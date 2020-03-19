@@ -30,7 +30,7 @@
 double Setpoint, Input, Output;
 
 //Specify the links and initial tuning parameters
-double Kp = 2, Ki = 4, Kd = 1;
+double Kp = 10, Ki = 6, Kd = 0;
 PID myPID(&Input, &Output, &Setpoint, Kp, Ki, Kd, DIRECT);
 
 // These constants won't change. They're used to give names to the pins used:
@@ -43,7 +43,7 @@ unsigned int cyclecounter = 0;
 
 void setup() {
   // initialize serial communications at 9600 bps:
-  Serial.begin(9600);
+  Serial.begin(115200);
 
   //Initialize PID
   Input = map(analogRead(DPSENSOR_PIN), 0, 1023, 0, 255);
@@ -54,7 +54,7 @@ void setup() {
 
 void loop() {
 
-  if (cyclecounter % 250 < 125) {
+  if (cyclecounter % 4000 < 2000) {
     Setpoint = BLOWER_LOW;
   } else {
     Setpoint = BLOWER_HIGH;
@@ -71,10 +71,15 @@ void loop() {
   analogWrite(BLOWERSPD_PIN, Output);
 
   // print the results to the Serial Monitor:
-  Serial.print("Input = ");
-  Serial.print(Input);
-  Serial.print("\t output = ");
-  Serial.println(Output);
+  //Serial.print("Input = ");
+  //Serial.print(Input);
+  //Serial.print("\t output = ");
+  //Serial.println(Output);
+  Serial.print("C");
+  Serial.write(int(Setpoint)>>8);
+  Serial.write(int(Setpoint)&0xff);
+  Serial.write(int(Input)>>8);
+  Serial.write(int(Input)&0xff);
 
   // wait 2 milliseconds before the next loop for the analog-to-digital
   // converter to settle after the last reading:

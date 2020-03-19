@@ -73,7 +73,16 @@ void loop() {
   // change the analog out value:
   analogWrite(BLOWERSPD_PIN, Output);
 
-  // print the results to the Serial Monitor:
+  // print the results Serial:
+  // this can be plotted with Cypress PSoC Programmer (Bridge Control Panel Tool)
+  // Download and install, connect serial
+  // Tools > Protocol Configuration > serial 115200:8n1 > hit OK
+  // In editor, use command RX8 [h=43] @1Key1 @0Key1 @1Key2 @0Key2
+  // Chart > Variable Settings
+  // Tick both Key1 and Key2, configure as int, and choose colors > hit OK
+  // Press >||< icon to connect to com port if necessary
+  // Click Repeat button, go to Chart tab
+  // both traces should now be plotting
   Serial.print("C");
   Serial.write(int(Setpoint)>>8);
   Serial.write(int(Setpoint)&0xff);

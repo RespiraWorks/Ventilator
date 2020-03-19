@@ -19,13 +19,21 @@
 
   http://www.arduino.cc/en/Tutorial/AnalogInOutSerial
 */
+#include <PID_v1.h>
 
 #define BLOWERSPD_PIN 3
-#define BLOWER_HIGH 65
-#define BLOWER_LOW 50
+#define BLOWER_HIGH 145
+#define BLOWER_LOW 135
+#define DPSENSOR_PIN A0
+
+//Define Variables we'll be connecting to
+double Setpoint, Input, Output;
+
+//Specify the links and initial tuning parameters
+double Kp = 2, Ki = 4, Kd = 1;
+PID myPID(&Input, &Output, &Setpoint, Kp, Ki, Kd, DIRECT);
 
 // These constants won't change. They're used to give names to the pins used:
-const int analogInPin = A0;  // Analog input pin that the potentiometer is attached to
 const int analogOutPin = LED_BUILTIN; // Analog output pin that the LED is attached to
 
 int sensorValue = 0;        // value read from the pot
@@ -36,29 +44,41 @@ unsigned int cyclecounter = 0;
 void setup() {
   // initialize serial communications at 9600 bps:
   Serial.begin(9600);
+
+  //Initialize PID
+  Input = map(analogRead(DPSENSOR_PIN), 0, 1023, 0, 255);
+  Setpoint = BLOWER_LOW;
+  //turn the PID on
+  myPID.SetMode(AUTOMATIC);
 }
 
 void loop() {
+
+  if (cyclecounter % 250 < 125) {
+    Setpoint = BLOWER_LOW;
+  } else {
+    Setpoint = BLOWER_HIGH;
+  }
+  
   // read the analog in value:
-  sensorValue = analogRead(analogInPin);
+  sensorValue = analogRead(DPSENSOR_PIN);
   // map it to the range of the analog out:
-  outputValue = map(sensorValue, 0, 1023, 0, 255);
+  Input = map(sensorValue, 0, 1023, 0, 255);
+
+  myPID.Compute();
+  
   // change the analog out value:
-  analogWrite(analogOutPin, outputValue);
+  analogWrite(BLOWERSPD_PIN, Output);
 
   // print the results to the Serial Monitor:
-  Serial.print("sensor = ");
-  Serial.print(sensorValue);
+  Serial.print("Input = ");
+  Serial.print(Input);
   Serial.print("\t output = ");
-  Serial.println(outputValue);
+  Serial.println(Output);
 
   // wait 2 milliseconds before the next loop for the analog-to-digital
   // converter to settle after the last reading:
   delay(2);
-  if(cyclecounter%125 < 62) {
-    analogWrite(BLOWERSPD_PIN, BLOWER_LOW);
-  } else {
-    analogWrite(BLOWERSPD_PIN, BLOWER_HIGH);
-  }
+  
   cyclecounter++;
 }

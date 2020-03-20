@@ -25,15 +25,15 @@
 #include <PID_v1.h>
 
 #define BLOWERSPD_PIN 3
-#define BLOWER_HIGH 145
-#define BLOWER_LOW 135
+#define BLOWER_HIGH 142
+#define BLOWER_LOW 132
 #define DPSENSOR_PIN A0
 
 //Define Variables we'll be connecting to
 double Setpoint, Input, Output;
 
 //Specify the links and initial tuning parameters
-double Kp = 10, Ki = 6, Kd = 0;
+double Kp = 5, Ki = 8, Kd = 0;
 PID myPID(&Input, &Output, &Setpoint, Kp, Ki, Kd, DIRECT);
 
 // These constants won't change. They're used to give names to the pins used:

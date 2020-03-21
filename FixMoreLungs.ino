@@ -19,6 +19,16 @@
   Project Description: http://bit.ly/2wYqj3X
   git: https://github.com/inceptionev/FixMoreLungs
   www.pandemicventilator.com
+
+  Outputs can be plotted with Cypress PSoC Programmer (Bridge Control Panel Tool)
+  Download and install, connect serial
+  Tools > Protocol Configuration > serial 115200:8n1 > hit OK
+  In editor, use command RX8 [h=43] @1Key1 @0Key1 @1Key2 @0Key2
+  Chart > Variable Settings
+  Tick both Key1 and Key2, configure as int, and choose colors > hit OK
+  Press >|< icon to connect to com port if necessary
+  Click Repeat button, go to Chart tab
+  both traces should now be plotting
   
 */
 
@@ -26,14 +36,30 @@
 
 #define BLOWERSPD_PIN 3
 #define BLOWER_HIGH 142
-#define BLOWER_LOW 132
+#define BLOWER_LOW 130
 #define DPSENSOR_PIN A0
+
+//state machine variables
+#define INSPIRE_TIME 1600
+#define INSPIRE_RATE 1
+#define PIP 142
+#define INSPIRE_DWELL 800
+#define INSPIRE_DWELL_PRESSURE 140
+#define EXPIRE_TIME 1000
+#define EXPIRE_RATE 1
+#define PEEP 130
+#define EXPIRE_DWELL 600
+//not implemented yet
+#define AC 0
+#define RR 0
+#define IE 0
+
 
 //Define Variables we'll be connecting to
 double Setpoint, Input, Output;
 
 //Specify the links and initial tuning parameters
-double Kp = 5, Ki = 8, Kd = 0;
+double Kp = 2, Ki = 8, Kd = 0;
 PID myPID(&Input, &Output, &Setpoint, Kp, Ki, Kd, DIRECT);
 
 // These constants won't change. They're used to give names to the pins used:
@@ -43,6 +69,7 @@ int sensorValue = 0;        // value read from the pot
 int outputValue = 0;        // value output to the PWM (analog out)
 
 unsigned int cyclecounter = 0;
+unsigned int state = 0;
 
 void setup() {
   // initialize serial communications at 9600 bps:
@@ -57,41 +84,75 @@ void setup() {
 
 void loop() {
 
-  if (cyclecounter % 4000 < 2000) {
-    Setpoint = BLOWER_LOW;
-  } else {
-    Setpoint = BLOWER_HIGH;
+  switch(state) {
+    case 0: //reset
+      cyclecounter = 0;
+      Setpoint = PEEP;
+      state = 1; //update state
+      break;
+      
+    case 1: //Inspire
+      cyclecounter++;
+      //set command
+      Setpoint += INSPIRE_RATE;
+      if (Setpoint > PIP) { Setpoint = PIP; }
+      //update state
+      if (cyclecounter > INSPIRE_TIME) {
+        cyclecounter = 0;
+        state = 2;  
+      }
+      break;
+      
+    case 2: //Inspiratory plateau
+      cyclecounter++;
+      //set command
+      Setpoint = INSPIRE_DWELL_PRESSURE;
+      //update state
+      if (cyclecounter > INSPIRE_DWELL) {
+        cyclecounter = 0;
+        state = 3;  
+      }
+      break; 
+
+    case 3: //Expire
+      cyclecounter++;
+      //set command
+      Setpoint -= EXPIRE_RATE;
+      if (Setpoint < PEEP) { Setpoint = PEEP; }
+      //update state
+      if (cyclecounter > EXPIRE_TIME) {
+        cyclecounter = 0;
+        state = 4;  
+      }
+      break;
+
+    case 4: //Expiratory Dwell
+      cyclecounter++;
+      //set command
+      Setpoint = PEEP;   
+      //update state
+      if (cyclecounter > EXPIRE_DWELL) {
+        cyclecounter = 0;
+        state = 0;  
+      }
+      break;
+
+    default:
+      state = 0;
+      break;
   }
-  
-  // read the analog in value:
-  sensorValue = analogRead(DPSENSOR_PIN);
-  // map it to the range of the analog out:
-  Input = map(sensorValue, 0, 1023, 0, 255);
 
-  myPID.Compute();
-  
-  // change the analog out value:
-  analogWrite(BLOWERSPD_PIN, Output);
+  //Update PID Loop
+  sensorValue = analogRead(DPSENSOR_PIN); //read sensor
+  Input = map(sensorValue, 0, 1023, 0, 255); //map to output scale
+  myPID.Compute(); // computer PID command
+  analogWrite(BLOWERSPD_PIN, Output); //write output
+  Serial.print("C"); //output to monitor
+  Serial.write(int(map(Setpoint,0,255,0,1023))>>8); //output to monitor
+  Serial.write(int(map(Setpoint,0,255,0,1023))&0xff); //output to monitor
+  Serial.write(int(sensorValue)>>8); //output to monitor
+  Serial.write(int(sensorValue)&0xff); //output to monitor
 
-  // print the results Serial:
-  // this can be plotted with Cypress PSoC Programmer (Bridge Control Panel Tool)
-  // Download and install, connect serial
-  // Tools > Protocol Configuration > serial 115200:8n1 > hit OK
-  // In editor, use command RX8 [h=43] @1Key1 @0Key1 @1Key2 @0Key2
-  // Chart > Variable Settings
-  // Tick both Key1 and Key2, configure as int, and choose colors > hit OK
-  // Press >||< icon to connect to com port if necessary
-  // Click Repeat button, go to Chart tab
-  // both traces should now be plotting
-  Serial.print("C");
-  Serial.write(int(Setpoint)>>8);
-  Serial.write(int(Setpoint)&0xff);
-  Serial.write(int(Input)>>8);
-  Serial.write(int(Input)&0xff);
+  delay(2);  //delay
 
-  // wait 2 milliseconds before the next loop for the analog-to-digital
-  // converter to settle after the last reading:
-  delay(2);
-  
-  cyclecounter++;
 }

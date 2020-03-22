@@ -1,15 +1,33 @@
+/* Copyright 2020, Edwin Chiu
+
+  This file is part of FixMoreLungs.
+
+  FixMoreLungs is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  FixMoreLungs is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with FixMoreLungs.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
 /*
   Basic test and demo software for COVID-19/ARDS Ventilator
 
-  Objective is to make a minimum-viable ARDS ventilator that can be deployed 
-  or constructed on-site in countries underserved by commecial global supply 
+  Objective is to make a minimum-viable ARDS ventilator that can be deployed
+  or constructed on-site in countries underserved by commecial global supply
   chains during the COVID-19 outbreak.
-  
+
   Currently consists of a (1) CPAP-style blower with speed control.
-  
+
   (2)Feedback from a differential pressure sensor with one side
   measuring delivered pressure to patient, other side ambient.
-  
+
 
   created 16 Mar 2020
   Edwin Chiu
@@ -29,7 +47,7 @@
   Press >|< icon to connect to com port if necessary
   Click Repeat button, go to Chart tab
   both traces should now be plotting
-  
+
 */
 
 #include <PID_v1.h>
@@ -90,7 +108,7 @@ void loop() {
       Setpoint = PEEP;
       state = 1; //update state
       break;
-      
+
     case 1: //Inspire
       cyclecounter++;
       //set command
@@ -99,10 +117,10 @@ void loop() {
       //update state
       if (cyclecounter > INSPIRE_TIME) {
         cyclecounter = 0;
-        state = 2;  
+        state = 2;
       }
       break;
-      
+
     case 2: //Inspiratory plateau
       cyclecounter++;
       //set command
@@ -110,9 +128,9 @@ void loop() {
       //update state
       if (cyclecounter > INSPIRE_DWELL) {
         cyclecounter = 0;
-        state = 3;  
+        state = 3;
       }
-      break; 
+      break;
 
     case 3: //Expire
       cyclecounter++;
@@ -122,18 +140,18 @@ void loop() {
       //update state
       if (cyclecounter > EXPIRE_TIME) {
         cyclecounter = 0;
-        state = 4;  
+        state = 4;
       }
       break;
 
     case 4: //Expiratory Dwell
       cyclecounter++;
       //set command
-      Setpoint = PEEP;   
+      Setpoint = PEEP;
       //update state
       if (cyclecounter > EXPIRE_DWELL) {
         cyclecounter = 0;
-        state = 0;  
+        state = 0;
       }
       break;
 

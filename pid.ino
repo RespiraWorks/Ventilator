@@ -1,3 +1,69 @@
+/*
+  Basic test and demo software for COVID-19/ARDS Ventilator
+
+  Objective is to make a minimum-viable ARDS ventilator that can be deployed 
+  or constructed on-site in countries underserved by commecial global supply 
+  chains during the COVID-19 outbreak.
+  
+  Currently consists of a (1) CPAP-style blower with speed control.
+  
+  (2)Feedback from a differential pressure sensor with one side
+  measuring delivered pressure to patient, other side ambient.
+  
+
+  created 16 Mar 2020
+  Edwin Chiu
+  Frost Methane Labs/Fix More Lungs
+  Based on example code by Tom Igoe and Brett Beauregard
+
+  Project Description: http://bit.ly/2wYqj3X
+  git: https://github.com/inceptionev/FixMoreLungs
+  www.pandemicventilator.com
+
+  Outputs can be plotted with Cypress PSoC Programmer (Bridge Control Panel Tool)
+  Download and install, connect serial
+  Tools > Protocol Configuration > serial 115200:8n1 > hit OK
+  In editor, use command RX8 [h=43] @1Key1 @0Key1 @1Key2 @0Key2
+  Chart > Variable Settings
+  Tick both Key1 and Key2, configure as int, and choose colors > hit OK
+  Press >|< icon to connect to com port if necessary
+  Click Repeat button, go to Chart tab
+  both traces should now be plotting
+  
+/*
+  Basic test and demo software for COVID-19/ARDS Ventilator
+
+  Objective is to make a minimum-viable ARDS ventilator that can be deployed 
+  or constructed on-site in countries underserved by commecial global supply 
+  chains during the COVID-19 outbreak.
+  
+  Currently consists of a (1) CPAP-style blower with speed control.
+  
+  (2)Feedback from a differential pressure sensor with one side
+  measuring delivered pressure to patient, other side ambient.
+  
+
+  created 16 Mar 2020
+  Edwin Chiu
+  Frost Methane Labs/Fix More Lungs
+  Based on example code by Tom Igoe and Brett Beauregard
+
+  Project Description: http://bit.ly/2wYqj3X
+  git: https://github.com/inceptionev/FixMoreLungs
+  www.pandemicventilator.com
+
+  Outputs can be plotted with Cypress PSoC Programmer (Bridge Control Panel Tool)
+  Download and install, connect serial
+  Tools > Protocol Configuration > serial 115200:8n1 > hit OK
+  In editor, use command RX8 [h=43] @1Key1 @0Key1 @1Key2 @0Key2
+  Chart > Variable Settings
+  Tick both Key1 and Key2, configure as int, and choose colors > hit OK
+  Press >|< icon to connect to com port if necessary
+  Click Repeat button, go to Chart tab
+  both traces should now be plotting
+  
+*/
+
 #include "pid.h"
 
 //Define Variables we'll be connecting to
@@ -10,6 +76,16 @@ static PID myPID(&Input, &Output, &Setpoint, Kp, Ki, Kd, DIRECT);
 
 // These constants won't change. They're used to give names to the pins used:
 static const int analogOutPin = LED_BUILTIN; // Analog output pin that the LED is attached to
+
+enum pid_fsm_state {
+  reset        = 0,
+  inspire      = 1,
+  plateau      = 2,
+  expire       = 3,
+  expire_dwell = 4,
+
+  count        /* Sentinel */
+};
 
 
 void pid_init() {
@@ -25,21 +101,21 @@ void pid_init() {
 void pid_run() {
 	uint16_t cyclecounter = 0;
 	int16_t  sensorValue = 0;   // value read from the pot
-	PID_FSM_STATE_T state = PID_FSM_RESET;
+	enum pid_fsm_state state = pid_fsm_state::reset;
 
 	for(;;) {
 
     switch(state) {
 
-		  case PID_FSM_RESET: //reset
+		  case pid_fsm_state::reset: //reset
      
 		      cyclecounter = 0;
 		      Setpoint = PEEP;
-		      state = PID_FSM_INSPIRE; //update state
+		      state = pid_fsm_state::inspire; //update state
          
 		      break;
 		      
-      case PID_FSM_INSPIRE: //Inspire
+      case pid_fsm_state::inspire: //Inspire
       
 		      cyclecounter++;
 		      //set command
@@ -48,12 +124,12 @@ void pid_run() {
 		      //update state
 		      if (cyclecounter > INSPIRE_TIME) {
 		        cyclecounter = 0;
-		        state = PID_FSM_PLATEAU;  
+		        state = pid_fsm_state::plateau;  
 		      }
          
 		      break;
 		      
-      case PID_FSM_PLATEAU: //Inspiratory plateau
+      case pid_fsm_state::plateau: //Inspiratory plateau
       
 		      cyclecounter++;
 		      //set command
@@ -61,12 +137,12 @@ void pid_run() {
 		      //update state
 		      if (cyclecounter > INSPIRE_DWELL) {
 		        cyclecounter = 0;
-		        state = PID_FSM_EXPIRE;  
+		        state = pid_fsm_state::expire;  
 		      }
          
 		      break; 
 
-      case PID_FSM_EXPIRE: //Expire
+      case pid_fsm_state::expire: //Expire
       
 		      cyclecounter++;
 		      //set command
@@ -75,12 +151,12 @@ void pid_run() {
 		      //update state
 		      if (cyclecounter > EXPIRE_TIME) {
 		        cyclecounter = 0;
-		        state = PID_FSM_EXPIRE_DWELL;  
+		        state = pid_fsm_state::expire_dwell;  
 		      }
          
 		      break;
 
-      case PID_FSM_EXPIRE_DWELL: //Expiratory Dwell
+      case pid_fsm_state::expire_dwell: //Expiratory Dwell
       
 		      cyclecounter++;
 		      //set command
@@ -88,13 +164,13 @@ void pid_run() {
 		      //update state
 		      if (cyclecounter > EXPIRE_DWELL) {
 		        cyclecounter = 0;
-		        state = PID_FSM_RESET;  
+		        state = pid_fsm_state::reset;  
 		      }
          
 		      break;
 
       default:
-		      state = PID_FSM_RESET;       
+		      state = pid_fsm_state::reset;       
 		      break;
 		  }
 

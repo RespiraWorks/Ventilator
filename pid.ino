@@ -41,98 +41,102 @@ enum pid_fsm_state {
 
 void pid_init() {
 
-	//Initialize PID
+  //Initialize PID
   Input = map(analogRead(DPSENSOR_PIN), 0, 1023, 0, 255);
- 	Setpoint = BLOWER_LOW;
+  Setpoint = BLOWER_LOW;
 
   //turn the PID on
   myPID.SetMode(AUTOMATIC);
 }
 
 void pid_run() {
-	uint16_t cyclecounter = 0;
-	int16_t  sensorValue = 0;   // value read from the pot
-	enum pid_fsm_state state = pid_fsm_state::reset;
+  uint16_t cyclecounter = 0;
+  int16_t  sensorValue = 0;   // value read from the pot
+  enum pid_fsm_state state = pid_fsm_state::reset;
 
-	for(;;) {
+  for (;;) {
 
-    switch(state) {
+    switch (state) {
 
-		  case pid_fsm_state::reset: //reset
+      case pid_fsm_state::reset: //reset
 
-		      cyclecounter = 0;
-		      Setpoint = PEEP;
-		      state = pid_fsm_state::inspire; //update state
+        cyclecounter = 0;
+        Setpoint = PEEP;
+        state = pid_fsm_state::inspire; //update state
 
-		      break;
+        break;
 
       case pid_fsm_state::inspire: //Inspire
 
-		      cyclecounter++;
-		      //set command
-		      Setpoint += INSPIRE_RATE;
-		      if (Setpoint > PIP) { Setpoint = PIP; }
-		      //update state
-		      if (cyclecounter > INSPIRE_TIME) {
-		        cyclecounter = 0;
-		        state = pid_fsm_state::plateau;
-		      }
+        cyclecounter++;
+        //set command
+        Setpoint += INSPIRE_RATE;
+        if (Setpoint > PIP) {
+          Setpoint = PIP;
+        }
+        //update state
+        if (cyclecounter > INSPIRE_TIME) {
+          cyclecounter = 0;
+          state = pid_fsm_state::plateau;
+        }
 
-		      break;
+        break;
 
       case pid_fsm_state::plateau: //Inspiratory plateau
 
-		      cyclecounter++;
-		      //set command
-		      Setpoint = INSPIRE_DWELL_PRESSURE;
-		      //update state
-		      if (cyclecounter > INSPIRE_DWELL) {
-		        cyclecounter = 0;
-		        state = pid_fsm_state::expire;
-		      }
+        cyclecounter++;
+        //set command
+        Setpoint = INSPIRE_DWELL_PRESSURE;
+        //update state
+        if (cyclecounter > INSPIRE_DWELL) {
+          cyclecounter = 0;
+          state = pid_fsm_state::expire;
+        }
 
-		      break;
+        break;
 
       case pid_fsm_state::expire: //Expire
 
-		      cyclecounter++;
-		      //set command
-		      Setpoint -= EXPIRE_RATE;
-		      if (Setpoint < PEEP) { Setpoint = PEEP; }
-		      //update state
-		      if (cyclecounter > EXPIRE_TIME) {
-		        cyclecounter = 0;
-		        state = pid_fsm_state::expire_dwell;
-		      }
+        cyclecounter++;
+        //set command
+        Setpoint -= EXPIRE_RATE;
+        if (Setpoint < PEEP) {
+          Setpoint = PEEP;
+        }
+        //update state
+        if (cyclecounter > EXPIRE_TIME) {
+          cyclecounter = 0;
+          state = pid_fsm_state::expire_dwell;
+        }
 
-		      break;
+        break;
 
       case pid_fsm_state::expire_dwell: //Expiratory Dwell
 
-		      cyclecounter++;
-		      //set command
-		      Setpoint = PEEP;
-		      //update state
-		      if (cyclecounter > EXPIRE_DWELL) {
-		        cyclecounter = 0;
-		        state = pid_fsm_state::reset;
-		      }
+        cyclecounter++;
+        //set command
+        Setpoint = PEEP;
+        //update state
+        if (cyclecounter > EXPIRE_DWELL) {
+          cyclecounter = 0;
+          state = pid_fsm_state::reset;
+        }
 
-		      break;
+        break;
 
       default:
-		      state = pid_fsm_state::reset;
-		      break;
-		  }
+        state = pid_fsm_state::reset;
+        break;
+    }
 
-		  //Update PID Loop
-		  sensorValue = analogRead(DPSENSOR_PIN); //read sensor
-		  Input = map(sensorValue, 0, 1023, 0, 255); //map to output scale
-		  myPID.Compute(); // computer PID command
-		  analogWrite(BLOWERSPD_PIN, Output); //write output
+    //Update PID Loop
+    sensorValue = analogRead(DPSENSOR_PIN); //read sensor
+    Input = map(sensorValue, 0, 1023, 0, 255); //map to output scale
+    myPID.Compute(); // computer PID command
+    analogWrite(BLOWERSPD_PIN, Output); //write output
 
-		  comms_send(Setpoint, sensorValue);
+    comms_send(Setpoint, sensorValue);
 
-		  delay(2);  //delay
-	}
+    delay(2);  //delay
+  }
 }

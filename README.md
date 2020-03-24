@@ -44,12 +44,17 @@ This project is licensed under the
 ## Helpful Links
 
 [Project Description](http://bit.ly/2wYqj3X)
+
 [Self-link](https://github.com/inceptionev/FixMoreLungs)
+
 [Pandemic Ventilator Website](https://www.pandemicventilator.com)
 
   Copyright 2020
+
   Edwin Chiu
+
   Frost Methane Labs/Fix More Lungs
+
   Based on example code by Tom Igoe and Brett Beauregard
 
 

@@ -17,7 +17,7 @@ Currently consists of a:
 1. CPAP-style blower with speed control.
 2. Feedback from a differential pressure sensor with one side measuring delivered pressure to patient, other side ambient.
 
-## Setup.
+## Setup
 
 Tested with an RF-nano arduino board, which has similar parts and pinout to an
 Arduino Nano.

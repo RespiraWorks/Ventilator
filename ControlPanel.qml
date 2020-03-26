@@ -35,21 +35,21 @@ import QtQuick.Controls 2.5
 ColumnLayout
 {
 //    property alias openGLButton: openGLButton
-    property alias antialiasButton: antialiasButton
+//    property alias antialiasButton: antialiasButton
     spacing: 8
     Layout.fillHeight: true
     signal animationsEnabled(bool enabled)
     signal seriesTypeChanged(string type)
-    signal refreshRateChanged(variant rate);
+//    signal refreshRateChanged(variant rate);
     signal signalSourceChanged(string source, int signalCount, int sampleCount);
-    signal antialiasingEnabled(bool enabled)
-    signal openGlChanged(bool enabled)
+//    signal antialiasingEnabled(bool enabled)
+//    signal openGlChanged(bool enabled)
 
     Text
     {
         text: "Ventilator"
-        font.pointSize: 18
-        color: "black"
+        font.pointSize: 24
+        color: "yellow"
     }
 
     DelayButton
@@ -57,21 +57,21 @@ ColumnLayout
         text: "A/C Mode"
     }
 
-    MultiButton
-    {
-        text: "Refresh rate: "
-        items: ["5", "10", "15"]
-        currentSelection: 2
-        onSelectionChanged: refreshRateChanged(items[currentSelection]);
-    }
+//    MultiButton
+//    {
+//        text: "Refresh rate: "
+//        items: ["5", "10", "15"]
+//        currentSelection: 2
+//        onSelectionChanged: refreshRateChanged(items[currentSelection]);
+//    }
 
-    MultiButton
-    {
-        id: antialiasButton
-        text: "Antialias: "
-        items: ["OFF", "ON"]
-        enabled: true
-        currentSelection: 0
-        onSelectionChanged: antialiasingEnabled(currentSelection == 1);
-    }
+//    MultiButton
+//    {
+//        id: antialiasButton
+//        text: "Antialias: "
+//        items: ["OFF", "ON"]
+//        enabled: true
+//        currentSelection: 0
+//        onSelectionChanged: antialiasingEnabled(currentSelection == 1);
+//    }
 }

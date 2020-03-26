@@ -16,20 +16,21 @@ Item
         anchors.left: parent.left
         anchors.leftMargin: 10
 
-        onRefreshRateChanged:
-        {
-            pressureView.changeRefreshRate(rate);
-            tidalVolumeView.changeRefreshRate(rate);
-        }
-        onOpenGlChanged:
-        {
-            pressureView.openGL = enabled;
-            tidalVolumeView.openGL = enabled;
-        }
+//        onRefreshRateChanged:
+//        {
+//            pressureView.changeRefreshRate(rate);
+//            tidalVolumeView.changeRefreshRate(rate);
+//        }
+//        onOpenGlChanged:
+//        {
+//            pressureView.openGL = enabled;
+//            tidalVolumeView.openGL = enabled;
+//        }
     }
     ScopeView {
         id: pressureView
         name: "Pressure [mmH2O]"
+        color: "#4f67ff"
         anchors.bottomMargin: 301
         anchors.top: parent.top
         anchors.bottom: parent.bottom
@@ -50,6 +51,7 @@ Item
     {
         id: tidalVolumeView
         name: "Tidal Volume [mL]"
+        color: "yellow"
         height: 200
         anchors.top: pressureView.bottom
         anchors.bottom: parent.bottom

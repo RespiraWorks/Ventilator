@@ -1,24 +1,34 @@
-#include <QApplication>
-#include <QQmlApplicationEngine>
-#include <QtCharts/QChartGlobal>
-
+#include <QtWidgets/QApplication>
+#include <QtQml/QQmlContext>
+#include <QtQuick/QQuickView>
+#include <QtQml/QQmlEngine>
+#include <QtCore/QDir>
+#include "datasource.h"
 
 int main(int argc, char *argv[])
 {
-    qputenv("QT_IM_MODULE", QByteArray("qtvirtualkeyboard"));
-
-    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-
     QApplication app(argc, argv);
+    app.setWindowIcon(QIcon("Logo.png"));
+    QQuickView mainView;
 
-    QQmlApplicationEngine engine;
-    const QUrl url(QStringLiteral("qrc:/main.qml"));
-    QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
-                     &app, [url](QObject *obj, const QUrl &objUrl) {
-        if (!obj && url == objUrl)
-            QCoreApplication::exit(-1);
-    }, Qt::QueuedConnection);
-    engine.load(url);
+    QString extraImportPath(QStringLiteral("%1/../../../%2"));
+
+    mainView.engine()->addImportPath(extraImportPath.arg(QGuiApplication::applicationDirPath(),
+                                      QString::fromLatin1("qml")));
+    QObject::connect(mainView.engine(), &QQmlEngine::quit, &mainView, &QWindow::close);
+    mainView.setTitle(QStringLiteral("Ventilator"));
+
+    DataSource pressureDataSource(&mainView); // This will need to be a source coming from the arduino
+
+    DataSource volumeDataSource(&mainView); // This will need to be a source coming from the arduino
+
+    mainView.rootContext()->setContextProperty("pressureDataSource", &pressureDataSource);
+    mainView.rootContext()->setContextProperty("volumeDataSource", &volumeDataSource);
+
+    mainView.setSource(QUrl("qrc:/main.qml"));
+    mainView.setResizeMode(QQuickView::SizeRootObjectToView);
+    mainView.setColor(QColor("#ffffff"));
+    mainView.show();
 
     return app.exec();
 }

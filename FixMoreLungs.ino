@@ -51,11 +51,19 @@
 */
 
 #include "pid.h"
+#include "watchdog.h"
 #include "comms.h"
+#include "sensors.h"
+#include "parameters.h"
+#include "blower.h"
 
 void setup() {
 
+  parameters_init();
   comms_init();
+  sensors_init();
+  blower_init();
+  watchdog_init();
 
   pid_init();
   pid_run();

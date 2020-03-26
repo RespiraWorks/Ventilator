@@ -1,117 +1,83 @@
-import QtQuick 2.14
-import QtQuick.Window 2.14
-import QtQuick.VirtualKeyboard 2.14
-import QtCharts 2.3
-import QtQuick.Controls 2.13
-import QtQuick.Controls.Material 2.0
+import QtQuick 2.0
+import QtQuick.Layouts 1.3
 
-
-Window {
-    id: window
-    visible: true
+Item
+{
+    id: mainWindow
     width: 1024
     height: 600
-    title: qsTr("Ventilator")
 
-    InputPanel {
-        id: inputPanel
-        z: 99
-        x: 0
-        y: window.height
-        width: window.width
+    ControlPanel {
 
-        states: State {
-            name: "visible"
-            when: inputPanel.active
-            PropertyChanges {
-                target: inputPanel
-                y: window.height - inputPanel.height
-            }
-        }
-        transitions: Transition {
-            from: ""
-            to: "visible"
-            reversible: true
-            ParallelAnimation {
-                NumberAnimation {
-                    properties: "y"
-                    duration: 250
-                    easing.type: Easing.InOutQuad
-                }
-            }
-        }
-    }
-    
+        id: controlPanel
+        anchors.top: parent.top
+        anchors.topMargin: 10
+        anchors.bottom: parent.bottom
+        anchors.left: parent.left
+        anchors.leftMargin: 10
 
-    ButtonGroup {
-        id: mode_button_group
-        buttons: button_column.children
-
-    }
-    Column{
-        id: button_column
-        x: 15
-        y: 28
-        width: 253
-        height: 361
-        spacing: 25
-
-        Label {
-            id: modes_label
-            width: 227
-            height: 65
-            text: qsTr("Ventilation Mode Selection")
-            verticalAlignment: Text.AlignVCenter
-            wrapMode: Text.WordWrap
-            horizontalAlignment: Text.AlignHCenter
-            font.pointSize: 20
-        }
-
-        DelayButton {
-            id: assist_control_delay_button
-            x: 26
-            y: 255
-            width: 190
-            height: 86
-            delay: 1000
-            text: qsTr("Assist Control Ventilation \n(ACV / CMV)")
-            autoExclusive: true
-            ButtonGroup.group: mode_button_group
-        }
-
-        DelayButton
+        onRefreshRateChanged:
         {
-            id: psv_delay_button
-            x: 26
-            y: 361
-            width: 190
-            height: 86
-            delay: 1000
-            text: qsTr("Partial Support Ventilation \n(PCV)")
-            autoExclusive: true
-            ButtonGroup.group: mode_button_group
-
+            pressureView.changeRefreshRate(rate);
+            tidalVolumeView.changeRefreshRate(rate);
         }
-
-        DelayButton {
-            id: off_delay_button
-            x: 26
-            y: 467
-            width: 190
-            height: 86
-            delay: 1000
-            text: qsTr("Stop")
-            autoExclusive: true
-            ButtonGroup.group: mode_button_group
-
-
+        onOpenGlChanged:
+        {
+            pressureView.openGL = enabled;
+            tidalVolumeView.openGL = enabled;
         }
+    }
+    ScopeView {
+        id: pressureView
+        name: "Pressure [mmH2O]"
+        anchors.bottomMargin: 301
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        anchors.right: parent.right
+        anchors.left: controlPanel.right
 
-
+        onOpenGLSupportedChanged:
+        {
+            if (!openGLSupported)
+            {
+                controlPanel.openGLButton.enabled = false
+                controlPanel.openGLButton.currentSelection = 0
+            }
+        }
     }
 
+    ScopeView
+    {
+        id: tidalVolumeView
+        name: "Tidal Volume [mL]"
+        height: 200
+        anchors.top: pressureView.bottom
+        anchors.bottom: parent.bottom
+        anchors.right: parent.right
+        anchors.left: controlPanel.right
+        anchors.rightMargin: 0
+        anchors.bottomMargin: 0
+        anchors.leftMargin: 0
+        anchors.topMargin: 1
 
-
+        onOpenGLSupportedChanged:
+        {
+            if (!openGLSupported)
+            {
+                controlPanel.openGLButton.enabled = false
+                controlPanel.openGLButton.currentSelection = 0
+            }
+        }
+    }
+    Timer
+    {
+        id: refreshTimer
+        interval: 1 / 15 * 1000 // 60 Hz
+        running: true
+        repeat: true
+        onTriggered: {
+            volumeDataSource.update(tidalVolumeView.series(0));
+            pressureDataSource.update(pressureView.series(0));
+        }
+    }
 }
-
-

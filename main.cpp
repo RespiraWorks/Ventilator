@@ -27,7 +27,7 @@ int main(int argc, char *argv[])
 
     mainView.setSource(QUrl("qrc:/main.qml"));
     mainView.setResizeMode(QQuickView::SizeRootObjectToView);
-    mainView.setColor(QColor("#ffffff"));
+    mainView.setColor(QColor("#000000"));
     mainView.show();
 
     return app.exec();

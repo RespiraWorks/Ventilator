@@ -15,10 +15,30 @@
   You should have received a copy of the GNU General Public License
   along with FixMoreLungs.  If not, see <https://www.gnu.org/licenses/>.
 */
+
 #ifndef COMMS_H
 #define COMMS_H
 
+#include <stdint.h>
+
+#include "serialIO.h"
+
+/****************************************************************************************
+ *  @brief      
+ *  @usage      
+ *  @param      
+ *  @param      
+ *  @return     
+ ****************************************************************************************/
 void comms_init();
-void comms_send();
+
+/****************************************************************************************
+ *  @brief      
+ *  @usage      
+ *  @param      
+ *  @param      
+ *  @return     
+ ****************************************************************************************/
+void comms_send(double Setpoint, int16_t sensorValue);
 
 #endif  // COMMS_H

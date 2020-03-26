@@ -34,10 +34,17 @@ ChartView
 {
     id: chartView
     animationOptions: ChartView.NoAnimation
-    theme: ChartView.ChartThemeLight
+//    theme: ChartView.ChartThemeLight
+    plotAreaColor: "#000000"
+    backgroundColor: "#000000"
+    property string color
     property string name
     property bool openGL: true
     property bool openGLSupported: true
+//    title: name
+//    titleColor: color
+    legend.labelColor: "white"
+
     onOpenGLChanged:
     {
         if (openGLSupported)
@@ -58,6 +65,7 @@ ChartView
         id: axisY
         min: 0
         max: 3
+        labelsColor: chartView.color
     }
 
 
@@ -66,6 +74,7 @@ ChartView
         id: axisX
         min: 0
         max: 1000
+        labelsColor: chartView.color
     }
 
     LineSeries
@@ -75,6 +84,10 @@ ChartView
         axisX: axisX
         axisY: axisY
         useOpenGL: chartView.openGL
+        color: chartView.color
+        pointLabelsColor: chartView.color
+
+
     }
 
 

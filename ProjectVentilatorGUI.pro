@@ -18,7 +18,9 @@ SOURCES += \
         datasource.cpp \
         main.cpp
 
-RESOURCES += qml.qrc
+RESOURCES += qml.qrc Logo.png
+
+
 
 TRANSLATIONS += \
     ProjectVentilatorGUI_es_GT.ts

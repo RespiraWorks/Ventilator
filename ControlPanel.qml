@@ -27,51 +27,167 @@
 **
 ****************************************************************************/
 
-import QtQuick 2.1
+import QtQuick 2.14
 import QtQuick.Layouts 1.0
 import QtQuick.Controls 2.5
 
 
 ColumnLayout
 {
-//    property alias openGLButton: openGLButton
-//    property alias antialiasButton: antialiasButton
+    //    property alias openGLButton: openGLButton
+    //    property alias antialiasButton: antialiasButton
     spacing: 8
     Layout.fillHeight: true
     signal animationsEnabled(bool enabled)
     signal seriesTypeChanged(string type)
-//    signal refreshRateChanged(variant rate);
     signal signalSourceChanged(string source, int signalCount, int sampleCount);
-//    signal antialiasingEnabled(bool enabled)
-//    signal openGlChanged(bool enabled)
+    height: 600
+
 
     Text
     {
         text: "Ventilator"
+        font.bold: true
         font.pointSize: 24
         color: "yellow"
+        bottomPadding: 20
+        topPadding: 10
     }
 
-    DelayButton
-    {
-        text: "A/C Mode"
+
+
+
+    SwipeView {
+        id: swipeView
+        width: 200
+        height: 200
+        Layout.fillWidth: true
+        Layout.fillHeight: true
+        currentIndex: 0
+        spacing: 50
+        ButtonGroup {
+            buttons: modesButtonColumn.children
+        }
+
+        Item {
+            id: modePage
+            Text {
+                id: modesView
+                color: "#ffffff"
+                text: qsTr("Modes View")
+                anchors.bottomMargin: 424
+                visible: true
+                font.bold: true
+                anchors.fill: parent
+                font.pixelSize: 20
+            }
+
+            Column {
+                id: modesButtonColumn
+                anchors.leftMargin: 0
+                anchors.top: modesView.bottom
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
+                anchors.left: parent.left
+                anchors.topMargin: 0
+                spacing: 50
+
+
+
+                DelayButton
+                {
+                    id: acmodeButton
+                    height: 40
+                    text: "A/C Mode"
+                    autoExclusive: true
+                    spacing: 50
+
+                }
+
+                DelayButton
+                {
+                    id: psButton
+                    height: 40
+                    text: "Pressure Support"
+                    autoExclusive: true
+                    spacing: 50
+
+                    onActivated:
+                    {
+
+//                       checkable = false;
+
+                    }
+                    onPressed:
+                    {
+                        if(checked)
+                        {
+                            checked = true;
+
+                        }
+                    }
+                }
+
+                DelayButton
+                {
+                    id: offButton
+                    height: 40
+                    text: "Off"
+                    autoExclusive: true
+                    spacing: 50
+                    delay: 2000
+                }
+
+            }
+
+
+        }
+
+        Item
+        {
+            id: settingsPage
+            Text {
+                id: settingsView
+                color: "#ffffff"
+                text: qsTr("Settings View")
+                visible: true
+                font.bold: true
+                anchors.fill: parent
+                font.pixelSize: 20
+            }
+        }
     }
 
-//    MultiButton
-//    {
-//        text: "Refresh rate: "
-//        items: ["5", "10", "15"]
-//        currentSelection: 2
-//        onSelectionChanged: refreshRateChanged(items[currentSelection]);
-//    }
+    PageIndicator {
+        id: indicator
+        Layout.alignment: Qt.AlignHCenter | Qt.AlignBottom
 
-//    MultiButton
-//    {
-//        id: antialiasButton
-//        text: "Antialias: "
-//        items: ["OFF", "ON"]
-//        enabled: true
-//        currentSelection: 0
-//        onSelectionChanged: antialiasingEnabled(currentSelection == 1);
-//    }
+
+        count: swipeView.count
+        currentIndex: swipeView.currentIndex
+        antialiasing: true
+        delegate:
+            Rectangle {
+            implicitWidth: 15
+            implicitHeight: 15
+            color: "white"
+            radius: width / 2
+            opacity: index === swipeView.currentIndex ? 0.95 : pressed ? 0.7 : 0.45
+
+            Behavior on opacity {
+                OpacityAnimator {
+                    duration: 100
+                }
+            }
+        }
+
+    }
+
+
 }
+
+/*##^##
+Designer {
+    D{i:6;anchors_height:400;anchors_width:200}
+}
+##^##*/

@@ -23,7 +23,7 @@ static float rr;
 static float tv;
 static float peep;
 static float expireduration;
-static float inspireDuration;
+static float inspireduration;
 static float pip;
 static float dwell;
 
@@ -31,9 +31,9 @@ static float dwell;
 
 
 // PID parameters
-static float Kp;
-static float Ki;
-static float Kd;
+static float Kp_pid;
+static float Ki_pid;
+static float Kd_pid;
 
 void parameters_init() {
     //eeprom_init();
@@ -48,15 +48,15 @@ static void init_default_ventilatorParameters() {
     tv                = TV_DEFAULT;
     peep              = PEEP_DEFAULT;
     expireduration    = ED_DEFAULT;
-    inspireDuration   = ID_DEFAULT;
+    inspireduration   = ID_DEFAULT;
     pip               = PIP_DEFAULT;
     dwell             = DWELL_DEFAULT;
 }
 
 static void init_default_PIDParameters() {
-    Kp    = KP_DEFAULT;
-    Ki    = KI_DEFAULT;
-    Kd    = KD_DEFAULT;
+    Kp_pid    = KP_DEFAULT;
+    Ki_pid    = KI_DEFAULT;
+    Kd_pid    = KD_DEFAULT;
 }
 
 static void init_default_CalibrationParameters() {
@@ -64,27 +64,27 @@ static void init_default_CalibrationParameters() {
 }
 
 void parameters_set_Kp(float kp_value) {
-    Kp = kp_value;
+    Kp_pid = kp_value;
 }
 
 float parameters_get_Kp() {
-    return Kp;
+    return Kp_pid;
 }
 
 void parameters_set_Ki(float ki_value) {
-    Ki = ki_value;
+    Ki_pid = ki_value;
 }
 
 float parameters_get_Ki() {
-    return Ki;
+    return Ki_pid;
 }
 
 void parameters_set_Kd(float kd_value) {
-    Kd = kd_value;
+    Kd_pid = kd_value;
 }
 
 float parameters_get_Kd() {
-    return Kd;
+    return Kd_pid;
 }
 
 void parameters_set_RR(float rr_value) {
@@ -112,7 +112,7 @@ float parameters_get_PEEP() {
 }
 
 void parameters_set_ExpireDuration(float expireduration_value) {
-    expireduration = expireduration_value
+    expireduration = expireduration_value;
 }
 
 float parameters_get_ExpireDuration() {
@@ -120,7 +120,7 @@ float parameters_get_ExpireDuration() {
 }
 
 void parameters_set_InspireDuration(float inspireduration_value) {
-    inspireduration = inspireduration_value
+    inspireduration = inspireduration_value;
 }
 
 float parameters_get_InspireDuration() {

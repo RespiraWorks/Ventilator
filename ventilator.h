@@ -16,19 +16,10 @@
   along with FixMoreLungs.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef WATCHDOG_H
-#define WATCHDOG_H
+#ifndef VENTILATOR_H
+#define VENTILATOR_H
 
-#include <avr/wdt.h>
-
-/****************************************************************************************
- *  @brief      
- *  @usage      
- *  @param      
- *  @param      
- *  @return     
- ****************************************************************************************/
-void watchdog_init();
+// Private function prototypes
 
 /****************************************************************************************
  *  @brief      
@@ -37,6 +28,17 @@ void watchdog_init();
  *  @param      
  *  @return     
  ****************************************************************************************/
-void watchdog_kick();
+static void ventilator_control();
 
-#endif // WATCHDOG_H
+// Public function prototypes
+
+/****************************************************************************************
+ *  @brief      
+ *  @usage      
+ *  @param      
+ *  @param      
+ *  @return     
+ ****************************************************************************************/
+void ventilator_start();
+
+#endif // VENTILATOR_H

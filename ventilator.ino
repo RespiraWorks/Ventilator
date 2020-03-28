@@ -18,16 +18,18 @@
 
 #include "ventilator.h"
 
-static void ventilator_start() {
+void ventilator_start() {
 
 	for (;;) {	
 		ventilator_control();
 	}
 }
 
-void ventilator_control() {
+static void ventilator_control() {
 
 	// Check any new commands?
 
-	pid_run();
+	pid_execute();
+
+  watchdog_kick();
 }

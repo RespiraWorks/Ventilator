@@ -16,13 +16,18 @@
   along with FixMoreLungs.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include "watchdog.h"
+#include "ventilator.h"
 
-void watchdog_init() {
-  // FIXME Does this pose potential issues for arduino code updates?
-  // wdt_enable(WDTO_8S);
+static void ventilator_start() {
+
+	for (;;) {	
+		ventilator_control();
+	}
 }
 
-void watchdog_kick() {
-  // wdt_reset();
+void ventilator_control() {
+
+	// Check any new commands?
+
+	pid_run();
 }

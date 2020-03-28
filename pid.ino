@@ -49,12 +49,11 @@ void pid_init() {
   myPID.SetMode(AUTOMATIC);
 }
 
-void pid_run() {
-  uint16_t cyclecounter = 0;
-  int16_t  sensorValue = 0;   // value read from the pot
-  enum pid_fsm_state state = pid_fsm_state::reset;
+static void pid_execute() {
 
-  for (;;) {
+    uint16_t cyclecounter = 0;
+    int16_t  sensorValue = 0;   // value read from the pot
+    enum pid_fsm_state state = pid_fsm_state::reset;
 
     switch (state) {
 
@@ -138,5 +137,5 @@ void pid_run() {
     comms_send(Setpoint, sensorValue);
 
     delay(2);  //delay
-  }
+
 }

@@ -56,6 +56,7 @@
 #include "sensors.h"
 #include "parameters.h"
 #include "blower.h"
+#include "ventilator.h"
 
 void setup() {
 
@@ -64,7 +65,7 @@ void setup() {
   sensors_init();
   blower_init();
   watchdog_init();
-
   pid_init();
-  pid_run();
+
+  ventilator_start();
 }

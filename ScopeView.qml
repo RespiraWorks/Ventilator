@@ -27,23 +27,36 @@
 **
 ****************************************************************************/
 
-import QtQuick 2.0
+import QtQuick 2.14
 import QtCharts 2.1
 
 ChartView
 {
     id: chartView
     animationOptions: ChartView.NoAnimation
-//    theme: ChartView.ChartThemeLight
+
     plotAreaColor: "#000000"
     backgroundColor: "#000000"
     property string color
     property string name
     property bool openGL: true
     property bool openGLSupported: true
-//    title: name
-//    titleColor: color
+    antialiasing: true
     legend.labelColor: "white"
+    margins.bottom: 0
+    margins.top: 0
+    margins.right: 0
+    margins.left: 0
+    onWidthChanged:
+    {
+        lineSeries.width =  Math.sqrt(Math.pow(width, 2) + Math.pow(height, 2)) * .0025
+//        print("Width: " + lineSeries.width)
+    }
+    onHeightChanged:
+    {
+        lineSeries.width =  Math.sqrt(Math.pow(width, 2) + Math.pow(height, 2)) * .0025
+//        print("Width: " + lineSeries.width)
+    }
 
     onOpenGLChanged:
     {
@@ -86,7 +99,7 @@ ChartView
         useOpenGL: chartView.openGL
         color: chartView.color
         pointLabelsColor: chartView.color
-
+        width: 1
 
     }
 

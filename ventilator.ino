@@ -31,5 +31,5 @@ static void ventilator_control() {
 
 	pid_execute();
 
-  watchdog_kick();
+    watchdog_kick();
 }

@@ -28,7 +28,7 @@ static PID myPID(&Input, &Output, &Setpoint, Kp, Ki, Kd, DIRECT);
 // These constants won't change. They're used to give names to the pins used:
 static const int analogOutPin = LED_BUILTIN; // Analog output pin that the LED is attached to
 
-enum pid_fsm_state {
+enum class pid_fsm_state {
   reset        = 0,
   inspire      = 1,
   plateau      = 2,

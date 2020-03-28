@@ -22,7 +22,7 @@ static double Setpoint, Input, Output;
 
 // Configure the PID
 //Specify the links and initial tuning parameters
-static double Kp = 2, Ki = 8, Kd = 0;
+static float Kp = 2, Ki = 8, Kd = 0;
 static PID myPID(&Input, &Output, &Setpoint, Kp, Ki, Kd, DIRECT);
 
 // These constants won't change. They're used to give names to the pins used:

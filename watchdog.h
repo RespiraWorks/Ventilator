@@ -20,6 +20,9 @@
 #define WATCHDOG_H
 
 #include <avr/wdt.h>
+#include <stdint.h>
+
+#define WDT_1SECOND 1000
 
 /****************************************************************************************
  *  @brief      

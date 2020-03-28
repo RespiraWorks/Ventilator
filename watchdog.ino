@@ -19,10 +19,23 @@
 #include "watchdog.h"
 
 void watchdog_init() {
-  // FIXME Does this pose potential issues for arduino code updates?
-  // wdt_enable(WDTO_8S);
+    // FIXME Does this pose potential issues for arduino code updates?
+    wdt_enable(WDTO_8S);
 }
 
 void watchdog_kick() {
-  // wdt_reset();
+
+    static uint32_t time;
+    static bool first_call = true;
+
+    if(first_call == true) {
+        first_call = false;
+        time = millis();
+    }
+    else {
+        if((millis() - time) > WDT_1SECOND) {
+            wdt_reset();
+            time = millis();
+        }
+    }
 }

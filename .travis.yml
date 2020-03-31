@@ -1,0 +1,19 @@
+sudo: required
+
+# Enable C++ support
+language: cpp
+
+# Compiler selection
+compiler:
+  - gcc
+
+before_script:
+  - mkdir build
+  - cd build
+#  - cmake -DCOV=1 ..
+
+script:
+  - echo testing123
+#  - make
+
+

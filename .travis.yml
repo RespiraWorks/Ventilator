@@ -14,16 +14,16 @@ addons:
       - qttools5-dev-tools
       - qttools5-dev
 
-install:
-  - export QMAKE=/usr/lib/x86_64-linux-gnu/qt5/bin/qmake
+#install:
+#  - export QMAKE=/usr/lib/x86_64-linux-gnu/qt5/bin/qmake
 
 before_script:
   - mkdir build
   - cd build
+  - which qmake
   - qmake -qt=qt5 -v
-  - qmake -qt=qt5 ..
 
 script:
+  - qmake -qt=qt5 ..
   - make
-
 

@@ -33,8 +33,9 @@
 #include <QtQuick/QQuickView>
 #include <QtQuick/QQuickItem>
 #include <QtCore/QDebug>
-#include <QtCore/QRandomGenerator>
 #include <QtCore/QtMath>
+
+#include <random>
 
 QT_CHARTS_USE_NAMESPACE
 
@@ -70,6 +71,10 @@ void DataSource::update(QAbstractSeries *series)
 
 void DataSource::generateData(int rowCount, int colCount)
 {
+    std::random_device rd;
+    std::mt19937 e2 {rd()};
+    std::uniform_real_distribution<> dist {0, 1};
+
     // Remove previous data
     m_data.clear();
 
@@ -82,7 +87,7 @@ void DataSource::generateData(int rowCount, int colCount)
         qreal x(0);
         qreal y(0);
 
-        y = (qSin(M_PI / 50 * j)> 0 ? 1 : 0) + QRandomGenerator::global()->generateDouble()/5;
+        y = (qSin(M_PI / 50 * j)> 0 ? 1 : 0) + dist(e2)/5;
         x = j;
         points.append(QPointF(x, y));
     }
@@ -103,7 +108,7 @@ void DataSource::generateData(int rowCount, int colCount)
         qreal x(0);
         qreal y(0);
 
-        y = (qSin(M_PI / 50 * i)> 0 ? 1 : 0) + QRandomGenerator::global()->generateDouble()/5;
+        y = (qSin(M_PI / 50 * i)> 0 ? 1 : 0) + dist(e2)/5;
         x = colCount;
         points.append(QPointF(x, y));
 

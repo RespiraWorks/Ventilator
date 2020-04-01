@@ -16,23 +16,18 @@
   along with FixMoreLungs.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include <string.h>
+#ifndef VERSION_H
+#define VERSION_H
 
-#include "comms.h"
-#include "watchdog.h"
-#include "version.h"
+static const char SW_VERSION[] = "01.01.01";
 
-void comms_init() {
-    serialIO_init();
-}
+/****************************************************************************************
+ *  @brief      
+ *  @usage      
+ *  @param      
+ *  @param      
+ *  @return     
+ ****************************************************************************************/
+char * version_getVersion();
 
-void comms_sendResetState() {
-
-    // NOTE : Given the bootloader clears MCUSR, it's not possible to determine what reset the CPU without modifying the bootloader
-    char *version;
-
-    version = version_getVersion();
-
-    serialIO_send(dataType::status_packet, dataID::vc_boot, version, strlen((const char *) version));
-}
-
+#endif // VERSION_H

@@ -10,6 +10,8 @@ addons:
       - qtbase5-dev
       - qtdeclarative5-dev
       - libqt5charts5-dev
+      - qt5-default
+      - qttools5-dev-tools
 
 install:
   - export QMAKE=/usr/lib/x86_64-linux-gnu/qt5/bin/qmake

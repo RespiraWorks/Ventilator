@@ -23,5 +23,6 @@ script:
   - cd build
   - qmake ..
   - make
-  - ./ProjectVentilatorGUI -d./ProjectVentilatorGUI -d
-  - ./ProjectVentilatorGUI -d./ProjectVentilatorGUI -h
+  - ./ProjectVentilatorGUI -d
+  - ./ProjectVentilatorGUI -h
+  - ./ProjectVentilatorGUI

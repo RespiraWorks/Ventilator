@@ -17,19 +17,16 @@
 */
 
 #include "comms.h"
+#include "watchdog.h"
 
 void comms_init() {
-
   serialIO_init();
-
-  // initialize serial communications at 115200 bps
-  Serial.begin(115200);
 }
 
-void comms_send(double Setpoint, int16_t sensorValue) {
-  Serial.print("C"); //output to monitor
-  Serial.write(int(map(Setpoint, 0, 255, 0, 1023)) >> 8); //output to monitor
-  Serial.write(int(map(Setpoint, 0, 255, 0, 1023)) & 0xff); //output to monitor
-  Serial.write(int(sensorValue) >> 8); //output to monitor
-  Serial.write(int(sensorValue) & 0xff); //output to monitor
+void comms_send_reset_status() {
+
+    // NOTE : Given the bootloader clears MCUSR, it's not possible to determine what reset the CPU without modifying the bootloader
+    unsigned char watchdog_state;
+
+    serialIO_send(data_type::status_packet, data_id::vc_boot, &watchdog_state, 0);
 }

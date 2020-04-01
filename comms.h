@@ -21,7 +21,7 @@
 
 #include <stdint.h>
 
-enum class interfaceCmd {
+enum class command {
 
     /* Medical mode commands */
 
@@ -65,14 +65,13 @@ enum class interfaceCmd {
 
     set_mode        = 0x50,     /* Engineering or medical mode */
     get_mode        = 0x51,     
-    get_version     = 0x52,     /* Ventilator Controller Software version */
-    comms_check     = 0x53,     /* Communications check command */
-    resend_packet   = 0x54,
+    comms_check     = 0x52,     /* Communications check command */
+    resend_packet   = 0x53,
 
     count                       /* Sentinel */
 };
 
-enum class data_type {
+enum class dataType {
     response_packet = 0x00, /* Response to IC command */
     status_packet   = 0x01, /* Status packet */
     alarm_packet    = 0x02, /* Alarm packet */
@@ -81,17 +80,19 @@ enum class data_type {
     count                   /* Sentinel */
 };
 
-enum class data_id {
-    vc_boot      = 0x01, /* Status sent when arduino boots */
+enum class dataID {
+    /* Status */
+    vc_boot      = 0x01,    /* Status sent when arduino boots (includes software version) */
 
-    count                /* Sentinel */
+
+    /* Alarms */
+
+
+    /* Data */
+
+    count                   /* Sentinel */
 };
 
-enum class interfaceStatus {
-    vc_boot      = 0x01, /* Status sent when arduino boots - includes watchdog restart status */
-
-    count                /* Sentinel */
-};
 
 // Public function prototypes
 
@@ -111,7 +112,7 @@ void comms_init();
  *  @param      
  *  @return     
  ****************************************************************************************/
-void comms_send_flow(float flow);
+void comms_sendFlow(float flow);
 
 /****************************************************************************************
  *  @brief      
@@ -120,7 +121,7 @@ void comms_send_flow(float flow);
  *  @param      
  *  @return     
  ****************************************************************************************/
-void comms_send_pressure(float pressure);
+void comms_sendPressure(float pressure);
 
 /****************************************************************************************
  *  @brief      
@@ -129,7 +130,7 @@ void comms_send_pressure(float pressure);
  *  @param      
  *  @return     
  ****************************************************************************************/
-void comms_send_volume(float volume);
+void comms_sendVolume(float volume);
 
 /****************************************************************************************
  *  @brief      
@@ -138,7 +139,7 @@ void comms_send_volume(float volume);
  *  @param      
  *  @return     
  ****************************************************************************************/
-void comms_send_fpv(float flow, float pressure, float volume);
+void comms_sendFlowPressureVolume(float flow, float pressure, float volume);
 
 /****************************************************************************************
  *  @brief      
@@ -147,7 +148,7 @@ void comms_send_fpv(float flow, float pressure, float volume);
  *  @param      
  *  @return     
  ****************************************************************************************/
-void comms_send_reset_status();
+void comms_sendResetStatus();
 
 // Private function prototypes
 

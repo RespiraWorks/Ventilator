@@ -72,7 +72,7 @@
  *  @param      
  *  @return     
  ****************************************************************************************/
-static void init_default_ventilatorParameters();
+static void init_defaultVentilatorParameters();
 
 /****************************************************************************************
  *  @brief      
@@ -81,7 +81,7 @@ static void init_default_ventilatorParameters();
  *  @param      
  *  @return     
  ****************************************************************************************/
-static void init_default_PIDParameters();
+static void init_defaultPIDParameters();
 
 /****************************************************************************************
  *  @brief      
@@ -90,7 +90,7 @@ static void init_default_PIDParameters();
  *  @param      
  *  @return     
  ****************************************************************************************/
-static void init_default_CalibrationParameters();
+static void init_defaultCalibrationParameters();
 
 
 
@@ -104,7 +104,7 @@ static void init_default_CalibrationParameters();
  *  @param      
  *  @return     
  ****************************************************************************************/
-void parameters_set_Kp(float kp_value);
+void parameters_setKp(float kp_value);
 
 /****************************************************************************************
  *  @brief      
@@ -113,7 +113,7 @@ void parameters_set_Kp(float kp_value);
  *  @param      
  *  @return     
  ****************************************************************************************/
-float parameters_get_Kp();
+float parameters_getKp();
 
 /****************************************************************************************
  *  @brief      
@@ -122,7 +122,7 @@ float parameters_get_Kp();
  *  @param      
  *  @return     
  ****************************************************************************************/
-void parameters_set_Ki(float ki_value);
+void parameters_setKi(float ki_value);
 
 /****************************************************************************************
  *  @brief      
@@ -131,7 +131,7 @@ void parameters_set_Ki(float ki_value);
  *  @param      
  *  @return     
  ****************************************************************************************/
-float parameters_get_Ki();
+float parameters_getKi();
 
 /****************************************************************************************
  *  @brief      
@@ -140,7 +140,7 @@ float parameters_get_Ki();
  *  @param      
  *  @return     
  ****************************************************************************************/
-void parameters_set_Kd(float kd_value);
+void parameters_setKd(float kd_value);
 
 /****************************************************************************************
  *  @brief      
@@ -149,7 +149,7 @@ void parameters_set_Kd(float kd_value);
  *  @param      
  *  @return     
  ****************************************************************************************/
-float parameters_get_Kd(); 
+float parameters_getKd(); 
 
 /****************************************************************************************
  *  @brief      
@@ -169,7 +169,7 @@ void parameters_init();
  *  @param      
  *  @return     
  ****************************************************************************************/
-float parameters_get_RR();
+float parameters_getRR();
 
 /****************************************************************************************
  *  @brief      
@@ -178,7 +178,7 @@ float parameters_get_RR();
  *  @param      
  *  @return     
  ****************************************************************************************/
-void parameters_set_RR(float rr_value);
+void parameters_setRR(float rr_value);
 
 // Tidal volume
 
@@ -189,7 +189,7 @@ void parameters_set_RR(float rr_value);
  *  @param      
  *  @return     
  ****************************************************************************************/
-float parameters_get_TV();
+float parameters_getTV();
 
 /****************************************************************************************
  *  @brief      
@@ -198,7 +198,7 @@ float parameters_get_TV();
  *  @param      
  *  @return     
  ****************************************************************************************/
-void parameters_set_TV(float tv_value);
+void parameters_setTV(float tv_value);
 
 // Respiration rate
 
@@ -209,7 +209,7 @@ void parameters_set_TV(float tv_value);
  *  @param      
  *  @return     
  ****************************************************************************************/
-void parameters_set_PEEP(float peep_value);
+void parameters_setPEEP(float peep_value);
 
 /****************************************************************************************
  *  @brief      
@@ -218,7 +218,7 @@ void parameters_set_PEEP(float peep_value);
  *  @param      
  *  @return     
  ****************************************************************************************/
-float parameters_get_PEEP();
+float parameters_getPEEP();
 
 // Expiration duration
 
@@ -229,7 +229,7 @@ float parameters_get_PEEP();
  *  @param      
  *  @return     
  ****************************************************************************************/
-void parameters_set_ExpireDuration(float expireduration_value);
+void parameters_setExpireDuration(float expireduration_value);
 
 /****************************************************************************************
  *  @brief      
@@ -238,7 +238,7 @@ void parameters_set_ExpireDuration(float expireduration_value);
  *  @param      
  *  @return     
  ****************************************************************************************/
-float parameters_get_ExpireDuration();
+float parameters_getExpireDuration();
 
 // Inspiration duration
 
@@ -249,7 +249,7 @@ float parameters_get_ExpireDuration();
  *  @param      
  *  @return     
  ****************************************************************************************/
-void parameters_set_InspireDuration(float inspireduration_value);
+void parameters_setInspireDuration(float inspireduration_value);
 
 /****************************************************************************************
  *  @brief      
@@ -258,7 +258,7 @@ void parameters_set_InspireDuration(float inspireduration_value);
  *  @param      
  *  @return     
  ****************************************************************************************/
-float parameters_get_InspireDuration();
+float parameters_getInspireDuration();
 
 // Peak Inspiratory Pressure (PIP)
 
@@ -269,7 +269,7 @@ float parameters_get_InspireDuration();
  *  @param      
  *  @return     
  ****************************************************************************************/
-void parameters_set_PIP(float pip_value);
+void parameters_setPIP(float pip_value);
 
 /****************************************************************************************
  *  @brief      
@@ -278,7 +278,7 @@ void parameters_set_PIP(float pip_value);
  *  @param      
  *  @return     
  ****************************************************************************************/
-float parameters_get_PIP();
+float parameters_getPIP();
 
 // Dwell
 
@@ -289,7 +289,7 @@ float parameters_get_PIP();
  *  @param      
  *  @return     
  ****************************************************************************************/
-void parameters_set_Dwell(float Dwell);
+void parameters_setDwell(float Dwell);
 
 /****************************************************************************************
  *  @brief      
@@ -298,6 +298,6 @@ void parameters_set_Dwell(float Dwell);
  *  @param      
  *  @return     
  ****************************************************************************************/
-float parameters_get_Dwell();
+float parameters_getDwell();
 
 #endif // PARAMETERS_H

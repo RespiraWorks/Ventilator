@@ -20,6 +20,7 @@ install:
 before_script:
   - mkdir build
   - cd build
+  - qmake -qt=qt5 -v
   - qmake -qt=qt5 ..
 
 script:

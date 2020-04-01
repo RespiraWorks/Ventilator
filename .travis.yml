@@ -10,8 +10,6 @@ addons:
       - qt5-default
       - qtdeclarative5-dev
       - libqt5charts5-dev
-#      - qttools5-dev-tools
-#      - qttools5-dev
 
 before_script:
   - mkdir build
@@ -20,4 +18,5 @@ before_script:
 script:
   - qmake ..
   - make
-
+  - ./ProjectVentilatorGUI -d./ProjectVentilatorGUI -d
+  - ./ProjectVentilatorGUI -d./ProjectVentilatorGUI -h

@@ -21,17 +21,6 @@
 
 #include <stdint.h>
 
-#include "serialIO.h"
-
-enum class packetType {
-    cmd_response    = 0x00, /* Reponse to a Interface Controller command */
-    status          = 0x01, /* Ventilation Controller status */
-    alarm           = 0x02, /* Ventilation Controller Alarm */
-    data            = 0x03, /* Ventilation Controller Data */
-
-    count
-};
-
 enum class interfaceCmd {
 
     /* Medical mode commands */
@@ -70,12 +59,32 @@ enum class interfaceCmd {
     /* Mixed Engineering/Medical mode commands */
 
     set_periodic    = 0x40,     /* Periodic data transmission mode (Pressure, Flow, Volume) */
+    get_periodic    = 0x41,
 
     /* Mode configuration */
 
     set_mode        = 0x50,     /* Engineering or medical mode */
+    get_mode        = 0x51,     
+    get_version     = 0x52,     /* Ventilator Controller Software version */
+    comms_check     = 0x53,     /* Communications check command */
+    resend_packet   = 0x54,
 
     count                       /* Sentinel */
+};
+
+enum class data_type {
+    response_packet = 0x00, /* Response to IC command */
+    status_packet   = 0x01, /* Status packet */
+    alarm_packet    = 0x02, /* Alarm packet */
+    data_packet     = 0x03, /* Data packet */
+
+    count                   /* Sentinel */
+};
+
+enum class data_id {
+    vc_boot      = 0x01, /* Status sent when arduino boots */
+
+    count                /* Sentinel */
 };
 
 enum class interfaceStatus {
@@ -94,15 +103,6 @@ enum class interfaceStatus {
  *  @return     
  ****************************************************************************************/
 void comms_init();
-
-/****************************************************************************************
- *  @brief      
- *  @usage      
- *  @param      
- *  @param      
- *  @return     
- ****************************************************************************************/
-void comms_send(double Setpoint, int16_t sensorValue);
 
 /****************************************************************************************
  *  @brief      
@@ -140,6 +140,14 @@ void comms_send_volume(float volume);
  ****************************************************************************************/
 void comms_send_fpv(float flow, float pressure, float volume);
 
+/****************************************************************************************
+ *  @brief      
+ *  @usage      
+ *  @param      
+ *  @param      
+ *  @return     
+ ****************************************************************************************/
+void comms_send_reset_status();
 
 // Private function prototypes
 

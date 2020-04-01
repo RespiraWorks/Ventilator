@@ -9,7 +9,7 @@ addons:
     packages:
       - qtdeclarative5-dev
       - libqt5charts5-dev
-      - libqt5virtualkeyboard5-dev
+#      - libqt5virtualkeyboard5-dev
 
 install:
 #  - sudo apt-get install -qq libqt5webkit5-dev qtdeclarative5-dev

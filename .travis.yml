@@ -7,10 +7,9 @@ dist: bionic
 addons:
   apt:
     packages:
-      - qtbase5-dev
+      - qt5-default
       - qtdeclarative5-dev
       - libqt5charts5-dev
-#      - qt5-default
 #      - qttools5-dev-tools
 #      - qttools5-dev
 

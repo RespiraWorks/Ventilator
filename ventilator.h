@@ -48,6 +48,6 @@ void ventilator_start();
  *  @param      
  *  @return     
  ****************************************************************************************/
-void ventilator_periodic_data(bool periodic_active);
+void ventilator_periodicDataState(bool periodic_active);
 
 #endif // VENTILATOR_H

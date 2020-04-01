@@ -45,9 +45,11 @@ int main(int argc, char *argv[])
     mainView.setResizeMode(QQuickView::SizeRootObjectToView);
     mainView.setColor(QColor("#000000"));
 
-    if (!parser.isSet("h") && !die_now)
+    if (parser.isSet("h") || die_now)
     {
-      mainView.show();
-      return app.exec();
+      return EXIT_SUCCESS;
     }
+
+    mainView.show();
+    return app.exec();
 }

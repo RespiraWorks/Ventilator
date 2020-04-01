@@ -4,18 +4,28 @@ compiler: gcc
 sudo: required
 
 dist: bionic
-addons:
-  apt:
-    packages:
-      - qtbase5-dev
-      - qtdeclarative5-dev
-      - libqt5charts5-dev
-      - qt5-default
-      - qttools5-dev-tools
-      - qttools5-dev
+#addons:
+#  apt:
+#    packages:
+#      - qtbase5-dev
+#      - qtdeclarative5-dev
+#      - libqt5charts5-dev
+#      - qt5-default
+#      - qttools5-dev-tools
+#      - qttools5-dev
+
+
 
 #install:
 #  - export QMAKE=/usr/lib/x86_64-linux-gnu/qt5/bin/qmake
+
+before_install:
+  - sudo add-apt-repository ppa:beineri/opt-qt-5.14.1-bionic -y
+  - sudo apt-get update
+
+install:
+  - sudo apt-get install qt514base
+  - source /opt/qt514/bin/qt514-env.sh
 
 before_script:
   - mkdir build

@@ -31,7 +31,7 @@ before_script:
   - mkdir build
   - cd build
   - which qmake
-  - qmake -qt=qt5 -v
+  - qmake -v
 
 script:
   - qmake -qt=qt5 ..

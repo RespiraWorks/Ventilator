@@ -34,6 +34,6 @@ before_script:
   - qmake -v
 
 script:
-  - qmake -qt=qt5 ..
+  - qmake ..
   - make
 

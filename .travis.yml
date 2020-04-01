@@ -1,20 +1,22 @@
+language: cpp
+compiler: gcc
+
 sudo: required
 
-# Enable C++ support
-language: cpp
-
-# Compiler selection
-compiler:
-  - gcc
-
-before_script:
-  - mkdir build
-  - cd build
-#  - cmake -DCOV=1 ..
+dist: bionic
+services:
+  - xvfb
+addons:
+  apt:
+    packages:
+      - qt5-default
+      - qtdeclarative5-dev
+      - libqt5charts5-dev
 
 script:
-  - echo testing123
-#  - make
-#  - rake
-
-
+  - mkdir build
+  - cd build
+  - qmake ..
+  - make
+  - ./ProjectVentilatorGUI -d
+  - ./ProjectVentilatorGUI -h

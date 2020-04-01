@@ -1,16 +1,22 @@
+language: cpp
+compiler: gcc
+
 sudo: required
 
-# Enable C++ support
-language: cpp
+dist: bionic
+addons:
+  apt:
+    packages:
+      - qtdeclarative5-dev
 
-# Compiler selection
-compiler:
-  - gcc
+install:
+#  - sudo apt-get install -qq libqt5webkit5-dev qtdeclarative5-dev
+  - export QMAKE=/usr/lib/x86_64-linux-gnu/qt5/bin/qmake
 
 before_script:
   - mkdir build
   - cd build
-#  - cmake -DCOV=1 ..
+  - qmake -qt=qt5 ..
 
 script:
   - echo testing123

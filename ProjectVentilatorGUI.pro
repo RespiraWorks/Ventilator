@@ -1,4 +1,4 @@
-QT += quick charts
+QT += core quick charts
 # QT += virtualkeyboard
 
 CONFIG += c++11

@@ -17,11 +17,14 @@
 */
 
 #include "ventilator.h"
+#include "comms.h"
 
 void ventilator_start() {
 
+    comms_send_reset_status(); // Inform the Interface Controller that we just started/restarted
+
 	for (;;) {	
-		ventilator_control();
+		//ventilator_control();
 	}
 }
 
@@ -29,7 +32,7 @@ static void ventilator_control() {
 
 	// Check any new commands?
 
-	pid_execute();
+    pid_execute();
 
     watchdog_kick();
 }

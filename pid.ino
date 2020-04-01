@@ -134,7 +134,7 @@ static void pid_execute() {
     myPID.Compute(); // computer PID command
     analogWrite(BLOWERSPD_PIN, Output); //write output
 
-    comms_send(Setpoint, sensorValue);
+   // comms_send(Setpoint, sensorValue);
 
     delay(2);  //delay
 

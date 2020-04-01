@@ -19,6 +19,11 @@
 #ifndef SERIALIO_H
 #define SERIALIO_H
 
+#include <stdint.h>
+#include "comms.h"
+
+// Public functions
+
 /****************************************************************************************
  *  @brief      
  *  @usage      
@@ -28,6 +33,25 @@
  ****************************************************************************************/
 void serialIO_init();
 
+/****************************************************************************************
+ *  @brief      
+ *  @usage      
+ *  @param      
+ *  @param      
+ *  @return     
+ ****************************************************************************************/
+void serialIO_send(enum data_type type, enum data_id id, unsigned char *data, uint8_t len);
+
+// Private functions
+
+/****************************************************************************************
+ *  @brief      
+ *  @usage    Original checksum function taken from here https://en.wikipedia.org/wiki/Fletcher%27s_checksum
+ *  @param      
+ *  @param      
+ *  @return     
+ ****************************************************************************************/
+static uint16_t Fletcher16_calc(uint16_t *sum1, uint16_t *sum2,  unsigned char *data, uint8_t count);
 
 
 #endif // SERIALIO_H

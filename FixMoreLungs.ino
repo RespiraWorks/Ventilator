@@ -60,12 +60,13 @@
 
 void setup() {
 
-  parameters_init();
-  comms_init();
-  sensors_init();
-  blower_init();
-  watchdog_init();
-  pid_init();
+    parameters_init();
+    comms_init();
+    sensors_init();
+    blower_init();
 
-  ventilator_start();
+    watchdog_init();
+    pid_init();
+
+    ventilator_start();
 }

@@ -27,7 +27,7 @@
 **
 ****************************************************************************/
 
-import QtQuick 2.14
+import QtQuick 2.12
 import QtCharts 2.1
 
 ChartView

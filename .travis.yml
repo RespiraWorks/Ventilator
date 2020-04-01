@@ -10,17 +10,9 @@ addons:
       - qtbase5-dev
       - qtdeclarative5-dev
       - libqt5charts5-dev
-      - qt5-default
-      - qttools5-dev-tools
-      - qttools5-dev
-
-#install:
-#- export QMAKE=/usr/lib/x86_64-linux-gnu/qt5/bin/qmake
-#  - export QT_BASE_DIR=/usr/lib/x86_64-linux-gnu/qt5
-#  - export QTDIR=$QT_BASE_DIR
-#  - export PATH=$QT_BASE_DIR/bin:$PATH
-#  - export LD_LIBRARY_PATH=$QT_BASE_DIR/lib/x86_64-linux-gnu:$QT_BASE_DIR/lib:$LD_LIBRARY_PATH
-#  - export PKG_CONFIG_PATH=$QT_BASE_DIR/lib/pkgconfig:$PKG_CONFIG_PATH
+#      - qt5-default
+#      - qttools5-dev-tools
+#      - qttools5-dev
 
 before_script:
   - mkdir build

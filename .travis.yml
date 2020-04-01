@@ -24,7 +24,7 @@ before_install:
   - sudo apt-get update
 
 install:
-#  - sudo apt-get install qt514-meta-full
+  - sudo apt-get install qt514-meta-full
   - cat /opt/qt514/bin/qt514-env.sh
 #  - source /opt/qt514/bin/qt514-env.sh
 

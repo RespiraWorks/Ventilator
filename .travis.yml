@@ -12,10 +12,13 @@ addons:
       - libqt5charts5-dev
 
 before_script:
-  - mkdir build
-  - cd build
+  - "export DISPLAY=:99.0"
+  - "sh -e /etc/init.d/xvfb start"
+  - sleep 3 # give xvfb some time to start
 
 script:
+  - mkdir build
+  - cd build
   - qmake ..
   - make
   - ./ProjectVentilatorGUI -d./ProjectVentilatorGUI -d

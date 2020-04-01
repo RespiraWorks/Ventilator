@@ -21,8 +21,6 @@ before_script:
   - qmake -qt=qt5 ..
 
 script:
-  - echo testing123
-#  - make
-#  - rake
+  - make
 
 

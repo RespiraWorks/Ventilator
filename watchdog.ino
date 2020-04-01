@@ -33,6 +33,7 @@ void watchdog_kick() {
         time = millis();
     }
     else {
+        // TODO does this rollover properly?
         if((millis() - time) > WDT_1SECOND) {
             wdt_reset();
             time = millis();

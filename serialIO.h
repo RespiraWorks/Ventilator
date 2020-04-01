@@ -40,7 +40,16 @@ void serialIO_init();
  *  @param      
  *  @return     
  ****************************************************************************************/
-void serialIO_send(enum data_type type, enum data_id id, unsigned char *data, uint8_t len);
+void serialIO_send(enum dataType type, enum dataID id, char *data, uint8_t len);
+
+/****************************************************************************************
+ *  @brief      
+ *  @usage      
+ *  @param      
+ *  @param      
+ *  @return     
+ ****************************************************************************************/
+bool serialIO_checkChecksum(char *packet, uint8_t packet_len);
 
 // Private functions
 
@@ -51,7 +60,7 @@ void serialIO_send(enum data_type type, enum data_id id, unsigned char *data, ui
  *  @param      
  *  @return     
  ****************************************************************************************/
-static uint16_t Fletcher16_calc(uint16_t *sum1, uint16_t *sum2,  unsigned char *data, uint8_t count);
+static uint16_t Fletcher16_calc(uint16_t *sum1, uint16_t *sum2, char *data, uint8_t count);
 
 
 #endif // SERIALIO_H

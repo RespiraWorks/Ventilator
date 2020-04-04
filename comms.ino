@@ -27,12 +27,29 @@ void comms_init() {
 }
 
 void comms_sendResetState() {
+    char resetData[12];
+    uint32_t time;
+    char *version;
 
     // NOTE : Given the bootloader clears MCUSR, it's not possible to determine what reset the CPU without modifying the bootloader
-    char *version;
 
     version = version_getVersion();
 
-    serialIO_send(dataType::status_packet, dataID::vc_boot, version, strlen((const char *) version));
-}
+    time = millis();
 
+    resetData[0] = (time >> 24) & 0xFF;
+    resetData[1] = (time >> 16) & 0xFF;
+    resetData[2] = (time >> 8) & 0xFF;
+    resetData[3] = time & 0xFF;
+
+    resetData[4] = *version;
+    resetData[5] = *(version+1);
+    resetData[6] = *(version+2);
+    resetData[7] = *(version+3);
+    resetData[8] = *(version+4);
+    resetData[9] = *(version+5);
+    resetData[10] = *(version+6);
+    resetData[11] = *(version+7);
+    
+    serialIO_send(dataType::status_packet, dataID::vc_boot, resetData, sizeof(resetData));
+}

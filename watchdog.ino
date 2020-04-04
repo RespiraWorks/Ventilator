@@ -23,7 +23,7 @@ void watchdog_init() {
     wdt_enable(WDTO_8S);
 }
 
-void watchdog_kick() {
+void watchdog_handler() {
 
     static uint32_t time;
     static bool first_call = true;

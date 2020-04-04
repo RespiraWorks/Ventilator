@@ -16,18 +16,27 @@
   along with FixMoreLungs.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef VERSION_H
-#define VERSION_H
+#include "alarm.h"
 
-static const char SW_VERSION[] = "01.01.01"; /* Len must be 8 bytes (excluding NULL) */
+void alarm_init() {
 
-/****************************************************************************************
- *  @brief      
- *  @usage      
- *  @param      
- *  @param      
- *  @return     
- ****************************************************************************************/
-char * version_getVersion();
+}
 
-#endif // VERSION_H
+void alarm_add() {
+
+}
+
+
+void alarm_read() {
+
+}
+
+
+void alarm_available() {
+
+}
+
+
+void alarm_remove() {
+
+}

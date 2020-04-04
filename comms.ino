@@ -26,6 +26,10 @@ void comms_init() {
     serialIO_init();
 }
 
+void comms_handler() {
+    
+}
+
 void comms_sendResetState() {
     char resetData[12];
     uint32_t time;

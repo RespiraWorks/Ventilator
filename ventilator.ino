@@ -18,8 +18,11 @@
 
 #include "ventilator.h"
 #include "comms.h"
+#include "alarm.h"
 
 void ventilator_start() {
+
+    alarm_init();
 
     comms_sendResetState(); // Inform the Interface Controller that we just started/restarted
 
@@ -31,8 +34,9 @@ void ventilator_start() {
 static void ventilator_control() {
 
 	// Check any new commands?
+    comms_handler();
 
     // pid_execute();
-
-    watchdog_kick();
+    //comms_sendResetState(); 
+    watchdog_handler();
 }

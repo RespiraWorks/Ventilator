@@ -19,7 +19,7 @@
 #ifndef VERSION_H
 #define VERSION_H
 
-static const char SW_VERSION[] = "01.01.01";
+static const char SW_VERSION[] = "01.01.01"; /* 8 bytes maximum (excluding NULL) */
 
 /****************************************************************************************
  *  @brief      

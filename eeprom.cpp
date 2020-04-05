@@ -15,28 +15,10 @@
   You should have received a copy of the GNU General Public License
   along with FixMoreLungs.  If not, see <https://www.gnu.org/licenses/>.
 */
+#include <Arduino.h>
 
-#include "watchdog.h"
+#include "eeprom.h"
 
-void watchdog_init() {
-    // FIXME Does this pose potential issues for arduino code updates?
-    wdt_enable(WDTO_8S);
-}
+void eeprom_init() {
 
-void watchdog_handler() {
-
-    static uint32_t time;
-    static bool first_call = true;
-
-    if(first_call == true) {
-        first_call = false;
-        time = millis();
-    }
-    else {
-        // TODO does this rollover properly?
-        if((millis() - time) > WDT_1SECOND) {
-            wdt_reset();
-            time = millis();
-        }
-    }
 }

@@ -21,6 +21,18 @@
 
 #include <stdint.h>
 #include "comms.h"
+
+
+#define ALARM_NODES 4 /* Number of alarms we can store in the queue */
+
+typedef struct alarm {
+    enum alarmID alarm;
+    uint32_t timestamp;
+    char alarmData[8];
+} alarm_t;
+
+static alarm_t alarmStack_node[ALARM_NODES];
+
 /*
 typedef struct alarm {
     enum alarmID alarm;
@@ -37,47 +49,47 @@ typedef struct alarm {
 #define RESULT_SUCCESS 0
 
 /****************************************************************************************
- *  @brief      
- *  @usage      
- *  @param      
- *  @param      
- *  @return     
+ *  @brief
+ *  @usage
+ *  @param
+ *  @param
+ *  @return
  ****************************************************************************************/
 void alarm_init();
 
 /****************************************************************************************
- *  @brief      
- *  @usage  Add an alarm to the end of the queue. If the queue is full, new alarm is lost.  
- *  @param      
- *  @param      
- *  @return     
+ *  @brief
+ *  @usage  Add an alarm to the end of the queue. If the queue is full, new alarm is lost.
+ *  @param
+ *  @param
+ *  @return
  ****************************************************************************************/
 void alarm_add(enum alarmID alarm, char *data);
 
 /****************************************************************************************
- *  @brief      
+ *  @brief
  *  @usage  Read the alarm at the start of the queue
- *  @param      
- *  @param      
- *  @return     
+ *  @param
+ *  @param
+ *  @return
  ****************************************************************************************/
 void alarm_read(enum alarmID *alarm, char *data);
 
 /****************************************************************************************
- *  @brief      
- *  @usage   Are there any alarms available in the queue?   
- *  @param      
- *  @param      
- *  @return     
+ *  @brief
+ *  @usage   Are there any alarms available in the queue?
+ *  @param
+ *  @param
+ *  @return
  ****************************************************************************************/
 bool alarm_available();
 
 /****************************************************************************************
- *  @brief      
- *  @usage  Remove the alarm at the start of the queue    
- *  @param      
- *  @param      
- *  @return     
+ *  @brief
+ *  @usage  Remove the alarm at the start of the queue
+ *  @param
+ *  @param
+ *  @return
  ****************************************************************************************/
 void alarm_remove();
 

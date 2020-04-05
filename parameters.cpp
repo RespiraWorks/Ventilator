@@ -15,6 +15,7 @@
   You should have received a copy of the GNU General Public License
   along with FixMoreLungs.  If not, see <https://www.gnu.org/licenses/>.
 */
+#include <Arduino.h>
 
 #include "parameters.h"
 

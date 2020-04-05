@@ -17,17 +17,19 @@
 */
 
 #include <string.h>
+#include <Arduino.h>
 
 #include "comms.h"
 #include "watchdog.h"
 #include "version.h"
+#include "serialIO.h"
 
 void comms_init() {
     serialIO_init();
 }
 
 void comms_handler() {
-    
+
 }
 
 void comms_sendResetState() {
@@ -54,6 +56,6 @@ void comms_sendResetState() {
     resetData[9] = *(version+5);
     resetData[10] = *(version+6);
     resetData[11] = *(version+7);
-    
+
     serialIO_send(dataType::status_packet, dataID::vc_boot, resetData, sizeof(resetData));
 }

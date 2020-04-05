@@ -19,54 +19,32 @@
 
 #include "alarm.h"
 
+static stack_t stack;
+
 void alarm_init() {
-
+    stack.top = -1;
 }
 
-static int8_t stack_index = -1;
+void alarm_add(enum alarmID alarmID, char *data) {
+    alarm_t alarm;
 
+    if(!stack_full()) {
+        // No point spending time doing these operations if the stack is full
 
-bool stackFull() {
-    return (stack_index == (ALARM_NODES-1)) ? true : false;
-}
+        alarm.alarm = alarmID;
+        alarm.timestamp = millis();
 
-bool stackEmpty() {
-    return (stack_index == -1) ? true : false;
-}
+        // Copy alarm data
+        alarm.data[0] = *data;
+        alarm.data[1] = *(data+1);
+        alarm.data[2] = *(data+2);
+        alarm.data[3] = *(data+3);
+        alarm.data[4] = *(data+4);
+        alarm.data[5] = *(data+5);
+        alarm.data[6] = *(data+6);
+        alarm.data[7] = *(data+7);
 
-int32_t stackPeek(alarm_t *alarm) {
-
-    int32_t return_status = RESULT_FAIL;
-
-    if(!stackEmpty()) {
-        alarm = &alarmStack_node[stack_index];
-        return_status = RESULT_SUCCESS;
-    }
-
-    return return_status;
-}
-
-int32_t stackPop(alarm_t *alarm) {
-
-    int32_t return_status = RESULT_FAIL;
-
-    if(!stackEmpty()) {
-        alarm = &alarmStack_node[stack_index];
-
-        stack_index--;
-
-        return_status = RESULT_SUCCESS;
-    }
-
-    return return_status;
-}
-
-void stackPush(alarm_t alarm) {
-
-    if(!stackFull()) {
-        stack_index++;
-
-        alarmStack_node[stack_index] = alarm;
+        stack_push(alarm);
     }
     else {
         // Stack full, ignore alarm
@@ -74,21 +52,79 @@ void stackPush(alarm_t alarm) {
     }
 }
 
-void alarm_add(enum alarmID alarm, char *data) {
-    alarm_t alarmSlot;
+bool alarm_available() {
+    return (stack_empty() == false) ? true : false;
+}
 
-    alarmSlot.alarm = alarm;
-    alarmSlot.timestamp = millis();
+void alarm_remove() {
+    alarm_t alarm;
 
-    // Copy alarm data
-    alarmSlot.alarmData[0] = *data;
-    alarmSlot.alarmData[1] = *(data+1);
-    alarmSlot.alarmData[2] = *(data+2);
-    alarmSlot.alarmData[3] = *(data+3);
-    alarmSlot.alarmData[4] = *(data+4);
-    alarmSlot.alarmData[5] = *(data+5);
-    alarmSlot.alarmData[6] = *(data+6);
-    alarmSlot.alarmData[7] = *(data+7);
+    stack_pop(&alarm); // Don't need this alarm anymore, remove it
+}
 
-    stackPush(alarmSlot);
+int32_t alarm_read(enum alarmID *alarmID, uint32_t *timestamp, char *data) {
+
+    int32_t return_status = VC_STATUS_FAILURE;
+    alarm_t alarm;
+
+    return_status = stack_peek(&alarm);
+
+    if(return_status == VC_STATUS_SUCCESS) {
+        *alarmID   = alarm.alarm;
+        *timestamp = alarm.timestamp;
+
+        *data      = alarm.data[0];
+        *(data+1)  = alarm.data[1];
+        *(data+2)  = alarm.data[2];
+        *(data+3)  = alarm.data[3];
+        *(data+4)  = alarm.data[4];
+        *(data+5)  = alarm.data[5];
+        *(data+6)  = alarm.data[6];
+        *(data+7)  = alarm.data[7];
+    }
+
+    return return_status;
+}
+
+static bool stack_full() {
+    return (stack.top == (ALARM_NODES-1)) ? true : false;
+}
+
+static bool stack_empty() {
+    return (stack.top == -1) ? true : false;
+}
+
+static int32_t stack_peek(alarm_t *alarm) {
+
+    int32_t return_status = VC_STATUS_FAILURE;
+
+    if(!stack_empty()) {
+        alarm = &stack.alarm[stack.top];
+        return_status = VC_STATUS_SUCCESS;
+    }
+
+    return return_status;
+}
+
+static int32_t stack_pop(alarm_t *alarm) {
+
+    int32_t return_status = VC_STATUS_FAILURE;
+
+    if(!stack_empty()) {
+        alarm = &stack.alarm[stack.top];
+
+        stack.top--;
+
+        return_status = VC_STATUS_SUCCESS;
+    }
+
+    return return_status;
+}
+
+static void stack_push(alarm_t alarm) {
+    if(!stack_full()) {
+        stack.top++;
+
+        stack.alarm[stack.top] = alarm;
+    }
 }

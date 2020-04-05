@@ -18,7 +18,6 @@
 
 #include "ventilator.h"
 #include "comms.h"
-#include "alarm.h"
 
 void ventilator_start() {
 

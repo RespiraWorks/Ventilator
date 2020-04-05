@@ -49,6 +49,7 @@
   both traces should now be plotting
 
 */
+#include <Arduino.h>
 
 #include "pid.h"
 #include "watchdog.h"

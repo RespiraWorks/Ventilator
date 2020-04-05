@@ -36,20 +36,20 @@ enum class command {
     set_dwell       = 0x08,
     get_dwell       = 0x09,
     set_id          = 0x0a,   /* Inspiration duration */
-    get_id          = 0x0b, 
+    get_id          = 0x0b,
     set_ed          = 0x0c,   /* Expiration duration */
-    get_ed          = 0x0d, 
+    get_ed          = 0x0d,
 
     get_pressure    = 0x0e,
     get_flow        = 0x0f,
     get_volume      = 0x10,
 
-    /* Engineering mode commands */ 
+    /* Engineering mode commands */
 
     set_kp          = 0x20,     /* PID constant Kp */
-    get_Kp          = 0x21, 
+    get_Kp          = 0x21,
     set_Ki          = 0x22,     /* PID constant Ki */
-    get_Ki          = 0x23, 
+    get_Ki          = 0x23,
     set_Kd          = 0x24,     /* PID constant Kd */
     get_Kd          = 0x25,
 
@@ -64,7 +64,7 @@ enum class command {
     /* Mode configuration */
 
     set_mode        = 0x50,     /* Engineering or medical mode */
-    get_mode        = 0x51,     
+    get_mode        = 0x51,
     comms_check     = 0x52,     /* Communications check command */
     resend_packet   = 0x53,
 
@@ -108,67 +108,67 @@ enum class alarmID {
 // Public function prototypes
 
 /****************************************************************************************
- *  @brief      
- *  @usage      
- *  @param      
- *  @param      
- *  @return     
+ *  @brief
+ *  @usage
+ *  @param
+ *  @param
+ *  @return
  ****************************************************************************************/
 void comms_init();
 
 /****************************************************************************************
- *  @brief      
- *  @usage      
- *  @param      
- *  @param      
- *  @return     
+ *  @brief
+ *  @usage
+ *  @param
+ *  @param
+ *  @return
  ****************************************************************************************/
 void comms_handler();
 
 /****************************************************************************************
- *  @brief      
- *  @usage      
- *  @param      
- *  @param      
- *  @return     
+ *  @brief
+ *  @usage
+ *  @param
+ *  @param
+ *  @return
  ****************************************************************************************/
 void comms_sendFlow(float flow);
 
 /****************************************************************************************
- *  @brief      
- *  @usage      
- *  @param      
- *  @param      
- *  @return     
+ *  @brief
+ *  @usage
+ *  @param
+ *  @param
+ *  @return
  ****************************************************************************************/
 void comms_sendPressure(float pressure);
 
 /****************************************************************************************
- *  @brief      
- *  @usage      
- *  @param      
- *  @param      
- *  @return     
+ *  @brief
+ *  @usage
+ *  @param
+ *  @param
+ *  @return
  ****************************************************************************************/
 void comms_sendVolume(float volume);
 
 /****************************************************************************************
- *  @brief      
- *  @usage      
- *  @param      
- *  @param      
- *  @return     
+ *  @brief
+ *  @usage
+ *  @param
+ *  @param
+ *  @return
  ****************************************************************************************/
 void comms_sendFlowPressureVolume(float flow, float pressure, float volume);
 
 /****************************************************************************************
- *  @brief      
- *  @usage      
- *  @param      
- *  @param      
- *  @return     
+ *  @brief
+ *  @usage
+ *  @param
+ *  @param
+ *  @return
  ****************************************************************************************/
-void comms_sendResetStatus();
+void comms_sendResetState();
 
 // Private function prototypes
 

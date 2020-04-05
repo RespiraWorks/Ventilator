@@ -15,9 +15,30 @@
   You should have received a copy of the GNU General Public License
   along with FixMoreLungs.  If not, see <https://www.gnu.org/licenses/>.
 */
+#include <Arduino.h>
 
-#include "eeprom.h"
+#include "ventilator.h"
+#include "comms.h"
+#include "alarm.h"
+#include "watchdog.h"
 
-void eeprom_init() {
- 
+void ventilator_start() {
+
+    alarm_init();
+
+    comms_sendResetState(); // Inform the Interface Controller that we just started/restarted
+
+	for (;;) {
+		ventilator_control();
+	}
+}
+
+static void ventilator_control() {
+
+	// Check any new commands?
+    comms_handler();
+
+    // pid_execute();
+    //comms_sendResetState();
+    watchdog_handler();
 }

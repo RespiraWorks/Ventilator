@@ -15,6 +15,7 @@
   You should have received a copy of the GNU General Public License
   along with FixMoreLungs.  If not, see <https://www.gnu.org/licenses/>.
 */
+#include <Arduino.h>
 
 #include "serialIO.h"
 
@@ -33,7 +34,7 @@ void serialIO_send(enum dataType type, enum dataID id, char *data, uint8_t len) 
     uint16_t csum;
     uint8_t c0,c1,f0,f1;
 
-    
+
     metadata[0] = ((char) type) & 0xff; // DATA_TYPE
     metadata[1] = (char)  id; // DATA_ID
     metadata[2] = (char)  len; // LEN
@@ -48,16 +49,16 @@ void serialIO_send(enum dataType type, enum dataID id, char *data, uint8_t len) 
     f1 = (csum >> 8) & 0xff;
     c0 = 0xff - ((f0 + f1) % 0xff);
     c1 = 0xff - ((f0 + c0) % 0xff);
-    
-    
+
+
     Serial.write(metadata, sizeof(metadata));  // Send DATA_TYPE, DATA_ID, LEN
     Serial.write(data, len);  // Send DATA
-    
-    
+
+
     // Send checksum
     Serial.write(c0);
     Serial.write(c1);
-    
+
 }
 
 bool serialIO_checkChecksum(char *packet, uint8_t packet_len) {

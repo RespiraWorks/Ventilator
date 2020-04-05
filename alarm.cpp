@@ -15,27 +15,15 @@
   You should have received a copy of the GNU General Public License
   along with FixMoreLungs.  If not, see <https://www.gnu.org/licenses/>.
 */
+#include <Arduino.h>
 
 #include "alarm.h"
 
-#define ALARM_NODES 4 /* Number of alarms we can store in the queue */
-
-static uint8_t alarmStackindex;
-static alarm_t alarmStack_node[ALARM_NODES];
-
-typedef struct alarm {
-    enum alarmID alarm;
-    uint32_t timestamp;
-    char alarmData[8];
-} alarm_t;
-
 void alarm_init() {
-    alarm_index     = 0;
-    alarmStackEmpty = true;
+
 }
 
 static int8_t stack_index = -1;
-static alarm_t alarmStack_node[ALARM_NODES];
 
 
 bool stackFull() {
@@ -52,7 +40,7 @@ int32_t stackPeek(alarm_t *alarm) {
 
     if(!stackEmpty()) {
         alarm = &alarmStack_node[stack_index];
-        return_status = SUCCESS;
+        return_status = RESULT_SUCCESS;
     }
 
     return return_status;
@@ -77,7 +65,7 @@ void stackPush(alarm_t alarm) {
 
     if(!stackFull()) {
         stack_index++;
-        
+
         alarmStack_node[stack_index] = alarm;
     }
     else {
@@ -102,5 +90,5 @@ void alarm_add(enum alarmID alarm, char *data) {
     alarmSlot.alarmData[6] = *(data+6);
     alarmSlot.alarmData[7] = *(data+7);
 
-    stackPush(alarmSlot);        
+    stackPush(alarmSlot);
 }

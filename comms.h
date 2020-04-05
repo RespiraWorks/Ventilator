@@ -93,6 +93,17 @@ enum class dataID {
     count                   /* Sentinel */
 };
 
+enum class alarmID {
+
+    alarm_1 = 0x00, /* Alarm one */
+    alarm_2 = 0x01, /* Alarm two */
+    alarm_3 = 0x02, /* Alarm three */
+    alarm_4 = 0x03, /* Alarm four */
+    alarm_5 = 0x04, /* Alarm five */
+
+    count           /* Sentinel */
+};
+
 
 // Public function prototypes
 

@@ -66,18 +66,25 @@ enum class command {
     set_mode        = 0x50,     /* Engineering or medical mode */
     get_mode        = 0x51,
     comms_check     = 0x52,     /* Communications check command */
-    resend_packet   = 0x53,
 
     count                       /* Sentinel */
 };
 
-enum class dataType {
-    response_packet = 0x00, /* Response to IC command */
-    status_packet   = 0x01, /* Status packet */
-    alarm_packet    = 0x02, /* Alarm packet */
-    data_packet     = 0x03, /* Data packet */
+enum class msgType {
+    cmd             = 0x00,     /* Command */
+    ack             = 0x01,     /* VC alarm Ack */
+    nAck            = 0x02,     /* VC alarm Fail */
 
-    count                   /* Sentinel */
+    rAck            = 0x10,     /* Response Ack */
+    rErrChecksum    = 0x11,     /* Response checksum error */
+    rErrMode        = 0x12,     /* Response mode error */
+    rErrCmd         = 0x13,     /* Response cmd error */
+
+    status          = 0x20,     /* Status */
+    alarm           = 0x30,     /* Alarm */
+    data            = 0x40,     /* Data */
+
+    count                       /* Sentinel */
 };
 
 enum class dataID {
@@ -172,6 +179,6 @@ void comms_sendResetState();
 
 // Private function prototypes
 
-
+static bool packet_check(char *packet);
 
 #endif  // COMMS_H

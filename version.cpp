@@ -15,9 +15,10 @@
   You should have received a copy of the GNU General Public License
   along with FixMoreLungs.  If not, see <https://www.gnu.org/licenses/>.
 */
+#include <Arduino.h>
 
-#include "sensors.h"
+#include "version.h"
 
-void sensors_init() {
-	
+char * version_getVersion() {
+	return (char *) SW_VERSION;
 }

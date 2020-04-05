@@ -19,6 +19,23 @@
 #ifndef ALARM_H
 #define ALARM_H
 
+#include <stdint.h>
+#include "comms.h"
+/*
+typedef struct alarm {
+    enum alarmID alarm;
+    uint32_t timestamp;
+    char alarmData[8];
+    struct alarm *next_ptr;
+} alarm_t;
+*/
+
+
+
+
+#define RESULT_FAIL -1
+#define RESULT_SUCCESS 0
+
 /****************************************************************************************
  *  @brief      
  *  @usage      
@@ -30,34 +47,34 @@ void alarm_init();
 
 /****************************************************************************************
  *  @brief      
- *  @usage      
+ *  @usage  Add an alarm to the end of the queue. If the queue is full, new alarm is lost.  
  *  @param      
  *  @param      
  *  @return     
  ****************************************************************************************/
-void alarm_add();
+void alarm_add(enum alarmID alarm, char *data);
 
 /****************************************************************************************
  *  @brief      
- *  @usage      
+ *  @usage  Read the alarm at the start of the queue
  *  @param      
  *  @param      
  *  @return     
  ****************************************************************************************/
-void alarm_read();
+void alarm_read(enum alarmID *alarm, char *data);
 
 /****************************************************************************************
  *  @brief      
- *  @usage      
+ *  @usage   Are there any alarms available in the queue?   
  *  @param      
  *  @param      
  *  @return     
  ****************************************************************************************/
-void alarm_available();
+bool alarm_available();
 
 /****************************************************************************************
  *  @brief      
- *  @usage      
+ *  @usage  Remove the alarm at the start of the queue    
  *  @param      
  *  @param      
  *  @return     

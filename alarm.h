@@ -25,7 +25,7 @@
 #include "errors.h"
 
 #define ALARM_NODES     4 /* Number of alarms we can store in the queue */
-#define ALARM_DATALEN   8 /* Each alarm can store 8 bytes */
+#define ALARM_DATALEN   8 /* Each alarm can store 8 bytes - modifying this would mean modifying the memory copys*/
 
 typedef struct alarm {
     enum alarmID alarm;

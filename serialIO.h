@@ -25,42 +25,60 @@
 // Public functions
 
 /****************************************************************************************
- *  @brief      
- *  @usage      
- *  @param      
- *  @param      
- *  @return     
+ *  @brief
+ *  @usage
+ *  @param
+ *  @param
+ *  @return
  ****************************************************************************************/
 void serialIO_init();
 
 /****************************************************************************************
- *  @brief      
- *  @usage      
- *  @param      
- *  @param      
- *  @return     
+ *  @brief
+ *  @usage
+ *  @param
+ *  @param
+ *  @return
  ****************************************************************************************/
-void serialIO_send(enum dataType type, enum dataID id, char *data, uint8_t len);
+void serialIO_send(enum msgType type, enum dataID id, char *data, uint8_t len);
 
 /****************************************************************************************
- *  @brief      
- *  @usage      
- *  @param      
- *  @param      
- *  @return     
+ *  @brief
+ *  @usage
+ *  @param
+ *  @param
+ *  @return
  ****************************************************************************************/
 bool serialIO_checkChecksum(char *packet, uint8_t packet_len);
+
+/****************************************************************************************
+ *  @brief
+ *  @usage
+ *  @param
+ *  @param
+ *  @return
+ ****************************************************************************************/
+bool serialIO_dataAvailable();
+
+/****************************************************************************************
+ *  @brief
+ *  @usage
+ *  @param
+ *  @param
+ *  @return
+ ****************************************************************************************/
+void serialIO_readByte(char *buffer);
+
 
 // Private functions
 
 /****************************************************************************************
- *  @brief      
+ *  @brief
  *  @usage    Original checksum function taken from here https://en.wikipedia.org/wiki/Fletcher%27s_checksum
- *  @param      
- *  @param      
- *  @return     
+ *  @param
+ *  @param
+ *  @return
  ****************************************************************************************/
 static uint16_t Fletcher16_calc(uint16_t *sum1, uint16_t *sum2, char *data, uint8_t count);
-
 
 #endif // SERIALIO_H

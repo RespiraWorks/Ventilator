@@ -20,33 +20,25 @@
 #define ALARM_H
 
 #include <stdint.h>
+
 #include "comms.h"
+#include "errors.h"
 
-
-#define ALARM_NODES 4 /* Number of alarms we can store in the queue */
+#define ALARM_NODES     4 /* Number of alarms we can store in the queue */
+#define ALARM_DATALEN   8 /* Each alarm can store 8 bytes */
 
 typedef struct alarm {
     enum alarmID alarm;
     uint32_t timestamp;
-    char alarmData[8];
+    char data[ALARM_DATALEN];
 } alarm_t;
 
-static alarm_t alarmStack_node[ALARM_NODES];
+typedef struct {
+    alarm_t alarm[ALARM_NODES];
+    int8_t top;
+} stack_t;
 
-/*
-typedef struct alarm {
-    enum alarmID alarm;
-    uint32_t timestamp;
-    char alarmData[8];
-    struct alarm *next_ptr;
-} alarm_t;
-*/
-
-
-
-
-#define RESULT_FAIL -1
-#define RESULT_SUCCESS 0
+// Public function prototypes
 
 /****************************************************************************************
  *  @brief
@@ -59,7 +51,7 @@ void alarm_init();
 
 /****************************************************************************************
  *  @brief
- *  @usage  Add an alarm to the end of the queue. If the queue is full, new alarm is lost.
+ *  @usage  Add an alarm to the top of the stack. If the stack is full, new alarm is lost.
  *  @param
  *  @param
  *  @return
@@ -68,16 +60,16 @@ void alarm_add(enum alarmID alarm, char *data);
 
 /****************************************************************************************
  *  @brief
- *  @usage  Read the alarm at the start of the queue
+ *  @usage  Read the alarm at the top of the stack
  *  @param
  *  @param
  *  @return
  ****************************************************************************************/
-void alarm_read(enum alarmID *alarm, char *data);
+int32_t alarm_read(enum alarmID *alarmID, uint32_t *timestamp, char *data);
 
 /****************************************************************************************
  *  @brief
- *  @usage   Are there any alarms available in the queue?
+ *  @usage   Are there any alarms available on the stack?
  *  @param
  *  @param
  *  @return
@@ -86,11 +78,23 @@ bool alarm_available();
 
 /****************************************************************************************
  *  @brief
- *  @usage  Remove the alarm at the start of the queue
+ *  @usage  Remove the alarm at the top of the stack
  *  @param
  *  @param
  *  @return
  ****************************************************************************************/
 void alarm_remove();
+
+// Private function prototypes
+
+static bool stack_full();
+
+static bool stack_empty();
+
+static int32_t stack_peek(alarm_t *alarm);
+
+static int32_t stack_pop(alarm_t *alarm);
+
+static void stack_push(alarm_t alarm);
 
 #endif // ALARM_H

@@ -21,6 +21,40 @@
 
 #include <stdint.h>
 
+
+enum class processPacket {
+    checksumErr     = 0x00,
+    modeErr         = 0x01,
+    invalidErr      = 0x02,
+    command         = 0x03,
+    ack             = 0x04,
+    nack            = 0x05,
+    msgTypeUnknown  = 0x06,
+
+    count                       /* Sentinel */
+};
+
+enum class medicalMode {
+    start   = 0x00,     /* First medical mode command */
+    end     = 0x10,     /* Final medical mode command */
+
+    count
+};
+
+enum class engMode {
+    start   = 0x20,     /* First engineering mode command */
+    end     = 0x27,     /* Final engineering mode command */
+
+    count
+};
+
+enum class mixedMode {
+    start   = 0x40,     /* First mixed mode command */
+    end     = 0x44,     /* Final mixed mode command */
+
+    count
+};
+
 enum class command {
 
     /* Medical mode commands */
@@ -60,12 +94,9 @@ enum class command {
 
     set_periodic    = 0x40,     /* Periodic data transmission mode (Pressure, Flow, Volume) */
     get_periodic    = 0x41,
-
-    /* Mode configuration */
-
-    set_mode        = 0x50,     /* Engineering or medical mode */
-    get_mode        = 0x51,
-    comms_check     = 0x52,     /* Communications check command */
+    set_mode        = 0x42,     /* Engineering or medical mode */
+    get_mode        = 0x43,
+    comms_check     = 0x44,     /* Communications check command */
 
     count                       /* Sentinel */
 };
@@ -89,26 +120,17 @@ enum class msgType {
 
 enum class dataID {
     /* Status */
-    vc_boot      = 0x01,    /* Status sent when arduino boots (includes software version) */
+    vc_boot      = 0x80,    /* Status sent when arduino boots (includes software version) */
 
 
     /* Alarms */
-
+    alarm_1     = 0xA0,
+    alarm_2     = 0xA1,
 
     /* Data */
+    data_1      = 0xC0,
 
     count                   /* Sentinel */
-};
-
-enum class alarmID {
-
-    alarm_1 = 0x00, /* Alarm one */
-    alarm_2 = 0x01, /* Alarm two */
-    alarm_3 = 0x02, /* Alarm three */
-    alarm_4 = 0x03, /* Alarm four */
-    alarm_5 = 0x04, /* Alarm five */
-
-    count           /* Sentinel */
 };
 
 
@@ -177,8 +199,133 @@ void comms_sendFlowPressureVolume(float flow, float pressure, float volume);
  ****************************************************************************************/
 void comms_sendResetState();
 
+/****************************************************************************************
+ *  @brief
+ *  @usage
+ *  @param
+ *  @param
+ *  @return
+ ****************************************************************************************/
+void comms_sendPeriodicReadings(float pressure, float volume, float flow);
+
 // Private function prototypes
 
+/****************************************************************************************
+ *  @brief
+ *  @usage
+ *  @param
+ *  @param
+ *  @return
+ ****************************************************************************************/
 static bool packet_check(char *packet);
+
+/****************************************************************************************
+ *  @brief
+ *  @usage
+ *  @param
+ *  @param
+ *  @return
+ ****************************************************************************************/
+static bool packet_receive(char *packet, uint8_t *packet_len);
+
+/****************************************************************************************
+ *  @brief
+ *  @usage
+ *  @param
+ *  @param
+ *  @return
+ ****************************************************************************************/
+static bool packet_checksumValidation(char *packet, uint8_t len);
+
+/****************************************************************************************
+ *  @brief
+ *  @usage
+ *  @param
+ *  @param
+ *  @return
+ ****************************************************************************************/
+static bool packet_cmdValidatation(char *packet);
+
+/****************************************************************************************
+ *  @brief
+ *  @usage
+ *  @param
+ *  @param
+ *  @return
+ ****************************************************************************************/
+static bool packet_modeValidation(char *packet);
+
+/****************************************************************************************
+ *  @brief
+ *  @usage
+ *  @param
+ *  @param
+ *  @return
+ ****************************************************************************************/
+enum processPacket process_packet(char *packet, uint8_t len);
+
+/****************************************************************************************
+ *  @brief
+ *  @usage
+ *  @param
+ *  @param
+ *  @return
+ ****************************************************************************************/
+static void comms_sendModeERR(char *packet);
+
+/****************************************************************************************
+ *  @brief
+ *  @usage
+ *  @param
+ *  @param
+ *  @return
+ ****************************************************************************************/
+static void comms_sendChecksumERR(char *packet);
+
+/****************************************************************************************
+ *  @brief
+ *  @usage
+ *  @param
+ *  @param
+ *  @return
+ ****************************************************************************************/
+static void comms_sendCommandERR(char *packet);
+
+/****************************************************************************************
+ *  @brief
+ *  @usage
+ *  @param
+ *  @param
+ *  @return
+ ****************************************************************************************/
+static void cmd_execute(enum command cmd, char *dataTx, uint8_t lenTx,
+                        char *dataRx, uint8_t *lenRx, uint8_t lenRxMax);
+
+/****************************************************************************************
+ *  @brief
+ *  @usage
+ *  @param
+ *  @param
+ *  @return
+ ****************************************************************************************/
+static void cmd_responseSend(char *packet, uint8_t len);
+
+/****************************************************************************************
+ *  @brief
+ *  @usage
+ *  @param
+ *  @param
+ *  @return
+ ****************************************************************************************/
+static void send_alarm();
+
+/****************************************************************************************
+ *  @brief
+ *  @usage
+ *  @param
+ *  @param
+ *  @return
+ ****************************************************************************************/
+static void cmd_responseSend(uint8_t cmd, char *packet, uint8_t len);
 
 #endif  // COMMS_H

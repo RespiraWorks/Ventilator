@@ -18,6 +18,8 @@
 #include <Arduino.h>
 
 #include "pid.h"
+#include "parameters.h"
+#include "comms.h"
 
 //Define Variables we'll be connecting to
 static double Setpoint, Input, Output;
@@ -51,11 +53,14 @@ void pid_init() {
   myPID.SetMode(AUTOMATIC);
 }
 
-static void pid_execute() {
+void pid_execute() {
 
     uint16_t cyclecounter = 0;
     int16_t  sensorValue = 0;   // value read from the pot
     enum pid_fsm_state state = pid_fsm_state::reset;
+
+    static uint32_t time;
+    static bool first_call = true;
 
     switch (state) {
 
@@ -136,7 +141,24 @@ static void pid_execute() {
     myPID.Compute(); // computer PID command
     analogWrite(BLOWERSPD_PIN, Output); //write output
 
+    if(first_call == true) {
+        first_call = false;
+        time = millis();
+    }
+    else {
+        // TODO does this rollover properly?
+        if((millis() - time) > 100) {
+            if(parameters_getPeriodicReadings()){
+                // Send readings data
+                comms_sendPeriodicReadings(sensorValue * 1.0, 0.0, 0.0);
+            }
+
+            time = millis();
+        }
+    }
+
    // comms_send(Setpoint, sensorValue);
+
 
     delay(2);  //delay
 

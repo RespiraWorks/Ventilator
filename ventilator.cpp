@@ -21,6 +21,7 @@
 #include "comms.h"
 #include "alarm.h"
 #include "watchdog.h"
+#include "pid.h"
 
 void ventilator_start() {
 
@@ -38,7 +39,7 @@ static void ventilator_control() {
 	// Check any new commands?
     comms_handler();
 
-    // pid_execute();
+    pid_execute();
     //comms_sendResetState();
     watchdog_handler();
 }

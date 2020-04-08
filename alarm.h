@@ -28,7 +28,7 @@
 #define ALARM_DATALEN   8 /* Each alarm can store 8 bytes - modifying this would mean modifying the memory copys*/
 
 typedef struct alarm {
-    enum alarmID alarm;
+    enum dataID alarm;
     uint32_t timestamp;
     char data[ALARM_DATALEN];
 } alarm_t;
@@ -56,7 +56,7 @@ void alarm_init();
  *  @param
  *  @return
  ****************************************************************************************/
-void alarm_add(enum alarmID alarm, char *data);
+void alarm_add(enum dataID alarm, char *data);
 
 /****************************************************************************************
  *  @brief
@@ -65,7 +65,7 @@ void alarm_add(enum alarmID alarm, char *data);
  *  @param
  *  @return
  ****************************************************************************************/
-int32_t alarm_read(enum alarmID *alarmID, uint32_t *timestamp, char *data);
+int32_t alarm_read(enum dataID *alarmID, uint32_t *timestamp, char *data);
 
 /****************************************************************************************
  *  @brief

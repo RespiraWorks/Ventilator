@@ -45,22 +45,22 @@
 //Private function prototypes
 
 /****************************************************************************************
- *  @brief      
- *  @usage      
- *  @param      
- *  @param      
- *  @return     
+ *  @brief
+ *  @usage
+ *  @param
+ *  @param
+ *  @return
  ****************************************************************************************/
-static void pid_execute();
+void pid_execute();
 
 // Public function prototypes
 
 /****************************************************************************************
- *  @brief      
- *  @usage      
- *  @param      
- *  @param      
- *  @return     
+ *  @brief
+ *  @usage
+ *  @param
+ *  @param
+ *  @return
  ****************************************************************************************/
 void pid_init();
 

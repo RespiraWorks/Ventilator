@@ -28,6 +28,8 @@ static float inspireduration;
 static float pip;
 static float dwell;
 
+static bool periodicReadings;
+
 // Calibration parameters
 
 
@@ -52,6 +54,7 @@ static void init_defaultVentilatorParameters() {
     inspireduration   = ID_DEFAULT;
     pip               = PIP_DEFAULT;
     dwell             = DWELL_DEFAULT;
+    periodicReadings  = PERIODIC_READINGS;
 }
 
 static void init_defaultPIDParameters() {
@@ -142,4 +145,16 @@ void parameters_setDwell(float dwell_value) {
 
 float parameters_getDwell() {
     return dwell;
+}
+
+bool parameters_medicalModeActive() {
+    return false; // FIXME return parameter
+}
+
+void parameters_setPeriodicReadings(bool active) {
+    periodicReadings = active;
+}
+
+bool parameters_getPeriodicReadings() {
+    return periodicReadings;
 }

@@ -23,6 +23,7 @@
 #include "version.h"
 #include "serialIO.h"
 #include "alarm.h"
+#include "parameters.h"
 
 void comms_init() {
     serialIO_init();
@@ -35,29 +36,33 @@ enum class handler_state {
     alarm_waiting   = 0x03,
     alarm_process   = 0x04,
 
-    count
+    count                   /* Sentinel */
 };
 
 enum class packet_field {
     msg_type    = 0x00,
     cmd         = 0x01,
-    dataID      = 0x02,
-    len         = 0x03,
-    data        = 0x04,
-    checksum    = 0x05,
+    len         = 0x02,
+    data        = 0x03,
+    checksumA   = 0x04,
+    checksumB   = 0x05,
 
-    count
+    count                   /* Sentinel */
 };
 
-static char rx_packet[64];
-static char tx_packet[64];
+static char rx_packet[32];
+static char tx_packet[32];
+static char cmdResponse_data[sizeof(tx_packet) - 5]; // 5 (MSGTYPE[1] + DATAID[1] + LEN [1] + CHECKSUM[2])
 
 void comms_handler() {
 
-    static enum handler_state current_state = handler_state::idle;
-    bool complete;
+    static enum handler_state state = handler_state::idle;
+    static uint8_t packet_len = 0;
+    bool received = false;
+    uint8_t cmdResponseData_len;
+    enum processPacket packetStatus;
 
-    switch(current_state) {
+    switch(state) {
 
         case handler_state::idle:
 
@@ -67,16 +72,16 @@ void comms_handler() {
             if(serialIO_dataAvailable()) {
                 /* Serial data received */
 
-                current_state = handler_state::packet_arriving;
+                state = handler_state::packet_arriving;
             }
             else if(alarm_available()) { // Are any alarms waiting to be handled?
                 // Change state to process alarm
                 // This has lower priority than a packet recieved via serialIO
 
-                current_state = handler_state::alarm_waiting;
+                state = handler_state::alarm_waiting;
             }
             else {
-                current_state = handler_state::idle;
+                state = handler_state::idle;
             }
 
             break;
@@ -84,60 +89,299 @@ void comms_handler() {
         case handler_state::packet_arriving: /* Don't know what the packet is yet */
                 // Keep receiving packet until completion
 
-                complete = packet_check(rx_packet);
+                received = packet_receive(rx_packet, &packet_len);
 
                 // Check if packet has finished arriving
-                if(complete) {
-                    current_state = handler_state::packet_process;
+                if(received) {
+                    state = handler_state::packet_process;
                 }
 
             break;
 
         case handler_state::packet_process: /* Alarm ACK or Command */
-                // process_packet();
+
+                packetStatus = process_packet(rx_packet, packet_len);
+
+                switch(packetStatus) {
+                    case processPacket::command:
+                        cmd_execute((enum command) rx_packet[(uint8_t) packet_field::cmd],
+                                    &rx_packet[(uint8_t) packet_field::data],
+                                    rx_packet[(uint8_t) packet_field::len],
+                                    cmdResponse_data, &cmdResponseData_len,
+                                    sizeof(cmdResponse_data));
+
+                        // Send response to Interface Controller
+                        cmd_responseSend((uint8_t) rx_packet[(uint8_t) packet_field::cmd],
+                                         cmdResponse_data, cmdResponseData_len);
+                        break;
+
+                    case processPacket::ack:
+                        // We've received an alarm acknowledgement, remove the alarm from the buffer
+                        alarm_remove();
+                        break;
+
+                    case processPacket::nack:
+                        // The IC sent an ack packet (success or fail). Cannot be certain, don't remove the alarm in the buffer
+                        break;
+
+                    case processPacket::checksumErr:
+                        // The received packet had an invalid checksum, send error
+                        comms_sendChecksumERR(rx_packet);
+                        break;
+
+                    case processPacket::modeErr:
+                        // The received packet had an invalid mode, send error
+                        comms_sendModeERR(rx_packet);
+                        break;
+
+                    case processPacket::invalidErr:
+                        // The received packet had an invalid command, send error
+                        comms_sendCommandERR(rx_packet);
+                        break;
+
+                    case processPacket:: msgTypeUnknown:
+                        // TODO Handle this error case
+                        break;
+
+                    default:
+                        // TODO handle this error case
+                        break;
+                }
+
+            state = handler_state::idle;
+
             break;
 
         case handler_state::alarm_waiting:
+            // Read alarm
+            send_alarm();
 
-            break;
-
-        case handler_state::alarm_process:
+            state = handler_state::idle;
 
             break;
 
         default:
+            // TODO Undefined state, log Error
 
+            state = handler_state::idle; // Make sure FSM always ends in defined state
             break;
     }
 }
 
-static bool packet_check(char *packet) {
+static void cmd_responseSend(uint8_t cmd, char *packet, uint8_t len) {
+    serialIO_send(msgType::ack, (enum dataID) cmd, packet, len);
+}
+
+static void send_alarm() {
+    uint32_t timestamp;
+    char data[ALARM_DATALEN + sizeof(timestamp)];
+    enum dataID alarmID;
+
+    if(alarm_read(&alarmID, &timestamp, &data[sizeof(timestamp)]) == VC_STATUS_SUCCESS) {
+
+        data[0] = (timestamp >> 24) & 0xFF;
+        data[1] = (timestamp >> 16) & 0xFF;
+        data[2] = (timestamp >> 8) & 0xFF;
+        data[3] = timestamp & 0xFF;
+
+        serialIO_send(msgType::rErrCmd, alarmID, data, sizeof(data));
+    }
+    else {
+        // TODO Handle error
+    }
+
+}
+
+enum processPacket process_packet(char *packet, uint8_t len) {
+
+    // Validate packet checksum
+    if(!packet_checksumValidation(packet, len)) {
+        // Checksum invalid
+        // Therefore cannot be 100% sure that received msgType is correct
+        // Can we assume however that the length is correct? If yes,
+        // An Ack packet only has three bytes.
+        // Ignore if Ack with checksum error has been received
+        // The alarm will stay on the stack and we'll try to resend it later
+
+        return processPacket::checksumErr;
+    }
+
+    // What packet type is it?
+    if(packet[(uint8_t) packet_field::msg_type] == (uint8_t) msgType::cmd) {
+        // It's a command packet
+        if(packet_cmdValidatation(packet) == true) {
+            if(packet_modeValidation(packet)) {
+                // Command ok for execution
+                return processPacket::command;
+            }
+            else {
+                // Send mode error packet
+                return processPacket::modeErr;
+            }
+        }
+        else {
+            // Send cmd invalid packet
+            return processPacket::invalidErr;
+        }
+    }
+    else if(packet[(uint8_t) packet_field::msg_type] == (uint8_t) msgType::ack) {
+        // An ACK packet
+        return processPacket::ack;
+    }
+    else if(packet[(uint8_t) packet_field::msg_type] == (uint8_t) msgType::nAck) {
+        // A NACK packet
+        return processPacket::nack;
+    }
+
+    // Error condition - unexpected msg_type
+    return processPacket::msgTypeUnknown;
+}
+
+static void cmd_execute(enum command cmd, char *dataTx, uint8_t lenTx, char *dataRx, uint8_t *lenRx, uint8_t lenRxMax) {
+
+    switch(cmd) {
+
+        case command::set_rr:
+
+            break;
+
+        case command::get_rr:
+
+            break;
+
+        case command::set_tv:
+
+            break;
+
+        case command::get_tv:
+
+            break;
+
+        case command::set_peep:
+
+            break;
+
+        case command::get_peep:
+
+            break;
+
+        case command::set_pip:
+
+            break;
+
+        case command::get_pip:
+
+            break;
+
+        case command::set_dwell:
+
+            break;
+
+        case command::get_dwell:
+
+            break;
+
+        case command::set_id:
+
+            break;
+
+        case command::get_id:
+
+            break;
+
+        case command::set_ed:
+
+            break;
+
+        case command::get_ed:
+
+            break;
+
+
+        case command::set_periodic:
+            parameters_setPeriodicReadings(dataTx[0] == 0x01 ? true : false);
+            break;
+
+
+    }
+}
+
+static bool packet_checksumValidation(char *packet, uint8_t len) {
+    return serialIO_checkChecksum(packet, len);
+}
+
+static bool packet_cmdValidatation(char *packet) {
+
+    uint8_t cmd = (uint8_t) packet[(uint8_t) packet_field::cmd];
+
+    // Is the command valid?
+    if(((cmd >= (uint8_t) medicalMode::start) && (cmd <= (uint8_t) medicalMode::end)) ||
+         ((cmd >= (uint8_t) engMode::start) && (cmd <= (uint8_t) engMode::end)) ||
+         ((cmd >= (uint8_t) mixedMode::start) && (cmd <= (uint8_t) mixedMode::end))) {
+
+        /* Command falls inside predefined ranges */
+
+        return true;
+    }
+
+    return false;
+}
+
+static bool packet_modeValidation(char *packet) {
+
+    uint8_t cmd = (uint8_t) packet[(uint8_t) packet_field::cmd];
+
+    // Does the command correspond with the current mode
+    // Is medical mode active?
+    if(parameters_medicalModeActive()) {
+
+        // Limit the number of commands accepted
+        if((cmd >= (uint8_t) engMode::start) && (cmd <= (uint8_t) engMode::end)) {
+            /* eng mode command */
+
+            // Reject command
+            return false;
+        }
+    }
+
+    return true;
+}
+
+static bool packet_receive(char *packet, uint8_t *len) {
 
     // TODO Do we need to set serialtimer to something lower than 1 second?
 
-    static enum packet_field current_field = packet_field::msg_type;
+    static enum packet_field field = packet_field::msg_type;
     static uint8_t packet_len = 0;
+    static uint8_t data_len;
+    char msg_type;
+    bool packet_complete = false;
 
-    switch(current_field) {
+    if(!serialIO_dataAvailable()) {
+        return false;
+    }
+
+    switch(field) {
 
         case packet_field::msg_type:
 
             //NOTE: Assuming data already in buffer
             serialIO_readByte(&packet[packet_len]);
 
-            // Process field - what kind of packet is this? Command or Ack?
+            msg_type = packet[packet_len];
 
-            if(packet[packet_len] == msgType::cmd) {
+            // Process field - what kind of packet is this? Command or Ack?
+            if(msg_type == (char) msgType::cmd) {
                 // Command packet
-                current_field = packet_field::cmd;
+                field = packet_field::cmd;
             }
-            else if(packet[packet_len] == msgType::ack || packet[packet_len] == msgType::nAck) {
+            else if(msg_type == (char) msgType::ack ||  msg_type == (char) msgType::nAck) {
                 // Alarm acknowledgement
-                current_field = packet_field::checksum;
+                field = packet_field::checksumA;
             }
             else {
                 // Something else
-                // TODO Flag error
+                // FIXME Flag error
             }
 
             packet_len++;
@@ -146,35 +390,82 @@ static bool packet_check(char *packet) {
 
         case packet_field::cmd:
 
-            if(serialIO_dataAvailable()) {
-                serialIO_readByte(&packet[packet_len++]);
-                
-                current_field = packet_field::len;
-            }
-            else {
-                current_field = packet_field::cmd;
-            }
+            serialIO_readByte(&packet[packet_len++]);
 
-            break;
-
-        case packet_field::dataID:
+            field = packet_field::len;
 
             break;
 
         case packet_field::len:
 
+            serialIO_readByte(&packet[packet_len++]);
+
+            field = packet_field::data;
+
             break;
 
         case packet_field::data:
 
+            // TODO Set maximum LEN (incase LEN contains a number too high)
+
+            serialIO_readByte(&packet[packet_len++]);
+
+            if(++data_len == packet[(uint8_t) packet_field::len]) {
+                field = packet_field::checksumA;
+            }
+
             break;
 
-        case packet_field::checksum:
+        case packet_field::checksumA:
+
+            serialIO_readByte(&packet[packet_len++]);
+
+            field = packet_field::checksumB;
+
+            break;
+
+        case packet_field::checksumB:
+
+            serialIO_readByte(&packet[packet_len++]);
+
+            field = packet_field::checksumB;
+
+            // Reset static counters to default values
+            data_len = 0;
+            *len = packet_len; // Save packet length
+            packet_len = 0;
+            field = packet_field::msg_type;
+
+            packet_complete = true;
+
+            break;
+
+        default:
+            // Should never arrive there
+            // TODO Log error
 
             break;
     }
 
-    return false;
+    return packet_complete;
+}
+
+static void comms_sendModeERR(char *packet) {
+    char emptyData;
+
+    serialIO_send(msgType::rErrMode, (enum dataID) packet[(uint8_t) packet_field::cmd], &emptyData, 0);
+}
+
+static void comms_sendChecksumERR(char *packet) {
+    char emptyData;
+
+    serialIO_send(msgType::rErrChecksum, (enum dataID) packet[(uint8_t) packet_field::cmd], &emptyData, 0);
+}
+
+static void comms_sendCommandERR(char *packet) {
+    char emptyData;
+
+    serialIO_send(msgType::rErrCmd, (enum dataID) packet[(uint8_t) packet_field::cmd], &emptyData, 0);
 }
 
 void comms_sendResetState() {
@@ -193,6 +484,7 @@ void comms_sendResetState() {
     resetData[2] = (time >> 8) & 0xFF;
     resetData[3] = time & 0xFF;
 
+    // TODO Is using memcpy faster than this?
     resetData[4] = *version;
     resetData[5] = *(version+1);
     resetData[6] = *(version+2);
@@ -203,4 +495,33 @@ void comms_sendResetState() {
     resetData[11] = *(version+7);
 
     serialIO_send(msgType::status, dataID::vc_boot, resetData, sizeof(resetData));
+}
+
+void comms_sendPeriodicReadings(float pressure, float volume, float flow) {
+    char readingsData[16];
+    uint32_t time;
+
+    time = millis();
+
+    readingsData[0] = (time >> 24) & 0xFF;
+    readingsData[1] = (time >> 16) & 0xFF;
+    readingsData[2] = (time >> 8) & 0xFF;
+    readingsData[3] = time & 0xFF;
+
+    readingsData[4] = (((uint32_t) pressure) >> 24) & 0xFF;
+    readingsData[5] = (((uint32_t) pressure) >> 16) & 0xFF;
+    readingsData[6] = (((uint32_t) pressure) >> 8) & 0xFF;
+    readingsData[7] = ((uint32_t) pressure) & 0xFF;
+
+    readingsData[8]  = (((uint32_t) volume) >> 24) & 0xFF;
+    readingsData[9]  = (((uint32_t) volume) >> 16) & 0xFF;
+    readingsData[10] = (((uint32_t) volume) >> 8) & 0xFF;
+    readingsData[11] = ((uint32_t) volume) & 0xFF;
+
+    readingsData[12] = (((uint32_t) flow) >> 24) & 0xFF;
+    readingsData[13] = (((uint32_t) flow) >> 16) & 0xFF;
+    readingsData[14] = (((uint32_t) flow) >> 8) & 0xFF;
+    readingsData[15] = ((uint32_t) flow) & 0xFF;
+
+    serialIO_send(msgType::data, dataID::data_1, readingsData, sizeof(readingsData));
 }

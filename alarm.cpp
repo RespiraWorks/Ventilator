@@ -25,7 +25,7 @@ void alarm_init() {
     stack.top = -1;
 }
 
-void alarm_add(enum alarmID alarmID, char *data) {
+void alarm_add(enum dataID alarmID, char *data) {
     alarm_t alarm;
 
     if(!stack_full()) {
@@ -62,7 +62,7 @@ void alarm_remove() {
     stack_pop(&alarm); // Don't need this alarm anymore, remove it
 }
 
-int32_t alarm_read(enum alarmID *alarmID, uint32_t *timestamp, char *data) {
+int32_t alarm_read(enum dataID *alarmID, uint32_t *timestamp, char *data) {
 
     int32_t return_status = VC_STATUS_FAILURE;
     alarm_t alarm;

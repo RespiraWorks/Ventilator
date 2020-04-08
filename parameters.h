@@ -46,7 +46,7 @@
 #define DWELL_BOUNDARY_MAX 100.0
 
 // Ventilator parameter defaults
-// FIXME Put some default fallback values that are realistic 
+// FIXME Put some default fallback values that are realistic
 #define RR_DEFAULT    10.0
 #define TV_DEFAULT    10.0
 #define PEEP_DEFAULT  10.0
@@ -54,6 +54,8 @@
 #define ID_DEFAULT    10.0
 #define PIP_DEFAULT   10.0
 #define DWELL_DEFAULT 10.0
+
+#define PERIODIC_READINGS true
 
 // Calibration parameter defaults
 
@@ -66,29 +68,29 @@
 // Private function prototypes
 
 /****************************************************************************************
- *  @brief      
- *  @usage      
- *  @param      
- *  @param      
- *  @return     
+ *  @brief
+ *  @usage
+ *  @param
+ *  @param
+ *  @return
  ****************************************************************************************/
 static void init_defaultVentilatorParameters();
 
 /****************************************************************************************
- *  @brief      
- *  @usage      
- *  @param      
- *  @param      
- *  @return     
+ *  @brief
+ *  @usage
+ *  @param
+ *  @param
+ *  @return
  ****************************************************************************************/
 static void init_defaultPIDParameters();
 
 /****************************************************************************************
- *  @brief      
- *  @usage      
- *  @param      
- *  @param      
- *  @return     
+ *  @brief
+ *  @usage
+ *  @param
+ *  @param
+ *  @return
  ****************************************************************************************/
 static void init_defaultCalibrationParameters();
 
@@ -98,206 +100,233 @@ static void init_defaultCalibrationParameters();
 // Public function prototypes
 
 /****************************************************************************************
- *  @brief      
- *  @usage      
- *  @param      
- *  @param      
- *  @return     
+ *  @brief
+ *  @usage
+ *  @param
+ *  @param
+ *  @return
  ****************************************************************************************/
 void parameters_setKp(float kp_value);
 
 /****************************************************************************************
- *  @brief      
- *  @usage      
- *  @param      
- *  @param      
- *  @return     
+ *  @brief
+ *  @usage
+ *  @param
+ *  @param
+ *  @return
  ****************************************************************************************/
 float parameters_getKp();
 
 /****************************************************************************************
- *  @brief      
- *  @usage      
- *  @param      
- *  @param      
- *  @return     
+ *  @brief
+ *  @usage
+ *  @param
+ *  @param
+ *  @return
  ****************************************************************************************/
 void parameters_setKi(float ki_value);
 
 /****************************************************************************************
- *  @brief      
- *  @usage      
- *  @param      
- *  @param      
- *  @return     
+ *  @brief
+ *  @usage
+ *  @param
+ *  @param
+ *  @return
  ****************************************************************************************/
 float parameters_getKi();
 
 /****************************************************************************************
- *  @brief      
- *  @usage      
- *  @param      
- *  @param      
- *  @return     
+ *  @brief
+ *  @usage
+ *  @param
+ *  @param
+ *  @return
  ****************************************************************************************/
 void parameters_setKd(float kd_value);
 
 /****************************************************************************************
- *  @brief      
- *  @usage      
- *  @param      
- *  @param      
- *  @return     
+ *  @brief
+ *  @usage
+ *  @param
+ *  @param
+ *  @return
  ****************************************************************************************/
-float parameters_getKd(); 
+float parameters_getKd();
 
 /****************************************************************************************
- *  @brief      
- *  @usage      
- *  @param      
- *  @param      
- *  @return     
+ *  @brief
+ *  @usage
+ *  @param
+ *  @param
+ *  @return
  ****************************************************************************************/
 void parameters_init();
 
 // Respiratory rate
 
 /****************************************************************************************
- *  @brief      
- *  @usage      
- *  @param      
- *  @param      
- *  @return     
+ *  @brief
+ *  @usage
+ *  @param
+ *  @param
+ *  @return
  ****************************************************************************************/
 float parameters_getRR();
 
 /****************************************************************************************
- *  @brief      
- *  @usage      
- *  @param      
- *  @param      
- *  @return     
+ *  @brief
+ *  @usage
+ *  @param
+ *  @param
+ *  @return
  ****************************************************************************************/
 void parameters_setRR(float rr_value);
 
 // Tidal volume
 
 /****************************************************************************************
- *  @brief      
- *  @usage      
- *  @param      
- *  @param      
- *  @return     
+ *  @brief
+ *  @usage
+ *  @param
+ *  @param
+ *  @return
  ****************************************************************************************/
 float parameters_getTV();
 
 /****************************************************************************************
- *  @brief      
- *  @usage      
- *  @param      
- *  @param      
- *  @return     
+ *  @brief
+ *  @usage
+ *  @param
+ *  @param
+ *  @return
  ****************************************************************************************/
 void parameters_setTV(float tv_value);
 
 // Respiration rate
 
 /****************************************************************************************
- *  @brief      
- *  @usage      
- *  @param      
- *  @param      
- *  @return     
+ *  @brief
+ *  @usage
+ *  @param
+ *  @param
+ *  @return
  ****************************************************************************************/
 void parameters_setPEEP(float peep_value);
 
 /****************************************************************************************
- *  @brief      
- *  @usage      
- *  @param      
- *  @param      
- *  @return     
+ *  @brief
+ *  @usage
+ *  @param
+ *  @param
+ *  @return
  ****************************************************************************************/
 float parameters_getPEEP();
 
 // Expiration duration
 
 /****************************************************************************************
- *  @brief      
- *  @usage      
- *  @param      
- *  @param      
- *  @return     
+ *  @brief
+ *  @usage
+ *  @param
+ *  @param
+ *  @return
  ****************************************************************************************/
 void parameters_setExpireDuration(float expireduration_value);
 
 /****************************************************************************************
- *  @brief      
- *  @usage      
- *  @param      
- *  @param      
- *  @return     
+ *  @brief
+ *  @usage
+ *  @param
+ *  @param
+ *  @return
  ****************************************************************************************/
 float parameters_getExpireDuration();
 
 // Inspiration duration
 
 /****************************************************************************************
- *  @brief      
- *  @usage      
- *  @param      
- *  @param      
- *  @return     
+ *  @brief
+ *  @usage
+ *  @param
+ *  @param
+ *  @return
  ****************************************************************************************/
 void parameters_setInspireDuration(float inspireduration_value);
 
 /****************************************************************************************
- *  @brief      
- *  @usage      
- *  @param      
- *  @param      
- *  @return     
+ *  @brief
+ *  @usage
+ *  @param
+ *  @param
+ *  @return
  ****************************************************************************************/
 float parameters_getInspireDuration();
 
 // Peak Inspiratory Pressure (PIP)
 
 /****************************************************************************************
- *  @brief      
- *  @usage      
- *  @param      
- *  @param      
- *  @return     
+ *  @brief
+ *  @usage
+ *  @param
+ *  @param
+ *  @return
  ****************************************************************************************/
 void parameters_setPIP(float pip_value);
 
 /****************************************************************************************
- *  @brief      
- *  @usage      
- *  @param      
- *  @param      
- *  @return     
+ *  @brief
+ *  @usage
+ *  @param
+ *  @param
+ *  @return
  ****************************************************************************************/
 float parameters_getPIP();
 
 // Dwell
 
 /****************************************************************************************
- *  @brief      
- *  @usage      
- *  @param      
- *  @param      
- *  @return     
+ *  @brief
+ *  @usage
+ *  @param
+ *  @param
+ *  @return
  ****************************************************************************************/
 void parameters_setDwell(float Dwell);
 
 /****************************************************************************************
- *  @brief      
- *  @usage      
- *  @param      
- *  @param      
- *  @return     
+ *  @brief
+ *  @usage
+ *  @param
+ *  @param
+ *  @return
  ****************************************************************************************/
 float parameters_getDwell();
+
+/****************************************************************************************
+ *  @brief
+ *  @usage
+ *  @param
+ *  @param
+ *  @return
+ ****************************************************************************************/
+bool parameters_medicalModeActive();
+
+/****************************************************************************************
+ *  @brief
+ *  @usage
+ *  @param
+ *  @param
+ *  @return
+ ****************************************************************************************/
+void parameters_setPeriodicReadings(bool active);
+
+/****************************************************************************************
+ *  @brief
+ *  @usage
+ *  @param
+ *  @param
+ *  @return
+ ****************************************************************************************/
+bool parameters_getPeriodicReadings();
 
 #endif // PARAMETERS_H

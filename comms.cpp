@@ -25,10 +25,6 @@
 #include "alarm.h"
 #include "parameters.h"
 
-void comms_init() {
-    serialIO_init();
-}
-
 enum class handler_state {
     idle            = 0x00,
     packet_arriving = 0x01,
@@ -50,9 +46,14 @@ enum class packet_field {
     count                   /* Sentinel */
 };
 
-static char rx_packet[32];
-static char tx_packet[32];
-static char cmdResponse_data[sizeof(tx_packet) - 5]; // 5 (MSGTYPE[1] + DATAID[1] + LEN [1] + CHECKSUM[2])
+#define PACKET_LEN_MAX (32)
+
+static char rx_packet[PACKET_LEN_MAX];
+static char cmdResponse_data[PACKET_LEN_MAX - 5]; // 5 (MSGTYPE[1] + DATAID[1] + LEN [1] + CHECKSUM[2])
+
+void comms_init() {
+    serialIO_init();
+}
 
 void comms_handler() {
 
@@ -79,16 +80,17 @@ void comms_handler() {
                 // This has lower priority than a packet recieved via serialIO
 
                 state = handler_state::alarm_waiting;
-            }
+            } 
             else {
+
                 state = handler_state::idle;
             }
 
             break;
 
         case handler_state::packet_arriving: /* Don't know what the packet is yet */
-                // Keep receiving packet until completion
 
+                // Keep receiving packet until completion
                 received = packet_receive(rx_packet, &packet_len);
 
                 // Check if packet has finished arriving
@@ -104,6 +106,7 @@ void comms_handler() {
 
                 switch(packetStatus) {
                     case processPacket::command:
+
                         cmd_execute((enum command) rx_packet[(uint8_t) packet_field::cmd],
                                     &rx_packet[(uint8_t) packet_field::data],
                                     rx_packet[(uint8_t) packet_field::len],
@@ -169,7 +172,7 @@ void comms_handler() {
 }
 
 static void cmd_responseSend(uint8_t cmd, char *packet, uint8_t len) {
-    serialIO_send(msgType::ack, (enum dataID) cmd, packet, len);
+    serialIO_send(msgType::rAck, (enum dataID) cmd, packet, len);
 }
 
 static void send_alarm() {
@@ -189,7 +192,6 @@ static void send_alarm() {
     else {
         // TODO Handle error
     }
-
 }
 
 enum processPacket process_packet(char *packet, uint8_t len) {
@@ -238,6 +240,8 @@ enum processPacket process_packet(char *packet, uint8_t len) {
 }
 
 static void cmd_execute(enum command cmd, char *dataTx, uint8_t lenTx, char *dataRx, uint8_t *lenRx, uint8_t lenRxMax) {
+
+    *lenRx = 0; // Initialise the value to zero
 
     switch(cmd) {
 
@@ -297,12 +301,15 @@ static void cmd_execute(enum command cmd, char *dataTx, uint8_t lenTx, char *dat
 
             break;
 
-
         case command::set_periodic:
             parameters_setPeriodicReadings(dataTx[0] == 0x01 ? true : false);
             break;
 
+        case command::get_periodic:
+            *lenRx = 1;
+            dataRx[0] = (uint8_t) parameters_getPeriodicReadings();
 
+            break;
     }
 }
 
@@ -353,20 +360,21 @@ static bool packet_receive(char *packet, uint8_t *len) {
 
     static enum packet_field field = packet_field::msg_type;
     static uint8_t packet_len = 0;
-    static uint8_t data_len;
+    static uint8_t data_len = 0;
     char msg_type;
     bool packet_complete = false;
-
+/*
     if(!serialIO_dataAvailable()) {
         return false;
     }
-
+*/
     switch(field) {
 
         case packet_field::msg_type:
 
             //NOTE: Assuming data already in buffer
             serialIO_readByte(&packet[packet_len]);
+
 
             msg_type = packet[packet_len];
 
@@ -400,7 +408,10 @@ static bool packet_receive(char *packet, uint8_t *len) {
 
             serialIO_readByte(&packet[packet_len++]);
 
-            field = packet_field::data;
+            if(packet[(uint8_t) packet_field::len] == 0)
+                field = packet_field::checksumA;
+            else
+                field = packet_field::data;
 
             break;
 

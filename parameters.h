@@ -55,7 +55,7 @@
 #define PIP_DEFAULT   10.0
 #define DWELL_DEFAULT 10.0
 
-#define PERIODIC_READINGS true
+#define PERIODIC_READINGS false
 
 // Calibration parameter defaults
 

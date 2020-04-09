@@ -24,6 +24,7 @@
 #include "serialIO.h"
 #include "alarm.h"
 #include "parameters.h"
+#include "types.h"
 
 enum class handler_state {
     idle            = 0x00,
@@ -59,9 +60,20 @@ void comms_handler() {
 
     static enum handler_state state = handler_state::idle;
     static uint8_t packet_len = 0;
+    static bool alarm_sent = false;
+    static uint32_t alarmSentTime = 0;
     bool received = false;
     uint8_t cmdResponseData_len;
     enum processPacket packetStatus;
+
+    // Timeout alarm waiting if it has been sent
+    if(alarm_sent == true) {
+        if((millis() - alarmSentTime) >= DELAY_100MS) {
+            // Alarm hasn't ack arrived within DELAY_100MS,
+            // lets send the alarm again
+            alarm_sent = false;
+        }
+    }
 
     switch(state) {
 
@@ -75,12 +87,12 @@ void comms_handler() {
 
                 state = handler_state::packet_arriving;
             }
-            else if(alarm_available()) { // Are any alarms waiting to be handled?
+            else if(alarm_available() && alarm_sent == false) { // Are any alarms waiting to be handled?
                 // Change state to process alarm
                 // This has lower priority than a packet recieved via serialIO
 
                 state = handler_state::alarm_waiting;
-            } 
+            }
             else {
 
                 state = handler_state::idle;
@@ -121,10 +133,12 @@ void comms_handler() {
                     case processPacket::ack:
                         // We've received an alarm acknowledgement, remove the alarm from the buffer
                         alarm_remove();
+                        alarm_sent = false;
                         break;
 
                     case processPacket::nack:
                         // The IC sent an ack packet (success or fail). Cannot be certain, don't remove the alarm in the buffer
+                        alarm_sent = false;
                         break;
 
                     case processPacket::checksumErr:
@@ -159,6 +173,9 @@ void comms_handler() {
             // Read alarm
             send_alarm();
 
+            alarm_sent = true;
+            alarmSentTime = millis();
+
             state = handler_state::idle;
 
             break;
@@ -187,7 +204,7 @@ static void send_alarm() {
         data[2] = (timestamp >> 8) & 0xFF;
         data[3] = timestamp & 0xFF;
 
-        serialIO_send(msgType::rErrCmd, alarmID, data, sizeof(data));
+       serialIO_send(msgType::alarm, alarmID, data, sizeof(data));
     }
     else {
         // TODO Handle error
@@ -204,6 +221,12 @@ enum processPacket process_packet(char *packet, uint8_t len) {
         // An Ack packet only has three bytes.
         // Ignore if Ack with checksum error has been received
         // The alarm will stay on the stack and we'll try to resend it later
+
+        if(len == 3) {
+            // Assume that the recieved packet is a ack/nack following
+            // the transmission of an alarm
+            return processPacket::nack;
+        }
 
         return processPacket::checksumErr;
     }
@@ -240,7 +263,7 @@ enum processPacket process_packet(char *packet, uint8_t len) {
 }
 
 static void cmd_execute(enum command cmd, char *dataTx, uint8_t lenTx, char *dataRx, uint8_t *lenRx, uint8_t lenRxMax) {
-
+    char alarmData[8];
     *lenRx = 0; // Initialise the value to zero
 
     switch(cmd) {
@@ -303,6 +326,19 @@ static void cmd_execute(enum command cmd, char *dataTx, uint8_t lenTx, char *dat
 
         case command::set_periodic:
             parameters_setPeriodicReadings(dataTx[0] == 0x01 ? true : false);
+
+            // Set test alarm data values
+            alarmData[0] = 0x01;
+            alarmData[1] = 0x02;
+            alarmData[2] = 0x03;
+            alarmData[3] = 0x04;
+            alarmData[4] = 0x05;
+            alarmData[5] = 0x06;
+            alarmData[6] = 0x07;
+            alarmData[7] = 0x08;
+
+            alarm_add(dataID::alarm_1, alarmData);
+
             break;
 
         case command::get_periodic:
@@ -363,99 +399,100 @@ static bool packet_receive(char *packet, uint8_t *len) {
     static uint8_t data_len = 0;
     char msg_type;
     bool packet_complete = false;
-/*
-    if(!serialIO_dataAvailable()) {
-        return false;
-    }
-*/
-    switch(field) {
 
-        case packet_field::msg_type:
+    // Accelerate the packet acquisition process whilst data is waiting
+    // by repeatedly reading the data
+    while(serialIO_dataAvailable()) {
 
-            //NOTE: Assuming data already in buffer
-            serialIO_readByte(&packet[packet_len]);
+        switch(field) {
 
+            case packet_field::msg_type:
 
-            msg_type = packet[packet_len];
+                //NOTE: Assuming data already in buffer
+                serialIO_readByte(&packet[packet_len]);
 
-            // Process field - what kind of packet is this? Command or Ack?
-            if(msg_type == (char) msgType::cmd) {
-                // Command packet
-                field = packet_field::cmd;
-            }
-            else if(msg_type == (char) msgType::ack ||  msg_type == (char) msgType::nAck) {
-                // Alarm acknowledgement
-                field = packet_field::checksumA;
-            }
-            else {
-                // Something else
-                // FIXME Flag error
-            }
+                msg_type = packet[packet_len];
 
-            packet_len++;
+                // Process field - what kind of packet is this? Command or Ack?
+                if(msg_type == (char) msgType::cmd) {
+                    // Command packet
+                    field = packet_field::cmd;
+                }
+                else if(msg_type == (char) msgType::ack ||  msg_type == (char) msgType::nAck) {
+                    // Alarm acknowledgement
+                    field = packet_field::checksumA;
+                }
+                else {
+                    // Something else
+                    // FIXME Flag error
+                }
 
-            break;
+                packet_len++;
 
-        case packet_field::cmd:
+                break;
 
-            serialIO_readByte(&packet[packet_len++]);
+            case packet_field::cmd:
 
-            field = packet_field::len;
+                serialIO_readByte(&packet[packet_len++]);
 
-            break;
+                field = packet_field::len;
 
-        case packet_field::len:
+                break;
 
-            serialIO_readByte(&packet[packet_len++]);
+            case packet_field::len:
 
-            if(packet[(uint8_t) packet_field::len] == 0)
-                field = packet_field::checksumA;
-            else
-                field = packet_field::data;
+                serialIO_readByte(&packet[packet_len++]);
 
-            break;
+                // If no data, skip straight to the checksum
+                if(packet[(uint8_t) packet_field::len] == 0)
+                    field = packet_field::checksumA;
+                else
+                    field = packet_field::data;
 
-        case packet_field::data:
+                break;
 
-            // TODO Set maximum LEN (incase LEN contains a number too high)
+            case packet_field::data:
 
-            serialIO_readByte(&packet[packet_len++]);
+                // TODO Set maximum LEN (incase LEN contains a number too high)
 
-            if(++data_len == packet[(uint8_t) packet_field::len]) {
-                field = packet_field::checksumA;
-            }
+                serialIO_readByte(&packet[packet_len++]);
 
-            break;
+                if(++data_len == packet[(uint8_t) packet_field::len]) {
+                    field = packet_field::checksumA;
+                }
 
-        case packet_field::checksumA:
+                break;
 
-            serialIO_readByte(&packet[packet_len++]);
+            case packet_field::checksumA:
 
-            field = packet_field::checksumB;
+                serialIO_readByte(&packet[packet_len++]);
 
-            break;
+                field = packet_field::checksumB;
 
-        case packet_field::checksumB:
+                break;
 
-            serialIO_readByte(&packet[packet_len++]);
+            case packet_field::checksumB:
 
-            field = packet_field::checksumB;
+                serialIO_readByte(&packet[packet_len++]);
 
-            // Reset static counters to default values
-            data_len = 0;
-            *len = packet_len; // Save packet length
-            packet_len = 0;
-            field = packet_field::msg_type;
+                field = packet_field::checksumB;
 
-            packet_complete = true;
+                // Reset static counters to default values
+                data_len = 0;
+                *len = packet_len; // Save packet length
+                packet_len = 0;
+                field = packet_field::msg_type;
 
-            break;
+                packet_complete = true;
 
-        default:
-            // Should never arrive there
-            // TODO Log error
+                break;
 
-            break;
+            default:
+                // Should never arrive there
+                // TODO Log error
+
+                break;
+        }
     }
 
     return packet_complete;

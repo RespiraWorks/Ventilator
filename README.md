@@ -5,7 +5,9 @@ This is a common repository for all software components of the RespiraWorks open
 ## Structure
 
 common - code shared across controller and GUI
+
 controller - arduino/atmega code for hardware controller
+
 gui - graphical interface
 
 

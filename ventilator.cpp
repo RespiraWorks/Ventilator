@@ -25,21 +25,16 @@
 
 void ventilator_start() {
 
-    alarm_init();
-
-    comms_sendResetState(); // Inform the Interface Controller that we just started/restarted
-
 	for (;;) {
 		ventilator_control();
 	}
 }
 
-static void ventilator_control() {
+void ventilator_control() {
 
-	// Check any new commands?
     comms_handler();
 
     pid_execute();
-    //comms_sendResetState();
+
     watchdog_handler();
 }

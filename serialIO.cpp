@@ -25,6 +25,7 @@ void serialIO_init() {
 }
 
 bool serialIO_dataAvailable() {
+
     return (Serial.available() > 0) ? true : false;
 }
 
@@ -78,7 +79,8 @@ bool serialIO_checkChecksum(char *packet, uint8_t packet_len) {
     c0 = 0xff - ((f0 + f1) % 0xff);
     c1 = 0xff - ((f0 + c0) % 0xff);
 
-    if((packet[packet_len-2] == (unsigned char) c0) && (packet[packet_len-1] == (unsigned char) c1))
+
+    if((packet[packet_len-2] == (char) c0) && (packet[packet_len-1] == (char) c1))
         return true;
 
     return false;

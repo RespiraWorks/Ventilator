@@ -58,6 +58,7 @@
 #include "parameters.h"
 #include "blower.h"
 #include "ventilator.h"
+#include "alarm.h"
 
 void setup() {
 
@@ -68,6 +69,10 @@ void setup() {
 
     watchdog_init();
     pid_init();
+
+    alarm_init();
+
+    comms_sendResetState(); // Inform the Interface Controller that we just started/restarted
 
     ventilator_start();
 }

@@ -16,29 +16,13 @@
   along with FixMoreLungs.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef VENTILATOR_H
-#define VENTILATOR_H
+#ifndef TYPES_H
+#define TYPES_H
 
-// Private function prototypes
+// Timer defintions
+#define DELAY_1S    (1000)
+#define DELAY_100MS (100)
+#define DELAY_10MS  (10)
+#define DELAY_1MS   (1)
 
-/****************************************************************************************
- *  @brief
- *  @usage
- *  @param
- *  @param
- *  @return
- ****************************************************************************************/
-static void ventilator_control();
-
-// Public function prototypes
-
-/****************************************************************************************
- *  @brief
- *  @usage
- *  @param
- *  @param
- *  @return
- ****************************************************************************************/
-void ventilator_start();
-
-#endif // VENTILATOR_H
+#endif // TYPES_H

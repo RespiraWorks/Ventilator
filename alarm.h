@@ -91,9 +91,9 @@ static bool stack_full();
 
 static bool stack_empty();
 
-static int32_t stack_peek(alarm_t *alarm);
+static int32_t stack_peek(alarm_t **alarm);
 
-static int32_t stack_pop(alarm_t *alarm);
+static int32_t stack_pop(alarm_t **alarm);
 
 static void stack_push(alarm_t alarm);
 

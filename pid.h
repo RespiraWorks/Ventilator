@@ -42,8 +42,7 @@
 #define RR 0
 #define IE 0
 
-//Private function prototypes
-
+// Public function prototypes
 /****************************************************************************************
  *  @brief
  *  @usage
@@ -53,8 +52,6 @@
  ****************************************************************************************/
 void pid_execute();
 
-// Public function prototypes
-
 /****************************************************************************************
  *  @brief
  *  @usage
@@ -63,5 +60,9 @@ void pid_execute();
  *  @return
  ****************************************************************************************/
 void pid_init();
+
+// Private function prototypes
+
+static void send_periodicData(uint32_t delay, uint16_t pressure, uint16_t volume, uint16_t flow);
 
 #endif  // PID_H

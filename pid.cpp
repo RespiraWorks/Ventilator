@@ -20,6 +20,7 @@
 #include "pid.h"
 #include "parameters.h"
 #include "comms.h"
+#include "types.h"
 
 //Define Variables we'll be connecting to
 static double Setpoint, Input, Output;
@@ -58,9 +59,6 @@ void pid_execute() {
     uint16_t cyclecounter = 0;
     int16_t  sensorValue = 0;   // value read from the pot
     enum pid_fsm_state state = pid_fsm_state::reset;
-
-    static uint32_t time;
-    static bool first_call = true;
 
     switch (state) {
 
@@ -141,25 +139,25 @@ void pid_execute() {
     myPID.Compute(); // computer PID command
     analogWrite(BLOWERSPD_PIN, Output); //write output
 
+    send_periodicData(DELAY_100MS, sensorValue, 0, 0);
+}
+
+static void send_periodicData(uint32_t delay, uint16_t pressure, uint16_t volume, uint16_t flow) {
+    static uint32_t time;
+    static bool first_call = true;
+
     if(first_call == true) {
         first_call = false;
         time = millis();
     }
     else {
-        // TODO does this rollover properly?
-        if((millis() - time) > 100) {
+        if((millis() - time) > delay) {
             if(parameters_getPeriodicReadings()){
                 // Send readings data
-                comms_sendPeriodicReadings(sensorValue * 1.0, 0.0, 0.0);
+                comms_sendPeriodicReadings(pressure * 1.0, volume * 0.0, flow * 0.0);
             }
 
             time = millis();
         }
     }
-
-   // comms_send(Setpoint, sensorValue);
-
-
-    delay(2);  //delay
-
 }

@@ -1,5 +1,5 @@
-# OpenSourceVentilatorGUI
+# GUI for RespiraWorks open source ventilator.
 
-GUI for RespiraWorks open source ventilator.
+TODO(jlebar): Update link to TravisCI below.
 
-Build instructions go here
+[![Build Status](https://travis-ci.com/RespiraWorks/OpenSourceVentilatorGUI.svg?branch=master)](https://travis-ci.com/RespiraWorks/OpenSourceVentilatorGUI)

@@ -56,5 +56,3 @@ This project is licensed under the
   Frost Methane Labs/Fix More Lungs
 
   Based on example code by Tom Igoe and Brett Beauregard
-
-

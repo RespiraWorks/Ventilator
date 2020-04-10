@@ -1,6 +1,6 @@
-/build
-/install
-/source/config/*
+build/
+install
+source/config/*
 *.app
 *.desktop
 *.user

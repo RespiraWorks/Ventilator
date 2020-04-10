@@ -13,7 +13,9 @@ addons:
       - qtdeclarative5-dev
       - libqt5charts5-dev
 
+# TODO: Separate jobs for GUI and controller?
 script:
+  - cd gui
   - mkdir build
   - cd build
   - qmake ..

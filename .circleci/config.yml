@@ -31,7 +31,7 @@ jobs:
             docker buildx create --name gui
             docker buildx use gui
             docker buildx inspect --bootstrap
-            cd ~/project/gui && docker buildx build --platform linux/arm64 . -t respiraworks/gui:$CIRCLE_SHA1
+            cd ~/project/gui && docker buildx build --platform linux/arm64 . -t respiraworks/gui:$CIRCLE_SHA1 --load
       - run:
           name: Run tests
           command: |

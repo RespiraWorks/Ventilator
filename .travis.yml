@@ -1,0 +1,24 @@
+language: cpp
+compiler: gcc
+
+sudo: required
+
+dist: bionic
+services:
+  - xvfb
+addons:
+  apt:
+    packages:
+      - qt5-default
+      - qtdeclarative5-dev
+      - libqt5charts5-dev
+
+# TODO: Separate jobs for GUI and controller?
+script:
+  - cd gui
+  - mkdir build
+  - cd build
+  - qmake ..
+  - make
+  - ./ProjectVentilatorGUI -d
+  - ./ProjectVentilatorGUI -h

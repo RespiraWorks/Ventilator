@@ -350,7 +350,7 @@ static void cmd_execute(enum command cmd, char *dataTx, uint8_t lenTx, char *dat
 }
 
 static bool packet_checksumValidation(char *packet, uint8_t len) {
-    return serialIO_checkChecksum(packet, len);
+    return checksum_check(packet, len);
 }
 
 static bool packet_cmdValidatation(char *packet) {

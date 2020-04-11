@@ -46,8 +46,8 @@ void serialIO_send(enum msgType type, enum dataID id, char *data, uint8_t len) {
     metadata[1] = (char)  id; // DATA_ID
     metadata[2] = (char)  len; // LEN
 
-    Fletcher16_calc(&sum1, &sum2, metadata, sizeof(metadata));
-    csum = Fletcher16_calc(&sum1, &sum2, data, len);
+    checksum_fletcher16(&sum1, &sum2, metadata, sizeof(metadata));
+    csum = checksum_fletcher16(&sum1, &sum2, data, len);
 
     // Calculate check bytes
     // TODO Can this be optimised?
@@ -63,38 +63,4 @@ void serialIO_send(enum msgType type, enum dataID id, char *data, uint8_t len) {
     Serial.write(c0);
     Serial.write(c1);
 
-}
-
-bool serialIO_checkChecksum(char *packet, uint8_t packet_len) {
-    uint16_t sum1 = 0;
-    uint16_t sum2 = 0;
-    uint16_t csum;
-    uint8_t c0,c1,f0,f1;
-
-    // TODO Check validity of packet_len ?
-
-    csum = Fletcher16_calc(&sum1, &sum2, packet, packet_len-2); // Don't check the final two check bytes
-    f0 = csum & 0xff;
-    f1 = (csum >> 8) & 0xff;
-    c0 = 0xff - ((f0 + f1) % 0xff);
-    c1 = 0xff - ((f0 + c0) % 0xff);
-
-
-    if((packet[packet_len-2] == (char) c0) && (packet[packet_len-1] == (char) c1))
-        return true;
-
-    return false;
-}
-
-static uint16_t Fletcher16_calc(uint16_t *sum1, uint16_t *sum2,  char *data, uint8_t count )
-{
-    uint8_t index;
-
-    for (index = 0; index < count; ++index)
-    {
-        *sum1 = ((*sum1) + data[index]) % 255;
-        *sum2 = ((*sum2) + (*sum1)) % 255;
-    }
-
-    return ((*sum2) << 8) | *sum1;
 }

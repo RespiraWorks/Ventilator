@@ -1,5 +1,0 @@
-I'm using the platformio IDE to develop for the arduino
-
-Installation instructions :  https://www.youtube.com/watch?v=EIkGTwLOD7o
-
-In order to open the project in platformio, you'll need to copy the platformio.ini file into the project root directory (the one with .git in it)

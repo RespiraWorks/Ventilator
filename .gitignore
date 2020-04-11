@@ -14,5 +14,4 @@ cmake-build-*/
 .idea
 
 gui/build
-
 .DS_Store

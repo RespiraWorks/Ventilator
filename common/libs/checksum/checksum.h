@@ -16,15 +16,19 @@
   along with FixMoreLungs.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef SERIALIO_H
-#define SERIALIO_H
+#ifndef CHECKSUM_H
+#define CHECKSUM_H
 
 #include <stdint.h>
 
-#include "comms.h"
-#include "checksum.h"
-
-// Public functions
+/****************************************************************************************
+ *  @brief
+ *  @usage
+ *  @param
+ *  @param
+ *  @return
+ ****************************************************************************************/
+uint16_t checksum_fletcher16(uint16_t *sum1, uint16_t *sum2,  char *data, uint8_t count );
 
 /****************************************************************************************
  *  @brief
@@ -33,34 +37,6 @@
  *  @param
  *  @return
  ****************************************************************************************/
-void serialIO_init();
+bool checksum_check(char *packet, uint8_t packet_len);
 
-/****************************************************************************************
- *  @brief
- *  @usage
- *  @param
- *  @param
- *  @return
- ****************************************************************************************/
-void serialIO_send(enum msgType type, enum dataID id, char *data, uint8_t len);
-
-
-/****************************************************************************************
- *  @brief
- *  @usage
- *  @param
- *  @param
- *  @return
- ****************************************************************************************/
-bool serialIO_dataAvailable();
-
-/****************************************************************************************
- *  @brief
- *  @usage
- *  @param
- *  @param
- *  @return
- ****************************************************************************************/
-void serialIO_readByte(char *buffer);
-
-#endif // SERIALIO_H
+#endif // CHECKSUM_H

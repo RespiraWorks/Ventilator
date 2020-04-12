@@ -4,6 +4,7 @@ jobs:
   gui-static-analysis:
     machine:
       image: ubuntu-1604:201903-01
+    steps:
       - checkout
       - run:
           name: Install cppcheck
@@ -55,4 +56,6 @@ workflows:
   commit:
     jobs:
       - gui-static-analysis 
-      - gui-build-image
+      - gui-build-image:
+          requires:
+            - gui-static-analysis

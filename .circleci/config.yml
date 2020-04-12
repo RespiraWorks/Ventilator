@@ -1,0 +1,43 @@
+version: 2.1
+
+jobs:
+  build-gui-image:
+    machine:
+      image: ubuntu-1604:201903-01
+    steps:
+      - checkout
+      - run:
+          name: Remove old Docker version
+          command: |
+            sudo systemctl stop docker.service
+            sudo apt remove docker-ce docker-ce-cli containerd.io
+      - run:
+          name: Install latest Docker version
+          command: |
+            sudo apt-get update
+            sudo apt-get install -y docker-ce
+      - run:
+          name: Install QEMU
+          command: |
+            sudo docker run -it --rm --privileged multiarch/qemu-user-static --reset --credential yes --persistent yes
+      - run:
+          name: Install binfmt-support
+          command: |
+            sudo apt-get install -y binfmt-support
+      - run:
+          name: Do arm64 build
+          command: |
+            export DOCKER_CLI_EXPERIMENTAL=enabled
+            docker buildx create --name gui
+            docker buildx use gui
+            docker buildx inspect --bootstrap
+            cd ~/project/gui && docker buildx build --platform linux/arm64 . -t respiraworks/gui:$CIRCLE_SHA1 --load
+      - run:
+          name: Run tests
+          command: |
+            docker run -i respiraworks/gui:$CIRCLE_SHA1 ./test.sh
+
+workflows:
+  commit:
+    jobs:
+      - build-gui-image

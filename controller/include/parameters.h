@@ -65,37 +65,6 @@
 #define KI_DEFAULT   8.0
 #define KD_DEFAULT   0.0
 
-// Private function prototypes
-
-/****************************************************************************************
- *  @brief
- *  @usage
- *  @param
- *  @param
- *  @return
- ****************************************************************************************/
-static void init_defaultVentilatorParameters();
-
-/****************************************************************************************
- *  @brief
- *  @usage
- *  @param
- *  @param
- *  @return
- ****************************************************************************************/
-static void init_defaultPIDParameters();
-
-/****************************************************************************************
- *  @brief
- *  @usage
- *  @param
- *  @param
- *  @return
- ****************************************************************************************/
-static void init_defaultCalibrationParameters();
-
-
-
 
 // Public function prototypes
 

@@ -25,7 +25,20 @@ We use [platformio](https://platformio.org/) for building the controller code.  
 
 Here's a [video introduction](https://www.youtube.com/watch?v=EIkGTwLOD7o) to platformio.
 
-After installing platformio, you should be able to build by running `platformio run`.
+After installing platformio, you should be able to build and test as follows.
+
+```
+# Build for Arduino.
+$ platformio run
+
+# Test on local machine (i.e. your laptop/desktop).
+$ platformio test -e native
+
+# If you do this, you'll get an error because it tries to test on all platforms,
+and we don't currently support testing on the device.
+$ platformio test  # BAD
+Error: Please specify `upload_port` for environment or use global `--upload-port` option
+```
 
 This has been tested with an RF-nano Arduino board, which has similar parts and
 pinout to an Arduino Nano.

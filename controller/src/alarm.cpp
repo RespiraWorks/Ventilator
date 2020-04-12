@@ -21,6 +21,50 @@
 
 static stack_t stack;
 
+static bool stack_full() {
+    return (stack.top == (ALARM_NODES-1)) ? true : false;
+}
+
+static bool stack_empty() {
+    return (stack.top == -1) ? true : false;
+}
+
+static int32_t stack_peek(alarm_t **alarm) {
+
+    int32_t return_status = VC_STATUS_FAILURE;
+
+    if(!stack_empty()) {
+        *alarm = &stack.alarm[stack.top];
+
+        return_status = VC_STATUS_SUCCESS;
+    }
+
+    return return_status;
+}
+
+static int32_t stack_pop(alarm_t **alarm) {
+
+    int32_t return_status = VC_STATUS_FAILURE;
+
+    if(!stack_empty()) {
+        *alarm = &stack.alarm[stack.top];
+
+        stack.top--;
+
+        return_status = VC_STATUS_SUCCESS;
+    }
+
+    return return_status;
+}
+
+static void stack_push(alarm_t alarm) {
+    if(!stack_full()) {
+        stack.top++;
+
+        stack.alarm[stack.top] = alarm;
+    }
+}
+
 void alarm_init() {
     stack.top = -1;
 }
@@ -74,48 +118,4 @@ int32_t alarm_read(enum dataID *alarmID, uint32_t *timestamp, char *data) {
     }
 
     return return_status;
-}
-
-static bool stack_full() {
-    return (stack.top == (ALARM_NODES-1)) ? true : false;
-}
-
-static bool stack_empty() {
-    return (stack.top == -1) ? true : false;
-}
-
-static int32_t stack_peek(alarm_t **alarm) {
-
-    int32_t return_status = VC_STATUS_FAILURE;
-
-    if(!stack_empty()) {
-        *alarm = &stack.alarm[stack.top];
-
-        return_status = VC_STATUS_SUCCESS;
-    }
-
-    return return_status;
-}
-
-static int32_t stack_pop(alarm_t **alarm) {
-
-    int32_t return_status = VC_STATUS_FAILURE;
-
-    if(!stack_empty()) {
-        *alarm = &stack.alarm[stack.top];
-
-        stack.top--;
-
-        return_status = VC_STATUS_SUCCESS;
-    }
-
-    return return_status;
-}
-
-static void stack_push(alarm_t alarm) {
-    if(!stack_full()) {
-        stack.top++;
-
-        stack.alarm[stack.top] = alarm;
-    }
 }

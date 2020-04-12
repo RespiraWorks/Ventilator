@@ -43,6 +43,9 @@ ColumnLayout
     signal signalSourceChanged(string source, int signalCount, int sampleCount);
     height: 600
 
+    function changeStateText(txt) {
+        stateLayout.stateText = txt;
+    }
 
     Text
     {
@@ -55,12 +58,34 @@ ColumnLayout
     }
 
 
+    ColumnLayout {
+        id: stateLayout
+        property alias stateText: ventilatorState.text
+        Text {
+            id: ventilatorStateInfo
+            x: 40
+            y: 38
+            color: "#ffffff"
+            text: qsTr("Ventilator\nState:")
+            wrapMode: Text.NoWrap
+            font.pixelSize: 36
+        }
 
+        Text {
+            id: ventilatorState
+            x: 375
+            y: 38
+            color: "#ffffff"
+            text: qsTr("OFF")
+            font.pixelSize: 36
+        }
+    }
 
     SwipeView {
         id: swipeView
         width: 200
         height: 200
+        Layout.topMargin: 38
         Layout.fillWidth: true
         Layout.fillHeight: true
         currentIndex: 0
@@ -75,7 +100,7 @@ ColumnLayout
                 id: modesView
                 color: "#ffffff"
                 text: qsTr("Modes View")
-                anchors.bottomMargin: 424
+                anchors.bottomMargin: 316
                 visible: true
                 font.bold: true
                 anchors.fill: parent
@@ -84,12 +109,14 @@ ColumnLayout
 
             Column {
                 id: modesButtonColumn
+                anchors.rightMargin: 0
+                anchors.bottomMargin: 109
                 anchors.leftMargin: 0
-                anchors.top: modesView.bottom
+                anchors.top: parent.top
                 anchors.right: parent.right
                 anchors.bottom: parent.bottom
                 anchors.left: parent.left
-                anchors.topMargin: 0
+                anchors.topMargin: 33
                 spacing: 50
 
 
@@ -101,7 +128,7 @@ ColumnLayout
                     text: "A/C Mode"
                     autoExclusive: true
                     spacing: 50
-
+                    onActivated: changeStateText("ACV")
                 }
 
                 DelayButton
@@ -114,6 +141,7 @@ ColumnLayout
 
                     onActivated:
                     {
+                        onActivated: changeStateText("PRVC")
 
 //                       checkable = false;
 
@@ -136,6 +164,7 @@ ColumnLayout
                     autoExclusive: true
                     spacing: 50
                     delay: 2000
+                    onActivated: changeStateText("OFF")
                 }
 
             }
@@ -160,6 +189,7 @@ ColumnLayout
 
     PageIndicator {
         id: indicator
+        Layout.rightMargin: 180
         Layout.alignment: Qt.AlignHCenter | Qt.AlignBottom
 
 

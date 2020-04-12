@@ -38,6 +38,10 @@ static float Kp_pid;
 static float Ki_pid;
 static float Kd_pid;
 
+static void init_defaultVentilatorParameters();
+static void init_defaultPIDParameters();
+static void init_defaultCalibrationParameters();
+
 void parameters_init() {
     //eeprom_init();
 

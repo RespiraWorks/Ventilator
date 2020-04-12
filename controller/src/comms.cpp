@@ -52,6 +52,21 @@ enum class packet_field {
 static char rx_packet[PACKET_LEN_MAX];
 static char cmdResponse_data[PACKET_LEN_MAX - 5]; // 5 (MSGTYPE[1] + DATAID[1] + LEN [1] + CHECKSUM[2])
 
+static bool packet_check(char *packet);
+static bool packet_receive(char *packet, uint8_t *packet_len);
+static bool packet_checksumValidation(char *packet, uint8_t len);
+static bool packet_cmdValidatation(char *packet);
+static bool packet_modeValidation(char *packet);
+static enum processPacket process_packet(char *packet, uint8_t len);
+static void comms_sendModeERR(char *packet);
+static void comms_sendChecksumERR(char *packet);
+static void comms_sendCommandERR(char *packet);
+static void cmd_execute(enum command cmd, char *dataTx, uint8_t lenTx,
+                        char *dataRx, uint8_t *lenRx, uint8_t lenRxMax);
+static void cmd_responseSend(char *packet, uint8_t len);
+static void send_alarm();
+static void cmd_responseSend(uint8_t cmd, char *packet, uint8_t len);
+
 void comms_init() {
     serialIO_init();
 }
@@ -211,7 +226,7 @@ static void send_alarm() {
     }
 }
 
-enum processPacket process_packet(char *packet, uint8_t len) {
+static enum processPacket process_packet(char *packet, uint8_t len) {
 
     // Validate packet checksum
     if(!packet_checksumValidation(packet, len)) {

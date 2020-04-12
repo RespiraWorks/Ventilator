@@ -13,3 +13,5 @@ cmake-build-*/
 .idea/
 .idea
 
+gui/build
+.DS_Store

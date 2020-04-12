@@ -1,7 +1,21 @@
 version: 2.1
 
 jobs:
-  build-gui-image:
+  gui-static-analysis:
+    machine:
+      image: ubuntu-1604:201903-01
+      - checkout
+      - run:
+          name: Install cppcheck
+          command: |
+            sudo apt-get update
+            sudo apt-get install -y cppcheck
+      - run:
+          name: Run cppcheck on /gui
+          command: |
+            cd ~/project/gui && cppcheck . && cd -
+
+  gui-build-image:
     machine:
       image: ubuntu-1604:201903-01
     steps:
@@ -40,4 +54,5 @@ jobs:
 workflows:
   commit:
     jobs:
-      - build-gui-image
+      - gui-static-analysis 
+      - gui-build-image

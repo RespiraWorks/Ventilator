@@ -16,18 +16,10 @@
   along with FixMoreLungs.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef BLOWER_H
-#define BLOWER_H
+#include "blower.h"
+#include "solenoid.h"
 
-#include <Arduino.h>
-
-/****************************************************************************************
- *  @brief
- *  @usage
- *  @param
- *  @param
- *  @return
- ****************************************************************************************/
-void blower_init();
-
-#endif  // BLOWER_H
+void actuators_init() {
+    blower_init();
+    solenoid_init();
+}

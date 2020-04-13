@@ -21,22 +21,38 @@
 
 #include <stdint.h>
 
-/****************************************************************************************
- *  @brief
- *  @usage
- *  @param
- *  @param
- *  @return
- ****************************************************************************************/
-uint16_t checksum_fletcher16(uint16_t *sum1, uint16_t *sum2,  char *data, uint8_t count );
+// Computes the fletcher16 checksum for a packet.
+//
+// The optional `state` param lets you chain together multiple calls to this
+// function if you want to checksum one "logical message" which isn't in a
+// single buffer.
+//
+//   uint16_t state = checksum_fletcher16(data0, data0_len);
+//   state = checksum_fletcher16(data1, data1_len, state);
+//   uint16_t result = checksum_fletcher16(data2, data2_len, state);
+//
+uint16_t checksum_fletcher16(const char *data, uint8_t count,
+                             uint16_t state = 0);
 
-/****************************************************************************************
- *  @brief
- *  @usage
- *  @param
- *  @param
- *  @return
- ****************************************************************************************/
-bool checksum_check(char *packet, uint8_t packet_len);
+// Computes check bytes for a fletcher16 checksum.
+//
+// Given a packet p and checksum(p) == c, check_bytes_fletcher16(c) returns two
+// bytes [b1 b2] such that checksum(p | b1 | b2) == 0, where `|` represents
+// concatenation.
+inline uint16_t check_bytes_fletcher16(uint16_t checksum) {
+  uint8_t f0 = checksum & 0xff;
+  uint8_t f1 = (checksum >> 8) & 0xff;
+  uint8_t c0 = 0xff - ((f0 + f1) % 0xff);
+  uint8_t c1 = 0xff - ((f0 + c0) % 0xff);
+  return (uint16_t{c0} << 8) | c1;
+}
+
+// Verifies the checksum of a packet.
+//
+// When creating packets, we append "check bytes" so that the whole packet
+// (including the check bytes) has a checksum of 0.
+inline bool checksum_check(const char *packet, uint8_t packet_len) {
+  return checksum_fletcher16(packet, packet_len) == 0;
+}
 
 #endif // CHECKSUM_H

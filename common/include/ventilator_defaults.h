@@ -30,10 +30,11 @@
 #define DWELL_DEFAULT (10.0)
 #define IER_DEFAULT   (1.0)
 
-#define PERIODIC_READINGS false
+#define PERIODIC_READINGS_DEFAULT   false
 
-#define OPERATING_MODE operatingMode::medical
-#define PERIODIC_DATA_MODE periodicMode::off
+#define OPERATING_MODE_DEFAULT      operatingMode::medical
+#define PERIODIC_DATA_MODE_DEFAULT  periodicMode::off
+#define VENTILATOR_MODE_DEFAULT     ventilatorMode::PRVC
 
 // Calibration parameter defaults
 
@@ -42,6 +43,5 @@
 #define KP_DEFAULT   (2.0)
 #define KI_DEFAULT   (8.0)
 #define KD_DEFAULT   (0.0)
-
 
 #endif // VENTILATOR_DEFAULTS_H

@@ -19,6 +19,18 @@
 
 #include "parameters.h"
 
+/****************************************************************************************
+ *    PRIVATE FUNCTION PROTOTYPES
+ ****************************************************************************************/
+
+static void init_defaultVentilatorParameters();
+static void init_defaultPIDParameters();
+static void init_defaultCalibrationParameters();
+
+/****************************************************************************************
+ *    PRIVATE VARIABLES
+ ****************************************************************************************/
+
 // All ventilator settings parameters
 static float rr;
 static float tv;
@@ -30,7 +42,8 @@ static float dwell;
 static bool periodicReadings;
 
 static enum operatingMode operationMode;
-static enum periodicMode periodicDataMode;
+static enum periodicMode  periodicDataMode;
+static enum ventilatorMode   ventilatorOperatingMode;
 
 // Calibration parameters
 
@@ -40,35 +53,16 @@ static float Kp_pid;
 static float Ki_pid;
 static float Kd_pid;
 
+/****************************************************************************************
+ *    PUBLIC FUNCTIONS
+ ****************************************************************************************/
+
 void parameters_init() {
     //eeprom_init();
 
     init_defaultVentilatorParameters();
     init_defaultPIDParameters();
     init_defaultCalibrationParameters();
-}
-
-static void init_defaultVentilatorParameters() {
-    rr                = RR_DEFAULT;
-    tv                = TV_DEFAULT;
-    peep              = PEEP_DEFAULT;
-    ier               = IER_DEFAULT;
-    pip               = PIP_DEFAULT;
-    dwell             = DWELL_DEFAULT;
-    periodicReadings  = PERIODIC_READINGS;
-
-    operationMode     = OPERATING_MODE;
-    periodicDataMode  = PERIODIC_DATA_MODE;
-}
-
-static void init_defaultPIDParameters() {
-    Kp_pid    = KP_DEFAULT;
-    Ki_pid    = KI_DEFAULT;
-    Kd_pid    = KD_DEFAULT;
-}
-
-static void init_defaultCalibrationParameters() {
-
 }
 
 void parameters_setKp(float kp_value) {
@@ -199,12 +193,12 @@ enum periodicMode parameters_getPeriodicMode() {
     return periodicDataMode;
 }
 
-enum operatingMode parameters_getOperatingMode() {
-    return operationMode;
-}
-
 void parameters_setOperatingMode(enum operatingMode operatingMode_value) {
     operationMode = operatingMode_value;
+}
+
+enum operatingMode parameters_getOperatingMode() {
+    return operationMode;
 }
 
 void parameters_setPeriodicReadings(bool active) {
@@ -213,4 +207,40 @@ void parameters_setPeriodicReadings(bool active) {
 
 bool parameters_getPeriodicReadings() {
     return periodicReadings;
+}
+
+void parameters_setVentilatorMode(enum ventilatorMode ventilatorMode_value) {
+    ventilatorOperatingMode = ventilatorMode_value;
+}
+
+enum ventilatorMode parameters_getVentilatorMode() {
+    return ventilatorOperatingMode;
+}
+
+/****************************************************************************************
+ *    PRIVATE FUNCTIONS
+ ****************************************************************************************/
+
+static void init_defaultVentilatorParameters() {
+    rr                = RR_DEFAULT;
+    tv                = TV_DEFAULT;
+    peep              = PEEP_DEFAULT;
+    ier               = IER_DEFAULT;
+    pip               = PIP_DEFAULT;
+    dwell             = DWELL_DEFAULT;
+    periodicReadings  = PERIODIC_READINGS_DEFAULT;
+
+    operationMode           = OPERATING_MODE_DEFAULT;
+    periodicDataMode        = PERIODIC_DATA_MODE_DEFAULT;
+    ventilatorOperatingMode = VENTILATOR_MODE_DEFAULT;
+}
+
+static void init_defaultPIDParameters() {
+    Kp_pid    = KP_DEFAULT;
+    Ki_pid    = KI_DEFAULT;
+    Kd_pid    = KD_DEFAULT;
+}
+
+static void init_defaultCalibrationParameters() {
+
 }

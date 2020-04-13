@@ -120,4 +120,13 @@ enum class operatingMode {
     count                   /* Sentinel */
 };
 
+// The different medical operating mode types
+enum class ventilatorMode {
+    PRVC         = 0x00,
+    ACV          = 0x01,
+
+    count                   /* Sentinel */
+};
+
+
 #endif // PACKET_TYPES_H

@@ -261,4 +261,22 @@ void parameters_setVentilatorMode(enum ventilatorMode ventilatorMode_value);
 ****************************************************************************************/
 enum ventilatorMode parameters_getVentilatorMode();
 
+/****************************************************************************************
+*  @brief
+*  @usage
+*  @param
+*  @param
+*  @return
+****************************************************************************************/
+void parameters_setSolenoidNormalState(enum solenoidNormaleState normalState_value);
+
+/****************************************************************************************
+*  @brief
+*  @usage
+*  @param
+*  @param
+*  @return
+****************************************************************************************/
+enum solenoidNormaleState parameters_getSolenoidNormalState();
+
 #endif // PARAMETERS_H

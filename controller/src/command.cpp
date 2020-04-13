@@ -237,6 +237,12 @@ void command_execute(enum command cmd, char *dataTx, uint8_t lenTx, char *dataRx
 
             break;
 
+        case command::set_solenoidNormalState:
+
+            parameters_setSolenoidNormalState((enum solenoidNormaleState) dataTx[0]);
+
+            break;
+
         default:
 
             break;

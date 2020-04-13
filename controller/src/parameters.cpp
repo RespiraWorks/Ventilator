@@ -41,9 +41,10 @@ static float dwell;
 
 static bool periodicReadings;
 
-static enum operatingMode operationMode;
-static enum periodicMode  periodicDataMode;
-static enum ventilatorMode   ventilatorOperatingMode;
+static enum operatingMode           operationMode;
+static enum periodicMode            periodicDataMode;
+static enum ventilatorMode          ventilatorOperatingMode;
+static enum solenoidNormaleState    normalState;
 
 // Calibration parameters
 
@@ -217,6 +218,14 @@ enum ventilatorMode parameters_getVentilatorMode() {
     return ventilatorOperatingMode;
 }
 
+void parameters_setSolenoidNormalState(enum solenoidNormaleState normalState_value) {
+    normalState = normalState_value;
+}
+
+enum solenoidNormaleState parameters_getSolenoidNormalState() {
+    return normalState;
+}
+
 /****************************************************************************************
  *    PRIVATE FUNCTIONS
  ****************************************************************************************/
@@ -233,6 +242,7 @@ static void init_defaultVentilatorParameters() {
     operationMode           = OPERATING_MODE_DEFAULT;
     periodicDataMode        = PERIODIC_DATA_MODE_DEFAULT;
     ventilatorOperatingMode = VENTILATOR_MODE_DEFAULT;
+    normalState             = SOLENOID_NORMAL_STATE;
 }
 
 static void init_defaultPIDParameters() {

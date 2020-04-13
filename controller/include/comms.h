@@ -59,7 +59,7 @@ enum class medicalMode {
 */
 enum class engMode {
     start   = 0x20,     /* First engineering mode command */
-    end     = 0x27,     /* Final engineering mode command */
+    end     = 0x28,     /* Final engineering mode command */
 
     count
 };

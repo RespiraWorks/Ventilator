@@ -35,6 +35,7 @@
 #define OPERATING_MODE_DEFAULT      operatingMode::medical
 #define PERIODIC_DATA_MODE_DEFAULT  periodicMode::off
 #define VENTILATOR_MODE_DEFAULT     ventilatorMode::PRVC
+#define SOLENOID_NORMAL_STATE       solenoidNormaleState::normally_open
 
 // Calibration parameter defaults
 

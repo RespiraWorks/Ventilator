@@ -45,27 +45,28 @@ enum class command {
 
     /* Engineering mode commands */
 
-    set_kp          = 0x20,     /* PID constant Kp */
-    get_Kp          = 0x21,
-    set_Ki          = 0x22,     /* PID constant Ki */
-    get_Ki          = 0x23,
-    set_Kd          = 0x24,     /* PID constant Kd */
-    get_Kd          = 0x25,
+    set_kp                  = 0x20,     /* PID constant Kp */
+    get_Kp                  = 0x21,
+    set_Ki                  = 0x22,     /* PID constant Ki */
+    get_Ki                  = 0x23,
+    set_Kd                  = 0x24,     /* PID constant Kd */
+    get_Kd                  = 0x25,
 
-    set_blower      = 0x26,     /* Turn blower ON/OFF */
-    reset_vc        = 0x27,     /* Reset Ventilation Controller */
+    set_blower              = 0x26,     /* Turn blower ON/OFF */
+    reset_vc                = 0x27,     /* Reset Ventilation Controller */
+    set_solenoidNormalState = 0x28,     /* Solenoid normal state (open/closed) */
 
     /* Mixed Engineering/Medical mode commands */
 
-    set_periodic        = 0x40,     /* Periodic data transmission mode (Pressure, Flow, Volume) */
-    get_periodic        = 0x41,
-    set_mode            = 0x42,     /* Engineering or medical mode */
-    get_mode            = 0x43,
-    comms_check         = 0x44,     /* Communications check command */
-    set_ventilatorMode  = 0x45 ,    /* Set ventilator mode */
-    get_ventilatorMode  = 0x46,
-    start_ventilator    = 0x47,     /* Start the ventilator */
-    stop_ventilator     = 0x48,     /* Stop the ventilator */
+    set_periodic            = 0x40,     /* Periodic data transmission mode (Pressure, Flow, Volume) */
+    get_periodic            = 0x41,
+    set_mode                = 0x42,     /* Engineering or medical mode */
+    get_mode                = 0x43,
+    comms_check             = 0x44,     /* Communications check command */
+    set_ventilatorMode      = 0x45 ,    /* Set ventilator mode */
+    get_ventilatorMode      = 0x46,
+    start_ventilator        = 0x47,     /* Start the ventilator */
+    stop_ventilator         = 0x48,     /* Stop the ventilator */
 
     count                       /* Sentinel */
 };
@@ -130,6 +131,17 @@ enum class ventilatorMode {
     ACV          = 0x01,
 
     count                   /* Sentinel */
+};
+
+/****************************************************************************************
+ * SOLENOID STATE DEFINTIONS
+ ****************************************************************************************/
+
+enum class solenoidNormaleState {
+    normally_open    = 0x00,
+    normally_closed  = 0x01,
+
+    count                       /* Sentinel */
 };
 
 

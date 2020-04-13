@@ -28,12 +28,11 @@
  * SOLENOID STATE DEFINTIONS
  ****************************************************************************************/
 
-// FIXME Be sure that open/close are the right way around! This is currently A GUESS!
-enum class solenoidState {
-    closed = LOW,
-    open   = HIGH,
+enum class solenoid_normaleState {
+    normally_open    = 0x00,
+    normally_closed  = 0x01,
 
-    count
+    count                       /* Sentinel */
 };
 
  /****************************************************************************************
@@ -48,6 +47,16 @@ enum class solenoidState {
  *  @return
  ****************************************************************************************/
 void solenoid_init();
+
+/****************************************************************************************
+ *  @brief
+ *  @usage
+ *  @param
+ *  @param
+ *  @return
+ ****************************************************************************************/
+void solenoid_setNormalState();
+
 
 /****************************************************************************************
  *  @brief

@@ -18,15 +18,30 @@
 
 #include "solenoid.h"
 
+static enum solenoid_normaleState normalState;
 
 void solenoid_init() {
     pinMode(O_SOLENOID, OUTPUT);
 }
 
 void solenoid_open() {
-    digitalWrite(O_SOLENOID, (uint8_t) solenoidState::open);
+    if(normalState == solenoid_normaleState::normally_open) {
+        digitalWrite(O_SOLENOID, LOW);
+    }
+    else {
+        digitalWrite(O_SOLENOID, HIGH);
+    }
 }
 
 void solenoid_close() {
-    digitalWrite(O_SOLENOID, (uint8_t) solenoidState::closed);
+    if(normalState == solenoid_normaleState::normally_open) {
+        digitalWrite(O_SOLENOID, HIGH);
+    }
+    else {
+        digitalWrite(O_SOLENOID, LOW);
+    }
+}
+
+void solenoid_setNormalState() {
+
 }

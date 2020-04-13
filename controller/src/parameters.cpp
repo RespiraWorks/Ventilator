@@ -96,7 +96,15 @@ float parameters_getKd() {
 }
 
 void parameters_setRR(float rr_value) {
-    rr = rr_value;
+
+    // Make sure the uploaded values are within safe minimums and maximums
+    // If not, clamp them
+    if(rr_value > RR_MAX)
+        rr = RR_MAX;
+    else if (rr_value < RR_MIN)
+        rr = RR_MIN;
+    else
+        rr = rr_value;
 }
 
 float parameters_getRR() {
@@ -104,7 +112,15 @@ float parameters_getRR() {
 }
 
 void parameters_setTV(float tv_value) {
-    tv = tv_value;
+
+    // Make sure the uploaded values are within safe minimums and maximums
+    // If not, clamp them
+    if(tv_value > TV_MAX)
+        tv = TV_MAX;
+    else if (tv_value < TV_MIN)
+        tv = TV_MIN;
+    else
+        tv = tv_value;
 }
 
 float parameters_getTV() {
@@ -112,7 +128,15 @@ float parameters_getTV() {
 }
 
 void parameters_setPEEP(float peep_value) {
-    peep = peep_value;
+
+    // Make sure the uploaded values are within safe minimums and maximums
+    // If not, clamp them
+    if(peep_value > PEEP_MAX)
+        peep = PEEP_MAX;
+    else if (peep_value < PEEP_MIN)
+        peep = PEEP_MIN;
+    else
+        peep = peep_value;
 }
 
 float parameters_getPEEP() {
@@ -120,7 +144,15 @@ float parameters_getPEEP() {
 }
 
 void parameters_setInspireExpireRatio(float ier_value) {
-    ier = ier_value;
+
+    // Make sure the uploaded values are within safe minimums and maximums
+    // If not, clamp them
+    if(ier_value > IER_MAX)
+        ier = IER_MAX;
+    else if (ier_value < IER_MIN)
+        ier = IER_MIN;
+    else
+        ier = ier_value;
 }
 
 float parameters_getInspireExpireRatio() {
@@ -128,7 +160,15 @@ float parameters_getInspireExpireRatio() {
 }
 
 void parameters_setPIP(float pip_value) {
-    pip = pip_value;
+
+    // Make sure the uploaded values are within safe minimums and maximums
+    // If not, clamp them
+    if(pip_value > PIP_MAX)
+        pip = PIP_MAX;
+    else if (pip_value < PIP_MIN)
+        pip = PIP_MIN;
+    else
+        pip = pip_value;
 }
 
 float parameters_getPIP() {
@@ -136,7 +176,15 @@ float parameters_getPIP() {
 }
 
 void parameters_setDwell(float dwell_value) {
-    dwell = dwell_value;
+
+    // Make sure the uploaded values are within safe minimums and maximums
+    // If not, clamp them
+    if(dwell_value > DWELL_MAX)
+        dwell = DWELL_MAX;
+    else if (dwell_value < DWELL_MIN)
+        dwell = DWELL_MIN;
+    else
+        dwell = dwell_value;
 }
 
 float parameters_getDwell() {

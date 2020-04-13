@@ -25,22 +25,23 @@
 // Used to check that parameters are within "sane" values
 // TODO Fill these boundaries with realistic values
 
-#define RR_BOUNDARY_MIN (0.0)
-#define RR_DOUNDARY_MAX (100.0)
+#define RR_MIN (0.0)
+#define RR_MAX (100.0)
 
-#define TV_BOUNDARY_MIN (0.0)
-#define TV_BOUNDARY_MAX (100.0)
+#define TV_MIN (0.0)
+#define TV_MAX (100.0)
 
-#define PEEP_BOUNDARY_MIN (0.0)
-#define PEEP_BOUNDARY_MAX (100.0)
+#define PEEP_MIN (0.0)
+#define PEEP_MAX (100.0)
 
-#define IER_DEFAULT (1.0)
+#define IER_MIN (0.1)
+#define IER_MAX (10.0)
 
-#define PIP_BOUNDARY_MIN (0.0)
-#define PIP_BOUNDARY_MAX (100.0)
+#define PIP_MIN (0.0)
+#define PIP_MAX (100.0)
 
-#define DWELL_BOUNDARY_MIN (0.0)
-#define DWELL_BOUNDARY_MAX (100.0)
+#define DWELL_MIN (0.0)
+#define DWELL_MAX (100.0)
 
 // Ventilator parameter defaults
 // FIXME Put some default fallback values that are realistic
@@ -51,6 +52,7 @@
 #define ID_DEFAULT    (10.0)
 #define PIP_DEFAULT   (10.0)
 #define DWELL_DEFAULT (10.0)
+#define IER_DEFAULT   (1.0)
 
 #define PERIODIC_READINGS false
 

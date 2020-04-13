@@ -19,6 +19,13 @@
 #include "command.h"
 
 /****************************************************************************************
+ *    PRIVATE FUNCTION PROTOTYPES
+ ****************************************************************************************/
+
+static float convIntTofloat(char *data);
+static void convfloatToInt(float float_value, char *data);
+
+/****************************************************************************************
  *    PUBLIC FUNCTIONS
  ****************************************************************************************/
 
@@ -26,148 +33,88 @@ void command_execute(enum command cmd, char *dataTx, uint8_t lenTx, char *dataRx
 
     *lenRx = 0; // Initialise the value to zero
 
-    union {
-      float f;
-      unsigned char byte[4];
-    } conv;
+
 
     switch(cmd) {
         /* Medical mode commands */
 
         case command::set_rr:
 
-            conv.byte[0] = dataTx[0];
-            conv.byte[1] = dataTx[1];
-            conv.byte[2] = dataTx[2];
-            conv.byte[3] = dataTx[3];
-
-            parameters_setRR(conv.f);
+            parameters_setRR(convIntTofloat(dataTx));
 
             break;
 
         case command::get_rr:
 
             *lenRx = 4;
-            conv.f = parameters_getRR();
-
-            dataRx[0] = conv.byte[0];
-            dataRx[1] = conv.byte[1];
-            dataRx[2] = conv.byte[2];
-            dataRx[3] = conv.byte[3];
+            convfloatToInt(parameters_getRR(), dataRx);
 
             break;
 
         case command::set_tv:
-            conv.byte[0] = dataTx[0];
-            conv.byte[1] = dataTx[1];
-            conv.byte[2] = dataTx[2];
-            conv.byte[3] = dataTx[3];
 
-            parameters_setTV(conv.f);
+            parameters_setTV(convIntTofloat(dataTx));
 
             break;
 
         case command::get_tv:
 
             *lenRx = 4;
-            conv.f = parameters_getTV();
 
-            dataRx[0] = conv.byte[0];
-            dataRx[1] = conv.byte[1];
-            dataRx[2] = conv.byte[2];
-            dataRx[3] = conv.byte[3];
+            convfloatToInt(parameters_getTV(), dataRx);
 
             break;
 
         case command::set_peep:
 
-            conv.byte[0] = dataTx[0];
-            conv.byte[1] = dataTx[1];
-            conv.byte[2] = dataTx[2];
-            conv.byte[3] = dataTx[3];
-
-            parameters_setPEEP(conv.f);
+            parameters_setPEEP(convIntTofloat(dataTx));
 
             break;
 
         case command::get_peep:
 
             *lenRx = 4;
-            conv.f = parameters_getPEEP();
 
-            dataRx[0] = conv.byte[0];
-            dataRx[1] = conv.byte[1];
-            dataRx[2] = conv.byte[2];
-            dataRx[3] = conv.byte[3];
+            convfloatToInt(parameters_getPEEP(), dataRx);
 
             break;
 
         case command::set_pip:
 
-            conv.byte[0] = dataTx[0];
-            conv.byte[1] = dataTx[1];
-            conv.byte[2] = dataTx[2];
-            conv.byte[3] = dataTx[3];
-
-            parameters_setPIP(conv.f);
+            parameters_setPIP(convIntTofloat(dataTx));
 
             break;
 
         case command::get_pip:
 
             *lenRx = 4;
-            conv.f = parameters_getPIP();
-
-            dataRx[0] = conv.byte[0];
-            dataRx[1] = conv.byte[1];
-            dataRx[2] = conv.byte[2];
-            dataRx[3] = conv.byte[3];
+            convfloatToInt(parameters_getPIP(), dataRx);
 
             break;
 
         case command::set_dwell:
 
-            conv.byte[0] = dataTx[0];
-            conv.byte[1] = dataTx[1];
-            conv.byte[2] = dataTx[2];
-            conv.byte[3] = dataTx[3];
-
-            parameters_setDwell(conv.f);
+            parameters_setDwell(convIntTofloat(dataTx));
 
             break;
 
         case command::get_dwell:
 
             *lenRx = 4;
-            conv.f = parameters_getDwell();
-
-            dataRx[0] = conv.byte[0];
-            dataRx[1] = conv.byte[1];
-            dataRx[2] = conv.byte[2];
-            dataRx[3] = conv.byte[3];
+            convfloatToInt(parameters_getDwell(), dataRx);
 
             break;
 
         case command::set_ier:
 
-            conv.byte[0] = dataTx[0];
-            conv.byte[1] = dataTx[1];
-            conv.byte[2] = dataTx[2];
-            conv.byte[3] = dataTx[3];
-
-            parameters_setInspireExpireRatio(conv.f);
+            parameters_setInspireExpireRatio(convIntTofloat(dataTx));
 
             break;
 
         case command::get_ier:
 
             *lenRx = 4;
-            conv.f = parameters_getInspireExpireRatio();
-
-            dataRx[0] = conv.byte[0];
-            dataRx[1] = conv.byte[1];
-            dataRx[2] = conv.byte[2];
-            dataRx[3] = conv.byte[3];
+            convfloatToInt(parameters_getInspireExpireRatio(), dataRx);
 
             break;
 
@@ -188,70 +135,41 @@ void command_execute(enum command cmd, char *dataTx, uint8_t lenTx, char *dataRx
 
         case command::set_kp:
 
-            conv.byte[0] = dataTx[0];
-            conv.byte[1] = dataTx[1];
-            conv.byte[2] = dataTx[2];
-            conv.byte[3] = dataTx[3];
-
-            parameters_setKp(conv.f);
+            parameters_setKp(convIntTofloat(dataTx));
 
             break;
 
         case command::get_Kp:
 
             *lenRx = 4;
-            conv.f = parameters_getKp();
-
-            dataRx[0] = conv.byte[0];
-            dataRx[1] = conv.byte[1];
-            dataRx[2] = conv.byte[2];
-            dataRx[3] = conv.byte[3];
+            convfloatToInt(parameters_getKp(), dataRx);
 
             break;
 
         case command::set_Ki:
 
-            conv.byte[0] = dataTx[0];
-            conv.byte[1] = dataTx[1];
-            conv.byte[2] = dataTx[2];
-            conv.byte[3] = dataTx[3];
-
-            parameters_setKi(conv.f);
+            parameters_setKi(convIntTofloat(dataTx));
 
             break;
 
         case command::get_Ki:
 
             *lenRx = 4;
-            conv.f = parameters_getKi();
 
-            dataRx[0] = conv.byte[0];
-            dataRx[1] = conv.byte[1];
-            dataRx[2] = conv.byte[2];
-            dataRx[3] = conv.byte[3];
+            convfloatToInt(parameters_getKi(), dataRx);
 
             break;
 
         case command::set_Kd:
 
-            conv.byte[0] = dataTx[0];
-            conv.byte[1] = dataTx[1];
-            conv.byte[2] = dataTx[2];
-            conv.byte[3] = dataTx[3];
-
-            parameters_setKi(conv.f);
+            parameters_setKi(convIntTofloat(dataTx));
 
             break;
 
         case command::get_Kd:
 
             *lenRx = 4;
-            conv.f = parameters_getKd();
-
-            dataRx[0] = conv.byte[0];
-            dataRx[1] = conv.byte[1];
-            dataRx[2] = conv.byte[2];
-            dataRx[3] = conv.byte[3];
+            convfloatToInt(parameters_getKd(), dataRx);
 
             break;
 
@@ -298,6 +216,27 @@ void command_execute(enum command cmd, char *dataTx, uint8_t lenTx, char *dataRx
 
             break;
 
+        case command::set_ventilatorMode:
+
+            parameters_setVentilatorMode((enum ventilatorMode) dataTx[0]);
+
+            break;
+
+        case command::get_ventilatorMode:
+
+            *lenRx = 1;
+            dataTx[0] = (char) parameters_getVentilatorMode();
+
+            break;
+
+        case command::start_ventilator:
+
+            break;
+
+        case command::stop_ventilator:
+
+            break;
+
         default:
 
             break;
@@ -306,4 +245,50 @@ void command_execute(enum command cmd, char *dataTx, uint8_t lenTx, char *dataRx
 
 void command_responseSend(uint8_t cmd, char *packet, uint8_t len) {
     serialIO_send(msgType::rAck, (enum dataID) cmd, packet, len);
+}
+
+/****************************************************************************************
+*    PRIVATE FUNCTIONS
+****************************************************************************************/
+
+/****************************************************************************************
+*  @brief
+*  @usage
+*  @param
+*  @param
+*  @return
+****************************************************************************************/
+static float convIntTofloat(char *data) {
+    union {
+      float f;
+      unsigned char byte[4];
+    } conv;
+
+    conv.byte[0] = data[0];
+    conv.byte[1] = data[1];
+    conv.byte[2] = data[2];
+    conv.byte[3] = data[3];
+
+    return conv.f;
+}
+
+/****************************************************************************************
+*  @brief
+*  @usage
+*  @param
+*  @param
+*  @return
+****************************************************************************************/
+static void convfloatToInt(float float_value, char *data) {
+    union {
+      float f;
+      unsigned char byte[4];
+    } conv;
+
+    conv.f = float_value;
+
+    data[0] = conv.byte[0];
+    data[1] = conv.byte[1];
+    data[2] = conv.byte[2];
+    data[3] = conv.byte[3];
 }

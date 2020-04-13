@@ -16,10 +16,14 @@
   along with FixMoreLungs.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef BLOWER_H
-#define BLOWER_H
+#ifndef ACTUATORS_H
+#define ACTUATORS_H
 
-#include <Arduino.h>
+/****************************************************************************************
+ * GPIO PIN DEFINITIONS
+ ****************************************************************************************/
+
+#define O_SOLENOID 5 /* Solenoid output pin 5 TBC */
 
 /****************************************************************************************
  *  @brief
@@ -28,6 +32,6 @@
  *  @param
  *  @return
  ****************************************************************************************/
-void blower_init();
+void actuators_init();
 
 #endif  // BLOWER_H

@@ -16,18 +16,32 @@
   along with FixMoreLungs.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef BLOWER_H
-#define BLOWER_H
+#include "solenoid.h"
 
-#include <Arduino.h>
+static enum solenoid_normaleState normalState;
 
-/****************************************************************************************
- *  @brief
- *  @usage
- *  @param
- *  @param
- *  @return
- ****************************************************************************************/
-void blower_init();
+void solenoid_init() {
+    pinMode(O_SOLENOID, OUTPUT);
+}
 
-#endif  // BLOWER_H
+void solenoid_open() {
+    if(normalState == solenoid_normaleState::normally_open) {
+        digitalWrite(O_SOLENOID, LOW);
+    }
+    else {
+        digitalWrite(O_SOLENOID, HIGH);
+    }
+}
+
+void solenoid_close() {
+    if(normalState == solenoid_normaleState::normally_open) {
+        digitalWrite(O_SOLENOID, HIGH);
+    }
+    else {
+        digitalWrite(O_SOLENOID, LOW);
+    }
+}
+
+void solenoid_setNormalState() {
+
+}

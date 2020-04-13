@@ -56,7 +56,7 @@
 #include "comms.h"
 #include "sensors.h"
 #include "parameters.h"
-#include "blower.h"
+#include "actuators.h"
 #include "ventilator.h"
 #include "alarm.h"
 
@@ -65,7 +65,7 @@ void setup() {
     parameters_init();
     comms_init();
     sensors_init();
-    blower_init();
+    actuators_init();
 
     watchdog_init();
     pid_init();

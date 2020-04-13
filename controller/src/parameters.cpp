@@ -23,12 +23,14 @@
 static float rr;
 static float tv;
 static float peep;
-static float expireduration;
-static float inspireduration;
+static float ier;       /* Inspire / expire ratio */
 static float pip;
 static float dwell;
 
 static bool periodicReadings;
+
+static enum operatingMode operationMode;
+static enum periodicMode periodicDataMode;
 
 // Calibration parameters
 
@@ -50,11 +52,13 @@ static void init_defaultVentilatorParameters() {
     rr                = RR_DEFAULT;
     tv                = TV_DEFAULT;
     peep              = PEEP_DEFAULT;
-    expireduration    = ED_DEFAULT;
-    inspireduration   = ID_DEFAULT;
+    ier               = IER_DEFAULT;
     pip               = PIP_DEFAULT;
     dwell             = DWELL_DEFAULT;
     periodicReadings  = PERIODIC_READINGS;
+
+    operationMode     = OPERATING_MODE;
+    periodicDataMode  = PERIODIC_DATA_MODE;
 }
 
 static void init_defaultPIDParameters() {
@@ -91,7 +95,7 @@ float parameters_getKd() {
     return Kd_pid;
 }
 
-void parameters_set_RR(float rr_value) {
+void parameters_setRR(float rr_value) {
     rr = rr_value;
 }
 
@@ -115,20 +119,12 @@ float parameters_getPEEP() {
     return peep;
 }
 
-void parameters_set_ExpireDuration(float expireduration_value) {
-    expireduration = expireduration_value;
+void parameters_setInspireExpireRatio(float ier_value) {
+    ier = ier_value;
 }
 
-float parameters_getExpireDuration() {
-    return expireduration;
-}
-
-void parameters_setInspireDuration(float inspireduration_value) {
-    inspireduration = inspireduration_value;
-}
-
-float parameters_getInspireDuration() {
-    return inspireduration;
+float parameters_getInspireExpireRatio() {
+    return ier;
 }
 
 void parameters_setPIP(float pip_value) {
@@ -147,8 +143,20 @@ float parameters_getDwell() {
     return dwell;
 }
 
-bool parameters_medicalModeActive() {
-    return false; // FIXME return parameter
+void parameters_setPeriodicMode(enum periodicMode periodicMode_value) {
+    periodicDataMode = periodicMode_value;
+}
+
+enum periodicMode parameters_getPeriodicMode() {
+    return periodicDataMode;
+}
+
+enum operatingMode parameters_getOperatingMode() {
+    return operationMode;
+}
+
+void parameters_setOperatingMode(enum operatingMode operatingMode_value) {
+    operationMode = operatingMode_value;
 }
 
 void parameters_setPeriodicReadings(bool active) {

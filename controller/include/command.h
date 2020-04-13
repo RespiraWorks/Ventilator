@@ -16,13 +16,17 @@
   along with FixMoreLungs.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef WATCHDOG_H
-#define WATCHDOG_H
+#ifndef COMMAND_H
+#define COMMAND_H
 
-#include <avr/wdt.h>
+#include <Arduino.h>
 #include <stdint.h>
 
-#define WDT_1SECOND 1000
+#include "packet_types.h"
+#include "parameters.h"
+#include "serialIO.h"
+#include "alarm.h"
+#include "watchdog.h"
 
 /****************************************************************************************
  *  @brief
@@ -31,7 +35,7 @@
  *  @param
  *  @return
  ****************************************************************************************/
-void watchdog_init();
+void command_execute(enum command cmd, char *dataTx, uint8_t lenTx, char *dataRx, uint8_t *lenRx, uint8_t lenRxMax);
 
 /****************************************************************************************
  *  @brief
@@ -40,15 +44,6 @@ void watchdog_init();
  *  @param
  *  @return
  ****************************************************************************************/
-void watchdog_handler();
+void command_responseSend(uint8_t cmd, char *packet, uint8_t len);
 
-/****************************************************************************************
- *  @brief
- *  @usage
- *  @param
- *  @param
- *  @return
- ****************************************************************************************/
-void watchdog_reboot();
-
-#endif // WATCHDOG_H
+#endif // COMMAND_H

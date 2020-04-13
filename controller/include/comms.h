@@ -20,9 +20,14 @@
 #define COMMS_H
 
 #include <stdint.h>
+#include <Arduino.h>
 
+#include "version.h"
+#include "serialIO.h"
+#include "parameters.h"
+#include "types.h"
+#include "command.h"
 #include "checksum.h"
-
 #include "packet_types.h"
 
 enum class processPacket {
@@ -43,7 +48,7 @@ enum class processPacket {
 */
 enum class medicalMode {
     start   = 0x00,     /* First medical mode command */
-    end     = 0x10,     /* Final medical mode command */
+    end     = 0x0e,     /* Final medical mode command */
 
     count
 };
@@ -144,125 +149,5 @@ void comms_sendResetState();
  *  @return
  ****************************************************************************************/
 void comms_sendPeriodicReadings(float pressure, float volume, float flow);
-
-// Private function prototypes
-
-/****************************************************************************************
- *  @brief
- *  @usage
- *  @param
- *  @param
- *  @return
- ****************************************************************************************/
-static bool packet_check(char *packet);
-
-/****************************************************************************************
- *  @brief
- *  @usage
- *  @param
- *  @param
- *  @return
- ****************************************************************************************/
-static bool packet_receive(char *packet, uint8_t *packet_len);
-
-/****************************************************************************************
- *  @brief
- *  @usage
- *  @param
- *  @param
- *  @return
- ****************************************************************************************/
-static bool packet_checksumValidation(char *packet, uint8_t len);
-
-/****************************************************************************************
- *  @brief
- *  @usage
- *  @param
- *  @param
- *  @return
- ****************************************************************************************/
-static bool packet_cmdValidatation(char *packet);
-
-/****************************************************************************************
- *  @brief
- *  @usage
- *  @param
- *  @param
- *  @return
- ****************************************************************************************/
-static bool packet_modeValidation(char *packet);
-
-/****************************************************************************************
- *  @brief
- *  @usage
- *  @param
- *  @param
- *  @return
- ****************************************************************************************/
-enum processPacket process_packet(char *packet, uint8_t len);
-
-/****************************************************************************************
- *  @brief
- *  @usage
- *  @param
- *  @param
- *  @return
- ****************************************************************************************/
-static void comms_sendModeERR(char *packet);
-
-/****************************************************************************************
- *  @brief
- *  @usage
- *  @param
- *  @param
- *  @return
- ****************************************************************************************/
-static void comms_sendChecksumERR(char *packet);
-
-/****************************************************************************************
- *  @brief
- *  @usage
- *  @param
- *  @param
- *  @return
- ****************************************************************************************/
-static void comms_sendCommandERR(char *packet);
-
-/****************************************************************************************
- *  @brief
- *  @usage
- *  @param
- *  @param
- *  @return
- ****************************************************************************************/
-static void cmd_execute(enum command cmd, char *dataTx, uint8_t lenTx,
-                        char *dataRx, uint8_t *lenRx, uint8_t lenRxMax);
-
-/****************************************************************************************
- *  @brief
- *  @usage
- *  @param
- *  @param
- *  @return
- ****************************************************************************************/
-static void cmd_responseSend(char *packet, uint8_t len);
-
-/****************************************************************************************
- *  @brief
- *  @usage
- *  @param
- *  @param
- *  @return
- ****************************************************************************************/
-static void send_alarm();
-
-/****************************************************************************************
- *  @brief
- *  @usage
- *  @param
- *  @param
- *  @return
- ****************************************************************************************/
-static void cmd_responseSend(uint8_t cmd, char *packet, uint8_t len);
 
 #endif  // COMMS_H

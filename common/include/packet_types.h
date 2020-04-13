@@ -36,14 +36,12 @@ enum class command {
     get_pip         = 0x07,
     set_dwell       = 0x08,
     get_dwell       = 0x09,
-    set_id          = 0x0a,   /* Inspiration duration */
-    get_id          = 0x0b,
-    set_ed          = 0x0c,   /* Expiration duration */
-    get_ed          = 0x0d,
+    set_ier         = 0x0a,   /* Inspiration / Expiration ratio */
+    get_ier         = 0x0b,
 
-    get_pressure    = 0x0e,
-    get_flow        = 0x0f,
-    get_volume      = 0x10,
+    get_pressure    = 0x0c,
+    get_flow        = 0x0d,
+    get_volume      = 0x0e,
 
     /* Engineering mode commands */
 
@@ -105,5 +103,21 @@ enum class dataID {
     count                   /* Sentinel */
 };
 
+// The different periodic data transmission modes
+enum class periodicMode {
+    off                      = 0x00,
+    on                       = 0x01,
+
+    count                   /* Sentinel */
+};
+
+
+// The different engineering operating mode types
+enum class operatingMode {
+    medical         = 0x00,
+    engineering     = 0xF0,
+
+    count                   /* Sentinel */
+};
 
 #endif // PACKET_TYPES_H

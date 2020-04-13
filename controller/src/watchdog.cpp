@@ -41,3 +41,9 @@ void watchdog_handler() {
         }
     }
 }
+
+void watchdog_reboot() {
+    wdt_enable(WDTO_15MS);
+
+    while(1) {}
+}

@@ -20,50 +20,50 @@
 #define PARAMETERS_H
 
 #include "eeprom.h"
+#include "packet_types.h"
 
 // Used to check that parameters are within "sane" values
 // TODO Fill these boundaries with realistic values
 
-#define RR_BOUNDARY_MIN 0.0
-#define RR_DOUNDARY_MAX 100.0
+#define RR_BOUNDARY_MIN (0.0)
+#define RR_DOUNDARY_MAX (100.0)
 
-#define TV_BOUNDARY_MIN 0.0
-#define TV_BOUNDARY_MAX 100.0
+#define TV_BOUNDARY_MIN (0.0)
+#define TV_BOUNDARY_MAX (100.0)
 
-#define PEEP_BOUNDARY_MIN 0.0
-#define PEEP_BOUNDARY_MAX 100.0
+#define PEEP_BOUNDARY_MIN (0.0)
+#define PEEP_BOUNDARY_MAX (100.0)
 
-#define ED_BOUNDARY_MIN 0.0
-#define ED_BOUNDARY_MAX 100.0
+#define IER_DEFAULT (1.0)
 
-#define ID_BOUNDARY_MIN 0.0
-#define ID_BOUNDARY_MAX 100.0
+#define PIP_BOUNDARY_MIN (0.0)
+#define PIP_BOUNDARY_MAX (100.0)
 
-#define PIP_BOUNDARY_MIN 0.0
-#define PIP_BOUNDARY_MAX 100.0
-
-#define DWELL_BOUNDARY_MIN 0.0
-#define DWELL_BOUNDARY_MAX 100.0
+#define DWELL_BOUNDARY_MIN (0.0)
+#define DWELL_BOUNDARY_MAX (100.0)
 
 // Ventilator parameter defaults
 // FIXME Put some default fallback values that are realistic
-#define RR_DEFAULT    10.0
-#define TV_DEFAULT    10.0
-#define PEEP_DEFAULT  10.0
-#define ED_DEFAULT    10.0
-#define ID_DEFAULT    10.0
-#define PIP_DEFAULT   10.0
-#define DWELL_DEFAULT 10.0
+#define RR_DEFAULT    (10.0)
+#define TV_DEFAULT    (10.0)
+#define PEEP_DEFAULT  (10.0)
+#define ED_DEFAULT    (10.0)
+#define ID_DEFAULT    (10.0)
+#define PIP_DEFAULT   (10.0)
+#define DWELL_DEFAULT (10.0)
 
 #define PERIODIC_READINGS false
+
+#define OPERATING_MODE operatingMode::medical
+#define PERIODIC_DATA_MODE periodicMode::off
 
 // Calibration parameter defaults
 
 // PID parameter defaults
 
-#define KP_DEFAULT   2.0
-#define KI_DEFAULT   8.0
-#define KD_DEFAULT   0.0
+#define KP_DEFAULT   (2.0)
+#define KI_DEFAULT   (8.0)
+#define KD_DEFAULT   (0.0)
 
 // Private function prototypes
 
@@ -222,7 +222,7 @@ void parameters_setPEEP(float peep_value);
  ****************************************************************************************/
 float parameters_getPEEP();
 
-// Expiration duration
+// Inspire/Expire ratio
 
 /****************************************************************************************
  *  @brief
@@ -231,7 +231,7 @@ float parameters_getPEEP();
  *  @param
  *  @return
  ****************************************************************************************/
-void parameters_setExpireDuration(float expireduration_value);
+void parameters_setInspireExpireRatio(float ier_value);
 
 /****************************************************************************************
  *  @brief
@@ -240,27 +240,7 @@ void parameters_setExpireDuration(float expireduration_value);
  *  @param
  *  @return
  ****************************************************************************************/
-float parameters_getExpireDuration();
-
-// Inspiration duration
-
-/****************************************************************************************
- *  @brief
- *  @usage
- *  @param
- *  @param
- *  @return
- ****************************************************************************************/
-void parameters_setInspireDuration(float inspireduration_value);
-
-/****************************************************************************************
- *  @brief
- *  @usage
- *  @param
- *  @param
- *  @return
- ****************************************************************************************/
-float parameters_getInspireDuration();
+float parameters_getInspireExpireRatio();
 
 // Peak Inspiratory Pressure (PIP)
 
@@ -309,7 +289,7 @@ float parameters_getDwell();
  *  @param
  *  @return
  ****************************************************************************************/
-bool parameters_medicalModeActive();
+enum operatingMode parameters_getOperatingMode() ;
 
 /****************************************************************************************
  *  @brief
@@ -318,7 +298,7 @@ bool parameters_medicalModeActive();
  *  @param
  *  @return
  ****************************************************************************************/
-void parameters_setPeriodicReadings(bool active);
+void parameters_setOperatingMode(enum operatingMode) ;
 
 /****************************************************************************************
  *  @brief
@@ -327,6 +307,15 @@ void parameters_setPeriodicReadings(bool active);
  *  @param
  *  @return
  ****************************************************************************************/
-bool parameters_getPeriodicReadings();
+ void parameters_setPeriodicMode(enum periodicMode periodicMode_value);
+
+/****************************************************************************************
+ *  @brief
+ *  @usage
+ *  @param
+ *  @param
+ *  @return
+ ****************************************************************************************/
+ enum periodicMode parameters_getPeriodicMode();
 
 #endif // PARAMETERS_H

@@ -152,7 +152,7 @@ static void send_periodicData(uint32_t delay, uint16_t pressure, uint16_t volume
     }
     else {
         if((millis() - time) > delay) {
-            if(parameters_getPeriodicReadings()){
+            if(parameters_getPeriodicMode() == periodicMode::on){
                 // Send readings data
                 comms_sendPeriodicReadings(pressure * 1.0, volume * 0.0, flow * 0.0);
             }

@@ -16,60 +16,52 @@ limitations under the License.
 #ifndef COMMS_H
 #define COMMS_H
 
-#include <Arduino.h>
 #include <stdint.h>
 
-#include "checksum.h"
-#include "command.h"
-#include "packet_types.h"
-#include "parameters.h"
-#include "types.h"
-#include "version.h"
+// enum class processPacket {
+//   checksumErr = 0x00,
+//   modeErr = 0x01,
+//   invalidErr = 0x02,
+//   command = 0x03,
+//   ack = 0x04,
+//   nack = 0x05,
+//   msgTypeUnknown = 0x06,
 
-enum class processPacket {
-  checksumErr = 0x00,
-  modeErr = 0x01,
-  invalidErr = 0x02,
-  command = 0x03,
-  ack = 0x04,
-  nack = 0x05,
-  msgTypeUnknown = 0x06,
-
-  count /* Sentinel */
-};
+//   count /* Sentinel */
+// };
 
 /* Used to store the minimum and maximum medical mode command numbers
  *  This data is used to validate the incoming commands to be sure that
  *  they're in the proper ranges.
  */
-enum class medicalMode {
-  start = 0x00, /* First medical mode command */
-  end = 0x0e,   /* Final medical mode command */
+// enum class medicalMode {
+//   start = 0x00,  First medical mode command
+//   end = 0x0e,   /* Final medical mode command */
 
-  count
-};
+//   count
+// };
 
 /* Used to store the minimum and maximum engineering mode command numbers
  *  This data is used to validate the incoming commands to be sure that
  *  they're in the proper ranges.
  */
-enum class engMode {
-  start = 0x20, /* First engineering mode command */
-  end = 0x28,   /* Final engineering mode command */
+// enum class engMode {
+//   start = 0x20,  First engineering mode command
+//   end = 0x28,   /* Final engineering mode command */
 
-  count
-};
+//   count
+// };
 
 /* Used to store the minimum and maximum mixed mode command numbers
  *  This data is used to validate the incoming commands to be sure that
  *  they're in the proper ranges.
  */
-enum class mixedMode {
-  start = 0x40, /* First mixed mode command */
-  end = 0x44,   /* Final mixed mode command */
+// enum class mixedMode {
+//   start = 0x40,  First mixed mode command
+//   end = 0x44,   /* Final mixed mode command */
 
-  count
-};
+//   count
+// };
 
 void comms_init();
 void comms_handler();

@@ -21,7 +21,6 @@
 
 #include <stdint.h>
 
-#include "alarm.h"
 #include "packet_types.h"
 #include "parameters.h"
 #include "watchdog.h"

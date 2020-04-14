@@ -19,19 +19,6 @@
 #ifndef VENTILATOR_H
 #define VENTILATOR_H
 
-// Private function prototypes
-
-/****************************************************************************************
- *  @brief
- *  @usage
- *  @param
- *  @param
- *  @return
- ****************************************************************************************/
-static void ventilator_control();
-
-// Public function prototypes
-
 /****************************************************************************************
  *  @brief
  *  @usage

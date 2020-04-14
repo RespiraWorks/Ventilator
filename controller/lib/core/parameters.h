@@ -16,7 +16,7 @@ limitations under the License.
 #ifndef PARAMETERS_H
 #define PARAMETERS_H
 
-#include "packet_types.h"
+#include "model.h"
 #include "ventilator_defaults.h"
 #include "ventilator_limits.h"
 

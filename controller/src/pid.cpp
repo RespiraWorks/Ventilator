@@ -33,6 +33,26 @@ static PID myPID(&Input, &Output, &Setpoint, Kp, Ki, Kd, DIRECT);
 // These constants won't change. They're used to give names to the pins used:
 static const int analogOutPin = LED_BUILTIN; // Analog output pin that the LED is attached to
 
+static void send_periodicData(uint32_t delay, uint16_t pressure, uint16_t volume, uint16_t flow) {
+    static uint32_t time;
+    static bool first_call = true;
+
+    if(first_call == true) {
+        first_call = false;
+        time = millis();
+    }
+    else {
+        if((millis() - time) > delay) {
+            if(parameters_getPeriodicReadings()){
+                // Send readings data
+                comms_sendPeriodicReadings(pressure * 1.0, volume * 0.0, flow * 0.0);
+            }
+
+            time = millis();
+        }
+    }
+}
+
 enum class pid_fsm_state {
   reset        = 0,
   inspire      = 1,
@@ -140,24 +160,4 @@ void pid_execute() {
     analogWrite(BLOWERSPD_PIN, Output); //write output
 
     send_periodicData(DELAY_100MS, sensorValue, 0, 0);
-}
-
-static void send_periodicData(uint32_t delay, uint16_t pressure, uint16_t volume, uint16_t flow) {
-    static uint32_t time;
-    static bool first_call = true;
-
-    if(first_call == true) {
-        first_call = false;
-        time = millis();
-    }
-    else {
-        if((millis() - time) > delay) {
-            if(parameters_getPeriodicReadings()){
-                // Send readings data
-                comms_sendPeriodicReadings(pressure * 1.0, volume * 0.0, flow * 0.0);
-            }
-
-            time = millis();
-        }
-    }
 }

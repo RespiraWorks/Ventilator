@@ -23,18 +23,14 @@
 #include "watchdog.h"
 #include "pid.h"
 
-void ventilator_start() {
-
-	for (;;) {
-		ventilator_control();
-	}
+static void ventilator_control() {
+    comms_handler();
+    pid_execute();
+    watchdog_handler();
 }
 
-void ventilator_control() {
-
-    comms_handler();
-
-    pid_execute();
-
-    watchdog_handler();
+void ventilator_start() {
+    for (;;) {
+        ventilator_control();
+    }
 }

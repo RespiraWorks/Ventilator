@@ -18,22 +18,17 @@ limitations under the License.
 
 #include <stdint.h>
 
-#include "comms.h"
 #include "errors.h"
+#include "packet_types.h"
 
 #define ALARM_NODES     4 /* Number of alarms we can store in the queue */
 #define ALARM_DATALEN   8 /* Each alarm can store 8 bytes - modifying this would mean modifying the memory copys*/
 
-typedef struct alarm {
-    enum dataID alarm;
-    uint32_t timestamp;
-    char data[ALARM_DATALEN];
-} alarm_t;
-
-typedef struct {
-    alarm_t alarm[ALARM_NODES];
-    int8_t top;
-} stack_t;
+struct alarm_t {
+  dataID alarm;
+  uint32_t timestamp;
+  char data[ALARM_DATALEN];
+};
 
 // Public function prototypes
 

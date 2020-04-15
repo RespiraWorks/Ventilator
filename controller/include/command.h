@@ -21,6 +21,7 @@
 
 #include <Arduino.h>
 #include <stdint.h>
+#include <string.h>
 
 #include "packet_types.h"
 #include "parameters.h"

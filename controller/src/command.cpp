@@ -22,38 +22,41 @@
  *    PRIVATE FUNCTION PROTOTYPES
  ****************************************************************************************/
 
-static float convIntTofloat(char *data);
-static void convfloatToInt(float float_value, char *data);
+static float convIntTofloat(char *data, uint8_t len);
+static void convfloatToInt(float float_value, char *data, uint8_t len);
 
 /****************************************************************************************
  *    PUBLIC FUNCTIONS
  ****************************************************************************************/
 
-void command_execute(enum command cmd, char *dataTx, uint8_t lenTx, char *dataRx, uint8_t *lenRx, uint8_t lenRxMax) {
+void command_execute(enum command cmd,
+                     char *dataTx,
+                     uint8_t lenTx,
+                     char *dataRx,
+                     uint8_t *lenRx,
+                     uint8_t lenRxMax) {
 
     *lenRx = 0; // Initialise the value to zero
-
-
 
     switch(cmd) {
         /* Medical mode commands */
 
         case command::set_rr:
 
-            parameters_setRR(convIntTofloat(dataTx));
+            parameters_setRR(convIntTofloat(dataTx, lenTx));
 
             break;
 
         case command::get_rr:
 
             *lenRx = 4;
-            convfloatToInt(parameters_getRR(), dataRx);
+            convfloatToInt(parameters_getRR(), dataRx, *lenRx);
 
             break;
 
         case command::set_tv:
 
-            parameters_setTV(convIntTofloat(dataTx));
+            parameters_setTV(convIntTofloat(dataTx, lenTx));
 
             break;
 
@@ -61,13 +64,13 @@ void command_execute(enum command cmd, char *dataTx, uint8_t lenTx, char *dataRx
 
             *lenRx = 4;
 
-            convfloatToInt(parameters_getTV(), dataRx);
+            convfloatToInt(parameters_getTV(), dataRx, *lenRx);
 
             break;
 
         case command::set_peep:
 
-            parameters_setPEEP(convIntTofloat(dataTx));
+            parameters_setPEEP(convIntTofloat(dataTx, lenTx));
 
             break;
 
@@ -75,46 +78,46 @@ void command_execute(enum command cmd, char *dataTx, uint8_t lenTx, char *dataRx
 
             *lenRx = 4;
 
-            convfloatToInt(parameters_getPEEP(), dataRx);
+            convfloatToInt(parameters_getPEEP(), dataRx, *lenRx);
 
             break;
 
         case command::set_pip:
 
-            parameters_setPIP(convIntTofloat(dataTx));
+            parameters_setPIP(convIntTofloat(dataTx, lenTx));
 
             break;
 
         case command::get_pip:
 
             *lenRx = 4;
-            convfloatToInt(parameters_getPIP(), dataRx);
+            convfloatToInt(parameters_getPIP(), dataRx, *lenRx);
 
             break;
 
         case command::set_dwell:
 
-            parameters_setDwell(convIntTofloat(dataTx));
+            parameters_setDwell(convIntTofloat(dataTx, lenTx));
 
             break;
 
         case command::get_dwell:
 
             *lenRx = 4;
-            convfloatToInt(parameters_getDwell(), dataRx);
+            convfloatToInt(parameters_getDwell(), dataRx, *lenRx);
 
             break;
 
         case command::set_ier:
 
-            parameters_setInspireExpireRatio(convIntTofloat(dataTx));
+            parameters_setInspireExpireRatio(convIntTofloat(dataTx, lenTx));
 
             break;
 
         case command::get_ier:
 
             *lenRx = 4;
-            convfloatToInt(parameters_getInspireExpireRatio(), dataRx);
+            convfloatToInt(parameters_getInspireExpireRatio(), dataRx, *lenRx);
 
             break;
 
@@ -135,20 +138,20 @@ void command_execute(enum command cmd, char *dataTx, uint8_t lenTx, char *dataRx
 
         case command::set_kp:
 
-            parameters_setKp(convIntTofloat(dataTx));
+            parameters_setKp(convIntTofloat(dataTx, lenTx));
 
             break;
 
         case command::get_Kp:
 
             *lenRx = 4;
-            convfloatToInt(parameters_getKp(), dataRx);
+            convfloatToInt(parameters_getKp(), dataRx, *lenRx);
 
             break;
 
         case command::set_Ki:
 
-            parameters_setKi(convIntTofloat(dataTx));
+            parameters_setKi(convIntTofloat(dataTx, lenTx));
 
             break;
 
@@ -156,20 +159,20 @@ void command_execute(enum command cmd, char *dataTx, uint8_t lenTx, char *dataRx
 
             *lenRx = 4;
 
-            convfloatToInt(parameters_getKi(), dataRx);
+            convfloatToInt(parameters_getKi(), dataRx, *lenRx);
 
             break;
 
         case command::set_Kd:
 
-            parameters_setKi(convIntTofloat(dataTx));
+            parameters_setKi(convIntTofloat(dataTx, lenTx));
 
             break;
 
         case command::get_Kd:
 
             *lenRx = 4;
-            convfloatToInt(parameters_getKd(), dataRx);
+            convfloatToInt(parameters_getKd(), dataRx, *lenRx);
 
             break;
 
@@ -264,18 +267,13 @@ void command_responseSend(uint8_t cmd, char *packet, uint8_t len) {
 *  @param
 *  @return
 ****************************************************************************************/
-static float convIntTofloat(char *data) {
-    union {
-      float f;
-      unsigned char byte[4];
-    } conv;
+static float convIntTofloat(char *data, uint8_t len) {
 
-    conv.byte[0] = data[0];
-    conv.byte[1] = data[1];
-    conv.byte[2] = data[2];
-    conv.byte[3] = data[3];
+    float f;
 
-    return conv.f;
+    memcpy(&f, data, len);
+
+    return f;
 }
 
 /****************************************************************************************
@@ -285,16 +283,6 @@ static float convIntTofloat(char *data) {
 *  @param
 *  @return
 ****************************************************************************************/
-static void convfloatToInt(float float_value, char *data) {
-    union {
-      float f;
-      unsigned char byte[4];
-    } conv;
-
-    conv.f = float_value;
-
-    data[0] = conv.byte[0];
-    data[1] = conv.byte[1];
-    data[2] = conv.byte[2];
-    data[3] = conv.byte[3];
+static void convfloatToInt(float float_value, char *data, uint8_t len) {
+    memcpy(data, &float_value, len);
 }

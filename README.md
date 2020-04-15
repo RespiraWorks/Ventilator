@@ -42,3 +42,19 @@ Error: Please specify `upload_port` for environment or use global `--upload-port
 
 This has been tested with an RF-nano Arduino board, which has similar parts and
 pinout to an Arduino Nano.
+
+## Developing
+
+Please install [pre-commit](http://pre-commit.com) and activate it for this
+repository.  We use pre-commit to check for consistent formatting and other
+things.
+
+```
+# Install pre-commit
+$ brew install pre-commit
+# OR
+$ apt-get install pre-commit
+
+# Then activate pre-commit in this repository.
+$ pre-commit install
+```

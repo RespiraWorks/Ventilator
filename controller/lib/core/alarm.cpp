@@ -12,11 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-#include <Arduino.h>
+#include "hal.h"
 
 #include "alarm.h"
 
-static stack_t stack;
+namespace {
+struct alarm_stack_t {
+  alarm_t alarm[ALARM_NODES];
+  int8_t top;
+};
+
+alarm_stack_t stack;
+} // anonymous namespace
 
 static bool stack_full() {
     return (stack.top == (ALARM_NODES-1)) ? true : false;
@@ -73,7 +80,7 @@ void alarm_add(enum dataID alarmID, char *data) {
         // No point spending time doing these operations if the stack is full
 
         alarm.alarm = alarmID;
-        alarm.timestamp = millis();
+        alarm.timestamp = Hal.millis();
 
         // Copy alarm data
         for(uint8_t idx = 0; idx < ALARM_DATALEN; idx++) {

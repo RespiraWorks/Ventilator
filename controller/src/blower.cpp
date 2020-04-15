@@ -19,3 +19,7 @@ limitations under the License.
 void blower_init() {
 
 }
+
+void blower_disable() {
+	
+}

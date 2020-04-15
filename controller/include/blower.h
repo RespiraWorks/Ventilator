@@ -24,5 +24,6 @@ limitations under the License.
  *  @return     
  ****************************************************************************************/
 void blower_init();
+void blower_disable();
 
 #endif  // BLOWER_H

@@ -16,7 +16,6 @@ limitations under the License.
 #ifndef COMMAND_H
 #define COMMAND_H
 
-#include <Arduino.h>
 #include <stdint.h>
 #include <string.h>
 

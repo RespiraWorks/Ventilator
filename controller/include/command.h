@@ -25,22 +25,7 @@ limitations under the License.
 #include "alarm.h"
 #include "watchdog.h"
 
-/****************************************************************************************
- *  @brief
- *  @usage
- *  @param
- *  @param
- *  @return
- ****************************************************************************************/
 void command_execute(enum command cmd, char *dataTx, uint8_t lenTx, char *dataRx, uint8_t *lenRx, uint8_t lenRxMax);
-
-/****************************************************************************************
- *  @brief
- *  @usage
- *  @param
- *  @param
- *  @return
- ****************************************************************************************/
 void command_responseSend(uint8_t cmd, char *packet, uint8_t len);
 
 #endif // COMMAND_H

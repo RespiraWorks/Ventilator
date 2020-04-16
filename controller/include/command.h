@@ -1,16 +1,19 @@
 /* Copyright 2020, Edwin Chiu
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
+  This file is part of FixMoreLungs.
 
-    http://www.apache.org/licenses/LICENSE-2.0
+  FixMoreLungs is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
 
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
+  FixMoreLungs is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with FixMoreLungs.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 #ifndef COMMAND_H
@@ -19,13 +22,14 @@ limitations under the License.
 #include <stdint.h>
 #include <string.h>
 
+#include "alarm.h"
 #include "packet_types.h"
 #include "parameters.h"
 #include "serialIO.h"
-#include "alarm.h"
 #include "watchdog.h"
 
-void command_execute(enum command cmd, char *dataTx, uint8_t lenTx, char *dataRx, uint8_t *lenRx, uint8_t lenRxMax);
+void command_execute(enum command cmd, char *dataTx, uint8_t lenTx,
+                     char *dataRx, uint8_t *lenRx, uint8_t lenRxMax);
 void command_responseSend(uint8_t cmd, char *packet, uint8_t len);
 
 #endif // COMMAND_H

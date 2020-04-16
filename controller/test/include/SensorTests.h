@@ -1,4 +1,4 @@
-/* Copyright 2020, Edwin Chiu
+/* Copyright 2020, RespiraWorks
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -13,17 +13,18 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#ifndef EEPROM_H
-#define EEPROM_H
+/*
+ module contributors: verityRF
+ The purpose of this module is to provide unit testing for the sensors controller module.
+ Module is to be run on an x86 host and is not to be run on an Arduino platform.
+*/
 
-/****************************************************************************************
- *  @brief      
- *  @usage      
- *  @param      
- *  @param      
- *  @return     
- ****************************************************************************************/
-void eeprom_init();
+#ifndef SENSORTESTS_H
+#define SENSORTESTS_H
 
+/*
+ * @brief Runs unit tests for the sensor module. Reports errors to stdout.
+ */
+void runAllSensorTests();
 
-#endif // EEPROM_H
+#endif // SENSORTESTS_H

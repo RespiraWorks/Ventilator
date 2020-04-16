@@ -1,25 +1,66 @@
 /* Copyright 2020, Edwin Chiu
 
-  This file is part of FixMoreLungs.
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-  FixMoreLungs is free software: you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation, either version 3 of the License, or
-  (at your option) any later version.
+    http://www.apache.org/licenses/LICENSE-2.0
 
-  FixMoreLungs is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with FixMoreLungs.  If not, see <https://www.gnu.org/licenses/>.
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 */
 #include <Arduino.h>
 
 #include "alarm.h"
 
 static stack_t stack;
+
+static bool stack_full() {
+    return (stack.top == (ALARM_NODES-1)) ? true : false;
+}
+
+static bool stack_empty() {
+    return (stack.top == -1) ? true : false;
+}
+
+static int32_t stack_peek(alarm_t **alarm) {
+
+    int32_t return_status = VC_STATUS_FAILURE;
+
+    if(!stack_empty()) {
+        *alarm = &stack.alarm[stack.top];
+
+        return_status = VC_STATUS_SUCCESS;
+    }
+
+    return return_status;
+}
+
+static int32_t stack_pop(alarm_t **alarm) {
+
+    int32_t return_status = VC_STATUS_FAILURE;
+
+    if(!stack_empty()) {
+        *alarm = &stack.alarm[stack.top];
+
+        stack.top--;
+
+        return_status = VC_STATUS_SUCCESS;
+    }
+
+    return return_status;
+}
+
+static void stack_push(alarm_t alarm) {
+    if(!stack_full()) {
+        stack.top++;
+
+        stack.alarm[stack.top] = alarm;
+    }
+}
 
 void alarm_init() {
     stack.top = -1;
@@ -74,48 +115,4 @@ int32_t alarm_read(enum dataID *alarmID, uint32_t *timestamp, char *data) {
     }
 
     return return_status;
-}
-
-static bool stack_full() {
-    return (stack.top == (ALARM_NODES-1)) ? true : false;
-}
-
-static bool stack_empty() {
-    return (stack.top == -1) ? true : false;
-}
-
-static int32_t stack_peek(alarm_t **alarm) {
-
-    int32_t return_status = VC_STATUS_FAILURE;
-
-    if(!stack_empty()) {
-        *alarm = &stack.alarm[stack.top];
-
-        return_status = VC_STATUS_SUCCESS;
-    }
-
-    return return_status;
-}
-
-static int32_t stack_pop(alarm_t **alarm) {
-
-    int32_t return_status = VC_STATUS_FAILURE;
-
-    if(!stack_empty()) {
-        *alarm = &stack.alarm[stack.top];
-
-        stack.top--;
-
-        return_status = VC_STATUS_SUCCESS;
-    }
-
-    return return_status;
-}
-
-static void stack_push(alarm_t alarm) {
-    if(!stack_full()) {
-        stack.top++;
-
-        stack.alarm[stack.top] = alarm;
-    }
 }

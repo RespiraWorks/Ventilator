@@ -14,6 +14,4 @@ limitations under the License.
 */
 #include "version.h"
 
-char * version_getVersion() {
-	return (char *) SW_VERSION;
-}
+char *version_getVersion() { return (char *)SW_VERSION; }

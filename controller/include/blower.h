@@ -16,12 +16,14 @@ limitations under the License.
 #ifndef BLOWER_H
 #define BLOWER_H
 
+#include <Arduino.h>
+
 /****************************************************************************************
- *  @brief      
- *  @usage      
- *  @param      
- *  @param      
- *  @return     
+ *  @brief
+ *  @usage
+ *  @param
+ *  @param
+ *  @return
  ****************************************************************************************/
 void blower_init();
 void blower_disable();

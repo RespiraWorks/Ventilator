@@ -7,19 +7,19 @@
 #include <map>
 
 #include "checksum.h"
-#include "unity.h"
+#include "gtest/gtest.h"
 
-void test_KnownQuantities() {
-  TEST_ASSERT_EQUAL_INT16(0, checksum_fletcher16(NULL, 0));
-  TEST_ASSERT_EQUAL_INT16(0, checksum_fletcher16("", 0));
-  TEST_ASSERT_EQUAL_INT16(24929, checksum_fletcher16("a", 1));
-  TEST_ASSERT_EQUAL_INT16(51440, checksum_fletcher16("abcde", 5));
-  TEST_ASSERT_EQUAL_INT16(8279, checksum_fletcher16("abcdef", 6));
-  TEST_ASSERT_EQUAL_INT16(1575, checksum_fletcher16("abcdefgh", 8));
-  TEST_ASSERT_EQUAL_INT16(0xfefe, checksum_fletcher16("\xff\xfe", 2));
+TEST(Checksum, KnownValues) {
+  EXPECT_EQ(0, checksum_fletcher16(NULL, 0));
+  EXPECT_EQ(0, checksum_fletcher16("", 0));
+  EXPECT_EQ(24929, checksum_fletcher16("a", 1));
+  EXPECT_EQ(51440, checksum_fletcher16("abcde", 5));
+  EXPECT_EQ(8279, checksum_fletcher16("abcdef", 6));
+  EXPECT_EQ(1575, checksum_fletcher16("abcdefgh", 8));
+  EXPECT_EQ(0xfefe, checksum_fletcher16("\xff\xfe", 2));
 }
 
-void test_CheckBytes() {
+TEST(Checksum, CheckBytes) {
   uint16_t csum = checksum_fletcher16("abcde", 5);
 
   uint16_t checkBytes = check_bytes_fletcher16(csum);
@@ -27,13 +27,13 @@ void test_CheckBytes() {
   char c1 = checkBytes & 0xff;
   csum = checksum_fletcher16(&c0, 1, csum);
   csum = checksum_fletcher16(&c1, 1, csum);
-  TEST_ASSERT_EQUAL_INT16(csum, 0);
+  EXPECT_EQ(csum, 0);
 }
 
 // Repeatedly flip a random bit in `data` and check that
 //  - a one-bit flip never yields the same checksum, and
 //  - the same checksum doesn't appear "too often" overall.
-void test_BitFlips() {
+TEST(Checksum, BitFlips) {
   srand(0);
 
   char data[32];
@@ -61,10 +61,9 @@ void test_BitFlips() {
 
   printf("%d/%d collisions after flipping a single bit.\n",
          singleBitFlipCollisions, numTests);
-  if (singleBitFlipCollisions > 0) {
-    TEST_FAIL_MESSAGE("Got at least one collision from one-bit flips; is the "
-                      "checksum broken?\n");
-  }
+  EXPECT_EQ(0, singleBitFlipCollisions)
+      << "Got at least one collision from one-bit flips; is the "
+         "checksum broken?";
 
   // Find the checksum with the most collisions.  There shouldn't be "too
   // many".
@@ -77,15 +76,6 @@ void test_BitFlips() {
   double maxCollisionsFrac = 1.0 * maxCollisions / numTests;
   printf("%d/%d collisions on worst checksum, 0x%4x\n", maxCollisions, numTests,
          maxCollisionHash);
-  if (maxCollisionsFrac >= 0.0002) {
-    TEST_FAIL_MESSAGE(
-        "Too many collisions on worst checksum; is the checksum broken?");
-  }
-}
-
-int main() {
-  UNITY_BEGIN();
-  RUN_TEST(test_KnownQuantities);
-  RUN_TEST(test_BitFlips);
-  return UNITY_END();
+  EXPECT_LE(maxCollisionsFrac, 0.0002)
+      << "Too many collisions on worst checksum; is the checksum broken?";
 }

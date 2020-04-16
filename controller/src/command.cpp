@@ -257,13 +257,6 @@ void command_responseSend(uint8_t cmd, char *packet, uint8_t len) {
 *    PRIVATE FUNCTIONS
 ****************************************************************************************/
 
-/****************************************************************************************
-*  @brief
-*  @usage
-*  @param
-*  @param
-*  @return
-****************************************************************************************/
 static float convIntTofloat(char *data, uint8_t len) {
 
     float f;
@@ -273,13 +266,6 @@ static float convIntTofloat(char *data, uint8_t len) {
     return f;
 }
 
-/****************************************************************************************
-*  @brief
-*  @usage
-*  @param
-*  @param
-*  @return
-****************************************************************************************/
 static void convfloatToInt(float float_value, char *data, uint8_t len) {
     memcpy(data, &float_value, len);
 }

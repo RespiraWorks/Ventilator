@@ -159,23 +159,3 @@ void pid_execute() {
     send_periodicData(DELAY_100MS, sensorValue, 0, 0);
 }
 
-static void send_periodicData(uint32_t delay, uint16_t pressure, uint16_t volume, uint16_t flow) {
-    static uint32_t time;
-    static bool first_call = true;
-
-    if(first_call == true) {
-        first_call = false;
-        time = millis();
-    }
-    else {
-        if((millis() - time) > delay) {
-            if(parameters_getPeriodicMode() == periodicMode::on){
-                // Send readings data
-                comms_sendPeriodicReadings(pressure * 1.0, volume * 0.0, flow * 0.0);
-            }
-
-            time = millis();
-        }
-    }
-}
-

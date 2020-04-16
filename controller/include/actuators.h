@@ -16,12 +16,12 @@ limitations under the License.
 #ifndef ACTUATORS_H
 #define ACTUATORS_H
 
-/****************************************************************************************
+/**********************
  * GPIO PIN DEFINITIONS
- ****************************************************************************************/
+ **********************/
 
 #define O_SOLENOID 5 /* Solenoid output pin 5 TBC */
 
 void actuators_init();
 
-#endif  // BLOWER_H
+#endif // BLOWER_H

@@ -14,9 +14,6 @@ addons:
       - libqt5charts5-dev
 
 # https://docs.platformio.org/en/latest/integration/ci/travis.html#travis-ci
-python:
-    - "2.7"
-
 cache:
     directories:
         - "~/.platformio"

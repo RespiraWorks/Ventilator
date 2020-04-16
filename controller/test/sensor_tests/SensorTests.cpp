@@ -23,7 +23,7 @@ limitations under the License.
 #include "sensors.h"
 #include "ArduinoSim.h"
 
-#include <stdlib.h>
+#include <cmath>
 #include <stdio.h>
 #include <stdbool.h>
 #include <string>
@@ -117,7 +117,7 @@ static bool TestFullScaleReading() {
 			continue;
 		}
 		//Calculate deviance from expected. Using only inhalation because we know it is equal to exhalation by now.
-		float inhalationDelta = abs(pressureInhalation - differentialFlowPressures[4 + 2 * i]);
+		float inhalationDelta = std::abs(pressureInhalation - differentialFlowPressures[4 + 2 * i]);
 
 		if (inhalationDelta > COMPARISON_TOLERANCE ) {
 			fprintf(stdout, "Differential Sensor Calculated Value Mismatch. Calculated: %f, Expected: %f, Delta: %f, AllowedDelta: %f at index %d\n",
@@ -135,7 +135,7 @@ static bool TestFullScaleReading() {
 
 	for (int i = 0; i < 8; i++) {
 		float pressurePatient = get_pressure_reading(pressureSensors::PATIENT);
-		float patientDelta = abs(pressurePatient - patientPressures[4 + 2 * i]);
+		float patientDelta = std::abs(pressurePatient - patientPressures[4 + 2 * i]);
 		if (patientDelta > COMPARISON_TOLERANCE) {
 			fprintf(stdout, "Patient Sensor Calculated Value Mismatch. Calculated: %f, Expected: %f, Delta: %f, AllowedDelta: %f at index %d\n",
 				pressurePatient, patientPressures[4 + 2 * i], patientDelta, COMPARISON_TOLERANCE, 4 + 2 * i);

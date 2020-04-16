@@ -18,8 +18,8 @@ limitations under the License.
 
 #include "eeprom.h"
 #include "packet_types.h"
-#include "ventilator_limits.h"
 #include "ventilator_defaults.h"
+#include "ventilator_limits.h"
 
 void parameters_setKp(float kp_value);
 
@@ -72,7 +72,8 @@ enum periodicMode parameters_getPeriodicMode();
 void parameters_setVentilatorMode(enum ventilatorMode ventilatorMode_value);
 enum ventilatorMode parameters_getVentilatorMode();
 
-void parameters_setSolenoidNormalState(enum solenoidNormaleState normalState_value);
+void parameters_setSolenoidNormalState(
+    enum solenoidNormaleState normalState_value);
 enum solenoidNormaleState parameters_getSolenoidNormalState();
 
 #endif // PARAMETERS_H

@@ -13,9 +13,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include <Arduino.h>
-
 #include "comms.h"
+#include "hal.h"
 
 /****************************************************************************************
  *    PRIVATE FUNCTION PROTOTYPES
@@ -109,11 +108,11 @@ void comms_handler() {
 
     // Timeout alarm waiting if it has been sent
     if(alarm_sent == true) {
-        if((millis() - alarmSentTime) >= DELAY_100MS) {
-            // Alarm hasn't ack arrived within DELAY_100MS,
-            // lets send the alarm again
-            alarm_sent = false;
-        }
+      if ((Hal.millis() - alarmSentTime) >= DELAY_100MS) {
+        // Alarm hasn't ack arrived within DELAY_100MS,
+        // lets send the alarm again
+        alarm_sent = false;
+      }
     }
 
     switch(state) {
@@ -215,7 +214,7 @@ void comms_handler() {
             send_alarm();
 
             alarm_sent = true;
-            alarmSentTime = millis();
+            alarmSentTime = Hal.millis();
 
             state = handler_state::idle;
 
@@ -239,7 +238,7 @@ void comms_sendResetState() {
 
     version = version_getVersion();
 
-    time = millis();
+    time = Hal.millis();
 
     resetData[0] = (time >> 24) & 0xFF;
     resetData[1] = (time >> 16) & 0xFF;
@@ -263,7 +262,7 @@ void comms_sendPeriodicReadings(float pressure, float volume, float flow) {
     char readingsData[16];
     uint32_t time;
 
-    time = millis();
+    time = Hal.millis();
 
     readingsData[0] = (time >> 24) & 0xFF;
     readingsData[1] = (time >> 16) & 0xFF;

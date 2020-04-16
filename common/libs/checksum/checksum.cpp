@@ -17,36 +17,13 @@ limitations under the License.
 
 #include "checksum.h"
 
-uint16_t checksum_fletcher16(uint16_t *sum1, uint16_t *sum2,  char *data, uint8_t count)
-{
-    uint8_t index;
-
-    for (index = 0; index < count; ++index)
-    {
-        *sum1 = ((*sum1) + data[index]) % 255;
-        *sum2 = ((*sum2) + (*sum1)) % 255;
-    }
-
-    return ((*sum2) << 8) | *sum1;
-}
-
-bool checksum_check(char *packet, uint8_t packet_len) {
-    uint16_t sum1 = 0;
-    uint16_t sum2 = 0;
-    uint16_t csum;
-    uint8_t c0,c1,f0,f1;
-
-    // TODO Check validity of packet_len ?
-    // TODO Can this code be optimised?
-
-    csum = checksum_fletcher16(&sum1, &sum2, packet, packet_len-2); // Don't check the final two check bytes
-    f0 = csum & 0xff;
-    f1 = (csum >> 8) & 0xff;
-    c0 = 0xff - ((f0 + f1) % 0xff);
-    c1 = 0xff - ((f0 + c0) % 0xff);
-
-    if((packet[packet_len-2] == (char) c0) && (packet[packet_len-1] == (char) c1))
-        return true;
-
-    return false;
+uint16_t checksum_fletcher16(const char *data, uint8_t count,
+                             uint16_t state /*=0*/) {
+  uint8_t s1 = state & 0xff;
+  uint8_t s2 = (state >> 8) & 0xff;
+  for (uint8_t index = 0; index < count; ++index) {
+    s1 = (uint16_t{s1} + static_cast<uint16_t>(data[index])) % 255;
+    s2 = (uint16_t{s2} + uint16_t{s1}) % 255;
+  }
+  return (uint16_t{s2} << 8) | s1;
 }

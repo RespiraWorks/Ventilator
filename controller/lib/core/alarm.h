@@ -21,8 +21,12 @@ limitations under the License.
 #include "errors.h"
 #include "packet_types.h"
 
-#define ALARM_NODES     4 /* Number of alarms we can store in the queue */
-#define ALARM_DATALEN   8 /* Each alarm can store 8 bytes - modifying this would mean modifying the memory copys*/
+/* Number of alarms we can store in the queue */
+#define ALARM_NODES 4
+
+// Each alarm can store 8 bytes - modifying this would mean modifying the
+// memory copies.
+#define ALARM_DATALEN 8
 
 struct alarm_t {
   dataID alarm;

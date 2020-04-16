@@ -17,9 +17,14 @@ limitations under the License.
 #define COMMS_H
 
 #include <stdint.h>
+#include <Arduino.h>
 
+#include "version.h"
+#include "serialIO.h"
+#include "parameters.h"
+#include "types.h"
+#include "command.h"
 #include "checksum.h"
-
 #include "packet_types.h"
 
 enum class processPacket {
@@ -40,7 +45,7 @@ enum class processPacket {
 */
 enum class medicalMode {
     start   = 0x00,     /* First medical mode command */
-    end     = 0x10,     /* Final medical mode command */
+    end     = 0x0e,     /* Final medical mode command */
 
     count
 };
@@ -51,7 +56,7 @@ enum class medicalMode {
 */
 enum class engMode {
     start   = 0x20,     /* First engineering mode command */
-    end     = 0x27,     /* Final engineering mode command */
+    end     = 0x28,     /* Final engineering mode command */
 
     count
 };

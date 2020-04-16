@@ -48,7 +48,7 @@ limitations under the License.
 */
 #include <Arduino.h>
 
-#include "pid.h"
+#include "controller.h"
 #include "watchdog.h"
 #include "comms.h"
 #include "sensors.h"
@@ -65,7 +65,7 @@ void setup() {
     actuators_init();
 
     watchdog_init();
-    pid_init();
+    controller_init();
 
     alarm_init();
 

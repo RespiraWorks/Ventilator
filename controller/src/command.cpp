@@ -283,9 +283,13 @@ void command_execute(enum command cmd,
 
         case command::start_ventilator:
 
+            controller_start();
+
             break;
 
         case command::stop_ventilator:
+
+            controller_stop();
 
             break;
 

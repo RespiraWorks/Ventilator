@@ -28,6 +28,7 @@
 #include "serialIO.h"
 #include "alarm.h"
 #include "watchdog.h"
+#include "controller.h"
 
 /****************************************************************************************
  *  @brief

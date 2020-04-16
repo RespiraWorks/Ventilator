@@ -13,8 +13,25 @@ addons:
       - qtdeclarative5-dev
       - libqt5charts5-dev
 
+# https://docs.platformio.org/en/latest/integration/ci/travis.html#travis-ci
+python:
+    - "2.7"
+
+cache:
+    directories:
+        - "~/.platformio"
+
+install:
+  - pip install -U platformio
+  - platformio update
+
 # TODO: Separate jobs for GUI and controller?
 script:
+  # Controller unit tests on native.
+  - platformio test -e native -v
+  # Make sure controller builds for target platform.
+  - platformio run -v
+  # Make sure GUI builds.
   - cd gui
   - mkdir build
   - cd build

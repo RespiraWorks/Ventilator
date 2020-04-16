@@ -1,19 +1,16 @@
 /* Copyright 2020, Edwin Chiu
 
-  This file is part of FixMoreLungs.
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-  FixMoreLungs is free software: you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation, either version 3 of the License, or
-  (at your option) any later version.
+    http://www.apache.org/licenses/LICENSE-2.0
 
-  FixMoreLungs is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with FixMoreLungs.  If not, see <https://www.gnu.org/licenses/>.
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 */
 
 #include "comms.h"
@@ -78,6 +75,21 @@ enum class packet_field {
 /****************************************************************************************
  *    PUBLIC FUNCTIONS
  ****************************************************************************************/
+
+static bool packet_check(char *packet);
+static bool packet_receive(char *packet, uint8_t *packet_len);
+static bool packet_checksumValidation(char *packet, uint8_t len);
+static bool packet_cmdValidatation(char *packet);
+static bool packet_modeValidation(char *packet);
+static enum processPacket process_packet(char *packet, uint8_t len);
+static void comms_sendModeERR(char *packet);
+static void comms_sendChecksumERR(char *packet);
+static void comms_sendCommandERR(char *packet);
+static void cmd_execute(enum command cmd, char *dataTx, uint8_t lenTx,
+                        char *dataRx, uint8_t *lenRx, uint8_t lenRxMax);
+static void cmd_responseSend(char *packet, uint8_t len);
+static void send_alarm();
+static void cmd_responseSend(uint8_t cmd, char *packet, uint8_t len);
 
 void comms_init() {
     serialIO_init();
@@ -304,6 +316,7 @@ static void send_alarm() {
     }
 }
 
+
 /****************************************************************************************
  *  @brief
  *  @usage
@@ -515,8 +528,6 @@ static bool packet_receive(char *packet, uint8_t *len) {
             case packet_field::checksumB:
 
                 serialIO_readByte(&packet[packet_len++]);
-
-                field = packet_field::checksumB;
 
                 // Reset static counters to default values
                 data_len = 0;

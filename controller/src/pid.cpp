@@ -1,19 +1,16 @@
 /* Copyright 2020, Edwin Chiu
 
-  This file is part of FixMoreLungs.
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-  FixMoreLungs is free software: you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation, either version 3 of the License, or
-  (at your option) any later version.
+    http://www.apache.org/licenses/LICENSE-2.0
 
-  FixMoreLungs is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with FixMoreLungs.  If not, see <https://www.gnu.org/licenses/>.
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 */
 #include <Arduino.h>
 
@@ -32,6 +29,26 @@ static PID myPID(&Input, &Output, &Setpoint, Kp, Ki, Kd, DIRECT);
 
 // These constants won't change. They're used to give names to the pins used:
 static const int analogOutPin = LED_BUILTIN; // Analog output pin that the LED is attached to
+
+static void send_periodicData(uint32_t delay, uint16_t pressure, uint16_t volume, uint16_t flow) {
+    static uint32_t time;
+    static bool first_call = true;
+
+    if(first_call == true) {
+        first_call = false;
+        time = millis();
+    }
+    else {
+        if((millis() - time) > delay) {
+            if(parameters_getPeriodicReadings()){
+                // Send readings data
+                comms_sendPeriodicReadings(pressure * 1.0, volume * 0.0, flow * 0.0);
+            }
+
+            time = millis();
+        }
+    }
+}
 
 enum class pid_fsm_state {
   reset        = 0,
@@ -161,3 +178,4 @@ static void send_periodicData(uint32_t delay, uint16_t pressure, uint16_t volume
         }
     }
 }
+

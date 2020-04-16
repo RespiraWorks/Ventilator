@@ -18,8 +18,8 @@ limitations under the License.
 
 #include <stdint.h>
 
-#include "comms.h"
 #include "checksum.h"
+#include "comms.h"
 #include "packet_types.h"
 
 void serialIO_init();

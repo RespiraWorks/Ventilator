@@ -23,7 +23,7 @@ limitations under the License.
 #define BLOWER_LOW 130
 #define DPSENSOR_PIN A0
 
-//state machine variables
+// state machine variables
 #define INSPIRE_TIME 1600
 #define INSPIRE_RATE 1
 #define PIP 142
@@ -34,7 +34,7 @@ limitations under the License.
 #define PEEP 130
 #define EXPIRE_DWELL 600
 
-//not implemented yet
+// not implemented yet
 #define AC 0
 #define RR 0
 #define IE 0
@@ -42,4 +42,4 @@ limitations under the License.
 void pid_execute();
 void pid_init();
 
-#endif  // PID_H
+#endif // PID_H

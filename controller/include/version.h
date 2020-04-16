@@ -18,13 +18,6 @@ limitations under the License.
 
 static const char SW_VERSION[] = "01.01.01"; /* Len must be 8 bytes (excluding NULL) */
 
-/****************************************************************************************
- *  @brief      
- *  @usage      
- *  @param      
- *  @param      
- *  @return     
- ****************************************************************************************/
 char * version_getVersion();
 
 #endif // VERSION_H

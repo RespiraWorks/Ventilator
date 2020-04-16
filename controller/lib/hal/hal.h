@@ -52,6 +52,12 @@ public:
   // millis().
   void delay(uint32_t ms);
 
+  // In test mode, will return the last value set via test_setAnalogPin.
+  int analogRead(int pin);
+#ifdef TEST_MODE
+  void test_setAnalogPin(int pin, int value);
+#endif
+
   // TODO: Need at least one HAL_MOCK_METHOD.
 
 private:
@@ -59,6 +65,7 @@ private:
   // Instance variables used when mocking HAL.
 
   uint32_t millis_ = 0;
+  int pin_values_[15] = {0};
 #endif
 };
 
@@ -71,11 +78,14 @@ extern HalApi Hal;
 #include <Arduino.h>
 
 inline uint32_t HalApi::millis() { return ::millis(); }
-inline void HalApi::delay(uint32_t ms) { delay(ms); }
+inline void HalApi::delay(uint32_t ms) { ::delay(ms); }
+inline int HalApi::analogRead(int pin) { return ::analogRead(pin); }
 
 #else
 
 inline uint32_t HalApi::millis() { return millis_; }
 inline void HalApi::delay(uint32_t ms) { millis_ += ms; }
+inline int HalApi::analogRead(int pin) { return pin_values_[pin]; }
+inline void HalApi::test_setAnalogPin(int pin, int value) { pin_values_[pin] = value; }
 
 #endif

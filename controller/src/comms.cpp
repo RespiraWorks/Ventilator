@@ -487,8 +487,6 @@ static bool packet_receive(char *packet, uint8_t *len) {
 
                 serialIO_readByte(&packet[packet_len++]);
 
-                field = packet_field::checksumB;
-
                 // Reset static counters to default values
                 data_len = 0;
                 *len = packet_len; // Save packet length

@@ -13,15 +13,43 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include <Arduino.h>
-
 #include "comms.h"
-#include "watchdog.h"
-#include "version.h"
-#include "serialIO.h"
-#include "alarm.h"
-#include "parameters.h"
-#include "types.h"
+
+/****************************************************************************************
+ *    PRIVATE FUNCTION PROTOTYPES
+ ****************************************************************************************/
+
+static bool packet_check(char *packet);
+static bool packet_receive(char *packet, uint8_t *packet_len);
+static bool packet_checksumValidation(char *packet, uint8_t len);
+static bool packet_cmdValidatation(char *packet);
+static bool packet_modeValidation(char *packet);
+static enum processPacket process_packet(char *packet, uint8_t len);
+static void comms_sendModeERR(char *packet);
+static void comms_sendChecksumERR(char *packet);
+static void comms_sendCommandERR(char *packet);
+static void cmd_execute(enum command cmd, char *dataTx, uint8_t lenTx,
+                        char *dataRx, uint8_t *lenRx, uint8_t lenRxMax);
+static void cmd_responseSend(char *packet, uint8_t len);
+static void send_alarm();
+static void cmd_responseSend(uint8_t cmd, char *packet, uint8_t len);
+
+/****************************************************************************************
+ *    DEFINE STATEMENTS
+ ****************************************************************************************/
+
+#define PACKET_LEN_MAX (32)
+
+/****************************************************************************************
+ *    PRIVATE VARIABLES
+ ****************************************************************************************/
+
+static char rx_packet[PACKET_LEN_MAX];
+static char cmdResponse_data[PACKET_LEN_MAX - 5]; // 5 (MSGTYPE[1] + DATAID[1] + LEN [1] + CHECKSUM[2])
+
+/****************************************************************************************
+ *    TYPE DEFINITIONS
+ ****************************************************************************************/
 
 enum class handler_state {
     idle            = 0x00,
@@ -44,10 +72,9 @@ enum class packet_field {
     count                   /* Sentinel */
 };
 
-#define PACKET_LEN_MAX (32)
-
-static char rx_packet[PACKET_LEN_MAX];
-static char cmdResponse_data[PACKET_LEN_MAX - 5]; // 5 (MSGTYPE[1] + DATAID[1] + LEN [1] + CHECKSUM[2])
+/****************************************************************************************
+ *    PUBLIC FUNCTIONS
+ ****************************************************************************************/
 
 static bool packet_check(char *packet);
 static bool packet_receive(char *packet, uint8_t *packet_len);
@@ -131,14 +158,14 @@ void comms_handler() {
                 switch(packetStatus) {
                     case processPacket::command:
 
-                        cmd_execute((enum command) rx_packet[(uint8_t) packet_field::cmd],
+                        command_execute((enum command) rx_packet[(uint8_t) packet_field::cmd],
                                     &rx_packet[(uint8_t) packet_field::data],
                                     rx_packet[(uint8_t) packet_field::len],
                                     cmdResponse_data, &cmdResponseData_len,
                                     sizeof(cmdResponse_data));
 
                         // Send response to Interface Controller
-                        cmd_responseSend((uint8_t) rx_packet[(uint8_t) packet_field::cmd],
+                        command_responseSend((uint8_t) rx_packet[(uint8_t) packet_field::cmd],
                                          cmdResponse_data, cmdResponseData_len);
                         break;
 
@@ -200,10 +227,76 @@ void comms_handler() {
     }
 }
 
-static void cmd_responseSend(uint8_t cmd, char *packet, uint8_t len) {
-    serialIO_send(msgType::rAck, (enum dataID) cmd, packet, len);
+
+void comms_sendResetState() {
+    char resetData[12];
+    uint32_t time;
+    char *version;
+
+    // NOTE : Given the bootloader clears MCUSR, it's not possible to determine what reset the CPU without modifying the bootloader
+
+    version = version_getVersion();
+
+    time = millis();
+
+    resetData[0] = (time >> 24) & 0xFF;
+    resetData[1] = (time >> 16) & 0xFF;
+    resetData[2] = (time >> 8) & 0xFF;
+    resetData[3] = time & 0xFF;
+
+    // TODO Is using memcpy faster than this?
+    resetData[4] = *version;
+    resetData[5] = *(version+1);
+    resetData[6] = *(version+2);
+    resetData[7] = *(version+3);
+    resetData[8] = *(version+4);
+    resetData[9] = *(version+5);
+    resetData[10] = *(version+6);
+    resetData[11] = *(version+7);
+
+    serialIO_send(msgType::status, dataID::vc_boot, resetData, sizeof(resetData));
 }
 
+void comms_sendPeriodicReadings(float pressure, float volume, float flow) {
+    char readingsData[16];
+    uint32_t time;
+
+    time = millis();
+
+    readingsData[0] = (time >> 24) & 0xFF;
+    readingsData[1] = (time >> 16) & 0xFF;
+    readingsData[2] = (time >> 8) & 0xFF;
+    readingsData[3] = time & 0xFF;
+
+    readingsData[4] = (((uint32_t) pressure) >> 24) & 0xFF;
+    readingsData[5] = (((uint32_t) pressure) >> 16) & 0xFF;
+    readingsData[6] = (((uint32_t) pressure) >> 8) & 0xFF;
+    readingsData[7] = ((uint32_t) pressure) & 0xFF;
+
+    readingsData[8]  = (((uint32_t) volume) >> 24) & 0xFF;
+    readingsData[9]  = (((uint32_t) volume) >> 16) & 0xFF;
+    readingsData[10] = (((uint32_t) volume) >> 8) & 0xFF;
+    readingsData[11] = ((uint32_t) volume) & 0xFF;
+
+    readingsData[12] = (((uint32_t) flow) >> 24) & 0xFF;
+    readingsData[13] = (((uint32_t) flow) >> 16) & 0xFF;
+    readingsData[14] = (((uint32_t) flow) >> 8) & 0xFF;
+    readingsData[15] = ((uint32_t) flow) & 0xFF;
+
+    serialIO_send(msgType::data, dataID::data_1, readingsData, sizeof(readingsData));
+}
+
+/****************************************************************************************
+ *    PRIVATE FUNCTIONS
+ ****************************************************************************************/
+
+/****************************************************************************************
+ *  @brief
+ *  @usage
+ *  @param
+ *  @param
+ *  @return
+ ****************************************************************************************/
 static void send_alarm() {
     uint32_t timestamp;
     char data[ALARM_DATALEN + sizeof(timestamp)];
@@ -223,6 +316,14 @@ static void send_alarm() {
     }
 }
 
+
+/****************************************************************************************
+ *  @brief
+ *  @usage
+ *  @param
+ *  @param
+ *  @return
+ ****************************************************************************************/
 static enum processPacket process_packet(char *packet, uint8_t len) {
 
     // Validate packet checksum
@@ -274,97 +375,24 @@ static enum processPacket process_packet(char *packet, uint8_t len) {
     return processPacket::msgTypeUnknown;
 }
 
-static void cmd_execute(enum command cmd, char *dataTx, uint8_t lenTx, char *dataRx, uint8_t *lenRx, uint8_t lenRxMax) {
-    char alarmData[8];
-    *lenRx = 0; // Initialise the value to zero
-
-    switch(cmd) {
-
-        case command::set_rr:
-
-            break;
-
-        case command::get_rr:
-
-            break;
-
-        case command::set_tv:
-
-            break;
-
-        case command::get_tv:
-
-            break;
-
-        case command::set_peep:
-
-            break;
-
-        case command::get_peep:
-
-            break;
-
-        case command::set_pip:
-
-            break;
-
-        case command::get_pip:
-
-            break;
-
-        case command::set_dwell:
-
-            break;
-
-        case command::get_dwell:
-
-            break;
-
-        case command::set_id:
-
-            break;
-
-        case command::get_id:
-
-            break;
-
-        case command::set_ed:
-
-            break;
-
-        case command::get_ed:
-
-            break;
-
-        case command::set_periodic:
-            parameters_setPeriodicReadings(dataTx[0] == 0x01 ? true : false);
-
-            // Set test alarm data values
-            alarmData[0] = 0x01;
-            alarmData[1] = 0x02;
-            alarmData[2] = 0x03;
-            alarmData[3] = 0x04;
-            alarmData[4] = 0x05;
-            alarmData[5] = 0x06;
-            alarmData[6] = 0x07;
-            alarmData[7] = 0x08;
-
-            alarm_add(dataID::alarm_1, alarmData);
-
-            break;
-
-        case command::get_periodic:
-            *lenRx = 1;
-            dataRx[0] = (uint8_t) parameters_getPeriodicReadings();
-
-            break;
-    }
-}
-
+/****************************************************************************************
+ *  @brief
+ *  @usage
+ *  @param
+ *  @param
+ *  @return
+ ****************************************************************************************/
 static bool packet_checksumValidation(char *packet, uint8_t len) {
     return checksum_check(packet, len);
 }
 
+/****************************************************************************************
+ *  @brief
+ *  @usage
+ *  @param
+ *  @param
+ *  @return
+ ****************************************************************************************/
 static bool packet_cmdValidatation(char *packet) {
 
     uint8_t cmd = (uint8_t) packet[(uint8_t) packet_field::cmd];
@@ -382,13 +410,20 @@ static bool packet_cmdValidatation(char *packet) {
     return false;
 }
 
+/****************************************************************************************
+ *  @brief
+ *  @usage
+ *  @param
+ *  @param
+ *  @return
+ ****************************************************************************************/
 static bool packet_modeValidation(char *packet) {
 
     uint8_t cmd = (uint8_t) packet[(uint8_t) packet_field::cmd];
 
     // Does the command correspond with the current mode
     // Is medical mode active?
-    if(parameters_medicalModeActive()) {
+    if(parameters_getOperatingMode() == operatingMode::medical) {
 
         // Limit the number of commands accepted
         if((cmd >= (uint8_t) engMode::start) && (cmd <= (uint8_t) engMode::end)) {
@@ -402,6 +437,13 @@ static bool packet_modeValidation(char *packet) {
     return true;
 }
 
+/****************************************************************************************
+ *  @brief
+ *  @usage
+ *  @param
+ *  @param
+ *  @return
+ ****************************************************************************************/
 static bool packet_receive(char *packet, uint8_t *len) {
 
     // TODO Do we need to set serialtimer to something lower than 1 second?
@@ -508,78 +550,41 @@ static bool packet_receive(char *packet, uint8_t *len) {
     return packet_complete;
 }
 
+/****************************************************************************************
+ *  @brief
+ *  @usage
+ *  @param
+ *  @param
+ *  @return
+ ****************************************************************************************/
 static void comms_sendModeERR(char *packet) {
     char emptyData;
 
     serialIO_send(msgType::rErrMode, (enum dataID) packet[(uint8_t) packet_field::cmd], &emptyData, 0);
 }
 
+/****************************************************************************************
+ *  @brief
+ *  @usage
+ *  @param
+ *  @param
+ *  @return
+ ****************************************************************************************/
 static void comms_sendChecksumERR(char *packet) {
     char emptyData;
 
     serialIO_send(msgType::rErrChecksum, (enum dataID) packet[(uint8_t) packet_field::cmd], &emptyData, 0);
 }
 
+/****************************************************************************************
+ *  @brief
+ *  @usage
+ *  @param
+ *  @param
+ *  @return
+ ****************************************************************************************/
 static void comms_sendCommandERR(char *packet) {
     char emptyData;
 
     serialIO_send(msgType::rErrCmd, (enum dataID) packet[(uint8_t) packet_field::cmd], &emptyData, 0);
-}
-
-void comms_sendResetState() {
-    char resetData[12];
-    uint32_t time;
-    char *version;
-
-    // NOTE : Given the bootloader clears MCUSR, it's not possible to determine what reset the CPU without modifying the bootloader
-
-    version = version_getVersion();
-
-    time = millis();
-
-    resetData[0] = (time >> 24) & 0xFF;
-    resetData[1] = (time >> 16) & 0xFF;
-    resetData[2] = (time >> 8) & 0xFF;
-    resetData[3] = time & 0xFF;
-
-    // TODO Is using memcpy faster than this?
-    resetData[4] = *version;
-    resetData[5] = *(version+1);
-    resetData[6] = *(version+2);
-    resetData[7] = *(version+3);
-    resetData[8] = *(version+4);
-    resetData[9] = *(version+5);
-    resetData[10] = *(version+6);
-    resetData[11] = *(version+7);
-
-    serialIO_send(msgType::status, dataID::vc_boot, resetData, sizeof(resetData));
-}
-
-void comms_sendPeriodicReadings(float pressure, float volume, float flow) {
-    char readingsData[16];
-    uint32_t time;
-
-    time = millis();
-
-    readingsData[0] = (time >> 24) & 0xFF;
-    readingsData[1] = (time >> 16) & 0xFF;
-    readingsData[2] = (time >> 8) & 0xFF;
-    readingsData[3] = time & 0xFF;
-
-    readingsData[4] = (((uint32_t) pressure) >> 24) & 0xFF;
-    readingsData[5] = (((uint32_t) pressure) >> 16) & 0xFF;
-    readingsData[6] = (((uint32_t) pressure) >> 8) & 0xFF;
-    readingsData[7] = ((uint32_t) pressure) & 0xFF;
-
-    readingsData[8]  = (((uint32_t) volume) >> 24) & 0xFF;
-    readingsData[9]  = (((uint32_t) volume) >> 16) & 0xFF;
-    readingsData[10] = (((uint32_t) volume) >> 8) & 0xFF;
-    readingsData[11] = ((uint32_t) volume) & 0xFF;
-
-    readingsData[12] = (((uint32_t) flow) >> 24) & 0xFF;
-    readingsData[13] = (((uint32_t) flow) >> 16) & 0xFF;
-    readingsData[14] = (((uint32_t) flow) >> 8) & 0xFF;
-    readingsData[15] = ((uint32_t) flow) & 0xFF;
-
-    serialIO_send(msgType::data, dataID::data_1, readingsData, sizeof(readingsData));
 }

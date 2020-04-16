@@ -16,7 +16,6 @@ limitations under the License.
 #ifndef SERIALIO_H
 #define SERIALIO_H
 
-#include <Arduino.h>
 #include <stdint.h>
 
 #include "comms.h"

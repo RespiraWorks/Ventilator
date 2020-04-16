@@ -19,4 +19,4 @@ limitations under the License.
 void blower_init();
 void blower_disable();
 
-#endif  // BLOWER_H
+#endif // BLOWER_H

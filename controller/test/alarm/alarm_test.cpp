@@ -1,6 +1,5 @@
 #include "alarm.h"
 #include "hal.h"
-#include "unity.h"
 #include "gtest/gtest.h"
 
 class AlarmTest : public testing::Test {
@@ -11,13 +10,9 @@ public:
   }
 };
 
-TEST(AlarmTest, NotAvailableAfterInit) {
-  alarm_init();
-  ASSERT_FALSE(alarm_available());
-}
+TEST_F(AlarmTest, NotAvailableAfterInit) { ASSERT_FALSE(alarm_available()); }
 
-TEST(AlarmTest, AddOneAlarm) {
-  alarm_init();
+TEST_F(AlarmTest, AddOneAlarm) {
   char alarm_data[ALARM_DATALEN];
   memset(alarm_data, 'x', sizeof(alarm_data));
 
@@ -25,7 +20,7 @@ TEST(AlarmTest, AddOneAlarm) {
   ASSERT_TRUE(alarm_available());
 }
 
-TEST(AlarmTest, Timestamp) {}
+TEST_F(AlarmTest, Timestamp) {}
 
 // TODO(jlebar): Add more tests, checking that:
 //  - Alarms get dropped after a certain point.

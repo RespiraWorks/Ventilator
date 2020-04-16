@@ -16,14 +16,6 @@ limitations under the License.
 #ifndef EEPROM_H
 #define EEPROM_H
 
-/****************************************************************************************
- *  @brief      
- *  @usage      
- *  @param      
- *  @param      
- *  @return     
- ****************************************************************************************/
 void eeprom_init();
-
 
 #endif // EEPROM_H

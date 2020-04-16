@@ -22,13 +22,6 @@ limitations under the License.
 
 #define O_SOLENOID 5 /* Solenoid output pin 5 TBC */
 
-/****************************************************************************************
- *  @brief
- *  @usage
- *  @param
- *  @param
- *  @return
- ****************************************************************************************/
 void actuators_init();
 
 #endif  // BLOWER_H

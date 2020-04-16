@@ -30,51 +30,10 @@ struct alarm_t {
   char data[ALARM_DATALEN];
 };
 
-// Public function prototypes
-
-/****************************************************************************************
- *  @brief
- *  @usage
- *  @param
- *  @param
- *  @return
- ****************************************************************************************/
 void alarm_init();
-
-/****************************************************************************************
- *  @brief
- *  @usage  Add an alarm to the top of the stack. If the stack is full, new alarm is lost.
- *  @param
- *  @param
- *  @return
- ****************************************************************************************/
 void alarm_add(enum dataID alarm, char *data);
-
-/****************************************************************************************
- *  @brief
- *  @usage  Read the alarm at the top of the stack
- *  @param
- *  @param
- *  @return
- ****************************************************************************************/
 int32_t alarm_read(enum dataID *alarmID, uint32_t *timestamp, char *data);
-
-/****************************************************************************************
- *  @brief
- *  @usage   Are there any alarms available on the stack?
- *  @param
- *  @param
- *  @return
- ****************************************************************************************/
 bool alarm_available();
-
-/****************************************************************************************
- *  @brief
- *  @usage  Remove the alarm at the top of the stack
- *  @param
- *  @param
- *  @return
- ****************************************************************************************/
 void alarm_remove();
 
 #endif // ALARM_H

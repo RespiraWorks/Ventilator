@@ -13,19 +13,19 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 #include "ventilator.h"
-#include "comms.h"
 #include "alarm.h"
-#include "watchdog.h"
+#include "comms.h"
 #include "pid.h"
+#include "watchdog.h"
 
 static void ventilator_control() {
-    comms_handler();
-    pid_execute();
-    watchdog_handler();
+  comms_handler();
+  pid_execute();
+  watchdog_handler();
 }
 
 void ventilator_start() {
-    for (;;) {
-        ventilator_control();
-    }
+  for (;;) {
+    ventilator_control();
+  }
 }

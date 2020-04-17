@@ -19,47 +19,13 @@ limitations under the License.
 #include <Arduino.h>
 #include <stdint.h>
 
-#include "comms.h"
 #include "checksum.h"
+#include "comms.h"
 #include "packet_types.h"
 
-// Public functions
-
-/****************************************************************************************
- *  @brief
- *  @usage
- *  @param
- *  @param
- *  @return
- ****************************************************************************************/
 void serialIO_init();
-
-/****************************************************************************************
- *  @brief
- *  @usage
- *  @param
- *  @param
- *  @return
- ****************************************************************************************/
 void serialIO_send(enum msgType type, enum dataID id, char *data, uint8_t len);
-
-
-/****************************************************************************************
- *  @brief
- *  @usage
- *  @param
- *  @param
- *  @return
- ****************************************************************************************/
 bool serialIO_dataAvailable();
-
-/****************************************************************************************
- *  @brief
- *  @usage
- *  @param
- *  @param
- *  @return
- ****************************************************************************************/
 void serialIO_readByte(char *buffer);
 
 #endif // SERIALIO_H

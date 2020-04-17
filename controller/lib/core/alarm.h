@@ -13,16 +13,31 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#ifndef WATCHDOG_H
-#define WATCHDOG_H
+#ifndef ALARM_H
+#define ALARM_H
 
-#include <avr/wdt.h>
 #include <stdint.h>
 
-#define WDT_1SECOND 1000
+#include "errors.h"
+#include "packet_types.h"
 
-void watchdog_init();
-void watchdog_handler();
-void watchdog_reboot();
+/* Number of alarms we can store in the queue */
+#define ALARM_NODES 4
 
-#endif // WATCHDOG_H
+// Each alarm can store 8 bytes - modifying this would mean modifying the
+// memory copies.
+#define ALARM_DATALEN 8
+
+struct alarm_t {
+  dataID alarm;
+  uint32_t timestamp;
+  char data[ALARM_DATALEN];
+};
+
+void alarm_init();
+void alarm_add(enum dataID alarm, char *data);
+int32_t alarm_read(enum dataID *alarmID, uint32_t *timestamp, char *data);
+bool alarm_available();
+void alarm_remove();
+
+#endif // ALARM_H

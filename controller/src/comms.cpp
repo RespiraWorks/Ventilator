@@ -14,6 +14,7 @@ limitations under the License.
 */
 
 #include "comms.h"
+#include "hal.h"
 
 /****************************************************************************************
  *    PRIVATE FUNCTION PROTOTYPES
@@ -107,11 +108,11 @@ void comms_handler() {
 
     // Timeout alarm waiting if it has been sent
     if(alarm_sent == true) {
-        if((millis() - alarmSentTime) >= DELAY_100MS) {
-            // Alarm hasn't ack arrived within DELAY_100MS,
-            // lets send the alarm again
-            alarm_sent = false;
-        }
+      if ((Hal.millis() - alarmSentTime) >= DELAY_100MS) {
+        // Alarm hasn't ack arrived within DELAY_100MS,
+        // lets send the alarm again
+        alarm_sent = false;
+      }
     }
 
     switch(state) {
@@ -213,7 +214,7 @@ void comms_handler() {
             send_alarm();
 
             alarm_sent = true;
-            alarmSentTime = millis();
+            alarmSentTime = Hal.millis();
 
             state = handler_state::idle;
 
@@ -237,7 +238,7 @@ void comms_sendResetState() {
 
     version = version_getVersion();
 
-    time = millis();
+    time = Hal.millis();
 
     resetData[0] = (time >> 24) & 0xFF;
     resetData[1] = (time >> 16) & 0xFF;
@@ -261,7 +262,7 @@ void comms_sendPeriodicReadings(float pressure, float volume, float flow) {
     char readingsData[16];
     uint32_t time;
 
-    time = millis();
+    time = Hal.millis();
 
     readingsData[0] = (time >> 24) & 0xFF;
     readingsData[1] = (time >> 16) & 0xFF;
@@ -290,13 +291,6 @@ void comms_sendPeriodicReadings(float pressure, float volume, float flow) {
  *    PRIVATE FUNCTIONS
  ****************************************************************************************/
 
-/****************************************************************************************
- *  @brief
- *  @usage
- *  @param
- *  @param
- *  @return
- ****************************************************************************************/
 static void send_alarm() {
     uint32_t timestamp;
     char data[ALARM_DATALEN + sizeof(timestamp)];
@@ -317,13 +311,6 @@ static void send_alarm() {
 }
 
 
-/****************************************************************************************
- *  @brief
- *  @usage
- *  @param
- *  @param
- *  @return
- ****************************************************************************************/
 static enum processPacket process_packet(char *packet, uint8_t len) {
 
     // Validate packet checksum
@@ -375,13 +362,6 @@ static enum processPacket process_packet(char *packet, uint8_t len) {
     return processPacket::msgTypeUnknown;
 }
 
-/****************************************************************************************
- *  @brief
- *  @usage
- *  @param
- *  @param
- *  @return
- ****************************************************************************************/
 static bool packet_checksumValidation(char *packet, uint8_t len) {
     return checksum_check(packet, len);
 }
@@ -410,13 +390,6 @@ static bool packet_cmdValidatation(char *packet) {
     return false;
 }
 
-/****************************************************************************************
- *  @brief
- *  @usage
- *  @param
- *  @param
- *  @return
- ****************************************************************************************/
 static bool packet_modeValidation(char *packet) {
 
     uint8_t cmd = (uint8_t) packet[(uint8_t) packet_field::cmd];
@@ -437,13 +410,6 @@ static bool packet_modeValidation(char *packet) {
     return true;
 }
 
-/****************************************************************************************
- *  @brief
- *  @usage
- *  @param
- *  @param
- *  @return
- ****************************************************************************************/
 static bool packet_receive(char *packet, uint8_t *len) {
 
     // TODO Do we need to set serialtimer to something lower than 1 second?
@@ -550,39 +516,18 @@ static bool packet_receive(char *packet, uint8_t *len) {
     return packet_complete;
 }
 
-/****************************************************************************************
- *  @brief
- *  @usage
- *  @param
- *  @param
- *  @return
- ****************************************************************************************/
 static void comms_sendModeERR(char *packet) {
     char emptyData;
 
     serialIO_send(msgType::rErrMode, (enum dataID) packet[(uint8_t) packet_field::cmd], &emptyData, 0);
 }
 
-/****************************************************************************************
- *  @brief
- *  @usage
- *  @param
- *  @param
- *  @return
- ****************************************************************************************/
 static void comms_sendChecksumERR(char *packet) {
     char emptyData;
 
     serialIO_send(msgType::rErrChecksum, (enum dataID) packet[(uint8_t) packet_field::cmd], &emptyData, 0);
 }
 
-/****************************************************************************************
- *  @brief
- *  @usage
- *  @param
- *  @param
- *  @return
- ****************************************************************************************/
 static void comms_sendCommandERR(char *packet) {
     char emptyData;
 

@@ -16,15 +16,11 @@ limitations under the License.
 #ifndef VERSION_H
 #define VERSION_H
 
-static const char SW_VERSION[] = "01.01.01"; /* Len must be 8 bytes (excluding NULL) */
+// TODO(jlebar): Move this constant into a cpp file, otherwise we're duplicating
+// it.
+/* Len must be 8 bytes (excluding NULL) */
+static const char SW_VERSION[] = "01.01.01";
 
-/****************************************************************************************
- *  @brief      
- *  @usage      
- *  @param      
- *  @param      
- *  @return     
- ****************************************************************************************/
-char * version_getVersion();
+char *version_getVersion();
 
 #endif // VERSION_H

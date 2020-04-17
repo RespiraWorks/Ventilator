@@ -19,33 +19,17 @@
 #ifndef COMMAND_H
 #define COMMAND_H
 
-#include <Arduino.h>
 #include <stdint.h>
 #include <string.h>
 
+#include "alarm.h"
 #include "packet_types.h"
 #include "parameters.h"
 #include "serialIO.h"
-#include "alarm.h"
 #include "watchdog.h"
-#include "controller.h"
 
-/****************************************************************************************
- *  @brief
- *  @usage
- *  @param
- *  @param
- *  @return
- ****************************************************************************************/
-void command_execute(enum command cmd, char *dataTx, uint8_t lenTx, char *dataRx, uint8_t *lenRx, uint8_t lenRxMax);
-
-/****************************************************************************************
- *  @brief
- *  @usage
- *  @param
- *  @param
- *  @return
- ****************************************************************************************/
+void command_execute(enum command cmd, char *dataTx, uint8_t lenTx,
+                     char *dataRx, uint8_t *lenRx, uint8_t lenRxMax);
 void command_responseSend(uint8_t cmd, char *packet, uint8_t len);
 
 #endif // COMMAND_H

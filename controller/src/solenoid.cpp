@@ -1,41 +1,38 @@
 /* Copyright 2020, Edwin Chiu
 
-  This file is part of FixMoreLungs.
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-  FixMoreLungs is free software: you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation, either version 3 of the License, or
-  (at your option) any later version.
+    http://www.apache.org/licenses/LICENSE-2.0
 
-  FixMoreLungs is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with FixMoreLungs.  If not, see <https://www.gnu.org/licenses/>.
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 */
 
 #include "solenoid.h"
 
-void solenoid_init() {
-    pinMode(O_SOLENOID, OUTPUT);
-}
+#include "hal.h"
+
+void solenoid_init() { Hal.setDigitalPinMode(O_SOLENOID, PinMode::HAL_OUTPUT); }
 
 void solenoid_open() {
     if(parameters_getSolenoidNormalState() == solenoidNormaleState::normally_open) {
-        digitalWrite(O_SOLENOID, LOW);
+      Hal.digitalWrite(O_SOLENOID, VoltageLevel::HAL_LOW);
     }
     else {
-        digitalWrite(O_SOLENOID, HIGH);
+      Hal.digitalWrite(O_SOLENOID, VoltageLevel::HAL_HIGH);
     }
 }
 
 void solenoid_close() {
     if(parameters_getSolenoidNormalState() == solenoidNormaleState::normally_open) {
-        digitalWrite(O_SOLENOID, HIGH);
+      Hal.digitalWrite(O_SOLENOID, VoltageLevel::HAL_HIGH);
     }
     else {
-        digitalWrite(O_SOLENOID, LOW);
+      Hal.digitalWrite(O_SOLENOID, VoltageLevel::HAL_LOW);
     }
 }

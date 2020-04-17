@@ -16,10 +16,6 @@ limitations under the License.
 #ifndef SOLENOID_H
 #define SOLENOID_H
 
-#include "actuators.h"
-#include "parameters.h"
-#include "stdint.h"
-
 void solenoid_init();
 void solenoid_open();
 void solenoid_close();

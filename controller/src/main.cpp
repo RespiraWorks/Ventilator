@@ -46,12 +46,13 @@ limitations under the License.
 */
 #include <Arduino.h>
 
-#include "actuators.h"
 #include "alarm.h"
+#include "blower.h"
 #include "comms.h"
 #include "parameters.h"
 #include "pid.h"
 #include "sensors.h"
+#include "solenoid.h"
 #include "watchdog.h"
 
 static void controller_loop() {
@@ -67,7 +68,8 @@ void setup() {
   parameters_init();
   comms_init();
   sensors_init();
-  actuators_init();
+  blower_init();
+  solenoid_init();
 
   watchdog_init();
   pid_init();

@@ -17,9 +17,9 @@ limitations under the License.
 #define TYPES_H
 
 // Timer defintions
-#define DELAY_1S    (1000)
+#define DELAY_1S (1000)
 #define DELAY_100MS (100)
-#define DELAY_10MS  (10)
-#define DELAY_1MS   (1)
+#define DELAY_10MS (10)
+#define DELAY_1MS (1)
 
 #endif // TYPES_H

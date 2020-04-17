@@ -15,10 +15,6 @@ limitations under the License.
 
 #include "blower.h"
 
-void blower_init() {
+void blower_init() {}
 
-}
-
-void blower_disable() {
-	
-}
+void blower_disable() {}

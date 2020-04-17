@@ -14,10 +14,12 @@ limitations under the License.
 */
 
 /*
- module contributors: verityRF
- The purpose of this module is to provide unit testing for the sensors controller module.
- Module is to be run on an x86 host and is not to be run on an Arduino platform.
-*/
+ * module contributors: verityRF
+ *
+ * The purpose of this module is to provide unit testing for the sensors
+ * controller module.  Module is to be run on an x86 host and is not to be run
+ * on an Arduino platform.
+ */
 
 #ifndef SENSORTESTS_H
 #define SENSORTESTS_H

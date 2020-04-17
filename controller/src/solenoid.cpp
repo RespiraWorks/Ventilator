@@ -20,19 +20,19 @@ limitations under the License.
 void solenoid_init() { Hal.setDigitalPinMode(O_SOLENOID, PinMode::HAL_OUTPUT); }
 
 void solenoid_open() {
-    if(parameters_getSolenoidNormalState() == solenoidNormaleState::normally_open) {
-      Hal.digitalWrite(O_SOLENOID, VoltageLevel::HAL_LOW);
-    }
-    else {
-      Hal.digitalWrite(O_SOLENOID, VoltageLevel::HAL_HIGH);
-    }
+  if (parameters_getSolenoidNormalState() ==
+      solenoidNormaleState::normally_open) {
+    Hal.digitalWrite(O_SOLENOID, VoltageLevel::HAL_LOW);
+  } else {
+    Hal.digitalWrite(O_SOLENOID, VoltageLevel::HAL_HIGH);
+  }
 }
 
 void solenoid_close() {
-    if(parameters_getSolenoidNormalState() == solenoidNormaleState::normally_open) {
-      Hal.digitalWrite(O_SOLENOID, VoltageLevel::HAL_HIGH);
-    }
-    else {
-      Hal.digitalWrite(O_SOLENOID, VoltageLevel::HAL_LOW);
-    }
+  if (parameters_getSolenoidNormalState() ==
+      solenoidNormaleState::normally_open) {
+    Hal.digitalWrite(O_SOLENOID, VoltageLevel::HAL_HIGH);
+  } else {
+    Hal.digitalWrite(O_SOLENOID, VoltageLevel::HAL_LOW);
+  }
 }

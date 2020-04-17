@@ -50,6 +50,7 @@ static void send_periodicData(uint32_t delay, uint16_t pressure, uint16_t volume
     }
 }
 
+
 enum class pid_fsm_state {
   reset        = 0,
   inspire      = 1,
@@ -158,4 +159,3 @@ void pid_execute() {
 
     send_periodicData(DELAY_100MS, sensorValue, 0, 0);
 }
-

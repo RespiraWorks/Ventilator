@@ -22,9 +22,7 @@ void serialIO_init() {
   Serial.begin(115200, SERIAL_8N1);
 }
 
-bool serialIO_dataAvailable() {
-  return (Serial.available() > 0) ? true : false;
-}
+bool serialIO_dataAvailable() { return Serial.available() > 0; }
 
 void serialIO_readByte(char *buffer) {
   // NOTE: This assumes that a byte is ready in the buffer

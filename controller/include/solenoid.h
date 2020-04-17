@@ -16,8 +16,6 @@ limitations under the License.
 #ifndef SOLENOID_H
 #define SOLENOID_H
 
-#include <Arduino.h>
-
 #include "parameters.h"
 #include "actuators.h"
 #include "stdint.h"

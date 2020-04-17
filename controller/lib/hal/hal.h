@@ -28,12 +28,34 @@
 // when compiling for test, but not when compiling for production.
 
 #ifdef TEST_MODE
+
+#ifdef AVR
+#error "TEST_MODE intended to be run only on native, but AVR is defined"
+#endif
+
 #include "gmock/gmock.h"
 #define HAL_MOCK_METHOD(returntype, name, args)                                \
   MOCK_METHOD(returntype, name, args)
-#else
-#define HAL_MOCK_METHOD(returntype, name, args) returntype name args
+#define HAL_CONSTANT(name) HAL_##name
+
+#else // !TEST_MODE
+
+#ifndef AVR
+#error "When running without TEST_MODE, expecting AVR to be defined"
 #endif
+#include <Arduino.h>
+
+#define HAL_MOCK_METHOD(returntype, name, args) returntype name args
+#define HAL_CONSTANT(name) HAL_##name = name
+#endif // TEST_MODE
+
+enum class PinMode : uint8_t {
+  HAL_CONSTANT(INPUT),
+  HAL_CONSTANT(OUTPUT),
+  HAL_CONSTANT(INPUT_PULLUP)
+};
+
+enum class VoltageLevel : uint8_t { HAL_CONSTANT(HIGH), HAL_CONSTANT(LOW) };
 
 // Singleton class which implements a hardware abstraction layer.
 //
@@ -58,6 +80,9 @@ public:
   void test_setAnalogPin(int pin, int value);
 #endif
 
+  void setDigitalPinMode(int pin, PinMode mode);
+  void digitalWrite(int pin, VoltageLevel value);
+
   // TODO: Need at least one HAL_MOCK_METHOD.
 
 private:
@@ -65,7 +90,15 @@ private:
   // Instance variables used when mocking HAL.
 
   uint32_t millis_ = 0;
-  int pin_values_[15] = {0};
+  // Arduino Uno has 6 analog input pins and 14 digital input/output pins.
+  // Source: https://store.arduino.cc/usa/arduino-uno-rev3
+  int analog_pin_values_[6] = {0};
+
+  VoltageLevel digital_pin_values_[14] = {VoltageLevel::HAL_LOW};
+  // The default pin mode on Arduino is INPUT.
+  // Source: https://www.arduino.cc/en/Tutorial/DigitalPins
+  // "Arduino (Atmega) pins default to input"
+  PinMode digital_pin_modes_[14] = {PinMode::HAL_INPUT};
 #endif
 };
 
@@ -75,17 +108,32 @@ extern HalApi Hal;
 
 #ifdef AVR
 
-#include <Arduino.h>
-
 inline uint32_t HalApi::millis() { return ::millis(); }
 inline void HalApi::delay(uint32_t ms) { ::delay(ms); }
 inline int HalApi::analogRead(int pin) { return ::analogRead(pin); }
+inline void HalApi::setDigitalPinMode(int pin, PinMode mode) {
+  ::pinMode(pin, static_cast<uint8_t>(mode));
+}
+inline void HalApi::digitalWrite(int pin, VoltageLevel value) {
+  ::digitalWrite(pin, static_cast<uint8_t>(value));
+}
 
 #else
 
 inline uint32_t HalApi::millis() { return millis_; }
 inline void HalApi::delay(uint32_t ms) { millis_ += ms; }
-inline int HalApi::analogRead(int pin) { return pin_values_[pin]; }
-inline void HalApi::test_setAnalogPin(int pin, int value) { pin_values_[pin] = value; }
+inline int HalApi::analogRead(int pin) { return analog_pin_values_[pin]; }
+inline void HalApi::test_setAnalogPin(int pin, int value) {
+  analog_pin_values_[pin] = value;
+}
+inline void HalApi::setDigitalPinMode(int pin, PinMode mode) {
+  digital_pin_modes_[pin] = mode;
+}
+inline void HalApi::digitalWrite(int pin, VoltageLevel value) {
+  if (digital_pin_modes_[pin] != PinMode::HAL_OUTPUT) {
+    throw "Can only write to an OUTPUT pin";
+  }
+  digital_pin_values_[pin] = value;
+}
 
 #endif

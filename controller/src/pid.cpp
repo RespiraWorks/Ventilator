@@ -12,11 +12,11 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-#include <Arduino.h>
 
 #include "pid.h"
-#include "parameters.h"
 #include "comms.h"
+#include "hal.h"
+#include "parameters.h"
 #include "types.h"
 
 //Define Variables we'll be connecting to
@@ -36,17 +36,17 @@ static void send_periodicData(uint32_t delay, uint16_t pressure, uint16_t volume
 
     if(first_call == true) {
         first_call = false;
-        time = millis();
+        time = Hal.millis();
     }
     else {
-        if((millis() - time) > delay) {
-            if(parameters_getPeriodicReadings()){
-                // Send readings data
-                comms_sendPeriodicReadings(pressure * 1.0, volume * 0.0, flow * 0.0);
-            }
-
-            time = millis();
+      if ((Hal.millis() - time) > delay) {
+        if (parameters_getPeriodicReadings()) {
+          // Send readings data
+          comms_sendPeriodicReadings(pressure * 1.0, volume * 0.0, flow * 0.0);
         }
+
+        time = Hal.millis();
+      }
     }
 }
 
@@ -64,7 +64,7 @@ enum class pid_fsm_state {
 void pid_init() {
 
   //Initialize PID
-  Input = map(analogRead(DPSENSOR_PIN), 0, 1023, 0, 255);
+  Input = map(Hal.analogRead(DPSENSOR_PIN), 0, 1023, 0, 255);
   Setpoint = BLOWER_LOW;
 
   //turn the PID on
@@ -151,7 +151,7 @@ void pid_execute() {
     }
 
     //Update PID Loop
-    sensorValue = analogRead(DPSENSOR_PIN); //read sensor
+    sensorValue = Hal.analogRead(DPSENSOR_PIN); // read sensor
     Input = map(sensorValue, 0, 1023, 0, 255); //map to output scale
     myPID.Compute(); // computer PID command
     analogWrite(BLOWERSPD_PIN, Output); //write output

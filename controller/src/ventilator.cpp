@@ -20,9 +20,9 @@ limitations under the License.
 static void ventilator_control();
 
 void ventilator_start() {
-    for (;;) {
-        ventilator_control();
-    }
+  for (;;) {
+    ventilator_control();
+  }
 }
 
 static void ventilator_control() {

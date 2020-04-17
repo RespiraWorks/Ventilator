@@ -15,55 +15,69 @@ limitations under the License.
 
 #include "command.h"
 
-static float convIntTofloat(char *data, uint8_t len);
-static void convfloatToInt(float float_value, char *data, uint8_t len);
+static float convIntTofloat(char *data);
+static uint32_t convfloatToInt(float float_value);
 
 void command_execute(enum command cmd, char *dataTx, uint8_t lenTx,
                      char *dataRx, uint8_t *lenRx, uint8_t lenRxMax) {
+
+  float rr, tv, peep, dwell, ier, pip, Ki, Kd, Kp;
   *lenRx = 0; // Initialise the value to zero
   switch (cmd) {
     /* Medical mode commands */
   case command::set_rr:
-    parameters_setRR(convIntTofloat(dataTx, lenTx));
+    rr = convIntTofloat(dataTx);
+    parameters_setRR(rr);
     break;
   case command::get_rr:
     *lenRx = 4;
-    convfloatToInt(parameters_getRR(), dataRx, *lenRx);
+    rr = convfloatToInt(parameters_getRR());
+    memcpy(dataRx, &rr, sizeof(uint32_t));
     break;
   case command::set_tv:
-    parameters_setTV(convIntTofloat(dataTx, lenTx));
+    tv = convIntTofloat(dataTx);
+    parameters_setTV(tv);
     break;
   case command::get_tv:
     *lenRx = 4;
-    convfloatToInt(parameters_getTV(), dataRx, *lenRx);
+    tv = convfloatToInt(parameters_getTV());
+    memcpy(dataRx, &tv, sizeof(uint32_t));
     break;
   case command::set_peep:
-    parameters_setPEEP(convIntTofloat(dataTx, lenTx));
+    peep = convIntTofloat(dataTx);
+    parameters_setPEEP(peep);
     break;
   case command::get_peep:
     *lenRx = 4;
-    convfloatToInt(parameters_getPEEP(), dataRx, *lenRx);
+    peep = convfloatToInt(parameters_getPEEP());
+    memcpy(dataRx, &peep, sizeof(uint32_t));
     break;
   case command::set_pip:
-    parameters_setPIP(convIntTofloat(dataTx, lenTx));
+    pip = convIntTofloat(dataTx);
+    parameters_setPIP(pip);
     break;
   case command::get_pip:
     *lenRx = 4;
-    convfloatToInt(parameters_getPIP(), dataRx, *lenRx);
+    pip = convfloatToInt(parameters_getPIP());
+    memcpy(dataRx, &pip, sizeof(uint32_t));
     break;
   case command::set_dwell:
-    parameters_setDwell(convIntTofloat(dataTx, lenTx));
+    dwell = convIntTofloat(dataTx);
+    parameters_setDwell(dwell);
     break;
   case command::get_dwell:
     *lenRx = 4;
-    convfloatToInt(parameters_getDwell(), dataRx, *lenRx);
+    dwell = convfloatToInt(parameters_getDwell());
+    memcpy(dataRx, &dwell, sizeof(uint32_t));
     break;
   case command::set_ier:
-    parameters_setInspireExpireRatio(convIntTofloat(dataTx, lenTx));
+    ier = convIntTofloat(dataTx);
+    parameters_setInspireExpireRatio(ier);
     break;
   case command::get_ier:
     *lenRx = 4;
-    convfloatToInt(parameters_getInspireExpireRatio(), dataRx, *lenRx);
+    ier = convfloatToInt(parameters_getInspireExpireRatio());
+    memcpy(dataRx, &ier, sizeof(uint32_t));
     break;
   case command::get_pressure:
     break;
@@ -73,25 +87,31 @@ void command_execute(enum command cmd, char *dataTx, uint8_t lenTx,
     break;
     /* Engineering mode commands */
   case command::set_kp:
-    parameters_setKp(convIntTofloat(dataTx, lenTx));
+    Kp = convIntTofloat(dataTx);
+    parameters_setKp(Kp);
     break;
   case command::get_Kp:
     *lenRx = 4;
-    convfloatToInt(parameters_getKp(), dataRx, *lenRx);
+    Kp = convfloatToInt(parameters_getKp());
+    memcpy(dataRx, &Kp, sizeof(uint32_t));
     break;
   case command::set_Ki:
-    parameters_setKi(convIntTofloat(dataTx, lenTx));
+    Ki = convIntTofloat(dataTx);
+    parameters_setKi(Ki);
     break;
   case command::get_Ki:
     *lenRx = 4;
-    convfloatToInt(parameters_getKi(), dataRx, *lenRx);
+    Ki = convfloatToInt(parameters_getKi());
+    memcpy(dataRx, &Ki, sizeof(uint32_t));
     break;
   case command::set_Kd:
-    parameters_setKi(convIntTofloat(dataTx, lenTx));
+    Kd = convIntTofloat(dataTx);
+    parameters_setKi(Kd);
     break;
   case command::get_Kd:
     *lenRx = 4;
-    convfloatToInt(parameters_getKd(), dataRx, *lenRx);
+    Kd = convfloatToInt(parameters_getKd());
+    memcpy(dataRx, &Kd, sizeof(uint32_t));
     break;
   case command::set_blower:
     break;
@@ -143,16 +163,41 @@ void command_responseSend(uint8_t cmd, char *packet, uint8_t len) {
   serialIO_send(msgType::rAck, (enum dataID)cmd, packet, len);
 }
 
-/****************************************************************************************
- *    PRIVATE FUNCTIONS
- ****************************************************************************************/
+static float convIntTofloat(char *data) {
 
-static float convIntTofloat(char *data, uint8_t len) {
-  float f;
-  memcpy(&f, data, len);
-  return f;
+    float f;
+
+#ifdef LITTLE_ENDIAN
+    /* Convert big endian integer to little endian float */
+    uint32_t data_bEndian = 0;
+    uint32_t data_lEndian = 0;
+
+    memcpy(&data_bEndian, data, sizeof(data_bEndian));
+    data_lEndian =  __builtin_bswap32(data_bEndian);
+    memcpy(&f, &data_lEndian, sizeof(f));
+#else
+    /* Convert big endian to big endian float */
+    memcpy(&f, &data, sizeof(f));
+#endif
+
+    return f;
 }
 
-static void convfloatToInt(float float_value, char *data, uint8_t len) {
-  memcpy(data, &float_value, len);
+static uint32_t convfloatToInt(float float_value) {
+
+    #ifdef LITTLE_ENDIAN
+        /* Convert float into big endian format for transmission */
+        uint32_t data_bEndian = 0;
+        uint32_t data_lEndian = 0;
+
+        memcpy(&data_lEndian, &float_value, sizeof(data_lEndian));
+        data_bEndian =  __builtin_bswap32(data_lEndian);
+        return data_bEndian;
+    #else
+        /* Keep float in big endian format */
+        uint32_t data_bEndian;
+
+        memcpy(&data_bEndian, &float_value, sizeof(data_bEndian));
+        return data_bEndian;
+    #endif
 }

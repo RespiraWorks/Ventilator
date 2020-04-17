@@ -17,6 +17,6 @@ limitations under the License.
 #include "solenoid.h"
 
 void actuators_init() {
-    blower_init();
-    solenoid_init();
+  blower_init();
+  solenoid_init();
 }

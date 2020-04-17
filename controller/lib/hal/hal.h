@@ -94,11 +94,11 @@ private:
   // Source: https://store.arduino.cc/usa/arduino-uno-rev3
   int analog_pin_values_[6] = {0};
 
-  VoltageLevel digital_pin_values_[14] = {0};
+  VoltageLevel digital_pin_values_[14] = {VoltageLevel::HAL_LOW};
   // The default pin mode on Arduino is INPUT.
   // Source: https://www.arduino.cc/en/Tutorial/DigitalPins
   // "Arduino (Atmega) pins default to input"
-  PinMode digital_pin_modes_[14] = {PinMode::INPUT};
+  PinMode digital_pin_modes_[14] = {PinMode::HAL_INPUT};
 #endif
 };
 
@@ -122,13 +122,15 @@ inline void HalApi::digitalWrite(int pin, VoltageLevel value) {
 
 inline uint32_t HalApi::millis() { return millis_; }
 inline void HalApi::delay(uint32_t ms) { millis_ += ms; }
-inline int HalApi::analogRead(int pin) { return pin_values_[pin]; }
-inline void HalApi::test_setAnalogPin(int pin, int value) { pin_values_[pin] = value; }
+inline int HalApi::analogRead(int pin) { return analog_pin_values_[pin]; }
+inline void HalApi::test_setAnalogPin(int pin, int value) {
+  analog_pin_values_[pin] = value;
+}
 inline void HalApi::setDigitalPinMode(int pin, PinMode mode) {
   digital_pin_modes_[pin] = mode;
 }
 inline void HalApi::digitalWrite(int pin, VoltageLevel value) {
-  if (digital_pin_modes_[pin] != PinMode::OUTPUT) {
+  if (digital_pin_modes_[pin] != PinMode::HAL_OUTPUT) {
     throw "Can only write to an OUTPUT pin";
   }
   digital_pin_values_[pin] = value;

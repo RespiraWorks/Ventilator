@@ -28,22 +28,17 @@ limitations under the License.
 #include <math.h>
 #include <stdlib.h>
 
-// TODO(jlebar): Make these variables `static`.
 // how (maximally) long are the simulated analog signals
-const int ANALOG_SIGNAL_DEPTH = 256;
+static const int ANALOG_SIGNAL_DEPTH = 256;
 // how many channels (analog pins) are supported
-const int NUM_ANALOG_CHANNELS = 4;
+static const int NUM_ANALOG_CHANNELS = 4;
 // Arduino ADC VREF_P setting/value [V]
-const float ADC_VREFP = 5.0f;
+static const float ADC_VREFP = 5.0f;
 // 10 bit ADC with given ADC VREF_P [Count/V]
-const float ADC_COUNTS_PER_VOLT = 1024.0f / ADC_VREFP;
+static const float ADC_COUNTS_PER_VOLT = 1024.0f / ADC_VREFP;
 
 static float analogSignalMemory[NUM_ANALOG_CHANNELS][ANALOG_SIGNAL_DEPTH];
 static int analogSignalMemoryIndexes[NUM_ANALOG_CHANNELS];
-
-void delay(unsigned long count) {
-  // method to remain unimplemented; isn't useful from a unit test perspective
-}
 
 int getSignalChannelDepth() { return ANALOG_SIGNAL_DEPTH; }
 

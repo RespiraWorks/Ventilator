@@ -116,19 +116,19 @@ TEST(SensorTests, DISABLED_FullScaleReading) {
 
   // First set the simulated analog signals to an ambient 0 kPa corresponding
   // voltage
-  createStaticAnalogSignal((int)pressureSensors::INHALATION,
+  createStaticAnalogSignal((int)PressureSensors::INHALATION_PIN,
                            differentialFlowSensorVoltage_0kPa);
-  createStaticAnalogSignal((int)pressureSensors::EXHALATION,
+  createStaticAnalogSignal((int)PressureSensors::EXHALATION_PIN,
                            differentialFlowSensorVoltage_0kPa);
-  createStaticAnalogSignal((int)pressureSensors::PATIENT,
+  createStaticAnalogSignal((int)PressureSensors::PATIENT_PIN,
                            patientFlowSensorVoltage_0kPa);
 
   // Overwrite the start of the simulated signal to the dynamic signal
-  createDynamicAnalogSignal((int)pressureSensors::INHALATION,
+  createDynamicAnalogSignal((int)PressureSensors::INHALATION_PIN,
                             differentialFlowSensorVoltages, NUM_DIFF_ELEMENTS);
-  createDynamicAnalogSignal((int)pressureSensors::EXHALATION,
+  createDynamicAnalogSignal((int)PressureSensors::EXHALATION_PIN,
                             differentialFlowSensorVoltages, NUM_DIFF_ELEMENTS);
-  createDynamicAnalogSignal((int)pressureSensors::PATIENT,
+  createDynamicAnalogSignal((int)PressureSensors::PATIENT_PIN,
                             patientSensorVoltages, NUM_PATIENT_ELEMENTS);
 
   // Result is now that the dynamic signal is first, then followed by 0 kPa
@@ -141,18 +141,15 @@ TEST(SensorTests, DISABLED_FullScaleReading) {
   for (int i = 0; i < 9; i++) {
     int index = 4 + 2 * i;
     float pressureInhalation =
-        get_pressure_reading(pressureSensors::INHALATION);
+        get_pressure_reading(PressureSensors::INHALATION_PIN);
     float pressureExhalation =
-        get_pressure_reading(pressureSensors::EXHALATION);
+        get_pressure_reading(PressureSensors::EXHALATION_PIN);
     // Inhalation and exhalation should match because they are fed with the same
     // pressure waveform
     EXPECT_EQ(pressureInhalation, pressureExhalation)
         << "Differential Sensor Calculated Inhale/Exhale at index " << index;
     // Calculate deviance from expected. Using only inhalation because we know
     // it is equal to exhalation by now.
-    float inhalationDelta =
-        std::abs(pressureInhalation - differentialFlowPressures[index]);
-
     EXPECT_NEAR(pressureInhalation, differentialFlowPressures[index],
                 COMPARISON_TOLERANCE)
         << "Differential Sensor Calculated Value at index " << index;
@@ -160,7 +157,7 @@ TEST(SensorTests, DISABLED_FullScaleReading) {
 
   for (int i = 0; i < 8; i++) {
     int index = 4 + 2 * i;
-    float pressurePatient = get_pressure_reading(pressureSensors::PATIENT);
+    float pressurePatient = get_pressure_reading(PressureSensors::PATIENT_PIN);
     EXPECT_NEAR(pressurePatient, patientPressures[index], COMPARISON_TOLERANCE)
         << "Patient Sensor at index" << index;
   }

@@ -16,6 +16,11 @@ limitations under the License.
 #include "solenoid.h"
 
 #include "hal.h"
+#include "parameters.h"
+#include "stdint.h"
+
+// Solenoid output pin 5 TBC.
+static const int O_SOLENOID = 5;
 
 void solenoid_init() { Hal.setDigitalPinMode(O_SOLENOID, PinMode::HAL_OUTPUT); }
 

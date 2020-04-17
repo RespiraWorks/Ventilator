@@ -16,13 +16,6 @@ limitations under the License.
 #ifndef VENTILATOR_H
 #define VENTILATOR_H
 
-/****************************************************************************************
- *  @brief
- *  @usage
- *  @param
- *  @param
- *  @return
- ****************************************************************************************/
 void ventilator_start();
 
 #endif // VENTILATOR_H

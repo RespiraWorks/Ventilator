@@ -30,8 +30,8 @@
 #ifndef DATASOURCE_H
 #define DATASOURCE_H
 
-#include <QtCore/QObject>
 #include <QtCharts/QAbstractSeries>
+#include <QtCore/QObject>
 
 QT_BEGIN_NAMESPACE
 class QQuickView;
@@ -39,22 +39,21 @@ QT_END_NAMESPACE
 
 QT_CHARTS_USE_NAMESPACE
 
-class DataSource : public QObject
-{
-    Q_OBJECT
+class DataSource : public QObject {
+  Q_OBJECT
 public:
-    explicit DataSource(QQuickView *appViewer, QObject *parent = 0);
-    QList<QVector<QPointF> > m_data;
+  explicit DataSource(QQuickView *appViewer, QObject *parent = 0);
+  QList<QVector<QPointF>> m_data;
 
 Q_SIGNALS:
 
 public slots:
-    void generateData(int rowCount, int colCount);
-    void update(QAbstractSeries *series);
+  void generateData(int rowCount, int colCount);
+  void update(QAbstractSeries *series);
 
 private:
-    QQuickView *m_appViewer;
-    int m_index;
+  QQuickView *m_appViewer;
+  int m_index;
 };
 
 #endif // DATASOURCE_H

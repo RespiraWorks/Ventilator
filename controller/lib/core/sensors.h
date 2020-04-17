@@ -22,13 +22,28 @@ Arduino Nano and the MPXV5004GP and MPXV7002DP pressure sensors.
 #ifndef SENSORS_H
 #define SENSORS_H
 
-/*
- * @brief enum for the three different pressure sensors in the ventilator system
- */
-enum class pressureSensors {
-  PATIENT = 0, // patient pressure sensor
-  INHALATION,  // inhalation diff pressure sensor
-  EXHALATION   // exhalation diff pressure sensor
+#include "hal.h"
+
+// A namespace class for constants related to pressure sensors.
+class PressureSensors {
+public:
+  // Patient pressure sensor pin
+  inline constexpr static AnalogPinId PATIENT_PIN = AnalogPinId::HAL_A0;
+  // Inhalation diff pressure sensor pin
+  inline constexpr static AnalogPinId INHALATION_PIN = AnalogPinId::HAL_A1;
+  // Exhalation diff pressure sensor pin
+  inline constexpr static AnalogPinId EXHALATION_PIN = AnalogPinId::HAL_A2;
+
+  // min/max possible reading from MPXV5004GP [kPa]
+  inline constexpr static float P_VAL_MIN = 0.0f;
+  inline constexpr static float P_VAL_MAX = 3.92f;
+
+  // min/max possible reading from MPXV7002DP [kPa]
+  inline constexpr static float DP_VAL_MIN = -2.0f;
+  inline constexpr static float DP_VAL_MAX = 2.0f;
+
+private:
+  PressureSensors() = delete;
 };
 
 /*
@@ -57,12 +72,11 @@ void zero_sensors();
  * @brief This method gets the specified calibrated sensor reading and performs
  * simple averaging if configured to do so.
  *
- * @param pressureSensor the sensor from the pressureSensor enum that a reading
- * is desired from
+ * @param pinId the pressure sensor pin that a reading is desired from
  *
  * @return The specified pressure sensor calibrated reading in kPa
  */
-float get_pressure_reading(enum pressureSensors pressureSensor);
+float get_pressure_reading(AnalogPinId pinId);
 
 /*
  * @brief Method for setting the number of samples to use for average during

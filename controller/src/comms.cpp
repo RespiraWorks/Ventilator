@@ -230,16 +230,12 @@ void comms_handler() {
 
 
 void comms_sendResetState() {
-    char resetData[12];
-    uint32_t time;
-    char *version;
-
     // NOTE : Given the bootloader clears MCUSR, it's not possible to determine what reset the CPU without modifying the bootloader
 
-    version = version_getVersion();
+    const char *version = version_getVersion();
+    uint32_t time = Hal.millis();
 
-    time = Hal.millis();
-
+    char resetData[12];
     resetData[0] = (time >> 24) & 0xFF;
     resetData[1] = (time >> 16) & 0xFF;
     resetData[2] = (time >> 8) & 0xFF;
@@ -367,40 +363,20 @@ static bool packet_checksumValidation(char *packet, uint8_t len) {
 }
 
 static bool packet_cmdValidatation(char *packet) {
-
-    uint8_t cmd = (uint8_t) packet[(uint8_t) packet_field::cmd];
-
-    // Is the command valid?
-    if(((cmd >= (uint8_t) medicalMode::start) && (cmd <= (uint8_t) medicalMode::end)) ||
-         ((cmd >= (uint8_t) engMode::start) && (cmd <= (uint8_t) engMode::end)) ||
-         ((cmd >= (uint8_t) mixedMode::start) && (cmd <= (uint8_t) mixedMode::end))) {
-
-        /* Command falls inside predefined ranges */
-
-        return true;
-    }
-
-    return false;
+  uint8_t cmd = (uint8_t)packet[(uint8_t)packet_field::cmd];
+  return (cmd >= (uint8_t)medicalMode::start &&
+          cmd <= (uint8_t)medicalMode::end) ||
+         (cmd >= (uint8_t)engMode::start && cmd <= (uint8_t)engMode::end) ||
+         (cmd >= (uint8_t)mixedMode::start && cmd <= (uint8_t)mixedMode::end);
 }
 
 static bool packet_modeValidation(char *packet) {
+  uint8_t cmd = (uint8_t)packet[(uint8_t)packet_field::cmd];
 
-    uint8_t cmd = (uint8_t) packet[(uint8_t) packet_field::cmd];
-
-    // Does the command correspond with the current mode
-    // Is medical mode active?
-    if(parameters_getOperatingMode() == operatingMode::medical) {
-
-        // Limit the number of commands accepted
-        if((cmd >= (uint8_t) engMode::start) && (cmd <= (uint8_t) engMode::end)) {
-            /* eng mode command */
-
-            // Reject command
-            return false;
-        }
-    }
-
-    return true;
+  // If medical mode, reject eng-mode commands.
+  bool isEngMode =
+      cmd >= (uint8_t)engMode::start && cmd <= (uint8_t)engMode::end;
+  return parameters_getOperatingMode() != operatingMode::medical || !isEngMode;
 }
 
 static bool packet_receive(char *packet, uint8_t *len) {

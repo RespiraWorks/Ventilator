@@ -17,7 +17,6 @@ limitations under the License.
 #define COMMS_H
 
 #include <stdint.h>
-#include <Arduino.h>
 
 #include "version.h"
 #include "serialIO.h"

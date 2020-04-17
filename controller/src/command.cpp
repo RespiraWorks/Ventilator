@@ -143,10 +143,6 @@ void command_responseSend(uint8_t cmd, char *packet, uint8_t len) {
   serialIO_send(msgType::rAck, (enum dataID)cmd, packet, len);
 }
 
-/****************************************************************************************
- *    PRIVATE FUNCTIONS
- ****************************************************************************************/
-
 static float convIntTofloat(char *data, uint8_t len) {
   float f;
   memcpy(&f, data, len);

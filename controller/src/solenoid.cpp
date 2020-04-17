@@ -13,28 +13,26 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include <Arduino.h>
-
 #include "solenoid.h"
 
-void solenoid_init() {
-    pinMode(O_SOLENOID, OUTPUT);
-}
+#include "hal.h"
+
+void solenoid_init() { Hal.setDigitalPinMode(O_SOLENOID, PinMode::HAL_OUTPUT); }
 
 void solenoid_open() {
     if(parameters_getSolenoidNormalState() == solenoidNormaleState::normally_open) {
-        digitalWrite(O_SOLENOID, LOW);
+      Hal.digitalWrite(O_SOLENOID, VoltageLevel::HAL_LOW);
     }
     else {
-        digitalWrite(O_SOLENOID, HIGH);
+      Hal.digitalWrite(O_SOLENOID, VoltageLevel::HAL_HIGH);
     }
 }
 
 void solenoid_close() {
     if(parameters_getSolenoidNormalState() == solenoidNormaleState::normally_open) {
-        digitalWrite(O_SOLENOID, HIGH);
+      Hal.digitalWrite(O_SOLENOID, VoltageLevel::HAL_HIGH);
     }
     else {
-        digitalWrite(O_SOLENOID, LOW);
+      Hal.digitalWrite(O_SOLENOID, VoltageLevel::HAL_LOW);
     }
 }

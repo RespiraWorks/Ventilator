@@ -366,13 +366,6 @@ static bool packet_checksumValidation(char *packet, uint8_t len) {
     return checksum_check(packet, len);
 }
 
-/****************************************************************************************
- *  @brief
- *  @usage
- *  @param
- *  @param
- *  @return
- ****************************************************************************************/
 static bool packet_cmdValidatation(char *packet) {
 
     uint8_t cmd = (uint8_t) packet[(uint8_t) packet_field::cmd];

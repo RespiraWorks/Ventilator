@@ -1,4 +1,17 @@
-#include <stdint.h>
+/* Copyright 2020, RespiraWorks
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
 
 // A hardware abstraction layer that supports mocking/faking for tests.
 //
@@ -26,6 +39,11 @@
 // But we don't want virtual methods when compiling for the controller, because
 // they come at a cost.  Thus we do some macro magic to get virtual methods
 // when compiling for test, but not when compiling for production.
+
+#ifndef HAL_H
+#define HAL_H
+
+#include <stdint.h>
 
 #ifdef TEST_MODE
 
@@ -137,3 +155,5 @@ inline void HalApi::digitalWrite(int pin, VoltageLevel value) {
 }
 
 #endif
+
+#endif // HAL_H

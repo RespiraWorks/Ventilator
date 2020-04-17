@@ -35,41 +35,40 @@ limitations under the License.
   git: https://github.com/inceptionev/FixMoreLungs
   www.pandemicventilator.com
 
-  Outputs can be plotted with Cypress PSoC Programmer (Bridge Control Panel Tool)
-  Download and install, connect serial
-  Tools > Protocol Configuration > serial 115200:8n1 > hit OK
-  In editor, use command RX8 [h=43] @1Key1 @0Key1 @1Key2 @0Key2
-  Chart > Variable Settings
-  Tick both Key1 and Key2, configure as int, and choose colors > hit OK
-  Press >|< icon to connect to com port if necessary
-  Click Repeat button, go to Chart tab
-  both traces should now be plotting
+  Outputs can be plotted with Cypress PSoC Programmer (Bridge Control Panel
+  Tool) Download and install, connect serial Tools > Protocol Configuration >
+  serial 115200:8n1 > hit OK In editor, use command RX8 [h=43] @1Key1 @0Key1
+  @1Key2 @0Key2 Chart > Variable Settings Tick both Key1 and Key2, configure as
+  int, and choose colors > hit OK Press >|< icon to connect to com port if
+  necessary Click Repeat button, go to Chart tab both traces should now be
+  plotting
 
 */
 #include <Arduino.h>
 
-#include "pid.h"
-#include "watchdog.h"
-#include "comms.h"
-#include "sensors.h"
-#include "parameters.h"
 #include "actuators.h"
-#include "ventilator.h"
 #include "alarm.h"
+#include "comms.h"
+#include "parameters.h"
+#include "pid.h"
+#include "sensors.h"
+#include "ventilator.h"
+#include "watchdog.h"
 
 void setup() {
 
-    parameters_init();
-    comms_init();
-    sensors_init();
-    actuators_init();
+  parameters_init();
+  comms_init();
+  sensors_init();
+  actuators_init();
 
-    watchdog_init();
-    pid_init();
+  watchdog_init();
+  pid_init();
 
-    alarm_init();
+  alarm_init();
 
-    comms_sendResetState(); // Inform the Interface Controller that we just started/restarted
+  comms_sendResetState(); // Inform the Interface Controller that we just
+                          // started/restarted
 
-    ventilator_start();
+  ventilator_start();
 }

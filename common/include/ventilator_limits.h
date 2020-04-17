@@ -37,5 +37,4 @@ limitations under the License.
 #define DWELL_MIN (0.0)
 #define DWELL_MAX (100.0)
 
-
 #endif // VENTILATOR_LIMITS_H

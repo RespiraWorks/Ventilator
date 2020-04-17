@@ -354,7 +354,7 @@ static uint32_t convfloatToInt(float float_value) {
         uint32_t data_bEndian = 0;
         uint32_t data_lEndian = 0;
 
-        memcpy((void * ) data_lEndian, (void *) &float_value, sizeof(data_lEndian));
+        memcpy(&data_lEndian, &float_value, sizeof(data_lEndian));
 
         data_bEndian =  __builtin_bswap32(data_lEndian);
 
@@ -363,7 +363,7 @@ static uint32_t convfloatToInt(float float_value) {
         /* Keep float in big endian format */
         uint32_t data_bEndian;
 
-        memcpy((void *) &data_bEndian, (void *) &float_value, sizeof(data_bEndian));
+        memcpy(&data_bEndian, &float_value, sizeof(data_bEndian));
 
         return data_bEndian;
     #endif

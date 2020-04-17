@@ -12,21 +12,28 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-#include "ventilator.h"
-#include "comms.h"
-#include "watchdog.h"
-#include "respirationCtrl.h"
 
-static void ventilator_control();
+#ifndef RESPIRATIONCTRL_H
+#define RESPIRATIONCTRL_H
 
-void ventilator_start() {
-    for (;;) {
-        ventilator_control();
-    }
-}
+#include "parameters.h"
+#include "packet_types.h"
+#include "ACV.h"
+#include "PRVC.h"
 
-static void ventilator_control() {
-    comms_handler();
-    respirationCtrl_handler();
-    watchdog_handler();
-}
+enum class ventilatorState {
+    not_running = 0x00,
+    ACV_running = 0x01,
+    PRVC_running = 0x02,
+
+    count /* Sentinel */
+};
+
+
+void respirationCtrl_init();
+void respirationCtrl_handler();
+void respirationCtrl_start();
+void respirationCtrl_stop();
+enum ventilatorState respirationCtrl_getVentilatorState();
+
+#endif // RESPIRATIONCTRL_H

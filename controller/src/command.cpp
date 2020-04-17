@@ -138,15 +138,28 @@ void command_execute(enum command cmd, char *dataTx, uint8_t lenTx,
   case command::comms_check:
     break;
   case command::set_ventilatorMode:
-    parameters_setVentilatorMode((enum ventilatorMode)dataTx[0]);
+    /* Only allow one to change the ventilator mode when it isn't running */
+    if(respirationCtrl_getVentilatorState() == ventilatorState::not_running) {
+        parameters_setVentilatorMode((enum ventilatorMode) dataTx[0]);
+    }
     break;
   case command::get_ventilatorMode:
     *lenRx = 1;
     dataTx[0] = (char)parameters_getVentilatorMode();
     break;
   case command::start_ventilator:
+    if(respirationCtrl_getVentilatorState() == ventilatorState::not_running) {
+        respirationCtrl_start();
+    }
     break;
   case command::stop_ventilator:
+    ventilatorState ventState;
+    ventState = respirationCtrl_getVentilatorState();
+
+    if(ventState == ventilatorState::ACV_running
+    || ventState == ventilatorState::PRVC_running) {
+        respirationCtrl_stop();
+    }
     break;
   case command::set_solenoidNormalState:
     parameters_setSolenoidNormalState((enum solenoidNormaleState)dataTx[0]);

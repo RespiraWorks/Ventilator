@@ -16,69 +16,48 @@
   along with FixMoreLungs.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include "controller.h"
-
-static enum ventilatorMode vMode;
-
-enum class ventilatorState {
-    not_running     = 0x00,
-    ACV_running     = 0x01,
-    PRVC_running    = 0x02,
-
-    count                   /* Sentinel */
-};
+#include "respirationCtrl.h"
 
 enum ventilatorState vState;
 
-void controller_init() {
+void respirationCtrl_init() {
     ACV_init();
     PRVC_init();
 
     vState = ventilatorState::not_running;
 }
 
-void controller_start() {
+void respirationCtrl_start() {
 
-    switch(vMode) {
+    switch(parameters_getVentilatorMode()) {
         case ventilatorMode::ACV:
-
             ACV_start();
             vState = ventilatorState::ACV_running;
-
             break;
 
         case ventilatorMode::PRVC:
-
             PRVC_start();
             vState = ventilatorState::PRVC_running;
-
             break;
 
         default:
-
             // TODO Flag error
-
             break;
     }
 }
 
-void controller_stop() {
+void respirationCtrl_stop() {
 
-    switch(vMode) {
+    switch(parameters_getVentilatorMode()) {
         case ventilatorMode::ACV:
-
             ACV_stop();
-
             break;
 
         case ventilatorMode::PRVC:
-
             PRVC_stop();
-
             break;
 
         default:
-
             // TODO Flag error
             break;
     }
@@ -86,33 +65,21 @@ void controller_stop() {
     vState = ventilatorState::not_running;
 }
 
-void controller_handler() {
+void respirationCtrl_handler() {
 
-    switch(vMode) {
+    switch(parameters_getVentilatorMode()) {
         case ventilatorMode::ACV:
-
             ACV_handler();
-
             break;
 
         case ventilatorMode::PRVC:
-
             PRVC_handler();
-
             break;
 
         default:
-
             // TODO Flag error
-
             break;
     }
 }
 
-void controller_setVentilatorMode(enum ventilatorMode mode_value) {
-
-    // Only allow one to change the state when the ventilator hasn't been started
-    if(vState == ventilatorState::not_running) {
-        vMode = mode_value;
-    }
-}
+enum ventilatorState respirationCtrl_getVentilatorState() { return vState; }

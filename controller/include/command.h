@@ -27,6 +27,7 @@
 #include "parameters.h"
 #include "serialIO.h"
 #include "watchdog.h"
+#include "respirationCtrl.h"
 
 void command_execute(enum command cmd, char *dataTx, uint8_t lenTx,
                      char *dataRx, uint8_t *lenRx, uint8_t lenRxMax);

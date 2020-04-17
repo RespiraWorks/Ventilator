@@ -14,6 +14,4 @@ limitations under the License.
 */
 #include "eeprom.h"
 
-void eeprom_init() {
-
-}
+void eeprom_init() {}

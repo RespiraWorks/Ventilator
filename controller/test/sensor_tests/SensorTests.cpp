@@ -14,10 +14,12 @@ limitations under the License.
 */
 
 /*
- module contributors: verityRF
- The purpose of this module is to provide unit testing for the sensors controller module.
- Module is to be run on an x86 host and is not to be run on an Arduino platform.
-*/
+ * module contributors: verityRF
+ *
+ * The purpose of this module is to provide unit testing for the sensors
+ * controller module.  Module is to be run on an x86 host and is not to be run
+ * on an Arduino platform.
+ */
 
 #include "SensorTests.h"
 #include "ArduinoSim.h"
@@ -25,24 +27,28 @@ limitations under the License.
 #include "gtest/gtest.h"
 
 #include <cmath>
-#include <stdio.h>
-#include <stdbool.h>
-#include <string>
 #include <iostream>
+#include <stdbool.h>
+#include <stdio.h>
+#include <string>
 
-static const float COMPARISON_TOLERANCE = 0.005f; //Maximum allowable delta between calculated sensor readings and the input pressure waveform [kPa]
+// Maximum allowable delta between calculated sensor readings and the input
+// pressure waveform [kPa]
+static const float COMPARISON_TOLERANCE = 0.005f;
 
 //@TODO: Finish writing more specific unit tests for this module
 
 /*
  * @brief This method models the pressure to voltage transfer function of the
- MPXV5004 series sensors. Caller must ensure the output buffer has the correct
- minimum length.
+ * MPXV5004 series sensors. Caller must ensure the output buffer has the
+ * correct minimum length.
+ *
  * @param *pressureIn pointer to input pressure waveform to process
  * @param *voltageOut pointer to the output voltage buffer
  * @param count is the length of the input buffer
  */
-static void MPXV5004_TransferFn(float* pressureIn, float* voltageOut, int count) {
+static void MPXV5004_TransferFn(float *pressureIn, float *voltageOut,
+                                int count) {
   if (pressureIn == NULL || voltageOut == NULL) {
     throw "Pressure or voltage pointer is null";
   }
@@ -53,13 +59,15 @@ static void MPXV5004_TransferFn(float* pressureIn, float* voltageOut, int count)
 
 /*
  * @brief This method models the pressure to voltage transfer function of the
- MPXV7002 series sensors. Caller must ensure the output buffer has the correct
- minimum length.
+ * MPXV7002 series sensors. Caller must ensure the output buffer has the
+ * correct minimum length.
+ *
  * @param *pressureIn pointer to input pressure waveform to process
  * @param *voltageOut pointer to the output voltage buffer
  * @param count is the length of the input buffer
  */
-static void MPXV7002_TransferFn(float* pressureIn, float* voltageOut, int count) {
+static void MPXV7002_TransferFn(float *pressureIn, float *voltageOut,
+                                int count) {
   if (pressureIn == NULL || voltageOut == NULL) {
     throw "Pressure or voltage pointer is null";
   }
@@ -75,16 +83,18 @@ TEST(SensorTests, DISABLED_FullScaleReading) {
   // value is repeated four times, and each subsequent value twice, so that the
   // test neatly corresponds to the 4 and 2 default average sample counts that
   // the sensor module defaults to.
-  float differentialFlowPressures[] = {0.0f,  0.0f,  0.0f,  0.0f,  -2.0f, -2.0f,
-                                       -1.5f, -1.5f, -1.0f, -1.0f, -0.5f, -0.5f,
-                                       0,     0,     0.5f,  0.5f,  1.0f,  1.0f,
-                                       1.5f,  1.5f,  2.0f,  2.0f}; //[kPa]
+  //
+  // Value sare in kPa.
+  float differentialFlowPressures[] = {
+      0.0f,  0.0f, 0.0f, 0.0f, -2.0f, -2.0f, -1.5f, -1.5f, -1.0f, -1.0f, -0.5f,
+      -0.5f, 0,    0,    0.5f, 0.5f,  1.0f,  1.0f,  1.5f,  1.5f,  2.0f,  2.0f};
   float patientPressures[] = {0.0f, 0.0f, 0.0f, 0.0f, 0.5f,  0.5f, 1.0f,
                               1.0f, 1.5f, 1.5f, 2.0f, 2.0f,  2.5f, 2.5f,
-                              3.0f, 3.0f, 3.5f, 3.5f, 3.92f, 3.92f}; //[kPa]
-  const int NUM_DIFF_ELEMENTS =
-      22; // length of the differentialFlowPressures array
-  const int NUM_PATIENT_ELEMENTS = 20; // length of the patientPressures Array
+                              3.0f, 3.0f, 3.5f, 3.5f, 3.92f, 3.92f};
+  // length of the differentialFlowPressures array
+  const int NUM_DIFF_ELEMENTS = 22;
+  // length of the patientPressures Array
+  const int NUM_PATIENT_ELEMENTS = 20;
   float differentialFlowSensorVoltages[NUM_DIFF_ELEMENTS]; //[V]
   float patientSensorVoltages[NUM_PATIENT_ELEMENTS];       //[V]
 

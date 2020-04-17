@@ -18,28 +18,28 @@ limitations under the License.
 
 // Ventilator parameter defaults
 // FIXME Put some default fallback values that are realistic
-#define RR_DEFAULT    (10.0)
-#define TV_DEFAULT    (10.0)
-#define PEEP_DEFAULT  (10.0)
-#define ED_DEFAULT    (10.0)
-#define ID_DEFAULT    (10.0)
-#define PIP_DEFAULT   (10.0)
+#define RR_DEFAULT (10.0)
+#define TV_DEFAULT (10.0)
+#define PEEP_DEFAULT (10.0)
+#define ED_DEFAULT (10.0)
+#define ID_DEFAULT (10.0)
+#define PIP_DEFAULT (10.0)
 #define DWELL_DEFAULT (10.0)
-#define IER_DEFAULT   (1.0)
+#define IER_DEFAULT (1.0)
 
-#define PERIODIC_READINGS_DEFAULT   false
+#define PERIODIC_READINGS_DEFAULT false
 
-#define OPERATING_MODE_DEFAULT      operatingMode::medical
-#define PERIODIC_DATA_MODE_DEFAULT  periodicMode::off
-#define VENTILATOR_MODE_DEFAULT     ventilatorMode::PRVC
-#define SOLENOID_NORMAL_STATE       solenoidNormaleState::normally_open
+#define OPERATING_MODE_DEFAULT operatingMode::medical
+#define PERIODIC_DATA_MODE_DEFAULT periodicMode::off
+#define VENTILATOR_MODE_DEFAULT ventilatorMode::PRVC
+#define SOLENOID_NORMAL_STATE solenoidNormaleState::normally_open
 
 // Calibration parameter defaults
 
 // PID parameter defaults
 
-#define KP_DEFAULT   (2.0)
-#define KI_DEFAULT   (8.0)
-#define KD_DEFAULT   (0.0)
+#define KP_DEFAULT (2.0)
+#define KI_DEFAULT (8.0)
+#define KD_DEFAULT (0.0)
 
 #endif // VENTILATOR_DEFAULTS_H

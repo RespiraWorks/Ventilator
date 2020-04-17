@@ -16,7 +16,6 @@ limitations under the License.
 #ifndef PARAMETERS_H
 #define PARAMETERS_H
 
-#include "eeprom.h"
 #include "packet_types.h"
 #include "ventilator_defaults.h"
 #include "ventilator_limits.h"

@@ -23,27 +23,8 @@ Arduino Nano and the MPXV5004GP and MPXV7002DP pressure sensors.
 #include "blower.h"
 #include "sensors.h"
 
-// TODO(jkff): Move this to hal.h
-#ifndef TEST_MODE
-//[0]: patient pressure sensor pin; [1]: inhalation diff pressure sensor pin;
-//[2]: exhalation diff pressure sensor pin
-static const int SENSOR_PINS[] = {A0, A1, A2};
-#else
-//[0]: patient pressure sensor pin; [1]: inhalation diff pressure sensor pin;
-//[2]: exhalation diff pressure sensor pin
-static const int SENSOR_PINS[] = {0, 1, 2};
-#endif
-
 //@TODO: Replace floats with equivalent integer only operations to save program
 // space/time
-
-// min/max possible reading from MPXV5004GP [kPa]
-static const float P_VAL_MIN = 0.0f;
-static const float P_VAL_MAX = 3.92f;
-
-// min/max possible reading from MPXV7002DP [kPa]
-static const float DP_VAL_MIN = -2.0f;
-static const float DP_VAL_MAX = 2.0f;
 
 // Arduino Nano ADC is 10 bit, default 5V Vref_P (~4.9 mV
 // per count) [V];
@@ -88,10 +69,10 @@ int get_sensor_avg_samples() { return sensorAvgSize; }
  * @return The averaged sensor zero reading in ADC counts for the specified
  * pressureSensor enum member
  */
-static int get_raw_sensor_zero_reading(enum pressureSensors pressureSensor) {
+static int get_raw_sensor_zero_reading(AnalogPinId pinId) {
   int runningSum = 0;
   for (int i = 0; i < zeroingAvgSize; i++) {
-    runningSum += Hal.analogRead((int)pressureSensor);
+    runningSum += Hal.analogRead(pinId);
   }
   // disregarding remainder because that's in the noise floor anyway
   return runningSum / zeroingAvgSize;
@@ -101,12 +82,12 @@ void zero_sensors() {
   blower_disable();
   Hal.delay(100); // some arbitrary time to wait for the pressure of the system
                   // to equalize at all points
-  sensorZeroVals[(int)pressureSensors::PATIENT] =
-      get_raw_sensor_zero_reading(pressureSensors::PATIENT);
-  sensorZeroVals[(int)pressureSensors::INHALATION] =
-      get_raw_sensor_zero_reading(pressureSensors::INHALATION);
-  sensorZeroVals[(int)pressureSensors::EXHALATION] =
-      get_raw_sensor_zero_reading(pressureSensors::EXHALATION);
+  sensorZeroVals[static_cast<int>(PressureSensors::PATIENT_PIN)] =
+      get_raw_sensor_zero_reading(PressureSensors::PATIENT_PIN);
+  sensorZeroVals[static_cast<int>(PressureSensors::INHALATION_PIN)] =
+      get_raw_sensor_zero_reading(PressureSensors::INHALATION_PIN);
+  sensorZeroVals[static_cast<int>(PressureSensors::EXHALATION_PIN)] =
+      get_raw_sensor_zero_reading(PressureSensors::EXHALATION_PIN);
 }
 
 void sensors_init() {
@@ -117,11 +98,11 @@ void sensors_init() {
 }
 
 //@TODO: Add alarms if sensor value is out of expected range?
-float get_pressure_reading(enum pressureSensors pressureSensor) {
+float get_pressure_reading(AnalogPinId pinId) {
   int runningSum = 0;
   for (int i = 0; i < sensorAvgSize; i++) {
-    runningSum += (Hal.analogRead((int)pressureSensor) -
-                   sensorZeroVals[(int)pressureSensor]);
+    runningSum +=
+        (Hal.analogRead(pinId) - sensorZeroVals[static_cast<int>(pinId)]);
   }
   // disregarding remainder because that's in the noise floor anyway
   runningSum /= sensorAvgSize;

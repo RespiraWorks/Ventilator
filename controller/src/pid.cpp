@@ -144,6 +144,6 @@ void pid_execute() {
   sensorValue = Hal.analogRead(DPSENSOR_PIN); // read sensor
   Input = map(sensorValue, 0, 1023, 0, 255);  // map to output scale
   myPID.Compute();                            // computer PID command
-  analogWrite(BLOWERSPD_PIN, Output);         // write output
+  Hal.analogWrite(BLOWERSPD_PIN, Output);     // write output
   send_periodicData(DELAY_100MS, sensorValue, 0, 0);
 }

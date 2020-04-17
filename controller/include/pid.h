@@ -16,28 +16,29 @@ limitations under the License.
 #define PID_H
 
 #include <PID_v1.h>
-#include <stdint.h>
 
-#define BLOWERSPD_PIN 3
-#define BLOWER_HIGH 142
-#define BLOWER_LOW 130
-#define DPSENSOR_PIN A0
+#include "hal.h"
+
+inline constexpr AnalogPinId DPSENSOR_PIN = AnalogPinId::HAL_A0;
+inline constexpr PwmPinId BLOWERSPD_PIN = PwmPinId::PWM_3;
+inline constexpr int BLOWER_HIGH = 142;
+inline constexpr int BLOWER_LOW = 130;
 
 // state machine variables
-#define INSPIRE_TIME 1600
-#define INSPIRE_RATE 1
-#define PIP 142
-#define INSPIRE_DWELL 800
-#define INSPIRE_DWELL_PRESSURE 140
-#define EXPIRE_TIME 1000
-#define EXPIRE_RATE 1
-#define PEEP 130
-#define EXPIRE_DWELL 600
+inline constexpr int INSPIRE_TIME = 1600;
+inline constexpr int INSPIRE_RATE = 1;
+inline constexpr int PIP = 142;
+inline constexpr int INSPIRE_DWELL = 800;
+inline constexpr int INSPIRE_DWELL_PRESSURE = 140;
+inline constexpr int EXPIRE_TIME = 1000;
+inline constexpr int EXPIRE_RATE = 1;
+inline constexpr int PEEP = 130;
+inline constexpr int EXPIRE_DWELL = 600;
 
 // not implemented yet
-#define AC 0
-#define RR 0
-#define IE 0
+inline constexpr int AC = 0;
+inline constexpr int RR = 0;
+inline constexpr int IE = 0;
 
 void pid_execute();
 void pid_init();

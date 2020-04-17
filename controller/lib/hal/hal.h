@@ -12,6 +12,8 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+#ifndef HAL_H
+#define HAL_H
 
 // A hardware abstraction layer that supports mocking/faking for tests.
 //
@@ -40,11 +42,6 @@ limitations under the License.
 // they come at a cost.  Thus we do some macro magic to get virtual methods
 // when compiling for test, but not when compiling for production.
 
-#ifndef HAL_H
-#define HAL_H
-
-#include <stdint.h>
-
 #ifdef TEST_MODE
 
 #ifdef AVR
@@ -64,16 +61,43 @@ limitations under the License.
 #include <Arduino.h>
 
 #define HAL_MOCK_METHOD(returntype, name, args) returntype name args
+
+// "HAL" has to be there because the respective Arduino symbols are macros,
+// e.g. A0 expands to simply 0 so we can't have a constant named A0.
 #define HAL_CONSTANT(name) HAL_##name = name
 #endif // TEST_MODE
 
+// ---------------------------------------------------------------
+// Strongly typed analogues of some Arduino types.
+// "Strongly typed" means that it will be a compile error, e.g.,
+// to pass a PWM pin id to a function expecting an analog pin id.
+// ---------------------------------------------------------------
+
+// Mode of a digital pin.
+// Usage: PinMode::HAL_INPUT etc.
 enum class PinMode : uint8_t {
   HAL_CONSTANT(INPUT),
   HAL_CONSTANT(OUTPUT),
   HAL_CONSTANT(INPUT_PULLUP)
 };
 
+// Voltage level of a digital pin.
+// Usage: VoltageLevel::HAL_HIGH, HAL_LOW
 enum class VoltageLevel : uint8_t { HAL_CONSTANT(HIGH), HAL_CONSTANT(LOW) };
+
+// ID of an analog pin.
+// Usage: AnalogPinId::HAL_A0 etc.
+enum class AnalogPinId {
+  HAL_CONSTANT(A0),
+  HAL_CONSTANT(A1),
+  HAL_CONSTANT(A2),
+  HAL_CONSTANT(A3),
+};
+
+// ID of one of the digital pins that can be used as a PWM pin.
+enum class PwmPinId {
+  PWM_3 = 3,
+};
 
 // Singleton class which implements a hardware abstraction layer.
 //
@@ -92,11 +116,18 @@ public:
   // millis().
   void delay(uint32_t ms);
 
+  // Caveat for people new to Arduino: analogRead and analogWrite are completely
+  // separate from each other and do not even refer to the same pins.
+  // analogRead() reads the value of an analog input pin. analogWrite() writes
+  // to a PWM pin - some of the digital pins are PWM pins.
+
   // In test mode, will return the last value set via test_setAnalogPin.
-  int analogRead(int pin);
+  int analogRead(AnalogPinId pin);
 #ifdef TEST_MODE
-  void test_setAnalogPin(int pin, int value);
+  void test_setAnalogPin(AnalogPinId pin, int value);
 #endif
+
+  void analogWrite(PwmPinId pin, int value);
 
   void setDigitalPinMode(int pin, PinMode mode);
   void digitalWrite(int pin, VoltageLevel value);
@@ -117,6 +148,10 @@ private:
   // Source: https://www.arduino.cc/en/Tutorial/DigitalPins
   // "Arduino (Atmega) pins default to input"
   PinMode digital_pin_modes_[14] = {PinMode::HAL_INPUT};
+
+  // TODO: Really, PWM pins are digital pins - i.e., "writing to a PWM pin"
+  // means "asking the device to set the digital pin to HIGH this% of the time".
+  int pwm_pin_values_[14] = {0};
 #endif
 };
 
@@ -128,21 +163,28 @@ extern HalApi Hal;
 
 inline uint32_t HalApi::millis() { return ::millis(); }
 inline void HalApi::delay(uint32_t ms) { ::delay(ms); }
-inline int HalApi::analogRead(int pin) { return ::analogRead(pin); }
+inline int HalApi::analogRead(AnalogPinId pin) {
+  return ::analogRead(static_cast<int>(pin));
+}
 inline void HalApi::setDigitalPinMode(int pin, PinMode mode) {
   ::pinMode(pin, static_cast<uint8_t>(mode));
 }
 inline void HalApi::digitalWrite(int pin, VoltageLevel value) {
   ::digitalWrite(pin, static_cast<uint8_t>(value));
 }
+inline void HalApi::analogWrite(PwmPinId pin, int value) {
+  ::analogWrite(static_cast<int>(pin), value);
+}
 
 #else
 
 inline uint32_t HalApi::millis() { return millis_; }
 inline void HalApi::delay(uint32_t ms) { millis_ += ms; }
-inline int HalApi::analogRead(int pin) { return analog_pin_values_[pin]; }
-inline void HalApi::test_setAnalogPin(int pin, int value) {
-  analog_pin_values_[pin] = value;
+inline int HalApi::analogRead(AnalogPinId pin) {
+  return analog_pin_values_[static_cast<int>(pin)];
+}
+inline void HalApi::test_setAnalogPin(AnalogPinId pin, int value) {
+  analog_pin_values_[static_cast<int>(pin)] = value;
 }
 inline void HalApi::setDigitalPinMode(int pin, PinMode mode) {
   digital_pin_modes_[pin] = mode;
@@ -152,6 +194,9 @@ inline void HalApi::digitalWrite(int pin, VoltageLevel value) {
     throw "Can only write to an OUTPUT pin";
   }
   digital_pin_values_[pin] = value;
+}
+inline void HalApi::analogWrite(PwmPinId pin, int value) {
+  pwm_pin_values_[static_cast<int>(pin)] = value;
 }
 
 #endif

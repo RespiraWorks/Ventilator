@@ -4,6 +4,8 @@
 
 This is a common repository for all software components of the [RespiraWorks](http://respira.works) open source ventilator project.
 
+If you are a new team member, read the [Software Onboarding](https://docs.google.com/document/d/1Nb5IbK7lXTFG0HcIHifqVn2Gh4mjS6R8894UEoa5TF4/edit) document and see the [repository wiki](https://github.com/RespiraWorks/VentilatorSoftware/wiki).
+
 ## Structure
 
 common - code shared across controller and GUI

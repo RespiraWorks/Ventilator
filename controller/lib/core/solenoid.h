@@ -13,15 +13,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#ifndef ACTUATORS_H
-#define ACTUATORS_H
+#ifndef SOLENOID_H
+#define SOLENOID_H
 
-/**********************
- * GPIO PIN DEFINITIONS
- **********************/
+void solenoid_init();
+void solenoid_open();
+void solenoid_close();
 
-#define O_SOLENOID 5 /* Solenoid output pin 5 TBC */
-
-void actuators_init();
-
-#endif // BLOWER_H
+#endif // SOLENOID_H

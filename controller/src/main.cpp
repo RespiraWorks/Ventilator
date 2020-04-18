@@ -32,8 +32,8 @@ limitations under the License.
   Based on example code by Tom Igoe and Brett Beauregard
 
   Project Description: http://bit.ly/2wYqj3X
-  git: https://github.com/inceptionev/FixMoreLungs
-  www.pandemicventilator.com
+  git: https://github.com/RespiraWorks/VentilatorSoftware
+  http://respira.works
 
   Outputs can be plotted with Cypress PSoC Programmer (Bridge Control Panel
   Tool) Download and install, connect serial Tools > Protocol Configuration >
@@ -52,8 +52,15 @@ limitations under the License.
 #include "parameters.h"
 #include "pid.h"
 #include "sensors.h"
-#include "ventilator.h"
 #include "watchdog.h"
+
+static void controller_loop() {
+  while (true) {
+    comms_handler();
+    pid_execute();
+    watchdog_handler();
+  }
+}
 
 void setup() {
 
@@ -67,8 +74,8 @@ void setup() {
 
   alarm_init();
 
-  comms_sendResetState(); // Inform the Interface Controller that we just
-                          // started/restarted
+  // Inform the Interface Controller that we just started/restarted
+  comms_sendResetState();
 
-  ventilator_start();
+  controller_loop();
 }

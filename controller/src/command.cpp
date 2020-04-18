@@ -15,7 +15,10 @@ limitations under the License.
 
 #include "command.h"
 
+// Converts 4 bytes of big-endian data into a float.
 static float convIntTofloat(char *data);
+
+// Converts a float into 4 bytes of big-endian data.
 static uint32_t convfloatToInt(float float_value);
 
 void command_execute(enum command cmd, char *dataTx, uint8_t lenTx,
@@ -164,16 +167,15 @@ void command_responseSend(uint8_t cmd, char *packet, uint8_t len) {
 }
 
 static float convIntTofloat(char *data) {
-
     float f;
 
-#ifdef LITTLE_ENDIAN
+#ifndef __FLOAT_WORD_ORDER__
+#error "Your compiler isn't defining the __FLOAT_WORD_ORDER__ macro?"
+#elif __FLOAT_WORD_ORDER__ == __ORDER_LITTLE_ENDIAN__
     /* Convert big endian integer to little endian float */
-    uint32_t data_bEndian = 0;
-    uint32_t data_lEndian = 0;
-
+    uint32_t data_bEndian;
     memcpy(&data_bEndian, data, sizeof(data_bEndian));
-    data_lEndian =  __builtin_bswap32(data_bEndian);
+    uint32_t data_lEndian = __builtin_bswap32(data_bEndian);
     memcpy(&f, &data_lEndian, sizeof(f));
 #else
     /* Convert big endian to big endian float */
@@ -184,20 +186,17 @@ static float convIntTofloat(char *data) {
 }
 
 static uint32_t convfloatToInt(float float_value) {
-
-    #ifdef LITTLE_ENDIAN
-        /* Convert float into big endian format for transmission */
-        uint32_t data_bEndian = 0;
-        uint32_t data_lEndian = 0;
-
-        memcpy(&data_lEndian, &float_value, sizeof(data_lEndian));
-        data_bEndian =  __builtin_bswap32(data_lEndian);
-        return data_bEndian;
-    #else
-        /* Keep float in big endian format */
-        uint32_t data_bEndian;
-
-        memcpy(&data_bEndian, &float_value, sizeof(data_bEndian));
-        return data_bEndian;
-    #endif
+#ifndef __FLOAT_WORD_ORDER__
+#error "Your compiler isn't defining the __FLOAT_WORD_ORDER__ macro?"
+#elif __FLOAT_WORD_ORDER__ == __ORDER_LITTLE_ENDIAN__
+  /* Convert float into big endian format for transmission */
+  uint32_t data_lEndian;
+  memcpy(&data_lEndian, &float_value, sizeof(data_lEndian));
+  return __builtin_bswap32(data_lEndian);
+#else
+  /* Keep float in big endian format */
+  uint32_t data_bEndian;
+  memcpy(&data_bEndian, &float_value, sizeof(data_bEndian));
+  return data_bEndian;
+#endif
 }

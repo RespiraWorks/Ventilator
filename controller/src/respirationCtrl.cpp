@@ -15,7 +15,7 @@ limitations under the License.
 
 #include "respirationCtrl.h"
 
-enum ventilatorState vState;
+static enum ventilatorState vState;
 
 void respirationCtrl_init() {
     ACV_init();
@@ -25,7 +25,6 @@ void respirationCtrl_init() {
 }
 
 void respirationCtrl_start() {
-
     switch(parameters_getVentilatorMode()) {
         case ventilatorMode::ACV:
             ACV_start();
@@ -44,7 +43,6 @@ void respirationCtrl_start() {
 }
 
 void respirationCtrl_stop() {
-
     switch(parameters_getVentilatorMode()) {
         case ventilatorMode::ACV:
             ACV_stop();
@@ -63,7 +61,6 @@ void respirationCtrl_stop() {
 }
 
 void respirationCtrl_handler() {
-
     switch(parameters_getVentilatorMode()) {
         case ventilatorMode::ACV:
             ACV_handler();

@@ -153,12 +153,13 @@ void command_execute(enum command cmd, char *dataTx, uint8_t lenTx,
     }
     break;
   case command::stop_ventilator:
-    ventilatorState ventState;
-    ventState = respirationCtrl_getVentilatorState();
+    {
+        ventilatorState ventState = respirationCtrl_getVentilatorState();
 
-    if(ventState == ventilatorState::ACV_running
-    || ventState == ventilatorState::PRVC_running) {
-        respirationCtrl_stop();
+        if(ventState == ventilatorState::ACV_running
+        || ventState == ventilatorState::PRVC_running) {
+            respirationCtrl_stop();
+        }
     }
     break;
   case command::set_solenoidNormalState:

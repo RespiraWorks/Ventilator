@@ -21,6 +21,7 @@ limitations under the License.
 #include "ACV.h"
 #include "PRVC.h"
 
+// Used to keep track of which ventilator mode is currently running
 enum class ventilatorState {
     not_running = 0x00,
     ACV_running = 0x01,

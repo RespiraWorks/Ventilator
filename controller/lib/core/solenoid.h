@@ -12,21 +12,12 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-#include "ventilator.h"
-#include "comms.h"
-#include "watchdog.h"
-#include "respirationCtrl.h"
 
-static void ventilator_control();
+#ifndef SOLENOID_H
+#define SOLENOID_H
 
-void ventilator_start() {
-  for (;;) {
-    ventilator_control();
-  }
-}
+void solenoid_init();
+void solenoid_open();
+void solenoid_close();
 
-static void ventilator_control() {
-    comms_handler();
-    respirationCtrl_handler();
-    watchdog_handler();
-}
+#endif // SOLENOID_H

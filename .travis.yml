@@ -17,10 +17,13 @@ addons:
 cache:
     directories:
         - "~/.platformio"
+        - $HOME/.cache/pre-commit
+        - $HOME/.cache/pre-commit-jlebar
 
 install:
   - pip install -U platformio
   - platformio update
+  - pip install pre-commit
 
 # TODO: Separate jobs for GUI and controller?
 script:

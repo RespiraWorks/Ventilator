@@ -1,11 +1,11 @@
-#include "command_handlers.h"
-void command_handler(Command cmd) {
+#include "serdes.h"
+void command_handler(Command &) {
   // TODO move to nanopb Command type
-  
+
   // // TODO(lee-matthews): We need to validate that we don't go past dataTx
   // (void)lenTx;
-  // // TODO(lee-matthews): We need to ensure that we don't set lenRx > lenRxMax.
-  // (void)lenRxMax;
+  // // TODO(lee-matthews): We need to ensure that we don't set lenRx >
+  // lenRxMax. (void)lenRxMax;
 
   // float rr, tv, peep, dwell, ier, pip, Ki, Kd, Kp;
   // *lenRx = 0; // Initialise the value to zero
@@ -143,8 +143,6 @@ void command_handler(Command cmd) {
   //   // handle all commands.
   //   break;
   // }
-
-
 }
 
-void ack_handler(GuiAck) {}
+void gui_ack_handler(GuiAck &) {}

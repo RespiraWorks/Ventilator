@@ -13,6 +13,7 @@ CMakeLists.txt.user
 cmake-build-*/
 .idea/
 .idea
+.vscode/
 
 gui/build
 .DS_Store

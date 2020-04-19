@@ -24,10 +24,8 @@ install:
 
 # TODO: Separate jobs for GUI and controller?
 script:
-  # Controller unit tests on native.
-  - platformio test -e native -v
-  # Make sure controller builds for target platform.
-  - platformio run -v
+  # Run checks for non-GUI code
+  - ./test.sh
   # Make sure GUI builds.
   - cd gui
   - mkdir build

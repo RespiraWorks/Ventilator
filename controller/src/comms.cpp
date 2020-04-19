@@ -73,16 +73,6 @@ enum class packet_field {
  *    PUBLIC FUNCTIONS
  ****************************************************************************************/
 
-static bool packet_receive(char *packet, uint8_t *packet_len);
-static bool packet_checksumValidation(char *packet, uint8_t len);
-static bool packet_cmdValidatation(char *packet);
-static bool packet_modeValidation(char *packet);
-static enum processPacket process_packet(char *packet, uint8_t len);
-static void comms_sendModeERR(char *packet);
-static void comms_sendChecksumERR(char *packet);
-static void comms_sendCommandERR(char *packet);
-static void send_alarm();
-
 void comms_init() { serialIO_init(); }
 
 void comms_handler() {

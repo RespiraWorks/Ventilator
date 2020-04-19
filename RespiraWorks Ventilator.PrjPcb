@@ -28,7 +28,7 @@ DItemRevisionGUID=
 ReportSuppressedErrorsInMessages=0
 FSMCodingStyle=eFMSDropDownList_OneProcess
 FSMEncodingStyle=eFMSDropDownList_OneHot
-OutputPath=
+OutputPath=Project Outputs for RespiraWorks Ventilator
 LogFolderPath=
 ManagedProjectGUID=
 IncludeDesignInRelease=0
@@ -207,6 +207,78 @@ DItemRevisionGUID=
 GenerateClassCluster=0
 DocumentUniqueId=KXLNVNQU
 
+[GeneratedDocument1]
+DocumentPath=Project Outputs for RespiraWorks Ventilator\FAB PKG\Fabrication Testpoint Report for RespiraWorks Ventilator Rev 1.ipc
+DItemRevisionGUID=
+
+[GeneratedDocument2]
+DocumentPath=Project Outputs for RespiraWorks Ventilator\FAB PKG\RespiraWorks Ventilator Rev 1-RoundHoles.TXT
+DItemRevisionGUID=
+
+[GeneratedDocument3]
+DocumentPath=Project Outputs for RespiraWorks Ventilator\FAB PKG\RespiraWorks Ventilator Rev 1-SlotHoles.TXT
+DItemRevisionGUID=
+
+[GeneratedDocument4]
+DocumentPath=Project Outputs for RespiraWorks Ventilator\FAB PKG\RespiraWorks Ventilator Rev 1.DRL
+DItemRevisionGUID=
+
+[GeneratedDocument5]
+DocumentPath=Project Outputs for RespiraWorks Ventilator\FAB PKG\RespiraWorks Ventilator Rev 1.DRR
+DItemRevisionGUID=
+
+[GeneratedDocument6]
+DocumentPath=Project Outputs for RespiraWorks Ventilator\FAB PKG\RespiraWorks Ventilator Rev 1.EXTREP
+DItemRevisionGUID=
+
+[GeneratedDocument7]
+DocumentPath=Project Outputs for RespiraWorks Ventilator\FAB PKG\RespiraWorks Ventilator Rev 1.GBL
+DItemRevisionGUID=
+
+[GeneratedDocument8]
+DocumentPath=Project Outputs for RespiraWorks Ventilator\FAB PKG\RespiraWorks Ventilator Rev 1.GBO
+DItemRevisionGUID=
+
+[GeneratedDocument9]
+DocumentPath=Project Outputs for RespiraWorks Ventilator\FAB PKG\RespiraWorks Ventilator Rev 1.GBP
+DItemRevisionGUID=
+
+[GeneratedDocument10]
+DocumentPath=Project Outputs for RespiraWorks Ventilator\FAB PKG\RespiraWorks Ventilator Rev 1.GBS
+DItemRevisionGUID=
+
+[GeneratedDocument11]
+DocumentPath=Project Outputs for RespiraWorks Ventilator\FAB PKG\RespiraWorks Ventilator Rev 1.GP1
+DItemRevisionGUID=
+
+[GeneratedDocument12]
+DocumentPath=Project Outputs for RespiraWorks Ventilator\FAB PKG\RespiraWorks Ventilator Rev 1.GTL
+DItemRevisionGUID=
+
+[GeneratedDocument13]
+DocumentPath=Project Outputs for RespiraWorks Ventilator\FAB PKG\RespiraWorks Ventilator Rev 1.GTO
+DItemRevisionGUID=
+
+[GeneratedDocument14]
+DocumentPath=Project Outputs for RespiraWorks Ventilator\FAB PKG\RespiraWorks Ventilator Rev 1.GTP
+DItemRevisionGUID=
+
+[GeneratedDocument15]
+DocumentPath=Project Outputs for RespiraWorks Ventilator\FAB PKG\RespiraWorks Ventilator Rev 1.GTS
+DItemRevisionGUID=
+
+[GeneratedDocument16]
+DocumentPath=Project Outputs for RespiraWorks Ventilator\FAB PKG\RespiraWorks Ventilator Rev 1.LDP
+DItemRevisionGUID=
+
+[GeneratedDocument17]
+DocumentPath=Project Outputs for RespiraWorks Ventilator\FAB PKG\RespiraWorks Ventilator Rev 1.REP
+DItemRevisionGUID=
+
+[GeneratedDocument18]
+DocumentPath=Project Outputs for RespiraWorks Ventilator\FAB PKG\RespiraWorks Ventilator Rev 1.RUL
+DItemRevisionGUID=
+
 [Configuration1]
 Name=Sources
 ParameterCount=0
@@ -231,7 +303,7 @@ AddNetPorts=-1
 ShowComponentParameters=-1
 GlobalBookmarks=0
 ExportBOM=0
-TemplateFilename=Board Stack Report.XLT
+TemplateFilename=C:\Projects\pcbreathe\Board Stack Report.XLT
 TemplateStoreRelative=0
 PCB_PrintColor=1
 SCH_PrintColor=0
@@ -254,7 +326,7 @@ SCH_HasExpandLogicalToPhysicalSheets=-1
 SaveSettingsToOutJob=0
 
 [Generic_EDE]
-OutputDir=
+OutputDir=Project Outputs for RespiraWorks Ventilator
 
 [OutputGroup1]
 Name=Netlist Outputs
@@ -426,7 +498,9 @@ OutputName9=Schematic Prints
 OutputDocumentPath9=
 OutputVariantName9=
 OutputDefault9=0
-PageOptions9=Record=PageOptions|CenterHorizontal=True|CenterVertical=True|PrintScale=1.00|XCorrection=1.00|YCorrection=1.00|PrintKind=1|BorderSize=5000000|LeftOffset=0|BottomOffset=0|Orientation=2|PaperLength=1000|PaperWidth=1000|Scale=100|PaperSource=7|PrintQuality=-3|MediaType=1|DitherType=10|PrintScaleMode=1|PaperKind=Letter|PaperIndex=1
+PageOptions9=Record=PageOptions|CenterHorizontal=True|CenterVertical=True|PrintScale=0.68|XCorrection=1.00|YCorrection=1.00|PrintKind=0|BorderSize=5000000|LeftOffset=0|BottomOffset=0|Orientation=2|PaperLength=1000|PaperWidth=1000|Scale=100|PaperSource=276|PrintQuality=-3|MediaType=1|DitherType=10|PrintScaleMode=1|PaperKind=11"x17" 279.4x431.8mm|PaperIndex=3
+Configuration9_Name1=OutputConfigurationParameter1
+Configuration9_Item1=Record=SchPrintView|ShowNoERC=True|ShowParamSet=True|ShowProbe=True|ShowBlanket=True|NoERCSymbolsToShow="Thin Cross","Thick Cross","Small Cross",Checkbox,Triangle|ShowNote=True|ShowNoteCollapsed=True|ShowOpenEnds=True|ExpandDesignator=True|ExpandNetLabel=False|ExpandPort=False|ExpandSheetNum=False|ExpandDocNum=False|PrintArea=0|PrintAreaRect.X1=0|PrintAreaRect.Y1=0|PrintAreaRect.X2=0|PrintAreaRect.Y2=0
 OutputType10=SimView Print
 OutputName10=SimView Prints
 OutputDocumentPath10=

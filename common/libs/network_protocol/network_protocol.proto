@@ -1,130 +1,128 @@
 syntax = "proto2";
 
-
-enum ControllerMsgType 
-{
-    ACK = 			0x10;
-    ERR_CHECK_SUM = 0x11;
-    ERR_MODE = 		0x12;
-    ERR_CMD = 		0x13;
-    STATUS = 		0x20;
-    ALARM = 		0x30;
-    DATA = 			0x40;
+enum ControllerMsgType {
+  ACK = 0x10;
+  ERR_CHECK_SUM = 0x11;
+  ERR_MODE = 0x12;
+  ERR_CMD = 0x13;
+  STATUS = 0x20;
+  ALARM = 0x30;
+  DATA = 0x40;
 }
 
-enum CommandType
-{
-	SET_RR = 0x00;
-	GET_RR = 0x01;
-	SET_TV = 0x02;
-	GET_TV = 0x03;
-	SET_PEEP = 0x04;
-	GET_PEEP = 0x05;
-	SET_PIP = 0x06;
-	GET_PIP = 0x07;
-	SET_DWELL = 0x08;
-	GET_DWELL = 0x09;
-	SET_IR = 0x0a;
-	GET_IR = 0x0b;
-	
-	GET_PRESSURE = 0x0c;
-	GET_FLOW = 0x0d;
-	GET_VOLUME = 0x0e;
+enum CommandType {
 
-	SET_KP = 0x20;
-	GET_KP = 0x21;
-	SET_KI = 0x22;
-	GET_KI = 0x23;
-	SET_KD = 0x24;
-	GET_KD = 0x25;
-	SET_BLOWER = 0x26;
-	RESET = 0x27;
-	SET_SOLENOID = 0x28;
+  // MEDICAL mode commands
 
-	SET_TX_RATE = 0x40;
-	GET_TX_RATE = 0x41;
-	SET_CONTROLLER_MODE = 0x42;
-	GET_CONTROLLER_MODE = 0x43;
-	COMM_CHECK = 0x44;
-	SET_VENTILATOR_MODE = 0x45;
-	GET_VENTILATOR_MODE = 0x46;
-	START_VENTILATOR = 0x47;
-	STOP_VENTILATOR = 0x48;
-	NONE = 0xFF;
+  SET_RR = 0x00;    // Set Respiratory Rate (RR)
+  GET_RR = 0x01;    // Get Respiratory Rate (RR)
+  SET_TV = 0x02;    // Set Tidal Volume (TV)
+  GET_TV = 0x03;    // Get Tidal Volume (TV)
+  SET_PEEP = 0x04;  // Set Positive End-Expiratory Pressure (PEEP)
+  GET_PEEP = 0x05;  // Get Positive End-Expiratory Pressure (PEEP)
+  SET_PIP = 0x06;   // Set Peak Inspiratory Pressure (PIP)
+  GET_PIP = 0x07;   // Get Peak Inspiratory Pressure (PIP)
+  SET_DWELL = 0x08; // Set Dwell
+  GET_DWELL = 0x09; // Get Dwell
+  SET_IR = 0x0a;    // Set Inspiration ratio
+  GET_IR = 0x0b;    // Get Inspiration ratio
+
+  GET_PRESSURE = 0x0c; // Get Pressure
+  GET_FLOW = 0x0d;     // Get Flow
+  GET_VOLUME = 0x0e;   // Get Volume
+
+  // ENGINEERING mode commands
+
+  SET_KP = 0x20;       // Set Kp (PID proportional coefficient)
+  GET_KP = 0x21;       // Get Kp (PID proportional coefficient
+  SET_KI = 0x22;       // Set Ki (PID integration coefficient
+  GET_KI = 0x23;       // Get Ki (PID integration coefficient
+  SET_KD = 0x24;       // Set Kd (PID differentiation coefficient
+  GET_KD = 0x25;       // Set Kd (PID differentiation coefficient
+  SET_BLOWER = 0x26;   // Set blower PWM signal value 0x00 to 0x0FF; 0x00 - off,
+                       // 0xFF - full speed
+  RESET = 0x27;        // Reset Ventilator Controller board
+  SET_SOLENOID = 0x28; // Set solenoid normal state 0x00 - Normally open, 0x01
+                       // Normally closed
+
+  // Mixed ENGINEERING/MEDICAL mode commands
+
+  SET_TX_RATE = 0x40; // Set periodic data transmission rate - to be defined
+  GET_TX_RATE = 0x41; // Get periodic data transmission rate - to be defined
+  SET_CONTROLLER_MODE = 0x42; // Set Ventilator Controller mode; 0x00 - Medical
+                              // Mode, 0xFF - Engineering Mode
+
+  GET_CONTROLLER_MODE = 0x43; // Get Ventilator Controller mode
+  COMM_CHECK = 0x44;          // Send communications check
+  SET_VENTILATOR_MODE = 0x45; // Set ventilator mode; 0x00 - PRVC, 0xFF - ACV
+  GET_VENTILATOR_MODE = 0x46; // Get ventilator mode; 0x00 - PRVC, 0xFF - ACV
+  START_VENTILATOR = 0x47;    // Ventilator start
+  STOP_VENTILATOR = 0x48;     // Ventilator stop
+  NONE = 0xFF; // For Controller originating packets that are not responses to
+               // commands
 }
 
-message Command
-{
-    required CommandType cmd = 1;
-    optional float data = 2;
+// Sent form GUI to controller
+message Command {
+  required CommandType cmd = 1;
+  optional float data = 2;
 }
 
-message GuiAck
-{
-	required uint32 type = 1;
+// Sent from GUI in response to Alarm ControllerData packet
+message GuiAck { required uint32 type = 1; }
+
+// Periodic controller status sent in ControllerData packet
+message ControllerStatus {
+  required uint64 time = 1;
+  required float pressure = 2;
+  required float volume = 3;
+  required float flow = 4;
+  optional uint32 alarm_flags = 5;
 }
 
-message ControllerStatus
-{
-	required uint64  time = 1;
-	required float pressure = 2;
-	required float volume = 3;
-	required float flow = 4;
-	optional uint32 alarm_flags = 5;
+// Sent in ControllerData packet on controller reset
+message ControllerIdentification {
+  required uint64 time = 1;
+  required uint32 version_fw = 2;
+  required uint32 version_hw = 3;
+  optional string about = 4;
 }
 
-message ControllerIdentification
-{
-	required uint64  time = 1;
-	required uint32 version_fw = 2;
-	required uint32 version_hw = 3;
-	optional string about = 4;
+enum AlarmType { TO_BE_DEFINED = 0; }
+
+enum AlarmLevel {
+  LOW = 0;
+  MEDIUM = 1;
+  HIGH = 2;
 }
 
-
-enum AlarmType 
-{
-	TO_BE_DEFINED = 0;
+// sent in ControllerData packet on alarm conditions
+message ControlerAlarm {
+  required AlarmLevel level = 1;
+  required AlarmType type = 2;
+  optional string description = 3; // to be defined better
 }
 
-enum AlarmLevelType 
-{
-	LOW = 0;
-	MEDIUM = 1;
-	HIGH = 2;
+// sent in ControllerData packet in response to get/set commands
+message ControllerValue { optional float value = 1; }
+
+// All packets sent from controller are wrapped in ControllerData packet
+message ControllerData {
+  required ControllerMsgType msg_type = 1;
+  required CommandType response_to_cmd = 2;
+
+  oneof payload {
+    ControllerStatus status = 3;
+    ControllerIdentification identification = 4;
+    ControllerValue value = 5;
+    ControlerAlarm alert = 6;
+  }
 }
 
-message ControlerAlarm
-{
-	required AlarmLevelType level = 1;
-	required AlarmType type = 2;
-	optional string description = 3; //to be defined better 
+message Packet {
+  oneof payload {
+    Command cmd = 1;
+    GuiAck gui_ack = 2;
+    ControllerData data = 3;
+  }
 }
-
-message ControllerValue
-{
-	optional float value = 1; 
-}
-
-message ControllerData
-{
-	required ControllerMsgType msg_type = 1;
-	required CommandType response_to_cmd = 2;
-
-	oneof payload {
-		ControllerStatus status = 3;
-		ControllerIdentification identification = 4;
-		ControllerValue value = 5;
-		ControlerAlarm alert = 6;
-	}
-}
-
-message Packet
-{
-	oneof payload {
-	    Command cmd = 1;
-	    GuiAck gui_ack = 2;
-	    ControllerData data = 3;
-	}
-}
-

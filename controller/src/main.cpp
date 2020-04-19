@@ -50,15 +50,15 @@ limitations under the License.
 #include "blower.h"
 #include "comms.h"
 #include "parameters.h"
-#include "pid.h"
 #include "sensors.h"
 #include "solenoid.h"
 #include "watchdog.h"
+#include "respirationCtrl.h"
 
 static void controller_loop() {
   while (true) {
     comms_handler();
-    pid_execute();
+    respirationCtrl_handler();
     watchdog_handler();
   }
 }
@@ -72,7 +72,7 @@ void setup() {
   solenoid_init();
 
   watchdog_init();
-  pid_init();
+  respirationCtrl_init();
 
   alarm_init();
 

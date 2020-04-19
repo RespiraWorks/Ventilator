@@ -16,8 +16,8 @@ limitations under the License.
 #ifndef COMMS_H
 #define COMMS_H
 
-#include <stdint.h>
 #include <Arduino.h>
+#include <stdint.h>
 
 #include "checksum.h"
 #include "command.h"

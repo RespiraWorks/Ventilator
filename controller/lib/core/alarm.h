@@ -28,7 +28,7 @@ limitations under the License.
 
 
 void alarm_init();
-void alarm_add(char *data);
+void alarm_add(const char *data);
 int32_t alarm_read(uint32_t *timestamp, char *data);
 bool alarm_available();
 void alarm_remove();

@@ -15,7 +15,7 @@ create_clean_directory(){
   else
     echo "Creating directory failed: $dir_name"
     return 1
-  fi 
+  fi
 }
 
 create_clean_directory build

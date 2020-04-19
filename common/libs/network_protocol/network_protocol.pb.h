@@ -63,11 +63,11 @@ typedef enum _CommandType {
 
 typedef enum _AlarmType { AlarmType_TO_BE_DEFINED = 0 } AlarmType;
 
-typedef enum _AlarmLevelType {
-  AlarmLevelType_LOW = 0,
-  AlarmLevelType_MEDIUM = 1,
-  AlarmLevelType_HIGH = 2
-} AlarmLevelType;
+typedef enum _AlarmLevel {
+  AlarmLevel_LOW = 0,
+  AlarmLevel_MEDIUM = 1,
+  AlarmLevel_HIGH = 2
+} AlarmLevel;
 
 /* Struct definitions */
 typedef struct _Command {
@@ -77,7 +77,7 @@ typedef struct _Command {
 } Command;
 
 typedef struct _ControlerAlarm {
-  AlarmLevelType level;
+  AlarmLevel level;
   AlarmType type;
   pb_callback_t description;
 } ControlerAlarm;
@@ -94,6 +94,7 @@ typedef struct _ControllerStatus {
   float pressure;
   float volume;
   float flow;
+  bool has_alarm_flags;
   uint32_t alarm_flags;
 } ControllerStatus;
 
@@ -141,9 +142,9 @@ typedef struct _Packet {
 #define _AlarmType_MAX AlarmType_TO_BE_DEFINED
 #define _AlarmType_ARRAYSIZE ((AlarmType)(AlarmType_TO_BE_DEFINED + 1))
 
-#define _AlarmLevelType_MIN AlarmLevelType_LOW
-#define _AlarmLevelType_MAX AlarmLevelType_HIGH
-#define _AlarmLevelType_ARRAYSIZE ((AlarmLevelType)(AlarmLevelType_HIGH + 1))
+#define _AlarmLevel_MIN AlarmLevel_LOW
+#define _AlarmLevel_MAX AlarmLevel_HIGH
+#define _AlarmLevel_ARRAYSIZE ((AlarmLevel)(AlarmLevel_HIGH + 1))
 
 /* Initializer values for message structs */
 #define Command_init_default                                                   \
@@ -151,14 +152,14 @@ typedef struct _Packet {
 #define GuiAck_init_default                                                    \
   { 0 }
 #define ControllerStatus_init_default                                          \
-  { 0, 0, 0, 0, 0 }
+  { 0, 0, 0, 0, false, 0 }
 #define ControllerIdentification_init_default                                  \
   {                                                                            \
     0, 0, 0, { {NULL}, NULL }                                                  \
   }
 #define ControlerAlarm_init_default                                            \
   {                                                                            \
-    _AlarmLevelType_MIN, _AlarmType_MIN, { {NULL}, NULL }                      \
+    _AlarmLevel_MIN, _AlarmType_MIN, { {NULL}, NULL }                          \
   }
 #define ControllerValue_init_default                                           \
   { false, 0 }
@@ -177,14 +178,14 @@ typedef struct _Packet {
 #define GuiAck_init_zero                                                       \
   { 0 }
 #define ControllerStatus_init_zero                                             \
-  { 0, 0, 0, 0, 0 }
+  { 0, 0, 0, 0, false, 0 }
 #define ControllerIdentification_init_zero                                     \
   {                                                                            \
     0, 0, 0, { {NULL}, NULL }                                                  \
   }
 #define ControlerAlarm_init_zero                                               \
   {                                                                            \
-    _AlarmLevelType_MIN, _AlarmType_MIN, { {NULL}, NULL }                      \
+    _AlarmLevel_MIN, _AlarmType_MIN, { {NULL}, NULL }                          \
   }
 #define ControllerValue_init_zero                                              \
   { false, 0 }
@@ -242,7 +243,7 @@ typedef struct _Packet {
   X(a, STATIC, REQUIRED, FLOAT, pressure, 2)                                   \
   X(a, STATIC, REQUIRED, FLOAT, volume, 3)                                     \
   X(a, STATIC, REQUIRED, FLOAT, flow, 4)                                       \
-  X(a, STATIC, REQUIRED, UINT32, alarm_flags, 5)
+  X(a, STATIC, OPTIONAL, UINT32, alarm_flags, 5)
 #define ControllerStatus_CALLBACK NULL
 #define ControllerStatus_DEFAULT NULL
 

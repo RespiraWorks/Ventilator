@@ -60,7 +60,7 @@ static void stack_push(alarm_t alarm) {
 
 void alarm_init() { stack.top = -1; }
 
-void alarm_add(char *data) {
+void alarm_add(const char *data) {
   alarm_t alarm;
   if (!stack_full()) {
     // No point spending time doing these operations if the stack is full

@@ -9,3 +9,6 @@ repos:
     name: clang-format C
     types: [c]
     exclude_types: [c++]
+  - id: clang-format
+    name: clang-format protobuf
+    types: [proto]

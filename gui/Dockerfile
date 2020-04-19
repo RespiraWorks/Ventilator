@@ -21,4 +21,3 @@ RUN apt-get update && \
 COPY . .
 RUN bash ./build.sh
 CMD ["bash"]
-

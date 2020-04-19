@@ -1,0 +1,8 @@
+---
+# TODO: Enable as many useful checks as possible.
+# E.g. set to '*', see which of those aren't useful, and disable just those.
+Checks: '-*,readability-redundant-declaration'
+WarningsAsErrors: '*'
+
+# TODO: Add naming style checks (readability-identifier-naming).
+...

@@ -12,15 +12,12 @@ public:
 
 TEST_F(AlarmTest, NotAvailableAfterInit) { ASSERT_FALSE(alarm_available()); }
 
-TEST_F(AlarmTest, AddOneAlarm) {
+TEST_F(AlarmTest, AddAndRemoveOneAlarm) {
   char alarm_data[ALARM_DATALEN];
   memset(alarm_data, 'x', sizeof(alarm_data));
 
   alarm_add(dataID::alarm_1, alarm_data);
   ASSERT_TRUE(alarm_available());
-}
-
-TEST_F(AlarmTest, RemoveOneAlarm) {
   alarm_remove();
   ASSERT_FALSE(alarm_available());
 }

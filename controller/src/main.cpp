@@ -64,6 +64,16 @@ static void controller_loop() {
 }
 
 void setup() {
+  // Initialize the watchdog first, for two reasons:
+  //
+  //  - The purpose of the watchdog is to catch hangs, and if initializing the
+  //    watchdog weren't the first thing we did, we wouldn't catch hangs in the
+  //    work that came before.
+  //
+  //  - After the device is soft-reset via reset_device(), the watchdog timer
+  //    has a very short value.  We need to watchdog_init() immediately so that
+  //    we don't time out while initializing.
+  watchdog_init();
 
   parameters_init();
   comms_init();
@@ -71,7 +81,6 @@ void setup() {
   blower_init();
   solenoid_init();
 
-  watchdog_init();
   pid_init();
 
   alarm_init();

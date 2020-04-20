@@ -16,10 +16,9 @@ limitations under the License.
 #ifndef ALARM_H
 #define ALARM_H
 
-#include <stdint.h>
-
 #include "errors.h"
 #include "packet_types.h"
+#include <stdint.h>
 
 /* Number of alarms we can store in the queue */
 #define ALARM_NODES 4
@@ -35,8 +34,8 @@ struct alarm_t {
 };
 
 void alarm_init();
-void alarm_add(enum dataID alarm, char *data);
-int32_t alarm_read(enum dataID *alarmID, uint32_t *timestamp, char *data);
+void alarm_add(dataID alarm, const char *data);
+int32_t alarm_read(dataID *alarmID, uint32_t *timestamp, char *data);
 bool alarm_available();
 void alarm_remove();
 

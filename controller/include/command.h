@@ -20,7 +20,6 @@
 #define COMMAND_H
 
 #include <stdint.h>
-#include <string.h>
 
 #include "alarm.h"
 #include "packet_types.h"

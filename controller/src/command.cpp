@@ -120,7 +120,7 @@ void command_execute(enum command cmd, char *dataTx, uint8_t lenTx,
     break;
   case command::reset_vc:
     // TODO Do any necessary cleaning up before reset
-    watchdog_reboot();
+    reset_device();
     break;
 
     /* Mixed mode commands */

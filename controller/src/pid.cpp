@@ -36,7 +36,7 @@ static void send_periodicData(uint32_t delay, uint16_t pressure,
   static uint32_t time;
   static bool first_call = true;
 
-  if (first_call == true) {
+  if (first_call) {
     first_call = false;
     time = Hal.millis();
   } else {
@@ -50,7 +50,6 @@ static void send_periodicData(uint32_t delay, uint16_t pressure,
     }
   }
 }
-
 
 enum class pid_fsm_state {
   reset = 0,
@@ -144,6 +143,6 @@ void pid_execute() {
   sensorValue = Hal.analogRead(DPSENSOR_PIN); // read sensor
   Input = map(sensorValue, 0, 1023, 0, 255);  // map to output scale
   myPID.Compute();                            // computer PID command
-  Hal.analogWrite(BLOWERSPD_PIN, Output);     // write output
+  Hal.analogWrite(BLOWERSPD_PIN, static_cast<int>(Output)); // write output
   send_periodicData(DELAY_100MS, sensorValue, 0, 0);
 }

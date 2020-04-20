@@ -16,13 +16,22 @@ limitations under the License.
 #ifndef WATCHDOG_H
 #define WATCHDOG_H
 
-#include <avr/wdt.h>
-#include <stdint.h>
-
-#define WDT_1SECOND 1000
-
+// The watchdog checks for hangs / crashes.  It resets the device if
+// watchdog_handler() is not called for "too long".
+//
+// This module also exposes reset_device(), which immediately restarts the
+// device.
+//
+// Implementation note: reset_device() restarts the controller by setting a
+// short watchdog timeout and then entering an infinite loop; when the short
+// timeout expires, the device restarts.  When the device boots back up, the
+// docs [0] claim that this timeout will be retained.  You should therefore
+// **call watchdog_init() very early in startup**, to reset the timer back to a
+// normal, longer value.
+//
+// [0] https://www.nongnu.org/avr-libc/user-manual/group__avr__watchdog.html
 void watchdog_init();
 void watchdog_handler();
-void watchdog_reboot();
+[[noreturn]] void reset_device();
 
 #endif // WATCHDOG_H

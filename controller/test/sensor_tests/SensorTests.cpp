@@ -74,25 +74,30 @@ static void MPXV7002_TransferFn(float *pressureIn, float *voltageOut,
   }
 }
 
+// Simple helper function that takes in a voltage and returns the
+// equivalent ADC counts that represent it
+static void test_setAnalogPinToVolts(AnalogPinId pin, float volts) {
+  Hal.test_setAnalogPin(pin, static_cast<int>(roundf(volts * COUNTS_PER_VOLT)));
+}
+
 TEST(SensorTests, FullScaleReading) {
+  // length of the differentialFlowPressures array
+  const int NUM_DIFF_ELEMENTS = 20;
+  // length of the patientPressures Array
+  const int NUM_PATIENT_ELEMENTS = 18;
   // These pressure waveforms start at 0 kPa to simulate the system being in the
   // proper calibration state then they go over the sensor full ranges. Each
   // value is repeated twice, so that the test neatly corresponds to the
   // 2 default average sample counts that the sensor module defaults to.
   // Values are in kPa.
-  float differentialFlowPressures[] = {
+  float differentialFlowPressures[NUM_DIFF_ELEMENTS] = {
       0.0f, 0.0f, -2.0f, -2.0f, -1.5f, -1.5f, -1.0f, -1.0f, -0.5f, -0.5f,
       0.0f, 0.0f, 0.5f,  0.5f,  1.0f,  1.0f,  1.5f,  1.5f,  2.0f,  2.0f};
-  float patientPressures[] = {0.0f, 0.0f, 0.5f, 0.5f, 1.0f,  1.0f,
-                              1.5f, 1.5f, 2.0f, 2.0f, 2.5f,  2.5f,
-                              3.0f, 3.0f, 3.5f, 3.5f, 3.92f, 3.92f};
-  // length of the differentialFlowPressures array
-  const int NUM_DIFF_ELEMENTS = 20;
-  // length of the patientPressures Array
-  const int NUM_PATIENT_ELEMENTS = 18;
+  float patientPressures[NUM_PATIENT_ELEMENTS] = {
+      0.0f, 0.0f, 0.5f, 0.5f, 1.0f, 1.0f, 1.5f, 1.5f,  2.0f,
+      2.0f, 2.5f, 2.5f, 3.0f, 3.0f, 3.5f, 3.5f, 3.92f, 3.92f};
   float differentialFlowSensorVoltages[NUM_DIFF_ELEMENTS]; //[V]
   float patientSensorVoltages[NUM_PATIENT_ELEMENTS];       //[V]
-
   // Convert these pressure waveforms into the voltage equivalents using the
   // appropriate sensor transfer functions
   MPXV7002_TransferFn(differentialFlowPressures, differentialFlowSensorVoltages,
@@ -111,32 +116,22 @@ TEST(SensorTests, FullScaleReading) {
 
   // First set the simulated analog signals to an ambient 0 kPa corresponding
   // voltage during calibration
-  Hal.test_setAnalogPin(PressureSensors::PATIENT_PIN,
-                        static_cast<int>(roundf(patientFlowSensorVoltage_0kPa *
-                                                COUNTS_PER_VOLT)));
-  Hal.test_setAnalogPin(
-      PressureSensors::INHALATION_PIN,
-      static_cast<int>(
-          roundf(differentialFlowSensorVoltage_0kPa * COUNTS_PER_VOLT)));
-  Hal.test_setAnalogPin(
-      PressureSensors::EXHALATION_PIN,
-      static_cast<int>(
-          roundf(differentialFlowSensorVoltage_0kPa * COUNTS_PER_VOLT)));
+  test_setAnalogPinToVolts(PressureSensors::PATIENT_PIN,
+                           patientFlowSensorVoltage_0kPa);
+  test_setAnalogPinToVolts(PressureSensors::INHALATION_PIN,
+                           differentialFlowSensorVoltage_0kPa);
+  test_setAnalogPinToVolts(PressureSensors::EXHALATION_PIN,
+                           differentialFlowSensorVoltage_0kPa);
 
   sensors_init(); // the sensors are also calibrated
 
   // Now to compare the pressure readings the sensor module is calculating
   // versus what the original pressure waveform was
   for (int i = 0; i < NUM_DIFF_ELEMENTS; i += 2) {
-    int index = i; // this will be changed when HAL is updated
-    Hal.test_setAnalogPin(
-        PressureSensors::INHALATION_PIN,
-        static_cast<int>(
-            roundf(differentialFlowSensorVoltages[i] * COUNTS_PER_VOLT)));
-    Hal.test_setAnalogPin(
-        PressureSensors::EXHALATION_PIN,
-        static_cast<int>(
-            roundf(differentialFlowSensorVoltages[i] * COUNTS_PER_VOLT)));
+    test_setAnalogPinToVolts(PressureSensors::INHALATION_PIN,
+                             differentialFlowSensorVoltages[i]);
+    test_setAnalogPinToVolts(PressureSensors::EXHALATION_PIN,
+                             differentialFlowSensorVoltages[i]);
     float pressureInhalation =
         get_pressure_reading(PressureSensors::INHALATION_PIN);
     float pressureExhalation =
@@ -144,21 +139,19 @@ TEST(SensorTests, FullScaleReading) {
     // Inhalation and exhalation should match because they are fed with the same
     // pressure waveform
     EXPECT_EQ(pressureInhalation, pressureExhalation)
-        << "Differential Sensor Calculated Inhale/Exhale at index " << index;
+        << "Differential Sensor Calculated Inhale/Exhale at index " << i;
     // Calculate deviance from expected. Using only inhalation because we know
     // it is equal to exhalation by now.
-    EXPECT_NEAR(pressureInhalation, differentialFlowPressures[index],
+    EXPECT_NEAR(pressureInhalation, differentialFlowPressures[i],
                 COMPARISON_TOLERANCE)
-        << "Differential Sensor Calculated Value at index " << index;
+        << "Differential Sensor Calculated Value at index " << i;
   }
 
   for (int i = 0; i < NUM_PATIENT_ELEMENTS; i += 2) {
-    int index = i; // this will be changed when HAL is updated
-    Hal.test_setAnalogPin(
-        PressureSensors::PATIENT_PIN,
-        static_cast<int>(roundf(patientSensorVoltages[i] * COUNTS_PER_VOLT)));
+    test_setAnalogPinToVolts(PressureSensors::PATIENT_PIN,
+                             patientSensorVoltages[i]);
     float pressurePatient = get_pressure_reading(PressureSensors::PATIENT_PIN);
-    EXPECT_NEAR(pressurePatient, patientPressures[index], COMPARISON_TOLERANCE)
-        << "Patient Sensor at index" << index;
+    EXPECT_NEAR(pressurePatient, patientPressures[i], COMPARISON_TOLERANCE)
+        << "Patient Sensor at index" << i;
   }
 }

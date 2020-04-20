@@ -13,9 +13,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include <stdint.h>
-
 #include "checksum.h"
+#include <stdint.h>
 
 uint16_t checksum_fletcher16(const char *data, uint8_t count,
                              uint16_t state /*=0*/) {

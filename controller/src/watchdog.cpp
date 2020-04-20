@@ -37,6 +37,6 @@ void watchdog_handler() { wdt_reset(); }
   // Reset the device by setting a short watchdog timeout and then entering an
   // infinite loop.
   wdt_enable(WDTO_15MS);
-  while (1) {
+  while (true) {
   }
 }

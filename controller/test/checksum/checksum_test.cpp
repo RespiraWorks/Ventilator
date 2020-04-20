@@ -1,7 +1,7 @@
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 #include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
 #include <algorithm>
 #include <map>

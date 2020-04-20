@@ -60,19 +60,18 @@ void parameters_setDwell(float Dwell);
 float parameters_getDwell();
 
 enum operatingMode parameters_getOperatingMode();
-void parameters_setOperatingMode(enum operatingMode);
+void parameters_setOperatingMode(operatingMode);
 
 void parameters_setPeriodicReadings(bool active);
 bool parameters_getPeriodicReadings();
 
-void parameters_setPeriodicMode(enum periodicMode periodicMode_value);
+void parameters_setPeriodicMode(periodicMode periodicMode_value);
 enum periodicMode parameters_getPeriodicMode();
 
-void parameters_setVentilatorMode(enum ventilatorMode ventilatorMode_value);
+void parameters_setVentilatorMode(ventilatorMode ventilatorMode_value);
 enum ventilatorMode parameters_getVentilatorMode();
 
-void parameters_setSolenoidNormalState(
-    enum solenoidNormaleState normalState_value);
+void parameters_setSolenoidNormalState(solenoidNormaleState normalState_value);
 enum solenoidNormaleState parameters_getSolenoidNormalState();
 
 #endif // PARAMETERS_H

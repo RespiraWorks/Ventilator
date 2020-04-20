@@ -125,19 +125,18 @@ enum class operatingMode {
 
 // Solenoid state definitions
 enum class solenoidNormaleState {
-    normally_open    = 0x00,
-    normally_closed  = 0x01,
+  normally_open = 0x00,
+  normally_closed = 0x01,
 
-    count                       /* Sentinel */
+  count /* Sentinel */
 };
 
 // Ventilator medical mode types
 enum class ventilatorMode {
-    PRVC = 0x00,
-    ACV  = 0x01,
+  PRVC = 0x00,
+  ACV = 0x01,
 
-    count                       /* Sentinel */
+  count /* Sentinel */
 };
-
 
 #endif // PACKET_TYPES_H

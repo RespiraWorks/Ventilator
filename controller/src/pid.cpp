@@ -16,7 +16,6 @@ limitations under the License.
 #include "pid.h"
 #include "comms.h"
 #include "hal.h"
-#include "parameters.h"
 #include "types.h"
 
 // Define Variables we'll be connecting to
@@ -30,33 +29,6 @@ static PID myPID(&Input, &Output, &Setpoint, Kp, Ki, Kd, DIRECT);
 // These constants won't change. They're used to give names to the pins used:
 // Analog output pin that the LED is attached to
 static const int analogOutPin = LED_BUILTIN;
-
-static void send_periodicData(uint32_t delay, uint16_t pressure,
-                              uint16_t volume, uint16_t flow) {
-  static uint32_t time;
-  static bool first_call = true;
-
-  if (first_call) {
-    first_call = false;
-    time = Hal.millis();
-  } else {
-    if ((Hal.millis() - time) > delay) {
-      if (parameters_getPeriodicReadings()) {
-        // Send readings data
-
-        ControllerStatus controller_status = ControllerStatus_init_zero;
-        controller_status.time = millis();
-        controller_status.flow = flow * 1.0;
-        controller_status.volume = volume * 0.0;
-        controller_status.pressure = pressure * 0.0;
-
-        comms_sendControllerStatus(controller_status);
-      }
-
-      time = Hal.millis();
-    }
-  }
-}
 
 enum class pid_fsm_state {
   reset = 0,
@@ -78,10 +50,8 @@ void pid_init() {
   myPID.SetMode(AUTOMATIC);
 }
 
-void pid_execute() {
-
+void pid_execute(const VentParams &params, SensorReadings *readings) {
   uint16_t cyclecounter = 0;
-  int16_t sensorValue = 0; // value read from the pot
   enum pid_fsm_state state = pid_fsm_state::reset;
 
   switch (state) {
@@ -147,9 +117,15 @@ void pid_execute() {
   }
 
   // Update PID Loop
-  sensorValue = Hal.analogRead(DPSENSOR_PIN); // read sensor
+  int16_t sensorValue = Hal.analogRead(DPSENSOR_PIN); // read sensor
   Input = map(sensorValue, 0, 1023, 0, 255);  // map to output scale
   myPID.Compute();                            // computer PID command
   Hal.analogWrite(BLOWERSPD_PIN, static_cast<int>(Output)); // write output
-  send_periodicData(DELAY_100MS, sensorValue, 0, 0);
+
+  // Store sensor readings so they can eventually be sent to the GUI.
+  // TODO(jlebar): Is sensorValue actually pressure in cm of h2o?
+  // TODO(jlebar): Get and store volume and flow data.
+  readings->pressure_cm_h2o = sensorValue;
+  readings->volume_ml = 0;
+  readings->flow_ml_per_min = 0;
 }

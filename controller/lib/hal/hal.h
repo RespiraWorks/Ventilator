@@ -63,7 +63,7 @@ limitations under the License.
 #define HAL_MOCK_METHOD(returntype, name, args) returntype name args
 
 // "HAL" has to be there because the respective Arduino symbols are macros,
-// e.g. A0 expands to simply 0 so we can't have a constant named A0.
+// e.g. A0 expands to 14, so we can't have a constant named A0.
 #define HAL_CONSTANT(name) HAL_##name = name
 #endif // TEST_MODE
 
@@ -92,6 +92,9 @@ enum class AnalogPinId {
   HAL_CONSTANT(A1),
   HAL_CONSTANT(A2),
   HAL_CONSTANT(A3),
+  // https://github.com/arduino/ArduinoCore-avr/blob/master/variants/standard/pins_arduino.h
+  // has 7 named analog pins, the largest of which, A7, has id 21.
+  COUNT = 22
 };
 
 // ID of one of the digital pins that can be used as a PWM pin.

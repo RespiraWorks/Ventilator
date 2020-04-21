@@ -26,9 +26,8 @@ limitations under the License.
 #include "gtest/gtest.h"
 #include <assert.h>
 #include <cmath>
+#include <cstdio>
 #include <iostream>
-#include <stdbool.h>
-#include <stdio.h>
 #include <string>
 
 // Maximum allowable delta between calculated sensor readings and the input
@@ -49,9 +48,9 @@ static const float COUNTS_PER_VOLT = 1024.0f / 5.0f;
  * @param *voltageOut pointer to the output voltage buffer
  * @param count is the length of the input buffer
  */
-static void MPXV5004_TransferFn(float *pressureIn, float *voltageOut,
+static void MPXV5004_TransferFn(const float *pressureIn, float *voltageOut,
                                 int count) {
-  assert(pressureIn != NULL && voltageOut != NULL);
+  assert(pressureIn != nullptr && voltageOut != nullptr);
   for (int i = 0; i < count; i++) {
     voltageOut[i] = 5 * (0.2f * pressureIn[i] + 0.2f);
   }
@@ -66,9 +65,9 @@ static void MPXV5004_TransferFn(float *pressureIn, float *voltageOut,
  * @param *voltageOut pointer to the output voltage buffer
  * @param count is the length of the input buffer
  */
-static void MPXV7002_TransferFn(float *pressureIn, float *voltageOut,
+static void MPXV7002_TransferFn(const float *pressureIn, float *voltageOut,
                                 int count) {
-  assert(pressureIn != NULL && voltageOut != NULL);
+  assert(pressureIn != nullptr && voltageOut != nullptr);
   for (int i = 0; i < count; i++) {
     voltageOut[i] = 5 * (0.2f * pressureIn[i] + 0.5f);
   }

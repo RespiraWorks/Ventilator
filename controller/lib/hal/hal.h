@@ -173,12 +173,12 @@ public:
   uint16_t serialBytesAvailableForWrite();
 
 #ifdef TEST_MODE
-  // Reads `len` bytes of data "sent" via serialWrite, or returns false if
-  // there aren't that many bytes available.
+  // Reads up to `len` bytes of data "sent" via serialWrite.  Returns the total
+  // number of bytes read.
   //
   // TODO: Once we have explicit message framing, this should simply read one
   // message.
-  bool test_serialGetOutgoingData(char *data, uint16_t len);
+  uint16_t test_serialGetOutgoingData(char *data, uint16_t len);
 
   // Simulates receiving serial data from the GUI controller.  Makes these
   // bytes available to be read by serialReadByte().
@@ -318,16 +318,20 @@ inline uint16_t HalApi::serialBytesAvailableForWrite() {
   // the Arduino tx buffer.
   return 64;
 }
-inline bool HalApi::test_serialGetOutgoingData(char *data, uint16_t len) {
-  if (len > serialOutgoingData_.size()) {
-    return false;
-  }
-  memcpy(data, serialOutgoingData_.data(), len);
+inline uint16_t HalApi::test_serialGetOutgoingData(char *data, uint16_t len) {
+  uint16_t n = alg::min<uint16_t>(len, serialOutgoingData_.size());
+  memcpy(data, serialOutgoingData_.data(), n);
   serialOutgoingData_.erase(serialOutgoingData_.begin(),
-                            serialOutgoingData_.begin() + len);
-  return true;
+                            serialOutgoingData_.begin() + n);
+  return n;
 }
 inline void HalApi::test_serialPutIncomingData(const char *data, uint16_t len) {
+  constexpr int MAX_MSG_SIZE = 64;
+  while (len > MAX_MSG_SIZE) {
+    serialIncomingData_.push_back(std::vector<char>(data, data + MAX_MSG_SIZE));
+    data += MAX_MSG_SIZE;
+    len -= MAX_MSG_SIZE;
+  }
   serialIncomingData_.push_back(std::vector<char>(data, data + len));
 }
 

@@ -42,13 +42,19 @@ limitations under the License.
 // they come at a cost.  Thus we do some macro magic to get virtual methods
 // when compiling for test, but not when compiling for production.
 
+#include "alg.h"
+
 #ifdef TEST_MODE
 
 #ifdef AVR
 #error "TEST_MODE intended to be run only on native, but AVR is defined"
 #endif
 
+#include <deque>
+#include <vector>
+
 #include "gmock/gmock.h"
+
 #define HAL_MOCK_METHOD(returntype, name, args)                                \
   MOCK_METHOD(returntype, name, args)
 #define HAL_CONSTANT(name) HAL_##name
@@ -107,6 +113,8 @@ enum class PwmPinId {
 // Access this via the `Hal` global variable, e.g. `Hal.millis()`.
 class HalApi {
 public:
+  void init();
+
   // Number of milliseconds that have passed since the board started running the
   // program.
   //
@@ -135,7 +143,69 @@ public:
   void setDigitalPinMode(int pin, PinMode mode);
   void digitalWrite(int pin, VoltageLevel value);
 
-  // TODO: Need at least one HAL_MOCK_METHOD.
+  // Receives bytes from the GUI controller along the serial bus.
+  //
+  // Arduino's SerialIO will block if len > serialBytesAvailableForRead(), but
+  // this function will never block. Instead it returns the number of bytes
+  // read.  It's up to you to check how many bytes were actually read and
+  // handle "short reads" where we read fewer bytes than were requested.
+  //
+  // TODO(jlebar): Change the serial* functions to use uint32_t once we've
+  // dropped support for Arduino.
+  [[nodiscard]] uint16_t serialRead(char *buf, uint16_t len);
+
+  // Number of bytes we can read without blocking.
+  uint16_t serialBytesAvailableForRead();
+
+  // Sends bytes to the GUI controller along the serial bus.
+  //
+  // Arduino's SerialIO will block if len > serialBytesAvailableForWrite(), but
+  // this function will never block.  Instead, it returns the number of bytes
+  // written.  number of bytes written.  It's up to you to check how many bytes
+  // were actually written and handle "short writes" where we wrote less than
+  // the whole buffer.
+  [[nodiscard]] uint16_t serialWrite(const char *data, uint16_t len);
+  [[nodiscard]] uint16_t serialWrite(uint8_t data) {
+    return serialWrite(reinterpret_cast<const char *>(&data), 1);
+  }
+
+  // Number of bytes we can write without blocking.
+  uint16_t serialBytesAvailableForWrite();
+
+#ifdef TEST_MODE
+  // Reads `len` bytes of data "sent" via serialWrite, or returns false if
+  // there aren't that many bytes available.
+  //
+  // TODO: Once we have explicit message framing, this should simply read one
+  // message.
+  bool test_serialGetOutgoingData(char *data, uint16_t len);
+
+  // Simulates receiving serial data from the GUI controller.  Makes these
+  // bytes available to be read by serialReadByte().
+  //
+  // Large buffers sent this way will be split into smaller buffers, to
+  // simulate the fact that the Arduino has a small rx buffer.
+  //
+  // Furthermore, serialRead() will not read across a
+  // test_serialPutIncomingData() boundary.  This allows you to test short
+  // reads.  For example, if you did
+  //
+  //   char buf1[8];
+  //   char buf2[4];
+  //   Hal.test_serialPutIncomingData(buf1, 8);
+  //   Hal.test_serialPutIncomingData(buf2, 4);
+  //
+  // then the you'd have the following execution
+  //
+  //   char buf[16];
+  //   Hal.serialBytesAvailableForRead() == 8
+  //   Hal.serialRead(buf, 16) == 8
+  //   Hal.serialBytesAvailableForRead() == 4
+  //   Hal.serialRead(buf, 16) == 4
+  //   Hal.serialBytesAvailableForRead() == 0
+  //
+  void test_serialPutIncomingData(const char *data, uint16_t len);
+#endif
 
 private:
 #ifdef TEST_MODE
@@ -155,6 +225,9 @@ private:
   // TODO: Really, PWM pins are digital pins - i.e., "writing to a PWM pin"
   // means "asking the device to set the digital pin to HIGH this% of the time".
   int pwm_pin_values_[14] = {0};
+
+  std::deque<std::vector<char>> serialIncomingData_;
+  std::vector<char> serialOutgoingData_;
 #endif
 };
 
@@ -164,6 +237,10 @@ extern HalApi Hal;
 
 #ifdef AVR
 
+inline void HalApi::init() {
+  constexpr int32_t BAUD_RATE_BPS = 115200;
+  Serial.begin(BAUD_RATE_BPS, SERIAL_8N1);
+}
 inline uint32_t HalApi::millis() { return ::millis(); }
 inline void HalApi::delay(uint32_t ms) { ::delay(ms); }
 inline int HalApi::analogRead(AnalogPinId pin) {
@@ -177,6 +254,19 @@ inline void HalApi::digitalWrite(int pin, VoltageLevel value) {
 }
 inline void HalApi::analogWrite(PwmPinId pin, int value) {
   ::analogWrite(static_cast<int>(pin), value);
+}
+[[nodiscard]] inline uint16_t HalApi::serialRead(char *buf, uint16_t len) {
+  return Serial.readBytes(buf, alg::min(len, serialBytesAvailableForRead()));
+}
+inline uint16_t HalApi::serialBytesAvailableForRead() {
+  return Serial.available();
+}
+[[nodiscard]] inline uint16_t HalApi::serialWrite(const char *buf,
+                                                  uint16_t len) {
+  return Serial.write(buf, alg::min(len, serialBytesAvailableForWrite()));
+}
+inline uint16_t HalApi::serialBytesAvailableForWrite() {
+  return Serial.availableForWrite();
 }
 
 #else
@@ -200,6 +290,45 @@ inline void HalApi::digitalWrite(int pin, VoltageLevel value) {
 }
 inline void HalApi::analogWrite(PwmPinId pin, int value) {
   pwm_pin_values_[static_cast<int>(pin)] = value;
+}
+[[nodiscard]] inline uint16_t HalApi::serialRead(char *buf, uint16_t len) {
+  if (serialIncomingData_.empty()) {
+    return 0;
+  }
+  auto &readBuf = serialIncomingData_.front();
+  uint16_t n = alg::min<uint16_t>(len, readBuf.size());
+  memcpy(buf, readBuf.data(), n);
+  readBuf.erase(readBuf.begin(), readBuf.begin() + n);
+  if (readBuf.empty()) {
+    serialIncomingData_.pop_front();
+  }
+  return n;
+}
+inline uint16_t HalApi::serialBytesAvailableForRead() {
+  return serialIncomingData_.empty() ? 0 : serialIncomingData_.front().size();
+}
+[[nodiscard]] inline uint16_t HalApi::serialWrite(const char *buf,
+                                                  uint16_t len) {
+  uint16_t n = alg::min(len, serialBytesAvailableForWrite());
+  serialOutgoingData_.insert(serialOutgoingData_.end(), buf, buf + n);
+  return n;
+}
+inline uint16_t HalApi::serialBytesAvailableForWrite() {
+  // TODO: Simulate partial writes?  For now, simply return the true size of
+  // the Arduino tx buffer.
+  return 64;
+}
+inline bool HalApi::test_serialGetOutgoingData(char *data, uint16_t len) {
+  if (len > serialOutgoingData_.size()) {
+    return false;
+  }
+  memcpy(data, serialOutgoingData_.data(), len);
+  serialOutgoingData_.erase(serialOutgoingData_.begin(),
+                            serialOutgoingData_.begin() + len);
+  return true;
+}
+inline void HalApi::test_serialPutIncomingData(const char *data, uint16_t len) {
+  serialIncomingData_.push_back(std::vector<char>(data, data + len));
 }
 
 #endif

@@ -13,20 +13,26 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#ifndef SERIALIO_H
-#define SERIALIO_H
+#ifndef COMMS_H
+#define COMMS_H
 
+#include "network_protocol.pb.h"
 #include <stdint.h>
 
-uint64_t millis();
-#include "checksum.h"
-#include "comms.h"
+void comms_init();
+void comms_handler();
+void comms_sendFlow(float flow);
+void comms_sendPressure(float pressure);
+void comms_sendVolume(float volume);
+void comms_sendResetState();
+void comms_sendControllerStatus(ControllerStatus);
 
-// Public functions
+#ifdef TEST_MODE
+// Sets an alternative callback to be run when receiving a command over the
+// network.
+//
+// Pass a null handler to restore the default handler.
+void comms_test_set_command_handler(void (*handler)(Command &cmd));
+#endif
 
-void serialIO_init();
-void serialIO_send(uint8_t b);
-bool serialIO_dataAvailable();
-void serialIO_readByte(char *buffer);
-
-#endif // SERIALIO_H
+#endif // COMMS_H

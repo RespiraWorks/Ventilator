@@ -188,11 +188,8 @@ void comms_sendControllerStatus(ControllerStatus controller_status) {
   if (output_buffer_ready) {
     return;
   }
-
-  // TODO(jlebar): Casting tx_data_length to size_t is not safe on systems
-  // where size_t is 32 bits!
-  bool status = serdes_encode_status_packet(
-      controller_status, tx_buffer, PACKET_LEN_MAX, (size_t *)&tx_data_length);
+  bool status = serdes_encode_status_packet(controller_status, tx_buffer,
+                                            PACKET_LEN_MAX, &tx_data_length);
   if (status) {
     output_buffer_ready = true;
   }
@@ -209,7 +206,7 @@ void comms_sendControllerStatus(ControllerStatus controller_status) {
 // TODO run this via DMA to free up resources for control loops
 static void process_tx() {
   if (output_buffer_ready) {
-    for (size_t i = 0; i < tx_data_length; i++) {
+    for (uint16_t i = 0; i < tx_data_length; i++) {
       uint16_t written = Hal.serialWrite(tx_buffer[i]);
       if (1 != written) {
         // TODO catch on fire

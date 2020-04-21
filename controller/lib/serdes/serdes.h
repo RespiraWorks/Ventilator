@@ -2,9 +2,6 @@
 #define __SERDES_H
 #include "network_protocol.pb.h"
 
-extern void command_handler(Command &);
-extern void gui_ack_handler(GuiAck &);
-
 typedef void (*CommandHandler_t)(Command &);
 typedef void (*GuiAckHandler_t)(GuiAck &);
 

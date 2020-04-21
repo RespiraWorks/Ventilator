@@ -49,6 +49,7 @@ limitations under the License.
 #include "alarm.h"
 #include "blower.h"
 #include "comms.h"
+#include "hal.h"
 #include "parameters.h"
 #include "pid.h"
 #include "sensors.h"
@@ -74,15 +75,14 @@ void setup() {
   //    has a very short value.  We need to watchdog_init() immediately so that
   //    we don't time out while initializing.
   watchdog_init();
+  Hal.init();
 
   parameters_init();
   comms_init();
   sensors_init();
   blower_init();
   solenoid_init();
-
   pid_init();
-
   alarm_init();
 
   // Inform the Interface Controller that we just started/restarted

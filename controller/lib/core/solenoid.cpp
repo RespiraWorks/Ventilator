@@ -17,7 +17,7 @@ limitations under the License.
 
 #include "hal.h"
 #include "parameters.h"
-#include "stdint.h"
+#include <stdint.h>
 
 // Solenoid output pin 5 TBC.
 static const int O_SOLENOID = 5;

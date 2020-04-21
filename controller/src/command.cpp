@@ -23,6 +23,10 @@ static uint32_t convfloatToInt(float float_value);
 
 void command_execute(enum command cmd, char *dataTx, uint8_t lenTx,
                      char *dataRx, uint8_t *lenRx, uint8_t lenRxMax) {
+  // TODO(lee-matthews): We need to validate that we don't go past dataTx
+  (void)lenTx;
+  // TODO(lee-matthews): We need to ensure that we don't set lenRx > lenRxMax.
+  (void)lenRxMax;
 
   float rr, tv, peep, dwell, ier, pip, Ki, Kd, Kp;
   *lenRx = 0; // Initialise the value to zero
@@ -167,22 +171,22 @@ void command_responseSend(uint8_t cmd, char *packet, uint8_t len) {
 }
 
 static float convIntTofloat(char *data) {
-    float f;
+  float f;
 
 #ifndef __FLOAT_WORD_ORDER__
 #error "Your compiler isn't defining the __FLOAT_WORD_ORDER__ macro?"
 #elif __FLOAT_WORD_ORDER__ == __ORDER_LITTLE_ENDIAN__
-    /* Convert big endian integer to little endian float */
-    uint32_t data_bEndian;
-    memcpy(&data_bEndian, data, sizeof(data_bEndian));
-    uint32_t data_lEndian = __builtin_bswap32(data_bEndian);
-    memcpy(&f, &data_lEndian, sizeof(f));
+  /* Convert big endian integer to little endian float */
+  uint32_t data_bEndian;
+  memcpy(&data_bEndian, data, sizeof(data_bEndian));
+  uint32_t data_lEndian = __builtin_bswap32(data_bEndian);
+  memcpy(&f, &data_lEndian, sizeof(f));
 #else
-    /* Convert big endian to big endian float */
-    memcpy(&f, &data, sizeof(f));
+  /* Convert big endian to big endian float */
+  memcpy(&f, &data, sizeof(f));
 #endif
 
-    return f;
+  return f;
 }
 
 static uint32_t convfloatToInt(float float_value) {

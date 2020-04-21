@@ -23,7 +23,6 @@ limitations under the License.
 #include "command.h"
 #include "packet_types.h"
 #include "parameters.h"
-#include "serialIO.h"
 #include "types.h"
 #include "version.h"
 

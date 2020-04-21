@@ -15,6 +15,8 @@ limitations under the License.
 
 #include "command.h"
 
+#include <string.h>
+
 // Converts 4 bytes of big-endian data into a float.
 static float convIntTofloat(char *data);
 
@@ -164,10 +166,6 @@ void command_execute(enum command cmd, char *dataTx, uint8_t lenTx,
     // handle all commands.
     break;
   }
-}
-
-void command_responseSend(uint8_t cmd, char *packet, uint8_t len) {
-  serialIO_send(msgType::rAck, (enum dataID)cmd, packet, len);
 }
 
 static float convIntTofloat(char *data) {

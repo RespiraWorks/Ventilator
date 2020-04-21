@@ -6,6 +6,9 @@ class AlarmTest : public testing::Test {
 public:
   void SetUp() override {
     alarm_init();
+    while (alarm_available()) {
+      alarm_remove();
+    }
     // TODO: Reset Hal mock object.
   }
 };
@@ -33,10 +36,6 @@ TEST_F(AlarmTest, OverflowAlarmQueue) {
 }
 
 TEST_F(AlarmTest, AddAndReadAlarm) {
-  while (alarm_available()) {
-    alarm_remove();
-  }
-
   char alarm_data_a[ALARM_DATALEN];
   memset(alarm_data_a, 'y', sizeof(alarm_data_a));
   dataID alarm_id_a = dataID::alarm_2;

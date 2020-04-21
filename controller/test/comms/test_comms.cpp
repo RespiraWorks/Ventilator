@@ -1,12 +1,11 @@
-#include "gtest/gtest.h"
-
 #include "comms.h"
 
+#include "hal.h"
 #include "network_protocol.pb.h"
+#include "gtest/gtest.h"
 #include <pb_common.h>
 #include <pb_decode.h>
 #include <pb_encode.h>
-
 
 #define PACKET_LEN_MAX (32)
 static uint8_t tx_buffer[PACKET_LEN_MAX];
@@ -14,32 +13,6 @@ static uint8_t tx_idx = 0;
 static uint8_t rx_buffer[PACKET_LEN_MAX];
 static uint8_t rx_idx = 0;
 static uint8_t rx_data_len = 0;
-
-uint64_t millis() {
-  static uint64_t time = 0x4242;
-  return time++;
-}
-
-void serialIO_readByte(char *buffer) {
-  if (rx_idx >= PACKET_LEN_MAX || rx_idx > rx_data_len) {
-    FAIL() << "rx buffer underflow";
-  }
-  *buffer++ = rx_buffer[rx_idx++];
-}
-
-void serialIO_init() {
-  tx_idx = 0;
-  rx_idx = 0;
-}
-
-bool serialIO_dataAvailable() { return rx_idx < rx_data_len; }
-
-void serialIO_send(uint8_t b) {
-  tx_buffer[tx_idx++] = b;
-  if (tx_idx >= PACKET_LEN_MAX) {
-    FAIL() << "tx buffer overflow";
-  }
-}
 
 TEST(CommTests, SendControllerStatus) {
   float pressure = 1.1;
@@ -81,7 +54,7 @@ void command_handler(const Command &cmd) {
 
 void gui_ack_handler(const GuiAck &ack) {}
 
-void test_command_rx() {
+TEST(CommTests, CommandRx) {
   Command cmd = Command_init_zero;
   cmd.cmd = CommandType_NONE;
   cmd.has_data = true;
@@ -96,7 +69,7 @@ void test_command_rx() {
   rx_data_len = stream.bytes_written;
   rx_idx = 0;
 
-  ASSERT_TRUE(serialIO_dataAvailable());
+  ASSERT_GT(Hal.serialBytesAvailableForRead(), 0);
 
   comms_handler();
   comms_handler();

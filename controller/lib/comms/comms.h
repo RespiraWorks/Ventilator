@@ -27,4 +27,12 @@ void comms_sendVolume(float volume);
 void comms_sendResetState();
 void comms_sendControllerStatus(ControllerStatus);
 
+#ifdef TEST_MODE
+// Sets an alternative callback to be run when receiving a command over the
+// network.
+//
+// Pass a null handler to restore the default handler.
+void comms_test_set_command_handler(void (*handler)(Command &cmd));
+#endif
+
 #endif // COMMS_H

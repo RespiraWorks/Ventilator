@@ -4,7 +4,7 @@
 #include <pb_encode.h>
 
 bool serdes_decode_incomming_packet(uint8_t *rx_buffer, uint8_t rx_buffer_len,
-                                    size_t encoded_len,
+                                    uint16_t encoded_len,
                                     GuiAckHandler_t gui_ack_handler,
                                     CommandHandler_t command_handler) {
   pb_istream_t stream = pb_istream_from_buffer(rx_buffer, encoded_len);
@@ -25,7 +25,7 @@ bool serdes_decode_incomming_packet(uint8_t *rx_buffer, uint8_t rx_buffer_len,
 
 bool serdes_encode_status_packet(ControllerStatus controller_status,
                                  uint8_t *tx_buffer, uint8_t tx_buffer_len,
-                                 size_t *encoded_len) {
+                                 uint16_t *encoded_len) {
   pb_ostream_t stream = pb_ostream_from_buffer(tx_buffer, tx_buffer_len);
 
 

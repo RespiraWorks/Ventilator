@@ -1,4 +1,4 @@
-/* Copyright 2020, Edwin Chiu
+/* Copyright 2020, RespiraWorks
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -13,19 +13,5 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#ifndef SERIALIO_H
-#define SERIALIO_H
-
-#include <Arduino.h>
-#include <stdint.h>
-
-#include "checksum.h"
-#include "comms.h"
-#include "packet_types.h"
-
-void serialIO_init();
-void serialIO_send(enum msgType type, enum dataID id, char *data, uint8_t len);
-bool serialIO_dataAvailable();
-void serialIO_readByte(char *buffer);
-
-#endif // SERIALIO_H
+// This file intentionally left blank.  It's only here because platformio
+// requires all libraries to have a cpp file.

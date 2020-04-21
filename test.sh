@@ -20,6 +20,9 @@ set -o pipefail
 # Print each command as it executes
 set -o xtrace
 
+# This script should work no matter where you call it from.
+cd "$(dirname "$0")"
+
 # Controller unit tests on native.
 pio test -e native
 # Make sure controller builds for target platform.

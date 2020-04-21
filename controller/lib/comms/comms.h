@@ -13,24 +13,18 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#ifndef ALARM_H
-#define ALARM_H
+#ifndef COMMS_H
+#define COMMS_H
 
+#include "network_protocol.pb.h"
 #include <stdint.h>
-#include "errors.h"
 
-/* Number of alarms we can store in the queue */
-#define ALARM_NODES 4
+void comms_init();
+void comms_handler();
+void comms_sendFlow(float flow);
+void comms_sendPressure(float pressure);
+void comms_sendVolume(float volume);
+void comms_sendResetState();
+void comms_sendControllerStatus(ControllerStatus);
 
-// Each alarm can store 8 bytes - modifying this would mean modifying the
-// memory copies.
-#define ALARM_DATALEN 8
-
-
-void alarm_init();
-void alarm_add(const char *data);
-int32_t alarm_read(uint32_t *timestamp, char *data);
-bool alarm_available();
-void alarm_remove();
-
-#endif // ALARM_H
+#endif // COMMS_H

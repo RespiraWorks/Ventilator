@@ -18,6 +18,7 @@ limitations under the License.
 #include <PID_v1.h>
 
 #include "hal.h"
+#include "network_protocol.pb.h"
 
 inline constexpr AnalogPinId DPSENSOR_PIN = AnalogPinId::HAL_A0;
 inline constexpr PwmPinId BLOWERSPD_PIN = PwmPinId::PWM_3;
@@ -40,7 +41,13 @@ inline constexpr int AC = 0;
 inline constexpr int RR = 0;
 inline constexpr int IE = 0;
 
-void pid_execute();
 void pid_init();
+
+// Runs one step of the PID module, which is responsible for spinning up the
+// blower.
+//
+// `params` is the last set of params we received from the GUI.  Puts readings
+// from e.g. the pressure sensor into `readings`.
+void pid_execute(const VentParams &params, SensorReadings *readings);
 
 #endif // PID_H

@@ -21,13 +21,13 @@ limitations under the License.
  ****************************************************************************************/
 
 static bool packet_receive(char *packet, uint8_t *packet_len);
-static bool packet_checksumValidation(char *packet, uint8_t len);
-static bool packet_cmdValidatation(char *packet);
-static bool packet_modeValidation(char *packet);
-static enum processPacket process_packet(char *packet, uint8_t len);
-static void comms_sendModeERR(char *packet);
-static void comms_sendChecksumERR(char *packet);
-static void comms_sendCommandERR(char *packet);
+static bool packet_checksumValidation(const char *packet, uint8_t len);
+static bool packet_cmdValidation(const char *packet);
+static bool packet_modeValidation(const char *packet);
+static processPacket process_packet(const char *packet, uint8_t len);
+static void comms_sendModeERR(const char *packet);
+static void comms_sendChecksumERR(const char *packet);
+static void comms_sendCommandERR(const char *packet);
 static void send_alarm();
 
 /****************************************************************************************
@@ -76,7 +76,7 @@ enum class packet_field {
 void comms_init() { serialIO_init(); }
 
 void comms_handler() {
-  static enum handler_state state = handler_state::idle;
+  static handler_state state = handler_state::idle;
   static uint8_t packet_len = 0;
   static bool alarm_sent = false;
   static uint32_t alarmSentTime = 0;
@@ -85,7 +85,7 @@ void comms_handler() {
   enum processPacket packetStatus;
 
   // Timeout alarm waiting if it has been sent
-  if (alarm_sent == true) {
+  if (alarm_sent) {
     if ((Hal.millis() - alarmSentTime) >= DELAY_100MS) {
       // Alarm hasn't ack arrived within DELAY_100MS,
       // lets send the alarm again
@@ -104,7 +104,7 @@ void comms_handler() {
       /* Serial data received */
       state = handler_state::packet_arriving;
     } else if (alarm_available() &&
-               alarm_sent == false) { // Are any alarms waiting to be handled?
+               !alarm_sent) { // Are any alarms waiting to be handled?
       // Change state to process alarm
       // This has lower priority than a packet recieved via serialIO
       state = handler_state::alarm_waiting;
@@ -272,7 +272,7 @@ static void send_alarm() {
   }
 }
 
-static enum processPacket process_packet(char *packet, uint8_t len) {
+static processPacket process_packet(const char *packet, uint8_t len) {
 
   // Validate packet checksum
   if (!packet_checksumValidation(packet, len)) {
@@ -295,7 +295,7 @@ static enum processPacket process_packet(char *packet, uint8_t len) {
   // What packet type is it?
   if (packet[(uint8_t)packet_field::msg_type] == (uint8_t)msgType::cmd) {
     // It's a command packet
-    if (packet_cmdValidatation(packet) == true) {
+    if (packet_cmdValidation(packet)) {
       if (packet_modeValidation(packet)) {
         // Command ok for execution
         return processPacket::command;
@@ -320,20 +320,19 @@ static enum processPacket process_packet(char *packet, uint8_t len) {
   return processPacket::msgTypeUnknown;
 }
 
-static bool packet_checksumValidation(char *packet, uint8_t len) {
+static bool packet_checksumValidation(const char *packet, uint8_t len) {
   return checksum_check(packet, len);
 }
 
-static bool packet_cmdValidatation(char *packet) {
+static bool packet_cmdValidation(const char *packet) {
   uint8_t cmd = (uint8_t)packet[(uint8_t)packet_field::cmd];
   return (cmd >= (uint8_t)medicalMode::start &&
           cmd <= (uint8_t)medicalMode::end) ||
          (cmd >= (uint8_t)engMode::start && cmd <= (uint8_t)engMode::end) ||
-         (cmd >= (uint8_t)mixedMode::start &&
-          cmd <= (uint8_t)mixedMode::end);
+         (cmd >= (uint8_t)mixedMode::start && cmd <= (uint8_t)mixedMode::end);
 }
 
-static bool packet_modeValidation(char *packet) {
+static bool packet_modeValidation(const char *packet) {
   uint8_t cmd = (uint8_t)packet[(uint8_t)packet_field::cmd];
 
   // If medical mode, reject eng-mode commands.
@@ -345,7 +344,7 @@ static bool packet_modeValidation(char *packet) {
 static bool packet_receive(char *packet, uint8_t *len) {
   // TODO Do we need to set serialtimer to something lower than 1 second?
 
-  static enum packet_field field = packet_field::msg_type;
+  static packet_field field = packet_field::msg_type;
   static uint8_t packet_len = 0;
   static uint8_t data_len = 0;
   char msg_type;
@@ -425,19 +424,19 @@ static bool packet_receive(char *packet, uint8_t *len) {
   return packet_complete;
 }
 
-static void comms_sendModeERR(char *packet) {
+static void comms_sendModeERR(const char *packet) {
   char emptyData;
   serialIO_send(msgType::rErrMode,
                 (enum dataID)packet[(uint8_t)packet_field::cmd], &emptyData, 0);
 }
 
-static void comms_sendChecksumERR(char *packet) {
+static void comms_sendChecksumERR(const char *packet) {
   char emptyData;
   serialIO_send(msgType::rErrChecksum,
                 (enum dataID)packet[(uint8_t)packet_field::cmd], &emptyData, 0);
 }
 
-static void comms_sendCommandERR(char *packet) {
+static void comms_sendCommandERR(const char *packet) {
   char emptyData;
   serialIO_send(msgType::rErrCmd,
                 (enum dataID)packet[(uint8_t)packet_field::cmd], &emptyData, 0);

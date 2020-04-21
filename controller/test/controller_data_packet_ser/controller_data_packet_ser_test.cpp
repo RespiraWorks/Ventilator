@@ -12,7 +12,7 @@ uint8_t tx_buffer[PACKET_LEN_MAX];
 
 TEST(SerDesTests, StatusSerialization) {
 
-  size_t encoded_data_length;
+  uint16_t encoded_data_length;
   uint64_t time = 1;
   float pressure = 2.2;
   float volume = 3.3;

@@ -71,7 +71,7 @@ TEST(CommTests, CommandRx) {
   pb_ostream_t stream = pb_ostream_from_buffer(
       reinterpret_cast<unsigned char *>(rx_buffer), sizeof(rx_buffer));
   pb_encode(&stream, Packet_fields, &packet);
-  EXPECT_GT(stream.bytes_written, 0);
+  EXPECT_GT(stream.bytes_written, 0u);
   Hal.test_serialPutIncomingData(rx_buffer, stream.bytes_written);
   EXPECT_GT(Hal.serialBytesAvailableForRead(), 0);
 

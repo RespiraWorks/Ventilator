@@ -43,7 +43,14 @@ static void send_periodicData(uint32_t delay, uint16_t pressure,
     if ((Hal.millis() - time) > delay) {
       if (parameters_getPeriodicReadings()) {
         // Send readings data
-        comms_sendPeriodicReadings(pressure * 1.0, volume * 0.0, flow * 0.0);
+
+        ControllerStatus controller_status = ControllerStatus_init_zero;
+        controller_status.time = millis();
+        controller_status.flow = flow * 1.0;
+        controller_status.volume = volume * 0.0;
+        controller_status.pressure = pressure * 0.0;
+
+        comms_sendControllerStatus(controller_status);
       }
 
       time = Hal.millis();

@@ -18,7 +18,7 @@ static constexpr uint16_t RX_TIMEOUT_MS = 1;
 void comms_init() {}
 
 static bool is_time_to_process_packet() {
-  return millis() - last_rx > RX_TIMEOUT_MS;
+  return Hal.millis() - last_rx > RX_TIMEOUT_MS;
 }
 
 void comms_sendResetState() {
@@ -70,7 +70,7 @@ void process_rx() {
         rx_idx = 0;
         break;
       }
-      last_rx = millis();
+      last_rx = Hal.millis();
     }
   }
 

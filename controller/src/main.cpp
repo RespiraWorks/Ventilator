@@ -50,16 +50,27 @@ limitations under the License.
 #include "blower.h"
 #include "comms.h"
 #include "hal.h"
-#include "parameters.h"
+#include "network_protocol.pb.h"
 #include "pid.h"
 #include "sensors.h"
 #include "solenoid.h"
 #include "watchdog.h"
 
+// Current controller status.  Updated when we receive data from the GUI, when
+// sensors read data, etc.
+static ControllerStatus controller_status = ControllerStatus_init_zero;
+
+// Last-received status from the GUI.
+static GuiStatus gui_status = GuiStatus_init_zero;
+
 static void controller_loop() {
   while (true) {
-    comms_handler();
-    pid_execute();
+    controller_status.uptime_ms = Hal.millis();
+    comms_handler(controller_status, &gui_status);
+    controller_status.active_params = gui_status.desired_params;
+
+    pid_execute(controller_status.active_params,
+                &controller_status.sensor_readings);
     watchdog_handler();
   }
 }
@@ -77,16 +88,12 @@ void setup() {
   watchdog_init();
   Hal.init();
 
-  parameters_init();
   comms_init();
   sensors_init();
   blower_init();
   solenoid_init();
   pid_init();
   alarm_init();
-
-  // Inform the Interface Controller that we just started/restarted
-  comms_sendResetState();
 
   controller_loop();
 }

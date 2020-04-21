@@ -30,10 +30,8 @@ Arduino Nano and the MPXV5004GP and MPXV7002DP pressure sensors.
 // per count) [V];
 static const float ADC_LSB = 5.0f / 1024.0f;
 
-// zero calibration values for [0]: patient pressure sensor;[1]:
-// inhalation diff pressure sensor;[2]: exhalation diff pressure
-// sensor; [ADC Counts]
-static int sensorZeroVals[] = {0, 0, 0};
+// zero calibration values for the different pressure sensors.
+static int sensorZeroVals[static_cast<int>(AnalogPinId::COUNT)] = {0};
 
 // number of samples to perform averaging over during sensor zeroization
 static int zeroingAvgSize = 4;

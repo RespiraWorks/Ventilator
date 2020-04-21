@@ -15,6 +15,13 @@ limitations under the License.
 #include "hal.h"
 
 #include "alarm.h"
+#include "packet_types.h"
+
+struct alarm_t {
+  dataID alarm;
+  uint32_t timestamp;
+  char data[ALARM_DATALEN];
+};
 
 namespace {
 struct alarm_stack_t {
@@ -53,11 +60,13 @@ static void stack_push(alarm_t alarm) {
 
 void alarm_init() { stack.top = -1; }
 
-void alarm_add(dataID alarmID, const char *data) {
+void alarm_add(const char *data) {
+  alarm_t alarm;
   if (!stack_full()) {
     // No point spending time doing these operations if the stack is full
-    alarm_t alarm;
-    alarm.alarm = alarmID;
+    
+    //TODO work in progress, move alarm code to nanopb transport
+    alarm.alarm = dataID::alarm_1;
     alarm.timestamp = Hal.millis();
 
     // Copy alarm data
@@ -79,13 +88,15 @@ void alarm_remove() {
   stack_pop(&alarm); // Don't need this alarm anymore, remove it
 }
 
-int32_t alarm_read(dataID *alarmID, uint32_t *timestamp, char *data) {
+int32_t alarm_read(uint32_t *timestamp, char *data) {
   int32_t return_status = VC_STATUS_FAILURE;
   alarm_t *alarm;
   return_status = stack_peek(&alarm);
 
   if (return_status == VC_STATUS_SUCCESS) {
-    *alarmID = alarm->alarm;
+    
+    //TODO work in progress move alarm code to nanopb 
+    // *alarmID = (enum dataID)alarm->alarm;
     *timestamp = alarm->timestamp;
 
     for (uint8_t idx = 0; idx < ALARM_DATALEN; idx++) {

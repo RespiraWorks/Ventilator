@@ -13,24 +13,20 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#ifndef ALARM_H
-#define ALARM_H
+#ifndef SERIALIO_H
+#define SERIALIO_H
 
 #include <stdint.h>
-#include "errors.h"
 
-/* Number of alarms we can store in the queue */
-#define ALARM_NODES 4
+uint64_t millis();
+#include "checksum.h"
+#include "comms.h"
 
-// Each alarm can store 8 bytes - modifying this would mean modifying the
-// memory copies.
-#define ALARM_DATALEN 8
+// Public functions
 
+void serialIO_init();
+void serialIO_send(uint8_t b);
+bool serialIO_dataAvailable();
+void serialIO_readByte(char *buffer);
 
-void alarm_init();
-void alarm_add(const char *data);
-int32_t alarm_read(uint32_t *timestamp, char *data);
-bool alarm_available();
-void alarm_remove();
-
-#endif // ALARM_H
+#endif // SERIALIO_H

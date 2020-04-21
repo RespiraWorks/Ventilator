@@ -205,6 +205,9 @@ public:
   //   Hal.serialBytesAvailableForRead() == 0
   //
   void test_serialPutIncomingData(const char *data, uint16_t len);
+
+  // returns amount of data in outgoing buffer
+  uint32_t test_serialGetOutgoingDataSize();
 #endif
 
 private:
@@ -327,6 +330,11 @@ inline bool HalApi::test_serialGetOutgoingData(char *data, uint16_t len) {
                             serialOutgoingData_.begin() + len);
   return true;
 }
+
+inline uint32_t HalApi::test_serialGetOutgoingDataSize() {
+  return serialOutgoingData_.size();
+}
+
 inline void HalApi::test_serialPutIncomingData(const char *data, uint16_t len) {
   serialIncomingData_.push_back(std::vector<char>(data, data + len));
 }

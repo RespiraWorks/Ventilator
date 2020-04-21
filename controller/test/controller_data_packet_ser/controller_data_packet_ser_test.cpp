@@ -61,7 +61,7 @@ bool gui_ack_handler_called = false;
 
 void gui_ack_handler(GuiAck &ack) { gui_ack_handler_called = true; }
 
-TEST(SerDesTests, StatusDeserialization) {
+TEST(SerDesTests, CommandDeserialization) {
   Command cmd = Command_init_zero;
   cmd.cmd = CommandType_NONE;
   cmd.has_data = true;

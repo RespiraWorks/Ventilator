@@ -5,7 +5,7 @@
 
 #define PACKET_LEN_MAX (32)
 static uint8_t tx_buffer[PACKET_LEN_MAX];
-static uint16_t tx_data_length;
+static uint32_t tx_data_length;
 static bool output_buffer_ready = false;
 
 static uint8_t rx_buffer[PACKET_LEN_MAX];
@@ -59,6 +59,7 @@ void process_tx() {
   }
 }
 
+#include <stdio.h>
 void process_rx() {
   while (Hal.serialBytesAvailableForRead() > 0) {
     rx_in_progress = true;

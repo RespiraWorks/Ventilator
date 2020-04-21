@@ -1,198 +1,50 @@
 #include "comms.h"
+
+#include "alg.h"
 #include "hal.h"
 #include "network_protocol.pb.h"
-#include "serdes.h"
+#include <pb_common.h>
+#include <pb_decode.h>
+#include <pb_encode.h>
 
-#define PACKET_LEN_MAX (32)
-static uint8_t tx_buffer[PACKET_LEN_MAX];
-static uint16_t tx_data_length;
-static bool output_buffer_ready = false;
+// TODO: Change last_{tx,rx}_ms to uint64 once Hal.millis() is uint64_t.
 
-static uint8_t rx_buffer[PACKET_LEN_MAX];
+// Our outgoing (serialized) ControllerStatus proto is stored in tx_buffer.  We
+// then transmit it a few bytes at a time, as the serial port becomes
+// available.
+//
+// This isn't a circular buffer; the beginning of the proto is always at the
+// beginning of the buffer.
+static uint8_t tx_buffer[ControllerStatus_size];
+// Index of the next byte to transmit.
+static uint8_t tx_idx = 0;
+// Number of bytes remaining to transmit. tx_idx + tx_bytes_remaining equals
+// the size of the serialized ControllerStatus proto.
+static uint16_t tx_bytes_remaining = 0;
+// Time when we started sending the last ControllerStatus.
+static uint32_t last_tx_ms = -1;
+
+// Our incoming (serialized) GuiStatus proto is incrementally buffered in
+// rx_buffer until it's complete and we can deserialize it to a proto.
+//
+// Like tx_buffer, this isn't a circular buffer; the beginning of the proto is
+// always at the beginning of the buffer.
+static uint8_t rx_buffer[GuiStatus_size];
 static uint8_t rx_idx = 0;
-static uint64_t last_rx = 0;
+static uint32_t last_rx_ms = 0;
 static bool rx_in_progress = false;
 
+// We currently lack proper message framing, so we use a timeout to determine
+// when the GUI is done sending us its message.
 static constexpr uint16_t RX_TIMEOUT_MS = 1;
 
-void command_handler(Command &) {
-  // TODO move to nanopb Command type
-
-  // // TODO(lee-matthews): We need to validate that we don't go past dataTx
-  // (void)lenTx;
-  // // TODO(lee-matthews): We need to ensure that we don't set lenRx >
-  // lenRxMax. (void)lenRxMax;
-
-  // float rr, tv, peep, dwell, ier, pip, Ki, Kd, Kp;
-  // *lenRx = 0; // Initialise the value to zero
-  // switch (cmd) {
-  //   /* Medical mode commands */
-  // case command::set_rr:
-  //   rr = convIntTofloat(dataTx);
-  //   parameters_setRR(rr);
-  //   break;
-  // case command::get_rr:
-  //   *lenRx = 4;
-  //   rr = convfloatToInt(parameters_getRR());
-  //   memcpy(dataRx, &rr, sizeof(uint32_t));
-  //   break;
-  // case command::set_tv:
-  //   tv = convIntTofloat(dataTx);
-  //   parameters_setTV(tv);
-  //   break;
-  // case command::get_tv:
-  //   *lenRx = 4;
-  //   tv = convfloatToInt(parameters_getTV());
-  //   memcpy(dataRx, &tv, sizeof(uint32_t));
-  //   break;
-  // case command::set_peep:
-  //   peep = convIntTofloat(dataTx);
-  //   parameters_setPEEP(peep);
-  //   break;
-  // case command::get_peep:
-  //   *lenRx = 4;
-  //   peep = convfloatToInt(parameters_getPEEP());
-  //   memcpy(dataRx, &peep, sizeof(uint32_t));
-  //   break;
-  // case command::set_pip:
-  //   pip = convIntTofloat(dataTx);
-  //   parameters_setPIP(pip);
-  //   break;
-  // case command::get_pip:
-  //   *lenRx = 4;
-  //   pip = convfloatToInt(parameters_getPIP());
-  //   memcpy(dataRx, &pip, sizeof(uint32_t));
-  //   break;
-  // case command::set_dwell:
-  //   dwell = convIntTofloat(dataTx);
-  //   parameters_setDwell(dwell);
-  //   break;
-  // case command::get_dwell:
-  //   *lenRx = 4;
-  //   dwell = convfloatToInt(parameters_getDwell());
-  //   memcpy(dataRx, &dwell, sizeof(uint32_t));
-  //   break;
-  // case command::set_ier:
-  //   ier = convIntTofloat(dataTx);
-  //   parameters_setInspireExpireRatio(ier);
-  //   break;
-  // case command::get_ier:
-  //   *lenRx = 4;
-  //   ier = convfloatToInt(parameters_getInspireExpireRatio());
-  //   memcpy(dataRx, &ier, sizeof(uint32_t));
-  //   break;
-  // case command::get_pressure:
-  //   break;
-  // case command::get_flow:
-  //   break;
-  // case command::get_volume:
-  //   break;
-  //   /* Engineering mode commands */
-  // case command::set_kp:
-  //   Kp = convIntTofloat(dataTx);
-  //   parameters_setKp(Kp);
-  //   break;
-  // case command::get_Kp:
-  //   *lenRx = 4;
-  //   Kp = convfloatToInt(parameters_getKp());
-  //   memcpy(dataRx, &Kp, sizeof(uint32_t));
-  //   break;
-  // case command::set_Ki:
-  //   Ki = convIntTofloat(dataTx);
-  //   parameters_setKi(Ki);
-  //   break;
-  // case command::get_Ki:
-  //   *lenRx = 4;
-  //   Ki = convfloatToInt(parameters_getKi());
-  //   memcpy(dataRx, &Ki, sizeof(uint32_t));
-  //   break;
-  // case command::set_Kd:
-  //   Kd = convIntTofloat(dataTx);
-  //   parameters_setKi(Kd);
-  //   break;
-  // case command::get_Kd:
-  //   *lenRx = 4;
-  //   Kd = convfloatToInt(parameters_getKd());
-  //   memcpy(dataRx, &Kd, sizeof(uint32_t));
-  //   break;
-  // case command::set_blower:
-  //   break;
-  // case command::reset_vc:
-  //   // TODO Do any necessary cleaning up before reset
-  //   reset_device();
-  //   break;
-
-  //   /* Mixed mode commands */
-  // case command::set_periodic:
-  //   parameters_setPeriodicMode((enum periodicMode)dataTx[0]);
-  //   break;
-  // case command::get_periodic:
-  //   *lenRx = 1;
-  //   dataRx[0] = (char)parameters_getPeriodicMode();
-  //   break;
-  // case command::set_mode:
-  //   parameters_setOperatingMode((enum operatingMode)dataTx[0]);
-  //   break;
-  // case command::get_mode:
-  //   *lenRx = 1;
-  //   dataTx[0] = (char)parameters_getOperatingMode();
-  //   break;
-  // case command::comms_check:
-  //   break;
-  // case command::set_ventilatorMode:
-  //   parameters_setVentilatorMode((enum ventilatorMode)dataTx[0]);
-  //   break;
-  // case command::get_ventilatorMode:
-  //   *lenRx = 1;
-  //   dataTx[0] = (char)parameters_getVentilatorMode();
-  //   break;
-  // case command::start_ventilator:
-  //   break;
-  // case command::stop_ventilator:
-  //   break;
-  // case command::set_solenoidNormalState:
-  //   parameters_setSolenoidNormalState((enum solenoidNormaleState)dataTx[0]);
-  //   break;
-
-  // default:
-  //   // TODO: Remove this `default` clause so the compiler can check that we
-  //   // handle all commands.
-  //   break;
-  // }
-}
-
-void gui_ack_handler(GuiAck &) {}
-
-// command_handler_ptr is a level of indirection to allow tests to redirect
-// command_handler to an alternative callback.
-//
-// TODO(jlebar): This is not the most elegant way to mock a function!
-static
-#ifndef TEST_MODE
-    constexpr
-#endif
-    void (*command_handler_ptr)(Command &cmd) = &command_handler;
+// We send a ControllerStatus every TX_INTERVAL_MS.
+static constexpr uint16_t TX_INTERVAL_MS = 10;
 
 void comms_init() {}
 
 static bool is_time_to_process_packet() {
-  return Hal.millis() - last_rx > RX_TIMEOUT_MS;
-}
-
-void comms_sendResetState() {
-  // TODO
-}
-
-void comms_sendControllerStatus(ControllerStatus controller_status) {
-  // TODO solve tx overflow
-  if (output_buffer_ready) {
-    return;
-  }
-  bool status = serdes_encode_status_packet(controller_status, tx_buffer,
-                                            PACKET_LEN_MAX, &tx_data_length);
-  if (status) {
-    output_buffer_ready = true;
-  }
+  return Hal.millis() - last_rx_ms > RX_TIMEOUT_MS;
 }
 
 // NOTE this is work in progress.
@@ -204,54 +56,89 @@ void comms_sendControllerStatus(ControllerStatus controller_status) {
 // TODO add CRC to whole packet
 
 // TODO run this via DMA to free up resources for control loops
-static void process_tx() {
-  if (output_buffer_ready) {
-    for (uint16_t i = 0; i < tx_data_length; i++) {
-      uint16_t written = Hal.serialWrite(tx_buffer[i]);
-      if (1 != written) {
-        // TODO catch on fire
-      }
+static void process_tx(const ControllerStatus &controller_status) {
+  auto bytes_avail = Hal.serialBytesAvailableForWrite();
+  if (bytes_avail == 0) {
+    return;
+  }
+
+  // Serialize our current state into the buffer if
+  //  - we're not currently transmitting,
+  //  - we can transmit at least one byte now, and
+  //  - it's been a while since we last transmitted.
+  //
+  // Note that the initial value of last_tx_ms has to be -1; changing it to 0
+  // wouldn't work.  We immediately transmit on boot (last_tx_ms == -1), and
+  // after we do that, we want to wait a full TX_INTERVAL_MS.  If we
+  // initialized last_tx_ms to 0 and our first transmit happened at time
+  // millis() == 0, we would set last_tx_ms back to 0 and then retransmit
+  // immediately.
+  if (tx_bytes_remaining == 0 &&
+      (last_tx_ms == static_cast<decltype(last_tx_ms)>(-1) ||
+       Hal.millis() - last_tx_ms > TX_INTERVAL_MS)) {
+    // Serialize current status into output buffer.
+    //
+    // TODO: Frame the message bytes.
+    // TODO: Add a checksum to the message.
+    pb_ostream_t stream = pb_ostream_from_buffer(tx_buffer, sizeof(tx_buffer));
+    if (!pb_encode(&stream, ControllerStatus_fields, &controller_status)) {
+      // TODO: Serialization failure; log an error or raise an alert.
+      return;
     }
-    output_buffer_ready = false;
+    tx_idx = 0;
+    tx_bytes_remaining = stream.bytes_written;
+    last_tx_ms = Hal.millis();
+  }
+
+  // TODO: Alarm if we haven't been able to send a status in a certain amount
+  // of time.
+
+  // Send bytes over the wire if any are in our buffer.
+  if (tx_bytes_remaining > 0) {
+    // TODO(jlebar): Change serialWrite to take a uint8* instead of a char*, so
+    // it matches nanopb.
+    auto bytes_written =
+        Hal.serialWrite(reinterpret_cast<char *>(tx_buffer) + tx_idx,
+                        alg::min(bytes_avail, tx_bytes_remaining));
+    // TODO: How paranoid should we be about this underflowing?  Perhaps we
+    // should reset the device if this or other invariants are violated?
+    tx_bytes_remaining -= bytes_written;
+    tx_idx += bytes_written;
   }
 }
 
-static void process_rx() {
+static void process_rx(GuiStatus *gui_status) {
   while (Hal.serialBytesAvailableForRead() > 0) {
     rx_in_progress = true;
     char b;
     uint16_t bytes_read = Hal.serialRead(&b, 1);
     if (bytes_read == 1) {
       rx_buffer[rx_idx++] = (uint8_t)b;
-      if (rx_idx >= PACKET_LEN_MAX) {
+      if (rx_idx >= sizeof(rx_buffer)) {
         rx_idx = 0;
         break;
       }
-      last_rx = Hal.millis();
+      last_rx_ms = Hal.millis();
     }
   }
 
-  // TODO do away with timeout-based reception once we have framing inplace,
+  // TODO do away with timeout-based reception once we have framing in place,
   // but it will work for Alpha build for now
   if (rx_in_progress && is_time_to_process_packet()) {
-    serdes_decode_incomming_packet(rx_buffer, PACKET_LEN_MAX, rx_idx,
-                                   gui_ack_handler, command_handler_ptr);
+    pb_istream_t stream = pb_istream_from_buffer(rx_buffer, rx_idx);
+    GuiStatus new_gui_status = GuiStatus_init_zero;
+    if (pb_decode(&stream, GuiStatus_fields, &new_gui_status)) {
+      *gui_status = new_gui_status;
+    } else {
+      // TODO: Log an error.
+    }
     rx_idx = 0;
     rx_in_progress = false;
   }
 }
 
-void comms_handler() {
-  process_tx();
-  process_rx();
+void comms_handler(const ControllerStatus &controller_status,
+                   GuiStatus *gui_status) {
+  process_tx(controller_status);
+  process_rx(gui_status);
 }
-
-#if TEST_MODE
-void comms_test_set_command_handler(void (*handler)(Command &cmd)) {
-  if (handler) {
-    command_handler_ptr = handler;
-  } else {
-    command_handler_ptr = &command_handler;
-  }
-}
-#endif

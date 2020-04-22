@@ -27,6 +27,8 @@ Arduino Nano and the MPXV5004GP and MPXV7002DP pressure sensors.
 // A namespace class for constants related to pressure sensors.
 class PressureSensors {
 public:
+  PressureSensors() = delete;
+
   // Patient pressure sensor pin
   inline constexpr static AnalogPinId PATIENT_PIN = AnalogPinId::HAL_A0;
   // Inhalation diff pressure sensor pin
@@ -41,9 +43,6 @@ public:
   // min/max possible reading from MPXV7002DP [kPa]
   inline constexpr static float DP_VAL_MIN = -2.0f;
   inline constexpr static float DP_VAL_MAX = 2.0f;
-
-private:
-  PressureSensors() = delete;
 };
 
 /*

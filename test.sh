@@ -33,8 +33,5 @@ pio run
 # and different results on CI:
 # See https://community.platformio.org/t/no-version-of-tool-clangtidy-works-on-all-os/13219
 # Feel free to edit .clang_tidy to blacklist problematic checks.
-#
-# Disabled due to failures in nanoproto-generated code,
-# https://github.com/RespiraWorks/VentilatorSoftware/issues/146
-# pio check --pattern="*" --fail-on-defect=high
-# pio check -e native --pattern="*" --fail-on-defect=high
+pio check -e native --fail-on-defect=high
+

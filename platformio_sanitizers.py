@@ -9,10 +9,12 @@ sanitizers = [
       "-fsanitize=address",
 ]
 
-#GCC does not have memory option to -fsanitize
-#if sys.platform == "linux":
-#    # https://releases.llvm.org/3.7.0/tools/clang/docs/MemorySanitizer.html#supported-platforms
-#    # Currently only works on Linux but e.g. not Mac OS.
+# TODO: Add -fsanitize=memory when supported.
+# Caveats: It's only supported in clang and only on Linux.
+# And PlatformIO may choose gcc even if you have clang too.
+# If it didn't, the code below would probably work:
+#
+# if sys.platform == "linux" and env["CC"] == "clang":
 #    sanitizers.append('-fsanitize=memory')
 
 env.Append(CCFLAGS=sanitizers)

@@ -16,7 +16,6 @@ limitations under the License.
 #include "solenoid.h"
 
 #include "hal.h"
-#include "parameters.h"
 #include <stdint.h>
 
 // Solenoid output pin 5 TBC.
@@ -25,19 +24,23 @@ static const int O_SOLENOID = 5;
 void solenoid_init() { Hal.setDigitalPinMode(O_SOLENOID, PinMode::HAL_OUTPUT); }
 
 void solenoid_open() {
-  if (parameters_getSolenoidNormalState() ==
+  // TODO: The solenoid normally open/closed param shouldn't come from the GUI;
+  // where is it supposed to come from?  Is this just a hardcoded constant?
+  /*if (parameters_getSolenoidNormalState() ==
       solenoidNormaleState::normally_open) {
     Hal.digitalWrite(O_SOLENOID, VoltageLevel::HAL_LOW);
   } else {
     Hal.digitalWrite(O_SOLENOID, VoltageLevel::HAL_HIGH);
-  }
+  }*/
 }
 
 void solenoid_close() {
-  if (parameters_getSolenoidNormalState() ==
+  // TODO: The solenoid normally open/closed param shouldn't come from the GUI;
+  // where is it supposed to come from?  Is this just a hardcoded constant?
+  /*if (parameters_getSolenoidNormalState() ==
       solenoidNormaleState::normally_open) {
     Hal.digitalWrite(O_SOLENOID, VoltageLevel::HAL_HIGH);
   } else {
     Hal.digitalWrite(O_SOLENOID, VoltageLevel::HAL_LOW);
-  }
+  }*/
 }

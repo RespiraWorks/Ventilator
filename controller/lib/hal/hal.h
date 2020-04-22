@@ -164,7 +164,7 @@ public:
   // written.  number of bytes written.  It's up to you to check how many bytes
   // were actually written and handle "short writes" where we wrote less than
   // the whole buffer.
-  [[nodiscard]] uint16_t serialWrite(const char *data, uint16_t len);
+  [[nodiscard]] uint16_t serialWrite(const char *buf, uint16_t len);
   [[nodiscard]] uint16_t serialWrite(uint8_t data) {
     return serialWrite(reinterpret_cast<const char *>(&data), 1);
   }

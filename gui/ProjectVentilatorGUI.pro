@@ -41,4 +41,3 @@ HEADERS += \
 
 DISTFILES += \
     Logo.png
-

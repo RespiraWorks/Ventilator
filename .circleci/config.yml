@@ -55,7 +55,7 @@ jobs:
 workflows:
   commit:
     jobs:
-      - gui-static-analysis 
+      - gui-static-analysis
       - gui-build-image:
           requires:
             - gui-static-analysis

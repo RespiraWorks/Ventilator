@@ -15,10 +15,8 @@ limitations under the License.
 #include "hal.h"
 
 #include "alarm.h"
-#include "packet_types.h"
 
 struct alarm_t {
-  dataID alarm;
   uint32_t timestamp;
   char data[ALARM_DATALEN];
 };
@@ -66,7 +64,6 @@ void alarm_add(const char *data) {
     // No point spending time doing these operations if the stack is full
     
     //TODO work in progress, move alarm code to nanopb transport
-    alarm.alarm = dataID::alarm_1;
     alarm.timestamp = Hal.millis();
 
     // Copy alarm data
@@ -96,7 +93,6 @@ int32_t alarm_read(uint32_t *timestamp, char *data) {
   if (return_status == VC_STATUS_SUCCESS) {
     
     //TODO work in progress move alarm code to nanopb 
-    // *alarmID = (enum dataID)alarm->alarm;
     *timestamp = alarm->timestamp;
 
     for (uint8_t idx = 0; idx < ALARM_DATALEN; idx++) {

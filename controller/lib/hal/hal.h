@@ -66,6 +66,17 @@ limitations under the License.
 #endif
 #include <Arduino.h>
 
+#ifdef AVR
+#include <avr/wdt.h>
+#endif
+// Reset the device if watchdog_handle is not called within roughly this time
+// period.
+//
+// Options are: 15ms, 30ms, 60ms, 120ms, 250ms, 500ms, 1s, 2s, 4s, 8s.
+//
+// TODO: This value was not chosen carefully.
+#define WATCHDOG_TIMEOUT WDTO_120MS
+
 #define HAL_MOCK_METHOD(returntype, name, args) returntype name args
 
 // "HAL" has to be there because the respective Arduino symbols are macros,
@@ -134,6 +145,7 @@ public:
 
   // In test mode, will return the last value set via test_setAnalogPin.
   int analogRead(AnalogPinId pin);
+
 #ifdef TEST_MODE
   void test_setAnalogPin(AnalogPinId pin, int value);
 #endif
@@ -206,6 +218,14 @@ public:
   //
   void test_serialPutIncomingData(const char *data, uint16_t len);
 #endif
+  // Initializes watchdog
+  void watchdog_init();
+
+  // Performs the deviece soft-reset
+  [[noreturn]] void reset_device();
+
+  // Pets the watchdog
+  void watchdog_handler();
 
 private:
 #ifdef TEST_MODE
@@ -238,6 +258,7 @@ extern HalApi Hal;
 #ifdef AVR
 
 inline void HalApi::init() {
+  watchdog_init();
   constexpr int32_t BAUD_RATE_BPS = 115200;
   Serial.begin(BAUD_RATE_BPS, SERIAL_8N1);
 }
@@ -267,6 +288,25 @@ inline uint16_t HalApi::serialBytesAvailableForRead() {
 }
 inline uint16_t HalApi::serialBytesAvailableForWrite() {
   return Serial.availableForWrite();
+}
+
+inline void HalApi::watchdog_init() {
+#ifdef AVR
+  // FIXME Does this pose potential issues for arduino code updates?
+  wdt_enable(WATCHDOG_TIMEOUT);
+#endif
+}
+[[noreturn]] inline void HalApi::reset_device() {
+#ifdef AVR
+  wdt_enable(WDTO_15MS);
+  while (true) {
+  }
+#endif
+}
+inline void HalApi::watchdog_handler() {
+#ifdef AVR
+  wdt_reset();
+#endif
 }
 
 #else

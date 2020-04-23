@@ -2,6 +2,143 @@
 FileName = RespiraWorks Ventilator Rev 1.GBR
 AutoAperture = True
 *************************************************************
+Generating : Top Overlay
+      File : RespiraWorks Ventilator Rev 1.GTO
+
+    Adding Layer      : Top Overlay
+
+    Adding Layer      : Mechanical 3
+
+
+Used DCodes :
+    D10
+    D11
+    D12
+    D13
+    D14
+    D15
+    D16
+    D17
+    D18
+    D19
+*************************************************************
+
+*************************************************************
+Generating : Bottom Solder
+      File : RespiraWorks Ventilator Rev 1.GBS
+
+    Adding Layer      : Bottom Solder
+
+    Adding Layer      : Mechanical 3
+
+    Adding Layer      : Bottom Layer
+
+    Adding Layer      : Multi-Layer
+
+
+Used DCodes :
+    D11
+    D72
+    D73
+    D74
+    D75
+    D76
+    D77
+    D78
+    D79
+    D80
+    D81
+    D82
+    D83
+    D108
+*************************************************************
+
+*************************************************************
+Generating : Internal Plane 1
+      File : RespiraWorks Ventilator Rev 1.GP1
+
+    Adding Layer      : Internal Plane 1
+
+    Adding Layer      : Mechanical 3
+
+    Adding Layer      : Multi-Layer
+
+
+Used DCodes :
+    D11
+    D85
+    D97
+    D98
+    D99
+    D100
+    D101
+    D102
+    D103
+    D104
+    D105
+    D106
+*************************************************************
+
+*************************************************************
+Generating : Bottom Paste
+      File : RespiraWorks Ventilator Rev 1.GBP
+
+    Adding Layer      : Bottom Paste
+
+    Adding Layer      : Mechanical 3
+
+    Adding Layer      : Bottom Layer
+
+    Adding Layer      : Multi-Layer
+
+
+Used DCodes :
+    D11
+    D107
+*************************************************************
+
+*************************************************************
+Generating : Internal Plane 2
+      File : RespiraWorks Ventilator Rev 1.GP2
+
+    Adding Layer      : Internal Plane 2
+
+    Adding Layer      : Mechanical 3
+
+    Adding Layer      : Multi-Layer
+
+
+Used DCodes :
+    D11
+    D84
+    D85
+    D97
+    D98
+    D99
+    D100
+    D101
+    D102
+    D103
+    D104
+    D105
+    D106
+*************************************************************
+
+*************************************************************
+Generating : Bottom Overlay
+      File : RespiraWorks Ventilator Rev 1.GBO
+
+    Adding Layer      : Bottom Overlay
+
+    Adding Layer      : Mechanical 3
+
+
+Used DCodes :
+    D11
+    D13
+*************************************************************
+
+*************************************************************
 Generating : Top Layer
       File : RespiraWorks Ventilator Rev 1.GTL
 
@@ -53,98 +190,7 @@ Used DCodes :
     D93
     D94
     D95
-*************************************************************
-
-*************************************************************
-Generating : Bottom Overlay
-      File : RespiraWorks Ventilator Rev 1.GBO
-
-    Adding Layer      : Bottom Overlay
-
-    Adding Layer      : Mechanical 3
-
-
-Used DCodes :
-    D11
-    D13
-*************************************************************
-
-*************************************************************
-Generating : Bottom Solder
-      File : RespiraWorks Ventilator Rev 1.GBS
-
-    Adding Layer      : Bottom Solder
-
-    Adding Layer      : Mechanical 3
-
-    Adding Layer      : Bottom Layer
-
-    Adding Layer      : Multi-Layer
-
-
-Used DCodes :
-    D11
-    D72
-    D73
-    D74
-    D75
-    D76
-    D77
-    D78
-    D79
-    D80
-    D81
-    D82
-    D83
-    D108
-*************************************************************
-
-*************************************************************
-Generating : Internal Plane 1
-      File : RespiraWorks Ventilator Rev 1.GP1
-
-    Adding Layer      : Internal Plane 1
-
-    Adding Layer      : Mechanical 3
-
-    Adding Layer      : Multi-Layer
-
-
-Used DCodes :
-    D11
     D96
-    D97
-    D98
-    D99
-    D100
-    D101
-    D102
-    D103
-    D104
-    D105
-    D106
-*************************************************************
-
-*************************************************************
-Generating : Top Overlay
-      File : RespiraWorks Ventilator Rev 1.GTO
-
-    Adding Layer      : Top Overlay
-
-    Adding Layer      : Mechanical 3
-
-
-Used DCodes :
-    D10
-    D11
-    D12
-    D13
-    D14
-    D15
-    D16
-    D17
-    D18
-    D19
 *************************************************************
 
 *************************************************************
@@ -160,7 +206,8 @@ Generating : Bottom Layer
 
 Used DCodes :
     D11
-    D85
+    D16
+    D84
     D86
     D87
     D88
@@ -171,6 +218,7 @@ Used DCodes :
     D93
     D94
     D95
+    D96
     D107
 *************************************************************
 
@@ -270,23 +318,5 @@ Used DCodes :
     D43
     D44
     D45
-*************************************************************
-
-*************************************************************
-Generating : Bottom Paste
-      File : RespiraWorks Ventilator Rev 1.GBP
-
-    Adding Layer      : Bottom Paste
-
-    Adding Layer      : Mechanical 3
-
-    Adding Layer      : Bottom Layer
-
-    Adding Layer      : Multi-Layer
-
-
-Used DCodes :
-    D11
-    D107
 *************************************************************
 

@@ -81,8 +81,9 @@ void setup() {
 
   comms_init();
   blower_init();
-  sensors_init(PressureSensors::DEFAULT_VENTURI_PORT_DIAM,
-               PressureSensors::DEFAULT_VENTURI_CHOKE_DIAM);
+  // sensors_init should come after blower_init because it needs to disable
+  // blowers for calibration
+  sensors_init();
   solenoid_init();
   pid_init();
   alarm_init();

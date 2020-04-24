@@ -34,6 +34,9 @@ limitations under the License.
 // pressure waveform [kPa]
 static const float COMPARISON_TOLERANCE = 0.005f;
 
+// Maximum allowable delta between calculated and actual volumetric flow
+static const float COMPARISON_TOLERANCE_FLOW = 5.0e-5f;
+
 // ADC of Nano is 10 bit, 5V VREF_P [ADC Counts / V]
 static const float COUNTS_PER_VOLT = 1024.0f / 5.0f;
 
@@ -122,9 +125,7 @@ TEST(SensorTests, FullScaleReading) {
   test_setAnalogPinToVolts(PressureSensors::EXHALATION_PIN,
                            differentialFlowSensorVoltage_0kPa);
 
-  sensors_init(PressureSensors::DEFAULT_VENTURI_PORT_DIAM,
-               PressureSensors::DEFAULT_VENTURI_CHOKE_DIAM); // the sensors are
-                                                             // also calibrated
+  sensors_init(); // the sensors are also calibrated
 
   // Now to compare the pressure readings the sensor module is calculating
   // versus what the original pressure waveform was
@@ -157,11 +158,48 @@ TEST(SensorTests, FullScaleReading) {
   }
 }
 
-//@TODO: Write complete unit tests for the volumetric flow calculation
-TEST(SensorTests, TestVolumetricFlowCalculation) {
-  sensors_init(PressureSensors::DEFAULT_VENTURI_PORT_DIAM,
-               PressureSensors::DEFAULT_VENTURI_CHOKE_DIAM);
-  float volumFlow = convert_diff_pressure_to_volumetric_flow(1.0f);
+// These tests expect Venturi Diamters of 14 and 5.5 mm.
+// If the Default PressureSensors::DEFAULT_VENTURI_PORT_DIAM and
+// DEFAULT_VENTURI_CHOKE_DIAM are changed from this, the tests will fail unless
+// you update the expected values accordingly.
+TEST(SensorTests, TestPositiveVolumetricFlowCalculation) {
+  sensors_init();
+  float volumFlow = pressure_delta_to_volumetric_flow(1.0f);
   // 1 kPa differential pressure should result in 9.52e-4 [m^3/s] of Q
-  EXPECT_NEAR(volumFlow, 9.52e-4f, COMPARISON_TOLERANCE);
+  EXPECT_NEAR(volumFlow, 9.52e-4f, COMPARISON_TOLERANCE_FLOW);
+}
+
+TEST(SensorTests, TestNegativeVolumetricFlowCalculation) {
+  sensors_init();
+  float volumFlow = pressure_delta_to_volumetric_flow(-1.0f);
+  // -1 kPa differential pressure should result in -9.52e-4 [m^3/s] of Q
+  EXPECT_NEAR(volumFlow, -9.52e-4f, COMPARISON_TOLERANCE_FLOW);
+}
+
+TEST(SensorTests, TestZeroVolumetricFlowCalculation) {
+  sensors_init();
+  float volumFlow = pressure_delta_to_volumetric_flow(0.0f);
+  // 0 kPa differential pressure should result in 0 [m^3/s] of Q
+  EXPECT_NEAR(volumFlow, 0.0f, COMPARISON_TOLERANCE_FLOW);
+}
+
+TEST(SensorTests, TestNearZeroVolumetricFlowCalculation) {
+  sensors_init();
+  float volumFlow = pressure_delta_to_volumetric_flow(1.0e-7f);
+  // 1e-7 kPa differential pressure should result in 3.07e-7 [m^3/s] of Q
+  EXPECT_NEAR(volumFlow, 3.07e-7f, COMPARISON_TOLERANCE_FLOW);
+}
+
+TEST(SensorTests, TestLargeVolumetricFlowCalculation) {
+  sensors_init();
+  float volumFlow = pressure_delta_to_volumetric_flow(100.0f);
+  // 100 kPa differential pressure should result in 9.72e-3 [m^3/s] of Q
+  EXPECT_NEAR(volumFlow, 9.72e-3f, COMPARISON_TOLERANCE_FLOW);
+}
+
+TEST(SensorTests, TestSmallVolumetricFlowCalculation) {
+  sensors_init();
+  float volumFlow = pressure_delta_to_volumetric_flow(-100.0f);
+  // -100 kPa differential pressure should result in -9.72e-3 [m^3/s] of Q
+  EXPECT_NEAR(volumFlow, -9.72e-3f, COMPARISON_TOLERANCE_FLOW);
 }

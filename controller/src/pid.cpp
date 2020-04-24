@@ -44,7 +44,7 @@ enum class pid_fsm_state {
 void pid_init() {
 
   //@TODO: Raw access that needs to be updated to reference the new sensor
-  //module and maybe the upcoming blower module
+  // module and maybe the upcoming blower module
   // because currently does not have the benefits of things like calibration,
   // etc. that the module methods do. I didn't do this because I have no clue
   // what the desired units are for the control system.

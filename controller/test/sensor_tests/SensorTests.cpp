@@ -122,7 +122,9 @@ TEST(SensorTests, FullScaleReading) {
   test_setAnalogPinToVolts(PressureSensors::EXHALATION_PIN,
                            differentialFlowSensorVoltage_0kPa);
 
-  sensors_init(); // the sensors are also calibrated
+  sensors_init(PressureSensors::DEFAULT_VENTURI_PORT_DIAM,
+               PressureSensors::DEFAULT_VENTURI_CHOKE_DIAM); // the sensors are
+                                                             // also calibrated
 
   // Now to compare the pressure readings the sensor module is calculating
   // versus what the original pressure waveform was
@@ -153,4 +155,13 @@ TEST(SensorTests, FullScaleReading) {
     EXPECT_NEAR(pressurePatient, patientPressures[i], COMPARISON_TOLERANCE)
         << "Patient Sensor at index" << i;
   }
+}
+
+//@TODO: Write complete unit tests for the volumetric flow calculation
+TEST(SensorTests, TestVolumetricFlowCalculation) {
+  sensors_init(PressureSensors::DEFAULT_VENTURI_PORT_DIAM,
+               PressureSensors::DEFAULT_VENTURI_CHOKE_DIAM);
+  float volumFlow = convert_diff_pressure_to_volumetric_flow(1.0f);
+  // 1 kPa differential pressure should result in 9.52e-4 [m^3/s] of Q
+  EXPECT_NEAR(volumFlow, 9.52e-4f, COMPARISON_TOLERANCE);
 }

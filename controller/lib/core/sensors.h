@@ -12,7 +12,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 
-module contributors: verityRF, lee-matthews, Edwin Chiu
+module contributors: verityRF, jlebar, lee-matthews, Edwin Chiu
 
 The purpose of this module is to allow calibrated readings from the different
 pressure sensors in the ventilator design. It is designed to be used with the
@@ -43,14 +43,22 @@ public:
   // min/max possible reading from MPXV7002DP [kPa]
   inline constexpr static float DP_VAL_MIN = -2.0f;
   inline constexpr static float DP_VAL_MAX = 2.0f;
+
+  // Default diameters relating to Ethan's Alpha Venturi - II
+  // (https://docs.google.com/spreadsheets/d/1G9Kb-ImlluK8MOx-ce2rlHUBnTOtAFQvKjjs1bEhlpM/edit#gid=963553579)
+  // Port diameter must be larger than choke diameter [meters]
+  inline constexpr static const float DEFAULT_VENTURI_PORT_DIAM = 14e-3f;
+  inline constexpr static const float DEFAULT_VENTURI_CHOKE_DIAM = 5.5e-3f;
 };
 
 /*
  * @brief This method is to be called once on POR to initialize the module.
  * It calls zero_sensors() for an initial calibration. Call before
  * attempting to get sensor readings.
+ * @param venturiPortDiameter the larger diameter in [meters] of Venturi
+ * @param venturiChokeDiameter the smaller diameter in [meters] of Venturi
  */
-void sensors_init();
+void sensors_init(float venturiPortDiameter, float venturiChokeDiameter);
 
 /*
  * @brief This method calculates and saves the zero pressure reading for each of
@@ -73,7 +81,7 @@ void zero_sensors();
  *
  * @param pinId the pressure sensor pin that a reading is desired from
  *
- * @return The specified pressure sensor calibrated reading in kPa
+ * @return The specified pressure sensor calibrated reading in [kPa]
  */
 float get_pressure_reading(AnalogPinId pinId);
 
@@ -110,5 +118,18 @@ void set_sensor_avg_samples(int numAvgSamples);
  * @return A number between 1 and 32 inclusive.
  */
 int get_sensor_avg_samples();
+
+/*
+ * @brief Method implements Bernoulli's equation assuming the Venturi Effect.
+ * Solves for the volumetric flow rate since A1/A2, rho, and differential
+ * pressure are known. Q = sqrt(2/rho) * (A1*A2) * 1/sqrt(A1^2-A2^2) *
+ * sqrt(p1-p2); based on (p1 - p2) = (rho/2) * (v2^2 - v1^2); where A1 > A2
+ * @param diffPressureInKiloPascals the differential pressure from a sensor in
+ * [kPa]
+ * @return the volumetric flow in [meters^3/s]. Can be negative, indicating
+ * direction of flow, depending on how the differential sensor is attached to
+ * the venturi.
+ */
+float convert_diff_pressure_to_volumetric_flow(float diffPressureInKiloPascals);
 
 #endif // SENSORS_H

@@ -46,8 +46,9 @@ limitations under the License.
 
 #ifdef TEST_MODE
 
-#ifdef AVR
-#error "TEST_MODE intended to be run only on native, but AVR is defined"
+#if defined(ARDUINO_AVR_UNO) || defined(ARDUINO_NUCLEO_L452RE)
+#error                                                                         \
+    "TEST_MODE intended to be run only on native, but ARDUINO_AVR_UNO or ARDUINO_NUCLEO_L452RE is defined"
 #endif
 
 #include <deque>
@@ -61,10 +62,15 @@ limitations under the License.
 
 #else // !TEST_MODE
 
-#ifndef AVR
-#error "When running without TEST_MODE, expecting AVR to be defined"
+#if !defined(ARDUINO_AVR_UNO) && !defined(ARDUINO_NUCLEO_L452RE)
+#error                                                                         \
+    "When running without TEST_MODE, expecting ARDUINO_AVR_UNO or ARDUINO_NUCLEO_L452RE to be defined"
 #endif
 #include <Arduino.h>
+
+#ifdef ARDUINO_AVR_UNO
+#include <avr/wdt.h>
+#endif
 
 #define HAL_MOCK_METHOD(returntype, name, args) returntype name args
 
@@ -134,6 +140,7 @@ public:
 
   // In test mode, will return the last value set via test_setAnalogPin.
   int analogRead(AnalogPinId pin);
+
 #ifdef TEST_MODE
   void test_setAnalogPin(AnalogPinId pin, int value);
 #endif
@@ -207,7 +214,16 @@ public:
   void test_serialPutIncomingData(const char *data, uint16_t len);
 #endif
 
+  // Performs the device soft-reset
+  [[noreturn]] void reset_device();
+
+  // Pets the watchdog, this makes the watchdog not reset the
+  // system for configured amount of time
+  void watchdog_handler();
+
 private:
+  // Initializes watchdog, is called by HalApi::init
+  void watchdog_init();
 #ifdef TEST_MODE
   // Instance variables used when mocking HAL.
 
@@ -235,9 +251,22 @@ private:
 
 extern HalApi Hal;
 
-#ifdef AVR
+#if defined(ARDUINO_AVR_UNO) || defined(ARDUINO_NUCLEO_L452RE)
 
 inline void HalApi::init() {
+
+  // Hal.init() should be the first thing called during initialization.
+  // Among other things, it initializes the watchdog, and that needs to happen
+  // very early in startup because:
+  //
+  //  - The purpose of the watchdog is to catch hangs, and if initializing the
+  //    watchdog weren't the first thing we did, we wouldn't catch hangs in the
+  //    work that came before.
+  //
+  //  - After the device is soft-reset via reset_device(), the watchdog timer
+  //    has a very short value.  We need to Hal.init() immediately so that
+  //    we don't time out while initializing.
+  watchdog_init();
   constexpr int32_t BAUD_RATE_BPS = 115200;
   Serial.begin(BAUD_RATE_BPS, SERIAL_8N1);
 }
@@ -267,6 +296,34 @@ inline uint16_t HalApi::serialBytesAvailableForRead() {
 }
 inline uint16_t HalApi::serialBytesAvailableForWrite() {
   return Serial.availableForWrite();
+}
+
+inline void HalApi::watchdog_init() {
+#ifdef ARDUINO_AVR_UNO
+  // FIXME Does this pose potential issues for arduino code updates?
+
+  // The device will be reset if watchdog_handle is not called within roughly
+  // this time period.
+  //
+  // Options are: 15ms, 30ms, 60ms, 120ms, 250ms, 500ms, 1s, 2s, 4s, 8s.
+  //
+  // TODO: This value was not chosen carefully.
+  wdt_enable(WDTO_120MS);
+#endif
+}
+[[noreturn]] inline void HalApi::reset_device() {
+#ifdef ARDUINO_AVR_UNO
+  // Reset the device by setting a short watchdog timeout and then entering an
+  // infinite loop.
+  wdt_enable(WDTO_15MS);
+  while (true) {
+  }
+#endif
+}
+inline void HalApi::watchdog_handler() {
+#ifdef ARDUINO_AVR_UNO
+  wdt_reset();
+#endif
 }
 
 #else

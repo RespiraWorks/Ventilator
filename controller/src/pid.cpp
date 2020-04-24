@@ -43,7 +43,8 @@ enum class pid_fsm_state {
 
 void pid_init() {
 
-  //@TODO: Raw access that needs to be updated to reference the new modules
+  //@TODO: Raw access that needs to be updated to reference the new sensor
+  //module and maybe the upcoming blower module
   // because currently does not have the benefits of things like calibration,
   // etc. that the module methods do. I didn't do this because I have no clue
   // what the desired units are for the control system.
@@ -138,16 +139,19 @@ void pid_execute(const VentParams &params, SensorReadings *readings) {
   // means and how that is calculated from the two different venturi tubes in
   // the air loop. Most likely need to have an integrator for flow to get the
   // volume_ml.
+  // See
+  // https://docs.google.com/presentation/d/1Tin9kD9-UmLLGk1syUNVLj0kwz7nC2lE9lSnTD91C9c/edit#slide=id.g7330d84036_1_0
+  // From that diagram on slide 9, how does one relate the air circuit and the 3
+  // sensors to the parameters we want?
   // TODO(someone): is pressure_cm_h2o just the patient pressure sensor
   // converted to the right unit? Convert [kPa] to [cm H2O] in place
   readings->pressure_cm_h2o =
       get_pressure_reading(PressureSensors::PATIENT_PIN) * 10.1974f;
   readings->volume_ml = 0;
-  // example needs to be updated based on which of 2 DP sensors actually are
-  // used in this metric
-  // Convert [meters^3/s] to [mL/min] in place
+  // TODO(someone): example needs to be updated based on which of 2 DP sensors
+  // actually are used in this metric Convert [meters^3/s] to [mL/min] in place
   readings->flow_ml_per_min =
-      convert_diff_pressure_to_volumetric_flow(
+      pressure_delta_to_volumetric_flow(
           get_pressure_reading(PressureSensors::EXHALATION_PIN)) *
-      60000000.0f;
+      1000.0f * 1000.0f * 60.0f;
 }

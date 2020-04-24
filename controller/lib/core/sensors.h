@@ -49,16 +49,17 @@ public:
   // Port diameter must be larger than choke diameter [meters]
   inline constexpr static const float DEFAULT_VENTURI_PORT_DIAM = 14e-3f;
   inline constexpr static const float DEFAULT_VENTURI_CHOKE_DIAM = 5.5e-3f;
+
+  static_assert(DEFAULT_VENTURI_PORT_DIAM > DEFAULT_VENTURI_CHOKE_DIAM);
+  static_assert(DEFAULT_VENTURI_CHOKE_DIAM > 0.0f);
 };
 
 /*
  * @brief This method is to be called once on POR to initialize the module.
  * It calls zero_sensors() for an initial calibration. Call before
  * attempting to get sensor readings.
- * @param venturiPortDiameter the larger diameter in [meters] of Venturi
- * @param venturiChokeDiameter the smaller diameter in [meters] of Venturi
  */
-void sensors_init(float venturiPortDiameter, float venturiChokeDiameter);
+void sensors_init();
 
 /*
  * @brief This method calculates and saves the zero pressure reading for each of
@@ -121,6 +122,7 @@ int get_sensor_avg_samples();
 
 /*
  * @brief Method implements Bernoulli's equation assuming the Venturi Effect.
+ * https://en.wikipedia.org/wiki/Venturi_effect
  * Solves for the volumetric flow rate since A1/A2, rho, and differential
  * pressure are known. Q = sqrt(2/rho) * (A1*A2) * 1/sqrt(A1^2-A2^2) *
  * sqrt(p1-p2); based on (p1 - p2) = (rho/2) * (v2^2 - v1^2); where A1 > A2
@@ -130,6 +132,6 @@ int get_sensor_avg_samples();
  * direction of flow, depending on how the differential sensor is attached to
  * the venturi.
  */
-float convert_diff_pressure_to_volumetric_flow(float diffPressureInKiloPascals);
+float pressure_delta_to_volumetric_flow(float diffPressureInKiloPascals);
 
 #endif // SENSORS_H

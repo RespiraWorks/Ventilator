@@ -16,6 +16,7 @@ limitations under the License.
 #include "pid.h"
 #include "comms.h"
 #include "hal.h"
+#include "sensors.h"
 #include "types.h"
 
 // Define Variables we'll be connecting to
@@ -42,6 +43,10 @@ enum class pid_fsm_state {
 
 void pid_init() {
 
+  //@TODO: Raw access that needs to be updated to reference the new modules
+  // because currently does not have the benefits of things like calibration,
+  // etc. that the module methods do. I didn't do this because I have no clue
+  // what the desired units are for the control system.
   // Initialize PID
   Input = map(Hal.analogRead(DPSENSOR_PIN), 0, 1023, 0, 255);
   Setpoint = BLOWER_LOW;
@@ -116,16 +121,33 @@ void pid_execute(const VentParams &params, SensorReadings *readings) {
     break;
   }
 
+  //@TODO: The following are raw accesses that need to be updated to reference
+  // the new modules because currently they do not have the benefits of things
+  // like calibration, etc. that the module methods do. I didn't do this because
+  // I have no clue what the desired units are for the control system.
   // Update PID Loop
   int16_t sensorValue = Hal.analogRead(DPSENSOR_PIN); // read sensor
-  Input = map(sensorValue, 0, 1023, 0, 255);  // map to output scale
-  myPID.Compute();                            // computer PID command
+  // int16_t sensorValue = get_pressure_reading(PressureSensors::SomeDPPin);
+  Input = map(sensorValue, 0, 1023, 0, 255); // map to output scale
+  myPID.Compute();                           // computer PID command
   Hal.analogWrite(BLOWERSPD_PIN, static_cast<int>(Output)); // write output
 
   // Store sensor readings so they can eventually be sent to the GUI.
-  // TODO(jlebar): Is sensorValue actually pressure in cm of h2o?
   // TODO(jlebar): Get and store volume and flow data.
-  readings->pressure_cm_h2o = sensorValue;
+  // TODO(jlebar/verityRF): determine what volume_ml and flow_ml_per_min really
+  // means and how that is calculated from the two different venturi tubes in
+  // the air loop. Most likely need to have an integrator for flow to get the
+  // volume_ml.
+  // TODO(someone): is pressure_cm_h2o just the patient pressure sensor
+  // converted to the right unit? Convert [kPa] to [cm H2O] in place
+  readings->pressure_cm_h2o =
+      get_pressure_reading(PressureSensors::PATIENT_PIN) * 10.1974f;
   readings->volume_ml = 0;
-  readings->flow_ml_per_min = 0;
+  // example needs to be updated based on which of 2 DP sensors actually are
+  // used in this metric
+  // Convert [meters^3/s] to [mL/min] in place
+  readings->flow_ml_per_min =
+      convert_diff_pressure_to_volumetric_flow(
+          get_pressure_reading(PressureSensors::EXHALATION_PIN)) *
+      60000000.0f;
 }

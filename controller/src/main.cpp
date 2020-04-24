@@ -80,8 +80,9 @@ void setup() {
   Hal.init();
 
   comms_init();
-  sensors_init();
   blower_init();
+  sensors_init(PressureSensors::DEFAULT_VENTURI_PORT_DIAM,
+               PressureSensors::DEFAULT_VENTURI_CHOKE_DIAM);
   solenoid_init();
   pid_init();
   alarm_init();

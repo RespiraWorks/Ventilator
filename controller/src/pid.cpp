@@ -20,16 +20,17 @@ limitations under the License.
 #include "types.h"
 
 // Define Variables we'll be connecting to
-static double Setpoint, Input, Output;
+static double Setpoint;
+static double Input;
+static double Output;
 
 // Configure the PID
 // Specify the links and initial tuning parameters
 static float Kp = 2, Ki = 8, Kd = 0;
-static PID myPID(&Input, &Output, &Setpoint, Kp, Ki, Kd, DIRECT);
 
-// These constants won't change. They're used to give names to the pins used:
-// Analog output pin that the LED is attached to
-static const int analogOutPin = LED_BUILTIN;
+// DIRECT means that increases in the output should result in increases in the
+// input.  DIRECT as opposed to REVERSE.
+static PID myPID(&Input, &Output, &Setpoint, Kp, Ki, Kd, DIRECT);
 
 enum class pid_fsm_state {
   reset = 0,
@@ -37,22 +38,14 @@ enum class pid_fsm_state {
   plateau = 2,
   expire = 3,
   expire_dwell = 4,
-
-  count /* Sentinel */
 };
 
 void pid_init() {
-
-  //@TODO: Raw access that needs to be updated to reference the new sensor
-  // module and maybe the upcoming blower module
-  // because currently does not have the benefits of things like calibration,
-  // etc. that the module methods do. I didn't do this because I have no clue
-  // what the desired units are for the control system.
-  // Initialize PID
-  Input = map(Hal.analogRead(DPSENSOR_PIN), 0, 1023, 0, 255);
   Setpoint = BLOWER_LOW;
+  Input = 0;
+  Output = 0;
 
-  // turn the PID on
+  // Turn the PID on.
   myPID.SetMode(AUTOMATIC);
 }
 
@@ -122,12 +115,16 @@ void pid_execute(const VentParams &params, SensorReadings *readings) {
     break;
   }
 
-  //@TODO: The following are raw accesses that need to be updated to reference
-  // the new modules because currently they do not have the benefits of things
-  // like calibration, etc. that the module methods do. I didn't do this because
-  // I have no clue what the desired units are for the control system.
-  // Update PID Loop
-  int16_t sensorValue = Hal.analogRead(DPSENSOR_PIN); // read sensor
+  // Read pressure sensor and update PID input.
+  //
+  // The Arduino analog-to-digital converter yields a 10-bit value.  As of
+  // 2020-04-25, we're using exclusively MPXV5004 pressure sensors:
+  // https://docs.google.com/spreadsheets/d/1EOa5USxCaV1uuK5RdZMPWIBl7iGKPtVBh_DIlNusR50/edit#gid=0
+  //
+  // Edwin says IRL that these pressure sensors should never return negative
+  // values.
+
+  int sensorValue = Hal.analogRead(DPSENSOR_PIN); // read sensor
   // int16_t sensorValue = get_pressure_reading(PressureSensors::SomeDPPin);
   Input = map(sensorValue, 0, 1023, 0, 255); // map to output scale
   myPID.Compute();                           // computer PID command

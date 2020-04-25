@@ -118,6 +118,7 @@ float get_pressure_reading(AnalogPinId pinId) {
 }
 
 float pressure_delta_to_volumetric_flow(float diffPressureInKiloPascals) {
+  // TODO(jlebar): Make these constexpr once we have a C++ standard library
   // PortArea must be larger than the ChokeArea [meters^2]
   float venturiPortArea =
       diameterOfCircleToArea(PressureSensors::DEFAULT_VENTURI_PORT_DIAM);

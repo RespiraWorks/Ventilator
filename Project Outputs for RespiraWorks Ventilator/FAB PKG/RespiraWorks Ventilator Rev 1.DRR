@@ -1,25 +1,23 @@
 ----------------------------------------------------------------------------------------------------------------------------------
-NCDrill File Report For: RespiraWorks Ventilator Rev 1.PcbDoc   4/23/2020  10:37:49 PM
+NCDrill File Report For: RespiraWorks Ventilator Rev 1.PcbDoc   4/24/2020  9:10:12 PM
 ----------------------------------------------------------------------------------------------------------------------------------
 
 Layer Pair : Top Layer to Bottom Layer
-ASCII RoundHoles File : RespiraWorks Ventilator Rev 1-RoundHoles.TXT
-ASCII SlotHoles File : RespiraWorks Ventilator Rev 1-SlotHoles.TXT
+ASCII RoundHoles File : RespiraWorks Ventilator Rev 1.TXT
 EIA File   : RespiraWorks Ventilator Rev 1.DRL
 
 Tool       Hole Size               Hole Tolerance               Hole Type       Hole Count   Plated         Tool Travel
 ----------------------------------------------------------------------------------------------------------------------------------
-T1      12mil (0.305mm)                                           Round             166       PTH        0.00inch (0.00mm)
+T1      12mil (0.305mm)                                           Round             353       PTH        0.00inch (0.00mm)
 T2      35mil (0.9mm)           +4mil (0.1mm)/-0mil (0mm)         Round             29        PTH        0.00inch (0.00mm)
 T3      35mil (0.9mm)                                             Round             116       PTH        0.00inch (0.00mm)
 T4      39mil (1mm)             +/-2mil (0.05mm)                  Round             2         PTH        0.00inch (0.00mm)
-T5      39mil (1mm)                                               Slot              3         PTH        0.00inch (0.00mm)
-T6      65mil (1.65mm)                                            Round             2         PTH        0.00inch (0.00mm)
-T7      108mil (2.75mm)                                           Round             4         PTH        0.00inch (0.00mm)
-T8      118mil (3mm)                                              Round             3         PTH        0.00inch (0.00mm)
-T9      150mil (3.81mm)                                           Round             4         PTH        0.00inch (0.00mm)
-T10     43mil (1.1mm)           +8mil (0.2mm)/-0mil (0mm)         Round             7         NPTH       0.00inch (0.00mm)
+T5      65mil (1.65mm)                                            Round             5         PTH        0.00inch (0.00mm)
+T6      108mil (2.75mm)                                           Round             4         PTH        0.00inch (0.00mm)
+T7      118mil (3mm)                                              Round             3         PTH        0.00inch (0.00mm)
+T8      150mil (3.81mm)                                           Round             4         PTH        0.00inch (0.00mm)
+T9      43mil (1.1mm)           +8mil (0.2mm)/-0mil (0mm)         Round             7         NPTH       0.00inch (0.00mm)
 ----------------------------------------------------------------------------------------------------------------------------------
-Totals                                                                              336
+Totals                                                                              523
 
-Total Processing Time (hh:mm:ss) : 00:00:00
+Total Processing Time (hh:mm:ss) : 00:00:01

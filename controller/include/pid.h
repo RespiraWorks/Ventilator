@@ -22,6 +22,8 @@ limitations under the License.
 
 inline constexpr AnalogPinId DPSENSOR_PIN = AnalogPinId::HAL_A0;
 inline constexpr PwmPinId BLOWERSPD_PIN = PwmPinId::PWM_3;
+
+// TODO(jlebar): Where did these numbers come from?
 inline constexpr int BLOWER_HIGH = 142;
 inline constexpr int BLOWER_LOW = 130;
 

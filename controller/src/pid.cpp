@@ -144,12 +144,14 @@ void pid_execute(const VentParams &params, SensorReadings *readings) {
   // From that diagram on slide 9, how does one relate the air circuit and the 3
   // sensors to the parameters we want?
   // TODO(someone): is pressure_cm_h2o just the patient pressure sensor
-  // converted to the right unit? Convert [kPa] to [cm H2O] in place
+  // converted to the right unit?
+  // Convert [kPa] to [cm H2O] in place
   readings->pressure_cm_h2o =
       get_pressure_reading(PressureSensors::PATIENT_PIN) * 10.1974f;
   readings->volume_ml = 0;
   // TODO(someone): example needs to be updated based on which of 2 DP sensors
-  // actually are used in this metric Convert [meters^3/s] to [mL/min] in place
+  // actually are used in this metric
+  // Convert [meters^3/s] to [mL/min] in place
   readings->flow_ml_per_min =
       pressure_delta_to_volumetric_flow(
           get_pressure_reading(PressureSensors::EXHALATION_PIN)) *

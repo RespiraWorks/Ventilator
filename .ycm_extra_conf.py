@@ -80,6 +80,7 @@ common_flags = ["-x", "c++", "-std=gnu++17", "-fno-exceptions", "-Wall",] + [
 
 arduino_flags = [
     "-I.pio/libdeps/uno/Nanopb_ID431",
+    "-I.pio/libdeps/uno/PID_ID2",
     "-isystem" + pio_pkg_dir("framework-arduino-avr/cores/arduino"),
     "-isystem" + pio_pkg_dir("framework-arduino-avr/variants/standard"),
     "-isystem" + pio_pkg_dir("toolchain-atmelavr/avr/include"),

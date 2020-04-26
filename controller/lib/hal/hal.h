@@ -52,6 +52,7 @@ limitations under the License.
 #endif
 
 #include <deque>
+#include <map>
 #include <vector>
 
 #include "gmock/gmock.h"
@@ -97,18 +98,18 @@ enum class PinMode : uint8_t {
 // Usage: VoltageLevel::HAL_HIGH, HAL_LOW
 enum class VoltageLevel : uint8_t { HAL_CONSTANT(HIGH), HAL_CONSTANT(LOW) };
 
-// ID of an analog pin.
-// Usage: AnalogPinId::HAL_A0 etc.
-enum class AnalogPinId {
-  HAL_CONSTANT(A0),
-  HAL_CONSTANT(A1),
-  HAL_CONSTANT(A2),
-  HAL_CONSTANT(A3),
-  HAL_CONSTANT(A4),
-  HAL_CONSTANT(A5),
-  // https://github.com/arduino/ArduinoCore-avr/blob/master/variants/standard/pins_arduino.h
-  // has 7 named analog pins, the largest of which, A7, has id 21.
-  COUNT = 22
+enum class AnalogPin {
+  // PATIENT_PRESSURE is an MPXV5004 sensor, reading an absolute pressure
+  // value at the patient.
+  //
+  // {INFLOW,OUTFLOW}_PRESSURE_DIFF are MPXV5004 sensors, reading a pressure
+  // differential across a venturi.  They let us measure volumetric flow into
+  // and out of the patient.
+  //
+  // Details at https://bit.ly/3bFwhpP
+  PATIENT_PRESSURE,
+  INFLOW_PRESSURE_DIFF,
+  OUTFLOW_PRESSURE_DIFF,
 };
 
 // IDs of the digital pins that can be used for pulse-width modulation.
@@ -146,11 +147,19 @@ public:
   // analogRead() reads the value of an analog input pin. analogWrite() writes
   // to a PWM pin - some of the digital pins are PWM pins.
 
+  // Reads from analog sensor.
+  //
+  // On Arduino, the analog-to-digital converter has 10 bits of precision, so
+  // you get a number in the range [0, 1024).
+  //
   // In test mode, will return the last value set via test_setAnalogPin.
-  int analogRead(AnalogPinId pin);
+  //
+  // TODO: Implementation is currently incorrect on STM32,
+  // https://github.com/RespiraWorks/VentilatorSoftware/pull/186#discussion_r415436954
+  int analogRead(AnalogPin pin);
 
 #ifdef TEST_MODE
-  void test_setAnalogPin(AnalogPinId pin, int value);
+  void test_setAnalogPin(AnalogPin pin, int value);
 #endif
 
   // TODO(jlebar): Make digital pin number strongly typed?  It's slightly
@@ -241,9 +250,8 @@ private:
   // Instance variables used when mocking HAL.
 
   uint32_t millis_ = 0;
-  // Arduino Uno has 6 analog input pins and 14 digital input/output pins.
-  // Source: https://store.arduino.cc/usa/arduino-uno-rev3
-  int analog_pin_values_[6] = {0};
+
+  std::map<AnalogPin, int> analog_pin_values_;
 
   VoltageLevel digital_pin_values_[14] = {VoltageLevel::HAL_LOW};
   // The default pin mode on Arduino is INPUT.
@@ -285,8 +293,20 @@ inline void HalApi::init() {
 }
 inline uint32_t HalApi::millis() { return ::millis(); }
 inline void HalApi::delay(uint32_t ms) { ::delay(ms); }
-inline int HalApi::analogRead(AnalogPinId pin) {
-  return ::analogRead(static_cast<int>(pin));
+inline int HalApi::analogRead(AnalogPin pin) {
+  int raw_pin = [&] {
+    switch (pin) {
+    case AnalogPin::PATIENT_PRESSURE:
+      return A0;
+    case AnalogPin::INFLOW_PRESSURE_DIFF:
+      return A1;
+    case AnalogPin::OUTFLOW_PRESSURE_DIFF:
+      return A2;
+    }
+    // Switch above covers all cases (and gcc enforces this).
+    __builtin_unreachable();
+  }();
+  return ::analogRead(raw_pin);
 }
 inline void HalApi::setDigitalPinMode(int pin, PinMode mode) {
   ::pinMode(pin, static_cast<uint8_t>(mode));
@@ -343,11 +363,11 @@ inline void HalApi::watchdog_handler() {
 
 inline uint32_t HalApi::millis() { return millis_; }
 inline void HalApi::delay(uint32_t ms) { millis_ += ms; }
-inline int HalApi::analogRead(AnalogPinId pin) {
-  return analog_pin_values_[static_cast<int>(pin)];
+inline int HalApi::analogRead(AnalogPin pin) {
+  return analog_pin_values_.at(pin);
 }
-inline void HalApi::test_setAnalogPin(AnalogPinId pin, int value) {
-  analog_pin_values_[static_cast<int>(pin)] = value;
+inline void HalApi::test_setAnalogPin(AnalogPin pin, int value) {
+  analog_pin_values_[pin] = value;
 }
 inline void HalApi::setDigitalPinMode(int pin, PinMode mode) {
   digital_pin_modes_[pin] = mode;

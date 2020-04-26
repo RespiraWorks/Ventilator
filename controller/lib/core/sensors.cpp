@@ -34,54 +34,43 @@ static const float ROOT_OF_TWO_OVER_DENSITY_OF_AIR =
 // per count) [V];
 static const float ADC_LSB = 5.0f / 1024.0f;
 
-// zero calibration values for the different pressure sensors.
-static int sensorZeroVals[static_cast<int>(AnalogPinId::COUNT)] = {0};
+// Take this many samples from a sensor while zeroing it.
+// TODO: Tune this value.
+static constexpr int SENSOR_SAMPLES_FOR_INIT = 4;
 
-// number of samples to perform averaging over during sensor zeroization
-static int zeroingAvgSize = 4;
-// number of samples to perform averaging over during calibrated sensor reads
-static int sensorAvgSize = 2;
+// Take this many samples from a sensor while reading it.
+// TODO: Tune this value.
+static constexpr int SENSOR_SAMPLES_FOR_READ = 2;
 
-void set_zero_avg_samples(int numAvgSamples) {
-  if (numAvgSamples < 1 || numAvgSamples > 32) {
-    return;
+namespace {
+enum Sensor {
+  PATIENT_PRESSURE,
+  INFLOW_PRESSURE_DIFF,
+  OUTFLOW_PRESSURE_DIFF,
+};
+
+// Keep this in sync with the Sensors enum!
+constexpr int NUM_SENSORS = 3;
+
+} // anonymous namespace
+
+static float sensorZeroVals[NUM_SENSORS];
+
+AnalogPin pin_for(Sensor s) {
+  switch (s) {
+  case PATIENT_PRESSURE:
+    return AnalogPin::PATIENT_PRESSURE;
+  case INFLOW_PRESSURE_DIFF:
+    return AnalogPin::INFLOW_PRESSURE_DIFF;
+  case OUTFLOW_PRESSURE_DIFF:
+    return AnalogPin::OUTFLOW_PRESSURE_DIFF;
   }
-  zeroingAvgSize = numAvgSamples;
+  // Switch above covers all cases.
+  __builtin_unreachable();
 }
 
-int get_zero_avg_samples() { return zeroingAvgSize; }
-
-void set_sensor_avg_samples(int numAvgSamples) {
-  if (numAvgSamples < 1 || numAvgSamples > 32) {
-    return;
-  }
-  sensorAvgSize = numAvgSamples;
-}
-
-int get_sensor_avg_samples() { return sensorAvgSize; }
-
-static float diameterOfCircleToArea(float diameter) {
+static float diameter_to_area(float diameter) {
   return static_cast<float>(M_PI) / 4.0f * diameter * diameter;
-}
-
-/*
- * @brief This method gets the zero pressure readings from the specified sensor
- * and averages them according to zeroingAvgSize. Called from zero_sensors(),
- * not for external use as zero_sensors() ensures correct system configuration.
- *
- * @param pressureSensor the sensor from the pressureSensor enum that a reading
- * is desired from
- *
- * @return The averaged sensor zero reading in ADC counts for the specified
- * pressureSensor enum member
- */
-static int get_raw_sensor_zero_reading(AnalogPinId pinId) {
-  int runningSum = 0;
-  for (int i = 0; i < zeroingAvgSize; i++) {
-    runningSum += Hal.analogRead(pinId);
-  }
-  // disregarding remainder because that's in the noise floor anyway
-  return runningSum / zeroingAvgSize;
 }
 
 void sensors_init() {
@@ -101,34 +90,52 @@ void sensors_init() {
   // memory and provide operators with a way to shut off the device's blowers,
   // open any necessary valves, and recalibrate.
   Hal.delay(20);
-  sensorZeroVals[static_cast<int>(PressureSensors::PATIENT_PIN)] =
-      get_raw_sensor_zero_reading(PressureSensors::PATIENT_PIN);
-  sensorZeroVals[static_cast<int>(PressureSensors::INHALATION_PIN)] =
-      get_raw_sensor_zero_reading(PressureSensors::INHALATION_PIN);
-  sensorZeroVals[static_cast<int>(PressureSensors::EXHALATION_PIN)] =
-      get_raw_sensor_zero_reading(PressureSensors::EXHALATION_PIN);
+
+  auto set_zero_level = [](Sensor s) {
+    int sum = 0;
+    for (int i = 0; i < SENSOR_SAMPLES_FOR_INIT; i++) {
+      sum += Hal.analogRead(pin_for(s));
+    }
+    sensorZeroVals[s] = static_cast<float>(sum) / SENSOR_SAMPLES_FOR_INIT;
+  };
+  set_zero_level(PATIENT_PRESSURE);
+  set_zero_level(INFLOW_PRESSURE_DIFF);
+  set_zero_level(OUTFLOW_PRESSURE_DIFF);
 }
 
-//@TODO: Add alarms if sensor value is out of expected range?
-float get_pressure_reading(AnalogPinId pinId) {
-  int runningSum = 0;
-  for (int i = 0; i < sensorAvgSize; i++) {
-    runningSum +=
-        (Hal.analogRead(pinId) - sensorZeroVals[static_cast<int>(pinId)]);
+// Reads a sensor, returning its value in kPa.
+//
+// @TODO: Add alarms if sensor value is out of expected range?
+static float read_pressure_sensor_kpa(Sensor s) {
+  int sum = 0;
+  for (int i = 0; i < SENSOR_SAMPLES_FOR_READ; i++) {
+    sum += Hal.analogRead(pin_for(s)) - sensorZeroVals[s];
   }
-  // disregarding remainder because that's in the noise floor anyway
-  runningSum /= sensorAvgSize;
   // Sensitivity of all pressure sensors is 1 V/kPa; no division needed.
-  return ((float)runningSum * ADC_LSB);
+  return static_cast<float>(sum) / SENSOR_SAMPLES_FOR_READ * ADC_LSB;
+}
+
+float get_patient_pressure_kpa() {
+  return read_pressure_sensor_kpa(PATIENT_PRESSURE);
+}
+
+float get_volumetric_inflow_m3ps() {
+  return pressure_delta_to_volumetric_flow(
+      read_pressure_sensor_kpa(INFLOW_PRESSURE_DIFF));
+}
+
+float get_volumetric_outflow_m3ps() {
+  return pressure_delta_to_volumetric_flow(
+      read_pressure_sensor_kpa(OUTFLOW_PRESSURE_DIFF));
 }
 
 float pressure_delta_to_volumetric_flow(float diffPressureInKiloPascals) {
   // TODO(jlebar): Make these constexpr once we have a C++ standard library
   // PortArea must be larger than the ChokeArea [meters^2]
   float venturiPortArea =
-      diameterOfCircleToArea(PressureSensors::DEFAULT_VENTURI_PORT_DIAM);
+      diameter_to_area(PressureSensors::DEFAULT_VENTURI_PORT_DIAM);
   float venturiChokeArea =
-      diameterOfCircleToArea(PressureSensors::DEFAULT_VENTURI_CHOKE_DIAM);
+      diameter_to_area(PressureSensors::DEFAULT_VENTURI_CHOKE_DIAM);
   //[meters^4]
   float venturiAreaProduct = venturiPortArea * venturiChokeArea;
   // Equivalent to 1/sqrt(A1^2 - A2^2) guaranteed never to have a negative

@@ -49,6 +49,11 @@ import ycm_core
 DIR_OF_THIS_SCRIPT = os.path.abspath(os.path.dirname(__file__))
 SOURCE_EXTENSIONS = [".cpp", ".cxx", ".cc", ".c", ".m", ".mm"]
 
+# I am unclear on what is the working directory used when this script is
+# invoked; it seems to change?  For our purposes, the working directory should
+# be the location of the script itself.
+os.chdir(DIR_OF_THIS_SCRIPT)
+
 
 def pio_pkg_dir(pkg):
     return os.path.join(os.environ["HOME"], ".platformio/packages", pkg)

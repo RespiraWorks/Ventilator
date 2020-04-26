@@ -13,20 +13,17 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include "PRVC.h"
+#ifndef PRVC_H
+#define PRVC_H
 
-void PRVC_init() {
+#include "network_protocol.pb.h"
 
-}
+void PRVC_init(double *Setpoint);
 
-void PRVC_handler() {
+void PRVC_handler(const SensorReadings &readings, double *Setpoint);
 
-}
+void PRVC_start(double *Setpoint);
 
-void PRVC_start() {
+void PRVC_stop(double *Setpoint);
 
-}
-
-void PRVC_stop() {
-
-}
+#endif // PRVC_H

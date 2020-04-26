@@ -15,18 +15,10 @@ limitations under the License.
 
 #include "ACV.h"
 
-void ACV_init() {
+void ACV_init() {}
 
-}
+void ACV_handler(SensorReadings &readings) {}
 
-void ACV_handler() {
+void ACV_start() {}
 
-}
-
-void ACV_start() {
-
-}
-
-void ACV_stop() {
-
-}
+void ACV_stop() {}

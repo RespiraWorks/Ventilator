@@ -134,26 +134,23 @@ void pid_execute(const VentParams &params, SensorReadings *readings) {
   Hal.analogWrite(BLOWERSPD_PIN, static_cast<int>(Output)); // write output
 
   // Store sensor readings so they can eventually be sent to the GUI.
-  // TODO(jlebar): Get and store volume and flow data.
-  // TODO(jlebar/verityRF): determine what volume_ml and flow_ml_per_min really
-  // means and how that is calculated from the two different venturi tubes in
-  // the air loop. Most likely need to have an integrator for flow to get the
-  // volume_ml.
-  // See
-  // https://docs.google.com/presentation/d/1Tin9kD9-UmLLGk1syUNVLj0kwz7nC2lE9lSnTD91C9c/edit#slide=id.g7330d84036_1_0
-  // From that diagram on slide 9, how does one relate the air circuit and the 3
-  // sensors to the parameters we want?
-  // TODO(someone): is pressure_cm_h2o just the patient pressure sensor
-  // converted to the right unit?
+  // This pressure is just from the patient sensor, converted to the right
+  // units. 
   // Convert [kPa] to [cm H2O] in place
   readings->pressure_cm_h2o =
       get_pressure_reading(PressureSensors::PATIENT_PIN) * 10.1974f;
+  // TODO(anyone): This value is to be the integration over time of the below
+  // flow_ml_per_min. That is, you take the value calculated for flow_ml_per_min
+  // and integrate it over time to get total volume at the current time. Don't
+  // think this necessarily has to be done on the controller though?
   readings->volume_ml = 0;
-  // TODO(someone): example needs to be updated based on which of 2 DP sensors
-  // actually are used in this metric
+  // Flow rate is inhalation flow minus exhalation flow. Positive value is flow
+  // into lungs, and negative is flow out of lungs. 
   // Convert [meters^3/s] to [mL/min] in place
   readings->flow_ml_per_min =
-      pressure_delta_to_volumetric_flow(
-          get_pressure_reading(PressureSensors::EXHALATION_PIN)) *
+      (pressure_delta_to_volumetric_flow(
+           get_pressure_reading(PressureSensors::INHALATION_PIN)) -
+       pressure_delta_to_volumetric_flow(
+           get_pressure_reading(PressureSensors::EXHALATION_PIN))) *
       1000.0f * 1000.0f * 60.0f;
 }

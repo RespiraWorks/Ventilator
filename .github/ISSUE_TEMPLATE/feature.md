@@ -7,11 +7,13 @@ assignees: ''
 
 ---
 
-**Summary:**
+Please take the time to describe the issue in detail, so that other contributors can pick it up and implement or declare it done/obsolete in case if was completed out of band.
 
+**What has to be done**
+Please describe what has to be done, ideally in declarative form - what does success look like.
 
-**Details:**
+**How do you know it has to be done**
+Please link any documents, Slack threads, quote personal communication, reference your personal domain expertise etc. explaining why you think this should be done.
 
-
-**Relevant links:**
-_(to requirements documentation, background context, or Slack conversations)_
+**Code pointers**
+Please give some thoughts on roughly where in code do you think the necessary changes might be located.

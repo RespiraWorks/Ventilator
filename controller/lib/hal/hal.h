@@ -104,14 +104,22 @@ enum class AnalogPinId {
   HAL_CONSTANT(A1),
   HAL_CONSTANT(A2),
   HAL_CONSTANT(A3),
+  HAL_CONSTANT(A4),
+  HAL_CONSTANT(A5),
   // https://github.com/arduino/ArduinoCore-avr/blob/master/variants/standard/pins_arduino.h
   // has 7 named analog pins, the largest of which, A7, has id 21.
   COUNT = 22
 };
 
-// ID of one of the digital pins that can be used as a PWM pin.
+// IDs of the digital pins that can be used for pulse-width modulation.
+// https://github.com/arduino/ArduinoCore-avr/blob/257ee3f/variants/standard/pins_arduino.h#L35
 enum class PwmPinId {
   PWM_3 = 3,
+  PWM_5 = 5,
+  PWM_6 = 6,
+  PWM_9 = 9,
+  PWM_10 = 10,
+  PWM_11 = 11,
 };
 
 // Singleton class which implements a hardware abstraction layer.
@@ -145,9 +153,14 @@ public:
   void test_setAnalogPin(AnalogPinId pin, int value);
 #endif
 
-  void analogWrite(PwmPinId pin, int value);
-
+  // TODO(jlebar): Make digital pin number strongly typed?  It's slightly
+  // tricky because the digital pin numbers are a superset of PWM pin numbers,
+  // and C++ doesn't support enum inheritance.
   void setDigitalPinMode(int pin, PinMode mode);
+  void setDigitalPinMode(PwmPinId pin, PinMode mode) {
+    setDigitalPinMode(static_cast<int>(pin), mode);
+  }
+  void analogWrite(PwmPinId pin, int value);
   void digitalWrite(int pin, VoltageLevel value);
 
   // Receives bytes from the GUI controller along the serial bus.

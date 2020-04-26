@@ -7,15 +7,13 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Install platformio core
+          name: Run Docker build
           command: |
-            pip install -U pip
-            pip install pre-commit==1.21.0  # pinned for Python 2.7 compatibility
-            pip install -U platformio
+            docker build . -t controller
       - run:
           name: Run tests
           command: |
-            bash test.sh
+            docker run --privileged -t controller
   gui-static-analysis:
     machine:
       image: ubuntu-1604:201903-01

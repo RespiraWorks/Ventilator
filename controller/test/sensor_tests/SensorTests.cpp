@@ -59,23 +59,6 @@ static void MPXV5004_TransferFn(const float *pressureIn, float *voltageOut,
   }
 }
 
-/*
- * @brief This method models the pressure to voltage transfer function of the
- * MPXV7002 series sensors. Caller must ensure the output buffer has the
- * correct minimum length.
- *
- * @param *pressureIn pointer to input pressure waveform to process
- * @param *voltageOut pointer to the output voltage buffer
- * @param count is the length of the input buffer
- */
-static void MPXV7002_TransferFn(const float *pressureIn, float *voltageOut,
-                                int count) {
-  assert(pressureIn != nullptr && voltageOut != nullptr);
-  for (int i = 0; i < count; i++) {
-    voltageOut[i] = 5 * (0.2f * pressureIn[i] + 0.5f);
-  }
-}
-
 // Simple helper function that takes in a voltage and returns the
 // equivalent ADC counts that represent it
 static void test_setAnalogPinToVolts(AnalogPin pin, float volts) {
@@ -83,75 +66,55 @@ static void test_setAnalogPinToVolts(AnalogPin pin, float volts) {
 }
 
 TEST(SensorTests, FullScaleReading) {
-  // length of the differentialFlowPressures array
-  const int NUM_DIFF_ELEMENTS = 20;
-  // length of the patientPressures Array
-  const int NUM_PATIENT_ELEMENTS = 18;
   // These pressure waveforms start at 0 kPa to simulate the system being in the
   // proper calibration state then they go over the sensor full ranges. Each
   // value is repeated twice, so that the test neatly corresponds to the
   // 2 default average sample counts that the sensor module defaults to.
   // Values are in kPa.
-  float differentialFlowPressures[NUM_DIFF_ELEMENTS] = {
-      0.0f, 0.0f, -2.0f, -2.0f, -1.5f, -1.5f, -1.0f, -1.0f, -0.5f, -0.5f,
-      0.0f, 0.0f, 0.5f,  0.5f,  1.0f,  1.0f,  1.5f,  1.5f,  2.0f,  2.0f};
-  float patientPressures[NUM_PATIENT_ELEMENTS] = {
-      0.0f, 0.0f, 0.5f, 0.5f, 1.0f, 1.0f, 1.5f, 1.5f,  2.0f,
-      2.0f, 2.5f, 2.5f, 3.0f, 3.0f, 3.5f, 3.5f, 3.92f, 3.92f};
-  float differentialFlowSensorVoltages[NUM_DIFF_ELEMENTS]; //[V]
-  float patientSensorVoltages[NUM_PATIENT_ELEMENTS];       //[V]
+  float pressures[] = {0.0f, 0.0f, 0.5f, 0.5f, 1.0f, 1.0f, 1.5f, 1.5f,  2.0f,
+                       2.0f, 2.5f, 2.5f, 3.0f, 3.0f, 3.5f, 3.5f, 3.92f, 3.92f};
+  const int NUM_ELEMENTS = sizeof(pressures) / sizeof(pressures[0]);
+
   // Convert these pressure waveforms into the voltage equivalents using the
   // appropriate sensor transfer functions
-  MPXV7002_TransferFn(differentialFlowPressures, differentialFlowSensorVoltages,
-                      NUM_DIFF_ELEMENTS);
-  MPXV5004_TransferFn(patientPressures, patientSensorVoltages,
-                      NUM_PATIENT_ELEMENTS);
+  float sensorVoltages[NUM_ELEMENTS]; //[V]
+  MPXV5004_TransferFn(pressures, sensorVoltages, NUM_ELEMENTS);
 
   // Will pad the rest of the simulated analog signals with ambient pressure
   // readings (0 kPa) voltage equivalents
   float ambientPressure = 0;                    //[kPa]
-  float differentialFlowSensorVoltage_0kPa = 0; //[V]
-  float patientFlowSensorVoltage_0kPa = 0;      //[V]
-
-  MPXV7002_TransferFn(&ambientPressure, &differentialFlowSensorVoltage_0kPa, 1);
-  MPXV5004_TransferFn(&ambientPressure, &patientFlowSensorVoltage_0kPa, 1);
+  float sensorVoltage_0kPa = 0;                 //[V]
+  MPXV5004_TransferFn(&ambientPressure, &sensorVoltage_0kPa, 1);
 
   // First set the simulated analog signals to an ambient 0 kPa corresponding
   // voltage during calibration
-  test_setAnalogPinToVolts(AnalogPin::PATIENT_PRESSURE,
-                           patientFlowSensorVoltage_0kPa);
-  test_setAnalogPinToVolts(AnalogPin::INFLOW_PRESSURE_DIFF,
-                           differentialFlowSensorVoltage_0kPa);
+  test_setAnalogPinToVolts(AnalogPin::PATIENT_PRESSURE, sensorVoltage_0kPa);
+  test_setAnalogPinToVolts(AnalogPin::INFLOW_PRESSURE_DIFF, sensorVoltage_0kPa);
   test_setAnalogPinToVolts(AnalogPin::OUTFLOW_PRESSURE_DIFF,
-                           differentialFlowSensorVoltage_0kPa);
+                           sensorVoltage_0kPa);
 
   sensors_init(); // the sensors are also calibrated
 
   // Now to compare the pressure readings the sensor module is calculating
   // versus what the original pressure waveform was
-  for (int i = 0; i < NUM_DIFF_ELEMENTS; i += 2) {
+  for (int i = 0; i < NUM_ELEMENTS; i += 2) {
     SCOPED_TRACE("iteration " + std::to_string(i));
+    test_setAnalogPinToVolts(AnalogPin::PATIENT_PRESSURE, sensorVoltages[i]);
     test_setAnalogPinToVolts(AnalogPin::INFLOW_PRESSURE_DIFF,
-                             differentialFlowSensorVoltages[i]);
+                             sensorVoltages[i]);
     test_setAnalogPinToVolts(AnalogPin::OUTFLOW_PRESSURE_DIFF,
-                             differentialFlowSensorVoltages[i]);
+                             sensorVoltages[i]);
+
+    float pressurePatient = get_patient_pressure_kpa();
+    EXPECT_NEAR(pressurePatient, pressures[i], COMPARISON_TOLERANCE);
+
     float inflow = get_volumetric_inflow_m3ps();
     float outflow = get_volumetric_outflow_m3ps();
-
     // Inhalation and exhalation should match because they are fed with the same
     // pressure waveform
     EXPECT_EQ(inflow, outflow);
-    EXPECT_NEAR(inflow,
-                pressure_delta_to_volumetric_flow(differentialFlowPressures[i]),
+    EXPECT_NEAR(inflow, pressure_delta_to_volumetric_flow(pressures[i]),
                 COMPARISON_TOLERANCE);
-  }
-
-  for (int i = 0; i < NUM_PATIENT_ELEMENTS; i += 2) {
-    SCOPED_TRACE("iteration " + std::to_string(i));
-    test_setAnalogPinToVolts(AnalogPin::PATIENT_PRESSURE,
-                             patientSensorVoltages[i]);
-    float pressurePatient = get_patient_pressure_kpa();
-    EXPECT_NEAR(pressurePatient, patientPressures[i], COMPARISON_TOLERANCE);
   }
 }
 

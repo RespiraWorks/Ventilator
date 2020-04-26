@@ -13,7 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include "pid.h"
+#include "control.h"
 #include "comms.h"
 #include "hal.h"
 #include "sensors.h"

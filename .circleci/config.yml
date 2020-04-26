@@ -1,6 +1,21 @@
 version: 2.1
 
 jobs:
+  run-precommit-checks:
+    machine:
+      image: ubuntu-1604:201903-01
+    steps:
+      - checkout
+      - run:
+          name: Install pre-commit
+          command: |
+            sudo apt-get update
+            sudo apt-get install -y pre-commit
+      - run:
+          name: Run pre-commit hooks
+          command: |
+            exit 1
+
   # This job creates an image that has the necessary tools to build and test the controller code, then runs it.
   # It replicates the same environment as the one used in TravisCI (see the .travis.yml file in this repo),
   # though without the GUI build tools and dependencies.
@@ -74,6 +89,7 @@ jobs:
 workflows:
   commit:
     jobs:
+      - run-precommit-checks
       - controller-test
       - gui-static-analysis
       - gui-build-image:

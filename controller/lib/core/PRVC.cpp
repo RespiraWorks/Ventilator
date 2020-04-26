@@ -15,10 +15,10 @@ limitations under the License.
 
 #include "PRVC.h"
 
-void PRVC_init() {}
+void PRVC_init(double *Setpoint) {}
 
 void PRVC_handler(SensorReadings &readings) {}
 
-void PRVC_start() {}
+void PRVC_start(double *Setpoint) {}
 
-void PRVC_stop() {}
+void PRVC_stop(double *Setpoint) {}

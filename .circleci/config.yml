@@ -1,6 +1,18 @@
 version: 2.1
 
 jobs:
+  controller-test:
+    machine:
+      image: ubuntu-1604:201903-01
+    steps:
+      - checkout
+      - run:
+        name: Install platformio core
+        command: |
+          pip install -U platformio
+      - run:
+        name: Run tests
+          bash test.sh
   gui-static-analysis:
     machine:
       image: ubuntu-1604:201903-01
@@ -55,6 +67,7 @@ jobs:
 workflows:
   commit:
     jobs:
+      - controller-test
       - gui-static-analysis
       - gui-build-image:
           requires:

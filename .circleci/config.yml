@@ -9,6 +9,8 @@ jobs:
       - run:
           name: Install platformio core
           command: |
+            pip install -U pip
+            pip install pre-commit==1.21.0  # pinned for Python 2.7 compatibility
             pip install -U platformio
       - run:
           name: Run tests

@@ -104,14 +104,22 @@ enum class AnalogPinId {
   HAL_CONSTANT(A1),
   HAL_CONSTANT(A2),
   HAL_CONSTANT(A3),
+  HAL_CONSTANT(A4),
+  HAL_CONSTANT(A5),
   // https://github.com/arduino/ArduinoCore-avr/blob/master/variants/standard/pins_arduino.h
   // has 7 named analog pins, the largest of which, A7, has id 21.
   COUNT = 22
 };
 
-// ID of one of the digital pins that can be used as a PWM pin.
+// IDs of the digital pins that can be used for pulse-width modulation.
+// https://github.com/arduino/ArduinoCore-avr/blob/257ee3f/variants/standard/pins_arduino.h#L35
 enum class PwmPinId {
   PWM_3 = 3,
+  PWM_5 = 5,
+  PWM_6 = 6,
+  PWM_9 = 9,
+  PWM_10 = 10,
+  PWM_11 = 11,
 };
 
 // Singleton class which implements a hardware abstraction layer.

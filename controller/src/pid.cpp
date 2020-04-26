@@ -54,7 +54,14 @@ void pid_execute(const VentParams &params, SensorReadings *readings) {
   uint16_t cyclecounter = 0;
   enum pid_fsm_state state = pid_fsm_state::reset;
 
-  // TODO(jlebar): Get rid of ramp rate; just go to the set pressure asap.
+  // The state machine drives PID to blow a trapezoid.  We start at the PEEP
+  // pressure, then gradually ramp the setpoint up to PIP.  Then we dwell there
+  // for a while, ramp down to PEEP, and dwell there for a bit.
+  //
+  // TODO(jlebar): Per Edwin, we should simplify this by removing the ramp-up
+  // and ramp-down states.  Instead, just modify the setpoint and let PID ramp
+  // us up/down.  The timescales for the ramp-up and ramp-down are short, and
+  // PID only moves us so fast anyway.
   switch (state) {
   case pid_fsm_state::reset: // reset
     cyclecounter = 0;
@@ -76,7 +83,6 @@ void pid_execute(const VentParams &params, SensorReadings *readings) {
     }
     break;
 
-    // TODO: Remove this, just use inspire (i.e. pip) pressure.
   case pid_fsm_state::plateau: // Inspiratory plateau
     cyclecounter++;
     // set command

@@ -7,12 +7,13 @@ jobs:
     steps:
       - checkout
       - run:
-        name: Install platformio core
-        command: |
-          pip install -U platformio
+          name: Install platformio core
+          command: |
+            pip install -U platformio
       - run:
-        name: Run tests
-          bash test.sh
+          name: Run tests
+          command: |
+            bash test.sh
   gui-static-analysis:
     machine:
       image: ubuntu-1604:201903-01

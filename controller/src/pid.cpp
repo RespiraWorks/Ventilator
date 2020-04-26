@@ -47,8 +47,7 @@ void pid_init() {
 
   // Turn the PID on.
   myPID.SetMode(AUTOMATIC);
-
-  pinMode(static_cast<uint8_t>(BLOWERSPD_PIN), OUTPUT);
+  Hal.setDigitalPinMode(BLOWERSPD_PIN, PinMode::HAL_OUTPUT);
 }
 
 void pid_execute(const VentParams &params, SensorReadings *readings) {

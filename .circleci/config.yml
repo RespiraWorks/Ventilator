@@ -9,7 +9,7 @@ jobs:
       - run:
           name: Run Docker build
           command: |
-            docker build . -t controller
+            docker build -f controller/Dockerfile -t controller .
       - run:
           name: Run tests
           command: |

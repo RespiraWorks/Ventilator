@@ -1,17 +1,24 @@
+
+/* Copyright 2020, RespiraWorks
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+    http://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
 /**********************************************************************************************
- * Arduino PID Library - Version 1.2.1
+ * Adapted from Arduino PID Library - Version 1.2.1 - under MIT License
  * by Brett Beauregard <br3ttb@gmail.com> brettbeauregard.com
- *
- * This Library is licensed under the MIT License
+ * Original project hash: 9b4ca0e5b6d7bab9c6ac023e249d6af2446d99bb
  **********************************************************************************************/
 
-#if ARDUINO >= 100
-#include "Arduino.h"
-#else
-#include "WProgram.h"
-#endif
-
-#include <PID_v1.h>
+#include "pid.h"
+#include "hal.h"
 
 /*Constructor (...)*********************************************************
  *    The parameters specified here are those for for which we can't set up
@@ -32,7 +39,7 @@ PID::PID(double *Input, double *Output, double *Setpoint, double Kp, double Ki,
   PID::SetControllerDirection(ControllerDirection);
   PID::SetTunings(Kp, Ki, Kd, POn);
 
-  lastTime = millis() - SampleTime;
+  lastTime = Hal.millis() - SampleTime;
 }
 
 /*Constructor (...)*********************************************************
@@ -55,7 +62,7 @@ PID::PID(double *Input, double *Output, double *Setpoint, double Kp, double Ki,
 bool PID::Compute() {
   if (!inAuto)
     return false;
-  unsigned long now = millis();
+  unsigned long now = Hal.millis();
   unsigned long timeChange = (now - lastTime);
   if (timeChange >= SampleTime) {
     /*Compute all the working error variables*/

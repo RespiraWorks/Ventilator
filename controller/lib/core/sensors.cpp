@@ -61,7 +61,7 @@ void set_sensor_avg_samples(int numAvgSamples) {
 
 int get_sensor_avg_samples() { return sensorAvgSize; }
 
-static float diameterOfCircleToArea(float diameter) {
+static float circle_area_from_diam(float diameter) {
   return static_cast<float>(M_PI) / 4.0f * diameter * diameter;
 }
 
@@ -117,22 +117,25 @@ float get_pressure_reading(AnalogPinId pinId) {
   return ((float)runningSum * ADC_LSB);
 }
 
-float pressure_delta_to_volumetric_flow(float diffPressureInKiloPascals) {
+float pressure_delta_to_flow(float pressure_delta_kpa) {
   // TODO(jlebar): Make these constexpr once we have a C++ standard library
+
   // PortArea must be larger than the ChokeArea [meters^2]
   float venturiPortArea =
-      diameterOfCircleToArea(PressureSensors::DEFAULT_VENTURI_PORT_DIAM);
+      circle_area_from_diam(PressureSensors::DEFAULT_VENTURI_PORT_DIAM);
   float venturiChokeArea =
-      diameterOfCircleToArea(PressureSensors::DEFAULT_VENTURI_CHOKE_DIAM);
+      circle_area_from_diam(PressureSensors::DEFAULT_VENTURI_CHOKE_DIAM);
+
   //[meters^4]
   float venturiAreaProduct = venturiPortArea * venturiChokeArea;
+
   // Equivalent to 1/sqrt(A1^2 - A2^2) guaranteed never to have a negative
   // radicand [1/meters^2]
   float bernoulliAreaDivisor =
       1.0f / sqrtf(venturiPortArea * venturiPortArea -
                    venturiChokeArea * venturiChokeArea);
 
-  float sgn = copysignf(1.0f, diffPressureInKiloPascals);
+  float sgn = copysignf(1.0f, pressure_delta_kpa);
   return sgn * ROOT_OF_TWO_OVER_DENSITY_OF_AIR * venturiAreaProduct *
-         bernoulliAreaDivisor * sqrtf(abs(diffPressureInKiloPascals) * 1000.0f);
+         bernoulliAreaDivisor * sqrtf(abs(pressure_delta_kpa) * 1000.0f);
 }

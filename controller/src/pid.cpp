@@ -149,7 +149,7 @@ void pid_execute(const VentParams &params, SensorReadings *readings) {
   // Flow rate is inhalation flow minus exhalation flow. Positive value is flow
   // into lungs, and negative is flow out of lungs.
   float flow = // [m^3/s]
-      pressure_delta_to_volumetric_flow(
+      pressure_delta_to_flow(
           get_pressure_reading(PressureSensors::INHALATION_PIN) -
           get_pressure_reading(PressureSensors::EXHALATION_PIN));
   readings->flow_ml_per_min = flow * 1000.0f * 1000.0f * 60.0f;

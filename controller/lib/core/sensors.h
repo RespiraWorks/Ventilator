@@ -121,17 +121,19 @@ void set_sensor_avg_samples(int numAvgSamples);
 int get_sensor_avg_samples();
 
 /*
- * @brief Method implements Bernoulli's equation assuming the Venturi Effect.
+ * @brief Implements Bernoulli's equation assuming the Venturi Effect.
  * https://en.wikipedia.org/wiki/Venturi_effect
+ *
  * Solves for the volumetric flow rate since A1/A2, rho, and differential
  * pressure are known. Q = sqrt(2/rho) * (A1*A2) * 1/sqrt(A1^2-A2^2) *
  * sqrt(p1-p2); based on (p1 - p2) = (rho/2) * (v2^2 - v1^2); where A1 > A2
- * @param diffPressureInKiloPascals the differential pressure from a sensor in
- * [kPa]
+ *
+ * @param pressure_delta_kpa the differential pressure from a sensor in [kPa]
+ *
  * @return the volumetric flow in [meters^3/s]. Can be negative, indicating
  * direction of flow, depending on how the differential sensor is attached to
  * the venturi.
  */
-float pressure_delta_to_volumetric_flow(float diffPressureInKiloPascals);
+float pressure_delta_to_flow(float pressure_delta_kpa);
 
 #endif // SENSORS_H

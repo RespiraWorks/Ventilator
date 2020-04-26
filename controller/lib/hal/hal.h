@@ -153,9 +153,14 @@ public:
   void test_setAnalogPin(AnalogPinId pin, int value);
 #endif
 
-  void analogWrite(PwmPinId pin, int value);
-
+  // TODO(jlebar): Make digital pin number strongly typed?  It's slightly
+  // tricky because the digital pin numbers are a superset of PWM pin numbers,
+  // and C++ doesn't support enum inheritance.
   void setDigitalPinMode(int pin, PinMode mode);
+  void setDigitalPinMode(PwmPinId pin, PinMode mode) {
+    setDigitalPinMode(static_cast<int>(pin), mode);
+  }
+  void analogWrite(PwmPinId pin, int value);
   void digitalWrite(int pin, VoltageLevel value);
 
   // Receives bytes from the GUI controller along the serial bus.

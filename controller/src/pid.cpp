@@ -133,7 +133,7 @@ void pid_execute(const VentParams &params, SensorReadings *readings) {
   // Edwin says IRL that these pressure sensors should never return negative
   // values.
 
-  int sensorValue = Hal.analogRead(DPSENSOR_PIN); // read sensor
+  int sensorValue = Hal.analogRead(AnalogPin::PATIENT_PRESSURE); // read sensor
   // int16_t sensorValue = get_pressure_reading(PressureSensors::SomeDPPin);
   Input = map(sensorValue, 0, 1023, 0, 255); // map to output scale
   myPID.Compute();                           // computer PID command
@@ -143,8 +143,7 @@ void pid_execute(const VentParams &params, SensorReadings *readings) {
   // This pressure is just from the patient sensor, converted to the right
   // units.
   // Convert [kPa] to [cm H2O] in place
-  readings->pressure_cm_h2o =
-      get_pressure_reading(PressureSensors::PATIENT_PIN) * 10.1974f;
+  readings->pressure_cm_h2o = get_patient_pressure_kpa() * 10.1974f;
   // TODO(anyone): This value is to be the integration over time of the below
   // flow_ml_per_min. That is, you take the value calculated for flow_ml_per_min
   // and integrate it over time to get total volume at the current time. Don't
@@ -154,9 +153,6 @@ void pid_execute(const VentParams &params, SensorReadings *readings) {
   // into lungs, and negative is flow out of lungs.
   // Convert [meters^3/s] to [mL/min] in place
   readings->flow_ml_per_min =
-      (pressure_delta_to_volumetric_flow(
-           get_pressure_reading(PressureSensors::INHALATION_PIN)) -
-       pressure_delta_to_volumetric_flow(
-           get_pressure_reading(PressureSensors::EXHALATION_PIN))) *
-      1000.0f * 1000.0f * 60.0f;
+      (get_volumetric_inflow_m3ps() - get_volumetric_outflow_m3ps()) * 1000.0f *
+      1000.0f * 60.0f;
 }

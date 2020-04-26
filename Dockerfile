@@ -4,4 +4,4 @@ RUN pip install -U pip
 RUN pip install pre-commit==1.21.0 platformio
 WORKDIR /root/VentilatorSoftware
 COPY . ./
-CMD /bin/bash
+CMD /bin/bash test.sh

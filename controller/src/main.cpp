@@ -44,7 +44,6 @@ limitations under the License.
   plotting
 
 */
-#include <Arduino.h>
 
 #include "alarm.h"
 #include "comms.h"

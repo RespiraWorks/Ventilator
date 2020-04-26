@@ -47,12 +47,15 @@ void pid_init() {
 
   // Turn the PID on.
   myPID.SetMode(AUTOMATIC);
+
+  pinMode(static_cast<uint8_t>(BLOWERSPD_PIN), OUTPUT);
 }
 
 void pid_execute(const VentParams &params, SensorReadings *readings) {
   uint16_t cyclecounter = 0;
   enum pid_fsm_state state = pid_fsm_state::reset;
 
+  // TODO(jlebar): Get rid of ramp rate; just go to the set pressure asap.
   switch (state) {
   case pid_fsm_state::reset: // reset
     cyclecounter = 0;
@@ -74,6 +77,7 @@ void pid_execute(const VentParams &params, SensorReadings *readings) {
     }
     break;
 
+    // TODO: Remove this, just use inspire (i.e. pip) pressure.
   case pid_fsm_state::plateau: // Inspiratory plateau
     cyclecounter++;
     // set command

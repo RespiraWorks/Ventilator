@@ -2,15 +2,14 @@ version: 2.1
 
 jobs:
   run-precommit-checks:
-    machine:
-      image: ubuntu-1604:201903-01
+    docker:
+      image: circleci/python:3.8
     steps:
       - checkout
       - run:
           name: Install pre-commit
           command: |
-            sudo apt-get update
-            sudo apt-get install -y pre-commit
+            pip install pre-commit
       - run:
           name: Run pre-commit hooks
           command: |

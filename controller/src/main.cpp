@@ -48,9 +48,9 @@ limitations under the License.
 
 #include "alarm.h"
 #include "comms.h"
+#include "control.h"
 #include "hal.h"
 #include "network_protocol.pb.h"
-#include "pid.h"
 #include "sensors.h"
 #include "solenoid.h"
 

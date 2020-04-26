@@ -79,7 +79,8 @@ void sensors_init() {
   // TODO: Is 20ms the right amount of time?  We're basing it on the data sheet
   // for MPXV7002, https://www.nxp.com/docs/en/data-sheet/MPXV7002.pdf table 1,
   // last entry.  But we're not acutally using that pressure sensor, we're
-  // using MPXV500<x>!  20ms is probably fine, but we should verify.
+  // using MPXV5004DP!  The 5004DP datasheet doesn't say anything about a
+  // startup time.  20ms is probably fine, but we should verify.
   //
   // TODO: This is unsafe if/when the controller starts up while connected to a
   // patient!  Calibration is valid only if the physical system is quiescent,

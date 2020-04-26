@@ -20,8 +20,11 @@ limitations under the License.
 #include "hal.h"
 #include "network_protocol.pb.h"
 
-inline constexpr AnalogPinId DPSENSOR_PIN = AnalogPinId::HAL_A0;
-inline constexpr PwmPinId BLOWERSPD_PIN = PwmPinId::PWM_3;
+inline constexpr AnalogPinId DPSENSOR_PIN = AnalogPinId::HAL_A5;
+inline constexpr PwmPinId BLOWERSPD_PIN = PwmPinId::PWM_6;
+
+// TODO(jlebar): Remove these dummy values and instead use the state sent from
+// the GuiStatus object.
 inline constexpr int BLOWER_HIGH = 142;
 inline constexpr int BLOWER_LOW = 130;
 

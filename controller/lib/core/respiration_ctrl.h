@@ -18,6 +18,7 @@ limitations under the License.
 
 #include "ACV.h"
 #include "PRVC.h"
+#include "hal.h"
 
 #include <PID_v1.h>
 

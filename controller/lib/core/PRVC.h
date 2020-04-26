@@ -19,11 +19,8 @@ limitations under the License.
 #include "network_protocol.pb.h"
 
 void PRVC_init(double *Setpoint);
-
 void PRVC_handler(const SensorReadings &readings, double *Setpoint);
-
 void PRVC_start(double *Setpoint);
-
 void PRVC_stop(double *Setpoint);
 
 #endif // PRVC_H

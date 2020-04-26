@@ -17,7 +17,7 @@ limitations under the License.
 
 void ACV_init(double *Setpoint) {}
 
-void ACV_handler(SensorReadings &readings) {}
+void ACV_handler(const SensorReadings &readings, double *Setpoint) {}
 
 void ACV_start(double *Setpoint) {}
 

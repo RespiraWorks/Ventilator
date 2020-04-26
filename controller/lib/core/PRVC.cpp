@@ -17,7 +17,7 @@ limitations under the License.
 
 void PRVC_init(double *Setpoint) {}
 
-void PRVC_handler(SensorReadings &readings) {}
+void PRVC_handler(const SensorReadings &readings, double *Setpoint) {}
 
 void PRVC_start(double *Setpoint) {}
 

@@ -1,7 +1,7 @@
 version: 2.1
 
 jobs:
-  gui-static-analysis:
+  common-static-analysis:
     machine:
       image: ubuntu-1604:201903-01
     steps:
@@ -57,7 +57,7 @@ jobs:
 workflows:
   commit:
     jobs:
-      - gui-static-analysis
+      - common-static-analysis
       - gui-build-image:
           requires:
-            - gui-static-analysis
+            - common-static-analysis

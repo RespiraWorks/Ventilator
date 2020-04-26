@@ -20,7 +20,6 @@ Arduino Nano and the MPXV5004GP and MPXV7002DP pressure sensors.
 
 #include "hal.h"
 
-#include "blower.h"
 #include "math.h"
 #include "sensors.h"
 
@@ -85,23 +84,29 @@ static int get_raw_sensor_zero_reading(AnalogPinId pinId) {
   return runningSum / zeroingAvgSize;
 }
 
-void zero_sensors() {
-  blower_disable();
-  Hal.delay(100); // some arbitrary time to wait for the pressure of the system
-                  // to equalize at all points
+void sensors_init() {
+  // We wait 20ms from power-on-reset for pressure sensors to warm up.
+  //
+  // TODO: Is 20ms the right amount of time?  We're basing it on the data sheet
+  // for MPXV7002, https://www.nxp.com/docs/en/data-sheet/MPXV7002.pdf table 1,
+  // last entry.  But we're not acutally using that pressure sensor, we're
+  // using MPXV500<x>!  20ms is probably fine, but we should verify.
+  //
+  // TODO: This is unsafe if/when the controller starts up while connected to a
+  // patient!  Calibration is valid only if the physical system is quiescent,
+  // but if a patient is attached (or if the blower was running just a few
+  // milliseconds ago), obviously that's not true.
+  //
+  // It seems that we'll need to save calibration readings to non-volatile
+  // memory and provide operators with a way to shut off the device's blowers,
+  // open any necessary valves, and recalibrate.
+  Hal.delay(20);
   sensorZeroVals[static_cast<int>(PressureSensors::PATIENT_PIN)] =
       get_raw_sensor_zero_reading(PressureSensors::PATIENT_PIN);
   sensorZeroVals[static_cast<int>(PressureSensors::INHALATION_PIN)] =
       get_raw_sensor_zero_reading(PressureSensors::INHALATION_PIN);
   sensorZeroVals[static_cast<int>(PressureSensors::EXHALATION_PIN)] =
       get_raw_sensor_zero_reading(PressureSensors::EXHALATION_PIN);
-}
-
-void sensors_init() {
-  // must wait at least 20 ms from Power-On-Reset for pressure sensors to
-  // warm-up
-  Hal.delay(20);
-  zero_sensors();
 }
 
 //@TODO: Add alarms if sensor value is out of expected range?

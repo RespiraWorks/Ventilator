@@ -54,27 +54,7 @@ public:
   static_assert(DEFAULT_VENTURI_CHOKE_DIAM > 0.0f);
 };
 
-/*
- * @brief This method is to be called once on POR to initialize the module.
- * It calls zero_sensors() for an initial calibration. Call before
- * attempting to get sensor readings.
- */
 void sensors_init();
-
-/*
- * @brief This method calculates and saves the zero pressure reading for each of
- * the three pressure sensors for calibration. Called once on POR by
- * sensors_init().
- *
- * @usage The method should be called regularly to minimize sensor errors due to
- * environmental changes (like temperature). It is important to note that all
- * non-differential sensors must be experience atmospheric pressure during
- * calibration. Differential sensors must have the same pressure at both ports
- * during calibration. The routine automatically turns off the blower prior to
- * calibration; but there may be other valves/controls to be actuated to meet
- * these requirements.
- */
-void zero_sensors();
 
 /*
  * @brief This method gets the specified calibrated sensor reading and performs

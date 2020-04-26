@@ -47,7 +47,6 @@ limitations under the License.
 #include <Arduino.h>
 
 #include "alarm.h"
-#include "blower.h"
 #include "comms.h"
 #include "hal.h"
 #include "network_protocol.pb.h"
@@ -80,9 +79,6 @@ void setup() {
   Hal.init();
 
   comms_init();
-  blower_init();
-  // sensors_init should come after blower_init because it needs to disable
-  // blowers for calibration
   sensors_init();
   solenoid_init();
   pid_init();

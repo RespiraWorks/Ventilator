@@ -15,10 +15,9 @@ limitations under the License.
 #ifndef CONTROL_H
 #define CONTROL_H
 
-#include <PID_v1.h>
-
 #include "hal.h"
 #include "network_protocol.pb.h"
+#include "pid.h"
 
 inline constexpr PwmPinId BLOWERSPD_PIN = PwmPinId::PWM_6;
 

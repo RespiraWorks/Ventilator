@@ -20,7 +20,6 @@ Arduino Nano and the MPXV5004GP and MPXV7002DP pressure sensors.
 
 #include "hal.h"
 
-#include "blower.h"
 #include "math.h"
 #include "sensors.h"
 
@@ -85,23 +84,30 @@ static int get_raw_sensor_zero_reading(AnalogPinId pinId) {
   return runningSum / zeroingAvgSize;
 }
 
-void zero_sensors() {
-  blower_disable();
-  Hal.delay(100); // some arbitrary time to wait for the pressure of the system
-                  // to equalize at all points
+void sensors_init() {
+  // Must wait at least 20 ms from power-on-reset for pressure sensors to
+  // warm-up (TODO: according to whom?).
+  //
+  // TODO: This sleep is unsafe!
+  //
+  //  - We can't safely get sensors' zero levels until the physical system is
+  //    quiescent.  In the event of a controller restart, 20ms doesn't seem
+  //    long enough; even it if is, we'd need to prove it.
+  //
+  //  - On the other hand, we can't wait a lot *longer* than 20ms because the
+  //    controller and GUI both have watchdogs that will restart the controller
+  //    if it hangs, and this sleep looks like a hang.
+  //
+  // It seems that we'll need to save calibration readings to non-volatile
+  // memory and provide operators with a way to shut off the device's blowers,
+  // open any necessary valves, and recalibrate.
+  Hal.delay(20);
   sensorZeroVals[static_cast<int>(PressureSensors::PATIENT_PIN)] =
       get_raw_sensor_zero_reading(PressureSensors::PATIENT_PIN);
   sensorZeroVals[static_cast<int>(PressureSensors::INHALATION_PIN)] =
       get_raw_sensor_zero_reading(PressureSensors::INHALATION_PIN);
   sensorZeroVals[static_cast<int>(PressureSensors::EXHALATION_PIN)] =
       get_raw_sensor_zero_reading(PressureSensors::EXHALATION_PIN);
-}
-
-void sensors_init() {
-  // must wait at least 20 ms from Power-On-Reset for pressure sensors to
-  // warm-up
-  Hal.delay(20);
-  zero_sensors();
 }
 
 //@TODO: Add alarms if sensor value is out of expected range?

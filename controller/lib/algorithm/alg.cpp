@@ -1,4 +1,4 @@
-/* Copyright 2020, Edwin Chiu
+/* Copyright 2020, RespiraWorks
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -13,16 +13,5 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#ifndef WATCHDOG_H
-#define WATCHDOG_H
-
-#include <avr/wdt.h>
-#include <stdint.h>
-
-#define WDT_1SECOND 1000
-
-void watchdog_init();
-void watchdog_handler();
-void watchdog_reboot();
-
-#endif // WATCHDOG_H
+// This file intentionally left blank.  It's only here because platformio
+// requires all libraries to have a cpp file.

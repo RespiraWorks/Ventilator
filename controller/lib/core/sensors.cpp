@@ -12,7 +12,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 
- module contributors: verityRF, lee-matthews, Edwin Chiu
+ module contributors: verityRF, jlebar, lee-matthews, Edwin Chiu
  The purpose of this module is to allow calibrated readings from the different
 pressure sensors in the ventilator design. It is designed to be used with the
 Arduino Nano and the MPXV5004GP and MPXV7002DP pressure sensors.
@@ -21,19 +21,22 @@ Arduino Nano and the MPXV5004GP and MPXV7002DP pressure sensors.
 #include "hal.h"
 
 #include "blower.h"
+#include "math.h"
 #include "sensors.h"
 
-//@TODO: Replace floats with equivalent integer only operations to save program
-// space/time
+//@TODO: Potential Caution: Density of air slightly varies over temperature and
+// altitude - need mechanism to adjust based on delivery? Constant involving
+// density of air. Density assumed at 15 deg. Celsius and 1 atm of pressure.
+// Sourced from https://en.wikipedia.org/wiki/Density_of_air
+static const float ROOT_OF_TWO_OVER_DENSITY_OF_AIR =
+    sqrtf(2.0f / 1.225f); //[sqrt(meters^3/kg)]
 
 // Arduino Nano ADC is 10 bit, default 5V Vref_P (~4.9 mV
 // per count) [V];
 static const float ADC_LSB = 5.0f / 1024.0f;
 
-// zero calibration values for [0]: patient pressure sensor;[1]:
-// inhalation diff pressure sensor;[2]: exhalation diff pressure
-// sensor; [ADC Counts]
-static int sensorZeroVals[] = {0, 0, 0};
+// zero calibration values for the different pressure sensors.
+static int sensorZeroVals[static_cast<int>(AnalogPinId::COUNT)] = {0};
 
 // number of samples to perform averaging over during sensor zeroization
 static int zeroingAvgSize = 4;
@@ -57,6 +60,10 @@ void set_sensor_avg_samples(int numAvgSamples) {
 }
 
 int get_sensor_avg_samples() { return sensorAvgSize; }
+
+static float diameterOfCircleToArea(float diameter) {
+  return static_cast<float>(M_PI) / 4.0f * diameter * diameter;
+}
 
 /*
  * @brief This method gets the zero pressure readings from the specified sensor
@@ -108,4 +115,24 @@ float get_pressure_reading(AnalogPinId pinId) {
   runningSum /= sensorAvgSize;
   // Sensitivity of all pressure sensors is 1 V/kPa; no division needed.
   return ((float)runningSum * ADC_LSB);
+}
+
+float pressure_delta_to_volumetric_flow(float diffPressureInKiloPascals) {
+  // TODO(jlebar): Make these constexpr once we have a C++ standard library
+  // PortArea must be larger than the ChokeArea [meters^2]
+  float venturiPortArea =
+      diameterOfCircleToArea(PressureSensors::DEFAULT_VENTURI_PORT_DIAM);
+  float venturiChokeArea =
+      diameterOfCircleToArea(PressureSensors::DEFAULT_VENTURI_CHOKE_DIAM);
+  //[meters^4]
+  float venturiAreaProduct = venturiPortArea * venturiChokeArea;
+  // Equivalent to 1/sqrt(A1^2 - A2^2) guaranteed never to have a negative
+  // radicand [1/meters^2]
+  float bernoulliAreaDivisor =
+      1.0f / sqrtf(venturiPortArea * venturiPortArea -
+                   venturiChokeArea * venturiChokeArea);
+
+  float sgn = copysignf(1.0f, diffPressureInKiloPascals);
+  return sgn * ROOT_OF_TWO_OVER_DENSITY_OF_AIR * venturiAreaProduct *
+         bernoulliAreaDivisor * sqrtf(abs(diffPressureInKiloPascals) * 1000.0f);
 }

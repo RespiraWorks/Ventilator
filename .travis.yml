@@ -17,17 +17,18 @@ addons:
 cache:
     directories:
         - "~/.platformio"
+        - $HOME/.cache/pre-commit
+        - $HOME/.cache/pre-commit-jlebar
 
 install:
   - pip install -U platformio
   - platformio update
+  - pip install pre-commit
 
 # TODO: Separate jobs for GUI and controller?
 script:
-  # Controller unit tests on native.
-  - platformio test -e native -v
-  # Make sure controller builds for target platform.
-  - platformio run -v
+  # Run checks for non-GUI code
+  - ./test.sh
   # Make sure GUI builds.
   - cd gui
   - mkdir build

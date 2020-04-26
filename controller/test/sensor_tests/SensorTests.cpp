@@ -21,20 +21,24 @@ limitations under the License.
  * on an Arduino platform.
  */
 
-#include "SensorTests.h"
-#include "ArduinoSim.h"
+#include "hal.h"
 #include "sensors.h"
 #include "gtest/gtest.h"
-
+#include <assert.h>
 #include <cmath>
+#include <cstdio>
 #include <iostream>
-#include <stdbool.h>
-#include <stdio.h>
 #include <string>
 
 // Maximum allowable delta between calculated sensor readings and the input
 // pressure waveform [kPa]
 static const float COMPARISON_TOLERANCE = 0.005f;
+
+// Maximum allowable delta between calculated and actual volumetric flow
+static const float COMPARISON_TOLERANCE_FLOW = 5.0e-5f;
+
+// ADC of Nano is 10 bit, 5V VREF_P [ADC Counts / V]
+static const float COUNTS_PER_VOLT = 1024.0f / 5.0f;
 
 //@TODO: Finish writing more specific unit tests for this module
 
@@ -47,11 +51,9 @@ static const float COMPARISON_TOLERANCE = 0.005f;
  * @param *voltageOut pointer to the output voltage buffer
  * @param count is the length of the input buffer
  */
-static void MPXV5004_TransferFn(float *pressureIn, float *voltageOut,
+static void MPXV5004_TransferFn(const float *pressureIn, float *voltageOut,
                                 int count) {
-  if (pressureIn == NULL || voltageOut == NULL) {
-    throw "Pressure or voltage pointer is null";
-  }
+  assert(pressureIn != nullptr && voltageOut != nullptr);
   for (int i = 0; i < count; i++) {
     voltageOut[i] = 5 * (0.2f * pressureIn[i] + 0.2f);
   }
@@ -66,38 +68,38 @@ static void MPXV5004_TransferFn(float *pressureIn, float *voltageOut,
  * @param *voltageOut pointer to the output voltage buffer
  * @param count is the length of the input buffer
  */
-static void MPXV7002_TransferFn(float *pressureIn, float *voltageOut,
+static void MPXV7002_TransferFn(const float *pressureIn, float *voltageOut,
                                 int count) {
-  if (pressureIn == NULL || voltageOut == NULL) {
-    throw "Pressure or voltage pointer is null";
-  }
+  assert(pressureIn != nullptr && voltageOut != nullptr);
   for (int i = 0; i < count; i++) {
     voltageOut[i] = 5 * (0.2f * pressureIn[i] + 0.5f);
   }
 }
 
-// TODO(verityRF): Fix and enable this test (currently it fails).
-TEST(SensorTests, DISABLED_FullScaleReading) {
-  // These pressure waveforms start at 0 kPa to simulate the system being in the
-  // proper calibration state then they go over the sensor full ranges The first
-  // value is repeated four times, and each subsequent value twice, so that the
-  // test neatly corresponds to the 4 and 2 default average sample counts that
-  // the sensor module defaults to.
-  //
-  // Value sare in kPa.
-  float differentialFlowPressures[] = {
-      0.0f,  0.0f, 0.0f, 0.0f, -2.0f, -2.0f, -1.5f, -1.5f, -1.0f, -1.0f, -0.5f,
-      -0.5f, 0,    0,    0.5f, 0.5f,  1.0f,  1.0f,  1.5f,  1.5f,  2.0f,  2.0f};
-  float patientPressures[] = {0.0f, 0.0f, 0.0f, 0.0f, 0.5f,  0.5f, 1.0f,
-                              1.0f, 1.5f, 1.5f, 2.0f, 2.0f,  2.5f, 2.5f,
-                              3.0f, 3.0f, 3.5f, 3.5f, 3.92f, 3.92f};
+// Simple helper function that takes in a voltage and returns the
+// equivalent ADC counts that represent it
+static void test_setAnalogPinToVolts(AnalogPinId pin, float volts) {
+  Hal.test_setAnalogPin(pin, static_cast<int>(roundf(volts * COUNTS_PER_VOLT)));
+}
+
+TEST(SensorTests, FullScaleReading) {
   // length of the differentialFlowPressures array
-  const int NUM_DIFF_ELEMENTS = 22;
+  const int NUM_DIFF_ELEMENTS = 20;
   // length of the patientPressures Array
-  const int NUM_PATIENT_ELEMENTS = 20;
+  const int NUM_PATIENT_ELEMENTS = 18;
+  // These pressure waveforms start at 0 kPa to simulate the system being in the
+  // proper calibration state then they go over the sensor full ranges. Each
+  // value is repeated twice, so that the test neatly corresponds to the
+  // 2 default average sample counts that the sensor module defaults to.
+  // Values are in kPa.
+  float differentialFlowPressures[NUM_DIFF_ELEMENTS] = {
+      0.0f, 0.0f, -2.0f, -2.0f, -1.5f, -1.5f, -1.0f, -1.0f, -0.5f, -0.5f,
+      0.0f, 0.0f, 0.5f,  0.5f,  1.0f,  1.0f,  1.5f,  1.5f,  2.0f,  2.0f};
+  float patientPressures[NUM_PATIENT_ELEMENTS] = {
+      0.0f, 0.0f, 0.5f, 0.5f, 1.0f, 1.0f, 1.5f, 1.5f,  2.0f,
+      2.0f, 2.5f, 2.5f, 3.0f, 3.0f, 3.5f, 3.5f, 3.92f, 3.92f};
   float differentialFlowSensorVoltages[NUM_DIFF_ELEMENTS]; //[V]
   float patientSensorVoltages[NUM_PATIENT_ELEMENTS];       //[V]
-
   // Convert these pressure waveforms into the voltage equivalents using the
   // appropriate sensor transfer functions
   MPXV7002_TransferFn(differentialFlowPressures, differentialFlowSensorVoltages,
@@ -115,31 +117,23 @@ TEST(SensorTests, DISABLED_FullScaleReading) {
   MPXV5004_TransferFn(&ambientPressure, &patientFlowSensorVoltage_0kPa, 1);
 
   // First set the simulated analog signals to an ambient 0 kPa corresponding
-  // voltage
-  createStaticAnalogSignal((int)PressureSensors::INHALATION_PIN,
-                           differentialFlowSensorVoltage_0kPa);
-  createStaticAnalogSignal((int)PressureSensors::EXHALATION_PIN,
-                           differentialFlowSensorVoltage_0kPa);
-  createStaticAnalogSignal((int)PressureSensors::PATIENT_PIN,
+  // voltage during calibration
+  test_setAnalogPinToVolts(PressureSensors::PATIENT_PIN,
                            patientFlowSensorVoltage_0kPa);
-
-  // Overwrite the start of the simulated signal to the dynamic signal
-  createDynamicAnalogSignal((int)PressureSensors::INHALATION_PIN,
-                            differentialFlowSensorVoltages, NUM_DIFF_ELEMENTS);
-  createDynamicAnalogSignal((int)PressureSensors::EXHALATION_PIN,
-                            differentialFlowSensorVoltages, NUM_DIFF_ELEMENTS);
-  createDynamicAnalogSignal((int)PressureSensors::PATIENT_PIN,
-                            patientSensorVoltages, NUM_PATIENT_ELEMENTS);
-
-  // Result is now that the dynamic signal is first, then followed by 0 kPa
-  // readings
+  test_setAnalogPinToVolts(PressureSensors::INHALATION_PIN,
+                           differentialFlowSensorVoltage_0kPa);
+  test_setAnalogPinToVolts(PressureSensors::EXHALATION_PIN,
+                           differentialFlowSensorVoltage_0kPa);
 
   sensors_init(); // the sensors are also calibrated
 
   // Now to compare the pressure readings the sensor module is calculating
-  // versus what the original preassure waveform was
-  for (int i = 0; i < 9; i++) {
-    int index = 4 + 2 * i;
+  // versus what the original pressure waveform was
+  for (int i = 0; i < NUM_DIFF_ELEMENTS; i += 2) {
+    test_setAnalogPinToVolts(PressureSensors::INHALATION_PIN,
+                             differentialFlowSensorVoltages[i]);
+    test_setAnalogPinToVolts(PressureSensors::EXHALATION_PIN,
+                             differentialFlowSensorVoltages[i]);
     float pressureInhalation =
         get_pressure_reading(PressureSensors::INHALATION_PIN);
     float pressureExhalation =
@@ -147,18 +141,65 @@ TEST(SensorTests, DISABLED_FullScaleReading) {
     // Inhalation and exhalation should match because they are fed with the same
     // pressure waveform
     EXPECT_EQ(pressureInhalation, pressureExhalation)
-        << "Differential Sensor Calculated Inhale/Exhale at index " << index;
+        << "Differential Sensor Calculated Inhale/Exhale at index " << i;
     // Calculate deviance from expected. Using only inhalation because we know
     // it is equal to exhalation by now.
-    EXPECT_NEAR(pressureInhalation, differentialFlowPressures[index],
+    EXPECT_NEAR(pressureInhalation, differentialFlowPressures[i],
                 COMPARISON_TOLERANCE)
-        << "Differential Sensor Calculated Value at index " << index;
+        << "Differential Sensor Calculated Value at index " << i;
   }
 
-  for (int i = 0; i < 8; i++) {
-    int index = 4 + 2 * i;
+  for (int i = 0; i < NUM_PATIENT_ELEMENTS; i += 2) {
+    test_setAnalogPinToVolts(PressureSensors::PATIENT_PIN,
+                             patientSensorVoltages[i]);
     float pressurePatient = get_pressure_reading(PressureSensors::PATIENT_PIN);
-    EXPECT_NEAR(pressurePatient, patientPressures[index], COMPARISON_TOLERANCE)
-        << "Patient Sensor at index" << index;
+    EXPECT_NEAR(pressurePatient, patientPressures[i], COMPARISON_TOLERANCE)
+        << "Patient Sensor at index" << i;
   }
+}
+
+// These tests expect Venturi Diamters of 14 and 5.5 mm.
+// If the Default PressureSensors::DEFAULT_VENTURI_PORT_DIAM and
+// DEFAULT_VENTURI_CHOKE_DIAM are changed from this, the tests will fail unless
+// you update the expected values accordingly.
+TEST(SensorTests, TestPositiveVolumetricFlowCalculation) {
+  sensors_init();
+  float volumFlow = pressure_delta_to_volumetric_flow(1.0f);
+  // 1 kPa differential pressure should result in 9.52e-4 [m^3/s] of Q
+  EXPECT_NEAR(volumFlow, 9.52e-4f, COMPARISON_TOLERANCE_FLOW);
+}
+
+TEST(SensorTests, TestNegativeVolumetricFlowCalculation) {
+  sensors_init();
+  float volumFlow = pressure_delta_to_volumetric_flow(-1.0f);
+  // -1 kPa differential pressure should result in -9.52e-4 [m^3/s] of Q
+  EXPECT_NEAR(volumFlow, -9.52e-4f, COMPARISON_TOLERANCE_FLOW);
+}
+
+TEST(SensorTests, TestZeroVolumetricFlowCalculation) {
+  sensors_init();
+  float volumFlow = pressure_delta_to_volumetric_flow(0.0f);
+  // 0 kPa differential pressure should result in 0 [m^3/s] of Q
+  EXPECT_NEAR(volumFlow, 0.0f, COMPARISON_TOLERANCE_FLOW);
+}
+
+TEST(SensorTests, TestNearZeroVolumetricFlowCalculation) {
+  sensors_init();
+  float volumFlow = pressure_delta_to_volumetric_flow(1.0e-7f);
+  // 1e-7 kPa differential pressure should result in 3.07e-7 [m^3/s] of Q
+  EXPECT_NEAR(volumFlow, 3.07e-7f, COMPARISON_TOLERANCE_FLOW);
+}
+
+TEST(SensorTests, TestLargeVolumetricFlowCalculation) {
+  sensors_init();
+  float volumFlow = pressure_delta_to_volumetric_flow(100.0f);
+  // 100 kPa differential pressure should result in 9.72e-3 [m^3/s] of Q
+  EXPECT_NEAR(volumFlow, 9.72e-3f, COMPARISON_TOLERANCE_FLOW);
+}
+
+TEST(SensorTests, TestSmallVolumetricFlowCalculation) {
+  sensors_init();
+  float volumFlow = pressure_delta_to_volumetric_flow(-100.0f);
+  // -100 kPa differential pressure should result in -9.72e-3 [m^3/s] of Q
+  EXPECT_NEAR(volumFlow, -9.72e-3f, COMPARISON_TOLERANCE_FLOW);
 }

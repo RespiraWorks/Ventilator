@@ -49,35 +49,48 @@ limitations under the License.
 #include "alarm.h"
 #include "blower.h"
 #include "comms.h"
-#include "parameters.h"
+#include "hal.h"
+#include "network_protocol.pb.h"
+#include "respiration_ctrl.h"
 #include "sensors.h"
 #include "solenoid.h"
-#include "watchdog.h"
-#include "respirationCtrl.h"
+
+// Current controller status.  Updated when we receive data from the GUI, when
+// sensors read data, etc.
+static ControllerStatus controller_status = ControllerStatus_init_zero;
+
+// Last-received status from the GUI.
+static GuiStatus gui_status = GuiStatus_init_zero;
 
 static void controller_loop() {
   while (true) {
-    comms_handler();
-    respirationCtrl_handler();
-    watchdog_handler();
+    controller_status.uptime_ms = Hal.millis();
+    comms_handler(controller_status, &gui_status);
+    controller_status.active_params = gui_status.desired_params;
+
+    respiration_ctrl_handler(controller_status.active_params,
+                             &controller_status.sensor_readings);
+    Hal.watchdog_handler();
   }
 }
 
 void setup() {
+  // Initialize Hal first because it initializes the watchdog. See comment on
+  // HalApi::init().
+  Hal.init();
 
-  parameters_init();
   comms_init();
-  sensors_init();
   blower_init();
+  // sensors_init should come after blower_init because it needs to disable
+  // blowers for calibration
+  sensors_init();
   solenoid_init();
-
-  watchdog_init();
-  respirationCtrl_init();
-
+  respiration_ctrl_init();
   alarm_init();
 
-  // Inform the Interface Controller that we just started/restarted
-  comms_sendResetState();
-
   controller_loop();
+}
+
+void loop() {
+  // Dummy placeholder as Arduino framework requires it to compile
 }

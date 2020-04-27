@@ -2,6 +2,9 @@ version: 2.1
 
 jobs:
   controller-test:
+    # See https://circleci.com/docs/2.0/executor-types/#docker-benefits-and-limitations
+    # We use a machine executor here because we must run the container in privileged mode.
+    # This is because LeakSanitizer, which runs during the build, requires ptrace.
     machine:
       image: ubuntu-1604:201903-01
     steps:
@@ -9,11 +12,11 @@ jobs:
       - run:
           name: Run Docker build
           command: |
-            docker build -f controller/Dockerfile -t controller .
+            docker build -f controller/Dockerfile -t controller-test-image .
       - run:
           name: Run tests
           command: |
-            docker run --privileged -t controller
+            docker run --privileged -t controller-test-image
   gui-static-analysis:
     machine:
       image: ubuntu-1604:201903-01

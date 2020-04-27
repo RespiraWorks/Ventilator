@@ -78,7 +78,7 @@ static void MPXV7002_TransferFn(const float *pressureIn, float *voltageOut,
 
 // Simple helper function that takes in a voltage and returns the
 // equivalent ADC counts that represent it
-static void test_setAnalogPinToVolts(AnalogPinId pin, float volts) {
+static void test_setAnalogPinToVolts(AnalogPin pin, float volts) {
   Hal.test_setAnalogPin(pin, static_cast<int>(roundf(volts * COUNTS_PER_VOLT)));
 }
 
@@ -118,11 +118,11 @@ TEST(SensorTests, FullScaleReading) {
 
   // First set the simulated analog signals to an ambient 0 kPa corresponding
   // voltage during calibration
-  test_setAnalogPinToVolts(PressureSensors::PATIENT_PIN,
+  test_setAnalogPinToVolts(AnalogPin::PATIENT_PRESSURE,
                            patientFlowSensorVoltage_0kPa);
-  test_setAnalogPinToVolts(PressureSensors::INHALATION_PIN,
+  test_setAnalogPinToVolts(AnalogPin::INFLOW_PRESSURE_DIFF,
                            differentialFlowSensorVoltage_0kPa);
-  test_setAnalogPinToVolts(PressureSensors::EXHALATION_PIN,
+  test_setAnalogPinToVolts(AnalogPin::OUTFLOW_PRESSURE_DIFF,
                            differentialFlowSensorVoltage_0kPa);
 
   sensors_init(); // the sensors are also calibrated
@@ -130,31 +130,28 @@ TEST(SensorTests, FullScaleReading) {
   // Now to compare the pressure readings the sensor module is calculating
   // versus what the original pressure waveform was
   for (int i = 0; i < NUM_DIFF_ELEMENTS; i += 2) {
-    test_setAnalogPinToVolts(PressureSensors::INHALATION_PIN,
+    SCOPED_TRACE("iteration " + std::to_string(i));
+    test_setAnalogPinToVolts(AnalogPin::INFLOW_PRESSURE_DIFF,
                              differentialFlowSensorVoltages[i]);
-    test_setAnalogPinToVolts(PressureSensors::EXHALATION_PIN,
+    test_setAnalogPinToVolts(AnalogPin::OUTFLOW_PRESSURE_DIFF,
                              differentialFlowSensorVoltages[i]);
-    float pressureInhalation =
-        get_pressure_reading(PressureSensors::INHALATION_PIN);
-    float pressureExhalation =
-        get_pressure_reading(PressureSensors::EXHALATION_PIN);
+    float inflow = get_volumetric_inflow_m3ps();
+    float outflow = get_volumetric_outflow_m3ps();
+
     // Inhalation and exhalation should match because they are fed with the same
     // pressure waveform
-    EXPECT_EQ(pressureInhalation, pressureExhalation)
-        << "Differential Sensor Calculated Inhale/Exhale at index " << i;
-    // Calculate deviance from expected. Using only inhalation because we know
-    // it is equal to exhalation by now.
-    EXPECT_NEAR(pressureInhalation, differentialFlowPressures[i],
-                COMPARISON_TOLERANCE)
-        << "Differential Sensor Calculated Value at index " << i;
+    EXPECT_EQ(inflow, outflow);
+    EXPECT_NEAR(inflow,
+                pressure_delta_to_volumetric_flow(differentialFlowPressures[i]),
+                COMPARISON_TOLERANCE);
   }
 
   for (int i = 0; i < NUM_PATIENT_ELEMENTS; i += 2) {
-    test_setAnalogPinToVolts(PressureSensors::PATIENT_PIN,
+    SCOPED_TRACE("iteration " + std::to_string(i));
+    test_setAnalogPinToVolts(AnalogPin::PATIENT_PRESSURE,
                              patientSensorVoltages[i]);
-    float pressurePatient = get_pressure_reading(PressureSensors::PATIENT_PIN);
-    EXPECT_NEAR(pressurePatient, patientPressures[i], COMPARISON_TOLERANCE)
-        << "Patient Sensor at index" << i;
+    float pressurePatient = get_patient_pressure_kpa();
+    EXPECT_NEAR(pressurePatient, patientPressures[i], COMPARISON_TOLERANCE);
   }
 }
 

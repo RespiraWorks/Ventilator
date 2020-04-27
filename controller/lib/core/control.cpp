@@ -13,7 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include "pid.h"
+#include "control.h"
 #include "comms.h"
 #include "hal.h"
 #include "sensors.h"
@@ -40,6 +40,12 @@ enum class pid_fsm_state {
   expire_dwell = 4,
 };
 
+// TODO: move this into a mathematical library
+// This function is originally from the Arduino library
+long map(long x, long in_min, long in_max, long out_min, long out_max) {
+  return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+}
+
 void pid_init() {
   Setpoint = BLOWER_LOW;
   Input = 0;
@@ -51,8 +57,8 @@ void pid_init() {
 }
 
 void pid_execute(const VentParams &params, SensorReadings *readings) {
-  uint16_t cyclecounter = 0;
-  enum pid_fsm_state state = pid_fsm_state::reset;
+  static uint16_t cyclecounter = 0;
+  static enum pid_fsm_state state = pid_fsm_state::reset;
 
   // The state machine drives PID to blow a trapezoid.  We start at the PEEP
   // pressure, then gradually ramp the setpoint up to PIP.  Then we dwell there

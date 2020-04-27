@@ -20,7 +20,6 @@ limitations under the License.
 #include "hal.h"
 #include "network_protocol.pb.h"
 
-inline constexpr AnalogPinId DPSENSOR_PIN = AnalogPinId::HAL_A5;
 inline constexpr PwmPinId BLOWERSPD_PIN = PwmPinId::PWM_6;
 
 // TODO(jlebar): Remove these dummy values and instead use the state sent from

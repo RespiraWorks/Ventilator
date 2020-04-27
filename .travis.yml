@@ -29,17 +29,8 @@ install:
 script:
   # Run checks for non-GUI code
   - ./test.sh
-
-# TODO: Disabled because $TRAVIS_BRANCH sometimes can be set incorrectly
-# (https://github.com/RespiraWorks/VentilatorSoftware/issues/184)
-# Pre-commit checks are only runing on changed files.
-# changed_files=$(git diff --name-only $TRAVIS_BRANCH...HEAD)
-# echo "Changed files: " $changed_files
-# Make git think these changes are uncommitted
-# git reset --soft $TRAVIS_BRANCH
-# Run precommit only on the files changed in our branch since merge-base
-# pre-commit run --show-diff-on-failure --files $changed_files
-
+  # Run Travis-only tests
+  - ./travis_only_test.sh
   # Make sure GUI builds.
   - cd gui
   - mkdir build

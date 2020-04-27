@@ -99,14 +99,12 @@ enum class PinMode : uint8_t {
 enum class VoltageLevel : uint8_t { HAL_CONSTANT(HIGH), HAL_CONSTANT(LOW) };
 
 enum class AnalogPin {
-  // PATIENT_PRESSURE is an MPXV5004 sensor, reading an absolute pressure
-  // value at the patient.
+  // MPXV5004DP pressure sensors.
   //
-  // {INFLOW,OUTFLOW}_PRESSURE_DIFF are MPXV5004 sensors, reading a pressure
-  // differential across a venturi.  They let us measure volumetric flow into
-  // and out of the patient.
+  // PATIENT_PRESSURE reads an absolute pressure value at the patient.
   //
-  // Details at https://bit.ly/3bFwhpP
+  // {INFLOW,OUTFLOW}_PRESSURE_DIFF, read a differential across a venturi.
+  // They let us measure volumetric flow into and out of the patient.
   PATIENT_PRESSURE,
   INFLOW_PRESSURE_DIFF,
   OUTFLOW_PRESSURE_DIFF,

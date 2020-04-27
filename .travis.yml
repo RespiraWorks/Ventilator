@@ -17,6 +17,8 @@ addons:
 cache:
     directories:
         - "~/.platformio"
+        # Temporarily commented out because of
+        # https://github.com/RespiraWorks/VentilatorSoftware/pull/191
         # - $HOME/.cache/pre-commit
         # - $HOME/.cache/pre-commit-jlebar
 

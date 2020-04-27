@@ -25,7 +25,7 @@ static double Input;
 static double Output;
 
 // Configure the PID
-// Specify the links and initial tuning parameters
+// TODO: Tune these params.
 static float Kp = 2, Ki = 8, Kd = 0;
 
 // DIRECT means that increases in the output should result in increases in the
@@ -33,11 +33,8 @@ static float Kp = 2, Ki = 8, Kd = 0;
 static PID myPID(&Input, &Output, &Setpoint, Kp, Ki, Kd, DIRECT);
 
 enum class pid_fsm_state {
-  reset = 0,
-  inspire = 1,
-  plateau = 2,
-  expire = 3,
-  expire_dwell = 4,
+  INSPIRE,
+  EXPIRE,
 };
 
 // Rescales x from range [in_min, in_max] to [out_min, out_max] using integer
@@ -59,89 +56,35 @@ void pid_init() {
 
 void pid_execute(const VentParams &params, SensorReadings *readings) {
   static uint16_t cyclecounter = 0;
-  static enum pid_fsm_state state = pid_fsm_state::reset;
+  static enum pid_fsm_state state = pid_fsm_state::EXPIRE;
 
-  // The state machine drives PID to blow a trapezoid.  We start at the PEEP
-  // pressure, then gradually ramp the setpoint up to PIP.  Then we dwell there
-  // for a while, ramp down to PEEP, and dwell there for a bit.
-  //
-  // TODO(jlebar): Per Edwin, we should simplify this by removing the ramp-up
-  // and ramp-down states.  Instead, just modify the setpoint and let PID ramp
-  // us up/down.  The timescales for the ramp-up and ramp-down are short, and
-  // PID only moves us so fast anyway.
+  // The state machine drives PID to blow a square wave.  The PID setpoint
+  // moves from PEEP pressure (EXPIRE state) to PIP pressure (INSPIRE state)
+  // and back to PEEP.
   switch (state) {
-  case pid_fsm_state::reset: // reset
-    cyclecounter = 0;
-    Setpoint = PEEP;
-    state = pid_fsm_state::inspire; // update state
-    break;
-
-  case pid_fsm_state::inspire: // Inspire
+  case pid_fsm_state::INSPIRE:
     cyclecounter++;
-    // set command
-    Setpoint += INSPIRE_RATE;
-    if (Setpoint > PIP) {
-      Setpoint = PIP;
-    }
-    // update state
-    if (cyclecounter > INSPIRE_TIME) {
-      cyclecounter = 0;
-      state = pid_fsm_state::plateau;
-    }
-    break;
-
-  case pid_fsm_state::plateau: // Inspiratory plateau
-    cyclecounter++;
-    // set command
     Setpoint = INSPIRE_DWELL_PRESSURE;
-    // update state
     if (cyclecounter > INSPIRE_DWELL) {
       cyclecounter = 0;
-      state = pid_fsm_state::expire;
+      state = pid_fsm_state::EXPIRE;
     }
     break;
 
-  case pid_fsm_state::expire: // Expire
+  case pid_fsm_state::EXPIRE:
     cyclecounter++;
-    // set command
-    Setpoint -= EXPIRE_RATE;
-    if (Setpoint < PEEP) {
-      Setpoint = PEEP;
-    }
-    // update state
-    if (cyclecounter > EXPIRE_TIME) {
-      cyclecounter = 0;
-      state = pid_fsm_state::expire_dwell;
-    }
-    break;
-
-  case pid_fsm_state::expire_dwell: // Expiratory Dwell
-    cyclecounter++;
-    // set command
     Setpoint = PEEP;
-    // update state
     if (cyclecounter > EXPIRE_DWELL) {
       cyclecounter = 0;
-      state = pid_fsm_state::reset;
+      state = pid_fsm_state::INSPIRE;
     }
-    break;
-
-  default:
-    state = pid_fsm_state::reset;
     break;
   }
 
   // Read pressure sensor and update PID input.
-  //
-  // The Arduino analog-to-digital converter yields a 10-bit value.  As of
-  // 2020-04-25, we're using exclusively MPXV5004 pressure sensors:
-  // https://docs.google.com/spreadsheets/d/1EOa5USxCaV1uuK5RdZMPWIBl7iGKPtVBh_DIlNusR50/edit#gid=0
-  //
-  // Edwin says IRL that these pressure sensors should never return negative
-  // values.
-
-  int sensorValue = Hal.analogRead(AnalogPin::PATIENT_PRESSURE); // read sensor
-  // int16_t sensorValue = get_pressure_reading(PressureSensors::SomeDPPin);
+  // TODO: Read pressure in kPa from sensors module instead of reading the raw
+  // pin value.
+  int sensorValue = Hal.analogRead(AnalogPin::PATIENT_PRESSURE);
   Input = rescale(sensorValue, 0, 1023, 0, 255); // map to output scale
   myPID.Compute();                           // computer PID command
   Hal.analogWrite(PwmPin::BLOWER, static_cast<int>(Output)); // write output

@@ -29,13 +29,6 @@ class PressureSensors {
 public:
   PressureSensors() = delete;
 
-  // Patient pressure sensor pin
-  inline constexpr static AnalogPinId PATIENT_PIN = AnalogPinId::HAL_A0;
-  // Inhalation diff pressure sensor pin
-  inline constexpr static AnalogPinId INHALATION_PIN = AnalogPinId::HAL_A1;
-  // Exhalation diff pressure sensor pin
-  inline constexpr static AnalogPinId EXHALATION_PIN = AnalogPinId::HAL_A2;
-
   // min/max possible reading from MPXV5004GP [kPa]
   inline constexpr static float P_VAL_MIN = 0.0f;
   inline constexpr static float P_VAL_MAX = 3.92f;
@@ -56,49 +49,16 @@ public:
 
 void sensors_init();
 
-/*
- * @brief This method gets the specified calibrated sensor reading and performs
- * simple averaging if configured to do so.
- *
- * @param pinId the pressure sensor pin that a reading is desired from
- *
- * @return The specified pressure sensor calibrated reading in [kPa]
- */
-float get_pressure_reading(AnalogPinId pinId);
+// Gets gets the current pressure at the patient, in kPa.
+float get_patient_pressure_kpa();
 
-/*
- * @brief Method for setting the number of samples to use for average during
- * sensor zeroization.
- *
- * @param numAvgSamples the number of samples to use for averaging, between 1
- * and 32 inclusive
- */
-void set_zero_avg_samples(int numAvgSamples);
+// Gets the volumetric inflow (i.e. rate of air flowing into the patient), in
+// meters^3/sec.
+float get_volumetric_inflow_m3ps();
 
-/*
- * @brief Method for getting the number of samples in use for averaging during
- * sensor zeroization.
- *
- * @return A number between 1 and 32 inclusive.
- */
-int get_zero_avg_samples();
-
-/*
- * @brief Method for setting the number of samples to use for average during
- * sensor zeroization.
- *
- * @param numAvgSamples the number of samples to use for averaging, between 1
- * and 32 inclusive
- */
-void set_sensor_avg_samples(int numAvgSamples);
-
-/*
- * @brief Method for getting the number of samples in use for averaging during
- * calibrated sensor reads.
- *
- * @return A number between 1 and 32 inclusive.
- */
-int get_sensor_avg_samples();
+// Gets the volumetric outflow (i.e. rate of air flowing out of the patient),
+// in meters^3/sec.
+float get_volumetric_outflow_m3ps();
 
 /*
  * @brief Method implements Bernoulli's equation assuming the Venturi Effect.

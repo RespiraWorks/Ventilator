@@ -17,8 +17,10 @@ addons:
 cache:
     directories:
         - "~/.platformio"
-        - $HOME/.cache/pre-commit
-        - $HOME/.cache/pre-commit-jlebar
+        # Temporarily commented out because of
+        # https://github.com/RespiraWorks/VentilatorSoftware/pull/191
+        # - $HOME/.cache/pre-commit
+        # - $HOME/.cache/pre-commit-jlebar
 
 install:
   - pip install -U platformio
@@ -29,6 +31,8 @@ install:
 script:
   # Run checks for non-GUI code
   - ./test.sh
+  # Run Travis-only tests
+  - ./travis_only_test.sh
   # Make sure GUI builds.
   - cd gui
   - mkdir build

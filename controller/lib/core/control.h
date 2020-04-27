@@ -12,13 +12,12 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-#ifndef PID_H
-#define PID_H
-
-#include <PID_v1.h>
+#ifndef CONTROL_H
+#define CONTROL_H
 
 #include "hal.h"
 #include "network_protocol.pb.h"
+#include "pid.h"
 
 inline constexpr PwmPinId BLOWERSPD_PIN = PwmPinId::PWM_6;
 
@@ -52,4 +51,4 @@ void pid_init();
 // from e.g. the pressure sensor into `readings`.
 void pid_execute(const VentParams &params, SensorReadings *readings);
 
-#endif // PID_H
+#endif // CONTROL_H

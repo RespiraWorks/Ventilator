@@ -23,14 +23,6 @@ set -o xtrace
 # This script should work no matter where you call it from.
 cd "$(dirname "$0")"
 
-# Pre-commit checks are only runing on changed files.
-changed_files=$(git diff --name-only $TRAVIS_BRANCH...HEAD)
-echo "Changed files: " $changed_files
-# Make git think these changes are uncommitted
-git reset --soft $TRAVIS_BRANCH
-# Run precommit only on the files changed in our branch since merge-base
-pre-commit run --show-diff-on-failure --files $changed_files
-
 # Controller unit tests on native.
 pio test -e native
 # Make sure controller builds for target platform.

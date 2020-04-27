@@ -32,6 +32,8 @@ static const float ROOT_OF_TWO_OVER_DENSITY_OF_AIR =
 
 // Arduino Nano ADC is 10 bit, default 5V Vref_P (~4.9 mV
 // per count) [V];
+//
+// TODO: Update this for STM32, see https://bit.ly/3aERr69.
 static const float ADC_LSB = 5.0f / 1024.0f;
 
 // Take this many samples from a sensor while zeroing it.

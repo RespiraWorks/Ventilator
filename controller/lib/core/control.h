@@ -19,8 +19,6 @@ limitations under the License.
 #include "network_protocol.pb.h"
 #include "pid.h"
 
-inline constexpr PwmPinId BLOWERSPD_PIN = PwmPinId::PWM_6;
-
 // TODO(jlebar): Remove these dummy values and instead use the state sent from
 // the GuiStatus object.
 inline constexpr int BLOWER_HIGH = 142;

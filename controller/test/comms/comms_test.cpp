@@ -12,8 +12,7 @@ TEST(CommTests, SendControllerStatus) {
   // comms_handler to send it.
   ControllerStatus s = ControllerStatus_init_zero;
   s.uptime_ms = 42;
-  s.active_params.mode = VentMode_PRESSURE_ASSIST;
-  s.active_params.percent_inspiratory_o2 = 60;
+  s.active_params.mode = VentMode_PRESSURE_CONTROL;
   s.active_params.peep_cm_h2o = 10;
   s.active_params.breaths_per_min = 15;
   s.active_params.pip_cm_h2o = 1;
@@ -49,8 +48,6 @@ TEST(CommTests, SendControllerStatus) {
   ASSERT_TRUE(pb_decode(&stream, ControllerStatus_fields, &sent));
   EXPECT_EQ(s.uptime_ms, sent.uptime_ms);
   EXPECT_EQ(s.active_params.mode, sent.active_params.mode);
-  EXPECT_EQ(s.active_params.percent_inspiratory_o2,
-            sent.active_params.percent_inspiratory_o2);
   EXPECT_EQ(s.active_params.peep_cm_h2o, sent.active_params.peep_cm_h2o);
   EXPECT_EQ(s.sensor_readings.pressure_cm_h2o,
             sent.sensor_readings.pressure_cm_h2o);
@@ -59,8 +56,7 @@ TEST(CommTests, SendControllerStatus) {
 TEST(CommTests, CommandRx) {
   GuiStatus s = GuiStatus_init_zero;
   s.uptime_ms = std::numeric_limits<uint32_t>::max() / 2;
-  s.desired_params.mode = VentMode_PRESSURE_ASSIST;
-  s.desired_params.percent_inspiratory_o2 = 60;
+  s.desired_params.mode = VentMode_PRESSURE_CONTROL;
   s.desired_params.peep_cm_h2o = 10;
   s.desired_params.breaths_per_min = 15;
   s.desired_params.pip_cm_h2o = 1;

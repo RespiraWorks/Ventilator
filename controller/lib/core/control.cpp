@@ -53,7 +53,6 @@ void pid_init() {
 
   // Turn the PID on.
   myPID.SetMode(AUTOMATIC);
-  Hal.setDigitalPinMode(BLOWERSPD_PIN, PinMode::HAL_OUTPUT);
 }
 
 void pid_execute(const VentParams &params, SensorReadings *readings) {
@@ -143,7 +142,7 @@ void pid_execute(const VentParams &params, SensorReadings *readings) {
   // int16_t sensorValue = get_pressure_reading(PressureSensors::SomeDPPin);
   Input = map(sensorValue, 0, 1023, 0, 255); // map to output scale
   myPID.Compute();                           // computer PID command
-  Hal.analogWrite(BLOWERSPD_PIN, static_cast<int>(Output)); // write output
+  Hal.analogWrite(PwmPin::BLOWER, static_cast<int>(Output)); // write output
 
   // Store sensor readings so they can eventually be sent to the GUI.
   // This pressure is just from the patient sensor, converted to the right

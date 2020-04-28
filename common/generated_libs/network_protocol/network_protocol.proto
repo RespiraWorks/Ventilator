@@ -122,9 +122,10 @@ message ControllerStatus {
 message VentParams {
   required VentMode mode = 1;
 
-  required uint32 percent_inspiratory_o2 = 2; // FiO2 - frac inspiratory oxygen
-  required uint32 peep_cm_h2o = 3; // PEEP - positive end-expiratory pressure
+  // For more info on these terms, see
+  // https://github.com/RespiraWorks/VentilatorSoftware/wiki/Ventilator-Glossary
 
+  required uint32 peep_cm_h2o = 3; // PEEP - positive end-expiratory pressure
   required uint32 breaths_per_min = 4; // RR - respiratory rate
   required uint32 pip_cm_h2o = 5;      // PIP - peak inspiratory pressure
   required float inspiratory_expiratory_ratio = 6; // I:E
@@ -134,6 +135,10 @@ message VentParams {
 
   // TODO(jlebar): Is ml/min the correct unit for this?
   required uint32 expiratory_trigger_ml_per_min = 9; // V-trigger
+
+  // Notably missing here is FiO2 -- fraction of oxygen in inhaled air.
+  // Currently (2020-04-27) we anticipate this will be controlled externally,
+  // not within the ventilator.
 
   // Alarm if tidal volume falls outside this range.
   required uint32 alarm_lo_tidal_volume_ml = 10;
@@ -154,7 +159,6 @@ enum VentMode {
   //
   // Operational parameters:
   //
-  //   FiO2 - percent_inspiratory_o2
   //   PEEP - peep_cm_h2o
   //   RR   - breaths_per_min
   //   PIP  - pip_cm_h2o
@@ -173,7 +177,6 @@ enum VentMode {
   //
   // Operational parameters:
   //
-  //   FiO2      - percent_inspiratory_o2
   //   PEEP      - peep_cm_h2o
   //   min RR    - breaths_per_min (note, interpreted as a minimum here)
   //   PIP       - pip_cm_h2o
@@ -186,25 +189,11 @@ enum VentMode {
   //   alarm_hi_tidal_volume_ml
   //   alarm_hi_breaths_per_min
   //
-  PRESSURE_ASSIST = 2;
+  // TODO: Implement me!
+  // PRESSURE_ASSIST = 2;
 
-  // All inhalations and exhalations are triggered by the patient.
-  //
-  // Operational parameters:
-  //
-  //   FiO2      - percent_inspiratory_o2
-  //   PEEP      - peep_cm_h2o
-  //   PIP       - pip_cm_h2o
-  //   P-trigger - inspiratory_trigger_cm_h2o
-  //   V-trigger - expiratory_trigger_ml_per_min
-  //
-  // Alarm parameters:
-  //
-  //   alarm_lo_tidal_volume_ml
-  //   alarm_hi_tidal_volume_ml
-  //   alarm_lo_breaths_per_min
-  //   alarm_hi_breaths_per_min
-  PRESSURE_SUPPORT = 3;
+  // TODO: Implement me!
+  // ADAPTIVE_CONTROL_BREATH = 3;
 }
 
 message SensorReadings {

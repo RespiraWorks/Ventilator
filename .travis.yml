@@ -33,11 +33,6 @@ script:
   - ./test.sh
   # Run Travis-only tests
   - ./travis_only_test.sh
-  # Make sure GUI builds.
-  - cd gui
-  - mkdir build
-  - cd build
-  - qmake ..
-  - make
-  - ./ProjectVentilatorGUI -d
-  - ./ProjectVentilatorGUI -h
+  # Make sure GUI builds and starts up
+  - ./gui/build.sh
+  - ./gui/build/ProjectVentilatorGUI --startup-only

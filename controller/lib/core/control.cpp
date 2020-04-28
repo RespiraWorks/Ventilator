@@ -40,9 +40,11 @@ enum class pid_fsm_state {
   expire_dwell = 4,
 };
 
-// TODO: move this into a mathematical library
-// This function is originally from the Arduino library
-long map(long x, long in_min, long in_max, long out_min, long out_max) {
+// Rescales x from range [in_min, in_max] to [out_min, out_max] using integer
+// math.  (This is a replacement for Arduino map(), because we don't want to
+// include Arduino.h outside of hal.)
+static long rescale(long x, long in_min, long in_max, long out_min,
+                    long out_max) {
   return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 }
 
@@ -140,7 +142,7 @@ void pid_execute(const VentParams &params, SensorReadings *readings) {
 
   int sensorValue = Hal.analogRead(AnalogPin::PATIENT_PRESSURE); // read sensor
   // int16_t sensorValue = get_pressure_reading(PressureSensors::SomeDPPin);
-  Input = map(sensorValue, 0, 1023, 0, 255); // map to output scale
+  Input = rescale(sensorValue, 0, 1023, 0, 255); // map to output scale
   myPID.Compute();                           // computer PID command
   Hal.analogWrite(PwmPin::BLOWER, static_cast<int>(Output)); // write output
 

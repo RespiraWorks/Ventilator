@@ -39,8 +39,6 @@ ChartView
     backgroundColor: "#000000"
     property string color
     property string name
-    property bool openGL: true
-    property bool openGLSupported: true
     antialiasing: true
     legend.labelColor: "white"
     margins.bottom: 0
@@ -50,37 +48,11 @@ ChartView
     onWidthChanged:
     {
         lineSeries.width =  Math.sqrt(Math.pow(width, 2) + Math.pow(height, 2)) * .0025
-//        print("Width: " + lineSeries.width)
     }
     onHeightChanged:
     {
         lineSeries.width =  Math.sqrt(Math.pow(width, 2) + Math.pow(height, 2)) * .0025
-//        print("Width: " + lineSeries.width)
     }
-
-    onOpenGLChanged:
-    {
-        if (openGLSupported)
-        {
-            series(chartView.name).useOpenGL = openGL;
-        }
-    }
-    Component.onCompleted:
-    {
-        if (!series(chartView.name).useOpenGL) {
-            openGLSupported = false
-            openGL = false
-        }
-    }
-
-    ValueAxis
-    {
-        id: axisY
-        min: 0
-        max: 3
-        labelsColor: chartView.color
-    }
-
 
     ValueAxis
     {
@@ -90,42 +62,30 @@ ChartView
         labelsColor: chartView.color
     }
 
+    ValueAxis
+    {
+        id: axisY
+        min: -1.5
+        max: 1.5
+        labelsColor: chartView.color
+    }
+
     LineSeries
     {
         id: lineSeries
         name: chartView.name
         axisX: axisX
         axisY: axisY
-        useOpenGL: chartView.openGL
         color: chartView.color
         pointLabelsColor: chartView.color
         width: 1
-
+        useOpenGL: true
     }
-
-
 
     function createAxis(min, max)
     {
         // The following creates a ValueAxis object that can be then set as a x or y axis for a series
         return Qt.createQmlObject("import QtQuick 2.0; import QtCharts 2.0; ValueAxis { min: "
                                   + min + "; max: " + max + " }", chartView);
-    }
-
-    function setAnimations(enabled)
-    {
-        if (enabled)
-        {
-            chartView.animationOptions = ChartView.SeriesAnimations;
-        }
-        else
-        {
-            chartView.animationOptions = ChartView.NoAnimation;
-        }
-    }
-
-    function changeRefreshRate(rate)
-    {
-        refreshTimer.interval = 1 / Number(rate) * 1000;
     }
 }

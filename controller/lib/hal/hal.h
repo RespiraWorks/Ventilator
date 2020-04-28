@@ -17,6 +17,9 @@ limitations under the License.
 
 // A hardware abstraction layer that supports mocking/faking for tests.
 //
+// The canonical list of hardware and the pins they connect to is:
+// https://bit.ly/3aERr69
+//
 // Once this is completed, you shouldn't include <Arduino.h> outside of this
 // file; everything that interacts with the hardware should go through here.
 //
@@ -89,6 +92,8 @@ limitations under the License.
 // Mode of a digital pin.
 // Usage: PinMode::HAL_INPUT etc.
 enum class PinMode : uint8_t {
+  // Test code relies on INPUT being the first enumeration (to get the behavior
+  // that INPUT pins are the default).
   HAL_CONSTANT(INPUT),
   HAL_CONSTANT(OUTPUT),
   HAL_CONSTANT(INPUT_PULLUP)
@@ -110,15 +115,25 @@ enum class AnalogPin {
   OUTFLOW_PRESSURE_DIFF,
 };
 
-// IDs of the digital pins that can be used for pulse-width modulation.
-// https://github.com/arduino/ArduinoCore-avr/blob/257ee3f/variants/standard/pins_arduino.h#L35
-enum class PwmPinId {
-  PWM_3 = 3,
-  PWM_5 = 5,
-  PWM_6 = 6,
-  PWM_9 = 9,
-  PWM_10 = 10,
-  PWM_11 = 11,
+// Pulse-width modulated outputs from the controller.  These can be set to
+// values in [0-255].
+//
+// Pins default to INPUT, so if you add a new pin here, be sure to update
+// HalApi::init() and set it to OUTPUT!
+enum class PwmPin {
+  // Controls the fan speed.
+  BLOWER,
+};
+
+// Binary pins set by the controller -- these are booleans, HIGH or LOW.
+//
+// PWM pins can of course be HIGH or LOW too, but we separate out purely on/off
+// pins from PWM pins for reasons of "strong typing".
+//
+// Pins default to INPUT, so if you add a new pin here, be sure to update
+// HalApi::init() and set it to OUTPUT!
+enum class BinaryPin {
+  SOLENOID,
 };
 
 // Singleton class which implements a hardware abstraction layer.
@@ -160,15 +175,15 @@ public:
   void test_setAnalogPin(AnalogPin pin, int value);
 #endif
 
-  // TODO(jlebar): Make digital pin number strongly typed?  It's slightly
-  // tricky because the digital pin numbers are a superset of PWM pin numbers,
-  // and C++ doesn't support enum inheritance.
-  void setDigitalPinMode(int pin, PinMode mode);
-  void setDigitalPinMode(PwmPinId pin, PinMode mode) {
-    setDigitalPinMode(static_cast<int>(pin), mode);
-  }
-  void analogWrite(PwmPinId pin, int value);
-  void digitalWrite(int pin, VoltageLevel value);
+  // Causes `pin` to output a square wave with duty cycle determined by value
+  // (range [0, 255]).
+  //
+  // Perhaps a better name would be "pwmWrite", but we also want to be somewhat
+  // consistent with the Arduino API that people are familiar with.
+  void analogWrite(PwmPin pin, int value);
+
+  // Sets `pin` to high or low.
+  void digitalWrite(BinaryPin pin, VoltageLevel value);
 
   // Receives bytes from the GUI controller along the serial bus.
   //
@@ -199,7 +214,13 @@ public:
   // Number of bytes we can write without blocking.
   uint16_t serialBytesAvailableForWrite();
 
-#ifdef TEST_MODE
+#ifndef TEST_MODE
+  // Translates to a numeric pin that can be passed to the Arduino API.
+  int rawPin(PwmPin pin);
+  int rawPin(AnalogPin pin);
+  int rawPin(BinaryPin pin);
+
+#else
   // Reads up to `len` bytes of data "sent" via serialWrite.  Returns the total
   // number of bytes read.
   //
@@ -244,22 +265,26 @@ public:
 private:
   // Initializes watchdog, is called by HalApi::init
   void watchdog_init();
+
+  void setDigitalPinMode(PwmPin pin, PinMode mode);
+  void setDigitalPinMode(BinaryPin pin, PinMode mode);
+
 #ifdef TEST_MODE
   // Instance variables used when mocking HAL.
 
   uint32_t millis_ = 0;
 
-  std::map<AnalogPin, int> analog_pin_values_;
-
-  VoltageLevel digital_pin_values_[14] = {VoltageLevel::HAL_LOW};
-  // The default pin mode on Arduino is INPUT.
+  // The default pin mode on Arduino is INPUT, which happens to be the first
+  // enumerator in PinMode and so the default in these maps!
+  //
   // Source: https://www.arduino.cc/en/Tutorial/DigitalPins
   // "Arduino (Atmega) pins default to input"
-  PinMode digital_pin_modes_[14] = {PinMode::HAL_INPUT};
+  std::map<PwmPin, PinMode> pwm_pin_modes_;
+  std::map<BinaryPin, PinMode> binary_pin_modes_;
 
-  // TODO: Really, PWM pins are digital pins - i.e., "writing to a PWM pin"
-  // means "asking the device to set the digital pin to HIGH this% of the time".
-  int pwm_pin_values_[14] = {0};
+  std::map<AnalogPin, int> analog_pin_values_;
+  std::map<BinaryPin, VoltageLevel> binary_pin_values_;
+  std::map<PwmPin, int> pwm_pin_values_;
 
   std::deque<std::vector<char>> serialIncomingData_;
   std::vector<char> serialOutgoingData_;
@@ -288,32 +313,64 @@ inline void HalApi::init() {
   watchdog_init();
   constexpr int32_t BAUD_RATE_BPS = 115200;
   Serial.begin(BAUD_RATE_BPS, SERIAL_8N1);
+
+  setDigitalPinMode(PwmPin::BLOWER, PinMode::HAL_OUTPUT);
+  setDigitalPinMode(BinaryPin::SOLENOID, PinMode::HAL_OUTPUT);
 }
 inline uint32_t HalApi::millis() { return ::millis(); }
 inline void HalApi::delay(uint32_t ms) { ::delay(ms); }
+
+inline int HalApi::rawPin(AnalogPin pin) {
+  // See pinout at https://bit.ly/3aERr69.
+  // TODO: Update with STM32 pinout.
+  switch (pin) {
+  case AnalogPin::PATIENT_PRESSURE:
+    return A0;
+  case AnalogPin::INFLOW_PRESSURE_DIFF:
+    return A1;
+  case AnalogPin::OUTFLOW_PRESSURE_DIFF:
+    return A2;
+  }
+  // Switch above covers all cases (and gcc enforces this).
+  __builtin_unreachable();
+}
+
+inline int HalApi::rawPin(PwmPin pin) {
+  // See pinout at https://bit.ly/3aERr69.
+  // TODO: Update with STM32 pinout.
+  switch (pin) {
+  case PwmPin::BLOWER:
+    return 6;
+  }
+  // Switch above covers all cases (and gcc enforces this).
+  __builtin_unreachable();
+}
+
+inline int HalApi::rawPin(BinaryPin pin) {
+  // See pinout at https://bit.ly/3aERr69.
+  // TODO: Update with STM32 pinout.
+  switch (pin) {
+  case BinaryPin::SOLENOID:
+    return 5;
+  }
+  // Switch above covers all cases (and gcc enforces this).
+  __builtin_unreachable();
+}
+
 inline int HalApi::analogRead(AnalogPin pin) {
-  int raw_pin = [&] {
-    switch (pin) {
-    case AnalogPin::PATIENT_PRESSURE:
-      return A0;
-    case AnalogPin::INFLOW_PRESSURE_DIFF:
-      return A1;
-    case AnalogPin::OUTFLOW_PRESSURE_DIFF:
-      return A2;
-    }
-    // Switch above covers all cases (and gcc enforces this).
-    __builtin_unreachable();
-  }();
-  return ::analogRead(raw_pin);
+  return ::analogRead(rawPin(pin));
 }
-inline void HalApi::setDigitalPinMode(int pin, PinMode mode) {
-  ::pinMode(pin, static_cast<uint8_t>(mode));
+inline void HalApi::setDigitalPinMode(PwmPin pin, PinMode mode) {
+  ::pinMode(rawPin(pin), static_cast<uint8_t>(mode));
 }
-inline void HalApi::digitalWrite(int pin, VoltageLevel value) {
-  ::digitalWrite(pin, static_cast<uint8_t>(value));
+inline void HalApi::setDigitalPinMode(BinaryPin pin, PinMode mode) {
+  ::pinMode(rawPin(pin), static_cast<uint8_t>(mode));
 }
-inline void HalApi::analogWrite(PwmPinId pin, int value) {
-  ::analogWrite(static_cast<int>(pin), value);
+inline void HalApi::digitalWrite(BinaryPin pin, VoltageLevel value) {
+  ::digitalWrite(rawPin(pin), static_cast<uint8_t>(value));
+}
+inline void HalApi::analogWrite(PwmPin pin, int value) {
+  ::analogWrite(rawPin(pin), value);
 }
 [[nodiscard]] inline uint16_t HalApi::serialRead(char *buf, uint16_t len) {
   return Serial.readBytes(buf, alg::min(len, serialBytesAvailableForRead()));
@@ -367,17 +424,23 @@ inline int HalApi::analogRead(AnalogPin pin) {
 inline void HalApi::test_setAnalogPin(AnalogPin pin, int value) {
   analog_pin_values_[pin] = value;
 }
-inline void HalApi::setDigitalPinMode(int pin, PinMode mode) {
-  digital_pin_modes_[pin] = mode;
+inline void HalApi::setDigitalPinMode(PwmPin pin, PinMode mode) {
+  pwm_pin_modes_[pin] = mode;
 }
-inline void HalApi::digitalWrite(int pin, VoltageLevel value) {
-  if (digital_pin_modes_[pin] != PinMode::HAL_OUTPUT) {
+inline void HalApi::setDigitalPinMode(BinaryPin pin, PinMode mode) {
+  binary_pin_modes_[pin] = mode;
+}
+inline void HalApi::digitalWrite(BinaryPin pin, VoltageLevel value) {
+  if (binary_pin_modes_[pin] != PinMode::HAL_OUTPUT) {
     throw "Can only write to an OUTPUT pin";
   }
-  digital_pin_values_[pin] = value;
+  binary_pin_values_[pin] = value;
 }
-inline void HalApi::analogWrite(PwmPinId pin, int value) {
-  pwm_pin_values_[static_cast<int>(pin)] = value;
+inline void HalApi::analogWrite(PwmPin pin, int value) {
+  if (pwm_pin_modes_[pin] != PinMode::HAL_OUTPUT) {
+    throw "Can only write to an OUTPUT pin";
+  }
+  pwm_pin_values_[pin] = value;
 }
 [[nodiscard]] inline uint16_t HalApi::serialRead(char *buf, uint16_t len) {
   if (serialIncomingData_.empty()) {

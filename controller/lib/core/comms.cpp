@@ -1,6 +1,6 @@
 #include "comms.h"
 
-#include "alg.h"
+#include "algorithm.h"
 #include "hal.h"
 #include "network_protocol.pb.h"
 #include <pb_common.h>
@@ -99,7 +99,7 @@ static void process_tx(const ControllerStatus &controller_status) {
     // it matches nanopb.
     auto bytes_written =
         Hal.serialWrite(reinterpret_cast<char *>(tx_buffer) + tx_idx,
-                        alg::min(bytes_avail, tx_bytes_remaining));
+                        stl::min(bytes_avail, tx_bytes_remaining));
     // TODO: How paranoid should we be about this underflowing?  Perhaps we
     // should reset the device if this or other invariants are violated?
     tx_bytes_remaining -= bytes_written;

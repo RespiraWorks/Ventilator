@@ -12,8 +12,8 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-#ifndef ALG_H
-#define ALG_H
+#ifndef ALGORITHM_H
+#define ALGORITHM_H
 
 // This file is a "Polyfill" for some functions in <algorithm>, which is
 // unavailable on Arduino.
@@ -32,7 +32,7 @@ limitations under the License.
 // and you can see that this might evaluate fn() twice.  There's no guarantee
 // that the second return is equal to the first.
 //
-// Use alg::min/max instead.
+// Use stl::min/max instead.
 #ifndef TEST_MODE
 #include <Arduino.h>
 #endif
@@ -40,7 +40,7 @@ limitations under the License.
 #undef min
 #undef max
 
-namespace alg {
+namespace stl {
 
 template <typename T> constexpr const T &min(const T &a, const T &b) {
   return a < b ? a : b;
@@ -50,5 +50,5 @@ template <typename T> constexpr const T &max(const T &a, const T &b) {
   return a > b ? a : b;
 }
 
-} // namespace alg
-#endif // ALG_H
+} // namespace stl
+#endif // ALGORITHM_H

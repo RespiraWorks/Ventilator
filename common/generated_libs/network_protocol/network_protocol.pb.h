@@ -16,9 +16,7 @@ extern "C" {
 /* Enum definitions */
 typedef enum _VentMode {
     VentMode_OFF = 0,
-    VentMode_PRESSURE_CONTROL = 1,
-    VentMode_PRESSURE_ASSIST = 2,
-    VentMode_PRESSURE_SUPPORT = 3
+    VentMode_PRESSURE_CONTROL = 1
 } VentMode;
 
 typedef enum _AlarmKind {
@@ -42,7 +40,6 @@ typedef struct _SensorReadings {
 
 typedef struct _VentParams {
     VentMode mode;
-    uint32_t percent_inspiratory_o2;
     uint32_t peep_cm_h2o;
     uint32_t breaths_per_min;
     uint32_t pip_cm_h2o;
@@ -74,8 +71,8 @@ typedef struct _GuiStatus {
 
 /* Helper constants for enums */
 #define _VentMode_MIN VentMode_OFF
-#define _VentMode_MAX VentMode_PRESSURE_SUPPORT
-#define _VentMode_ARRAYSIZE ((VentMode)(VentMode_PRESSURE_SUPPORT+1))
+#define _VentMode_MAX VentMode_PRESSURE_CONTROL
+#define _VentMode_ARRAYSIZE ((VentMode)(VentMode_PRESSURE_CONTROL+1))
 
 #define _AlarmKind_MIN AlarmKind_RESPIRATORY_RATE_TOO_LOW
 #define _AlarmKind_MAX AlarmKind_TIDAL_VOLUME_TOO_HIGH
@@ -85,12 +82,12 @@ typedef struct _GuiStatus {
 /* Initializer values for message structs */
 #define GuiStatus_init_default                   {0, VentParams_init_default, 0, {Alarm_init_default, Alarm_init_default, Alarm_init_default, Alarm_init_default}}
 #define ControllerStatus_init_default            {0, VentParams_init_default, SensorReadings_init_default, 0, {Alarm_init_default, Alarm_init_default, Alarm_init_default, Alarm_init_default}}
-#define VentParams_init_default                  {_VentMode_MIN, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+#define VentParams_init_default                  {_VentMode_MIN, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
 #define SensorReadings_init_default              {0, 0, 0}
 #define Alarm_init_default                       {0, _AlarmKind_MIN}
 #define GuiStatus_init_zero                      {0, VentParams_init_zero, 0, {Alarm_init_zero, Alarm_init_zero, Alarm_init_zero, Alarm_init_zero}}
 #define ControllerStatus_init_zero               {0, VentParams_init_zero, SensorReadings_init_zero, 0, {Alarm_init_zero, Alarm_init_zero, Alarm_init_zero, Alarm_init_zero}}
-#define VentParams_init_zero                     {_VentMode_MIN, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+#define VentParams_init_zero                     {_VentMode_MIN, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
 #define SensorReadings_init_zero                 {0, 0, 0}
 #define Alarm_init_zero                          {0, _AlarmKind_MIN}
 
@@ -101,7 +98,6 @@ typedef struct _GuiStatus {
 #define SensorReadings_volume_ml_tag             2
 #define SensorReadings_flow_ml_per_min_tag       3
 #define VentParams_mode_tag                      1
-#define VentParams_percent_inspiratory_o2_tag    2
 #define VentParams_peep_cm_h2o_tag               3
 #define VentParams_breaths_per_min_tag           4
 #define VentParams_pip_cm_h2o_tag                5
@@ -144,7 +140,6 @@ X(a, STATIC,   REPEATED, MESSAGE,  controller_alarms,   4)
 
 #define VentParams_FIELDLIST(X, a) \
 X(a, STATIC,   REQUIRED, UENUM,    mode,              1) \
-X(a, STATIC,   REQUIRED, UINT32,   percent_inspiratory_o2,   2) \
 X(a, STATIC,   REQUIRED, UINT32,   peep_cm_h2o,       3) \
 X(a, STATIC,   REQUIRED, UINT32,   breaths_per_min,   4) \
 X(a, STATIC,   REQUIRED, UINT32,   pip_cm_h2o,        5) \
@@ -186,9 +181,9 @@ extern const pb_msgdesc_t Alarm_msg;
 #define Alarm_fields &Alarm_msg
 
 /* Maximum encoded size of messages (where known) */
-#define GuiStatus_size                           146
-#define ControllerStatus_size                    163
-#define VentParams_size                          73
+#define GuiStatus_size                           140
+#define ControllerStatus_size                    157
+#define VentParams_size                          67
 #define SensorReadings_size                      15
 #define Alarm_size                               13
 

@@ -41,7 +41,10 @@ static_assert(DEFAULT_VENTURI_CHOKE_DIAM > meters(0));
 // Arduino Nano ADC is 10 bit, default 5V Vref_P (~4.9 mV
 // per count) [V];
 //
-// TODO: Update this for STM32, see https://bit.ly/3aERr69.
+// Happily, this constant also works on STM32.  There, the pressure
+// transducer's output is scaled down from [0V, 5V] to [0, 3.3V], and the ADC
+// correspondingly gives us 10 bits over the range [0V, 3.3V].  So one step in
+// the ADC value still corresponds to the same pressure amount of increase.
 static const float ADC_LSB = 5.0f / 1024.0f;
 
 // Take this many samples from a sensor while zeroing it.

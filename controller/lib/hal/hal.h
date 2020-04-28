@@ -15,35 +15,25 @@ limitations under the License.
 #ifndef HAL_H
 #define HAL_H
 
-// A hardware abstraction layer that supports mocking/faking for tests.
+// A hardware abstraction layer that supports faking for tests.
 //
 // The canonical list of hardware and the pins they connect to is:
 // https://bit.ly/3aERr69
 //
-// Once this is completed, you shouldn't include <Arduino.h> outside of this
-// file; everything that interacts with the hardware should go through here.
+// You shouldn't include <Arduino.h> outside of this file; everything that
+// interacts with the hardware should go through here.
 //
-// When running in test mode, HalApi is pedantically a combination of a mock
-// and a fake.  All that means is,
+// When running in test mode, HalApi is pedantically a fake, not a mock.  All
+// that means is that the methods have "fake" implementations, trying to
+// loosely mimic the hardware in some defined way.  For example, instead of
+// telling the actual amount of time since boot, millis() stays constant, and
+// doesn't advance unless you call delay().
 //
-//   - Some methods have "fake" implementations.  For example, instead of
-//     telling the actual amount of time since boot, millis() stays constant,
-//     and doesn't advance unless you call delay().
-//
-//   - Other methods are "mocked".  gMock provides a default do-nothing
-//     implementation, and:
-//      - If you want to check that a mocked method is called (e.g. you want
-//        to check that data was sent along a channel, use EXPECT_CALL.
-//      - If you want to provide a temporary ("mock") implementation of a
-//        method, e.g. to make a "read" method return data, use ON_CALL.
-//
-// For more info, see
-// https://github.com/google/googletest/blob/master/googlemock/docs/for_dummies.md
-//
-// In order to support mocking, the HAL has to be a class with virtual methods.
-// But we don't want virtual methods when compiling for the controller, because
-// they come at a cost.  Thus we do some macro magic to get virtual methods
-// when compiling for test, but not when compiling for production.
+// It would be possible to mock some methods in HAL if we needed to.  A mock is
+// a method whose behavior can be controlled by the test itself; it might do
+// nothing, or it might throw an exception, or whatever.  Tests can also
+// observe whether mocked methods are called.  So far that hasn't been
+// necessary.
 
 #include "alg.h"
 
@@ -54,14 +44,11 @@ limitations under the License.
     "TEST_MODE intended to be run only on native, but ARDUINO_AVR_UNO or ARDUINO_NUCLEO_L452RE is defined"
 #endif
 
+#include <cstring>
 #include <deque>
 #include <map>
 #include <vector>
 
-#include "gmock/gmock.h"
-
-#define HAL_MOCK_METHOD(returntype, name, args)                                \
-  MOCK_METHOD(returntype, name, args)
 #define HAL_CONSTANT(name) HAL_##name
 
 #else // !TEST_MODE
@@ -76,8 +63,6 @@ limitations under the License.
 #include <avr/wdt.h>
 #endif
 
-#define HAL_MOCK_METHOD(returntype, name, args) returntype name args
-
 // "HAL" has to be there because the respective Arduino symbols are macros,
 // e.g. A0 expands to 14, so we can't have a constant named A0.
 #define HAL_CONSTANT(name) HAL_##name = name
@@ -91,7 +76,7 @@ limitations under the License.
 
 // Mode of a digital pin.
 // Usage: PinMode::HAL_INPUT etc.
-enum class PinMode : uint8_t {
+enum class PinMode {
   // Test code relies on INPUT being the first enumeration (to get the behavior
   // that INPUT pins are the default).
   HAL_CONSTANT(INPUT),
@@ -101,7 +86,7 @@ enum class PinMode : uint8_t {
 
 // Voltage level of a digital pin.
 // Usage: VoltageLevel::HAL_HIGH, HAL_LOW
-enum class VoltageLevel : uint8_t { HAL_CONSTANT(HIGH), HAL_CONSTANT(LOW) };
+enum class VoltageLevel { HAL_CONSTANT(HIGH), HAL_CONSTANT(LOW) };
 
 enum class AnalogPin {
   // MPXV5004DP pressure sensors.
@@ -146,12 +131,12 @@ public:
   // Number of milliseconds that have passed since the board started running the
   // program.
   //
-  // Faked when mocking.  Time doesn't advance unless you call delay().
+  // Faked when testing.  Time doesn't advance unless you call delay().
   uint32_t millis();
 
   // Sleeps for some number of milliseconds.
   //
-  // Faked when mocking.  Does not sleep, but does advance the time returned by
+  // Faked when testing.  Does not sleep, but does advance the time returned by
   // millis().
   void delay(uint32_t ms);
 
@@ -263,15 +248,14 @@ public:
   void watchdog_handler();
 
 private:
-  // Initializes watchdog, is called by HalApi::init
+  // Initializes watchdog, sets appropriate pins to OUTPUT, etc.  Called by
+  // HalApi::init
   void watchdog_init();
 
   void setDigitalPinMode(PwmPin pin, PinMode mode);
   void setDigitalPinMode(BinaryPin pin, PinMode mode);
 
 #ifdef TEST_MODE
-  // Instance variables used when mocking HAL.
-
   uint32_t millis_ = 0;
 
   // The default pin mode on Arduino is INPUT, which happens to be the first
@@ -291,8 +275,6 @@ private:
 #endif
 };
 
-#undef HAL_MOCK_METHOD
-
 extern HalApi Hal;
 
 #if defined(ARDUINO_AVR_UNO) || defined(ARDUINO_NUCLEO_L452RE)
@@ -311,6 +293,7 @@ inline void HalApi::init() {
   //    has a very short value.  We need to Hal.init() immediately so that
   //    we don't time out while initializing.
   watchdog_init();
+
   constexpr int32_t BAUD_RATE_BPS = 115200;
   Serial.begin(BAUD_RATE_BPS, SERIAL_8N1);
 

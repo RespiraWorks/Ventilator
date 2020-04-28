@@ -72,15 +72,6 @@ Item
             Layout.fillWidth: true
             height: parent.height/3
             width: parent.width
-
-            onOpenGLSupportedChanged:
-            {
-                if (!openGLSupported)
-                {
-                    controlPanel.openGLButton.enabled = false
-                    controlPanel.openGLButton.currentSelection = 0
-                }
-            }
         }
 
         ScopeView
@@ -92,15 +83,6 @@ Item
             Layout.fillWidth: true
             height: parent.height/3
             width: parent.width
-
-            onOpenGLSupportedChanged:
-            {
-                if (!openGLSupported)
-                {
-                    controlPanel.openGLButton.enabled = false
-                    controlPanel.openGLButton.currentSelection = 0
-                }
-            }
         }
 
         ScopeView {
@@ -111,15 +93,6 @@ Item
             Layout.fillWidth: true
             height: parent.height/3
             width: parent.width
-
-            onOpenGLSupportedChanged:
-            {
-                if (!openGLSupported)
-                {
-                    controlPanel.openGLButton.enabled = false
-                    controlPanel.openGLButton.currentSelection = 0
-                }
-            }
         }
 
 

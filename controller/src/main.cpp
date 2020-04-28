@@ -46,8 +46,9 @@ limitations under the License.
 */
 
 #include "alarm.h"
+#include "blower_fsm.h"
+#include "blower_pid.h"
 #include "comms.h"
-#include "control.h"
 #include "hal.h"
 #include "network_protocol.pb.h"
 #include "sensors.h"
@@ -66,8 +67,12 @@ static void controller_loop() {
     comms_handler(controller_status, &gui_status);
     controller_status.active_params = gui_status.desired_params;
 
-    pid_execute(controller_status.active_params,
-                &controller_status.sensor_readings);
+    Pressure setpoint =
+        blower_fsm_get_setpoint(controller_status.active_params);
+    controller_status.fan_setpoint_cm_h2o = setpoint.cmH2O();
+
+    blower_pid_execute(setpoint, &controller_status.sensor_readings,
+                       &controller_status.fan_power);
     Hal.watchdog_handler();
   }
 }
@@ -78,10 +83,11 @@ void setup() {
   Hal.init();
 
   comms_init();
+  alarm_init();
   sensors_init();
   solenoid_init();
-  pid_init();
-  alarm_init();
+  blower_fsm_init();
+  blower_pid_init();
 
   controller_loop();
 }

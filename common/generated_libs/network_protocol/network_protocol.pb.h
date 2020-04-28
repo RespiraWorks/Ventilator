@@ -59,6 +59,8 @@ typedef struct _ControllerStatus {
     SensorReadings sensor_readings;
     pb_size_t controller_alarms_count;
     Alarm controller_alarms[4];
+    float fan_setpoint_cm_h2o;
+    float fan_power;
 } ControllerStatus;
 
 typedef struct _GuiStatus {
@@ -81,12 +83,12 @@ typedef struct _GuiStatus {
 
 /* Initializer values for message structs */
 #define GuiStatus_init_default                   {0, VentParams_init_default, 0, {Alarm_init_default, Alarm_init_default, Alarm_init_default, Alarm_init_default}}
-#define ControllerStatus_init_default            {0, VentParams_init_default, SensorReadings_init_default, 0, {Alarm_init_default, Alarm_init_default, Alarm_init_default, Alarm_init_default}}
+#define ControllerStatus_init_default            {0, VentParams_init_default, SensorReadings_init_default, 0, {Alarm_init_default, Alarm_init_default, Alarm_init_default, Alarm_init_default}, 0, 0}
 #define VentParams_init_default                  {_VentMode_MIN, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
 #define SensorReadings_init_default              {0, 0, 0}
 #define Alarm_init_default                       {0, _AlarmKind_MIN}
 #define GuiStatus_init_zero                      {0, VentParams_init_zero, 0, {Alarm_init_zero, Alarm_init_zero, Alarm_init_zero, Alarm_init_zero}}
-#define ControllerStatus_init_zero               {0, VentParams_init_zero, SensorReadings_init_zero, 0, {Alarm_init_zero, Alarm_init_zero, Alarm_init_zero, Alarm_init_zero}}
+#define ControllerStatus_init_zero               {0, VentParams_init_zero, SensorReadings_init_zero, 0, {Alarm_init_zero, Alarm_init_zero, Alarm_init_zero, Alarm_init_zero}, 0, 0}
 #define VentParams_init_zero                     {_VentMode_MIN, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
 #define SensorReadings_init_zero                 {0, 0, 0}
 #define Alarm_init_zero                          {0, _AlarmKind_MIN}
@@ -113,6 +115,8 @@ typedef struct _GuiStatus {
 #define ControllerStatus_active_params_tag       2
 #define ControllerStatus_sensor_readings_tag     3
 #define ControllerStatus_controller_alarms_tag   4
+#define ControllerStatus_fan_setpoint_cm_h2o_tag 5
+#define ControllerStatus_fan_power_tag           6
 #define GuiStatus_uptime_ms_tag                  1
 #define GuiStatus_desired_params_tag             2
 #define GuiStatus_acked_alarms_tag               3
@@ -131,7 +135,9 @@ X(a, STATIC,   REPEATED, MESSAGE,  acked_alarms,      3)
 X(a, STATIC,   REQUIRED, UINT64,   uptime_ms,         1) \
 X(a, STATIC,   REQUIRED, MESSAGE,  active_params,     2) \
 X(a, STATIC,   REQUIRED, MESSAGE,  sensor_readings,   3) \
-X(a, STATIC,   REPEATED, MESSAGE,  controller_alarms,   4)
+X(a, STATIC,   REPEATED, MESSAGE,  controller_alarms,   4) \
+X(a, STATIC,   REQUIRED, FLOAT,    fan_setpoint_cm_h2o,   5) \
+X(a, STATIC,   REQUIRED, FLOAT,    fan_power,         6)
 #define ControllerStatus_CALLBACK NULL
 #define ControllerStatus_DEFAULT NULL
 #define ControllerStatus_active_params_MSGTYPE VentParams
@@ -182,7 +188,7 @@ extern const pb_msgdesc_t Alarm_msg;
 
 /* Maximum encoded size of messages (where known) */
 #define GuiStatus_size                           140
-#define ControllerStatus_size                    157
+#define ControllerStatus_size                    167
 #define VentParams_size                          67
 #define SensorReadings_size                      15
 #define Alarm_size                               13

@@ -15,7 +15,7 @@ jobs:
       - run:
           name: Run Docker build
           command: |
-            docker build -f controller/Dockerfile -t controller-test-image .
+            docker build -f controller/tests_Dockerfile -t controller-test-image .
       - run:
           name: Run tests
           command: |

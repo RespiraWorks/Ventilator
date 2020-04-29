@@ -92,8 +92,7 @@ void pid_execute(const VentParams &params, SensorReadings *readings) {
   // Store sensor readings so they can eventually be sent to the GUI.
   // This pressure is just from the patient sensor, converted to the right
   // units.
-  // Convert [kPa] to [cm H2O] in place
-  readings->pressure_cm_h2o = get_patient_pressure_kpa() * 10.1974f;
+  readings->pressure_cm_h2o = get_patient_pressure().cmH2O();
   // TODO(anyone): This value is to be the integration over time of the below
   // flow_ml_per_min. That is, you take the value calculated for flow_ml_per_min
   // and integrate it over time to get total volume at the current time. Don't
@@ -101,8 +100,6 @@ void pid_execute(const VentParams &params, SensorReadings *readings) {
   readings->volume_ml = 0;
   // Flow rate is inhalation flow minus exhalation flow. Positive value is flow
   // into lungs, and negative is flow out of lungs.
-  // Convert [meters^3/s] to [mL/min] in place
   readings->flow_ml_per_min =
-      (get_volumetric_inflow_m3ps() - get_volumetric_outflow_m3ps()) * 1000.0f *
-      1000.0f * 60.0f;
+      (get_volumetric_inflow() - get_volumetric_outflow()).ml_per_min();
 }

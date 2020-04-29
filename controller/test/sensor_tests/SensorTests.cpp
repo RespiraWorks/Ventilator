@@ -105,15 +105,16 @@ TEST(SensorTests, FullScaleReading) {
     test_setAnalogPinToVolts(AnalogPin::OUTFLOW_PRESSURE_DIFF,
                              sensorVoltages[i]);
 
-    float pressurePatient = get_patient_pressure_kpa();
+    float pressurePatient = get_patient_pressure().kPa();
     EXPECT_NEAR(pressurePatient, pressures[i], COMPARISON_TOLERANCE);
 
-    float inflow = get_volumetric_inflow_m3ps();
-    float outflow = get_volumetric_outflow_m3ps();
+    float inflow = get_volumetric_inflow().cubic_m_per_sec();
+    float outflow = get_volumetric_outflow().cubic_m_per_sec();
     // Inhalation and exhalation should match because they are fed with the same
     // pressure waveform
     EXPECT_EQ(inflow, outflow);
-    EXPECT_NEAR(inflow, pressure_delta_to_volumetric_flow(pressures[i]),
+    EXPECT_NEAR(inflow,
+                pressure_delta_to_flow(kPa(pressures[i])).cubic_m_per_sec(),
                 COMPARISON_TOLERANCE);
   }
 }
@@ -124,42 +125,42 @@ TEST(SensorTests, FullScaleReading) {
 // you update the expected values accordingly.
 TEST(SensorTests, TestPositiveVolumetricFlowCalculation) {
   sensors_init();
-  float volumFlow = pressure_delta_to_volumetric_flow(1.0f);
+  float volumFlow = pressure_delta_to_flow(kPa(1.0f)).cubic_m_per_sec();
   // 1 kPa differential pressure should result in 9.52e-4 [m^3/s] of Q
   EXPECT_NEAR(volumFlow, 9.52e-4f, COMPARISON_TOLERANCE_FLOW);
 }
 
 TEST(SensorTests, TestNegativeVolumetricFlowCalculation) {
   sensors_init();
-  float volumFlow = pressure_delta_to_volumetric_flow(-1.0f);
+  float volumFlow = pressure_delta_to_flow(kPa(-1.0f)).cubic_m_per_sec();
   // -1 kPa differential pressure should result in -9.52e-4 [m^3/s] of Q
   EXPECT_NEAR(volumFlow, -9.52e-4f, COMPARISON_TOLERANCE_FLOW);
 }
 
 TEST(SensorTests, TestZeroVolumetricFlowCalculation) {
   sensors_init();
-  float volumFlow = pressure_delta_to_volumetric_flow(0.0f);
+  float volumFlow = pressure_delta_to_flow(kPa(0.0f)).cubic_m_per_sec();
   // 0 kPa differential pressure should result in 0 [m^3/s] of Q
   EXPECT_NEAR(volumFlow, 0.0f, COMPARISON_TOLERANCE_FLOW);
 }
 
 TEST(SensorTests, TestNearZeroVolumetricFlowCalculation) {
   sensors_init();
-  float volumFlow = pressure_delta_to_volumetric_flow(1.0e-7f);
+  float volumFlow = pressure_delta_to_flow(kPa(1.0e-7f)).cubic_m_per_sec();
   // 1e-7 kPa differential pressure should result in 3.07e-7 [m^3/s] of Q
   EXPECT_NEAR(volumFlow, 3.07e-7f, COMPARISON_TOLERANCE_FLOW);
 }
 
 TEST(SensorTests, TestLargeVolumetricFlowCalculation) {
   sensors_init();
-  float volumFlow = pressure_delta_to_volumetric_flow(100.0f);
+  float volumFlow = pressure_delta_to_flow(kPa(100.0f)).cubic_m_per_sec();
   // 100 kPa differential pressure should result in 9.72e-3 [m^3/s] of Q
   EXPECT_NEAR(volumFlow, 9.72e-3f, COMPARISON_TOLERANCE_FLOW);
 }
 
 TEST(SensorTests, TestSmallVolumetricFlowCalculation) {
   sensors_init();
-  float volumFlow = pressure_delta_to_volumetric_flow(-100.0f);
+  float volumFlow = pressure_delta_to_flow(kPa(-100.0f)).cubic_m_per_sec();
   // -100 kPa differential pressure should result in -9.72e-3 [m^3/s] of Q
   EXPECT_NEAR(volumFlow, -9.72e-3f, COMPARISON_TOLERANCE_FLOW);
 }

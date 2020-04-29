@@ -28,82 +28,14 @@
 ****************************************************************************/
 
 #include "datasource.h"
-#include <QtCharts/QAreaSeries>
 #include <QtCharts/QXYSeries>
-#include <QtCore/QDebug>
-#include <QtCore/QtMath>
-#include <QtQuick/QQuickItem>
-#include <QtQuick/QQuickView>
-
-#include <random>
 
 QT_CHARTS_USE_NAMESPACE
 
-Q_DECLARE_METATYPE(QAbstractSeries *)
-Q_DECLARE_METATYPE(QAbstractAxis *)
-
-DataSource::DataSource(QQuickView *appViewer, QObject *parent)
-    : QObject(parent), m_appViewer(appViewer), m_index(-1) {
-  qRegisterMetaType<QAbstractSeries *>();
-  qRegisterMetaType<QAbstractAxis *>();
-
-  generateData(1000, 1000);
-}
-
 void DataSource::update(QAbstractSeries *series) {
-  if (series) {
-    QXYSeries *xySeries = static_cast<QXYSeries *>(series);
-    m_index++;
-    if (m_index > m_data.count() - 1) {
-      m_index = 0;
-    }
-    QVector<QPointF> points = m_data.at(m_index);
-    // Use replace instead of clear + append, it's optimized for performance
-    xySeries->replace(points);
-  }
-}
-
-void DataSource::generateData(int rowCount, int colCount) {
-  std::random_device rd;
-  std::mt19937 e2{rd()};
-  std::uniform_real_distribution<> dist{0, 1};
-
-  // Remove previous data
-  m_data.clear();
-
-  // Append the new data depending on the type
   QVector<QPointF> points;
-  points.reserve(colCount);
-
-  for (int j(0); j < colCount; ++j) {
-    qreal x(0);
-    qreal y(0);
-
-    y = (qSin(M_PI / 50 * j) > 0 ? 1 : 0) + dist(e2) / 5;
-    x = j;
+  for (auto [x, y] : generate_data_()) {
     points.append(QPointF(x, y));
   }
-  m_data.append(points);
-
-  points.clear();
-  // Append the new data depending on the type
-  for (int i(1); i < rowCount; ++i) {
-    for (int j(0); j < colCount - 1; ++j) {
-      qreal x(0);
-      qreal y(0);
-
-      y = m_data[i - 1][j + 1].y();
-      x = j;
-      points.append(QPointF(x, y));
-    }
-    qreal x(0);
-    qreal y(0);
-
-    y = (qSin(M_PI / 50 * i) > 0 ? 1 : 0) + dist(e2) / 5;
-    x = colCount;
-    points.append(QPointF(x, y));
-
-    m_data.append(points);
-    points.clear();
-  }
+  qobject_cast<QXYSeries *>(series)->replace(points);
 }

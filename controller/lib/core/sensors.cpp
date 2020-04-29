@@ -27,8 +27,7 @@ Arduino Nano and the MPXV5004GP and MPXV7002DP pressure sensors.
 // altitude - need mechanism to adjust based on delivery? Constant involving
 // density of air. Density assumed at 15 deg. Celsius and 1 atm of pressure.
 // Sourced from https://en.wikipedia.org/wiki/Density_of_air
-static const float ROOT_OF_TWO_OVER_DENSITY_OF_AIR =
-    sqrtf(2.0f / 1.225f); //[sqrt(meters^3/kg)]
+static const float DENSITY_OF_AIR_KG_PER_CUBIC_METER = 1.225; // kg/m^3
 
 // Arduino Nano ADC is 10 bit, default 5V Vref_P (~4.9 mV
 // per count) [V];
@@ -71,8 +70,10 @@ AnalogPin pin_for(Sensor s) {
   __builtin_unreachable();
 }
 
-static float diameter_to_area(float diameter) {
-  return static_cast<float>(M_PI) / 4.0f * diameter * diameter;
+// Returns an area in meters squared.
+static float diameter_to_area_m2(Length diameter) {
+  return static_cast<float>(M_PI) / 4.0f * diameter.meters() *
+         diameter.meters();
 }
 
 void sensors_init() {
@@ -109,36 +110,34 @@ void sensors_init() {
 // Reads a sensor, returning its value in kPa.
 //
 // @TODO: Add alarms if sensor value is out of expected range?
-static float read_pressure_sensor_kpa(Sensor s) {
+static Pressure read_pressure_sensor(Sensor s) {
   int sum = 0;
   for (int i = 0; i < SENSOR_SAMPLES_FOR_READ; i++) {
     sum += Hal.analogRead(pin_for(s)) - sensorZeroVals[s];
   }
   // Sensitivity of all pressure sensors is 1 V/kPa; no division needed.
-  return static_cast<float>(sum) / SENSOR_SAMPLES_FOR_READ * ADC_LSB;
+  return kPa(static_cast<float>(sum) / SENSOR_SAMPLES_FOR_READ * ADC_LSB);
 }
 
-float get_patient_pressure_kpa() {
-  return read_pressure_sensor_kpa(PATIENT_PRESSURE);
+Pressure get_patient_pressure() {
+  return read_pressure_sensor(PATIENT_PRESSURE);
 }
 
-float get_volumetric_inflow_m3ps() {
-  return pressure_delta_to_volumetric_flow(
-      read_pressure_sensor_kpa(INFLOW_PRESSURE_DIFF));
+VolumetricFlow get_volumetric_inflow() {
+  return pressure_delta_to_flow(read_pressure_sensor(INFLOW_PRESSURE_DIFF));
 }
 
-float get_volumetric_outflow_m3ps() {
-  return pressure_delta_to_volumetric_flow(
-      read_pressure_sensor_kpa(OUTFLOW_PRESSURE_DIFF));
+VolumetricFlow get_volumetric_outflow() {
+  return pressure_delta_to_flow(read_pressure_sensor(OUTFLOW_PRESSURE_DIFF));
 }
 
-float pressure_delta_to_volumetric_flow(float diffPressureInKiloPascals) {
+VolumetricFlow pressure_delta_to_flow(Pressure delta) {
   // TODO(jlebar): Make these constexpr once we have a C++ standard library
   // PortArea must be larger than the ChokeArea [meters^2]
   float venturiPortArea =
-      diameter_to_area(PressureSensors::DEFAULT_VENTURI_PORT_DIAM);
+      diameter_to_area_m2(PressureSensors::DEFAULT_VENTURI_PORT_DIAM);
   float venturiChokeArea =
-      diameter_to_area(PressureSensors::DEFAULT_VENTURI_CHOKE_DIAM);
+      diameter_to_area_m2(PressureSensors::DEFAULT_VENTURI_CHOKE_DIAM);
   //[meters^4]
   float venturiAreaProduct = venturiPortArea * venturiChokeArea;
   // Equivalent to 1/sqrt(A1^2 - A2^2) guaranteed never to have a negative
@@ -147,7 +146,8 @@ float pressure_delta_to_volumetric_flow(float diffPressureInKiloPascals) {
       1.0f / sqrtf(venturiPortArea * venturiPortArea -
                    venturiChokeArea * venturiChokeArea);
 
-  float sgn = copysignf(1.0f, diffPressureInKiloPascals);
-  return sgn * ROOT_OF_TWO_OVER_DENSITY_OF_AIR * venturiAreaProduct *
-         bernoulliAreaDivisor * sqrtf(abs(diffPressureInKiloPascals) * 1000.0f);
+  float sgn = copysignf(1.0f, delta.kPa());
+  return cubic_m_per_sec(sgn * sqrtf(2 / DENSITY_OF_AIR_KG_PER_CUBIC_METER) *
+                         venturiAreaProduct * bernoulliAreaDivisor *
+                         sqrtf(abs(delta.kPa()) * 1000.0f));
 }

@@ -23,6 +23,7 @@ Arduino Nano and the MPXV5004GP and MPXV7002DP pressure sensors.
 #define SENSORS_H
 
 #include "hal.h"
+#include "units.h"
 
 // A namespace class for constants related to pressure sensors.
 class PressureSensors {
@@ -30,48 +31,48 @@ public:
   PressureSensors() = delete;
 
   // min/max possible reading from MPXV5004GP [kPa]
-  inline constexpr static float P_VAL_MIN = 0.0f;
-  inline constexpr static float P_VAL_MAX = 3.92f;
+  inline constexpr static Pressure P_VAL_MIN = kPa(0.0);
+  inline constexpr static Pressure P_VAL_MAX = kPa(3.92);
 
   // min/max possible reading from MPXV7002DP [kPa]
-  inline constexpr static float DP_VAL_MIN = -2.0f;
-  inline constexpr static float DP_VAL_MAX = 2.0f;
+  inline constexpr static Pressure DP_VAL_MIN = kPa(-2);
+  inline constexpr static Pressure DP_VAL_MAX = kPa(2);
 
   // Default diameters relating to Ethan's Alpha Venturi - II
   // (https://docs.google.com/spreadsheets/d/1G9Kb-ImlluK8MOx-ce2rlHUBnTOtAFQvKjjs1bEhlpM/edit#gid=963553579)
   // Port diameter must be larger than choke diameter [meters]
-  inline constexpr static const float DEFAULT_VENTURI_PORT_DIAM = 14e-3f;
-  inline constexpr static const float DEFAULT_VENTURI_CHOKE_DIAM = 5.5e-3f;
+  inline constexpr static const Length DEFAULT_VENTURI_PORT_DIAM =
+      meters(14e-3);
+  inline constexpr static const Length DEFAULT_VENTURI_CHOKE_DIAM =
+      meters(5.5e-3);
 
   static_assert(DEFAULT_VENTURI_PORT_DIAM > DEFAULT_VENTURI_CHOKE_DIAM);
-  static_assert(DEFAULT_VENTURI_CHOKE_DIAM > 0.0f);
+  static_assert(DEFAULT_VENTURI_CHOKE_DIAM > meters(0));
 };
 
 void sensors_init();
 
 // Gets gets the current pressure at the patient, in kPa.
-float get_patient_pressure_kpa();
+Pressure get_patient_pressure();
 
-// Gets the volumetric inflow (i.e. rate of air flowing into the patient), in
-// meters^3/sec.
-float get_volumetric_inflow_m3ps();
+// Gets the volumetric inflow (i.e. rate of air flowing into the patient).
+VolumetricFlow get_volumetric_inflow();
 
-// Gets the volumetric outflow (i.e. rate of air flowing out of the patient),
-// in meters^3/sec.
-float get_volumetric_outflow_m3ps();
+// Gets the volumetric outflow (i.e. rate of air flowing out of the patient).
+VolumetricFlow get_volumetric_outflow();
 
 /*
  * @brief Method implements Bernoulli's equation assuming the Venturi Effect.
  * https://en.wikipedia.org/wiki/Venturi_effect
+ *
  * Solves for the volumetric flow rate since A1/A2, rho, and differential
  * pressure are known. Q = sqrt(2/rho) * (A1*A2) * 1/sqrt(A1^2-A2^2) *
  * sqrt(p1-p2); based on (p1 - p2) = (rho/2) * (v2^2 - v1^2); where A1 > A2
- * @param diffPressureInKiloPascals the differential pressure from a sensor in
- * [kPa]
+ *
  * @return the volumetric flow in [meters^3/s]. Can be negative, indicating
  * direction of flow, depending on how the differential sensor is attached to
  * the venturi.
  */
-float pressure_delta_to_volumetric_flow(float diffPressureInKiloPascals);
+VolumetricFlow pressure_delta_to_flow(Pressure delta);
 
 #endif // SENSORS_H

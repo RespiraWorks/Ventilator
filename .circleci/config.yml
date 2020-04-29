@@ -1,6 +1,25 @@
 version: 2.1
 
 jobs:
+  # This job creates an image that has the necessary tools to build and test the controller code, then runs it.
+  # It replicates the same environment as the one used in TravisCI (see the .travis.yml file in this repo),
+  # though without the GUI build tools and dependencies.
+  controller-test:
+    # See https://circleci.com/docs/2.0/executor-types/#docker-benefits-and-limitations
+    # We use a machine executor here because we must run the container in privileged mode.
+    # This is because LeakSanitizer, which runs during the build, requires ptrace.
+    machine:
+      image: ubuntu-1604:201903-01
+    steps:
+      - checkout
+      - run:
+          name: Run Docker build
+          command: |
+            docker build -f controller/tests_Dockerfile -t controller-test-image .
+      - run:
+          name: Run tests
+          command: |
+            docker run --privileged -t controller-test-image
   gui-static-analysis:
     machine:
       image: ubuntu-1604:201903-01
@@ -55,6 +74,7 @@ jobs:
 workflows:
   commit:
     jobs:
+      - controller-test
       - gui-static-analysis
       - gui-build-image:
           requires:

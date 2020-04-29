@@ -36,6 +36,7 @@ limitations under the License.
 // necessary.
 
 #include "algorithm.h"
+#include "units.h"
 
 #ifdef TEST_MODE
 
@@ -127,6 +128,9 @@ enum class BinaryPin {
 class HalApi {
 public:
   void init();
+
+  // Current time, strongly typed.  Prefer this over millis().
+  Time now() { return millisSinceStartup(millis()); }
 
   // Number of milliseconds that have passed since the board started running the
   // program.

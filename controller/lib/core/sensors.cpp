@@ -29,6 +29,15 @@ Arduino Nano and the MPXV5004GP and MPXV7002DP pressure sensors.
 // Sourced from https://en.wikipedia.org/wiki/Density_of_air
 static const float DENSITY_OF_AIR_KG_PER_CUBIC_METER = 1.225; // kg/m^3
 
+// Diameters relating to Ethan's Alpha Venturi - II
+// (https://docs.google.com/spreadsheets/d/1G9Kb-ImlluK8MOx-ce2rlHUBnTOtAFQvKjjs1bEhlpM/edit#gid=963553579)
+// Port diameter must be larger than choke diameter
+constexpr static Length DEFAULT_VENTURI_PORT_DIAM = millimeters(14);
+constexpr static Length DEFAULT_VENTURI_CHOKE_DIAM = millimeters(5.5);
+
+static_assert(DEFAULT_VENTURI_PORT_DIAM > DEFAULT_VENTURI_CHOKE_DIAM);
+static_assert(DEFAULT_VENTURI_CHOKE_DIAM > meters(0));
+
 // Arduino Nano ADC is 10 bit, default 5V Vref_P (~4.9 mV
 // per count) [V];
 //
@@ -134,10 +143,8 @@ VolumetricFlow get_volumetric_outflow() {
 VolumetricFlow pressure_delta_to_flow(Pressure delta) {
   // TODO(jlebar): Make these constexpr once we have a C++ standard library
   // PortArea must be larger than the ChokeArea [meters^2]
-  float venturiPortArea =
-      diameter_to_area_m2(PressureSensors::DEFAULT_VENTURI_PORT_DIAM);
-  float venturiChokeArea =
-      diameter_to_area_m2(PressureSensors::DEFAULT_VENTURI_CHOKE_DIAM);
+  float venturiPortArea = diameter_to_area_m2(DEFAULT_VENTURI_PORT_DIAM);
+  float venturiChokeArea = diameter_to_area_m2(DEFAULT_VENTURI_CHOKE_DIAM);
   //[meters^4]
   float venturiAreaProduct = venturiPortArea * venturiChokeArea;
   // Equivalent to 1/sqrt(A1^2 - A2^2) guaranteed never to have a negative

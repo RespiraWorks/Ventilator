@@ -30,24 +30,10 @@ class PressureSensors {
 public:
   PressureSensors() = delete;
 
-  // min/max possible reading from MPXV5004GP [kPa]
+  // min/max possible reading from MPXV5004GP pressure sensors
+  // The canonical list of hardware in the device is: https://bit.ly/3aERr69
   inline constexpr static Pressure P_VAL_MIN = kPa(0.0);
   inline constexpr static Pressure P_VAL_MAX = kPa(3.92);
-
-  // min/max possible reading from MPXV7002DP [kPa]
-  inline constexpr static Pressure DP_VAL_MIN = kPa(-2);
-  inline constexpr static Pressure DP_VAL_MAX = kPa(2);
-
-  // Default diameters relating to Ethan's Alpha Venturi - II
-  // (https://docs.google.com/spreadsheets/d/1G9Kb-ImlluK8MOx-ce2rlHUBnTOtAFQvKjjs1bEhlpM/edit#gid=963553579)
-  // Port diameter must be larger than choke diameter [meters]
-  inline constexpr static const Length DEFAULT_VENTURI_PORT_DIAM =
-      meters(14e-3);
-  inline constexpr static const Length DEFAULT_VENTURI_CHOKE_DIAM =
-      meters(5.5e-3);
-
-  static_assert(DEFAULT_VENTURI_PORT_DIAM > DEFAULT_VENTURI_CHOKE_DIAM);
-  static_assert(DEFAULT_VENTURI_CHOKE_DIAM > meters(0));
 };
 
 void sensors_init();

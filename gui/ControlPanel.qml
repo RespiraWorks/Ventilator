@@ -34,12 +34,8 @@ import QtQuick.Controls 2.4
 
 ColumnLayout
 {
-    //    property alias openGLButton: openGLButton
-    //    property alias antialiasButton: antialiasButton
     spacing: 8
     Layout.fillHeight: true
-    signal animationsEnabled(bool enabled)
-    signal seriesTypeChanged(string type)
     signal signalSourceChanged(string source, int signalCount, int sampleCount);
     height: 600
 

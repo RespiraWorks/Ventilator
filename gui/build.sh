@@ -1,5 +1,15 @@
 #!/bin/bash
 
+# Fail if any command fails
+set -e
+set -o pipefail
+
+# Print each command as it executes
+set -o xtrace
+
+# This script should work no matter where you call it from.
+cd "$(dirname "$0")"
+
 create_clean_directory(){
   dir_name=$1
   if [ -d "$dir_name" ]; then
@@ -20,4 +30,6 @@ create_clean_directory(){
 
 create_clean_directory build
 qmake -unset QMAKEFEATURES
-cd build && qmake .. && make && cd -
+cd build
+qmake ..
+make

@@ -143,6 +143,7 @@ public:
   // Faked when testing.  Does not sleep, but does advance the time returned by
   // millis().
   void delay(uint32_t ms);
+  void delay(Duration d) { delay(d.milliseconds()); }
 
   // Caveat for people new to Arduino: analogRead and analogWrite are completely
   // separate from each other and do not even refer to the same pins.
@@ -338,7 +339,7 @@ inline int HalApi::rawPin(BinaryPin pin) {
   // TODO: Update with STM32 pinout.
   switch (pin) {
   case BinaryPin::SOLENOID:
-    return 5;
+    return 7;
   }
   // Switch above covers all cases (and gcc enforces this).
   __builtin_unreachable();

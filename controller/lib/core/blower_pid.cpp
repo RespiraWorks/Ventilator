@@ -25,7 +25,7 @@ static double Input;
 static double Output;
 
 // Configure the PID
-// TODO: Tune these params.
+// TODO(#207): Tune these params.
 static constexpr float Kp = 2;
 static constexpr float Ki = 8;
 static constexpr float Kd = 0;
@@ -39,10 +39,14 @@ void blower_pid_init() {
   Input = 0;
   Output = 0;
 
+  // Our output is an 8-bit PWM.
+  myPID.SetOutputLimits(0, 255);
+
+  // TODO(#207): Tune this.
+  myPID.SetSampleTime(100); // ms
+
   // Turn the PID on.
   myPID.SetMode(AUTOMATIC);
-
-  // TODO: PID updates at 100ms by default, which is probably too slow for us?
 }
 
 void blower_pid_execute(Pressure setpoint, SensorReadings *readings,

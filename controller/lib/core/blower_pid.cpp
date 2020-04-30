@@ -49,11 +49,20 @@ void blower_pid_init() {
   myPID.SetMode(AUTOMATIC);
 }
 
-void blower_pid_execute(Pressure setpoint, SensorReadings *readings,
-                        float *fan_power) {
+void blower_pid_execute(const BlowerSystemState &desired_state,
+                        SensorReadings *readings, float *fan_power) {
+  // Open/close the solenoid as appropriate.
+  //
+  // Our solenoid is "normally open", so low voltage means open and high
+  // voltage means closed.  Hardware spec: https://bit.ly/3aERr69
+  Hal.digitalWrite(BinaryPin::SOLENOID,
+                   desired_state.expire_valve_state == ValveState::OPEN
+                       ? VoltageLevel::HAL_LOW
+                       : VoltageLevel::HAL_HIGH);
+
   Pressure cur_pressure = get_patient_pressure();
 
-  Setpoint = setpoint.kPa();
+  Setpoint = desired_state.pressure.kPa();
   Input = cur_pressure.kPa();
   myPID.Compute();
   Hal.analogWrite(PwmPin::BLOWER, static_cast<int>(Output));

@@ -312,11 +312,11 @@ inline int HalApi::rawPin(AnalogPin pin) {
   // TODO: Update with STM32 pinout.
   switch (pin) {
   case AnalogPin::PATIENT_PRESSURE:
-    return A0;
+    return A5;
   case AnalogPin::INFLOW_PRESSURE_DIFF:
-    return A1;
+    return A6;
   case AnalogPin::OUTFLOW_PRESSURE_DIFF:
-    return A2;
+    return A7;
   }
   // Switch above covers all cases (and gcc enforces this).
   __builtin_unreachable();

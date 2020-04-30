@@ -1,0 +1,14 @@
+- name: ManualTest1
+  steps:
+    - step: 5
+      result: pass
+      req_ids: [SR-18]
+    - step: 6
+      req_ids: [SR-19]
+      result: fail
+      note: 'Allowed because of XYZ'
+- name: ManualTest2
+  steps:
+    - step: 1
+      result: pass
+      req_ids: [SR-11, SR-12]

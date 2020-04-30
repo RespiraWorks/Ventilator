@@ -1,0 +1,48 @@
+risk_levels:
+    - label: Low
+      description: Acceptable
+    - label: Medium
+      description: Investigate further risk reduction
+    - label: High
+      description: Unacceptable
+risk_probability_levels:
+    - label: Low
+      description: Unlikely
+    - label: Medium
+      description: Somewhat likely
+    - label: High
+      description: Likely
+risk_severity_levels:
+    - label: Negligible
+      description: Inconvenience or temporary discomfort
+    - label: Minor
+      description: Results in temporary injury or impairment not requiring professional medical intervention
+    - label: Serious
+      description: Results in injury or impairment requiring professional medical intervention
+    - label: Critical
+      description: Results in permanent impairment or life-threatening injury
+    - label: Catastrophic
+      description: Results in patient death
+risk_acceptability_matrix:
+    - [Low, Low, Low, Low, Low]
+    - [Low, Low, Low, Low, Medium]
+    - [Low, Low, Low, Medium, Medium]
+    - [Low, Low, Medium, Medium, High]
+    - [Low, Medium, Medium, High, High]
+risks:
+    - hazard: Incorrect information
+      software_item: Annotation Metric Calculator
+      events: |
+          - A software defect in the Annotation Metric Calculator causes the
+            size an annotated tumor to be significantly under-estimated
+          - The radiologist fails to notice the discrepancy
+      hazardous_situation: The oncologist is presented with incorrect tumor sizes
+      harm: An inappropriate therapy is given to the patient
+      severity: Catastrophic
+      probability: Low
+      control_measures: null
+      residual_severity: null
+      residual_probability: null
+      notes: Although it is not possible to estimate the probability of the
+          software defect occurring, it is unlikely that the radiologist would not
+          noticed the discrepancy.

@@ -1,0 +1,35 @@
+change_requests:
+- id: '1'
+  title: Feature Change Request
+  content: A description of the requested changes should go here.  Usually,
+    this data is periodically pulled out of a separate project management tool,
+    such as github
+  is_problem_report: false
+  change_ids:
+  - '1'
+- id: '2'
+  title: Problem Report
+  content: A problem report may or may not also be a change request.  If the
+    reported problem doesn't require changes, then it is just a "known anomaly"
+    that won't be addressed.  If it does require changes, it also acts as a
+    change request.
+  is_problem_report: true
+  change_ids: []
+changes:
+- id: '1'
+  content: Implement Feature Request
+  approvals:
+  - id: '100'
+    reviewer:
+      name: David Giese
+      id: '400'
+    content: '
+      - [x] Implements change request
+      - [x] Consistent with software system design
+      - [x] Documentation: N/A
+      - [x] Unit tests
+      - [x] Risk assessment: added appropriate risks
+      - [x] Integration tests: N/A'
+  authors:
+  - name: Yujan Shreshta
+    id: '401'

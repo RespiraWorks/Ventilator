@@ -1,0 +1,6 @@
+- id: r-1
+  title: Low Pressure Alarm
+  system_requirements: [SR-111]
+  description: Software shall alert the user to high pressure when the pressure of the system goes above pressure alarm threshold (P_Alarm_Threshold).  Alarm shall generate a high level alert.
+  specifications: |
+      Implementation details here

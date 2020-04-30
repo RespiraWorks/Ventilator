@@ -1,0 +1,142 @@
+<svg width="771" height="1079" viewBox="0 0 771 1079" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="771" height="1079" fill="white"/>
+<path d="M519 900.5H743.848V310.762H713.5" stroke="#4A4A4A" stroke-linecap="square"/>
+<path d="M370 504H311" stroke="#4A4A4A" stroke-linecap="square"/>
+<path d="M517.375 172.738H382.625C381.175 172.738 380 174.081 380 175.738V229.738C380 231.395 381.175 232.738 382.625 232.738H517.375C518.825 232.738 520 231.395 520 229.738V175.738C520 174.081 518.825 172.738 517.375 172.738Z" fill="#A9C8ED"/>
+<path d="M707.375 13H572.625C571.175 13 570 14.3431 570 16V70C570 71.6568 571.175 73 572.625 73H707.375C708.825 73 710 71.6568 710 70V16C710 14.3431 708.825 13 707.375 13Z" fill="#A9C8ED"/>
+<path d="M517.375 272.738H382.625C381.175 272.738 380 274.081 380 275.738V329.738C380 331.395 381.175 332.738 382.625 332.738H517.375C518.825 332.738 520 331.395 520 329.738V275.738C520 274.081 518.825 272.738 517.375 272.738Z" fill="#EDB6A9"/>
+<path d="M517.375 672.738H382.625C381.175 672.738 380 674.081 380 675.738V729.738C380 731.395 381.175 732.738 382.625 732.738H517.375C518.825 732.738 520 731.395 520 729.738V675.738C520 674.081 518.825 672.738 517.375 672.738Z" fill="#EDB6A9"/>
+<path d="M517.375 772.738H382.625C381.175 772.738 380 774.081 380 775.738V829.738C380 831.395 381.175 832.738 382.625 832.738H517.375C518.825 832.738 520 831.395 520 829.738V775.738C520 774.081 518.825 772.738 517.375 772.738Z" fill="#EDB6A9"/>
+<path d="M707.375 274H572.625C571.175 274 570 275.343 570 277V331C570 332.657 571.175 334 572.625 334H707.375C708.825 334 710 332.657 710 331V277C710 275.343 708.825 274 707.375 274Z" fill="#EDB6A9"/>
+<path d="M517.375 374H382.625C381.175 374 380 375.343 380 377V431C380 432.657 381.175 434 382.625 434H517.375C518.825 434 520 432.657 520 431V377C520 375.343 518.825 374 517.375 374Z" fill="#EDB6A9"/>
+<path d="M517.375 872.738H382.625C381.175 872.738 380 874.081 380 875.738V929.738C380 931.395 381.175 932.738 382.625 932.738H517.375C518.825 932.738 520 931.395 520 929.738V875.738C520 874.081 518.825 872.738 517.375 872.738Z" fill="#EDB6A9"/>
+<path d="M707.375 374H572.625C571.175 374 570 375.343 570 377V431C570 432.657 571.175 434 572.625 434H707.375C708.825 434 710 432.657 710 431V377C710 375.343 708.825 374 707.375 374Z" fill="#EDB6A9"/>
+<path d="M517.375 474H382.625C381.175 474 380 475.343 380 477V531C380 532.657 381.175 534 382.625 534H517.375C518.825 534 520 532.657 520 531V477C520 475.343 518.825 474 517.375 474Z" fill="#A9C8ED"/>
+<path d="M517.375 972.738H382.625C381.175 972.738 380 974.081 380 975.738V1029.74C380 1031.4 381.175 1032.74 382.625 1032.74H517.375C518.825 1032.74 520 1031.4 520 1029.74V975.738C520 974.081 518.825 972.738 517.375 972.738Z" fill="#EDB6A9"/>
+<path d="M707.375 574H572.625C571.175 574 570 575.343 570 577V631C570 632.657 571.175 634 572.625 634H707.375C708.825 634 710 632.657 710 631V577C710 575.343 708.825 574 707.375 574Z" fill="#EDDAA9"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M380 222.738H520V229.738C520 231.395 518.825 232.738 517.375 232.738H382.625C381.175 232.738 380 231.395 380 229.738V222.738Z" fill="#A9C8ED"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M570 63H710V70C710 71.6569 708.825 73 707.375 73H572.625C571.175 73 570 71.6569 570 70V63Z" fill="#A9C8ED"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M380 322.738H520V329.738C520 331.395 518.825 332.738 517.375 332.738H382.625C381.175 332.738 380 331.395 380 329.738V322.738Z" fill="#A9C8ED"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M380 722.738H520V729.738C520 731.395 518.825 732.738 517.375 732.738H382.625C381.175 732.738 380 731.395 380 729.738V722.738Z" fill="#EDB6A9"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M570 324H710V331C710 332.657 708.825 334 707.375 334H572.625C571.175 334 570 332.657 570 331V324Z" fill="#EDB6A9"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M380 922.738H520V929.738C520 931.395 518.825 932.738 517.375 932.738H382.625C381.175 932.738 380 931.395 380 929.738V922.738Z" fill="#A9C8ED"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M570 424H710V431C710 432.657 708.825 434 707.375 434H572.625C571.175 434 570 432.657 570 431V424Z" fill="#EDB6A9"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M380 1022.74H520V1029.74C520 1031.4 518.825 1032.74 517.375 1032.74H382.625C381.175 1032.74 380 1031.4 380 1029.74V1022.74Z" fill="#A9C8ED"/>
+<path d="M380 222.738C438.325 222.738 484.991 222.738 520 222.738" stroke="white"/>
+<path d="M570 62C628.325 62 674.991 62 710 62" stroke="white"/>
+<path d="M380 322.738C438.325 322.738 484.991 322.738 520 322.738" stroke="white"/>
+<path d="M380 722.738C438.325 722.738 484.991 722.738 520 722.738" stroke="white"/>
+<path d="M570 323C628.325 323 674.991 323 710 323" stroke="white"/>
+<path d="M380 922.738C438.325 922.738 484.991 922.738 520 922.738" stroke="white"/>
+<path d="M570 423C628.325 423 674.991 423 710 423" stroke="white"/>
+<path d="M380 1021.74C438.325 1021.74 484.991 1021.74 520 1021.74" stroke="white"/>
+<text fill="#4A4A4A" xml:space="preserve" style="white-space: pre" font-family="Arial" font-size="12" letter-spacing="0em"><tspan x="414.123" y="197.654">Requirements&#10;</tspan><tspan x="425.127" y="211.453">Gathering</tspan></text>
+<text fill="#4A4A4A" xml:space="preserve" style="white-space: pre" font-family="Arial" font-size="12" letter-spacing="0em"><tspan x="619" y="39.916">Planning</tspan></text>
+<text fill="#4A4A4A" xml:space="preserve" style="white-space: pre" font-family="Arial" font-size="12" letter-spacing="0em"><tspan x="396.811" y="300.654">Architectural Design</tspan></text>
+<path d="M308.375 374H173.625C172.175 374 171 375.343 171 377V431C171 432.657 172.175 434 173.625 434H308.375C309.825 434 311 432.657 311 431V377C311 375.343 309.825 374 308.375 374Z" fill="#EDB6A9"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M171 424H311V431C311 432.657 309.825 434 308.375 434H173.625C172.175 434 171 432.657 171 431V424Z" fill="#B3A9ED"/>
+<path d="M171 424C229.325 424 275.991 424 311 424" stroke="white"/>
+<text fill="#4A4A4A" xml:space="preserve" style="white-space: pre" font-family="Arial" font-size="12" letter-spacing="0em"><tspan x="195.303" y="401.916">Risk Assessment</tspan></text>
+<path d="M308.375 474H173.625C172.175 474 171 475.343 171 477V531C171 532.657 172.175 534 173.625 534H308.375C309.825 534 311 532.657 311 531V477C311 475.343 309.825 474 308.375 474Z" fill="#EDB6A9"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M171 524H311V531C311 532.657 309.825 534 308.375 534H173.625C172.175 534 171 532.657 171 531V524Z" fill="#B3A9ED"/>
+<path d="M171 524C229.325 524 275.991 524 311 524" stroke="white"/>
+<text fill="#4A4A4A" xml:space="preserve" style="white-space: pre" font-family="Arial" font-size="12" letter-spacing="0em"><tspan x="208.299" y="501.916">Risk Control</tspan></text>
+<text fill="#4A4A4A" xml:space="preserve" style="white-space: pre" font-family="Arial" font-size="12" letter-spacing="0em"><tspan x="397.233" y="694.154">Unit Implementation&#10;</tspan><tspan x="415.362" y="707.953">and Testing**</tspan></text>
+<text fill="#4A4A4A" xml:space="preserve" style="white-space: pre" font-family="Arial" font-size="12" letter-spacing="0em"><tspan x="423.117" y="806.863">Integration</tspan></text>
+<text fill="#4A4A4A" xml:space="preserve" style="white-space: pre" font-family="Arial" font-size="12" letter-spacing="0em"><tspan x="619.143" y="298.863">Prepare&#10;</tspan><tspan x="595.453" y="312.662">Problem Reports</tspan></text>
+<text fill="#4A4A4A" xml:space="preserve" style="white-space: pre" font-family="Arial" font-size="12" letter-spacing="0em"><tspan x="405.811" y="401.916">Division of Labor</tspan></text>
+<text fill="#4A4A4A" xml:space="preserve" style="white-space: pre" font-family="Arial" font-size="12" letter-spacing="0em"><tspan x="417.414" y="893.863">Integration &#38;&#10;</tspan><tspan x="410.875" y="907.662">System Testing</tspan></text>
+<text fill="#4A4A4A" xml:space="preserve" style="white-space: pre" font-family="Arial" font-size="12" letter-spacing="0em"><tspan x="582.803" y="402.916">Problem Investigation</tspan></text>
+<text fill="#4A4A4A" xml:space="preserve" style="white-space: pre" font-family="Arial" font-size="12" letter-spacing="0em"><tspan x="403.467" y="507.916">Release Planning</tspan></text>
+<text fill="#4A4A4A" xml:space="preserve" style="white-space: pre" font-family="Arial" font-size="12" letter-spacing="0em"><tspan x="428.486" y="1000.65">Release</tspan></text>
+<text fill="#4A4A4A" xml:space="preserve" style="white-space: pre" font-family="Arial" font-size="12" letter-spacing="0em"><tspan x="596.783" y="599.416">Communicate to&#10;</tspan><tspan x="582.428" y="613.215">Users and Regulators</tspan></text>
+<path d="M410.5 15.5V172.738" stroke="#4A4A4A" stroke-linecap="square"/>
+<path d="M411 41L558 41" stroke="#4A4A4A" stroke-linecap="square"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M410.5 172.738L413.5 161.938H407.5L410.5 172.738Z" fill="#4A4A4A" stroke="#4A4A4A" stroke-linecap="square"/>
+<path d="M410.5 232.738V272.738" stroke="#4A4A4A" stroke-linecap="square"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M410.5 272.738L413.5 261.938H407.5L410.5 272.738Z" fill="#4A4A4A" stroke="#4A4A4A" stroke-linecap="square"/>
+<path d="M410.5 534V574" stroke="#4A4A4A" stroke-linecap="square"/>
+<path d="M600 504H532" stroke="#4A4A4A" stroke-linecap="square"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M410.5 574L413.5 563.2H407.5L410.5 574Z" fill="#4A4A4A" stroke="#4A4A4A" stroke-linecap="square"/>
+<path d="M601 73V113" stroke="#4A4A4A" stroke-linecap="square"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M601 113L604 102.2H598L601 113Z" fill="#4A4A4A" stroke="#4A4A4A" stroke-linecap="square"/>
+<path d="M410.5 332.738V372.738" stroke="#4A4A4A" stroke-linecap="square"/>
+<path d="M211 347L410 347" stroke="#4A4A4A" stroke-linecap="square"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M410.5 372.738L413.5 361.938H407.5L410.5 372.738Z" fill="#4A4A4A" stroke="#4A4A4A" stroke-linecap="square"/>
+<path d="M211 348L211 373" stroke="#4A4A4A" stroke-linecap="square"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M211 372.738L214 361.938H208L211 372.738Z" fill="#4A4A4A" stroke="#4A4A4A" stroke-linecap="square"/>
+<path d="M410.5 732.738V772.738" stroke="#4A4A4A" stroke-linecap="square"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M410.5 772.738L413.5 761.938H407.5L410.5 772.738Z" fill="#4A4A4A" stroke="#4A4A4A" stroke-linecap="square"/>
+<path d="M410.5 832.738V872.738" stroke="#4A4A4A" stroke-linecap="square"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M410.5 872.738L413.5 861.938H407.5L410.5 872.738Z" fill="#4A4A4A" stroke="#4A4A4A" stroke-linecap="square"/>
+<path d="M600.5 334V374" stroke="#4A4A4A" stroke-linecap="square"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M600.5 374L603.5 363.2H597.5L600.5 374Z" fill="#4A4A4A" stroke="#4A4A4A" stroke-linecap="square"/>
+<path d="M410.5 434V474" stroke="#4A4A4A" stroke-linecap="square"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M410.5 474L413.5 463.2H407.5L410.5 474Z" fill="#4A4A4A" stroke="#4A4A4A" stroke-linecap="square"/>
+<path d="M410.5 932.738V972.738" stroke="#4A4A4A" stroke-linecap="square"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M410.5 972.738L413.5 961.938H407.5L410.5 972.738Z" fill="#4A4A4A" stroke="#4A4A4A" stroke-linecap="square"/>
+<path d="M410.5 1032.74V1072.74" stroke="#4A4A4A" stroke-linecap="square"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M410.5 1072.74L413.5 1061.94H407.5L410.5 1072.74Z" fill="#4A4A4A" stroke="#4A4A4A" stroke-linecap="square"/>
+<path d="M375 700H144V400.262M144 400.262H167.002M144 400.262V299H375" stroke="#4A4A4A" stroke-linecap="square"/>
+<path d="M531.5 1062.74H753.848V195H525.5" stroke="#4A4A4A" stroke-linecap="square"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M713 291.262L723.8 294.262V288.262L713 291.262Z" fill="#4A4A4A" stroke="#4A4A4A" stroke-linecap="square"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M522 195L532.8 198V192L522 195Z" fill="#4A4A4A" stroke="#4A4A4A" stroke-linecap="square"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M568.8 41L558 44V38L568.8 41Z" fill="#4A4A4A" stroke="#4A4A4A" stroke-linecap="square"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M712.989 310.762L723.789 313.762V307.762L712.989 310.762Z" fill="#4A4A4A" stroke="#4A4A4A" stroke-linecap="square"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M521.519 504L532.319 507V501L521.519 504Z" fill="#4A4A4A" stroke="#4A4A4A" stroke-linecap="square"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M169.8 401L159 404V398L169.8 401Z" fill="#4A4A4A" stroke="#4A4A4A" stroke-linecap="square"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M378.8 299L368 302V296L378.8 299Z" fill="#4A4A4A" stroke="#4A4A4A" stroke-linecap="square"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M380.319 504L369.519 507V501L380.319 504Z" fill="#4A4A4A" stroke="#4A4A4A" stroke-linecap="square"/>
+<path d="M600.5 434.828V572.305" stroke="#4A4A4A" stroke-linecap="square"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M600.5 572.305L603.5 561.505H597.5L600.5 572.305Z" fill="#4A4A4A" stroke="#4A4A4A" stroke-linecap="square"/>
+<text fill="#4A4A4A" xml:space="preserve" style="white-space: pre" font-family="Arial" font-size="10" letter-spacing="0em"><tspan x="417.93" y="146.808">System Requirements &#38;&#10;</tspan><tspan x="417.93" y="158.307">Risk Controls</tspan></text>
+<text fill="#4A4A4A" xml:space="preserve" style="white-space: pre" font-family="Arial" font-size="10" letter-spacing="0em"><tspan x="417.273" y="253.438">Software Requirements</tspan></text>
+<text fill="#4A4A4A" xml:space="preserve" style="white-space: pre" font-family="Arial" font-size="10" letter-spacing="0em"><tspan x="417.273" y="550.7">Approved&#10;</tspan><tspan x="417.273" y="562.199">Change Requests</tspan></text>
+<text fill="#4A4A4A" xml:space="preserve" style="white-space: pre" font-family="Arial" font-size="10" letter-spacing="0em"><tspan x="607.773" y="91.7002">Software Plan</tspan></text>
+<text fill="#4A4A4A" xml:space="preserve" style="white-space: pre" font-family="Arial" font-size="10" letter-spacing="0em"><tspan x="417.273" y="353.438">Software Design Spec.</tspan></text>
+<text fill="#4A4A4A" xml:space="preserve" style="white-space: pre" font-family="Arial" font-size="10" letter-spacing="0em"><tspan x="417.273" y="755.438">Code Changes &#38; Tests</tspan></text>
+<text fill="#4A4A4A" xml:space="preserve" style="white-space: pre" font-family="Arial" font-size="10" letter-spacing="0em"><tspan x="549" y="1055.05">User Feedback</tspan></text>
+<text fill="#4A4A4A" xml:space="preserve" style="white-space: pre" font-family="Arial" font-size="10" letter-spacing="0em"><tspan x="544.727" y="892.325">Internal Feedback</tspan></text>
+<path d="M517.375 573H382.625C381.175 573 380 574.343 380 576V630C380 631.657 381.175 633 382.625 633H517.375C518.825 633 520 631.657 520 630V576C520 574.343 518.825 573 517.375 573Z" fill="#EDB6A9"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M380 623H520V630C520 631.657 518.825 633 517.375 633H382.625C381.175 633 380 631.657 380 630V623Z" fill="#A9C8ED"/>
+<path d="M380 623C438.325 623 484.991 623 520 623" stroke="white"/>
+<text fill="#4A4A4A" xml:space="preserve" style="white-space: pre" font-family="Arial" font-size="12" letter-spacing="0em"><tspan x="407.643" y="600.916">Detailed Design*</tspan></text>
+<path d="M410 633V673" stroke="#4A4A4A" stroke-linecap="square"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M410 673L413 662.2H407L410 673Z" fill="#4A4A4A" stroke="#4A4A4A" stroke-linecap="square"/>
+<text fill="#4A4A4A" xml:space="preserve" style="white-space: pre" font-family="Arial" font-size="10" letter-spacing="0em"><tspan x="416.773" y="655.7">Detailed Design Files</tspan></text>
+<text fill="#4A4A4A" xml:space="preserve" style="white-space: pre" font-family="Arial" font-size="10" letter-spacing="0em"><tspan x="417.273" y="854.438">Integrated Changes</tspan></text>
+<text fill="#4A4A4A" xml:space="preserve" style="white-space: pre" font-family="Arial" font-size="10" letter-spacing="0em"><tspan x="607.273" y="356.7">Bare Problem Report</tspan></text>
+<text fill="#4A4A4A" xml:space="preserve" style="white-space: pre" font-family="Arial" font-size="10" letter-spacing="0em"><tspan x="417.273" y="450.7">Feature&#10;</tspan><tspan x="417.273" y="462.199">Change Requests</tspan></text>
+<path d="M211 434V474" stroke="#4A4A4A" stroke-linecap="square"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M211 474L214 463.2H208L211 474Z" fill="#4A4A4A" stroke="#4A4A4A" stroke-linecap="square"/>
+<text fill="#4A4A4A" xml:space="preserve" style="white-space: pre" font-family="Arial" font-size="10" letter-spacing="0em"><tspan x="217.773" y="450.7">Risk&#10;</tspan><tspan x="217.773" y="462.199">Assessments</tspan></text>
+<text fill="#4A4A4A" xml:space="preserve" style="white-space: pre" font-family="Arial" font-size="10" letter-spacing="0em"><tspan x="315" y="472.053">Risk Control&#10;</tspan><tspan x="315" y="483.552">Change&#10;</tspan><tspan x="315" y="495.051">Requests</tspan></text>
+<text fill="#4A4A4A" xml:space="preserve" style="white-space: pre" font-family="Arial" font-size="10" letter-spacing="0em"><tspan x="417.273" y="951.438">Test Records</tspan></text>
+<text fill="#4A4A4A" xml:space="preserve" style="white-space: pre" font-family="Arial" font-size="10" letter-spacing="0em"><tspan x="419.519" y="1050.79">Software Release &#38;&#10;</tspan><tspan x="419.519" y="1062.29">Regulatory Documents</tspan></text>
+<text fill="#4A4A4A" xml:space="preserve" style="white-space: pre" font-family="Arial" font-size="10" letter-spacing="0em"><tspan x="607" y="452.7">Problem Fix&#10;</tspan><tspan x="607" y="464.199">Change Requests</tspan></text>
+<path d="M714 291L754 291" stroke="#4A4A4A"/>
+<path d="M332 758H18V1062H332V758Z" fill="#F3F3F3"/>
+<path d="M108.288 816.353H34.2876C32.6307 816.353 31.2876 817.696 31.2876 819.353V873.353C31.2876 875.009 32.6307 876.353 34.2876 876.353H108.288C109.944 876.353 111.288 875.009 111.288 873.353V819.353C111.288 817.696 109.944 816.353 108.288 816.353Z" fill="#EDB6A9"/>
+<path d="M47.9067 965.353H33.9067C32.2499 965.353 30.9067 966.696 30.9067 968.353V982.353C30.9067 984.009 32.2499 985.353 33.9067 985.353H47.9067C49.5636 985.353 50.9067 984.009 50.9067 982.353V968.353C50.9067 966.696 49.5636 965.353 47.9067 965.353Z" fill="#EDB6A9"/>
+<path d="M186 935H172C170.343 935 169 936.343 169 938V952C169 953.657 170.343 955 172 955H186C187.657 955 189 953.657 189 952V938C189 936.343 187.657 935 186 935Z" fill="#EDDAA9"/>
+<path d="M47.9067 935.353H33.9067C32.2499 935.353 30.9067 936.696 30.9067 938.353V952.353C30.9067 954.009 32.2499 955.353 33.9067 955.353H47.9067C49.5636 955.353 50.9067 954.009 50.9067 952.353V938.353C50.9067 936.696 49.5636 935.353 47.9067 935.353Z" fill="#A9C8ED"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M31.2876 866.353H111.288V873.353C111.288 875.009 109.944 876.353 108.288 876.353H34.2876C32.6307 876.353 31.2876 875.009 31.2876 873.353V866.353Z" fill="#EDB6A9"/>
+<path d="M31.2949 865.353C64.6234 865.353 91.29 865.353 111.295 865.353" stroke="white"/>
+<text fill="#4A4A4A" xml:space="preserve" style="white-space: pre" font-family="Arial" font-size="10" letter-spacing="0em"><tspan x="55.4526" y="843.458">Activity</tspan></text>
+<text fill="#4A4A4A" xml:space="preserve" style="white-space: pre" font-family="Arial" font-size="10" font-style="italic" letter-spacing="0em"><tspan x="131.288" y="872.998">Role Responsible&#10;</tspan><tspan x="131.288" y="884.497">for Verifying Outputs</tspan></text>
+<text fill="#4A4A4A" xml:space="preserve" style="white-space: pre" font-family="Arial" font-size="10" font-style="italic" letter-spacing="0em"><tspan x="31" y="1010.05">*Activities only required for class C devices&#10;</tspan><tspan x="31" y="1021.55">&#10;</tspan><tspan x="31" y="1033.05">**The person who verifies the output must be different than the </tspan><tspan x="31" y="1044.55">person who generated it.</tspan></text>
+<text fill="#4A4A4A" xml:space="preserve" style="white-space: pre" font-family="Arial" font-size="10" font-style="italic" letter-spacing="0em"><tspan x="131.288" y="837.405">Role Responsible&#10;</tspan><tspan x="131.288" y="848.904">for Performing Activity</tspan></text>
+<path d="M104 835.19H122" stroke="#979797" stroke-linecap="square" stroke-dasharray="1 2"/>
+<path d="M104 871.19H122" stroke="#979797" stroke-linecap="square" stroke-dasharray="1 2"/>
+<text fill="#4A4A4A" xml:space="preserve" style="white-space: pre" font-family="Arial" font-size="10" letter-spacing="0em"><tspan x="61.2876" y="978.405">Software Developer</tspan></text>
+<text fill="#4A4A4A" xml:space="preserve" style="white-space: pre" font-family="Arial" font-size="10" letter-spacing="0em"><tspan x="199.381" y="948.053">Other Team Members</tspan></text>
+<path d="M186 965H172C170.343 965 169 966.343 169 968V982C169 983.657 170.343 985 172 985H186C187.657 985 189 983.657 189 982V968C189 966.343 187.657 965 186 965Z" fill="#B3A9ED"/>
+<text fill="#4A4A4A" xml:space="preserve" style="white-space: pre" font-family="Arial" font-size="10" letter-spacing="0em"><tspan x="199.381" y="972.053">Has Risk Management&#10;</tspan><tspan x="199.381" y="983.552">Training</tspan></text>
+<text fill="#4A4A4A" xml:space="preserve" style="white-space: pre" font-family="Arial" font-size="10" letter-spacing="0em"><tspan x="61.2876" y="948.405">Software Lead</tspan></text>
+<path d="M43.46 876.353V916.353" stroke="#4A4A4A"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M43.46 916.353L46.46 905.553H40.46L43.46 916.353Z" fill="#4A4A4A" stroke="#4A4A4A"/>
+<text fill="#4A4A4A" xml:space="preserve" style="white-space: pre" font-family="Arial" font-size="10" letter-spacing="0em"><tspan x="50.7876" y="891.053">Activity&#10;</tspan><tspan x="50.7876" y="902.552">Output</tspan></text>
+<path d="M43.46 776.19V816.19" stroke="#4A4A4A"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M43.46 816.19L46.46 805.39H40.46L43.46 816.19Z" fill="#4A4A4A" stroke="#4A4A4A"/>
+<text fill="#4A4A4A" xml:space="preserve" style="white-space: pre" font-family="Arial" font-size="10" letter-spacing="0em"><tspan x="50.7876" y="790.891">Activity&#10;</tspan><tspan x="50.7876" y="802.39">Input</tspan></text>
+</svg>

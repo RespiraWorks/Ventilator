@@ -1,0 +1,20 @@
+# rdm translate utility can be used to generate YANL files from gtest, xunit or qttest xml output files.
+TestClass.TestName100:
+  message: null
+  name: TestClass.TestName1
+  result: pass
+  req_ids: [SR-13, SR-14]
+TestClass.TestName200:
+  message: "Assertion failed: 127 != 0"
+  name: TestClass.TestName1
+  result: fail
+  req_ids: [SR-17]
+  note: 'It is okay that this test failed because of XYZ'
+TestClass.TestName300:
+  message: null
+  name: TestClass.TestName1
+  result: pass
+  req_ids: [SR-17]
+
+
+

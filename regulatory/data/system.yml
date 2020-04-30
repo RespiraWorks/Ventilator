@@ -1,0 +1,74 @@
+# The name of the project
+project_name: RespiraWorks Ventillator Software
+
+# List optional extensions
+md_extensions:
+  - 'rdm.md_extensions.section_numbers.SectionNumberExtension'
+  - 'rdm.md_extensions.vocabulary_extension.VocabularyExtension'
+  - 'rdm.md_extensions.audit_notes.AuditNoteExclusionExtension'
+#  - 'rdm.md_extensions.audit_notes.AuditNoteInclusionExtension'
+# audit notes can be excluded or included by changing which of the above two lines are commented out.
+
+# Standard Version
+standard: IEC62304:2006
+
+# Is the software project part of a medical device with a hardware component,
+# or is the software a medical device by-itself?
+is_software_only_device: false
+
+# The location where the system requirements are stored; only used if
+# `is_software_only_device == false`
+system_requirements_location: SYSTEM REQUIREMENTS SOFTWARE
+
+# The project management tool
+project_management_tool: GitHub
+
+# The location where risk analysis outputs are stored
+risk_matrix_location: '`risk.yml`'
+
+# TODO: change this to the full URL
+# The repository location within the project management tool
+repository: user/repository
+
+# What is the IEC62304 safety classification of the entire system?
+# "A" - No injury or damage to health is possible
+# "B" - Non-serious injury is possible
+# "C" - Death or serious injury is possible
+safety_class: C
+
+# What is the FDA's software Level of Concern?
+# "Minor" - Failures or latent design flaws are unlikely to cause any injury to
+#    the patient or operator.
+# "Moderate" - A failure or latent design flaw could directly
+#    result in minor in jury to the patient or operator.  The level of concern
+#    is also Moderate if a failure or latent flaw could indirectly result in
+#    minor injury to the patient or operator through incorrect or delayed
+#    information or through the action of a care provider.
+# "Major" - A failure or latent flaw could directly result in
+#    death or serious in jury to the patient or operator. The level of concern
+#    is also Major if a failure or latent flaw could indirectly result in death
+#    or serious injury of the patient or operator through incorrect or delayed
+#    information or through the action of a care provider.
+level_of_concern: Minor
+
+# A string that identifies a release of the software (e.g. v1.0.0)
+release_id: v1.0.0
+
+# The company name of the medical device manufacturer
+manufacturer_name: MANUFACTURER
+
+# The company name of the software consulting firm, if there is one (set to
+# `null` if there isn't)
+software_consultants_name: null
+
+# Include notes which, while distracting to normal users, are helpful for auditors
+auditor_notes: false
+
+# The location where user feedback is stored.
+feedback_location: USER FEEDBACK SOFTWARE
+
+# The document ID of the "Software Requirements Specification" (the What)
+current_srs_document_id: SRS-001
+
+# The document ID of the "Software Design Specification" (the How)
+current_sds_document_id: SDS-001

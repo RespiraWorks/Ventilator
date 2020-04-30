@@ -67,11 +67,11 @@ static void controller_loop() {
     comms_handler(controller_status, &gui_status);
     controller_status.active_params = gui_status.desired_params;
 
-    Pressure setpoint =
-        blower_fsm_get_setpoint(controller_status.active_params);
-    controller_status.fan_setpoint_cm_h2o = setpoint.cmH2O();
+    BlowerSystemState desired_state =
+        blower_fsm_desired_state(controller_status.active_params);
+    controller_status.fan_setpoint_cm_h2o = desired_state.pressure.cmH2O();
 
-    blower_pid_execute(setpoint, &controller_status.sensor_readings,
+    blower_pid_execute(desired_state, &controller_status.sensor_readings,
                        &controller_status.fan_power);
     Hal.watchdog_handler();
   }

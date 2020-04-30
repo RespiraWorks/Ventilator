@@ -16,7 +16,11 @@ limitations under the License.
 #include "blower_fsm.h"
 
 #include "hal.h"
+#include "gmock/gmock-matchers.h"
 #include "gtest/gtest.h"
+#include <string>
+
+namespace {
 
 class BlowerFsmTest : public ::testing::Test {
 public:
@@ -26,13 +30,37 @@ public:
 
 TEST_F(BlowerFsmTest, InitiallyOff) {
   VentParams p = VentParams_init_zero;
-  EXPECT_EQ(blower_fsm_get_setpoint(p), kPa(0));
+  BlowerSystemState s = blower_fsm_desired_state(p);
+  EXPECT_FLOAT_EQ(s.pressure.cmH2O(), 0);
+  EXPECT_EQ(s.expire_valve_state, ValveState::OPEN);
 }
 
 TEST_F(BlowerFsmTest, StaysOff) {
   VentParams p = VentParams_init_zero;
   Hal.delay(1000);
-  EXPECT_EQ(blower_fsm_get_setpoint(p), kPa(0));
+  BlowerSystemState s = blower_fsm_desired_state(p);
+  EXPECT_FLOAT_EQ(s.pressure.cmH2O(), 0);
+  EXPECT_EQ(s.expire_valve_state, ValveState::OPEN);
+}
+
+// Checks that a sequence of calls to blower_fsm_desired_state() yield the
+// expected results.
+void testSequence(
+    const std::vector<
+        std::tuple<VentParams,
+                   /*time_millis*/ int,
+                   /*expected_setpoint_pressure*/ Pressure,
+                   /*expected_expiratory_valve_state*/ ValveState>> &seq) {
+  for (const auto &[params, time_millis, expected_pressure,
+                    expected_valve_state] : seq) {
+    Hal.delay(millisSinceStartup(time_millis) - Hal.now());
+    SCOPED_TRACE("time = " + std::to_string(time_millis));
+    EXPECT_EQ(time_millis, Hal.now().millisSinceStartup());
+
+    BlowerSystemState s = blower_fsm_desired_state(params);
+    EXPECT_EQ(s.pressure.cmH2O(), expected_pressure.cmH2O());
+    EXPECT_EQ(s.expire_valve_state, expected_valve_state);
+  }
 }
 
 TEST_F(BlowerFsmTest, PressureControl) {
@@ -44,17 +72,19 @@ TEST_F(BlowerFsmTest, PressureControl) {
   p.peep_cm_h2o = 10;
   p.pip_cm_h2o = 20;
 
-  EXPECT_EQ(blower_fsm_get_setpoint(p).cmH2O(), 20);
-  Hal.delay(1000); // t = 1000
-  EXPECT_EQ(blower_fsm_get_setpoint(p).cmH2O(), 20);
-  Hal.delay(999); // t = 1999
-  EXPECT_EQ(blower_fsm_get_setpoint(p).cmH2O(), 20);
-
-  Hal.delay(2); // t = 2001
-  EXPECT_EQ(blower_fsm_get_setpoint(p).cmH2O(), 10);
-  Hal.delay(998); // t = 2999
-  EXPECT_EQ(blower_fsm_get_setpoint(p).cmH2O(), 10);
-
-  Hal.delay(2); // t = 3001
-  EXPECT_EQ(blower_fsm_get_setpoint(p).cmH2O(), 20);
+  testSequence({
+      {p, 0, cmH2O(20), ValveState::CLOSED},
+      {p, 1000, cmH2O(20), ValveState::CLOSED},
+      {p, 1999, cmH2O(20), ValveState::CLOSED},
+      {p, 2001, cmH2O(10), ValveState::OPEN},
+      {p, 2999, cmH2O(10), ValveState::OPEN},
+      {p, 3001, cmH2O(20), ValveState::CLOSED},
+  });
 }
+
+// TODO(#220): Test changing the state of the blower FSM while it's running.
+//
+//  - Changes to params should take effect only at the next breath, but
+//  - Switching from ON to OFF and vice versa should happen immediately.
+
+} // anonymous namespace

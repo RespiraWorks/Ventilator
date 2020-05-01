@@ -18,3 +18,5 @@ cmake-build-*/
 gui/build
 .DS_Store
 .clangd/
+.*.swp
+*.map

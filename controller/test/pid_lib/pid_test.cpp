@@ -28,7 +28,7 @@ limitations under the License.
 
 //@TODO: Adjust this tolerance... assumes the PWM is a 0-255 integer but that
 // may not be the case
-static const double output_TOLERANCE = 1;
+static const double OUTPUT_TOLERANCE = 1;
 
 // PID
 static double setpoint;
@@ -52,10 +52,10 @@ TEST(pidTest, Proportional) {
   myPID.SetMode(AUTOMATIC);
   myPID.Compute();
   // Ki and Kd = 0 therefore output = Kp*error, nothing more
-  EXPECT_NEAR(output, (setpoint - input) * Kp, output_TOLERANCE);
+  EXPECT_NEAR(output, (setpoint - input) * Kp, OUTPUT_TOLERANCE);
   Hal.delay(sample_time);
   myPID.Compute();
-  EXPECT_NEAR(output, (setpoint - input) * Kp, output_TOLERANCE);
+  EXPECT_NEAR(output, (setpoint - input) * Kp, OUTPUT_TOLERANCE);
 }
 
 TEST(pidTest, Integral) {
@@ -70,12 +70,12 @@ TEST(pidTest, Integral) {
   myPID.Compute();
   // on first call, integral = error*sample time, output = Ki*integral
   EXPECT_NEAR(output, (setpoint - input) * sample_time / 1000.0 * Ki,
-              output_TOLERANCE);
+              OUTPUT_TOLERANCE);
   Hal.delay(sample_time);
   myPID.Compute();
   // on second call, integral = error*2*sample time, output = Ki*integral
   EXPECT_NEAR(output, (setpoint - input) * 2 * sample_time / 1000.0 * Ki,
-              output_TOLERANCE);
+              OUTPUT_TOLERANCE);
 }
 
 TEST(pidTest, derivative) {
@@ -88,18 +88,32 @@ TEST(pidTest, derivative) {
   myPID.SetMode(AUTOMATIC);
   myPID.Compute();
   // Expect no derivative on first call
-  EXPECT_NEAR(output, 0, output_TOLERANCE);
+  EXPECT_NEAR(output, 0, OUTPUT_TOLERANCE);
 
   // delay and update input to create non-zero derivative
   Hal.delay(sample_time);
   double previous_input = input;
-  // output being in [0 255], create a negative derivative in order to have
-  // a positive output
+  double previous_setpoint = setpoint;
+  // output being in [0 255], create a negative input derivative in order to
+  // have a positive error derivative, and therefore a positive output
   input = 5;
-  double derivative = (input - previous_input) / sample_time * 1000.0;
+  double derivative =
+      ((setpoint - input) - (previous_setpoint - previous_input)) /
+      sample_time * 1000.0;
 
   myPID.Compute();
-  EXPECT_NEAR(output, derivative * -1 * Kd, output_TOLERANCE);
+  EXPECT_NEAR(output, derivative * Kd, OUTPUT_TOLERANCE);
+
+  Hal.delay(sample_time);
+  previous_setpoint = setpoint;
+  previous_input = input;
+  // output being in [0 255], create a positive setpoint derivative in order to
+  // have a positive error derivative, and therefore a positive output
+  setpoint = 30;
+  derivative = ((setpoint - input) - (previous_setpoint - previous_input)) /
+               sample_time * 1000.0;
+  myPID.Compute();
+  EXPECT_NEAR(output, derivative * Kd, OUTPUT_TOLERANCE);
 }
 
 TEST(pidTest, TaskJitter) {
@@ -116,21 +130,21 @@ TEST(pidTest, TaskJitter) {
   myPID.Compute();
   // First task, with only Ki set, output = error*sample_time
   double integral = (setpoint - input) * (sample_time / 1000.0);
-  EXPECT_NEAR(output, integral * Ki, output_TOLERANCE);
+  EXPECT_NEAR(output, integral * Ki, OUTPUT_TOLERANCE);
   // Advance time with jitter
   uint32_t dt = sample_time + max_task_jitter;
   Hal.delay(dt);
   myPID.Compute();
   // Expect output to take jitter into account in integral
   integral += (setpoint - input) * (dt / 1000.0);
-  EXPECT_NEAR(output, integral * Ki, output_TOLERANCE);
+  EXPECT_NEAR(output, integral * Ki, OUTPUT_TOLERANCE);
   // Advance time and compensate previous jitter to have total time
   // elapsed = 2*sample time
   dt = sample_time - max_task_jitter;
   Hal.delay(dt);
   integral += (setpoint - input) * (dt / 1000.0);
   myPID.Compute();
-  EXPECT_NEAR(output, integral * Ki, output_TOLERANCE);
+  EXPECT_NEAR(output, integral * Ki, OUTPUT_TOLERANCE);
 }
 
 TEST(pidTest, SampleTimeChange) {
@@ -147,14 +161,14 @@ TEST(pidTest, SampleTimeChange) {
 
   // First task, with only Ki set, output = error*sample_time
   double integral = (setpoint - input) * (sample_time / 1000.0);
-  EXPECT_NEAR(output, integral * Ki, output_TOLERANCE);
+  EXPECT_NEAR(output, integral * Ki, OUTPUT_TOLERANCE);
   // Advance time
   uint32_t dt = sample_time;
   Hal.delay(dt);
   myPID.Compute();
   // Expect output to integrate this
   integral += (setpoint - input) * (dt / 1000.0);
-  EXPECT_NEAR(output, integral * Ki, output_TOLERANCE);
+  EXPECT_NEAR(output, integral * Ki, OUTPUT_TOLERANCE);
   // Change sample time and advance
   sample_time = 50;
   dt = sample_time;
@@ -162,7 +176,7 @@ TEST(pidTest, SampleTimeChange) {
   Hal.delay(dt);
   integral += (setpoint - input) * (dt / 1000.0);
   myPID.Compute();
-  EXPECT_NEAR(output, integral * Ki, output_TOLERANCE);
+  EXPECT_NEAR(output, integral * Ki, OUTPUT_TOLERANCE);
 }
 
 TEST(pidTest, MissedSample) {
@@ -179,19 +193,19 @@ TEST(pidTest, MissedSample) {
 
   // First task, with only Ki set, output = error*sample_time
   double integral = (setpoint - input) * (sample_time / 1000.0);
-  EXPECT_NEAR(output, integral * Ki, output_TOLERANCE);
+  EXPECT_NEAR(output, integral * Ki, OUTPUT_TOLERANCE);
   // Advance time
   uint32_t dt = 2 * sample_time;
   Hal.delay(dt);
   myPID.Compute();
   // Expect output to integrate this
   integral += (setpoint - input) * (dt / 1000.0);
-  EXPECT_NEAR(output, integral * Ki, output_TOLERANCE);
+  EXPECT_NEAR(output, integral * Ki, OUTPUT_TOLERANCE);
   // Advance time a small amount to allow PID to catch up to missed sample
   dt = max_task_jitter;
   Hal.delay(dt);
   integral += (setpoint - input) * (dt / 1000.0);
   myPID.Compute();
   // Expect output to have a new update
-  EXPECT_NEAR(output, integral * Ki, output_TOLERANCE);
+  EXPECT_NEAR(output, integral * Ki, OUTPUT_TOLERANCE);
 }

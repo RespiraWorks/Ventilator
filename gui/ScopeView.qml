@@ -56,15 +56,16 @@ ChartView
 
     ValueAxis
     {
-        id: axisX
-        min: 0
-        max: 1000
+        id: timeAxis
+        titleText: "Seconds ago"
+        min: -30
+        max: 0
         labelsColor: chartView.color
     }
 
     ValueAxis
     {
-        id: axisY
+        id: valueAxis
         min: -1.5
         max: 1.5
         labelsColor: chartView.color
@@ -74,18 +75,11 @@ ChartView
     {
         id: lineSeries
         name: chartView.name
-        axisX: axisX
-        axisY: axisY
+        axisX: timeAxis
+        axisY: valueAxis
         color: chartView.color
         pointLabelsColor: chartView.color
         width: 1
         useOpenGL: true
-    }
-
-    function createAxis(min, max)
-    {
-        // The following creates a ValueAxis object that can be then set as a x or y axis for a series
-        return Qt.createQmlObject("import QtQuick 2.0; import QtCharts 2.0; ValueAxis { min: "
-                                  + min + "; max: " + max + " }", chartView);
     }
 }

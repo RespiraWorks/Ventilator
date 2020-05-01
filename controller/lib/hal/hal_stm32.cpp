@@ -21,6 +21,11 @@ limitations under the License.
 // This is the main stack 
 uint32_t mainStack[ 500 ];
 
+// local static functions.  I don't want to add any private 
+// functions to the Hal class to avoid complexity with other
+// builds
+static void EnableClock( uint32_t base );
+
 // For now, the main function in main.cpp is called setup
 // rather then main.  If we adopt this HAL then we can 
 // just rename it main and get rid of the following function.
@@ -42,14 +47,8 @@ void HalApi::init() {
    SysCtrl_Reg *sysCtl = (SysCtrl_Reg *)SYSCTL_BASE;
    sysCtl->cpac = 0x00F00000;
 
-   // Enable clocks to the GPIO banks that 
-   // exist on this chip.  I'll enable clocks
-   // to other peripherials as necessary later
-   // when they are initialized
-   RCC_Regs *rcc = (RCC_Regs *)RCC_BASE;
-   rcc->periphClkEna[1] = 0x00000007;
-
    // Reset caches and set latency for 80MHz opperation
+   EnableClock( FLASH_BASE );
    FlashReg *flash = (FlashReg *)FLASH_BASE;
    flash->access = 0x00000004;
    flash->access = 0x00001804;
@@ -81,6 +80,7 @@ void HalApi::init() {
    //
    int N = 40;
    int M = 1;
+   RCC_Regs *rcc = (RCC_Regs *)RCC_BASE;
    rcc->pllCfg = 0x01000001 | (N<<8) | ((M-1)<<4);
 
    // Turn on the PLL 
@@ -91,6 +91,10 @@ void HalApi::init() {
 
    // Set PLL as system clock
    rcc->clkCfg = 0x00000003;
+
+   // Enable the GPIO modules that we're using and 
+   // configure the GPIO pins.
+
 
    // Enable interrupts
    IntEnable();
@@ -144,6 +148,71 @@ void HalApi::watchdog_init() {
 void HalApi::watchdog_handler() {
 }
 
+// Enable clocks to a specific peripherial.
+// On the STM32 the clocks going to various peripherials on the chip
+// are individually selectable and for the most part disabled on startup.
+// Clocks to the specific peripherials need to be enabled through the 
+// RCC (Reset and Clock Controller) module before the peripherial can be
+// used.
+// Pass in the base address of the peripherial to enable it's clock
+static void EnableClock( uint32_t base )
+{
+   RCC_Regs *rcc = (RCC_Regs *)RCC_BASE;
+
+   // I don't include all the peripherials here, just the ones
+   // that we currently use or seem likely to be used in the 
+   // future.  To add more peripherials, just look up the appropriate
+   // bit in the reference manual.
+   //
+   // This big case statement finds the index of the register in the 
+   // array of clock enable registers, and the bit number used to enable
+   // the clock for the specified peripherial.
+   int ndx = -1;
+   int bit = 0;
+   switch( base )
+   {
+      case DMA1_BASE:    ndx = 0; bit =  0; break;
+      case DMA2_BASE:    ndx = 0; bit =  1; break;
+      case FLASH_BASE:   ndx = 0; bit =  8; break;
+
+      case DIGIO_A_BASE: ndx = 1; bit =  0; break;
+      case DIGIO_B_BASE: ndx = 1; bit =  1; break;
+      case DIGIO_C_BASE: ndx = 1; bit =  2; break;
+      case DIGIO_D_BASE: ndx = 1; bit =  3; break;
+      case DIGIO_E_BASE: ndx = 1; bit =  4; break;
+      case DIGIO_H_BASE: ndx = 1; bit =  7; break;
+      case ADC_BASE:     ndx = 1; bit = 13; break;
+
+      case TIMER2_BASE:  ndx = 4; bit =  0; break;
+      case TIMER3_BASE:  ndx = 4; bit =  1; break;
+      case TIMER6_BASE:  ndx = 4; bit =  4; break;
+      case TIMER7_BASE:  ndx = 4; bit =  7; break;
+      case SPI2_BASE:    ndx = 4; bit = 14; break;
+      case SPI3_BASE:    ndx = 4; bit = 15; break;
+      case UART2_BASE:   ndx = 4; bit = 17; break;
+      case UART3_BASE:   ndx = 4; bit = 18; break;
+      case UART4_BASE:   ndx = 4; bit = 19; break;
+      case I2C1_BASE:    ndx = 4; bit = 21; break;
+      case I2C2_BASE:    ndx = 4; bit = 22; break;
+      case I2C3_BASE:    ndx = 4; bit = 23; break;
+
+      case I2C4_BASE:    ndx = 5; bit =  1; break;
+
+      case TIMER1_BASE:  ndx = 6; bit = 11; break;
+      case SPI1_BASE:    ndx = 6; bit = 12; break;
+      case UART1_BASE:   ndx = 6; bit = 13; break;
+      case TIMER15_BASE: ndx = 6; bit = 16; break;
+      case TIMER16_BASE: ndx = 6; bit = 17; break;
+   }
+
+   // Not sure what to do if the input address isn't found.
+   // For now I just return.  Maybe I should force a fault?
+   if( ndx < 0 ) return;
+
+   // Enable the clock of the requested peripherial
+   RCC_Regs *rcc = (RCC_Regs *)RCC_BASE;
+   rcc->periphClkEna[ndx] |= (1<<bit);
+}
 
 
 

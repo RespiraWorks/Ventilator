@@ -95,6 +95,9 @@ struct SysCtrl_Reg
 #define DIGIO_A_BASE                0x48000000
 #define DIGIO_B_BASE                0x48000400
 #define DIGIO_C_BASE                0x48000800
+#define DIGIO_D_BASE                0x48000C00
+#define DIGIO_E_BASE                0x48001000
+#define DIGIO_H_BASE                0x48001C00
 struct GPIO_Regs
 {
    REG  mode;

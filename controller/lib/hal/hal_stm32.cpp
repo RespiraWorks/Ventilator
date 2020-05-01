@@ -21,27 +21,33 @@ limitations under the License.
 // This is the main stack 
 uint32_t mainStack[ 500 ];
 
+// local data 
+static volatile uint32_t msCount;
+
 // local static functions.  I don't want to add any private 
 // functions to the Hal class to avoid complexity with other
 // builds
+static void InitGPIO( void );
+static void InitADC( void );
+static void InitSysTimer( void );
 static void EnableClock( uint32_t base );
+static void EnableInterrupt( int addr, int pri );
+static void DisableInterrupt( int addr );
+static void Timer6ISR( void );
 
 // For now, the main function in main.cpp is called setup
 // rather then main.  If we adopt this HAL then we can 
 // just rename it main and get rid of the following function.
 extern void setup( void );
-int main( void )
-{
+int main( void ){
    setup();
 }
 
-/*
- * One time init of HAL.
- * This does some basic setup of the STM32 processor such as
- * turning on the PLL to bring the clock rate up to the max
- * value (80MHz), enabling floating point, etc.
- */
-void HalApi::init() {
+
+// This function is called from the libc initialization code 
+// before any static constructors are called.  We do some basic
+// chip initialization here.
+extern "C" void _init( void ){
 
    // Enable the FPU
    SysCtrl_Reg *sysCtl = (SysCtrl_Reg *)SYSCTL_BASE;
@@ -92,9 +98,20 @@ void HalApi::init() {
    // Set PLL as system clock
    rcc->clkCfg = 0x00000003;
 
-   // Enable the GPIO modules that we're using and 
-   // configure the GPIO pins.
+   // Use system clock as the A/D clock
+   rcc->indClkCfg = 0x30000000;
+}
 
+/*
+ * One time init of HAL.
+ */
+int temp_adc = 0;
+void HalApi::init() {
+
+   // Init various components needed by the system.
+   InitGPIO();
+   InitSysTimer();
+   InitADC();
 
    // Enable interrupts
    IntEnable();
@@ -112,19 +129,256 @@ void HalApi::init() {
    sysCtl->apInt = 0x05FA0004;
 }
 
-uint32_t HalApi::millis() { return 0; }
+/******************************************************************
+ * General Purpose I/O support.
+ *
+ * The following pins are used as GPIO on the rev-1 PCB 
+ *
+ * ID inputs.  These can be used to identify the PCB revision
+ * we're running on.
+ *  PB1  - ID0
+ *  PA12 - ID1
+ *
+ * LED outputs.
+ *  PC13 - red
+ *  PC14 - yellow
+ *  PC15 - green
+ *
+ * Solenoid
+ *  PA11 - Note, this is also a timer pin so we may want to 
+ *         PWM it to reduce the solenoid voltage.
+ *         For no I'm treating it as a digital output.
+ *****************************************************************/
+static void InitGPIO( void )
+{
+   // Enable all the GPIO clocks
+   EnableClock( GPIO_A_BASE );
+   EnableClock( GPIO_B_BASE );
+   EnableClock( GPIO_C_BASE );
+   EnableClock( GPIO_D_BASE );
+   EnableClock( GPIO_E_BASE );
+   EnableClock( GPIO_H_BASE );
 
-void HalApi::delay(uint32_t ms) {}
+   // Configure PCB ID pins as inputs.
+   GPIO_PinMode( GPIO_B_BASE,  1, GPIO_MODE_INPUT );
+   GPIO_PinMode( GPIO_A_BASE, 12, GPIO_MODE_INPUT );
 
-int HalApi::analogRead(AnalogPin pin){
-  return 0;
+   // Configure LED pins as outputs
+   GPIO_PinMode( GPIO_C_BASE, 13, GPIO_MODE_OUTPUT );
+   GPIO_PinMode( GPIO_C_BASE, 14, GPIO_MODE_OUTPUT );
+   GPIO_PinMode( GPIO_C_BASE, 15, GPIO_MODE_OUTPUT );
+
+   // Turn all three LEDs off initially
+   GPIO_ClrPin( GPIO_C_BASE, 13 );
+   GPIO_ClrPin( GPIO_C_BASE, 14 );
+   GPIO_ClrPin( GPIO_C_BASE, 15 );
+
+   // Configure the solenoid and turn it off
+   GPIO_PinMode( GPIO_A_BASE, 11, GPIO_MODE_OUTPUT );
+   GPIO_ClrPin( GPIO_A_BASE, 11 );
 }
 
+// Set or clear the specified digital output
+void HalApi::digitalWrite(BinaryPin pin, VoltageLevel value) {
+   uint32_t base;
+   int bit;
+
+   switch( pin )
+   {
+      case BinaryPin::SOLENOID:
+         base = GPIO_A_BASE;
+         bit = 11;
+         break;
+   }
+
+   switch( value )
+   {
+      case VoltageLevel::HAL_HIGH:
+         GPIO_SetPin( base, bit );
+         break;
+
+      case VoltageLevel::HAL_LOW:
+         GPIO_ClrPin( base, bit );
+         break;
+   }
+}
+
+/******************************************************************
+ * System timer
+ *
+ * I use one of the basic timers (timer 6) for general system timing.
+ * I configure it to count every microsecond and generate an interrupt 
+ * every millisecond
+ *****************************************************************/
+static void InitSysTimer( void ){
+
+   // Enable the clock to the timer
+   EnableClock( TIMER6_BASE );
+
+   // Just set the timer up to count every microsecond.
+   TimerRegs *tmr = (TimerRegs *)TIMER6_BASE;
+   tmr->reload = 999;
+   tmr->prescale = 79;
+   tmr->event = 1;
+   tmr->ctrl[0] = 1;
+   tmr->intEna  = 1;
+
+   EnableInterrupt( INT_VEC_TIMER6, 3 );
+}
+
+// Just spin for a specified number of microseconds
+static void BusyWait( uint16_t usec )
+{
+   while( usec > 1000 )
+   {
+      BusyWait(1000);
+      usec -= 1000;
+   }
+
+   TimerRegs *tmr = (TimerRegs *)TIMER6_BASE;
+   uint16_t start = tmr->counter;
+   while( 1 )
+   {
+      uint16_t dt = tmr->counter - start;
+      if( dt >= usec )
+         return;
+   }
+}
+
+static void Timer6ISR( void )
+{
+   TimerRegs *tmr = (TimerRegs *)TIMER6_BASE;
+   tmr->status = 0;
+   msCount++;
+}
+
+uint32_t HalApi::millis(){
+   return msCount;
+}
+
+void HalApi::delay(uint32_t ms){
+   uint32_t start = msCount;
+   while( 1 )
+   {
+      uint32_t dt = msCount - start;
+      if( dt >= ms )
+         return;
+   }
+}
+
+/******************************************************************
+ * A/D inputs.
+ *
+ * The following pins are used as analog inputs on the rev-1 PCB 
+ *
+ * PA0 (ADC1_IN5)  - vin
+ * PA1 (ADC1_IN6)  - pressure
+ * PA4 (ADC1_IN9)  - inhale flow
+ * PB0 (ADC1_IN15) - exhale flow
+ *
+ *****************************************************************/
+static void InitADC( void ){
+   // Enable the clock to the A/D converter
+   EnableClock( ADC_BASE );
+
+   // Configure the 4 pins used as analog inputs 
+   GPIO_PinMode( GPIO_A_BASE, 0, GPIO_MODE_ANALOG );
+   GPIO_PinMode( GPIO_A_BASE, 1, GPIO_MODE_ANALOG );
+   GPIO_PinMode( GPIO_A_BASE, 4, GPIO_MODE_ANALOG );
+   GPIO_PinMode( GPIO_B_BASE, 0, GPIO_MODE_ANALOG );
+
+   // Perform a power-up and calibration sequence on 
+   // the A/D converter
+   ADC_Regs *adc = (ADC_Regs *)ADC_BASE;
+
+   // Exit deep power down mode and turn on the
+   // internal voltage regulator.
+   adc->adc[0].ctrl   = 0x10000000;
+
+   // Wait for the startup time specified in the datasheet
+   // for the voltage regulator to become ready.
+   // The time in the datasheet is 20 microseconds, but
+   // I'll wait for 30 just to be extra conservative
+   BusyWait( 30 );
+
+   // Calibrate the A/D for single ended channels
+   adc->adc[0].ctrl |= 0x80000000;
+
+   // Wait until the CAL bit is cleared meaning
+   // calibration is finished
+   while( adc->adc[0].ctrl & 0x80000000 ){}
+
+   // Clear all the status bits
+   adc->adc[0].stat = 0x3FF;
+
+   // Enable the A/D
+   adc->adc[0].ctrl |= 0x00000001;
+
+   // Wait for the ADRDY status bit to be set
+   while( !(adc->adc[0].stat & 0x00000001) ){}
+
+   // Configure the A/D as 12-bit resolution
+   adc->adc[0].cfg[0] = 0x00000000;
+
+   // Set sample time. I'm using 92.5 A/D clocks (a little over 1us)
+   // to sample.  We'll need to do a bit of testing to see what the
+   // best value is for this
+   adc->adc[0].samp[0] = 5;
+}
+
+// Read a single A/D channel.
+// This just does the conversion immediately when called.
+//
+// It would be better to start a sequence of conversions at the beginning of the loop
+// but the HAL interface currently isn't set up to run that way.  That's an improvement
+// that can be made later
+int HalApi::analogRead(AnalogPin pin){
+
+   int channel = 0;
+   switch( pin )
+   {
+      case AnalogPin::PATIENT_PRESSURE:
+         channel = 6;
+         break;
+
+      case AnalogPin::INFLOW_PRESSURE_DIFF:
+         channel = 9;
+         break;
+
+      case AnalogPin::OUTFLOW_PRESSURE_DIFF:
+         channel = 15;
+         break;
+
+      default:
+         return 0;
+   }
+
+   ADC_Regs *adc = (ADC_Regs *)ADC_BASE;
+   adc->adc[0].seq[0] = channel << 6;
+
+   // Clear the EOC flag
+   adc->adc[0].stat = 4;
+
+   // Start the conversion
+   adc->adc[0].ctrl |= 4;
+
+   // Wait for the end of the conversion
+   while( !(adc->adc[0].stat & 4) ){}
+
+   // Return the result
+   return adc->adc[0].data;
+}
+
+/******************************************************************
+ * PWM outputs
+ *****************************************************************/
 void HalApi::analogWrite(PwmPin pin, int value) {
 }
 
-void HalApi::digitalWrite(BinaryPin pin, VoltageLevel value) {
-}
+
+/******************************************************************
+ * Serial port to GUI
+ *****************************************************************/
 
 uint16_t HalApi::serialRead(char *buf, uint16_t len) {
   return 0;
@@ -142,6 +396,9 @@ uint16_t HalApi::serialBytesAvailableForWrite() {
   return 0;
 }
 
+/******************************************************************
+ * Watchdog timer
+ *****************************************************************/
 void HalApi::watchdog_init() {
 }
 
@@ -157,12 +414,10 @@ void HalApi::watchdog_handler() {
 // Pass in the base address of the peripherial to enable it's clock
 static void EnableClock( uint32_t base )
 {
-   RCC_Regs *rcc = (RCC_Regs *)RCC_BASE;
-
    // I don't include all the peripherials here, just the ones
    // that we currently use or seem likely to be used in the 
    // future.  To add more peripherials, just look up the appropriate
-   // bit in the reference manual.
+   // bit in the reference manual RCC chapter.
    //
    // This big case statement finds the index of the register in the 
    // array of clock enable registers, and the bit number used to enable
@@ -175,12 +430,12 @@ static void EnableClock( uint32_t base )
       case DMA2_BASE:    ndx = 0; bit =  1; break;
       case FLASH_BASE:   ndx = 0; bit =  8; break;
 
-      case DIGIO_A_BASE: ndx = 1; bit =  0; break;
-      case DIGIO_B_BASE: ndx = 1; bit =  1; break;
-      case DIGIO_C_BASE: ndx = 1; bit =  2; break;
-      case DIGIO_D_BASE: ndx = 1; bit =  3; break;
-      case DIGIO_E_BASE: ndx = 1; bit =  4; break;
-      case DIGIO_H_BASE: ndx = 1; bit =  7; break;
+      case GPIO_A_BASE:  ndx = 1; bit =  0; break;
+      case GPIO_B_BASE:  ndx = 1; bit =  1; break;
+      case GPIO_C_BASE:  ndx = 1; bit =  2; break;
+      case GPIO_D_BASE:  ndx = 1; bit =  3; break;
+      case GPIO_E_BASE:  ndx = 1; bit =  4; break;
+      case GPIO_H_BASE:  ndx = 1; bit =  7; break;
       case ADC_BASE:     ndx = 1; bit = 13; break;
 
       case TIMER2_BASE:  ndx = 4; bit =  0; break;
@@ -214,15 +469,17 @@ static void EnableClock( uint32_t base )
    rcc->periphClkEna[ndx] |= (1<<bit);
 }
 
-
+/******************************************************************
+ * Interrupt vector table.  The interrupt vector table is a list of
+ * pointers to the various interrupt functions.  It is stored at the
+ * very start of the flash memory.
+ *****************************************************************/
 
 // Fault handlers
 static void fault( void )
 {
    while(1){}
 }
-
-extern "C" void _init( void ){}
 
 static void NMI( void )           { fault(); }
 static void FaultISR( void )      { fault(); }
@@ -231,13 +488,28 @@ static void BusFaultISR( void )   { fault(); }
 static void UsageFaultISR( void ) { fault(); }
 static void BadISR( void )        { fault(); }
 
-// Interrupt vector table.
 extern "C" void Reset_Handler( void );
 __attribute__ ((section(".isr_vector")))
 void (* const vectors[])(void) =
 {
+   // The first entry of the ISR holds the initial value of the
+   // stack pointer.  The ARM processor initializes the stack
+   // pointer based on this address.
    (void (*)(void))((uint32_t)mainStack + sizeof(mainStack)),
+
+   // The second ISR entry is the reset vector which is an 
+   // assembly language routine that does some basic memory 
+   // initilization and then calls main().
+   // Note that the LSB of the reset vector needs to be set
+   // (hence the +1 below).  This tells the ARM that this is
+   // thumb code.  The cortex m4 processor only supports 
+   // thumb code, so this will always be set or we'll get 
+   // a hard fault.
    (void(*)(void))((uint32_t)Reset_Handler+1), //   1 - 0x004 The reset handler
+
+   // The rest of the table is a list of exception and 
+   // interrupt handlers.  Chapter 12 (NVIC) of the reference
+   // manual gives a listing of the vector table offsets.
    NMI,                                    //   2 - 0x008 The NMI handler
    FaultISR,                               //   3 - 0x00C The hard fault handler
    MPUFaultISR,                            //   4 - 0x010 The MPU fault handler
@@ -300,10 +572,41 @@ void (* const vectors[])(void) =
    BadISR,                                 //  61 - 0x0F4 
    BadISR,                                 //  62 - 0x0F8 
    BadISR,                                 //  63 - 0x0FC 
+   BadISR,                                 //  64 - 0x100
+   BadISR,                                 //  65 - 0x104
+   BadISR,                                 //  66 - 0x108
+   BadISR,                                 //  67 - 0x10C
+   BadISR,                                 //  68 - 0x110
+   BadISR,                                 //  69 - 0x114
+   Timer6ISR,                              //  70 - 0x118
+   BadISR,                                 //  71 - 0x11C
 };
 
 // NOTE - this never actually gets called.  It's just here
 // to prevent the linker from remove the vector array
 const void *GetVectorAddr( void ){ return &vectors; }
+
+// Enable an interrupt with a specified priority (0 to 15)
+static void EnableInterrupt( int addr, int pri )
+{
+   IntCtrl_Regs *nvic = (IntCtrl_Regs *)NVIC_BASE;
+
+   int id = addr/4 - 16;
+
+   nvic->setEna[ id>>5 ] = 1<<(id&0x1F);
+
+   // The STM32 processor implements bits 4-7 of the NVIM priority register.
+   nvic->priority[id] = pri<<4;
+}
+
+static void DisableInterrupt( int addr )
+{
+   IntCtrl_Regs *nvic = (IntCtrl_Regs *)NVIC_BASE;
+
+   int id = addr/4 - 16;
+
+   nvic->clrEna[ id>>5 ] = 1<<(id&0x1F);
+}
+
 
 #endif

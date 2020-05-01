@@ -32,14 +32,16 @@ public:
 #define REVERSE 1
 #define P_ON_M 0
 #define P_ON_E 1
+#define D_ON_M 0
+#define D_ON_E 1
 
   // commonly used functions
   // **************************************************************************
   PID(double *, double *,
       double *, // * constructor.  links the PID to the Input, Output, and
-      double, double, double, int,
+      double, double, double, int, int,
       int); //   Setpoint.  Initial tuning parameters are also set here.
-            //   (overload for specifying proportional mode)
+            //   (overload for specifying proportional and derivative modes)
 
   PID(double *, double *,
       double *, // * constructor.  links the PID to the Input, Output, and
@@ -68,6 +70,9 @@ public:
   void SetTunings(double, double, // * overload for specifying proportional mode
                   double, int);
 
+  void SetTunings(double, double, // * overload for specifying derivative mode
+                  double, int, int);
+
   void SetControllerDirection(
       int); // * Sets the Direction, or "Action" of the controller. DIRECT
             //   means the output will increase when error is positive. REVERSE
@@ -95,7 +100,7 @@ private:
   double kd; // * (D)erivative Tuning Parameter
 
   int controllerDirection;
-  int pOn;
+  int pOn, dOn;
 
   double *myInput;  // * Pointers to the Input, Output, and Setpoint variables
   double *myOutput; //   This creates a hard link between the variables and the
@@ -104,9 +109,9 @@ private:
                    //   what these values are.  with pointers we'll just know.
 
   Duration lastTime, lastSampleTime;
-  double outputSum, lastInput;
+  double outputSum, lastInput, lastError;
 
   double outMin, outMax;
-  bool inAuto, pOnE;
+  bool inAuto, pOnE, dOnE;
 };
 #endif

@@ -35,11 +35,6 @@ static double setpoint;
 static double input;
 static double output;
 
-// default PID gains
-static float Kp;
-static float Ki;
-static float Kd;
-
 // PID Sample time (in milliseconds)
 static uint32_t sample_time = 100;
 
@@ -47,9 +42,9 @@ static uint32_t sample_time = 100;
 static const uint32_t max_task_jitter = 5;
 
 TEST(pidTest, Proportional) {
-  Kp = 0.9;
-  Ki = 0;
-  Kd = 0;
+  float Kp = 0.9;
+  float Ki = 0;
+  float Kd = 0;
   setpoint = 25;
   input = 10;
   PID myPID(&input, &output, &setpoint, Kp, Ki, Kd, DIRECT);
@@ -64,9 +59,9 @@ TEST(pidTest, Proportional) {
 }
 
 TEST(pidTest, Integral) {
-  Kp = 0;
-  Ki = 1.75;
-  Kd = 0;
+  float Kp = 0;
+  float Ki = 1.75;
+  float Kd = 0;
   // reset output to 0 since PID lib uses output to initalise its integral
   output = 0;
   PID myPID(&input, &output, &setpoint, Kp, Ki, Kd, DIRECT);
@@ -84,9 +79,9 @@ TEST(pidTest, Integral) {
 }
 
 TEST(pidTest, derivative) {
-  Kp = 0;
-  Ki = 0;
-  Kd = 2.5;
+  float Kp = 0;
+  float Ki = 0;
+  float Kd = 2.5;
   output = 0;
   PID myPID(&input, &output, &setpoint, Kp, Ki, Kd, DIRECT);
   myPID.SetSampleTime(sample_time);
@@ -97,11 +92,11 @@ TEST(pidTest, derivative) {
 
   // delay and update input to create non-zero derivative
   Hal.delay(sample_time);
-  double derivative = input;
+  double previous_input = input;
   // output being in [0 255], create a negative derivative in order to have
   // a positive output
   input = 5;
-  derivative = (input - derivative) / sample_time * 1000.0;
+  double derivative = (input - previous_input) / sample_time * 1000.0;
 
   myPID.Compute();
   EXPECT_NEAR(output, derivative * -1 * Kd, output_TOLERANCE);
@@ -111,9 +106,9 @@ TEST(pidTest, TaskJitter) {
   // This test uses integral to check the effect of time between calls on the
   // PID output. Introducing jitter in call frequency and checking that the
   // integral takes this jitter into account.
-  Kp = 0;
-  Ki = 0.5;
-  Kd = 0;
+  float Kp = 0;
+  float Ki = 0.5;
+  float Kd = 0;
   output = 0;
   PID myPID(&input, &output, &setpoint, Kp, Ki, Kd, DIRECT);
   myPID.SetSampleTime(sample_time);
@@ -141,9 +136,9 @@ TEST(pidTest, TaskJitter) {
 TEST(pidTest, SampleTimeChange) {
   // This test uses integral to check the effect of changing sample time
   // during execution of the PID
-  Kp = 0;
-  Ki = 1.1;
-  Kd = 0;
+  float Kp = 0;
+  float Ki = 1.1;
+  float Kd = 0;
   output = 0;
   PID myPID(&input, &output, &setpoint, Kp, Ki, Kd, DIRECT);
   myPID.SetSampleTime(sample_time);
@@ -173,9 +168,9 @@ TEST(pidTest, SampleTimeChange) {
 TEST(pidTest, MissedSample) {
   // This test uses integral to check the effect of missing a sample in the
   // execution of PID
-  Kp = 0;
-  Ki = 0.2;
-  Kd = 0;
+  float Kp = 0;
+  float Ki = 0.2;
+  float Kd = 0;
   output = 0;
   PID myPID(&input, &output, &setpoint, Kp, Ki, Kd, DIRECT);
   myPID.SetSampleTime(sample_time);

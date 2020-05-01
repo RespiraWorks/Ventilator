@@ -24,11 +24,20 @@ static inline int IntSuspend( void ){
    return (ret==0);
 }
 
+// Interrupt vectors that we currently use.
+// The values here are the offsets into the interrupt table.
+// These can be found in the NVIC chapter (chapter 12) of the
+// processor reference manual
+#define INT_VEC_TIMER6           0x118
+
 // Represents a 32-bit register
 typedef volatile uint32_t REG;
 
 // 16-bit short register
 typedef volatile uint16_t SREG;
+
+// 8-bit byte sized register
+typedef volatile uint8_t BREG;
 
 ///////////////////////////////////////////////////////////////
 // The structures below represent the STM32 registers used
@@ -91,27 +100,17 @@ struct SysCtrl_Reg
    REG cpac;                     // 0xE000ED88
 };
 
-// Digital I/O
-#define DIGIO_A_BASE                0x48000000
-#define DIGIO_B_BASE                0x48000400
-#define DIGIO_C_BASE                0x48000800
-#define DIGIO_D_BASE                0x48000C00
-#define DIGIO_E_BASE                0x48001000
-#define DIGIO_H_BASE                0x48001C00
-struct GPIO_Regs
+// Interrupt controller
+#define NVIC_BASE                   0xE000E100
+typedef struct
 {
-   REG  mode;
-   REG  outType;
-   REG  outSpeed;
-   REG  pullUpDn;
-   REG  inDat;
-   REG  outDat;
-   SREG set;
-   SREG clr;
-   REG  lock;
-   REG  alt[2];
-   REG  reset;
-};
+   REG  setEna[32];
+   REG  clrEna[32];
+   REG  setPend[32];
+   REG  clrPend[32];
+   REG  active[64];
+   BREG priority[1024];
+} IntCtrl_Regs;
 
 #define UART1_BASE                  0x40013800
 #define UART2_BASE                  0x40004400
@@ -264,5 +263,95 @@ struct I2C_Regs
    REG rxData;
    REG txData;
 };
+
+// General Purpose I/O
+#define GPIO_A_BASE                 0x48000000
+#define GPIO_B_BASE                 0x48000400
+#define GPIO_C_BASE                 0x48000800
+#define GPIO_D_BASE                 0x48000C00
+#define GPIO_E_BASE                 0x48001000
+#define GPIO_H_BASE                 0x48001C00
+struct GPIO_Regs
+{
+   REG  mode;
+   REG  outType;
+   REG  outSpeed;
+   REG  pullUpDn;
+   REG  inDat;
+   REG  outDat;
+   SREG set;
+   SREG clr;
+   REG  lock;
+   REG  alt[2];
+   REG  reset;
+};
+
+// Handy functions for controlling GPIO
+#define GPIO_MODE_INPUT    0
+#define GPIO_MODE_OUTPUT   1
+#define GPIO_MODE_ALT      2
+#define GPIO_MODE_ANALOG   3
+static inline void GPIO_PinMode( uint32_t bank, int pin, int mode )
+{
+   GPIO_Regs *gpio = (GPIO_Regs *)bank;
+   gpio->mode &= ~(3 << (pin*2));
+   gpio->mode |= (mode << (pin*2));
+}
+
+#define GPIO_OUTTYPE_PUSHPULL   0
+#define GPIO_OUTTYPE_OPENDRIAN  1
+static inline void GPIO_OutType( uint32_t bank, int pin, int drain )
+{
+   GPIO_Regs *gpio = (GPIO_Regs *)bank;
+   if( drain )
+      gpio->outType |=   1<<pin;
+   else
+      gpio->outType &= ~(1<<pin);
+}
+
+static inline void GPIO_PinAltFunc( uint32_t bank, int pin, int func )
+{
+   GPIO_PinMode( bank, pin, GPIO_MODE_ALT );
+
+   GPIO_Regs *gpio = (GPIO_Regs *)bank;
+   int x = (pin<8) ? 0 : 1;
+   gpio->alt[x] |= (func << ((pin&7)*4));
+}
+
+static inline void GPIO_SetPin( uint32_t bank, int pin )
+{
+   GPIO_Regs *gpio = (GPIO_Regs *)bank;
+   gpio->set = (1<<pin);
+}
+
+static inline void GPIO_ClrPin( uint32_t bank, int pin )
+{
+   GPIO_Regs *gpio = (GPIO_Regs *)bank;
+   gpio->clr = (1<<pin);
+}
+
+static inline int GPIO_GetPin( uint32_t bank, int pin )
+{
+   GPIO_Regs *gpio = (GPIO_Regs *)bank;
+   return (gpio->inDat & (1<<pin)) ? 1 : 0;
+}
+
+static inline void GPIO_PullUp( uint32_t bank, int pin )
+{
+   GPIO_Regs *gpio = (GPIO_Regs *)bank;
+
+   uint32_t x = gpio->pullUpDn & ~(3<<(2*pin));
+   x |= 1 << (2*pin);
+   gpio->pullUpDn = x;
+}
+
+static inline void GPIO_PullDn( uint32_t bank, int pin )
+{
+   GPIO_Regs *gpio = (GPIO_Regs *)bank;
+
+   uint32_t x = gpio->pullUpDn & ~(3<<(2*pin));
+   x |= 2 << (2*pin);
+   gpio->pullUpDn = x;
+}
 
 #endif

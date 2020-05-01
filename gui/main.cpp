@@ -18,6 +18,8 @@
 
 int main(int argc, char *argv[]) {
   QApplication app(argc, argv);
+  QApplication::setOverrideCursor(Qt::BlankCursor);
+  
   app.setWindowIcon(QIcon(":/Logo.png"));
 
   QCommandLineParser parser;
@@ -112,7 +114,7 @@ int main(int argc, char *argv[]) {
   mainView.setResizeMode(QQuickView::SizeRootObjectToView);
   mainView.setColor(QColor("#000000"));
 
-  mainView.show();
+  mainView.showFullScreen();
 
   if (parser.isSet(startupOnlyOption)) {
     return EXIT_SUCCESS;

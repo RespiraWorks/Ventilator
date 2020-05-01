@@ -6,6 +6,8 @@
 #include "gui_state_container.h"
 #include "periodic_closure.h"
 
+#include "button_handlers.h"
+
 #include <QCommandLineParser>
 #include <QtCore/QDir>
 #include <QtQml/QQmlContext>
@@ -19,8 +21,10 @@
 int main(int argc, char *argv[]) {
   QApplication app(argc, argv);
   QApplication::setOverrideCursor(Qt::BlankCursor);
-  
-  app.setWindowIcon(QIcon(":/Logo.png"));
+
+  app.setWindowIcon(QIcon(":/images/Logo.png"));
+
+  qmlRegisterType<MyObject>("com.myself", 1, 0, "MyObject");
 
   QCommandLineParser parser;
   parser.setApplicationDescription("Ventilator GUI application");

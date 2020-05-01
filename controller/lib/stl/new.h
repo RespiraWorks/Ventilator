@@ -21,7 +21,7 @@ limitations under the License.
 // has an STL.
 //
 // TODO: Remove this file once we no longer support AVR_UNO.
-#ifdef ARDUINO_AVR_UNO
+#if defined(ARDUINO_AVR_UNO) or defined(BARE_STM32)
 
 // Placement new operator.  Provided by <new> when we have an STL; otherwise
 // stubbed out here.

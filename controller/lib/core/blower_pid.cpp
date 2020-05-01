@@ -24,11 +24,29 @@ static double Setpoint;
 static double Input;
 static double Output;
 
-// Configure the PID
-// TODO(#207): Tune these params.
-static constexpr float Kp = 2;
-static constexpr float Ki = 8;
-static constexpr float Kd = 0;
+// PID-tuning were chosen by following the Ziegler-Nichols method,
+// https://en.wikipedia.org/wiki/Ziegler%E2%80%93Nichols_method.
+//
+// Here's an achieved pressure vs. desired pressure trace collected on Alpha
+// build, 2020-05-01, with the following settings.
+//
+//   PEEP = 10 cm H2O,
+//   PIP = 30 cm H2O,
+//   RR = 10 breaths/min
+//   I:E = 2
+//
+// https://drive.google.com/file/d/13QyvO1ptUYYUAs8qT0dCyW9f1XZ8w7iw
+//
+// Note that Ku and Tu only seem to work with this particular sample time.
+static constexpr Duration SampleTime = milliseconds(10);
+static constexpr float Ku = 600;
+static constexpr Duration Tu = seconds(2);
+
+// "Classic PID" settings.  Wikipedia says to expect aggressive overshoot with
+// these params, but I don't observe any overshoot.
+static constexpr float Kp = 0.6 * Ku;
+static constexpr float Ki = 1.2 * Ku / Tu.seconds();
+static constexpr float Kd = 3 * Ku * Tu.seconds() / 40;
 
 // DIRECT means that increases in the output should result in increases in the
 // input.  DIRECT as opposed to REVERSE.
@@ -38,12 +56,10 @@ void blower_pid_init() {
   Setpoint = 0;
   Input = 0;
   Output = 0;
+  myPID.SetSampleTime(SampleTime.milliseconds());
 
   // Our output is an 8-bit PWM.
   myPID.SetOutputLimits(0, 255);
-
-  // TODO(#207): Tune this.
-  myPID.SetSampleTime(100); // ms
 
   // Turn the PID on.
   myPID.SetMode(AUTOMATIC);

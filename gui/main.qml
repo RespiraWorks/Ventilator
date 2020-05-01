@@ -1,6 +1,7 @@
 import QtQuick 2.11
 import QtQuick.Layouts 1.3
 import QtQuick.Controls 2.4
+import com.myself 1.0
 
 Item
 {
@@ -87,6 +88,10 @@ Item
                     Layout.rightMargin: 10
                     Layout.leftMargin: 10
 
+                    MyObject {
+                       id: myobject
+                    }
+
                     Text {
                         id: breathsPerMinuteVal
                         x: 45
@@ -120,6 +125,11 @@ Item
                         font.family: "Courier"
                         font.bold: true
                         focusPolicy: Qt.ClickFocus
+
+                        onClicked: {
+                            myobject.rr_increase();
+                            breathsPerMinuteVal.text =  Number(myobject.rr_value());
+                            }
                     }
 
                     RoundButton {
@@ -132,6 +142,11 @@ Item
                         checkable: false
                         focusPolicy: Qt.NoFocus
                         font.bold: true
+
+                        onClicked: {
+                            myobject.rr_decrease();
+                            breathsPerMinuteVal.text =  Number(myobject.rr_value());
+                            }
                     }
 
                 }
@@ -178,6 +193,11 @@ Item
                         checkable: false
                         focusPolicy: Qt.NoFocus
                         font.bold: true
+
+                        onClicked: {
+                            myobject.peep_increase();
+                            peepVal.text =  Number(myobject.peep_value());
+                            }
                     }
 
                     RoundButton {
@@ -190,6 +210,11 @@ Item
                         checkable: false
                         font.bold: true
                         focusPolicy: Qt.NoFocus
+
+                        onClicked: {
+                            myobject.peep_decrease();
+                            peepVal.text =  Number(myobject.peep_value());
+                            }
                     }
                     Layout.minimumWidth: 150
                     Layout.topMargin: 10
@@ -238,6 +263,11 @@ Item
                         checkable: false
                         font.bold: true
                         focusPolicy: Qt.NoFocus
+
+                        onClicked: {
+                            myobject.pip_increase();
+                            pipVal.text =  Number(myobject.pip_value());
+                            }
                     }
 
                     RoundButton {
@@ -250,7 +280,85 @@ Item
                         checkable: false
                         focusPolicy: Qt.NoFocus
                         font.bold: true
+
+                        onClicked: {
+                            myobject.pip_decrease();
+                            pipVal.text =  Number(myobject.pip_value());
+                            }
                     }
+                    Layout.minimumWidth: 150
+                    Layout.topMargin: 10
+                    Layout.leftMargin: 10
+                }
+
+                Rectangle {
+                    id: ier
+                    color: "#466eeb"
+                    radius: 10
+                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                    Layout.minimumHeight: 100
+                    Layout.rightMargin: 10
+
+                    Text {
+                        id: ierVal
+                        x: 45
+                        y: 39
+                        width: 60
+                        height: 44
+                        text: qsTr("1.1")
+                        horizontalAlignment: Text.AlignHCenter
+                        font.weight: Font.DemiBold
+                        font.family: "Times New Roman"
+                        font.pixelSize: 38
+                        font.bold: true
+                    }
+
+                    Text {
+                        id: element53
+                        x: 61
+                        y: 13
+                        text: qsTr("I:E")
+                        horizontalAlignment: Text.AlignHCenter
+                        font.pixelSize: 17
+                        font.bold: true
+                    }
+
+                    RoundButton {
+                        id: ierInc
+                        x: 110
+                        y: 45
+                        width: 30
+                        height: 30
+                        text: qsTr("+")
+                        checkable: false
+                        font.bold: true
+                        focusPolicy: Qt.NoFocus
+
+                        onClicked: {
+                            myobject.ier_increase();
+                            ierVal.text =  Number(myobject.ier_value(), 'g', 1).toFixed(1);
+                            //console.log("Increase :" + ierVal.text);
+                            }
+                    }
+
+                    RoundButton {
+                        id: ierDec
+                        x: 9
+                        y: 45
+                        width: 30
+                        height: 30
+                        text: qsTr("-")
+                        checkable: false
+                        focusPolicy: Qt.NoFocus
+                        font.bold: true
+
+                        onClicked: {
+                            myobject.ier_decrease();
+                            ierVal.text =  Number(myobject.ier_value(), 'g', 1).toFixed(1);
+                            //console.log("Decrease :" + ierVal.text);
+                            }
+                    }
+
                     Layout.minimumWidth: 150
                     Layout.topMargin: 10
                     Layout.leftMargin: 10

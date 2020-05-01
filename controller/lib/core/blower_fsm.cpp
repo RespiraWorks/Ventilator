@@ -68,7 +68,7 @@ public:
       : inspire_pressure_(cmH2O(params.pip_cm_h2o)),
         expire_pressure_(cmH2O(params.peep_cm_h2o)), start_time_(Hal.now()),
         inspire_end_(start_time_ + inspire_duration(params)),
-        expire_end_(start_time_ + expire_duration(params)) {}
+        expire_end_(inspire_end_ + expire_duration(params)) {}
 
   Pressure get_setpoint() {
     if (Hal.now() < inspire_end_) {

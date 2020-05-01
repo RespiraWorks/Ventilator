@@ -2,8 +2,11 @@ QT += core quick charts
 CONFIG += c++17
 DEFINES += QT_DEPRECATED_WARNINGS
 
-SOURCES += *.cpp
-HEADERS += *.h
+SOURCES += $$files("*.cpp")
+SOURCES += $$files("$$PWD/../common/**/*.c")
+HEADERS += $$files("*.h")
+HEADERS += $$files("$$PWD/../common/**/*.h")
+INCLUDEPATH += $$PWD/../common/third_party/nanopb
 RESOURCES += qml.qrc Logo.png
 DISTFILES += Logo.png
 TRANSLATIONS += ProjectVentilatorGUI_es_GT.ts

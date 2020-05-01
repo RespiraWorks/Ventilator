@@ -40,7 +40,7 @@ limitations under the License.
 
 #ifdef TEST_MODE
 
-#if defined(ARDUINO_AVR_UNO) || defined(ARDUINO_NUCLEO_L452RE)
+#if defined(ARDUINO_AVR_UNO) || defined(ARDUINO_NUCLEO_L452RE) || defined(BARE_STM32)
 #error                                                                         \
     "TEST_MODE intended to be run only on native, but ARDUINO_AVR_UNO or ARDUINO_NUCLEO_L452RE is defined"
 #endif
@@ -54,11 +54,27 @@ limitations under the License.
 
 #else // !TEST_MODE
 
-#if !defined(ARDUINO_AVR_UNO) && !defined(ARDUINO_NUCLEO_L452RE)
+#if !defined(ARDUINO_AVR_UNO) && !defined(ARDUINO_NUCLEO_L452RE) and !defined(BARE_STM32)
 #error                                                                         \
     "When running without TEST_MODE, expecting ARDUINO_AVR_UNO or ARDUINO_NUCLEO_L452RE to be defined"
 #endif
+
+#if defined(BARE_STM32)
+#include <stdint.h>
+
+// Some constants that would normally be in the Arduino header
+// which we're not using on the bare system
+
+#define INPUT         0
+#define OUTPUT        1
+#define INPUT_PULLUP  2
+
+#define LOW           0
+#define HIGH          1
+
+#else
 #include <Arduino.h>
+#endif // BARE_STM32
 
 #ifdef ARDUINO_AVR_UNO
 #include <avr/wdt.h>
@@ -421,7 +437,9 @@ inline void HalApi::watchdog_handler() {
 #endif
 }
 
-#else // TEST_MODE
+#elif defined(BARE_STM32)
+
+#else
 
 inline Time HalApi::now() { return time_; }
 inline void HalApi::delay(Duration d) { time_ = time_ + d; }

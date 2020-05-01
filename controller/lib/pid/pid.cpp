@@ -62,11 +62,18 @@ bool PID::Compute() {
   Time now = Hal.now();
   Duration timeChange = now - lastTime;
   if (timeChange >= SampleTime) {
+    // compute actual samples time-difference to take jitter into account in
+    // integral and derivative
+    double samplesTimeChangeSec = ((now - lastSampleTime) / 1000.0);
+    if (samplesTimeChangeSec <= 0) {
+      // something went wrong, assume sample time
+      samplesTimeChangeSec = (SampleTime / 1000.0);
+    }
     /*Compute all the working error variables*/
     double input = *myInput;
     double error = *mySetpoint - input;
-    double dInput = (input - lastInput);
-    outputSum += (ki * error);
+    double dInput = ((input - lastInput) / samplesTimeChangeSec);
+    outputSum += (ki * error * samplesTimeChangeSec);
 
     /*Add Proportional on Measurement, if P_ON_M is specified*/
     if (!pOnE)
@@ -95,7 +102,9 @@ bool PID::Compute() {
 
     /*Remember some variables for next time*/
     lastInput = input;
-    lastTime = now;
+    lastTime += SampleTime; // this makes the PID able to somewhat "catch up"
+    // when it looses a sample due to slow controller execution
+    lastSampleTime = now;
     return true;
   } else
     return false;
@@ -113,14 +122,9 @@ void PID::SetTunings(double Kp, double Ki, double Kd, int POn) {
   pOn = POn;
   pOnE = POn == P_ON_E;
 
-  dispKp = Kp;
-  dispKi = Ki;
-  dispKd = Kd;
-
-  double SampleTimeInSec = SampleTime.seconds();
   kp = Kp;
-  ki = Ki * SampleTimeInSec;
-  kd = Kd / SampleTimeInSec;
+  ki = Ki;
+  kd = Kd;
 
   if (controllerDirection == REVERSE) {
     kp = (0 - kp);
@@ -141,9 +145,6 @@ void PID::SetTunings(double Kp, double Ki, double Kd) {
  ******************************************************************************/
 void PID::SetSampleTime(Duration NewSampleTime) {
   if (NewSampleTime > milliseconds(0)) {
-    double ratio = NewSampleTime.seconds() / SampleTime.seconds();
-    ki *= ratio;
-    kd /= ratio;
     SampleTime = NewSampleTime;
   }
 }
@@ -199,6 +200,8 @@ void PID::Initialize() {
     outputSum = outMax;
   else if (outputSum < outMin)
     outputSum = outMin;
+  lastTime = Hal.millis() - SampleTime;
+  lastSampleTime = lastTime;
 }
 
 /* SetControllerDirection(...)*************************************************
@@ -221,8 +224,9 @@ void PID::SetControllerDirection(int Direction) {
  * functions query the internal state of the PID.  they're here for display
  * purposes.  this are the functions the PID Front-end uses for example
  ******************************************************************************/
-double PID::GetKp() { return dispKp; }
-double PID::GetKi() { return dispKi; }
-double PID::GetKd() { return dispKd; }
+double PID::GetKp() { return kp; }
+double PID::GetKi() { return ki; }
+double PID::GetKd() { return kd; }
+int PID::GetSampleTime() { return SampleTime; }
 int PID::GetMode() { return inAuto ? AUTOMATIC : MANUAL; }
 int PID::GetDirection() { return controllerDirection; }

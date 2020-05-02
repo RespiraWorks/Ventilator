@@ -12,6 +12,7 @@ addons:
       - qt5-default
       - qtdeclarative5-dev
       - libqt5charts5-dev
+      - libqt5serialport5-dev
 
 # https://docs.platformio.org/en/latest/integration/ci/travis.html#travis-ci
 cache:

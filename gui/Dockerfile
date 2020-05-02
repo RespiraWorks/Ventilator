@@ -9,6 +9,8 @@ RUN apt-get update && \
     qtmultimedia5-dev \
     libqt5charts5 \
     libqt5charts5-dev \
+    libqt5serialport5 \
+    libqt5serialport5-dev \
     qml-module-qtcharts \
     libqt5multimedia5-plugins \
     qtquickcontrols2-5-dev \

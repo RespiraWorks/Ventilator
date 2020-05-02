@@ -98,7 +98,7 @@ Item
                         y: 39
                         width: 60
                         height: 44
-                        text: qsTr("0")
+                        text: Number(myobject.rr_default());
                         horizontalAlignment: Text.AlignHCenter
                         font.family: "Times New Roman"
                         font.weight: Font.DemiBold
@@ -127,8 +127,8 @@ Item
                         focusPolicy: Qt.ClickFocus
 
                         onClicked: {
-                            myobject.rr_increase();
-                            breathsPerMinuteVal.text =  Number(myobject.rr_value());
+                            myobject.rr_inc();
+                            breathsPerMinuteVal.text =  Number(myobject.rr_val());
                             }
                     }
 
@@ -144,8 +144,8 @@ Item
                         font.bold: true
 
                         onClicked: {
-                            myobject.rr_decrease();
-                            breathsPerMinuteVal.text =  Number(myobject.rr_value());
+                            myobject.rr_dec();
+                            breathsPerMinuteVal.text =  Number(myobject.rr_val());
                             }
                     }
 
@@ -165,7 +165,7 @@ Item
                         y: 39
                         width: 60
                         height: 44
-                        text: qsTr("0")
+                        text:  Number(myobject.peep_default());
                         horizontalAlignment: Text.AlignHCenter
                         font.weight: Font.DemiBold
                         font.family: "Times New Roman"
@@ -195,9 +195,9 @@ Item
                         font.bold: true
 
                         onClicked: {
-                            myobject.peep_increase();
-                            peepVal.text =  Number(myobject.peep_value());
-                            }
+                            myobject.peep_inc();
+                            peepVal.text =  Number(myobject.peep_val());
+                        }
                     }
 
                     RoundButton {
@@ -212,9 +212,9 @@ Item
                         focusPolicy: Qt.NoFocus
 
                         onClicked: {
-                            myobject.peep_decrease();
-                            peepVal.text =  Number(myobject.peep_value());
-                            }
+                            myobject.peep_dec();
+                            peepVal.text =  Number(myobject.peep_val());
+                        }
                     }
                     Layout.minimumWidth: 150
                     Layout.topMargin: 10
@@ -235,7 +235,7 @@ Item
                         y: 39
                         width: 60
                         height: 44
-                        text: qsTr("0")
+                        text:  Number(myobject.pip_default());
                         horizontalAlignment: Text.AlignHCenter
                         font.weight: Font.DemiBold
                         font.family: "Times New Roman"
@@ -265,9 +265,9 @@ Item
                         focusPolicy: Qt.NoFocus
 
                         onClicked: {
-                            myobject.pip_increase();
-                            pipVal.text =  Number(myobject.pip_value());
-                            }
+                            myobject.pip_inc();
+                            pipVal.text =  Number(myobject.pip_val());
+                        }
                     }
 
                     RoundButton {
@@ -282,9 +282,9 @@ Item
                         font.bold: true
 
                         onClicked: {
-                            myobject.pip_decrease();
-                            pipVal.text =  Number(myobject.pip_value());
-                            }
+                            myobject.pip_dec();
+                            pipVal.text =  Number(myobject.pip_val());
+                        }
                     }
                     Layout.minimumWidth: 150
                     Layout.topMargin: 10
@@ -305,7 +305,7 @@ Item
                         y: 39
                         width: 60
                         height: 44
-                        text: qsTr("1.1")
+                        text:  Number(myobject.ier_default());
                         horizontalAlignment: Text.AlignHCenter
                         font.weight: Font.DemiBold
                         font.family: "Times New Roman"
@@ -335,10 +335,10 @@ Item
                         focusPolicy: Qt.NoFocus
 
                         onClicked: {
-                            myobject.ier_increase();
-                            ierVal.text =  Number(myobject.ier_value(), 'g', 1).toFixed(1);
+                            myobject.ier_inc();
+                            ierVal.text =  Number(myobject.ier_val(), 'g', 1).toFixed(1);
                             //console.log("Increase :" + ierVal.text);
-                            }
+                        }
                     }
 
                     RoundButton {
@@ -353,10 +353,9 @@ Item
                         font.bold: true
 
                         onClicked: {
-                            myobject.ier_decrease();
-                            ierVal.text =  Number(myobject.ier_value(), 'g', 1).toFixed(1);
-                            //console.log("Decrease :" + ierVal.text);
-                            }
+                            myobject.ier_dec();
+                            ierVal.text =  Number(myobject.ier_val(), 'g', 1).toFixed(1);
+                        }
                     }
 
                     Layout.minimumWidth: 150
@@ -370,14 +369,6 @@ Item
                 id: scopeGridLayout
                 columnSpacing: 0
                 rowSpacing: -20
-           /*     anchors.left: parent.left
-                anchors.leftMargin: 195
-                anchors.bottom: parent.bottom
-                anchors.bottomMargin: 0
-                anchors.top: parent.top
-                anchors.topMargin: 0
-                anchors.right: parent.right
-                anchors.rightMargin: 0 */
                 Layout.minimumHeight: 400
                 Layout.minimumWidth: 500
                 Layout.fillHeight: true
@@ -424,6 +415,306 @@ Item
 
             }
 
+            ColumnLayout {
+                id: columnLayout2
+                width: 100
+                height: 100
+
+                Text {
+                    id: element2
+                    text: qsTr("Alarms")
+                    Layout.fillWidth: true
+                    font.bold: true
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignHCenter
+                    font.pixelSize: 22
+                }
+
+
+                Rectangle {
+                    id: rrAlarmHigh
+                    color: "#466eeb"
+                    radius: 10
+                    MyObject {
+                        id: myobject1
+                    }
+
+                    Text {
+                        id: rrAlarmHighVal
+                        x: 45
+                        y: 39
+                        width: 60
+                        height: 44
+                        text:  Number(myobject.rrAlarmHigh_default());
+                        font.weight: Font.DemiBold
+                        font.bold: true
+                        horizontalAlignment: Text.AlignHCenter
+                        font.family: "Times New Roman"
+                        font.pixelSize: 38
+                    }
+
+                    Text {
+                        id: element1
+                        x: 45
+                        y: 13
+                        text: qsTr("RR High")
+                        font.bold: true
+                        font.pixelSize: 17
+                    }
+
+                    RoundButton {
+                        id: rrAlarmHighInc
+                        x: 110
+                        y: 45
+                        width: 30
+                        height: 30
+                        text: qsTr("+")
+                        font.bold: true
+                        focusPolicy: Qt.ClickFocus
+                        font.family: "Courier"
+
+                        onClicked: {
+                            myobject.rrAlarmHigh_inc();
+                            rrAlarmHighVal.text =  Number(myobject.rrAlarmHigh_val());
+                            }
+                    }
+
+                    RoundButton {
+                        id: rrAlarmHighDec
+                        x: 9
+                        y: 45
+                        width: 30
+                        height: 30
+                        text: qsTr("-")
+                        checkable: false
+                        font.bold: true
+                        focusPolicy: Qt.NoFocus
+
+                        onClicked: {
+                            myobject.rrAlarmHigh_dec();
+                            rrAlarmHighVal.text =  Number(myobject.rrAlarmHigh_val());
+                            }
+                    }
+                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                    Layout.minimumWidth: 150
+                    Layout.minimumHeight: 100
+                    Layout.rightMargin: 10
+                    Layout.leftMargin: 10
+                }
+
+                Rectangle {
+                    id: rrAlarmLow
+                    color: "#466eeb"
+                    radius: 10
+                    Text {
+                        id: rrAlarmLowVal
+                        x: 45
+                        y: 39
+                        width: 60
+                        height: 44
+                        text: Number(myobject.rrAlarmLow_default());
+                        font.weight: Font.DemiBold
+                        font.bold: true
+                        horizontalAlignment: Text.AlignHCenter
+                        font.family: "Times New Roman"
+                        font.pixelSize: 38
+                    }
+
+                    Text {
+                        id: element4
+                        x: 45
+                        y: 13
+                        text: qsTr("RR Low")
+                        font.bold: true
+                        horizontalAlignment: Text.AlignHCenter
+                        font.pixelSize: 17
+                    }
+
+                    RoundButton {
+                        id: rrAlarmLowInc
+                        x: 110
+                        y: 45
+                        width: 30
+                        height: 30
+                        text: qsTr("+")
+                        checkable: false
+                        font.bold: true
+                        focusPolicy: Qt.NoFocus
+
+                        onClicked: {
+                            myobject.rrAlarmLow_inc();
+                            rrAlarmLowVal.text =  Number(myobject.rrAlarmLow_val());
+                            }
+                    }
+
+                    RoundButton {
+                        id: rrAlarmLowDec
+                        x: 9
+                        y: 45
+                        width: 30
+                        height: 30
+                        text: qsTr("-")
+                        checkable: false
+                        font.bold: true
+                        focusPolicy: Qt.NoFocus
+
+                        onClicked: {
+                            myobject.rrAlarmLow_dec();
+                            rrAlarmLowVal.text =  Number(myobject.rrAlarmLow_val());
+                            }
+                    }
+                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                    Layout.minimumWidth: 150
+                    Layout.minimumHeight: 100
+                    Layout.rightMargin: 10
+                    Layout.leftMargin: 10
+                }
+
+                Rectangle {
+                    id: tvAlarmHigh
+                    color: "#466eeb"
+                    radius: 10
+                    Text {
+                        id: tvAlarmHighVal
+                        x: 45
+                        y: 39
+                        width: 60
+                        height: 44
+                        text: Number(myobject.tvAlarmHigh_default());
+                        font.weight: Font.DemiBold
+                        font.bold: true
+                        horizontalAlignment: Text.AlignHCenter
+                        font.family: "Times New Roman"
+                        font.pixelSize: 38
+                    }
+
+                    Text {
+                        id: element6
+                        x: 44
+                        y: 13
+                        text: qsTr("TV High")
+                        font.bold: true
+                        horizontalAlignment: Text.AlignHCenter
+                        font.pixelSize: 17
+                    }
+
+                    RoundButton {
+                        id: tvAlarmHighInc
+                        x: 110
+                        y: 45
+                        width: 30
+                        height: 30
+                        text: qsTr("+")
+                        checkable: false
+                        font.bold: true
+                        focusPolicy: Qt.NoFocus
+
+                        onClicked: {
+                            myobject.tvAlarmHigh_inc();
+                            tvAlarmHighVal.text =  Number(myobject.tvAlarmHigh_val());
+                            }
+                    }
+
+                    RoundButton {
+                        id: tvAlarmHighDec
+                        x: 9
+                        y: 45
+                        width: 30
+                        height: 30
+                        text: qsTr("-")
+                        checkable: false
+                        font.bold: true
+                        focusPolicy: Qt.NoFocus
+
+                        onClicked: {
+                            myobject.tvAlarmHigh_dec();
+                            tvAlarmHighVal.text =  Number(myobject.tvAlarmHigh_val());
+                            }
+                    }
+                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                    Layout.minimumWidth: 150
+                    Layout.minimumHeight: 100
+                    Layout.rightMargin: 10
+                    Layout.leftMargin: 10
+                }
+
+                Rectangle {
+                    id: tvAlarmLow
+                    color: "#466eeb"
+                    radius: 10
+                    Text {
+                        id: tvAlarmLowVal
+                        x: 45
+                        y: 39
+                        width: 60
+                        height: 44
+                        text: Number(myobject.tvAlarmLow_default());
+                        font.weight: Font.DemiBold
+                        font.bold: true
+                        horizontalAlignment: Text.AlignHCenter
+                        font.family: "Times New Roman"
+                        font.pixelSize: 38
+                    }
+
+                    Text {
+                        id: element54
+                        x: 45
+                        y: 13
+                        text: qsTr("TV Low")
+                        font.bold: true
+                        horizontalAlignment: Text.AlignHCenter
+                        font.pixelSize: 17
+                    }
+
+                    RoundButton {
+                        id: tvAlarmLowInc
+                        x: 110
+                        y: 45
+                        width: 30
+                        height: 30
+                        text: qsTr("+")
+                        checkable: false
+                        font.bold: true
+                        focusPolicy: Qt.NoFocus
+
+                        onClicked: {
+                            myobject.tvAlarmLow_inc();
+                            tvAlarmLowVal.text =  Number(myobject.tvAlarmLow_val());
+                            }
+                    }
+
+                    RoundButton {
+                        id: tvAlarmLowDec
+                        x: 9
+                        y: 45
+                        width: 30
+                        height: 30
+                        text: qsTr("-")
+                        checkable: false
+                        font.bold: true
+                        focusPolicy: Qt.NoFocus
+
+                        onClicked: {
+                            myobject.tvAlarmLow_dec();
+                            tvAlarmLowVal.text =  Number(myobject.tvAlarmLow_val());
+                            }
+                    }
+                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                    Layout.minimumWidth: 150
+                    Layout.minimumHeight: 100
+                    Layout.rightMargin: 10
+                    Layout.leftMargin: 10
+                }
+
+
+                Layout.maximumHeight: 65356
+                Layout.minimumWidth: 200
+                Layout.fillWidth: true
+                Layout.maximumWidth: 6553
+                Layout.fillHeight: true
+            }
+
+
         }
 
         RowLayout {
@@ -454,6 +745,56 @@ Designer {
     D{i:2;anchors_height:93;anchors_width:185}D{i:3;anchors_height:600;anchors_width:839;anchors_x:157;anchors_y:0}
 }
 ##^##*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

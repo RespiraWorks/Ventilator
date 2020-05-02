@@ -5,6 +5,9 @@
 
 #include <stdint.h>
 
+#define CPU_FREQ_MHZ       80
+#define CPU_FREQ           (CPU_FREQ_MHZ * 1000000)
+
 // Some useful inline functions to enable/disable interrupts
 static inline void IntDisable( void ){
    asm volatile( "cpsid i" );
@@ -28,6 +31,7 @@ static inline int IntSuspend( void ){
 // The values here are the offsets into the interrupt table.
 // These can be found in the NVIC chapter (chapter 12) of the
 // processor reference manual
+#define INT_VEC_UART3            0x0DC
 #define INT_VEC_TIMER6           0x118
 
 // Represents a 32-bit register

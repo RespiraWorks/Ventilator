@@ -233,6 +233,7 @@ public:
   [[nodiscard]] constexpr float seconds() const {
     return static_cast<float>(val_) / 1000;
   }
+  [[nodiscard]] constexpr float minutes() const { return seconds() / 60; }
 
   constexpr friend Duration operator+(const Duration &a, const Duration &b);
   constexpr friend Duration operator-(const Duration &a, const Duration &b);
@@ -250,6 +251,7 @@ private:
 
 constexpr Duration milliseconds(int64_t millis) { return Duration(millis); }
 constexpr Duration seconds(float secs) { return Duration(1000 * secs); }
+constexpr Duration minutes(float mins) { return seconds(mins * 60); }
 
 // Represents a point in time, relative to when the device started up.  See
 // details above.

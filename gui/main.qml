@@ -23,6 +23,9 @@ Item
         }
     }
 
+    GuiStateInterface {
+       id: guiStateInterface
+    }
 
     Rectangle {
         id: rectangle
@@ -88,17 +91,13 @@ Item
                     Layout.rightMargin: 10
                     Layout.leftMargin: 10
 
-                    MyObject {
-                       id: myobject
-                    }
-
                     Text {
                         id: breathsPerMinuteVal
                         x: 45
                         y: 39
                         width: 60
                         height: 44
-                        text: Number(myobject.rr_default());
+                        text: Number(guiStateInterface.rr_default());
                         horizontalAlignment: Text.AlignHCenter
                         font.family: "Times New Roman"
                         font.weight: Font.DemiBold
@@ -127,8 +126,8 @@ Item
                         focusPolicy: Qt.ClickFocus
 
                         onClicked: {
-                            myobject.rr_inc();
-                            breathsPerMinuteVal.text =  Number(myobject.rr_val());
+                            guiStateInterface.rr_inc();
+                            breathsPerMinuteVal.text =  Number(guiStateInterface.rr_val());
                             }
                     }
 
@@ -144,8 +143,8 @@ Item
                         font.bold: true
 
                         onClicked: {
-                            myobject.rr_dec();
-                            breathsPerMinuteVal.text =  Number(myobject.rr_val());
+                            guiStateInterface.rr_dec();
+                            breathsPerMinuteVal.text =  Number(guiStateInterface.rr_val());
                             }
                     }
 
@@ -165,7 +164,7 @@ Item
                         y: 39
                         width: 60
                         height: 44
-                        text:  Number(myobject.peep_default());
+                        text:  Number(guiStateInterface.peep_default());
                         horizontalAlignment: Text.AlignHCenter
                         font.weight: Font.DemiBold
                         font.family: "Times New Roman"
@@ -195,8 +194,8 @@ Item
                         font.bold: true
 
                         onClicked: {
-                            myobject.peep_inc();
-                            peepVal.text =  Number(myobject.peep_val());
+                            guiStateInterface.peep_inc();
+                            peepVal.text =  Number(guiStateInterface.peep_val());
                         }
                     }
 
@@ -212,8 +211,8 @@ Item
                         focusPolicy: Qt.NoFocus
 
                         onClicked: {
-                            myobject.peep_dec();
-                            peepVal.text =  Number(myobject.peep_val());
+                            guiStateInterface.peep_dec();
+                            peepVal.text =  Number(guiStateInterface.peep_val());
                         }
                     }
                     Layout.minimumWidth: 150
@@ -235,7 +234,7 @@ Item
                         y: 39
                         width: 60
                         height: 44
-                        text:  Number(myobject.pip_default());
+                        text:  Number(guiStateInterface.pip_default());
                         horizontalAlignment: Text.AlignHCenter
                         font.weight: Font.DemiBold
                         font.family: "Times New Roman"
@@ -265,8 +264,8 @@ Item
                         focusPolicy: Qt.NoFocus
 
                         onClicked: {
-                            myobject.pip_inc();
-                            pipVal.text =  Number(myobject.pip_val());
+                            guiStateInterface.pip_inc();
+                            pipVal.text =  Number(guiStateInterface.pip_val());
                         }
                     }
 
@@ -282,8 +281,8 @@ Item
                         font.bold: true
 
                         onClicked: {
-                            myobject.pip_dec();
-                            pipVal.text =  Number(myobject.pip_val());
+                            guiStateInterface.pip_dec();
+                            pipVal.text =  Number(guiStateInterface.pip_val());
                         }
                     }
                     Layout.minimumWidth: 150
@@ -305,7 +304,7 @@ Item
                         y: 39
                         width: 60
                         height: 44
-                        text:  Number(myobject.ier_default());
+                        text:  Number(guiStateInterface.ier_default());
                         horizontalAlignment: Text.AlignHCenter
                         font.weight: Font.DemiBold
                         font.family: "Times New Roman"
@@ -335,8 +334,8 @@ Item
                         focusPolicy: Qt.NoFocus
 
                         onClicked: {
-                            myobject.ier_inc();
-                            ierVal.text =  Number(myobject.ier_val(), 'g', 1).toFixed(1);
+                            guiStateInterface.ier_inc();
+                            ierVal.text =  Number(guiStateInterface.ier_val(), 'g', 1).toFixed(1);
                             //console.log("Increase :" + ierVal.text);
                         }
                     }
@@ -353,8 +352,8 @@ Item
                         font.bold: true
 
                         onClicked: {
-                            myobject.ier_dec();
-                            ierVal.text =  Number(myobject.ier_val(), 'g', 1).toFixed(1);
+                            guiStateInterface.ier_dec();
+                            ierVal.text =  Number(guiStateInterface.ier_val(), 'g', 1).toFixed(1);
                         }
                     }
 
@@ -435,9 +434,6 @@ Item
                     id: rrAlarmHigh
                     color: "#466eeb"
                     radius: 10
-                    MyObject {
-                        id: myobject1
-                    }
 
                     Text {
                         id: rrAlarmHighVal
@@ -445,7 +441,7 @@ Item
                         y: 39
                         width: 60
                         height: 44
-                        text:  Number(myobject.rrAlarmHigh_default());
+                        text:  Number(guiStateInterface.rrAlarmHigh_default());
                         font.weight: Font.DemiBold
                         font.bold: true
                         horizontalAlignment: Text.AlignHCenter
@@ -474,8 +470,8 @@ Item
                         font.family: "Courier"
 
                         onClicked: {
-                            myobject.rrAlarmHigh_inc();
-                            rrAlarmHighVal.text =  Number(myobject.rrAlarmHigh_val());
+                            guiStateInterface.rrAlarmHigh_inc();
+                            rrAlarmHighVal.text =  Number(guiStateInterface.rrAlarmHigh_val());
                             }
                     }
 
@@ -491,8 +487,8 @@ Item
                         focusPolicy: Qt.NoFocus
 
                         onClicked: {
-                            myobject.rrAlarmHigh_dec();
-                            rrAlarmHighVal.text =  Number(myobject.rrAlarmHigh_val());
+                            guiStateInterface.rrAlarmHigh_dec();
+                            rrAlarmHighVal.text =  Number(guiStateInterface.rrAlarmHigh_val());
                             }
                     }
                     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
@@ -512,7 +508,7 @@ Item
                         y: 39
                         width: 60
                         height: 44
-                        text: Number(myobject.rrAlarmLow_default());
+                        text: Number(guiStateInterface.rrAlarmLow_default());
                         font.weight: Font.DemiBold
                         font.bold: true
                         horizontalAlignment: Text.AlignHCenter
@@ -542,8 +538,8 @@ Item
                         focusPolicy: Qt.NoFocus
 
                         onClicked: {
-                            myobject.rrAlarmLow_inc();
-                            rrAlarmLowVal.text =  Number(myobject.rrAlarmLow_val());
+                            guiStateInterface.rrAlarmLow_inc();
+                            rrAlarmLowVal.text =  Number(guiStateInterface.rrAlarmLow_val());
                             }
                     }
 
@@ -559,8 +555,8 @@ Item
                         focusPolicy: Qt.NoFocus
 
                         onClicked: {
-                            myobject.rrAlarmLow_dec();
-                            rrAlarmLowVal.text =  Number(myobject.rrAlarmLow_val());
+                            guiStateInterface.rrAlarmLow_dec();
+                            rrAlarmLowVal.text =  Number(guiStateInterface.rrAlarmLow_val());
                             }
                     }
                     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
@@ -580,7 +576,7 @@ Item
                         y: 39
                         width: 60
                         height: 44
-                        text: Number(myobject.tvAlarmHigh_default());
+                        text: Number(guiStateInterface.tvAlarmHigh_default());
                         font.weight: Font.DemiBold
                         font.bold: true
                         horizontalAlignment: Text.AlignHCenter
@@ -610,8 +606,8 @@ Item
                         focusPolicy: Qt.NoFocus
 
                         onClicked: {
-                            myobject.tvAlarmHigh_inc();
-                            tvAlarmHighVal.text =  Number(myobject.tvAlarmHigh_val());
+                            guiStateInterface.tvAlarmHigh_inc();
+                            tvAlarmHighVal.text =  Number(guiStateInterface.tvAlarmHigh_val());
                             }
                     }
 
@@ -627,8 +623,8 @@ Item
                         focusPolicy: Qt.NoFocus
 
                         onClicked: {
-                            myobject.tvAlarmHigh_dec();
-                            tvAlarmHighVal.text =  Number(myobject.tvAlarmHigh_val());
+                            guiStateInterface.tvAlarmHigh_dec();
+                            tvAlarmHighVal.text =  Number(guiStateInterface.tvAlarmHigh_val());
                             }
                     }
                     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
@@ -648,7 +644,7 @@ Item
                         y: 39
                         width: 60
                         height: 44
-                        text: Number(myobject.tvAlarmLow_default());
+                        text: Number(guiStateInterface.tvAlarmLow_default());
                         font.weight: Font.DemiBold
                         font.bold: true
                         horizontalAlignment: Text.AlignHCenter
@@ -678,8 +674,8 @@ Item
                         focusPolicy: Qt.NoFocus
 
                         onClicked: {
-                            myobject.tvAlarmLow_inc();
-                            tvAlarmLowVal.text =  Number(myobject.tvAlarmLow_val());
+                            guiStateInterface.tvAlarmLow_inc();
+                            tvAlarmLowVal.text =  Number(guiStateInterface.tvAlarmLow_val());
                             }
                     }
 
@@ -695,8 +691,8 @@ Item
                         focusPolicy: Qt.NoFocus
 
                         onClicked: {
-                            myobject.tvAlarmLow_dec();
-                            tvAlarmLowVal.text =  Number(myobject.tvAlarmLow_val());
+                            guiStateInterface.tvAlarmLow_dec();
+                            tvAlarmLowVal.text =  Number(guiStateInterface.tvAlarmLow_val());
                             }
                     }
                     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter

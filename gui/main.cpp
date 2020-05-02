@@ -6,7 +6,7 @@
 #include "gui_state_container.h"
 #include "periodic_closure.h"
 
-#include "button_handlers.h"
+//#include "button_handlers.h"
 
 #include <QCommandLineParser>
 #include <QtCore/QDir>
@@ -24,7 +24,7 @@ int main(int argc, char *argv[]) {
 
   app.setWindowIcon(QIcon(":/images/Logo.png"));
 
-  qmlRegisterType<MyObject>("com.myself", 1, 0, "MyObject");
+  qmlRegisterType<GuiStateInterface>("com.myself", 1, 0, "GuiStateInterface");
 
   QCommandLineParser parser;
   parser.setApplicationDescription("Ventilator GUI application");
@@ -39,7 +39,7 @@ int main(int argc, char *argv[]) {
   parser.process(app);
 
   GuiStateContainer state_container(
-      /*history_window=*/DurationMs(30000));
+      /*history_window=*/DurationMs(30000)); 
   auto startup_time = state_container.GetStartupTime();
 
   std::unique_ptr<ConnectedDevice> device =

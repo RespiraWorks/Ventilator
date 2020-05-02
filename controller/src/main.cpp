@@ -120,7 +120,8 @@ static void controller_loop() {
     //   - Expiratory solenoid valve state (open/closed).
     BlowerSystemState desired_state =
         blower_fsm_desired_state(controller_status.active_params);
-    controller_status.fan_setpoint_cm_h2o = desired_state.pressure.cmH2O();
+    controller_status.fan_setpoint_cm_h2o =
+        desired_state.setpoint_pressure.cmH2O();
 
     blower_pid_execute(desired_state, &controller_status.sensor_readings,
                        &controller_status.fan_power);

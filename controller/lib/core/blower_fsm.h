@@ -48,7 +48,17 @@ enum class ValveState {
 // Represents a state that the blower FSM wants us to achieve at a given point
 // in time.
 struct BlowerSystemState {
-  Pressure pressure;
+  // Is the blower on?
+  //
+  // Note: blower_enabled == false isn't the same as setpoint_pressure == 0:
+  //
+  //  - If blower_enabled is false, we shut down the fan immediately, whereas
+  //  - if setpoint_pressure == 0, PID spins down the fan to attempt to read 0
+  //    kPa measured patient pressure.
+  //
+  bool blower_enabled;
+
+  Pressure setpoint_pressure;
   ValveState expire_valve_state;
 };
 

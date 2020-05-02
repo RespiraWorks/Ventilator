@@ -30,10 +30,13 @@ static volatile uint32_t msCount;
 static void InitGPIO( void );
 static void InitADC( void );
 static void InitSysTimer( void );
+static void InitPwmOut( void );
+static void InitUARTs( void );
 static void EnableClock( uint32_t base );
 static void EnableInterrupt( int addr, int pri );
 static void DisableInterrupt( int addr );
 static void Timer6ISR( void );
+static void UART3_ISR( void );
 
 // For now, the main function in main.cpp is called setup
 // rather then main.  If we adopt this HAL then we can 
@@ -105,13 +108,14 @@ extern "C" void _init( void ){
 /*
  * One time init of HAL.
  */
-int temp_adc = 0;
 void HalApi::init() {
 
    // Init various components needed by the system.
    InitGPIO();
    InitSysTimer();
    InitADC();
+   InitPwmOut();
+   InitUARTs();
 
    // Enable interrupts
    IntEnable();
@@ -218,7 +222,7 @@ static void InitSysTimer( void ){
    // Just set the timer up to count every microsecond.
    TimerRegs *tmr = (TimerRegs *)TIMER6_BASE;
    tmr->reload = 999;
-   tmr->prescale = 79;
+   tmr->prescale = (CPU_FREQ_MHZ-1);
    tmr->event = 1;
    tmr->ctrl[0] = 1;
    tmr->intEna  = 1;
@@ -371,29 +375,269 @@ int HalApi::analogRead(AnalogPin pin){
 
 /******************************************************************
  * PWM outputs
+ *
+ * The following four outputs could be driven
+ * as PWM outputs:
+ *
+ * PA8  - Timer 1 Channel 1 - heater control
+ * PA11 - Timer 1 Channel 4 - solenoid
+ * PB3  - Timer 2 Channel 2 - blower control
+ * PB4  - Timer 3 Channel 1 - buzzer
+ *
+ * For now I'll just set up the blower since that's the only
+ * one called out in the HAL
  *****************************************************************/
-void HalApi::analogWrite(PwmPin pin, int value) {
+static void InitPwmOut( void )
+{
+   // The PWM frequency isn't mentioned anywhere that I can find, so
+   // I'm just picking a reasonable number.  This can be refined later
+   const int pwmFreqHz  = 20000;
+
+   EnableClock( TIMER2_BASE );
+
+   // Connect PB3 to timer 2
+   GPIO_PinAltFunc( GPIO_B_BASE, 3, 1 );
+
+   TimerRegs *tmr = (TimerRegs *)TIMER2_BASE;
+
+   // Set the frequency
+   tmr->reload = (CPU_FREQ / pwmFreqHz)-1;
+
+   // Configure channel 2 in PWM output mode
+   tmr->ccMode[0] = 0x6800;
+
+   tmr->ccEnable = 0x10;
+
+   // Start with 0% duty cycle
+   tmr->compare[1] = 0;
+
+   // Load the shadow registers
+   tmr->event = 1;
+
+   // Start the counter
+   tmr->ctrl[0] = 0x81;
 }
 
+// Set the PWM period.  Currently the value is 0 to 255 which is
+// a shame.  We should change this to a float, say with a value 
+// of 0.0 to 1.0 to make better use of our resolution
+void HalApi::analogWrite(PwmPin pin, int value) {
+
+   // Convert the value to a float
+   float duty =  value * (1.0/255);
+
+   TimerRegs *tmr;
+   int chan;
+   switch( pin )
+   {
+      case PwmPin::BLOWER:
+         tmr = (TimerRegs *)TIMER2_BASE;
+         chan = 1;
+         break;
+
+      default:
+         return;
+   }
+
+   tmr->compare[chan] = tmr->reload * duty;
+}
 
 /******************************************************************
  * Serial port to GUI
  *****************************************************************/
 
+// This class is a generic circular buffer for byte sized data.
+// It could probably go in it's own header outside the HAL, we 
+// would just need to add interrupt suspend/restore to the HAL
+// definition.
+template <int N> class CircBuff
+{
+   uint8_t buff[N];
+   int head, tail;
+
+public:
+   CircBuff( void ){
+      head = tail = 0;
+   }
+
+   // Return number of bytes available in the buffer
+   int FullCt( void ){
+      int p = IntSuspend();
+      int ct = head-tail;
+      IntRestore(p);
+      if( ct < 0 ) ct += N;
+      return ct;
+   }
+
+   // Return number of free spaces in the buffer
+   int FreeCt( void ){
+      return N-1-FullCt();
+   }
+
+   // Get the oldest byte from the buffer.
+   // Returns -1 if the buffer is empty
+   int Get( void )
+   {
+      int ret = -1;
+
+      int p = IntSuspend();
+
+      if( head != tail )
+      {
+         ret = buff[tail++];
+         if( tail >= N ) tail = 0;
+      }
+
+      IntRestore( p );
+      return ret;
+   }
+
+   // Add a byte ot the buffer
+   // Retuns 1 on success, 0 if the buffer is full
+   int Put( uint8_t dat )
+   {
+      int ret = 0;
+
+      int p = IntSuspend();
+
+      int h = head+1;
+      if( h >= N ) h = 0;
+
+      if( h != tail )
+      {
+         buff[head] = dat;
+         head = h;
+         ret = 1;
+      }
+
+      IntRestore( p );
+
+      return ret;
+   }
+};
+
+class UART
+{
+   CircBuff<128> rxDat;
+   CircBuff<128> txDat;
+   UART_Regs *reg;
+public:
+   void Init( UART_Regs *r, int baud )
+   {
+      reg = r;
+
+      // Set baud rate register
+      reg->baud = CPU_FREQ / baud;
+
+      // Enable the UART and receive interrupts
+      reg->ctrl[0] = 0x002D;
+   }
+
+   void ISR( void ){
+
+      // Check for over run error and framing errors.
+      // Clear those errors if they're set to avoid
+      // further interrupts from them.
+      if( reg->status & 0x000A )
+         reg->intClear = 0x000A;
+
+      // See if we received a new byte
+      if( reg->status & 0x0020 )
+         rxDat.Put( reg->rxDat );
+
+      // Check for transmit data register empty
+      if( reg->status & reg->ctrl[0] & 0x0080 )
+      {
+         int ch = txDat.Get();
+
+         // If there's nothing left in the transmit buffer, 
+         // just disable further transmit interrupts.
+         if( ch < 0 )
+            reg->ctrl[0] &= ~0x0080;
+
+         // Otherwise, Send the next byte
+         else
+            reg->txDat = ch;
+      }
+   }
+
+   uint16_t read( uint8_t *buf, uint16_t len ){
+
+      for( uint16_t i=0; i<len; i++ ) {
+         int ch = rxDat.Get();
+         if( ch < 0 ) return i;
+         *buf++ = ch;
+      }
+      return len;
+   }
+
+   uint16_t write( const uint8_t *buf, uint16_t len) {
+
+      uint16_t i;
+      for( i=0; i<len; i++ ){
+         if( !txDat.Put( *buf++ ) )
+            break;
+      }
+
+      // Enable the tx interrupt
+      reg->ctrl[0] |= 0x0080;
+
+      return i;
+   }
+
+   int RxFull( void ){
+      return rxDat.FullCt();
+   }
+
+   int TxFree( void ){
+      return txDat.FreeCt();
+   }
+};
+
+static UART rpUART;
+
+// The UART that talks to the rPi uses the following pins:
+//    PB10 - TX
+//    PB11 - RX
+//    PB13 - RTS
+//    PB14 - CTS
+//
+// These pins are connected to UART3
+static void InitUARTs( void )
+{
+// NOTE - The UART functionality hasn't been tested due to lack of hardware!
+//        Need to do that as soon as the boards are available.
+   EnableClock( UART3_BASE );
+
+   GPIO_PinAltFunc( GPIO_B_BASE, 10, 7 );
+   GPIO_PinAltFunc( GPIO_B_BASE, 11, 7 );
+   GPIO_PinAltFunc( GPIO_B_BASE, 13, 7 );
+   GPIO_PinAltFunc( GPIO_B_BASE, 14, 7 );
+
+   rpUART.Init( (UART_Regs*)UART3_BASE, 115200 );
+
+   EnableInterrupt( INT_VEC_UART3, 3 );
+}
+
+static void UART3_ISR( void ){
+   rpUART.ISR();
+}
+
 uint16_t HalApi::serialRead(char *buf, uint16_t len) {
-  return 0;
+   return rpUART.read( (uint8_t *)buf, len );
 }
 
 uint16_t HalApi::serialBytesAvailableForRead() {
-  return 0;
+   return rpUART.RxFull();
 }
 
 uint16_t HalApi::serialWrite(const char *buf, uint16_t len) {
+   return rpUART.write( (const uint8_t *)buf, len);
   return 0;
 }
 
 uint16_t HalApi::serialBytesAvailableForWrite() {
-  return 0;
+   return rpUART.TxFree();
 }
 
 /******************************************************************
@@ -563,7 +807,7 @@ void (* const vectors[])(void) =
    BadISR,                                 //  52 - 0x0D0 
    BadISR,                                 //  53 - 0x0D4 
    BadISR,                                 //  54 - 0x0D8 
-   BadISR,                                 //  55 - 0x0DC 
+   UART3_ISR,                              //  55 - 0x0DC 
    BadISR,                                 //  56 - 0x0E0 
    BadISR,                                 //  57 - 0x0E4 
    BadISR,                                 //  58 - 0x0E8 

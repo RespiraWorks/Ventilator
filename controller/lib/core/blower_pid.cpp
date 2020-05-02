@@ -78,9 +78,15 @@ void blower_pid_execute(const BlowerSystemState &desired_state,
 
   Pressure cur_pressure = get_patient_pressure();
 
-  Setpoint = desired_state.pressure.kPa();
+  Setpoint = desired_state.setpoint_pressure.kPa();
   Input = cur_pressure.kPa();
   myPID.Compute();
+
+  // If the blower is not enabled, immediately shut down the fan.  But for
+  // consistency, we still run the PID iteration above.
+  if (!desired_state.blower_enabled) {
+    Output = 0;
+  }
   Hal.analogWrite(PwmPin::BLOWER, static_cast<int>(Output));
 
   // fan_power is in range [0, 1].

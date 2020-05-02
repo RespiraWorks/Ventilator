@@ -46,7 +46,7 @@ PID::PID(double *Input, double *Output, double *Setpoint, double Kp, double Ki,
 
 PID::PID(double *Input, double *Output, double *Setpoint, double Kp, double Ki,
          double Kd, int ControllerDirection)
-    : PID::PID(Input, Output, Setpoint, Kp, Ki, Kd, P_ON_E, D_ON_E,
+    : PID::PID(Input, Output, Setpoint, Kp, Ki, Kd, P_ON_E, D_ON_M,
                ControllerDirection) {}
 
 /* Compute()
@@ -60,15 +60,12 @@ bool PID::Compute() {
   if (!inAuto)
     return false;
   Time now = Hal.now();
-  Duration timeChange = now - lastTime;
-  if (timeChange >= SampleTime) {
-    // compute actual samples time-difference to take jitter into account in
-    // integral and derivative
-    double samplesTimeChangeSec = ((now - lastSampleTime) / 1000.0);
-    if (samplesTimeChangeSec <= 0) {
-      // something went wrong, assume sample time
-      samplesTimeChangeSec = (SampleTime / 1000.0);
-    }
+  Duration timeChange = (now - lastTime);
+  // compute actual samples time-difference to take jitter into account in
+  // integral and derivative
+  double samplesTimeChangeSec = (now - lastSampleTime).seconds();
+  // condition to update output : 1 sample time has passed and we have new data
+  if (timeChange >= SampleTime && samplesTimeChangeSec > 0) {
     /*Compute all the working error variables*/
     double input = *myInput;
     double error = *mySetpoint - input;

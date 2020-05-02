@@ -84,6 +84,9 @@ TEST(Units, VolumetricFlow) {
 
 TEST(Units, Duration) {
   EXPECT_FLOAT_EQ(seconds(1).seconds(), 1);
+  EXPECT_FLOAT_EQ(minutes(1).seconds(), 60);
+  EXPECT_FLOAT_EQ(minutes(10).seconds(), 600);
+  EXPECT_FLOAT_EQ(seconds(300).minutes(), 5);
   EXPECT_FLOAT_EQ(seconds(1).milliseconds(), 1000);
   EXPECT_FLOAT_EQ(milliseconds(1).milliseconds(), 1);
   EXPECT_FLOAT_EQ(milliseconds(1).seconds(), 0.001);

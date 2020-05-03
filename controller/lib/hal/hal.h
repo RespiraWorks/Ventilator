@@ -129,26 +129,17 @@ class HalApi {
 public:
   void init();
 
-  // Current time, strongly typed.  Prefer this over millis().
-  Time now() {
-    // TODO: millis() is a uint32_t, which means it rolls over after about a
-    // month.  Use a routine that doesn't roll over, or detect and handle
-    // rollover.
-    return millisSinceStartup(millis());
-  }
-
-  // Number of milliseconds that have passed since the board started running the
+  // Amount of time that has passed since the board started running the
   // program.
   //
   // Faked when testing.  Time doesn't advance unless you call delay().
-  uint32_t millis();
+  Time now();
 
   // Sleeps for some number of milliseconds.
   //
   // Faked when testing.  Does not sleep, but does advance the time returned by
   // millis().
-  void delay(uint32_t ms);
-  void delay(Duration d) { delay(d.milliseconds()); }
+  void delay(Duration d);
 
   // Caveat for people new to Arduino: analogRead and analogWrite are completely
   // separate from each other and do not even refer to the same pins.
@@ -266,7 +257,7 @@ private:
   void setDigitalPinMode(BinaryPin pin, PinMode mode);
 
 #ifdef TEST_MODE
-  uint32_t millis_ = 0;
+  int64_t millis_ = 0;
 
   // The default pin mode on Arduino is INPUT, which happens to be the first
   // enumerator in PinMode and so the default in these maps!
@@ -282,6 +273,16 @@ private:
 
   std::deque<std::vector<char>> serialIncomingData_;
   std::vector<char> serialOutgoingData_;
+#endif
+
+#if defined(ARDUINO_AVR_UNO) || defined(ARDUINO_NUCLEO_L452RE)
+  // Value of ::millis() at last call to watchdog_handler().  Used to detect
+  // clock overflows.
+  uint32_t last_millis_ = 0;
+
+  // Number of times millis() has gone backwards.   Arduino millis is a uint32,
+  // so this happens once every 1.6 months of uptime.
+  uint32_t clock_overflows_ = 0;
 #endif
 };
 
@@ -310,8 +311,11 @@ inline void HalApi::init() {
   setDigitalPinMode(PwmPin::BLOWER, PinMode::HAL_OUTPUT);
   setDigitalPinMode(BinaryPin::SOLENOID, PinMode::HAL_OUTPUT);
 }
-inline uint32_t HalApi::millis() { return ::millis(); }
-inline void HalApi::delay(uint32_t ms) { ::delay(ms); }
+inline Time HalApi::now() {
+  return millisSinceStartup((uint64_t{1} << 32) * clock_overflows_ +
+                            ::millis());
+}
+inline void HalApi::delay(Duration d) { ::delay(d.milliseconds()); }
 
 inline int HalApi::rawPin(AnalogPin pin) {
   // See pinout at https://bit.ly/3aERr69.
@@ -402,15 +406,21 @@ inline void HalApi::watchdog_init() {
 #endif
 }
 inline void HalApi::watchdog_handler() {
+  uint32_t millis = ::millis();
+  if (millis < last_millis_) {
+    clock_overflows_++;
+  }
+  last_millis_ = millis;
+
 #ifdef ARDUINO_AVR_UNO
   wdt_reset();
 #endif
 }
 
-#else
+#else // TEST_MODE
 
-inline uint32_t HalApi::millis() { return millis_; }
-inline void HalApi::delay(uint32_t ms) { millis_ += ms; }
+inline Time HalApi::now() { return millisSinceStartup(millis_); }
+inline void HalApi::delay(Duration d) { millis_ += d.milliseconds(); }
 inline int HalApi::analogRead(AnalogPin pin) {
   return analog_pin_values_.at(pin);
 }

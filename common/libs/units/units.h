@@ -16,6 +16,8 @@ limitations under the License.
 #ifndef UNITS_H
 #define UNITS_H
 
+#include <stdint.h>
+
 // Wrappers for measurements of different physical quantities [1] (length,
 // time, etc.).
 //
@@ -54,8 +56,8 @@ limitations under the License.
 //   VolumetricFlow   cubic_m_per_sec(float)
 //   VolumetricFlow   ml_per_min(float)
 //   Duration         seconds(float)
-//   Duration         milliseconds(int)
-//   Time             millisSinceStartup(int)
+//   Duration         milliseconds(int64_t)
+//   Time             millisSinceStartup(int64_t)
 //
 // Values support addition and subtraction.  The laws for Duration and Time are
 // different than the other units:
@@ -73,8 +75,8 @@ namespace units_detail {
 
 // Represents a value of some physical quantity Q, e.g. length, pressure, time.
 //
-// The value is stored as type ValTy (e.g. float, int), and standard comparison
-// operators are available.
+// The value is stored as type ValTy (e.g. float, int64_t), and standard
+// comparison operators are available.
 //
 // The motivation for this base class is, if we don't, we have to type out the
 // comparison operators for each type.  I'm afraid of typo'ing them, as those
@@ -224,13 +226,14 @@ class Time;
 //  - seconds
 //  - milliseconds
 //
-// Native unit (implementation detail): miliseconds
-class Duration : public units_detail::Scalar<Duration, int> {
+// Native unit (implementation detail): int64_t miliseconds
+class Duration : public units_detail::Scalar<Duration, int64_t> {
 public:
-  [[nodiscard]] constexpr int milliseconds() const { return val_; }
+  [[nodiscard]] constexpr int64_t milliseconds() const { return val_; }
   [[nodiscard]] constexpr float seconds() const {
     return static_cast<float>(val_) / 1000;
   }
+  [[nodiscard]] constexpr float minutes() const { return seconds() / 60; }
 
   constexpr friend Duration operator+(const Duration &a, const Duration &b);
   constexpr friend Duration operator-(const Duration &a, const Duration &b);
@@ -240,14 +243,15 @@ public:
   constexpr friend Duration operator-(const Time &a, const Time &b);
 
 private:
-  constexpr friend Duration milliseconds(int millis);
+  constexpr friend Duration milliseconds(int64_t millis);
   constexpr friend Duration seconds(float secs);
 
-  using units_detail::Scalar<Duration, int>::Scalar;
+  using units_detail::Scalar<Duration, int64_t>::Scalar;
 };
 
-constexpr Duration milliseconds(int millis) { return Duration(millis); }
+constexpr Duration milliseconds(int64_t millis) { return Duration(millis); }
 constexpr Duration seconds(float secs) { return Duration(1000 * secs); }
+constexpr Duration minutes(float mins) { return seconds(mins * 60); }
 
 // Represents a point in time, relative to when the device started up.  See
 // details above.
@@ -257,10 +261,10 @@ constexpr Duration seconds(float secs) { return Duration(1000 * secs); }
 // Units:
 //  - milliseconds
 //
-// Native unit (implementation detail): miliseconds
-class Time : public units_detail::Scalar<Time, int> {
+// Native unit (implementation detail): int64_t miliseconds
+class Time : public units_detail::Scalar<Time, int64_t> {
 public:
-  [[nodiscard]] int millisSinceStartup() const { return val_; }
+  [[nodiscard]] int64_t millisSinceStartup() const { return val_; }
 
   constexpr friend Time operator+(const Time &a, const Duration &b);
   constexpr friend Time operator+(const Duration &a, const Time &b);
@@ -268,12 +272,12 @@ public:
   constexpr friend Duration operator-(const Time &a, const Time &b);
 
 private:
-  constexpr friend Time millisSinceStartup(int millis);
+  constexpr friend Time millisSinceStartup(int64_t millis);
 
-  using units_detail::Scalar<Time, int>::Scalar;
+  using units_detail::Scalar<Time, int64_t>::Scalar;
 };
 
-constexpr Time millisSinceStartup(int millis) { return Time(millis); }
+constexpr Time millisSinceStartup(int64_t millis) { return Time(millis); }
 
 constexpr inline Duration operator+(const Duration &a, const Duration &b) {
   return Duration(a.val_ + b.val_);

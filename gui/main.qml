@@ -383,6 +383,123 @@ Item
 
 
             }
+
+            ColumnLayout {
+                id: sensorReadouts
+                width: 100
+                height: 100
+                Layout.maximumHeight: 65356
+                Layout.maximumWidth: 6553
+                Layout.fillHeight: true
+                Layout.fillWidth: true
+                Layout.minimumWidth: 200
+
+                Rectangle {
+                    id: pressureReadout
+                    color: "#466eeb"
+                    radius: 10
+                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                    Layout.minimumHeight: 100
+                    Layout.rightMargin: 10
+
+                    Text {
+                        id: pressureVal
+                        x: 45
+                        y: 39
+                        width: 60
+                        height: 44
+                        text: Number(guiState.pressureReadout, 'g', 1).toFixed(1);
+                        horizontalAlignment: Text.AlignHCenter
+                        font.family: "Times New Roman"
+                        font.weight: Font.DemiBold
+                        font.bold: true
+                        font.pixelSize: 38
+                    }
+
+                    Text {
+                        x: 3
+                        y: 13
+                        text: qsTr("Pressure (cm H2O)")
+                        font.bold: true
+                        font.pixelSize: 17
+                    }
+                    Layout.minimumWidth: 150
+                    Layout.topMargin: 10
+                    Layout.leftMargin: 10
+                }
+
+                Rectangle {
+                    id: flowReadout
+                    color: "#466eeb"
+                    radius: 10
+                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                    Layout.minimumHeight: 100
+                    Layout.rightMargin: 10
+
+                    Text {
+                        id: flowVal
+                        x: 45
+                        y: 39
+                        width: 60
+                        height: 44
+                        text: Number(guiState.flowReadout, 'g', 1).toFixed(1);
+                        horizontalAlignment: Text.AlignHCenter
+                        font.weight: Font.DemiBold
+                        font.family: "Times New Roman"
+                        font.pixelSize: 38
+                        font.bold: true
+                    }
+
+                    Text {
+                        x: 23
+                        y: 13
+                        text: qsTr("Flow (mL/min)")
+                        horizontalAlignment: Text.AlignHCenter
+                        font.pixelSize: 17
+                        font.bold: true
+                    }
+
+                    Layout.minimumWidth: 150
+                    Layout.topMargin: 10
+                    Layout.leftMargin: 10
+                }
+
+                Rectangle {
+                    id: tvReadout
+                    color: "#466eeb"
+                    radius: 10
+                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                    Layout.minimumHeight: 100
+                    Layout.rightMargin: 10
+
+                    Text {
+                        id: tvVal
+                        x: 45
+                        y: 39
+                        width: 60
+                        height: 44
+                        text:  Number(guiState.tvReadout);
+                        horizontalAlignment: Text.AlignHCenter
+                        font.weight: Font.DemiBold
+                        font.family: "Times New Roman"
+                        font.pixelSize: 38
+                        font.bold: true
+                    }
+
+                    Text {
+                        x: 41
+                        y: 13
+                        text: qsTr("TV (mL)")
+                        horizontalAlignment: Text.AlignHCenter
+                        font.pixelSize: 17
+                        font.bold: true
+                    }
+
+                    Layout.minimumWidth: 150
+                    Layout.topMargin: 10
+                    Layout.leftMargin: 10
+                }
+            }
         }
 
         RowLayout {

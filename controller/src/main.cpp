@@ -98,7 +98,8 @@ static void DEV_MODE_comms_handler() {
   Serial.print(',');
   Serial.print(controller_status.sensor_readings.flow_ml_per_min / 1000.0f);
   Serial.print(',');
-  Serial.print(controller_status.sensor_readings.volume_ml);
+  // Report volume in cL because because that fits on the graph better.
+  Serial.print(controller_status.sensor_readings.volume_ml / 10.f);
   Serial.println();
 }
 #endif

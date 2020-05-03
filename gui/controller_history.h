@@ -36,8 +36,15 @@ public:
     }
   }
 
-  std::vector<std::tuple<SteadyInstant, ControllerStatus>> GetHistory() {
+  std::vector<std::tuple<SteadyInstant, ControllerStatus>> GetHistory() const {
     return {history_.begin(), history_.end()};
+  }
+
+  ControllerStatus GetLastStatus() const {
+    if (history_.empty()) {
+      return ControllerStatus_init_zero;
+    }
+    return std::get<1>(history_.back());
   }
 
 private:

@@ -79,7 +79,8 @@ if [ "$1" == "--install" ] ; then
     qtquickcontrols2-5-dev \
     qml-module-qtquick-controls \
     qml-module-qtquick-controls2 \
-    qtdeclarative5-dev-tools
+    qtdeclarative5-dev-tools \
+    xvfb
   fi
 fi
 
@@ -105,6 +106,7 @@ if [ "$1" == "--test" ] ; then
     ./build_autotests/autotests.app/Contents/MacOS/autotests
   fi
   if [ "$PLATFORM" == "Linux" ]; then
-    ./build_autotests/autotests
+    Xvfb :1 &
+    DISPLAY=:1 ./build_autotests/autotests
   fi
 fi

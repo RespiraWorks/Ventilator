@@ -49,8 +49,11 @@ public:
 
   // Adds a data point of controller status to the history.
   void AppendHistory(const ControllerStatus &status) {
-    std::unique_lock<std::mutex> l(mu_);
-    history_.Append(SteadyClock::now(), status);
+    {
+      std::unique_lock<std::mutex> l(mu_);
+      history_.Append(SteadyClock::now(), status);
+    }
+    readouts_changed();
   }
 
   // Returns the current GuiStatus to be sent to the controller.
@@ -69,15 +72,34 @@ public:
     return history_.GetHistory();
   }
 
+  Q_PROPERTY(
+      qreal pressureReadout READ get_pressure_readout NOTIFY readouts_changed)
+  Q_PROPERTY(qreal flowReadout READ get_flow_readout NOTIFY readouts_changed)
+  Q_PROPERTY(qreal tvReadout READ get_tv_readout NOTIFY readouts_changed)
+
   Q_PROPERTY(quint32 rr READ get_rr WRITE set_rr NOTIFY params_changed)
   Q_PROPERTY(quint32 peep READ get_peep WRITE set_peep NOTIFY params_changed)
   Q_PROPERTY(quint32 pip READ get_pip WRITE set_pip NOTIFY params_changed)
   Q_PROPERTY(qreal ier READ get_ier WRITE set_ier NOTIFY params_changed)
 
 signals:
+  void readouts_changed();
   void params_changed();
 
 private:
+  qreal get_pressure_readout() const {
+    std::unique_lock<std::mutex> l(mu_);
+    return history_.GetLastStatus().sensor_readings.pressure_cm_h2o;
+  }
+  qreal get_flow_readout() const {
+    std::unique_lock<std::mutex> l(mu_);
+    return history_.GetLastStatus().sensor_readings.flow_ml_per_min;
+  }
+  qreal get_tv_readout() const {
+    std::unique_lock<std::mutex> l(mu_);
+    return history_.GetLastStatus().sensor_readings.volume_ml;
+  }
+
   quint32 get_rr() const {
     std::unique_lock<std::mutex> l(mu_);
     return gui_status_.desired_params.breaths_per_min;

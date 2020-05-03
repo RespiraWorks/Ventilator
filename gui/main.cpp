@@ -20,11 +20,8 @@
 
 int main(int argc, char *argv[]) {
   QApplication app(argc, argv);
-  QApplication::setOverrideCursor(Qt::BlankCursor);
 
   app.setWindowIcon(QIcon(":/images/Logo.png"));
-
-  qmlRegisterType<GuiStateInterface>("com.myself", 1, 0, "GuiStateInterface");
 
   QCommandLineParser parser;
   parser.setApplicationDescription("Ventilator GUI application");
@@ -39,7 +36,7 @@ int main(int argc, char *argv[]) {
   parser.process(app);
 
   GuiStateContainer state_container(
-      /*history_window=*/DurationMs(30000)); 
+      /*history_window=*/DurationMs(30000));
   auto startup_time = state_container.GetStartupTime();
 
   std::unique_ptr<ConnectedDevice> device =
@@ -113,6 +110,7 @@ int main(int argc, char *argv[]) {
   mainView.rootContext()->setContextProperty("volumeDataSource",
                                              &volumeDataSource);
   mainView.rootContext()->setContextProperty("flowDataSource", &flowDataSource);
+  mainView.rootContext()->setContextProperty("guiState", &state_container);
 
   mainView.setSource(QUrl("qrc:/main.qml"));
   mainView.setResizeMode(QQuickView::SizeRootObjectToView);

@@ -15,10 +15,10 @@ Item
         running: true
         repeat: true
         onTriggered: {
-            volumeDataSource.update(tidalVolumeView.series(0));
-            pressureDataSource.update(pressureView.series(0));
-            flowDataSource.update(flowView.series(0));
-
+            stateContainer.update(
+                pressureView.series(0),
+                flowView.series(0),
+                tidalVolumeView.series(0));
         }
     }
 
@@ -56,8 +56,6 @@ Item
                 source: "images/respiraWorksLogoHorizontalTransparent.png"
                 fillMode: Image.PreserveAspectFit
             }
-
-
         }
 
         RowLayout {

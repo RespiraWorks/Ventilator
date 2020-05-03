@@ -1,5 +1,4 @@
-#include "datasource.h"
-
+#include "RespiraConnectedDevice.h"
 #include "chrono.h"
 #include "connected_device.h"
 #include "controller_history.h"
@@ -39,6 +38,18 @@ int main(int argc, char *argv[]) {
       /*history_window=*/DurationMs(30000));
   auto startup_time = state_container.GetStartupTime();
 
+  // TODO add a command line argument to control if GUI is connected
+  // to a real serial port or to a fake implementation.
+  // TODO add a serial port name command line argument
+
+  // For now uncomment this line and comment instantiation below to run
+  // in real mode. Check out utils/mock-cycle-controller.py - it is
+  // a script that bangs ControllerState at the set rate into serial
+  // port.
+
+  // std::unique_ptr<ConnectedDevice> device =
+  //     std::make_unique<RespiraConnectedDevice>("/dev/pts/6");
+
   std::unique_ptr<ConnectedDevice> device =
       std::make_unique<FakeConnectedDevice>(
           [&](const GuiStatus &gui_status) {
@@ -52,8 +63,9 @@ int main(int argc, char *argv[]) {
             auto *sensors = &controller_status->sensor_readings;
             sensors->pressure_cm_h2o =
                 sin(controller_status->uptime_ms * 0.001);
-            sensors->volume_ml = 0;
-            sensors->flow_ml_per_min = 0;
+            sensors->volume_ml = sin(controller_status->uptime_ms * 0.002);
+            sensors->flow_ml_per_min =
+                sin(controller_status->uptime_ms * 0.003);
           });
 
   // TODO: Bind the readable aspects of state_container to UI elements
@@ -62,55 +74,21 @@ int main(int argc, char *argv[]) {
 
   // TODO: Figure out whether asynchronously and periodically sending GUI status
   // and receiving controller status is the right thing to do here.
-  PeriodicClosure send_gui_status(DurationMs(10), [&] {
+
+  PeriodicClosure communicate(DurationMs(10), [&] {
     device->SendGuiStatus(state_container.GetGuiStatus());
-  });
-  send_gui_status.Start();
-
-  PeriodicClosure maintain_history(DurationMs(10), [&] {
     ControllerStatus controller_status;
-    device->ReceiveControllerStatus(&controller_status);
-    state_container.AppendHistory(controller_status);
-  });
-  maintain_history.Start();
-
-  auto generate_pressure = [&]() -> std::vector<std::tuple<float, float>> {
-    // TODO: If this is invoked several times for several different graphs,
-    // they will be slightly misaligned, because each gets its own value of
-    // "now". This will stop being a problem once the TODO below about filling
-    // in all 3 graphs at the same time is addressed.
-    auto now = SteadyClock::now();
-
-    // TODO: This makes a copy of the status history, and then it's copied
-    // one more time into the DataSource. We should reduce the amount of copying
-    // and allocation churn.
-    std::vector<std::tuple<float, float>> res;
-    for (const auto &[time, controller_status] :
-         state_container.GetControllerStatusHistory()) {
-      int neg_millis_ago = TimeAMinusB(time, now).count();
-      res.push_back({neg_millis_ago * 0.001,
-                     controller_status.sensor_readings.pressure_cm_h2o});
+    if (device->ReceiveControllerStatus(&controller_status)) {
+      state_container.AppendHistory(controller_status);
     }
-    return res;
-  };
-
-  // TODO: Create lambdas for volume and flow as well
-  // TODO: Throw away DataSource and make something nicer that can
-  // fill in all 3 graphs with a single scan over GetControllerStatusHistory()
-  // instead of 3 scans.
-  DataSource pressureDataSource(generate_pressure);
-  DataSource volumeDataSource(generate_pressure);
-  DataSource flowDataSource(generate_pressure);
+  });
+  communicate.Start();
 
   QQuickView mainView;
   mainView.setTitle(QStringLiteral("Ventilator"));
 
-  mainView.rootContext()->setContextProperty("pressureDataSource",
-                                             &pressureDataSource);
-  mainView.rootContext()->setContextProperty("volumeDataSource",
-                                             &volumeDataSource);
-  mainView.rootContext()->setContextProperty("flowDataSource", &flowDataSource);
-  mainView.rootContext()->setContextProperty("guiState", &state_container);
+  mainView.rootContext()->setContextProperty("stateContainer",
+                                             &state_container);
 
   mainView.setSource(QUrl("qrc:/main.qml"));
   mainView.setResizeMode(QQuickView::SizeRootObjectToView);

@@ -130,7 +130,12 @@ public:
   void init();
 
   // Current time, strongly typed.  Prefer this over millis().
-  Time now() { return millisSinceStartup(millis()); }
+  Time now() {
+    // TODO: millis() is a uint32_t, which means it rolls over after about a
+    // month.  Use a routine that doesn't roll over, or detect and handle
+    // rollover.
+    return millisSinceStartup(millis());
+  }
 
   // Number of milliseconds that have passed since the board started running the
   // program.
@@ -143,6 +148,7 @@ public:
   // Faked when testing.  Does not sleep, but does advance the time returned by
   // millis().
   void delay(uint32_t ms);
+  void delay(Duration d) { delay(d.milliseconds()); }
 
   // Caveat for people new to Arduino: analogRead and analogWrite are completely
   // separate from each other and do not even refer to the same pins.
@@ -312,11 +318,11 @@ inline int HalApi::rawPin(AnalogPin pin) {
   // TODO: Update with STM32 pinout.
   switch (pin) {
   case AnalogPin::PATIENT_PRESSURE:
-    return A0;
+    return A5;
   case AnalogPin::INFLOW_PRESSURE_DIFF:
-    return A1;
+    return A6;
   case AnalogPin::OUTFLOW_PRESSURE_DIFF:
-    return A2;
+    return A7;
   }
   // Switch above covers all cases (and gcc enforces this).
   __builtin_unreachable();
@@ -338,7 +344,7 @@ inline int HalApi::rawPin(BinaryPin pin) {
   // TODO: Update with STM32 pinout.
   switch (pin) {
   case BinaryPin::SOLENOID:
-    return 5;
+    return 7;
   }
   // Switch above covers all cases (and gcc enforces this).
   __builtin_unreachable();

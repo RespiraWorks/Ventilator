@@ -1,7 +1,6 @@
 import QtQuick 2.11
 import QtQuick.Layouts 1.3
 import QtQuick.Controls 2.4
-import com.myself 1.0
 
 Item
 {
@@ -21,10 +20,6 @@ Item
             flowDataSource.update(flowView.series(0));
 
         }
-    }
-
-    GuiStateInterface {
-       id: guiStateInterface
     }
 
     Rectangle {
@@ -97,7 +92,7 @@ Item
                         y: 39
                         width: 60
                         height: 44
-                        text: Number(guiStateInterface.rr_default());
+                        text: Number(guiState.rr);
                         horizontalAlignment: Text.AlignHCenter
                         font.family: "Times New Roman"
                         font.weight: Font.DemiBold
@@ -125,10 +120,7 @@ Item
                         font.bold: true
                         focusPolicy: Qt.ClickFocus
 
-                        onClicked: {
-                            guiStateInterface.rr_inc();
-                            breathsPerMinuteVal.text =  Number(guiStateInterface.rr_val());
-                            }
+                        onClicked: { guiState.rr++; }
                     }
 
                     RoundButton {
@@ -142,10 +134,7 @@ Item
                         focusPolicy: Qt.NoFocus
                         font.bold: true
 
-                        onClicked: {
-                            guiStateInterface.rr_dec();
-                            breathsPerMinuteVal.text =  Number(guiStateInterface.rr_val());
-                            }
+                        onClicked: { guiState.rr--; }
                     }
 
                 }
@@ -164,7 +153,7 @@ Item
                         y: 39
                         width: 60
                         height: 44
-                        text:  Number(guiStateInterface.peep_default());
+                        text:  Number(guiState.peep);
                         horizontalAlignment: Text.AlignHCenter
                         font.weight: Font.DemiBold
                         font.family: "Times New Roman"
@@ -193,10 +182,7 @@ Item
                         focusPolicy: Qt.NoFocus
                         font.bold: true
 
-                        onClicked: {
-                            guiStateInterface.peep_inc();
-                            peepVal.text =  Number(guiStateInterface.peep_val());
-                        }
+                        onClicked: { guiState.peep++; }
                     }
 
                     RoundButton {
@@ -210,10 +196,7 @@ Item
                         font.bold: true
                         focusPolicy: Qt.NoFocus
 
-                        onClicked: {
-                            guiStateInterface.peep_dec();
-                            peepVal.text =  Number(guiStateInterface.peep_val());
-                        }
+                        onClicked: { guiState.peep--; }
                     }
                     Layout.minimumWidth: 150
                     Layout.topMargin: 10
@@ -234,7 +217,7 @@ Item
                         y: 39
                         width: 60
                         height: 44
-                        text:  Number(guiStateInterface.pip_default());
+                        text:  Number(guiState.pip);
                         horizontalAlignment: Text.AlignHCenter
                         font.weight: Font.DemiBold
                         font.family: "Times New Roman"
@@ -263,10 +246,7 @@ Item
                         font.bold: true
                         focusPolicy: Qt.NoFocus
 
-                        onClicked: {
-                            guiStateInterface.pip_inc();
-                            pipVal.text =  Number(guiStateInterface.pip_val());
-                        }
+                        onClicked: { guiState.pip++; }
                     }
 
                     RoundButton {
@@ -280,10 +260,7 @@ Item
                         focusPolicy: Qt.NoFocus
                         font.bold: true
 
-                        onClicked: {
-                            guiStateInterface.pip_dec();
-                            pipVal.text =  Number(guiStateInterface.pip_val());
-                        }
+                        onClicked: { guiState.pip--; }
                     }
                     Layout.minimumWidth: 150
                     Layout.topMargin: 10
@@ -304,7 +281,7 @@ Item
                         y: 39
                         width: 60
                         height: 44
-                        text:  Number(guiStateInterface.ier_default());
+                        text:  Number(guiState.ier, 'g', 1).toFixed(1)
                         horizontalAlignment: Text.AlignHCenter
                         font.weight: Font.DemiBold
                         font.family: "Times New Roman"
@@ -333,11 +310,7 @@ Item
                         font.bold: true
                         focusPolicy: Qt.NoFocus
 
-                        onClicked: {
-                            guiStateInterface.ier_inc();
-                            ierVal.text =  Number(guiStateInterface.ier_val(), 'g', 1).toFixed(1);
-                            //console.log("Increase :" + ierVal.text);
-                        }
+                        onClicked: { guiState.ier += 0.1; }
                     }
 
                     RoundButton {
@@ -351,10 +324,7 @@ Item
                         focusPolicy: Qt.NoFocus
                         font.bold: true
 
-                        onClicked: {
-                            guiStateInterface.ier_dec();
-                            ierVal.text =  Number(guiStateInterface.ier_val(), 'g', 1).toFixed(1);
-                        }
+                        onClicked: { guiState.ier -= 0.1; }
                     }
 
                     Layout.minimumWidth: 150
@@ -413,304 +383,6 @@ Item
 
 
             }
-
-            ColumnLayout {
-                id: columnLayout2
-                width: 100
-                height: 100
-
-                Text {
-                    id: element2
-                    text: qsTr("Alarms")
-                    Layout.fillWidth: true
-                    font.bold: true
-                    verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: Text.AlignHCenter
-                    font.pixelSize: 22
-                }
-
-
-                Rectangle {
-                    id: rrAlarmHigh
-                    color: "#466eeb"
-                    radius: 10
-
-                    Text {
-                        id: rrAlarmHighVal
-                        x: 45
-                        y: 39
-                        width: 60
-                        height: 44
-                        text:  Number(guiStateInterface.rrAlarmHigh_default());
-                        font.weight: Font.DemiBold
-                        font.bold: true
-                        horizontalAlignment: Text.AlignHCenter
-                        font.family: "Times New Roman"
-                        font.pixelSize: 38
-                    }
-
-                    Text {
-                        id: element1
-                        x: 45
-                        y: 13
-                        text: qsTr("RR High")
-                        font.bold: true
-                        font.pixelSize: 17
-                    }
-
-                    RoundButton {
-                        id: rrAlarmHighInc
-                        x: 110
-                        y: 45
-                        width: 30
-                        height: 30
-                        text: qsTr("+")
-                        font.bold: true
-                        focusPolicy: Qt.ClickFocus
-                        font.family: "Courier"
-
-                        onClicked: {
-                            guiStateInterface.rrAlarmHigh_inc();
-                            rrAlarmHighVal.text =  Number(guiStateInterface.rrAlarmHigh_val());
-                            }
-                    }
-
-                    RoundButton {
-                        id: rrAlarmHighDec
-                        x: 9
-                        y: 45
-                        width: 30
-                        height: 30
-                        text: qsTr("-")
-                        checkable: false
-                        font.bold: true
-                        focusPolicy: Qt.NoFocus
-
-                        onClicked: {
-                            guiStateInterface.rrAlarmHigh_dec();
-                            rrAlarmHighVal.text =  Number(guiStateInterface.rrAlarmHigh_val());
-                            }
-                    }
-                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                    Layout.minimumWidth: 150
-                    Layout.minimumHeight: 100
-                    Layout.rightMargin: 10
-                    Layout.leftMargin: 10
-                }
-
-                Rectangle {
-                    id: rrAlarmLow
-                    color: "#466eeb"
-                    radius: 10
-                    Text {
-                        id: rrAlarmLowVal
-                        x: 45
-                        y: 39
-                        width: 60
-                        height: 44
-                        text: Number(guiStateInterface.rrAlarmLow_default());
-                        font.weight: Font.DemiBold
-                        font.bold: true
-                        horizontalAlignment: Text.AlignHCenter
-                        font.family: "Times New Roman"
-                        font.pixelSize: 38
-                    }
-
-                    Text {
-                        id: element4
-                        x: 45
-                        y: 13
-                        text: qsTr("RR Low")
-                        font.bold: true
-                        horizontalAlignment: Text.AlignHCenter
-                        font.pixelSize: 17
-                    }
-
-                    RoundButton {
-                        id: rrAlarmLowInc
-                        x: 110
-                        y: 45
-                        width: 30
-                        height: 30
-                        text: qsTr("+")
-                        checkable: false
-                        font.bold: true
-                        focusPolicy: Qt.NoFocus
-
-                        onClicked: {
-                            guiStateInterface.rrAlarmLow_inc();
-                            rrAlarmLowVal.text =  Number(guiStateInterface.rrAlarmLow_val());
-                            }
-                    }
-
-                    RoundButton {
-                        id: rrAlarmLowDec
-                        x: 9
-                        y: 45
-                        width: 30
-                        height: 30
-                        text: qsTr("-")
-                        checkable: false
-                        font.bold: true
-                        focusPolicy: Qt.NoFocus
-
-                        onClicked: {
-                            guiStateInterface.rrAlarmLow_dec();
-                            rrAlarmLowVal.text =  Number(guiStateInterface.rrAlarmLow_val());
-                            }
-                    }
-                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                    Layout.minimumWidth: 150
-                    Layout.minimumHeight: 100
-                    Layout.rightMargin: 10
-                    Layout.leftMargin: 10
-                }
-
-                Rectangle {
-                    id: tvAlarmHigh
-                    color: "#466eeb"
-                    radius: 10
-                    Text {
-                        id: tvAlarmHighVal
-                        x: 45
-                        y: 39
-                        width: 60
-                        height: 44
-                        text: Number(guiStateInterface.tvAlarmHigh_default());
-                        font.weight: Font.DemiBold
-                        font.bold: true
-                        horizontalAlignment: Text.AlignHCenter
-                        font.family: "Times New Roman"
-                        font.pixelSize: 38
-                    }
-
-                    Text {
-                        id: element6
-                        x: 44
-                        y: 13
-                        text: qsTr("TV High")
-                        font.bold: true
-                        horizontalAlignment: Text.AlignHCenter
-                        font.pixelSize: 17
-                    }
-
-                    RoundButton {
-                        id: tvAlarmHighInc
-                        x: 110
-                        y: 45
-                        width: 30
-                        height: 30
-                        text: qsTr("+")
-                        checkable: false
-                        font.bold: true
-                        focusPolicy: Qt.NoFocus
-
-                        onClicked: {
-                            guiStateInterface.tvAlarmHigh_inc();
-                            tvAlarmHighVal.text =  Number(guiStateInterface.tvAlarmHigh_val());
-                            }
-                    }
-
-                    RoundButton {
-                        id: tvAlarmHighDec
-                        x: 9
-                        y: 45
-                        width: 30
-                        height: 30
-                        text: qsTr("-")
-                        checkable: false
-                        font.bold: true
-                        focusPolicy: Qt.NoFocus
-
-                        onClicked: {
-                            guiStateInterface.tvAlarmHigh_dec();
-                            tvAlarmHighVal.text =  Number(guiStateInterface.tvAlarmHigh_val());
-                            }
-                    }
-                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                    Layout.minimumWidth: 150
-                    Layout.minimumHeight: 100
-                    Layout.rightMargin: 10
-                    Layout.leftMargin: 10
-                }
-
-                Rectangle {
-                    id: tvAlarmLow
-                    color: "#466eeb"
-                    radius: 10
-                    Text {
-                        id: tvAlarmLowVal
-                        x: 45
-                        y: 39
-                        width: 60
-                        height: 44
-                        text: Number(guiStateInterface.tvAlarmLow_default());
-                        font.weight: Font.DemiBold
-                        font.bold: true
-                        horizontalAlignment: Text.AlignHCenter
-                        font.family: "Times New Roman"
-                        font.pixelSize: 38
-                    }
-
-                    Text {
-                        id: element54
-                        x: 45
-                        y: 13
-                        text: qsTr("TV Low")
-                        font.bold: true
-                        horizontalAlignment: Text.AlignHCenter
-                        font.pixelSize: 17
-                    }
-
-                    RoundButton {
-                        id: tvAlarmLowInc
-                        x: 110
-                        y: 45
-                        width: 30
-                        height: 30
-                        text: qsTr("+")
-                        checkable: false
-                        font.bold: true
-                        focusPolicy: Qt.NoFocus
-
-                        onClicked: {
-                            guiStateInterface.tvAlarmLow_inc();
-                            tvAlarmLowVal.text =  Number(guiStateInterface.tvAlarmLow_val());
-                            }
-                    }
-
-                    RoundButton {
-                        id: tvAlarmLowDec
-                        x: 9
-                        y: 45
-                        width: 30
-                        height: 30
-                        text: qsTr("-")
-                        checkable: false
-                        font.bold: true
-                        focusPolicy: Qt.NoFocus
-
-                        onClicked: {
-                            guiStateInterface.tvAlarmLow_dec();
-                            tvAlarmLowVal.text =  Number(guiStateInterface.tvAlarmLow_val());
-                            }
-                    }
-                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                    Layout.minimumWidth: 150
-                    Layout.minimumHeight: 100
-                    Layout.rightMargin: 10
-                    Layout.leftMargin: 10
-                }
-
-
-                Layout.maximumHeight: 65356
-                Layout.minimumWidth: 200
-                Layout.fillWidth: true
-                Layout.maximumWidth: 6553
-                Layout.fillHeight: true
-            }
-
-
         }
 
         RowLayout {
@@ -720,20 +392,7 @@ Item
             Layout.minimumHeight: 50
             Layout.maximumHeight: 65535
         }
-
-
-
-
-
-
-
     }
-
-
-
-
-
-
 }
 
 /*##^##
@@ -741,91 +400,6 @@ Designer {
     D{i:2;anchors_height:93;anchors_width:185}D{i:3;anchors_height:600;anchors_width:839;anchors_x:157;anchors_y:0}
 }
 ##^##*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /*##^## Designer {
     D{i:2;anchors_height:200;anchors_width:200}
 }

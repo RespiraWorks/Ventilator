@@ -52,7 +52,9 @@ class OffFsm {
 public:
   OffFsm() = default;
   explicit OffFsm(const VentParams &) {}
-  BlowerSystemState desired_state() { return {kPa(0), ValveState::OPEN}; }
+  BlowerSystemState desired_state() {
+    return {.blower_enabled = false, kPa(0), ValveState::OPEN};
+  }
   bool finished() { return true; }
 };
 
@@ -73,9 +75,9 @@ public:
 
   BlowerSystemState desired_state() {
     if (Hal.now() < inspire_end_) {
-      return {inspire_pressure_, ValveState::CLOSED};
+      return {.blower_enabled = true, inspire_pressure_, ValveState::CLOSED};
     }
-    return {expire_pressure_, ValveState::OPEN};
+    return {.blower_enabled = true, expire_pressure_, ValveState::OPEN};
   }
 
   bool finished() { return Hal.now() > expire_end_; }

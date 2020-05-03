@@ -10,10 +10,10 @@ public:
   virtual ~ConnectedDevice() = default;
 
   // Sends the GuiStatus to the controller. May block.
-  virtual void SendGuiStatus(const GuiStatus &gui_status) = 0;
+  virtual bool SendGuiStatus(const GuiStatus &gui_status) = 0;
   // Reads a ControllerStatus from the controller. May block.
   // TODO: Make sure both functions can't block indefinitely.
-  virtual void ReceiveControllerStatus(ControllerStatus *controller_status) = 0;
+  virtual bool ReceiveControllerStatus(ControllerStatus *controller_status) = 0;
 };
 
 // A fake version of ConnectedDevice backed by a lambda for testing.
@@ -24,11 +24,13 @@ public:
       : send_fn_(send_fn), receive_fn_(receive_fn) {}
   ~FakeConnectedDevice() = default;
 
-  void SendGuiStatus(const GuiStatus &gui_status) override {
+  bool SendGuiStatus(const GuiStatus &gui_status) override {
     send_fn_(gui_status);
+    return true;
   }
-  void ReceiveControllerStatus(ControllerStatus *controller_status) override {
+  bool ReceiveControllerStatus(ControllerStatus *controller_status) override {
     receive_fn_(controller_status);
+    return true;
   }
 
 private:
@@ -36,7 +38,5 @@ private:
   std::function<void(ControllerStatus *)> receive_fn_;
 };
 
-// TODO: Define a subclass of ConnectedDevice that talks to a real device
-// over the serial port.
 
 #endif // CONNECTED_DEVICE_H

@@ -8,6 +8,13 @@
 #include "controller_history.h"
 
 #include <mutex>
+#include <tuple>
+#include <vector>
+
+#include <QtCharts/QAbstractSeries>
+#include <QtCore/QObject>
+
+QT_CHARTS_USE_NAMESPACE
 
 #define RR_DEFAULT 0
 #define PEEP_DEFAULT 0
@@ -35,7 +42,7 @@
 // to centralize it in the current class, simply protecting everything
 // by a single mutex.
 class GuiStateContainer : public QObject {
-  Q_OBJECT;
+  Q_OBJECT
 
 public:
   // Initializes the state container to keep the history of controller
@@ -84,6 +91,10 @@ public:
 signals:
   void readouts_changed();
   void params_changed();
+
+public slots:
+  void update(QAbstractSeries *pressure_series, QAbstractSeries *flow_series,
+              QAbstractSeries *tv_series);
 
 private:
   qreal get_pressure_readout() const {

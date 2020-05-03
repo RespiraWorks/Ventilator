@@ -5,6 +5,13 @@
 #include "controller_history.h"
 
 #include <mutex>
+#include <tuple>
+#include <vector>
+
+#include <QtCharts/QAbstractSeries>
+#include <QtCore/QObject>
+
+QT_CHARTS_USE_NAMESPACE
 
 // A thread-safe container for readable and writable state
 // of the GUI.
@@ -20,7 +27,9 @@
 // with the controller, so thread safety is important, and it is easiest
 // to centralize it in the current class, simply protecting everything
 // by a single mutex.
-class GuiStateContainer {
+class GuiStateContainer : public QObject {
+  Q_OBJECT
+
 public:
   // Initializes the state container to keep the history of controller
   // statuses in a given time window.
@@ -51,6 +60,10 @@ public:
     std::unique_lock<std::mutex> l(mu_);
     return history_.GetHistory();
   }
+
+public slots:
+  void update(QAbstractSeries *pressure_series, QAbstractSeries *flow_series,
+              QAbstractSeries *tv_series);
 
 private:
   const SteadyInstant startup_time_;

@@ -54,6 +54,7 @@ limitations under the License.
 //   Length           meters(float)
 //   Length           millimeters(float)
 //   VolumetricFlow   cubic_m_per_sec(float)
+//   VolumetricFlow   liters_per_min(float)
 //   VolumetricFlow   ml_per_min(float)
 //   Duration         seconds(float)
 //   Duration         milliseconds(int64_t)
@@ -182,12 +183,16 @@ constexpr Length millimeters(float mm) { return Length(mm / 1000); }
 class VolumetricFlow : public units_detail::ArithScalar<VolumetricFlow, float> {
 public:
   [[nodiscard]] constexpr float cubic_m_per_sec() { return val_; }
+  [[nodiscard]] constexpr float liters_per_min() {
+    return val_ * 1000.0f * 60.0f;
+  }
   [[nodiscard]] constexpr float ml_per_min() {
-    return val_ * 1000.0f * 1000.0f * 60.0f;
+    return liters_per_min() * 1000.f;
   }
 
 private:
   constexpr friend VolumetricFlow cubic_m_per_sec(float m3ps);
+  constexpr friend VolumetricFlow liters_per_min(float liters_per_min);
   constexpr friend VolumetricFlow ml_per_min(float ml_per_min);
 
   using units_detail::ArithScalar<VolumetricFlow, float>::ArithScalar;
@@ -196,8 +201,11 @@ private:
 constexpr VolumetricFlow cubic_m_per_sec(float m3ps) {
   return VolumetricFlow(m3ps);
 }
+constexpr VolumetricFlow liters_per_min(float liters_per_min) {
+  return VolumetricFlow(liters_per_min / (1000.0f * 60.0f));
+}
 constexpr VolumetricFlow ml_per_min(float ml_per_min) {
-  return VolumetricFlow(ml_per_min / (1000.0f * 1000.0f * 60.0f));
+  return liters_per_min(ml_per_min / 1000.f);
 }
 
 // Time and Duration classes.

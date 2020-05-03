@@ -15,9 +15,8 @@ void GuiStateContainer::update(QAbstractSeries *pressure_series,
     pressure_points.append(
         QPointF(neg_millis_ago * 0.001,
                 controller_status.sensor_readings.pressure_cm_h2o));
-    flow_points.append(
-        QPointF(neg_millis_ago * 0.001,
-                controller_status.sensor_readings.flow_ml_per_min));
+    flow_points.append(QPointF(
+        neg_millis_ago, controller_status.sensor_readings.flow_liters_per_min));
     tv_points.append(QPointF(neg_millis_ago * 0.001,
                              controller_status.sensor_readings.volume_ml));
   }

@@ -139,8 +139,7 @@ message VentParams {
 
   required uint32 inspiratory_trigger_cm_h2o = 8; // P-trigger
 
-  // TODO(jlebar): Is ml/min the correct unit for this?
-  required uint32 expiratory_trigger_ml_per_min = 9; // V-trigger
+  required float expiratory_trigger_liters_per_min = 9; // V-trigger
 
   // Notably missing here is FiO2 -- fraction of oxygen in inhaled air.
   // Currently (2020-04-27) we anticipate this will be controlled externally,
@@ -205,7 +204,7 @@ enum VentMode {
 message SensorReadings {
   required float pressure_cm_h2o = 1;
   required float volume_ml = 2;
-  required float flow_ml_per_min = 3;
+  required float flow_liters_per_min = 3;
 }
 
 enum AlarmKind {

@@ -35,7 +35,7 @@ typedef struct _Alarm {
 typedef struct _SensorReadings {
     float pressure_cm_h2o;
     float volume_ml;
-    float flow_ml_per_min;
+    float flow_liters_per_min;
 } SensorReadings;
 
 typedef struct _VentParams {
@@ -46,7 +46,7 @@ typedef struct _VentParams {
     float inspiratory_expiratory_ratio;
     uint32_t rise_time_ms;
     uint32_t inspiratory_trigger_cm_h2o;
-    uint32_t expiratory_trigger_ml_per_min;
+    float expiratory_trigger_liters_per_min;
     uint32_t alarm_lo_tidal_volume_ml;
     uint32_t alarm_hi_tidal_volume_ml;
     uint32_t alarm_lo_breaths_per_min;
@@ -98,7 +98,7 @@ typedef struct _GuiStatus {
 #define Alarm_kind_tag                           2
 #define SensorReadings_pressure_cm_h2o_tag       1
 #define SensorReadings_volume_ml_tag             2
-#define SensorReadings_flow_ml_per_min_tag       3
+#define SensorReadings_flow_liters_per_min_tag   3
 #define VentParams_mode_tag                      1
 #define VentParams_peep_cm_h2o_tag               3
 #define VentParams_breaths_per_min_tag           4
@@ -106,7 +106,7 @@ typedef struct _GuiStatus {
 #define VentParams_inspiratory_expiratory_ratio_tag 6
 #define VentParams_rise_time_ms_tag              7
 #define VentParams_inspiratory_trigger_cm_h2o_tag 8
-#define VentParams_expiratory_trigger_ml_per_min_tag 9
+#define VentParams_expiratory_trigger_liters_per_min_tag 9
 #define VentParams_alarm_lo_tidal_volume_ml_tag  10
 #define VentParams_alarm_hi_tidal_volume_ml_tag  11
 #define VentParams_alarm_lo_breaths_per_min_tag  12
@@ -152,7 +152,7 @@ X(a, STATIC,   REQUIRED, UINT32,   pip_cm_h2o,        5) \
 X(a, STATIC,   REQUIRED, FLOAT,    inspiratory_expiratory_ratio,   6) \
 X(a, STATIC,   REQUIRED, UINT32,   rise_time_ms,      7) \
 X(a, STATIC,   REQUIRED, UINT32,   inspiratory_trigger_cm_h2o,   8) \
-X(a, STATIC,   REQUIRED, UINT32,   expiratory_trigger_ml_per_min,   9) \
+X(a, STATIC,   REQUIRED, FLOAT,    expiratory_trigger_liters_per_min,   9) \
 X(a, STATIC,   REQUIRED, UINT32,   alarm_lo_tidal_volume_ml,  10) \
 X(a, STATIC,   REQUIRED, UINT32,   alarm_hi_tidal_volume_ml,  11) \
 X(a, STATIC,   REQUIRED, UINT32,   alarm_lo_breaths_per_min,  12) \
@@ -163,7 +163,7 @@ X(a, STATIC,   REQUIRED, UINT32,   alarm_hi_breaths_per_min,  13)
 #define SensorReadings_FIELDLIST(X, a) \
 X(a, STATIC,   REQUIRED, FLOAT,    pressure_cm_h2o,   1) \
 X(a, STATIC,   REQUIRED, FLOAT,    volume_ml,         2) \
-X(a, STATIC,   REQUIRED, FLOAT,    flow_ml_per_min,   3)
+X(a, STATIC,   REQUIRED, FLOAT,    flow_liters_per_min,   3)
 #define SensorReadings_CALLBACK NULL
 #define SensorReadings_DEFAULT NULL
 
@@ -187,9 +187,9 @@ extern const pb_msgdesc_t Alarm_msg;
 #define Alarm_fields &Alarm_msg
 
 /* Maximum encoded size of messages (where known) */
-#define GuiStatus_size                           140
-#define ControllerStatus_size                    167
-#define VentParams_size                          67
+#define GuiStatus_size                           139
+#define ControllerStatus_size                    166
+#define VentParams_size                          66
 #define SensorReadings_size                      15
 #define Alarm_size                               13
 

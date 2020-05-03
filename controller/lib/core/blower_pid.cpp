@@ -47,7 +47,7 @@ static PID myPID(&Input, &Output, &Setpoint, Kp, Ki, Kd, DIRECT);
 // TODO: VOLUME_INTEGRAL_INTERVAL was not chosen carefully.
 static constexpr Duration VOLUME_INTEGRAL_INTERVAL = milliseconds(5);
 static Time last_flow_measurement_time = millisSinceStartup(0);
-static float last_flow_ml_per_min = NAN;
+static float last_flow_liters_per_min = NAN;
 
 void blower_pid_init() {
   Setpoint = 0;
@@ -71,16 +71,16 @@ static void update_volume(SensorReadings *readings) {
   //
   //  - Measure time with better than millisecond granularity.
   Time now = Hal.now();
-  if (isnan(last_flow_ml_per_min)) { // First time
+  if (isnan(last_flow_liters_per_min)) { // First time
     readings->volume_ml = 0;
-    last_flow_ml_per_min = readings->flow_ml_per_min;
+    last_flow_liters_per_min = readings->flow_liters_per_min;
     last_flow_measurement_time = now;
   } else if (Duration delta = now - last_flow_measurement_time;
              delta >= VOLUME_INTEGRAL_INTERVAL) {
-    readings->volume_ml += delta.minutes() *
-                           (last_flow_ml_per_min + readings->flow_ml_per_min) /
-                           2;
-    last_flow_ml_per_min = readings->flow_ml_per_min;
+    readings->volume_ml +=
+        delta.minutes() *
+        (last_flow_liters_per_min + readings->flow_liters_per_min) / 2;
+    last_flow_liters_per_min = readings->flow_liters_per_min;
     last_flow_measurement_time = now;
   }
 }
@@ -119,8 +119,8 @@ void blower_pid_execute(const BlowerSystemState &desired_state,
 
   // Flow rate is inhalation flow minus exhalation flow. Positive value is flow
   // into lungs, and negative is flow out of lungs.
-  readings->flow_ml_per_min =
-      (get_volumetric_inflow() - get_volumetric_outflow()).ml_per_min();
+  readings->flow_liters_per_min =
+      (get_volumetric_inflow() - get_volumetric_outflow()).liters_per_min();
 
   update_volume(readings);
 }

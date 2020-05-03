@@ -19,7 +19,7 @@ TEST(CommTests, SendControllerStatus) {
   s.active_params.inspiratory_expiratory_ratio = 2;
   s.active_params.rise_time_ms = 100;
   s.active_params.inspiratory_trigger_cm_h2o = 5;
-  s.active_params.expiratory_trigger_ml_per_min = 9;
+  s.active_params.expiratory_trigger_liters_per_min = 9;
   // Set very large values here because they take up more space in the encoded
   // proto, and our goal is to make it big.
   s.active_params.alarm_lo_tidal_volume_ml = -1;
@@ -30,7 +30,7 @@ TEST(CommTests, SendControllerStatus) {
       std::numeric_limits<uint32_t>::max();
   s.sensor_readings.pressure_cm_h2o = 11;
   s.sensor_readings.volume_ml = 800;
-  s.sensor_readings.flow_ml_per_min = 1000;
+  s.sensor_readings.flow_liters_per_min = 1000;
 
   // Run comms_handler until it stops sending data.  10 iterations should be
   // more than enough.
@@ -63,7 +63,7 @@ TEST(CommTests, CommandRx) {
   s.desired_params.inspiratory_expiratory_ratio = 2;
   s.desired_params.rise_time_ms = 100;
   s.desired_params.inspiratory_trigger_cm_h2o = 5;
-  s.desired_params.expiratory_trigger_ml_per_min = 9;
+  s.desired_params.expiratory_trigger_liters_per_min = 9;
   // Set very large values here because they take up more space in the encoded
   // proto, and our goal is to make it big.
   s.desired_params.alarm_lo_tidal_volume_ml = -1;

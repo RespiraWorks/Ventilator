@@ -48,7 +48,7 @@ int main(int argc, char *argv[]) {
             sensors->pressure_cm_h2o =
                 sin(controller_status->uptime_ms * 0.001);
             sensors->volume_ml = sin(controller_status->uptime_ms * 0.002);
-            sensors->flow_ml_per_min =
+            sensors->flow_liters_per_min =
                 sin(controller_status->uptime_ms * 0.003);
           });
 

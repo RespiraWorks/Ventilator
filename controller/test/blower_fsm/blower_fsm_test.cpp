@@ -37,7 +37,7 @@ TEST_F(BlowerFsmTest, InitiallyOff) {
 
 TEST_F(BlowerFsmTest, StaysOff) {
   VentParams p = VentParams_init_zero;
-  Hal.delay(1000);
+  Hal.delay(milliseconds(1000));
   BlowerSystemState s = blower_fsm_desired_state(p);
   EXPECT_FLOAT_EQ(s.setpoint_pressure.cmH2O(), 0);
   EXPECT_EQ(s.expire_valve_state, ValveState::OPEN);

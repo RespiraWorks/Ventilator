@@ -20,6 +20,8 @@ limitations under the License.
 #define PID_H
 #define LIBRARY_VERSION 1.2.1
 
+#include "units.h"
+
 class PID {
 
 public:
@@ -71,9 +73,10 @@ public:
             //   means the output will increase when error is positive. REVERSE
             //   means the opposite.  it's very unlikely that this will be
             //   needed once it is set in the constructor.
-  void
-  SetSampleTime(int); // * sets the frequency, in Milliseconds, with which
-                      //   the PID calculation is performed.  default is 100
+
+  // Sets the frequency with which the PID calculation is performed.  Default
+  // is 100ms.
+  void SetSampleTime(Duration);
 
   // Display functions
   // ****************************************************************
@@ -103,10 +106,10 @@ private:
       *mySetpoint; //   PID, freeing the user from having to constantly tell us
                    //   what these values are.  with pointers we'll just know.
 
-  unsigned long lastTime;
+  Duration SampleTime;
+  Time lastTime;
   double outputSum, lastInput;
 
-  unsigned long SampleTime;
   double outMin, outMax;
   bool inAuto, pOnE;
 };

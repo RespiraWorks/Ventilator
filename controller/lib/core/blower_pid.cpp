@@ -15,6 +15,8 @@ limitations under the License.
 
 #include "blower_pid.h"
 
+#include <math.h>
+
 #include "comms.h"
 #include "hal.h"
 #include "sensors.h"
@@ -24,34 +26,87 @@ static double Setpoint;
 static double Input;
 static double Output;
 
-// Configure the PID
-// TODO: Tune these params.
-static constexpr float Kp = 2;
-static constexpr float Ki = 8;
-static constexpr float Kd = 0;
+// PID-tuning were chosen by following the Ziegler-Nichols method,
+// https://en.wikipedia.org/wiki/Ziegler%E2%80%93Nichols_method
+//
+// Note that Ku and Tu only seem to work with this particular sample time.
+static constexpr Duration PID_SAMPLE_TIME = milliseconds(10);
+static constexpr float Ku = 200;
+static constexpr Duration Tu = seconds(1.5);
+
+// "No overshoot" settings from the Ziegler-Nichols Wikipedia page.  This
+// avoids overpressurizing the patient's lungs.
+static constexpr float Kp = 0.2 * Ku;
+static constexpr float Ki = 0.4 * Ku / Tu.seconds();
+static constexpr float Kd = Ku * Tu.seconds() / 15;
 
 // DIRECT means that increases in the output should result in increases in the
 // input.  DIRECT as opposed to REVERSE.
 static PID myPID(&Input, &Output, &Setpoint, Kp, Ki, Kd, DIRECT);
 
+// TODO: VOLUME_INTEGRAL_INTERVAL was not chosen carefully.
+static constexpr Duration VOLUME_INTEGRAL_INTERVAL = milliseconds(5);
+static Time last_flow_measurement_time = millisSinceStartup(0);
+static float last_flow_ml_per_min = NAN;
+
 void blower_pid_init() {
   Setpoint = 0;
   Input = 0;
   Output = 0;
+  myPID.SetSampleTime(PID_SAMPLE_TIME.milliseconds());
+
+  // Our output is an 8-bit PWM.
+  myPID.SetOutputLimits(0, 255);
 
   // Turn the PID on.
   myPID.SetMode(AUTOMATIC);
-
-  // TODO: PID updates at 100ms by default, which is probably too slow for us?
 }
 
-void blower_pid_execute(Pressure setpoint, SensorReadings *readings,
-                        float *fan_power) {
+static void update_volume(SensorReadings *readings) {
+  // TODO: This calculation should be much more sophisticated.  Some possible
+  // improvements.
+  //
+  //  - Periodically re-zero the volume (e.g. what happens if the tubes are
+  //    disconnected from the patient?)
+  //
+  //  - Measure time with better than millisecond granularity.
+  Time now = Hal.now();
+  if (isnan(last_flow_ml_per_min)) { // First time
+    readings->volume_ml = 0;
+    last_flow_ml_per_min = readings->flow_ml_per_min;
+    last_flow_measurement_time = now;
+  } else if (Duration delta = now - last_flow_measurement_time;
+             delta >= VOLUME_INTEGRAL_INTERVAL) {
+    readings->volume_ml += delta.minutes() *
+                           (last_flow_ml_per_min + readings->flow_ml_per_min) /
+                           2;
+    last_flow_ml_per_min = readings->flow_ml_per_min;
+    last_flow_measurement_time = now;
+  }
+}
+
+void blower_pid_execute(const BlowerSystemState &desired_state,
+                        SensorReadings *readings, float *fan_power) {
+  // Open/close the solenoid as appropriate.
+  //
+  // Our solenoid is "normally open", so low voltage means open and high
+  // voltage means closed.  Hardware spec: https://bit.ly/3aERr69
+  Hal.digitalWrite(BinaryPin::SOLENOID,
+                   desired_state.expire_valve_state == ValveState::OPEN
+                       ? VoltageLevel::HAL_LOW
+                       : VoltageLevel::HAL_HIGH);
+
   Pressure cur_pressure = get_patient_pressure();
 
-  Setpoint = setpoint.kPa();
+  Setpoint = desired_state.setpoint_pressure.kPa();
   Input = cur_pressure.kPa();
   myPID.Compute();
+
+  // If the blower is not enabled, immediately shut down the fan.  But for
+  // consistency, we still run the PID iteration above.
+  if (!desired_state.blower_enabled) {
+    Output = 0;
+  }
   Hal.analogWrite(PwmPin::BLOWER, static_cast<int>(Output));
 
   // fan_power is in range [0, 1].
@@ -61,13 +116,11 @@ void blower_pid_execute(Pressure setpoint, SensorReadings *readings,
   // This pressure is just from the patient sensor, converted to the right
   // units.
   readings->pressure_cm_h2o = cur_pressure.cmH2O();
-  // TODO(anyone): This value is to be the integration over time of the below
-  // flow_ml_per_min. That is, you take the value calculated for flow_ml_per_min
-  // and integrate it over time to get total volume at the current time. Don't
-  // think this necessarily has to be done on the controller though?
-  readings->volume_ml = 0;
+
   // Flow rate is inhalation flow minus exhalation flow. Positive value is flow
   // into lungs, and negative is flow out of lungs.
   readings->flow_ml_per_min =
       (get_volumetric_inflow() - get_volumetric_outflow()).ml_per_min();
+
+  update_volume(readings);
 }

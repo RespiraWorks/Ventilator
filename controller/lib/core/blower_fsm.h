@@ -19,17 +19,53 @@ limitations under the License.
 #include "network_protocol.pb.h"
 #include "units.h"
 
-// This module encapsulates the blower's finite state machine (FSM).
+// This module encapsulates the blower system's finite state machine (FSM).
 //
-// It determines the pressure setpoint that the blower fan should try to
-// achieve at this moment.  In other words, it's responsible for generating an
-// idealized pressure curve over time.
+// The controllable parts of the "blower system" are
 //
-// Once this module has chosen a setpoint, it's the responsibility of the
-// blower_pid module to drive the blower to achieve the desired pressure.
+//  - the blower fan, which generates air pressure, and
+//  - the expire valve, a solenoid which, when open, allows air to exit the
+//    system.
+//
+// The purpose of this module is to determine, at any point in time, the ideal
+// state of the blower system:
+//
+//  - the pressure that (ideally) should exist in the system, and
+//  - whether the expire valve is open or closed.
+//
+// In other words, it's responsible for generating an idealized pressure curve
+// and a valve on/off control over time.
+//
+// Once this module has determined the ideal state, it's the responsibility of
+// the blower_pid module to open/close the valve and drive the blower to
+// achieve the desired pressure.
+
+enum class ValveState {
+  OPEN,
+  CLOSED,
+};
+
+// Represents a state that the blower FSM wants us to achieve at a given point
+// in time.
+struct BlowerSystemState {
+  // Is the blower on?
+  //
+  // Note: blower_enabled == false isn't the same as setpoint_pressure == 0:
+  //
+  //  - If blower_enabled is false, we shut down the fan immediately, whereas
+  //  - if setpoint_pressure == 0, PID spins down the fan to attempt to read 0
+  //    kPa measured patient pressure.
+  //
+  bool blower_enabled;
+
+  Pressure setpoint_pressure;
+  ValveState expire_valve_state;
+};
+
 void blower_fsm_init();
 
-// Gets the pressure that the blower should (ideally) deliver right now.
-Pressure blower_fsm_get_setpoint(const VentParams &params);
+// Gets the state that the the blower system should (ideally) deliver right
+// now.
+BlowerSystemState blower_fsm_desired_state(const VentParams &params);
 
 #endif // BLOWER_FSM_H

@@ -53,7 +53,7 @@ void blower_pid_init() {
   Setpoint = 0;
   Input = 0;
   Output = 0;
-  myPID.SetSampleTime(PID_SAMPLE_TIME.milliseconds());
+  myPID.SetSampleTime(PID_SAMPLE_TIME);
 
   // Our output is an 8-bit PWM.
   myPID.SetOutputLimits(0, 255);

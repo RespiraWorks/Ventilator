@@ -81,10 +81,10 @@ static GuiStatus gui_status = GuiStatus_init_zero;
 // and graphed by e.g. the Arduino IDE (tools -> serial plotter).
 static void DEV_MODE_comms_handler() {
   gui_status.desired_params.mode = VentMode_PRESSURE_CONTROL;
-  gui_status.desired_params.breaths_per_min = 10;
-  gui_status.desired_params.peep_cm_h2o = 10;
-  gui_status.desired_params.pip_cm_h2o = 30;
-  gui_status.desired_params.inspiratory_expiratory_ratio = 2;
+  gui_status.desired_params.breaths_per_min = 12;
+  gui_status.desired_params.peep_cm_h2o = 5;
+  gui_status.desired_params.pip_cm_h2o = 15;
+  gui_status.desired_params.inspiratory_expiratory_ratio = 0.66;
 
   static Time last_sent = Hal.now();
   Time now = Hal.now();

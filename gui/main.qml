@@ -19,9 +19,6 @@ Item
                 pressureView.series(0),
                 flowView.series(0),
                 tidalVolumeView.series(0));
-            pressureReadout.text = pressureView.series(0).at(pressureView.series(0).count-1).y.toFixed(2).toString()
-            flowReadout.text = flowView.series(0).at(flowView.series(0).count-1).y.toFixed(2).toString()
-            volumeReadout.text = tidalVolumeView.series(0).at(flowView.series(0).count-1).y.toFixed(2).toString()
         }
     }
 
@@ -100,42 +97,6 @@ Item
 
 
 
-    }
-
-    Text {
-        id: flowReadout
-        x: 901
-        y: 15
-        width: 62
-        height: 41
-        color: "green"
-        text: qsTr("0")
-        styleColor: "#ffffff"
-        font.pixelSize: 32
-    }
-
-    Text {
-        id: volumeReadout
-        x: 901
-        y: 202
-        width: 62
-        height: 63
-        color: "yellow"
-        text: qsTr("0")
-        styleColor: "#ffffff"
-        font.pixelSize: 32
-    }
-
-    Text {
-        id: pressureReadout
-        x: 901
-        y: 395
-        width: 62
-        height: 52
-        color: "#4f67ff"
-        text: qsTr("0")
-        styleColor: "#ffffff"
-        font.pixelSize: 32
     }
 
 }

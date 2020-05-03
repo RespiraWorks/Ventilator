@@ -23,7 +23,7 @@ limitations under the License.
 // It's then up to the PID module to realize this pressure, as closely as it
 // can.
 //
-// The main() loop queries blower_fsm_get_setpoint() on each iteration.
+// The main() loop queries blower_fsm_desired_state() on each iteration.
 // get_setpoint() delegates to a "breath FSM" (e.g. PressureControlFsm), which
 // is responsible for *one breath* with a fixed mode and VentParams.  When that
 // breath ends, we create a new inner FSM with (potentially) new params.
@@ -41,8 +41,9 @@ namespace {
 //    single breath, with the given params.  Those params don't change during
 //    the life of the FSM.
 //
-//  - Pressure get_setpoint(): Gets the pressure that the fan should be trying
-//    to hit at this point in time.
+//  - BlowerSystemState desired_state(): Gets the solenoid open/closed state
+//    and the pressure that the fan should be trying to hit at this point in
+//    time.
 //
 //  - bool finished(): Has this breath FSM completed its work (namely, running
 //    a single breath)?  If so, it is ready to be replaced with a new one.
@@ -51,7 +52,9 @@ class OffFsm {
 public:
   OffFsm() = default;
   explicit OffFsm(const VentParams &) {}
-  Pressure get_setpoint() { return kPa(0); }
+  BlowerSystemState desired_state() {
+    return {.blower_enabled = false, kPa(0), ValveState::OPEN};
+  }
   bool finished() { return true; }
 };
 
@@ -68,13 +71,13 @@ public:
       : inspire_pressure_(cmH2O(params.pip_cm_h2o)),
         expire_pressure_(cmH2O(params.peep_cm_h2o)), start_time_(Hal.now()),
         inspire_end_(start_time_ + inspire_duration(params)),
-        expire_end_(start_time_ + expire_duration(params)) {}
+        expire_end_(inspire_end_ + expire_duration(params)) {}
 
-  Pressure get_setpoint() {
+  BlowerSystemState desired_state() {
     if (Hal.now() < inspire_end_) {
-      return inspire_pressure_;
+      return {.blower_enabled = true, inspire_pressure_, ValveState::CLOSED};
     }
-    return expire_pressure_;
+    return {.blower_enabled = true, expire_pressure_, ValveState::OPEN};
   }
 
   bool finished() { return Hal.now() > expire_end_; }
@@ -141,13 +144,13 @@ public:
     }
   }
 
-  // Gets the pressure setpoint of the current FSM.
-  Pressure get_setpoint() {
+  // Gets the state the FSM would like us to (try to) achieve.
+  BlowerSystemState desired_state() {
     switch (mode_) {
     case VentMode_OFF:
-      return u_.off.get_setpoint();
+      return u_.off.desired_state();
     case VentMode_PRESSURE_CONTROL:
-      return u_.pressure_control.get_setpoint();
+      return u_.pressure_control.desired_state();
     }
     // All cases covered above (and gcc checks this).
     __builtin_unreachable();
@@ -180,12 +183,12 @@ FsmUnion fsm;
 
 void blower_fsm_init() {}
 
-Pressure blower_fsm_get_setpoint(const VentParams &params) {
+BlowerSystemState blower_fsm_desired_state(const VentParams &params) {
   // Immediately turn off the ventilator if params.mode == OFF; otherwise, wait
   // until the end of a cycle before implementing the mode change.
   if (params.mode == VentMode_OFF || fsm.finished()) {
     fsm.new_breath(params.mode, params);
   }
 
-  return fsm.get_setpoint();
+  return fsm.desired_state();
 }

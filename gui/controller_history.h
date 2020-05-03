@@ -5,6 +5,8 @@
 #include "chrono.h"
 
 #include <deque>
+#include <tuple>
+#include <vector>
 
 // Maintains a history of recent ControllerStatus-es sufficient
 // for rendering the UI.

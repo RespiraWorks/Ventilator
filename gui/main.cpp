@@ -23,8 +23,6 @@ int main(int argc, char *argv[]) {
 
   app.setWindowIcon(QIcon(":/images/Logo.png"));
 
-  qmlRegisterAnonymousType<GuiStateContainer>("com.respiraworks", 1);
-
   QCommandLineParser parser;
   parser.setApplicationDescription("Ventilator GUI application");
   parser.addHelpOption();
@@ -118,7 +116,7 @@ int main(int argc, char *argv[]) {
   mainView.setResizeMode(QQuickView::SizeRootObjectToView);
   mainView.setColor(QColor("#000000"));
 
-  mainView.show();
+  mainView.showFullScreen();
 
   if (parser.isSet(startupOnlyOption)) {
     return EXIT_SUCCESS;

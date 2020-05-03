@@ -40,9 +40,8 @@ class GuiStateContainer : public QObject {
 public:
   // Initializes the state container to keep the history of controller
   // statuses in a given time window.
-  GuiStateContainer(DurationMs history_window, QObject *parent = nullptr)
-      : QObject(parent), startup_time_(SteadyClock::now()),
-        history_(history_window) {}
+  GuiStateContainer(DurationMs history_window)
+             : startup_time_(SteadyClock::now()), history_(history_window) {}
 
   // Returns when the GUI started up.
   SteadyInstant GetStartupTime() { return startup_time_; }

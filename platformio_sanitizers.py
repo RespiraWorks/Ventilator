@@ -19,4 +19,3 @@ sanitizers = [
 
 env.Append(CCFLAGS=sanitizers)
 env.Append(LINKFLAGS=sanitizers)
-

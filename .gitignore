@@ -1,4 +1,5 @@
 build/
+build_autotests/
 .pio/
 install
 source/config/*

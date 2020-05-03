@@ -22,7 +22,9 @@ jobs:
             docker run --privileged -t controller-test-image
   gui-static-analysis:
     machine:
+      resource_class: 2xlarge
       image: ubuntu-1604:201903-01
+      docker_layer_caching: true
     steps:
       - checkout
       - run:
@@ -37,7 +39,9 @@ jobs:
 
   gui-build-image:
     machine:
+      resource_class: 2xlarge
       image: ubuntu-1604:201903-01
+      docker_layer_caching: true
     steps:
       - checkout
       - run:
@@ -69,7 +73,7 @@ jobs:
       - run:
           name: Run tests
           command: |
-            docker run -i respiraworks/gui:$CIRCLE_SHA1 ./test.sh
+            docker run -i respiraworks/gui:$CIRCLE_SHA1 ./gui.sh --test
 
 workflows:
   commit:

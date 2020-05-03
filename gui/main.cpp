@@ -1,3 +1,4 @@
+#include "RespiraConnectedDevice.h"
 #include "chrono.h"
 #include "connected_device.h"
 #include "controller_history.h"
@@ -34,6 +35,18 @@ int main(int argc, char *argv[]) {
       /*history_window=*/DurationMs(30000));
   auto startup_time = state_container.GetStartupTime();
 
+  // TODO add a command line argument to control if GUI is connected
+  // to a real serial port or to a fake implementation.
+  // TODO add a serial port name command line argument
+
+  // For now uncomment this line and comment instantiation below to run
+  // in real mode. Check out utils/mock-cycle-controller.py - it is
+  // a script that bangs ControllerState at the set rate into serial
+  // port.
+
+  // std::unique_ptr<ConnectedDevice> device =
+  //     std::make_unique<RespiraConnectedDevice>("/dev/pts/6");
+
   std::unique_ptr<ConnectedDevice> device =
       std::make_unique<FakeConnectedDevice>(
           [&](const GuiStatus &gui_status) {
@@ -58,17 +71,15 @@ int main(int argc, char *argv[]) {
 
   // TODO: Figure out whether asynchronously and periodically sending GUI status
   // and receiving controller status is the right thing to do here.
-  PeriodicClosure send_gui_status(DurationMs(10), [&] {
-    device->SendGuiStatus(state_container.GetGuiStatus());
-  });
-  send_gui_status.Start();
 
-  PeriodicClosure maintain_history(DurationMs(10), [&] {
+  PeriodicClosure communicate(DurationMs(10), [&] {
+    device->SendGuiStatus(state_container.GetGuiStatus());
     ControllerStatus controller_status;
-    device->ReceiveControllerStatus(&controller_status);
-    state_container.AppendHistory(controller_status);
+    if (device->ReceiveControllerStatus(&controller_status)) {
+      state_container.AppendHistory(controller_status);
+    }
   });
-  maintain_history.Start();
+  communicate.Start();
 
   QQuickView mainView;
   mainView.setTitle(QStringLiteral("Ventilator"));

@@ -130,7 +130,12 @@ public:
   void init();
 
   // Current time, strongly typed.  Prefer this over millis().
-  Time now() { return millisSinceStartup(millis()); }
+  Time now() {
+    // TODO: millis() is a uint32_t, which means it rolls over after about a
+    // month.  Use a routine that doesn't roll over, or detect and handle
+    // rollover.
+    return millisSinceStartup(millis());
+  }
 
   // Number of milliseconds that have passed since the board started running the
   // program.

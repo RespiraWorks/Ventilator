@@ -26,15 +26,15 @@ limitations under the License.
 #include "types.h"
 #include "gtest/gtest.h"
 
-//@TODO: Adjust this tolerance... assumes the PWM is a 0-255 integer but that
-// may not be the case
+// The PWM is a 0-255 integer, which means we can accept error of 1 in output
 static const double OUTPUT_TOLERANCE = 1;
 
 // PID input and setpoints
 static double setpoint = 25;
 static double input = setpoint - 10;
-// NOTE: output is not reused in different tests since constructor uses output
-// to initialize its integral, which makes sense when turning the PID on and off
+// NOTE: output is not reused in different tests since setMode(AUTOMATIC) uses
+// output to initialize its integral, which makes sense when turning the PID on
+// and off
 
 // PID Sample time (in milliseconds)
 static uint32_t sample_time = 100;
@@ -164,7 +164,8 @@ TEST(pidTest, derivativeOnMeasure) {
   EXPECT_NEAR(output, -1 * derivative * Kd, OUTPUT_TOLERANCE);
 
   previous_input = input;
-  // no change in input, but change setpoint
+  // no change in input, but change setpoint, which should have no effect on
+  // derivative (this mode uses derivative on measurement)
   setpoint = setpoint + 5;
   derivative = (input - previous_input) / sample_time * 1000.0;
 
@@ -295,18 +296,16 @@ TEST(pidTest, SampleTimeChange) {
   double integral = (setpoint - input) * (sample_time / 1000.0);
   EXPECT_NEAR(output, integral * Ki, OUTPUT_TOLERANCE);
   // Advance time
-  uint32_t dt = sample_time;
-  Hal.delay(dt);
+  Hal.delay(sample_time);
   myPID.Compute();
   // Expect output to integrate this
-  integral += (setpoint - input) * (dt / 1000.0);
+  integral += (setpoint - input) * (sample_time / 1000.0);
   EXPECT_NEAR(output, integral * Ki, OUTPUT_TOLERANCE);
   // Change sample time and advance
   sample_time = 50;
-  dt = sample_time;
   myPID.SetSampleTime(sample_time);
-  integral += (setpoint - input) * (dt / 1000.0);
-  Hal.delay(dt);
+  integral += (setpoint - input) * (sample_time / 1000.0);
+  Hal.delay(sample_time);
   myPID.Compute();
   EXPECT_NEAR(output, integral * Ki, OUTPUT_TOLERANCE);
 }

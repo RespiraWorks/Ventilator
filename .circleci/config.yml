@@ -1,7 +1,7 @@
 version: 2.1
 
 jobs:
-  run-precommit-checks:
+  common-precommit-checks:
     docker:
       - image: circleci/python:3.8
     steps:
@@ -13,9 +13,10 @@ jobs:
       - run:
           name: Run pre-commit hooks
           command: |
-            changed_files=$(git diff --name-only $CIRCLE_BRANCH...HEAD)
-            echo "Changed files: " $changed_files
-            git reset --soft $CIRCLE_BRANCH
+            merge_base=$(git merge-base -a HEAD origin/master)
+            changed_files=$(git diff --name-only $merge_base...HEAD)
+            echo "Changed files since branched from origin/master: " $changed_files
+            git reset --soft $merge_base
             pre-commit run --show-diff-on-failure --files $changed_files
 
   # This job creates an image that has the necessary tools to build and test the controller code, then runs it.
@@ -91,9 +92,10 @@ jobs:
 workflows:
   commit:
     jobs:
-      - run-precommit-checks
+      - common-precommit-checks
       - controller-test
       - gui-static-analysis
       - gui-build-image:
           requires:
+            - common-precommit-checks
             - gui-static-analysis

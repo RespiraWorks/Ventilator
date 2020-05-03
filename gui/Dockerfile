@@ -2,26 +2,7 @@
 
 FROM debian:buster
 
-RUN apt-get update && \
-    apt-get install -y \
-    build-essential \
-    qt5-default \
-    qtbase5-dev-tools \
-    qtdeclarative5-dev \
-    qtmultimedia5-dev \
-    libqt5charts5 \
-    libqt5charts5-dev \
-    libqt5serialport5 \
-    libqt5serialport5-dev \
-    qml-module-qtcharts \
-    libqt5multimedia5-plugins \
-    qtquickcontrols2-5-dev \
-    qml-module-qtquick-controls \
-    qml-module-qtquick-controls2 \
-    qtdeclarative5-dev-tools \
-    xvfb && \
-    exit 0
-
 COPY . .
-RUN bash gui/build.sh
+RUN bash gui/gui.sh --install
+RUN bash gui/gui.sh --build
 CMD ["bash"]

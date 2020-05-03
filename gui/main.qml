@@ -15,10 +15,10 @@ Item
         running: true
         repeat: true
         onTriggered: {
-            volumeDataSource.update(tidalVolumeView.series(0));
-            pressureDataSource.update(pressureView.series(0));
-            flowDataSource.update(flowView.series(0));
-
+            stateContainer.update(
+                pressureView.series(0),
+                flowView.series(0),
+                tidalVolumeView.series(0));
         }
     }
 
@@ -66,7 +66,7 @@ Item
         ScopeView
         {
             id: flowView
-            name: "Flow [mL]"
+            name: "Flow [mL/min]"
             color: "green"
             Layout.fillHeight: true
             Layout.fillWidth: true
@@ -87,7 +87,7 @@ Item
 
         ScopeView {
             id: pressureView
-            name: "Pressure [mmH2O]"
+            name: "Pressure [cmH2O]"
             color: "#4f67ff"
             Layout.fillHeight: true
             Layout.fillWidth: true

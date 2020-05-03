@@ -102,7 +102,7 @@ void sensors_init() {
   // It seems that we'll need to save calibration readings to non-volatile
   // memory and provide operators with a way to shut off the device's blowers,
   // open any necessary valves, and recalibrate.
-  Hal.delay(20);
+  Hal.delay(milliseconds(20));
 
   auto set_zero_level = [](Sensor s) {
     int sum = 0;

@@ -105,7 +105,7 @@ static void DEV_MODE_comms_handler() {
 
 static void controller_loop() {
   while (true) {
-    controller_status.uptime_ms = Hal.millis();
+    controller_status.uptime_ms = Hal.now().millisSinceStartup();
 
 #ifndef NO_GUI_DEV_MODE
     comms_handler(controller_status, &gui_status);

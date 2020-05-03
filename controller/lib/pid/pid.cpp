@@ -25,7 +25,7 @@ limitations under the License.
  *    reliable defaults, so we need to have the user set them.
  ***************************************************************************/
 PID::PID(double *Input, double *Output, double *Setpoint, double Kp, double Ki,
-         double Kd, int POn, int DOn, int ControllerDirection) 
+         double Kd, bool POnE, bool DOnE, int ControllerDirection) 
     : SampleTime(milliseconds(100)), lastTime(Hal.now() - SampleTime) {
   myOutput = Output;
   myInput = Input;
@@ -36,7 +36,7 @@ PID::PID(double *Input, double *Output, double *Setpoint, double Kp, double Ki,
                                 // the arduino pwm limits
 
   PID::SetControllerDirection(ControllerDirection);
-  PID::SetTunings(Kp, Ki, Kd, POn, DOn);
+  PID::SetTunings(Kp, Ki, Kd, POnE, DOnE);
 }
 
 /*Constructor (...)*********************************************************
@@ -60,24 +60,23 @@ bool PID::Compute() {
   if (!inAuto)
     return false;
   Time now = Hal.now();
-  Duration timeChange = (now - lastTime);
   // compute actual samples time-difference to take jitter into account in
   // integral and derivative
   double samplesTimeChangeSec = (now - lastSampleTime).seconds();
   // condition to update output : 1 sample time has passed and we have new data
-  if (timeChange >= SampleTime && samplesTimeChangeSec > 0) {
+  if (now >= nextSampleTime && samplesTimeChangeSec > 0) {
     /*Compute all the working error variables*/
     double input = *myInput;
     double error = *mySetpoint - input;
     double dInput = 0.0;
     // Compute dInput only if needed (P_ON_M or D_ON_M)
-    if (!pOnE || !dOnE) {
+    if (pOn == P_ON_M || dOn == D_ON_M) {
       dInput = (input - lastInput);
     }
     outputSum += (ki * error * samplesTimeChangeSec);
 
     /*Add Proportional on Measurement, if P_ON_M is specified*/
-    if (!pOnE)
+    if (pOn == P_ON_M)
       outputSum -= kp * dInput;
 
     if (outputSum > outMax)
@@ -87,16 +86,16 @@ bool PID::Compute() {
 
     /*Add Proportional on Error, if P_ON_E is specified*/
     double output;
-    if (pOnE) {
+    if (pOn == P_ON_E) {
       output = kp * error;
     } else {
       output = 0;
     }
-    if (!dOnE) {
+    if (dOn == D_ON_M) {
       dInput /= samplesTimeChangeSec;
       /*Compute Rest of PID Output*/
       output += outputSum - kd * dInput;
-    } else {
+    } else { // dOn==D_ON_E
       double dError = (error - lastError) / samplesTimeChangeSec;
       /*Compute Rest of PID Output*/
       output += outputSum + kd * dError;
@@ -111,9 +110,10 @@ bool PID::Compute() {
     /*Remember some variables for next time*/
     lastInput = input;
     lastError = error;
-    lastTime += SampleTime; // this makes the PID able to somewhat "catch up"
+    nextSampleTime += SampleTime; // when should we expect to perform our next
+                                  // output calculation
     // when it looses a sample due to slow controller execution
-    lastSampleTime = now;
+    lastUpdateTime = now;
     return true;
   } else
     return false;
@@ -124,15 +124,13 @@ bool PID::Compute() {
  * it's called automatically from the constructor, but tunings can also
  * be adjusted on the fly during normal operation
  ******************************************************************************/
-void PID::SetTunings(double Kp, double Ki, double Kd, int POn, int DOn) {
+void PID::SetTunings(double Kp, double Ki, double Kd, bool POn, bool DOn) {
   if (Kp < 0 || Ki < 0 || Kd < 0)
     return;
 
   pOn = POn;
-  pOnE = POn == P_ON_E;
 
   dOn = DOn;
-  dOnE = DOn == D_ON_E;
 
   kp = Kp;
   ki = Ki;
@@ -148,7 +146,7 @@ void PID::SetTunings(double Kp, double Ki, double Kd, int POn, int DOn) {
 /* SetTunings(...)*************************************************************
  * Set Tunings using the last-rembered  DOn setting
  ******************************************************************************/
-void PID::SetTunings(double Kp, double Ki, double Kd, int POn) {
+void PID::SetTunings(double Kp, double Ki, double Kd, bool POn) {
   SetTunings(Kp, Ki, Kd, POn, dOn);
 }
 
@@ -164,7 +162,9 @@ void PID::SetTunings(double Kp, double Ki, double Kd) {
  ******************************************************************************/
 void PID::SetSampleTime(Duration NewSampleTime) {
   if (NewSampleTime > milliseconds(0)) {
+    nextSampleTime -= SampleTime;
     SampleTime = NewSampleTime;
+    nextSampleTime += SampleTime;
   }
 }
 
@@ -220,8 +220,11 @@ void PID::Initialize() {
     outputSum = outMax;
   else if (outputSum < outMin)
     outputSum = outMin;
-  lastTime = Hal.millis() - SampleTime;
-  lastSampleTime = lastTime;
+  // next sample time in now
+  nextSampleTime = Hal.now();
+  // last call time defined as now - SampleTime to enable computation on first
+  // call (user should call Compute() immediately after SetMode(Auto))
+  lastUpdateTime = Hal.now() - SampleTime;
 }
 
 /* SetControllerDirection(...)*************************************************
@@ -247,6 +250,6 @@ void PID::SetControllerDirection(int Direction) {
 double PID::GetKp() { return kp; }
 double PID::GetKi() { return ki; }
 double PID::GetKd() { return kd; }
-int PID::GetSampleTime() { return SampleTime; }
+Duration PID::GetSampleTime() { return SampleTime; }
 int PID::GetMode() { return inAuto ? AUTOMATIC : MANUAL; }
 int PID::GetDirection() { return controllerDirection; }

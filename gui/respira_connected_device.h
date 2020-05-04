@@ -8,9 +8,6 @@
 #include <QtDebug>
 #include <memory>
 
-constexpr DurationMs INTER_FRAME_TIMEOUT_MS = DurationMs(11);
-constexpr DurationMs WRITE_TIMEOUT_MS = DurationMs(10);
-
 // Connects to system serial port, does nanopb serialization/deserialization
 // of GuiStatus and ControllerStatus and provides methods to send/receive
 // these opbejcts over serial port.
@@ -24,6 +21,15 @@ constexpr DurationMs WRITE_TIMEOUT_MS = DurationMs(10);
 // This has to be researched a bit more as we specify if we are opening
 // QSerialPort for reading or for writing or both, thus it might work to open
 // QIODevice::Read in Send thread and QIODevice::Write in Receive thread
+
+// In Alpha Cycle controller transmits every 30ms, but sometimes it takes
+// longer, 42 being a safe bet
+constexpr DurationMs INTER_FRAME_TIMEOUT_MS = DurationMs(42);
+
+// GuiStatus is about 150 bytes, resulting in 13ms tx time. Output buffer
+// will usually swallow it immeadetely, but just in case we set a timeout.
+constexpr DurationMs WRITE_TIMEOUT_MS = DurationMs(15);
+
 class RespiraConnectedDevice : public ConnectedDevice {
 
 public:
@@ -111,10 +117,10 @@ public:
         (const uint8_t *)responseData.data(), responseData.length());
 
     if (!pb_decode(&stream, ControllerStatus_fields, controller_status)) {
-      return false;
       qCritical()
           << "Could not de-serialize received data as Controller Status";
       // TODO: Log an error. Raise an Alert?
+      return false;
     }
 
     return true;

@@ -80,12 +80,13 @@ int main(int argc, char *argv[]) {
         });
   }
 
-  PeriodicClosure communicate(DurationMs(100), [&] {
-    device->SendGuiStatus(state_container.GetGuiStatus());
+  // Run comm thread at the same time interval as Cycle Controller.
+  PeriodicClosure communicate(DurationMs(30), [&] {
     ControllerStatus controller_status;
     if (device->ReceiveControllerStatus(&controller_status)) {
       state_container.AppendHistory(controller_status);
     }
+    device->SendGuiStatus(state_container.GetGuiStatus());
   });
   communicate.Start();
 

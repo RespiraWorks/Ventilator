@@ -16,17 +16,6 @@
 
 QT_CHARTS_USE_NAMESPACE
 
-#define RR_DEFAULT 0
-#define PEEP_DEFAULT 0
-#define PIP_DEFAULT 0
-#define IER_DEFAULT 1.1
-
-#define RR_ALARM_HIGH_DEFAULT 0
-#define RR_ALARM_LOW_DEFAULT 0
-#define TV_ALARM_HIGH_DEFAULT 0
-#define TV_ALARM_LOW_DEFAULT 0
-
-
 // A thread-safe container for readable and writable state
 // of the GUI.
 //
@@ -48,7 +37,17 @@ public:
   // Initializes the state container to keep the history of controller
   // statuses in a given time window.
   GuiStateContainer(DurationMs history_window)
-             : startup_time_(SteadyClock::now()), history_(history_window) {}
+      : startup_time_(SteadyClock::now()), history_(history_window) {
+    // Initialize to default parameters like in
+    // https://github.com/RespiraWorks/VentilatorSoftware/blob/89b817af/controller/src/main.cpp#L84
+
+    auto *params = &gui_status_.desired_params;
+    params->mode = VentMode_PRESSURE_CONTROL;
+    params->peep_cm_h2o = 5;
+    params->breaths_per_min = 12;
+    params->pip_cm_h2o = 15;
+    params->inspiratory_expiratory_ratio = 0.66;
+  }
 
   // Returns when the GUI started up.
   SteadyInstant GetStartupTime() { return startup_time_; }
@@ -65,6 +64,8 @@ public:
   // Returns the current GuiStatus to be sent to the controller.
   GuiStatus GetGuiStatus() {
     std::unique_lock<std::mutex> l(mu_);
+    gui_status_.uptime_ms =
+        TimeAMinusB(SteadyClock::now(), startup_time_).count();
     return gui_status_;
   }
 

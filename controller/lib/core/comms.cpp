@@ -40,7 +40,11 @@ static bool rx_in_progress = false;
 static constexpr Duration RX_TIMEOUT = milliseconds(1);
 
 // We send a ControllerStatus every TX_INTERVAL_MS.
-static constexpr Duration TX_INTERVAL = milliseconds(10);
+
+// In Alpha build we use synchronized communication initiated by GUI cycle
+// controller. Since both ControllerStatus and GuiStatus take roughly 300+
+// bytes, we need at least 1/115200.*10*300=26ms to transmit.
+static constexpr Duration TX_INTERVAL = milliseconds(30);
 
 void comms_init() {}
 

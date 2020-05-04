@@ -32,4 +32,4 @@ create_clean_directory build
 qmake -unset QMAKEFEATURES
 cd build
 qmake ..
-make
+make -j

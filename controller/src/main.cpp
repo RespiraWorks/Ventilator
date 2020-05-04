@@ -52,7 +52,6 @@ limitations under the License.
 #include "hal.h"
 #include "network_protocol.pb.h"
 #include "sensors.h"
-#include "solenoid.h"
 
 // Current controller status.  Updated when we receive data from the GUI, when
 // sensors read data, etc.
@@ -138,7 +137,6 @@ void setup() {
   comms_init();
   alarm_init();
   sensors_init();
-  solenoid_init();
   blower_fsm_init();
   blower_pid_init();
 

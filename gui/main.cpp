@@ -33,6 +33,8 @@ int main(int argc, char *argv[]) {
       QStringList() << "serial-port",
       QApplication::translate(
           "main", "Serial port filename. Uses fake data if not set."));
+  serialPortOption.setValueName("port");
+
   parser.addOption(startupOnlyOption);
   parser.addOption(serialPortOption);
   parser.process(app);

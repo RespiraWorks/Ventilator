@@ -27,11 +27,11 @@ limitations under the License.
 #include "gtest/gtest.h"
 
 // The PWM is a 0-255 integer, which means we can accept error of 1 in output
-static const double OUTPUT_TOLERANCE = 1;
+static const float OUTPUT_TOLERANCE = 1;
 
 // PID min/max output
-static const double MAX_OUTPUT = 255;
-static const double MIN_OUTPUT = 0;
+static const float MAX_OUTPUT = 255;
+static const float MIN_OUTPUT = 0;
 
 // Maximum task jitter (assume 5 ms for now, will need adjuting)
 static const Duration max_task_jitter = milliseconds(5);
@@ -40,9 +40,9 @@ TEST(pidTest, Proportional) {
   float Kp = 0.9;
   float Ki = 0;
   float Kd = 0;
-  double output = 0;
-  double setpoint = 25;
-  double input = setpoint - 10;
+  float output = 0;
+  float setpoint = 25;
+  float input = setpoint - 10;
   Duration sample_time = milliseconds(100);
 
   // Create PID and run once
@@ -63,9 +63,9 @@ TEST(pidTest, Integral) {
   float Ki = 1.75;
   float Kd = 0;
   const uint32_t MAX_ITERATIONS = 1000;
-  double output = 0;
-  double setpoint = 25;
-  double input = setpoint - 10;
+  float output = 0;
+  float setpoint = 25;
+  float input = setpoint - 10;
   Duration sample_time = milliseconds(100);
 
   // Create PID and run once
@@ -138,9 +138,9 @@ TEST(pidTest, derivativeOnMeasure) {
   float Kp = 0;
   float Ki = 0;
   float Kd = 1.5;
-  double output = 0;
-  double setpoint = 25;
-  double input = setpoint - 10;
+  float output = 0;
+  float setpoint = 25;
+  float input = setpoint - 10;
   Duration sample_time = milliseconds(100);
   PID myPID(&input, &output, &setpoint, Kp, Ki, Kd, P_ON_E, D_ON_M, DIRECT);
   myPID.SetSampleTime(sample_time);
@@ -150,12 +150,12 @@ TEST(pidTest, derivativeOnMeasure) {
   EXPECT_NEAR(output, 0, OUTPUT_TOLERANCE);
 
   // delay and update input to create non-zero derivative
-  double previous_input = input;
+  float previous_input = input;
   // output being in [0 255], create a negative input derivative to have a
   // positive output (D_ON_M actually works with -1*Kd) to allow using the same
   // parameters as D_ON_E)
   input = input - 5;
-  double derivative = (input - previous_input) / sample_time.seconds();
+  float derivative = (input - previous_input) / sample_time.seconds();
 
   Hal.delay(sample_time);
   myPID.Compute();
@@ -178,9 +178,9 @@ TEST(pidTest, derivativeOnError) {
   float Kp = 0;
   float Ki = 0;
   float Kd = 2.5;
-  double output = 0;
-  double setpoint = 25;
-  double input = setpoint - 10;
+  float output = 0;
+  float setpoint = 25;
+  float input = setpoint - 10;
   Duration sample_time = milliseconds(100);
   PID myPID(&input, &output, &setpoint, Kp, Ki, Kd, P_ON_E, D_ON_E, DIRECT);
   myPID.SetSampleTime(sample_time);
@@ -190,12 +190,12 @@ TEST(pidTest, derivativeOnError) {
   EXPECT_NEAR(output, 0, OUTPUT_TOLERANCE);
 
   // update input to create non-zero derivative
-  double previous_input = input;
-  double previous_setpoint = setpoint;
+  float previous_input = input;
+  float previous_setpoint = setpoint;
   // output being in [0 255], create a negative input derivative in order to
   // have a positive error derivative, and therefore a positive output
   input = input - 5;
-  double derivative =
+  float derivative =
       ((setpoint - input) - (previous_setpoint - previous_input)) /
       sample_time.seconds();
 
@@ -222,16 +222,16 @@ TEST(pidTest, CallFasterThanSample) {
   float Kp = 5.5;
   float Ki = 1.1;
   float Kd = 1.5;
-  double output = 0;
-  double setpoint = 25;
-  double input = setpoint - 10;
+  float output = 0;
+  float setpoint = 25;
+  float input = setpoint - 10;
   Duration sample_time = milliseconds(100);
   PID myPID(&input, &output, &setpoint, Kp, Ki, Kd, DIRECT);
   myPID.SetSampleTime(sample_time);
   myPID.SetMode(AUTOMATIC);
   myPID.Compute();
 
-  double last_output = output;
+  float last_output = output;
   // check that call with no time change has no effect
   myPID.Compute();
   EXPECT_EQ(output, last_output);
@@ -261,16 +261,16 @@ TEST(pidTest, TaskJitter) {
   float Kp = 0;
   float Ki = 0.5;
   float Kd = 0;
-  double output = 0;
-  double setpoint = 25;
-  double input = setpoint - 10;
+  float output = 0;
+  float setpoint = 25;
+  float input = setpoint - 10;
   Duration sample_time = milliseconds(100);
   PID myPID(&input, &output, &setpoint, Kp, Ki, Kd, DIRECT);
   myPID.SetSampleTime(sample_time);
   myPID.SetMode(AUTOMATIC);
   myPID.Compute();
   // First task, with only Ki set, output = error*sample_time
-  double integral = (setpoint - input) * sample_time.seconds();
+  float integral = (setpoint - input) * sample_time.seconds();
   EXPECT_NEAR(output, integral * Ki, OUTPUT_TOLERANCE);
   // Advance time with jitter
   Duration dt = sample_time + max_task_jitter;
@@ -294,9 +294,9 @@ TEST(pidTest, SampleTimeChange) {
   float Kp = 0;
   float Ki = 1.1;
   float Kd = 0;
-  double output = 0;
-  double setpoint = 25;
-  double input = setpoint - 10;
+  float output = 0;
+  float setpoint = 25;
+  float input = setpoint - 10;
   Duration sample_time = milliseconds(100);
   PID myPID(&input, &output, &setpoint, Kp, Ki, Kd, DIRECT);
   myPID.SetSampleTime(sample_time);
@@ -304,7 +304,7 @@ TEST(pidTest, SampleTimeChange) {
   myPID.Compute();
 
   // First task, with only Ki set, output = error*sample_time
-  double integral = (setpoint - input) * (sample_time.seconds());
+  float integral = (setpoint - input) * (sample_time.seconds());
   EXPECT_NEAR(output, integral * Ki, OUTPUT_TOLERANCE);
   // Advance time
   Hal.delay(sample_time);
@@ -327,9 +327,9 @@ TEST(pidTest, MissedSample) {
   float Kp = 0;
   float Ki = 0.2;
   float Kd = 0;
-  double output = 0;
-  double setpoint = 25;
-  double input = setpoint - 10;
+  float output = 0;
+  float setpoint = 25;
+  float input = setpoint - 10;
   Duration sample_time = milliseconds(100);
   PID myPID(&input, &output, &setpoint, Kp, Ki, Kd, DIRECT);
   myPID.SetSampleTime(sample_time);
@@ -337,7 +337,7 @@ TEST(pidTest, MissedSample) {
   myPID.Compute();
 
   // First task, with only Ki set, output = error*sample_time
-  double integral = (setpoint - input) * (sample_time.seconds());
+  float integral = (setpoint - input) * (sample_time.seconds());
   EXPECT_NEAR(output, integral * Ki, OUTPUT_TOLERANCE);
   // Advance time
   Duration dt = sample_time + sample_time;
@@ -348,7 +348,7 @@ TEST(pidTest, MissedSample) {
   EXPECT_NEAR(output, integral * Ki, OUTPUT_TOLERANCE);
   // check that a new call without change in time has no effect, even if we
   // missed a sample
-  double last_output = output;
+  float last_output = output;
   myPID.Compute();
   EXPECT_EQ(output, last_output);
   // Advance time a small amount to allow PID to catch up to missed sample
@@ -365,9 +365,9 @@ TEST(pidTest, OffOnCycle) {
   float Kp = 5.5;
   float Ki = 1.1;
   float Kd = 1.5;
-  double output = 0;
-  double setpoint = 25;
-  double input = setpoint - 10;
+  float output = 0;
+  float setpoint = 25;
+  float input = setpoint - 10;
   Duration sample_time = milliseconds(100);
   PID myPID(&input, &output, &setpoint, Kp, Ki, Kd, DIRECT);
   myPID.SetSampleTime(sample_time);
@@ -380,7 +380,7 @@ TEST(pidTest, OffOnCycle) {
     myPID.Compute();
   }
 
-  double last_output = output;
+  float last_output = output;
 
   // turn PID OFF
   myPID.SetMode(MANUAL);
@@ -401,7 +401,7 @@ TEST(pidTest, OffOnCycle) {
   // turn PID back ON
   myPID.SetMode(AUTOMATIC);
 
-  double integral = (setpoint - input) * (sample_time.seconds());
+  float integral = (setpoint - input) * (sample_time.seconds());
 
   myPID.Compute();
 

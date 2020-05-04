@@ -40,14 +40,14 @@ public:
   // * constructor.  links the PID to the Input, Output, and
   //   Setpoint.  Initial tuning parameters are also set here.
   //   (overload for specifying proportional and derivative modes)
-  PID(double *Input, double *Output, double *Setpoint, double Kp, double Ki,
-      double Kd, bool POnE, bool DOnE, int ControllerDirection);
+  PID(float *Input, float *Output, float *Setpoint, float Kp, float Ki,
+      float Kd, bool POnE, bool DOnE, int ControllerDirection);
 
   // * constructor.  links the PID to the Input, Output, and
   //   Setpoint.  Initial tuning parameters are also set here.
   //   Uses default values DOnE = D_ON_M and POnE = P_ON_E
-  PID(double *Input, double *Output, double *Setpoint, double Kp, double Ki,
-      double Kd, int ControllerDirection);
+  PID(float *Input, float *Output, float *Setpoint, float Kp, float Ki,
+      float Kd, int ControllerDirection);
 
   // * sets PID to either Manual (0) or Auto (non-0)
   void SetMode(int Mode);
@@ -60,18 +60,18 @@ public:
   // * clamps the output to a specific range. 0-255 by default, but
   //   it's likely the user will want to change this depending on
   //   the application
-  void SetOutputLimits(double Min, double Max);
+  void SetOutputLimits(float Min, float Max);
 
   // available but not commonly used functions
   // ********************************************************
   // * While most users will set the tunings once in the
   //   constructor, this function gives the user the option
   //   of changing tunings during runtime for Adaptive control
-  void SetTunings(double Kp, double Ki, double Kd);
+  void SetTunings(float Kp, float Ki, float Kd);
   // * overload for specifying proportional mode
-  void SetTunings(double Kp, double Ki, double Kd, bool POnE);
+  void SetTunings(float Kp, float Ki, float Kd, bool POnE);
   // * overload for specifying proportional and derivative modes
-  void SetTunings(double Kp, double Ki, double Kd, bool POnE, bool DOnE);
+  void SetTunings(float Kp, float Ki, float Kd, bool POnE, bool DOnE);
 
   // * Sets the Direction, or "Action" of the controller. DIRECT
   //   means the output will increase when error is positive. REVERSE
@@ -84,9 +84,9 @@ public:
 
   // Display functions
   // ****************************************************************
-  double GetKp();     // These functions query the pid for interal values.
-  double GetKi();     //  they were created mainly for the pid front-end,
-  double GetKd();     // where it's important to know what is actually
+  float GetKp(); // These functions query the pid for interal values.
+  float GetKi(); //  they were created mainly for the pid front-end,
+  float GetKd(); // where it's important to know what is actually
   Duration GetSampleTime();
   bool GetMode();      //  inside the PID.
   bool GetDirection(); //
@@ -94,22 +94,22 @@ public:
 private:
   void Initialize();
 
-  double kp; // * (P)roportional Tuning Parameter
-  double ki; // * (I)ntegral Tuning Parameter
-  double kd; // * (D)erivative Tuning Parameter
+  float kp; // * (P)roportional Tuning Parameter
+  float ki; // * (I)ntegral Tuning Parameter
+  float kd; // * (D)erivative Tuning Parameter
 
   int controllerDirection;
 
-  double *myInput;  // * Pointers to the Input, Output, and Setpoint variables
-  double *myOutput; //   This creates a hard link between the variables and the
-  double *mySetpoint; // PID, freeing the user from having to constantly tell
-                      // us what these values are.
+  float *myInput;    // * Pointers to the Input, Output, and Setpoint variables
+  float *myOutput;   // This creates a hard link between the variables and the
+  float *mySetpoint; // PID, freeing the user from having to constantly tell
+                     // us what these values are.
 
   Duration SampleTime;
   Time nextSampleTime, lastUpdateTime;
-  double outputSum, lastInput, lastError;
+  float outputSum, lastInput, lastError;
 
-  double outMin, outMax;
+  float outMin, outMax;
   bool inAuto, pOnE, dOnE;
 };
 #endif

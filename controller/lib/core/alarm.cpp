@@ -62,9 +62,9 @@ void alarm_add(const char *data) {
   alarm_t alarm;
   if (!stack_full()) {
     // No point spending time doing these operations if the stack is full
-    
+
     //TODO work in progress, move alarm code to nanopb transport
-    alarm.timestamp = Hal.millis();
+    alarm.timestamp = Hal.now().millisSinceStartup();
 
     // Copy alarm data
     for (uint8_t idx = 0; idx < ALARM_DATALEN; idx++) {
@@ -91,8 +91,8 @@ int32_t alarm_read(uint32_t *timestamp, char *data) {
   return_status = stack_peek(&alarm);
 
   if (return_status == VC_STATUS_SUCCESS) {
-    
-    //TODO work in progress move alarm code to nanopb 
+
+    // TODO work in progress move alarm code to nanopb
     *timestamp = alarm->timestamp;
 
     for (uint8_t idx = 0; idx < ALARM_DATALEN; idx++) {

@@ -1,5 +1,5 @@
 QT += core quick charts serialport
-CONFIG += c++17
+CONFIG += c++1z
 DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += $$files("*.cpp") \

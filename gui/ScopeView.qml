@@ -33,6 +33,10 @@ import QtCharts 2.1
 ChartView
 {
     id: chartView
+
+    property double yMin: -1.5
+    property double yMax: 1.5
+
     animationOptions: ChartView.NoAnimation
 
     plotAreaColor: "#000000"
@@ -66,8 +70,8 @@ ChartView
     ValueAxis
     {
         id: valueAxis
-        min: -1.5
-        max: 1.5
+        min: yMin
+        max: yMax
         labelsColor: chartView.color
     }
 

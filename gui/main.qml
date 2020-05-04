@@ -1,12 +1,12 @@
 import QtQuick 2.11
 import QtQuick.Layouts 1.3
+import QtQuick.Controls 2.4
 
 Item
 {
     id: mainWindow
     width: 1024
     height: 600
-
 
     Timer // TODO: Make data sources be updated as we get data
     {
@@ -15,90 +15,525 @@ Item
         running: true
         repeat: true
         onTriggered: {
-            stateContainer.update(
+            guiState.update(
                 pressureView.series(0),
                 flowView.series(0),
                 tidalVolumeView.series(0));
         }
     }
 
-
-    ControlPanel {
-
-        id: controlPanel
-        anchors.right: scopeGridLayout.left
-        anchors.rightMargin: 0
-        anchors.left: parent.left
-        anchors.leftMargin: 10
-        anchors.top: parent.top
-        anchors.topMargin: 0
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: 0
-        Layout.leftMargin: 10
-        Layout.fillHeight: true
-        Layout.fillWidth: true
-        Layout.minimumHeight: 85
-        Layout.minimumWidth: 160
-        Layout.maximumWidth: 180
-        spacing: 7.7
-
+    Rectangle {
+        id: rectangle
+        color: "#e3e8ee"
+        z: -1
+        anchors.fill: parent
     }
 
-    GridLayout {
-        id: scopeGridLayout
-        columnSpacing: 0
-        rowSpacing: -20
-        anchors.left: parent.left
-        anchors.leftMargin: 195
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: 0
-        anchors.top: parent.top
-        anchors.topMargin: 0
-        anchors.right: parent.right
-        anchors.rightMargin: 0
-        Layout.minimumHeight: 400
-        Layout.minimumWidth: 500
-        Layout.fillHeight: true
-        Layout.fillWidth: true
-        flow: GridLayout.TopToBottom
-        rows: 3
+    ColumnLayout {
+        id: columnLayout
+        anchors.fill: parent
 
-        ScopeView
-        {
-            id: flowView
-            name: "Flow [mL/min]"
-            color: "green"
-            Layout.fillHeight: true
-            Layout.fillWidth: true
-            height: parent.height/3
-            width: parent.width
+
+
+        RowLayout {
+            id: rowLayout1
+            width: 100
+            height: 100
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+
+            Image {
+                id: image
+                width: 150
+                height: 50
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                Layout.maximumWidth: 200
+                clip: false
+                Layout.maximumHeight: 50
+                Layout.fillHeight: true
+                Layout.fillWidth: true
+                Layout.minimumHeight: 50
+                Layout.topMargin: 5
+                source: "images/respiraWorksLogoHorizontalTransparent.png"
+                fillMode: Image.PreserveAspectFit
+            }
         }
 
-        ScopeView
-        {
-            id: tidalVolumeView
-            name: "Tidal Volume [mL]"
-            color: "yellow"
-            Layout.fillHeight: true
-            Layout.fillWidth: true
-            height: parent.height/3
-            width: parent.width
+        RowLayout {
+            id: rowLayout
+            width: 100
+            height: 100
+
+            ColumnLayout {
+                id: columnLayout1
+                width: 100
+                height: 100
+                Layout.maximumHeight: 65356
+                Layout.maximumWidth: 6553
+                Layout.fillHeight: true
+                Layout.fillWidth: true
+                Layout.minimumWidth: 200
+
+                Rectangle {
+                    id: breathsPerMinute
+                    color: "#466eeb"
+                    radius: 10
+                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                    Layout.minimumWidth: 150
+                    Layout.minimumHeight: 100
+                    Layout.topMargin: 10
+                    Layout.rightMargin: 10
+                    Layout.leftMargin: 10
+
+                    Text {
+                        id: breathsPerMinuteVal
+                        x: 45
+                        y: 39
+                        width: 60
+                        height: 44
+                        text: Number(guiState.rr);
+                        horizontalAlignment: Text.AlignHCenter
+                        font.family: "Times New Roman"
+                        font.weight: Font.DemiBold
+                        font.bold: true
+                        font.pixelSize: 38
+                    }
+
+                    Text {
+                        id: element
+                        x: 63
+                        y: 13
+                        text: qsTr("RR")
+                        font.bold: true
+                        font.pixelSize: 17
+                    }
+
+                    RoundButton {
+                        id: breathsPerMinuteInc
+                        x: 110
+                        y: 45
+                        width: 30
+                        height: 30
+                        text: qsTr("+")
+                        font.family: "Courier"
+                        font.bold: true
+                        focusPolicy: Qt.ClickFocus
+
+                        onClicked: { guiState.rr++; }
+                    }
+
+                    RoundButton {
+                        id: breathsPerMinuteDec
+                        x: 9
+                        y: 45
+                        width: 30
+                        height: 30
+                        text: qsTr("-")
+                        checkable: false
+                        focusPolicy: Qt.NoFocus
+                        font.bold: true
+
+                        onClicked: { guiState.rr--; }
+                    }
+
+                }
+
+                Rectangle {
+                    id: peep
+                    color: "#466eeb"
+                    radius: 10
+                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                    Layout.minimumHeight: 100
+                    Layout.rightMargin: 10
+
+                    Text {
+                        id: peepVal
+                        x: 45
+                        y: 39
+                        width: 60
+                        height: 44
+                        text:  Number(guiState.peep);
+                        horizontalAlignment: Text.AlignHCenter
+                        font.weight: Font.DemiBold
+                        font.family: "Times New Roman"
+                        font.pixelSize: 38
+                        font.bold: true
+                    }
+
+                    Text {
+                        id: element3
+                        x: 53
+                        y: 13
+                        text: qsTr("PEEP")
+                        horizontalAlignment: Text.AlignHCenter
+                        font.pixelSize: 17
+                        font.bold: true
+                    }
+
+                    RoundButton {
+                        id: peepInc
+                        x: 110
+                        y: 45
+                        width: 30
+                        height: 30
+                        text: qsTr("+")
+                        checkable: false
+                        focusPolicy: Qt.NoFocus
+                        font.bold: true
+
+                        onClicked: { guiState.peep++; }
+                    }
+
+                    RoundButton {
+                        id: peepDec
+                        x: 9
+                        y: 45
+                        width: 30
+                        height: 30
+                        text: qsTr("-")
+                        checkable: false
+                        font.bold: true
+                        focusPolicy: Qt.NoFocus
+
+                        onClicked: { guiState.peep--; }
+                    }
+                    Layout.minimumWidth: 150
+                    Layout.topMargin: 10
+                    Layout.leftMargin: 10
+                }
+
+                Rectangle {
+                    id: pip
+                    color: "#466eeb"
+                    radius: 10
+                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                    Layout.minimumHeight: 100
+                    Layout.rightMargin: 10
+
+                    Text {
+                        id: pipVal
+                        x: 45
+                        y: 39
+                        width: 60
+                        height: 44
+                        text:  Number(guiState.pip);
+                        horizontalAlignment: Text.AlignHCenter
+                        font.weight: Font.DemiBold
+                        font.family: "Times New Roman"
+                        font.pixelSize: 38
+                        font.bold: true
+                    }
+
+                    Text {
+                        id: element5
+                        x: 61
+                        y: 13
+                        text: qsTr("PIP")
+                        horizontalAlignment: Text.AlignHCenter
+                        font.pixelSize: 17
+                        font.bold: true
+                    }
+
+                    RoundButton {
+                        id: pipInc
+                        x: 110
+                        y: 45
+                        width: 30
+                        height: 30
+                        text: qsTr("+")
+                        checkable: false
+                        font.bold: true
+                        focusPolicy: Qt.NoFocus
+
+                        onClicked: { guiState.pip++; }
+                    }
+
+                    RoundButton {
+                        id: pipDec
+                        x: 9
+                        y: 45
+                        width: 30
+                        height: 30
+                        text: qsTr("-")
+                        checkable: false
+                        focusPolicy: Qt.NoFocus
+                        font.bold: true
+
+                        onClicked: { guiState.pip--; }
+                    }
+                    Layout.minimumWidth: 150
+                    Layout.topMargin: 10
+                    Layout.leftMargin: 10
+                }
+
+                Rectangle {
+                    id: ier
+                    color: "#466eeb"
+                    radius: 10
+                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                    Layout.minimumHeight: 100
+                    Layout.rightMargin: 10
+
+                    Text {
+                        id: ierVal
+                        x: 45
+                        y: 39
+                        width: 60
+                        height: 44
+                        text:  Number(guiState.ier, 'g', 1).toFixed(1)
+                        horizontalAlignment: Text.AlignHCenter
+                        font.weight: Font.DemiBold
+                        font.family: "Times New Roman"
+                        font.pixelSize: 38
+                        font.bold: true
+                    }
+
+                    Text {
+                        id: element53
+                        x: 61
+                        y: 13
+                        text: qsTr("I:E")
+                        horizontalAlignment: Text.AlignHCenter
+                        font.pixelSize: 17
+                        font.bold: true
+                    }
+
+                    RoundButton {
+                        id: ierInc
+                        x: 110
+                        y: 45
+                        width: 30
+                        height: 30
+                        text: qsTr("+")
+                        checkable: false
+                        font.bold: true
+                        focusPolicy: Qt.NoFocus
+
+                        onClicked: { guiState.ier += 0.1; }
+                    }
+
+                    RoundButton {
+                        id: ierDec
+                        x: 9
+                        y: 45
+                        width: 30
+                        height: 30
+                        text: qsTr("-")
+                        checkable: false
+                        focusPolicy: Qt.NoFocus
+                        font.bold: true
+
+                        onClicked: { guiState.ier -= 0.1; }
+                    }
+
+                    Layout.minimumWidth: 150
+                    Layout.topMargin: 10
+                    Layout.leftMargin: 10
+                }
+
+            }
+
+            GridLayout {
+                id: scopeGridLayout
+                columnSpacing: 0
+                rowSpacing: -20
+                Layout.minimumHeight: 400
+                Layout.minimumWidth: 500
+                Layout.fillHeight: true
+                Layout.fillWidth: true
+                flow: GridLayout.TopToBottom
+                rows: 3
+
+                ScopeView {
+                    id: pressureView
+                    name: "Pressure [cmH2O]"
+                    // TODO: Are these reasonable lower and upper bounds?
+                    // Source for current value:
+                    // https://www.rtmagazine.com/public-health/pediatrics/neonatal/selecting-appropriate-ventilator-parameters/
+                    // mentions values in the range 5-30 cmH2O.
+                    yMin: -3
+                    yMax: 30
+
+                    color: "#4f67ff"
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
+                    Layout.topMargin: 10
+                    height: parent.height/3
+                    width: parent.width
+                }
+
+                ScopeView
+                {
+                    id: flowView
+                    name: "Flow [mL/min]"
+                    // TODO: Are these reasonable lower and upper bounds?
+                    // Source for current value:
+                    // https://www.sciencedirect.com/topics/medicine-and-dentistry/peak-inspiratory-flow
+                    // "Most modern ventilators can deliver flow rates between
+                    // 60 and 120 L/min. "
+                    yMin: -150
+                    yMax: 150
+
+                    color: "green"
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
+                    Layout.topMargin: 10
+                    height: parent.height/3
+                    width: parent.width
+                }
+
+                ScopeView
+                {
+                    id: tidalVolumeView
+                    name: "Tidal Volume [mL]"
+                    // TODO: Are these reasonable lower and upper bounds?
+                    // Source for current value:
+                    // https://en.wikipedia.org/wiki/Tidal_volume
+                    // "In a healthy, young human adult, tidal volume is
+                    // approximately 500 mL per inspiration or 7 mL/kg of body mass."
+                    // Meaning, 2000 should be enough for a human of ~300kg body mass;
+                    // I don't know whether heavier humans have even larger
+                    // tidal volume.
+                    yMin: 0
+                    yMax: 2000
+
+                    color: "#ffff00"
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
+                    Layout.topMargin: 10
+                    height: parent.height/3
+                    width: parent.width
+                }
+
+
+
+            }
+
+            ColumnLayout {
+                id: sensorReadouts
+                width: 100
+                height: 100
+                Layout.maximumHeight: 65356
+                Layout.maximumWidth: 6553
+                Layout.fillHeight: true
+                Layout.fillWidth: true
+                Layout.minimumWidth: 200
+
+                Rectangle {
+                    id: pressureReadout
+                    color: "#466eeb"
+                    radius: 10
+                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                    Layout.minimumHeight: 100
+                    Layout.rightMargin: 10
+
+                    Text {
+                        id: pressureVal
+                        x: 45
+                        y: 39
+                        width: 60
+                        height: 44
+                        text: Number(guiState.pressureReadout, 'g', 1).toFixed(1);
+                        horizontalAlignment: Text.AlignHCenter
+                        font.family: "Times New Roman"
+                        font.weight: Font.DemiBold
+                        font.bold: true
+                        font.pixelSize: 38
+                    }
+
+                    Text {
+                        x: 3
+                        y: 13
+                        text: qsTr("Pressure (cm H2O)")
+                        font.bold: true
+                        font.pixelSize: 17
+                    }
+                    Layout.minimumWidth: 150
+                    Layout.topMargin: 10
+                    Layout.leftMargin: 10
+                }
+
+                Rectangle {
+                    id: flowReadout
+                    color: "#466eeb"
+                    radius: 10
+                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                    Layout.minimumHeight: 100
+                    Layout.rightMargin: 10
+
+                    Text {
+                        id: flowVal
+                        x: 45
+                        y: 39
+                        width: 60
+                        height: 44
+                        text: Number(guiState.flowReadout, 'g', 1).toFixed(1);
+                        horizontalAlignment: Text.AlignHCenter
+                        font.weight: Font.DemiBold
+                        font.family: "Times New Roman"
+                        font.pixelSize: 38
+                        font.bold: true
+                    }
+
+                    Text {
+                        x: 23
+                        y: 13
+                        text: qsTr("Flow (mL/min)")
+                        horizontalAlignment: Text.AlignHCenter
+                        font.pixelSize: 17
+                        font.bold: true
+                    }
+
+                    Layout.minimumWidth: 150
+                    Layout.topMargin: 10
+                    Layout.leftMargin: 10
+                }
+
+                Rectangle {
+                    id: tvReadout
+                    color: "#466eeb"
+                    radius: 10
+                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                    Layout.minimumHeight: 100
+                    Layout.rightMargin: 10
+
+                    Text {
+                        id: tvVal
+                        x: 45
+                        y: 39
+                        width: 60
+                        height: 44
+                        text:  Number(guiState.tvReadout, 'g', 1).toFixed(1);
+                        horizontalAlignment: Text.AlignHCenter
+                        font.weight: Font.DemiBold
+                        font.family: "Times New Roman"
+                        font.pixelSize: 38
+                        font.bold: true
+                    }
+
+                    Text {
+                        x: 41
+                        y: 13
+                        text: qsTr("TV (mL)")
+                        horizontalAlignment: Text.AlignHCenter
+                        font.pixelSize: 17
+                        font.bold: true
+                    }
+
+                    Layout.minimumWidth: 150
+                    Layout.topMargin: 10
+                    Layout.leftMargin: 10
+                }
+            }
         }
 
-        ScopeView {
-            id: pressureView
-            name: "Pressure [cmH2O]"
-            color: "#4f67ff"
-            Layout.fillHeight: true
-            Layout.fillWidth: true
-            height: parent.height/3
-            width: parent.width
+        RowLayout {
+            id: rowLayout2
+            width: 100
+            height: 50
+            Layout.minimumHeight: 50
+            Layout.maximumHeight: 65535
         }
-
-
-
     }
-
 }
 
 /*##^##
@@ -106,3 +541,7 @@ Designer {
     D{i:2;anchors_height:93;anchors_width:185}D{i:3;anchors_height:600;anchors_width:839;anchors_x:157;anchors_y:0}
 }
 ##^##*/
+/*##^## Designer {
+    D{i:2;anchors_height:200;anchors_width:200}
+}
+ ##^##*/

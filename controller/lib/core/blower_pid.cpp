@@ -22,9 +22,9 @@ limitations under the License.
 #include "sensors.h"
 #include "types.h"
 
-static double Setpoint;
-static double Input;
-static double Output;
+static float Setpoint;
+static float Input;
+static float Output;
 
 // PID-tuning were chosen by following the Ziegler-Nichols method,
 // https://en.wikipedia.org/wiki/Ziegler%E2%80%93Nichols_method
@@ -110,7 +110,7 @@ void blower_pid_execute(const BlowerSystemState &desired_state,
   Hal.analogWrite(PwmPin::BLOWER, static_cast<int>(Output));
 
   // fan_power is in range [0, 1].
-  *fan_power = stl::min(stl::max(Output, 0.), 255.) / 255.;
+  *fan_power = stl::min(stl::max(Output, 0.f), 255.f) / 255.f;
 
   // Store sensor readings so they can eventually be sent to the GUI.
   // This pressure is just from the patient sensor, converted to the right

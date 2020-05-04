@@ -17,7 +17,8 @@
 
 int main(int argc, char *argv[]) {
   QApplication app(argc, argv);
-  app.setWindowIcon(QIcon(":/Logo.png"));
+
+  app.setWindowIcon(QIcon(":/images/Logo.png"));
 
   QCommandLineParser parser;
   parser.setApplicationDescription("Ventilator GUI application");
@@ -53,26 +54,31 @@ int main(int argc, char *argv[]) {
         [&](const GuiStatus &gui_status) {
           // For now, completely ignore gui_status.
           (void)gui_status;
+          /* std::cout << "uptime_ms = " << gui_status.uptime_ms << ", "
+            << "desired_params = {"
+            << "mode = " << gui_status.desired_params.mode << ", "
+            << "peep = " << gui_status.desired_params.peep_cm_h2o << ", "
+            << "rr = " << gui_status.desired_params.breaths_per_min << ", "
+            << "pip = " << gui_status.desired_params.pip_cm_h2o << ", "
+            << "ier = " <<
+            gui_status.desired_params.inspiratory_expiratory_ratio
+            << "}" << std::endl; */
         },
         [&](ControllerStatus *controller_status) {
           // Fill the status with fake data.
           controller_status->uptime_ms =
               TimeAMinusB(SteadyClock::now(), startup_time).count();
           auto *sensors = &controller_status->sensor_readings;
-          sensors->pressure_cm_h2o = sin(controller_status->uptime_ms * 0.001);
-          sensors->volume_ml = sin(controller_status->uptime_ms * 0.002);
-          sensors->flow_ml_per_min = sin(controller_status->uptime_ms * 0.003);
+          sensors->pressure_cm_h2o =
+              15 + 10 * sin(controller_status->uptime_ms * 0.001);
+          sensors->flow_ml_per_min =
+              120 * sin(controller_status->uptime_ms * 0.003);
+          sensors->volume_ml =
+              1000 + 500 * sin(controller_status->uptime_ms * 0.002);
         });
   }
 
-  // TODO: Bind the readable aspects of state_container to UI elements
-  // TODO: Bind the writable aspects of state_container to parameters set in the
-  // UI
-
-  // TODO: Figure out whether asynchronously and periodically sending GUI status
-  // and receiving controller status is the right thing to do here.
-
-  PeriodicClosure communicate(DurationMs(10), [&] {
+  PeriodicClosure communicate(DurationMs(100), [&] {
     device->SendGuiStatus(state_container.GetGuiStatus());
     ControllerStatus controller_status;
     if (device->ReceiveControllerStatus(&controller_status)) {
@@ -84,14 +90,13 @@ int main(int argc, char *argv[]) {
   QQuickView mainView;
   mainView.setTitle(QStringLiteral("Ventilator"));
 
-  mainView.rootContext()->setContextProperty("stateContainer",
-                                             &state_container);
+  mainView.rootContext()->setContextProperty("guiState", &state_container);
 
   mainView.setSource(QUrl("qrc:/main.qml"));
   mainView.setResizeMode(QQuickView::SizeRootObjectToView);
   mainView.setColor(QColor("#000000"));
 
-  mainView.show();
+  mainView.showFullScreen();
 
   if (parser.isSet(startupOnlyOption)) {
     return EXIT_SUCCESS;

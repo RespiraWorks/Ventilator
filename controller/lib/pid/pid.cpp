@@ -25,7 +25,8 @@ limitations under the License.
  *    reliable defaults, so we need to have the user set them.
  ***************************************************************************/
 PID::PID(double *Input, double *Output, double *Setpoint, double Kp, double Ki,
-         double Kd, int POn, int ControllerDirection) {
+         double Kd, int POn, int ControllerDirection)
+    : SampleTime(milliseconds(100)), lastTime(Hal.now() - SampleTime) {
   myOutput = Output;
   myInput = Input;
   mySetpoint = Setpoint;
@@ -34,12 +35,8 @@ PID::PID(double *Input, double *Output, double *Setpoint, double Kp, double Ki,
   PID::SetOutputLimits(0, 255); // default output limit corresponds to
                                 // the arduino pwm limits
 
-  SampleTime = 100; // default Controller Sample Time is 0.1 seconds
-
   PID::SetControllerDirection(ControllerDirection);
   PID::SetTunings(Kp, Ki, Kd, POn);
-
-  lastTime = Hal.millis() - SampleTime;
 }
 
 /*Constructor (...)*********************************************************
@@ -62,8 +59,8 @@ PID::PID(double *Input, double *Output, double *Setpoint, double Kp, double Ki,
 bool PID::Compute() {
   if (!inAuto)
     return false;
-  unsigned long now = Hal.millis();
-  unsigned long timeChange = (now - lastTime);
+  Time now = Hal.now();
+  Duration timeChange = now - lastTime;
   if (timeChange >= SampleTime) {
     /*Compute all the working error variables*/
     double input = *myInput;
@@ -120,7 +117,7 @@ void PID::SetTunings(double Kp, double Ki, double Kd, int POn) {
   dispKi = Ki;
   dispKd = Kd;
 
-  double SampleTimeInSec = ((double)SampleTime) / 1000;
+  double SampleTimeInSec = SampleTime.seconds();
   kp = Kp;
   ki = Ki * SampleTimeInSec;
   kd = Kd / SampleTimeInSec;
@@ -142,12 +139,12 @@ void PID::SetTunings(double Kp, double Ki, double Kd) {
 /* SetSampleTime(...) *********************************************************
  * sets the period, in Milliseconds, at which the calculation is performed
  ******************************************************************************/
-void PID::SetSampleTime(int NewSampleTime) {
-  if (NewSampleTime > 0) {
-    double ratio = (double)NewSampleTime / (double)SampleTime;
+void PID::SetSampleTime(Duration NewSampleTime) {
+  if (NewSampleTime > milliseconds(0)) {
+    double ratio = NewSampleTime.seconds() / SampleTime.seconds();
     ki *= ratio;
     kd /= ratio;
-    SampleTime = (unsigned long)NewSampleTime;
+    SampleTime = NewSampleTime;
   }
 }
 

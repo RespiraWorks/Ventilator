@@ -15,7 +15,7 @@ Item
         running: true
         repeat: true
         onTriggered: {
-            stateContainer.update(
+            guiState.update(
                 pressureView.series(0),
                 flowView.series(0),
                 tidalVolumeView.series(0));
@@ -343,10 +343,36 @@ Item
                 flow: GridLayout.TopToBottom
                 rows: 3
 
+                ScopeView {
+                    id: pressureView
+                    name: "Pressure [cmH2O]"
+                    // TODO: Are these reasonable lower and upper bounds?
+                    // Source for current value:
+                    // https://www.rtmagazine.com/public-health/pediatrics/neonatal/selecting-appropriate-ventilator-parameters/
+                    // mentions values in the range 5-30 cmH2O.
+                    yMin: -3
+                    yMax: 30
+
+                    color: "#4f67ff"
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
+                    Layout.topMargin: 10
+                    height: parent.height/3
+                    width: parent.width
+                }
+
                 ScopeView
                 {
                     id: flowView
-                    name: "Flow [mL]"
+                    name: "Flow [mL/min]"
+                    // TODO: Are these reasonable lower and upper bounds?
+                    // Source for current value:
+                    // https://www.sciencedirect.com/topics/medicine-and-dentistry/peak-inspiratory-flow
+                    // "Most modern ventilators can deliver flow rates between
+                    // 60 and 120 L/min. "
+                    yMin: -150
+                    yMax: 150
+
                     color: "green"
                     Layout.fillHeight: true
                     Layout.fillWidth: true
@@ -359,18 +385,18 @@ Item
                 {
                     id: tidalVolumeView
                     name: "Tidal Volume [mL]"
-                    color: "#ffff00"
-                    Layout.fillHeight: true
-                    Layout.fillWidth: true
-                    Layout.topMargin: 10
-                    height: parent.height/3
-                    width: parent.width
-                }
+                    // TODO: Are these reasonable lower and upper bounds?
+                    // Source for current value:
+                    // https://en.wikipedia.org/wiki/Tidal_volume
+                    // "In a healthy, young human adult, tidal volume is
+                    // approximately 500 mL per inspiration or 7 mL/kg of body mass."
+                    // Meaning, 2000 should be enough for a human of ~300kg body mass;
+                    // I don't know whether heavier humans have even larger
+                    // tidal volume.
+                    yMin: 0
+                    yMax: 2000
 
-                ScopeView {
-                    id: pressureView
-                    name: "Pressure [mmH2O]"
-                    color: "#4f67ff"
+                    color: "#ffff00"
                     Layout.fillHeight: true
                     Layout.fillWidth: true
                     Layout.topMargin: 10
@@ -476,7 +502,7 @@ Item
                         y: 39
                         width: 60
                         height: 44
-                        text:  Number(guiState.tvReadout);
+                        text:  Number(guiState.tvReadout, 'g', 1).toFixed(1);
                         horizontalAlignment: Text.AlignHCenter
                         font.weight: Font.DemiBold
                         font.family: "Times New Roman"

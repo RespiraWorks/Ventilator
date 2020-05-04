@@ -7,8 +7,6 @@
 #include <pb_decode.h>
 #include <pb_encode.h>
 
-// TODO: Change last_{tx,rx}_ms to uint64 once Hal.millis() is uint64_t.
-
 // Our outgoing (serialized) ControllerStatus proto is stored in tx_buffer.  We
 // then transmit it a few bytes at a time, as the serial port becomes
 // available.
@@ -21,8 +19,11 @@ static uint8_t tx_idx = 0;
 // Number of bytes remaining to transmit. tx_idx + tx_bytes_remaining equals
 // the size of the serialized ControllerStatus proto.
 static uint16_t tx_bytes_remaining = 0;
+
 // Time when we started sending the last ControllerStatus.
-static uint32_t last_tx_ms = -1;
+// TODO: Change this to std::optional<Time> once that's available; then we
+// don't need this "clever" -1 initialization.
+static Time last_tx = millisSinceStartup(-1);
 
 // Our incoming (serialized) GuiStatus proto is incrementally buffered in
 // rx_buffer until it's complete and we can deserialize it to a proto.
@@ -31,20 +32,20 @@ static uint32_t last_tx_ms = -1;
 // always at the beginning of the buffer.
 static uint8_t rx_buffer[GuiStatus_size];
 static uint8_t rx_idx = 0;
-static uint32_t last_rx_ms = 0;
+static Time last_rx = Hal.now();
 static bool rx_in_progress = false;
 
 // We currently lack proper message framing, so we use a timeout to determine
 // when the GUI is done sending us its message.
-static constexpr uint16_t RX_TIMEOUT_MS = 1;
+static constexpr Duration RX_TIMEOUT = milliseconds(1);
 
 // We send a ControllerStatus every TX_INTERVAL_MS.
-static constexpr uint16_t TX_INTERVAL_MS = 10;
+static constexpr Duration TX_INTERVAL = milliseconds(10);
 
 void comms_init() {}
 
 static bool is_time_to_process_packet() {
-  return Hal.millis() - last_rx_ms > RX_TIMEOUT_MS;
+  return Hal.now() - last_rx > RX_TIMEOUT;
 }
 
 // NOTE this is work in progress.
@@ -67,15 +68,13 @@ static void process_tx(const ControllerStatus &controller_status) {
   //  - we can transmit at least one byte now, and
   //  - it's been a while since we last transmitted.
   //
-  // Note that the initial value of last_tx_ms has to be -1; changing it to 0
-  // wouldn't work.  We immediately transmit on boot (last_tx_ms == -1), and
-  // after we do that, we want to wait a full TX_INTERVAL_MS.  If we
-  // initialized last_tx_ms to 0 and our first transmit happened at time
-  // millis() == 0, we would set last_tx_ms back to 0 and then retransmit
-  // immediately.
-  if (tx_bytes_remaining == 0 &&
-      (last_tx_ms == static_cast<decltype(last_tx_ms)>(-1) ||
-       Hal.millis() - last_tx_ms > TX_INTERVAL_MS)) {
+  // Note that the initial value of last_tx has to be -1; changing it to 0
+  // wouldn't work.  We immediately transmit on boot (last_tx == -1), and after
+  // we do that, we want to wait a full TX_INTERVAL_MS.  If we initialized
+  // last_tx to 0 and our first transmit happened at time millis() == 0, we
+  // would set last_tx back to 0 and then retransmit immediately.
+  if (tx_bytes_remaining == 0 && (last_tx == millisSinceStartup(-1) ||
+                                  Hal.now() - last_tx > TX_INTERVAL)) {
     // Serialize current status into output buffer.
     //
     // TODO: Frame the message bytes.
@@ -87,7 +86,7 @@ static void process_tx(const ControllerStatus &controller_status) {
     }
     tx_idx = 0;
     tx_bytes_remaining = stream.bytes_written;
-    last_tx_ms = Hal.millis();
+    last_tx = Hal.now();
   }
 
   // TODO: Alarm if we haven't been able to send a status in a certain amount
@@ -118,7 +117,7 @@ static void process_rx(GuiStatus *gui_status) {
         rx_idx = 0;
         break;
       }
-      last_rx_ms = Hal.millis();
+      last_rx = Hal.now();
     }
   }
 

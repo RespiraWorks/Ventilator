@@ -3,5 +3,7 @@
         <file>main.qml</file>
         <file>ScopeView.qml</file>
         <file>ControlPanel.qml</file>
+        <file>images/respiraWorksLogoHorizontalTransparent.png</file>
+	<file>images/Logo.png</file>
     </qresource>
 </RCC>

@@ -1,5 +1,5 @@
 QT += core quick charts serialport
-CONFIG += c++17
+CONFIG += c++1z
 DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += $$files("*.cpp") \
@@ -16,8 +16,8 @@ HEADERS += $$files("*.h") \
     ../common/third_party/nanopb/pb_encode.h
 HEADERS += $$files("$$PWD/../common/**/*.h")
 INCLUDEPATH += $$PWD/../common/third_party/nanopb
-RESOURCES += qml.qrc Logo.png
-DISTFILES += Logo.png
+RESOURCES += qml.qrc images/Logo.png
+DISTFILES += images/Logo.png
 TRANSLATIONS += ProjectVentilatorGUI_es_GT.ts
 
 # Default rules for deployment.

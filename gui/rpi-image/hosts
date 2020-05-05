@@ -1,0 +1,1 @@
+pi@localhost ansible_connection=ssh ansible_ssh_pass=raspberry ansible_port=5022

@@ -1,0 +1,58 @@
+---
+- name: Install Docker
+  hosts: pi@localhost
+  become: yes
+  become_method: sudo
+
+  tasks:
+  - name: Update apt packages
+    apt:
+      update_cache: "yes"
+      force_apt_get: "yes"
+
+  - name: Add Docker GPG apt Key
+    apt_key:
+      url: https://download.docker.com/linux/raspbian/gpg
+      state: present
+
+  - name: Update apt packages
+    apt:
+      update_cache: "yes"
+      force_apt_get: "yes"
+
+  - name: Set up Debian to use legacy iptables
+    shell: update-alternatives --set iptables /usr/sbin/iptables-legacy
+
+  - name: Set up Debian to use legacy ip6tables
+    shell: update-alternatives --set ip6tables /usr/sbin/ip6tables-legacy
+
+  - name: Download Docker convenience script
+    shell: curl -fsSL https://get.docker.com -o get-docker.sh
+
+  - name: Run Docker convenience script
+    shell: sh get-docker.sh
+
+  - name: Adding user pi to docker group  
+    shell: usermod -aG docker pi
+
+  - name: Install Debian menu for Openbox
+    apt:
+      name: menu
+
+  - name: Set default boot to GUI
+    lineinfile:
+      dest: /etc/rc.local
+      insertbefore: 'exit 0'
+      line: 'startx &'
+
+  - name: Disable default boot to Xsession
+    lineinfile:
+      dest: /etc/X11/xinit/xinitrc
+      regexp: '. /etc/X11/Xsession'
+      line: '#. /etc/X11/Xsession'
+
+  - name: Set default boot to OpenBox
+    lineinfile:
+      dest: /etc/X11/xinit/xinitrc
+      insertafter: '#. /etc/X11/Xsession'
+      line: 'exec openbox-session'

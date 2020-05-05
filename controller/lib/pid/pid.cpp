@@ -24,8 +24,8 @@ limitations under the License.
  *    The parameters specified here are those for for which we can't set up
  *    reliable defaults, so we need to have the user set them.
  ***************************************************************************/
-PID::PID(double *Input, double *Output, double *Setpoint, double Kp, double Ki,
-         double Kd, bool POnE, bool DOnE, int ControllerDirection)
+PID::PID(float *Input, float *Output, float *Setpoint, float Kp, float Ki,
+         float Kd, bool POnE, bool DOnE, int ControllerDirection)
     : SampleTime(milliseconds(100)), nextSampleTime(Hal.now()),
       lastUpdateTime(Hal.now() - SampleTime) {
   myOutput = Output;
@@ -45,8 +45,8 @@ PID::PID(double *Input, double *Output, double *Setpoint, double Kp, double Ki,
  *    to use Proportional on Error without explicitly saying so
  ***************************************************************************/
 
-PID::PID(double *Input, double *Output, double *Setpoint, double Kp, double Ki,
-         double Kd, int ControllerDirection)
+PID::PID(float *Input, float *Output, float *Setpoint, float Kp, float Ki,
+         float Kd, int ControllerDirection)
     : PID::PID(Input, Output, Setpoint, Kp, Ki, Kd, P_ON_E, D_ON_M,
                ControllerDirection) {}
 
@@ -64,13 +64,13 @@ bool PID::Compute() {
   // compute actual samples time-difference to take jitter into account in
   // integral and derivative
   Duration effectiveSampleTime = (now - lastUpdateTime);
-  double samplesTimeChangeSec = effectiveSampleTime.seconds();
+  float samplesTimeChangeSec = effectiveSampleTime.seconds();
   // condition to update output : 1 sample time has passed and we have new data
   if (now >= nextSampleTime && samplesTimeChangeSec > 0) {
     /*Compute all the working error variables*/
-    double input = *myInput;
-    double error = *mySetpoint - input;
-    double dInput = 0.0;
+    float input = *myInput;
+    float error = *mySetpoint - input;
+    float dInput = 0.0;
     // Compute dInput only if needed (P_ON_M or D_ON_M)
     if (pOnE == P_ON_M || dOnE == D_ON_M) {
       dInput = (input - lastInput);
@@ -87,7 +87,7 @@ bool PID::Compute() {
       outputSum = outMin;
 
     /*Add Proportional on Error, if P_ON_E is specified*/
-    double output;
+    float output;
     if (pOnE == P_ON_E) {
       output = kp * error;
     } else {
@@ -98,7 +98,7 @@ bool PID::Compute() {
       /*Compute Rest of PID Output*/
       output += outputSum - kd * dInput;
     } else { // dOnE==D_ON_E
-      double dError = (error - lastError) / samplesTimeChangeSec;
+      float dError = (error - lastError) / samplesTimeChangeSec;
       /*Compute Rest of PID Output*/
       output += outputSum + kd * dError;
     }
@@ -125,7 +125,7 @@ bool PID::Compute() {
  * it's called automatically from the constructor, but tunings can also
  * be adjusted on the fly during normal operation
  ******************************************************************************/
-void PID::SetTunings(double Kp, double Ki, double Kd, bool POnE, bool DOnE) {
+void PID::SetTunings(float Kp, float Ki, float Kd, bool POnE, bool DOnE) {
   if (Kp < 0 || Ki < 0 || Kd < 0)
     return;
 
@@ -147,14 +147,14 @@ void PID::SetTunings(double Kp, double Ki, double Kd, bool POnE, bool DOnE) {
 /* SetTunings(...)*************************************************************
  * Set Tunings using the last-rembered  DOnE setting
  ******************************************************************************/
-void PID::SetTunings(double Kp, double Ki, double Kd, bool POnE) {
+void PID::SetTunings(float Kp, float Ki, float Kd, bool POnE) {
   SetTunings(Kp, Ki, Kd, POnE, dOnE);
 }
 
 /* SetTunings(...)*************************************************************
  * Set Tunings using the last-rembered POnE and DOnE setting
  ******************************************************************************/
-void PID::SetTunings(double Kp, double Ki, double Kd) {
+void PID::SetTunings(float Kp, float Ki, float Kd) {
   SetTunings(Kp, Ki, Kd, pOnE, dOnE);
 }
 
@@ -176,7 +176,7 @@ void PID::SetSampleTime(Duration NewSampleTime) {
  *  want to clamp it from 0-125.  who knows.  at any rate, that can all be done
  *  here.
  **************************************************************************/
-void PID::SetOutputLimits(double Min, double Max) {
+void PID::SetOutputLimits(float Min, float Max) {
   if (Min >= Max)
     return;
   outMin = Min;
@@ -247,9 +247,9 @@ void PID::SetControllerDirection(int Direction) {
  * functions query the internal state of the PID.  they're here for display
  * purposes.  this are the functions the PID Front-end uses for example
  ******************************************************************************/
-double PID::GetKp() { return kp; }
-double PID::GetKi() { return ki; }
-double PID::GetKd() { return kd; }
+float PID::GetKp() { return kp; }
+float PID::GetKi() { return ki; }
+float PID::GetKd() { return kd; }
 Duration PID::GetSampleTime() { return SampleTime; }
 bool PID::GetMode() { return inAuto ? AUTOMATIC : MANUAL; }
 bool PID::GetDirection() { return controllerDirection; }

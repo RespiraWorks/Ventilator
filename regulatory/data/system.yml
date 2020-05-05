@@ -1,5 +1,5 @@
 # The name of the project
-project_name: RespiraWorks Ventillator Software
+project_name: Ventilator Software
 
 # List optional extensions
 md_extensions:
@@ -49,13 +49,13 @@ safety_class: C
 #    is also Major if a failure or latent flaw could indirectly result in death
 #    or serious injury of the patient or operator through incorrect or delayed
 #    information or through the action of a care provider.
-level_of_concern: Minor
+level_of_concern: Major
 
 # A string that identifies a release of the software (e.g. v1.0.0)
 release_id: v1.0.0
 
 # The company name of the medical device manufacturer
-manufacturer_name: MANUFACTURER
+manufacturer_name: RespiraWorks
 
 # The company name of the software consulting firm, if there is one (set to
 # `null` if there isn't)
@@ -72,3 +72,6 @@ current_srs_document_id: SRS-001
 
 # The document ID of the "Software Design Specification" (the How)
 current_sds_document_id: SDS-001
+
+# are pull request reviews mandatory
+reviews_required: true

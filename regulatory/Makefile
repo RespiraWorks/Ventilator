@@ -1,15 +1,20 @@
+SHELL := /bin/bash -o pipefail -e
 .SUFFIXES:
 .SECONDARY:
+.DELETE_ON_ERROR:
 
 SYSTEM_CONFIG := data/system.yml
 DATA_FILES := $(wildcard data/*.yml)
 TEMPLATES := $(wildcard templates/*.md)
 RELEASE_DOCUMENTS := $(patsubst documents/%.md,release/%.md,$(wildcard documents/*.md))
 RELEASE_PDFS := $(patsubst documents/%.md,release/%.pdf,$(wildcard documents/*.md))
+RELEASE_JSONS := $(patsubst documents/%.md,release/%.pdf,$(wildcard documents/*.md))
 
 all: $(RELEASE_DOCUMENTS)
 
 pdfs: $(RELEASE_PDFS)
+
+jsons: $(RELEASE_JSONS)
 
 .PHONY:
 github_issues: $(SYSTEM_CONFIG)
@@ -21,7 +26,7 @@ release/%.md: documents/%.md $(DATA_FILES) $(TEMPLATES)
 
 tmp/%.tex: release/%.md
 	@mkdir -p $(@D)
-	rdm tex $< > $@
+	rdm tex $< $(DATA_FILES) > $@
 
 release/%.pdf: tmp/%.pdf
 	cp $< $@
@@ -31,4 +36,4 @@ tmp/%.pdf: tmp/%.tex
 
 .PHONY:
 clean:
-	rm -rf release tmp
+	rm -rf release/**.pdf tmp

@@ -1,13 +1,9 @@
-- title: Example Camera SDK
-  manufacturer: Basler AG
-  version: "5.3.1"
+- title: Qt Framework
+  manufacturer: Qt Company
+  version: "5.13.1"
   purpose: |
-      To allow us to configure, control, and retrieve images from our cameras.
+      To provide UI and OS abstractions.  The QML module provides a markup language for developing UI.
   requirements: |
       Linux kernel version 3.x or higher
   anomaly_reference: https://example.url/pointing/to/issue/list
-- title: FFTW
-  version: "3.3.5"
-  purpose: |
-      To calculate the Fast Fourier Transform.
-  anomaly_reference: https://github.com/FFTW/fftw3/issues
+

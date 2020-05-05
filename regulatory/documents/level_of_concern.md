@@ -1,6 +1,17 @@
-{% extends "base/level_of_concern.md" %}
+---
+id: LOC-001
+revision: 1
+title: Level of Concern
+---
 
-{% block level_of_concern %}
+# Purpose
+
+The purpose of this document is to state and justify our stated Level of Concern for the software within {{ system.project_name }}.
+
+# Scope
+
+The scope of this document is the software system within the {{ system.project_name }} product.
+
 # Level of Concern
 
 The Level of Concern for the software system within {{ system.project_name }} is **{{ system.level_of_concern }}**.
@@ -9,11 +20,13 @@ The Level of Concern for the software system within {{ system.project_name }} is
 
 See the 2005 "Guidance for the Content of Premarket Submissions for Software Contained in Medical Devices" for details.
 
-To determine the level of concern the ventilator software was analyzed per the guidance document for level of concern.  In addition, other FDA cleared devices were checked for level of concern. We believe the software system inside {{ system.project_name }} has a {{ system.project_name }} Level of Concern because the role of the software is a life sustaining device.  Failure to provide therapy or correctly measure patient vitals could result in a permanent injury of death to the patient.  The following sections outline the analysis.
+Describe how you arrived at the stated Level of Concern.  Below is a template for a device that has a minor Level of Concern.
+
+We believe the software system inside {{ system.project_name }} has a {{ system.project_name }} Level of Concern because ...
 
 ## Role of the Software
 
-The role of the software is to provide ventillation therapy.  This therapy is life sustaining for patients who are unable to breath voluntarily.  In addition the software provide vital indications to the clinician including patient inspiratory pressure, tidal volume, and apnea time.  These metrics are used to make decisions for treatment.
+Describe the role of the software in causing, controlling, and/or mitigating hazards that could result in injury to the patient or the operator.
 
 ## Major Level of Concern Key Questions
 
@@ -33,11 +46,11 @@ No.
 
 **4. Prior to mitigation of hazards, could a failure of the Software Device result in death or serious injury, either to a patient or to a user of the device?**
 
-Yes.
+No.
 
 **a. Does the Software Device control a life supporting or life sustaining function?**
 
-Yes
+No.
 
 **b. Does the Software Device control the delivery of potentially harmful energy that could result in death or serious injury, such as radiation treatment systems, defibrillators, and ablation generators?**
 
@@ -45,15 +58,15 @@ No.
 
 **c. Does the Software Device control the delivery of treatment or therapy such that an error or malfunction could result in death or serious injury?**
 
-Yes
+No.
 
 **d. Does the Software Device provide diagnostic information that directly drives a decision regarding treatment or therapy, such that if misapplied it could result in serious injury or death?**
 
-Yes
+No.
 
 **e. Does the Software Device provide vital signs monitoring and alarms for potentially life threatening situations in which medical intervention is necessary?**
 
-Yes
+No.
 
 ## Moderate Level of Concern Key Questions
 
@@ -74,5 +87,3 @@ No.
 # References
 
 [1]: "Guidance for the Content of Premarket Submissions for Software Contained in Medical Devices", 2005.
-
-{% endblock %}

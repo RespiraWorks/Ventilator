@@ -1,0 +1,12 @@
+- date: 1-1-2040
+  release_id: v1.0
+  changes:
+      - Add major new feature X.
+      - Add major new feature Y.
+      - Several bug fixes related to ZZZ.
+- date: 5-5-2039
+  release_id: v0.1
+  changes:
+      - Add major new feature A.
+      - Add major new feature B.
+      - Several bug fixes related to CDE.

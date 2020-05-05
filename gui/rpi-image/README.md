@@ -4,7 +4,7 @@ This is the Ansible script that installs docker and sets up the image to automat
 
 The command used to run the script is as follows:
 
-$ ansible-playbook --ask-become-pass rpi-primer.yml 
+`$ ansible-playbook --ask-become-pass rpi-primer.yml` 
 
 ### hosts
 This is Ansible's inventory file that keeps track of the targets of playbooks. Place this file at `/etc/ansible/` or replace the contents of the preexisting `hosts` file

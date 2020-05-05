@@ -6,6 +6,8 @@ The command used to run the script is as follows:
 
 `$ ansible-playbook --ask-become-pass rpi-primer.yml` 
 
+The terminal will ask for the SUDO password for Raspbian. By default, this is "raspberry" without the quotes.
+
 ### hosts
 This is Ansible's inventory file that keeps track of the targets of playbooks. Place this file at `/etc/ansible/` or replace the contents of the preexisting `hosts` file
 

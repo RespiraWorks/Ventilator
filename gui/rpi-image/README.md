@@ -12,6 +12,8 @@ The terminal will ask for the SUDO password for Raspbian. By default, this is "r
 This is Ansible's inventory file that keeps track of the targets of playbooks. Place this file at `/etc/ansible/` or replace the contents of the preexisting `hosts` file
 
 ## QEMU Files (QEMU emulator version 2.11.1)
+
+Both of these files are from [this](https://github.com/dhruvvyas90/qemu-rpi-kernel) repo with RPi kernels
 ### kernel-qemu-4.19.50-buster
 Kernel used to spin up Raspbian via QEMU. 
 

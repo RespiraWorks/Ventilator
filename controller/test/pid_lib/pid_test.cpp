@@ -46,7 +46,8 @@ TEST(pidTest, Proportional) {
   Duration sample_time = milliseconds(100);
 
   // Create PID and run once
-  PID myPID(&input, &output, &setpoint, Kp, Ki, Kd, P_ON_E, D_ON_M, DIRECT);
+  PID myPID(&input, &output, &setpoint, Kp, Ki, Kd, ProportionalTerm::ON_ERROR,
+            DifferentialTerm::ON_MEASUREMENT, ControlDirection::DIRECT);
   myPID.SetSampleTime(sample_time);
   myPID.Compute();
 
@@ -68,7 +69,8 @@ TEST(pidTest, Integral) {
   Duration sample_time = milliseconds(100);
 
   // Create PID and run once
-  PID myPID(&input, &output, &setpoint, Kp, Ki, Kd, P_ON_E, D_ON_M, DIRECT);
+  PID myPID(&input, &output, &setpoint, Kp, Ki, Kd, ProportionalTerm::ON_ERROR,
+            DifferentialTerm::ON_MEASUREMENT, ControlDirection::DIRECT);
   myPID.SetSampleTime(sample_time);
   myPID.Compute();
 
@@ -140,7 +142,8 @@ TEST(pidTest, derivativeOnMeasure) {
   float setpoint = 25;
   float input = setpoint - 10;
   Duration sample_time = milliseconds(100);
-  PID myPID(&input, &output, &setpoint, Kp, Ki, Kd, P_ON_E, D_ON_M, DIRECT);
+  PID myPID(&input, &output, &setpoint, Kp, Ki, Kd, ProportionalTerm::ON_ERROR,
+            DifferentialTerm::ON_MEASUREMENT, ControlDirection::DIRECT);
   myPID.SetSampleTime(sample_time);
   myPID.Compute();
   // Expect no derivative on first call
@@ -149,8 +152,8 @@ TEST(pidTest, derivativeOnMeasure) {
   // delay and update input to create non-zero derivative
   float previous_input = input;
   // output being in [0 255], create a negative input derivative to have a
-  // positive output (D_ON_M actually works with -1*Kd) to allow using the same
-  // parameters as D_ON_E)
+  // positive output (DifferentialTerm::ON_MEASUREMENT actually works with
+  // -1*Kd) to allow using the same parameters as DifferentialTerm::ON_ERROR)
   input = input - 5;
   float derivative = (input - previous_input) / sample_time.seconds();
 
@@ -179,7 +182,8 @@ TEST(pidTest, derivativeOnError) {
   float setpoint = 25;
   float input = setpoint - 10;
   Duration sample_time = milliseconds(100);
-  PID myPID(&input, &output, &setpoint, Kp, Ki, Kd, P_ON_E, D_ON_E, DIRECT);
+  PID myPID(&input, &output, &setpoint, Kp, Ki, Kd, ProportionalTerm::ON_ERROR,
+            DifferentialTerm::ON_ERROR, ControlDirection::DIRECT);
   myPID.SetSampleTime(sample_time);
   myPID.Compute();
   // Expect no derivative on first call
@@ -222,7 +226,8 @@ TEST(pidTest, CallFasterThanSample) {
   float setpoint = 25;
   float input = setpoint - 10;
   Duration sample_time = milliseconds(100);
-  PID myPID(&input, &output, &setpoint, Kp, Ki, Kd, P_ON_E, D_ON_M, DIRECT);
+  PID myPID(&input, &output, &setpoint, Kp, Ki, Kd, ProportionalTerm::ON_ERROR,
+            DifferentialTerm::ON_MEASUREMENT, ControlDirection::DIRECT);
   myPID.SetSampleTime(sample_time);
   myPID.Compute();
 
@@ -260,7 +265,8 @@ TEST(pidTest, TaskJitter) {
   float setpoint = 25;
   float input = setpoint - 10;
   Duration sample_time = milliseconds(100);
-  PID myPID(&input, &output, &setpoint, Kp, Ki, Kd, P_ON_E, D_ON_M, DIRECT);
+  PID myPID(&input, &output, &setpoint, Kp, Ki, Kd, ProportionalTerm::ON_ERROR,
+            DifferentialTerm::ON_MEASUREMENT, ControlDirection::DIRECT);
   myPID.SetSampleTime(sample_time);
   myPID.Compute();
   // First task, with only Ki set, output = error*sample_time
@@ -292,7 +298,8 @@ TEST(pidTest, SampleTimeChange) {
   float setpoint = 25;
   float input = setpoint - 10;
   Duration sample_time = milliseconds(100);
-  PID myPID(&input, &output, &setpoint, Kp, Ki, Kd, P_ON_E, D_ON_M, DIRECT);
+  PID myPID(&input, &output, &setpoint, Kp, Ki, Kd, ProportionalTerm::ON_ERROR,
+            DifferentialTerm::ON_MEASUREMENT, ControlDirection::DIRECT);
   myPID.SetSampleTime(sample_time);
   myPID.Compute();
 
@@ -324,7 +331,8 @@ TEST(pidTest, MissedSample) {
   float setpoint = 25;
   float input = setpoint - 10;
   Duration sample_time = milliseconds(100);
-  PID myPID(&input, &output, &setpoint, Kp, Ki, Kd, P_ON_E, D_ON_M, DIRECT);
+  PID myPID(&input, &output, &setpoint, Kp, Ki, Kd, ProportionalTerm::ON_ERROR,
+            DifferentialTerm::ON_MEASUREMENT, ControlDirection::DIRECT);
   myPID.SetSampleTime(sample_time);
   myPID.Compute();
 
@@ -350,39 +358,4 @@ TEST(pidTest, MissedSample) {
   myPID.Compute();
   // Expect output to have a new update
   EXPECT_NEAR(output, integral * Ki, OUTPUT_TOLERANCE);
-}
-
-TEST(pidTest, OffOnCycle) {
-  // This test switches the PID and checks the output
-  float Kp = 5.5;
-  float Ki = 1.1;
-  float Kd = 1.5;
-  float output = 0;
-  float setpoint = 25;
-  float input = setpoint - 10;
-  Duration sample_time = milliseconds(100);
-  PID myPID(&input, &output, &setpoint, Kp, Ki, Kd, P_ON_E, D_ON_M, DIRECT);
-  myPID.SetSampleTime(sample_time);
-  myPID.Compute();
-
-  // Run PID a few times to have output in the middle of the range
-  for (int i = 0; i < 10; i++) {
-    Hal.delay(sample_time);
-    myPID.Compute();
-  }
-
-  float last_output = output;
-
-  // change PID gains to make output easier to predict (this also tests
-  // SetTunings function while we are at it)
-  Kp = 0;
-  Ki = 1;
-  Kd = 0;
-  myPID.SetTunings(Kp, Ki, Kd, P_ON_E, D_ON_M);
-
-  float integral = (setpoint - input) * (sample_time.seconds());
-
-  myPID.Compute();
-
-  EXPECT_NEAR(output, last_output + integral * Ki, OUTPUT_TOLERANCE);
 }

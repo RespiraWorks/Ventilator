@@ -20,19 +20,15 @@ limitations under the License.
 #include "algorithm.h"
 #include "hal.h"
 
-PID::PID(float *Input, float *Output, float *Setpoint, float Kp, float Ki,
-         float Kd, bool POnE, bool DOnE, int ControllerDirection)
+PID::PID(float *input, float *output, float *setpoint, float kp, float ki,
+         float kd, bool p_on_e, bool d_on_e, int controller_direction)
     : sample_time_(milliseconds(100)), next_sample_time_(Hal.now()),
       last_update_time_(Hal.now() - sample_time_) {
-  output_ = Output;
-  input_ = Input;
-  setpoint_ = Setpoint;
-
-  // default output limit corresponds to the arduino pwm limits
-  SetOutputLimits(0, 255);
-
-  controller_direction_ = ControllerDirection;
-  SetTunings(Kp, Ki, Kd, POnE, DOnE);
+  output_ = output;
+  input_ = input;
+  setpoint_ = setpoint;
+  controller_direction_ = controller_direction;
+  SetTunings(kp, ki, kd, p_on_e, d_on_e);
 }
 
 bool PID::Compute() {
@@ -60,33 +56,45 @@ bool PID::Compute() {
   float input = *input_;
   float error = *setpoint_ - input;
   float dInput = 0.0;
+
+  float kp, ki, kd;
+  if (controller_direction_ == DIRECT) {
+    kp = kp_;
+    ki = ki_;
+    kd = kd_;
+  } else {
+    kp = -kp_;
+    ki = -ki_;
+    kd = -kd_;
+  }
+
   // Compute dInput only if needed (P_ON_M or D_ON_M)
   if (p_on_e_ == P_ON_M || d_on_e_ == D_ON_M) {
     dInput = (input - last_input_);
   }
-  output_sum_ += (ki_ * error * samplesTimeChangeSec);
+  output_sum_ += (ki * error * samplesTimeChangeSec);
 
   /*Add Proportional on Measurement, if P_ON_M is specified*/
   if (p_on_e_ == P_ON_M)
-    output_sum_ -= kp_ * dInput;
+    output_sum_ -= kp * dInput;
 
   output_sum_ = stl::clamp(output_sum_, out_min_, out_max_);
 
   /*Add Proportional on Error, if P_ON_E is specified*/
   float output;
   if (p_on_e_ == P_ON_E) {
-    output = kp_ * error;
+    output = kp * error;
   } else {
     output = 0;
   }
   if (d_on_e_ == D_ON_M) {
     dInput /= samplesTimeChangeSec;
     /*Compute Rest of PID Output*/
-    output += output_sum_ - kd_ * dInput;
+    output += output_sum_ - kd * dInput;
   } else { // d_on_e_==D_ON_E
     float dError = (error - last_error_) / samplesTimeChangeSec;
     /*Compute Rest of PID Output*/
-    output += output_sum_ + kd_ * dError;
+    output += output_sum_ + kd * dError;
   }
 
   *output_ = stl::clamp(output, out_min_, out_max_);
@@ -100,36 +108,28 @@ bool PID::Compute() {
   return true;
 }
 
-void PID::SetTunings(float Kp, float Ki, float Kd, bool POnE, bool DOnE) {
-  if (Kp < 0 || Ki < 0 || Kd < 0)
+void PID::SetTunings(float kp, float ki, float kd, bool p_on_e, bool d_on_e) {
+  if (kp < 0 || ki < 0 || kd < 0)
     return;
-
-  p_on_e_ = POnE;
-  d_on_e_ = DOnE;
-
-  kp_ = Kp;
-  ki_ = Ki;
-  kd_ = Kd;
-
-  if (controller_direction_ == REVERSE) {
-    kp_ = (0 - kp_);
-    ki_ = (0 - ki_);
-    kd_ = (0 - kd_);
-  }
+  p_on_e_ = p_on_e;
+  d_on_e_ = d_on_e;
+  kp_ = kp;
+  ki_ = ki;
+  kd_ = kd;
 }
 
-void PID::SetSampleTime(Duration NewSampleTime) {
-  if (NewSampleTime <= milliseconds(0))
+void PID::SetSampleTime(Duration sample_time) {
+  if (sample_time <= milliseconds(0))
     return;
-  next_sample_time_ = next_sample_time_ - sample_time_ + NewSampleTime;
-  sample_time_ = NewSampleTime;
+  next_sample_time_ = next_sample_time_ - sample_time_ + sample_time;
+  sample_time_ = sample_time;
 }
 
-void PID::SetOutputLimits(float Min, float Max) {
-  if (Min >= Max)
+void PID::SetOutputLimits(float min, float max) {
+  if (min >= max)
     return;
-  out_min_ = Min;
-  out_max_ = Max;
+  out_min_ = min;
+  out_max_ = max;
 
   *output_ = stl::clamp(*output_, out_min_, out_max_);
   output_sum_ = stl::clamp(output_sum_, out_min_, out_max_);

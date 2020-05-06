@@ -82,6 +82,7 @@ private:
   float *setpoint_; // PID, freeing the user from having to constantly tell
                     // us what these values are.
 
+  bool initialized_ = false;
   Duration sample_time_;
   Time next_sample_time_;
   Time last_update_time_;

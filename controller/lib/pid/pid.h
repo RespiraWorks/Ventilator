@@ -54,6 +54,8 @@ public:
 
   // Performs one step of the PID calculation. Calculation frequency
   // can be set using SetSampleTime.
+  // Returns false if this call was ignored due to being within sample time
+  // of the previous call, otherwise true.
   bool Compute();
 
   // Clamps the output to a specific range. 0-255 by default, but
@@ -69,22 +71,27 @@ public:
   void SetSampleTime(Duration NewSampleTime);
 
 private:
-  float kp; // * (P)roportional Tuning Parameter
-  float ki; // * (I)ntegral Tuning Parameter
-  float kd; // * (D)erivative Tuning Parameter
+  float kp_; // * (P)roportional Tuning Parameter
+  float ki_; // * (I)ntegral Tuning Parameter
+  float kd_; // * (D)erivative Tuning Parameter
 
-  int controllerDirection;
+  int controller_direction_;
 
-  float *myInput;    // * Pointers to the Input, Output, and Setpoint variables
-  float *myOutput;   // This creates a hard link between the variables and the
-  float *mySetpoint; // PID, freeing the user from having to constantly tell
-                     // us what these values are.
+  float *input_;    // * Pointers to the Input, Output, and Setpoint variables
+  float *output_;   // This creates a hard link between the variables and the
+  float *setpoint_; // PID, freeing the user from having to constantly tell
+                    // us what these values are.
 
-  Duration SampleTime;
-  Time nextSampleTime, lastUpdateTime;
-  float outputSum, lastInput, lastError;
+  Duration sample_time_;
+  Time next_sample_time_;
+  Time last_update_time_;
+  float output_sum_;
+  float last_input_;
+  float last_error_;
 
-  float outMin, outMax;
-  bool pOnE, dOnE;
+  float out_min_;
+  float out_max_;
+  bool p_on_e_;
+  bool d_on_e_;
 };
 #endif

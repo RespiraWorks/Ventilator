@@ -39,17 +39,15 @@ enum class ControlDirection {
 
 class PID {
 public:
-  // Constructs the PID linked to the Input, Output, and Setpoint,
-  // using the given parameters.
-  PID(float *input, float *output, float *setpoint, float kp, float ki,
-      float kd, ProportionalTerm p_term, DifferentialTerm d_term,
-      ControlDirection direction);
+  // Constructs the PID using the given parameters.
+  PID(float kp, float ki, float kd, ProportionalTerm p_term,
+      DifferentialTerm d_term, ControlDirection direction);
 
   // Performs one step of the PID calculation. Calculation frequency
   // can be set using SetSampleTime.
   // Returns false if this call was ignored due to being within sample time
   // of the previous call, otherwise true.
-  bool Compute();
+  bool Compute(float input, float setpoint, float *output);
 
   // Clamps the output to a specific range. 0-255 by default, but
   // it's likely the user will want to change this depending on
@@ -61,13 +59,6 @@ public:
   void SetSampleTime(Duration sample_time);
 
 private:
-  float
-      *const input_; // * Pointers to the Input, Output, and Setpoint variables
-  float
-      *const output_; // This creates a hard link between the variables and the
-  float *const setpoint_; // PID, freeing the user from having to constantly
-                          // tell us what these values are.
-
   const float kp_; // * (P)roportional Tuning Parameter
   const float ki_; // * (I)ntegral Tuning Parameter
   const float kd_; // * (D)erivative Tuning Parameter

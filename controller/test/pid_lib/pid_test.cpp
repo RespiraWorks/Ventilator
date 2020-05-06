@@ -48,7 +48,6 @@ TEST(pidTest, Proportional) {
   // Create PID and run once
   PID myPID(&input, &output, &setpoint, Kp, Ki, Kd, DIRECT);
   myPID.SetSampleTime(sample_time);
-  myPID.SetMode(AUTOMATIC);
   myPID.Compute();
 
   // Ki and Kd = 0 therefore output = Kp*error, nothing more
@@ -71,7 +70,6 @@ TEST(pidTest, Integral) {
   // Create PID and run once
   PID myPID(&input, &output, &setpoint, Kp, Ki, Kd, DIRECT);
   myPID.SetSampleTime(sample_time);
-  myPID.SetMode(AUTOMATIC);
   myPID.Compute();
 
   // on first call, integral = error*sample time, output = Ki*integral
@@ -144,7 +142,6 @@ TEST(pidTest, derivativeOnMeasure) {
   Duration sample_time = milliseconds(100);
   PID myPID(&input, &output, &setpoint, Kp, Ki, Kd, P_ON_E, D_ON_M, DIRECT);
   myPID.SetSampleTime(sample_time);
-  myPID.SetMode(AUTOMATIC);
   myPID.Compute();
   // Expect no derivative on first call
   EXPECT_NEAR(output, 0, OUTPUT_TOLERANCE);
@@ -184,7 +181,6 @@ TEST(pidTest, derivativeOnError) {
   Duration sample_time = milliseconds(100);
   PID myPID(&input, &output, &setpoint, Kp, Ki, Kd, P_ON_E, D_ON_E, DIRECT);
   myPID.SetSampleTime(sample_time);
-  myPID.SetMode(AUTOMATIC);
   myPID.Compute();
   // Expect no derivative on first call
   EXPECT_NEAR(output, 0, OUTPUT_TOLERANCE);
@@ -228,7 +224,6 @@ TEST(pidTest, CallFasterThanSample) {
   Duration sample_time = milliseconds(100);
   PID myPID(&input, &output, &setpoint, Kp, Ki, Kd, DIRECT);
   myPID.SetSampleTime(sample_time);
-  myPID.SetMode(AUTOMATIC);
   myPID.Compute();
 
   float last_output = output;
@@ -267,7 +262,6 @@ TEST(pidTest, TaskJitter) {
   Duration sample_time = milliseconds(100);
   PID myPID(&input, &output, &setpoint, Kp, Ki, Kd, DIRECT);
   myPID.SetSampleTime(sample_time);
-  myPID.SetMode(AUTOMATIC);
   myPID.Compute();
   // First task, with only Ki set, output = error*sample_time
   float integral = (setpoint - input) * sample_time.seconds();
@@ -300,7 +294,6 @@ TEST(pidTest, SampleTimeChange) {
   Duration sample_time = milliseconds(100);
   PID myPID(&input, &output, &setpoint, Kp, Ki, Kd, DIRECT);
   myPID.SetSampleTime(sample_time);
-  myPID.SetMode(AUTOMATIC);
   myPID.Compute();
 
   // First task, with only Ki set, output = error*sample_time
@@ -333,7 +326,6 @@ TEST(pidTest, MissedSample) {
   Duration sample_time = milliseconds(100);
   PID myPID(&input, &output, &setpoint, Kp, Ki, Kd, DIRECT);
   myPID.SetSampleTime(sample_time);
-  myPID.SetMode(AUTOMATIC);
   myPID.Compute();
 
   // First task, with only Ki set, output = error*sample_time
@@ -371,7 +363,6 @@ TEST(pidTest, OffOnCycle) {
   Duration sample_time = milliseconds(100);
   PID myPID(&input, &output, &setpoint, Kp, Ki, Kd, DIRECT);
   myPID.SetSampleTime(sample_time);
-  myPID.SetMode(AUTOMATIC);
   myPID.Compute();
 
   // Run PID a few times to have output in the middle of the range
@@ -382,24 +373,12 @@ TEST(pidTest, OffOnCycle) {
 
   float last_output = output;
 
-  // turn PID OFF
-  myPID.SetMode(MANUAL);
-
-  // Run PID a few times and check output doesn't change
-  for (int i = 0; i < 10; i++) {
-    Hal.delay(sample_time);
-    myPID.Compute();
-    EXPECT_EQ(output, last_output);
-  }
-
   // change PID gains to make output easier to predict (this also tests
   // SetTunings function while we are at it)
   Kp = 0;
   Ki = 1;
   Kd = 0;
   myPID.SetTunings(Kp, Ki, Kd);
-  // turn PID back ON
-  myPID.SetMode(AUTOMATIC);
 
   float integral = (setpoint - input) * (sample_time.seconds());
 

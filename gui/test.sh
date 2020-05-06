@@ -1,5 +1,4 @@
 #!/bin/bash
 
 Xvfb :1 &
-DISPLAY=:1 ./build/ProjectVentilatorGUI -d
-DISPLAY=:1 ./build/ProjectVentilatorGUI -h
+DISPLAY=:1 ./gui/build/ProjectVentilatorGUI -h

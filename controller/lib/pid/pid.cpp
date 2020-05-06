@@ -1,4 +1,3 @@
-
 /* Copyright 2020, RespiraWorks
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -18,6 +17,7 @@ limitations under the License.
  **********************************************************************************************/
 
 #include "pid.h"
+#include "algorithm.h"
 #include "hal.h"
 
 PID::PID(float *Input, float *Output, float *Setpoint, float Kp, float Ki,
@@ -29,14 +29,25 @@ PID::PID(float *Input, float *Output, float *Setpoint, float Kp, float Ki,
   setpoint_ = Setpoint;
 
   // default output limit corresponds to the arduino pwm limits
-  PID::SetOutputLimits(0, 255);
+  SetOutputLimits(0, 255);
 
   controller_direction_ = ControllerDirection;
-  PID::SetTunings(Kp, Ki, Kd, POnE, DOnE);
+  SetTunings(Kp, Ki, Kd, POnE, DOnE);
 }
 
 bool PID::Compute() {
   Time now = Hal.now();
+  if (!initialized_) {
+    last_input_ = *input_;
+    last_error_ = *setpoint_ - *input_;
+    output_sum_ = stl::clamp(*output_, out_min_, out_max_);
+    next_sample_time_ = now;
+    // last call time defined as now - SampleTime to enable computation on first
+    // call (user should call Compute() immediately after SetMode(Auto))
+    last_update_time_ = now - sample_time_;
+    initialized_ = true;
+  }
+
   // compute actual samples time-difference to take jitter into account in
   // integral and derivative
   Duration effectiveSampleTime = (now - last_update_time_);
@@ -59,7 +70,7 @@ bool PID::Compute() {
   if (p_on_e_ == P_ON_M)
     output_sum_ -= kp_ * dInput;
 
-  output_sum_ = std::clamp(output_sum_, out_min_, out_max_);
+  output_sum_ = stl::clamp(output_sum_, out_min_, out_max_);
 
   /*Add Proportional on Error, if P_ON_E is specified*/
   float output;
@@ -78,7 +89,7 @@ bool PID::Compute() {
     output += output_sum_ + kd_ * dError;
   }
 
-  *output_ = std::clamp(output, out_min_, out_max_);
+  *output_ = stl::clamp(output, out_min_, out_max_);
 
   /*Remember some variables for next time*/
   last_input_ = input;
@@ -120,6 +131,6 @@ void PID::SetOutputLimits(float Min, float Max) {
   out_min_ = Min;
   out_max_ = Max;
 
-  *output_ = std::clamp(*output_, out_min_, out_max_);
-  output_sum_ = std::clamp(output_sum_, out_min_, out_max_);
+  *output_ = stl::clamp(*output_, out_min_, out_max_);
+  output_sum_ = stl::clamp(output_sum_, out_min_, out_max_);
 }

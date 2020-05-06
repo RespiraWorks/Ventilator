@@ -49,8 +49,8 @@ public:
 
   // Constructs the PID linked to the Input, Output, and Setpoint,
   // using the given parameters.
-  PID(float *Input, float *Output, float *Setpoint, float Kp, float Ki,
-      float Kd, bool POnE, bool DOnE, int ControllerDirection);
+  PID(float *input, float *output, float *setpoint, float kp, float ki,
+      float kd, bool p_on_e, bool d_on_e, int controller_direction);
 
   // Performs one step of the PID calculation. Calculation frequency
   // can be set using SetSampleTime.
@@ -61,14 +61,14 @@ public:
   // Clamps the output to a specific range. 0-255 by default, but
   // it's likely the user will want to change this depending on
   // the application.
-  void SetOutputLimits(float Min, float Max);
+  void SetOutputLimits(float min, float max);
 
   // Changes the PID parameters to the given values.
-  void SetTunings(float Kp, float Ki, float Kd, bool POnE, bool DOnE);
+  void SetTunings(float kp, float ki, float kd, bool p_on_e, bool d_on_e);
 
   // Sets the frequency, in Milliseconds, with which the PID calculation
   // is performed.  Default is 100.
-  void SetSampleTime(Duration NewSampleTime);
+  void SetSampleTime(Duration sample_time);
 
 private:
   float kp_; // * (P)roportional Tuning Parameter
@@ -90,8 +90,9 @@ private:
   float last_input_;
   float last_error_;
 
-  float out_min_;
-  float out_max_;
+  // default output limit corresponds to the arduino pwm limits
+  float out_min_ = 0;
+  float out_max_ = 255;
   bool p_on_e_;
   bool d_on_e_;
 };

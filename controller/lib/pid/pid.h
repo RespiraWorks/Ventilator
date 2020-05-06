@@ -23,13 +23,13 @@ limitations under the License.
 #include "units.h"
 
 enum class ProportionalTerm {
-  PROPORTIONAL_ON_ERROR,
-  PROPORTIONAL_ON_MEASUREMENT,
+  ON_ERROR,
+  ON_MEASUREMENT,
 };
 
 enum class DifferentialTerm {
-  DIFFERENTIAL_ON_ERROR,
-  DIFFERENTIAL_ON_MEASUREMENT,
+  ON_ERROR,
+  ON_MEASUREMENT,
 };
 
 enum class ControlDirection {
@@ -39,18 +39,11 @@ enum class ControlDirection {
 
 class PID {
 public:
-// Constants used in some of the functions below
-#define DIRECT 0
-#define REVERSE 1
-#define P_ON_M 0
-#define P_ON_E 1
-#define D_ON_M 0
-#define D_ON_E 1
-
   // Constructs the PID linked to the Input, Output, and Setpoint,
   // using the given parameters.
   PID(float *input, float *output, float *setpoint, float kp, float ki,
-      float kd, bool p_on_e, bool d_on_e, int controller_direction);
+      float kd, ProportionalTerm p_term, DifferentialTerm d_term,
+      ControlDirection direction);
 
   // Performs one step of the PID calculation. Calculation frequency
   // can be set using SetSampleTime.
@@ -63,37 +56,36 @@ public:
   // the application.
   void SetOutputLimits(float min, float max);
 
-  // Changes the PID parameters to the given values.
-  void SetTunings(float kp, float ki, float kd, bool p_on_e, bool d_on_e);
-
   // Sets the frequency, in Milliseconds, with which the PID calculation
   // is performed.  Default is 100.
   void SetSampleTime(Duration sample_time);
 
 private:
-  float kp_; // * (P)roportional Tuning Parameter
-  float ki_; // * (I)ntegral Tuning Parameter
-  float kd_; // * (D)erivative Tuning Parameter
+  float
+      *const input_; // * Pointers to the Input, Output, and Setpoint variables
+  float
+      *const output_; // This creates a hard link between the variables and the
+  float *const setpoint_; // PID, freeing the user from having to constantly
+                          // tell us what these values are.
 
-  int controller_direction_;
+  const float kp_; // * (P)roportional Tuning Parameter
+  const float ki_; // * (I)ntegral Tuning Parameter
+  const float kd_; // * (D)erivative Tuning Parameter
 
-  float *input_;    // * Pointers to the Input, Output, and Setpoint variables
-  float *output_;   // This creates a hard link between the variables and the
-  float *setpoint_; // PID, freeing the user from having to constantly tell
-                    // us what these values are.
-
-  bool initialized_ = false;
-  Duration sample_time_;
-  Time next_sample_time_;
-  Time last_update_time_;
-  float output_sum_;
-  float last_input_;
-  float last_error_;
+  const ProportionalTerm p_term_;
+  const DifferentialTerm d_term_;
+  const ControlDirection direction_;
 
   // default output limit corresponds to the arduino pwm limits
   float out_min_ = 0;
   float out_max_ = 255;
-  bool p_on_e_;
-  bool d_on_e_;
+
+  bool initialized_ = false;
+  Duration sample_time_ = milliseconds(100);
+  Time next_sample_time_ = millisSinceStartup(0);
+  Time last_update_time_ = millisSinceStartup(0);
+  float output_sum_;
+  float last_input_;
+  float last_error_;
 };
 #endif

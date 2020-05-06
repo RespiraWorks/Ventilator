@@ -21,15 +21,10 @@ limitations under the License.
 #include "hal.h"
 
 PID::PID(float *input, float *output, float *setpoint, float kp, float ki,
-         float kd, bool p_on_e, bool d_on_e, int controller_direction)
-    : sample_time_(milliseconds(100)), next_sample_time_(Hal.now()),
-      last_update_time_(Hal.now() - sample_time_) {
-  output_ = output;
-  input_ = input;
-  setpoint_ = setpoint;
-  controller_direction_ = controller_direction;
-  SetTunings(kp, ki, kd, p_on_e, d_on_e);
-}
+         float kd, ProportionalTerm p_term, DifferentialTerm d_term,
+         ControlDirection direction)
+    : input_(input), output_(output), setpoint_(setpoint), kp_(kp), ki_(ki),
+      kd_(kd), p_term_(p_term), d_term_(d_term), direction_(direction) {}
 
 bool PID::Compute() {
   Time now = Hal.now();
@@ -58,7 +53,7 @@ bool PID::Compute() {
   float dInput = 0.0;
 
   float kp, ki, kd;
-  if (controller_direction_ == DIRECT) {
+  if (direction_ == ControlDirection::DIRECT) {
     kp = kp_;
     ki = ki_;
     kd = kd_;
@@ -68,38 +63,35 @@ bool PID::Compute() {
     kd = -kd_;
   }
 
-  // Compute dInput only if needed (P_ON_M or D_ON_M)
-  if (p_on_e_ == P_ON_M || d_on_e_ == D_ON_M) {
+  // Compute dInput only if needed.
+  if (p_term_ == ProportionalTerm::ON_MEASUREMENT ||
+      d_term_ == DifferentialTerm::ON_MEASUREMENT) {
     dInput = (input - last_input_);
   }
   output_sum_ += (ki * error * samplesTimeChangeSec);
 
-  /*Add Proportional on Measurement, if P_ON_M is specified*/
-  if (p_on_e_ == P_ON_M)
+  if (p_term_ == ProportionalTerm::ON_MEASUREMENT)
     output_sum_ -= kp * dInput;
 
   output_sum_ = stl::clamp(output_sum_, out_min_, out_max_);
 
-  /*Add Proportional on Error, if P_ON_E is specified*/
   float output;
-  if (p_on_e_ == P_ON_E) {
+  if (p_term_ == ProportionalTerm::ON_ERROR) {
     output = kp * error;
   } else {
     output = 0;
   }
-  if (d_on_e_ == D_ON_M) {
+  if (d_term_ == DifferentialTerm::ON_MEASUREMENT) {
     dInput /= samplesTimeChangeSec;
-    /*Compute Rest of PID Output*/
     output += output_sum_ - kd * dInput;
-  } else { // d_on_e_==D_ON_E
+  } else {
     float dError = (error - last_error_) / samplesTimeChangeSec;
-    /*Compute Rest of PID Output*/
     output += output_sum_ + kd * dError;
   }
 
   *output_ = stl::clamp(output, out_min_, out_max_);
 
-  /*Remember some variables for next time*/
+  // Remember some variables for next time
   last_input_ = input;
   last_error_ = error;
   last_update_time_ = now;
@@ -108,26 +100,12 @@ bool PID::Compute() {
   return true;
 }
 
-void PID::SetTunings(float kp, float ki, float kd, bool p_on_e, bool d_on_e) {
-  if (kp < 0 || ki < 0 || kd < 0)
-    return;
-  p_on_e_ = p_on_e;
-  d_on_e_ = d_on_e;
-  kp_ = kp;
-  ki_ = ki;
-  kd_ = kd;
-}
-
 void PID::SetSampleTime(Duration sample_time) {
-  if (sample_time <= milliseconds(0))
-    return;
   next_sample_time_ = next_sample_time_ - sample_time_ + sample_time;
   sample_time_ = sample_time;
 }
 
 void PID::SetOutputLimits(float min, float max) {
-  if (min >= max)
-    return;
   out_min_ = min;
   out_max_ = max;
 

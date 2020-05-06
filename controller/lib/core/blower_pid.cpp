@@ -42,7 +42,8 @@ static constexpr float Kd = Ku * Tu.seconds() / 15;
 
 // DIRECT means that increases in the output should result in increases in the
 // input.  DIRECT as opposed to REVERSE.
-static PID myPID(&Input, &Output, &Setpoint, Kp, Ki, Kd, DIRECT);
+static PID myPID(&Input, &Output, &Setpoint, Kp, Ki, Kd, P_ON_E, D_ON_M,
+                 DIRECT);
 
 // TODO: VOLUME_INTEGRAL_INTERVAL was not chosen carefully.
 static constexpr Duration VOLUME_INTEGRAL_INTERVAL = milliseconds(5);
@@ -57,9 +58,6 @@ void blower_pid_init() {
 
   // Our output is an 8-bit PWM.
   myPID.SetOutputLimits(0, 255);
-
-  // Turn the PID on.
-  myPID.SetMode(AUTOMATIC);
 }
 
 static void update_volume(SensorReadings *readings) {

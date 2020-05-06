@@ -22,131 +22,104 @@ limitations under the License.
 
 PID::PID(float *Input, float *Output, float *Setpoint, float Kp, float Ki,
          float Kd, bool POnE, bool DOnE, int ControllerDirection)
-    : SampleTime(milliseconds(100)), nextSampleTime(Hal.now()),
-      lastUpdateTime(Hal.now() - SampleTime) {
-  myOutput = Output;
-  myInput = Input;
-  mySetpoint = Setpoint;
+    : sample_time_(milliseconds(100)), next_sample_time_(Hal.now()),
+      last_update_time_(Hal.now() - sample_time_) {
+  output_ = Output;
+  input_ = Input;
+  setpoint_ = Setpoint;
 
   // default output limit corresponds to the arduino pwm limits
   PID::SetOutputLimits(0, 255);
 
-  controllerDirection = ControllerDirection;
+  controller_direction_ = ControllerDirection;
   PID::SetTunings(Kp, Ki, Kd, POnE, DOnE);
 }
 
-/* Compute()
- *********************************************************************** This,
- *as they say, is where the magic happens.  this function should be called every
- *time "void loop()" executes.  the function will decide for itself whether a
- *new pid Output needs to be computed.  returns true when the output is
- *computed, false when nothing has been done.
- **********************************************************************************/
 bool PID::Compute() {
   Time now = Hal.now();
   // compute actual samples time-difference to take jitter into account in
   // integral and derivative
-  Duration effectiveSampleTime = (now - lastUpdateTime);
+  Duration effectiveSampleTime = (now - last_update_time_);
   float samplesTimeChangeSec = effectiveSampleTime.seconds();
   // condition to update output : 1 sample time has passed and we have new data
-  if (now < nextSampleTime || samplesTimeChangeSec <= 0) {
+  if (now < next_sample_time_ || samplesTimeChangeSec <= 0) {
     return false;
   }
   /*Compute all the working error variables*/
-  float input = *myInput;
-  float error = *mySetpoint - input;
+  float input = *input_;
+  float error = *setpoint_ - input;
   float dInput = 0.0;
   // Compute dInput only if needed (P_ON_M or D_ON_M)
-  if (pOnE == P_ON_M || dOnE == D_ON_M) {
-    dInput = (input - lastInput);
+  if (p_on_e_ == P_ON_M || d_on_e_ == D_ON_M) {
+    dInput = (input - last_input_);
   }
-  outputSum += (ki * error * samplesTimeChangeSec);
+  output_sum_ += (ki_ * error * samplesTimeChangeSec);
 
   /*Add Proportional on Measurement, if P_ON_M is specified*/
-  if (pOnE == P_ON_M)
-    outputSum -= kp * dInput;
+  if (p_on_e_ == P_ON_M)
+    output_sum_ -= kp_ * dInput;
 
-  if (outputSum > outMax)
-    outputSum = outMax;
-  else if (outputSum < outMin)
-    outputSum = outMin;
+  output_sum_ = std::clamp(output_sum_, out_min_, out_max_);
 
   /*Add Proportional on Error, if P_ON_E is specified*/
   float output;
-  if (pOnE == P_ON_E) {
-    output = kp * error;
+  if (p_on_e_ == P_ON_E) {
+    output = kp_ * error;
   } else {
     output = 0;
   }
-  if (dOnE == D_ON_M) {
+  if (d_on_e_ == D_ON_M) {
     dInput /= samplesTimeChangeSec;
     /*Compute Rest of PID Output*/
-    output += outputSum - kd * dInput;
-  } else { // dOnE==D_ON_E
-    float dError = (error - lastError) / samplesTimeChangeSec;
+    output += output_sum_ - kd_ * dInput;
+  } else { // d_on_e_==D_ON_E
+    float dError = (error - last_error_) / samplesTimeChangeSec;
     /*Compute Rest of PID Output*/
-    output += outputSum + kd * dError;
+    output += output_sum_ + kd_ * dError;
   }
 
-  *myOutput = std::clamp(output, outMin, outMax);
+  *output_ = std::clamp(output, out_min_, out_max_);
 
   /*Remember some variables for next time*/
-  lastInput = input;
-  lastError = error;
-  lastUpdateTime = now;
+  last_input_ = input;
+  last_error_ = error;
+  last_update_time_ = now;
   // when should we expect to perform our next output calculation
-  nextSampleTime = nextSampleTime + SampleTime;
+  next_sample_time_ = next_sample_time_ + sample_time_;
   return true;
 }
 
-/* SetTunings(...)*************************************************************
- * This function allows the controller's dynamic performance to be adjusted.
- * it's called automatically from the constructor, but tunings can also
- * be adjusted on the fly during normal operation
- ******************************************************************************/
 void PID::SetTunings(float Kp, float Ki, float Kd, bool POnE, bool DOnE) {
   if (Kp < 0 || Ki < 0 || Kd < 0)
     return;
 
-  pOnE = POnE;
-  dOnE = DOnE;
+  p_on_e_ = POnE;
+  d_on_e_ = DOnE;
 
-  kp = Kp;
-  ki = Ki;
-  kd = Kd;
+  kp_ = Kp;
+  ki_ = Ki;
+  kd_ = Kd;
 
-  if (controllerDirection == REVERSE) {
-    kp = (0 - kp);
-    ki = (0 - ki);
-    kd = (0 - kd);
+  if (controller_direction_ == REVERSE) {
+    kp_ = (0 - kp_);
+    ki_ = (0 - ki_);
+    kd_ = (0 - kd_);
   }
 }
 
-/* SetSampleTime(...) *********************************************************
- * sets the period, in Milliseconds, at which the calculation is performed
- ******************************************************************************/
 void PID::SetSampleTime(Duration NewSampleTime) {
-  if (NewSampleTime <= milliseconds(0)) {
+  if (NewSampleTime <= milliseconds(0))
     return;
-  }
-  nextSampleTime = nextSampleTime - SampleTime + NewSampleTime;
-  SampleTime = NewSampleTime;
+  next_sample_time_ = next_sample_time_ - sample_time_ + NewSampleTime;
+  sample_time_ = NewSampleTime;
 }
 
-/* SetOutputLimits(...)****************************************************
- *     This function will be used far more often than SetInputLimits.  while
- *  the input to the controller will generally be in the 0-1023 range (which is
- *  the default already,)  the output will be a little different.  maybe they'll
- *  be doing a time window and will need 0-8000 or something.  or maybe they'll
- *  want to clamp it from 0-125.  who knows.  at any rate, that can all be done
- *  here.
- **************************************************************************/
 void PID::SetOutputLimits(float Min, float Max) {
   if (Min >= Max)
     return;
-  outMin = Min;
-  outMax = Max;
+  out_min_ = Min;
+  out_max_ = Max;
 
-  *myOutput = std::clamp(*myOutput, outMin, outMax);
-  outputSum = std::clamp(outputSum, outMin, outMax);
+  *output_ = std::clamp(*output_, out_min_, out_max_);
+  output_sum_ = std::clamp(output_sum_, out_min_, out_max_);
 }

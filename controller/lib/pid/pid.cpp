@@ -20,18 +20,17 @@ limitations under the License.
 #include "algorithm.h"
 #include "hal.h"
 
-PID::PID(float *input, float *output, float *setpoint, float kp, float ki,
-         float kd, ProportionalTerm p_term, DifferentialTerm d_term,
-         ControlDirection direction)
-    : input_(input), output_(output), setpoint_(setpoint), kp_(kp), ki_(ki),
-      kd_(kd), p_term_(p_term), d_term_(d_term), direction_(direction) {}
+PID::PID(float kp, float ki, float kd, ProportionalTerm p_term,
+         DifferentialTerm d_term, ControlDirection direction)
+    : kp_(kp), ki_(ki), kd_(kd), p_term_(p_term), d_term_(d_term),
+      direction_(direction) {}
 
-bool PID::Compute() {
+bool PID::Compute(float input, float setpoint, float *output) {
   Time now = Hal.now();
   if (!initialized_) {
-    last_input_ = *input_;
-    last_error_ = *setpoint_ - *input_;
-    output_sum_ = stl::clamp(*output_, out_min_, out_max_);
+    last_input_ = input;
+    last_error_ = setpoint - input;
+    output_sum_ = stl::clamp(*output, out_min_, out_max_);
     next_sample_time_ = now;
     // last call time defined as now - SampleTime to enable computation on first
     // call (user should call Compute() immediately after SetMode(Auto))
@@ -47,9 +46,8 @@ bool PID::Compute() {
   if (now < next_sample_time_ || samplesTimeChangeSec <= 0) {
     return false;
   }
-  /*Compute all the working error variables*/
-  float input = *input_;
-  float error = *setpoint_ - input;
+  // Compute all the working error variables
+  float error = setpoint - input;
   float dInput = 0.0;
 
   float kp, ki, kd;
@@ -75,21 +73,17 @@ bool PID::Compute() {
 
   output_sum_ = stl::clamp(output_sum_, out_min_, out_max_);
 
-  float output;
+  float res = output_sum_;
   if (p_term_ == ProportionalTerm::ON_ERROR) {
-    output = kp * error;
-  } else {
-    output = 0;
+    res += kp * error;
   }
   if (d_term_ == DifferentialTerm::ON_MEASUREMENT) {
-    dInput /= samplesTimeChangeSec;
-    output += output_sum_ - kd * dInput;
+    res -= kd * dInput / samplesTimeChangeSec;
   } else {
-    float dError = (error - last_error_) / samplesTimeChangeSec;
-    output += output_sum_ + kd * dError;
+    res += kd * (error - last_error_) / samplesTimeChangeSec;
   }
 
-  *output_ = stl::clamp(output, out_min_, out_max_);
+  *output = stl::clamp(res, out_min_, out_max_);
 
   // Remember some variables for next time
   last_input_ = input;
@@ -108,7 +102,5 @@ void PID::SetSampleTime(Duration sample_time) {
 void PID::SetOutputLimits(float min, float max) {
   out_min_ = min;
   out_max_ = max;
-
-  *output_ = stl::clamp(*output_, out_min_, out_max_);
   output_sum_ = stl::clamp(output_sum_, out_min_, out_max_);
 }

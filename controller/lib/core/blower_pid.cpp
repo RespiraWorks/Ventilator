@@ -42,8 +42,9 @@ static constexpr float Kd = Ku * Tu.seconds() / 15;
 
 // DIRECT means that increases in the output should result in increases in the
 // input.  DIRECT as opposed to REVERSE.
-static PID myPID(&Input, &Output, &Setpoint, Kp, Ki, Kd, P_ON_E, D_ON_M,
-                 DIRECT);
+static PID myPID(&Input, &Output, &Setpoint, Kp, Ki, Kd,
+                 ProportionalTerm::ON_ERROR, DifferentialTerm::ON_MEASUREMENT,
+                 ControlDirection::DIRECT);
 
 // TODO: VOLUME_INTEGRAL_INTERVAL was not chosen carefully.
 static constexpr Duration VOLUME_INTEGRAL_INTERVAL = milliseconds(5);

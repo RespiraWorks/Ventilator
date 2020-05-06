@@ -69,7 +69,7 @@ jobs:
       - run:
           name: Run tests
           command: |
-            docker run -i respiraworks/gui:$CIRCLE_SHA1 ./test.sh
+            docker run -i respiraworks/gui:$CIRCLE_SHA1 gui/test.sh
 
 workflows:
   commit:

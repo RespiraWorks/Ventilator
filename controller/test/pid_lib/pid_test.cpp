@@ -46,7 +46,7 @@ TEST(pidTest, Proportional) {
   Duration sample_time = milliseconds(100);
 
   // Create PID and run once
-  PID myPID(&input, &output, &setpoint, Kp, Ki, Kd, DIRECT);
+  PID myPID(&input, &output, &setpoint, Kp, Ki, Kd, P_ON_E, D_ON_M, DIRECT);
   myPID.SetSampleTime(sample_time);
   myPID.Compute();
 
@@ -68,7 +68,7 @@ TEST(pidTest, Integral) {
   Duration sample_time = milliseconds(100);
 
   // Create PID and run once
-  PID myPID(&input, &output, &setpoint, Kp, Ki, Kd, DIRECT);
+  PID myPID(&input, &output, &setpoint, Kp, Ki, Kd, P_ON_E, D_ON_M, DIRECT);
   myPID.SetSampleTime(sample_time);
   myPID.Compute();
 
@@ -222,7 +222,7 @@ TEST(pidTest, CallFasterThanSample) {
   float setpoint = 25;
   float input = setpoint - 10;
   Duration sample_time = milliseconds(100);
-  PID myPID(&input, &output, &setpoint, Kp, Ki, Kd, DIRECT);
+  PID myPID(&input, &output, &setpoint, Kp, Ki, Kd, P_ON_E, D_ON_M, DIRECT);
   myPID.SetSampleTime(sample_time);
   myPID.Compute();
 
@@ -260,7 +260,7 @@ TEST(pidTest, TaskJitter) {
   float setpoint = 25;
   float input = setpoint - 10;
   Duration sample_time = milliseconds(100);
-  PID myPID(&input, &output, &setpoint, Kp, Ki, Kd, DIRECT);
+  PID myPID(&input, &output, &setpoint, Kp, Ki, Kd, P_ON_E, D_ON_M, DIRECT);
   myPID.SetSampleTime(sample_time);
   myPID.Compute();
   // First task, with only Ki set, output = error*sample_time
@@ -292,7 +292,7 @@ TEST(pidTest, SampleTimeChange) {
   float setpoint = 25;
   float input = setpoint - 10;
   Duration sample_time = milliseconds(100);
-  PID myPID(&input, &output, &setpoint, Kp, Ki, Kd, DIRECT);
+  PID myPID(&input, &output, &setpoint, Kp, Ki, Kd, P_ON_E, D_ON_M, DIRECT);
   myPID.SetSampleTime(sample_time);
   myPID.Compute();
 
@@ -324,7 +324,7 @@ TEST(pidTest, MissedSample) {
   float setpoint = 25;
   float input = setpoint - 10;
   Duration sample_time = milliseconds(100);
-  PID myPID(&input, &output, &setpoint, Kp, Ki, Kd, DIRECT);
+  PID myPID(&input, &output, &setpoint, Kp, Ki, Kd, P_ON_E, D_ON_M, DIRECT);
   myPID.SetSampleTime(sample_time);
   myPID.Compute();
 
@@ -361,7 +361,7 @@ TEST(pidTest, OffOnCycle) {
   float setpoint = 25;
   float input = setpoint - 10;
   Duration sample_time = milliseconds(100);
-  PID myPID(&input, &output, &setpoint, Kp, Ki, Kd, DIRECT);
+  PID myPID(&input, &output, &setpoint, Kp, Ki, Kd, P_ON_E, D_ON_M, DIRECT);
   myPID.SetSampleTime(sample_time);
   myPID.Compute();
 
@@ -378,7 +378,7 @@ TEST(pidTest, OffOnCycle) {
   Kp = 0;
   Ki = 1;
   Kd = 0;
-  myPID.SetTunings(Kp, Ki, Kd);
+  myPID.SetTunings(Kp, Ki, Kd, P_ON_E, D_ON_M);
 
   float integral = (setpoint - input) * (sample_time.seconds());
 

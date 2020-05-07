@@ -1,7 +1,34 @@
-/* stm32.h */
+/* Copyright 2020, RespiraWorks
 
-#ifndef _DEF_INC_STM32
-#define _DEF_INC_STM32
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+This file implements the HAL (Hardware Abstraction Layer) for the 
+STM32L452 processor used on the controller.  Details of the processor's 
+peripherals can be found in the reference manual for that processor:
+   https://www.st.com/resource/en/reference_manual/dm00151940-stm32l41xxx42xxx43xxx44xxx45xxx46xxx-advanced-armbased-32bit-mcus-stmicroelectronics.pdf
+
+Details specific to the ARM processor used in this chip can be found in 
+the programmer's manual for the processor available here:
+   https://www.st.com/resource/en/programming_manual/dm00046982-stm32-cortexm4-mcus-and-mpus-programming-manual-stmicroelectronics.pdf
+
+*/
+
+#ifndef DEF_INC_STM32
+#define DEF_INC_STM32
+
+#if !defined( BARE_STM32 )
+#error "the header stm32.h is part of the HAL for the BARE_STM32 build.  It should only be used as part of that build"
+#endif
 
 #include <stdint.h>
 
@@ -9,19 +36,19 @@
 #define CPU_FREQ           (CPU_FREQ_MHZ * 1000000)
 
 // Some useful inline functions to enable/disable interrupts
-static inline void IntDisable( void ){
+inline void IntDisable( void ){
    asm volatile( "cpsid i" );
 }
 
-static inline void IntEnable( void ){
+inline void IntEnable( void ){
    asm volatile( "cpsie i" );
 }
 
-static inline void IntRestore( int p ){
+inline void IntRestore( int p ){
    if( p ) IntEnable();
 }
 
-static inline int IntSuspend( void ){
+inline int IntSuspend( void ){
    int ret;
    asm volatile( "mrs   %[output], primask\n\t" "cpsid i": [output] "=r" (ret) );
    return (ret==0);
@@ -295,7 +322,7 @@ struct GPIO_Regs
 #define GPIO_MODE_OUTPUT   1
 #define GPIO_MODE_ALT      2
 #define GPIO_MODE_ANALOG   3
-static inline void GPIO_PinMode( uint32_t bank, int pin, int mode )
+inline void GPIO_PinMode( uint32_t bank, int pin, int mode )
 {
    GPIO_Regs *gpio = (GPIO_Regs *)bank;
    gpio->mode &= ~(3 << (pin*2));
@@ -304,7 +331,7 @@ static inline void GPIO_PinMode( uint32_t bank, int pin, int mode )
 
 #define GPIO_OUTTYPE_PUSHPULL   0
 #define GPIO_OUTTYPE_OPENDRIAN  1
-static inline void GPIO_OutType( uint32_t bank, int pin, int drain )
+inline void GPIO_OutType( uint32_t bank, int pin, int drain )
 {
    GPIO_Regs *gpio = (GPIO_Regs *)bank;
    if( drain )
@@ -313,7 +340,7 @@ static inline void GPIO_OutType( uint32_t bank, int pin, int drain )
       gpio->outType &= ~(1<<pin);
 }
 
-static inline void GPIO_PinAltFunc( uint32_t bank, int pin, int func )
+inline void GPIO_PinAltFunc( uint32_t bank, int pin, int func )
 {
    GPIO_PinMode( bank, pin, GPIO_MODE_ALT );
 
@@ -322,25 +349,25 @@ static inline void GPIO_PinAltFunc( uint32_t bank, int pin, int func )
    gpio->alt[x] |= (func << ((pin&7)*4));
 }
 
-static inline void GPIO_SetPin( uint32_t bank, int pin )
+inline void GPIO_SetPin( uint32_t bank, int pin )
 {
    GPIO_Regs *gpio = (GPIO_Regs *)bank;
    gpio->set = (1<<pin);
 }
 
-static inline void GPIO_ClrPin( uint32_t bank, int pin )
+inline void GPIO_ClrPin( uint32_t bank, int pin )
 {
    GPIO_Regs *gpio = (GPIO_Regs *)bank;
    gpio->clr = (1<<pin);
 }
 
-static inline int GPIO_GetPin( uint32_t bank, int pin )
+inline int GPIO_GetPin( uint32_t bank, int pin )
 {
    GPIO_Regs *gpio = (GPIO_Regs *)bank;
    return (gpio->inDat & (1<<pin)) ? 1 : 0;
 }
 
-static inline void GPIO_PullUp( uint32_t bank, int pin )
+inline void GPIO_PullUp( uint32_t bank, int pin )
 {
    GPIO_Regs *gpio = (GPIO_Regs *)bank;
 
@@ -349,7 +376,7 @@ static inline void GPIO_PullUp( uint32_t bank, int pin )
    gpio->pullUpDn = x;
 }
 
-static inline void GPIO_PullDn( uint32_t bank, int pin )
+inline void GPIO_PullDn( uint32_t bank, int pin )
 {
    GPIO_Regs *gpio = (GPIO_Regs *)bank;
 

@@ -106,5 +106,42 @@ TEST_F(BlowerFsmTest, TurnOff) {
 //
 //  - Changes to params should take effect only at the next breath, but
 //  - Switching from ON to OFF and vice versa should happen immediately.
+TEST_F(BlowerFsmTest, ChangeOfParamsStartAtTheNextBreath) {
+  VentParams p_init = VentParams_init_zero;
+  p_init.mode = VentMode_PRESSURE_CONTROL;
+  p_init.breaths_per_min = 20;
+  p_init.inspiratory_expiratory_ratio = 2; // I: 2s, E: 1s
+  p_init.pip_cm_h2o = 20;
+  p_init.peep_cm_h2o = 10;
+
+  VentParams p_change = p_init;
+  p_init.breaths_per_min = 30;
+  p_init.inspiratory_expiratory_ratio = 1; // I: 1s, E: 1s
+  p_change.pip_cm_h2o = 30;
+  p_change.peep_cm_h2o = 15;
+
+  VentParams p_off = VentParams_init_default;
+  //|---------------------|----------|----------|----------|
+  // 0                   1999        2999       3999       4999
+  //         I                 E           I          E
+  testSequence({
+      // Switching ON mode takes effect immidiately.
+      {p_init, /*blower_enabled=*/true, 0, cmH2O(20), ValveState::CLOSED},
+      // 2sec of inhalation 1sec of exhalation. Ignores param change, stays on
+      // p_init pip.
+      {p_change, /*blower_enabled=*/true, 1, cmH2O(20), ValveState::CLOSED},
+      {p_change, /*blower_enabled=*/true, 1998, cmH2O(20), ValveState::CLOSED},
+      {p_change, /*blower_enabled=*/true, 2000, cmH2O(10), ValveState::OPEN},
+      {p_change, /*blower_enabled=*/true, 2998, cmH2O(10), ValveState::OPEN},
+      // Previous state finished, switch to p_change settings, 1sec In 1sec Ex.
+      {p_change, /*blower_enabled=*/true, 3000, cmH2O(30), ValveState::CLOSED},
+      {p_init, /*blower_enabled=*/true, 3998, cmH2O(30), ValveState::CLOSED},
+      // Ignore p_init setting in the middle of a breath.
+      {p_init, /*blower_enabled=*/true, 4000, cmH2O(15), ValveState::CLOSED},
+      {p_init, /*blower_enabled=*/true, 4995, cmH2O(15), ValveState::OPEN},
+      // Switching OFF device, takes effect immidiately.
+      {p_off, /*blower_enabled*/ false, 4998, cmH2O(0), ValveState::OPEN},
+  });
+}
 
 } // anonymous namespace

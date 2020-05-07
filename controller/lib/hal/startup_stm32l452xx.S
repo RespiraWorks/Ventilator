@@ -23,6 +23,15 @@
   * License. You may obtain a copy of the License at:
   *                        opensource.org/licenses/BSD-3-Clause
   *
+  *
+  ******************************************************************************
+  * This file was copied from the file of the same name located in the platformio 
+  * framework-arduinoststm32 directory.
+  * The following changes were made:
+  * - Removed the interrupt vector table, this is now in hal_stm32.cpp.
+  * - Removed sp initialization.  That's done automatically by the processor on
+  *   reset (the sp is pulled from the start of the reset vector table).
+  * - Removed the unused SystemInit call.
   ******************************************************************************
   */
 #if defined( BARE_STM32 )

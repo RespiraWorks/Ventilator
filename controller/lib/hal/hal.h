@@ -42,7 +42,7 @@ limitations under the License.
 
 #if defined(ARDUINO_AVR_UNO) || defined(ARDUINO_NUCLEO_L452RE) || defined(BARE_STM32)
 #error                                                                         \
-    "TEST_MODE intended to be run only on native, but ARDUINO_AVR_UNO or ARDUINO_NUCLEO_L452RE is defined"
+    "TEST_MODE intended to be run only on native, but ARDUINO_AVR_UNO or ARDUINO_NUCLEO_L452RE or BARE_STM32 is defined"
 #endif
 
 #include <cstring>
@@ -54,9 +54,9 @@ limitations under the License.
 
 #else // !TEST_MODE
 
-#if !defined(ARDUINO_AVR_UNO) && !defined(ARDUINO_NUCLEO_L452RE) and !defined(BARE_STM32)
+#if !defined(ARDUINO_AVR_UNO) && !defined(ARDUINO_NUCLEO_L452RE) && !defined(BARE_STM32)
 #error                                                                         \
-    "When running without TEST_MODE, expecting ARDUINO_AVR_UNO or ARDUINO_NUCLEO_L452RE to be defined"
+    "When running without TEST_MODE, expecting ARDUINO_AVR_UNO or ARDUINO_NUCLEO_L452RE or BARE_STM32 to be defined"
 #endif
 
 #if defined(BARE_STM32)
@@ -438,6 +438,8 @@ inline void HalApi::watchdog_handler() {
 }
 
 #elif defined(BARE_STM32)
+// The STM32 build implements these functions in a separate cpp file,
+// so nothing needs to be added here.
 
 #else
 

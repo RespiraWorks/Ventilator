@@ -26,33 +26,35 @@ the programmer's manual for the processor available here:
 #if defined(BARE_STM32)
 
 #include "hal.h"
-#include "stm32.h"
+#include "hal_stm32.h"
+
+#define SYSTEM_STACK_SIZE       500
 
 // This is the main stack used in our system.
-uint32_t systemStack[ 500 ];
+__attribute__((aligned (8))) uint32_t systemStack[ SYSTEM_STACK_SIZE ];
 
 // local data 
-static volatile uint32_t msCount;
+static volatile uint64_t msCount;
 
 // local static functions.  I don't want to add any private 
 // functions to the Hal class to avoid complexity with other
 // builds
-static void InitGPIO( void );
-static void InitADC( void );
-static void InitSysTimer( void );
-static void InitPwmOut( void );
-static void InitUARTs( void );
+static void InitGPIO();
+static void InitADC();
+static void InitSysTimer();
+static void InitPwmOut();
+static void InitUARTs();
 static void EnableClock( uint32_t base );
 static void EnableInterrupt( int addr, int pri );
 static void DisableInterrupt( int addr );
-static void Timer6ISR( void );
-static void UART3_ISR( void );
+static void Timer6ISR();
+static void UART3_ISR();
 
 // For now, the main function in main.cpp is called setup
 // rather then main.  If we adopt this HAL then we can 
 // just rename it main and get rid of the following function.
-extern void setup( void );
-int main( void ){
+extern void setup();
+int main(){
    setup();
 }
 
@@ -65,21 +67,21 @@ int main( void ){
 // constructor uses any floating point math, and to enable 
 // the PLL so we can run at full speed (80MHz) rather then the
 // default speed of 4MHz.
-extern "C" void _init( void ){
+extern "C" void _init(){
 
    // Enable the FPU.  This allows floating point to be used without 
    // generating a hard fault.
    // The system control registers are documented in the programmers
    // manual (not the reference manual) chapter 4.
    // Details on enabling the FPU are in section 4.6.6.
-   SysCtrl_Reg *sysCtl = (SysCtrl_Reg *)SYSCTL_BASE;
+   SysCtrl_Reg *sysCtl = reinterpret_cast<SysCtrl_Reg *>(SYSCTL_BASE);
    sysCtl->cpac = 0x00F00000;
 
    // Reset caches and set latency for 80MHz opperation
    // See chapter 3 of the reference manual for details
    // on the embedded flash module
    EnableClock( FLASH_BASE );
-   FlashReg *flash = (FlashReg *)FLASH_BASE;
+   FlashReg *flash = reinterpret_cast<FlashReg *>(FLASH_BASE);
    flash->access = 0x00000004;
    flash->access = 0x00001804;
    flash->access = 0x00001804;
@@ -111,7 +113,7 @@ extern "C" void _init( void ){
    // See chapter 6 of the reference manual
    int N = 40;
    int M = 1;
-   RCC_Regs *rcc = (RCC_Regs *)RCC_BASE;
+   RCC_Regs *rcc = reinterpret_cast<RCC_Regs *>(RCC_BASE);
    rcc->pllCfg = 0x01000001 | (N<<8) | ((M-1)<<4);
 
    // Turn on the PLL 
@@ -151,7 +153,7 @@ void HalApi::init() {
    // they're in the processor programming manual.
    // The register we use to reset the system is called the 
    // "Application interrupt and reset control register (AIRCR)"
-   SysCtrl_Reg *sysCtl = (SysCtrl_Reg *)SYSCTL_BASE;
+   SysCtrl_Reg *sysCtl = reinterpret_cast<SysCtrl_Reg *>(SYSCTL_BASE);
    sysCtl->apInt = 0x05FA0004;
 }
 
@@ -175,7 +177,7 @@ void HalApi::init() {
  *         PWM it to reduce the solenoid voltage.
  *         For no I'm treating it as a digital output.
  *****************************************************************/
-static void InitGPIO( void )
+static void InitGPIO()
 {
    // See chapter 8 of the reference manual for details on GPIO
 
@@ -241,13 +243,13 @@ void HalApi::digitalWrite(BinaryPin pin, VoltageLevel value) {
  * The basic timers (like timer 6) are documented in chapter 29 of
  * the reference manual
  *****************************************************************/
-static void InitSysTimer( void ){
+static void InitSysTimer(){
 
    // Enable the clock to the timer
    EnableClock( TIMER6_BASE );
 
    // Just set the timer up to count every microsecond.
-   TimerRegs *tmr = (TimerRegs *)TIMER6_BASE;
+   TimerRegs *tmr = reinterpret_cast<TimerRegs *>(TIMER6_BASE);
    tmr->reload = 999;
    tmr->prescale = (CPU_FREQ_MHZ-1);
    tmr->event = 1;
@@ -266,7 +268,7 @@ static void BusyWait( uint16_t usec )
       usec -= 1000;
    }
 
-   TimerRegs *tmr = (TimerRegs *)TIMER6_BASE;
+   TimerRegs *tmr = reinterpret_cast<TimerRegs *>(TIMER6_BASE);
    uint16_t start = tmr->counter;
    while( 1 )
    {
@@ -276,14 +278,14 @@ static void BusyWait( uint16_t usec )
    }
 }
 
-static void Timer6ISR( void )
+static void Timer6ISR()
 {
-   TimerRegs *tmr = (TimerRegs *)TIMER6_BASE;
+   TimerRegs *tmr = reinterpret_cast<TimerRegs *>(TIMER6_BASE);
    tmr->status = 0;
    msCount++;
 }
 
-uint32_t HalApi::millis(){
+uint64_t HalApi::millis(){
    return msCount;
 }
 
@@ -310,7 +312,7 @@ void HalApi::delay(uint32_t ms){
  * See chapter 16 of the reference manual
  *
  *****************************************************************/
-static void InitADC( void ){
+static void InitADC(){
    // Enable the clock to the A/D converter
    EnableClock( ADC_BASE );
 
@@ -322,7 +324,7 @@ static void InitADC( void ){
 
    // Perform a power-up and calibration sequence on 
    // the A/D converter
-   ADC_Regs *adc = (ADC_Regs *)ADC_BASE;
+   ADC_Regs *adc = reinterpret_cast<ADC_Regs *>(ADC_BASE);
 
    // Exit deep power down mode and turn on the
    // internal voltage regulator.
@@ -386,7 +388,7 @@ int HalApi::analogRead(AnalogPin pin){
          return 0;
    }
 
-   ADC_Regs *adc = (ADC_Regs *)ADC_BASE;
+   ADC_Regs *adc = reinterpret_cast<ADC_Regs *>(ADC_BASE);
    adc->adc[0].seq[0] = channel << 6;
 
    // Clear the EOC flag
@@ -419,7 +421,7 @@ int HalApi::analogRead(AnalogPin pin){
  * These timers are documented in chapters 26 and 27 of the reference
  * manual.
  *****************************************************************/
-static void InitPwmOut( void )
+static void InitPwmOut()
 {
    // The PWM frequency isn't mentioned anywhere that I can find, so
    // I'm just picking a reasonable number.  This can be refined later
@@ -430,7 +432,7 @@ static void InitPwmOut( void )
    // Connect PB3 to timer 2
    GPIO_PinAltFunc( GPIO_B_BASE, 3, 1 );
 
-   TimerRegs *tmr = (TimerRegs *)TIMER2_BASE;
+   TimerRegs *tmr = reinterpret_cast<TimerRegs *>(TIMER2_BASE);
 
    // Set the frequency
    tmr->reload = (CPU_FREQ / pwmFreqHz)-1;
@@ -463,7 +465,7 @@ void HalApi::analogWrite(PwmPin pin, int value) {
    switch( pin )
    {
       case PwmPin::BLOWER:
-         tmr = (TimerRegs *)TIMER2_BASE;
+         tmr = reinterpret_cast<TimerRegs *>(TIMER2_BASE);
          chan = 1;
          break;
 
@@ -494,13 +496,13 @@ template <int N> class CircBuff
    volatile int head, tail;
 
 public:
-   CircBuff( void ){
+   CircBuff(){
       head = tail = 0;
    }
 
    // Return number of bytes available in the buffer
-   int FullCt( void ){
-      int p = IntSuspend();
+   int FullCt(){
+      bool p = IntSuspend();
       int ct = head-tail;
       IntRestore(p);
       if( ct < 0 ) ct += N;
@@ -508,17 +510,17 @@ public:
    }
 
    // Return number of free spaces in the buffer
-   int FreeCt( void ){
+   int FreeCt(){
       return N-1-FullCt();
    }
 
    // Get the oldest byte from the buffer.
    // Returns -1 if the buffer is empty
-   int Get( void )
+   int Get()
    {
       int ret = -1;
 
-      int p = IntSuspend();
+      bool p = IntSuspend();
 
       if( head != tail )
       {
@@ -536,7 +538,7 @@ public:
    {
       bool ret = false;
 
-      int p = IntSuspend();
+      bool p = IntSuspend();
 
       int h = head+1;
       if( h >= N ) h = 0;
@@ -560,9 +562,9 @@ class UART
    CircBuff<128> txDat;
    UART_Regs *reg;
 public:
-   void Init( UART_Regs *r, int baud )
+   void Init( uint32_t baseAddr, int baud )
    {
-      reg = r;
+      reg = reinterpret_cast<UART_Regs*>(baseAddr);
 
       // Set baud rate register
       reg->baud = CPU_FREQ / baud;
@@ -571,7 +573,7 @@ public:
       reg->ctrl[0] = 0x002D;
    }
 
-   void ISR( void ){
+   void ISR(){
 
       // Check for over run error and framing errors.
       // Clear those errors if they're set to avoid
@@ -601,7 +603,7 @@ public:
 
    // Read up to len bytes and store them in the passed buffer.
    // Returns the number of bytes actually read.
-   uint16_t read( uint8_t *buf, uint16_t len ){
+   uint16_t read( char *buf, uint16_t len ){
 
       for( uint16_t i=0; i<len; i++ ) {
          int ch = rxDat.Get();
@@ -613,7 +615,7 @@ public:
 
    // Write up to len bytes to the buffer and return the
    // number actually written.
-   uint16_t write( const uint8_t *buf, uint16_t len) {
+   uint16_t write( const char *buf, uint16_t len) {
 
       uint16_t i;
       for( i=0; i<len; i++ ){
@@ -629,13 +631,13 @@ public:
 
    // Return the number of bytes currently in the 
    // receive buffer and ready to be read.
-   int RxFull( void ){
+   int RxFull(){
       return rxDat.FullCt();
    }
 
    // Returns the number of free locations in the 
    // transmit buffer.
-   int TxFree( void ){
+   int TxFree(){
       return txDat.FreeCt();
    }
 };
@@ -649,7 +651,7 @@ static UART rpUART;
 //    PB14 - CTS
 //
 // These pins are connected to UART3
-static void InitUARTs( void )
+static void InitUARTs()
 {
 // NOTE - The UART functionality hasn't been tested due to lack of hardware!
 //        Need to do that as soon as the boards are available.
@@ -660,17 +662,17 @@ static void InitUARTs( void )
    GPIO_PinAltFunc( GPIO_B_BASE, 13, 7 );
    GPIO_PinAltFunc( GPIO_B_BASE, 14, 7 );
 
-   rpUART.Init( (UART_Regs*)UART3_BASE, 115200 );
+   rpUART.Init( UART3_BASE, 115200 );
 
    EnableInterrupt( INT_VEC_UART3, 3 );
 }
 
-static void UART3_ISR( void ){
+static void UART3_ISR(){
    rpUART.ISR();
 }
 
 uint16_t HalApi::serialRead(char *buf, uint16_t len) {
-   return rpUART.read( (uint8_t *)buf, len );
+   return rpUART.read( buf, len );
 }
 
 uint16_t HalApi::serialBytesAvailableForRead() {
@@ -678,7 +680,7 @@ uint16_t HalApi::serialBytesAvailableForRead() {
 }
 
 uint16_t HalApi::serialWrite(const char *buf, uint16_t len) {
-   return rpUART.write( (const uint8_t *)buf, len);
+   return rpUART.write( buf, len);
 }
 
 uint16_t HalApi::serialBytesAvailableForWrite() {
@@ -760,7 +762,7 @@ static void EnableClock( uint32_t base )
    }
 
    // Enable the clock of the requested peripherial
-   RCC_Regs *rcc = (RCC_Regs *)RCC_BASE;
+   RCC_Regs *rcc = reinterpret_cast<RCC_Regs *>(RCC_BASE);
    rcc->periphClkEna[ndx] |= (1<<bit);
 }
 
@@ -771,26 +773,26 @@ static void EnableClock( uint32_t base )
  *****************************************************************/
 
 // Fault handlers
-static void fault( void )
+static void fault()
 {
    while(1){}
 }
 
-static void NMI( void )           { fault(); }
-static void FaultISR( void )      { fault(); }
-static void MPUFaultISR( void )   { fault(); }
-static void BusFaultISR( void )   { fault(); }
-static void UsageFaultISR( void ) { fault(); }
-static void BadISR( void )        { fault(); }
+static void NMI()           { fault(); }
+static void FaultISR()      { fault(); }
+static void MPUFaultISR()   { fault(); }
+static void BusFaultISR()   { fault(); }
+static void UsageFaultISR() { fault(); }
+static void BadISR()        { fault(); }
 
-extern "C" void Reset_Handler( void );
+extern "C" void Reset_Handler();
 __attribute__ ((section(".isr_vector")))
-void (* const vectors[])(void) =
+void (* const vectors[])() =
 {
    // The first entry of the ISR holds the initial value of the
    // stack pointer.  The ARM processor initializes the stack
    // pointer based on this address.
-   (void (*)(void))((uint32_t)systemStack + sizeof(systemStack)),
+   reinterpret_cast<void (*)()>(&systemStack[SYSTEM_STACK_SIZE]),
 
    // The second ISR entry is the reset vector which is an 
    // assembly language routine that does some basic memory 
@@ -800,7 +802,7 @@ void (* const vectors[])(void) =
    // thumb code.  The cortex m4 processor only supports 
    // thumb code, so this will always be set or we'll get 
    // a hard fault.
-   (void(*)(void))((uint32_t)Reset_Handler+1), //   1 - 0x004 The reset handler
+   reinterpret_cast<void (*)()>(reinterpret_cast<uint32_t >(Reset_Handler)+1),
 
    // The rest of the table is a list of exception and 
    // interrupt handlers.  Chapter 12 (NVIC) of the reference
@@ -879,12 +881,12 @@ void (* const vectors[])(void) =
 
 // NOTE - this never actually gets called.  It's just here
 // to prevent the linker from remove the vector array
-const void *GetVectorAddr( void ){ return &vectors; }
+const void *GetVectorAddr(){ return &vectors; }
 
 // Enable an interrupt with a specified priority (0 to 15)
 static void EnableInterrupt( int addr, int pri )
 {
-   IntCtrl_Regs *nvic = (IntCtrl_Regs *)NVIC_BASE;
+   IntCtrl_Regs *nvic = reinterpret_cast<IntCtrl_Regs *>(NVIC_BASE);
 
    int id = addr/4 - 16;
 
@@ -896,7 +898,7 @@ static void EnableInterrupt( int addr, int pri )
 
 static void DisableInterrupt( int addr )
 {
-   IntCtrl_Regs *nvic = (IntCtrl_Regs *)NVIC_BASE;
+   IntCtrl_Regs *nvic = reinterpret_cast<IntCtrl_Regs *>(NVIC_BASE);
 
    int id = addr/4 - 16;
 

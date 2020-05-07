@@ -11,6 +11,16 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
+
+This file implements the HAL (Hardware Abstraction Layer) for the 
+STM32L452 processor used on the controller.  Details of the processor's 
+peripherals can be found in the reference manual for that processor:
+   https://www.st.com/resource/en/reference_manual/dm00151940-stm32l41xxx42xxx43xxx44xxx45xxx46xxx-advanced-armbased-32bit-mcus-stmicroelectronics.pdf
+
+Details specific to the ARM processor used in this chip can be found in 
+the programmer's manual for the processor available here:
+   https://www.st.com/resource/en/programming_manual/dm00046982-stm32-cortexm4-mcus-and-mpus-programming-manual-stmicroelectronics.pdf
+
 */
 
 #if defined(BARE_STM32)
@@ -18,8 +28,8 @@ limitations under the License.
 #include "hal.h"
 #include "stm32.h"
 
-// This is the main stack 
-uint32_t mainStack[ 500 ];
+// This is the main stack used in our system.
+uint32_t systemStack[ 500 ];
 
 // local data 
 static volatile uint32_t msCount;
@@ -46,17 +56,28 @@ int main( void ){
    setup();
 }
 
-
 // This function is called from the libc initialization code 
 // before any static constructors are called.  We do some basic
 // chip initialization here.
+//
+// The main things done here are to enable the FPU because if 
+// we don't do that then we'll get a fatal exception if any 
+// constructor uses any floating point math, and to enable 
+// the PLL so we can run at full speed (80MHz) rather then the
+// default speed of 4MHz.
 extern "C" void _init( void ){
 
-   // Enable the FPU
+   // Enable the FPU.  This allows floating point to be used without 
+   // generating a hard fault.
+   // The system control registers are documented in the programmers
+   // manual (not the reference manual) chapter 4.
+   // Details on enabling the FPU are in section 4.6.6.
    SysCtrl_Reg *sysCtl = (SysCtrl_Reg *)SYSCTL_BASE;
    sysCtl->cpac = 0x00F00000;
 
    // Reset caches and set latency for 80MHz opperation
+   // See chapter 3 of the reference manual for details
+   // on the embedded flash module
    EnableClock( FLASH_BASE );
    FlashReg *flash = (FlashReg *)FLASH_BASE;
    flash->access = 0x00000004;
@@ -87,6 +108,7 @@ extern "C" void _init( void ){
    // data sheet.  I'll use 160MHz for Fvco and divide by 2
    // to get an 80MHz output clock
    //
+   // See chapter 6 of the reference manual
    int N = 40;
    int M = 1;
    RCC_Regs *rcc = (RCC_Regs *)RCC_BASE;
@@ -155,6 +177,8 @@ void HalApi::init() {
  *****************************************************************/
 static void InitGPIO( void )
 {
+   // See chapter 8 of the reference manual for details on GPIO
+
    // Enable all the GPIO clocks
    EnableClock( GPIO_A_BASE );
    EnableClock( GPIO_B_BASE );
@@ -213,6 +237,9 @@ void HalApi::digitalWrite(BinaryPin pin, VoltageLevel value) {
  * I use one of the basic timers (timer 6) for general system timing.
  * I configure it to count every microsecond and generate an interrupt 
  * every millisecond
+ *
+ * The basic timers (like timer 6) are documented in chapter 29 of
+ * the reference manual
  *****************************************************************/
 static void InitSysTimer( void ){
 
@@ -279,6 +306,8 @@ void HalApi::delay(uint32_t ms){
  * PA1 (ADC1_IN6)  - pressure
  * PA4 (ADC1_IN9)  - inhale flow
  * PB0 (ADC1_IN15) - exhale flow
+ *
+ * See chapter 16 of the reference manual
  *
  *****************************************************************/
 static void InitADC( void ){
@@ -386,6 +415,9 @@ int HalApi::analogRead(AnalogPin pin){
  *
  * For now I'll just set up the blower since that's the only
  * one called out in the HAL
+ *
+ * These timers are documented in chapters 26 and 27 of the reference
+ * manual.
  *****************************************************************/
 static void InitPwmOut( void )
 {
@@ -444,16 +476,22 @@ void HalApi::analogWrite(PwmPin pin, int value) {
 
 /******************************************************************
  * Serial port to GUI
+ * Chapter 38 of the reference manual defines the USART registers.
  *****************************************************************/
 
 // This class is a generic circular buffer for byte sized data.
 // It could probably go in it's own header outside the HAL, we 
 // would just need to add interrupt suspend/restore to the HAL
 // definition.
+//
+// Note that this class is used from both the main line of code
+// and the interrupt handlers, so it needs to be thread safe.
+// I'm disabling interrupts during the critical sections to 
+// ensure that's the case.
 template <int N> class CircBuff
 {
-   uint8_t buff[N];
-   int head, tail;
+   volatile uint8_t buff[N];
+   volatile int head, tail;
 
 public:
    CircBuff( void ){
@@ -492,11 +530,11 @@ public:
       return ret;
    }
 
-   // Add a byte ot the buffer
-   // Retuns 1 on success, 0 if the buffer is full
-   int Put( uint8_t dat )
+   // Add a byte to the buffer
+   // Returnes true on success, false if the buffer is full
+   bool Put( uint8_t dat )
    {
-      int ret = 0;
+      bool ret = false;
 
       int p = IntSuspend();
 
@@ -507,7 +545,7 @@ public:
       {
          buff[head] = dat;
          head = h;
-         ret = 1;
+         ret = true;
       }
 
       IntRestore( p );
@@ -561,6 +599,8 @@ public:
       }
    }
 
+   // Read up to len bytes and store them in the passed buffer.
+   // Returns the number of bytes actually read.
    uint16_t read( uint8_t *buf, uint16_t len ){
 
       for( uint16_t i=0; i<len; i++ ) {
@@ -571,6 +611,8 @@ public:
       return len;
    }
 
+   // Write up to len bytes to the buffer and return the
+   // number actually written.
    uint16_t write( const uint8_t *buf, uint16_t len) {
 
       uint16_t i;
@@ -585,10 +627,14 @@ public:
       return i;
    }
 
+   // Return the number of bytes currently in the 
+   // receive buffer and ready to be read.
    int RxFull( void ){
       return rxDat.FullCt();
    }
 
+   // Returns the number of free locations in the 
+   // transmit buffer.
    int TxFree( void ){
       return txDat.FreeCt();
    }
@@ -633,7 +679,6 @@ uint16_t HalApi::serialBytesAvailableForRead() {
 
 uint16_t HalApi::serialWrite(const char *buf, uint16_t len) {
    return rpUART.write( (const uint8_t *)buf, len);
-  return 0;
 }
 
 uint16_t HalApi::serialBytesAvailableForWrite() {
@@ -704,9 +749,15 @@ static void EnableClock( uint32_t base )
       case TIMER16_BASE: ndx = 6; bit = 17; break;
    }
 
-   // Not sure what to do if the input address isn't found.
-   // For now I just return.  Maybe I should force a fault?
-   if( ndx < 0 ) return;
+   // If the input address wasn't found then it's definitly 
+   // a bug.  I'll just loop forever here causing the code
+   // to crash.  That should make it easier to find the 
+   // bug during development.
+   if( ndx < 0 )
+   {
+      IntDisable();
+      while( 1 ){}
+   }
 
    // Enable the clock of the requested peripherial
    RCC_Regs *rcc = (RCC_Regs *)RCC_BASE;
@@ -739,7 +790,7 @@ void (* const vectors[])(void) =
    // The first entry of the ISR holds the initial value of the
    // stack pointer.  The ARM processor initializes the stack
    // pointer based on this address.
-   (void (*)(void))((uint32_t)mainStack + sizeof(mainStack)),
+   (void (*)(void))((uint32_t)systemStack + sizeof(systemStack)),
 
    // The second ISR entry is the reset vector which is an 
    // assembly language routine that does some basic memory 

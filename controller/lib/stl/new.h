@@ -27,6 +27,9 @@ limitations under the License.
 // stubbed out here.
 inline void *operator new(size_t, void *__ptr) { return __ptr; }
 
+#else
+#include <new>
+
 #endif // ARDUINO_AVR_UNO
 
 #endif // NEW_H

@@ -1,6 +1,24 @@
 version: 2.1
 
 jobs:
+  common-precommit-checks:
+    docker:
+      - image: circleci/python:3.8
+    steps:
+      - checkout
+      - run:
+          name: Install pre-commit
+          command: |
+            pip install pre-commit
+      - run:
+          name: Run pre-commit hooks
+          command: |
+            merge_base=$(git merge-base -a HEAD origin/master)
+            changed_files=$(git diff --name-only $merge_base...HEAD)
+            echo "Changed files since branched from origin/master: " $changed_files
+            git reset --soft $merge_base
+            pre-commit run --show-diff-on-failure --files $changed_files
+
   # This job creates an image that has the necessary tools to build and test the controller code, then runs it.
   # It replicates the same environment as the one used in TravisCI (see the .travis.yml file in this repo),
   # though without the GUI build tools and dependencies.
@@ -74,8 +92,10 @@ jobs:
 workflows:
   commit:
     jobs:
+      - common-precommit-checks
       - controller-test
       - gui-static-analysis
       - gui-build-image:
           requires:
+            - common-precommit-checks
             - gui-static-analysis

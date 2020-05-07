@@ -102,10 +102,6 @@ TEST_F(BlowerFsmTest, TurnOff) {
   });
 }
 
-// TODO(#220): Test changing the state of the blower FSM while it's running.
-//
-//  - Changes to params should take effect only at the next breath, but
-//  - Switching from ON to OFF and vice versa should happen immediately.
 TEST_F(BlowerFsmTest, ChangeOfParamsStartAtTheNextBreath) {
   VentParams p_init = VentParams_init_zero;
   p_init.mode = VentMode_PRESSURE_CONTROL;

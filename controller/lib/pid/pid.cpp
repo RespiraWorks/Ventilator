@@ -20,21 +20,15 @@ limitations under the License.
 #include "algorithm.h"
 #include "hal.h"
 
-PID::PID(float kp, float ki, float kd, ProportionalTerm p_term,
-         DifferentialTerm d_term, ControlDirection direction)
-    : kp_(kp), ki_(ki), kd_(kd), p_term_(p_term), d_term_(d_term),
-      direction_(direction) {}
-
-bool PID::Compute(float input, float setpoint, float *output) {
+float PID::Compute(float input, float setpoint) {
   Time now = Hal.now();
   if (!initialized_) {
     last_input_ = input;
     last_error_ = setpoint - input;
-    output_sum_ = stl::clamp(*output, out_min_, out_max_);
     next_sample_time_ = now;
     // last call time defined as now - SampleTime to enable computation on first
     // call (user should call Compute() immediately after SetMode(Auto))
-    last_update_time_ = now - sample_time_;
+    last_update_time_ = now - sample_period_;
     initialized_ = true;
   }
 
@@ -44,7 +38,7 @@ bool PID::Compute(float input, float setpoint, float *output) {
   float samplesTimeChangeSec = effectiveSampleTime.seconds();
   // condition to update output : 1 sample time has passed and we have new data
   if (now < next_sample_time_ || samplesTimeChangeSec <= 0) {
-    return false;
+    return last_output_;
   }
   // Compute all the working error variables
   float error = setpoint - input;
@@ -68,8 +62,9 @@ bool PID::Compute(float input, float setpoint, float *output) {
   }
   output_sum_ += (ki * error * samplesTimeChangeSec);
 
-  if (p_term_ == ProportionalTerm::ON_MEASUREMENT)
+  if (p_term_ == ProportionalTerm::ON_MEASUREMENT) {
     output_sum_ -= kp * dInput;
+  }
 
   output_sum_ = stl::clamp(output_sum_, out_min_, out_max_);
 
@@ -83,24 +78,13 @@ bool PID::Compute(float input, float setpoint, float *output) {
     res += kd * (error - last_error_) / samplesTimeChangeSec;
   }
 
-  *output = stl::clamp(res, out_min_, out_max_);
-
   // Remember some variables for next time
   last_input_ = input;
   last_error_ = error;
   last_update_time_ = now;
   // when should we expect to perform our next output calculation
-  next_sample_time_ = next_sample_time_ + sample_time_;
-  return true;
-}
+  next_sample_time_ = next_sample_time_ + sample_period_;
 
-void PID::SetSampleTime(Duration sample_time) {
-  next_sample_time_ = next_sample_time_ - sample_time_ + sample_time;
-  sample_time_ = sample_time;
-}
-
-void PID::SetOutputLimits(float min, float max) {
-  out_min_ = min;
-  out_max_ = max;
-  output_sum_ = stl::clamp(output_sum_, out_min_, out_max_);
+  last_output_ = stl::clamp(res, out_min_, out_max_);
+  return last_output_;
 }

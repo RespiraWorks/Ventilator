@@ -295,6 +295,17 @@ struct I2C_Regs
    REG txData;
 };
 
+// Watchdog timer
+#define WATCHDOG_BASE               0x40003000
+struct Watchdog_Regs
+{
+   REG key;
+   REG prescale;
+   REG reload;
+   REG status;
+   REG window;
+};
+
 // General Purpose I/O
 #define GPIO_A_BASE                 0x48000000
 #define GPIO_B_BASE                 0x48000400

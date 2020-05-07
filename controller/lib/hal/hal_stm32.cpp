@@ -46,7 +46,6 @@ static void InitPwmOut();
 static void InitUARTs();
 static void EnableClock( uint32_t base );
 static void EnableInterrupt( int addr, int pri );
-static void DisableInterrupt( int addr );
 static void Timer6ISR();
 static void UART3_ISR();
 
@@ -140,6 +139,7 @@ void HalApi::init() {
    InitADC();
    InitPwmOut();
    InitUARTs();
+   watchdog_init();
 
    // Enable interrupts
    IntEnable();
@@ -155,6 +155,9 @@ void HalApi::init() {
    // "Application interrupt and reset control register (AIRCR)"
    SysCtrl_Reg *sysCtl = reinterpret_cast<SysCtrl_Reg *>(SYSCTL_BASE);
    sysCtl->apInt = 0x05FA0004;
+
+   // We promised we wouldn't return, so...
+   while (true) {}
 }
 
 /******************************************************************
@@ -383,9 +386,6 @@ int HalApi::analogRead(AnalogPin pin){
       case AnalogPin::OUTFLOW_PRESSURE_DIFF:
          channel = 15;
          break;
-
-      default:
-         return 0;
    }
 
    ADC_Regs *adc = reinterpret_cast<ADC_Regs *>(ADC_BASE);
@@ -468,9 +468,6 @@ void HalApi::analogWrite(PwmPin pin, int value) {
          tmr = reinterpret_cast<TimerRegs *>(TIMER2_BASE);
          chan = 1;
          break;
-
-      default:
-         return;
    }
 
    tmr->compare[chan] = tmr->reload * duty;
@@ -688,12 +685,46 @@ uint16_t HalApi::serialBytesAvailableForWrite() {
 }
 
 /******************************************************************
- * Watchdog timer
+ * Watchdog timer (see chapter 32 of reference manual).
+ * 
+ * The watchdog timer will reset the system if it hasn't been 
+ * re-initialized within a specific amount of time.  It's used 
+ * to catch bugs that would otherwise hang the system.  When
+ * the watchdog is enabled such a bug will reset the system 
+ * rather then let it hang indefinitely.
  *****************************************************************/
 void HalApi::watchdog_init() {
+   Watchdog_Regs *wdog = reinterpret_cast<Watchdog_Regs *>(WATCHDOG_BASE);
+
+   // Enable the watchdog timer by writing the appropriate value to it's key register
+   wdog->key    = 0xCCCC;
+
+   // Enable register access
+   wdog->key    = 0x5555;
+
+   // Set the pre-scaler to 0.  That setting will cause the watchdog
+   // clock to be updated at approximately 8KHz.
+   wdog->prescale = 0;
+
+   // The reload value gives the number of clock cycles before the
+   // watchdog timer times out.  I'll set it to 1000 which gives 
+   // us about 250ms before a reset.
+   wdog->reload = 2000;
+
+   // Since the watchdog timer runs off it's own clock which is pretty
+   // slow, it takes a little time for the registers to actually get 
+   // updated.  I wait for the status register to go to zero which 
+   // means it's done.
+   while( wdog->status ){}
+
+   // Reset the timer.  This also locks the registers again.
+   wdog->key    = 0xAAAA;
 }
 
+// Pet the watchdog so he doesn't bite us.
 void HalApi::watchdog_handler() {
+   Watchdog_Regs *wdog = reinterpret_cast<Watchdog_Regs *>(WATCHDOG_BASE);
+   wdog->key    = 0xAAAA;
 }
 
 // Enable clocks to a specific peripherial.
@@ -895,15 +926,5 @@ static void EnableInterrupt( int addr, int pri )
    // The STM32 processor implements bits 4-7 of the NVIM priority register.
    nvic->priority[id] = pri<<4;
 }
-
-static void DisableInterrupt( int addr )
-{
-   IntCtrl_Regs *nvic = reinterpret_cast<IntCtrl_Regs *>(NVIC_BASE);
-
-   int id = addr/4 - 16;
-
-   nvic->clrEna[ id>>5 ] = 1<<(id&0x1F);
-}
-
 
 #endif

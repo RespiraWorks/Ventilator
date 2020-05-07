@@ -41,22 +41,16 @@ class PID {
 public:
   // Constructs the PID using the given parameters.
   PID(float kp, float ki, float kd, ProportionalTerm p_term,
-      DifferentialTerm d_term, ControlDirection direction);
+      DifferentialTerm d_term, ControlDirection direction, float output_min,
+      float output_max, Duration sample_period)
+      : kp_(kp), ki_(ki), kd_(kd), p_term_(p_term), d_term_(d_term),
+        direction_(direction), out_min_(output_min), out_max_(output_max),
+        sample_period_(sample_period) {}
 
-  // Performs one step of the PID calculation. Calculation frequency
-  // can be set using SetSampleTime.
-  // Returns false if this call was ignored due to being within sample time
-  // of the previous call, otherwise true.
-  bool Compute(float input, float setpoint, float *output);
-
-  // Clamps the output to a specific range. 0-255 by default, but
-  // it's likely the user will want to change this depending on
-  // the application.
-  void SetOutputLimits(float min, float max);
-
-  // Sets the frequency, in Milliseconds, with which the PID calculation
-  // is performed.  Default is 100.
-  void SetSampleTime(Duration sample_time);
+  // Performs one step of the PID calculation.
+  // If this call was ignored due to being within sample time
+  // of the previous call, returns the last returned value.
+  float Compute(float input, float setpoint);
 
 private:
   const float kp_; // * (P)roportional Tuning Parameter
@@ -67,16 +61,17 @@ private:
   const DifferentialTerm d_term_;
   const ControlDirection direction_;
 
-  // default output limit corresponds to the arduino pwm limits
-  float out_min_ = 0;
-  float out_max_ = 255;
+  const float out_min_;
+  const float out_max_;
+
+  const Duration sample_period_;
 
   bool initialized_ = false;
-  Duration sample_time_ = milliseconds(100);
   Time next_sample_time_ = millisSinceStartup(0);
   Time last_update_time_ = millisSinceStartup(0);
-  float output_sum_;
-  float last_input_;
-  float last_error_;
+  float output_sum_ = 0;
+  float last_input_ = 0;
+  float last_error_ = 0;
+  float last_output_ = 0;
 };
 #endif

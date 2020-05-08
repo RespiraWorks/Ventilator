@@ -38,6 +38,9 @@ constexpr static Length DEFAULT_VENTURI_CHOKE_DIAM = millimeters(5.5f);
 static_assert(DEFAULT_VENTURI_PORT_DIAM > DEFAULT_VENTURI_CHOKE_DIAM);
 static_assert(DEFAULT_VENTURI_CHOKE_DIAM > meters(0));
 
+// TODO: VOLUME_INTEGRAL_INTERVAL was not chosen carefully.
+static constexpr Duration VOLUME_INTEGRAL_INTERVAL = milliseconds(5);
+
 // Arduino Nano ADC is 10 bit, default 5V Vref_P (~4.9 mV
 // per count) [V];
 //
@@ -145,6 +148,18 @@ VolumetricFlow get_volumetric_outflow() {
   return pressure_delta_to_flow(read_pressure_sensor(OUTFLOW_PRESSURE_DIFF));
 }
 
+/*
+ * @brief Method implements Bernoulli's equation assuming the Venturi Effect.
+ * https://en.wikipedia.org/wiki/Venturi_effect
+ *
+ * Solves for the volumetric flow rate since A1/A2, rho, and differential
+ * pressure are known. Q = sqrt(2/rho) * (A1*A2) * 1/sqrt(A1^2-A2^2) *
+ * sqrt(p1-p2); based on (p1 - p2) = (rho/2) * (v2^2 - v1^2); where A1 > A2
+ *
+ * @return the volumetric flow in [meters^3/s]. Can be negative, indicating
+ * direction of flow, depending on how the differential sensor is attached to
+ * the venturi.
+ */
 VolumetricFlow pressure_delta_to_flow(Pressure delta) {
   // TODO(jlebar): Make these constexpr once we have a C++ standard library
   // PortArea must be larger than the ChokeArea [meters^2]
@@ -162,4 +177,50 @@ VolumetricFlow pressure_delta_to_flow(Pressure delta) {
   return cubic_m_per_sec(sgn * sqrtf(2 / DENSITY_OF_AIR_KG_PER_CUBIC_METER) *
                          venturiAreaProduct * bernoulliAreaDivisor *
                          sqrtf(abs(delta.kPa()) * 1000.0f));
+}
+
+Volume integrate_flow(VolumetricFlow flow) {
+  // volume integral computation data
+  static Time last_flow_measurement_time = millisSinceStartup(0);
+  static VolumetricFlow last_flow = cubic_m_per_sec(0);
+  static Volume volume = ml(0);
+  static bool integrator_initialized = 0;
+
+  // TODO: This calculation should be much more sophisticated.  Some possible
+  // improvements.
+  //
+  //  - Periodically re-zero the volume (e.g. what happens if the tubes are
+  //    disconnected from the patient?)
+  //
+  //  - Measure time with better than millisecond granularity.
+  Time now = Hal.now();
+  if (integrator_initialized == 0) { // First time
+    last_flow = flow;
+    last_flow_measurement_time = now;
+    integrator_initialized = 1;
+  } else if (Duration delta = now - last_flow_measurement_time;
+             delta >= VOLUME_INTEGRAL_INTERVAL) {
+    volume = volume + ml(delta.minutes() *
+                         (last_flow.ml_per_min() + flow.ml_per_min()) / 2);
+    last_flow_measurement_time = now;
+  }
+  return volume;
+}
+
+SensorReadings get_sensor_readings() {
+  SensorReadings readings;
+  Pressure cur_pressure = get_patient_pressure();
+  // Store sensor readings so they can eventually be sent to the GUI.
+  // This pressure is just from the patient sensor, converted to the right
+  // units.
+  readings.pressure_cm_h2o = cur_pressure.cmH2O();
+
+  // Flow rate is inhalation flow minus exhalation flow. Positive value is flow
+  // into lungs, and negative is flow out of lungs.
+  VolumetricFlow flow = get_volumetric_inflow() - get_volumetric_outflow();
+  readings.flow_ml_per_min = flow.ml_per_min();
+
+  readings.volume_ml = integrate_flow(flow).ml();
+
+  return readings;
 }

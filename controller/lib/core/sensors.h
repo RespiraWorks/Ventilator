@@ -23,6 +23,7 @@ Arduino Nano and the MPXV5004GP and MPXV7002DP pressure sensors.
 #define SENSORS_H
 
 #include "hal.h"
+#include "network_protocol.pb.h"
 #include "units.h"
 
 // A namespace class for constants related to pressure sensors.
@@ -60,5 +61,9 @@ VolumetricFlow get_volumetric_outflow();
  * the venturi.
  */
 VolumetricFlow pressure_delta_to_flow(Pressure delta);
+
+// get the sensor readings (patient pressure, volumetric flow and tidal
+// volume) from the sensors
+SensorReadings get_sensor_readings();
 
 #endif // SENSORS_H

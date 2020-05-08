@@ -28,10 +28,10 @@ the programmer's manual for the processor available here:
 #include "hal.h"
 #include "hal_stm32.h"
 
-#define SYSTEM_STACK_SIZE       500
+#define SYSTEM_STACK_SIZE 2500
 
 // This is the main stack used in our system.
-__attribute__((aligned (8))) uint32_t systemStack[ SYSTEM_STACK_SIZE ];
+__attribute__((aligned(8))) uint32_t systemStack[SYSTEM_STACK_SIZE];
 
 // local data
 static volatile int64_t msCount;
@@ -44,8 +44,8 @@ static void InitADC();
 static void InitSysTimer();
 static void InitPwmOut();
 static void InitUARTs();
-static void EnableClock( uint32_t base );
-static void EnableInterrupt( int addr, int pri );
+static void EnableClock(uint32_t base);
+static void EnableInterrupt(int addr, int pri);
 static void Timer6ISR();
 static void UART3_ISR();
 
@@ -53,9 +53,7 @@ static void UART3_ISR();
 // rather then main.  If we adopt this HAL then we can
 // just rename it main and get rid of the following function.
 extern void setup();
-int main(){
-   setup();
-}
+int main() { setup(); }
 
 // This function is called from the libc initialization code
 // before any static constructors are called.  We do some basic
@@ -66,7 +64,7 @@ int main(){
 // constructor uses any floating point math, and to enable
 // the PLL so we can run at full speed (80MHz) rather then the
 // default speed of 4MHz.
-extern "C" void _init(){
+extern "C" void _init() {
 
   // Enable the FPU.  This allows floating point to be used without
   // generating a hard fault.
@@ -122,11 +120,11 @@ extern "C" void _init(){
   while (!(rcc->clkCtrl & 0x02000000)) {
   }
 
-   // Set PLL as system clock
-   rcc->clkCfg = 0x00000003;
+  // Set PLL as system clock
+  rcc->clkCfg = 0x00000003;
 
-   // Use system clock as the A/D clock
-   rcc->indClkCfg = 0x30000000;
+  // Use system clock as the A/D clock
+  rcc->indClkCfg = 0x30000000;
 }
 
 /*
@@ -134,16 +132,16 @@ extern "C" void _init(){
  */
 void HalApi::init() {
 
-   // Init various components needed by the system.
-   InitGPIO();
-   InitSysTimer();
-   InitADC();
-   InitPwmOut();
-   InitUARTs();
-   watchdog_init();
+  // Init various components needed by the system.
+  InitGPIO();
+  InitSysTimer();
+  InitADC();
+  InitPwmOut();
+  InitUARTs();
+  watchdog_init();
 
-   // Enable interrupts
-   IntEnable();
+  // Enable interrupts
+  IntEnable();
 }
 
 // Reset the processor
@@ -182,60 +180,57 @@ void HalApi::init() {
  *         PWM it to reduce the solenoid voltage.
  *         For no I'm treating it as a digital output.
  *****************************************************************/
-static void InitGPIO()
-{
-   // See chapter 8 of the reference manual for details on GPIO
+static void InitGPIO() {
+  // See chapter 8 of the reference manual for details on GPIO
 
-   // Enable all the GPIO clocks
-   EnableClock( GPIO_A_BASE );
-   EnableClock( GPIO_B_BASE );
-   EnableClock( GPIO_C_BASE );
-   EnableClock( GPIO_D_BASE );
-   EnableClock( GPIO_E_BASE );
-   EnableClock( GPIO_H_BASE );
+  // Enable all the GPIO clocks
+  EnableClock(GPIO_A_BASE);
+  EnableClock(GPIO_B_BASE);
+  EnableClock(GPIO_C_BASE);
+  EnableClock(GPIO_D_BASE);
+  EnableClock(GPIO_E_BASE);
+  EnableClock(GPIO_H_BASE);
 
-   // Configure PCB ID pins as inputs.
-   GPIO_PinMode( GPIO_B_BASE,  1, GPIO_MODE_INPUT );
-   GPIO_PinMode( GPIO_A_BASE, 12, GPIO_MODE_INPUT );
+  // Configure PCB ID pins as inputs.
+  GPIO_PinMode(GPIO_B_BASE, 1, GPIO_MODE_INPUT);
+  GPIO_PinMode(GPIO_A_BASE, 12, GPIO_MODE_INPUT);
 
-   // Configure LED pins as outputs
-   GPIO_PinMode( GPIO_C_BASE, 13, GPIO_MODE_OUTPUT );
-   GPIO_PinMode( GPIO_C_BASE, 14, GPIO_MODE_OUTPUT );
-   GPIO_PinMode( GPIO_C_BASE, 15, GPIO_MODE_OUTPUT );
+  // Configure LED pins as outputs
+  GPIO_PinMode(GPIO_C_BASE, 13, GPIO_MODE_OUTPUT);
+  GPIO_PinMode(GPIO_C_BASE, 14, GPIO_MODE_OUTPUT);
+  GPIO_PinMode(GPIO_C_BASE, 15, GPIO_MODE_OUTPUT);
 
-   // Turn all three LEDs off initially
-   GPIO_ClrPin( GPIO_C_BASE, 13 );
-   GPIO_ClrPin( GPIO_C_BASE, 14 );
-   GPIO_ClrPin( GPIO_C_BASE, 15 );
+  // Turn all three LEDs off initially
+  GPIO_ClrPin(GPIO_C_BASE, 13);
+  GPIO_ClrPin(GPIO_C_BASE, 14);
+  GPIO_ClrPin(GPIO_C_BASE, 15);
 
-   // Configure the solenoid and turn it off
-   GPIO_PinMode( GPIO_A_BASE, 11, GPIO_MODE_OUTPUT );
-   GPIO_ClrPin( GPIO_A_BASE, 11 );
+  // Configure the solenoid and turn it off
+  GPIO_PinMode(GPIO_A_BASE, 11, GPIO_MODE_OUTPUT);
+  GPIO_ClrPin(GPIO_A_BASE, 11);
 }
 
 // Set or clear the specified digital output
 void HalApi::digitalWrite(BinaryPin pin, VoltageLevel value) {
-   uint32_t base;
-   int bit;
+  uint32_t base;
+  int bit;
 
-   switch( pin )
-   {
-      case BinaryPin::SOLENOID:
-         base = GPIO_A_BASE;
-         bit = 11;
-         break;
-   }
+  switch (pin) {
+  case BinaryPin::SOLENOID:
+    base = GPIO_A_BASE;
+    bit = 11;
+    break;
+  }
 
-   switch( value )
-   {
-      case VoltageLevel::HAL_HIGH:
-         GPIO_SetPin( base, bit );
-         break;
+  switch (value) {
+  case VoltageLevel::HAL_HIGH:
+    GPIO_SetPin(base, bit);
+    break;
 
-      case VoltageLevel::HAL_LOW:
-         GPIO_ClrPin( base, bit );
-         break;
-   }
+  case VoltageLevel::HAL_LOW:
+    GPIO_ClrPin(base, bit);
+    break;
+  }
 }
 
 /******************************************************************
@@ -248,56 +243,51 @@ void HalApi::digitalWrite(BinaryPin pin, VoltageLevel value) {
  * The basic timers (like timer 6) are documented in chapter 29 of
  * the reference manual
  *****************************************************************/
-static void InitSysTimer(){
+static void InitSysTimer() {
 
-   // Enable the clock to the timer
-   EnableClock( TIMER6_BASE );
+  // Enable the clock to the timer
+  EnableClock(TIMER6_BASE);
 
-   // Just set the timer up to count every microsecond.
-   TimerRegs *tmr = reinterpret_cast<TimerRegs *>(TIMER6_BASE);
-   tmr->reload = 999;
-   tmr->prescale = (CPU_FREQ_MHZ-1);
-   tmr->event = 1;
-   tmr->ctrl[0] = 1;
-   tmr->intEna  = 1;
+  // Just set the timer up to count every microsecond.
+  TimerRegs *tmr = reinterpret_cast<TimerRegs *>(TIMER6_BASE);
+  tmr->reload = 999;
+  tmr->prescale = (CPU_FREQ_MHZ - 1);
+  tmr->event = 1;
+  tmr->ctrl[0] = 1;
+  tmr->intEna = 1;
 
-   EnableInterrupt( INT_VEC_TIMER6, 3 );
+  EnableInterrupt(INT_VEC_TIMER6, 3);
 }
 
 // Just spin for a specified number of microseconds
-static void BusyWait( uint16_t usec )
-{
-   while( usec > 1000 )
-   {
-      BusyWait(1000);
-      usec -= 1000;
-   }
+static void BusyWait(uint16_t usec) {
+  while (usec > 1000) {
+    BusyWait(1000);
+    usec -= 1000;
+  }
 
-   TimerRegs *tmr = reinterpret_cast<TimerRegs *>(TIMER6_BASE);
-   uint16_t start = tmr->counter;
-   while( 1 )
-   {
-      uint16_t dt = tmr->counter - start;
-      if( dt >= usec )
-         return;
-   }
+  TimerRegs *tmr = reinterpret_cast<TimerRegs *>(TIMER6_BASE);
+  uint16_t start = tmr->counter;
+  while (1) {
+    uint16_t dt = tmr->counter - start;
+    if (dt >= usec)
+      return;
+  }
 }
 
-static void Timer6ISR()
-{
-   TimerRegs *tmr = reinterpret_cast<TimerRegs *>(TIMER6_BASE);
-   tmr->status = 0;
-   msCount++;
+static void Timer6ISR() {
+  TimerRegs *tmr = reinterpret_cast<TimerRegs *>(TIMER6_BASE);
+  tmr->status = 0;
+  msCount++;
 }
 
-void HalApi::delay(Duration d){
-   int64_t start = msCount;
-   while( (msCount - start) < d.milliseconds() ){}
+void HalApi::delay(Duration d) {
+  int64_t start = msCount;
+  while ((msCount - start) < d.milliseconds()) {
+  }
 }
 
-Time HalApi::now(){
-   return millisSinceStartup(msCount);
-}
+Time HalApi::now() { return millisSinceStartup(msCount); }
 
 /******************************************************************
  * A/D inputs.
@@ -312,93 +302,95 @@ Time HalApi::now(){
  * See chapter 16 of the reference manual
  *
  *****************************************************************/
-static void InitADC(){
-   // Enable the clock to the A/D converter
-   EnableClock( ADC_BASE );
+static void InitADC() {
+  // Enable the clock to the A/D converter
+  EnableClock(ADC_BASE);
 
-   // Configure the 4 pins used as analog inputs
-   GPIO_PinMode( GPIO_A_BASE, 0, GPIO_MODE_ANALOG );
-   GPIO_PinMode( GPIO_A_BASE, 1, GPIO_MODE_ANALOG );
-   GPIO_PinMode( GPIO_A_BASE, 4, GPIO_MODE_ANALOG );
-   GPIO_PinMode( GPIO_B_BASE, 0, GPIO_MODE_ANALOG );
+  // Configure the 4 pins used as analog inputs
+  GPIO_PinMode(GPIO_A_BASE, 0, GPIO_MODE_ANALOG);
+  GPIO_PinMode(GPIO_A_BASE, 1, GPIO_MODE_ANALOG);
+  GPIO_PinMode(GPIO_A_BASE, 4, GPIO_MODE_ANALOG);
+  GPIO_PinMode(GPIO_B_BASE, 0, GPIO_MODE_ANALOG);
 
-   // Perform a power-up and calibration sequence on
-   // the A/D converter
-   ADC_Regs *adc = reinterpret_cast<ADC_Regs *>(ADC_BASE);
+  // Perform a power-up and calibration sequence on
+  // the A/D converter
+  ADC_Regs *adc = reinterpret_cast<ADC_Regs *>(ADC_BASE);
 
-   // Exit deep power down mode and turn on the
-   // internal voltage regulator.
-   adc->adc[0].ctrl   = 0x10000000;
+  // Exit deep power down mode and turn on the
+  // internal voltage regulator.
+  adc->adc[0].ctrl = 0x10000000;
 
-   // Wait for the startup time specified in the datasheet
-   // for the voltage regulator to become ready.
-   // The time in the datasheet is 20 microseconds, but
-   // I'll wait for 30 just to be extra conservative
-   BusyWait( 30 );
+  // Wait for the startup time specified in the datasheet
+  // for the voltage regulator to become ready.
+  // The time in the datasheet is 20 microseconds, but
+  // I'll wait for 30 just to be extra conservative
+  BusyWait(30);
 
-   // Calibrate the A/D for single ended channels
-   adc->adc[0].ctrl |= 0x80000000;
+  // Calibrate the A/D for single ended channels
+  adc->adc[0].ctrl |= 0x80000000;
 
-   // Wait until the CAL bit is cleared meaning
-   // calibration is finished
-   while( adc->adc[0].ctrl & 0x80000000 ){}
+  // Wait until the CAL bit is cleared meaning
+  // calibration is finished
+  while (adc->adc[0].ctrl & 0x80000000) {
+  }
 
-   // Clear all the status bits
-   adc->adc[0].stat = 0x3FF;
+  // Clear all the status bits
+  adc->adc[0].stat = 0x3FF;
 
-   // Enable the A/D
-   adc->adc[0].ctrl |= 0x00000001;
+  // Enable the A/D
+  adc->adc[0].ctrl |= 0x00000001;
 
-   // Wait for the ADRDY status bit to be set
-   while( !(adc->adc[0].stat & 0x00000001) ){}
+  // Wait for the ADRDY status bit to be set
+  while (!(adc->adc[0].stat & 0x00000001)) {
+  }
 
-   // Configure the A/D as 12-bit resolution
-   adc->adc[0].cfg[0] = 0x00000000;
+  // Configure the A/D as 12-bit resolution
+  adc->adc[0].cfg[0] = 0x00000000;
 
-   // Set sample time. I'm using 92.5 A/D clocks (a little over 1us)
-   // to sample.  We'll need to do a bit of testing to see what the
-   // best value is for this
-   adc->adc[0].samp[0] = 5;
+  // Set sample time. I'm using 92.5 A/D clocks (a little over 1us)
+  // to sample.  We'll need to do a bit of testing to see what the
+  // best value is for this
+  adc->adc[0].samp[0] = 5;
 }
 
 // Read a single A/D channel.
 // This just does the conversion immediately when called.
 //
-// It would be better to start a sequence of conversions at the beginning of the loop
-// but the HAL interface currently isn't set up to run that way.  That's an improvement
-// that can be made later
-int HalApi::analogRead(AnalogPin pin){
+// It would be better to start a sequence of conversions at the beginning of the
+// loop but the HAL interface currently isn't set up to run that way.  That's an
+// improvement that can be made later
+int HalApi::analogRead(AnalogPin pin) {
 
-   int channel = 0;
-   switch( pin )
-   {
-      case AnalogPin::PATIENT_PRESSURE:
-         channel = 6;
-         break;
+  int channel = 0;
+  switch (pin) {
+  case AnalogPin::PATIENT_PRESSURE:
+    channel = 6;
+    break;
 
-      case AnalogPin::INFLOW_PRESSURE_DIFF:
-         channel = 9;
-         break;
+  case AnalogPin::INFLOW_PRESSURE_DIFF:
+    channel = 9;
+    break;
 
-      case AnalogPin::OUTFLOW_PRESSURE_DIFF:
-         channel = 15;
-         break;
-   }
+  case AnalogPin::OUTFLOW_PRESSURE_DIFF:
+    channel = 15;
+    break;
+  }
 
-   ADC_Regs *adc = reinterpret_cast<ADC_Regs *>(ADC_BASE);
-   adc->adc[0].seq[0] = channel << 6;
+  ADC_Regs *adc = reinterpret_cast<ADC_Regs *>(ADC_BASE);
+  adc->adc[0].seq[0] = channel << 6;
 
-   // Clear the EOC flag
-   adc->adc[0].stat = 4;
+  // Clear the EOC flag
+  adc->adc[0].stat = 4;
 
-   // Start the conversion
-   adc->adc[0].ctrl |= 4;
+  // Start the conversion
+  adc->adc[0].ctrl |= 4;
 
-   // Wait for the end of the conversion
-   while( !(adc->adc[0].stat & 4) ){}
+  // Wait for the end of the conversion
+  while (!(adc->adc[0].stat & 4)) {
+  }
 
-   // Return the result
-   return adc->adc[0].data;
+  // Return the result
+  return adc->adc[0].data;
 }
 
 /******************************************************************
@@ -418,35 +410,34 @@ int HalApi::analogRead(AnalogPin pin){
  * These timers are documented in chapters 26 and 27 of the reference
  * manual.
  *****************************************************************/
-static void InitPwmOut()
-{
-   // The PWM frequency isn't mentioned anywhere that I can find, so
-   // I'm just picking a reasonable number.  This can be refined later
-   const int pwmFreqHz  = 20000;
+static void InitPwmOut() {
+  // The PWM frequency isn't mentioned anywhere that I can find, so
+  // I'm just picking a reasonable number.  This can be refined later
+  const int pwmFreqHz = 20000;
 
-   EnableClock( TIMER2_BASE );
+  EnableClock(TIMER2_BASE);
 
-   // Connect PB3 to timer 2
-   GPIO_PinAltFunc( GPIO_B_BASE, 3, 1 );
+  // Connect PB3 to timer 2
+  GPIO_PinAltFunc(GPIO_B_BASE, 3, 1);
 
-   TimerRegs *tmr = reinterpret_cast<TimerRegs *>(TIMER2_BASE);
+  TimerRegs *tmr = reinterpret_cast<TimerRegs *>(TIMER2_BASE);
 
-   // Set the frequency
-   tmr->reload = (CPU_FREQ / pwmFreqHz)-1;
+  // Set the frequency
+  tmr->reload = (CPU_FREQ / pwmFreqHz) - 1;
 
-   // Configure channel 2 in PWM output mode
-   tmr->ccMode[0] = 0x6800;
+  // Configure channel 2 in PWM output mode
+  tmr->ccMode[0] = 0x6800;
 
-   tmr->ccEnable = 0x10;
+  tmr->ccEnable = 0x10;
 
-   // Start with 0% duty cycle
-   tmr->compare[1] = 0;
+  // Start with 0% duty cycle
+  tmr->compare[1] = 0;
 
-   // Load the shadow registers
-   tmr->event = 1;
+  // Load the shadow registers
+  tmr->event = 1;
 
-   // Start the counter
-   tmr->ctrl[0] = 0x81;
+  // Start the counter
+  tmr->ctrl[0] = 0x81;
 }
 
 // Set the PWM period.  Currently the value is 0 to 255 which is
@@ -454,20 +445,19 @@ static void InitPwmOut()
 // of 0.0 to 1.0 to make better use of our resolution
 void HalApi::analogWrite(PwmPin pin, int value) {
 
-   // Convert the value to a float
-   float duty =  value * (1.0/255);
+  // Convert the value to a float
+  float duty = value * (1.0 / 255);
 
-   TimerRegs *tmr;
-   int chan;
-   switch( pin )
-   {
-      case PwmPin::BLOWER:
-         tmr = reinterpret_cast<TimerRegs *>(TIMER2_BASE);
-         chan = 1;
-         break;
-   }
+  TimerRegs *tmr;
+  int chan;
+  switch (pin) {
+  case PwmPin::BLOWER:
+    tmr = reinterpret_cast<TimerRegs *>(TIMER2_BASE);
+    chan = 1;
+    break;
+  }
 
-   tmr->compare[chan] = tmr->reload * duty;
+  tmr->compare[chan] = tmr->reload * duty;
 }
 
 /******************************************************************
@@ -484,156 +474,145 @@ void HalApi::analogWrite(PwmPin pin, int value) {
 // and the interrupt handlers, so it needs to be thread safe.
 // I'm disabling interrupts during the critical sections to
 // ensure that's the case.
-template <int N> class CircBuff
-{
-   volatile uint8_t buff[N];
-   volatile int head, tail;
+template <int N> class CircBuff {
+  volatile uint8_t buff[N];
+  volatile int head, tail;
 
 public:
-   CircBuff(){
-      head = tail = 0;
-   }
+  CircBuff() { head = tail = 0; }
 
-   // Return number of bytes available in the buffer
-   int FullCt(){
-      bool p = IntSuspend();
-      int ct = head-tail;
-      IntRestore(p);
-      if( ct < 0 ) ct += N;
-      return ct;
-   }
+  // Return number of bytes available in the buffer
+  int FullCt() {
+    bool p = IntSuspend();
+    int ct = head - tail;
+    IntRestore(p);
+    if (ct < 0)
+      ct += N;
+    return ct;
+  }
 
-   // Return number of free spaces in the buffer
-   int FreeCt(){
-      return N-1-FullCt();
-   }
+  // Return number of free spaces in the buffer
+  int FreeCt() { return N - 1 - FullCt(); }
 
-   // Get the oldest byte from the buffer.
-   // Returns -1 if the buffer is empty
-   int Get()
-   {
-      int ret = -1;
+  // Get the oldest byte from the buffer.
+  // Returns -1 if the buffer is empty
+  int Get() {
+    int ret = -1;
 
-      bool p = IntSuspend();
+    bool p = IntSuspend();
 
-      if( head != tail )
-      {
-         ret = buff[tail++];
-         if( tail >= N ) tail = 0;
-      }
+    if (head != tail) {
+      ret = buff[tail++];
+      if (tail >= N)
+        tail = 0;
+    }
 
-      IntRestore( p );
-      return ret;
-   }
+    IntRestore(p);
+    return ret;
+  }
 
-   // Add a byte to the buffer
-   // Returnes true on success, false if the buffer is full
-   bool Put( uint8_t dat )
-   {
-      bool ret = false;
+  // Add a byte to the buffer
+  // Returnes true on success, false if the buffer is full
+  bool Put(uint8_t dat) {
+    bool ret = false;
 
-      bool p = IntSuspend();
+    bool p = IntSuspend();
 
-      int h = head+1;
-      if( h >= N ) h = 0;
+    int h = head + 1;
+    if (h >= N)
+      h = 0;
 
-      if( h != tail )
-      {
-         buff[head] = dat;
-         head = h;
-         ret = true;
-      }
+    if (h != tail) {
+      buff[head] = dat;
+      head = h;
+      ret = true;
+    }
 
-      IntRestore( p );
+    IntRestore(p);
 
-      return ret;
-   }
+    return ret;
+  }
 };
 
-class UART
-{
-   CircBuff<128> rxDat;
-   CircBuff<128> txDat;
-   UART_Regs *reg;
+class UART {
+  CircBuff<128> rxDat;
+  CircBuff<128> txDat;
+  UART_Regs *reg;
+
 public:
-   void Init( uint32_t baseAddr, int baud )
-   {
-      reg = reinterpret_cast<UART_Regs*>(baseAddr);
+  void Init(uint32_t baseAddr, int baud) {
+    reg = reinterpret_cast<UART_Regs *>(baseAddr);
 
-      // Set baud rate register
-      reg->baud = CPU_FREQ / baud;
+    // Set baud rate register
+    reg->baud = CPU_FREQ / baud;
 
-      // Enable the UART and receive interrupts
-      reg->ctrl[0] = 0x002D;
-   }
+    // Enable the UART and receive interrupts
+    reg->ctrl[0] = 0x002D;
+  }
 
-   void ISR(){
+  void ISR() {
 
-      // Check for over run error and framing errors.
-      // Clear those errors if they're set to avoid
-      // further interrupts from them.
-      if( reg->status & 0x000A )
-         reg->intClear = 0x000A;
+    // Check for over run error and framing errors.
+    // Clear those errors if they're set to avoid
+    // further interrupts from them.
+    if (reg->status & 0x000A)
+      reg->intClear = 0x000A;
 
-      // See if we received a new byte
-      if( reg->status & 0x0020 )
-         rxDat.Put( reg->rxDat );
+    // See if we received a new byte
+    if (reg->status & 0x0020)
+      rxDat.Put(reg->rxDat);
 
-      // Check for transmit data register empty
-      if( reg->status & reg->ctrl[0] & 0x0080 )
-      {
-         int ch = txDat.Get();
+    // Check for transmit data register empty
+    if (reg->status & reg->ctrl[0] & 0x0080) {
+      int ch = txDat.Get();
 
-         // If there's nothing left in the transmit buffer,
-         // just disable further transmit interrupts.
-         if( ch < 0 )
-            reg->ctrl[0] &= ~0x0080;
+      // If there's nothing left in the transmit buffer,
+      // just disable further transmit interrupts.
+      if (ch < 0)
+        reg->ctrl[0] &= ~0x0080;
 
-         // Otherwise, Send the next byte
-         else
-            reg->txDat = ch;
-      }
-   }
+      // Otherwise, Send the next byte
+      else
+        reg->txDat = ch;
+    }
+  }
 
-   // Read up to len bytes and store them in the passed buffer.
-   // Returns the number of bytes actually read.
-   uint16_t read( char *buf, uint16_t len ){
+  // Read up to len bytes and store them in the passed buffer.
+  // Returns the number of bytes actually read.
+  uint16_t read(char *buf, uint16_t len) {
 
-      for( uint16_t i=0; i<len; i++ ) {
-         int ch = rxDat.Get();
-         if( ch < 0 ) return i;
-         *buf++ = ch;
-      }
-      return len;
-   }
+    for (uint16_t i = 0; i < len; i++) {
+      int ch = rxDat.Get();
+      if (ch < 0)
+        return i;
+      *buf++ = ch;
+    }
+    return len;
+  }
 
-   // Write up to len bytes to the buffer and return the
-   // number actually written.
-   uint16_t write( const char *buf, uint16_t len) {
+  // Write up to len bytes to the buffer and return the
+  // number actually written.
+  uint16_t write(const char *buf, uint16_t len) {
 
-      uint16_t i;
-      for( i=0; i<len; i++ ){
-         if( !txDat.Put( *buf++ ) )
-            break;
-      }
+    uint16_t i;
+    for (i = 0; i < len; i++) {
+      if (!txDat.Put(*buf++))
+        break;
+    }
 
-      // Enable the tx interrupt
-      reg->ctrl[0] |= 0x0080;
+    // Enable the tx interrupt
+    reg->ctrl[0] |= 0x0080;
 
-      return i;
-   }
+    return i;
+  }
 
-   // Return the number of bytes currently in the
-   // receive buffer and ready to be read.
-   int RxFull(){
-      return rxDat.FullCt();
-   }
+  // Return the number of bytes currently in the
+  // receive buffer and ready to be read.
+  int RxFull() { return rxDat.FullCt(); }
 
-   // Returns the number of free locations in the
-   // transmit buffer.
-   int TxFree(){
-      return txDat.FreeCt();
-   }
+  // Returns the number of free locations in the
+  // transmit buffer.
+  int TxFree() { return txDat.FreeCt(); }
 };
 
 static UART rpUART;
@@ -645,41 +624,34 @@ static UART rpUART;
 //    PB14 - CTS
 //
 // These pins are connected to UART3
-static void InitUARTs()
-{
-// NOTE - The UART functionality hasn't been tested due to lack of hardware!
-//        Need to do that as soon as the boards are available.
-   EnableClock( UART3_BASE );
+static void InitUARTs() {
+  // NOTE - The UART functionality hasn't been tested due to lack of hardware!
+  //        Need to do that as soon as the boards are available.
+  EnableClock(UART3_BASE);
 
-   GPIO_PinAltFunc( GPIO_B_BASE, 10, 7 );
-   GPIO_PinAltFunc( GPIO_B_BASE, 11, 7 );
-   GPIO_PinAltFunc( GPIO_B_BASE, 13, 7 );
-   GPIO_PinAltFunc( GPIO_B_BASE, 14, 7 );
+  GPIO_PinAltFunc(GPIO_B_BASE, 10, 7);
+  GPIO_PinAltFunc(GPIO_B_BASE, 11, 7);
+  GPIO_PinAltFunc(GPIO_B_BASE, 13, 7);
+  GPIO_PinAltFunc(GPIO_B_BASE, 14, 7);
 
-   rpUART.Init( UART3_BASE, 115200 );
+  rpUART.Init(UART3_BASE, 115200);
 
-   EnableInterrupt( INT_VEC_UART3, 3 );
+  EnableInterrupt(INT_VEC_UART3, 3);
 }
 
-static void UART3_ISR(){
-   rpUART.ISR();
-}
+static void UART3_ISR() { rpUART.ISR(); }
 
 uint16_t HalApi::serialRead(char *buf, uint16_t len) {
-   return rpUART.read( buf, len );
+  return rpUART.read(buf, len);
 }
 
-uint16_t HalApi::serialBytesAvailableForRead() {
-   return rpUART.RxFull();
-}
+uint16_t HalApi::serialBytesAvailableForRead() { return rpUART.RxFull(); }
 
 uint16_t HalApi::serialWrite(const char *buf, uint16_t len) {
-   return rpUART.write( buf, len);
+  return rpUART.write(buf, len);
 }
 
-uint16_t HalApi::serialBytesAvailableForWrite() {
-   return rpUART.TxFree();
-}
+uint16_t HalApi::serialBytesAvailableForWrite() { return rpUART.TxFree(); }
 
 /******************************************************************
  * Watchdog timer (see chapter 32 of reference manual).
@@ -691,37 +663,39 @@ uint16_t HalApi::serialBytesAvailableForWrite() {
  * rather then let it hang indefinitely.
  *****************************************************************/
 void HalApi::watchdog_init() {
-   Watchdog_Regs *wdog = reinterpret_cast<Watchdog_Regs *>(WATCHDOG_BASE);
+  Watchdog_Regs *wdog = reinterpret_cast<Watchdog_Regs *>(WATCHDOG_BASE);
 
-   // Enable the watchdog timer by writing the appropriate value to it's key register
-   wdog->key    = 0xCCCC;
+  // Enable the watchdog timer by writing the appropriate value to it's key
+  // register
+  wdog->key = 0xCCCC;
 
-   // Enable register access
-   wdog->key    = 0x5555;
+  // Enable register access
+  wdog->key = 0x5555;
 
-   // Set the pre-scaler to 0.  That setting will cause the watchdog
-   // clock to be updated at approximately 8KHz.
-   wdog->prescale = 0;
+  // Set the pre-scaler to 0.  That setting will cause the watchdog
+  // clock to be updated at approximately 8KHz.
+  wdog->prescale = 0;
 
-   // The reload value gives the number of clock cycles before the
-   // watchdog timer times out.  I'll set it to 1000 which gives
-   // us about 250ms before a reset.
-   wdog->reload = 2000;
+  // The reload value gives the number of clock cycles before the
+  // watchdog timer times out.  I'll set it to 1000 which gives
+  // us about 250ms before a reset.
+  wdog->reload = 2000;
 
-   // Since the watchdog timer runs off it's own clock which is pretty
-   // slow, it takes a little time for the registers to actually get
-   // updated.  I wait for the status register to go to zero which
-   // means it's done.
-   while( wdog->status ){}
+  // Since the watchdog timer runs off it's own clock which is pretty
+  // slow, it takes a little time for the registers to actually get
+  // updated.  I wait for the status register to go to zero which
+  // means it's done.
+  while (wdog->status) {
+  }
 
-   // Reset the timer.  This also locks the registers again.
-   wdog->key    = 0xAAAA;
+  // Reset the timer.  This also locks the registers again.
+  wdog->key = 0xAAAA;
 }
 
 // Pet the watchdog so he doesn't bite us.
 void HalApi::watchdog_handler() {
-   Watchdog_Regs *wdog = reinterpret_cast<Watchdog_Regs *>(WATCHDOG_BASE);
-   wdog->key    = 0xAAAA;
+  Watchdog_Regs *wdog = reinterpret_cast<Watchdog_Regs *>(WATCHDOG_BASE);
+  wdog->key = 0xAAAA;
 }
 
 // Enable clocks to a specific peripherial.
@@ -731,8 +705,7 @@ void HalApi::watchdog_handler() {
 // RCC (Reset and Clock Controller) module before the peripherial can be
 // used.
 // Pass in the base address of the peripherial to enable it's clock
-static void EnableClock( uint32_t base )
-{
+static void EnableClock(uint32_t base) {
   // I don't include all the peripherials here, just the ones
   // that we currently use or seem likely to be used in the
   // future.  To add more peripherials, just look up the appropriate
@@ -872,9 +845,9 @@ static void EnableClock( uint32_t base )
     }
   }
 
-   // Enable the clock of the requested peripherial
-   RCC_Regs *rcc = reinterpret_cast<RCC_Regs *>(RCC_BASE);
-   rcc->periphClkEna[ndx] |= (1<<bit);
+  // Enable the clock of the requested peripherial
+  RCC_Regs *rcc = reinterpret_cast<RCC_Regs *>(RCC_BASE);
+  rcc->periphClkEna[ndx] |= (1 << bit);
 }
 
 /******************************************************************
@@ -884,17 +857,17 @@ static void EnableClock( uint32_t base )
  *****************************************************************/
 
 // Fault handlers
-static void fault()
-{
-   while(1){}
+static void fault() {
+  while (1) {
+  }
 }
 
-static void NMI()           { fault(); }
-static void FaultISR()      { fault(); }
-static void MPUFaultISR()   { fault(); }
-static void BusFaultISR()   { fault(); }
+static void NMI() { fault(); }
+static void FaultISR() { fault(); }
+static void MPUFaultISR() { fault(); }
+static void BusFaultISR() { fault(); }
 static void UsageFaultISR() { fault(); }
-static void BadISR()        { fault(); }
+static void BadISR() { fault(); }
 
 extern "C" void Reset_Handler();
 __attribute__((section(".isr_vector"))) void (*const vectors[])() = {
@@ -990,19 +963,18 @@ __attribute__((section(".isr_vector"))) void (*const vectors[])() = {
 
 // NOTE - this never actually gets called.  It's just here
 // to prevent the linker from remove the vector array
-const void *GetVectorAddr(){ return &vectors; }
+const void *GetVectorAddr() { return &vectors; }
 
 // Enable an interrupt with a specified priority (0 to 15)
-static void EnableInterrupt( int addr, int pri )
-{
-   IntCtrl_Regs *nvic = reinterpret_cast<IntCtrl_Regs *>(NVIC_BASE);
+static void EnableInterrupt(int addr, int pri) {
+  IntCtrl_Regs *nvic = reinterpret_cast<IntCtrl_Regs *>(NVIC_BASE);
 
-   int id = addr/4 - 16;
+  int id = addr / 4 - 16;
 
-   nvic->setEna[ id>>5 ] = 1<<(id&0x1F);
+  nvic->setEna[id >> 5] = 1 << (id & 0x1F);
 
-   // The STM32 processor implements bits 4-7 of the NVIM priority register.
-   nvic->priority[id] = pri<<4;
+  // The STM32 processor implements bits 4-7 of the NVIM priority register.
+  nvic->priority[id] = pri << 4;
 }
 
 #endif

@@ -7,7 +7,7 @@
   *                - Set the initial SP
   *                - Set the initial PC == Reset_Handler,
   *                - Set the vector table entries with the exceptions ISR address,
-  *                - Configure the clock system  
+  *                - Configure the clock system
   *                - Branches to main in the C library (which eventually
   *                  calls main()).
   *            After Reset the Cortex-M4 processor is in Thread mode,
@@ -25,7 +25,7 @@
   *
   *
   ******************************************************************************
-  * This file was copied from the file of the same name located in the platformio 
+  * This file was copied from the file of the same name located in the platformio
   * framework-arduinoststm32 directory.
   * The following changes were made:
   * - Removed the interrupt vector table, this is now in hal_stm32.cpp.
@@ -106,7 +106,7 @@ LoopFillZerobss:
 
 LoopForever:
     b LoopForever
-    
+
 .size	Reset_Handler, .-Reset_Handler
 
 #endif

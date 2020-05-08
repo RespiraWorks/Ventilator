@@ -86,7 +86,7 @@ extern "C" void _init() {
 
   // Enable the PLL.
   // We use the MSI clock as the source for the PLL
-  // The MSI clock is running at it's default frequency of
+  // The MSI clock is running at its default frequency of
   // 4MHz.
   //
   // The PLL can generate several clocks with somewhat
@@ -466,7 +466,7 @@ void HalApi::analogWrite(PwmPin pin, int value) {
  *****************************************************************/
 
 // This class is a generic circular buffer for byte sized data.
-// It could probably go in it's own header outside the HAL, we
+// It could probably go in its own header outside the HAL, we
 // would just need to add interrupt suspend/restore to the HAL
 // definition.
 //
@@ -665,7 +665,7 @@ uint16_t HalApi::serialBytesAvailableForWrite() { return rpUART.TxFree(); }
 void HalApi::watchdog_init() {
   Watchdog_Regs *wdog = reinterpret_cast<Watchdog_Regs *>(WATCHDOG_BASE);
 
-  // Enable the watchdog timer by writing the appropriate value to it's key
+  // Enable the watchdog timer by writing the appropriate value to its key
   // register
   wdog->key = 0xCCCC;
 
@@ -681,10 +681,10 @@ void HalApi::watchdog_init() {
   // us about 250ms before a reset.
   wdog->reload = 2000;
 
-  // Since the watchdog timer runs off it's own clock which is pretty
+  // Since the watchdog timer runs off its own clock which is pretty
   // slow, it takes a little time for the registers to actually get
   // updated.  I wait for the status register to go to zero which
-  // means it's done.
+  // means its done.
   while (wdog->status) {
   }
 
@@ -704,7 +704,7 @@ void HalApi::watchdog_handler() {
 // Clocks to the specific peripherials need to be enabled through the
 // RCC (Reset and Clock Controller) module before the peripherial can be
 // used.
-// Pass in the base address of the peripherial to enable it's clock
+// Pass in the base address of the peripherial to enable its clock
 static void EnableClock(uint32_t base) {
   // I don't include all the peripherials here, just the ones
   // that we currently use or seem likely to be used in the
@@ -835,7 +835,7 @@ static void EnableClock(uint32_t base) {
     break;
   }
 
-  // If the input address wasn't found then it's definitly
+  // If the input address wasn't found then its definitly
   // a bug.  I'll just loop forever here causing the code
   // to crash.  That should make it easier to find the
   // bug during development.

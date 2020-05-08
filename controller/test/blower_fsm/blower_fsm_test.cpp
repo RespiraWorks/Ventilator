@@ -136,6 +136,8 @@ TEST_F(BlowerFsmTest, ChangeOfParamsStartAtTheNextBreath) {
       {p_init, /*blower_enabled=*/true, 5000, cmH2O(15), ValveState::OPEN},
       // Switching OFF device, takes effect immidiately.
       {p_off, /*blower_enabled*/ false, 5005, cmH2O(0), ValveState::OPEN},
+      // Switching ON device, takes effect immidiately.
+      {p_init, /*blower_enabled*/ true, 5010, cmH2O(20), ValveState::CLOSED},
   });
 }
 

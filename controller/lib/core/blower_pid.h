@@ -29,7 +29,7 @@ void blower_pid_init();
 //
 // Puts readings from e.g. the pressure sensor into `readings`, and puts the
 // current fan power (range [0-1]) into `fan_power`.
-void blower_pid_execute(const BlowerSystemState &desired_state,
-                        SensorReadings *readings, float *fan_power);
+float blower_pid_execute(const BlowerSystemState &desired_state,
+                         float current_pressure_cm_h2o);
 
 #endif // BLOWER_PID_H

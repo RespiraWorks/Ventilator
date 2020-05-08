@@ -33,6 +33,7 @@ limitations under the License.
 //   - Length (e.g. meters)
 //   - Pressure (e.g. kPa)
 //   - Volumetric flow (e.g. m^3/s)
+//   - Volume (e.g. m^3)
 //   - Elapsed time since startup (ms)
 //   - Duration, aka time interval (ms)
 //
@@ -55,6 +56,8 @@ limitations under the License.
 //   Length           millimeters(float)
 //   VolumetricFlow   cubic_m_per_sec(float)
 //   VolumetricFlow   ml_per_min(float)
+//   Volume           cubic_m(float)
+//   Volume           ml(float)
 //   Duration         seconds(float)
 //   Duration         milliseconds(int64_t)
 //   Time             millisSinceStartup(int64_t)
@@ -201,6 +204,31 @@ constexpr VolumetricFlow cubic_m_per_sec(float m3ps) {
 constexpr VolumetricFlow ml_per_min(float ml_per_min) {
   return VolumetricFlow(ml_per_min / (1000.0f * 1000.0f * 60.0f));
 }
+
+// Represents volume.
+//
+// Precision: float.
+//
+// Units:
+//
+//   - meters^3
+//   - mL
+//
+// Native unit (implementation detail): meters^3
+class Volume : public units_detail::ArithScalar<Volume, float> {
+public:
+  [[nodiscard]] constexpr float cubic_m() { return val_; }
+  [[nodiscard]] constexpr float ml() { return val_ * 1000.0f * 1000.0f; }
+
+private:
+  constexpr friend Volume cubic_m(float m3);
+  constexpr friend Volume ml(float ml);
+
+  using units_detail::ArithScalar<Volume, float>::ArithScalar;
+};
+
+constexpr Volume cubic_m(float m3) { return Volume(m3); }
+constexpr Volume ml(float ml) { return Volume(ml / (1000.0f * 1000.0f)); }
 
 // Time and Duration classes.
 //

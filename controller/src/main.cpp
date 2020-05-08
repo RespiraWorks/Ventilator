@@ -45,6 +45,7 @@ limitations under the License.
 
 */
 
+#include "actuators.h"
 #include "alarm.h"
 #include "blower_fsm.h"
 #include "blower_pid.h"
@@ -59,6 +60,9 @@ static ControllerStatus controller_status = ControllerStatus_init_zero;
 
 // Last-received status from the GUI.
 static GuiStatus gui_status = GuiStatus_init_zero;
+
+// desired actuators state
+static ActuatorsState actuators_state = ActuatorsState_init_zero;
 
 // NO_GUI_DEV_MODE is a hacky development mode until we have the GUI working.
 //
@@ -113,6 +117,9 @@ static void controller_loop() {
     DEV_MODE_comms_handler();
 #endif
 
+    // get sensor readings
+    controller_status.sensor_readings = get_sensor_readings();
+
     controller_status.active_params = gui_status.desired_params;
 
     // TODO: Add additional fields to the ControllerStatus proto:
@@ -120,12 +127,17 @@ static void controller_loop() {
     //   - Expiratory solenoid valve state (open/closed).
     BlowerSystemState desired_state =
         blower_fsm_desired_state(controller_status.active_params);
+
     controller_status.fan_setpoint_cm_h2o =
         desired_state.setpoint_pressure.cmH2O();
 
-    blower_pid_execute(desired_state, &controller_status.sensor_readings,
-                       &controller_status.fan_power);
-    Hal.watchdog_handler();
+    controller_status.fan_power = blower_pid_execute(
+        desired_state, controller_status.sensor_readings.pressure_cm_h2o);
+
+    actuators_state.expire_valve_state = desired_state.expire_valve_state;
+    actuators_state.fan_power = controller_status.fan_power;
+
+    actuators_execute(actuators_state);
   }
 }
 

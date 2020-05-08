@@ -34,7 +34,7 @@ the programmer's manual for the processor available here:
 __attribute__((aligned (8))) uint32_t systemStack[ SYSTEM_STACK_SIZE ];
 
 // local data 
-static volatile uint64_t msCount;
+static volatile int64_t msCount;
 
 // local static functions.  I don't want to add any private 
 // functions to the Hal class to avoid complexity with other
@@ -288,18 +288,13 @@ static void Timer6ISR()
    msCount++;
 }
 
-uint64_t HalApi::millis(){
-   return msCount;
+void HalApi::delay(Duration d){
+   int64_t start = msCount;
+   while( (msCount - start) < d.milliseconds() ){}
 }
 
-void HalApi::delay(uint32_t ms){
-   uint32_t start = msCount;
-   while( 1 )
-   {
-      uint32_t dt = msCount - start;
-      if( dt >= ms )
-         return;
-   }
+Time HalApi::now(){
+   return millisSinceStartup(msCount);
 }
 
 /******************************************************************

@@ -12,12 +12,12 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 
-This file implements the HAL (Hardware Abstraction Layer) for the 
-STM32L452 processor used on the controller.  Details of the processor's 
+This file implements the HAL (Hardware Abstraction Layer) for the
+STM32L452 processor used on the controller.  Details of the processor's
 peripherals can be found in the reference manual for that processor:
    https://www.st.com/resource/en/reference_manual/dm00151940-stm32l41xxx42xxx43xxx44xxx45xxx46xxx-advanced-armbased-32bit-mcus-stmicroelectronics.pdf
 
-Details specific to the ARM processor used in this chip can be found in 
+Details specific to the ARM processor used in this chip can be found in
 the programmer's manual for the processor available here:
    https://www.st.com/resource/en/programming_manual/dm00046982-stm32-cortexm4-mcus-and-mpus-programming-manual-stmicroelectronics.pdf
 
@@ -88,7 +88,7 @@ struct RCC_Regs
    REG pllCfg;                   // 0x0C PLL configuration register (RCC_PLLCFGR)
    REG pllSaiCfg;                // 0x10 PLLSAI1 configuration register (RCC_PLLSAI1CFGR)
    REG rsvd1;
-   REG clkIntEna;                // 0x18 Clock interrupt enable register ( RCC_CIER) 
+   REG clkIntEna; // 0x18 Clock interrupt enable register ( RCC_CIER)
    REG clkIntFlg;                // 0x1C Clock interrupt flag register ( RCC_CIFR)
    REG clkIntClr;                // 0x20 Clock interrupt clear register ( RCC_CICR)
    REG rsvd2;

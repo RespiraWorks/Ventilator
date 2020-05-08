@@ -12,12 +12,12 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 
-This file implements the HAL (Hardware Abstraction Layer) for the 
-STM32L452 processor used on the controller.  Details of the processor's 
+This file implements the HAL (Hardware Abstraction Layer) for the
+STM32L452 processor used on the controller.  Details of the processor's
 peripherals can be found in the reference manual for that processor:
    https://www.st.com/resource/en/reference_manual/dm00151940-stm32l41xxx42xxx43xxx44xxx45xxx46xxx-advanced-armbased-32bit-mcus-stmicroelectronics.pdf
 
-Details specific to the ARM processor used in this chip can be found in 
+Details specific to the ARM processor used in this chip can be found in
 the programmer's manual for the processor available here:
    https://www.st.com/resource/en/programming_manual/dm00046982-stm32-cortexm4-mcus-and-mpus-programming-manual-stmicroelectronics.pdf
 
@@ -33,10 +33,10 @@ the programmer's manual for the processor available here:
 // This is the main stack used in our system.
 __attribute__((aligned (8))) uint32_t systemStack[ SYSTEM_STACK_SIZE ];
 
-// local data 
+// local data
 static volatile int64_t msCount;
 
-// local static functions.  I don't want to add any private 
+// local static functions.  I don't want to add any private
 // functions to the Hal class to avoid complexity with other
 // builds
 static void InitGPIO();
@@ -50,76 +50,77 @@ static void Timer6ISR();
 static void UART3_ISR();
 
 // For now, the main function in main.cpp is called setup
-// rather then main.  If we adopt this HAL then we can 
+// rather then main.  If we adopt this HAL then we can
 // just rename it main and get rid of the following function.
 extern void setup();
 int main(){
    setup();
 }
 
-// This function is called from the libc initialization code 
+// This function is called from the libc initialization code
 // before any static constructors are called.  We do some basic
 // chip initialization here.
 //
-// The main things done here are to enable the FPU because if 
-// we don't do that then we'll get a fatal exception if any 
-// constructor uses any floating point math, and to enable 
+// The main things done here are to enable the FPU because if
+// we don't do that then we'll get a fatal exception if any
+// constructor uses any floating point math, and to enable
 // the PLL so we can run at full speed (80MHz) rather then the
 // default speed of 4MHz.
 extern "C" void _init(){
 
-   // Enable the FPU.  This allows floating point to be used without 
-   // generating a hard fault.
-   // The system control registers are documented in the programmers
-   // manual (not the reference manual) chapter 4.
-   // Details on enabling the FPU are in section 4.6.6.
-   SysCtrl_Reg *sysCtl = reinterpret_cast<SysCtrl_Reg *>(SYSCTL_BASE);
-   sysCtl->cpac = 0x00F00000;
+  // Enable the FPU.  This allows floating point to be used without
+  // generating a hard fault.
+  // The system control registers are documented in the programmers
+  // manual (not the reference manual) chapter 4.
+  // Details on enabling the FPU are in section 4.6.6.
+  SysCtrl_Reg *sysCtl = reinterpret_cast<SysCtrl_Reg *>(SYSCTL_BASE);
+  sysCtl->cpac = 0x00F00000;
 
-   // Reset caches and set latency for 80MHz opperation
-   // See chapter 3 of the reference manual for details
-   // on the embedded flash module
-   EnableClock( FLASH_BASE );
-   FlashReg *flash = reinterpret_cast<FlashReg *>(FLASH_BASE);
-   flash->access = 0x00000004;
-   flash->access = 0x00001804;
-   flash->access = 0x00001804;
-   flash->access = 0x00000604;
+  // Reset caches and set latency for 80MHz opperation
+  // See chapter 3 of the reference manual for details
+  // on the embedded flash module
+  EnableClock(FLASH_BASE);
+  FlashReg *flash = reinterpret_cast<FlashReg *>(FLASH_BASE);
+  flash->access = 0x00000004;
+  flash->access = 0x00001804;
+  flash->access = 0x00001804;
+  flash->access = 0x00000604;
 
-   // Enable the PLL.
-   // We use the MSI clock as the source for the PLL
-   // The MSI clock is running at it's default frequency of 
-   // 4MHz.
-   //
-   // The PLL can generate several clocks with somewhat
-   // less then descriptive names in the reference manual.
-   // These clocks are:
-   //   P clock - Used for the SAI peripherial.  Not used here
-   //   Q clock - 48MHz output clock used for USB.  Not used here.
-   //   R clock - This is the main system clock.  We care about this one.
-   //
-   // When configuring the PLL there are several constants programmed
-   // into the PLL register to set the frequency of the internal VCO 
-   // These constants are called N and M in the reference manual:
-   //
-   // Fin = 4MHz
-   // Fvco = Fin * (N/M)
-   //
-   // Legal range for Fvco is 96MHz to 344MHz according to the 
-   // data sheet.  I'll use 160MHz for Fvco and divide by 2
-   // to get an 80MHz output clock
-   //
-   // See chapter 6 of the reference manual
-   int N = 40;
-   int M = 1;
-   RCC_Regs *rcc = reinterpret_cast<RCC_Regs *>(RCC_BASE);
-   rcc->pllCfg = 0x01000001 | (N<<8) | ((M-1)<<4);
+  // Enable the PLL.
+  // We use the MSI clock as the source for the PLL
+  // The MSI clock is running at it's default frequency of
+  // 4MHz.
+  //
+  // The PLL can generate several clocks with somewhat
+  // less then descriptive names in the reference manual.
+  // These clocks are:
+  //   P clock - Used for the SAI peripherial.  Not used here
+  //   Q clock - 48MHz output clock used for USB.  Not used here.
+  //   R clock - This is the main system clock.  We care about this one.
+  //
+  // When configuring the PLL there are several constants programmed
+  // into the PLL register to set the frequency of the internal VCO
+  // These constants are called N and M in the reference manual:
+  //
+  // Fin = 4MHz
+  // Fvco = Fin * (N/M)
+  //
+  // Legal range for Fvco is 96MHz to 344MHz according to the
+  // data sheet.  I'll use 160MHz for Fvco and divide by 2
+  // to get an 80MHz output clock
+  //
+  // See chapter 6 of the reference manual
+  int N = 40;
+  int M = 1;
+  RCC_Regs *rcc = reinterpret_cast<RCC_Regs *>(RCC_BASE);
+  rcc->pllCfg = 0x01000001 | (N << 8) | ((M - 1) << 4);
 
-   // Turn on the PLL 
-   rcc->clkCtrl |= 0x01000000;
+  // Turn on the PLL
+  rcc->clkCtrl |= 0x01000000;
 
-   // Wait for the PLL ready indication
-   while( !(rcc->clkCtrl & 0x02000000) ){}
+  // Wait for the PLL ready indication
+  while (!(rcc->clkCtrl & 0x02000000)) {
+  }
 
    // Set PLL as system clock
    rcc->clkCfg = 0x00000003;
@@ -148,22 +149,23 @@ void HalApi::init() {
 // Reset the processor
 [[noreturn]] void HalApi::reset_device() {
 
-   // Note that the system control registers are a standard ARM peripherial
-   // they aren't documented in the normal STM32 reference manual, rather
-   // they're in the processor programming manual.
-   // The register we use to reset the system is called the 
-   // "Application interrupt and reset control register (AIRCR)"
-   SysCtrl_Reg *sysCtl = reinterpret_cast<SysCtrl_Reg *>(SYSCTL_BASE);
-   sysCtl->apInt = 0x05FA0004;
+  // Note that the system control registers are a standard ARM peripherial
+  // they aren't documented in the normal STM32 reference manual, rather
+  // they're in the processor programming manual.
+  // The register we use to reset the system is called the
+  // "Application interrupt and reset control register (AIRCR)"
+  SysCtrl_Reg *sysCtl = reinterpret_cast<SysCtrl_Reg *>(SYSCTL_BASE);
+  sysCtl->apInt = 0x05FA0004;
 
-   // We promised we wouldn't return, so...
-   while (true) {}
+  // We promised we wouldn't return, so...
+  while (true) {
+  }
 }
 
 /******************************************************************
  * General Purpose I/O support.
  *
- * The following pins are used as GPIO on the rev-1 PCB 
+ * The following pins are used as GPIO on the rev-1 PCB
  *
  * ID inputs.  These can be used to identify the PCB revision
  * we're running on.
@@ -176,7 +178,7 @@ void HalApi::init() {
  *  PC15 - green
  *
  * Solenoid
- *  PA11 - Note, this is also a timer pin so we may want to 
+ *  PA11 - Note, this is also a timer pin so we may want to
  *         PWM it to reduce the solenoid voltage.
  *         For no I'm treating it as a digital output.
  *****************************************************************/
@@ -240,7 +242,7 @@ void HalApi::digitalWrite(BinaryPin pin, VoltageLevel value) {
  * System timer
  *
  * I use one of the basic timers (timer 6) for general system timing.
- * I configure it to count every microsecond and generate an interrupt 
+ * I configure it to count every microsecond and generate an interrupt
  * every millisecond
  *
  * The basic timers (like timer 6) are documented in chapter 29 of
@@ -300,7 +302,7 @@ Time HalApi::now(){
 /******************************************************************
  * A/D inputs.
  *
- * The following pins are used as analog inputs on the rev-1 PCB 
+ * The following pins are used as analog inputs on the rev-1 PCB
  *
  * PA0 (ADC1_IN5)  - vin
  * PA1 (ADC1_IN6)  - pressure
@@ -314,13 +316,13 @@ static void InitADC(){
    // Enable the clock to the A/D converter
    EnableClock( ADC_BASE );
 
-   // Configure the 4 pins used as analog inputs 
+   // Configure the 4 pins used as analog inputs
    GPIO_PinMode( GPIO_A_BASE, 0, GPIO_MODE_ANALOG );
    GPIO_PinMode( GPIO_A_BASE, 1, GPIO_MODE_ANALOG );
    GPIO_PinMode( GPIO_A_BASE, 4, GPIO_MODE_ANALOG );
    GPIO_PinMode( GPIO_B_BASE, 0, GPIO_MODE_ANALOG );
 
-   // Perform a power-up and calibration sequence on 
+   // Perform a power-up and calibration sequence on
    // the A/D converter
    ADC_Regs *adc = reinterpret_cast<ADC_Regs *>(ADC_BASE);
 
@@ -448,7 +450,7 @@ static void InitPwmOut()
 }
 
 // Set the PWM period.  Currently the value is 0 to 255 which is
-// a shame.  We should change this to a float, say with a value 
+// a shame.  We should change this to a float, say with a value
 // of 0.0 to 1.0 to make better use of our resolution
 void HalApi::analogWrite(PwmPin pin, int value) {
 
@@ -474,13 +476,13 @@ void HalApi::analogWrite(PwmPin pin, int value) {
  *****************************************************************/
 
 // This class is a generic circular buffer for byte sized data.
-// It could probably go in it's own header outside the HAL, we 
+// It could probably go in it's own header outside the HAL, we
 // would just need to add interrupt suspend/restore to the HAL
 // definition.
 //
 // Note that this class is used from both the main line of code
 // and the interrupt handlers, so it needs to be thread safe.
-// I'm disabling interrupts during the critical sections to 
+// I'm disabling interrupts during the critical sections to
 // ensure that's the case.
 template <int N> class CircBuff
 {
@@ -582,7 +584,7 @@ public:
       {
          int ch = txDat.Get();
 
-         // If there's nothing left in the transmit buffer, 
+         // If there's nothing left in the transmit buffer,
          // just disable further transmit interrupts.
          if( ch < 0 )
             reg->ctrl[0] &= ~0x0080;
@@ -621,13 +623,13 @@ public:
       return i;
    }
 
-   // Return the number of bytes currently in the 
+   // Return the number of bytes currently in the
    // receive buffer and ready to be read.
    int RxFull(){
       return rxDat.FullCt();
    }
 
-   // Returns the number of free locations in the 
+   // Returns the number of free locations in the
    // transmit buffer.
    int TxFree(){
       return txDat.FreeCt();
@@ -681,11 +683,11 @@ uint16_t HalApi::serialBytesAvailableForWrite() {
 
 /******************************************************************
  * Watchdog timer (see chapter 32 of reference manual).
- * 
- * The watchdog timer will reset the system if it hasn't been 
- * re-initialized within a specific amount of time.  It's used 
+ *
+ * The watchdog timer will reset the system if it hasn't been
+ * re-initialized within a specific amount of time.  It's used
  * to catch bugs that would otherwise hang the system.  When
- * the watchdog is enabled such a bug will reset the system 
+ * the watchdog is enabled such a bug will reset the system
  * rather then let it hang indefinitely.
  *****************************************************************/
 void HalApi::watchdog_init() {
@@ -702,13 +704,13 @@ void HalApi::watchdog_init() {
    wdog->prescale = 0;
 
    // The reload value gives the number of clock cycles before the
-   // watchdog timer times out.  I'll set it to 1000 which gives 
+   // watchdog timer times out.  I'll set it to 1000 which gives
    // us about 250ms before a reset.
    wdog->reload = 2000;
 
    // Since the watchdog timer runs off it's own clock which is pretty
-   // slow, it takes a little time for the registers to actually get 
-   // updated.  I wait for the status register to go to zero which 
+   // slow, it takes a little time for the registers to actually get
+   // updated.  I wait for the status register to go to zero which
    // means it's done.
    while( wdog->status ){}
 
@@ -725,67 +727,150 @@ void HalApi::watchdog_handler() {
 // Enable clocks to a specific peripherial.
 // On the STM32 the clocks going to various peripherials on the chip
 // are individually selectable and for the most part disabled on startup.
-// Clocks to the specific peripherials need to be enabled through the 
+// Clocks to the specific peripherials need to be enabled through the
 // RCC (Reset and Clock Controller) module before the peripherial can be
 // used.
 // Pass in the base address of the peripherial to enable it's clock
 static void EnableClock( uint32_t base )
 {
-   // I don't include all the peripherials here, just the ones
-   // that we currently use or seem likely to be used in the 
-   // future.  To add more peripherials, just look up the appropriate
-   // bit in the reference manual RCC chapter.
-   //
-   // This big case statement finds the index of the register in the 
-   // array of clock enable registers, and the bit number used to enable
-   // the clock for the specified peripherial.
-   int ndx = -1;
-   int bit = 0;
-   switch( base )
-   {
-      case DMA1_BASE:    ndx = 0; bit =  0; break;
-      case DMA2_BASE:    ndx = 0; bit =  1; break;
-      case FLASH_BASE:   ndx = 0; bit =  8; break;
+  // I don't include all the peripherials here, just the ones
+  // that we currently use or seem likely to be used in the
+  // future.  To add more peripherials, just look up the appropriate
+  // bit in the reference manual RCC chapter.
+  //
+  // This big case statement finds the index of the register in the
+  // array of clock enable registers, and the bit number used to enable
+  // the clock for the specified peripherial.
+  int ndx = -1;
+  int bit = 0;
+  switch (base) {
+  case DMA1_BASE:
+    ndx = 0;
+    bit = 0;
+    break;
+  case DMA2_BASE:
+    ndx = 0;
+    bit = 1;
+    break;
+  case FLASH_BASE:
+    ndx = 0;
+    bit = 8;
+    break;
 
-      case GPIO_A_BASE:  ndx = 1; bit =  0; break;
-      case GPIO_B_BASE:  ndx = 1; bit =  1; break;
-      case GPIO_C_BASE:  ndx = 1; bit =  2; break;
-      case GPIO_D_BASE:  ndx = 1; bit =  3; break;
-      case GPIO_E_BASE:  ndx = 1; bit =  4; break;
-      case GPIO_H_BASE:  ndx = 1; bit =  7; break;
-      case ADC_BASE:     ndx = 1; bit = 13; break;
+  case GPIO_A_BASE:
+    ndx = 1;
+    bit = 0;
+    break;
+  case GPIO_B_BASE:
+    ndx = 1;
+    bit = 1;
+    break;
+  case GPIO_C_BASE:
+    ndx = 1;
+    bit = 2;
+    break;
+  case GPIO_D_BASE:
+    ndx = 1;
+    bit = 3;
+    break;
+  case GPIO_E_BASE:
+    ndx = 1;
+    bit = 4;
+    break;
+  case GPIO_H_BASE:
+    ndx = 1;
+    bit = 7;
+    break;
+  case ADC_BASE:
+    ndx = 1;
+    bit = 13;
+    break;
 
-      case TIMER2_BASE:  ndx = 4; bit =  0; break;
-      case TIMER3_BASE:  ndx = 4; bit =  1; break;
-      case TIMER6_BASE:  ndx = 4; bit =  4; break;
-      case TIMER7_BASE:  ndx = 4; bit =  7; break;
-      case SPI2_BASE:    ndx = 4; bit = 14; break;
-      case SPI3_BASE:    ndx = 4; bit = 15; break;
-      case UART2_BASE:   ndx = 4; bit = 17; break;
-      case UART3_BASE:   ndx = 4; bit = 18; break;
-      case UART4_BASE:   ndx = 4; bit = 19; break;
-      case I2C1_BASE:    ndx = 4; bit = 21; break;
-      case I2C2_BASE:    ndx = 4; bit = 22; break;
-      case I2C3_BASE:    ndx = 4; bit = 23; break;
+  case TIMER2_BASE:
+    ndx = 4;
+    bit = 0;
+    break;
+  case TIMER3_BASE:
+    ndx = 4;
+    bit = 1;
+    break;
+  case TIMER6_BASE:
+    ndx = 4;
+    bit = 4;
+    break;
+  case TIMER7_BASE:
+    ndx = 4;
+    bit = 7;
+    break;
+  case SPI2_BASE:
+    ndx = 4;
+    bit = 14;
+    break;
+  case SPI3_BASE:
+    ndx = 4;
+    bit = 15;
+    break;
+  case UART2_BASE:
+    ndx = 4;
+    bit = 17;
+    break;
+  case UART3_BASE:
+    ndx = 4;
+    bit = 18;
+    break;
+  case UART4_BASE:
+    ndx = 4;
+    bit = 19;
+    break;
+  case I2C1_BASE:
+    ndx = 4;
+    bit = 21;
+    break;
+  case I2C2_BASE:
+    ndx = 4;
+    bit = 22;
+    break;
+  case I2C3_BASE:
+    ndx = 4;
+    bit = 23;
+    break;
 
-      case I2C4_BASE:    ndx = 5; bit =  1; break;
+  case I2C4_BASE:
+    ndx = 5;
+    bit = 1;
+    break;
 
-      case TIMER1_BASE:  ndx = 6; bit = 11; break;
-      case SPI1_BASE:    ndx = 6; bit = 12; break;
-      case UART1_BASE:   ndx = 6; bit = 13; break;
-      case TIMER15_BASE: ndx = 6; bit = 16; break;
-      case TIMER16_BASE: ndx = 6; bit = 17; break;
-   }
+  case TIMER1_BASE:
+    ndx = 6;
+    bit = 11;
+    break;
+  case SPI1_BASE:
+    ndx = 6;
+    bit = 12;
+    break;
+  case UART1_BASE:
+    ndx = 6;
+    bit = 13;
+    break;
+  case TIMER15_BASE:
+    ndx = 6;
+    bit = 16;
+    break;
+  case TIMER16_BASE:
+    ndx = 6;
+    bit = 17;
+    break;
+  }
 
-   // If the input address wasn't found then it's definitly 
-   // a bug.  I'll just loop forever here causing the code
-   // to crash.  That should make it easier to find the 
-   // bug during development.
-   if( ndx < 0 )
-   {
-      IntDisable();
-      while( 1 ){}
-   }
+  // If the input address wasn't found then it's definitly
+  // a bug.  I'll just loop forever here causing the code
+  // to crash.  That should make it easier to find the
+  // bug during development.
+  if (ndx < 0) {
+    IntDisable();
+    while (1) {
+    }
+  }
 
    // Enable the clock of the requested peripherial
    RCC_Regs *rcc = reinterpret_cast<RCC_Regs *>(RCC_BASE);
@@ -812,97 +897,95 @@ static void UsageFaultISR() { fault(); }
 static void BadISR()        { fault(); }
 
 extern "C" void Reset_Handler();
-__attribute__ ((section(".isr_vector")))
-void (* const vectors[])() =
-{
-   // The first entry of the ISR holds the initial value of the
-   // stack pointer.  The ARM processor initializes the stack
-   // pointer based on this address.
-   reinterpret_cast<void (*)()>(&systemStack[SYSTEM_STACK_SIZE]),
+__attribute__((section(".isr_vector"))) void (*const vectors[])() = {
+    // The first entry of the ISR holds the initial value of the
+    // stack pointer.  The ARM processor initializes the stack
+    // pointer based on this address.
+    reinterpret_cast<void (*)()>(&systemStack[SYSTEM_STACK_SIZE]),
 
-   // The second ISR entry is the reset vector which is an 
-   // assembly language routine that does some basic memory 
-   // initilization and then calls main().
-   // Note that the LSB of the reset vector needs to be set
-   // (hence the +1 below).  This tells the ARM that this is
-   // thumb code.  The cortex m4 processor only supports 
-   // thumb code, so this will always be set or we'll get 
-   // a hard fault.
-   reinterpret_cast<void (*)()>(reinterpret_cast<uint32_t >(Reset_Handler)+1),
+    // The second ISR entry is the reset vector which is an
+    // assembly language routine that does some basic memory
+    // initilization and then calls main().
+    // Note that the LSB of the reset vector needs to be set
+    // (hence the +1 below).  This tells the ARM that this is
+    // thumb code.  The cortex m4 processor only supports
+    // thumb code, so this will always be set or we'll get
+    // a hard fault.
+    reinterpret_cast<void (*)()>(reinterpret_cast<uint32_t>(Reset_Handler) + 1),
 
-   // The rest of the table is a list of exception and 
-   // interrupt handlers.  Chapter 12 (NVIC) of the reference
-   // manual gives a listing of the vector table offsets.
-   NMI,                                    //   2 - 0x008 The NMI handler
-   FaultISR,                               //   3 - 0x00C The hard fault handler
-   MPUFaultISR,                            //   4 - 0x010 The MPU fault handler
-   BusFaultISR,                            //   5 - 0x014 The bus fault handler
-   UsageFaultISR,                          //   6 - 0x018 The usage fault handler
-   BadISR,                                 //   7 - 0x01C Reserved
-   BadISR,                                 //   8 - 0x020 Reserved
-   BadISR,                                 //   9 - 0x024 Reserved
-   BadISR,                                 //  10 - 0x028 Reserved
-   BadISR,                                 //  11 - 0x02C SVCall handler
-   BadISR,                                 //  12 - 0x030 Debug monitor handler
-   BadISR,                                 //  13 - 0x034 Reserved
-   BadISR,                                 //  14 - 0x038 The PendSV handler
-   BadISR,                                 //  15 - 0x03C 
-   BadISR,                                 //  16 - 0x040 
-   BadISR,                                 //  17 - 0x044 
-   BadISR,                                 //  18 - 0x048 
-   BadISR,                                 //  19 - 0x04C 
-   BadISR,                                 //  20 - 0x050 
-   BadISR,                                 //  21 - 0x054 
-   BadISR,                                 //  22 - 0x058 
-   BadISR,                                 //  23 - 0x05C 
-   BadISR,                                 //  24 - 0x060 
-   BadISR,                                 //  25 - 0x064 
-   BadISR,                                 //  26 - 0x068 
-   BadISR,                                 //  27 - 0x06C 
-   BadISR,                                 //  28 - 0x070 
-   BadISR,                                 //  29 - 0x074 
-   BadISR,                                 //  30 - 0x078 
-   BadISR,                                 //  31 - 0x07C 
-   BadISR,                                 //  32 - 0x080 
-   BadISR,                                 //  33 - 0x084 
-   BadISR,                                 //  34 - 0x088 
-   BadISR,                                 //  35 - 0x08C 
-   BadISR,                                 //  36 - 0x090 
-   BadISR,                                 //  37 - 0x094 
-   BadISR,                                 //  38 - 0x098 
-   BadISR,                                 //  39 - 0x09C 
-   BadISR,                                 //  40 - 0x0A0 
-   BadISR,                                 //  41 - 0x0A4 
-   BadISR,                                 //  42 - 0x0A8 
-   BadISR,                                 //  43 - 0x0AC 
-   BadISR,                                 //  44 - 0x0B0 
-   BadISR,                                 //  45 - 0x0B4 
-   BadISR,                                 //  46 - 0x0B8 
-   BadISR,                                 //  47 - 0x0BC 
-   BadISR,                                 //  48 - 0x0C0 
-   BadISR,                                 //  49 - 0x0C4 
-   BadISR,                                 //  50 - 0x0C8 
-   BadISR,                                 //  51 - 0x0CC
-   BadISR,                                 //  52 - 0x0D0 
-   BadISR,                                 //  53 - 0x0D4 
-   BadISR,                                 //  54 - 0x0D8 
-   UART3_ISR,                              //  55 - 0x0DC 
-   BadISR,                                 //  56 - 0x0E0 
-   BadISR,                                 //  57 - 0x0E4 
-   BadISR,                                 //  58 - 0x0E8 
-   BadISR,                                 //  59 - 0x0EC 
-   BadISR,                                 //  60 - 0x0F0 
-   BadISR,                                 //  61 - 0x0F4 
-   BadISR,                                 //  62 - 0x0F8 
-   BadISR,                                 //  63 - 0x0FC 
-   BadISR,                                 //  64 - 0x100
-   BadISR,                                 //  65 - 0x104
-   BadISR,                                 //  66 - 0x108
-   BadISR,                                 //  67 - 0x10C
-   BadISR,                                 //  68 - 0x110
-   BadISR,                                 //  69 - 0x114
-   Timer6ISR,                              //  70 - 0x118
-   BadISR,                                 //  71 - 0x11C
+    // The rest of the table is a list of exception and
+    // interrupt handlers.  Chapter 12 (NVIC) of the reference
+    // manual gives a listing of the vector table offsets.
+    NMI,           //   2 - 0x008 The NMI handler
+    FaultISR,      //   3 - 0x00C The hard fault handler
+    MPUFaultISR,   //   4 - 0x010 The MPU fault handler
+    BusFaultISR,   //   5 - 0x014 The bus fault handler
+    UsageFaultISR, //   6 - 0x018 The usage fault handler
+    BadISR,        //   7 - 0x01C Reserved
+    BadISR,        //   8 - 0x020 Reserved
+    BadISR,        //   9 - 0x024 Reserved
+    BadISR,        //  10 - 0x028 Reserved
+    BadISR,        //  11 - 0x02C SVCall handler
+    BadISR,        //  12 - 0x030 Debug monitor handler
+    BadISR,        //  13 - 0x034 Reserved
+    BadISR,        //  14 - 0x038 The PendSV handler
+    BadISR,        //  15 - 0x03C
+    BadISR,        //  16 - 0x040
+    BadISR,        //  17 - 0x044
+    BadISR,        //  18 - 0x048
+    BadISR,        //  19 - 0x04C
+    BadISR,        //  20 - 0x050
+    BadISR,        //  21 - 0x054
+    BadISR,        //  22 - 0x058
+    BadISR,        //  23 - 0x05C
+    BadISR,        //  24 - 0x060
+    BadISR,        //  25 - 0x064
+    BadISR,        //  26 - 0x068
+    BadISR,        //  27 - 0x06C
+    BadISR,        //  28 - 0x070
+    BadISR,        //  29 - 0x074
+    BadISR,        //  30 - 0x078
+    BadISR,        //  31 - 0x07C
+    BadISR,        //  32 - 0x080
+    BadISR,        //  33 - 0x084
+    BadISR,        //  34 - 0x088
+    BadISR,        //  35 - 0x08C
+    BadISR,        //  36 - 0x090
+    BadISR,        //  37 - 0x094
+    BadISR,        //  38 - 0x098
+    BadISR,        //  39 - 0x09C
+    BadISR,        //  40 - 0x0A0
+    BadISR,        //  41 - 0x0A4
+    BadISR,        //  42 - 0x0A8
+    BadISR,        //  43 - 0x0AC
+    BadISR,        //  44 - 0x0B0
+    BadISR,        //  45 - 0x0B4
+    BadISR,        //  46 - 0x0B8
+    BadISR,        //  47 - 0x0BC
+    BadISR,        //  48 - 0x0C0
+    BadISR,        //  49 - 0x0C4
+    BadISR,        //  50 - 0x0C8
+    BadISR,        //  51 - 0x0CC
+    BadISR,        //  52 - 0x0D0
+    BadISR,        //  53 - 0x0D4
+    BadISR,        //  54 - 0x0D8
+    UART3_ISR,     //  55 - 0x0DC
+    BadISR,        //  56 - 0x0E0
+    BadISR,        //  57 - 0x0E4
+    BadISR,        //  58 - 0x0E8
+    BadISR,        //  59 - 0x0EC
+    BadISR,        //  60 - 0x0F0
+    BadISR,        //  61 - 0x0F4
+    BadISR,        //  62 - 0x0F8
+    BadISR,        //  63 - 0x0FC
+    BadISR,        //  64 - 0x100
+    BadISR,        //  65 - 0x104
+    BadISR,        //  66 - 0x108
+    BadISR,        //  67 - 0x10C
+    BadISR,        //  68 - 0x110
+    BadISR,        //  69 - 0x114
+    Timer6ISR,     //  70 - 0x118
+    BadISR,        //  71 - 0x11C
 };
 
 // NOTE - this never actually gets called.  It's just here

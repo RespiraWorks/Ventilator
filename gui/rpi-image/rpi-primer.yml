@@ -32,27 +32,15 @@
   - name: Run Docker convenience script
     shell: sh get-docker.sh
 
-  - name: Adding user pi to docker group  
+  - name: Adding user pi to docker group
     shell: usermod -aG docker pi
 
   - name: Install Debian menu for Openbox
     apt:
       name: menu
 
-  - name: Set default boot to GUI
+  - name: Set pi user's .xsession
     lineinfile:
-      dest: /etc/rc.local
-      insertbefore: 'exit 0'
-      line: 'startx &'
-
-  - name: Disable default boot to Xsession
-    lineinfile:
-      dest: /etc/X11/xinit/xinitrc
-      regexp: '. /etc/X11/Xsession'
-      line: '#. /etc/X11/Xsession'
-
-  - name: Set default boot to OpenBox
-    lineinfile:
-      dest: /etc/X11/xinit/xinitrc
-      insertafter: '#. /etc/X11/Xsession'
+      dest: /home/pi/.xsession
       line: 'exec openbox-session'
+      create: yes

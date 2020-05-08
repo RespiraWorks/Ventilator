@@ -32,7 +32,7 @@
   - name: Run Docker convenience script
     shell: sh get-docker.sh
 
-  - name: Adding user pi to docker group  
+  - name: Adding user pi to docker group
     shell: usermod -aG docker pi
 
   - name: Install Debian menu for Openbox

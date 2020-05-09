@@ -52,6 +52,15 @@ public:
   // of the previous call, returns the last returned value.
   float Compute(Time now, float input, float setpoint);
 
+  // Call this instead of Compute in case on this step of the control loop
+  // you intend apply different control logic instead of the PID.
+  // "actual_output" contains the value of output you plan to act on.
+  //
+  // This is a variation on the "manual" mode:
+  // http://brettbeauregard.com/blog/2011/04/improving-the-beginner%e2%80%99s-pid-onoff/
+  // http://brettbeauregard.com/blog/2011/04/improving-the-beginner%e2%80%99s-pid-initialization/
+  void Observe(Time now, float input, float setpoint, float actual_output);
+
 private:
   const float kp_; // * (P)roportional Tuning Parameter
   const float ki_; // * (I)ntegral Tuning Parameter

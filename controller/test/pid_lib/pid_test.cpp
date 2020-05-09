@@ -21,283 +21,256 @@ limitations under the License.
  * on an Arduino platform.
  */
 
-#include "hal.h"
 #include "pid.h"
 #include "types.h"
 #include "gtest/gtest.h"
 
 // The PWM is a 0-255 integer, which means we can accept error of 1 in output
-static const float OUTPUT_TOLERANCE = 1;
+inline constexpr float OUTPUT_TOLERANCE = 1;
 
 // PID min/max output
-static const float MAX_OUTPUT = 255;
-static const float MIN_OUTPUT = 0;
+inline constexpr const float MAX_OUTPUT = 255;
+inline constexpr const float MIN_OUTPUT = 0;
 
 // Maximum task jitter (assume 5 ms for now, will need adjuting)
-static const Duration max_task_jitter = milliseconds(5);
+inline constexpr Duration max_task_jitter = milliseconds(5);
 
-TEST(pidTest, Proportional) {
-  float Kp = 0.9;
-  float Ki = 0;
-  float Kd = 0;
-  float setpoint = 25;
-  float input = setpoint - 10;
-  Duration sample_time = milliseconds(100);
+inline constexpr Time base = millisSinceStartup(10000);
+inline constexpr Duration sample_period = milliseconds(100);
+Time ticks(int num_ticks) { return base + num_ticks * sample_period; }
+
+#define EXPECT_OUTPUT(expected, actual)                                        \
+  EXPECT_NEAR(expected, actual, OUTPUT_TOLERANCE)
+
+TEST(PidTest, Proportional) {
+  const float Kp = 0.9;
+  const float setpoint = 25;
+  const float input = setpoint - 10;
 
   // Create PID and run once
-  PID pid(Kp, Ki, Kd, ProportionalTerm::ON_ERROR,
-          DifferentialTerm::ON_MEASUREMENT, ControlDirection::DIRECT, 0, 255,
-          sample_time);
+  PID pid(Kp, /*ki=*/0, /*kd=*/0, ProportionalTerm::ON_ERROR,
+          DifferentialTerm::ON_MEASUREMENT, ControlDirection::DIRECT,
+          MIN_OUTPUT, MAX_OUTPUT, sample_period);
+  int t = 0;
 
   // Ki and Kd = 0 therefore output = Kp*error, nothing more
-  EXPECT_NEAR(pid.Compute(input, setpoint), (setpoint - input) * Kp,
-              OUTPUT_TOLERANCE);
-  Hal.delay(sample_time);
-  EXPECT_NEAR(pid.Compute(input, setpoint), (setpoint - input) * Kp,
-              OUTPUT_TOLERANCE);
+  EXPECT_OUTPUT(pid.Compute(ticks(t++), input, setpoint),
+                (setpoint - input) * Kp);
+  EXPECT_OUTPUT(pid.Compute(ticks(t++), input, setpoint),
+                (setpoint - input) * Kp);
 }
 
-TEST(pidTest, Integral) {
-  float Kp = 0;
-  float Ki = 1.75;
-  float Kd = 0;
-  const uint32_t MAX_ITERATIONS = 1000;
-  float output = 0;
-  float setpoint = 25;
-  float input = setpoint - 10;
-  Duration sample_time = milliseconds(100);
+TEST(PidTest, IntegralBasic) {
+  const float Ki = 1.75;
+  const float setpoint = 25;
+  const float input = setpoint - 10;
 
-  // Create PID and run once
-  PID pid(Kp, Ki, Kd, ProportionalTerm::ON_ERROR,
-          DifferentialTerm::ON_MEASUREMENT, ControlDirection::DIRECT, 0, 255,
-          sample_time);
+  PID pid(/*kp=*/0, Ki, /*kd=*/0, ProportionalTerm::ON_ERROR,
+          DifferentialTerm::ON_MEASUREMENT, ControlDirection::DIRECT,
+          MIN_OUTPUT, MAX_OUTPUT, sample_period);
+  int t = 0;
 
   // on first call, integral = error*sample time, output = Ki*integral
-  EXPECT_NEAR(pid.Compute(input, setpoint),
-              (setpoint - input) * sample_time.seconds() * Ki,
-              OUTPUT_TOLERANCE);
-
-  Hal.delay(sample_time);
+  EXPECT_OUTPUT(pid.Compute(ticks(t++), input, setpoint),
+                (setpoint - input) * sample_period.seconds() * Ki);
 
   // on second call, integral = error*2*sample time, output = Ki*integral
-  EXPECT_NEAR(pid.Compute(input, setpoint),
-              (setpoint - input) * 2 * sample_time.seconds() * Ki,
-              OUTPUT_TOLERANCE);
+  EXPECT_OUTPUT(pid.Compute(ticks(t++), input, setpoint),
+                (setpoint - input) * 2 * sample_period.seconds() * Ki);
+}
 
-  uint32_t cycles = MAX_ITERATIONS;
-  // test output and integral saturation to MAX
-  while (output < MAX_OUTPUT && cycles > 0) {
-    Hal.delay(sample_time);
-    output = pid.Compute(input, setpoint);
-    cycles--;
+TEST(PidTest, IntegralSaturationMax) {
+  const float Ki = 1.75;
+  const float setpoint = 25;
+  const float input = setpoint - 10;
+
+  PID pid(/*kp=*/0, Ki, /*kd=*/0, ProportionalTerm::ON_ERROR,
+          DifferentialTerm::ON_MEASUREMENT, ControlDirection::DIRECT,
+          MIN_OUTPUT, MAX_OUTPUT, sample_period);
+  int t = 0;
+
+  float output = 0;
+  for (int i = 0; i < 1000; ++i) {
+    output = pid.Compute(ticks(t++), input, setpoint);
+    if (output >= MAX_OUTPUT)
+      break;
   }
   EXPECT_EQ(output, MAX_OUTPUT);
-  // run a few times to make sure actual integral is bigger
+
   for (int i = 0; i < 10; i++) {
-    Hal.delay(sample_time);
-    pid.Compute(input, setpoint);
+    pid.Compute(ticks(t++), input, setpoint);
   }
+
   // make setpoint lower than input to de-saturate output
-  setpoint = input - 10;
+  const float low_setpoint = input - 10;
+  EXPECT_OUTPUT(pid.Compute(ticks(t++), input, low_setpoint),
+                MAX_OUTPUT +
+                    (low_setpoint - input) * sample_period.seconds() * Ki);
+}
 
-  Hal.delay(sample_time);
+TEST(PidTest, IntegralSaturationMin) {
+  const float Ki = 1.75;
+  const float setpoint = 25;
+  const float input = setpoint + 10;
 
-  EXPECT_NEAR(pid.Compute(input, setpoint),
-              MAX_OUTPUT + (setpoint - input) * sample_time.seconds() * Ki,
-              OUTPUT_TOLERANCE);
+  // Create PID and run once
+  PID pid(/*kp=*/0, Ki, /*kd=*/0, ProportionalTerm::ON_ERROR,
+          DifferentialTerm::ON_MEASUREMENT, ControlDirection::DIRECT,
+          MIN_OUTPUT, MAX_OUTPUT, sample_period);
+  int t = 0;
 
-  // test output and integral saturation to MIN
-  cycles = MAX_ITERATIONS;
-  while (output > MIN_OUTPUT && cycles > 0) {
-    Hal.delay(sample_time);
-    output = pid.Compute(input, setpoint);
-    cycles--;
+  float output = 0;
+  for (int i = 0; i < 1000; ++i) {
+    output = pid.Compute(ticks(t++), input, setpoint);
+    if (output <= MIN_OUTPUT)
+      break;
   }
   EXPECT_EQ(output, MIN_OUTPUT);
 
   // run a few times to make sure actual integral is lower
   for (int i = 0; i < 10; i++) {
-    Hal.delay(sample_time);
-    pid.Compute(input, setpoint);
+    pid.Compute(ticks(t++), input, setpoint);
   }
 
   // make setpoint bigger than input again to de-saturate output
-  setpoint = input + 10;
+  float new_setpoint = input + 10;
 
-  Hal.delay(sample_time);
-
-  EXPECT_NEAR(pid.Compute(input, setpoint),
-              MIN_OUTPUT + (setpoint - input) * sample_time.seconds() * Ki,
-              OUTPUT_TOLERANCE);
+  EXPECT_OUTPUT(pid.Compute(ticks(t++), input, new_setpoint),
+                MIN_OUTPUT +
+                    (new_setpoint - input) * sample_period.seconds() * Ki);
 }
 
-TEST(pidTest, derivativeOnMeasure) {
-  float Kp = 0;
-  float Ki = 0;
-  float Kd = 1.5;
-  float setpoint = 25;
-  float input = setpoint - 10;
-  Duration sample_time = milliseconds(100);
-  PID pid(Kp, Ki, Kd, ProportionalTerm::ON_ERROR,
-          DifferentialTerm::ON_MEASUREMENT, ControlDirection::DIRECT, 0, 255,
-          sample_time);
+// In the following tests we transition from (input1, setpoint1) to (input2,
+// setpoint2). Derivative on measure and on error should handle this transition
+// differently.
+TEST(PidTest, DerivativeOnMeasure) {
+  const float Kd = 1.5;
+  const float setpoint1 = 25;
+  const float input1 = setpoint1 - 10;
+  const float setpoint2 = 17;
+  const float input2 = setpoint2 - 13;
+  PID pid(/*kp=*/0, /*ki=*/0, Kd, ProportionalTerm::ON_MEASUREMENT,
+          DifferentialTerm::ON_MEASUREMENT, ControlDirection::DIRECT,
+          MIN_OUTPUT, MAX_OUTPUT, sample_period);
+  int t = 0;
+
   // Expect no derivative on first call
-  EXPECT_NEAR(pid.Compute(input, setpoint), 0, OUTPUT_TOLERANCE);
+  EXPECT_OUTPUT(pid.Compute(ticks(t++), input1, setpoint1), 0);
 
-  // delay and update input to create non-zero derivative
-  float previous_input = input;
-  // output being in [0 255], create a negative input derivative to have a
-  // positive output (DifferentialTerm::ON_MEASUREMENT actually works with
-  // -1*Kd) to allow using the same parameters as DifferentialTerm::ON_ERROR)
-  input = input - 5;
-  float derivative = (input - previous_input) / sample_time.seconds();
-
-  Hal.delay(sample_time);
-  EXPECT_NEAR(pid.Compute(input, setpoint), -1 * derivative * Kd,
-              OUTPUT_TOLERANCE);
-
-  previous_input = input;
-  // no change in input, but change setpoint, which should have no effect on
-  // derivative (this mode uses derivative on measurement)
-  setpoint = setpoint + 5;
-  derivative = (input - previous_input) / sample_time.seconds();
-
-  Hal.delay(sample_time);
-  EXPECT_NEAR(pid.Compute(input, setpoint), -1 * derivative * Kd,
-              OUTPUT_TOLERANCE);
+  // Note that DifferentialTerm::ON_MEASUREMENT actually works with
+  // -1*Kd to allow using the same parameters as DifferentialTerm::ON_ERROR
+  EXPECT_OUTPUT(pid.Compute(ticks(t++), input2, setpoint2),
+                -1 * Kd * (input2 - input1) / sample_period.seconds());
 }
 
-TEST(pidTest, derivativeOnError) {
-  float Kp = 0;
-  float Ki = 0;
-  float Kd = 2.5;
-  float setpoint = 25;
-  float input = setpoint - 10;
-  Duration sample_time = milliseconds(100);
-  PID pid(Kp, Ki, Kd, ProportionalTerm::ON_ERROR, DifferentialTerm::ON_ERROR,
-          ControlDirection::DIRECT, 0, 255, sample_time);
+TEST(PidTest, DerivativeOnError) {
+  const float Kd = 1.5;
+  const float setpoint1 = 25;
+  const float input1 = setpoint1 - 10;
+  const float setpoint2 = 17;
+  const float input2 = setpoint2 - 13;
+  PID pid(/*kp=*/0, /*ki=*/0, Kd, ProportionalTerm::ON_MEASUREMENT,
+          DifferentialTerm::ON_ERROR, ControlDirection::DIRECT, MIN_OUTPUT,
+          MAX_OUTPUT, sample_period);
+  int t = 0;
+
   // Expect no derivative on first call
-  EXPECT_NEAR(pid.Compute(input, setpoint), 0, OUTPUT_TOLERANCE);
-
-  // update input to create non-zero derivative
-  float previous_input = input;
-  float previous_setpoint = setpoint;
-  // output being in [0 255], create a negative input derivative in order to
-  // have a positive error derivative, and therefore a positive output
-  input = input - 5;
-  float derivative =
-      ((setpoint - input) - (previous_setpoint - previous_input)) /
-      sample_time.seconds();
-
-  Hal.delay(sample_time);
-  EXPECT_NEAR(pid.Compute(input, setpoint), derivative * Kd, OUTPUT_TOLERANCE);
-
-  previous_setpoint = setpoint;
-  previous_input = input;
-  // output being in [0 255], create a positive setpoint derivative in order to
-  // have a positive error derivative, and therefore a positive output
-  setpoint = setpoint + 5;
-  derivative = ((setpoint - input) - (previous_setpoint - previous_input)) /
-               sample_time.seconds();
-  Hal.delay(sample_time);
-  EXPECT_NEAR(pid.Compute(input, setpoint), derivative * Kd, OUTPUT_TOLERANCE);
+  EXPECT_OUTPUT(pid.Compute(ticks(t++), input1, setpoint1), 0);
+  EXPECT_OUTPUT(pid.Compute(ticks(t++), input2, setpoint2),
+                Kd * ((setpoint2 - input2) - (setpoint1 - input1)) /
+                    sample_period.seconds());
 }
 
-TEST(pidTest, CallFasterThanSample) {
+TEST(PidTest, CallFasterThanSample) {
   // This test calls PID::Compute faster than sample time to check this has no
   // effect on output
-  float Kp = 5.5;
-  float Ki = 1.1;
-  float Kd = 1.5;
-  float setpoint = 25;
-  float input = setpoint - 10;
-  Duration sample_time = milliseconds(100);
-  PID pid(Kp, Ki, Kd, ProportionalTerm::ON_ERROR,
-          DifferentialTerm::ON_MEASUREMENT, ControlDirection::DIRECT, 0, 255,
-          sample_time);
+  const float setpoint = 25;
+  const float input = setpoint - 10;
+  PID pid(/*kp=*/5.5, /*ki=*/1.1, /*kd=*/1.5, ProportionalTerm::ON_ERROR,
+          DifferentialTerm::ON_MEASUREMENT, ControlDirection::DIRECT,
+          MIN_OUTPUT, MAX_OUTPUT, sample_period);
+  int t = 0;
 
-  float last_output = pid.Compute(input, setpoint);
+  float last_output = pid.Compute(ticks(t), input, setpoint);
   // check that call with no time change has no effect
-  EXPECT_EQ(pid.Compute(input, setpoint), last_output);
+  EXPECT_EQ(pid.Compute(ticks(t), input, setpoint), last_output);
 
-  Time last_time = Hal.now();
-
+  // Run PID a few times in rapid succession and check output doesn't change
+  // unless a sample time has passed
+  Time next_sample = ticks(t) + sample_period;
   // chose dt to not be a divisor of SampleTime, for better coverage
   Duration dt = milliseconds(6);
-  // Run PID a few times with fast and check output doesn't change unless a
-  // sample time has passed
   for (int i = 0; i < 100; i++) {
-    Hal.delay(dt);
-    float output = pid.Compute(input, setpoint);
-    if (Hal.now() >= last_time + sample_time) {
+    Time now = ticks(t) + i * dt;
+    float output = pid.Compute(now, input, setpoint);
+    if (now >= next_sample) {
       last_output = output;
-      last_time = last_time + sample_time;
+      next_sample += sample_period;
     } else {
       EXPECT_EQ(output, last_output);
     }
   }
 }
 
-TEST(pidTest, TaskJitter) {
+TEST(PidTest, TaskJitter) {
   // This test uses integral to check the effect of time between calls on the
   // PID output. Introducing jitter in call frequency and checking that the
   // integral takes this jitter into account.
-  float Kp = 0;
-  float Ki = 0.5;
-  float Kd = 0;
-  float setpoint = 25;
-  float input = setpoint - 10;
-  Duration sample_time = milliseconds(100);
-  PID pid(Kp, Ki, Kd, ProportionalTerm::ON_ERROR,
-          DifferentialTerm::ON_MEASUREMENT, ControlDirection::DIRECT, 0, 255,
-          sample_time);
-  // First task, with only Ki set, output = error*sample_time
-  float integral = (setpoint - input) * sample_time.seconds();
-  EXPECT_NEAR(pid.Compute(input, setpoint), integral * Ki, OUTPUT_TOLERANCE);
+  const float Ki = 0.5;
+  const float setpoint = 25;
+  const float input = setpoint - 10;
+  PID pid(/*kp=*/0, Ki, /*kd=*/0, ProportionalTerm::ON_ERROR,
+          DifferentialTerm::ON_MEASUREMENT, ControlDirection::DIRECT,
+          MIN_OUTPUT, MAX_OUTPUT, sample_period);
+  Time now = base;
+
+  float integral = (setpoint - input) * sample_period.seconds();
+  EXPECT_OUTPUT(pid.Compute(now, input, setpoint), integral * Ki);
+
   // Advance time with jitter
-  Duration dt = sample_time + max_task_jitter;
-  Hal.delay(dt);
+  Duration dt_high = sample_period + max_task_jitter;
+  now += dt_high;
   // Expect output to take jitter into account in integral
-  integral += (setpoint - input) * (dt.seconds());
-  EXPECT_NEAR(pid.Compute(input, setpoint), integral * Ki, OUTPUT_TOLERANCE);
+  integral += (setpoint - input) * dt_high.seconds();
+  EXPECT_OUTPUT(pid.Compute(now, input, setpoint), integral * Ki);
+
   // Advance time and compensate previous jitter to have total time
   // elapsed = 2*sample time
-  dt = sample_time - max_task_jitter;
-  integral += (setpoint - input) * (dt.seconds());
-  Hal.delay(dt);
-  EXPECT_NEAR(pid.Compute(input, setpoint), integral * Ki, OUTPUT_TOLERANCE);
+  Duration dt_low = sample_period - max_task_jitter;
+  integral += (setpoint - input) * dt_low.seconds();
+  now += dt_low;
+  EXPECT_OUTPUT(pid.Compute(now, input, setpoint), integral * Ki);
 }
 
-TEST(pidTest, MissedSample) {
+TEST(PidTest, MissedSample) {
   // This test uses integral to check the effect of missing a sample in the
   // execution of PID
-  float Kp = 0;
-  float Ki = 0.2;
-  float Kd = 0;
-  float setpoint = 25;
-  float input = setpoint - 10;
-  Duration sample_time = milliseconds(100);
-  PID pid(Kp, Ki, Kd, ProportionalTerm::ON_ERROR,
-          DifferentialTerm::ON_MEASUREMENT, ControlDirection::DIRECT, 0, 255,
-          sample_time);
+  const float Ki = 0.2;
+  const float setpoint = 25;
+  const float input = setpoint - 10;
+  PID pid(/*kp=*/0, Ki, /*kd=*/0, ProportionalTerm::ON_ERROR,
+          DifferentialTerm::ON_MEASUREMENT, ControlDirection::DIRECT,
+          MIN_OUTPUT, MAX_OUTPUT, sample_period);
+  Time now = base;
 
-  // First task, with only Ki set, output = error*sample_time
-  float integral = (setpoint - input) * (sample_time.seconds());
-  EXPECT_NEAR(pid.Compute(input, setpoint), integral * Ki, OUTPUT_TOLERANCE);
+  float integral = (setpoint - input) * (sample_period.seconds());
+  EXPECT_OUTPUT(pid.Compute(now, input, setpoint), integral * Ki);
+
   // Advance time
-  Duration dt = sample_time + sample_time;
-  Hal.delay(dt);
-  float output = pid.Compute(input, setpoint);
+  now += 2 * sample_period;
+  float output = pid.Compute(now, input, setpoint);
   // Expect output to integrate this
-  integral += (setpoint - input) * (dt.seconds());
-  EXPECT_NEAR(output, integral * Ki, OUTPUT_TOLERANCE);
+  integral += (setpoint - input) * 2 * sample_period.seconds();
+  EXPECT_OUTPUT(output, integral * Ki);
+
   // check that a new call without change in time has no effect, even if we
   // missed a sample
-  EXPECT_EQ(pid.Compute(input, setpoint), output);
+  EXPECT_EQ(pid.Compute(now, input, setpoint), output);
+
   // Advance time a small amount to allow PID to catch up to missed sample
-  dt = max_task_jitter;
-  Hal.delay(dt);
-  integral += (setpoint - input) * (dt.seconds());
+  Duration dt = max_task_jitter;
+  now += dt;
+  integral += (setpoint - input) * dt.seconds();
   // Expect output to have a new update
-  EXPECT_NEAR(pid.Compute(input, setpoint), integral * Ki, OUTPUT_TOLERANCE);
+  EXPECT_OUTPUT(pid.Compute(now, input, setpoint), integral * Ki);
 }

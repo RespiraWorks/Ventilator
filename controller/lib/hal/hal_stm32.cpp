@@ -790,7 +790,8 @@ __attribute__((section(".isr_vector"))) void (*const vectors[])() = {
     // thumb code.  The cortex m4 processor only supports
     // thumb code, so this will always be set or we'll get
     // a hard fault.
-    reinterpret_cast<void (*)()>(reinterpret_cast<uint32_t>(Reset_Handler) + 1),
+    reinterpret_cast<void (*)()>(reinterpret_cast<uintptr_t>(Reset_Handler) +
+                                 1),
 
     // The rest of the table is a list of exception and
     // interrupt handlers.  Chapter 12 (NVIC) of the reference

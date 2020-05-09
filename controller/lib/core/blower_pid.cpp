@@ -46,35 +46,22 @@ static PID myPID(Kp, Ki, Kd, ProportionalTerm::ON_ERROR,
 void blower_pid_init() {
 }
 
-float blower_pid_execute(const BlowerSystemState &desired_state,
+float blower_pid_execute(Time now, const BlowerSystemState &desired_state,
                          float current_pressure_cm_h2o) {
 
-<<<<<<< HEAD
   // If the blower is not enabled, immediately shut down the fan.  But for
   // consistency, we still run the PID iteration above.
   float output;
   if (desired_state.blower_enabled) {
-    output = myPID.Compute(Hal.now(), /*input=*/cur_pressure.kPa(),
+    output = myPID.Compute(now, /*input=*/cmH2O(current_pressure_cm_h2o).kPa(),
                            /*setpoint=*/desired_state.setpoint_pressure.kPa());
   } else {
     output = 0;
-    myPID.Observe(Hal.now(), /*input=*/cur_pressure.kPa(),
+    myPID.Observe(now, /*input=*/cmH2O(current_pressure_cm_h2o).kPa(),
                   /*setpoint=*/desired_state.setpoint_pressure.kPa(),
                   /*actual_output=*/output);
   }
-  Hal.analogWrite(PwmPin::BLOWER, static_cast<int>(output));
-=======
-  float pid_output =
-      myPID.Compute(/*input=*/cmH2O(current_pressure_cm_h2o).kPa(),
-                    /*setpoint=*/desired_state.setpoint_pressure.kPa());
-
-  // If the blower is not enabled, immediately shut down the fan.  But for
-  // consistency, we still run the PID iteration above.
-  if (!desired_state.blower_enabled) {
-    pid_output = 0;
-  }
->>>>>>> first step to isolate computational part of the controller:
 
   // fan_power is in range [0, 1].
-  return pid_output / 255.f;
+  return output / 255.f;
 }

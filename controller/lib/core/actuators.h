@@ -27,6 +27,6 @@ typedef struct _ActuatorsState {
 #define ActuatorsState_init_zero                                               \
   { ValveState::OPEN, 0.0 }
 
-void actuators_execute(ActuatorsState desired_state);
+ActuatorsState actuators_execute(ActuatorsState desired_state);
 
 #endif // ACTUATORS_H

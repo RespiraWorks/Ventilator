@@ -86,3 +86,15 @@ float PID::Compute(Time now, float input, float setpoint) {
   last_output_ = stl::clamp(res, out_min_, out_max_);
   return last_output_;
 }
+
+void PID::Observe(Time now, float input, float setpoint, float actual_output) {
+  // All the observable variables are updated the same way as in Compute();
+  last_input_ = input;
+  last_error_ = setpoint - input;
+  last_update_time_ = now;
+  next_sample_time_ = now + sample_period_;
+  // Reset output_sum_ to actual_output so that the next Compute()
+  // will adjust it only slightly (as if it had been computed by a current
+  // Compute() call), avoiding a spike.
+  output_sum_ = stl::clamp(actual_output, out_min_, out_max_);
+}

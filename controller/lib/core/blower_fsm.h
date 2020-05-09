@@ -66,6 +66,6 @@ void blower_fsm_init();
 
 // Gets the state that the the blower system should (ideally) deliver right
 // now.
-BlowerSystemState blower_fsm_desired_state(const VentParams &params);
+BlowerSystemState blower_fsm_desired_state(Time now, const VentParams &params);
 
 #endif // BLOWER_FSM_H

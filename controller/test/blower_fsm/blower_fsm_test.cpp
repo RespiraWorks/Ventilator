@@ -30,7 +30,7 @@ public:
 
 TEST_F(BlowerFsmTest, InitiallyOff) {
   VentParams p = VentParams_init_zero;
-  BlowerSystemState s = blower_fsm_desired_state(p);
+  BlowerSystemState s = blower_fsm_desired_state(Hal.now(), p);
   EXPECT_FLOAT_EQ(s.setpoint_pressure.cmH2O(), 0);
   EXPECT_EQ(s.expire_valve_state, ValveState::OPEN);
 }
@@ -38,7 +38,7 @@ TEST_F(BlowerFsmTest, InitiallyOff) {
 TEST_F(BlowerFsmTest, StaysOff) {
   VentParams p = VentParams_init_zero;
   Hal.delay(milliseconds(1000));
-  BlowerSystemState s = blower_fsm_desired_state(p);
+  BlowerSystemState s = blower_fsm_desired_state(Hal.now(), p);
   EXPECT_FLOAT_EQ(s.setpoint_pressure.cmH2O(), 0);
   EXPECT_EQ(s.expire_valve_state, ValveState::OPEN);
 }
@@ -58,7 +58,7 @@ void testSequence(
     SCOPED_TRACE("time = " + std::to_string(time_millis));
     EXPECT_EQ(time_millis, Hal.now().millisSinceStartup());
 
-    BlowerSystemState s = blower_fsm_desired_state(params);
+    BlowerSystemState s = blower_fsm_desired_state(Hal.now(), params);
     EXPECT_EQ(s.blower_enabled, blower_enabled);
     EXPECT_EQ(s.setpoint_pressure.cmH2O(), expected_pressure.cmH2O());
     EXPECT_EQ(s.expire_valve_state, expected_valve_state);

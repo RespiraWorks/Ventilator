@@ -13,12 +13,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-// This module is responsible for passing the actuator commands to Hal to
-// generate the actual electrical signals.
-
 #include "actuators.h"
 
-ActuatorsState actuators_execute(ActuatorsState desired_state) {
+void actuators_execute(const ActuatorsState &desired_state) {
   // Open/close the solenoid as appropriate.
   // Our solenoid is "normally open", so low voltage means open and high
   // voltage means closed.  Hardware spec: https://bit.ly/3aERr69
@@ -30,5 +27,4 @@ ActuatorsState actuators_execute(ActuatorsState desired_state) {
   // TODO: create PWM limits in HAL (255) and use this instead
   Hal.analogWrite(PwmPin::BLOWER,
                   static_cast<int>(desired_state.fan_power * 255));
-  return desired_state;
 }

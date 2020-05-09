@@ -37,25 +37,26 @@ namespace {
 //
 // All breath FSMs should implement the following "duck-typed API".
 //
-//  - <constructor>(const VentParams& params): Constructs a new FSM for a
-//    single breath, with the given params.  Those params don't change during
-//    the life of the FSM.
+//  - <constructor>(Time now, const VentParams& params): Constructs a new FSM
+//    for a single breath starting at the given time and with the given params.
+//    Those params don't change during the life of the FSM.
 //
-//  - BlowerSystemState desired_state(): Gets the solenoid open/closed state
-//    and the pressure that the fan should be trying to hit at this point in
-//    time.
+//  - BlowerSystemState desired_state(Time now): Gets the solenoid open/closed
+//    state and the pressure that the fan should be trying to hit at this point
+//    in time.
 //
-//  - bool finished(): Has this breath FSM completed its work (namely, running
-//    a single breath)?  If so, it is ready to be replaced with a new one.
+//  - bool finished(Time now): Has this breath FSM completed its work (namely,
+//    running a single breath) at the given time?  If so, it is ready to be
+//    replaced with a new one.
 //
 class OffFsm {
 public:
   OffFsm() = default;
-  explicit OffFsm(const VentParams &) {}
-  BlowerSystemState desired_state() {
+  explicit OffFsm(Time now, const VentParams &) {}
+  BlowerSystemState desired_state(Time now) {
     return {.blower_enabled = false, kPa(0), ValveState::OPEN};
   }
-  bool finished() { return true; }
+  bool finished(Time now) { return true; }
 };
 
 // "Breath finite state machine" for pressure control mode.
@@ -139,7 +140,7 @@ public:
     mode_ = m;
     switch (mode_) {
     case VentMode_OFF:
-      new (&u_.off) OffFsm(params);
+      new (&u_.off) OffFsm(now, params);
       break;
     case VentMode_PRESSURE_CONTROL:
       new (&u_.pressure_control) PressureControlFsm(now, params);
@@ -151,7 +152,7 @@ public:
   BlowerSystemState desired_state(Time now) {
     switch (mode_) {
     case VentMode_OFF:
-      return u_.off.desired_state();
+      return u_.off.desired_state(now);
     case VentMode_PRESSURE_CONTROL:
       return u_.pressure_control.desired_state(now);
     }
@@ -163,7 +164,7 @@ public:
   bool finished(Time now) {
     switch (mode_) {
     case VentMode_OFF:
-      return u_.off.finished();
+      return u_.off.finished(now);
     case VentMode_PRESSURE_CONTROL:
       return u_.pressure_control.finished(now);
     }

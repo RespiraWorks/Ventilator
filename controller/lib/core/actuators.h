@@ -13,20 +13,21 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+// This module is responsible for passing the actuator commands to Hal to
+// generate the actual electrical signals.
+
 #ifndef ACTUATORS_H
 #define ACTUATORS_H
 
 #include "blower_fsm.h"
 #include "hal.h"
 
-typedef struct _ActuatorsState {
-  ValveState expire_valve_state;
-  float fan_power;
-} ActuatorsState;
+struct ActuatorsState {
+  float fan_setpoint_cm_h2o = 0.0;
+  ValveState expire_valve_state = ValveState::CLOSED;
+  float fan_power = 0.0;
+};
 
-#define ActuatorsState_init_zero                                               \
-  { ValveState::OPEN, 0.0 }
-
-ActuatorsState actuators_execute(ActuatorsState desired_state);
+void actuators_execute(const ActuatorsState &desired_state);
 
 #endif // ACTUATORS_H

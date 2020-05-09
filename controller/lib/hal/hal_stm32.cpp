@@ -165,6 +165,11 @@ void HalApi::init() {
  *
  * The following pins are used as GPIO on the rev-1 PCB
  *
+ * Please refer to the PCB schematic as the ultimate source of which
+ * pin is used for which function.  A less definitive, but perhaps
+ * easier to read spreadsheet is availabe here:
+ * https://docs.google.com/spreadsheets/d/1JOSQKxkQxXJ6MCMDI9PwUQ6kiuGdujR4D6EJN9u2LWg/edit#gid=0
+ *
  * ID inputs.  These can be used to identify the PCB revision
  * we're running on.
  *  PB1  - ID0
@@ -192,13 +197,13 @@ static void InitGPIO() {
   EnableClock(GPIO_H_BASE);
 
   // Configure PCB ID pins as inputs.
-  GPIO_PinMode(GPIO_B_BASE, 1, GPIO_MODE_INPUT);
-  GPIO_PinMode(GPIO_A_BASE, 12, GPIO_MODE_INPUT);
+  GPIO_PinMode(GPIO_B_BASE, 1, GPIO_PinMode::IN);
+  GPIO_PinMode(GPIO_A_BASE, 12, GPIO_PinMode::IN);
 
   // Configure LED pins as outputs
-  GPIO_PinMode(GPIO_C_BASE, 13, GPIO_MODE_OUTPUT);
-  GPIO_PinMode(GPIO_C_BASE, 14, GPIO_MODE_OUTPUT);
-  GPIO_PinMode(GPIO_C_BASE, 15, GPIO_MODE_OUTPUT);
+  GPIO_PinMode(GPIO_C_BASE, 13, GPIO_PinMode::OUT);
+  GPIO_PinMode(GPIO_C_BASE, 14, GPIO_PinMode::OUT);
+  GPIO_PinMode(GPIO_C_BASE, 15, GPIO_PinMode::OUT);
 
   // Turn all three LEDs off initially
   GPIO_ClrPin(GPIO_C_BASE, 13);
@@ -206,7 +211,7 @@ static void InitGPIO() {
   GPIO_ClrPin(GPIO_C_BASE, 15);
 
   // Configure the solenoid and turn it off
-  GPIO_PinMode(GPIO_A_BASE, 11, GPIO_MODE_OUTPUT);
+  GPIO_PinMode(GPIO_A_BASE, 11, GPIO_PinMode::OUT);
   GPIO_ClrPin(GPIO_A_BASE, 11);
 }
 
@@ -260,9 +265,9 @@ static void InitSysTimer() {
 }
 
 // Just spin for a specified number of microseconds
-static void BusyWait(uint16_t usec) {
+static void BusyWaitUsec(uint16_t usec) {
   while (usec > 1000) {
-    BusyWait(1000);
+    BusyWaitUsec(1000);
     usec -= 1000;
   }
 
@@ -293,6 +298,11 @@ Time HalApi::now() { return millisSinceStartup(msCount); }
  *
  * The following pins are used as analog inputs on the rev-1 PCB
  *
+ * Please refer to the PCB schematic as the ultimate source of which
+ * pin is used for which function.  A less definitive, but perhaps
+ * easier to read spreadsheet is availabe here:
+ * https://docs.google.com/spreadsheets/d/1JOSQKxkQxXJ6MCMDI9PwUQ6kiuGdujR4D6EJN9u2LWg/edit#gid=0
+ *
  * PA0 (ADC1_IN5)  - vin
  * PA1 (ADC1_IN6)  - pressure
  * PA4 (ADC1_IN9)  - inhale flow
@@ -306,10 +316,10 @@ static void InitADC() {
   EnableClock(ADC_BASE);
 
   // Configure the 4 pins used as analog inputs
-  GPIO_PinMode(GPIO_A_BASE, 0, GPIO_MODE_ANALOG);
-  GPIO_PinMode(GPIO_A_BASE, 1, GPIO_MODE_ANALOG);
-  GPIO_PinMode(GPIO_A_BASE, 4, GPIO_MODE_ANALOG);
-  GPIO_PinMode(GPIO_B_BASE, 0, GPIO_MODE_ANALOG);
+  GPIO_PinMode(GPIO_A_BASE, 0, GPIO_PinMode::ANALOG);
+  GPIO_PinMode(GPIO_A_BASE, 1, GPIO_PinMode::ANALOG);
+  GPIO_PinMode(GPIO_A_BASE, 4, GPIO_PinMode::ANALOG);
+  GPIO_PinMode(GPIO_B_BASE, 0, GPIO_PinMode::ANALOG);
 
   // Perform a power-up and calibration sequence on
   // the A/D converter
@@ -323,7 +333,7 @@ static void InitADC() {
   // for the voltage regulator to become ready.
   // The time in the datasheet is 20 microseconds, but
   // I'll wait for 30 just to be extra conservative
-  BusyWait(30);
+  BusyWaitUsec(30);
 
   // Calibrate the A/D for single ended channels
   adc->adc[0].ctrl |= 0x80000000;
@@ -412,6 +422,17 @@ int HalApi::analogRead(AnalogPin pin) {
 static void InitPwmOut() {
   // The PWM frequency isn't mentioned anywhere that I can find, so
   // I'm just picking a reasonable number.  This can be refined later
+  //
+  // The selection of PWM frequency is a trade off between latency and
+  // resolution.  Higher frequencies give lower latency and lower resoution.
+  //
+  // Latency is the time between setting the value and it taking effect,
+  // this is essentially the PWM period (1/frequency).  For example, a
+  // 20kHz frequency would give a latency of up to 50 usec.
+  //
+  // Resultion is based on the ratio of the clock frequency (80MHz) to the
+  // PWM frequency.  For example, a 20kHz PWM would have a resolution of one
+  // part in 4000 (80000000/20000) or about 12 bits.
   const int pwmFreqHz = 20000;
 
   EnableClock(TIMER2_BASE);
@@ -424,7 +445,11 @@ static void InitPwmOut() {
   // Set the frequency
   tmr->reload = (CPU_FREQ / pwmFreqHz) - 1;
 
-  // Configure channel 2 in PWM output mode
+  // Configure channel 2 in PWM output mode 1
+  // with preload enabled.  The preload means that
+  // the new PWM duty cycle gets written to a shadow
+  // register and copied to the active register
+  // at the start of the next cycle.
   tmr->ccMode[0] = 0x6800;
 
   tmr->ccEnable = 0x10;
@@ -480,7 +505,7 @@ template <int N> class CircBuff {
 public:
   CircBuff() { head = tail = 0; }
 
-  // Return number of bytes available in the buffer
+  // Return number of bytes available in the buffer to read.
   int FullCt() {
     bool p = IntSuspend();
     int ct = head - tail;
@@ -490,7 +515,8 @@ public:
     return ct;
   }
 
-  // Return number of free spaces in the buffer
+  // Return number of free spaces in the buffer where more
+  // bytes can be written.
   int FreeCt() { return N - 1 - FullCt(); }
 
   // Get the oldest byte from the buffer.
@@ -550,6 +576,7 @@ public:
     reg->ctrl[0] = 0x002D;
   }
 
+  // This is the interrupt handler for the UART.
   void ISR() {
 
     // Check for over run error and framing errors.
@@ -578,6 +605,8 @@ public:
   }
 
   // Read up to len bytes and store them in the passed buffer.
+  // This function does not block, so if less then len bytes
+  // are available it will only return the available bytes
   // Returns the number of bytes actually read.
   uint16_t read(char *buf, uint16_t len) {
 
@@ -587,11 +616,17 @@ public:
         return i;
       *buf++ = ch;
     }
+
+    // Note that we don't need to enable the rx interrupt
+    // here.  That one is always enabled.
     return len;
   }
 
-  // Write up to len bytes to the buffer and return the
-  // number actually written.
+  // Write up to len bytes to the buffer.
+  // This function does not block, so if there isn't enough
+  // space to write len bytes, then only a partial write
+  // will occur.
+  // The number of bytes actually written is returned.
   uint16_t write(const char *buf, uint16_t len) {
 
     uint16_t i;
@@ -600,7 +635,9 @@ public:
         break;
     }
 
-    // Enable the tx interrupt
+    // Enable the tx interrupt.  If there was already anything
+    // in the buffer this will already be enabled, but enabling
+    // it again doesn't hurt anything.
     reg->ctrl[0] |= 0x0080;
 
     return i;
@@ -623,7 +660,13 @@ static UART rpUART(UART3_BASE);
 //    PB13 - RTS
 //    PB14 - CTS
 //
+// Please refer to the PCB schematic as the ultimate source of which
+// pin is used for which function.  A less definitive, but perhaps
+// easier to read spreadsheet is availabe here:
+// https://docs.google.com/spreadsheets/d/1JOSQKxkQxXJ6MCMDI9PwUQ6kiuGdujR4D6EJN9u2LWg/edit#gid=0
+//
 // These pins are connected to UART3
+// The UART is described in chapter 38 of the reference manual
 static void InitUARTs() {
   // NOTE - The UART functionality hasn't been tested due to lack of hardware!
   //        Need to do that as soon as the boards are available.
@@ -677,7 +720,7 @@ void HalApi::watchdog_init() {
   wdog->prescale = 0;
 
   // The reload value gives the number of clock cycles before the
-  // watchdog timer times out.  I'll set it to 1000 which gives
+  // watchdog timer times out.  I'll set it to 2000 which gives
   // us about 250ms before a reset.
   wdog->reload = 2000;
 
@@ -711,26 +754,39 @@ static void EnableClock(void *ptr) {
     int ndx;
     int bit;
   } rccInfo[] = {
-      {DMA1_BASE, 0, 0},     {DMA2_BASE, 0, 1},     {FLASH_BASE, 0, 8},
-      {CRC_BASE, 0, 12},     {GPIO_A_BASE, 1, 0},   {GPIO_B_BASE, 1, 1},
-      {GPIO_C_BASE, 1, 2},   {GPIO_D_BASE, 1, 3},   {GPIO_E_BASE, 1, 4},
-      {GPIO_H_BASE, 1, 7},   {ADC_BASE, 1, 13},     {TIMER2_BASE, 4, 0},
-      {TIMER3_BASE, 4, 1},   {TIMER6_BASE, 4, 4},   {TIMER7_BASE, 4, 7},
-      {SPI2_BASE, 4, 14},    {SPI3_BASE, 4, 15},    {UART2_BASE, 4, 17},
-      {UART3_BASE, 4, 18},   {UART4_BASE, 4, 19},   {I2C1_BASE, 4, 21},
-      {I2C2_BASE, 4, 22},    {I2C3_BASE, 4, 23},    {I2C4_BASE, 5, 1},
-      {TIMER1_BASE, 6, 11},  {SPI1_BASE, 6, 12},    {UART1_BASE, 6, 13},
-      {TIMER15_BASE, 6, 16}, {TIMER16_BASE, 6, 17},
+      {FLASH_BASE, 0, 8},  {GPIO_A_BASE, 1, 0}, {GPIO_B_BASE, 1, 1},
+      {GPIO_C_BASE, 1, 2}, {GPIO_D_BASE, 1, 3}, {GPIO_E_BASE, 1, 4},
+      {GPIO_H_BASE, 1, 7}, {ADC_BASE, 1, 13},   {TIMER2_BASE, 4, 0},
+      {TIMER6_BASE, 4, 4}, {UART3_BASE, 4, 18},
+
+      // The following entries are probably correct, but have
+      // not been tested yet.  When adding support for one of
+      // these peripherials just comment out the line.  And
+      // test of course.
+      //      {DMA1_BASE, 0, 0},
+      //      {DMA2_BASE, 0, 1},
+      //      {CRC_BASE, 0, 12},
+      //      {TIMER3_BASE, 4, 1},
+      //      {TIMER7_BASE, 4, 7},
+      //      {SPI2_BASE, 4, 14},
+      //      {SPI3_BASE, 4, 15},
+      //      {UART2_BASE, 4, 17},
+      //      {UART4_BASE, 4, 19},
+      //      {I2C1_BASE, 4, 21},
+      //      {I2C2_BASE, 4, 22},
+      //      {I2C3_BASE, 4, 23},
+      //      {I2C4_BASE, 5, 1},
+      //      {TIMER1_BASE, 6, 11},
+      //      {SPI1_BASE, 6, 12},
+      //      {UART1_BASE, 6, 14},
+      //      {TIMER15_BASE, 6, 16},
+      //      {TIMER16_BASE, 6, 17},
   };
 
   // I don't include all the peripherials here, just the ones
   // that we currently use or seem likely to be used in the
   // future.  To add more peripherials, just look up the appropriate
   // bit in the reference manual RCC chapter.
-  //
-  // This big case statement finds the index of the register in the
-  // array of clock enable registers, and the bit number used to enable
-  // the clock for the specified peripherial.
   int ndx = -1;
   int bit = 0;
   for (uint32_t i = 0; i < sizeof(rccInfo) / sizeof(rccInfo[0]); i++) {
@@ -776,7 +832,8 @@ static void UsageFaultISR() { fault(); }
 static void BadISR() { fault(); }
 
 extern "C" void Reset_Handler();
-__attribute__((section(".isr_vector"))) void (*const vectors[])() = {
+__attribute__((used))
+__attribute__((section(".isr_vector"))) void (*const vectors[101])() = {
     // The first entry of the ISR holds the initial value of the
     // stack pointer.  The ARM processor initializes the stack
     // pointer based on this address.
@@ -866,13 +923,39 @@ __attribute__((section(".isr_vector"))) void (*const vectors[])() = {
     BadISR,        //  69 - 0x114
     Timer6ISR,     //  70 - 0x118
     BadISR,        //  71 - 0x11C
+    BadISR,        //  72 - 0x120
+    BadISR,        //  73 - 0x124
+    BadISR,        //  74 - 0x128
+    BadISR,        //  75 - 0x12C
+    BadISR,        //  76 - 0x130
+    BadISR,        //  77 - 0x134
+    BadISR,        //  78 - 0x138
+    BadISR,        //  79 - 0x13C
+    BadISR,        //  80 - 0x140
+    BadISR,        //  81 - 0x144
+    BadISR,        //  82 - 0x148
+    BadISR,        //  83 - 0x14C
+    BadISR,        //  84 - 0x150
+    BadISR,        //  85 - 0x154
+    BadISR,        //  86 - 0x158
+    BadISR,        //  87 - 0x15C
+    BadISR,        //  88 - 0x160
+    BadISR,        //  89 - 0x164
+    BadISR,        //  90 - 0x168
+    BadISR,        //  91 - 0x16C
+    BadISR,        //  92 - 0x170
+    BadISR,        //  93 - 0x174
+    BadISR,        //  94 - 0x178
+    BadISR,        //  95 - 0x17C
+    BadISR,        //  96 - 0x180
+    BadISR,        //  97 - 0x184
+    BadISR,        //  98 - 0x188
+    BadISR,        //  99 - 0x18C
+    BadISR,        // 100 - 0x190
 };
 
-// NOTE - this never actually gets called.  It's just here
-// to prevent the linker from remove the vector array
-const void *GetVectorAddr() { return &vectors; }
-
 // Enable an interrupt with a specified priority (0 to 15)
+// See the NVIC chapter of the manual for more information.
 static void EnableInterrupt(int addr, int pri) {
   IntCtrl_Regs *nvic = NVIC_BASE;
 

@@ -274,3 +274,34 @@ TEST(PidTest, MissedSample) {
   // Expect output to have a new update
   EXPECT_OUTPUT(pid.Compute(now, input, setpoint), integral * Ki);
 }
+
+TEST(PidTest, Observe) {
+  float Ki = 1;
+  float setpoint = 25;
+  float input = setpoint - 10;
+  PID pid(/*kp=*/0, Ki, /*kd=*/0, ProportionalTerm::ON_ERROR,
+          DifferentialTerm::ON_MEASUREMENT, ControlDirection::DIRECT,
+          MIN_OUTPUT, MAX_OUTPUT, sample_period);
+  int t = 0;
+
+  // Run PID a few times
+  float output;
+  for (int i = 0; i < 10; i++) {
+    output = pid.Compute(ticks(t++), input, setpoint);
+  }
+  // Make sure we're not saturated in either direction so the following tests
+  // are not vacuous.
+  EXPECT_GT(output, MIN_OUTPUT);
+  EXPECT_LT(output, MAX_OUTPUT);
+
+  // Do a few cycles where the PID is not actually in control
+  float last_output;
+  for (int i = 0; i < 10; i++) {
+    last_output = 128 + i;
+    pid.Observe(ticks(t++), input, setpoint, /*actual_output=*/last_output);
+  }
+
+  float integral = (setpoint - input) * sample_period.seconds();
+  EXPECT_OUTPUT(pid.Compute(ticks(t++), input, setpoint),
+                128 + 10 + integral * Ki);
+}

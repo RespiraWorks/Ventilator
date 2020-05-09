@@ -208,19 +208,10 @@ Volume integrate_flow(VolumetricFlow flow) {
 }
 
 SensorReadings get_sensor_readings() {
-  SensorReadings readings;
-  Pressure cur_pressure = get_patient_pressure();
-  // Store sensor readings so they can eventually be sent to the GUI.
-  // This pressure is just from the patient sensor, converted to the right
-  // units.
-  readings.pressure_cm_h2o = cur_pressure.cmH2O();
-
   // Flow rate is inhalation flow minus exhalation flow. Positive value is flow
   // into lungs, and negative is flow out of lungs.
   VolumetricFlow flow = get_volumetric_inflow() - get_volumetric_outflow();
-  readings.flow_ml_per_min = flow.ml_per_min();
-
-  readings.volume_ml = integrate_flow(flow).ml();
-
-  return readings;
+  return {.pressure_cm_h2o = get_patient_pressure().cmH2O(),
+          .volume_ml = integrate_flow(flow).ml(),
+          .flow_ml_per_min = flow.ml_per_min()};
 }

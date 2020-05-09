@@ -18,7 +18,7 @@ limitations under the License.
 
 #include "actuators.h"
 
-void actuators_execute(ActuatorsState desired_state) {
+ActuatorsState actuators_execute(ActuatorsState desired_state) {
   // Open/close the solenoid as appropriate.
   // Our solenoid is "normally open", so low voltage means open and high
   // voltage means closed.  Hardware spec: https://bit.ly/3aERr69
@@ -30,4 +30,5 @@ void actuators_execute(ActuatorsState desired_state) {
   // TODO: create PWM limits in HAL (255) and use this instead
   Hal.analogWrite(PwmPin::BLOWER,
                   static_cast<int>(desired_state.fan_power * 255));
+  return desired_state;
 }

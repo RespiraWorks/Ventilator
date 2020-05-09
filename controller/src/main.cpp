@@ -61,28 +61,18 @@ static ControllerStatus controller_status = ControllerStatus_init_zero;
 // Last-received status from the GUI.
 static GuiStatus gui_status = GuiStatus_init_zero;
 
-// desired actuators state
-static ActuatorsState actuators_state = ActuatorsState_init_zero;
-
+// This class is here to allow integration of our controller into Modellica
+// software and run closed-loop tests in a simulated physical environment
 class Controller {
 public:
-  ActuatorsState Run(Time now, VentParams params, SensorReadings readings) {
-    // TODO: Add additional fields to the ControllerStatus proto:
-    //   - Blower speed (0-255 PWM value)
-    //   - Expiratory solenoid valve state (open/closed).
+  ActuatorsState Run(Time now, const VentParams &params,
+                     const SensorReadings &readings) {
     BlowerSystemState desired_state = blower_fsm_desired_state(now, params);
 
-    // pass setpoint to controller status for testing reasons
-    controller_status.fan_setpoint_cm_h2o =
-        desired_state.setpoint_pressure.cmH2O();
-
-    // output struct
-    ActuatorsState actuators_state;
-    actuators_state.fan_power =
-        blower_pid_execute(now, desired_state, readings.pressure_cm_h2o);
-    actuators_state.expire_valve_state = desired_state.expire_valve_state;
-
-    return actuators_state;
+    return {.fan_setpoint_cm_h2o = desired_state.setpoint_pressure.cmH2O(),
+            .expire_valve_state = desired_state.expire_valve_state,
+            .fan_power =
+                blower_pid_compute_fan_power(now, desired_state, readings)};
   }
 };
 
@@ -139,19 +129,21 @@ static void controller_loop() {
     DEV_MODE_comms_handler();
 #endif
 
-    // get sensor readings
     controller_status.sensor_readings = get_sensor_readings();
 
     controller_status.active_params = gui_status.desired_params;
 
     Controller controller;
-    actuators_state = controller.Run(Hal.now(), controller_status.active_params,
-                                     controller_status.sensor_readings);
+    ActuatorsState actuators_state =
+        controller.Run(Hal.now(), controller_status.active_params,
+                       controller_status.sensor_readings);
 
-    // TODO update pb library tp replace fan_power in controller status with
-    // actuators_state
-    actuators_state = actuators_execute(actuators_state);
+    // TODO update pb library to replace fan_power in ControllerStatus with
+    // actuators_state, and remove fan_setpoint_cm_h2o from ControllerStatus
+    actuators_execute(actuators_state);
     controller_status.fan_power = actuators_state.fan_power;
+
+    controller_status.fan_setpoint_cm_h2o = actuators_state.fan_setpoint_cm_h2o;
   }
 }
 

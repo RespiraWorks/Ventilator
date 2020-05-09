@@ -67,21 +67,21 @@ public:
 // an acceptable waveform, although it remains to be seen.
 class PressureControlFsm {
 public:
-  explicit PressureControlFsm(const VentParams &params)
+  explicit PressureControlFsm(Time now, const VentParams &params)
       : inspire_pressure_(cmH2O(static_cast<float>(params.pip_cm_h2o))),
         expire_pressure_(cmH2O(static_cast<float>(params.peep_cm_h2o))),
-        start_time_(Hal.now()),
+        start_time_(now),
         inspire_end_(start_time_ + inspire_duration(params)),
         expire_end_(inspire_end_ + expire_duration(params)) {}
 
-  BlowerSystemState desired_state() {
-    if (Hal.now() < inspire_end_) {
+  BlowerSystemState desired_state(Time now) {
+    if (now < inspire_end_) {
       return {.blower_enabled = true, inspire_pressure_, ValveState::CLOSED};
     }
     return {.blower_enabled = true, expire_pressure_, ValveState::OPEN};
   }
 
-  bool finished() { return Hal.now() > expire_end_; }
+  bool finished(Time now) { return now > expire_end_; }
 
 private:
   // Given t = secs_per_breath and r = I:E ratio, calculate inspiration and
@@ -126,7 +126,7 @@ public:
 
   // Replaces the existing breath FSM with a new one, of the given mode and
   // params.
-  void new_breath(VentMode m, const VentParams &params) {
+  void new_breath(Time now, VentMode m, const VentParams &params) {
     switch (mode_) {
     case VentMode_OFF:
       u_.off.~OffFsm();
@@ -142,30 +142,30 @@ public:
       new (&u_.off) OffFsm(params);
       break;
     case VentMode_PRESSURE_CONTROL:
-      new (&u_.pressure_control) PressureControlFsm(params);
+      new (&u_.pressure_control) PressureControlFsm(now, params);
       break;
     }
   }
 
   // Gets the state the FSM would like us to (try to) achieve.
-  BlowerSystemState desired_state() {
+  BlowerSystemState desired_state(Time now) {
     switch (mode_) {
     case VentMode_OFF:
       return u_.off.desired_state();
     case VentMode_PRESSURE_CONTROL:
-      return u_.pressure_control.desired_state();
+      return u_.pressure_control.desired_state(now);
     }
     // All cases covered above (and gcc checks this).
     __builtin_unreachable();
   }
 
   // Returns whether or not the current FSM is done with its one breath.
-  bool finished() {
+  bool finished(Time now) {
     switch (mode_) {
     case VentMode_OFF:
       return u_.off.finished();
     case VentMode_PRESSURE_CONTROL:
-      return u_.pressure_control.finished();
+      return u_.pressure_control.finished(now);
     }
     // All cases covered above (and gcc checks this).
     __builtin_unreachable();
@@ -186,12 +186,12 @@ FsmUnion fsm;
 
 void blower_fsm_init() {}
 
-BlowerSystemState blower_fsm_desired_state(const VentParams &params) {
+BlowerSystemState blower_fsm_desired_state(Time now, const VentParams &params) {
   // Immediately turn off the ventilator if params.mode == OFF; otherwise, wait
   // until the end of a cycle before implementing the mode change.
-  if (params.mode == VentMode_OFF || fsm.finished()) {
-    fsm.new_breath(params.mode, params);
+  if (params.mode == VentMode_OFF || fsm.finished(now)) {
+    fsm.new_breath(now, params.mode, params);
   }
 
-  return fsm.desired_state();
+  return fsm.desired_state(now);
 }

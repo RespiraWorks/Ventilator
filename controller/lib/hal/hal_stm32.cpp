@@ -25,8 +25,8 @@ the programmer's manual for the processor available here:
 
 #if defined(BARE_STM32)
 
-#include "hal.h"
 #include "hal_stm32.h"
+#include "hal.h"
 
 #define SYSTEM_STACK_SIZE 2500
 
@@ -44,7 +44,7 @@ static void InitADC();
 static void InitSysTimer();
 static void InitPwmOut();
 static void InitUARTs();
-static void EnableClock(uint32_t base);
+static void EnableClock(void *ptr);
 static void EnableInterrupt(int addr, int pri);
 static void Timer6ISR();
 static void UART3_ISR();
@@ -71,14 +71,14 @@ extern "C" void _init() {
   // The system control registers are documented in the programmers
   // manual (not the reference manual) chapter 4.
   // Details on enabling the FPU are in section 4.6.6.
-  SysCtrl_Reg *sysCtl = reinterpret_cast<SysCtrl_Reg *>(SYSCTL_BASE);
+  SysCtrl_Reg *sysCtl = SYSCTL_BASE;
   sysCtl->cpac = 0x00F00000;
 
   // Reset caches and set latency for 80MHz opperation
   // See chapter 3 of the reference manual for details
   // on the embedded flash module
   EnableClock(FLASH_BASE);
-  FlashReg *flash = reinterpret_cast<FlashReg *>(FLASH_BASE);
+  FlashReg *flash = FLASH_BASE;
   flash->access = 0x00000004;
   flash->access = 0x00001804;
   flash->access = 0x00001804;
@@ -110,7 +110,7 @@ extern "C" void _init() {
   // See chapter 6 of the reference manual
   int N = 40;
   int M = 1;
-  RCC_Regs *rcc = reinterpret_cast<RCC_Regs *>(RCC_BASE);
+  RCC_Regs *rcc = RCC_BASE;
   rcc->pllCfg = 0x01000001 | (N << 8) | ((M - 1) << 4);
 
   // Turn on the PLL
@@ -152,7 +152,7 @@ void HalApi::init() {
   // they're in the processor programming manual.
   // The register we use to reset the system is called the
   // "Application interrupt and reset control register (AIRCR)"
-  SysCtrl_Reg *sysCtl = reinterpret_cast<SysCtrl_Reg *>(SYSCTL_BASE);
+  SysCtrl_Reg *sysCtl = SYSCTL_BASE;
   sysCtl->apInt = 0x05FA0004;
 
   // We promised we wouldn't return, so...
@@ -212,7 +212,7 @@ static void InitGPIO() {
 
 // Set or clear the specified digital output
 void HalApi::digitalWrite(BinaryPin pin, VoltageLevel value) {
-  uint32_t base;
+  GPIO_Regs *base;
   int bit;
 
   switch (pin) {
@@ -249,7 +249,7 @@ static void InitSysTimer() {
   EnableClock(TIMER6_BASE);
 
   // Just set the timer up to count every microsecond.
-  TimerRegs *tmr = reinterpret_cast<TimerRegs *>(TIMER6_BASE);
+  TimerRegs *tmr = TIMER6_BASE;
   tmr->reload = 999;
   tmr->prescale = (CPU_FREQ_MHZ - 1);
   tmr->event = 1;
@@ -266,7 +266,7 @@ static void BusyWait(uint16_t usec) {
     usec -= 1000;
   }
 
-  TimerRegs *tmr = reinterpret_cast<TimerRegs *>(TIMER6_BASE);
+  TimerRegs *tmr = TIMER6_BASE;
   uint16_t start = tmr->counter;
   while (1) {
     uint16_t dt = tmr->counter - start;
@@ -276,8 +276,7 @@ static void BusyWait(uint16_t usec) {
 }
 
 static void Timer6ISR() {
-  TimerRegs *tmr = reinterpret_cast<TimerRegs *>(TIMER6_BASE);
-  tmr->status = 0;
+  TIMER6_BASE->status = 0;
   msCount++;
 }
 
@@ -314,7 +313,7 @@ static void InitADC() {
 
   // Perform a power-up and calibration sequence on
   // the A/D converter
-  ADC_Regs *adc = reinterpret_cast<ADC_Regs *>(ADC_BASE);
+  ADC_Regs *adc = ADC_BASE;
 
   // Exit deep power down mode and turn on the
   // internal voltage regulator.
@@ -376,7 +375,7 @@ int HalApi::analogRead(AnalogPin pin) {
     break;
   }
 
-  ADC_Regs *adc = reinterpret_cast<ADC_Regs *>(ADC_BASE);
+  ADC_Regs *adc = ADC_BASE;
   adc->adc[0].seq[0] = channel << 6;
 
   // Clear the EOC flag
@@ -420,7 +419,7 @@ static void InitPwmOut() {
   // Connect PB3 to timer 2
   GPIO_PinAltFunc(GPIO_B_BASE, 3, 1);
 
-  TimerRegs *tmr = reinterpret_cast<TimerRegs *>(TIMER2_BASE);
+  TimerRegs *tmr = TIMER2_BASE;
 
   // Set the frequency
   tmr->reload = (CPU_FREQ / pwmFreqHz) - 1;
@@ -452,7 +451,7 @@ void HalApi::analogWrite(PwmPin pin, int value) {
   int chan;
   switch (pin) {
   case PwmPin::BLOWER:
-    tmr = reinterpret_cast<TimerRegs *>(TIMER2_BASE);
+    tmr = TIMER2_BASE;
     chan = 1;
     break;
   }
@@ -537,11 +536,12 @@ public:
 class UART {
   CircBuff<128> rxDat;
   CircBuff<128> txDat;
-  UART_Regs *reg;
+  UART_Regs *const reg;
 
 public:
-  void Init(uint32_t baseAddr, int baud) {
-    reg = reinterpret_cast<UART_Regs *>(baseAddr);
+  UART(UART_Regs *const r) : reg(r) {}
+
+  void Init(int baud) {
 
     // Set baud rate register
     reg->baud = CPU_FREQ / baud;
@@ -615,7 +615,7 @@ public:
   int TxFree() { return txDat.FreeCt(); }
 };
 
-static UART rpUART;
+static UART rpUART(UART3_BASE);
 
 // The UART that talks to the rPi uses the following pins:
 //    PB10 - TX
@@ -634,7 +634,7 @@ static void InitUARTs() {
   GPIO_PinAltFunc(GPIO_B_BASE, 13, 7);
   GPIO_PinAltFunc(GPIO_B_BASE, 14, 7);
 
-  rpUART.Init(UART3_BASE, 115200);
+  rpUART.Init(115200);
 
   EnableInterrupt(INT_VEC_UART3, 3);
 }
@@ -663,7 +663,7 @@ uint16_t HalApi::serialBytesAvailableForWrite() { return rpUART.TxFree(); }
  * rather then let it hang indefinitely.
  *****************************************************************/
 void HalApi::watchdog_init() {
-  Watchdog_Regs *wdog = reinterpret_cast<Watchdog_Regs *>(WATCHDOG_BASE);
+  Watchdog_Regs *wdog = WATCHDOG_BASE;
 
   // Enable the watchdog timer by writing the appropriate value to its key
   // register
@@ -692,9 +692,9 @@ void HalApi::watchdog_init() {
   wdog->key = 0xAAAA;
 }
 
-// Pet the watchdog so he doesn't bite us.
+// Pet the watchdog so it doesn't bite us.
 void HalApi::watchdog_handler() {
-  Watchdog_Regs *wdog = reinterpret_cast<Watchdog_Regs *>(WATCHDOG_BASE);
+  Watchdog_Regs *wdog = WATCHDOG_BASE;
   wdog->key = 0xAAAA;
 }
 
@@ -705,7 +705,24 @@ void HalApi::watchdog_handler() {
 // RCC (Reset and Clock Controller) module before the peripherial can be
 // used.
 // Pass in the base address of the peripherial to enable its clock
-static void EnableClock(uint32_t base) {
+static void EnableClock(void *ptr) {
+  static struct {
+    void *base;
+    int ndx;
+    int bit;
+  } rccInfo[] = {
+      {DMA1_BASE, 0, 0},     {DMA2_BASE, 0, 1},     {FLASH_BASE, 0, 8},
+      {CRC_BASE, 0, 12},     {GPIO_A_BASE, 1, 0},   {GPIO_B_BASE, 1, 1},
+      {GPIO_C_BASE, 1, 2},   {GPIO_D_BASE, 1, 3},   {GPIO_E_BASE, 1, 4},
+      {GPIO_H_BASE, 1, 7},   {ADC_BASE, 1, 13},     {TIMER2_BASE, 4, 0},
+      {TIMER3_BASE, 4, 1},   {TIMER6_BASE, 4, 4},   {TIMER7_BASE, 4, 7},
+      {SPI2_BASE, 4, 14},    {SPI3_BASE, 4, 15},    {UART2_BASE, 4, 17},
+      {UART3_BASE, 4, 18},   {UART4_BASE, 4, 19},   {I2C1_BASE, 4, 21},
+      {I2C2_BASE, 4, 22},    {I2C3_BASE, 4, 23},    {I2C4_BASE, 5, 1},
+      {TIMER1_BASE, 6, 11},  {SPI1_BASE, 6, 12},    {UART1_BASE, 6, 13},
+      {TIMER15_BASE, 6, 16}, {TIMER16_BASE, 6, 17},
+  };
+
   // I don't include all the peripherials here, just the ones
   // that we currently use or seem likely to be used in the
   // future.  To add more peripherials, just look up the appropriate
@@ -716,123 +733,12 @@ static void EnableClock(uint32_t base) {
   // the clock for the specified peripherial.
   int ndx = -1;
   int bit = 0;
-  switch (base) {
-  case DMA1_BASE:
-    ndx = 0;
-    bit = 0;
-    break;
-  case DMA2_BASE:
-    ndx = 0;
-    bit = 1;
-    break;
-  case FLASH_BASE:
-    ndx = 0;
-    bit = 8;
-    break;
-
-  case GPIO_A_BASE:
-    ndx = 1;
-    bit = 0;
-    break;
-  case GPIO_B_BASE:
-    ndx = 1;
-    bit = 1;
-    break;
-  case GPIO_C_BASE:
-    ndx = 1;
-    bit = 2;
-    break;
-  case GPIO_D_BASE:
-    ndx = 1;
-    bit = 3;
-    break;
-  case GPIO_E_BASE:
-    ndx = 1;
-    bit = 4;
-    break;
-  case GPIO_H_BASE:
-    ndx = 1;
-    bit = 7;
-    break;
-  case ADC_BASE:
-    ndx = 1;
-    bit = 13;
-    break;
-
-  case TIMER2_BASE:
-    ndx = 4;
-    bit = 0;
-    break;
-  case TIMER3_BASE:
-    ndx = 4;
-    bit = 1;
-    break;
-  case TIMER6_BASE:
-    ndx = 4;
-    bit = 4;
-    break;
-  case TIMER7_BASE:
-    ndx = 4;
-    bit = 7;
-    break;
-  case SPI2_BASE:
-    ndx = 4;
-    bit = 14;
-    break;
-  case SPI3_BASE:
-    ndx = 4;
-    bit = 15;
-    break;
-  case UART2_BASE:
-    ndx = 4;
-    bit = 17;
-    break;
-  case UART3_BASE:
-    ndx = 4;
-    bit = 18;
-    break;
-  case UART4_BASE:
-    ndx = 4;
-    bit = 19;
-    break;
-  case I2C1_BASE:
-    ndx = 4;
-    bit = 21;
-    break;
-  case I2C2_BASE:
-    ndx = 4;
-    bit = 22;
-    break;
-  case I2C3_BASE:
-    ndx = 4;
-    bit = 23;
-    break;
-
-  case I2C4_BASE:
-    ndx = 5;
-    bit = 1;
-    break;
-
-  case TIMER1_BASE:
-    ndx = 6;
-    bit = 11;
-    break;
-  case SPI1_BASE:
-    ndx = 6;
-    bit = 12;
-    break;
-  case UART1_BASE:
-    ndx = 6;
-    bit = 13;
-    break;
-  case TIMER15_BASE:
-    ndx = 6;
-    bit = 16;
-    break;
-  case TIMER16_BASE:
-    ndx = 6;
-    bit = 17;
-    break;
+  for (uint32_t i = 0; i < sizeof(rccInfo) / sizeof(rccInfo[0]); i++) {
+    if (ptr == rccInfo[i].base) {
+      ndx = rccInfo[i].ndx;
+      bit = rccInfo[i].bit;
+      break;
+    }
   }
 
   // If the input address wasn't found then its definitly
@@ -846,7 +752,7 @@ static void EnableClock(uint32_t base) {
   }
 
   // Enable the clock of the requested peripherial
-  RCC_Regs *rcc = reinterpret_cast<RCC_Regs *>(RCC_BASE);
+  RCC_Regs *rcc = RCC_BASE;
   rcc->periphClkEna[ndx] |= (1 << bit);
 }
 
@@ -967,7 +873,7 @@ const void *GetVectorAddr() { return &vectors; }
 
 // Enable an interrupt with a specified priority (0 to 15)
 static void EnableInterrupt(int addr, int pri) {
-  IntCtrl_Regs *nvic = reinterpret_cast<IntCtrl_Regs *>(NVIC_BASE);
+  IntCtrl_Regs *nvic = NVIC_BASE;
 
   int id = addr / 4 - 16;
 

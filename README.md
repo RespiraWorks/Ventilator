@@ -2,15 +2,16 @@
 custom board design for beta/prod build
 
 ## Rev 1 As-Built Files:
+As-built directory: <br>
 https://github.com/RespiraWorks/pcbreathe/tree/master/NIGHTLY/20200424v2-RELEASE-CANDIDATE-2
 
-As-built Schematic:
+As-built Schematic: <br>
 https://github.com/RespiraWorks/pcbreathe/blob/master/NIGHTLY/20200424v2-RELEASE-CANDIDATE-2/20200424v2-RespiraWorks-Ventilator-Rev1.0-RC2-DWG-SCH.PDF
 
-As-built 3D STEP file:
+As-built 3D STEP file: <br>
 https://github.com/RespiraWorks/pcbreathe/blob/master/NIGHTLY/20200424v2-RELEASE-CANDIDATE-2/20200424v2-RespiraWorks-Ventilator-Rev1.0-RC2-3D-STEP.step
 
-Manufacturing Pacakge:
+Manufacturing Pacakge: <br>
 https://github.com/RespiraWorks/pcbreathe/blob/master/NIGHTLY/20200424v2-RELEASE-CANDIDATE-2/20200424v2-RespiraWorks-Ventilator-Rev1.0-RC2-PKG-TURNKEY.zip
 
 ## Requesting Hardware for Dev:

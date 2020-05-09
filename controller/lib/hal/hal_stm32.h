@@ -37,9 +37,9 @@ the programmer's manual for the processor available here:
 #define CPU_FREQ (CPU_FREQ_MHZ * 1000000)
 
 // Some useful inline functions to enable/disable interrupts
-inline void IntDisable() { asm volatile("cpsid i"); }
+inline void IntDisable() { asm volatile("cpsid i" ::: "memory"); }
 
-inline void IntEnable() { asm volatile("cpsie i"); }
+inline void IntEnable() { asm volatile("cpsie i" ::: "memory"); }
 
 inline void IntRestore(bool p) {
   if (p)
@@ -50,7 +50,7 @@ inline bool IntSuspend() {
   int ret;
   asm volatile("mrs   %[output], primask\n\t"
                "cpsid i"
-               : [output] "=r"(ret));
+               : [output] "=r"(ret)::"memory");
   return (ret == 0);
 }
 
@@ -79,7 +79,6 @@ typedef volatile uint8_t BREG;
 ///////////////////////////////////////////////////////////////
 
 // Reset & clock controller
-#define RCC_BASE 0x40021000
 struct RCC_Regs {
   REG clkCtrl;   // 0x00 clock control register (RCC_CR)
   REG clkCal;    // 0x04 Internal clock sources calibration register (RCC_ICSCR)
@@ -103,9 +102,9 @@ struct RCC_Regs {
   REG indClkCfg2; // 0x9C Peripherals independent clock configuration register
                   // (RCC_CCIPR2)
 };
+inline RCC_Regs *const RCC_BASE = reinterpret_cast<RCC_Regs *>(0x40021000);
 
 // System control registers
-#define SYSCTL_BASE 0xE000E000
 struct SysCtrl_Reg {
   REG rsvd0;      // 0xE000E000
   REG intType;    // 0xE000E004
@@ -130,9 +129,10 @@ struct SysCtrl_Reg {
   REG rsvd4[19];
   REG cpac; // 0xE000ED88
 };
+inline SysCtrl_Reg *const SYSCTL_BASE =
+    reinterpret_cast<SysCtrl_Reg *>(0xE000E000);
 
 // Interrupt controller
-#define NVIC_BASE 0xE000E100
 typedef struct {
   REG setEna[32];
   REG clrEna[32];
@@ -141,11 +141,9 @@ typedef struct {
   REG active[64];
   BREG priority[1024];
 } IntCtrl_Regs;
+inline IntCtrl_Regs *const NVIC_BASE =
+    reinterpret_cast<IntCtrl_Regs *>(0xE000E100);
 
-#define UART1_BASE 0x40013800
-#define UART2_BASE 0x40004400
-#define UART3_BASE 0x40004800
-#define UART4_BASE 0x40004C00
 struct UART_Regs {
   REG ctrl[3];
   REG baud;
@@ -157,8 +155,11 @@ struct UART_Regs {
   REG rxDat;
   REG txDat;
 };
+inline UART_Regs *const UART1_BASE = reinterpret_cast<UART_Regs *>(0x40013800);
+inline UART_Regs *const UART2_BASE = reinterpret_cast<UART_Regs *>(0x40004400);
+inline UART_Regs *const UART3_BASE = reinterpret_cast<UART_Regs *>(0x40004800);
+inline UART_Regs *const UART4_BASE = reinterpret_cast<UART_Regs *>(0x40004C00);
 
-#define ADC_BASE 0X50040000
 struct ADC_Regs {
   // A/D specific registers (0x100 total length)
   struct {
@@ -192,14 +193,8 @@ struct ADC_Regs {
   REG comCtrl; // 0x304 - Common control
   REG comData; // 0x308 - Common data
 };
+inline ADC_Regs *const ADC_BASE = reinterpret_cast<ADC_Regs *>(0X50040000);
 
-#define TIMER1_BASE 0x40012C00
-#define TIMER2_BASE 0x40000000
-#define TIMER3_BASE 0x40000400
-#define TIMER6_BASE 0x40001000
-#define TIMER7_BASE 0x40001400
-#define TIMER15_BASE 0x40014000
-#define TIMER16_BASE 0x40014400
 struct TimerRegs {
   REG ctrl[2];
   REG slaveCtrl;
@@ -223,8 +218,16 @@ struct TimerRegs {
   REG opt2;
   REG opt3;
 };
+inline TimerRegs *const TIMER1_BASE = reinterpret_cast<TimerRegs *>(0x40012C00);
+inline TimerRegs *const TIMER2_BASE = reinterpret_cast<TimerRegs *>(0x40000000);
+inline TimerRegs *const TIMER3_BASE = reinterpret_cast<TimerRegs *>(0x40000400);
+inline TimerRegs *const TIMER6_BASE = reinterpret_cast<TimerRegs *>(0x40001000);
+inline TimerRegs *const TIMER7_BASE = reinterpret_cast<TimerRegs *>(0x40001400);
+inline TimerRegs *const TIMER15_BASE =
+    reinterpret_cast<TimerRegs *>(0x40014000);
+inline TimerRegs *const TIMER16_BASE =
+    reinterpret_cast<TimerRegs *>(0x40014400);
 
-#define FLASH_BASE 0x40022000
 struct FlashReg {
   REG access;
   REG pdKey;
@@ -240,9 +243,8 @@ struct FlashReg {
   REG wrpA;
   REG wrpB;
 };
+inline FlashReg *const FLASH_BASE = reinterpret_cast<FlashReg *>(0x40022000);
 
-#define DMA1_BASE 0x40020000
-#define DMA2_BASE 0x40020400
 struct DMA_Reg {
   REG intStat;
   REG intClr;
@@ -256,10 +258,9 @@ struct DMA_Reg {
   REG rsvd[5];
   REG chanSel;
 };
+inline DMA_Reg *const DMA1_BASE = reinterpret_cast<DMA_Reg *>(0x40020000);
+inline DMA_Reg *const DMA2_BASE = reinterpret_cast<DMA_Reg *>(0x40020400);
 
-#define SPI1_BASE 0x40013000
-#define SPI2_BASE 0x40003800
-#define SPI3_BASE 0x40003C00
 struct SPI_Regs {
   REG ctrl[2];
   REG status;
@@ -268,11 +269,10 @@ struct SPI_Regs {
   REG rxCRC;
   REG txCRC;
 };
+inline SPI_Regs *const SPI1_BASE = reinterpret_cast<SPI_Regs *>(0x40013000);
+inline SPI_Regs *const SPI2_BASE = reinterpret_cast<SPI_Regs *>(0x40003800);
+inline SPI_Regs *const SPI3_BASE = reinterpret_cast<SPI_Regs *>(0x40003C00);
 
-#define I2C1_BASE 0x40005400
-#define I2C2_BASE 0x40005800
-#define I2C3_BASE 0x40005c00
-#define I2C4_BASE 0x40008400
 struct I2C_Regs {
   REG ctrl[2];
   REG addr[2];
@@ -284,9 +284,12 @@ struct I2C_Regs {
   REG rxData;
   REG txData;
 };
+inline I2C_Regs *const I2C1_BASE = reinterpret_cast<I2C_Regs *>(0x40005400);
+inline I2C_Regs *const I2C2_BASE = reinterpret_cast<I2C_Regs *>(0x40005800);
+inline I2C_Regs *const I2C3_BASE = reinterpret_cast<I2C_Regs *>(0x40005c00);
+inline I2C_Regs *const I2C4_BASE = reinterpret_cast<I2C_Regs *>(0x40008400);
 
 // Watchdog timer
-#define WATCHDOG_BASE 0x40003000
 struct Watchdog_Regs {
   REG key;
   REG prescale;
@@ -294,14 +297,21 @@ struct Watchdog_Regs {
   REG status;
   REG window;
 };
+inline Watchdog_Regs *const WATCHDOG_BASE =
+    reinterpret_cast<Watchdog_Regs *>(0x40003000);
+
+// CRC calculation unit
+struct CRC_Regs {
+  REG data;
+  REG scratch;
+  REG ctrl;
+  REG rsvd;
+  REG init;
+  REG poly;
+};
+inline CRC_Regs *const CRC_BASE = reinterpret_cast<CRC_Regs *>(0x40023000);
 
 // General Purpose I/O
-#define GPIO_A_BASE 0x48000000
-#define GPIO_B_BASE 0x48000400
-#define GPIO_C_BASE 0x48000800
-#define GPIO_D_BASE 0x48000C00
-#define GPIO_E_BASE 0x48001000
-#define GPIO_H_BASE 0x48001C00
 struct GPIO_Regs {
   REG mode;
   REG outType;
@@ -315,62 +325,58 @@ struct GPIO_Regs {
   REG alt[2];
   REG reset;
 };
+inline GPIO_Regs *const GPIO_A_BASE = reinterpret_cast<GPIO_Regs *>(0x48000000);
+inline GPIO_Regs *const GPIO_B_BASE = reinterpret_cast<GPIO_Regs *>(0x48000400);
+inline GPIO_Regs *const GPIO_C_BASE = reinterpret_cast<GPIO_Regs *>(0x48000800);
+inline GPIO_Regs *const GPIO_D_BASE = reinterpret_cast<GPIO_Regs *>(0x48000C00);
+inline GPIO_Regs *const GPIO_E_BASE = reinterpret_cast<GPIO_Regs *>(0x48001000);
+inline GPIO_Regs *const GPIO_H_BASE = reinterpret_cast<GPIO_Regs *>(0x48001C00);
 
 // Handy functions for controlling GPIO
 #define GPIO_MODE_INPUT 0
 #define GPIO_MODE_OUTPUT 1
 #define GPIO_MODE_ALT 2
 #define GPIO_MODE_ANALOG 3
-inline void GPIO_PinMode(uint32_t bank, int pin, int mode) {
-  GPIO_Regs *gpio = (GPIO_Regs *)bank;
+inline void GPIO_PinMode(GPIO_Regs *const gpio, int pin, int mode) {
   gpio->mode &= ~(3 << (pin * 2));
   gpio->mode |= (mode << (pin * 2));
 }
 
 #define GPIO_OUTTYPE_PUSHPULL 0
 #define GPIO_OUTTYPE_OPENDRIAN 1
-inline void GPIO_OutType(uint32_t bank, int pin, int drain) {
-  GPIO_Regs *gpio = (GPIO_Regs *)bank;
+inline void GPIO_OutType(GPIO_Regs *const gpio, int pin, int drain) {
   if (drain)
     gpio->outType |= 1 << pin;
   else
     gpio->outType &= ~(1 << pin);
 }
 
-inline void GPIO_PinAltFunc(uint32_t bank, int pin, int func) {
-  GPIO_PinMode(bank, pin, GPIO_MODE_ALT);
+inline void GPIO_PinAltFunc(GPIO_Regs *const gpio, int pin, int func) {
+  GPIO_PinMode(gpio, pin, GPIO_MODE_ALT);
 
-  GPIO_Regs *gpio = (GPIO_Regs *)bank;
   int x = (pin < 8) ? 0 : 1;
   gpio->alt[x] |= (func << ((pin & 7) * 4));
 }
 
-inline void GPIO_SetPin(uint32_t bank, int pin) {
-  GPIO_Regs *gpio = (GPIO_Regs *)bank;
+inline void GPIO_SetPin(GPIO_Regs *const gpio, int pin) {
   gpio->set = (1 << pin);
 }
 
-inline void GPIO_ClrPin(uint32_t bank, int pin) {
-  GPIO_Regs *gpio = (GPIO_Regs *)bank;
+inline void GPIO_ClrPin(GPIO_Regs *const gpio, int pin) {
   gpio->clr = (1 << pin);
 }
 
-inline int GPIO_GetPin(uint32_t bank, int pin) {
-  GPIO_Regs *gpio = (GPIO_Regs *)bank;
+inline int GPIO_GetPin(GPIO_Regs *const gpio, int pin) {
   return (gpio->inDat & (1 << pin)) ? 1 : 0;
 }
 
-inline void GPIO_PullUp(uint32_t bank, int pin) {
-  GPIO_Regs *gpio = (GPIO_Regs *)bank;
-
+inline void GPIO_PullUp(GPIO_Regs *const gpio, int pin) {
   uint32_t x = gpio->pullUpDn & ~(3 << (2 * pin));
   x |= 1 << (2 * pin);
   gpio->pullUpDn = x;
 }
 
-inline void GPIO_PullDn(uint32_t bank, int pin) {
-  GPIO_Regs *gpio = (GPIO_Regs *)bank;
-
+inline void GPIO_PullDn(GPIO_Regs *const gpio, int pin) {
   uint32_t x = gpio->pullUpDn & ~(3 << (2 * pin));
   x |= 2 << (2 * pin);
   gpio->pullUpDn = x;

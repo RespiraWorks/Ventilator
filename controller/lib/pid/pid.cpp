@@ -18,10 +18,8 @@ limitations under the License.
 
 #include "pid.h"
 #include "algorithm.h"
-#include "hal.h"
 
-float PID::Compute(float input, float setpoint) {
-  Time now = Hal.now();
+float PID::Compute(Time now, float input, float setpoint) {
   if (!initialized_) {
     last_input_ = input;
     last_error_ = setpoint - input;

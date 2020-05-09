@@ -23,13 +23,12 @@ limitations under the License.
 
 void blower_pid_init();
 
-// Runs one step of the blower_pid module, which is responsible for spinning
-// the blower to attempt to achieve the given setpoint pressure and
-// opening/closing the expire solenoid.
+// Computes the fan power necessary to match pressure setpoint in desired state
+// by running the necessary step of the pid with input = current pressure
+// fan power represents the necessary power between 0 (Off) and 1 (full power)
 //
-// Puts readings from e.g. the pressure sensor into `readings`, and puts the
-// current fan power (range [0-1]) into `fan_power`.
-float blower_pid_execute(Time now, const BlowerSystemState &desired_state,
-                         float current_pressure_cm_h2o);
+float blower_pid_compute_fan_power(Time now,
+                                   const BlowerSystemState &desired_state,
+                                   const SensorReadings &sensor_readings);
 
 #endif // BLOWER_PID_H

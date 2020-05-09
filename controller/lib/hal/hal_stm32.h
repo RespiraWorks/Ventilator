@@ -23,8 +23,8 @@ the programmer's manual for the processor available here:
 
 */
 
-#ifndef DEF_INC_STM32
-#define DEF_INC_STM32
+#ifndef HAL_STM32_H_
+#define HAL_STM32_H_
 
 #if !defined(BARE_STM32)
 #error                                                                         \
@@ -333,26 +333,27 @@ inline GPIO_Regs *const GPIO_E_BASE = reinterpret_cast<GPIO_Regs *>(0x48001000);
 inline GPIO_Regs *const GPIO_H_BASE = reinterpret_cast<GPIO_Regs *>(0x48001C00);
 
 // Handy functions for controlling GPIO
-#define GPIO_MODE_INPUT 0
-#define GPIO_MODE_OUTPUT 1
-#define GPIO_MODE_ALT 2
-#define GPIO_MODE_ANALOG 3
-inline void GPIO_PinMode(GPIO_Regs *const gpio, int pin, int mode) {
+enum class GPIO_PinMode {
+  IN = 0,
+  OUT = 1,
+  ALT = 2,
+  ANALOG = 3,
+};
+inline void GPIO_PinMode(GPIO_Regs *const gpio, int pin, GPIO_PinMode mode) {
   gpio->mode &= ~(3 << (pin * 2));
-  gpio->mode |= (mode << (pin * 2));
+  gpio->mode |= ((int)mode << (pin * 2));
 }
 
-#define GPIO_OUTTYPE_PUSHPULL 0
-#define GPIO_OUTTYPE_OPENDRIAN 1
-inline void GPIO_OutType(GPIO_Regs *const gpio, int pin, int drain) {
-  if (drain)
+enum class GPIO_OutType { PUSHPULL = 0, OPENDRAIN = 1 };
+inline void GPIO_OutType(GPIO_Regs *const gpio, int pin, GPIO_OutType outType) {
+  if (outType == GPIO_OutType::OPENDRAIN)
     gpio->outType |= 1 << pin;
   else
     gpio->outType &= ~(1 << pin);
 }
 
 inline void GPIO_PinAltFunc(GPIO_Regs *const gpio, int pin, int func) {
-  GPIO_PinMode(gpio, pin, GPIO_MODE_ALT);
+  GPIO_PinMode(gpio, pin, GPIO_PinMode::ALT);
 
   int x = (pin < 8) ? 0 : 1;
   gpio->alt[x] |= (func << ((pin & 7) * 4));

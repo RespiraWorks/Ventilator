@@ -50,7 +50,7 @@ public:
   // Performs one step of the PID calculation.
   // If this call was ignored due to being within sample time
   // of the previous call, returns the last returned value.
-  float Compute(float input, float setpoint);
+  float Compute(Time now, float input, float setpoint);
 
 private:
   const float kp_; // * (P)roportional Tuning Parameter

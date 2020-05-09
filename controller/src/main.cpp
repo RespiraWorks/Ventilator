@@ -64,6 +64,28 @@ static GuiStatus gui_status = GuiStatus_init_zero;
 // desired actuators state
 static ActuatorsState actuators_state = ActuatorsState_init_zero;
 
+class Controller {
+public:
+  ActuatorsState Run(Time now, VentParams params, SensorReadings readings) {
+    // TODO: Add additional fields to the ControllerStatus proto:
+    //   - Blower speed (0-255 PWM value)
+    //   - Expiratory solenoid valve state (open/closed).
+    BlowerSystemState desired_state = blower_fsm_desired_state(now, params);
+
+    // pass setpoint to controller status for testing reasons
+    controller_status.fan_setpoint_cm_h2o =
+        desired_state.setpoint_pressure.cmH2O();
+
+    // output struct
+    ActuatorsState actuators_state;
+    actuators_state.fan_power =
+        blower_pid_execute(now, desired_state, readings.pressure_cm_h2o);
+    actuators_state.expire_valve_state = desired_state.expire_valve_state;
+
+    return actuators_state;
+  }
+};
+
 // NO_GUI_DEV_MODE is a hacky development mode until we have the GUI working.
 //
 // Uncomment this line to get started:
@@ -122,22 +144,14 @@ static void controller_loop() {
 
     controller_status.active_params = gui_status.desired_params;
 
-    // TODO: Add additional fields to the ControllerStatus proto:
-    //   - Blower speed (0-255 PWM value)
-    //   - Expiratory solenoid valve state (open/closed).
-    BlowerSystemState desired_state =
-        blower_fsm_desired_state(controller_status.active_params);
+    Controller controller;
+    actuators_state = controller.Run(Hal.now(), controller_status.active_params,
+                                     controller_status.sensor_readings);
 
-    controller_status.fan_setpoint_cm_h2o =
-        desired_state.setpoint_pressure.cmH2O();
-
-    controller_status.fan_power = blower_pid_execute(
-        desired_state, controller_status.sensor_readings.pressure_cm_h2o);
-
-    actuators_state.expire_valve_state = desired_state.expire_valve_state;
-    actuators_state.fan_power = controller_status.fan_power;
-
-    actuators_execute(actuators_state);
+    // TODO update pb library tp replace fan_power in controller status with
+    // actuators_state
+    actuators_state = actuators_execute(actuators_state);
+    controller_status.fan_power = actuators_state.fan_power;
   }
 }
 

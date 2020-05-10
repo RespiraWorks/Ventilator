@@ -56,7 +56,7 @@ TEST(Checksum, BitFlips) {
     lastChecksum = checksum;
     int bitToFlip = rand() % static_cast<int>(8 * sizeof(data));
     uint8_t byteMask = static_cast<uint8_t>(1 << (bitToFlip % 8));
-    data[bitToFlip / 8] ^= byteMask;
+    data[bitToFlip / 8] = static_cast<char>(data[bitToFlip / 8] ^ byteMask);
   }
 
   printf("%d/%d collisions after flipping a single bit.\n",

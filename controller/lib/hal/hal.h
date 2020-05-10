@@ -512,7 +512,7 @@ inline void HalApi::test_serialPutIncomingData(const char *data, uint16_t len) {
   while (len > MAX_MSG_SIZE) {
     serialIncomingData_.push_back(std::vector<char>(data, data + MAX_MSG_SIZE));
     data += MAX_MSG_SIZE;
-    len -= MAX_MSG_SIZE;
+    len = static_cast<uint16_t>(len - MAX_MSG_SIZE);
   }
   serialIncomingData_.push_back(std::vector<char>(data, data + len));
 }

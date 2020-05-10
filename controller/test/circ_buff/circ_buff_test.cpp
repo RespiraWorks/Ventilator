@@ -86,3 +86,15 @@ TEST(CircBuff, DataIO) {
   // The buffer should be empty now
   ASSERT_EQ(buff.Get(), -1);
 }
+
+// TODO - some other good tests to add when there's time:
+//
+// - Test that when Put() and Get() fail, they have no effect
+//
+// - Test what happens when the buffer is empty or has size 1
+//
+// - Exhaustively test the state space of a small circular buffer (if it
+//   works for a buffer of size 5, it probably also works for 128 - but
+//   with size 5 it's easy to write a completely exhaustive test that
+//   verifies that the buffer implements all operations correctly in states
+//   with all combinations of (head, tail))

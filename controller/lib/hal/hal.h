@@ -476,7 +476,7 @@ inline void HalApi::analogWrite(PwmPin pin, int value) {
     return 0;
   }
   auto &readBuf = serialIncomingData_.front();
-  uint16_t n = stl::min<uint16_t>(len, static_cast<uint16_t>(readBuf.size()));
+  uint16_t n = stl::min(len, static_cast<uint16_t>(readBuf.size()));
   memcpy(buf, readBuf.data(), n);
   readBuf.erase(readBuf.begin(), readBuf.begin() + n);
   if (readBuf.empty()) {
@@ -501,8 +501,7 @@ inline uint16_t HalApi::serialBytesAvailableForWrite() {
   return 64;
 }
 inline uint16_t HalApi::test_serialGetOutgoingData(char *data, uint16_t len) {
-  uint16_t n = stl::min<uint16_t>(
-      len, static_cast<uint16_t>(serialOutgoingData_.size()));
+  uint16_t n = stl::min(len, static_cast<uint16_t>(serialOutgoingData_.size()));
   memcpy(data, serialOutgoingData_.data(), n);
   serialOutgoingData_.erase(serialOutgoingData_.begin(),
                             serialOutgoingData_.begin() + n);

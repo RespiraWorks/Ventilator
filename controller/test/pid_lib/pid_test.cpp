@@ -297,7 +297,7 @@ TEST(PidTest, Observe) {
   // Do a few cycles where the PID is not actually in control
   float last_output;
   for (int i = 0; i < 10; i++) {
-    last_output = 128 + i;
+    last_output = static_cast<float>(128 + i);
     pid.Observe(ticks(t++), input, setpoint, /*actual_output=*/last_output);
   }
 

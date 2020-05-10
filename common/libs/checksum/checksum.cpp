@@ -18,11 +18,12 @@ limitations under the License.
 
 uint16_t checksum_fletcher16(const char *data, uint8_t count,
                              uint16_t state /*=0*/) {
-  uint8_t s1 = state & 0xff;
-  uint8_t s2 = (state >> 8) & 0xff;
+  uint8_t s1 = static_cast<uint8_t>(state & 0xff);
+  uint8_t s2 = static_cast<uint8_t>((state >> 8) & 0xff);
   for (uint8_t index = 0; index < count; ++index) {
-    s1 = (uint16_t{s1} + static_cast<uint16_t>(data[index])) % 255;
-    s2 = (uint16_t{s2} + uint16_t{s1}) % 255;
+    s1 = static_cast<uint8_t>(
+        (uint16_t{s1} + static_cast<uint16_t>(data[index])) % 255);
+    s2 = static_cast<uint8_t>((uint16_t{s2} + uint16_t{s1}) % 255);
   }
-  return static_cast<uint16_t>(uint16_t{s2} << 8) | s1;
+  return static_cast<uint16_t>((uint16_t{s2} << 8) | s1);
 }

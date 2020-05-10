@@ -360,11 +360,11 @@ inline void GPIO_PinAltFunc(GPIO_Regs *const gpio, int pin, int func) {
 }
 
 inline void GPIO_SetPin(GPIO_Regs *const gpio, int pin) {
-  gpio->set = (1 << pin);
+  gpio->set = static_cast<SREG>(1 << pin);
 }
 
 inline void GPIO_ClrPin(GPIO_Regs *const gpio, int pin) {
-  gpio->clr = (1 << pin);
+  gpio->clr = static_cast<SREG>(1 << pin);
 }
 
 inline int GPIO_GetPin(GPIO_Regs *const gpio, int pin) {

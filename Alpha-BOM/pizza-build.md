@@ -11,15 +11,11 @@ It is also not enclosed like the final product and is meant to be operated in an
 
 This build is adequate for integration and systems testing.
 There are still no instructions on building this configuration specifically, but it might be similar to
-[this](https://github.com/RespiraWorks/PhysicalDesign/wiki/Alpha-Prototype-Assembly-Instructions). This build should be simpler, since it is not "packaged" and so has far fewer piping connections, etc. 
-
-When done, pizza build [looks something like this](https://github.com/RespiraWorks/PhysicalDesign/blob/master/Alpha-BOM/IMG_20200429_141024426.jpg), but with fewer piping connections and with the brain build PCB.
+[this](https://github.com/RespiraWorks/PhysicalDesign/wiki/Alpha-Prototype-Assembly-Instructions).
 
 This build depends on already having a Brain build, which has its own BOM [here](brain-build.md).
 
 ![Draft Pizzabuild Drawing](20200509-draft-pizzabuild-drawing.jpg)
-
-![Pneumatics Build Drawing](pneumatics-pizza.png)
 
 ## Purchasing source abbreviations
 
@@ -43,10 +39,10 @@ This build depends on already having a Brain build, which has its own BOM [here]
 | 5a     |        2 |               |                     | 13.45 / 2    | buy       | [Z][5a-amzn]    | 2pac of ball valves 5/8", alternative for uncertain design changes |
 | 5b     |        2 |               |                     | 13.45 / 2    | buy       | [Z][5b-amzn]    | 2pac of ball valves 3/4", alternative for uncertain design changes |
 | 6      |        - |               |                     | 14.26 / 10ft | buy       | [Z][6amzn]      | 5/8" tubing, fits current venturi design |
-| 6a     |        - |               |                     | 42.99 / 10ft | buy       | [Z][6a-amzn]    | 3/4" tubing, alternative because we are probably switching to this diameter |
-| 7      |        - |               |                     | 6.49 / 16ft  | buy       | [Z][7amzn]      | 2.5 mm tubing (for sensors?) |
-| 8      |        1 |               |                     | 19.99        | buy       | [Z][8amzn]      | 12v Power supply adapter (obsolete? opt for 8a?) |
-| 8a     |        1 |               |                     | 13.99        | buy       | [Z][8a-amzn]    | 12v Power supply adapter, better than 8 above |
+| 6a     |        - |               |                     | 42.99 / 10ft | buy       | [Z][6a-amzn] [C][6a-mcmc]   | 3/4" tubing, alternative because we are probably switching to this diameter |
+| 7      |        - |               |                     | 6.49 / 16ft  | buy       | [Z][7amzn] [C][7mcmc]     | 2.5 mm tubing (for sensors?) |
+| 8      |        1 |               |                     | 19.99        | buy       | [Z][8amzn] [C][8mcmc]     | 12v Power supply adapter (obsolete? opt for 8a?) |
+| 8a     |        1 |               |                     | 13.99        | buy       | [Z][8a-amzn] [C][8a-mcmc]   | 12v Power supply adapter, better than 8 above |
 | 9      |        2 |               |                     | 16.99 / 2    | buy       | [Z][9amzn]      | CPAP tubing |
 | 10     |        1 |               |                     | 15.00        |*ask first*| [E][10ebay]     | test "lung", ask Edward if he has extra? |
 | 11     |        1 |               |                     | 6.98         | buy       | [Z][11amzn]     | use these to simulate lung compliance |
@@ -60,6 +56,21 @@ This build depends on already having a Brain build, which has its own BOM [here]
 | 18     |        1 | RespiraWorks  | blower control cable|              | **ask**   | B               | blower control cable |
 | 19     |        1 | RespiraWorks  | blower power cable  |              | **ask**   | B               | blower power cable |
 
+| Item # | Quantity | Part #              | Price($) | Sources         | Notes |
+| ------ |---------:| ------------------- | --------:|-----------------| ----- |
+| 1      |        1 | 53415K217           |          | [C][1mcmc]      | Barbed fitting 3/4" |
+| 2      |        1 | 5463K565            |          | [C][2mcmc]      | Barbed tee-fitting 3/4" |
+| 3      |        1 | 5463K33             |          | [C][3mcmc]      | Barbed fitting 3/32" for venturis |
+| 4      |        1 | 5463K37             |          | [C][4mcmc]      | Barbed fitting 3/32" for venturis |
+| 5      |        2 |                     |          | [Z][5amzn]      | 2pac of ball valves 1/2", diametere of current design but may not be for long |
+| 5a     |        2 |                     |          | [Z][5a-amzn]    | 2pac of ball valves 5/8", alternative for uncertain design changes |
+| 5b     |        2 |                     |          | [Z][5b-amzn]    | 2pac of ball valves 3/4", alternative for uncertain design changes |
+| 6      |    ???ft |                     |          | [Z][6amzn]      | 5/8" tubing, fits current venturi design |
+| 9      | ft or units? |                 |          | [Z][9amzn]      | CPAP tubing |
+| 10     |        1 |                     |          | [Z][10ebay]     | test "lung" |
+| 11     |        1 |                     |          | [Z][11amzn]     | use these to simulate lung compliance |
+
+
 [1mcmc]:   https://www.mcmaster.com/53415K217
 [2mcmc]:   https://www.mcmaster.com/5463K565
 [3mcmc]:   https://www.mcmaster.com/5463K33
@@ -69,7 +80,10 @@ This build depends on already having a Brain build, which has its own BOM [here]
 [5b-amzn]: https://www.amazon.com/gp/product/B07C5FVSQB
 [6amzn]:   https://www.amazon.com/gp/product/B00LX6MB6G
 [6a-amzn]: https://www.amazon.com/gp/product/B079WRWH34
+[6a-mcmc]: https://www.mcmaster.com/5233K71
 [7amzn]:   https://www.amazon.com/gp/product/B01F4BJ7PI
+[7mcmc]:   https://www.mcmaster.com/50315K68
+[8mcmc]:   https://www.mcmaster.com/3791N024
 [8amzn]:   https://www.amazon.com/gp/product/B00Z9X4GLW
 [8a-amzn]: https://www.amazon.com/gp/product/B01MYXTA6N
 [9amzn]:   https://www.amazon.com/gp/product/B01N14F1MV

@@ -22,23 +22,19 @@ limitations under the License.
 
 namespace {
 
-class BlowerFsmTest : public ::testing::Test {
-public:
-  BlowerFsmTest() = default;
-  void SetUp() override { blower_fsm_init(); }
-};
-
-TEST_F(BlowerFsmTest, InitiallyOff) {
+TEST(BlowerFsmTest, InitiallyOff) {
+  BlowerFsm fsm;
   VentParams p = VentParams_init_zero;
-  BlowerSystemState s = blower_fsm_desired_state(Hal.now(), p);
+  BlowerSystemState s = fsm.DesiredState(Hal.now(), p);
   EXPECT_FLOAT_EQ(s.setpoint_pressure.cmH2O(), 0);
   EXPECT_EQ(s.expire_valve_state, ValveState::OPEN);
 }
 
-TEST_F(BlowerFsmTest, StaysOff) {
+TEST(BlowerFsmTest, StaysOff) {
+  BlowerFsm fsm;
   VentParams p = VentParams_init_zero;
   Hal.delay(milliseconds(1000));
-  BlowerSystemState s = blower_fsm_desired_state(Hal.now(), p);
+  BlowerSystemState s = fsm.DesiredState(Hal.now(), p);
   EXPECT_FLOAT_EQ(s.setpoint_pressure.cmH2O(), 0);
   EXPECT_EQ(s.expire_valve_state, ValveState::OPEN);
 }
@@ -52,20 +48,21 @@ void testSequence(
                    /*time_millis*/ uint64_t,
                    /*expected_setpoint_pressure*/ Pressure,
                    /*expected_expiratory_valve_state*/ ValveState>> &seq) {
+  BlowerFsm fsm;
   for (const auto &[params, blower_enabled, time_millis, expected_pressure,
                     expected_valve_state] : seq) {
     Hal.delay(millisSinceStartup(time_millis) - Hal.now());
     SCOPED_TRACE("time = " + std::to_string(time_millis));
     EXPECT_EQ(time_millis, Hal.now().millisSinceStartup());
 
-    BlowerSystemState s = blower_fsm_desired_state(Hal.now(), params);
+    BlowerSystemState s = fsm.DesiredState(Hal.now(), params);
     EXPECT_EQ(s.blower_enabled, blower_enabled);
     EXPECT_EQ(s.setpoint_pressure.cmH2O(), expected_pressure.cmH2O());
     EXPECT_EQ(s.expire_valve_state, expected_valve_state);
   }
 }
 
-TEST_F(BlowerFsmTest, PressureControl) {
+TEST(BlowerFsmTest, PressureControl) {
   VentParams p = VentParams_init_zero;
   p.mode = VentMode_PRESSURE_CONTROL;
   // 20 breaths/min = 3s/breath.  I:E = 2 means 2s for inspire, 1s for expire.
@@ -84,7 +81,7 @@ TEST_F(BlowerFsmTest, PressureControl) {
   });
 }
 
-TEST_F(BlowerFsmTest, TurnOff) {
+TEST(BlowerFsmTest, TurnOff) {
   VentParams p_on = VentParams_init_zero;
   p_on.mode = VentMode_PRESSURE_CONTROL;
   // 20 breaths/min = 3s/breath.  I:E = 2 means 2s for inspire, 1s for expire.
@@ -102,7 +99,7 @@ TEST_F(BlowerFsmTest, TurnOff) {
   });
 }
 
-TEST_F(BlowerFsmTest, ChangeOfParamsStartAtTheNextBreath) {
+TEST(BlowerFsmTest, ChangeOfParamsStartAtTheNextBreath) {
   VentParams p_init = VentParams_init_zero;
   p_init.mode = VentMode_PRESSURE_CONTROL;
   p_init.breaths_per_min = 20;

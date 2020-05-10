@@ -1,21 +1,31 @@
 #ifndef CONTROLLER_H_
 #define CONTROLLER_H_
 
+#include "actuators.h"
+#include "blower_fsm.h"
+#include "network_protocol.pb.h"
+#include "pid.h"
+#include "units.h"
+
 // This class is here to allow integration of our controller into Modelica
 // software and run closed-loop tests in a simulated physical environment
-// TODO: move all static states from the controller computations inside that
-// class
 class Controller {
 public:
-  ActuatorsState Run(Time now, const VentParams &params,
-                     const SensorReadings &readings) {
-    BlowerSystemState desired_state = blower_fsm_desired_state(now, params);
+  Controller();
 
-    return {.fan_setpoint_cm_h2o = desired_state.setpoint_pressure.cmH2O(),
-            .expire_valve_state = desired_state.expire_valve_state,
-            .fan_power =
-                blower_pid_compute_fan_power(now, desired_state, readings)};
-  }
+  ActuatorsState Run(Time now, const VentParams &params,
+                     const SensorReadings &readings);
+
+private:
+  // Computes the fan power necessary to match pressure setpoint in desired
+  // state by running the necessary step of the pid with input = current
+  // pressure fan power represents the necessary power between 0 (Off) and 1
+  // (full power)
+  float ComputeFanPower(Time now, const BlowerSystemState &desired_state,
+                        const SensorReadings &sensor_readings);
+
+  BlowerFsm fsm_;
+  PID pid_;
 };
 
 #endif // CONTROLLER_H_

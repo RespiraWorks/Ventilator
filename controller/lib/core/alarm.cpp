@@ -17,7 +17,7 @@ limitations under the License.
 #include "alarm.h"
 
 struct alarm_t {
-  uint32_t timestamp;
+  Time timestamp;
   char data[ALARM_DATALEN];
 };
 
@@ -64,7 +64,7 @@ void alarm_add(const char *data) {
     // No point spending time doing these operations if the stack is full
 
     //TODO work in progress, move alarm code to nanopb transport
-    alarm.timestamp = Hal.now().millisSinceStartup();
+    alarm.timestamp = Hal.now();
 
     // Copy alarm data
     for (uint8_t idx = 0; idx < ALARM_DATALEN; idx++) {
@@ -85,7 +85,7 @@ void alarm_remove() {
   stack_pop(&alarm); // Don't need this alarm anymore, remove it
 }
 
-int32_t alarm_read(uint32_t *timestamp, char *data) {
+int32_t alarm_read(Time *timestamp, char *data) {
   int32_t return_status = VC_STATUS_FAILURE;
   alarm_t *alarm;
   return_status = stack_peek(&alarm);

@@ -70,8 +70,7 @@ public:
   explicit PressureControlFsm(Time now, const VentParams &params)
       : inspire_pressure_(cmH2O(static_cast<float>(params.pip_cm_h2o))),
         expire_pressure_(cmH2O(static_cast<float>(params.peep_cm_h2o))),
-        start_time_(now),
-        inspire_end_(start_time_ + inspire_duration(params)),
+        start_time_(now), inspire_end_(start_time_ + inspire_duration(params)),
         expire_end_(inspire_end_ + expire_duration(params)) {}
 
   BlowerSystemState desired_state(Time now) {

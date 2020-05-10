@@ -23,8 +23,8 @@ TEST(Checksum, CheckBytes) {
   uint16_t csum = checksum_fletcher16("abcde", 5);
 
   uint16_t checkBytes = check_bytes_fletcher16(csum);
-  char c0 = checkBytes >> 8;
-  char c1 = checkBytes & 0xff;
+  char c0 = static_cast<char>(checkBytes >> 8);
+  char c1 = static_cast<char>(checkBytes & 0xff);
   csum = checksum_fletcher16(&c0, 1, csum);
   csum = checksum_fletcher16(&c1, 1, csum);
   EXPECT_EQ(csum, 0);
@@ -39,13 +39,13 @@ TEST(Checksum, BitFlips) {
   char data[32];
   memset(&data, '\0', sizeof(data));
 
-  // Start lastChecksum at -1 because our first test will be checksum'ing the
-  // all-zeroes buffer, which should yield 0.
-  uint16_t lastChecksum = -1;
+  // Start lastChecksum at an arbitrary non-zero value because our first test
+  // will be checksum'ing the all-zeroes buffer, which should yield 0.
+  uint16_t lastChecksum = 12345;
 
   const int32_t numTests = int32_t{1} << 16;
   int32_t singleBitFlipCollisions = 0;
-  std::map<int16_t, int32_t> collisions;
+  std::map<uint16_t, uint32_t> collisions;
   for (int32_t i = 0; i < numTests; ++i) {
     uint16_t checksum = checksum_fletcher16(data, sizeof(data));
     collisions[checksum]++;
@@ -54,9 +54,9 @@ TEST(Checksum, BitFlips) {
     }
 
     lastChecksum = checksum;
-    int bitToFlip = rand() % (8 * sizeof(data));
-    uint8_t byteMask = 1 << (bitToFlip % 8);
-    data[bitToFlip / 8] ^= byteMask;
+    int bitToFlip = rand() % static_cast<int>(8 * sizeof(data));
+    uint8_t byteMask = static_cast<uint8_t>(1 << (bitToFlip % 8));
+    data[bitToFlip / 8] = static_cast<char>(data[bitToFlip / 8] ^ byteMask);
   }
 
   printf("%d/%d collisions after flipping a single bit.\n",
@@ -71,8 +71,8 @@ TEST(Checksum, BitFlips) {
   auto it = std::max_element(
       collisions.begin(), collisions.end(),
       [](MapElem a, MapElem b) { return a.second < b.second; });
-  int16_t maxCollisionHash = it->first;
-  int32_t maxCollisions = it->second;
+  uint16_t maxCollisionHash = it->first;
+  uint32_t maxCollisions = it->second;
   double maxCollisionsFrac = 1.0 * maxCollisions / numTests;
   printf("%d/%d collisions on worst checksum, 0x%4x\n", maxCollisions, numTests,
          maxCollisionHash);

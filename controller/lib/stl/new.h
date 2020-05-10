@@ -21,11 +21,14 @@ limitations under the License.
 // has an STL.
 //
 // TODO: Remove this file once we no longer support AVR_UNO.
-#ifdef ARDUINO_AVR_UNO
+#if defined(ARDUINO_AVR_UNO)
 
 // Placement new operator.  Provided by <new> when we have an STL; otherwise
 // stubbed out here.
 inline void *operator new(size_t, void *__ptr) { return __ptr; }
+
+#else
+#include <new>
 
 #endif // ARDUINO_AVR_UNO
 

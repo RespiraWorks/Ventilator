@@ -218,9 +218,9 @@ public:
 
 #ifndef TEST_MODE
   // Translates to a numeric pin that can be passed to the Arduino API.
-  int rawPin(PwmPin pin);
-  int rawPin(AnalogPin pin);
-  int rawPin(BinaryPin pin);
+  uint8_t rawPin(PwmPin pin);
+  uint8_t rawPin(AnalogPin pin);
+  uint8_t rawPin(BinaryPin pin);
 
 #else
   // Reads up to `len` bytes of data "sent" via serialWrite.  Returns the total
@@ -331,9 +331,11 @@ inline Time HalApi::now() {
   return millisSinceStartup((uint64_t{1} << 32) * num_clock_overflows_ +
                             ::millis());
 }
-inline void HalApi::delay(Duration d) { ::delay(d.milliseconds()); }
+inline void HalApi::delay(Duration d) {
+  ::delay(static_cast<unsigned long>(d.milliseconds()));
+}
 
-inline int HalApi::rawPin(AnalogPin pin) {
+inline uint8_t HalApi::rawPin(AnalogPin pin) {
   // See pinout at https://bit.ly/3aERr69.
   // TODO: Update with STM32 pinout.
   switch (pin) {
@@ -348,7 +350,7 @@ inline int HalApi::rawPin(AnalogPin pin) {
   __builtin_unreachable();
 }
 
-inline int HalApi::rawPin(PwmPin pin) {
+inline uint8_t HalApi::rawPin(PwmPin pin) {
   // See pinout at https://bit.ly/3aERr69.
   // TODO: Update with STM32 pinout.
   switch (pin) {
@@ -359,7 +361,7 @@ inline int HalApi::rawPin(PwmPin pin) {
   __builtin_unreachable();
 }
 
-inline int HalApi::rawPin(BinaryPin pin) {
+inline uint8_t HalApi::rawPin(BinaryPin pin) {
   // See pinout at https://bit.ly/3aERr69.
   // TODO: Update with STM32 pinout.
   switch (pin) {
@@ -474,7 +476,7 @@ inline void HalApi::analogWrite(PwmPin pin, int value) {
     return 0;
   }
   auto &readBuf = serialIncomingData_.front();
-  uint16_t n = stl::min<uint16_t>(len, readBuf.size());
+  uint16_t n = stl::min<uint16_t>(len, static_cast<uint16_t>(readBuf.size()));
   memcpy(buf, readBuf.data(), n);
   readBuf.erase(readBuf.begin(), readBuf.begin() + n);
   if (readBuf.empty()) {
@@ -483,7 +485,9 @@ inline void HalApi::analogWrite(PwmPin pin, int value) {
   return n;
 }
 inline uint16_t HalApi::serialBytesAvailableForRead() {
-  return serialIncomingData_.empty() ? 0 : serialIncomingData_.front().size();
+  return serialIncomingData_.empty()
+             ? 0
+             : static_cast<uint16_t>(serialIncomingData_.front().size());
 }
 [[nodiscard]] inline uint16_t HalApi::serialWrite(const char *buf,
                                                   uint16_t len) {
@@ -497,7 +501,8 @@ inline uint16_t HalApi::serialBytesAvailableForWrite() {
   return 64;
 }
 inline uint16_t HalApi::test_serialGetOutgoingData(char *data, uint16_t len) {
-  uint16_t n = stl::min<uint16_t>(len, serialOutgoingData_.size());
+  uint16_t n = stl::min<uint16_t>(
+      len, static_cast<uint16_t>(serialOutgoingData_.size()));
   memcpy(data, serialOutgoingData_.data(), n);
   serialOutgoingData_.erase(serialOutgoingData_.begin(),
                             serialOutgoingData_.begin() + n);

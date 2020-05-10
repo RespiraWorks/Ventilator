@@ -43,7 +43,7 @@ Time ticks(int num_ticks) { return base + num_ticks * sample_period; }
   EXPECT_NEAR(expected, actual, OUTPUT_TOLERANCE)
 
 TEST(PidTest, Proportional) {
-  const float Kp = 0.9;
+  const float Kp = 0.9f;
   const float setpoint = 25;
   const float input = setpoint - 10;
 
@@ -61,7 +61,7 @@ TEST(PidTest, Proportional) {
 }
 
 TEST(PidTest, IntegralBasic) {
-  const float Ki = 1.75;
+  const float Ki = 1.75f;
   const float setpoint = 25;
   const float input = setpoint - 10;
 
@@ -80,7 +80,7 @@ TEST(PidTest, IntegralBasic) {
 }
 
 TEST(PidTest, IntegralSaturationMax) {
-  const float Ki = 1.75;
+  const float Ki = 1.75f;
   const float setpoint = 25;
   const float input = setpoint - 10;
 
@@ -109,7 +109,7 @@ TEST(PidTest, IntegralSaturationMax) {
 }
 
 TEST(PidTest, IntegralSaturationMin) {
-  const float Ki = 1.75;
+  const float Ki = 1.75f;
   const float setpoint = 25;
   const float input = setpoint + 10;
 
@@ -144,7 +144,7 @@ TEST(PidTest, IntegralSaturationMin) {
 // setpoint2). Derivative on measure and on error should handle this transition
 // differently.
 TEST(PidTest, DerivativeOnMeasure) {
-  const float Kd = 1.5;
+  const float Kd = 1.5f;
   const float setpoint1 = 25;
   const float input1 = setpoint1 - 10;
   const float setpoint2 = 17;
@@ -164,7 +164,7 @@ TEST(PidTest, DerivativeOnMeasure) {
 }
 
 TEST(PidTest, DerivativeOnError) {
-  const float Kd = 1.5;
+  const float Kd = 1.5f;
   const float setpoint1 = 25;
   const float input1 = setpoint1 - 10;
   const float setpoint2 = 17;
@@ -186,7 +186,7 @@ TEST(PidTest, CallFasterThanSample) {
   // effect on output
   const float setpoint = 25;
   const float input = setpoint - 10;
-  PID pid(/*kp=*/5.5, /*ki=*/1.1, /*kd=*/1.5, ProportionalTerm::ON_ERROR,
+  PID pid(/*kp=*/5.5f, /*ki=*/1.1f, /*kd=*/1.5f, ProportionalTerm::ON_ERROR,
           DifferentialTerm::ON_MEASUREMENT, ControlDirection::DIRECT,
           MIN_OUTPUT, MAX_OUTPUT, sample_period);
   int t = 0;
@@ -216,7 +216,7 @@ TEST(PidTest, TaskJitter) {
   // This test uses integral to check the effect of time between calls on the
   // PID output. Introducing jitter in call frequency and checking that the
   // integral takes this jitter into account.
-  const float Ki = 0.5;
+  const float Ki = 0.5f;
   const float setpoint = 25;
   const float input = setpoint - 10;
   PID pid(/*kp=*/0, Ki, /*kd=*/0, ProportionalTerm::ON_ERROR,
@@ -245,7 +245,7 @@ TEST(PidTest, TaskJitter) {
 TEST(PidTest, MissedSample) {
   // This test uses integral to check the effect of missing a sample in the
   // execution of PID
-  const float Ki = 0.2;
+  const float Ki = 0.2f;
   const float setpoint = 25;
   const float input = setpoint - 10;
   PID pid(/*kp=*/0, Ki, /*kd=*/0, ProportionalTerm::ON_ERROR,

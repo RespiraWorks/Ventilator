@@ -26,8 +26,8 @@ the programmer's manual for the processor available here:
 #ifndef CIRCULAR_BUFFER_H_
 #define CIRCULAR_BUFFER_H_
 
-#include <stdint.h>
 #include "hal.h"
+#include <stdint.h>
 
 // This class is a generic circular buffer for byte sized data.
 //

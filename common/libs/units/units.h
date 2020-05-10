@@ -257,10 +257,10 @@ constexpr Duration seconds(float secs) {
 }
 constexpr Duration minutes(float mins) { return seconds(mins * 60); }
 constexpr Duration operator*(int n, Duration d) {
-  return milliseconds(static_cast<uint64_t>(n) * d.milliseconds());
+  return milliseconds(static_cast<int64_t>(n) * d.milliseconds());
 }
 constexpr Duration operator*(Duration d, int n) {
-  return milliseconds(static_cast<uint64_t>(n) * d.milliseconds());
+  return milliseconds(static_cast<int64_t>(n) * d.milliseconds());
 }
 
 // Represents a point in time, relative to when the device started up.  See

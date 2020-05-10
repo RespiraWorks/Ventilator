@@ -91,8 +91,7 @@ TEST(Units, Duration) {
   EXPECT_FLOAT_EQ(milliseconds(1).milliseconds(), 1);
   EXPECT_FLOAT_EQ(milliseconds(1).seconds(), 0.001f);
   EXPECT_FLOAT_EQ((seconds(2) - seconds(1)).seconds(), 1);
-  // Negative durations are not supported.
-  // EXPECT_FLOAT_EQ((seconds(1) - seconds(2)).seconds(), ???);
+  EXPECT_FLOAT_EQ((seconds(1) - seconds(2)).seconds(), -1);
   EXPECT_FLOAT_EQ((milliseconds(1) + milliseconds(10)).milliseconds(), 11);
   EXPECT_FLOAT_EQ((seconds(1) - milliseconds(1000)).seconds(), 0);
 
@@ -104,14 +103,14 @@ TEST(Units, Time) {
   // "millisSinceStartup" is long and makes this test hard to read; shorten it.
   auto ms = &millisSinceStartup;
 
-  EXPECT_FLOAT_EQ(ms(42).millisSinceStartup(), 42);
-  EXPECT_FLOAT_EQ((ms(10) + milliseconds(1)).millisSinceStartup(), 11);
-  EXPECT_FLOAT_EQ((milliseconds(42) + ms(100)).millisSinceStartup(), 142);
-  EXPECT_FLOAT_EQ((ms(2000) - milliseconds(1000)).millisSinceStartup(), 1000);
-  EXPECT_FLOAT_EQ((ms(5432) - seconds(3)).millisSinceStartup(), 2432);
-  EXPECT_FLOAT_EQ((ms(1000) - millisSinceStartup(500)).seconds(), 0.5);
+  EXPECT_EQ(ms(42).millisSinceStartup(), 42u);
+  EXPECT_EQ((ms(10) + milliseconds(1)).millisSinceStartup(), 11u);
+  EXPECT_EQ((milliseconds(42) + ms(100)).millisSinceStartup(), 142u);
+  EXPECT_EQ((ms(2000) - milliseconds(1000)).millisSinceStartup(), 1000u);
+  EXPECT_EQ((ms(5432) - seconds(3)).millisSinceStartup(), 2432u);
+  EXPECT_FLOAT_EQ((ms(1000) - millisSinceStartup(500)).seconds(), 0.5f);
   // Negative times are not supported:
-  // EXPECT_FLOAT_EQ((ms(500) - ms(1000)).seconds(), ???);
+  // EXPECT_EQ((ms(500) - ms(1000)).seconds(), ???);
 
   checkRelationalOperators(millisSinceStartup);
 }

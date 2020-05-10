@@ -220,7 +220,7 @@ constexpr VolumetricFlow ml_per_min(float ml_per_min) {
 //
 class Time;
 
-// Represents a non-negative length of time.
+// Represents a length of time.
 //
 // Precision: 1ms
 //
@@ -228,10 +228,10 @@ class Time;
 //  - seconds
 //  - milliseconds
 //
-// Native unit (implementation detail): uint64_t miliseconds
-class Duration : public units_detail::Scalar<Duration, uint64_t> {
+// Native unit (implementation detail): int64_t miliseconds
+class Duration : public units_detail::Scalar<Duration, int64_t> {
 public:
-  [[nodiscard]] constexpr uint64_t milliseconds() const { return val_; }
+  [[nodiscard]] constexpr int64_t milliseconds() const { return val_; }
   [[nodiscard]] constexpr float seconds() const {
     return static_cast<float>(val_) / 1000;
   }
@@ -245,15 +245,15 @@ public:
   constexpr friend Duration operator-(const Time &a, const Time &b);
 
 private:
-  constexpr friend Duration milliseconds(uint64_t millis);
+  constexpr friend Duration milliseconds(int64_t millis);
   constexpr friend Duration seconds(float secs);
 
-  using units_detail::Scalar<Duration, uint64_t>::Scalar;
+  using units_detail::Scalar<Duration, int64_t>::Scalar;
 };
 
-constexpr Duration milliseconds(uint64_t millis) { return Duration(millis); }
+constexpr Duration milliseconds(int64_t millis) { return Duration(millis); }
 constexpr Duration seconds(float secs) {
-  return Duration(static_cast<uint64_t>(1000 * secs));
+  return Duration(static_cast<int64_t>(1000 * secs));
 }
 constexpr Duration minutes(float mins) { return seconds(mins * 60); }
 constexpr Duration operator*(int n, Duration d) {
@@ -297,17 +297,17 @@ constexpr inline Duration operator+(const Duration &a, const Duration &b) {
 constexpr inline Duration operator-(const Duration &a, const Duration &b) {
   return Duration(a.val_ - b.val_);
 }
-constexpr inline Time operator+(const Time &a, const Duration &b) {
-  return Time(a.val_ + b.val_);
+constexpr inline Time operator+(const Time &t, const Duration &dt) {
+  return Time(t.val_ + static_cast<uint64_t>(dt.val_));
 }
-constexpr inline Time operator+(const Duration &a, const Time &b) {
-  return Time(a.val_ + b.val_);
+constexpr inline Time operator+(const Duration &dt, const Time &t) {
+  return Time(t.val_ + static_cast<uint64_t>(dt.val_));
 }
-constexpr inline Time operator-(const Time &a, const Duration &b) {
-  return Time(a.val_ - b.val_);
+constexpr inline Time operator-(const Time &t, const Duration &dt) {
+  return Time(t.val_ - static_cast<uint64_t>(dt.val_));
 }
 constexpr inline Duration operator-(const Time &a, const Time &b) {
-  return Duration(a.val_ - b.val_);
+  return Duration(static_cast<int64_t>(a.val_ - b.val_));
 }
 
 #endif // UNITS_H

@@ -23,7 +23,7 @@ static uint16_t tx_bytes_remaining = 0;
 // Time when we started sending the last ControllerStatus.
 // TODO: Change this to std::optional<Time> once that's available; then we
 // don't need this "clever" initialization.
-constexpr Time kInvalidTime = millisSinceStartup(0xFFFFFFFFFFFFFFFFUL);
+constexpr Time kInvalidTime = millisSinceStartup(0xFFFF'FFFF'FFFF'FFFFUL);
 static Time last_tx = kInvalidTime;
 
 // Our incoming (serialized) GuiStatus proto is incrementally buffered in

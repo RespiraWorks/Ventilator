@@ -22,15 +22,11 @@ limitations under the License.
 #include "sensors.h"
 #include "types.h"
 
-static float Setpoint;
-static float Input;
-static float Output;
-
 // PID-tuning were chosen by following the Ziegler-Nichols method,
 // https://en.wikipedia.org/wiki/Ziegler%E2%80%93Nichols_method
 //
 // Note that Ku and Tu only seem to work with this particular sample time.
-static constexpr Duration PID_SAMPLE_TIME = milliseconds(10);
+static constexpr Duration PID_SAMPLE_PERIOD = milliseconds(10);
 static constexpr float Ku = 200;
 static constexpr Duration Tu = seconds(1.5);
 
@@ -42,7 +38,10 @@ static constexpr float Kd = Ku * Tu.seconds() / 15;
 
 // DIRECT means that increases in the output should result in increases in the
 // input.  DIRECT as opposed to REVERSE.
-static PID myPID(&Input, &Output, &Setpoint, Kp, Ki, Kd, DIRECT);
+static PID myPID(Kp, Ki, Kd, ProportionalTerm::ON_ERROR,
+                 DifferentialTerm::ON_MEASUREMENT, ControlDirection::DIRECT,
+                 // Our output is an 8-bit PWM.
+                 /*output_min=*/0.f, /*output_max=*/255.f, PID_SAMPLE_PERIOD);
 
 // TODO: VOLUME_INTEGRAL_INTERVAL was not chosen carefully.
 static constexpr Duration VOLUME_INTEGRAL_INTERVAL = milliseconds(5);
@@ -50,16 +49,6 @@ static Time last_flow_measurement_time = millisSinceStartup(0);
 static float last_flow_ml_per_min = NAN;
 
 void blower_pid_init() {
-  Setpoint = 0;
-  Input = 0;
-  Output = 0;
-  myPID.SetSampleTime(PID_SAMPLE_TIME);
-
-  // Our output is an 8-bit PWM.
-  myPID.SetOutputLimits(0, 255);
-
-  // Turn the PID on.
-  myPID.SetMode(AUTOMATIC);
 }
 
 static void update_volume(SensorReadings *readings) {
@@ -98,19 +87,22 @@ void blower_pid_execute(const BlowerSystemState &desired_state,
 
   Pressure cur_pressure = get_patient_pressure();
 
-  Setpoint = desired_state.setpoint_pressure.kPa();
-  Input = cur_pressure.kPa();
-  myPID.Compute();
-
   // If the blower is not enabled, immediately shut down the fan.  But for
   // consistency, we still run the PID iteration above.
-  if (!desired_state.blower_enabled) {
-    Output = 0;
+  float output;
+  if (desired_state.blower_enabled) {
+    output = myPID.Compute(Hal.now(), /*input=*/cur_pressure.kPa(),
+                           /*setpoint=*/desired_state.setpoint_pressure.kPa());
+  } else {
+    output = 0;
+    myPID.Observe(Hal.now(), /*input=*/cur_pressure.kPa(),
+                  /*setpoint=*/desired_state.setpoint_pressure.kPa(),
+                  /*actual_output=*/output);
   }
-  Hal.analogWrite(PwmPin::BLOWER, static_cast<int>(Output));
+  Hal.analogWrite(PwmPin::BLOWER, static_cast<int>(output));
 
   // fan_power is in range [0, 1].
-  *fan_power = stl::min(stl::max(Output, 0.f), 255.f) / 255.f;
+  *fan_power = output / 255.f;
 
   // Store sensor readings so they can eventually be sent to the GUI.
   // This pressure is just from the patient sensor, converted to the right

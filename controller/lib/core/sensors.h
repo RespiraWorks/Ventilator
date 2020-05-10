@@ -32,8 +32,8 @@ public:
 
   // min/max possible reading from MPXV5004GP pressure sensors
   // The canonical list of hardware in the device is: https://bit.ly/3aERr69
-  inline constexpr static Pressure P_VAL_MIN = kPa(0.0);
-  inline constexpr static Pressure P_VAL_MAX = kPa(3.92);
+  inline constexpr static Pressure P_VAL_MIN = kPa(0.0f);
+  inline constexpr static Pressure P_VAL_MAX = kPa(3.92f);
 };
 
 void sensors_init();

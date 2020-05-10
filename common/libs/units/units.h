@@ -91,6 +91,8 @@ namespace units_detail {
 // [1] https://en.wikipedia.org/wiki/Curiously_recurring_template_pattern
 template <class Q, class ValTy> class Scalar {
 public:
+  Scalar() : val_(0) {}
+
   constexpr bool operator<(const Scalar &s) const { return val_ < s.val_; }
   constexpr bool operator<=(const Scalar &s) const { return val_ <= s.val_; }
   constexpr bool operator==(const Scalar &s) const { return val_ == s.val_; }
@@ -132,7 +134,7 @@ public:
 
 private:
   // https://www.google.com/search?q=kpa+to+cmh2o
-  static inline constexpr float CM_H2O_PER_KPA = 10.1972;
+  static inline constexpr float CM_H2O_PER_KPA = 10.1972f;
 
   constexpr friend Pressure kPa(float kpa);
   constexpr friend Pressure cmH2O(float cm_h2o);
@@ -218,7 +220,7 @@ constexpr VolumetricFlow ml_per_min(float ml_per_min) {
 //
 class Time;
 
-// Represents a length of time.
+// Represents a non-negative length of time.
 //
 // Precision: 1ms
 //
@@ -226,10 +228,10 @@ class Time;
 //  - seconds
 //  - milliseconds
 //
-// Native unit (implementation detail): int64_t miliseconds
-class Duration : public units_detail::Scalar<Duration, int64_t> {
+// Native unit (implementation detail): uint64_t miliseconds
+class Duration : public units_detail::Scalar<Duration, uint64_t> {
 public:
-  [[nodiscard]] constexpr int64_t milliseconds() const { return val_; }
+  [[nodiscard]] constexpr uint64_t milliseconds() const { return val_; }
   [[nodiscard]] constexpr float seconds() const {
     return static_cast<float>(val_) / 1000;
   }
@@ -243,20 +245,22 @@ public:
   constexpr friend Duration operator-(const Time &a, const Time &b);
 
 private:
-  constexpr friend Duration milliseconds(int64_t millis);
+  constexpr friend Duration milliseconds(uint64_t millis);
   constexpr friend Duration seconds(float secs);
 
-  using units_detail::Scalar<Duration, int64_t>::Scalar;
+  using units_detail::Scalar<Duration, uint64_t>::Scalar;
 };
 
-constexpr Duration milliseconds(int64_t millis) { return Duration(millis); }
-constexpr Duration seconds(float secs) { return Duration(1000 * secs); }
+constexpr Duration milliseconds(uint64_t millis) { return Duration(millis); }
+constexpr Duration seconds(float secs) {
+  return Duration(static_cast<uint64_t>(1000 * secs));
+}
 constexpr Duration minutes(float mins) { return seconds(mins * 60); }
 constexpr Duration operator*(int n, Duration d) {
-  return milliseconds(n * d.milliseconds());
+  return milliseconds(static_cast<uint64_t>(n) * d.milliseconds());
 }
 constexpr Duration operator*(Duration d, int n) {
-  return milliseconds(n * d.milliseconds());
+  return milliseconds(static_cast<uint64_t>(n) * d.milliseconds());
 }
 
 // Represents a point in time, relative to when the device started up.  See
@@ -267,10 +271,10 @@ constexpr Duration operator*(Duration d, int n) {
 // Units:
 //  - milliseconds
 //
-// Native unit (implementation detail): int64_t miliseconds
-class Time : public units_detail::Scalar<Time, int64_t> {
+// Native unit (implementation detail): uint64_t miliseconds
+class Time : public units_detail::Scalar<Time, uint64_t> {
 public:
-  [[nodiscard]] int64_t millisSinceStartup() const { return val_; }
+  [[nodiscard]] uint64_t millisSinceStartup() const { return val_; }
 
   constexpr friend Time operator+(const Time &a, const Duration &b);
   constexpr friend Time operator+(const Duration &a, const Time &b);
@@ -280,12 +284,12 @@ public:
   inline Time &operator-=(const Duration &dt) { return *this = *this - dt; }
 
 private:
-  constexpr friend Time millisSinceStartup(int64_t millis);
+  constexpr friend Time millisSinceStartup(uint64_t millis);
 
-  using units_detail::Scalar<Time, int64_t>::Scalar;
+  using units_detail::Scalar<Time, uint64_t>::Scalar;
 };
 
-constexpr Time millisSinceStartup(int64_t millis) { return Time(millis); }
+constexpr Time millisSinceStartup(uint64_t millis) { return Time(millis); }
 
 constexpr inline Duration operator+(const Duration &a, const Duration &b) {
   return Duration(a.val_ + b.val_);

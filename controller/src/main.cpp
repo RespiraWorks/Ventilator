@@ -50,6 +50,7 @@ limitations under the License.
 #include "blower_fsm.h"
 #include "blower_pid.h"
 #include "comms.h"
+#include "controller.h"
 #include "hal.h"
 #include "network_protocol.pb.h"
 #include "sensors.h"
@@ -60,23 +61,6 @@ static ControllerStatus controller_status = ControllerStatus_init_zero;
 
 // Last-received status from the GUI.
 static GuiStatus gui_status = GuiStatus_init_zero;
-
-// This class is here to allow integration of our controller into Modellica
-// software and run closed-loop tests in a simulated physical environment
-// TODO: move all static states from the controller computations inside that
-// class
-class Controller {
-public:
-  ActuatorsState Run(Time now, const VentParams &params,
-                     const SensorReadings &readings) {
-    BlowerSystemState desired_state = blower_fsm_desired_state(now, params);
-
-    return {.fan_setpoint_cm_h2o = desired_state.setpoint_pressure.cmH2O(),
-            .expire_valve_state = desired_state.expire_valve_state,
-            .fan_power =
-                blower_pid_compute_fan_power(now, desired_state, readings)};
-  }
-};
 
 static Controller controller;
 

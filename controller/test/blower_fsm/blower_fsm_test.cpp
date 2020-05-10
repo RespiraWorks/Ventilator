@@ -49,7 +49,7 @@ void testSequence(
     const std::vector<
         std::tuple<VentParams,
                    /*blower_enabled*/ bool,
-                   /*time_millis*/ int,
+                   /*time_millis*/ uint64_t,
                    /*expected_setpoint_pressure*/ Pressure,
                    /*expected_expiratory_valve_state*/ ValveState>> &seq) {
   for (const auto &[params, blower_enabled, time_millis, expected_pressure,

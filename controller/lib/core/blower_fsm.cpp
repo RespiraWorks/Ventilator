@@ -68,8 +68,9 @@ public:
 class PressureControlFsm {
 public:
   explicit PressureControlFsm(const VentParams &params)
-      : inspire_pressure_(cmH2O(params.pip_cm_h2o)),
-        expire_pressure_(cmH2O(params.peep_cm_h2o)), start_time_(Hal.now()),
+      : inspire_pressure_(cmH2O(static_cast<float>(params.pip_cm_h2o))),
+        expire_pressure_(cmH2O(static_cast<float>(params.peep_cm_h2o))),
+        start_time_(Hal.now()),
         inspire_end_(start_time_ + inspire_duration(params)),
         expire_end_(inspire_end_ + expire_duration(params)) {}
 
@@ -96,12 +97,14 @@ private:
   //
   // https://www.wolframalpha.com/input/?i=solve+t+%3D+x+%2B+y+and+r+%3D+x%2Fy+for+x%2Cy
   static Duration inspire_duration(const VentParams &params) {
-    float t = 60.f / params.breaths_per_min;       // secs per breath
+    float t =
+        60.f / static_cast<float>(params.breaths_per_min); // secs per breath
     float r = params.inspiratory_expiratory_ratio; // I:E
     return seconds(t * r / (1 + r));
   }
   static Duration expire_duration(const VentParams &params) {
-    float t = 60.f / params.breaths_per_min;       // secs per breath
+    float t =
+        60.f / static_cast<float>(params.breaths_per_min); // secs per breath
     float r = params.inspiratory_expiratory_ratio; // I:E
     return seconds(t / (1 + r));
   }

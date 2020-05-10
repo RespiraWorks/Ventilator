@@ -26,6 +26,7 @@ the programmer's manual for the processor available here:
 #if defined(BARE_STM32)
 
 #include "hal_stm32.h"
+#include "circular_buffer.h"
 #include "hal.h"
 
 #define SYSTEM_STACK_SIZE 2500
@@ -141,7 +142,7 @@ void HalApi::init() {
   watchdog_init();
 
   // Enable interrupts
-  IntEnable();
+  Hal.IntEnable();
 }
 
 // Reset the processor
@@ -490,77 +491,6 @@ void HalApi::analogWrite(PwmPin pin, int value) {
  * Chapter 38 of the reference manual defines the USART registers.
  *****************************************************************/
 
-// This class is a generic circular buffer for byte sized data.
-// It could probably go in its own header outside the HAL, we
-// would just need to add interrupt suspend/restore to the HAL
-// definition.
-//
-// Note that this class is used from both the main line of code
-// and the interrupt handlers, so it needs to be thread safe.
-// I'm disabling interrupts during the critical sections to
-// ensure that's the case.
-template <uint16_t N> class CircBuff {
-
-  volatile uint8_t buff[N];
-  volatile int head, tail;
-
-public:
-  CircBuff() { head = tail = 0; }
-
-  // Return number of bytes available in the buffer to read.
-  uint16_t FullCt() {
-    bool p = IntSuspend();
-    int ct = head - tail;
-    IntRestore(p);
-    if (ct < 0)
-      ct += N;
-    return static_cast<uint16_t>(ct);
-  }
-
-  // Return number of free spaces in the buffer where more
-  // bytes can be written.
-  uint16_t FreeCt() { return static_cast<uint16_t>(N - 1 - FullCt()); }
-
-  // Get the oldest byte from the buffer.
-  // Returns -1 if the buffer is empty
-  int Get() {
-    int ret = -1;
-
-    bool p = IntSuspend();
-
-    if (head != tail) {
-      ret = buff[tail++];
-      if (tail >= N)
-        tail = 0;
-    }
-
-    IntRestore(p);
-    return ret;
-  }
-
-  // Add a byte to the buffer
-  // Returnes true on success, false if the buffer is full
-  bool Put(uint8_t dat) {
-    bool ret = false;
-
-    bool p = IntSuspend();
-
-    int h = head + 1;
-    if (h >= N)
-      h = 0;
-
-    if (h != tail) {
-      buff[head] = dat;
-      head = h;
-      ret = true;
-    }
-
-    IntRestore(p);
-
-    return ret;
-  }
-};
-
 class UART {
   CircBuff<128> rxDat;
   CircBuff<128> txDat;
@@ -804,7 +734,7 @@ static void EnableClock(void *ptr) {
   // to crash.  That should make it easier to find the
   // bug during development.
   if (ndx < 0) {
-    IntDisable();
+    Hal.IntDisable();
     while (1) {
     }
   }

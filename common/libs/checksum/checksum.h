@@ -41,7 +41,7 @@ inline uint16_t check_bytes_fletcher16(uint16_t checksum) {
   uint8_t f1 = (checksum >> 8) & 0xff;
   uint8_t c0 = 0xff - ((f0 + f1) % 0xff);
   uint8_t c1 = 0xff - ((f0 + c0) % 0xff);
-  return (uint16_t{c0} << 8) | c1;
+  return static_cast<uint16_t>(uint16_t{c0} << 8) | c1;
 }
 
 // Verifies the checksum of a packet.

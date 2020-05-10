@@ -63,6 +63,8 @@ static GuiStatus gui_status = GuiStatus_init_zero;
 
 // This class is here to allow integration of our controller into Modellica
 // software and run closed-loop tests in a simulated physical environment
+// TODO: move all static states from the controller computations inside that
+// class
 class Controller {
 public:
   ActuatorsState Run(Time now, const VentParams &params,
@@ -75,6 +77,8 @@ public:
                 blower_pid_compute_fan_power(now, desired_state, readings)};
   }
 };
+
+static Controller controller;
 
 // NO_GUI_DEV_MODE is a hacky development mode until we have the GUI working.
 //
@@ -133,7 +137,6 @@ static void controller_loop() {
 
     controller_status.active_params = gui_status.desired_params;
 
-    Controller controller;
     ActuatorsState actuators_state =
         controller.Run(Hal.now(), controller_status.active_params,
                        controller_status.sensor_readings);

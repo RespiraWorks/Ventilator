@@ -19,3 +19,7 @@ Q [liters/minute] = 0.75398*sqrt(1346.584669*(voltage-offset))
 For an arbitrary body geometry, you can use the following short spreadsheet to return the transfer function:
 https://docs.google.com/spreadsheets/d/1G9Kb-ImlluK8MOx-ce2rlHUBnTOtAFQvKjjs1bEhlpM/edit#gid=963553579
 
+**Pressure Sensor**
+This venturi is designed to be paired with this sensor and a 14-bit ADC. 
+[Data Sheet MPXV5004DP](https://www.nxp.com/docs/en/data-sheet/MPXV5004G.pdf)
+Adjust values in e spreadsheet above accordinly to see how it will perform in your setup. 

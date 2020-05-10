@@ -25,8 +25,9 @@ cd "$(dirname "$0")"
 
 # Controller unit tests on native.
 pio test -e native
-# Make sure controller builds for target platform.
-pio run
+# Make sure controller builds for target platforms.
+pio run -e uno
+pio run -e stm32
 
 # Code style / bug-prone pattern checks (eg. clang-tidy)
 # WARNING: This might sometimes give different results for different people,

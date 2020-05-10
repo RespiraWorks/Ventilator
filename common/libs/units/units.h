@@ -252,6 +252,12 @@ private:
 constexpr Duration milliseconds(int64_t millis) { return Duration(millis); }
 constexpr Duration seconds(float secs) { return Duration(1000 * secs); }
 constexpr Duration minutes(float mins) { return seconds(mins * 60); }
+constexpr Duration operator*(int n, Duration d) {
+  return milliseconds(n * d.milliseconds());
+}
+constexpr Duration operator*(Duration d, int n) {
+  return milliseconds(n * d.milliseconds());
+}
 
 // Represents a point in time, relative to when the device started up.  See
 // details above.
@@ -270,6 +276,8 @@ public:
   constexpr friend Time operator+(const Duration &a, const Time &b);
   constexpr friend Time operator-(const Time &a, const Duration &b);
   constexpr friend Duration operator-(const Time &a, const Time &b);
+  inline Time &operator+=(const Duration &dt) { return *this = *this + dt; }
+  inline Time &operator-=(const Duration &dt) { return *this = *this - dt; }
 
 private:
   constexpr friend Time millisSinceStartup(int64_t millis);

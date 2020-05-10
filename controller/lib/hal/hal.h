@@ -495,6 +495,8 @@ inline bool HalApi::IntSuspend() {
 }
 
 #else
+inline void HalApi::init() {}
+inline void HalApi::watchdog_handler() {}
 
 inline Time HalApi::now() { return time_; }
 inline void HalApi::delay(Duration d) { time_ = time_ + d; }

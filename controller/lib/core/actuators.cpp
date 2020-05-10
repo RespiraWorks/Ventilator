@@ -26,5 +26,5 @@ void actuators_execute(const ActuatorsState &desired_state) {
   // set blower PWM
   // TODO: create PWM limits in HAL (255) and use this instead
   Hal.analogWrite(PwmPin::BLOWER,
-                  static_cast<int>(desired_state.fan_power * 255));
+                  static_cast<int>(desired_state.fan_power * 255.0f));
 }

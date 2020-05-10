@@ -24,5 +24,5 @@ uint16_t checksum_fletcher16(const char *data, uint8_t count,
     s1 = (uint16_t{s1} + static_cast<uint16_t>(data[index])) % 255;
     s2 = (uint16_t{s2} + uint16_t{s1}) % 255;
   }
-  return (uint16_t{s2} << 8) | s1;
+  return static_cast<uint16_t>(uint16_t{s2} << 8) | s1;
 }

@@ -287,7 +287,7 @@ static void Timer6ISR() {
 
 void HalApi::delay(Duration d) {
   int64_t start = msCount;
-  while ((msCount - start) < d.milliseconds()) {
+  while (static_cast<uint64_t>(msCount - start) < d.milliseconds()) {
   }
 }
 

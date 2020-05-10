@@ -28,12 +28,12 @@ limitations under the License.
 // Note that Ku and Tu only seem to work with this particular sample time.
 static constexpr Duration PID_SAMPLE_PERIOD = milliseconds(10);
 static constexpr float Ku = 200;
-static constexpr Duration Tu = seconds(1.5);
+static constexpr Duration Tu = seconds(1.5f);
 
 // "No overshoot" settings from the Ziegler-Nichols Wikipedia page.  This
 // avoids overpressurizing the patient's lungs.
-static constexpr float Kp = 0.2 * Ku;
-static constexpr float Ki = 0.4 * Ku / Tu.seconds();
+static constexpr float Kp = 0.2f * Ku;
+static constexpr float Ki = 0.4f * Ku / Tu.seconds();
 static constexpr float Kd = Ku * Tu.seconds() / 15;
 
 // DIRECT means that increases in the output should result in increases in the

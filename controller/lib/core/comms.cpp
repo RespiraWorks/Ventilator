@@ -15,15 +15,16 @@
 // beginning of the buffer.
 static uint8_t tx_buffer[ControllerStatus_size];
 // Index of the next byte to transmit.
-static uint8_t tx_idx = 0;
+static uint16_t tx_idx = 0;
 // Number of bytes remaining to transmit. tx_idx + tx_bytes_remaining equals
 // the size of the serialized ControllerStatus proto.
 static uint16_t tx_bytes_remaining = 0;
 
 // Time when we started sending the last ControllerStatus.
 // TODO: Change this to std::optional<Time> once that's available; then we
-// don't need this "clever" -1 initialization.
-static Time last_tx = millisSinceStartup(-1);
+// don't need this "clever" initialization.
+constexpr Time kInvalidTime = millisSinceStartup(0xFFFFFFFFFFFFFFFFUL);
+static Time last_tx = kInvalidTime;
 
 // Our incoming (serialized) GuiStatus proto is incrementally buffered in
 // rx_buffer until it's complete and we can deserialize it to a proto.
@@ -31,7 +32,7 @@ static Time last_tx = millisSinceStartup(-1);
 // Like tx_buffer, this isn't a circular buffer; the beginning of the proto is
 // always at the beginning of the buffer.
 static uint8_t rx_buffer[GuiStatus_size];
-static uint8_t rx_idx = 0;
+static uint16_t rx_idx = 0;
 static Time last_rx = Hal.now();
 static bool rx_in_progress = false;
 
@@ -72,13 +73,13 @@ static void process_tx(const ControllerStatus &controller_status) {
   //  - we can transmit at least one byte now, and
   //  - it's been a while since we last transmitted.
   //
-  // Note that the initial value of last_tx has to be -1; changing it to 0
-  // wouldn't work.  We immediately transmit on boot (last_tx == -1), and after
+  // Note that the initial value of last_tx has to be invalid; changing it to 0
+  // wouldn't work.  We immediately transmit on boot, and after
   // we do that, we want to wait a full TX_INTERVAL_MS.  If we initialized
   // last_tx to 0 and our first transmit happened at time millis() == 0, we
   // would set last_tx back to 0 and then retransmit immediately.
-  if (tx_bytes_remaining == 0 && (last_tx == millisSinceStartup(-1) ||
-                                  Hal.now() - last_tx > TX_INTERVAL)) {
+  if (tx_bytes_remaining == 0 &&
+      (last_tx == kInvalidTime || Hal.now() - last_tx > TX_INTERVAL)) {
     // Serialize current status into output buffer.
     //
     // TODO: Frame the message bytes.
@@ -89,7 +90,7 @@ static void process_tx(const ControllerStatus &controller_status) {
       return;
     }
     tx_idx = 0;
-    tx_bytes_remaining = stream.bytes_written;
+    tx_bytes_remaining = static_cast<uint16_t>(stream.bytes_written);
     last_tx = Hal.now();
   }
 

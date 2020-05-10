@@ -12,4 +12,5 @@ For a 0.157" throat and 0.5" body using a 0-3920 Pa analog sensor, where offset 
 Q [liters/minute] = 0.75398*sqrt(1346.584669*(voltage-offset))
 
 For an arbitrary body geometry, you can use the following short spreadsheet to return the transfer function:
+https://docs.google.com/spreadsheets/d/1G9Kb-ImlluK8MOx-ce2rlHUBnTOtAFQvKjjs1bEhlpM/edit#gid=963553579
 

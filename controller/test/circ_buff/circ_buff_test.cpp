@@ -63,7 +63,7 @@ TEST(CircBuff, DataIO) {
 
   uint8_t TestSet[200];
   for (uint32_t i = 0; i < sizeof(TestSet); i++)
-    TestSet[i] = rand();
+    TestSet[i] = static_cast<uint8_t>(rand());
 
   // Add data to the buffer until failure
   for (int i = 0; i < 128; i++) {

@@ -14,13 +14,8 @@ limitations under the License.
 */
 
 #include "blower_pid.h"
-
+#include "pid.h"
 #include <math.h>
-
-#include "comms.h"
-#include "hal.h"
-#include "sensors.h"
-#include "types.h"
 
 // PID-tuning were chosen by following the Ziegler-Nichols method,
 // https://en.wikipedia.org/wiki/Ziegler%E2%80%93Nichols_method

@@ -33,7 +33,7 @@ limitations under the License.
 // that the second return is equal to the first.
 //
 // Use stl::min/max instead.
-#ifndef TEST_MODE
+#if !defined(TEST_MODE) && !defined(BARE_STM32)
 #include <Arduino.h>
 #endif
 

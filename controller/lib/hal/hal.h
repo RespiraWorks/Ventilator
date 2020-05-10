@@ -271,7 +271,7 @@ public:
   // very good reasons.  Leaving interrupts disabled for long can cause loss of
   // serial data and other bad effects.
 
-  // Disable interrupts 
+  // Disable interrupts
   void IntDisable();
 
   // Enable interrupts
@@ -284,8 +284,9 @@ public:
   // Restore interrupts to the state they were in when IntSuspend was last
   // called.  The return value from IntSuspend is passed in.
   // If the input value is false, this function has no effect.
-  void IntRestore( bool yes ){
-     if( yes ) IntEnable();
+  void IntRestore(bool yes) {
+    if (yes)
+      IntEnable();
   }
 
 private:
@@ -473,11 +474,11 @@ inline bool HalApi::IntSuspend() { return false; }
 // Support for bare STM32.  Only a few inline functions are defined here.
 // Most support for this HAL is in a separate cpp file.
 #elif defined(BARE_STM32)
-  // Disable interrupts.
-  // Returns true if interrupts were enabled when this 
-  // was called or false if they were already disabled.
+// Disable interrupts.
+// Returns true if interrupts were enabled when this
+// was called or false if they were already disabled.
 
-// Disable interrupts 
+// Disable interrupts
 inline void HalApi::IntDisable() { asm volatile("cpsid i" ::: "memory"); }
 
 // Enable interrupts

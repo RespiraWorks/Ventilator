@@ -16,9 +16,7 @@ limitations under the License.
 #define BLOWER_PID_H
 
 #include "blower_fsm.h"
-#include "hal.h"
 #include "network_protocol.pb.h"
-#include "pid.h"
 #include "units.h"
 
 void blower_pid_init();

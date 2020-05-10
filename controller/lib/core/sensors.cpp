@@ -64,7 +64,7 @@ constexpr int NUM_SENSORS = 3;
 
 } // anonymous namespace
 
-static int sensorZeroVals[NUM_SENSORS];
+static float sensorZeroVals[NUM_SENSORS];
 
 AnalogPin pin_for(Sensor s) {
   switch (s) {
@@ -105,9 +105,12 @@ void sensors_init() {
   Hal.delay(milliseconds(20));
 
   auto set_zero_level = [](Sensor s) {
-    int sum = 0;
+    float sum = 0;
     for (int i = 0; i < SENSOR_SAMPLES_FOR_INIT; i++) {
-      sum += Hal.analogRead(pin_for(s));
+      // This cast is safe as analogRead returns values in 0..1023,
+      // which is way below the maximum value exactly representable
+      // as a float.
+      sum += static_cast<float>(Hal.analogRead(pin_for(s)));
     }
     sensorZeroVals[s] = sum / SENSOR_SAMPLES_FOR_INIT;
   };
@@ -120,12 +123,12 @@ void sensors_init() {
 //
 // @TODO: Add alarms if sensor value is out of expected range?
 static Pressure read_pressure_sensor(Sensor s) {
-  int sum = 0;
+  float sum = 0;
   for (int i = 0; i < SENSOR_SAMPLES_FOR_READ; i++) {
-    sum += Hal.analogRead(pin_for(s)) - sensorZeroVals[s];
+    sum += static_cast<float>(Hal.analogRead(pin_for(s))) - sensorZeroVals[s];
   }
   // Sensitivity of all pressure sensors is 1 V/kPa; no division needed.
-  return kPa(static_cast<float>(sum) / SENSOR_SAMPLES_FOR_READ * ADC_LSB);
+  return kPa(sum / SENSOR_SAMPLES_FOR_READ * ADC_LSB);
 }
 
 Pressure get_patient_pressure() {

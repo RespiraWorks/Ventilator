@@ -15,7 +15,6 @@ limitations under the License.
 
 #include "blower_fsm.h"
 
-#include "hal.h"
 #include "new.h"
 #include "units.h"
 

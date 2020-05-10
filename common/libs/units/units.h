@@ -91,6 +91,8 @@ namespace units_detail {
 // [1] https://en.wikipedia.org/wiki/Curiously_recurring_template_pattern
 template <class Q, class ValTy> class Scalar {
 public:
+  Scalar() : val_(0) {}
+
   constexpr bool operator<(const Scalar &s) const { return val_ < s.val_; }
   constexpr bool operator<=(const Scalar &s) const { return val_ <= s.val_; }
   constexpr bool operator==(const Scalar &s) const { return val_ == s.val_; }
@@ -132,7 +134,7 @@ public:
 
 private:
   // https://www.google.com/search?q=kpa+to+cmh2o
-  static inline constexpr float CM_H2O_PER_KPA = 10.1972;
+  static inline constexpr float CM_H2O_PER_KPA = 10.1972f;
 
   constexpr friend Pressure kPa(float kpa);
   constexpr friend Pressure cmH2O(float cm_h2o);
@@ -250,13 +252,15 @@ private:
 };
 
 constexpr Duration milliseconds(int64_t millis) { return Duration(millis); }
-constexpr Duration seconds(float secs) { return Duration(1000 * secs); }
+constexpr Duration seconds(float secs) {
+  return Duration(static_cast<int64_t>(1000 * secs));
+}
 constexpr Duration minutes(float mins) { return seconds(mins * 60); }
 constexpr Duration operator*(int n, Duration d) {
-  return milliseconds(n * d.milliseconds());
+  return milliseconds(static_cast<int64_t>(n) * d.milliseconds());
 }
 constexpr Duration operator*(Duration d, int n) {
-  return milliseconds(n * d.milliseconds());
+  return milliseconds(static_cast<int64_t>(n) * d.milliseconds());
 }
 
 // Represents a point in time, relative to when the device started up.  See
@@ -267,10 +271,10 @@ constexpr Duration operator*(Duration d, int n) {
 // Units:
 //  - milliseconds
 //
-// Native unit (implementation detail): int64_t miliseconds
-class Time : public units_detail::Scalar<Time, int64_t> {
+// Native unit (implementation detail): uint64_t miliseconds
+class Time : public units_detail::Scalar<Time, uint64_t> {
 public:
-  [[nodiscard]] int64_t millisSinceStartup() const { return val_; }
+  [[nodiscard]] uint64_t millisSinceStartup() const { return val_; }
 
   constexpr friend Time operator+(const Time &a, const Duration &b);
   constexpr friend Time operator+(const Duration &a, const Time &b);
@@ -280,12 +284,12 @@ public:
   inline Time &operator-=(const Duration &dt) { return *this = *this - dt; }
 
 private:
-  constexpr friend Time millisSinceStartup(int64_t millis);
+  constexpr friend Time millisSinceStartup(uint64_t millis);
 
-  using units_detail::Scalar<Time, int64_t>::Scalar;
+  using units_detail::Scalar<Time, uint64_t>::Scalar;
 };
 
-constexpr Time millisSinceStartup(int64_t millis) { return Time(millis); }
+constexpr Time millisSinceStartup(uint64_t millis) { return Time(millis); }
 
 constexpr inline Duration operator+(const Duration &a, const Duration &b) {
   return Duration(a.val_ + b.val_);
@@ -293,17 +297,17 @@ constexpr inline Duration operator+(const Duration &a, const Duration &b) {
 constexpr inline Duration operator-(const Duration &a, const Duration &b) {
   return Duration(a.val_ - b.val_);
 }
-constexpr inline Time operator+(const Time &a, const Duration &b) {
-  return Time(a.val_ + b.val_);
+constexpr inline Time operator+(const Time &t, const Duration &dt) {
+  return Time(t.val_ + static_cast<uint64_t>(dt.val_));
 }
-constexpr inline Time operator+(const Duration &a, const Time &b) {
-  return Time(a.val_ + b.val_);
+constexpr inline Time operator+(const Duration &dt, const Time &t) {
+  return Time(t.val_ + static_cast<uint64_t>(dt.val_));
 }
-constexpr inline Time operator-(const Time &a, const Duration &b) {
-  return Time(a.val_ - b.val_);
+constexpr inline Time operator-(const Time &t, const Duration &dt) {
+  return Time(t.val_ - static_cast<uint64_t>(dt.val_));
 }
 constexpr inline Duration operator-(const Time &a, const Time &b) {
-  return Duration(a.val_ - b.val_);
+  return Duration(static_cast<int64_t>(a.val_ - b.val_));
 }
 
 #endif // UNITS_H

@@ -266,15 +266,16 @@ static void InitSysTimer() {
 
 // Just spin for a specified number of microseconds
 static void BusyWaitUsec(uint16_t usec) {
-  while (usec > 1000) {
-    BusyWaitUsec(1000);
-    usec -= 1000;
+  constexpr uint16_t one_sec = 1000;
+  while (usec > one_sec) {
+    BusyWaitUsec(one_sec);
+    usec = static_cast<uint16_t>(usec - one_sec);
   }
 
   TimerRegs *tmr = TIMER6_BASE;
-  uint16_t start = tmr->counter;
+  uint16_t start = static_cast<uint16_t>(tmr->counter);
   while (1) {
-    uint16_t dt = tmr->counter - start;
+    uint16_t dt = static_cast<uint16_t>(tmr->counter - start);
     if (dt >= usec)
       return;
   }
@@ -470,7 +471,7 @@ static void InitPwmOut() {
 void HalApi::analogWrite(PwmPin pin, int value) {
 
   // Convert the value to a float
-  float duty = value * (1.0 / 255);
+  float duty = static_cast<float>(value) * (1.0f / 255);
 
   TimerRegs *tmr;
   int chan;
@@ -481,7 +482,7 @@ void HalApi::analogWrite(PwmPin pin, int value) {
     break;
   }
 
-  tmr->compare[chan] = tmr->reload * duty;
+  tmr->compare[chan] = static_cast<REG>(static_cast<float>(tmr->reload) * duty);
 }
 
 /******************************************************************
@@ -498,7 +499,8 @@ void HalApi::analogWrite(PwmPin pin, int value) {
 // and the interrupt handlers, so it needs to be thread safe.
 // I'm disabling interrupts during the critical sections to
 // ensure that's the case.
-template <int N> class CircBuff {
+template <uint16_t N> class CircBuff {
+
   volatile uint8_t buff[N];
   volatile int head, tail;
 
@@ -506,18 +508,18 @@ public:
   CircBuff() { head = tail = 0; }
 
   // Return number of bytes available in the buffer to read.
-  int FullCt() {
+  uint16_t FullCt() {
     bool p = IntSuspend();
     int ct = head - tail;
     IntRestore(p);
     if (ct < 0)
       ct += N;
-    return ct;
+    return static_cast<uint16_t>(ct);
   }
 
   // Return number of free spaces in the buffer where more
   // bytes can be written.
-  int FreeCt() { return N - 1 - FullCt(); }
+  uint16_t FreeCt() { return static_cast<uint16_t>(N - 1 - FullCt()); }
 
   // Get the oldest byte from the buffer.
   // Returns -1 if the buffer is empty
@@ -587,7 +589,7 @@ public:
 
     // See if we received a new byte
     if (reg->status & 0x0020)
-      rxDat.Put(reg->rxDat);
+      rxDat.Put(static_cast<uint8_t>(reg->rxDat));
 
     // Check for transmit data register empty
     if (reg->status & reg->ctrl[0] & 0x0080) {
@@ -614,7 +616,7 @@ public:
       int ch = rxDat.Get();
       if (ch < 0)
         return i;
-      *buf++ = ch;
+      *buf++ = static_cast<uint8_t>(ch);
     }
 
     // Note that we don't need to enable the rx interrupt
@@ -645,11 +647,11 @@ public:
 
   // Return the number of bytes currently in the
   // receive buffer and ready to be read.
-  int RxFull() { return rxDat.FullCt(); }
+  uint16_t RxFull() { return rxDat.FullCt(); }
 
   // Returns the number of free locations in the
   // transmit buffer.
-  int TxFree() { return txDat.FreeCt(); }
+  uint16_t TxFree() { return txDat.FreeCt(); }
 };
 
 static UART rpUART(UART3_BASE);
@@ -964,7 +966,7 @@ static void EnableInterrupt(int addr, int pri) {
   nvic->setEna[id >> 5] = 1 << (id & 0x1F);
 
   // The STM32 processor implements bits 4-7 of the NVIM priority register.
-  nvic->priority[id] = pri << 4;
+  nvic->priority[id] = static_cast<BREG>(pri << 4);
 }
 
 #endif

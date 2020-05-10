@@ -36,24 +36,6 @@ the programmer's manual for the processor available here:
 #define CPU_FREQ_MHZ 80
 #define CPU_FREQ (CPU_FREQ_MHZ * 1000000)
 
-// Some useful inline functions to enable/disable interrupts
-inline void IntDisable() { asm volatile("cpsid i" ::: "memory"); }
-
-inline void IntEnable() { asm volatile("cpsie i" ::: "memory"); }
-
-inline void IntRestore(bool p) {
-  if (p)
-    IntEnable();
-}
-
-inline bool IntSuspend() {
-  int ret;
-  asm volatile("mrs   %[output], primask\n\t"
-               "cpsid i"
-               : [output] "=r"(ret)::"memory");
-  return (ret == 0);
-}
-
 // Interrupt vectors that we currently use.
 // The values here are the offsets into the interrupt table.
 // These can be found in the NVIC chapter (chapter 12) of the

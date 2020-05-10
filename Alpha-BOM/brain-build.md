@@ -28,6 +28,7 @@ For how to assemble the brains, check this wiki [here](https://github.com/Respir
 | BRAIN-01     |   1 | ST Micro     | NUCLEO-L452-RE     |    14.00 | [M][1mouser]                     | STM32 Nucleo dev board |
 | BRAIN-02     |   1 | Monoprice    | 3896               |     0.83 | [Z][2amzn] [O][2mono]            | USB-A to miniUSB-B cable, power/data for Nucleo |
 | BRAIN-03     |   1 | UPerfect     | -                  |    49.00 | [A][3ali]                        | 7" capacitive touchscreen with speakers, HDMI/USB |
+| CONSUMABLE-a |   1 | GenBasic     | 4330127279         |     6.00 | [Z][4amzn]
 | BRAIN-06     |   1 | Raspberry Pi | RPI4-MODBP-2GB     |    53.23 | [M][6mouser]                     | Raspberry PI 4 |
 | BRAIN-06-alt |   1 | Raspberry Pi | RPI3-MODBP         |    35.00 | OUT OF STOCK                     | Raspberry PI 3B+ |
 | BRAIN-07     |   1 | Monoprice    | 31201              |     8.03 | [Z][7amzn] [O][7mono]            | USB-A to USB-C cable, 3ft, for RPI4 |

@@ -264,6 +264,31 @@ public:
   // system for configured amount of time
   void watchdog_handler();
 
+  // Interrupt enable/disable functions.
+  //
+  // NOTE:
+  // Interrupts should only be disabled for short periods of time and only for
+  // very good reasons.  Leaving interrupts disabled for long can cause loss of
+  // serial data and other bad effects.
+
+  // Disable interrupts
+  void IntDisable();
+
+  // Enable interrupts
+  void IntEnable();
+
+  // Disable interrutps and return true if they were enabled when the function
+  // was called.  Return false if interrupts were already disabled.
+  bool IntSuspend();
+
+  // Restore interrupts to the state they were in when IntSuspend was last
+  // called.  The return value from IntSuspend is passed in.
+  // If the input value is false, this function has no effect.
+  void IntRestore(bool yes) {
+    if (yes)
+      IntEnable();
+  }
+
 private:
   // Initializes watchdog, sets appropriate pins to OUTPUT, etc.  Called by
   // HalApi::init
@@ -439,11 +464,39 @@ inline void HalApi::watchdog_handler() {
 #endif
 }
 
+// Interrupt disable/enable not supported for Arduino HALs yet.
+// I'm assuming these are going away soon so don't require new
+// functionality
+inline void HalApi::IntDisable() {}
+inline void HalApi::IntEnable() {}
+inline bool HalApi::IntSuspend() { return false; }
+
+// Support for bare STM32.  Only a few inline functions are defined here.
+// Most support for this HAL is in a separate cpp file.
 #elif defined(BARE_STM32)
-// The STM32 build implements these functions in a separate cpp file,
-// so nothing needs to be added here.
+// Disable interrupts.
+// Returns true if interrupts were enabled when this
+// was called or false if they were already disabled.
+
+// Disable interrupts
+inline void HalApi::IntDisable() { asm volatile("cpsid i" ::: "memory"); }
+
+// Enable interrupts
+inline void HalApi::IntEnable() { asm volatile("cpsie i" ::: "memory"); }
+
+// Disable interrutps and return true if they were enabled when the function
+// was called.  Return false if interrupts were already disabled.
+inline bool HalApi::IntSuspend() {
+  int ret;
+  asm volatile("mrs   %[output], primask\n\t"
+               "cpsid i"
+               : [output] "=r"(ret)::"memory");
+  return (ret == 0);
+}
 
 #else
+inline void HalApi::init() {}
+inline void HalApi::watchdog_handler() {}
 
 inline Time HalApi::now() { return time_; }
 inline void HalApi::delay(Duration d) { time_ = time_ + d; }
@@ -516,6 +569,10 @@ inline void HalApi::test_serialPutIncomingData(const char *data, uint16_t len) {
   }
   serialIncomingData_.push_back(std::vector<char>(data, data + len));
 }
+
+inline void HalApi::IntDisable() {}
+inline void HalApi::IntEnable() {}
+inline bool HalApi::IntSuspend() { return false; }
 
 #endif
 

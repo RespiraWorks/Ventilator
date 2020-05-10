@@ -181,6 +181,7 @@ VolumetricFlow pressure_delta_to_flow(Pressure delta) {
 
 Volume integrate_flow(VolumetricFlow flow) {
   // volume integral computation data
+  // TODO: make TV a static class with those variables as attributes
   static Time last_flow_measurement_time = millisSinceStartup(0);
   static VolumetricFlow last_flow = cubic_m_per_sec(0);
   static Volume volume = ml(0);

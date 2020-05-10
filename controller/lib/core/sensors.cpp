@@ -64,7 +64,7 @@ constexpr int NUM_SENSORS = 3;
 
 } // anonymous namespace
 
-static float sensorZeroVals[NUM_SENSORS];
+static int sensorZeroVals[NUM_SENSORS];
 
 AnalogPin pin_for(Sensor s) {
   switch (s) {
@@ -105,7 +105,7 @@ void sensors_init() {
   Hal.delay(milliseconds(20));
 
   auto set_zero_level = [](Sensor s) {
-    float sum = 0;
+    int sum = 0;
     for (int i = 0; i < SENSOR_SAMPLES_FOR_INIT; i++) {
       sum += Hal.analogRead(pin_for(s));
     }
@@ -120,7 +120,7 @@ void sensors_init() {
 //
 // @TODO: Add alarms if sensor value is out of expected range?
 static Pressure read_pressure_sensor(Sensor s) {
-  float sum = 0;
+  int sum = 0;
   for (int i = 0; i < SENSOR_SAMPLES_FOR_READ; i++) {
     sum += Hal.analogRead(pin_for(s)) - sensorZeroVals[s];
   }

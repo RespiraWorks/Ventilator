@@ -17,6 +17,7 @@ limitations under the License.
 #define BLOWER_FSM_H
 
 #include "network_protocol.pb.h"
+#include "new.h"
 #include "units.h"
 
 // This module encapsulates the blower system's finite state machine (FSM).
@@ -37,8 +38,16 @@ limitations under the License.
 // and a valve on/off control over time.
 //
 // Once this module has determined the ideal state, it's the responsibility of
-// the blower_pid module to open/close the valve and drive the blower to
-// achieve the desired pressure.
+// the PID inside the Controller module to open/close the valve and drive the
+// blower to achieve the desired pressure.
+//
+// The main() loop queries DesiredState() on each iteration, which delegates to
+// a "breath FSM" (e.g. PressureControlFsm), which is responsible for *one
+// breath* with a fixed mode and VentParams.  When that breath ends, we create a
+// new inner FSM with (potentially) new params.
+//
+// Decision that params should only change at breath boundaries:
+// https://respiraworks.slack.com/archives/CV4MTUJHF/p1588001011133500
 
 enum class ValveState {
   OPEN,
@@ -62,10 +71,169 @@ struct BlowerSystemState {
   ValveState expire_valve_state;
 };
 
-void blower_fsm_init();
+// A "breath finite state machine" where the blower is always off.
+//
+// All breath FSMs should implement the following "duck-typed API".
+//
+//  - <constructor>(Time now, const VentParams& params): Constructs a new FSM
+//    for a single breath starting at the given time and with the given params.
+//    Those params don't change during the life of the FSM.
+//
+//  - BlowerSystemState desired_state(Time now): Gets the solenoid open/closed
+//    state and the pressure that the fan should be trying to hit at this point
+//    in time.
+//
+//  - bool finished(Time now): Has this breath FSM completed its work (namely,
+//    running a single breath) at the given time?  If so, it is ready to be
+//    replaced with a new one.
+//
+class OffFsm {
+public:
+  OffFsm() = default;
+  explicit OffFsm(Time now, const VentParams &) {}
+  BlowerSystemState desired_state(Time now) {
+    return {.blower_enabled = false, kPa(0), ValveState::OPEN};
+  }
+  bool finished(Time now) { return true; }
+};
 
-// Gets the state that the the blower system should (ideally) deliver right
-// now.
-BlowerSystemState blower_fsm_desired_state(Time now, const VentParams &params);
+// "Breath finite state machine" for pressure control mode.
+//
+// Currently our pressure-control mode drives a simple square wave: We go from
+// PIP pressure on inhale to PEEP pressure on exhale.  Edwin currently
+// (2020-04-29) believes that the physical limitations of the system (i.e. the
+// fact that the blower can't spin up instantaneously) will lead this to being
+// an acceptable waveform, although it remains to be seen.
+class PressureControlFsm {
+public:
+  explicit PressureControlFsm(Time now, const VentParams &params)
+      : inspire_pressure_(cmH2O(static_cast<float>(params.pip_cm_h2o))),
+        expire_pressure_(cmH2O(static_cast<float>(params.peep_cm_h2o))),
+        start_time_(now), inspire_end_(start_time_ + inspire_duration(params)),
+        expire_end_(inspire_end_ + expire_duration(params)) {}
+
+  BlowerSystemState desired_state(Time now) {
+    if (now < inspire_end_) {
+      return {.blower_enabled = true, inspire_pressure_, ValveState::CLOSED};
+    }
+    return {.blower_enabled = true, expire_pressure_, ValveState::OPEN};
+  }
+
+  bool finished(Time now) { return now > expire_end_; }
+
+private:
+  // Given t = secs_per_breath and r = I:E ratio, calculate inspiration and
+  // expiration durations (I and E).
+  //
+  //   t = I + E
+  //   r = I / E
+  //
+  // implies
+  //
+  //  I = t * r / (1 + r)
+  //  E =     t / (1 + r)
+  //
+  // https://www.wolframalpha.com/input/?i=solve+t+%3D+x+%2B+y+and+r+%3D+x%2Fy+for+x%2Cy
+  static Duration inspire_duration(const VentParams &params) {
+    float t =
+        60.f / static_cast<float>(params.breaths_per_min); // secs per breath
+    float r = params.inspiratory_expiratory_ratio;         // I:E
+    return seconds(t * r / (1 + r));
+  }
+  static Duration expire_duration(const VentParams &params) {
+    float t =
+        60.f / static_cast<float>(params.breaths_per_min); // secs per breath
+    float r = params.inspiratory_expiratory_ratio;         // I:E
+    return seconds(t / (1 + r));
+  }
+
+  const Pressure inspire_pressure_;
+  const Pressure expire_pressure_;
+  Time start_time_;
+  Time inspire_end_;
+  Time expire_end_;
+};
+
+// A discriminated union of "breath finite state machines".
+//
+// TODO(jlebar): Replace with std::variant once we have an STL.  I tried to
+// hack together my own variant class, but it was ultimately disappointing.
+class FsmUnion {
+public:
+  FsmUnion() : mode_(), u_{OffFsm()} {}
+
+  // Replaces the existing breath FSM with a new one, of the given mode and
+  // params.
+  void new_breath(Time now, VentMode m, const VentParams &params) {
+    switch (mode_) {
+    case VentMode_OFF:
+      u_.off.~OffFsm();
+      break;
+    case VentMode_PRESSURE_CONTROL:
+      u_.pressure_control.~PressureControlFsm();
+      break;
+    }
+
+    mode_ = m;
+    switch (mode_) {
+    case VentMode_OFF:
+      new (&u_.off) OffFsm(now, params);
+      break;
+    case VentMode_PRESSURE_CONTROL:
+      new (&u_.pressure_control) PressureControlFsm(now, params);
+      break;
+    }
+  }
+
+  // Gets the state the FSM would like us to (try to) achieve.
+  BlowerSystemState desired_state(Time now) {
+    switch (mode_) {
+    case VentMode_OFF:
+      return u_.off.desired_state(now);
+    case VentMode_PRESSURE_CONTROL:
+      return u_.pressure_control.desired_state(now);
+    }
+    // All cases covered above (and gcc checks this).
+    __builtin_unreachable();
+  }
+
+  // Returns whether or not the current FSM is done with its one breath.
+  bool finished(Time now) {
+    switch (mode_) {
+    case VentMode_OFF:
+      return u_.off.finished(now);
+    case VentMode_PRESSURE_CONTROL:
+      return u_.pressure_control.finished(now);
+    }
+    // All cases covered above (and gcc checks this).
+    __builtin_unreachable();
+  }
+
+private:
+  VentMode mode_;
+  union U {
+    OffFsm off;
+    PressureControlFsm pressure_control;
+  };
+  U u_;
+};
+
+class BlowerFsm {
+public:
+  // Gets the state that the the blower system should (ideally) deliver right
+  // now.
+  BlowerSystemState DesiredState(Time now, const VentParams &params) {
+    // Immediately turn off the ventilator if params.mode == OFF; otherwise,
+    // wait until the end of a cycle before implementing the mode change.
+    if (params.mode == VentMode_OFF || fsm_.finished(now)) {
+      fsm_.new_breath(now, params.mode, params);
+    }
+
+    return fsm_.desired_state(now);
+  }
+
+private:
+  FsmUnion fsm_;
+};
 
 #endif // BLOWER_FSM_H

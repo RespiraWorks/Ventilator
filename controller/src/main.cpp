@@ -47,8 +47,6 @@ limitations under the License.
 
 #include "actuators.h"
 #include "alarm.h"
-#include "blower_fsm.h"
-#include "blower_pid.h"
 #include "comms.h"
 #include "controller.h"
 #include "hal.h"
@@ -142,8 +140,6 @@ void setup() {
   comms_init();
   alarm_init();
   sensors_init();
-  blower_fsm_init();
-  blower_pid_init();
 
   controller_loop();
 }

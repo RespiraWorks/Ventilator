@@ -577,11 +577,11 @@ public:
 
   // Return the number of bytes currently in the
   // receive buffer and ready to be read.
-  uint16_t RxFull() { return rxDat.FullCt(); }
+  uint16_t RxFull() { return static_cast<uint16_t>(rxDat.FullCt()); }
 
   // Returns the number of free locations in the
   // transmit buffer.
-  uint16_t TxFree() { return txDat.FreeCt(); }
+  uint16_t TxFree() { return static_cast<uint16_t>(txDat.FreeCt()); }
 };
 
 static UART rpUART(UART3_BASE);

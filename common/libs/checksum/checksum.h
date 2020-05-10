@@ -37,11 +37,11 @@ uint16_t checksum_fletcher16(const char *data, uint8_t count,
 // bytes [b1 b2] such that checksum(p | b1 | b2) == 0, where `|` represents
 // concatenation.
 inline uint16_t check_bytes_fletcher16(uint16_t checksum) {
-  uint8_t f0 = checksum & 0xff;
-  uint8_t f1 = (checksum >> 8) & 0xff;
-  uint8_t c0 = 0xff - ((f0 + f1) % 0xff);
-  uint8_t c1 = 0xff - ((f0 + c0) % 0xff);
-  return (uint16_t{c0} << 8) | c1;
+  uint8_t f0 = static_cast<uint8_t>(checksum & 0xff);
+  uint8_t f1 = static_cast<uint8_t>((checksum >> 8) & 0xff);
+  uint8_t c0 = static_cast<uint8_t>(0xff - ((f0 + f1) % 0xff));
+  uint8_t c1 = static_cast<uint8_t>(0xff - ((f0 + c0) % 0xff));
+  return static_cast<uint16_t>((uint16_t{c0} << 8) | c1);
 }
 
 // Verifies the checksum of a packet.

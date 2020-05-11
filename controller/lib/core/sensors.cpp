@@ -55,21 +55,7 @@ static constexpr int SENSOR_SAMPLES_FOR_INIT = 4;
 // TODO: Tune this value.
 static constexpr int SENSOR_SAMPLES_FOR_READ = 2;
 
-namespace {
-enum Sensor {
-  PATIENT_PRESSURE,
-  INFLOW_PRESSURE_DIFF,
-  OUTFLOW_PRESSURE_DIFF,
-};
-
-// Keep this in sync with the Sensors enum!
-constexpr int NUM_SENSORS = 3;
-
-} // anonymous namespace
-
-static float sensorZeroVals[NUM_SENSORS];
-
-AnalogPin pin_for(Sensor s) {
+/*static*/ AnalogPin Sensors::PinFor(Sensor s) {
   switch (s) {
   case PATIENT_PRESSURE:
     return AnalogPin::PATIENT_PRESSURE;
@@ -88,7 +74,7 @@ static float diameter_to_area_m2(Length diameter) {
          diameter.meters();
 }
 
-void sensors_init() {
+void Sensors::Init() {
   // We wait 20ms from power-on-reset for pressure sensors to warm up.
   //
   // TODO: Is 20ms the right amount of time?  We're basing it on the data sheet
@@ -107,16 +93,16 @@ void sensors_init() {
   // open any necessary valves, and recalibrate.
   Hal.delay(milliseconds(20));
 
-  auto set_zero_level = [](Sensor s) {
+  auto set_zero_level = [this](Sensor s) {
     // Perform most of the computation exactly in "int", to avoid a situation
     // where sum + x == sum, in case sum is above the maximum exactly
     // representable integer in a float.
     int sum = 0;
     for (int i = 0; i < SENSOR_SAMPLES_FOR_INIT; i++) {
-      sum += Hal.analogRead(pin_for(s));
+      sum += Hal.analogRead(PinFor(s));
     }
     // A bit of loss of mantissa here is okay.
-    sensorZeroVals[s] = static_cast<float>(sum) / SENSOR_SAMPLES_FOR_INIT;
+    sensors_zero_vals_[s] = static_cast<float>(sum) / SENSOR_SAMPLES_FOR_INIT;
   };
   set_zero_level(PATIENT_PRESSURE);
   set_zero_level(INFLOW_PRESSURE_DIFF);
@@ -126,41 +112,29 @@ void sensors_init() {
 // Reads a sensor, returning its value in kPa.
 //
 // @TODO: Add alarms if sensor value is out of expected range?
-static Pressure read_pressure_sensor(Sensor s) {
+Pressure Sensors::ReadPressureSensor(Sensor s) {
   int sum = 0;
   for (int i = 0; i < SENSOR_SAMPLES_FOR_READ; i++) {
-    sum += Hal.analogRead(pin_for(s));
+    sum += Hal.analogRead(PinFor(s));
   }
   // Sensitivity of all pressure sensors is 1 V/kPa; no division needed.
   return kPa(ADC_LSB * (static_cast<float>(sum) / SENSOR_SAMPLES_FOR_READ -
-                        sensorZeroVals[s]));
+                        sensors_zero_vals_[s]));
 }
 
-Pressure get_patient_pressure() {
-  return read_pressure_sensor(PATIENT_PRESSURE);
+Pressure Sensors::GetPatientPressure() {
+  return ReadPressureSensor(PATIENT_PRESSURE);
 }
 
-VolumetricFlow get_volumetric_inflow() {
-  return pressure_delta_to_flow(read_pressure_sensor(INFLOW_PRESSURE_DIFF));
+VolumetricFlow Sensors::GetVolumetricInflow() {
+  return PressureDeltaToFlow(ReadPressureSensor(INFLOW_PRESSURE_DIFF));
 }
 
-VolumetricFlow get_volumetric_outflow() {
-  return pressure_delta_to_flow(read_pressure_sensor(OUTFLOW_PRESSURE_DIFF));
+VolumetricFlow Sensors::GetVolumetricOutflow() {
+  return PressureDeltaToFlow(ReadPressureSensor(OUTFLOW_PRESSURE_DIFF));
 }
 
-/*
- * @brief Method implements Bernoulli's equation assuming the Venturi Effect.
- * https://en.wikipedia.org/wiki/Venturi_effect
- *
- * Solves for the volumetric flow rate since A1/A2, rho, and differential
- * pressure are known. Q = sqrt(2/rho) * (A1*A2) * 1/sqrt(A1^2-A2^2) *
- * sqrt(p1-p2); based on (p1 - p2) = (rho/2) * (v2^2 - v1^2); where A1 > A2
- *
- * @return the volumetric flow in [meters^3/s]. Can be negative, indicating
- * direction of flow, depending on how the differential sensor is attached to
- * the venturi.
- */
-VolumetricFlow pressure_delta_to_flow(Pressure delta) {
+/*static*/ VolumetricFlow Sensors::PressureDeltaToFlow(Pressure delta) {
   // TODO(jlebar): Make these constexpr once we have a C++ standard library
   // PortArea must be larger than the ChokeArea [meters^2]
   float venturiPortArea = diameter_to_area_m2(DEFAULT_VENTURI_PORT_DIAM);
@@ -179,14 +153,7 @@ VolumetricFlow pressure_delta_to_flow(Pressure delta) {
                          sqrtf(abs(delta.kPa()) * 1000.0f));
 }
 
-Volume integrate_flow(VolumetricFlow flow) {
-  // volume integral computation data
-  // TODO: make TV a static class with those variables as attributes
-  static Time last_flow_measurement_time = millisSinceStartup(0);
-  static VolumetricFlow last_flow = cubic_m_per_sec(0);
-  static Volume volume = ml(0);
-  static bool integrator_initialized = 0;
-
+void TVIntegrator::AddFlow(Time now, VolumetricFlow flow) {
   // TODO: This calculation should be much more sophisticated.  Some possible
   // improvements.
   //
@@ -194,25 +161,24 @@ Volume integrate_flow(VolumetricFlow flow) {
   //    disconnected from the patient?)
   //
   //  - Measure time with better than millisecond granularity.
-  Time now = Hal.now();
-  if (integrator_initialized == 0) { // First time
-    last_flow = flow;
-    last_flow_measurement_time = now;
-    integrator_initialized = 1;
-  } else if (Duration delta = now - last_flow_measurement_time;
+  if (!initialized_) {
+    last_flow_ = flow;
+    last_flow_measurement_time_ = now;
+    initialized_ = true;
+  } else if (Duration delta = now - last_flow_measurement_time_;
              delta >= VOLUME_INTEGRAL_INTERVAL) {
-    volume = volume + ml(delta.minutes() *
-                         (last_flow.ml_per_min() + flow.ml_per_min()) / 2);
-    last_flow_measurement_time = now;
+    volume_ = volume_ + ml(delta.minutes() *
+                           (last_flow_.ml_per_min() + flow.ml_per_min()) / 2);
+    last_flow_measurement_time_ = now;
   }
-  return volume;
 }
 
-SensorReadings get_sensor_readings() {
+SensorReadings Sensors::GetSensorReadings() {
   // Flow rate is inhalation flow minus exhalation flow. Positive value is flow
   // into lungs, and negative is flow out of lungs.
-  VolumetricFlow flow = get_volumetric_inflow() - get_volumetric_outflow();
-  return {.pressure_cm_h2o = get_patient_pressure().cmH2O(),
-          .volume_ml = integrate_flow(flow).ml(),
+  VolumetricFlow flow = GetVolumetricInflow() - GetVolumetricOutflow();
+  tv_integrator_.AddFlow(Hal.now(), flow);
+  return {.pressure_cm_h2o = GetPatientPressure().cmH2O(),
+          .volume_ml = tv_integrator_.GetTV().ml(),
           .flow_ml_per_min = flow.ml_per_min()};
 }

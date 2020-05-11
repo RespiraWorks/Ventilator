@@ -69,34 +69,32 @@ def pio_pkg_dir(pkg):
 #    means that when you add a new header to a file, ycm won't know how to use
 #    that header until you manually regenerate compile_commands.json!
 #
-#  - platformio uses gcc-avr to compile for Arduino, and that compiler
-#    implicitly adds a bunch of necessary flags that ycm/clangd are not aware
-#    of.  So we'd have to add them here *anyway*.
+#  - platformio uses arm-none-eabi-g++ to compile for our chip, and that
+#    compiler implicitly adds a bunch of necessary flags that ycm/clangd are
+#    not aware of.  So we'd have to add them here *anyway*.
 #
-#  - Most files get compiled with Arduino flags, but some (tests) must be
+#  - Most files get compiled with ARM flags, but some (tests) must be
 #    compiled with native flags.  So even if we used a compilation_database,
 #    we'd have to intelligently choose which set of flags to use here.
 #
 # Flags are defined below.  Feel free to modify them if necessary!
 
-common_flags = ["-x", "c++", "-std=gnu++17", "-fno-exceptions", "-Wall",] + [
+common_flags = [
+    "-x",
+    "c++",
+    "-std=gnu++17",
+    "-fno-exceptions",
+    "-Wall",
+    "-Werror=conversion",
+] + [
     "-I" + d for d in {os.path.dirname(h) for h in glob.glob("**/*.h", recursive=True)}
 ]
 
-arduino_flags = [
-    "-I.pio/libdeps/uno/Nanopb_ID431",
-    "-I.pio/libdeps/uno/PID_ID2",
-    "-isystem" + pio_pkg_dir("framework-arduino-avr/cores/arduino"),
-    "-isystem" + pio_pkg_dir("framework-arduino-avr/variants/standard"),
-    "-isystem" + pio_pkg_dir("toolchain-atmelavr/avr/include"),
-    "-DAVR",
-    "-DARDUINO_AVR_UNO",
-    "-DF_CPU=16000000L",
-    "-DARDUINO_ARCH_AVR",
-    "-DARDUINO=10808",
-    "-D__AVR_ATmega328P__",
-    "-Os",  # AVR headers complain if we compile without optimizations!
-] + ["-I" + d for d in glob.glob(".pio/libdeps/uno/*")]
+stm32_flags = [
+    "-nostdlib",
+    "-DBARE_STM32",
+    "-DF_CPU=80000000L",
+] + ["-I" + d for d in glob.glob(".pio/libdeps/stm32/*")]
 
 native_flags = [
     "-DTEST_MODE",
@@ -161,7 +159,7 @@ def Settings(**kwargs):
             # TODO(jlebar): This is not a perfect heuristic.  In particular, hal.h
             # mixes modes.
             if "/test/" not in filename:
-                flags = common_flags + arduino_flags
+                flags = common_flags + stm32_flags
             else:
                 flags = common_flags + native_flags
 

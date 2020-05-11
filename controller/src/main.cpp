@@ -60,6 +60,7 @@ static ControllerStatus controller_status = ControllerStatus_init_zero;
 // Last-received status from the GUI.
 static GuiStatus gui_status = GuiStatus_init_zero;
 
+static Sensors sensors;
 static Controller controller;
 
 // NO_GUI_DEV_MODE is a hacky development mode until we have the GUI working.
@@ -115,7 +116,7 @@ static void controller_loop() {
     DEV_MODE_comms_handler();
 #endif
 
-    controller_status.sensor_readings = get_sensor_readings();
+    controller_status.sensor_readings = sensors.GetSensorReadings();
 
     controller_status.active_params = gui_status.desired_params;
 
@@ -139,7 +140,7 @@ void setup() {
 
   comms_init();
   alarm_init();
-  sensors_init();
+  sensors.Init();
 
   controller_loop();
 }

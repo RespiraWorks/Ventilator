@@ -53,21 +53,6 @@ This build depends on already having a Brain build, which has its own BOM [here]
 | 18     |        1 | RespiraWorks  | blower control cable|              | **ask**   | B               | blower control cable |
 | 19     |        1 | RespiraWorks  | blower power cable  |              | **ask**   | B               | blower power cable |
 
-| Item # | Quantity | Part #              | Price($) | Sources         | Notes |
-| ------ |---------:| ------------------- | --------:|-----------------| ----- |
-| 1      |        1 | 53415K217           |          | [C][1mcmc]      | Barbed fitting 3/4" |
-| 2      |        1 | 5463K565            |          | [C][2mcmc]      | Barbed tee-fitting 3/4" |
-| 3      |        1 | 5463K33             |          | [C][3mcmc]      | Barbed fitting 3/32" for venturis |
-| 4      |        1 | 5463K37             |          | [C][4mcmc]      | Barbed fitting 3/32" for venturis |
-| 5      |        2 |                     |          | [Z][5amzn]      | 2pac of ball valves 1/2", diametere of current design but may not be for long |
-| 5a     |        2 |                     |          | [Z][5a-amzn]    | 2pac of ball valves 5/8", alternative for uncertain design changes |
-| 5b     |        2 |                     |          | [Z][5b-amzn]    | 2pac of ball valves 3/4", alternative for uncertain design changes |
-| 6      |    ???ft |                     |          | [Z][6amzn]      | 5/8" tubing, fits current venturi design |
-| 9      | ft or units? |                 |          | [Z][9amzn]      | CPAP tubing |
-| 10     |        1 |                     |          | [Z][10ebay]     | test "lung" |
-| 11     |        1 |                     |          | [Z][11amzn]     | use these to simulate lung compliance |
-
-
 [1mcmc]:   https://www.mcmaster.com/53415K217
 [2mcmc]:   https://www.mcmaster.com/5463K565
 [3mcmc]:   https://www.mcmaster.com/5463K33

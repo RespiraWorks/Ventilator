@@ -40,9 +40,10 @@ limitations under the License.
 
 #ifdef TEST_MODE
 
-#if defined(ARDUINO_AVR_UNO) || defined(BARE_STM32)
+#if defined(ARDUINO_AVR_UNO) || defined(ARDUINO_NUCLEO_L452RE) ||              \
+    defined(BARE_STM32)
 #error                                                                         \
-    "TEST_MODE intended to be run only on native, but ARDUINO_AVR_UNO or BARE_STM32 is defined"
+    "TEST_MODE intended to be run only on native, but ARDUINO_AVR_UNO or ARDUINO_NUCLEO_L452RE or BARE_STM32 is defined"
 #endif
 
 #include <cstring>
@@ -54,9 +55,10 @@ limitations under the License.
 
 #else // !TEST_MODE
 
-#if !defined(ARDUINO_AVR_UNO) && !defined(BARE_STM32)
+#if !defined(ARDUINO_AVR_UNO) && !defined(ARDUINO_NUCLEO_L452RE) &&            \
+    !defined(BARE_STM32)
 #error                                                                         \
-    "When running without TEST_MODE, expecting ARDUINO_AVR_UNO or BARE_STM32 to be defined"
+    "When running without TEST_MODE, expecting ARDUINO_AVR_UNO or ARDUINO_NUCLEO_L452RE or BARE_STM32 to be defined"
 #endif
 
 #if defined(BARE_STM32)
@@ -316,7 +318,7 @@ private:
   std::vector<char> serialOutgoingData_;
 #endif
 
-#if defined(ARDUINO_AVR_UNO)
+#if defined(ARDUINO_AVR_UNO) || defined(ARDUINO_NUCLEO_L452RE)
   // Value of ::millis() at last call to watchdog_handler().  Used to detect
   // clock overflows.
   uint32_t last_millis_ = 0;
@@ -329,7 +331,7 @@ private:
 
 extern HalApi Hal;
 
-#if defined(ARDUINO_AVR_UNO)
+#if defined(ARDUINO_AVR_UNO) || defined(ARDUINO_NUCLEO_L452RE)
 
 inline void HalApi::init() {
 

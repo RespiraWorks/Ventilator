@@ -1,0 +1,13 @@
+*.app
+*.desktop
+*.user
+*.log
+!.gitignore
+
+#IDE
+.idea/
+.idea
+.vscode/
+
+.DS_Store
+.clangd/

@@ -1,4 +1,4 @@
-# ~Alpha BOM~
+# Alpha BOM
 -------------
 
 Here we have parts lists for various levels of the alpha build.

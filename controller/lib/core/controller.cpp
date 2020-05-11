@@ -1,4 +1,4 @@
-/* Copyright 2020, Edwin Chiu
+/* Copyright 2020, RespiraWorks
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -13,7 +13,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include "blower_pid.h"
+#include "controller.h"
+
 #include "pid.h"
 #include <math.h>
 
@@ -31,33 +32,41 @@ static constexpr float Kp = 0.2f * Ku;
 static constexpr float Ki = 0.4f * Ku / Tu.seconds();
 static constexpr float Kd = Ku * Tu.seconds() / 15;
 
-// DIRECT means that increases in the output should result in increases in the
-// input.  DIRECT as opposed to REVERSE.
-static PID myPID(Kp, Ki, Kd, ProportionalTerm::ON_ERROR,
-                 DifferentialTerm::ON_MEASUREMENT, ControlDirection::DIRECT,
-                 // Our output is an 8-bit PWM.
-                 /*output_min=*/0.f, /*output_max=*/255.f, PID_SAMPLE_PERIOD);
+Controller::Controller()
+    : pid_(Kp, Ki, Kd, ProportionalTerm::ON_ERROR,
+           DifferentialTerm::ON_MEASUREMENT,
+           // Increases in the blower fan speed should result in increased
+           // pressure.
+           ControlDirection::DIRECT,
+           // Our output is an 8-bit PWM.
+           /*output_min=*/0.f, /*output_max=*/255.f, PID_SAMPLE_PERIOD) {}
 
-void blower_pid_init() {
+ActuatorsState Controller::Run(Time now, const VentParams &params,
+                               const SensorReadings &readings) {
+  BlowerSystemState desired_state = fsm_.DesiredState(now, params);
+
+  return {.fan_setpoint_cm_h2o = desired_state.setpoint_pressure.cmH2O(),
+          .expire_valve_state = desired_state.expire_valve_state,
+          .fan_power = ComputeFanPower(now, desired_state, readings)};
 }
 
-float blower_pid_compute_fan_power(Time now,
-                                   const BlowerSystemState &desired_state,
-                                   const SensorReadings &sensor_readings) {
+float Controller::ComputeFanPower(Time now,
+                                  const BlowerSystemState &desired_state,
+                                  const SensorReadings &sensor_readings) {
   // If the blower is not enabled, immediately shut down the fan.  But for
   // consistency, we still run the PID iteration above.
   float output;
   if (desired_state.blower_enabled) {
     output =
-        myPID.Compute(/*time=*/now,
-                      /*input=*/cmH2O(sensor_readings.pressure_cm_h2o).kPa(),
-                      /*setpoint=*/desired_state.setpoint_pressure.kPa());
+        pid_.Compute(/*time=*/now,
+                     /*input=*/cmH2O(sensor_readings.pressure_cm_h2o).kPa(),
+                     /*setpoint=*/desired_state.setpoint_pressure.kPa());
   } else {
     output = 0;
-    myPID.Observe(/*time=*/now,
-                  /*input=*/cmH2O(sensor_readings.pressure_cm_h2o).kPa(),
-                  /*setpoint=*/desired_state.setpoint_pressure.kPa(),
-                  /*output=*/output);
+    pid_.Observe(/*time=*/now,
+                 /*input=*/cmH2O(sensor_readings.pressure_cm_h2o).kPa(),
+                 /*setpoint=*/desired_state.setpoint_pressure.kPa(),
+                 /*output=*/output);
   }
 
   // fan_power is in range [0, 1].

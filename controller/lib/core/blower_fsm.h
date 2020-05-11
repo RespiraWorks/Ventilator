@@ -16,8 +16,9 @@ limitations under the License.
 #ifndef BLOWER_FSM_H
 #define BLOWER_FSM_H
 
+#include <variant>
+
 #include "network_protocol.pb.h"
-#include "new.h"
 #include "units.h"
 
 // This module encapsulates the blower system's finite state machine (FSM).
@@ -154,70 +155,6 @@ private:
   Time expire_end_;
 };
 
-// A discriminated union of "breath finite state machines".
-//
-// TODO(jlebar): Replace with std::variant once we have an STL.  I tried to
-// hack together my own variant class, but it was ultimately disappointing.
-class FsmUnion {
-public:
-  FsmUnion() : mode_(), u_{OffFsm()} {}
-
-  // Replaces the existing breath FSM with a new one, of the given mode and
-  // params.
-  void new_breath(Time now, VentMode m, const VentParams &params) {
-    switch (mode_) {
-    case VentMode_OFF:
-      u_.off.~OffFsm();
-      break;
-    case VentMode_PRESSURE_CONTROL:
-      u_.pressure_control.~PressureControlFsm();
-      break;
-    }
-
-    mode_ = m;
-    switch (mode_) {
-    case VentMode_OFF:
-      new (&u_.off) OffFsm(now, params);
-      break;
-    case VentMode_PRESSURE_CONTROL:
-      new (&u_.pressure_control) PressureControlFsm(now, params);
-      break;
-    }
-  }
-
-  // Gets the state the FSM would like us to (try to) achieve.
-  BlowerSystemState desired_state(Time now) {
-    switch (mode_) {
-    case VentMode_OFF:
-      return u_.off.desired_state(now);
-    case VentMode_PRESSURE_CONTROL:
-      return u_.pressure_control.desired_state(now);
-    }
-    // All cases covered above (and gcc checks this).
-    __builtin_unreachable();
-  }
-
-  // Returns whether or not the current FSM is done with its one breath.
-  bool finished(Time now) {
-    switch (mode_) {
-    case VentMode_OFF:
-      return u_.off.finished(now);
-    case VentMode_PRESSURE_CONTROL:
-      return u_.pressure_control.finished(now);
-    }
-    // All cases covered above (and gcc checks this).
-    __builtin_unreachable();
-  }
-
-private:
-  VentMode mode_;
-  union U {
-    OffFsm off;
-    PressureControlFsm pressure_control;
-  };
-  U u_;
-};
-
 class BlowerFsm {
 public:
   // Gets the state that the the blower system should (ideally) deliver right
@@ -225,15 +162,23 @@ public:
   BlowerSystemState DesiredState(Time now, const VentParams &params) {
     // Immediately turn off the ventilator if params.mode == OFF; otherwise,
     // wait until the end of a cycle before implementing the mode change.
-    if (params.mode == VentMode_OFF || fsm_.finished(now)) {
-      fsm_.new_breath(now, params.mode, params);
+    if (params.mode == VentMode_OFF ||
+        std::visit([&](auto &fsm) { return fsm.finished(now); }, fsm_)) {
+      switch (params.mode) {
+      case VentMode_OFF:
+        fsm_.emplace<OffFsm>(now, params);
+        break;
+      case VentMode_PRESSURE_CONTROL:
+        fsm_.emplace<PressureControlFsm>(now, params);
+        break;
+      }
     }
 
-    return fsm_.desired_state(now);
+    return std::visit([&](auto &fsm) { return fsm.desired_state(now); }, fsm_);
   }
 
 private:
-  FsmUnion fsm_;
+  std::variant<OffFsm, PressureControlFsm> fsm_;
 };
 
 #endif // BLOWER_FSM_H

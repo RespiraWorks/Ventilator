@@ -8,7 +8,9 @@ If you decide to buy them, do so at your own risk... oh, and thank you ;).**
 This build consists of a functional ventilator pneumatic assembly with controller and user interface. This build is adequate for integration and systems testing.
 
 It lacks heating, oxygen mixing, humidification, battery backup and air filtering.
-It is also not enclosed like the final product and is meant to be operated in an open layout on your table, like a pizza. **This is not intended to be used on patients and lacks a number of safety features.**
+It is also not enclosed like the final product and is meant to be operated in an open layout on your table, like a pizza.
+
+**This is not intended to be used on patients and lacks a number of safety features.**
 
 This build depends on already having a Brain build, which has its own BOM [here](brain-build.md).
 

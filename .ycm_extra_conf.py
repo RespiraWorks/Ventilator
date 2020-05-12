@@ -90,11 +90,9 @@ common_flags = [
     "-I" + d for d in {os.path.dirname(h) for h in glob.glob("**/*.h", recursive=True)}
 ]
 
-stm32_flags = [
-    "-nostdlib",
-    "-DBARE_STM32",
-    "-DF_CPU=80000000L",
-] + ["-I" + d for d in glob.glob(".pio/libdeps/stm32/*")]
+stm32_flags = ["-nostdlib", "-DBARE_STM32", "-DF_CPU=80000000L",] + [
+    "-I" + d for d in glob.glob(".pio/libdeps/stm32/*")
+]
 
 native_flags = [
     "-DTEST_MODE",

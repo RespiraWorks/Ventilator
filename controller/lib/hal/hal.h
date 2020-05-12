@@ -428,14 +428,14 @@ inline void HalApi::analogWrite(PwmPin pin, int value) {
   ::analogWrite(rawPin(pin), value);
 }
 [[nodiscard]] inline uint16_t HalApi::serialRead(char *buf, uint16_t len) {
-  return Serial.readBytes(buf, stl::min(len, serialBytesAvailableForRead()));
+  return Serial.readBytes(buf, std::min(len, serialBytesAvailableForRead()));
 }
 inline uint16_t HalApi::serialBytesAvailableForRead() {
   return Serial.available();
 }
 [[nodiscard]] inline uint16_t HalApi::serialWrite(const char *buf,
                                                   uint16_t len) {
-  return Serial.write(buf, stl::min(len, serialBytesAvailableForWrite()));
+  return Serial.write(buf, std::min(len, serialBytesAvailableForWrite()));
 }
 inline uint16_t HalApi::serialBytesAvailableForWrite() {
   return Serial.availableForWrite();
@@ -545,7 +545,7 @@ inline void HalApi::analogWrite(PwmPin pin, int value) {
     return 0;
   }
   auto &readBuf = serialIncomingData_.front();
-  uint16_t n = stl::min(len, static_cast<uint16_t>(readBuf.size()));
+  uint16_t n = std::min(len, static_cast<uint16_t>(readBuf.size()));
   memcpy(buf, readBuf.data(), n);
   readBuf.erase(readBuf.begin(), readBuf.begin() + n);
   if (readBuf.empty()) {
@@ -560,7 +560,7 @@ inline uint16_t HalApi::serialBytesAvailableForRead() {
 }
 [[nodiscard]] inline uint16_t HalApi::serialWrite(const char *buf,
                                                   uint16_t len) {
-  uint16_t n = stl::min(len, serialBytesAvailableForWrite());
+  uint16_t n = std::min(len, serialBytesAvailableForWrite());
   serialOutgoingData_.insert(serialOutgoingData_.end(), buf, buf + n);
   return n;
 }
@@ -570,7 +570,7 @@ inline uint16_t HalApi::serialBytesAvailableForWrite() {
   return 64;
 }
 inline uint16_t HalApi::test_serialGetOutgoingData(char *data, uint16_t len) {
-  uint16_t n = stl::min(len, static_cast<uint16_t>(serialOutgoingData_.size()));
+  uint16_t n = std::min(len, static_cast<uint16_t>(serialOutgoingData_.size()));
   memcpy(data, serialOutgoingData_.data(), n);
   serialOutgoingData_.erase(serialOutgoingData_.begin(),
                             serialOutgoingData_.begin() + n);

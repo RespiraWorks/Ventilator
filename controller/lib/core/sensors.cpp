@@ -74,7 +74,7 @@ static float diameter_to_area_m2(Length diameter) {
          diameter.meters();
 }
 
-void Sensors::Init() {
+Sensors::Sensors() {
   // We wait 20ms from power-on-reset for pressure sensors to warm up.
   //
   // TODO: Is 20ms the right amount of time?  We're basing it on the data sheet
@@ -122,18 +122,6 @@ Pressure Sensors::ReadPressureSensor(Sensor s) {
                         sensors_zero_vals_[s]));
 }
 
-Pressure Sensors::GetPatientPressure() {
-  return ReadPressureSensor(PATIENT_PRESSURE);
-}
-
-VolumetricFlow Sensors::GetVolumetricInflow() {
-  return PressureDeltaToFlow(ReadPressureSensor(INFLOW_PRESSURE_DIFF));
-}
-
-VolumetricFlow Sensors::GetVolumetricOutflow() {
-  return PressureDeltaToFlow(ReadPressureSensor(OUTFLOW_PRESSURE_DIFF));
-}
-
 /*static*/ VolumetricFlow Sensors::PressureDeltaToFlow(Pressure delta) {
   // TODO(jlebar): Make these constexpr once we have a C++ standard library
   // PortArea must be larger than the ChokeArea [meters^2]
@@ -176,9 +164,13 @@ void TVIntegrator::AddFlow(Time now, VolumetricFlow flow) {
 SensorReadings Sensors::GetSensorReadings() {
   // Flow rate is inhalation flow minus exhalation flow. Positive value is flow
   // into lungs, and negative is flow out of lungs.
-  VolumetricFlow flow = GetVolumetricInflow() - GetVolumetricOutflow();
+  auto patient_pressure = ReadPressureSensor(PATIENT_PRESSURE);
+  auto inflow_delta = ReadPressureSensor(INFLOW_PRESSURE_DIFF);
+  auto outflow_delta = ReadPressureSensor(INFLOW_PRESSURE_DIFF);
+  VolumetricFlow flow =
+      PressureDeltaToFlow(inflow_delta) - PressureDeltaToFlow(outflow_delta);
   tv_integrator_.AddFlow(Hal.now(), flow);
-  return {.pressure_cm_h2o = GetPatientPressure().cmH2O(),
+  return {.pressure_cm_h2o = patient_pressure.cmH2O(),
           .volume_ml = tv_integrator_.GetTV().ml(),
           .flow_ml_per_min = flow.ml_per_min()};
 }

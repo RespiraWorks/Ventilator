@@ -103,7 +103,7 @@ static void process_tx(const ControllerStatus &controller_status) {
     // it matches nanopb.
     uint16_t bytes_written =
         Hal.serialWrite(reinterpret_cast<char *>(tx_buffer) + tx_idx,
-                        stl::min(bytes_avail, tx_bytes_remaining));
+                        std::min(bytes_avail, tx_bytes_remaining));
     // TODO: How paranoid should we be about this underflowing?  Perhaps we
     // should reset the device if this or other invariants are violated?
     tx_bytes_remaining =

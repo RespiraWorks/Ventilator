@@ -31,6 +31,14 @@ limitations under the License.
 uint16_t checksum_fletcher16(const char *data, uint8_t count,
                              uint16_t state = 0);
 
+// The polynomial 0x741B8CD7 has Hamming distance 6 up to 16360 bits
+// and Hamming distance 4 up to 114663 bits.
+//[Philip Koopman, 32-Bit Cyclic Redundancy Codes for Internet Applications
+// 2002.] https://users.ece.cmu.edu/~koopman/crc/
+constexpr uint32_t CRC32_POLYNOMIAL = 0x741B8CD7;
+
+uint32_t soft_crc32(const char *data, uint32_t count);
+
 // Computes check bytes for a fletcher16 checksum.
 //
 // Given a packet p and checksum(p) == c, check_bytes_fletcher16(c) returns two

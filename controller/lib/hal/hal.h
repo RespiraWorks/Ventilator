@@ -441,6 +441,13 @@ inline uint16_t HalApi::serialBytesAvailableForWrite() {
   return Serial.availableForWrite();
 }
 
+// No implementation of debugRead/Write on Nucleo because the Arduino API
+// doesn't expose a separate debug serial port.
+inline uint16_t HalApi::debugWrite(const char *buf, uint16_t len) {
+  return len;
+}
+inline uint16_t HalApi::debugRead(char *buf, uint16_t len) { return 0; }
+
 inline void HalApi::watchdog_init() {
   // Our only user of the Arduino API is Nucleo, i.e. STM32 using Arduino APIs.
   // Unfortunately it does not expose the watchdog API, so we can't implement

@@ -20,8 +20,8 @@ Arduino Nano and the MPXV5004GP and MPXV7002DP pressure sensors.
 
 #include "hal.h"
 
-#include "math.h"
 #include "sensors.h"
+#include <cmath>
 
 //@TODO: Potential Caution: Density of air slightly varies over temperature and
 // altitude - need mechanism to adjust based on delivery? Constant involving
@@ -66,12 +66,6 @@ static constexpr int SENSOR_SAMPLES_FOR_READ = 2;
   }
   // Switch above covers all cases.
   __builtin_unreachable();
-}
-
-// Returns an area in meters squared.
-static float diameter_to_area_m2(Length diameter) {
-  return static_cast<float>(M_PI) / 4.0f * diameter.meters() *
-         diameter.meters();
 }
 
 Sensors::Sensors() {
@@ -123,22 +117,19 @@ Pressure Sensors::ReadPressureSensor(Sensor s) {
 }
 
 /*static*/ VolumetricFlow Sensors::PressureDeltaToFlow(Pressure delta) {
-  // TODO(jlebar): Make these constexpr once we have a C++ standard library
-  // PortArea must be larger than the ChokeArea [meters^2]
-  float venturiPortArea = diameter_to_area_m2(DEFAULT_VENTURI_PORT_DIAM);
-  float venturiChokeArea = diameter_to_area_m2(DEFAULT_VENTURI_CHOKE_DIAM);
-  //[meters^4]
-  float venturiAreaProduct = venturiPortArea * venturiChokeArea;
-  // Equivalent to 1/sqrt(A1^2 - A2^2) guaranteed never to have a negative
-  // radicand [1/meters^2]
-  float bernoulliAreaDivisor =
-      1.0f / sqrtf(venturiPortArea * venturiPortArea -
-                   venturiChokeArea * venturiChokeArea);
+  auto pow2 = [](float f) { return f * f; };
 
-  float sgn = copysignf(1.0f, delta.kPa());
-  return cubic_m_per_sec(sgn * sqrtf(2 / DENSITY_OF_AIR_KG_PER_CUBIC_METER) *
-                         venturiAreaProduct * bernoulliAreaDivisor *
-                         sqrtf(abs(delta.kPa()) * 1000.0f));
+  // Returns an area in meters squared.
+  auto diameter_to_area_m2 = [&](Length diameter) {
+    return static_cast<float>(M_PI) / 4.0f * pow2(diameter.meters());
+  };
+
+  float portArea = diameter_to_area_m2(DEFAULT_VENTURI_PORT_DIAM);
+  float chokeArea = diameter_to_area_m2(DEFAULT_VENTURI_CHOKE_DIAM);
+  return cubic_m_per_sec(
+      std::copysign(std::sqrt(std::abs(delta.kPa()) * 1000.0f), delta.kPa()) *
+      std::sqrt(2 / DENSITY_OF_AIR_KG_PER_CUBIC_METER) * portArea * chokeArea /
+      std::sqrt(pow2(portArea) - pow2(chokeArea)));
 }
 
 void TVIntegrator::AddFlow(Time now, VolumetricFlow flow) {

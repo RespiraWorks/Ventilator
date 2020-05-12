@@ -27,7 +27,6 @@ cd "$(dirname "$0")"
 pio test -e native
 
 # Make sure controller builds for target platform.
-pio run -e uno
 pio run -e stm32
 pio run -e nucleo
 

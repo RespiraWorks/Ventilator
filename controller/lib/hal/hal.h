@@ -40,10 +40,9 @@ limitations under the License.
 
 #ifdef TEST_MODE
 
-#if defined(ARDUINO_AVR_UNO) || defined(ARDUINO_NUCLEO_L452RE) ||              \
-    defined(BARE_STM32)
+#if defined(ARDUINO_NUCLEO_L452RE) || defined(BARE_STM32)
 #error                                                                         \
-    "TEST_MODE intended to be run only on native, but ARDUINO_AVR_UNO or ARDUINO_NUCLEO_L452RE or BARE_STM32 is defined"
+    "TEST_MODE intended to be run only on native, but ARDUINO_NUCLEO_L452RE or BARE_STM32 is defined"
 #endif
 
 #include "checksum.h"
@@ -56,10 +55,9 @@ limitations under the License.
 
 #else // !TEST_MODE
 
-#if !defined(ARDUINO_AVR_UNO) && !defined(ARDUINO_NUCLEO_L452RE) &&            \
-    !defined(BARE_STM32)
+#if !defined(ARDUINO_NUCLEO_L452RE) && !defined(BARE_STM32)
 #error                                                                         \
-    "When running without TEST_MODE, expecting ARDUINO_AVR_UNO or ARDUINO_NUCLEO_L452RE or BARE_STM32 to be defined"
+    "When running without TEST_MODE, expecting ARDUINO_NUCLEO_L452RE or BARE_STM32 to be defined"
 #endif
 
 #if defined(BARE_STM32)
@@ -78,10 +76,6 @@ limitations under the License.
 #else
 #include <Arduino.h>
 #endif // BARE_STM32
-
-#ifdef ARDUINO_AVR_UNO
-#include <avr/wdt.h>
-#endif
 
 // "HAL" has to be there because the respective Arduino symbols are macros,
 // e.g. A0 expands to 14, so we can't have a constant named A0.
@@ -337,7 +331,7 @@ private:
   std::vector<char> serialOutgoingData_;
 #endif
 
-#if defined(ARDUINO_AVR_UNO) || defined(ARDUINO_NUCLEO_L452RE)
+#if defined(ARDUINO_NUCLEO_L452RE)
   // Value of ::millis() at last call to watchdog_handler().  Used to detect
   // clock overflows.
   uint32_t last_millis_ = 0;
@@ -350,7 +344,7 @@ private:
 
 extern HalApi Hal;
 
-#if defined(ARDUINO_AVR_UNO) || defined(ARDUINO_NUCLEO_L452RE)
+#if defined(ARDUINO_NUCLEO_L452RE)
 
 inline void HalApi::init() {
 
@@ -448,26 +442,21 @@ inline uint16_t HalApi::serialBytesAvailableForWrite() {
 }
 
 inline void HalApi::watchdog_init() {
-#ifdef ARDUINO_AVR_UNO
-  // FIXME Does this pose potential issues for arduino code updates?
-
-  // The device will be reset if watchdog_handle is not called within roughly
-  // this time period.
+  // Our only user of the Arduino API is Nucleo, i.e. STM32 using Arduino APIs.
+  // Unfortunately it does not expose the watchdog API, so we can't implement
+  // this.  Which is OK, because Nucleo is not long for this world.
   //
-  // Options are: 15ms, 30ms, 60ms, 120ms, 250ms, 500ms, 1s, 2s, 4s, 8s.
-  //
-  // TODO: This value was not chosen carefully.
-  wdt_enable(WDTO_120MS);
-#endif
+  // wdt_enable(WDTO_120MS);
 }
 [[noreturn]] inline void HalApi::reset_device() {
-#ifdef ARDUINO_AVR_UNO
+  // Watchdog is not implementable on Nucleo, sadly.
+
   // Reset the device by setting a short watchdog timeout and then entering an
   // infinite loop.
-  wdt_enable(WDTO_15MS);
-  while (true) {
-  }
-#endif
+  //
+  // wdt_enable(WDTO_15MS);
+  // while (true) {
+  // }
 }
 inline void HalApi::watchdog_handler() {
   // Check for clock overflow.  We need to run this at least once every
@@ -480,9 +469,8 @@ inline void HalApi::watchdog_handler() {
   }
   last_millis_ = millis;
 
-#ifdef ARDUINO_AVR_UNO
-  wdt_reset();
-#endif
+  // Watchdog is not implementable on Nucleo.
+  // wdt_reset();
 }
 
 // Interrupt disable/enable not supported for Arduino HALs yet.

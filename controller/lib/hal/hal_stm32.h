@@ -40,6 +40,7 @@ the programmer's manual for the processor available here:
 // The values here are the offsets into the interrupt table.
 // These can be found in the NVIC chapter (chapter 12) of the
 // processor reference manual
+#define INT_VEC_UART2 0x0D8
 #define INT_VEC_UART3 0x0DC
 #define INT_VEC_TIMER6 0x118
 

@@ -74,11 +74,11 @@ limitations under the License.
 // and graphed by e.g. the Arduino IDE (tools -> serial plotter).
 static void DEV_MODE_comms_handler(const ControllerStatus &controller_status,
                                    GuiStatus *gui_status) {
-  gui_status.desired_params.mode = VentMode_PRESSURE_CONTROL;
-  gui_status.desired_params.breaths_per_min = 12;
-  gui_status.desired_params.peep_cm_h2o = 5;
-  gui_status.desired_params.pip_cm_h2o = 15;
-  gui_status.desired_params.inspiratory_expiratory_ratio = 0.66f;
+  gui_status->desired_params.mode = VentMode_PRESSURE_CONTROL;
+  gui_status->desired_params.breaths_per_min = 12;
+  gui_status->desired_params.peep_cm_h2o = 5;
+  gui_status->desired_params.pip_cm_h2o = 15;
+  gui_status->desired_params.inspiratory_expiratory_ratio = 0.66f;
 
   static Time last_sent = millisSinceStartup(0);
   Time now = Hal.now();

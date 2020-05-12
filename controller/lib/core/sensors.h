@@ -42,17 +42,7 @@ private:
 // integrated from flow.
 class Sensors {
 public:
-  Sensors() {}
-
-  // Calibrates the sensors. Must call this before calling any other methods.
-  void Init();
-
-  // Gets gets the current pressure at the patient.
-  Pressure GetPatientPressure();
-  // Gets the volumetric inflow (i.e. rate of air flowing into the patient).
-  VolumetricFlow GetVolumetricInflow();
-  // Gets the volumetric outflow (i.e. rate of air flowing out of the patient).
-  VolumetricFlow GetVolumetricOutflow();
+  Sensors();
 
   // get the sensor readings (patient pressure, volumetric flow and tidal
   // volume) from the sensors

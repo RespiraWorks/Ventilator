@@ -25,6 +25,8 @@ the programmer's manual for the processor available here:
 
 #if defined(BARE_STM32)
 
+#include <stdarg.h>
+#include <stdio.h>
 #include "hal_stm32.h"
 #include "checksum.h"
 #include "circular_buffer.h"
@@ -587,12 +589,19 @@ public:
 };
 
 static UART rpUART(UART3_BASE);
+static UART dbgUART(UART2_BASE);
 
 // The UART that talks to the rPi uses the following pins:
 //    PB10 - TX
 //    PB11 - RX
 //    PB13 - RTS
 //    PB14 - CTS
+//
+// The Nucleo board also includes a secondary serial port that's
+// indirectly connected to it's USB connector.  This port is
+// connected to the STM32 UART2 at pins:
+//    PA2 - TX
+//    PA3 - RX
 //
 // Please refer to the PCB schematic as the ultimate source of which
 // pin is used for which function.  A less definitive, but perhaps
@@ -604,7 +613,11 @@ static UART rpUART(UART3_BASE);
 static void InitUARTs() {
   // NOTE - The UART functionality hasn't been tested due to lack of hardware!
   //        Need to do that as soon as the boards are available.
+  EnableClock(UART2_BASE);
   EnableClock(UART3_BASE);
+
+  GPIO_PinAltFunc(GPIO_A_BASE,  2, 7);
+  GPIO_PinAltFunc(GPIO_A_BASE,  3, 7);
 
   GPIO_PinAltFunc(GPIO_B_BASE, 10, 7);
   GPIO_PinAltFunc(GPIO_B_BASE, 11, 7);
@@ -612,10 +625,13 @@ static void InitUARTs() {
   GPIO_PinAltFunc(GPIO_B_BASE, 14, 7);
 
   rpUART.Init(115200);
+  dbgUART.Init(115200);
 
+  EnableInterrupt(INT_VEC_UART2, 3);
   EnableInterrupt(INT_VEC_UART3, 3);
 }
 
+static void UART2_ISR() { dbgUART.ISR(); }
 static void UART3_ISR() { rpUART.ISR(); }
 
 uint16_t HalApi::serialRead(char *buf, uint16_t len) {
@@ -629,6 +645,14 @@ uint16_t HalApi::serialWrite(const char *buf, uint16_t len) {
 }
 
 uint16_t HalApi::serialBytesAvailableForWrite() { return rpUART.TxFree(); }
+
+uint16_t HalApi::debugWrite(const char *buf, uint16_t len){
+  return dbgUART.write(buf, len);
+}
+
+inline uint16_t HalApi::debugRead(char *buf, uint16_t len){
+  return dbgUART.read(buf, len);
+}
 
 /******************************************************************
  * Watchdog timer (see chapter 32 of reference manual).
@@ -735,7 +759,7 @@ static void EnableClock(void *ptr) {
       {FLASH_BASE, 0, 8},  {GPIO_A_BASE, 1, 0}, {GPIO_B_BASE, 1, 1},
       {GPIO_C_BASE, 1, 2}, {GPIO_D_BASE, 1, 3}, {GPIO_E_BASE, 1, 4},
       {GPIO_H_BASE, 1, 7}, {ADC_BASE, 1, 13},   {TIMER2_BASE, 4, 0},
-      {TIMER6_BASE, 4, 4}, {UART3_BASE, 4, 18},
+      {TIMER6_BASE, 4, 4}, {UART2_BASE, 4, 17}, {UART3_BASE, 4, 18},
 
       // The following entries are probably correct, but have
       // not been tested yet.  When adding support for one of
@@ -748,7 +772,6 @@ static void EnableClock(void *ptr) {
       //      {TIMER7_BASE, 4, 7},
       //      {SPI2_BASE, 4, 14},
       //      {SPI3_BASE, 4, 15},
-      //      {UART2_BASE, 4, 17},
       //      {UART4_BASE, 4, 19},
       //      {I2C1_BASE, 4, 21},
       //      {I2C2_BASE, 4, 22},
@@ -883,7 +906,7 @@ __attribute__((section(".isr_vector"))) void (*const vectors[101])() = {
     BadISR,        //  51 - 0x0CC
     BadISR,        //  52 - 0x0D0
     BadISR,        //  53 - 0x0D4
-    BadISR,        //  54 - 0x0D8
+    UART2_ISR,     //  54 - 0x0D8
     UART3_ISR,     //  55 - 0x0DC
     BadISR,        //  56 - 0x0E0
     BadISR,        //  57 - 0x0E4

@@ -13,17 +13,17 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 The reason that we reimplemented the standard sprintf function is that
-the normal sprintf may dynamically allocate memory which we want to 
+the normal sprintf may dynamically allocate memory which we want to
 avoid on the controller.  This simple reimplementation never does that
 so is safer to use for our purposes
 
 Written by Steve Glow
 
 
-TODO - we should either add a bunch of unit tests for this module or #ifdef it out
-       of release builds.  There's a lot of code here and it hasn't undergone the 
+TODO - we should either add a bunch of unit tests for this module or #ifdef it
+out of release builds.  There's a lot of code here and it hasn't undergone the
        level of scrutiny that our other production code has.
-       This is really intended to be part of a debugging interface that wouldn't 
+       This is really intended to be part of a debugging interface that wouldn't
        be used in the normal operation of the ventilator.
 
 */

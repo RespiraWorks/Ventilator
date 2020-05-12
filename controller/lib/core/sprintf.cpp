@@ -12,13 +12,21 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 
-sprintf implementation which doesn't allocate any memory.
-Written by Steve Glow
-*/
+The reason that we reimplemented the standard sprintf function is that
+the normal sprintf may dynamically allocate memory which we want to 
+avoid on the controller.  This simple reimplementation never does that
+so is safer to use for our purposes
 
-// This doesn't compile on the Arduino but that platform is going away soon so I
-// don't care
-#if !defined(ARDUINO_AVR_UNO)
+Written by Steve Glow
+
+
+TODO - we should either add a bunch of unit tests for this module or #ifdef it out
+       of release builds.  There's a lot of code here and it hasn't undergone the 
+       level of scrutiny that our other production code has.
+       This is really intended to be part of a debugging interface that wouldn't 
+       be used in the normal operation of the ventilator.
+
+*/
 
 #include <math.h>
 #include <stdarg.h>
@@ -611,4 +619,3 @@ static int FormatStr(FieldInfo *info, char *str, const char *src, int max) {
 
   return info->width;
 }
-#endif

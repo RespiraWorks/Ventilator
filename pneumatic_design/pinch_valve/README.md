@@ -1,4 +1,4 @@
-#Stepper proportional pinch valve
+# Stepper proportional pinch valve
 
 ![Rendering](render_v5.png)
 

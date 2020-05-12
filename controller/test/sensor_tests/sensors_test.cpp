@@ -44,81 +44,58 @@ static const float COUNTS_PER_VOLT = 1024.0f / 5.0f;
 
 /*
  * @brief This method models the pressure to voltage transfer function of the
- * MPXV5004 series sensors. Caller must ensure the output buffer has the
- * correct minimum length.
- *
- * @param *pressureIn pointer to input pressure waveform to process
- * @param *voltageOut pointer to the output voltage buffer
- * @param count is the length of the input buffer
+ * MPXV5004 series sensors.
  */
-static void MPXV5004_TransferFn(const float *pressureIn, float *voltageOut,
-                                int count) {
-  assert(pressureIn != nullptr && voltageOut != nullptr);
-  for (int i = 0; i < count; i++) {
-    voltageOut[i] = 5 * (0.2f * pressureIn[i] + 0.2f);
-  }
+static Voltage MPXV5004_PressureToVoltage(Pressure pressure) {
+  return volts(5 * (0.2f * pressure.kPa() + 0.2f));
 }
 
 // Simple helper function that takes in a voltage and returns the
 // equivalent ADC counts that represent it
-static void test_setAnalogPinToVolts(AnalogPin pin, float volts) {
-  Hal.test_setAnalogPin(pin, static_cast<int>(roundf(volts * COUNTS_PER_VOLT)));
+static void test_setAnalogPinToVolts(AnalogPin pin, Voltage v) {
+  Hal.test_setAnalogPin(pin,
+                        static_cast<int>(roundf(v.volts() * COUNTS_PER_VOLT)));
 }
 
 TEST(SensorTests, FullScaleReading) {
-  Sensors sensors;
-
   // These pressure waveforms start at 0 kPa to simulate the system being in the
-  // proper calibration state then they go over the sensor full ranges. Each
-  // value is repeated twice, so that the test neatly corresponds to the
-  // 2 default average sample counts that the sensor module defaults to.
-  // Values are in kPa.
-  float pressures[] = {0.0f, 0.0f, 0.5f, 0.5f, 1.0f, 1.0f, 1.5f, 1.5f,  2.0f,
-                       2.0f, 2.5f, 2.5f, 3.0f, 3.0f, 3.5f, 3.5f, 3.92f, 3.92f};
-  const int NUM_ELEMENTS = sizeof(pressures) / sizeof(pressures[0]);
-
-  // Convert these pressure waveforms into the voltage equivalents using the
-  // appropriate sensor transfer functions
-  float sensorVoltages[NUM_ELEMENTS]; //[V]
-  MPXV5004_TransferFn(pressures, sensorVoltages, NUM_ELEMENTS);
+  // proper calibration state then they go over the sensor full ranges.
+  std::vector<Pressure> pressures = {kPa(0.0f), kPa(0.5f), kPa(1.0f),
+                                     kPa(1.5f), kPa(2.0f), kPa(2.5f),
+                                     kPa(3.0f), kPa(3.5f), kPa(3.92f)};
 
   // Will pad the rest of the simulated analog signals with ambient pressure
   // readings (0 kPa) voltage equivalents
-  float ambientPressure = 0;    //[kPa]
-  float sensorVoltage_0kPa = 0; //[V]
-  MPXV5004_TransferFn(&ambientPressure, &sensorVoltage_0kPa, 1);
+  Voltage voltage_at_0kPa = MPXV5004_PressureToVoltage(kPa(0)); //[V]
 
   // First set the simulated analog signals to an ambient 0 kPa corresponding
   // voltage during calibration
-  test_setAnalogPinToVolts(AnalogPin::PATIENT_PRESSURE, sensorVoltage_0kPa);
-  test_setAnalogPinToVolts(AnalogPin::INFLOW_PRESSURE_DIFF, sensorVoltage_0kPa);
-  test_setAnalogPinToVolts(AnalogPin::OUTFLOW_PRESSURE_DIFF,
-                           sensorVoltage_0kPa);
+  test_setAnalogPinToVolts(AnalogPin::PATIENT_PRESSURE, voltage_at_0kPa);
+  test_setAnalogPinToVolts(AnalogPin::INFLOW_PRESSURE_DIFF, voltage_at_0kPa);
+  test_setAnalogPinToVolts(AnalogPin::OUTFLOW_PRESSURE_DIFF, voltage_at_0kPa);
 
-  sensors.Init(); // the sensors are also calibrated
+  Sensors sensors;
 
   // Now to compare the pressure readings the sensor module is calculating
   // versus what the original pressure waveform was
-  for (int i = 0; i < NUM_ELEMENTS; i += 2) {
-    SCOPED_TRACE("iteration " + std::to_string(i));
-    test_setAnalogPinToVolts(AnalogPin::PATIENT_PRESSURE, sensorVoltages[i]);
+  for (auto p : pressures) {
+    SCOPED_TRACE("Pressure " + std::to_string(p.kPa()));
+    test_setAnalogPinToVolts(AnalogPin::PATIENT_PRESSURE,
+                             MPXV5004_PressureToVoltage(p));
     test_setAnalogPinToVolts(AnalogPin::INFLOW_PRESSURE_DIFF,
-                             sensorVoltages[i]);
+                             MPXV5004_PressureToVoltage(kPa(3.0)));
     test_setAnalogPinToVolts(AnalogPin::OUTFLOW_PRESSURE_DIFF,
-                             sensorVoltages[i]);
+                             MPXV5004_PressureToVoltage(kPa(1.0)));
 
-    float pressurePatient = sensors.GetPatientPressure().kPa();
-    EXPECT_NEAR(pressurePatient, pressures[i], COMPARISON_TOLERANCE);
+    auto readings = sensors.GetSensorReadings();
+    float pressurePatient = cmH2O(readings.pressure_cm_h2o).kPa();
+    EXPECT_NEAR(pressurePatient, p.kPa(), COMPARISON_TOLERANCE);
 
-    float inflow = sensors.GetVolumetricInflow().cubic_m_per_sec();
-    float outflow = sensors.GetVolumetricOutflow().cubic_m_per_sec();
     // Inhalation and exhalation should match because they are fed with the same
     // pressure waveform
-    EXPECT_EQ(inflow, outflow);
-    EXPECT_NEAR(
-        inflow,
-        Sensors::PressureDeltaToFlow(kPa(pressures[i])).cubic_m_per_sec(),
-        COMPARISON_TOLERANCE);
+    EXPECT_NEAR(Sensors::PressureDeltaToFlow(kPa(2.0)).cubic_m_per_sec(),
+                ml_per_min(readings.flow_ml_per_min).cubic_m_per_sec(),
+                COMPARISON_TOLERANCE);
   }
 }
 
@@ -127,39 +104,16 @@ TEST(SensorTests, FullScaleReading) {
 // DEFAULT_VENTURI_CHOKE_DIAM are changed from this, the tests will fail unless
 // you update the expected values accordingly.
 TEST(SensorTests, TestPositiveVolumetricFlowCalculation) {
-  float volumFlow = Sensors::PressureDeltaToFlow(kPa(1.0f)).cubic_m_per_sec();
-  // 1 kPa differential pressure should result in 9.52e-4 [m^3/s] of Q
-  EXPECT_NEAR(volumFlow, 9.52e-4f, COMPARISON_TOLERANCE_FLOW);
-}
-
-TEST(SensorTests, TestNegativeVolumetricFlowCalculation) {
-  float volumFlow = Sensors::PressureDeltaToFlow(kPa(-1.0f)).cubic_m_per_sec();
-  // -1 kPa differential pressure should result in -9.52e-4 [m^3/s] of Q
-  EXPECT_NEAR(volumFlow, -9.52e-4f, COMPARISON_TOLERANCE_FLOW);
-}
-
-TEST(SensorTests, TestZeroVolumetricFlowCalculation) {
-  float volumFlow = Sensors::PressureDeltaToFlow(kPa(0.0f)).cubic_m_per_sec();
-  // 0 kPa differential pressure should result in 0 [m^3/s] of Q
-  EXPECT_NEAR(volumFlow, 0.0f, COMPARISON_TOLERANCE_FLOW);
-}
-
-TEST(SensorTests, TestNearZeroVolumetricFlowCalculation) {
-  float volumFlow =
-      Sensors::PressureDeltaToFlow(kPa(1.0e-7f)).cubic_m_per_sec();
-  // 1e-7 kPa differential pressure should result in 3.07e-7 [m^3/s] of Q
-  EXPECT_NEAR(volumFlow, 3.07e-7f, COMPARISON_TOLERANCE_FLOW);
-}
-
-TEST(SensorTests, TestLargeVolumetricFlowCalculation) {
-  float volumFlow = Sensors::PressureDeltaToFlow(kPa(100.0f)).cubic_m_per_sec();
-  // 100 kPa differential pressure should result in 9.72e-3 [m^3/s] of Q
-  EXPECT_NEAR(volumFlow, 9.72e-3f, COMPARISON_TOLERANCE_FLOW);
-}
-
-TEST(SensorTests, TestSmallVolumetricFlowCalculation) {
-  float volumFlow =
-      Sensors::PressureDeltaToFlow(kPa(-100.0f)).cubic_m_per_sec();
-  // -100 kPa differential pressure should result in -9.72e-3 [m^3/s] of Q
-  EXPECT_NEAR(volumFlow, -9.72e-3f, COMPARISON_TOLERANCE_FLOW);
+  EXPECT_NEAR(Sensors::PressureDeltaToFlow(kPa(1.0f)).cubic_m_per_sec(),
+              9.52e-4f, COMPARISON_TOLERANCE_FLOW);
+  EXPECT_NEAR(Sensors::PressureDeltaToFlow(kPa(-1.0f)).cubic_m_per_sec(),
+              -9.52e-4f, COMPARISON_TOLERANCE_FLOW);
+  EXPECT_NEAR(Sensors::PressureDeltaToFlow(kPa(0.0f)).cubic_m_per_sec(), 0.0f,
+              COMPARISON_TOLERANCE_FLOW);
+  EXPECT_NEAR(Sensors::PressureDeltaToFlow(kPa(1.0e-7f)).cubic_m_per_sec(),
+              3.07e-7f, COMPARISON_TOLERANCE_FLOW);
+  EXPECT_NEAR(Sensors::PressureDeltaToFlow(kPa(100.0f)).cubic_m_per_sec(),
+              9.72e-3f, COMPARISON_TOLERANCE_FLOW);
+  EXPECT_NEAR(Sensors::PressureDeltaToFlow(kPa(-100.0f)).cubic_m_per_sec(),
+              -9.72e-3f, COMPARISON_TOLERANCE_FLOW);
 }

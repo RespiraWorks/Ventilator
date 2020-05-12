@@ -34,6 +34,7 @@ limitations under the License.
 //   - Pressure (e.g. kPa)
 //   - Volumetric flow (e.g. m^3/s)
 //   - Volume (e.g. m^3)
+//   - Voltage (volts)
 //   - Elapsed time since startup (ms)
 //   - Duration, aka time interval (ms)
 //
@@ -58,6 +59,7 @@ limitations under the License.
 //   VolumetricFlow   ml_per_min(float)
 //   Volume           cubic_m(float)
 //   Volume           ml(float)
+//   Voltage          volts(float)
 //   Duration         seconds(float)
 //   Duration         milliseconds(int64_t)
 //   Time             millisSinceStartup(int64_t)
@@ -229,6 +231,23 @@ private:
 
 constexpr Volume cubic_m(float m3) { return Volume(m3); }
 constexpr Volume ml(float ml) { return Volume(ml / (1000.0f * 1000.0f)); }
+
+// Represents voltage.
+//
+// Precision: float.
+//
+// Units: Volts
+class Voltage : public units_detail::ArithScalar<Voltage, float> {
+public:
+  [[nodiscard]] constexpr float volts() const { return val_; }
+
+private:
+  constexpr friend Voltage volts(float v);
+
+  using units_detail::ArithScalar<Voltage, float>::ArithScalar;
+};
+
+constexpr Voltage volts(float v) { return Voltage(v); }
 
 // Time and Duration classes.
 //

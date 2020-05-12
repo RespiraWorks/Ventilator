@@ -19,8 +19,24 @@ Latest progress on 3d-printed part design is found in
 
 ## BOM
 
-**TODO:** list parts that need purchasing here
+### Purchasing source abbreviations
+
+* **C** = McMaster-Carr
+
+| RefDes | Quantity | Manufacturer  | Part #              | Price($)     | Sources         | Notes |
+| ------ |---------:| ------------- | ------------------- | ------------:|-----------------| ----- |
+| 1      |        1 | McMaster-Carr | 92095A218           |  7.64 / 25   | [C][1mcmc]      | M5x30mm button head. Axle for bearing. |
+| 2      |        3 | McMaster-Carr | 91294A128           |  4.82 / 100  | [C][2mcmc]      | M3x8mm flat head. Attaches frame to stepper body |
+| 3      |        1 | McMaster-Carr | 91390A117           |  4.75 / 100  | [C][3mcmc]      | M5x5mm set screw. Attaches rotor to stepper |
+
+[1mcmc]:   https://www.mcmaster.com/catalog/92095A218
+[2mcmc]:   https://www.mcmaster.com/catalog/91294A128
+[3mcmc]:   https://www.mcmaster.com/catalog/91390A117
 
 ## Assembly
 
 **TODO:** add or link to instructions here
+
+Assembled it should look something like this (all screws are visible):
+
+![Assembled](assembled.png)

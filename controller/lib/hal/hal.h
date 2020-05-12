@@ -599,6 +599,8 @@ inline uint32_t HalApi::crc32(uint8_t *data, uint32_t length) {
   return soft_crc32(reinterpret_cast<char *>(data), length);
 }
 
+// NOTE - these functions are for debugging/testing the controller only.
+// They aren't necessary or used when running in test mode
 inline uint16_t HalApi::debugWrite(const char *buf, uint16_t len) {
   return len;
 }

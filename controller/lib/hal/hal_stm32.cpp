@@ -598,7 +598,7 @@ static UART dbgUART(UART2_BASE);
 //    PB14 - CTS
 //
 // The Nucleo board also includes a secondary serial port that's
-// indirectly connected to it's USB connector.  This port is
+// indirectly connected to its USB connector.  This port is
 // connected to the STM32 UART2 at pins:
 //    PA2 - TX
 //    PA3 - RX

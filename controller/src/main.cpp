@@ -53,15 +53,6 @@ limitations under the License.
 #include "network_protocol.pb.h"
 #include "sensors.h"
 
-// Current controller status.  Updated when we receive data from the GUI, when
-// sensors read data, etc.
-static ControllerStatus controller_status = ControllerStatus_init_zero;
-
-// Last-received status from the GUI.
-static GuiStatus gui_status = GuiStatus_init_zero;
-
-static Controller controller;
-
 // NO_GUI_DEV_MODE is a hacky development mode until we have the GUI working.
 //
 // Uncomment this line to get started:
@@ -80,7 +71,8 @@ static Controller controller;
 //
 // "Sends" data to the "GUI" via a simple serial protocol.  This can be parsed
 // and graphed by e.g. the Arduino IDE (tools -> serial plotter).
-static void DEV_MODE_comms_handler() {
+static void DEV_MODE_comms_handler(const ControllerStatus &controller_status,
+                                   GuiStatus *gui_status) {
   gui_status.desired_params.mode = VentMode_PRESSURE_CONTROL;
   gui_status.desired_params.breaths_per_min = 12;
   gui_status.desired_params.peep_cm_h2o = 5;
@@ -106,16 +98,25 @@ static void DEV_MODE_comms_handler() {
 #endif
 
 static void controller_loop() {
+  Sensors sensors;
+  Controller controller;
+
+  // Current controller status.  Updated when we receive data from the GUI, when
+  // sensors read data, etc.
+  ControllerStatus controller_status = ControllerStatus_init_zero;
+  // Last-received status from the GUI.
+  GuiStatus gui_status = GuiStatus_init_zero;
+
   while (true) {
     controller_status.uptime_ms = Hal.now().millisSinceStartup();
 
 #ifndef NO_GUI_DEV_MODE
     comms_handler(controller_status, &gui_status);
 #else
-    DEV_MODE_comms_handler();
+    DEV_MODE_comms_handler(controller_status, &gui_status);
 #endif
 
-    controller_status.sensor_readings = get_sensor_readings();
+    controller_status.sensor_readings = sensors.GetSensorReadings();
 
     controller_status.active_params = gui_status.desired_params;
 
@@ -139,7 +140,6 @@ void setup() {
 
   comms_init();
   alarm_init();
-  sensors_init();
 
   controller_loop();
 }

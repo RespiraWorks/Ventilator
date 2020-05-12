@@ -207,14 +207,6 @@ int RWvsnprintf(char *str, size_t sz, const char *format, va_list ap) {
   return ret;
 }
 
-int RWsprintf(char *str, const char *format, ...) {
-  va_list ap;
-  va_start(ap, format);
-  int ret = RWvsnprintf(str, 0x7fffffff, format, ap);
-  va_end(ap);
-  return ret;
-}
-
 int RWsnprintf(char *str, size_t size, const char *format, ...) {
   va_list ap;
   va_start(ap, format);

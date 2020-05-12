@@ -1,13 +1,13 @@
 #!/usr/bin/python3 -u
 
-#use socat -d -d pty,raw,echo=0 pty,raw,echo=0
-#you will get something like this:
+# use socat -d -d pty,raw,echo=0 pty,raw,echo=0
+# you will get something like this:
 
-#2020/05/02 22:27:09 socat[23367] N PTY is /dev/pts/1
-#2020/05/02 22:27:09 socat[23367] N PTY is /dev/pts/6
-#2020/05/02 22:27:09 socat[23367] N starting data transfer loop with FDs [5,5] and [7,7]
+# 2020/05/02 22:27:09 socat[23367] N PTY is /dev/pts/1
+# 2020/05/02 22:27:09 socat[23367] N PTY is /dev/pts/6
+# 2020/05/02 22:27:09 socat[23367] N starting data transfer loop with FDs [5,5] and [7,7]
 
-#note the /dev/pts/*,
+# note the /dev/pts/*,
 # run mock-cycle-controller.py /dev/pts/1
 # and specify the other one for ventillator GUI
 
@@ -19,8 +19,13 @@ import argparse
 import math
 
 parser = argparse.ArgumentParser()
-parser.add_argument('serialport', metavar='SERIAL', type=str, help='Serial port')
-parser.add_argument('interframe_interval_ms', metavar='INTERVAL', type=int, help='Milliseconds between frames')
+parser.add_argument("serialport", metavar="SERIAL", type=str, help="Serial port")
+parser.add_argument(
+    "interframe_interval_ms",
+    metavar="INTERVAL",
+    type=int,
+    help="Milliseconds between frames",
+)
 args = parser.parse_args()
 
 p = serial.Serial(args.serialport, 115200)
@@ -53,10 +58,10 @@ stat.active_params.alarm_hi_breaths_per_min = 10
 
 i = 0
 while True:
-	stat.sensor_readings.pressure_cm_h2o = math.sin(i)
-	p.write(stat.SerializeToString())
-	p.flush()
-	while p.in_waiting > 0:
-		p.read()
-	time.sleep(0.001 * args.interframe_interval_ms)
-	i += 0.01
+    stat.sensor_readings.pressure_cm_h2o = math.sin(i)
+    p.write(stat.SerializeToString())
+    p.flush()
+    while p.in_waiting > 0:
+        p.read()
+    time.sleep(0.001 * args.interframe_interval_ms)
+    i += 0.01

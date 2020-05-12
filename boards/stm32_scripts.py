@@ -8,11 +8,6 @@
 # hardware floating point, so the software floating point libraries aren't
 # needed.
 #
-Import( "env" )
+Import("env")
 
-env.Append(
-  LINKFLAGS=[
-     "-mfpu=fpv4-sp-d16",
-     "-mfloat-abi=hard"
-  ]
-)
+env.Append(LINKFLAGS=["-mfpu=fpv4-sp-d16", "-mfloat-abi=hard"])

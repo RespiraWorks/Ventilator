@@ -5,8 +5,8 @@ import sys
 
 # Sanitizers have to be enabled both in CCFLAGS and LINKFLAGS.
 sanitizers = [
-      "-fsanitize=undefined",
-      "-fsanitize=address",
+    "-fsanitize=undefined",
+    "-fsanitize=address",
 ]
 
 # TODO: Add -fsanitize=memory when supported.
@@ -19,4 +19,3 @@ sanitizers = [
 
 env.Append(CCFLAGS=sanitizers)
 env.Append(LINKFLAGS=sanitizers)
-

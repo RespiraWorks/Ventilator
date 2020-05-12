@@ -24,6 +24,11 @@ the programmer's manual for the processor available here:
 sprintf implementation which doesn't allocate any memory.
 Written by Steve Glow
 */
+
+// This doesn't compile on the Arduino but that platform is going away soon so I
+// don't care
+#if !defined(ARDUINO_AVR_UNO)
+
 #include <math.h>
 #include <stdarg.h>
 #include <stddef.h>
@@ -63,7 +68,8 @@ static int FormatStr(FieldInfo *info, char *str, const char *src, int max);
 
 // This returns the number of characters that WOULD have been written if the
 // string was long enough.
-int RWvsnprintf(char *str, size_t size, const char *format, va_list ap) {
+int RWvsnprintf(char *str, size_t sz, const char *format, va_list ap) {
+  int size = static_cast<int>(sz);
   int zeroSize = !size;
   if (!zeroSize)
     size--;
@@ -112,7 +118,7 @@ int RWvsnprintf(char *str, size_t size, const char *format, va_list ap) {
     if (*format)
       format++;
 
-    size_t len = 0;
+    int len = 0;
     switch (finfo.spec) {
     case 'u':
     case 'x':
@@ -139,14 +145,12 @@ int RWvsnprintf(char *str, size_t size, const char *format, va_list ap) {
     {
       void *ptr = va_arg(ap, void *);
       finfo.flags |= FLG_UNSIGNED;
-      len = FormatInt(&finfo, (uint32_t)ptr, str, size);
+      len = FormatInt(&finfo, reinterpret_cast<uintptr_t>(ptr), str, size);
       break;
     }
 
     case 'f':
-    case 'F': // float  - Note that I don't pass floats, I pass ints disguised
-              // as floats
-    {
+    case 'F': {
       float val = static_cast<float>(va_arg(ap, double));
       len = FormatFloat(&finfo, val, str, size);
       break;
@@ -380,7 +384,7 @@ static int FormatInt(FieldInfo *info, long val, char *str, int max) {
     signChar = ' ';
 
   // See how many padding characters I need to add
-  int ct, L = strlen(bptr);
+  int ct, L = static_cast<int>(strlen(bptr));
   int ret = 0;
 
   int pct = info->width - L;
@@ -451,7 +455,7 @@ static int FormatFloat(FieldInfo *info, float val, char *str, int max) {
   if (bad) {
     for (int i = 0; i < max && bad[i]; i++)
       *str++ = bad[i];
-    return strlen(bad);
+    return static_cast<int>(strlen(bad));
   }
 
   // If precision wasn't specified, default to 6
@@ -511,7 +515,7 @@ static int FormatFloat(FieldInfo *info, float val, char *str, int max) {
     *--lptr = ' ';
 
   // Copy all we can into the output string
-  int len = strlen(lptr);
+  int len = static_cast<int>(strlen(lptr));
   int ct = (len < max) ? len : max;
   memcpy(str, lptr, ct);
   str += ct;
@@ -577,7 +581,7 @@ static int FormatExp(FieldInfo *info, float val, char *str, int max) {
 }
 
 static int FormatBad(FieldInfo *info, const char *fmt, char *str, int max) {
-  int len = fmt - info->start;
+  int len = static_cast<int>(fmt - info->start);
   int ct = (len > max) ? max : len;
 
   for (int i = 0; i < ct; i++)
@@ -624,3 +628,4 @@ static int FormatStr(FieldInfo *info, char *str, const char *src, int max) {
 
   return info->width;
 }
+#endif

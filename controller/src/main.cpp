@@ -49,6 +49,7 @@ limitations under the License.
 #include "alarm.h"
 #include "comms.h"
 #include "controller.h"
+#include "debug.h"
 #include "hal.h"
 #include "network_protocol.pb.h"
 #include "sensors.h"
@@ -77,23 +78,20 @@ static void DEV_MODE_comms_handler(const ControllerStatus &controller_status,
   gui_status.desired_params.breaths_per_min = 12;
   gui_status.desired_params.peep_cm_h2o = 5;
   gui_status.desired_params.pip_cm_h2o = 15;
-  gui_status.desired_params.inspiratory_expiratory_ratio = 0.66;
+  gui_status.desired_params.inspiratory_expiratory_ratio = 0.66f;
 
-  static Time last_sent = Hal.now();
+  static Time last_sent = millisSinceStartup(0);
   Time now = Hal.now();
-  if (now - last_sent < seconds(0.1)) {
+  if (now - last_sent < seconds(0.1f)) {
     return;
   }
   last_sent = now;
-  Serial.print(controller_status.fan_setpoint_cm_h2o);
-  Serial.print(',');
-  Serial.print(controller_status.sensor_readings.pressure_cm_h2o);
-  Serial.print(',');
-  Serial.print(controller_status.sensor_readings.flow_ml_per_min / 1000.0f);
-  Serial.print(',');
-  // Report volume in cL because because that fits on the graph better.
-  Serial.print(controller_status.sensor_readings.volume_ml / 10.f);
-  Serial.println();
+
+  debugPrint("%.2f, %.2f, %.2f, %.2f\r\n",
+             controller_status.fan_setpoint_cm_h2o,
+             controller_status.sensor_readings.pressure_cm_h2o,
+             controller_status.sensor_readings.flow_ml_per_min / 1000.0f,
+             controller_status.sensor_readings.volume_ml / 10.f);
 }
 #endif
 
@@ -130,6 +128,8 @@ static void controller_loop() {
     controller_status.fan_power = actuators_state.fan_power;
 
     controller_status.fan_setpoint_cm_h2o = actuators_state.fan_setpoint_cm_h2o;
+
+    Hal.watchdog_handler();
   }
 }
 

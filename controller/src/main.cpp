@@ -87,11 +87,11 @@ static void DEV_MODE_comms_handler(const ControllerStatus &controller_status,
   }
   last_sent = now;
 
-  debugPrint( "%.2f, %.2f, %.2f, %.2f\r\n", 
-      controller_status.fan_setpoint_cm_h2o, 
-      controller_status.sensor_readings.pressure_cm_h2o, 
-      controller_status.sensor_readings.flow_ml_per_min / 1000.0f,
-      controller_status.sensor_readings.volume_ml / 10.f );
+  debugPrint("%.2f, %.2f, %.2f, %.2f\r\n",
+             controller_status.fan_setpoint_cm_h2o,
+             controller_status.sensor_readings.pressure_cm_h2o,
+             controller_status.sensor_readings.flow_ml_per_min / 1000.0f,
+             controller_status.sensor_readings.volume_ml / 10.f);
 }
 #endif
 

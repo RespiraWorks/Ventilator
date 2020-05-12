@@ -69,7 +69,6 @@ int main() { setup(); }
 // the PLL so we can run at full speed (80MHz) rather then the
 // default speed of 4MHz.
 extern "C" void _init() {
-
   // Enable the FPU.  This allows floating point to be used without
   // generating a hard fault.
   // The system control registers are documented in the programmers
@@ -135,7 +134,6 @@ extern "C" void _init() {
  * One time init of HAL.
  */
 void HalApi::init() {
-
   // Init various components needed by the system.
   InitGPIO();
   InitSysTimer();
@@ -151,7 +149,6 @@ void HalApi::init() {
 
 // Reset the processor
 [[noreturn]] void HalApi::reset_device() {
-
   // Note that the system control registers are a standard ARM peripherial
   // they aren't documented in the normal STM32 reference manual, rather
   // they're in the processor programming manual.
@@ -222,15 +219,14 @@ static void InitGPIO() {
 
 // Set or clear the specified digital output
 void HalApi::digitalWrite(BinaryPin pin, VoltageLevel value) {
-  GPIO_Regs *base;
-  int bit;
-
-  switch (pin) {
-  case BinaryPin::SOLENOID:
-    base = GPIO_A_BASE;
-    bit = 11;
-    break;
-  }
+  auto [base, bit] = [&]() -> std::pair<GPIO_Regs *, int> {
+    switch (pin) {
+    case BinaryPin::SOLENOID:
+      return {GPIO_A_BASE, 11};
+    }
+    // All cases covered above (and GCC checks this).
+    __builtin_unreachable();
+  }();
 
   switch (value) {
   case VoltageLevel::HAL_HIGH:
@@ -254,7 +250,6 @@ void HalApi::digitalWrite(BinaryPin pin, VoltageLevel value) {
  * the reference manual
  *****************************************************************/
 static void InitSysTimer() {
-
   // Enable the clock to the timer
   EnableClock(TIMER6_BASE);
 
@@ -279,7 +274,7 @@ static void BusyWaitUsec(uint16_t usec) {
 
   TimerRegs *tmr = TIMER6_BASE;
   uint16_t start = static_cast<uint16_t>(tmr->counter);
-  while (1) {
+  while (true) {
     uint16_t dt = static_cast<uint16_t>(tmr->counter - start);
     if (dt >= usec)
       return;
@@ -375,21 +370,18 @@ static void InitADC() {
 // loop but the HAL interface currently isn't set up to run that way.  That's an
 // improvement that can be made later
 int HalApi::analogRead(AnalogPin pin) {
-
-  int channel = 0;
-  switch (pin) {
-  case AnalogPin::PATIENT_PRESSURE:
-    channel = 6;
-    break;
-
-  case AnalogPin::INFLOW_PRESSURE_DIFF:
-    channel = 9;
-    break;
-
-  case AnalogPin::OUTFLOW_PRESSURE_DIFF:
-    channel = 15;
-    break;
-  }
+  int channel = [&] {
+    switch (pin) {
+    case AnalogPin::PATIENT_PRESSURE:
+      return 6;
+    case AnalogPin::INFLOW_PRESSURE_DIFF:
+      return 9;
+    case AnalogPin::OUTFLOW_PRESSURE_DIFF:
+      return 15;
+    }
+    // All cases covered above (and GCC checks this).
+    __builtin_unreachable();
+  }();
 
   ADC_Regs *adc = ADC_BASE;
   adc->adc[0].seq[0] = channel << 6;
@@ -474,18 +466,17 @@ static void InitPwmOut() {
 // a shame.  We should change this to a float, say with a value
 // of 0.0 to 1.0 to make better use of our resolution
 void HalApi::analogWrite(PwmPin pin, int value) {
-
   // Convert the value to a float
   float duty = static_cast<float>(value) * (1.0f / 255);
 
-  TimerRegs *tmr;
-  int chan;
-  switch (pin) {
-  case PwmPin::BLOWER:
-    tmr = TIMER2_BASE;
-    chan = 1;
-    break;
-  }
+  auto [tmr, chan] = [&]() -> std::pair<TimerRegs *, int> {
+    switch (pin) {
+    case PwmPin::BLOWER:
+      return {TIMER2_BASE, 1};
+    }
+    // All cases covered above (and GCC checks this).
+    __builtin_unreachable();
+  }();
 
   tmr->compare[chan] = static_cast<REG>(static_cast<float>(tmr->reload) * duty);
 }
@@ -501,10 +492,9 @@ class UART {
   UART_Regs *const reg;
 
 public:
-  UART(UART_Regs *const r) : reg(r) {}
+  explicit UART(UART_Regs *const r) : reg(r) {}
 
   void Init(int baud) {
-
     // Set baud rate register
     reg->baud = CPU_FREQ / baud;
 
@@ -514,7 +504,6 @@ public:
 
   // This is the interrupt handler for the UART.
   void ISR() {
-
     // Check for over run error and framing errors.
     // Clear those errors if they're set to avoid
     // further interrupts from them.
@@ -531,12 +520,12 @@ public:
 
       // If there's nothing left in the transmit buffer,
       // just disable further transmit interrupts.
-      if (ch < 0)
+      if (ch < 0) {
         reg->ctrl[0] &= ~0x0080;
-
-      // Otherwise, Send the next byte
-      else
+      } else {
+        // Otherwise, Send the next byte
         reg->txDat = ch;
+      }
     }
   }
 
@@ -545,7 +534,6 @@ public:
   // are available it will only return the available bytes
   // Returns the number of bytes actually read.
   uint16_t read(char *buf, uint16_t len) {
-
     for (uint16_t i = 0; i < len; i++) {
       int ch = rxDat.Get();
       if (ch < 0)
@@ -564,7 +552,6 @@ public:
   // will occur.
   // The number of bytes actually written is returned.
   uint16_t write(const char *buf, uint16_t len) {
-
     uint16_t i;
     for (i = 0; i < len; i++) {
       if (!txDat.Put(*buf++))
@@ -718,10 +705,14 @@ void HalApi::crc32_accumulate(uint8_t d) {
 }
 
 uint32_t HalApi::crc32_get() {
-  // CRC32 peripheral takes 4 clock cycles to produce a result
-  // after the last write to it.
-  // These nops are just in case of some spectacular compiler
+  // CRC32 peripheral takes 4 clock cycles to produce a result after the last
+  // write to it.  These nops are just in case of some spectacular compiler
   // optimization that would result in querying too early.
+  //
+  // TODO(jlebar): I think the nops likely are not necessary. The chip should
+  // stall the processor if the data isn't available.  Moreover if it *is*
+  // necessary, asm volatile may not be enough of a memory barrier; we may need
+  // to say that these instructions also clobber "memory".
   asm volatile("nop");
   asm volatile("nop");
   asm volatile("nop");
@@ -784,16 +775,15 @@ static void EnableClock(void *ptr) {
       //      {TIMER16_BASE, 6, 17},
   };
 
-  // I don't include all the peripherials here, just the ones
-  // that we currently use or seem likely to be used in the
-  // future.  To add more peripherials, just look up the appropriate
-  // bit in the reference manual RCC chapter.
+  // I don't include all the peripherials here, just the ones that we currently
+  // use or seem likely to be used in the future.  To add more peripherials,
+  // just look up the appropriate bit in the reference manual RCC chapter.
   int ndx = -1;
   int bit = 0;
-  for (uint32_t i = 0; i < sizeof(rccInfo) / sizeof(rccInfo[0]); i++) {
-    if (ptr == rccInfo[i].base) {
-      ndx = rccInfo[i].ndx;
-      bit = rccInfo[i].bit;
+  for (auto &info : rccInfo) {
+    if (ptr == info.base) {
+      ndx = info.ndx;
+      bit = info.bit;
       break;
     }
   }
@@ -804,7 +794,7 @@ static void EnableClock(void *ptr) {
   // bug during development.
   if (ndx < 0) {
     Hal.IntDisable();
-    while (1) {
+    while (true) {
     }
   }
 
@@ -821,7 +811,7 @@ static void EnableClock(void *ptr) {
 
 // Fault handlers
 static void fault() {
-  while (1) {
+  while (true) {
   }
 }
 

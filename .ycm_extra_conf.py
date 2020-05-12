@@ -86,6 +86,7 @@ common_flags = [
     "-fno-exceptions",
     "-Wall",
     "-Werror=conversion",
+    "-Wno-sign-conversion",
 ] + [
     "-I" + d for d in {os.path.dirname(h) for h in glob.glob("**/*.h", recursive=True)}
 ]

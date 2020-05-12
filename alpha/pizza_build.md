@@ -7,14 +7,18 @@ If you decide to buy them, do so at your own risk... oh, and thank you ;).**
 
 This build consists of a functional ventilator pneumatic assembly with controller and user interface. This build is adequate for integration and systems testing.
 
+![Pizza pneumatics](pizza_pneumatics.png)
+
 It lacks heating, oxygen mixing, humidification, battery backup and air filtering.
 It is also not enclosed like the final product and is meant to be operated in an open layout on your table, like a pizza.
 
+![Pizza drawing](pizza_photo.jpg)
+
 **This is not intended to be used on patients and lacks a number of safety features.**
 
-This build depends on already having a Brain build, which has its own BOM [here](brain-build.md).
+This build depends on already having a Brain build, which has its own BOM [here](brain_build.md).
 
-![Draft Pizzabuild Drawing](20200509-draft-pizzabuild-drawing.jpg)
+![Pizza drawing](pizza_diagram.jpg)
 
 ## Purchasing source abbreviations
 

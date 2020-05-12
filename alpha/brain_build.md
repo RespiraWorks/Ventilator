@@ -9,9 +9,9 @@ This build constitutes the computing and digital user interface components.
 It is enough to fully deploy and run all developed software, to test the GUI interface and
 possibly the communications protocol between controller and UI. Since it contains none of the sensors
 or drivers, integration testing with this bare build is not possible. For an upgrade, check the 
-[Pizza build](pizza-build.md).
+[Pizza build](pizza_build.md).
 
-For how to assemble the brains, check this wiki [here](https://github.com/RespiraWorks/PhysicalDesign/wiki/Brain-Build).
+For how to assemble the brains, check this wiki [here](brain_build_instructions.md).
 
 ## Purchasing source abbreviations
 

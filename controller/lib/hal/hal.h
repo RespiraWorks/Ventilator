@@ -46,6 +46,7 @@ limitations under the License.
     "TEST_MODE intended to be run only on native, but ARDUINO_AVR_UNO or ARDUINO_NUCLEO_L452RE or BARE_STM32 is defined"
 #endif
 
+#include "checksum.h"
 #include <cstring>
 #include <deque>
 #include <map>
@@ -291,10 +292,24 @@ public:
       IntEnable();
   }
 
+  // Calculate CRC32 for data buffer
+  uint32_t crc32(uint8_t *data, uint32_t length);
+
 private:
   // Initializes watchdog, sets appropriate pins to OUTPUT, etc.  Called by
   // HalApi::init
   void watchdog_init();
+
+#ifdef BARE_STM32
+  // Initializes CRC32 peripheral
+  void crc32_init();
+  // Reset the hardware peripheral in STM32
+  void crc32_reset();
+  // Accumulate CRC32 in STM32 hardware
+  void crc32_accumulate(uint8_t d);
+  // Get CRC32 accumulated in STM32 hardware
+  uint32_t crc32_get();
+#endif
 
   void setDigitalPinMode(PwmPin pin, PinMode mode);
   void setDigitalPinMode(BinaryPin pin, PinMode mode);
@@ -575,6 +590,10 @@ inline void HalApi::test_serialPutIncomingData(const char *data, uint16_t len) {
 inline void HalApi::IntDisable() {}
 inline void HalApi::IntEnable() {}
 inline bool HalApi::IntSuspend() { return false; }
+
+inline uint32_t HalApi::crc32(uint8_t *data, uint32_t length) {
+  return soft_crc32(reinterpret_cast<char *>(data), length);
+}
 
 #endif
 

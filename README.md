@@ -49,4 +49,5 @@ If you decide to buy or build anything, do so at your own risk.**
   * [System architecture](system_architecture/README.md)
   * [Pneumatic design](pneumatic_design/README.md)
   * [Electrical design](electrical_design/README.md)
+  * [Alpha build BOM + instructions](alpha/README.md)
   * [Software (separate repository)](https://github.com/RespiraWorks/VentilatorSoftware)

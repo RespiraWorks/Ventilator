@@ -28,6 +28,8 @@ Checks: >
   -readability-convert-member-functions-to-static,
   -modernize-use-default-member-init,
   -misc-non-private-member-variables-in-classes,
+  -readability-implicit-bool-conversion,
+  -modernize-use-using
 
 WarningsAsErrors: '*'
 

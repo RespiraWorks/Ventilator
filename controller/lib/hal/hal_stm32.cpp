@@ -25,12 +25,12 @@ the programmer's manual for the processor available here:
 
 #if defined(BARE_STM32)
 
-#include <stdarg.h>
-#include <stdio.h>
 #include "hal_stm32.h"
 #include "checksum.h"
 #include "circular_buffer.h"
 #include "hal.h"
+#include <stdarg.h>
+#include <stdio.h>
 
 #define SYSTEM_STACK_SIZE 2500
 
@@ -616,8 +616,8 @@ static void InitUARTs() {
   EnableClock(UART2_BASE);
   EnableClock(UART3_BASE);
 
-  GPIO_PinAltFunc(GPIO_A_BASE,  2, 7);
-  GPIO_PinAltFunc(GPIO_A_BASE,  3, 7);
+  GPIO_PinAltFunc(GPIO_A_BASE, 2, 7);
+  GPIO_PinAltFunc(GPIO_A_BASE, 3, 7);
 
   GPIO_PinAltFunc(GPIO_B_BASE, 10, 7);
   GPIO_PinAltFunc(GPIO_B_BASE, 11, 7);
@@ -646,11 +646,11 @@ uint16_t HalApi::serialWrite(const char *buf, uint16_t len) {
 
 uint16_t HalApi::serialBytesAvailableForWrite() { return rpUART.TxFree(); }
 
-uint16_t HalApi::debugWrite(const char *buf, uint16_t len){
+uint16_t HalApi::debugWrite(const char *buf, uint16_t len) {
   return dbgUART.write(buf, len);
 }
 
-inline uint16_t HalApi::debugRead(char *buf, uint16_t len){
+inline uint16_t HalApi::debugRead(char *buf, uint16_t len) {
   return dbgUART.read(buf, len);
 }
 

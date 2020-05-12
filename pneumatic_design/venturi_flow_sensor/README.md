@@ -1,4 +1,4 @@
-#Venturi flow sensor
+# Venturi flow sensor
 
 ![Rendering](screenshot.png)
 
@@ -14,7 +14,7 @@ There is an arrow printed onto the body to indicate the direction of flow.
 
 **TODO:** link and explain STL files
 
-##Transfer function
+## Transfer function
 
 To go from voltage to flow rate, you need the following transfer functions.
 For a 0.157" throat and 0.5" body using a 0-3920 Pa analog sensor, where offset is the 0 flow signal:
@@ -27,7 +27,7 @@ https://docs.google.com/spreadsheets/d/1G9Kb-ImlluK8MOx-ce2rlHUBnTOtAFQvKjjs1bEh
 
 **TODO:** make spreadsheet contents visible here
 
-##Pressure Sensor
+## Pressure Sensor
 
 This venturi is designed to be paired with this sensor and a 14-bit ADC. 
 

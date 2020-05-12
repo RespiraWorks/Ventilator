@@ -219,6 +219,10 @@ public:
   // Number of bytes we can write without blocking.
   uint16_t serialBytesAvailableForWrite();
 
+  // Serial port used for debugging
+  uint16_t debugWrite(const char *buf, uint16_t len);
+  uint16_t debugRead(char *buf, uint16_t len);
+
 #ifndef TEST_MODE
   // Translates to a numeric pin that can be passed to the Arduino API.
   uint8_t rawPin(PwmPin pin);
@@ -594,6 +598,13 @@ inline bool HalApi::IntSuspend() { return false; }
 inline uint32_t HalApi::crc32(uint8_t *data, uint32_t length) {
   return soft_crc32(reinterpret_cast<char *>(data), length);
 }
+
+// NOTE - these functions are for debugging/testing the controller only.
+// They aren't necessary or used when running in test mode
+inline uint16_t HalApi::debugWrite(const char *buf, uint16_t len) {
+  return len;
+}
+inline uint16_t HalApi::debugRead(char *buf, uint16_t len) { return 0; }
 
 #endif
 

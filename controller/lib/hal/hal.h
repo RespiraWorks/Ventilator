@@ -377,14 +377,13 @@ inline void HalApi::delay(Duration d) {
 
 inline uint8_t HalApi::rawPin(AnalogPin pin) {
   // See pinout at https://bit.ly/3aERr69.
-  // TODO: Update with STM32 pinout.
   switch (pin) {
   case AnalogPin::PATIENT_PRESSURE:
-    return A5;
+    return PA1;
   case AnalogPin::INFLOW_PRESSURE_DIFF:
-    return A6;
+    return PA4;
   case AnalogPin::OUTFLOW_PRESSURE_DIFF:
-    return A7;
+    return PB0;
   }
   // Switch above covers all cases (and gcc enforces this).
   __builtin_unreachable();
@@ -392,10 +391,9 @@ inline uint8_t HalApi::rawPin(AnalogPin pin) {
 
 inline uint8_t HalApi::rawPin(PwmPin pin) {
   // See pinout at https://bit.ly/3aERr69.
-  // TODO: Update with STM32 pinout.
   switch (pin) {
   case PwmPin::BLOWER:
-    return 6;
+    return PB3;
   }
   // Switch above covers all cases (and gcc enforces this).
   __builtin_unreachable();
@@ -403,10 +401,13 @@ inline uint8_t HalApi::rawPin(PwmPin pin) {
 
 inline uint8_t HalApi::rawPin(BinaryPin pin) {
   // See pinout at https://bit.ly/3aERr69.
-  // TODO: Update with STM32 pinout.
   switch (pin) {
   case BinaryPin::SOLENOID:
-    return 7;
+    // Although the spreadsheet says PA11, the solenoid is currently plugged
+    // into PA8 in jlebar's pizza model because we lacked a 2-pin connector.
+    //
+    // TODO: Should this be configurable by a build-time -D flag or something?
+    return PA8;
   }
   // Switch above covers all cases (and gcc enforces this).
   __builtin_unreachable();

@@ -26,6 +26,7 @@ the programmer's manual for the processor available here:
 #if defined(BARE_STM32)
 
 #include "hal_stm32.h"
+#include "checksum.h"
 #include "circular_buffer.h"
 #include "hal.h"
 
@@ -140,6 +141,7 @@ void HalApi::init() {
   InitPwmOut();
   InitUARTs();
   watchdog_init();
+  crc32_init();
 
   // Enable interrupts
   Hal.IntEnable();
@@ -671,6 +673,50 @@ void HalApi::watchdog_init() {
 void HalApi::watchdog_handler() {
   Watchdog_Regs *wdog = WATCHDOG_BASE;
   wdog->key = 0xAAAA;
+}
+
+void HalApi::crc32_init() {
+  RCC_Regs *rcc = RCC_BASE;
+  // Enable clock to CRC32
+  rcc->periphClkEna[0] |= (1 << 12);
+  // Pull CRC32 peripheral out of reset if it ever was
+  rcc->periphReset[0] &= ~(1 << 12);
+
+  CRC_Regs *crc = CRC_BASE;
+  crc->init = 0xFFFFFFFF;
+  crc->poly = CRC32_POLYNOMIAL;
+  crc->ctrl = 1;
+}
+
+void HalApi::crc32_accumulate(uint8_t d) {
+  CRC_Regs *crc = CRC_BASE;
+  crc->data = static_cast<uint32_t>(d);
+}
+
+uint32_t HalApi::crc32_get() {
+  // CRC32 peripheral takes 4 clock cycles to produce a result
+  // after the last write to it.
+  // These nops are just in case of some spectacular compiler
+  // optimization that would result in querying too early.
+  asm volatile("nop");
+  asm volatile("nop");
+  asm volatile("nop");
+  asm volatile("nop");
+  CRC_Regs *crc = CRC_BASE;
+  return crc->data;
+}
+
+void HalApi::crc32_reset() {
+  CRC_Regs *crc = CRC_BASE;
+  crc->ctrl = 1;
+}
+
+uint32_t HalApi::crc32(uint8_t *data, uint32_t length) {
+  crc32_reset();
+  while (length--) {
+    crc32_accumulate(*data++);
+  }
+  return crc32_get();
 }
 
 // Enable clocks to a specific peripherial.

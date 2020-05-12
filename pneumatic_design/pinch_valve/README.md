@@ -1,10 +1,12 @@
 # Stepper proportional pinch valve
 
-![Rendering](render_v5.png)
+![Animation](animation.gif)
+
+**TODO:** Explain motivation for this part
 
 ## CAD files
 
-**TODO:** explain this better
+![Rendering](render_v5.png)
 
 [Exported step file](exhaust%20pinch%20valve%201.5.step) of version 1.5 is available here for download.
 
@@ -35,7 +37,7 @@ Latest progress on 3d-printed part design is found in
 
 ## Assembly
 
-**TODO:** add or link to instructions here
+**TODO:** add more detailed instructions here
 
 Assembled it should look something like this (all screws are visible):
 

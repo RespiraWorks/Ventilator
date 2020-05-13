@@ -1,5 +1,30 @@
 # pcbreathe
-custom board design for beta/prod build
+RespiraWorks Ventilator Mainboard Rev 1.0
+
+## Important Rev 1.0 PCB Errata
+* #63: DNP resistors populated on board, typing 3.3V to the 5V rail (bad) - if you have SN 01, 02, 03, or 05 - don't continue using the board without executing the fix in this issue ticket.  See ticket for rework instructions and photos.  All other serial number boards are shipping with this issue fixed.
+* #64: Yellow and Green alarm LEDs don't work due to a pin use conflict on the nucleo
+* #56: Blower command is 5V but nucleo outputs 3.3V.  All boards are currently shipping with a level translator fitted which addresses this problem, however the blower will turn on full blast briefly at reset (#62 - to be fixed in next rev)
+
+## Rev 1.0 PCB Quick Start Guide (visual guide pictures to be uploaded soon)
+* If you have SN 01, 02, 03, or 05, make sure you check the errata above before you proceed or you may damange the Rpi.
+* Verify that you have an STM32-L452RE module (not an STM32-L452RE-P module, they have different pinouts - see #51)
+* Plug the Nucleo into the PCB, observing the silkscreen (white outline on the board) for correct orientation.
+* Move the JP5 jumper in the upper-middle-center of the Nucleo board to the E5V position.  This tells the board to expect external power from the PCB.  This will avoid programming problems.  If you wish to remove the Nucleo board and work with it on its own without the PCB, move the jumper back to the U5V position to power it from USB.
+* If you have a X-NUCLEO-IHM03A1 stepper driver accesory, plug that in on top of the Nucleo.  The stepper driver green connectors go in the direction of the white connectors on the mainboard PCB.
+* If you are using an Rpi 3B+ or 4 with this PCB, plug this into the RPI socket.  Note that if you have the standoffs fitted, do not overtighen them as this can damage the Pi.
+* If you are using Touchscreen w/ Speakers with your Rpi, connect an HDMI cable (included with Touchscreen package) between the Pi and the Touchscreen.  Similarly, connect a USB micro cable (included with Touchscreen package) between the Pi and the TOUCH+5V connector on the Touchscreen.
+* If you are connecting a blower, take the 6-pin to 6-pin JST XH cable and connect it between the BLOWER CTRL connector at the top of the PCB with corresponding connector on the blower driver.  Likewise, take the 2-pin to 2-pin JST VH cable and connect it between BLOWER POWER connector at the top of the PCB and the corresponding connector on the blower driver.
+* The PCB must be powered in order for the Nucleo to program correctly.  A power cable which plugs into the upper left corner of the PCB is provided with the board and allows it to be powered from any 12V, 1.2A or greater power adapter with a 5.5x2.1mm center-positive barrel jack.  You will want 5A or more if you are also powering solenoids, blowers, and heaters from the PCB.  Plug this in to the power the board.  A green POWER light in the upper left of the PCB should come on, and the various status lights of the Rpi and Nucleo will probably also come on.
+* The large power connectors on the PCB are JST VH type.  [Purchase Link](https://www.amazon.com/gp/product/B07LBZ3LCR)
+* The smaller peripheral connectors on the PCB are JST XH type. 
+  * [Purchase link for 2/3/4/5-pin](https://www.amazon.com/gp/product/B06ZZ45G7G) 
+  * [Purchase link for 5/6/7-pin](https://www.amazon.com/gp/product/B079MJ1RYN)
+* Here is a crimper that can crimp both types of contacts.  [Purchase Link](https://www.amazon.com/gp/product/B01N4L8QMW)
+* The buzzer requires an oscillating signal to make sound, it is designed for peak output at 2.4kHz.  Take off the kapton cover at your own hearing risk.
+* The switched heater and solenoid outputs can support a resistive or inductive load up to 2A.
+* The i2c sensor connectors are initially configured for providing 3.3V supply power to the sensors, but can be configured for 5V.  Each sensor can have its own voltage; they do not need to be the same.  If you need to switch to 5V, see the schematic for the resistors to change.
+* The analog pressure sensors have an anti-aliasing filter value of 100Hz.
 
 ## Rev 1 As-Built Files:
 As-built directory: <br>

@@ -17,3 +17,13 @@ The first question is where the ventilator is generating pressure to drive into 
 
 Displacement type devices provide a mechanical compression of a fixed volume to drive air into the lungs. These are commonly employed in existing ventilators, and they provide a high degree of volumetric accuracy and precise control of flow. There are two challenges here. First is a question of supply chain, the volume of air which must be delivered into a lung is relatively large, as far as traditional cylinders go. The lubricant and gasket material must be oxygen compatible, and relatively expensivie and sensitive drive mechanisms are required. The designs end up rather heavy and expensive. Bellows-type devices can be helpful in addressing the volume issue, but are very challenging to design for the millions of cycles required, in addition to being difficult to source. 
 
+## Subsystems
+
+**TODO:** Introduce each subsystem properly
+
+**TODO:** Why no flowchart?
+
+      * [01_Pneumatic_Design](02_System_Design/pneumatic_design/README.md)
+      * [02_Electrical_Design](02_System_Design/electrical_design/README.md)
+      * [03_Software_Design](https://github.com/RespiraWorks/VentilatorSoftware)
+      * [04_Mechanical_Design]

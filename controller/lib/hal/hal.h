@@ -40,9 +40,8 @@ limitations under the License.
 
 #ifdef TEST_MODE
 
-#if defined(ARDUINO_NUCLEO_L452RE) || defined(BARE_STM32)
-#error                                                                         \
-    "TEST_MODE intended to be run only on native, but ARDUINO_NUCLEO_L452RE or BARE_STM32 is defined"
+#if defined(BARE_STM32)
+#error "TEST_MODE intended to be run only on native, but BARE_STM32 is defined"
 #endif
 
 #include "checksum.h"
@@ -55,9 +54,8 @@ limitations under the License.
 
 #else // !TEST_MODE
 
-#if !defined(ARDUINO_NUCLEO_L452RE) && !defined(BARE_STM32)
-#error                                                                         \
-    "When running without TEST_MODE, expecting ARDUINO_NUCLEO_L452RE or BARE_STM32 to be defined"
+#if !defined(BARE_STM32)
+#error "When running without TEST_MODE, expecting BARE_STM32 to be defined"
 #endif
 
 #if defined(BARE_STM32)
@@ -138,6 +136,10 @@ enum class BinaryPin {
 // Singleton class which implements a hardware abstraction layer.
 //
 // Access this via the `Hal` global variable, e.g. `Hal.millis()`.
+//
+// TODO: Make Hal a namespace rather than a class.  Then this header won't need
+// any ifdefs for different platforms, and all of the "global variables" can
+// move into the hal_foo.cpp files.
 class HalApi {
 public:
   void init();
@@ -330,170 +332,18 @@ private:
   std::deque<std::vector<char>> serialIncomingData_;
   std::vector<char> serialOutgoingData_;
 #endif
-
-#if defined(ARDUINO_NUCLEO_L452RE)
-  // Value of ::millis() at last call to watchdog_handler().  Used to detect
-  // clock overflows.
-  uint32_t last_millis_ = 0;
-
-  // Number of times millis() has gone backwards.   Arduino millis is a uint32,
-  // so this happens once every 1.6 months of uptime.
-  uint32_t num_clock_overflows_ = 0;
-#endif
 };
 
 extern HalApi Hal;
 
-#if defined(ARDUINO_NUCLEO_L452RE)
+#if defined(BARE_STM32)
 
-inline void HalApi::init() {
-
-  // Hal.init() should be the first thing called during initialization.
-  // Among other things, it initializes the watchdog, and that needs to happen
-  // very early in startup because:
-  //
-  //  - The purpose of the watchdog is to catch hangs, and if initializing the
-  //    watchdog weren't the first thing we did, we wouldn't catch hangs in the
-  //    work that came before.
-  //
-  //  - After the device is soft-reset via reset_device(), the watchdog timer
-  //    has a very short value.  We need to Hal.init() immediately so that
-  //    we don't time out while initializing.
-  watchdog_init();
-
-  constexpr int32_t BAUD_RATE_BPS = 115200;
-  Serial.begin(BAUD_RATE_BPS, SERIAL_8N1);
-
-  setDigitalPinMode(PwmPin::BLOWER, PinMode::HAL_OUTPUT);
-  setDigitalPinMode(BinaryPin::SOLENOID, PinMode::HAL_OUTPUT);
-}
-inline Time HalApi::now() {
-  return millisSinceStartup((uint64_t{1} << 32) * num_clock_overflows_ +
-                            ::millis());
-}
-inline void HalApi::delay(Duration d) {
-  ::delay(static_cast<unsigned long>(d.milliseconds()));
-}
-
-inline uint8_t HalApi::rawPin(AnalogPin pin) {
-  // See pinout at https://bit.ly/3aERr69.
-  switch (pin) {
-  case AnalogPin::PATIENT_PRESSURE:
-    return PA1;
-  case AnalogPin::INFLOW_PRESSURE_DIFF:
-    return PA4;
-  case AnalogPin::OUTFLOW_PRESSURE_DIFF:
-    return PB0;
-  }
-  // Switch above covers all cases (and gcc enforces this).
-  __builtin_unreachable();
-}
-
-inline uint8_t HalApi::rawPin(PwmPin pin) {
-  // See pinout at https://bit.ly/3aERr69.
-  switch (pin) {
-  case PwmPin::BLOWER:
-    return PB3;
-  }
-  // Switch above covers all cases (and gcc enforces this).
-  __builtin_unreachable();
-}
-
-inline uint8_t HalApi::rawPin(BinaryPin pin) {
-  // See pinout at https://bit.ly/3aERr69.
-  switch (pin) {
-  case BinaryPin::SOLENOID:
-    // Although the spreadsheet says PA11, the solenoid is currently plugged
-    // into PA8 in jlebar's pizza model because we lacked a 2-pin connector.
-    //
-    // TODO: Should this be configurable by a build-time -D flag or something?
-    return PA8;
-  }
-  // Switch above covers all cases (and gcc enforces this).
-  __builtin_unreachable();
-}
-
-inline int HalApi::analogRead(AnalogPin pin) {
-  return ::analogRead(rawPin(pin));
-}
-inline void HalApi::setDigitalPinMode(PwmPin pin, PinMode mode) {
-  ::pinMode(rawPin(pin), static_cast<uint8_t>(mode));
-}
-inline void HalApi::setDigitalPinMode(BinaryPin pin, PinMode mode) {
-  ::pinMode(rawPin(pin), static_cast<uint8_t>(mode));
-}
-inline void HalApi::digitalWrite(BinaryPin pin, VoltageLevel value) {
-  ::digitalWrite(rawPin(pin), static_cast<uint8_t>(value));
-}
-inline void HalApi::analogWrite(PwmPin pin, int value) {
-  ::analogWrite(rawPin(pin), value);
-}
-[[nodiscard]] inline uint16_t HalApi::serialRead(char *buf, uint16_t len) {
-  return Serial.readBytes(buf, std::min(len, serialBytesAvailableForRead()));
-}
-inline uint16_t HalApi::serialBytesAvailableForRead() {
-  return Serial.available();
-}
-[[nodiscard]] inline uint16_t HalApi::serialWrite(const char *buf,
-                                                  uint16_t len) {
-  return Serial.write(buf, std::min(len, serialBytesAvailableForWrite()));
-}
-inline uint16_t HalApi::serialBytesAvailableForWrite() {
-  return Serial.availableForWrite();
-}
-
-// No implementation of debugRead/Write on Nucleo because the Arduino API
-// doesn't expose a separate debug serial port.
-inline uint16_t HalApi::debugWrite(const char *buf, uint16_t len) {
-  return len;
-}
-inline uint16_t HalApi::debugRead(char *buf, uint16_t len) { return 0; }
-
-inline void HalApi::watchdog_init() {
-  // Our only user of the Arduino API is Nucleo, i.e. STM32 using Arduino APIs.
-  // Unfortunately it does not expose the watchdog API, so we can't implement
-  // this.  Which is OK, because Nucleo is not long for this world.
-  //
-  // wdt_enable(WDTO_120MS);
-}
-[[noreturn]] inline void HalApi::reset_device() {
-  // Watchdog is not implementable on Nucleo, sadly.
-
-  // Reset the device by setting a short watchdog timeout and then entering an
-  // infinite loop.
-  //
-  // wdt_enable(WDTO_15MS);
-  // while (true) {
-  // }
-}
-inline void HalApi::watchdog_handler() {
-  // Check for clock overflow.  We need to run this at least once every
-  // 2^32ms = 1.6mo.  The watchdog handler has to be called at least as
-  // frequently as the watchdog timeout, and the largest timeout Arduino
-  // supports is 8s.  That gives us a little wiggle room.  :)
-  uint32_t millis = ::millis();
-  if (millis < last_millis_) {
-    num_clock_overflows_++;
-  }
-  last_millis_ = millis;
-
-  // Watchdog is not implementable on Nucleo.
-  // wdt_reset();
-}
-
-// Interrupt disable/enable not supported for Arduino HALs yet.
-// I'm assuming these are going away soon so don't require new
-// functionality
-inline void HalApi::IntDisable() {}
-inline void HalApi::IntEnable() {}
-inline bool HalApi::IntSuspend() { return false; }
-
-// Support for bare STM32.  Only a few inline functions are defined here.
-// Most support for this HAL is in a separate cpp file.
-#elif defined(BARE_STM32)
 // Disable interrupts.
+//
 // Returns true if interrupts were enabled when this
 // was called or false if they were already disabled.
+//
+// TODO: Add an RTTI InterruptDisabler class.
 
 // Disable interrupts
 inline void HalApi::IntDisable() { asm volatile("cpsid i" ::: "memory"); }

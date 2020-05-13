@@ -64,7 +64,7 @@ float PID::Compute(Time now, float input, float setpoint) {
     output_sum_ -= kp * dInput;
   }
 
-  output_sum_ = stl::clamp(output_sum_, out_min_, out_max_);
+  output_sum_ = std::clamp(output_sum_, out_min_, out_max_);
 
   float res = output_sum_;
   if (p_term_ == ProportionalTerm::ON_ERROR) {
@@ -83,7 +83,7 @@ float PID::Compute(Time now, float input, float setpoint) {
   // when should we expect to perform our next output calculation
   next_sample_time_ = next_sample_time_ + sample_period_;
 
-  last_output_ = stl::clamp(res, out_min_, out_max_);
+  last_output_ = std::clamp(res, out_min_, out_max_);
   return last_output_;
 }
 
@@ -96,5 +96,5 @@ void PID::Observe(Time now, float input, float setpoint, float actual_output) {
   // Reset output_sum_ to actual_output so that the next Compute()
   // will adjust it only slightly (as if it had been computed by a current
   // Compute() call), avoiding a spike.
-  output_sum_ = stl::clamp(actual_output, out_min_, out_max_);
+  output_sum_ = std::clamp(actual_output, out_min_, out_max_);
 }

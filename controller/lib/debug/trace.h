@@ -13,10 +13,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#ifndef DEBUG_H_
-#define DEBUG_H_
-#include <stdint.h>
-// Printf style debug print function
-int debugPrint(const char *fmt, ...);
-int debugRead(char *buf, uint16_t len);
+#ifndef TRACE_H
+#define TRACE_H
+
+// Called from the main loop
+void TraceSample();
+
 #endif

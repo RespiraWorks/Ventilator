@@ -630,9 +630,11 @@ uint16_t HalApi::debugWrite(const char *buf, uint16_t len) {
   return dbgUART.write(buf, len);
 }
 
-inline uint16_t HalApi::debugRead(char *buf, uint16_t len) {
+uint16_t HalApi::debugRead(char *buf, uint16_t len) {
   return dbgUART.read(buf, len);
 }
+
+uint16_t HalApi::debugBytesAvailableForWrite() { return rpUART.TxFree(); }
 
 /******************************************************************
  * Watchdog timer (see chapter 32 of reference manual).

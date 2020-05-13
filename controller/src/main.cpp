@@ -132,6 +132,9 @@ static void controller_loop() {
 
     controller_status.fan_setpoint_cm_h2o = actuators_state.fan_setpoint_cm_h2o;
 
+    // Poll the debug serial port handler
+    debug.Poll();
+
     Hal.watchdog_handler();
   }
 }

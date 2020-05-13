@@ -41,10 +41,12 @@ static_assert(DEFAULT_VENTURI_CHOKE_DIAM > meters(0));
 // TODO: VOLUME_INTEGRAL_INTERVAL was not chosen carefully.
 static constexpr Duration VOLUME_INTEGRAL_INTERVAL = milliseconds(5);
 
-// Arduino Nano ADC is 10 bit, default 5V Vref_P (~4.9 mV
-// per count) [V];
+// STM32's ADC is 12 bits, default 5V Vref_P (~4.9 mV per count) [V];
 //
-// TODO: Update this for STM32, see https://bit.ly/3aERr69.
+// TODO: STM32 with the Arduino APIs (i.e. the "nucleo" target) returns a
+// 10-bit ADC value, while the STM32 itself is equipped with a 12-bit ADC.
+// This should be abstracted in HAL, but until then this denominator (i.e.
+// 1024) needs to match the ADC width.
 static const float ADC_LSB = 5.0f / 1024.0f;
 
 // Take this many samples from a sensor while zeroing it.

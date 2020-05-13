@@ -22,8 +22,8 @@ RespiraWorks Ventilator Mainboard Rev 1.0
   * [Purchase link for 5/6/7-pin](https://www.amazon.com/gp/product/B079MJ1RYN)
 * Here is a crimper that can crimp both types of contacts.  [Purchase Link](https://www.amazon.com/gp/product/B01N4L8QMW)
 * The buzzer requires an oscillating signal to make sound, it is designed for peak output at 2.4kHz.  Take off the kapton cover at your own hearing risk.
-* The switched heater and solenoid outputs can support a resistive or inductive load up to 2A.
-* The i2c sensor connectors are initially configured for providing 3.3V supply power to the sensors, but can be configured for 5V.  Each sensor can have its own voltage; they do not need to be the same.  If you need to switch to 5V, see the schematic for the resistors to change.
+* The switched heater and solenoid outputs can support a resistive or inductive load up to 2A.  Refer to schematic for pinouts.
+* The i2c sensor connectors are initially configured for providing 3.3V supply power to the sensors, but can be configured for 5V.  Each sensor can have its own voltage; they do not need to be the same.  If you need to switch to 5V, see the schematic for the resistors to change.  Refer to schematic for pinouts.
 * The analog pressure sensors have an anti-aliasing filter value of 100Hz.
 
 ## Rev 1 As-Built Files:

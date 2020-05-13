@@ -20,3 +20,4 @@ gui/build
 .clangd/
 .*.swp
 *.map
+__pycache__/

@@ -31,6 +31,8 @@
 * The PCB must be powered in order for the Nucleo to program correctly.  A power cable which plugs into the upper left corner of the PCB is provided with the board and allows it to be powered from any 12V, 1.2A or greater power adapter with a 5.5x2.1mm center-positive barrel jack.  You will want 5A or more if you are also powering solenoids, blowers, and heaters from the PCB.  Plug this in to the power the board.  A green POWER light in the upper left of the PCB should come on, and the various status lights of the Rpi and Nucleo will probably also come on.
 
 ![plug in the nucleo](/ReadmePhotos/IMG_9312.jpg)
+* When programming over the Nucleo USB interface, the board emulates an ST-Link programming the MCU over SWD.  Use these settings in the toolchain of your choice.
+* The bringup code was written in the Arduino IDE environment with STM32duino installed and can be found here (disclaimer: this code is not part of the project and is pretty much unsupported, use at your own risk.  The listing of hardware pin #defines at the top might be useful): [pcbreathe-bringup](https://github.com/inceptionev/pcbreathe-bringup/issues) 
 * The large power connectors on the PCB are JST VH type.  [Purchase Link](https://www.amazon.com/gp/product/B07LBZ3LCR)
 * The smaller peripheral connectors on the PCB are JST XH type. 
   * [Purchase link for 2/3/4/5-pin](https://www.amazon.com/gp/product/B06ZZ45G7G) 

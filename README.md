@@ -1,5 +1,4 @@
-# RespiraWorks Ventilator Mainboard 
-# Rev 1.0
+# RespiraWorks Ventilator Mainboard Rev 1.0
 
 ## Important Rev 1.0 PCB Errata
 * #63: DNP resistors populated on board, typing 3.3V to the 5V rail (bad) - if you have SN 01, 02, 03, or 05 - don't continue using the board without executing the fix in this issue ticket.  See ticket for rework instructions and photos.  All other serial number boards are shipping with this issue fixed.

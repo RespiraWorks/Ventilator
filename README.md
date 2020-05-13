@@ -41,12 +41,12 @@ The physical design encompasses everything that is not software run on the devic
   * [01_Requirements](01_Requirements/README.md)
   Describes the requirement architecture, heirarchy, and process. Links to the releases of our system requirements, hardware specifications, and software requirements. 
   * [02_System_Design](02_System_Design/README.md)
-  Describes the functional implementation and design theory of the system. This document also defines the tree structure for the repositories below this directory.
+  Describes the functional implementation and design theory of the system. This document also defines the hierarchy for the subsystems below.
       * [01_Pneumatic_Design](02_System_Design/pneumatic_design/README.md)
       * [02_Electrical_Design](02_System_Design/electrical_design/README.md)
       * [03_Software_Design](https://github.com/RespiraWorks/VentilatorSoftware)
       * [04_Mechanical_Design]
-  * [03_Quality_documentation](03_Quality_Documentation/README.md)
+  * [03_Quality_documentation](03_Quality_Documentation)
   * [04_Build_Instructions]
-      * [Alpha build BOM + instructions](04_Build_Instructions/alpha/README.md)
+      * [Alpha build](04_Build_Instructions/alpha/README.md)
          Documentation for building the "Alpha" version of the device which can be used by developers to contribute to the software. Note that this is almost always out of date, by definition.

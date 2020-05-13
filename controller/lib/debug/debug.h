@@ -34,9 +34,10 @@ enum class DbgCmdCode {
 };
 
 enum class DbgErrCode {
-  OK = 0x00,      // success
-  CRC_ERR = 0x01, // CRC error on command
-  BAD_CMD = 0x02, // Unknown command code received
+  OK = 0x00,           // success
+  CRC_ERR = 0x01,      // CRC error on command
+  BAD_CMD = 0x02,      // Unknown command code received
+  MISSING_DATA = 0x03, // Not enough data passed with command
 };
 
 // Each debug command is represented by an instance of this
@@ -59,7 +60,9 @@ public:
   //
   //   Returns an error code.  For any non-zero error, the values
   //   returned in len and data will be ignored.
-  virtual DbgErrCode HandleCmd(uint8_t *data, int *len, int max);
+  virtual DbgErrCode HandleCmd(uint8_t *data, int *len, int max) {
+    return DbgErrCode::BAD_CMD;
+  }
 };
 
 // Singleton class which implements the debug serial port handler.

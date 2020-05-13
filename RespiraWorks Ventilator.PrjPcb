@@ -28,7 +28,7 @@ DItemRevisionGUID=
 ReportSuppressedErrorsInMessages=0
 FSMCodingStyle=eFMSDropDownList_OneProcess
 FSMEncodingStyle=eFMSDropDownList_OneHot
-OutputPath=Project Outputs for RespiraWorks Ventilator
+OutputPath=
 LogFolderPath=
 ManagedProjectGUID=
 IncludeDesignInRelease=0
@@ -224,78 +224,70 @@ DocumentPath=Project Outputs for RespiraWorks Ventilator\ASSY PKG\Pick Place for
 DItemRevisionGUID=
 
 [GeneratedDocument5]
-DocumentPath=Project Outputs for RespiraWorks Ventilator\FAB PKG\RespiraWorks Ventilator Rev 1-RoundHoles.TXT
-DItemRevisionGUID=
-
-[GeneratedDocument6]
-DocumentPath=Project Outputs for RespiraWorks Ventilator\FAB PKG\RespiraWorks Ventilator Rev 1-SlotHoles.TXT
-DItemRevisionGUID=
-
-[GeneratedDocument7]
 DocumentPath=Project Outputs for RespiraWorks Ventilator\FAB PKG\RespiraWorks Ventilator Rev 1.DRL
 DItemRevisionGUID=
 
-[GeneratedDocument8]
+[GeneratedDocument6]
 DocumentPath=Project Outputs for RespiraWorks Ventilator\FAB PKG\RespiraWorks Ventilator Rev 1.DRR
 DItemRevisionGUID=
 
-[GeneratedDocument9]
+[GeneratedDocument7]
 DocumentPath=Project Outputs for RespiraWorks Ventilator\FAB PKG\RespiraWorks Ventilator Rev 1.EXTREP
 DItemRevisionGUID=
 
-[GeneratedDocument10]
+[GeneratedDocument8]
 DocumentPath=Project Outputs for RespiraWorks Ventilator\FAB PKG\RespiraWorks Ventilator Rev 1.GBL
 DItemRevisionGUID=
 
-[GeneratedDocument11]
+[GeneratedDocument9]
 DocumentPath=Project Outputs for RespiraWorks Ventilator\FAB PKG\RespiraWorks Ventilator Rev 1.GBO
 DItemRevisionGUID=
 
-[GeneratedDocument12]
+[GeneratedDocument10]
 DocumentPath=Project Outputs for RespiraWorks Ventilator\FAB PKG\RespiraWorks Ventilator Rev 1.GBP
 DItemRevisionGUID=
 
-[GeneratedDocument13]
+[GeneratedDocument11]
 DocumentPath=Project Outputs for RespiraWorks Ventilator\FAB PKG\RespiraWorks Ventilator Rev 1.GBS
 DItemRevisionGUID=
 
-[GeneratedDocument14]
+[GeneratedDocument12]
 DocumentPath=Project Outputs for RespiraWorks Ventilator\FAB PKG\RespiraWorks Ventilator Rev 1.GP1
 DItemRevisionGUID=
 
-[GeneratedDocument15]
+[GeneratedDocument13]
 DocumentPath=Project Outputs for RespiraWorks Ventilator\FAB PKG\RespiraWorks Ventilator Rev 1.GP2
 DItemRevisionGUID=
 
-[GeneratedDocument16]
+[GeneratedDocument14]
 DocumentPath=Project Outputs for RespiraWorks Ventilator\FAB PKG\RespiraWorks Ventilator Rev 1.GTL
 DItemRevisionGUID=
 
-[GeneratedDocument17]
+[GeneratedDocument15]
 DocumentPath=Project Outputs for RespiraWorks Ventilator\FAB PKG\RespiraWorks Ventilator Rev 1.GTO
 DItemRevisionGUID=
 
-[GeneratedDocument18]
+[GeneratedDocument16]
 DocumentPath=Project Outputs for RespiraWorks Ventilator\FAB PKG\RespiraWorks Ventilator Rev 1.GTP
 DItemRevisionGUID=
 
-[GeneratedDocument19]
+[GeneratedDocument17]
 DocumentPath=Project Outputs for RespiraWorks Ventilator\FAB PKG\RespiraWorks Ventilator Rev 1.GTS
 DItemRevisionGUID=
 
-[GeneratedDocument20]
+[GeneratedDocument18]
 DocumentPath=Project Outputs for RespiraWorks Ventilator\FAB PKG\RespiraWorks Ventilator Rev 1.LDP
 DItemRevisionGUID=
 
-[GeneratedDocument21]
+[GeneratedDocument19]
 DocumentPath=Project Outputs for RespiraWorks Ventilator\FAB PKG\RespiraWorks Ventilator Rev 1.REP
 DItemRevisionGUID=
 
-[GeneratedDocument22]
+[GeneratedDocument20]
 DocumentPath=Project Outputs for RespiraWorks Ventilator\FAB PKG\RespiraWorks Ventilator Rev 1.RUL
 DItemRevisionGUID=
 
-[GeneratedDocument23]
+[GeneratedDocument21]
 DocumentPath=Project Outputs for RespiraWorks Ventilator\FAB PKG\RespiraWorks Ventilator Rev 1.TXT
 DItemRevisionGUID=
 
@@ -346,7 +338,7 @@ SCH_HasExpandLogicalToPhysicalSheets=-1
 SaveSettingsToOutJob=0
 
 [Generic_EDE]
-OutputDir=Project Outputs for RespiraWorks Ventilator
+OutputDir=
 
 [OutputGroup1]
 Name=Netlist Outputs

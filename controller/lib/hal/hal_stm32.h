@@ -116,14 +116,14 @@ inline SysCtrl_Reg *const SYSCTL_BASE =
     reinterpret_cast<SysCtrl_Reg *>(0xE000E000);
 
 // Interrupt controller
-typedef struct {
+struct IntCtrl_Regs {
   REG setEna[32];
   REG clrEna[32];
   REG setPend[32];
   REG clrPend[32];
   REG active[64];
   BREG priority[1024];
-} IntCtrl_Regs;
+};
 inline IntCtrl_Regs *const NVIC_BASE =
     reinterpret_cast<IntCtrl_Regs *>(0xE000E100);
 

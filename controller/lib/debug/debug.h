@@ -28,9 +28,10 @@ enum class DbgPollState { WAIT_CMD, PROCESS_CMD, SEND_RESP };
 enum class DbgSpecial { ESC = 0xf1, TERM = 0xf2 };
 
 enum class DbgCmdCode {
-  NOP = 0x00,  // No operation.
-  PEEK = 0x01, // Peek into RAM
-  POKE = 0x02, // Poke values into RAM
+  MODE = 0x00,            // Return the current firmware mode
+  PEEK = 0x01,            // Peek into RAM
+  POKE = 0x02,            // Poke values into RAM
+  PRINT_BUFF_READ = 0x03, // Read strings from the print buffer
 };
 
 enum class DbgErrCode {
@@ -77,6 +78,11 @@ public:
   // Printf style function to print data to a virtual
   // console.
   int Print(const char *fmt, ...);
+
+  // Read a byte from the print buffer.
+  // This is only intended to be called from the command that returns
+  // print buffer data.
+  int PrintBuffGet() { return printBuff.Get(); }
 
 private:
   CircBuff<2000> printBuff;

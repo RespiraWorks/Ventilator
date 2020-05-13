@@ -46,7 +46,7 @@ The physical design encompasses everything that is not software run on the devic
       * [02_Electrical_Design](02_System_Design/electrical_design/README.md)
       * [03_Software_Design](https://github.com/RespiraWorks/VentilatorSoftware)
       * [04_Mechanical_Design]
-  * [03_Quality_documentation]
+  * [03_Quality_documentation](03_Quality_Documentation/README.md)
   * [04_Build_Instructions]
-      * [Alpha build BOM + instructions](02_Build_Instructions/alpha/README.md)
+      * [Alpha build BOM + instructions](04_Build_Instructions/alpha/README.md)
          Documentation for building the "Alpha" version of the device which can be used by developers to contribute to the software. Note that this is almost always out of date, by definition.

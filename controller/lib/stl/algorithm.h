@@ -15,24 +15,14 @@ limitations under the License.
 #ifndef ALGORITHM_H
 #define ALGORITHM_H
 
-// This file is a "Polyfill" for some functions in <algorithm>, which is
-// unavailable on Arduino.
+// Include this file instead of <algorithm>.
+//
+// It works around the fact that Arduino.h defines min/max macros, which causes
+// it to conflict with std::min/max.
+//
+// TODO: Remove this and use plain <algorithm> once the `nucleo` (i.e. stm32 +
+// Arduino API) platform is gone.
 
-// Undefine evil min/max macros defined by Arduino.h.  These are prone to the
-// following bug:
-//
-//   int a = min(b, fn());
-//   assert(a <= b);
-//
-// You'd expect this assert to always be true, but it might fail!  The min
-// macro expands to
-//
-//   int a = b < fn() ? b : fn();
-//
-// and you can see that this might evaluate fn() twice.  There's no guarantee
-// that the second return is equal to the first.
-//
-// Use stl::min/max instead.
 #if !defined(TEST_MODE) && !defined(BARE_STM32)
 #include <Arduino.h>
 #endif
@@ -40,20 +30,6 @@ limitations under the License.
 #undef min
 #undef max
 
-namespace stl {
+#include <algorithm>
 
-template <typename T> constexpr const T &min(const T &a, const T &b) {
-  return a < b ? a : b;
-}
-
-template <typename T> constexpr const T &max(const T &a, const T &b) {
-  return a > b ? a : b;
-}
-
-template <typename T>
-constexpr const T &clamp(const T &v, const T &lo, const T &hi) {
-  return (v < lo) ? lo : (hi < v) ? hi : v;
-}
-
-} // namespace stl
 #endif // ALGORITHM_H

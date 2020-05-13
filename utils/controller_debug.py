@@ -14,9 +14,10 @@ import time
 import traceback
 
 # Command codes.  See debug.h in the controller debug library
-OP_NOP  = 0x00
-OP_PEEK = 0x01
-OP_POKE = 0x02
+OP_MODE   = 0x00
+OP_PEEK   = 0x01
+OP_POKE   = 0x02
+OP_PBREAD = 0x03
 
 # Special characters used to frame commands
 ESC  = 0xf1
@@ -40,8 +41,16 @@ class Error(Exception):
 class cmdline( cmd.Cmd ):
    def __init__( self ):
       cmd.Cmd.__init__( self );
-      self.prompt = '] ';
+      self.UpdatePrompt();
       self.cmdloop();
+
+   def UpdatePrompt( self, mode=None ):
+      if( mode == None ):
+         mode = SendCmd( OP_MODE )[0]
+      if( mode == 1 ):
+         self.prompt = 'BOOT] ';
+      else:
+         self.prompt = '] ';
 
    def cmdloop( self ):
       while( True ):
@@ -59,6 +68,7 @@ class cmdline( cmd.Cmd ):
 
    def emptyline( self ):
       ReSync()
+      self.UpdatePrompt();
 
    def do_debug( self, line ):
       """Toggles display of low level serial data on/off"""
@@ -96,6 +106,27 @@ class cmdline( cmd.Cmd ):
          ct   - Number of bytes to read (default 1)
          fmt  - An optional formatting string.
          file - An optional file to save the data to
+
+         The formatting string determines how the data is interpreted and displayed.
+         Its a string made up of the following characters:
+           +  current address
+           x  16-bit integer displayed in hex
+           i  16-bit signed integer displayed in decimal
+           u  16-bit unsigned integer displayed in decimal
+           X  32-bit integer displayed in hex
+           I  32-bit signed integer displayed in decimal
+           U  32-bit unsigned integer displayed in decimal
+           f  32-bit float
+           e  32-bit float in exponential format
+           c  Single byte displayed as an ASCII character
+           b  Single byte displayed in hex
+
+         The data is extracted from what's returned and formatted as described in the string.
+         If there's more data left over at the end of the string, a new line starts and the
+         string starts over.
+
+         The default formatting string if none is supplied is +XXXX
+         i.e. Data is displayed as a series of 4 32-bit hex values / line
       """
       param = str.split(line);
       addr = 0; ct = 1; fmt = '+XXXX';
@@ -135,6 +166,58 @@ class cmdline( cmd.Cmd ):
       else:
          data = [int(x,0) for x in param[1:] ];
       poke( addr, data, ptype );
+
+   def do_console( self, line ):
+      """
+      Switch from command mode to a simple console display which
+      continuously readings debug print statements from the controller
+      and displays the data received to the screen.
+
+      Enter <ctrl>C to exit this mode
+
+      A couple optional parameters can be passed on the command line:
+
+      --flush     If given, the console will be flushed before we start
+                  to display data.  That way any old (possibly incomplete
+                  data) will be removed before the display starts
+
+      <filename>  If a file name is given, the data received will be
+                  written to the file as well as displayed.
+      """
+
+      cl = line.split()
+
+      # Optionally flush the buffer before we start displaying
+      if( '--flush' in cl ):
+         while( len(SendCmd(OP_PBREAD)) > 0 ):
+            pass
+         cl.remove( '--flush' )
+
+      if( len(cl) > 0 ):
+         fp = open( cl[0], 'w' );
+      else:
+         fp = None
+
+      try:
+         while( True ):
+            dat = SendCmd( OP_PBREAD );
+            if( len(dat) < 1 ):
+               time.sleep(.05)
+               continue
+
+            S = ''.join( [chr(x) for x in dat] )
+
+            sys.stdout.write(S)
+            sys.stdout.flush()
+
+            if( fp != None ):
+               fp.write(S)
+
+      except KeyboardInterrupt:
+         print()
+         ReSync()
+         pass
+
 
    def do_EOF( self, line ):
       return True;

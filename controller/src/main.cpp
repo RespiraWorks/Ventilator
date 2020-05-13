@@ -88,13 +88,13 @@ static void DEV_MODE_comms_handler(const ControllerStatus &controller_status,
   last_sent = now;
 
   auto &r = controller_status.sensor_readings;
-  debugPrint("%.2f, ", controller_status.fan_setpoint_cm_h2o);
-  debugPrint("%.2f, ", r.patient_pressure_cm_h2o);
-  debugPrint("%.2f, ", r.inflow_pressure_diff_cm_h2o);
-  debugPrint("%.2f, ", r.outflow_pressure_diff_cm_h2o);
-  debugPrint("%.2f, ", r.flow_ml_per_min / 1000.0f);
+  debug.Print("%.2f, ", controller_status.fan_setpoint_cm_h2o);
+  debug.Print("%.2f, ", r.patient_pressure_cm_h2o);
+  debug.Print("%.2f, ", r.inflow_pressure_diff_cm_h2o);
+  debug.Print("%.2f, ", r.outflow_pressure_diff_cm_h2o);
+  debug.Print("%.2f, ", r.flow_ml_per_min / 1000.0f);
   // debugPrint("%.2f, ", r.volume_ml / 10.f);
-  debugPrint("\n");
+  debug.Print("\n");
 }
 #endif
 

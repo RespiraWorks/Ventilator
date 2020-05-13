@@ -69,10 +69,12 @@ DebugSerial::DebugSerial() {
   // prevent that.  For now I'm just explicitely adding them here.
   // They still add themselves in their static constructors, but
   // that shouldn't cause any harm.
-  extern DebugCmd peek, poke;
+  extern DebugCmd mode, peek, poke, pbRead;
 
+  DebugCmd::cmdList[static_cast<int>(DbgCmdCode::MODE)] = &mode;
   DebugCmd::cmdList[static_cast<int>(DbgCmdCode::PEEK)] = &peek;
   DebugCmd::cmdList[static_cast<int>(DbgCmdCode::POKE)] = &poke;
+  DebugCmd::cmdList[static_cast<int>(DbgCmdCode::PRINT_BUFF_READ)] = &pbRead;
 }
 
 // This function is called from the main low priority background loop.
@@ -310,14 +312,23 @@ DebugCmd::DebugCmd(DbgCmdCode opcode) {
   cmdList[static_cast<uint8_t>(opcode)] = this;
 }
 
-// No-op command.  Just returns OK
-class NoOpCmd : public DebugCmd {
+// Mode command.  This returns a single byte of data which
+// gives the firmware mode:
+//  0 - Running in normal mode
+//  1 - Running in boot mode.
+//
+// We don't actually have a boot mode yet, but it's only
+// a matter of time.  Once we start doing things like
+// updating firmware (not through a debugger) we will
+// need a separate boot loader image to ensure graceful
+// recovery.
+class ModeCmd : public DebugCmd {
 public:
-  NoOpCmd() : DebugCmd(DbgCmdCode::NOP) {}
+  ModeCmd() : DebugCmd(DbgCmdCode::MODE) {}
   DbgErrCode HandleCmd(uint8_t *data, int *len, int max) {
+    *len = 1;
+    data[0] = 0;
     return DbgErrCode::OK;
   }
 };
-static NoOpCmd noOp;
-
-extern DebugCmd peek;
+ModeCmd mode;

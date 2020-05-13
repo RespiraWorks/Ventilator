@@ -25,13 +25,13 @@ The physical design encompasses everything that is not software run on the devic
 
 ## DISCLAIMER
 
-**This is an incomplete, untested design and is not intended to be used on patients.**
+**This is an incomplete, untested design and is not yet intended to be used on patients.**
 
 **This repository contains live documents.
 There are duplicate and alternative items for undecided aspects of the physical design.
 Components may or may not connect and integrate as intended.
 Contents may also be out of date. 
-RespiraWorks may, or may not compensate you for parts you may purchase.
+RespiraWorks may, or may not compensate you for parts you purchase.
 If you decide to buy or build anything, do so at your own risk.**
 
 ## Design Objectives
@@ -46,8 +46,11 @@ If you decide to buy or build anything, do so at your own risk.**
 ## Structure
 
   * [Requirements](requirements/README.md)
+  Describes the requirement architecture, heirarchy, and process.
   * [System architecture](system_architecture/README.md)
+  Describes the functional implementation of the system. This document also defines the tree structure for the repositories below this directory.
   * [Pneumatic design](pneumatic_design/README.md)
   * [Electrical design](electrical_design/README.md)
   * [Alpha build BOM + instructions](alpha/README.md)
+  Documentation for building the "Alpha" version of the device which can be used by developers to contribute to the software. Note that this is almost always out of date, by definition.
   * [Software (separate repository)](https://github.com/RespiraWorks/VentilatorSoftware)

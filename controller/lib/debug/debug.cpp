@@ -62,6 +62,17 @@ DebugSerial::DebugSerial() {
   buffNdx = 0;
   pollState = DbgPollState::WAIT_CMD;
   prevCharEsc = false;
+
+  // TODO - This is annoying.  I had intended to make the constructors
+  // of the various commands automatically add them to this list, but
+  // the linker keeps removing them and I can't figure out how to
+  // prevent that.  For now I'm just explicitely adding them here.
+  // They still add themselves in their static constructors, but
+  // that shouldn't cause any harm.
+  extern DebugCmd peek, poke;
+
+  DebugCmd::cmdList[static_cast<int>(DbgCmdCode::PEEK)] = &peek;
+  DebugCmd::cmdList[static_cast<int>(DbgCmdCode::POKE)] = &poke;
 }
 
 // This function is called from the main low priority background loop.
@@ -218,12 +229,16 @@ void DebugSerial::ProcessCmd() {
 
   uint16_t crc = CalcCRC(cmdBuff, buffNdx - 2);
 
-  if (crc != u8_to_u16(&cmdBuff[1]))
+  if (crc != u8_to_u16(&cmdBuff[buffNdx - 2])) {
     SendError(DbgErrCode::CRC_ERR);
+    return;
+  }
 
   DebugCmd *cmd = DebugCmd::cmdList[cmdBuff[0]];
-  if (!cmd)
+  if (!cmd) {
     SendError(DbgErrCode::BAD_CMD);
+    return;
+  }
 
   // The length that we pass in to the command handler doesn't
   // include the command code or CRC.  The max size is also reduced
@@ -231,8 +246,10 @@ void DebugSerial::ProcessCmd() {
   int len = buffNdx - 3;
   DbgErrCode err =
       cmd->HandleCmd(&cmdBuff[1], &len, static_cast<int>(sizeof(cmdBuff) - 3));
-  if (err != DbgErrCode::OK)
+  if (err != DbgErrCode::OK) {
     SendError(err);
+    return;
+  }
 
   cmdBuff[0] = static_cast<uint8_t>(DbgErrCode::OK);
 
@@ -279,7 +296,7 @@ uint16_t DebugSerial::CalcCRC(uint8_t *buff, int len) {
     }
   }
 
-  uint16_t crc = 0xffff;
+  uint16_t crc = 0;
 
   for (int i = 0; i < len; i++) {
     uint16_t tmp = tbl[0xFF & (buff[i] ^ crc)];
@@ -302,3 +319,5 @@ public:
   }
 };
 static NoOpCmd noOp;
+
+extern DebugCmd peek;

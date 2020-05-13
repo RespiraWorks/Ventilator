@@ -23,7 +23,7 @@ Displacement type devices provide a mechanical compression of a fixed volume to 
 
 **TODO:** Why no flowchart?
 
-      * [01_Pneumatic_Design](02_System_Design/pneumatic_design/README.md)
-      * [02_Electrical_Design](02_System_Design/electrical_design/README.md)
-      * [03_Software_Design](https://github.com/RespiraWorks/VentilatorSoftware)
-      * [04_Mechanical_Design]
+   * [01_Pneumatic_Design](pneumatic_design/README.md)
+   * [02_Electrical_Design](electrical_design/README.md)
+   * [03_Software_Design](https://github.com/RespiraWorks/VentilatorSoftware)
+   * [04_Mechanical_Design]

@@ -49,11 +49,11 @@ This build depends on already having a Brain build, which has its own BOM [here]
 | 9      |        2 |               |                     | 16.99 / 2    | buy       | [Z][9amzn]      | CPAP tubing |
 | 10     |        1 |               |                     | 15.00        |*ask first*| [E][10ebay]     | test "lung", ask build-team if they have extra |
 | 11     |        1 |               |                     | 6.98         | buy       | [Z][11amzn]     | use these to simulate lung compliance |
-| 12     |        1 | RespiraWorks  | PCB1                |              | **ask**   | [B][1rw]        | RespiraWorks Ventilator Mainboard Rev 1 PCB |
+| 12     |        1 | RespiraWorks  | PCB1                |              | **ask**   | [B][12rw]       | RespiraWorks Ventilator Mainboard Rev 1 PCB |
 | 13     |        1 | RespiraWorks  | Power input 1       |              | **ask**   | B               | Power Input cable |
 | 14     |        1 | Digikey       | X-NUCLEO-IHM03A1    |        10.64 |*ask first*| [K][14key]      | Stepper driver dev board |
-| 15     |        1 | RespiraWorks  | PinchValve1.4       |              | **ask**   | B               | Marc-designed stepper pinch valve rev 1.4 |
-| 16     |        2 | RespiraWorks  | Venturi2            |              | **ask**   | B               | Ethan-designed 10-32 threaded venturis Rev 2 |
+| 15     |        1 | RespiraWorks  | PinchValve1.4       |              | **ask**   | [B][15rw]       | Marc-designed stepper pinch valve rev 1.4 |
+| 16     |        2 | RespiraWorks  | Venturi2            |              | **ask**   | [B][16rw]       | Ethan-designed 10-32 threaded venturis Rev 2 |
 | 17     |        1 |               | WS7040-12-X200N     |        52.65 |*ask first*| [A][17ali]      | 12v blower and driver. Make sure to choose w/driver when ordering. |
 | 17x    |        1 |               | WS1208DYY01V03      |        24.00 |*ask first*| [W][17x-won]    | blower driver, in case blower above did not come with driver. |
 | 18     |        1 | RespiraWorks  | blower control cable|              | **ask**   | B               | blower control cable |
@@ -78,10 +78,12 @@ This build depends on already having a Brain build, which has its own BOM [here]
 [9amzn]:   https://www.amazon.com/gp/product/B01N14F1MV
 [10ebay]:  https://www.ebay.com/itm/PORTEX-Adult-Disposable-Anesthesia-Breathing-Circuit-3L-Breathing-Bag-370924/362943456196
 [11amzn]:  https://www.amazon.com/gp/product/B018WPZCSO
+[12rw]:    https://github.com/RespiraWorks/pcbreathe/tree/master/NIGHTLY/20200424v2-RELEASE-CANDIDATE-2
 [14key]:   https://www.digikey.com/product-detail/en/stmicro/X-NUCLEO-IHM03A1/497-15868-ND/5325495
+[15rw]:    ../../02_System_Design/pneumatic_design/pinch_valve/README.md 
+[16rw]:    ../../02_System_Design/pneumatic_design/venturi_flow_sensor/README.md
 [17ali]:   https://www.aliexpress.com/item/32698107687.html
 [17x-won]: https://wonsmart-motor.en.made-in-china.com/product/hsjxFewOppVg/China-Air-Pump12V-Brushless-Motor-12V-Blower-Fan-Driver.html
-[1rw]:     https://github.com/RespiraWorks/pcbreathe/tree/master/NIGHTLY/20200424v2-RELEASE-CANDIDATE-2
 
 ## Tooling BOM
 

@@ -1,31 +1,27 @@
 # RespiraWorks Open Source Ventilator
 
-RespiraWorks is a 501(c)(3) non-profit organization (IRS status pending) with over
+[RespiraWorks](https://respira.works/) is a 501(c)(3) non-profit organization (IRS status pending) with over
 100 contributors worldwide working to rapidly develop, manufacture, and deploy a
 low-cost and open-source ventilator for communities under-served by the global supply chain.
 
 ![Ventilator under construction](open_box.jpg)
+
+**Design Origin**
 
 Most low-cost ventilator designs tackle the 'bridge' - how to keep a patient alive for
 6-8 hours of closely monitored care until they can be transitioned to a full ventilator.
 However COVID-19 patients require lung-protective adaptive ventilation strategies, and
 require ventilator support for days to weeks.
 
-Our product provides these essential features with an open-source design, an
-IEC-conformant quality process, and an optimized BOM for sourcing and manufacture worldwide.
-These parts of the world will deal with COVID-19 for longer, with less healthcare, and a
-larger deficit of medical devices. RespiraWorks provides solutions for these communities
-where existing manufacturers cannot.
+Early in the crisis, we realized that the ventilator designs that could be completed in weeks might not be necessary, and if so, a more feature complete ventilator would be needed. As we started working on that, we realized that this was a market need unmet by the established ventilator market. Despite constant developments in the disease progression, we realized that a true-open source ventilator, with transparant requirements, design history documents, and yet still optimized for low-cost and ease of manufacturing would enable expanded global access to a critical piece of medical equipment.
 
-This repository tracks the physical design of the RespiraWorks open source medical ventilator.
-The physical design encompasses everything that is not software run on the device.
+Our ventilator exists between the short-term ambu-bag actuating designs and the commercial ventilators offered by established manufacturers. It provides essential features such as a graphical user interface, adaptive pressure controls, and fine control of FiO2, oxygen, and PEEP, with CMV, SIMV, PSV and PRVC operating modes. Unlike tranditional ventilators, our design work is being completed as fully open-source design, yet still with an IEC-conformant quality process, and an optimized BOM for sourcing and manufacture worldwide.
 
-  * [Website](https://respira.works/)
-  * [GoFundMe page](https://www.gofundme.com/f/open-source-pandemic-ventilator)
+Our target is not the US or Europe, but the middle- and low-income parts of the world that will deal with COVID-19 for longer, with less healthcare, and a larger deficit of medical devices. RespiraWorks provides solutions for these communities where existing manufacturers cannot.
 
 ## DISCLAIMER
 
-**This is an incomplete, untested design and is not yet intended to be used on patients.**
+**This is an incomplete, as yet untested design that is not yet intended to be used on patients.**
 
 **This repository contains live documents.
 There are duplicate and alternative items for undecided aspects of the physical design.
@@ -34,23 +30,23 @@ Contents may also be out of date.
 RespiraWorks may, or may not compensate you for parts you purchase.
 If you decide to buy or build anything, do so at your own risk.**
 
-## Design Objectives
+# Repository Overview
 
-- Design and build a ventilator that provides the level of care required for effectively treating COVID-19 patients.
-- Have the right modes and controls.
-- Provide the right feedback for caregivers to set those modes and controls.
-- The design must be sourceable, and buildable in a repeatable fashion.
-- Keep the unit material cost under $500
-- Limit the waste of limited consumables (O2, filters)
+This repository tracks the physical design of the RespiraWorks open source medical ventilator.
+The physical design encompasses everything that is not software run on the device, from the pneumatics, to the mechanical design, bill of materials, and circuit diagram. The software repository can be found below and linked from within the system design. 
+
 
 ## Structure
 
-  * [Requirements](requirements/README.md)
-  Describes the requirement architecture, heirarchy, and process.
-  * [System architecture](system_architecture/README.md)
-  Describes the functional implementation of the system. This document also defines the tree structure for the repositories below this directory.
-  * [Pneumatic design](pneumatic_design/README.md)
-  * [Electrical design](electrical_design/README.md)
-  * [Alpha build BOM + instructions](alpha/README.md)
-  Documentation for building the "Alpha" version of the device which can be used by developers to contribute to the software. Note that this is almost always out of date, by definition.
-  * [Software (separate repository)](https://github.com/RespiraWorks/VentilatorSoftware)
+  * [01_Requirements](01_Requirements/README.md)
+  Describes the requirement architecture, heirarchy, and process. Links to the releases of our system requirements, hardware specifications, and software requirements. 
+  * [02_System_Design](02_System_Design/README.md)
+  Describes the functional implementation and design theory of the system. This document also defines the tree structure for the repositories below this directory.
+      * [01_Pneumatic_Design](pneumatic_design/README.md)
+      * [02_Electrical_Design](electrical_design/README.md)
+      * [03_Software_Design](https://github.com/RespiraWorks/VentilatorSoftware)
+      * [04_Mechanical_Design]
+  * [03_Quality_documentation]
+  * [04_Build_Instructions]
+      * [Alpha build BOM + instructions](alpha/README.md)
+         Documentation for building the "Alpha" version of the device which can be used by developers to contribute to the software. Note that this is almost always out of date, by definition.

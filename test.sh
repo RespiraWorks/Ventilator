@@ -28,7 +28,6 @@ pio test -e native
 
 # Make sure controller builds for target platform.
 pio run -e stm32
-pio run -e nucleo
 
 # Code style / bug-prone pattern checks (eg. clang-tidy)
 # WARNING: This might sometimes give different results for different people,

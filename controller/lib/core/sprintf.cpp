@@ -439,9 +439,9 @@ static int FormatLong(FieldInfo *info, long long val, char *str, int max) {
 static int FormatFloat(FieldInfo *info, float val, char *str, int max) {
   // Check for outliers
   const char *bad = 0;
-  if (isnanf(val))
+  if (isnan(val))
     bad = (val < 0) ? "-nan" : "nan";
-  if (isinff(val))
+  if (isinf(val))
     bad = (val < 0) ? "-inf" : "inf";
   if (bad) {
     for (int i = 0; i < max && bad[i]; i++)
@@ -542,7 +542,7 @@ static int FormatExp(FieldInfo *info, float val, char *str, int max) {
   int exp = 0;
   float av = fabsf(val);
 
-  if (av) {
+  if (av != 0) {
     exp = (int)floorf(log10f(av));
     val *= powf(10.0f, static_cast<float>(-exp));
   }

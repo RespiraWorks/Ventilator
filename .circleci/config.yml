@@ -118,4 +118,3 @@ workflows:
               only: $CIRCLE_BRANCH #change to `master` only we confirm this works
           requires:
             - gui-build-image
-

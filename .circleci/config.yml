@@ -115,6 +115,6 @@ workflows:
       - gui-push-image:
           filters:
             branches:
-              only: $CIRCLE_BRANCH #change to `master` only we confirm this works
+              only: slankard/issue_175-docker-hub-push #change to `master` only we confirm this works
           requires:
             - gui-build-image

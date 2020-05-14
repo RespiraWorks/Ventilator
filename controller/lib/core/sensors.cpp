@@ -41,14 +41,6 @@ static_assert(DEFAULT_VENTURI_CHOKE_DIAM > meters(0));
 // TODO: VOLUME_INTEGRAL_INTERVAL was not chosen carefully.
 static constexpr Duration VOLUME_INTEGRAL_INTERVAL = milliseconds(5);
 
-// Take this many samples from a sensor while zeroing it.
-// TODO: Tune this value.
-static constexpr int SENSOR_SAMPLES_FOR_INIT = 4;
-
-// Take this many samples from a sensor while reading it.
-// TODO: Tune this value.
-static constexpr int SENSOR_SAMPLES_FOR_READ = 2;
-
 /*static*/ AnalogPin Sensors::PinFor(Sensor s) {
   switch (s) {
   case PATIENT_PRESSURE:
@@ -81,28 +73,16 @@ Sensors::Sensors() {
   // open any necessary valves, and recalibrate.
   Hal.delay(milliseconds(20));
 
-  auto set_zero_level = [this](Sensor s) {
-    float sum = 0;
-    for (int i = 0; i < SENSOR_SAMPLES_FOR_INIT; i++) {
-      sum += Hal.analogRead(PinFor(s)).volts();
-    }
-    // A bit of loss of mantissa here is okay.
-    sensors_zero_vals_[s] = volts(sum / SENSOR_SAMPLES_FOR_INIT);
-  };
-  set_zero_level(PATIENT_PRESSURE);
-  set_zero_level(INFLOW_PRESSURE_DIFF);
-  set_zero_level(OUTFLOW_PRESSURE_DIFF);
+  for (Sensor s :
+       {PATIENT_PRESSURE, INFLOW_PRESSURE_DIFF, OUTFLOW_PRESSURE_DIFF}) {
+    sensors_zero_vals_[s] = Hal.analogRead(PinFor(s));
+  }
 }
 
 // Reads a sensor, returning its value in kPa.
 //
 // @TODO: Add alarms if sensor value is out of expected range?
 Pressure Sensors::ReadPressureSensor(Sensor s) {
-  float sum = 0;
-  for (int i = 0; i < SENSOR_SAMPLES_FOR_READ; i++) {
-    sum += Hal.analogRead(PinFor(s)).volts();
-  }
-
   // The pressure sensors output 1-5V, and each additional 1V of output
   // corresponds to an additional 1kPa of pressure difference.
   // https://www.nxp.com/docs/en/data-sheet/MPXV5004G.pdf.
@@ -111,9 +91,8 @@ Pressure Sensors::ReadPressureSensor(Sensor s) {
   // our ADC.  Therefore, if we multiply the received voltage by 5/3.3, we get
   // a pressure in kPa.
   static const float TRANSFER_FN_COEFF = 5.f / 3.3f;
-  return kPa(
-      TRANSFER_FN_COEFF *
-      (volts(sum / SENSOR_SAMPLES_FOR_READ) - sensors_zero_vals_[s]).volts());
+  return kPa(TRANSFER_FN_COEFF *
+             (Hal.analogRead(PinFor(s)) - sensors_zero_vals_[s]).volts());
 }
 
 /*static*/ VolumetricFlow Sensors::PressureDeltaToFlow(Pressure delta) {

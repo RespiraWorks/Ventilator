@@ -370,54 +370,6 @@ public:
 private:
   bool active_;
 };
-inline int HalApi::analogRead(AnalogPin pin) {
-  return ::analogRead(rawPin(pin));
-}
-inline void HalApi::setDigitalPinMode(PwmPin pin, PinMode mode) {
-  ::pinMode(rawPin(pin), static_cast<uint8_t>(mode));
-}
-inline void HalApi::setDigitalPinMode(BinaryPin pin, PinMode mode) {
-  ::pinMode(rawPin(pin), static_cast<uint8_t>(mode));
-}
-inline void HalApi::digitalWrite(BinaryPin pin, VoltageLevel value) {
-  ::digitalWrite(rawPin(pin), static_cast<uint8_t>(value));
-}
-inline void HalApi::analogWrite(PwmPin pin, int value) {
-  ::analogWrite(rawPin(pin), value);
-}
-[[nodiscard]] inline uint16_t HalApi::serialRead(char *buf, uint16_t len) {
-  return Serial.readBytes(buf, std::min(len, serialBytesAvailableForRead()));
-}
-inline uint16_t HalApi::serialBytesAvailableForRead() {
-  return Serial.available();
-}
-[[nodiscard]] inline uint16_t HalApi::serialWrite(const char *buf,
-                                                  uint16_t len) {
-  return Serial.write(buf, std::min(len, serialBytesAvailableForWrite()));
-}
-inline uint16_t HalApi::serialBytesAvailableForWrite() {
-  return Serial.availableForWrite();
-}
-
-// No implementation of debugRead/Write on Nucleo because the Arduino API
-// doesn't expose a separate debug serial port.
-// Debug stuff not supported because this platform is being removed
-inline uint16_t HalApi::debugWrite(const char *buf, uint16_t len) {
-  return len;
-}
-inline uint16_t HalApi::debugRead(char *buf, uint16_t len) { return 0; }
-inline uint16_t HalApi::debugBytesAvailableForWrite() { return 0; }
-
-inline void HalApi::watchdog_init() {
-  // Our only user of the Arduino API is Nucleo, i.e. STM32 using Arduino APIs.
-  // Unfortunately it does not expose the watchdog API, so we can't implement
-  // this.  Which is OK, because Nucleo is not long for this world.
-  //
-  // wdt_enable(WDTO_120MS);
-}
-[[noreturn]] inline void HalApi::reset_device() {
-  // Watchdog is not implementable on Nucleo, sadly.
->>>>>>> Added debug serial interface.  No commands yet other then noop
 
 #if defined(BARE_STM32)
 

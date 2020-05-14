@@ -203,9 +203,11 @@ enum VentMode {
 }
 
 message SensorReadings {
-  required float pressure_cm_h2o = 1;
+  required float patient_pressure_cm_h2o = 1;
   required float volume_ml = 2;
   required float flow_ml_per_min = 3;
+  required float inflow_pressure_diff_cm_h2o = 4;
+  required float outflow_pressure_diff_cm_h2o = 5;
 }
 
 enum AlarmKind {

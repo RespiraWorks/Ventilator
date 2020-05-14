@@ -30,7 +30,7 @@ TEST(CommTests, SendControllerStatus) {
       std::numeric_limits<uint32_t>::max();
   s.active_params.alarm_hi_breaths_per_min =
       std::numeric_limits<uint32_t>::max();
-  s.sensor_readings.pressure_cm_h2o = 11;
+  s.sensor_readings.patient_pressure_cm_h2o = 11;
   s.sensor_readings.volume_ml = 800;
   s.sensor_readings.flow_ml_per_min = 1000;
 
@@ -51,8 +51,8 @@ TEST(CommTests, SendControllerStatus) {
   EXPECT_EQ(s.uptime_ms, sent.uptime_ms);
   EXPECT_EQ(s.active_params.mode, sent.active_params.mode);
   EXPECT_EQ(s.active_params.peep_cm_h2o, sent.active_params.peep_cm_h2o);
-  EXPECT_EQ(s.sensor_readings.pressure_cm_h2o,
-            sent.sensor_readings.pressure_cm_h2o);
+  EXPECT_EQ(s.sensor_readings.patient_pressure_cm_h2o,
+            sent.sensor_readings.patient_pressure_cm_h2o);
 }
 
 TEST(CommTests, CommandRx) {

@@ -88,6 +88,13 @@ jobs:
           name: Run tests
           command: |
             docker run -i respiraworks/gui:$CIRCLE_SHA1 gui/test.sh
+      - run:
+          name: Push docker image
+          command: |
+            if [[ "$CIRCLE_BRANCH" == "master" ]]; then
+                echo "$DOCKER_HUB_TOKEN" | docker login -u "$DOCKER_HUB_USERNAME" --password-stdin
+                docker push respiraworks/gui:$CIRCLE_SHA1
+            fi
 
 workflows:
   commit:

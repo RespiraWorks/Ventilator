@@ -16,7 +16,7 @@ If you decide to buy them, do so at your own risk... oh, and thank you ;).**
 
 | RefDes | Quantity | Manufacturer  | Part #              | Price($)     | Sources         | Notes |
 | ------ |---------:| ------------- | ------------------- | ------------:|-----------------| ----- |
-| 1      |        - | JST           | SXH-001T-P0.6       |         0.10 | [K][1digi]      | XH sockets, for sensor & actuator connections |
+| 1      |       12 | JST           | SXH-001T-P0.6       |         0.10 | [K][1digi]      | XH sockets, for sensor & actuator connections |
 | 2      |        - | JST           | XHP-2               |         0.10 | [K][2digi]      | XH 2-pin housings, for solenoid |
 | 3      |        - | JST           | XHP-3               |         0.10 | [K][3digi]      | XH 3-pin housings, for heater |
 | 4      |        - | JST           | XHP-5               |         0.12 | [K][4digi]      | XH 5-pin housings, for sensors |
@@ -26,6 +26,7 @@ If you decide to buy them, do so at your own risk... oh, and thank you ;).**
 | 6      |        6 | JST           | SVH-21T-P1.1        |         0.11 | [K][6digi]      | VH sockets, for power connectors |
 | 7      |        2 | TE            | 1-1123722-2         |         0.18 | [K][7digi]      | VH housing 2 pin, for blower power |
 | 8      |        1 | JST           | VHR-3N              |         0.14 | [K][8digi]      | VH housing 3 pin, for main power |
+| 9      |        1 | AIMHD         | AHD-DC20-F-PT       |    9.99 / 20 | [Z][9amzn]      | Female Power Pigtail DC 5.5mm x 2.1mm Connectors, for main power |
 
 [1digi]:   https://www.digikey.com/short/z44f8d
 [2digi]:   https://www.digikey.com/short/z44f8f
@@ -37,8 +38,7 @@ If you decide to buy them, do so at your own risk... oh, and thank you ;).**
 [6digi]:   https://www.digikey.com/short/z44fjr
 [7digi]:   https://www.digikey.com/short/z44fwj
 [8digi]:   https://www.digikey.com/short/z44fwp
-
-**TODO:** power adapter connector
+[9amzn]: https://www.amazon.com/Connectors-Upgraded-Surveillance-Transformer-Connection/dp/B0768V9V5Q
 
 **TODO:** wires
 

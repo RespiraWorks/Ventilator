@@ -29,7 +29,7 @@ Latest progress on 3d-printed part design is found in
 
 | RefDes | Quantity | Manufacturer  | Part #              | Price($)     | Sources         | Notes |
 | ------ |---------:| ------------- | ------------------- | ------------:|-----------------| ----- |
-| 1      |        1 | STEPPERONLINE | 17HS19-2004S2       |       14.99  | [Z][1amzn]      | Stepper motor. Make sure to get one with the D-Cut shaft |
+| 1      |        1 | STEPPERONLINE | 17HS19-2004S2       |       14.99  | [Z][1amzn]      | Stepper motor. Make sure to get one with the full-cut D-shaft. |
 | 2      |        1 | McMaster-Carr | 92095A218           |   7.64 / 25  | [C][2mcmc]      | M5x30mm button head. Axle for bearing. |
 | 3      |        3 | McMaster-Carr | 91294A128           |  4.82 / 100  | [C][3mcmc]      | M3x8mm flat head. Attaches frame to stepper body |
 | 4      |        1 | McMaster-Carr | 91390A117           |  4.75 / 100  | [C][4mcmc]      | M5x5mm set screw. Attaches rotor to stepper |

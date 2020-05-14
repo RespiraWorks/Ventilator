@@ -32,13 +32,14 @@
 
 ![plug in the nucleo](/ReadmePhotos/IMG_9312.jpg)
 * When programming over the Nucleo USB interface, the board emulates an ST-Link programming the MCU over SWD.  Use these settings in the toolchain of your choice.
-* The bringup code was written in the Arduino IDE environment with STM32duino installed and can be found here (disclaimer: this code is not part of the project and is pretty much unsupported, use at your own risk.  The listing of hardware pin #defines at the top might be useful): [pcbreathe-bringup](https://github.com/inceptionev/pcbreathe-bringup/issues) 
+* The bringup code was written in the Arduino IDE environment with STM32duino installed and can be found here (disclaimer: this code is not part of the project and is pretty much unsupported, use at your own risk.  The listing of hardware pin #defines at the top might be useful): [pcbreathe-bringup](https://github.com/inceptionev/pcbreathe-bringup) 
 * The large power connectors on the PCB are JST VH type.  [Purchase Link](https://www.amazon.com/gp/product/B07LBZ3LCR)
 * The smaller peripheral connectors on the PCB are JST XH type. 
   * [Purchase link for 2/3/4/5-pin](https://www.amazon.com/gp/product/B06ZZ45G7G) 
   * [Purchase link for 5/6/7-pin](https://www.amazon.com/gp/product/B079MJ1RYN)
 * Here is a crimper that can crimp both types of contacts.  [Purchase Link](https://www.amazon.com/gp/product/B01N4L8QMW)
 * The buzzer requires an oscillating signal to make sound, it is designed for peak output at 2.4kHz.  Take off the kapton cover at your own hearing risk.
+* On the MPXV5004DP differential pressure sensors, the upper port is the positive measurement, and the lower port is the negative.  The transfer function, assuming a 12-bit ADC, is P[kpa] = ADCcounts/819 - 1
 * The switched heater and solenoid outputs can support a resistive or inductive load up to 2A.  Refer to schematic for pinouts.
 * The i2c sensor connectors are initially configured for providing 3.3V supply power to the sensors, but can be configured for 5V.  Each sensor can have its own voltage; they do not need to be the same.  If you need to switch to 5V, see the schematic for the resistors to change.  Refer to schematic for pinouts.
 * The analog pressure sensors have an anti-aliasing filter value of 100Hz.

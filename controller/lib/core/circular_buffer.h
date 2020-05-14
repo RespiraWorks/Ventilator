@@ -44,9 +44,8 @@ public:
 
   // Return number of bytes available in the buffer to read.
   int FullCt() {
-    bool p = Hal.IntSuspend();
+    BlockInterrupts block;
     int ct = head - tail;
-    Hal.IntRestore(p);
     if (ct < 0)
       ct += N;
     return ct;
@@ -59,27 +58,21 @@ public:
   // Get the oldest byte from the buffer.
   // Returns -1 if the buffer is empty
   int Get() {
+    BlockInterrupts block;
     int ret = -1;
-
-    bool p = Hal.IntSuspend();
-
     if (head != tail) {
       ret = buff[tail++];
       if (tail >= N)
         tail = 0;
     }
-
-    Hal.IntRestore(p);
     return ret;
   }
 
   // Add a byte to the buffer
   // Returnes true on success, false if the buffer is full
   bool Put(uint8_t dat) {
+    BlockInterrupts block;
     bool ret = false;
-
-    bool p = Hal.IntSuspend();
-
     int h = head + 1;
     if (h >= N)
       h = 0;
@@ -89,9 +82,6 @@ public:
       head = h;
       ret = true;
     }
-
-    Hal.IntRestore(p);
-
     return ret;
   }
 };

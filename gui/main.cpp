@@ -71,7 +71,7 @@ int main(int argc, char *argv[]) {
           controller_status->uptime_ms =
               TimeAMinusB(SteadyClock::now(), startup_time).count();
           auto *sensors = &controller_status->sensor_readings;
-          sensors->pressure_cm_h2o =
+          sensors->patient_pressure_cm_h2o =
               15 + 10 * sin(controller_status->uptime_ms * 0.001);
           sensors->flow_ml_per_min =
               120 * sin(controller_status->uptime_ms * 0.003);

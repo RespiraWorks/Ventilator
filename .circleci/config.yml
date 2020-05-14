@@ -1,5 +1,10 @@
 version: 2.1
 
+executors:
+  gui-executor:
+    machine:
+      image: ubuntu-1604:201903-01
+
 jobs:
   common-precommit-checks:
     docker:
@@ -38,9 +43,9 @@ jobs:
           name: Run tests
           command: |
             docker run --privileged -t controller-test-image
+
   gui-static-analysis:
-    machine:
-      image: ubuntu-1604:201903-01
+    executor: gui-executor
     steps:
       - checkout
       - run:
@@ -54,8 +59,7 @@ jobs:
             cd ~/project/gui && cppcheck . --error-exitcode=1 && cd -
 
   gui-build-image:
-    machine:
-      image: ubuntu-1604:201903-01
+    executor: gui-executor
     steps:
       - checkout
       - run:
@@ -88,7 +92,14 @@ jobs:
           name: Run tests
           command: |
             docker run -i respiraworks/gui:$CIRCLE_SHA1 gui/test.sh
-      - run:
+
+    gui-push-image:
+      executor: gui-executor
+      filters:
+        branch:
+          only: $CIRCLE_BRANCH #change to `master` only we confirm this works
+      steps:
+        - run:
           name: Push docker image
           command: |
             echo "$DOCKER_HUB_TOKEN" | docker login -u "$DOCKER_HUB_USERNAME" --password-stdin
@@ -104,3 +115,7 @@ workflows:
           requires:
             - common-precommit-checks
             - gui-static-analysis
+      - gui-push-image:
+          requires:
+            - gui-build-image
+

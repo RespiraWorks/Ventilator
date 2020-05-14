@@ -37,24 +37,16 @@ static const float COMPARISON_TOLERANCE = 0.005f;
 // Maximum allowable delta between calculated and actual volumetric flow
 static const float COMPARISON_TOLERANCE_FLOW = 5.0e-5f;
 
-// ADC of Nano is 10 bit, 5V VREF_P [ADC Counts / V]
-static const float COUNTS_PER_VOLT = 1024.0f / 5.0f;
-
 //@TODO: Finish writing more specific unit tests for this module
 
 /*
  * @brief This method models the pressure to voltage transfer function of the
- * MPXV5004 series sensors.
+ * MPXV5004 series sensors.  The raw voltage coming out of the sensor would be
+ * 5 * (...), but our PCB scales it down to 3.3f * (...) so that the pressure
+ * range (0-4kPa) is in the voltage range 0-3.3V.
  */
 static Voltage MPXV5004_PressureToVoltage(Pressure pressure) {
-  return volts(5 * (0.2f * pressure.kPa() + 0.2f));
-}
-
-// Simple helper function that takes in a voltage and returns the
-// equivalent ADC counts that represent it
-static void test_setAnalogPinToVolts(AnalogPin pin, Voltage v) {
-  Hal.test_setAnalogPin(pin,
-                        static_cast<int>(roundf(v.volts() * COUNTS_PER_VOLT)));
+  return volts(3.3f * (0.2f * pressure.kPa() + 0.2f));
 }
 
 TEST(SensorTests, FullScaleReading) {
@@ -70,9 +62,9 @@ TEST(SensorTests, FullScaleReading) {
 
   // First set the simulated analog signals to an ambient 0 kPa corresponding
   // voltage during calibration
-  test_setAnalogPinToVolts(AnalogPin::PATIENT_PRESSURE, voltage_at_0kPa);
-  test_setAnalogPinToVolts(AnalogPin::INFLOW_PRESSURE_DIFF, voltage_at_0kPa);
-  test_setAnalogPinToVolts(AnalogPin::OUTFLOW_PRESSURE_DIFF, voltage_at_0kPa);
+  Hal.test_setAnalogPin(AnalogPin::PATIENT_PRESSURE, voltage_at_0kPa);
+  Hal.test_setAnalogPin(AnalogPin::INFLOW_PRESSURE_DIFF, voltage_at_0kPa);
+  Hal.test_setAnalogPin(AnalogPin::OUTFLOW_PRESSURE_DIFF, voltage_at_0kPa);
 
   Sensors sensors;
 
@@ -80,12 +72,12 @@ TEST(SensorTests, FullScaleReading) {
   // versus what the original pressure waveform was
   for (auto p : pressures) {
     SCOPED_TRACE("Pressure " + std::to_string(p.kPa()));
-    test_setAnalogPinToVolts(AnalogPin::PATIENT_PRESSURE,
-                             MPXV5004_PressureToVoltage(p));
-    test_setAnalogPinToVolts(AnalogPin::INFLOW_PRESSURE_DIFF,
-                             MPXV5004_PressureToVoltage(kPa(3.0)));
-    test_setAnalogPinToVolts(AnalogPin::OUTFLOW_PRESSURE_DIFF,
-                             MPXV5004_PressureToVoltage(kPa(1.0)));
+    Hal.test_setAnalogPin(AnalogPin::PATIENT_PRESSURE,
+                          MPXV5004_PressureToVoltage(p));
+    Hal.test_setAnalogPin(AnalogPin::INFLOW_PRESSURE_DIFF,
+                          MPXV5004_PressureToVoltage(kPa(3.0)));
+    Hal.test_setAnalogPin(AnalogPin::OUTFLOW_PRESSURE_DIFF,
+                          MPXV5004_PressureToVoltage(kPa(1.0)));
 
     auto readings = sensors.GetSensorReadings();
     float pressurePatient = cmH2O(readings.patient_pressure_cm_h2o).kPa();

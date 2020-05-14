@@ -32,6 +32,7 @@ enum class DbgCmdCode {
   PEEK = 0x01,            // Peek into RAM
   POKE = 0x02,            // Poke values into RAM
   PRINT_BUFF_READ = 0x03, // Read strings from the print buffer
+  VAR = 0x04,             // Variable access
 };
 
 enum class DbgErrCode {
@@ -39,6 +40,10 @@ enum class DbgErrCode {
   CRC_ERR = 0x01,      // CRC error on command
   BAD_CMD = 0x02,      // Unknown command code received
   MISSING_DATA = 0x03, // Not enough data passed with command
+  NO_MEMORY = 0x04,    // Insufficient memory
+  INTERNAL = 0x05,     // Some type of interal error (aka bug)
+  BAD_VARID = 0x06,    // The requested variable ID is invalid
+  RANGE = 0x07,        // data out of range
 };
 
 // Each debug command is represented by an instance of this
@@ -115,7 +120,7 @@ inline uint32_t u8_to_u32(uint8_t *dat) {
   uint32_t B = dat[1];
   uint32_t C = dat[2];
   uint32_t D = dat[3];
-  return static_cast<uint32_t>(A | (B << 8) | (C << 15) | (D << 24));
+  return static_cast<uint32_t>(A | (B << 8) | (C << 16) | (D << 24));
 }
 
 inline void u16_to_u8(uint16_t val, uint8_t *buff) {
@@ -129,5 +134,7 @@ inline void u32_to_u8(uint32_t val, uint8_t *buff) {
   buff[2] = static_cast<uint8_t>(val >> 16);
   buff[3] = static_cast<uint8_t>(val >> 24);
 }
+
+#define ARRAY_CT(x) (sizeof(x) / sizeof(x[0]))
 
 #endif

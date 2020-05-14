@@ -16,6 +16,7 @@ limitations under the License.
 #include "controller.h"
 
 #include "pid.h"
+#include "vars.h"
 #include <math.h>
 
 // PID-tuning were chosen by following the Ziegler-Nichols method,
@@ -28,9 +29,16 @@ static constexpr Duration Tu = seconds(1.5f);
 
 // "No overshoot" settings from the Ziegler-Nichols Wikipedia page.  This
 // avoids overpressurizing the patient's lungs.
-static constexpr float Kp = 0.2f * Ku;
-static constexpr float Ki = 0.4f * Ku / Tu.seconds();
-static constexpr float Kd = Ku * Tu.seconds() / 15;
+static float Kp = 0.2f * Ku;
+static float Ki = 0.4f * Ku / Tu.seconds();
+static float Kd = Ku * Tu.seconds() / 15;
+
+// These debug variables can be modified from the python debug utility.
+// This is very handy for loop tuning.
+// They can be removed once ideal tuning values have been found
+static DebugVar varKP("kp", &Kp, "Controller loop P gain");
+static DebugVar varKI("ki", &Ki, "Controller loop I gain");
+static DebugVar varKD("kd", &Kd, "Controller loop D gain");
 
 Controller::Controller()
     : pid_(Kp, Ki, Kd, ProportionalTerm::ON_ERROR,

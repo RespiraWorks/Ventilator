@@ -92,10 +92,16 @@ jobs:
           name: Run tests
           command: |
             docker run -i respiraworks/gui:$CIRCLE_SHA1 gui/test.sh
+      - persist_to_workspace:
+          root: /var/lib/docker/
+          paths:
+            - image
 
   gui-push-image:
     executor: gui-executor
     steps:
+      - attach_workspace:
+          at: /var/lib/docker/image
       - run:
           name: Push docker image
           command: |

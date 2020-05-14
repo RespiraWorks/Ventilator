@@ -116,8 +116,8 @@ TEST(SensorTests, TestPositiveVolumetricFlowCalculation) {
               -9.72e-3f, COMPARISON_TOLERANCE_FLOW);
 }
 
-inline constexpr Time base = millisSinceStartup(86400000);
-inline constexpr Duration sample_period = milliseconds(10);
+static constexpr Time base = millisSinceStartup(86400000);
+static constexpr Duration sample_period = milliseconds(10);
 Time ticks(int num_ticks) { return base + num_ticks * sample_period; }
 
 TEST(SensorTests, TVIntegrator) {

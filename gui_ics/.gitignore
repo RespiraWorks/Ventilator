@@ -1,0 +1,8 @@
+*.pro.user*
+.directory
+CMakeLists.txt.user*
+build*
+*.qmlc
+*.jsc
+.stash
+target.cfg

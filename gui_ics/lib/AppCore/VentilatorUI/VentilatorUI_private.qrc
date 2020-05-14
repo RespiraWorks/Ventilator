@@ -1,0 +1,34 @@
+<RCC>
+    <qresource prefix="/VentilatorUI/">
+    <file>private/ActiveAlertsFrameIFace.qml</file>
+    <file>private/AdjustIERatioIFace.qml</file>
+    <file>private/AdjustPEEPIFace.qml</file>
+    <file>private/AdjustRRMinIFace.qml</file>
+    <file>private/AdjustTidalVIFace.qml</file>
+    <file>private/AlarmLogs_MainViewPanelIFace.qml</file>
+    <file>private/Alarms_Bottom_Navigation_Bar_PanelIFace.qml</file>
+    <file>private/Alarms_Center_Content_PanelIFace.qml</file>
+    <file>private/Alarms_Dark_Backgrounds_MainIFace.qml</file>
+    <file>private/Background_Shared0IFace.qml</file>
+    <file>private/MainView_MainViewPanelIFace.qml</file>
+    <file>private/ModeSelectionIFace.qml</file>
+    <file>private/PreUseTest_MainViewPanelIFace.qml</file>
+    <file>private/SettingPlaceholder_MainViewPanelIFace.qml</file>
+    <file>private/TopBarPanel_Shared0IFace.qml</file>
+    <file>private/ActiveAlertsFrameLayout.qml</file>
+    <file>private/AdjustIERatioLayout.qml</file>
+    <file>private/AdjustPEEPLayout.qml</file>
+    <file>private/AdjustRRMinLayout.qml</file>
+    <file>private/AdjustTidalVLayout.qml</file>
+    <file>private/AlarmLogs_MainViewPanelLayout.qml</file>
+    <file>private/Alarms_Bottom_Navigation_Bar_PanelLayout.qml</file>
+    <file>private/Alarms_Center_Content_PanelLayout.qml</file>
+    <file>private/Alarms_Dark_Backgrounds_MainLayout.qml</file>
+    <file>private/Background_Shared0Layout.qml</file>
+    <file>private/MainView_MainViewPanelLayout.qml</file>
+    <file>private/ModeSelectionLayout.qml</file>
+    <file>private/PreUseTest_MainViewPanelLayout.qml</file>
+    <file>private/SettingPlaceholder_MainViewPanelLayout.qml</file>
+    <file>private/TopBarPanel_Shared0Layout.qml</file>
+    </qresource>
+</RCC>

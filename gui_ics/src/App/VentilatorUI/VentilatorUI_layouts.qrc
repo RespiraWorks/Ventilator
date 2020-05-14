@@ -1,0 +1,19 @@
+<RCC>
+    <qresource prefix="/VentilatorUI/">
+    <file>layouts/ActiveAlertsFrameLayoutImpl.qml</file>
+    <file>layouts/AdjustIERatioLayoutImpl.qml</file>
+    <file>layouts/AdjustPEEPLayoutImpl.qml</file>
+    <file>layouts/AdjustRRMinLayoutImpl.qml</file>
+    <file>layouts/AdjustTidalVLayoutImpl.qml</file>
+    <file>layouts/AlarmLogs_MainViewPanelLayoutImpl.qml</file>
+    <file>layouts/Alarms_Bottom_Navigation_Bar_PanelLayoutImpl.qml</file>
+    <file>layouts/Alarms_Center_Content_PanelLayoutImpl.qml</file>
+    <file>layouts/Alarms_Dark_Backgrounds_MainLayoutImpl.qml</file>
+    <file>layouts/Background_Shared0LayoutImpl.qml</file>
+    <file>layouts/MainView_MainViewPanelLayoutImpl.qml</file>
+    <file>layouts/ModeSelectionLayoutImpl.qml</file>
+    <file>layouts/PreUseTest_MainViewPanelLayoutImpl.qml</file>
+    <file>layouts/SettingPlaceholder_MainViewPanelLayoutImpl.qml</file>
+    <file>layouts/TopBarPanel_Shared0LayoutImpl.qml</file>
+    </qresource>
+</RCC>

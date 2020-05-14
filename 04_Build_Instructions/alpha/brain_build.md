@@ -20,12 +20,14 @@ For how to assemble the brains, check this wiki [here](brain_build_instructions.
 * **M** = Mouser
 * **C** = McMaster-Carr
 * **O** = Monoprice
+* **R** = RS Computing ([various countries](https://www.rs-online.com/))
+* **B** = Built by RespiraWorks
 
 ## Parts BOM
 
 | Refdes       | Qty | Manufacturer | Part Number        | Price($) | Sources                          | Notes |
 | ------------ |----:| -------------| ------------------ | --------:|--------------------------------- | ----- |
-| BRAIN-01     |   1 | ST Micro     | NUCLEO-L452-RE     |    14.00 | [M][1mouser]                     | STM32 Nucleo dev board |
+| BRAIN-01     |   1 | ST Micro     | NUCLEO-L452-RE     |    14.00 | [M][1mouser] [R][1rs]            | STM32 Nucleo dev board, make sure to NOT get the **-P** version |
 | BRAIN-02     |   1 | Monoprice    | 3896               |     0.83 | [Z][2amzn] [O][2mono]            | USB-A to miniUSB-B cable, power/data for Nucleo |
 | BRAIN-03     |   1 | UPerfect     | -                  |    49.00 | [A][3ali]                        | 7" capacitive touchscreen with speakers, HDMI/USB |
 | CONSUMABLE-a |   1 | GenBasic     | 4330127279         |     6.00 | [Z][4amzn] | optional if you don't have the PCB (BRAIN-11)
@@ -36,7 +38,7 @@ For how to assemble the brains, check this wiki [here](brain_build_instructions.
 | BRAIN-08     |   1 | Seadream     | 26121600           |     7.00 | [Z][8amzn]                       | microHDMI adapter, for RPI4 |
 | BRAIN-09     |   1 | SanDisk      | SDSQXAF-032G-GN6MA |    10.73 | [Z][9amzn]                       | UHS-1 Class 10 micro SD |
 | CONSUMABLE-b |   1 | Poyiccot     | AF-90degree_Type-C |     9.00 | [Z][10amzn]                      | optional USB-C elbow adapter |
-| BRAIN-11     |   1 | RespiraWorks | Carrier PCB, Rev A |      N/A | N/A | see [pcb repo][https://github.com/respiraworks/pcbreathe]
+| BRAIN-11     |   1 | RespiraWorks | Carrier PCB, Rev A |      N/A | [B][12rw]                        | RespiraWorks custom PCB |
 
 ## Tooling BOM
 
@@ -45,6 +47,7 @@ For how to assemble the brains, check this wiki [here](brain_build_instructions.
 | microSD-USB adapter |    12.00 | [Z][5amzn]      | for flashing raspi images |
 
 [1mouser]:https://www.mouser.com/ProductDetail/STMicroelectronics/NUCLEO-L452RE?qs=sGAEpiMZZMtw0nEwywcFgEEYp888DlnM1Y5kGes2rJIHvcJjT1ZDkw%3D%3D
+[1rs]:https://www.rs-particuliers.com/Product.aspx?Product=1261775
 [2amzn]:https://www.amazon.com/AmazonBasics-USB-2-0-Cable-Male/dp/B00NH13S44/
 [3ali]:https://www.aliexpress.com/item/4000747984746.html
 [4amzn]:https://www.amazon.com/GenBasic-Piece-Female-Jumper-Wires/dp/B01L5ULRUA/
@@ -58,3 +61,4 @@ For how to assemble the brains, check this wiki [here](brain_build_instructions.
 [2mono]:https://www.monoprice.com/product?p_id=3896
 [7mono]:https://www.monoprice.com/product?p_id=31201
 [7-alt-mono]:https://www.monoprice.com/product?p_id=13924
+[12rw]:https://github.com/respiraworks/pcbreathe

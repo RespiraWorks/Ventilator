@@ -366,10 +366,10 @@ static void InitADC() {
 // Read a single A/D channel.
 // This just does the conversion immediately when called.
 //
-// It would be better to start a sequence of conversions at the beginning of the
-// loop but the HAL interface currently isn't set up to run that way.  That's an
-// improvement that can be made later
-int HalApi::analogRead(AnalogPin pin) {
+// TODO: It would be better to start a sequence of conversions at the beginning
+// of the loop but the HAL interface currently isn't set up to run that way.
+// That's an improvement that can be made later.
+Voltage HalApi::analogRead(AnalogPin pin) {
   int channel = [&] {
     switch (pin) {
     case AnalogPin::PATIENT_PRESSURE:
@@ -396,8 +396,8 @@ int HalApi::analogRead(AnalogPin pin) {
   while (!(adc->adc[0].stat & 4)) {
   }
 
-  // Return the result
-  return adc->adc[0].data;
+  // STM32's ADC ranges from [0,3.3]V with 12 bits of precision.
+  return volts(static_cast<float>(adc->adc[0].data) * 3.3f / 4096.f);
 }
 
 /******************************************************************
@@ -462,13 +462,8 @@ static void InitPwmOut() {
   tmr->ctrl[0] = 0x81;
 }
 
-// Set the PWM period.  Currently the value is 0 to 255 which is
-// a shame.  We should change this to a float, say with a value
-// of 0.0 to 1.0 to make better use of our resolution
-void HalApi::analogWrite(PwmPin pin, int value) {
-  // Convert the value to a float
-  float duty = static_cast<float>(value) * (1.0f / 255);
-
+// Set the PWM period.
+void HalApi::analogWrite(PwmPin pin, float duty) {
   auto [tmr, chan] = [&]() -> std::pair<TimerRegs *, int> {
     switch (pin) {
     case PwmPin::BLOWER:

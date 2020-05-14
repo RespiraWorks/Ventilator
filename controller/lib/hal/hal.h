@@ -241,28 +241,18 @@ public:
 
   // Interrupt enable/disable functions.
   //
-  // NOTE:
-  // Interrupts should only be disabled for short periods of time and only for
-  // very good reasons.  Leaving interrupts disabled for long can cause loss of
-  // serial data and other bad effects.
+  // Where possible, prefer using the BlockInterrupts RAII class.
+  //
+  // NOTE: Interrupts should only be disabled for short periods of time and
+  // only for very good reasons.  Leaving interrupts disabled for long can
+  // cause loss of serial data and other bad effects.
+  void disableInterrupts();
+  void enableInterrupts();
 
-  // Disable interrupts
-  void IntDisable();
-
-  // Enable interrupts
-  void IntEnable();
-
-  // Disable interrutps and return true if they were enabled when the function
-  // was called.  Return false if interrupts were already disabled.
-  bool IntSuspend();
-
-  // Restore interrupts to the state they were in when IntSuspend was last
-  // called.  The return value from IntSuspend is passed in.
-  // If the input value is false, this function has no effect.
-  void IntRestore(bool yes) {
-    if (yes)
-      IntEnable();
-  }
+  // Returns true if interrupts are currently enabled.
+  //
+  // Where possible, prefer using the BlockInterrupts RAII class.
+  bool interruptsEnabled();
 
   // Calculate CRC32 for data buffer
   uint32_t crc32(uint8_t *data, uint32_t length);
@@ -288,6 +278,7 @@ private:
 
 #ifdef TEST_MODE
   Time time_ = millisSinceStartup(0);
+  bool interruptsEnabled_ = true;
 
   // The default pin mode on Arduino is INPUT, which happens to be the first
   // enumerator in PinMode and so the default in these maps!
@@ -308,29 +299,50 @@ private:
 
 extern HalApi Hal;
 
+// RAII class that disables interrupts.  For example:
+//
+// {
+//   BlockInterrupts block;
+//   // Interrupts are disabled until the close brace.
+// }
+//
+// This class is reentrant, i.e. it's safe to BlockInterrupts even when
+// interrupts are already disabled.
+class [[nodiscard]] BlockInterrupts {
+public:
+  BlockInterrupts() : active_(Hal.interruptsEnabled()) {
+    if (active_) {
+      Hal.disableInterrupts();
+    }
+  }
+
+  // Not copyable or moveable.  (Technically we could make this class
+  // moveable if necessary, but it probably isn't!)
+  BlockInterrupts(const BlockInterrupts &) = delete;
+  BlockInterrupts(BlockInterrupts &&) = delete;
+  BlockInterrupts &operator=(const BlockInterrupts &) = delete;
+  BlockInterrupts &operator=(BlockInterrupts &&) = delete;
+
+  ~BlockInterrupts() {
+    if (active_) {
+      Hal.enableInterrupts();
+    }
+  }
+
+private:
+  bool active_;
+};
+
 #if defined(BARE_STM32)
 
-// Disable interrupts.
-//
-// Returns true if interrupts were enabled when this
-// was called or false if they were already disabled.
-//
-// TODO: Add an RTTI InterruptDisabler class.
-
-// Disable interrupts
-inline void HalApi::IntDisable() { asm volatile("cpsid i" ::: "memory"); }
-
-// Enable interrupts
-inline void HalApi::IntEnable() { asm volatile("cpsie i" ::: "memory"); }
-
-// Disable interrutps and return true if they were enabled when the function
-// was called.  Return false if interrupts were already disabled.
-inline bool HalApi::IntSuspend() {
+inline void HalApi::disableInterrupts() {
+  asm volatile("cpsid i" ::: "memory");
+}
+inline void HalApi::enableInterrupts() { asm volatile("cpsie i" ::: "memory"); }
+inline bool HalApi::interruptsEnabled() {
   int ret;
-  asm volatile("mrs   %[output], primask\n\t"
-               "cpsid i"
-               : [output] "=r"(ret)::"memory");
-  return (ret == 0);
+  asm volatile("mrs %[output], primask" : [output] "=r"(ret));
+  return ret == 0;
 }
 
 #else
@@ -409,9 +421,9 @@ inline void HalApi::test_serialPutIncomingData(const char *data, uint16_t len) {
   serialIncomingData_.push_back(std::vector<char>(data, data + len));
 }
 
-inline void HalApi::IntDisable() {}
-inline void HalApi::IntEnable() {}
-inline bool HalApi::IntSuspend() { return false; }
+inline void HalApi::disableInterrupts() { interruptsEnabled_ = false; }
+inline void HalApi::enableInterrupts() { interruptsEnabled_ = true; }
+inline bool HalApi::interruptsEnabled() { return interruptsEnabled_; }
 
 inline uint32_t HalApi::crc32(uint8_t *data, uint32_t length) {
   return soft_crc32(reinterpret_cast<char *>(data), length);

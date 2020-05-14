@@ -142,9 +142,7 @@ void HalApi::init() {
   InitUARTs();
   watchdog_init();
   crc32_init();
-
-  // Enable interrupts
-  Hal.IntEnable();
+  Hal.enableInterrupts();
 }
 
 // Reset the processor
@@ -788,7 +786,7 @@ static void EnableClock(void *ptr) {
   // to crash.  That should make it easier to find the
   // bug during development.
   if (ndx < 0) {
-    Hal.IntDisable();
+    Hal.disableInterrupts();
     while (true) {
     }
   }

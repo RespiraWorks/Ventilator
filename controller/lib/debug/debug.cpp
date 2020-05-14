@@ -69,12 +69,13 @@ DebugSerial::DebugSerial() {
   // prevent that.  For now I'm just explicitely adding them here.
   // They still add themselves in their static constructors, but
   // that shouldn't cause any harm.
-  extern DebugCmd mode, peek, poke, pbRead;
+  extern DebugCmd mode, peek, poke, pbRead, varCmd;
 
   DebugCmd::cmdList[static_cast<int>(DbgCmdCode::MODE)] = &mode;
   DebugCmd::cmdList[static_cast<int>(DbgCmdCode::PEEK)] = &peek;
   DebugCmd::cmdList[static_cast<int>(DbgCmdCode::POKE)] = &poke;
   DebugCmd::cmdList[static_cast<int>(DbgCmdCode::PRINT_BUFF_READ)] = &pbRead;
+  DebugCmd::cmdList[static_cast<int>(DbgCmdCode::VAR)] = &varCmd;
 }
 
 // This function is called from the main low priority background loop.

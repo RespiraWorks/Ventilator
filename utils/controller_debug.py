@@ -17,10 +17,15 @@ OP_MODE = 0x00
 OP_PEEK = 0x01
 OP_POKE = 0x02
 OP_PBREAD = 0x03
+OP_VAR = 0x04
 
 # Special characters used to frame commands
 ESC = 0xF1
 TERM = 0xF2
+
+# Variable types (see vars.h)
+VAR_INT32 = 1
+VAR_FLOAT = 2
 
 port = "/dev/ttyACM0"
 if len(sys.argv) > 1:
@@ -44,6 +49,8 @@ class cmdline(cmd.Cmd):
     def __init__(self):
         cmd.Cmd.__init__(self)
         self.UpdatePrompt()
+        ReSync()
+        self.GetVarInfo()
         self.cmdloop()
 
     def UpdatePrompt(self, mode=None):
@@ -71,6 +78,7 @@ class cmdline(cmd.Cmd):
     def emptyline(self):
         ReSync()
         self.UpdatePrompt()
+        self.GetVarInfo()
 
     def do_debug(self, line):
         """Toggles display of low level serial data on/off"""
@@ -102,36 +110,36 @@ class cmdline(cmd.Cmd):
 
     def do_peek(self, line):
         """
-      Peek at a memory location.
+Peek at a memory location.
 
-      ex: peek <addr> <ct> <fmt> <file>
+ex: peek <addr> <ct> <fmt> <file>
 
-         addr - the starting address
-         ct   - Number of bytes to read (default 1)
-         fmt  - An optional formatting string.
-         file - An optional file to save the data to
+   addr - the starting address
+   ct   - Number of bytes to read (default 1)
+   fmt  - An optional formatting string.
+   file - An optional file to save the data to
 
-         The formatting string determines how the data is interpreted and displayed.
-         Its a string made up of the following characters:
-           +  current address
-           x  16-bit integer displayed in hex
-           i  16-bit signed integer displayed in decimal
-           u  16-bit unsigned integer displayed in decimal
-           X  32-bit integer displayed in hex
-           I  32-bit signed integer displayed in decimal
-           U  32-bit unsigned integer displayed in decimal
-           f  32-bit float
-           e  32-bit float in exponential format
-           c  Single byte displayed as an ASCII character
-           b  Single byte displayed in hex
+   The formatting string determines how the data is interpreted and displayed.
+   Its a string made up of the following characters:
+     +  current address
+     x  16-bit integer displayed in hex
+     i  16-bit signed integer displayed in decimal
+     u  16-bit unsigned integer displayed in decimal
+     X  32-bit integer displayed in hex
+     I  32-bit signed integer displayed in decimal
+     U  32-bit unsigned integer displayed in decimal
+     f  32-bit float
+     e  32-bit float in exponential format
+     c  Single byte displayed as an ASCII character
+     b  Single byte displayed in hex
 
-         The data is extracted from what's returned and formatted as described in the string.
-         If there's more data left over at the end of the string, a new line starts and the
-         string starts over.
+   The data is extracted from what's returned and formatted as described in the string.
+   If there's more data left over at the end of the string, a new line starts and the
+   string starts over.
 
-         The default formatting string if none is supplied is +XXXX
-         i.e. Data is displayed as a series of 4 32-bit hex values / line
-      """
+   The default formatting string if none is supplied is +XXXX
+   i.e. Data is displayed as a series of 4 32-bit hex values / line
+"""
         param = str.split(line)
         addr = 0
         ct = 1
@@ -149,17 +157,17 @@ class cmdline(cmd.Cmd):
 
     def do_poke(self, line):
         """
-      Write data to a memory address
+Write data to a memory address
 
-      ex: poke [type] <addr> <data>
+ex: poke [type] <addr> <data>
 
-         type - Optional type, can be byte, short, long or float
-                determines how the data will be interpreted.
+   type - Optional type, can be byte, short, long or float
+          determines how the data will be interpreted.
 
-         addr - Address at which to write data
+   addr - Address at which to write data
 
-         data - One or more data items to write.
-      """
+   data - One or more data items to write.
+"""
         param = str.split(line)
         if len(param) < 2:
             return
@@ -180,21 +188,21 @@ class cmdline(cmd.Cmd):
 
     def do_console(self, line):
         """
-      Switch from command mode to a simple console display which
-      continuously readings debug print statements from the controller
-      and displays the data received to the screen.
+Switch from command mode to a simple console display which
+continuously readings debug print statements from the controller
+and displays the data received to the screen.
 
-      Enter <ctrl>C to exit this mode
+Enter <ctrl>C to exit this mode
 
-      A couple optional parameters can be passed on the command line:
+A couple optional parameters can be passed on the command line:
 
-      --flush     If given, the console will be flushed before we start
-                  to display data.  That way any old (possibly incomplete
-                  data) will be removed before the display starts
+--flush     If given, the console will be flushed before we start
+            to display data.  That way any old (possibly incomplete
+            data) will be removed before the display starts
 
-      <filename>  If a file name is given, the data received will be
-                  written to the file as well as displayed.
-      """
+<filename>  If a file name is given, the data received will be
+            written to the file as well as displayed.
+"""
 
         cl = line.split()
 
@@ -234,6 +242,119 @@ class cmdline(cmd.Cmd):
 
     def do_exit(self, line):
         return True
+
+    def do_get(self, line):
+        cl = line.split()
+        if len(cl) < 1:
+            print("Please give the variable name to read")
+            return
+
+        print(GetVar(cl[0]))
+
+    def help_get(self):
+        global varDict
+        print("Read the value of a debug variable and display it\n")
+        print("Variables currently defined:")
+        for k in varDict.keys():
+            print("   %-10s - %s" % (k, varDict[k].help))
+
+    def do_set(self, line):
+        cl = line.split()
+        if len(cl) < 2:
+            print("Please give the variable name and value")
+            return
+        SetVar(cl[0], cl[1])
+
+    def help_set(self):
+        global varDict
+        print("Set the value of a debug variable\n")
+        print("Variables currently defined:")
+        for k in varDict.keys():
+            print("   %-10s - %s" % (k, varDict[k].help))
+
+    # Read info about all the supported variables and load
+    # them in a map
+    def GetVarInfo(self):
+        global varDict
+        varDict = {}
+
+        try:
+            for vid in range(256):
+                dat = SendCmd(OP_VAR, [0] + Split16(vid))
+                V = VarInfo(vid, dat)
+                varDict[V.name] = V
+        except Error as e:
+            pass
+
+
+varDict = {}
+
+
+class VarInfo:
+
+    # Initialize the variable info from the data returned
+    # by the controller.  Set var.cpp in the controller for
+    # details on this formatting
+    def __init__(self, id, dat):
+        self.id = id
+
+        if len(dat) < 8:
+            raise Error("Invalid VarInfo data returned")
+
+        self.type = dat[0]
+        nLen = dat[4]
+        fLen = dat[5]
+        hLen = dat[6]
+
+        if len(dat) < 8 + nLen + fLen + hLen:
+            raise Error("Invalid VarInfo data returned")
+
+        n = 8
+        self.name = "".join([chr(x) for x in dat[n : n + nLen]])
+        n += nLen
+        self.fmt = "".join([chr(x) for x in dat[n : n + fLen]])
+        n += fLen
+        self.help = "".join([chr(x) for x in dat[n : n + hLen]])
+
+
+def GetVar(name, raw=False):
+    global varDict
+    if not name in varDict:
+        raise Error("Unknown variable %s" % name)
+
+    V = varDict[name]
+    dat = SendCmd(OP_VAR, [1] + Split16(V.id))
+
+    if V.type == VAR_INT32:
+        val = Build32(dat)[0]
+
+    elif V.type == VAR_FLOAT:
+        val = BuildFlt(dat)[0]
+
+    else:
+        raise Error("Sorry, I don't know how to handle that variable type yet")
+
+    if raw:
+        return val
+
+    return V.fmt % val
+
+
+def SetVar(name, value):
+    global varDict
+    if not name in varDict:
+        raise Error("Unknown variable %s" % name)
+
+    V = varDict[name]
+
+    if V.type == VAR_INT32:
+        dat = Split32(int(value, 0))
+
+    elif V.type == VAR_FLOAT:
+        dat = SplitFlt(float(value))
+
+    SendCmd(OP_VAR, [2] + Split16(V.id) + dat)
+    return
 
 
 def FmtPeek(dat, fmt="+XXXX", addr=0):
@@ -498,7 +619,7 @@ def SendCmd(op, data=[], timeout=None):
 
 def ReSync():
     cmd = [TERM, TERM]
-    ser.write("".join([chr(x) for x in cmd]))
+    ser.write(bytearray(cmd))
     time.sleep(0.1)
     ser.reset_input_buffer()
 
@@ -540,6 +661,8 @@ def Split32(x, le=True, asStr=False):
 
 
 def SplitFlt(x):
+    if isinstance(x, float):
+        x = [x]
     return Split32([F2I(i) for i in x])
 
 
@@ -560,7 +683,7 @@ def MakeInt(bytes, signed=True, le=True):
 
 def Build32(dat, le=True, signed=False):
     ret = []
-    for i in range(len(dat) / 4):
+    for i in range(int(len(dat) / 4)):
         ret.append(MakeInt(dat[(4 * i) : (4 * i + 4)], signed=signed, le=le))
     return ret
 

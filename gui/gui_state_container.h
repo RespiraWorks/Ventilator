@@ -100,7 +100,7 @@ public slots:
 private:
   qreal get_pressure_readout() const {
     std::unique_lock<std::mutex> l(mu_);
-    return history_.GetLastStatus().sensor_readings.pressure_cm_h2o;
+    return history_.GetLastStatus().sensor_readings.patient_pressure_cm_h2o;
   }
   qreal get_flow_readout() const {
     std::unique_lock<std::mutex> l(mu_);

@@ -93,13 +93,10 @@ jobs:
           command: |
             docker run -i respiraworks/gui:$CIRCLE_SHA1 gui/test.sh
 
-    gui-push-image:
-      executor: gui-executor
-      filters:
-        branch:
-          only: $CIRCLE_BRANCH #change to `master` only we confirm this works
-      steps:
-        - run:
+  gui-push-image:
+    executor: gui-executor
+    steps:
+      - run:
           name: Push docker image
           command: |
             echo "$DOCKER_HUB_TOKEN" | docker login -u "$DOCKER_HUB_USERNAME" --password-stdin
@@ -116,6 +113,9 @@ workflows:
             - common-precommit-checks
             - gui-static-analysis
       - gui-push-image:
+          filters:
+            branches:
+              only: $CIRCLE_BRANCH #change to `master` only we confirm this works
           requires:
             - gui-build-image
 

@@ -146,9 +146,10 @@ void TVIntegrator::AddFlow(Time now, VolumetricFlow flow) {
     initialized_ = true;
   } else if (Duration delta = now - last_flow_measurement_time_;
              delta >= VOLUME_INTEGRAL_INTERVAL) {
-    volume_ = volume_ + ml(delta.minutes() *
-                           (last_flow_.ml_per_min() + flow.ml_per_min()) / 2);
+    volume_ =
+        volume_ + ml(delta.minutes() * (last_flow_ + flow).ml_per_min() / 2.0f);
     last_flow_measurement_time_ = now;
+    last_flow_ = flow;
   }
 }
 

@@ -159,7 +159,7 @@ SensorReadings Sensors::GetSensorReadings() {
   // into lungs, and negative is flow out of lungs.
   auto patient_pressure = ReadPressureSensor(PATIENT_PRESSURE);
   auto inflow_delta = ReadPressureSensor(INFLOW_PRESSURE_DIFF);
-  auto outflow_delta = ReadPressureSensor(INFLOW_PRESSURE_DIFF);
+  auto outflow_delta = ReadPressureSensor(OUTFLOW_PRESSURE_DIFF);
   VolumetricFlow flow =
       PressureDeltaToFlow(inflow_delta) - PressureDeltaToFlow(outflow_delta);
   tv_integrator_.AddFlow(Hal.now(), flow);

@@ -310,6 +310,32 @@ Time HalApi::now() { return millisSinceStartup(msCount); }
  * See chapter 16 of the reference manual
  *
  *****************************************************************/
+
+// Controls how many times we read the ADC to produce one result.
+//
+// With a value of 1, we read the ADC just once.  With a value greater than 1,
+// we "oversample", getting multiple readings and summing them in hardware.
+//
+// Must be a power of 2 in the range [1,256].  A value of 1 means "don't
+// oversample".
+static constexpr int ADC_NUM_READINGS = 32;
+static_assert(ADC_NUM_READINGS >= 1);
+static_assert(ADC_NUM_READINGS <= 256);
+static_assert(((ADC_NUM_READINGS - 1) & ADC_NUM_READINGS) == 0,
+              "ADC_NUM_READINGS must be a power of 2.");
+
+static constexpr bool ADCOversamplingEnabled() { return ADC_NUM_READINGS > 1; }
+
+// log2(ADC_NUM_READINGS)
+static constexpr int ADCNumReadingsLog2() {
+  int n = ADC_NUM_READINGS;
+  int ret = 0;
+  while (n >>= 1) {
+    ret++;
+  }
+  return ret;
+}
+
 static void InitADC() {
   // Enable the clock to the A/D converter
   EnableClock(ADC_BASE);
@@ -353,7 +379,22 @@ static void InitADC() {
   }
 
   // Configure the A/D as 12-bit resolution
-  adc->adc[0].cfg[0] = 0x00000000;
+  adc->adc[0].cfgr = 0x00000000;
+
+  // Configure ADC oversampling.
+  adc->adc[0].rovse = ADCOversamplingEnabled();
+  if (ADCOversamplingEnabled()) {
+    // We take 2^(ovsr+1) readings when oversampling.
+    adc->adc[0].ovsr = ADCNumReadingsLog2() - 1;
+
+    // Each time we read the ADC we get 12 bits of data.  When oversampling,
+    // the hardware accumulates into a 20-bit register, but this gets truncated
+    // down to 16 bits before we get to see it.
+    //
+    // We therefore may need to ask the hardware to downshift the result (by
+    // `ovss` bits) before it's returned.
+    adc->adc[0].ovss = std::max(0, 12 + ADCNumReadingsLog2() - 16);
+  }
 
   // Set sample time. I'm using 92.5 A/D clocks (a little over 1us)
   // to sample.  We'll need to do a bit of testing to see what the
@@ -394,8 +435,13 @@ Voltage HalApi::analogRead(AnalogPin pin) {
   while (!(adc->adc[0].stat & 4)) {
   }
 
-  // STM32's ADC ranges from [0,3.3]V with 12 bits of precision.
-  return volts(static_cast<float>(adc->adc[0].data) * 3.3f / 4096.f);
+  // STM32's ADC ranges from [0,3.3]V.  The ADC itself gives 12 bits of
+  // precision, and if we oversampled, we might get up to 16 bits of precision.
+  // (We never get more than 16 bits; any excess precision is shifted away in
+  // the hardware.)
+  int precision = 12 + std::min(4, ADCNumReadingsLog2());
+  return volts(static_cast<float>(adc->adc[0].data) * 3.3f /
+               static_cast<float>(1 << precision));
 }
 
 /******************************************************************

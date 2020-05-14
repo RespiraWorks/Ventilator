@@ -41,7 +41,7 @@ limitations under the License.
  * - ESC  (0xF1) - used to send a special character as data.
  *
  * The escape byte causes the serial processor to treat the next byte as
- * data no matter what it's value is.  It's used when the data being sent
+ * data no matter what its value is.  It's used when the data being sent
  * has a special value.
  *
  */
@@ -84,20 +84,21 @@ DebugSerial::DebugSerial() {
 void DebugSerial::Poll() {
   switch (pollState) {
   // Waiting for a new command to be received.
-  // I continue to process bytes there are no more available,
+  // I continue to process bytes until there are no more available,
   // or a full command has been received.  Either way, the
-  // ReadNextByte function will return false when it's time
+  // ReadNextByte function will return false when its time
   // to move on.
   case DbgPollState::WAIT_CMD:
     while (ReadNextByte()) {
     }
     return;
 
-    // TODO
+  // Process the current command
   case DbgPollState::PROCESS_CMD:
     ProcessCmd();
     return;
 
+  // Send my response
   case DbgPollState::SEND_RESP:
     while (SendNextByte()) {
     }
@@ -185,7 +186,7 @@ bool DebugSerial::SendNextByte() {
   // See what the next character to send is.
   uint8_t ch = cmdBuff[buffNdx++];
 
-  // If it's a special character, I need to escape it.
+  // If its a special character, I need to escape it.
   if ((ch == static_cast<uint8_t>(DbgSpecial::TERM)) ||
       (ch == static_cast<uint8_t>(DbgSpecial::ESC))) {
     char tmp[2];
@@ -214,12 +215,12 @@ bool DebugSerial::SendNextByte() {
   return false;
 }
 
-// Procee the received command
+// Process the received command
 void DebugSerial::ProcessCmd() {
   // The total number of bytes received (not including
-  // the termination byte) is the value of of buffNdx.
+  // the termination byte) is the value of buffNdx.
   // This should be at least 3 (command & checksum).
-  // If it's not, I just ignore the command and jump
+  // If its not, I just ignore the command and jump
   // to waiting on the next.
   // This means we can send TERM characters to synchronize
   // communications if necessary
@@ -317,7 +318,7 @@ DebugCmd::DebugCmd(DbgCmdCode opcode) {
 //  0 - Running in normal mode
 //  1 - Running in boot mode.
 //
-// We don't actually have a boot mode yet, but it's only
+// We don't actually have a boot mode yet, but its only
 // a matter of time.  Once we start doing things like
 // updating firmware (not through a debugger) we will
 // need a separate boot loader image to ensure graceful

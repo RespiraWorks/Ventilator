@@ -21,8 +21,8 @@ void actuators_execute(const ActuatorsState &desired_state) {
   // voltage means closed.  Hardware spec: https://bit.ly/3aERr69
   Hal.digitalWrite(BinaryPin::SOLENOID,
                    desired_state.expire_valve_state == ValveState::OPEN
-                       ? VoltageLevel::HAL_LOW
-                       : VoltageLevel::HAL_HIGH);
+                       ? VoltageLevel::LOW
+                       : VoltageLevel::HIGH);
   // set blower PWM
   Hal.analogWrite(PwmPin::BLOWER, desired_state.fan_power);
 }

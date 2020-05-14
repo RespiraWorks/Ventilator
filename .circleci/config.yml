@@ -91,7 +91,7 @@ jobs:
       - run:
           name: Push docker image
           command: |
-            if [[ "$CIRCLE_BRANCH" == "slankard/issue_175-docker-hub-push-2" ]]; then
+            if [[ "$CIRCLE_BRANCH" == "master" ]]; then
                 echo "$DOCKER_HUB_TOKEN" | docker login -u "$DOCKER_HUB_USERNAME" --password-stdin
                 docker push respiraworks/gui:$CIRCLE_SHA1
             fi

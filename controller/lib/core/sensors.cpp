@@ -163,7 +163,11 @@ SensorReadings Sensors::GetSensorReadings() {
   VolumetricFlow flow =
       PressureDeltaToFlow(inflow_delta) - PressureDeltaToFlow(outflow_delta);
   tv_integrator_.AddFlow(Hal.now(), flow);
-  return {.pressure_cm_h2o = patient_pressure.cmH2O(),
-          .volume_ml = tv_integrator_.GetTV().ml(),
-          .flow_ml_per_min = flow.ml_per_min()};
+  return {
+      .patient_pressure_cm_h2o = patient_pressure.cmH2O(),
+      .volume_ml = tv_integrator_.GetTV().ml(),
+      .flow_ml_per_min = flow.ml_per_min(),
+      .inflow_pressure_diff_cm_h2o = inflow_delta.cmH2O(),
+      .outflow_pressure_diff_cm_h2o = outflow_delta.cmH2O(),
+  };
 }

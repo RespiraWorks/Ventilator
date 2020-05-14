@@ -33,9 +33,11 @@ typedef struct _Alarm {
 } Alarm;
 
 typedef struct _SensorReadings {
-    float pressure_cm_h2o;
+    float patient_pressure_cm_h2o;
     float volume_ml;
     float flow_ml_per_min;
+    float inflow_pressure_diff_cm_h2o;
+    float outflow_pressure_diff_cm_h2o;
 } SensorReadings;
 
 typedef struct _VentParams {
@@ -85,18 +87,20 @@ typedef struct _GuiStatus {
 #define GuiStatus_init_default                   {0, VentParams_init_default, 0, {Alarm_init_default, Alarm_init_default, Alarm_init_default, Alarm_init_default}}
 #define ControllerStatus_init_default            {0, VentParams_init_default, SensorReadings_init_default, 0, {Alarm_init_default, Alarm_init_default, Alarm_init_default, Alarm_init_default}, 0, 0}
 #define VentParams_init_default                  {_VentMode_MIN, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
-#define SensorReadings_init_default              {0, 0, 0}
+#define SensorReadings_init_default              {0, 0, 0, 0, 0}
 #define Alarm_init_default                       {0, _AlarmKind_MIN}
 #define GuiStatus_init_zero                      {0, VentParams_init_zero, 0, {Alarm_init_zero, Alarm_init_zero, Alarm_init_zero, Alarm_init_zero}}
 #define ControllerStatus_init_zero               {0, VentParams_init_zero, SensorReadings_init_zero, 0, {Alarm_init_zero, Alarm_init_zero, Alarm_init_zero, Alarm_init_zero}, 0, 0}
 #define VentParams_init_zero                     {_VentMode_MIN, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
-#define SensorReadings_init_zero                 {0, 0, 0}
+#define SensorReadings_init_zero                 {0, 0, 0, 0, 0}
 #define Alarm_init_zero                          {0, _AlarmKind_MIN}
 
 /* Field tags (for use in manual encoding/decoding) */
 #define Alarm_start_time_tag                     1
 #define Alarm_kind_tag                           2
-#define SensorReadings_pressure_cm_h2o_tag       1
+#define SensorReadings_patient_pressure_cm_h2o_tag 1
+#define SensorReadings_inflow_pressure_diff_cm_h2o_tag 4
+#define SensorReadings_outflow_pressure_diff_cm_h2o_tag 5
 #define SensorReadings_volume_ml_tag             2
 #define SensorReadings_flow_ml_per_min_tag       3
 #define VentParams_mode_tag                      1
@@ -161,9 +165,11 @@ X(a, STATIC,   REQUIRED, UINT32,   alarm_hi_breaths_per_min,  13)
 #define VentParams_DEFAULT NULL
 
 #define SensorReadings_FIELDLIST(X, a) \
-X(a, STATIC,   REQUIRED, FLOAT,    pressure_cm_h2o,   1) \
+X(a, STATIC,   REQUIRED, FLOAT,    patient_pressure_cm_h2o,   1) \
 X(a, STATIC,   REQUIRED, FLOAT,    volume_ml,         2) \
-X(a, STATIC,   REQUIRED, FLOAT,    flow_ml_per_min,   3)
+X(a, STATIC,   REQUIRED, FLOAT,    flow_ml_per_min,   3) \
+X(a, STATIC,   REQUIRED, FLOAT,    inflow_pressure_diff_cm_h2o,   4) \
+X(a, STATIC,   REQUIRED, FLOAT,    outflow_pressure_diff_cm_h2o,   5)
 #define SensorReadings_CALLBACK NULL
 #define SensorReadings_DEFAULT NULL
 
@@ -188,9 +194,9 @@ extern const pb_msgdesc_t Alarm_msg;
 
 /* Maximum encoded size of messages (where known) */
 #define GuiStatus_size                           140
-#define ControllerStatus_size                    167
+#define ControllerStatus_size                    177
 #define VentParams_size                          67
-#define SensorReadings_size                      15
+#define SensorReadings_size                      25
 #define Alarm_size                               13
 
 #ifdef __cplusplus

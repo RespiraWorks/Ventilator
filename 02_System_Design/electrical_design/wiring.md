@@ -16,21 +16,32 @@ If you decide to buy them, do so at your own risk... oh, and thank you ;).**
 
 | RefDes | Quantity | Manufacturer  | Part #              | Price($)     | Sources         | Notes |
 | ------ |---------:| ------------- | ------------------- | ------------:|-----------------| ----- |
-| 1      |        - | McMaster-Carr | 53415K217           |         9.99 | [Z][1amzn]      | XH connectors 6/7/8 pins |
-| 2      |        - | McMaster-Carr | 5463K565            |         8.99 | [Z][2amzn]      | XH connectors 2/3/4/5 pins  |
-| 3      |        - | TE            | 1-1123722-2         |         0.18 | [K][3digi]      | VH housing 2 pin |
-| 4      |        - | JST           | VHR-3N              |         0.14 | [K][4digi]      | VH housing 3 pin |
+| 1      |        - | JST           | SXH-001T-P0.6       |         0.10 | [K][1digi]      | XH sockets, for sensor & actuator connections |
+| 2      |        - | JST           | XHP-2               |         0.10 | [K][2digi]      | XH 2-pin housings, for solenoid |
+| 3      |        - | JST           | XHP-3               |         0.10 | [K][3digi]      | XH 3-pin housings, for heater |
+| 4      |        - | JST           | XHP-5               |         0.12 | [K][4digi]      | XH 5-pin housings, for sensors |
+| 5      |        2 | JST           | XHP-6               |         0.12 | [K][4digi]      | XH 6-pin housings, for blower control |
+| alt1   |        - | WGCD          | 4330589508          |         8.99 | [Z][alt1amzn]   | XH connector kit for 2/3/4/5 pins, alternative for 1+2+3+4 above |
+| alt2   |        - | CQRobot       | CQRJST254-BGB       |         9.99 | [Z][alt2amzn]   | XH connector kit for 6/7/8 pins, alternative for 1+6 above |
+| 6      |        6 | JST           | SVH-21T-P1.1        |         0.11 | [K][6digi]      | VH sockets, for power connectors |
+| 7      |        2 | TE            | 1-1123722-2         |         0.18 | [K][7digi]      | VH housing 2 pin, for blower power |
+| 8      |        1 | JST           | VHR-3N              |         0.14 | [K][8digi]      | VH housing 3 pin, for main power |
+
+[1digi]:   https://www.digikey.com/short/z44f8d
+[2digi]:   https://www.digikey.com/short/z44f8f
+[3digi]:   https://www.digikey.com/short/z44fb9
+[4digi]:   https://www.digikey.com/short/z44r0b
+[5digi]:   https://www.digikey.com/short/z44ff8
+[alt1amzn]:   https://www.amazon.com/gp/product/B06ZZ45G7G
+[alt2amzn]:   https://www.amazon.com/gp/product/B079MJ1RYN
+[6digi]:   https://www.digikey.com/short/z44fjr
+[7digi]:   https://www.digikey.com/short/z44fwj
+[8digi]:   https://www.digikey.com/short/z44fwp
 
 **TODO:** power adapter connector
 
-**TODO:** metal parts for VH connectors
-
 **TODO:** wires
 
-[1amzn]:   https://www.amazon.com/gp/product/B079MJ1RYN
-[2amzn]:   https://www.amazon.com/gp/product/B06ZZ45G7G
-[3digi]:   https://www.digikey.com/product-detail/en/te-connectivity-amp-connectors/1-1123722-2/A30501-ND/686666
-[4digi]:   https://www.digikey.com/product-detail/en/jst-sales-america-inc/VHR-3N/455-1184-ND/608625
 
 ## Tooling BOM
 
@@ -42,8 +53,12 @@ We try to make few assumptions about what tools you have. Here are recommended t
 
 [t1amzn]:https://www.amazon.com/gp/product/B01N4L8QMW
 
-## Assembling
+**TODO:** better quality crimper preferred?
 
-**TODO:** explain this better
+## Assembly
+
+As much as possible we should try to keep the cables one-to-one 
+(for example the wiring of the PCB to blower driver cables are all pin 1 to pin 1,
+pin 2 to pin 2, etc. with the same connector style on both ends.
 
 ![Pizza pneumatics](wires.jpg)

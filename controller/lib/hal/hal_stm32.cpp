@@ -229,11 +229,11 @@ void HalApi::digitalWrite(BinaryPin pin, VoltageLevel value) {
   }();
 
   switch (value) {
-  case VoltageLevel::HAL_HIGH:
+  case VoltageLevel::HIGH:
     GPIO_SetPin(base, bit);
     break;
 
-  case VoltageLevel::HAL_LOW:
+  case VoltageLevel::LOW:
     GPIO_ClrPin(base, bit);
     break;
   }

@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 
 # Very simple command line interface for development
-# Currently works well with Python 2.7 but gives errors under 3.x
 
 import sys
 import math

@@ -19,3 +19,8 @@ PB_BIND(SensorReadings, SensorReadings, AUTO)
 
 
 PB_BIND(Alarm, Alarm, AUTO)
+
+
+
+
+

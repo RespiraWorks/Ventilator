@@ -57,14 +57,14 @@ float Controller::ComputeFanPower(Time now,
   // consistency, we still run the PID iteration above.
   float output;
   if (desired_state.blower_enabled) {
-    output =
-        pid_.Compute(/*time=*/now,
-                     /*input=*/cmH2O(sensor_readings.pressure_cm_h2o).kPa(),
-                     /*setpoint=*/desired_state.setpoint_pressure.kPa());
+    output = pid_.Compute(
+        /*time=*/now,
+        /*input=*/cmH2O(sensor_readings.patient_pressure_cm_h2o).kPa(),
+        /*setpoint=*/desired_state.setpoint_pressure.kPa());
   } else {
     output = 0;
     pid_.Observe(/*time=*/now,
-                 /*input=*/cmH2O(sensor_readings.pressure_cm_h2o).kPa(),
+                 /*input=*/cmH2O(sensor_readings.patient_pressure_cm_h2o).kPa(),
                  /*setpoint=*/desired_state.setpoint_pressure.kPa(),
                  /*output=*/output);
   }

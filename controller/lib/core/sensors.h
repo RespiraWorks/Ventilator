@@ -80,7 +80,7 @@ private:
   Pressure ReadPressureSensor(Sensor s);
 
   // Calibrated average sensor values in a zero state.
-  float sensors_zero_vals_[NUM_SENSORS];
+  Voltage sensors_zero_vals_[NUM_SENSORS];
 
   // State related to integrating volume from flow.
   TVIntegrator tv_integrator_;

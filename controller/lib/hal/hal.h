@@ -161,27 +161,23 @@ public:
   // analogRead() reads the value of an analog input pin. analogWrite() writes
   // to a PWM pin - some of the digital pins are PWM pins.
 
-  // Reads from analog sensor.
+  // Reads from analog sensor using an analog-to-digital converter.
   //
-  // On Arduino, the analog-to-digital converter has 10 bits of precision, so
-  // you get a number in the range [0, 1024).
+  // Returns a voltage.  On STM32 this can range from 0 to 3.3V.
   //
   // In test mode, will return the last value set via test_setAnalogPin.
-  //
-  // TODO: Implementation is currently incorrect on STM32,
-  // https://github.com/RespiraWorks/VentilatorSoftware/pull/186#discussion_r415436954
-  int analogRead(AnalogPin pin);
+  Voltage analogRead(AnalogPin pin);
 
 #ifdef TEST_MODE
-  void test_setAnalogPin(AnalogPin pin, int value);
+  void test_setAnalogPin(AnalogPin pin, Voltage value);
 #endif
 
-  // Causes `pin` to output a square wave with duty cycle determined by value
-  // (range [0, 255]).
+  // Causes `pin` to output a square wave with the given duty cycle (range
+  // [0, 1]).
   //
   // Perhaps a better name would be "pwmWrite", but we also want to be somewhat
   // consistent with the Arduino API that people are familiar with.
-  void analogWrite(PwmPin pin, int value);
+  void analogWrite(PwmPin pin, float duty);
 
   // Sets `pin` to high or low.
   void digitalWrite(BinaryPin pin, VoltageLevel value);
@@ -325,9 +321,9 @@ private:
   std::map<PwmPin, PinMode> pwm_pin_modes_;
   std::map<BinaryPin, PinMode> binary_pin_modes_;
 
-  std::map<AnalogPin, int> analog_pin_values_;
+  std::map<AnalogPin, Voltage> analog_pin_values_;
   std::map<BinaryPin, VoltageLevel> binary_pin_values_;
-  std::map<PwmPin, int> pwm_pin_values_;
+  std::map<PwmPin, float> pwm_pin_values_;
 
   std::deque<std::vector<char>> serialIncomingData_;
   std::vector<char> serialOutgoingData_;
@@ -367,10 +363,10 @@ inline void HalApi::watchdog_handler() {}
 
 inline Time HalApi::now() { return time_; }
 inline void HalApi::delay(Duration d) { time_ = time_ + d; }
-inline int HalApi::analogRead(AnalogPin pin) {
+inline Voltage HalApi::analogRead(AnalogPin pin) {
   return analog_pin_values_.at(pin);
 }
-inline void HalApi::test_setAnalogPin(AnalogPin pin, int value) {
+inline void HalApi::test_setAnalogPin(AnalogPin pin, Voltage value) {
   analog_pin_values_[pin] = value;
 }
 inline void HalApi::setDigitalPinMode(PwmPin pin, PinMode mode) {
@@ -385,11 +381,11 @@ inline void HalApi::digitalWrite(BinaryPin pin, VoltageLevel value) {
   }
   binary_pin_values_[pin] = value;
 }
-inline void HalApi::analogWrite(PwmPin pin, int value) {
+inline void HalApi::analogWrite(PwmPin pin, float duty) {
   if (pwm_pin_modes_[pin] != PinMode::HAL_OUTPUT) {
     throw "Can only write to an OUTPUT pin";
   }
-  pwm_pin_values_[pin] = value;
+  pwm_pin_values_[pin] = duty;
 }
 [[nodiscard]] inline uint16_t HalApi::serialRead(char *buf, uint16_t len) {
   if (serialIncomingData_.empty()) {

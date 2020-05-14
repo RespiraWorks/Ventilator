@@ -17,7 +17,7 @@ This is Ansible's inventory file that keeps track of the targets of playbooks. P
 
 Both of these files are from [this](https://github.com/dhruvvyas90/qemu-rpi-kernel) repo with RPi kernels
 ### kernel-qemu-4.19.50-buster
-Kernel used to spin up Raspbian via QEMU. 
+Kernel used to spin up Raspbian via QEMU.
 
 ### versatile-pb-buster.dtb
 Compiled device tree used to spin up Raspbian via QEMU

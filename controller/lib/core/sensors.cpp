@@ -41,14 +41,6 @@ static_assert(DEFAULT_VENTURI_CHOKE_DIAM > meters(0));
 // TODO: VOLUME_INTEGRAL_INTERVAL was not chosen carefully.
 static constexpr Duration VOLUME_INTEGRAL_INTERVAL = milliseconds(5);
 
-// STM32's ADC is 12 bits, default 5V Vref_P (~4.9 mV per count) [V];
-//
-// TODO: STM32 with the Arduino APIs (i.e. the "nucleo" target) returns a
-// 10-bit ADC value, while the STM32 itself is equipped with a 12-bit ADC.
-// This should be abstracted in HAL, but until then this denominator (i.e.
-// 1024) needs to match the ADC width.
-static const float ADC_LSB = 5.0f / 1024.0f;
-
 // Take this many samples from a sensor while zeroing it.
 // TODO: Tune this value.
 static constexpr int SENSOR_SAMPLES_FOR_INIT = 4;
@@ -90,15 +82,12 @@ Sensors::Sensors() {
   Hal.delay(milliseconds(20));
 
   auto set_zero_level = [this](Sensor s) {
-    // Perform most of the computation exactly in "int", to avoid a situation
-    // where sum + x == sum, in case sum is above the maximum exactly
-    // representable integer in a float.
-    int sum = 0;
+    float sum = 0;
     for (int i = 0; i < SENSOR_SAMPLES_FOR_INIT; i++) {
-      sum += Hal.analogRead(PinFor(s));
+      sum += Hal.analogRead(PinFor(s)).volts();
     }
     // A bit of loss of mantissa here is okay.
-    sensors_zero_vals_[s] = static_cast<float>(sum) / SENSOR_SAMPLES_FOR_INIT;
+    sensors_zero_vals_[s] = volts(sum / SENSOR_SAMPLES_FOR_INIT);
   };
   set_zero_level(PATIENT_PRESSURE);
   set_zero_level(INFLOW_PRESSURE_DIFF);
@@ -109,13 +98,22 @@ Sensors::Sensors() {
 //
 // @TODO: Add alarms if sensor value is out of expected range?
 Pressure Sensors::ReadPressureSensor(Sensor s) {
-  int sum = 0;
+  float sum = 0;
   for (int i = 0; i < SENSOR_SAMPLES_FOR_READ; i++) {
-    sum += Hal.analogRead(PinFor(s));
+    sum += Hal.analogRead(PinFor(s)).volts();
   }
-  // Sensitivity of all pressure sensors is 1 V/kPa; no division needed.
-  return kPa(ADC_LSB * (static_cast<float>(sum) / SENSOR_SAMPLES_FOR_READ -
-                        sensors_zero_vals_[s]));
+
+  // The pressure sensors output 1-5V, and each additional 1V of output
+  // corresponds to an additional 1kPa of pressure difference.
+  // https://www.nxp.com/docs/en/data-sheet/MPXV5004G.pdf.
+  //
+  // The pressure sensor is scaled to 0-3.3V, which is the range captured by
+  // our ADC.  Therefore, if we multiply the received voltage by 5/3.3, we get
+  // a pressure in kPa.
+  static const float TRANSFER_FN_COEFF = 5.f / 3.3f;
+  return kPa(
+      TRANSFER_FN_COEFF *
+      (volts(sum / SENSOR_SAMPLES_FOR_READ) - sensors_zero_vals_[s]).volts());
 }
 
 /*static*/ VolumetricFlow Sensors::PressureDeltaToFlow(Pressure delta) {

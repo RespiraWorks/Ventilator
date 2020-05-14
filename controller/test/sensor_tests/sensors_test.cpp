@@ -37,6 +37,9 @@ static const float COMPARISON_TOLERANCE = 0.005f;
 // Maximum allowable delta between calculated and actual volumetric flow
 static const float COMPARISON_TOLERANCE_FLOW = 5.0e-5f;
 
+// Maximum allowable delta between calculated and actual volume, in ml
+static const float COMPARISON_TOLERANCE_VOLUME_ML = 5.0f;
+
 //@TODO: Finish writing more specific unit tests for this module
 
 /*
@@ -97,11 +100,12 @@ TEST(SensorTests, FullScaleReading) {
 // If the Default PressureSensors::DEFAULT_VENTURI_PORT_DIAM and
 // DEFAULT_VENTURI_CHOKE_DIAM are changed from this, the tests will fail unless
 // you update the expected values accordingly.
+// Expected values from https://www.wolframalpha.com/input/?i=Venturi+flowmeter
 TEST(SensorTests, TestPositiveVolumetricFlowCalculation) {
   EXPECT_NEAR(Sensors::PressureDeltaToFlow(kPa(1.0f)).cubic_m_per_sec(),
-              9.52e-4f, COMPARISON_TOLERANCE_FLOW);
+              9.72e-4f, COMPARISON_TOLERANCE_FLOW);
   EXPECT_NEAR(Sensors::PressureDeltaToFlow(kPa(-1.0f)).cubic_m_per_sec(),
-              -9.52e-4f, COMPARISON_TOLERANCE_FLOW);
+              -9.72e-4f, COMPARISON_TOLERANCE_FLOW);
   EXPECT_NEAR(Sensors::PressureDeltaToFlow(kPa(0.0f)).cubic_m_per_sec(), 0.0f,
               COMPARISON_TOLERANCE_FLOW);
   EXPECT_NEAR(Sensors::PressureDeltaToFlow(kPa(1.0e-7f)).cubic_m_per_sec(),
@@ -110,4 +114,36 @@ TEST(SensorTests, TestPositiveVolumetricFlowCalculation) {
               9.72e-3f, COMPARISON_TOLERANCE_FLOW);
   EXPECT_NEAR(Sensors::PressureDeltaToFlow(kPa(-100.0f)).cubic_m_per_sec(),
               -9.72e-3f, COMPARISON_TOLERANCE_FLOW);
+}
+
+inline constexpr Time base = millisSinceStartup(86400000);
+inline constexpr Duration sample_period = milliseconds(10);
+Time ticks(int num_ticks) { return base + num_ticks * sample_period; }
+
+TEST(SensorTests, TVIntegrator) {
+  TVIntegrator tidal_volume;
+  // base flow : 1 liter/s
+  VolumetricFlow flow = cubic_m_per_sec(1e-3f);
+  int t = 0;
+  tidal_volume.AddFlow(ticks(t++), flow);
+  // first call to AddFlow ==> initialization and TV is 0, even if flow is not
+  EXPECT_EQ(tidal_volume.GetTV().ml(), 0.0f);
+  tidal_volume.AddFlow(ticks(t++), flow);
+  // integrate 1 l/s flow over 10 ms ==> 10 ml
+  EXPECT_NEAR(tidal_volume.GetTV().ml(), 10.0f, COMPARISON_TOLERANCE_VOLUME_ML);
+
+  tidal_volume.AddFlow(ticks(t++), flow);
+  // add 1 l/s flow over 10 ms ==> 20 ml
+  EXPECT_NEAR(tidal_volume.GetTV().ml(), 20.0f, COMPARISON_TOLERANCE_VOLUME_ML);
+
+  tidal_volume.AddFlow(ticks(t++), ml_per_min(0.0f));
+  // add 0 l/s flow over 10 ms ==> 25 ml (rectangle rule)
+  EXPECT_NEAR(tidal_volume.GetTV().ml(), 25.0f, COMPARISON_TOLERANCE_VOLUME_ML);
+
+  // integrate 0 for some time ==> still 25 ms
+  while (t < 100) {
+    tidal_volume.AddFlow(ticks(t++), ml_per_min(0.0f));
+  }
+
+  EXPECT_NEAR(tidal_volume.GetTV().ml(), 25.0f, COMPARISON_TOLERANCE_VOLUME_ML);
 }

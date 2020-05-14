@@ -5,13 +5,16 @@
 ## Overview
 **TODO:** Say stuff here and provide context for diagram below.
 
-![Diagram](electrical_design.png)
+![Diagram](electrical_circuit_diagram.png)
 
-**TODO:** describe subsystems and create dirctory structure to reflect them
+**TODO:** describe subsystems and create directory structure to reflect them
 
-**TODO:** wiring bom and instructions
+[Wiring](wiring.md)
 
-**TODO:** link to PCB repo
+[PCB (separate repo)](https://github.com/RespiraWorks/pcbreathe)
+
+
+**TODO:** provide context for the following:
 
 [Plotting and recording live data from MCU](data_from_MCU.md)
 

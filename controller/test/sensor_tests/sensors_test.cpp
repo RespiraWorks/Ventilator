@@ -93,9 +93,11 @@ TEST(SensorTests, FullScaleReading) {
 
     // Inhalation and exhalation should match because they are fed with the same
     // pressure waveform
-    EXPECT_NEAR(Sensors::PressureDeltaToFlow(kPa(2.0)).cubic_m_per_sec(),
+    auto expected_flow = Sensors::PressureDeltaToFlow(kPa(3.0)) -
+                         Sensors::PressureDeltaToFlow(kPa(1.0));
+    EXPECT_NEAR(expected_flow.cubic_m_per_sec(),
                 ml_per_min(readings.flow_ml_per_min).cubic_m_per_sec(),
-                COMPARISON_TOLERANCE);
+                COMPARISON_TOLERANCE_FLOW);
   }
 }
 

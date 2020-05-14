@@ -88,7 +88,7 @@ TEST(SensorTests, FullScaleReading) {
                              MPXV5004_PressureToVoltage(kPa(1.0)));
 
     auto readings = sensors.GetSensorReadings();
-    float pressurePatient = cmH2O(readings.pressure_cm_h2o).kPa();
+    float pressurePatient = cmH2O(readings.patient_pressure_cm_h2o).kPa();
     EXPECT_NEAR(pressurePatient, p.kPa(), COMPARISON_TOLERANCE);
 
     // Inhalation and exhalation should match because they are fed with the same

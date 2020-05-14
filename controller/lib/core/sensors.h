@@ -32,10 +32,9 @@ public:
   Volume GetTV() const { return volume_; }
 
 private:
-  Time last_flow_measurement_time_ = millisSinceStartup(0);
+  Time last_flow_measurement_time_ = Hal.now();
   VolumetricFlow last_flow_ = cubic_m_per_sec(0);
   Volume volume_ = ml(0);
-  bool initialized_ = false;
 };
 
 // Provides calibrated sensor readings, including tidal volume (TV)

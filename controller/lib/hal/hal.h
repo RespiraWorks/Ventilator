@@ -20,9 +20,6 @@ limitations under the License.
 // The canonical list of hardware and the pins they connect to is:
 // https://bit.ly/3aERr69
 //
-// You shouldn't include <Arduino.h> outside of this file; everything that
-// interacts with the hardware should go through here.
-//
 // When running in test mode, HalApi is pedantically a fake, not a mock.  All
 // that means is that the methods have "fake" implementations, trying to
 // loosely mimic the hardware in some defined way.  For example, instead of
@@ -37,6 +34,7 @@ limitations under the License.
 
 #include "algorithm.h"
 #include "units.h"
+#include <stdint.h>
 
 #ifdef TEST_MODE
 
@@ -50,34 +48,12 @@ limitations under the License.
 #include <map>
 #include <vector>
 
-#define HAL_CONSTANT(name) HAL_##name
-
 #else // !TEST_MODE
 
 #if !defined(BARE_STM32)
 #error "When running without TEST_MODE, expecting BARE_STM32 to be defined"
 #endif
 
-#if defined(BARE_STM32)
-#include <stdint.h>
-
-// Some constants that would normally be in the Arduino header
-// which we're not using on the bare system
-
-#define INPUT 0
-#define OUTPUT 1
-#define INPUT_PULLUP 2
-
-#define LOW 0
-#define HIGH 1
-
-#else
-#include <Arduino.h>
-#endif // BARE_STM32
-
-// "HAL" has to be there because the respective Arduino symbols are macros,
-// e.g. A0 expands to 14, so we can't have a constant named A0.
-#define HAL_CONSTANT(name) HAL_##name = name
 #endif // TEST_MODE
 
 // ---------------------------------------------------------------
@@ -87,18 +63,18 @@ limitations under the License.
 // ---------------------------------------------------------------
 
 // Mode of a digital pin.
-// Usage: PinMode::HAL_INPUT etc.
+// Usage: PinMode::INPUT etc.
 enum class PinMode {
   // Test code relies on INPUT being the first enumeration (to get the behavior
   // that INPUT pins are the default).
-  HAL_CONSTANT(INPUT),
-  HAL_CONSTANT(OUTPUT),
-  HAL_CONSTANT(INPUT_PULLUP)
+  INPUT,
+  OUTPUT,
+  INPUT_PULLUP
 };
 
 // Voltage level of a digital pin.
-// Usage: VoltageLevel::HAL_HIGH, HAL_LOW
-enum class VoltageLevel { HAL_CONSTANT(HIGH), HAL_CONSTANT(LOW) };
+// Usage: VoltageLevel::HIGH, LOW
+enum class VoltageLevel { HIGH, LOW };
 
 enum class AnalogPin {
   // MPXV5004DP pressure sensors.
@@ -376,13 +352,13 @@ inline void HalApi::setDigitalPinMode(BinaryPin pin, PinMode mode) {
   binary_pin_modes_[pin] = mode;
 }
 inline void HalApi::digitalWrite(BinaryPin pin, VoltageLevel value) {
-  if (binary_pin_modes_[pin] != PinMode::HAL_OUTPUT) {
+  if (binary_pin_modes_[pin] != PinMode::OUTPUT) {
     throw "Can only write to an OUTPUT pin";
   }
   binary_pin_values_[pin] = value;
 }
 inline void HalApi::analogWrite(PwmPin pin, float duty) {
-  if (pwm_pin_modes_[pin] != PinMode::HAL_OUTPUT) {
+  if (pwm_pin_modes_[pin] != PinMode::OUTPUT) {
     throw "Can only write to an OUTPUT pin";
   }
   pwm_pin_values_[pin] = duty;

@@ -15,8 +15,8 @@ limitations under the License.
 
 #include "blower_fsm.h"
 
-#include "hal.h"
 #include "gmock/gmock-matchers.h"
+#include "hal.h"
 #include "gtest/gtest.h"
 #include <string>
 
@@ -49,8 +49,10 @@ void testSequence(
                    /*expected_setpoint_pressure*/ Pressure,
                    /*expected_expiratory_valve_state*/ ValveState>> &seq) {
   BlowerFsm fsm;
-  for (const auto &[params, blower_enabled, time_millis, expected_pressure,
-                    expected_valve_state] : seq) {
+  for (const auto & [
+         params, blower_enabled, time_millis, expected_pressure,
+         expected_valve_state
+       ] : seq) {
     Hal.delay(millisSinceStartup(time_millis) - Hal.now());
     SCOPED_TRACE("time = " + std::to_string(time_millis));
     EXPECT_EQ(time_millis, Hal.now().millisSinceStartup());

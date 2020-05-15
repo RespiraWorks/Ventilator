@@ -10,20 +10,21 @@
 #include "global_constants.h"
 
 WaveformAgentConnector::WaveformAgentConnector(DataModelWaveform *model, QObject *parent)
-    : QObject(parent)
-    , m_model(model)
+  : QObject(parent)
+  , m_model(model)
 {
-    connect(this, &WaveformAgentConnector::processWaveFormData, this, &WaveformAgentConnector::updateWaveformValueData,
-            Qt::QueuedConnection);
+    connect(this, &WaveformAgentConnector::processWaveFormData, this,
+            &WaveformAgentConnector::updateWaveformValueData, Qt::QueuedConnection);
 }
 
 void WaveformAgentConnector::updateWaveformValueData(const QVector<WaveformSample> &data)
 {
-    // append data to each filtered slot
+// append data to each filtered slot
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 7, 0))
     for (FilteredWaveformValueData *val : qAsConst(m_model->m_filtered_data)) {
 #else
-    for (auto it = m_model->m_filtered_data.constBegin(); it != m_model->m_filtered_data.constEnd(); ++it) {
+    for (auto it = m_model->m_filtered_data.constBegin(); it != m_model->m_filtered_data.constEnd();
+         ++it) {
         FilteredWaveformValueData *val = *it;
 #endif
         val->appendData(data);
@@ -32,11 +33,12 @@ void WaveformAgentConnector::updateWaveformValueData(const QVector<WaveformSampl
 
 void WaveformAgentConnector::advanceSweep()
 {
-    // filter each filtered data
+// filter each filtered data
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 7, 0))
     for (FilteredWaveformValueData *val : qAsConst(m_model->m_filtered_data)) {
 #else
-    for (auto it = m_model->m_filtered_data.constBegin(); it != m_model->m_filtered_data.constEnd(); ++it) {
+    for (auto it = m_model->m_filtered_data.constBegin(); it != m_model->m_filtered_data.constEnd();
+         ++it) {
         FilteredWaveformValueData *val = *it;
 #endif
         val->filterWaveform();
@@ -44,9 +46,9 @@ void WaveformAgentConnector::advanceSweep()
 }
 
 DataModelWaveform::DataModelWaveform(QObject *parent)
-    : QObject(parent)
-    , m_connector(new WaveformAgentConnector(this))
-    , m_connector_thread(new QThread())
+  : QObject(parent)
+  , m_connector(new WaveformAgentConnector(this))
+  , m_connector_thread(new QThread())
 {
     m_connector->moveToThread(m_connector_thread);
     m_connector_thread->start();

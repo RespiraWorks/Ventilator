@@ -7,8 +7,8 @@
 #include <cmath>
 
 #include <QCoreApplication>
-#include <QFile>
 #include <QElapsedTimer>
+#include <QFile>
 #include <QMutexLocker>
 #include <QThread>
 
@@ -18,14 +18,14 @@
 #include "sweeptimer.h"
 
 DataReader::DataReader(QObject *parent)
-    : QObject(parent)
-    , m_dataTimer(new QTimer(this))
-    , m_ecg1(nSamples)
-    , m_ecg2(nSamples)
-    , m_resp(nSamples)
-    , m_scg(nSamples)
-    , m_timestamps(nSamples)
-    , m_dataPath()
+  : QObject(parent)
+  , m_dataTimer(new QTimer(this))
+  , m_ecg1(nSamples)
+  , m_ecg2(nSamples)
+  , m_resp(nSamples)
+  , m_scg(nSamples)
+  , m_timestamps(nSamples)
+  , m_dataPath()
 {
     m_dataTimer->setTimerType(Qt::PreciseTimer);
     connect(m_dataTimer, &QTimer::timeout, this, &DataReader::generateData);
@@ -72,14 +72,16 @@ void DataReader::registerAgentConnector(WaveformAgentConnector *connector, int w
             it = m_agentConnectors.insert(waveformType, QList<WaveformAgentConnector *>());
         it.value().append(connector);
 
-        connect(m_sweepTimer, &SweepTimer::renderSweep, connector, &WaveformAgentConnector::advanceSweep);
+        connect(m_sweepTimer, &SweepTimer::renderSweep, connector,
+                &WaveformAgentConnector::advanceSweep);
     }
 }
 
 void DataReader::unregisterAgentConnector(WaveformAgentConnector *connector)
 {
     bool empty = true;
-    disconnect(m_sweepTimer, &SweepTimer::renderSweep, connector, &WaveformAgentConnector::advanceSweep);
+    disconnect(m_sweepTimer, &SweepTimer::renderSweep, connector,
+               &WaveformAgentConnector::advanceSweep);
     QMutexLocker lock(&m_connectorsMutex);
     Q_UNUSED(lock)
     for (auto it = m_agentConnectors.begin(); it != m_agentConnectors.end(); ++it) {

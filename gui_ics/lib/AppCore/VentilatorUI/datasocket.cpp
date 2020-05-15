@@ -15,8 +15,8 @@
 #include "medicalplottingcomponentplugin_log.h"
 
 DataSocket::DataSocket(const QString &dataPath)
-    : QObject(nullptr)
-    , m_socket(new QUdpSocket(this))
+  : QObject(nullptr)
+  , m_socket(new QUdpSocket(this))
 {
     qRegisterMetaType<QMap<int, QVector<WaveformSample>>>("QMap<int, QVector<WaveformSample>>");
     QThread *socketThread = new QThread;
@@ -29,7 +29,8 @@ DataSocket::DataSocket(const QString &dataPath)
             bool ok = false;
             quint16 port = quint16(addressList.value(addressList.length() - 1).toInt(&ok));
             if (!ok) {
-                mpcpWarning() << "Invalid port value:" << addressList.value(addressList.length() - 1);
+                mpcpWarning() << "Invalid port value:"
+                              << addressList.value(addressList.length() - 1);
             } else {
                 m_socket->bind(QHostAddress(addressList.at(addressList.length() - 2)), port);
             }
@@ -50,7 +51,8 @@ DataSocket::DataSocket(const QString &dataPath)
             while (!stream.atEnd()) {
                 const QString line = stream.readLine();
                 const QStringList tokens = line.split(QStringLiteral(","));
-                // NOTE: We expect the first token to be a timestamp which we ignore for now
+                // NOTE: We expect the first token to be a timestamp which we ignore for
+                // now
                 for (int i = 1; i < tokens.length(); ++i) {
                     bool ok = false;
                     const double value = tokens.at(i).toDouble(&ok) * DATA_RANGE;
@@ -59,7 +61,7 @@ DataSocket::DataSocket(const QString &dataPath)
                     auto it = data.find(i - 1);
                     if (it == data.end())
                         it = data.insert(i - 1, QVector<WaveformSample>());
-                    it.value().append(WaveformSample { qRound(value), 0 });
+                    it.value().append(WaveformSample{ qRound(value), 0 });
                 }
             }
         }

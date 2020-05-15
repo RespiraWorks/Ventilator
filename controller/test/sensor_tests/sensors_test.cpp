@@ -21,8 +21,8 @@ limitations under the License.
  * on an Arduino platform.
  */
 
-#include "hal.h"
 #include "sensors.h"
+#include "hal.h"
 #include "gtest/gtest.h"
 #include <assert.h>
 #include <cmath>

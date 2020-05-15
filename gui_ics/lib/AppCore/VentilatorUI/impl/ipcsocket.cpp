@@ -11,8 +11,10 @@ IpcSocket::IpcSocket(QObject *parent)
             [=]() { emit message(QStringLiteral("Socket Error: ") + errorString()); });
 
     connect(this, &QTcpSocket::readyRead, [=]() {
-        // It is better if there is a protocol in case of data loss. But now it is a localhost.
-        // May be better to do socket into thread. (or moveToThread object of this class from code)
+        // It is better if there is a protocol in case of data loss. But now it is a
+        // localhost.
+        // May be better to do socket into thread. (or moveToThread object of this
+        // class from code)
         // Plus better if parse will be through QThreads.
 
         QByteArray incomingData = readAll();

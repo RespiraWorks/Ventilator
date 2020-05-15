@@ -9,8 +9,8 @@
 #include "global_constants.h"
 
 SweepTimer::SweepTimer(QObject *parent)
-    : QObject(parent)
-    , m_sweep_timer(new QTimer(this))
+  : QObject(parent)
+  , m_sweep_timer(new QTimer(this))
 {
     m_sweep_timer->setTimerType(Qt::PreciseTimer);
 

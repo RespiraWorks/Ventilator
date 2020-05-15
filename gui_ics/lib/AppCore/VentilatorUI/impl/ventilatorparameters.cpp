@@ -4,14 +4,18 @@
 
 namespace VentilatorUI {
 VentilatorParameters::VentilatorParameters(QObject *parent)
-    : VentilatorParametersInterface(parent)
-    , m_ipcSocket(new IpcSocket(this))
+  : VentilatorParametersInterface(parent)
+  , m_ipcSocket(new IpcSocket(this))
 {
-    //TODO Init CTOR with connections to real backend instead of IpcSocket
-    connect(m_ipcSocket, &IpcSocket::receivedPreUseTestFinished, this, &VentilatorParameters::setPreUseTestPassed);
-    connect(m_ipcSocket, &IpcSocket::receivedPressureModeChanged, this, &VentilatorParameters::setAcpMode);
-    connect(m_ipcSocket, &IpcSocket::receivedPowerSourceChanged, this, &VentilatorParameters::setPowerSourceType);
-    connect(m_ipcSocket, &IpcSocket::receivedBatteryLevel, this, &VentilatorParameters::setBatteryLevel);
+    // TODO Init CTOR with connections to real backend instead of IpcSocket
+    connect(m_ipcSocket, &IpcSocket::receivedPreUseTestFinished, this,
+            &VentilatorParameters::setPreUseTestPassed);
+    connect(m_ipcSocket, &IpcSocket::receivedPressureModeChanged, this,
+            &VentilatorParameters::setAcpMode);
+    connect(m_ipcSocket, &IpcSocket::receivedPowerSourceChanged, this,
+            &VentilatorParameters::setPowerSourceType);
+    connect(m_ipcSocket, &IpcSocket::receivedBatteryLevel, this,
+            &VentilatorParameters::setBatteryLevel);
     connect(m_ipcSocket, &IpcSocket::receivedAlert, this, &VentilatorParameters::handleAlert);
 
     connect(m_ipcSocket, &IpcSocket::receivedTidalv, this, &VentilatorParameters::setTidalV);
@@ -26,10 +30,14 @@ VentilatorParameters::VentilatorParameters(QObject *parent)
     connect(m_ipcSocket, &IpcSocket::receivedRrMin, this, &VentilatorParameters::setRrMinLow);
     connect(m_ipcSocket, &IpcSocket::receivedRrMax, this, &VentilatorParameters::setRrMinHigh);
 
-    connect(m_ipcSocket, &IpcSocket::receivedCurrentRate, this, &VentilatorParameters::setCurrentRate);
-    connect(m_ipcSocket, &IpcSocket::receivedCurrentPEEP, this, &VentilatorParameters::setCurrentPeep);
-    connect(m_ipcSocket, &IpcSocket::receivedCurrentTidalVolume, this, &VentilatorParameters::setCurrentTidalV);
-    connect(m_ipcSocket, &IpcSocket::receivedCurrentAdditionalValue, this, &VentilatorParameters::setCurrentAdditionalValue);
+    connect(m_ipcSocket, &IpcSocket::receivedCurrentRate, this,
+            &VentilatorParameters::setCurrentRate);
+    connect(m_ipcSocket, &IpcSocket::receivedCurrentPEEP, this,
+            &VentilatorParameters::setCurrentPeep);
+    connect(m_ipcSocket, &IpcSocket::receivedCurrentTidalVolume, this,
+            &VentilatorParameters::setCurrentTidalV);
+    connect(m_ipcSocket, &IpcSocket::receivedCurrentAdditionalValue, this,
+            &VentilatorParameters::setCurrentAdditionalValue);
 
     setAcpMode(acpMode());
     setPowerSourceType(powerSourceType());
@@ -54,7 +62,7 @@ void VentilatorParameters::startPreUseTest()
 
     m_ipcSocket->sendStartPreUseTest();
 
-    //TODO remove stub
+    // TODO remove stub
     setPreUseTestPassed(true);
 }
 
@@ -68,7 +76,7 @@ void VentilatorParameters::setPressureMode(int mode)
 
     m_ipcSocket->sendSetPressureMode(mode);
 
-    //TODO remove stub
+    // TODO remove stub
     setAcpMode(mode);
 }
 
@@ -76,11 +84,8 @@ void VentilatorParameters::setAcpMode(int acpMode)
 {
     VentilatorParametersInterface::setAcpMode(acpMode);
 
-    static const QVector<QString> modeNames = {
-        QStringLiteral("AC/P"),
-        QStringLiteral("PCV"),
-        QStringLiteral("CPP")
-    };
+    static const QVector<QString> modeNames = { QStringLiteral("AC/P"), QStringLiteral("PCV"),
+                                                QStringLiteral("CPP") };
 
     setAcpModeName(modeNames.value(acpMode));
 }
@@ -90,8 +95,7 @@ void VentilatorParameters::setPowerSourceType(int powerSourceType)
     VentilatorParametersInterface::setPowerSourceType(powerSourceType);
 
     static const QVector<QString> powerSourceAssets = {
-        QStringLiteral("/Icons/Power__ACState.png"),
-        QStringLiteral("/Icons/Power__DCState.png")
+        QStringLiteral("/Icons/Power__ACState.png"), QStringLiteral("/Icons/Power__DCState.png")
     };
 
     setPowerSourceAsset(powerSourceAssets.value(powerSourceType));
@@ -114,7 +118,7 @@ void VentilatorParameters::adjustTidalV(int value)
 
     m_ipcSocket->sendSetTidalv(value);
 
-    //TODO remove stub
+    // TODO remove stub
     setTidalV(value);
 }
 
@@ -154,7 +158,7 @@ void VentilatorParameters::adjustPeep(int value)
 
     m_ipcSocket->sendSetPeep(value);
 
-    //TODO remove stub
+    // TODO remove stub
     setPeep(value);
 }
 
@@ -194,7 +198,7 @@ void VentilatorParameters::adjustRrMin(int value)
 
     m_ipcSocket->sendSetRr(value);
 
-    //TODO remove stub
+    // TODO remove stub
     setRrMin(value);
 }
 
@@ -224,7 +228,8 @@ void VentilatorParameters::setRrMinHigh(int rrMinHigh)
     setRrMin(rrMin());
 }
 
-void VentilatorParameters::handleAlert(const QString &alert, const QDateTime &timestamp, int priority)
+void VentilatorParameters::handleAlert(const QString &alert, const QDateTime &timestamp,
+                                       int priority)
 {
     Q_UNUSED(timestamp)
     Q_UNUSED(priority)
@@ -235,7 +240,8 @@ void VentilatorParameters::handleAlert(const QString &alert, const QDateTime &ti
 
 bool VentilatorParameters::checkConnection() const
 {
-    if (m_ipcSocket->state() != QAbstractSocket::ConnectedState) {//TODO replace with == for Simulator
+    if (m_ipcSocket->state()
+        != QAbstractSocket::ConnectedState) { // TODO replace with == for Simulator
         return true;
     }
 
@@ -247,5 +253,4 @@ bool VentilatorParameters::checkConnection() const
 
     return false;
 }
-
 }

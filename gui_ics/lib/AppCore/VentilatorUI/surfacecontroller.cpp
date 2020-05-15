@@ -2,8 +2,8 @@
 #include <QDebug>
 
 namespace VentilatorUI {
-SurfaceController::SurfaceController(QObject *parent) :
-    QObject(parent)
+SurfaceController::SurfaceController(QObject *parent)
+  : QObject(parent)
 {
 }
 }

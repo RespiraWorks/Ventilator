@@ -1,7 +1,7 @@
 #include "appcommandlineparser.h"
 
-#include <QCoreApplication>
 #include <QCommandLineParser>
+#include <QCoreApplication>
 #include <QDebug>
 #include <QProcess>
 
@@ -86,58 +86,53 @@ AppCommandLineParser::AppCommandLineParser(const QStringList &args)
 
     QCommandLineOption pluginDir(
             { QStringLiteral("c"), QStringLiteral("pluginDir") },
-            QCoreApplication::translate("main",
-                                        "Used to specify a path to the plugin directory.\n"
-                                        "   e.g. '/usr/lib64/plugin-dir' \n"),
+            QCoreApplication::translate("main", "Used to specify a path to the plugin directory.\n"
+                                                "   e.g. '/usr/lib64/plugin-dir' \n"),
             QStringLiteral("path"), QString());
     parser.addOption(pluginDir);
 
     QCommandLineOption remoteBackend(
             { QStringLiteral("remoteBackend") },
-            QCoreApplication::translate(
-                    "main",
-                    "Used to sepcify if the application should connect to a remote backend.\n"));
+            QCoreApplication::translate("main", "Used to sepcify if the application "
+                                                "should connect to a remote "
+                                                "backend.\n"));
     parser.addOption(remoteBackend);
 
     QCommandLineOption backendPort(
             { QStringLiteral("backendPort") },
             QCoreApplication::translate(
-                    "main",
-                    "Used to sepcify the port used to connect to a backend instance.\n"
-                    "   e.g. '26186'. \n"),
+                    "main", "Used to sepcify the port used to connect to a backend instance.\n"
+                            "   e.g. '26186'. \n"),
             QStringLiteral("port"));
     parser.addOption(backendPort);
 
     QCommandLineOption backendUrl(
             { QStringLiteral("backendUrl") },
             QCoreApplication::translate(
-                    "main",
-                    "Used to sepcify the URL used to connect to a backend instance.\n"
-                    "   e.g. 'localhost'. \n"),
+                    "main", "Used to sepcify the URL used to connect to a backend instance.\n"
+                            "   e.g. 'localhost'. \n"),
             QStringLiteral("url"), m_backendUrl);
     parser.addOption(backendUrl);
 
-    QCommandLineOption simulator(
-            { QStringLiteral("simulator") },
-            QCoreApplication::translate(
-                    "main", "Used to sepcify if the application should connect to a simulator.\n"));
+    QCommandLineOption simulator({ QStringLiteral("simulator") },
+                                 QCoreApplication::translate("main",
+                                                             "Used to sepcify if the application "
+                                                             "should connect to a simulator.\n"));
     parser.addOption(simulator);
 
     QCommandLineOption simulatorPort(
             { QStringLiteral("simulatorPort") },
             QCoreApplication::translate(
-                    "main",
-                    "Used to sepcify the port used to connect to a simulator instance.\n"
-                    "   e.g. '26186'. \n"),
+                    "main", "Used to sepcify the port used to connect to a simulator instance.\n"
+                            "   e.g. '26186'. \n"),
             QStringLiteral("port"));
     parser.addOption(simulatorPort);
 
     QCommandLineOption simulatorUrl(
             { QStringLiteral("simulatorUrl") },
             QCoreApplication::translate(
-                    "main",
-                    "Used to sepcify the URL used to connect to a simulator instance.\n"
-                    "   e.g. 'localhost'. \n"),
+                    "main", "Used to sepcify the URL used to connect to a simulator instance.\n"
+                            "   e.g. 'localhost'. \n"),
             QStringLiteral("url"), m_simulatorUrl);
     parser.addOption(simulatorUrl);
 

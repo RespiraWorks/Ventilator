@@ -1,13 +1,13 @@
 #include "greenhouseviewmanager.h"
-#include "greenhousecontext.h"
 #include "greenhouse_log.h"
+#include "greenhousecontext.h"
 
-#include <QMetaObject>
-#include <QMetaMethod>
 #include <QFile>
+#include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
-#include <QJsonArray>
+#include <QMetaMethod>
+#include <QMetaObject>
 #include <QQuickItem>
 
 namespace {
@@ -38,17 +38,16 @@ QQuickItem *instantiateItem(GreenHouse::Context *context, const QString &file)
     }
     return item;
 }
-
 }
 
 namespace GreenHouse {
 
 ViewItem::ViewItem(const QString &name, const QString &qmlFile, QObject *parent)
-    : QObject(parent)
-    , m_name(name)
-    , m_qmlFile(qmlFile)
-    , m_item(nullptr)
-    , m_itemInterface(nullptr)
+  : QObject(parent)
+  , m_name(name)
+  , m_qmlFile(qmlFile)
+  , m_item(nullptr)
+  , m_itemInterface(nullptr)
 {
 }
 
@@ -59,7 +58,8 @@ void ViewItem::showItem(const QString &replaces)
         if (m_itemInterface && m_itemInterface->metaObject()->indexOfProperty("replaces") != -1)
             m_itemInterface->setProperty("replaces", QVariant::fromValue(replaces));
 
-        if (m_itemInterface && m_itemInterface->metaObject()->indexOfProperty("allowedToDisplay") != -1)
+        if (m_itemInterface
+            && m_itemInterface->metaObject()->indexOfProperty("allowedToDisplay") != -1)
             m_itemInterface->setProperty("allowedToDisplay", QVariant::fromValue(true));
         else
             m_item->setVisible(true);
@@ -81,7 +81,8 @@ void ViewItem::hideItem(const QString &replacedBy)
         if (m_itemInterface && m_itemInterface->metaObject()->indexOfProperty("replacedBy") != -1)
             m_itemInterface->setProperty("replacedBy", QVariant::fromValue(replacedBy));
 
-        if (m_itemInterface && m_itemInterface->metaObject()->indexOfProperty("allowedToDisplay") != -1)
+        if (m_itemInterface
+            && m_itemInterface->metaObject()->indexOfProperty("allowedToDisplay") != -1)
             m_itemInterface->setProperty("allowedToDisplay", QVariant::fromValue(false));
         else
             m_item->setVisible(false);
@@ -118,18 +119,21 @@ void ViewItem::createItem()
                             int requestItemIndex = meta->indexOfSignal(requestItemSig);
                             if (requestItemIndex != -1) {
                                 QMetaMethod signal = meta->method(requestItemIndex);
-                                QMetaMethod slot = metaObject()->method(metaObject()->indexOfSlot(requestItemSig));
+                                QMetaMethod slot = metaObject()->method(
+                                        metaObject()->indexOfSlot(requestItemSig));
                                 connect(m_itemInterface, signal, this, slot);
                             }
                             int requestDefaultIndex = meta->indexOfSignal(requestDefaultSig);
                             if (requestDefaultIndex != -1) {
                                 QMetaMethod signal = meta->method(requestDefaultIndex);
-                                QMetaMethod slot = metaObject()->method(metaObject()->indexOfSlot(requestDefaultSig));
+                                QMetaMethod slot = metaObject()->method(
+                                        metaObject()->indexOfSlot(requestDefaultSig));
                                 connect(m_itemInterface, signal, this, slot);
                             }
                         }
                     }
-                    if (m_itemInterface && m_itemInterface->metaObject()->indexOfSignal("init()") != -1)
+                    if (m_itemInterface
+                        && m_itemInterface->metaObject()->indexOfSignal("init()") != -1)
                         QMetaObject::invokeMethod(m_itemInterface, "init", Qt::DirectConnection);
                     else
                         m_item->setVisible(false);
@@ -187,13 +191,13 @@ Context *ViewItem::context()
 }
 
 ViewSurface::ViewSurface(const QString &name, int z, QObject *parent)
-    : QObject(parent)
-    , m_z(z)
-    , m_default(nullptr)
-    , m_active(nullptr)
-    , m_items()
-    , m_name(name)
-    , m_surface(nullptr)
+  : QObject(parent)
+  , m_z(z)
+  , m_default(nullptr)
+  , m_active(nullptr)
+  , m_items()
+  , m_name(name)
+  , m_surface(nullptr)
 {
 }
 
@@ -311,20 +315,20 @@ void ViewSurface::createSurface()
 }
 
 ViewManager::ViewManager(Context *context, QObject *parent)
-    : QObject(parent)
-    , m_context(context)
-    , m_surfaces()
-    , m_running(false)
-    , m_precreateUi(false)
+  : QObject(parent)
+  , m_context(context)
+  , m_surfaces()
+  , m_running(false)
+  , m_precreateUi(false)
 {
 }
 
 ViewManager::ViewManager(Context *context, const QString &descriptorFile, QObject *parent)
-    : QObject(parent)
-    , m_context(context)
-    , m_surfaces()
-    , m_running(false)
-    , m_precreateUi(false)
+  : QObject(parent)
+  , m_context(context)
+  , m_surfaces()
+  , m_running(false)
+  , m_precreateUi(false)
 {
     QFile descriptor(descriptorFile);
     if (descriptor.exists()) {
@@ -361,11 +365,13 @@ ViewManager::ViewManager(Context *context, const QString &descriptorFile, QObjec
                                             objIt = itemObj.constFind(DEFAULT_TAG);
                                             if (objIt != itemObj.constEnd())
                                                 isDefault = objIt.value().toBool();
-                                            ViewItem *item = new ViewItem(itemName, itemFile, surface);
+                                            ViewItem *item =
+                                                    new ViewItem(itemName, itemFile, surface);
                                             surface->registerItem(item, isDefault);
                                             objIt = itemObj.constFind(PROXY_TAG);
                                             if (objIt != itemObj.constEnd()) {
-                                                const QJsonArray proxyArray = objIt.value().toArray();
+                                                const QJsonArray proxyArray =
+                                                        objIt.value().toArray();
                                                 for (const auto &proxy : proxyArray)
                                                     item->addProxyItem(proxy.toString());
                                             }
@@ -384,14 +390,17 @@ ViewManager::ViewManager(Context *context, const QString &descriptorFile, QObjec
                                 << "descriptor file does not contain any surfaces.";
                 }
             } else {
-                ghWarning() << Q_FUNC_INFO << "The provided" << descriptorFile << "descriptor file is invalid.";
+                ghWarning() << Q_FUNC_INFO << "The provided" << descriptorFile
+                            << "descriptor file is invalid.";
                 ghWarning() << error.errorString();
             }
         } else {
-            ghWarning() << Q_FUNC_INFO << "The provided" << descriptorFile << "descriptor file is not readable.";
+            ghWarning() << Q_FUNC_INFO << "The provided" << descriptorFile
+                        << "descriptor file is not readable.";
         }
     } else {
-        ghWarning() << Q_FUNC_INFO << "The provided" << descriptorFile << "descriptor file does not exist.";
+        ghWarning() << Q_FUNC_INFO << "The provided" << descriptorFile
+                    << "descriptor file does not exist.";
     }
 }
 
@@ -466,5 +475,4 @@ void ViewManager::requestDefault(const QString &name)
     if (surface)
         surface->showDefault();
 }
-
 }

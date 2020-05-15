@@ -217,7 +217,7 @@ static void InitGPIO() {
 
 // Set or clear the specified digital output
 void HalApi::digitalWrite(BinaryPin pin, VoltageLevel value) {
-  auto [base, bit] = [&]() -> std::pair<GPIO_Regs *, int> {
+  auto[base, bit] = [&]() -> std::pair<GPIO_Regs *, int> {
     switch (pin) {
     case BinaryPin::SOLENOID:
       return {GPIO_A_BASE, 11};
@@ -462,7 +462,7 @@ static void InitPwmOut() {
 
 // Set the PWM period.
 void HalApi::analogWrite(PwmPin pin, float duty) {
-  auto [tmr, chan] = [&]() -> std::pair<TimerRegs *, int> {
+  auto[tmr, chan] = [&]() -> std::pair<TimerRegs *, int> {
     switch (pin) {
     case PwmPin::BLOWER:
       return {TIMER2_BASE, 1};

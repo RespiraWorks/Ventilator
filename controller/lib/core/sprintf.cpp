@@ -123,7 +123,7 @@ int RWvsnprintf(char *str, size_t sz, const char *format, va_list ap) {
     case 'x':
     case 'X':
       finfo.flags |= FLG_UNSIGNED;
-      // fall through
+    // fall through
 
     case 'd':
     case 'i':

@@ -17,29 +17,29 @@ static int PLOT_HORIZONTAL_OFFSET = 20;
 static int SWEEP_GAP = 10;
 
 WaveformChartWidget::WaveformChartWidget(QQuickPaintedItem *parent)
-    : QQuickPaintedItem(parent)
-    , m_filtered_data(nullptr)
-    , m_canvas(QImage())
-    , m_waveformType(-1)
-    , m_auto_scale(false)
-    , m_auto_size(false)
-    , m_title_color(Qt::black)
-    , m_title_text()
-    , m_scale_text()
-    , m_source_text()
-    , m_message_text()
-    , m_grid_color(Qt::black)
-    , m_grid_labels_color(Qt::black)
-    , m_grid_style(Qt::DotLine)
-    , m_grid_width(1)
-    , m_show_vertical_grid(true)
-    , m_show_vertical_grid_labels(true)
-    , m_waveform_plot_type(0)
-    , m_waveform_color(Qt::black)
-    , m_waveform_style(Qt::SolidLine)
-    , m_waveform_width(1)
-    , m_selected(false)
-    , m_scale_string()
+  : QQuickPaintedItem(parent)
+  , m_filtered_data(nullptr)
+  , m_canvas(QImage())
+  , m_waveformType(-1)
+  , m_auto_scale(false)
+  , m_auto_size(false)
+  , m_title_color(Qt::black)
+  , m_title_text()
+  , m_scale_text()
+  , m_source_text()
+  , m_message_text()
+  , m_grid_color(Qt::black)
+  , m_grid_labels_color(Qt::black)
+  , m_grid_style(Qt::DotLine)
+  , m_grid_width(1)
+  , m_show_vertical_grid(true)
+  , m_show_vertical_grid_labels(true)
+  , m_waveform_plot_type(0)
+  , m_waveform_color(Qt::black)
+  , m_waveform_style(Qt::SolidLine)
+  , m_waveform_width(1)
+  , m_selected(false)
+  , m_scale_string()
 {
     connect(this, SIGNAL(updateWaveform()), this, SLOT(update()));
 
@@ -58,7 +58,8 @@ void WaveformChartWidget::setWaveformType(int type)
         m_waveformType = type;
         emit waveformTypeChanged();
         if (!m_dataPath.isEmpty())
-            DataReader::instance(m_dataPath)->registerAgentConnector(m_waveFormData->connector(), m_waveformType);
+            DataReader::instance(m_dataPath)
+                    ->registerAgentConnector(m_waveFormData->connector(), m_waveformType);
     }
 }
 
@@ -67,12 +68,13 @@ void WaveformChartWidget::setFilteredData(FilteredWaveformValueData *fd)
     if (m_filtered_data)
         disconnect(m_filtered_data);
     m_filtered_data = fd;
-    connect(m_filtered_data, &FilteredWaveformValueData::renderWaveform, this, &WaveformChartWidget::renderWaveform,
-            Qt::DirectConnection);
+    connect(m_filtered_data, &FilteredWaveformValueData::renderWaveform, this,
+            &WaveformChartWidget::renderWaveform, Qt::DirectConnection);
     connect(m_filtered_data, &FilteredWaveformValueData::sweepSpeedChanged, this,
             &WaveformChartWidget::sweepSpeedChanged);
     connect(m_filtered_data, &FilteredWaveformValueData::scaleChanged, this, [this]() -> void {
-        // XXX formatting will be based on waveform id and units of measurement
+        // XXX formatting will be based on waveform id and units of
+        // measurement
         m_scale_string = QStringLiteral("%1 mV").arg(m_filtered_data->scale());
         emit scaleChanged();
     });
@@ -233,7 +235,8 @@ void WaveformChartWidget::setDataPath(const QString &path)
         m_dataPath = path;
         emit dataPathChanged();
         if (!m_dataPath.isEmpty())
-            DataReader::instance(m_dataPath)->registerAgentConnector(m_waveFormData->connector(), m_waveformType);
+            DataReader::instance(m_dataPath)
+                    ->registerAgentConnector(m_waveFormData->connector(), m_waveformType);
     }
 }
 
@@ -266,8 +269,8 @@ void WaveformChartWidget::setScale(int scale)
 void WaveformChartWidget::updateSize()
 {
     m_canvasMutex.lock();
-    m_canvas =
-            QImage(int(width() - PLOT_HORIZONTAL_OFFSET), int(height() - PLOT_VERTICAL_OFFSET), QImage::Format_ARGB32);
+    m_canvas = QImage(int(width() - PLOT_HORIZONTAL_OFFSET), int(height() - PLOT_VERTICAL_OFFSET),
+                      QImage::Format_ARGB32);
     m_canvas.fill(Qt::transparent);
     m_canvasMutex.unlock();
 
@@ -311,17 +314,21 @@ void WaveformChartWidget::drawVerticalGrid(QPainter *painter)
     QRect labelRect = fm.boundingRect(QLatin1Char('0'));
 
     painter->setPen(line_pen);
-    painter->drawLine(PLOT_HORIZONTAL_OFFSET, PLOT_VERTICAL_OFFSET, int(width()), PLOT_VERTICAL_OFFSET);
-    painter->drawLine(PLOT_HORIZONTAL_OFFSET, int(height() - PLOT_VERTICAL_OFFSET / 2 + PLOT_VERTICAL_OFFSET),
-                      int(width()), int(height() - PLOT_VERTICAL_OFFSET / 2 + PLOT_VERTICAL_OFFSET));
+    painter->drawLine(PLOT_HORIZONTAL_OFFSET, PLOT_VERTICAL_OFFSET, int(width()),
+                      PLOT_VERTICAL_OFFSET);
+    painter->drawLine(PLOT_HORIZONTAL_OFFSET,
+                      int(height() - PLOT_VERTICAL_OFFSET / 2 + PLOT_VERTICAL_OFFSET), int(width()),
+                      int(height() - PLOT_VERTICAL_OFFSET / 2 + PLOT_VERTICAL_OFFSET));
     painter->drawLine(PLOT_HORIZONTAL_OFFSET, int(height()) - 1, int(width()), int(height()) - 1);
 
     painter->setPen(text_pen);
     painter->drawText(0, PLOT_VERTICAL_OFFSET + labelRect.height(),
                       QStringLiteral("%1").arg(m_filtered_data->scale() / 2));
-    painter->drawText(0, int(height() - PLOT_VERTICAL_OFFSET / 2 + PLOT_VERTICAL_OFFSET + labelRect.height() / 2),
+    painter->drawText(0, int(height() - PLOT_VERTICAL_OFFSET / 2 + PLOT_VERTICAL_OFFSET
+                             + labelRect.height() / 2),
                       QStringLiteral("%1").arg(0));
-    painter->drawText(0, int(height() - 1), QStringLiteral("%1").arg(-m_filtered_data->scale() / 2));
+    painter->drawText(0, int(height() - 1),
+                      QStringLiteral("%1").arg(-m_filtered_data->scale() / 2));
 }
 
 void WaveformChartWidget::drawName(QPainter *painter)
@@ -373,7 +380,8 @@ void WaveformChartWidget::drawMessage(QPainter *painter)
     painter->drawText(int(width() / 2 - labelRect.width() / 2), int(height() / 2), m_message_text);
 }
 
-void WaveformChartWidget::drawVerticalLineSegment(QPainter *painter, const QPoint &p1, const QPoint &p2)
+void WaveformChartWidget::drawVerticalLineSegment(QPainter *painter, const QPoint &p1,
+                                                  const QPoint &p2)
 {
     QPainterPath path;
     path.moveTo(p1);
@@ -401,8 +409,10 @@ void WaveformChartWidget::redrawWaveform(QPainter *imagePainter, int sweepPositi
     imagePainter->eraseRect(0, 0, m_canvas.width(), m_canvas.height());
 
     for (int i = 1; i < m_filtered_data->filteredData().size(); i++) {
-        m_beg = m_filtered_data->mapUnipolarValueToScreen(m_filtered_data->filteredData().at(i - 1).maxValue());
-        m_end = m_filtered_data->mapUnipolarValueToScreen(m_filtered_data->filteredData().at(i).maxValue());
+        m_beg = m_filtered_data->mapUnipolarValueToScreen(
+                m_filtered_data->filteredData().at(i - 1).maxValue());
+        m_end = m_filtered_data->mapUnipolarValueToScreen(
+                m_filtered_data->filteredData().at(i).maxValue());
 
         if (i < sweepPosition - 1 || i > sweepPosition + 1) {
             switch (m_waveform_plot_type) {
@@ -454,15 +464,18 @@ void WaveformChartWidget::renderWaveform(int sweepPosition, bool replot)
 
         switch (m_waveform_plot_type) {
         case 0:
-            drawLineSegment(&imagePainter, QPoint(sweepPosition - 2, m_beg), QPoint(sweepPosition - 1, m_end));
+            drawLineSegment(&imagePainter, QPoint(sweepPosition - 2, m_beg),
+                            QPoint(sweepPosition - 1, m_end));
             break;
 
         case 1:
-            drawVerticalLineSegment(&imagePainter, QPoint(sweepPosition - 2, m_beg), QPoint(sweepPosition - 1, m_end));
+            drawVerticalLineSegment(&imagePainter, QPoint(sweepPosition - 2, m_beg),
+                                    QPoint(sweepPosition - 1, m_end));
             break;
 
         default:
-            drawLineSegment(&imagePainter, QPoint(sweepPosition - 2, m_beg), QPoint(sweepPosition - 1, m_end));
+            drawLineSegment(&imagePainter, QPoint(sweepPosition - 2, m_beg),
+                            QPoint(sweepPosition - 1, m_end));
             break;
         }
     }

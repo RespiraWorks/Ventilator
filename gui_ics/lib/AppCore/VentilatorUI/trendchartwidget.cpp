@@ -10,7 +10,7 @@
 #include <QTime>
 
 TrendChartWidget::TrendChartWidget(QQuickItem *parent)
-    : QQuickPaintedItem(parent)
+  : QQuickPaintedItem(parent)
 {
     // Calculate current hour, can be 9.0, 10.5 14.0, 16.5
     m_currentHour = getCurrentHour();
@@ -36,9 +36,12 @@ void TrendChartWidget::setDataModel(QAbstractItemModel *dataModel)
         m_dataModel = dataModel;
         emit dataModelChanged();
         if (m_dataModel) {
-            connect(m_dataModel, &QAbstractListModel::rowsInserted, this, &TrendChartWidget::scheduleUpdate);
-            connect(m_dataModel, &QAbstractListModel::rowsRemoved, this, &TrendChartWidget::scheduleUpdate);
-            connect(m_dataModel, &QAbstractListModel::rowsMoved, this, &TrendChartWidget::scheduleUpdate);
+            connect(m_dataModel, &QAbstractListModel::rowsInserted, this,
+                    &TrendChartWidget::scheduleUpdate);
+            connect(m_dataModel, &QAbstractListModel::rowsRemoved, this,
+                    &TrendChartWidget::scheduleUpdate);
+            connect(m_dataModel, &QAbstractListModel::rowsMoved, this,
+                    &TrendChartWidget::scheduleUpdate);
         }
         syncValueRole();
         syncTimeStampRole();
@@ -118,7 +121,8 @@ void TrendChartWidget::setPlotColor(const QColor &color)
 
 void TrendChartWidget::setPlotLineWidth(qreal plotLineWidth)
 {
-    if ((m_plotLineWidth < plotLineWidth || m_plotLineWidth > plotLineWidth) && plotLineWidth >= 1.0) {
+    if ((m_plotLineWidth < plotLineWidth || m_plotLineWidth > plotLineWidth)
+        && plotLineWidth >= 1.0) {
         m_plotLineWidth = plotLineWidth;
         emit plotLineWidthChanged();
         update();
@@ -197,7 +201,8 @@ void TrendChartWidget::paint(QPainter *painter)
 
             // Get proper value and timestamp
             const QVariant val = m_dataModel->data(m_dataModel->index(index, 0), m_valueRole);
-            const QVariant timeStamp = m_dataModel->data(m_dataModel->index(index, 0), m_timeStampRole);
+            const QVariant timeStamp =
+                    m_dataModel->data(m_dataModel->index(index, 0), m_timeStampRole);
 
             bool ok = false;
             int value = qMin(m_valueCeiling, qMax(0, val.toInt(&ok) + m_plotValueOffset));
@@ -209,11 +214,13 @@ void TrendChartWidget::paint(QPainter *painter)
 
                 if (!timeStamp.toString().isEmpty()) {
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 11, 0))
-                    painter->drawText(int(xPos - fontMetrics.horizontalAdvance(timeStamp.toString()) / 2),
+                    painter->drawText(
+                            int(xPos - fontMetrics.horizontalAdvance(timeStamp.toString()) / 2),
 #else
-                    painter->drawText(int(xPos - fontMetrics.width(timeStamp.toString()) / 2),
+                    painter->drawText(
+                            int(xPos - fontMetrics.width(timeStamp.toString()) / 2),
 #endif
-                                      int(m_headerHeight - m_headerBottomOffset), timeStamp.toString());
+                            int(m_headerHeight - m_headerBottomOffset), timeStamp.toString());
                 }
 
                 if (index == m_markedNodeIndex) {
@@ -238,9 +245,10 @@ void TrendChartWidget::paint(QPainter *painter)
     painter->setPen(QPen(m_plotColor, m_plotLineWidth));
     painter->drawPath(path);
 
-    if (markedNodePosition.x() > -1.0 && markedNodePosition.y() > -1.0 && !m_nodeMarkerImage.isNull())
-        painter->drawImage(markedNodePosition
-                                   - QPointF(m_nodeMarkerImage.width() * 0.5, m_nodeMarkerImage.height() * 0.5),
+    if (markedNodePosition.x() > -1.0 && markedNodePosition.y() > -1.0
+        && !m_nodeMarkerImage.isNull())
+        painter->drawImage(markedNodePosition - QPointF(m_nodeMarkerImage.width() * 0.5,
+                                                        m_nodeMarkerImage.height() * 0.5),
                            m_nodeMarkerImage);
 }
 

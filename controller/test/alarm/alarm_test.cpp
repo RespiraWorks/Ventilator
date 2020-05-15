@@ -1,7 +1,7 @@
-#include <types.h>
 #include "alarm.h"
 #include "hal.h"
 #include "gtest/gtest.h"
+#include <types.h>
 
 class AlarmTest : public testing::Test {
 public:

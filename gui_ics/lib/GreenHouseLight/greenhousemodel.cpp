@@ -22,21 +22,21 @@ inline void swap(QJsonValueRef v1, QJsonValueRef v2)
 namespace GreenHouse {
 
 Model::Model(QObject *parent)
-    : QAbstractListModel(parent)
+  : QAbstractListModel(parent)
 {
     makeConnections();
 }
 
 Model::Model(QStringList roles, QObject *parent)
-    : QAbstractListModel(parent)
-    , m_roles(std::move(roles))
+  : QAbstractListModel(parent)
+  , m_roles(std::move(roles))
 {
     makeConnections();
 }
 
 Model::Model(QStringList roles, const QByteArray &data, QObject *parent)
-    : QAbstractListModel(parent)
-    , m_roles(std::move(roles))
+  : QAbstractListModel(parent)
+  , m_roles(std::move(roles))
 {
     QJsonParseError err = {};
     const QJsonDocument doc = QJsonDocument::fromJson(data, &err);
@@ -49,9 +49,9 @@ Model::Model(QStringList roles, const QByteArray &data, QObject *parent)
 }
 
 Model::Model(QStringList roles, QJsonArray data, QObject *parent)
-    : QAbstractListModel(parent)
-    , m_roles(std::move(roles))
-    , m_data(std::move(data))
+  : QAbstractListModel(parent)
+  , m_roles(std::move(roles))
+  , m_data(std::move(data))
 {
     makeConnections();
 }
@@ -298,9 +298,11 @@ void Model::makeConnections()
 
     // NOTE: using the raw overload connection syntax to keep Qt 5.6 compatibility
     connect(this, &Model::delayedPopulateWithRoles, this,
-            static_cast<void (Model::*)(const QStringList &, const QJsonArray &, bool)>(&Model::populate),
+            static_cast<void (Model::*)(const QStringList &, const QJsonArray &, bool)>(
+                    &Model::populate),
             Qt::QueuedConnection);
-    connect(this, &Model::delayedPopulate, this, static_cast<void (Model::*)(const QJsonArray &)>(&Model::populate),
+    connect(this, &Model::delayedPopulate, this,
+            static_cast<void (Model::*)(const QJsonArray &)>(&Model::populate),
             Qt::QueuedConnection);
 }
 
@@ -309,8 +311,10 @@ void Model::applyFilter()
     if (m_dataFilter) {
         beginResetModel();
         m_filteredData = QJsonArray();
-        // NOTE: We can't use a reference as QJsonArray does not provide reference access to its values
-        // and using QJsonValueRef does not buy us anything as it is intended for inline editing rather
+        // NOTE: We can't use a reference as QJsonArray does not provide reference
+        // access to its values
+        // and using QJsonValueRef does not buy us anything as it is intended for
+        // inline editing rather
         // than just pure access
         for (const QJsonValue row : m_data) {
             if (m_dataFilter(row.toObject()))
@@ -319,5 +323,4 @@ void Model::applyFilter()
         endResetModel();
     }
 }
-
 }

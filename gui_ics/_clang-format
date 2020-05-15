@@ -13,7 +13,6 @@ NamespaceIndentation: None
 
 ConstructorInitializerAllOnOneLineOrOnePerLine: false
 PointerBindsToType: false
-SpaceAfterTemplateKeyword: false
 
 BreakBeforeBinaryOperators: NonAssignment
 BreakBeforeBraces: Custom

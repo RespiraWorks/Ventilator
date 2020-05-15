@@ -2,8 +2,8 @@
 #include <QDebug>
 
 namespace VentilatorUI {
-VentilatorParametersInterface::VentilatorParametersInterface(QObject *parent) :
-    QObject(parent)
+VentilatorParametersInterface::VentilatorParametersInterface(QObject *parent)
+  : QObject(parent)
 {
 }
 

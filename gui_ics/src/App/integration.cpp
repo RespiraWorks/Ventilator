@@ -21,12 +21,15 @@ Integration::Integration(QQmlEngine *engine, AppCommandLineParser *cmd, QObject 
     VentilatorUI::setup();
 }
 
-Integration::~Integration() { }
+Integration::~Integration()
+{
+}
 
 void Integration::mainWindowCreated(QQuickItem *mainContainer, QQuickWindow *window)
 {
     if (m_context) {
-        // NOTE: We are dealing with a UI reload scenario, if we already have a valid context
+        // NOTE: We are dealing with a UI reload scenario, if we already have a
+        // valid context
         // instance
         m_context->setRootItem(mainContainer);
         m_viewManager->recreateUi();

@@ -3,8 +3,8 @@
  **********************************************************************************************************************/
 
 #include "greenhousetheme.h"
-#include "greenhousecontext.h"
 #include "greenhouse_log.h"
+#include "greenhousecontext.h"
 #include "greenhousetheme.h"
 
 #include <QCryptographicHash>
@@ -101,7 +101,7 @@ int rawColorChannelValue(const QString &channelValue)
 }
 
 Theme::Theme(QObject *parent)
-    : QObject(parent)
+  : QObject(parent)
 {
 }
 
@@ -141,7 +141,8 @@ QUrl Theme::asset(const QString &id) const
             return m_parentThemeInstance->asset(id);
         return QUrl();
     }
-    return QUrl(m_imageProviderId + m_themePrefix + m_themePrefixDir + m_themeBaseDir + QStringLiteral("/") + id);
+    return QUrl(m_imageProviderId + m_themePrefix + m_themePrefixDir + m_themeBaseDir
+                + QStringLiteral("/") + id);
 }
 
 QUrl Theme::animationFrameAsset(const QString &id, int frame, int frameIdLength) const
@@ -160,8 +161,8 @@ QUrl Theme::animationFrameAsset(const QString &id, int frame, int frameIdLength)
             return m_parentThemeInstance->animationFrameAsset(id, frame, frameIdLength);
         return QUrl();
     }
-    return QUrl(m_animationImageProviderId + m_themePrefix + m_themePrefixDir + m_themeBaseDir + QStringLiteral("/")
-                + frameId);
+    return QUrl(m_animationImageProviderId + m_themePrefix + m_themePrefixDir + m_themeBaseDir
+                + QStringLiteral("/") + frameId);
 }
 
 QUrl Theme::coloredAsset(const QString &id, const QString &colorId) const
@@ -211,7 +212,8 @@ QMap<QString, QColor> rawColors;
 QColor Theme::color(const QString &id) const
 {
     QColor res;
-    if (id.startsWith(RAW_COLOR_PREFIX) && id.length() >= RAW_RGB_LENGTH && id.length() <= RAW_ARGB_LENGTH) {
+    if (id.startsWith(RAW_COLOR_PREFIX) && id.length() >= RAW_RGB_LENGTH
+        && id.length() <= RAW_ARGB_LENGTH) {
         auto it = rawColors.find(id);
         if (it == rawColors.end()) {
             int ind = RAW_COLOR_START;
@@ -281,13 +283,15 @@ void Theme::init(const QString &prefixPath)
             QJsonParseError err = {};
             const QJsonDocument config = QJsonDocument::fromJson(configFile.readAll(), &err);
             if (err.error != QJsonParseError::NoError) {
-                themingWarning() << "Mallformed theme config file:" << configFile.fileName() << err.errorString();
+                themingWarning() << "Mallformed theme config file:" << configFile.fileName()
+                                 << err.errorString();
                 return;
             } else {
                 const QJsonObject themeConfig = config.object();
                 m_parentTheme = themeConfig.value(PARENT_THEME_TAG).toString();
                 m_imageProviderId = themeConfig.value(IMAGE_PROVIDER_TAG).toString();
-                m_animationImageProviderId = themeConfig.value(ANIMATION_IMAGE_PROVIDER_TAG).toString();
+                m_animationImageProviderId =
+                        themeConfig.value(ANIMATION_IMAGE_PROVIDER_TAG).toString();
                 m_cacheEffects = themeConfig.value(CACHE_EFFECTS_TAG).toBool();
             }
         }
@@ -308,23 +312,26 @@ void Theme::loadFonts()
         QFontDatabase::removeApplicationFont(id);
     m_loadedFontFiles.clear();
     m_fontMap.clear();
-    QString fontsDirPath = m_themePrefixDir + m_themeBaseDir + QStringLiteral("/") + QStringLiteral("Fonts");
+    QString fontsDirPath =
+            m_themePrefixDir + m_themeBaseDir + QStringLiteral("/") + QStringLiteral("Fonts");
     fontsDirPath.remove(QStringLiteral("qrc"));
     QDir fontsDir(fontsDirPath);
     if (fontsDir.exists()) {
-        QFileInfoList fontFiles =
-                fontsDir.entryInfoList(QStringList() << QStringLiteral("*.ttf") << QStringLiteral("*.otf"));
+        QFileInfoList fontFiles = fontsDir.entryInfoList(QStringList() << QStringLiteral("*.ttf")
+                                                                       << QStringLiteral("*.otf"));
         for (const QFileInfo &fontFile : fontFiles) {
             themingDebug() << "Loading font file: " << fontFile.absoluteFilePath();
-            m_loadedFontFiles.append(QFontDatabase::addApplicationFont(fontFile.absoluteFilePath()));
+            m_loadedFontFiles.append(
+                    QFontDatabase::addApplicationFont(fontFile.absoluteFilePath()));
         }
         QFile fontDefintionsFile(fontsDir.filePath(QStringLiteral("definitions.json")));
         if (fontDefintionsFile.open(QIODevice::ReadOnly)) {
             QJsonParseError err = {};
-            const QJsonDocument fontsDefinitions = QJsonDocument::fromJson(fontDefintionsFile.readAll(), &err);
+            const QJsonDocument fontsDefinitions =
+                    QJsonDocument::fromJson(fontDefintionsFile.readAll(), &err);
             if (err.error != QJsonParseError::NoError) {
-                themingWarning() << "Mallformed fonts defintion file:" << fontDefintionsFile.fileName()
-                                 << err.errorString();
+                themingWarning() << "Mallformed fonts defintion file:"
+                                 << fontDefintionsFile.fileName() << err.errorString();
                 return;
             } else {
                 const QJsonArray definitions = fontsDefinitions.array();
@@ -332,10 +339,12 @@ void Theme::loadFonts()
                     const QJsonObject defObj = definition.toObject();
                     QFont font;
                     font.setFamily(defObj.value(FONT_FAMILY_TAG).toString());
-                    font.setStyleName(defObj.value(FONT_STYLE_NAME_TAG).toString(QStringLiteral("Regular")));
+                    font.setStyleName(
+                            defObj.value(FONT_STYLE_NAME_TAG).toString(QStringLiteral("Regular")));
                     font.setPixelSize(defObj.value(FONT_PIXEL_SIZE_TAG).toInt());
                     font.setWeight(defObj.value(FONT_WEIGHT_TAG).toInt());
-                    font.setCapitalization(QFont::Capitalization(defObj.value(FONT_CAPITALIZATION_TAG).toInt()));
+                    font.setCapitalization(
+                            QFont::Capitalization(defObj.value(FONT_CAPITALIZATION_TAG).toInt()));
                     font.setItalic(defObj.value(FONT_ITALIC_TAG).toBool());
                     font.setBold(defObj.value(FONT_BOLD_TAG).toBool());
                     font.setUnderline(defObj.value(FONT_UNDERLINE_TAG).toBool());
@@ -352,17 +361,19 @@ void Theme::loadColors()
 {
     themingDebug() << "";
     m_colors.clear();
-    QString colorsDirPath = m_themePrefixDir + m_themeBaseDir + QStringLiteral("/") + QStringLiteral("Colors");
+    QString colorsDirPath =
+            m_themePrefixDir + m_themeBaseDir + QStringLiteral("/") + QStringLiteral("Colors");
     colorsDirPath.remove(QStringLiteral("qrc"));
     QDir colorsDir(colorsDirPath);
     if (colorsDir.exists()) {
         QFile colorDefintionsFile(colorsDir.filePath(QStringLiteral("definitions.json")));
         if (colorDefintionsFile.open(QIODevice::ReadOnly)) {
             QJsonParseError err = {};
-            const QJsonDocument colorsDefinitions = QJsonDocument::fromJson(colorDefintionsFile.readAll(), &err);
+            const QJsonDocument colorsDefinitions =
+                    QJsonDocument::fromJson(colorDefintionsFile.readAll(), &err);
             if (err.error != QJsonParseError::NoError) {
-                themingWarning() << "Mallformed colors defintion file:" << colorDefintionsFile.fileName()
-                                 << err.errorString();
+                themingWarning() << "Mallformed colors defintion file:"
+                                 << colorDefintionsFile.fileName() << err.errorString();
                 return;
             } else {
                 const QJsonArray definitions = colorsDefinitions.array();
@@ -415,7 +426,8 @@ void ThemeManager::activateTheme(const QString &name)
             auto themeDesc = themes.value().find(name);
             if (themeDesc != themes.value().end()) {
                 // NOTE: Prefer synchronous loading for the theme; it should
-                // ideally be constructed and ready for the UI before the UI is first drawn.
+                // ideally be constructed and ready for the UI before the UI is first
+                // drawn.
                 auto cmp = new QQmlComponent(m_context->qmlEngine(), themeDesc.value(),
                                              QQmlComponent::CompilationMode::PreferSynchronous);
                 auto componentReadyHandler = [cmp, this]() {
@@ -424,12 +436,14 @@ void ThemeManager::activateTheme(const QString &name)
                     if (!m_themeInstance && obj) {
                         // Theme conversion failed (non-Theme obj was created);
                         // delete invalid object
-                        themingWarning() << "Failed to construct Theme object from Component:" << cmp;
+                        themingWarning() << "Failed to construct Theme object from Component:"
+                                         << cmp;
                         obj->deleteLater();
                     } else {
                         // Initialize Theme
-                        themingDebug() << "Successfully converted Component-created object to Theme:"
-                                       << m_themeInstance;
+                        themingDebug()
+                                << "Successfully converted Component-created object to Theme:"
+                                << m_themeInstance;
                         m_themeInstance->setParent(this);
                         m_themeInstance->init(contextThemeBasePath.value(m_context, QString()));
                         createThemeParent(m_themeInstance);
@@ -450,8 +464,8 @@ void ThemeManager::activateTheme(const QString &name)
                                         themingWarning() << "Theme component delay Ready";
                                         componentReadyHandler();
                                     } else {
-                                        themingWarning()
-                                                << "Theme component delayed error state:" << cmp->errorString();
+                                        themingWarning() << "Theme component delayed error state:"
+                                                         << cmp->errorString();
                                         cmp->deleteLater();
                                         emit themeChanged();
                                     }
@@ -492,8 +506,8 @@ void ThemeManager::createThemeParent(Theme *theme)
 }
 
 ThemeManager::ThemeManager(Context *context, QObject *parent)
-    : QObject(parent)
-    , m_context(context)
+  : QObject(parent)
+  , m_context(context)
 {
 }
 
@@ -508,7 +522,8 @@ QObject *ThemeManagerActivator::contextThemeManagerInstance(Context *context)
     return it.value();
 }
 
-void ThemeManagerActivator::loadThemeConfig(const QString &configPath, Context *context, const QString &themeBasePath)
+void ThemeManagerActivator::loadThemeConfig(const QString &configPath, Context *context,
+                                            const QString &themeBasePath)
 {
     static bool themeManagerRegisterd = false;
     if (!themeManagerRegisterd) {
@@ -523,7 +538,8 @@ void ThemeManagerActivator::loadThemeConfig(const QString &configPath, Context *
         QJsonParseError err = {};
         const QJsonDocument configDoc = QJsonDocument::fromJson(configFile.readAll(), &err);
         if (err.error != QJsonParseError::NoError) {
-            themingWarning() << "Mallformed theme config file:" << configFile.fileName() << err.errorString();
+            themingWarning() << "Mallformed theme config file:" << configFile.fileName()
+                             << err.errorString();
             return;
         } else {
             const QJsonObject configObj = configDoc.object();
@@ -532,13 +548,16 @@ void ThemeManagerActivator::loadThemeConfig(const QString &configPath, Context *
             QMap<QString, QUrl> themes;
             for (const QJsonValue &val : themeArray) {
                 const QJsonObject themeObj = val.toObject();
-                const QString themePath = themeBasePath + themeObj.value(THEME_OBJECT_PATH_TAG).toString();
+                const QString themePath =
+                        themeBasePath + themeObj.value(THEME_OBJECT_PATH_TAG).toString();
                 QRegularExpression regex(QStringLiteral("^(?:qrc|https{0,1}):.*$"));
                 const QRegularExpressionMatch matcher(regex.match(themePath));
                 if (matcher.hasMatch()) {
-                    themes.insert(themeObj.value(THEME_OBJECT_NAME_TAG).toString(), QUrl(themePath));
+                    themes.insert(themeObj.value(THEME_OBJECT_NAME_TAG).toString(),
+                                  QUrl(themePath));
                 } else {
-                    themes.insert(themeObj.value(THEME_OBJECT_NAME_TAG).toString(), QUrl::fromLocalFile(themePath));
+                    themes.insert(themeObj.value(THEME_OBJECT_NAME_TAG).toString(),
+                                  QUrl::fromLocalFile(themePath));
                 }
             }
             themingDebug() << "Loaded Themes:" << themes;
@@ -548,11 +567,13 @@ void ThemeManagerActivator::loadThemeConfig(const QString &configPath, Context *
             activateTheme(defaultTheme, context);
         }
     } else {
-        themingWarning() << "Failed to read theme config file:" << configFile.fileName() << configFile.errorString();
+        themingWarning() << "Failed to read theme config file:" << configFile.fileName()
+                         << configFile.errorString();
     }
 }
 
-void ThemeManagerActivator::registerThemeCollection(const QMap<QString, QUrl> &themes, Context *context)
+void ThemeManagerActivator::registerThemeCollection(const QMap<QString, QUrl> &themes,
+                                                    Context *context)
 {
     if (!context)
         return;

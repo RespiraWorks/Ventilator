@@ -101,7 +101,8 @@ void FilteredWaveformValueData::filterWaveform()
         use_samples = 1;
 
     while (m_raw_data.size() >= use_samples) {
-        FilteredSample filtered = WaveformFilter::filterWaveformMinMax(m_raw_data.mid(0, use_samples));
+        FilteredSample filtered =
+                WaveformFilter::filterWaveformMinMax(m_raw_data.mid(0, use_samples));
 
         m_raw_data.remove(0, use_samples);
 

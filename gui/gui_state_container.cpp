@@ -10,7 +10,8 @@ void GuiStateContainer::update(QAbstractSeries *pressure_series,
   auto now = SteadyClock::now();
 
   QVector<QPointF> pressure_points, flow_points, tv_points;
-  for (const auto &[time, controller_status] : GetControllerStatusHistory()) {
+  for (const auto & [ time, controller_status ] :
+       GetControllerStatusHistory()) {
     int neg_millis_ago = TimeAMinusB(time, now).count();
     pressure_points.append(
         QPointF(neg_millis_ago * 0.001,

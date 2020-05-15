@@ -5,7 +5,7 @@
 #include "waveformsample.h"
 
 WaveformSample::WaveformSample(int value, unsigned int status)
-    : value(value)
-    , status(status)
+  : value(value)
+  , status(status)
 {
 }

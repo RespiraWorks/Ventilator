@@ -3,9 +3,9 @@
  **********************************************************************************************************************/
 
 #include "greenhousecontext.h"
-#include "greenhousetheme.h"
-#include "greenhousemodel.h"
 #include "greenhouse_log.h"
+#include "greenhousemodel.h"
+#include "greenhousetheme.h"
 
 #include <QCoreApplication>
 #include <QFileInfo>
@@ -169,5 +169,4 @@ void Context::activateTheme(const QString &theme)
         ThemeManagerActivator::activateTheme(theme, this);
     }
 }
-
 }

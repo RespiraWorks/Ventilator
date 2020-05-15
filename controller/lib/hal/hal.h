@@ -235,6 +235,9 @@ public:
   // Performs the device soft-reset
   [[noreturn]] void reset_device();
 
+  // Start the high priority loop timer
+  void startLoopTimer(const Duration &period, void (*callback)());
+
   // Pets the watchdog, this makes the watchdog not reset the
   // system for configured amount of time
   void watchdog_handler();

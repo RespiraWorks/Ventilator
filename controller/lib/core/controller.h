@@ -4,7 +4,6 @@
 #include "actuators.h"
 #include "blower_fsm.h"
 #include "network_protocol.pb.h"
-#include "pid.h"
 #include "units.h"
 
 // This class is here to allow integration of our controller into Modelica
@@ -16,6 +15,8 @@ public:
   ActuatorsState Run(Time now, const VentParams &params,
                      const SensorReadings &readings);
 
+  Duration GetLoopPeriod();
+
 private:
   // Computes the fan power necessary to match pressure setpoint in desired
   // state by running the necessary step of the pid with input = current
@@ -25,7 +26,9 @@ private:
                         const SensorReadings &sensor_readings);
 
   BlowerFsm fsm_;
-  PID pid_;
+
+  float prevError;
+  float integral;
 };
 
 #endif // CONTROLLER_H_

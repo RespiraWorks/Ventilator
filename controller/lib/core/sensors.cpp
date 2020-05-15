@@ -62,7 +62,11 @@ static constexpr int SENSOR_SAMPLES_FOR_READ = 2;
   __builtin_unreachable();
 }
 
-Sensors::Sensors() {
+Sensors::Sensors() {}
+
+// NOTE - I can't do this in the constructor now because it gets called before
+// the HAL is set up, so the busy wait never finishes.
+void Sensors::Calibrate() {
   // We wait 20ms from power-on-reset for pressure sensors to warm up.
   //
   // TODO: Is 20ms the right amount of time?  We're basing it on the data sheet

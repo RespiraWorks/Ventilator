@@ -547,20 +547,17 @@ def EscCmd(buff):
     return ret
 
 
-def GetResp(show=False):
+def GetResp(DbgPrint):
     dat = []
     esc = False
-    if show:
-        print("Getting resp: ", end="")
+    DbgPrint("Getting resp: ", end="")
     while True:
         x = ser.read(1)
         if len(x) < 1:
-            if show:
-                print("timeout")
+            DbgPrint("timeout")
             return dat
         x = ord(x)
-        if show:
-            print("0x%02x" % x, end=" ")
+        DbgPrint("0x%02x" % x, end=" ")
 
         if esc:
             esc = False
@@ -572,8 +569,7 @@ def GetResp(show=False):
             continue
 
         if x == TERM:
-            if show:
-                print()
+            DbgPrint()
             return dat
         dat.append(x)
 
@@ -590,33 +586,37 @@ def GetResp(show=False):
 #            not specified then a reasonable system default is used
 def SendCmd(op, data=[], timeout=None):
     global showSerial, ser
-    show = showSerial
+
+    if showSerial:
+        DbgPrint = print
+    else:
+
+        def DbgPrint(S="", end="\n"):
+            pass
+
     buff = [op] + data
 
     crc = crc16.calc(buff)
     buff += Split16(crc)
 
-    if show:
-        S = "CMD: "
-        for b in buff:
-            S += "0x%02x " % b
-        print(S)
+    S = "CMD: "
+    for b in buff:
+        S += "0x%02x " % b
+    DbgPrint(S)
 
     buff = EscCmd(buff)
-    if show:
-        S = "ESC: "
-        for b in buff:
-            S += "0x%02x " % b
-        print(S)
+    S = "ESC: "
+    for b in buff:
+        S += "0x%02x " % b
+    DbgPrint(S)
 
     ser.write(bytearray(buff))
     if timeout != None:
-        if show:
-            print("Setting timeout to %.1f" % timeout)
+        DbgPrint("Setting timeout to %.1f" % timeout)
         oldto = ser.timeout
         ser.timeout = timeout
 
-    rsp = GetResp(show)
+    rsp = GetResp(DbgPrint)
     if timeout != None:
         ser.timeout = oldto
 

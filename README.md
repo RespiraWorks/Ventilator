@@ -32,7 +32,9 @@
 
 ![plug in the nucleo](/ReadmePhotos/IMG_9312.jpg)
 * When programming over the Nucleo USB interface, the board emulates an ST-Link programming the MCU over SWD.  Use these settings in the toolchain of your choice.
-* The bringup code was written in the Arduino IDE environment with STM32duino installed and can be found here (disclaimer: this code is not part of the project and is pretty much unsupported, use at your own risk.  The listing of hardware pin #defines at the top might be useful): [pcbreathe-bringup](https://github.com/inceptionev/pcbreathe-bringup) 
+* The bringup code was written in the Arduino IDE environment with STM32duino installed and can be found here along with basic instructions for setting up STM32dino and programming the STM32. (disclaimer: this code is not part of the project and is pretty much unsupported, use at your own risk.  The listing of hardware pin #defines at the top might be useful): [pcbreathe-bringup](https://github.com/inceptionev/pcbreathe-bringup) 
+    * for more test code with a state machine for running a ventilator setup in closed-loop control mode, see: [FMLtest] (https://github.com/inceptionev/FMLtest)
+* The main reference for pin and GPIO assignments on this board are in the [Electrical Hardware Requirements and PCB Interface Control Document](https://docs.google.com/spreadsheets/d/1JOSQKxkQxXJ6MCMDI9PwUQ6kiuGdujR4D6EJN9u2LWg/edit?usp=sharing)
 * The large power connectors on the PCB are JST VH type.  [Purchase Link](https://www.amazon.com/gp/product/B07LBZ3LCR)
 * The smaller peripheral connectors on the PCB are JST XH type. 
   * [Purchase link for 2/3/4/5-pin](https://www.amazon.com/gp/product/B06ZZ45G7G) 

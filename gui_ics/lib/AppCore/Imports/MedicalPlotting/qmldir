@@ -1,0 +1,6 @@
+module MedicalPlotting
+
+Plot 1.0 Plot.qml
+GlowingPlot 1.0 GlowingPlot.qml
+TrendPlot 1.0 TrendPlot.qml
+GlowingTrendPlot 1.0 GlowingTrendPlot.qml

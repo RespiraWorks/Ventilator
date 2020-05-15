@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/MedicalPlottingDemoData">
+        <file>b0_3s.txt</file>
+    </qresource>
+</RCC>

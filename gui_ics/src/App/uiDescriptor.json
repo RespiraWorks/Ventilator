@@ -1,0 +1,223 @@
+{
+    "surfaces": [
+        {
+            "items": [
+                {
+                    "default": false,
+                    "file": "",
+                    "name": "BackgroundHidden"
+                },
+                {
+                    "default": true,
+                    "file": "qrc:/VentilatorUI/layouts/Background_Shared0LayoutImpl.qml",
+                    "name": "Background_Shared0"
+                }
+            ],
+            "name": "Background",
+            "z": -1
+        },
+        {
+            "items": [
+                {
+                    "default": false,
+                    "file": "qrc:/VentilatorUI/layouts/Alarms_Dark_Backgrounds_MainLayoutImpl.qml",
+                    "name": "Alarms_Dark_Backgrounds_Main"
+                },
+                {
+                    "default": true,
+                    "file": "",
+                    "name": "Dark_Backgrounds_MainHidden"
+                }
+            ],
+            "name": "Dark_Backgrounds_Main",
+            "z": -1
+        },
+        {
+            "items": [
+                {
+                    "default": false,
+                    "file": "qrc:/VentilatorUI/layouts/Alarms_Bottom_Navigation_Bar_PanelLayoutImpl.qml",
+                    "name": "Alarms_Bottom_Navigation_Bar_Panel"
+                },
+                {
+                    "default": true,
+                    "file": "",
+                    "name": "Bottom_Navigation_Bar_PanelHidden"
+                }
+            ],
+            "name": "Bottom_Navigation_Bar_Panel",
+            "z": 0
+        },
+        {
+            "items": [
+                {
+                    "default": false,
+                    "file": "qrc:/VentilatorUI/layouts/Alarms_Center_Content_PanelLayoutImpl.qml",
+                    "name": "Alarms_Center_Content_Panel"
+                },
+                {
+                    "default": true,
+                    "file": "",
+                    "name": "Center_Content_PanelHidden"
+                }
+            ],
+            "name": "Center_Content_Panel",
+            "z": 0
+        },
+        {
+            "items": [
+                {
+                    "default": false,
+                    "file": "qrc:/VentilatorUI/layouts/AlarmLogs_MainViewPanelLayoutImpl.qml",
+                    "name": "AlarmLogs_MainViewPanel"
+                },
+                {
+                    "default": false,
+                    "file": "",
+                    "name": "MainViewPanelHidden"
+                },
+                {
+                    "default": false,
+                    "file": "qrc:/VentilatorUI/layouts/MainView_MainViewPanelLayoutImpl.qml",
+                    "name": "MainView_MainViewPanel"
+                },
+                {
+                    "default": true,
+                    "file": "qrc:/VentilatorUI/layouts/PreUseTest_MainViewPanelLayoutImpl.qml",
+                    "name": "PreUseTest_MainViewPanel"
+                },
+                {
+                    "default": false,
+                    "file": "qrc:/VentilatorUI/layouts/SettingPlaceholder_MainViewPanelLayoutImpl.qml",
+                    "name": "SettingPlaceholder_MainViewPanel"
+                }
+            ],
+            "name": "MainViewPanel",
+            "z": 0
+        },
+        {
+            "items": [
+                {
+                    "default": false,
+                    "file": "",
+                    "name": "AlarmLogs_ScreenState",
+                    "proxyItems": [
+                        "AlarmLogs_MainViewPanel",
+                        "TopBarPanel_Shared0",
+                        "Background_Shared0"
+                    ]
+                },
+                {
+                    "default": false,
+                    "file": "",
+                    "name": "MainView_ScreenState",
+                    "proxyItems": [
+                        "MainView_MainViewPanel",
+                        "TopBarPanel_Shared0",
+                        "Background_Shared0"
+                    ]
+                },
+                {
+                    "default": true,
+                    "file": "",
+                    "name": "PreUseTest_ScreenState",
+                    "proxyItems": [
+                        "PreUseTest_MainViewPanel",
+                        "TopBarPanel_Shared0",
+                        "Background_Shared0"
+                    ]
+                },
+                {
+                    "default": false,
+                    "file": "",
+                    "name": "SettingPlaceholder_ScreenState",
+                    "proxyItems": [
+                        "SettingPlaceholder_MainViewPanel",
+                        "TopBarPanel_Shared0",
+                        "Background_Shared0"
+                    ]
+                }
+            ],
+            "name": "Screens",
+            "z": 0
+        },
+        {
+            "items": [
+                {
+                    "default": false,
+                    "file": "",
+                    "name": "TopBarPanelHidden"
+                },
+                {
+                    "default": true,
+                    "file": "qrc:/VentilatorUI/layouts/TopBarPanel_Shared0LayoutImpl.qml",
+                    "name": "TopBarPanel_Shared0"
+                }
+            ],
+            "name": "TopBarPanel",
+            "z": 0
+        },
+        {
+            "items": [
+                {
+                    "default": false,
+                    "file": "",
+                    "name": "MenusHidden"
+                },
+                {
+                    "default": true,
+                    "file": "",
+                    "name": "NoMenu"
+                }
+            ],
+            "name": "Menus",
+            "z": 5
+        },
+        {
+            "items": [
+                {
+                    "default": false,
+                    "file": "qrc:/VentilatorUI/layouts/ActiveAlertsFrameLayoutImpl.qml",
+                    "name": "ActiveAlertsFrame"
+                },
+                {
+                    "default": false,
+                    "file": "qrc:/VentilatorUI/layouts/AdjustIERatioLayoutImpl.qml",
+                    "name": "AdjustIERatio"
+                },
+                {
+                    "default": false,
+                    "file": "qrc:/VentilatorUI/layouts/AdjustPEEPLayoutImpl.qml",
+                    "name": "AdjustPEEP"
+                },
+                {
+                    "default": false,
+                    "file": "qrc:/VentilatorUI/layouts/AdjustRRMinLayoutImpl.qml",
+                    "name": "AdjustRRMin"
+                },
+                {
+                    "default": false,
+                    "file": "qrc:/VentilatorUI/layouts/AdjustTidalVLayoutImpl.qml",
+                    "name": "AdjustTidalV"
+                },
+                {
+                    "default": false,
+                    "file": "qrc:/VentilatorUI/layouts/ModeSelectionLayoutImpl.qml",
+                    "name": "ModeSelection"
+                },
+                {
+                    "default": true,
+                    "file": "",
+                    "name": "NoPopup"
+                },
+                {
+                    "default": false,
+                    "file": "",
+                    "name": "PopupsHidden"
+                }
+            ],
+            "name": "Popups",
+            "z": 9
+        }
+    ]
+}

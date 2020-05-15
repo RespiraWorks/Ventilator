@@ -1,0 +1,4 @@
+module GreenHouse
+Displayable 1.0 qml/Displayable.qml
+ViewItemInterface 1.0 qml/ViewItemInterface.qml
+ViewItem 1.0 qml/ViewItem.qml

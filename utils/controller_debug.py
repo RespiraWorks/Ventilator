@@ -1,6 +1,12 @@
 #!/usr/bin/python3
 
 # Very simple command line interface for development
+#
+# At the moment this program is just a command line utility.  You run
+# it and get a command prompt from which you can enter commands to
+# observe and control the system.
+#
+# For a list of available commands, enter 'help'
 
 import sys
 import math
@@ -34,6 +40,9 @@ if len(sys.argv) > 1:
 ser = serial.Serial(port=port, baudrate=115200)
 ser.timeout = 0.8
 
+# If true, the raw bytes of the serial data will be printed.
+# This is handy for debugging the low level serial interface
+# It can be toggled with the 'debug' command
 showSerial = False
 
 
@@ -45,13 +54,13 @@ class Error(Exception):
         return self.value
 
 
-class cmdline(cmd.Cmd):
+class CmdLine(cmd.Cmd):
     def __init__(self):
         cmd.Cmd.__init__(self)
         self.UpdatePrompt()
         ReSync()
         self.GetVarInfo()
-        self.cmdloop()
+        self.CmdLoop()
 
     def UpdatePrompt(self, mode=None):
         if mode == None:
@@ -61,7 +70,7 @@ class cmdline(cmd.Cmd):
         else:
             self.prompt = "] "
 
-    def cmdloop(self):
+    def CmdLoop(self):
         while True:
 
             try:
@@ -153,7 +162,7 @@ ex: peek <addr> <ct> <fmt> <file>
             ct = int(param[1], 0)
         if len(param) > 0:
             addr = param[0]
-        peek(addr, ct, fmt, fname)
+        Peek(addr, ct, fmt, fname)
 
     def do_poke(self, line):
         """
@@ -184,7 +193,7 @@ ex: poke [type] <addr> <data>
             data = [float(x) for x in param[1:]]
         else:
             data = [int(x, 0) for x in param[1:]]
-        poke(addr, data, ptype)
+        Poke(addr, data, ptype)
 
     def do_console(self, line):
         """
@@ -418,7 +427,7 @@ def FmtPeek(dat, fmt="+XXXX", addr=0):
 #   return e['elf']
 
 
-def decodeAddr(addr, fw=None):
+def DecodeAddr(addr, fw=None):
 
     #   global fwname
     #   if( fw == None ):
@@ -437,8 +446,8 @@ def decodeAddr(addr, fw=None):
     return int(addr, 0)
 
 
-def peek(addr, ct=1, fmt="+XXXX", fname=None, raw=False):
-    addr = decodeAddr(addr)
+def Peek(addr, ct=1, fmt="+XXXX", fname=None, raw=False):
+    addr = DecodeAddr(addr)
     if addr == None:
         print("Unknown symbol")
         return
@@ -467,46 +476,46 @@ def peek(addr, ct=1, fmt="+XXXX", fname=None, raw=False):
         fp.close()
 
 
-def peek16(addr, ct=None, le=True, signed=False):
-    addr = decodeAddr(addr)
+def Peek16(addr, ct=None, le=True, signed=False):
+    addr = DecodeAddr(addr)
     if addr == None:
         print("Unknown symbol")
         return
 
     if ct == None:
         ct = 1
-    out = peek(addr, 2 * ct, raw=True)
+    out = Peek(addr, 2 * ct, raw=True)
     return Build16(out, le=True, signed=False)
 
 
-def peek32(addr, ct=None, le=True, signed=False):
-    addr = decodeAddr(addr)
+def Peek32(addr, ct=None, le=True, signed=False):
+    addr = DecodeAddr(addr)
     if addr == None:
         print("Unknown symbol")
         return
 
     if ct == None:
         ct = 1
-    out = peek(addr, 4 * ct, raw=True)
+    out = Peek(addr, 4 * ct, raw=True)
     return Build32(out, le=True, signed=False)
 
 
-# def peekf( addr, ct=None ):
-#   dat = peekl(addr,ct, le=True, signed=False);
-#   if( ct == None ):
-#      return Util.I2F(dat)
-#   ret = []
-#   for d in dat:
-#      ret.append( Util.I2F(d) )
-#   return ret
+def Peekf(addr, ct=None):
+    dat = Peekl(addr, ct, le=True, signed=False)
+    if ct == None:
+        return Util.I2F(dat)
+    ret = []
+    for d in dat:
+        ret.append(Util.I2F(d))
+    return ret
 
 
-def poke(addr, dat, ptype):
-    addr = decodeAddr(addr)
+def Poke(addr, dat, ptype):
+    addr = DecodeAddr(addr)
     if addr == None:
         print("Unknown symbol")
         return
-    if isinstance(dat, int) or isinstance(dat, long):
+    if isinstance(dat, int):
         dat = [dat]
 
     if ptype == "long":
@@ -520,12 +529,12 @@ def poke(addr, dat, ptype):
     SendCmd(OP_POKE, Split32(addr) + dat)
 
 
-def poke32(addr, dat):
-    poke(addr, dat, "long")
+def Poke32(addr, dat):
+    Poke(addr, dat, "long")
 
 
-def poke16(addr, dat):
-    poke(addr, dat, "short")
+def Poke16(addr, dat):
+    Poke(addr, dat, "short")
 
 
 def EscCmd(buff):
@@ -569,6 +578,16 @@ def GetResp(show=False):
         dat.append(x)
 
 
+# This formats a binary command and sends it to the system.
+# It then waits for and returns a response.
+#
+#  op - The command code to send.  See the list at the top
+#       of the file.
+
+#  data - Zero or more bytes of data to be sent with the command
+
+#  timeout - How long (seconds) to wait for the response.  If
+#            not specified then a reasonable system default is used
 def SendCmd(op, data=[], timeout=None):
     global showSerial, ser
     show = showSerial
@@ -634,12 +653,18 @@ def F2I(fval):
     return struct.unpack("I", s)[0]
 
 
-def SplitInt(val, len=4, le=True, asStr=False):
+# Takes as input a list of integer values and
+# splits them into a list of bytes which is returned.
+#
+# val - The input list of ints
+# len - Length (in bytes) of the input ints.
+# le  - Little endian format if true
+def SplitInt(val, len=4, le=True):
     ret = []
 
     if isinstance(val, list):
         for v in val:
-            ret += SplitInt(v, len, le, False)
+            ret += SplitInt(v, len, le)
     else:
         for i in range(len):
             ret.append(int(val & 0x00FF))
@@ -647,19 +672,24 @@ def SplitInt(val, len=4, le=True, asStr=False):
 
         if not le:
             ret = ret[::-1]
-    if asStr:
-        ret = "".join([chr(i) for i in ret])
     return ret
 
 
-def Split16(x, le=True, asStr=False):
-    return SplitInt(x, 2, le, asStr)
+# Splits a list of 16-bit ints into a list of bytes
+def Split16(x, le=True):
+    if isinstance(x, int):
+        x = [x]
+    return SplitInt(x, 2, le)
 
 
-def Split32(x, le=True, asStr=False):
-    return SplitInt(x, 4, le, asStr)
+# Splits a list of 32-bit ints into a list of bytes
+def Split32(x, le=True):
+    if isinstance(x, int):
+        x = [x]
+    return SplitInt(x, 4, le)
 
 
+# Splits a list of 32-bit floats into a list of bytes
 def SplitFlt(x):
     if isinstance(x, float):
         x = [x]
@@ -667,6 +697,10 @@ def SplitFlt(x):
 
 
 # Utility function to convert bytes to ints
+#   bytes - Array of byte values to convert
+#          All input bytes will be compined into one integer
+#   signed - If true, the output will be signed
+#   le - If true, use little endian format
 def MakeInt(bytes, signed=True, le=True):
     if not le:
         bytes = bytes[::-1]
@@ -681,6 +715,7 @@ def MakeInt(bytes, signed=True, le=True):
     return val
 
 
+# Convert a list of bytes into a list of 32-bit integers
 def Build32(dat, le=True, signed=False):
     ret = []
     for i in range(int(len(dat) / 4)):
@@ -688,6 +723,7 @@ def Build32(dat, le=True, signed=False):
     return ret
 
 
+# Convert a list of bytes into a list of 16-bit integers
 def Build16(dat, le=True, signed=False):
     ret = []
     for i in range(int(len(dat) / 2)):
@@ -695,11 +731,13 @@ def Build16(dat, le=True, signed=False):
     return ret
 
 
+# Convert a list of bytes into a list of 32-bit floats integers
 def BuildFlt(dat):
     tmp = Build32(dat, le=True, signed=False)
     return [I2F(x) for x in tmp]
 
 
+# Utility function which removes the first ct elements from a list and returns them
 def GrabElems(dat, ct):
     if len(dat) < ct:
         dat.extend((ct - len(dat)) * [0])
@@ -708,6 +746,8 @@ def GrabElems(dat, ct):
     return ret
 
 
+# These functions all pull the first bytes of the input list and convert
+# them into another type before returning them.
 def GrabI8(dat, le=True):
     return MakeInt(GrabElems(dat, 1), signed=True, le=le)
 
@@ -752,6 +792,7 @@ def GrabFlt(dat, le=True):
     return I2F(GrabU32(dat, le=le))
 
 
+# Simple utility class for calculating CRC values.
 class CRCutil:
     def __init__(self, poly=0xEDB88320, init=0xFFFFFFFF):
         self.init = init
@@ -778,6 +819,7 @@ class CRCutil:
             self.tbl.append(crc)
 
 
+# Standard 16-bit CRC calculations
 crc16 = CRCutil(poly=0xA001, init=0)
 
 
@@ -786,4 +828,4 @@ def CRC16_Calc(dat):
     return crc16.calc(dat)
 
 
-cmdline()
+CmdLine()

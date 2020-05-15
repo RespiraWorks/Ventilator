@@ -41,6 +41,8 @@ Controller::Controller()
            // Our output is an 8-bit PWM.
            /*output_min=*/0.f, /*output_max=*/255.f, PID_SAMPLE_PERIOD) {}
 
+Duration Controller::GetLoopPeriod() { return PID_SAMPLE_PERIOD; }
+
 ActuatorsState Controller::Run(Time now, const VentParams &params,
                                const SensorReadings &readings) {
   BlowerSystemState desired_state = fsm_.DesiredState(now, params);

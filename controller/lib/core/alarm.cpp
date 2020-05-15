@@ -63,7 +63,7 @@ void alarm_add(const char *data) {
   if (!stack_full()) {
     // No point spending time doing these operations if the stack is full
 
-    //TODO work in progress, move alarm code to nanopb transport
+    // TODO work in progress, move alarm code to nanopb transport
     alarm.timestamp = Hal.now();
 
     // Copy alarm data

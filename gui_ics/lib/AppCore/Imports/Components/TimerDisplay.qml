@@ -44,4 +44,3 @@ Item {
         horizontalAlignment: Text.AlignHCenter
     }
 }
- 

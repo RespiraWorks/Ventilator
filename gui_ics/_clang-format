@@ -37,5 +37,8 @@ AllowShortFunctionsOnASingleLine: Inline
 
 SortIncludes: false
 
-ForEachMacros:   [ foreach, Q_FOREACH, BOOST_FOREACH, forever, Q_FOREVER, QBENCHMARK, QBENCHMARK_ONCE ]
+AlignTrailingComments: true
 
+SpacesBeforeTrailingComments: 4
+
+ForEachMacros:   [ foreach, Q_FOREACH, BOOST_FOREACH, forever, Q_FOREVER, QBENCHMARK, QBENCHMARK_ONCE ]

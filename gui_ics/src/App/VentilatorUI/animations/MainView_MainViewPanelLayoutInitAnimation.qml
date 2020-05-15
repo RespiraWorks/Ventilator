@@ -9,13 +9,13 @@ SequentialAnimation {
 
     ScriptAction {
         script: {
-            
+
         }
     }
 
     ScriptAction {
         script: {
-            
+
         }
     }
 

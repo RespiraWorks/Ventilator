@@ -29,4 +29,3 @@ SOURCES += \
 
 RESOURCES += \
     $$PWD/demo_data.qrc
-

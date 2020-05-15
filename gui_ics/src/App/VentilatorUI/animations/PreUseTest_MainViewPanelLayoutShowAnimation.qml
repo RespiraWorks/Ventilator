@@ -9,14 +9,14 @@ SequentialAnimation {
 
     ScriptAction {
         script: {
-            
+
         }
     }
     PropertyAction { target: root.target; property: "visible"; value: true }
 
     ScriptAction {
         script: {
-            
+
         }
     }
 

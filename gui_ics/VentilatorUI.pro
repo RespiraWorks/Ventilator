@@ -24,4 +24,3 @@ OTHER_FILES += _clang-format README.md
 exists(scripts) {
     OTHER_FILES += scripts/*
 }
-

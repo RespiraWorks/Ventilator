@@ -43,6 +43,8 @@ class Sensors {
 public:
   Sensors();
 
+  void Calibrate();
+
   // get the sensor readings (patient pressure, volumetric flow and tidal
   // volume) from the sensors
   SensorReadings GetSensorReadings();

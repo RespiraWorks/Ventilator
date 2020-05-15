@@ -25,6 +25,11 @@ OP_POKE = 0x02
 OP_PBREAD = 0x03
 OP_VAR = 0x04
 
+# Some commands take a sub-command as their first byte of data
+SUBCMD_VAR_INFO = 0
+SUBCMD_VAR_GET = 1
+SUBCMD_VAR_SET = 2
+
 # Special characters used to frame commands
 ESC = 0xF1
 TERM = 0xF2
@@ -51,16 +56,19 @@ class Error(Exception):
         self.value = value
 
     def __str__(self):
-        return self.value
+        return str(self.value)
 
 
+# This class creates a simple command line interface using the standard
+# Python cmd module.
+#
+# Member functions named do_something will implement a command called
+# 'something'.  See the Python documentation for the cmd module for
+# more details.
 class CmdLine(cmd.Cmd):
     def __init__(self):
         cmd.Cmd.__init__(self)
-        self.UpdatePrompt()
-        ReSync()
-        self.GetVarInfo()
-        self.CmdLoop()
+        self.scriptsDir = "scripts/"
 
     def UpdatePrompt(self, mode=None):
         if mode == None:
@@ -71,6 +79,9 @@ class CmdLine(cmd.Cmd):
             self.prompt = "] "
 
     def CmdLoop(self):
+        self.UpdatePrompt()
+        ReSync()
+        self.GetVarInfo()
         while True:
 
             try:
@@ -94,13 +105,24 @@ class CmdLine(cmd.Cmd):
         global showSerial
         showSerial = not showSerial
 
+    def help_run(self):
+        print(
+            """
+        Run an external Python script which can send commands,
+        set variables, etc.
+        If no explicit path is given then the current directory
+        and a sub-directory named %s will be searched for the
+        python script.
+        """
+            % self.scriptsDir
+        )
+
     def do_run(self, line):
-        "Run a Python script located in the scripts directory"
         p = str.split(line)
         if os.path.exists(p[0]):
             fname = p[0]
-        elif os.path.exists("scripts/" + p[0]):
-            fname = "scripts/" + p[0]
+        elif os.path.exists(self.scriptsDir + p[0]):
+            fname = self.scriptsDir + p[0]
         else:
             print("Unknown file " + p[0])
             return
@@ -111,7 +133,8 @@ class CmdLine(cmd.Cmd):
 
     def complete_run(self, text, line, begidx, endidx):
         return glob.glob(text + "*.py") + [
-            x[8:] for x in glob.glob("scripts/" + text + "*.py")
+            x[len(self.scriptsDir) :]
+            for x in glob.glob(self.scriptsDir + text + "*.py")
         ]
 
     def do_exec(self, line):
@@ -123,7 +146,7 @@ Peek at a memory location.
 
 ex: peek <addr> <ct> <fmt> <file>
 
-   addr - the starting address
+   addr - the starting address passed as an integer value
    ct   - Number of bytes to read (default 1)
    fmt  - An optional formatting string.
    file - An optional file to save the data to
@@ -150,7 +173,9 @@ ex: peek <addr> <ct> <fmt> <file>
    i.e. Data is displayed as a series of 4 32-bit hex values / line
 """
         param = str.split(line)
-        addr = 0
+        if len(param) < 1:
+            print("Please specify the address at which to peek at a minimum")
+            return
         ct = 1
         fmt = "+XXXX"
         fname = None
@@ -160,8 +185,7 @@ ex: peek <addr> <ct> <fmt> <file>
             fmt = param[2]
         if len(param) > 1:
             ct = int(param[1], 0)
-        if len(param) > 0:
-            addr = param[0]
+        addr = int(param[0], 0)
         Peek(addr, ct, fmt, fname)
 
     def do_poke(self, line):
@@ -179,8 +203,8 @@ ex: poke [type] <addr> <data>
 """
         param = str.split(line)
         if len(param) < 2:
+            print("Please pass the address and at least one value to write")
             return
-        ldat = False
 
         ptype = "byte"
         if param[0] in ["long", "short", "float"]:
@@ -198,16 +222,23 @@ ex: poke [type] <addr> <data>
     def do_console(self, line):
         """
 Switch from command mode to a simple console display which
-continuously readings debug print statements from the controller
+continuously reads debug print statements from the controller
 and displays the data received to the screen.
+
+When firmware in the controller calls the debug.Print() function
+it formats a string which is written to a circular buffer.  When
+this program is running in console mode it constantly reads this
+data and displays it.
 
 Enter <ctrl>C to exit this mode
 
-A couple optional parameters can be passed on the command line:
+A couple optional parameters can be passed as arguments to this command:
 
---flush     If given, the console will be flushed before we start
-            to display data.  That way any old (possibly incomplete
-            data) will be removed before the display starts
+--flush     If given, the print buffer on the controller will be
+            flushed (emptied) before we start displaying the data.
+            That way any old (possibly incomplete) data that had previously
+            been printed by the firmware to the print buffer will be removed
+            before the display starts
 
 <filename>  If a file name is given, the data received will be
             written to the file as well as displayed.
@@ -230,7 +261,6 @@ A couple optional parameters can be passed on the command line:
             while True:
                 dat = SendCmd(OP_PBREAD)
                 if len(dat) < 1:
-                    time.sleep(0.05)
                     continue
 
                 S = "".join([chr(x) for x in dat])
@@ -289,7 +319,7 @@ A couple optional parameters can be passed on the command line:
 
         try:
             for vid in range(256):
-                dat = SendCmd(OP_VAR, [0] + Split16(vid))
+                dat = SendCmd(OP_VAR, [SUBCMD_VAR_INFO] + Split16(vid))
                 V = VarInfo(vid, dat)
                 varDict[V.name] = V
         except Error as e:
@@ -311,19 +341,19 @@ class VarInfo:
             raise Error("Invalid VarInfo data returned")
 
         self.type = dat[0]
-        nLen = dat[4]
-        fLen = dat[5]
-        hLen = dat[6]
+        nameLen = dat[4]
+        fmtLen = dat[5]
+        helpLen = dat[6]
 
-        if len(dat) < 8 + nLen + fLen + hLen:
+        if len(dat) < 8 + nameLen + fmtLen + helpLen:
             raise Error("Invalid VarInfo data returned")
 
         n = 8
-        self.name = "".join([chr(x) for x in dat[n : n + nLen]])
-        n += nLen
-        self.fmt = "".join([chr(x) for x in dat[n : n + fLen]])
-        n += fLen
-        self.help = "".join([chr(x) for x in dat[n : n + hLen]])
+        self.name = "".join([chr(x) for x in dat[n : n + nameLen]])
+        n += nameLen
+        self.fmt = "".join([chr(x) for x in dat[n : n + fmtLen]])
+        n += fmtLen
+        self.help = "".join([chr(x) for x in dat[n : n + helpLen]])
 
 
 def GetVar(name, raw=False):
@@ -332,7 +362,7 @@ def GetVar(name, raw=False):
         raise Error("Unknown variable %s" % name)
 
     V = varDict[name]
-    dat = SendCmd(OP_VAR, [1] + Split16(V.id))
+    dat = SendCmd(OP_VAR, [SUBCMD_VAR_GET] + Split16(V.id))
 
     if V.type == VAR_INT32:
         val = Build32(dat)[0]
@@ -362,25 +392,25 @@ def SetVar(name, value):
     elif V.type == VAR_FLOAT:
         dat = SplitFlt(float(value))
 
-    SendCmd(OP_VAR, [2] + Split16(V.id) + dat)
+    SendCmd(OP_VAR, [SUBCMD_VAR_SET] + Split16(V.id) + dat)
     return
 
 
 def FmtPeek(dat, fmt="+XXXX", addr=0):
 
     fmtInfo = {
-        "+": ("0x%08x: ", 0, "addr"),
-        "x": ("0x%04x ", 2, "GrabU16(dat)"),
-        "i": ("%5d ", 2, "GrabI16(dat)"),
-        "u": ("%5u ", 2, "GrabU16(dat)"),
-        "X": ("0x%08x ", 4, "GrabU32(dat)"),
-        "I": ("%9d ", 4, "GrabI32(dat)"),
-        "U": ("%9u ", 4, "GrabU32(dat)"),
-        "n": ("\n", 0, "None"),
-        "f": ("%8.4f ", 4, "GrabFlt(dat)"),
-        "e": ("%12.4e ", 4, "GrabFlt(dat)"),
-        "c": ("%s", 1, "chr(GrabU8(dat))"),
-        "b": ("0x%02x ", 1, "GrabU8(dat)"),
+        "+": ("0x%08x: ", 0, lambda dat: addr),
+        "x": ("0x%04x ", 2, GrabU16),
+        "i": ("%5d ", 2, GrabI16),
+        "u": ("%5u ", 2, GrabU16),
+        "X": ("0x%08x ", 4, GrabU32),
+        "I": ("%9d ", 4, GrabI32),
+        "U": ("%9u ", 4, GrabU32),
+        "n": ("\n", 0, lambda dat: None),
+        "f": ("%8.4f ", 4, GrabFlt),
+        "e": ("%12.4e ", 4, GrabFlt),
+        "c": ("%s", 1, lambda dat: chr(GrabU8(dat))),
+        "b": ("0x%02x ", 1, GrabU8),
     }
 
     ret = ""
@@ -394,55 +424,25 @@ def FmtPeek(dat, fmt="+XXXX", addr=0):
         ch = fmt[ndx]
 
         if ch in fmtInfo:
-            val = eval(fmtInfo[ch][2])
+            (fmtString, byteCt, func) = fmtInfo[ch]
+            val = func(dat)
 
             if val == None:
-                ret += fmtInfo[ch][0]
+                ret += fmtString
             else:
-                ret += fmtInfo[ch][0] % val
-            addr += fmtInfo[ch][1]
+                ret += fmtString % val
+            addr += byteCt
         else:
             ret += ch
 
     return ret
 
 
-# elfFiles = {}
-# def loadElf( fname ):
-#   global elfFiles
-#
-#   ct = os.stat( fname ).st_ctime
-#
-#   if( not fname in elfFiles ):
-#      pass
-#   elif( elfFiles[fname]['ctime'] != ct ):
-#      pass
-#   else:
-#      return elfFiles[fname]['elf']
-#
-#   e = {}
-#   e['ctime'] = ct
-#   e['elf'] = elffile.ElfFile( fname )
-#   elfFiles[fname] = e
-#   return e['elf']
-
-
 def DecodeAddr(addr, fw=None):
 
-    #   global fwname
-    #   if( fw == None ):
-    #      fw = fwname
-    #
     if isinstance(addr, int):
         return addr
 
-    #   if( addr[0] == '&' ):
-    #      elf = loadElf( fw )
-    #
-    #      a = elf.getSymbol( addr[1:] )
-    #      if( a != None ):
-    #         a = a.value;
-    #      return a
     return int(addr, 0)
 
 
@@ -485,7 +485,7 @@ def Peek16(addr, ct=None, le=True, signed=False):
     if ct == None:
         ct = 1
     out = Peek(addr, 2 * ct, raw=True)
-    return Build16(out, le=True, signed=False)
+    return Build16(out, le, signed)
 
 
 def Peek32(addr, ct=None, le=True, signed=False):
@@ -497,7 +497,7 @@ def Peek32(addr, ct=None, le=True, signed=False):
     if ct == None:
         ct = 1
     out = Peek(addr, 4 * ct, raw=True)
-    return Build32(out, le=True, signed=False)
+    return Build32(out, le, signed)
 
 
 def Peekf(addr, ct=None):
@@ -537,6 +537,9 @@ def Poke16(addr, dat):
     Poke(addr, dat, "short")
 
 
+# This adds the escape characters to the serial data stream
+# to implement the framing used by that format.
+# See debug.cpp in the controller code for details
 def EscCmd(buff):
     ret = []
     for i in buff:
@@ -547,6 +550,12 @@ def EscCmd(buff):
     return ret
 
 
+# Wait for a response from the controller to the last command
+# The binary format uses two special characters to frame a
+# command or response.  This function removes those characters
+# before returning.
+# See debug.cpp in the controller source for more detail on
+# command framing.
 def GetResp(DbgPrint):
     dat = []
     esc = False
@@ -828,4 +837,5 @@ def CRC16_Calc(dat):
     return crc16.calc(dat)
 
 
-CmdLine()
+cl = CmdLine()
+cl.CmdLoop()

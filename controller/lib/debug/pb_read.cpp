@@ -34,10 +34,10 @@ public:
 
     int i;
     for (i = 0; i < max; i++) {
-      int x = debug.PrintBuffGet();
-      if (x < 0)
+      uint8_t x;
+      if (!debug.PrintBuffGet(&x))
         break;
-      *data++ = static_cast<uint8_t>(x);
+      *data++ = x;
     }
 
     *len = i;

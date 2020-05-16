@@ -17,6 +17,10 @@ import serial
 import struct
 import time
 import traceback
+import matplotlib.pyplot as plt
+
+# Turn on interactive mode for matplotlib
+plt.ion()
 
 # Command codes.  See debug.h in the controller debug library
 OP_MODE = 0x00
@@ -24,11 +28,15 @@ OP_PEEK = 0x01
 OP_POKE = 0x02
 OP_PBREAD = 0x03
 OP_VAR = 0x04
+OP_TRACE = 0x05
 
 # Some commands take a sub-command as their first byte of data
 SUBCMD_VAR_INFO = 0
 SUBCMD_VAR_GET = 1
 SUBCMD_VAR_SET = 2
+
+SUBCMD_TRACE_FLUSH = 0
+SUBCMD_TRACE_GETDATA = 1
 
 # Special characters used to frame commands
 ESC = 0xF1
@@ -36,7 +44,8 @@ TERM = 0xF2
 
 # Variable types (see vars.h)
 VAR_INT32 = 1
-VAR_FLOAT = 2
+VAR_UINT32 = 2
+VAR_FLOAT = 3
 
 port = "/dev/ttyACM0"
 if len(sys.argv) > 1:
@@ -290,6 +299,16 @@ A couple optional parameters can be passed as arguments to this command:
 
         print(GetVar(cl[0]))
 
+    def complete_get(self, text, line, begidx, endidx):
+        var = text
+
+        out = []
+        for i in varDict.keys():
+            if i.startswith(var):
+                out.append(i)
+
+        return out
+
     def help_get(self):
         global varDict
         print("Read the value of a debug variable and display it\n")
@@ -304,12 +323,109 @@ A couple optional parameters can be passed as arguments to this command:
             return
         SetVar(cl[0], cl[1])
 
+    def complete_set(self, text, line, begidx, endidx):
+        var = text
+
+        out = []
+        for i in varDict.keys():
+            if i.startswith(var):
+                out.append(i)
+
+        return out
+
     def help_set(self):
         global varDict
         print("Set the value of a debug variable\n")
         print("Variables currently defined:")
         for k in varDict.keys():
             print("   %-10s - %s" % (k, varDict[k].help))
+
+    def do_trace(self, line):
+        """
+       This command is used to access the trace buffer on the controller.
+       A sub-command must be passed as an option:
+
+       trace flush
+         Stops the trace if one was on-going and flushes the trace buffer
+
+       trace start
+         Starts the trace collecting data.
+
+       trace graph
+         This will download the data and display it graphically
+
+       trace download <filename>
+         This will download the data and save it to a file with the given
+         name.  If no file name is given, then trace.dat will be used
+
+       The trace feature allows variables to be sampled in real time and saved
+       to a large internal memory buffer in the drive.  This command can then
+       be used to download the captured data and save or display it.
+
+       The trace first must be set up by setting specific variables.
+
+       trace_var1
+       trace_var2
+       trace_var3
+       trace_var4
+         Set these variables to the name of the parameter you want to capture.
+         Any parameter can be given by name.  Up to 4 parameters can be saved
+         to the trace buffer at any time.  Think of it as a 4 channel oscilloscope.
+
+       trace_period
+         Set this to the period at which you want to save the data.  The units
+         are loop periods.  A period <= 0 is treated as 1
+
+       trace_ctrl
+         This variable is used to start the trace.  Just set it to 1 to start.
+         It will be cleared when the trace buffer is full.
+
+       trace_samples
+         This variable gives the number of samples stored in the buffer currently.
+       """
+        cl = line.split()
+        if len(cl) < 1:
+            print("Error, please specify the trace command to run")
+            return
+
+        if cl[0] == "flush":
+            SendCmd(OP_TRACE, [SUBCMD_TRACE_FLUSH])
+
+        elif cl[0] == "start":
+            SendCmd(OP_TRACE, [SUBCMD_TRACE_FLUSH])
+            SetVar("trace_ctrl", 1)
+
+        elif cl[0] == "download":
+            tv = TraceActiveVars()
+            if len(tv) < 1:
+                print("No active trace variables")
+
+            if len(cl) > 1:
+                fname = cl[1]
+            else:
+                fname = "trace.dat"
+            fp = open(fname, "w")
+            dat = TraceDownload()
+            for i in range(len(dat[0])):
+                S = ""
+                for j in range(len(tv)):
+                    S += tv[j].fmt % dat[j][i] + "   "
+                fp.write(S + "\n")
+            fp.close()
+
+        elif cl[0] == "graph":
+            dat = TraceDownload()
+
+            samp = range(len(dat[0]))
+            plt.figure()
+            for d in dat:
+                plt.plot(samp, d)
+            plt.grid()
+            plt.show()
+
+        else:
+            print("Unknown trace sub-command %s" % cl[0])
+            return
 
     # Read info about all the supported variables and load
     # them in a map
@@ -355,6 +471,24 @@ class VarInfo:
         n += fmtLen
         self.help = "".join([chr(x) for x in dat[n : n + helpLen]])
 
+    # Convert an unsigned 32-bit value into the correct type for
+    # this variable
+    def ConvertInt(self, d):
+        if self.type == VAR_FLOAT:
+            return I2F(d)
+        if self.type == VAR_INT32:
+            if d & 0x80000000:
+                return d - (1 << 32)
+            return d
+        return d
+
+
+def FindVarByID(vid):
+    for name in varDict:
+        if varDict[name].id == vid:
+            return varDict[name]
+    return None
+
 
 def GetVar(name, raw=False):
     global varDict
@@ -365,6 +499,9 @@ def GetVar(name, raw=False):
     dat = SendCmd(OP_VAR, [SUBCMD_VAR_GET] + Split16(V.id))
 
     if V.type == VAR_INT32:
+        val = Build32(dat, signed=True)[0]
+
+    elif V.type == VAR_UINT32:
         val = Build32(dat)[0]
 
     elif V.type == VAR_FLOAT:
@@ -376,6 +513,14 @@ def GetVar(name, raw=False):
     if raw:
         return val
 
+    # I'll convert trace variable values to variable names
+    if name.startswith("trace_var"):
+        if val < 0:
+            return "none"
+        tv = FindVarByID(val)
+        if tv != None:
+            return tv.name
+
     return V.fmt % val
 
 
@@ -386,14 +531,86 @@ def SetVar(name, value):
 
     V = varDict[name]
 
+    # If this is a trace variable, the passed value
+    # should be a variable name
+    if name.startswith("trace_var"):
+        if value == "none":
+            value = "-1"
+        elif value in varDict:
+            value = "%d" % varDict[value].id
+
     if V.type == VAR_INT32:
-        dat = Split32(int(value, 0))
+        if not isinstance(value, int):
+            value = int(value, 0)
+        dat = Split32(value)
+
+    elif V.type == VAR_UINT32:
+        if not isinstance(value, int):
+            value = int(value, 0)
+        dat = Split32(value)
 
     elif V.type == VAR_FLOAT:
         dat = SplitFlt(float(value))
 
     SendCmd(OP_VAR, [SUBCMD_VAR_SET] + Split16(V.id) + dat)
     return
+
+
+def TraceActiveVars():
+    """Return a list of active trace variables"""
+    ret = []
+    for i in range(10):
+        name = "trace_var%d" % (i + 1)
+        if not name in varDict:
+            break
+        vid = GetVar(name, raw=True)
+        V = FindVarByID(vid)
+        if V:
+            ret.append(V)
+    return ret
+
+
+# This returns a list of N lists where N is the number
+# of active trace variables.
+# Each of those lists holds the trace data for that
+# variable
+def TraceDownload():
+    """
+   This function first reads the
+   """
+    traceVars = TraceActiveVars()
+    if len(traceVars) < 1:
+        return None
+
+    print("Download trace data...")
+    data = []
+    while True:
+        dat = SendCmd(OP_TRACE, [1])
+        if len(dat) < 1:
+            break
+        data += dat
+
+    # Convert the bytes into an array of unsigned 32-bit values
+    data = Build32(data)
+
+    ret = []
+    for i in range(len(traceVars)):
+        ret.append([])
+
+    # Find out how many total samples there were
+    samples = int(len(data) / len(traceVars))
+    n = 0
+    for s in range(samples):
+        for i in range(len(traceVars)):
+            d = data[n]
+            n += 1
+
+            # Reformat the raw data into a float
+            # or signed int as necessary
+            d = traceVars[i].ConvertInt(d)
+
+            ret[i].append(d)
+    return ret
 
 
 def FmtPeek(dat, fmt="+XXXX", addr=0):

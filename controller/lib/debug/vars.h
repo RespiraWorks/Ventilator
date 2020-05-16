@@ -22,7 +22,8 @@ limitations under the License.
 enum class VarType {
   UNKNOWN = 0,
   INT32 = 1,
-  FLOAT = 2,
+  UINT32 = 2,
+  FLOAT = 3,
 };
 
 // This class represents a variable that you can read/write using the
@@ -40,7 +41,7 @@ public:
   // @param help String that the Python code displays describing the variable.
   // @param fmt printf style format string.  This is a hint to the Python code
   // as to how the variable data should be displayed.
-  DebugVar(const char *name, const char *help = "", const char *fmt = "");
+  DebugVar(const char *name = "", const char *help = "", const char *fmt = "");
 
   // 32-bit integer variable.  The default get/set functions will probably be
   // fine
@@ -50,7 +51,11 @@ public:
   // @param help String that the Python code displays describing the variable.
   // @param fmt printf style format string.  This is a hint to the Python code
   // as to how the variable data should be displayed.
-  DebugVar(const char *name, int *data, const char *help = "",
+  DebugVar(const char *name, int32_t *data, const char *help = "",
+           const char *fmt = "%d");
+
+  // Like above, but unsigned
+  DebugVar(const char *name, uint32_t *data, const char *help = "",
            const char *fmt = "%d");
 
   // float variable.  The default get/set functions will probably be fine
@@ -76,6 +81,13 @@ public:
   // @param len Number of valid bytes in buffer
   // @return An error code, 0 on success
   virtual DbgErrCode SetValue(uint8_t *buff, int len);
+
+  // Returns a representation of this variable as a 32-bit integer.
+  // This is used when capturing the variables value to the trace buffer.
+  // Only variables that can be represented by 32-bits can be traced.
+  // For floats, this returns the raw bits of the float, the Python
+  // program handles converting it back into a float.
+  virtual uint32_t getDataForTrace();
 
   const char *getName() const { return name; }
   const char *getFormat() const { return fmt; }

@@ -33,6 +33,7 @@ enum class DbgCmdCode {
   POKE = 0x02,            // Poke values into RAM
   PRINT_BUFF_READ = 0x03, // Read strings from the print buffer
   VAR = 0x04,             // Variable access
+  TRACE = 0x05,           // Data trace commands
 };
 
 enum class DbgErrCode {
@@ -87,10 +88,10 @@ public:
   // Read a byte from the print buffer.
   // This is only intended to be called from the command that returns
   // print buffer data.
-  int PrintBuffGet() { return printBuff.Get(); }
+  bool PrintBuffGet(uint8_t *ch) { return printBuff.Get(ch); }
 
 private:
-  CircBuff<2000> printBuff;
+  CircBuff<uint8_t, 2000> printBuff;
 
   uint8_t cmdBuff[500];
   int buffNdx;

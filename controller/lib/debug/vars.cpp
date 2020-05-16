@@ -32,8 +32,9 @@ DebugVar::DebugVar(const char *nm, const char *h, const char *f) {
   RegisterVar();
 }
 
-// Creates a debug variable that modifies a float
-DebugVar::DebugVar(const char *nm, int *data, const char *h, const char *f) {
+// Creates a debug variable that modifies an int
+DebugVar::DebugVar(const char *nm, int32_t *data, const char *h,
+                   const char *f) {
   name = nm;
   fmt = f;
   help = h;
@@ -42,7 +43,18 @@ DebugVar::DebugVar(const char *nm, int *data, const char *h, const char *f) {
   RegisterVar();
 }
 
-// Creates a debug variable that modifies an int
+// Creates a debug variable that modifies an unsigned int
+DebugVar::DebugVar(const char *nm, uint32_t *data, const char *h,
+                   const char *f) {
+  name = nm;
+  fmt = f;
+  help = h;
+  type = VarType::UINT32;
+  addr = data;
+  RegisterVar();
+}
+
+// Creates a debug variable that modifies a float
 DebugVar::DebugVar(const char *nm, float *data, const char *h, const char *f) {
   name = nm;
   fmt = f;
@@ -59,6 +71,7 @@ DbgErrCode DebugVar::GetValue(uint8_t *buff, int *len, int max) {
   // We're just grabbing their value directly from memory and treating it
   // as an integer so we can split it up and send it out.
   case VarType::INT32:
+  case VarType::UINT32:
   case VarType::FLOAT:
     *len = 4;
     if (max < 4)
@@ -79,6 +92,7 @@ DbgErrCode DebugVar::SetValue(uint8_t *buff, int len) {
   switch (type) {
   // Like with the get, we actually handle both floats and ints the same here.
   case VarType::INT32:
+  case VarType::UINT32:
   case VarType::FLOAT:
     if (len < 4)
       return DbgErrCode::MISSING_DATA;
@@ -88,6 +102,22 @@ DbgErrCode DebugVar::SetValue(uint8_t *buff, int len) {
 
   default:
     return DbgErrCode::INTERNAL;
+  }
+}
+
+// Return the variable as a 32-bit integer.
+// We just return zero for any type we don't understand
+uint32_t DebugVar::getDataForTrace() {
+  switch (type) {
+
+  // Like above, we treat 32-bit ints and floats the same here
+  case VarType::INT32:
+  case VarType::UINT32:
+  case VarType::FLOAT:
+    return *reinterpret_cast<uint32_t *>(addr);
+
+  default:
+    return 0;
   }
 }
 

@@ -198,20 +198,13 @@ public:
     if (tot > max)
       tot = max;
 
-    // See if ints are currently enabled.  They should be
-    bool iena = Hal.interruptsEnabled();
-
     for (int i = 0; i < tot; i++) {
+      BlockInterrupts block;
       // Grab one sample with interrupts disabled.
       // There's a chance the trace is still running, so we
       // could get interrupted by the high priority thread
       // that adds to the buffer.  I want to make sure I
       // read a full sample without being interrupted
-      //
-      // NOTE - It would be nicer to use the BlockInterrupts
-      // class here, but the compiler was not calling its
-      // destructor until the end of the loop.  Which is odd.
-      Hal.disableInterrupts();
       for (int j = 0; j < vct; j++) {
         uint32_t dat = 0;
         traceBuffer.Get(&dat);
@@ -219,8 +212,6 @@ public:
         data += sizeof(uint32_t);
       }
       traceSamp--;
-      if (iena)
-        Hal.enableInterrupts();
     }
 
     *len = static_cast<int>(tot * vct * sizeof(uint32_t));

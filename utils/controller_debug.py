@@ -359,7 +359,7 @@ A couple optional parameters can be passed as arguments to this command:
          name.  If no file name is given, then trace.dat will be used
 
        The trace feature allows variables to be sampled in real time and saved
-       to a large internal memory buffer in the drive.  This command can then
+       to a large internal memory buffer in the device.  This command can then
        be used to download the captured data and save or display it.
 
        The trace first must be set up by setting specific variables.

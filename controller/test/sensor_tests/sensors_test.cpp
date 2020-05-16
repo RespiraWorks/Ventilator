@@ -37,7 +37,7 @@ static const float COMPARISON_TOLERANCE_PRESSURE = 0.005f;
 // Maximum allowable delta between calculated and actual volumetric flow
 static const float COMPARISON_TOLERANCE_FLOW_CUBIC_M_PER_SEC = 5.0e-5f;
 
-// Maximum allowable delta between calculated and actual volume (= 5 ml)
+// Maximum allowable delta between calculated and actual volume (= 1 ml)
 static const float COMPARISON_TOLERANCE_VOLUME_ML = 1.0f;
 
 //@TODO: Finish writing more specific unit tests for this module
@@ -57,7 +57,7 @@ static Voltage MPXV5004_PressureToVoltage(Pressure pressure) {
 static SensorReadings update_readings(Duration dt, Pressure patient_pressure,
                                       Pressure inflow_pressure,
                                       Pressure outflow_pressure,
-                                      Sensors sensors) {
+                                      Sensors *sensors) {
   Hal.test_setAnalogPin(AnalogPin::PATIENT_PRESSURE,
                         MPXV5004_PressureToVoltage(patient_pressure));
   Hal.test_setAnalogPin(AnalogPin::INFLOW_PRESSURE_DIFF,
@@ -65,7 +65,7 @@ static SensorReadings update_readings(Duration dt, Pressure patient_pressure,
   Hal.test_setAnalogPin(AnalogPin::OUTFLOW_PRESSURE_DIFF,
                         MPXV5004_PressureToVoltage(outflow_pressure));
   Hal.delay(dt);
-  return sensors.GetSensorReadings();
+  return sensors->GetSensorReadings();
 }
 
 TEST(SensorTests, FullScaleReading) {
@@ -92,13 +92,9 @@ TEST(SensorTests, FullScaleReading) {
   for (auto p : pressures) {
     SCOPED_TRACE("Pressure " + std::to_string(p.kPa()));
 
-    auto readings = update_readings(seconds(0.0f), p, p, p, sensors);
+    auto readings = update_readings(seconds(0.0f), p, p, p, &sensors);
     float pressurePatient = cmH2O(readings.patient_pressure_cm_h2o).kPa();
     EXPECT_NEAR(pressurePatient, p.kPa(), COMPARISON_TOLERANCE_PRESSURE);
-
-    // Inhalation and exhalation should match because they are fed with the same
-    // pressure waveform ==> total flow should be 0
-    EXPECT_EQ(readings.flow_ml_per_min, 0.0f);
   }
 }
 
@@ -141,7 +137,7 @@ TEST(SensorTests, TotalFlowCalculation) {
   for (auto p_in : pressures) {
     for (auto p_out : pressures) {
       auto readings =
-          update_readings(seconds(0.0f), kPa(0.0f), p_in, p_out, sensors);
+          update_readings(seconds(0.0f), kPa(0.0f), p_in, p_out, &sensors);
 
       EXPECT_NEAR(ml_per_min(readings.flow_ml_per_min).cubic_m_per_sec(),
                   (Sensors::PressureDeltaToFlow(p_in) -
@@ -153,7 +149,7 @@ TEST(SensorTests, TotalFlowCalculation) {
 }
 
 // start integrating from time=10 days to maximize potential floating
-// precision error during integration
+// precision error during integration (which uses dt.minutes())
 static constexpr Time base = millisSinceStartup(864000000);
 static constexpr Duration sample_period = milliseconds(10);
 Time ticks(int num_ticks) { return base + num_ticks * sample_period; }
@@ -162,8 +158,7 @@ TEST(SensorTests, TVIntegrator) {
   // this Hal.delay is needed to allow TV construction with proper init time
   Hal.delay(base - Hal.now());
   TVIntegrator tidal_volume;
-  // base flow : 1 liter/s
-  VolumetricFlow flow = cubic_m_per_sec(1e-3f);
+  VolumetricFlow flow = liters_per_sec(1.0f);
   int t = 0;
   tidal_volume.AddFlow(ticks(t++), flow);
   // first call to AddFlow ==> initialization and TV is 0, even if flow is not
@@ -188,8 +183,8 @@ TEST(SensorTests, TVIntegrator) {
 
   EXPECT_NEAR(tidal_volume.GetTV().ml(), 30.0f, COMPARISON_TOLERANCE_VOLUME_ML);
 
-  // reverse flow : -1 liter/s
-  flow = cubic_m_per_sec(-1e-3f);
+  // reverse flow
+  flow = liters_per_sec(-1.0f);
   // this does not increment t in order to allow oversampling (following test)
   tidal_volume.AddFlow(ticks(t), flow);
   // remove 1 l/s flow over 10 ms ==> 25 ml (rectangle rule)

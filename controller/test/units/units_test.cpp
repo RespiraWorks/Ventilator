@@ -69,14 +69,21 @@ TEST(Units, Length) {
 TEST(Units, VolumetricFlow) {
   EXPECT_FLOAT_EQ(cubic_m_per_sec(1).cubic_m_per_sec(), 1);
   EXPECT_FLOAT_EQ(cubic_m_per_sec(1).ml_per_min(), 60.0f * 1000 * 1000);
+  EXPECT_FLOAT_EQ(cubic_m_per_sec(1).liters_per_sec(), 1000.0f);
   EXPECT_FLOAT_EQ(ml_per_min(1).ml_per_min(), 1);
   EXPECT_FLOAT_EQ(ml_per_min(1).cubic_m_per_sec(), 1 / (60.0f * 1000 * 1000));
+  EXPECT_FLOAT_EQ(ml_per_min(1).liters_per_sec(), 1 / (60.0f * 1000));
+  EXPECT_FLOAT_EQ(liters_per_sec(1).liters_per_sec(), 1);
+  EXPECT_FLOAT_EQ(liters_per_sec(1).ml_per_min(), 1 * (60.0f * 1000));
+  EXPECT_FLOAT_EQ(liters_per_sec(1).cubic_m_per_sec(), 1 / (1000.0f));
   EXPECT_FLOAT_EQ((cubic_m_per_sec(1) - cubic_m_per_sec(2)).cubic_m_per_sec(),
                   -1);
   EXPECT_FLOAT_EQ((ml_per_min(1) + ml_per_min(10)).ml_per_min(), 11);
   EXPECT_FLOAT_EQ(
       (cubic_m_per_sec(1) - ml_per_min(60.0f * 1000 * 1000)).cubic_m_per_sec(),
       0);
+  EXPECT_FLOAT_EQ(
+      (cubic_m_per_sec(1) - liters_per_sec(1000.0f)).cubic_m_per_sec(), 0);
 
   checkRelationalOperators(cubic_m_per_sec);
   checkRelationalOperators(ml_per_min);

@@ -47,6 +47,23 @@
 * The i2c sensor connectors are initially configured for providing 3.3V supply power to the sensors, but can be configured for 5V.  Each sensor can have its own voltage; they do not need to be the same.  If you need to switch to 5V, see the schematic for the resistors to change.  Refer to schematic for pinouts.
 * The analog pressure sensors have an anti-aliasing filter value of 100Hz.
 
+## Setting up to drive stepper motors
+When the PCB was originally designed, the ability to add a stepper driver was essentially a hedge, a backup *just in case* we wanted to try something that required a stepper motor, so if some of this looks hackey, that's why.  Now that the stepper-driven valve concept is moving towards the main design, we need to support it.  This is the beginning of a guide to using stepper motors with the PCB, which will be completed in the following few days.
+
+* This will assume some knowledge and practice with electrical tinkering.  
+* For bakground on stepper motors in general, the always-excellent Great Scott provides a good [intro to stepper motors](https://youtu.be/bkqoKWP4Oy4)
+* For information on the powerSTEP01, the specific driver we are using in Rev 1.0 of the PCB, [there is a video here](https://youtu.be/_Arx5CMr_mk).  Keep in mind that while this driver will stay for the duration of the Beta phase, we may move to something different in the final product, as powerSTEP01 is likely to be **way** overkill for this application, but it does offer a lot of convenient features.
+* We will need to solder some wires to power the stepper driver as it takes a power input for the motor that is separate from the logic power it gets from the Nucleo below. We will piggyback off the blower driver power socket.  Solder two 13cm wires of 22awg or thicker to the backside of J10, the blower power connector. The square pin pad is negative. (photo placeholder)
+* While we could put the wires of the stepper directly into the terminal block on the driver, making a little doodad like this will make it quick and easy to swap out different steppers that use this common 4-pin dupont 0.100" pitch connector. (photo placeholder)
+* Insert the wires in to the terminal block and connect them like so. (photo placeholder)
+* Connect the stepper motor to this connector. (photo placeholder)
+* Note pin naming conventions and color codes vary from manufacturer to manufacturer.   
+    * If it does nothing and draws no current, swap one wire from the A pair with one wire from the B pair.  
+    * If you send a CW command and it turns CCW, then swap the polarity of either the A or B pair, but not both.
+* Set the correct chip select for the powerSTEP01 (see [Hardware ICD](https://docs.google.com/spreadsheets/d/1JOSQKxkQxXJ6MCMDI9PwUQ6kiuGdujR4D6EJN9u2LWg/edit?usp=sharing) for pin assignments)
+* Send SPI commands to the powerSTEP01 from the NUCLEO to setup the motor settings. (code link placeholder)
+* Send SPI commands to the powerSTEP01 to command motions. (code link placeholder)
+
 ## Rev 1 As-Built Files:
 As-built directory: <br>
 https://github.com/RespiraWorks/pcbreathe/tree/master/NIGHTLY/20200424v2-RELEASE-CANDIDATE-2

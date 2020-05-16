@@ -53,6 +53,7 @@ limitations under the License.
 #include "hal.h"
 #include "network_protocol.pb.h"
 #include "sensors.h"
+#include "trace.h"
 
 // NO_GUI_DEV_MODE is a hacky development mode until we have the GUI working.
 //
@@ -127,6 +128,9 @@ static void high_priority_task(void *arg) {
   controller_status.fan_power = actuators_state.fan_power;
   controller_status.fan_setpoint_cm_h2o = actuators_state.fan_setpoint_cm_h2o;
 
+  // Sample any enabled trace variables
+  TraceSample();
+
   // Pet the watchdog
   Hal.watchdog_handler();
 }
@@ -168,6 +172,9 @@ static void background_loop() {
 #else
     DEV_MODE_comms_handler(local_controller_status, &gui_status);
 #endif
+
+    // Poll the debug serial port handler
+    debug.Poll();
 
     // Copy the gui_status data into our controller status
     // with interrupts disabled.  This ensures that the data

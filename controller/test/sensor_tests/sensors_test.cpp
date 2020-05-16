@@ -91,10 +91,11 @@ TEST(SensorTests, FullScaleReading) {
   // versus what the original pressure waveform was
   for (auto p : pressures) {
     SCOPED_TRACE("Pressure " + std::to_string(p.kPa()));
-
-    auto readings = update_readings(seconds(0.0f), p, p, p, &sensors);
-    float pressurePatient = cmH2O(readings.patient_pressure_cm_h2o).kPa();
-    EXPECT_NEAR(pressurePatient, p.kPa(), COMPARISON_TOLERANCE_PRESSURE);
+    Hal.test_setAnalogPin(AnalogPin::PATIENT_PRESSURE,
+                          MPXV5004_PressureToVoltage(p));
+    auto readings = sensors.GetSensorReadings();
+    float patient_pressure = cmH2O(readings.patient_pressure_cm_h2o).kPa();
+    EXPECT_NEAR(patient_pressure, p.kPa(), COMPARISON_TOLERANCE_PRESSURE);
   }
 }
 
@@ -148,9 +149,7 @@ TEST(SensorTests, TotalFlowCalculation) {
   }
 }
 
-// start integrating from time=10 days to maximize potential floating
-// precision error during integration (which uses dt.minutes())
-static constexpr Time base = millisSinceStartup(864000000);
+static constexpr Time base = millisSinceStartup(10000);
 static constexpr Duration sample_period = milliseconds(10);
 Time ticks(int num_ticks) { return base + num_ticks * sample_period; }
 

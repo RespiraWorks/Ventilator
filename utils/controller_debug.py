@@ -335,7 +335,11 @@ A couple optional parameters can be passed as arguments to this command:
 
     def help_set(self):
         global varDict
-        print("Set the value of a debug variable\n")
+        print("You can very easily add debug variables to the C++ code.")
+        print("You give these variables names and a pointer to a value to")
+        print("access.  Then using the get/set commands you can read the")
+        print("current state of that C++ location and modify it.\n")
+        print("This command allows you to modify such a debug variable\n")
         print("Variables currently defined:")
         for k in varDict.keys():
             print("   %-10s - %s" % (k, varDict[k].help))
@@ -354,9 +358,12 @@ A couple optional parameters can be passed as arguments to this command:
        trace graph
          This will download the data and display it graphically
 
-       trace download <filename>
+       trace download [--seperator=<str> ] <filename>
          This will download the data and save it to a file with the given
          name.  If no file name is given, then trace.dat will be used
+         If the --seperator=<str> option is given, then the specified
+         string will seperate each column of data.  The default seperator
+         is a few spaces.
 
        The trace feature allows variables to be sampled in real time and saved
        to a large internal memory buffer in the device.  This command can then
@@ -396,6 +403,11 @@ A couple optional parameters can be passed as arguments to this command:
             SetVar("trace_ctrl", 1)
 
         elif cl[0] == "download":
+            seperator = "  "
+            if len(cl) > 1 and cl[1].startswith("--seperator="):
+                seperator = cl[1].split("=")[1]
+                cl.remove(cl[1])
+
             tv = TraceActiveVars()
             if len(tv) < 1:
                 print("No active trace variables")
@@ -405,12 +417,17 @@ A couple optional parameters can be passed as arguments to this command:
             else:
                 fname = "trace.dat"
             fp = open(fname, "w")
+            line = []
+            for v in tv:
+                line.append(v.name)
+            fp.write(seperator.join(line) + "\n")
             dat = TraceDownload()
+
             for i in range(len(dat[0])):
-                S = ""
+                line = []
                 for j in range(len(tv)):
-                    S += tv[j].fmt % dat[j][i] + "   "
-                fp.write(S + "\n")
+                    line.append(tv[j].fmt % dat[j][i])
+                fp.write(seperator.join(line) + "\n")
             fp.close()
 
         elif cl[0] == "graph":
@@ -585,7 +602,7 @@ def TraceDownload():
     print("Download trace data...")
     data = []
     while True:
-        dat = SendCmd(OP_TRACE, [1])
+        dat = SendCmd(OP_TRACE, [SUBCMD_TRACE_GETDATA])
         if len(dat) < 1:
             break
         data += dat
@@ -988,14 +1005,6 @@ def GrabI16(dat, le=True):
 
 def GrabU16(dat, le=True):
     return MakeInt(GrabElems(dat, 2), signed=False, le=le)
-
-
-def GrabI24(dat, le=True):
-    return MakeInt(GrabElems(dat, 3), signed=True, le=le)
-
-
-def GrabU24(dat, le=True):
-    return MakeInt(GrabElems(dat, 3), signed=False, le=le)
 
 
 def GrabI32(dat, le=True):

@@ -528,8 +528,8 @@ void HalApi::analogWrite(PwmPin pin, float duty) {
  *****************************************************************/
 
 class UART {
-  CircBuff<128> rxDat;
-  CircBuff<128> txDat;
+  CircBuff<uint8_t, 128> rxDat;
+  CircBuff<uint8_t, 128> txDat;
   UART_Regs *const reg;
 
 public:
@@ -557,11 +557,11 @@ public:
 
     // Check for transmit data register empty
     if (reg->status & reg->ctrl[0] & 0x0080) {
-      int ch = txDat.Get();
 
+      uint8_t ch;
       // If there's nothing left in the transmit buffer,
       // just disable further transmit interrupts.
-      if (ch < 0) {
+      if (!txDat.Get(&ch)) {
         reg->ctrl[0] &= ~0x0080;
       } else {
         // Otherwise, Send the next byte
@@ -576,10 +576,10 @@ public:
   // Returns the number of bytes actually read.
   uint16_t read(char *buf, uint16_t len) {
     for (uint16_t i = 0; i < len; i++) {
-      int ch = rxDat.Get();
-      if (ch < 0)
+      uint8_t ch;
+      if (!rxDat.Get(&ch))
         return i;
-      *buf++ = static_cast<uint8_t>(ch);
+      *buf++ = ch;
     }
 
     // Note that we don't need to enable the rx interrupt

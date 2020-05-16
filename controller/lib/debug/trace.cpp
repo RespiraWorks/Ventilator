@@ -36,7 +36,7 @@ static int CountActiveVars(DebugVar *vptr[]);
 static CircBuff<uint32_t, 0x4000> traceBuffer;
 
 // The trace control variable is a bit-mapped parameter which
-// is used to start/stop the trace and read it's status.
+// is used to start/stop the trace and read its status.
 // Right now only bit 0 is in use.  Set this to start capturing
 // data to the trace buffer.  It will auto-clear when the buffer
 // is full
@@ -133,7 +133,6 @@ static int CountActiveVars(DebugVar *vptr[]) {
 }
 
 class TraceCmd : public DebugCmd {
-
 public:
   TraceCmd() : DebugCmd(DbgCmdCode::TRACE) {
     // Disable all trace varaibles initially
@@ -155,6 +154,7 @@ public:
     // It also disables the trace
     case 0: {
       traceCtrl = 0;
+      traceSamp = 0;
 
       uint32_t tmp;
       while (traceBuffer.Get(&tmp)) {
@@ -185,12 +185,21 @@ public:
     }
 
     // See how many samples I can return
-    int tot = max / static_cast<int>((vct * sizeof(uint32_t)));
+    // First, find out how many I could based on the max value
+    max /= static_cast<int>((vct * sizeof(uint32_t)));
 
     // If there's not room for even one sample, return an error.
     // That really shouldn't happen
-    if (!tot)
+    if (!max)
       return DbgErrCode::NO_MEMORY;
+
+    // Find the total number of samples in the buffer
+    int tot = traceBuffer.FullCt() / vct;
+    if (tot > max)
+      tot = max;
+
+    // See if ints are currently enabled.  They should be
+    bool iena = Hal.interruptsEnabled();
 
     for (int i = 0; i < tot; i++) {
       // Grab one sample with interrupts disabled.
@@ -198,7 +207,11 @@ public:
       // could get interrupted by the high priority thread
       // that adds to the buffer.  I want to make sure I
       // read a full sample without being interrupted
-      BlockInterrupts block;
+      //
+      // NOTE - It would be nicer to use the BlockInterrupts
+      // class here, but the compiler was not calling its
+      // destructor until the end of the loop.  Which is odd.
+      Hal.disableInterrupts();
       for (int j = 0; j < vct; j++) {
         uint32_t dat = 0;
         traceBuffer.Get(&dat);
@@ -206,9 +219,11 @@ public:
         data += sizeof(uint32_t);
       }
       traceSamp--;
+      if (iena)
+        Hal.enableInterrupts();
     }
 
-    *len = static_cast<int>(tot * sizeof(uint32_t));
+    *len = static_cast<int>(tot * vct * sizeof(uint32_t));
     return DbgErrCode::OK;
   }
 };

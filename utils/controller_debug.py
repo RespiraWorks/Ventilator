@@ -138,7 +138,7 @@ class CmdLine(cmd.Cmd):
         gbl = globals().copy()
         gbl["cmdline"] = line
         gbl["parser"] = self
-        execfile(fname, gbl)
+        exec(open(fname).read(), gbl)
 
     def complete_run(self, text, line, begidx, endidx):
         return glob.glob(text + "*.py") + [

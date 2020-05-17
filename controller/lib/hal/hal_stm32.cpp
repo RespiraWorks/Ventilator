@@ -31,6 +31,7 @@ the programmer's manual for the processor available here:
 #include "hal.h"
 #include "uart_dma.h"
 #include <optional>
+#include "stepper.h"
 #include <stdarg.h>
 #include <stdio.h>
 
@@ -45,13 +46,6 @@ static volatile int64_t msCount;
 // local static functions.  I don't want to add any private
 // functions to the Hal class to avoid complexity with other
 // builds
-static void InitGPIO();
-static void InitADC();
-static void InitSysTimer();
-static void InitPwmOut();
-static void InitUARTs();
-static void EnableClock(void *ptr);
-static void EnableInterrupt(int addr, IntPriority pri);
 static void Timer6ISR();
 static void Timer15ISR();
 void UART3_ISR();
@@ -59,15 +53,20 @@ void DMA1_CH2_ISR();
 void DMA1_CH3_ISR();
 
 // This function is called from the libc initialization code
-// before any static constructors are called.  We do some basic
-// chip initialization here.
+// before any static constructors are called.
+//
+// It calls the Hal function used to initialize the processor.
+extern "C" void _init() { Hal.EarlyInit(); }
+
+// This function is called _init() above.  It does some basic
+// chip initialization.
 //
 // The main things done here are to enable the FPU because if
 // we don't do that then we'll get a fatal exception if any
 // constructor uses any floating point math, and to enable
 // the PLL so we can run at full speed (80MHz) rather then the
 // default speed of 4MHz.
-extern "C" void _init() {
+void HalApi::EarlyInit() {
   // Enable the FPU.  This allows floating point to be used without
   // generating a hard fault.
   // The system control registers are documented in the programmers
@@ -141,6 +140,7 @@ void HalApi::init() {
   InitUARTs();
   watchdog_init();
   crc32_init();
+  StepperMotorInit();
   Hal.enableInterrupts();
 }
 
@@ -184,7 +184,7 @@ void HalApi::init() {
  *         PWM it to reduce the solenoid voltage.
  *         For no I'm treating it as a digital output.
  *****************************************************************/
-static void InitGPIO() {
+void HalApi::InitGPIO() {
   // See chapter 8 of the reference manual for details on GPIO
 
   // Enable all the GPIO clocks
@@ -240,20 +240,20 @@ void HalApi::digitalWrite(BinaryPin pin, VoltageLevel value) {
  * System timer
  *
  * I use one of the basic timers (timer 6) for general system timing.
- * I configure it to count every microsecond and generate an interrupt
+ * I configure it to count every 100ns and generate an interrupt
  * every millisecond
  *
  * The basic timers (like timer 6) are documented in chapter 29 of
  * the reference manual
  *****************************************************************/
-static void InitSysTimer() {
+void HalApi::InitSysTimer() {
   // Enable the clock to the timer
   EnableClock(TIMER6_BASE);
 
   // Just set the timer up to count every microsecond.
   TimerRegs *tmr = TIMER6_BASE;
-  tmr->reload = 999;
-  tmr->prescale = (CPU_FREQ_MHZ - 1);
+  tmr->reload = 9999;
+  tmr->prescale = (CPU_FREQ_MHZ / 10 - 1);
   tmr->event = 1;
   tmr->ctrl[0] = 1;
   tmr->intEna = 1;
@@ -262,18 +262,18 @@ static void InitSysTimer() {
 }
 
 // Just spin for a specified number of microseconds
-static void BusyWaitUsec(uint16_t usec) {
-  constexpr uint16_t one_sec = 1000;
-  while (usec > one_sec) {
-    BusyWaitUsec(one_sec);
-    usec = static_cast<uint16_t>(usec - one_sec);
+void HalApi::BusyWaitUsec(uint16_t usec) {
+  constexpr uint16_t one_ms = 1000;
+  while (usec > one_ms) {
+    BusyWaitUsec(one_ms);
+    usec = static_cast<uint16_t>(usec - one_ms);
   }
 
   TimerRegs *tmr = TIMER6_BASE;
   uint16_t start = static_cast<uint16_t>(tmr->counter);
   while (true) {
     uint16_t dt = static_cast<uint16_t>(tmr->counter - start);
-    if (dt >= usec)
+    if (dt >= usec * 10)
       return;
   }
 }
@@ -388,7 +388,7 @@ static constexpr int ADCNumReadingsLog2() {
   return ret;
 }
 
-static void InitADC() {
+void HalApi::InitADC() {
   // Enable the clock to the A/D converter
   EnableClock(ADC_BASE);
 
@@ -513,7 +513,7 @@ Voltage HalApi::analogRead(AnalogPin pin) {
  * These timers are documented in chapters 26 and 27 of the reference
  * manual.
  *****************************************************************/
-static void InitPwmOut() {
+void HalApi::InitPwmOut() {
   // The PWM frequency isn't mentioned anywhere that I can find, so
   // I'm just picking a reasonable number.  This can be refined later
   //
@@ -701,7 +701,7 @@ extern UART_DMA dmaUART;
 //
 // These pins are connected to UART3
 // The UART is described in chapter 38 of the reference manual
-static void InitUARTs() {
+void HalApi::InitUARTs() {
   // NOTE - The UART functionality hasn't been tested due to lack of hardware!
   //        Need to do that as soon as the boards are available.
   EnableClock(UART2_BASE);
@@ -856,32 +856,23 @@ uint32_t HalApi::crc32(uint8_t *data, uint32_t length) {
 // RCC (Reset and Clock Controller) module before the peripherial can be
 // used.
 // Pass in the base address of the peripherial to enable its clock
-static void EnableClock(void *ptr) {
+void HalApi::EnableClock(void *ptr) {
   static struct {
     void *base;
     int ndx;
     int bit;
   } rccInfo[] = {
-      {FLASH_BASE, 0, 8},
-      {GPIO_A_BASE, 1, 0},
-      {GPIO_B_BASE, 1, 1},
-      {GPIO_C_BASE, 1, 2},
-      {GPIO_D_BASE, 1, 3},
-      {GPIO_E_BASE, 1, 4},
-      {GPIO_H_BASE, 1, 7},
-      {ADC_BASE, 1, 13},
-      {TIMER2_BASE, 4, 0},
-      {TIMER6_BASE, 4, 4},
-      {UART2_BASE, 4, 17},
-      {UART3_BASE, 4, 18},
+      {DMA1_BASE, 0, 0},     {DMA2_BASE, 0, 1},   {FLASH_BASE, 0, 8},
+      {GPIO_A_BASE, 1, 0},   {GPIO_B_BASE, 1, 1}, {GPIO_C_BASE, 1, 2},
+      {GPIO_D_BASE, 1, 3},   {GPIO_E_BASE, 1, 4}, {GPIO_H_BASE, 1, 7},
+      {ADC_BASE, 1, 13},     {TIMER2_BASE, 4, 0}, {TIMER6_BASE, 4, 4},
+      {UART2_BASE, 4, 17},   {UART3_BASE, 4, 18}, {SPI1_BASE, 6, 12},
       {TIMER15_BASE, 6, 16},
 
       // The following entries are probably correct, but have
       // not been tested yet.  When adding support for one of
       // these peripherials just comment out the line.  And
       // test of course.
-      {DMA1_BASE, 0, 0},
-      //      {DMA2_BASE, 0, 1},
       //      {CRC_BASE, 0, 12},
       //      {TIMER3_BASE, 4, 1},
       //      {SPI2_BASE, 4, 14},
@@ -892,7 +883,6 @@ static void EnableClock(void *ptr) {
       //      {I2C3_BASE, 4, 23},
       //      {I2C4_BASE, 5, 1},
       //      {TIMER1_BASE, 6, 11},
-      //      {SPI1_BASE, 6, 12},
       //      {UART1_BASE, 6, 14},
       //      {TIMER16_BASE, 6, 17},
   };
@@ -924,6 +914,8 @@ static void EnableClock(void *ptr) {
   RCC_Regs *rcc = RCC_BASE;
   rcc->periphClkEna[ndx] |= (1 << bit);
 }
+
+static void DMA1CH2_ISR() { StepMotor::DMA_ISR(); }
 
 /******************************************************************
  * Interrupt vector table.  The interrupt vector table is a list of
@@ -1074,7 +1066,7 @@ __attribute__((section(".isr_vector"))) void (*const vectors[101])() = {
 
 // Enable an interrupt with a specified priority (0 to 15)
 // See the NVIC chapter of the manual for more information.
-static void EnableInterrupt(int addr, IntPriority pri) {
+void HalApi::EnableInterrupt(int addr, IntPriority pri) {
   IntCtrl_Regs *nvic = NVIC_BASE;
 
   int id = addr / 4 - 16;

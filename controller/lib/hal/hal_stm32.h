@@ -41,7 +41,9 @@ the programmer's manual for the processor available here:
 // The values here are the offsets into the interrupt table.
 // These can be found in the NVIC chapter (chapter 12) of the
 // processor reference manual
+#define INT_VEC_DMA1_CH2 0x70
 #define INT_VEC_TIMER15 0xA0
+#define INT_VEC_SPI1 0xCC
 #define INT_VEC_UART2 0x0D8
 #define INT_VEC_UART3 0x0DC
 #define INT_VEC_DMA1_CH2 0x070
@@ -72,7 +74,7 @@ enum class GPIO_PinMode {
 };
 inline void GPIO_PinMode(GPIO_Regs *const gpio, int pin, GPIO_PinMode mode) {
   gpio->mode &= ~(3 << (pin * 2));
-  gpio->mode |= ((int)mode << (pin * 2));
+  gpio->mode |= (static_cast<int>(mode) << (pin * 2));
 }
 
 enum class GPIO_OutType { PUSHPULL = 0, OPENDRAIN = 1 };
@@ -81,6 +83,13 @@ inline void GPIO_OutType(GPIO_Regs *const gpio, int pin, GPIO_OutType outType) {
     gpio->outType |= 1 << pin;
   else
     gpio->outType &= ~(1 << pin);
+}
+
+enum class GPIO_OutSpeed { LOW = 0, MEDIUM = 1, HIGH = 2, SMOKIN = 3 };
+inline void GPIO_OutSpeed(GPIO_Regs *const gpio, int pin, GPIO_OutSpeed speed) {
+  int S = static_cast<int>(speed);
+  gpio->outSpeed &= ~(3 << (2 * pin));
+  gpio->outSpeed |= (S << (2 * pin));
 }
 
 inline void GPIO_PinAltFunc(GPIO_Regs *const gpio, int pin, int func) {

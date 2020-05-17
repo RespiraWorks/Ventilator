@@ -88,8 +88,7 @@ enum class StepMtrParam {
 // Error codes returned by my functions
 enum class StepMtrErr {
   OK,
-  CMD_TOO_LONG, // Command is too long to fit in my command buffer
-  BAD_PARAM,    // The parameter ID is invalid
+  BAD_PARAM, // The parameter ID is invalid
 };
 
 // Represents one of the stepper motors in the system
@@ -116,17 +115,19 @@ private:
   static StepMotor motor[totalMotors];
   static uint8_t dmaBuff[totalMotors];
   static uint8_t paramLen[32];
-  static uint32_t activeMask;
+  static bool comsActive;
 
-  // These two buffers hold the command and response bytes
-  // to be sent to the motor.
-  CircBuff<uint8_t, 20> cmd;
-  CircBuff<uint8_t, 20> rsp;
+  // This pointer and count are used to hold the command being
+  // sent to the motor and it's response.
+  // They're volatile because the interrupt handler updates them
+  volatile uint8_t *cmdPtr;
+  volatile int cmdRemain;
+  bool sentByte;
 
   // Send a command and wait for the response
-  StepMtrErr SendCmd(StepMtrCmd op, uint8_t *data, int dlen, wait = false);
+  StepMtrErr SendCmd(uint8_t *cmd, int len);
 
-  static void StartCmd(bool fromISR = false);
+  static void StartCmd();
 
 public:
   // Interrupt service routine.

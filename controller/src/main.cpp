@@ -107,7 +107,7 @@ static Sensors sensors;
 //
 // NOTE - it's important that anything being called from this function executes
 // quickly.  No busy waiting here.
-static void high_priority_task() {
+static void high_priority_task(void *arg) {
 
   // Read the sensors
   controller_status.sensor_readings = sensors.GetSensorReadings();
@@ -136,7 +136,8 @@ static void high_priority_task() {
 // should go here.
 static void background_loop() {
 
-  // Calibrate the sensors
+  // Calibrate the sensors.
+  // This needs to be done before the sensors are used.
   sensors.Calibrate();
 
   // Current controller status.  Updated when we receive data from the GUI, when
@@ -148,15 +149,24 @@ static void background_loop() {
 
   // After all initialization is done, ask the HAL
   // to start our high priority thread.
-  Hal.startLoopTimer(controller.GetLoopPeriod(), high_priority_task);
+  Hal.startLoopTimer(controller.GetLoopPeriod(), high_priority_task, 0);
 
   while (true) {
     controller_status.uptime_ms = Hal.now().millisSinceStartup();
 
+    // Copy the current controller status with interrupts 
+    // disabled to ensure that the data we send to the 
+    // GUI is self consistent.
+    ControllerStatus local_controller_status;
+    {
+      BlockInterrupts block;
+      local_controller_status = controller_status;
+    }
+
 #ifndef NO_GUI_DEV_MODE
-    comms_handler(controller_status, &gui_status);
+    comms_handler(local_controller_status, &gui_status);
 #else
-    DEV_MODE_comms_handler(controller_status, &gui_status);
+    DEV_MODE_comms_handler(local_controller_status, &gui_status);
 #endif
 
     // Copy the gui_status data into our controller status

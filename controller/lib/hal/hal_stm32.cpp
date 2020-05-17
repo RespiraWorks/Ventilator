@@ -49,7 +49,7 @@ static void InitSysTimer();
 static void InitPwmOut();
 static void InitUARTs();
 static void EnableClock(void *ptr);
-static void EnableInterrupt(int addr, int pri);
+static void EnableInterrupt(int addr, IntPriority pri);
 static void Timer6ISR();
 static void Timer15ISR();
 static void UART3_ISR();
@@ -254,7 +254,7 @@ static void InitSysTimer() {
   tmr->ctrl[0] = 1;
   tmr->intEna = 1;
 
-  EnableInterrupt(INT_VEC_TIMER6, 3);
+  EnableInterrupt(INT_VEC_TIMER6, IntPriority::STANDARD);
 }
 
 // Just spin for a specified number of microseconds
@@ -296,9 +296,12 @@ Time HalApi::now() { return millisSinceStartup(msCount); }
  * The basic timers (like timer 7) are documented in chapter 29 of
  * the reference manual
  *****************************************************************/
-static void (*high_priority_callback)();
-void HalApi::startLoopTimer(const Duration &period, void (*callback)()) {
+static void (*high_priority_callback)(void *);
+static void *high_priority_arg;
+void HalApi::startLoopTimer(const Duration &period, void (*callback)(void *),
+                            void *arg) {
   high_priority_callback = callback;
+  high_priority_arg = arg;
 
   // Find the loop period in clock cycles
   int32_t reload = static_cast<int32_t>(CPU_FREQ * period.seconds());
@@ -322,20 +325,20 @@ void HalApi::startLoopTimer(const Duration &period, void (*callback)()) {
   tmr->ctrl[0] = 1;
   tmr->intEna = 1;
 
-  // Enable the interrupt with a higher priority value then
-  // my other interrupts.  Priority values are inverted, so
-  // the lower value interrupts are considered more important
-  // then the higher value ones.  This means that other
+  // Enable the interrupt that will call the high priority
+  // callback function periodically.
+  // I'm using a lower priority then that which I use
+  // for normal hardware interrupts.  This means that other
   // interrupts can be serviced while my high priority
   // loop functions are running.
-  EnableInterrupt(INT_VEC_TIMER15, 8);
+  EnableInterrupt(INT_VEC_TIMER15, IntPriority::LOW);
 }
 
 static void Timer15ISR() {
   TIMER15_BASE->status = 0;
 
   // Call the function
-  high_priority_callback();
+  high_priority_callback(high_priority_arg);
 }
 
 /******************************************************************
@@ -653,8 +656,8 @@ static void InitUARTs() {
   rpUART.Init(115200);
   dbgUART.Init(115200);
 
-  EnableInterrupt(INT_VEC_UART2, 3);
-  EnableInterrupt(INT_VEC_UART3, 3);
+  EnableInterrupt(INT_VEC_UART2, IntPriority::STANDARD);
+  EnableInterrupt(INT_VEC_UART3, IntPriority::STANDARD);
 }
 
 static void UART2_ISR() { dbgUART.ISR(); }
@@ -987,7 +990,7 @@ __attribute__((section(".isr_vector"))) void (*const vectors[101])() = {
 
 // Enable an interrupt with a specified priority (0 to 15)
 // See the NVIC chapter of the manual for more information.
-static void EnableInterrupt(int addr, int pri) {
+static void EnableInterrupt(int addr, IntPriority pri) {
   IntCtrl_Regs *nvic = NVIC_BASE;
 
   int id = addr / 4 - 16;
@@ -995,7 +998,8 @@ static void EnableInterrupt(int addr, int pri) {
   nvic->setEna[id >> 5] = 1 << (id & 0x1F);
 
   // The STM32 processor implements bits 4-7 of the NVIM priority register.
-  nvic->priority[id] = static_cast<BREG>(pri << 4);
+  int p = static_cast<int>(pri);
+  nvic->priority[id] = static_cast<BREG>(p << 4);
 }
 
 #endif

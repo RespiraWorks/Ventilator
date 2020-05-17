@@ -107,7 +107,7 @@ static Sensors sensors;
 //
 // NOTE - it's important that anything being called from this function executes
 // quickly.  No busy waiting here.
-static void high_priority_task() {
+static void high_priority_task(void *arg) {
 
   // Read the sensors
   controller_status.sensor_readings = sensors.GetSensorReadings();
@@ -136,7 +136,8 @@ static void high_priority_task() {
 // should go here.
 static void background_loop() {
 
-  // Calibrate the sensors
+  // Calibrate the sensors.
+  // This needs to be done before the sensors are used.
   sensors.Calibrate();
 
   // Current controller status.  Updated when we receive data from the GUI, when
@@ -148,7 +149,7 @@ static void background_loop() {
 
   // After all initialization is done, ask the HAL
   // to start our high priority thread.
-  Hal.startLoopTimer(controller.GetLoopPeriod(), high_priority_task);
+  Hal.startLoopTimer(controller.GetLoopPeriod(), high_priority_task, 0);
 
   while (true) {
     controller_status.uptime_ms = Hal.now().millisSinceStartup();

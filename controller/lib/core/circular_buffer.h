@@ -75,6 +75,11 @@ public:
     }
     return ret;
   }
+
+  void Flush() {
+    BlockInterrupts block;
+    head = tail = 0;
+  }
 };
 
 #endif

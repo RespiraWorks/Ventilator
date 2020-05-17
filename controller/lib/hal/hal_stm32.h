@@ -40,7 +40,9 @@ the programmer's manual for the processor available here:
 // The values here are the offsets into the interrupt table.
 // These can be found in the NVIC chapter (chapter 12) of the
 // processor reference manual
+#define INT_VEC_DMA1_CH2 0x70
 #define INT_VEC_TIMER15 0xA0
+#define INT_VEC_SPI1 0xCC
 #define INT_VEC_UART2 0x0D8
 #define INT_VEC_UART3 0x0DC
 #define INT_VEC_TIMER6 0x118
@@ -53,21 +55,6 @@ typedef volatile uint16_t SREG;
 
 // 8-bit byte sized register
 typedef volatile uint8_t BREG;
-
-// Interrupts on the STM32 are prioritized.  This allows
-// more important interrupts to interrupt less important
-// ones.  When interrupts are enabled we give a priority
-// value to indicate how important the interrupt is.
-// The lower the priority number the more important the
-// interrupt.  The range is 0 to 15, but I only use a few
-// here.  Hard faults, NMI, resets, etc have a fixed
-// priority of -1, so they can always interrupt any other
-// priority level.
-enum class IntPriority {
-  CRITICAL = 2, // Very important interrupt
-  STANDARD = 5, // Normal hardware interrupts
-  LOW = 8,      // Less important.  Hardware interrutps can interrupt this
-};
 
 ///////////////////////////////////////////////////////////////
 // The structures below represent the STM32 registers used
@@ -249,8 +236,8 @@ struct DMA_Reg {
   struct {
     REG config;
     REG count;
-    REG pAddr;
-    REG mAddr;
+    volatile void *pAddr;
+    volatile void *mAddr;
     REG rsvd;
   } channel[7];
   REG rsvd[5];
@@ -258,6 +245,33 @@ struct DMA_Reg {
 };
 inline DMA_Reg *const DMA1_BASE = reinterpret_cast<DMA_Reg *>(0x40020000);
 inline DMA_Reg *const DMA2_BASE = reinterpret_cast<DMA_Reg *>(0x40020400);
+
+// DMA channels
+enum class DMA_Chan {
+  C1 = 0,
+  C2 = 1,
+  C3 = 2,
+  C4 = 3,
+  C5 = 4,
+  C6 = 5,
+  C7 = 6,
+};
+
+// Select the source for a DMA channel
+// @param dma Address of DMA registers
+// @param chan DMA channel to modify.  Channels are numbered from 0
+// @param selection Selects which peripherial request to map to the channel
+inline void DMA_SelectChannel(DMA_Reg *const dma, DMA_Chan chan,
+                              int selection) {
+  selection &= 0x0F;
+
+  int x = 4 * static_cast<int>(chan);
+
+  uint32_t val = dma->chanSel;
+  val &= ~(0xF << x);
+  val |= selection << x;
+  dma->chanSel = val;
+}
 
 struct SPI_Regs {
   REG ctrl[2];
@@ -339,7 +353,7 @@ enum class GPIO_PinMode {
 };
 inline void GPIO_PinMode(GPIO_Regs *const gpio, int pin, GPIO_PinMode mode) {
   gpio->mode &= ~(3 << (pin * 2));
-  gpio->mode |= ((int)mode << (pin * 2));
+  gpio->mode |= (static_cast<int>(mode) << (pin * 2));
 }
 
 enum class GPIO_OutType { PUSHPULL = 0, OPENDRAIN = 1 };
@@ -348,6 +362,13 @@ inline void GPIO_OutType(GPIO_Regs *const gpio, int pin, GPIO_OutType outType) {
     gpio->outType |= 1 << pin;
   else
     gpio->outType &= ~(1 << pin);
+}
+
+enum class GPIO_OutSpeed { LOW = 0, MEDIUM = 1, HIGH = 2, SMOKIN = 3 };
+inline void GPIO_OutSpeed(GPIO_Regs *const gpio, int pin, GPIO_OutSpeed speed) {
+  int S = static_cast<int>(speed);
+  gpio->outSpeed &= ~(3 << (2 * pin));
+  gpio->outSpeed |= (S << (2 * pin));
 }
 
 inline void GPIO_PinAltFunc(GPIO_Regs *const gpio, int pin, int func) {

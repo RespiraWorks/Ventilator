@@ -135,6 +135,7 @@ TEST(SensorTests, TotalFlowCalculation) {
   Hal.test_setAnalogPin(AnalogPin::OUTFLOW_PRESSURE_DIFF, voltage_at_0kPa);
 
   Sensors sensors;
+  sensors.Calibrate();
 
   for (auto p_in : pressures) {
     for (auto p_out : pressures) {

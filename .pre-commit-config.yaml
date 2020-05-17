@@ -31,3 +31,10 @@ repos:
   - id: check-yaml
   - id: end-of-file-fixer
   - id: trailing-whitespace
+- repo: local
+  hooks:
+    - id: c-file-naming
+      name: C++ sources and headers must be named in snake case (like_this)
+      entry: C++ sources and headers must be named in snake case (like_this)
+      language: fail
+      files: '[A-Z-].*\.(h|cpp|c)$'

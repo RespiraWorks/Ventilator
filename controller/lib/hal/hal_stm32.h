@@ -54,6 +54,21 @@ typedef volatile uint16_t SREG;
 // 8-bit byte sized register
 typedef volatile uint8_t BREG;
 
+// Interrupts on the STM32 are prioritized.  This allows
+// more important interrupts to interrupt less important
+// ones.  When interrupts are enabled we give a priority
+// value to indicate how important the interrupt is.
+// The lower the priority number the more important the
+// interrupt.  The range is 0 to 15, but I only use a few
+// here.  Hard faults, NMI, resets, etc have a fixed
+// priority of -1, so they can always interrupt any other
+// priority level.
+enum class IntPriority {
+  CRITICAL = 2, // Very important interrupt
+  STANDARD = 5, // Normal hardware interrupts
+  LOW = 8,      // Less important.  Hardware interrutps can interrupt this
+};
+
 ///////////////////////////////////////////////////////////////
 // The structures below represent the STM32 registers used
 // to configure various modules (like timers, serial ports, etc).

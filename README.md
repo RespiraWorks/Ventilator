@@ -1,6 +1,6 @@
 # RespiraWorks Open Source Ventilator
 
-[RespiraWorks](https://respira.works/) is a 501(c)(3) non-profit organization (IRS status pending) with over
+[RespiraWorks](https://respira.works/) is a 501(c)(3) non-profit organization with over
 100 contributors worldwide working to rapidly develop, manufacture, and deploy a
 low-cost and open-source ventilator for communities under-served by the global supply chain.
 

@@ -40,16 +40,16 @@ The physical design encompasses everything that is not software run on the devic
 
   * [Requirements](System_Requirements.md) -
   describes the requirement architecture, heirarchy, and process. Links to the releases of our system requirements, hardware specifications, and software requirements. 
-  * [Ventilator System Design](1_Ventilator_System_Design/README.md) -
+  * [Ventilator System Design](1_Ventilator_System_Design) -
   describes the functional implementation and design theory of the system. This document also defines the hierarchy for the subsystems below.
-      * [Pneumatic System](1_Ventilator_System_Design/Pneumatic_System/README.md)
-      * [Electrical System](1_Ventilator_System_Design/Electrical_System/README.md)
+      * [Pneumatic System](1_Ventilator_System_Design/Pneumatic_System)
+      * [Electrical System](1_Ventilator_System_Design/Electrical_System)
       * [Software System](https://github.com/RespiraWorks/VentilatorSoftware)
-  * [Research & Development](2_Research_&_Development/README.md)
-      * [Project: IAV Air Control](2_Research_&_Development/Project-IAV_Air_Control/README.md)
-      * [Project: Pinch Valve](2_Research_&_Development/Project-Pinch_Valve/README.md)
-      * [Project: Venturi](2_Research_&_Development/Project-Venturi/README.md)
-  * [Quality Plan](3_Quality_Plan/README.md)
-  * [Manufacturing Design](4_Manufacturing_Design/README.md)
-      * [Alpha Build Instructions](Alpha_Build_Instructions/README.md) -
+  * [Research & Development](2_Research_&_Development)
+      * [Project: IAV Air Control](2_Research_&_Development/Project-IAV_Air_Control)
+      * [Project: Pinch Valve](2_Research_&_Development/Project-Pinch_Valve)
+      * [Project: Venturi](2_Research_&_Development/Project-Venturi)
+  * [Quality Plan](3_Quality_Plan)
+  * [Manufacturing Design](4_Manufacturing_Design)
+      * [Alpha Build Instructions](Alpha_Build_Instructions) -
          documentation for building the "Alpha" version of the device which can be used by developers to contribute to the software. Note that this is almost always out of date, by definition.

@@ -21,7 +21,7 @@ limitations under the License.
 // Static data members
 StepMotor StepMotor::motor[StepMotor::totalMotors];
 uint8_t StepMotor::dmaBuff[StepMotor::totalMotors];
-uint32_t StepMotor::activeMask;
+bool StepMotor::comsActive;
 
 // This array holds the length of each parameter in units of
 // bytes, rounded up to the nearest byte.  This info is based
@@ -77,18 +77,20 @@ StepMtrErr StepMotor::SetParam(StepMtrParam param, uint32_t value) {
     return StepMtrErr::BAD_PARAM;
 
   int len = paramLen[P];
-  if (!len)
+  if (!len || (len > 3))
     return StepMtrErr::BAD_PARAM;
+
+  uint8_t cmdBuff[4];
+  cmdBuff[0] = P; // The op-code for a set is just the parameter number
 
   // Split the parameter value into bytes, MSB first
   value <<= 8 * (3 - len);
-  uint8_t tmp[3];
-  tmp[0] = static_cast<uint8_t>(value >> 16);
-  tmp[1] = static_cast<uint8_t>(value >> 8);
-  tmp[2] = static_cast<uint8_t>(value);
+  cmdBuff[1] = static_cast<uint8_t>(value >> 16);
+  cmdBuff[2] = static_cast<uint8_t>(value >> 8);
+  cmdBuff[3] = static_cast<uint8_t>(value);
 
   // The op-code for a set is equal to the parameter number
-  return SendCmd(static_cast<StepMtrCmd>(P), tmp, len, true);
+  return SendCmd(cmdBuff, len + 1);
 }
 
 StepMtrErr StepMotor::GetParam(StepMtrParam param, uint32_t *value) {
@@ -97,14 +99,29 @@ StepMtrErr StepMotor::GetParam(StepMtrParam param, uint32_t *value) {
     return StepMtrErr::BAD_PARAM;
 
   int len = paramLen[P];
-  if (!len)
+  if (!len || (len > 3))
     return StepMtrErr::BAD_PARAM;
 
+  uint8_t cmdBuff[4];
+
   // For a get, the op-code is the parameter | 0x20
-  uint8_t tmp[3] = {0, 0, 0};
-  StepMtrErr err = SendCmd(static_cast<StepMtrCmd>(0x20 | P), tmp, len, true);
+  cmdBuff[0] = static_cast<uint8_t>(P | 0x20);
+  cmdBuff[1] = 0;
+  cmdBuff[2] = 0;
+  cmdBuff[3] = 0;
+
+  StepMtrErr err = SendCmd(cmdBuff, len + 1);
   if (err != StepMtrErr::OK)
     return err;
+
+  // At this point, the response from the stepper driver
+  // chip is in my buffer.  The first byte is zero, and
+  // the returned data is in bytes 1-N stored MSB first.
+  *value = 0;
+  for (int i = 0; i < len; i++) {
+    *value <<= 8;
+    *value |= cmdBuff[i + 1];
+  }
 
   return err;
 }
@@ -169,9 +186,8 @@ void HalApi::StepperMotorInit() {
 
   // Configure the SPI to work in 8-bit data mode
   // Enable RXNE interrupts
-  const int rxFifo8Bit =
-      1 << 12; // Generate an interrupt with >= 1 byte in rx FIFO
-  const int dataSize = 7 << 8; // 8-bit data words
+  const int rxFifo8Bit = 1 << 12; // Rx int on every byte
+  const int dataSize = 7 << 8;    // 8-bit data words
   const int txDmaEna = 1 << 1;
   const int rxDmaEna = 1 << 0;
   spi->ctrl[1] = rxFifo8Bit | dataSize | txDmaEna | rxDmaEna;
@@ -216,32 +232,39 @@ void test() {
   }
 }
 
-// Send a command to the motor and optionally wait for the response.
-// On return, the response will be in the rsp buffer
-StepMtrErr StepMotor::SendCmd(StepMtrCmd op, uint8_t *data, int dlen,
-                              bool wait) {
-
-  // Make sure there's room for this command in my command buffer
-  if (cmd.FreeCt() < dlen + 1)
-    return StepMtrErr::CMD_TOO_LONG;
+// Send a command to the motor and wait for the response.
+// The passed buffer should be at least len bytes long.
+// On entry it holds the commands (or commands) that will be
+// sent to the stepper.  On return it will hold the response
+// we received from the stepper.
+//
+// Each command to the stepper consists of a one byte command
+// code and 0 to 3 data bytes.  Multiple commands can be placed
+// one after another and all sent as a unit with this function.
+//
+StepMtrErr StepMotor::SendCmd(uint8_t *cmd, int len) {
 
   // Copy the command to my buffer with interrupts disabled.
   // I want to make sure the whole command gets sent as one continuous
   // stream and it's possible that commands are currently being sent
   // to other motors.
-  uint32_t active;
+  bool active;
   {
     BlockInterrupts block;
-    cmd.Put(static_cast<uint8_t>(op));
-    for (int i = 0; i < dlen; i++)
-      cmd.Put(data[i]);
-    active = activeMask;
+    cmdPtr = cmd;
+    cmdRemain = len;
+    active = comsActive;
   }
 
   // If there wasn't already a command being sent,
   // start a new one.
   if (!active)
     StartCmd();
+
+  // Wait for the ISR to finish sending the command.
+  // When it does, it will set the pointer to NULL
+  while (cmdPtr) {
+  }
 
   return StepMtrErr::OK;
 }
@@ -250,7 +273,7 @@ StepMtrErr StepMotor::SendCmd(StepMtrCmd op, uint8_t *data, int dlen,
 // This is called when a new command is being sent and also
 // from the ISR to send the next byte.
 // If sent from the ISR, then the isr parameter will be true
-void StepMotor::StartCmd(bool isr) {
+void StepMotor::StartCmd() {
 
   // Run through all the motors and if the motor was active on
   // that last byte, add the byte we received from them
@@ -258,26 +281,35 @@ void StepMotor::StartCmd(bool isr) {
   //
   // Also, keep track of which ones have more data to send.
   // For those that don't, I'll just send a NOP command.
-  uint32_t newCmd = 0;
-
+  comsActive = false;
   for (int i = 0; i < totalMotors; i++) {
 
-    // The ith bit will be set in the active mask
-    // if this motor was communicating last byte
-    if (activeMask & (1 << i))
-      motor[i].rsp.Put(dmaBuff[i]);
+    // If motor[i].sentByte is true, it means we
+    // sent a byte to this motor driver last cycle.
+    // In that case, store the response to the
+    // motor's buffer.
 
-    uint8_t ch;
-    if (motor[i].cmd.Get(&ch)) {
-      dmaBuff[i] = ch;
-      newCmd |= (1 << i);
-    } else
+    if (motor[i].sentByte && motor[i].cmdPtr) {
+      *motor[i].cmdPtr++ = dmaBuff[i];
+      if (--motor[i].cmdRemain <= 0)
+        motor[i].cmdPtr = 0;
+    }
+
+    // If this motor has an active command to send,
+    // grab the next byte and keep track of that in
+    // my bitmask
+    if (motor[i].cmdPtr) {
+      motor[i].sentByte = true;
+      comsActive = true;
+      dmaBuff[i] = *motor[i].cmdPtr;
+    } else {
+      motor[i].sentByte = false;
       dmaBuff[i] = static_cast<uint8_t>(StepMtrCmd::NOP);
+    }
   }
 
   // If there's nothing else to send, I'm done.
-  activeMask = newCmd;
-  if (!newCmd)
+  if (!comsActive)
     return;
 
   int C2 = static_cast<int>(DMA_Chan::C2);
@@ -314,7 +346,7 @@ void StepMotor::DMA_ISR() {
   // Clear the DMA interrupt
   DMA1_BASE->intClr = 1 << (4 * static_cast<int>(DMA_Chan::C2));
 
-  StartCmd(true);
+  StartCmd();
 }
 
 #endif

@@ -61,6 +61,10 @@ static bool is_time_to_process_packet() {
 // TODO add marker escaping in contents
 // TODO add CRC to whole packet
 
+inline static bool is_time_to_transmit() {
+  return (last_tx == kInvalidTime || Hal.now() - last_tx > TX_INTERVAL);
+}
+
 // TODO run this via DMA to free up resources for control loops
 static void process_tx(const ControllerStatus &controller_status) {
   auto bytes_avail = Hal.serialBytesAvailableForWrite();
@@ -78,8 +82,7 @@ static void process_tx(const ControllerStatus &controller_status) {
   // we do that, we want to wait a full TX_INTERVAL_MS.  If we initialized
   // last_tx to 0 and our first transmit happened at time millis() == 0, we
   // would set last_tx back to 0 and then retransmit immediately.
-  if (tx_bytes_remaining == 0 &&
-      (last_tx == kInvalidTime || Hal.now() - last_tx > TX_INTERVAL)) {
+  if (tx_bytes_remaining == 0 && is_time_to_transmit()) {
     // Serialize current status into output buffer.
     //
     // TODO: Frame the message bytes.

@@ -668,11 +668,9 @@ public:
   uint16_t TxFree() { return static_cast<uint16_t>(txDat.FreeCt()); }
 };
 
-static UART rpUART(UART3_BASE);
 static UART dbgUART(UART2_BASE);
-#ifdef UART_VIA_DMA
 extern UART_DMA dmaUART;
-#endif
+
 // The UART that talks to the rPi uses the following pins:
 //    PB10 - TX
 //    PB11 - RX
@@ -697,9 +695,8 @@ static void InitUARTs() {
   //        Need to do that as soon as the boards are available.
   EnableClock(UART2_BASE);
   EnableClock(UART3_BASE);
-#ifdef UART_VIA_DMA
   EnableClock(DMA1_BASE);
-#endif
+
   GPIO_PinAltFunc(GPIO_A_BASE, 2, 7);
   GPIO_PinAltFunc(GPIO_A_BASE, 3, 7);
 
@@ -708,11 +705,7 @@ static void InitUARTs() {
   GPIO_PinAltFunc(GPIO_B_BASE, 13, 7);
   GPIO_PinAltFunc(GPIO_B_BASE, 14, 7);
 
-#ifdef UART_VIA_DMA
   dmaUART.init(115200);
-#else
-  rpUART.Init(115200);
-#endif
   dbgUART.Init(115200);
 
   EnableInterrupt(INT_VEC_DMA1_CH2, IntPriority::STANDARD);
@@ -722,22 +715,6 @@ static void InitUARTs() {
 }
 
 static void UART2_ISR() { dbgUART.ISR(); }
-
-#ifndef UART_VIA_DMA
-void UART3_ISR() { rpUART.ISR(); }
-#endif
-
-uint16_t HalApi::serialRead(char *buf, uint16_t len) {
-  return rpUART.read(buf, len);
-}
-
-uint16_t HalApi::serialBytesAvailableForRead() { return rpUART.RxFull(); }
-
-uint16_t HalApi::serialWrite(const char *buf, uint16_t len) {
-  return rpUART.write(buf, len);
-}
-
-uint16_t HalApi::serialBytesAvailableForWrite() { return rpUART.TxFree(); }
 
 uint16_t HalApi::debugWrite(const char *buf, uint16_t len) {
   return dbgUART.write(buf, len);
@@ -983,13 +960,8 @@ __attribute__((section(".isr_vector"))) void (*const vectors[101])() = {
     BadISR,        //  25 - 0x064
     BadISR,        //  26 - 0x068
     BadISR,        //  27 - 0x06C
-#ifdef UART_VIA_DMA
     DMA1_CH2_ISR, //  28 - 0x070 DMA1 CH2
     DMA1_CH3_ISR, //  29 - 0x074 DMA1 CH3
-#else
-    BadISR, //  28 - 0x070
-    BadISR, //  29 - 0x074
-#endif
     BadISR,     //  30 - 0x078
     BadISR,     //  31 - 0x07C
     BadISR,     //  32 - 0x080

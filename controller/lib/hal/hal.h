@@ -158,35 +158,6 @@ public:
   // Sets `pin` to high or low.
   void digitalWrite(BinaryPin pin, VoltageLevel value);
 
-  // Receives bytes from the GUI controller along the serial bus.
-  //
-  // Arduino's SerialIO will block if len > serialBytesAvailableForRead(), but
-  // this function will never block. Instead it returns the number of bytes
-  // read.  It's up to you to check how many bytes were actually read and
-  // handle "short reads" where we read fewer bytes than were requested.
-  //
-  // TODO(jlebar): Change the serial* functions to use uint32_t once we've
-  // dropped support for Arduino.
-  [[nodiscard]] uint16_t serialRead(char *buf, uint16_t len);
-
-  // Number of bytes we can read without blocking.
-  uint16_t serialBytesAvailableForRead();
-
-  // Sends bytes to the GUI controller along the serial bus.
-  //
-  // Arduino's SerialIO will block if len > serialBytesAvailableForWrite(), but
-  // this function will never block.  Instead, it returns the number of bytes
-  // written.  number of bytes written.  It's up to you to check how many bytes
-  // were actually written and handle "short writes" where we wrote less than
-  // the whole buffer.
-  [[nodiscard]] uint16_t serialWrite(const char *buf, uint16_t len);
-  [[nodiscard]] uint16_t serialWrite(uint8_t data) {
-    return serialWrite(reinterpret_cast<const char *>(&data), 1);
-  }
-
-  // Number of bytes we can write without blocking.
-  uint16_t serialBytesAvailableForWrite();
-
   // Serial port used for debugging
   uint16_t debugWrite(const char *buf, uint16_t len);
   uint16_t debugRead(char *buf, uint16_t len);
@@ -378,51 +349,6 @@ inline void HalApi::analogWrite(PwmPin pin, float duty) {
     throw "Can only write to an OUTPUT pin";
   }
   pwm_pin_values_[pin] = duty;
-}
-[[nodiscard]] inline uint16_t HalApi::serialRead(char *buf, uint16_t len) {
-  if (serialIncomingData_.empty()) {
-    return 0;
-  }
-  auto &readBuf = serialIncomingData_.front();
-  uint16_t n = std::min(len, static_cast<uint16_t>(readBuf.size()));
-  memcpy(buf, readBuf.data(), n);
-  readBuf.erase(readBuf.begin(), readBuf.begin() + n);
-  if (readBuf.empty()) {
-    serialIncomingData_.pop_front();
-  }
-  return n;
-}
-inline uint16_t HalApi::serialBytesAvailableForRead() {
-  return serialIncomingData_.empty()
-             ? 0
-             : static_cast<uint16_t>(serialIncomingData_.front().size());
-}
-[[nodiscard]] inline uint16_t HalApi::serialWrite(const char *buf,
-                                                  uint16_t len) {
-  uint16_t n = std::min(len, serialBytesAvailableForWrite());
-  serialOutgoingData_.insert(serialOutgoingData_.end(), buf, buf + n);
-  return n;
-}
-inline uint16_t HalApi::serialBytesAvailableForWrite() {
-  // TODO: Simulate partial writes?  For now, simply return the true size of
-  // the Arduino tx buffer.
-  return 64;
-}
-inline uint16_t HalApi::test_serialGetOutgoingData(char *data, uint16_t len) {
-  uint16_t n = std::min(len, static_cast<uint16_t>(serialOutgoingData_.size()));
-  memcpy(data, serialOutgoingData_.data(), n);
-  serialOutgoingData_.erase(serialOutgoingData_.begin(),
-                            serialOutgoingData_.begin() + n);
-  return n;
-}
-inline void HalApi::test_serialPutIncomingData(const char *data, uint16_t len) {
-  constexpr uint16_t MAX_MSG_SIZE = 64;
-  while (len > MAX_MSG_SIZE) {
-    serialIncomingData_.push_back(std::vector<char>(data, data + MAX_MSG_SIZE));
-    data += MAX_MSG_SIZE;
-    len = static_cast<uint16_t>(len - MAX_MSG_SIZE);
-  }
-  serialIncomingData_.push_back(std::vector<char>(data, data + len));
 }
 
 inline void HalApi::disableInterrupts() { interruptsEnabled_ = false; }

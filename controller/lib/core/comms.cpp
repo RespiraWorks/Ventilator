@@ -49,11 +49,6 @@ inline void add_crc(uint8_t *buf, uint32_t dataLength) {
 }
 
 void Comms::process_tx(const ControllerStatus &controller_status) {
-  auto bytes_avail = Hal.serialBytesAvailableForWrite();
-  if (bytes_avail == 0) {
-    return;
-  }
-
   // Serialize our current state into the buffer if
   //  - we're not currently transmitting,
   //  - we can transmit at least one byte now, and
@@ -83,33 +78,33 @@ void Comms::process_tx(const ControllerStatus &controller_status) {
 }
 
 void Comms::process_rx(GuiStatus *gui_status) {
-  while (Hal.serialBytesAvailableForRead() > 0) {
-    rx_in_progress = true;
-    char b;
-    uint16_t bytes_read = Hal.serialRead(&b, 1);
-    if (bytes_read == 1) {
-      rx_buffer[rx_idx++] = (uint8_t)b;
-      if (rx_idx >= sizeof(rx_buffer)) {
-        rx_idx = 0;
-        break;
-      }
-      last_rx = Hal.now();
-    }
-  }
+  // while (Hal.serialBytesAvailableForRead() > 0) {
+  //   rx_in_progress = true;
+  //   char b;
+  //   uint16_t bytes_read = Hal.serialRead(&b, 1);
+  //   if (bytes_read == 1) {
+  //     rx_buffer[rx_idx++] = (uint8_t)b;
+  //     if (rx_idx >= sizeof(rx_buffer)) {
+  //       rx_idx = 0;
+  //       break;
+  //     }
+  //     last_rx = Hal.now();
+  //   }
+  // }
 
   // TODO do away with timeout-based reception once we have framing in place,
   // but it will work for Alpha build for now
-  if (rx_in_progress && is_time_to_process_packet()) {
-    pb_istream_t stream = pb_istream_from_buffer(rx_buffer, rx_idx);
-    GuiStatus new_gui_status = GuiStatus_init_zero;
-    if (pb_decode(&stream, GuiStatus_fields, &new_gui_status)) {
-      *gui_status = new_gui_status;
-    } else {
-      // TODO: Log an error.
-    }
-    rx_idx = 0;
-    rx_in_progress = false;
-  }
+  // if (rx_in_progress && is_time_to_process_packet()) {
+  //   pb_istream_t stream = pb_istream_from_buffer(rx_buffer, rx_idx);
+  //   GuiStatus new_gui_status = GuiStatus_init_zero;
+  //   if (pb_decode(&stream, GuiStatus_fields, &new_gui_status)) {
+  //     *gui_status = new_gui_status;
+  //   } else {
+  //     // TODO: Log an error.
+  //   }
+  //   rx_idx = 0;
+  //   rx_in_progress = false;
+  // }
 }
 
 void Comms::handler(const ControllerStatus &controller_status,

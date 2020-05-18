@@ -15,8 +15,8 @@ limitations under the License.
 
 #ifndef DEBUG_H_
 #define DEBUG_H_
-
+#include <stdint.h>
 // Printf style debug print function
 int debugPrint(const char *fmt, ...);
-
+int debugRead(char *buf, uint16_t len);
 #endif

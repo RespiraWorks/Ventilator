@@ -81,5 +81,14 @@ void FramingRxFSM::restartRX() {
 }
 
 void FramingRxFSM::processReceivedData() {
-  rx_buf[receivedBytesCount() - 1] = 0;
+  out_buf_length = receivedBytesCount() - 1;
+  memcpy(out_buf, rx_buf, out_buf_length);
+  isNewOutBufReady = true;
 }
+
+uint8_t *FramingRxFSM::getReceivedBuf() {
+  isNewOutBufReady = false;
+  return out_buf;
+}
+
+uint32_t FramingRxFSM::getReceivedLength() { return out_buf_length; }

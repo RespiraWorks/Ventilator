@@ -15,12 +15,17 @@ class FramingRxFSM : public UART_DMA_RxListener {
   static constexpr uint32_t RX_BUF_LEN = (GuiStatus_size + 4) * 2 + 2;
   static constexpr uint32_t RX_BYTES_MAX = RX_BUF_LEN;
   uint8_t rx_buf[RX_BUF_LEN];
+  uint8_t out_buf[RX_BUF_LEN];
+  uint32_t out_buf_length = 0;
+  bool isNewOutBufReady = false;
 
 public:
   void begin();
   void onRxComplete();
   void onCharacterMatch();
   void onRxError(RxError_t e);
+  uint8_t *getReceivedBuf();
+  uint32_t getReceivedLength();
 
 private:
   uint32_t receivedBytesCount();

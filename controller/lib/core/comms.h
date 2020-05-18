@@ -84,7 +84,6 @@ private:
   // controller. Since both ControllerStatus and GuiStatus take roughly 300+
   // bytes, we need at least 1/115200.*10*300=26ms to transmit.
   static constexpr Duration TX_INTERVAL = milliseconds(30);
-
 };
 
 #endif // COMMS_H

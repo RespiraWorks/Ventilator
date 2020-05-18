@@ -32,7 +32,7 @@ limitations under the License.
 
 // Maximum allowable delta between calculated sensor readings and the input
 // pressure waveform [kPa]
-static const float COMPARISON_TOLERANCE_PRESSURE = 0.005f;
+static const float COMPARISON_TOLERANCE_PRESSURE_KPA = 0.005f;
 
 // Maximum allowable delta between calculated and actual volumetric flow
 static const float COMPARISON_TOLERANCE_FLOW_CUBIC_M_PER_SEC = 5.0e-5f;
@@ -95,7 +95,7 @@ TEST(SensorTests, FullScaleReading) {
                           MPXV5004_PressureToVoltage(p));
     auto readings = sensors.GetSensorReadings();
     float patient_pressure = cmH2O(readings.patient_pressure_cm_h2o).kPa();
-    EXPECT_NEAR(patient_pressure, p.kPa(), COMPARISON_TOLERANCE_PRESSURE);
+    EXPECT_NEAR(patient_pressure, p.kPa(), COMPARISON_TOLERANCE_PRESSURE_KPA);
   }
 }
 
@@ -196,4 +196,94 @@ TEST(SensorTests, TVIntegrator) {
     EXPECT_NEAR(tidal_volume.GetTV().ml(), 25.0f - floor(i / 5) * 5,
                 COMPARISON_TOLERANCE_VOLUME_ML);
   }
+}
+
+// This test checks encapsulation of TVIntegrator in getSensorReadings with
+// irregular sampling
+TEST(SensorTests, TidalVolume) {
+  // define pressure waveforms over which integration will take place
+  // This was chosen randomly
+  std::vector<Duration> sampling_time = {milliseconds(8), milliseconds(2),
+                                         milliseconds(5), milliseconds(4),
+                                         milliseconds(6), milliseconds(7)};
+  std::vector<Pressure> pressure_in = {kPa(0.0f), kPa(1.5f), kPa(0.0f),
+                                       kPa(1.0f), kPa(2.0f), kPa(3.0f)};
+  std::vector<Pressure> pressure_out = {kPa(1.0f), kPa(0.5f), kPa(2.0f),
+                                        kPa(0.0f), kPa(1.0f), kPa(2.0f)};
+
+  // Set the simulated analog signals to an ambient 0 kPa corresponding
+  // voltage during calibration
+  Voltage voltage_at_0kPa = MPXV5004_PressureToVoltage(kPa(0)); //[V]
+  Hal.test_setAnalogPin(AnalogPin::PATIENT_PRESSURE, voltage_at_0kPa);
+  Hal.test_setAnalogPin(AnalogPin::INFLOW_PRESSURE_DIFF, voltage_at_0kPa);
+  Hal.test_setAnalogPin(AnalogPin::OUTFLOW_PRESSURE_DIFF, voltage_at_0kPa);
+
+  // Note: sensors' contructor calls Hal.delay, which means reference
+  // tidal_volume must be constructed before sensors in order to have the same
+  // initialization time.
+  // Note outside of tests: the sensors TVintegrator's TV has a constant bias:
+  // init value = time between sensors' init and first measure * first flow / 2
+  TVIntegrator tidal_volume;
+  Sensors sensors;
+
+  for (uint i = 0; i < sampling_time.size(); i++) {
+    Pressure p_in = pressure_in[i];
+    Pressure p_out = pressure_out[i];
+    Duration dt = sampling_time[i];
+    SensorReadings readings =
+        update_readings(dt, kPa(0.0f), p_in, p_out, &sensors);
+
+    tidal_volume.AddFlow(Hal.now(), Sensors::PressureDeltaToFlow(p_in) -
+                                        Sensors::PressureDeltaToFlow(p_out));
+    EXPECT_FLOAT_EQ(tidal_volume.GetTV().ml(), readings.volume_ml);
+  }
+}
+
+TEST(SensorTests, Calibration) {
+  // First set the simulated analog signals to randomly chosen signals
+  // corresponding to pressure during calibration
+  Pressure init_pressure = kPa(0.23f);
+  Hal.test_setAnalogPin(AnalogPin::PATIENT_PRESSURE,
+                        MPXV5004_PressureToVoltage(init_pressure));
+  Pressure init_inflow_delta = kPa(0.15f);
+  Hal.test_setAnalogPin(AnalogPin::INFLOW_PRESSURE_DIFF,
+                        MPXV5004_PressureToVoltage(init_inflow_delta));
+  Pressure init_outflow_delta = kPa(-0.13f);
+  Hal.test_setAnalogPin(AnalogPin::OUTFLOW_PRESSURE_DIFF,
+                        MPXV5004_PressureToVoltage(init_outflow_delta));
+
+  Sensors sensors;
+
+  // get the sensor readings for the init signals, expect 0
+  SensorReadings readings = sensors.GetSensorReadings();
+
+  EXPECT_NEAR(readings.patient_pressure_cm_h2o, 0.0f,
+              COMPARISON_TOLERANCE_PRESSURE_KPA);
+  EXPECT_NEAR(readings.flow_ml_per_min, 0.0f,
+              COMPARISON_TOLERANCE_FLOW_CUBIC_M_PER_SEC);
+
+  // set measured signals to 0 and expect -1*init values
+  readings = update_readings(seconds(0), kPa(0), kPa(0), kPa(0), &sensors);
+
+  EXPECT_NEAR(readings.patient_pressure_cm_h2o, -1 * init_pressure.cmH2O(),
+              COMPARISON_TOLERANCE_PRESSURE_KPA);
+  EXPECT_NEAR(readings.flow_ml_per_min,
+              -1 * (Sensors::PressureDeltaToFlow(init_inflow_delta) -
+                    Sensors::PressureDeltaToFlow(init_outflow_delta))
+                       .ml_per_min(),
+              COMPARISON_TOLERANCE_FLOW_CUBIC_M_PER_SEC);
+
+  // set measured signals to some random values + init values and expect init
+  // value to be removed from the readings
+  readings = update_readings(seconds(0), kPa(-0.5f) + init_pressure,
+                             kPa(1.1f) + init_inflow_delta,
+                             kPa(0.01f) + init_outflow_delta, &sensors);
+
+  EXPECT_NEAR(readings.patient_pressure_cm_h2o, kPa(-0.5f).cmH2O(),
+              COMPARISON_TOLERANCE_PRESSURE_KPA);
+  EXPECT_NEAR(ml_per_min(readings.flow_ml_per_min).cubic_m_per_sec(),
+              (Sensors::PressureDeltaToFlow(kPa(1.1f)) -
+               Sensors::PressureDeltaToFlow(kPa(0.01f)))
+                  .cubic_m_per_sec(),
+              COMPARISON_TOLERANCE_FLOW_CUBIC_M_PER_SEC);
 }

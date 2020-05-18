@@ -29,6 +29,7 @@ the programmer's manual for the processor available here:
 #include "checksum.h"
 #include "circular_buffer.h"
 #include "hal.h"
+#include "uart_dma.h"
 #include <stdarg.h>
 #include <stdio.h>
 
@@ -52,7 +53,9 @@ static void EnableClock(void *ptr);
 static void EnableInterrupt(int addr, IntPriority pri);
 static void Timer6ISR();
 static void Timer15ISR();
-static void UART3_ISR();
+void UART3_ISR();
+void DMA1_CH2_ISR();
+void DMA1_CH3_ISR();
 
 // This function is called from the libc initialization code
 // before any static constructors are called.  We do some basic
@@ -292,7 +295,7 @@ Time HalApi::now() { return millisSinceStartup(msCount); }
  *
  * I use one of the timers (timer 15) to generate the interrupt
  * from which the control loop callback function is called.
- * This function runs at a higher priority then normal code, 
+ * This function runs at a higher priority then normal code,
  * but not as high as the hardware interrupts.
  *****************************************************************/
 static void (*controller_callback)(void *);
@@ -324,11 +327,11 @@ void HalApi::startLoopTimer(const Duration &period, void (*callback)(void *),
   tmr->ctrl[0] = 1;
   tmr->intEna = 1;
 
-  // Enable the interrupt that will call the controller 
+  // Enable the interrupt that will call the controller
   // function callback periodically.
   // I'm using a lower priority then that which I use
   // for normal hardware interrupts.  This means that other
-  // interrupts can be serviced while controller functions 
+  // interrupts can be serviced while controller functions
   // are running.
   EnableInterrupt(INT_VEC_TIMER15, IntPriority::LOW);
 }
@@ -585,8 +588,10 @@ public:
     // Set baud rate register
     reg->baud = CPU_FREQ / baud;
 
-    // Enable the UART and receive interrupts
-    reg->ctrl[0] = 0x002D;
+    reg->ctrl1.s.rxneie = 1; // enable receive interrupt
+    reg->ctrl1.s.te = 1;     // enable transmitter
+    reg->ctrl1.s.re = 1;     // enable receiver
+    reg->ctrl1.s.ue = 1;     // enable uart
   }
 
   // This is the interrupt handler for the UART.
@@ -602,15 +607,17 @@ public:
       rxDat.Put(static_cast<uint8_t>(reg->rxDat));
 
     // Check for transmit data register empty
-    if (reg->status & reg->ctrl[0] & 0x0080) {
+    if (0 != (reg->status & 0x0080 & reg->ctrl1.r)) {
       int ch = txDat.Get();
 
       // If there's nothing left in the transmit buffer,
       // just disable further transmit interrupts.
       if (ch < 0) {
-        reg->ctrl[0] &= ~0x0080;
-      } else {
-        // Otherwise, Send the next byte
+        reg->ctrl1.s.txeie = 0;
+      }
+
+      // Otherwise, Send the next byte
+      else {
         reg->txDat = ch;
       }
     }
@@ -648,8 +655,7 @@ public:
     // Enable the tx interrupt.  If there was already anything
     // in the buffer this will already be enabled, but enabling
     // it again doesn't hurt anything.
-    reg->ctrl[0] |= 0x0080;
-
+    reg->ctrl1.s.txeie = 1;
     return i;
   }
 
@@ -664,7 +670,9 @@ public:
 
 static UART rpUART(UART3_BASE);
 static UART dbgUART(UART2_BASE);
-
+#ifdef UART_VIA_DMA
+extern UART_DMA dmaUART;
+#endif
 // The UART that talks to the rPi uses the following pins:
 //    PB10 - TX
 //    PB11 - RX
@@ -689,7 +697,9 @@ static void InitUARTs() {
   //        Need to do that as soon as the boards are available.
   EnableClock(UART2_BASE);
   EnableClock(UART3_BASE);
-
+#ifdef UART_VIA_DMA
+  EnableClock(DMA1_BASE);
+#endif
   GPIO_PinAltFunc(GPIO_A_BASE, 2, 7);
   GPIO_PinAltFunc(GPIO_A_BASE, 3, 7);
 
@@ -698,15 +708,24 @@ static void InitUARTs() {
   GPIO_PinAltFunc(GPIO_B_BASE, 13, 7);
   GPIO_PinAltFunc(GPIO_B_BASE, 14, 7);
 
+#ifdef UART_VIA_DMA
+  dmaUART.init(115200);
+#else
   rpUART.Init(115200);
+#endif
   dbgUART.Init(115200);
 
+  EnableInterrupt(INT_VEC_DMA1_CH2, IntPriority::STANDARD);
+  EnableInterrupt(INT_VEC_DMA1_CH3, IntPriority::STANDARD);
   EnableInterrupt(INT_VEC_UART2, IntPriority::STANDARD);
   EnableInterrupt(INT_VEC_UART3, IntPriority::STANDARD);
 }
 
 static void UART2_ISR() { dbgUART.ISR(); }
-static void UART3_ISR() { rpUART.ISR(); }
+
+#ifndef UART_VIA_DMA
+void UART3_ISR() { rpUART.ISR(); }
+#endif
 
 uint16_t HalApi::serialRead(char *buf, uint16_t len) {
   return rpUART.read(buf, len);
@@ -724,7 +743,7 @@ uint16_t HalApi::debugWrite(const char *buf, uint16_t len) {
   return dbgUART.write(buf, len);
 }
 
-inline uint16_t HalApi::debugRead(char *buf, uint16_t len) {
+uint16_t HalApi::debugRead(char *buf, uint16_t len) {
   return dbgUART.read(buf, len);
 }
 
@@ -834,17 +853,25 @@ static void EnableClock(void *ptr) {
     int ndx;
     int bit;
   } rccInfo[] = {
-      {FLASH_BASE, 0, 8},    {GPIO_A_BASE, 1, 0}, {GPIO_B_BASE, 1, 1},
-      {GPIO_C_BASE, 1, 2},   {GPIO_D_BASE, 1, 3}, {GPIO_E_BASE, 1, 4},
-      {GPIO_H_BASE, 1, 7},   {ADC_BASE, 1, 13},   {TIMER2_BASE, 4, 0},
-      {TIMER6_BASE, 4, 4},   {UART2_BASE, 4, 17}, {UART3_BASE, 4, 18},
+      {FLASH_BASE, 0, 8},
+      {GPIO_A_BASE, 1, 0},
+      {GPIO_B_BASE, 1, 1},
+      {GPIO_C_BASE, 1, 2},
+      {GPIO_D_BASE, 1, 3},
+      {GPIO_E_BASE, 1, 4},
+      {GPIO_H_BASE, 1, 7},
+      {ADC_BASE, 1, 13},
+      {TIMER2_BASE, 4, 0},
+      {TIMER6_BASE, 4, 4},
+      {UART2_BASE, 4, 17},
+      {UART3_BASE, 4, 18},
       {TIMER15_BASE, 6, 16},
 
       // The following entries are probably correct, but have
       // not been tested yet.  When adding support for one of
       // these peripherials just comment out the line.  And
       // test of course.
-      //      {DMA1_BASE, 0, 0},
+      {DMA1_BASE, 0, 0},
       //      {DMA2_BASE, 0, 1},
       //      {CRC_BASE, 0, 12},
       //      {TIMER3_BASE, 4, 1},
@@ -943,7 +970,7 @@ __attribute__((section(".isr_vector"))) void (*const vectors[101])() = {
     BadISR,        //  12 - 0x030 Debug monitor handler
     BadISR,        //  13 - 0x034 Reserved
     BadISR,        //  14 - 0x038 The PendSV handler
-    BadISR,        //  15 - 0x03C
+    BadISR,        //  15 - 0x03C SysTick
     BadISR,        //  16 - 0x040
     BadISR,        //  17 - 0x044
     BadISR,        //  18 - 0x048
@@ -956,79 +983,84 @@ __attribute__((section(".isr_vector"))) void (*const vectors[101])() = {
     BadISR,        //  25 - 0x064
     BadISR,        //  26 - 0x068
     BadISR,        //  27 - 0x06C
-    BadISR,        //  28 - 0x070
-    BadISR,        //  29 - 0x074
-    BadISR,        //  30 - 0x078
-    BadISR,        //  31 - 0x07C
-    BadISR,        //  32 - 0x080
-    BadISR,        //  33 - 0x084
-    BadISR,        //  34 - 0x088
-    BadISR,        //  35 - 0x08C
-    BadISR,        //  36 - 0x090
-    BadISR,        //  37 - 0x094
-    BadISR,        //  38 - 0x098
-    BadISR,        //  39 - 0x09C
-    Timer15ISR,    //  40 - 0x0A0
-    BadISR,        //  41 - 0x0A4
-    BadISR,        //  42 - 0x0A8
-    BadISR,        //  43 - 0x0AC
-    BadISR,        //  44 - 0x0B0
-    BadISR,        //  45 - 0x0B4
-    BadISR,        //  46 - 0x0B8
-    BadISR,        //  47 - 0x0BC
-    BadISR,        //  48 - 0x0C0
-    BadISR,        //  49 - 0x0C4
-    BadISR,        //  50 - 0x0C8
-    BadISR,        //  51 - 0x0CC
-    BadISR,        //  52 - 0x0D0
-    BadISR,        //  53 - 0x0D4
-    UART2_ISR,     //  54 - 0x0D8
-    UART3_ISR,     //  55 - 0x0DC
-    BadISR,        //  56 - 0x0E0
-    BadISR,        //  57 - 0x0E4
-    BadISR,        //  58 - 0x0E8
-    BadISR,        //  59 - 0x0EC
-    BadISR,        //  60 - 0x0F0
-    BadISR,        //  61 - 0x0F4
-    BadISR,        //  62 - 0x0F8
-    BadISR,        //  63 - 0x0FC
-    BadISR,        //  64 - 0x100
-    BadISR,        //  65 - 0x104
-    BadISR,        //  66 - 0x108
-    BadISR,        //  67 - 0x10C
-    BadISR,        //  68 - 0x110
-    BadISR,        //  69 - 0x114
-    Timer6ISR,     //  70 - 0x118
-    BadISR,        //  71 - 0x11C
-    BadISR,        //  72 - 0x120
-    BadISR,        //  73 - 0x124
-    BadISR,        //  74 - 0x128
-    BadISR,        //  75 - 0x12C
-    BadISR,        //  76 - 0x130
-    BadISR,        //  77 - 0x134
-    BadISR,        //  78 - 0x138
-    BadISR,        //  79 - 0x13C
-    BadISR,        //  80 - 0x140
-    BadISR,        //  81 - 0x144
-    BadISR,        //  82 - 0x148
-    BadISR,        //  83 - 0x14C
-    BadISR,        //  84 - 0x150
-    BadISR,        //  85 - 0x154
-    BadISR,        //  86 - 0x158
-    BadISR,        //  87 - 0x15C
-    BadISR,        //  88 - 0x160
-    BadISR,        //  89 - 0x164
-    BadISR,        //  90 - 0x168
-    BadISR,        //  91 - 0x16C
-    BadISR,        //  92 - 0x170
-    BadISR,        //  93 - 0x174
-    BadISR,        //  94 - 0x178
-    BadISR,        //  95 - 0x17C
-    BadISR,        //  96 - 0x180
-    BadISR,        //  97 - 0x184
-    BadISR,        //  98 - 0x188
-    BadISR,        //  99 - 0x18C
-    BadISR,        // 100 - 0x190
+#ifdef UART_VIA_DMA
+    DMA1_CH2_ISR, //  28 - 0x070 DMA1 CH2
+    DMA1_CH3_ISR, //  29 - 0x074 DMA1 CH3
+#else
+    BadISR, //  28 - 0x070
+    BadISR, //  29 - 0x074
+#endif
+    BadISR,     //  30 - 0x078
+    BadISR,     //  31 - 0x07C
+    BadISR,     //  32 - 0x080
+    BadISR,     //  33 - 0x084
+    BadISR,     //  34 - 0x088
+    BadISR,     //  35 - 0x08C
+    BadISR,     //  36 - 0x090
+    BadISR,     //  37 - 0x094
+    BadISR,     //  38 - 0x098
+    BadISR,     //  39 - 0x09C
+    Timer15ISR, //  40 - 0x0A0
+    BadISR,     //  41 - 0x0A4
+    BadISR,     //  42 - 0x0A8
+    BadISR,     //  43 - 0x0AC
+    BadISR,     //  44 - 0x0B0
+    BadISR,     //  45 - 0x0B4
+    BadISR,     //  46 - 0x0B8
+    BadISR,     //  47 - 0x0BC
+    BadISR,     //  48 - 0x0C0
+    BadISR,     //  49 - 0x0C4
+    BadISR,     //  50 - 0x0C8
+    BadISR,     //  51 - 0x0CC
+    BadISR,     //  52 - 0x0D0
+    BadISR,     //  53 - 0x0D4
+    UART2_ISR,  //  54 - 0x0D8
+    UART3_ISR,  //  55 - 0x0DC
+    BadISR,     //  56 - 0x0E0
+    BadISR,     //  57 - 0x0E4
+    BadISR,     //  58 - 0x0E8
+    BadISR,     //  59 - 0x0EC
+    BadISR,     //  60 - 0x0F0
+    BadISR,     //  61 - 0x0F4
+    BadISR,     //  62 - 0x0F8
+    BadISR,     //  63 - 0x0FC
+    BadISR,     //  64 - 0x100
+    BadISR,     //  65 - 0x104
+    BadISR,     //  66 - 0x108
+    BadISR,     //  67 - 0x10C
+    BadISR,     //  68 - 0x110
+    BadISR,     //  69 - 0x114
+    Timer6ISR,  //  70 - 0x118
+    BadISR,     //  71 - 0x11C
+    BadISR,     //  72 - 0x120
+    BadISR,     //  73 - 0x124
+    BadISR,     //  74 - 0x128
+    BadISR,     //  75 - 0x12C
+    BadISR,     //  76 - 0x130
+    BadISR,     //  77 - 0x134
+    BadISR,     //  78 - 0x138
+    BadISR,     //  79 - 0x13C
+    BadISR,     //  80 - 0x140
+    BadISR,     //  81 - 0x144
+    BadISR,     //  82 - 0x148
+    BadISR,     //  83 - 0x14C
+    BadISR,     //  84 - 0x150
+    BadISR,     //  85 - 0x154
+    BadISR,     //  86 - 0x158
+    BadISR,     //  87 - 0x15C
+    BadISR,     //  88 - 0x160
+    BadISR,     //  89 - 0x164
+    BadISR,     //  90 - 0x168
+    BadISR,     //  91 - 0x16C
+    BadISR,     //  92 - 0x170
+    BadISR,     //  93 - 0x174
+    BadISR,     //  94 - 0x178
+    BadISR,     //  95 - 0x17C
+    BadISR,     //  96 - 0x180
+    BadISR,     //  97 - 0x184
+    BadISR,     //  98 - 0x188
+    BadISR,     //  99 - 0x18C
+    BadISR,     // 100 - 0x190
 };
 
 // Enable an interrupt with a specified priority (0 to 15)

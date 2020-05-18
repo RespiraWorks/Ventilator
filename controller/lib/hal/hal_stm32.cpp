@@ -669,7 +669,12 @@ public:
 };
 
 static UART dbgUART(UART2_BASE);
-extern UART_DMA dmaUART;
+
+#include "framing_rx_fsm.h"
+constexpr uint8_t txCh = 1;
+constexpr uint8_t rxCh = 2;
+UART_DMA dmaUART(UART3_BASE, DMA1_BASE, txCh, rxCh, 0xE2);
+FramingRxFSM rxFSM;
 
 // The UART that talks to the rPi uses the following pins:
 //    PB10 - TX

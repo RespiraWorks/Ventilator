@@ -27,6 +27,25 @@ limitations under the License.
 // by modifying the gui_status pointer in comms_handler.
 
 class Comms : public UART_DMA_TxListener {
+
+public:
+  Comms(){};
+  void init();
+  void onTxComplete() override;
+  void onTxError() override;
+  // `controller_status` should be the controller's current status.  It's sent
+  // periodically to the GUI.  When we receive a message from the GUI, we update
+  // gui_status accordingly.
+  void handler(const ControllerStatus &controller_status,
+               GuiStatus *gui_status);
+
+private:
+  bool is_time_to_process_packet();
+  bool is_time_to_transmit();
+  bool is_transmitting();
+  void process_tx(const ControllerStatus &controller_status);
+  void process_rx(GuiStatus *gui_status);
+
   // Our outgoing frame (ControllerStatus proto serialized, crc'd and escaped)
   // is stored in tx_buffer.  We then give it to DMA-UART to transmit.
   //
@@ -66,23 +85,6 @@ class Comms : public UART_DMA_TxListener {
   // bytes, we need at least 1/115200.*10*300=26ms to transmit.
   static constexpr Duration TX_INTERVAL = milliseconds(30);
 
-public:
-  Comms(){};
-  void init();
-  void onTxComplete();
-  void onTxError();
-  // `controller_status` should be the controller's current status.  It's sent
-  // periodically to the GUI.  When we receive a message from the GUI, we update
-  // gui_status accordingly.
-  void handler(const ControllerStatus &controller_status,
-               GuiStatus *gui_status);
-
-private:
-  bool is_time_to_process_packet();
-  bool is_time_to_transmit();
-  bool is_transmitting();
-  void process_tx(const ControllerStatus &controller_status);
-  void process_rx(GuiStatus *gui_status);
 };
 
 #endif // COMMS_H

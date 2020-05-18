@@ -27,9 +27,9 @@ inline bool Comms::is_time_to_transmit() {
 
 inline bool Comms::is_transmitting() { return dmaUART.isTxInProgress(); }
 
-void onTxComplete() {}
+void Comms::onTxComplete() {}
 
-void onTxError() {}
+void Comms::onTxError() {}
 
 // Adds CRC of the dataLength of data bytes in the buf at the end of the buf
 inline void add_crc(uint8_t *buf, uint32_t dataLength) {
@@ -59,7 +59,7 @@ void Comms::process_tx(const ControllerStatus &controller_status) {
     uint32_t encodedLength =
         encodeFrame(pb_buffer, stream.bytes_written + 4, tx_buffer, TX_BUF_LEN);
     if (encodedLength > 0) {
-      dmaUART.startTX(tx_buffer, encodedLength);
+      dmaUART.startTX(tx_buffer, encodedLength, this);
       last_tx = Hal.now();
     }
   }

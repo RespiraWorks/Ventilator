@@ -7,7 +7,7 @@ extern UART_DMA dmaUART;
 void FramingRxFSM::begin() {
   state = STATE_LOST;
   dmaUART.charMatchEnable();
-  dmaUART.startRX(rx_buf, RX_BYTES_MAX, RX_TIMEOUT);
+  dmaUART.startRX(rx_buf, RX_BYTES_MAX, RX_TIMEOUT, this);
 }
 
 void FramingRxFSM::onRxComplete() {
@@ -77,7 +77,7 @@ uint32_t FramingRxFSM::receivedBytesCount() {
 
 void FramingRxFSM::restartRX() {
   dmaUART.stopRX();
-  dmaUART.startRX(rx_buf, RX_BYTES_MAX, RX_TIMEOUT);
+  dmaUART.startRX(rx_buf, RX_BYTES_MAX, RX_TIMEOUT, this);
 }
 
 void FramingRxFSM::processReceivedData() {

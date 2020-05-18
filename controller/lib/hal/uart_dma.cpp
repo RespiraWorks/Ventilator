@@ -91,10 +91,13 @@ bool UART_DMA::isRxInProgress() {
 // Returns false if DMA transmission is in progress, does not
 // interrupt previous transmission.
 // Returns true if no transmission is in progress
-bool UART_DMA::startTX(const uint8_t *buf, uint32_t length) {
+bool UART_DMA::startTX(const uint8_t *buf, uint32_t length,
+                       UART_DMA_TxListener *txl) {
   if (isTxInProgress()) {
     return false;
   }
+
+  txListener = txl;
 
   dma->channel[txCh].config.enable = 0; // Disable channel before config
   // data sink
@@ -128,11 +131,13 @@ void UART_DMA::stopTX() {
 // was setup.
 
 bool UART_DMA::startRX(const uint8_t *buf, const uint32_t length,
-                       const uint32_t timeout) {
+                       const uint32_t timeout, UART_DMA_RxListener *rxl) {
   // UART3 reception happens on DMA1 channel 3
   if (isRxInProgress()) {
     return false;
   }
+
+  rxListener = rxl;
 
   dma->channel[rxCh].config.enable = 0; // don't enable yet
 
@@ -207,34 +212,34 @@ inline void UART_DMA::UART_ISR() {
     uart->intClear = (1 << 11) | (1 << 3) | (1 << 1); // Clear error flags
 
     // TODO define logic if stopRX() has to be here
-    rxListener.onRxError(e);
+    rxListener->onRxError(e);
   }
 
   if (isCharacterMatchInterrupt()) {
     uart->request = (1 << 3);   // Clear RXNE flag before clearing other flags
     uart->intClear = (1 << 17); // Clear char match flag
     // TODO define logic if stopRX() has to be here
-    rxListener.onCharacterMatch();
+    rxListener->onCharacterMatch();
   }
 }
 
 inline void UART_DMA::DMA_TX_ISR() {
   if (dma->intStat.teif2) {
     stopTX();
-    txListener.onTxError();
+    txListener->onTxError();
   } else {
     stopTX();
-    txListener.onTxComplete();
+    txListener->onTxComplete();
   }
 }
 
 inline void UART_DMA::DMA_RX_ISR() {
   if (dma->intStat.teif3) {
     stopRX();
-    rxListener.onRxError(RxError_t::RX_ERROR_DMA);
+    rxListener->onRxError(RxError_t::RX_ERROR_DMA);
   } else {
     stopRX();
-    rxListener.onRxComplete();
+    rxListener->onRxComplete();
   }
 }
 

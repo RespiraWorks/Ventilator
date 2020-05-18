@@ -21,9 +21,9 @@ class FramingRxFSM : public UART_DMA_RxListener {
 
 public:
   void begin();
-  void onRxComplete();
-  void onCharacterMatch();
-  void onRxError(RxError_t e);
+  void onRxComplete() override;
+  void onCharacterMatch() override;
+  void onRxError(RxError_t e) override;
   uint8_t *getReceivedBuf();
   uint32_t getReceivedLength();
   bool isDataAvailable();

@@ -16,19 +16,73 @@ limitations under the License.
 #ifndef COMMS_H
 #define COMMS_H
 
+#include "hal.h"
 #include "network_protocol.pb.h"
+#include "uart_dma.h"
+#include "units.h"
 #include <stdint.h>
 
 // This module periodically sends messages to the GUI device and receives
 // messages from the GUI.  The only way it communicates with other modules is
 // by modifying the gui_status pointer in comms_handler.
 
-void comms_init();
+class Comms : public UART_DMA_TxListener {
+  // Our outgoing frame (ControllerStatus proto serialized, crc'd and escaped)
+  // is stored in tx_buffer.  We then give it to DMA-UART to transmit.
+  //
+  // This isn't a circular buffer; the beginning of the frame is always at the
+  // beginning of the buffer.
+  // Size of the buffer is set asuming a corner case where EVERY
+  // ControllerStatus byte and CRC32 will be escaped + two marker chars; this is
+  // too big, but safe.
+  static constexpr uint32_t TX_BUF_LEN = (ControllerStatus_size + 4) * 2 + 2;
+  uint8_t tx_buffer[TX_BUF_LEN];
 
-// `controller_status` should be the controller's current status.  It's sent
-// periodically to the GUI.  When we receive a message from the GUI, we update
-// gui_status accordingly.
-void comms_handler(const ControllerStatus &controller_status,
-                   GuiStatus *gui_status);
+  // Time when we started sending the last ControllerStatus.
+  // TODO: Change this to std::optional<Time> once that's available; then we
+  // don't need this "clever" initialization.
+  static constexpr Time kInvalidTime =
+      millisSinceStartup(0xFFFF'FFFF'FFFF'FFFFUL);
+  Time last_tx = kInvalidTime;
+
+  // Our incoming (serialized) GuiStatus proto is incrementally buffered in
+  // rx_buffer until it's complete and we can deserialize it to a proto.
+  //
+  // Like tx_buffer, this isn't a circular buffer; the beginning of the proto is
+  // always at the beginning of the buffer.
+  uint8_t rx_buffer[GuiStatus_size];
+  uint16_t rx_idx = 0;
+  Time last_rx = Hal.now();
+  bool rx_in_progress = false;
+
+  // We currently lack proper message framing, so we use a timeout to determine
+  // when the GUI is done sending us its message.
+  static constexpr Duration RX_TIMEOUT = milliseconds(1);
+
+  // We send a ControllerStatus every TX_INTERVAL_MS.
+
+  // In Alpha build we use synchronized communication initiated by GUI cycle
+  // controller. Since both ControllerStatus and GuiStatus take roughly 300+
+  // bytes, we need at least 1/115200.*10*300=26ms to transmit.
+  static constexpr Duration TX_INTERVAL = milliseconds(30);
+
+public:
+  Comms(){};
+  void init();
+  void onTxComplete();
+  void onTxError();
+  // `controller_status` should be the controller's current status.  It's sent
+  // periodically to the GUI.  When we receive a message from the GUI, we update
+  // gui_status accordingly.
+  void handler(const ControllerStatus &controller_status,
+               GuiStatus *gui_status);
+
+private:
+  bool is_time_to_process_packet();
+  bool is_time_to_transmit();
+  bool is_transmitting();
+  void process_tx(const ControllerStatus &controller_status);
+  void process_rx(GuiStatus *gui_status);
+};
 
 #endif // COMMS_H

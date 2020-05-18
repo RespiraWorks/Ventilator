@@ -91,7 +91,7 @@ bool UART_DMA::isRxInProgress() {
 // Returns false if DMA transmission is in progress, does not
 // interrupt previous transmission.
 // Returns true if no transmission is in progress
-bool UART_DMA::startTX(const char *buf, uint32_t length) {
+bool UART_DMA::startTX(const uint8_t *buf, uint32_t length) {
   if (isTxInProgress()) {
     return false;
   }
@@ -127,7 +127,7 @@ void UART_DMA::stopTX() {
 // setup. Returns true if no reception is in progress and new reception
 // was setup.
 
-bool UART_DMA::startRX(const char *buf, const uint32_t length,
+bool UART_DMA::startRX(const uint8_t *buf, const uint32_t length,
                        const uint32_t timeout) {
   // UART3 reception happens on DMA1 channel 3
   if (isRxInProgress()) {

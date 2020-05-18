@@ -164,7 +164,7 @@ static void background_loop() {
     }
 
 #ifndef NO_GUI_DEV_MODE
-    comms_handler(local_controller_status, &gui_status);
+    comms.handler(controller_status, &gui_status);
 #else
     DEV_MODE_comms_handler(local_controller_status, &gui_status);
 #endif
@@ -183,8 +183,7 @@ int main() {
   // Initialize Hal first because it initializes the watchdog. See comment on
   // HalApi::init().
   Hal.init();
-
-  comms_init();
+  comms.init();
   alarm_init();
 
   background_loop();

@@ -26,6 +26,7 @@ public:
   void onRxError(RxError_t e);
   uint8_t *getReceivedBuf();
   uint32_t getReceivedLength();
+  bool isDataAvailable();
 
 private:
   uint32_t receivedBytesCount();

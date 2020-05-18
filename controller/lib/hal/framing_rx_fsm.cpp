@@ -92,3 +92,5 @@ uint8_t *FramingRxFSM::getReceivedBuf() {
 }
 
 uint32_t FramingRxFSM::getReceivedLength() { return out_buf_length; }
+
+bool FramingRxFSM::isDataAvailable() { return isNewOutBufReady; }

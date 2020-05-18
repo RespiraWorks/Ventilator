@@ -16,14 +16,6 @@ bool Comms::is_time_to_process_packet() {
   return Hal.now() - last_rx > RX_TIMEOUT;
 }
 
-// NOTE this is work in progress.
-// Proper framing incomming. Afproto will be used to encode data to form that
-// can be safely sent over wire - with packet start/end markers and CRC
-
-// TODO add frame markers
-// TODO add marker escaping in contents
-// TODO add CRC to whole packet
-
 // Note that the initial value of last_tx has to be invalid; changing it to 0
 // wouldn't work.  We immediately transmit on boot, and after
 // we do that, we want to wait a full TX_INTERVAL_MS.  If we initialized
@@ -51,9 +43,8 @@ inline void add_crc(uint8_t *buf, uint32_t dataLength) {
 void Comms::process_tx(const ControllerStatus &controller_status) {
   // Serialize our current state into the buffer if
   //  - we're not currently transmitting,
-  //  - we can transmit at least one byte now, and
   //  - it's been a while since we last transmitted.
-  //
+
   if (!is_transmitting() && is_time_to_transmit()) {
     // Serialize current status into output buffer.
 
@@ -69,42 +60,34 @@ void Comms::process_tx(const ControllerStatus &controller_status) {
         encodeFrame(pb_buffer, stream.bytes_written + 4, tx_buffer, TX_BUF_LEN);
     if (encodedLength > 0) {
       dmaUART.startTX(tx_buffer, encodedLength);
+      last_tx = Hal.now();
     }
-    last_tx = Hal.now();
   }
 
   // TODO: Alarm if we haven't been able to send a status in a certain amount
   // of time.
 }
 
-void Comms::process_rx(GuiStatus *gui_status) {
-  // while (Hal.serialBytesAvailableForRead() > 0) {
-  //   rx_in_progress = true;
-  //   char b;
-  //   uint16_t bytes_read = Hal.serialRead(&b, 1);
-  //   if (bytes_read == 1) {
-  //     rx_buffer[rx_idx++] = (uint8_t)b;
-  //     if (rx_idx >= sizeof(rx_buffer)) {
-  //       rx_idx = 0;
-  //       break;
-  //     }
-  //     last_rx = Hal.now();
-  //   }
-  // }
+#include "framing_rx_fsm.h"
+extern FramingRxFSM rxFSM;
 
-  // TODO do away with timeout-based reception once we have framing in place,
-  // but it will work for Alpha build for now
-  // if (rx_in_progress && is_time_to_process_packet()) {
-  //   pb_istream_t stream = pb_istream_from_buffer(rx_buffer, rx_idx);
-  //   GuiStatus new_gui_status = GuiStatus_init_zero;
-  //   if (pb_decode(&stream, GuiStatus_fields, &new_gui_status)) {
-  //     *gui_status = new_gui_status;
-  //   } else {
-  //     // TODO: Log an error.
-  //   }
-  //   rx_idx = 0;
-  //   rx_in_progress = false;
-  // }
+void Comms::process_rx(GuiStatus *gui_status) {
+  if (rxFSM.isDataAvailable()) {
+    uint8_t *buf = rxFSM.getReceivedBuf();
+    uint32_t len = rxFSM.getReceivedLength();
+    decodeFrame(buf, len, buf, len);
+    Hal.crc32(buf, len - 4);
+    // if crc32 is ok
+    pb_istream_t stream = pb_istream_from_buffer(buf, len - 4);
+    GuiStatus new_gui_status = GuiStatus_init_zero;
+    if (pb_decode(&stream, GuiStatus_fields, &new_gui_status)) {
+      *gui_status = new_gui_status;
+    } else {
+      // TODO: Log an error.
+    }
+
+    last_rx = Hal.now();
+  }
 }
 
 void Comms::handler(const ControllerStatus &controller_status,

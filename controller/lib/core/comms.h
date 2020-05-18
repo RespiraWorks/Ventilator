@@ -40,7 +40,6 @@ public:
                GuiStatus *gui_status);
 
 private:
-  bool is_time_to_process_packet();
   bool is_time_to_transmit();
   bool is_transmitting();
   void process_tx(const ControllerStatus &controller_status);

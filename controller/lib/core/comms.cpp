@@ -2,6 +2,7 @@
 
 #include "algorithm.h"
 #include "framing.h"
+#include "framing_rx_fsm.h"
 #include "hal.h"
 #include "network_protocol.pb.h"
 #include <pb_common.h>
@@ -9,12 +10,7 @@
 #include <pb_encode.h>
 
 extern UART_DMA dmaUART;
-
-void Comms::init() {}
-
-bool Comms::is_time_to_process_packet() {
-  return Hal.now() - last_rx > RX_TIMEOUT;
-}
+extern FramingRxFSM rxFSM;
 
 // Note that the initial value of last_tx has to be invalid; changing it to 0
 // wouldn't work.  We immediately transmit on boot, and after
@@ -67,9 +63,6 @@ void Comms::process_tx(const ControllerStatus &controller_status) {
   // TODO: Alarm if we haven't been able to send a status in a certain amount
   // of time.
 }
-
-#include "framing_rx_fsm.h"
-extern FramingRxFSM rxFSM;
 
 void Comms::process_rx(GuiStatus *gui_status) {
   if (rxFSM.isDataAvailable()) {

@@ -81,6 +81,8 @@ void FramingRxFSM::restartRX() {
 }
 
 void FramingRxFSM::processReceivedData() {
+  // we strip markers from the stream, but that does not influence the frame
+  // decoder code
   out_buf_length = receivedBytesCount() - 1;
   memcpy(out_buf, rx_buf, out_buf_length);
   isNewOutBufReady = true;

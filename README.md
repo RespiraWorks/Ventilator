@@ -1,6 +1,6 @@
 # RespiraWorks Open Source Ventilator
 
-[RespiraWorks](https://respira.works/) is a 501(c)(3) non-profit organization (IRS status pending) with over
+[RespiraWorks](https://respira.works/) is a 501(c)(3) non-profit organization with over
 100 contributors worldwide working to rapidly develop, manufacture, and deploy a
 low-cost and open-source ventilator for communities under-served by the global supply chain.
 
@@ -38,15 +38,18 @@ The physical design encompasses everything that is not software run on the devic
 
 ## Structure
 
-  * [Requirements](01_Requirements/README.md) -
+  * [Requirements](System_Requirements.md) -
   describes the requirement architecture, heirarchy, and process. Links to the releases of our system requirements, hardware specifications, and software requirements. 
-  * [System design](02_System_Design/README.md) -
+  * [Ventilator System Design](1_Ventilator_System_Design) -
   describes the functional implementation and design theory of the system. This document also defines the hierarchy for the subsystems below.
-      * [Pneumatic design](02_System_Design/pneumatic_design/README.md)
-      * [Electrical design](02_System_Design/electrical_design/README.md)
-      * [Software design](https://github.com/RespiraWorks/VentilatorSoftware)
-      * **Mechanical design**
-  * [Quality documentation](03_Quality_Documentation)
-  * **Build instructions**
-      * [Alpha build](04_Build_Instructions/alpha/README.md) -
+      * [Pneumatic System](1_Ventilator_System_Design/Pneumatic_System)
+      * [Electrical System](1_Ventilator_System_Design/Electrical_System)
+      * [Software (separate repository)](https://github.com/RespiraWorks/VentilatorSoftware)
+  * [Research & Development](2_Research_&_Development)
+      * [Project: IAV Air Control](2_Research_&_Development/Project-IAV_Air_Control)
+      * [Project: Pinch Valve](2_Research_&_Development/Project-Pinch_Valve)
+      * [Project: Venturi](2_Research_&_Development/Project-Venturi)
+  * [Quality Plan](3_Quality_Plan)
+  * [Manufacturing Design](4_Manufacturing_Design)
+      * [Alpha Build Instructions](4_Manufacturing_Design/Alpha_Build_Instructions) -
          documentation for building the "Alpha" version of the device which can be used by developers to contribute to the software. Note that this is almost always out of date, by definition.

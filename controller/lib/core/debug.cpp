@@ -41,3 +41,5 @@ int debugPrint(const char *fmt, ...) {
 
   return len;
 }
+
+int debugRead(char *buf, uint16_t len) { return Hal.debugRead(buf, len); }

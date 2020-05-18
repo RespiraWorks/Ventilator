@@ -54,10 +54,10 @@ void Comms::process_tx(const ControllerStatus &controller_status) {
       // TODO: Serialization failure; log an error or raise an alert.
       return;
     }
-    add_crc(pb_buffer, stream.bytes_written);
+    add_crc(pb_buffer, (uint32_t)(stream.bytes_written));
 
-    uint32_t encodedLength =
-        encodeFrame(pb_buffer, stream.bytes_written + 4, tx_buffer, TX_BUF_LEN);
+    uint32_t encodedLength = encodeFrame(
+        pb_buffer, (uint32_t)(stream.bytes_written) + 4, tx_buffer, TX_BUF_LEN);
     if (encodedLength > 0) {
       dmaUART.startTX(tx_buffer, encodedLength, this);
       last_tx = Hal.now();

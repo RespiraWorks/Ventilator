@@ -140,12 +140,31 @@ void TVIntegrator::AddFlow(Time now, VolumetricFlow flow) {
   //    disconnected from the patient?)
   //
   //  - Measure time with better than millisecond granularity.
-  Duration delta = now - last_flow_measurement_time_;
-  if (delta >= VOLUME_INTEGRAL_INTERVAL) {
-    volume_ =
-        volume_ + ml(delta.minutes() * (last_flow_ + flow).ml_per_min() / 2.0f);
+
+  // Open question (jtravert): I made a point to keep the
+  // VOLUME_INTEGRAL_INTERVAL to drive volume updates, not sure this is
+  // actually necessary. This could be made much easier if the volume is updated
+  // on every loop instead of every VOLUME_INTEGRAL_INTERVAL
+
+  // compute local average as the average of flow between last volume update and
+  // current time (now)
+  Duration delta_measures = now - last_flow_measurement_time_;
+  if (delta_measures.minutes() > 0) {
+    local_flow_average_ = ml_per_min(
+        (local_flow_average_.ml_per_min() * local_average_duration_.minutes() +
+         flow.ml_per_min() * delta_measures.minutes()) /
+        (local_average_duration_ + delta_measures).minutes());
     last_flow_measurement_time_ = now;
-    last_flow_ = flow;
+    local_average_duration_ = local_average_duration_ + delta_measures;
+  }
+  Duration delta_updates = now - last_volume_update_time_;
+  if (delta_updates >= VOLUME_INTEGRAL_INTERVAL) {
+    // update volume using this local average and reset local average
+    volume_ = volume_ +
+              ml(delta_updates.minutes() * local_flow_average_.ml_per_min());
+    last_volume_update_time_ = now;
+    local_average_duration_ = milliseconds(0);
+    local_flow_average_ = cubic_m_per_sec(0);
   }
 }
 

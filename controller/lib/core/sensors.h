@@ -33,7 +33,9 @@ public:
 
 private:
   Time last_flow_measurement_time_ = Hal.now();
-  VolumetricFlow last_flow_ = cubic_m_per_sec(0);
+  Time last_volume_update_time_ = Hal.now();
+  Duration local_average_duration_ = milliseconds(0);
+  VolumetricFlow local_flow_average_ = cubic_m_per_sec(0);
   Volume volume_ = ml(0);
 };
 

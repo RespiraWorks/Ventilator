@@ -163,37 +163,51 @@ TEST(SensorTests, TVIntegrator) {
   // first call to AddFlow ==> initialization and TV is 0, even if flow is not
   EXPECT_EQ(tidal_volume.GetTV().ml(), 0.0f);
   tidal_volume.AddFlow(ticks(t++), flow);
-  // integrate 1 l/s flow over 10 ms ==> 5 ml (rectangle rule with initial flow
-  // set to 0)
-  EXPECT_NEAR(tidal_volume.GetTV().ml(), 5.0f, COMPARISON_TOLERANCE_VOLUME_ML);
+  // integrate 1 l/s flow over 10 ms ==> 10 ml
+  EXPECT_NEAR(tidal_volume.GetTV().ml(), 10.0f, COMPARISON_TOLERANCE_VOLUME_ML);
 
   tidal_volume.AddFlow(ticks(t++), cubic_m_per_sec(2e-3f));
-  // add 2 l/s flow over 10 ms ==> 20 ml ()
-  EXPECT_NEAR(tidal_volume.GetTV().ml(), 20.0f, COMPARISON_TOLERANCE_VOLUME_ML);
-
-  tidal_volume.AddFlow(ticks(t++), ml_per_min(0.0f));
-  // add 0 l/s flow over 10 ms ==> 30 ml (rectangle rule)
+  // add 2 l/s flow over 10 ms ==> total 30 ml ()
   EXPECT_NEAR(tidal_volume.GetTV().ml(), 30.0f, COMPARISON_TOLERANCE_VOLUME_ML);
 
   // integrate 0 for some time ==> still 30 ms
   while (t < 100) {
     tidal_volume.AddFlow(ticks(t++), ml_per_min(0.0f));
   }
-
   EXPECT_NEAR(tidal_volume.GetTV().ml(), 30.0f, COMPARISON_TOLERANCE_VOLUME_ML);
 
   // reverse flow
   flow = liters_per_sec(-1.0f);
   // this does not increment t in order to allow oversampling (following test)
   tidal_volume.AddFlow(ticks(t), flow);
-  // remove 1 l/s flow over 10 ms ==> 25 ml (rectangle rule)
-  EXPECT_NEAR(tidal_volume.GetTV().ml(), 25.0f, COMPARISON_TOLERANCE_VOLUME_ML);
+  // remove 1 l/s flow over 10 ms ==> 20 ml
+  EXPECT_NEAR(tidal_volume.GetTV().ml(), 20.0f, COMPARISON_TOLERANCE_VOLUME_ML);
 
   // oversampling and expect volume to not change except on multiples of 5 ms
   for (int i = 0; i < 50; i++) {
     tidal_volume.AddFlow(ticks(t) + milliseconds(i), flow);
     // remove 1l/s flow over 5 ms only when i is a multiple of 5
-    EXPECT_NEAR(tidal_volume.GetTV().ml(), 25.0f - floor(i / 5) * 5,
+    EXPECT_NEAR(tidal_volume.GetTV().ml(), 20.0f - floor(i / 5) * 5,
+                COMPARISON_TOLERANCE_VOLUME_ML);
+  }
+
+  // make t catch up with actual simulation of time and make sure time is on a
+  // volume update point - after this point, volume should be -30 ml
+  t = t + 5;
+  tidal_volume.AddFlow(ticks(t), flow);
+  EXPECT_NEAR(tidal_volume.GetTV().ml(), -30.0f,
+              COMPARISON_TOLERANCE_VOLUME_ML);
+  // oversampling with variations of flow between volume updates (done by
+  // zeroing flow on volume update time)
+  flow = liters_per_sec(1.0f);
+  for (int i = 0; i < 50; i++) {
+    if (i % 5 != 0) {
+      tidal_volume.AddFlow(ticks(t) + milliseconds(i), flow);
+    } else {
+      tidal_volume.AddFlow(ticks(t) + milliseconds(i), ml_per_min(0));
+    }
+    // add 1l/s flow over 4 ms only when i is a multiple of 5
+    EXPECT_NEAR(tidal_volume.GetTV().ml(), -30.0f + floor(i / 5) * 4,
                 COMPARISON_TOLERANCE_VOLUME_ML);
   }
 }

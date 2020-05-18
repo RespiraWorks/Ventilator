@@ -79,14 +79,14 @@ This build depends on already having a Brain build, which has its own BOM [here]
 [10ebay]:  https://www.ebay.com/itm/PORTEX-Adult-Disposable-Anesthesia-Breathing-Circuit-3L-Breathing-Bag-370924/362943456196
 [11amzn]:  https://www.amazon.com/gp/product/B018WPZCSO
 [12rw]:    https://github.com/RespiraWorks/pcbreathe/tree/master/NIGHTLY/20200424v2-RELEASE-CANDIDATE-2
-[13rw]:    ../../02_System_Design/electrical_design/wiring.md
+[13rw]:    ../../1_Ventilator_System_Design/Electrical_System/wiring.md
 [14key]:   https://www.digikey.com/short/z442qt
-[15rw]:    ../../02_System_Design/pneumatic_design/pinch_valve/README.md 
-[16rw]:    ../../02_System_Design/pneumatic_design/venturi_flow_sensor/README.md
+[15rw]:    ../../2_Research_&_Development/Project-Pinch_Valve/README.md 
+[16rw]:    ../../2_Research_&_Development/Project-Venturi/README.md
 [17ali]:   https://www.aliexpress.com/item/32698107687.html
 [17x-won]: https://wonsmart-motor.en.made-in-china.com/product/hsjxFewOppVg/China-Air-Pump12V-Brushless-Motor-12V-Blower-Fan-Driver.html
-[18rw]:    ../../02_System_Design/electrical_design/wiring.md
-[19rw]:    ../../02_System_Design/electrical_design/wiring.md
+[18rw]:    ../../1_Ventilator_System_Design/Electrical_System/wiring.md
+[19rw]:    ../../1_Ventilator_System_Design/Electrical_System/wiring.md
 
 ## Tooling BOM
 

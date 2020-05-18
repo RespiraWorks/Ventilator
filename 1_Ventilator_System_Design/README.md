@@ -31,13 +31,13 @@ mechanisms are required. The designs end up rather heavy and expensive. Bellows-
 devices can be helpful in addressing the volume issue, but are very challenging to design
 for the millions of cycles required, in addition to being difficult to source. 
 
-![Ventilator Design Overview](system_block_diagram.png)
+![Ventilator Design Overview](functional_block_diagram.png)
 
 ## Subsystems
 
 **TODO:** Introduce each subsystem properly
 
-   * [Pneumatic design](pneumatic_design/README.md)
-   * [Electrical design](electrical_design/README.md)
+   * [Pneumatic design](Pneumatic_System)
+   * [Electrical design](Electrical_System)
    * [Software design](https://github.com/RespiraWorks/VentilatorSoftware)
    * **Mechanical design**

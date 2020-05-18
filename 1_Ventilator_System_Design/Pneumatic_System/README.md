@@ -11,8 +11,8 @@
 ## Components
 
 - Fan
-- [Proportional pinch valve](pinch_valve/README.md)
-- [Venturi flow sensor](venturi_flow_sensor/README.md)
+- [Proportional pinch valve](/2_Research_&_Development/Project-Pinch_Valve)
+- [Venturi flow sensor](/2_Research_&_Development/Project-Venturi)
 - Oxygen control valve
 - Exhaust closure valve
 - Inhale and Exhale Nozzle + Filter

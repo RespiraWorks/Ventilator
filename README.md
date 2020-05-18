@@ -44,7 +44,7 @@ The physical design encompasses everything that is not software run on the devic
   describes the functional implementation and design theory of the system. This document also defines the hierarchy for the subsystems below.
       * [Pneumatic System](1_Ventilator_System_Design/Pneumatic_System)
       * [Electrical System](1_Ventilator_System_Design/Electrical_System)
-      * [Software System](https://github.com/RespiraWorks/VentilatorSoftware)
+      * [Software (separate repository)](https://github.com/RespiraWorks/VentilatorSoftware)
   * [Research & Development](2_Research_&_Development)
       * [Project: IAV Air Control](2_Research_&_Development/Project-IAV_Air_Control)
       * [Project: Pinch Valve](2_Research_&_Development/Project-Pinch_Valve)

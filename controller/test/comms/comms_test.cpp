@@ -8,6 +8,7 @@
 #include <pb_encode.h>
 
 TEST(CommTests, SendControllerStatus) {
+  Comms comms;
   // Initialize a large ControllerStatus so as to force multiple calls to
   // comms_handler to send it.
   ControllerStatus s = ControllerStatus_init_zero;
@@ -38,7 +39,7 @@ TEST(CommTests, SendControllerStatus) {
   // more than enough.
   for (int i = 0; i < 10; i++) {
     GuiStatus gui_status_ignored = GuiStatus_init_zero;
-    comms_handler(s, &gui_status_ignored);
+    comms.handler(s, &gui_status_ignored);
   }
   char tx_buffer[ControllerStatus_size];
   uint16_t len = Hal.test_serialGetOutgoingData(tx_buffer, sizeof(tx_buffer));
@@ -56,7 +57,7 @@ TEST(CommTests, SendControllerStatus) {
 }
 
 TEST(CommTests, CommandRx) {
-  GuiStatus s = GuiStatus_init_zero;
+  Comms comms;
   s.uptime_ms = std::numeric_limits<uint32_t>::max() / 2;
   s.desired_params.mode = VentMode_PRESSURE_CONTROL;
   s.desired_params.peep_cm_h2o = 10;
@@ -92,7 +93,7 @@ TEST(CommTests, CommandRx) {
   // Run comms_handler until it updates GuiStatus.  10 iterations should be
   // more than enough to read the whole thing.
   for (int i = 0; i < 10; i++) {
-    comms_handler(controller_status_ignored, &received);
+    comms.handler(controller_status_ignored, &received);
     // We use a timeout for framing packets, so we have to advance the time,
     // otherwise we'll never think the packet is complete!
     Hal.delay(milliseconds(1));

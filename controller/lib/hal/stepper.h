@@ -32,12 +32,9 @@ the programmer's manual for the processor available here:
 // Not included here are set/get parameter which include
 // the parameter ID value as part of the code.
 enum class StepMtrCmd {
-  NOP = 0, // Used when there's no other command to send
-
-  RUN_NEG =
-      0x50, // Start running at a constant speed, 2 byte speed is given as data
-  RUN_POS =
-      0x51, // Start running at a constant speed, 2 byte speed is given as data
+  NOP = 0,             // Used when there's no other command to send
+  RUN_NEG = 0x50,      // Run negative at constant speed.
+  RUN_POS = 0x51,      // Run positive at constant speed.
   STEP_CLK_NEG = 0x58, // Switch to step clock mode moving in negative direction
   STEP_CLK_POS = 0x59, // Switch to step clock mode moving in positive direction
   MOVE_NEG = 0x40,     // Move - steps, steps is given as a parameter
@@ -70,7 +67,7 @@ enum class StepMtrParam {
   STEP_MODE = 0x16,         //
   ALARM_ENA = 0x17,         //
   GATE_CFG1 = 0x18,         //
-  GATE_CFG2 = 0x18,         //
+  GATE_CFG2 = 0x19,         //
   STATUS = 0x1B,            //
   CONFIG = 0x1A,            //
   KVAL_HOLD = 0x09,         //
@@ -111,6 +108,8 @@ public:
   StepMtrErr SetParam(StepMtrParam param, uint32_t value);
   StepMtrErr GetParam(StepMtrParam param, uint32_t *value);
 
+  StepMtrErr GetStatus(uint16_t *stat);
+
 private:
   static StepMotor motor[totalMotors];
   static uint8_t dmaBuff[totalMotors];
@@ -125,6 +124,7 @@ private:
   bool sentByte;
 
   // Send a command and wait for the response
+public:
   StepMtrErr SendCmd(uint8_t *cmd, int len);
 
   static void StartCmd();

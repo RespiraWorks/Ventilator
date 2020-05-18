@@ -29,41 +29,55 @@ bool StepMotor::comsActive;
 uint8_t StepMotor::paramLen[32] = {
     0, // 0x00 - No valid parameter with ID 0
     3, // 0x01 - Absolute position (22 bits)
-    2, // 0x02 - Electrical position 9
-    3, // 0x03 - Mark position 22
-    3, // 0x04 - Current speed 20
-    2, // 0x05 - Acceleration 12
-    2, // 0x06 - Deceleration 12
-    2, // 0x07 - Maximum speed 10
-    2, // 0x08 - Minimum speed 12
-    1, // 0x09 - KVAL_HOLD Holding K VAL 8
-    1, // 0x0A - KVAL_RUN Constant speed K VAL 8
-    1, // 0x0B - KVAL_ACC Acceleration starting K VAL 8
-    1, // 0x0C - KVAL_DEC Deceleration starting K VAL 8
-    2, // 0x0D - INT_SPEED Intersect speed 14
-    1, // 0x0E - ST_SLP Start slope 8
-    1, // 0x0F - FN_SLP_ACC Acceleration final slope 8
-    1, // 0x10 - FN_SLP_DEC Deceleration final slope 8
-    1, // 0x11 - K_THERM Thermal compensation factor 4
-    1, // 0x12 - ADC output 5
-    1, // 0x13 - OCD threshold 5
-    1, // 0x14 - STALL_TH STALL threshold 5
-    2, // 0x15 - Full-step speed 11
-    1, // 0x16 - Step mode 8
-    1, // 0x17 - Alarm enables 8
-    2, // 0x18 - Gate driver configuration 11
-    1, // 0x19 - Gate driver configuration 8
-    2, // 0x1A - IC configuration 16
-    2, // 0x1B - Status 16
+    2, // 0x02 - Electrical position (9 bits)
+    3, // 0x03 - Mark position (22 bits)
+    3, // 0x04 - Current speed (20 bits)
+    2, // 0x05 - Acceleration (12 bits)
+    2, // 0x06 - Deceleration (12 bits)
+    2, // 0x07 - Maximum speed (10 bits)
+    2, // 0x08 - Minimum speed (12 bits)
+    1, // 0x09 - KVAL_HOLD Holding K VAL (8 bits)
+    1, // 0x0A - KVAL_RUN Constant speed K VAL (8 bits)
+    1, // 0x0B - KVAL_ACC Acceleration starting K VAL (8 bits)
+    1, // 0x0C - KVAL_DEC Deceleration starting K VAL (8 bits)
+    2, // 0x0D - INT_SPEED Intersect speed (14 bits)
+    1, // 0x0E - ST_SLP Start slope (8 bits)
+    1, // 0x0F - FN_SLP_ACC Acceleration final slope (8 bits)
+    1, // 0x10 - FN_SLP_DEC Deceleration final slope (8 bits)
+    1, // 0x11 - K_THERM Thermal compensation factor (4 bits)
+    1, // 0x12 - ADC output (5 bits)
+    1, // 0x13 - OCD threshold (5 bits)
+    1, // 0x14 - STALL_TH STALL threshold (5 bits)
+    2, // 0x15 - Full-step speed (11 bits)
+    1, // 0x16 - Step mode (8 bits)
+    1, // 0x17 - Alarm enables (8 bits)
+    2, // 0x18 - Gate driver configuration (11 bits)
+    1, // 0x19 - Gate driver configuration (8 bits)
+    2, // 0x1A - IC configuration (16 bits)
+    2, // 0x1B - Status (16 bits)
     0, // 0x1C - No such parameter
     0, // 0x1D - No such parameter
     0, // 0x1E - No such parameter
     0, // 0x1F - No such parameter
 };
 
+// Notes to get the stepper working
+// Gate current 96mA              - cfg1 0x07FF
+// VCC Value 15V
+// UVLO threshold 7V
+// Turn OFF boost time 1000ns
+// Controlled current time 3750ns
+// Blanking time 1000ns
+// Dead time 1000ns
+
 #include "vars.h"
-int32_t testVar;
-DebugVar varTest("test", &testVar, "For testing stepper", "0x%08x");
+int32_t setMtr, getMtr, cmd;
+uint32_t getVal, stat;
+DebugVar v1("set_param", &setMtr, "For testing stepper", "0x%08x");
+DebugVar v2("get_param", &getMtr, "For testing stepper", "0x%08x");
+DebugVar v3("mtr_value", &getVal, "For testing stepper", "0x%08x");
+DebugVar v4("mtr_cmd", &cmd, "For testing stepper", "0x%08x");
+DebugVar v5("stat", &stat, "For testing stepper", "0x%08x");
 
 // These functions raise and lower the chip select pin
 static inline void CS_High() { GPIO_SetPin(GPIO_B_BASE, 6); }
@@ -222,14 +236,45 @@ void HalApi::StepperMotorInit() {
 }
 
 void test() {
-  if (testVar) {
+  StepMotor *mtr = StepMotor::GetStepper(0);
 
-    StepMotor *mtr = StepMotor::GetStepper(0);
+  if (setMtr) {
+    mtr->SetParam(static_cast<StepMtrParam>(setMtr), getVal);
+    setMtr = 0;
 
-    uint32_t x;
-    mtr->GetParam(static_cast<StepMtrParam>(testVar), &x);
-    testVar = 0;
+    uint16_t x;
+    mtr->GetStatus(&x);
+    stat = x;
   }
+
+  if (getMtr) {
+    mtr->GetParam(static_cast<StepMtrParam>(getMtr), &getVal);
+    getMtr = 0;
+
+    uint16_t x;
+    mtr->GetStatus(&x);
+    stat = x;
+  }
+
+  if (cmd) {
+    mtr->SendCmd(reinterpret_cast<uint8_t *>(&cmd), 4);
+    cmd = 0;
+
+    uint16_t x;
+    mtr->GetStatus(&x);
+    stat = x;
+  }
+}
+
+// Read the motor status register (blocking) and return it
+StepMtrErr StepMotor::GetStatus(uint16_t *stat) {
+  uint8_t cmd[] = {static_cast<uint8_t>(StepMtrCmd::GET_STATUS), 0, 0};
+
+  StepMtrErr err = SendCmd(cmd, 3);
+  uint16_t h = cmd[1];
+  uint16_t l = cmd[2];
+  *stat = static_cast<uint16_t>((h << 8) | l);
+  return err;
 }
 
 // Send a command to the motor and wait for the response.

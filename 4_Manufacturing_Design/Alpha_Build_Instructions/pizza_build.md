@@ -101,6 +101,8 @@ We try to make few assumptions about what tools you have. Here are recommended t
 [t2amzn]:https://www.amazon.com/gp/product/B003GKJYKI
 
 ## Reduced Compliance Test Lung
+![Completed](TestLung4.jpg)
+
 To test basic function a ventilator check lung or a breathing bag is sufficient, but can really only work up to 10cmH2O.  To be able to test higher PIP values, you need to reduce the conpliance of the lung so you don't just inflate it like a balloon (or pop it).  These are partial instructions, and there is currently a shortage of test lungs, so what model you get can vary, so expect to do some tinkering to these instrutions if you are going to build you own.  This is completely uncalibrated, so it is not intended for instrumentation just for functional observation.
 
 | RefDes | Quantity | Manufacturer  | Part number         | Price($) | Sources         | Notes |
@@ -131,3 +133,5 @@ To test basic function a ventilator check lung or a breathing bag is sufficient,
 
 ![Rubber Band](TestLung3.jpg)
 * Mate the tee-junction to the port on the lung to allow attachment of your hoses.
+
+![Completed](TestLung4.jpg)

@@ -145,7 +145,7 @@ bool UART_DMA::startRX(const char *buf, const uint32_t length,
 
   // setup rx timeout
   // max timeout is 24 bit
-  uart->timeout = timeout & 0x00FFFFFF;
+  uart->timeout.s.rto = timeout & 0x00FFFFFF;
   uart->intClear = (1 << 11); // Clear rx timeout flag
   uart->request = (1 << 3);   // Clear RXNE flag
   uart->ctrl1.s.rtoie = 1;    // Enable receive timeout interrupt

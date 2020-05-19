@@ -17,7 +17,8 @@ typedef volatile uint8_t BREG;
 // to configure various modules (like timers, serial ports, etc).
 // Detailed information on these modules and the registers
 // used to configure them can be found in the reference
-// manual for this chip.
+// manual for this chip:
+// https://www.st.com/resource/en/reference_manual/dm00151940-stm32l41xxx42xxx43xxx44xxx45xxx46xxx-advanced-armbased-32bit-mcus-stmicroelectronics.pdf
 ///////////////////////////////////////////////////////////////
 
 // Reset & clock controller
@@ -172,7 +173,13 @@ struct UART_Regs {
   } ctrl3;
   REG baud;
   REG guard;
-  REG timeout;
+  union {
+    struct {
+      REG rto : 24; // receiver timeout
+      REG blen : 8; // block length
+    } s;
+    REG r;
+  } timeout;
   REG request;
   REG status;
   REG intClear;

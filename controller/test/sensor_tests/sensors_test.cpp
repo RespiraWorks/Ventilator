@@ -227,6 +227,7 @@ TEST(SensorTests, TidalVolume) {
   // init value = time between sensors' init and first measure * first flow / 2
   TVIntegrator tidal_volume;
   Sensors sensors;
+  sensors.Calibrate();
 
   for (uint i = 0; i < sampling_time.size(); i++) {
     Pressure p_in = pressure_in[i];
@@ -255,6 +256,7 @@ TEST(SensorTests, Calibration) {
                         MPXV5004_PressureToVoltage(init_outflow_delta));
 
   Sensors sensors;
+  sensors.Calibrate();
 
   // get the sensor readings for the init signals, expect 0
   SensorReadings readings = sensors.GetSensorReadings();

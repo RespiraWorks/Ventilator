@@ -165,7 +165,16 @@ struct ADC_Regs {
     REG stat;    // 0x00 - interrupt and status register (ADC_ISR)
     REG intEna;  // 0x04 - interrupt enable register (ADC_IER)
     REG ctrl;    // 0x08 - control register (ADC_CR)
-    REG cfg[2];  // 0x0C - configuration registers
+    REG cfgr;    // 0x0C - configuration register (ADC_CFGR)
+    // 0x10 - Begin ADC_CFGR2
+    REG rovse : 1;           // bit 0    - regular oversampling enable
+    REG jovse : 1;           // bit 1    - injected oversampling enable
+    REG ovsr : 3;            // bits 2-4 - oversampling ratio
+    REG ovss : 4;            // bits 5-8 - oversampling shift (max 0b1000)
+    REG trovs : 1;           // bit 9    - triggered regular oversampling
+    REG rovsm : 1;           // bit 10   - regular oversampling mode
+    REG cfgr2_reserved : 21; // Reserved bits in ADC_CFGR2.
+    // End ADC_CFGR2
     REG samp[2]; // 0x14 - sampling time registers
     REG rsvd1;
     REG wdog[3]; // 0x20 - watchdog threshold registers

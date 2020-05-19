@@ -16,10 +16,11 @@ limitations under the License.
 #include "circular_buffer.h"
 #include "gtest/gtest.h"
 #include <cstdlib>
+#include <optional>
 
 // Just getting my feet wet with gtest
 TEST(CircBuff, Counts) {
-  CircBuff<128> buff;
+  CircBuff<uint8_t, 128> buff;
 
   // Note that a buffer with 128 bytes of storage can only actually
   // hold 127 bytes.  This is a side effect of how we represent a
@@ -45,8 +46,8 @@ TEST(CircBuff, Counts) {
     }
 
     for (int j = 0; j < 20; j++) {
-      int ch = buff.Get();
-      ASSERT_EQ(ch, 0);
+      std::optional<uint8_t> ch = buff.Get();
+      ASSERT_EQ(*ch, 0);
 
       full--;
       free++;
@@ -59,7 +60,7 @@ TEST(CircBuff, Counts) {
 // Make sure the data we add to the buffer is the same
 // as the data we get out of it
 TEST(CircBuff, DataIO) {
-  CircBuff<128> buff;
+  CircBuff<uint8_t, 128> buff;
 
   uint8_t TestSet[200];
   for (uint32_t i = 0; i < sizeof(TestSet); i++)
@@ -79,12 +80,12 @@ TEST(CircBuff, DataIO) {
   }
 
   for (int i = 0; i < 127; i++) {
-    int x = buff.Get();
-    ASSERT_EQ(x, TestSet[i]);
+    std::optional<uint8_t> x = buff.Get();
+    ASSERT_EQ(*x, TestSet[i]);
   }
 
   // The buffer should be empty now
-  ASSERT_EQ(buff.Get(), -1);
+  ASSERT_EQ(buff.Get(), std::nullopt);
 }
 
 // TODO - some other good tests to add when there's time:

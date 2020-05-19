@@ -37,7 +37,7 @@ uint16_t checksum_fletcher16(const char *data, uint8_t count,
 // 2002.] https://users.ece.cmu.edu/~koopman/crc/
 constexpr uint32_t CRC32_POLYNOMIAL = 0x741B8CD7;
 
-uint32_t soft_crc32(const char *data, uint32_t count);
+uint32_t soft_crc32(const uint8_t *data, uint32_t count);
 
 // Computes check bytes for a fletcher16 checksum.
 //

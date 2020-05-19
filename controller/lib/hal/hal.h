@@ -356,7 +356,7 @@ inline void HalApi::enableInterrupts() { interruptsEnabled_ = true; }
 inline bool HalApi::interruptsEnabled() { return interruptsEnabled_; }
 
 inline uint32_t HalApi::crc32(uint8_t *data, uint32_t length) {
-  return soft_crc32(reinterpret_cast<char *>(data), length);
+  return soft_crc32(data, length);
 }
 
 // NOTE - these functions are for debugging/testing the controller only.

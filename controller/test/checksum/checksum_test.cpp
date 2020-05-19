@@ -21,11 +21,15 @@ TEST(Checksum, KnownValues) {
 
 TEST(Checksum32, KnownValues) {
   EXPECT_EQ((uint32_t)0, soft_crc32(NULL, 0));
-  EXPECT_EQ((uint32_t)0, soft_crc32("", 0));
-  EXPECT_EQ((uint32_t)0xC808931C, soft_crc32("a", 1));
-  EXPECT_EQ((uint32_t)0x47A393F8, soft_crc32("abcde", 5));
-  EXPECT_EQ((uint32_t)0x9DBDD91C, soft_crc32("abcdef", 6));
-  EXPECT_EQ((uint32_t)0x321FBEF4, soft_crc32("abcdefgh", 8));
+  EXPECT_EQ((uint32_t)0, soft_crc32(reinterpret_cast<const uint8_t *>(""), 0));
+  EXPECT_EQ((uint32_t)0xC808931C,
+            soft_crc32(reinterpret_cast<const uint8_t *>("a"), 1));
+  EXPECT_EQ((uint32_t)0x47A393F8,
+            soft_crc32(reinterpret_cast<const uint8_t *>("abcde"), 5));
+  EXPECT_EQ((uint32_t)0x9DBDD91C,
+            soft_crc32(reinterpret_cast<const uint8_t *>("abcdef"), 6));
+  EXPECT_EQ((uint32_t)0x321FBEF4,
+            soft_crc32(reinterpret_cast<const uint8_t *>("abcdefgh"), 8));
 }
 
 TEST(Checksum, CheckBytes) {
@@ -92,7 +96,7 @@ TEST(Checksum, BitFlips) {
 TEST(Checksum32, BitFlips) {
   srand(0);
 
-  char data[32];
+  uint8_t data[32];
   memset(&data, '\0', sizeof(data));
 
   // Start lastChecksum at -1 because our first test will be checksum'ing the

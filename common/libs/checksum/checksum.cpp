@@ -84,14 +84,14 @@ bool append_crc(uint8_t *buf, uint32_t dataLength, uint32_t bufLength,
   return true;
 }
 
-uint32_t extract_crc(uint8_t *buf, uint32_t dataLength) {
-  if (dataLength < 4) {
+uint32_t extract_crc(uint8_t *buf, uint32_t data_length) {
+  if (data_length < 4) {
     return 0;
   }
 
-  uint32_t crc = static_cast<uint32_t>(buf[len - 1 - 3]) << 24 |
-                 static_cast<uint32_t>(buf[len - 1 - 2]) << 16 |
-                 static_cast<uint32_t>(buf[len - 1 - 1]) << 8 |
-                 static_cast<uint32_t>(buf[len - 1]);
+  uint32_t crc = static_cast<uint32_t>(buf[data_length - 1 - 3]) << 24 |
+                 static_cast<uint32_t>(buf[data_length - 1 - 2]) << 16 |
+                 static_cast<uint32_t>(buf[data_length - 1 - 1]) << 8 |
+                 static_cast<uint32_t>(buf[data_length - 1]);
   return crc;
 }

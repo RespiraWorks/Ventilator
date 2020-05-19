@@ -1,6 +1,7 @@
 #include "comms.h"
 
 #include "algorithm.h"
+#include "checksum.h"
 #include "framing.h"
 #include "framing_rx_fsm.h"
 #include "hal.h"
@@ -27,13 +28,25 @@ void Comms::onTxComplete() {}
 
 void Comms::onTxError() {}
 
-// Adds CRC of the dataLength of data bytes in the buf at the end of the buf
-inline void add_crc(uint8_t *buf, uint32_t dataLength) {
-  uint32_t crc32 = Hal.crc32(buf, dataLength);
-  buf[dataLength] = static_cast<uint8_t>((crc32 >> 24) & 0x000000FF);
-  buf[dataLength + 1] = static_cast<uint8_t>((crc32 >> 16) & 0x000000FF);
-  buf[dataLength + 2] = static_cast<uint8_t>((crc32 >> 8) & 0x000000FF);
-  buf[dataLength + 3] = static_cast<uint8_t>(crc32 & 0x000000FF);
+// Serializes current controller status, adds crc and escapes it.
+// The resulting frame is written into tx buffer.
+// Returns the length of the resulting frame.
+uint32_t Comms::createFrame(const ControllerStatus &controller_status) {
+  uint8_t pb_buffer[ControllerStatus_size + 4];
+
+  pb_ostream_t stream = pb_ostream_from_buffer(pb_buffer, sizeof(pb_buffer));
+  if (!pb_encode(&stream, ControllerStatus_fields, &controller_status)) {
+    // TODO: Serialization failure; log an error or raise an alert.
+    return 0;
+  }
+  uint32_t pb_data_len = (uint32_t)(stream.bytes_written);
+
+  uint32_t crc32 = Hal.crc32(pb_buffer, pb_data_len);
+  if (!append_crc(pb_buffer, pb_data_len, sizeof(pb_buffer), crc32)) {
+    // TODO log an error, output buffer too small
+  }
+
+  return encodeFrame(pb_buffer, pb_data_len + 4, tx_buffer, TX_BUF_LEN);
 }
 
 void Comms::process_tx(const ControllerStatus &controller_status) {
@@ -42,21 +55,12 @@ void Comms::process_tx(const ControllerStatus &controller_status) {
   //  - it's been a while since we last transmitted.
 
   if (!is_transmitting() && is_time_to_transmit()) {
-    // Serialize current status into output buffer.
-
-    uint8_t pb_buffer[ControllerStatus_size + 4];
-    pb_ostream_t stream = pb_ostream_from_buffer(pb_buffer, sizeof(pb_buffer));
-    if (!pb_encode(&stream, ControllerStatus_fields, &controller_status)) {
-      // TODO: Serialization failure; log an error or raise an alert.
-      return;
-    }
-    add_crc(pb_buffer, (uint32_t)(stream.bytes_written));
-
-    uint32_t encodedLength = encodeFrame(
-        pb_buffer, (uint32_t)(stream.bytes_written) + 4, tx_buffer, TX_BUF_LEN);
-    if (encodedLength > 0) {
-      dmaUART.startTX(tx_buffer, encodedLength, this);
+    uint32_t frame_len = createFrame(controller_status);
+    if (frame_len > 0) {
+      dmaUART.startTX(tx_buffer, frame_len, this);
       last_tx = Hal.now();
+    } else {
+      // TODO log an error
     }
   }
 
@@ -64,22 +68,27 @@ void Comms::process_tx(const ControllerStatus &controller_status) {
   // of time.
 }
 
+inline bool is_crc_pass(uint8_t *buf, uint32_t len) {
+  return Hal.crc32(buf, len - 4) == extract_crc(buf, len);
+}
+
 void Comms::process_rx(GuiStatus *gui_status) {
   if (rxFSM.isDataAvailable()) {
     uint8_t *buf = rxFSM.getReceivedBuf();
     uint32_t len = rxFSM.getReceivedLength();
     decodeFrame(buf, len, buf, len);
-    Hal.crc32(buf, len - 4);
-    // if crc32 is ok
-    pb_istream_t stream = pb_istream_from_buffer(buf, len - 4);
-    GuiStatus new_gui_status = GuiStatus_init_zero;
-    if (pb_decode(&stream, GuiStatus_fields, &new_gui_status)) {
-      *gui_status = new_gui_status;
+    if (is_crc_pass(buf, len)) {
+      pb_istream_t stream = pb_istream_from_buffer(buf, len - 4);
+      GuiStatus new_gui_status = GuiStatus_init_zero;
+      if (pb_decode(&stream, GuiStatus_fields, &new_gui_status)) {
+        *gui_status = new_gui_status;
+      } else {
+        // TODO: Log an error.
+      }
+      last_rx = Hal.now();
     } else {
-      // TODO: Log an error.
+      // TODO CRC mismatch; log an error
     }
-
-    last_rx = Hal.now();
   }
 }
 

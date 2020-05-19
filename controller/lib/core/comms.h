@@ -44,6 +44,7 @@ private:
   bool is_transmitting();
   void process_tx(const ControllerStatus &controller_status);
   void process_rx(GuiStatus *gui_status);
+  uint32_t createFrame(const ControllerStatus &controller_status);
 
   // Our outgoing frame (ControllerStatus proto serialized, crc'd and escaped)
   // is stored in tx_buffer.  We then give it to DMA-UART to transmit.

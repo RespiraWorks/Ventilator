@@ -32,6 +32,7 @@ the programmer's manual for the processor available here:
 #include "uart_dma.h"
 #include <optional>
 #include "stepper.h"
+#include "uart_dma.h"
 #include <stdarg.h>
 #include <stdio.h>
 
@@ -915,7 +916,7 @@ void HalApi::EnableClock(void *ptr) {
   rcc->periphClkEna[ndx] |= (1 << bit);
 }
 
-static void DMA1CH2_ISR() { StepMotor::DMA_ISR(); }
+// static void DMA1CH2_ISR() { StepMotor::DMA_ISR(); }
 
 /******************************************************************
  * Interrupt vector table.  The interrupt vector table is a list of

@@ -176,9 +176,6 @@ static void background_loop() {
       BlockInterrupts block;
       controller_status.active_params = gui_status.desired_params;
     }
-
-    extern void test(void);
-    test();
   }
 }
 

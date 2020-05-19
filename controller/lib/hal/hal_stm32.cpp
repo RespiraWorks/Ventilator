@@ -49,15 +49,10 @@ static void InitSysTimer();
 static void InitPwmOut();
 static void InitUARTs();
 static void EnableClock(void *ptr);
-static void EnableInterrupt(int addr, int pri);
+static void EnableInterrupt(int addr, IntPriority pri);
 static void Timer6ISR();
+static void Timer15ISR();
 static void UART3_ISR();
-
-// For now, the main function in main.cpp is called setup
-// rather then main.  If we adopt this HAL then we can
-// just rename it main and get rid of the following function.
-extern void setup();
-int main() { setup(); }
 
 // This function is called from the libc initialization code
 // before any static constructors are called.  We do some basic
@@ -259,7 +254,7 @@ static void InitSysTimer() {
   tmr->ctrl[0] = 1;
   tmr->intEna = 1;
 
-  EnableInterrupt(INT_VEC_TIMER6, 3);
+  EnableInterrupt(INT_VEC_TIMER6, IntPriority::STANDARD);
 }
 
 // Just spin for a specified number of microseconds
@@ -291,6 +286,59 @@ void HalApi::delay(Duration d) {
 }
 
 Time HalApi::now() { return millisSinceStartup(msCount); }
+
+/******************************************************************
+ * Loop timer
+ *
+ * I use one of the timers (timer 15) to generate the interrupt
+ * from which the control loop callback function is called.
+ * This function runs at a higher priority then normal code, 
+ * but not as high as the hardware interrupts.
+ *****************************************************************/
+static void (*controller_callback)(void *);
+static void *controller_arg;
+void HalApi::startLoopTimer(const Duration &period, void (*callback)(void *),
+                            void *arg) {
+  controller_callback = callback;
+  controller_arg = arg;
+
+  // Find the loop period in clock cycles
+  int32_t reload = static_cast<int32_t>(CPU_FREQ * period.seconds());
+  int prescale = 1;
+
+  // Adjust the prescaler so that my reload count will fit in the 16-bit
+  // timer.
+  if (reload > 65536) {
+    prescale = static_cast<int>(reload / 65536.0) + 1;
+    reload /= prescale;
+  }
+
+  // Enable the clock to the timer
+  EnableClock(TIMER15_BASE);
+
+  // Just set the timer up to count every microsecond.
+  TimerRegs *tmr = TIMER15_BASE;
+  tmr->reload = reload - 1;
+  tmr->prescale = prescale - 1;
+  tmr->event = 1;
+  tmr->ctrl[0] = 1;
+  tmr->intEna = 1;
+
+  // Enable the interrupt that will call the controller 
+  // function callback periodically.
+  // I'm using a lower priority then that which I use
+  // for normal hardware interrupts.  This means that other
+  // interrupts can be serviced while controller functions 
+  // are running.
+  EnableInterrupt(INT_VEC_TIMER15, IntPriority::LOW);
+}
+
+static void Timer15ISR() {
+  TIMER15_BASE->status = 0;
+
+  // Call the function
+  controller_callback(controller_arg);
+}
 
 /******************************************************************
  * A/D inputs.
@@ -607,8 +655,8 @@ static void InitUARTs() {
   rpUART.Init(115200);
   dbgUART.Init(115200);
 
-  EnableInterrupt(INT_VEC_UART2, 3);
-  EnableInterrupt(INT_VEC_UART3, 3);
+  EnableInterrupt(INT_VEC_UART2, IntPriority::STANDARD);
+  EnableInterrupt(INT_VEC_UART3, IntPriority::STANDARD);
 }
 
 static void UART2_ISR() { dbgUART.ISR(); }
@@ -740,10 +788,11 @@ static void EnableClock(void *ptr) {
     int ndx;
     int bit;
   } rccInfo[] = {
-      {FLASH_BASE, 0, 8},  {GPIO_A_BASE, 1, 0}, {GPIO_B_BASE, 1, 1},
-      {GPIO_C_BASE, 1, 2}, {GPIO_D_BASE, 1, 3}, {GPIO_E_BASE, 1, 4},
-      {GPIO_H_BASE, 1, 7}, {ADC_BASE, 1, 13},   {TIMER2_BASE, 4, 0},
-      {TIMER6_BASE, 4, 4}, {UART2_BASE, 4, 17}, {UART3_BASE, 4, 18},
+      {FLASH_BASE, 0, 8},    {GPIO_A_BASE, 1, 0}, {GPIO_B_BASE, 1, 1},
+      {GPIO_C_BASE, 1, 2},   {GPIO_D_BASE, 1, 3}, {GPIO_E_BASE, 1, 4},
+      {GPIO_H_BASE, 1, 7},   {ADC_BASE, 1, 13},   {TIMER2_BASE, 4, 0},
+      {TIMER6_BASE, 4, 4},   {UART2_BASE, 4, 17}, {UART3_BASE, 4, 18},
+      {TIMER15_BASE, 6, 16},
 
       // The following entries are probably correct, but have
       // not been tested yet.  When adding support for one of
@@ -753,7 +802,6 @@ static void EnableClock(void *ptr) {
       //      {DMA2_BASE, 0, 1},
       //      {CRC_BASE, 0, 12},
       //      {TIMER3_BASE, 4, 1},
-      //      {TIMER7_BASE, 4, 7},
       //      {SPI2_BASE, 4, 14},
       //      {SPI3_BASE, 4, 15},
       //      {UART4_BASE, 4, 19},
@@ -764,7 +812,6 @@ static void EnableClock(void *ptr) {
       //      {TIMER1_BASE, 6, 11},
       //      {SPI1_BASE, 6, 12},
       //      {UART1_BASE, 6, 14},
-      //      {TIMER15_BASE, 6, 16},
       //      {TIMER16_BASE, 6, 17},
   };
 
@@ -875,7 +922,7 @@ __attribute__((section(".isr_vector"))) void (*const vectors[101])() = {
     BadISR,        //  37 - 0x094
     BadISR,        //  38 - 0x098
     BadISR,        //  39 - 0x09C
-    BadISR,        //  40 - 0x0A0
+    Timer15ISR,    //  40 - 0x0A0
     BadISR,        //  41 - 0x0A4
     BadISR,        //  42 - 0x0A8
     BadISR,        //  43 - 0x0AC
@@ -940,7 +987,7 @@ __attribute__((section(".isr_vector"))) void (*const vectors[101])() = {
 
 // Enable an interrupt with a specified priority (0 to 15)
 // See the NVIC chapter of the manual for more information.
-static void EnableInterrupt(int addr, int pri) {
+static void EnableInterrupt(int addr, IntPriority pri) {
   IntCtrl_Regs *nvic = NVIC_BASE;
 
   int id = addr / 4 - 16;
@@ -948,7 +995,8 @@ static void EnableInterrupt(int addr, int pri) {
   nvic->setEna[id >> 5] = 1 << (id & 0x1F);
 
   // The STM32 processor implements bits 4-7 of the NVIM priority register.
-  nvic->priority[id] = static_cast<BREG>(pri << 4);
+  int p = static_cast<int>(pri);
+  nvic->priority[id] = static_cast<BREG>(p << 4);
 }
 
 #endif

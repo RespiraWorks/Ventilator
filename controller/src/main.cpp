@@ -98,45 +98,88 @@ static void DEV_MODE_comms_handler(const ControllerStatus &controller_status,
 }
 #endif
 
-static void controller_loop() {
-  Sensors sensors;
-  Controller controller;
+static Controller controller;
+static ControllerStatus controller_status;
+static Sensors sensors;
+
+// This function handles all the high priority tasks which need to be called
+// periodically.  The HAL calls this function from a timer interrupt.
+//
+// NOTE - it's important that anything being called from this function executes
+// quickly.  No busy waiting here.
+static void high_priority_task(void *arg) {
+
+  // Read the sensors
+  controller_status.sensor_readings = sensors.GetSensorReadings();
+
+  // Run our PID loop
+  ActuatorsState actuators_state =
+      controller.Run(Hal.now(), controller_status.active_params,
+                     controller_status.sensor_readings);
+
+  // TODO update pb library to replace fan_power in ControllerStatus with
+  // actuators_state, and remove fan_setpoint_cm_h2o from ControllerStatus
+
+  // Update the outputs from the PID
+  actuators_execute(actuators_state);
+
+  // Update some status info
+  controller_status.fan_power = actuators_state.fan_power;
+  controller_status.fan_setpoint_cm_h2o = actuators_state.fan_setpoint_cm_h2o;
+
+  // Pet the watchdog
+  Hal.watchdog_handler();
+}
+
+// This function is the lower priority background loop which runs continuously
+// after some basic system init.  Pretty much everything not time critical
+// should go here.
+static void background_loop() {
+
+  // Calibrate the sensors.
+  // This needs to be done before the sensors are used.
+  sensors.Calibrate();
 
   // Current controller status.  Updated when we receive data from the GUI, when
   // sensors read data, etc.
-  ControllerStatus controller_status = ControllerStatus_init_zero;
+  controller_status = ControllerStatus_init_zero;
+
   // Last-received status from the GUI.
   GuiStatus gui_status = GuiStatus_init_zero;
+
+  // After all initialization is done, ask the HAL
+  // to start our high priority thread.
+  Hal.startLoopTimer(controller.GetLoopPeriod(), high_priority_task, 0);
 
   while (true) {
     controller_status.uptime_ms = Hal.now().millisSinceStartup();
 
+    // Copy the current controller status with interrupts 
+    // disabled to ensure that the data we send to the 
+    // GUI is self consistent.
+    ControllerStatus local_controller_status;
+    {
+      BlockInterrupts block;
+      local_controller_status = controller_status;
+    }
+
 #ifndef NO_GUI_DEV_MODE
-    comms_handler(controller_status, &gui_status);
+    comms_handler(local_controller_status, &gui_status);
 #else
-    DEV_MODE_comms_handler(controller_status, &gui_status);
+    DEV_MODE_comms_handler(local_controller_status, &gui_status);
 #endif
 
-    controller_status.sensor_readings = sensors.GetSensorReadings();
-
-    controller_status.active_params = gui_status.desired_params;
-
-    ActuatorsState actuators_state =
-        controller.Run(Hal.now(), controller_status.active_params,
-                       controller_status.sensor_readings);
-
-    // TODO update pb library to replace fan_power in ControllerStatus with
-    // actuators_state, and remove fan_setpoint_cm_h2o from ControllerStatus
-    actuators_execute(actuators_state);
-    controller_status.fan_power = actuators_state.fan_power;
-
-    controller_status.fan_setpoint_cm_h2o = actuators_state.fan_setpoint_cm_h2o;
-
-    Hal.watchdog_handler();
+    // Copy the gui_status data into our controller status
+    // with interrupts disabled.  This ensures that the data
+    // is copied atomically
+    {
+      BlockInterrupts block;
+      controller_status.active_params = gui_status.desired_params;
+    }
   }
 }
 
-void setup() {
+int main() {
   // Initialize Hal first because it initializes the watchdog. See comment on
   // HalApi::init().
   Hal.init();
@@ -144,9 +187,5 @@ void setup() {
   comms_init();
   alarm_init();
 
-  controller_loop();
-}
-
-void loop() {
-  // Dummy placeholder as Arduino framework requires it to compile
+  background_loop();
 }

@@ -348,72 +348,89 @@ struct FlashReg {
 };
 inline FlashReg *const FLASH_BASE = reinterpret_cast<FlashReg *>(0x40022000);
 
+// DMA channels
+enum class DMA_Chan {
+  C1 = 0,
+  C2 = 1,
+  C3 = 2,
+  C4 = 3,
+  C5 = 4,
+  C6 = 5,
+  C7 = 6,
+};
+
 typedef enum { PERIPHERAL_TO_MEM = 0, MEM_TO_PERIPHERAL = 1 } DmaChannelDir;
 typedef enum { BITS8 = 0, BITS16 = 1, BITS32 = 2 } DmaTransferSize;
 
 struct DMA_Regs {
-  struct {
-    REG gif1 : 1;  // global interrupt flag
-    REG tcif1 : 1; // transfer complete (TC) flag
-    REG htif1 : 1; // half transfer (HT) flag
-    REG teif1 : 1; // transfer error (TE) flag
-    REG gif2 : 1;  // global interrupt flag
-    REG tcif2 : 1; // transfer complete (TC) flag
-    REG htif2 : 1; // half transfer (HT) flag
-    REG teif2 : 1; // transfer error (TE) flag
-    REG gif3 : 1;  // global interrupt flag
-    REG tcif3 : 1; // transfer complete (TC) flag
-    REG htif3 : 1; // half transfer (HT) flag
-    REG teif3 : 1; // transfer error (TE) flag
-    REG gif4 : 1;  // global interrupt flag
-    REG tcif4 : 1; // transfer complete (TC) flag
-    REG htif4 : 1; // half transfer (HT) flag
-    REG teif4 : 1; // transfer error (TE) flag
-    REG gif5 : 1;  // global interrupt flag
-    REG tcif5 : 1; // transfer complete (TC) flag
-    REG htif5 : 1; // half transfer (HT) flag
-    REG teif5 : 1; // transfer error (TE) flag
-    REG gif6 : 1;  // global interrupt flag
-    REG tcif6 : 1; // transfer complete (TC) flag
-    REG htif6 : 1; // half transfer (HT) flag
-    REG teif6 : 1; // transfer error (TE) flag
-    REG gif7 : 1;  // global interrupt flag
-    REG tcif7 : 1; // transfer complete (TC) flag
-    REG htif7 : 1; // half transfer (HT) flag
-    REG teif7 : 1; // transfer error (TE) flag
-    REG rsvd : 4;
+  union {
+    struct {
+      REG gif1 : 1;  // global interrupt flag
+      REG tcif1 : 1; // transfer complete (TC) flag
+      REG htif1 : 1; // half transfer (HT) flag
+      REG teif1 : 1; // transfer error (TE) flag
+      REG gif2 : 1;  // global interrupt flag
+      REG tcif2 : 1; // transfer complete (TC) flag
+      REG htif2 : 1; // half transfer (HT) flag
+      REG teif2 : 1; // transfer error (TE) flag
+      REG gif3 : 1;  // global interrupt flag
+      REG tcif3 : 1; // transfer complete (TC) flag
+      REG htif3 : 1; // half transfer (HT) flag
+      REG teif3 : 1; // transfer error (TE) flag
+      REG gif4 : 1;  // global interrupt flag
+      REG tcif4 : 1; // transfer complete (TC) flag
+      REG htif4 : 1; // half transfer (HT) flag
+      REG teif4 : 1; // transfer error (TE) flag
+      REG gif5 : 1;  // global interrupt flag
+      REG tcif5 : 1; // transfer complete (TC) flag
+      REG htif5 : 1; // half transfer (HT) flag
+      REG teif5 : 1; // transfer error (TE) flag
+      REG gif6 : 1;  // global interrupt flag
+      REG tcif6 : 1; // transfer complete (TC) flag
+      REG htif6 : 1; // half transfer (HT) flag
+      REG teif6 : 1; // transfer error (TE) flag
+      REG gif7 : 1;  // global interrupt flag
+      REG tcif7 : 1; // transfer complete (TC) flag
+      REG htif7 : 1; // half transfer (HT) flag
+      REG teif7 : 1; // transfer error (TE) flag
+      REG rsvd : 4;
+    };
+    REG r;
   } intStat; // interrupt status register
 
   struct {
-    REG gif1 : 1;  // global interrupt flag
-    REG tcif1 : 1; // transfer complete (TC) flag
-    REG htif1 : 1; // half transfer (HT) flag
-    REG teif1 : 1; // transfer error (TE) flag
-    REG gif2 : 1;  // global interrupt flag
-    REG tcif2 : 1; // transfer complete (TC) flag
-    REG htif2 : 1; // half transfer (HT) flag
-    REG teif2 : 1; // transfer error (TE) flag
-    REG gif3 : 1;  // global interrupt flag
-    REG tcif3 : 1; // transfer complete (TC) flag
-    REG htif3 : 1; // half transfer (HT) flag
-    REG teif3 : 1; // transfer error (TE) flag
-    REG gif4 : 1;  // global interrupt flag
-    REG tcif4 : 1; // transfer complete (TC) flag
-    REG htif4 : 1; // half transfer (HT) flag
-    REG teif4 : 1; // transfer error (TE) flag
-    REG gif5 : 1;  // global interrupt flag
-    REG tcif5 : 1; // transfer complete (TC) flag
-    REG htif5 : 1; // half transfer (HT) flag
-    REG teif5 : 1; // transfer error (TE) flag
-    REG gif6 : 1;  // global interrupt flag
-    REG tcif6 : 1; // transfer complete (TC) flag
-    REG htif6 : 1; // half transfer (HT) flag
-    REG teif6 : 1; // transfer error (TE) flag
-    REG gif7 : 1;  // global interrupt flag
-    REG tcif7 : 1; // transfer complete (TC) flag
-    REG htif7 : 1; // half transfer (HT) flag
-    REG teif7 : 1; // transfer error (TE) flag
-    REG rsvd : 4;
+    union {
+      REG gif1 : 1;  // global interrupt flag
+      REG tcif1 : 1; // transfer complete (TC) flag
+      REG htif1 : 1; // half transfer (HT) flag
+      REG teif1 : 1; // transfer error (TE) flag
+      REG gif2 : 1;  // global interrupt flag
+      REG tcif2 : 1; // transfer complete (TC) flag
+      REG htif2 : 1; // half transfer (HT) flag
+      REG teif2 : 1; // transfer error (TE) flag
+      REG gif3 : 1;  // global interrupt flag
+      REG tcif3 : 1; // transfer complete (TC) flag
+      REG htif3 : 1; // half transfer (HT) flag
+      REG teif3 : 1; // transfer error (TE) flag
+      REG gif4 : 1;  // global interrupt flag
+      REG tcif4 : 1; // transfer complete (TC) flag
+      REG htif4 : 1; // half transfer (HT) flag
+      REG teif4 : 1; // transfer error (TE) flag
+      REG gif5 : 1;  // global interrupt flag
+      REG tcif5 : 1; // transfer complete (TC) flag
+      REG htif5 : 1; // half transfer (HT) flag
+      REG teif5 : 1; // transfer error (TE) flag
+      REG gif6 : 1;  // global interrupt flag
+      REG tcif6 : 1; // transfer complete (TC) flag
+      REG htif6 : 1; // half transfer (HT) flag
+      REG teif6 : 1; // transfer error (TE) flag
+      REG gif7 : 1;  // global interrupt flag
+      REG tcif7 : 1; // transfer complete (TC) flag
+      REG htif7 : 1; // half transfer (HT) flag
+      REG teif7 : 1; // transfer error (TE) flag
+      REG rsvd : 4;
+    };
+    REG r;
   } intClr; // interrupt flag clear register
   struct {
     struct {
@@ -430,26 +447,61 @@ struct DMA_Regs {
       REG priority : 2; // priority level 0b00 - low, 0b11 - high
       REG mem2mem : 1;  // memory-to-memory mode
       REG rsvd : 17;
-    } config;  // channel x configuration register
-    REG count; // channel x number of data to transfer register
-    REG pAddr; // channel x peripheral address register
-    REG mAddr; // channel x memory address register
-    REG rsvd;  // reserved
+    } config;             // channel x configuration register
+    REG count;            // channel x number of data to transfer register
+    volatile void *pAddr; // channel x peripheral address register
+    volatile void *mAddr; // channel x memory address register
+    REG rsvd;             // reserved
   } channel[7];
   REG rsvd[5]; // reserved
-  struct {
-    REG c1s : 4;
-    REG c2s : 4;
-    REG c3s : 4;
-    REG c4s : 4;
-    REG c5s : 4;
-    REG c6s : 4;
-    REG c7s : 4;
-    REG rsvd : 4;
+  union {
+    struct {
+      REG c1s : 4;
+      REG c2s : 4;
+      REG c3s : 4;
+      REG c4s : 4;
+      REG c5s : 4;
+      REG c6s : 4;
+      REG c7s : 4;
+      REG rsvd : 4;
+    };
+    REG r;
   } chanSel; // channel selection register
 };
 inline DMA_Regs *const DMA1_BASE = reinterpret_cast<DMA_Regs *>(0x40020000);
 inline DMA_Regs *const DMA2_BASE = reinterpret_cast<DMA_Regs *>(0x40020400);
+
+// Select the source for a DMA channel
+// @param dma Address of DMA registers
+// @param chan DMA channel to modify.  Channels are numbered from 0
+// @param selection Selects which peripherial request to map to the channel
+inline void DMA_SelectChannel(DMA_Regs *const dma, DMA_Chan chan,
+                              int selection) {
+  selection &= 0x0F;
+
+  int x = 4 * static_cast<int>(chan);
+
+  uint32_t val = dma->chanSel.r;
+  val &= ~(0xF << x);
+  val |= selection << x;
+  dma->chanSel.r = val;
+}
+
+// Clear a DMA interrupt given the channel number and interrupt type
+typedef enum {
+  GLOBAL = 0,
+  XFER_COMPLETE = 1,
+  HALF_COMPLETE = 2,
+  XFER_ERR = 3
+} DmaInterrupt;
+
+inline void DMA_ClearInt(DMA_Regs *const dma, DMA_Chan chan,
+                         DmaInterrupt interrupt) {
+
+  int x = static_cast<int>(interrupt);
+  x <<= 4 * static_cast<int>(chan);
+  dma->intClr.r = x;
+}
 
 struct SPI_Regs {
   REG ctrl[2];

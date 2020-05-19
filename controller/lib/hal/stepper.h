@@ -61,15 +61,6 @@ enum class StepMtrParam {
   DECEL = 0x06,             // Deceleration
   MAX_SPEED = 0x07,         // Maximum allowed speed
   MIN_SPEED = 0x08,         // Minimum allowed speed
-  ADC_OUT = 0x12,           //
-  OVER_CRNT_THRESH = 0x13,  //
-  FULL_STEP_SPEED = 0x15,   // Speed at which to switch to full step mode
-  STEP_MODE = 0x16,         //
-  ALARM_ENA = 0x17,         //
-  GATE_CFG1 = 0x18,         //
-  GATE_CFG2 = 0x19,         //
-  STATUS = 0x1B,            //
-  CONFIG = 0x1A,            //
   KVAL_HOLD = 0x09,         //
   KVAL_RUN = 0x0A,          //
   KVAL_ACCEL = 0x0B,        //
@@ -79,7 +70,16 @@ enum class StepMtrParam {
   FINAL_SLOPE_ACCEL = 0x0F, //
   FINAL_SLOPE_DECEL = 0x10, //
   THERMAL_COMP = 0x11,      //
+  ADC_OUT = 0x12,           //
+  OVER_CRNT_THRESH = 0x13,  //
   STALL_THRESH = 0x14,      //
+  FULL_STEP_SPEED = 0x15,   // Speed at which to switch to full step mode
+  STEP_MODE = 0x16,         //
+  ALARM_ENA = 0x17,         //
+  GATE_CFG1 = 0x18,         //
+  GATE_CFG2 = 0x19,         //
+  CONFIG = 0x1A,            //
+  STATUS = 0x1B,            //
 };
 
 // Error codes returned by my functions
@@ -90,7 +90,7 @@ enum class StepMtrErr {
 
 // Represents one of the stepper motors in the system
 class StepMotor {
-  static const int totalMotors = 1;
+  static const int totalMotors = 4;
 
 public:
   StepMotor();

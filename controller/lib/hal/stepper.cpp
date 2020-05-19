@@ -71,13 +71,14 @@ uint8_t StepMotor::paramLen[32] = {
 // Dead time 1000ns
 
 #include "vars.h"
-int32_t setMtr, getMtr, cmd;
+int32_t setMtr, getMtr, cmd, mtrNdx;
 uint32_t getVal, stat;
 DebugVar v1("set_param", &setMtr, "For testing stepper", "0x%08x");
 DebugVar v2("get_param", &getMtr, "For testing stepper", "0x%08x");
 DebugVar v3("mtr_value", &getVal, "For testing stepper", "0x%08x");
 DebugVar v4("mtr_cmd", &cmd, "For testing stepper", "0x%08x");
 DebugVar v5("stat", &stat, "For testing stepper", "0x%08x");
+DebugVar v6("mtr_ndx", &mtrNdx, "For testing stepper", "%d");
 
 // These functions raise and lower the chip select pin
 static inline void CS_High() { GPIO_SetPin(GPIO_B_BASE, 6); }
@@ -236,7 +237,9 @@ void HalApi::StepperMotorInit() {
 }
 
 void test() {
-  StepMotor *mtr = StepMotor::GetStepper(0);
+  StepMotor *mtr = StepMotor::GetStepper(mtrNdx);
+  if (!mtr)
+    return;
 
   if (setMtr) {
     mtr->SetParam(static_cast<StepMtrParam>(setMtr), getVal);

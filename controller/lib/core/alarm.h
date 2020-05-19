@@ -16,8 +16,8 @@ limitations under the License.
 #ifndef ALARM_H
 #define ALARM_H
 
-#include <stdint.h>
 #include "errors.h"
+#include <stdint.h>
 
 /* Number of alarms we can store in the queue */
 #define ALARM_NODES 4
@@ -25,7 +25,6 @@ limitations under the License.
 // Each alarm can store 8 bytes - modifying this would mean modifying the
 // memory copies.
 #define ALARM_DATALEN 8
-
 
 void alarm_init();
 void alarm_add(const char *data);

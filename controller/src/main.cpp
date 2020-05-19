@@ -58,7 +58,7 @@ limitations under the License.
 //
 // Uncomment this line to get started:
 //
-//   #define NO_GUI_DEV_MODE
+#define NO_GUI_DEV_MODE
 //
 // Then see comment on DEV_MODE_comms_handler below.
 //
@@ -154,8 +154,8 @@ static void background_loop() {
   while (true) {
     controller_status.uptime_ms = Hal.now().millisSinceStartup();
 
-    // Copy the current controller status with interrupts 
-    // disabled to ensure that the data we send to the 
+    // Copy the current controller status with interrupts
+    // disabled to ensure that the data we send to the
     // GUI is self consistent.
     ControllerStatus local_controller_status;
     {

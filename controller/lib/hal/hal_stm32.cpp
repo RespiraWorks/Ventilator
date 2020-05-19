@@ -30,6 +30,7 @@ the programmer's manual for the processor available here:
 #include "circular_buffer.h"
 #include "hal.h"
 #include "uart_dma.h"
+#include <optional>
 #include <stdarg.h>
 #include <stdio.h>
 
@@ -577,8 +578,8 @@ void HalApi::analogWrite(PwmPin pin, float duty) {
  *****************************************************************/
 
 class UART {
-  CircBuff<128> rxDat;
-  CircBuff<128> txDat;
+  CircBuff<uint8_t, 128> rxDat;
+  CircBuff<uint8_t, 128> txDat;
   UART_Regs *const reg;
 
 public:
@@ -605,23 +606,27 @@ public:
       reg->intClear.s.orecf = 1;
     }
 
-    // See if we received a new byte
-    if (reg->status.s.rxne)
-      rxDat.Put(static_cast<uint8_t>(reg->rxDat));
+    // See if we received a new byte.
+    if (reg->status.s.rxne) {
+      // Add the byte to rxDat.  If the buffer is full, we'll drop it -- what
+      // else can we do?
+      //
+      // TODO: Perhaps log a warning here so we have an idea of whether this
+      // buffer is hitting capacity frequently.
+      (void)rxDat.Put(static_cast<uint8_t>(reg->rxDat));
+    }
 
     // Check for transmit data register empty
     if (reg->status.s.txe && reg->ctrl1.s.txeie) {
-      int ch = txDat.Get();
+      std::optional<uint8_t> ch = txDat.Get();
 
       // If there's nothing left in the transmit buffer,
       // just disable further transmit interrupts.
-      if (ch < 0) {
+      if (ch == std::nullopt) {
         reg->ctrl1.s.txeie = 0;
-      }
-
-      // Otherwise, Send the next byte
-      else {
-        reg->txDat = ch;
+      } else {
+        // Otherwise, Send the next byte.
+        reg->txDat = *ch;
       }
     }
   }
@@ -632,10 +637,11 @@ public:
   // Returns the number of bytes actually read.
   uint16_t read(char *buf, uint16_t len) {
     for (uint16_t i = 0; i < len; i++) {
-      int ch = rxDat.Get();
-      if (ch < 0)
+      std::optional<uint8_t> ch = rxDat.Get();
+      if (ch == std::nullopt) {
         return i;
-      *buf++ = static_cast<uint8_t>(ch);
+      }
+      *buf++ = *ch;
     }
 
     // Note that we don't need to enable the rx interrupt

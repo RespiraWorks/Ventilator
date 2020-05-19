@@ -19,7 +19,7 @@ limitations under the License.
 
 // Just getting my feet wet with gtest
 TEST(CircBuff, Counts) {
-  CircBuff<128> buff;
+  CircBuff<uint8_t, 128> buff;
 
   // Note that a buffer with 128 bytes of storage can only actually
   // hold 127 bytes.  This is a side effect of how we represent a
@@ -45,7 +45,9 @@ TEST(CircBuff, Counts) {
     }
 
     for (int j = 0; j < 20; j++) {
-      int ch = buff.Get();
+      uint8_t ch;
+      bool ok = buff.Get(&ch);
+      ASSERT_EQ(ok, true);
       ASSERT_EQ(ch, 0);
 
       full--;
@@ -59,7 +61,7 @@ TEST(CircBuff, Counts) {
 // Make sure the data we add to the buffer is the same
 // as the data we get out of it
 TEST(CircBuff, DataIO) {
-  CircBuff<128> buff;
+  CircBuff<uint8_t, 128> buff;
 
   uint8_t TestSet[200];
   for (uint32_t i = 0; i < sizeof(TestSet); i++)
@@ -79,12 +81,15 @@ TEST(CircBuff, DataIO) {
   }
 
   for (int i = 0; i < 127; i++) {
-    int x = buff.Get();
+    uint8_t x;
+    bool ok = buff.Get(&x);
+    ASSERT_EQ(ok, true);
     ASSERT_EQ(x, TestSet[i]);
   }
 
   // The buffer should be empty now
-  ASSERT_EQ(buff.Get(), -1);
+  uint8_t ch;
+  ASSERT_EQ(buff.Get(&ch), false);
 }
 
 // TODO - some other good tests to add when there's time:

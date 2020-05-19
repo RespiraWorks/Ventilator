@@ -101,6 +101,7 @@ static void DEV_MODE_comms_handler(const ControllerStatus &controller_status,
 static Controller controller;
 static ControllerStatus controller_status;
 static Sensors sensors;
+static Comms comms;
 
 // This function handles all the high priority tasks which need to be called
 // periodically.  The HAL calls this function from a timer interrupt.
@@ -154,8 +155,8 @@ static void background_loop() {
   while (true) {
     controller_status.uptime_ms = Hal.now().millisSinceStartup();
 
-    // Copy the current controller status with interrupts 
-    // disabled to ensure that the data we send to the 
+    // Copy the current controller status with interrupts
+    // disabled to ensure that the data we send to the
     // GUI is self consistent.
     ControllerStatus local_controller_status;
     {
@@ -183,7 +184,6 @@ int main() {
   // Initialize Hal first because it initializes the watchdog. See comment on
   // HalApi::init().
   Hal.init();
-  comms.init();
   alarm_init();
 
   background_loop();

@@ -42,28 +42,12 @@ the programmer's manual for the processor available here:
 // These can be found in the NVIC chapter (chapter 12) of the
 // processor reference manual
 #define INT_VEC_DMA1_CH2 0x70
+#define INT_VEC_DMA1_CH3 0x074
 #define INT_VEC_TIMER15 0xA0
 #define INT_VEC_SPI1 0xCC
 #define INT_VEC_UART2 0x0D8
 #define INT_VEC_UART3 0x0DC
-#define INT_VEC_DMA1_CH2 0x070
-#define INT_VEC_DMA1_CH3 0x074
 #define INT_VEC_TIMER6 0x118
-
-// Interrupts on the STM32 are prioritized.  This allows
-// more important interrupts to interrupt less important
-// ones.  When interrupts are enabled we give a priority
-// value to indicate how important the interrupt is.
-// The lower the priority number the more important the
-// interrupt.  The range is 0 to 15, but I only use a few
-// here.  Hard faults, NMI, resets, etc have a fixed
-// priority of -1, so they can always interrupt any other
-// priority level.
-enum class IntPriority {
-  CRITICAL = 2, // Very important interrupt
-  STANDARD = 5, // Normal hardware interrupts
-  LOW = 8,      // Less important.  Hardware interrutps can interrupt this
-};
 
 // Handy functions for controlling GPIO
 enum class GPIO_PinMode {

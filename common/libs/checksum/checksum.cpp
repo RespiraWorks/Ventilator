@@ -59,7 +59,7 @@ uint32_t crc32_single(uint32_t crc, uint8_t data) {
   return crc;
 }
 
-uint32_t soft_crc32(const char *data, uint32_t count) {
+uint32_t soft_crc32(const uint8_t *data, uint32_t count) {
   if (0 == count) {
     return 0;
   }
@@ -68,5 +68,30 @@ uint32_t soft_crc32(const char *data, uint32_t count) {
   while (count--) {
     crc = crc32_single(crc, *data++);
   }
+  return crc;
+}
+
+// Adds CRC of the dataLength of data bytes in the buf at the end of the buf
+bool append_crc(uint8_t *buf, uint32_t dataLength, uint32_t bufLength,
+                uint32_t crc32) {
+  if (dataLength + 4 > bufLength) {
+    return false;
+  }
+  buf[dataLength] = static_cast<uint8_t>((crc32 >> 24) & 0x000000FF);
+  buf[dataLength + 1] = static_cast<uint8_t>((crc32 >> 16) & 0x000000FF);
+  buf[dataLength + 2] = static_cast<uint8_t>((crc32 >> 8) & 0x000000FF);
+  buf[dataLength + 3] = static_cast<uint8_t>(crc32 & 0x000000FF);
+  return true;
+}
+
+uint32_t extract_crc(uint8_t *buf, uint32_t dataLength) {
+  if (dataLength < 4) {
+    return 0;
+  }
+
+  uint32_t crc = static_cast<uint32_t>(buf[len - 1 - 3]) << 24 |
+                 static_cast<uint32_t>(buf[len - 1 - 2]) << 16 |
+                 static_cast<uint32_t>(buf[len - 1 - 1]) << 8 |
+                 static_cast<uint32_t>(buf[len - 1]);
   return crc;
 }

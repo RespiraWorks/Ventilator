@@ -60,4 +60,8 @@ inline bool checksum_check(const char *packet, uint8_t packet_len) {
   return checksum_fletcher16(packet, packet_len) == 0;
 }
 
+bool append_crc(uint8_t *buf, uint32_t dataLength, uint32_t bufLength,
+                uint32_t crc32);
+uint32_t extract_crc(uint8_t *buf, uint32_t dataLength);
+
 #endif // CHECKSUM_H

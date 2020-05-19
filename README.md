@@ -53,10 +53,18 @@ When the PCB was originally designed, the ability to add a stepper driver was es
 * This will assume some knowledge and practice with electrical tinkering.  
 * For bakground on stepper motors in general, the always-excellent Great Scott provides a good [intro to stepper motors](https://youtu.be/bkqoKWP4Oy4)
 * For information on the powerSTEP01, the specific driver we are using in Rev 1.0 of the PCB, [there is a video here](https://youtu.be/_Arx5CMr_mk).  Keep in mind that while this driver will stay for the duration of the Beta phase, we may move to something different in the final product, as powerSTEP01 is likely to be **way** overkill for this application, but it does offer a lot of convenient features.
-* We will need to solder some wires to power the stepper driver as it takes a power input for the motor that is separate from the logic power it gets from the Nucleo below. We will piggyback off the blower driver power socket.  Solder two 13cm wires of 22awg or thicker to the backside of J10, the blower power connector. The square pin pad is negative. (photo placeholder)
-* While we could put the wires of the stepper directly into the terminal block on the driver, making a little doodad like this will make it quick and easy to swap out different steppers that use this common 4-pin dupont 0.100" pitch connector. (photo placeholder)
-* Insert the wires in to the terminal block and connect them like so. (photo placeholder)
-* Connect the stepper motor to this connector. (photo placeholder)
+* We will need to solder some wires to power the stepper driver as it takes a power input for the motor that is separate from the logic power it gets from the Nucleo below. We will piggyback off the blower driver power socket.  Solder two 13cm wires of 22awg or thicker to the backside of J10, the blower power connector. The square pin pad is negative. 
+
+![solder power connection](/ReadmePhotos/IMG_9372.jpg)
+* While we could put the wires of the stepper directly into the terminal block on the driver, making a little doodad like this will make it quick and easy to swap out different steppers that use this common 4-pin dupont 0.100" pitch connector.
+
+![terminal block wires](/ReadmePhotos/IMG_9371.jpg)
+* Insert the wires in to the terminal block and connect them like so.  Screw them down to ensure a secure connection.
+
+![verify model](/ReadmePhotos/IMG_9373.jpg)
+* Connect the stepper motor to this connector. 
+
+![verify model](/ReadmePhotos/IMG_9374.jpg)
 * Note pin naming conventions and color codes vary from manufacturer to manufacturer.   
     * If it does nothing and draws no current, swap one wire from the A pair with one wire from the B pair.  
     * If you send a CW command and it turns CCW, then swap the polarity of either the A or B pair, but not both.

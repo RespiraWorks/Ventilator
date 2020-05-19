@@ -235,6 +235,10 @@ public:
   // Performs the device soft-reset
   [[noreturn]] void reset_device();
 
+  // Start the loop timer
+  void startLoopTimer(const Duration &period, void (*callback)(void *),
+                      void *arg);
+
   // Pets the watchdog, this makes the watchdog not reset the
   // system for configured amount of time
   void watchdog_handler();
@@ -435,6 +439,9 @@ inline uint16_t HalApi::debugWrite(const char *buf, uint16_t len) {
   return len;
 }
 inline uint16_t HalApi::debugRead(char *buf, uint16_t len) { return 0; }
+
+inline void HalApi::startLoopTimer(const Duration &period,
+                                   void (*callback)(void *), void *arg) {}
 
 #endif
 

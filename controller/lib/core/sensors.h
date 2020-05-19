@@ -43,6 +43,11 @@ class Sensors {
 public:
   Sensors();
 
+  // Perform some initial sensor calibration.  This function should
+  // be called on system startup before any other sensor functions
+  // are called.
+  void Calibrate();
+
   // get the sensor readings (patient pressure, volumetric flow and tidal
   // volume) from the sensors
   SensorReadings GetSensorReadings();

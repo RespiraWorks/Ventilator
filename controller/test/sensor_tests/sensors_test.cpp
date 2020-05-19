@@ -86,6 +86,7 @@ TEST(SensorTests, FullScaleReading) {
   Hal.test_setAnalogPin(AnalogPin::OUTFLOW_PRESSURE_DIFF, voltage_at_0kPa);
 
   Sensors sensors;
+  sensors.Calibrate();
 
   // Now to compare the pressure readings the sensor module is calculating
   // versus what the original pressure waveform was
@@ -134,6 +135,7 @@ TEST(SensorTests, TotalFlowCalculation) {
   Hal.test_setAnalogPin(AnalogPin::OUTFLOW_PRESSURE_DIFF, voltage_at_0kPa);
 
   Sensors sensors;
+  sensors.Calibrate();
 
   for (auto p_in : pressures) {
     for (auto p_out : pressures) {

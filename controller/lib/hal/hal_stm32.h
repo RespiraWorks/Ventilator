@@ -40,6 +40,7 @@ the programmer's manual for the processor available here:
 // The values here are the offsets into the interrupt table.
 // These can be found in the NVIC chapter (chapter 12) of the
 // processor reference manual
+#define INT_VEC_TIMER15 0xA0
 #define INT_VEC_UART2 0x0D8
 #define INT_VEC_UART3 0x0DC
 #define INT_VEC_TIMER6 0x118
@@ -52,6 +53,21 @@ typedef volatile uint16_t SREG;
 
 // 8-bit byte sized register
 typedef volatile uint8_t BREG;
+
+// Interrupts on the STM32 are prioritized.  This allows
+// more important interrupts to interrupt less important
+// ones.  When interrupts are enabled we give a priority
+// value to indicate how important the interrupt is.
+// The lower the priority number the more important the
+// interrupt.  The range is 0 to 15, but I only use a few
+// here.  Hard faults, NMI, resets, etc have a fixed
+// priority of -1, so they can always interrupt any other
+// priority level.
+enum class IntPriority {
+  CRITICAL = 2, // Very important interrupt
+  STANDARD = 5, // Normal hardware interrupts
+  LOW = 8,      // Less important.  Hardware interrutps can interrupt this
+};
 
 ///////////////////////////////////////////////////////////////
 // The structures below represent the STM32 registers used
@@ -205,7 +221,6 @@ inline TimerRegs *const TIMER1_BASE = reinterpret_cast<TimerRegs *>(0x40012C00);
 inline TimerRegs *const TIMER2_BASE = reinterpret_cast<TimerRegs *>(0x40000000);
 inline TimerRegs *const TIMER3_BASE = reinterpret_cast<TimerRegs *>(0x40000400);
 inline TimerRegs *const TIMER6_BASE = reinterpret_cast<TimerRegs *>(0x40001000);
-inline TimerRegs *const TIMER7_BASE = reinterpret_cast<TimerRegs *>(0x40001400);
 inline TimerRegs *const TIMER15_BASE =
     reinterpret_cast<TimerRegs *>(0x40014000);
 inline TimerRegs *const TIMER16_BASE =

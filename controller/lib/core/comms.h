@@ -20,6 +20,7 @@ limitations under the License.
 
 #include "framing_rx_fsm.h"
 #include "hal.h"
+#include "hal_transport.h"
 #include "network_protocol.pb.h"
 #include "uart_dma.h"
 #include "units.h"
@@ -31,9 +32,9 @@ limitations under the License.
 class Comms : public UART_DMA_TxListener {
 public:
   UART_DMA &uart_dma;
-  FramingRxFSM rxFSM;
-  Comms(UART_DMA &uart_dma)
-      : uart_dma(uart_dma), rxFSM(FramingRxFSM(uart_dma)){};
+  FramingRxFSM<HalTransport> rxFSM;
+  Comms(UART_DMA &uart_dma, FramingRxFSM<HalTransport> &rxFSM)
+      : uart_dma(uart_dma), rxFSM(rxFSM){};
   void init();
   void onTxComplete() override;
   void onTxError() override;

@@ -103,7 +103,9 @@ static ControllerStatus controller_status;
 static Sensors sensors;
 
 extern UART_DMA uart_dma;
-static Comms comms(uart_dma);
+HalTransport hal_transport(uart_dma);
+FramingRxFSM<HalTransport> rxFSM(hal_transport);
+static Comms comms(uart_dma, rxFSM);
 
 // This function handles all the high priority tasks which need to be called
 // periodically.  The HAL calls this function from a timer interrupt.

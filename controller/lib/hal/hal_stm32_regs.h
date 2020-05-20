@@ -398,8 +398,8 @@ struct DMA_Regs {
     REG r;
   } intStat; // interrupt status register
 
-  struct {
-    union {
+  union {
+    struct {
       REG gif1 : 1;  // global interrupt flag
       REG tcif1 : 1; // transfer complete (TC) flag
       REG htif1 : 1; // half transfer (HT) flag
@@ -489,10 +489,10 @@ inline void DMA_SelectChannel(DMA_Regs *const dma, DMA_Chan chan,
 
 // Clear a DMA interrupt given the channel number and interrupt type
 typedef enum {
-  GLOBAL = 0,
-  XFER_COMPLETE = 1,
-  HALF_COMPLETE = 2,
-  XFER_ERR = 3
+  GLOBAL = 1,
+  XFER_COMPLETE = 2,
+  HALF_COMPLETE = 4,
+  XFER_ERR = 8
 } DmaInterrupt;
 
 inline void DMA_ClearInt(DMA_Regs *const dma, DMA_Chan chan,

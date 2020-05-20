@@ -90,7 +90,7 @@ enum class StepMtrErr {
 
 // Represents one of the stepper motors in the system
 class StepMotor {
-  static const int totalMotors = 4;
+  static const int totalMotors = 2;
 
 public:
   StepMotor();

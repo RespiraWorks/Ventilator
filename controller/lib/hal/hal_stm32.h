@@ -48,6 +48,7 @@ the programmer's manual for the processor available here:
 #define INT_VEC_UART2 0x0D8
 #define INT_VEC_UART3 0x0DC
 #define INT_VEC_TIMER6 0x118
+#define INT_VEC_DMA2_CH3 0x128
 
 // Handy functions for controlling GPIO
 enum class GPIO_PinMode {

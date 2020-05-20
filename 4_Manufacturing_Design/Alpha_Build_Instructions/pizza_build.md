@@ -9,7 +9,7 @@ This build consists of a functional ventilator pneumatic assembly with controlle
 
 ![Pizza pneumatics](pizza_pneumatics_2.png)
 
-Note: the sensing tube diagram above is not correct, please refer the the drawing below for how to connect the venturis pressure sensors on the PCB.
+Note: the sensing tube diagram above is not correct, please refer the the drawing below for how to connect the venturis pressure sensors on the PCB, and mind which tubes go into the bottom and top port of the sensors on the PCB.
 
 It lacks heating, oxygen mixing, humidification, battery backup and air filtering.
 It is also not enclosed like the final product and is meant to be operated in an open layout on your table, like a pizza.

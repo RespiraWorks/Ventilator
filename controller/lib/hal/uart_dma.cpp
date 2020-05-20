@@ -13,7 +13,7 @@
 // CPU is notified via interrupt.
 
 // This driver also provides Character Match interrupt on reception.
-// UART will issue an interrupt upot the reception of the specified
+// UART will issue an interrupt upon receipt of the specified
 // character.
 
 extern UART_DMA dmaUART;
@@ -31,7 +31,7 @@ void UART_DMA::init(int baud) {
 
   uart->ctrl3.s.eie = 1; // enable interrupt on error
 
-  uart->request = (1 << 3); // Clear RXNE flag before clearing other flags
+  uart->request.s.rxfrq = 1; // Clear RXNE flag before clearing other flags
   uart->intClear = (1 << 11) | (1 << 3) | (1 << 1); // Clear error flags
 
   uart->ctrl1.s.te = 1; // enable transmitter
@@ -147,7 +147,7 @@ bool UART_DMA::startRX(const char *buf, const uint32_t length,
   // max timeout is 24 bit
   uart->timeout.s.rto = timeout & 0x00FFFFFF;
   uart->intClear = (1 << 11); // Clear rx timeout flag
-  uart->request = (1 << 3);   // Clear RXNE flag
+  uart->request.s.rxfrq = 1;  // Clear RXNE flag
   uart->ctrl1.s.rtoie = 1;    // Enable receive timeout interrupt
 
   dma->channel[rxCh].config.enable = 1; // go!
@@ -203,7 +203,7 @@ inline void UART_DMA::UART_ISR() {
       e = RxError_t::RX_ERROR_FRAMING;
     }
 
-    uart->request = (1 << 3); // Clear RXNE flag before clearing other flags
+    uart->request.s.rxfrq = 1; // Clear RXNE flag before clearing other flags
     uart->intClear = (1 << 11) | (1 << 3) | (1 << 1); // Clear error flags
 
     // TODO define logic if stopRX() has to be here
@@ -211,7 +211,7 @@ inline void UART_DMA::UART_ISR() {
   }
 
   if (isCharacterMatchInterrupt()) {
-    uart->request = (1 << 3);   // Clear RXNE flag before clearing other flags
+    uart->request.s.rxfrq = 1;  // Clear RXNE flag before clearing other flags
     uart->intClear = (1 << 17); // Clear char match flag
     // TODO define logic if stopRX() has to be here
     rxListener.onCharacterMatch();

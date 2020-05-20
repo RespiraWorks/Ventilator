@@ -180,7 +180,17 @@ struct UART_Regs {
     } s;
     REG r;
   } timeout;
-  REG request;
+  union {
+    struct {
+      REG abrrq : 1; // auto baud rate request
+      REG sbkrq : 1; // send break request
+      REG mmrq : 1;  // mute  mode request
+      REG rxfrq : 1; // receive data flush request
+      REG txfrq : 1; // transmit data flush request
+      REG rsvd : 27;
+    } s;
+    REG r;
+  } request;
   REG status;
   REG intClear;
   REG rxDat;

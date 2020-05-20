@@ -1,12 +1,15 @@
+#include <QSerialPort>
+#include <QtDebug>
+#include <memory>
+
 #include "../common/generated_libs/network_protocol/network_protocol.pb.h"
+#include "../common/libs/checksum/checksum.h"
+#include "../common/libs/framing/framing.h"
 #include "../common/third_party/nanopb/pb_common.h"
 #include "../common/third_party/nanopb/pb_decode.h"
 #include "../common/third_party/nanopb/pb_encode.h"
 #include "chrono.h"
 #include "connected_device.h"
-#include <QSerialPort>
-#include <QtDebug>
-#include <memory>
 
 // Connects to system serial port, does nanopb serialization/deserialization
 // of GuiStatus and ControllerStatus and provides methods to send/receive
@@ -31,7 +34,6 @@ constexpr DurationMs INTER_FRAME_TIMEOUT_MS = DurationMs(42);
 constexpr DurationMs WRITE_TIMEOUT_MS = DurationMs(15);
 
 class RespiraConnectedDevice : public ConnectedDevice {
-
 public:
   RespiraConnectedDevice(QString portName) : serialPortName_(portName) {}
 
@@ -69,16 +71,31 @@ public:
       return false;
     }
 
-    uint8_t tx_buffer[GuiStatus_size];
+    uint8_t pb_buffer[GuiStatus_size + 4];
 
-    pb_ostream_t stream = pb_ostream_from_buffer(tx_buffer, sizeof(tx_buffer));
+    pb_ostream_t stream =
+        pb_ostream_from_buffer(pb_buffer, sizeof(pb_buffer) - 4);
     if (!pb_encode(&stream, GuiStatus_fields, &gui_status)) {
       // TODO: Serialization failure; log an error and/or raise an alert.
       qCritical() << "Could not serialize GuiStatus";
       return false;
     }
 
-    serialPort_->write((const char *)tx_buffer, stream.bytes_written);
+    uint32_t crc32 = soft_crc32(pb_buffer, stream.bytes_written);
+    if (!append_crc(pb_buffer, stream.bytes_written, sizeof(pb_buffer),
+                    crc32)) {
+      qCritical() << "Could not append CRC to serialized GuiStatus";
+      return false;
+    }
+    uint8_t tx_buffer[(GuiStatus_size + 4) * 2 + 2];
+    uint32_t encoded_length = encodeFrame(pb_buffer, stream.bytes_written + 4,
+                                          tx_buffer, sizeof(tx_buffer));
+    if (0 == encoded_length) {
+      qCritical() << "Could not frame serialized GuiStatus";
+      return false;
+    }
+
+    serialPort_->write((const char *)tx_buffer, encoded_length);
 
     if (!serialPort_->waitForBytesWritten(WRITE_TIMEOUT_MS.count())) {
       // TODO communication failure, port closed? Log an error and raise

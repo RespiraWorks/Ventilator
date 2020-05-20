@@ -9,6 +9,8 @@ This build consists of a functional ventilator pneumatic assembly with controlle
 
 ![Pizza pneumatics](pizza_pneumatics_2.png)
 
+Note: the sensing tube diagram above is not correct, please refer the the drawing below for how to connect the venturis pressure sensors on the PCB, and mind which tubes go into the bottom and top port of the sensors on the PCB.
+
 It lacks heating, oxygen mixing, humidification, battery backup and air filtering.
 It is also not enclosed like the final product and is meant to be operated in an open layout on your table, like a pizza.
 
@@ -58,6 +60,7 @@ This build depends on already having a Brain build, which has its own BOM [here]
 | 17x    |        1 |               | WS1208DYY01V03      |        24.00 |*ask first*| [W][17x-won]    | blower driver, in case blower above did not come with driver. |
 | 18     |        1 | RespiraWorks  | blower control cable|              | **ask**   | [B][18rw]               | blower control cable |
 | 19     |        1 | RespiraWorks  | blower power cable  |              | **ask**   | [B][19rw]               | blower power cable |
+| 20     |        1 | McMaster-Carr  | 5463K44  | 7.39 / 10 | buy   | [C][20mcmc] | sensing tube 3/23" t-junction |
 
 [1mcmc]:   https://www.mcmaster.com/53415K217
 [2mcmc]:   https://www.mcmaster.com/5463K565
@@ -87,6 +90,7 @@ This build depends on already having a Brain build, which has its own BOM [here]
 [17x-won]: https://wonsmart-motor.en.made-in-china.com/product/hsjxFewOppVg/China-Air-Pump12V-Brushless-Motor-12V-Blower-Fan-Driver.html
 [18rw]:    ../../1_Ventilator_System_Design/Electrical_System/wiring.md
 [19rw]:    ../../1_Ventilator_System_Design/Electrical_System/wiring.md
+[20mcmc]:    https://www.mcmaster.com/5463K44
 
 ## Tooling BOM
 

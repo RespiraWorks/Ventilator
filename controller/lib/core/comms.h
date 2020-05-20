@@ -16,19 +16,19 @@ limitations under the License.
 #ifndef COMMS_H
 #define COMMS_H
 
+#include <stdint.h>
+
 #include "framing_rx_fsm.h"
 #include "hal.h"
 #include "network_protocol.pb.h"
 #include "uart_dma.h"
 #include "units.h"
-#include <stdint.h>
 
 // This module periodically sends messages to the GUI device and receives
 // messages from the GUI.  The only way it communicates with other modules is
 // by modifying the gui_status pointer in comms_handler.
 
 class Comms : public UART_DMA_TxListener {
-
 public:
   UART_DMA &uart_dma;
   FramingRxFSM rxFSM;
@@ -42,6 +42,9 @@ public:
   // gui_status accordingly.
   void handler(const ControllerStatus &controller_status,
                GuiStatus *gui_status);
+#ifdef TEST_MODE
+  void test_PutRxBuffer(uint8_t *buf, uint32_t len);
+#endif
 
 private:
   bool is_time_to_transmit();

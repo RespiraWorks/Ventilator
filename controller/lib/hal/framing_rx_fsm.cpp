@@ -3,8 +3,6 @@
 #include "network_protocol.pb.h"
 #include "uart_dma.h"
 
-// extern UART_DMA dmaUART;
-
 void FramingRxFSM::begin() {
   state = STATE_LOST;
   uart_dma.charMatchEnable();

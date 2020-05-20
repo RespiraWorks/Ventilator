@@ -32,7 +32,9 @@ public:
   uint8_t *getReceivedBuf();
   uint32_t getReceivedLength();
   bool isDataAvailable();
-
+#ifdef TEST_MODE
+  void test_PutRxBuffer(uint8_t *buf, uint32_t len);
+#endif
 private:
   uint32_t receivedBytesCount();
   void restartRX();

@@ -4,32 +4,60 @@
 #include <pb_decode.h>
 #include <pb_encode.h>
 
+#include "checksum.h"
+#include "framing.h"
 #include "framing_rx_fsm.h"
 #include "hal.h"
 #include "network_protocol.pb.h"
 #include "gtest/gtest.h"
 
-bool UART_DMA::isTxInProgress() { return true; }
-bool UART_DMA::isRxInProgress() { return true; }
+uint8_t tx_buffer[(ControllerStatus_size + 4) * 2 + 2];
+uint32_t tx_length = 0;
+bool is_txing = false;
+uint8_t rx_buffer[(GuiStatus_size + 4) * 2 + 2];
+UART_DMA_RxListener *rx_listener;
+uint32_t rx_i = 0;
+uint32_t rx_length = 0;
+
+void UART_DMA::init(int baud){};
+bool UART_DMA::isTxInProgress() { return false; }
+bool UART_DMA::isRxInProgress() { return false; }
 bool UART_DMA::startTX(const uint8_t *buf, uint32_t length,
                        UART_DMA_TxListener *txl) {
-  return false;
+  memcpy(tx_buffer, buf, length);
+  tx_length = length;
+  is_txing = true;
+  return true;
 };
-
-uint32_t UART_DMA::getRxBytesLeft() { return 0; };
 
 void UART_DMA::stopTX(){};
 
+uint32_t UART_DMA::getRxBytesLeft() { return rx_length - rx_i - 1; };
+
 bool UART_DMA::startRX(const uint8_t *buf, const uint32_t length,
                        const uint32_t timeout, UART_DMA_RxListener *rxl) {
-  return 0;
+  rx_length = length;
+  rx_listener = rxl;
+  return true;
 };
+
+void fakeRx() {
+  for (rx_i = 0; rx_i < rx_length; rx_i++) {
+    if (MARK == rx_buffer[rx_i]) {
+      rx_listener->onCharacterMatch();
+    }
+  }
+}
+
+void FramingRxFSM::test_PutRxBuffer(uint8_t *buf, uint32_t len) {
+  memcpy(rx_buf, buf, len);
+}
+void Comms::test_PutRxBuffer(uint8_t *buf, uint32_t len) {
+  rxFSM.test_PutRxBuffer(buf, len);
+}
+
 void UART_DMA::stopRX(){};
 void UART_DMA::charMatchEnable(){};
-void UART_DMA::UART_ISR() {}
-void UART_DMA::DMA_RX_ISR(){};
-void UART_DMA::DMA_TX_ISR(){};
-void UART_DMA::init(int baud){};
 
 UART_DMA dmaUART = UART_DMA();
 Comms comms(dmaUART);
@@ -68,12 +96,13 @@ TEST(CommTests, SendControllerStatus) {
     GuiStatus gui_status_ignored = GuiStatus_init_zero;
     comms.handler(s, &gui_status_ignored);
   }
-  char tx_buffer[ControllerStatus_size];
-  uint16_t len = 15;
-  // Hal.test_serialGetOutgoingData(tx_buffer, sizeof(tx_buffer));
-  ASSERT_GT(len, 0);
-  pb_istream_t stream =
-      pb_istream_from_buffer(reinterpret_cast<unsigned char *>(tx_buffer), len);
+  uint8_t decoded_buf[ControllerStatus_size + 4];
+  uint32_t decoded_length =
+      decodeFrame(tx_buffer, tx_length, decoded_buf, ControllerStatus_size + 4);
+
+  ASSERT_GT(decoded_length, static_cast<uint32_t>(0));
+  pb_istream_t stream = pb_istream_from_buffer(
+      reinterpret_cast<unsigned char *>(decoded_buf), decoded_length - 4);
 
   ControllerStatus sent = ControllerStatus_init_zero;
   ASSERT_TRUE(pb_decode(&stream, ControllerStatus_fields, &sent));
@@ -84,7 +113,7 @@ TEST(CommTests, SendControllerStatus) {
             sent.sensor_readings.patient_pressure_cm_h2o);
 }
 
-TEST(CommTests, DISABLED_CommandRx) {
+TEST(CommTests, CommandRx) {
   GuiStatus s = GuiStatus_init_zero;
   s.uptime_ms = std::numeric_limits<uint32_t>::max() / 2;
   s.desired_params.mode = VentMode_PRESSURE_CONTROL;
@@ -106,26 +135,34 @@ TEST(CommTests, DISABLED_CommandRx) {
   s.desired_params.alarm_hi_breaths_per_min =
       std::numeric_limits<uint32_t>::max();
 
-  char rx_buffer[GuiStatus_size];
-  pb_ostream_t stream = pb_ostream_from_buffer(
-      reinterpret_cast<unsigned char *>(rx_buffer), sizeof(rx_buffer));
+  uint8_t pb_buf[GuiStatus_size + 4];
+  pb_ostream_t stream = pb_ostream_from_buffer(pb_buf, GuiStatus_size);
   pb_encode(&stream, GuiStatus_fields, &s);
-  EXPECT_GT(stream.bytes_written, 0u);
-  // Hal.test_serialPutIncomingData(rx_buffer,
-  //                                static_cast<uint16_t>(stream.bytes_written));
-  // EXPECT_GT(Hal.serialBytesAvailableForRead(), 0);
+  uint32_t len = (uint32_t)(stream.bytes_written);
+  EXPECT_GT(len, 0u);
+  uint32_t crc32 = soft_crc32(pb_buf, reinterpret_cast<uint32_t>(len));
+  bool crc_appened = append_crc(pb_buf, len, GuiStatus_size + 4, crc32);
+  EXPECT_TRUE(crc_appened);
+  uint32_t encoded_length =
+      encodeFrame(pb_buf, len + 4, rx_buffer, sizeof(rx_buffer));
+  EXPECT_GT(encoded_length, (uint32_t)0);
 
   ControllerStatus controller_status_ignored = ControllerStatus_init_zero;
   GuiStatus received = GuiStatus_init_zero;
+  comms.init();
+  comms.test_PutRxBuffer(rx_buffer, sizeof(rx_buffer));
+  fakeRx();
+  comms.handler(controller_status_ignored, &received);
 
   // Run comms_handler until it updates GuiStatus.  10 iterations should be
   // more than enough to read the whole thing.
-  for (int i = 0; i < 10; i++) {
-    comms.handler(controller_status_ignored, &received);
-    // We use a timeout for framing packets, so we have to advance the time,
-    // otherwise we'll never think the packet is complete!
-    Hal.delay(milliseconds(1));
-  }
+  //   for (int i = 0; i < 10; i++) {
+  //     comms.handler(controller_status_ignored, &received);
+  //     // We use a timeout for framing packets, so we have to advance the
+  //     time,
+  //     // otherwise we'll never think the packet is complete!
+  //     Hal.delay(milliseconds(1));
+  //   }
   EXPECT_EQ(s.uptime_ms, received.uptime_ms);
   EXPECT_EQ(s.desired_params.mode, received.desired_params.mode);
 }

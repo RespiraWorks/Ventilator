@@ -49,11 +49,15 @@ We try to make few assumptions about what tools you have. Here are recommended t
 
 | RefDes | Quantity | Manufacturer  | Part number         | Price($) | Sources         | Notes |
 | ------ |---------:| ------------- | ------------------- | --------:|-----------------| ----- |
-| T1     |        1 | IWISS         | SN-2549             |    25.29 | [Z][t1amzn]     | Crimping tool for HX and HV connectors |
+| T1     |        1 | Preciva         | PR-3254 (PR102001)             |    39.99 | [Z][t1amzn]     | Crimping tool for HX and HV connectors |
 
-[t1amzn]:https://www.amazon.com/gp/product/B01N4L8QMW
+[t1amzn]:https://www.amazon.com/gp/product/B07R1H3Z8X
 
-**TODO:** better quality crimper preferred?
+**Crimper Tips:**
+
+* Position 1 on the crimper will crimp XH contacts
+* Position 2 on the crimper will crimp VH contacts.  However, with certain gauges of wire, this crimper may bend the contact into a shrimp-like shape.  If this happens, bend the contact back straight (it should be pretty obvious as it blocks insertion)
+* It comes with a lot of XH contacts, but not any VH contacts.
 
 ## Assembly
 

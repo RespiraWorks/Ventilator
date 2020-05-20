@@ -72,6 +72,7 @@ uint8_t StepMotor::paramLen[32] = {
 
 int32_t setMtr, getMtr, cmd, mtrNdx;
 uint32_t getVal, stat;
+//#define DEBUG_ENABLED
 #ifdef DEBUG_ENABLED
 #include "vars.h"
 DebugVar v1("set_param", &setMtr, "For testing stepper", "0x%08x");
@@ -163,7 +164,7 @@ StepMtrErr StepMotor::GetParam(StepMtrParam param, uint32_t *value) {
  *****************************************************************/
 void HalApi::StepperMotorInit() {
   EnableClock(SPI1_BASE);
-  EnableClock(DMA1_BASE);
+  EnableClock(DMA2_BASE);
 
   // The following pins are used to talk to the stepper
   // drivers:
@@ -223,37 +224,24 @@ void HalApi::StepperMotorInit() {
   spi->ctrl[0] =
       cpha | cpol | masterMode | baudRate | spiEnable | internalSS | softwareSS;
 
-  // DMA1 channels 2 and 3 can be used to handle rx and tx interrupts from
+  // DMA2 channels 3 and 4 can be used to handle rx and tx interrupts from
   // SPI1 respectively.
-  DMA_SelectChannel(DMA1_BASE, DMA_Chan::C2, 1);
-  DMA_SelectChannel(DMA1_BASE, DMA_Chan::C3, 1);
+  DMA_SelectChannel(DMA2_BASE, DMA_Chan::C3, 4);
+  DMA_SelectChannel(DMA2_BASE, DMA_Chan::C4, 4);
 
   // The two DMA channels move data to/from the SPI data register.
-  DMA_Regs *dma = DMA1_BASE;
-  int C2 = static_cast<int>(DMA_Chan::C2);
+  DMA_Regs *dma = DMA2_BASE;
   int C3 = static_cast<int>(DMA_Chan::C3);
-  dma->channel[C2].pAddr = &spi->data;
+  int C4 = static_cast<int>(DMA_Chan::C4);
   dma->channel[C3].pAddr = &spi->data;
+  dma->channel[C4].pAddr = &spi->data;
 
   // Configure the DMA channels, but don't enable them yet
-  dma->channel[C2].config.enable = 0;
-  dma->channel[C2].config.tcie = 1;
-  dma->channel[C2].config.htie = 0;
-  dma->channel[C2].config.teie = 0;
-  dma->channel[C2].config.dir = DmaChannelDir::PERIPHERAL_TO_MEM;
-  dma->channel[C2].config.circular = 0;
-  dma->channel[C2].config.perInc = 0;
-  dma->channel[C2].config.memInc = 1;
-  dma->channel[C2].config.psize = 0;
-  dma->channel[C2].config.msize = 0;
-  dma->channel[C2].config.priority = 0;
-  dma->channel[C2].config.mem2mem = 0;
-
   dma->channel[C3].config.enable = 0;
-  dma->channel[C3].config.tcie = 0;
+  dma->channel[C3].config.tcie = 1;
   dma->channel[C3].config.htie = 0;
   dma->channel[C3].config.teie = 0;
-  dma->channel[C3].config.dir = DmaChannelDir::MEM_TO_PERIPHERAL;
+  dma->channel[C3].config.dir = DmaChannelDir::PERIPHERAL_TO_MEM;
   dma->channel[C3].config.circular = 0;
   dma->channel[C3].config.perInc = 0;
   dma->channel[C3].config.memInc = 1;
@@ -262,7 +250,20 @@ void HalApi::StepperMotorInit() {
   dma->channel[C3].config.priority = 0;
   dma->channel[C3].config.mem2mem = 0;
 
-  Hal.EnableInterrupt(INT_VEC_DMA1_CH2, IntPriority::STANDARD);
+  dma->channel[C4].config.enable = 0;
+  dma->channel[C4].config.tcie = 0;
+  dma->channel[C4].config.htie = 0;
+  dma->channel[C4].config.teie = 0;
+  dma->channel[C4].config.dir = DmaChannelDir::MEM_TO_PERIPHERAL;
+  dma->channel[C4].config.circular = 0;
+  dma->channel[C4].config.perInc = 0;
+  dma->channel[C4].config.memInc = 1;
+  dma->channel[C4].config.psize = 0;
+  dma->channel[C4].config.msize = 0;
+  dma->channel[C4].config.priority = 0;
+  dma->channel[C4].config.mem2mem = 0;
+
+  Hal.EnableInterrupt(INT_VEC_DMA2_CH3, IntPriority::STANDARD);
 }
 
 void test() {
@@ -389,32 +390,32 @@ void StepMotor::StartCmd() {
   if (!comsActive)
     return;
 
-  int C2 = static_cast<int>(DMA_Chan::C2);
   int C3 = static_cast<int>(DMA_Chan::C3);
+  int C4 = static_cast<int>(DMA_Chan::C4);
 
-  DMA_Regs *dma = DMA1_BASE;
-  dma->channel[C2].config.enable = 0;
+  DMA_Regs *dma = DMA2_BASE;
   dma->channel[C3].config.enable = 0;
+  dma->channel[C4].config.enable = 0;
 
-  dma->channel[C2].count = totalMotors;
   dma->channel[C3].count = totalMotors;
-  dma->channel[C2].mAddr = dmaBuff;
+  dma->channel[C4].count = totalMotors;
   dma->channel[C3].mAddr = dmaBuff;
+  dma->channel[C4].mAddr = dmaBuff;
 
   // NOTE - CS has to be high for at least 650ns between bytes.
   // I don't bother timing this because I've found that in
   // practice it takes longer then that to handle the interrupt
   CS_Low();
 
-  dma->channel[C2].config.enable = 1;
   dma->channel[C3].config.enable = 1;
+  dma->channel[C4].config.enable = 1;
 }
 
 void StepMotor::DMA_ISR() {
   CS_High();
 
   // Clear the DMA interrupt
-  DMA_ClearInt(DMA1_BASE, DMA_Chan::C2, DmaInterrupt::GLOBAL);
+  DMA_ClearInt(DMA2_BASE, DMA_Chan::C3, DmaInterrupt::GLOBAL);
 
   StartCmd();
 }

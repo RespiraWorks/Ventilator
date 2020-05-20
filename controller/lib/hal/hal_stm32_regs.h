@@ -222,7 +222,29 @@ struct UART_Regs {
     } s;
     REG r;
   } status;
-  REG intClear;
+  union {
+    struct {
+      REG pecf : 1;   // parity error clear flag
+      REG fecf : 1;   // framing error clear flag
+      REG ncf : 1;    // noise detected clear flag
+      REG orecf : 1;  // overrun error clear flag
+      REG idlecf : 1; // idle line detected clear flag
+      REG rsvd : 1;
+      REG tccf : 1;    // transmission complete clear flag
+      REG tcbgtcf : 1; // transmission completed before guard time clear fl.
+      REG lbdcf : 1;   // LIN break detection clear flag
+      REG ctscf : 1;   // CTS clear flag
+      REG rsvd2 : 1;
+      REG rtocf : 1; // receiver timeout clear flag
+      REG eobcf : 1; // end of block clear flag
+      REG rsvd3 : 4;
+      REG cmcf : 1; // character match clear flag
+      REG rsvd4 : 2;
+      REG wucf : 1; // wakeup from stop mode clear flag
+      REG rsvd5 : 11;
+    } s;
+    REG r;
+  } intClear;
   REG rxDat;
   REG txDat;
 };

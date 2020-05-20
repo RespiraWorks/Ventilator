@@ -2,13 +2,13 @@
 #define __UART_DMA
 #include "hal_stm32_regs.h"
 
-typedef enum {
+enum RxError_t {
   RX_ERROR_UNKNOWN,
   RX_ERROR_OVR,
   RX_ERROR_FRAMING,
   RX_ERROR_TIMEOUT,
   RX_ERROR_DMA
-} RxError_t;
+};
 
 // An interface that gets called back by the driver on rx, tx complete
 // and rx character match events.
@@ -35,7 +35,7 @@ class DMACtrl {
   DMA_Regs *const dma;
 
 public:
-  DMACtrl(DMA_Regs *const dma) : dma(dma) {}
+  explicit DMACtrl(DMA_Regs *const dma) : dma(dma) {}
   void init() {
     // UART3 reception happens on DMA1 channel 3
     dma->chanSel.c3s = 0b0010;
@@ -83,7 +83,7 @@ public:
   // setup. Returns true if no reception is in progress and new reception
   // was setup.
 
-  bool startRX(const char *buf, const uint32_t length, const uint32_t timeout);
+  bool startRX(const char *buf, uint32_t length, uint32_t timeout);
   void stopRX();
   void charMatchEnable();
 

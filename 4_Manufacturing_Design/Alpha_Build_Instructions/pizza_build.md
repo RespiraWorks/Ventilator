@@ -9,6 +9,8 @@ This build consists of a functional ventilator pneumatic assembly with controlle
 
 ![Pizza pneumatics](pizza_pneumatics_2.png)
 
+Note: the sensing tube diagram above is not correct, please refer the the drawing below for how to connect the venturis pressure sensors on the PCB, and mind which tubes go into the bottom and top port of the sensors on the PCB.
+
 It lacks heating, oxygen mixing, humidification, battery backup and air filtering.
 It is also not enclosed like the final product and is meant to be operated in an open layout on your table, like a pizza.
 
@@ -27,6 +29,7 @@ This build depends on already having a Brain build, which has its own BOM [here]
 * **E** = ebay
 * **C** = McMaster-Carr
 * **K** = Digikey
+* **M** = Mouser
 * **W** = Wonsmart
 * **B** = Built by RespiraWorks
 
@@ -51,13 +54,14 @@ This build depends on already having a Brain build, which has its own BOM [here]
 | 11     |        1 |               |                     | 6.98         | buy       | [Z][11amzn]     | use these to simulate lung compliance |
 | 12     |        1 | RespiraWorks  | PCB1                |              | **ask**   | [B][12rw]       | RespiraWorks Ventilator Mainboard Rev 1 PCB |
 | 13     |        1 | RespiraWorks  | Power input 1       |              | **ask**   | [B][13rw]               | Power Input cable |
-| 14     |        1 | Digikey       | X-NUCLEO-IHM03A1    |        10.64 |*ask first*| [K][14key] [M][1mr]      | Stepper driver dev board |
+| 14     |        1 | Digikey       | X-NUCLEO-IHM03A1    |        10.64 |*ask first*| [K][14key] [M][14mr]      | Stepper driver dev board |
 | 15     |        1 | RespiraWorks  | PinchValve1.4       |              | **ask**   | [B][15rw]       | Marc-designed stepper pinch valve rev 1.4 |
 | 16     |        2 | RespiraWorks  | Venturi2            |              | **ask**   | [B][16rw]       | Ethan-designed 10-32 threaded venturis Rev 2 |
 | 17     |        1 |               | WS7040-12-X200N     |        52.65 |*ask first*| [A][17ali]      | 12v blower and driver. Make sure to choose w/driver when ordering. |
 | 17x    |        1 |               | WS1208DYY01V03      |        24.00 |*ask first*| [W][17x-won]    | blower driver, in case blower above did not come with driver. |
 | 18     |        1 | RespiraWorks  | blower control cable|              | **ask**   | [B][18rw]               | blower control cable |
 | 19     |        1 | RespiraWorks  | blower power cable  |              | **ask**   | [B][19rw]               | blower power cable |
+| 20     |        1 | McMaster-Carr  | 5463K44  | 7.39 / 10 | buy   | [C][20mcmc] | sensing tube 3/23" t-junction |
 
 [1mcmc]:   https://www.mcmaster.com/53415K217
 [2mcmc]:   https://www.mcmaster.com/5463K565
@@ -81,13 +85,14 @@ This build depends on already having a Brain build, which has its own BOM [here]
 [12rw]:    https://github.com/RespiraWorks/pcbreathe/tree/master/NIGHTLY/20200424v2-RELEASE-CANDIDATE-2
 [13rw]:    ../../1_Ventilator_System_Design/Electrical_System/wiring.md
 [14key]:   https://www.digikey.com/short/z442qt
+[14mr]:     https://www.mouser.com/ProductDetail/511-X-NUCLEO-IHM03A1
 [15rw]:    ../../2_Research_&_Development/Project-Pinch_Valve/README.md 
 [16rw]:    ../../2_Research_&_Development/Project-Venturi/README.md
 [17ali]:   https://www.aliexpress.com/item/32698107687.html
 [17x-won]: https://wonsmart-motor.en.made-in-china.com/product/hsjxFewOppVg/China-Air-Pump12V-Brushless-Motor-12V-Blower-Fan-Driver.html
 [18rw]:    ../../1_Ventilator_System_Design/Electrical_System/wiring.md
 [19rw]:    ../../1_Ventilator_System_Design/Electrical_System/wiring.md
-[1mr]:     https://www.mouser.com/ProductDetail/511-X-NUCLEO-IHM03A1
+[20mcmc]:    https://www.mcmaster.com/5463K44
 
 ## Tooling BOM
 

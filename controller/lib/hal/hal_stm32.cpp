@@ -916,7 +916,7 @@ void HalApi::EnableClock(void *ptr) {
   rcc->periphClkEna[ndx] |= (1 << bit);
 }
 
-// static void DMA1CH2_ISR() { StepMotor::DMA_ISR(); }
+static void StepperISR() { StepMotor::DMA_ISR(); }
 
 /******************************************************************
  * Interrupt vector table.  The interrupt vector table is a list of
@@ -1036,7 +1036,7 @@ __attribute__((section(".isr_vector"))) void (*const vectors[101])() = {
     BadISR,     //  71 - 0x11C
     BadISR,     //  72 - 0x120
     BadISR,     //  73 - 0x124
-    BadISR,     //  74 - 0x128
+    StepperISR, //  74 - 0x128
     BadISR,     //  75 - 0x12C
     BadISR,     //  76 - 0x130
     BadISR,     //  77 - 0x134

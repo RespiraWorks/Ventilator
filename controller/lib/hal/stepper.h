@@ -86,11 +86,12 @@ enum class StepMtrParam {
 enum class StepMtrErr {
   OK,
   BAD_PARAM, // The parameter ID is invalid
+  BAD_VALUE, // Illegal value passed
 };
 
 // Represents one of the stepper motors in the system
 class StepMotor {
-  static const int totalMotors = 2;
+  static const int total_motors_ = 2;
 
 public:
   StepMotor();
@@ -98,9 +99,9 @@ public:
   // Return a pointer to the Nth stepper motor
   // in the system.  Returns NULL for an invalid input
   static StepMotor *GetStepper(int n) {
-    if ((n < 0) || (n >= totalMotors))
+    if ((n < 0) || (n >= total_motors_))
       return 0;
-    return &motor[n];
+    return &motor_[n];
   }
 
   // Set and get parameters.
@@ -110,18 +111,47 @@ public:
 
   StepMtrErr GetStatus(uint16_t *stat);
 
+  // Sets the number of full steps / rev for the motor.
+  // For most stepper motors this is 200.  That's the
+  // default if this function isn't called.
+  // If your stepper is a '1.8 deg' motor, then it has
+  // 200 steps / rev (360 deg / 200 steps = 1.8 deg).
+  // This value is used internally to convert between
+  // degrees and steps.
+  void SetStepsPerRev(int spr) { steps_per_rev_ = spr; }
+
+  int GetStepsPerRev() { return steps_per_rev_; }
+
+  float GetCurrentSpeed();
+
+  StepMtrErr SetMinSpeed(float dps);
+  float GetMinSpeed();
+
+  StepMtrErr SetMaxSpeed(float dps);
+  float GetMaxSpeed();
+
+  StepMtrErr SetAccel(float acc);
+
+  void RunAtVelocity(float vel);
+
 private:
-  static StepMotor motor[totalMotors];
-  static uint8_t dmaBuff[totalMotors];
-  static uint8_t paramLen[32];
-  static bool comsActive;
+  static StepMotor motor_[total_motors_];
+  static uint8_t dma_buff_[total_motors_];
+  static uint8_t param_len_[32];
+  static bool coms_active_;
 
   // This pointer and count are used to hold the command being
   // sent to the motor and it's response.
   // They're volatile because the interrupt handler updates them
-  volatile uint8_t *cmdPtr;
-  volatile int cmdRemain;
-  bool sentByte;
+  volatile uint8_t *cmd_ptr_;
+  volatile int cmd_remain_;
+  bool sent_byte_;
+
+  // Number of full steps/rev
+  int steps_per_rev_;
+
+  float DpsToVelReg(float vel, float cnv);
+  float RegVelToDps(int32_t val, float cnv);
 
   // Send a command and wait for the response
 public:

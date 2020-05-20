@@ -34,7 +34,5 @@ def main():
         SetVar("get_param", p)
         print("%20s: %s" % (params[p], GetVar("mtr_value")))
 
-    print("%20s: %s" % ("STATUS", GetVar("stat")))
-
 
 main()

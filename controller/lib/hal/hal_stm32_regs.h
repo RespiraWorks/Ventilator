@@ -191,7 +191,37 @@ struct UART_Regs {
     } s;
     REG r;
   } request;
-  REG status;
+  union {
+    struct {
+      const REG pe : 1;    // parity error
+      const REG fe : 1;    // framing error
+      const REG nf : 1;    // START bit noise detection flag
+      const REG ore : 1;   // overrun error
+      const REG idle : 1;  // idle line detected
+      const REG rxne : 1;  // read data register not empty
+      const REG tc : 1;    // transmission complete
+      const REG txe : 1;   // transmit data register empty
+      const REG lbdf : 1;  // LIN break detection flag
+      const REG ctsif : 1; // CTS interrupt flag
+      const REG cts : 1;   // CTS flag
+      const REG rtof : 1;  // receiver timeout
+      const REG eobf : 1;  // end of block flag
+      const REG rsvd : 1;
+      const REG abre : 1;  // auto baud rate error
+      const REG abrf : 1;  // auto baud rate flag
+      const REG busy : 1;  // busy flag
+      const REG cmf : 1;   // character match flag
+      const REG sbkf : 1;  // send break flag
+      const REG rwu : 1;   // receiver wakeup from Mute mode
+      const REG wuf : 1;   // wakeup from Stop mode flag
+      const REG teack : 1; // transmit enable acknowledge flag
+      const REG reack : 1; // receive enable acknowledge flag
+      const REG rsvd2 : 2;
+      const REG tcbgt : 1; // trans. complete before guard time completion
+      const REG rsvd3 : 6;
+    } s;
+    REG r;
+  } status;
   REG intClear;
   REG rxDat;
   REG txDat;

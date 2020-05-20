@@ -1,9 +1,10 @@
 #if defined(BARE_STM32) && defined(UART_VIA_DMA)
+
 #include "uart_dma.h"
 #include "hal_stm32.h"
 #include "hal_stm32_regs.h"
-
 #include "debug.h"
+
 // STM32 UART3 driver based on DMA transfers.
 
 // Direct Memory Access mode in MCU allows to set up a memory buffer
@@ -17,6 +18,8 @@
 // character.
 
 extern UART_DMA dmaUART;
+
+// TODO(jlebar): "inline" functions here should be static.
 
 // Performs UART3 initialization
 void UART_DMA::init(int baud) {
@@ -169,25 +172,21 @@ void UART_DMA::stopRX() {
 }
 
 inline bool isCharacterMatchInterrupt() {
-  UART_Regs *const uart = UART3_BASE;
-  return 0 != (uart->status & (1 << 17));
+  return UART3_BASE->status.s.cmf != 0;
 }
 
 inline bool isRxTimeout() {
-  UART_Regs *const uart = UART3_BASE;
   // Timeout interrupt enable and RTOF - Receiver timeout
-  return uart->ctrl1.s.rtoie && (uart->status & (1 << 11));
+  return UART3_BASE->ctrl1.s.rtoie && UART3_BASE->status.s.rtof;
 }
 
 inline bool isRxError() {
-  UART_Regs *const uart = UART3_BASE;
+  return isRxTimeout() || UART3_BASE->status.s.ore || // overrun error
+         UART3_BASE->status.s.fe;                     // frame error
 
-  return isRxTimeout() ||
-         0 != (uart->status & (1 << 3)) || // ORE - Overrun error
-         0 != (uart->status & (1 << 1));   // FE - frame error
-
-  // 0 != uart->status & (1 << 0)  || // PE - parity error
-  // 0 != uart->status & (1 << 2)  || // START bit Noise detection flag
+  // TODO(miceuz): Enable these?
+  // UART3_BASE->status.s.pe || // parity error
+  // UART3_BASE->status.s.nf || // START bit noise detection flag
 }
 
 inline void UART_DMA::UART_ISR() {
@@ -196,10 +195,10 @@ inline void UART_DMA::UART_ISR() {
     if (isRxTimeout()) {
       e = RxError_t::RX_ERROR_TIMEOUT;
     }
-    if (uart->status & (1 << 3)) {
+    if (uart->status.s.ore) {
       e = RxError_t::RX_ERROR_OVR;
     }
-    if (uart->status & (1 << 1)) {
+    if (uart->status.s.fe) {
       e = RxError_t::RX_ERROR_FRAMING;
     }
 

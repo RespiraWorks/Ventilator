@@ -598,8 +598,11 @@ public:
   void ISR() {
     // Check for overrun error and framing errors.  Clear those errors if
     // they're set to avoid further interrupts from them.
-    if (reg->status.s.fe || reg->status.s.ore) {
-      reg->intClear = 0x000A;
+    if (reg->status.s.fe) {
+      reg->intClear.s.fecf = 1;
+    }
+    if (reg->status.s.ore) {
+      reg->intClear.s.orecf = 1;
     }
 
     // See if we received a new byte

@@ -27,9 +27,6 @@ public:
 #ifdef TEST_MODE
   void test_PutRxBuffer(uint8_t *buf, uint32_t len);
 #endif
-protected:
-  // virtual void restartRX() = 0;
-  // virtual uint32_t receivedBytesCount() = 0;
 
 private:
   void processReceivedData();
@@ -123,5 +120,12 @@ uint32_t FramingRxFSM<Transport>::getReceivedLength() {
 template <class Transport> bool FramingRxFSM<Transport>::isDataAvailable() {
   return isNewOutBufReady;
 }
+
+#ifdef TEST_MODE
+template <class Transport>
+void FramingRxFSM<Transport>::test_PutRxBuffer(uint8_t *buf, uint32_t len) {
+  transport.test_PutRxBuffer(buf, len);
+}
+#endif
 
 #endif

@@ -49,9 +49,10 @@ void fakeRx() {
   }
 }
 
-void FramingRxFSM::test_PutRxBuffer(uint8_t *buf, uint32_t len) {
+void HalTransport::test_PutRxBuffer(uint8_t *buf, uint32_t len) {
   memcpy(rx_buf, buf, len);
 }
+
 void Comms::test_PutRxBuffer(uint8_t *buf, uint32_t len) {
   rxFSM.test_PutRxBuffer(buf, len);
 }
@@ -59,9 +60,10 @@ void Comms::test_PutRxBuffer(uint8_t *buf, uint32_t len) {
 void UART_DMA::stopRX(){};
 void UART_DMA::charMatchEnable(){};
 
-UART_DMA dmaUART = UART_DMA();
-Comms comms(dmaUART);
-// TestFsm rxFSM(dmaUART);
+UART_DMA uart_dma = UART_DMA();
+HalTransport hal_transport(uart_dma);
+FramingRxFSM<HalTransport> rxFSM(hal_transport);
+Comms comms(uart_dma, rxFSM);
 
 TEST(CommTests, SendControllerStatus) {
   // Initialize a large ControllerStatus so as to force multiple calls to

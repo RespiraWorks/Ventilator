@@ -18,5 +18,8 @@ public:
   void restartRX(UART_DMA_RxListener *);
   uint32_t receivedBytesCount();
   uint8_t *get_rx_buf() { return rx_buf; }
+#ifdef TEST_MODE
+  void test_PutRxBuffer(uint8_t *buf, uint32_t len);
+#endif
 };
 #endif

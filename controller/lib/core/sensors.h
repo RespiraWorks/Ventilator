@@ -25,6 +25,9 @@ Arduino Nano and the MPXV5004GP and MPXV7002DP pressure sensors.
 #include "hal.h"
 #include "network_protocol.pb.h"
 #include "units.h"
+#include <cmath>
+
+static constexpr Duration SENSORS_SAMPLE_PERIOD = milliseconds(1);
 
 class TVIntegrator {
 public:
@@ -32,9 +35,43 @@ public:
   Volume GetTV() const { return volume_; }
 
 private:
-  Time last_flow_measurement_time_ = Hal.now();
+  Time last_volume_update_time_ = Hal.now();
   VolumetricFlow last_flow_ = cubic_m_per_sec(0);
   Volume volume_ = ml(0);
+};
+
+// Template to create a first order low pass filter on strongly-typed data
+// state_ is the output value of the lowpass filter
+// Call creator with cutoff frequency and sample time to initialize the
+// coefficient of the filter
+//
+// Creating a new filter class requires defining Update with the correct unit:
+// Update(value){state_ = unit((alpha_*value.unit()+state_.unit())/(alpha_+1))
+// ;}
+//
+template <class Q> class LowPassFilter {
+public:
+  LowPassFilter(float cutoff_frequency, Duration sample_time)
+      : alpha_(cutoff_frequency * 2 * static_cast<float>(M_PI) *
+               sample_time.seconds()){};
+  Q getLowPassValue() { return state_; }
+
+protected:
+  Q state_;
+  float alpha_;
+};
+
+// First order lowpass filter on flow
+class FlowFilter : LowPassFilter<VolumetricFlow> {
+public:
+  using LowPassFilter<VolumetricFlow>::getLowPassValue;
+  void Update(VolumetricFlow flow) {
+    state_ = ml_per_min((alpha_ * flow.ml_per_min() + state_.ml_per_min()) /
+                        (alpha_ + 1));
+  };
+
+private:
+  using LowPassFilter<VolumetricFlow>::LowPassFilter;
 };
 
 // Provides calibrated sensor readings, including tidal volume (TV)
@@ -85,6 +122,8 @@ private:
 
   // Calibrated average sensor values in a zero state.
   Voltage sensors_zero_vals_[NUM_SENSORS];
+
+  FlowFilter flow_lowpass_ = FlowFilter(100.0f, SENSORS_SAMPLE_PERIOD);
 
   // State related to integrating volume from flow.
   TVIntegrator tv_integrator_;

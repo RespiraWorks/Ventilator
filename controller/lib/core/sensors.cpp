@@ -21,7 +21,6 @@ Arduino Nano and the MPXV5004GP and MPXV7002DP pressure sensors.
 #include "hal.h"
 
 #include "sensors.h"
-#include <cmath>
 
 //@TODO: Potential Caution: Density of air slightly varies over temperature and
 // altitude - need mechanism to adjust based on delivery? Constant involving
@@ -123,11 +122,11 @@ void TVIntegrator::AddFlow(Time now, VolumetricFlow flow) {
   //    disconnected from the patient?)
   //
   //  - Measure time with better than millisecond granularity.
-  Duration delta = now - last_flow_measurement_time_;
+  Duration delta = now - last_volume_update_time_;
   if (delta >= VOLUME_INTEGRAL_INTERVAL) {
     volume_ =
         volume_ + ml(delta.minutes() * (last_flow_ + flow).ml_per_min() / 2.0f);
-    last_flow_measurement_time_ = now;
+    last_volume_update_time_ = now;
     last_flow_ = flow;
   }
 }
@@ -140,7 +139,8 @@ SensorReadings Sensors::GetSensorReadings() {
   auto outflow_delta = ReadPressureSensor(OUTFLOW_PRESSURE_DIFF);
   VolumetricFlow flow =
       PressureDeltaToFlow(inflow_delta) - PressureDeltaToFlow(outflow_delta);
-  tv_integrator_.AddFlow(Hal.now(), flow);
+  flow_lowpass_.Update(flow);
+  tv_integrator_.AddFlow(Hal.now(), flow_lowpass_.getLowPassValue());
   return {
       .patient_pressure_cm_h2o = patient_pressure.cmH2O(),
       .volume_ml = tv_integrator_.GetTV().ml(),

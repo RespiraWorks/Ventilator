@@ -54,6 +54,14 @@ limitations under the License.
 #include "network_protocol.pb.h"
 #include "sensors.h"
 
+// make sure the PID sample period is a multiple of sensors sample period
+// TODO: update .milliseconds() once we have better than ms precision
+static_assert(PID_SAMPLE_PERIOD.milliseconds() %
+                  SENSORS_SAMPLE_PERIOD.milliseconds() ==
+              0);
+static constexpr int SENSORS_TO_PID_PERIOD_RATIO =
+    PID_SAMPLE_PERIOD.milliseconds() / SENSORS_SAMPLE_PERIOD.milliseconds();
+
 // NO_GUI_DEV_MODE is a hacky development mode until we have the GUI working.
 //
 // Uncomment this line to get started:
@@ -109,26 +117,30 @@ static Sensors sensors;
 // quickly.  No busy waiting here.
 static void high_priority_task(void *arg) {
 
+  static int cycle_counter = 0;
   // Read the sensors
   controller_status.sensor_readings = sensors.GetSensorReadings();
 
-  // Run our PID loop
-  ActuatorsState actuators_state =
-      controller.Run(Hal.now(), controller_status.active_params,
-                     controller_status.sensor_readings);
+  if (cycle_counter % SENSORS_TO_PID_PERIOD_RATIO == 0) {
+    // Run our PID loop
+    ActuatorsState actuators_state =
+        controller.Run(Hal.now(), controller_status.active_params,
+                       controller_status.sensor_readings);
 
-  // TODO update pb library to replace fan_power in ControllerStatus with
-  // actuators_state, and remove fan_setpoint_cm_h2o from ControllerStatus
+    // Update the outputs from the PID
+    actuators_execute(actuators_state);
 
-  // Update the outputs from the PID
-  actuators_execute(actuators_state);
+    // TODO update pb library to replace fan_power and fan_setpoint_cm_h2o in
+    // ControllerStatus with actuators_state
 
-  // Update some status info
-  controller_status.fan_power = actuators_state.fan_power;
-  controller_status.fan_setpoint_cm_h2o = actuators_state.fan_setpoint_cm_h2o;
-
+    // Update some status info
+    controller_status.fan_power = actuators_state.fan_power;
+    controller_status.fan_setpoint_cm_h2o = actuators_state.fan_setpoint_cm_h2o;
+  }
   // Pet the watchdog
   Hal.watchdog_handler();
+
+  cycle_counter = (cycle_counter + 1) % SENSORS_TO_PID_PERIOD_RATIO;
 }
 
 // This function is the lower priority background loop which runs continuously
@@ -149,7 +161,7 @@ static void background_loop() {
 
   // After all initialization is done, ask the HAL
   // to start our high priority thread.
-  Hal.startLoopTimer(controller.GetLoopPeriod(), high_priority_task, 0);
+  Hal.startLoopTimer(SENSORS_SAMPLE_PERIOD, high_priority_task, 0);
 
   while (true) {
     controller_status.uptime_ms = Hal.now().millisSinceStartup();

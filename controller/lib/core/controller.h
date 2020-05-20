@@ -7,6 +7,7 @@
 #include "pid.h"
 #include "units.h"
 
+static constexpr Duration PID_SAMPLE_PERIOD = milliseconds(10);
 // This class is here to allow integration of our controller into Modelica
 // software and run closed-loop tests in a simulated physical environment
 class Controller {
@@ -16,7 +17,7 @@ public:
   ActuatorsState Run(Time now, const VentParams &params,
                      const SensorReadings &readings);
 
-  Duration GetLoopPeriod();
+  Duration GetPIDPeriod();
 
 private:
   // Computes the fan power necessary to match pressure setpoint in desired

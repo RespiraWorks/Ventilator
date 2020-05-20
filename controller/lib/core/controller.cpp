@@ -21,8 +21,7 @@ limitations under the License.
 // PID-tuning were chosen by following the Ziegler-Nichols method,
 // https://en.wikipedia.org/wiki/Ziegler%E2%80%93Nichols_method
 //
-// Note that Ku and Tu only seem to work with this particular sample time.
-static constexpr Duration PID_SAMPLE_PERIOD = milliseconds(10);
+// Note that Ku and Tu only seem to work with 10 ms sample time (see header)
 static constexpr float Ku = 200;
 static constexpr Duration Tu = seconds(1.5f);
 
@@ -41,7 +40,7 @@ Controller::Controller()
            // Our output is an 8-bit PWM.
            /*output_min=*/0.f, /*output_max=*/255.f, PID_SAMPLE_PERIOD) {}
 
-Duration Controller::GetLoopPeriod() { return PID_SAMPLE_PERIOD; }
+Duration Controller::GetPIDPeriod() { return PID_SAMPLE_PERIOD; }
 
 ActuatorsState Controller::Run(Time now, const VentParams &params,
                                const SensorReadings &readings) {

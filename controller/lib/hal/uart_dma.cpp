@@ -35,7 +35,11 @@ void UART_DMA::init(int baud) {
   uart->ctrl3.s.eie = 1; // enable interrupt on error
 
   uart->request.s.rxfrq = 1; // Clear RXNE flag before clearing other flags
-  uart->intClear = (1 << 11) | (1 << 3) | (1 << 1); // Clear error flags
+
+  // Clear error flags.
+  uart->intClear.s.fecf = 1;
+  uart->intClear.s.orecf = 1;
+  uart->intClear.s.rtocf = 1;
 
   uart->ctrl1.s.te = 1; // enable transmitter
   uart->ctrl1.s.re = 1; // Enable receiver
@@ -74,7 +78,7 @@ void UART_DMA::init(int baud) {
 
 // Sets up an interrupt on matching char incomming form UART3
 void UART_DMA::charMatchEnable() {
-  uart->intClear = (1 << 17); // Clear char match flag
+  uart->intClear.s.cmcf = 1;  // Clear char match flag
   uart->ctrl1.s.cmie = 1;     // Enable character match interrupt
 }
 
@@ -149,7 +153,7 @@ bool UART_DMA::startRX(const char *buf, const uint32_t length,
   // setup rx timeout
   // max timeout is 24 bit
   uart->timeout.s.rto = timeout & 0x00FFFFFF;
-  uart->intClear = (1 << 11); // Clear rx timeout flag
+  uart->intClear.s.rtocf = 1; // Clear rx timeout flag
   uart->request.s.rxfrq = 1;  // Clear RXNE flag
   uart->ctrl1.s.rtoie = 1;    // Enable receive timeout interrupt
 
@@ -203,15 +207,19 @@ inline void UART_DMA::UART_ISR() {
     }
 
     uart->request.s.rxfrq = 1; // Clear RXNE flag before clearing other flags
-    uart->intClear = (1 << 11) | (1 << 3) | (1 << 1); // Clear error flags
+
+    // Clear error flags.
+    uart->intClear.s.fecf = 1;
+    uart->intClear.s.orecf = 1;
+    uart->intClear.s.rtocf = 1;
 
     // TODO define logic if stopRX() has to be here
     rxListener.onRxError(e);
   }
 
   if (isCharacterMatchInterrupt()) {
-    uart->request.s.rxfrq = 1;  // Clear RXNE flag before clearing other flags
-    uart->intClear = (1 << 17); // Clear char match flag
+    uart->request.s.rxfrq = 1; // Clear RXNE flag before clearing other flags
+    uart->intClear.s.cmcf = 1; // Clear char match flag
     // TODO define logic if stopRX() has to be here
     rxListener.onCharacterMatch();
   }

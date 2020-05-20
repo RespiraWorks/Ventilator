@@ -19,8 +19,6 @@
 
 extern UART_DMA dmaUART;
 
-// TODO(jlebar): "inline" functions here should be static.
-
 // Performs UART3 initialization
 void UART_DMA::init(int baud) {
   // Set baud rate register
@@ -175,16 +173,16 @@ void UART_DMA::stopRX() {
   }
 }
 
-inline bool isCharacterMatchInterrupt() {
+static bool isCharacterMatchInterrupt() {
   return UART3_BASE->status.s.cmf != 0;
 }
 
-inline bool isRxTimeout() {
+static bool isRxTimeout() {
   // Timeout interrupt enable and RTOF - Receiver timeout
   return UART3_BASE->ctrl1.s.rtoie && UART3_BASE->status.s.rtof;
 }
 
-inline bool isRxError() {
+static bool isRxError() {
   return isRxTimeout() || UART3_BASE->status.s.ore || // overrun error
          UART3_BASE->status.s.fe;                     // frame error
 
@@ -193,7 +191,7 @@ inline bool isRxError() {
   // UART3_BASE->status.s.nf || // START bit noise detection flag
 }
 
-inline void UART_DMA::UART_ISR() {
+void UART_DMA::UART_ISR() {
   if (isRxError()) {
     RxError_t e = RxError_t::RX_ERROR_UNKNOWN;
     if (isRxTimeout()) {
@@ -225,7 +223,7 @@ inline void UART_DMA::UART_ISR() {
   }
 }
 
-inline void UART_DMA::DMA_TX_ISR() {
+void UART_DMA::DMA_TX_ISR() {
   if (dma->intStat.teif2) {
     stopTX();
     txListener.onTxError();
@@ -235,7 +233,7 @@ inline void UART_DMA::DMA_TX_ISR() {
   }
 }
 
-inline void UART_DMA::DMA_RX_ISR() {
+void UART_DMA::DMA_RX_ISR() {
   if (dma->intStat.teif3) {
     stopRX();
     rxListener.onRxError(RxError_t::RX_ERROR_DMA);

@@ -26,12 +26,14 @@ the programmer's manual for the processor available here:
 #if defined(BARE_STM32)
 
 #include "hal_stm32.h"
+
+#include <stdarg.h>
+#include <stdio.h>
+
 #include "checksum.h"
 #include "circular_buffer.h"
 #include "hal.h"
 #include "uart_dma.h"
-#include <stdarg.h>
-#include <stdio.h>
 
 #define SYSTEM_STACK_SIZE 2500
 
@@ -670,11 +672,9 @@ public:
 
 static UART dbgUART(UART2_BASE);
 
-#include "framing_rx_fsm.h"
 constexpr uint8_t txCh = 1;
 constexpr uint8_t rxCh = 2;
-UART_DMA dmaUART(UART3_BASE, DMA1_BASE, txCh, rxCh, 0xE2);
-FramingRxFSM rxFSM;
+UART_DMA uart_dma(UART3_BASE, DMA1_BASE, txCh, rxCh, 0xE2);
 
 // The UART that talks to the rPi uses the following pins:
 //    PB10 - TX
@@ -710,7 +710,7 @@ static void InitUARTs() {
   GPIO_PinAltFunc(GPIO_B_BASE, 13, 7);
   GPIO_PinAltFunc(GPIO_B_BASE, 14, 7);
 
-  dmaUART.init(115200);
+  uart_dma.init(115200);
   dbgUART.Init(115200);
 
   EnableInterrupt(INT_VEC_DMA1_CH2, IntPriority::STANDARD);
@@ -965,79 +965,79 @@ __attribute__((section(".isr_vector"))) void (*const vectors[101])() = {
     BadISR,        //  25 - 0x064
     BadISR,        //  26 - 0x068
     BadISR,        //  27 - 0x06C
-    DMA1_CH2_ISR, //  28 - 0x070 DMA1 CH2
-    DMA1_CH3_ISR, //  29 - 0x074 DMA1 CH3
-    BadISR,     //  30 - 0x078
-    BadISR,     //  31 - 0x07C
-    BadISR,     //  32 - 0x080
-    BadISR,     //  33 - 0x084
-    BadISR,     //  34 - 0x088
-    BadISR,     //  35 - 0x08C
-    BadISR,     //  36 - 0x090
-    BadISR,     //  37 - 0x094
-    BadISR,     //  38 - 0x098
-    BadISR,     //  39 - 0x09C
-    Timer15ISR, //  40 - 0x0A0
-    BadISR,     //  41 - 0x0A4
-    BadISR,     //  42 - 0x0A8
-    BadISR,     //  43 - 0x0AC
-    BadISR,     //  44 - 0x0B0
-    BadISR,     //  45 - 0x0B4
-    BadISR,     //  46 - 0x0B8
-    BadISR,     //  47 - 0x0BC
-    BadISR,     //  48 - 0x0C0
-    BadISR,     //  49 - 0x0C4
-    BadISR,     //  50 - 0x0C8
-    BadISR,     //  51 - 0x0CC
-    BadISR,     //  52 - 0x0D0
-    BadISR,     //  53 - 0x0D4
-    UART2_ISR,  //  54 - 0x0D8
-    UART3_ISR,  //  55 - 0x0DC
-    BadISR,     //  56 - 0x0E0
-    BadISR,     //  57 - 0x0E4
-    BadISR,     //  58 - 0x0E8
-    BadISR,     //  59 - 0x0EC
-    BadISR,     //  60 - 0x0F0
-    BadISR,     //  61 - 0x0F4
-    BadISR,     //  62 - 0x0F8
-    BadISR,     //  63 - 0x0FC
-    BadISR,     //  64 - 0x100
-    BadISR,     //  65 - 0x104
-    BadISR,     //  66 - 0x108
-    BadISR,     //  67 - 0x10C
-    BadISR,     //  68 - 0x110
-    BadISR,     //  69 - 0x114
-    Timer6ISR,  //  70 - 0x118
-    BadISR,     //  71 - 0x11C
-    BadISR,     //  72 - 0x120
-    BadISR,     //  73 - 0x124
-    BadISR,     //  74 - 0x128
-    BadISR,     //  75 - 0x12C
-    BadISR,     //  76 - 0x130
-    BadISR,     //  77 - 0x134
-    BadISR,     //  78 - 0x138
-    BadISR,     //  79 - 0x13C
-    BadISR,     //  80 - 0x140
-    BadISR,     //  81 - 0x144
-    BadISR,     //  82 - 0x148
-    BadISR,     //  83 - 0x14C
-    BadISR,     //  84 - 0x150
-    BadISR,     //  85 - 0x154
-    BadISR,     //  86 - 0x158
-    BadISR,     //  87 - 0x15C
-    BadISR,     //  88 - 0x160
-    BadISR,     //  89 - 0x164
-    BadISR,     //  90 - 0x168
-    BadISR,     //  91 - 0x16C
-    BadISR,     //  92 - 0x170
-    BadISR,     //  93 - 0x174
-    BadISR,     //  94 - 0x178
-    BadISR,     //  95 - 0x17C
-    BadISR,     //  96 - 0x180
-    BadISR,     //  97 - 0x184
-    BadISR,     //  98 - 0x188
-    BadISR,     //  99 - 0x18C
-    BadISR,     // 100 - 0x190
+    DMA1_CH2_ISR,  //  28 - 0x070 DMA1 CH2
+    DMA1_CH3_ISR,  //  29 - 0x074 DMA1 CH3
+    BadISR,        //  30 - 0x078
+    BadISR,        //  31 - 0x07C
+    BadISR,        //  32 - 0x080
+    BadISR,        //  33 - 0x084
+    BadISR,        //  34 - 0x088
+    BadISR,        //  35 - 0x08C
+    BadISR,        //  36 - 0x090
+    BadISR,        //  37 - 0x094
+    BadISR,        //  38 - 0x098
+    BadISR,        //  39 - 0x09C
+    Timer15ISR,    //  40 - 0x0A0
+    BadISR,        //  41 - 0x0A4
+    BadISR,        //  42 - 0x0A8
+    BadISR,        //  43 - 0x0AC
+    BadISR,        //  44 - 0x0B0
+    BadISR,        //  45 - 0x0B4
+    BadISR,        //  46 - 0x0B8
+    BadISR,        //  47 - 0x0BC
+    BadISR,        //  48 - 0x0C0
+    BadISR,        //  49 - 0x0C4
+    BadISR,        //  50 - 0x0C8
+    BadISR,        //  51 - 0x0CC
+    BadISR,        //  52 - 0x0D0
+    BadISR,        //  53 - 0x0D4
+    UART2_ISR,     //  54 - 0x0D8
+    UART3_ISR,     //  55 - 0x0DC
+    BadISR,        //  56 - 0x0E0
+    BadISR,        //  57 - 0x0E4
+    BadISR,        //  58 - 0x0E8
+    BadISR,        //  59 - 0x0EC
+    BadISR,        //  60 - 0x0F0
+    BadISR,        //  61 - 0x0F4
+    BadISR,        //  62 - 0x0F8
+    BadISR,        //  63 - 0x0FC
+    BadISR,        //  64 - 0x100
+    BadISR,        //  65 - 0x104
+    BadISR,        //  66 - 0x108
+    BadISR,        //  67 - 0x10C
+    BadISR,        //  68 - 0x110
+    BadISR,        //  69 - 0x114
+    Timer6ISR,     //  70 - 0x118
+    BadISR,        //  71 - 0x11C
+    BadISR,        //  72 - 0x120
+    BadISR,        //  73 - 0x124
+    BadISR,        //  74 - 0x128
+    BadISR,        //  75 - 0x12C
+    BadISR,        //  76 - 0x130
+    BadISR,        //  77 - 0x134
+    BadISR,        //  78 - 0x138
+    BadISR,        //  79 - 0x13C
+    BadISR,        //  80 - 0x140
+    BadISR,        //  81 - 0x144
+    BadISR,        //  82 - 0x148
+    BadISR,        //  83 - 0x14C
+    BadISR,        //  84 - 0x150
+    BadISR,        //  85 - 0x154
+    BadISR,        //  86 - 0x158
+    BadISR,        //  87 - 0x15C
+    BadISR,        //  88 - 0x160
+    BadISR,        //  89 - 0x164
+    BadISR,        //  90 - 0x168
+    BadISR,        //  91 - 0x16C
+    BadISR,        //  92 - 0x170
+    BadISR,        //  93 - 0x174
+    BadISR,        //  94 - 0x178
+    BadISR,        //  95 - 0x17C
+    BadISR,        //  96 - 0x180
+    BadISR,        //  97 - 0x184
+    BadISR,        //  98 - 0x188
+    BadISR,        //  99 - 0x18C
+    BadISR,        // 100 - 0x190
 };
 
 // Enable an interrupt with a specified priority (0 to 15)

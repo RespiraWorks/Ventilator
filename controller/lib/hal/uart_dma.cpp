@@ -17,7 +17,7 @@
 // UART will issue an interrupt upot the reception of the specified
 // character.
 
-extern UART_DMA dmaUART;
+extern UART_DMA uart_dma;
 
 // Performs UART3 initialization
 void UART_DMA::init(int baud) {
@@ -246,17 +246,17 @@ inline void UART_DMA::DMA_RX_ISR() {
 
 void DMA1_CH2_ISR() {
   DMA_Regs *dma = DMA1_BASE;
-  dmaUART.DMA_TX_ISR();
+  uart_dma.DMA_TX_ISR();
   dma->intClr.gif2 = 1; // clear all channel 3 flags
 }
 
 void DMA1_CH3_ISR() {
   DMA_Regs *dma = DMA1_BASE;
-  dmaUART.DMA_RX_ISR();
+  uart_dma.DMA_RX_ISR();
   dma->intClr.gif3 = 1; // clear all channel 2 flags
 }
 
 // This is the interrupt handler for the UART.
-void UART3_ISR() { dmaUART.UART_ISR(); }
+void UART3_ISR() { uart_dma.UART_ISR(); }
 
 #endif

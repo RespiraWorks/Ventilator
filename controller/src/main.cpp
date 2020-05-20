@@ -102,8 +102,8 @@ static Controller controller;
 static ControllerStatus controller_status;
 static Sensors sensors;
 
-extern UART_DMA dmaUART;
-static Comms comms(dmaUART);
+extern UART_DMA uart_dma;
+static Comms comms(uart_dma);
 
 // This function handles all the high priority tasks which need to be called
 // periodically.  The HAL calls this function from a timer interrupt.

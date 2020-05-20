@@ -72,14 +72,14 @@ void Comms::process_tx(const ControllerStatus &controller_status) {
 inline bool is_crc_pass(uint8_t *buf, uint32_t len) {
   return Hal.crc32(buf, len - 4) == extract_crc(buf, len);
 }
-
+#include <stdio.h>
 void Comms::process_rx(GuiStatus *gui_status) {
   if (rxFSM.isDataAvailable()) {
     uint8_t *buf = rxFSM.getReceivedBuf();
     uint32_t len = rxFSM.getReceivedLength();
-    decodeFrame(buf, len, buf, len);
-    if (is_crc_pass(buf, len)) {
-      pb_istream_t stream = pb_istream_from_buffer(buf, len - 4);
+    uint32_t decoded_length = decodeFrame(buf, len, buf, len);
+    if (is_crc_pass(buf, decoded_length)) {
+      pb_istream_t stream = pb_istream_from_buffer(buf, decoded_length - 4);
       GuiStatus new_gui_status = GuiStatus_init_zero;
       if (pb_decode(&stream, GuiStatus_fields, &new_gui_status)) {
         *gui_status = new_gui_status;
@@ -92,6 +92,8 @@ void Comms::process_rx(GuiStatus *gui_status) {
     }
   }
 }
+
+void Comms::init() { rxFSM.begin(); }
 
 void Comms::handler(const ControllerStatus &controller_status,
                     GuiStatus *gui_status) {

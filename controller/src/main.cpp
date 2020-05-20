@@ -185,6 +185,7 @@ int main() {
   // HalApi::init().
   Hal.init();
   alarm_init();
+  comms.init();
 
   background_loop();
 }

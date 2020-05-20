@@ -101,7 +101,9 @@ static void DEV_MODE_comms_handler(const ControllerStatus &controller_status,
 static Controller controller;
 static ControllerStatus controller_status;
 static Sensors sensors;
-static Comms comms;
+
+extern UART_DMA dmaUART;
+static Comms comms(dmaUART);
 
 // This function handles all the high priority tasks which need to be called
 // periodically.  The HAL calls this function from a timer interrupt.
@@ -109,7 +111,6 @@ static Comms comms;
 // NOTE - it's important that anything being called from this function executes
 // quickly.  No busy waiting here.
 static void high_priority_task(void *arg) {
-
   // Read the sensors
   controller_status.sensor_readings = sensors.GetSensorReadings();
 
@@ -136,7 +137,6 @@ static void high_priority_task(void *arg) {
 // after some basic system init.  Pretty much everything not time critical
 // should go here.
 static void background_loop() {
-
   // Calibrate the sensors.
   // This needs to be done before the sensors are used.
   sensors.Calibrate();

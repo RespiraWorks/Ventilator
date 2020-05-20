@@ -54,6 +54,9 @@ class UART_DMA {
   char matchChar;
 
 public:
+#ifdef TEST_MODE
+  UART_DMA() : uart(0), dma(0){};
+#endif
   UART_DMA(UART_Regs *const uart, DMA_Regs *const dma, uint8_t txCh,
            uint8_t rxCh, char matchChar)
       : uart(uart), dma(dma), txCh(txCh), rxCh(rxCh), matchChar(matchChar) {}

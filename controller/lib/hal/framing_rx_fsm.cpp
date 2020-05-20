@@ -1,13 +1,14 @@
 #include "framing_rx_fsm.h"
+
 #include "network_protocol.pb.h"
 #include "uart_dma.h"
 
-extern UART_DMA dmaUART;
+// extern UART_DMA dmaUART;
 
 void FramingRxFSM::begin() {
   state = STATE_LOST;
-  dmaUART.charMatchEnable();
-  dmaUART.startRX(rx_buf, RX_BYTES_MAX, RX_TIMEOUT, this);
+  uart_dma.charMatchEnable();
+  uart_dma.startRX(rx_buf, RX_BYTES_MAX, RX_TIMEOUT, this);
 }
 
 void FramingRxFSM::onRxComplete() {
@@ -72,12 +73,12 @@ void FramingRxFSM::onRxError(RxError_t e) {
 };
 
 uint32_t FramingRxFSM::receivedBytesCount() {
-  return (RX_BYTES_MAX - dmaUART.getRxBytesLeft());
+  return (RX_BYTES_MAX - uart_dma.getRxBytesLeft());
 }
 
 void FramingRxFSM::restartRX() {
-  dmaUART.stopRX();
-  dmaUART.startRX(rx_buf, RX_BYTES_MAX, RX_TIMEOUT, this);
+  uart_dma.stopRX();
+  uart_dma.startRX(rx_buf, RX_BYTES_MAX, RX_TIMEOUT, this);
 }
 
 void FramingRxFSM::processReceivedData() {

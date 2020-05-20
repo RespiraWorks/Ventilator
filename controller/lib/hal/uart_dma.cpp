@@ -1,9 +1,10 @@
 #if defined(BARE_STM32)
+
 #include "uart_dma.h"
-#include "hal_stm32.h"
-#include "hal_stm32_regs.h"
 
 #include "debug.h"
+#include "hal_stm32.h"
+#include "hal_stm32_regs.h"
 // STM32 UART3 driver based on DMA transfers.
 
 // Direct Memory Access mode in MCU allows to set up a memory buffer

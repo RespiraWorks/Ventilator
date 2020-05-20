@@ -1,17 +1,18 @@
 #include "comms.h"
 
-#include "algorithm.h"
-#include "checksum.h"
-#include "framing.h"
-#include "framing_rx_fsm.h"
-#include "hal.h"
-#include "network_protocol.pb.h"
 #include <pb_common.h>
 #include <pb_decode.h>
 #include <pb_encode.h>
 
-extern UART_DMA dmaUART;
-extern FramingRxFSM rxFSM;
+#include "algorithm.h"
+#include "checksum.h"
+#include "framing.h"
+#include "hal.h"
+#include "network_protocol.pb.h"
+#include "uart_dma.h"
+
+// extern UART_DMA dmaUART;
+// extern FramingRxFSM rxFSM;
 
 // Note that the initial value of last_tx has to be invalid; changing it to 0
 // wouldn't work.  We immediately transmit on boot, and after
@@ -22,7 +23,7 @@ inline bool Comms::is_time_to_transmit() {
   return (last_tx == kInvalidTime || Hal.now() - last_tx > TX_INTERVAL);
 }
 
-inline bool Comms::is_transmitting() { return dmaUART.isTxInProgress(); }
+inline bool Comms::is_transmitting() { return uart_dma.isTxInProgress(); }
 
 void Comms::onTxComplete() {}
 
@@ -57,7 +58,7 @@ void Comms::process_tx(const ControllerStatus &controller_status) {
   if (!is_transmitting() && is_time_to_transmit()) {
     uint32_t frame_len = createFrame(controller_status);
     if (frame_len > 0) {
-      dmaUART.startTX(tx_buffer, frame_len, this);
+      uart_dma.startTX(tx_buffer, frame_len, this);
       last_tx = Hal.now();
     } else {
       // TODO log an error

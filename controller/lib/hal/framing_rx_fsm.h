@@ -1,10 +1,14 @@
+#ifndef __FRAMING_RX_FSM
+#define __FRAMING_RX_FSM
+
 #include "network_protocol.pb.h"
 #include "uart_dma.h"
 
-extern UART_DMA dmaUART;
-
 class FramingRxFSM : public UART_DMA_RxListener {
   enum State_t { STATE_LOST, STATE_WAIT_START, STATE_RX_FRAME };
+
+  UART_DMA &uart_dma;
+
   static constexpr uint32_t RX_TIMEOUT = 115200 * 10;
 
   State_t state = STATE_LOST;
@@ -20,6 +24,7 @@ class FramingRxFSM : public UART_DMA_RxListener {
   bool isNewOutBufReady = false;
 
 public:
+  FramingRxFSM(UART_DMA &uart_dma) : uart_dma(uart_dma){};
   void begin();
   void onRxComplete() override;
   void onCharacterMatch() override;
@@ -33,3 +38,4 @@ private:
   void restartRX();
   void processReceivedData();
 };
+#endif

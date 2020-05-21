@@ -83,7 +83,7 @@ static const int ustep_per_step_ = 128;
 int32_t setMtr, getMtr, cmd, mtrNdx;
 uint32_t getVal, tmp2;
 float mtrVel, mtrAcc, tmp1, mtrPos;
-#define DEBUG_ENABLED
+//#define DEBUG_ENABLED
 #ifdef DEBUG_ENABLED
 #include "vars.h"
 DebugVar v1("set_param", &setMtr, "For testing stepper", "0x%08x");

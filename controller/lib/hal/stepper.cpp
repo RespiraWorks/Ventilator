@@ -79,18 +79,10 @@ static const float cvt_vel_int_speed_reg = tick_time * (1 << 26);
 // default value of the chip.
 static const int ustep_per_step_ = 128;
 
-// Notes to get the stepper working
-// Gate current 96mA
-// VCC Value 15V
-// UVLO threshold 7V
-// Turn OFF boost time 1000ns
-// Controlled current time 3750ns
-// Blanking time 1000ns
-// Dead time 1000ns
-
+// debug stuff, to be removed soon
 int32_t setMtr, getMtr, cmd, mtrNdx;
 uint32_t getVal, tmp2;
-float mtrVel, mtrAcc, tmp1;
+float mtrVel, mtrAcc, tmp1, mtrPos;
 #define DEBUG_ENABLED
 #ifdef DEBUG_ENABLED
 #include "vars.h"
@@ -103,6 +95,7 @@ DebugVar v6("mtr_ndx", &mtrNdx, "For testing stepper", "%d");
 DebugVar v7("mtr_vel", &mtrVel, "For testing stepper", "%.3f");
 DebugVar v8("mtr_tmp", &tmp1, "For testing stepper", "%.5e");
 DebugVar v9("mtr_acc", &mtrAcc, "For testing stepper", "%.3f");
+DebugVar va("mtr_pos", &mtrPos, "For testing stepper", "%.3f");
 #endif
 
 void test() {
@@ -119,7 +112,7 @@ void test() {
     mtr->GetParam(static_cast<StepMtrParam>(getMtr), &getVal);
     getMtr = 0;
 
-    tmp1 = mtr->GetCurrentSpeed();
+    mtr->GetCurrentSpeed(&tmp1);
   }
 
   if (cmd) {
@@ -135,6 +128,11 @@ void test() {
   if (mtrAcc) {
     mtr->SetAccel(mtrAcc);
     mtrAcc = 0;
+  }
+
+  if (mtrPos) {
+    mtr->MoveRel(mtrPos);
+    mtrPos = 0;
   }
 }
 
@@ -348,7 +346,17 @@ StepMtrErr StepMotor::GetStatus(uint16_t *stat) {
 // code and 0 to 3 data bytes.  Multiple commands can be placed
 // one after another and all sent as a unit with this function.
 //
+// NOTE - this is a blocking call and should not be called from
+// the high priority controller thread.  If it is, it will return
+// an error.
+//
 StepMtrErr StepMotor::SendCmd(uint8_t *cmd, int len) {
+
+  // See if we're running from an interrupt handler
+  // (i.e. the controller thread) and return an error
+  // if we are.
+  if (Hal.InInterruptHandler())
+    return StepMtrErr::WOULD_BLOCK;
 
   // Copy the command to my buffer with interrupts disabled.
   // I want to make sure the whole command gets sent as one continuous
@@ -377,7 +385,7 @@ StepMtrErr StepMotor::SendCmd(uint8_t *cmd, int len) {
 
 // Start transmitting a command.
 // This is called when a new command is being sent and also
-// from the ISR to send the next byte.
+// from the ISR to send the next byte to each motor.
 void StepMotor::StartCmd() {
 
   // Run through all the motors and if the motor was active on
@@ -464,42 +472,14 @@ float StepMotor::RegVelToDps(int32_t val, float cnv) {
          (cnv * static_cast<float>(steps_per_rev_));
 }
 
-// Start running at a constant velocity.
-// The velocity is specified in deg/sec units
-void StepMotor::RunAtVelocity(float vel) {
-
-  int neg = vel < 0;
-  vel = fabsf(vel);
-
-  // Convert the speed from deg/sec to the weird units
-  // used by the stepper chip
-  float speed = DpsToVelReg(vel, cvt_vel_crnt_speed_reg);
-
-  // The speed value is a 20 bit unsigned integer passed
-  // as part of the command.
-  int32_t S = static_cast<int32_t>(speed);
-  if (S > 0x000fffff)
-    S = 0x000fffff;
-
-  uint8_t cmd[4];
-  if (neg)
-    cmd[0] = static_cast<uint8_t>(StepMtrCmd::RUN_NEG);
-  else
-    cmd[0] = static_cast<uint8_t>(StepMtrCmd::RUN_POS);
-
-  cmd[1] = static_cast<uint8_t>(S >> 16);
-  cmd[2] = static_cast<uint8_t>(S >> 8);
-  cmd[3] = static_cast<uint8_t>(S);
-  SendCmd(cmd, 4);
-}
-
 // Read the current absolute motor velocity and return it
 // in deg/sec units
 // Note that this value is always positive
-float StepMotor::GetCurrentSpeed() {
+StepMtrErr StepMotor::GetCurrentSpeed(float *ret) {
   uint32_t val;
-  StepMotor::GetParam(StepMtrParam::SPEED, &val);
-  return RegVelToDps(val, cvt_vel_crnt_speed_reg);
+  StepMtrErr err = GetParam(StepMtrParam::SPEED, &val);
+  *ret = RegVelToDps(val, cvt_vel_crnt_speed_reg);
+  return err;
 }
 
 // Set the motor's max speed setting in deg/sec
@@ -518,10 +498,11 @@ StepMtrErr StepMotor::SetMaxSpeed(float dps) {
 }
 
 // Get the motor's max speed setting in deg/sec
-float StepMotor::GetMaxSpeed() {
+StepMtrErr StepMotor::GetMaxSpeed(float *ret) {
   uint32_t val;
-  StepMotor::GetParam(StepMtrParam::MAX_SPEED, &val);
-  return RegVelToDps(val, cvt_vel_max_speed_reg);
+  StepMtrErr err = GetParam(StepMtrParam::MAX_SPEED, &val);
+  *ret = RegVelToDps(val, cvt_vel_max_speed_reg);
+  return err;
 }
 
 // Set the motor's min speed setting in deg/sec
@@ -547,10 +528,11 @@ StepMtrErr StepMotor::SetMinSpeed(float dps) {
 }
 
 // Get the motor's min speed setting in deg/sec
-float StepMotor::GetMinSpeed() {
+StepMtrErr StepMotor::GetMinSpeed(float *ret) {
   uint32_t val;
-  StepMotor::GetParam(StepMtrParam::MIN_SPEED, &val);
-  return RegVelToDps(val, cvt_vel_min_speed_reg);
+  StepMtrErr err = GetParam(StepMtrParam::MIN_SPEED, &val);
+  *ret = RegVelToDps(val, cvt_vel_min_speed_reg);
+  return err;
 }
 
 // Set the motors accel and decel rate in deg/sec/sec units
@@ -578,18 +560,152 @@ StepMtrErr StepMotor::SetAccel(float acc) {
   return SetParam(StepMtrParam::DECEL, val);
 }
 
-/*
-  KVAL_HOLD = 0x09,         //
-  KVAL_RUN = 0x0A,          //
-  KVAL_ACCEL = 0x0B,        //
-  KVAL_DECEL = 0x0C,        //
-  INT_SPEED = 0x0D,         //
-  START_SLOPE = 0x0E,       //
-  FINAL_SLOPE_ACCEL = 0x0F, //
-  FINAL_SLOPE_DECEL = 0x10, //
-  THERMAL_COMP = 0x11,      //
-  OVER_CRNT_THRESH = 0x13,  //
-  STALL_THRESH = 0x14,      //
-  FULL_STEP_SPEED = 0x15,   // Speed at which to switch to full step mode
-  */
+// Set the amplitude of the voltage output used to drive the motor.
+// The values set here allow the amplitude of output that pushes power
+// to the motor to be adjusted.  Higher values will push more current
+// into the motor, lower values will push less.  The motor will be
+// more powerful with higher values, but will get hotter, consume more
+// power, and could potentially be damaged if these are set too high,
+// so be careful.
+//
+// There are four different values that can be set which control the
+// output to the motor in different phases of it's motion:
+//   hold - Value used when the motor is holding position (not moving)
+//   run  - Value used when running at constant velocity.
+//   accel - Value used when accelerating
+//   decel - Value used when decelerating
+//
+// In all cases the values are set in a range of 0 to 1
+// for 0 to 100%
+StepMtrErr StepMotor::SetKval(StepMtrParam param, float amp) {
+
+  if ((amp < 0) || (amp > 1))
+    return StepMtrErr::BAD_VALUE;
+
+  // The stepper chip uses a value of 0 to 255
+  return SetParam(param, static_cast<uint32_t>(amp * 255));
+}
+
+StepMtrErr StepMotor::SetAmpHold(float amp) {
+  return SetKval(StepMtrParam::KVAL_HOLD, amp);
+}
+StepMtrErr StepMotor::SetAmpRun(float amp) {
+  return SetKval(StepMtrParam::KVAL_RUN, amp);
+}
+StepMtrErr StepMotor::SetAmpAccel(float amp) {
+  return SetKval(StepMtrParam::KVAL_ACCEL, amp);
+}
+StepMtrErr StepMotor::SetAmpDecel(float amp) {
+  return SetKval(StepMtrParam::KVAL_DECEL, amp);
+}
+
+// Start running at a constant velocity.
+// The velocity is specified in deg/sec units
+StepMtrErr StepMotor::RunAtVelocity(float vel) {
+
+  int neg = vel < 0;
+  vel = fabsf(vel);
+
+  // Convert the speed from deg/sec to the weird units
+  // used by the stepper chip
+  float speed = DpsToVelReg(vel, cvt_vel_crnt_speed_reg);
+
+  // The speed value is a 20 bit unsigned integer passed
+  // as part of the command.
+  int32_t S = static_cast<int32_t>(speed);
+  if (S > 0x000fffff)
+    S = 0x000fffff;
+
+  uint8_t cmd[4];
+  if (neg)
+    cmd[0] = static_cast<uint8_t>(StepMtrCmd::RUN_NEG);
+  else
+    cmd[0] = static_cast<uint8_t>(StepMtrCmd::RUN_POS);
+
+  cmd[1] = static_cast<uint8_t>(S >> 16);
+  cmd[2] = static_cast<uint8_t>(S >> 8);
+  cmd[3] = static_cast<uint8_t>(S);
+  return SendCmd(cmd, 4);
+}
+
+// Decelerate to zero velocity and hold position
+// This can also be used to enable the motor without
+// causing any motion
+StepMtrErr StepMotor::SoftStop() {
+  uint8_t cmd = static_cast<uint8_t>(StepMtrCmd::SOFT_STOP);
+  return SendCmd(&cmd, 0);
+}
+
+// Stop abruptly and hold position
+// This can also be used to enable the motor without
+// causing any motion
+StepMtrErr StepMotor::HardStop() {
+  uint8_t cmd = static_cast<uint8_t>(StepMtrCmd::HARD_STOP);
+  return SendCmd(&cmd, 0);
+}
+
+// Decelerate to zero velocity and disable
+StepMtrErr StepMotor::SoftDisable() {
+  uint8_t cmd = static_cast<uint8_t>(StepMtrCmd::SOFT_DISABLE);
+  return SendCmd(&cmd, 0);
+}
+
+// Immediately disable the motor
+StepMtrErr StepMotor::HardDisable() {
+  uint8_t cmd = static_cast<uint8_t>(StepMtrCmd::HARD_DISABLE);
+  return SendCmd(&cmd, 0);
+}
+
+// Reset the motor position to zero
+StepMtrErr StepMotor::ClearPosition() {
+  uint8_t cmd = static_cast<uint8_t>(StepMtrCmd::RESET_POS);
+  return SendCmd(&cmd, 0);
+}
+
+// Reset the stepper chip
+StepMtrErr StepMotor::Reset() {
+  uint8_t cmd = static_cast<uint8_t>(StepMtrCmd::RESET_DEVICE);
+  return SendCmd(&cmd, 0);
+}
+
+int32_t StepMotor::DegToUstep(float deg) {
+  uint32_t ustep_per_rev = ustep_per_step_ * steps_per_rev_;
+
+  float steps = static_cast<float>(ustep_per_rev) * deg / 360.0f;
+  return static_cast<int32_t>(steps);
+}
+
+// Goto to the position (in deg) via the shortest path
+StepMtrErr StepMotor::GotoPos(float deg) {
+  int32_t ustep = DegToUstep(deg);
+
+  uint8_t cmd[4];
+  cmd[0] = static_cast<uint8_t>(StepMtrCmd::GOTO);
+  cmd[1] = static_cast<uint8_t>(ustep >> 16);
+  cmd[2] = static_cast<uint8_t>(ustep >> 8);
+  cmd[3] = static_cast<uint8_t>(ustep);
+  return SendCmd(cmd, 4);
+}
+
+// Make a relative move of the passed number of deg.
+StepMtrErr StepMotor::MoveRel(float deg) {
+  int32_t dist = DegToUstep(deg);
+
+  uint8_t cmd[4];
+
+  if (dist < 0) {
+    cmd[0] = static_cast<uint8_t>(StepMtrCmd::MOVE_NEG);
+    dist *= -1;
+  } else
+    cmd[0] = static_cast<uint8_t>(StepMtrCmd::MOVE_POS);
+
+  if (dist > 0x003FFFFF)
+    return StepMtrErr::BAD_VALUE;
+
+  cmd[1] = static_cast<uint8_t>(dist >> 16);
+  cmd[2] = static_cast<uint8_t>(dist >> 8);
+  cmd[3] = static_cast<uint8_t>(dist);
+  return SendCmd(cmd, 4);
+}
+
 #endif

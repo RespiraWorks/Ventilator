@@ -83,8 +83,9 @@ More detailed thoughts on this [here](https://docs.google.com/document/d/1_2f-MA
 ## Filters
 * Filters on inlet/outlet to prevent contaminents from the surrounding environment getting into the device
 * Filter on patient circuit to avoid device contamination and spreading particles between patients
-* We're currently looking at HEPA filters since they are commonly avaible and cheap - but we're also evaluating other options
+* We're currently looking at HEPA filters since they are commonly avaible and cheap - but we're also evaluating other options. More info on HEPA filters: https://respiraworks.slack.com/archives/C0137BLF17A/p1589983907134500?thread_ts=1589940279.125800&cid=C0137BLF17A
 * 2 part mold for holding the filters is meant to be easily manufacturable and to allow easy changing of the filters over time
+* Filters are placed physically on the outside of the box so they can be replaced without the box being opened
 
 ## Blower
 * Current blower is not rated to 100% O2, which drives the lack of a blower on the O2 system and a one way valve in front of the blower to keep it separate from the high O2 part of the system

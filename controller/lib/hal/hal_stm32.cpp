@@ -342,6 +342,9 @@ static void Timer15ISR() {
 
   // Call the function
   controller_callback(controller_arg);
+
+  // Start sending any queued commands to the stepper motor
+  StepMotor::StartQueuedCommands();
 }
 
 /******************************************************************

@@ -1,0 +1,9 @@
+{
+    "defaultTheme": "DefaultTheme",
+    "themes": [
+        {
+            "name": "DefaultTheme",
+            "themeObjectPath": "qrc:/Themes/VentilatorUI/DefaultTheme.qml"
+        }
+    ]
+}

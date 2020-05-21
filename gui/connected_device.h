@@ -38,5 +38,4 @@ private:
   std::function<void(ControllerStatus *)> receive_fn_;
 };
 
-
 #endif // CONNECTED_DEVICE_H

@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/VentilatorUI/">
+    <file>private/Background_Shared0IFace.qml</file>
+    <file>private/PreUseTest_MainViewPanelIFace.qml</file>
+    <file>private/TopBarPanel_Shared0IFace.qml</file>
+    <file>private/Background_Shared0Layout.qml</file>
+    <file>private/PreUseTest_MainViewPanelLayout.qml</file>
+    <file>private/TopBarPanel_Shared0Layout.qml</file>
+    </qresource>
+</RCC>

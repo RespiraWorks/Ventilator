@@ -1,0 +1,100 @@
+{
+    "surfaces": [
+        {
+            "items": [
+                {
+                    "default": true,
+                    "file": "",
+                    "name": "BackgroundHidden"
+                },
+                {
+                    "default": false,
+                    "file": "qrc:/VentilatorUI/layouts/Background_Shared0LayoutImpl.qml",
+                    "name": "Background_Shared0"
+                }
+            ],
+            "name": "Background",
+            "z": -1
+        },
+        {
+            "items": [
+                {
+                    "default": true,
+                    "file": "",
+                    "name": "PreUseTest_ScreenState",
+                    "proxyItems": [
+                        "PreUseTest_MainViewPanel",
+                        "TopBarPanel_Shared0",
+                        "Background_Shared0"
+                    ]
+                }
+            ],
+            "name": "Screens",
+            "z": 0
+        },
+        {
+            "items": [
+                {
+                    "default": true,
+                    "file": "",
+                    "name": "MainViewPanelHidden"
+                },
+                {
+                    "default": false,
+                    "file": "qrc:/VentilatorUI/layouts/PreUseTest_MainViewPanelLayoutImpl.qml",
+                    "name": "PreUseTest_MainViewPanel"
+                }
+            ],
+            "name": "MainViewPanel",
+            "z": 0
+        },
+        {
+            "items": [
+                {
+                    "default": true,
+                    "file": "",
+                    "name": "TopBarPanelHidden"
+                },
+                {
+                    "default": false,
+                    "file": "qrc:/VentilatorUI/layouts/TopBarPanel_Shared0LayoutImpl.qml",
+                    "name": "TopBarPanel_Shared0"
+                }
+            ],
+            "name": "TopBarPanel",
+            "z": 0
+        },
+        {
+            "items": [
+                {
+                    "default": false,
+                    "file": "",
+                    "name": "MenusHidden"
+                },
+                {
+                    "default": true,
+                    "file": "",
+                    "name": "NoMenu"
+                }
+            ],
+            "name": "Menus",
+            "z": 5
+        },
+        {
+            "items": [
+                {
+                    "default": true,
+                    "file": "",
+                    "name": "NoPopup"
+                },
+                {
+                    "default": false,
+                    "file": "",
+                    "name": "PopupsHidden"
+                }
+            ],
+            "name": "Popups",
+            "z": 9
+        }
+    ]
+}

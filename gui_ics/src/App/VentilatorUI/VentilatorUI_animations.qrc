@@ -1,0 +1,14 @@
+<RCC>
+    <qresource prefix="/VentilatorUI/">
+    <file>animations/Background_Shared0LayoutShowAnimation.qml</file>
+    <file>animations/Background_Shared0LayoutHideAnimation.qml</file>
+    <file>animations/Background_Shared0LayoutInitAnimation.qml</file>
+    <file>animations/PreUseTest_MainViewPanelLayoutShowAnimation.qml</file>
+    <file>animations/PreUseTest_MainViewPanelLayoutHideAnimation.qml</file>
+    <file>animations/PreUseTest_MainViewPanelLayoutInitAnimation.qml</file>
+    <file>animations/TopBarPanel_Shared0LayoutShowAnimation.qml</file>
+    <file>animations/TopBarPanel_Shared0LayoutHideAnimation.qml</file>
+    <file>animations/TopBarPanel_Shared0LayoutInitAnimation.qml</file>
+    <file>animations/Transformer.qml</file>
+    </qresource>
+</RCC>

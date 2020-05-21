@@ -1,0 +1,121 @@
+[
+    {
+        "colorA": 255,
+        "colorB": 59,
+        "colorG": 59,
+        "colorR": 59,
+        "name": "textColor"
+    },
+    {
+        "colorA": 255,
+        "colorB": 111,
+        "colorG": 43,
+        "colorR": 66,
+        "name": "buttonTextColor"
+    },
+    {
+        "colorA": 255,
+        "colorB": 121,
+        "colorG": 121,
+        "colorR": 121,
+        "name": "buttonDisabledTextColor"
+    },
+    {
+        "colorA": 255,
+        "colorB": 255,
+        "colorG": 255,
+        "colorR": 255,
+        "name": "buttonAltTextColor"
+    },
+    {
+        "colorA": 255,
+        "colorB": 75,
+        "colorG": 75,
+        "colorR": 75,
+        "name": "panelColor"
+    },
+    {
+        "colorA": 255,
+        "colorB": 128,
+        "colorG": 128,
+        "colorR": 128,
+        "name": "alternativePanelColor"
+    },
+    {
+        "colorA": 255,
+        "colorB": 23,
+        "colorG": 23,
+        "colorR": 23,
+        "name": "spinBoxTextColor"
+    },
+    {
+        "colorA": 255,
+        "colorB": 111,
+        "colorG": 43,
+        "colorR": 66,
+        "name": "circularProgressColor"
+    },
+    {
+        "colorA": 255,
+        "colorB": 255,
+        "colorG": 255,
+        "colorR": 255,
+        "name": "circularProgressBackgroundColor"
+    },
+    {
+        "colorA": 128,
+        "colorB": 32,
+        "colorG": 32,
+        "colorR": 32,
+        "name": "shadowColor"
+    },
+    {
+        "colorA": 255,
+        "colorB": 0,
+        "colorG": 0,
+        "colorR": 255,
+        "name": "shadowRectColor"
+    },
+    {
+        "colorA": 255,
+        "colorB": 255,
+        "colorG": 255,
+        "colorR": 255,
+        "name": "innerShadowRectColor"
+    },
+    {
+        "colorA": 128,
+        "colorB": 255,
+        "colorG": 255,
+        "colorR": 255,
+        "name": "glowColor"
+    },
+    {
+        "colorA": 0,
+        "colorB": 0,
+        "colorG": 0,
+        "colorR": 0,
+        "name": "Figma::0_0_0_0"
+    },
+    {
+        "colorA": 255,
+        "colorB": 196,
+        "colorG": 196,
+        "colorR": 196,
+        "name": "Figma::255_196_196_196"
+    },
+    {
+        "colorA": 255,
+        "colorB": 191,
+        "colorG": 98,
+        "colorR": 36,
+        "name": "Figma::255_36_98_191"
+    },
+    {
+        "colorA": 255,
+        "colorB": 161,
+        "colorG": 86,
+        "colorR": 16,
+        "name": "Figma::255_16_86_161"
+    }
+]

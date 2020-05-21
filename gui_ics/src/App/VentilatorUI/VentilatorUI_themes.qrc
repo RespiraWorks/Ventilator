@@ -1,0 +1,14 @@
+<RCC>
+    <qresource prefix="/">
+        <file>Themes/VentilatorUI/config.json</file>
+        <file>Themes/VentilatorUI/DefaultTheme.qml</file>
+        <file>Themes/VentilatorUI/DefaultTheme/893_1623.png</file>
+        <file>Themes/VentilatorUI/DefaultTheme/config.json</file>
+        <file>Themes/VentilatorUI/DefaultTheme/Colors/definitions.json</file>
+        <file>Themes/VentilatorUI/DefaultTheme/Fonts/definitions.json</file>
+        <file>Themes/VentilatorUI/DefaultTheme/Fonts/DroidSans.ttf</file>
+        <file>Themes/VentilatorUI/DefaultTheme/Fonts/Lato-Bold.ttf</file>
+        <file>Themes/VentilatorUI/DefaultTheme/Fonts/NotoSerif-Bold.ttf</file>
+        <file>Themes/VentilatorUI/DefaultTheme/Styles/definitions.json</file>
+    </qresource>
+</RCC>

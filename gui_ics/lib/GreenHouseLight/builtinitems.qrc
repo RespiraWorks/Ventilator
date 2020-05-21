@@ -1,0 +1,12 @@
+<RCC>
+    <qresource prefix="/GreenHouseBuiltIn">
+        <file>qml/GreenHouseLayer.qml</file>
+    </qresource>
+    <qresource prefix="/GreenHouse">
+        <file>GHLogo.png</file>
+        <file>qml/Displayable.qml</file>
+        <file>qmldir</file>
+        <file>qml/ViewItem.qml</file>
+        <file>qml/ViewItemInterface.qml</file>
+    </qresource>
+</RCC>

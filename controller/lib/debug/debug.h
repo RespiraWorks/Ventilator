@@ -17,6 +17,7 @@ limitations under the License.
 #define DEBUG_H
 
 #include "circular_buffer.h"
+#include <optional>
 #include <stdint.h>
 
 // States for the internal state machine
@@ -88,7 +89,7 @@ public:
   // Read a byte from the print buffer.
   // This is only intended to be called from the command that returns
   // print buffer data.
-  bool PrintBuffGet(uint8_t *ch) { return printBuff.Get(ch); }
+  std::optional<uint8_t> PrintBuffGet() { return printBuff.Get(); }
 
 private:
   CircBuff<uint8_t, 2000> printBuff;

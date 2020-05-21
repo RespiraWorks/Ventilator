@@ -20,6 +20,7 @@ limitations under the License.
  */
 
 #include "debug.h"
+#include <optional>
 #include <string.h>
 
 class PrintBuffReadCmd : public DebugCmd {
@@ -34,10 +35,10 @@ public:
 
     int i;
     for (i = 0; i < max; i++) {
-      uint8_t x;
-      if (!debug.PrintBuffGet(&x))
+      std::optional<uint8_t> ch = debug.PrintBuffGet();
+      if (ch = std::nullopt)
         break;
-      *data++ = x;
+      *data++ = *ch;
     }
 
     *len = i;

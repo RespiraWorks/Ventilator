@@ -27,6 +27,7 @@ limitations under the License.
 
 #include "debug.h"
 #include "vars.h"
+#include <optional>
 #include <stdint.h>
 
 // local functions
@@ -103,8 +104,15 @@ void TraceSample() {
 
   // Sample each enabled varible and store the
   // result to the buffer
-  for (int i = 0; i < vct; i++)
-    traceBuffer.Put(vptr[i]->getDataForTrace());
+  for (int i = 0; i < vct; i++) {
+    bool ok = traceBuffer.Put(vptr[i]->getDataForTrace());
+
+    // Note that this can't fail as we've already checked for sufficient
+    // space above.  I still need to check it though, becuase it's marked
+    // as no discard in the circular buffer.
+    if (!ok)
+      break;
+  }
 
   traceSamp++;
 }
@@ -156,8 +164,8 @@ public:
       traceCtrl = 0;
       traceSamp = 0;
 
-      uint32_t tmp;
-      while (traceBuffer.Get(&tmp)) {
+      std::optional<uint32_t> tmp;
+      while ((tmp = traceBuffer.Get()) != std::nullopt) {
       }
       *len = 0;
       return DbgErrCode::OK;
@@ -206,9 +214,12 @@ public:
       // that adds to the buffer.  I want to make sure I
       // read a full sample without being interrupted
       for (int j = 0; j < vct; j++) {
-        uint32_t dat = 0;
-        traceBuffer.Get(&dat);
-        u32_to_u8(dat, data);
+
+        // This shouldn't fail since I've already confirmed
+        // the number of elements in the buffer.  If it does
+        // fail it's a bug.
+        std::optional<uint32_t> dat = traceBuffer.Get();
+        u32_to_u8(*dat, data);
         data += sizeof(uint32_t);
       }
       traceSamp--;

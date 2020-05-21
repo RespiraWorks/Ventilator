@@ -80,59 +80,6 @@ static const float cvt_vel_int_speed_reg = tick_time * (1 << 26);
 // default value of the chip.
 static const int ustep_per_step_ = 128;
 
-// debug stuff, to be removed soon
-//#define DEBUG_ENABLED
-#ifdef DEBUG_ENABLED
-#include "vars.h"
-
-int32_t setMtr, getMtr, mtrNdx;
-uint32_t getVal, tmp2;
-float mtrVel, mtrAcc, tmp1, mtrPos;
-
-DebugVar v1("set_param", &setMtr, "For testing stepper", "0x%08x");
-DebugVar v2("get_param", &getMtr, "For testing stepper", "0x%08x");
-DebugVar v3("mtr_value", &getVal, "For testing stepper", "0x%08x");
-DebugVar v5("tmp2", &tmp2, "For testing stepper", "0x%08x");
-DebugVar v6("mtr_ndx", &mtrNdx, "For testing stepper", "%d");
-DebugVar v7("mtr_vel", &mtrVel, "For testing stepper", "%.3f");
-DebugVar v8("mtr_tmp", &tmp1, "For testing stepper", "%.5e");
-DebugVar v9("mtr_acc", &mtrAcc, "For testing stepper", "%.3f");
-DebugVar va("mtr_pos", &mtrPos, "For testing stepper", "%.3f");
-
-void test() {
-  StepMotor *mtr = StepMotor::GetStepper(mtrNdx);
-  if (!mtr)
-    return;
-
-  if (setMtr) {
-    mtr->SetParam(static_cast<StepMtrParam>(setMtr), getVal);
-    setMtr = 0;
-  }
-
-  if (getMtr) {
-    mtr->GetParam(static_cast<StepMtrParam>(getMtr), &getVal);
-    getMtr = 0;
-
-    mtr->GetCurrentSpeed(&tmp1);
-  }
-
-  if (mtrVel) {
-    mtr->RunAtVelocity(mtrVel);
-    mtrVel = 0;
-  }
-
-  if (mtrAcc) {
-    mtr->SetAccel(mtrAcc);
-    mtrAcc = 0;
-  }
-
-  if (mtrPos) {
-    mtr->MoveRel(mtrPos);
-    mtrPos = 0;
-  }
-}
-#endif
-
 // These functions raise and lower the chip select pin
 static inline void CS_High() { GPIO_SetPin(GPIO_B_BASE, 6); }
 static inline void CS_Low() { GPIO_ClrPin(GPIO_B_BASE, 6); }
@@ -325,6 +272,45 @@ void HalApi::StepperMotorInit() {
   dma->channel[C4].config.mem2mem = 0;
 
   Hal.EnableInterrupt(INT_VEC_DMA2_CH3, IntPriority::STANDARD);
+
+  StepMotor::OneTimeInit();
+}
+
+// Do some basic init of the stepper motor chips so we can
+// make them spin the motors
+void StepMotor::OneTimeInit() {
+  uint32_t val;
+  for (int i = 0; i < total_motors_; i++) {
+
+    StepMotor *mtr = StepMotor::GetStepper(i);
+
+    // Reset the chip to default values
+    mtr->Reset();
+
+    // Get the first gate config register of the powerSTEP01.
+    // This is actually the config register on the L6470
+    mtr->GetParam(StepMtrParam::GATE_CFG1, &val);
+
+    // If this is at the default config register value for
+    // the L6470 then I don't need to do any more configuration
+    if (val == 0x2E88)
+      continue;
+
+    // Configure the two gate config registers to reasonable values
+    //
+    // GATE_CFG1 xxxxxxxxxxxxxxxx
+    //           ...........\\\\\ - time at constant current 3750ns (0x1D)
+    //           ........\\\------- Gate current 96mA (7)
+    //           .....\\\---------- Turn off boost time 1uS (7)
+    //           ....\------------- Watch dog enable (1)
+    //           \\\\-------------- reserved
+    mtr->SetParam(StepMtrParam::GATE_CFG1, 0x0FFD);
+
+    // GATE_CFG2 xxxxxxxx
+    //           ...\\\\\---------- Dead time 1000ns (7)
+    //           \\\--------------- Blanking time 1000ns (7)
+    mtr->SetParam(StepMtrParam::GATE_CFG2, 0xF7);
+  }
 }
 
 // Convert a velocity from Deg/sec units to the value to program
@@ -415,7 +401,6 @@ StepMtrErr StepMotor::SetAccel(float acc) {
   static const float scaler = (tick_time * tick_time * 1099511627776.f);
   if (acc < 0)
     return StepMtrErr::BAD_VALUE;
-  tmp1 = scaler;
 
   // Convert from deg/sec/sec to steps/sec/sec
   acc *= static_cast<float>(steps_per_rev_) / 360.0f;
@@ -540,6 +525,45 @@ StepMtrErr StepMotor::Reset() {
   return SendCmd(&cmd, 0);
 }
 
+StepMtrErr StepMotor::GetStatus(StepperStatus *stat) {
+
+  // It's not legal to call this from the control loop because it
+  // has to block.  Return an error if we're in an interrupt handler
+  if (Hal.InInterruptHandler())
+    return StepMtrErr::WOULD_BLOCK;
+
+  uint8_t cmd[] = {static_cast<uint8_t>(StepMtrCmd::GET_STATUS), 0, 0};
+
+  StepMtrErr err = SendCmd(cmd, 3);
+  if (err != StepMtrErr::OK)
+    return err;
+
+  stat->enabled = (cmd[2] & 0x01) == 0;
+  stat->command_error = (cmd[2] & 0x80) || (cmd[1] & 0x01);
+  stat->under_voltage = (cmd[1] & 0x02) == 0;
+  stat->thermal_warning = (cmd[1] & 0x04) == 0;
+  stat->thermal_shutdown = (cmd[1] & 0x08) == 0;
+  stat->over_current = (cmd[1] & 0x10) == 0;
+  stat->step_loss = (cmd[1] & 0x60) != 0x60;
+
+  switch (cmd[2] & 0x60) {
+  case 0x00:
+    stat->move_status = StepMoveStatus::STOPPED;
+    break;
+  case 0x20:
+    stat->move_status = StepMoveStatus::ACCELERATING;
+    break;
+  case 0x40:
+    stat->move_status = StepMoveStatus::DECELERATING;
+    break;
+  case 0x60:
+    stat->move_status = StepMoveStatus::CONSTANT_SPEED;
+    break;
+  }
+
+  return err;
+}
+
 int32_t StepMotor::DegToUstep(float deg) {
   uint32_t ustep_per_rev = ustep_per_step_ * steps_per_rev_;
 
@@ -580,23 +604,6 @@ StepMtrErr StepMotor::MoveRel(float deg) {
   cmd[2] = static_cast<uint8_t>(dist >> 8);
   cmd[3] = static_cast<uint8_t>(dist);
   return SendCmd(cmd, 4);
-}
-
-// Read the motor status register (blocking) and return it
-StepMtrErr StepMotor::GetStatus(uint16_t *stat) {
-
-  // It's not legal to call this from the control loop because it
-  // has to block.  Return an error if we're in an interrupt handler
-  if (Hal.InInterruptHandler())
-    return StepMtrErr::WOULD_BLOCK;
-
-  uint8_t cmd[] = {static_cast<uint8_t>(StepMtrCmd::GET_STATUS), 0, 0};
-
-  StepMtrErr err = SendCmd(cmd, 3);
-  uint16_t h = cmd[1];
-  uint16_t l = cmd[2];
-  *stat = static_cast<uint16_t>((h << 8) | l);
-  return err;
 }
 
 // Send a command to the motor and wait for the response.
@@ -803,6 +810,14 @@ void StepMotor::DMA_ISR() {
   DMA_ClearInt(DMA2_BASE, DMA_Chan::C3, DmaInterrupt::GLOBAL);
 
   UpdateComState();
+}
+
+// This is called from the HAL at the end of the high
+// priority loop timer ISR.  If the comm state machine
+// is idle it starts a new transmission
+void StepMotor::StartQueuedCommands() {
+  if (coms_state_ == StepCommState::IDLE)
+    UpdateComState();
 }
 
 #endif

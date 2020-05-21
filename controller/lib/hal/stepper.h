@@ -26,7 +26,7 @@ the programmer's manual for the processor available here:
 #ifndef STEPPER_H_
 #define STEPPER_H_
 
-#include "circular_buffer.h"
+#include <stdint.h>
 
 // These are the simple opcodes for the stepper driver.
 // Not included here are set/get parameter which include
@@ -85,8 +85,9 @@ enum class StepMtrParam {
 // Error codes returned by my functions
 enum class StepMtrErr {
   OK,
-  BAD_PARAM, // The parameter ID is invalid
-  BAD_VALUE, // Illegal value passed
+  BAD_PARAM,   // The parameter ID is invalid
+  BAD_VALUE,   // Illegal value passed
+  WOULD_BLOCK, // Call would block, can't be called from within ISR
 };
 
 // Represents one of the stepper motors in the system
@@ -96,12 +97,29 @@ class StepMotor {
 public:
   StepMotor();
 
-  // Return a pointer to the Nth stepper motor
-  // in the system.  Returns NULL for an invalid input
+  // Return a pointer to the Nth stepper motor in the system.
+  //
+  // Note that we actually number the motors in reverse order.
+  // That way, if the module is compiled to work with say 3
+  // motors but your hardware only has 2, you'll use values
+  // of 0 and 1 to call this function rather then 1 and 2.
+  //
+  // The reason has to do with how the interface is daisy
+  // chained.
+  //
+  // For example, if we didn't reverse things we'd have this:
+  //
+  // host -> M2 -> M1 -> M0 +
+  //  ^                     |
+  //  +---------------------+
+  //
+  // We swap them so M0 is closest to the host.
+  //
+  // Returns NULL for an invalid input
   static StepMotor *GetStepper(int n) {
     if ((n < 0) || (n >= total_motors_))
       return 0;
-    return &motor_[n];
+    return &motor_[total_motors_ - n - 1];
   }
 
   // Set and get parameters.
@@ -122,17 +140,29 @@ public:
 
   int GetStepsPerRev() { return steps_per_rev_; }
 
-  float GetCurrentSpeed();
+  StepMtrErr GetCurrentSpeed(float *ret);
 
   StepMtrErr SetMinSpeed(float dps);
-  float GetMinSpeed();
+  StepMtrErr GetMinSpeed(float *ret);
 
   StepMtrErr SetMaxSpeed(float dps);
-  float GetMaxSpeed();
+  StepMtrErr GetMaxSpeed(float *ret);
 
   StepMtrErr SetAccel(float acc);
+  StepMtrErr SetAmpHold(float amp);
+  StepMtrErr SetAmpRun(float amp);
+  StepMtrErr SetAmpAccel(float amp);
+  StepMtrErr SetAmpDecel(float amp);
 
-  void RunAtVelocity(float vel);
+  StepMtrErr GotoPos(float deg);
+  StepMtrErr MoveRel(float deg);
+  StepMtrErr RunAtVelocity(float vel);
+  StepMtrErr SoftStop();
+  StepMtrErr HardStop();
+  StepMtrErr SoftDisable();
+  StepMtrErr HardDisable();
+  StepMtrErr ClearPosition();
+  StepMtrErr Reset();
 
 private:
   static StepMotor motor_[total_motors_];
@@ -152,6 +182,8 @@ private:
 
   float DpsToVelReg(float vel, float cnv);
   float RegVelToDps(int32_t val, float cnv);
+  int32_t DegToUstep(float deg);
+  StepMtrErr SetKval(StepMtrParam param, float amp);
 
   // Send a command and wait for the response
 public:

@@ -29,10 +29,9 @@ the programmer's manual for the processor available here:
 #include "checksum.h"
 #include "circular_buffer.h"
 #include "hal.h"
-#include "uart_dma.h"
-#include <optional>
 #include "stepper.h"
 #include "uart_dma.h"
+#include <optional>
 #include <stdarg.h>
 #include <stdio.h>
 

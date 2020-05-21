@@ -1,9 +1,9 @@
 #if defined(BARE_STM32) && defined(UART_VIA_DMA)
 
 #include "uart_dma.h"
+#include "debug.h"
 #include "hal_stm32.h"
 #include "hal_stm32_regs.h"
-#include "debug.h"
 
 // STM32 UART3 driver based on DMA transfers.
 
@@ -76,8 +76,8 @@ void UART_DMA::init(int baud) {
 
 // Sets up an interrupt on matching char incomming form UART3
 void UART_DMA::charMatchEnable() {
-  uart->intClear.s.cmcf = 1;  // Clear char match flag
-  uart->ctrl1.s.cmie = 1;     // Enable character match interrupt
+  uart->intClear.s.cmcf = 1; // Clear char match flag
+  uart->ctrl1.s.cmie = 1;    // Enable character match interrupt
 }
 
 // Returns true if DMA TX is in progress

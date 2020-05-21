@@ -276,6 +276,9 @@ public:
   // Where possible, prefer using the BlockInterrupts RAII class.
   bool interruptsEnabled();
 
+  // Return true if we are currently executing in an interrupt handler
+  bool InInterruptHandler();
+
   // Calculate CRC32 for data buffer
   uint32_t crc32(uint8_t *data, uint32_t length);
 
@@ -375,6 +378,12 @@ inline bool HalApi::interruptsEnabled() {
   int ret;
   asm volatile("mrs %[output], primask" : [output] "=r"(ret));
   return ret == 0;
+}
+
+inline bool HalApi::InInterruptHandler() {
+  int ret;
+  asm volatile("mrs %[output], ipsr" : [output] "=r"(ret));
+  return ret > 0;
 }
 
 #else

@@ -125,16 +125,58 @@ enum class StepCommState {
   SEND_SYNC,   // Sending data that the background thread is waiting on.
 };
 
+enum class StepMoveStatus {
+  STOPPED,
+  ACCELERATING,
+  DECELERATING,
+  CONSTANT_SPEED,
+};
+
+// Detailed status about the stepper driver chip.
+// Note, fields marked with * below are latched meaning that they
+// will return true if the event has occurred since the last time
+// the status was read.  The act of reading the status clears them
+// so they won't be true on the next read unless they happen again.
+struct StepperStatus {
+
+  // If true, power is being applied to the motor.
+  bool enabled;
+
+  // * True if the stepper chip has detected an under voltage
+  bool under_voltage;
+
+  // * True if the stepper chip is getting hot
+  bool thermal_warning;
+
+  // * True if the stepper chip got so hot is shut itself down.
+  bool thermal_shutdown;
+
+  // * True if over current has been detected
+  bool over_current;
+
+  // * True if the chip detects a loss of steps (motor stall)
+  bool step_loss;
+
+  // * True if a command error (bad command) was detected by the chip
+  bool command_error;
+
+  // Specifics of the move status
+  StepMoveStatus move_status;
+};
+
 // Represents one of the stepper motors in the system
 class StepMotor {
 
   // This constant represents the number of motors wired in
   // to the system.  It needs to match the hardware or the
   // interface wont work.
-  static const int total_motors_ = 2;
+  static const int total_motors_ = 1;
 
 public:
   StepMotor();
+
+  // Called from HAL at startup
+  static void OneTimeInit();
 
   // Return a pointer to the Nth stepper motor in the system.
   //
@@ -239,6 +281,11 @@ public:
   // Reset the stepper chip
   StepMtrErr Reset();
 
+  // Read the status of the stepper chip.
+  // Like all reads, this can only be done in the
+  // background loop
+  StepMtrErr GetStatus(StepperStatus *stat);
+
   // Set and get parameters.
   // These are mostly for internal use.
   // The higher level methods should generally
@@ -282,12 +329,14 @@ private:
 
   static void UpdateComState();
 
-  StepMtrErr GetStatus(uint16_t *stat);
-
 public:
   // Interrupt service routine.
   // This has to be public, but don't call it.
   static void DMA_ISR();
+
+  // This function should only be called by the HAL
+  // at the end of the high priority loop timer ISR
+  static void StartQueuedCommands();
 };
 
 #endif

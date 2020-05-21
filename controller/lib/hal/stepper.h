@@ -12,16 +12,42 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 
-This file implements the HAL (Hardware Abstraction Layer) for the
-STM32L452 processor used on the controller.  Details of the processor's
-peripherals can be found in the reference manual for that processor:
-   https://www.st.com/resource/en/reference_manual/dm00151940-stm32l41xxx42xxx43xxx44xxx45xxx46xxx-advanced-armbased-32bit-mcus-stmicroelectronics.pdf
-
-Details specific to the ARM processor used in this chip can be found in
-the programmer's manual for the processor available here:
-   https://www.st.com/resource/en/programming_manual/dm00046982-stm32-cortexm4-mcus-and-mpus-programming-manual-stmicroelectronics.pdf
-
 */
+
+///////////////////////////////////////////////////////////////////////////////
+//
+// This module implements a communication interface used to talk to a fixed
+// number of stepper driver chips via an SPI synchronous serial port.
+//
+// The driver chips supported are made by ST.  The following chips are
+// supported:
+//   L6470
+//     https://www.st.com/content/st_com/en/products/motor-drivers/stepper-motor-drivers/l6470.html
+//   powerSTEP01
+//     https://www.st.com/content/st_com/en/products/motor-drivers/stepper-motor-drivers/powerstep01.html
+//
+// This interface is designed to allow it to be safely used by code running
+// both in the main background loop of the controller as well as from the
+// high priority control loop which itself runs from an ISR.
+//
+// The main background loop can call any method implemented in this module.
+// The loop will block while the communication with the stepper chips takes
+// place and resume when the communication has finished.
+//
+// The high priority control loop can only call a subset of the methods here,
+// those which send commands to the stepper chips but don't return a value.
+// When methods are called from the high priority loop the command is queued
+// up to be sent later, but no communication is immediately started.
+// The HAL kicks off any queued up commands automatically at the end of the
+// high priority loop.  If an illegal command (i.e. one that returns a value)
+// is called from the high priority control loop it will result in an error.
+//
+// For communications to work properly it's important that the constant value
+// total_motors_ matches the actual number of driver chips wired up in the
+// hardware.  If you're experiencing problems using this module, please check
+// that first.
+//
+///////////////////////////////////////////////////////////////////////////////
 
 #ifndef STEPPER_H_
 #define STEPPER_H_
@@ -85,13 +111,26 @@ enum class StepMtrParam {
 // Error codes returned by my functions
 enum class StepMtrErr {
   OK,
-  BAD_PARAM,   // The parameter ID is invalid
-  BAD_VALUE,   // Illegal value passed
-  WOULD_BLOCK, // Call would block, can't be called from within ISR
+  BAD_PARAM,     // The parameter ID is invalid
+  BAD_VALUE,     // Illegal value passed
+  WOULD_BLOCK,   // Call would block, can't be called from within ISR
+  QUEUE_FULL,    // Can't add command to queue, not enough space
+  INVALID_STATE, // Invalid state for command.
+};
+
+// States for the stepper motor communication interface
+enum class StepCommState {
+  IDLE,        // Not currently communicating
+  SEND_QUEUED, // Sending data that was queued up by control loop
+  SEND_SYNC,   // Sending data that the background thread is waiting on.
 };
 
 // Represents one of the stepper motors in the system
 class StepMotor {
+
+  // This constant represents the number of motors wired in
+  // to the system.  It needs to match the hardware or the
+  // interface wont work.
   static const int total_motors_ = 2;
 
 public:
@@ -99,35 +138,12 @@ public:
 
   // Return a pointer to the Nth stepper motor in the system.
   //
-  // Note that we actually number the motors in reverse order.
-  // That way, if the module is compiled to work with say 3
-  // motors but your hardware only has 2, you'll use values
-  // of 0 and 1 to call this function rather then 1 and 2.
-  //
-  // The reason has to do with how the interface is daisy
-  // chained.
-  //
-  // For example, if we didn't reverse things we'd have this:
-  //
-  // host -> M2 -> M1 -> M0 +
-  //  ^                     |
-  //  +---------------------+
-  //
-  // We swap them so M0 is closest to the host.
-  //
   // Returns NULL for an invalid input
   static StepMotor *GetStepper(int n) {
     if ((n < 0) || (n >= total_motors_))
       return 0;
-    return &motor_[total_motors_ - n - 1];
+    return &motor_[n];
   }
-
-  // Set and get parameters.
-  // These commands block until the command finishes
-  StepMtrErr SetParam(StepMtrParam param, uint32_t value);
-  StepMtrErr GetParam(StepMtrParam param, uint32_t *value);
-
-  StepMtrErr GetStatus(uint16_t *stat);
 
   // Sets the number of full steps / rev for the motor.
   // For most stepper motors this is 200.  That's the
@@ -140,42 +156,115 @@ public:
 
   int GetStepsPerRev() { return steps_per_rev_; }
 
+  // Read the current absolute motor velocity and return it
+  // in deg/sec units
+  // Note that this value is always positive
   StepMtrErr GetCurrentSpeed(float *ret);
 
-  StepMtrErr SetMinSpeed(float dps);
-  StepMtrErr GetMinSpeed(float *ret);
-
+  // Get and set the motors max speed in deg/sec
   StepMtrErr SetMaxSpeed(float dps);
   StepMtrErr GetMaxSpeed(float *ret);
 
+  // Get and set the motor's minimum speed setting in deg/sec
+  //
+  // NOTE - Setting a non-zero minimum speed doesn't mean
+  // the motor can't stop, this is the minimum speed for
+  // a move.  When you start a move, rather then increase
+  // linearly from 0, the stepper will jump to this speed
+  // immediately, then ramp up from there.
+  // This can help with vibration.
+  //
+  // NOTE - The motor must be disabled to set this
+  StepMtrErr SetMinSpeed(float dps);
+  StepMtrErr GetMinSpeed(float *ret);
+
+  // Set the motors accel and decel rate in deg/sec/sec units
+  //
+  // NOTE - The motor must be disabled to set this
   StepMtrErr SetAccel(float acc);
+
+  // Set the amplitude of the voltage output used to drive the motor.
+  // The values set here allow the amplitude of output that pushes power
+  // to the motor to be adjusted.  Higher values will push more current
+  // into the motor, lower values will push less.  The motor will be
+  // more powerful with higher values, but will get hotter, consume more
+  // power, and could potentially be damaged if these are set too high,
+  // so be careful.
+  //
+  // There are four different values that can be set which control the
+  // output to the motor in different phases of it's motion:
+  //   hold - Value used when the motor is holding position (not moving)
+  //   run  - Value used when running at constant velocity.
+  //   accel - Value used when accelerating
+  //   decel - Value used when decelerating
+  //
+  // In all cases the values are set in a range of 0 to 1
+  // for 0 to 100%
   StepMtrErr SetAmpHold(float amp);
   StepMtrErr SetAmpRun(float amp);
   StepMtrErr SetAmpAccel(float amp);
   StepMtrErr SetAmpDecel(float amp);
 
+  // Goto to the position (in deg) via the shortest path
+  // This returns once the move has started, it doesn't
+  // wait for the move to finish
   StepMtrErr GotoPos(float deg);
+
+  // Start a relative move of the passed number of deg.
   StepMtrErr MoveRel(float deg);
+
+  // Start running at a constant velocity.
+  // The velocity is specified in deg/sec units
   StepMtrErr RunAtVelocity(float vel);
+
+  // Decelerate to zero velocity and hold position
+  // This can also be used to enable the motor without
+  // causing any motion
   StepMtrErr SoftStop();
+
+  // Stop abruptly and hold position
+  // This can also be used to enable the motor without
+  // causing any motion
   StepMtrErr HardStop();
+
+  // Decelerate to zero velocity and disable
   StepMtrErr SoftDisable();
+
+  // Immediately disable the motor
   StepMtrErr HardDisable();
+
+  // Reset the motor position to zero
   StepMtrErr ClearPosition();
+
+  // Reset the stepper chip
   StepMtrErr Reset();
+
+  // Set and get parameters.
+  // These are mostly for internal use.
+  // The higher level methods should generally
+  // be used instead.
+  StepMtrErr SetParam(StepMtrParam param, uint32_t value);
+  StepMtrErr GetParam(StepMtrParam param, uint32_t *value);
 
 private:
   static StepMotor motor_[total_motors_];
   static uint8_t dma_buff_[total_motors_];
   static uint8_t param_len_[32];
-  static bool coms_active_;
+  static StepCommState coms_state_;
+
+  // This queue is used for sending commands from the high
+  // priority loop.  The command is copied to this queue and
+  // sent later.
+  uint8_t queue_[40];
+  int queue_count_;
+  int queue_ndx_;
 
   // This pointer and count are used to hold the command being
   // sent to the motor and it's response.
   // They're volatile because the interrupt handler updates them
   volatile uint8_t *cmd_ptr_;
   volatile int cmd_remain_;
-  bool sent_byte_;
+  bool save_response_;
 
   // Number of full steps/rev
   int steps_per_rev_;
@@ -186,14 +275,18 @@ private:
   StepMtrErr SetKval(StepMtrParam param, float amp);
 
   // Send a command and wait for the response
-public:
-  StepMtrErr SendCmd(uint8_t *cmd, int len);
+  StepMtrErr SendCmd(uint8_t *cmd, uint32_t len);
 
-  static void StartCmd();
+  // Queue up the command and return immediately
+  StepMtrErr EnqueueCmd(uint8_t *cmd, uint32_t len);
+
+  static void UpdateComState();
+
+  StepMtrErr GetStatus(uint16_t *stat);
 
 public:
   // Interrupt service routine.
-  // This has to be public, but don't call it
+  // This has to be public, but don't call it.
   static void DMA_ISR();
 };
 

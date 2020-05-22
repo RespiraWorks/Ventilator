@@ -268,7 +268,7 @@ void HalApi::StepperMotorInit() {
   dma->channel[C4].config.priority = 0;
   dma->channel[C4].config.mem2mem = 0;
 
-  Hal.EnableInterrupt(INT_VEC_DMA2_CH3, IntPriority::STANDARD);
+  Hal.EnableInterrupt(InterruptVector::DMA2_CH3, IntPriority::STANDARD);
 
   StepMotor::OneTimeInit();
 }

@@ -213,25 +213,21 @@ void HalApi::StepperMotorInit() {
 
   // Configure the SPI to work in 8-bit data mode
   // Enable RXNE interrupts
-  const int rxFifo8Bit = 1 << 12; // Rx int on every byte
-  const int dataSize = 7 << 8;    // 8-bit data words
-  const int txDmaEna = 1 << 1;
-  const int rxDmaEna = 1 << 0;
-  spi->ctrl[1] = rxFifo8Bit | dataSize | txDmaEna | rxDmaEna;
+  spi->ctrl2.rx_dma_en = 1; // Enable DMA on receive
+  spi->ctrl2.tx_dma_en = 1; // Enable DMA on transmit
+  spi->ctrl2.ds = 7;        // 8-bit data size
+  spi->ctrl2.frxth = 1;     // Receive interrupt on every byte
 
   // Configure for master mode, CPOL and CPHA both 0.
   // The stepper driver chip has a max SPI clock
   // rate of 5MHz which is the rate I'll use.
-  const int cpha = 1 << 0; // Data is sampled on the rising edge of the clock
-  const int cpol = 1 << 1; // Clock line is high when not active
-  const int masterMode = 1 << 2; // We're acting as the master on the SPI bus
-  const int baudRate = 3 << 3;   // Set bit rate for 80MHz/16 or 5MHz
-  const int spiEnable = 1 << 6;  // Enable the SPI module
-  const int internalSS =
-      1 << 8; // These two settings allow us to manually control the SS pin
-  const int softwareSS = 1 << 9;
-  spi->ctrl[0] =
-      cpha | cpol | masterMode | baudRate | spiEnable | internalSS | softwareSS;
+  spi->ctrl1.cpha = 1; // Data is sampled on the rising edge of the clock
+  spi->ctrl1.cpol = 1; // Clock line is high when not active
+  spi->ctrl1.mstr = 1; // We're acting as the master on the SPI bus
+  spi->ctrl1.br = 3;   // Set bit rate for 80MHz/16 or 5MHz
+  spi->ctrl1.ssi = 1;  // Enable software slave select
+  spi->ctrl1.ssm = 1;  // Software slave select management
+  spi->ctrl1.spe = 1;  // Enable the SPI module
 
   // DMA2 channels 3 and 4 can be used to handle rx and tx interrupts from
   // SPI1 respectively.

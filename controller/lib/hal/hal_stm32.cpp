@@ -252,13 +252,17 @@ void HalApi::InitSysTimer() {
 
   // Just set the timer up to count every microsecond.
   TimerRegs *tmr = TIMER6_BASE;
+
+  // The reload register gives the numer of clock ticks (100ns in our case) -1
+  // until the clock wraps back to zero and generates an interrupt
+  // This setting will cause an interrupt every 10,000 clocks or 1 millisecond
   tmr->reload = 9999;
   tmr->prescale = (CPU_FREQ_MHZ / 10 - 1);
   tmr->event = 1;
   tmr->ctrl[0] = 1;
   tmr->intEna = 1;
 
-  EnableInterrupt(INT_VEC_TIMER6, IntPriority::STANDARD);
+  EnableInterrupt(InterruptVector::TIMER6, IntPriority::STANDARD);
 }
 
 // Just spin for a specified number of microseconds
@@ -334,7 +338,7 @@ void HalApi::startLoopTimer(const Duration &period, void (*callback)(void *),
   // for normal hardware interrupts.  This means that other
   // interrupts can be serviced while controller functions
   // are running.
-  EnableInterrupt(INT_VEC_TIMER15, IntPriority::LOW);
+  EnableInterrupt(InterruptVector::TIMER15, IntPriority::LOW);
 }
 
 static void Timer15ISR() {
@@ -727,10 +731,10 @@ void HalApi::InitUARTs() {
 #endif
   dbgUART.Init(115200);
 
-  EnableInterrupt(INT_VEC_DMA1_CH2, IntPriority::STANDARD);
-  EnableInterrupt(INT_VEC_DMA1_CH3, IntPriority::STANDARD);
-  EnableInterrupt(INT_VEC_UART2, IntPriority::STANDARD);
-  EnableInterrupt(INT_VEC_UART3, IntPriority::STANDARD);
+  EnableInterrupt(InterruptVector::DMA1_CH2, IntPriority::STANDARD);
+  EnableInterrupt(InterruptVector::DMA1_CH3, IntPriority::STANDARD);
+  EnableInterrupt(InterruptVector::UART2, IntPriority::STANDARD);
+  EnableInterrupt(InterruptVector::UART3, IntPriority::STANDARD);
 }
 
 static void UART2_ISR() { dbgUART.ISR(); }
@@ -1069,8 +1073,10 @@ __attribute__((section(".isr_vector"))) void (*const vectors[101])() = {
 
 // Enable an interrupt with a specified priority (0 to 15)
 // See the NVIC chapter of the manual for more information.
-void HalApi::EnableInterrupt(int addr, IntPriority pri) {
+void HalApi::EnableInterrupt(InterruptVector vec, IntPriority pri) {
   IntCtrl_Regs *nvic = NVIC_BASE;
+
+  int addr = static_cast<int>(vec);
 
   int id = addr / 4 - 16;
 

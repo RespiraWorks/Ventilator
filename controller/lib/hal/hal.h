@@ -467,6 +467,7 @@ inline void HalApi::test_serialPutIncomingData(const char *data, uint16_t len) {
 inline void HalApi::disableInterrupts() { interruptsEnabled_ = false; }
 inline void HalApi::enableInterrupts() { interruptsEnabled_ = true; }
 inline bool HalApi::interruptsEnabled() { return interruptsEnabled_; }
+inline bool HalApi::InInterruptHandler() { return false; }
 
 inline uint32_t HalApi::crc32(uint8_t *data, uint32_t length) {
   return soft_crc32(reinterpret_cast<char *>(data), length);

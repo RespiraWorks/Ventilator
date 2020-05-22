@@ -62,14 +62,14 @@ enum class GPIO_PinMode {
   ALT = 2,
   ANALOG = 3,
 };
-inline void GPIO_PinMode(GPIO_Regs *const gpio, int pin, GPIO_PinMode mode) {
+inline void GPIO_PinMode(GPIO_Regs *gpio, int pin, GPIO_PinMode mode) {
   gpio->mode &= ~(3 << (pin * 2));
   gpio->mode |= (static_cast<int>(mode) << (pin * 2));
 }
 
 // The output type is controlled by a single bit in a register.
 enum class GPIO_OutType { PUSHPULL = 0, OPENDRAIN = 1 };
-inline void GPIO_OutType(GPIO_Regs *const gpio, int pin, GPIO_OutType outType) {
+inline void GPIO_OutType(GPIO_Regs *gpio, int pin, GPIO_OutType outType) {
   if (outType == GPIO_OutType::OPENDRAIN)
     gpio->outType |= 1 << pin;
   else
@@ -78,7 +78,7 @@ inline void GPIO_OutType(GPIO_Regs *const gpio, int pin, GPIO_OutType outType) {
 
 // Output pin speeds are set using two consecutive bits / pin.
 enum class GPIO_OutSpeed { LOW = 0, MEDIUM = 1, HIGH = 2, SMOKIN = 3 };
-inline void GPIO_OutSpeed(GPIO_Regs *const gpio, int pin, GPIO_OutSpeed speed) {
+inline void GPIO_OutSpeed(GPIO_Regs *gpio, int pin, GPIO_OutSpeed speed) {
   int S = static_cast<int>(speed);
   gpio->outSpeed &= ~(3 << (2 * pin));
   gpio->outSpeed |= (S << (2 * pin));
@@ -89,7 +89,7 @@ inline void GPIO_OutSpeed(GPIO_Regs *const gpio, int pin, GPIO_OutSpeed speed) {
 // functions for each pin.
 // This function sets the alternate function associated with a
 // particular pin.
-inline void GPIO_PinAltFunc(GPIO_Regs *const gpio, int pin, int func) {
+inline void GPIO_PinAltFunc(GPIO_Regs *gpio, int pin, int func) {
   GPIO_PinMode(gpio, pin, GPIO_PinMode::ALT);
 
   int x = (pin < 8) ? 0 : 1;
@@ -97,29 +97,29 @@ inline void GPIO_PinAltFunc(GPIO_Regs *const gpio, int pin, int func) {
 }
 
 // Set a specific output pin
-inline void GPIO_SetPin(GPIO_Regs *const gpio, int pin) {
+inline void GPIO_SetPin(GPIO_Regs *gpio, int pin) {
   gpio->set = static_cast<SREG>(1 << pin);
 }
 
 // Clear a specific output pin
-inline void GPIO_ClrPin(GPIO_Regs *const gpio, int pin) {
+inline void GPIO_ClrPin(GPIO_Regs *gpio, int pin) {
   gpio->clr = static_cast<SREG>(1 << pin);
 }
 
 // Return the current value of an input pin
-inline int GPIO_GetPin(GPIO_Regs *const gpio, int pin) {
+inline int GPIO_GetPin(GPIO_Regs *gpio, int pin) {
   return (gpio->inDat & (1 << pin)) ? 1 : 0;
 }
 
 // This adds a pull-up resistor to an input pin
-inline void GPIO_PullUp(GPIO_Regs *const gpio, int pin) {
+inline void GPIO_PullUp(GPIO_Regs *gpio, int pin) {
   uint32_t x = gpio->pullUpDn & ~(3 << (2 * pin));
   x |= 1 << (2 * pin);
   gpio->pullUpDn = x;
 }
 
 // This adds a pull-down resistor to an input pin
-inline void GPIO_PullDn(GPIO_Regs *const gpio, int pin) {
+inline void GPIO_PullDn(GPIO_Regs *gpio, int pin) {
   uint32_t x = gpio->pullUpDn & ~(3 << (2 * pin));
   x |= 2 << (2 * pin);
   gpio->pullUpDn = x;

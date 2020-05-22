@@ -359,8 +359,8 @@ enum class DMA_Chan {
   C7 = 6,
 };
 
-typedef enum { PERIPHERAL_TO_MEM = 0, MEM_TO_PERIPHERAL = 1 } DmaChannelDir;
-typedef enum { BITS8 = 0, BITS16 = 1, BITS32 = 2 } DmaTransferSize;
+enum class DmaChannelDir { PERIPHERAL_TO_MEM = 0, MEM_TO_PERIPHERAL = 1 };
+enum class DmaTransferSize { BITS8 = 0, BITS16 = 1, BITS32 = 2 };
 
 struct DMA_Regs {
   union {
@@ -475,8 +475,7 @@ inline DMA_Regs *const DMA2_BASE = reinterpret_cast<DMA_Regs *>(0x40020400);
 // @param dma Address of DMA registers
 // @param chan DMA channel to modify.  Channels are numbered from 0
 // @param selection Selects which peripherial request to map to the channel
-inline void DMA_SelectChannel(DMA_Regs *const dma, DMA_Chan chan,
-                              int selection) {
+inline void DMA_SelectChannel(DMA_Regs *dma, DMA_Chan chan, int selection) {
   selection &= 0x0F;
 
   int x = 4 * static_cast<int>(chan);
@@ -488,15 +487,14 @@ inline void DMA_SelectChannel(DMA_Regs *const dma, DMA_Chan chan,
 }
 
 // Clear a DMA interrupt given the channel number and interrupt type
-typedef enum {
+enum class DmaInterrupt {
   GLOBAL = 1,
   XFER_COMPLETE = 2,
   HALF_COMPLETE = 4,
   XFER_ERR = 8
-} DmaInterrupt;
+};
 
-inline void DMA_ClearInt(DMA_Regs *const dma, DMA_Chan chan,
-                         DmaInterrupt interrupt) {
+inline void DMA_ClearInt(DMA_Regs *dma, DMA_Chan chan, DmaInterrupt interrupt) {
 
   int x = static_cast<int>(interrupt);
   x <<= 4 * static_cast<int>(chan);

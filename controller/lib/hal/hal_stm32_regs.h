@@ -504,7 +504,38 @@ inline void DMA_ClearInt(DMA_Regs *const dma, DMA_Chan chan,
 }
 
 struct SPI_Regs {
-  REG ctrl[2];
+  struct {
+    REG cpha : 1;       // Clock phase
+    REG cpol : 1;       // Clock polarity
+    REG mstr : 1;       // Master mode
+    REG br : 3;         // Bit rate
+    REG spe : 1;        // SPI enable
+    REG lsb_first : 1;  // Send LSB first
+    REG ssi : 1;        // Internal slave select
+    REG ssm : 1;        // Software slave management
+    REG rx_only : 1;    // Receive mode only
+    REG crcl : 1;       // CRC length
+    REG crc_next : 1;   // CRC transmit next
+    REG crc_ena : 1;    // CRC enable
+    REG bidir_oe : 1;   // Bidirectional output enable
+    REG bidir_mode : 1; // Bidirectional data mode enable
+    REG rsvd : 16;
+  } ctrl1;
+  struct {
+    REG rx_dma_en : 1; // Receive buffer DMA enable
+    REG tx_dma_en : 1; // Transmit buffer DMA enable
+    REG ssoe : 1;      // SS output enable
+    REG nssp : 1;      // NSS pulse management
+    REG frf : 1;       // Frame format
+    REG err_ie : 1;    // Error interrupt enable
+    REG rxne_ie : 1;   // Recieve buffer not empty int enable
+    REG txe_ie : 1;    // Transmit buffer empty int enable
+    REG ds : 4;        // Data size
+    REG frxth : 1;     // FIFO reception threshold
+    REG ldma_rx : 1;   // Last DMA xfer for receive
+    REG ldma_tx : 1;   // Last DMA xfer for transmit
+    REG rsvd : 17;
+  } ctrl2;
   REG status;
   REG data;
   REG crcPoly;

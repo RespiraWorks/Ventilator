@@ -124,6 +124,8 @@ enum class IntPriority {
   LOW = 8,      // Less important.  Hardware interrutps can interrupt this
 };
 
+enum class InterruptVector;
+
 // Singleton class which implements a hardware abstraction layer.
 //
 // Access this via the `Hal` global variable, e.g. `Hal.millis()`.
@@ -304,7 +306,7 @@ private:
   void InitPwmOut();
   void InitUARTs();
   void EnableClock(void *ptr);
-  void EnableInterrupt(int addr, IntPriority pri);
+  void EnableInterrupt(InterruptVector vec, IntPriority pri);
   void StepperMotorInit();
 #endif
 

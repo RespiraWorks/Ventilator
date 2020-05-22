@@ -22,8 +22,8 @@ limitations under the License.
 #include <string.h>
 
 // Static data members
-StepMotor StepMotor::motor_[StepMotor::total_motors_];
-uint8_t StepMotor::dma_buff_[StepMotor::total_motors_];
+StepMotor StepMotor::motor_[StepMotor::kTotalMotors];
+uint8_t StepMotor::dma_buff_[StepMotor::kTotalMotors];
 StepCommState StepMotor::coms_state_ = StepCommState::IDLE;
 
 // This array holds the length of each parameter in units of
@@ -81,29 +81,22 @@ static const float cvt_vel_int_speed_reg = tick_time * (1 << 26);
 static const int ustep_per_step_ = 128;
 
 // These functions raise and lower the chip select pin
-static inline void CS_High() { GPIO_SetPin(GPIO_B_BASE, 6); }
-static inline void CS_Low() { GPIO_ClrPin(GPIO_B_BASE, 6); }
+inline void CS_High() { GPIO_SetPin(GPIO_B_BASE, 6); }
+inline void CS_Low() { GPIO_ClrPin(GPIO_B_BASE, 6); }
 
-StepMotor::StepMotor() {
-  queue_count_ = 0;
-  queue_ndx_ = 0;
-  cmd_ptr_ = 0;
-  cmd_remain_ = 0;
-  save_response_ = false;
-  steps_per_rev_ = 200;
-}
+StepMotor::StepMotor() {}
 
 StepMtrErr StepMotor::SetParam(StepMtrParam param, uint32_t value) {
-  uint8_t P = static_cast<uint8_t>(param);
-  if (P > sizeof(param_len_))
+  uint8_t p = static_cast<uint8_t>(param);
+  if (p > sizeof(param_len_))
     return StepMtrErr::BAD_PARAM;
 
-  int len = param_len_[P];
+  int len = param_len_[p];
   if (!len || (len > 3))
     return StepMtrErr::BAD_PARAM;
 
   uint8_t cmdBuff[4];
-  cmdBuff[0] = P; // The op-code for a set is just the parameter number
+  cmdBuff[0] = p; // The op-code for a set is just the parameter number
 
   // Split the parameter value into bytes, MSB first
   value <<= 8 * (3 - len);
@@ -116,11 +109,11 @@ StepMtrErr StepMotor::SetParam(StepMtrParam param, uint32_t value) {
 }
 
 StepMtrErr StepMotor::GetParam(StepMtrParam param, uint32_t *value) {
-  uint8_t P = static_cast<uint8_t>(param);
-  if (P > sizeof(param_len_))
+  uint8_t p = static_cast<uint8_t>(param);
+  if (p > sizeof(param_len_))
     return StepMtrErr::BAD_PARAM;
 
-  int len = param_len_[P];
+  int len = param_len_[p];
   if (!len || (len > 3))
     return StepMtrErr::BAD_PARAM;
 
@@ -132,7 +125,7 @@ StepMtrErr StepMotor::GetParam(StepMtrParam param, uint32_t *value) {
   uint8_t cmdBuff[4];
 
   // For a get, the op-code is the parameter | 0x20
-  cmdBuff[0] = static_cast<uint8_t>(P | 0x20);
+  cmdBuff[0] = static_cast<uint8_t>(p | 0x20);
   cmdBuff[1] = 0;
   cmdBuff[2] = 0;
   cmdBuff[3] = 0;
@@ -246,7 +239,8 @@ void HalApi::StepperMotorInit() {
   dma->channel[C3].config.tcie = 1;
   dma->channel[C3].config.htie = 0;
   dma->channel[C3].config.teie = 0;
-  dma->channel[C3].config.dir = DmaChannelDir::PERIPHERAL_TO_MEM;
+  dma->channel[C3].config.dir =
+      static_cast<REG>(DmaChannelDir::PERIPHERAL_TO_MEM);
   dma->channel[C3].config.circular = 0;
   dma->channel[C3].config.perInc = 0;
   dma->channel[C3].config.memInc = 1;
@@ -259,7 +253,8 @@ void HalApi::StepperMotorInit() {
   dma->channel[C4].config.tcie = 0;
   dma->channel[C4].config.htie = 0;
   dma->channel[C4].config.teie = 0;
-  dma->channel[C4].config.dir = DmaChannelDir::MEM_TO_PERIPHERAL;
+  dma->channel[C4].config.dir =
+      static_cast<REG>(DmaChannelDir::MEM_TO_PERIPHERAL);
   dma->channel[C4].config.circular = 0;
   dma->channel[C4].config.perInc = 0;
   dma->channel[C4].config.memInc = 1;
@@ -277,7 +272,7 @@ void HalApi::StepperMotorInit() {
 // make them spin the motors
 void StepMotor::OneTimeInit() {
   uint32_t val;
-  for (int i = 0; i < total_motors_; i++) {
+  for (int i = 0; i < kTotalMotors; i++) {
 
     StepMotor *mtr = StepMotor::GetStepper(i);
 
@@ -711,7 +706,7 @@ void StepMotor::UpdateComState() {
     // For each motor, grab the next byte from the queue
     // and add it to my DMA buffer.  For any empty queue
     // I just add a NOP command
-    for (int i = 0; i < total_motors_; i++) {
+    for (int i = 0; i < kTotalMotors; i++) {
 
       // This really should already be false
       motor_[i].save_response_ = false;
@@ -743,7 +738,7 @@ void StepMotor::UpdateComState() {
   //////////////////////////////////////////////
   case StepCommState::SEND_SYNC:
 
-    for (int i = 0; i < total_motors_; i++) {
+    for (int i = 0; i < kTotalMotors; i++) {
 
       // If we sent this motor driver chip a command from
       // this state last time, save the response in the same
@@ -786,8 +781,8 @@ void StepMotor::UpdateComState() {
   dma->channel[C3].config.enable = 0;
   dma->channel[C4].config.enable = 0;
 
-  dma->channel[C3].count = total_motors_;
-  dma->channel[C4].count = total_motors_;
+  dma->channel[C3].count = kTotalMotors;
+  dma->channel[C4].count = kTotalMotors;
   dma->channel[C3].mAddr = dma_buff_;
   dma->channel[C4].mAddr = dma_buff_;
 

@@ -43,7 +43,7 @@ limitations under the License.
 // is called from the high priority control loop it will result in an error.
 //
 // For communications to work properly it's important that the constant value
-// total_motors_ matches the actual number of driver chips wired up in the
+// kTotalMotors matches the actual number of driver chips wired up in the
 // hardware.  If you're experiencing problems using this module, please check
 // that first.
 //
@@ -57,7 +57,7 @@ limitations under the License.
 // These are the simple opcodes for the stepper driver.
 // Not included here are set/get parameter which include
 // the parameter ID value as part of the code.
-enum class StepMtrCmd {
+enum class StepMtrCmd : uint8_t {
   NOP = 0,             // Used when there's no other command to send
   RUN_NEG = 0x50,      // Run negative at constant speed.
   RUN_POS = 0x51,      // Run positive at constant speed.
@@ -78,7 +78,7 @@ enum class StepMtrCmd {
   GET_STATUS = 0xD0,   // Read the 16-bit status word
 };
 
-enum class StepMtrParam {
+enum class StepMtrParam : uint8_t {
   ABS_POS = 0x01,           // Absolute position
   ELE_POS = 0x02,           // Electrical position
   MARK_POS = 0x03,          // Mark position
@@ -140,39 +140,28 @@ enum class StepMoveStatus {
 struct StepperStatus {
 
   // If true, power is being applied to the motor.
-  bool enabled;
+  bool enabled{false};
 
   // * True if the stepper chip has detected an under voltage
-  bool under_voltage;
+  bool under_voltage{false};
 
   // * True if the stepper chip is getting hot
-  bool thermal_warning;
+  bool thermal_warning{false};
 
   // * True if the stepper chip got so hot is shut itself down.
-  bool thermal_shutdown;
+  bool thermal_shutdown{false};
 
   // * True if over current has been detected
-  bool over_current;
+  bool over_current{false};
 
   // * True if the chip detects a loss of steps (motor stall)
-  bool step_loss;
+  bool step_loss{false};
 
   // * True if a command error (bad command) was detected by the chip
-  bool command_error;
+  bool command_error{false};
 
   // Specifics of the move status
-  StepMoveStatus move_status;
-
-  StepperStatus() {
-    enabled = false;
-    under_voltage = false;
-    thermal_warning = false;
-    thermal_shutdown = false;
-    over_current = false;
-    step_loss = false;
-    command_error = false;
-    move_status = StepMoveStatus::STOPPED;
-  }
+  StepMoveStatus move_status{StepMoveStatus::STOPPED};
 };
 
 // Represents one of the stepper motors in the system
@@ -181,7 +170,7 @@ class StepMotor {
   // This constant represents the number of motors wired in
   // to the system.  It needs to match the hardware or the
   // interface wont work.
-  static constexpr int total_motors_ = 1;
+  static constexpr int kTotalMotors = {1};
 
 public:
   StepMotor();
@@ -193,8 +182,8 @@ public:
   //
   // Returns NULL for an invalid input
   static StepMotor *GetStepper(int n) {
-    if ((n < 0) || (n >= total_motors_))
-      return 0;
+    if ((n < 0) || (n >= kTotalMotors))
+      return nullptr;
     return &motor_[n];
   }
 
@@ -245,7 +234,7 @@ public:
   // so be careful.
   //
   // There are four different values that can be set which control the
-  // output to the motor in different phases of it's motion:
+  // output to the motor in different phases of its motion:
   //   hold - Value used when the motor is holding position (not moving)
   //   run  - Value used when running at constant velocity.
   //   accel - Value used when accelerating
@@ -305,8 +294,8 @@ public:
   StepMtrErr GetParam(StepMtrParam param, uint32_t *value);
 
 private:
-  static StepMotor motor_[total_motors_];
-  static uint8_t dma_buff_[total_motors_];
+  static StepMotor motor_[kTotalMotors];
+  static uint8_t dma_buff_[kTotalMotors];
   static uint8_t param_len_[32];
   static StepCommState coms_state_;
 
@@ -314,18 +303,19 @@ private:
   // priority loop.  The command is copied to this queue and
   // sent later.
   uint8_t queue_[40];
-  int queue_count_;
-  int queue_ndx_;
+  int queue_count_{0};
+  int queue_ndx_{0};
 
   // This pointer and count are used to hold the command being
-  // sent to the motor and it's response.
+  // sent to the motor and its response.
   // They're volatile because the interrupt handler updates them
-  volatile uint8_t *cmd_ptr_;
-  volatile int cmd_remain_;
-  bool save_response_;
+  volatile uint8_t *cmd_ptr_{0};
+  volatile int cmd_remain_{0};
+  bool save_response_{false};
 
   // Number of full steps/rev
-  int steps_per_rev_;
+  // Defaults to the standard value for most steppers
+  int steps_per_rev_{200};
 
   float DpsToVelReg(float vel, float cnv);
   float RegVelToDps(int32_t val, float cnv);

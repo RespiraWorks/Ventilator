@@ -1,3 +1,13 @@
+# This is a simple script that can be run from the console debug interface
+# to display the current values of the DMA registers.
+#
+# From the debug console you would enter:
+#   run peek_dma.py [which]
+#
+# which is either 1 or 2 to look at DMA1_BASE or DMA2_BASE.
+# If not supplied it shows you DMA1
+
+
 def main():
     DMA1_BASE = 0x40020000
     DMA2_BASE = 0x40020400
@@ -34,17 +44,5 @@ def main():
 
         print(S)
 
-
-#  REG intStat;
-#  REG intClr;
-#  struct {
-#    REG config;
-#    REG count;
-#    volatile void *pAddr;
-#    volatile void *mAddr;
-#    REG rsvd;
-#  } channel[7];
-#  REG rsvd[5];
-#  REG chanSel;
 
 main()

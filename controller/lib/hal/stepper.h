@@ -162,6 +162,17 @@ struct StepperStatus {
 
   // Specifics of the move status
   StepMoveStatus move_status;
+
+  StepperStatus() {
+    enabled = false;
+    under_voltage = false;
+    thermal_warning = false;
+    thermal_shutdown = false;
+    over_current = false;
+    step_loss = false;
+    command_error = false;
+    move_status = StepMoveStatus::STOPPED;
+  }
 };
 
 // Represents one of the stepper motors in the system
@@ -170,7 +181,7 @@ class StepMotor {
   // This constant represents the number of motors wired in
   // to the system.  It needs to match the hardware or the
   // interface wont work.
-  static const int total_motors_ = 1;
+  static constexpr int total_motors_ = 1;
 
 public:
   StepMotor();

@@ -85,10 +85,11 @@ static inline void CS_High() { GPIO_SetPin(GPIO_B_BASE, 6); }
 static inline void CS_Low() { GPIO_ClrPin(GPIO_B_BASE, 6); }
 
 StepMotor::StepMotor() {
+  queue_count_ = 0;
+  queue_ndx_ = 0;
   cmd_ptr_ = 0;
   cmd_remain_ = 0;
   save_response_ = false;
-
   steps_per_rev_ = 200;
 }
 

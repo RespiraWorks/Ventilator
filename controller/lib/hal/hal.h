@@ -109,6 +109,23 @@ enum class BinaryPin {
   SOLENOID,
 };
 
+// Interrupts on the STM32 are prioritized.  This allows
+// more important interrupts to interrupt less important
+// ones.  When interrupts are enabled we give a priority
+// value to indicate how important the interrupt is.
+// The lower the priority number the more important the
+// interrupt.  The range is 0 to 15, but I only use a few
+// here.  Hard faults, NMI, resets, etc have a fixed
+// priority of -1, so they can always interrupt any other
+// priority level.
+enum class IntPriority {
+  CRITICAL = 2, // Very important interrupt
+  STANDARD = 5, // Normal hardware interrupts
+  LOW = 8,      // Less important.  Hardware interrutps can interrupt this
+};
+
+enum class InterruptVector;
+
 // Singleton class which implements a hardware abstraction layer.
 //
 // Access this via the `Hal` global variable, e.g. `Hal.millis()`.
@@ -197,6 +214,9 @@ public:
   uint8_t rawPin(AnalogPin pin);
   uint8_t rawPin(BinaryPin pin);
 
+  // Perform some early chip initialization before static constructors are run
+  void EarlyInit();
+
 #else
   // Reads up to `len` bytes of data "sent" via serialWrite.  Returns the total
   // number of bytes read.
@@ -258,6 +278,9 @@ public:
   // Where possible, prefer using the BlockInterrupts RAII class.
   bool interruptsEnabled();
 
+  // Return true if we are currently executing in an interrupt handler
+  bool InInterruptHandler();
+
   // Calculate CRC32 for data buffer
   uint32_t crc32(uint8_t *data, uint32_t length);
 
@@ -275,6 +298,16 @@ private:
   void crc32_accumulate(uint8_t d);
   // Get CRC32 accumulated in STM32 hardware
   uint32_t crc32_get();
+
+  void InitGPIO();
+  void InitADC();
+  void InitSysTimer();
+  void BusyWaitUsec(uint16_t usec);
+  void InitPwmOut();
+  void InitUARTs();
+  void EnableClock(void *ptr);
+  void EnableInterrupt(InterruptVector vec, IntPriority pri);
+  void StepperMotorInit();
 #endif
 
   void setDigitalPinMode(PwmPin pin, PinMode mode);
@@ -347,6 +380,12 @@ inline bool HalApi::interruptsEnabled() {
   int ret;
   asm volatile("mrs %[output], primask" : [output] "=r"(ret));
   return ret == 0;
+}
+
+inline bool HalApi::InInterruptHandler() {
+  int ret;
+  asm volatile("mrs %[output], ipsr" : [output] "=r"(ret));
+  return ret > 0;
 }
 
 #else
@@ -428,6 +467,7 @@ inline void HalApi::test_serialPutIncomingData(const char *data, uint16_t len) {
 inline void HalApi::disableInterrupts() { interruptsEnabled_ = false; }
 inline void HalApi::enableInterrupts() { interruptsEnabled_ = true; }
 inline bool HalApi::interruptsEnabled() { return interruptsEnabled_; }
+inline bool HalApi::InInterruptHandler() { return false; }
 
 inline uint32_t HalApi::crc32(uint8_t *data, uint32_t length) {
   return soft_crc32(reinterpret_cast<char *>(data), length);

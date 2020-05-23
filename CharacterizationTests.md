@@ -4,9 +4,7 @@ Caution: this document has not been formally reviewed and is a work in progress.
 
 NOTE: these tests are supposed to be incrementally developed. As we progress, the tests will become more granular.
 
-## Pneumatics Component/System Tests
-
-* **System characterization**
+## System characterization**
 1. What is the maximum pressure that can be achieved with the current blower with a representative amount of tubing, a fully open air inhale valve, and a fully closed exhale valve?
 
 2. From PEEPs of 0 to 20 cm H20 (in reasonable increments), how quickly can the current design achieve PIPs from 10 cm H20 up to 60 cm H20 (or the max value, testing reasonable increments)?
@@ -19,19 +17,23 @@ NOTE: these tests are supposed to be incrementally developed. As we progress, th
 
 6. What is the difference in pressure right after the inhale venturi (before the humidifier) and at the patient pressure sensor before the exhale venturi?
 
-* **Pinch Valve Characterizatino**
+## Valve Tests
+
+* **Pinch Valve Characterization
 1. How quickly can the pinch valve be fully opened? How does this change as a function of pressure (up to at least 60 cm H20)?
 
 2. How quickly can the pinch valve be fully closed? How does this change as a function of pressure (up to at least 60 cm H20)
 
 3. What is the leak rate past a fully closed pinch valve as a functin of pressure (up to at least 60 cm H20)?
 
-* **Proportional Solenoid Characterizatino**
+* **Proportional Solenoid Characterization
 1. How quickly can the solenoid be fully opened? How does this change as a function of pressure (up to at least 60 cm H20)?
 
 2. How quickly can the solenoid be fully closed? How does this change as a function of pressure (up to at least 60 cm H20)
 
 3. What is the leak rate past a fully closed soleonid valve as a function of pressure (up to at least 60 cm H20)?
+
+## Sensor Tests
 
 * **DP sensor/Venturi characterization
 1. For flow rates from 1 to 80 lpm, how accurate is the flow measurement and how does this accuracy change over time (if sitting at a specific FiO2)?
@@ -63,3 +65,4 @@ NOTE: these tests are supposed to be incrementally developed. As we progress, th
 4. When there is a change in FiO2, how long does it take for the sensor to settle?
 
 ## Things that need to be added
+* Electronics/Software/Controller tests?

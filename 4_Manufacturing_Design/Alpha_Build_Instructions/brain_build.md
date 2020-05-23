@@ -11,8 +11,6 @@ possibly the communications protocol between controller and UI. Since it contain
 or drivers, integration testing with this bare build is not possible. For an upgrade, check the 
 [Pizza build](pizza_build.md).
 
-For how to assemble the brains, check this wiki [here](brain_build_instructions.md).
-
 ## Purchasing source abbreviations
 
 * **Z** = Amazon

@@ -21,7 +21,7 @@ limitations under the License.
 // to read precisely, so to improve the results we do a lot of
 // averaging of the A/D values.
 //
-// The A/D itself can oversample it's inputs a number of times and
+// The A/D itself can oversample its inputs a number of times and
 // sum the result.  Those results are stored in a 16-bit register,
 // so if the number of samples exceeds 16 then the sum can overflow.
 // In that case there's a setting to down-shift the result we read
@@ -111,7 +111,7 @@ static constexpr float adc_scaler = 3.3f / (max_adc_reading * adc_samp_history);
 // This buffer will hold the readings from the A/D
 static volatile uint16_t adc_buff[adc_samp_history * adc_channels];
 
-// NOTE - we expect the sample history to be small for two reasons:
+// NOTE - we need the sample history to be small for two reasons:
 // - We sum to a 32-bit floating point number and will lose precision
 //   if we add in too many samples
 // - We want the A/D reading to be fast, so summing up a really large

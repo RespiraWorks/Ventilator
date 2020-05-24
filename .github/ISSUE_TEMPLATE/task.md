@@ -8,6 +8,12 @@ assignees: ""
 
 Please take the time to describe the problem in detail, so that other contributors can pick it up and implement or declare it done/obsolete in case if was completed out of band.
 
+**When to create Feature request or Task?**
+
+Feature request is like a User Story. Task represents work that needs to be done. (Sub-)task would be underneath a Feature request (Story) which in our case (R&D) might just stand in the way.
+
+Task can include non-code and most likely will i.e. study/investigate X , do a PoC of Y (pseudo-code?) , get more info about something (+writing a documentation is a task)
+
 **What has to be done**
 Describe what has to be done, ideally in declarative form - what does success look like.
 

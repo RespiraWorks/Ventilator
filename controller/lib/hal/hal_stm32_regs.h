@@ -284,13 +284,13 @@ struct ADC_Regs {
     } cfg1; // 0x0C - configuration register (ADC_CFGR)
 
     struct {
-      REG rovse : 1;           // bit 0    - regular oversampling enable
-      REG jovse : 1;           // bit 1    - injected oversampling enable
-      REG ovsr : 3;            // bits 2-4 - oversampling ratio
-      REG ovss : 4;            // bits 5-8 - oversampling shift (max 0b1000)
-      REG trovs : 1;           // bit 9    - triggered regular oversampling
-      REG rovsm : 1;           // bit 10   - regular oversampling mode
-      REG cfgr2_reserved : 21; // Reserved bits in ADC_CFGR2.
+      REG rovse : 1; // bit 0    - regular oversampling enable
+      REG jovse : 1; // bit 1    - injected oversampling enable
+      REG ovsr : 3;  // bits 2-4 - oversampling ratio
+      REG ovss : 4;  // bits 5-8 - oversampling shift (max 0b1000)
+      REG trovs : 1; // bit 9    - triggered regular oversampling
+      REG rovsm : 1; // bit 10   - regular oversampling mode
+      REG rsvd : 21;
     } cfg2;
 
     struct {

@@ -29,7 +29,8 @@ Checks: >
   -modernize-use-default-member-init,
   -misc-non-private-member-variables-in-classes,
   -readability-implicit-bool-conversion,
-  -modernize-use-using
+  -modernize-use-using,
+  -modernize-use-nodiscard
 
 WarningsAsErrors: '*'
 

@@ -28,7 +28,6 @@ This build depends on already having a Brain build, which has its own BOM [here]
 * **Z** = Amazon
 * **E** = ebay
 * **C** = McMaster-Carr
-* **K** = Digikey
 * **M** = Mouser
 * **W** = Wonsmart
 * **B** = Built by RespiraWorks
@@ -54,7 +53,6 @@ This build depends on already having a Brain build, which has its own BOM [here]
 | 11     |        1 |               |                     | 6.98         | buy       | [Z][11amzn]     | use these to simulate lung compliance |
 | 12     |        1 | RespiraWorks  | PCB1                |              | **ask**   | [B][12rw]       | RespiraWorks Ventilator Mainboard Rev 1 PCB |
 | 13     |        1 | RespiraWorks  | Power input 1       |              | **ask**   | [B][13rw]               | Power Input cable |
-| 14     |        1 | Digikey       | X-NUCLEO-IHM03A1    |        10.64 |*ask first*| [K][14key] [M][14mr]      | Stepper driver dev board |
 | 15     |        1 | RespiraWorks  | PinchValve1.4       |              | **ask**   | [B][15rw]       | Marc-designed stepper pinch valve rev 1.4 |
 | 16     |        2 | RespiraWorks  | Venturi2            |              | **ask**   | [B][16rw]       | Ethan-designed 10-32 threaded venturis Rev 2 |
 | 17     |        1 |               | WS7040-12-X200N     |        52.65 |*ask first*| [A][17ali]      | 12v blower and driver. Make sure to choose w/driver when ordering. |
@@ -84,8 +82,6 @@ This build depends on already having a Brain build, which has its own BOM [here]
 [11amzn]:  https://www.amazon.com/gp/product/B018WPZCSO
 [12rw]:    https://github.com/RespiraWorks/pcbreathe/tree/master/NIGHTLY/20200424v2-RELEASE-CANDIDATE-2
 [13rw]:    ../../1_Ventilator_System_Design/Electrical_System/wiring.md
-[14key]:   https://www.digikey.com/short/z442qt
-[14mr]:     https://www.mouser.com/ProductDetail/511-X-NUCLEO-IHM03A1
 [15rw]:    ../../2_Research_&_Development/Project-Pinch_Valve/README.md 
 [16rw]:    ../../2_Research_&_Development/Project-Venturi/README.md
 [17ali]:   https://www.aliexpress.com/item/32698107687.html

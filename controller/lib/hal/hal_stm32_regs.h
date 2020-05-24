@@ -259,22 +259,104 @@ struct ADC_Regs {
     REG stat;   // 0x00 - interrupt and status register (ADC_ISR)
     REG intEna; // 0x04 - interrupt enable register (ADC_IER)
     REG ctrl;   // 0x08 - control register (ADC_CR)
-    REG cfgr;   // 0x0C - configuration register (ADC_CFGR)
-    // 0x10 - Begin ADC_CFGR2
-    REG rovse : 1;           // bit 0    - regular oversampling enable
-    REG jovse : 1;           // bit 1    - injected oversampling enable
-    REG ovsr : 3;            // bits 2-4 - oversampling ratio
-    REG ovss : 4;            // bits 5-8 - oversampling shift (max 0b1000)
-    REG trovs : 1;           // bit 9    - triggered regular oversampling
-    REG rovsm : 1;           // bit 10   - regular oversampling mode
-    REG cfgr2_reserved : 21; // Reserved bits in ADC_CFGR2.
-    // End ADC_CFGR2
-    REG samp[2]; // 0x14 - sampling time registers
+    struct {
+      REG dmaen : 1;      // DMA enable
+      REG dmacfg : 1;     // DMA config
+      REG dfsdmcfg : 1;   //
+      REG resolution : 2; // A/D resolution
+      REG align : 1;      // Data alignment
+      REG extsel : 4;     // External trigger selection
+      REG exten : 2;      // External trigger enable
+      REG ovrmod : 1;     // Over run mode
+      REG cont : 1;       // Continuous conversion mode
+      REG autdlh : 1;     // Delayed conversion mode
+      REG rsvd1 : 1;      //
+      REG discen : 1;     // Discontinuous mode
+      REG discnum : 3;    // Discontinuous mode channel count
+      REG jdiscen : 1;    // Discontinuous mode on injected channels
+      REG jqm : 1;        // JSQR mode
+      REG awd1sgl : 1;
+      REG awd1en : 1;
+      REG jawd1en : 1;
+      REG jauto : 1;
+      REG awd1ch : 5;
+      REG jqdis : 1;
+    } cfg1; // 0x0C - configuration register (ADC_CFGR)
+
+    struct {
+      REG rovse : 1; // bit 0    - regular oversampling enable
+      REG jovse : 1; // bit 1    - injected oversampling enable
+      REG ovsr : 3;  // bits 2-4 - oversampling ratio
+      REG ovss : 4;  // bits 5-8 - oversampling shift (max 0b1000)
+      REG trovs : 1; // bit 9    - triggered regular oversampling
+      REG rovsm : 1; // bit 10   - regular oversampling mode
+      REG rsvd : 21;
+    } cfg2;
+
+    struct {
+      REG smp0 : 3; // Sample time for channel 0
+      REG smp1 : 3; // Sample time for channel 1
+      REG smp2 : 3; // Sample time for channel 2
+      REG smp3 : 3; // Sample time for channel 3
+      REG smp4 : 3; // Sample time for channel 4
+      REG smp5 : 3; // Sample time for channel 5
+      REG smp6 : 3; // Sample time for channel 6
+      REG smp7 : 3; // Sample time for channel 7
+      REG smp8 : 3; // Sample time for channel 8
+      REG smp9 : 3; // Sample time for channel 9
+      REG rsvd : 2;
+
+      REG smp10 : 3; // Sample time for channel 10
+      REG smp11 : 3; // Sample time for channel 11
+      REG smp12 : 3; // Sample time for channel 12
+      REG smp13 : 3; // Sample time for channel 13
+      REG smp14 : 3; // Sample time for channel 14
+      REG smp15 : 3; // Sample time for channel 15
+      REG smp16 : 3; // Sample time for channel 16
+      REG smp17 : 3; // Sample time for channel 17
+      REG smp18 : 3; // Sample time for channel 18
+      REG rsvd2 : 5;
+    } samp;
+
     REG rsvd1;
     REG wdog[3]; // 0x20 - watchdog threshold registers
     REG rsvd2;
-    REG seq[4]; // 0x30 - Regular sequence registers
-    REG data;   // 0x40 - Regular data register
+
+    // 4x sequence registers.  These registers are used
+    // to define the number of A/D readings and the
+    // channel numbers being read.
+    struct {
+      // sqr1
+      REG len : 6;
+      REG sq1 : 6;
+      REG sq2 : 6;
+      REG sq3 : 6;
+      REG sq4 : 6;
+      REG rsvd1 : 2;
+
+      // sqr2
+      REG sq5 : 6;
+      REG sq6 : 6;
+      REG sq7 : 6;
+      REG sq8 : 6;
+      REG sq9 : 6;
+      REG rsvd2 : 2;
+
+      // sqr4
+      REG sq10 : 6;
+      REG sq11 : 6;
+      REG sq12 : 6;
+      REG sq13 : 6;
+      REG sq14 : 6;
+      REG rsvd3 : 2;
+
+      // sqr3
+      REG sq15 : 6;
+      REG sq16 : 6;
+      REG rsvd4 : 20;
+    } seq;
+
+    REG data; // 0x40 - Regular data register
     REG rsvd3[2];
     REG iSeq; // 0x4C - Injected sequence regiseter
     REG rsvd4[4];

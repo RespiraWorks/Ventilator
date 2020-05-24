@@ -34,18 +34,7 @@ This venturi is designed to be paired with this sensor and a 14-bit ADC.
 
 [Data Sheet MPXV5004DP](https://www.nxp.com/docs/en/data-sheet/MPXV5004G.pdf)
 
-Adjust values in e spreadsheet above accordinly to see how it will perform in your setup. 
-
-## Nipple Insertion & Testing
-
-![Nipples](venturi-nipples.jpg)
-
-No hand-tapping was required to insert nipples. 
-
-**Testing:**
-Check for leaks by plugging the holes and pulling some vacuum. There are threads in the print but they don’t always come out right if resin get a trapped in the grooves while it prints.
-* Plug one large end, plug both nipples, suck on the remaining end.  If you have a vacuum pump handy do a regular vacuum hold leak test
-* Or, blow into each port with your fingers over the other three.
+Adjust values in the spreadsheet above accordingly to see how it will perform in your setup. 
 
 ## BOM
 
@@ -56,13 +45,11 @@ Check for leaks by plugging the holes and pulling some vacuum. There are threads
 
 ### Parts BOM
 
+| RefDes | Quantity | Manufacturer  | Part number         | Price($) | Do what? | Sources         | Notes |
+| ------ |---------:| ------------- | ------------------- | --------:| ----- |-----------------| ----- |
 | 1      |        - | McMaster-Carr | 5463K33             | 3.93 / 10    | buy       | [C][1mcmc]      | Barbed fitting 3/32" for venturis |
-| 2      |        - | McMaster-Carr | 5463K37             | 4.74 / 10    | buy       | [C][2mcmc]      | Barbed fitting 3/32" for venturis |
-| 3     |        2 | RespiraWorks  | Venturi2            |              | **ask**   | [B][3rw]       | Ethan-designed 10-32 threaded venturis Rev 2 |
 
 [1mcmc]:   https://www.mcmaster.com/5463K33
-[2mcmc]:   https://www.mcmaster.com/5463K37
-[3rw]:    ../../2_Research_&_Development/Project-Venturi/README.md
 
 ### Tooling BOM
 
@@ -78,4 +65,11 @@ We try to make few assumptions about what tools you have. Here are recommended t
 
 ## Assembly
 
-**TODO:** add or link to instructions here
+![Nipples](venturi-nipples.jpg)
+
+No hand-tapping was required to insert nipples. 
+
+**Testing:**
+Check for leaks by plugging the holes and pulling some vacuum. There are threads in the print but they don’t always come out right if resin get a trapped in the grooves while it prints.
+* Plug one large end, plug both nipples, suck on the remaining end.  If you have a vacuum pump handy do a regular vacuum hold leak test
+* Or, blow into each port with your fingers over the other three.

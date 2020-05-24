@@ -71,7 +71,7 @@ We try to make few assumptions about what tools you have. Here are recommended t
 | RefDes | Quantity | Manufacturer  | Part number         | Price($) | Sources         | Notes |
 | ------ |---------:| ------------- | ------------------- | --------:|-----------------| ----- |
 | T1     |        1 | McMaster-Carr | 26955A86            |     6.76 | [C][t1mcmc]     | Tap for 10-32 threads for venturis. Edwin notes that 3d printed fittings may not have good enough threads and you might need to chase them with a hand tap. |
-| T2     |        1 | Kaufhof       | KF-ATW-0053         |    14.11 | [Z][t2amzn]     | Hand-operated tap wrenches, for use with T1 above |
+| T2     |        1 | Kaufhof       | KF-ATW-0053         |    14.11 | [Z][t2amzn]     | Hand-operated tap wrenches, for use with T1 above 
 
 [t1mcmc]:https://www.mcmaster.com/26955A86
 [t2amzn]:https://www.amazon.com/gp/product/B003GKJYKI

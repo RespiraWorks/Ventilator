@@ -46,7 +46,6 @@ limitations under the License.
 */
 
 #include "actuators.h"
-#include "alarm.h"
 #include "comms.h"
 #include "controller.h"
 #include "debug.h"
@@ -185,7 +184,6 @@ int main() {
   Hal.init();
 
   comms_init();
-  alarm_init();
 
   background_loop();
 }

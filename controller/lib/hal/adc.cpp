@@ -109,7 +109,17 @@ static constexpr int adc_samp_history =
 static constexpr float adc_scaler = 3.3f / (max_adc_reading * adc_samp_history);
 
 // This buffer will hold the readings from the A/D
-static uint16_t adc_buff[adc_samp_history * adc_channels];
+static volatile uint16_t adc_buff[adc_samp_history * adc_channels];
+
+// NOTE - we expect the sample history to be small for two reasons:
+// - We sum to a 32-bit floating point number and will lose precision
+//   if we add in too many samples
+// - We want the A/D reading to be fast, so summing up a really large
+//   array might be too slow.
+//
+// If you get hit with this assertion you may beed to rethink the
+// way this function works.
+static_assert(adc_samp_history < 100);
 
 void HalApi::InitADC() {
 
@@ -130,8 +140,8 @@ void HalApi::InitADC() {
   // internal voltage regulator.
   adc->adc[0].ctrl = 0x10000000;
 
-  // Wait for the startup time specified in the datasheet
-  // for the voltage regulator to become ready.
+  // Wait for the startup time specified in the STM32
+  // datasheet for the voltage regulator to become ready.
   // The time in the datasheet is 20 microseconds, but
   // I'll wait for 30 just to be extra conservative
   BusyWaitUsec(30);

@@ -54,6 +54,7 @@ This build depends on already having a Brain build, which has its own BOM [here]
 | 13     |        1 | RespiraWorks  | Power input 1       |              | **ask**   | [B][13rw]               | Power Input cable |
 | 14     |        1 | Digikey       | X-NUCLEO-IHM03A1    |        10.64 |*ask first*| [K][14key] [M][14mr]      | Stepper driver dev board |
 | 15     |        1 | RespiraWorks  | PinchValve1.4       |              | **ask**   | [B][15rw]       | Marc-designed stepper pinch valve rev 1.4 |
+| 16     |        2 | RespiraWorks  | Venturi2            |              | **ask**   | [B][16rw]       | Ethan-designed 10-32 threaded venturis Rev 2 |
 | 17     |        1 |               | WS7040-12-X200N     |        52.65 |*ask first*| [A][17ali]      | 12v blower and driver. Make sure to choose w/driver when ordering. |
 | 17x    |        1 |               | WS1208DYY01V03      |        24.00 |*ask first*| [W][17x-won]    | blower driver, in case blower above did not come with driver. |
 | 18     |        1 | RespiraWorks  | blower control cable|              | **ask**   | [B][18rw]               | blower control cable |
@@ -82,6 +83,7 @@ This build depends on already having a Brain build, which has its own BOM [here]
 [14key]:   https://www.digikey.com/short/z442qt
 [14mr]:     https://www.mouser.com/ProductDetail/511-X-NUCLEO-IHM03A1
 [15rw]:    ../../2_Research_&_Development/Project-Pinch_Valve/README.md 
+[16rw]:    ../../2_Research_&_Development/Project-Venturi/README.md
 [17ali]:   https://www.aliexpress.com/item/32698107687.html
 [17x-won]: https://wonsmart-motor.en.made-in-china.com/product/hsjxFewOppVg/China-Air-Pump12V-Brushless-Motor-12V-Blower-Fan-Driver.html
 [18rw]:    ../../1_Ventilator_System_Design/Electrical_System/wiring.md

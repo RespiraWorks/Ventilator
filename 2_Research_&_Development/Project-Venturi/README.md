@@ -12,6 +12,7 @@ You will also need a 10-32 tap to clean the threads. You do not need a bottoming
 
 There is an arrow printed onto the body to indicate the direction of flow. 
 
+
 **TODO:** link and explain STL files
 
 ## Transfer function
@@ -35,9 +36,45 @@ This venturi is designed to be paired with this sensor and a 14-bit ADC.
 
 Adjust values in e spreadsheet above accordinly to see how it will perform in your setup. 
 
+## Nipple Insertion & Testing
+
+![Nipples](venturi-nipples.jpg)
+
+No hand-tapping was required to insert nipples. 
+
+**Testing:**
+Check for leaks by plugging the holes and pulling some vacuum. There are threads in the print but they don’t always come out right if resin get a trapped in the grooves while it prints.
+* Plug one large end, plug both nipples, suck on the remaining end.  If you have a vacuum pump handy do a regular vacuum hold leak test
+* Or, blow into each port with your fingers over the other three.
+
 ## BOM
 
-**TODO:** list parts that need purchasing here
+### Purchasing source abbreviations
+
+* **C** = McMaster-Carr
+* **Z** = Amazon
+
+### Parts BOM
+
+| 1      |        - | McMaster-Carr | 5463K33             | 3.93 / 10    | buy       | [C][1mcmc]      | Barbed fitting 3/32" for venturis |
+| 2      |        - | McMaster-Carr | 5463K37             | 4.74 / 10    | buy       | [C][2mcmc]      | Barbed fitting 3/32" for venturis |
+| 3     |        2 | RespiraWorks  | Venturi2            |              | **ask**   | [B][3rw]       | Ethan-designed 10-32 threaded venturis Rev 2 |
+
+[1mcmc]:   https://www.mcmaster.com/5463K33
+[2mcmc]:   https://www.mcmaster.com/5463K37
+[3rw]:    ../../2_Research_&_Development/Project-Venturi/README.md
+
+### Tooling BOM
+
+We try to make few assumptions about what tools you have. Here are recommended tools you might need.
+
+| RefDes | Quantity | Manufacturer  | Part number         | Price($) | Sources         | Notes |
+| ------ |---------:| ------------- | ------------------- | --------:|-----------------| ----- |
+| T1     |        1 | McMaster-Carr | 26955A86            |     6.76 | [C][t1mcmc]     | Tap for 10-32 threads for venturis. Edwin notes that 3d printed fittings may not have good enough threads and you might need to chase them with a hand tap. |
+| T2     |        1 | Kaufhof       | KF-ATW-0053         |    14.11 | [Z][t2amzn]     | Hand-operated tap wrenches, for use with T1 above |
+
+[t1mcmc]:https://www.mcmaster.com/26955A86
+[t2amzn]:https://www.amazon.com/gp/product/B003GKJYKI
 
 ## Assembly
 

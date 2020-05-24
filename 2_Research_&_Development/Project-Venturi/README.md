@@ -10,6 +10,8 @@ The flow sensor we are using has 2.5 mm or 3/32" barbs, which is too small for 1
 
 You will also need a 10-32 tap to clean the threads. You do not need a bottoming tap, there is enough depth in the holes and the threads are short.
 
+The plan is for [beta](/../../4_Manufacturing_Design/Beta_Build_Instructions/README.md) to use 3/4"ID tubing throughout. The venturi will most likely be redesigned to have barbs that fit 3/4"ID tubing directly.
+
 There is an arrow printed onto the body to indicate the direction of flow. 
 
 

@@ -10,7 +10,7 @@ If you decide to buy them, do so at your own risk.**
 [Brain build](pizza_brain) constitutes just the computing components.
 
 [Pizza build](pizza_build.md) is an upgrade that includes sensors, drivers and pneumatics.
-Lives on your table and is customizable, like a pizza. Here are possible components:
+Lives on your table and is customizable, like a pizza. Here are the various components:
 * [Mandatory blower assembly](pizza_blower)
 * [Mandatory basic test lung](pizza_test_lung)
 * [Mandatory flow sensors](../../2_Research_&_Development/Project-Venturi)

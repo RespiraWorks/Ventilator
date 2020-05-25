@@ -17,7 +17,7 @@
 * Move the JP5 jumper in the upper-middle-center of the Nucleo board to the E5V position.  This tells the board to expect external power from the PCB.  This will avoid programming problems.  If you wish to remove the Nucleo board and work with it on its own without the PCB, move the jumper back to the U5V position to power it from USB.
 
 ![plug in the nucleo](/ReadmePhotos/IMG_9289.jpg)
-* If you have a X-NUCLEO-IHM03A1 stepper driver accesory, plug that in on top of the Nucleo.  The long gold pins of this module can get bent so make sure they are straight and they all go into their respective sockets successfully.  The stepper driver green connectors go in the direction of the white connectors on the mainboard PCB.
+* If you have a X-NUCLEO-IHM03A1 stepper driver accesory, plug that in on top of the Nucleo.  The long gold pins of this module can get bent so make sure they are straight and they all go into their respective sockets successfully.  The stepper driver green connectors go in the direction of the white connectors on the mainboard PCB.  For setting up multiple stepper boards and/or connecting actual steppers, see "Setting Up To Drive Steppers" lower down in this readme.
 
 ![plug in the stepper driver](/ReadmePhotos/IMG_9307.jpg)
 * If you are using an Rpi 3B+ or 4 with this PCB, plug this into the RPI socket.  Note that if you have the standoffs fitted, do not overtighen them as this can damage the Pi.
@@ -61,16 +61,38 @@ When the PCB was originally designed, the ability to add a stepper driver was es
 ![terminal block wires](/ReadmePhotos/IMG_9371.jpg)
 * Insert the wires in to the terminal block and connect them like so.  Screw them down to ensure a secure connection.
 
-![verify model](/ReadmePhotos/IMG_9373.jpg)
+![screw down wires](/ReadmePhotos/IMG_9373.jpg)
 * Connect the stepper motor to this connector. 
 
-![verify model](/ReadmePhotos/IMG_9374.jpg)
+![connect stepper](/ReadmePhotos/IMG_9374.jpg)
 * Note pin naming conventions and color codes vary from manufacturer to manufacturer.   
     * If it does nothing and draws no current, swap one wire from the A pair with one wire from the B pair.  
     * If you send a CW command and it turns CCW, then swap the polarity of either the A or B pair, but not both.
 * Set the correct chip select for the powerSTEP01 (see [Hardware ICD](https://docs.google.com/spreadsheets/d/1JOSQKxkQxXJ6MCMDI9PwUQ6kiuGdujR4D6EJN9u2LWg/edit?usp=sharing) for pin assignments)
-* Send SPI commands to the powerSTEP01 from the NUCLEO to setup the motor settings. (code link placeholder)
-* Send SPI commands to the powerSTEP01 to command motions. (code link placeholder)
+* Send SPI commands to the powerSTEP01 from the NUCLEO to setup the motor settings. [sample code: pcbreathe-bringup](https://github.com/inceptionev/pcbreathe-bringup)
+* Send SPI commands to the powerSTEP01 to command motions. [sample code: pcbreathe-bringup](https://github.com/inceptionev/pcbreathe-bringup)
+* Once you get one stepper motor working, and you are ready to use multiple stepper drivers, consult the [X-NUCLEO-IHM03A1 user manual](https://www.st.com/resource/en/user_manual/dm00206777-getting-started-with-the-high-power-stepper-motor-driver-expansion-board-based-on-powerstep01-for-stm32-nucleo-stmicroelectronics.pdf) for information about how to stack the boards.  A brief overview of the process follows, but read the manual first.
+    * Make the same motor connector doodad for the second board and install it.  Also prepare two short red and black power wires to piggy-back the motor power input.
+    * You will need to move some resistors.  The manual link above will list which ones.
+    
+    * BOTTOM BOARD IN THE STACK (of two-board stack):
+    
+    ![bottom board](/ReadmePhotos/IMG_9493.jpg)
+    
+    * TOP BOARD IN THE STACK (of two-board stack):
+    
+    ![top board](/ReadmePhotos/IMG_9494.jpg)
+    
+    * Put the two short power wires into the bottom board's power inputs along with the existing wires and screw then down.
+    * Stack the boards, making sure that the long pins go into all their intended sockets.  They tend to get bent and might need some straightening.
+    * Screw the two power wires into the upper board.
+    
+    ![power stack](/ReadmePhotos/IMG_9497.jpg)
+    
+    * You're done!  Plug in your motors and get moving!
+    
+    ![dual motors moving](/ReadmePhotos/IMG_9505.GIF)
+    
 
 ## Rev 1 As-Built Files:
 As-built directory: <br>

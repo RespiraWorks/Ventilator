@@ -49,14 +49,14 @@ This build depends on already having a Brain build, which has its own BOM [here]
 | 11     |        1 |               |                     | 6.98         | buy       | [Z][11amzn]     | use these to simulate lung compliance |
 | 12     |        1 | RespiraWorks  | PCB1                |              | **ask**   | [B][12rw]       | RespiraWorks Ventilator Mainboard Rev 1 PCB |
 | 13     |        1 | RespiraWorks  | Power input 1       |              | **ask**   | [B][13rw]               | Power Input cable |
-| 15     |        1 | RespiraWorks  | Pinch valve         |              | make      | [B][15rw]       | Proportional pinch pinch valve assembly |
-| 16     |        2 | RespiraWorks  | Venturi             |              | make      | [B][16rw]       | Venturi sensor assembly |
+| 15     |      1-3 | *you*         |                     |              | **make**  | [B][15rw]       | Proportional pinch pinch valve assembly |
+| 16     |        2 | *you*         |                     |              | **make**  | [B][16rw]       | Venturi sensor assembly |
 | 17     |        1 |               | WS7040-12-X200N     |        52.65 |*ask first*| [A][17ali]      | 12v blower and driver. Make sure to choose w/driver when ordering. |
 | 17x    |        1 |               | WS1208DYY01V03      |        24.00 |*ask first*| [W][17x-won]    | blower driver, in case blower above did not come with driver. |
 | 18     |        1 | RespiraWorks  | blower control cable|              | **ask**   | [B][18rw]               | blower control cable |
 | 19     |        1 | RespiraWorks  | blower power cable  |              | **ask**   | [B][19rw]               | blower power cable |
-| 20     |        1 | McMaster-Carr | 5463K44             | 7.39 / 10 | buy   | [C][20mcmc] | sensing tube 3/23" t-junction |
-| 21     |        1 | various       | Test lung           |              | make      | [B][21rw] | Test lung assembly |
+| 20     |        1 | McMaster-Carr | 5463K44             | 7.39 / 10    | buy       | [C][20mcmc] | sensing tube 3/23" t-junction |
+| 21     |        1 | *you*         |                     |              | **make**  | [B][21rw] | Test lung assembly |
 
 [1mcmc]:   https://www.mcmaster.com/53415K217
 [2mcmc]:   https://www.mcmaster.com/5463K565

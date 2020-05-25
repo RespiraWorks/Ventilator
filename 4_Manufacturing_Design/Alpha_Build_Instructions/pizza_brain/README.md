@@ -70,7 +70,7 @@ For an upgrade, check the [Pizza build](../pizza_build.md).
 
 | Item | Manufacturer  | Part number        | Price($) | Sources         | Notes |
 | ---- |--------------:| ------------------ | -------- | ---------------:|------ |
-| T1   |               |                    |    12.00 | [Z][t1amzn]     | microSD-USB adapter, for flashing RasPi images | 
+| T1   |               |                    |    12.99 | [Z][t1amzn]     | microSD-USB adapter, for flashing RasPi images | 
 | T2   | Preciva       | PR-3254 (PR102001) |    39.99 | [Z][t2amzn]     | Crimping tool for HX and HV connectors |
 
 [t1amzn]:https://www.amazon.com/Anker-Portable-Reader-RS-MMC-Micro/dp/B006T9B6R2

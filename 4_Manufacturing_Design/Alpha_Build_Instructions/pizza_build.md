@@ -35,12 +35,12 @@ The goal of this documentation has been precisely to help you avoid unproductive
 Read over as much of the following documentation as you can and then come back to this point.
 
 Now, contact the team to see if we have components in stock that we can send you.
-Once you know what you are getting from "headquarters" should you start filling up baskets.
+Once you know what you are getting from "headquarters", only then should you start filling up your baskets.
 Also ask the team if anything should be ordered on the company account.
 
 ## Essentials
 
-The first thing you will need is a [Brain build](brain_build.md), which contains the computing components.
+The first thing you will need is a [Brain build](pizza_brain), which contains the computing components.
 
 The next thing you need to do is decide on what internal diameter the pneumatic system will use. Early prototypes have
 been using 5/8" Inner Diameter (henceforth, ID) but for beta we plan to transition to 3/4"ID. There wille be a few
@@ -52,7 +52,7 @@ A metric version of the pneumatic system is also anticipated. If you can help wi
 | Item | Quantity | Manufacturer  | Part #              | Price($)     |  Sources        | Notes |
 | ---- |---------:| ------------- | ------------------- | ------------:|-----------------| ----- |
 | a1   |      5ft | McMaster-Carr | 5234K57             | 21.50 / 5ft  | [C][a1mcmc]     | Soft latex tubing, 5/8" ID, 7/8" OD |
-| a2   |      5ft |               |                     | 14.26 / 10ft | [Z][a2amzn]     | 5/8" tubing, alternative to *a1*, not as good, too hard |
+| a2   |      5ft | Duda Energy   | LPpvc063-025ft      | 20.11 / 25ft | [Z][a2amzn]     | 5/8" tubing, alternative to *a1*, not as good, too hard |
 | a3   |       20 | McMaster-Carr | 9579K72             | 12.21 / 20   | [C][a3mcmc]     | Herbie clip J (20.3-23mm) for clamping 7/8"OD tubing, you'll need plenty |
 | a4   |       ~6 | McMaster-Carr | 5463K646            |  6.60 / 10   | [C][a4mcmc]     | Reducer 5/8"ID <-> 1/2"ID, single barb, for adapting to pinch valve tubing |
 | a5   |       ~3 | McMaster-Carr | 5372K128            | 2.82         | [C][a5mcmc]     | 1/2 NTP female tee, if you plan to have bypass or oxygen limb |
@@ -60,7 +60,7 @@ A metric version of the pneumatic system is also anticipated. If you can help wi
 | a7   |        2 |               |                     | 13.45 / 2    | [Z][a7amzn]     | 2pac of ball valves 5/8"ID |
 
 [a1mcmc]: https://www.mcmaster.com/5234K57
-[a2amzn]: https://www.amazon.com/gp/product/B00LX6MB6G
+[a2amzn]: https://www.amazon.com/gp/product/B00LX6MFYE?th=1
 [a3mcmc]: https://www.mcmaster.com/9579K72
 [a4mcmc]: https://www.mcmaster.com/5463K646
 [a5mcmc]: https://www.mcmaster.com/4880K154

@@ -49,8 +49,8 @@ This build depends on already having a Brain build, which has its own BOM [here]
 | 11     |        1 |               |                     | 6.98         | buy       | [Z][11amzn]     | use these to simulate lung compliance |
 | 12     |        1 | RespiraWorks  | PCB1                |              | **ask**   | [B][12rw]       | RespiraWorks Ventilator Mainboard Rev 1 PCB |
 | 13     |        1 | RespiraWorks  | Power input 1       |              | **ask**   | [B][13rw]               | Power Input cable |
-| 15     |        1 | RespiraWorks  | PinchValve1.4       |              | **ask**   | [B][15rw]       | Marc-designed stepper pinch valve rev 1.4 |
-| 16     |        2 | RespiraWorks  | Venturi2            |              | **ask**   | [B][16rw]       | Ethan-designed 10-32 threaded venturis Rev 2 |
+| 15     |        1 | RespiraWorks  | Pinch valve assembly|              | make      | [B][15rw]       | Marc-designed stepper pinch valve rev 1.4 |
+| 16     |        2 | RespiraWorks  | Venturi assembly    |              | make      | [B][16rw]       | Ethan-designed 10-32 threaded venturis Rev 2 |
 | 17     |        1 |               | WS7040-12-X200N     |        52.65 |*ask first*| [A][17ali]      | 12v blower and driver. Make sure to choose w/driver when ordering. |
 | 17x    |        1 |               | WS1208DYY01V03      |        24.00 |*ask first*| [W][17x-won]    | blower driver, in case blower above did not come with driver. |
 | 18     |        1 | RespiraWorks  | blower control cable|              | **ask**   | [B][18rw]               | blower control cable |

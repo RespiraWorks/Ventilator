@@ -66,5 +66,5 @@ The assembled article below is uses *item 8* as tee.
 
 | Parts                |  Assembled           |           
 |:--------------------:|:--------------------:|
-![](lung-short-parts.jpg)|![](lung-short-assembled2.jpg)|
+![](lung-short-parts.jpg)|![](lung-short-assembled.jpg)|
 

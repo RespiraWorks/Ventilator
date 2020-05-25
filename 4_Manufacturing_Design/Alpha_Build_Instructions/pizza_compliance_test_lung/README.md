@@ -30,12 +30,12 @@ This is completely uncalibrated, so it is not intended for instrumentation just 
 [TL5mcmc]:  https://www.mcmaster.com/5463K615
 [11amzn]:  https://www.amazon.com/gp/product/B018WPZCSO
 
-* Cut a 16x12 panel of sturdy material into two 8x12 panels. (the sound absorber panels above work fine, or any wood or aluminum you have around.  Cardboard is probably not sturdy enough.
+* Cut a 16x12 panel of sturdy material into two 8x12 panels. (the sound absorber panels above work fine, or any wood or aluminum you have around.  Cardboard is probably not sturdy enough.)
 
 ![Panels](TestLung1.jpg)
 
 * Drill 2 holes at one end of each panel to form a zip tie hinge.  Drill two additional holes in one of the panels as a securing point for the test lung.  Measure with the rubber band and cut 2 notches at the opposite end of both panels to accomodate the rubber band.  
-* If your lung does not have an attachement loop, make a fold of duct tape attached to the end of the lung and poke a hole in it for the zip tie to secure.  Secure the lung to the panel.
+* If your lung does not have an attachment loop, make a fold of duct tape attached to the end of the lung and poke a hole in it for the zip tie to secure.  Secure the lung to the panel.
 * Put the zip ties into the end of the panel for the hinge. Make sure the ties are loose enough to allow the panels to fold over completely.
 
 ![Fold hinge](TestLung2.jpg)

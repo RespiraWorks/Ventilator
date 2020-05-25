@@ -14,6 +14,7 @@ For an upgrade, check the [Pizza build](../pizza_build.md).
 * **A** = Ali Express
 * **M** = Mouser
 * **O** = Monoprice
+* **K** = Digikey
 * **R** = RS Computing ([various countries](https://www.rs-online.com/))
 * **B** = Built by RespiraWorks
 
@@ -23,12 +24,12 @@ For an upgrade, check the [Pizza build](../pizza_build.md).
 
 | Item | Qty | Manufacturer | Part Number        | Price($) | Sources                   | Notes |
 | ---- |----:| -------------| ------------------ | --------:|-------------------------- | ----- |
-| 1    |   1 | ST Micro     | NUCLEO-L452-RE     |    14.00 | [M][1mouser] [R][1rs]     | STM32 Nucleo dev board, make sure to **NOT get the -P** version |
+| 1    |   1 | ST Micro     | NUCLEO-L452-RE     |    14.43 | [M][1mouser] [R][1rs]     | STM32 Nucleo dev board, make sure to **NOT get the -P** version |
 | 2    |   1 | Monoprice    | 3896               |     0.83 | [Z][2amzn] [O][2mono]     | USB-A to miniUSB-B cable, power/data for Nucleo |
 | 3    |   1 | UPerfect     | -                  |    49.00 | [A][3ali]                 | 7" capacitive touchscreen with speakers, HDMI/USB |
 | 4    |   1 | Raspberry Pi | RPI4-MODBP-2GB     |    53.23 | [M][4mouser]              | Raspberry PI 4 |
 | 5    |   1 | Raspberry Pi | RPI3-MODBP         |    35.00 | OUT OF STOCK              | Raspberry PI 3B+ as an alternative to PI 4, **optional** substitute if you have one already|
-| 6    |   1 | Monoprice    | 31201              |     8.03 | [Z][6amzn] [O][6mono]     | USB-A to USB-C cable, 3ft, **for RPI4** |
+| 6    |   1 | Monoprice    | 31201              |     8.39 | [Z][6amzn] [O][6mono]     | USB-A to USB-C cable, 3ft, **for RPI4** |
 | 7    |   1 | Monoprice    | 13924              |     1.05 | [Z][7amzn] [O][7mono]     | USB-A to microUSB-B cable, 3ft, **only for RPI3B+** |
 | 8    |   1 | Seadream     | 26121600           |     7.00 | [Z][8amzn]                | microHDMI adapter, **for RPI4** |
 | 9    |   1 | SanDisk      | SDSQXAF-032G-GN6MA |    10.73 | [Z][9amzn]                | UHS-1 Class 10 micro SD, memory for Raspberry Pi |

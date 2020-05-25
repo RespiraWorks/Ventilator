@@ -37,19 +37,19 @@ Original design found
 
 ### Parts BOM
 
-| RefDes | Quantity | Manufacturer  | Part #              | Price($)     | Do what? | Sources         | Notes |
-| ------ |---------:| ------------- | ------------------- | ------------:| ----- |-----------------| ----- |
-| 1      |        1 | STEPPERONLINE | 17HS19-2004S2       |       14.99  | Buy      | [Z][1amzn]      | Stepper motor. Make sure to get one with the full-cut D-shaft. |
-| 2      |        1 | McMaster-Carr | 92095A218           |   7.64 / 25  | Buy      | [C][2mcmc]      | M5x30mm button head. Axle for bearing. |
-| 3      |        3 | McMaster-Carr | 91294A128           |  4.82 / 100  | Buy      | [C][3mcmc]      | M3x8mm flat head. Attaches frame to stepper body |
-| 4      |        1 | McMaster-Carr | 91390A117           |  4.75 / 100  | Buy      | [C][4mcmc]      | M5x5mm set screw. Attaches rotor to stepper |
-| 5      |        3 | FastEddy      | TFE4262             |  12.50 / 10  | Buy      | [F][5fast]      | 5x16x5 Metal shielded bearings |
-| 6      |        2 | McMaster-Carr      | 5463K646             |  6.60 / 10  | Buy      | [C][6mcmc]      | Plastic Barbed Tube Fitting for Air and Water, Tight-Seal, Reducer, for 5/8" x 1/2" Tube ID |
-| 7      | 6in/15cm | McMaster-Carr      | 5894K39             |  8.04 / 2 ft  | Buy      | [C][7mcmc]      | Continuous-Flex Soft Tygon PVC Tubing, 1/2" ID, 5/8" OD |
-| 8      |        2 | McMaster-Carr      | 9579K67            |  12.63 / 20  | Buy      | [C][8mcmc]   | Easy-Install Double Snap-Grip Clamps, 1/2" to 19/32" ID |
-| 9     |         1 | Digikey       | X-NUCLEO-IHM03A1    |        10.64 | *Ask first*      | [K][9key] [M][9mr]      | Stepper driver dev board |
-| 10     |        1 | RespiraWorks       | N/A    |       N/A | Ask      | 3d printed from the STEP files above      | BASE - 3D printed |
-| 11     |        1 | RespiraWorks      | N/A    |       N/A | Ask      | 3d printed from the STEP files above      | ROTOR - 3D printed |
+| RefDes | Quantity | Manufacturer  | Part #              | Price($)     | Do what?     | Sources         | Notes |
+| ------ |---------:| ------------- | ------------------- | ------------:| ------------ |-----------------| ----- |
+| 1      |        1 | STEPPERONLINE | 17HS19-2004S2       |       14.99  | Buy          | [Z][1amzn]      | Stepper motor. Make sure to get one with the full-cut D-shaft. |
+| 2      |        1 | McMaster-Carr | 92095A218           |   7.64 / 25  | Buy          | [C][2mcmc]      | M5x30mm button head. Axle for bearing. |
+| 3      |        3 | McMaster-Carr | 91294A128           |  4.82 / 100  | Buy          | [C][3mcmc]      | M3x8mm flat head. Attaches frame to stepper body |
+| 4      |        1 | McMaster-Carr | 91390A117           |  4.75 / 100  | Buy          | [C][4mcmc]      | M5x5mm set screw. Attaches rotor to stepper |
+| 5      |        3 | FastEddy      | TFE4262             |  12.50 / 10  | Buy          | [F][5fast]      | 5x16x5 Metal shielded bearings |
+| 6      |        2 | McMaster-Carr | 5463K646            |  6.60 / 10   | Buy          | [C][6mcmc]      | Plastic Barbed Tube Fitting for Air and Water, Tight-Seal, Reducer, for 5/8" x 1/2" Tube ID |
+| 7      | 6in/15cm | McMaster-Carr | 5894K39             |  8.04 / 2 ft | Buy          | [C][7mcmc]      | Continuous-Flex Soft Tygon PVC Tubing, 1/2" ID, 5/8" OD |
+| 8      |        2 | McMaster-Carr | 9579K67              |  12.63 / 20  | Buy         | [C][8mcmc]      | Easy-Install Double Snap-Grip Clamps, 1/2" to 19/32" ID |
+| 9     |         1 | Digikey       | X-NUCLEO-IHM03A1     |        10.64 | *Ask first* | [K][9key] [M][9mr]      | Stepper driver dev board |
+| 10     |        1 | RespiraWorks. | N/A                  |       N/A.   | Ask         | [3D][103d]      | BASE - 3D printed |
+| 11     |        1 | RespiraWorks  | N/A                  |       N/A    | Ask         | [3D][103d]      | ROTOR - 3D printed |
 
 [1amzn]:   https://www.amazon.com/dp/B07Z1J8JWH/ref=cm_sw_r_cp_api_i_d.zUEbRBKGSVW
 [2mcmc]:   https://www.mcmaster.com/catalog/92095A218
@@ -61,6 +61,8 @@ Original design found
 [8mcmc]:   https://www.mcmaster.com/catalog/9579K67
 [9key]:   https://www.digikey.com/short/z442qt
 [9mr]:     https://www.mouser.com/ProductDetail/511-X-NUCLEO-IHM03A1
+[103d]:    https://github.com/RespiraWorks/SystemDesign/blob/grace-pinch-valve-updates/2_Research_&_Development/Project-Pinch_Valve/README.md#exported-step-files
+
 
 ### Tooling BOM
 

@@ -1,8 +1,8 @@
 # Blower Bypass
 
-The blower bypass is an optional "topping" that can be integrated into the [pizza build](../Alpha_Build_Instructions/pizza_build.md).
+The blower bypass is an optional "topping" that can be integrated into the [pizza build](../../Alpha_Build_Instructions/pizza_build.md).
 
-The purpose of the blower bypass is to prevent strain on blower when the inhale pinch valve is closed. This is the version for 3/8"ID [alpha build](../Alpha_Build_Instructions).
+The purpose of the blower bypass is to prevent strain on blower when the inhale pinch valve is closed. This is the version for 3/8"ID [alpha build](../../Alpha_Build_Instructions).
 
 ## BOM
 

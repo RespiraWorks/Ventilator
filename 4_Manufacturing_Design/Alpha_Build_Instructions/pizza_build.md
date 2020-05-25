@@ -46,8 +46,6 @@ This build depends on already having a Brain build, which has its own BOM [here]
 | 7      |        - |               |                     | 6.49 / 16ft  | buy       | [Z][7amzn] [C][7mcmc]     | 2.5 mm tubing (for sensors?) |
 | 8      |        1 |               |                     | 19.99        | buy       | [Z][8amzn] [C][8mcmc]     | 12v Power supply adapter (obsolete? opt for 8a?) |
 | 8a     |        1 |               |                     | 13.99        | buy       | [Z][8a-amzn] [C][8a-mcmc]   | 12v Power supply adapter, better than 8 above |
-| 9      |        2 |               |                     | 16.99 / 2    | buy       | [Z][9amzn]      | CPAP tubing |
-| 10     |        1 |               |                     | 15.00        |*ask first*| [E][10ebay]     | test "lung", ask build-team if they have extra |
 | 11     |        1 |               |                     | 6.98         | buy       | [Z][11amzn]     | use these to simulate lung compliance |
 | 12     |        1 | RespiraWorks  | PCB1                |              | **ask**   | [B][12rw]       | RespiraWorks Ventilator Mainboard Rev 1 PCB |
 | 13     |        1 | RespiraWorks  | Power input 1       |              | **ask**   | [B][13rw]               | Power Input cable |
@@ -73,8 +71,6 @@ This build depends on already having a Brain build, which has its own BOM [here]
 [8amzn]:   https://www.amazon.com/gp/product/B00Z9X4GLW
 [8a-amzn]: https://www.amazon.com/gp/product/B01MYXTA6N
 [8a-mcmc]:https://www.mcmaster.com/3824N132
-[9amzn]:   https://www.amazon.com/gp/product/B01N14F1MV
-[10ebay]:  https://www.ebay.com/itm/PORTEX-Adult-Disposable-Anesthesia-Breathing-Circuit-3L-Breathing-Bag-370924/362943456196
 [11amzn]:  https://www.amazon.com/gp/product/B018WPZCSO
 [12rw]:    https://github.com/RespiraWorks/pcbreathe/tree/master/NIGHTLY/20200424v2-RELEASE-CANDIDATE-2
 [13rw]:    ../../1_Ventilator_System_Design/Electrical_System/wiring.md

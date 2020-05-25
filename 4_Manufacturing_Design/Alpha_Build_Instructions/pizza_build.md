@@ -76,12 +76,12 @@ A metric version of the pneumatic system is also anticipated. If you can help wi
 | b3   |       20 | McMaster-Carr | 9579K73             | 12.24 / 20   | [C][b3mcmc]    | Herbie clip K (22.2-24.9mm) for clamping 1"OD tubing, works better for soft tubing |
 | b4   |       20 | McMaster-Carr | 9579K74             | 12.33 / 20   | [C][b4mcmc]    | Herbie clip L (24.5-27.6mm) for clamping 1"OD tubing, maybe works better for hard tubing? |
 | b5   |        1 | McMaster-Carr | 5463K167            | 13.16 / 10   | [C][b5mcmc]    | 3/4"ID <-> 5/8"ID adapter single barb, to interface with blower sub-assembly |
-| b6   |       ~6 | McMaster-Carr | 5463K651            | 12.33 / 20   | [C][b6mcmc]    | 3/4"ID <-> 1/2"ID adapter, to interface with pinch valve assembly |
+| b6   |       ~6 | McMaster-Carr | 5463K651            | 10.20 / 10   | [C][b6mcmc]    | 3/4"ID <-> 1/2"ID adapter, to interface with pinch valve assembly |
 | b7   |       ~3 | McMaster-Carr | 4596K33             | 4.18         | [C][b7mcmc]    | 3/4 NTP female tee, if you plan to have bypass or oxygen limb |
 | b8   |       ~5 | McMaster-Carr | 53415K217           | 12.89 / 10   | [C][b8mcmc]    | 3/4 NTP male <-> 3/4"ID single barb, for tee junctions, if you plan to have bypass or oxygen limb |
 | b9   |        2 |               |                     | 13.45 / 2    | [Z][b9amzn]    | 2pac of ball valves 3/4"ID |
 
-[b1amzn]: https://www.amazon.com/gp/product/B079WRWH34
+[b1amzn]: https://www.amazon.com/gp/product/B01LZ5ZK53
 [b2mcmc]: https://www.mcmaster.com/5233K71
 [b3mcmc]: https://www.mcmaster.com/9579K73
 [b4mcmc]: https://www.mcmaster.com/9579K74
@@ -106,7 +106,7 @@ Also, scissors or a sharp knife might be ok instead of T3.
 | ---- |--------------:| ------------------ | -------- | ---------------:|------ |
 | T1   |               |                    |    13.00 | [Z][t1amzn]     | 8 inch slip-joint pliers, for clamping tubes onto fittings | 
 | T2   |               |                    |    19.99 | [Z][t2amzn]     | Adjustable wrench, at least 1" wide opening, for screwing in NTP fittings |
-| T3   |               |                    |    14.69 | [Z][t3amzn]     | Pipe and PVC cutter, for cutting tubing |
+| T3   |               |                    |    15.88 | [Z][t3amzn]     | Pipe and PVC cutter, for cutting tubing |
 | T4   |               |                    |     8.90 | [Z][t4amzn]     | Long nose pliers, for removing herbie clips |
 
 [t1amzn]: https://www.amazon.com/TEKTON-2-Inch-Joint-Pliers-37122/dp/B00KLY1FAY

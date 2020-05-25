@@ -21,8 +21,8 @@ If you decide to buy them, do so at your own risk... oh, and thank you ;).**
 | 3      |        - | JST           | XHP-3               |         0.10 | [K][3digi]      | XH 3-pin housings, for heater |
 | 4      |        - | JST           | XHP-5               |         0.12 | [K][4digi]      | XH 5-pin housings, for sensors |
 | 5      |        2 | JST           | XHP-6               |         0.12 | [K][5digi]      | XH 6-pin housings, for blower control |
-| alt1   |        - | WGCD          | 4330589508          |         8.99 | [Z][alt1amzn]   | XH connector kit for 2/3/4/5 pins, alternative for 1,2,3,4 above |
-| alt2   |        - | CQRobot       | CQRJST254-BGB       |         9.99 | [Z][alt2amzn]   | XH connector kit for 6/7/8 pins, alternative for 1,5 above |
+| alt1   |        - | WGCD          | 4330589508          |         8.99 | [Z][alt1amzn]   | XH connector kit for 2/3/4/5 pins, alternative for 1+2+3+4 above |
+| alt2   |        - | CQRobot       | CQRJST254-BGB       |         9.99 | [Z][alt2amzn]   | XH connector kit for 6/7/8 pins, alternative for 1+5 above |
 | 6      |        6 | JST           | SVH-21T-P1.1        |         0.11 | [K][6digi]      | VH crimps, for power connectors |
 | 7      |        2 | TE            | 1-1123722-2         |         0.18 | [K][7digi]      | VH housing 2 pin, for blower power |
 | 8      |        1 | JST           | VHR-3N              |         0.14 | [K][8digi]      | VH housing 3 pin, for main power |
@@ -48,9 +48,9 @@ If you decide to buy them, do so at your own risk... oh, and thank you ;).**
 
 We try to make few assumptions about what tools you have. Here are recommended tools you might need.
 
-| RefDes | Quantity | Manufacturer  | Part number         | Price($) | Sources         | Notes |
-| ------ |---------:| ------------- | ------------------- | --------:|-----------------| ----- |
-| T1     |        1 | Preciva         | PR-3254 (PR102001)             |    39.99 | [Z][t1amzn]     | Crimping tool for HX and HV connectors |
+| Item | Quantity | Manufacturer  | Part number         | Price($) | Sources         | Notes |
+| ---- |---------:| ------------- | ------------------- | --------:|-----------------| ----- |
+| T1   |        1 | Preciva         | PR-3254 (PR102001)             |    39.99 | [Z][t1amzn]     | Crimping tool for HX and HV connectors |
 
 [t1amzn]:https://www.amazon.com/gp/product/B07R1H3Z8X
 

@@ -31,11 +31,11 @@ We may have parts to send you from our inventory.
 | 2    |        1 |               | WS1208DYY01V03      |        24.00 | [W][2won]      | blower driver, in case blower above did not come with driver. |
 | 3    |   ~10 cm | McMaster-Carr | 5234K57             | 21.50 / 5ft  | [C][3mcmc]     | Soft latex tubing, 5/8" ID, 7/8" OD, optional? |
 | 4    |        1 | McMaster-Carr | 9579K72             | 12.21 / 20   | [C][4mcmc]     | Herbie clip J (20.3-23mm) for clamping 7/8"OD tubing, optional? |
-| 5    |        6 | JST           | SXH-001T-P0.6       |         0.10 | [K][5digi]     | XH crimps, for control connector |
-| 6    |        1 | JST           | XHP-6               |         0.12 | [K][6digi]     | XH 6-pin housing, for control connector |
+| 5    |  6 or 12 | JST           | SXH-001T-P0.6       |         0.10 | [K][5digi]     | XH crimps, for control connector |
+| 6    |   1 or 2 | JST           | XHP-6               |         0.12 | [K][6digi]     | XH 6-pin housing, for control connector |
 | 7    |        - | CQRobot       | CQRJST254-BGB       |         9.99 | [Z][7amzn]     | XH connector kit for 6/7/8 pins, alternative for 1+6 above |
-| 8    |        6 | JST           | SVH-21T-P1.1        |         0.11 | [K][8digi]     | VH crimps, for power connector |
-| 9    |        2 | TE            | 1-1123722-2         |         0.18 | [K][9digi]     | VH housing 2 pin, for power connector |
+| 8    |   2 or 4 | JST           | SVH-21T-P1.1        |         0.11 | [K][8digi]     | VH crimps, for power connector |
+| 9    |   1 or 2 | TE            | 1-1123722-2         |         0.18 | [K][9digi]     | VH housing 2 pin, for power connector |
 | 10   |        - | Remington     | 16UL1007STRKIT      |        29.70 | [K][10amzn]    | 16 AWG wire, for power cable |
 | 11   |        - | Remington     | 26UL1007STRKIT10COLOR |      29.70 | [K][10amzn]    | 26 AWG wire, for control cable |
 
@@ -65,14 +65,14 @@ We may have parts to send you from our inventory.
 
 ![Parts](blower-parts.jpg)
 
-Use short segment of tubing, probably shorter than pictured. This will largely depend on how you physically lay out
-your build and what other optional components you intend to use.
+Use short segment of tubing, probably shorter than pictured.
 Use Herbie clip to secure tubing to blower. Alternatively, you can use a zip-tie.
 
 ![Parts](blower-subassmebly.jpg)
 
 You will have to crimp connectors to the second end of the wiring that connects the driver board to the PCB.
-It depends on your build layout, but it is highly likely you will want longer wires.
-If you already have crimping tools, you just need longer wires.
+It depends on your build layout, but it is highly likely you will want longer wires, which you can
+manufacture if you have a crimping tool. In this case you will need the higher number of connector
+components listed in the BOM above.
 
 

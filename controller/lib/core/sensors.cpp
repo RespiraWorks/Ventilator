@@ -125,8 +125,7 @@ void TVIntegrator::AddFlow(Time now, VolumetricFlow flow) {
   //  - Measure time with better than millisecond granularity.
   Duration delta = now - last_flow_measurement_time_;
   if (delta >= VOLUME_INTEGRAL_INTERVAL) {
-    volume_ =
-        volume_ + ml(delta.minutes() * (last_flow_ + flow).ml_per_min() / 2.0f);
+    volume_ += (delta * ((last_flow_ + flow) / 2.0f));
     last_flow_measurement_time_ = now;
     last_flow_ = flow;
   }

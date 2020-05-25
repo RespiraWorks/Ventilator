@@ -51,6 +51,12 @@ TEST(Units, Pressure) {
 
   checkRelationalOperators(kPa);
   checkRelationalOperators(cmH2O);
+
+  Pressure pressure = kPa(2);
+  pressure += kPa(1);
+  EXPECT_FLOAT_EQ(pressure.kPa(), 3.0f);
+  pressure -= kPa(5);
+  EXPECT_FLOAT_EQ(pressure.kPa(), -2.0f);
 }
 
 TEST(Units, Length) {
@@ -64,6 +70,12 @@ TEST(Units, Length) {
 
   checkRelationalOperators(meters);
   checkRelationalOperators(millimeters);
+
+  Length length = meters(2);
+  length += meters(1);
+  EXPECT_FLOAT_EQ(length.meters(), 3.0f);
+  length -= meters(5);
+  EXPECT_FLOAT_EQ(length.meters(), -2.0f);
 }
 
 TEST(Units, VolumetricFlow) {
@@ -87,6 +99,22 @@ TEST(Units, VolumetricFlow) {
 
   checkRelationalOperators(cubic_m_per_sec);
   checkRelationalOperators(ml_per_min);
+  checkRelationalOperators(liters_per_sec);
+
+  VolumetricFlow flow = liters_per_sec(2);
+  flow += liters_per_sec(1);
+  EXPECT_FLOAT_EQ(flow.liters_per_sec(), 3.0f);
+  flow -= liters_per_sec(5);
+  EXPECT_FLOAT_EQ(flow.liters_per_sec(), -2.0f);
+  flow /= -2.0f;
+  EXPECT_FLOAT_EQ(flow.liters_per_sec(), 1.0f);
+  flow *= -5.0f;
+  EXPECT_FLOAT_EQ(flow.liters_per_sec(), -5.0f);
+
+  EXPECT_FLOAT_EQ((liters_per_sec(1) * 1000.0f).cubic_m_per_sec(), 1);
+  EXPECT_FLOAT_EQ((cubic_m_per_sec(1) / 1000.0f).liters_per_sec(), 1);
+
+  EXPECT_FLOAT_EQ((cubic_m(1) / seconds(1)).cubic_m_per_sec(), 1);
 }
 
 TEST(Units, Volume) {
@@ -100,6 +128,22 @@ TEST(Units, Volume) {
 
   checkRelationalOperators(cubic_m);
   checkRelationalOperators(ml);
+
+  Volume volume = ml(2);
+  volume += ml(1);
+  EXPECT_FLOAT_EQ(volume.ml(), 3.0f);
+  volume -= ml(5);
+  EXPECT_FLOAT_EQ(volume.ml(), -2.0f);
+  volume /= -2.0f;
+  EXPECT_FLOAT_EQ(volume.ml(), 1.0f);
+  volume *= -5.0f;
+  EXPECT_FLOAT_EQ(volume.ml(), -5.0f);
+
+  EXPECT_FLOAT_EQ((cubic_m(1) / 1e6f).ml(), 1);
+  EXPECT_FLOAT_EQ((ml(1) * 1e6f).cubic_m(), 1);
+
+  EXPECT_FLOAT_EQ((cubic_m_per_sec(1) * seconds(1)).cubic_m(), 1);
+  EXPECT_FLOAT_EQ((seconds(1) * cubic_m_per_sec(1)).cubic_m(), 1);
 }
 
 TEST(Units, Duration) {
@@ -131,6 +175,11 @@ TEST(Units, Time) {
   EXPECT_FLOAT_EQ((ms(1000) - millisSinceStartup(500)).seconds(), 0.5f);
   // Negative times are not supported:
   // EXPECT_EQ((ms(500) - ms(1000)).seconds(), ???);
+  Time time = ms(2000);
+  time += milliseconds(1000);
+  EXPECT_EQ(time.millisSinceStartup(), static_cast<uint64_t>(3000));
+  time -= milliseconds(2000);
+  EXPECT_EQ(time.millisSinceStartup(), static_cast<uint64_t>(1000));
 
   checkRelationalOperators(millisSinceStartup);
 }

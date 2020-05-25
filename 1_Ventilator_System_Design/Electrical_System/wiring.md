@@ -20,7 +20,7 @@ If you decide to buy them, do so at your own risk... oh, and thank you ;).**
 | 2      |        - | JST           | XHP-2               |         0.10 | [K][2digi]      | XH 2-pin housings, for solenoid |
 | 3      |        - | JST           | XHP-3               |         0.10 | [K][3digi]      | XH 3-pin housings, for heater |
 | 4      |        - | JST           | XHP-5               |         0.12 | [K][4digi]      | XH 5-pin housings, for sensors |
-| 5      |        2 | JST           | XHP-6               |         0.12 | [K][4digi]      | XH 6-pin housings, for blower control |
+| 5      |        2 | JST           | XHP-6               |         0.12 | [K][5digi]      | XH 6-pin housings, for blower control |
 | alt1   |        - | WGCD          | 4330589508          |         8.99 | [Z][alt1amzn]   | XH connector kit for 2/3/4/5 pins, alternative for 1+2+3+4 above |
 | alt2   |        - | CQRobot       | CQRJST254-BGB       |         9.99 | [Z][alt2amzn]   | XH connector kit for 6/7/8 pins, alternative for 1+6 above |
 | 6      |        6 | JST           | SVH-21T-P1.1        |         0.11 | [K][6digi]      | VH sockets, for power connectors |

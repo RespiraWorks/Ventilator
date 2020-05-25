@@ -34,6 +34,7 @@ Original design found
 * **F** = Fast Eddy Bearings
 * **K** = Digikey
 * **M** = Mouser
+* **3D** = 3D printed (RespiraWorks)
 
 ### Parts BOM
 

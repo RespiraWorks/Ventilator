@@ -68,6 +68,8 @@ We may have parts to send you from our inventory.
 Use short segment of tubing, probably shorter than pictured.
 Use Herbie clip to secure tubing to blower. Alternatively, you can use a zip-tie.
 
+**IMPORTANT** For the blower sub-assembly, you need 5/8"ID tubing, even if you are building a largely 3/4"ID pneumatic circuit.
+
 ![Parts](blower-subassmebly.jpg)
 
 You will have to crimp connectors to the second end of the wiring that connects the driver board to the PCB.

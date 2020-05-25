@@ -76,15 +76,17 @@ For an upgrade, check the [Pizza build](../pizza_build.md).
 [t1amzn]:https://www.amazon.com/Anker-Portable-Reader-RS-MMC-Micro/dp/B006T9B6R2
 [t2amzn]:https://www.amazon.com/gp/product/B07R1H3Z8X
 
-**NOTE: Items 13-15 and T2 above are also duplicated in the [wiring BOM](../../../1_Ventilator_System_Design/Electrical_System/wiring.md)**
+**NOTE: Items 15-17 and T2 above are also duplicated in the [wiring BOM](../../../1_Ventilator_System_Design/Electrical_System/wiring.md)**
 
 ## Purchasing guide
 
 1. First of all, contact Edwin, Martin or Ethan to see if there are extra parts in the RespiraWorks inventory that
 can be sent to you.
 2. Take note of the specifically RPI3+ or RPI4 components. Don't get the wrong ones.
-3. If you are not (yet) able to get a PCB, get items 16 and 17
-4. If you are getting a PCB, and a power cable is included, you will not need 13-15, nor T2
+3. If you are not (yet) able to get a PCB, get items 18 and 19
+4. If you are getting a PCB, and a power cable is included, you will not need 15-17, nor T2
+5. If you are feeling stingy, don't get the touchscreen (item 3). You can connect the RasPi to any monitor and use
+a mouse and keyboard to control it.
 
 ## Assembly instructions
 
@@ -96,7 +98,7 @@ can be sent to you.
 6. Connect RasPi USB to 5V_TS microUSB on screen.
 7. Connect mini USB to Nucleo and USB to your laptop, or raspi, if you're feeling frisky.
 8. Install OS on μSD card and plug it into RasPi.
-9. If you got a PCB, go [here](https://github.com/respiraworks/pcbreathe) for testing instructions
+9. If you got a PCB, go [here](https://github.com/respiraworks/pcbreathe) for further instructions
 10. If you did not get a PCB, it's jumper wire time to connect Nucleo to RasPi.
 Here is reference for [RasPi pinout](https://pinout.xyz/pinout/pin2_5v_power) and here it is for the [Nucleo](https://docs.zephyrproject.org/latest/_images/nucleo-l452re-pinout.png).
     - Raspi UART-TXD (pin 8) <--> Nucleo USART3-RX (CN10 pin 18)

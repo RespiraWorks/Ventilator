@@ -48,8 +48,8 @@ Original design found
 | 7      | 6in/15cm | McMaster-Carr      | 5894K39             |  8.04 / 2 ft  | Buy      | [C][7mcmc]      | Continuous-Flex Soft Tygon PVC Tubing, 1/2" ID, 5/8" OD |
 | 8      |        2 | McMaster-Carr      | 9579K67            |  12.63 / 20  | Buy      | [C][8mcmc]   | Easy-Install Double Snap-Grip Clamps, 1/2" to 19/32" ID |
 | 9     |         1 | Digikey       | X-NUCLEO-IHM03A1    |        10.64 | *Ask first*      | [K][9key] [M][9mr]      | Stepper driver dev board |
-| 10     |        1 | N/A       | N/A    |       N/A | Ask      | 3d printed from the STEP files above      | BASE - 3D printed |
-| 11     |        1 | N/A       | N/A    |       N/A | Ask      | 3d printed from the STEP files above      | ROTOR - 3D printed |
+| 10     |        1 | RespiraWorks       | N/A    |       N/A | Ask      | 3d printed from the STEP files above      | BASE - 3D printed |
+| 11     |        1 | RespiraWorks      | N/A    |       N/A | Ask      | 3d printed from the STEP files above      | ROTOR - 3D printed |
 
 [1amzn]:   https://www.amazon.com/dp/B07Z1J8JWH/ref=cm_sw_r_cp_api_i_d.zUEbRBKGSVW
 [2mcmc]:   https://www.mcmaster.com/catalog/92095A218

@@ -1,26 +1,26 @@
 # Pizza Build
 
-**DISCLAIMER: These are live documents.
-There are duplicate and alternative items for undecided aspects of the physical design. 
-RespiraWorks may or may not compensate you for any of these parts if you choose to buy them. Please connect with Edwin or Ethan first.
-If you decide to buy them, do so at your own risk... oh, and thank you ;).**
+**WARNING: This is not intended to be used on patients and lacks a number of safety features.**
 
-This build consists of a functional ventilator pneumatic assembly with controller and user interface. This build is adequate for integration and systems testing.
+This is a ventilator prototype for testing and development.
+The build consists of a functional ventilator pneumatic assembly with controller and user interface. This build is adequate for integration and systems testing.
 
-![Pizza pneumatics](pizza_pneumatics_2.png)
+It lacks heating, humidification, battery backup and air filtering.
 
-Note: the sensing tube diagram above is not correct, please refer the the drawing below for how to connect the venturis pressure sensors on the PCB, and mind which tubes go into the bottom and top port of the sensors on the PCB.
-
-It lacks heating, oxygen mixing, humidification, battery backup and air filtering.
 It is also not enclosed like the final product and is meant to be operated in an open layout on your table, like a pizza.
 
-![Pizza drawing](pizza_photo.jpg)
+It can also come in various configurations, depending on your testing needs:
 
-**This is not intended to be used on patients and lacks a number of safety features.**
+| Solenoid valve setup  |  Pinch valve setup   | Advanced setup        |           
+|:---------------------:|:--------------------:|:---------------------:|
+![](photo_solenoid.jpg) |![](photo_pinch.jpg)  |![](photo_advanced.jpg)|
+
+**DISCLAIMER: These are live documents.
+There are duplicate and alternative items for undecided aspects of the physical design. 
+RespiraWorks may or may not compensate you for any of these parts if you choose to buy them. Please connect with Edwin, Martin or Ethan first.
+If you decide to buy them, do so at your own risk... oh, and thank you ;).**
 
 This build depends on already having a Brain build, which has its own BOM [here](brain_build.md).
-
-![Pizza drawing](pizza_diagram.jpg)
 
 ## Purchasing source abbreviations
 
@@ -49,7 +49,6 @@ This build depends on already having a Brain build, which has its own BOM [here]
 | 11     |        1 |               |                     | 6.98         | buy       | [Z][11amzn]     | use these to simulate lung compliance |
 | 12     |        1 | RespiraWorks  | PCB1                |              | **ask**   | [B][12rw]       | RespiraWorks Ventilator Mainboard Rev 1 PCB |
 | 13     |        1 | RespiraWorks  | Power input 1       |              | **ask**   | [B][13rw]               | Power Input cable |
-| 15     |      1-3 | *you*         |                     |              | **make**  | [B][15rw]       | Proportional pinch pinch valve assembly |
 | 16     |        2 | *you*         |                     |              | **make**  | [B][16rw]       | Venturi sensor assembly |
 | 17     |        1 |               | WS7040-12-X200N     |        52.65 |*ask first*| [A][17ali]      | 12v blower and driver. Make sure to choose w/driver when ordering. |
 | 17x    |        1 |               | WS1208DYY01V03      |        24.00 |*ask first*| [W][17x-won]    | blower driver, in case blower above did not come with driver. |
@@ -75,7 +74,6 @@ This build depends on already having a Brain build, which has its own BOM [here]
 [11amzn]:  https://www.amazon.com/gp/product/B018WPZCSO
 [12rw]:    https://github.com/RespiraWorks/pcbreathe/tree/master/NIGHTLY/20200424v2-RELEASE-CANDIDATE-2
 [13rw]:    ../../1_Ventilator_System_Design/Electrical_System/wiring.md
-[15rw]:    ../../2_Research_&_Development/Project-Pinch_Valve 
 [16rw]:    ../../2_Research_&_Development/Project-Venturi
 [17ali]:   https://www.aliexpress.com/item/32698107687.html
 [17x-won]: https://wonsmart-motor.en.made-in-china.com/product/hsjxFewOppVg/China-Air-Pump12V-Brushless-Motor-12V-Blower-Fan-Driver.html
@@ -88,4 +86,23 @@ This build depends on already having a Brain build, which has its own BOM [here]
 
 **Optional additions (toppings) for your pizza build:**
 These can be added or customized based on what functions you need to test in your pizza build.
-* **Reduced compliance test lung:** To test basic function a ventilator check lung or a breathing bag is sufficient, but can really only work up to 10cmH2O. To be able to test higher PIP values, you need to reduce the compliance of the lung so you don’t just inflate it like a balloon (or pop it). View more details on reduced compliance test lung [here](reduced_compliance_test_lung.md).
+* **Reduced compliance test lung:** To test basic function a ventilator check lung or a breathing bag is sufficient,
+but can really only work up to 10cmH2O. To be able to test higher PIP values, you need to reduce the compliance of the
+lung so you don’t just inflate it like a balloon (or pop it). View more details on reduced compliance test lung [here](pizza_compliance_test_lung).
+* **Binary solenoid:** One option for inhale or exhale valve is a binary solenoid, which either opens or closes.
+The sub-assembly for this component is documented [here](pizza_binary_solenoid). The PCB can only power/control one such
+solenoid, so for more advanced designs you will want to (also) start using other valves.
+* **Proportional pinch valve** A proportional pinch valve can control the airflow constriction with much better precision.
+Multiple such pinch valves can be used in our prototype, the part is buildable from 3d-printed plastic components and
+easily obtainable generic parts. Instructions are [here](../../2_Research_&_Development/Project-Pinch_Valve).
+You may need anywhere between 1 and 3 such pinch valves, depending on the complexity of your system.
+
+
+## Assembly instructions
+
+![Pizza pneumatics](pizza_pneumatics.png)
+[Pneumatics diagram source](pizza_pneumatics.eps)
+
+Note: mind which tubes go into the bottom and top ports of the sensors on the PCB.
+
+![Pizza drawing](pizza_diagram.jpg)

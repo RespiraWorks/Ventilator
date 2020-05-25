@@ -38,8 +38,6 @@ This build depends on already having a Brain build, which has its own BOM [here]
 | ------ |---------:| ------------- | ------------------- | ------------:|:---------:|-----------------| ----- |
 | 1      |        - | McMaster-Carr | 53415K217           | 12.89 / 10   | buy       | [C][1mcmc]      | Barbed fitting 3/4" |
 | 2      |        - | McMaster-Carr | 5463K565            | 10.53 / 10   | buy       | [C][2mcmc]      | Barbed tee-fitting 3/4" |
-| 3      |        - | McMaster-Carr | 5463K33             | 3.93 / 10    | buy       | [C][3mcmc]      | Barbed fitting 3/32" for venturis |
-| 4      |        - | McMaster-Carr | 5463K37             | 4.74 / 10    | buy       | [C][4mcmc]      | Barbed fitting 3/32" for venturis |
 | 5      |        2 |               |                     | 12.95 / 2    | buy       | [Z][5amzn]      | 2pac of ball valves 1/2", diameter of current design but may not be for long |
 | 5a     |        2 |               |                     | 13.45 / 2    | buy       | [Z][5a-amzn]    | 2pac of ball valves 5/8", alternative for uncertain design changes |
 | 5b     |        2 |               |                     | 13.45 / 2    | buy       | [Z][5b-amzn]    | 2pac of ball valves 3/4", alternative for uncertain design changes |
@@ -63,8 +61,6 @@ This build depends on already having a Brain build, which has its own BOM [here]
 
 [1mcmc]:   https://www.mcmaster.com/53415K217
 [2mcmc]:   https://www.mcmaster.com/5463K565
-[3mcmc]:   https://www.mcmaster.com/5463K33
-[4mcmc]:   https://www.mcmaster.com/5463K37
 [5amzn]:   https://www.amazon.com/gp/product/B07C5B4S1S
 [5a-amzn]: https://www.amazon.com/gp/product/B07C5FVN9K
 [5b-amzn]: https://www.amazon.com/gp/product/B07C5FVSQB
@@ -90,19 +86,8 @@ This build depends on already having a Brain build, which has its own BOM [here]
 [19rw]:    ../../1_Ventilator_System_Design/Electrical_System/wiring.md
 [20mcmc]:    https://www.mcmaster.com/5463K44
 
-## Tooling BOM
-
-We try to make few assumptions about what tools you have. Here are recommended tools you might need.
-
-| RefDes | Quantity | Manufacturer  | Part number         | Price($) | Sources         | Notes |
-| ------ |---------:| ------------- | ------------------- | --------:|-----------------| ----- |
-| T1     |        1 | McMaster-Carr | 26955A86            |     6.76 | [C][t1mcmc]     | Tap for 10-32 threads for venturis. Edwin notes that 3d printed fittings may not have good enough threads and you might need to chase them with a hand tap. |
-| T2     |        1 | Kaufhof       | KF-ATW-0053         |    14.11 | [Z][t2amzn]     | Hand-operated tap wrenches, for use with T1 above |
-
-[t1mcmc]:https://www.mcmaster.com/26955A86
-[t2amzn]:https://www.amazon.com/gp/product/B003GKJYKI
-
 ## Pizza Toppings
 
-**Optional:**
-To test basic function a ventilator check lung or a breathing bag is sufficient, but can really only work up to 10cmH2O. To be able to test higher PIP values, you need to reduce the conpliance of the lung so you don’t just inflate it like a balloon (or pop it). View more details on reduced compliance test lung [here](reduced_compliance_test_lung.md).
+**Optional additions (toppings) for your pizza build:**
+These can be added or customized based on what functions you need to test in your pizza build.
+* **Reduced compliance test lung:** To test basic function a ventilator check lung or a breathing bag is sufficient, but can really only work up to 10cmH2O. To be able to test higher PIP values, you need to reduce the compliance of the lung so you don’t just inflate it like a balloon (or pop it). View more details on reduced compliance test lung [here](reduced_compliance_test_lung.md).

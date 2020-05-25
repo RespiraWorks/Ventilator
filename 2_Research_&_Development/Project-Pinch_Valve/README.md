@@ -76,10 +76,10 @@ Original design found
 
 ![Components](pinch-valve-components.jpg)
 
-  Assembly         |  Image         |Notes           
-:------------------:|:-----------------:|:-------------------------:
-Rotor assembly  |  ![Assembled](pinch-assembling1.jpg)  |  3mm hex and 2.5mm hex driver are required for assembling rotor (see photo above).
-Base assembly  |  ![Assembled](pinch-assembling2.jpg)  |  2mm hex driver is required for attaching base (see photo above).\
+Rotor Assembly                     |  Base Assembly           |   
+:---------------------------------:|:-------------------------: 
+![Assembled](pinch-assembling1.jpg)|  ![Assembled](pinch-assembling2.jpg)  
+3mm hex and 2.5mm hex driver are required for assembling rotor (see photo above).|  2mm hex driver is required for attaching base (see photo above).\
 
 Assembled it should look something like this:
 

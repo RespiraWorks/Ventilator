@@ -24,7 +24,6 @@ If you decide to buy them, do so at your own risk... oh, and thank you ;).**
 
 * **Z** = Amazon
 * **C** = McMaster-Carr
-* **B** = Built by RespiraWorks (or you)
 
 ## Planning
 
@@ -90,19 +89,25 @@ A metric version of the pneumatic system is also anticipated. If you can help wi
 [b6mcmc]: https://www.mcmaster.com/5463K651
 [b7mcmc]: https://www.mcmaster.com/4596K33
 [b8mcmc]: https://www.mcmaster.com/53415K217
-[5b-amzn]: https://www.amazon.com/gp/product/B07C5FVSQB
+[b9amzn]: https://www.amazon.com/gp/product/B07C5FVSQB
+
+### Metric version
+
+**TODO: document how to build with metric components**
 
 
 ### Tools
 
-Assembling the pneumatic system will require the following tools:
+Assembling the pneumatic system will likely need the following tools.
+T1 might be enough and T4 might be unnecessary.
+Also, scissors or a sharp knife might be ok instead of T3.
 
 | Item | Manufacturer  | Part number        | Price($) | Sources         | Notes |
 | ---- |--------------:| ------------------ | -------- | ---------------:|------ |
 | T1   |               |                    |    13.00 | [Z][t1amzn]     | 8 inch slip-joint pliers, for clamping tubes onto fittings | 
 | T2   |               |                    |    19.99 | [Z][t2amzn]     | Adjustable wrench, at least 1" wide opening, for screwing in NTP fittings |
 | T3   |               |                    |    14.69 | [Z][t3amzn]     | Pipe and PVC cutter, for cutting tubing |
-| T3   |               |                    |     8.90 | [Z][t4amzn]     | Long nose pliers, for removing herbie clips |
+| T4   |               |                    |     8.90 | [Z][t4amzn]     | Long nose pliers, for removing herbie clips |
 
 [t1amzn]: https://www.amazon.com/TEKTON-2-Inch-Joint-Pliers-37122/dp/B00KLY1FAY
 [t2amzn]: https://www.amazon.com/GETUPOWER-10-Inch-Adjustable-Opening-Vanadium/dp/B07RGV2VK1

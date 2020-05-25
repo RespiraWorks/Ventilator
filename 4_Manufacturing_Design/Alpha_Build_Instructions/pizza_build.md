@@ -118,6 +118,7 @@ Also, scissors or a sharp knife might be ok instead of T3.
 ## Sub-assemblies
 
 The following are essential sub-assemblies that you'll need no matter what additional/optional "toppings" you chose to have. 
+
 * [Blower assembly](pizza_blower) - the main driver of pressure in the pneumatic circuit
 * [Basic test lung](pizza_test_lung) - something to simulate a lung
 * 2x [Venturi flow sensors](../../2_Research_&_Development/Project-Venturi) and corresponding tubing, to provide the controller feedback
@@ -127,6 +128,7 @@ The following are essential sub-assemblies that you'll need no matter what addit
 
 **Optional additions (toppings) for your pizza build:**
 These can be added or customized based on what functions you will be developing or testing.
+
 * **Binary solenoid:** One option for inhale or exhale valve is a binary solenoid, which either opens or closes.
 The sub-assembly for this component is documented [here](pizza_binary_solenoid). The PCB can only power/control one such
 solenoid, so for more advanced designs you will want to (also) start using other valves.
@@ -137,8 +139,8 @@ You may need anywhere between 1 and 3 such pinch valves, depending on the comple
 * **Reduced compliance test lung:** To test basic function a ventilator check lung or a breathing bag is sufficient,
 but can really only work up to 10cmH2O. To be able to test higher PIP values, you need to reduce the compliance of the
 lung so you don’t just inflate it like a balloon (or pop it). View more details on reduced compliance test lung [here](pizza_compliance_test_lung).
+* **Blower bypass:** The purpose of the blower bypass is to prevent strain on blower when the inhale pinch valve is closed. The sub-assembly for this component is documented [here](pizza_blower_bypass).
 * **TODO: check valve**
-* **TODO: blower bypass**
 
 ## Assembly instructions
 

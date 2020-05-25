@@ -1,93 +1,152 @@
 # Pizza Build
 
-**DISCLAIMER: These are live documents.
-There are duplicate and alternative items for undecided aspects of the physical design. 
-RespiraWorks may or may not compensate you for any of these parts if you choose to buy them. Please connect with Edwin or Ethan first.
-If you decide to buy them, do so at your own risk... oh, and thank you ;).**
+**WARNING: This is not intended to be used on patients and lacks a number of safety features.**
 
-This build consists of a functional ventilator pneumatic assembly with controller and user interface. This build is adequate for integration and systems testing.
+This is a ventilator prototype for testing and development.
+The build consists of a functional ventilator pneumatic assembly with controller and user interface. This build is adequate for integration and systems testing.
 
-![Pizza pneumatics](pizza_pneumatics_2.png)
+It lacks heating, humidification, battery backup and air filtering.
 
-Note: the sensing tube diagram above is not correct, please refer the the drawing below for how to connect the venturis pressure sensors on the PCB, and mind which tubes go into the bottom and top port of the sensors on the PCB.
-
-It lacks heating, oxygen mixing, humidification, battery backup and air filtering.
 It is also not enclosed like the final product and is meant to be operated in an open layout on your table, like a pizza.
 
-![Pizza drawing](pizza_photo.jpg)
+It can also come in various configurations, depending on your testing needs:
 
-**This is not intended to be used on patients and lacks a number of safety features.**
+| Solenoid valve setup  |  Pinch valve setup   | Blower bypass setup     |           
+|:---------------------:|:--------------------:|:-----------------------:|
+![](photo_solenoid.jpg) |![](photo_pinch.jpg)  |![](photo_advanced.jpg)  |
 
-This build depends on already having a Brain build, which has its own BOM [here](brain_build.md).
-
-![Pizza drawing](pizza_diagram.jpg)
+**DISCLAIMER: These are live documents.
+There are duplicate and alternative items for undecided aspects of the physical design. 
+RespiraWorks may or may not compensate you for any of these parts if you choose to buy them. Please connect with Edwin, Martin or Ethan first.
+If you decide to buy them, do so at your own risk... oh, and thank you ;).**
 
 ## Purchasing source abbreviations
 
-* **A** = Ali Express
 * **Z** = Amazon
-* **E** = ebay
 * **C** = McMaster-Carr
-* **M** = Mouser
-* **W** = Wonsmart
-* **B** = Built by RespiraWorks
 
-## Parts BOM
+## Planning
 
-| RefDes | Quantity | Manufacturer  | Part #              | Price($)     | Do what?  | Sources         | Notes |
-| ------ |---------:| ------------- | ------------------- | ------------:|:---------:|-----------------| ----- |
-| 1      |        - | McMaster-Carr | 53415K217           | 12.89 / 10   | buy       | [C][1mcmc]      | Barbed fitting 3/4" |
-| 2      |        - | McMaster-Carr | 5463K565            | 10.53 / 10   | buy       | [C][2mcmc]      | Barbed tee-fitting 3/4" |
-| 5      |        2 |               |                     | 12.95 / 2    | buy       | [Z][5amzn]      | 2pac of ball valves 1/2", diameter of current design but may not be for long |
-| 5a     |        2 |               |                     | 13.45 / 2    | buy       | [Z][5a-amzn]    | 2pac of ball valves 5/8", alternative for uncertain design changes |
-| 5b     |        2 |               |                     | 13.45 / 2    | buy       | [Z][5b-amzn]    | 2pac of ball valves 3/4", alternative for uncertain design changes |
-| 6      |        - |               |                     | 14.26 / 10ft | buy       | [Z][6amzn]      | 5/8" tubing, fits current venturi design |
-| 6a     |        - |               |                     | 42.99 / 10ft | buy       | [Z][6a-amzn] [C][6a-mcmc]   | 3/4" tubing, alternative because we are probably switching to this diameter |
-| 7      |        - |               |                     | 6.49 / 16ft  | buy       | [Z][7amzn] [C][7mcmc]     | 2.5 mm tubing (for sensors?) |
-| 8      |        1 |               |                     | 19.99        | buy       | [Z][8amzn] [C][8mcmc]     | 12v Power supply adapter (obsolete? opt for 8a?) |
-| 8a     |        1 |               |                     | 13.99        | buy       | [Z][8a-amzn] [C][8a-mcmc]   | 12v Power supply adapter, better than 8 above |
-| 9      |        2 |               |                     | 16.99 / 2    | buy       | [Z][9amzn]      | CPAP tubing |
-| 10     |        1 |               |                     | 15.00        |*ask first*| [E][10ebay]     | test "lung", ask build-team if they have extra |
-| 11     |        1 |               |                     | 6.98         | buy       | [Z][11amzn]     | use these to simulate lung compliance |
-| 12     |        1 | RespiraWorks  | PCB1                |              | **ask**   | [B][12rw]       | RespiraWorks Ventilator Mainboard Rev 1 PCB |
-| 13     |        1 | RespiraWorks  | Power input 1       |              | **ask**   | [B][13rw]               | Power Input cable |
-| 15     |        1 | RespiraWorks  | PinchValve1.4       |              | **ask**   | [B][15rw]       | Marc-designed stepper pinch valve rev 1.4 |
-| 16     |        2 | RespiraWorks  | Venturi2            |              | **ask**   | [B][16rw]       | Ethan-designed 10-32 threaded venturis Rev 2 |
-| 17     |        1 |               | WS7040-12-X200N     |        52.65 |*ask first*| [A][17ali]      | 12v blower and driver. Make sure to choose w/driver when ordering. |
-| 17x    |        1 |               | WS1208DYY01V03      |        24.00 |*ask first*| [W][17x-won]    | blower driver, in case blower above did not come with driver. |
-| 18     |        1 | RespiraWorks  | blower control cable|              | **ask**   | [B][18rw]               | blower control cable |
-| 19     |        1 | RespiraWorks  | blower power cable  |              | **ask**   | [B][19rw]               | blower power cable |
-| 20     |        1 | McMaster-Carr  | 5463K44  | 7.39 / 10 | buy   | [C][20mcmc] | sensing tube 3/23" t-junction |
+Before you start, it would be wise to plan the configuration you will build and order adequate amounts of components.
+Try to plan for what you'll need in a few weeks rather than what you need now.
+Supply chains are quirky and shipping times can be long, so your surprise at having missed something will soon turn to frustration.
+The goal of this documentation has been precisely to help you avoid unproductive waiting. **PLAN NOW!**
 
-[1mcmc]:   https://www.mcmaster.com/53415K217
-[2mcmc]:   https://www.mcmaster.com/5463K565
-[5amzn]:   https://www.amazon.com/gp/product/B07C5B4S1S
-[5a-amzn]: https://www.amazon.com/gp/product/B07C5FVN9K
-[5b-amzn]: https://www.amazon.com/gp/product/B07C5FVSQB
-[6amzn]:   https://www.amazon.com/gp/product/B00LX6MB6G
-[6a-amzn]: https://www.amazon.com/gp/product/B079WRWH34
-[6a-mcmc]: https://www.mcmaster.com/5233K71
-[7amzn]:   https://www.amazon.com/gp/product/B01F4BJ7PI
-[7mcmc]:   https://www.mcmaster.com/50315K68
-[8mcmc]:   https://www.mcmaster.com/3791N024
-[8amzn]:   https://www.amazon.com/gp/product/B00Z9X4GLW
-[8a-amzn]: https://www.amazon.com/gp/product/B01MYXTA6N
-[8a-mcmc]:https://www.mcmaster.com/3824N132
-[9amzn]:   https://www.amazon.com/gp/product/B01N14F1MV
-[10ebay]:  https://www.ebay.com/itm/PORTEX-Adult-Disposable-Anesthesia-Breathing-Circuit-3L-Breathing-Bag-370924/362943456196
-[11amzn]:  https://www.amazon.com/gp/product/B018WPZCSO
-[12rw]:    https://github.com/RespiraWorks/pcbreathe/tree/master/NIGHTLY/20200424v2-RELEASE-CANDIDATE-2
-[13rw]:    ../../1_Ventilator_System_Design/Electrical_System/wiring.md
-[15rw]:    ../../2_Research_&_Development/Project-Pinch_Valve/README.md 
-[16rw]:    ../../2_Research_&_Development/Project-Venturi/README.md
-[17ali]:   https://www.aliexpress.com/item/32698107687.html
-[17x-won]: https://wonsmart-motor.en.made-in-china.com/product/hsjxFewOppVg/China-Air-Pump12V-Brushless-Motor-12V-Blower-Fan-Driver.html
-[18rw]:    ../../1_Ventilator_System_Design/Electrical_System/wiring.md
-[19rw]:    ../../1_Ventilator_System_Design/Electrical_System/wiring.md
-[20mcmc]:    https://www.mcmaster.com/5463K44
+Read over as much of the following documentation as you can and then come back to this point.
 
-## Pizza Toppings
+Now, contact the team to see if we have components in stock that we can send you.
+Once you know what you are getting from "headquarters", only then should you start filling up your baskets.
+Also ask the team if anything should be ordered on the company account.
+
+## Essentials
+
+The first thing you will need is a [Brain build](pizza_brain), which contains the computing components.
+
+The next thing you need to do is decide on what internal diameter the pneumatic system will use. Early prototypes have
+been using 5/8" Inner Diameter (henceforth, ID) but for beta we plan to transition to 3/4"ID. There wille be a few
+segments of the pneumatic system that may unavoidably use different diameter tubing. 
+A metric version of the pneumatic system is also anticipated. If you can help with this, please contribute.
+
+### 5/8"ID tubing components
+
+| Item | Quantity | Manufacturer  | Part #              | Price($)     |  Sources        | Notes |
+| ---- |---------:| ------------- | ------------------- | ------------:|-----------------| ----- |
+| a1   |      5ft | McMaster-Carr | 5234K57             | 21.50 / 5ft  | [C][a1mcmc]     | Soft latex tubing, 5/8" ID, 7/8" OD |
+| a2   |      5ft | Duda Energy   | LPpvc063-025ft      | 20.11 / 25ft | [Z][a2amzn]     | 5/8" tubing, alternative to *a1*, not as good, too hard |
+| a3   |       20 | McMaster-Carr | 9579K72             | 12.21 / 20   | [C][a3mcmc]     | Herbie clip J (20.3-23mm) for clamping 7/8"OD tubing, you'll need plenty |
+| a4   |       ~6 | McMaster-Carr | 5463K646            |  6.60 / 10   | [C][a4mcmc]     | Reducer 5/8"ID <-> 1/2"ID, single barb, for adapting to pinch valve tubing |
+| a5   |       ~3 | McMaster-Carr | 5372K128            | 2.82         | [C][a5mcmc]     | 1/2 NTP female tee, if you plan to have bypass or oxygen limb |
+| a6   |       ~5 | McMaster-Carr | 5372K128            | 4.89 / 10    | [C][a6mcmc]     | 1/2 NTP male <-> 5/8"ID multibarbed, for tee junctions, if you plan to have bypass or oxygen limb |
+| a7   |        2 |               |                     | 13.45 / 2    | [Z][a7amzn]     | 2pac of ball valves 5/8"ID |
+
+[a1mcmc]: https://www.mcmaster.com/5234K57
+[a2amzn]: https://www.amazon.com/gp/product/B00LX6MFYE?th=1
+[a3mcmc]: https://www.mcmaster.com/9579K72
+[a4mcmc]: https://www.mcmaster.com/5463K646
+[a5mcmc]: https://www.mcmaster.com/4880K154
+[a6mcmc]: https://www.mcmaster.com/5372K128
+[a7amzn]: https://www.amazon.com/gp/product/B07C5FVN9K
+
+### 3/4"ID tubing components
+
+| Item | Quantity | Manufacturer  | Part #              | Price($)     |  Sources       | Notes |
+| ---- |---------:| ------------- | ------------------- | ------------:|----------------| ----- |
+| b1   |      5ft |               |                     | 22.99 / 5ft  | [Z][b1amzn]    | soft 3/4"ID 1"OD tubing |
+| b2   |      5ft | McMaster-Carr | 5233K71             | 14.20 / 10ft | [C][b2mcmc]    | hard 3/4"ID 1"OD tubing, alternative to b1, not as fun to work with, not for medical use |
+| b3   |       20 | McMaster-Carr | 9579K73             | 12.24 / 20   | [C][b3mcmc]    | Herbie clip K (22.2-24.9mm) for clamping 1"OD tubing, works better for soft tubing |
+| b4   |       20 | McMaster-Carr | 9579K74             | 12.33 / 20   | [C][b4mcmc]    | Herbie clip L (24.5-27.6mm) for clamping 1"OD tubing, maybe works better for hard tubing? |
+| b5   |        1 | McMaster-Carr | 5463K167            | 13.16 / 10   | [C][b5mcmc]    | 3/4"ID <-> 5/8"ID adapter single barb, to interface with blower sub-assembly |
+| b6   |       ~6 | McMaster-Carr | 5463K651            | 10.20 / 10   | [C][b6mcmc]    | 3/4"ID <-> 1/2"ID adapter, to interface with pinch valve assembly |
+| b7   |       ~3 | McMaster-Carr | 4596K33             | 4.18         | [C][b7mcmc]    | 3/4 NTP female tee, if you plan to have bypass or oxygen limb |
+| b8   |       ~5 | McMaster-Carr | 53415K217           | 12.89 / 10   | [C][b8mcmc]    | 3/4 NTP male <-> 3/4"ID single barb, for tee junctions, if you plan to have bypass or oxygen limb |
+| b9   |        2 |               |                     | 13.45 / 2    | [Z][b9amzn]    | 2pac of ball valves 3/4"ID |
+
+[b1amzn]: https://www.amazon.com/gp/product/B01LZ5ZK53
+[b2mcmc]: https://www.mcmaster.com/5233K71
+[b3mcmc]: https://www.mcmaster.com/9579K73
+[b4mcmc]: https://www.mcmaster.com/9579K74
+[b5mcmc]: https://www.mcmaster.com/5463K167
+[b6mcmc]: https://www.mcmaster.com/5463K651
+[b7mcmc]: https://www.mcmaster.com/4596K33
+[b8mcmc]: https://www.mcmaster.com/53415K217
+[b9amzn]: https://www.amazon.com/gp/product/B07C5FVSQB
+
+### Metric version
+
+**TODO: document how to build with metric components**
+
+
+### Tools
+
+Assembling the pneumatic system will likely need the following tools.
+T1 might be enough and T4 might be unnecessary.
+Also, scissors or a sharp knife might be ok instead of T3.
+
+| Item | Manufacturer  | Part number        | Price($) | Sources         | Notes |
+| ---- |--------------:| ------------------ | -------- | ---------------:|------ |
+| T1   |               |                    |    13.00 | [Z][t1amzn]     | 8 inch slip-joint pliers, for clamping tubes onto fittings | 
+| T2   |               |                    |    19.99 | [Z][t2amzn]     | Adjustable wrench, at least 1" wide opening, for screwing in NTP fittings |
+| T3   |               |                    |    15.88 | [Z][t3amzn]     | Pipe and PVC cutter, for cutting tubing |
+| T4   |               |                    |     8.90 | [Z][t4amzn]     | Long nose pliers, for removing herbie clips |
+
+[t1amzn]: https://www.amazon.com/TEKTON-2-Inch-Joint-Pliers-37122/dp/B00KLY1FAY
+[t2amzn]: https://www.amazon.com/GETUPOWER-10-Inch-Adjustable-Opening-Vanadium/dp/B07RGV2VK1
+[t3amzn]: https://www.amazon.com/gp/product/B07Y997XKC
+[t4amzn]: https://www.amazon.com/Tools-VISE-GRIP-Pliers-6-Inch-2078216/dp/B000A0OW2M
+
+
+## Sub-assemblies
+
+The following are essential sub-assemblies that you'll need no matter what additional/optional "toppings" you chose to have. 
+* [Blower assembly](pizza_blower) - the main driver of pressure in the pneumatic circuit
+* [Basic test lung](pizza_test_lung) - something to simulate a lung
+* 2x [Venturi flow sensors](../../2_Research_&_Development/Project-Venturi) and corresponding tubing, to provide the controller feedback
+* Some sort of valve or valves, which leads us to...
+
+## Optional components
 
 **Optional additions (toppings) for your pizza build:**
-These can be added or customized based on what functions you need to test in your pizza build.
-* **Reduced compliance test lung:** To test basic function a ventilator check lung or a breathing bag is sufficient, but can really only work up to 10cmH2O. To be able to test higher PIP values, you need to reduce the compliance of the lung so you don’t just inflate it like a balloon (or pop it). View more details on reduced compliance test lung [here](reduced_compliance_test_lung.md).
+These can be added or customized based on what functions you will be developing or testing.
+* **Binary solenoid:** One option for inhale or exhale valve is a binary solenoid, which either opens or closes.
+The sub-assembly for this component is documented [here](pizza_binary_solenoid). The PCB can only power/control one such
+solenoid, so for more advanced designs you will want to (also) start using other valves.
+* **Proportional pinch valve:** A proportional pinch valve can control the airflow constriction with much better precision.
+Multiple such pinch valves can be used in our prototype, the part is buildable from 3d-printed plastic components and
+easily obtainable generic parts. Instructions are [here](../../2_Research_&_Development/Project-Pinch_Valve).
+You may need anywhere between 1 and 3 such pinch valves, depending on the complexity of your system.
+* **Reduced compliance test lung:** To test basic function a ventilator check lung or a breathing bag is sufficient,
+but can really only work up to 10cmH2O. To be able to test higher PIP values, you need to reduce the compliance of the
+lung so you don’t just inflate it like a balloon (or pop it). View more details on reduced compliance test lung [here](pizza_compliance_test_lung).
+* **TODO: check valve**
+* **TODO: blower bypass**
+
+## Assembly instructions
+
+Use the following diagrams as well as the pictures of the most recent builds at the top of the page to help you assemble this lego set.
+
+![Pizza pneumatics](pizza_pneumatics.png)
+[Pneumatics diagram source](pizza_pneumatics.eps)
+
+Note: mind which tubes go into the bottom and top ports of the sensors on the PCB.
+
+![Pizza drawing](pizza_diagram.jpg)

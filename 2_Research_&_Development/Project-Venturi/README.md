@@ -8,10 +8,12 @@ You can use a zip tie or hose clamp to improve the seal.
 
 The plan is for [beta](/../../4_Manufacturing_Design/Beta_Build_Instructions/README.md) to use 3/4"ID tubing throughout. The venturi will most likely be redesigned to have barbs that fit 3/4"ID tubing directly.
 
-There is an arrow printed onto the body to indicate the direction of flow. 
+The flow sensor we are using has 2.5 mm or 3/32" barbs, which is too small for 1/8" tubing, therefore this model has #10-32 tapped holes.
+
+There is an arrow printed onto the body to indicate the direction of flow.
 
 
-**TODO:** link and explain STL files
+**TODO:** link and explain STEP files
 
 ## Transfer function
 
@@ -40,18 +42,20 @@ Adjust values in the spreadsheet above accordingly to see how it will perform in
 
 * **C** = McMaster-Carr
 * **Z** = Amazon
+* **3D** = 3D printed
 
 ### Parts BOM
 
 | RefDes | Quantity | Manufacturer  | Part number         | Price($) | Do what? | Sources         | Notes |
-| ------ |---------:| ------------- | ------------------- | --------:| ----- |-----------------| ----- |
-| 1      |        - | McMaster-Carr | 5463K33             | 3.93 / 10    | buy       | [C][1mcmc]      | Barbed fitting 3/32" for venturis |
+| ------ |---------:| ------------- | ------------------- | --------:| ------- |-----------------| ----- |
+| 1      |        1 | RespiraWorks  |                     |          | **ask** | **3D**            | 3D-printed venturi |
+| 2      |        2 | McMaster-Carr | 5463K33             | 3.93 / 10| buy     | [C][1mcmc]      | Barbed fitting 3/32" AKA nipple |
 
 [1mcmc]:   https://www.mcmaster.com/5463K33
 
 ### Tooling BOM
 
-We try to make few assumptions about what tools you have. Here are recommended tools you might need.
+We try to make few assumptions about what tools you have. Here are recommended tools you might need. You might already have some of these.
 
 | RefDes | Quantity | Manufacturer  | Part number         | Price($) | Sources         | Notes |
 | ------ |---------:| ------------- | ------------------- | --------:|-----------------| ----- |
@@ -65,9 +69,11 @@ We try to make few assumptions about what tools you have. Here are recommended t
 
 ![Nipples](venturi-nipples.jpg)
 
-No hand-tapping was required to insert nipples. 
+Screw the nipples into the 3d-printed venturi. There are threads in the print but they don’t always come out right if resin get a trapped in the grooves while it prints,
+ so you might a tap (listed in tooling BOM above) to clean the threads. You do not need a bottoming tap, there is enough depth in the holes and the threads are short.
+In the latest version, however, no hand-tapping was required to insert nipples. With good enough 3d priting, this step should not be necessary. 
 
 **Testing:**
-Check for leaks by plugging the holes and pulling some vacuum. There are threads in the print but they don’t always come out right if resin get a trapped in the grooves while it prints.
+Check for leaks by plugging the holes and pulling some vacuum. 
 * Plug one large end, plug both nipples, suck on the remaining end.  If you have a vacuum pump handy do a regular vacuum hold leak test
 * Or, blow into each port with your fingers over the other three.

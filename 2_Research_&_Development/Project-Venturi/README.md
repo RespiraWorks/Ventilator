@@ -47,12 +47,18 @@ Adjust values in the spreadsheet above accordingly to see how it will perform in
 
 ### Parts BOM
 
-| RefDes | Quantity | Manufacturer  | Part number         | Price($) | Do what? | Sources        | Notes |
-| ------ |---------:| ------------- | ------------------- | --------:| ------- |-----------------| ----- |
-| 1      |        1 | RespiraWorks  |                     |          | **ask** | **3D**          | 3D-printed venturi |
-| 2      |        2 | McMaster-Carr | 5463K33             | 3.93 / 10| buy     | [C][1mcmc]      | Barbed fitting 3/32" AKA nipple |
+| Item | Quantity | Manufacturer  | Part number         | Price($)     | Do what? | Sources    | Notes |
+| ---- |---------:| ------------- | ------------------- | ------------:| ------- |-------------| ----- |
+| 1    |        1 | RespiraWorks  |                     |              | **ask** | **3D**      | 3D-printed venturi |
+| 2    |        2 | McMaster-Carr | 5463K33             | 3.93 / 10    | buy     | [C][2mcmc]  | Barbed fitting 3/32" AKA nipple |
+| 3    |        1 | McMaster-Carr | 5463K44             | 7.39 / 10    | buy     | [C][3mcmc]  | sensing tube 3/23" t-junction |
+| 4    |        - |               |                     | 6.49 / 16ft  | buy     | [Z][4amzn]  | 2.5 mm tubing for connecting to sensors |
+| 5    |        - |               |                     | 5.75 / 25ft  | buy     | [C][5mcmc]  | 2.5 mm tubing, alternative to *3* |
 
-[1mcmc]:   https://www.mcmaster.com/5463K33
+[2mcmc]:   https://www.mcmaster.com/5463K33
+[3mcmc]:    https://www.mcmaster.com/5463K44
+[4amzn]:   https://www.amazon.com/gp/product/B01F4BJ7PI
+[5mcmc]:   https://www.mcmaster.com/50315K68
 
 ### Tooling BOM
 
@@ -76,7 +82,10 @@ In such a case you might need a tap (listed in tooling BOM above) to clean the t
 
 In the latest tested version, no hand-tapping was required to insert nipples. With good enough 3d printing, this step should not be necessary. 
 
+**TODO:** instructions on connecting tubes to sensors
+
 ## Testing
 Check for leaks by plugging the holes and pulling some vacuum. 
 * Plug one large end, plug both nipples, suck on the remaining end.  If you have a vacuum pump handy do a regular vacuum hold leak test.
 * Or, blow into each port with your fingers over the other three.
+

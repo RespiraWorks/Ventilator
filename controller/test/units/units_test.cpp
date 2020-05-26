@@ -57,6 +57,14 @@ TEST(Units, Pressure) {
   EXPECT_FLOAT_EQ(pressure.kPa(), 3.0f);
   pressure -= kPa(5);
   EXPECT_FLOAT_EQ(pressure.kPa(), -2.0f);
+  pressure /= -2.0f;
+  EXPECT_FLOAT_EQ(pressure.kPa(), 1.0f);
+  pressure *= -5.0f;
+  EXPECT_FLOAT_EQ(pressure.kPa(), -5.0f);
+
+  EXPECT_FLOAT_EQ((cmH2O(1) * 10.1972f).kPa(), 1);
+  EXPECT_FLOAT_EQ((10.1972f * cmH2O(1)).kPa(), 1);
+  EXPECT_FLOAT_EQ((kPa(1) / 10.1972f).cmH2O(), 1);
 }
 
 TEST(Units, Length) {
@@ -76,6 +84,14 @@ TEST(Units, Length) {
   EXPECT_FLOAT_EQ(length.meters(), 3.0f);
   length -= meters(5);
   EXPECT_FLOAT_EQ(length.meters(), -2.0f);
+  length /= -2.0f;
+  EXPECT_FLOAT_EQ(length.meters(), 1.0f);
+  length *= -5.0f;
+  EXPECT_FLOAT_EQ(length.meters(), -5.0f);
+
+  EXPECT_FLOAT_EQ((millimeters(1) * 1000.0f).meters(), 1);
+  EXPECT_FLOAT_EQ((1000.0f * millimeters(1)).meters(), 1);
+  EXPECT_FLOAT_EQ((meters(1) / 1000.0f).millimeters(), 1);
 }
 
 TEST(Units, VolumetricFlow) {
@@ -112,6 +128,7 @@ TEST(Units, VolumetricFlow) {
   EXPECT_FLOAT_EQ(flow.liters_per_sec(), -5.0f);
 
   EXPECT_FLOAT_EQ((liters_per_sec(1) * 1000.0f).cubic_m_per_sec(), 1);
+  EXPECT_FLOAT_EQ((1000.0f * liters_per_sec(1)).cubic_m_per_sec(), 1);
   EXPECT_FLOAT_EQ((cubic_m_per_sec(1) / 1000.0f).liters_per_sec(), 1);
 
   EXPECT_FLOAT_EQ((cubic_m(1) / seconds(1)).cubic_m_per_sec(), 1);

@@ -13,22 +13,44 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#ifndef TRACE_H
-#define TRACE_H
+#ifndef TRACE_H_
+#define TRACE_H_
 
+#include "circular_buffer.h"
 #include "debug.h"
+#include "vars.h"
+
+#define TRACE_VAR_CT 4
 
 // Called from the main loop
 void TraceSample();
 
-class TraceCmd : public DebugCmd {
-public:
-  TraceCmd();
-  // The trace command is used to download data from the trace buffer.
-  DbgErrCode HandleCmd(uint8_t *data, int *len, int max);
-  DbgErrCode ReadTraceBuff(uint8_t *data, int *len, int max);
-};
+// local functions
+int CountActiveVars(DebugVar *vptr[]);
 
-extern TraceCmd traceCmd;
+// Trace buffer
+extern CircBuff<uint32_t, 0x4000> traceBuffer;
 
-#endif
+// The trace control variable is a bit-mapped parameter which
+// is used to start/stop the trace and read its status.
+// Right now only bit 0 is in use.  Set this to start capturing
+// data to the trace buffer.  It will auto-clear when the buffer
+// is full
+extern int32_t traceCtrl;
+
+// The trace period gives the period of the trace data capture
+// in units of loop cycles.
+extern int32_t tracePeriod;
+
+// Trace count is used to count the period
+extern int32_t traceCount;
+
+// These parameters give the variable IDs being captured
+extern int32_t traceVar[TRACE_VAR_CT];
+
+// This gives the number of samples collected so far.
+// A sample is one group of trace variables, so if there are 3
+// trace variables enabled then each sample is 3 x 32-bit values.
+extern int32_t traceSamp;
+
+#endif // TRACE_H_

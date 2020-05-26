@@ -31,34 +31,12 @@ limitations under the License.
 #include <optional>
 #include <stdint.h>
 
-// local functions
-static int CountActiveVars(DebugVar *vptr[]);
-
-// Trace buffer
-static CircBuff<uint32_t, 0x4000> traceBuffer;
-
-// The trace control variable is a bit-mapped parameter which
-// is used to start/stop the trace and read its status.
-// Right now only bit 0 is in use.  Set this to start capturing
-// data to the trace buffer.  It will auto-clear when the buffer
-// is full
-static int32_t traceCtrl;
-
-// The trace period gives the period of the trace data capture
-// in units of loop cycles.
-static int32_t tracePeriod;
-
-// Trace count is used to count the period
-static int32_t traceCount;
-
-// This gives the number of samples collected so far.
-// A sample is one group of trace variables, so if there are 3
-// trace variables enabled then each sample is 3 x 32-bit values.
-static int32_t traceSamp;
-
-// These parameters give the variable IDs being captured
-#define TRACE_VAR_CT 4
-static int32_t traceVar[TRACE_VAR_CT];
+CircBuff<uint32_t, 0x4000> traceBuffer;
+int32_t traceCtrl;
+int32_t tracePeriod;
+int32_t traceCount;
+int32_t traceSamp;
+int32_t traceVar[TRACE_VAR_CT];
 
 class TraceCtrlVar : public DebugVar {
 public:
@@ -129,7 +107,7 @@ void TraceSample() {
 
 // Fill the vptr array with pointers to all the active
 // trace variables and return the number of active ones
-static int CountActiveVars(DebugVar *vptr[]) {
+int CountActiveVars(DebugVar *vptr[]) {
   int vct = 0;
 
   for (int i = 0; i < TRACE_VAR_CT; i++) {
@@ -148,93 +126,6 @@ static int CountActiveVars(DebugVar *vptr[]) {
   }
 
   return vct;
-}
-
-TraceCmd::TraceCmd() : DebugCmd(DbgCmdCode::TRACE) {
-  // Disable all trace varaibles initially
-  for (int i = 0; i < TRACE_VAR_CT; i++)
-    traceVar[i] = -1;
-}
-
-// The trace command is used to download data from the trace buffer.
-DbgErrCode TraceCmd::HandleCmd(uint8_t *data, int *len, int max) {
-
-  // The first byte of data is always required, this
-  // gives the sub-command.
-  if (*len < 1)
-    return DbgErrCode::MISSING_DATA;
-
-  switch (data[0]) {
-
-  // Sub-command 0 is used to flush the trace buffer
-  // It also disables the trace
-  case 0: {
-    traceCtrl = 0;
-    traceSamp = 0;
-
-    std::optional<uint32_t> tmp;
-    while ((tmp = traceBuffer.Get()) != std::nullopt) {
-    }
-    *len = 0;
-    return DbgErrCode::OK;
-  }
-
-  // Sub-command 1 is used to read data from the buffer
-  case 1:
-    return ReadTraceBuff(data, len, max);
-
-  default:
-    return DbgErrCode::RANGE;
-  }
-}
-
-DbgErrCode TraceCmd::ReadTraceBuff(uint8_t *data, int *len, int max) {
-  // See how many active trace variables there are
-  // This gives us our sample size;
-  DebugVar *vptr[TRACE_VAR_CT];
-  int vct = CountActiveVars(vptr);
-
-  // If there aren't any active variables, I'm done
-  if (!vct) {
-    *len = 0;
-    return DbgErrCode::OK;
-  }
-
-  // See how many samples I can return
-  // First, find out how many I could based on the max value
-  max /= static_cast<int>((vct * sizeof(uint32_t)));
-
-  // If there's not room for even one sample, return an error.
-  // That really shouldn't happen
-  if (!max)
-    return DbgErrCode::NO_MEMORY;
-
-  // Find the total number of samples in the buffer
-  int tot = traceBuffer.FullCt() / vct;
-  if (tot > max)
-    tot = max;
-
-  for (int i = 0; i < tot; i++) {
-    BlockInterrupts block;
-    // Grab one sample with interrupts disabled.
-    // There's a chance the trace is still running, so we
-    // could get interrupted by the high priority thread
-    // that adds to the buffer.  I want to make sure I
-    // read a full sample without being interrupted
-    for (int j = 0; j < vct; j++) {
-
-      // This shouldn't fail since I've already confirmed
-      // the number of elements in the buffer.  If it does
-      // fail it's a bug.
-      std::optional<uint32_t> dat = traceBuffer.Get();
-      u32_to_u8(*dat, data);
-      data += sizeof(uint32_t);
-    }
-    traceSamp--;
-  }
-
-  *len = static_cast<int>(tot * vct * sizeof(uint32_t));
-  return DbgErrCode::OK;
 }
 
 DbgErrCode TraceCtrlVar::SetValue(uint8_t *buff, int len) {
@@ -261,5 +152,3 @@ DbgErrCode TraceCtrlVar::SetValue(uint8_t *buff, int len) {
 
   return DbgErrCode::OK;
 }
-
-TraceCmd traceCmd;

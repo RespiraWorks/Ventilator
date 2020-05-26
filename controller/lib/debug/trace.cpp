@@ -116,7 +116,7 @@ int CountActiveVars(DebugVar *vptr[]) {
 
     // Find the debug variable associated
     // with this ID
-    vptr[vct] = DebugVar::findVar(static_cast<uint16_t>(traceVar[i]));
+    vptr[vct] = DebugVar::FindVar(static_cast<uint16_t>(traceVar[i]));
 
     // If the ID wasn't valid, disable this trace variable
     if (!vptr[vct])
@@ -134,11 +134,11 @@ DbgErrCode TraceCtrlVar::SetValue(uint8_t *buff, int len) {
   // so the setting doesn't take effect immediately
   // Then call the standard SetValue function
   int32_t new_ctrl;
-  addr = &new_ctrl;
+  addr_ = &new_ctrl;
 
   DbgErrCode err = DebugVar::SetValue(buff, len);
 
-  addr = &traceCtrl;
+  addr_ = &traceCtrl;
 
   if (err != DbgErrCode::OK)
     return err;

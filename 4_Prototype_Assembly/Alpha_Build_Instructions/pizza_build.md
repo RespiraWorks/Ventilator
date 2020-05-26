@@ -15,15 +15,11 @@ It can also come in various configurations, depending on your testing needs:
 |:---------------------:|:--------------------:|:-----------------------:|
 ![](photo_solenoid.jpg) |![](photo_pinch.jpg)  |![](photo_advanced.jpg)  |
 
-**DISCLAIMER: These are live documents.
+**DISCLAIMER:** These are live documents.
 There are duplicate and alternative items for undecided aspects of the physical design. 
+
 RespiraWorks may or may not compensate you for any of these parts if you choose to buy them. Please connect with Edwin, Martin or Ethan first.
 If you decide to buy them, do so at your own risk... oh, and thank you ;).**
-
-## Purchasing source abbreviations
-
-* **Z** = Amazon
-* **C** = McMaster-Carr
 
 ## Planning
 
@@ -47,9 +43,16 @@ been using 5/8" Inner Diameter (henceforth, ID) but for beta we plan to transiti
 segments of the pneumatic system that may unavoidably use different diameter tubing. 
 A metric version of the pneumatic system is also anticipated. If you can help with this, please contribute.
 
-### 5/8"ID tubing components
+## Parts List (BOM)
 
-| Item | Quantity | Manufacturer  | Part #              | Price($)     |  Sources        | Notes |
+### Purchasing Source Key
+
+* **Z** = Amazon
+* **C** = McMaster-Carr
+
+### 5/8"ID Tubing Components
+
+| Item | Quantity | Manufacturer  | Part #              | Price (USD)     |  Sources        | Notes |
 | ---- |---------:| ------------- | ------------------- | ------------:|-----------------| ----- |
 | a1   |      5ft | McMaster-Carr | 5234K57             | 21.50 / 5ft  | [C][a1mcmc]     | Soft latex tubing, 5/8" ID, 7/8" OD |
 | a2   |      5ft | Duda Energy   | LPpvc063-025ft      | 20.11 / 25ft | [Z][a2amzn]     | 5/8" tubing, alternative to *a1*, not as good, too hard |
@@ -67,9 +70,9 @@ A metric version of the pneumatic system is also anticipated. If you can help wi
 [a6mcmc]: https://www.mcmaster.com/5372K128
 [a7amzn]: https://www.amazon.com/gp/product/B07C5FVN9K
 
-### 3/4"ID tubing components
+### 3/4" ID Tubing Components
 
-| Item | Quantity | Manufacturer  | Part #              | Price($)     |  Sources       | Notes |
+| Item | Quantity | Manufacturer  | Part #              | Price (USD)     |  Sources       | Notes |
 | ---- |---------:| ------------- | ------------------- | ------------:|----------------| ----- |
 | b1   |      5ft |               |                     | 22.99 / 5ft  | [Z][b1amzn]    | soft 3/4"ID 1"OD tubing |
 | b2   |      5ft | McMaster-Carr | 5233K71             | 14.20 / 10ft | [C][b2mcmc]    | hard 3/4"ID 1"OD tubing, alternative to b1, not as fun to work with, not for medical use |
@@ -91,9 +94,9 @@ A metric version of the pneumatic system is also anticipated. If you can help wi
 [b8mcmc]: https://www.mcmaster.com/53415K217
 [b9amzn]: https://www.amazon.com/gp/product/B07C5FVSQB
 
-### Metric version
+### Metric Version
 
-**TODO: document how to build with metric components**
+**#TODO: document how to build with metric components**
 
 
 ### Tools
@@ -102,12 +105,12 @@ Assembling the pneumatic system will likely need the following tools.
 T1 might be enough and T4 might be unnecessary.
 Also, scissors or a sharp knife might be ok instead of T3.
 
-| Item | Manufacturer  | Part number        | Price($) | Sources         | Notes |
+| Item | Manufacturer  | Part number        | Price (USD) | Sources         | Notes |
 | ---- |--------------:| ------------------ | -------- | ---------------:|------ |
-| T1   |               |                    |    13.00 | [Z][t1amzn]     | 8 inch slip-joint pliers, for clamping tubes onto fittings | 
-| T2   |               |                    |    19.99 | [Z][t2amzn]     | Adjustable wrench, at least 1" wide opening, for screwing in NTP fittings |
-| T3   |               |                    |    15.88 | [Z][t3amzn]     | Pipe and PVC cutter, for cutting tubing |
-| T4   |               |                    |     8.90 | [Z][t4amzn]     | Long nose pliers, for removing herbie clips |
+| c1   |               |                    |    13.00 | [Z][t1amzn]     | 8 inch slip-joint pliers, for clamping tubes onto fittings | 
+| c2   |               |                    |    19.99 | [Z][t2amzn]     | Adjustable wrench, at least 1" wide opening, for screwing in NTP fittings |
+| c3   |               |                    |    15.88 | [Z][t3amzn]     | Pipe and PVC cutter, for cutting tubing |
+| c4   |               |                    |     8.90 | [Z][t4amzn]     | Long nose pliers, for removing herbie clips |
 
 [t1amzn]: https://www.amazon.com/TEKTON-2-Inch-Joint-Pliers-37122/dp/B00KLY1FAY
 [t2amzn]: https://www.amazon.com/GETUPOWER-10-Inch-Adjustable-Opening-Vanadium/dp/B07RGV2VK1
@@ -124,7 +127,7 @@ The following are essential sub-assemblies that you'll need no matter what addit
 * 2x [Venturi flow sensors](../../2_Research_&_Development/Project-Venturi) and corresponding tubing, to provide the controller feedback
 * Some sort of valve or valves, which leads us to...
 
-## Optional components
+## Optional Components
 
 **Optional additions (toppings) for your pizza build:**
 These can be added or customized based on what functions you will be developing or testing.
@@ -143,7 +146,7 @@ lung so you don’t just inflate it like a balloon (or pop it). View more detail
 * **#TODO: check valve**
 * **#TODO: oxygen supply limb** 
 
-## Assembly instructions
+## Assembly Instructions
 
 Use the following diagrams as well as the pictures of the most recent builds at the top of the page to help you assemble this lego set.
 

@@ -21,6 +21,9 @@ limitations under the License.
  * starting address and an 16-bit byte count.
  */
 
+#ifndef PEEK_CMD_H_
+#define PEEK_CMD_H_
+
 #include "debug.h"
 #include <string.h>
 
@@ -67,3 +70,5 @@ public:
 };
 
 extern PeekCmd peekCmd;
+
+#endif // PEEK_CMD_H_

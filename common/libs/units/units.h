@@ -110,7 +110,14 @@ protected:
   ValTy val_;
 };
 
-// Represents a Scalar where addition and subtraction are well-defined.
+// Represents a Scalar where:
+// - addition and subtraction are well-defined
+// - multiplication by an external factor of type ValTy is defined
+// This is what mathematicians call a "module":
+// https://en.wikipedia.org/wiki/Module_(mathematics)
+// Note that multiplication by an external factor requires multiplication to be
+// well defined on ValTy type.
+// Be aware that dividing by 0.0f yields Inf and needs to be protected.
 template <class Q, class ValTy> class ArithScalar : public Scalar<Q, ValTy> {
 public:
   constexpr Q operator+(const ArithScalar &a) { return Q(this->val_ + a.val_); }
@@ -121,30 +128,17 @@ public:
   inline ArithScalar &operator-=(const ArithScalar &a) {
     return *this = *this - a;
   }
+  constexpr Q operator*(const ValTy &a) { return Q(this->val_ * a); }
+  constexpr Q operator/(const ValTy &a) { return Q(this->val_ / a); }
+  inline ArithScalar &operator*=(const ValTy &a) { return *this = *this * a; }
+  inline ArithScalar &operator/=(const ValTy &a) { return *this = *this / a; }
+  constexpr friend Q operator*(const ValTy &a, const Q &b) {
+    return Q(b.val_ * a);
+  }
 
 protected:
   // Pull in base class's constructor.
   using Scalar<Q, ValTy>::Scalar;
-};
-
-// Represents an ArithScalar where multiplication by an external factor of type
-// ValTy is defined, creating what mathematicians call a "module":
-// https://en.wikipedia.org/wiki/Module_(mathematics)
-// Multiplication by a ValTy factor follows the rules of multiplication for
-// ValTy, and requires multiplication to be well defined on ValTy type, except
-// that it does not commute: float*ModuleScalar is undefined
-// This is especially useful for things that need averaging.
-// Be aware that dividing by 0.0f yields Inf and needs to be protected.
-template <class Q, class ValTy>
-class ModuleScalar : public ArithScalar<Q, ValTy> {
-public:
-  constexpr Q operator*(const ValTy &a) { return Q(this->val_ * a); }
-  constexpr Q operator/(const ValTy &a) { return Q(this->val_ / a); }
-  inline ModuleScalar &operator*=(const ValTy &a) { return *this = *this * a; }
-  inline ModuleScalar &operator/=(const ValTy &a) { return *this = *this / a; }
-
-protected:
-  using ArithScalar<Q, ValTy>::ArithScalar;
 };
 
 } // namespace units_detail
@@ -158,6 +152,10 @@ protected:
 //  - cm h2o (centimeters of water)
 //
 // Native unit (implementation detail): kPa
+//
+// Note that multiplying and dividing pressure by a float makes little sense,
+// as they are not an absolute value.
+// Division may be used to define an average.
 class Pressure : public units_detail::ArithScalar<Pressure, float> {
 public:
   [[nodiscard]] constexpr float kPa() const { return val_; }
@@ -202,10 +200,6 @@ private:
 constexpr Length meters(float meters) { return Length(meters); }
 constexpr Length millimeters(float mm) { return Length(mm / 1000); }
 
-// pre-declare duration and volume in order to reference them in VolumetricFlow
-// definition
-class Duration;
-class Volume;
 // Represents flow over time, the rate of air passing through a tube.
 //
 // Precision: float.
@@ -220,25 +214,20 @@ class Volume;
 //
 // Dividing a Volume (see below) by a Duration gives you a VolumetricFlow
 // Multiplying a VolumetricFlow by a Duration (see below) gives you a Volume
-class VolumetricFlow
-    : public units_detail::ModuleScalar<VolumetricFlow, float> {
+class VolumetricFlow : public units_detail::ArithScalar<VolumetricFlow, float> {
 public:
   [[nodiscard]] constexpr float cubic_m_per_sec() { return val_; }
   [[nodiscard]] constexpr float ml_per_min() {
     return val_ * 1000.0f * 1000.0f * 60.0f;
   }
   [[nodiscard]] constexpr float liters_per_sec() { return val_ * 1000.0f; }
-  constexpr friend Volume operator*(const VolumetricFlow &a, const Duration &b);
-  constexpr friend Volume operator*(const Duration &b, const VolumetricFlow &a);
-  // Be aware that deviding by 0 yields Inf and needs to be protected.
-  constexpr friend VolumetricFlow operator/(const Volume &a, const Duration &b);
 
 private:
   constexpr friend VolumetricFlow cubic_m_per_sec(float m3ps);
   constexpr friend VolumetricFlow ml_per_min(float ml_per_min);
   constexpr friend VolumetricFlow liters_per_sec(float lps);
 
-  using units_detail::ModuleScalar<VolumetricFlow, float>::ModuleScalar;
+  using units_detail::ArithScalar<VolumetricFlow, float>::ArithScalar;
 };
 
 constexpr VolumetricFlow cubic_m_per_sec(float m3ps) {
@@ -264,20 +253,16 @@ constexpr VolumetricFlow liters_per_sec(float lps) {
 //
 // Multiplying a VolumetricFlow by a Duration (see below) gives you a Volume
 // Dividing a Volume by a Duration gives you a VolumetricFlow
-class Volume : public units_detail::ModuleScalar<Volume, float> {
+class Volume : public units_detail::ArithScalar<Volume, float> {
 public:
   [[nodiscard]] constexpr float cubic_m() { return val_; }
   [[nodiscard]] constexpr float ml() { return val_ * 1000.0f * 1000.0f; }
-  constexpr friend Volume operator*(const VolumetricFlow &a, const Duration &b);
-  constexpr friend Volume operator*(const Duration &b, const VolumetricFlow &a);
-  // Be aware that deviding by seconds(0) yields Inf and needs to be protected.
-  constexpr friend VolumetricFlow operator/(const Volume &a, const Duration &b);
 
 private:
   constexpr friend Volume cubic_m(float m3);
   constexpr friend Volume ml(float ml);
 
-  using units_detail::ModuleScalar<Volume, float>::ModuleScalar;
+  using units_detail::ArithScalar<Volume, float>::ArithScalar;
 };
 
 constexpr Volume cubic_m(float m3) { return Volume(m3); }
@@ -344,10 +329,6 @@ public:
   constexpr friend Time operator+(const Duration &a, const Time &b);
   constexpr friend Time operator-(const Time &a, const Duration &b);
   constexpr friend Duration operator-(const Time &a, const Time &b);
-  constexpr friend Volume operator*(const VolumetricFlow &a, const Duration &b);
-  constexpr friend Volume operator*(const Duration &b, const VolumetricFlow &a);
-  // Be aware that deviding by 0 yields Inf and needs to be protected.
-  constexpr friend VolumetricFlow operator/(const Volume &a, const Duration &b);
 
 private:
   constexpr friend Duration milliseconds(int64_t millis);
@@ -415,16 +396,17 @@ constexpr inline Duration operator-(const Time &a, const Time &b) {
   return Duration(static_cast<int64_t>(a.val_ - b.val_));
 }
 
-constexpr inline Volume operator*(const VolumetricFlow &a, const Duration &b) {
-  return Volume(a.val_ * static_cast<float>(b.val_) / 1000.0f);
+constexpr inline Volume operator*(VolumetricFlow a, Duration b) {
+  return ml(a.ml_per_min() * b.minutes());
 }
 
-constexpr inline Volume operator*(const Duration &b, const VolumetricFlow &a) {
-  return Volume(a.val_ * static_cast<float>(b.val_) / 1000.0f);
+constexpr inline Volume operator*(Duration b, VolumetricFlow a) {
+  return ml(a.ml_per_min() * b.minutes());
 }
 
-constexpr inline VolumetricFlow operator/(const Volume &a, const Duration &b) {
-  return VolumetricFlow(a.val_ / static_cast<float>(b.val_) * 1000.0f);
+// Be aware that dividing by zero leads to Inf and needs to be protected
+constexpr inline VolumetricFlow operator/(Volume a, Duration b) {
+  return ml_per_min(a.ml() / b.minutes());
 }
 
 #endif // UNITS_H

@@ -1,17 +1,12 @@
 # RespiraWorks Open Source Ventilator
 
-[RespiraWorks](https://respira.works/) is a 501(c)(3) non-profit organization with over
-100 contributors worldwide working to rapidly develop, manufacture, and deploy a
-low-cost and open-source ventilator for communities under-served by the global supply chain.
+[RespiraWorks](https://respira.works/) is a 501(c)(3) non-profit organization with over 100 contributors worldwide working to rapidly develop, manufacture, and deploy a low-cost and open-source ventilator for communities under-served by the global supply chain.
 
 ![Ventilator under construction](open_box.jpg)
 
 ## Design Origin
 
-Most low-cost ventilator designs tackle the 'bridge' - how to keep a patient alive for
-6-8 hours of closely monitored care until they can be transitioned to a full ventilator.
-However COVID-19 patients require lung-protective adaptive ventilation strategies, and
-require ventilator support for days to weeks.
+Most low-cost ventilator designs tackle the 'bridge' - how to keep a patient alive for 6-8 hours of closely monitored care until they can be transitioned to a full ventilator. However COVID-19 patients require lung-protective adaptive ventilation strategies, and require ventilator support for days to weeks.
 
 Early in the crisis, we realized that the ventilator designs that could be completed in weeks might not be necessary, and if so, a more feature complete ventilator would be needed. As we started working on that, we realized that this was a market need unmet by the established ventilator market. Despite constant developments in the disease progression, we realized that a true-open source ventilator, with transparant requirements, design history documents, and yet still optimized for low-cost and ease of manufacturing would enable expanded global access to a critical piece of medical equipment.
 
@@ -24,16 +19,12 @@ Our target is not the US or Europe, but the middle- and low-income parts of the 
 **This is an incomplete, as yet untested design that is not yet intended to be used on patients.**
 
 **This repository contains live documents.
-There are duplicate and alternative items for undecided aspects of the physical design.
-Components may or may not connect and integrate as intended.
-Contents may also be out of date. 
-RespiraWorks may, or may not compensate you for parts you purchase.
-If you decide to buy or build anything, do so at your own risk.**
+There are duplicate and alternative items for undecided aspects of the physical design. Components may or may not connect and integrate as intended.
+Contents may also be out of date. RespiraWorks may, or may not compensate you for parts you purchase. If you decide to buy or build anything, do so at your own risk.**
 
 ## Repository Overview
 
-This repository tracks the physical design of the RespiraWorks open source medical ventilator.
-The physical design encompasses everything that is not software run on the device, from the pneumatics, to the mechanical design, bill of materials, and circuit diagram. The software repository can be found below and linked from within the system design. 
+This repository tracks the physical design of the RespiraWorks open source medical ventilator. The physical design encompasses everything that is not software run on the device, from the pneumatics, to the mechanical design, bill of materials, and circuit diagram. The software repository can be found below and linked from within the system design. 
 
 ### Structure
 

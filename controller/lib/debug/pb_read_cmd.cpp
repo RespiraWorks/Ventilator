@@ -13,6 +13,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include "peek.h"
+#include "pb_read_cmd.h"
 
-PeekCmd peekCmd;
+PrintBuffReadCmd pbReadCmd;

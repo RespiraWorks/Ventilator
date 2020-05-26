@@ -23,6 +23,9 @@ limitations under the License.
  * given address
  */
 
+#ifndef POKE_CMD_H_
+#define POKE_CMD_H_
+
 #include "debug.h"
 #include <string.h>
 
@@ -70,3 +73,5 @@ public:
 };
 
 extern PokeCmd pokeCmd;
+
+#endif // POKE_CMD_H_

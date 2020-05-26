@@ -1,24 +1,23 @@
-# Pizza build: binary solenoid valve
+# Pizza build: Binary Solenoid Valve
 
 A solenoid valve can be used as a valve in the pneumatic circuit.
 A solenoid is a common car component, relatively cheap and easy to obtain.
 
-We refer to this as a binary solenoid because it has only two states - open or closed,
-as opposed to a proportional solenoid, which would have other degrees in between.  
+We refer to this as a binary solenoid because it has only two states - open or closed, as opposed to a proportional solenoid, which would have other degrees in between.  
 
-**TODO:** unit price analysis
+**#TODO:** unit price analysis
 
-## BOM
+## Parts List (BOM)
 
-### Purchasing source abbreviations
+### Purchasing Source Key
 
 * **Z** = Amazon
 * **C** = McMaster-Carr
 * **K** = Digikey
 
-### BOM
+### Parts
 
-| Item | Quantity | Manufacturer  | Part number         | Price($)     | Sources        | Notes |
+| Item | Quantity | Manufacturer  | Part number         | Price (USD)     | Sources        | Notes |
 | ---- |---------:| ------------- | ------------------- | ------------:|----------------| ----- |
 | 1    |        1 | Beduan        | 40141600            | 17.99        | [Z][1amzn]     | 1/2NTP 12v solenoid |
 | 2    |        2 | McMaster-Carr | 5372K128            | 4.89 / 10    | [C][2mcmc]     | 1/2 NTP <-> 5/8"ID male multibarbed |
@@ -32,17 +31,17 @@ as opposed to a proportional solenoid, which would have other degrees in between
 [4digi]:  https://www.digikey.com/short/z44f8d
 [5digi]:  https://www.digikey.com/short/z44f8f
 
-## Tooling BOM
+## Tools
 
 | Item | Quantity | Manufacturer  | Part number         | Price($) | Sources         | Notes |
 | ---- |---------:| ------------- | ------------------- | --------:|-----------------| ----- |
-| T1   |        1 | Preciva       | PR-3254 (PR102001)  |    39.99 | [Z][t1amzn]     | Crimping tool for HX and HV connectors |
+| a1   |        1 | Preciva       | PR-3254 (PR102001)  |    39.99 | [Z][t1amzn]     | Crimping tool for HX and HV connectors |
 
 [t1amzn]:https://www.amazon.com/gp/product/B07R1H3Z8X
 
 **NOTE: Items 3, 4 and T1 above are also duplicated in the [wiring BOM](../../../1_Ventilator_System_Design/Electrical_System/wiring.md)**
 
-## Assembly instructions
+## Assembly Instructions
 
 Screw tubing adapters into the solenoid - either item 2 or 3, depending on the diameter of the tubing in your prototype.
 

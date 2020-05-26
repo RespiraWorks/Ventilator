@@ -4,14 +4,14 @@ The blower bypass is an optional "topping" that can be integrated into the [pizz
 
 The purpose of the blower bypass is to prevent strain on blower when the inhale pinch valve is closed. Note the alternative parts for 3/8"ID and 3/4"ID builds.
 
-## BOM
+## Parts List (BOM)
 
 ### Purchasing Source Key
 
 * **Z** = Amazon
 * **C** = McMaster-Carr
 
-### Parts BOM
+### Parts
 
 | Item   | Quantity      | Manufacturer  | Part #            | Price (USD)  | Sources         | Notes                    |
 | ------ |--------------:| ------------- | ----------------- | ------------:|-----------------| ------------------------ |
@@ -33,7 +33,7 @@ The purpose of the blower bypass is to prevent strain on blower when the inhale 
 [7mcmc]:   https://www.mcmaster.com/53415K204
 [8mcmc]:   https://www.mcmaster.com/4880K343
 
-## Assembly
+## Assembly Instructions
 
 Parts:
 

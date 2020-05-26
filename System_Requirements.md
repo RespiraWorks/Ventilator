@@ -6,7 +6,7 @@
 
 Currently [this Google document](https://docs.google.com/document/d/18nqg36VkDUn594jnHEbXHlZkW_4Bj2x9HIhAgLesSlw/edit#heading=h.nx06tlqgwqzj) serves as the requirements overview.
 
-**Note:** We're in process of migrating requirements-tracking to Valispace. Currently the Google is the most consolidated, clean place to track requirements, but Valispace will soon not be the canonical place where requirements are managed.
+**Note:** We're in process of migrating requirements-tracking to Valispace. Currently the Google is the most consolidated, clean place to track requirements, but Valispace will soon be the canonical place where requirements are managed.
 
 ## Requirements documents
 

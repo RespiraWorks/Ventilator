@@ -20,6 +20,9 @@ limitations under the License.
  * where strings go when you call debug.Print
  */
 
+#ifndef PB_READ_CMD_H_
+#define PB_READ_CMD_H_
+
 #include "debug.h"
 #include <optional>
 #include <string.h>
@@ -48,3 +51,5 @@ public:
 };
 
 extern PrintBuffReadCmd pbReadCmd;
+
+#endif // PB_READ_CMD_H_

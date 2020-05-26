@@ -13,6 +13,16 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include "pb_read.h"
+/*
+ * This file implements a 'poke' command which allows us
+ * to write to wrap values in memory.  Use with caution!
+ *
+ * The data passed to the command consists of a 32-bit
+ * starting address and one or more data bytes to be
+ * written to consecutive addresses starting at the
+ * given address
+ */
 
-PrintBuffReadCmd pbReadCmd;
+#include "poke_cmd.h"
+
+PokeCmd pokeCmd;

@@ -46,22 +46,18 @@ public:
   // @param fmt printf style format string.  This is a hint to the Python code
   // as to how the variable data should be displayed.
   DebugVar(const char *name, int32_t *data, const char *help = "",
-           const char *fmt = "%d");
+           const char *fmt = "%d")
+      : DebugVar(VarType::INT32, name, data, help, fmt) {}
 
   // Like above, but unsigned
   DebugVar(const char *name, uint32_t *data, const char *help = "",
-           const char *fmt = "%d");
+           const char *fmt = "%d")
+      : DebugVar(VarType::INT32, name, data, help, fmt) {}
 
-  // float variable.  The default get/set functions will probably be fine
-  // @param name Name of the variable
-  // @param data Pointer to the actual variable in C++ code that this will
-  // access
-  // @param fmt printf style format string.  This is a hint to the Python code
-  // as to how
-  //            the variable data should be displayed.
-  // @param help String that the Python code displays describing the variable.
+  // Like above, but float
   DebugVar(const char *name, float *data, const char *help = "",
-           const char *fmt = "%.3f");
+           const char *fmt = "%.3f")
+      : DebugVar(VarType::FLOAT, name, data, help, fmt) {}
 
   // Gets the current value of the variable.
   // @param buff The variable's value is stored here
@@ -83,34 +79,36 @@ public:
   // program handles converting it back into a float.
   virtual uint32_t getDataForTrace();
 
-  const char *getName() const { return name; }
-  const char *getFormat() const { return fmt; }
-  const char *getHelp() const { return help; }
-  VarType getType() const { return type; }
+  const char *GetName() const { return name_; }
+  const char *GetFormat() const { return fmt_; }
+  const char *GetHelp() const { return help_; }
+  VarType GetType() const { return type_; }
 
-  static DebugVar *findVar(uint16_t vid) {
+  static DebugVar *FindVar(uint16_t vid) {
     if (vid >= ARRAY_CT(varList))
       return 0;
     return varList[vid];
   }
 
 protected:
-  VarType type;
-  const char *name;
-  const char *fmt;
-  const char *help;
-  void *addr;
+  const VarType type_;
+  const char *const name_;
+  const char *const fmt_;
+  const char *const help_;
+  void *addr_;
 
 private:
+  DebugVar(VarType type, const char *name, void *data, const char *help,
+           const char *fmt)
+      : type_(type), name_(name), fmt_(fmt), help_(help), addr_(data) {
+    if (varCount < static_cast<int>(ARRAY_CT(varList)))
+      varList[varCount++] = this;
+  }
+
   // List of all the variables in the system.
   // Increase size as necessary
   static DebugVar *varList[100];
   static int varCount;
-
-  void RegisterVar() {
-    if (varCount < static_cast<int>(ARRAY_CT(varList)))
-      varList[varCount++] = this;
-  }
 };
 
 #endif

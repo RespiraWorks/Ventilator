@@ -52,19 +52,19 @@ TEST(Units, Pressure) {
   checkRelationalOperators(kPa);
   checkRelationalOperators(cmH2O);
 
-  Pressure pressure = kPa(2);
-  pressure += kPa(1);
-  EXPECT_FLOAT_EQ(pressure.kPa(), 3.0f);
-  pressure -= kPa(5);
+  Pressure pressure = kPa(2.1f);
+  pressure += kPa(1.2f);
+  EXPECT_FLOAT_EQ(pressure.kPa(), 3.3f);
+  pressure -= kPa(5.3f);
   EXPECT_FLOAT_EQ(pressure.kPa(), -2.0f);
-  pressure /= -2.0f;
-  EXPECT_FLOAT_EQ(pressure.kPa(), 1.0f);
-  pressure *= -5.0f;
-  EXPECT_FLOAT_EQ(pressure.kPa(), -5.0f);
+  pressure /= -0.5f;
+  EXPECT_FLOAT_EQ(pressure.kPa(), 4.0f);
+  pressure *= -2.5f;
+  EXPECT_FLOAT_EQ(pressure.kPa(), -10.0f);
 
-  EXPECT_FLOAT_EQ((cmH2O(1) * 10.1972f).kPa(), 1);
-  EXPECT_FLOAT_EQ((10.1972f * cmH2O(1)).kPa(), 1);
-  EXPECT_FLOAT_EQ((kPa(1) / 10.1972f).cmH2O(), 1);
+  EXPECT_FLOAT_EQ((cmH2O(2.5f) * 101.972f).kPa(), 25);
+  EXPECT_FLOAT_EQ((1.01972f * cmH2O(-5.2f)).kPa(), -0.52f);
+  EXPECT_FLOAT_EQ((kPa(12.345f) / 10.1972f).cmH2O(), 12.345f);
 }
 
 TEST(Units, Length) {
@@ -79,19 +79,19 @@ TEST(Units, Length) {
   checkRelationalOperators(meters);
   checkRelationalOperators(millimeters);
 
-  Length length = meters(2);
+  Length length = meters(0.23f);
   length += meters(1);
+  EXPECT_FLOAT_EQ(length.meters(), 1.23f);
+  length -= meters(4.92f);
+  EXPECT_FLOAT_EQ(length.meters(), -3.69f);
+  length /= -1.23f;
   EXPECT_FLOAT_EQ(length.meters(), 3.0f);
-  length -= meters(5);
-  EXPECT_FLOAT_EQ(length.meters(), -2.0f);
-  length /= -2.0f;
-  EXPECT_FLOAT_EQ(length.meters(), 1.0f);
-  length *= -5.0f;
-  EXPECT_FLOAT_EQ(length.meters(), -5.0f);
+  length *= -1.5f;
+  EXPECT_FLOAT_EQ(length.meters(), -4.5f);
 
-  EXPECT_FLOAT_EQ((millimeters(1) * 1000.0f).meters(), 1);
-  EXPECT_FLOAT_EQ((1000.0f * millimeters(1)).meters(), 1);
-  EXPECT_FLOAT_EQ((meters(1) / 1000.0f).millimeters(), 1);
+  EXPECT_FLOAT_EQ((millimeters(1234) * 1.5f).meters(), 1.851f);
+  EXPECT_FLOAT_EQ((2.345f * millimeters(654.3f)).meters(), 1.5343335f);
+  EXPECT_FLOAT_EQ((meters(2.46f) / 2000.0f).millimeters(), 1.23f);
 }
 
 TEST(Units, VolumetricFlow) {
@@ -117,21 +117,22 @@ TEST(Units, VolumetricFlow) {
   checkRelationalOperators(ml_per_min);
   checkRelationalOperators(liters_per_sec);
 
-  VolumetricFlow flow = liters_per_sec(2);
-  flow += liters_per_sec(1);
-  EXPECT_FLOAT_EQ(flow.liters_per_sec(), 3.0f);
-  flow -= liters_per_sec(5);
-  EXPECT_FLOAT_EQ(flow.liters_per_sec(), -2.0f);
-  flow /= -2.0f;
-  EXPECT_FLOAT_EQ(flow.liters_per_sec(), 1.0f);
-  flow *= -5.0f;
-  EXPECT_FLOAT_EQ(flow.liters_per_sec(), -5.0f);
+  VolumetricFlow flow = liters_per_sec(9.87f);
+  flow += liters_per_sec(1.23f);
+  EXPECT_FLOAT_EQ(flow.liters_per_sec(), 11.1f);
+  flow -= liters_per_sec(9.87f);
+  EXPECT_FLOAT_EQ(flow.liters_per_sec(), 1.23f);
+  flow /= -0.5f;
+  EXPECT_FLOAT_EQ(flow.liters_per_sec(), -2.46f);
+  flow *= -2.0f;
+  EXPECT_FLOAT_EQ(flow.liters_per_sec(), 4.92f);
 
-  EXPECT_FLOAT_EQ((liters_per_sec(1) * 1000.0f).cubic_m_per_sec(), 1);
-  EXPECT_FLOAT_EQ((1000.0f * liters_per_sec(1)).cubic_m_per_sec(), 1);
-  EXPECT_FLOAT_EQ((cubic_m_per_sec(1) / 1000.0f).liters_per_sec(), 1);
+  EXPECT_FLOAT_EQ((liters_per_sec(4.0f) * 500.0f).cubic_m_per_sec(), 2.0f);
+  EXPECT_FLOAT_EQ((1234.0f * liters_per_sec(2.5f)).cubic_m_per_sec(), 3.085f);
+  EXPECT_FLOAT_EQ((cubic_m_per_sec(6.283f) / 2000.0f).liters_per_sec(),
+                  3.1415f);
 
-  EXPECT_FLOAT_EQ((cubic_m(1) / seconds(1)).cubic_m_per_sec(), 1);
+  EXPECT_FLOAT_EQ((cubic_m(3.198f) / seconds(2.6f)).cubic_m_per_sec(), 1.23f);
 }
 
 TEST(Units, Volume) {
@@ -146,21 +147,21 @@ TEST(Units, Volume) {
   checkRelationalOperators(cubic_m);
   checkRelationalOperators(ml);
 
-  Volume volume = ml(2);
-  volume += ml(1);
-  EXPECT_FLOAT_EQ(volume.ml(), 3.0f);
-  volume -= ml(5);
-  EXPECT_FLOAT_EQ(volume.ml(), -2.0f);
-  volume /= -2.0f;
-  EXPECT_FLOAT_EQ(volume.ml(), 1.0f);
-  volume *= -5.0f;
-  EXPECT_FLOAT_EQ(volume.ml(), -5.0f);
+  Volume volume = ml(456.0f);
+  volume += ml(123.0f);
+  EXPECT_FLOAT_EQ(volume.ml(), 579.0f);
+  volume -= ml(234.0f);
+  EXPECT_FLOAT_EQ(volume.ml(), 345.0f);
+  volume /= -5.0f;
+  EXPECT_FLOAT_EQ(volume.ml(), -69.0f);
+  volume *= 3.0f;
+  EXPECT_FLOAT_EQ(volume.ml(), -207.0f);
 
-  EXPECT_FLOAT_EQ((cubic_m(1) / 1e6f).ml(), 1);
-  EXPECT_FLOAT_EQ((ml(1) * 1e6f).cubic_m(), 1);
+  EXPECT_FLOAT_EQ((cubic_m(0.123f) / 1e4f).ml(), 12.3f);
+  EXPECT_FLOAT_EQ((ml(1234.0f) * 567.0f).cubic_m(), 0.699678f);
 
-  EXPECT_FLOAT_EQ((cubic_m_per_sec(1) * seconds(1)).cubic_m(), 1);
-  EXPECT_FLOAT_EQ((seconds(1) * cubic_m_per_sec(1)).cubic_m(), 1);
+  EXPECT_FLOAT_EQ((liters_per_sec(1.47f) * seconds(2.58f)).ml(), 3792.6f);
+  EXPECT_FLOAT_EQ((seconds(4.56f) * liters_per_sec(3.1415f)).ml(), 14325.24f);
 }
 
 TEST(Units, Duration) {

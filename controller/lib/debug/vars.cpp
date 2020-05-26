@@ -21,41 +21,9 @@ limitations under the License.
 DebugVar *DebugVar::varList[100];
 int DebugVar::varCount = 0;
 
-// Creates a debug variable that modifies an int
-DebugVar::DebugVar(const char *nm, int32_t *data, const char *h,
-                   const char *f) {
-  name = nm;
-  fmt = f;
-  help = h;
-  type = VarType::INT32;
-  addr = data;
-  RegisterVar();
-}
-
-// Creates a debug variable that modifies an unsigned int
-DebugVar::DebugVar(const char *nm, uint32_t *data, const char *h,
-                   const char *f) {
-  name = nm;
-  fmt = f;
-  help = h;
-  type = VarType::UINT32;
-  addr = data;
-  RegisterVar();
-}
-
-// Creates a debug variable that modifies a float
-DebugVar::DebugVar(const char *nm, float *data, const char *h, const char *f) {
-  name = nm;
-  fmt = f;
-  help = h;
-  type = VarType::FLOAT;
-  addr = data;
-  RegisterVar();
-}
-
 // Used to read a debug variable's value over the debug serial interface
 DbgErrCode DebugVar::GetValue(uint8_t *buff, int *len, int max) {
-  switch (type) {
+  switch (type_) {
   // We can actually treat 32-bit ints and floats exactly the same way.
   // We're just grabbing their value directly from memory and treating it
   // as an integer so we can split it up and send it out.
@@ -66,7 +34,7 @@ DbgErrCode DebugVar::GetValue(uint8_t *buff, int *len, int max) {
     if (max < 4)
       return DbgErrCode::NO_MEMORY;
 
-    u32_to_u8(*reinterpret_cast<uint32_t *>(addr), buff);
+    u32_to_u8(*reinterpret_cast<uint32_t *>(addr_), buff);
     return DbgErrCode::OK;
 
   // For other types we just generate an error.
@@ -78,7 +46,7 @@ DbgErrCode DebugVar::GetValue(uint8_t *buff, int *len, int max) {
 
 // Used to set a debug variable's value over the debug serial interface
 DbgErrCode DebugVar::SetValue(uint8_t *buff, int len) {
-  switch (type) {
+  switch (type_) {
   // Like with the get, we actually handle both floats and ints the same here.
   case VarType::INT32:
   case VarType::UINT32:
@@ -86,7 +54,7 @@ DbgErrCode DebugVar::SetValue(uint8_t *buff, int len) {
     if (len < 4)
       return DbgErrCode::MISSING_DATA;
 
-    *reinterpret_cast<uint32_t *>(addr) = u8_to_u32(buff);
+    *reinterpret_cast<uint32_t *>(addr_) = u8_to_u32(buff);
     return DbgErrCode::OK;
 
   default:
@@ -97,13 +65,13 @@ DbgErrCode DebugVar::SetValue(uint8_t *buff, int len) {
 // Return the variable as a 32-bit integer.
 // We just return zero for any type we don't understand
 uint32_t DebugVar::getDataForTrace() {
-  switch (type) {
+  switch (type_) {
 
   // Like above, we treat 32-bit ints and floats the same here
   case VarType::INT32:
   case VarType::UINT32:
   case VarType::FLOAT:
-    return *reinterpret_cast<uint32_t *>(addr);
+    return *reinterpret_cast<uint32_t *>(addr_);
 
   default:
     return 0;

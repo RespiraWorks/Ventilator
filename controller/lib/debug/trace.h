@@ -16,7 +16,19 @@ limitations under the License.
 #ifndef TRACE_H
 #define TRACE_H
 
+#include "debug.h"
+
 // Called from the main loop
 void TraceSample();
+
+class TraceCmd : public DebugCmd {
+public:
+  TraceCmd();
+  // The trace command is used to download data from the trace buffer.
+  DbgErrCode HandleCmd(uint8_t *data, int *len, int max);
+  DbgErrCode ReadTraceBuff(uint8_t *data, int *len, int max);
+};
+
+extern TraceCmd traceCmd;
 
 #endif

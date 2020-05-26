@@ -8,13 +8,8 @@ The purpose of the blower bypass is to prevent strain on blower when the inhale 
 
 ### Purchasing Source Key
 
-* **A** = Ali Express
 * **Z** = Amazon
-* **E** = ebay
 * **C** = McMaster-Carr
-* **M** = Mouser
-* **W** = Wonsmart
-* **B** = Built by RespiraWorks
 
 ### Parts BOM
 

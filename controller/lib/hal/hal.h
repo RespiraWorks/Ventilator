@@ -207,6 +207,7 @@ public:
   // Serial port used for debugging
   uint16_t debugWrite(const char *buf, uint16_t len);
   uint16_t debugRead(char *buf, uint16_t len);
+  uint16_t debugBytesAvailableForWrite();
 
 #ifndef TEST_MODE
   // Translates to a numeric pin that can be passed to the Arduino API.

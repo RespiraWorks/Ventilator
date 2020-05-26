@@ -6,7 +6,7 @@ low-cost and open-source ventilator for communities under-served by the global s
 
 ![Ventilator under construction](open_box.jpg)
 
-**Design Origin**
+## Design Origin
 
 Most low-cost ventilator designs tackle the 'bridge' - how to keep a patient alive for
 6-8 hours of closely monitored care until they can be transitioned to a full ventilator.
@@ -30,13 +30,12 @@ Contents may also be out of date.
 RespiraWorks may, or may not compensate you for parts you purchase.
 If you decide to buy or build anything, do so at your own risk.**
 
-# Repository Overview
+## Repository Overview
 
 This repository tracks the physical design of the RespiraWorks open source medical ventilator.
 The physical design encompasses everything that is not software run on the device, from the pneumatics, to the mechanical design, bill of materials, and circuit diagram. The software repository can be found below and linked from within the system design. 
 
-
-## Structure
+### Structure
 
   * [Requirements](System_Requirements.md) -
   describes the requirement architecture, heirarchy, and process. Links to the releases of our system requirements, hardware specifications, and software requirements. 

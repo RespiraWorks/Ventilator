@@ -48,12 +48,12 @@ limitations under the License.
 
 #include "debug.h"
 #include "hal.h"
-#include "pb_read.h"
-#include "peek.h"
-#include "poke.h"
+#include "pb_read_cmd.h"
+#include "peek_cmd.h"
+#include "poke_cmd.h"
 #include "sprintf.h"
-#include "trace.h"
-#include "vars.h"
+#include "trace_cmd.h"
+#include "var_cmd.h"
 #include <stdarg.h>
 #include <string.h>
 

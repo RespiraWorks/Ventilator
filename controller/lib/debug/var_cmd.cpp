@@ -119,7 +119,12 @@ DbgErrCode VarCmd::GetVar(uint8_t *data, int *len, int max) {
   if (!var)
     return DbgErrCode::BAD_VARID;
 
-  return var->GetValue(data, len, max);
+  if (max < 4)
+    return DbgErrCode::NO_MEMORY;
+
+  u32_to_u8(var->GetValue(), data);
+  *len = 4;
+  return DbgErrCode::OK;
 }
 
 DbgErrCode VarCmd::SetVar(uint8_t *data, int *len, int max) {
@@ -134,8 +139,13 @@ DbgErrCode VarCmd::SetVar(uint8_t *data, int *len, int max) {
     return DbgErrCode::BAD_VARID;
 
   int ct = *len - 3;
+
+  if (ct < 4)
+    return DbgErrCode::MISSING_DATA;
+
+  var->SetValue(u8_to_u32(data + 3));
   *len = 0;
-  return var->SetValue(&data[3], ct);
+  return DbgErrCode::OK;
 }
 
 VarCmd varCmd;

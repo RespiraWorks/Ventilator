@@ -1,4 +1,4 @@
-# TODO: give this a name
+# Alpha Assembly Instructions
 
 1. Mount the rPi to the back of the rPi display. Connect display cables.
 2. Identify [Front Panel - Inner] and determine the inside and outside of the panel. Mount the following components to the panel:  

@@ -17,10 +17,10 @@ limitations under the License.
 #define VARS_H
 
 #include "debug.h"
+#include <cstring>
 
 // Defines the type of variable
 enum class VarType {
-  UNKNOWN = 0,
   INT32 = 1,
   UINT32 = 2,
   FLOAT = 3,
@@ -51,7 +51,7 @@ public:
 
   // Like above, but unsigned
   DebugVar(const char *name, uint32_t *data, const char *help = "",
-           const char *fmt = "%d")
+           const char *fmt = "%u")
       : DebugVar(VarType::INT32, name, data, help, fmt) {}
 
   // Like above, but float
@@ -59,25 +59,15 @@ public:
            const char *fmt = "%.3f")
       : DebugVar(VarType::FLOAT, name, data, help, fmt) {}
 
-  // Gets the current value of the variable.
-  // @param buff The variable's value is stored here
-  // @param len Return the length (in bytes) of the value here
-  // @param max Maximum number of bytes we can write to buff
-  // @return An error code, 0 on success
-  virtual DbgErrCode GetValue(uint8_t *buff, int *len, int max);
+  // Gets the current value of the variable as an uint32_t.
+  virtual uint32_t GetValue() {
+    uint32_t res;
+    std::memcpy(&res, addr_, 4);
+    return res;
+  }
 
-  // Sets the current value of the variable.
-  // @param buff Holds the data to be written to the variable
-  // @param len Number of valid bytes in buffer
-  // @return An error code, 0 on success
-  virtual DbgErrCode SetValue(uint8_t *buff, int len);
-
-  // Returns a representation of this variable as a 32-bit integer.
-  // This is used when capturing the variables value to the trace buffer.
-  // Only variables that can be represented by 32-bits can be traced.
-  // For floats, this returns the raw bits of the float, the Python
-  // program handles converting it back into a float.
-  virtual uint32_t getDataForTrace();
+  // Sets the current value of the variable as an uint32_t.
+  virtual void SetValue(uint32_t value) { std::memcpy(addr_, &value, 4); }
 
   const char *GetName() const { return name_; }
   const char *GetFormat() const { return fmt_; }

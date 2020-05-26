@@ -52,12 +52,6 @@
   - name: Copy openbox autostart folder from root to pi
     shell: cp -r /etc/xdg/openbox /home/pi/.config/
 
-#TODO:
-# - name: Add script to update locally cached gui docker image
-#   lineinfile:
-#     dest: /home/pi/.config/openbox/autostart
-#     line: docker pull respiraworks/gui
-
   - name: Add script to spin up gui docker instance on boot
     lineinfile:
       dest: /home/pi/.config/openbox/autostart

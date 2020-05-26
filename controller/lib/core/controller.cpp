@@ -16,6 +16,7 @@ limitations under the License.
 #include "controller.h"
 
 #include "pid.h"
+#include "vars.h"
 #include <math.h>
 
 // PID-tuning were chosen by following the Ziegler-Nichols method,

@@ -140,7 +140,8 @@ You may need anywhere between 1 and 3 such pinch valves, depending on the comple
 but can really only work up to 10cmH2O. To be able to test higher PIP values, you need to reduce the compliance of the
 lung so you don’t just inflate it like a balloon (or pop it). View more details on reduced compliance test lung [here](pizza_compliance_test_lung).
 * **Blower bypass:** The purpose of the blower bypass is to prevent strain on blower when the inhale pinch valve is closed. The sub-assembly for this component is documented [here](pizza_blower_bypass).
-* **TODO: check valve**
+* **#TODO: check valve**
+* **#TODO: oxygen supply limb** 
 
 ## Assembly instructions
 

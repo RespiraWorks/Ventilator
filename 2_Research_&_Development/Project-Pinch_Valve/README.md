@@ -9,7 +9,8 @@ This contains details, BOM, & instructions for the pinch valve module for the pn
 
 The module is something that can be "spliced" into any location in the pneumatic circuit given the 5/8"ID standard adopted for alpha. This makes it interchangeable with solenoid or whatever other valve implementation we might consider/test. The barbed adapters are needed because only 5/8"OD fits in the pinch valve mechanical assembly. It is envisioned that beta will be 3/4"ID throughout, which will require different adapters for the pinch valve.
 
-### Latest changes
+### Latest Changes
+
 The stop is moved down by 3 mm, which should buy us a lot more leverage.
 The stop is now flat. We might need to tweak exact dimensions further to get a perfect close, but this should be better.
 Watching the video I'm pretty concerned watching that stop flex. I made it run the full width, I made it thicker, and I also bulked out the tube holders.
@@ -17,7 +18,8 @@ Bearings are now better aligned with the tube.
 
 v1.6: Broader shelf, slightly larger bump
 
-### Exported step files
+### Step Files
+
 - [base](exhaust%20pinch%20valve%201.6%20-%20base.step)
 - [rotor](exhaust%20pinch%20valve%201.6%20-%20rotor.step)
 - [bearing](exhaust%20pinch%20valve%201.6%20-%20bearing.step)
@@ -25,9 +27,9 @@ v1.6: Broader shelf, slightly larger bump
 Original design found
 [here](https://cad.onshape.com/documents/3fe0c1f79c482144c267173d/w/2ad1c08071a25185f9c78c68/e/764ab1c89ba2f5ce8cf4b650).
 
-## BOM
+## Parts List (BOM)
 
-### Purchasing source abbreviations
+### Purchasing Source Key
 
 * **C** = McMaster-Carr
 * **Z** = Amazon
@@ -36,9 +38,9 @@ Original design found
 * **M** = Mouser
 * **3D** = 3D printed (RespiraWorks)
 
-### Parts BOM
+### Parts 
 
-| RefDes | Quantity | Manufacturer  | Part #              | Price($)     | Do what?     | Sources         | Notes |
+| Item | Quantity | Manufacturer  | Part #              | Price (USD)     | Action     | Sources         | Notes |
 | ------ |---------:| ------------- | ------------------- | ------------:| ------------ |-----------------| ----- |
 | 1      |        1 | STEPPERONLINE | 17HS19-2004S2       |       14.99  | Buy          | [Z][1amzn]      | Stepper motor. Make sure to get one with the full-cut D-shaft. |
 | 2      |        1 | McMaster-Carr | 92095A218           |   7.64 / 25  | Buy          | [C][2mcmc]      | M5x30mm button head. Axle for bearing. |
@@ -65,7 +67,7 @@ Original design found
 [103d]:    https://github.com/RespiraWorks/SystemDesign/blob/grace-pinch-valve-updates/2_Research_&_Development/Project-Pinch_Valve/README.md#exported-step-files
 
 
-### Tooling BOM
+### Tools
 
 | RefDes | Quantity | Manufacturer  | Part #              | Price($)     | Sources         | Notes |
 | ------ |---------:| ------------- | ------------------- | ------------:|-----------------| ----- |
@@ -75,7 +77,7 @@ Original design found
 [2amzn]:   https://www.amazon.com/TEKTON-2-Inch-Joint-Pliers-37122/dp/B00KLY1FAY
 [3amzn]:   https://www.amazon.com/Wiha-71397-Metric-Insert-6-Piece/dp/B0084B7S70/ref=sr_1_4?dchild=1&keywords=3mm+hex&qid=1590347774&sr=8-4
 
-## Assembly
+## Assembly Instructions
 
 ![Components](pinch-valve-components.jpg)
 

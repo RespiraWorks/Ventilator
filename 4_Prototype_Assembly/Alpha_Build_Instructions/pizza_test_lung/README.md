@@ -61,7 +61,7 @@ For a prototype with 3/4"ID tubing, these adapters should not be necessary.
 
 Although running long respiratory limbs is the best emulation of a real clinical setup, you may be short on space in your set up. Also, the test lung you buy may not come with the same type of connectors. 
 
-In this case, you could set up with tee connectors of your own. Two different options are possible with McMaster parts and pasts for both alternatives are listed as optional in the parts list. The assembled article below uses *item 8* as tee.
+In this case, you could set up with tee connectors of your own. Two different options are possible with McMaster parts and pasts for both alternatives are listed as optional in the parts list. The assembled article below uses *item a5* as tee.
 
 | Parts                  |  Assembled           |           
 |:----------------------:|:--------------------:|

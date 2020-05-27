@@ -162,9 +162,9 @@ SensorReadings Sensors::GetSensorReadings() {
   VolumetricFlow outflow = PressureDeltaToFlow(outflow_delta);
   VolumetricFlow flow = inflow - outflow;
 
-  flow_inhale = inflow.liters_per_sec() * 1000.0f;
-  flow_exhale = outflow.liters_per_sec() * 1000.0f;
-  flow_delta = flow.liters_per_sec() * 1000.0f;
+  flow_inhale = inflow.ml_per_sec();
+  flow_exhale = outflow.ml_per_sec();
+  flow_delta = flow.ml_per_sec();
 
   tv_integrator_.AddFlow(Hal.now(), flow);
   return {

@@ -57,7 +57,7 @@ DbgErrCode VarCmd::GetVarInfo(uint8_t *data, int *len, int max) {
 
   uint16_t vid = u8_to_u16(&data[1]);
 
-  const DebugVar *var = DebugVar::findVar(vid);
+  const DebugVar *var = DebugVar::FindVar(vid);
   if (!var)
     return DbgErrCode::BAD_VARID;
 
@@ -72,9 +72,9 @@ DbgErrCode VarCmd::GetVarInfo(uint8_t *data, int *len, int max) {
   // <fmt>  - variable length format string
   // <help> - variable length format string
   // The strings are not null terminated.
-  int nLen = static_cast<int>(strlen(var->getName()));
-  int fLen = static_cast<int>(strlen(var->getFormat()));
-  int hLen = static_cast<int>(strlen(var->getHelp()));
+  int nLen = static_cast<int>(strlen(var->GetName()));
+  int fLen = static_cast<int>(strlen(var->GetFormat()));
+  int hLen = static_cast<int>(strlen(var->GetHelp()));
 
   if (nLen > 255)
     nLen = 255;
@@ -88,7 +88,7 @@ DbgErrCode VarCmd::GetVarInfo(uint8_t *data, int *len, int max) {
     return DbgErrCode::NO_MEMORY;
 
   int n = 0;
-  data[n++] = static_cast<uint8_t>(var->getType());
+  data[n++] = static_cast<uint8_t>(var->GetType());
   data[n++] = 0;
   data[n++] = 0;
   data[n++] = 0;
@@ -96,13 +96,13 @@ DbgErrCode VarCmd::GetVarInfo(uint8_t *data, int *len, int max) {
   data[n++] = static_cast<uint8_t>(fLen);
   data[n++] = static_cast<uint8_t>(hLen);
   data[n++] = 0;
-  memcpy(&data[n], var->getName(), nLen);
+  memcpy(&data[n], var->GetName(), nLen);
   n += nLen;
 
-  memcpy(&data[n], var->getFormat(), fLen);
+  memcpy(&data[n], var->GetFormat(), fLen);
   n += fLen;
 
-  memcpy(&data[n], var->getHelp(), hLen);
+  memcpy(&data[n], var->GetHelp(), hLen);
   n += hLen;
   *len = n;
   return DbgErrCode::OK;
@@ -115,11 +115,16 @@ DbgErrCode VarCmd::GetVar(uint8_t *data, int *len, int max) {
 
   uint16_t vid = u8_to_u16(&data[1]);
 
-  DebugVar *var = DebugVar::findVar(vid);
+  DebugVar *var = DebugVar::FindVar(vid);
   if (!var)
     return DbgErrCode::BAD_VARID;
 
-  return var->GetValue(data, len, max);
+  if (max < 4)
+    return DbgErrCode::NO_MEMORY;
+
+  u32_to_u8(var->GetValue(), data);
+  *len = 4;
+  return DbgErrCode::OK;
 }
 
 DbgErrCode VarCmd::SetVar(uint8_t *data, int *len, int max) {
@@ -129,13 +134,18 @@ DbgErrCode VarCmd::SetVar(uint8_t *data, int *len, int max) {
 
   uint16_t vid = u8_to_u16(&data[1]);
 
-  DebugVar *var = DebugVar::findVar(vid);
+  DebugVar *var = DebugVar::FindVar(vid);
   if (!var)
     return DbgErrCode::BAD_VARID;
 
   int ct = *len - 3;
+
+  if (ct < 4)
+    return DbgErrCode::MISSING_DATA;
+
+  var->SetValue(u8_to_u32(data + 3));
   *len = 0;
-  return var->SetValue(&data[3], ct);
+  return DbgErrCode::OK;
 }
 
 VarCmd varCmd;

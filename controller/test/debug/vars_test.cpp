@@ -27,9 +27,9 @@ TEST(DebugVar, DebugVarInt32) {
   EXPECT_EQ("fmt", var.GetFormat());
   EXPECT_EQ(&var, DebugVar::FindVar(var.GetId()));
 
-  EXPECT_EQ(5, var.GetValue());
+  EXPECT_EQ(uint32_t{5}, var.GetValue());
   var.SetValue(7);
-  EXPECT_EQ(7, var.GetValue());
+  EXPECT_EQ(uint32_t{7}, var.GetValue());
   EXPECT_EQ(7, value);
 
   // Test a value outside the range of int32_t.
@@ -48,7 +48,7 @@ TEST(DebugVar, DebugVarUint32Defaults) {
   uint32_t value = 5;
   // All default arguments
   DebugVar var("var", &value);
-  EXPECT_EQ(5, var.GetValue());
+  EXPECT_EQ(uint32_t{5}, var.GetValue());
   EXPECT_EQ("", var.GetHelp());
   EXPECT_EQ("%u", var.GetFormat());
   EXPECT_EQ(VarType::UINT32, var.GetType());

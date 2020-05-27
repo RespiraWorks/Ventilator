@@ -46,7 +46,7 @@
       create: yes
 
   - name: Cache most recent gui docker image from dockerhub
-    shell: docker pull respiraworks/gui
+    shell: docker pull respiraworks/gui:8b771524c20789caf0f8a003bb9e1b3a71fc4544
 
   - name: Copy openbox autostart folder from root to pi
     shell: cp -r /etc/xdg/openbox /home/pi/.config/
@@ -54,4 +54,4 @@
   - name: Add script to spin up gui docker instance on boot
     lineinfile:
       dest: /home/pi/.config/openbox/autostart
-      line: 'docker run --name=gui -d --restart unless-stopped --volume="$HOME/.Xauthority:/root/.Xauthority:rw" --env="DISPLAY" --net=host -i -t respiraworks/gui &'
+      line: 'docker run --name=gui -d --restart unless-stopped --volume="$HOME/.Xauthority:/root/.Xauthority:rw" --env="DISPLAY" --net=host -i -t respiraworks/gui:8b771524c20789caf0f8a003bb9e1b3a71fc4544 /gui/build/ProjectVentilatorGUI &'

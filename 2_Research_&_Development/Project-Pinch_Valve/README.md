@@ -2,28 +2,35 @@
 
   CAD File         |  Assembled         |Animation           
 :------------------:|:-----------------:|:-------------------------:
-![](rendering_1_6.png)  |  ![](assembled.png)  |  ![](animation.gif)
+![](assets/rendering_1_6.png)  |  ![](assets/assembled.png)  |  ![](assets/animation.gif)
 
 
 This contains details, BOM, & instructions for the pinch valve module for the pneumatic circuit. 
 
 The module is something that can be "spliced" into any location in the pneumatic circuit given the 5/8"ID standard adopted for alpha. This makes it interchangeable with solenoid or whatever other valve implementation we might consider/test. The barbed adapters are needed because only 5/8"OD fits in the pinch valve mechanical assembly. It is envisioned that beta will be 3/4"ID throughout, which will require different adapters for the pinch valve.
 
-### Latest changes
+### Latest Changes
+
 The stop is moved down by 3 mm, which should buy us a lot more leverage.
 The stop is now flat. We might need to tweak exact dimensions further to get a perfect close, but this should be better.
 Watching the video I'm pretty concerned watching that stop flex. I made it run the full width, I made it thicker, and I also bulked out the tube holders.
 Bearings are now better aligned with the tube.
 
-v1.6: Broader shelf, slightly larger bump
+v1.6: Broader shelf, slightly larger bump.
 
-### Exported step files
-- [base](exhaust%20pinch%20valve%201.6%20-%20base.step)
-- [rotor](exhaust%20pinch%20valve%201.6%20-%20rotor.step)
-- [bearing](exhaust%20pinch%20valve%201.6%20-%20bearing.step)
+## 3D Printing
+
+### Files 
+
+- [Base - .step format](assets/exhaust%20pinch%20valve%201.6%20-%20base.step)
+- [Rotor - .step format](assets/exhaust%20pinch%20valve%201.6%20-%20rotor.step)
 
 Original design found
 [here](https://cad.onshape.com/documents/3fe0c1f79c482144c267173d/w/2ad1c08071a25185f9c78c68/e/764ab1c89ba2f5ce8cf4b650).
+
+### Guidelines
+
+The above files should not be printed with FDM. Instead, a leaktight method like SLA or MJF should be used.
 
 ## BOM
 
@@ -77,15 +84,15 @@ Original design found
 
 ## Assembly
 
-![Components](pinch-valve-components.jpg)
+![Components](assets/pinch-valve-components.jpg)
 
 Rotor Assembly                     |  Base Assembly           |   
 :---------------------------------:|:-------------------------: 
-![Assembled](pinch-assembling1.jpg)|  ![Assembled](pinch-assembling2.jpg)  
+![Assembled](assets/pinch-assembling1.jpg)|  ![Assembled](assets/pinch-assembling2.jpg)  
 3mm hex and 2.5mm hex driver are required for assembling rotor.|  2mm hex driver is required for attaching base.
 
 Assembled it should look something like this:
 
-![Assembled](pinch-valve-assembled.jpg)
+![Assembled](assets/pinch-valve-assembled.jpg)
 
 [Instructions on wiring the pinch valve to the PCB can be found here](https://github.com/RespiraWorks/pcbreathe).

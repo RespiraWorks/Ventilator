@@ -1,6 +1,6 @@
 # Venturi flow sensor
 
-![Rendering](assets/screenshot.png)
+![Rendering](Assets/screenshot.png)
 
 The venturi is used to measure flow by measuring a change in pressure as the flow accelerates through the throat. The change in pressure is measured between the two ports, and this is correlated to the flow rate through the device. This version inserts within 5/8" ID tubing, though can also be used with 16mm ID tubing. You can use a zip tie or hose clamp to improve the seal. 
 
@@ -37,12 +37,12 @@ Adjust values in the spreadsheet above accordingly to see how it will perform in
 ### Files
 
 * Venturi - for use with 5/8" ID tubing
-    * [.step format](assets/venturi-5-8.step)
-    * [.iges format](assets/venturi-5-8.iges)
-    * [.f3d format](assets/venturi-5-8.f3d)
+    * [.step format](Assets/venturi-5-8.step)
+    * [.iges format](Assets/venturi-5-8.iges)
+    * [.f3d format](Assets/venturi-5-8.f3d)
 * Venturi - for use with 3/4" ID tubing
-    * [.iges format](assets/venturi-3-4.iges)
-    * [.f3d format](assets/venturi-3-4.f3d)
+    * [.iges format](Assets/venturi-3-4.iges)
+    * [.f3d format](Assets/venturi-3-4.f3d)
 
 ### Guidelines
 
@@ -87,7 +87,7 @@ We try to make few assumptions about what tools you have. Here are recommended t
 
 ## Assembly
 
-![Nipples](assets/venturi-nipples.jpg)
+![Nipples](Assets/venturi-nipples.jpg)
 
 Screw the nipples into the 3d-printed venturi.
 There are threads in the print but they don’t always come out right if resin gets trapped in the grooves while it prints.

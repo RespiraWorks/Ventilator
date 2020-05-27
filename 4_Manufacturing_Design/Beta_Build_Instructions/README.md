@@ -16,7 +16,7 @@ We're planning to add some kind of Flash memory to support non-volatile storage 
 
 ## Stepper Drivers Updates
 
-We're planning to move the steppers driver onto the PCB. No need to buy stepper drivers - remove from BOM] Moving stepper drivers onto board - Pizza build version no change (see above “stepper drivers” for details)
+We're planning to move the steppers driver onto the PCB. Because of this, there will be no need to buy stepper drivers.
 
 ## RTC Battery
 

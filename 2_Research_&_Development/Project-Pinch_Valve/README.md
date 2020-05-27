@@ -2,7 +2,7 @@
 
   CAD File         |  Assembled         |Animation           
 :------------------:|:-----------------:|:-------------------------:
-![](Assets/rendering_1_6.png)  |  ![](Assets/assembled.png)  |  ![](Assets/animation.gif)
+![](assets/rendering_1_6.png)  |  ![](assets/assembled.png)  |  ![](assets/animation.gif)
 
 
 This contains details, BOM, & instructions for the pinch valve module for the pneumatic circuit. 
@@ -84,15 +84,15 @@ The above files should not be printed with FDM. Instead, a leaktight method like
 
 ## Assembly
 
-![Components](Assets/pinch-valve-components.jpg)
+![Components](assets/pinch-valve-components.jpg)
 
 Rotor Assembly                     |  Base Assembly           |   
 :---------------------------------:|:-------------------------: 
-![Assembled](Assets/pinch-assembling1.jpg)|  ![Assembled](Assets/pinch-assembling2.jpg)  
+![Assembled](assets/pinch-assembling1.jpg)|  ![Assembled](assets/pinch-assembling2.jpg)  
 3mm hex and 2.5mm hex driver are required for assembling rotor.|  2mm hex driver is required for attaching base.
 
 Assembled it should look something like this:
 
-![Assembled](Assets/pinch-valve-assembled.jpg)
+![Assembled](assets/pinch-valve-assembled.jpg)
 
 [Instructions on wiring the pinch valve to the PCB can be found here](https://github.com/RespiraWorks/pcbreathe).

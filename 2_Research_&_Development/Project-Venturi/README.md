@@ -67,7 +67,7 @@ We try to make few assumptions about what tools you have. Here are recommended t
 | Item | Quantity | Manufacturer  | Part #         | Price (USD) | Sources         | Notes |
 | ------ |---------:| ------------- | ------------------- | --------:|-----------------| ----- |
 | a1     |        1 | McMaster-Carr | 26955A86            |     6.76 | [C][a1mcmc]     | Tap for 10-32 threading nipple ports. |
-| a2     |        1 | Kaufhof       | KF-ATW-0053         |    14.11 | [Z][a2amzn]     | Hand-operated tap wrenches, for use with T1 above | 
+| a2     |        1 | Kaufhof       | KF-ATW-0053         |    14.11 | [Z][a2amzn]     | Hand-operated tap wrenches, for use with a1 above | 
 
 [a1mcmc]:https://www.mcmaster.com/26955A86
 [a2amzn]:https://www.amazon.com/gp/product/B003GKJYKI

@@ -48,7 +48,7 @@ static const float DENSITY_OF_AIR_KG_PER_CUBIC_METER = 1.225f; // kg/m^3
 // Diameters relating to Ethan's Alpha Venturi - II
 // (https://docs.google.com/spreadsheets/d/1G9Kb-ImlluK8MOx-ce2rlHUBnTOtAFQvKjjs1bEhlpM/edit#gid=963553579)
 // Port diameter must be larger than choke diameter
-constexpr static Length DEFAULT_VENTURI_PORT_DIAM = millimeters(11.5);
+constexpr static Length DEFAULT_VENTURI_PORT_DIAM = millimeters(14.0);
 constexpr static Length DEFAULT_VENTURI_CHOKE_DIAM = millimeters(5.5f);
 
 static_assert(DEFAULT_VENTURI_PORT_DIAM > DEFAULT_VENTURI_CHOKE_DIAM);

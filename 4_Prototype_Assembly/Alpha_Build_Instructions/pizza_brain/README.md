@@ -74,13 +74,13 @@ For an upgrade, check the [Pizza build](../pizza_build.md).
 
 | Item | Manufacturer  | Part number        | Price (USD) | Sources         | Notes |
 | ---- |--------------:| ------------------ | -------- | ---------------:|------ |
-| a1   |               |                    |    12.99 | [Z][t1amzn]     | microSD-USB adapter, for flashing RasPi images | 
-| a2   | Preciva       | PR-3254 (PR102001) |    39.99 | [Z][t2amzn]     | Crimping tool for HX and HV connectors |
+| a1   |               |                    |    12.99 | [Z][a1amzn]     | microSD-USB adapter, for flashing RasPi images | 
+| a2   | Preciva       | PR-3254 (PR102001) |    39.99 | [Z][a2amzn]     | Crimping tool for HX and HV connectors |
 
-[t1amzn]:https://www.amazon.com/Anker-Portable-Reader-RS-MMC-Micro/dp/B006T9B6R2
-[t2amzn]:https://www.amazon.com/gp/product/B07R1H3Z8X
+[a1amzn]:https://www.amazon.com/Anker-Portable-Reader-RS-MMC-Micro/dp/B006T9B6R2
+[a2amzn]:https://www.amazon.com/gp/product/B07R1H3Z8X
 
-**NOTE: Items 15-17 and T2 above are also duplicated in the [wiring BOM](../../../1_Ventilator_System_Design/Electrical_System/wiring.md)**
+**NOTE: Items 15-17 and a2 above are also duplicated in the [wiring BOM](../../../1_Ventilator_System_Design/Electrical_System/wiring.md)**
 
 ### Purchasing Guide
 

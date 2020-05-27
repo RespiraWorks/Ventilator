@@ -69,13 +69,13 @@ Original design found
 
 ### Tools
 
-| RefDes | Quantity | Manufacturer  | Part #              | Price($)     | Sources         | Notes |
+| Item | Quantity | Manufacturer  | Part #              | Price($)     | Sources         | Notes |
 | ------ |---------:| ------------- | ------------------- | ------------:|-----------------| ----- |
-| 1      |        1 | TEKTON | 37122       |       9.99  | [Z][2amzn]      | For final assembly, some sort of wrench/pliers are needed to clamp the herbie clips around the tubing+fitting. |
-| 2      |        1 | Wiha | 71397       |       6.76  | [Z][3amzn]      | 2, 2.5, & 3mm hex drivers required for assembly.  |
+| a1      |        1 | TEKTON | 37122       |       9.99  | [Z][a2amzn]      | For final assembly, some sort of wrench/pliers are needed to clamp the herbie clips around the tubing+fitting. |
+| a2      |        1 | Wiha | 71397       |       6.76  | [Z][a3amzn]      | 2, 2.5, & 3mm hex drivers required for assembly.  |
 
-[2amzn]:   https://www.amazon.com/TEKTON-2-Inch-Joint-Pliers-37122/dp/B00KLY1FAY
-[3amzn]:   https://www.amazon.com/Wiha-71397-Metric-Insert-6-Piece/dp/B0084B7S70/ref=sr_1_4?dchild=1&keywords=3mm+hex&qid=1590347774&sr=8-4
+[a2amzn]:   https://www.amazon.com/TEKTON-2-Inch-Joint-Pliers-37122/dp/B00KLY1FAY
+[a3amzn]:   https://www.amazon.com/Wiha-71397-Metric-Insert-6-Piece/dp/B0084B7S70/ref=sr_1_4?dchild=1&keywords=3mm+hex&qid=1590347774&sr=8-4
 
 ## Assembly Instructions
 

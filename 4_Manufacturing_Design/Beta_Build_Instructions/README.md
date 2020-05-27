@@ -8,7 +8,7 @@ We're planning to use 3/4"ID tubing throughout. The venturi will most likely be 
 
 ## Nucleo Module Updates
 
-We're planning to move the STM32 (nucleo module) onto the PCB, so there won't be a need to buy nucleo module. 
+We're planning to move the STM32 onto the PCB, so there won't be a need to buy nucleo module. 
 
 ## STM32 Updates
 

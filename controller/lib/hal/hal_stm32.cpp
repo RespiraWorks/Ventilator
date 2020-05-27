@@ -31,6 +31,7 @@ the programmer's manual for the processor available here:
 #include "hal.h"
 #include "stepper.h"
 #include "uart_dma.h"
+#include "vars.h"
 #include <optional>
 #include <stdarg.h>
 #include <stdio.h>
@@ -341,11 +342,30 @@ void HalApi::startLoopTimer(const Duration &period, void (*callback)(void *),
   EnableInterrupt(InterruptVector::TIMER15, IntPriority::LOW);
 }
 
+static float latency, max_latency, loop_time;
+static DebugVar d1("loop_latency", &latency, "Latency of loop function, usec",
+                   "%.2f");
+static DebugVar d2("max_latency", &max_latency,
+                   "Maximum latency of loop function, usec", "%.2f");
+static DebugVar d3("loop_time", &loop_time, "Duration of loop function, usec",
+                   "%.2f");
+
 static void Timer15ISR() {
+  uint32_t start = TIMER15_BASE->counter;
   TIMER15_BASE->status = 0;
+
+  // Keep track of loop latency in uSec
+  // Also max latency since it was last zeroed
+  latency = static_cast<float>(start) * (1.0f / CPU_FREQ_MHZ);
+  max_latency = 0;
+  if (latency > max_latency)
+    max_latency = latency;
 
   // Call the function
   controller_callback(controller_arg);
+
+  uint32_t end = TIMER15_BASE->counter;
+  loop_time = static_cast<float>(end - start) * (1.0f / CPU_FREQ_MHZ);
 
   // Start sending any queued commands to the stepper motor
   StepMotor::StartQueuedCommands();

@@ -18,32 +18,27 @@ This is completely uncalibrated, so it is not intended for instrumentation just 
 ### Purchasing Source Key
 
 * **Z** = Amazon
-* **A** = Ali Express
-* **M** = Mouser
-* **O** = Monoprice
-* **K** = Digikey
-* **R** = RS Computing ([various countries](https://www.rs-online.com/))
-* **B** = Built by RespiraWorks
+* **C** = McMaster Carr
 
 ### Parts
 
 | Item | Quantity | Manufacturer    | Part number         | Price (USD) | Sources         | Notes |
 | ---- |---------:| --------------- | ------------------- | --------:|-----------------| ----- |
-| 1  |        1 | South Pacific   | FlexLung            |  129.00 / 5 | [Z][TL1amzn]     | Test Lung or breathing bag or equivalent, many models out there, check eBay as well |
-| 2  |        1 | BXI or whatever | CA-BX-AP-PF |    28.95 | [Z][TL2amzn]     | Just some sturdy material.  Aluminum, wood, whatevery you have around. 1x 16x12 sheet needed, or 2x 8x12 sheets |
-| 3  |        1 | Grifiti         | 9-inch Silicone Huge Rubber Band   |     11.00| [Z][TL3amzn]     | just a big rubber band.  several jumbo rubber bands or resistance tubing from an exercise device will work. |
-| 4 |        1 | Alliance Rubber | 08997 SuperSize Bands  |     7.00| [Z][TL3aamzn]     | just some more big rubber bands. good for tuning the response. |
-| 5  |        1 | whoever         | literally just some zip ties   |     14.00| [Z][TL4amzn]     | hopefully you have some zip ties at home already but if not, here's a link |
-| 6  |        1 | McMaster-Carr   | 5463K615   |     12.00 for pack of 10| [Z][TL5mcmc]     | tee-juction to connect hoses to your test lung.  Again sizes vary so this is just a suggestion.  Find the right part for your hoses and your lung.  Expect to use some tape to ensure a tight seal. |
-| 7   |        1 |                 |                     | 6.98         | [Z][11amzn]     | more rubber bands, optional or alternative to 3 and 3a |
+| 1  |        1 | South Pacific   | FlexLung            |  129.00 / 5 | [Z][1amzn]     | Test Lung or breathing bag or equivalent, many models out there, check eBay as well |
+| 2  |        1 | BXI or whatever | CA-BX-AP-PF |    28.95 | [Z][2amzn]     | Just some sturdy material.  Aluminum, wood, whatevery you have around. 1x 16x12 sheet needed, or 2x 8x12 sheets |
+| 3  |        1 | Grifiti         | 9-inch Silicone Huge Rubber Band   |     11.00| [Z][3amzn]     | just a big rubber band.  several jumbo rubber bands or resistance tubing from an exercise device will work. |
+| 4 |        1 | Alliance Rubber | 08997 SuperSize Bands  |     7.00| [Z][4amzn]     | just some more big rubber bands. good for tuning the response. |
+| 5  |        1 | whoever         | literally just some zip ties   |     14.00| [Z][5amzn]     | hopefully you have some zip ties at home already but if not, here's a link |
+| 6  |        1 | McMaster-Carr   | 5463K615   |     12.00 for pack of 10| [C][6mcmc]     | tee-juction to connect hoses to your test lung.  Again sizes vary so this is just a suggestion.  Find the right part for your hoses and your lung.  Expect to use some tape to ensure a tight seal. |
+| 7   |        1 |                 |                     | 6.98         | [Z][7amzn]     | more rubber bands, optional or alternative to 3 and 3a |
 
-[TL1amzn]:  https://www.amazon.com/FlexLung-Biomedical-Ventilator-Testing-Demonstration/dp/B07B876P9C
-[TL2amzn]:  https://www.amazon.com/gp/product/B077Q2HYMW
-[TL3amzn]:  https://www.amazon.com/Wrapping-Exercise-Chemical-Resistant-Silicone/dp/B0070EEGTK
-[TL3aamzn]:  https://www.amazon.com/gp/product/B0017D16PW
-[TL4amzn]: https://www.amazon.com/gp/product/B0777LWBD9
-[TL5mcmc]:  https://www.mcmaster.com/5463K615
-[11amzn]:  https://www.amazon.com/gp/product/B018WPZCSO
+[1amzn]:  https://www.amazon.com/FlexLung-Biomedical-Ventilator-Testing-Demonstration/dp/B07B876P9C
+[2amzn]:  https://www.amazon.com/gp/product/B077Q2HYMW
+[3amzn]:  https://www.amazon.com/Wrapping-Exercise-Chemical-Resistant-Silicone/dp/B0070EEGTK
+[4amzn]:  https://www.amazon.com/gp/product/B0017D16PW
+[5amzn]: https://www.amazon.com/gp/product/B0777LWBD9
+[6mcmc]:  https://www.mcmaster.com/5463K615
+[7amzn]:  https://www.amazon.com/gp/product/B018WPZCSO
 
 ## Assembly Instructions
 

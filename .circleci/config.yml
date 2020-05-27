@@ -93,7 +93,8 @@ jobs:
           command: |
             if [[ "$CIRCLE_BRANCH" == "master" ]]; then
                 echo "$DOCKER_HUB_TOKEN" | docker login -u "$DOCKER_HUB_USERNAME" --password-stdin
-                docker push respiraworks/gui:$CIRCLE_SHA1
+                docker tag respiraworks/gui:$CIRCLE_SHA1 respiraworks/gui:latest
+                docker push respiraworks/gui
             fi
 
 workflows:

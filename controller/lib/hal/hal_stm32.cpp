@@ -357,7 +357,6 @@ static void Timer15ISR() {
   // Keep track of loop latency in uSec
   // Also max latency since it was last zeroed
   latency = static_cast<float>(start) * (1.0f / CPU_FREQ_MHZ);
-  max_latency = 0;
   if (latency > max_latency)
     max_latency = latency;
 

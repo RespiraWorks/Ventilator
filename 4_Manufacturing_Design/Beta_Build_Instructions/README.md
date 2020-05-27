@@ -1,4 +1,4 @@
-# Beta Build Instructions
+# Beta Build Plan
 
 This page contains a running list of notes and planned updates that will be organized and added to as we get further into beta design and build. 
 

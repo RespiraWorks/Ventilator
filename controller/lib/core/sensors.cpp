@@ -18,10 +18,26 @@ pressure sensors in the ventilator design. It is designed to be used with the
 Arduino Nano and the MPXV5004GP and MPXV7002DP pressure sensors.
 */
 
-#include "hal.h"
-
 #include "sensors.h"
+#include "hal.h"
+#include "vars.h"
 #include <cmath>
+
+// Debug variables useful for tracing
+static float dp_inhale, dp_exhale, pressure;
+static DebugVar d1("dp_inhale", &dp_inhale, "Inhale diff pressure, cm/h2O",
+                   "%.4f");
+static DebugVar d2("dp_exhale", &dp_exhale, "Exhale diff pressure, cm/h2O",
+                   "%.4f");
+static DebugVar d3("pressure", &pressure, "Patient pressure, cm/h2O", "%.4f");
+
+static float flow_inhale, flow_exhale, flow_delta;
+static DebugVar d4("flow_inhale", &flow_inhale, "Inhale flow rate, cc/sec",
+                   "%.3f");
+static DebugVar d5("flow_exhale", &flow_exhale, "Exhale flow rate, cc/sec",
+                   "%.3f");
+static DebugVar d6("flow_delta", &flow_delta,
+                   "Inhale - Exhale flow rate, cc/sec", "%.3f");
 
 //@TODO: Potential Caution: Density of air slightly varies over temperature and
 // altitude - need mechanism to adjust based on delivery? Constant involving
@@ -32,7 +48,7 @@ static const float DENSITY_OF_AIR_KG_PER_CUBIC_METER = 1.225f; // kg/m^3
 // Diameters relating to Ethan's Alpha Venturi - II
 // (https://docs.google.com/spreadsheets/d/1G9Kb-ImlluK8MOx-ce2rlHUBnTOtAFQvKjjs1bEhlpM/edit#gid=963553579)
 // Port diameter must be larger than choke diameter
-constexpr static Length DEFAULT_VENTURI_PORT_DIAM = millimeters(14);
+constexpr static Length DEFAULT_VENTURI_PORT_DIAM = millimeters(11.5);
 constexpr static Length DEFAULT_VENTURI_CHOKE_DIAM = millimeters(5.5f);
 
 static_assert(DEFAULT_VENTURI_PORT_DIAM > DEFAULT_VENTURI_CHOKE_DIAM);
@@ -137,8 +153,19 @@ SensorReadings Sensors::GetSensorReadings() {
   auto patient_pressure = ReadPressureSensor(PATIENT_PRESSURE);
   auto inflow_delta = ReadPressureSensor(INFLOW_PRESSURE_DIFF);
   auto outflow_delta = ReadPressureSensor(OUTFLOW_PRESSURE_DIFF);
-  VolumetricFlow flow =
-      PressureDeltaToFlow(inflow_delta) - PressureDeltaToFlow(outflow_delta);
+
+  dp_inhale = inflow_delta.cmH2O();
+  dp_exhale = outflow_delta.cmH2O();
+  pressure = patient_pressure.cmH2O();
+
+  VolumetricFlow inflow = PressureDeltaToFlow(inflow_delta);
+  VolumetricFlow outflow = PressureDeltaToFlow(outflow_delta);
+  VolumetricFlow flow = inflow - outflow;
+
+  flow_inhale = inflow.liters_per_sec() * 1000.0f;
+  flow_exhale = outflow.liters_per_sec() * 1000.0f;
+  flow_delta = flow.liters_per_sec() * 1000.0f;
+
   tv_integrator_.AddFlow(Hal.now(), flow);
   return {
       .patient_pressure_cm_h2o = patient_pressure.cmH2O(),

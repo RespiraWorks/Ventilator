@@ -88,7 +88,7 @@ For an upgrade, check the [Pizza build](../pizza_build.md).
 can be sent to you.
 2. Take note of the specifically RPI3+ or RPI4 components. Don't get the wrong ones.
 3. If you are not (yet) able to get a PCB, get items 18 and 19
-4. If you are getting a PCB, and a power cable is included, you will not need 15-17, nor T2
+4. If you are getting a PCB, and a power cable is included, you will not need items 15-17, nor a2
 5. If you are feeling stingy, don't get the touchscreen (item 3). You can connect the RasPi to any monitor and use
 a mouse and keyboard to control it.
 

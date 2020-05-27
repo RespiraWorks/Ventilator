@@ -77,13 +77,13 @@ jobs:
           command: |
             sudo apt-get install -y binfmt-support
       - run:
-          name: Do arm64 build
+          name: Do ARMv7 build
           command: |
             export DOCKER_CLI_EXPERIMENTAL=enabled
             docker buildx create --name gui
             docker buildx use gui
             docker buildx inspect --bootstrap
-            cd ~/project/ && docker buildx build --platform linux/arm64 -t respiraworks/gui:$CIRCLE_SHA1 --load -f gui/Dockerfile .
+            cd ~/project/ && docker buildx build --platform linux/arm/v7 -t respiraworks/gui:$CIRCLE_SHA1 --load -f gui/Dockerfile .
       - run:
           name: Run tests
           command: |

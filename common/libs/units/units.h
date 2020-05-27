@@ -200,6 +200,7 @@ constexpr Length millimeters(float mm) { return Length(mm / 1000); }
 //   - meters^3/sec
 //   - mL^3/min
 //   - liters/sec
+//   - ml/sec
 //
 // Native unit (implementation detail): meters^3/sec
 //
@@ -212,11 +213,13 @@ public:
     return val_ * 1000.0f * 1000.0f * 60.0f;
   }
   [[nodiscard]] constexpr float liters_per_sec() { return val_ * 1000.0f; }
+  [[nodiscard]] constexpr float ml_per_sec() { return val_ * 1.0e6f; }
 
 private:
   constexpr friend VolumetricFlow cubic_m_per_sec(float m3ps);
   constexpr friend VolumetricFlow ml_per_min(float ml_per_min);
   constexpr friend VolumetricFlow liters_per_sec(float lps);
+  constexpr friend VolumetricFlow ml_per_sec(float mmps);
 
   using units_detail::ArithScalar<VolumetricFlow, float>::ArithScalar;
 };
@@ -229,6 +232,9 @@ constexpr VolumetricFlow ml_per_min(float ml_per_min) {
 }
 constexpr VolumetricFlow liters_per_sec(float lps) {
   return VolumetricFlow(lps / (1000.0f));
+}
+constexpr VolumetricFlow ml_per_sec(float mmps) {
+  return VolumetricFlow(mmps / (1.0e6f));
 }
 
 // Represents volume.

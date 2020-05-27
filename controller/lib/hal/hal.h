@@ -480,6 +480,7 @@ inline uint16_t HalApi::debugWrite(const char *buf, uint16_t len) {
   return len;
 }
 inline uint16_t HalApi::debugRead(char *buf, uint16_t len) { return 0; }
+inline uint16_t HalApi::debugBytesAvailableForWrite() { return 0; }
 
 inline void HalApi::startLoopTimer(const Duration &period,
                                    void (*callback)(void *), void *arg) {}

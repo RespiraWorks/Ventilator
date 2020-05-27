@@ -19,5 +19,5 @@ limitations under the License.
 #include <string.h>
 
 // static member variables
-DebugVar *DebugVar::varList[100];
-int DebugVar::varCount = 0;
+DebugVar *DebugVar::var_list[100];
+uint16_t DebugVar::var_count = 0;

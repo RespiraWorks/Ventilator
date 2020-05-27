@@ -1,6 +1,6 @@
 # Important: this Dockerfile requires that the repo root be build context (in order to include the common code)
 
-FROM arm64v8/debian:buster
+FROM debian:buster
 
 RUN apt-get update && \
     apt-get install -y \

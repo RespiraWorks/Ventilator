@@ -54,18 +54,22 @@ A metric version of the pneumatic system is also anticipated. If you can help wi
 | a1   |      5ft | McMaster-Carr | 5234K57             | 21.50 / 5ft  | [C][a1mcmc]     | Soft latex tubing, 5/8" ID, 7/8" OD |
 | a2   |      5ft | Duda Energy   | LPpvc063-025ft      | 20.11 / 25ft | [Z][a2amzn]     | 5/8" tubing, alternative to *a1*, not as good, too hard |
 | a3   |       20 | McMaster-Carr | 9579K72             | 12.21 / 20   | [C][a3mcmc]     | Herbie clip J (20.3-23mm) for clamping 7/8"OD tubing, you'll need plenty |
-| a4   |       ~6 | McMaster-Carr | 5463K646            |  6.60 / 10   | [C][a4mcmc]     | Reducer 5/8"ID <-> 1/2"ID, single barb, for adapting to pinch valve tubing |
-| a5   |       ~3 | McMaster-Carr | 5372K128            | 2.82         | [C][a5mcmc]     | 1/2 NTP female tee, if you plan to have bypass or oxygen limb |
-| a6   |       ~5 | McMaster-Carr | 5372K128            | 4.89 / 10    | [C][a6mcmc]     | 1/2 NTP male <-> 5/8"ID multibarbed, for tee junctions, if you plan to have bypass or oxygen limb |
-| a7   |        2 |               |                     | 13.45 / 2    | [Z][a7amzn]     | 2pac of ball valves 5/8"ID |
+| a4   |       ~6 | McMaster-Carr | 5463K646            |  6.60 / 10   | [C][a4mcmc]     | 5/8"ID <-> 1/2"ID, adapter, to interface with pinch valve tubing, **read note below** |
+| a5   |       ~6 | McMaster-Carr | 5463K646            |  6.60 / 10   | [C][a5mcmc]     | 5/8"ID <-> 3/8"ID, adapter, to interface with alternative pinch valve tubing, **read note below** |
+| a5   |       ~3 | McMaster-Carr | 5372K128            | 2.82         | [C][a6mcmc]     | 1/2 NTP female tee, if you plan to have bypass or oxygen limb |
+| a6   |       ~5 | McMaster-Carr | 5372K128            | 4.89 / 10    | [C][a7mcmc]     | 1/2 NTP male <-> 5/8"ID multibarbed, for tee junctions, if you plan to have bypass or oxygen limb |
+| a7   |        2 |               |                     | 13.45 / 2    | [Z][a8amzn]     | 2pac of ball valves 5/8"ID |
+
+**NOTE:** You should select either **a4** or **a5** depending on what your pinch valve tubing diameter will be.**
 
 [a1mcmc]: https://www.mcmaster.com/5234K57
 [a2amzn]: https://www.amazon.com/gp/product/B00LX6MFYE?th=1
 [a3mcmc]: https://www.mcmaster.com/9579K72
 [a4mcmc]: https://www.mcmaster.com/5463K646
-[a5mcmc]: https://www.mcmaster.com/4880K154
-[a6mcmc]: https://www.mcmaster.com/5372K128
-[a7amzn]: https://www.amazon.com/gp/product/B07C5FVN9K
+[a5mcmc]: https://www.mcmaster.com/5463K644
+[a6mcmc]: https://www.mcmaster.com/4880K154
+[a7mcmc]: https://www.mcmaster.com/5372K128
+[a8amzn]: https://www.amazon.com/gp/product/B07C5FVN9K
 
 ### 3/4"ID tubing components
 
@@ -76,10 +80,13 @@ A metric version of the pneumatic system is also anticipated. If you can help wi
 | b3   |       20 | McMaster-Carr | 9579K73             | 12.24 / 20   | [C][b3mcmc]    | Herbie clip K (22.2-24.9mm) for clamping 1"OD tubing, works better for soft tubing |
 | b4   |       20 | McMaster-Carr | 9579K74             | 12.33 / 20   | [C][b4mcmc]    | Herbie clip L (24.5-27.6mm) for clamping 1"OD tubing, maybe works better for hard tubing? |
 | b5   |        1 | McMaster-Carr | 5463K167            | 13.16 / 10   | [C][b5mcmc]    | 3/4"ID <-> 5/8"ID adapter single barb, to interface with blower sub-assembly |
-| b6   |       ~6 | McMaster-Carr | 5463K651            | 10.20 / 10   | [C][b6mcmc]    | 3/4"ID <-> 1/2"ID adapter, to interface with pinch valve assembly |
-| b7   |       ~3 | McMaster-Carr | 4596K33             | 4.18         | [C][b7mcmc]    | 3/4 NTP female tee, if you plan to have bypass or oxygen limb |
-| b8   |       ~5 | McMaster-Carr | 53415K217           | 12.89 / 10   | [C][b8mcmc]    | 3/4 NTP male <-> 3/4"ID single barb, for tee junctions, if you plan to have bypass or oxygen limb |
-| b9   |        2 |               |                     | 13.45 / 2    | [Z][b9amzn]    | 2pac of ball valves 3/4"ID |
+| b6   |       ~6 | McMaster-Carr | 5463K651            | 10.20 / 10   | [C][b6mcmc]    | 3/4"ID <-> 1/2"ID adapter, to interface with pinch valve tubing, **read note below** |
+| b7   |       ~6 | McMaster-Carr | 5463K648            | 10.20 / 10   | [C][b7mcmc]    | 3/4"ID <-> 3/8"ID adapter, to interface with alternative pinch valve tubing, **read note below** |
+| b8   |       ~3 | McMaster-Carr | 4596K33             | 4.18         | [C][b8mcmc]    | 3/4 NTP female tee, if you plan to have bypass or oxygen limb |
+| b9   |       ~5 | McMaster-Carr | 53415K217           | 12.89 / 10   | [C][b9mcmc]    | 3/4 NTP male <-> 3/4"ID single barb, for tee junctions, if you plan to have bypass or oxygen limb |
+| b10  |        2 |               |                     | 13.45 / 2    | [Z][b10amzn]    | 2pac of ball valves 3/4"ID |
+
+**NOTE:** You should select either **b6** or **b7** depending on what your pinch valve tubing diameter will be.**
 
 [b1amzn]: https://www.amazon.com/gp/product/B01LZ5ZK53
 [b2mcmc]: https://www.mcmaster.com/5233K71
@@ -87,9 +94,10 @@ A metric version of the pneumatic system is also anticipated. If you can help wi
 [b4mcmc]: https://www.mcmaster.com/9579K74
 [b5mcmc]: https://www.mcmaster.com/5463K167
 [b6mcmc]: https://www.mcmaster.com/5463K651
-[b7mcmc]: https://www.mcmaster.com/4596K33
-[b8mcmc]: https://www.mcmaster.com/53415K217
-[b9amzn]: https://www.amazon.com/gp/product/B07C5FVSQB
+[b7mcmc]: https://www.mcmaster.com/5463K648
+[b8mcmc]: https://www.mcmaster.com/4596K33
+[b9mcmc]: https://www.mcmaster.com/53415K217
+[b10amzn]: https://www.amazon.com/gp/product/B07C5FVSQB
 
 ### Metric version
 

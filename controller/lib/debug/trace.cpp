@@ -40,16 +40,14 @@ int32_t traceVar[TRACE_VAR_CT];
 
 class TraceCtrlVar : public DebugVar {
 public:
-  TraceCtrlVar(const char *name, int32_t *data, const char *help,
-               const char *fmt)
-      : DebugVar(name, data, help, fmt) {}
-  DbgErrCode SetValue(uint8_t *buff, int len);
+  TraceCtrlVar()
+      : DebugVar("trace_ctrl", &traceCtrl,
+                 "Used to start/stop the trace function", "0x%08x") {}
+  void SetValue(uint32_t value) override;
 };
 
 // These variables are used control the trace function
-static TraceCtrlVar varTraceCtrl("trace_ctrl", &traceCtrl,
-                                 "Used to start/stop the trace function",
-                                 "0x%08x");
+static TraceCtrlVar varTraceCtrl;
 static DebugVar
     varTracePeriod("trace_period", &tracePeriod,
                    "Period that data will be captured.  Loop cycle units");
@@ -93,7 +91,7 @@ void TraceSample() {
   // Sample each enabled varible and store the
   // result to the buffer
   for (int i = 0; i < vct; i++) {
-    bool ok = traceBuffer.Put(vptr[i]->getDataForTrace());
+    bool ok = traceBuffer.Put(vptr[i]->GetValue());
 
     // Note that this can't fail as we've already checked for sufficient
     // space above.  I still need to check it though, becuase it's marked
@@ -116,7 +114,7 @@ int CountActiveVars(DebugVar *vptr[]) {
 
     // Find the debug variable associated
     // with this ID
-    vptr[vct] = DebugVar::findVar(static_cast<uint16_t>(traceVar[i]));
+    vptr[vct] = DebugVar::FindVar(static_cast<uint16_t>(traceVar[i]));
 
     // If the ID wasn't valid, disable this trace variable
     if (!vptr[vct])
@@ -128,20 +126,15 @@ int CountActiveVars(DebugVar *vptr[]) {
   return vct;
 }
 
-DbgErrCode TraceCtrlVar::SetValue(uint8_t *buff, int len) {
+void TraceCtrlVar::SetValue(uint32_t value) {
 
   // Temporarily replace the address with a local variable
   // so the setting doesn't take effect immediately
   // Then call the standard SetValue function
   int32_t new_ctrl;
-  addr = &new_ctrl;
+  addr_ = &new_ctrl;
 
-  DbgErrCode err = DebugVar::SetValue(buff, len);
-
-  addr = &traceCtrl;
-
-  if (err != DbgErrCode::OK)
-    return err;
+  DebugVar::SetValue(value);
 
   // When a new trace is started, flush the buffer first
   if ((new_ctrl & 1) && !(traceCtrl & 1)) {
@@ -149,6 +142,5 @@ DbgErrCode TraceCtrlVar::SetValue(uint8_t *buff, int len) {
     traceSamp = 0;
   }
   traceCtrl = new_ctrl;
-
-  return DbgErrCode::OK;
+  addr_ = &traceCtrl;
 }

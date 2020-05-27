@@ -17,10 +17,11 @@ limitations under the License.
 #define VARS_H
 
 #include "debug.h"
+#include <array>
+#include <cstring>
 
 // Defines the type of variable
 enum class VarType {
-  UNKNOWN = 0,
   INT32 = 1,
   UINT32 = 2,
   FLOAT = 3,
@@ -46,71 +47,63 @@ public:
   // @param fmt printf style format string.  This is a hint to the Python code
   // as to how the variable data should be displayed.
   DebugVar(const char *name, int32_t *data, const char *help = "",
-           const char *fmt = "%d");
+           const char *fmt = "%d")
+      : DebugVar(VarType::INT32, name, data, help, fmt) {}
 
   // Like above, but unsigned
   DebugVar(const char *name, uint32_t *data, const char *help = "",
-           const char *fmt = "%d");
+           const char *fmt = "%u")
+      : DebugVar(VarType::UINT32, name, data, help, fmt) {}
 
-  // float variable.  The default get/set functions will probably be fine
-  // @param name Name of the variable
-  // @param data Pointer to the actual variable in C++ code that this will
-  // access
-  // @param fmt printf style format string.  This is a hint to the Python code
-  // as to how
-  //            the variable data should be displayed.
-  // @param help String that the Python code displays describing the variable.
+  // Like above, but float
   DebugVar(const char *name, float *data, const char *help = "",
-           const char *fmt = "%.3f");
+           const char *fmt = "%.3f")
+      : DebugVar(VarType::FLOAT, name, data, help, fmt) {}
 
-  // Gets the current value of the variable.
-  // @param buff The variable's value is stored here
-  // @param len Return the length (in bytes) of the value here
-  // @param max Maximum number of bytes we can write to buff
-  // @return An error code, 0 on success
-  virtual DbgErrCode GetValue(uint8_t *buff, int *len, int max);
+  // Gets the current value of the variable as an uint32_t.
+  virtual uint32_t GetValue() {
+    uint32_t res;
+    std::memcpy(&res, addr_, 4);
+    return res;
+  }
 
-  // Sets the current value of the variable.
-  // @param buff Holds the data to be written to the variable
-  // @param len Number of valid bytes in buffer
-  // @return An error code, 0 on success
-  virtual DbgErrCode SetValue(uint8_t *buff, int len);
+  // Sets the current value of the variable as an uint32_t.
+  virtual void SetValue(uint32_t value) { std::memcpy(addr_, &value, 4); }
 
-  // Returns a representation of this variable as a 32-bit integer.
-  // This is used when capturing the variables value to the trace buffer.
-  // Only variables that can be represented by 32-bits can be traced.
-  // For floats, this returns the raw bits of the float, the Python
-  // program handles converting it back into a float.
-  virtual uint32_t getDataForTrace();
+  const char *GetName() const { return name_; }
+  const char *GetFormat() const { return fmt_; }
+  const char *GetHelp() const { return help_; }
+  VarType GetType() const { return type_; }
+  uint16_t GetId() const { return id_; }
 
-  const char *getName() const { return name; }
-  const char *getFormat() const { return fmt; }
-  const char *getHelp() const { return help; }
-  VarType getType() const { return type; }
-
-  static DebugVar *findVar(uint16_t vid) {
-    if (vid >= ARRAY_CT(varList))
-      return 0;
-    return varList[vid];
+  static DebugVar *FindVar(uint16_t vid) {
+    if (vid >= std::size(var_list))
+      return nullptr;
+    return var_list[vid];
   }
 
 protected:
-  VarType type;
-  const char *name;
-  const char *fmt;
-  const char *help;
-  void *addr;
+  const VarType type_;
+  const char *const name_;
+  const char *const fmt_;
+  const char *const help_;
+  void *addr_;
+  const uint16_t id_;
 
 private:
+  DebugVar(VarType type, const char *name, void *data, const char *help,
+           const char *fmt)
+      : type_(type), name_(name), fmt_(fmt), help_(help), addr_(data),
+        id_(var_count) {
+    if (var_count < static_cast<uint16_t>(std::size(var_list)))
+      var_list[id_] = this;
+    var_count++;
+  }
+
   // List of all the variables in the system.
   // Increase size as necessary
-  static DebugVar *varList[100];
-  static int varCount;
-
-  void RegisterVar() {
-    if (varCount < static_cast<int>(ARRAY_CT(varList)))
-      varList[varCount++] = this;
-  }
+  static DebugVar *var_list[100];
+  static uint16_t var_count;
 };
 
 #endif

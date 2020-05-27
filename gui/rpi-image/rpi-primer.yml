@@ -45,9 +45,8 @@
       line: 'exec openbox-session'
       create: yes
 
-#TODO:
-# - name: Cache most recent gui docker image from dockerhub
-#   shell: docker pull respiraworks/gui
+  - name: Cache most recent gui docker image from dockerhub
+    shell: docker pull respiraworks/gui
 
   - name: Copy openbox autostart folder from root to pi
     shell: cp -r /etc/xdg/openbox /home/pi/.config/

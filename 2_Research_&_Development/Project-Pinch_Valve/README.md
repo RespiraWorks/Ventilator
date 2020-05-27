@@ -7,7 +7,14 @@
 
 This contains details, BOM, & instructions for the pinch valve module for the pneumatic circuit. 
 
-The module is something that can be "spliced" into any location in the pneumatic circuit given the 5/8"ID standard adopted for alpha. This makes it interchangeable with solenoid or whatever other valve implementation we might consider/test. The barbed adapters are needed because only 5/8"OD fits in the pinch valve mechanical assembly. It is envisioned that beta will be 3/4"ID throughout, which will require different adapters for the pinch valve.
+The module is something that can be "spliced" into any location in the pneumatic circuit.
+This makes it interchangeable with solenoid or whatever other valve implementation we might consider/test.
+The barbed adapters are needed because only 5/8"OD fits in the pinch valve mechanical assembly.
+It is envisioned that beta will be 3/4"ID throughout, which will require different tubing adapters.
+
+**NOTE: there are two types of tubing listed, with different internal diameter. We are still prototyping and final
+specification is undecided. Consult with the team for selecting one.
+Depending on your system's tubing, you will also need to get appropriate diameter adapters.** 
 
 ### Latest Changes
 
@@ -45,42 +52,46 @@ The above files should not be printed with FDM. Instead, a leaktight method like
 
 ### Parts BOM
 
-| RefDes | Quantity | Manufacturer  | Part #              | Price($)     | Do what?     | Sources         | Notes |
-| ------ |---------:| ------------- | ------------------- | ------------:| ------------ |-----------------| ----- |
-| 1      |        1 | STEPPERONLINE | 17HS19-2004S2       |       14.99  | Buy          | [Z][1amzn]      | Stepper motor. Make sure to get one with the full-cut D-shaft. |
-| 2      |        1 | McMaster-Carr | 92095A218           |   7.64 / 25  | Buy          | [C][2mcmc]      | M5x30mm button head. Axle for bearing. |
-| 3      |        3 | McMaster-Carr | 91294A128           |  4.82 / 100  | Buy          | [C][3mcmc]      | M3x8mm flat head. Attaches frame to stepper body |
-| 4      |        1 | McMaster-Carr | 91390A117           |  4.75 / 100  | Buy          | [C][4mcmc]      | M5x5mm set screw. Attaches rotor to stepper |
-| 5      |        3 | FastEddy      | TFE4262             |  12.50 / 10  | Buy          | [F][5fast]      | 5x16x5 Metal shielded bearings |
-| 6      |        2 | McMaster-Carr | 5463K646            |  6.60 / 10   | Buy          | [C][6mcmc]      | Reducer 5/8"ID <-> 1/2"ID, single barb |
-| 7      | 6in/15cm | McMaster-Carr | 5894K39             |  8.04 / 2 ft | Buy          | [C][7mcmc]      | Continuous-Flex Soft Tygon PVC Tubing, 1/2" ID, 5/8" OD |
-| 8      |        2 | McMaster-Carr | 9579K67              |  12.63 / 20  | Buy         | [C][8mcmc]      | Easy-Install Double Snap-Grip Clamps, 1/2" to 19/32" ID |
-| 9     |         1 | Digikey       | X-NUCLEO-IHM03A1     |        10.64 | *Ask first* | [K][9key] [M][9mr]      | Stepper driver dev board |
-| 10     |        1 | RespiraWorks. | N/A                  |       N/A.   | Ask         | [3D][103d]      | BASE - 3D printed |
-| 11     |        1 | RespiraWorks  | N/A                  |       N/A    | Ask         | [3D][103d]      | ROTOR - 3D printed |
+| RefDes | Quantity | Manufacturer  | Part #              | Price($)     | Do what?     | Sources            | Notes |
+| ------ |---------:| ------------- | ------------------- | ------------:| ------------ |--------------------| ----- |
+| 1      |        1 | STEPPERONLINE | 17HS19-2004S2       |       14.99  | Buy          | [Z][1amzn]         | Stepper motor. Make sure to get one with the full-cut D-shaft. |
+| 2      |        1 | McMaster-Carr | 92095A218           |   7.64 / 25  | Buy          | [C][2mcmc]         | M5x30mm button head. Axle for bearing. |
+| 3      |        3 | McMaster-Carr | 91294A128           |  4.82 / 100  | Buy          | [C][3mcmc]         | M3x8mm flat head. Attaches frame to stepper body |
+| 4      |        1 | McMaster-Carr | 91390A117           |  4.75 / 100  | Buy          | [C][4mcmc]         | M5x5mm set screw. Attaches rotor to stepper |
+| 5      |        3 | FastEddy      | TFE4262             |  12.50 / 10  | Buy          | [F][5fast]         | 5x16x5 Metal shielded bearings |
+| 6      |        2 | McMaster-Carr | 5463K646            |  6.60 / 10   | Buy          | [C][6mcmc]         | Reducer 5/8"ID <-> 1/2"ID, single barb **READ WARNING BELOW**|
+| 7      | 6in/15cm | McMaster-Carr | 5894K39             |  8.04 / 2 ft | Buy          | [C][7mcmc]         | Continuous-Flex Soft Tygon PVC Tubing, 1/2" ID, 5/8" OD |
+| 8      |        2 | McMaster-Carr | 9579K67             |  12.63 / 20  | Buy          | [C][8mcmc]         | Easy-Install Double Snap-Grip Clamps, 1/2" to 19/32" ID |
+| 9      |        1 | Digikey       | X-NUCLEO-IHM03A1    |        10.64 | *Ask first*  | [K][9key] [M][9mr] | Stepper driver dev board |
+| 10     |        1 | RespiraWorks  | N/A                 |       N/A.   | *Ask first*  | [3D][103d]         | BASE - 3D printed |
+| 11     |        1 | RespiraWorks  | N/A                 |       N/A    | *Ask first*  | [3D][103d]         | ROTOR - 3D printed |
+| 12     | 6in/15cm | McMaster-Carr | 5894K38             |  8.04 / 2 ft | Buy          | [C][12mcmc]        | **alternative to 7**, tubing 3/8" ID, 5/8" OD |
+
+**WARNING: Item 6 may have to be substituted by another adapter, depending on your choice of tubing here (7 or 12) and
+your choice of pneumatic system internal diameter. Alternative adapters are listed on main pizza page**
 
 [1amzn]:   https://www.amazon.com/dp/B07Z1J8JWH/ref=cm_sw_r_cp_api_i_d.zUEbRBKGSVW
-[2mcmc]:   https://www.mcmaster.com/catalog/92095A218
-[3mcmc]:   https://www.mcmaster.com/catalog/91294A128
-[4mcmc]:   https://www.mcmaster.com/catalog/91390A117
+[2mcmc]:   https://www.mcmaster.com/92095A218
+[3mcmc]:   https://www.mcmaster.com/91294A128
+[4mcmc]:   https://www.mcmaster.com/91390A117
 [5fast]:   https://www.fasteddybearings.com/5x16x5-metal-shielded-bearing-625-zz-10-units/
-[6mcmc]:   https://www.mcmaster.com/catalog/5463K646
-[7mcmc]:   https://www.mcmaster.com/catalog/5894K39
-[8mcmc]:   https://www.mcmaster.com/catalog/9579K67
+[6mcmc]:   https://www.mcmaster.com/5463K646
+[7mcmc]:   https://www.mcmaster.com/5894K39
+[8mcmc]:   https://www.mcmaster.com/9579K67
 [9key]:   https://www.digikey.com/short/z442qt
 [9mr]:     https://www.mouser.com/ProductDetail/511-X-NUCLEO-IHM03A1
 [103d]:    https://github.com/RespiraWorks/SystemDesign/blob/grace-pinch-valve-updates/2_Research_&_Development/Project-Pinch_Valve/README.md#exported-step-files
-
+[12mcmc]:  https://www.mcmaster.com/5894K38
 
 ### Tooling BOM
 
-| RefDes | Quantity | Manufacturer  | Part #              | Price($)     | Sources         | Notes |
-| ------ |---------:| ------------- | ------------------- | ------------:|-----------------| ----- |
-| 1      |        1 | TEKTON | 37122       |       9.99  | [Z][2amzn]      | For final assembly, some sort of wrench/pliers are needed to clamp the herbie clips around the tubing+fitting. |
-| 2      |        1 | Wiha | 71397       |       6.76  | [Z][3amzn]      | 2, 2.5, & 3mm hex drivers required for assembly.  |
+| Item | Quantity | Manufacturer  | Part #      | Price(USD) | Sources         | Notes |
+| ---- |---------:| ------------- | ----------- | ----------:|-----------------| ----- |
+| A1   |        1 | TEKTON        | 37122       |       9.99 | [Z][a1amzn]      | Some sort of wrench/pliers, to clamp the herbie clips around the tubing+fitting. |
+| A2   |        1 | Wiha          | 71397       |       6.76 | [Z][a2amzn]      | 2, 2.5, & 3mm hex drivers required for assembly.  |
 
-[2amzn]:   https://www.amazon.com/TEKTON-2-Inch-Joint-Pliers-37122/dp/B00KLY1FAY
-[3amzn]:   https://www.amazon.com/Wiha-71397-Metric-Insert-6-Piece/dp/B0084B7S70/ref=sr_1_4?dchild=1&keywords=3mm+hex&qid=1590347774&sr=8-4
+[a1amzn]:   https://www.amazon.com/TEKTON-2-Inch-Joint-Pliers-37122/dp/B00KLY1FAY
+[a2amzn]:   https://www.amazon.com/Wiha-71397-Metric-Insert-6-Piece/dp/B0084B7S70/ref=sr_1_4?dchild=1&keywords=3mm+hex&qid=1590347774&sr=8-4
 
 ## Assembly
 

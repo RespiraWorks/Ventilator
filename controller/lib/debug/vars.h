@@ -17,6 +17,7 @@ limitations under the License.
 #define VARS_H
 
 #include "debug.h"
+#include <array>
 #include <cstring>
 
 // Defines the type of variable
@@ -52,7 +53,7 @@ public:
   // Like above, but unsigned
   DebugVar(const char *name, uint32_t *data, const char *help = "",
            const char *fmt = "%u")
-      : DebugVar(VarType::INT32, name, data, help, fmt) {}
+      : DebugVar(VarType::UINT32, name, data, help, fmt) {}
 
   // Like above, but float
   DebugVar(const char *name, float *data, const char *help = "",
@@ -73,11 +74,12 @@ public:
   const char *GetFormat() const { return fmt_; }
   const char *GetHelp() const { return help_; }
   VarType GetType() const { return type_; }
+  uint16_t GetId() const { return id_; }
 
   static DebugVar *FindVar(uint16_t vid) {
-    if (vid >= ARRAY_CT(varList))
-      return 0;
-    return varList[vid];
+    if (vid >= std::size(var_list))
+      return nullptr;
+    return var_list[vid];
   }
 
 protected:
@@ -86,19 +88,22 @@ protected:
   const char *const fmt_;
   const char *const help_;
   void *addr_;
+  const uint16_t id_;
 
 private:
   DebugVar(VarType type, const char *name, void *data, const char *help,
            const char *fmt)
-      : type_(type), name_(name), fmt_(fmt), help_(help), addr_(data) {
-    if (varCount < static_cast<int>(ARRAY_CT(varList)))
-      varList[varCount++] = this;
+      : type_(type), name_(name), fmt_(fmt), help_(help), addr_(data),
+        id_(var_count) {
+    if (var_count < static_cast<uint16_t>(std::size(var_list)))
+      var_list[id_] = this;
+    var_count++;
   }
 
   // List of all the variables in the system.
   // Increase size as necessary
-  static DebugVar *varList[100];
-  static int varCount;
+  static DebugVar *var_list[100];
+  static uint16_t var_count;
 };
 
 #endif

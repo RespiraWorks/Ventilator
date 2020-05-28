@@ -37,7 +37,7 @@ for the millions of cycles required, in addition to being difficult to source.
 
 ## Subsystems
 
-**TODO:** Introduce each subsystem properly
+**#TODO:** Introduce each subsystem properly
 
    * [Pneumatic design](Pneumatic_System)
    * [Electrical design](Electrical_System)

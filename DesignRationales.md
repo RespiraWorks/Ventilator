@@ -41,7 +41,10 @@ More detailed thoughts on this [here](https://docs.google.com/document/d/1_2f-MA
 
 * Trigger breath transitions off of changes in flow instead of pressure - Because the ventilator is pressure controlled, it adapts to small changes in pressure by adjusting the flow rate (by adjusting the valve states) in order to maintain pressure. Therefore, changes in flow rate are a better sign that the patient is attempting to inhale or exhale. #todo need to confirm this/flesh this out as we go
 
-* Anti-asphyxiation design - If the ventilator looses power, it is important that the patient is able to breathe and is not given dangerous amounts of pressure/flow. The oxygen system is fed by an external pressure source that the ventilator doesn't control; therefore, in the loss of power it is important to shut off flow from the oxygen system to keep the patient safe. We accomplish this by using a normally closed solenoid on the oxygen limb. The air/blower valve and the exhale valve are made to be normally open so that those paths are unobstructed to allow the patient to breathe.
+* Anti-asphyxiation design (#todo need to confirm all this)
+    * **Pneumatic** If the ventilator looses power, it is important that the patient is able to breathe and is not given dangerous amounts of pressure/flow. The oxygen system is fed by an external pressure source that the ventilator doesn't control; therefore, in the loss of power it is important to shut off flow from the oxygen system to keep the patient safe. We accomplish this by using a normally closed solenoid on the oxygen limb. The air/blower valve and the exhale valve are made to be normally open so that those paths are unobstructed to allow the patient to breathe.
+    * **Electrical** To support the air/blower valves and exhale valves being normally open, the Cycle Controller watchdog timer is connected to the stepper motor drivers, which will default them to an unpowered state in the event of a Cycle Controller computing failure, causing the valves to snap open.
+    
 
 * Use of stepper motors - #todo need to fill this out
 
@@ -131,14 +134,44 @@ More detailed thoughts on this [here](https://docs.google.com/document/d/1_2f-MA
 ## PCB/Electronics
 * **SRM32 Microcontroller**
     * More powerful than the simpler arduino and Raspberry pis, but still cheap and widely available
+    * Used in other medical devices
+    * Comes with more powerful/extensive debugging tools
     * Familiar to many of the members of our team
     * See [this ticket](https://github.com/RespiraWorks/SystemDesign/issues/1) for more details on why a STM32 microcontroller was chosen.
 * **Power Supply**
     * 12V standard chosen to ensure flexibility of power supplies (e.g. battery or UPC)
     * Open question on internal alarms battery
 * #todo - need more here.
+* #todo - add diagrams from design reviews and such
 
 ## Software
+* #todo - add diagrams from design reviews and such
+* **Separation of UI Controller and Cycle Controller**
+    * To maximize safety, it is important to minimize the amount of software that is immediately hazardous to the patient (can cause harm in <1s, making human intervention useless), and expose any hazardous software to high levels of verification and testing. By moving the UI code to a separate porcess, it reduces risk and saves time because the complicated UI code doesn't have to be exposed to the same verification and testing as the cycle controller.
+    * Items that fall within the UI Controller:
+        * Cycle Controller Watchdog/Alarm
+        * User Parameter Setting
+        * Ventilation Mode Setting
+        * Sensor Data Reporting
+        * Respiratory Cycle Plot Display
+        * Alarm Information Display
+        * Alarm-specific alert sounds
+    * Items that fall within the cycle controller:
+        * UI Computer Watchdog/Alarm
+        * Closed-Loop Valve Control
+        * Open-Loop Blower/Valve Control
+        * Respiratory cycle Control
+        * Sensor Data Reading
+        * Sensor Failure Alarm
+        * Overpressure Alarm
+        * Respiration Rate Alarm
+        * Broken Loop Alarm
+    * NOTE: Neither of the controllers are a complete backup for the other - this is not a redundant system.  If either fails in a way that is not fixed through the watchdog reset, an immediate intervention will be needed to keep the patient alive.  The objective in the case of either failure is to sound the alarm so that the intervention can happen - and to design the system such that in the event of a failure there is time to make an intervention.  Making a truly redundant system will add cost and time, and so has been deferred for now.
+
+* **Watchdog Timers**
+    * In the event of a computing failure in either the UI Computer or the Cycle Controller, a watchdog timer monitors each and will reset the offending computer, which should then be able to regain control of the valves. 
+    * #todo it will need to be confirmed in the final design that the UI Computer cannot command any modes that will cause the Cycle Controller to hold these valves closed. 
+    * 
 * #todo - should figure out some stuff for this
 
 ## GUI

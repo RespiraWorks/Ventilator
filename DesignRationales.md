@@ -162,23 +162,23 @@ More detailed thoughts on this [here](https://docs.google.com/document/d/1_2f-MA
 ### GUI / UI Controller
 * **#todo** - needs more
 * Items that fall within the UI Controller:
-        * Cycle Controller Watchdog/Alarm
-        * User Parameter Setting
-        * Ventilation Mode Setting
-        * Sensor Data Reporting
-        * Respiratory Cycle Plot Display
-        * Alarm Information Display
-        * Alarm-specific alert sounds
+    * Cycle Controller Watchdog/Alarm
+    * User Parameter Setting
+    * Ventilation Mode Setting
+    * Sensor Data Reporting
+    * Respiratory Cycle Plot Display
+    * Alarm Information Display
+    * Alarm-specific alert sounds
 
 ### Cycle Controller
 * **#todo** - needs more
 * Items that fall within the cycle controller:
-        * UI Computer Watchdog/Alarm
-        * Closed-Loop Valve Control
-        * Open-Loop Blower/Valve Control
-        * Respiratory cycle Control
-        * Sensor Data Reading
-        * Sensor Failure Alarm
-        * Overpressure Alarm
-        * Respiration Rate Alarm
-        * Broken Loop Alarm
+    * UI Computer Watchdog/Alarm
+    * Closed-Loop Valve Control
+    * Open-Loop Blower/Valve Control
+    * Respiratory cycle Control
+    * Sensor Data Reading
+    * Sensor Failure Alarm
+    * Overpressure Alarm
+    * Respiration Rate Alarm
+    * Broken Loop Alarm

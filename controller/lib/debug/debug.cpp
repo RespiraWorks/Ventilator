@@ -70,9 +70,9 @@ limitations under the License.
 class ModeCmd : public DebugCmd {
 public:
   ModeCmd() : DebugCmd(DbgCmdCode::MODE) {}
-  DbgErrCode HandleCmd(uint8_t *data, int *len, int max) {
-    *len = 1;
-    data[0] = 0;
+  DbgErrCode HandleCmd(CmdContext *context) override {
+    context->resp_len = 1;
+    context->resp[0] = 0;
     return DbgErrCode::OK;
   }
 };
@@ -173,8 +173,8 @@ bool DebugSerial::ReadNextByte() {
   if (prevCharEsc) {
     prevCharEsc = false;
 
-    if (buffNdx < static_cast<int>(sizeof(cmdBuff)))
-      cmdBuff[buffNdx++] = byte;
+    if (buffNdx < static_cast<int>(sizeof(cmdInBuff)))
+      cmdInBuff[buffNdx++] = byte;
     return true;
   }
 
@@ -194,8 +194,8 @@ bool DebugSerial::ReadNextByte() {
 
   // For other boring characters, just save them
   // if there's space in my buffer
-  if (buffNdx < static_cast<int>(sizeof(cmdBuff)))
-    cmdBuff[buffNdx++] = byte;
+  if (buffNdx < static_cast<int>(sizeof(cmdInBuff)))
+    cmdInBuff[buffNdx++] = byte;
   return true;
 }
 
@@ -210,7 +210,7 @@ bool DebugSerial::SendNextByte() {
     return false;
 
   // See what the next character to send is.
-  uint8_t ch = cmdBuff[buffNdx++];
+  uint8_t ch = cmdOutBuff[buffNdx++];
 
   // If its a special character, I need to escape it.
   if ((ch == static_cast<uint8_t>(DbgSpecial::TERM)) ||
@@ -256,14 +256,14 @@ void DebugSerial::ProcessCmd() {
     return;
   }
 
-  uint16_t crc = CalcCRC(cmdBuff, buffNdx - 2);
+  uint16_t crc = CalcCRC(cmdInBuff, buffNdx - 2);
 
-  if (crc != u8_to_u16(&cmdBuff[buffNdx - 2])) {
+  if (crc != u8_to_u16(&cmdInBuff[buffNdx - 2])) {
     SendError(DbgErrCode::CRC_ERR);
     return;
   }
 
-  DebugCmd *cmd = DebugCmd::cmdList[cmdBuff[0]];
+  DebugCmd *cmd = DebugCmd::cmdList[cmdInBuff[0]];
   if (!cmd) {
     SendError(DbgErrCode::BAD_CMD);
     return;
@@ -272,30 +272,36 @@ void DebugSerial::ProcessCmd() {
   // The length that we pass in to the command handler doesn't
   // include the command code or CRC.  The max size is also reduced
   // by 3 to make sure we can add the error code and CRC.
-  int len = buffNdx - 3;
-  DbgErrCode err =
-      cmd->HandleCmd(&cmdBuff[1], &len, static_cast<int>(sizeof(cmdBuff) - 3));
+  int len_in = buffNdx - 3;
+  int len_out = 0;
+  CmdContext context = {.req = &cmdInBuff[1],
+                        .req_len = len_in,
+                        .resp = &cmdOutBuff[1],
+                        .max_resp_len =
+                            static_cast<int>(sizeof(cmdOutBuff) - 3),
+                        .resp_len = 0};
+  DbgErrCode err = cmd->HandleCmd(&context);
   if (err != DbgErrCode::OK) {
     SendError(err);
     return;
   }
 
-  cmdBuff[0] = static_cast<uint8_t>(DbgErrCode::OK);
+  cmdOutBuff[0] = static_cast<uint8_t>(DbgErrCode::OK);
 
   // Calculate the CRC on the data and error code returned
   // and append this to the end of the response
-  crc = CalcCRC(cmdBuff, len + 1);
-  u16_to_u8(crc, &cmdBuff[len + 1]);
+  crc = CalcCRC(cmdOutBuff, len_out + 1);
+  u16_to_u8(crc, &cmdOutBuff[len_out + 1]);
 
   pollState = DbgPollState::SEND_RESP;
   buffNdx = 0;
-  respLen = len + 3;
+  respLen = len_out + 3;
 }
 
 void DebugSerial::SendError(DbgErrCode err) {
-  cmdBuff[0] = static_cast<uint8_t>(err);
-  uint16_t crc = CalcCRC(cmdBuff, 1);
-  u16_to_u8(crc, &cmdBuff[1]);
+  cmdOutBuff[0] = static_cast<uint8_t>(err);
+  uint16_t crc = CalcCRC(cmdOutBuff, 1);
+  u16_to_u8(crc, &cmdOutBuff[1]);
   pollState = DbgPollState::SEND_RESP;
   buffNdx = 0;
   respLen = 3;

@@ -32,16 +32,16 @@ limitations under the License.
 class PokeCmd : public DebugCmd {
 public:
   PokeCmd() : DebugCmd(DbgCmdCode::POKE) {}
-  DbgErrCode HandleCmd(uint8_t *data, int *len, int max) {
+  DbgErrCode HandleCmd(CmdContext *context) override {
 
     // Total command length must be at least 5.  That's
     // four for the address and at least one data byte.
-    if (*len < 5)
+    if (context->req_len < 5)
       return DbgErrCode::MISSING_DATA;
 
-    uint32_t addr = u8_to_u32(&data[0]);
+    uint32_t addr = u8_to_u32(&context->req[0]);
 
-    int ct = *len - 4;
+    int ct = context->req_len - 4;
 
     // If both the address and count are multiples of 4, I write
     // 32-bit values.  This is useful when poking into registers
@@ -50,7 +50,7 @@ public:
       uint32_t *ptr = reinterpret_cast<uint32_t *>(addr);
       ct /= 4;
       for (int i = 0; i < ct; i++)
-        *ptr++ = u8_to_u32(&data[4 + i * 4]);
+        *ptr++ = u8_to_u32(&context->req[4 + i * 4]);
     }
 
     // Same idea for multiples of 2
@@ -58,16 +58,16 @@ public:
       uint16_t *ptr = reinterpret_cast<uint16_t *>(addr);
       ct /= 2;
       for (int i = 0; i < ct; i++)
-        *ptr++ = u8_to_u16(&data[4 + i * 2]);
+        *ptr++ = u8_to_u16(&context->req[4 + i * 2]);
     }
 
     else {
       uint8_t *ptr = reinterpret_cast<uint8_t *>(addr);
       for (int i = 0; i < ct; i++)
-        *ptr++ = data[4 + i];
+        *ptr++ = context->req[4 + i];
     }
 
-    *len = 0;
+    context->resp_len = 0;
     return DbgErrCode::OK;
   }
 };

@@ -17,6 +17,9 @@ The part of the code specific to the controller resides here.
 Most of the substantive code is in the [lib](lib) directory, because
 this is required by [platformio](https://platformio.org/) to unit test that code.
 
+The equivalent of a "make file" which governs which targets platformio builds
+and how is the [../platfomio.ini](../platformio.ini) file.
+
 ## Development toolchain
 
 The target platform for this code is the STM32 processor.
@@ -40,6 +43,9 @@ and [Python](https://www.python.org/downloads/windows/).
 
 ## Building and testing
 
+**All shell scripts should be run in the root directory of this repo
+(same as where `platformnio.ini` lives).**
+
 After installing platformio, you should be able to build and test as follows.
 
 ```
@@ -54,13 +60,14 @@ Run it frequently during development to catch errors/style violations early.
 Sometimes PlatformIO can get into a bad state -
 e.g. if things don't build for you in `master`, try:
 
+
 ```
 $ rm -rf .pio/
 ```
 
 ## Running on the controller
 
-Plug in the STM32 to your machine, then ask platformio to list all devices connected. 
+Plug in the STM32 to your machine, then ask platformio to list all devices connected.
 You should see a USB serial port corresponding to your device.
 
 ```
@@ -85,12 +92,8 @@ Error: Please specify `upload_port` for environment or use global `--upload-port
 ```
 
 Alternatively, you can upload the firmware.elf and firmware.bin files to the controller
-mounted USB storage device.
+mounted as a USB storage device.
 
-OK, but how do you know that this is *doing* anything? 
-You'd need to decode messages off the serial bus.
-As of 2020-04-25 this is a work in progress;
-see e.g. https://github.com/RespiraWorks/VentilatorSoftware/commit/69ae546cbfaf76a98f0ae169581c22903381a4b2
-Ask Miceuz@ if you want to help build this.
+## Testing with hardware
 
-
+There are some basic integration tests in the [../utils](../utils) directory.

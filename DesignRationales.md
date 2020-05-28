@@ -25,30 +25,30 @@ duties reliably with high confidence over extended periods of time. The goal is 
 
 More detailed thoughts on this [here](https://docs.google.com/document/d/1_2f-MABkjC65XBJjWOoxpzJW7co3L-7IdkNQfdwZbGU/edit).
 
-* Targeting pressure control for two reasons: 
+* Targeting **pressure control** for two reasons: 
     1. We got early feedback that this was most important to doctors - though we have gotten feedback that volume control is also important.
     2. A lower cost pressure controlled system seemed more achievable - and theoretically a good pressure controlled system should be able to do volume control. Currently we are pursuing pressure control and will be evaluating how accurate volume measurements we can get to determine if the design can also support volume control.
 
-* Doctors need fine control of FiO2 -> this drives the need for an oxygen supply, the need to support oxygen mixing and sensing, and the need for a variable state valve on the O2 supply to adjust the flow rate dynamically. #todo Need more info on the ox system design we pick.
+* **Doctors need fine control of FiO2** -> this drives the need for an oxygen supply, the need to support oxygen mixing and sensing, and the need for a variable state valve on the O2 supply to adjust the flow rate dynamically. **#todo** Need more info on the ox system design we pick.
 
-* Multiple closed loop (feedback control) systems create complexity by creating interacting dynamics -> we're attempting to only have a single closed loop controlled part of the system at a time and to target one key feature (e.g. pressure with FiO2 achieved across cycles). We're also working to determine which components (e.g., valves, blower) need to be controlled and how in order to figure out what will actually support the system requirements. 
+* **Multiple closed loop (feedback control) systems create complexity by creating interacting dynamics** -> we're attempting to only have a single closed loop controlled part of the system at a time and to target one key feature (e.g. pressure with FiO2 achieved across cycles). We're also working to determine which components (e.g., valves, blower) need to be controlled and how in order to figure out what will actually support the system requirements. 
 
-* Anything that will be exposed to high oxygen contrations and pressures needs to be safe and ox-clean. This drives a desire to reduce the number of items directly in the flow as much as possible, especially for high-pressure (greater than 1 bar O2)
+* Anything that will be exposed to high oxygen contrations and pressures needs to be safe and ox-clean. This drives a desire to **reduce the number of items directly in the flow as much as possible**, especially for high-pressure (greater than 1 bar O2)
 
-* Air valve after the fan/blower with air valve being closed loop controlled and fan being open loop - The ventilator requires a high rise time of the pressure when transition from PEEP to PIP. A motor which can change the fan inertia this quickly against increasing pressure ends up being the fan for some high-performance ventilators, or expensive. We have solved this by the use of a proportional valve after the fan. The fan runs at constant power, and the pinch valve is used to modelate the flow. For refernce, one fan we got quoted was $500 and we were never able to get one delivered. A fan capable of meeting the pressure spec + an air valve capable of the rise time spec was less than $75.
+* **Air valve after the fan/blower with air valve being closed loop controlled and fan being open loop** -> The ventilator requires a high rise time of the pressure when transition from PEEP to PIP. A motor which can change the fan inertia this quickly against increasing pressure ends up being the fan for some high-performance ventilators, or expensive. We have solved this by the use of a proportional valve after the fan. The fan runs at constant power, and the pinch valve is used to modelate the flow. For refernce, one fan we got quoted was $500 and we were never able to get one delivered. A fan capable of meeting the pressure spec + an air valve capable of the rise time spec was less than $75.
 
-* The goal is to maintain some bias flow through the system at all times, both to help the fan and to avoid big surges from completely opening and closing different parts of the circuit. This also helps ensure a 'one way' flow of particles and aids with sterilization.
+* The goal is to maintain **some bias flow through the system at all times**, both to help the fan and to avoid big surges from completely opening and closing different parts of the circuit. This also helps ensure a 'one way' flow of particles and aids with sterilization.
 
-* Trigger breath transitions off of changes in flow instead of pressure - Because the ventilator is pressure controlled, it adapts to small changes in pressure by adjusting the flow rate (by adjusting the valve states) in order to maintain pressure. Therefore, changes in flow rate are a better sign that the patient is attempting to inhale or exhale. #todo need to confirm this/flesh this out as we go
+* **Trigger breath transitions off of changes in flow instead of pressure** -> Because the ventilator is pressure controlled, it adapts to small changes in pressure by adjusting the flow rate (by adjusting the valve states) in order to maintain pressure. Therefore, changes in flow rate are a better sign that the patient is attempting to inhale or exhale. #todo need to confirm this/flesh this out as we go
 
-* Anti-asphyxiation design (#todo need to confirm all this)
+* **Anti-asphyxiation design** (**#todo** need to confirm all this)
     * **Pneumatic** If the ventilator loses power, it is important that the patient is able to breathe and is not given dangerous amounts of pressure/flow. The oxygen system is fed by an external pressure source that the ventilator doesn't control; therefore, in the loss of power it is important to shut off flow from the oxygen system to keep the patient safe. We accomplish this by using a normally closed solenoid on the oxygen limb. The air/blower valve and the exhale valve are made to be normally open so that those paths are unobstructed to allow the patient to breathe.
     * **Electrical** To support the air/blower valves and exhale valves being normally open, the Cycle Controller watchdog timer is connected to the stepper motor drivers, which will default them to an unpowered state in the event of a Cycle Controller computing failure, causing the valves to snap open.
     
 
-* Use of stepper motors - #todo need to fill this out
+* **Use of stepper motors** - **#todo** need to fill this out
 
-* Metric vs imperial - #todo fill this out when we make a decision
+* **Metric vs imperial** - **#todo** fill this out when we make a decision
 
 ## Valves
 
@@ -70,7 +70,7 @@ More detailed thoughts on this [here](https://docs.google.com/document/d/1_2f-MA
     * Provides precise, reliable control of high-pressure gasses. 
     * May be cost effective but requires a high-pressure source of oxygen (can not use low pressure sources like oxygen conentrators without a booster pump).
     * O2 cleaned PSOLs are relatively hard to find, though are already in use on ventilators. We may be able to clean automotive PSOLs.    
-    * Normally closed, which is important for anti-asphyxiation. #todo need to confirm this
+    * Normally closed, which is important for anti-asphyxiation. **#todo** need to confirm this
     
 * **One way valve (check valve)**
     * Needs to work in an O2 environment
@@ -81,7 +81,7 @@ More detailed thoughts on this [here](https://docs.google.com/document/d/1_2f-MA
     * Could possibly modify a normal check valve by cutting the spring down or out. 
 
 * **Relief Valve**
-    * #todo when we figure this out
+    * **#todo** when we figure this out
 
 ## Tubing
 * Pick peristaltic tubing in the pinch valves so that it can withstand many cycles
@@ -111,14 +111,14 @@ More detailed thoughts on this [here](https://docs.google.com/document/d/1_2f-MA
 ## Filters
 * Filters on inlet/outlet to prevent contaminents from the surrounding environment getting into the device
 * Filter on patient circuit to avoid device contamination and spreading particles between patients
-* We're currently looking at HEPA filters since they are commonly avaible and cheap - but we're also evaluating other options. More info on HEPA filters: https://respiraworks.slack.com/archives/C0137BLF17A/p1589983907134500?thread_ts=1589940279.125800&cid=C0137BLF17A
+* We're currently looking at HEPA filters since they are commonly avaible and cheap - but we're also evaluating other options. [More info on HEPA filters](https://respiraworks.slack.com/archives/C0137BLF17A/p1589983907134500?thread_ts=1589940279.125800&cid=C0137BLF17A)
 * 2 part mold for holding the filters is meant to be easily manufacturable and to allow easy changing of the filters over time
 * Filters are placed physically on the outside of the box so they can be replaced without the box being opened
 
 ## Blower
 * Current blower is not rated to 100% O2, which drives the lack of a blower on the O2 system and a one way valve in front of the blower to keep it separate from the high O2 part of the system
 * We have evaluated a large number of blowers. When balancing supply chain, ubiquity of specification, and future avaialability, we settled on this one. However, there is an issue with the pressure spec for the fan. If we needed to reach 60 cm H2O, this fan might be under powered. We are currently leaning to not support those high pressures 
-* #todo: link to the fan we picked
+* **#todo:** link to the fan we picked
 
 ## Enclosure
 * Must be sterilizable
@@ -132,6 +132,7 @@ More detailed thoughts on this [here](https://docs.google.com/document/d/1_2f-MA
 * Currently planning to use an off the shelf external humidifier—see [this ticket](https://github.com/RespiraWorks/SystemDesign/issues/10) for more details.
 
 ## PCB/Electronics
+
 * **SRM32 Microcontroller**
     * More powerful than the simpler arduino and Raspberry pis, but still cheap and widely available
     * Used in other medical devices
@@ -141,11 +142,12 @@ More detailed thoughts on this [here](https://docs.google.com/document/d/1_2f-MA
 * **Power Supply**
     * 12V standard chosen to ensure flexibility of power supplies (e.g. battery or UPC)
     * Open question on internal alarms battery
-* #todo - need more here.
-* #todo - add diagrams from design reviews and such
+* **#todo** - need more here.
+* **#todo** - add diagrams from design reviews and such
 
 ## Software
-* #todo - add diagrams from design reviews and such
+
+* **#todo** - add diagrams from design reviews and such
 * **Separation of UI Controller and Cycle Controller**
     * To maximize safety, it is important to minimize the amount of software that is immediately hazardous to the patient (can cause harm in <1s, making human intervention useless), and expose any hazardous software to high levels of verification and testing. By moving the UI code to a separate porcess, it reduces risk and saves time because the complicated UI code doesn't have to be exposed to the same verification and testing as the cycle controller.
     * Items that fall within the UI Controller:
@@ -170,12 +172,12 @@ More detailed thoughts on this [here](https://docs.google.com/document/d/1_2f-MA
 
 * **Watchdog Timers**
     * In the event of a computing failure in either the UI Computer or the Cycle Controller, a watchdog timer monitors each and will reset the offending computer, which should then be able to regain control of the valves. 
-    * #todo it will need to be confirmed in the final design that the UI Computer cannot command any modes that will cause the Cycle Controller to hold these valves closed. 
+    * **#todo** it will need to be confirmed in the final design that the UI Computer cannot command any modes that will cause the Cycle Controller to hold these valves closed. 
     * 
-* #todo - should figure out some stuff for this
+* **#todo** - should figure out some stuff for this
 
-## GUI
-* #todo - should figure out some stuff for this
+### GUI
+* **#todo** - should figure out some stuff for this
 
-## Controller (may fold into software)
-* #todo
+### Controller
+* **#todo**

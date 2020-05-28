@@ -1,23 +1,24 @@
-## RespiraWorks Ventilator Concept of Operations (CONOP)
+# RespiraWorks Ventilator Concept of Operations (CONOP)
 
-### Purpose
+## Purpose
 
 - Build a common understanding of ventilator internal operation amongst different parts of the team.
 
 - Caution: this document has not been formally reviewed and is a work in progress. Be responsible to understand the provenance of documentation.
 
-### Document Content
+## Document Content
+
 - Summary of key constraints
 - Understanding of current intra-breath cycle control for the development (“Pizza”) board.
 - Preliminary description of system operation for next iteration of system with O2 mixing
 - Envisioned Inter and Intra-breath cycle control states 
 - Open questions / points to resolve.
 
-### Functional Diagram
+## Functional Diagram
 
 ![Functional Block Diagram](functional_block_diagram.png)
 
-### “Pizza Build” Intra-breath cycle control
+## “Pizza Build” Intra-breath Cycle Control
 
 The Alpha system flow path is:
 - Fan

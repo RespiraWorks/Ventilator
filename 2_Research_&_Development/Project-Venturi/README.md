@@ -1,4 +1,4 @@
-# Venturi flow sensor
+# Venturi Flow Sensor
 
 ![Rendering](assets/screenshot.png)
 
@@ -18,11 +18,11 @@ For a 0.157" throat and 0.5" body using a 0-3920 Pa analog sensor, where offset 
 
 Q [liters/minute] = 0.75398*sqrt(1346.584669*(voltage-offset))
 
-**TODO:** make math pretty with Mathjax?
+**#TODO:** make math pretty with Mathjax?
 
 For an arbitrary body geometry, you can use [this short spreadsheet](https://docs.google.com/spreadsheets/d/1G9Kb-ImlluK8MOx-ce2rlHUBnTOtAFQvKjjs1bEhlpM/edit#gid=963553579) to return the transfer function.
 
-**TODO:** make spreadsheet contents visible here
+**#TODO:** make spreadsheet contents visible here
 
 ## Pressure Sensor
 
@@ -50,17 +50,17 @@ These should not be printed with FDM. Instead, a leaktight method like SLA or MJ
 
 Note that the flow measurement is very sensitive to the exact geometry, particularly the thread geometry. 3D printing can have variable shrinkage that results in uncertainty in the throat size, and thus the flow rates. Check the diameter of the printed venturi; a good way to do this is to put a drill into the venturi that just barely fits, and then measure the diameter of that drill bit. (Any round thing will work.)
 
-## BOM
+## Parts List (BOM)
 
-### Purchasing source abbreviations
+### Purchasing Source Key 
 
 * **C** = McMaster-Carr
 * **Z** = Amazon
 * **3D** = 3D printed
 
-### Parts BOM
+### Parts
 
-| Item | Quantity | Manufacturer  | Part number         | Price($)     | Do what? | Sources    | Notes |
+| Item | Quantity | Manufacturer  | Part #         | Price (USD)     | Action | Sources    | Notes |
 | ---- |---------:| ------------- | ------------------- | ------------:| ------- |-------------| ----- |
 | 1    |        1 | RespiraWorks  |                     |              | **ask** | **3D**      | 3D-printed venturi |
 | 2    |        2 | McMaster-Carr | 5463K33             | 3.93 / 10    | buy     | [C][2mcmc]  | Barbed fitting 3/32" AKA nipple |
@@ -73,14 +73,14 @@ Note that the flow measurement is very sensitive to the exact geometry, particul
 [4amzn]:   https://www.amazon.com/gp/product/B01F4BJ7PI
 [5mcmc]:   https://www.mcmaster.com/50315K68
 
-### Tooling BOM
+### Tools
 
 We try to make few assumptions about what tools you have. Here are recommended tools you might need. You might already have some of these.
 
-| RefDes | Quantity | Manufacturer  | Part number         | Price($) | Sources         | Notes |
+| Item | Quantity | Manufacturer  | Part #         | Price (USD) | Sources         | Notes |
 | ------ |---------:| ------------- | ------------------- | --------:|-----------------| ----- |
-| T1     |        1 | McMaster-Carr | 26955A86            |     6.76 | [C][t1mcmc]     | Tap for 10-32 threading nipple ports. |
-| T2     |        1 | Kaufhof       | KF-ATW-0053         |    14.11 | [Z][t2amzn]     | Hand-operated tap wrenches, for use with T1 above | 
+| a1     |        1 | McMaster-Carr | 26955A86            |     6.76 | [C][t1mcmc]     | Tap for 10-32 threading nipple ports. |
+| a2     |        1 | Kaufhof       | KF-ATW-0053         |    14.11 | [Z][t2amzn]     | Hand-operated tap wrenches, for use with T1 above | 
 
 [t1mcmc]:https://www.mcmaster.com/26955A86
 [t2amzn]:https://www.amazon.com/gp/product/B003GKJYKI
@@ -95,9 +95,10 @@ In such a case you might need a tap (listed in tooling BOM above) to clean the t
 
 In the latest tested version, no hand-tapping was required to insert nipples. With good enough 3d printing, this step should not be necessary. 
 
-**TODO:** instructions on connecting tubes to sensors
+**#TODO:** instructions on connecting tubes to sensors
 
 ## Testing
+
 Check for leaks by plugging the holes and pulling some vacuum. 
 
 * Plug one large end, plug both nipples, suck on the remaining end.  If you have a vacuum pump handy do a regular vacuum hold leak test.

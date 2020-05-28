@@ -17,6 +17,6 @@ This is a common repository for all software components of the [RespiraWorks](ht
 * [gui](gui) - code for the ventilator graphical interface (Qt)
 * [sample-data](sample-data) - some sample data for something **TODO: explain**
 * [scripts](scripts) - for testing something **TODO: explain**
-* [utils](utils) - python scripts for debugging controller
+* [utils](utils) - scripts for debugging controller / simple integration tests
 
 To contribute, please check the [onboarding wiki](https://github.com/RespiraWorks/VentilatorSoftware/wiki).

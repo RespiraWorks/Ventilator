@@ -36,16 +36,70 @@ enum class VarType {
 //
 // The fmt string gives the debug interface a suggestion on the best way
 // to display the variable's data.
-class DebugVar {
+class DebugVarBase {
 public:
-  // 32-bit integer variable.  The default get/set functions will probably be
-  // fine
+  // @param type Type of the variable
   // @param name Name of the variable
-  // @param data Pointer to the actual variable in C++ code that this will
-  // access
   // @param help String that the Python code displays describing the variable.
   // @param fmt printf style format string.  This is a hint to the Python code
   // as to how the variable data should be displayed.
+  DebugVarBase(VarType type, const char *name, const char *help,
+               const char *fmt)
+      : type_(type), name_(name), help_(help), fmt_(fmt), id_(var_count) {
+    if (var_count < static_cast<uint16_t>(std::size(var_list)))
+      var_list[id_] = this;
+    var_count++;
+  }
+
+  static DebugVarBase *FindVar(uint16_t vid) {
+    if (vid >= std::size(var_list))
+      return nullptr;
+    return var_list[vid];
+  }
+
+  // Ideally these should be pure virtual, but that pulls in the C++ exception
+  // ABI and malloc.
+  virtual uint32_t GetValue() { return 0; }
+  virtual void SetValue(uint32_t value) { (void)value; }
+
+  const char *GetName() const { return name_; }
+  const char *GetFormat() const { return fmt_; }
+  const char *GetHelp() const { return help_; }
+  VarType GetType() const { return type_; }
+  uint16_t GetId() const { return id_; }
+
+private:
+  const VarType type_;
+  const char *const name_;
+  const char *const help_;
+  const char *const fmt_;
+  const uint16_t id_;
+
+  // List of all the variables in the system.
+  // Increase size as necessary
+  static DebugVarBase *var_list[100];
+  static uint16_t var_count;
+};
+
+template <typename GetFn, typename SetFn>
+class FnDebugVar : public DebugVarBase {
+public:
+  FnDebugVar(VarType type, const char *name, const char *help, const char *fmt,
+             GetFn get_fn, SetFn set_fn)
+      : DebugVarBase(type, name, help, fmt), get_fn_(get_fn), set_fn_(set_fn) {}
+
+  uint32_t GetValue() override { return get_fn_(); }
+  void SetValue(uint32_t value) override { set_fn_(value); }
+
+private:
+  GetFn get_fn_;
+  SetFn set_fn_;
+};
+
+class DebugVar : public DebugVarBase {
+public:
+  // 32-bit integer variable.
+  // @param data Pointer to an actual variable in C++ code that this will access
   DebugVar(const char *name, int32_t *data, const char *help = "",
            const char *fmt = "%d")
       : DebugVar(VarType::INT32, name, data, help, fmt) {}
@@ -61,49 +115,21 @@ public:
       : DebugVar(VarType::FLOAT, name, data, help, fmt) {}
 
   // Gets the current value of the variable as an uint32_t.
-  virtual uint32_t GetValue() {
+  uint32_t GetValue() override {
     uint32_t res;
     std::memcpy(&res, addr_, 4);
     return res;
   }
 
   // Sets the current value of the variable as an uint32_t.
-  virtual void SetValue(uint32_t value) { std::memcpy(addr_, &value, 4); }
-
-  const char *GetName() const { return name_; }
-  const char *GetFormat() const { return fmt_; }
-  const char *GetHelp() const { return help_; }
-  VarType GetType() const { return type_; }
-  uint16_t GetId() const { return id_; }
-
-  static DebugVar *FindVar(uint16_t vid) {
-    if (vid >= std::size(var_list))
-      return nullptr;
-    return var_list[vid];
-  }
-
-protected:
-  const VarType type_;
-  const char *const name_;
-  const char *const fmt_;
-  const char *const help_;
-  void *addr_;
-  const uint16_t id_;
+  void SetValue(uint32_t value) override { std::memcpy(addr_, &value, 4); }
 
 private:
+  void *addr_;
+
   DebugVar(VarType type, const char *name, void *data, const char *help,
            const char *fmt)
-      : type_(type), name_(name), fmt_(fmt), help_(help), addr_(data),
-        id_(var_count) {
-    if (var_count < static_cast<uint16_t>(std::size(var_list)))
-      var_list[id_] = this;
-    var_count++;
-  }
-
-  // List of all the variables in the system.
-  // Increase size as necessary
-  static DebugVar *var_list[100];
-  static uint16_t var_count;
+      : DebugVarBase(type, name, help, fmt), addr_(data) {}
 };
 
 class DebugInt32 : public DebugVar {

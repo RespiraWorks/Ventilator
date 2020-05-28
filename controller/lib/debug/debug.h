@@ -48,6 +48,14 @@ enum class DbgErrCode {
   RANGE = 0x07,        // data out of range
 };
 
+struct CmdContext {
+  const uint8_t *req;
+  const int req_len;
+  uint8_t *resp;
+  const int max_resp_len;
+  int resp_len;
+};
+
 // Each debug command is represented by an instance of this
 // virtual class
 class DebugCmd {
@@ -58,17 +66,17 @@ public:
   DebugCmd(DbgCmdCode opcode);
 
   // Command handler.
-  //   data - Buffer holding command data on entry.
-  //   The response data should be written here.
+  //   data_in - Buffer holding command data on entry.
+  //   len_in - Holds the data length on entry.
   //
-  //   len - Holds the data length on entry and response
-  //   length on return.
+  //   data_out - The response data should be written here.
+  //   len_out - Length of the response should be written here.
   //
-  //   max - Maximum number of bytes that can be written to data
+  //   max - Maximum number of bytes that can be written to data_out.
   //
   //   Returns an error code.  For any non-zero error, the values
-  //   returned in len and data will be ignored.
-  virtual DbgErrCode HandleCmd(uint8_t *data, int *len, int max) {
+  //   returned in len_out and data_out will be ignored.
+  [[nodiscard]] virtual DbgErrCode HandleCmd(CmdContext *context) {
     return DbgErrCode::BAD_CMD;
   }
 };
@@ -94,7 +102,8 @@ public:
 private:
   CircBuff<uint8_t, 2000> printBuff;
 
-  uint8_t cmdBuff[500];
+  uint8_t cmdInBuff[500];
+  uint8_t cmdOutBuff[500];
   int buffNdx;
   int respLen;
   DbgPollState pollState;
@@ -111,13 +120,13 @@ extern DebugSerial debug;
 
 // Some simple data conversion functions.
 // These assume little endian byte format
-inline uint16_t u8_to_u16(uint8_t *dat) {
+inline uint16_t u8_to_u16(const uint8_t *dat) {
   uint16_t L = dat[0];
   uint16_t H = dat[1];
   return static_cast<uint16_t>(L | (H << 8));
 }
 
-inline uint32_t u8_to_u32(uint8_t *dat) {
+inline uint32_t u8_to_u32(const uint8_t *dat) {
   uint32_t A = dat[0];
   uint32_t B = dat[1];
   uint32_t C = dat[2];

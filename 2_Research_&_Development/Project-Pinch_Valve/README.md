@@ -39,9 +39,9 @@ Original design found
 
 The above files should not be printed with FDM. Instead, a leaktight method like SLA or MJF should be used.
 
-## BOM
+## Parts List (BOM)
 
-### Purchasing source abbreviations
+### Purchasing Source Key
 
 * **C** = McMaster-Carr
 * **Z** = Amazon
@@ -50,7 +50,7 @@ The above files should not be printed with FDM. Instead, a leaktight method like
 * **M** = Mouser
 * **3D** = 3D printed (RespiraWorks)
 
-### Parts BOM
+### Parts 
 
 | RefDes | Quantity | Manufacturer  | Part #              | Price($)     | Do what?     | Sources            | Notes |
 | ------ |---------:| ------------- | ------------------- | ------------:| ------------ |--------------------| ----- |
@@ -83,7 +83,7 @@ your choice of pneumatic system internal diameter. Alternative adapters are list
 [103d]:    https://github.com/RespiraWorks/SystemDesign/blob/grace-pinch-valve-updates/2_Research_&_Development/Project-Pinch_Valve/README.md#exported-step-files
 [12mcmc]:  https://www.mcmaster.com/5894K38
 
-### Tooling BOM
+### Tools
 
 | Item | Quantity | Manufacturer  | Part #      | Price(USD) | Sources         | Notes |
 | ---- |---------:| ------------- | ----------- | ----------:|-----------------| ----- |
@@ -93,7 +93,7 @@ your choice of pneumatic system internal diameter. Alternative adapters are list
 [a1amzn]:   https://www.amazon.com/TEKTON-2-Inch-Joint-Pliers-37122/dp/B00KLY1FAY
 [a2amzn]:   https://www.amazon.com/Wiha-71397-Metric-Insert-6-Piece/dp/B0084B7S70/ref=sr_1_4?dchild=1&keywords=3mm+hex&qid=1590347774&sr=8-4
 
-## Assembly
+## Assembly Instructions
 
 ![Components](assets/pinch-valve-components.jpg)
 

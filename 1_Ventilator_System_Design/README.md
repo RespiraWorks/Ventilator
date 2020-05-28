@@ -37,7 +37,7 @@ for the millions of cycles required, in addition to being difficult to source.
 
 ## Overview Documents
 
-* [Concept of Operations](/CONOP.md)
+* [Concept of Operations](CONOP.md)
 
 ## Subsystems
 

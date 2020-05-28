@@ -1,6 +1,23 @@
-# Utils
+# Testing utilities
 
 **#TODO: document other utilities**
+
+## General considerations
+
+For some of these communication tests, it is possible to set
+```c++
+#define NO_GUI_DEV_MODE
+```
+in `main.cpp` so that serial data is sent over the same USB cable that is
+used to program the nucleo.
+
+Otherwise, a more "honest" test would be to check communication on the
+actual serial pins of the Nucleo. To do so, you can use a serial dongle such as
+[this](https://www.amazon.com/gp/product/B00QT7LQ88),
+or, for a more scalable setup, [this](https://www.amazon.com/dp/B07XF2SLQ1).
+
+
+## Utilities
 
 ### decoder
 

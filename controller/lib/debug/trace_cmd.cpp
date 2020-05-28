@@ -25,14 +25,14 @@ TraceCmd::TraceCmd() : DebugCmd(DbgCmdCode::TRACE) {
 }
 
 // The trace command is used to download data from the trace buffer.
-DbgErrCode TraceCmd::HandleCmd(uint8_t *data, int *len, int max) {
+DbgErrCode TraceCmd::HandleCmd(CmdContext *context) {
 
   // The first byte of data is always required, this
   // gives the sub-command.
-  if (*len < 1)
+  if (context->req_len < 1)
     return DbgErrCode::MISSING_DATA;
 
-  switch (data[0]) {
+  switch (context->req[0]) {
 
   // Sub-command 0 is used to flush the trace buffer
   // It also disables the trace
@@ -43,20 +43,20 @@ DbgErrCode TraceCmd::HandleCmd(uint8_t *data, int *len, int max) {
     std::optional<uint32_t> tmp;
     while ((tmp = traceBuffer.Get()) != std::nullopt) {
     }
-    *len = 0;
+    context->resp_len = 0;
     return DbgErrCode::OK;
   }
 
   // Sub-command 1 is used to read data from the buffer
   case 1:
-    return ReadTraceBuff(data, len, max);
+    return ReadTraceBuff(context);
 
   default:
     return DbgErrCode::RANGE;
   }
 }
 
-DbgErrCode TraceCmd::ReadTraceBuff(uint8_t *data, int *len, int max) {
+DbgErrCode TraceCmd::ReadTraceBuff(CmdContext *context) {
   // See how many active trace variables there are
   // This gives us our sample size;
   DebugVar *vptr[TRACE_VAR_CT];
@@ -64,13 +64,13 @@ DbgErrCode TraceCmd::ReadTraceBuff(uint8_t *data, int *len, int max) {
 
   // If there aren't any active variables, I'm done
   if (!vct) {
-    *len = 0;
+    context->resp_len = 0;
     return DbgErrCode::OK;
   }
 
   // See how many samples I can return
   // First, find out how many I could based on the max value
-  max /= static_cast<int>((vct * sizeof(uint32_t)));
+  int max = context->max_resp_len / static_cast<int>((vct * sizeof(uint32_t)));
 
   // If there's not room for even one sample, return an error.
   // That really shouldn't happen
@@ -82,6 +82,7 @@ DbgErrCode TraceCmd::ReadTraceBuff(uint8_t *data, int *len, int max) {
   if (tot > max)
     tot = max;
 
+  uint8_t *resp = context->resp;
   for (int i = 0; i < tot; i++) {
     BlockInterrupts block;
     // Grab one sample with interrupts disabled.
@@ -95,13 +96,13 @@ DbgErrCode TraceCmd::ReadTraceBuff(uint8_t *data, int *len, int max) {
       // the number of elements in the buffer.  If it does
       // fail it's a bug.
       std::optional<uint32_t> dat = traceBuffer.Get();
-      u32_to_u8(*dat, data);
-      data += sizeof(uint32_t);
+      u32_to_u8(*dat, resp);
+      resp += sizeof(uint32_t);
     }
     traceSamp--;
   }
 
-  *len = static_cast<int>(tot * vct * sizeof(uint32_t));
+  context->resp_len = static_cast<int>(tot * vct * sizeof(uint32_t));
   return DbgErrCode::OK;
 }
 

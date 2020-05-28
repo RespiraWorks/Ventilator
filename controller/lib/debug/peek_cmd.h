@@ -30,20 +30,20 @@ limitations under the License.
 class PeekCmd : public DebugCmd {
 public:
   PeekCmd() : DebugCmd(DbgCmdCode::PEEK) {}
-  DbgErrCode HandleCmd(uint8_t *data, int *len, int max) {
+  DbgErrCode HandleCmd(CmdContext *context) override {
     // The data passed to this command consists of a 4 byte address
     // and a two byte count of how many bytes to return
     // Length should be exactly 6, but if more data is passed
     // I'll just ignore it.
-    if (*len < 6)
+    if (context->req_len < 6)
       return DbgErrCode::MISSING_DATA;
 
-    uint32_t addr = u8_to_u32(&data[0]);
-    int ct = u8_to_u16(&data[4]);
+    uint32_t addr = u8_to_u32(&context->req[0]);
+    int ct = u8_to_u16(&context->req[4]);
 
     // Limit the number of output bytes based on buffer size
-    if (ct > max)
-      ct = max;
+    if (ct > context->max_resp_len)
+      ct = context->max_resp_len;
 
     // Some registers can't handle byte accesses, so rather then just
     // use a simple memcpy here I will do 32-bit or 16-bit accesses
@@ -53,18 +53,18 @@ public:
 
       for (int i = 0; i < ct / 4; i++) {
         uint32_t x = *ptr++;
-        u32_to_u8(x, &data[4 * i]);
+        u32_to_u8(x, &context->resp[4 * i]);
       }
     } else if (!(addr & 1) && !(ct & 1)) {
       uint16_t *ptr = reinterpret_cast<uint16_t *>(addr);
       for (int i = 0; i < ct / 2; i++) {
         uint16_t x = *ptr++;
-        u16_to_u8(x, &data[2 * i]);
+        u16_to_u8(x, &context->resp[2 * i]);
       }
     } else
-      memcpy(data, reinterpret_cast<void *>(addr), ct);
+      memcpy(context->resp, reinterpret_cast<void *>(addr), ct);
 
-    *len = ct;
+    context->resp_len = ct;
     return DbgErrCode::OK;
   }
 };

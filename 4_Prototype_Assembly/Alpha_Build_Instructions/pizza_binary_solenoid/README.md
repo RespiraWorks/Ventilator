@@ -33,7 +33,7 @@ We refer to this as a binary solenoid because it has only two states - open or c
 
 ## Tools
 
-| Item | Quantity | Manufacturer  | Part number         | Price($) | Sources         | Notes |
+| Item | Quantity | Manufacturer  | Part number         | Price (USD) | Sources         | Notes |
 | ---- |---------:| ------------- | ------------------- | --------:|-----------------| ----- |
 | a1   |        1 | Preciva       | PR-3254 (PR102001)  |    39.99 | [Z][a1amzn]     | Crimping tool for HX and HV connectors |
 

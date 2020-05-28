@@ -28,17 +28,17 @@ This page explains how to adapt off-the-shelf parts into a basic test lung for o
 
 | Item | Quantity | Manufacturer  | Part number         | Price (USD)     | Sources        | Notes |
 | ---- |---------:| ------------- | ------------------- | ------------:|----------------|----------------|
-| a1    |  ~10 cm  | McMaster-Carr | 5234K57             | 21.50 / 5ft  | [C][4mcmc]     | Soft latex tubing, 5/8" ID, 7/8" OD, optional? |
-| a2    |       1  | McMaster-Carr | 9579K72             | 12.21 / 20   | [C][5mcmc]     | Herbie clip J (20.3-23mm) for clamping 7/8"OD tubing, optional? |
-| a3   |       1  | McMaster-Carr | 4880K154            | 2.82         | [C][6mcmc]     | 1/2 NTP tee female |
-| a4   |       3  | McMaster-Carr | 5372K128            | 4.89 / 10    | [C][7mcmc]     | 1/2 NTP <-> 5/8"ID male multibarbed |
-| a5   |       1  | McMaster-Carr | 5372K625            | 9.59 / 10    | [C][8mcmc]     | 5/8"ID tee, multibarbed, *alternative to items 6 & 7 above* |
+| a1    |  ~10 cm  | McMaster-Carr | 5234K57             | 21.50 / 5ft  | [C][a1mcmc]     | Soft latex tubing, 5/8" ID, 7/8" OD, optional? |
+| a2    |       1  | McMaster-Carr | 9579K72             | 12.21 / 20   | [C][a2mcmc]     | Herbie clip J (20.3-23mm) for clamping 7/8"OD tubing, optional? |
+| a3   |       1  | McMaster-Carr | 4880K154            | 2.82         | [C][a3mcmc]     | 1/2 NTP tee female |
+| a4   |       3  | McMaster-Carr | 5372K128            | 4.89 / 10    | [C][a4mcmc]     | 1/2 NTP <-> 5/8"ID male multibarbed |
+| a5   |       1  | McMaster-Carr | 5372K625            | 9.59 / 10    | [C][a5mcmc]     | 5/8"ID tee, multibarbed, *alternative to items 6 & 7 above* |
 
-[4mcmc]:  https://www.mcmaster.com/5234K57
-[5mcmc]:  https://www.mcmaster.com/9579K72
-[6mcmc]:  https://www.mcmaster.com/4880K154
-[7mcmc]:  https://www.mcmaster.com/5372K128
-[8mcmc]:  https://www.mcmaster.com/5372K625
+[a1mcmc]:  https://www.mcmaster.com/5234K57
+[a2mcmc]:  https://www.mcmaster.com/9579K72
+[a3mcmc]:  https://www.mcmaster.com/4880K154
+[a4mcmc]:  https://www.mcmaster.com/5372K128
+[a5mcmc]:  https://www.mcmaster.com/5372K625
 
 **TODO:** pricing analysis
 
@@ -61,7 +61,7 @@ For a prototype with 3/4"ID tubing, these adapters should not be necessary.
 
 Although running long respiratory limbs is the best emulation of a real clinical setup, you may be short on space in your set up. Also, the test lung you buy may not come with the same type of connectors. 
 
-In this case, you could set up with tee connectors of your own. Two different options are possible with McMaster parts and pasts for both alternatives are listed as optional in the parts list. The assembled article below uses *item 8* as tee.
+In this case, you could set up with tee connectors of your own. Two different options are possible with McMaster parts and pasts for both alternatives are listed as optional in the parts list. The assembled article below uses *item a5* as tee.
 
 | Parts                  |  Assembled           |           
 |:----------------------:|:--------------------:|

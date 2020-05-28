@@ -56,11 +56,11 @@ We may have parts to send you from our inventory.
 
 | Item | Quantity | Manufacturer  | Part number         | Price (USD) | Sources         | Notes |
 | ---- |---------:| ------------- | ------------------- | -----------:|-----------------| ----- |
-| a1   |        1 | Preciva       | PR-3254 (PR102001)  |    39.99 | [Z][t1amzn]     | Crimping tool for HX and HV connectors |
+| a1   |        1 | Preciva       | PR-3254 (PR102001)  |    39.99 | [Z][a1amzn]     | Crimping tool for HX and HV connectors |
 
-[t1amzn]:https://www.amazon.com/gp/product/B07R1H3Z8X
+[a1amzn]:https://www.amazon.com/gp/product/B07R1H3Z8X
 
-**NOTE: Items 5-11 and T1 above are also duplicated in the [wiring BOM](../../../1_Ventilator_System_Design/Electrical_System/wiring.md)**
+**NOTE: Items 5-11 and a1 above are also duplicated in the [wiring BOM](../../../1_Ventilator_System_Design/Electrical_System/wiring.md)**
 
 ## Assembly Instructions
 

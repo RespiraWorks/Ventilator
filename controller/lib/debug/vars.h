@@ -106,4 +106,40 @@ private:
   static uint16_t var_count;
 };
 
+class DebugInt32 : public DebugVar {
+public:
+  DebugInt32(const char *name, const char *help = "", const char *fmt = "%d")
+      : DebugVar(name, &value, help, fmt) {}
+
+  virtual void Set(int32_t v) { value = v; }
+  virtual int32_t Get() { return value; }
+
+private:
+  int32_t value;
+};
+
+class DebugUInt32 : public DebugVar {
+public:
+  DebugUInt32(const char *name, const char *help = "", const char *fmt = "%u")
+      : DebugVar(name, &value, help, fmt) {}
+
+  virtual void Set(uint32_t v) { value = v; }
+  virtual uint32_t Get() { return value; }
+
+private:
+  uint32_t value;
+};
+
+class DebugFloat : public DebugVar {
+public:
+  DebugFloat(const char *name, const char *help = "", const char *fmt = "%.3f")
+      : DebugVar(name, &value, help, fmt) {}
+
+  virtual void Set(float v) { value = v; }
+  virtual float Get() { return value; }
+
+private:
+  float value;
+};
+
 #endif

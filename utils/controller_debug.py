@@ -17,6 +17,7 @@ import serial
 import struct
 import time
 import traceback
+import threading
 import matplotlib.pyplot as plt
 
 # Turn on interactive mode for matplotlib
@@ -865,8 +866,11 @@ def GetResp(DbgPrint):
 
 #  timeout - How long (seconds) to wait for the response.  If
 #            not specified then a reasonable system default is used
+cmdLock = threading.Lock()
+
+
 def SendCmd(op, data=[], timeout=None):
-    global showSerial, ser
+    global showSerial, ser, cmdLock
 
     if showSerial:
         DbgPrint = print
@@ -891,37 +895,50 @@ def SendCmd(op, data=[], timeout=None):
         S += "0x%02x " % b
     DbgPrint(S)
 
-    ser.write(bytearray(buff))
-    if timeout != None:
-        DbgPrint("Setting timeout to %.1f" % timeout)
-        oldto = ser.timeout
-        ser.timeout = timeout
+    cmdLock.acquire()
+    try:
+        ser.write(bytearray(buff))
+        if timeout != None:
+            DbgPrint("Setting timeout to %.1f" % timeout)
+            oldto = ser.timeout
+            ser.timeout = timeout
 
-    rsp = GetResp(DbgPrint)
-    if timeout != None:
-        ser.timeout = oldto
+        rsp = GetResp(DbgPrint)
+        if timeout != None:
+            ser.timeout = oldto
 
-    if len(rsp) < 3:
-        raise Error("Invalid response, too short")
+        if len(rsp) < 3:
+            raise Error("Invalid response, too short")
 
-    crc = crc16.calc(rsp[:-2])
-    rcrc = Build16(rsp[-2:])[0]
-    if crc != rcrc:
-        raise Error(
-            "CRC error on response, calculated 0x%04x received 0x%04x" % (crc, rcrc)
-        )
+        crc = crc16.calc(rsp[:-2])
+        rcrc = Build16(rsp[-2:])[0]
+        if crc != rcrc:
+            raise Error(
+                "CRC error on response, calculated 0x%04x received 0x%04x" % (crc, rcrc)
+            )
 
-    if rsp[0]:
-        raise Error("Error %d (0x%02x)" % (rsp[0], rsp[0]))
-        return []
-    return rsp[1:-2]
+        if rsp[0]:
+            raise Error("Error %d (0x%02x)" % (rsp[0], rsp[0]))
+            return []
+        cmdLock.release()
+        return rsp[1:-2]
+    except:
+        cmdLock.release()
+        raise
 
 
 def ReSync():
-    cmd = [TERM, TERM]
-    ser.write(bytearray(cmd))
-    time.sleep(0.1)
-    ser.reset_input_buffer()
+    global cmdLock
+    cmdLock.acquire()
+    try:
+        cmd = [TERM, TERM]
+        ser.write(bytearray(cmd))
+        time.sleep(0.1)
+        ser.reset_input_buffer()
+        cmdLock.release()
+    except:
+        cmdLock.release()
+        raise
 
 
 def I2F(ival):

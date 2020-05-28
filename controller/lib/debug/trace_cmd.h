@@ -23,8 +23,8 @@ class TraceCmd : public DebugCmd {
 public:
   TraceCmd();
   // The trace command is used to download data from the trace buffer.
-  DbgErrCode HandleCmd(uint8_t *data, int *len, int max);
-  DbgErrCode ReadTraceBuff(uint8_t *data, int *len, int max);
+  DbgErrCode HandleCmd(CmdContext *context) override;
+  DbgErrCode ReadTraceBuff(CmdContext *context);
 };
 
 extern TraceCmd traceCmd;

@@ -19,24 +19,24 @@ limitations under the License.
 #include <stdint.h>
 #include <string.h>
 
-DbgErrCode VarCmd::HandleCmd(uint8_t *data, int *len, int max) {
+DbgErrCode VarCmd::HandleCmd(CmdContext *context) {
 
   // The first byte of data is always required, this
   // gives the sub-command.
-  if (*len < 1)
+  if (context->req_len < 1)
     return DbgErrCode::MISSING_DATA;
 
-  switch (data[0]) {
+  switch (context->req[0]) {
 
   // Return info about one of the variables.
   case 0:
-    return GetVarInfo(data, len, max);
+    return GetVarInfo(context);
 
   case 1:
-    return GetVar(data, len, max);
+    return GetVar(context);
 
   case 2:
-    return SetVar(data, len, max);
+    return SetVar(context);
 
   default:
     return DbgErrCode::RANGE;
@@ -49,13 +49,13 @@ DbgErrCode VarCmd::HandleCmd(uint8_t *data, int *len, int max) {
 // system starting with 0.  The Python code can read them
 // all out until it gets an error code indicating that the
 // passed ID is invalid.
-DbgErrCode VarCmd::GetVarInfo(uint8_t *data, int *len, int max) {
+DbgErrCode VarCmd::GetVarInfo(CmdContext *context) {
 
   // We expect a 16-bit ID to be passed
-  if (*len < 3)
+  if (context->req_len < 3)
     return DbgErrCode::MISSING_DATA;
 
-  uint16_t vid = u8_to_u16(&data[1]);
+  uint16_t vid = u8_to_u16(&context->req[1]);
 
   const DebugVar *var = DebugVar::FindVar(vid);
   if (!var)
@@ -84,67 +84,67 @@ DbgErrCode VarCmd::GetVarInfo(uint8_t *data, int *len, int max) {
     hLen = 255;
 
   // Fail if the strings are too large to fit.
-  if (max < 8 + nLen + fLen + hLen)
+  if (context->max_resp_len < 8 + nLen + fLen + hLen)
     return DbgErrCode::NO_MEMORY;
 
   int n = 0;
-  data[n++] = static_cast<uint8_t>(var->GetType());
-  data[n++] = 0;
-  data[n++] = 0;
-  data[n++] = 0;
-  data[n++] = static_cast<uint8_t>(nLen);
-  data[n++] = static_cast<uint8_t>(fLen);
-  data[n++] = static_cast<uint8_t>(hLen);
-  data[n++] = 0;
-  memcpy(&data[n], var->GetName(), nLen);
+  context->resp[n++] = static_cast<uint8_t>(var->GetType());
+  context->resp[n++] = 0;
+  context->resp[n++] = 0;
+  context->resp[n++] = 0;
+  context->resp[n++] = static_cast<uint8_t>(nLen);
+  context->resp[n++] = static_cast<uint8_t>(fLen);
+  context->resp[n++] = static_cast<uint8_t>(hLen);
+  context->resp[n++] = 0;
+  memcpy(&context->resp[n], var->GetName(), nLen);
   n += nLen;
 
-  memcpy(&data[n], var->GetFormat(), fLen);
+  memcpy(&context->resp[n], var->GetFormat(), fLen);
   n += fLen;
 
-  memcpy(&data[n], var->GetHelp(), hLen);
+  memcpy(&context->resp[n], var->GetHelp(), hLen);
   n += hLen;
-  *len = n;
+  context->resp_len = n;
   return DbgErrCode::OK;
 }
 
-DbgErrCode VarCmd::GetVar(uint8_t *data, int *len, int max) {
+DbgErrCode VarCmd::GetVar(CmdContext *context) {
   // We expect a 16-bit ID to be passed
-  if (*len < 3)
+  if (context->req_len < 3)
     return DbgErrCode::MISSING_DATA;
 
-  uint16_t vid = u8_to_u16(&data[1]);
+  uint16_t vid = u8_to_u16(&context->req[1]);
 
   DebugVar *var = DebugVar::FindVar(vid);
   if (!var)
     return DbgErrCode::BAD_VARID;
 
-  if (max < 4)
+  if (context->max_resp_len < 4)
     return DbgErrCode::NO_MEMORY;
 
-  u32_to_u8(var->GetValue(), data);
-  *len = 4;
+  u32_to_u8(var->GetValue(), context->resp);
+  context->resp_len = 4;
   return DbgErrCode::OK;
 }
 
-DbgErrCode VarCmd::SetVar(uint8_t *data, int *len, int max) {
+DbgErrCode VarCmd::SetVar(CmdContext *context) {
   // We expect a 16-bit ID to be passed
-  if (*len < 3)
+  if (context->req_len < 3)
     return DbgErrCode::MISSING_DATA;
 
-  uint16_t vid = u8_to_u16(&data[1]);
+  uint16_t vid = u8_to_u16(&context->req[1]);
 
   DebugVar *var = DebugVar::FindVar(vid);
   if (!var)
     return DbgErrCode::BAD_VARID;
 
-  int ct = *len - 3;
+  int ct = context->req_len - 3;
 
   if (ct < 4)
     return DbgErrCode::MISSING_DATA;
 
-  var->SetValue(u8_to_u32(data + 3));
-  *len = 0;
+  var->SetValue(u8_to_u32(context->req + 3));
+  context->resp_len = 0;
   return DbgErrCode::OK;
 }
 

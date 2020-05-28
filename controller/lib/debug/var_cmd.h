@@ -41,7 +41,7 @@ class VarCmd : public DebugCmd {
 public:
   VarCmd() : DebugCmd(DbgCmdCode::VAR) {}
 
-  DbgErrCode HandleCmd(uint8_t *data, int *len, int max);
+  DbgErrCode HandleCmd(CmdContext *context) override;
 
   // Return info about one of the variables.
   // The 16-bit variable ID is passed in.  These IDs are
@@ -49,11 +49,11 @@ public:
   // system starting with 0.  The Python code can read them
   // all out until it gets an error code indicating that the
   // passed ID is invalid.
-  DbgErrCode GetVarInfo(uint8_t *data, int *len, int max);
+  DbgErrCode GetVarInfo(CmdContext *context);
 
-  DbgErrCode GetVar(uint8_t *data, int *len, int max);
+  DbgErrCode GetVar(CmdContext *context);
 
-  DbgErrCode SetVar(uint8_t *data, int *len, int max);
+  DbgErrCode SetVar(CmdContext *context);
 };
 
 extern VarCmd varCmd;

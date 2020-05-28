@@ -39,11 +39,20 @@ More detailed thoughts on this [here](https://docs.google.com/document/d/1_2f-MA
 
 * The goal is to maintain some bias flow through the system at all times, both to help the fan and to avoid big surges from completely opening and closing different parts of the circuit. This also helps ensure a 'one way' flow of particles and aids with sterilization.
 
+* Trigger breath transitions off of changes in flow instead of pressure - Because the ventilator is pressure controlled, it adapts to small changes in pressure by adjusting the flow rate (by adjusting the valve states) in order to maintain pressure. Therefore, changes in flow rate are a better sign that the patient is attempting to inhale or exhale. #todo need to confirm this/flesh this out as we go
+
+* Anti-asphyxiation design - If the ventilator looses power, it is important that the patient is able to breathe and is not given dangerous amounts of pressure/flow. The oxygen system is fed by an external pressure source that the ventilator doesn't control; therefore, in the loss of power it is important to shut off flow from the oxygen system to keep the patient safe. We accomplish this by using a normally closed solenoid on the oxygen limb. The air/blower valve and the exhale valve are made to be normally open so that those paths are unobstructed to allow the patient to breathe.
+
+* Use of stepper motors - #todo need to fill this out
+
+* Metric vs imperial - #todo fill this out when we make a decision
+
 ## Valves
 
 * **Pinch Valve (Custom design)**
     * Low cost, robust design for achieving variable flow based on peristaltic tubing. 
     * The valve mechanical components are not exposed to the flow, which means it is not exposed to high O2 concentrations directly.
+    * Normally open, which is important for anti-asphyxiation in the case of power loss
     * Still evaluating fatigue and lifetime / sealing.
     * Originally designed as the exhale valve to give control for maintaining PEEP - under considering to use for both the air inlet and for the oxygen inlet
 
@@ -57,8 +66,8 @@ More detailed thoughts on this [here](https://docs.google.com/document/d/1_2f-MA
     * Relatively uncommon part but used in traditional ventilators. 
     * Provides precise, reliable control of high-pressure gasses. 
     * May be cost effective but requires a high-pressure source of oxygen (can not use low pressure sources like oxygen conentrators without a booster pump).
-    * O2 cleaned PSOLs are relatively hard to find and already in use on ventilators. We may be able to clean automotive PSOLs.    
-    
+    * O2 cleaned PSOLs are relatively hard to find, though are already in use on ventilators. We may be able to clean automotive PSOLs.    
+    * Normally closed, which is important for anti-asphyxiation. #todo need to confirm this
     
 * **One way valve (check valve)**
     * Needs to work in an O2 environment
@@ -67,6 +76,9 @@ More detailed thoughts on this [here](https://docs.google.com/document/d/1_2f-MA
     * Two possibilities are a normal umbrella seat check valve, problem is these have a high cracking pressure. This could be OK on the intake side where the fan can generate this but would be a problem on exhale. 
     * duckbill valves have also been explored, but these can chatter at low flow rates. 
     * Could possibly modify a normal check valve by cutting the spring down or out. 
+
+* **Relief Valve**
+    * #todo when we figure this out
 
 ## Tubing
 * Pick peristaltic tubing in the pinch valves so that it can withstand many cycles
@@ -103,18 +115,23 @@ More detailed thoughts on this [here](https://docs.google.com/document/d/1_2f-MA
 ## Blower
 * Current blower is not rated to 100% O2, which drives the lack of a blower on the O2 system and a one way valve in front of the blower to keep it separate from the high O2 part of the system
 * We have evaluated a large number of blowers. When balancing supply chain, ubiquity of specification, and future avaialability, we settled on this one. However, there is an issue with the pressure spec for the fan. If we needed to reach 60 cm H2O, this fan might be under powered. We are currently leaning to not support those high pressures 
-* TODO: link to the fan we picked
+* #todo: link to the fan we picked
 
 ## Enclosure
-* Looking at custom folder sheet metal so that it is easily manufacturable
+* Must be sterilizable
+* Must be manufacturable with commonly available fabrication equipment in the markets we are assessing (currently targeting custom folded sheet metal)
 * Enclosed to protect the internals and keep out dust
 * Has an external fan for cooling the internal electronics
+* Ruggedized and compatible with the hospital environment
+* Must support easy assembly and maitenance of the various components
 
 ## Humidifier
 * Currently planning to use an off the shelf external humidifier—see [this ticket](https://github.com/RespiraWorks/SystemDesign/issues/10) for more details.
 
 ## PCB/Electronics
-* **Microcontroller**
+* **SRM32 Microcontroller**
+    * More powerful than the simpler arduino and Raspberry pis, but still cheap and widely available
+    * Familiar to many of the members of our team
     * See [this ticket](https://github.com/RespiraWorks/SystemDesign/issues/1) for more details on why a STM32 microcontroller was chosen.
 * **Power Supply**
     * 12V standard chosen to ensure flexibility of power supplies (e.g. battery or UPC)
@@ -126,3 +143,6 @@ More detailed thoughts on this [here](https://docs.google.com/document/d/1_2f-MA
 
 ## GUI
 * #todo - should figure out some stuff for this
+
+## Controller (may fold into software)
+* #todo

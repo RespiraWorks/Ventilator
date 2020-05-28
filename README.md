@@ -24,7 +24,9 @@ Contents may also be out of date. RespiraWorks may, or may not compensate you fo
 
 ## Repository Overview
 
-This repository tracks the physical design of the RespiraWorks open source medical ventilator. The physical design encompasses everything that is not software run on the device, from the pneumatics, to the mechanical design, bill of materials, and circuit diagram. The software repository can be found below and linked from within the system design. 
+* This repository tracks the physical design of the RespiraWorks open source medical ventilator. 
+* The physical design encompasses everything that is not software run on the device, from the pneumatics, to the mechanical design, bill of materials, and circuit diagram. 
+* The software repository can be found below and linked from within the system design. 
 
 ### Structure
 
@@ -39,8 +41,8 @@ This repository tracks the physical design of the RespiraWorks open source medic
       * [Project: IAV Air Control](2_Research_&_Development/Project-IAV_Air_Control)
       * [Project: Pinch Valve](2_Research_&_Development/Project-Pinch_Valve)
       * [Project: Venturi](2_Research_&_Development/Project-Venturi)
-  * [Quality Plan](3_Quality_Plan)
-  * [Manufacturing Design](4_Manufacturing_Design)
-      * [Alpha Build Instructions](4_Manufacturing_Design/Alpha_Build_Instructions) -
+  * [Quality Assurance](3_Quality_Assurance)
+  * [Prototype Assembly](4_Prototype_Assembly)
+      * [Alpha Build Instructions](4_Prototype_Assembly/Alpha_Build_Instructions) -
          documentation for building the "Alpha" version of the device which can be used by developers to contribute to the software. Note that this is almost always out of date, by definition.
   * [Design Rationale](DesignRationales.md) - An explanation of the rationale that went into specific parts can be found here. 

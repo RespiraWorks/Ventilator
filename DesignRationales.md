@@ -21,6 +21,8 @@ duties reliably with high confidence over extended periods of time. The goal is 
 
 4. **Amenable to developing world supply chains and maitenance** - don't presume that the medical context we might be used to is the same in our target market. The only way to get this information is contact with doctors and workers familiar with the facts on the ground. 
 
+5. **Open source** - we want this project to be something that anyone who wants can build off of and leverage. Therefore, all designs, rationales behind those designs, requirements, processes, etc. will be documented in a common repo that everyone has access to. **#todo** - go through and make sure all of the links in here are in git so that people can access them (some slack links exist temporarily before the information is fully resolved and moved to git)
+
 ## System CONOPS/System Design:
 
 More detailed thoughts on this [here](https://docs.google.com/document/d/1_2f-MABkjC65XBJjWOoxpzJW7co3L-7IdkNQfdwZbGU/edit).
@@ -148,9 +150,18 @@ More detailed thoughts on this [here](https://docs.google.com/document/d/1_2f-MA
 ## Software
 
 * **#todo** - add diagrams from design reviews and such
-* **Separation of UI Controller and Cycle Controller**
-    * To maximize safety, it is important to minimize the amount of software that is immediately hazardous to the patient (can cause harm in <1s, making human intervention useless), and expose any hazardous software to high levels of verification and testing. By moving the UI code to a separate porcess, it reduces risk and saves time because the complicated UI code doesn't have to be exposed to the same verification and testing as the cycle controller.
-    * Items that fall within the UI Controller:
+### Separation of UI Controller and Cycle Controller
+* To maximize safety, it is important to minimize the amount of software that is immediately hazardous to the patient (can cause harm in <1s, making human intervention useless), and expose any hazardous software to high levels of verification and testing. By moving the UI code to a separate porcess, it reduces risk and saves time because the complicated UI code doesn't have to be exposed to the same verification and testing as the cycle controller.
+
+* NOTE: Neither of the controllers are a complete backup for the other - this is not a redundant system.  If either fails in a way that is not fixed through the watchdog reset, an immediate intervention will be needed to keep the patient alive.  The objective in the case of either failure is to sound the alarm so that the intervention can happen - and to design the system such that in the event of a failure there is time to make an intervention.  Making a truly redundant system will add cost and time, and so has been deferred for now.
+
+* **Watchdog Timers**
+    * In the event of a computing failure in either the UI Computer or the Cycle Controller, a watchdog timer monitors each and will reset the offending computer, which should then be able to regain control of the valves. 
+    * **#todo** it will need to be confirmed in the final design that the UI Computer cannot command any modes that will cause the Cycle Controller to hold these valves closed. 
+
+### GUI / UI Controller
+* **#todo** - needs more
+* Items that fall within the UI Controller:
         * Cycle Controller Watchdog/Alarm
         * User Parameter Setting
         * Ventilation Mode Setting
@@ -158,7 +169,10 @@ More detailed thoughts on this [here](https://docs.google.com/document/d/1_2f-MA
         * Respiratory Cycle Plot Display
         * Alarm Information Display
         * Alarm-specific alert sounds
-    * Items that fall within the cycle controller:
+
+### Cycle Controller
+* **#todo** - needs more
+* Items that fall within the cycle controller:
         * UI Computer Watchdog/Alarm
         * Closed-Loop Valve Control
         * Open-Loop Blower/Valve Control
@@ -168,16 +182,3 @@ More detailed thoughts on this [here](https://docs.google.com/document/d/1_2f-MA
         * Overpressure Alarm
         * Respiration Rate Alarm
         * Broken Loop Alarm
-    * NOTE: Neither of the controllers are a complete backup for the other - this is not a redundant system.  If either fails in a way that is not fixed through the watchdog reset, an immediate intervention will be needed to keep the patient alive.  The objective in the case of either failure is to sound the alarm so that the intervention can happen - and to design the system such that in the event of a failure there is time to make an intervention.  Making a truly redundant system will add cost and time, and so has been deferred for now.
-
-* **Watchdog Timers**
-    * In the event of a computing failure in either the UI Computer or the Cycle Controller, a watchdog timer monitors each and will reset the offending computer, which should then be able to regain control of the valves. 
-    * **#todo** it will need to be confirmed in the final design that the UI Computer cannot command any modes that will cause the Cycle Controller to hold these valves closed. 
-    * 
-* **#todo** - should figure out some stuff for this
-
-### GUI
-* **#todo** - should figure out some stuff for this
-
-### Controller
-* **#todo**

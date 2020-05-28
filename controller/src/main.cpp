@@ -72,13 +72,19 @@ limitations under the License.
 //
 // "Sends" data to the "GUI" via a simple serial protocol.  This can be parsed
 // and graphed by e.g. the Arduino IDE (tools -> serial plotter).
+static DebugUInt32 gui_mode("gui_mode", "Mode setting for GUI free testing");
+static DebugUInt32 gui_bpm("gui_bpm", "Breaths/min for GUI free testing");
+static DebugUInt32 gui_peep("gui_peep", "PEEP (cm/h2O) for GUI free testing");
+static DebugUInt32 gui_pip("gui_pip", "PIP (cm/h2O) for GUI free testing");
+static DebugFloat gui_ie_ratio("gui_ie_ratio",
+                               "I/E ratio for GUI free testing");
 static void DEV_MODE_comms_handler(const ControllerStatus &controller_status,
                                    GuiStatus *gui_status) {
-  gui_status->desired_params.mode = VentMode_PRESSURE_CONTROL;
-  gui_status->desired_params.breaths_per_min = 12;
-  gui_status->desired_params.peep_cm_h2o = 5;
-  gui_status->desired_params.pip_cm_h2o = 15;
-  gui_status->desired_params.inspiratory_expiratory_ratio = 0.66f;
+  gui_status->desired_params.mode = static_cast<VentMode>(gui_mode.Get());
+  gui_status->desired_params.breaths_per_min = gui_bpm.Get();
+  gui_status->desired_params.peep_cm_h2o = gui_peep.Get();
+  gui_status->desired_params.pip_cm_h2o = gui_pip.Get();
+  gui_status->desired_params.inspiratory_expiratory_ratio = gui_ie_ratio.Get();
 
   static Time last_sent = millisSinceStartup(0);
   Time now = Hal.now();

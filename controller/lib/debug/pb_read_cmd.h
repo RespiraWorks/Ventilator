@@ -31,21 +31,21 @@ class PrintBuffReadCmd : public DebugCmd {
 public:
   PrintBuffReadCmd() : DebugCmd(DbgCmdCode::PRINT_BUFF_READ) {}
 
-  DbgErrCode HandleCmd(uint8_t *data, int *len, int max) {
+  DbgErrCode HandleCmd(CmdContext *context) override {
     // No data needs to be passed in to this command.
 
     // Read bytes from the print buffer until I hit my
     // max or the buffer is empty.
 
     int i;
-    for (i = 0; i < max; i++) {
+    for (i = 0; i < context->max_resp_len; i++) {
       std::optional<uint8_t> ch = debug.PrintBuffGet();
       if (ch == std::nullopt)
         break;
-      *data++ = *ch;
+      context->resp[i] = *ch;
     }
 
-    *len = i;
+    context->resp_len = i;
     return DbgErrCode::OK;
   }
 };

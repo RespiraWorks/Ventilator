@@ -9,7 +9,7 @@
 
 This is a common repository for all software components of the [RespiraWorks](http://respira.works) open source ventilator project.
 
-##Repository structure
+## Repository structure
 
 * [boards](boards) - files for platformio to build for the stm32 chip
 * [common](common) - code common to both controller and GUI executables

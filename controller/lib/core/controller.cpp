@@ -33,6 +33,8 @@ static constexpr float Kp = 0.2f * Ku;
 static constexpr float Ki = 0.4f * Ku / Tu.seconds();
 static constexpr float Kd = Ku * Tu.seconds() / 15;
 
+static DebugFloat dbgSetpoint("setpoint", "Setpoint pressure, kPa");
+
 Controller::Controller()
     : pid_(Kp, Ki, Kd, ProportionalTerm::ON_ERROR,
            DifferentialTerm::ON_MEASUREMENT,
@@ -59,16 +61,19 @@ float Controller::ComputeFanPower(Time now,
   // If the blower is not enabled, immediately shut down the fan.  But for
   // consistency, we still run the PID iteration above.
   float output;
+  float setpoint = desired_state.setpoint_pressure.kPa();
+  dbgSetpoint.Set(setpoint);
+
   if (desired_state.blower_enabled) {
     output = pid_.Compute(
         /*time=*/now,
         /*input=*/cmH2O(sensor_readings.patient_pressure_cm_h2o).kPa(),
-        /*setpoint=*/desired_state.setpoint_pressure.kPa());
+        /*setpoint=*/setpoint);
   } else {
     output = 0;
     pid_.Observe(/*time=*/now,
                  /*input=*/cmH2O(sensor_readings.patient_pressure_cm_h2o).kPa(),
-                 /*setpoint=*/desired_state.setpoint_pressure.kPa(),
+                 /*setpoint=*/setpoint,
                  /*output=*/output);
   }
 

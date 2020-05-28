@@ -2,7 +2,15 @@
 
 **#TODO: document other utilities**
 
+### decoder
+
+[decoder.py](decoder.py)
+
+This is a decoder of serial packets sent from controller to GUI.
+
 ### DMA UART test
+
+[dma_uart_test.py](dma_uart_test.py)
 
 This is an integration test. Test code is deployed to the
 controller, and a python script is run locally to confirm that the controller

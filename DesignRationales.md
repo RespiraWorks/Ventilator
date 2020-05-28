@@ -17,9 +17,9 @@ duties reliably with high confidence over extended periods of time. The goal is 
 
 2. **Keep It Simple (Stupid)** - remove complexity wherever possible to reduce failure modes (and cost), without sacrificing key functionality (though certain functionality may not be achieved)
 
-3. **Make it something that doctors will use** - it won't necessarily do everything, but we want the ventilator to provide the key needs of doctors. Therefore, we keep doctors extremely in the loop and constantly get feedback from them on what we're doing.
+3. **Make it something that doctors will use** - it won't necessarily do everything, but we want the ventilator to provide the key needs of doctors. Therefore, we must keep doctors extremely in the loop and constantly get feedback from them on what we're doing.
 
-4. **Amenable to developing world supply chains and maitenance** - don't presume things that may not be the case (e.g. 100% O2 source).
+4. **Amenable to developing world supply chains and maitenance** - don't presume that the medical context we might be used to is the same in our target market. The only way to get this information is contact with doctors and workers familiar with the facts on the ground. 
 
 ## System CONOPS/System Design:
 
@@ -33,45 +33,58 @@ More detailed thoughts on this [here](https://docs.google.com/document/d/1_2f-MA
 
 * Multiple closed loop (feedback control) systems create complexity by creating interacting dynamics -> we're attempting to only have a single closed loop controlled part of the system at a time and to target one key feature (e.g. pressure with FiO2 achieved across cycles). We're also working to determine which components (e.g., valves, blower) need to be controlled and how in order to figure out what will actually support the system requirements. 
 
-* Anything that will be exposed to high oxygen ratios needs to be safe and ox-clean. This drives a desire to reduce the number of items directly in the flow as much as possible.
+* Anything that will be exposed to high oxygen contrations and pressures needs to be safe and ox-clean. This drives a desire to reduce the number of items directly in the flow as much as possible, especially for high-pressure (greater than 1 bar O2)
 
-* Air valve after the fan/blower with air valve being closed loop controlled and fan being open loop - this is driven by an issue ramping up the fan fast enough to achieve peak pressures without going to high performance fans, which were either too expensive or needed too much power.
+* Air valve after the fan/blower with air valve being closed loop controlled and fan being open loop - The ventilator requires a high rise time of the pressure when transition from PEEP to PIP. A motor which can change the fan inertia this quickly against increasing pressure ends up being the fan for some high-performance ventilators, or expensive. We have solved this by the use of a proportional valve after the fan. The fan runs at constant power, and the pinch valve is used to modelate the flow. For refernce, one fan we got quoted was $500 and we were never able to get one delivered. A fan capable of meeting the pressure spec + an air valve capable of the rise time spec was less than $75.
 
-* Bypass leg from in front of the blower to the end of the exhale circuit - meant to ensure at least some flow for the blower even when holding pressure in order to limit stall/surge when the system is opened back up.
-
-* The goal is to maintain some flow through the system at all times, both to help the fan and to avoid big surges from completely opening and closing different parts of the circuit.
+* The goal is to maintain some bias flow through the system at all times, both to help the fan and to avoid big surges from completely opening and closing different parts of the circuit. This also helps ensure a 'one way' flow of particles and aids with sterilization.
 
 ## Valves
 
 * **Pinch Valve (Custom design)**
-    * Low cost, robust design for achieving variable flow
-    * Valve is not inline with the flow - which means it is not exposed to high O2 concentrations directly
-    * Still evaluating fatigue and lifetime / sealing
+    * Low cost, robust design for achieving variable flow based on peristaltic tubing. 
+    * The valve mechanical components are not exposed to the flow, which means it is not exposed to high O2 concentrations directly.
+    * Still evaluating fatigue and lifetime / sealing.
     * Originally designed as the exhale valve to give control for maintaining PEEP - under considering to use for both the air inlet and for the oxygen inlet
 
-* **Idle Control Valve (IAV/IAC)**
-    * Common automotive part that is cheap and widely available
-    * Unclear how these valves perform in high O2 environments
+* **Idle Air Control Valve (IAC)**
+    * Common automotive part that is cheap and widely available. 
+    * A linear stepper motor drives a pintle up and down to create a variable orifice.
+    * Unclear how these valves perform in high O2 environments or if they could be sufficiently rated/cleaned.
+    * Significantly cheaper, more robust, and more widely avaiable than the pinch valve.
+    
+* **Proportional Solenoid (PSOL)**
+    * Relatively uncommon part but used in traditional ventilators. 
+    * Provides precise, reliable control of high-pressure gasses. 
+    * May be cost effective but requires a high-pressure source of oxygen (can not use low pressure sources like oxygen conentrators without a booster pump).
+    * O2 cleaned PSOLs are relatively hard to find and already in use on ventilators. We may be able to clean automotive PSOLs.    
+    
     
 * **One way valve (check valve)**
     * Needs to work in an O2 environment
     * Needs to be reliable and relatively low cost
     * Still figuring out the exact one way valve design
+    * Two possibilities are a normal umbrella seat check valve, problem is these have a high cracking pressure. This could be OK on the intake side where the fan can generate this but would be a problem on exhale. 
+    * duckbill valves have also been explored, but these can chatter at low flow rates. 
+    * Could possibly modify a normal check valve by cutting the spring down or out. 
 
 ## Tubing
-* Pick peristaltic tubing so that it can withstand many cycles
+* Pick peristaltic tubing in the pinch valves so that it can withstand many cycles
+* Otherwise any biocompatible tubing is fine, gneerally Tygon for most of the testing. 
 * Needs to be O2 safe
+* 3/4 inch standard allows relatively cheap fittings. Need to transition to metric for int'l.
 
 ## Sensors
 
 * **DP sensors / Venturi**
-    * The goal of the venturi design is to measure the flow through the system.
+    * The goal of the venturi design is to measure the flow through the system at a limited pressure drop and with a large signal.
     * Venturi's are nice because they are cheap and yet can provide reliable flow measurements. See [this ticket](https://github.com/RespiraWorks/SystemDesign/issues/9) for info about evaluating the venturi's.
     * Currently we are using the difference between the two flow measurements (one for inhale and one for exhale) to determine the tidal volume delivered to the patient. We are still evaluating how to do this - see [this ticket](https://github.com/RespiraWorks/SystemDesign/issues/57) for more information.
     * Another open questions is manufacturing of the venturis - currently the goal is to design a venturi that can be injection molded.
     
 * **Patient Pressure sensors**
     * Needs to be reliable, handle many cycles, and meet the required ranges and accuracies of the requirements (#todo flesh this out more).
+    * Currently only one sensor is used, but maybe a second one is required for reliability.
     
 * **O2 sensor**
     * The O2 sensor needs to be able to measure up to 100% O2
@@ -89,7 +102,8 @@ More detailed thoughts on this [here](https://docs.google.com/document/d/1_2f-MA
 
 ## Blower
 * Current blower is not rated to 100% O2, which drives the lack of a blower on the O2 system and a one way valve in front of the blower to keep it separate from the high O2 part of the system
-* #todo why did we pick the current blower we have?
+* We have evaluated a large number of blowers. When balancing supply chain, ubiquity of specification, and future avaialability, we settled on this one. However, there is an issue with the pressure spec for the fan. If we needed to reach 60 cm H2O, this fan might be under powered. We are currently leaning to not support those high pressures 
+* TODO: link to the fan we picked
 
 ## Enclosure
 * Looking at custom folder sheet metal so that it is easily manufacturable
@@ -97,7 +111,7 @@ More detailed thoughts on this [here](https://docs.google.com/document/d/1_2f-MA
 * Has an external fan for cooling the internal electronics
 
 ## Humidifier
-* Currently planning to use an off the shelf humidifier—see [this ticket](https://github.com/RespiraWorks/SystemDesign/issues/10) for more details.
+* Currently planning to use an off the shelf external humidifier—see [this ticket](https://github.com/RespiraWorks/SystemDesign/issues/10) for more details.
 
 ## PCB/Electronics
 * **Microcontroller**

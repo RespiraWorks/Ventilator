@@ -53,4 +53,5 @@ The physical design encompasses everything that is not software run on the devic
   * [Manufacturing Design](4_Manufacturing_Design)
       * [Alpha Build Instructions](4_Manufacturing_Design/Alpha_Build_Instructions) -
          documentation for building the "Alpha" version of the device which can be used by developers to contribute to the software. Note that this is almost always out of date, by definition.
+      * [Beta Build Plan](4_Manufacturing_Design/Beta_Build_Instructions) - Details on this page will be fleshed out once as we progress further into beta build. 
   * [Design Rationale](DesignRationales.md) - An explanation of the rationale that went into specific parts can be found here. 

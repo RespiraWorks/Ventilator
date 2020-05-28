@@ -25,21 +25,26 @@ TEST(VarCmd, GetVar) {
   DebugVar var("name", &value, "help", "fmt");
 
   // Test that a GET command obtains the variable's value.
-  VarCmd cmd;
   uint8_t id[2];
   u16_to_u8(var.GetId(), id);
-  std::array get_cmd = {
+  std::array req = {
       uint8_t{1},   // GET
       id[0], id[1], // Var id
       uint8_t{0}    // Placeholder
   };
-  int len = std::size(get_cmd);
-  cmd.HandleCmd(get_cmd.data(), &len, len);
-  EXPECT_EQ(4, len);
+  std::array<uint8_t, 4> resp;
+  CmdContext context = {.req = req.data(),
+                        .req_len = std::size(req),
+                        .resp = resp.data(),
+                        .max_resp_len = std::size(resp),
+                        .resp_len = 0};
+
+  EXPECT_EQ(DbgErrCode::OK, VarCmd().HandleCmd(&context));
+  EXPECT_EQ(4, context.resp_len);
 
   std::array<uint8_t, 4> expected_result;
   u32_to_u8(value, expected_result.data());
-  EXPECT_EQ(get_cmd, expected_result);
+  EXPECT_EQ(resp, expected_result);
 }
 
 TEST(VarCmd, SetVar) {
@@ -51,17 +56,23 @@ TEST(VarCmd, SetVar) {
   u32_to_u8(new_value, new_bytes.data());
 
   // Test that a SET command changes the variable's value.
-  VarCmd cmd;
   uint8_t id[2];
   u16_to_u8(var.GetId(), id);
-  std::array set_cmd = {
+  std::array req = {
       uint8_t{2},                                            // SET
       id[0],        id[1],                                   // Var id
       new_bytes[0], new_bytes[1], new_bytes[2], new_bytes[3] // Value
   };
-  int len = std::size(set_cmd);
-  cmd.HandleCmd(set_cmd.data(), &len, len);
-  EXPECT_EQ(0, len);
+
+  std::array<uint8_t, 0> resp;
+  CmdContext context = {.req = req.data(),
+                        .req_len = std::size(req),
+                        .resp = resp.data(),
+                        .max_resp_len = std::size(resp),
+                        .resp_len = 0};
+
+  EXPECT_EQ(DbgErrCode::OK, VarCmd().HandleCmd(&context));
+  EXPECT_EQ(0, context.resp_len);
 
   EXPECT_EQ(new_value, value);
 }

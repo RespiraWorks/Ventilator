@@ -21,3 +21,4 @@ gui/build
 .*.swp
 *.map
 __pycache__/
+last_graph.dat

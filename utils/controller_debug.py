@@ -895,8 +895,7 @@ def SendCmd(op, data=[], timeout=None):
         S += "0x%02x " % b
     DbgPrint(S)
 
-    cmdLock.acquire()
-    try:
+    with cmdLock:
         ser.write(bytearray(buff))
         if timeout != None:
             DbgPrint("Setting timeout to %.1f" % timeout)
@@ -920,25 +919,16 @@ def SendCmd(op, data=[], timeout=None):
         if rsp[0]:
             raise Error("Error %d (0x%02x)" % (rsp[0], rsp[0]))
             return []
-        cmdLock.release()
         return rsp[1:-2]
-    except:
-        cmdLock.release()
-        raise
 
 
 def ReSync():
     global cmdLock
-    cmdLock.acquire()
-    try:
+    with cmdLock:
         cmd = [TERM, TERM]
         ser.write(bytearray(cmd))
         time.sleep(0.1)
         ser.reset_input_buffer()
-        cmdLock.release()
-    except:
-        cmdLock.release()
-        raise
 
 
 def I2F(ival):

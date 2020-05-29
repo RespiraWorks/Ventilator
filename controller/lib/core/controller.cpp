@@ -33,7 +33,7 @@ static constexpr float Kp = 0.2f * Ku;
 static constexpr float Ki = 0.4f * Ku / Tu.seconds();
 static constexpr float Kd = Ku * Tu.seconds() / 15;
 
-static DebugFloat dbgSetpoint("setpoint", "Setpoint pressure, kPa");
+static DebugFloat dbg_setpoint("setpoint", "Setpoint pressure, kPa");
 
 Controller::Controller()
     : pid_(Kp, Ki, Kd, ProportionalTerm::ON_ERROR,
@@ -62,7 +62,7 @@ float Controller::ComputeFanPower(Time now,
   // consistency, we still run the PID iteration above.
   float output;
   float setpoint = desired_state.setpoint_pressure.kPa();
-  dbgSetpoint.Set(setpoint);
+  dbg_setpoint.Set(setpoint);
 
   if (desired_state.blower_enabled) {
     output = pid_.Compute(

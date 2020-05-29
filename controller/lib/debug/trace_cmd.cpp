@@ -18,13 +18,40 @@ limitations under the License.
 #include "debug.h"
 #include "trace.h"
 
-TraceCmd::TraceCmd() : DebugCmd(DbgCmdCode::TRACE) {
-  // Disable all trace varaibles initially
-  for (int i = 0; i < TRACE_VAR_CT; i++)
-    trace_var[i] = -1;
-}
+// These variables are used control the trace function
+static FnDebugVar varTraceCtrl(
+    VarType::UINT32, "trace_ctrl", "Used to start/stop the trace function",
+    "0x%08x", [] { return trace.GetFlags(); },
+    [](uint32_t value) { trace.SetFlags(value); });
 
-// The trace command is used to download data from the trace buffer.
+static FnDebugVar varTracePeriod(
+    VarType::UINT32, "trace_period",
+    "Period that data will be captured.  Loop cycle units", "%u",
+    [] { return trace.GetPeriod(); },
+    [](uint32_t value) { trace.SetPeriod(value); });
+
+static FnDebugVar varTraceSamp(
+    VarType::UINT32, "trace_samples", "Number of trace samples saved so far",
+    "%u", [] { return trace.GetNumSamples(); },
+    [](uint32_t value) { /* ignore */ });
+
+static FnDebugVar vartrace_var1(
+    VarType::INT32, "trace_var1", "Variable to be saved to the trace buffer",
+    "%d", [] { return trace.GetTracedVarId<0>(); },
+    [](int32_t value) { trace.SetTracedVarId<0>(value); });
+static FnDebugVar vartrace_var2(
+    VarType::INT32, "trace_var2", "Variable to be saved to the trace buffer",
+    "%d", [] { return trace.GetTracedVarId<1>(); },
+    [](int32_t value) { trace.SetTracedVarId<1>(value); });
+static FnDebugVar vartrace_var3(
+    VarType::INT32, "trace_var3", "Variable to be saved to the trace buffer",
+    "%d", [] { return trace.GetTracedVarId<2>(); },
+    [](int32_t value) { trace.SetTracedVarId<2>(value); });
+static FnDebugVar vartrace_var4(
+    VarType::INT32, "trace_var4", "Variable to be saved to the trace buffer",
+    "%d", [] { return trace.GetTracedVarId<3>(); },
+    [](int32_t value) { trace.SetTracedVarId<3>(value); });
+
 DbgErrCode TraceCmd::HandleCmd(CmdContext *context) {
 
   // The first byte of data is always required, this
@@ -37,7 +64,7 @@ DbgErrCode TraceCmd::HandleCmd(CmdContext *context) {
   // Sub-command 0 is used to flush the trace buffer
   // It also disables the trace
   case 0: {
-    trace_control.Flush();
+    trace.SetFlags(0);
     context->resp_len = 0;
     return DbgErrCode::OK;
   }
@@ -54,8 +81,7 @@ DbgErrCode TraceCmd::HandleCmd(CmdContext *context) {
 DbgErrCode TraceCmd::ReadTraceBuff(CmdContext *context) {
   // See how many active trace variables there are
   // This gives us our sample size;
-  DebugVarBase *vptr[TRACE_VAR_CT];
-  int vct = CountActiveVars(vptr);
+  int vct = trace.GetNumActiveVars();
 
   // If there aren't any active variables, I'm done
   if (!vct) {
@@ -73,25 +99,20 @@ DbgErrCode TraceCmd::ReadTraceBuff(CmdContext *context) {
     return DbgErrCode::NO_MEMORY;
 
   // Find the total number of samples in the buffer
-  int tot = trace_buffer.FullCt() / vct;
+  int tot = trace.GetNumSamples();
   if (tot > max)
     tot = max;
 
   uint8_t *resp = context->resp;
+  std::array<uint32_t, TRACE_VAR_CT> record;
   for (int i = 0; i < tot; i++) {
-    BlockInterrupts block;
-    // Grab one sample with interrupts disabled.
-    // There's a chance the trace is still running, so we
-    // could get interrupted by the high priority thread
-    // that adds to the buffer.  I want to make sure I
-    // read a full sample without being interrupted
+    // This shouldn't fail since I've already confirmed
+    // the number of elements in the buffer.  If it does
+    // fail it's a bug.
+    if (!trace.GetNextTraceRecord(&record, &vct))
+      break;
     for (int j = 0; j < vct; j++) {
-
-      // This shouldn't fail since I've already confirmed
-      // the number of elements in the buffer.  If it does
-      // fail it's a bug.
-      std::optional<uint32_t> dat = trace_buffer.Get();
-      u32_to_u8(*dat, resp);
+      u32_to_u8(record[j], resp);
       resp += sizeof(uint32_t);
     }
   }

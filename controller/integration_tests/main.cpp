@@ -4,7 +4,7 @@ int main() {
   Hal.init();
 
   float fan_min{0.0};
-  float fan_max{0.5};
+  float fan_max{0.75};
   float step{0.001f};
 
   float fan_power = fan_min;

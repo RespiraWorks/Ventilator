@@ -14,7 +14,7 @@ This page explains how to adapt off-the-shelf parts into a basic test lung for o
 
 ### Parts
 
-| Item | Quantity | Manufacturer  | Part number         | Price($)     | Action | Sources         | Notes |
+| Item | Quantity | Manufacturer  | Part #         | Price (USD)     | Action | Sources         | Notes |
 | ---- |---------:| ------------- | ------------------- | ------------:|-----------|----------------| ----- |
 | 1    |        1 | Portex        | 370924              | 15.00        |*ask first*| [E][1ebay]     | test "lung", ask build-team if they have extra |
 | 2    |        2 | Mars Wellness | 4332593260          | 16.99 / 2    | buy       | [Z][2amzn]     | CPAP tubing |
@@ -26,7 +26,7 @@ This page explains how to adapt off-the-shelf parts into a basic test lung for o
 
 ### Parts: Alt Tee
 
-| Item | Quantity | Manufacturer  | Part number         | Price (USD)     | Sources        | Notes |
+| Item | Quantity | Manufacturer  | Part #         | Price (USD)     | Sources        | Notes |
 | ---- |---------:| ------------- | ------------------- | ------------:|----------------|----------------|
 | a1    |  ~10 cm  | McMaster-Carr | 5234K57             | 21.50 / 5ft  | [C][a1mcmc]     | Soft latex tubing, 5/8" ID, 7/8" OD, optional? |
 | a2    |       1  | McMaster-Carr | 9579K72             | 12.21 / 20   | [C][a2mcmc]     | Herbie clip J (20.3-23mm) for clamping 7/8"OD tubing, optional? |

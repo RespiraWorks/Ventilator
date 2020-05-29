@@ -30,7 +30,8 @@ Checks: >
   -misc-non-private-member-variables-in-classes,
   -readability-implicit-bool-conversion,
   -modernize-use-using,
-  -modernize-use-nodiscard
+  -modernize-use-nodiscard,
+  -readability-non-const-parameter
 
 WarningsAsErrors: '*'
 

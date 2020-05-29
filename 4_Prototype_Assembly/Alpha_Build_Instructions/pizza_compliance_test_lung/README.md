@@ -22,7 +22,7 @@ This is completely uncalibrated, so it is not intended for instrumentation just 
 
 ### Parts
 
-| Item | Quantity | Manufacturer    | Part number         | Price (USD) | Sources         | Notes |
+| Item | Quantity | Manufacturer    | Part #         | Price (USD) | Sources         | Notes |
 | ---- |---------:| --------------- | ------------------- | --------:|-----------------| ----- |
 | 1  |        1 | South Pacific   | FlexLung            |  129.00 / 5 | [Z][1amzn]     | Test Lung or breathing bag or equivalent, many models out there, check eBay as well |
 | 2  |        1 | BXI or whatever | CA-BX-AP-PF |    28.95 | [Z][2amzn]     | Just some sturdy material.  Aluminum, wood, whatevery you have around. 1x 16x12 sheet needed, or 2x 8x12 sheets |
@@ -30,7 +30,7 @@ This is completely uncalibrated, so it is not intended for instrumentation just 
 | 4 |        1 | Alliance Rubber | 08997 SuperSize Bands  |     7.00| [Z][4aamzn]     | just some more big rubber bands. good for tuning the response. |
 | 5  |        1 | whoever         | literally just some zip ties   |     14.00| [Z][5amzn]     | hopefully you have some zip ties at home already but if not, here's a link |
 | 6  |        1 | McMaster-Carr   | 5463K615   |     12.00 for pack of 10| [C][6mcmc]     | tee-juction to connect hoses to your test lung.  Again sizes vary so this is just a suggestion.  Find the right part for your hoses and your lung.  Expect to use some tape to ensure a tight seal. |
-| 7   |        1 |                 |                     | 6.98         | [Z][6amzn]     | more rubber bands, optional or alternative to 3 and 3a |
+| 7   |        1 |                 |                     | 6.98         | [Z][7amzn]     | more rubber bands, optional or alternative to 3 and 3a |
 
 [1amzn]:  https://www.amazon.com/FlexLung-Biomedical-Ventilator-Testing-Demonstration/dp/B07B876P9C
 [2amzn]:  https://www.amazon.com/gp/product/B077Q2HYMW

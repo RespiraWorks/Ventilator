@@ -26,9 +26,9 @@ enum class DbgPollState { WAIT_CMD, PROCESS_CMD, SEND_RESP };
 // The binary serial interface uses two special characters
 // These values are pretty arbitrary.
 // See debug.cpp for a detailed description of how this works
-enum class DbgSpecial { ESC = 0xf1, TERM = 0xf2 };
+enum class DbgSpecial : uint8_t { ESC = 0xf1, TERM = 0xf2 };
 
-enum class DbgCmdCode {
+enum class DbgCmdCode : uint8_t {
   MODE = 0x00,            // Return the current firmware mode
   PEEK = 0x01,            // Peek into RAM
   POKE = 0x02,            // Poke values into RAM
@@ -37,7 +37,7 @@ enum class DbgCmdCode {
   TRACE = 0x05,           // Data trace commands
 };
 
-enum class DbgErrCode {
+enum class DbgErrCode : uint8_t {
   OK = 0x00,           // success
   CRC_ERR = 0x01,      // CRC error on command
   BAD_CMD = 0x02,      // Unknown command code received
@@ -60,7 +60,7 @@ struct CmdContext {
 // virtual class
 class DebugCmd {
   friend class DebugSerial;
-  static DebugCmd *cmdList[256];
+  static DebugCmd *cmd_registry_[256];
 
 public:
   DebugCmd(DbgCmdCode opcode);
@@ -88,7 +88,9 @@ public:
 
   // This function is called from the main loop to handle
   // debug commands
-  void Poll();
+  // Returns true if this call has finished sending the response for a command:
+  // this is useful for testing.
+  bool Poll();
 
   // Printf style function to print data to a virtual
   // console.
@@ -99,21 +101,29 @@ public:
   // print buffer data.
   std::optional<uint8_t> PrintBuffGet() { return printBuff.Get(); }
 
+  static uint16_t CalcCRC(uint8_t *buff, size_t len);
+
 private:
   CircBuff<uint8_t, 2000> printBuff;
 
-  uint8_t cmdInBuff[500];
-  uint8_t cmdOutBuff[500];
-  int buffNdx;
-  int respLen;
-  DbgPollState pollState;
-  bool prevCharEsc;
+  // Buffer into which request data is written when poll_state_ == WAIT_CMD
+  uint8_t request_[500] = {0};
+  // How many bytes in request_ have been received for the current command
+  uint32_t request_size_ = 0;
+
+  // Buffer into which the command writes its response and from which it is then
+  // sent in state SEND_RESP.
+  uint8_t response_[500] = {0};
+  uint32_t response_size_ = 0;
+  uint32_t response_bytes_sent_ = 0;
+
+  DbgPollState poll_state_ = DbgPollState::WAIT_CMD;
+  bool escape_next_byte_ = false;
 
   bool ReadNextByte();
   void ProcessCmd();
   bool SendNextByte();
 
-  uint16_t CalcCRC(uint8_t *buff, int len);
   void SendError(DbgErrCode err);
 };
 extern DebugSerial debug;

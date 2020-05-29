@@ -52,7 +52,7 @@ The above files should not be printed with FDM. Instead, a leaktight method like
 
 ### Parts 
 
-| RefDes | Quantity | Manufacturer  | Part #              | Price($)     | Do what?     | Sources            | Notes |
+| Item | Quantity | Manufacturer  | Part #              | Price (USD)     | Action     | Sources            | Notes |
 | ------ |---------:| ------------- | ------------------- | ------------:| ------------ |--------------------| ----- |
 | 1      |        1 | STEPPERONLINE | 17HS19-2004S2       |       14.99  | Buy          | [Z][1amzn]         | Stepper motor. Make sure to get one with the full-cut D-shaft. |
 | 2      |        1 | McMaster-Carr | 92095A218           |   7.64 / 25  | Buy          | [C][2mcmc]         | M5x30mm button head. Axle for bearing. |
@@ -85,10 +85,10 @@ your choice of pneumatic system internal diameter. Alternative adapters are list
 
 ### Tools
 
-| Item | Quantity | Manufacturer  | Part #      | Price(USD) | Sources         | Notes |
+| Item | Quantity | Manufacturer  | Part #      | Price (USD) | Sources         | Notes |
 | ---- |---------:| ------------- | ----------- | ----------:|-----------------| ----- |
-| A1   |        1 | TEKTON        | 37122       |       9.99 | [Z][a1amzn]      | Some sort of wrench/pliers, to clamp the herbie clips around the tubing+fitting. |
-| A2   |        1 | Wiha          | 71397       |       6.76 | [Z][a2amzn]      | 2, 2.5, & 3mm hex drivers required for assembly.  |
+| a1   |        1 | TEKTON        | 37122       |       9.99 | [Z][a1amzn]      | Some sort of wrench/pliers, to clamp the herbie clips around the tubing+fitting. |
+| a2   |        1 | Wiha          | 71397       |       6.76 | [Z][a2amzn]      | 2, 2.5, & 3mm hex drivers required for assembly.  |
 
 [a1amzn]:   https://www.amazon.com/TEKTON-2-Inch-Joint-Pliers-37122/dp/B00KLY1FAY
 [a2amzn]:   https://www.amazon.com/Wiha-71397-Metric-Insert-6-Piece/dp/B0084B7S70/ref=sr_1_4?dchild=1&keywords=3mm+hex&qid=1590347774&sr=8-4

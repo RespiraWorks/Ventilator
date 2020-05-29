@@ -247,6 +247,9 @@ public:
   StepMtrErr SetAmpAccel(float amp);
   StepMtrErr SetAmpDecel(float amp);
 
+  // Sets all four amplitude values to the same value
+  StepMtrErr SetAmpAll(float amp);
+
   // Goto to the position (in deg) via the shortest path
   // This returns once the move has started, it doesn't
   // wait for the move to finish

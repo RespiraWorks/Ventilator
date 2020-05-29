@@ -155,7 +155,8 @@ void PinchValve::SetOutput(float value) {
   // The motor's zero position is at the home offset
   // which corresponds to fully open (i.e. 100% flow)
   // The valve is closed at a position of -max_move;
-  float pos = value * -max_move;
+
+  float pos = (value - 1.0f) * max_move;
   mtr_->GotoPos(pos);
 }
 

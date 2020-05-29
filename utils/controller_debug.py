@@ -866,6 +866,12 @@ def GetResp(DbgPrint):
 
 #  timeout - How long (seconds) to wait for the response.  If
 #            not specified then a reasonable system default is used
+
+
+# This lock is used to make the command interface thread safe.
+# The main debug program doesn't currently use threads, but scripts
+# run from it may and those scripts use these same functions to
+# send commands
 cmdLock = threading.Lock()
 
 

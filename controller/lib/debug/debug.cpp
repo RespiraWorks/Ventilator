@@ -286,6 +286,8 @@ void DebugSerial::ProcessCmd() {
     return;
   }
 
+  len_out = context.resp_len;
+
   cmdOutBuff[0] = static_cast<uint8_t>(DbgErrCode::OK);
 
   // Calculate the CRC on the data and error code returned

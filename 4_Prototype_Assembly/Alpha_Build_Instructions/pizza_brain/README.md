@@ -14,7 +14,7 @@ For an upgrade, check the [Pizza build](../pizza_build.md).
 ### Purchasing Source Key
 
 * **Z** = Amazon
-* **C** = McMaster-Carr4!@(4_Prototype_Assembly/Alpha_Build_Instructions) -
+* **C** = McMaster-Carr
 * **A** = Ali Express
 * **M** = Mouser
 * **O** = Monoprice

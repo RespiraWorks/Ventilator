@@ -45,5 +45,5 @@ Contents may also be out of date. RespiraWorks may, or may not compensate you fo
   * [Prototype Assembly](4_Prototype_Assembly)
       * [Alpha Build Instructions](4_Prototype_Assembly/Alpha_Build_Instructions) -
          documentation for building the "Alpha" version of the device which can be used by developers to contribute to the software. Note that this is almost always out of date, by definition.
-      * [Beta Build Plan](4_Manufacturing_Design/Beta_Build_Instructions) - Details on this page will be fleshed out once as we progress further into beta build. 
+      * [Beta Build Plan](4_Prototype_Assembly/Beta_Build_Instructions) - Details on this page will be fleshed out once as we progress further into beta build. 
   * [Design Rationale](DesignRationales.md) - An explanation of the rationale that went into specific parts can be found here. 

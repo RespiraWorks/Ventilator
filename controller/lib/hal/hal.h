@@ -127,6 +127,22 @@ enum class IntPriority {
 
 enum class InterruptVector;
 
+#ifdef TEST_MODE
+class TestSerialPort {
+public:
+  [[nodiscard]] uint16_t Write(const char *buf, uint16_t len);
+  [[nodiscard]] uint16_t Read(char *buf, uint16_t len);
+  uint16_t BytesAvailableForWrite();
+  uint16_t BytesAvailableForRead();
+  void PutIncomingData(const char *data, uint16_t len);
+  uint16_t GetOutgoingData(char *data, uint16_t len);
+
+private:
+  std::deque<std::vector<char>> incoming_data_;
+  std::vector<char> outgoing_data_;
+};
+#endif // TEST_MODE
+
 // Singleton class which implements a hardware abstraction layer.
 //
 // Access this via the `Hal` global variable, e.g. `Hal.millis()`.
@@ -206,9 +222,10 @@ public:
   uint16_t serialBytesAvailableForWrite();
 
   // Serial port used for debugging
-  uint16_t debugWrite(const char *buf, uint16_t len);
-  uint16_t debugRead(char *buf, uint16_t len);
+  [[nodiscard]] uint16_t debugWrite(const char *buf, uint16_t len);
+  [[nodiscard]] uint16_t debugRead(char *buf, uint16_t len);
   uint16_t debugBytesAvailableForWrite();
+  uint16_t debugBytesAvailableForRead();
 
 #ifndef TEST_MODE
   // Translates to a numeric pin that can be passed to the Arduino API.
@@ -252,6 +269,10 @@ public:
   //   Hal.serialBytesAvailableForRead() == 0
   //
   void test_serialPutIncomingData(const char *data, uint16_t len);
+
+  // Same as above, but for the debug serial port.
+  uint16_t test_debugGetOutgoingData(char *data, uint16_t len);
+  void test_debugPutIncomingData(const char *data, uint16_t len);
 #endif
 
   // Performs the device soft-reset
@@ -331,8 +352,8 @@ private:
   std::map<BinaryPin, VoltageLevel> binary_pin_values_;
   std::map<PwmPin, float> pwm_pin_values_;
 
-  std::deque<std::vector<char>> serialIncomingData_;
-  std::vector<char> serialOutgoingData_;
+  TestSerialPort serial_port_;
+  TestSerialPort debug_serial_port_;
 #endif
 };
 
@@ -420,50 +441,43 @@ inline void HalApi::analogWrite(PwmPin pin, float duty) {
   }
   pwm_pin_values_[pin] = duty;
 }
-[[nodiscard]] inline uint16_t HalApi::serialRead(char *buf, uint16_t len) {
-  if (serialIncomingData_.empty()) {
-    return 0;
-  }
-  auto &readBuf = serialIncomingData_.front();
-  uint16_t n = std::min(len, static_cast<uint16_t>(readBuf.size()));
-  memcpy(buf, readBuf.data(), n);
-  readBuf.erase(readBuf.begin(), readBuf.begin() + n);
-  if (readBuf.empty()) {
-    serialIncomingData_.pop_front();
-  }
-  return n;
+
+inline uint16_t HalApi::serialRead(char *buf, uint16_t len) {
+  return serial_port_.Read(buf, len);
 }
 inline uint16_t HalApi::serialBytesAvailableForRead() {
-  return serialIncomingData_.empty()
-             ? 0
-             : static_cast<uint16_t>(serialIncomingData_.front().size());
+  return serial_port_.BytesAvailableForRead();
 }
-[[nodiscard]] inline uint16_t HalApi::serialWrite(const char *buf,
-                                                  uint16_t len) {
-  uint16_t n = std::min(len, serialBytesAvailableForWrite());
-  serialOutgoingData_.insert(serialOutgoingData_.end(), buf, buf + n);
-  return n;
+inline uint16_t HalApi::serialWrite(const char *buf, uint16_t len) {
+  return serial_port_.Write(buf, len);
 }
 inline uint16_t HalApi::serialBytesAvailableForWrite() {
-  // TODO: Simulate partial writes?  For now, simply return the true size of
-  // the Arduino tx buffer.
-  return 64;
+  return serial_port_.BytesAvailableForWrite();
 }
 inline uint16_t HalApi::test_serialGetOutgoingData(char *data, uint16_t len) {
-  uint16_t n = std::min(len, static_cast<uint16_t>(serialOutgoingData_.size()));
-  memcpy(data, serialOutgoingData_.data(), n);
-  serialOutgoingData_.erase(serialOutgoingData_.begin(),
-                            serialOutgoingData_.begin() + n);
-  return n;
+  return serial_port_.GetOutgoingData(data, len);
 }
 inline void HalApi::test_serialPutIncomingData(const char *data, uint16_t len) {
-  constexpr uint16_t MAX_MSG_SIZE = 64;
-  while (len > MAX_MSG_SIZE) {
-    serialIncomingData_.push_back(std::vector<char>(data, data + MAX_MSG_SIZE));
-    data += MAX_MSG_SIZE;
-    len = static_cast<uint16_t>(len - MAX_MSG_SIZE);
-  }
-  serialIncomingData_.push_back(std::vector<char>(data, data + len));
+  serial_port_.PutIncomingData(data, len);
+}
+
+inline uint16_t HalApi::debugRead(char *buf, uint16_t len) {
+  return debug_serial_port_.Read(buf, len);
+}
+inline uint16_t HalApi::debugBytesAvailableForRead() {
+  return debug_serial_port_.BytesAvailableForRead();
+}
+inline uint16_t HalApi::debugWrite(const char *buf, uint16_t len) {
+  return debug_serial_port_.Write(buf, len);
+}
+inline uint16_t HalApi::debugBytesAvailableForWrite() {
+  return debug_serial_port_.BytesAvailableForWrite();
+}
+inline uint16_t HalApi::test_debugGetOutgoingData(char *data, uint16_t len) {
+  return debug_serial_port_.GetOutgoingData(data, len);
+}
+inline void HalApi::test_debugPutIncomingData(const char *data, uint16_t len) {
+  debug_serial_port_.PutIncomingData(data, len);
 }
 
 inline void HalApi::disableInterrupts() { interruptsEnabled_ = false; }
@@ -475,13 +489,49 @@ inline uint32_t HalApi::crc32(uint8_t *data, uint32_t length) {
   return soft_crc32(reinterpret_cast<char *>(data), length);
 }
 
-// NOTE - these functions are for debugging/testing the controller only.
-// They aren't necessary or used when running in test mode
-inline uint16_t HalApi::debugWrite(const char *buf, uint16_t len) {
-  return len;
+inline uint16_t TestSerialPort::Read(char *buf, uint16_t len) {
+  if (incoming_data_.empty()) {
+    return 0;
+  }
+  auto &readBuf = incoming_data_.front();
+  uint16_t n = std::min(len, static_cast<uint16_t>(readBuf.size()));
+  memcpy(buf, readBuf.data(), n);
+  readBuf.erase(readBuf.begin(), readBuf.begin() + n);
+  if (readBuf.empty()) {
+    incoming_data_.pop_front();
+  }
+  return n;
 }
-inline uint16_t HalApi::debugRead(char *buf, uint16_t len) { return 0; }
-inline uint16_t HalApi::debugBytesAvailableForWrite() { return 0; }
+inline uint16_t TestSerialPort::BytesAvailableForRead() {
+  return incoming_data_.empty()
+             ? 0
+             : static_cast<uint16_t>(incoming_data_.front().size());
+}
+inline uint16_t TestSerialPort::Write(const char *buf, uint16_t len) {
+  uint16_t n = std::min(len, BytesAvailableForWrite());
+  outgoing_data_.insert(outgoing_data_.end(), buf, buf + n);
+  return n;
+}
+inline uint16_t TestSerialPort::BytesAvailableForWrite() {
+  // TODO: Simulate partial writes?  For now, simply return the true size of
+  // the Arduino tx buffer.
+  return 64;
+}
+inline uint16_t TestSerialPort::GetOutgoingData(char *data, uint16_t len) {
+  uint16_t n = std::min(len, static_cast<uint16_t>(outgoing_data_.size()));
+  memcpy(data, outgoing_data_.data(), n);
+  outgoing_data_.erase(outgoing_data_.begin(), outgoing_data_.begin() + n);
+  return n;
+}
+inline void TestSerialPort::PutIncomingData(const char *data, uint16_t len) {
+  constexpr uint16_t MAX_MSG_SIZE = 64;
+  while (len > MAX_MSG_SIZE) {
+    incoming_data_.push_back(std::vector<char>(data, data + MAX_MSG_SIZE));
+    data += MAX_MSG_SIZE;
+    len = static_cast<uint16_t>(len - MAX_MSG_SIZE);
+  }
+  incoming_data_.push_back(std::vector<char>(data, data + len));
+}
 
 inline void HalApi::startLoopTimer(const Duration &period,
                                    void (*callback)(void *), void *arg) {}

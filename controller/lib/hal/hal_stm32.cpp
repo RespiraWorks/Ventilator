@@ -140,8 +140,8 @@ void HalApi::init() {
   InitPwmOut();
   InitUARTs();
   crc32_init();
-  StepperMotorInit();
   Hal.enableInterrupts();
+  StepperMotorInit();
 }
 
 // Reset the processor

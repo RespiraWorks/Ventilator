@@ -21,7 +21,7 @@ limitations under the License.
 TraceCmd::TraceCmd() : DebugCmd(DbgCmdCode::TRACE) {
   // Disable all trace varaibles initially
   for (int i = 0; i < TRACE_VAR_CT; i++)
-    traceVar[i] = -1;
+    trace_var[i] = -1;
 }
 
 // The trace command is used to download data from the trace buffer.
@@ -37,12 +37,7 @@ DbgErrCode TraceCmd::HandleCmd(CmdContext *context) {
   // Sub-command 0 is used to flush the trace buffer
   // It also disables the trace
   case 0: {
-    traceCtrl = 0;
-    traceSamp = 0;
-
-    std::optional<uint32_t> tmp;
-    while ((tmp = traceBuffer.Get()) != std::nullopt) {
-    }
+    trace_control.Flush();
     context->resp_len = 0;
     return DbgErrCode::OK;
   }
@@ -59,7 +54,7 @@ DbgErrCode TraceCmd::HandleCmd(CmdContext *context) {
 DbgErrCode TraceCmd::ReadTraceBuff(CmdContext *context) {
   // See how many active trace variables there are
   // This gives us our sample size;
-  DebugVar *vptr[TRACE_VAR_CT];
+  DebugVarBase *vptr[TRACE_VAR_CT];
   int vct = CountActiveVars(vptr);
 
   // If there aren't any active variables, I'm done
@@ -78,7 +73,7 @@ DbgErrCode TraceCmd::ReadTraceBuff(CmdContext *context) {
     return DbgErrCode::NO_MEMORY;
 
   // Find the total number of samples in the buffer
-  int tot = traceBuffer.FullCt() / vct;
+  int tot = trace_buffer.FullCt() / vct;
   if (tot > max)
     tot = max;
 
@@ -95,11 +90,10 @@ DbgErrCode TraceCmd::ReadTraceBuff(CmdContext *context) {
       // This shouldn't fail since I've already confirmed
       // the number of elements in the buffer.  If it does
       // fail it's a bug.
-      std::optional<uint32_t> dat = traceBuffer.Get();
+      std::optional<uint32_t> dat = trace_buffer.Get();
       u32_to_u8(*dat, resp);
       resp += sizeof(uint32_t);
     }
-    traceSamp--;
   }
 
   context->resp_len = static_cast<int>(tot * vct * sizeof(uint32_t));

@@ -59,9 +59,9 @@ A metric version of the pneumatic system is also anticipated. If you can help wi
 | a3   |       20 | McMaster-Carr | 9579K72             | 12.21 / 20   | [C][a3mcmc]     | Herbie clip J (20.3-23mm) for clamping 7/8"OD tubing, you'll need plenty |
 | a4   |       ~6 | McMaster-Carr | 5463K646            |  6.60 / 10   | [C][a4mcmc]     | 5/8"ID <-> 1/2"ID, adapter, to interface with pinch valve tubing, **read note below** |
 | a5   |       ~6 | McMaster-Carr | 5463K646            |  6.60 / 10   | [C][a5mcmc]     | 5/8"ID <-> 3/8"ID, adapter, to interface with alternative pinch valve tubing, **read note below** |
-| a5   |       ~3 | McMaster-Carr | 5372K128            | 2.82         | [C][a6mcmc]     | 1/2 NTP female tee, if you plan to have bypass or oxygen limb |
-| a6   |       ~5 | McMaster-Carr | 5372K128            | 4.89 / 10    | [C][a7mcmc]     | 1/2 NTP male <-> 5/8"ID multibarbed, for tee junctions, if you plan to have bypass or oxygen limb |
-| a7   |        2 |               |                     | 13.45 / 2    | [Z][a8amzn]     | 2pac of ball valves 5/8"ID |
+| a6   |       ~3 | McMaster-Carr | 5372K128            | 2.82         | [C][a6mcmc]     | 1/2 NTP female tee, if you plan to have bypass or oxygen limb |
+| a7   |       ~5 | McMaster-Carr | 5372K128            | 4.89 / 10    | [C][a7mcmc]     | 1/2 NTP male <-> 5/8"ID multibarbed, for tee junctions, if you plan to have bypass or oxygen limb |
+| a8   |        2 |               |                     | 13.45 / 2    | [Z][a8amzn]     | 2pac of ball valves 5/8"ID |
 
 **NOTE:** You should select either **a4** or **a5** depending on what your pinch valve tubing diameter will be.**
 
@@ -115,15 +115,15 @@ Also, scissors or a sharp knife might be ok instead of T3.
 
 | Item | Manufacturer  | Part number        | Price (USD) | Sources         | Notes |
 | ---- |--------------:| ------------------ | -------- | ---------------:|------ |
-| c1   |               |                    |    13.00 | [Z][t1amzn]     | 8 inch slip-joint pliers, for clamping tubes onto fittings | 
-| c2   |               |                    |    19.99 | [Z][t2amzn]     | Adjustable wrench, at least 1" wide opening, for screwing in NTP fittings |
-| c3   |               |                    |    15.88 | [Z][t3amzn]     | Pipe and PVC cutter, for cutting tubing |
-| c4   |               |                    |     8.90 | [Z][t4amzn]     | Long nose pliers, for removing herbie clips |
+| c1   |               |                    |    13.00 | [Z][c1amzn]     | 8 inch slip-joint pliers, for clamping tubes onto fittings | 
+| c2   |               |                    |    19.99 | [Z][c2amzn]     | Adjustable wrench, at least 1" wide opening, for screwing in NTP fittings |
+| c3   |               |                    |    15.88 | [Z][c3amzn]     | Pipe and PVC cutter, for cutting tubing |
+| c4   |               |                    |     8.90 | [Z][c4amzn]     | Long nose pliers, for removing herbie clips |
 
-[t1amzn]: https://www.amazon.com/TEKTON-2-Inch-Joint-Pliers-37122/dp/B00KLY1FAY
-[t2amzn]: https://www.amazon.com/GETUPOWER-10-Inch-Adjustable-Opening-Vanadium/dp/B07RGV2VK1
-[t3amzn]: https://www.amazon.com/gp/product/B07Y997XKC
-[t4amzn]: https://www.amazon.com/Tools-VISE-GRIP-Pliers-6-Inch-2078216/dp/B000A0OW2M
+[c1amzn]: https://www.amazon.com/TEKTON-2-Inch-Joint-Pliers-37122/dp/B00KLY1FAY
+[c2amzn]: https://www.amazon.com/GETUPOWER-10-Inch-Adjustable-Opening-Vanadium/dp/B07RGV2VK1
+[c3amzn]: https://www.amazon.com/gp/product/B07Y997XKC
+[c4amzn]: https://www.amazon.com/Tools-VISE-GRIP-Pliers-6-Inch-2078216/dp/B000A0OW2M
 
 
 ## Sub-assemblies

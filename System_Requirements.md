@@ -10,11 +10,11 @@ Currently [this Google document](https://docs.google.com/document/d/18nqg36VkDUn
 
 ## Requirements documents
 
-**TODO:** To be actually open source, put exported json in this directory and link nicely from here.
+**#TODO:** To be actually open source, put exported json in this directory and link nicely from here.
 
-**TODO:** For the bureaucratic-minded, put exported PDFs in this directory and link nicely here. 
+**#TODO:** For the bureaucratic-minded, put exported PDFs in this directory and link nicely here. 
 
-**TODO:** export valispace requirements into human-readible format in this directory
+**#TODO:** export valispace requirements into human-readible format in this directory
 
 # Valispace
 

@@ -22,35 +22,60 @@ limitations under the License.
 
 #define TRACE_VAR_CT 4
 
-// Called from the main loop
-void TraceSample();
+// Trace buffer
+extern CircBuff<uint32_t, 0x4000> trace_buffer;
+
+class TraceControl {
+public:
+  uint32_t GetFlags() const { return flags_; }
+  void SetFlags(uint32_t flags) {
+    if ((flags & 1) && !(flags_ & 1)) {
+      trace_buffer.Flush();
+    }
+    flags_ = flags;
+  }
+
+  uint32_t GetPeriod() { return period_; }
+  void SetPeriod(uint32_t period) { period_ = period; }
+
+  void MaybeSample() {
+    if (!(flags_ & 1))
+      return;
+    if (++count_ < period_)
+      return;
+    count_ = 0;
+
+    if (!SampleAllVars()) {
+      // Trace buffer is full, stop tracing.
+      SetFlags(0);
+    }
+  }
+
+  void Flush() {
+    flags_ = 0;
+    trace_buffer.Flush();
+  }
+
+private:
+  bool SampleAllVars();
+
+  // A bit-mapped parameter which is used to start/stop the trace and read its
+  // status. Right now only bit 0 is in use.  Set this to start capturing data
+  // to the trace buffer.  It will auto-clear when the buffer is full
+  uint32_t flags_ = 0;
+  // The trace period gives the period of the trace data capture
+  // in units of loop cycles.
+  uint32_t period_ = 0;
+  // Number of loop cycles elapsed since tracing was last enabled.
+  uint32_t count_ = 0;
+};
+
+extern TraceControl trace_control;
 
 // local functions
-int CountActiveVars(DebugVar *vptr[]);
-
-// Trace buffer
-extern CircBuff<uint32_t, 0x4000> traceBuffer;
-
-// The trace control variable is a bit-mapped parameter which
-// is used to start/stop the trace and read its status.
-// Right now only bit 0 is in use.  Set this to start capturing
-// data to the trace buffer.  It will auto-clear when the buffer
-// is full
-extern int32_t traceCtrl;
-
-// The trace period gives the period of the trace data capture
-// in units of loop cycles.
-extern int32_t tracePeriod;
-
-// Trace count is used to count the period
-extern int32_t traceCount;
+int CountActiveVars(DebugVarBase *vptr[]);
 
 // These parameters give the variable IDs being captured
-extern int32_t traceVar[TRACE_VAR_CT];
-
-// This gives the number of samples collected so far.
-// A sample is one group of trace variables, so if there are 3
-// trace variables enabled then each sample is 3 x 32-bit values.
-extern int32_t traceSamp;
+extern int32_t trace_var[TRACE_VAR_CT];
 
 #endif // TRACE_H_

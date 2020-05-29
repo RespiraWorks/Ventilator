@@ -3,7 +3,7 @@
 exclude: '\.pb\.|common/third_party'
 repos:
 - repo: https://github.com/jlebar/pre-commit-hooks
-  rev: 3c53ed59c0c749b787e793a9951afb5f877c60e9
+  rev: b55cb6fe2de1bd4a3cfe77d454207f24e23e3c20
   hooks:
   - id: clang-format
     name: clang-format C++

@@ -309,7 +309,7 @@ private:
   // This pointer and count are used to hold the command being
   // sent to the motor and its response.
   // They're volatile because the interrupt handler updates them
-  volatile uint8_t *cmd_ptr_{0};
+  volatile uint8_t *volatile cmd_ptr_{0};
   volatile int cmd_remain_{0};
   bool save_response_{false};
 

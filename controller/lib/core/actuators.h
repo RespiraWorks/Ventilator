@@ -26,8 +26,10 @@ struct ActuatorsState {
   float fan_setpoint_cm_h2o = 0.0;
   ValveState expire_valve_state = ValveState::CLOSED;
   float fan_power = 0.0;
+  float fan_valve = 0.0f;
 };
 
+void actuators_init(void);
 void actuators_execute(const ActuatorsState &desired_state);
 
 #endif // ACTUATORS_H

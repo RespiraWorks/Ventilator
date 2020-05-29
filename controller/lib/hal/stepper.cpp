@@ -448,6 +448,22 @@ StepMtrErr StepMotor::SetAmpDecel(float amp) {
   return SetKval(StepMtrParam::KVAL_DECEL, amp);
 }
 
+StepMtrErr StepMotor::SetAmpAll(float amp) {
+  StepMtrErr err = SetAmpHold(amp);
+  if (err != StepMtrErr::OK)
+    return err;
+
+  err = SetAmpRun(amp);
+  if (err != StepMtrErr::OK)
+    return err;
+
+  err = SetAmpAccel(amp);
+  if (err != StepMtrErr::OK)
+    return err;
+
+  return SetAmpDecel(amp);
+}
+
 // Start running at a constant velocity.
 // The velocity is specified in deg/sec units
 StepMtrErr StepMotor::RunAtVelocity(float vel) {

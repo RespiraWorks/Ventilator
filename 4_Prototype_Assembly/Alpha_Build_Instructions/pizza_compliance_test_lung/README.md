@@ -10,7 +10,7 @@ a balloon (or pop it).  These are partial instructions, and there is currently a
 you get can vary, so expect to do some tinkering to these instrutions if you are going to build you own.
 This is completely uncalibrated, so it is not intended for instrumentation just for functional observation.
 
-**#TODO: synchronize parts list in this page with that in [simple test lung](../pizza_compliance_test/pizza_build.md), or make that a prerequisite**
+**#TODO: synchronize parts list in this page with that in [simple test lung](../pizza_test_lung/README.md), or make that a prerequisite**
 
 ## Part List (BOM)
 

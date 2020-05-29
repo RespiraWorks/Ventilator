@@ -5,7 +5,7 @@
 #
 # $ ./test.sh
 #
-# CircleCI runs this script (via .travis.yml), but might have some
+# CircleCI runs this script (via .circleci/config.yml), but might have some
 # environment differences, so the approximation is not perfect. For
 # a more exact test run, please build the tests_Dockerfile.
 #

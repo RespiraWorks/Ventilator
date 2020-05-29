@@ -1,4 +1,4 @@
-# Pneumatic design
+# Pneumatic Design
 
 -------------
 

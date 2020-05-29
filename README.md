@@ -1,6 +1,5 @@
 # VentilatorSoftware
 
-[![Travis Build Status](https://travis-ci.com/RespiraWorks/VentilatorSoftware.svg?branch=master)](https://travis-ci.com/RespiraWorks/VentilatorSoftware)
 [![CircleCI Build Status](https://circleci.com/gh/RespiraWorks/VentilatorSoftware.svg?style=shield)](https://circleci.com/gh/RespiraWorks/VentilatorSoftware/tree/master)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)

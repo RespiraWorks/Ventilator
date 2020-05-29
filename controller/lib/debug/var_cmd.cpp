@@ -57,7 +57,7 @@ DbgErrCode VarCmd::GetVarInfo(CmdContext *context) {
 
   uint16_t vid = u8_to_u16(&context->req[1]);
 
-  const DebugVar *var = DebugVar::FindVar(vid);
+  const auto *var = DebugVar::FindVar(vid);
   if (!var)
     return DbgErrCode::BAD_VARID;
 
@@ -115,7 +115,7 @@ DbgErrCode VarCmd::GetVar(CmdContext *context) {
 
   uint16_t vid = u8_to_u16(&context->req[1]);
 
-  DebugVar *var = DebugVar::FindVar(vid);
+  auto *var = DebugVar::FindVar(vid);
   if (!var)
     return DbgErrCode::BAD_VARID;
 
@@ -134,7 +134,7 @@ DbgErrCode VarCmd::SetVar(CmdContext *context) {
 
   uint16_t vid = u8_to_u16(&context->req[1]);
 
-  DebugVar *var = DebugVar::FindVar(vid);
+  auto *var = DebugVar::FindVar(vid);
   if (!var)
     return DbgErrCode::BAD_VARID;
 

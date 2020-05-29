@@ -134,7 +134,7 @@ static void high_priority_task(void *arg) {
   controller_status.fan_setpoint_cm_h2o = actuators_state.fan_setpoint_cm_h2o;
 
   // Sample any trace variables that are enabled
-  TraceSample();
+  trace_control.MaybeSample();
 
   // Pet the watchdog
   Hal.watchdog_handler();

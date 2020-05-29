@@ -82,33 +82,30 @@ ModeCmd modeCmd;
 DebugSerial debug;
 
 // List of registered command handlers
-DebugCmd *DebugCmd::cmdList[256];
+DebugCmd *DebugCmd::cmd_registry_[256];
 
 DebugSerial::DebugSerial() {
-  buffNdx = 0;
-  pollState = DbgPollState::WAIT_CMD;
-  prevCharEsc = false;
-
   // TODO - This is annoying.  I had intended to make the constructors
   // of the various commands automatically add them to this list, but
   // the linker keeps removing them and I can't figure out how to
   // prevent that.  For now I'm just explicitely adding them here.
   // They still add themselves in their static constructors, but
   // that shouldn't cause any harm.
-  DebugCmd::cmdList[static_cast<int>(DbgCmdCode::MODE)] = &modeCmd;
-  DebugCmd::cmdList[static_cast<int>(DbgCmdCode::PEEK)] = &peekCmd;
-  DebugCmd::cmdList[static_cast<int>(DbgCmdCode::POKE)] = &pokeCmd;
-  DebugCmd::cmdList[static_cast<int>(DbgCmdCode::PRINT_BUFF_READ)] = &pbReadCmd;
-  DebugCmd::cmdList[static_cast<int>(DbgCmdCode::VAR)] = &varCmd;
-  DebugCmd::cmdList[static_cast<int>(DbgCmdCode::TRACE)] = &traceCmd;
+  DebugCmd::cmd_registry_[static_cast<int>(DbgCmdCode::MODE)] = &modeCmd;
+  DebugCmd::cmd_registry_[static_cast<int>(DbgCmdCode::PEEK)] = &peekCmd;
+  DebugCmd::cmd_registry_[static_cast<int>(DbgCmdCode::POKE)] = &pokeCmd;
+  DebugCmd::cmd_registry_[static_cast<int>(DbgCmdCode::PRINT_BUFF_READ)] =
+      &pbReadCmd;
+  DebugCmd::cmd_registry_[static_cast<int>(DbgCmdCode::VAR)] = &varCmd;
+  DebugCmd::cmd_registry_[static_cast<int>(DbgCmdCode::TRACE)] = &traceCmd;
 }
 
 // This function is called from the main low priority background loop.
 // Its a simple state machine that waits for a new command to be received
 // over the debug serial port.  Process the command when one is received
 // and sends the response back.
-void DebugSerial::Poll() {
-  switch (pollState) {
+bool DebugSerial::Poll() {
+  switch (poll_state_) {
   // Waiting for a new command to be received.
   // I continue to process bytes until there are no more available,
   // or a full command has been received.  Either way, the
@@ -117,19 +114,21 @@ void DebugSerial::Poll() {
   case DbgPollState::WAIT_CMD:
     while (ReadNextByte()) {
     }
-    return;
+    return false;
 
   // Process the current command
   case DbgPollState::PROCESS_CMD:
     ProcessCmd();
-    return;
+    request_size_ = 0;
+    return false;
 
   // Send my response
   case DbgPollState::SEND_RESP:
     while (SendNextByte()) {
     }
-    return;
+    return true;
   }
+  return false;
 }
 
 // Format a debug string printf sytle and save it to a local buffer
@@ -170,32 +169,32 @@ bool DebugSerial::ReadNextByte() {
 
   // If the previous character received was an escape character
   // then just save this byte (assuming there's space)
-  if (prevCharEsc) {
-    prevCharEsc = false;
+  if (escape_next_byte_) {
+    escape_next_byte_ = false;
 
-    if (buffNdx < static_cast<int>(sizeof(cmdInBuff)))
-      cmdInBuff[buffNdx++] = byte;
+    if (request_size_ < std::size(request_))
+      request_[request_size_++] = byte;
     return true;
   }
 
   // If this is an escape character, don't save it
   // just keep track of the fact that we saw it.
   if (byte == static_cast<uint8_t>(DbgSpecial::ESC)) {
-    prevCharEsc = true;
+    escape_next_byte_ = true;
     return true;
   }
 
   // If this is an termination character, then
   // change our state and return false
   if (byte == static_cast<uint8_t>(DbgSpecial::TERM)) {
-    pollState = DbgPollState::PROCESS_CMD;
+    poll_state_ = DbgPollState::PROCESS_CMD;
     return false;
   }
 
   // For other boring characters, just save them
   // if there's space in my buffer
-  if (buffNdx < static_cast<int>(sizeof(cmdInBuff)))
-    cmdInBuff[buffNdx++] = byte;
+  if (request_size_ < std::size(request_))
+    request_[request_size_++] = byte;
   return true;
 }
 
@@ -210,7 +209,7 @@ bool DebugSerial::SendNextByte() {
     return false;
 
   // See what the next character to send is.
-  uint8_t ch = cmdOutBuff[buffNdx++];
+  uint8_t ch = response_[response_bytes_sent_++];
 
   // If its a special character, I need to escape it.
   if ((ch == static_cast<uint8_t>(DbgSpecial::TERM)) ||
@@ -218,52 +217,52 @@ bool DebugSerial::SendNextByte() {
     char tmp[2];
     tmp[0] = static_cast<char>(DbgSpecial::ESC);
     tmp[1] = ch;
-    Hal.debugWrite(tmp, 2);
+    (void)Hal.debugWrite(tmp, 2);
   }
 
   else {
     char tmp = ch;
-    Hal.debugWrite(&tmp, 1);
+    (void)Hal.debugWrite(&tmp, 1);
   }
 
   // If there's more response to send, return true
-  if (buffNdx < respLen)
+  if (response_bytes_sent_ < response_size_)
     return true;
 
   // If that was the last byte in my response, send the
   // terminitaion character and start waiting on the next
   // command.
   char tmp = static_cast<char>(DbgSpecial::TERM);
-  Hal.debugWrite(&tmp, 1);
+  (void)Hal.debugWrite(&tmp, 1);
 
-  pollState = DbgPollState::WAIT_CMD;
-  buffNdx = 0;
+  poll_state_ = DbgPollState::WAIT_CMD;
+  response_bytes_sent_ = 0;
   return false;
 }
 
 // Process the received command
 void DebugSerial::ProcessCmd() {
   // The total number of bytes received (not including
-  // the termination byte) is the value of buffNdx.
+  // the termination byte) is the value of request_size_.
   // This should be at least 3 (command & checksum).
   // If its not, I just ignore the command and jump
   // to waiting on the next.
   // This means we can send TERM characters to synchronize
   // communications if necessary
-  if (buffNdx < 3) {
-    buffNdx = 0;
-    pollState = DbgPollState::WAIT_CMD;
+  if (request_size_ < 3) {
+    request_size_ = 0;
+    poll_state_ = DbgPollState::WAIT_CMD;
     return;
   }
 
-  uint16_t crc = CalcCRC(cmdInBuff, buffNdx - 2);
+  uint16_t crc = CalcCRC(request_, request_size_ - 2);
 
-  if (crc != u8_to_u16(&cmdInBuff[buffNdx - 2])) {
+  if (crc != u8_to_u16(&request_[request_size_ - 2])) {
     SendError(DbgErrCode::CRC_ERR);
     return;
   }
 
-  DebugCmd *cmd = DebugCmd::cmdList[cmdInBuff[0]];
+  DebugCmd *cmd = DebugCmd::cmd_registry_[request_[0]];
   if (!cmd) {
     SendError(DbgErrCode::BAD_CMD);
     return;
@@ -272,13 +271,12 @@ void DebugSerial::ProcessCmd() {
   // The length that we pass in to the command handler doesn't
   // include the command code or CRC.  The max size is also reduced
   // by 3 to make sure we can add the error code and CRC.
-  int len_in = buffNdx - 3;
+  int len_in = request_size_ - 3;
   int len_out = 0;
-  CmdContext context = {.req = &cmdInBuff[1],
+  CmdContext context = {.req = &request_[1],
                         .req_len = len_in,
-                        .resp = &cmdOutBuff[1],
-                        .max_resp_len =
-                            static_cast<int>(sizeof(cmdOutBuff) - 3),
+                        .resp = &response_[1],
+                        .max_resp_len = static_cast<int>(sizeof(response_) - 3),
                         .resp_len = 0};
   DbgErrCode err = cmd->HandleCmd(&context);
   if (err != DbgErrCode::OK) {
@@ -288,29 +286,29 @@ void DebugSerial::ProcessCmd() {
 
   len_out = context.resp_len;
 
-  cmdOutBuff[0] = static_cast<uint8_t>(DbgErrCode::OK);
+  response_[0] = static_cast<uint8_t>(DbgErrCode::OK);
 
   // Calculate the CRC on the data and error code returned
   // and append this to the end of the response
-  crc = CalcCRC(cmdOutBuff, len_out + 1);
-  u16_to_u8(crc, &cmdOutBuff[len_out + 1]);
+  crc = CalcCRC(response_, len_out + 1);
+  u16_to_u8(crc, &response_[len_out + 1]);
 
-  pollState = DbgPollState::SEND_RESP;
-  buffNdx = 0;
-  respLen = len_out + 3;
+  poll_state_ = DbgPollState::SEND_RESP;
+  response_bytes_sent_ = 0;
+  response_size_ = len_out + 3;
 }
 
 void DebugSerial::SendError(DbgErrCode err) {
-  cmdOutBuff[0] = static_cast<uint8_t>(err);
-  uint16_t crc = CalcCRC(cmdOutBuff, 1);
-  u16_to_u8(crc, &cmdOutBuff[1]);
-  pollState = DbgPollState::SEND_RESP;
-  buffNdx = 0;
-  respLen = 3;
+  response_[0] = static_cast<uint8_t>(err);
+  uint16_t crc = CalcCRC(response_, 1);
+  u16_to_u8(crc, &response_[1]);
+  poll_state_ = DbgPollState::SEND_RESP;
+  response_bytes_sent_ = 0;
+  response_size_ = 3;
 }
 
 // 16-bit CRC calculation for debug commands and responses
-uint16_t DebugSerial::CalcCRC(uint8_t *buff, int len) {
+uint16_t DebugSerial::CalcCRC(uint8_t *buff, size_t len) {
   const uint16_t CRC16POLY = 0xA001;
   static bool init = false;
   static uint16_t tbl[256];
@@ -335,7 +333,7 @@ uint16_t DebugSerial::CalcCRC(uint8_t *buff, int len) {
 
   uint16_t crc = 0;
 
-  for (int i = 0; i < len; i++) {
+  for (size_t i = 0; i < len; i++) {
     uint16_t tmp = tbl[0xFF & (buff[i] ^ crc)];
 
     crc = static_cast<uint16_t>(tmp ^ (crc >> 8));
@@ -344,5 +342,5 @@ uint16_t DebugSerial::CalcCRC(uint8_t *buff, int len) {
 }
 
 DebugCmd::DebugCmd(DbgCmdCode opcode) {
-  cmdList[static_cast<uint8_t>(opcode)] = this;
+  cmd_registry_[static_cast<uint8_t>(opcode)] = this;
 }

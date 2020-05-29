@@ -35,24 +35,20 @@ Item
 
 
 
-        RowLayout {
+        Item {
             id: rowLayout1
-            width: 100
+            width: parent.width
             height: 100
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
+            FpsItem {}
+
             Image {
                 id: image
+                anchors.horizontalCenter: parent.horizontalCenter
                 width: 150
                 height: 50
-                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                Layout.maximumWidth: 200
                 clip: false
-                Layout.maximumHeight: 50
-                Layout.fillHeight: true
-                Layout.fillWidth: true
-                Layout.minimumHeight: 50
-                Layout.topMargin: 5
                 source: "images/respiraWorksLogoHorizontalTransparent.png"
                 fillMode: Image.PreserveAspectFit
             }

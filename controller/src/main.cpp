@@ -145,6 +145,9 @@ static void high_priority_task(void *arg) {
 // should go here.
 static void background_loop() {
 
+  // Initialize the actuators that require it
+  actuators_init();
+
   // Calibrate the sensors.
   // This needs to be done before the sensors are used.
   sensors.Calibrate();

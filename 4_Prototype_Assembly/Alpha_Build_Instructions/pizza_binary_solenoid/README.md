@@ -20,8 +20,8 @@ We refer to this as a binary solenoid because it has only two states - open or c
 | Item | Quantity | Manufacturer  | Part #         | Price (USD)  | Sources        | Notes |
 | ---- |---------:| ------------- | ------------------- | ------------:|----------------| ----- |
 | 1    |        1 | Beduan        | 40141600            |        17.99 | [Z][1amzn]     | 1/2NTP 12v solenoid |
-| 2    |        2 | McMaster-Carr | 5372K128            |.   4.89 / 10 | [C][2mcmc]     | 1/2 NTP <-> 5/8"ID male multibarbed |
-| 3    |        2 | McMaster-Carr | 53415K216           |.  10.00 / 10 | [C][3mcmc]     | 1/2 NTP <-> 3/4"ID male single barb, **alternative to item 2 for 3/4"ID prototypes** |
+| 2    |        2 | McMaster-Carr | 5372K128            |    4.89 / 10 | [C][2mcmc]     | 1/2 NTP <-> 5/8"ID male multibarbed |
+| 3    |        2 | McMaster-Carr | 53415K216           |   10.00 / 10 | [C][3mcmc]     | 1/2 NTP <-> 3/4"ID male single barb, **alternative to item 2 for 3/4"ID prototypes** |
 | 4    |        2 | JST           | SXH-001T-P0.6       |         0.10 | [K][4digi]     | XH crimps, for connection to PCB |
 | 5    |        1 | JST           | XHP-2               |         0.10 | [K][5digi]     | XH 2-pin housing, for connection to PCB |
 

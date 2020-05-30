@@ -30,10 +30,11 @@ Contents may also be out of date. RespiraWorks may, or may not compensate you fo
 
 ### Structure
 
-  * [Requirements](System_Requirements.md) -
+  * [System Requirements](System_Requirements.md) -
   describes the requirement architecture, heirarchy, and process. Links to the releases of our system requirements, hardware specifications, and software requirements. 
   * [Ventilator System Design](1_Ventilator_System_Design) -
   describes the functional implementation and design theory of the system. This document also defines the hierarchy for the subsystems below.
+      * [Design Rationale](1_Ventilator_System_Design/DesignRationales.md) - An explanation of the rationale that went into specific parts can be found here. 
       * [Pneumatic System](1_Ventilator_System_Design/Pneumatic_System)
       * [Electrical System](1_Ventilator_System_Design/Electrical_System)
       * [Software (separate repository)](https://github.com/RespiraWorks/VentilatorSoftware)
@@ -46,4 +47,4 @@ Contents may also be out of date. RespiraWorks may, or may not compensate you fo
       * [Alpha Build Instructions](4_Prototype_Assembly/Alpha_Build_Instructions) -
          documentation for building the "Alpha" version of the device which can be used by developers to contribute to the software. Note that this is almost always out of date, by definition.
       * [Beta Build Plan](4_Prototype_Assembly/Beta_Build_Instructions) - Details on this page will be fleshed out once as we progress further into beta build. 
-  * [Design Rationale](DesignRationales.md) - An explanation of the rationale that went into specific parts can be found here. 
+  

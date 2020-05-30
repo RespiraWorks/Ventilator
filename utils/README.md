@@ -93,9 +93,9 @@ Debug variables are very easy to add to the controller software, so it’s commo
 The details of adding debug variables are beyond the scope of this document, but interested readers should check the vars.h header file in the debug library.
 
 **console**
-This command can be used to display messages written using the debug.Print function in the console.
+This command can be used to display messages written using the `debug.Print` function in the console.
 
-debug.Print allows messages to be output from the controller code using sprintf style formatting.  When this function is called by the controller code the string is formatted and copied to a circular buffer in the controller.  Running the console command causes the debug program to continuously read data from this circular buffer and display it.
+`debug.Print` allows messages to be output from the controller code using sprintf style formatting.  When this function is called by the controller code the string is formatted and copied to a circular buffer in the controller.  Running the console command causes the debug program to continuously read data from this circular buffer and display it.
 
 To exit console mode, enter control-C
 
@@ -118,7 +118,7 @@ trace graph
 ```
 or stored to a file
 ```
-trace download
+trace download <filename>
 ```
 For example, to capture patient pressure every loop cycle, the following commands would be used:
 ```

@@ -19,6 +19,12 @@ or, for a more scalable setup, [this](https://www.amazon.com/dp/B07XF2SLQ1).
 
 ## Utilities
 
+### controller_debug
+
+[controller_debug.py](controller_debug.py)
+
+**#TODO:** add some instructions on how to use it
+
 ### decoder
 
 [decoder.py](decoder.py)

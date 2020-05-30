@@ -119,11 +119,13 @@ Also, scissors or a sharp knife might be ok instead of T3.
 | c2   |               |                    |    19.99 | [Z][c2amzn]     | Adjustable wrench, at least 1" wide opening, for screwing in NTP fittings |
 | c3   |               |                    |    15.88 | [Z][c3amzn]     | Pipe and PVC cutter, for cutting tubing |
 | c4   |               |                    |     8.90 | [Z][c4amzn]     | Long nose pliers, for removing herbie clips |
+| c5   |          PTFE | vanguardSealantsPTFE-01 |     6.49 | [Z][a5amzn]     | It's advisable to teflon tape all NTP threaded components. Not only will they be more airtight, but also they will be easier to tighten and release. |
 
 [c1amzn]: https://www.amazon.com/TEKTON-2-Inch-Joint-Pliers-37122/dp/B00KLY1FAY
 [c2amzn]: https://www.amazon.com/GETUPOWER-10-Inch-Adjustable-Opening-Vanadium/dp/B07RGV2VK1
 [c3amzn]: https://www.amazon.com/gp/product/B07Y997XKC
 [c4amzn]: https://www.amazon.com/Tools-VISE-GRIP-Pliers-6-Inch-2078216/dp/B000A0OW2M
+[c5amzn]: https://www.amazon.com/gp/product/B01L2F428C
 
 
 ## Sub-assemblies

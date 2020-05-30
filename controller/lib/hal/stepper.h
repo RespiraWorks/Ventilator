@@ -247,6 +247,9 @@ public:
   StepMtrErr SetAmpAccel(float amp);
   StepMtrErr SetAmpDecel(float amp);
 
+  // Sets all four amplitude values to the same value
+  StepMtrErr SetAmpAll(float amp);
+
   // Goto to the position (in deg) via the shortest path
   // This returns once the move has started, it doesn't
   // wait for the move to finish
@@ -329,6 +332,9 @@ private:
   StepMtrErr EnqueueCmd(uint8_t *cmd, uint32_t len);
 
   static void UpdateComState();
+
+  // True if this is a powerSTEP chip.
+  bool power_step_{false};
 
 public:
   // Interrupt service routine.

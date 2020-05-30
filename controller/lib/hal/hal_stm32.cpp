@@ -139,10 +139,9 @@ void HalApi::init() {
   InitADC();
   InitPwmOut();
   InitUARTs();
-  watchdog_init();
   crc32_init();
-  StepperMotorInit();
   Hal.enableInterrupts();
+  StepperMotorInit();
 }
 
 // Reset the processor
@@ -310,6 +309,11 @@ void HalApi::startLoopTimer(const Duration &period, void (*callback)(void *),
                             void *arg) {
   controller_callback = callback;
   controller_arg = arg;
+
+  // Init the watchdog timer now.  The watchdog timer is serviced by the
+  // loop callback function.  I don't init it until the loop starts because
+  // otherwise it may expire before the function that resets it starts running
+  watchdog_init();
 
   // Find the loop period in clock cycles
   int32_t reload = static_cast<int32_t>(CPU_FREQ * period.seconds());

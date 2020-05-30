@@ -1,3 +1,5 @@
+# Characterization Test Plan
+
 This document will track desired characterization tests and link to the corresponding data when the test is performed. Eventually the info from this document will likely be formalized into a record of tests that have been performed as part of the development and validation of the ventilator - integration tests with the real software are expected to be defined elsewhere, though they could be folded into this.
 
 **Caution:** this document has not been formally reviewed and is a work in progress. Be responsible to understand the provenance of documentation.
@@ -5,7 +7,16 @@ This document will track desired characterization tests and link to the correspo
 **NOTE:** these tests are supposed to be iteratively developed. As we progress, the tests will become more granular.
 
 ## System Characterization
+
+
+* **Fan Tests**
+
+**#TODO** Add content
+
+[View fan tests](Project-Fan/Characterization-Tests)
+
 * **PIP/PEEP/Timing Tests**
+
     1. What is the maximum pressure that can be achieved with the current blower with a representative amount of tubing, a fully open air inhale valve, and a fully closed exhale valve?
 
     2. From PEEPs of 0 to 20 cm H20 (in reasonable increments), how quickly can the current design achieve PIPs from 10 cm H20 up to 60 cm H20 (or the max value, testing reasonable increments)?
@@ -23,6 +34,7 @@ This document will track desired characterization tests and link to the correspo
 ## Valve Tests
 
 * **Pinch Valve Characterization**
+
     1. How quickly can the pinch valve be fully opened? How does this change as a function of pressure (up to at least 60 cm H20)?
 
     2. How quickly can the pinch valve be fully closed? How does this change as a function of pressure (up to at least 60 cm H20)
@@ -30,6 +42,7 @@ This document will track desired characterization tests and link to the correspo
     3. What is the leak rate past a fully closed pinch valve as a functin of pressure (up to at least 60 cm H20)?
 
 * **Proportional Solenoid Characterization**
+
     1. How quickly can the solenoid be fully opened? How does this change as a function of pressure (up to at least 60 cm H20)?
 
     2. How quickly can the solenoid be fully closed? How does this change as a function of pressure (up to at least 60 cm H20)
@@ -39,6 +52,7 @@ This document will track desired characterization tests and link to the correspo
 ## Sensor Tests
 
 * **DP sensor/Venturi characterization**
+
     1. For flow rates from 1 to 80 lpm, how accurate is the flow measurement and how does this accuracy change over time (if sitting at a specific FiO2)?
 
     2. How do the measurements for letter i above change as a function of temperature and humidity?
@@ -48,6 +62,7 @@ This document will track desired characterization tests and link to the correspo
     4. When there is a change in flow rate, how long does it take for the sensor to settle?
 
 * **Pressure sensor characterization**
+
     1. For pressures from 1 to 60 cm H20, how accurate is the pressure reading and how does this accuracy change over time (if sitting at a specific FiO2)?
 
     2. How do the measurements for letter i above change as a function of temperature and humidity?
@@ -59,6 +74,7 @@ This document will track desired characterization tests and link to the correspo
     5. When there is a change in pressure, how long does it take for the sensor to settle?
 
 * **O2 sensor characterization**
+
     1. For FiO2s from 21% to 100%, how accurate is the o2 sensor reading and how does this accuracy change over time (if sitting at a specific FiO2)?
 
     2. How do the measurements for #1 change as a function of temperature and humdity?

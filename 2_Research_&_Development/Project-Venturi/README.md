@@ -30,7 +30,7 @@ The fundamental equation for a ventiru flow meter is:
 
 You then need to convert from dP to voltage, if using an analog sensor, or from dP to serial, if using an I2C sensor. 
 
-[This short spreadsheet](https://docs.google.com/spreadsheets/d/1G9Kb-ImlluK8MOx-ce2rlHUBnTOtAFQvKjjs1bEhlpM/edit#gid=963553579) to return the transfer function.
+You can use [this short spreadsheet](https://docs.google.com/spreadsheets/d/1G9Kb-ImlluK8MOx-ce2rlHUBnTOtAFQvKjjs1bEhlpM/edit#gid=963553579) to return the transfer function.
 
 **TODO:** make spreadsheet contents visible here
 

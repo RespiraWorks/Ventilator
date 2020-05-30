@@ -1,4 +1,4 @@
-# Pizza build: blower sub-assembly
+# Pizza Build: Blower Sub-assembly
 
 The blower/fan is what provides air pressure to the ventilator's pneumatic circuit.
 
@@ -7,11 +7,11 @@ The pneumatic aspect of the blower assembly includes the blower and a short segm
 The electrical aspect of the blower assembly encompasses the driver board and wires of sufficient length to interface
 with the [PCB](https://github.com/respiraworks/pcbreathe).
 
-**TODO:** unit price analysis
+**#TODO:** unit price analysis
 
-## BOM
+## Parts List (BOM)
 
-### Purchasing source abbreviations
+### Purchasing Source Key
 
 * **A** = Ali Express
 * **C** = McMaster-Carr
@@ -20,18 +20,18 @@ with the [PCB](https://github.com/respiraworks/pcbreathe).
 * **B** = Built by RespiraWorks
 * **Z** = Amazon
 
-### BOM
+### Parts
 
 **NOTE:** Before you buy anything on this list, check with Edwin, Martin or Ethan. Blower takes a while to deliver.
 We may have parts to send you from our inventory. 
 
 
-| Item | Quantity | Manufacturer  | Part #              | Price($)     |Sources         | Notes |
+| Item | Quantity | Manufacturer  | Part #              | Price (USD)  |Sources         | Notes |
 | ---- |---------:| ------------- | ------------------- | ------------:|:--------------:|-------|
 | 1    |        1 |               | WS7040-12-X200N     |        65.00 | [A][1ali]      | 12v blower and driver. Make sure to choose with driver when ordering. |
 | 2    |        1 |               | WS1208              |        24.00 | [W][2won]      | blower driver, in case blower above did not come with driver. |
-| 3    |   ~10 cm | McMaster-Carr | 5234K57             | 21.50 / 5ft  | [C][3mcmc]     | Soft latex tubing, 5/8" ID, 7/8" OD, may already have some in 5/8"ID build |
-| 4    |        1 | McMaster-Carr | 9579K72             | 12.21 / 20   | [C][4mcmc]     | Herbie clip J (20.3-23mm) for clamping 7/8"OD tubing, may already have some in 5/8"ID build | |
+| 3    |   ~10 cm | McMaster-Carr | 5234K57             |  21.50 / 5ft | [C][3mcmc]     | Soft latex tubing, 5/8" ID, 7/8" OD, may already have some in 5/8"ID build |
+| 4    |        1 | McMaster-Carr | 9579K72             |   12.21 / 20 | [C][4mcmc]     | Herbie clip J (20.3-23mm) for clamping 7/8"OD tubing, may already have some in 5/8"ID build | |
 | 5    |  6 or 12 | JST           | SXH-001T-P0.6       |         0.10 | [K][5digi]     | XH crimps, for control connector |
 | 6    |   1 or 2 | JST           | XHP-6               |         0.14 | [K][6digi]     | XH 6-pin housing, for control connector |
 | 7    |        - | CQRobot       | CQRJST254-BGB       |         9.99 | [Z][7amzn]     | XH connector kit for 6/7/8 pins, alternative for 1+6 above |
@@ -52,17 +52,17 @@ We may have parts to send you from our inventory.
 [10amzn]: https://www.amazon.com/gp/product/B00N51OJJ4
 [11amzn]: https://www.amazon.com/gp/product/B011JC76OA
 
-## Tooling BOM
+## Tools
 
-| Item | Quantity | Manufacturer  | Part number         | Price($) | Sources         | Notes |
-| ---- |---------:| ------------- | ------------------- | --------:|-----------------| ----- |
-| T1   |        1 | Preciva       | PR-3254 (PR102001)  |    39.99 | [Z][t1amzn]     | Crimping tool for HX and HV connectors |
+| Item | Quantity | Manufacturer  | Part #              | Price (USD) | Sources         | Notes |
+| ---- |---------:| ------------- | ------------------- | -----------:|-----------------| ----- |
+| a1   |        1 | Preciva       | PR-3254 (PR102001)  |    39.99 | [Z][a1amzn]     | Crimping tool for HX and HV connectors |
 
-[t1amzn]:https://www.amazon.com/gp/product/B07R1H3Z8X
+[a1amzn]:https://www.amazon.com/gp/product/B07R1H3Z8X
 
-**NOTE: Items 5-11 and T1 above are also duplicated in the [wiring BOM](../../../1_Ventilator_System_Design/Electrical_System/wiring.md)**
+**NOTE: Items 5-11 and a1 above are also duplicated in the [wiring BOM](../../../1_Ventilator_System_Design/Electrical_System/wiring.md)**
 
-## Assembly instructions
+## Assembly Instructions
 
 ![Parts](blower-parts.jpg)
 

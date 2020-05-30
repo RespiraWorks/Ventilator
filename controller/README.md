@@ -67,6 +67,11 @@ $ rm -rf .pio/
 
 ## Running on the controller
 
+To run this you will need at a Nucleo dev board and/or some version of the PCB.
+For various builds of the physical system, please refer to
+[prototype assembly](https://github.com/RespiraWorks/SystemDesign/tree/master/4_Prototype_Assembly)
+in our (system design repository)[https://github.com/RespiraWorks/SystemDesign/].
+
 Plug in the STM32 to your machine, then ask platformio to list all devices connected.
 You should see a USB serial port corresponding to your device.
 
@@ -96,4 +101,5 @@ mounted as a USB storage device.
 
 ## Testing with hardware
 
-There are some basic integration tests in the [../utils](../utils) directory.
+There are some basic integration tests and manual testing utilities
+ in the [../utils](../utils) directory.

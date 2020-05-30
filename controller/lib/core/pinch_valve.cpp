@@ -15,6 +15,7 @@ limitations under the License.
 
 #include "pinch_valve.h"
 #include "stepper.h"
+#include <algorithm>
 
 // These constants define various properties of the pinch
 // value and how we control it.  As the mechanical design
@@ -23,37 +24,37 @@ limitations under the License.
 // be able to come up with a good set of values here that
 // won't need further modification.
 
-// Amplitude of the power level used for homing
+// Amplitude of the power level used for homing.
 // 0.1 is 10% of maximum.  There's no need for high
 // power when homing, we're intentionally driving the
 // motor against a hard stop.
-constexpr float home_amp = 0.1f;
+static constexpr float home_amp = 0.1f;
 
 // Velocity (deg/sec), acceleration (deg/sec/sec)
 // and distance (deg) to move during the home
-constexpr float home_vel = 60.0f;
-constexpr float home_accel = home_vel / 0.1f;
-constexpr float home_dist = 90.0f;
+static constexpr float home_vel = 60.0f;
+static constexpr float home_accel = home_vel / 0.1f;
+static constexpr float home_dist = 90.0f;
 
 // Amount we can move away from the homing end stop before
 // we start to touch the tube (deg)
-constexpr float home_offset = 20.0f;
+static constexpr float home_offset = 20.0f;
 
 // This is the distance (deg) from the zero position until
 // the tube is completely shut.
-constexpr float max_move = 50.0f;
+static constexpr float max_move = 50.0f;
 
 // Amplitude of power level for normal operation.
 // Don't go crazy here, you can easily overheat the
 // motor driver chips and stepper motors.
-constexpr float move_amp = 0.2f;
+static constexpr float move_amp = 0.2f;
 
 // Speed/accel for normal moves.  We want the motor
 // to be quick because the PID loop output will be
 // small move and ideally we want it to finish before
 // the next loop cycle
-constexpr float move_vel = 2000.0f;
-constexpr float move_acc = move_vel / 0.05f;
+static constexpr float move_vel = 2000.0f;
+static constexpr float move_acc = move_vel / 0.05f;
 
 PinchValve::PinchValve(int motor_index) {
 
@@ -76,7 +77,7 @@ void PinchValve::Home() {
 
   StepMtrErr err;
 
-  // Limit motor power during homing
+  // Limit motor power during homing.
   err = mtr_->SetAmpAll(home_amp);
   if (err != StepMtrErr::OK)
     return;
@@ -84,7 +85,7 @@ void PinchValve::Home() {
   // Make a relative move in the positive direction
   // that should be away from the tubing.
   // My move is far enough that I should definitely
-  // hit the hard stop
+  // hit the hard stop.
   err = mtr_->SetMaxSpeed(home_vel);
   if (err != StepMtrErr::OK)
     return;
@@ -140,10 +141,7 @@ void PinchValve::SetOutput(float value) {
   if (!homed_)
     return;
 
-  if (value < 0.0f)
-    value = 0.0f;
-  if (value > 1.0f)
-    value = 1.0f;
+  value = std::clamp(value, 0.0f, 1.0f);
 
   // Convert the value to an absolute position in deg
   // The motor's zero position is at the home offset
@@ -154,7 +152,7 @@ void PinchValve::SetOutput(float value) {
   mtr_->GotoPos(pos);
 }
 
-// Wait for the move to finish.  Only used when homing
+// Wait for the move to finish.  Only used when homing.
 StepMtrErr PinchValve::WaitForMove() {
   while (true) {
     StepperStatus status;

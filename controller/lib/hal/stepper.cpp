@@ -288,6 +288,8 @@ void StepMotor::OneTimeInit() {
     if (val == 0x2E88)
       continue;
 
+    mtr->power_step_ = true;
+
     // Configure the two gate config registers to reasonable values
     //
     // GATE_CFG1 xxxxxxxxxxxxxxxx
@@ -427,6 +429,15 @@ StepMtrErr StepMotor::SetAccel(float acc) {
 // In all cases the values are set in a range of 0 to 1
 // for 0 to 100%
 StepMtrErr StepMotor::SetKval(StepMtrParam param, float amp) {
+
+  // The powerSTEP chip seems a bit flaky with this setting.
+  // It doesn't seem to enable at all with a 10% setting, and is
+  // really wimpy with 20%.  For the moment I'm just boosting this
+  // by an extra 15% if working with the powerSTEP chip.
+  // I don't think we're using that part in the real design, so
+  // this can get retired at some point
+  if (power_step_ && amp < 0.9)
+    amp += 0.15f;
 
   if ((amp < 0) || (amp > 1))
     return StepMtrErr::BAD_VALUE;

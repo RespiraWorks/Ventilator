@@ -68,7 +68,7 @@ The above files should not be printed with FDM. Instead, a leaktight method like
 | 12     |        1 | RespiraWorks  | N/A                 |       N/A    | *Ask first*  | [3D][123d]         | ROTOR - 3D printed |
 | 13     | 6in/15cm | McMaster-Carr | 5894K38             |  8.04 / 2 ft | Buy          | [C][13mcmc]        | **alternative to 7**, tubing 3/8" ID, 5/8" OD |
 
-**WARNING: Item 6 may have to be substituted by another adapter, depending on your choice of tubing here (7 or 12) and
+**WARNING: Item 7 may have to be substituted by another adapter, depending on your choice of tubing here (7 or 12) and
 your choice of pneumatic system internal diameter. Alternative adapters are listed on main [pizza page](../../4_Prototype_Assembly/Alpha_Build_Instructions/pizza_build.md)**
 
 [1amzn]:   https://www.amazon.com/dp/B07Z1J8JWH/ref=cm_sw_r_cp_api_i_d.zUEbRBKGSVW

@@ -333,6 +333,9 @@ private:
 
   static void UpdateComState();
 
+  // True if this is a powerSTEP chip.
+  bool power_step_{false};
+
 public:
   // Interrupt service routine.
   // This has to be public, but don't call it.

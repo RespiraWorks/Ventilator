@@ -73,10 +73,8 @@ Item
                 Layout.fillWidth: true
                 Layout.minimumWidth: 200
 
-                Rectangle {
-                    id: breathsPerMinute
-                    color: "#466eeb"
-                    radius: 10
+                StepCounter {
+                    id: rrStepCounter
                     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                     Layout.minimumWidth: 150
                     Layout.minimumHeight: 100
@@ -84,252 +82,57 @@ Item
                     Layout.rightMargin: 10
                     Layout.leftMargin: 10
 
-                    Text {
-                        id: breathsPerMinuteVal
-                        x: 45
-                        y: 39
-                        width: 60
-                        height: 44
-                        text: Number(guiState.rr);
-                        horizontalAlignment: Text.AlignHCenter
-                        font.family: "Times New Roman"
-                        font.weight: Font.DemiBold
-                        font.bold: true
-                        font.pixelSize: 38
-                    }
-
-                    Text {
-                        id: element
-                        x: 63
-                        y: 13
-                        text: qsTr("RR")
-                        font.bold: true
-                        font.pixelSize: 17
-                    }
-
-                    RoundButton {
-                        id: breathsPerMinuteInc
-                        x: 110
-                        y: 45
-                        width: 30
-                        height: 30
-                        text: qsTr("+")
-                        font.family: "Courier"
-                        font.bold: true
-                        focusPolicy: Qt.ClickFocus
-
-                        onClicked: { guiState.rr++; }
-                    }
-
-                    RoundButton {
-                        id: breathsPerMinuteDec
-                        x: 9
-                        y: 45
-                        width: 30
-                        height: 30
-                        text: qsTr("-")
-                        checkable: false
-                        focusPolicy: Qt.NoFocus
-                        font.bold: true
-
-                        onClicked: { guiState.rr--; }
-                    }
-
+                    title: qsTr("RR")
+                    value: guiState.rr
+                    onValueModified: guiState.rr = value
                 }
 
-                Rectangle {
-                    id: peep
-                    color: "#466eeb"
-                    radius: 10
+                StepCounter {
+                    id: peepStepCounter
                     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                    Layout.minimumHeight: 100
-                    Layout.rightMargin: 10
-
-                    Text {
-                        id: peepVal
-                        x: 45
-                        y: 39
-                        width: 60
-                        height: 44
-                        text:  Number(guiState.peep);
-                        horizontalAlignment: Text.AlignHCenter
-                        font.weight: Font.DemiBold
-                        font.family: "Times New Roman"
-                        font.pixelSize: 38
-                        font.bold: true
-                    }
-
-                    Text {
-                        id: element3
-                        x: 53
-                        y: 13
-                        text: qsTr("PEEP")
-                        horizontalAlignment: Text.AlignHCenter
-                        font.pixelSize: 17
-                        font.bold: true
-                    }
-
-                    RoundButton {
-                        id: peepInc
-                        x: 110
-                        y: 45
-                        width: 30
-                        height: 30
-                        text: qsTr("+")
-                        checkable: false
-                        focusPolicy: Qt.NoFocus
-                        font.bold: true
-
-                        onClicked: { guiState.peep++; }
-                    }
-
-                    RoundButton {
-                        id: peepDec
-                        x: 9
-                        y: 45
-                        width: 30
-                        height: 30
-                        text: qsTr("-")
-                        checkable: false
-                        font.bold: true
-                        focusPolicy: Qt.NoFocus
-
-                        onClicked: { guiState.peep--; }
-                    }
                     Layout.minimumWidth: 150
+                    Layout.minimumHeight: 100
                     Layout.topMargin: 10
+                    Layout.rightMargin: 10
                     Layout.leftMargin: 10
+
+                    title: qsTr("PEEP")
+                    value: guiState.peep
+                    onValueModified: guiState.peep = value
                 }
 
-                Rectangle {
-                    id: pip
-                    color: "#466eeb"
-                    radius: 10
+                StepCounter {
+                    id: pipStepCounter
                     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                    Layout.minimumHeight: 100
-                    Layout.rightMargin: 10
-
-                    Text {
-                        id: pipVal
-                        x: 45
-                        y: 39
-                        width: 60
-                        height: 44
-                        text:  Number(guiState.pip);
-                        horizontalAlignment: Text.AlignHCenter
-                        font.weight: Font.DemiBold
-                        font.family: "Times New Roman"
-                        font.pixelSize: 38
-                        font.bold: true
-                    }
-
-                    Text {
-                        id: element5
-                        x: 61
-                        y: 13
-                        text: qsTr("PIP")
-                        horizontalAlignment: Text.AlignHCenter
-                        font.pixelSize: 17
-                        font.bold: true
-                    }
-
-                    RoundButton {
-                        id: pipInc
-                        x: 110
-                        y: 45
-                        width: 30
-                        height: 30
-                        text: qsTr("+")
-                        checkable: false
-                        font.bold: true
-                        focusPolicy: Qt.NoFocus
-
-                        onClicked: { guiState.pip++; }
-                    }
-
-                    RoundButton {
-                        id: pipDec
-                        x: 9
-                        y: 45
-                        width: 30
-                        height: 30
-                        text: qsTr("-")
-                        checkable: false
-                        focusPolicy: Qt.NoFocus
-                        font.bold: true
-
-                        onClicked: { guiState.pip--; }
-                    }
                     Layout.minimumWidth: 150
+                    Layout.minimumHeight: 100
                     Layout.topMargin: 10
+                    Layout.rightMargin: 10
                     Layout.leftMargin: 10
+
+                    title: qsTr("PIP")
+                    value: guiState.pip
+                    onValueModified: guiState.pip = value
                 }
 
-                Rectangle {
-                    id: ier
-                    color: "#466eeb"
-                    radius: 10
+                StepCounter {
+                    id: ierStepCounter
                     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                    Layout.minimumHeight: 100
-                    Layout.rightMargin: 10
-
-                    Text {
-                        id: ierVal
-                        x: 45
-                        y: 39
-                        width: 60
-                        height: 44
-                        text:  Number(guiState.ier, 'g', 1).toFixed(1)
-                        horizontalAlignment: Text.AlignHCenter
-                        font.weight: Font.DemiBold
-                        font.family: "Times New Roman"
-                        font.pixelSize: 38
-                        font.bold: true
-                    }
-
-                    Text {
-                        id: element53
-                        x: 61
-                        y: 13
-                        text: qsTr("I:E")
-                        horizontalAlignment: Text.AlignHCenter
-                        font.pixelSize: 17
-                        font.bold: true
-                    }
-
-                    RoundButton {
-                        id: ierInc
-                        x: 110
-                        y: 45
-                        width: 30
-                        height: 30
-                        text: qsTr("+")
-                        checkable: false
-                        font.bold: true
-                        focusPolicy: Qt.NoFocus
-
-                        onClicked: { guiState.ier += 0.1; }
-                    }
-
-                    RoundButton {
-                        id: ierDec
-                        x: 9
-                        y: 45
-                        width: 30
-                        height: 30
-                        text: qsTr("-")
-                        checkable: false
-                        focusPolicy: Qt.NoFocus
-                        font.bold: true
-
-                        onClicked: { guiState.ier -= 0.1; }
-                    }
-
                     Layout.minimumWidth: 150
+                    Layout.minimumHeight: 100
                     Layout.topMargin: 10
+                    Layout.rightMargin: 10
                     Layout.leftMargin: 10
-                }
 
+                    title: qsTr("I:E")
+                    stepSize: 0.1
+                    value: guiState.ier
+                    onValueModified: guiState.ier = value
+
+                    textFromValue: function (value, locale) {
+                        return Number(value).toFixed(1)
+                    }
+                }
             }
 
             GridLayout {

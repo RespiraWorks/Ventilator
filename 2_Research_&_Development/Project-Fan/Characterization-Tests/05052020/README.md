@@ -2,10 +2,9 @@
 
 ## Overview
 
-**Test Date:** May 25, 2020
-**Location:**	The Port, Oakland, CA
-**Involved:**	Ethan Chaleff, echaleff@gmail.com; Bryan Murray, brmurray@vt.edu
-
+* **Test Date:** May 25, 2020
+* **Location:**	The Port, Oakland, CA
+* **Involved:**	Ethan Chaleff, echaleff@gmail.com; Bryan Murray, brmurray@vt.edu
 
 ## Test Specifications
 
@@ -24,14 +23,14 @@ Post-processing enabled by a rachety python script. Ask Bryan for more details.
 ## Files
 
 * Flow Test 21818
-  * [CSV file](flow-test-21818rpm.csv)
-  * [PKL file](flow-test-21818.pkl)
+  * [CSV file](assets/flow-test-21818rpm.csv)
+  * [PKL file](assets/flow-test-21818.pkl)
 * Flow Test 24000
-  * [CSV file](flow-test-24000rpm.csv)
-  * [PKL file](flow-test-24000.pkl)
+  * [CSV file](assets/flow-test-24000rpm.csv)
+  * [PKL file](assets/flow-test-24000.pkl)
 * Flow Test 26666
-  * [CSV file](flow-test-26666rpm.csv)
-  * [PKL file](flow-test-26666.pkl)
+  * [CSV file](assets/flow-test-26666rpm.csv)
+  * [PKL file](assets/flow-test-26666.pkl)
 
 ## CSV File
 

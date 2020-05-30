@@ -38,10 +38,9 @@ Also ask the team if anything should be ordered on the company account.
 
 The first thing you will need is a [Brain build](pizza_brain), which contains the computing components.
 
-The next thing you need to do is decide on what internal diameter the pneumatic system will use. Early prototypes have
-been using 5/8" Inner Diameter (henceforth, ID) but for beta we plan to transition to 3/4"ID. There wille be a few
-segments of the pneumatic system that may unavoidably use different diameter tubing. 
-A metric version of the pneumatic system is also anticipated. If you can help with this, please contribute.
+We are using 3/4" ID tube as the default standard (and adapters where needed, like to the blower and the pinch valves). This easily can have 19mm ID tubing substituted in metric manufacturing settings (3/4" = 19.05mm). All rigid plumbing fittings should be NPT/imperial standard (3/4 NPS preferable, to keep ID consistent throughout the flowpath). 
+
+We are still providing 5/8" tubing as an option below, since some people may still have parts that support 5/8" tubing. 
 
 ## Parts List (BOM)
 
@@ -49,30 +48,6 @@ A metric version of the pneumatic system is also anticipated. If you can help wi
 
 * **Z** = Amazon
 * **C** = McMaster-Carr
-
-### 5/8"ID Tubing Components
-
-| Item | Quantity | Manufacturer  | Part #              | Price (USD)     |  Sources        | Notes |
-| ---- |---------:| ------------- | ------------------- | ------------:|-----------------| ----- |
-| a1   |      5ft | McMaster-Carr | 5234K57             | 21.50 / 5ft  | [C][a1mcmc]     | Soft latex tubing, 5/8" ID, 7/8" OD |
-| a2   |      5ft | Duda Energy   | LPpvc063-025ft      | 20.11 / 25ft | [Z][a2amzn]     | 5/8" tubing, alternative to *a1*, not as good, too hard |
-| a3   |       20 | McMaster-Carr | 9579K72             | 12.21 / 20   | [C][a3mcmc]     | Herbie clip J (20.3-23mm) for clamping 7/8"OD tubing, you'll need plenty |
-| a4   |       ~6 | McMaster-Carr | 5463K646            |  6.60 / 10   | [C][a4mcmc]     | 5/8"ID <-> 1/2"ID, adapter, to interface with pinch valve tubing, **read note below** |
-| a5   |       ~6 | McMaster-Carr | 5463K646            |  6.60 / 10   | [C][a5mcmc]     | 5/8"ID <-> 3/8"ID, adapter, to interface with alternative pinch valve tubing, **read note below** |
-| a6   |       ~3 | McMaster-Carr | 5372K128            | 2.82         | [C][a6mcmc]     | 1/2 NTP female tee, if you plan to have bypass or oxygen limb |
-| a7   |       ~5 | McMaster-Carr | 5372K128            | 4.89 / 10    | [C][a7mcmc]     | 1/2 NTP male <-> 5/8"ID multibarbed, for tee junctions, if you plan to have bypass or oxygen limb |
-| a8   |        2 |               |                     | 13.45 / 2    | [Z][a8amzn]     | 2pac of ball valves 5/8"ID |
-
-**NOTE:** You should select either **a4** or **a5** depending on what your pinch valve tubing diameter will be.**
-
-[a1mcmc]: https://www.mcmaster.com/5234K57
-[a2amzn]: https://www.amazon.com/gp/product/B00LX6MFYE?th=1
-[a3mcmc]: https://www.mcmaster.com/9579K72
-[a4mcmc]: https://www.mcmaster.com/5463K646
-[a5mcmc]: https://www.mcmaster.com/5463K644
-[a6mcmc]: https://www.mcmaster.com/4880K154
-[a7mcmc]: https://www.mcmaster.com/5372K128
-[a8amzn]: https://www.amazon.com/gp/product/B07C5FVN9K
 
 ### 3/4" ID Tubing Components
 
@@ -101,6 +76,32 @@ A metric version of the pneumatic system is also anticipated. If you can help wi
 [b8mcmc]: https://www.mcmaster.com/4596K33
 [b9mcmc]: https://www.mcmaster.com/53415K217
 [b10amzn]: https://www.amazon.com/gp/product/B07C5FVSQB
+
+### 5/8"ID Tubing Components
+
+Note: This is NOT the default tube size. If you are purchasing parts to assemble pizza build for the first time, use 3/4"ID tubing above.
+
+| Item | Quantity | Manufacturer  | Part #              | Price (USD)     |  Sources        | Notes |
+| ---- |---------:| ------------- | ------------------- | ------------:|-----------------| ----- |
+| a1   |      5ft | McMaster-Carr | 5234K57             | 21.50 / 5ft  | [C][a1mcmc]     | Soft latex tubing, 5/8" ID, 7/8" OD |
+| a2   |      5ft | Duda Energy   | LPpvc063-025ft      | 20.11 / 25ft | [Z][a2amzn]     | 5/8" tubing, alternative to *a1*, not as good, too hard |
+| a3   |       20 | McMaster-Carr | 9579K72             | 12.21 / 20   | [C][a3mcmc]     | Herbie clip J (20.3-23mm) for clamping 7/8"OD tubing, you'll need plenty |
+| a4   |       ~6 | McMaster-Carr | 5463K646            |  6.60 / 10   | [C][a4mcmc]     | 5/8"ID <-> 1/2"ID, adapter, to interface with pinch valve tubing, **read note below** |
+| a5   |       ~6 | McMaster-Carr | 5463K646            |  6.60 / 10   | [C][a5mcmc]     | 5/8"ID <-> 3/8"ID, adapter, to interface with alternative pinch valve tubing, **read note below** |
+| a6   |       ~3 | McMaster-Carr | 5372K128            | 2.82         | [C][a6mcmc]     | 1/2 NTP female tee, if you plan to have bypass or oxygen limb |
+| a7   |       ~5 | McMaster-Carr | 5372K128            | 4.89 / 10    | [C][a7mcmc]     | 1/2 NTP male <-> 5/8"ID multibarbed, for tee junctions, if you plan to have bypass or oxygen limb |
+| a8   |        2 |               |                     | 13.45 / 2    | [Z][a8amzn]     | 2pac of ball valves 5/8"ID |
+
+**NOTE:** You should select either **a4** or **a5** depending on what your pinch valve tubing diameter will be.**
+
+[a1mcmc]: https://www.mcmaster.com/5234K57
+[a2amzn]: https://www.amazon.com/gp/product/B00LX6MFYE?th=1
+[a3mcmc]: https://www.mcmaster.com/9579K72
+[a4mcmc]: https://www.mcmaster.com/5463K646
+[a5mcmc]: https://www.mcmaster.com/5463K644
+[a6mcmc]: https://www.mcmaster.com/4880K154
+[a7mcmc]: https://www.mcmaster.com/5372K128
+[a8amzn]: https://www.amazon.com/gp/product/B07C5FVN9K
 
 ### Metric Version
 
@@ -152,7 +153,6 @@ You may need anywhere between 1 and 3 such pinch valves, depending on the comple
 * **Reduced compliance test lung:** To test basic function a ventilator check lung or a breathing bag is sufficient,
 but can really only work up to 10cmH2O. To be able to test higher PIP values, you need to reduce the compliance of the
 lung so you don’t just inflate it like a balloon (or pop it). View more details on reduced compliance test lung [here](pizza_compliance_test_lung).
-* **Blower bypass:** The purpose of the blower bypass is to prevent strain on blower when the inhale pinch valve is closed. The sub-assembly for this component is documented [here](pizza_blower_bypass).
 * **#TODO: check valve**
 * **#TODO: oxygen supply limb** 
 

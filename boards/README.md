@@ -1,3 +1,5 @@
+# Boards
+
 This directory holds the board file used by platformio to build the stm32 controller software.
 
 The board file (custom\_stm32.json) was copied from the platformio board file nucleo\_l452.json .platformio/platforms/ststm32/boards/nucleo\_l452re.json

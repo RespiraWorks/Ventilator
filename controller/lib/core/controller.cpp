@@ -52,7 +52,8 @@ ActuatorsState Controller::Run(Time now, const VentParams &params,
 
   return {.fan_setpoint_cm_h2o = desired_state.setpoint_pressure.cmH2O(),
           .expire_valve_state = desired_state.expire_valve_state,
-          .fan_power = ComputeFanPower(now, desired_state, readings)};
+          .fan_power = ComputeFanPower(now, desired_state, readings),
+          .fan_valve = 1.0f /* not used yet */};
 }
 
 float Controller::ComputeFanPower(Time now,

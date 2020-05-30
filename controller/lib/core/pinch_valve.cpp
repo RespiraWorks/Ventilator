@@ -74,13 +74,7 @@ void PinchValve::Home() {
   if (!mtr_)
     return;
 
-  // I'll reset the stepper driver first,
-  // that puts it in a known state so I don't have
-  // to worry about setting everything
   StepMtrErr err;
-  err = mtr_->Reset();
-  if (err != StepMtrErr::OK)
-    return;
 
   // Limit motor power during homing
   err = mtr_->SetAmpAll(home_amp);

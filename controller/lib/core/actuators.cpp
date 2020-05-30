@@ -14,6 +14,14 @@ limitations under the License.
 */
 
 #include "actuators.h"
+#include "pinch_valve.h"
+
+// local data
+static PinchValve blower_pinch(0);
+
+// Called once at system startup to initialize any
+// actuators that need it
+void actuators_init(void) { blower_pinch.Home(); }
 
 void actuators_execute(const ActuatorsState &desired_state) {
   // Open/close the solenoid as appropriate.
@@ -25,4 +33,7 @@ void actuators_execute(const ActuatorsState &desired_state) {
                        : VoltageLevel::HIGH);
   // set blower PWM
   Hal.analogWrite(PwmPin::BLOWER, desired_state.fan_power);
+
+  // Set the blower pinch valve position
+  blower_pinch.SetOutput(desired_state.fan_valve);
 }

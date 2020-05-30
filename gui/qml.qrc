@@ -4,6 +4,9 @@
         <file>ScopeView.qml</file>
         <file>ControlPanel.qml</file>
         <file>images/respiraWorksLogoHorizontalTransparent.png</file>
-	<file>images/Logo.png</file>
+        <file>images/Logo.png</file>
+        <file>Style.qml</file>
+        <file>qmldir</file>
+        <file>StepCounter.qml</file>
     </qresource>
 </RCC>

@@ -39,9 +39,9 @@ Original design found
 
 The above files should not be printed with FDM. Instead, a leaktight method like SLA or MJF should be used.
 
-## BOM
+## Parts List (BOM)
 
-### Purchasing source abbreviations
+### Purchasing Source Key
 
 * **C** = McMaster-Carr
 * **Z** = Amazon
@@ -50,9 +50,9 @@ The above files should not be printed with FDM. Instead, a leaktight method like
 * **M** = Mouser
 * **3D** = 3D printed (RespiraWorks)
 
-### Parts BOM
+### Parts 
 
-| RefDes | Quantity | Manufacturer  | Part #              | Price($)     | Do what?     | Sources            | Notes |
+| Item | Quantity | Manufacturer  | Part #              | Price (USD)     | Action     | Sources            | Notes |
 | ------ |---------:| ------------- | ------------------- | ------------:| ------------ |--------------------| ----- |
 | 1      |        1 | STEPPERONLINE | 17HS19-2004S2       |       14.99  | Buy          | [Z][1amzn]         | Stepper motor. Make sure to get one with the full-cut D-shaft. |
 | 2      |        1 | McMaster-Carr | 92095A218           |   7.64 / 25  | Buy          | [C][2mcmc]         | M5x30mm button head. Axle for bearing. |
@@ -68,7 +68,7 @@ The above files should not be printed with FDM. Instead, a leaktight method like
 | 12     | 6in/15cm | McMaster-Carr | 5894K38             |  8.04 / 2 ft | Buy          | [C][12mcmc]        | **alternative to 7**, tubing 3/8" ID, 5/8" OD |
 
 **WARNING: Item 6 may have to be substituted by another adapter, depending on your choice of tubing here (7 or 12) and
-your choice of pneumatic system internal diameter. Alternative adapters are listed on main pizza page**
+your choice of pneumatic system internal diameter. Alternative adapters are listed on main [pizza page](../../4_Prototype_Assembly/Alpha_Build_Instructions/pizza_build.md)**
 
 [1amzn]:   https://www.amazon.com/dp/B07Z1J8JWH/ref=cm_sw_r_cp_api_i_d.zUEbRBKGSVW
 [2mcmc]:   https://www.mcmaster.com/92095A218
@@ -83,17 +83,17 @@ your choice of pneumatic system internal diameter. Alternative adapters are list
 [103d]:    https://github.com/RespiraWorks/SystemDesign/blob/grace-pinch-valve-updates/2_Research_&_Development/Project-Pinch_Valve/README.md#exported-step-files
 [12mcmc]:  https://www.mcmaster.com/5894K38
 
-### Tooling BOM
+### Tools
 
-| Item | Quantity | Manufacturer  | Part #      | Price(USD) | Sources         | Notes |
+| Item | Quantity | Manufacturer  | Part #      | Price (USD) | Sources         | Notes |
 | ---- |---------:| ------------- | ----------- | ----------:|-----------------| ----- |
-| A1   |        1 | TEKTON        | 37122       |       9.99 | [Z][a1amzn]      | Some sort of wrench/pliers, to clamp the herbie clips around the tubing+fitting. |
-| A2   |        1 | Wiha          | 71397       |       6.76 | [Z][a2amzn]      | 2, 2.5, & 3mm hex drivers required for assembly.  |
+| a1   |        1 | TEKTON        | 37122       |       9.99 | [Z][a1amzn]      | Some sort of wrench/pliers, to clamp the herbie clips around the tubing+fitting. |
+| a2   |        1 | Wiha          | 71397       |       6.76 | [Z][a2amzn]      | 2, 2.5, & 3mm hex drivers required for assembly.  |
 
 [a1amzn]:   https://www.amazon.com/TEKTON-2-Inch-Joint-Pliers-37122/dp/B00KLY1FAY
 [a2amzn]:   https://www.amazon.com/Wiha-71397-Metric-Insert-6-Piece/dp/B0084B7S70/ref=sr_1_4?dchild=1&keywords=3mm+hex&qid=1590347774&sr=8-4
 
-## Assembly
+## Assembly Instructions
 
 ![Components](assets/pinch-valve-components.jpg)
 

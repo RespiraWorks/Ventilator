@@ -1,4 +1,4 @@
-# Brain build
+# Brain Build
 
 This build constitutes the computing and digital user interface components.
 It is enough to fully deploy and run all developed software, to test the GUI interface and
@@ -6,11 +6,15 @@ possibly the communications protocol between controller and UI. Since it contain
 or drivers, system integration testing with this bare build is not possible.
 For an upgrade, check the [Pizza build](../pizza_build.md).
 
-**TODO:** add pictures
+**#TODO:** add pictures
 
-## Purchasing source abbreviations
+## Part List (BOM)
+
+
+### Purchasing Source Key
 
 * **Z** = Amazon
+* **C** = McMaster-Carr
 * **A** = Ali Express
 * **M** = Mouser
 * **O** = Monoprice
@@ -18,11 +22,11 @@ For an upgrade, check the [Pizza build](../pizza_build.md).
 * **R** = RS Computing ([various countries](https://www.rs-online.com/))
 * **B** = Built by RespiraWorks
 
-## Parts BOM
+### Parts
 
 **NOTE:** Shipping times are in flux! To the extent you can, attempt to find a similar product that can get to you faster.
 
-| Item | Qty | Manufacturer | Part Number        | Price($) | Sources                   | Notes |
+| Item | Qty | Manufacturer | Part Number        | Price (USD) | Sources                   | Notes |
 | ---- |----:| -------------| ------------------ | --------:|-------------------------- | ----- |
 | 1    |   1 | ST Micro     | NUCLEO-L452-RE     |    14.43 | [M][1mouser] [R][1rs]     | STM32 Nucleo dev board, make sure to **NOT get the -P** version |
 | 2    |   1 | Monoprice    | 3896               |     0.83 | [Z][2amzn] [O][2mono]     | USB-A to miniUSB-B cable, power/data for Nucleo |
@@ -67,29 +71,29 @@ For an upgrade, check the [Pizza build](../pizza_build.md).
 [18amzn]:  https://www.amazon.com/GenBasic-Piece-Female-Jumper-Wires/dp/B01L5ULRUA/
 [19amzn]:  https://www.amazon.com/Poyiccot-2-Pack-Degree-Adapter-Extension/dp/B071XHQJG8/
 
-## Tooling BOM
+### Tools
 
-| Item | Manufacturer  | Part number        | Price($) | Sources         | Notes |
+| Item | Manufacturer  | Part number        | Price (USD) | Sources         | Notes |
 | ---- |--------------:| ------------------ | -------- | ---------------:|------ |
-| T1   |               |                    |    12.99 | [Z][t1amzn]     | microSD-USB adapter, for flashing RasPi images | 
-| T2   | Preciva       | PR-3254 (PR102001) |    39.99 | [Z][t2amzn]     | Crimping tool for HX and HV connectors |
+| a1   |               |                    |    12.99 | [Z][a1amzn]     | microSD-USB adapter, for flashing RasPi images | 
+| a2   | Preciva       | PR-3254 (PR102001) |    39.99 | [Z][a2amzn]     | Crimping tool for HX and HV connectors |
 
-[t1amzn]:https://www.amazon.com/Anker-Portable-Reader-RS-MMC-Micro/dp/B006T9B6R2
-[t2amzn]:https://www.amazon.com/gp/product/B07R1H3Z8X
+[a1amzn]:https://www.amazon.com/Anker-Portable-Reader-RS-MMC-Micro/dp/B006T9B6R2
+[a2amzn]:https://www.amazon.com/gp/product/B07R1H3Z8X
 
-**NOTE: Items 15-17 and T2 above are also duplicated in the [wiring BOM](../../../1_Ventilator_System_Design/Electrical_System/wiring.md)**
+**NOTE: Items 15-17 and a2 above are also duplicated in the [wiring BOM](../../../1_Ventilator_System_Design/Electrical_System/wiring.md)**
 
-## Purchasing guide
+### Purchasing Guide
 
 1. First of all, contact Edwin, Martin or Ethan to see if there are extra parts in the RespiraWorks inventory that
 can be sent to you.
 2. Take note of the specifically RPI3+ or RPI4 components. Don't get the wrong ones.
 3. If you are not (yet) able to get a PCB, get items 18 and 19
-4. If you are getting a PCB, and a power cable is included, you will not need 15-17, nor T2
+4. If you are getting a PCB, and a power cable is included, you will not need items 15-17, nor a2
 5. If you are feeling stingy, don't get the touchscreen (item 3). You can connect the RasPi to any monitor and use
 a mouse and keyboard to control it.
 
-## Assembly instructions
+## Assembly Instructions
 
 1. Mount touchscreen legs.
 2. Mount RasPi to screen.

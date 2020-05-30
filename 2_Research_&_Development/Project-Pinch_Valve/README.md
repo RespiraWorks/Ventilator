@@ -55,22 +55,24 @@ The above files should not be printed with FDM. Instead, a leaktight method like
 | Item | Quantity | Manufacturer  | Part #              | Price (USD)     | Action     | Sources            | Notes |
 | ------ |---------:| ------------- | ------------------- | ------------:| ------------ |--------------------| ----- |
 | 1      |        1 | STEPPERONLINE | 17HS19-2004S2       |       14.99  | Buy          | [Z][1amzn]         | Stepper motor. Make sure to get one with the full-cut D-shaft. |
-| 2      |        1 | McMaster-Carr | 92095A218           |   7.64 / 25  | Buy          | [C][2mcmc]         | M5x30mm button head. Axle for bearing. |
-| 3      |        3 | McMaster-Carr | 91294A128           |  4.82 / 100  | Buy          | [C][3mcmc]         | M3x8mm flat head. Attaches frame to stepper body |
-| 4      |        1 | McMaster-Carr | 91390A117           |  4.75 / 100  | Buy          | [C][4mcmc]         | M5x5mm set screw. Attaches rotor to stepper |
-| 5      |        3 | FastEddy      | TFE4262             |  12.50 / 10  | Buy          | [F][5fast]         | 5x16x5 Metal shielded bearings |
-| 6      |        2 | McMaster-Carr | 5463K646            |  6.60 / 10   | Buy          | [C][6mcmc]         | Reducer 5/8"ID <-> 1/2"ID, single barb **READ WARNING BELOW**|
-| 7      | 6in/15cm | McMaster-Carr | 5894K39             |  8.04 / 2 ft | Buy          | [C][7mcmc]         | Continuous-Flex Soft Tygon PVC Tubing, 1/2" ID, 5/8" OD |
-| 8      |        2 | McMaster-Carr | 9579K67             |  12.63 / 20  | Buy          | [C][8mcmc]         | Easy-Install Double Snap-Grip Clamps, 1/2" to 19/32" ID |
-| 9      |        1 | Digikey       | X-NUCLEO-IHM03A1    |        10.64 | *Ask first*  | [K][9key] [M][9mr] | Stepper driver dev board |
-| 10     |        1 | RespiraWorks  | N/A                 |       N/A.   | *Ask first*  | [3D][103d]         | BASE - 3D printed |
-| 11     |        1 | RespiraWorks  | N/A                 |       N/A    | *Ask first*  | [3D][103d]         | ROTOR - 3D printed |
-| 12     | 6in/15cm | McMaster-Carr | 5894K38             |  8.04 / 2 ft | Buy          | [C][12mcmc]        | **alternative to 7**, tubing 3/8" ID, 5/8" OD |
+| 2      |        1 | STEPPERONLINE | 17HS19-2004S1       |       13.99  | Buy          | [Z][2amzn]         | **alternative to 1** Stepper motor.  |
+| 3      |        1 | McMaster-Carr | 92095A218           |   7.64 / 25  | Buy          | [C][3mcmc]         | M5x30mm button head. Axle for bearing. |
+| 4      |        3 | McMaster-Carr | 91294A128           |  4.82 / 100  | Buy          | [C][4mcmc]         | M3x8mm flat head. Attaches frame to stepper body |
+| 5      |        1 | McMaster-Carr | 91390A117           |  4.75 / 100  | Buy          | [C][5mcmc]         | M5x5mm set screw. Attaches rotor to stepper |
+| 6      |        3 | FastEddy      | TFE4262             |  12.50 / 10  | Buy          | [F][6fast]         | 5x16x5 Metal shielded bearings |
+| 7      |        2 | McMaster-Carr | 5463K646            |  6.60 / 10   | Buy          | [C][7mcmc]         | Reducer 5/8"ID <-> 1/2"ID, single barb **READ WARNING BELOW**|
+| 8      | 6in/15cm | McMaster-Carr | 5894K39             |  8.04 / 2 ft | Buy          | [C][8mcmc]         | Continuous-Flex Soft Tygon PVC Tubing, 1/2" ID, 5/8" OD |
+| 9      |        2 | McMaster-Carr | 9579K67             |  12.63 / 20  | Buy          | [C][9mcmc]         | Easy-Install Double Snap-Grip Clamps, 1/2" to 19/32" ID |
+| 10      |        1 | Digikey       | X-NUCLEO-IHM03A1    |        10.64 | *Ask first*  | [K][10key] [M][9mr] | Stepper driver dev board |
+| 11     |        1 | RespiraWorks  | N/A                 |       N/A.   | *Ask first*  | [3D][113d]         | BASE - 3D printed |
+| 12     |        1 | RespiraWorks  | N/A                 |       N/A    | *Ask first*  | [3D][123d]         | ROTOR - 3D printed |
+| 13     | 6in/15cm | McMaster-Carr | 5894K38             |  8.04 / 2 ft | Buy          | [C][13mcmc]        | **alternative to 7**, tubing 3/8" ID, 5/8" OD |
 
 **WARNING: Item 6 may have to be substituted by another adapter, depending on your choice of tubing here (7 or 12) and
 your choice of pneumatic system internal diameter. Alternative adapters are listed on main [pizza page](../../4_Prototype_Assembly/Alpha_Build_Instructions/pizza_build.md)**
 
 [1amzn]:   https://www.amazon.com/dp/B07Z1J8JWH/ref=cm_sw_r_cp_api_i_d.zUEbRBKGSVW
+[2amzn]:   https://www.amazon.com/gp/product/B00PNEQKC0
 [2mcmc]:   https://www.mcmaster.com/92095A218
 [3mcmc]:   https://www.mcmaster.com/91294A128
 [4mcmc]:   https://www.mcmaster.com/91390A117

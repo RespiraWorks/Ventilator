@@ -39,10 +39,13 @@ Contents may also be out of date. RespiraWorks may, or may not compensate you fo
       * [Electrical System](1_Ventilator_System_Design/Electrical_System)
       * [Software (separate repository)](https://github.com/RespiraWorks/VentilatorSoftware)
   * [Research & Development](2_Research_&_Development)
+      * [Project: Fan](2_Research_&_Development/Project-Fan)
       * [Project: IAV Air Control](2_Research_&_Development/Project-IAV_Air_Control)
       * [Project: Pinch Valve](2_Research_&_Development/Project-Pinch_Valve)
       * [Project: Venturi](2_Research_&_Development/Project-Venturi)
+      * [Characterization Test Plan](2_Research_&_Development/characterization-test-plan.md)
   * [Quality Assurance](3_Quality_Assurance)
+      * [Testing](3_Quality_Assurance/Testing)
   * [Prototype Assembly](4_Prototype_Assembly)
       * [Alpha Build Instructions](4_Prototype_Assembly/Alpha_Build_Instructions) -
          documentation for building the "Alpha" version of the device which can be used by developers to contribute to the software. Note that this is almost always out of date, by definition.

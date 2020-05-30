@@ -18,7 +18,6 @@ Lives on your table and is customizable, like a pizza. Here are the various comp
 * [Optional: binary solenoid assembly](pizza_binary_solenoid)
 * [Optional: proportional pinch valve assembly](../../2_Research_&_Development/Project-Pinch_Valve)
 * [Optional: reduced compliance test lung](pizza_compliance_test_lung)
-* [Optional: blower bypass](pizza_blower_bypass)
 
 [Enclosed alpha assembly instructions](alpha_assembly_instructions.md)
 

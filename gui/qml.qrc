@@ -1,6 +1,7 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
+        <file>FpsItem.qml</file>
         <file>ScopeView.qml</file>
         <file>ControlPanel.qml</file>
         <file>images/respiraWorksLogoHorizontalTransparent.png</file>

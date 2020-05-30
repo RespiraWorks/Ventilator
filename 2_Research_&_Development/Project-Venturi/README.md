@@ -2,25 +2,35 @@
 
 ![Rendering](assets/screenshot.png)
 
-The venturi is used to measure flow by measuring a change in pressure as the flow accelerates through the throat. The change in pressure is measured between the two ports, and this is correlated to the flow rate through the device. This version inserts within 5/8" ID tubing, though can also be used with 16mm ID tubing. You can use a zip tie or hose clamp to improve the seal. 
+The venturi is used to measure flow by measuring a change in pressure as the flow accelerates through the throat. Relative to other pressure sensor types, a venturi flow meter produces the largest signal pressure at the smallest pressure loss. This allows significantly cheaper and more widely available pressure sensors to be used, because a signal at peak flow can be 5 to 15 times larger than the flow resistance. 
 
-The plan is for [beta](../../4_Prototype_Assembly/Beta_Build_Instructions/README.md) to use 3/4"ID tubing throughout.
-The venturi will most likely be redesigned to have barbs that fit 3/4"ID tubing directly.
+The change in pressure is measured between the two ports, and this is correlated to the flow rate through the orifice. It is important to note that the as the flow expands, almost all of this pressure is recovered to the original flow; the pressure signal measured is not the same as the pressure resistance to flow. 
 
-The pressure sensor we are using has 2.5 mm or 3/32" barbs, which is too small for 1/8" tubing, therefore this model has #10-32 tapped holes.
+# Mechanical Implementation
 
-There is an arrow printed onto the body to indicate the direction of flow.
+The venturi is available in 3/4" or 5/8" ID tubing.
+
+The Alpha version is designed to insert into 5/8" ID or 16mm ID tubing.
+
+The [beta](/../../4_Manufacturing_Design/Beta_Build_Instructions/README.md) version of the ventilator uses 3/4"ID or 19mm ID tubing throughout. 
+
+The pressure sensor we are using, see below, has 2.5 mm or 3/32" barbs. Note that this is not sufficiently close in size to use more common 3mm or 1/8" tubing. This model has printed threads to accept an adapter from #10-32 pipe to 3/32" adapter. Other adapters could be incorporated eventually by changing the interface design.
+
+You can use a zip tie or hose clamp to improve the seal by tightening it behind the barb.
+
+There is an arrow printed onto the body between the two ports to indicate the direction of flow. The venturi is asymetrical, with a tighter constriction on entrance than exit. 
 
 ## Transfer Function
 
-To go from voltage to flow rate, you need the following transfer functions.
-For a 0.157" throat and 0.5" body using a 0-3920 Pa analog sensor, where offset is the 0 flow signal:
+To go from voltage to flow rate, you must correlate the flow rate to a change in pressure, and the change in pressure to a voltage. 
 
-Q [liters/minute] = 0.75398*sqrt(1346.584669*(voltage-offset))
+The fundamental equation for a ventiru flow meter is:
 
-**#TODO:** make math pretty with Mathjax?
+![Equation](https://wikimedia.org/api/rest_v1/media/math/render/svg/164d293785917d5d5bb07cdb01d96bafbc603a61)
 
-For an arbitrary body geometry, you can use [this short spreadsheet](https://docs.google.com/spreadsheets/d/1G9Kb-ImlluK8MOx-ce2rlHUBnTOtAFQvKjjs1bEhlpM/edit#gid=963553579) to return the transfer function.
+You then need to convert from dP to voltage, if using an analog sensor, or from dP to serial, if using an I2C sensor. 
+
+You can use [this short spreadsheet](https://docs.google.com/spreadsheets/d/1G9Kb-ImlluK8MOx-ce2rlHUBnTOtAFQvKjjs1bEhlpM/edit#gid=963553579) to return the transfer function.
 
 **#TODO:** make spreadsheet contents visible here
 

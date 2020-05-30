@@ -2,35 +2,24 @@
 
 -------------
 
-## Overview
+# Overview
 
-Currently [this Google document](https://docs.google.com/document/d/18nqg36VkDUn594jnHEbXHlZkW_4Bj2x9HIhAgLesSlw/edit#heading=h.nx06tlqgwqzj) serves as the requirements overview.
+Requirements are still being granularly defined and documented. We use Valispace software for requirements tracking; an export is updated here ~weekly.
 
-**Note:** We're in process of migrating requirements-tracking to Valispace. Currently the Google is the most consolidated, clean place to track requirements, but Valispace will soon be the canonical place where requirements are managed.
+* [PDF format](assets/system-reqs.pdf)
+* [XLSX format](assets/system-reqs.xlsx)
+* **#TODO:** To be actually open source, put exported json in this directory and link nicely from here.
 
-## Requirements documents
 
-**#TODO:** To be actually open source, put exported json in this directory and link nicely from here.
+# Using Valispace
 
-**#TODO:** For the bureaucratic-minded, put exported PDFs in this directory and link nicely here. 
-
-**#TODO:** export valispace requirements into human-readible format in this directory
-
-# Valispace
-
-Valispace is the tool we're using to track requirements. 
-
-## Logging in
 
 [RespiraWorks Valispace account](https://covent-19.valispace.com/specifications/requirements)
 
-username: RespiraWorks_public
+`username: RespiraWorks_public`
 
-password: (*************)
+`password: (*************)`
 
-*Check the #requirements slack pinned posts for the password, or contact us at info@respira.works for access. We will release versions from there as soon as we figure out how to do that, and will eventually be uploading JSON's of the entire database.*
+*Check the #requirements slack pinned posts for the password, or contact us at info@respira.works for access. We will eventually be uploading JSON's of the entire database.*
 
-
-## Requirements organization
-
-Note that you can use the "position" value to move requirements around and change the display order.
+Note that you can use the "position" value to move requirements around and change the display order in Valispace.

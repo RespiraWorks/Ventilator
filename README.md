@@ -1,4 +1,4 @@
-# VentilatorSoftware
+# RespiraWorks Ventilator Software
 
 [![CircleCI Build Status](https://circleci.com/gh/RespiraWorks/VentilatorSoftware.svg?style=shield)](https://circleci.com/gh/RespiraWorks/VentilatorSoftware/tree/master)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
@@ -9,4 +9,14 @@
 
 This is a common repository for all software components of the [RespiraWorks](http://respira.works) open source ventilator project.
 
-Please see more information in the [onboarding wiki](https://github.com/RespiraWorks/VentilatorSoftware/wiki).
+## Repository structure
+
+* [boards](boards) - files for platformio to build for the stm32 chip
+* [common](common) - code common to both controller and GUI executables
+* [controller](controller) - code for pneumatic system controller (stm32)
+* [gui](gui) - code for the ventilator graphical interface (Qt)
+* [sample-data](sample-data) - some sample data for something **TODO: explain**
+* [scripts](scripts) - for testing something **TODO: explain**
+* [utils](utils) - scripts for debugging controller / simple integration tests
+
+To contribute, please check the [onboarding wiki](https://github.com/RespiraWorks/VentilatorSoftware/wiki).

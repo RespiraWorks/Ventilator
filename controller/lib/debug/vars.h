@@ -57,10 +57,8 @@ public:
     return var_list[vid];
   }
 
-  // Ideally these should be pure virtual, but that pulls in the C++ exception
-  // ABI and malloc.
-  virtual uint32_t GetValue() { return 0; }
-  virtual void SetValue(uint32_t value) { (void)value; }
+  virtual uint32_t GetValue() = 0;
+  virtual void SetValue(uint32_t value) = 0;
 
   const char *GetName() const { return name_; }
   const char *GetFormat() const { return fmt_; }

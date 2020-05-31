@@ -4,7 +4,7 @@
 
 * **Test Date:** May 25, 2020
 * **Location:**	The Port, Oakland, CA
-* **Involved:**	Ethan Chaleff, echaleff@gmail.com; Bryan Murray, brmurray@vt.edu
+* **Involved:**	Ethan Chaleff (echaleff@gmail.com); Bryan Murray (brmurray@vt.edu)
 
 ## Test Specifications
 

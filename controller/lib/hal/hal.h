@@ -43,6 +43,7 @@ limitations under the License.
 #endif
 
 #include "checksum.h"
+#include <assert.h>
 #include <cstring>
 #include <deque>
 #include <map>
@@ -409,13 +410,13 @@ inline void HalApi::setDigitalPinMode(BinaryPin pin, PinMode mode) {
 }
 inline void HalApi::digitalWrite(BinaryPin pin, VoltageLevel value) {
   if (binary_pin_modes_[pin] != PinMode::OUTPUT) {
-    throw "Can only write to an OUTPUT pin";
+    assert(false && "Can only write to an OUTPUT pin");
   }
   binary_pin_values_[pin] = value;
 }
 inline void HalApi::analogWrite(PwmPin pin, float duty) {
   if (pwm_pin_modes_[pin] != PinMode::OUTPUT) {
-    throw "Can only write to an OUTPUT pin";
+    assert(false && "Can only write to an OUTPUT pin");
   }
   pwm_pin_values_[pin] = duty;
 }

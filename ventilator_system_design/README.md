@@ -2,7 +2,7 @@
 
 -------------
 
-This document contains description of design implementation and closure of issues which
+This document contains description of ventilator design implementation and closure of issues which
 apply at the system level, such as architecture configuration.
 
 ## Overview

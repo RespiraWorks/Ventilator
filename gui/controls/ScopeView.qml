@@ -29,6 +29,7 @@
 
 import QtQuick 2.11
 import QtCharts 2.1
+import ".."
 
 ChartView
 {

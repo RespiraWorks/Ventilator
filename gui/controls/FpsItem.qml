@@ -1,5 +1,6 @@
 import QtQuick 2.11
 import QtQuick.Window 2.2
+import ".."
 
 /*!
     \qmltype FPSItem
@@ -12,7 +13,7 @@ import QtQuick.Window 2.2
     calculates how many updates happens on a given interval (default 2s).
 
 */
-Rectangle {
+Item {
     id: root
 
     property bool enabled: true
@@ -24,7 +25,9 @@ Rectangle {
     property int fpsAvg: 0
 
     visible: enabled
-    color: "black"
+
+    implicitWidth: fpsText.width + 10 + spinnerImage.width
+    implicitHeight: 30
 
     Row {
 
@@ -34,8 +37,9 @@ Rectangle {
         Image {
             id: spinnerImage
             anchors.verticalCenter: parent.verticalCenter
-            source: "images/Logo.png"
+            source: "qrc:/images/Logo.png"
             width: 24; height: 24
+            opacity: 0
             NumberAnimation on rotation {
                 from:0
                 to: 360
@@ -48,7 +52,9 @@ Rectangle {
 
         // Display FPS count as Text
         Text {
+            id: fpsText
             font.pointSize: 18
+            color: "white"
             text: "Ø " + root.fpsAvg + " | " + root.fps + " fps"
         }
     }

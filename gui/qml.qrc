@@ -1,13 +1,20 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
-        <file>FpsItem.qml</file>
-        <file>ScopeView.qml</file>
         <file>ControlPanel.qml</file>
         <file>images/respiraWorksLogoHorizontalTransparent.png</file>
         <file>images/Logo.png</file>
         <file>Style.qml</file>
         <file>qmldir</file>
-        <file>StepCounter.qml</file>
+        <file>ModeSelectionPopup.qml</file>
+        <file>controls/FpsItem.qml</file>
+        <file>controls/PopupButton.qml</file>
+        <file>controls/ScopeView.qml</file>
+        <file>controls/StepCounter.qml</file>
+        <file>controls/Mode.qml</file>
+        <file>modes/PressureAssistMode.qml</file>
+        <file>modes/CommandPressureMode.qml</file>
+        <file>modes/HighFlowNasalCannulaMode.qml</file>
+        <file>controls/HeaderButton.qml</file>
     </qresource>
 </RCC>

@@ -30,11 +30,11 @@ Contents may also be out of date. RespiraWorks may, or may not compensate you fo
 
 ### Structure
 
-  * [System Requirements](system-requirements) -
+  * [System Requirements](system-requirements.md) -
   describes the requirement architecture, heirarchy, and process. Links to the releases of our system requirements, hardware specifications, and software requirements. 
   * [Ventilator System Design](ventilator-design) -
   describes the functional implementation and design theory of the system. This document also defines the hierarchy for the subsystems below.
-      * [Design Rationale](ventilator-design/DesignRationales.md) - An explanation of the rationale that went into specific parts can be found here. 
+      * [Design Rationale](ventilator-design/design-rationales.md) - An explanation of the rationale that went into specific parts can be found here. 
       * [Pneumatic System](ventilator-design/pneumatic-system)
       * [Electrical System](ventilator-design/electrical-system)
       * [Software (separate repository)](https://github.com/RespiraWorks/VentilatorSoftware)

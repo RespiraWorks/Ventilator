@@ -1,6 +1,6 @@
 version: 2.1
 
-jobs:  
+jobs: 
   dead-link-test:
     machine:
       image: ubuntu-1604:201903-01

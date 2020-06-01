@@ -7,11 +7,17 @@
 # started on the rPi.
 
 # Provides Rendering debug information
-QT_LOGGING_RULES=qt.qpa.*=true
+export QT_LOGGING_RULES=qt.qpa.*=true
 
 # Tells Qt which display to be used.
-DISPLAY=:0
+export DISPLAY=:0
 
-# Run GUI APP forcing to use eglfs with a particular configuration
-# defined in kms.json
-QT_QPA_EGLFS_KMS_CONFIG=kms.json QT_QPA_EGLFS_INTEGRATION=eglfs_kms build/ProjectVentilatorGUI -platform eglfs
+# Please note, the configuration variable for specific HDMI mode is removed
+# because it changes according to the display you plug your raspberry. To
+# force a specific mode, uncomment the line below and update kms.json to
+# use the desired mode
+#export QT_QPA_EGLFS_KMS_CONFIG=kms.json
+export QT_QPA_EGLFS_INTEGRATION=eglfs_kms
+
+# Run GUI APP forcing to use eglfs
+build/ProjectVentilatorGUI -platform eglfs

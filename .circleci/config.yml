@@ -35,11 +35,18 @@ jobs:
       - run:
           name: Check for broken links with Liche
           command: |
-            liche -r -d . -v -t 30
+            liche README.md -v
+            liche DesignRationales.md -v
+            liche System_Requirements.md -v
+            liche -r 1_Ventilator_System_Design -d . -v
+            # TODO:
+            # liche -r 2_Research_&_Development -d . -v
+            # liche -r 3_Quality_Assurance -d . -v
+            # liche -r 4_Prototype_Assembly -d . -v
             # -r: search for links through directories recursively
             # -d: set document root directory
             # -v: verbose output
-            # HTTP time-out limit
+            # -t: HTTP time-out limit (seconds)
 workflows:
   commit:
     jobs:

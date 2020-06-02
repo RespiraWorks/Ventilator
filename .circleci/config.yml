@@ -35,7 +35,7 @@ jobs:
       - run:
           name: Check for broken links with Liche
           command: |
-            for f in $(find . -type f -name "*.md"); do liche -d . -v -x "mouser.com|cypress.com" -t 30 "$f"; done
+            for f in $(find . -type f -name "*.md"); do liche -d . -v -x "mouser.com|cypress.com|digikey.com" -t 30 "$f"; done
 workflows:
   commit:
     jobs:

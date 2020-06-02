@@ -1,3 +1,5 @@
+// This test repeatedly opens and closes a pinch valve
+
 #include "hal.h"
 #include "pinch_valve.h"
 

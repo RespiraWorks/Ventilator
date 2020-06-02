@@ -9,7 +9,7 @@
 
 **TODO:** describe subsystems and create directory structure to reflect them
 
-[Wiring](assets/wiring.md)
+[Wiring](wiring.md)
 
 [PCB (separate repo)](https://github.com/RespiraWorks/pcbreathe)
 

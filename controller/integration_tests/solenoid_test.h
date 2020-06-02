@@ -1,3 +1,5 @@
+// This test switches the binary solenoid between the open and closed position
+
 #include "hal.h"
 
 // test parameters

@@ -30,8 +30,8 @@ v1.6: Broader shelf, slightly larger bump.
 
 ### Files 
 
-- [Base - .step format](assets/exhaust%20pinch%20valve%201.6%20-%20base.step)
-- [Rotor - .step format](assets/exhaust%20pinch%20valve%201.6%20-%20rotor.step)
+- [Base - .step format](assets/exhaust-pinch-valve-1.6-base.step)
+- [Rotor - .step format](assets/exhaust-pinch-valve-1.6-rotor.step)
 
 Original design found
 [here](https://cad.onshape.com/documents/3fe0c1f79c482144c267173d/w/2ad1c08071a25185f9c78c68/e/03a49465e4e026f9f102d0af).
@@ -69,9 +69,9 @@ The above files should not be printed with FDM. Instead, a leaktight method like
 | 11     |        1 | ST            | X-NUCLEO-IHM02A1    | 15.00 / each | Buy          | [S][11st]    | **ALT for item 10:** Two-axis stepper driver dev board |
 | 12     |        1 | RespiraWorks  | N/A                 |       N/A    | *Ask first*  | [3D][123d]         | BASE - 3D printed |
 | 13     |        1 | RespiraWorks  | N/A                 |       N/A    | *Ask first*  | [3D][123d]         | ROTOR - 3D printed |
-| 14     | 6in/15cm | McMaster-Carr | 5894K38             |  8.04 / 2 ft | Buy          | [C][14mcmc]        | **alternative to 8**, tubing 3/8" ID, 5/8" OD |
+| 14     | 6in/15cm | McMaster-Carr | 5894K38             |  8.04 / 2 ft | *Ask first*          | [C][14mcmc]        | **alternative to 8**, tubing 3/8" ID, 5/8" OD |
 
-**WARNING: Item 7 may have to be substituted by another adapter, depending on your choice of tubing here (items 8 or 14) and your choice of pneumatic system internal diameter. Alternative adapters are listed on main [pizza page](../../4_Prototype_Assembly/Alpha_Build_Instructions/pizza_build.md)**
+**WARNING: Item 7 may have to be substituted by another adapter, depending on your choice of tubing here (items 8 or 14) and your choice of pneumatic system internal diameter. Alternative adapters are listed on main [pizza page](../../ventilator-build/alpha-build-instructions/pizza-build.md).**
 
 [1amzn]:   https://www.amazon.com/dp/B07Z1J8JWH
 [2amzn]:   https://www.amazon.com/gp/product/B00PNEQKC0
@@ -85,7 +85,7 @@ The above files should not be printed with FDM. Instead, a leaktight method like
 [10key]:    https://www.digikey.com/short/z442qt
 [10mr]:     https://www.mouser.com/ProductDetail/511-X-NUCLEO-IHM03A1
 [11st]:    https://www.st.com/en/ecosystems/x-nucleo-ihm02a1.html#sample-and-buy
-[123d]:    https://github.com/RespiraWorks/SystemDesign/blob/grace-pinch-valve-updates/2_Research_&_Development/Project-Pinch_Valve/README.md#exported-step-files
+[123d]:    ###files
 [14mcmc]:  https://www.mcmaster.com/5894K38
 
 ### Tools

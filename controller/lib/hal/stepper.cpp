@@ -509,7 +509,7 @@ StepMtrErr StepMotor::RunAtVelocity(float vel) {
 // causing any motion
 StepMtrErr StepMotor::SoftStop() {
   uint8_t cmd = static_cast<uint8_t>(StepMtrCmd::SOFT_STOP);
-  return SendCmd(&cmd, 0);
+  return SendCmd(&cmd, 1);
 }
 
 // Stop abruptly and hold position
@@ -517,31 +517,31 @@ StepMtrErr StepMotor::SoftStop() {
 // causing any motion
 StepMtrErr StepMotor::HardStop() {
   uint8_t cmd = static_cast<uint8_t>(StepMtrCmd::HARD_STOP);
-  return SendCmd(&cmd, 0);
+  return SendCmd(&cmd, 1);
 }
 
 // Decelerate to zero velocity and disable
 StepMtrErr StepMotor::SoftDisable() {
   uint8_t cmd = static_cast<uint8_t>(StepMtrCmd::SOFT_DISABLE);
-  return SendCmd(&cmd, 0);
+  return SendCmd(&cmd, 1);
 }
 
 // Immediately disable the motor
 StepMtrErr StepMotor::HardDisable() {
   uint8_t cmd = static_cast<uint8_t>(StepMtrCmd::HARD_DISABLE);
-  return SendCmd(&cmd, 0);
+  return SendCmd(&cmd, 1);
 }
 
 // Reset the motor position to zero
 StepMtrErr StepMotor::ClearPosition() {
   uint8_t cmd = static_cast<uint8_t>(StepMtrCmd::RESET_POS);
-  return SendCmd(&cmd, 0);
+  return SendCmd(&cmd, 1);
 }
 
 // Reset the stepper chip
 StepMtrErr StepMotor::Reset() {
   uint8_t cmd = static_cast<uint8_t>(StepMtrCmd::RESET_DEVICE);
-  return SendCmd(&cmd, 0);
+  return SendCmd(&cmd, 1);
 }
 
 StepMtrErr StepMotor::GetStatus(StepperStatus *stat) {

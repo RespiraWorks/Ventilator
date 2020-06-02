@@ -27,6 +27,11 @@ cd "$(dirname "$0")"
 # Controller unit tests on native.
 pio test -e native
 
+# Make sure controller integration tests build for target platform.
+pio run -e int-test-blower
+pio run -e int-test-solenoid
+pio run -e int-test-stepper
+
 # Make sure controller builds for target platform.
 pio run -e stm32
 

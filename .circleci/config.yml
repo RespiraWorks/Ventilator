@@ -35,7 +35,7 @@ jobs:
       - run:
           name: Check for broken links with Liche
           command: |
-            for f in $(find . -type f -name "*.md"); do liche "$f" -v -d . -x "[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)"; done
+            for f in $(find . -type f -name "*.md"); do liche -d . -v "$f"; done
 workflows:
   commit:
     jobs:

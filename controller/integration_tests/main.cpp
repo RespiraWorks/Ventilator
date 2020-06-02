@@ -6,6 +6,8 @@
 #include "solenoid_test.h"
 #elif STEPPER_TEST
 #include "stepper_test.h"
+#elif PINCH_VALVE_TEST
+#include "pinch_valve_test.h"
 #endif
 
 int main() { run_test(); }

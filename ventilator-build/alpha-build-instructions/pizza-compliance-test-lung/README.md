@@ -2,7 +2,7 @@
 
 This is an optional add-on (topping!) to the [pizza build](../pizza-build.md).
 
-![Completed](test-lung-4.jpg)
+![Completed](assets/test-lung-4.jpg)
 
 To test basic function a ventilator check lung or a breathing bag is sufficient, but can really only work up to 10cmH2O.
 To be able to test higher PIP values, you need to reduce the conpliance of the lung so you don't just inflate it like

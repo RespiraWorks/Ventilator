@@ -1,3 +1,5 @@
+// This test ramps the blower up and down repeatedly
+
 #include "hal.h"
 
 // test parameters

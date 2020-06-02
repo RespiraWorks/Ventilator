@@ -31,6 +31,7 @@ pio test -e native
 pio run -e int-test-blower
 pio run -e int-test-solenoid
 pio run -e int-test-stepper
+pio run -e int-test-pinch-valve
 
 # Make sure controller builds for target platform.
 pio run -e stm32

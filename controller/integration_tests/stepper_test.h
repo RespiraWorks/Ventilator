@@ -1,3 +1,5 @@
+// This test rotates a stepper clockwise at a predefined rate and steps
+
 #include "hal.h"
 #include "stepper.h"
 #include <cmath>

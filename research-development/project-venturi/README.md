@@ -12,7 +12,7 @@ The venturi is available in 3/4" or 5/8" ID tubing.
 
 The Alpha version is designed to insert into 5/8" ID or 16mm ID tubing.
 
-The [beta](/../../ventilator-build/beta-build-instructions/README.md) version of the ventilator uses 3/4"ID or 19mm ID tubing throughout. 
+The [beta](../../ventilator-build/beta-build-instructions) version of the ventilator uses 3/4"ID or 19mm ID tubing throughout. 
 
 The pressure sensor we are using, see below, has 2.5 mm or 3/32" barbs. Note that this is not sufficiently close in size to use more common 3mm or 1/8" tubing. This model has printed threads to accept an adapter from #10-32 pipe to 3/32" adapter. Other adapters could be incorporated eventually by changing the interface design.
 

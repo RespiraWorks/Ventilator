@@ -2,21 +2,22 @@
 #include "stepper.h"
 #include <cmath>
 
-StepMotor *mtr_{nullptr};
+// test parameters
+static constexpr float step_degrees{-30.0f};
+static constexpr int64_t delay_ms{1000};
 
 void run_test() {
-  float step_degrees{-30.0f};
-  int64_t delay_ms{1000};
-
   Hal.init();
-  mtr_ = StepMotor::GetStepper(0);
-  mtr_->SetAmpAll(0.1f);
-  mtr_->SetMaxSpeed(100.0f);
-  mtr_->SetAccel(100.0f / 0.1f);
-  mtr_->ClearPosition();
+
+  // Configure stepper
+  StepMotor *stepper_motor = StepMotor::GetStepper(0);
+  stepper_motor->SetAmpAll(0.1f);
+  stepper_motor->SetMaxSpeed(100.0f);
+  stepper_motor->SetAccel(100.0f / 0.1f);
+  stepper_motor->ClearPosition();
 
   while (true) {
-    mtr_->MoveRel(step_degrees);
+    stepper_motor->MoveRel(step_degrees);
     Hal.delay(milliseconds(delay_ms));
 
     Hal.watchdog_handler();

@@ -35,18 +35,7 @@ jobs:
       - run:
           name: Check for broken links with Liche
           command: |
-            liche README.md -v
-            liche DesignRationales.md -v
-            liche System_Requirements.md -v
-            liche -r 1_Ventilator_System_Design -d . -v
-            # TODO:
-            # liche -r 2_Research_&_Development -d . -v
-            # liche -r 3_Quality_Assurance -d . -v
-            # liche -r 4_Prototype_Assembly -d . -v
-            # -r: search for links through directories recursively
-            # -d: set document root directory
-            # -v: verbose output
-            # -t: HTTP time-out limit (seconds)
+            for f in $(find . -type f -name "*.md"); do liche "$f" -v -d . -x "[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)"; done
 workflows:
   commit:
     jobs:

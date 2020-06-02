@@ -85,7 +85,7 @@ The above files should not be printed with FDM. Instead, a leaktight method like
 [10key]:    https://www.digikey.com/short/z442qt
 [10mr]:     https://www.mouser.com/ProductDetail/511-X-NUCLEO-IHM03A1
 [11st]:    https://www.st.com/en/ecosystems/x-nucleo-ihm02a1.html#sample-and-buy
-[123d]:    ###files
+[123d]:    #files
 [14mcmc]:  https://www.mcmaster.com/5894K38
 
 ### Tools

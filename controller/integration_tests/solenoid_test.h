@@ -1,9 +1,10 @@
 #include "hal.h"
 
+// test parameters
+static constexpr int64_t delay_ms{1000};
+
 void run_test() {
   Hal.init();
-
-  int64_t delay_ms{1000};
 
   bool solenoid_state = false;
 

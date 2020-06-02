@@ -15,7 +15,7 @@
 
 ## Components
 
-- Fan
+- [Fan](../../research-development/project-fan)
 - [Proportional pinch valve](/research-development/project-pinch-valve)
 - [Venturi flow sensor](/research-development/project-venturi)
 - Oxygen control valve

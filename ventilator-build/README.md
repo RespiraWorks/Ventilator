@@ -1,4 +1,4 @@
-# Prototype Assembly
+# Ventilator Build
 
 This contains details on the alpha and beta build assemblies, including parts information and assembly instructions. 
 

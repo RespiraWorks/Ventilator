@@ -6,6 +6,12 @@
 #include "network_protocol.pb.h"
 #include "pid.h"
 #include "units.h"
+#include <utility>
+
+struct ControllerState {
+  // True if this is the first breath of a new cycle.
+  bool is_new_breath;
+};
 
 // This class is here to allow integration of our controller into Modelica
 // software and run closed-loop tests in a simulated physical environment
@@ -13,8 +19,8 @@ class Controller {
 public:
   Controller();
 
-  ActuatorsState Run(Time now, const VentParams &params,
-                     const SensorReadings &readings);
+  std::pair<ActuatorsState, ControllerState>
+  Run(Time now, const VentParams &params, const SensorReadings &readings);
 
   Duration GetLoopPeriod();
 

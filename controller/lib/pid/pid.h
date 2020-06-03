@@ -18,67 +18,49 @@ limitations under the License.
 
 #ifndef PID_H
 #define PID_H
-#define LIBRARY_VERSION 1.2.1
 
 #include "units.h"
-
-enum class ProportionalTerm {
-  ON_ERROR,
-  ON_MEASUREMENT,
-};
-
-enum class DifferentialTerm {
-  ON_ERROR,
-  ON_MEASUREMENT,
-};
-
-enum class ControlDirection {
-  DIRECT,
-  REVERSE,
-};
 
 class PID {
 public:
   // Constructs the PID using the given parameters.
-  PID(float kp, float ki, float kd, ProportionalTerm p_term,
-      DifferentialTerm d_term, ControlDirection direction, float output_min,
-      float output_max, Duration sample_period)
-      : kp_(kp), ki_(ki), kd_(kd), p_term_(p_term), d_term_(d_term),
-        direction_(direction), out_min_(output_min), out_max_(output_max),
-        sample_period_(sample_period) {}
+  PID(float kp = 0, float ki = 0, float kd = 0);
+
+  void SetKP(float kp) { kp_ = kp; }
+  void SetKI(float ki) { ki_ = ki; }
+  void SetKD(float kd) { kd_ = kd; }
+
+  void SetSamplePeriod(Duration sample_period) {
+    if (sample_period.seconds() > 0)
+      sample_period_ = sample_period;
+  }
+
+  void SetLimits(float min, float max) {
+    if (max > min) {
+      out_min_ = min;
+      out_max_ = max;
+    }
+  }
 
   // Performs one step of the PID calculation.
   // If this call was ignored due to being within sample time
   // of the previous call, returns the last returned value.
-  float Compute(Time now, float input, float setpoint);
+  float Compute(float input, float setpoint);
 
-  // Call this instead of Compute in case on this step of the control loop
-  // you intend apply different control logic instead of the PID.
-  // "actual_output" contains the value of output you plan to act on.
-  //
-  // This is a variation on the "manual" mode:
-  // http://brettbeauregard.com/blog/2011/04/improving-the-beginner%e2%80%99s-pid-onoff/
-  // http://brettbeauregard.com/blog/2011/04/improving-the-beginner%e2%80%99s-pid-initialization/
-  void Observe(Time now, float input, float setpoint, float actual_output);
+  // Reset the internal state.
+  void Reset(float input = 0);
 
-private:
-  const float kp_; // * (P)roportional Tuning Parameter
-  const float ki_; // * (I)ntegral Tuning Parameter
-  const float kd_; // * (D)erivative Tuning Parameter
+  // private:
+  float kp_{0}; // (P)roportional Tuning Parameter
+  float ki_{0}; // (I)ntegral Tuning Parameter
+  float kd_{0}; // (D)erivative Tuning Parameter
 
-  const ProportionalTerm p_term_;
-  const DifferentialTerm d_term_;
-  const ControlDirection direction_;
+  float out_min_{1.0e-9f};
+  float out_max_{1.0e9f};
 
-  const float out_min_;
-  const float out_max_;
+  Duration sample_period_ = seconds(1);
 
-  const Duration sample_period_;
-
-  bool initialized_ = false;
-  float output_sum_ = 0;
-  float last_input_ = 0;
-  float last_error_ = 0;
-  float last_output_ = 0;
+  float isum_{0};
+  float last_error_{0};
 };
 #endif

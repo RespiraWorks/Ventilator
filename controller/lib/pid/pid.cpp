@@ -19,70 +19,52 @@ limitations under the License.
 #include "pid.h"
 #include "algorithm.h"
 
-float PID::Compute(Time now, float input, float setpoint) {
-  if (!initialized_) {
-    last_input_ = input;
-    last_error_ = setpoint - input;
+PID::PID(float kp, float ki, float kd) {
 
-    // last call time defined as now - SampleTime to enable computation on first
-    // call (user should call Compute() immediately after SetMode(Auto))
-    initialized_ = true;
-  }
+  SetKP(kp);
+  SetKI(ki);
+  SetKP(kd);
 
-  float samplesTimeChangeSec = sample_period_.seconds();
-
-  // Compute all the working error variables
-  float error = setpoint - input;
-  float dInput = 0.0;
-
-  float kp, ki, kd;
-  if (direction_ == ControlDirection::DIRECT) {
-    kp = kp_;
-    ki = ki_;
-    kd = kd_;
-  } else {
-    kp = -kp_;
-    ki = -ki_;
-    kd = -kd_;
-  }
-
-  // Compute dInput only if needed.
-  if (p_term_ == ProportionalTerm::ON_MEASUREMENT ||
-      d_term_ == DifferentialTerm::ON_MEASUREMENT) {
-    dInput = (input - last_input_);
-  }
-  output_sum_ += (ki * error * samplesTimeChangeSec);
-
-  if (p_term_ == ProportionalTerm::ON_MEASUREMENT) {
-    output_sum_ -= kp * dInput;
-  }
-
-  output_sum_ = std::clamp(output_sum_, out_min_, out_max_);
-
-  float res = output_sum_;
-  if (p_term_ == ProportionalTerm::ON_ERROR) {
-    res += kp * error;
-  }
-  if (d_term_ == DifferentialTerm::ON_MEASUREMENT) {
-    res -= kd * dInput / samplesTimeChangeSec;
-  } else {
-    res += kd * (error - last_error_) / samplesTimeChangeSec;
-  }
-
-  // Remember some variables for next time
-  last_input_ = input;
-  last_error_ = error;
-
-  last_output_ = std::clamp(res, out_min_, out_max_);
-  return last_output_;
+  Reset();
 }
 
-void PID::Observe(Time now, float input, float setpoint, float actual_output) {
-  // All the observable variables are updated the same way as in Compute();
-  last_input_ = input;
-  last_error_ = setpoint - input;
-  // Reset output_sum_ to actual_output so that the next Compute()
-  // will adjust it only slightly (as if it had been computed by a current
-  // Compute() call), avoiding a spike.
-  output_sum_ = std::clamp(actual_output, out_min_, out_max_);
+void PID::Reset(float input) {
+  isum_ = 0;
+  last_error_ = 0;
+}
+
+float PID::Compute(float input, float setpoint) {
+
+  // The proportional gain is multiplied by the error
+  float error = setpoint - input;
+  float output = kp_ * error;
+
+  // Find the change in error.  This is used
+  // for the derivative term
+  float dError = error - last_error_;
+  last_error_ = error;
+  output += kd_ * dError / sample_period_.seconds();
+
+  // Update the integral sum.
+  float old_isum = isum_;
+  isum_ += ki_ * error * sample_period_.seconds();
+
+  output += isum_;
+
+  // Clamp the output.  If the output is clamped and
+  // the error is in the same direction as the output,
+  // then limit the integral sum to prevent windup
+  if (output > out_max_) {
+    if (error > 0)
+      isum_ = old_isum;
+    output = out_max_;
+  }
+
+  else if (output < out_min_) {
+    if (error < 0)
+      isum_ = old_isum;
+    output = out_min_;
+  }
+
+  return output;
 }

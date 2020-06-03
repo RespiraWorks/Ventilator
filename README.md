@@ -17,7 +17,7 @@
 * Move the JP5 jumper in the upper-middle-center of the Nucleo board to the E5V position.  This tells the board to expect external power from the PCB.  This will avoid programming problems.  If you wish to remove the Nucleo board and work with it on its own without the PCB, move the jumper back to the U5V position to power it from USB.
 
 ![plug in the nucleo](/ReadmePhotos/IMG_9289.jpg)
-* If you have a X-NUCLEO-IHM03A1 stepper driver accesory, plug that in on top of the Nucleo.  The long gold pins of this module can get bent so make sure they are straight and they all go into their respective sockets successfully.  The stepper driver green connectors go in the direction of the white connectors on the mainboard PCB.  For setting up multiple stepper boards and/or connecting actual steppers, see "Setting Up To Drive Steppers" lower down in this readme.
+* If you have a X-NUCLEO-IHM03A1 or X-NUCLEO-IHM02A1 stepper driver accesory, plug that in on top of the Nucleo.  The long gold pins of this module can get bent so make sure they are straight and they all go into their respective sockets successfully.  The stepper driver green connectors go in the direction of the white connectors on the mainboard PCB.  For setting up multiple stepper boards and/or connecting actual steppers, see "Setting Up To Drive Steppers" lower down in this readme.
 
 ![plug in the stepper driver](/ReadmePhotos/IMG_9307.jpg)
 * If you are using an Rpi 3B+ or 4 with this PCB, plug this into the RPI socket.  Note that if you have the standoffs fitted, do not overtighen them as this can damage the Pi.
@@ -52,14 +52,20 @@ When the PCB was originally designed, the ability to add a stepper driver was es
 
 * This will assume some knowledge and practice with electrical tinkering.  
 * For bakground on stepper motors in general, the always-excellent Great Scott provides a good [intro to stepper motors](https://youtu.be/bkqoKWP4Oy4)
-* For information on the powerSTEP01, the specific driver we are using in Rev 1.0 of the PCB, [there is a video here](https://youtu.be/_Arx5CMr_mk).  Keep in mind that while this driver will stay for the duration of the Beta phase, we may move to something different in the final product, as powerSTEP01 is likely to be **way** overkill for this application, but it does offer a lot of convenient features.
+* For information on the powerSTEP01, the specific driver for X-NUCLEO-IHM03A1 we are using in Rev 1.0 of the PCB, [there is a video here](https://youtu.be/_Arx5CMr_mk).  Keep in mind that while this driver will stay for the duration of the Beta phase, we may move to something different in the final product, as powerSTEP01 is likely to be **way** overkill for this application, but it does offer a lot of convenient features.
 * We will need to solder some wires to power the stepper driver as it takes a power input for the motor that is separate from the logic power it gets from the Nucleo below. We will piggyback off the blower driver power socket.  Solder two 13cm wires of 22awg or thicker to the backside of J10, the blower power connector. The square pin pad is negative. 
+
+* If you are using the X-NUCLEO-IHM02A1, before going forward, you have to change the board configuration to make it compatible with the PCB setup, using your trusty soldering iron:
+    * Move the 0 Ohm resistor from SB34 to SB12 to connect PA5 to the clock
+    * Move the 0 Ohm resistor from SB23 to SB8 to connect PB6 to CS
+![X-NUCLEO-IHM02A1](/ReadmePhotos/X-NUCLEO-IHM02A1)
 
 ![solder power connection](/ReadmePhotos/IMG_9372.jpg)
 * While we could put the wires of the stepper directly into the terminal block on the driver, making a little doodad like this will make it quick and easy to swap out different steppers that use this common 4-pin dupont 0.100" pitch connector.
 
 ![terminal block wires](/ReadmePhotos/IMG_9371.jpg)
-* Insert the wires in to the terminal block and connect them like so.  Screw them down to ensure a secure connection.
+
+* Insert the wires in to the terminal block and connect them like so (note the example below is for the X-NUCLEO-IHM03A1, IHM02A1 is slightly different).  Screw them down to ensure a secure connection.
 
 ![screw down wires](/ReadmePhotos/IMG_9373.jpg)
 * Connect the stepper motor to this connector. 

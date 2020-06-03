@@ -56,7 +56,7 @@ static constexpr float move_amp = 0.2f;
 // small move and ideally we want it to finish before
 // the next loop cycle
 static constexpr float move_vel = 2000.0f;
-static constexpr float move_acc = move_vel / 0.05f;
+static constexpr float move_acc = move_vel / 0.03f;
 
 // This table is used to roughly linearize the pinch valve
 // output.  It was built by adjusting the pinch valve and

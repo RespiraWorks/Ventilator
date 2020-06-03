@@ -100,6 +100,9 @@ void Sensors::Calibrate() {
   }
 }
 
+#include "vars.h"
+static DebugInt32 dcal("recal");
+
 // Reads a sensor, returning its value in kPa.
 //
 // @TODO: Add alarms if sensor value is out of expected range?
@@ -112,6 +115,15 @@ Pressure Sensors::ReadPressureSensor(Sensor s) {
   // our ADC.  Therefore, if we multiply the received voltage by 5/3.3, we get
   // a pressure in kPa.
   static const float TRANSFER_FN_COEFF = 5.f / 3.3f;
+
+  if (dcal.Get()) {
+    dcal.Set(0);
+    for (Sensor s :
+         {PATIENT_PRESSURE, INFLOW_PRESSURE_DIFF, OUTFLOW_PRESSURE_DIFF}) {
+      sensors_zero_vals_[s] = Hal.analogRead(PinFor(s));
+    }
+  }
+
   return kPa(TRANSFER_FN_COEFF *
              (Hal.analogRead(PinFor(s)) - sensors_zero_vals_[s]).volts());
 }

@@ -18,22 +18,27 @@ limitations under the License.
 
 // local data
 static PinchValve blower_pinch(0);
-
-// Called once at system startup to initialize any
-// actuators that need it
-void actuators_init(void) {}
+static PinchValve exhale_pinch(1);
 
 void actuators_execute(const ActuatorsState &desired_state) {
-  // Open/close the solenoid as appropriate.
-  // Our solenoid is "normally open", so low voltage means open and high
-  // voltage means closed.  Hardware spec: https://bit.ly/3aERr69
-  Hal.digitalWrite(BinaryPin::SOLENOID,
-                   desired_state.expire_valve_state == ValveState::OPEN
-                       ? VoltageLevel::LOW
-                       : VoltageLevel::HIGH);
+
   // set blower PWM
   Hal.analogWrite(PwmPin::BLOWER, desired_state.fan_power);
 
   // Set the blower pinch valve position
-  blower_pinch.SetOutput(desired_state.fan_valve);
+  if (desired_state.blower_valve_enabled)
+    blower_pinch.SetOutput(desired_state.fan_valve);
+  else
+    blower_pinch.Disable();
+
+  // Set the exhale pinch valve position
+  if (desired_state.exhale_valve_enabled)
+    exhale_pinch.SetOutput(desired_state.exhale_valve);
+  else
+    exhale_pinch.Disable();
+}
+
+// Return true if all actuators are enabled and ready for action
+bool AreActuatorsReady() {
+  return blower_pinch.IsReady() && exhale_pinch.IsReady();
 }

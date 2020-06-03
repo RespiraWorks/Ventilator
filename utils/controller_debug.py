@@ -646,7 +646,7 @@ def TraceDownload():
 
     ct = GetVar("trace_samples", raw=True) * len(traceVars)
 
-    print("Download trace data...")
+    # print("Download trace data...")
     data = []
     while len(data) < 4 * ct:
         dat = SendCmd(OP_TRACE, [SUBCMD_TRACE_GETDATA])

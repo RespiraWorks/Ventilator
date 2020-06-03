@@ -66,12 +66,29 @@ public:
   VarType GetType() const { return type_; }
   uint16_t GetId() const { return id_; }
 
+  bool HasBeenSet() {
+    if (!written_)
+      return false;
+    written_ = false;
+    return true;
+  }
+
+  bool HasBeenRead() {
+    if (!read_)
+      return false;
+    read_ = false;
+    return true;
+  }
+
 private:
+  friend class VarCmd;
   const VarType type_;
   const char *const name_;
   const char *const help_;
   const char *const fmt_;
   const uint16_t id_;
+  bool written_{false};
+  bool read_{false};
 
   // List of all the variables in the system.
   // Increase size as necessary

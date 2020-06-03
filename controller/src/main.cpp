@@ -13,38 +13,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-/*
-  Basic test and demo software for COVID-19/ARDS Ventilator
-
-  Objective is to make a minimum-viable ARDS ventilator that can be deployed
-  or constructed on-site in countries underserved by commecial global supply
-  chains during the COVID-19 outbreak.
-
-  Currently consists of a (1) CPAP-style blower with speed control.
-
-  (2)Feedback from a differential pressure sensor with one side
-  measuring delivered pressure to patient, other side ambient.
-
-
-  created 16 Mar 2020
-  Edwin Chiu
-  Frost Methane Labs/Fix More Lungs
-  Based on example code by Tom Igoe and Brett Beauregard
-
-  Project Description: http://bit.ly/2wYqj3X
-  git: https://github.com/RespiraWorks/VentilatorSoftware
-  http://respira.works
-
-  Outputs can be plotted with Cypress PSoC Programmer (Bridge Control Panel
-  Tool) Download and install, connect serial Tools > Protocol Configuration >
-  serial 115200:8n1 > hit OK In editor, use command RX8 [h=43] @1Key1 @0Key1
-  @1Key2 @0Key2 Chart > Variable Settings Tick both Key1 and Key2, configure as
-  int, and choose colors > hit OK Press >|< icon to connect to com port if
-  necessary Click Repeat button, go to Chart tab both traces should now be
-  plotting
-
-*/
-
 #include "actuators.h"
 #include "comms.h"
 #include "controller.h"
@@ -107,9 +75,13 @@ static void DEV_MODE_comms_handler(const ControllerStatus &controller_status,
 }
 #endif
 
-static Controller controller;
 static ControllerStatus controller_status;
 static Sensors sensors;
+
+static VentModeNone vmode_none;
+static VentModePresCtrl vmode_pressure_ctrl;
+
+Duration Controller::GetLoopPeriod() { return milliseconds(1); }
 
 // This function handles all the high priority tasks which need to be called
 // periodically.  The HAL calls this function from a timer interrupt.
@@ -117,24 +89,39 @@ static Sensors sensors;
 // NOTE - it's important that anything being called from this function executes
 // quickly.  No busy waiting here.
 static void high_priority_task(void *arg) {
+  static VentMode prevMode = VentMode::VentMode_OFF;
 
   // Read the sensors
   controller_status.sensor_readings = sensors.GetSensorReadings();
 
-  // Run our PID loop
-  ActuatorsState actuators_state =
-      controller.Run(Hal.now(), controller_status.active_params,
-                     controller_status.sensor_readings);
+  Controller *controller = nullptr;
 
-  // TODO update pb library to replace fan_power in ControllerStatus with
-  // actuators_state, and remove fan_setpoint_cm_h2o from ControllerStatus
+  switch (controller_status.active_params.mode) {
+  case VentMode::VentMode_OFF:
+    controller = &vmode_none;
+    break;
+
+  case VentMode::VentMode_PRESSURE_CONTROL:
+    controller = &vmode_pressure_ctrl;
+    break;
+  }
+
+  // If we switched modes, give the controller for the new
+  // mode a chance to initialize itself.
+  if (controller_status.active_params.mode != prevMode) {
+    prevMode = controller_status.active_params.mode;
+    controller->Enter();
+  }
+
+  // Run the controller state machine
+  ActuatorsState actuators_state = controller->Run(
+      controller_status.active_params, controller_status.sensor_readings);
 
   // Update the outputs from the PID
   actuators_execute(actuators_state);
 
   // Update some status info
   controller_status.fan_power = actuators_state.fan_power;
-  controller_status.fan_setpoint_cm_h2o = actuators_state.fan_setpoint_cm_h2o;
 
   // Sample any trace variables that are enabled
   trace.MaybeSample();
@@ -148,8 +135,11 @@ static void high_priority_task(void *arg) {
 // should go here.
 static void background_loop() {
 
-  // Initialize the actuators that require it
-  actuators_init();
+  // My initial mode is the disabled state.
+  // Normally modes are given a chance to initialize themselves on a mode
+  // switch, but since there won't be a switch into this mode we call its
+  // initializer at startup.
+  vmode_none.Enter();
 
   // Calibrate the sensors.
   // This needs to be done before the sensors are used.
@@ -164,7 +154,7 @@ static void background_loop() {
 
   // After all initialization is done, ask the HAL
   // to start our high priority thread.
-  Hal.startLoopTimer(controller.GetLoopPeriod(), high_priority_task, 0);
+  Hal.startLoopTimer(Controller::GetLoopPeriod(), high_priority_task, 0);
 
   while (true) {
     controller_status.uptime_ms = Hal.now().millisSinceStartup();

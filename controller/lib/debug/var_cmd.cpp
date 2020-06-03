@@ -123,6 +123,7 @@ DbgErrCode VarCmd::GetVar(CmdContext *context) {
     return DbgErrCode::NO_MEMORY;
 
   u32_to_u8(var->GetValue(), context->resp);
+  var->read_ = true;
   context->resp_len = 4;
   return DbgErrCode::OK;
 }
@@ -144,6 +145,7 @@ DbgErrCode VarCmd::SetVar(CmdContext *context) {
     return DbgErrCode::MISSING_DATA;
 
   var->SetValue(u8_to_u32(context->req + 3));
+  var->written_ = true;
   context->resp_len = 0;
   return DbgErrCode::OK;
 }

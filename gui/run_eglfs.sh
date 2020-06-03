@@ -14,4 +14,4 @@ DISPLAY=:0
 
 # Run GUI APP forcing to use eglfs with a particular configuration
 # defined in kms.json
-QT_QPA_EGLFS_KMS_CONFIG=kms.json QT_QPA_EGLFS_INTEGRATION=eglfs_kms build/ProjectVentilatorGUI -platform eglfs
+QT_QPA_EGLFS_KMS_CONFIG=kms.json QT_QPA_EGLFS_INTEGRATION=eglfs_kms build/app/ProjectVentilatorGUI -platform eglfs

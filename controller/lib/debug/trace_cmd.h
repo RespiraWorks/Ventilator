@@ -19,10 +19,11 @@ limitations under the License.
 
 #include "debug.h"
 
+// The trace command is used to download data from the trace buffer.
 class TraceCmd : public DebugCmd {
 public:
-  TraceCmd();
-  // The trace command is used to download data from the trace buffer.
+  TraceCmd() : DebugCmd(DbgCmdCode::TRACE) {}
+
   DbgErrCode HandleCmd(CmdContext *context) override;
   DbgErrCode ReadTraceBuff(CmdContext *context);
 };

@@ -17,6 +17,21 @@ limitations under the License.
 #define PINCH_VALVE_H
 
 #include "stepper.h"
+#include "units.h"
+
+enum class PinchValveHomeState {
+  DISABLED,
+  LOWER_AMP,
+  SET_HOME_SPEED,
+  MOVE_TO_STOP,
+  WAIT_MOVE_STOP,
+  SET_NORMAL_AMP,
+  MOVE_OFFSET,
+  WAIT_MOVE_OFFSET,
+  ZERO_POS,
+  SET_NORMAL_SPEED,
+  HOMED
+};
 
 // The PinchValve represents a single stepper driven pinch
 // value in the system.
@@ -52,11 +67,15 @@ public:
   // Values outside that range will be clipped.
   void SetOutput(float value);
 
+  // Disable the valve.  It will need to be homed
+  // before it can be used
+  void Disable();
+
 private:
-  StepMtrErr WaitForMove();
+  Time move_start_time_;
 
   StepMotor *mtr_{nullptr};
-  bool homed_{false};
+  PinchValveHomeState home_state_{PinchValveHomeState::DISABLED};
 };
 
 #endif

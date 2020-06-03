@@ -102,7 +102,7 @@ static void DEV_MODE_comms_handler(const ControllerStatus &controller_status,
   debug.Print("%.2f, ", r.inflow_pressure_diff_cm_h2o);
   debug.Print("%.2f, ", r.outflow_pressure_diff_cm_h2o);
   debug.Print("%.2f, ", r.flow_ml_per_min / 1000.0f);
-  // debugPrint("%.2f, ", r.volume_ml / 10.f);
+  debug.Print("%.2f, ", r.volume_ml / 10.f);
   debug.Print("\n");
 }
 #endif
@@ -122,9 +122,13 @@ static void high_priority_task(void *arg) {
   controller_status.sensor_readings = sensors.GetSensorReadings();
 
   // Run our PID loop
-  ActuatorsState actuators_state =
+  auto [actuators_state, controller_state] =
       controller.Run(Hal.now(), controller_status.active_params,
                      controller_status.sensor_readings);
+
+  if (controller_state.is_new_breath) {
+    sensors.NoteNewBreath();
+  }
 
   // TODO update pb library to replace fan_power in ControllerStatus with
   // actuators_state, and remove fan_setpoint_cm_h2o from ControllerStatus

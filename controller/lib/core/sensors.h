@@ -24,7 +24,9 @@ Arduino Nano and the MPXV5004GP and MPXV7002DP pressure sensors.
 
 #include "hal.h"
 #include "network_protocol.pb.h"
+#include "pid.h"
 #include "units.h"
+#include <optional>
 
 class TVIntegrator {
 public:
@@ -47,6 +49,22 @@ public:
   // be called on system startup before any other sensor functions
   // are called.
   void Calibrate();
+
+  // Called once for every breath cycle.  Sensors assume that tidal volume
+  // should be 0 at the beginning of a breath and will calibrate to that
+  // over time.
+  //
+  // TODO: This will not work as-is in pressure-assist mode.  TV is 0 at the
+  // beginning of inspiratory effort by assumption, but by the time the
+  // ventilator notices that an effort has occurred, TV is no longer 0 --
+  // indeed, the way the ventilator notices that effort has occurred is by
+  // detecting a flow over time, i.e. a change in volume!
+  //
+  // One way to fix this for pressure-assist mode is for us to keep track of
+  // the measured TV at the start of the detected inspiratory effort.  Then we
+  // can tell the Sensors module, TV was X mL Y milliseconds ago, but it should
+  // have been 0.  That should be enough for us to calibrate to.
+  void NoteNewBreath();
 
   // get the sensor readings (patient pressure, volumetric flow and tidal
   // volume) from the sensors
@@ -86,8 +104,35 @@ private:
   // Calibrated average sensor values in a zero state.
   Voltage sensors_zero_vals_[NUM_SENSORS];
 
-  // State related to integrating volume from flow.
+  // Our flow sensors are subject to roughly two kinds of error:
+  //
+  //  - high-frequency error (i.e. "noise"), which we handle by reading the ADC
+  //    many times ("oversampling") in HAL, and
+  //
+  //  - low-frequency error, i.e. zero-point drift, meaning that the flow we
+  //    observe is equal to true flow plus an error, and that error changes
+  //    slowly relative to how quickly we can read the sensor.
+  //
+  // We use a PID controller invoked at each breath boundary to estimate the
+  // zero-point drift.  If the patient is breathing normally, tidal volume
+  // should be 0 between breaths, so the PID always has a setpoint of 0.  The
+  // job of the PID is to output a flow offset so that the measured flow plus
+  // the offset takes tidal volume down to 0 at the next breath.
+  //
+  //  - PID input: Tidal volume in ml right between two breaths.
+  //  - PID setpoint: Desired volume between breaths, i.e. 0 ml.
+  //  - PID output: A flow in ml/sec that should be added to every measured
+  //    flow.
+  //
+  // We integrate flow to calculate tidal volume.  For debugging purposes, we
+  // keep track of volume both with and without the error correction.
+  //
+  // TODO: When the ventilator blower is disabled and re-enabled, presumably we
+  // should clear some or all of these values!
+  PID flow_error_pid_;
+  VolumetricFlow flow_correction_ = ml_per_sec(0);
   TVIntegrator tv_integrator_;
+  TVIntegrator uncorrected_tv_integrator_;
 };
 
 #endif // SENSORS_H

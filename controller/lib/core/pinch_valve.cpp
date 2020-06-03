@@ -17,6 +17,7 @@ limitations under the License.
 #include "hal.h"
 #include "stepper.h"
 #include <algorithm>
+#include <array>
 
 // These constants define various properties of the pinch
 // value and how we control it.  As the mechanical design
@@ -60,12 +61,14 @@ static constexpr float move_acc = move_vel / 0.05f;
 // This table is used to roughly linearize the pinch valve
 // output.  It was built by adjusting the pinch valve and
 // monitoring the flow through the venturi tube.
-// Each of the 11 entries corresponds to a 10% step in flow
-// from 0% to 100%, the value for each entry gives the pinch
-// valve opening to achieve that % of flow.
-static constexpr float flow_table[11] = {0.0f,   0.125f, 0.161f, 0.197f,
-                                         0.232f, 0.271f, 0.310f, 0.358f,
-                                         0.425f, 0.542f, 0.9f};
+// The entries should give pinch valve settings for a list
+// of equally spaced flow rates.  The first entry should be
+// the setting for 0 flow rate (normally 0) and the last entry
+// should be the setting for 100% flow rate.  The minimum
+// length of the table is 2 entries.
+static constexpr float flow_table[] = {0.0f,   0.125f, 0.161f, 0.197f,
+                                       0.232f, 0.271f, 0.310f, 0.358f,
+                                       0.425f, 0.542f, 0.9f};
 
 PinchValve::PinchValve(int motor_index) {
 
@@ -190,14 +193,20 @@ void PinchValve::SetOutput(float value) {
     return;
   }
 
-  value = std::clamp(value, 0.0f, 0.99f);
+  value = std::clamp(value, 0.0f, 1.0f);
+
+  // Number of intervals defined by the table.
+  float tbl_len = std::size(flow_table) - 1;
 
   // Convert the input value based on a table
   // used to linearize the pinch valve output
-  int n = static_cast<int>(value * 10.0f);
-  float f = value * 10.0f - static_cast<float>(n);
+  int n = static_cast<int>(value * tbl_len);
+  float f = value * tbl_len - static_cast<float>(n);
 
-  value = flow_table[n] + f * (flow_table[n + 1] - flow_table[n]);
+  if (n == static_cast<int>(tbl_len))
+    value = flow_table[n];
+  else
+    value = flow_table[n] + f * (flow_table[n + 1] - flow_table[n]);
 
   // Convert the value to an absolute position in deg
   // The motor's zero position is at the home offset

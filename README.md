@@ -58,7 +58,7 @@ When the PCB was originally designed, the ability to add a stepper driver was es
 * If you are using the X-NUCLEO-IHM02A1, before going forward, you have to change the board configuration to make it compatible with the PCB setup, using your trusty soldering iron:
     * Move the 0 Ohm resistor from SB34 to SB12 to connect PA5 to the clock
     * Move the 0 Ohm resistor from SB23 to SB8 to connect PB6 to CS
-![X-NUCLEO-IHM02A1](/ReadmePhotos/X-NUCLEO-IHM02A1)
+![X-NUCLEO-IHM02A1](/ReadmePhotos/x-nucleo-ihm02a1.jpeg)
 
 ![solder power connection](/ReadmePhotos/IMG_9372.jpg)
 * While we could put the wires of the stepper directly into the terminal block on the driver, making a little doodad like this will make it quick and easy to swap out different steppers that use this common 4-pin dupont 0.100" pitch connector.

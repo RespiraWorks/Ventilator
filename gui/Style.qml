@@ -18,20 +18,25 @@ import QtQuick 2.11
 */
 QtObject {
 
-    property var theme: lightTheme
+    property var theme: darkTheme
 
     property var lightTheme: QtObject {
-
-        property QtObject color: QtObject {
-            property color primary: "#466eeb"
-        }
-
+        // TODO get all values
     }
 
     property var darkTheme: QtObject {
 
         property QtObject color: QtObject {
-            property color primary: "#eeb466"
+            property color primary: "#466eeb"
+            property color windowBackground: "#1A1F32"
+            property color modalBackground: "black"
+            property color modalHeaderColor: "#1056A1"
+            property color modalButton: "#132D4D"
+            property color modalButtonHighlighted: "#498CCD"
+            property color headerButtonColor: Qt.rgba(163, 165, 172, 1)
+
+            property color radioButtonColor: "white"
+            property color radioButtonHighlightedColor: "red"
         }
 
     }

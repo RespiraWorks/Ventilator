@@ -77,7 +77,8 @@ When the PCB was originally designed, the ability to add a stepper driver was es
 * Set the correct chip select for the powerSTEP01 (see [Hardware ICD](https://docs.google.com/spreadsheets/d/1JOSQKxkQxXJ6MCMDI9PwUQ6kiuGdujR4D6EJN9u2LWg/edit?usp=sharing) for pin assignments)
 * Send SPI commands to the powerSTEP01 from the NUCLEO to setup the motor settings. [sample code: pcbreathe-bringup](https://github.com/inceptionev/pcbreathe-bringup)
 * Send SPI commands to the powerSTEP01 to command motions. [sample code: pcbreathe-bringup](https://github.com/inceptionev/pcbreathe-bringup)
-* Once you get one stepper motor working, and you are ready to use multiple stepper drivers, consult the [X-NUCLEO-IHM03A1 user manual](https://www.st.com/resource/en/user_manual/dm00206777-getting-started-with-the-high-power-stepper-motor-driver-expansion-board-based-on-powerstep01-for-stm32-nucleo-stmicroelectronics.pdf) for information about how to stack the boards.  A brief overview of the process follows, but read the manual first.
+* Once you get one stepper motor working, and you are ready to use multiple stepper drivers, for X-NUCLEO-IHM02A1, you only have to connect the second stepper motor, but for the X-NUCLEO-IHM02A1, there are some more steps:
+    * Consult the [X-NUCLEO-IHM03A1 user manual](https://www.st.com/resource/en/user_manual/dm00206777-getting-started-with-the-high-power-stepper-motor-driver-expansion-board-based-on-powerstep01-for-stm32-nucleo-stmicroelectronics.pdf) for information about how to stack the boards.  A brief overview of the process follows, but read the manual first.
     * Make the same motor connector doodad for the second board and install it.  Also prepare two short red and black power wires to piggy-back the motor power input.
     * You will need to move some resistors.  The manual link above will list which ones.
     

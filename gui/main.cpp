@@ -5,17 +5,19 @@
 #include "periodic_closure.h"
 #include "respira_connected_device.h"
 
+#include <QApplication>
 #include <QCommandLineParser>
+#include <QQmlApplicationEngine>
 #include <QtCore/QDir>
 #include <QtQml/QQmlContext>
 #include <QtQml/QQmlEngine>
 #include <QtQuick/QQuickView>
-#include <QtWidgets/QApplication>
 #include <cmath>
 #include <iostream>
 #include <memory>
 
 int main(int argc, char *argv[]) {
+
   QApplication app(argc, argv);
 
   app.setWindowIcon(QIcon(":/images/Logo.png"));
@@ -23,16 +25,16 @@ int main(int argc, char *argv[]) {
   QCommandLineParser parser;
   parser.setApplicationDescription("Ventilator GUI application");
   parser.addHelpOption();
+
   // Support this option so we can verify that the GUI can start up at all,
   // e.g. load all resources and so on.
   QCommandLineOption startupOnlyOption(
       QStringList() << "startup-only",
-      QApplication::translate("main",
-                              "Start up and exit successfully (for testing)"));
+      QObject::tr("main", "Start up and exit successfully (for testing)"));
+
   QCommandLineOption serialPortOption(
       QStringList() << "serial-port",
-      QApplication::translate(
-          "main", "Serial port filename. Uses fake data if not set."));
+      QObject::tr("main", "Serial port filename. Uses fake data if not set."));
   serialPortOption.setValueName("port");
 
   parser.addOption(startupOnlyOption);
@@ -57,14 +59,14 @@ int main(int argc, char *argv[]) {
           // For now, completely ignore gui_status.
           (void)gui_status;
           /* std::cout << "uptime_ms = " << gui_status.uptime_ms << ", "
-            << "desired_params = {"
-            << "mode = " << gui_status.desired_params.mode << ", "
-            << "peep = " << gui_status.desired_params.peep_cm_h2o << ", "
-            << "rr = " << gui_status.desired_params.breaths_per_min << ", "
-            << "pip = " << gui_status.desired_params.pip_cm_h2o << ", "
-            << "ier = " <<
-            gui_status.desired_params.inspiratory_expiratory_ratio
-            << "}" << std::endl; */
+          << "desired_params = {"
+          << "mode = " << gui_status.desired_params.mode << ", "
+          << "peep = " << gui_status.desired_params.peep_cm_h2o << ", "
+          << "rr = " << gui_status.desired_params.breaths_per_min << ", "
+          << "pip = " << gui_status.desired_params.pip_cm_h2o << ", "
+          << "ier = " <<
+          gui_status.desired_params.inspiratory_expiratory_ratio
+          << "}" << std::endl; */
         },
         [&](ControllerStatus *controller_status) {
           // Fill the status with fake data.
@@ -90,16 +92,9 @@ int main(int argc, char *argv[]) {
   });
   communicate.Start();
 
-  QQuickView mainView;
-  mainView.setTitle(QStringLiteral("Ventilator"));
-
-  mainView.rootContext()->setContextProperty("guiState", &state_container);
-
-  mainView.setSource(QUrl("qrc:/main.qml"));
-  mainView.setResizeMode(QQuickView::SizeRootObjectToView);
-  mainView.setColor(QColor("#000000"));
-
-  mainView.showFullScreen();
+  QQmlApplicationEngine engine;
+  engine.rootContext()->setContextProperty("guiState", &state_container);
+  engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
 
   if (parser.isSet(startupOnlyOption)) {
     return EXIT_SUCCESS;

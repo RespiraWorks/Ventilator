@@ -100,13 +100,15 @@ fi
 
 if [ "$1" == "--test" ] ; then
   create_clean_directory build_autotests
-  cd build_autotests && qmake ../autotests && make -j && cd -
+  cd build_autotests
+  qmake ../autotests
+  make -j
 
   if [ "$PLATFORM" == "Darwin" ]; then
-    ./build_autotests/autotests.app/Contents/MacOS/autotests
+    make check
   fi
   if [ "$PLATFORM" == "Linux" ]; then
     Xvfb :1 &
-    DISPLAY=:1 ./build_autotests/autotests
+    DISPLAY=:1 make check
   fi
 fi

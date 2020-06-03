@@ -21,7 +21,7 @@ static PinchValve blower_pinch(0);
 
 // Called once at system startup to initialize any
 // actuators that need it
-void actuators_init(void) { blower_pinch.Home(); }
+void actuators_init(void) {}
 
 void actuators_execute(const ActuatorsState &desired_state) {
   // Open/close the solenoid as appropriate.

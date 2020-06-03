@@ -34,11 +34,15 @@ Controller::Controller()
 
 Duration Controller::GetLoopPeriod() { return PID_SAMPLE_PERIOD; }
 
-ActuatorsState Controller::Run(Time now, const VentParams &params,
-                               const SensorReadings &readings) {
+std::pair<ActuatorsState, ControllerState>
+Controller::Run(Time now, const VentParams &params,
+                const SensorReadings &readings) {
   BlowerSystemState desired_state = fsm_.DesiredState(now, params);
 
   ActuatorsState actuator_state;
+  ControllerState controller_state = {
+      .is_new_breath = desired_state.is_new_breath,
+  };
 
   pid_.SetKP(dbg_kp.Get());
   pid_.SetKI(dbg_ki.Get());
@@ -86,5 +90,5 @@ ActuatorsState Controller::Run(Time now, const VentParams &params,
     break;
   }
 
-  return actuator_state;
+  return {actuator_state, controller_state};
 }

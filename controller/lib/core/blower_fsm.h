@@ -70,6 +70,12 @@ struct BlowerSystemState {
 
   Pressure setpoint_pressure;
   ValveState expire_valve_state;
+
+  // Is this the first BlowerSystemState returned for a brand-new breath cycle?
+  //
+  // This is defaulted to false here and is handled by BlowerFsm, rather than
+  // the individual FSM classes (OffFsm, PressureControlFsm, etc).
+  bool is_new_breath = false;
 };
 
 // A "breath finite state machine" where the blower is always off.
@@ -162,8 +168,16 @@ public:
   BlowerSystemState DesiredState(Time now, const VentParams &params) {
     // Immediately turn off the ventilator if params.mode == OFF; otherwise,
     // wait until the end of a cycle before implementing the mode change.
-    if (params.mode == VentMode_OFF ||
+    bool is_new_breath = false;
+    if ((params.mode == VentMode_OFF &&
+         !std::holds_alternative<OffFsm>(fsm_)) ||
         std::visit([&](auto &fsm) { return fsm.finished(now); }, fsm_)) {
+      // Set is_new_breath to true even when the ventilator transitions from on
+      // to off.  It's a little arbitrary, but for the most part, is_new_breath
+      // is used to mark breath boundaries rather than simply signal the
+      // beginning of a breath, and it would be weird if the last breath before
+      // turning off the ventilator appeared to continue indefinitely.
+      is_new_breath = true;
       switch (params.mode) {
       case VentMode_OFF:
         fsm_.emplace<OffFsm>(now, params);
@@ -174,7 +188,10 @@ public:
       }
     }
 
-    return std::visit([&](auto &fsm) { return fsm.desired_state(now); }, fsm_);
+    BlowerSystemState s =
+        std::visit([&](auto &fsm) { return fsm.desired_state(now); }, fsm_);
+    s.is_new_breath = is_new_breath;
+    return s;
   }
 
 private:

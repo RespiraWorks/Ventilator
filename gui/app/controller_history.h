@@ -1,8 +1,8 @@
 #ifndef CONTROLLER_HISTORY_H
 #define CONTROLLER_HISTORY_H
 
-#include "../common/generated_libs/network_protocol/network_protocol.pb.h"
 #include "chrono.h"
+#include "network_protocol.pb.h"
 
 #include <deque>
 #include <tuple>

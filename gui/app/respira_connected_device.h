@@ -1,9 +1,9 @@
-#include "../common/generated_libs/network_protocol/network_protocol.pb.h"
-#include "../common/third_party/nanopb/pb_common.h"
-#include "../common/third_party/nanopb/pb_decode.h"
-#include "../common/third_party/nanopb/pb_encode.h"
 #include "chrono.h"
 #include "connected_device.h"
+#include "network_protocol.pb.h"
+#include "pb_common.h"
+#include "pb_decode.h"
+#include "pb_encode.h"
 #include <QSerialPort>
 #include <QtDebug>
 #include <memory>

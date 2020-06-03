@@ -55,4 +55,3 @@ hdmi_cvt=1024 600 60 3 0 0 0
 hdmi_group=2
 hdmi_mode=87
 ```
-

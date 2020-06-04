@@ -111,9 +111,21 @@ class CmdLine(cmd.Cmd):
         self.GetVarInfo()
 
     def do_debug(self, line):
-        """Toggles display of low level serial data on/off"""
+        """Sets display of low level serial data on/off.
+
+        Usage:
+
+          debug on
+          debug off
+        """
         global showSerial
-        showSerial = not showSerial
+        line = line.strip().lower()
+        if line == "on":
+            showSerial = True
+        elif line == "off":
+            showSerial = False
+        else:
+            print("Unknown command; pass 'on' or 'off'.")
 
     def help_run(self):
         print(
@@ -875,15 +887,13 @@ def GetResp(DbgPrint):
 cmdLock = threading.Lock()
 
 
-def SendCmd(op, data=[], timeout=None):
-    global showSerial, ser, cmdLock
-
+def DbgPrint(*args, **kwargs):
     if showSerial:
-        DbgPrint = print
-    else:
+        print(*args, **kwargs)
 
-        def DbgPrint(S="", end="\n"):
-            pass
+
+def SendCmd(op, data=[], timeout=None):
+    global ser, cmdLock
 
     buff = [op] + data
 

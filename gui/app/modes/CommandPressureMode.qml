@@ -1,7 +1,7 @@
 import QtQuick 2.11
 import QtQuick.Layouts 1.3
 import QtQuick.Controls 2.4
-
+import Respira 1.0
 import "../controls"
 import ".."
 
@@ -13,11 +13,7 @@ Mode {
         running: true
         repeat: true
         onTriggered: {
-            // TODO: guiState as a contextObject is not great
-            // as you lose autocomplete and you might infect
-            // a lot of files. Context objects will also be
-            // removed on Qt6. So better use singleton instead
-            guiState.update(
+            GuiStateContainer.update(
                         pressureView.series(0),
                         flowView.series(0),
                         tidalVolumeView.series(0));
@@ -44,33 +40,33 @@ Mode {
             rowSpacing: 0
 
             ParameterDisplay {
-                parameterName: qsTr("PiP")
+                parameterName: qsTr("PIP")
                 parameterUnit: qsTr("cmH<sub>2</sub>O")
-                parameterValue: guiState.pip.toString()
+                parameterValue: GuiStateContainer.pip.toString()
             }
 
             ParameterDisplay {
                 parameterName: qsTr("PEEP")
                 parameterUnit: qsTr("cmH<sub>2</sub>O")
-                parameterValue: guiState.peep.toString()
+                parameterValue: GuiStateContainer.peep.toString()
             }
 
             ParameterDisplay {
                 parameterName: qsTr("Flow")
-                parameterUnit: qsTr("l/min")
-                parameterValue: guiState.flowReadout.toFixed(0);
+                parameterUnit: qsTr("L/min")
+                parameterValue: GuiStateContainer.flowReadout.toFixed(0);
             }
 
             ParameterDisplay {
                 parameterName: qsTr("RR")
                 parameterUnit: qsTr("b/min")
-                parameterValue: guiState.rr.toString()
+                parameterValue: GuiStateContainer.rr.toString()
             }
 
             ParameterDisplay {
                 parameterName: qsTr("I:E")
                 parameterUnit: qsTr("ratio")
-                parameterValue: guiState.ier.toFixed(1).toString()
+                parameterValue: GuiStateContainer.ier.toFixed(1).toString()
             }
 
             ParameterDisplay {
@@ -79,8 +75,8 @@ Mode {
 
             ParameterDisplay {
                 parameterName: qsTr("TV")
-                parameterUnit: qsTr("ml")
-                parameterValue: guiState.tvReadout.toFixed(0);
+                parameterUnit: qsTr("mL")
+                parameterValue: GuiStateContainer.tvReadout.toFixed(0);
             }
 
             ParameterDisplay {
@@ -176,33 +172,52 @@ Mode {
         Layout.alignment: Qt.AlignHCenter
 
         ParameterButton {
-            parameterName: qsTr("Pip")
+            parameterName: qsTr("PIP")
             parameterUnit: qsTr("cmH<sub>2</sub>0")
-            parameterValue: guiState.pip.toString()
+            parameterValue: GuiStateContainer.pip
+            onValueConfirmed: GuiStateContainer.pip = value
         }
 
         ParameterButton {
             parameterName: qsTr("Peep")
             parameterUnit: qsTr("cmH<sub>2</sub>0")
-            parameterValue: guiState.peep.toString()
+            parameterMaxValue: 20
+            parameterMinValue: 0
+            parameterStepSize: 2
+            parameterValue: GuiStateContainer.peep
+            onValueConfirmed: GuiStateContainer.peep = value
         }
 
         ParameterButton {
             parameterName: qsTr("FiO<sub>2</sub>")
             parameterUnit: "%"
-            parameterValue: guiState.pip.toString()
+            parameterMaxValue: 100
+            parameterMinValue: 21
+            parameterStepSize: 0.5
+            parameterValue: 10
+            onValueConfirmed: parameterValue = value
         }
 
         ParameterButton {
             parameterName: qsTr("I-time")
             parameterUnit: "sec"
-            parameterValue: Number(guiState.ier).toFixed(1)
+            parameterValue: Number(GuiStateContainer.ier).toFixed(1)
+            parameterMaxValue: 1
+            parameterMinValue: 0
+            parameterStepSize: 0.05
+            parameterDisplayFormatter: function (value) {
+                return Number(value).toFixed(1)
+            }
         }
 
         ParameterButton {
             parameterName: qsTr("RR")
             parameterUnit: "b/min"
-            parameterValue: guiState.rr.toString()
+            parameterMaxValue: 30
+            parameterMinValue: 5
+            parameterStepSize: 1
+            parameterValue: GuiStateContainer.rr
+            onValueConfirmed: GuiStateContainer.rr = value
         }
     }
 }

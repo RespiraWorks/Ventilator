@@ -364,55 +364,56 @@ A couple optional parameters can be passed as arguments to this command:
 
     def do_trace(self, line):
         """
-       This command is used to access the trace buffer on the controller.
-       A sub-command must be passed as an option:
+This command is used to access the trace buffer on the controller.
+A sub-command must be passed as an option:
 
-       trace flush
-         Stops the trace if one was on-going and flushes the trace buffer
+trace flush
+  Stops the trace if one was on-going and flushes the trace buffer
 
-       trace start
-         Starts the trace collecting data.
+trace start
+  Starts the trace collecting data.
 
-       trace graph
-         This will download the data and display it graphically
-         The trace data will also be stored to the file last_graph.dat
-         which will be overwritten if it exists
+trace graph
+  This will download the data and display it graphically
+  The trace data will also be stored to the file last_graph.dat
+  which will be overwritten if it exists
 
-       trace download [--seperator=<str> ] <filename>
-         This will download the data and save it to a file with the given
-         name.  If no file name is given, then trace.dat will be used
-         If the --seperator=<str> option is given, then the specified
-         string will seperate each column of data.  The default seperator
-         is a few spaces.
+trace download [--seperator=<str> ] <filename>
+  This will download the data and save it to a file with the given
+  name.  If no file name is given, then trace.dat will be used
+  If the --seperator=<str> option is given, then the specified
+  string will seperate each column of data.  The default seperator
+  is a few spaces.
 
-       The trace feature allows variables to be sampled in real time and saved
-       to a large internal memory buffer in the device.  This command can then
-       be used to download the captured data and save or display it.
+The trace feature allows variables to be sampled in real time and saved
+to a large internal memory buffer in the device.  This command can then
+be used to download the captured data and save or display it.
 
-       The trace first must be set up by setting specific variables.
+The trace first must be set up by setting specific variables.
 
-       trace_var1
-       trace_var2
-       trace_var3
-       trace_var4
-         Set these variables to the name of the parameter you want to capture.
-         Any parameter can be given by name.  Up to 4 parameters can be saved
-         to the trace buffer at any time.  Think of it as a 4 channel oscilloscope.
+trace_var1
+trace_var2
+trace_var3
+trace_var4
+  Set these variables to the name of the parameter you want to capture.
+  Any parameter can be given by name.  Up to 4 parameters can be saved
+  to the trace buffer at any time.  Think of it as a 4 channel oscilloscope.
 
-       trace_period
-         Set this to the period at which you want to save the data.  The units
-         are loop periods.  A period <= 0 is treated as 1
+trace_period
+  Set this to the period at which you want to save the data.  The units
+  are loop periods.  A period <= 0 is treated as 1
 
-       trace_ctrl
-         This variable is used to start the trace.  Just set it to 1 to start.
-         It will be cleared when the trace buffer is full.
+trace_ctrl
+  This variable is used to start the trace.  Just set it to 1 to start.
+  It will be cleared when the trace buffer is full.
 
-       trace_samples
-         This variable gives the number of samples stored in the buffer currently.
-       """
+trace_samples
+  This variable gives the number of samples stored in the buffer currently.
+"""
         cl = line.split()
         if len(cl) < 1:
-            print("Error, please specify the trace command to run")
+            print("Error, please specify the trace command to run\n")
+            print(self.do_trace.__doc__)
             return
 
         if cl[0] == "flush":

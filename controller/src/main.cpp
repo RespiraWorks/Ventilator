@@ -72,12 +72,15 @@ limitations under the License.
 //
 // "Sends" data to the "GUI" via a simple serial protocol.  This can be parsed
 // and graphed by e.g. the Arduino IDE (tools -> serial plotter).
-static DebugUInt32 gui_mode("gui_mode", "Mode setting for GUI free testing");
-static DebugUInt32 gui_bpm("gui_bpm", "Breaths/min for GUI free testing");
-static DebugUInt32 gui_peep("gui_peep", "PEEP (cm/h2O) for GUI free testing");
-static DebugUInt32 gui_pip("gui_pip", "PIP (cm/h2O) for GUI free testing");
-static DebugFloat gui_ie_ratio("gui_ie_ratio",
-                               "I/E ratio for GUI free testing");
+static DebugUInt32
+    gui_mode("gui_mode", "Mode setting for GUI free testing",
+             static_cast<uint32_t>(VentMode::VentMode_PRESSURE_CONTROL));
+static DebugUInt32 gui_bpm("gui_bpm", "Breaths/min for GUI free testing", 15);
+static DebugUInt32 gui_peep("gui_peep", "PEEP (cm/h2O) for GUI free testing",
+                            5);
+static DebugUInt32 gui_pip("gui_pip", "PIP (cm/h2O) for GUI free testing", 15);
+static DebugFloat gui_ie_ratio("gui_ie_ratio", "I/E ratio for GUI free testing",
+                               0.66f);
 static void DEV_MODE_comms_handler(const ControllerStatus &controller_status,
                                    GuiStatus *gui_status) {
   gui_status->desired_params.mode = static_cast<VentMode>(gui_mode.Get());

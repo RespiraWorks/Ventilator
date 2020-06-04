@@ -53,7 +53,7 @@ Item {
         // Display FPS count as Text
         Text {
             id: fpsText
-            font.pointSize: 18
+            font.pixelSize: 18
             color: "white"
             text: "Ø " + root.fpsAvg + " | " + root.fps + " fps"
         }

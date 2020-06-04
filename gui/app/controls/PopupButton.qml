@@ -43,7 +43,7 @@ RadioButton {
     contentItem: Text {
         text: root.text
         font.bold: true
-        font.pixelSize: 38
+        font.pixelSize: 32
         color: "white"
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter

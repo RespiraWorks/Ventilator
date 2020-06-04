@@ -52,10 +52,6 @@ VAR_INT32 = 1
 VAR_UINT32 = 2
 VAR_FLOAT = 3
 
-# Frequency with which the controller's high-priority loop runs, in
-# milliseconds.  Keep this in sync with Conrtroller::GetLoopPeriod().
-PID_SAMPLE_PERIOD_MS = 10
-
 # Can trace this many variables at once.  Keep this in sync with TRACE_VAR_CT
 # in the controller.
 TRACE_VAR_CT = 4
@@ -478,11 +474,7 @@ trace_samples
                 return
 
             dat = TraceDownload()
-            with open(args.dest, "w") as fp:
-                fp.write(args.separator.join(v.name for v in tv) + "\n")
-                for i in range(len(dat[0])):
-                    line = (tv[j].fmt % dat[j][i] for j in range(len(tv)))
-                    fp.write(args.separator.join(line) + "\n")
+            TraceSaveDat(dat, args.dest, args.separator)
 
         elif cl[0] == "graph":
             TraceGraph()
@@ -637,8 +629,11 @@ def TraceActiveVars():
 def TraceDownload():
     """Fetches a trace from the controller.
 
-    Returns a list of N lists where N is the number of active trace variables.
-    Each of those lists holds the trace data for one variable.
+    This returns a list of N+1 lists where N is the number
+    of active trace variables.
+    The first list is the time base of the trace in seconds.
+    Each of the remaining lists holds the trace data for one
+    variable
     """
     traceVars = TraceActiveVars()
     if len(traceVars) < 1:
@@ -671,6 +666,15 @@ def TraceDownload():
     for sample in zip(*iters):
         for i, val in enumerate(sample):
             ret[i].append(traceVars[i].ConvertInt(val))
+
+    per = GetVar("trace_period", raw=True)
+    if per < 1:
+        per = 1
+
+    per *= GetVar("loop_period", raw=True) * 1e-6
+
+    time = [ x*per for x in range(len(ret[0]))]
+    ret.insert(0,time)
     return ret
 
 
@@ -679,16 +683,12 @@ def TraceGraph():
     dat = TraceDownload()
     TraceSaveDat(dat, "last_graph.dat")
 
-    # trace_period <= 0 is canonically interpreted as 1.
-    trace_period = GetVar("trace_period", raw=True)
-    if trace_period <= 0:
-        trace_period = 1
-    trace_period_ms = trace_period * PID_SAMPLE_PERIOD_MS
+    time = dat[0]
 
-    timestamps_sec = [t * trace_period_ms / 1000 for t in range(len(dat[0]))]
     plt.figure()
-    for i, d in enumerate(dat):
-        plt.plot(timestamps_sec, d, label=traceVars[i].help)
+    for d in dat[1:]:
+        plt.plot(time, d)
+
     plt.xlabel("Seconds")
     plt.grid()
     plt.legend()
@@ -701,15 +701,17 @@ def TraceSaveDat(dat, fname, separator="  "):
 
     fp = open(fname, "w")
     line = []
+    line.append("time")
     for v in tv:
         line.append(v.name)
     fp.write(separator.join(line) + "\n")
 
     for i in range(len(dat[0])):
         line = []
+        line.append("%.3f" % dat[0][i])
         for j in range(len(tv)):
-            line.append(tv[j].fmt % dat[j][i])
-        fp.write(separator.join(line) + "\n")
+            line.append(tv[j].fmt % dat[j + 1][i])
+        fp.write(seperator.join(line) + "\n")
     fp.close()
 
 

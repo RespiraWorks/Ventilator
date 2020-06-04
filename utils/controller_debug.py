@@ -329,7 +329,6 @@ A couple optional parameters can be passed as arguments to this command:
         return out
 
     def help_get(self):
-        global varDict
         print("Read the value of a debug variable and display it\n")
         print("Variables currently defined:")
         for k in varDict.keys():
@@ -353,7 +352,6 @@ A couple optional parameters can be passed as arguments to this command:
         return out
 
     def help_set(self):
-        global varDict
         print("You can very easily add debug variables to the C++ code.")
         print("You give these variables names and a pointer to a value to")
         print("access.  Then using the get/set commands you can read the")
@@ -462,9 +460,7 @@ trace_samples
     # Read info about all the supported variables and load
     # them in a map
     def GetVarInfo(self):
-        global varDict
-        varDict = {}
-
+        varDict.clear()
         try:
             for vid in range(256):
                 dat = SendCmd(OP_VAR, [SUBCMD_VAR_INFO] + Split16(vid))
@@ -523,7 +519,6 @@ def FindVarByID(vid):
 
 
 def GetVar(name, raw=False, fmt=None):
-    global varDict
     if not name in varDict:
         raise Error("Unknown variable %s" % name)
 
@@ -561,7 +556,6 @@ def GetVar(name, raw=False, fmt=None):
 
 
 def SetVar(name, value):
-    global varDict
     if not name in varDict:
         raise Error("Unknown variable %s" % name)
 
@@ -895,8 +889,6 @@ def DbgPrint(*args, **kwargs):
 
 
 def SendCmd(op, data=[], timeout=None):
-    global ser, cmdLock
-
     buff = [op] + data
 
     crc = crc16.calc(buff)
@@ -941,7 +933,6 @@ def SendCmd(op, data=[], timeout=None):
 
 
 def ReSync():
-    global cmdLock
     with cmdLock:
         cmd = [TERM, TERM]
         ser.write(bytearray(cmd))

@@ -1,7 +1,7 @@
 #ifndef CONNECTED_DEVICE_H
 #define CONNECTED_DEVICE_H
 
-#include "../common/generated_libs/network_protocol/network_protocol.pb.h"
+#include "network_protocol.pb.h"
 #include <functional>
 
 // Represents a connection to the device running the controller.
@@ -37,6 +37,5 @@ private:
   std::function<void(const GuiStatus &)> send_fn_;
   std::function<void(ControllerStatus *)> receive_fn_;
 };
-
 
 #endif // CONNECTED_DEVICE_H

@@ -38,9 +38,9 @@ public:
   UartDma() = default;
 #endif
   UartDma(UartReg *const uart, DmaReg *const dma, uint8_t tx_channel,
-          uint8_t rx_channel, char match_char)
-      : uart_(uart), dma_(dma), tx_channel_(tx_channel),
-        rx_channel_(rx_channel), match_char_(match_char) {}
+           uint8_t rx_channel, char match_char)
+           : uart_(uart), dma_(dma), tx_channel_(tx_channel)
+           , rx_channel_(rx_channel), match_char_(match_char) {}
 
   void Init(uint32_t baud);
   // Returns true if DMA TX is in progress

@@ -14,6 +14,7 @@ limitations under the License.
 */
 
 #include "hal.h"
+#include <assert.h>
 
 // Provide an implementation of __cxa_pure_virtual, which is called when you
 // try to invoke a pure-virtual function.  Without this, the default
@@ -27,8 +28,13 @@ limitations under the License.
 // header in the putative library from each file with a pure virtual function.
 // We'd probably also need to remove the dependency on hal, so this could be
 // used from libraries that don't link with hal.
-#ifdef BARE_STM32
+
 // We don't control this function's name, silence the style check
 // NOLINTNEXTLINE(readability-identifier-naming)
-extern "C" void __cxa_pure_virtual() { hal.ResetDevice(); }
+extern "C" void __cxa_pure_virtual() {
+#ifndef TEST_MODE
+  hal.ResetDevice();
+#else
+  assert(false);
 #endif
+}

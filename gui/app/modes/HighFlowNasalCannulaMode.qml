@@ -1,4 +1,7 @@
-import QtQuick 2.0
+import QtQuick 2.11
+import QtQuick.Controls 2.4
+import QtQuick.Layouts 1.3
+import ".."
 import "../controls"
 
 // TODO: Implement mode
@@ -8,6 +11,63 @@ Mode {
         text: "High Flow Nasal Cannula Mode"
         color: "white"
         font.pointSize: 38
+    }
+
+    Rectangle {
+
+        width: 216; height: 440
+        color: "#05121C"
+        radius: 8
+        anchors {
+            top: parent.top;
+            right: parent.right; rightMargin: 8
+        }
+
+        GridLayout {
+            anchors {
+                top: parent.top
+                horizontalCenter: parent.horizontalCenter
+            }
+            columns: 2
+            columnSpacing: 0
+            rowSpacing: 0
+
+            ParameterDisplay {
+                parameterName: qsTr("Pip")
+                parameterUnit: qsTr("cmH<sub>2</sub>O")
+                parameterValue: "23"
+            }
+
+            ParameterDisplay {
+                parameterName: qsTr("PEEP")
+                parameterUnit: qsTr("cmH<sub>2</sub>O")
+                parameterValue: "4"
+            }
+
+            ParameterDisplay {
+                parameterName: qsTr("Flow")
+                parameterUnit: qsTr("l/min")
+                parameterValue: "58"
+            }
+
+            ParameterDisplay {
+                parameterName: qsTr("RR")
+                parameterUnit: qsTr("b/min")
+                parameterValue: "15"
+            }
+
+            ParameterDisplay {
+                parameterName: qsTr("VT")
+                parameterUnit: qsTr("ml")
+                parameterValue: "385"
+            }
+
+            ParameterDisplay {
+                parameterName: qsTr("FiO<sub>2</sub>")
+                parameterUnit: qsTr("%")
+                parameterValue: "15"
+            }
+        }
     }
 
     Row {
@@ -21,13 +81,13 @@ Mode {
 
         ParameterButton {
             parameterName: qsTr("Flow")
-            parameterNotation: qsTr("l/min")
+            parameterUnit: qsTr("l/min")
             parameterValue: "60"
         }
 
         ParameterButton {
             parameterName: qsTr("FiO<sub>2</sub>")
-            parameterNotation: "%"
+            parameterUnit: "%"
             parameterValue: "40"
         }
     }

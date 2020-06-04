@@ -82,9 +82,12 @@ class ArgparseShowHelpError(Exception):
     pass
 
 
-# An ArgumentParser that doesn't call sys.exit() on error.
-# https://docs.python.org/3/library/argparse.html#argparse.ArgumentParser.exit
 class CmdArgumentParser(argparse.ArgumentParser):
+    """An ArgumentParser that doesn't call sys.exit() on error.
+
+    https://docs.python.org/3/library/argparse.html#argparse.ArgumentParser.exit
+    """
+
     def exit(self, status=0, message=None):
         if status:
             raise Error(f"Encountered a parse error: {message}")
@@ -149,14 +152,12 @@ class CmdLine(cmd.Cmd):
 
     def help_run(self):
         print(
-            """
-        Run an external Python script which can send commands,
-        set variables, etc.
-        If no explicit path is given then the current directory
-        and a sub-directory named %s will be searched for the
-        python script.
+            f"""\
+Run an external Python script which can send commands, set variables, etc.
+
+If no explicit path is given then the current directory and a sub-directory
+named {self.scriptsDir} will be searched for the python script.
         """
-            % self.scriptsDir
         )
 
     def do_run(self, line):
@@ -184,8 +185,7 @@ class CmdLine(cmd.Cmd):
         exec(line)
 
     def do_peek(self, line):
-        """
-Peek at a memory location.
+        """Peek at a memory location.
 
 ex: peek <addr> <ct> <fmt> <file>
 
@@ -232,8 +232,7 @@ ex: peek <addr> <ct> <fmt> <file>
         Peek(addr, ct, fmt, fname)
 
     def do_poke(self, line):
-        """
-Write data to a memory address
+        """Write data to a memory address
 
 ex: poke [type] <addr> <data>
 
@@ -263,15 +262,13 @@ ex: poke [type] <addr> <data>
         Poke(addr, data, ptype)
 
     def do_console(self, line):
-        """
-Switch from command mode to a simple console display which
-continuously reads debug print statements from the controller
-and displays the data received to the screen.
+        """Switch from command mode to a simple console display which
+continuously reads debug print statements from the controller and displays the
+data received to the screen.
 
-When firmware in the controller calls the debug.Print() function
-it formats a string which is written to a circular buffer.  When
-this program is running in console mode it constantly reads this
-data and displays it.
+When firmware in the controller calls the debug.Print() function it formats a
+string which is written to a circular buffer.  When this program is running in
+console mode it constantly reads this data and displays it.
 
 Enter <ctrl>C to exit this mode
 
@@ -378,8 +375,7 @@ A couple optional parameters can be passed as arguments to this command:
             print("   %-10s - %s" % (k, varDict[k].help))
 
     def do_trace(self, line):
-        """
-The `trace` command controls and reads the controller's trace buffer.
+        """The `trace` command controls/reads the controller's trace buffer.
 
 Tracing lets you sample debug variables in real time.  Their values are saved
 to a large internal memory buffer in the device, which you can then download
@@ -614,14 +610,12 @@ def TraceActiveVars():
     return ret
 
 
-# This returns a list of N lists where N is the number
-# of active trace variables.
-# Each of those lists holds the trace data for that
-# variable
 def TraceDownload():
+    """Fetches a trace from the controller.
+
+    Returns a list of N lists where N is the number of active trace variables.
+    Each of those lists holds the trace data for one variable.
     """
-   This function first reads the
-   """
     traceVars = TraceActiveVars()
     if len(traceVars) < 1:
         return None

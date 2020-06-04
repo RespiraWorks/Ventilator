@@ -161,6 +161,7 @@ class CmdLine(cmd.Cmd):
         ]
 
     def do_exec(self, line):
+        """exec()'s a string.  Good luck!"""
         exec(line)
 
     def do_peek(self, line):

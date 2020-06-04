@@ -53,7 +53,22 @@ ApplicationWindow {
     StackView {
         id: pageStack
         anchors.fill: parent
-
+        replaceEnter: Transition {
+            PropertyAnimation {
+                property: "opacity"
+                from: 0
+                to:1
+                duration: 300
+            }
+        }
+        replaceExit: Transition {
+            PropertyAnimation {
+                property: "opacity"
+                from: 1
+                to:0
+                duration: 200
+            }
+        }
         property var currentMode: modesModel.get(0)
 
         property ListModel modesModel: ListModel {

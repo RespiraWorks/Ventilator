@@ -328,24 +328,12 @@ public:
   // Return true if we are currently executing in an interrupt handler
   bool InInterruptHandler();
 
-  // Calculate CRC32 for data buffer
-  uint32_t CRC32(const uint8_t *data, uint32_t length);
-
 private:
   // Initializes watchdog, sets appropriate pins to Output, etc.  Called by
   // HalApi::Init
   void WatchdogInit();
 
 #ifdef BARE_STM32
-  // Initializes CRC32 peripheral
-  void CRC32Init();
-  // Reset the hardware peripheral in STM32
-  void CRC32Reset();
-  // Accumulate CRC32 in STM32 hardware
-  void CRC32Accumulate(uint8_t d);
-  // Get CRC32 accumulated in STM32 hardware
-  uint32_t CRC32Get();
-
   void InitGpio();
   void InitADC();
   void InitI2C();
@@ -510,10 +498,6 @@ inline void HalApi::DisableInterrupts() { interrupts_enabled_ = false; }
 inline void HalApi::EnableInterrupts() { interrupts_enabled_ = true; }
 inline bool HalApi::InterruptsEnabled() const { return interrupts_enabled_; }
 inline bool HalApi::InInterruptHandler() { return false; }
-
-inline uint32_t HalApi::CRC32(const uint8_t *data, uint32_t length) {
-  return SoftCRC32(data, length);
-}
 
 inline uint16_t TestSerialPort::Read(char *buf, uint16_t len) {
   if (incoming_data_.empty()) {

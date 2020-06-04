@@ -26,84 +26,18 @@ Mode {
 
     ColumnLayout {
         id: columnLayout
-        anchors.fill: parent
+        anchors {
+            left: parent.left
+            top: parent.top
+            right: parent.right
+            bottom: parent.bottom
+            margins: 8
+        }
 
         RowLayout {
             id: rowLayout
-            width: 100
-            height: 100
-
-            ColumnLayout {
-                id: columnLayout1
-                width: 100
-                height: 100
-                Layout.maximumHeight: 65356
-                Layout.maximumWidth: 6553
-                Layout.fillHeight: true
-                Layout.fillWidth: true
-                Layout.minimumWidth: 200
-
-                StepCounter {
-                    id: rrStepCounter
-                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                    Layout.minimumWidth: 150
-                    Layout.minimumHeight: 100
-                    Layout.topMargin: 10
-                    Layout.rightMargin: 10
-                    Layout.leftMargin: 10
-
-                    title: qsTr("RR")
-                    value: guiState.rr
-                    onValueModified: guiState.rr = value
-                }
-
-                StepCounter {
-                    id: peepStepCounter
-                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                    Layout.minimumWidth: 150
-                    Layout.minimumHeight: 100
-                    Layout.topMargin: 10
-                    Layout.rightMargin: 10
-                    Layout.leftMargin: 10
-
-                    title: qsTr("PEEP")
-                    value: guiState.peep
-                    onValueModified: guiState.peep = value
-                }
-
-                StepCounter {
-                    id: pipStepCounter
-                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                    Layout.minimumWidth: 150
-                    Layout.minimumHeight: 100
-                    Layout.topMargin: 10
-                    Layout.rightMargin: 10
-                    Layout.leftMargin: 10
-
-                    title: qsTr("PIP")
-                    value: guiState.pip
-                    onValueModified: guiState.pip = value
-                }
-
-                StepCounter {
-                    id: ierStepCounter
-                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                    Layout.minimumWidth: 150
-                    Layout.minimumHeight: 100
-                    Layout.topMargin: 10
-                    Layout.rightMargin: 10
-                    Layout.leftMargin: 10
-
-                    title: qsTr("I:E")
-                    stepSize: 0.1
-                    value: guiState.ier
-                    onValueModified: guiState.ier = value
-
-                    textFromValue: function (value, locale) {
-                        return Number(value).toFixed(1)
-                    }
-                }
-            }
+            width: 784
+            height: 440
 
             GridLayout {
                 id: scopeGridLayout
@@ -297,12 +231,40 @@ Mode {
             }
         }
 
-        RowLayout {
-            id: rowLayout2
-            width: 100
-            height: 50
-            Layout.minimumHeight: 50
-            Layout.maximumHeight: 65535
+        Row {
+            spacing: 8
+
+            Layout.alignment: Qt.AlignHCenter
+
+            ParameterButton {
+                parameterName: qsTr("Pip")
+                parameterNotation: qsTr("cmH<sub>2</sub>0")
+                parameterValue: guiState.pip.toString()
+            }
+
+            ParameterButton {
+                parameterName: qsTr("Peep")
+                parameterNotation: qsTr("cmH<sub>2</sub>0")
+                parameterValue: guiState.peep.toString()
+            }
+
+            ParameterButton {
+                parameterName: qsTr("FiO<sub>2</sub>")
+                parameterNotation: "%"
+                parameterValue: guiState.pip.toString()
+            }
+
+            ParameterButton {
+                parameterName: qsTr("I-time")
+                parameterNotation: "sec"
+                parameterValue: Number(guiState.ier).toFixed(1)
+            }
+
+            ParameterButton {
+                parameterName: qsTr("RR")
+                parameterNotation: "b/min"
+                parameterValue: guiState.rr.toString()
+            }
         }
     }
 }

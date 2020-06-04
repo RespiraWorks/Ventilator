@@ -23,14 +23,21 @@ float PID::Compute(Time now, float input, float setpoint) {
   if (!initialized_) {
     last_input_ = input;
     last_error_ = setpoint - input;
-
+    next_sample_time_ = now;
     // last call time defined as now - SampleTime to enable computation on first
     // call (user should call Compute() immediately after SetMode(Auto))
+    last_update_time_ = now - sample_period_;
     initialized_ = true;
   }
 
-  float samplesTimeChangeSec = sample_period_.seconds();
-
+  // compute actual samples time-difference to take jitter into account in
+  // integral and derivative
+  Duration effectiveSampleTime = (now - last_update_time_);
+  float samplesTimeChangeSec = effectiveSampleTime.seconds();
+  // condition to update output : 1 sample time has passed and we have new data
+  if (now < next_sample_time_ || samplesTimeChangeSec <= 0) {
+    return last_output_;
+  }
   // Compute all the working error variables
   float error = setpoint - input;
   float dInput = input - last_input_;
@@ -56,6 +63,9 @@ float PID::Compute(Time now, float input, float setpoint) {
   // Remember some variables for next time
   last_input_ = input;
   last_error_ = error;
+  last_update_time_ = now;
+  // when should we expect to perform our next output calculation
+  next_sample_time_ = next_sample_time_ + sample_period_;
 
   last_output_ = std::clamp(res, out_min_, out_max_);
   return last_output_;
@@ -65,6 +75,8 @@ void PID::Observe(Time now, float input, float setpoint, float actual_output) {
   // All the observable variables are updated the same way as in Compute();
   last_input_ = input;
   last_error_ = setpoint - input;
+  last_update_time_ = now;
+  next_sample_time_ = now + sample_period_;
   // Reset output_sum_ to actual_output so that the next Compute()
   // will adjust it only slightly (as if it had been computed by a current
   // Compute() call), avoiding a spike.

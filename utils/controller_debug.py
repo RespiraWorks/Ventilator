@@ -8,17 +8,17 @@
 #
 # For a list of available commands, enter 'help'
 
-import sys
-import math
 import cmd
 import glob
+import math
+import matplotlib.pyplot as plt
 import os
 import serial
 import struct
+import sys
+import threading
 import time
 import traceback
-import threading
-import matplotlib.pyplot as plt
 
 # Turn on interactive mode for matplotlib
 plt.ion()

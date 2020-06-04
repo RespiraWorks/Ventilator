@@ -16,14 +16,22 @@ Button {
 
     implicitWidth:192; implicitHeight: 80
 
-    // define parameter name, e.g. PiP
+    // define parameter name, e.g. PIP
     property alias parameterName: parameterNameText.text
 
     // define parameter notation, e.g cmH<sub>2</sub>O
     property alias parameterUnit: parameterUnitText.text
 
     // define current value as a string
-    property alias parameterValue: parameterValueText.text
+    property real parameterValue: 0
+
+    // define current value as a string
+    property alias parameterMinValue: popup.minValue
+    property alias parameterMaxValue: popup.maxValue
+    property alias parameterStepSize: popup.stepSize
+    property alias parameterDisplayFormatter: popup.displayFormatter
+
+    signal valueConfirmed(real value)
 
     background: Rectangle {
         antialiasing: true
@@ -70,11 +78,26 @@ Button {
                 top: parent.top; topMargin: 1
                 right: parent.right; rightMargin: 8
             }
+            text: control.parameterDisplayFormatter(control.parameterValue)
             textFormat: Text.AutoText
             color: "white"
             font: Style.theme.font.parameterButtonValue
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
         }
+    }
+
+    onClicked: {
+        popup.value = control.parameterValue
+        popup.open()
+    }
+
+    ParameterAdjustPopup {
+        id: popup
+        parameterInfoText: parameterName
+        parameterUnit: control.parameterUnit
+        value: control.parameterValue
+        title: qsTr("Adjust set parameter")
+        onValueConfirmed: control.valueConfirmed(value)
     }
 }

@@ -10,7 +10,7 @@ Mode {
         anchors.centerIn: parent
         text: "High Flow Nasal Cannula Mode"
         color: "white"
-        font.pointSize: 38
+        font.pixelSize: 38
     }
 
     Rectangle {
@@ -33,7 +33,7 @@ Mode {
             rowSpacing: 0
 
             ParameterDisplay {
-                parameterName: qsTr("Pip")
+                parameterName: qsTr("PIP")
                 parameterUnit: qsTr("cmH<sub>2</sub>O")
                 parameterValue: "23"
             }
@@ -46,7 +46,7 @@ Mode {
 
             ParameterDisplay {
                 parameterName: qsTr("Flow")
-                parameterUnit: qsTr("l/min")
+                parameterUnit: qsTr("L/min")
                 parameterValue: "58"
             }
 
@@ -58,7 +58,7 @@ Mode {
 
             ParameterDisplay {
                 parameterName: qsTr("VT")
-                parameterUnit: qsTr("ml")
+                parameterUnit: qsTr("mL")
                 parameterValue: "385"
             }
 
@@ -81,14 +81,14 @@ Mode {
 
         ParameterButton {
             parameterName: qsTr("Flow")
-            parameterUnit: qsTr("l/min")
-            parameterValue: "60"
+            parameterUnit: qsTr("L/min")
+            parameterValue: 60
         }
 
         ParameterButton {
             parameterName: qsTr("FiO<sub>2</sub>")
             parameterUnit: "%"
-            parameterValue: "40"
+            parameterValue: 40
         }
     }
 }

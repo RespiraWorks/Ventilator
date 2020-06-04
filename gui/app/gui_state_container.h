@@ -6,6 +6,7 @@
 
 #include "chrono.h"
 #include "controller_history.h"
+#include "simple_clock.h"
 
 #include <mutex>
 #include <tuple>
@@ -89,15 +90,27 @@ public:
   Q_PROPERTY(quint32 pip READ get_pip WRITE set_pip NOTIFY params_changed)
   Q_PROPERTY(qreal ier READ get_ier WRITE set_ier NOTIFY params_changed)
 
+  Q_PROPERTY(int batteryPercentage READ get_battery_percentage NOTIFY
+                 battery_percentage_changed)
+  Q_PROPERTY(SimpleClock *clock READ get_clock NOTIFY clock_changed)
+
 signals:
   void readouts_changed();
   void params_changed();
+  void battery_percentage_changed();
+  void clock_changed();
 
 public slots:
   void update(QAbstractSeries *pressure_series, QAbstractSeries *flow_series,
               QAbstractSeries *tv_series);
 
 private:
+  int get_battery_percentage() const {
+    return battery_percentage_;
+    // TODO: Figure our how battery will be implemented
+    // and how to get estimation.
+  }
+  SimpleClock *get_clock() const { return const_cast<SimpleClock *>(&clock_); }
   qreal get_pressure_readout() const {
     std::unique_lock<std::mutex> l(mu_);
     return history_.GetLastStatus().sensor_readings.patient_pressure_cm_h2o;
@@ -115,6 +128,7 @@ private:
     std::unique_lock<std::mutex> l(mu_);
     return gui_status_.desired_params.breaths_per_min;
   }
+
   void set_rr(quint32 value) {
     {
       std::unique_lock<std::mutex> l(mu_);
@@ -168,6 +182,8 @@ private:
   // be no-ops on gcc.
   GuiStatus gui_status_ = GuiStatus_init_zero;
   ControllerHistory history_;
+  int battery_percentage_ = 70;
+  SimpleClock clock_;
 };
 
 #endif // GUI_STATE_CONTAINER_H

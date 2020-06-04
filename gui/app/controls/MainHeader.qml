@@ -4,6 +4,10 @@ import QtQuick.Controls 2.4
 
 import ".."
 
+/*!
+    \qmltype MainHeader
+    \brief Top screen header containing menu, mode selection and alarm buttons.
+*/
 Control {
 
     width: 784; height: 64
@@ -20,8 +24,10 @@ Control {
             leftMargin: 8
         }
         contentItem: Image {
+            sourceSize: Qt.size(32, 32)
+            fillMode: Image.PreserveAspectFit
             anchors.centerIn: parent
-            source: 'qrc:/images/icon_menu.png'
+            source: 'qrc:/images/RW_menu_24.svg'
         }
 
         onClicked: menuClicked()
@@ -48,8 +54,9 @@ Control {
                 Image {
                     anchors.verticalCenter: parent.verticalCenter
                     width: 20; height: 20
+                    sourceSize: Qt.size(width, height)
                     fillMode: Image.PreserveAspectFit
-                    source: 'qrc:/images/Logo.png'
+                    source: 'qrc:/images/RW_inspsenssettings_24.svg'
                 }
 
                 Text {
@@ -66,7 +73,7 @@ Control {
     }
 
     HeaderButton {
-        id: alertButton
+        id: alarmSettingsButton
 
         width: 104; height: 40
 
@@ -99,8 +106,9 @@ Control {
                 Image {
                     anchors.verticalCenter: parent.verticalCenter
                     width: 20; height: 20
+                    sourceSize: Qt.size(width, height)
                     fillMode: Image.PreserveAspectFit
-                    source: 'qrc:/images/Logo.png'
+                    source: 'qrc:/images/RW_alarm_24.svg'
                 }
             }
         }

@@ -47,7 +47,7 @@ ColumnLayout
     {
         text: "Ventilator"
         font.bold: true
-        font.pointSize: 24
+        font.pixelSize: 24
         color: "yellow"
         bottomPadding: 20
         topPadding: 10

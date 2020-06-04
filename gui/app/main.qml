@@ -42,6 +42,13 @@ ApplicationWindow {
             onAlarmSettingsClicked: console.log("Alarm Settings Clicked")
             onModeSelectionClicked: modeSelectionPopup.open()
         }
+
+        DeviceStatusDisplay {
+            anchors {
+                right: parent.right; rightMargin: 8
+                verticalCenter: parent.verticalCenter
+            }
+        }
     }
 
     ModeSelectionPopup {

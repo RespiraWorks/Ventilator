@@ -1,5 +1,3 @@
-import QtQuick 2.0
-
 import QtQuick 2.11
 import QtQuick.Controls 2.4
 import ".."
@@ -10,7 +8,7 @@ Rectangle {
 
     color: "#05121C"
 
-    // define parameter name, e.g. PiP
+    // define parameter name, e.g. PIP
     property alias parameterName: parameterNameText.text
 
     // define parameter notation, e.g cmH<sub>2</sub>O

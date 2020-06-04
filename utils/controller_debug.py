@@ -364,7 +364,12 @@ A couple optional parameters can be passed as arguments to this command:
 
     def do_trace(self, line):
         """
-This command is used to access the trace buffer on the controller.
+The `trace` command controls and reads the controller's trace buffer.
+
+Tracing lets you sample debug variables in real time.  Their values are saved
+to a large internal memory buffer in the device, which you can then download
+and/or display as a graph.
+
 A sub-command must be passed as an option:
 
 trace flush
@@ -374,20 +379,16 @@ trace start
   Starts the trace collecting data.
 
 trace graph
-  This will download the data and display it graphically
-  The trace data will also be stored to the file last_graph.dat
-  which will be overwritten if it exists
+  Downloads the data and displays it graphically.
 
-trace download [--separator=<str> ] <filename>
-  This will download the data and save it to a file with the given
-  name.  If no file name is given, then trace.dat will be used
-  If the --separator=<str> option is given, then the specified
-  string will separate each column of data.  The default separator
-  is a few spaces.
+  The trace data will also be stored to the file last_graph.dat, which will be
+  overwritten if it exists
 
-The trace feature allows variables to be sampled in real time and saved
-to a large internal memory buffer in the device.  This command can then
-be used to download the captured data and save or display it.
+trace download [--separator=<str>] <filename>
+  This will download the data and save it to a file with the given name.  If no
+  file name is given, then trace.dat will be used If the --separator=<str>
+  option is given, then the specified string will separate each column of data.
+  The default separator is a few spaces.
 
 The trace first must be set up by setting specific variables.
 

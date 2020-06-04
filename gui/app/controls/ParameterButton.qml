@@ -20,7 +20,7 @@ Button {
     property alias parameterName: parameterNameText.text
 
     // define parameter notation, e.g cmH<sub>2</sub>O
-    property alias parameterNotation: parameterNotationText.text
+    property alias parameterUnit: parameterUnitText.text
 
     // define current value as a string
     property alias parameterValue: parameterValueText.text
@@ -42,7 +42,7 @@ Button {
                 left: parent.left; leftMargin: 8
             }
             textFormat: Text.AutoText
-            font: Style.theme.font.parameterDisplay
+            font: Style.theme.font.parameterButton
             color: "white"
             horizontalAlignment: Text.AlignLeft
             verticalAlignment: Text.AlignVCenter
@@ -50,14 +50,14 @@ Button {
         }
 
         Text {
-            id: parameterNotationText
+            id: parameterUnitText
             anchors {
                 top: parameterNameText.bottom; topMargin: 1
                 left: parent.left; leftMargin: 8
             }
             textFormat: Text.AutoText
             color: "#AFAFAF"
-            font: Style.theme.font.parameterDisplayNotation
+            font: Style.theme.font.parameterButtonNotation
             horizontalAlignment: Text.AlignLeft
             verticalAlignment: Text.AlignVCenter
             elide: Text.ElideRight
@@ -72,7 +72,7 @@ Button {
             }
             textFormat: Text.AutoText
             color: "white"
-            font: Style.theme.font.parameterDisplayValue
+            font: Style.theme.font.parameterButtonValue
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
         }

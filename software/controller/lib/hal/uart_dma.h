@@ -14,62 +14,35 @@ limitations under the License.
 
 */
 
-#ifndef UART_DMA_H
-#define UART_DMA_H
+#pragma once
 #include "hal_stm32_regs.h"
-
-enum class RxError {
-  RxUnknownError,
-  RxOverflow,
-  RxFramingError,
-  RxTimeout,
-  RxDmaError
-};
-
-// An interface that gets called back by the driver on rx, tx complete
-// and rx character match events.
-// NOTE: all callbacks are called from interrupt context!
-class UartDmaRxListener {
-public:
-  // Called on DMA RX complete
-  virtual void OnRxComplete() = 0;
-  // Called on specified character reception
-  virtual void OnCharacterMatch() = 0;
-  // Called on RX errors
-  virtual void OnRxError(RxError) = 0;
-};
-
-class UartDmaTxListener {
-public:
-  // Called on DMA TX complete
-  virtual void OnTxComplete() = 0;
-  // Called on TX errors
-  virtual void OnTxError() = 0;
-};
+#include "serial_listeners.h"
+#include "units.h"
 
 class DMACtrl {
-public:
+ public:
   explicit DMACtrl(DmaReg *const dma) : dma_(dma) {}
-  void Init() {
+  void init() {
     // UART3 reception happens on DMA1 channel 3
     dma_->channel_select.c3s = 0b0010;
     // UART3 transmission happens on DMA1 channel 2
     dma_->channel_select.c2s = 0b0010;
   }
-
-private:
-  DmaReg *const dma_;
+ private:
+  DmaReg *const dma_ {nullptr};
 };
 
 class UartDma {
 public:
-  UartDma(UartReg *const uart, DmaReg *const dma, uint8_t tx_chan,
-          uint8_t rx_chan, UartDmaRxListener *rxl, UartDmaTxListener *txl,
-          char match_char)
-      : uart_(uart), dma_(dma), tx_channel_(tx_chan), rx_channel_(rx_chan),
-        rx_listener_(rxl), tx_listener_(txl), match_char_(match_char) {}
+#ifdef TEST_MODE
+  UartDma() {}
+#endif
+  UartDma(UartReg *const uart, DmaReg *const dma, uint8_t tx_channel,
+           uint8_t rx_channel, char matchChar)
+           : uart_(uart), dma_(dma), tx_channel_(tx_channel)
+           , rx_channel_(rx_channel), match_char_(matchChar) {}
 
-  void Init(int baud);
+  void Init(uint32_t baud);
   // Returns true if DMA TX is in progress
   bool TxInProgress() const;
   // Returns true if DMA RX is in progress
@@ -79,7 +52,8 @@ public:
   // Returns false if DMA transmission is in progress, does not
   // interrupt previous transmission.
   // Returns true if no transmission is in progress
-  bool StartTX(char *buf, uint32_t length);
+  [[nodiscard]] bool StartTX(uint8_t *buf, uint32_t length,
+                             TxListener *txl);
 
   uint32_t GetRxBytesLeft();
 
@@ -92,7 +66,8 @@ public:
   // setup. Returns true if no reception is in progress and new reception
   // was setup.
 
-  bool StartRX(char *buf, uint32_t length, uint32_t timeout);
+  [[nodiscard]] bool StartRX(uint8_t *buf, uint32_t length,
+                             Duration timeout, RxListener *rxl);
   void StopRX();
   void CharMatchEnable();
 
@@ -101,14 +76,21 @@ public:
   void DmaTxISR();
 
 private:
-  UartReg *const uart_;
-  DmaReg *const dma_;
+  typedef struct {
+    uint32_t ignored : 8;
+    uint32_t bits : 24;
+  } uint24_t;
+
+  uint24_t DurationToBits(Duration d);
+
+  UartReg *const uart_ {nullptr};
+  DmaReg *const dma_ {nullptr};
   uint8_t tx_channel_;
   uint8_t rx_channel_;
-  UartDmaRxListener *rx_listener_;
-  UartDmaTxListener *tx_listener_;
+  RxListener *rx_listener_ {nullptr};
+  TxListener *tx_listener_ {nullptr};
+  uint32_t baud_;
   char match_char_;
-  bool tx_in_progress_{false};
-  bool rx_in_progress_{false};
+  bool tx_in_progress_ {false};
+  bool rx_in_progress_ {false};
 };
-#endif

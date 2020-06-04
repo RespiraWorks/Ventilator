@@ -24,11 +24,12 @@ limitations under the License.
 class PID {
 public:
   // Constructs the PID using the given parameters.
-  PID(float kp = 0, float ki = 0, float kd = 0);
+  PID();
 
   void SetKP(float kp) { kp_ = kp; }
   void SetKI(float ki) { ki_ = ki; }
   void SetKD(float kd) { kd_ = kd; }
+  void SetKFF(float kff) { kff_ = kff; }
 
   void SetSamplePeriod(Duration sample_period) {
     if (sample_period.seconds() > 0)
@@ -51,9 +52,10 @@ public:
   void Reset(float input = 0);
 
   // private:
-  float kp_{0}; // (P)roportional Tuning Parameter
-  float ki_{0}; // (I)ntegral Tuning Parameter
-  float kd_{0}; // (D)erivative Tuning Parameter
+  float kp_{0};  // (P)roportional Tuning Parameter
+  float ki_{0};  // (I)ntegral Tuning Parameter
+  float kd_{0};  // (D)erivative Tuning Parameter
+  float kff_{0}; // Feed forward gain
 
   float out_min_{1.0e-9f};
   float out_max_{1.0e9f};

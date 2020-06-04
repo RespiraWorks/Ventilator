@@ -83,6 +83,14 @@ static VentModePresCtrl vmode_pressure_ctrl;
 
 Duration Controller::GetLoopPeriod() { return milliseconds(1); }
 
+static FnDebugVar varLoopPer(
+    VarType::UINT32, "loop_period", "Period of main loop in microseconds", "%d",
+    [] {
+      return static_cast<uint32_t>(Controller::GetLoopPeriod().seconds() *
+                                   1e6f);
+    },
+    [](uint32_t value) {});
+
 // This function handles all the high priority tasks which need to be called
 // periodically.  The HAL calls this function from a timer interrupt.
 //

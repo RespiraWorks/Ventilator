@@ -19,14 +19,7 @@ limitations under the License.
 #include "pid.h"
 #include "algorithm.h"
 
-PID::PID(float kp, float ki, float kd) {
-
-  SetKP(kp);
-  SetKI(ki);
-  SetKP(kd);
-
-  Reset();
-}
+PID::PID() {}
 
 void PID::Reset(float input) {
   isum_ = 0;
@@ -50,6 +43,9 @@ float PID::Compute(float input, float setpoint) {
   isum_ += ki_ * error * sample_period_.seconds();
 
   output += isum_;
+
+  // Feed forward is simply a gain multipled by the input
+  output += input * kff_;
 
   // Clamp the output.  If the output is clamped and
   // the error is in the same direction as the output,

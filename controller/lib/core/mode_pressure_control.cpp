@@ -20,23 +20,25 @@ limitations under the License.
 #include "vars.h"
 
 // Debug variabels use to tune the loop
-static DebugFloat pc_kp("pc_kp",
-                        "Proportional gain used in pressure control mode");
-static DebugFloat pc_ki("pc_ki", "Integral gain used in pressure control mode");
+static DebugFloat pc_kp("pc_kp", "Proportional gain for pressure control mode");
+static DebugFloat pc_ki("pc_ki", "Integral gain for pressure control mode");
+static DebugFloat pc_ff("pc_ff", "Feed forward gain for pressure control mode");
 static DebugFloat
     pc_setpoint("pc_setpoint",
                 "Pressure set point in pressure control mode (cm H2O)");
 
 // Called when we first enter this state
 void VentModePresCtrl::Enter() {
-  pc_kp.Set(0.3f);
+  pc_kp.Set(0.25f);
   pc_ki.Set(0.5f);
+  pc_ff.Set(0.0f);
   start_time = Hal.now();
   inhale = true;
 
   pid.Reset();
   pid.SetKP(pc_kp.Get());
   pid.SetKI(pc_ki.Get());
+  pid.SetKFF(pc_ff.Get());
 
   pid.SetLimits(0.0f, 1.0f);
   pid.SetSamplePeriod(GetLoopPeriod());
@@ -63,6 +65,9 @@ ActuatorsState VentModePresCtrl::Run(const VentParams &params,
 
   if (pc_ki.HasBeenSet())
     pid.SetKI(pc_ki.Get());
+
+  if (pc_ff.HasBeenSet())
+    pid.SetKFF(pc_ff.Get());
 
   // See if it's time to switch between inhale & exhale
   Duration dt = Hal.now() - start_time;

@@ -51,14 +51,28 @@ QtObject {
                 weight: Font.Normal
             })
 
-            property font parameterDisplay: Qt.font({
+            property font parameterButton: Qt.font({
                 family: "Noto Sans",
                 pointSize: 20,
                 letterSpacing: 0,
                 weight: Font.Normal
             })
 
-            property font parameterDisplayNotation: Qt.font({
+            property font parameterButtonNotation: Qt.font({
+                family: "Noto Sans",
+                pointSize: 16,
+                letterSpacing: 0,
+                weight: Font.Normal
+            })
+
+            property font parameterButtonValue: Qt.font({
+                family: "Oxygen",
+                pointSize: 48,
+                letterSpacing: 0,
+                weight: Font.Normal
+            })
+
+            property font parameterDisplay: Qt.font({
                 family: "Noto Sans",
                 pointSize: 16,
                 letterSpacing: 0,

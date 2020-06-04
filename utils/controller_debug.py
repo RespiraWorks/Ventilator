@@ -13,6 +13,7 @@ import glob
 import math
 import matplotlib.pyplot as plt
 import os
+import readline
 import serial
 import struct
 import sys

@@ -8,6 +8,7 @@
 #
 # For a list of available commands, enter 'help'
 
+import argparse
 import cmd
 import glob
 import math
@@ -70,6 +71,27 @@ class Error(Exception):
         return str(self.value)
 
 
+class ArgparseShowHelpError(Exception):
+    """Exception raised when CmdArgumentParser encounters --help.
+
+    Canonical way of handling this is to catch it in the main command loop and
+    then ignore it.  Argparse will print out the help message, and that's all
+    the user needs to understand what happened.
+    """
+
+    pass
+
+
+# An ArgumentParser that doesn't call sys.exit() on error.
+# https://docs.python.org/3/library/argparse.html#argparse.ArgumentParser.exit
+class CmdArgumentParser(argparse.ArgumentParser):
+    def exit(self, status=0, message=None):
+        if status:
+            raise Error(f"Encountered a parse error: {message}")
+        else:
+            raise ArgparseShowHelpError()
+
+
 # This class creates a simple command line interface using the standard
 # Python cmd module.
 #
@@ -94,17 +116,14 @@ class CmdLine(cmd.Cmd):
         ReSync()
         self.GetVarInfo()
         while True:
-
             try:
                 return cmd.Cmd.cmdloop(self)
-
+            except ArgparseShowHelpError:
+                pass
             except Error as e:
                 print(e)
-
             except:
                 traceback.print_exc()
-                # print sys.exc_info()
-                pass
 
     def emptyline(self):
         ReSync()
@@ -258,47 +277,43 @@ Enter <ctrl>C to exit this mode
 
 A couple optional parameters can be passed as arguments to this command:
 
---flush     If given, the print buffer on the controller will be
-            flushed (emptied) before we start displaying the data.
-            That way any old (possibly incomplete) data that had previously
-            been printed by the firmware to the print buffer will be removed
-            before the display starts
+--flush
+  Flush the print buffer on the controller before we start displaying the data,
+  removing any old data that had previously been added to the print buffer.
 
-<filename>  If a file name is given, the data received will be
-            written to the file as well as displayed.
+--dest <filename>
+  Save received data to this file.
 """
+        parser = CmdArgumentParser(prog="console")
+        parser.add_argument(
+            "--flush",
+            action="store_true",
+            help="flush print buffer on device before displaying data",
+        )
+        parser.add_argument(
+            "--dest", help="write output to this file", default=os.devnull
+        )
+        args = parser.parse_args(line.split())
 
-        cl = line.split()
-
-        # Optionally flush the buffer before we start displaying
-        if "--flush" in cl:
+        if args.flush:
             while len(SendCmd(OP_PBREAD)) > 0:
                 pass
-            cl.remove("--flush")
 
-        if len(cl) > 0:
-            fp = open(cl[0], "w")
-        else:
-            fp = None
+        with open(args.dest, "w") as fp:
+            try:
+                while True:
+                    dat = SendCmd(OP_PBREAD)
+                    if len(dat) < 1:
+                        continue
 
-        try:
-            while True:
-                dat = SendCmd(OP_PBREAD)
-                if len(dat) < 1:
-                    continue
-
-                S = "".join([chr(x) for x in dat])
-
-                sys.stdout.write(S)
-                sys.stdout.flush()
-
-                if fp != None:
-                    fp.write(S)
-
-        except KeyboardInterrupt:
-            print()
-            ReSync()
-            pass
+                    s = "".join(chr(x) for x in dat)
+                    sys.stdout.write(s)
+                    sys.stdout.flush()
+                    fp.write(s)
+            except KeyboardInterrupt:
+                print()
+                ReSync()
+                pass
 
     def do_EOF(self, line):
         return True
@@ -384,7 +399,7 @@ trace graph
   The trace data will also be stored to the file last_graph.dat, which will be
   overwritten if it exists
 
-trace download [--separator=<str>] <filename>
+trace download [--separator=<str>] [--dest=<filename>]
   This will download the data and save it to a file with the given name.  If no
   file name is given, then trace.dat will be used If the --separator=<str>
   option is given, then the specified string will separate each column of data.
@@ -413,7 +428,7 @@ trace_samples
 """
         cl = line.split()
         if len(cl) < 1:
-            print("Error, please specify the trace command to run\n")
+            print("Error, please specify the trace command to run.")
             print(self.do_trace.__doc__)
             return
 
@@ -425,32 +440,29 @@ trace_samples
             SetVar("trace_ctrl", 1)
 
         elif cl[0] == "download":
-            separator = "  "
-            if len(cl) > 1 and cl[1].startswith("--separator="):
-                separator = cl[1].split("=")[1]
-                cl.remove(cl[1])
+            parser = CmdArgumentParser(prog="trace download")
+            parser.add_argument(
+                "--separator", type=str, default="  ", help="field separator in file"
+            )
+            parser.add_argument(
+                "--dest",
+                type=str,
+                default="trace.dat",
+                help="filename to save the trace to",
+            )
+            args = parser.parse_args(cl[1:])
 
             tv = TraceActiveVars()
             if len(tv) < 1:
                 print("No active trace variables")
+                return
 
-            if len(cl) > 1:
-                fname = cl[1]
-            else:
-                fname = "trace.dat"
-            fp = open(fname, "w")
-            line = []
-            for v in tv:
-                line.append(v.name)
-            fp.write(separator.join(line) + "\n")
             dat = TraceDownload()
-
-            for i in range(len(dat[0])):
-                line = []
-                for j in range(len(tv)):
-                    line.append(tv[j].fmt % dat[j][i])
-                fp.write(separator.join(line) + "\n")
-            fp.close()
+            with open(args.dest, "w") as fp:
+                fp.write(args.separator.join(v.name for v in tv) + "\n")
+                for i in range(len(dat[0])):
+                    line = (tv[j].fmt % dat[j][i] for j in range(len(tv)))
+                    fp.write(args.separator.join(line) + "\n")
 
         elif cl[0] == "graph":
             TraceGraph()

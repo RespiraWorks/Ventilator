@@ -762,6 +762,7 @@ void HalApi::EnableClock(void *ptr) {
       // these peripherials just comment out the line.  And
       // test of course.
       //      {CRC_BASE, 0, 12},
+      //      {TIMER3_BASE, 4, 1},
       //      {SPI2_BASE, 4, 14},
       //      {SPI3_BASE, 4, 15},
       //      {UART4_BASE, 4, 19},

@@ -28,10 +28,12 @@ cd "$(dirname "$0")"
 pio test -e native
 
 # Make sure controller integration tests build for target platform.
-pio run -e int-test-blower
-pio run -e int-test-solenoid
-pio run -e int-test-stepper
-pio run -e int-test-pinch-valve
+TEST=TEST_IDLE pio run -e integration-test
+TEST=TEST_BUZZER pio run -e integration-test
+TEST=TEST_BLOWER pio run -e integration-test
+TEST=TEST_STEPPER pio run -e integration-test
+TEST=TEST_PINCH_VALVE pio run -e integration-test
+TEST=TEST_SOLENOID pio run -e integration-test
 
 # Make sure controller builds for target platform.
 pio run -e stm32

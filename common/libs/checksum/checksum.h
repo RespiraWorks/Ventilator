@@ -18,46 +18,33 @@ limitations under the License.
 
 #include <stdint.h>
 
-// Computes the fletcher16 checksum for a packet.
-//
-// The optional `state` param lets you chain together multiple calls to this
-// function if you want to checksum one "logical message" which isn't in a
-// single buffer.
-//
-//   uint16_t state = checksum_fletcher16(data0, data0_len);
-//   state = checksum_fletcher16(data1, data1_len, state);
-//   uint16_t result = checksum_fletcher16(data2, data2_len, state);
-//
-uint16_t checksum_fletcher16(const char *data, uint8_t count,
-                             uint16_t state = 0);
-
 // The polynomial 0x741B8CD7 has Hamming distance 6 up to 16360 bits
 // and Hamming distance 4 up to 114663 bits.
 //[Philip Koopman, 32-Bit Cyclic Redundancy Codes for Internet Applications
 // 2002.] https://users.ece.cmu.edu/~koopman/crc/
 constexpr uint32_t CRC32_POLYNOMIAL = 0x741B8CD7;
 
-uint32_t soft_crc32(const char *data, uint32_t count);
+// Calculates CRC32 of a given byte array.
+// NOTE: each byte separately is passed to CRC calculation, i.e. bytes are not
+// packed to uint32_t value, but extended with zeroes in upper bits. I.e. 0x42
+// will be interpreted as 0x00000042. This is for compatibility with hardware
+// CRC32 peripheral in STM32 and to have simpler code as we are dealing with
+// bytes.
+// @param data - data on which to calculate CRC32
+// @param length - length of the data
+// @returns CRC32 if length > 0, 0 otherwise
+uint32_t soft_crc32(const uint8_t *data, uint32_t length);
 
-// Computes check bytes for a fletcher16 checksum.
-//
-// Given a packet p and checksum(p) == c, check_bytes_fletcher16(c) returns two
-// bytes [b1 b2] such that checksum(p | b1 | b2) == 0, where `|` represents
-// concatenation.
-inline uint16_t check_bytes_fletcher16(uint16_t checksum) {
-  uint8_t f0 = static_cast<uint8_t>(checksum & 0xff);
-  uint8_t f1 = static_cast<uint8_t>((checksum >> 8) & 0xff);
-  uint8_t c0 = static_cast<uint8_t>(0xff - ((f0 + f1) % 0xff));
-  uint8_t c1 = static_cast<uint8_t>(0xff - ((f0 + c0) % 0xff));
-  return static_cast<uint16_t>((uint16_t{c0} << 8) | c1);
-}
+// Performs a single CRC32 calculation.
+// @param crc - CRC value pre-computed in earlier iteration, or initial CRC
+// value
+// @param data - byte on which to calculate the CRC
+// @returns CRC32
+uint32_t crc32_single(uint32_t crc, uint8_t data);
 
-// Verifies the checksum of a packet.
-//
-// When creating packets, we append "check bytes" so that the whole packet
-// (including the check bytes) has a checksum of 0.
-inline bool checksum_check(const char *packet, uint8_t packet_len) {
-  return checksum_fletcher16(packet, packet_len) == 0;
-}
+// Assumes last 4 bytes in buf are CRC32, calculates CRC for buf[0:len-4] and
+// checks if they match.
+// @returns true if CRC match, false if not match or length < 5
+bool crc_ok(const uint8_t *buf, uint32_t len);
 
 #endif // CHECKSUM_H

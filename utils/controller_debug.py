@@ -108,6 +108,7 @@ class CmdLine(cmd.Cmd):
     def __init__(self):
         cmd.Cmd.__init__(self)
         self.scriptsDir = "scripts/"
+        self.GetVarInfo()
 
     def UpdatePrompt(self, mode=None):
         if mode == None:
@@ -692,7 +693,6 @@ def TraceGraph():
     plt.grid()
     plt.legend()
     plt.show()
-    return dat
 
 
 def TraceSaveDat(dat, fname, separator="  "):
@@ -1174,6 +1174,10 @@ if __name__ == "__main__":
         help="Serial port device is connected to, e.g. /dev/ttyACM0.  If "
         "unspecified, we try to auto-detect the port.",
     )
+    parser.add_argument(
+        "--command", "-c", type=str, help="Run the given command and exit."
+    )
+
     args = parser.parse_args()
 
     if not args.port:
@@ -1183,4 +1187,13 @@ if __name__ == "__main__":
     ser = serial.Serial(port=args.port, baudrate=115200)
     ser.timeout = 0.8
 
-    CmdLine().CmdLoop()
+    cmdline = CmdLine()
+
+    if args.command:
+        # Set matplotlib to noninteractive mode.  This causes show() to block,
+        # so if you do `controller_debug.py -c "trace graph"` the program won't
+        # exit until you close the displayed graph.
+        plt.ioff()
+        cmdline.onecmd(args.command)
+    else:
+        cmdline.CmdLoop()

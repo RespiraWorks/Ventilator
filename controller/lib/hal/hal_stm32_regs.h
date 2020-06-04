@@ -1,81 +1,104 @@
+/* Copyright 2020, RespiraWorks
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
 #ifndef __HAL_STM32_REGS
 #define __HAL_STM32_REGS
 
 #include <stdint.h>
 
 // Represents a 32-bit register
-typedef volatile uint32_t REG;
+using REG = volatile uint32_t;
 
 // 16-bit short register
-typedef volatile uint16_t SREG;
+using SREG = volatile uint16_t;
 
 // 8-bit byte sized register
-typedef volatile uint8_t BREG;
+using BREG = volatile uint8_t;
 
-///////////////////////////////////////////////////////////////
-// The structures below represent the STM32 registers used
-// to configure various modules (like timers, serial ports, etc).
-// Detailed information on these modules and the registers
-// used to configure them can be found in the reference
-// manual for this chip:
-// https://www.st.com/resource/en/reference_manual/dm00151940-stm32l41xxx42xxx43xxx44xxx45xxx46xxx-advanced-armbased-32bit-mcus-stmicroelectronics.pdf
-///////////////////////////////////////////////////////////////
+/*
+SOURCES OF TRUTH
+================
+The structures below represent the STM32 registers used
+to configure various modules (like timers, serial ports, etc).
 
-// Reset & clock controller
-struct RCC_Regs {
-  REG clkCtrl;   // 0x00 clock control register (RCC_CR)
-  REG clkCal;    // 0x04 Internal clock sources calibration register (RCC_ICSCR)
-  REG clkCfg;    // 0x08 clock configuration register (RCC_CFGR)
-  REG pllCfg;    // 0x0C PLL configuration register (RCC_PLLCFGR)
-  REG pllSaiCfg; // 0x10 PLLSAI1 configuration register (RCC_PLLSAI1CFGR)
-  REG rsvd1;
-  REG clkIntEna; // 0x18 Clock interrupt enable register ( RCC_CIER)
-  REG clkIntFlg; // 0x1C Clock interrupt flag register ( RCC_CIFR)
-  REG clkIntClr; // 0x20 Clock interrupt clear register ( RCC_CICR)
-  REG rsvd2;
-  REG periphReset[8];  // 0x28 peripheral reset registers
-  REG periphClkEna[8]; // 0x48 peripheral clock registers
-  REG sleepClkEna[8];  // 0x68 Clock enable in sleep
-  REG indClkCfg; // 0x88 Peripherals independent clock configuration register
-                 // (RCC_CCIPR)
-  REG rsvd3;
-  REG backup;     // 0x90 Backup domain control register (RCC_BDCR)
-  REG status;     // 0x94 control & status register (RCC_CSR)
-  REG recovery;   // 0x98 Clock recovery RC register (RCC_CRRCR)
-  REG indClkCfg2; // 0x9C Peripherals independent clock configuration register
-                  // (RCC_CCIPR2)
+Detailed information on these modules and the registers
+used to configure them can be found in the reference
+manual for this chip
+
+[RM] Reference Manual for the STM32L452 processor 
+  https://www.st.com/resource/en/reference_manual/dm00151940-stm32l41xxx42xxx43xxx44xxx45xxx46xxx-advanced-armbased-32bit-mcus-stmicroelectronics.pdf
+
+[PM] Programmer's manual for the Cortex M4 line of processors:
+   https://www.st.com/resource/en/programming_manual/dm00046982-stm32-cortexm4-mcus-and-mpus-programming-manual-stmicroelectronics.pdf
+*/
+
+// [PM] 4.4 System control block (SCB) (pg 221)
+struct RCC_Regs {       // <Offset> <Name>
+  REG clkCtrl;          // 0x00 clock control register (RCC_CR)
+  REG clkCal;           // 0x04 Internal clock sources calibration register (RCC_ICSCR)
+  REG clkCfg;           // 0x08 clock configuration register (RCC_CFGR)
+  REG pllCfg;           // 0x0C PLL configuration register (RCC_PLLCFGR)
+  REG pllSaiCfg;        // 0x10 PLLSAI1 configuration register (RCC_PLLSAI1CFGR)
+  REG rsvd1;            //      Reserved
+  REG clkIntEna;        // 0x18 Clock interrupt enable register ( RCC_CIER)
+  REG clkIntFlg;        // 0x1C Clock interrupt flag register ( RCC_CIFR)
+  REG clkIntClr;        // 0x20 Clock interrupt clear register ( RCC_CICR)
+  REG rsvd2;            //      Reserved
+  REG periphReset[8];   // 0x28 peripheral reset registers
+  REG periphClkEna[8];  // 0x48 peripheral clock registers
+  REG sleepClkEna[8];   // 0x68 Clock enable in sleep
+  REG indClkCfg;        // 0x88 Peripherals independent clock configuration register
+                        // (RCC_CCIPR)
+  REG rsvd3;            //      Reserved
+  REG backup;           // 0x90 Backup domain control register (RCC_BDCR)
+  REG status;           // 0x94 control & status register (RCC_CSR)
+  REG recovery;         // 0x98 Clock recovery RC register (RCC_CRRCR)
+  REG indClkCfg2;       // 0x9C Peripherals independent clock configuration register
+                        // (RCC_CCIPR2)
 };
 inline RCC_Regs *const RCC_BASE = reinterpret_cast<RCC_Regs *>(0x40021000);
 
-// System control registers
+// [PM] 4.4 System control block (SCB) (pg 221)
 struct SysCtrl_Reg {
-  REG rsvd0;      // 0xE000E000
-  REG intType;    // 0xE000E004
-  REG auxCtrl;    // 0xE000E008
-  REG rsvd1;      // 0xE000E00C
-  REG systick[3]; // 0xE000E010
+  REG rsvd0;         // 0xE000E000
+  REG intType;       // 0xE000E004
+  REG auxCtrl;       // 0xE000E008 - Auxiliary Control Register
+  REG rsvd1;         // 0xE000E00C
+  REG systick[3];    // 0xE000E010 - SysTick Timer 
   REG rsvd2[57];
-  REG nvic[768];     // 0xE000E100
-  REG cpuid;         // 0xE000ED00
-  REG intCtrl;       // 0xE000ED04
-  REG vtable;        // 0xE000ED08
-  REG apInt;         // 0xE000ED0C
-  REG sysCtrl;       // 0xE000ED10
-  REG cfgCtrl;       // 0xE000ED14
-  REG sysPri[3];     // 0xE000ED18
-  REG sysHdnCtrl;    // 0xE000ED24
-  REG faultStat;     // 0xE000ED28
-  REG hardFaultStat; // 0xE000ED2C
+  REG nvic[768];     // 0xE000E100 - NVIC Register [RM] 4.3 (pg 208)
+  REG cpuid;         // 0xE000ED00 - CPUID Base Register
+  REG intCtrl;       // 0xE000ED04 - Interrupt Control and State Register
+  REG vtable;        // 0xE000ED08 - Vector Table Offset Register   
+  REG apInt;         // 0xE000ED0C - Application Interrupt and Reset Control Register
+  REG sysCtrl;       // 0xE000ED10 - System Control Register
+  REG cfgCtrl;       // 0xE000ED14 - Configuration and Control Register
+  REG sysPri[3];     // 0xE000ED18 - System Handler Priority Registers (1-3)
+  REG sysHdnCtrl;    // 0xE000ED24 - System Handler Control and State Register
+  REG faultStat;     // 0xE000ED28 - Configurable Fault Status Register
+  REG hardFaultStat; // 0xE000ED2C - Hard Fault Status Register
   REG rsvd3;
-  REG mmFaultAddr; // 0xE000ED34
-  REG faultAddr;   // 0xE000ED38
+  REG mmFaultAddr;   // 0xE000ED34 - Memory Management Fault Address Register
+  REG faultAddr;     // 0xE000ED38 - Bus Fault Address Register
   REG rsvd4[19];
-  REG cpac; // 0xE000ED88
+  REG cpac;          // 0xE000ED88 - Coprocessor access control register
 };
 inline SysCtrl_Reg *const SYSCTL_BASE =
     reinterpret_cast<SysCtrl_Reg *>(0xE000E000);
 
-// Interrupt controller
+// [PM] 4.3 Nested vectored interrupt controller (NVIC) (pg 208)
 struct IntCtrl_Regs {
   REG setEna[32];
   REG clrEna[32];
@@ -87,6 +110,7 @@ struct IntCtrl_Regs {
 inline IntCtrl_Regs *const NVIC_BASE =
     reinterpret_cast<IntCtrl_Regs *>(0xE000E100);
 
+// [RM] 38.8 USART Registers (pg 1238)
 struct UART_Regs {
   union {
     struct {
@@ -114,13 +138,13 @@ struct UART_Regs {
       REG rsvd : 3;
     } s;
     REG r;
-  } ctrl1;
+  } ctrl1; // Control Register 1 (USART_CR1) [RM] 38.8.1 (pg 1238)
   union {
     struct {
       REG rsvd2 : 4;
-      REG addm7 : 1; // 7-bit Address Detection/4-bit Address Detection
-      REG lbdl : 1;  // LIN break detection length
-      REG lbdie : 1; // LIN break detection interrupt enable
+      REG addm7 : 1;    // 7-bit Address Detection/4-bit Address Detection
+      REG lbdl : 1;     // LIN break detection length
+      REG lbdie : 1;    // LIN break detection interrupt enable
       REG rsvd1 : 1;
       REG lbcl : 1;     // Last bit clock pulse
       REG cpha : 1;     // Clock phase
@@ -141,25 +165,25 @@ struct UART_Regs {
                         // disabled (RE = 0) or the USART is disabled (UE=0)
     } s;
     REG r;
-  } ctrl2;
+  } ctrl2; // Control Register 2 (USART_CR2) [RM] 38.8.2 (pg 1241)
   union {
     struct {
-      REG eie : 1;    // Error interrupt enable
-      REG iren : 1;   // IrDA mode enable
-      REG irlp : 1;   // IrDA low-power
-      REG hdsel : 1;  // Half-duplex selection
-      REG nack : 1;   // Smartcard NACK enable
-      REG scen : 1;   // Smartcard mode enable
-      REG dmar : 1;   // DMA enable receiver
-      REG dmat : 1;   // DMA enable transmitter
-      REG rtse : 1;   // RTS enable
-      REG ctse : 1;   // CTS enable
-      REG ctsie : 1;  // CTS interrupt enable
-      REG onebit : 1; // One sample bit method enable
-      REG ovrdis : 1; // Overrun Disable
-      REG ddre : 1;   // DMA Disable on Reception Error
-      REG dem : 1;    // Driver enable mode
-      REG dep : 1;    // Driver enable polarity selection
+      REG eie : 1;     // Error interrupt enable
+      REG iren : 1;    // IrDA mode enable
+      REG irlp : 1;    // IrDA low-power
+      REG hdsel : 1;   // Half-duplex selection
+      REG nack : 1;    // Smartcard NACK enable
+      REG scen : 1;    // Smartcard mode enable
+      REG dmar : 1;    // DMA enable receiver
+      REG dmat : 1;    // DMA enable transmitter
+      REG rtse : 1;    // RTS enable
+      REG ctse : 1;    // CTS enable
+      REG ctsie : 1;   // CTS interrupt enable
+      REG onebit : 1;  // One sample bit method enable
+      REG ovrdis : 1;  // Overrun Disable
+      REG ddre : 1;    // DMA Disable on Reception Error
+      REG dem : 1;     // Driver enable mode
+      REG dep : 1;     // Driver enable polarity selection
       REG rsvd2 : 1;
       REG scarcnt : 3; // Smartcard auto-retry count
       REG wus : 2;     // Wakeup from Stop mode interrupt flag selection
@@ -170,7 +194,7 @@ struct UART_Regs {
       REG rsvd : 7;
     } s;
     REG r;
-  } ctrl3;
+  } ctrl3; // Control Register 3 [RM] 38.8.3  (pg 1245)
   REG baud;
   REG guard;
   union {
@@ -179,7 +203,7 @@ struct UART_Regs {
       REG blen : 8; // block length
     } s;
     REG r;
-  } timeout;
+  } timeout; // Receiver Timeout Register (USART_RTOR) [RM] 38.8.6 (pg 1251)
   union {
     struct {
       REG abrrq : 1; // auto baud rate request
@@ -190,7 +214,7 @@ struct UART_Regs {
       REG rsvd : 27;
     } s;
     REG r;
-  } request;
+  } request; // Request Register (USART_QRQ) [RM] 38.8.7 (pg 1252)
   union {
     struct {
       const REG pe : 1;    // parity error
@@ -221,30 +245,30 @@ struct UART_Regs {
       const REG rsvd3 : 6;
     } s;
     REG r;
-  } status;
+  } status; // [RM] 38.8.8 Interrupt And Status Register (USART_ISR) (pg 1253)
   union {
     struct {
-      REG pecf : 1;   // parity error clear flag
-      REG fecf : 1;   // framing error clear flag
-      REG ncf : 1;    // noise detected clear flag
-      REG orecf : 1;  // overrun error clear flag
-      REG idlecf : 1; // idle line detected clear flag
+      REG pecf : 1;    // parity error clear flag
+      REG fecf : 1;    // framing error clear flag
+      REG ncf : 1;     // noise detected clear flag
+      REG orecf : 1;   // overrun error clear flag
+      REG idlecf : 1;  // idle line detected clear flag
       REG rsvd : 1;
       REG tccf : 1;    // transmission complete clear flag
       REG tcbgtcf : 1; // transmission completed before guard time clear fl.
       REG lbdcf : 1;   // LIN break detection clear flag
       REG ctscf : 1;   // CTS clear flag
       REG rsvd2 : 1;
-      REG rtocf : 1; // receiver timeout clear flag
-      REG eobcf : 1; // end of block clear flag
+      REG rtocf : 1;   // receiver timeout clear flag
+      REG eobcf : 1;   // end of block clear flag
       REG rsvd3 : 4;
-      REG cmcf : 1; // character match clear flag
+      REG cmcf : 1;    // character match clear flag
       REG rsvd4 : 2;
-      REG wucf : 1; // wakeup from stop mode clear flag
+      REG wucf : 1;    // wakeup from stop mode clear flag
       REG rsvd5 : 11;
     } s;
     REG r;
-  } intClear;
+  } intClear; // [RM] 38.8.9 Interrupt Flag Clear Register (USART_ICR) (pg 1257)
   REG rxDat;
   REG txDat;
 };
@@ -253,6 +277,7 @@ inline UART_Regs *const UART2_BASE = reinterpret_cast<UART_Regs *>(0x40004400);
 inline UART_Regs *const UART3_BASE = reinterpret_cast<UART_Regs *>(0x40004800);
 inline UART_Regs *const UART4_BASE = reinterpret_cast<UART_Regs *>(0x40004C00);
 
+// [RM] 16.6 ADC Registers (for each ADC) (pg 450)
 struct ADC_Regs {
   // A/D specific registers (0x100 total length)
   struct {
@@ -281,7 +306,7 @@ struct ADC_Regs {
       REG jauto : 1;
       REG awd1ch : 5;
       REG jqdis : 1;
-    } cfg1; // 0x0C - configuration register (ADC_CFGR)
+    } cfg1; // 0x0C - [RM] 16.6.4 ADC Configuration Register (ADC_CFGR) (pg 458)
 
     struct {
       REG rovse : 1; // bit 0    - regular oversampling enable
@@ -291,7 +316,7 @@ struct ADC_Regs {
       REG trovs : 1; // bit 9    - triggered regular oversampling
       REG rovsm : 1; // bit 10   - regular oversampling mode
       REG rsvd : 21;
-    } cfg2;
+    } cfg2; // [RM] 16.6.5 ADC configuration register 2 (ADC_CFGR2) (pg 462)
 
     struct {
       REG smp0 : 3; // Sample time for channel 0
@@ -316,17 +341,18 @@ struct ADC_Regs {
       REG smp17 : 3; // Sample time for channel 17
       REG smp18 : 3; // Sample time for channel 18
       REG rsvd2 : 5;
-    } samp;
+    } samp; // [RM] 16.6.6 ADC Sample Time Register 1 (ADC_SMPR1) (pg 464)
 
     REG rsvd1;
-    REG wdog[3]; // 0x20 - watchdog threshold registers
+    REG wdog[3]; // 0x20 - [RM] 16.6.8 ADC Watchdog
+                 // Threshold Register 1 (ADC_TR1) (pg 465)
     REG rsvd2;
 
     // 4x sequence registers.  These registers are used
     // to define the number of A/D readings and the
     // channel numbers being read.
     struct {
-      // sqr1
+      // [RM] 16.6.11 ADC Regular Sequence Register 1 (ADC_SQR1) (pg 468)
       REG len : 6;
       REG sq1 : 6;
       REG sq2 : 6;
@@ -334,7 +360,7 @@ struct ADC_Regs {
       REG sq4 : 6;
       REG rsvd1 : 2;
 
-      // sqr2
+      // [RM] 16.6.12 ADC Regular Sequence Register 2 (ADC_SQR2) (pg 469)
       REG sq5 : 6;
       REG sq6 : 6;
       REG sq7 : 6;
@@ -342,7 +368,7 @@ struct ADC_Regs {
       REG sq9 : 6;
       REG rsvd2 : 2;
 
-      // sqr4
+      // [RM] 16.6.13 ADC regular sequence register 3 (ADC_SQR3) (pg 470)
       REG sq10 : 6;
       REG sq11 : 6;
       REG sq12 : 6;
@@ -350,35 +376,37 @@ struct ADC_Regs {
       REG sq14 : 6;
       REG rsvd3 : 2;
 
-      // sqr3
+      // [RM] 16.6.14 ADC Regular Sequence Register 4 (ADC_SQR4) (pg 471)
       REG sq15 : 6;
       REG sq16 : 6;
       REG rsvd4 : 20;
-    } seq;
+    } seq; // ADC Regular Sequence Register
 
-    REG data; // 0x40 - Regular data register
+    REG data; // 0x40 - Regular data register [RM] 16.6.15 (pg 471)
     REG rsvd3[2];
-    REG iSeq; // 0x4C - Injected sequence regiseter
+    REG iSeq; // 0x4C - Injected sequence regiseter [RM] 16.6.16 (pg 472)
     REG rsvd4[4];
-    REG offset[4]; // 0x60 - Offset registers
+    REG offset[4]; // 0x60 - Offset Register [RM] 16.6.17 (pg 473)
     REG rsvd5[4];
-    REG iData[4]; // 0x80 - Injected channel data
+    REG iData[4]; // 0x80 - - Injected Channel Data Register [RM] 16.6.18 (pg 474)
     REG rsvd6[4];
-    REG wdCfg[2]; // 0xA0 - Watchdog config
+    REG wdCfg[2]; // 0xA0 - Analog Watchdog Config Register [RM] 16.6.19 (pg 474)
     REG rsvd7[2];
-    REG diffSel; // 0xB0 - Differential mode selection
-    REG cal;     // 0xB4 - Calibration factors
+    REG diffSel; // 0xB0 - Differential Mode Selection Register [RM] 16.6.21 (pg 476)
+    REG cal;     // 0xB4 - Calibration Factors [RM] 16.6.22 (pg 476)
     REG rsvd8[18];
-  } adc[2];
+  } adc[2]; // Master ADC1, Slave ADC2
 
-  // A/D common registers
-  REG comStat; // 0x300 - Common status
+  // [RM] 16.7.1 ADC Common Registers (pg 477)
+  REG comStat; // 0x300 - Common Status Register [RM] 16.7.1 (pg 477)
   REG rsvd9;
-  REG comCtrl; // 0x304 - Common control
-  REG comData; // 0x308 - Common data
+  REG comCtrl; // 0x304 - Common Control Register [RM] 16.7.2 (pg 479)
+  REG comData; // 0x308 - Common Data Register for Dual Mode [RM] 16.7.3 (pg 482)
 };
 inline ADC_Regs *const ADC_BASE = reinterpret_cast<ADC_Regs *>(0X50040000);
 
+// Timer Register
+// NOTE: Offset values and applicable registers depend on timer used
 struct TimerRegs {
   union {
     struct {
@@ -396,61 +424,66 @@ struct TimerRegs {
     } s;
     REG r;
   } ctrl1;
-  REG ctrl2;
-  REG slaveCtrl;
-  REG intEna;
-  REG status;
-  REG event;
-  REG ccMode[2];
-  REG ccEnable;
+  REG ctrl2;        // Control Register 2
+  REG slaveCtrl;    // Slave Mode Control Register
+  REG intEna;       // DMA/Interrupt Enable Register
+  REG status;       // Status Register
+  REG event;        // Even Generation Register
+  REG ccMode[2];    // Capture/Compare Mode Register (1,2)
+  REG ccEnable;     // Capture/Compare Enable Register
   // The topmost bit of counter will contain contain UIFCOPY if UIFREMAP is
   // enabled, but *this register should not be decomposed into a bitfield
   // struct*.  The idea behind UIFREMAP is to read the counter plus the UIFCOPY
   // value atomically, in one go.
-  REG counter;
-  REG prescale;
-  REG reload;
-  REG repeat;
-  REG compare[4];
-  REG deadTime;
-  REG dmaCtrl;
-  REG dmaAddr;
-  REG opt1;
-  REG ccMode3;
-  REG compare5;
-  REG compare6;
-  REG opt2;
-  REG opt3;
+  REG counter;      // Counter
+  REG prescale;     // Prescaler
+  REG reload;       // Auto-reload Register
+  REG repeat;       // Repetition Counter Register
+  REG compare[4];   // Capture/Compare Register (1-4)
+  REG deadTime;     // Break and Dead-time Register
+  REG dmaCtrl;      // DMA Control Register
+  REG dmaAddr;      // DMA Address for Full Transfer
+  REG opt1;         // Option Register 1
+  REG ccMode3;      // Capture/Compare Mode Register 3
+  REG compare5;     // Capture/Compare Register 5
+  REG compare6;     // Capture/Compare Register 6
+  REG opt2;         // Option Register 2
+  REG opt3;         // Option Register 3
 };
 
+// [RM] 26 Advanced-control Timers (TIM1) (pg 718)
 inline TimerRegs *const TIMER1_BASE = reinterpret_cast<TimerRegs *>(0x40012C00);
+// [RM] 27 General-purpose Timers (TIM2/TIM3) (pg 817)
 inline TimerRegs *const TIMER2_BASE = reinterpret_cast<TimerRegs *>(0x40000000);
 inline TimerRegs *const TIMER3_BASE = reinterpret_cast<TimerRegs *>(0x40000400);
+// [RM] 29 Basic Timers (TIM6/TIM7) (pg 968)
 inline TimerRegs *const TIMER6_BASE = reinterpret_cast<TimerRegs *>(0x40001000);
 inline TimerRegs *const TIMER7_BASE = reinterpret_cast<TimerRegs *>(0x40001400);
+// [RM] 28 General-purpose Timers (TIM15/TIM16) (pg 887)
 inline TimerRegs *const TIMER15_BASE =
     reinterpret_cast<TimerRegs *>(0x40014000);
 inline TimerRegs *const TIMER16_BASE =
     reinterpret_cast<TimerRegs *>(0x40014400);
 
+// [RM] 3.7 Flash Registers (pg 100)
 struct FlashReg {
-  REG access;
-  REG pdKey;
-  REG key;
-  REG optKey;
-  REG status;
-  REG ctrl;
-  REG ecc;
-  REG rsvd1;
-  REG option;
-  REG pcropStart;
-  REG pcropEnd;
-  REG wrpA;
-  REG wrpB;
+  REG access;     // 0x00 - Access Control Register (FLASH_ACR
+  REG pdKey;      // 0x04 - Power-down Key Register (FLASH_PDKEYR)
+  REG key;        // 0x08 - Key Register (FLASH_KEYR)
+  REG optKey;     // 0x0C - Option Key Register (FLASH_OPTKEYR)
+  REG status;     // 0x10 - Status Register (FLASH_SR)
+  REG ctrl;       // 0x14 - Control Register (FLASH_CR) 
+  REG ecc;        // 0x18 - EEC Register (FLASH_EECR)
+  REG rsvd1;      
+  REG option;     // 0x20 - Option Register (FLASH_OPTR)
+  REG pcropStart; // 0x24 - PCROP Start Address Register (FLASH_PCROP1SR)
+  REG pcropEnd;   // 0x28 - PCROP End Address Register (FLASH_PCROP1ER)
+  REG wrpA;       // 0x2C - WRP Area A Address Register (FLASH_WRP1AR)
+  REG wrpB;       // 0x30 - WRP Area B Address Register (FLAS_WRP1BR)
 };
 inline FlashReg *const FLASH_BASE = reinterpret_cast<FlashReg *>(0x40022000);
 
-// DMA channels
+// [RM] 11.4.4 DMA channels (pg 302)
 enum class DMA_Chan {
   C1 = 0,
   C2 = 1,
@@ -498,7 +531,7 @@ struct DMA_Regs {
       REG rsvd : 4;
     };
     REG r;
-  } intStat; // interrupt status register
+  } intStat; // Interrupt Status Register (DMA_ISR) [RM] 11.6.1 (pg 308)
 
   union {
     struct {
@@ -533,7 +566,7 @@ struct DMA_Regs {
       REG rsvd : 4;
     };
     REG r;
-  } intClr; // interrupt flag clear register
+  } intClr; // Interrupt Flag Clear Register [RM] 11.6.2 (pg 311)
   struct {
     struct {
       REG enable : 1;   // channel enable
@@ -549,7 +582,7 @@ struct DMA_Regs {
       REG priority : 2; // priority level 0b00 - low, 0b11 - high
       REG mem2mem : 1;  // memory-to-memory mode
       REG rsvd : 17;
-    } config;             // channel x configuration register
+    } config;             // channel x configuration register [RM] 11.6.3 (pg 312)
     REG count;            // channel x number of data to transfer register
     volatile void *pAddr; // channel x peripheral address register
     volatile void *mAddr; // channel x memory address register
@@ -568,15 +601,36 @@ struct DMA_Regs {
       REG rsvd : 4;
     };
     REG r;
-  } chanSel; // channel selection register
+  } chanSel; // Channel Selection Register [RM] 11.6.7 (pg 317)
 };
 inline DMA_Regs *const DMA1_BASE = reinterpret_cast<DMA_Regs *>(0x40020000);
 inline DMA_Regs *const DMA2_BASE = reinterpret_cast<DMA_Regs *>(0x40020400);
 
-// Select the source for a DMA channel
-// @param dma Address of DMA registers
-// @param chan DMA channel to modify.  Channels are numbered from 0
-// @param selection Selects which peripherial request to map to the channel
+/* Select the source for a DMA channel:
+  @param dma        Address of DMA registers
+  @param chan       DMA channel to modify.  Channels are numbered from 0
+  @param selection  Selects which peripherial request to map to the channel
+  
+  DMA request mapping [RM] 11.3.2 (pg 296)
+  
+  Channel Selection Register [RM] 11.6.7 (pg 317)
+    Bits 27:24 C7S[3:0]: DMA channel 7 selection
+    Bits 23:20 C6S[3:0]: DMA channel 6 selection
+    Bits 19:16 C5S[3:0]: DMA channel 5 selection
+    Bits 15:12 C4S[3:0]: DMA channel 4 selection 
+    Bits 11:8 C3S[3:0]:  DMA channel 3 selection
+    Bits 7:4 C2S[3:0]:   DMA channel 2 selection         
+    Bits 3:0 C1S[3:0]:   DMA channel 1 selection
+    
+  selection &= 0x0F                 Converts selection to binary and truncates 
+                                      digits after 4th bit
+  val = dma->chanSel.r              Holds DMA Channel Selection Register
+  2^(4 * chan)                        MSB position
+  val &= ~(0xF * 2^(4 * chan))      Clears bits storing channel selection on register
+  val |= selection * 2^(4 * chan)   Writes selection to channel selection on register
+  dma->chanSel.r = val              Write changes to channel selection register
+*/
+
 inline void DMA_SelectChannel(DMA_Regs *dma, DMA_Chan chan, int selection) {
   selection &= 0x0F;
 
@@ -588,7 +642,6 @@ inline void DMA_SelectChannel(DMA_Regs *dma, DMA_Chan chan, int selection) {
   dma->chanSel.r = val;
 }
 
-// Clear a DMA interrupt given the channel number and interrupt type
 enum class DmaInterrupt {
   GLOBAL = 1,
   XFER_COMPLETE = 2,
@@ -596,6 +649,20 @@ enum class DmaInterrupt {
   XFER_ERR = 8
 };
 
+/* Clear a DMA Interrupt 
+  @param dma        Address of DMA registers
+  @param chan       DMA channel to modify
+  @param interrupt  DMA interrupt event 
+
+  DMA interrupt flag clear register (DMA_IFCR) [RM] 11.6.2
+  Bit i             global interrupt flag clear for channel i
+  Bit i+1           transfer complete flag clear for channel i
+  Bit i+2           half transfer flag clear for channel i
+  Bit i+3           transfer error flag clear for channel i
+
+  2^(4 * chan)                DMA interrupt event flag clear bits for channel
+  interrupt * 2^(4 * chan)    bit that matches appropriate interrupt event for channel
+*/
 inline void DMA_ClearInt(DMA_Regs *dma, DMA_Chan chan, DmaInterrupt interrupt) {
 
   int x = static_cast<int>(interrupt);

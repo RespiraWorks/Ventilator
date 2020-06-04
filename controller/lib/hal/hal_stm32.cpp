@@ -561,7 +561,7 @@ public:
 static UART rpUART(UART3_BASE);
 static UART dbgUART(UART2_BASE);
 #ifdef UART_VIA_DMA
-extern UART_DMA dmaUART;
+extern UART_DMA uart_dma;
 #endif
 // The UART that talks to the rPi uses the following pins:
 //    PB10 - TX
@@ -599,7 +599,7 @@ void HalApi::InitUARTs() {
   GPIO_PinAltFunc(GPIO_B_BASE, 14, 7);
 
 #ifdef UART_VIA_DMA
-  dmaUART.init(115200);
+  uart_dma.init(115200);
 #else
   rpUART.Init(115200);
 #endif

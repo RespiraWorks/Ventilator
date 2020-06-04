@@ -16,5 +16,15 @@
         <file>modes/CommandPressureMode.qml</file>
         <file>modes/HighFlowNasalCannulaMode.qml</file>
         <file>controls/HeaderButton.qml</file>
+        <file>images/icon_menu.png</file>
+        <file>fonts/NotoSans-Bold.ttf</file>
+        <file>fonts/NotoSans-BoldItalic.ttf</file>
+        <file>fonts/NotoSans-Italic.ttf</file>
+        <file>fonts/NotoSans-Regular.ttf</file>
+        <file>controls/MainHeader.qml</file>
+        <file>controls/ParameterButton.qml</file>
+        <file>fonts/Oxygen-Bold.ttf</file>
+        <file>fonts/Oxygen-Light.ttf</file>
+        <file>fonts/Oxygen-Regular.ttf</file>
     </qresource>
 </RCC>

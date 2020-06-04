@@ -20,45 +20,28 @@ ApplicationWindow {
         color: Style.theme.color.windowBackground
     }
 
+    FpsItem {
+        anchors {
+            right: parent.right; rightMargin: 8
+            bottom: parent.bottom; bottomMargin: 8
+        }
+        z: 10
+    }
+
     header: ToolBar {
         contentHeight: 60
-        padding: Style.margin.normal
         background:  Item {  }
 
-        //TODO: Check with UX people how this button will look
-        // like
-        HeaderButton {
-            id: modeSelectionButton
-
-            width: 90
-
-            anchors.verticalCenter: parent.verticalCenter
-            text: pageStack.currentMode.acronym
-            onClicked: modeSelectionPopup.open()
-            contentItem: Text {
-                text: modeSelectionButton.text
-                font.pixelSize: 19
-                color: "white"
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
-                elide: Text.ElideRight
-            }
-        }
-
-        FpsItem {
+        MainHeader {
             anchors {
-                right: parent.right
+                left: parent.left; leftMargin: 8
+                top: parent.top;
             }
-        }
 
-        Image {
-            anchors.horizontalCenter: parent.horizontalCenter
-            // width will naturally be selected preserving ratio
-            height: parent.height
-            source: "images/respiraWorksLogoHorizontalTransparent.png"
-            fillMode: Image.PreserveAspectFit
+            onMenuClicked: console.log("Menu Click")
+            onAlarmSettingsClicked: console.log("Alarm Settings Clicked")
+            onModeSelectionClicked: modeSelectionPopup.open()
         }
-
     }
 
     ModeSelectionPopup {

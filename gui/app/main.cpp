@@ -7,6 +7,8 @@
 
 #include <QApplication>
 #include <QCommandLineParser>
+#include <QFontDatabase>
+#include <QFontInfo>
 #include <QQmlApplicationEngine>
 #include <QtCore/QDir>
 #include <QtQml/QQmlContext>
@@ -16,11 +18,21 @@
 #include <iostream>
 #include <memory>
 
+void install_fonts() {
+  if (QFontDatabase::addApplicationFont(":/fonts/NotoSans-Regular.ttf") == -1)
+    qWarning() << "Failed to load NatoSans-Regular.ttf";
+
+  if (QFontDatabase::addApplicationFont(":/fonts/Oxygen-Regular.ttf") == -1)
+    qWarning() << "Failed to load Oxygen-Regular.ttf";
+}
+
 int main(int argc, char *argv[]) {
 
   QApplication app(argc, argv);
 
   app.setWindowIcon(QIcon(":/images/Logo.png"));
+
+  install_fonts();
 
   QCommandLineParser parser;
   parser.setApplicationDescription("Ventilator GUI application");

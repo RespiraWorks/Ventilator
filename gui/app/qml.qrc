@@ -26,5 +26,6 @@
         <file>fonts/Oxygen-Bold.ttf</file>
         <file>fonts/Oxygen-Light.ttf</file>
         <file>fonts/Oxygen-Regular.ttf</file>
+        <file>controls/ParameterDisplay.qml</file>
     </qresource>
 </RCC>

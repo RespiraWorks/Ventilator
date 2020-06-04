@@ -378,11 +378,11 @@ trace graph
   The trace data will also be stored to the file last_graph.dat
   which will be overwritten if it exists
 
-trace download [--seperator=<str> ] <filename>
+trace download [--separator=<str> ] <filename>
   This will download the data and save it to a file with the given
   name.  If no file name is given, then trace.dat will be used
-  If the --seperator=<str> option is given, then the specified
-  string will seperate each column of data.  The default seperator
+  If the --separator=<str> option is given, then the specified
+  string will separate each column of data.  The default separator
   is a few spaces.
 
 The trace feature allows variables to be sampled in real time and saved
@@ -424,9 +424,9 @@ trace_samples
             SetVar("trace_ctrl", 1)
 
         elif cl[0] == "download":
-            seperator = "  "
-            if len(cl) > 1 and cl[1].startswith("--seperator="):
-                seperator = cl[1].split("=")[1]
+            separator = "  "
+            if len(cl) > 1 and cl[1].startswith("--separator="):
+                separator = cl[1].split("=")[1]
                 cl.remove(cl[1])
 
             tv = TraceActiveVars()
@@ -441,14 +441,14 @@ trace_samples
             line = []
             for v in tv:
                 line.append(v.name)
-            fp.write(seperator.join(line) + "\n")
+            fp.write(separator.join(line) + "\n")
             dat = TraceDownload()
 
             for i in range(len(dat[0])):
                 line = []
                 for j in range(len(tv)):
                     line.append(tv[j].fmt % dat[j][i])
-                fp.write(seperator.join(line) + "\n")
+                fp.write(separator.join(line) + "\n")
             fp.close()
 
         elif cl[0] == "graph":
@@ -664,7 +664,7 @@ def TraceGraph():
     return dat
 
 
-def TraceSaveDat(dat, fname, seperator="  "):
+def TraceSaveDat(dat, fname, separator="  "):
 
     tv = TraceActiveVars()
 
@@ -672,13 +672,13 @@ def TraceSaveDat(dat, fname, seperator="  "):
     line = []
     for v in tv:
         line.append(v.name)
-    fp.write(seperator.join(line) + "\n")
+    fp.write(separator.join(line) + "\n")
 
     for i in range(len(dat[0])):
         line = []
         for j in range(len(tv)):
             line.append(tv[j].fmt % dat[j][i])
-        fp.write(seperator.join(line) + "\n")
+        fp.write(separator.join(line) + "\n")
     fp.close()
 
 

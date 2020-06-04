@@ -43,7 +43,7 @@ public:
 
   // Returns how many bytes were written into rx_buffer_
   uint32_t received_length() {
-    return (RxBytesMax - uart_dma_.getRxBytesLeft());
+    return (RxBytesMax - uart_dma_.rx_bytes_left());
   }
 
   // Returns the rx_buffer_
@@ -66,7 +66,7 @@ extern uint32_t rx_index;
 // Puts a byte to rx_buffer
 template <int RxBytesMax>
 void RxBufferUartDma<RxBytesMax>::test_put_byte(uint8_t b) {
-  rx_buffer[rx_index++] = b;
+  rx_buffer_[rx_index++] = b;
 }
 #endif
 

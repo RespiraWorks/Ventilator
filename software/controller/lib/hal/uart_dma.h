@@ -42,7 +42,7 @@ public:
       : uart_(uart), dma_(dma), tx_channel_(tx_channel),
         rx_channel_(rx_channel), match_char_(match_char) {}
 
-  void Init(uint32_t baud);
+  void init(uint32_t baud);
   // Returns true if DMA TX is in progress
   bool tx_in_progress() const;
   // Returns true if DMA RX is in progress

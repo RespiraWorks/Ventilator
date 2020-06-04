@@ -30,6 +30,7 @@ Abbreviations [RM], [DS], etc are defined in hal/README.md.
 #include "hal.h"
 #include "stepper.h"
 #include "uart_dma.h"
+#include "framing_spec_chars.h"
 #include "vars.h"
 #include <optional>
 #include <stdarg.h>
@@ -580,11 +581,12 @@ public:
   uint16_t TxFree() { return static_cast<uint16_t>(tx_data_.FreeCount()); }
 };
 
-static UART rpi_uart(Uart3Base);
 static UART debug_uart(Uart2Base);
-#ifdef UART_VIA_DMA
-extern UartDma dma_uart;
-#endif
+static constexpr uint8_t txCh{1};
+static constexpr uint8_t rxCh{2};
+UartDma uart_dma(Uart3Base, Dma1Base, txCh, rxCh, FramingMark);
+DmaCtrl dmaController(Dma1Base);
+
 // The UART that talks to the rPi uses the following pins:
 //    PB10 - TX
 //    PB11 - RX
@@ -608,9 +610,8 @@ void HalApi::InitUARTs() {
   //        Need to do that as soon as the boards are available.
   EnableClock(Uart2Base);
   EnableClock(Uart3Base);
-#ifdef UART_VIA_DMA
   EnableClock(Dma1Base);
-#endif
+
   GpioPinAltFunc(GpioABase, 2, 7);
   GpioPinAltFunc(GpioABase, 3, 7);
 
@@ -619,11 +620,8 @@ void HalApi::InitUARTs() {
   GpioPinAltFunc(GpioBBase, 13, 7);
   GpioPinAltFunc(GpioBBase, 14, 7);
 
-#ifdef UART_VIA_DMA
-  dma_uart.Init(115200);
-#else
-  rpi_uart.Init(115200);
-#endif
+  uart_dma.init(115200);
+  dmaController.init();
   debug_uart.Init(115200);
 
   EnableInterrupt(InterruptVector::Dma1Channel2, IntPriority::Standard);
@@ -633,22 +631,6 @@ void HalApi::InitUARTs() {
 }
 
 static void Uart2ISR() { debug_uart.ISR(); }
-
-#ifndef UART_VIA_DMA
-void Uart3ISR() { rpi_uart.ISR(); }
-#endif
-
-uint16_t HalApi::SerialRead(char *buf, uint16_t len) {
-  return rpi_uart.Read(buf, len);
-}
-
-uint16_t HalApi::SerialBytesAvailableForRead() { return rpi_uart.RxFull(); }
-
-uint16_t HalApi::SerialWrite(const char *buf, uint16_t len) {
-  return rpi_uart.Write(buf, len);
-}
-
-uint16_t HalApi::SerialBytesAvailableForWrite() { return rpi_uart.TxFree(); }
 
 uint16_t HalApi::DebugWrite(const char *buf, uint16_t len) {
   return debug_uart.Write(buf, len);
@@ -846,13 +828,8 @@ __attribute__((section(".isr_vector"))) void (*const Vectors[101])() = {
     BadISR,        //  25 - 0x064
     BadISR,        //  26 - 0x068
     BadISR,        //  27 - 0x06C
-#ifdef UART_VIA_DMA
     DMA1Channel2ISR, //  28 - 0x070 DMA1 CH2
     DMA1Channel3ISR, //  29 - 0x074 DMA1 CH3
-#else
-    BadISR, //  28 - 0x070
-    BadISR, //  29 - 0x074
-#endif
     BadISR,          //  30 - 0x078
     BadISR,          //  31 - 0x07C
     BadISR,          //  32 - 0x080

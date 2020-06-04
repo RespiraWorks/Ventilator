@@ -193,35 +193,6 @@ public:
   // Sets `pin` to high or low.
   void DigitalWrite(BinaryPin pin, VoltageLevel value);
 
-  // Receives bytes from the GUI controller along the serial bus.
-  //
-  // Arduino's SerialIO will block if len > SerialBytesAvailableForRead(), but
-  // this function will never block. Instead it returns the number of bytes
-  // read.  It's up to you to check how many bytes were actually read and
-  // handle "short reads" where we read fewer bytes than were requested.
-  //
-  // TODO(jlebar): Change the serial* functions to use uint32_t once we've
-  // dropped support for Arduino.
-  [[nodiscard]] uint16_t SerialRead(char *buf, uint16_t len);
-
-  // Number of bytes we can read without blocking.
-  uint16_t SerialBytesAvailableForRead();
-
-  // Sends bytes to the GUI controller along the serial bus.
-  //
-  // Arduino's SerialIO will block if len > SerialBytesAvailableForWrite(),
-  // but this function will never block.  Instead, it returns the number of
-  // bytes written.  number of bytes written.  It's up to you to check how
-  // many bytes were actually written and handle "short writes" where we wrote
-  // less than the whole buffer.
-  [[nodiscard]] uint16_t SerialWrite(const char *buf, uint16_t len);
-  [[nodiscard]] uint16_t SerialWrite(uint8_t data) {
-    return SerialWrite(reinterpret_cast<const char *>(&data), 1);
-  }
-
-  // Number of bytes we can write without blocking.
-  uint16_t SerialBytesAvailableForWrite();
-
   // Serial port used for debugging
   [[nodiscard]] uint16_t DebugWrite(const char *buf, uint16_t len);
   [[nodiscard]] uint16_t DebugRead(char *buf, uint16_t len);
@@ -453,25 +424,6 @@ inline void HalApi::AnalogWrite(PwmPin pin, float duty) {
     assert(false && "Can only write to an OUTPUT pin");
   }
   pwm_pin_values_[pin] = duty;
-}
-
-inline uint16_t HalApi::SerialRead(char *buf, uint16_t len) {
-  return serial_port_.Read(buf, len);
-}
-inline uint16_t HalApi::SerialBytesAvailableForRead() {
-  return serial_port_.BytesAvailableForRead();
-}
-inline uint16_t HalApi::SerialWrite(const char *buf, uint16_t len) {
-  return serial_port_.Write(buf, len);
-}
-inline uint16_t HalApi::SerialBytesAvailableForWrite() {
-  return serial_port_.BytesAvailableForWrite();
-}
-inline uint16_t HalApi::TESTSerialGetOutgoingData(char *data, uint16_t len) {
-  return serial_port_.GetOutgoingData(data, len);
-}
-inline void HalApi::TESTSerialPutIncomingData(const char *data, uint16_t len) {
-  serial_port_.PutIncomingData(data, len);
 }
 
 inline uint16_t HalApi::DebugRead(char *buf, uint16_t len) {

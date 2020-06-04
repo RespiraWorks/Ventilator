@@ -114,9 +114,9 @@ if [ "$1" == "--install" ]; then
         libqt5serialport5 \
         qtdeclarative5-dev-tools \
         xvfb \
-	bear \
-	cppcheck \
-	clang-tidy
+	      bear \
+	      cppcheck \
+	      clang-tidy
   fi
   exit 0
 fi

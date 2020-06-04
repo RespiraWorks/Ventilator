@@ -14,7 +14,7 @@ limitations under the License.
 
 */
 
-#if defined(BARE_STM32) && defined(UART_VIA_DMA)
+#if defined(BARE_STM32)
 
 #include "uart_dma.h"
 #include "hal_stm32.h"
@@ -33,7 +33,7 @@ limitations under the License.
 extern UartDma uart_dma;
 
 // Performs UART3 initialization
-void UartDma::Init(uint32_t baud) {
+void UartDma::init(uint32_t baud) {
   baud_ = baud;
   // Set baud rate register
   uart_->baudrate = CPU_FREQ / baud;
@@ -231,7 +231,7 @@ static bool CharacterMatchInterrupt() {
   return Uart3Base->status.bitfield.char_match != 0;
 }
 
-static bool GetRxError() {
+static bool rx_error() {
   return Uart3Base->status.bitfield.overrun_error || // overrun error
          Uart3Base->status.bitfield.framing_error;   // frame error
 
@@ -245,7 +245,7 @@ static bool GetRxError() {
 // those events are provided by UART peripheral. on_rx_complete is called by DMA
 // ISR
 void UartDma::UART_interrupt_handler() {
-  if (GetRxError()) {
+  if (rx_error()) {
     RxError e = RxError::Unknown;
     if (uart_->status.bitfield.overrun_error) {
       e = RxError::Overrun;

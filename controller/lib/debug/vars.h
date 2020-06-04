@@ -132,8 +132,9 @@ private:
 
 class DebugInt32 : public DebugVar {
 public:
-  DebugInt32(const char *name, const char *help = "", const char *fmt = "%d")
-      : DebugVar(name, &value_, help, fmt) {}
+  explicit DebugInt32(const char *name, const char *help = "", int32_t init = 0,
+                      const char *fmt = "%d")
+      : DebugVar(name, &value_, help, fmt), value_(init) {}
 
   void Set(int32_t v) { value_ = v; }
   int32_t Get() { return value_; }
@@ -144,8 +145,9 @@ private:
 
 class DebugUInt32 : public DebugVar {
 public:
-  DebugUInt32(const char *name, const char *help = "", const char *fmt = "%u")
-      : DebugVar(name, &value_, help, fmt) {}
+  explicit DebugUInt32(const char *name, const char *help = "",
+                       uint32_t init = 0, const char *fmt = "%u")
+      : DebugVar(name, &value_, help, fmt), value_(init) {}
 
   void Set(uint32_t v) { value_ = v; }
   uint32_t Get() { return value_; }
@@ -156,8 +158,9 @@ private:
 
 class DebugFloat : public DebugVar {
 public:
-  DebugFloat(const char *name, const char *help = "", const char *fmt = "%.3f")
-      : DebugVar(name, &value_, help, fmt) {}
+  explicit DebugFloat(const char *name, const char *help = "", float init = 0,
+                      const char *fmt = "%.3f")
+      : DebugVar(name, &value_, help, fmt), value_(init) {}
 
   void Set(float v) { value_ = v; }
   float Get() { return value_; }

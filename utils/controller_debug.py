@@ -50,6 +50,10 @@ VAR_INT32 = 1
 VAR_UINT32 = 2
 VAR_FLOAT = 3
 
+# Can trace this many variables at once.  Keep this in sync with TRACE_VAR_CT
+# in the controller.
+TRACE_VAR_CT = 4
+
 port = "/dev/ttyACM0"
 if len(sys.argv) > 1:
     port = sys.argv[1]
@@ -386,8 +390,15 @@ A sub-command must be passed as an option:
 trace flush
   Stops the trace if one was on-going and flushes the trace buffer
 
-trace start
-  Starts the trace collecting data.
+trace start [--period p] [var1 ... ]
+  Starts collecting trace data.
+
+  You can specify the names of up to TRACE_VAR_CT debug variables to trace.  If
+  you don't specify any, we use the values in trace_var1, ....
+
+  --period controls the sample period in units of one trip through the
+  controller's high-priority loop.  If you don't specify a period, we use
+  whatever is in the trace_period debug variable.
 
 trace graph
   Downloads the data and displays it graphically.
@@ -401,19 +412,16 @@ trace download [--separator=<str>] [--dest=<filename>]
   option is given, then the specified string will separate each column of data.
   The default separator is a few spaces.
 
-The trace first must be set up by setting specific variables.
+The tracing API also exposes the following debug vars, controlled via the
+standard `get` and `set` commands.  You probably don't need to touch these.
 
-trace_var1
-trace_var2
-trace_var3
-trace_var4
-  Set these variables to the name of the parameter you want to capture.
-  Any parameter can be given by name.  Up to 4 parameters can be saved
-  to the trace buffer at any time.  Think of it as a 4 channel oscilloscope.
+trace_var1, ..., trace_var{TRACE_VAR_CT}
+  Names of the variables to trace.  Can be set explicitly, or via `trace
+  start`.
 
 trace_period
-  Set this to the period at which you want to save the data.  The units
-  are loop periods.  A period <= 0 is treated as 1
+  Interval between two samples in the trace.  A value of N means we sample once
+  every N times through the controller's high priority loop.
 
 trace_ctrl
   This variable is used to start the trace.  Just set it to 1 to start.
@@ -432,6 +440,22 @@ trace_samples
             SendCmd(OP_TRACE, [SUBCMD_TRACE_FLUSH])
 
         elif cl[0] == "start":
+            parser = CmdArgumentParser("trace start")
+            parser.add_argument("--period", type=int)
+            parser.add_argument("var", nargs="*")
+            args = parser.parse_args(cl[1:])
+
+            if len(args.var) > TRACE_VAR_CT:
+                print(f"Can't trace more than {TRACE_VAR_CT} variables at once.")
+                return
+            if args.period:
+                SetVar("trace_period", args.period)
+            if args.var:
+                # Unset existing trace vars, so we only get what was asked for.
+                var = args.var + [""] * (TRACE_VAR_CT - len(args.var))
+                for (i, var) in enumerate(var):
+                    SetVar(f"trace_var{i + 1}", var)
+
             SendCmd(OP_TRACE, [SUBCMD_TRACE_FLUSH])
             SetVar("trace_ctrl", 1)
 
@@ -574,7 +598,7 @@ def SetVar(name, value):
     # If this is a trace variable, the passed value
     # should be a variable name
     if name.startswith("trace_var"):
-        if value == "none":
+        if value == "" or value == "none":
             value = "-1"
         elif value in varDict:
             value = "%d" % varDict[value].id

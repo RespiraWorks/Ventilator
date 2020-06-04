@@ -74,6 +74,8 @@ private:
   const Duration sample_period_;
 
   bool initialized_ = false;
+  Time next_sample_time_ = millisSinceStartup(0);
+  Time last_update_time_ = millisSinceStartup(0);
   float output_sum_ = 0;
   float last_input_ = 0;
   float last_error_ = 0;

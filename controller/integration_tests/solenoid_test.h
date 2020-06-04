@@ -1,8 +1,19 @@
-// This test switches the binary solenoid between the open and closed position
-//
 // TODO - This test should be updated because the solenoid is now a proportional
 //        solenoid with variable positions between 0 and 1 and no longer a
 //        simple binary solenoid
+
+// This test switches the binary solenoid between the open and closed position
+//
+// Summary:
+//      This test switches the binary solenoid between the open and closed
+//      position
+//
+// How to run:
+//      TEST=TEST_SOLENOID pio run -e integration-test -t upload
+//
+// Automation:
+//      TBD - which python script to run?
+//
 
 #include "hal.h"
 

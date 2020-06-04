@@ -22,17 +22,6 @@ void HalApi::Init() {}
 void HalApi::init_PCB_ID_pins() {}
 void HalApi::InitUARTs() {}
 
-uint16_t HalApi::SerialRead(char *buf, uint16_t len) { return serial_port_.Read(buf, len); }
-uint16_t HalApi::SerialBytesAvailableForRead() { return serial_port_.BytesAvailableForRead(); }
-uint16_t HalApi::SerialWrite(const char *buf, uint16_t len) { return serial_port_.Write(buf, len); }
-uint16_t HalApi::SerialBytesAvailableForWrite() { return serial_port_.BytesAvailableForWrite(); }
-uint16_t HalApi::TESTSerialGetOutgoingData(char *data, uint16_t len) {
-  return serial_port_.GetOutgoingData(data, len);
-}
-void HalApi::TESTSerialPutIncomingData(const char *data, uint16_t len) {
-  serial_port_.PutIncomingData(data, len);
-}
-
 uint16_t HalApi::DebugRead(char *buf, uint16_t len) { return debug_serial_port_.Read(buf, len); }
 uint16_t HalApi::DebugBytesAvailableForRead() { return debug_serial_port_.BytesAvailableForRead(); }
 uint16_t HalApi::DebugWrite(const char *buf, uint16_t len) {

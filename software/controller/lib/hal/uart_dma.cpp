@@ -296,10 +296,8 @@ void DMA1Channel3ISR() {
   DMA::get_register(DMA::Base::DMA1)->interrupt_clear.gif3 = 1;  // clear all channel 2 flags
 }
 
-#if defined(UART_VIA_DMA)
 // This is the interrupt handler for the UART.
 void Uart3ISR() { uart_dma.UART_interrupt_handler(); }
-#endif
 
 #else
 

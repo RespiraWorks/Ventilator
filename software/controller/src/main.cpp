@@ -68,6 +68,7 @@ static DFloat forced_fio2(
 static Controller controller;
 static ControllerStatus controller_status;
 static Sensors sensors;
+static Comms comms;
 static NVParams::Handler nv_params;
 static I2Ceeprom eeprom = I2Ceeprom(0x50, 64, 32768, &i2c1);
 
@@ -181,7 +182,7 @@ static void HighPriorityTask(void *arg) {
       local_controller_status = controller_status;
     }
 
-    CommsHandler(local_controller_status, &gui_status);
+    comms.handler(local_controller_status, &gui_status);
 
     // Override received gui_status from the RPi with values from DebugVars iff
     // the forced_mode DebugVar has a legal value.
@@ -217,7 +218,10 @@ int main() {
   // Locate our non-volatile parameter block in flash
   nv_params.Init(&eeprom);
 
-  CommsInit();
+  if (!comms.init()) {
+    // TODO maybe do something better here? Alarm?
+    // hal.ResetDevice();
+  }
 
   BackgroundLoop();
 }

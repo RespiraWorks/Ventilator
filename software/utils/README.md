@@ -14,9 +14,9 @@ Scripts for doing so are available under [rpi_config](rpi_config).
 
 There is a brief tutorial on how to use it right next to the python code in the [/debug](debug) subdirectory. Script can also be accessed via the common controller utilities script at [software/controller/controller.sh](../controller/controller.sh).
 
-## decoder
+## Controller frame decoder
 
-[decoder.py](decoder.py)
+[decoder.py](controller_frame_decoder.py)
 
 This is a decoder of serial packets sent from controller to GUI.
 

@@ -28,8 +28,11 @@ Abbreviations [RM], [DS], etc are defined in hal/README.md.
 
 #include <optional>
 
+#include "checksum.h"
+#include "circular_buffer.h"
 #include "clocks.h"
 #include "flash.h"
+#include "framing_spec_chars.h"
 #include "gpio.h"
 #include "hal_stm32_regs.h"
 #include "i2c.h"
@@ -38,12 +41,9 @@ Abbreviations [RM], [DS], etc are defined in hal/README.md.
 #include "system_timer.h"
 #include "timers.h"
 #include "uart.h"
+#include "uart_dma.h"
 #include "vars.h"
 #include "watchdog.h"
-
-#if defined(UART_VIA_DMA)
-#include "uart_dma.h"
-#endif
 
 static constexpr uint32_t CPUFrequencyMhz{80};
 
@@ -243,11 +243,12 @@ void Timer15ISR() {
   StepMotor::StartQueuedCommands();
 }
 
-static UART rpi_uart(Uart3Base);
 static UART debug_uart(Uart2Base);
-#if defined(UART_VIA_DMA)
-extern UartDma dma_uart;
-#endif
+static constexpr uint8_t TxChannel{1};
+static constexpr uint8_t RxChannel{2};
+UartDma uart_dma(Uart3Base, DMA::get_register(DMA::Base::DMA1), TxChannel, RxChannel, FramingMark);
+DmaCtrl dma_conmtroller(DMA::get_register(DMA::Base::DMA1));
+
 // The UART that talks to the rPi uses the following pins:
 //    PB10 - TX
 //    PB11 - RX
@@ -271,9 +272,9 @@ void HalApi::InitUARTs() {
   //        Need to do that as soon as the boards are available.
   enable_peripheral_clock(PeripheralID::USART2);
   enable_peripheral_clock(PeripheralID::USART3);
-#if defined(UART_VIA_DMA)
+
   enable_peripheral_clock(PeripheralID::DMA1);
-#endif
+
   // [DS] Table 17 (pg 76)
   GPIO::alternate_function(GPIO::Port::A, /*pin =*/2,
                            GPIO::AlternativeFuncion::AF7);  // USART2_TX
@@ -290,11 +291,8 @@ void HalApi::InitUARTs() {
   GPIO::alternate_function(GPIO::Port::B, /*pin =*/14,
                            GPIO::AlternativeFuncion::AF7);  // USART3_RTS_DE
 
-#if defined(UART_VIA_DMA)
-  dma_uart.initialize(CPUFrequencyHz, 115200);
-#else
-  rpi_uart.Init(CPUFrequencyHz, 115200);
-#endif
+  uart_dma.initialize(CPUFrequencyHz, 115200);
+  dma_conmtroller.init();
   debug_uart.Init(CPUFrequencyHz, 115200);
 
   Interrupts::singleton().EnableInterrupt(InterruptVector::Dma1Channel2, IntPriority::Standard);
@@ -304,18 +302,6 @@ void HalApi::InitUARTs() {
 }
 
 void Uart2ISR() { debug_uart.ISR(); }
-
-#if !defined(UART_VIA_DMA)
-void Uart3ISR() { rpi_uart.ISR(); }
-#endif
-
-uint16_t HalApi::SerialRead(char *buf, uint16_t len) { return rpi_uart.Read(buf, len); }
-
-uint16_t HalApi::SerialBytesAvailableForRead() { return rpi_uart.RxFull(); }
-
-uint16_t HalApi::SerialWrite(const char *buf, uint16_t len) { return rpi_uart.Write(buf, len); }
-
-uint16_t HalApi::SerialBytesAvailableForWrite() { return rpi_uart.TxFree(); }
 
 uint16_t HalApi::DebugWrite(const char *buf, uint16_t len) { return debug_uart.Write(buf, len); }
 
@@ -379,39 +365,34 @@ __attribute__((used)) __attribute__((section(".isr_vector"))) void (*const Vecto
 
     // The rest of the table is a list of exception and interrupt handlers.
     // [RM] chapter 12 (NVIC) gives a listing of the vector table offsets.
-    NMI,            //   2 - 0x008 The NMI handler
-    FaultISR,       //   3 - 0x00C The hard fault handler
-    MPUFaultISR,    //   4 - 0x010 The MPU fault handler
-    BusFaultISR,    //   5 - 0x014 The bus fault handler
-    UsageFaultISR,  //   6 - 0x018 The usage fault handler
-    BadISR,         //   7 - 0x01C Reserved
-    BadISR,         //   8 - 0x020 Reserved
-    BadISR,         //   9 - 0x024 Reserved
-    BadISR,         //  10 - 0x028 Reserved
-    BadISR,         //  11 - 0x02C SVCall handler
-    BadISR,         //  12 - 0x030 Debug monitor handler
-    BadISR,         //  13 - 0x034 Reserved
-    BadISR,         //  14 - 0x038 The PendSV handler
-    BadISR,         //  15 - 0x03C SysTick
-    BadISR,         //  16 - 0x040
-    BadISR,         //  17 - 0x044
-    BadISR,         //  18 - 0x048
-    BadISR,         //  19 - 0x04C
-    BadISR,         //  20 - 0x050
-    BadISR,         //  21 - 0x054
-    BadISR,         //  22 - 0x058
-    BadISR,         //  23 - 0x05C
-    BadISR,         //  24 - 0x060
-    BadISR,         //  25 - 0x064
-    BadISR,         //  26 - 0x068
-    BadISR,         //  27 - 0x06C
-#if defined(UART_VIA_DMA)
+    NMI,              //   2 - 0x008 The NMI handler
+    FaultISR,         //   3 - 0x00C The hard fault handler
+    MPUFaultISR,      //   4 - 0x010 The MPU fault handler
+    BusFaultISR,      //   5 - 0x014 The bus fault handler
+    UsageFaultISR,    //   6 - 0x018 The usage fault handler
+    BadISR,           //   7 - 0x01C Reserved
+    BadISR,           //   8 - 0x020 Reserved
+    BadISR,           //   9 - 0x024 Reserved
+    BadISR,           //  10 - 0x028 Reserved
+    BadISR,           //  11 - 0x02C SVCall handler
+    BadISR,           //  12 - 0x030 Debug monitor handler
+    BadISR,           //  13 - 0x034 Reserved
+    BadISR,           //  14 - 0x038 The PendSV handler
+    BadISR,           //  15 - 0x03C SysTick
+    BadISR,           //  16 - 0x040
+    BadISR,           //  17 - 0x044
+    BadISR,           //  18 - 0x048
+    BadISR,           //  19 - 0x04C
+    BadISR,           //  20 - 0x050
+    BadISR,           //  21 - 0x054
+    BadISR,           //  22 - 0x058
+    BadISR,           //  23 - 0x05C
+    BadISR,           //  24 - 0x060
+    BadISR,           //  25 - 0x064
+    BadISR,           //  26 - 0x068
+    BadISR,           //  27 - 0x06C
     DMA1Channel2ISR,  //  28 - 0x070 DMA1 CH2
     DMA1Channel3ISR,  //  29 - 0x074 DMA1 CH3
-#else
-    BadISR,  //  28 - 0x070
-    BadISR,  //  29 - 0x074
-#endif
     BadISR,           //  30 - 0x078
     BadISR,           //  31 - 0x07C
     BadISR,           //  32 - 0x080

@@ -27,7 +27,7 @@ TEST(FramingTests, DecodingDestTooSmall) {
   uint8_t source_buf[] = {FramingMark, 0, 1, 2, 3, FramingMark};
   uint8_t dest_buf[10];
 
-  uint32_t frameLength = UnescapeFrame(source_buf, sizeof(source_buf), dest_buf, 3);
+  size_t frameLength = UnescapeFrame(source_buf, sizeof(source_buf), dest_buf, 3);
   ASSERT_EQ(frameLength, (uint32_t)0);
   frameLength = UnescapeFrame(source_buf, sizeof(source_buf), dest_buf, 4);
   ASSERT_GT(frameLength, (uint32_t)0);
@@ -52,7 +52,7 @@ bool UartDma::start_tx(uint8_t *buf, uint32_t length, TxListener *txl) {
   tx_length = length;
   is_transferring = true;
   tx_listener = txl;
-  printf("TX event, length: %d\n ", tx_length);
+  printf("TX event, length: %u\n ", tx_length);
   for (uint32_t i = 0; i < length; i++) {
     printf("%X ", buf[i]);
   }
@@ -83,8 +83,8 @@ TEST(FramingTests, ControllerStatusCoding) {
   s.sensor_readings.volume_ml = 800;
   s.sensor_readings.flow_ml_per_min = 1000;
 
-  uint32_t encoded_length = EncodeControllerStatusFrame(s, dma_stream);
-  printf("Encoded length: %d\n", encoded_length);
+  size_t encoded_length = EncodeControllerStatusFrame(s, dma_stream);
+  printf("Encoded length: %ld\n", encoded_length);
   ASSERT_GT(encoded_length, (uint32_t)0);
   EXPECT_EQ(tx_length, encoded_length);
   ControllerStatus decoded = ControllerStatus_init_zero;
@@ -109,8 +109,8 @@ TEST(FramingTests, GuiStatusCoding) {
   s.desired_params.inspiratory_trigger_cm_h2o = 5;
   s.desired_params.expiratory_trigger_ml_per_min = 9;
 
-  uint32_t encoded_length = EncodeGuiStatusFrame(s, dma_stream);
-  printf("Encoded length: %d\n", encoded_length);
+  size_t encoded_length = EncodeGuiStatusFrame(s, dma_stream);
+  printf("Encoded length: %ld\n", encoded_length);
   ASSERT_GT(encoded_length, (uint32_t)0);
   GuiStatus decoded = GuiStatus_init_zero;
   DecodeResult r = DecodeGuiStatusFrame(tx_buffer, encoded_length, &decoded);

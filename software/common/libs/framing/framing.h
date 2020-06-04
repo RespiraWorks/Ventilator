@@ -26,11 +26,11 @@ limitations under the License.
 #include "network_protocol.pb.h"
 #include "proto_traits.h"
 
-uint32_t UnescapeFrame(uint8_t *source, uint32_t source_length, uint8_t *destination,
-                       uint32_t destination_length) {
-  uint32_t i = 0;
+inline size_t UnescapeFrame(const uint8_t *source, size_t source_length, uint8_t *destination,
+                            size_t destination_length) {
+  size_t i = 0;
   bool is_escape = false;
-  for (uint32_t j = 0; j < source_length; j++) {
+  for (size_t j = 0; j < source_length; j++) {
     switch (source[j]) {
       case FramingMark:
         break;
@@ -63,8 +63,8 @@ enum class DecodeResult : uint32_t { Success, ErrorFraming, ErrorCRC, ErrorSeria
 // DecodeResult::ErrorCRC on CRC mismatch
 // DecodeResult::ErrorSerialization on nanopb decode error
 template <typename PbType>
-DecodeResult DecodeFrame(uint8_t *buf, uint32_t len, PbType *pb_object) {
-  uint32_t decoded_length = UnescapeFrame(buf, len, buf, len);
+DecodeResult DecodeFrame(uint8_t *buf, size_t len, PbType *pb_object) {
+  size_t decoded_length = UnescapeFrame(buf, len, buf, len);
   if (0 == decoded_length) {
     return DecodeResult::ErrorFraming;
   }
@@ -80,7 +80,7 @@ DecodeResult DecodeFrame(uint8_t *buf, uint32_t len, PbType *pb_object) {
 
 // Emulates the transmission process to count the number of bytes needed for encoding
 template <typename PbType>
-static uint32_t EncodedLength(uint8_t *buf, uint32_t len) {
+static uint32_t EncodedLength(uint8_t *buf, size_t len) {
   CounterStream counter_stream;
   EscapeStream esc_stream(counter_stream);
   CrcStream crc_stream(esc_stream);
@@ -96,7 +96,7 @@ static uint32_t EncodedLength(uint8_t *buf, uint32_t len) {
 // The resulting byte stream is written to the OutputStream
 // Returns number of bytes written.
 template <typename PbType>
-uint32_t EncodeFrame(const PbType &pb_object, OutputStream &output_stream) {
+size_t EncodeFrame(const PbType &pb_object, OutputStream &output_stream) {
   uint8_t pb_buffer[ProtoTraits<PbType>::MaxSize];
 
   pb_ostream_t stream = pb_ostream_from_buffer(pb_buffer, sizeof(pb_buffer));
@@ -104,7 +104,7 @@ uint32_t EncodeFrame(const PbType &pb_object, OutputStream &output_stream) {
     // TODO: Serialization failure; log an error or raise an alert.
     return 0;
   }
-  uint32_t pb_length = (uint32_t)(stream.bytes_written);
+  size_t pb_length = (size_t)(stream.bytes_written);
 
   EscapeStream esc_stream(output_stream);
   CrcStream crc_stream(esc_stream);
@@ -115,7 +115,7 @@ uint32_t EncodeFrame(const PbType &pb_object, OutputStream &output_stream) {
   }
 
   StreamResponse ret;
-  for (uint32_t i = 0; i < pb_length; i++) {
+  for (size_t i = 0; i < pb_length; i++) {
     ret += crc_stream.put(pb_buffer[i]);
   }
   ret += crc_stream.put(EndOfStream);

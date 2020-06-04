@@ -29,11 +29,14 @@ fi
 # This script should work no matter where you call it from.
 cd "$(dirname "$0")"
 
+EXIT_FAILURE=1
+EXIT_SUCCESS=0
+
 # Check if Darwin or Linux
 PLATFORM="$(uname -s)"
 if [ $PLATFORM != "Darwin" ] && [ $PLATFORM != "Linux" ]; then
   echo "Error: This script only supports 'Darwin' or 'Linux'. You have $PLATFORM."
-  exit 1
+  exit $EXIT_FAILURE
 fi
 
 EXIT_FAILURE=1
@@ -160,7 +163,7 @@ elif [ "$1" == "install" ]; then
   if [ "$PLATFORM" == "Linux" ]; then
     if [ "$EUID" -ne 0 ]; then
       echo "Please run install with root privileges!"
-      exit 1
+      exit $EXIT_FAILURE
     fi
 
     apt-get update &&

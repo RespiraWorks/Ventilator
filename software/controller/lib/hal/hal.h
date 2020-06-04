@@ -80,35 +80,6 @@ class HalApi {
  public:
   void Init();
 
-  // Receives bytes from the GUI controller along the serial bus.
-  //
-  // Arduino's SerialIO will block if len > SerialBytesAvailableForRead(), but
-  // this function will never block. Instead it returns the number of bytes
-  // read.  It's up to you to check how many bytes were actually read and
-  // handle "short reads" where we read fewer bytes than were requested.
-  //
-  // TODO(jlebar): Change the serial* functions to use uint32_t once we've
-  // dropped support for Arduino.
-  [[nodiscard]] uint16_t SerialRead(char *buf, uint16_t len);
-
-  // Number of bytes we can read without blocking.
-  uint16_t SerialBytesAvailableForRead();
-
-  // Sends bytes to the GUI controller along the serial bus.
-  //
-  // Arduino's SerialIO will block if len > SerialBytesAvailableForWrite(),
-  // but this function will never block.  Instead, it returns the number of
-  // bytes written.  number of bytes written.  It's up to you to check how
-  // many bytes were actually written and handle "short writes" where we wrote
-  // less than the whole buffer.
-  [[nodiscard]] uint16_t SerialWrite(const char *buf, uint16_t len);
-  [[nodiscard]] uint16_t SerialWrite(uint8_t data) {
-    return SerialWrite(reinterpret_cast<const char *>(&data), 1);
-  }
-
-  // Number of bytes we can write without blocking.
-  uint16_t SerialBytesAvailableForWrite();
-
   // Serial port used for debugging
   [[nodiscard]] uint16_t DebugWrite(const char *buf, uint16_t len);
   [[nodiscard]] uint16_t DebugRead(char *buf, uint16_t len);
@@ -130,13 +101,6 @@ class HalApi {
 
 #if !defined(BARE_STM32)
  public:
-  // Reads up to `len` bytes of data "sent" via SerialWrite.  Returns the
-  // total number of bytes read.
-  //
-  // TODO: Once we have explicit message framing, this should simply read one
-  // message.
-  uint16_t TESTSerialGetOutgoingData(char *data, uint16_t len);
-
   // Simulates receiving serial data from the GUI controller.  Makes these
   // bytes available to be read by serialReadByte().
   //
@@ -160,17 +124,18 @@ class HalApi {
   //   hal.SerialBytesAvailableForRead() == 4
   //   hal.SerialRead(buf, 16) == 4
   //   hal.SerialBytesAvailableForRead() == 0
-  //
-  void TESTSerialPutIncomingData(const char *data, uint16_t len);
-
-  // Same as above, but for the debug serial port.
-  uint16_t TESTDebugGetOutgoingData(char *data, uint16_t len);
   void TESTDebugPutIncomingData(const char *data, uint16_t len);
+
+  // Reads up to `len` bytes of data "sent" via SerialWrite.  Returns the
+  // total number of bytes read.
+  //
+  // TODO: Once we have explicit message framing, this should simply read one
+  // message.
+  uint16_t TESTDebugGetOutgoingData(char *data, uint16_t len);
 
  private:
   Time time_ = microsSinceStartup(0);
 
-  TestSerialPort serial_port_;
   TestSerialPort debug_serial_port_;
 #endif
 };

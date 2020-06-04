@@ -25,7 +25,7 @@
 //      In case the buzzer doesn't work, or you are working on a remote machine
 //      with no way to hear sound, you can check the result manually using the
 //      debug interface:
-//      $ utils/controller_debug.py
+//      $ utils/debug.sh
 //      ] get result
 //      Will return 1 if the result is successful, and 0 otherwise.
 //

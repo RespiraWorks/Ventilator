@@ -79,6 +79,8 @@ if [ "$1" == "--install" ] ; then
     qtquickcontrols2-5-dev \
     qml-module-qtquick-controls \
     qml-module-qtquick-controls2 \
+    libqt5serialport5-dev \
+    libqt5serialport5 \
     qtdeclarative5-dev-tools \
     xvfb
   fi
@@ -99,10 +101,8 @@ fi
 ########
 
 if [ "$1" == "--test" ] ; then
-  create_clean_directory build_autotests
-  cd build_autotests
-  qmake ../autotests
-  make -j
+
+  cd build
 
   if [ "$PLATFORM" == "Darwin" ]; then
     make check
@@ -111,4 +111,5 @@ if [ "$1" == "--test" ] ; then
     Xvfb :1 &
     DISPLAY=:1 make check
   fi
+  cd -
 fi

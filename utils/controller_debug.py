@@ -1114,5 +1114,5 @@ def CRC16_Calc(dat):
     return CRCutil().calc(dat)
 
 
-cl = CmdLine()
-cl.CmdLoop()
+if __name__ == "__main__":
+    CmdLine().CmdLoop()

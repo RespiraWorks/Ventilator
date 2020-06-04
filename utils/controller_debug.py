@@ -891,7 +891,7 @@ def DbgPrint(*args, **kwargs):
 def SendCmd(op, data=[], timeout=None):
     buff = [op] + data
 
-    crc = crc16.calc(buff)
+    crc = CRC16().calc(buff)
     buff += Split16(crc)
 
     S = "CMD: "
@@ -919,7 +919,7 @@ def SendCmd(op, data=[], timeout=None):
         if len(rsp) < 3:
             raise Error("Invalid response, too short")
 
-        crc = crc16.calc(rsp[:-2])
+        crc = CRC16().calc(rsp[:-2])
         rcrc = Build16(rsp[-2:])[0]
         if crc != rcrc:
             raise Error(
@@ -1081,41 +1081,34 @@ def GrabFlt(dat, le=True):
     return I2F(GrabU32(dat, le=le))
 
 
-# Simple utility class for calculating CRC values.
-class CRCutil:
-    def __init__(self, poly=0xEDB88320, init=0xFFFFFFFF):
-        self.init = init
-        self.InitTable(poly)
+def MakeCrcTable(poly):
+    tbl = []
+    for i in range(256):
+        crc = i
+        for j in range(8):
+            lsbSet = crc & 1
+            crc >>= 1
+            if lsbSet:
+                crc ^= poly
+        tbl.append(crc)
+    return tbl
+
+
+class CRC16:
+    """Simple utility class for calculating CRC values."""
+
+    tbl = MakeCrcTable(0xA001)
+
+    def __init__(self):
+        self.init = 0
 
     def calc(self, dat, init=0):
         crc = init ^ self.init
         for d in dat:
             a = 0x00FF & (d ^ crc)
-            crc = self.tbl[a] ^ (crc >> 8)
+            crc = CRC16.tbl[a] ^ (crc >> 8)
         return crc ^ self.init
 
-    def InitTable(self, poly):
-        self.tbl = []
 
-        for i in range(256):
-            crc = i
-
-            for j in range(8):
-                lsbSet = crc & 1
-                crc >>= 1
-                if lsbSet:
-                    crc ^= poly
-            self.tbl.append(crc)
-
-
-# Standard 16-bit CRC calculations
-crc16 = CRCutil(poly=0xA001, init=0)
-
-
-def CRC16_Calc(dat):
-    global crc16
-    return crc16.calc(dat)
-
-
-cl = CmdLine()
-cl.CmdLoop()
+if __name__ == "__main__":
+    CmdLine().CmdLoop()

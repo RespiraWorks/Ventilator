@@ -652,23 +652,20 @@ def TraceDownload():
     # Convert the bytes into an array of unsigned 32-bit values
     data = Build32(data)
 
-    ret = []
-    for i in range(len(traceVars)):
-        ret.append([])
+    # The data comes as a list of of samples, where each sample contains
+    # len(traceVars) uint32s: [a1, b1, c1, a2, b2, c2, ...].  Parse this into
+    # sublists [[a1', a2', ...], [b1', b2', ...], [c1', c2', ...]], where each
+    # of the variables is converted to the correct type.
+    nvars = len(traceVars)
+    ret = [[] for _ in range(nvars)]
 
-    # Find out how many total samples there were
-    samples = int(len(data) / len(traceVars))
-    n = 0
-    for s in range(samples):
-        for i in range(len(traceVars)):
-            d = data[n]
-            n += 1
-
-            # Reformat the raw data into a float
-            # or signed int as necessary
-            d = traceVars[i].ConvertInt(d)
-
-            ret[i].append(d)
+    # The `zip` expression groups data into sublists of nvars elems.  See the
+    # "grouper" recipe:
+    # https://docs.python.org/3/library/itertools.html#itertools-recipes
+    iters = [iter(data)] * nvars
+    for sample in zip(*iters):
+        for i, val in enumerate(sample):
+            ret[i].append(traceVars[i].ConvertInt(val))
     return ret
 
 

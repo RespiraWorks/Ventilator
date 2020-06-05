@@ -9,10 +9,10 @@ template <class RxBuffer, int FRAME_BUF_LEN>
 class FrameDetector : public RxListener {
 public:
   enum class State {
-    LOST,       // Frame detector does not know where it is in the stream of
-                // bytes coming into RxBuffer
-    WAIT_START, // Frame detector for a frame start marker
-    RX_FRAME    // Frame detector is receiving a frame
+    LOST, // Frame detector does not know where it is in the stream of
+          // bytes coming into RxBuffer
+    WAIT_FOR_START_MARKER, // Frame detector is waiting for a frame start marker
+    RECEIVING_FRAME        // Frame detector is receiving a frame
   };
 
   FrameDetector(RxBuffer &t) : rx_buffer_(t){};
@@ -24,7 +24,7 @@ public:
   }
 
   // Callback method called when RxBuffer is full
-  void onRxComplete() override {
+  void OnRxComplete() override {
     // We should never reach the full read of rx buffer.
     // If we get here, this means, there are no marker
     // chars in the stream, so we are lost
@@ -34,27 +34,27 @@ public:
   }
 
   // Callback method called when we receive a marker character
-  void onCharacterMatch() override {
+  void OnCharacterMatch() override {
     switch (state_) {
     case State::LOST:
-      // if we have received something before this marker,
-      // we assume, this is the frame end marker, so wait
-      // for start
       if (rx_buffer_.ReceivedLength() > 1) {
-        state_ = State::WAIT_START;
+        // if we have received something before this marker,
+        // we assume, this is the frame end marker, so wait
+        // for start
+        state_ = State::WAIT_FOR_START_MARKER;
+      } else if (rx_buffer_.ReceivedLength() == 1) {
         // if we were lucky to get lost in the interframe silence,
         // assume this is the start of the frame
-      } else if (rx_buffer_.ReceivedLength() == 1) {
-        state_ = State::RX_FRAME;
+        state_ = State::RECEIVING_FRAME;
       } else {
         // TODO alert, safe reset
         // Should never end up here
         // DMA is not working?
       }
       break;
-    case State::WAIT_START:
+    case State::WAIT_FOR_START_MARKER:
       if (rx_buffer_.ReceivedLength() == 1) {
-        state_ = State::RX_FRAME;
+        state_ = State::RECEIVING_FRAME;
       } else {
         // some junk received while waiting for start marker,
         // but should have been just silence
@@ -62,14 +62,15 @@ public:
         state_ = State::LOST;
       }
       break;
-    case State::RX_FRAME:
+    case State::RECEIVING_FRAME:
       // end marker received, check if we got something
       if (rx_buffer_.ReceivedLength() > 1) {
+        // yes, we got data, thus we got the frame we can pass further
         processReceivedData();
-        state_ = State::WAIT_START;
+        state_ = State::WAIT_FOR_START_MARKER;
       } else {
         // repeated marker char received
-        // assume we are still good
+        // ignore it and continue receiving frame bytes
       }
       break;
     }
@@ -77,13 +78,13 @@ public:
   }
 
   // Callback method called when underlying Rx system experiences an error
-  void onRxError([[maybe_unused]] RxError_t e) override {
+  void OnRxError([[maybe_unused]] RxError e) override {
     switch (state_) {
     case State::LOST:
-    case State::WAIT_START:
+    case State::WAIT_FOR_START_MARKER:
       // no change
       break;
-    case State::RX_FRAME:
+    case State::RECEIVING_FRAME:
       state_ = State::LOST;
       break;
     }

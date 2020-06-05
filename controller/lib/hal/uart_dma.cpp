@@ -204,6 +204,9 @@ static bool isRxError() {
   // UART3_BASE->status.s.nf || // START bit noise detection flag
 }
 
+// ISR handler for the UART peripheral.
+// Calls OnRxError and OnCharacterMatch functions of the rxListener as those
+// events are provided by UART peripheral. OnRxComplete is called by DMA ISR
 void UART_DMA::UART_ISR() {
   if (isRxError()) {
     RxError e = RxError::UNKNOWN;
@@ -224,22 +227,24 @@ void UART_DMA::UART_ISR() {
     uart->intClear.s.orecf = 1;
     uart->intClear.s.rtocf = 1;
 
-    // TODO define logic if stopRX() has to be here
     if (rxListener) {
       rxListener->OnRxError(e);
     }
+    return;
   }
 
   if (isCharacterMatchInterrupt()) {
     uart->request.s.rxfrq = 1; // Clear RXNE flag before clearing other flags
     uart->intClear.s.cmcf = 1; // Clear char match flag
-    // TODO define logic if stopRX() has to be here
+
     if (rxListener) {
       rxListener->OnCharacterMatch();
     }
   }
 }
 
+// ISR handler for the DMA peripheral responsible for transmission.
+// Calls OnRxError and OnTxComplete functions of the txListener
 void UART_DMA::DMA_TX_ISR() {
   if (dma->intStat.teif2) {
     stopTX();
@@ -254,6 +259,8 @@ void UART_DMA::DMA_TX_ISR() {
   }
 }
 
+// ISR handler for the DMA peripheral responsible for reception.
+// Calls OnRxError and OnRxComplete functions of the txListener
 void UART_DMA::DMA_RX_ISR() {
   if (dma->intStat.teif3) {
     stopRX();

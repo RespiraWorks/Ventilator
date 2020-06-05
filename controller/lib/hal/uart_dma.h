@@ -5,35 +5,36 @@
 #include "units.h"
 
 class DMACtrl {
-  DMA_Regs *const dma;
+  DMA_Regs *const dma_;
 
 public:
-  explicit DMACtrl(DMA_Regs *const dma) : dma(dma) {}
+  explicit DMACtrl(DMA_Regs *const dma) : dma_(dma) {}
   void init() {
     // UART3 reception happens on DMA1 channel 3
-    dma->chanSel.c3s = 0b0010;
+    dma_->chanSel.c3s = 0b0010;
     // UART3 transmission happens on DMA1 channel 2
-    dma->chanSel.c2s = 0b0010;
+    dma_->chanSel.c2s = 0b0010;
   }
 };
 
 class UART_DMA {
-  UART_Regs *const uart;
-  DMA_Regs *const dma;
-  uint8_t txCh;
-  uint8_t rxCh;
-  RxListener *rxListener = 0;
-  TxListener *txListener = 0;
+  UART_Regs *const uart_;
+  DMA_Regs *const dma_;
+  uint8_t tx_ch_;
+  uint8_t rx_ch_;
+  RxListener *rx_listener_ = 0;
+  TxListener *tx_listener_ = 0;
   uint32_t baud_;
-  char matchChar;
+  char match_char_;
 
 public:
 #ifdef TEST_MODE
-  UART_DMA() : uart(0), dma(0){};
+  UART_DMA() : uart_(0), dma_(0){};
 #endif
-  UART_DMA(UART_Regs *const uart, DMA_Regs *const dma, uint8_t txCh,
-           uint8_t rxCh, char matchChar)
-      : uart(uart), dma(dma), txCh(txCh), rxCh(rxCh), matchChar(matchChar) {}
+  UART_DMA(UART_Regs *const uart, DMA_Regs *const dma, uint8_t tx_ch,
+           uint8_t rx_ch, char match_char)
+      : uart_(uart), dma_(dma), tx_ch_(tx_ch), rx_ch_(rx_ch),
+        match_char_(match_char) {}
 
   void init(uint32_t baud);
   // Returns true if DMA TX is in progress

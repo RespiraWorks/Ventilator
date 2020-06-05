@@ -264,7 +264,7 @@ void UartDma::UartISR() {
 }
 
 // ISR handler for the DMA peripheral responsible for transmission.
-// Calls OnRxError and OnTxComplete functions of the tx_listener_
+// Calls OnTxError and OnTxComplete functions of the tx_listener_
 void UartDma::DmaTxISR() {
   if (dma_->interrupt_status.teif2) {
     StopTX();
@@ -280,7 +280,7 @@ void UartDma::DmaTxISR() {
 }
 
 // ISR handler for the DMA peripheral responsible for reception.
-// Calls OnRxError and OnRxComplete functions of the tx_listener_
+// Calls OnRxError and OnRxComplete functions of the rx_listener_
 void UartDma::DmaRxISR() {
   if (dma_->interrupt_status.teif3) {
     StopRX();

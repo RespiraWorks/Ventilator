@@ -64,9 +64,9 @@ static uint32_t extract_crc(const uint8_t *buf, uint32_t data_length) {
     return 0;
   }
 
-  uint32_t crc = static_cast<uint32_t>(buf[data_length - 1 - 3]) << 24 |
-                 static_cast<uint32_t>(buf[data_length - 1 - 2]) << 16 |
-                 static_cast<uint32_t>(buf[data_length - 1 - 1]) << 8 |
+  uint32_t crc = static_cast<uint32_t>(buf[data_length - 4]) << 24 |
+                 static_cast<uint32_t>(buf[data_length - 3]) << 16 |
+                 static_cast<uint32_t>(buf[data_length - 2]) << 8 |
                  static_cast<uint32_t>(buf[data_length - 1]);
   return crc;
 }

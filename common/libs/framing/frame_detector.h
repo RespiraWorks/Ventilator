@@ -5,6 +5,49 @@
 #include <stdint.h>
 #include <string.h>
 
+/**
+ * FrameDetector detects frames of this format:
+ * ...MbbbbbbbbbbbM...
+ * Where M is frame MARK byte and b is any other byte. It is responsibility of
+ * sender to ensure that MARK characters appear in the incoming stream to only
+ * mark the start and the end of the frame.
+ *
+ * Correct stream of frames will look like this:
+ * ...MbbbbbbMMbbbbbbbbMMbbbbbbbbbMMbbbbbM...
+ *
+ * RxBuffer is responsible for underlying reception and buffering of incoming
+ * data. Also RxBuffer provides callbacks described by RxListener interface. In
+ * particular:
+ * OnCharacterMatch is called when MARK character is received
+ * OnRxComplete is called when the requested number of bytes was received
+ * OnRxError is called when an error occurs in the underlying reception
+ * infrastructure
+ *
+ * FrameDetector is modeled as a Finite State Machine having states:
+ * LOST - FrameDetector is lost in the stream of incoming bytes and will
+ * interpret the next MARK byte as an end of the frame.
+ * WAIT_FOR_START_MARKER - FrameDetector is synced and is waiting for MARK byte
+ * that will denote the start of the frame RECEIVING_FRAME - FrameDetector is
+ * synced and will interpret the next MARK byte as an end of the frame and will
+ * interpret the bytes in RxBuffer as a frame.
+ *
+ * OnRxError will cause FrameDetector to transition to the LOST state, frame
+ * being received will be ignored.
+ * ...MbbbbbbEbbbbMMbbbbbbbM
+ *    ^-----------^ this frame will be ignored
+ *                 ^-------^ this frame will be received
+ *
+ * OnRxComplete should not happen in normal reception. When FrameEncoder orders
+ * a reception from RxBuffer, it specifies maximum length of the frame expected,
+ * also FrameEncoder restarts reception upon receiving OnCharMatch callback.
+ * Thus, receiving OnRxComplete callback means that we get no MARK characters in
+ * the stream because sender is sending garbage or a frame that is longer than
+ * the expected length.
+ *
+ * FrameDetector keeps a copy of the last successfully received frame and a flag
+ * denoting if the last received frame was read by the caller.
+ * */
+
 template <class RxBuffer, int FRAME_BUF_LEN>
 class FrameDetector : public RxListener {
 public:

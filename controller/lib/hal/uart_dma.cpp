@@ -108,7 +108,7 @@ bool UART_DMA::startTX(const uint8_t *buf, uint32_t length, TxListener *txl) {
 
   dma->channel[txCh].config.enable = 0; // Disable channel before config
   // data sink
-  dma->channel[txCh].pAddr = (&(uart->txDat));
+  dma->channel[txCh].pAddr = &uart->txDat;
   // data source
   dma->channel[txCh].mAddr =
       const_cast<void *>(reinterpret_cast<const void *>(buf));
@@ -155,7 +155,7 @@ bool UART_DMA::startRX(const uint8_t *buf, uint32_t length, Duration timeout,
   dma->channel[rxCh].config.enable = 0; // don't enable yet
 
   // data source
-  dma->channel[rxCh].pAddr = &(uart->rxDat);
+  dma->channel[rxCh].pAddr = &uart->rxDat;
   // data sink
   dma->channel[rxCh].mAddr =
       const_cast<void *>(reinterpret_cast<const void *>(buf));
@@ -206,15 +206,15 @@ static bool isRxError() {
 
 void UART_DMA::UART_ISR() {
   if (isRxError()) {
-    RxError_t e = RxError_t::RX_ERROR_UNKNOWN;
+    RxError e = RxError::UNKNOWN;
     if (isRxTimeout()) {
-      e = RxError_t::RX_ERROR_TIMEOUT;
+      e = RxError::TIMEOUT;
     }
     if (uart->status.s.ore) {
-      e = RxError_t::RX_ERROR_OVR;
+      e = RxError::OVERFLOW;
     }
     if (uart->status.s.fe) {
-      e = RxError_t::RX_ERROR_SERIAL_FRAMING;
+      e = RxError::SERIAL_FRAMING;
     }
 
     uart->request.s.rxfrq = 1; // Clear RXNE flag before clearing other flags
@@ -226,7 +226,7 @@ void UART_DMA::UART_ISR() {
 
     // TODO define logic if stopRX() has to be here
     if (rxListener) {
-      rxListener->onRxError(e);
+      rxListener->OnRxError(e);
     }
   }
 
@@ -235,7 +235,7 @@ void UART_DMA::UART_ISR() {
     uart->intClear.s.cmcf = 1; // Clear char match flag
     // TODO define logic if stopRX() has to be here
     if (rxListener) {
-      rxListener->onCharacterMatch();
+      rxListener->OnCharacterMatch();
     }
   }
 }
@@ -244,12 +244,12 @@ void UART_DMA::DMA_TX_ISR() {
   if (dma->intStat.teif2) {
     stopTX();
     if (txListener) {
-      txListener->onTxError();
+      txListener->OnTxError();
     }
   } else {
     stopTX();
     if (txListener) {
-      txListener->onTxComplete();
+      txListener->OnTxComplete();
     }
   }
 }
@@ -258,12 +258,12 @@ void UART_DMA::DMA_RX_ISR() {
   if (dma->intStat.teif3) {
     stopRX();
     if (rxListener) {
-      rxListener->onRxError(RxError_t::RX_ERROR_DMA);
+      rxListener->OnRxError(RxError::DMA);
     }
   } else {
     stopRX();
     if (rxListener) {
-      rxListener->onRxComplete();
+      rxListener->OnRxComplete();
     }
   }
 }

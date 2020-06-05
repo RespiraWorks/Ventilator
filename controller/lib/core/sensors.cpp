@@ -31,13 +31,14 @@ static DebugVar d2("dp_exhale", &dp_exhale, "Exhale diff pressure, cm/h2O",
                    "%.4f");
 static DebugVar d3("pressure", &pressure, "Patient pressure, cm/h2O", "%.4f");
 
-static float flow_inhale, flow_exhale, flow_delta;
+static float flow_inhale, flow_exhale, flow_delta, volume;
 static DebugVar d4("flow_inhale", &flow_inhale, "Inhale flow rate, cc/sec",
                    "%.3f");
 static DebugVar d5("flow_exhale", &flow_exhale, "Exhale flow rate, cc/sec",
                    "%.3f");
 static DebugVar d6("flow_delta", &flow_delta,
                    "Inhale - Exhale flow rate, cc/sec", "%.3f");
+static DebugVar d7("volume", &volume, "Tidal volume, ml", "%0.3f");
 
 //@TODO: Potential Caution: Density of air slightly varies over temperature and
 // altitude - need mechanism to adjust based on delivery? Constant involving
@@ -161,12 +162,13 @@ SensorReadings Sensors::GetSensorReadings() {
   VolumetricFlow inflow = PressureDeltaToFlow(inflow_delta);
   VolumetricFlow outflow = PressureDeltaToFlow(outflow_delta);
   VolumetricFlow flow = inflow - outflow;
+  tv_integrator_.AddFlow(Hal.now(), flow);
 
   flow_inhale = inflow.ml_per_sec();
   flow_exhale = outflow.ml_per_sec();
   flow_delta = flow.ml_per_sec();
+  volume = tv_integrator_.GetTV().ml();
 
-  tv_integrator_.AddFlow(Hal.now(), flow);
   return {
       .patient_pressure_cm_h2o = patient_pressure.cmH2O(),
       .volume_ml = tv_integrator_.GetTV().ml(),

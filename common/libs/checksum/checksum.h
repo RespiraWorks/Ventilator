@@ -27,9 +27,8 @@ constexpr uint32_t CRC32_POLYNOMIAL = 0x741B8CD7;
 // Calculates CRC32 of a given byte array.
 // NOTE: each byte separately is passed to CRC calculation, i.e. bytes are not
 // packed to uint32_t value, but extended with zeroes in upper bits. I.e. 0x42
-// will be interpreted as 0x00000042. This is for compatibility with hardware
-// CRC32 peripheral in STM32 and to have simpler code as we are dealing with
-// bytes.
+// will be interpreted as 0x00000042. This is to have simpler code as we are
+// dealing with bytes when calculating CRC.
 // @param data - data on which to calculate CRC32
 // @param length - length of the data
 // @returns CRC32 if length > 0, 0 otherwise

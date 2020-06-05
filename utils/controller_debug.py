@@ -11,12 +11,14 @@
 import argparse
 import cmd
 import glob
+import json
 import math
 import matplotlib.pyplot as plt
 import os
 import readline
 import serial
 import struct
+import subprocess
 import sys
 import threading
 import time
@@ -53,13 +55,6 @@ VAR_FLOAT = 3
 # Can trace this many variables at once.  Keep this in sync with TRACE_VAR_CT
 # in the controller.
 TRACE_VAR_CT = 4
-
-port = "/dev/ttyACM0"
-if len(sys.argv) > 1:
-    port = sys.argv[1]
-
-ser = serial.Serial(port=port, baudrate=115200)
-ser.timeout = 0.8
 
 # If true, the raw bytes of the serial data will be printed.
 # This is handy for debugging the low level serial interface
@@ -1142,5 +1137,41 @@ class CRC16:
         return crc ^ self.init
 
 
+def DetectSerialPort():
+    j = json.loads(
+        subprocess.check_output(["platformio", "device", "list", "--json-output"])
+    )
+    ports = [d["port"] for d in j if "STM32" in d.get("description", "")]
+    if not ports:
+        raise Error(
+            "Could not auto-detect serial port; platformio device list did not "
+            "yield any STM32 devices.  Choose port explicitly with --port."
+        )
+    if len(ports) > 1:
+        raise Error(
+            "Could not auto-detect serial port; platformio device list "
+            f"yielded multiple STM32 devices: {', '.join(ports)}.  "
+            "Choose port explicitly with --port."
+        )
+    print(f"Detected device connected to {ports[0]}")
+    return ports[0]
+
+
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--port",
+        type=str,
+        help="Serial port device is connected to, e.g. /dev/ttyACM0.  If "
+        "unspecified, we try to auto-detect the port.",
+    )
+    args = parser.parse_args()
+
+    if not args.port:
+        args.port = DetectSerialPort()
+
+    global ser
+    ser = serial.Serial(port=args.port, baudrate=115200)
+    ser.timeout = 0.8
+
     CmdLine().CmdLoop()

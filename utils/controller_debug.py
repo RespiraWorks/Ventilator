@@ -52,6 +52,10 @@ VAR_INT32 = 1
 VAR_UINT32 = 2
 VAR_FLOAT = 3
 
+# Frequency with which the controller's high-priority loop runs, in
+# milliseconds.  Keep this in sync with Conrtroller::GetLoopPeriod().
+PID_SAMPLE_PERIOD_MS = 10
+
 # Can trace this many variables at once.  Keep this in sync with TRACE_VAR_CT
 # in the controller.
 TRACE_VAR_CT = 4
@@ -670,15 +674,23 @@ def TraceDownload():
 
 
 def TraceGraph():
+    traceVars = TraceActiveVars()
     dat = TraceDownload()
-
     TraceSaveDat(dat, "last_graph.dat")
 
-    samp = range(len(dat[0]))
+    # trace_period <= 0 is canonically interpreted as 1.
+    trace_period = GetVar("trace_period", raw=True)
+    if trace_period <= 0:
+        trace_period = 1
+    trace_period_ms = trace_period * PID_SAMPLE_PERIOD_MS
+
+    timestamps_sec = [t * trace_period_ms / 1000 for t in range(len(dat[0]))]
     plt.figure()
-    for d in dat:
-        plt.plot(samp, d)
+    for i, d in enumerate(dat):
+        plt.plot(timestamps_sec, d, label=traceVars[i].help)
+    plt.xlabel("Seconds")
     plt.grid()
+    plt.legend()
     plt.show()
     return dat
 

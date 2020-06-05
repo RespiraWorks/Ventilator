@@ -31,13 +31,13 @@ public:
       rx_buf_[rx_i_++] = b;
       if (match_char_ == b) {
         if (rx_listener) {
-          rx_listener->onCharacterMatch();
+          rx_listener->OnCharacterMatch();
         }
       }
     }
     if (rx_i_ >= RX_BYTES_MAX) {
       if (rx_listener) {
-        rx_listener->onRxComplete();
+        rx_listener->OnRxComplete();
       }
     }
   }

@@ -208,12 +208,14 @@ constexpr Length millimeters(float mm) { return Length(mm / 1000); }
 // Multiplying a VolumetricFlow by a Duration (see below) gives you a Volume.
 class VolumetricFlow : public units_detail::ArithScalar<VolumetricFlow, float> {
 public:
-  [[nodiscard]] constexpr float cubic_m_per_sec() { return val_; }
-  [[nodiscard]] constexpr float ml_per_min() {
+  [[nodiscard]] constexpr float cubic_m_per_sec() const { return val_; }
+  [[nodiscard]] constexpr float ml_per_min() const {
     return val_ * 1000.0f * 1000.0f * 60.0f;
   }
-  [[nodiscard]] constexpr float liters_per_sec() { return val_ * 1000.0f; }
-  [[nodiscard]] constexpr float ml_per_sec() { return val_ * 1.0e6f; }
+  [[nodiscard]] constexpr float liters_per_sec() const {
+    return val_ * 1000.0f;
+  }
+  [[nodiscard]] constexpr float ml_per_sec() const { return val_ * 1.0e6f; }
 
 private:
   constexpr friend VolumetricFlow cubic_m_per_sec(float m3ps);
@@ -252,8 +254,8 @@ constexpr VolumetricFlow ml_per_sec(float mmps) {
 // Dividing a Volume by a Duration gives you a VolumetricFlow.
 class Volume : public units_detail::ArithScalar<Volume, float> {
 public:
-  [[nodiscard]] constexpr float cubic_m() { return val_; }
-  [[nodiscard]] constexpr float ml() { return val_ * 1000.0f * 1000.0f; }
+  [[nodiscard]] constexpr float cubic_m() const { return val_; }
+  [[nodiscard]] constexpr float ml() const { return val_ * 1000.0f * 1000.0f; }
 
 private:
   constexpr friend Volume cubic_m(float m3);
@@ -363,8 +365,8 @@ public:
   constexpr friend Time operator+(const Duration &a, const Time &b);
   constexpr friend Time operator-(const Time &a, const Duration &b);
   constexpr friend Duration operator-(const Time &a, const Time &b);
-  inline Time &operator+=(const Duration &dt) { return *this = *this + dt; }
-  inline Time &operator-=(const Duration &dt) { return *this = *this - dt; }
+  Time &operator+=(const Duration &dt) { return *this = *this + dt; }
+  Time &operator-=(const Duration &dt) { return *this = *this - dt; }
 
 private:
   constexpr friend Time millisSinceStartup(uint64_t millis);

@@ -60,6 +60,7 @@ More detailed thoughts on this [here](https://docs.google.com/document/d/1_2f-MA
     * Normally open, which is important for anti-asphyxiation in the case of power loss
     * Still evaluating fatigue and lifetime / sealing.
     * Originally designed as the exhale valve to give control for maintaining PEEP - under considering to use for both the air inlet and for the oxygen inlet
+    * For more informatin about the design of this valve, see https://github.com/RespiraWorks/SystemDesign/tree/master/research-development/project-pinch-valve
 
 * **Idle Air Control Valve (IAC)**
     * Common automotive part that is cheap and widely available. 
@@ -98,6 +99,7 @@ More detailed thoughts on this [here](https://docs.google.com/document/d/1_2f-MA
     * Venturi's are nice because they are cheap and yet can provide reliable flow measurements. See [this ticket](https://github.com/RespiraWorks/SystemDesign/issues/9) for info about evaluating the venturi's.
     * Currently we are using the difference between the two flow measurements (one for inhale and one for exhale) to determine the tidal volume delivered to the patient. We are still evaluating how to do this - see [this ticket](https://github.com/RespiraWorks/SystemDesign/issues/57) for more information.
     * Another open questions is manufacturing of the venturis - currently the goal is to design a venturi that can be injection molded.
+    * For more informatni about the venturi design, see https://github.com/RespiraWorks/SystemDesign/tree/master/research-development/project-venturi
     
 * **Patient Pressure sensors**
     * Needs to be reliable, handle many cycles, and meet the required ranges and accuracies of the requirements (#todo flesh this out more).

@@ -63,7 +63,7 @@ Control {
                     anchors.verticalCenter: parent.verticalCenter
                     text: modeSelectionButton.text
                     font: Style.theme.font.headerButton
-                    color: "white"
+                    color: Style.theme.color.textPrimary
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     elide: Text.ElideRight
@@ -97,7 +97,7 @@ Control {
                     width: 16; height: 27
                     text: "0"
                     font: Style.theme.font.headerButton
-                    color: "white"
+                    color: Style.theme.color.textPrimary
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     elide: Text.ElideRight

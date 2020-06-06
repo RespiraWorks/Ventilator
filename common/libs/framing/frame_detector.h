@@ -72,23 +72,25 @@ public:
     // We should never reach the full read of rx buffer.
     // If we get here, this means, there are no marker
     // chars in the stream, so we are lost
-    error_counter_++;
     state_ = State::LOST;
-    rx_buffer_.RestartRX(this);
+    RestartRX();
   }
 
   // Callback method called when RxBuffer receives a marker character;
   // Note, MARK character is already written to RxBuffer so all conditions
   // evaluating rx_buffer_.ReceivedLength() take that into account
   void OnCharacterMatch() override {
+    marker_count_++;
+
     switch (state_) {
     case State::LOST:
-      if (rx_buffer_.ReceivedLength() > 1) {
-        // if we have received something more than this marker,
+      if (IsDataReceived()) {
+        // if we have received something more than just markers,
         // we assume, this is the frame end marker, so wait
         // for start
         state_ = State::WAIT_FOR_START_MARKER;
-      } else if (rx_buffer_.ReceivedLength() == 1) {
+        RestartRX();
+      } else if (IsOnlyMarkersReceived()) {
         // We have received just this marker
         // In this case, we were lucky to get to LOST state in the interframe
         // silence, assume this is the start of the frame
@@ -97,43 +99,47 @@ public:
         // Should never end up here
         // DMA is not working?
         // TODO alert, safe reset
+        RestartRX();
       }
       break;
     case State::WAIT_FOR_START_MARKER:
-      if (rx_buffer_.ReceivedLength() == 1) {
-        // we have received the marker we are waiting for
-        state_ = State::RECEIVING_FRAME;
-      } else if (rx_buffer_.ReceivedLength() > 1) {
+      if (IsDataReceived()) {
         // some junk received while waiting for the start marker,
         // but should have been just silence
-        error_counter_++;
         state_ = State::LOST;
+        RestartRX();
+      } else if (IsOnlyMarkersReceived()) {
+        // we have received the marker we are waiting for
+        state_ = State::RECEIVING_FRAME;
       } else {
-        state_ = State::LOST;
         // Should never end up here
         // DMA is not working?
         // TODO alert, safe reset
+        state_ = State::LOST;
+        RestartRX();
       }
       break;
     case State::RECEIVING_FRAME:
       // end marker received, check if we got something
-      if (rx_buffer_.ReceivedLength() > 1) {
+      if (IsDataReceived()) {
         // yes, we got data, thus we got the frame we can pass further
         processReceivedData();
         state_ = State::WAIT_FOR_START_MARKER;
-      } else if (rx_buffer_.ReceivedLength() == 1) {
+        RestartRX();
+      } else if (IsOnlyMarkersReceived()) {
         // repeated marker char received
         // this means we have received a 0 lenght frame
         // ignore it and continue receiving frame bytes
+        // rx_buffer_.RestartRX(this);
       } else {
         state_ = State::LOST;
+        RestartRX();
         // Should never end up here
         // DMA is not working?
         // TODO alert, safe reset
       }
       break;
     }
-    rx_buffer_.RestartRX(this);
   }
 
   // Callback method called when underlying Rx system experiences an error
@@ -145,9 +151,9 @@ public:
       break;
     case State::RECEIVING_FRAME:
       state_ = State::LOST;
+      RestartRX();
       break;
     }
-    error_counter_++;
   }
 
   // Returns the last successfully detected frame, resets the frame_available
@@ -172,18 +178,27 @@ public:
 private:
   RxBuffer &rx_buffer_;
   State state_ = State::LOST;
-  uint32_t error_counter_ = 0;
   bool frame_available_ = false;
   uint8_t frame_buf_[FRAME_BUF_LEN];
   uint32_t frame_buf_length_ = 0;
+  uint32_t marker_count_ = 0;
 
+  void RestartRX() {
+    marker_count_ = 0;
+    rx_buffer_.RestartRX(this);
+  }
+
+  bool IsDataReceived() { return rx_buffer_.ReceivedLength() > marker_count_; }
+  bool IsOnlyMarkersReceived() {
+    return rx_buffer_.ReceivedLength() == marker_count_;
+  }
   void processReceivedData() {
     // We strip incoming markers. First marker is stripped by restarting RX
     // after frame start MARK, i.e. the first marker is not saved in RxBuffer;
     // and now here we strip the last marker (which was saved to RxBuffer) by
     // taking the ReceivedLength() - 1
-    frame_buf_length_ = rx_buffer_.ReceivedLength() - 1;
-    memcpy(frame_buf_, rx_buffer_.get(), frame_buf_length_);
+    frame_buf_length_ = rx_buffer_.ReceivedLength() - marker_count_;
+    memcpy(frame_buf_, rx_buffer_.get() + marker_count_ - 1, frame_buf_length_);
     frame_available_ = true;
   }
 };

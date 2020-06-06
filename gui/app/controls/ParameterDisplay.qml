@@ -31,7 +31,7 @@ Rectangle {
             id: parameterNameText
             textFormat: Text.RichText
             font: Style.theme.font.parameterDisplay
-            color: "white"
+            color: Style.theme.color.textPrimary
             horizontalAlignment: Text.AlignLeft
             verticalAlignment: Text.AlignVCenter
             elide: Text.ElideRight
@@ -40,7 +40,7 @@ Rectangle {
         Text {
             id: parameterUnitText
             textFormat: Text.RichText
-            color: "#AFAFAF"
+            color: Style.theme.color.textAlternative
             font: Style.theme.font.parameterDisplay
             horizontalAlignment: Text.AlignLeft
             verticalAlignment: Text.AlignVCenter
@@ -56,7 +56,7 @@ Rectangle {
             horizontalCenter: parent.horizontalCenter
         }
         textFormat: Text.AutoText
-        color: "white"
+        color: Style.theme.color.textPrimary
         font: Style.theme.font.parameterDisplayValue
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter

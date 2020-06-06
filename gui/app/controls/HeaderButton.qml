@@ -21,7 +21,7 @@ Button {
     contentItem: Text {
         text: control.text
         font: Style.theme.font.headerButton
-        color: "white"
+        color: Style.theme.color.textPrimary
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
         elide: Text.ElideRight

@@ -25,7 +25,7 @@ duties reliably with high confidence over extended periods of time. The goal is 
 
 ## System conopS/System Design:
 
-More detailed thoughts on this [here](https://docs.google.com/document/d/1_2f-MABkjC65XBJjWOoxpzJW7co3L-7IdkNQfdwZbGU/edit).
+More detailed thoughts on this [here](https://github.com/RespiraWorks/SystemDesign/blob/master/ventilator-design/conop.md).
 
 * Targeting **pressure control** for two reasons: 
     1. We got early feedback that this was most important to doctors - though we have gotten feedback that volume control is also important.
@@ -115,7 +115,7 @@ More detailed thoughts on this [here](https://docs.google.com/document/d/1_2f-MA
 ## Filters
 * Filters on inlet/outlet to prevent contaminents from the surrounding environment getting into the device
 * Filter on patient circuit to avoid device contamination and spreading particles between patients
-* We're currently looking at HEPA filters since they are commonly avaible and cheap - but we're also evaluating other options. [More info on HEPA filters](https://respiraworks.slack.com/archives/C0137BLF17A/p1589983907134500?thread_ts=1589940279.125800&cid=C0137BLF17A)
+* We're currently looking at HEPA filters since they are commonly avaible and cheap - but we're also evaluating other options. HEPA filters are appropriate because they are designed to filter small particles [More info on HEPA filters](https://ntrs.nasa.gov/archive/nasa/casi.ntrs.nasa.gov/20170005166.pdf)
 * 2 part mold for holding the filters is meant to be easily manufacturable and to allow easy changing of the filters over time
 * Filters are placed physically on the outside of the box so they can be replaced without the box being opened
 

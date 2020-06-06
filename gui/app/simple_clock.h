@@ -17,7 +17,7 @@ class SimpleClock : public QObject {
 public:
   explicit SimpleClock(QObject *parent = nullptr) : QObject(parent) {
     connect(&timer_, &QTimer::timeout, this, &SimpleClock::update_timer);
-    timer_.start();
+    timer_.start(1000);
   }
 
   ~SimpleClock() { timer_.stop(); }

@@ -6,17 +6,18 @@ import "../controls"
 import ".."
 
 Mode {
+    id: mode
     Timer // TODO: Make data sources be updated as we get data
     {
         id: refreshTimer
-        interval: 1 / 15 * 1000 // 60 Hz
-        running: true
+        interval: 1 / 15 * 1000 // 15 Hz
+        running: mode.visible
         repeat: true
         onTriggered: {
             GuiStateContainer.update(
-                        pressureView.series(0),
-                        flowView.series(0),
-                        tidalVolumeView.series(0));
+                        pressureView.serie,
+                        flowView.serie,
+                        tidalVolumeView.serie);
         }
     }
 
@@ -36,8 +37,8 @@ Mode {
                 horizontalCenter: parent.horizontalCenter
             }
             columns: 2
-            columnSpacing: 0
-            rowSpacing: 0
+            columnSpacing: 8
+            rowSpacing: 8
 
             ParameterDisplay {
                 parameterName: qsTr("PIP")
@@ -94,6 +95,7 @@ Mode {
             top: parent.top
             left: parent.left; leftMargin: 8
             right: parameterDisplayPanel.left; rightMargin: 8
+            bottom: parameterButtonsPanel.top; bottomMargin: 8
         }
 
         color: "#05121C"
@@ -102,10 +104,12 @@ Mode {
 
             id: scopeGridLayout
             anchors.fill: parent
+            spacing: 0
 
             ScopeView {
                 id: pressureView
-                name: "Pressure [cmH2O]"
+                name: "Pressure"
+                unit: "cmH<sub>2</sub>O"
                 // TODO: Are these reasonable lower and upper bounds?
                 // Source for current value:
                 // https://www.rtmagazine.com/public-health/pediatrics/neonatal/selecting-appropriate-ventilator-parameters/
@@ -113,7 +117,6 @@ Mode {
                 yMin: -3
                 yMax: 30
 
-                color: "white"
                 Layout.fillHeight: true
                 Layout.fillWidth: true
             }
@@ -121,7 +124,8 @@ Mode {
             ScopeView
             {
                 id: flowView
-                name: "Flow [mL/min]"
+                name: "Flow"
+                unit: "mL/min"
                 // TODO: Are these reasonable lower and upper bounds?
                 // Source for current value:
                 // https://www.sciencedirect.com/topics/medicine-and-dentistry/peak-inspiratory-flow
@@ -130,7 +134,6 @@ Mode {
                 yMin: -150
                 yMax: 150
 
-                color: "white"
                 Layout.fillHeight: true
                 Layout.fillWidth: true
             }
@@ -138,7 +141,8 @@ Mode {
             ScopeView
             {
                 id: tidalVolumeView
-                name: "Tidal Volume [mL]"
+                name: "Tidal Volume"
+                unit: "mL"
                 // TODO: Are these reasonable lower and upper bounds?
                 // Source for current value:
                 // https://en.wikipedia.org/wiki/Tidal_volume
@@ -150,7 +154,7 @@ Mode {
                 yMin: 0
                 yMax: 2000
 
-                color: "white"
+                showBottomLine: false
                 Layout.fillHeight: true
                 Layout.fillWidth: true
             }

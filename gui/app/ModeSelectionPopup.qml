@@ -54,9 +54,10 @@ Popup {
                 anchors {
                     left: parent.left; leftMargin: 24
                 }
+                sourceSize: Qt.size(96, 96)
 
-                fillMode: Image.PreserveAspectCrop
-                source: 'qrc:/images/Logo.png'
+                fillMode: Image.PreserveAspectFit
+                source: 'qrc:/images/RW_log_24.svg'
             }
 
             Text {
@@ -115,8 +116,8 @@ Popup {
                             }
 
                             width: 40; height: 40
-                            fillMode: Image.PreserveAspectCrop
-                            source: 'qrc:/images/Logo.png'
+                            sourceSize: Qt.size(40, 40)
+                            source: 'qrc:/images/RW_inspsenssettings_24.svg'
                         }
 
                         Text {
@@ -174,7 +175,6 @@ Popup {
                 popup.selectedMode(modesModel.get(buttonGroup.checkedButton.pos))
                 popup.close()
             }
-            checked: true
         }
     }
 }

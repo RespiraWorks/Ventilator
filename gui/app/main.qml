@@ -9,6 +9,12 @@ ApplicationWindow {
     id: window
     visible: true
     width: 1024
+    // Setting max and  min size
+    // to avoid resize screens on windowed mode
+    minimumWidth: 1024
+    maximumWidth: 1024
+    minimumHeight: 600
+    maximumHeight: 600
     height: 600
     title: qsTr("Ventilator")
 

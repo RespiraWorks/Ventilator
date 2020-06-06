@@ -5,6 +5,10 @@ import QtQuick.Controls 2.4
 
 import ".."
 
+/*!
+    \qmltype BasePopup
+    \brief A styled popup used as base for all popups
+*/
 Popup {
     id: root
     width: parent.width; height: parent.height
@@ -15,7 +19,9 @@ Popup {
     margins: 0
 
     default property alias contentElement: loader.sourceComponent
+
     property alias title: titleText.text
+
     signal confirm()
 
     background: Rectangle {

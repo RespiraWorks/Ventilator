@@ -22,9 +22,8 @@ Rectangle {
         spacing: 2
         anchors {
             top: parent.top; topMargin: 7
-            leftMargin: 4
-            rightMargin: 4
-            horizontalCenter: parent.horizontalCenter
+            left: parent.left; leftMargin: 8
+            right: parent.right; rightMargin: 4
         }
 
         Text {

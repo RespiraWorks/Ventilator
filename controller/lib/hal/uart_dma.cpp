@@ -13,9 +13,7 @@
 // endpoints as peripheral and memory. Upon transfer completion
 // CPU is notified via interrupt.
 
-// This driver also provides Character Match interrupt on reception.
-// UART will issue an interrupt upon receipt of the specified
-// character.
+// This driver also provides Character Match callback on match_char reception.
 
 extern UART_DMA uart_dma;
 
@@ -43,8 +41,6 @@ void UART_DMA::init(uint32_t baud) {
   uart_->ctrl1.s.te = 1; // enable transmitter
   uart_->ctrl1.s.re = 1; // Enable receiver
   uart_->ctrl1.s.ue = 1; // enable uart
-
-  // TODO enable parity checking?
 
   dma_->channel[rx_ch_].config.priority = 0b11; // high priority
   dma_->channel[rx_ch_].config.teie = 1;        // interrupt on error
@@ -138,10 +134,26 @@ UART_DMA::uint24_t UART_DMA::DurationToBits(Duration d) {
           static_cast<uint32_t>(d.milliseconds() * baud_ / 1000) & 0x00FFFFFF};
 }
 
-// Sets up reception of [length] chars from UART3 into [buf]
-// Returns false if reception is in progress, new reception is not
-// setup. Returns true if no reception is in progress and new reception
-// was setup.
+// Sets up reception of exactly [length] chars from UART3 into [buf]
+// [timeout] is the number of baudrate bits for which RX line is
+// allowed to be idle before issuing timeout error.
+// OnCharacterMatch callback will be called if a match_char is seen on the RX
+// line
+// OnRxComplete callback will be called when the [length] bytes are received.
+// DMA and UART is disabled in this case.
+// OnRxError is called if UART or DMA errors occur:
+// OVERRUN - if received byte was not read before a new byte is received
+// SERIAL_FRAMING - when a de-synchronization, excessive noise or a break
+// character is detected
+// TIMEOUT - if RX line is idle for [timeout] after last reception of
+// character.
+// DMA - if DMA transfer is ordered into a restricted memory address
+// Note that OVERRUN, SERIAL_FRAMING, TIMEOUT errors do not
+// stop the reception, DMA will still wait for ordered number of bytes.
+// DMA error means that DMA transfer was stopped though.
+//
+// Returns false if reception is in progress, new reception is not setup.
+// Returns true if no reception is in progress and new reception was setup.
 
 bool UART_DMA::startRX(const uint8_t *buf, uint32_t length, Duration timeout,
                        RxListener *rxl) {
@@ -260,7 +272,7 @@ void UART_DMA::DMA_TX_ISR() {
 }
 
 // ISR handler for the DMA peripheral responsible for reception.
-// Calls OnRxError and OnRxComplete functions of the tx_listener_
+// Calls OnRxError and OnRxComplete functions of the rx_listener_
 void UART_DMA::DMA_RX_ISR() {
   if (dma_->intStat.teif3) {
     stopRX();

@@ -22,8 +22,8 @@ class UART_DMA {
   DMA_Regs *const dma_;
   uint8_t tx_ch_;
   uint8_t rx_ch_;
-  RxListener *rx_listener_ = 0;
-  TxListener *tx_listener_ = 0;
+  RxListener *rx_listener_ = nullptr;
+  TxListener *tx_listener_ = nullptr;
   uint32_t baud_;
   char match_char_;
 
@@ -37,28 +37,15 @@ public:
         match_char_(match_char) {}
 
   void init(uint32_t baud);
-  // Returns true if DMA TX is in progress
   bool isTxInProgress();
-  // Returns true if DMA RX is in progress
   bool isRxInProgress();
 
-  // Sets up UART3 to transfer [length] characters from [buf]
-  // Returns false if DMA transmission is in progress, does not
-  // interrupt previous transmission.
-  // Returns true if no transmission is in progress
   [[nodiscard]] bool startTX(const uint8_t *buf, uint32_t length,
                              TxListener *txl);
 
   uint32_t getRxBytesLeft();
 
   void stopTX();
-
-  // Sets up reception of at least [length] chars from UART3 into [buf]
-  // [timeout] is the number of baudrate bits for which RX line is
-  // allowed to be idle before asserting timeout error.
-  // Returns false if reception is in progress, new reception is not
-  // setup. Returns true if no reception is in progress and new reception
-  // was setup.
 
   [[nodiscard]] bool startRX(const uint8_t *buf, uint32_t length,
                              Duration timeout, RxListener *rxl);

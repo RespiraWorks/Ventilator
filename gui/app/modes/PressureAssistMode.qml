@@ -7,6 +7,6 @@ Mode {
         anchors.centerIn: parent
         text: "Pressure Assist Mode"
         color: "white"
-        font.pointSize: 38
+        font.pixelSize: 38
     }
 }

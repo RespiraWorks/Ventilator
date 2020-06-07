@@ -7,6 +7,8 @@
 
 #include <QApplication>
 #include <QCommandLineParser>
+#include <QFontDatabase>
+#include <QFontInfo>
 #include <QQmlApplicationEngine>
 #include <QtCore/QDir>
 #include <QtQml/QQmlContext>
@@ -15,6 +17,31 @@
 #include <cmath>
 #include <iostream>
 #include <memory>
+
+#include "simple_clock.h"
+
+QObject *gui_state_instance(QQmlEngine *engine, QJSEngine *scriptEngine) {
+  static GuiStateContainer state_container(
+      /*history_window=*/DurationMs(30000));
+  Q_UNUSED(engine);
+  Q_UNUSED(scriptEngine);
+  // Since we are returning just a pointer, QQmlEngine does not know the object
+  // is static and will try to take ownership of this object, unless we manually
+  // tell the engine that the ownership will belong to Cpp side.
+  engine->setObjectOwnership(&state_container, QQmlEngine::CppOwnership);
+  return &state_container;
+}
+
+void install_fonts() {
+  if (QFontDatabase::addApplicationFont(":/fonts/NotoSans-Regular.ttf") == -1)
+    qWarning() << "Failed to load NatoSans-Regular.ttf";
+
+  if (QFontDatabase::addApplicationFont(":/fonts/Oxygen-Regular.ttf") == -1)
+    qWarning() << "Failed to load Oxygen-Regular.ttf";
+
+  if (QFontDatabase::addApplicationFont(":/fonts/Oxygen-Bold.ttf") == -1)
+    qWarning() << "Failed to load Oxygen-Bold.ttf";
+}
 
 int main(int argc, char *argv[]) {
 
@@ -41,10 +68,9 @@ int main(int argc, char *argv[]) {
   parser.addOption(serialPortOption);
   parser.process(app);
 
-  GuiStateContainer state_container(
-      /*history_window=*/DurationMs(30000));
-  auto startup_time = state_container.GetStartupTime();
-
+  GuiStateContainer *state_container =
+      static_cast<GuiStateContainer *>(gui_state_instance(nullptr, nullptr));
+  auto startup_time = state_container->GetStartupTime();
   // Check out utils/mock-cycle-controller.py - it is
   // a script that bangs ControllerState at the set rate into serial
   // port.
@@ -86,14 +112,18 @@ int main(int argc, char *argv[]) {
   PeriodicClosure communicate(DurationMs(30), [&] {
     ControllerStatus controller_status;
     if (device->ReceiveControllerStatus(&controller_status)) {
-      state_container.AppendHistory(controller_status);
+      state_container->AppendHistory(controller_status);
     }
-    device->SendGuiStatus(state_container.GetGuiStatus());
+    device->SendGuiStatus(state_container->GetGuiStatus());
   });
   communicate.Start();
 
+  qmlRegisterSingletonType<GuiStateContainer>(
+      "Respira", 1, 0, "GuiStateContainer", &gui_state_instance);
+
+  install_fonts();
+
   QQmlApplicationEngine engine;
-  engine.rootContext()->setContextProperty("guiState", &state_container);
   engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
 
   if (parser.isSet(startupOnlyOption)) {

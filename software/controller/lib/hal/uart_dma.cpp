@@ -30,9 +30,7 @@ limitations under the License.
 // endpoints as peripheral and memory. Upon transfer completion
 // CPU is notified via interrupt.
 
-// This driver also provides Character Match interrupt on reception.
-// UART will issue an interrupt upon receipt of the specified
-// character.
+// This driver also provides Character Match callback on match_char reception.
 
 extern UartDma uart_dma;
 
@@ -156,10 +154,26 @@ UartDma::uint24_t UartDma::DurationToBits(Duration d) {
           static_cast<float>(baud_) / 1000.0) & 0x00FFFFFF};
 }
 
-// Sets up reception of at least [length] chars from UART3 into [buf]
-// Returns false if reception is in progress, new reception is not
-// setup. Returns true if no reception is in progress and new reception
-// was setup.
+// Sets up reception of exactly [length] chars from UART3 into [buf]
+// [timeout] is the number of baudrate bits for which RX line is
+// allowed to be idle before issuing timeout error.
+// OnCharacterMatch callback will be called if a match_char is seen on the RX
+// line
+// OnRxComplete callback will be called when the [length] bytes are received.
+// DMA and UART is disabled in this case.
+// OnRxError is called if UART or DMA errors occur:
+// OVERRUN - if received byte was not read before a new byte is received
+// SERIAL_FRAMING - when a de-synchronization, excessive noise or a break
+// character is detected
+// TIMEOUT - if RX line is idle for [timeout] after last reception of
+// character.
+// DMA - if DMA transfer is ordered into a restricted memory address
+// Note that OVERRUN, SERIAL_FRAMING, TIMEOUT errors do not
+// stop the reception, DMA will still wait for ordered number of bytes.
+// DMA error means that DMA transfer was stopped though.
+//
+// Returns false if reception is in progress, new reception is not setup.
+// Returns true if no reception is in progress and new reception was setup.
 
 bool UartDma::StartRX(uint8_t *buf, uint32_t length, Duration timeout,
                        RxListener *rxl) {

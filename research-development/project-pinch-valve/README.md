@@ -51,6 +51,7 @@ The above files should not be printed with FDM. Instead, a leaktight method like
 * **M**  = Mouser
 * **3D** = 3D printed (RespiraWorks)
 * **S**  = ST
+* **R** = RS computing
 
 ### Parts 
 
@@ -66,7 +67,7 @@ The above files should not be printed with FDM. Instead, a leaktight method like
 | 8      | 6in/15cm | McMaster-Carr | 5894K39             |  8.04 / 2 ft | Buy          | [C][8mcmc]         | Continuous-Flex Soft Tygon PVC Tubing, 1/2" ID, 5/8" OD |
 | 9      |        2 | McMaster-Carr | 9579K67             |  12.63 / 20  | Buy          | [C][9mcmc]         | Easy-Install Double Snap-Grip Clamps, 1/2" to 19/32" ID |
 | 10     |        1 | Digikey       | X-NUCLEO-IHM03A1    | 10.64 / each | *Ask first*  | [K][10key] [M][10mr] | Stepper driver dev board |
-| 11     |        1 | ST            | X-NUCLEO-IHM02A1    | 15.00 / each | Buy          | [S][11st]    | **ALT for item 10:** Two-axis stepper driver dev board |
+| 11     |        1 | ST            | X-NUCLEO-IHM02A1    | 15.00 / each | Buy          | [S][11st] [R][11rs]    | **ALT for item 10:** Two-axis stepper driver dev board |
 | 12     |        1 | RespiraWorks  | N/A                 |       N/A    | *Ask first*  | [3D][123d]         | BASE - 3D printed |
 | 13     |        1 | RespiraWorks  | N/A                 |       N/A    | *Ask first*  | [3D][123d]         | ROTOR - 3D printed |
 | 14     | 6in/15cm | McMaster-Carr | 5894K38             |  8.04 / 2 ft | *Ask first*          | [C][14mcmc]        | **alternative to 8**, tubing 3/8" ID, 5/8" OD |
@@ -85,6 +86,7 @@ The above files should not be printed with FDM. Instead, a leaktight method like
 [10key]:    https://www.digikey.com/short/z442qt
 [10mr]:     https://www.mouser.com/ProductDetail/511-X-NUCLEO-IHM03A1
 [11st]:    https://www.st.com/en/ecosystems/x-nucleo-ihm02a1.html#sample-and-buy
+[11rs]:    https://export.rsdelivers.com/product/stmicroelectronics/x-nucleo-ihm02a1/stmicroelectronics-x-nucleo-ihm02a1-two-axis/1646982
 [123d]:    #files
 [14mcmc]:  https://www.mcmaster.com/5894K38
 

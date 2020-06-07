@@ -16,5 +16,29 @@
         <file>modes/CommandPressureMode.qml</file>
         <file>modes/HighFlowNasalCannulaMode.qml</file>
         <file>controls/HeaderButton.qml</file>
+        <file>fonts/NotoSans-Bold.ttf</file>
+        <file>fonts/NotoSans-BoldItalic.ttf</file>
+        <file>fonts/NotoSans-Italic.ttf</file>
+        <file>fonts/NotoSans-Regular.ttf</file>
+        <file>controls/MainHeader.qml</file>
+        <file>controls/ParameterButton.qml</file>
+        <file>fonts/Oxygen-Bold.ttf</file>
+        <file>fonts/Oxygen-Light.ttf</file>
+        <file>fonts/Oxygen-Regular.ttf</file>
+        <file>controls/ParameterDisplay.qml</file>
+        <file>controls/DeviceStatusDisplay.qml</file>
+        <file>controls/ParameterAdjustPopup.qml</file>
+        <file>controls/BasePopup.qml</file>
+        <file>controls/BaseButton.qml</file>
+        <file>images/RW_add_24.svg</file>
+        <file>images/RW_substract_24.svg</file>
+        <file>images/RW_menu_24.svg</file>
+        <file>images/RW_inspsenssettings_24.svg</file>
+        <file>images/RW_alarm_24.svg</file>
+        <file>images/RW_battery-25_24.svg</file>
+        <file>images/RW_battery-50_24.svg</file>
+        <file>images/RW_battery-75_24.svg</file>
+        <file>images/RW_battery-100_24.svg</file>
+        <file>images/RW_adjust_24.svg</file>
     </qresource>
 </RCC>

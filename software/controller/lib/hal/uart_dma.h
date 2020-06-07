@@ -48,23 +48,12 @@ public:
   // Returns true if DMA RX is in progress
   bool RxInProgress() const;
 
-  // Sets up UART3 to transfer [length] characters from [buf]
-  // Returns false if DMA transmission is in progress, does not
-  // interrupt previous transmission.
-  // Returns true if no transmission is in progress
   [[nodiscard]] bool StartTX(uint8_t *buf, uint32_t length,
                              TxListener *txl);
 
   uint32_t GetRxBytesLeft();
 
   void StopTX();
-
-  // Sets up reception of at least [length] chars from UART3 into [buf]
-  // [timeout] is the number of baudrate bits for which RX line is
-  // allowed to be idle before asserting timeout error.
-  // Returns false if reception is in progress, new reception is not
-  // setup. Returns true if no reception is in progress and new reception
-  // was setup.
 
   [[nodiscard]] bool StartRX(uint8_t *buf, uint32_t length,
                              Duration timeout, RxListener *rxl);

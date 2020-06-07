@@ -1,7 +1,7 @@
 import QtQuick 2.11
 import QtQuick.Layouts 1.3
 import QtQuick.Controls 2.4
-
+import Respira 1.0
 import "../controls"
 import ".."
 
@@ -13,296 +13,211 @@ Mode {
         running: true
         repeat: true
         onTriggered: {
-            // TODO: guiState as a contextObject is not great
-            // as you lose autocomplete and you might infect
-            // a lot of files. Context objects will also be
-            // removed on Qt6. So better use singleton instead
-            guiState.update(
+            GuiStateContainer.update(
                         pressureView.series(0),
                         flowView.series(0),
                         tidalVolumeView.series(0));
         }
     }
 
-    ColumnLayout {
-        id: columnLayout
-        anchors.fill: parent
+    Rectangle {
+        id: parameterDisplayPanel
+        width: 216; height: 440
+        color: "#05121C"
+        radius: 8
+        anchors {
+            top: parent.top;
+            right: parent.right; rightMargin: 8
+        }
 
-        RowLayout {
-            id: rowLayout
-            width: 100
-            height: 100
+        GridLayout {
+            anchors {
+                top: parent.top
+                horizontalCenter: parent.horizontalCenter
+            }
+            columns: 2
+            columnSpacing: 0
+            rowSpacing: 0
 
-            ColumnLayout {
-                id: columnLayout1
-                width: 100
-                height: 100
-                Layout.maximumHeight: 65356
-                Layout.maximumWidth: 6553
-                Layout.fillHeight: true
-                Layout.fillWidth: true
-                Layout.minimumWidth: 200
-
-                StepCounter {
-                    id: rrStepCounter
-                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                    Layout.minimumWidth: 150
-                    Layout.minimumHeight: 100
-                    Layout.topMargin: 10
-                    Layout.rightMargin: 10
-                    Layout.leftMargin: 10
-
-                    title: qsTr("RR")
-                    value: guiState.rr
-                    onValueModified: guiState.rr = value
-                }
-
-                StepCounter {
-                    id: peepStepCounter
-                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                    Layout.minimumWidth: 150
-                    Layout.minimumHeight: 100
-                    Layout.topMargin: 10
-                    Layout.rightMargin: 10
-                    Layout.leftMargin: 10
-
-                    title: qsTr("PEEP")
-                    value: guiState.peep
-                    onValueModified: guiState.peep = value
-                }
-
-                StepCounter {
-                    id: pipStepCounter
-                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                    Layout.minimumWidth: 150
-                    Layout.minimumHeight: 100
-                    Layout.topMargin: 10
-                    Layout.rightMargin: 10
-                    Layout.leftMargin: 10
-
-                    title: qsTr("PIP")
-                    value: guiState.pip
-                    onValueModified: guiState.pip = value
-                }
-
-                StepCounter {
-                    id: ierStepCounter
-                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                    Layout.minimumWidth: 150
-                    Layout.minimumHeight: 100
-                    Layout.topMargin: 10
-                    Layout.rightMargin: 10
-                    Layout.leftMargin: 10
-
-                    title: qsTr("I:E")
-                    stepSize: 0.1
-                    value: guiState.ier
-                    onValueModified: guiState.ier = value
-
-                    textFromValue: function (value, locale) {
-                        return Number(value).toFixed(1)
-                    }
-                }
+            ParameterDisplay {
+                parameterName: qsTr("PIP")
+                parameterUnit: qsTr("cmH<sub>2</sub>O")
+                parameterValue: GuiStateContainer.pip.toString()
             }
 
-            GridLayout {
-                id: scopeGridLayout
-                columnSpacing: 0
-                rowSpacing: -20
-                Layout.minimumHeight: 400
-                Layout.minimumWidth: 500
-                Layout.fillHeight: true
-                Layout.fillWidth: true
-                flow: GridLayout.TopToBottom
-                rows: 3
-
-                ScopeView {
-                    id: pressureView
-                    name: "Pressure [cmH2O]"
-                    // TODO: Are these reasonable lower and upper bounds?
-                    // Source for current value:
-                    // https://www.rtmagazine.com/public-health/pediatrics/neonatal/selecting-appropriate-ventilator-parameters/
-                    // mentions values in the range 5-30 cmH2O.
-                    yMin: -3
-                    yMax: 30
-
-                    color: "#4f67ff"
-                    Layout.fillHeight: true
-                    Layout.fillWidth: true
-                    Layout.topMargin: 10
-                    height: parent.height/3
-                    width: parent.width
-                }
-
-                ScopeView
-                {
-                    id: flowView
-                    name: "Flow [mL/min]"
-                    // TODO: Are these reasonable lower and upper bounds?
-                    // Source for current value:
-                    // https://www.sciencedirect.com/topics/medicine-and-dentistry/peak-inspiratory-flow
-                    // "Most modern ventilators can deliver flow rates between
-                    // 60 and 120 L/min. "
-                    yMin: -150
-                    yMax: 150
-
-                    color: "green"
-                    Layout.fillHeight: true
-                    Layout.fillWidth: true
-                    Layout.topMargin: 10
-                    height: parent.height/3
-                    width: parent.width
-                }
-
-                ScopeView
-                {
-                    id: tidalVolumeView
-                    name: "Tidal Volume [mL]"
-                    // TODO: Are these reasonable lower and upper bounds?
-                    // Source for current value:
-                    // https://en.wikipedia.org/wiki/Tidal_volume
-                    // "In a healthy, young human adult, tidal volume is
-                    // approximately 500 mL per inspiration or 7 mL/kg of body mass."
-                    // Meaning, 2000 should be enough for a human of ~300kg body mass;
-                    // I don't know whether heavier humans have even larger
-                    // tidal volume.
-                    yMin: 0
-                    yMax: 2000
-
-                    color: "#ffff00"
-                    Layout.fillHeight: true
-                    Layout.fillWidth: true
-                    Layout.topMargin: 10
-                    height: parent.height/3
-                    width: parent.width
-                }
-
+            ParameterDisplay {
+                parameterName: qsTr("PEEP")
+                parameterUnit: qsTr("cmH<sub>2</sub>O")
+                parameterValue: GuiStateContainer.peep.toString()
             }
 
-            ColumnLayout {
-                id: sensorReadouts
-                width: 100
-                height: 100
-                Layout.maximumHeight: 65356
-                Layout.maximumWidth: 6553
+            ParameterDisplay {
+                parameterName: qsTr("Flow")
+                parameterUnit: qsTr("L/min")
+                parameterValue: GuiStateContainer.flowReadout.toFixed(0);
+            }
+
+            ParameterDisplay {
+                parameterName: qsTr("RR")
+                parameterUnit: qsTr("b/min")
+                parameterValue: GuiStateContainer.rr.toString()
+            }
+
+            ParameterDisplay {
+                parameterName: qsTr("I:E")
+                parameterUnit: qsTr("ratio")
+                parameterValue: GuiStateContainer.ier.toFixed(1).toString()
+            }
+
+            ParameterDisplay {
+                // empty according to the design
+            }
+
+            ParameterDisplay {
+                parameterName: qsTr("TV")
+                parameterUnit: qsTr("mL")
+                parameterValue: GuiStateContainer.tvReadout.toFixed(0);
+            }
+
+            ParameterDisplay {
+                parameterName: qsTr("FiO<sub>2</sub>")
+                parameterUnit: qsTr("%")
+                parameterValue: "15"
+            }
+        }
+    }
+
+    Rectangle {
+        width: 784; height: 440
+        radius: 8
+        anchors {
+            top: parent.top
+            left: parent.left; leftMargin: 8
+            right: parameterDisplayPanel.left; rightMargin: 8
+        }
+
+        color: "#05121C"
+
+        ColumnLayout {
+
+            id: scopeGridLayout
+            anchors.fill: parent
+
+            ScopeView {
+                id: pressureView
+                name: "Pressure [cmH2O]"
+                // TODO: Are these reasonable lower and upper bounds?
+                // Source for current value:
+                // https://www.rtmagazine.com/public-health/pediatrics/neonatal/selecting-appropriate-ventilator-parameters/
+                // mentions values in the range 5-30 cmH2O.
+                yMin: -3
+                yMax: 30
+
+                color: "white"
                 Layout.fillHeight: true
                 Layout.fillWidth: true
-                Layout.minimumWidth: 200
+            }
 
-                Rectangle {
-                    id: pressureReadout
-                    color: "#466eeb"
-                    radius: 10
-                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                    Layout.minimumHeight: 100
-                    Layout.rightMargin: 10
+            ScopeView
+            {
+                id: flowView
+                name: "Flow [mL/min]"
+                // TODO: Are these reasonable lower and upper bounds?
+                // Source for current value:
+                // https://www.sciencedirect.com/topics/medicine-and-dentistry/peak-inspiratory-flow
+                // "Most modern ventilators can deliver flow rates between
+                // 60 and 120 L/min. "
+                yMin: -150
+                yMax: 150
 
-                    Text {
-                        id: pressureVal
-                        x: 45
-                        y: 39
-                        width: 60
-                        height: 44
-                        text: Number(guiState.pressureReadout, 'g', 1).toFixed(1);
-                        horizontalAlignment: Text.AlignHCenter
-                        font.family: "Times New Roman"
-                        font.weight: Font.DemiBold
-                        font.bold: true
-                        font.pixelSize: 38
-                    }
+                color: "white"
+                Layout.fillHeight: true
+                Layout.fillWidth: true
+            }
 
-                    Text {
-                        x: 3
-                        y: 13
-                        text: qsTr("Pressure (cm H2O)")
-                        font.bold: true
-                        font.pixelSize: 17
-                    }
-                    Layout.minimumWidth: 150
-                    Layout.topMargin: 10
-                    Layout.leftMargin: 10
-                }
+            ScopeView
+            {
+                id: tidalVolumeView
+                name: "Tidal Volume [mL]"
+                // TODO: Are these reasonable lower and upper bounds?
+                // Source for current value:
+                // https://en.wikipedia.org/wiki/Tidal_volume
+                // "In a healthy, young human adult, tidal volume is
+                // approximately 500 mL per inspiration or 7 mL/kg of body mass."
+                // Meaning, 2000 should be enough for a human of ~300kg body mass;
+                // I don't know whether heavier humans have even larger
+                // tidal volume.
+                yMin: 0
+                yMax: 2000
 
-                Rectangle {
-                    id: flowReadout
-                    color: "#466eeb"
-                    radius: 10
-                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                    Layout.minimumHeight: 100
-                    Layout.rightMargin: 10
+                color: "white"
+                Layout.fillHeight: true
+                Layout.fillWidth: true
+            }
 
-                    Text {
-                        id: flowVal
-                        x: 45
-                        y: 39
-                        width: 60
-                        height: 44
-                        text: Number(guiState.flowReadout, 'g', 1).toFixed(1);
-                        horizontalAlignment: Text.AlignHCenter
-                        font.weight: Font.DemiBold
-                        font.family: "Times New Roman"
-                        font.pixelSize: 38
-                        font.bold: true
-                    }
+        }
 
-                    Text {
-                        x: 23
-                        y: 13
-                        text: qsTr("Flow (mL/min)")
-                        horizontalAlignment: Text.AlignHCenter
-                        font.pixelSize: 17
-                        font.bold: true
-                    }
+    }
 
-                    Layout.minimumWidth: 150
-                    Layout.topMargin: 10
-                    Layout.leftMargin: 10
-                }
 
-                Rectangle {
-                    id: tvReadout
-                    color: "#466eeb"
-                    radius: 10
-                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                    Layout.minimumHeight: 100
-                    Layout.rightMargin: 10
+    Row {
+        id: parameterButtonsPanel
+        spacing: 8
 
-                    Text {
-                        id: tvVal
-                        x: 45
-                        y: 39
-                        width: 60
-                        height: 44
-                        text:  Number(guiState.tvReadout, 'g', 1).toFixed(1);
-                        horizontalAlignment: Text.AlignHCenter
-                        font.weight: Font.DemiBold
-                        font.family: "Times New Roman"
-                        font.pixelSize: 38
-                        font.bold: true
-                    }
+        anchors {
+            horizontalCenter: parent.horizontalCenter
+            bottom: parent.bottom; bottomMargin: 8
+        }
 
-                    Text {
-                        x: 41
-                        y: 13
-                        text: qsTr("TV (mL)")
-                        horizontalAlignment: Text.AlignHCenter
-                        font.pixelSize: 17
-                        font.bold: true
-                    }
+        Layout.alignment: Qt.AlignHCenter
 
-                    Layout.minimumWidth: 150
-                    Layout.topMargin: 10
-                    Layout.leftMargin: 10
-                }
+        ParameterButton {
+            parameterName: qsTr("PIP")
+            parameterUnit: qsTr("cmH<sub>2</sub>0")
+            parameterValue: GuiStateContainer.pip
+            onValueConfirmed: GuiStateContainer.pip = value
+        }
+
+        ParameterButton {
+            parameterName: qsTr("Peep")
+            parameterUnit: qsTr("cmH<sub>2</sub>0")
+            parameterMaxValue: 20
+            parameterMinValue: 0
+            parameterStepSize: 2
+            parameterValue: GuiStateContainer.peep
+            onValueConfirmed: GuiStateContainer.peep = value
+        }
+
+        ParameterButton {
+            parameterName: qsTr("FiO<sub>2</sub>")
+            parameterUnit: "%"
+            parameterMaxValue: 100
+            parameterMinValue: 21
+            parameterStepSize: 0.5
+            parameterValue: 10
+            onValueConfirmed: parameterValue = value
+        }
+
+        ParameterButton {
+            parameterName: qsTr("I-time")
+            parameterUnit: "sec"
+            parameterValue: Number(GuiStateContainer.ier).toFixed(1)
+            parameterMaxValue: 1
+            parameterMinValue: 0
+            parameterStepSize: 0.05
+            parameterDisplayFormatter: function (value) {
+                return Number(value).toFixed(1)
             }
         }
 
-        RowLayout {
-            id: rowLayout2
-            width: 100
-            height: 50
-            Layout.minimumHeight: 50
-            Layout.maximumHeight: 65535
+        ParameterButton {
+            parameterName: qsTr("RR")
+            parameterUnit: "b/min"
+            parameterMaxValue: 30
+            parameterMinValue: 5
+            parameterStepSize: 1
+            parameterValue: GuiStateContainer.rr
+            onValueConfirmed: GuiStateContainer.rr = value
         }
     }
 }

@@ -673,8 +673,8 @@ def TraceDownload():
 
     per *= GetVar("loop_period", raw=True) * 1e-6
 
-    time = [ x*per for x in range(len(ret[0]))]
-    ret.insert(0,time)
+    time = [x * per for x in range(len(ret[0]))]
+    ret.insert(0, time)
     return ret
 
 
@@ -711,7 +711,7 @@ def TraceSaveDat(dat, fname, separator="  "):
         line.append("%.3f" % dat[0][i])
         for j in range(len(tv)):
             line.append(tv[j].fmt % dat[j + 1][i])
-        fp.write(seperator.join(line) + "\n")
+        fp.write(separator.join(line) + "\n")
     fp.close()
 
 

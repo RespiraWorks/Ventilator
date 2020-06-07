@@ -9,13 +9,21 @@ import ".."
 Button {
     id: control
 
-    implicitWidth:36; implicitHeight: 36
+    implicitWidth:40; implicitHeight: 40
 
     background: Rectangle {
         antialiasing: true
-        color: "transparent"
-        border.color: Style.theme.color.headerButtonColor
-        border.width: 1
-        radius: 4
+        color: control.down ? Style.theme.color.headerButtonHighlighted :
+                              Style.theme.color.headerButton
+        radius: 8
+    }
+
+    contentItem: Text {
+        text: control.text
+        font: Style.theme.font.headerButton
+        color: "white"
+        horizontalAlignment: Text.AlignHCenter
+        verticalAlignment: Text.AlignVCenter
+        elide: Text.ElideRight
     }
 }

@@ -38,6 +38,8 @@ public:
     }
   }
 
+  int Size() const { return history_.size(); }
+
   std::vector<std::tuple<SteadyInstant, ControllerStatus>> GetHistory() const {
     return {history_.begin(), history_.end()};
   }

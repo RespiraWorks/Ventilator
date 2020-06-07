@@ -51,7 +51,7 @@ jobs:
       - run:
           name: Run cppcheck on /gui
           command: |
-            cd ~/project/gui && cppcheck . --error-exitcode=1 && cd -
+            cd ~/project/gui && cppcheck -ithird_party . --error-exitcode=1 && cd -
 
   gui-build-image:
     machine:
@@ -60,6 +60,10 @@ jobs:
       docker_layer_caching: true
     steps:
       - checkout
+      - run:
+          name: Checkout submodules
+          command: |
+            git submodule update --init --recursive
       - run:
           name: Remove old Docker version
           command: |

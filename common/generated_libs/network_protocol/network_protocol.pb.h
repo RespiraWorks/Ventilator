@@ -16,7 +16,8 @@ extern "C" {
 /* Enum definitions */
 typedef enum _VentMode {
     VentMode_OFF = 0,
-    VentMode_PRESSURE_CONTROL = 1
+    VentMode_PRESSURE_CONTROL = 1,
+    VentMode_PRESSURE_ASSIST = 2
 } VentMode;
 
 typedef enum _AlarmKind {

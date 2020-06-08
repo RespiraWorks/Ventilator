@@ -8,6 +8,8 @@ Note: You can optionally add-on to this simple test lung to make a reduced-compl
 
 ## Parts List (BOM)
 
+**Note: If you are a member of the RespiraWorks team, review [part purchasing guidelines](../../README.md) BEFORE purchasing any parts.**
+
 ### Purchasing Source Key
 
 * **E** = ebay

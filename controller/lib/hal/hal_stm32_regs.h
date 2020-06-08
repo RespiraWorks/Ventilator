@@ -380,13 +380,33 @@ struct ADC_Regs {
 inline ADC_Regs *const ADC_BASE = reinterpret_cast<ADC_Regs *>(0X50040000);
 
 struct TimerRegs {
-  REG ctrl[2];
+  union {
+    struct {
+      REG cen : 1;  // counter enable
+      REG udis : 1; // update disable
+      REG urs : 1;  // update request source
+      REG opm : 1;  // one-pulse mode
+      REG dir : 1;  // direction
+      REG cms : 2;  // center-aligned mode selection
+      REG arpe : 1; // auto-reload preload enable
+      REG ckd : 2;  // clock division
+      REG rsvd : 1;
+      REG uifremap : 1; // UIF status bit remapping
+      REG rsvd2 : 20;
+    } s;
+    REG r;
+  } ctrl1;
+  REG ctrl2;
   REG slaveCtrl;
   REG intEna;
   REG status;
   REG event;
   REG ccMode[2];
   REG ccEnable;
+  // The topmost bit of counter will contain contain UIFCOPY if UIFREMAP is
+  // enabled, but *this register should not be decomposed into a bitfield
+  // struct*.  The idea behind UIFREMAP is to read the counter plus the UIFCOPY
+  // value atomically, in one go.
   REG counter;
   REG prescale;
   REG reload;

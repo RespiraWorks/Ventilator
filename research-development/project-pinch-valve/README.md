@@ -1,23 +1,26 @@
 # Stepper Proportional Pinch Valve
 
-  CAD File         |  Assembled         |Animation           
+  CAD File         |  Assembled         | In action          
 :------------------:|:-----------------:|:-------------------------:
 ![](assets/rendering-1-6.png)  |  ![](assets/assembled.png)  |  ![](assets/animation.gif)
 
 ## Overview
 
-This contains details, BOM, & instructions for the pinch valve module for the pneumatic circuit. 
-
-Note: You will need 2 pinch valves, in which case it makes sense to purchase a 2-axis stepper module, though you can work with two single steppers if that's what you already have. 
+This contains details, BOM, & instructions for one pinch valve assembly for the pneumatic circuit. 
 
 The module is something that can be "spliced" into any location in the pneumatic circuit.
 This makes it interchangeable with solenoid or whatever other valve implementation we might consider/test.
 The barbed adapters are needed because only 5/8"OD fits in the pinch valve mechanical assembly.
-Beta will be 3/4"ID throughout, which will require different tubing adapters.
 
-**NOTE: there are two types of tubing listed, with different internal diameter. 3/4"ID tubing is the default; however, if you've already purchased 5/8" you may be able to test with that for the time being. Depending on your system's tubing, you will also need to get appropriate diameter adapters.** 
+**NOTE: there are two types of tubing listed, with different internal diameter. 3/4"ID tubing has been decided for beta;
+however, if you've already purchased 5/8" you may be able to test with that for the time being.
+Depending on your system's tubing, you will also need to get appropriate diameter adapters.
+We have tried to list both types to the best of our ability** 
 
-### Latest Changes
+For a full prototype build you will need 2 pinch valves, in which case it makes sense to purchase a 2-axis stepper driver,
+though you can work with two single-stepper drivers if that's what you already have. 
+
+### Change history
 
 The stop is moved down by 3 mm, which should buy us a lot more leverage.
 The stop is now flat. We might need to tweak exact dimensions further to get a perfect close, but this should be better.
@@ -26,19 +29,24 @@ Bearings are now better aligned with the tube.
 
 v1.6: Broader shelf, slightly larger bump.
 
+v1.7: set screw removed, 3/8"OD version added for potential use as oxygen supply valve.
+
 ## 3D Printing
+
+### Guidelines
+
+These files should not be printed with FDM. Instead, a leak-tight method like SLA or MJF should be used.
 
 ### Files 
 
 - [Base - .step format](assets/exhaust-pinch-valve-1.6-base.step)
 - [Rotor - .step format](assets/exhaust-pinch-valve-1.6-rotor.step)
 
-Original design found
+Original designs found
 [here](https://cad.onshape.com/documents/3fe0c1f79c482144c267173d/w/2ad1c08071a25185f9c78c68/e/03a49465e4e026f9f102d0af).
 
-### Guidelines
+You may also find other variations of the design meant for special testing/calibration units.
 
-The above files should not be printed with FDM. Instead, a leaktight method like SLA or MJF should be used.
 
 ## Parts List (BOM)
 
@@ -51,42 +59,49 @@ The above files should not be printed with FDM. Instead, a leaktight method like
 * **M**  = Mouser
 * **3D** = 3D printed (RespiraWorks)
 * **S**  = ST
+* **R** = RS computing
+(**note**: links provided are for worldwide customers; there are local RS retail sites for most countries that use the same product reference (RS Stock No.) and will probably ship faster if you order from your country's site)
+* **T**  = Stepperonline.com
 
 ### Parts 
 
-| Item | Quantity | Manufacturer  | Part #              | Price (USD)     | Action     | Sources            | Notes |
-| ------ |---------:| ------------- | ------------------- | ------------:| ------------ |--------------------| ----- |
-| 1      |        1 | STEPPERONLINE | 17HS19-2004S2       |14.99 / each  | Buy          | [Z][1amzn]         | Stepper motor. Make sure to get one with the full-cut D-shaft. |
-| 2      |        1 | STEPPERONLINE | 17HS19-2004S1       |13.99 / each  | Buy          | [Z][2amzn]         | **alternative to 1** Stepper motor.  |
-| 3      |        1 | McMaster-Carr | 92095A218           |   7.64 / 25  | Buy          | [C][3mcmc]         | M5x30mm button head. Axle for bearing. |
-| 4      |        3 | McMaster-Carr | 91294A128           |  4.82 / 100  | Buy          | [C][4mcmc]         | M3x8mm flat head. Attaches frame to stepper body |
-| 5      |        1 | McMaster-Carr | 91390A117           |  4.75 / 100  | Buy          | [C][5mcmc]         | M5x5mm set screw. Attaches rotor to stepper |
-| 6      |        3 | FastEddy      | TFE4262             |  12.50 / 10  | Buy          | [F][6fast]         | 5x16x5 Metal shielded bearings |
-| 7      |        2 | McMaster-Carr | 5463K646            |  6.60 / 10   | Buy          | [C][7mcmc]         | Reducer 5/8"ID <-> 1/2"ID, single barb **READ WARNING BELOW**|
-| 8      | 6in/15cm | McMaster-Carr | 5894K39             |  8.04 / 2 ft | Buy          | [C][8mcmc]         | Continuous-Flex Soft Tygon PVC Tubing, 1/2" ID, 5/8" OD |
-| 9      |        2 | McMaster-Carr | 9579K67             |  12.63 / 20  | Buy          | [C][9mcmc]         | Easy-Install Double Snap-Grip Clamps, 1/2" to 19/32" ID |
-| 10     |        1 | Digikey       | X-NUCLEO-IHM03A1    | 10.64 / each | *Ask first*  | [K][10key] [M][10mr] | Stepper driver dev board |
-| 11     |        1 | ST            | X-NUCLEO-IHM02A1    | 15.00 / each | Buy          | [S][11st]    | **ALT for item 10:** Two-axis stepper driver dev board |
-| 12     |        1 | RespiraWorks  | N/A                 |       N/A    | *Ask first*  | [3D][123d]         | BASE - 3D printed |
-| 13     |        1 | RespiraWorks  | N/A                 |       N/A    | *Ask first*  | [3D][123d]         | ROTOR - 3D printed |
-| 14     | 6in/15cm | McMaster-Carr | 5894K38             |  8.04 / 2 ft | *Ask first*          | [C][14mcmc]        | **alternative to 8**, tubing 3/8" ID, 5/8" OD |
+| Item   | Quantity | Manufacturer    | Part #              | Price (USD)  | Sources              | Notes |
+| ------ |---------:| --------------- | ------------------- | ------------:| ---------------------| ----- |
+| 1      |        1 | STEPPERONLINE   | 17HS19-2004S2       |11.59 / each  | [T][1step] [Z][1amzn]| Stepper motor. Make sure to get one with the full-cut D-shaft. |
+| 2      |        1 | McMaster-Carr   | 92095A218           |   7.64 / 25  | [C][2mcmc]           | M5x30mm button head. Axle for bearing. |
+| 3      |        3 | McMaster-Carr   | 91294A128           |  4.82 / 100  | [C][3mcmc]           | M3x8mm flat head. Attaches frame to stepper body |
+| 4      |        1 | McMaster-Carr   | 91390A117           |  4.75 / 100  | [C][4mcmc]           | M5x5mm set screw. Attaches rotor to stepper |
+| 5      |        3 | FastEddy        | TFE4262             |  12.50 / 10  | [F][5fast]           | 5x16x5 Metal shielded bearings |
+| 6      |        2 | McMaster-Carr   | 5463K648            |  8.20 / 10   | [C][6mcmc]           | 3/8"ID <-> 3/4"ID adapter  **READ WARNING BELOW**|
+| 7      | 6in/15cm | McMaster-Carr   | 5894K38             |  12.30 / 2 ft| [C][7mcmc]           | Continuous-Flex Soft Tygon PVC Tubing, 1/2" ID, 5/8" OD |
+| 8      |        2 | McMaster-Carr   | 9579K67             |  12.63 / 20  | [C][8mcmc]           | Herbie clip E, 12-13.8mm, to clamp tubing to fittings |
+| 9      |        1 | Digikey         | X-NUCLEO-IHM03A1    | 10.64 / each | [K][9key] [M][9mr]   | Stepper driver dev board |
+| 10     |        1 | ST              | X-NUCLEO-IHM02A1    | 15.00 / each | [S][10st] [R][10rs]  | **ALT for item 10:** Two-axis stepper driver dev board |
+| 11     |        1 | RespiraWorks    | N/A                 |       N/A    | [3D][113d]           | BASE - 3D printed |
+| 12     |        1 | RespiraWorks    | N/A                 |       N/A    | [3D][123d]           | ROTOR - 3D printed |
+| 13     |        2 | McMaster-Carr   | 5463K644            |  7.80 / 10   | [C][13mcmc]          | 3/8"ID <-> 5/8"ID **READ WARNING BELOW**|
+| 14     |        2 | McMaster-Carr   | 53415K211           |  8.42 / 10   | [C][14mcmc]          | 3/8"ID <-> 3/4 NTP adapter **READ WARNING BELOW**|
 
-**WARNING: Item 7 may have to be substituted by another adapter, depending on your choice of tubing here (items 8 or 14) and your choice of pneumatic system internal diameter. Alternative adapters are listed on main [pizza page](../../ventilator-build/alpha-build-instructions/pizza-build.md).**
+**WARNING: Items 6, 13 and 14 may have to be substituted, depending on what tubing you will be interfacing with.
+Alternative adapters are also listed on the main [pizza page](../../ventilator-build/alpha-build-instructions/pizza-build.md).**
 
+[1step]:  https://www.omc-stepperonline.com/nema-17-stepper-motor/nema-17-bipolar-59ncm-84oz-in-2a-42x48mm-4-wires-w-1m-cable-and-connector-full-d-cut-shaft.html
 [1amzn]:   https://www.amazon.com/dp/B07Z1J8JWH
-[2amzn]:   https://www.amazon.com/gp/product/B00PNEQKC0
-[3mcmc]:   https://www.mcmaster.com/92095A218
-[4mcmc]:   https://www.mcmaster.com/91294A128
-[5mcmc]:   https://www.mcmaster.com/91390A117
-[6fast]:   https://www.fasteddybearings.com/5x16x5-metal-shielded-bearing-625-zz-10-units/
-[7mcmc]:   https://www.mcmaster.com/5463K646
-[8mcmc]:   https://www.mcmaster.com/5894K39
-[9mcmc]:   https://www.mcmaster.com/9579K67
-[10key]:    https://www.digikey.com/short/z442qt
-[10mr]:     https://www.mouser.com/ProductDetail/511-X-NUCLEO-IHM03A1
-[11st]:    https://www.st.com/en/ecosystems/x-nucleo-ihm02a1.html#sample-and-buy
+[2mcmc]:   https://www.mcmaster.com/92095A218
+[3mcmc]:   https://www.mcmaster.com/91294A128
+[4mcmc]:   https://www.mcmaster.com/91390A117
+[5fast]:   https://www.fasteddybearings.com/5x16x5-metal-shielded-bearing-625-zz-10-units/
+[6mcmc]:  https://www.mcmaster.com/5463K648
+[7mcmc]:   https://www.mcmaster.com/5894K38
+[8mcmc]:   https://www.mcmaster.com/9579K67
+[9key]:    https://www.digikey.com/short/z442qt
+[9mr]:     https://www.mouser.com/ProductDetail/511-X-NUCLEO-IHM03A1
+[10st]:    https://www.st.com/en/ecosystems/x-nucleo-ihm02a1.html#sample-and-buy
+[10rs]:    https://export.rsdelivers.com/product/stmicroelectronics/x-nucleo-ihm02a1/stmicroelectronics-x-nucleo-ihm02a1-two-axis/1646982
+[113d]:    #files
 [123d]:    #files
-[14mcmc]:  https://www.mcmaster.com/5894K38
+[13mcmc]:   https://www.mcmaster.com/5463K644
+[14mcmc]:  https://www.mcmaster.com/53415K211
 
 ### Tools
 
@@ -94,13 +109,24 @@ The above files should not be printed with FDM. Instead, a leaktight method like
 | ---- |---------:| ------------- | ----------- | ----------:|-----------------| ----- |
 | a1   |        1 | TEKTON        | 37122       |       9.99 | [Z][a1amzn]      | Some sort of wrench/pliers, to clamp the herbie clips around the tubing+fitting. |
 | a2   |        1 | Wiha          | 71397       |       6.76 | [Z][a2amzn]      | 2, 2.5, & 3mm hex drivers required for assembly.  |
+| a3   |        1 | McMaster-Carr | 26475A38    |       9.55 | [Z][a3mcmc]      | M5x0.8mm taper chamfer tap, for bearing axle.  |
 
-[a1amzn]:   https://www.amazon.com/TEKTON-2-Inch-Joint-Pliers-37122/dp/B00KLY1FAY
-[a2amzn]:   https://www.amazon.com/Wiha-71397-Metric-Insert-6-Piece/dp/B0084B7S70/ref=sr_1_4?dchild=1&keywords=3mm+hex&qid=1590347774&sr=8-4
+[a1amzn]:  https://www.amazon.com/TEKTON-2-Inch-Joint-Pliers-37122/dp/B00KLY1FAY
+[a2amzn]:  https://www.amazon.com/Wiha-71397-Metric-Insert-6-Piece/dp/B0084B7S70/ref=sr_1_4?dchild=1&keywords=3mm+hex&qid=1590347774&sr=8-4
+[a3mcmc]:  https://www.mcmaster.com/26475A38
 
 ## Assembly Instructions
 
+**Note that item 6 may be substituted by items 13, 14 or some other adapter, depending on what tubing you are 
+interfacing the valve with at a particular location in the pneumatic circuit.**
+
 ![Components](assets/pinch-valve-components.jpg)
+
+You’ll need a vice to press on the rotors to the stepper motor shafts.  You may also need a tap ([Item a3](#tools)) to
+chase the threads in the rotor ([Item 11](#parts)) for the bolt ([Item 2](#parts)) holding the bearings. On some
+machines they way print too tight and you may crack the rotor trying to just muscle in the bolt without chasing the
+threads first.  Prop tip: only chase a portion of the threads for the bolt that holds on the bearings, leaving a bit
+to act as a lock nut.
 
 Rotor Assembly                     |  Base Assembly           |   
 :---------------------------------:|:-------------------------: 

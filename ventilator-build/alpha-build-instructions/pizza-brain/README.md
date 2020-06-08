@@ -19,7 +19,8 @@ For an upgrade, check the [Pizza build](../pizza-build.md).
 * **M** = Mouser
 * **O** = Monoprice
 * **K** = Digikey
-* **R** = RS Computing ([various countries](https://www.rs-online.com/))
+* **R** = RS Computing 
+(**note**: links provided are for worldwide customers; there are local RS retail sites for most countries that use the same product reference (RS Stock No.) and will probably ship faster if you order from your country's site)
 * **B** = Built by RespiraWorks
 
 ### Parts
@@ -43,13 +44,13 @@ For an upgrade, check the [Pizza build](../pizza-build.md).
 | 13   |   1 |              |                    |    13.99 | [Z][13amzn]               | 12v Power supply adapter, 5A, alternative for 11-12, for **PCB** |
 | 14   |   1 |              |                    |    27.00 | [C][14mcmc]               | 12v Power supply adapter, 5A, alternative for 11-13, for **PCB** |
 | 15   |   1 | AIMHD        | AHD-DC20-F-PT      | 9.99 / 20| [Z][15amzn]               | Female Power Pigtail DC 5.5mm x 2.1mm Connectors, for main power, for **PCB** |
-| 16   |   6 | JST          | SVH-21T-P1.1       |     0.11 | [K][16digi]               | VH crimps, for power connectors, for **PCB** |
-| 17   |   1 | JST          | VHR-3N             |     0.14 | [K][17digi]               | VH housing 3 pin, for main power, for **PCB** |
+| 16   |   6 | JST          | SVH-21T-P1.1       |     0.11 | [K][16digi] [R][16rs]     | VH crimps, for power connectors, for **PCB** |
+| 17   |   1 | JST          | VHR-3N             |     0.14 | [K][17digi] [R][17rs]     | VH housing 3 pin, for main power, for **PCB** |
 | 18   |   1 | GenBasic     | 4330127279         |     6.00 | [Z][18amzn]               | Jumper cables. for **non-PCB** build
 | 19   |   1 | Poyiccot     | AF-90degree_Type-C |     9.00 | [Z][19amzn]               | USB-C elbow adapter. for **non-PCB** build |
 
 [1mouser]: https://www.mouser.com/ProductDetail/STMicroelectronics/NUCLEO-L452RE?qs=sGAEpiMZZMtw0nEwywcFgEEYp888DlnM1Y5kGes2rJIHvcJjT1ZDkw%3D%3D
-[1rs]:     https://www.rs-particuliers.com/Product.aspx?Product=1261775
+[1rs]:     https://export.rsdelivers.com/product/stmicroelectronics/nucleo-l452re/stmicroelectronics-stm32-nucleo-64-mcu/1261775
 [2amzn]:   https://www.amazon.com/AmazonBasics-USB-2-0-Cable-Male/dp/B00NH13S44/
 [2mono]:   https://www.monoprice.com/product?p_id=3896
 [3ali]:    https://www.aliexpress.com/item/4000747984746.html
@@ -67,7 +68,9 @@ For an upgrade, check the [Pizza build](../pizza-build.md).
 [14mcmc]:  https://www.mcmaster.com/3824N132
 [15amzn]:   https://www.amazon.com/Connectors-Upgraded-Surveillance-Transformer-Connection/dp/B0768V9V5Q
 [16digi]:   https://www.digikey.com/short/z44fjr
+[16rs]:    https://export.rsdelivers.com/product/jst/svh-41t-p11/jst-nv-vh-female-crimp-terminal-contact-16awg-svh/7620692
 [17digi]:   https://www.digikey.com/short/z44fwp
+[17rs]:    https://export.rsdelivers.com/product/jst/vhr-3n/jst-vhr-female-connector-housing-396mm-pitch-3/8201175
 [18amzn]:  https://www.amazon.com/GenBasic-Piece-Female-Jumper-Wires/dp/B01L5ULRUA/
 [19amzn]:  https://www.amazon.com/Poyiccot-2-Pack-Degree-Adapter-Extension/dp/B071XHQJG8/
 

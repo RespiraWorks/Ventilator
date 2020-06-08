@@ -3,6 +3,7 @@
 #include "algorithm.h"
 #include "hal.h"
 #include "network_protocol.pb.h"
+#include <optional>
 #include <pb_common.h>
 #include <pb_decode.h>
 #include <pb_encode.h>
@@ -21,10 +22,7 @@ static uint16_t tx_idx = 0;
 static uint16_t tx_bytes_remaining = 0;
 
 // Time when we started sending the last ControllerStatus.
-// TODO: Change this to std::optional<Time> once that's available; then we
-// don't need this "clever" initialization.
-constexpr Time kInvalidTime = millisSinceStartup(0xFFFF'FFFF'FFFF'FFFFUL);
-static Time last_tx = kInvalidTime;
+static std::optional<Time> last_tx;
 
 // Our incoming (serialized) GuiStatus proto is incrementally buffered in
 // rx_buffer until it's complete and we can deserialize it to a proto.
@@ -72,14 +70,8 @@ static void process_tx(const ControllerStatus &controller_status) {
   //  - we're not currently transmitting,
   //  - we can transmit at least one byte now, and
   //  - it's been a while since we last transmitted.
-  //
-  // Note that the initial value of last_tx has to be invalid; changing it to 0
-  // wouldn't work.  We immediately transmit on boot, and after
-  // we do that, we want to wait a full TX_INTERVAL_MS.  If we initialized
-  // last_tx to 0 and our first transmit happened at time millis() == 0, we
-  // would set last_tx back to 0 and then retransmit immediately.
   if (tx_bytes_remaining == 0 &&
-      (last_tx == kInvalidTime || Hal.now() - last_tx > TX_INTERVAL)) {
+      (last_tx == std::nullopt || Hal.now() - *last_tx > TX_INTERVAL)) {
     // Serialize current status into output buffer.
     //
     // TODO: Frame the message bytes.

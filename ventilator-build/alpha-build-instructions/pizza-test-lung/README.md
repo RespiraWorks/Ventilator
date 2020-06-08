@@ -1,8 +1,10 @@
-# Pizza build: Test Lung Sub-Assembly
+# Pizza Build: Test Lung Sub-Assembly
 
 True test lungs are expensive and hard to come by, so we must do with what's available. 
 
 This page explains how to adapt off-the-shelf parts into a basic test lung for our ventilator prototype.
+
+Note: You can optionally add-on to this simple test lung to make a reduced-compliance test lung; [instructions for that are here](../pizza-compliance-test-lung).
 
 ## Parts List (BOM)
 

@@ -19,6 +19,8 @@ with the [PCB](https://github.com/respiraworks/pcbreathe).
 * **K** = Digikey
 * **B** = Built by RespiraWorks
 * **Z** = Amazon
+* **R** = RS computing
+(**note**: links provided are for worldwide customers; there are local RS retail sites for most countries that use the same product reference (RS Stock No.) and will probably ship faster if you order from your country's site)
 
 ### Parts
 
@@ -32,11 +34,11 @@ We may have parts to send you from our inventory.
 | 2    |        1 |               | WS1208              |        24.00 | [W][2won]      | blower driver, in case blower above did not come with driver. |
 | 3    |   ~10 cm | McMaster-Carr | 5234K57             |  21.50 / 5ft | [C][3mcmc]     | Soft latex tubing, 5/8" ID, 7/8" OD, may already have some in 5/8"ID build |
 | 4    |        1 | McMaster-Carr | 9579K72             |   12.21 / 20 | [C][4mcmc]     | Herbie clip J (20.3-23mm) for clamping 7/8"OD tubing, may already have some in 5/8"ID build | |
-| 5    |  6 or 12 | JST           | SXH-001T-P0.6       |         0.10 | [K][5digi]     | XH crimps, for control connector |
-| 6    |   1 or 2 | JST           | XHP-6               |         0.14 | [K][6digi]     | XH 6-pin housing, for control connector |
+| 5    |  6 or 12 | JST           | SXH-001T-P0.6       |         0.10 | [K][5digi] [R][5rs] | XH crimps, for control connector |
+| 6    |   1 or 2 | JST           | XHP-6               |         0.14 | [K][6digi] [R][6rs] | XH 6-pin housing, for control connector |
 | 7    |        - | CQRobot       | CQRJST254-BGB       |         9.99 | [Z][7amzn]     | XH connector kit for 6/7/8 pins, alternative for 1+6 above |
-| 8    |   2 or 4 | JST           | SVH-21T-P1.1        |         0.11 | [K][8digi]     | VH crimps, for power connector |
-| 9    |   1 or 2 | TE            | 1-1123722-2         |         0.18 | [K][9digi]     | VH housing 2 pin, for power connector |
+| 8    |   2 or 4 | JST           | SVH-21T-P1.1        |         0.11 | [K][8digi] [R][8rs] | VH crimps, for power connector |
+| 9    |   1 or 2 | TE            | 1-1123722-2         |         0.18 | [K][9digi] [R][9rs] | VH housing 2 pin, for power connector |
 | 10   |        - | Remington     | 16UL1007STRKIT      |        29.70 | [K][10amzn]    | 16 AWG wire, for power cable |
 | 11   |        - | Remington     | 26UL1007STRKIT10COLOR |      31.60 | [K][11amzn]    | 26 AWG wire, for control cable |
 
@@ -45,10 +47,14 @@ We may have parts to send you from our inventory.
 [3mcmc]:  https://www.mcmaster.com/5234K57
 [4mcmc]:  https://www.mcmaster.com/9579K72
 [5digi]:  https://www.digikey.com/short/z44f8d
+[5rs]: https://export.rsdelivers.com/product/jst/sxh-002t-p06/jst-xh-female-crimp-terminal-contact-26awg-sxh/1755645
 [6digi]:  https://www.digikey.com/short/z44ff8
+[6rs]: https://export.rsdelivers.com/product/jst/xhp-6/jst-xhp-female-connector-housing-25mm-pitch-6-way/8201620
 [7amzn]:  https://www.amazon.com/gp/product/B079MJ1RYN
 [8digi]:  https://www.digikey.com/short/z44fjr
+[8rs]: https://export.rsdelivers.com/product/jst/svh-41t-p11/jst-nv-vh-female-crimp-terminal-contact-16awg-svh/7620692
 [9digi]:  https://www.digikey.com/short/z44fwj
+[9rs]: https://export.rsdelivers.com/product/jst/vhr-2n/jst-vhr-female-connector-housing-396mm-pitch-2/8201172
 [10amzn]: https://www.amazon.com/gp/product/B00N51OJJ4
 [11amzn]: https://www.amazon.com/gp/product/B011JC76OA
 

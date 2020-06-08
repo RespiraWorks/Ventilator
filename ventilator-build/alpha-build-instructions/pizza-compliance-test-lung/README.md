@@ -14,7 +14,9 @@ This is completely uncalibrated, so it is not intended for instrumentation, just
 
 ## Part List (BOM)
 
-**NOTE: You'll first need to secure parts for the [simple test lung](../pizza-test-lung), EXCEPT for the following:**
+**Note: If you are a member of the RespiraWorks team, review [part purchasing guidelines](../../README.md) BEFORE purchasing any parts.**
+
+**Add-on part redundancies: You'll first need to secure parts for the [simple test lung](../pizza-test-lung), EXCEPT for the following:**
 *  **DON'T purchase Item #1 ion the simple test lung BOM; instead purchase item #1 in the BOM below.**
 * **DON'T purchase parts within the "Parts: Alt Tee" table in the simple test lung BOM; instead, purchase item #6 in the BOM below.** 
 

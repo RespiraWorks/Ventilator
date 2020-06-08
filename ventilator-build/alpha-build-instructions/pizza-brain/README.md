@@ -41,10 +41,10 @@ For an upgrade, check the [Pizza build](../pizza-build.md).
 | 8    |   1 | Seadream     | 26121600           |     7.00 | [Z][8amzn]                | microHDMI adapter, **for RPI4** |
 | 9    |   1 | SanDisk      | SDSQXAF-032G-GN6MA |    10.73 | [Z][9amzn]                | UHS-1 Class 10 micro SD, memory for Raspberry Pi |
 | 10   |   1 | RespiraWorks | PCB                |          | [B][10rw]                 | RespiraWorks custom PCB |
-| 11   |   1 |              |                    |    85.03 | [C][11mcmc]               | 12v Power supply adapter, medical grade, 9A, for **PCB** |
-| 12   |   1 |              |                    |    19.99 | [Z][12amzn]               | 12v Power supply adapter, 10A, alternative for 11, for **PCB** |
-| 13   |   1 |              |                    |    13.99 | [Z][13amzn]               | 12v Power supply adapter, 5A, alternative for 11-12, for **PCB** |
-| 14   |   1 |              |                    |    27.00 | [C][14mcmc]               | 12v Power supply adapter, 5A, alternative for 11-13, for **PCB** |
+| 11   |   1 | McMaster Carr |          3791N024 |    85.03 | [C][11mcmc]               | 12v Power supply adapter, medical grade, 9A, for **PCB** |
+| 12   |   1 |       BINZET |      FBA_LTC0487-3 |    19.99 | [Z][12amzn]               | 12v Power supply adapter, 10A, alternative for 11, for **PCB** |
+| 13   |   1 |     HISVISION |           AY60WDC |    13.99 | [Z][13amzn]               | 12v Power supply adapter, 5A, alternative for 11-12, for **PCB** |
+| 14   |   1 | McMaster Carr |          3824N132 |    27.00 | [C][14mcmc]               | 12v Power supply adapter, 5A, alternative for 11-13, for **PCB** |
 | 15   |   1 | AIMHD        | AHD-DC20-F-PT      | 9.99 / 20| [Z][15amzn]               | Female Power Pigtail DC 5.5mm x 2.1mm Connectors, for main power, for **PCB** |
 | 16   |   6 | JST          | SVH-21T-P1.1       |     0.11 | [K][16digi] [R][16rs]     | VH crimps, for power connectors, for **PCB** |
 | 17   |   1 | JST          | VHR-3N             |     0.14 | [K][17digi] [R][17rs]     | VH housing 3 pin, for main power, for **PCB** |
@@ -80,7 +80,7 @@ For an upgrade, check the [Pizza build](../pizza-build.md).
 
 | Item | Manufacturer  | Part number        | Price (USD) | Sources         | Notes |
 | ---- |--------------:| ------------------ | -------- | ---------------:|------ |
-| a1   |               |                    |    12.99 | [Z][a1amzn]     | microSD-USB adapter, for flashing RasPi images | 
+| a1   |         Anker |     68ANREADER-B2A |    12.99 | [Z][a1amzn]     | microSD-USB adapter, for flashing RasPi images | 
 | a2   | Preciva       | PR-3254 (PR102001) |    39.99 | [Z][a2amzn]     | Crimping tool for HX and HV connectors |
 
 [a1amzn]:https://www.amazon.com/Anker-Portable-Reader-RS-MMC-Micro/dp/B006T9B6R2

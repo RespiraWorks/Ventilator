@@ -52,6 +52,8 @@ The above files should not be printed with FDM. Instead, a leaktight method like
 * **3D** = 3D printed (RespiraWorks)
 * **S**  = ST
 * **R** = RS computing
+(**note**: links provided are for worldwide customers; there are local RS retail sites for most countries that use the same product reference (RS Stock No.) and will probably ship faster if you order from your country's site)
+
 
 ### Parts 
 

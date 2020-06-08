@@ -195,8 +195,7 @@ enum VentMode {
   //   alarm_hi_tidal_volume_ml
   //   alarm_hi_breaths_per_min
   //
-  // TODO: Implement me!
-  // PRESSURE_ASSIST = 2;
+  PRESSURE_ASSIST = 2;
 
   // TODO: Implement me!
   // ADAPTIVE_CONTROL_BREATH = 3;

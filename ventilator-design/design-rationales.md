@@ -60,7 +60,7 @@ More detailed thoughts on this [here](conop.md).
     * Normally open, which is important for anti-asphyxiation in the case of power loss
     * Still evaluating fatigue and lifetime / sealing.
     * Originally designed as the exhale valve to give control for maintaining PEEP - under considering to use for both the air inlet and for the oxygen inlet
-    * For more informatin about the design of this valve, see https://github.com/RespiraWorks/SystemDesign/tree/master/research-development/project-pinch-valve
+    * For more informatin about the design of this valve, see [here](../research-development/project-pinch-valve)
 
 * **Idle Air Control Valve (IAC)**
     * Common automotive part that is cheap and widely available. 
@@ -99,7 +99,7 @@ More detailed thoughts on this [here](conop.md).
     * Venturi's are nice because they are cheap and yet can provide reliable flow measurements. See [this ticket](https://github.com/RespiraWorks/SystemDesign/issues/9) for info about evaluating the venturi's.
     * Currently we are using the difference between the two flow measurements (one for inhale and one for exhale) to determine the tidal volume delivered to the patient. We are still evaluating how to do this - see [this ticket](https://github.com/RespiraWorks/SystemDesign/issues/57) for more information.
     * Another open questions is manufacturing of the venturis - currently the goal is to design a venturi that can be injection molded.
-    * For more informatni about the venturi design, see https://github.com/RespiraWorks/SystemDesign/tree/master/research-development/project-venturi
+    * For more informatni about the venturi design, see [here](../research-development/project-venturi).
     
 * **Patient Pressure sensors**
     * Needs to be reliable, handle many cycles, and meet the required ranges and accuracies of the requirements (#todo flesh this out more).
@@ -115,7 +115,7 @@ More detailed thoughts on this [here](conop.md).
 ## Filters
 * Filters on inlet/outlet to prevent contaminents from the surrounding environment getting into the device
 * Filter on patient circuit to avoid device contamination and spreading particles between patients
-* We're currently looking at HEPA filters since they are commonly avaible and cheap - but we're also evaluating other options. HEPA filters are appropriate because they are designed to filter small particles [More info on HEPA filters](https://ntrs.nasa.gov/archive/nasa/casi.ntrs.nasa.gov/20170005166.pdf)
+* We're currently looking at HEPA filters since they are commonly avaible and cheap - but we're also evaluating other options. HEPA filters are appropriate because they are designed to filter small particles. [More info on HEPA filters](https://ntrs.nasa.gov/archive/nasa/casi.ntrs.nasa.gov/20170005166.pdf)
 * 2 part mold for holding the filters is meant to be easily manufacturable and to allow easy changing of the filters over time
 * Filters are placed physically on the outside of the box so they can be replaced without the box being opened
 

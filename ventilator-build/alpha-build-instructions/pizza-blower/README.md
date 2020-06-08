@@ -19,7 +19,8 @@ with the [PCB](https://github.com/respiraworks/pcbreathe).
 * **K** = Digikey
 * **B** = Built by RespiraWorks
 * **Z** = Amazon
-* **R** = Radiospare : note the links provided are for worldwide custommers, there are local RS retail sites for most country that use the same product reference (RS Stock No.) and will probably ship faster if you order from your country's site)
+* **R** = RS computing
+(**note**: links provided are for worldwide customers; there are local RS retail sites for most countries that use the same product reference (RS Stock No.) and will probably ship faster if you order from your country's site)
 
 ### Parts
 

@@ -6,9 +6,7 @@ This is an optional add-on (topping!) to the [pizza build](../pizza-build.md).
 
 To test basic function a ventilator check lung or a breathing bag is sufficient, but can really only work up to 10cmH2O.
 
-To be able to test higher PIP values, you need to reduce the conpliance of the lung so you don't just inflate it like
-
-a balloon (or pop it).  These are partial instructions, and there is currently a shortage of test lungs, so what model you get can vary, so expect to do some tinkering to these instrutions if you are going to build you own.
+To be able to test higher PIP values, you need to reduce the conpliance of the lung so you don't just inflate it like a balloon (or pop it).  These are partial instructions, and there is currently a shortage of test lungs, so what model you get can vary, so expect to do some tinkering to these instrutions if you are going to build you own.
 
 This is completely uncalibrated, so it is not intended for instrumentation, just for functional observation.
 
@@ -17,8 +15,8 @@ This is completely uncalibrated, so it is not intended for instrumentation, just
 ## Part List (BOM)
 
 **NOTE: You'll first need to secure parts for the [simple test lung](../pizza-test-lung), EXCEPT for the following:**
-*  **Don't purchase Item #1 ion the simple test lung BOM; instead purchase item #1 in the BOM below.**
-* **Don't purchase parts within the "Parts: Alt Tee" table in the simple test lung BOM; instead, purchase item #6 in the BOM below.** 
+*  **DON'T purchase Item #1 ion the simple test lung BOM; instead purchase item #1 in the BOM below.**
+* **DON'T purchase parts within the "Parts: Alt Tee" table in the simple test lung BOM; instead, purchase item #6 in the BOM below.** 
 
 
 ### Purchasing Source Key

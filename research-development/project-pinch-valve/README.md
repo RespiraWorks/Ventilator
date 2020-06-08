@@ -50,6 +50,8 @@ You may also find other variations of the design meant for special testing/calib
 
 ## Parts List (BOM)
 
+**Note: If you are a member of the RespiraWorks team, review [part purchasing guidelines](../../ventilator-build/README.md) BEFORE purchasing any parts.**
+
 ### Purchasing Source Key
 
 * **C**  = McMaster-Carr

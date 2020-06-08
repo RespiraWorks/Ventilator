@@ -7,12 +7,16 @@ If you decide to buy them, do so at your own risk... oh, and thank you ;).**
 
 **TODO:** explain purpose and contents
 
-## Purchasing source abbreviations
+## Parts List (BOM)
+
+**Note: If you are a member of the RespiraWorks team, review [part purchasing guidelines](../../ventilator-build/README.md) BEFORE purchasing any parts.**
+
+### Purchasing Source Abbreviations
 
 * **Z** = Amazon
 * **K** = Digikey
 
-## Parts BOM
+### Parts 
 
 | RefDes | Quantity | Manufacturer  | Part #              | Price($)     | Sources         | Notes |
 | ------ |---------:| ------------- | ------------------- | ------------:|-----------------| ----- |
@@ -46,7 +50,7 @@ If you decide to buy them, do so at your own risk... oh, and thank you ;).**
 [11amzn]: https://www.amazon.com/gp/product/B011JC76OA
 [12amzn]: https://www.amazon.com/gp/product/B073SDGNKW
 
-## Tooling BOM
+### Tools
 
 We try to make few assumptions about what tools you have. Here are recommended tools you might need.
 

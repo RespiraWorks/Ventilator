@@ -44,6 +44,8 @@ We are still providing 5/8" tubing as an option below, since some people may sti
 
 ## Parts List (BOM)
 
+**Note: If you are a member of the RespiraWorks team, review [part purchasing guidelines](../README.md) BEFORE purchasing any parts.**
+
 ### Purchasing Source Key
 
 * **Z** = Amazon

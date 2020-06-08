@@ -325,7 +325,6 @@ private:
   void InitGPIO();
   void InitADC();
   void InitSysTimer();
-  void BusyWaitUsec(uint16_t usec);
   void InitPwmOut();
   void InitUARTs();
   void EnableClock(void *ptr);
@@ -337,7 +336,7 @@ private:
   void setDigitalPinMode(BinaryPin pin, PinMode mode);
 
 #ifdef TEST_MODE
-  Time time_ = millisSinceStartup(0);
+  Time time_ = microsSinceStartup(0);
   bool interruptsEnabled_ = true;
 
   // The default pin mode on Arduino is INPUT, which happens to be the first

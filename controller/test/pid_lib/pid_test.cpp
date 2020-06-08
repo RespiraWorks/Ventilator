@@ -35,7 +35,7 @@ inline constexpr const float MIN_OUTPUT = 0;
 // Maximum task jitter (assume 5 ms for now, will need adjuting)
 inline constexpr Duration max_task_jitter = milliseconds(5);
 
-inline constexpr Time base = millisSinceStartup(10000);
+inline constexpr Time base = microsSinceStartup(10'000'000);
 inline constexpr Duration sample_period = milliseconds(100);
 Time ticks(int num_ticks) { return base + num_ticks * sample_period; }
 

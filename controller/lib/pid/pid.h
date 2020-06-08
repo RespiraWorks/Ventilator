@@ -36,15 +36,11 @@ class PID {
 public:
   // Constructs the PID using the given parameters.
   PID(float kp, float ki, float kd, ProportionalTerm p_term,
-      DifferentialTerm d_term, float output_min, float output_max,
-      Duration sample_period)
+      DifferentialTerm d_term, float output_min, float output_max)
       : kp_(kp), ki_(ki), kd_(kd), p_term_(p_term), d_term_(d_term),
-        out_min_(output_min), out_max_(output_max),
-        sample_period_(sample_period) {}
+        out_min_(output_min), out_max_(output_max) {}
 
   // Performs one step of the PID calculation.
-  // If this call was ignored due to being within sample time
-  // of the previous call, returns the last returned value.
   float Compute(Time now, float input, float setpoint);
 
   // Call this instead of Compute in case on this step of the control loop
@@ -71,10 +67,7 @@ private:
   const float out_min_;
   const float out_max_;
 
-  const Duration sample_period_;
-
   bool initialized_ = false;
-  Time next_sample_time_ = microsSinceStartup(0);
   Time last_update_time_ = microsSinceStartup(0);
   float output_sum_ = 0;
   float last_input_ = 0;

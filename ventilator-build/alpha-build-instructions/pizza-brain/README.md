@@ -19,7 +19,8 @@ For an upgrade, check the [Pizza build](../pizza-build.md).
 * **M** = Mouser
 * **O** = Monoprice
 * **K** = Digikey
-* **R** = RS Computing ([various countries](https://www.rs-online.com/))
+* **R** = RS Computing 
+(**note**: links provided are for worldwide customers; there are local RS retail sites for most countries that use the same product reference (RS Stock No.) and will probably ship faster if you order from your country's site)
 * **B** = Built by RespiraWorks
 
 ### Parts

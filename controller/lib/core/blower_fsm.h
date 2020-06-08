@@ -19,6 +19,7 @@ limitations under the License.
 #include <variant>
 
 #include "network_protocol.pb.h"
+#include "sensors.h"
 #include "units.h"
 
 // This module encapsulates the blower system's finite state machine (FSM).
@@ -100,7 +101,7 @@ class OffFsm {
 public:
   OffFsm() = default;
   explicit OffFsm(Time now, const VentParams &) {}
-  BlowerSystemState desired_state(Time now) {
+  BlowerSystemState desired_state(Time now, const SensorReadings &readings) {
     return {.blower_enabled = false, kPa(0), ValveState::OPEN};
   }
   bool finished(Time now) { return true; }
@@ -120,7 +121,7 @@ public:
   static constexpr inline Duration RISE_TIME = milliseconds(100);
 
   explicit PressureControlFsm(Time now, const VentParams &params);
-  BlowerSystemState desired_state(Time now);
+  BlowerSystemState desired_state(Time now, const SensorReadings &readings);
 
   bool finished(Time now) { return now > expire_end_; }
 
@@ -132,14 +133,45 @@ private:
   Time expire_end_;
 };
 
+// "Breath finite state machine" for pressure assist mode.
+//
+// This mode is used for a patient that is not fully sedated and can initiate
+// breaths by himself, but once a breath has started, it is fully controlled
+// by the ventilator: inspiration time is set by the ventilator.
+// This mode enforce a minimum respiratory rate in case the patient does not
+// initiate enough breaths.
+// Similarly to pressure control, uses a square wave, only the length of the
+// exhale leg can vary depending on the patient breath initiation.
+// Unlike pressure control, this fsm starts with exhale and ends at the end of
+// inhale to be able to start the first inhale on patient trigger.
+class PressureAssistFsm {
+public:
+  explicit PressureAssistFsm(Time now, const VentParams &params);
+  BlowerSystemState desired_state(Time now, const SensorReadings &readings) ;
+
+  bool finished(Time now) { return now > inspire_end_; }
+
+private:
+  const Pressure inspire_pressure_;
+  const Pressure expire_pressure_;
+
+  Time start_time_;
+  Time latest_expire_end_;
+  Time inspire_end_;
+
+  VolumetricFlow inspiratory_effort_threshold_ = ml_per_min(-1.0f);
+  bool patient_inspiring_ = false;
+};
+
 class BlowerFsm {
 public:
   // Gets the state that the the blower system should (ideally) deliver right
   // now.
-  BlowerSystemState DesiredState(Time now, const VentParams &params);
+  BlowerSystemState DesiredState(Time now, const VentParams &params,
+                                 const SensorReadings &readings);
 
 private:
-  std::variant<OffFsm, PressureControlFsm> fsm_;
+  std::variant<OffFsm, PressureControlFsm, PressureAssistFsm> fsm_;
 };
 
 #endif // BLOWER_FSM_H

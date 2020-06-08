@@ -24,9 +24,6 @@ import threading
 import time
 import traceback
 
-# Turn on interactive mode for matplotlib
-plt.ion()
-
 # Command codes.  See debug.h in the controller debug library
 OP_MODE = 0x00
 OP_PEEK = 0x01
@@ -689,6 +686,10 @@ def TraceGraph():
     plt.figure()
     for i, d in enumerate(dat):
         plt.plot(timestamps_sec, d, label=traceVars[i].help)
+
+    # Draw a black gridline at y=0 to highlight the x-axis.
+    plt.axhline(linewidth=1, color="black")
+
     plt.xlabel("Seconds")
     plt.grid()
     plt.legend()
@@ -1196,4 +1197,6 @@ if __name__ == "__main__":
         plt.ioff()
         cmdline.onecmd(args.command)
     else:
+        # Turn on interactive mode for matplotlib, so show() doesn't block.
+        plt.ion()
         cmdline.CmdLoop()

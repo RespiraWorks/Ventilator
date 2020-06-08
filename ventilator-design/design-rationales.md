@@ -25,7 +25,7 @@ duties reliably with high confidence over extended periods of time. The goal is 
 
 ## System conopS/System Design:
 
-More detailed thoughts on this [here](https://github.com/RespiraWorks/SystemDesign/blob/master/ventilator-design/conop.md).
+More detailed thoughts on this [here](conop.md).
 
 * Targeting **pressure control** for two reasons: 
     1. We got early feedback that this was most important to doctors - though we have gotten feedback that volume control is also important.

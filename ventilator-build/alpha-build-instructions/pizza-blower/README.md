@@ -11,6 +11,8 @@ with the [PCB](https://github.com/respiraworks/pcbreathe).
 
 ## Parts List (BOM)
 
+**Note: If you are a member of the RespiraWorks team, review [part purchasing guidelines](../../README.md) BEFORE purchasing any parts.**
+
 ### Purchasing Source Key
 
 * **A** = Ali Express

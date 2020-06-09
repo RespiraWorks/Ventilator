@@ -49,7 +49,7 @@ static constexpr float max_move = 45.0f;
 // Amplitude of power level for normal operation.
 // Don't go crazy here, you can easily overheat the
 // motor driver chips and stepper motors.
-static constexpr float move_amp = 0.2f;
+static constexpr float move_amp = 0.25f;
 
 // Speed/accel for normal moves.  We want the motor
 // to be quick because the PID loop output will be

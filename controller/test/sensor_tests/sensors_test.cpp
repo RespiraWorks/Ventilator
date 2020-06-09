@@ -151,7 +151,7 @@ TEST(SensorTests, TotalFlowCalculation) {
   }
 }
 
-static constexpr Time base = millisSinceStartup(10000);
+static constexpr Time base = microsSinceStartup(10'000'000);
 static constexpr Duration sample_period = milliseconds(10);
 Time ticks(int num_ticks) { return base + num_ticks * sample_period; }
 

@@ -34,9 +34,9 @@ limitations under the License.
 //   - Pressure (e.g. kPa)
 //   - Volumetric flow (e.g. m^3/s)
 //   - Volume (e.g. m^3)
-//   - Voltage (volts)
-//   - Elapsed time since startup (ms)
-//   - Duration, aka time interval (ms)
+//   - Electric potential (volts)
+//   - Elapsed time since startup (μs)
+//   - Duration, aka time interval (μs)
 //
 // Feel free to add new ones!
 //
@@ -62,7 +62,9 @@ limitations under the License.
 //   Voltage          volts(float)
 //   Duration         seconds(float)
 //   Duration         milliseconds(int64_t)
-//   Time             millisSinceStartup(int64_t)
+//   Duration         milliseconds(float)
+//   Duration         microseconds(int64_t)
+//   Time             microsSinceStartup(int64_t)
 //
 // Values support addition and subtraction.  The laws for Duration and Time are
 // different than the other units:
@@ -73,6 +75,7 @@ limitations under the License.
 //   Time - Duration     = Time
 //   Time - Time         = Duration
 //   Time + Time           NOT ALLOWED
+//   Duration - Time       NOT ALLOWED
 //
 // [1] https://en.wikipedia.org/wiki/Physical_quantity
 
@@ -286,13 +289,14 @@ constexpr Voltage volts(float v) { return Voltage(v); }
 
 // Time and Duration classes.
 //
-// - Duration represents a length of time, e.g. "10 seconds" or "-2
-//   milliseconds".
+// - Duration represents a length of time, e.g. "10 seconds" or
+//   "-2 microseconds".
 //
 // - Time represents a point in time, relative to when the device started up,
 //   e.g. "1000 seconds after startup".
 //
-// Both classes have millisecond resolution.
+// Both classes have microsecond resolution.  2^63 μs is about 300,000 years,
+// so no need to worry about rollover.
 //
 // You can add and subtract Times and Durations in the natural way.
 //
@@ -309,16 +313,30 @@ class Time;
 // Units:
 //  - seconds
 //  - milliseconds
+//  - microseconds
 //
-// Native unit (implementation detail): int64_t miliseconds
+// Native unit (implementation detail): int64_t microseconds
 //
 // Multiplying a VolumetricFlow by a Duration gives you a Volume.
 // Dividing a Volume by a Duration gives you a VolumetricFlow.
+//
+// Note that because the factory `Duration milliseconds(int64_t)` takes an
+// int64, but `float Duration::milliseconds()` must return a float, you may
+// encounter an int64_t x such that
+//
+//   milliseconds(x).milliseconds() != x.
+//
+// This is unfortunate, but the alternative (not offering a
+// milliseconds(int64_t) factory) is worse, because converting an int64
+// milliseconds to float may lose useful precision.
 class Duration : public units_detail::Scalar<Duration, int64_t> {
 public:
-  [[nodiscard]] constexpr int64_t milliseconds() const { return val_; }
-  [[nodiscard]] constexpr float seconds() const {
+  [[nodiscard]] constexpr int64_t microseconds() const { return val_; }
+  [[nodiscard]] constexpr float milliseconds() const {
     return static_cast<float>(val_) / 1000;
+  }
+  [[nodiscard]] constexpr float seconds() const {
+    return milliseconds() / 1000;
   }
   [[nodiscard]] constexpr float minutes() const { return seconds() / 60; }
 
@@ -330,36 +348,48 @@ public:
   constexpr friend Duration operator-(const Time &a, const Time &b);
 
 private:
-  constexpr friend Duration milliseconds(int64_t millis);
-  constexpr friend Duration seconds(float secs);
+  constexpr friend Duration microseconds(int64_t micros);
 
   using units_detail::Scalar<Duration, int64_t>::Scalar;
 };
 
-constexpr Duration milliseconds(int64_t millis) { return Duration(millis); }
-constexpr Duration seconds(float secs) {
-  return Duration(static_cast<int64_t>(1000 * secs));
+constexpr Duration microseconds(int64_t micros) { return Duration(micros); }
+constexpr Duration milliseconds(int64_t millis) {
+  return microseconds(millis * 1000);
 }
+
+// Add a dummy template to make these overloads have lower priority than the
+// int64_t version.  We need a `double` version otherwise passing a double
+// (even just a double constant, like "0.1") will prefer the int64_t version!
+template <int /*dummy*/ = 0> constexpr Duration milliseconds(float millis) {
+  return microseconds(static_cast<int64_t>(millis * 1000));
+}
+template <int /*dummy*/ = 0> constexpr Duration milliseconds(double millis) {
+  return microseconds(static_cast<int64_t>(millis * 1000));
+}
+
+constexpr Duration seconds(float secs) { return milliseconds(secs * 1000); }
 constexpr Duration minutes(float mins) { return seconds(mins * 60); }
 constexpr Duration operator*(int n, Duration d) {
-  return milliseconds(static_cast<int64_t>(n) * d.milliseconds());
+  return microseconds(static_cast<int64_t>(n) * d.microseconds());
 }
 constexpr Duration operator*(Duration d, int n) {
-  return milliseconds(static_cast<int64_t>(n) * d.milliseconds());
+  return microseconds(static_cast<int64_t>(n) * d.microseconds());
 }
 
 // Represents a point in time, relative to when the device started up.  See
 // details above.
 //
-// Precision: 1ms
+// Precision: 1μs
 //
 // Units:
 //  - milliseconds
+//  - microseconds
 //
-// Native unit (implementation detail): uint64_t miliseconds
+// Native unit (implementation detail): uint64_t microseconds
 class Time : public units_detail::Scalar<Time, uint64_t> {
 public:
-  [[nodiscard]] uint64_t millisSinceStartup() const { return val_; }
+  [[nodiscard]] uint64_t microsSinceStartup() const { return val_; }
 
   constexpr friend Time operator+(const Time &a, const Duration &b);
   constexpr friend Time operator+(const Duration &a, const Time &b);
@@ -369,12 +399,12 @@ public:
   Time &operator-=(const Duration &dt) { return *this = *this - dt; }
 
 private:
-  constexpr friend Time millisSinceStartup(uint64_t millis);
+  constexpr friend Time microsSinceStartup(uint64_t micros);
 
   using units_detail::Scalar<Time, uint64_t>::Scalar;
 };
 
-constexpr Time millisSinceStartup(uint64_t millis) { return Time(millis); }
+constexpr Time microsSinceStartup(uint64_t micros) { return Time(micros); }
 
 constexpr inline Duration operator+(const Duration &a, const Duration &b) {
   return Duration(a.val_ + b.val_);

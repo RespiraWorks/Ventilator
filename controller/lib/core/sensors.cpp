@@ -44,14 +44,19 @@ static DebugFloat dbg_volume_uncorrected("volume_uncorrected",
 // Sourced from https://en.wikipedia.org/wiki/Density_of_air
 static const float DENSITY_OF_AIR_KG_PER_CUBIC_METER = 1.225f; // kg/m^3
 
-// Diameters relating to Ethan's Alpha Venturi - II
-// (https://docs.google.com/spreadsheets/d/1G9Kb-ImlluK8MOx-ce2rlHUBnTOtAFQvKjjs1bEhlpM/edit#gid=963553579)
-// Port diameter must be larger than choke diameter
-constexpr static Length DEFAULT_VENTURI_PORT_DIAM = millimeters(14.0);
-constexpr static Length DEFAULT_VENTURI_CHOKE_DIAM = millimeters(5.5f);
+// Diameters and correction coefficient relating to 3/4in Venturi, see
+// https://bit.ly/2ARuReg.
+//
+// Correction factor of 0.97 is based on ISO recommendations for Reynolds of
+// roughly 10^4 and machined (rather than cast) surfaces. Data fit is in good
+// agreement based on comparison to Fleisch pneumotachograph; see
+// https://github.com/RespiraWorks/VentilatorSoftware/pull/476
+constexpr static Length VENTURI_PORT_DIAM = millimeters(15.05f);
+constexpr static Length VENTURI_CHOKE_DIAM = millimeters(5.5f);
+constexpr static float VENTURI_CORRECTION = 0.97f;
 
-static_assert(DEFAULT_VENTURI_PORT_DIAM > DEFAULT_VENTURI_CHOKE_DIAM);
-static_assert(DEFAULT_VENTURI_CHOKE_DIAM > meters(0));
+static_assert(VENTURI_PORT_DIAM > VENTURI_CHOKE_DIAM);
+static_assert(VENTURI_CHOKE_DIAM > meters(0));
 
 // TODO: VOLUME_INTEGRAL_INTERVAL was not chosen carefully.
 static constexpr Duration VOLUME_INTEGRAL_INTERVAL = milliseconds(5);
@@ -160,9 +165,10 @@ Pressure Sensors::ReadPressureSensor(Sensor s) {
     return static_cast<float>(M_PI) / 4.0f * pow2(diameter.meters());
   };
 
-  float portArea = diameter_to_area_m2(DEFAULT_VENTURI_PORT_DIAM);
-  float chokeArea = diameter_to_area_m2(DEFAULT_VENTURI_CHOKE_DIAM);
+  float portArea = diameter_to_area_m2(VENTURI_PORT_DIAM);
+  float chokeArea = diameter_to_area_m2(VENTURI_CHOKE_DIAM);
   return cubic_m_per_sec(
+      VENTURI_CORRECTION *
       std::copysign(std::sqrt(std::abs(delta.kPa()) * 1000.0f), delta.kPa()) *
       std::sqrt(2 / DENSITY_OF_AIR_KG_PER_CUBIC_METER) * portArea * chokeArea /
       std::sqrt(pow2(portArea) - pow2(chokeArea)));

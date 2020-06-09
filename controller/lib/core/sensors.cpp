@@ -75,20 +75,6 @@ static constexpr Duration VOLUME_INTEGRAL_INTERVAL = milliseconds(5);
 // the constructor are for the "classic PID" control type, which seemed to work
 // well.
 //
-// Note that we have to choose a nominal sample period for the PID.  In reality
-// we sample the PID once per breath; the exact value we use for the sample
-// period is not important so long as it's shorter than our breath period.  If
-// we were to choose a value longer than our breath period, then the PID
-// wouldn't update on some breaths, which is not desirable!
-//
-// TODO: Consider updating the PID interface so that instead of taking sample
-// time as a constructor parameter and rejecting calls that occur before the
-// designated time, it always recomputes based on the new data.  Doing this
-// would require improving the resolution of our clock from milliseconds to
-// microseconds so we don't break the main controller loop's PID, which runs
-// once every few ms, and so wouldn't be happy with rounding errors between x
-// and x+1 ms.
-//
 // FLOW_PID_OUTPUT_MAX is a sanity check, preventing us from using absurdly
 // high flow corrections.  The value below may strike you as absurdly high, but
 // we've seen corrections of 40ml/s be necessary, and 100ml/s gives a safety
@@ -108,7 +94,6 @@ static constexpr Duration VOLUME_INTEGRAL_INTERVAL = milliseconds(5);
 // want to handle the low-flow case as best we can.
 static constexpr float FLOW_PID_KU = 0.20f;
 static constexpr float FLOW_PID_TU = 5;
-static constexpr Duration FLOW_PID_SAMPLE_PERIOD = seconds(1);
 static constexpr VolumetricFlow FLOW_PID_OUTPUT_MAX = ml_per_sec(100);
 
 Sensors::Sensors()
@@ -122,8 +107,7 @@ Sensors::Sensors()
           ProportionalTerm::ON_ERROR,        //
           DifferentialTerm::ON_MEASUREMENT,  //
           -FLOW_PID_OUTPUT_MAX.ml_per_sec(), //
-          FLOW_PID_OUTPUT_MAX.ml_per_sec(),  //
-          FLOW_PID_SAMPLE_PERIOD) {}
+          FLOW_PID_OUTPUT_MAX.ml_per_sec()) {}
 
 // NOTE - I can't do this in the constructor now because it gets called before
 // the HAL is set up, so the busy wait never finishes.

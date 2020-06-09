@@ -19,7 +19,7 @@ limitations under the License.
 #include "vars.h"
 #include <math.h>
 
-static constexpr Duration PID_SAMPLE_PERIOD = milliseconds(10);
+static constexpr Duration LOOP_PERIOD = milliseconds(10);
 
 static DebugFloat dbg_setpoint("setpoint", "Setpoint pressure, kPa");
 
@@ -29,10 +29,10 @@ static DebugFloat dbg_kd("kd", "Derivative gain for main loop");
 static DebugFloat dbg_sp("pc_setpoint", "Pressure control setpoint (cmH2O)");
 
 Controller::Controller()
-    : pid_(0.0f, 0.0f, 0.0f, ProportionalTerm::ON_ERROR,
-           DifferentialTerm::ON_MEASUREMENT, 0.f, 1.0f, PID_SAMPLE_PERIOD) {}
+    : pid_(dbg_kp.Get(), dbg_ki.Get(), dbg_kd.Get(), ProportionalTerm::ON_ERROR,
+           DifferentialTerm::ON_MEASUREMENT, /*output_min=*/0.f, /*output_max=*/1.0f) {}
 
-Duration Controller::GetLoopPeriod() { return PID_SAMPLE_PERIOD; }
+Duration Controller::GetLoopPeriod() { return LOOP_PERIOD; }
 
 std::pair<ActuatorsState, ControllerState>
 Controller::Run(Time now, const VentParams &params,

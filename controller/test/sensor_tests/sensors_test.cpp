@@ -30,15 +30,20 @@ limitations under the License.
 #include <iostream>
 #include <string>
 
-// Maximum allowable delta between calculated sensor readings and the input
-// pressure waveform [kPa]
-static const float COMPARISON_TOLERANCE_PRESSURE_KPA = 0.005f;
+// Maximum allowable delta between calculated sensor readings and the input.
+static const Pressure COMPARISON_TOLERANCE_PRESSURE = kPa(0.005f);
+static const VolumetricFlow COMPARISON_TOLERANCE_FLOW = ml_per_sec(50);
+static const Volume COMPARISON_TOLERANCE_VOLUME = ml(1);
 
-// Maximum allowable delta between calculated and actual volumetric flow
-static const float COMPARISON_TOLERANCE_FLOW_CUBIC_M_PER_SEC = 5.0e-5f;
+#define EXPECT_PRESSURE_NEAR(a, b)                                             \
+  EXPECT_NEAR((a).kPa(), (b).kPa(), COMPARISON_TOLERANCE_PRESSURE.kPa())
 
-// Maximum allowable delta between calculated and actual volume (= 1 ml)
-static const float COMPARISON_TOLERANCE_VOLUME_ML = 1.0f;
+#define EXPECT_FLOW_NEAR(a, b)                                                 \
+  EXPECT_NEAR((a).ml_per_sec(), (b).ml_per_sec(),                              \
+              COMPARISON_TOLERANCE_FLOW.ml_per_sec())
+
+#define EXPECT_VOLUME_NEAR(a, b)                                               \
+  EXPECT_NEAR((a).ml(), (b).ml(), COMPARISON_TOLERANCE_VOLUME.ml())
 
 //@TODO: Finish writing more specific unit tests for this module
 
@@ -95,8 +100,7 @@ TEST(SensorTests, FullScaleReading) {
     Hal.test_setAnalogPin(AnalogPin::PATIENT_PRESSURE,
                           MPXV5004_PressureToVoltage(p));
     auto readings = sensors.GetSensorReadings();
-    float patient_pressure = cmH2O(readings.patient_pressure_cm_h2o).kPa();
-    EXPECT_NEAR(patient_pressure, p.kPa(), COMPARISON_TOLERANCE_PRESSURE_KPA);
+    EXPECT_PRESSURE_NEAR(cmH2O(readings.patient_pressure_cm_h2o), p);
   }
 }
 
@@ -106,18 +110,18 @@ TEST(SensorTests, FullScaleReading) {
 // you update the expected values accordingly.
 // Expected values from https://www.wolframalpha.com/input/?i=Venturi+flowmeter
 TEST(SensorTests, TestPositiveVolumetricFlowCalculation) {
-  EXPECT_NEAR(Sensors::PressureDeltaToFlow(kPa(1.0f)).cubic_m_per_sec(),
-              9.7162e-4f, COMPARISON_TOLERANCE_FLOW_CUBIC_M_PER_SEC);
-  EXPECT_NEAR(Sensors::PressureDeltaToFlow(kPa(-1.0f)).cubic_m_per_sec(),
-              -9.7162e-4f, COMPARISON_TOLERANCE_FLOW_CUBIC_M_PER_SEC);
-  EXPECT_NEAR(Sensors::PressureDeltaToFlow(kPa(0.0f)).cubic_m_per_sec(), 0.0f,
-              COMPARISON_TOLERANCE_FLOW_CUBIC_M_PER_SEC);
-  EXPECT_NEAR(Sensors::PressureDeltaToFlow(kPa(1.0e-7f)).cubic_m_per_sec(),
-              3.0725e-7f, COMPARISON_TOLERANCE_FLOW_CUBIC_M_PER_SEC);
-  EXPECT_NEAR(Sensors::PressureDeltaToFlow(kPa(100.0f)).cubic_m_per_sec(),
-              9.7162e-3f, COMPARISON_TOLERANCE_FLOW_CUBIC_M_PER_SEC);
-  EXPECT_NEAR(Sensors::PressureDeltaToFlow(kPa(-100.0f)).cubic_m_per_sec(),
-              -9.7162e-3f, COMPARISON_TOLERANCE_FLOW_CUBIC_M_PER_SEC);
+  EXPECT_FLOW_NEAR(Sensors::PressureDeltaToFlow(kPa(1.0f)),
+                   cubic_m_per_sec(9.7162e-4f));
+  EXPECT_FLOW_NEAR(Sensors::PressureDeltaToFlow(kPa(-1.0f)),
+                   cubic_m_per_sec(-9.7162e-4f));
+  EXPECT_FLOW_NEAR(Sensors::PressureDeltaToFlow(kPa(0.0f)),
+                   cubic_m_per_sec(0.0f));
+  EXPECT_FLOW_NEAR(Sensors::PressureDeltaToFlow(kPa(1.0e-7f)),
+                   cubic_m_per_sec(3.0725e-7f));
+  EXPECT_FLOW_NEAR(Sensors::PressureDeltaToFlow(kPa(100.0f)),
+                   cubic_m_per_sec(9.7162e-3f));
+  EXPECT_FLOW_NEAR(Sensors::PressureDeltaToFlow(kPa(-100.0f)),
+                   cubic_m_per_sec(-9.7162e-3f));
 }
 
 TEST(SensorTests, TotalFlowCalculation) {
@@ -143,11 +147,9 @@ TEST(SensorTests, TotalFlowCalculation) {
           update_readings(/*dt=*/seconds(0.0f), /*patient_pressure=*/kPa(0.0f),
                           p_in, p_out, &sensors);
 
-      EXPECT_NEAR(ml_per_min(readings.flow_ml_per_min).cubic_m_per_sec(),
-                  (Sensors::PressureDeltaToFlow(p_in) -
-                   Sensors::PressureDeltaToFlow(p_out))
-                      .cubic_m_per_sec(),
-                  COMPARISON_TOLERANCE_FLOW_CUBIC_M_PER_SEC);
+      EXPECT_FLOW_NEAR(ml_per_min(readings.flow_ml_per_min),
+                       (Sensors::PressureDeltaToFlow(p_in) -
+                        Sensors::PressureDeltaToFlow(p_out)));
     }
   }
 }
@@ -168,36 +170,37 @@ TEST(SensorTests, TVIntegrator) {
   tidal_volume.AddFlow(ticks(t++), flow);
   // integrate 1 l/s flow over 10 ms ==> 5 ml (rectangle rule with initial flow
   // set to 0)
-  EXPECT_NEAR(tidal_volume.GetTV().ml(), 5.0f, COMPARISON_TOLERANCE_VOLUME_ML);
+  EXPECT_VOLUME_NEAR(tidal_volume.GetTV(), ml(5));
 
   tidal_volume.AddFlow(ticks(t++), cubic_m_per_sec(2e-3f));
   // add 2 l/s flow over 10 ms ==> 20 ml ()
-  EXPECT_NEAR(tidal_volume.GetTV().ml(), 20.0f, COMPARISON_TOLERANCE_VOLUME_ML);
+  EXPECT_VOLUME_NEAR(tidal_volume.GetTV(), ml(20));
 
   tidal_volume.AddFlow(ticks(t++), ml_per_min(0.0f));
   // add 0 l/s flow over 10 ms ==> 30 ml (rectangle rule)
-  EXPECT_NEAR(tidal_volume.GetTV().ml(), 30.0f, COMPARISON_TOLERANCE_VOLUME_ML);
+  EXPECT_VOLUME_NEAR(tidal_volume.GetTV(), ml(30.0f));
 
   // integrate 0 for some time ==> still 30 ms
   while (t < 100) {
     tidal_volume.AddFlow(ticks(t++), ml_per_min(0.0f));
   }
 
-  EXPECT_NEAR(tidal_volume.GetTV().ml(), 30.0f, COMPARISON_TOLERANCE_VOLUME_ML);
+  EXPECT_VOLUME_NEAR(tidal_volume.GetTV(), ml(30.0f));
 
   // reverse flow
   flow = liters_per_sec(-1.0f);
   // this does not increment t in order to allow oversampling (following test)
   tidal_volume.AddFlow(ticks(t), flow);
   // remove 1 l/s flow over 10 ms ==> 25 ml (rectangle rule)
-  EXPECT_NEAR(tidal_volume.GetTV().ml(), 25.0f, COMPARISON_TOLERANCE_VOLUME_ML);
+  EXPECT_VOLUME_NEAR(tidal_volume.GetTV(), ml(25.0f));
 
   // oversampling and expect volume to not change except on multiples of 5 ms
   for (int i = 0; i < 50; i++) {
     tidal_volume.AddFlow(ticks(t) + milliseconds(i), flow);
+
     // remove 1l/s flow over 5 ms only when i is a multiple of 5
-    EXPECT_NEAR(tidal_volume.GetTV().ml(), 25.0f - floor(i / 5) * 5,
-                COMPARISON_TOLERANCE_VOLUME_ML);
+    int j = i / 5 * 5;
+    EXPECT_VOLUME_NEAR(tidal_volume.GetTV(), ml(25.0f - static_cast<float>(j)));
   }
 }
 
@@ -262,23 +265,19 @@ TEST(SensorTests, Calibration) {
   // get the sensor readings for the init signals, expect 0
   SensorReadings readings = sensors.GetSensorReadings();
 
-  EXPECT_NEAR(readings.patient_pressure_cm_h2o, 0.0f,
-              COMPARISON_TOLERANCE_PRESSURE_KPA);
-  EXPECT_NEAR(readings.flow_ml_per_min, 0.0f,
-              COMPARISON_TOLERANCE_FLOW_CUBIC_M_PER_SEC);
+  EXPECT_PRESSURE_NEAR(cmH2O(readings.patient_pressure_cm_h2o), kPa(0.0f));
+  EXPECT_FLOW_NEAR(ml_per_min(readings.flow_ml_per_min), ml_per_sec(0.0f));
 
   // set measured signals to 0 and expect -1*init values
   readings = update_readings(/*dt=*/seconds(0), /*patient_pressure=*/kPa(0),
                              /*inflow_pressure=*/kPa(0),
                              /*outflow_pressure=*/kPa(0), &sensors);
 
-  EXPECT_NEAR(readings.patient_pressure_cm_h2o, -1 * init_pressure.cmH2O(),
-              COMPARISON_TOLERANCE_PRESSURE_KPA);
-  EXPECT_NEAR(readings.flow_ml_per_min,
-              -1 * (Sensors::PressureDeltaToFlow(init_inflow_delta) -
-                    Sensors::PressureDeltaToFlow(init_outflow_delta))
-                       .ml_per_min(),
-              COMPARISON_TOLERANCE_FLOW_CUBIC_M_PER_SEC);
+  EXPECT_PRESSURE_NEAR(cmH2O(readings.patient_pressure_cm_h2o),
+                       cmH2O(-1 * init_pressure.cmH2O()));
+  EXPECT_FLOW_NEAR(ml_per_min(readings.flow_ml_per_min),
+                   -1 * (Sensors::PressureDeltaToFlow(init_inflow_delta) -
+                         Sensors::PressureDeltaToFlow(init_outflow_delta)));
 
   // set measured signals to some random values + init values and expect init
   // value to be removed from the readings
@@ -287,13 +286,10 @@ TEST(SensorTests, Calibration) {
       /*inflow_pressure=*/kPa(1.1f) + init_inflow_delta,
       /*outflow_pressure=*/kPa(0.01f) + init_outflow_delta, &sensors);
 
-  EXPECT_NEAR(readings.patient_pressure_cm_h2o, kPa(-0.5f).cmH2O(),
-              COMPARISON_TOLERANCE_PRESSURE_KPA);
-  EXPECT_NEAR(ml_per_min(readings.flow_ml_per_min).cubic_m_per_sec(),
-              (Sensors::PressureDeltaToFlow(kPa(1.1f)) -
-               Sensors::PressureDeltaToFlow(kPa(0.01f)))
-                  .cubic_m_per_sec(),
-              COMPARISON_TOLERANCE_FLOW_CUBIC_M_PER_SEC);
+  EXPECT_PRESSURE_NEAR(cmH2O(readings.patient_pressure_cm_h2o), kPa(-0.5f));
+  EXPECT_FLOW_NEAR(ml_per_min(readings.flow_ml_per_min),
+                   (Sensors::PressureDeltaToFlow(kPa(1.1f)) -
+                    Sensors::PressureDeltaToFlow(kPa(0.01f))));
 }
 
 TEST(SensorTests, FlowDrift) {

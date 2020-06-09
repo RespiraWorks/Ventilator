@@ -155,10 +155,10 @@ static constexpr Time base = microsSinceStartup(10'000'000);
 static constexpr Duration sample_period = milliseconds(10);
 Time ticks(int num_ticks) { return base + num_ticks * sample_period; }
 
-TEST(SensorTests, TVIntegrator) {
+TEST(SensorTests, FlowIntegrator) {
   // this Hal.delay is needed to allow TV construction with proper init time
   Hal.delay(base - Hal.now());
-  TVIntegrator tidal_volume;
+  FlowIntegrator tidal_volume;
   VolumetricFlow flow = liters_per_sec(1.0f);
   int t = 0;
   tidal_volume.AddFlow(ticks(t++), flow);
@@ -201,7 +201,7 @@ TEST(SensorTests, TVIntegrator) {
   }
 }
 
-// This test checks encapsulation of TVIntegrator in getSensorReadings with
+// This test checks encapsulation of FlowIntegrator in getSensorReadings with
 // irregular sampling
 TEST(SensorTests, TidalVolume) {
   // define pressure waveforms over which integration will take place
@@ -224,9 +224,9 @@ TEST(SensorTests, TidalVolume) {
   // Note: sensors' contructor calls Hal.delay, which means reference
   // tidal_volume must be constructed before sensors in order to have the same
   // initialization time.
-  // Note outside of tests: the sensors TVintegrator's TV has a constant bias:
+  // Note outside of tests: the sensors FlowIntegrator's TV has a constant bias:
   // init value = time between sensors' init and first measure * first flow / 2
-  TVIntegrator tidal_volume;
+  FlowIntegrator tidal_volume;
   Sensors sensors;
   sensors.Calibrate();
 

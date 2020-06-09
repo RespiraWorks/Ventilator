@@ -140,7 +140,8 @@ TEST(SensorTests, TotalFlowCalculation) {
   for (auto p_in : pressures) {
     for (auto p_out : pressures) {
       auto readings =
-          update_readings(seconds(0.0f), kPa(0.0f), p_in, p_out, &sensors);
+          update_readings(/*dt=*/seconds(0.0f), /*patient_pressure=*/kPa(0.0f),
+                          p_in, p_out, &sensors);
 
       EXPECT_NEAR(ml_per_min(readings.flow_ml_per_min).cubic_m_per_sec(),
                   (Sensors::PressureDeltaToFlow(p_in) -
@@ -233,8 +234,8 @@ TEST(SensorTests, TidalVolume) {
     Pressure p_in = pressure_in[i];
     Pressure p_out = pressure_out[i];
     Duration dt = sampling_time[i];
-    SensorReadings readings =
-        update_readings(dt, kPa(0.0f), p_in, p_out, &sensors);
+    SensorReadings readings = update_readings(
+        dt, /*patient_pressure=*/kPa(0.0f), p_in, p_out, &sensors);
 
     tidal_volume.AddFlow(Hal.now(), Sensors::PressureDeltaToFlow(p_in) -
                                         Sensors::PressureDeltaToFlow(p_out));
@@ -267,7 +268,9 @@ TEST(SensorTests, Calibration) {
               COMPARISON_TOLERANCE_FLOW_CUBIC_M_PER_SEC);
 
   // set measured signals to 0 and expect -1*init values
-  readings = update_readings(seconds(0), kPa(0), kPa(0), kPa(0), &sensors);
+  readings = update_readings(/*dt=*/seconds(0), /*patient_pressure=*/kPa(0),
+                             /*inflow_pressure=*/kPa(0),
+                             /*outflow_pressure=*/kPa(0), &sensors);
 
   EXPECT_NEAR(readings.patient_pressure_cm_h2o, -1 * init_pressure.cmH2O(),
               COMPARISON_TOLERANCE_PRESSURE_KPA);
@@ -279,9 +282,10 @@ TEST(SensorTests, Calibration) {
 
   // set measured signals to some random values + init values and expect init
   // value to be removed from the readings
-  readings = update_readings(seconds(0), kPa(-0.5f) + init_pressure,
-                             kPa(1.1f) + init_inflow_delta,
-                             kPa(0.01f) + init_outflow_delta, &sensors);
+  readings = update_readings(
+      /*dt=*/seconds(0), /*patient_pressure=*/kPa(-0.5f) + init_pressure,
+      /*inflow_pressure=*/kPa(1.1f) + init_inflow_delta,
+      /*outflow_pressure=*/kPa(0.01f) + init_outflow_delta, &sensors);
 
   EXPECT_NEAR(readings.patient_pressure_cm_h2o, kPa(-0.5f).cmH2O(),
               COMPARISON_TOLERANCE_PRESSURE_KPA);
@@ -290,4 +294,60 @@ TEST(SensorTests, Calibration) {
                Sensors::PressureDeltaToFlow(kPa(0.01f)))
                   .cubic_m_per_sec(),
               COMPARISON_TOLERANCE_FLOW_CUBIC_M_PER_SEC);
+}
+
+TEST(SensorTests, FlowDrift) {
+  // Set pressure sensors to 0kPa for calibration.
+  for (auto pin : {AnalogPin::PATIENT_PRESSURE, AnalogPin::INFLOW_PRESSURE_DIFF,
+                   AnalogPin::OUTFLOW_PRESSURE_DIFF}) {
+    Hal.test_setAnalogPin(pin, MPXV5004_PressureToVoltage(kPa(0)));
+  }
+
+  Sensors sensors;
+  sensors.Calibrate();
+
+  // Apply a constant pressure difference to the flow sensors over a few
+  // breaths.
+  std::vector<float> v1;
+  for (int i = 0; i < 10; i++) {
+    sensors.NoteNewBreath();
+    v1.push_back(update_readings(/*dt=*/seconds(6),
+                                 /*patient_pressure=*/cmH2O(0),
+                                 /*inflow_pressure=*/cmH2O(0.005f),
+                                 /*outflow_pressure=*/cmH2O(0), &sensors)
+                     .volume_ml);
+  }
+  // At first TV should increase, but eventually this should be detected as
+  // flow sensor drift, and the TV should level off and start decreasing.
+  // Check that the max isn't the first or last element.
+  EXPECT_GT(v1[0], 0.0f);
+  auto v1_max_idx =
+      std::distance(v1.begin(), std::max_element(v1.begin(), v1.end()));
+  EXPECT_GT(v1_max_idx, 0);
+  EXPECT_LT(v1_max_idx, static_cast<int>(v1.size()) - 1);
+
+  // Now remove the pressure difference.
+  //
+  // TODO: With the current flow-drift PID settings, the volume here doesn't
+  // converge to 0 as desired.
+  std::vector<float> v2;
+  for (size_t i = 0; i < 10; i++) {
+    sensors.NoteNewBreath();
+    v2.push_back(update_readings(/*dt=*/seconds(6),
+                                 /*patient_pressure=*/cmH2O(0),
+                                 /*inflow_pressure=*/cmH2O(0),
+                                 /*outflow_pressure=*/cmH2O(0), &sensors)
+                     .volume_ml);
+  }
+  // At first TV should decrease, but eventually it should level off.  Check
+  // that min derivative (i.e. the min flow) isn't the first element.
+  std::vector<float> f2;
+  for (size_t i = 1; i < v2.size(); i++) {
+    f2.push_back(v2[i] - v2[i - 1]);
+  }
+  EXPECT_LT(f2[0], 0.0f);
+  auto f2_min_idx =
+      std::distance(f2.begin(), std::min_element(f2.begin(), f2.end()));
+  EXPECT_GT(f2_min_idx, 0);
+  EXPECT_LT(f2_min_idx, f2.size() - 1);
 }

@@ -22,22 +22,11 @@ Arduino Nano and the MPXV5004GP and MPXV7002DP pressure sensors.
 #ifndef SENSORS_H
 #define SENSORS_H
 
+#include "flow_integrator.h"
 #include "hal.h"
 #include "network_protocol.pb.h"
 #include "pid.h"
 #include "units.h"
-#include <optional>
-
-class TVIntegrator {
-public:
-  void AddFlow(Time now, VolumetricFlow flow);
-  Volume GetTV() const { return volume_; }
-
-private:
-  Time last_flow_measurement_time_ = Hal.now();
-  VolumetricFlow last_flow_ = cubic_m_per_sec(0);
-  Volume volume_ = ml(0);
-};
 
 // Provides calibrated sensor readings, including tidal volume (TV)
 // integrated from flow.
@@ -104,35 +93,12 @@ private:
   // Calibrated average sensor values in a zero state.
   Voltage sensors_zero_vals_[NUM_SENSORS];
 
-  // Our flow sensors are subject to roughly two kinds of error:
-  //
-  //  - high-frequency error (i.e. "noise"), which we handle by reading the ADC
-  //    many times ("oversampling") in HAL, and
-  //
-  //  - low-frequency error, i.e. zero-point drift, meaning that the flow we
-  //    observe is equal to true flow plus an error, and that error changes
-  //    slowly relative to how quickly we can read the sensor.
-  //
-  // We use a PID controller invoked at each breath boundary to estimate the
-  // zero-point drift.  If the patient is breathing normally, tidal volume
-  // should be 0 between breaths, so the PID always has a setpoint of 0.  The
-  // job of the PID is to output a flow offset so that the measured flow plus
-  // the offset takes tidal volume down to 0 at the next breath.
-  //
-  //  - PID input: Tidal volume in ml right between two breaths.
-  //  - PID setpoint: Desired volume between breaths, i.e. 0 ml.
-  //  - PID output: A flow in ml/sec that should be added to every measured
-  //    flow.
-  //
   // We integrate flow to calculate tidal volume.  For debugging purposes, we
-  // keep track of volume both with and without the error correction.
-  //
-  // TODO: When the ventilator blower is disabled and re-enabled, presumably we
-  // should clear some or all of these values!
-  PID flow_error_pid_;
-  VolumetricFlow flow_correction_ = ml_per_sec(0);
-  TVIntegrator tv_integrator_;
-  TVIntegrator uncorrected_tv_integrator_;
+  // keep track of volume both with and without error correction.  (With error
+  // correction we call NoteExpectedVolume, and without we don't.)  See
+  // description of errors in FlowIntegrator.h.
+  FlowIntegrator flow_integrator_;
+  FlowIntegrator uncorrected_flow_integrator_;
 };
 
 #endif // SENSORS_H

@@ -138,7 +138,8 @@ static void high_priority_task(void *arg) {
 
   // Update some status info
   controller_status.fan_power = actuators_state.blower_power;
-  controller_status.fan_setpoint_cm_h2o = actuators_state.setpoint_cm_h2o;
+  controller_status.fan_setpoint_cm_h2o =
+      controller_state.setpoint_pressure.cmH2O();
 
   // Sample any trace variables that are enabled
   trace.MaybeSample();

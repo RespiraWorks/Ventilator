@@ -51,9 +51,9 @@ void testSequence(
   BlowerFsm fsm;
   for (const auto &[params, blower_enabled, time_millis, expected_pressure,
                     expected_valve_state] : seq) {
-    Hal.delay(millisSinceStartup(time_millis) - Hal.now());
+    Hal.delay(microsSinceStartup(time_millis * 1000) - Hal.now());
     SCOPED_TRACE("time = " + std::to_string(time_millis));
-    EXPECT_EQ(time_millis, Hal.now().millisSinceStartup());
+    EXPECT_EQ(time_millis * 1000, Hal.now().microsSinceStartup());
 
     BlowerSystemState s = fsm.DesiredState(Hal.now(), params);
     EXPECT_EQ(s.blower_enabled, blower_enabled);

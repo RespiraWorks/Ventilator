@@ -9,7 +9,7 @@ This contains details on the alpha and beta build assemblies, including parts in
 
 If you are a member of the RespiraWorks team, please don’t buy anything using personal funds (we need to document everything in specific ways to meet the requirements of our grant funding).
 
-Before purchasing any parts, **ask** team members (the [#beta-build](https://respiraworks.slack.com/archives/C0122FX6G90) RespiraWorks Slack channel is a good place to start) if they have any spare parts floating around. There are a lot of extras, so you may be able to get your hands on parts without ordering anything. 
+Before purchasing any parts, **ask** team members (the [#dev-hardware](https://respiraworks.slack.com/archives/C012UTERXD5) RespiraWorks Slack channel is a good place to start) if they have any spare parts floating around. There are a lot of extras, so you may be able to get your hands on parts without ordering anything. 
 
 If you do need to purchase parts, follow the process below. Note: This process is subject to change as we work out any issues. Message Curtis Kline with any questions.
 

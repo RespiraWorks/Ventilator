@@ -25,7 +25,7 @@ static DebugFloat dbg_setpoint("setpoint", "Setpoint pressure, kPa");
 
 static DebugFloat dbg_kp("kp", "Proportional gain for main loop", 3.5);
 static DebugFloat dbg_ki("ki", "Integral gain for main loop", 1.0);
-static DebugFloat dbg_kd("kd", "Derivitive gain for main loop");
+static DebugFloat dbg_kd("kd", "Derivative gain for main loop");
 static DebugFloat dbg_sp("pc_setpoint", "Pressure control setpoint (cmH2O)");
 
 Controller::Controller()
@@ -51,6 +51,9 @@ ActuatorsState Controller::Run(Time now, const VentParams &params,
   float setpoint = desired_state.setpoint_pressure.kPa();
   dbg_sp.Set(desired_state.setpoint_pressure.cmH2O());
 
+  // TODO(jlebar): Add a boolean in ActuatorState that indicates whether
+  // the blower and other actuators should be on. Then remove this switch
+  // statement; we shouldn't be switching on the VentMode here.
   switch (params.mode) {
   case VentMode_OFF:
     actuator_state.setpoint_cm_h2o = 0.0f;

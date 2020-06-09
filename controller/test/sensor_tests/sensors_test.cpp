@@ -70,6 +70,7 @@ static SensorReadings update_readings(Duration dt, Pressure patient_pressure,
   Hal.test_setAnalogPin(AnalogPin::OUTFLOW_PRESSURE_DIFF,
                         MPXV5004_PressureToVoltage(outflow_pressure));
   Hal.delay(dt);
+  sensors->UpdateValues();
   return sensors->GetSensorReadings();
 }
 
@@ -99,6 +100,7 @@ TEST(SensorTests, FullScaleReading) {
     SCOPED_TRACE("Pressure " + std::to_string(p.kPa()));
     Hal.test_setAnalogPin(AnalogPin::PATIENT_PRESSURE,
                           MPXV5004_PressureToVoltage(p));
+    sensors.UpdateValues();
     auto readings = sensors.GetSensorReadings();
     EXPECT_PRESSURE_NEAR(cmH2O(readings.patient_pressure_cm_h2o), p);
   }

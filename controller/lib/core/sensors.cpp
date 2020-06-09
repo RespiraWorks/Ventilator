@@ -181,41 +181,41 @@ void TVIntegrator::AddFlow(Time now, VolumetricFlow flow) {
   }
 }
 
-SensorReadings Sensors::GetSensorReadings() {
-  // Flow rate is inhalation flow minus exhalation flow. Positive value is flow
-  // into lungs, and negative is flow out of lungs.
+void Sensors::UpdateValues() {
   auto now = Hal.now();
-  auto patient_pressure = ReadPressureSensor(PATIENT_PRESSURE);
-  auto inflow_delta = ReadPressureSensor(INFLOW_PRESSURE_DIFF);
-  auto outflow_delta = ReadPressureSensor(OUTFLOW_PRESSURE_DIFF);
+  patient_pressure_ = ReadPressureSensor(PATIENT_PRESSURE);
+  inflow_delta_ = ReadPressureSensor(INFLOW_PRESSURE_DIFF);
+  outflow_delta_ = ReadPressureSensor(OUTFLOW_PRESSURE_DIFF);
 
-  VolumetricFlow inflow = PressureDeltaToFlow(inflow_delta);
-  VolumetricFlow outflow = PressureDeltaToFlow(outflow_delta);
-  VolumetricFlow uncorrected_flow = inflow - outflow;
-  VolumetricFlow corrected_flow = uncorrected_flow + flow_correction_;
+  inflow_ = PressureDeltaToFlow(inflow_delta_);
+  outflow_ = PressureDeltaToFlow(outflow_delta_);
+  VolumetricFlow uncorrected_flow = inflow_ - outflow_;
+  corrected_flow_ = uncorrected_flow + flow_correction_;
   uncorrected_tv_integrator_.AddFlow(now, uncorrected_flow);
-  tv_integrator_.AddFlow(now, corrected_flow);
+  tv_integrator_.AddFlow(now, corrected_flow_);
 
   // Set debug variables.
   //
   // TODO: This is repetitive and easy to mess up.  Can we improve the DebugVar
   // API somehow?
-  dbg_dp_inhale.Set(inflow_delta.cmH2O());
-  dbg_dp_exhale.Set(outflow_delta.cmH2O());
-  dbg_pressure.Set(patient_pressure.cmH2O());
-  dbg_flow_inhale.Set(inflow.ml_per_sec());
-  dbg_flow_exhale.Set(outflow.ml_per_sec());
+  dbg_dp_inhale.Set(inflow_delta_.cmH2O());
+  dbg_dp_exhale.Set(outflow_delta_.cmH2O());
+  dbg_pressure.Set(patient_pressure_.cmH2O());
+  dbg_flow_inhale.Set(inflow_.ml_per_sec());
+  dbg_flow_exhale.Set(outflow_.ml_per_sec());
   dbg_flow_uncorrected.Set(uncorrected_flow.ml_per_sec());
-  dbg_flow_corrected.Set(corrected_flow.ml_per_sec());
+  dbg_flow_corrected.Set(corrected_flow_.ml_per_sec());
   dbg_volume.Set(tv_integrator_.GetTV().ml());
   dbg_volume_uncorrected.Set(uncorrected_tv_integrator_.GetTV().ml());
+}
 
+SensorReadings Sensors::GetSensorReadings() {
   return {
-      .patient_pressure_cm_h2o = patient_pressure.cmH2O(),
+      .patient_pressure_cm_h2o = patient_pressure_.cmH2O(),
       .volume_ml = tv_integrator_.GetTV().ml(),
-      .flow_ml_per_min = corrected_flow.ml_per_min(),
-      .inflow_pressure_diff_cm_h2o = inflow_delta.cmH2O(),
-      .outflow_pressure_diff_cm_h2o = outflow_delta.cmH2O(),
+      .flow_ml_per_min = corrected_flow_.ml_per_min(),
+      .inflow_pressure_diff_cm_h2o = inflow_delta_.cmH2O(),
+      .outflow_pressure_diff_cm_h2o = outflow_delta_.cmH2O(),
   };
 }
 

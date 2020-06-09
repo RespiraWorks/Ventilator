@@ -119,12 +119,11 @@ static Sensors sensors;
 static void high_priority_task(void *arg) {
 
   // Read the sensors
-  controller_status.sensor_readings = sensors.GetSensorReadings();
+  sensors.UpdateValues();
 
   // Run our PID loop
   auto [actuators_state, controller_state] =
-      controller.Run(Hal.now(), controller_status.active_params,
-                     controller_status.sensor_readings);
+      controller.Run(Hal.now(), controller_status.active_params, &sensors);
 
   if (controller_state.is_new_breath) {
     sensors.NoteNewBreath();
@@ -137,6 +136,7 @@ static void high_priority_task(void *arg) {
   actuators_execute(actuators_state);
 
   // Update some status info
+  controller_status.sensor_readings = sensors.GetSensorReadings();
   controller_status.fan_power = actuators_state.blower_power;
   controller_status.fan_setpoint_cm_h2o = actuators_state.setpoint_cm_h2o;
 

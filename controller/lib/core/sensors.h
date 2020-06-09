@@ -45,6 +45,8 @@ class Sensors {
 public:
   Sensors();
 
+  Pressure GetPatientPressure() const { return patient_pressure_; };
+
   // Perform some initial sensor calibration.  This function should
   // be called on system startup before any other sensor functions
   // are called.
@@ -66,8 +68,11 @@ public:
   // have been 0.  That should be enough for us to calibrate to.
   void NoteNewBreath();
 
-  // get the sensor readings (patient pressure, volumetric flow and tidal
-  // volume) from the sensors
+  // Update sensors values
+  void UpdateValues();
+
+  // format the sensor readings (patient pressure, volumetric flow and tidal
+  // volume) to the SensorReadings structure destined to the GUI.
   SensorReadings GetSensorReadings();
 
   // min/max possible reading from MPXV5004GP pressure sensors
@@ -103,6 +108,14 @@ private:
 
   // Calibrated average sensor values in a zero state.
   Voltage sensors_zero_vals_[NUM_SENSORS];
+
+  // Values of sensor readings
+  Pressure patient_pressure_;
+  Pressure inflow_delta_;
+  Pressure outflow_delta_;
+  VolumetricFlow inflow_;
+  VolumetricFlow outflow_;
+  VolumetricFlow corrected_flow_;
 
   // Our flow sensors are subject to roughly two kinds of error:
   //

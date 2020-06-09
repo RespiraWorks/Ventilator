@@ -874,7 +874,7 @@ def EscCmd(buff):
 # before returning.
 # See debug.cpp in the controller source for more detail on
 # command framing.
-def GetResp(DbgPrint):
+def GetResp():
     dat = []
     esc = False
     DbgPrint("Getting resp: ", end="")
@@ -949,7 +949,7 @@ def SendCmd(op, data=[], timeout=None):
             oldto = ser.timeout
             ser.timeout = timeout
 
-        rsp = GetResp(DbgPrint)
+        rsp = GetResp()
         if timeout != None:
             ser.timeout = oldto
 

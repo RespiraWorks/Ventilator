@@ -21,15 +21,17 @@ limitations under the License.
 
 #include "blower_fsm.h"
 #include "hal.h"
+#include <optional>
 
 struct ActuatorsState {
-  float fan_setpoint_cm_h2o = 0.0;
-  ValveState expire_valve_state = ValveState::CLOSED;
-  float fan_power = 0.0;
-  float fan_valve = 0.0f;
+  float setpoint_cm_h2o{0.0f};
+  float fio2_valve{0.0f};
+  float blower_power{0.0f};
+  std::optional<float> blower_valve;
+  std::optional<float> exhale_valve;
 };
 
-void actuators_init(void);
 void actuators_execute(const ActuatorsState &desired_state);
+bool AreActuatorsReady();
 
 #endif // ACTUATORS_H

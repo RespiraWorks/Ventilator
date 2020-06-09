@@ -104,24 +104,21 @@ TEST(SensorTests, FullScaleReading) {
   }
 }
 
-// These tests expect Venturi Diamters of 14 and 5.5 mm.
-// If the Default PressureSensors::DEFAULT_VENTURI_PORT_DIAM and
-// DEFAULT_VENTURI_CHOKE_DIAM are changed from this, the tests will fail unless
-// you update the expected values accordingly.
+// These tests expect Venturi Diamters of 15.05mm and 5.5mm with a "discharge
+// coefficient" of 0.97.  If VENTURI_PORT_DIAM or VENTURI_CHOKE_DIAM change,
+// this test will fail until you update it.
+//
 // Expected values from https://www.wolframalpha.com/input/?i=Venturi+flowmeter
-TEST(SensorTests, TestPositiveVolumetricFlowCalculation) {
-  EXPECT_FLOW_NEAR(Sensors::PressureDeltaToFlow(kPa(1.0f)),
-                   cubic_m_per_sec(9.7162e-4f));
+TEST(SensorTests, TestVolumetricFlowCalculation) {
+  EXPECT_FLOW_NEAR(Sensors::PressureDeltaToFlow(kPa(1.0f)), ml_per_sec(939.6f));
   EXPECT_FLOW_NEAR(Sensors::PressureDeltaToFlow(kPa(-1.0f)),
-                   cubic_m_per_sec(-9.7162e-4f));
-  EXPECT_FLOW_NEAR(Sensors::PressureDeltaToFlow(kPa(0.0f)),
-                   cubic_m_per_sec(0.0f));
+                   ml_per_sec(-939.6f));
+  EXPECT_FLOW_NEAR(Sensors::PressureDeltaToFlow(kPa(0.0f)), ml_per_sec(0));
   EXPECT_FLOW_NEAR(Sensors::PressureDeltaToFlow(kPa(1.0e-7f)),
-                   cubic_m_per_sec(3.0725e-7f));
-  EXPECT_FLOW_NEAR(Sensors::PressureDeltaToFlow(kPa(100.0f)),
-                   cubic_m_per_sec(9.7162e-3f));
+                   ml_per_sec(0.2971f));
+  EXPECT_FLOW_NEAR(Sensors::PressureDeltaToFlow(kPa(100.0f)), ml_per_sec(9396));
   EXPECT_FLOW_NEAR(Sensors::PressureDeltaToFlow(kPa(-100.0f)),
-                   cubic_m_per_sec(-9.7162e-3f));
+                   ml_per_sec(-9396));
 }
 
 TEST(SensorTests, TotalFlowCalculation) {

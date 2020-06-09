@@ -21,15 +21,38 @@ limitations under the License.
 
 #include "blower_fsm.h"
 #include "hal.h"
+#include <optional>
 
 struct ActuatorsState {
-  float fan_setpoint_cm_h2o = 0.0;
-  ValveState expire_valve_state = ValveState::CLOSED;
-  float fan_power = 0.0;
-  float fan_valve = 0.0f;
+  // Pressure set point in cm H2O.
+  // Not really an actuator state (maybe it should move?)
+  // Only meaningful in pressure control mode.
+  float setpoint_cm_h2o{0.0f};
+
+  // Valve setting for the FIO2 proportional solenoid
+  // Range 0 to 1 where 0 is fully closed and 1 is fully open.
+  float fio2_valve{0.0f};
+
+  // Power for the blower fan.  Range 0 (off) to 1 (full power)
+  float blower_power{0.0f};
+
+  // Pinch valve that regulates output of the blower.
+  // If the valve is disabled, then this is nullopt.
+  // If enabled the range is 0 (fully closed) to 1 (fully open)
+  std::optional<float> blower_valve;
+
+  // Pinch valve that regulates exaust flow
+  // If the valve is disabled, then this is nullopt.
+  // If enabled the range is 0 (fully closed) to 1 (fully open)
+  std::optional<float> exhale_valve;
 };
 
-void actuators_init(void);
+// Causes passed state to be applied to the actuators
 void actuators_execute(const ActuatorsState &desired_state);
+
+// Returns true if the actuators are ready for action or false
+// if they aren't (for example pinch valves are homing).
+// The system should be kept in a safe state until this returns true.
+bool AreActuatorsReady();
 
 #endif // ACTUATORS_H

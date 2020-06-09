@@ -32,19 +32,14 @@ enum class DifferentialTerm {
   ON_MEASUREMENT,
 };
 
-enum class ControlDirection {
-  DIRECT,
-  REVERSE,
-};
-
 class PID {
 public:
   // Constructs the PID using the given parameters.
   PID(float kp, float ki, float kd, ProportionalTerm p_term,
-      DifferentialTerm d_term, ControlDirection direction, float output_min,
-      float output_max, Duration sample_period)
+      DifferentialTerm d_term, float output_min, float output_max,
+      Duration sample_period)
       : kp_(kp), ki_(ki), kd_(kd), p_term_(p_term), d_term_(d_term),
-        direction_(direction), out_min_(output_min), out_max_(output_max),
+        out_min_(output_min), out_max_(output_max),
         sample_period_(sample_period) {}
 
   // Performs one step of the PID calculation.
@@ -61,14 +56,17 @@ public:
   // http://brettbeauregard.com/blog/2011/04/improving-the-beginner%e2%80%99s-pid-initialization/
   void Observe(Time now, float input, float setpoint, float actual_output);
 
+  void SetKP(float kp) { kp_ = kp; }
+  void SetKI(float ki) { ki_ = ki; }
+  void SetKD(float kd) { kd_ = kd; }
+
 private:
-  const float kp_; // * (P)roportional Tuning Parameter
-  const float ki_; // * (I)ntegral Tuning Parameter
-  const float kd_; // * (D)erivative Tuning Parameter
+  float kp_; // * (P)roportional Tuning Parameter
+  float ki_; // * (I)ntegral Tuning Parameter
+  float kd_; // * (D)erivative Tuning Parameter
 
   const ProportionalTerm p_term_;
   const DifferentialTerm d_term_;
-  const ControlDirection direction_;
 
   const float out_min_;
   const float out_max_;

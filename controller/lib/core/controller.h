@@ -21,7 +21,7 @@ public:
   Controller();
 
   std::pair<ActuatorsState, ControllerState>
-  Run(Time now, const VentParams &params, Sensors *sensors);
+  Run(Time now, const VentParams &params, const SensorValues &sensor_values);
 
   Duration GetLoopPeriod();
 

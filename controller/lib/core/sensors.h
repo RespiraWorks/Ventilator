@@ -28,6 +28,16 @@ Arduino Nano and the MPXV5004GP and MPXV7002DP pressure sensors.
 #include "units.h"
 #include <optional>
 
+// Structure for strongly typed sensor readings, denoted as Values, as opposed
+// to Readings which are generically typed to be readable in serial link
+struct SensorValues {
+  Pressure patient_pressure;
+  VolumetricFlow inflow;
+  VolumetricFlow outflow;
+  VolumetricFlow flow;
+  Volume tidal_volume;
+};
+
 class TVIntegrator {
 public:
   void AddFlow(Time now, VolumetricFlow flow);
@@ -44,8 +54,6 @@ private:
 class Sensors {
 public:
   Sensors();
-
-  Pressure GetPatientPressure() const { return patient_pressure_; };
 
   // Perform some initial sensor calibration.  This function should
   // be called on system startup before any other sensor functions
@@ -68,12 +76,10 @@ public:
   // have been 0.  That should be enough for us to calibrate to.
   void NoteNewBreath();
 
-  // Update sensors values
-  void UpdateValues();
-
-  // format the sensor readings (patient pressure, volumetric flow and tidal
-  // volume) to the SensorReadings structure destined to the GUI.
-  SensorReadings GetSensorReadings();
+  // get the sensor readings (patient pressure, volumetric flow and tidal
+  // volume) to the SensorValues struct destined to the controller and to the
+  // SensorReadings structure destined to the GUI.
+  std::pair<SensorValues, SensorReadings> GetSensorReadings();
 
   // min/max possible reading from MPXV5004GP pressure sensors
   // The canonical list of hardware in the device is: https://bit.ly/3aERr69
@@ -108,14 +114,6 @@ private:
 
   // Calibrated average sensor values in a zero state.
   Voltage sensors_zero_vals_[NUM_SENSORS];
-
-  // Values of sensor readings
-  Pressure patient_pressure_;
-  Pressure inflow_delta_;
-  Pressure outflow_delta_;
-  VolumetricFlow inflow_;
-  VolumetricFlow outflow_;
-  VolumetricFlow corrected_flow_;
 
   // Our flow sensors are subject to roughly two kinds of error:
   //

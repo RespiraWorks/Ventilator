@@ -35,7 +35,8 @@ Controller::Controller()
 Duration Controller::GetLoopPeriod() { return LOOP_PERIOD; }
 
 std::pair<ActuatorsState, ControllerState>
-Controller::Run(Time now, const VentParams &params, Sensors *sensors) {
+Controller::Run(Time now, const VentParams &params,
+                const SensorValues &sensor_values) {
   BlowerSystemState desired_state = fsm_.DesiredState(now, params);
 
   ActuatorsState actuator_state;
@@ -50,7 +51,7 @@ Controller::Run(Time now, const VentParams &params, Sensors *sensors) {
   // Not used yet
   actuator_state.fio2_valve = 0.0f;
 
-  float pressure = sensors->GetPatientPressure().kPa();
+  float pressure = sensor_values.patient_pressure.kPa();
   float setpoint = desired_state.setpoint_pressure.kPa();
   dbg_sp.Set(desired_state.setpoint_pressure.cmH2O());
 

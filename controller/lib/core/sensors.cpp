@@ -181,42 +181,49 @@ void TVIntegrator::AddFlow(Time now, VolumetricFlow flow) {
   }
 }
 
-void Sensors::UpdateValues() {
+std::pair<SensorValues, SensorReadings> Sensors::GetSensorReadings() {
   auto now = Hal.now();
-  patient_pressure_ = ReadPressureSensor(PATIENT_PRESSURE);
-  inflow_delta_ = ReadPressureSensor(INFLOW_PRESSURE_DIFF);
-  outflow_delta_ = ReadPressureSensor(OUTFLOW_PRESSURE_DIFF);
 
-  inflow_ = PressureDeltaToFlow(inflow_delta_);
-  outflow_ = PressureDeltaToFlow(outflow_delta_);
-  VolumetricFlow uncorrected_flow = inflow_ - outflow_;
-  corrected_flow_ = uncorrected_flow + flow_correction_;
+  SensorValues values;
+
+  values.patient_pressure = ReadPressureSensor(PATIENT_PRESSURE);
+
+  Pressure inflow_delta = ReadPressureSensor(INFLOW_PRESSURE_DIFF);
+  Pressure outflow_delta = ReadPressureSensor(OUTFLOW_PRESSURE_DIFF);
+
+  values.inflow = PressureDeltaToFlow(inflow_delta);
+  values.outflow = PressureDeltaToFlow(outflow_delta);
+
+  VolumetricFlow uncorrected_flow = values.inflow - values.outflow;
+
+  values.flow = uncorrected_flow + flow_correction_;
+
   uncorrected_tv_integrator_.AddFlow(now, uncorrected_flow);
-  tv_integrator_.AddFlow(now, corrected_flow_);
+  tv_integrator_.AddFlow(now, values.flow);
+
+  values.tidal_volume = tv_integrator_.GetTV();
 
   // Set debug variables.
   //
   // TODO: This is repetitive and easy to mess up.  Can we improve the DebugVar
   // API somehow?
-  dbg_dp_inhale.Set(inflow_delta_.cmH2O());
-  dbg_dp_exhale.Set(outflow_delta_.cmH2O());
-  dbg_pressure.Set(patient_pressure_.cmH2O());
-  dbg_flow_inhale.Set(inflow_.ml_per_sec());
-  dbg_flow_exhale.Set(outflow_.ml_per_sec());
+  dbg_dp_inhale.Set(inflow_delta.cmH2O());
+  dbg_dp_exhale.Set(outflow_delta.cmH2O());
+  dbg_pressure.Set(values.patient_pressure.cmH2O());
+  dbg_flow_inhale.Set(values.inflow.ml_per_sec());
+  dbg_flow_exhale.Set(values.outflow.ml_per_sec());
   dbg_flow_uncorrected.Set(uncorrected_flow.ml_per_sec());
-  dbg_flow_corrected.Set(corrected_flow_.ml_per_sec());
+  dbg_flow_corrected.Set(values.flow.ml_per_sec());
   dbg_volume.Set(tv_integrator_.GetTV().ml());
   dbg_volume_uncorrected.Set(uncorrected_tv_integrator_.GetTV().ml());
-}
 
-SensorReadings Sensors::GetSensorReadings() {
-  return {
-      .patient_pressure_cm_h2o = patient_pressure_.cmH2O(),
-      .volume_ml = tv_integrator_.GetTV().ml(),
-      .flow_ml_per_min = corrected_flow_.ml_per_min(),
-      .inflow_pressure_diff_cm_h2o = inflow_delta_.cmH2O(),
-      .outflow_pressure_diff_cm_h2o = outflow_delta_.cmH2O(),
-  };
+  SensorReadings readings = {
+      .patient_pressure_cm_h2o = values.patient_pressure.cmH2O(),
+      .volume_ml = values.tidal_volume.ml(),
+      .flow_ml_per_min = values.flow.ml_per_min(),
+      .inflow_pressure_diff_cm_h2o = inflow_delta.cmH2O(),
+      .outflow_pressure_diff_cm_h2o = outflow_delta.cmH2O()};
+  return {values, readings};
 }
 
 void Sensors::NoteNewBreath() {

@@ -33,40 +33,24 @@ float PID::Compute(Time now, float input, float setpoint) {
 
   // Compute all the working error variables
   float error = setpoint - input;
-  float dInput = 0.0;
+  float dInput = input - last_input_;
 
-  float kp, ki, kd;
-  if (direction_ == ControlDirection::DIRECT) {
-    kp = kp_;
-    ki = ki_;
-    kd = kd_;
-  } else {
-    kp = -kp_;
-    ki = -ki_;
-    kd = -kd_;
-  }
-
-  // Compute dInput only if needed.
-  if (p_term_ == ProportionalTerm::ON_MEASUREMENT ||
-      d_term_ == DifferentialTerm::ON_MEASUREMENT) {
-    dInput = (input - last_input_);
-  }
-  output_sum_ += (ki * error * samplesTimeChangeSec);
+  output_sum_ += (ki_ * error * samplesTimeChangeSec);
 
   if (p_term_ == ProportionalTerm::ON_MEASUREMENT) {
-    output_sum_ -= kp * dInput;
+    output_sum_ -= kp_ * dInput;
   }
 
   output_sum_ = std::clamp(output_sum_, out_min_, out_max_);
 
   float res = output_sum_;
   if (p_term_ == ProportionalTerm::ON_ERROR) {
-    res += kp * error;
+    res += kp_ * error;
   }
   if (d_term_ == DifferentialTerm::ON_MEASUREMENT) {
-    res -= kd * dInput / samplesTimeChangeSec;
+    res -= kd_ * dInput / samplesTimeChangeSec;
   } else {
-    res += kd * (error - last_error_) / samplesTimeChangeSec;
+    res += kd_ * (error - last_error_) / samplesTimeChangeSec;
   }
 
   // Remember some variables for next time

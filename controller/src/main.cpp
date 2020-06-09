@@ -53,6 +53,7 @@ limitations under the License.
 #include "network_protocol.pb.h"
 #include "sensors.h"
 #include "trace.h"
+#include <optional>
 
 // NO_GUI_DEV_MODE is a hacky development mode until we have the GUI working.
 //
@@ -88,9 +89,9 @@ static void DEV_MODE_comms_handler(const ControllerStatus &controller_status,
   gui_status->desired_params.pip_cm_h2o = gui_pip.Get();
   gui_status->desired_params.inspiratory_expiratory_ratio = gui_ie_ratio.Get();
 
-  static Time last_sent = millisSinceStartup(0);
+  static std::optional<Time> last_sent;
   Time now = Hal.now();
-  if (now - last_sent < seconds(0.1f)) {
+  if (last_sent != std::nullopt && now - *last_sent < seconds(0.1f)) {
     return;
   }
   last_sent = now;
@@ -163,7 +164,7 @@ static void background_loop() {
   Hal.startLoopTimer(controller.GetLoopPeriod(), high_priority_task, 0);
 
   while (true) {
-    controller_status.uptime_ms = Hal.now().millisSinceStartup();
+    controller_status.uptime_ms = Hal.now().microsSinceStartup() / 1000;
 
     // Copy the current controller status with interrupts
     // disabled to ensure that the data we send to the

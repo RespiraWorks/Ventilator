@@ -14,10 +14,8 @@ import "."
 Popup {
     id: popup
 
-    width: 800; height: 470
+    width: parent.width; height: parent.height
     parent: Overlay.overlay
-    x: Math.round((parent.width - width) / 2)
-    y: Math.round((parent.height - height) / 2)
     modal: true
     focus: true
     padding: 0
@@ -44,34 +42,52 @@ Popup {
 
     contentItem: Item {
 
-        Rectangle {
+        Item {
             id: header
+            anchors { top: parent.top; topMargin: 24 }
             width: parent.width
-            height: 60
-            color: Style.theme.color.modalHeaderColor
-            Text {
-                anchors.centerIn: parent
-                text: qsTr("Mode Selection")
-                color: "white"
-                font {
-                    bold: true
-                    pixelSize: 38
+            height: 120
+
+            Image {
+                id: icon
+                width: 96; height: 96
+                anchors {
+                    left: parent.left; leftMargin: 24
                 }
+                sourceSize: Qt.size(96, 96)
+
+                fillMode: Image.PreserveAspectFit
+                source: 'qrc:/images/RW_log_24.svg'
+            }
+
+            Text {
+                anchors {
+                    left: icon.right; leftMargin: 24
+                    verticalCenter: parent.verticalCenter
+                }
+
+                text: qsTr("Select Ventilation mode")
+                color: Style.theme.color.textPrimary
+                font: Style.theme.font.modalHeader
+            }
+
+            Rectangle {
+                anchors { bottom: parent.bottom }
+                width: parent.width;
+                height: 1;
+                color: "#435360"
             }
         }
 
         ButtonGroup { id: buttonGroup }
 
-        ColumnLayout {
+        Row {
 
-            width: parent.width
-
+            spacing: 8
             anchors {
-                margins: 10
-                top: header.bottom;
-                left:parent.left
-                bottom: parent.bottom
-                right: parent.right
+                top: header.bottom; topMargin: 56
+                verticalCenter: parent.verticalCenter
+                left: parent.left; leftMargin: 48
             }
 
             Repeater {
@@ -79,38 +95,85 @@ Popup {
                 model: modesModel
 
                 delegate: PopupButton {
+                    id: btn
+
                     property int pos: index
+
+                    width: 304; height: 240
                     objectName: model.mode
                     checked: popup.currentMode.mode === objectName
-                    Layout.fillWidth: true
                     text: model.title
                     ButtonGroup.group: buttonGroup
                     checkable: true
+                    contentItem: Item {
+                        width: btn.width; height: btn.height
+
+                        Image {
+                            id: delegateIcon
+                            anchors {
+                                horizontalCenter: parent.horizontalCenter
+                                top: parent.top; topMargin: 28
+                            }
+
+                            width: 40; height: 40
+                            sourceSize: Qt.size(40, 40)
+                            source: 'qrc:/images/RW_inspsenssettings_24.svg'
+                        }
+
+                        Text {
+                            id: delegateTitle
+                            anchors {
+                                top: delegateIcon.bottom; topMargin: 10
+                                left: parent.left; leftMargin: 16
+                                right: parent.right; rightMargin: 16
+                            }
+                            text: btn.text
+                            font: Style.theme.font.modalTitle
+                            color: Style.theme.color.textPrimary
+                            horizontalAlignment: Text.AlignHCenter
+                            verticalAlignment: Text.AlignVCenter
+                        }
+
+                        Text {
+                            anchors {
+                                top: delegateTitle.bottom; topMargin: 0
+                                left: parent.left; leftMargin: 16
+                                right: parent.right; rightMargin: 16
+                                bottom: parent.bottom; bottomMargin: 16
+                            }
+                            text: model.description
+                            wrapMode: Text.WordWrap
+                            font: Style.theme.font.modalContent
+                            color: Style.theme.color.textAlternative
+                            horizontalAlignment: Text.AlignHCenter
+                            verticalAlignment: Text.AlignTop
+                        }
+                    }
                 }
             }
+        }
 
-            RowLayout {
-                Layout.fillWidth: true
-                spacing: 10
+        PopupButton {
+            anchors {
+                left: parent.left; leftMargin: 48
+                bottom: parent.bottom; bottomMargin: 40
+            }
 
-                PopupButton {
-                    Layout.fillWidth: true
-                    indicator: Item{}
-                    text: qsTr("Cancel")
-                    onClicked: popup.close()
-                }
+            text: qsTr("Cancel")
+            onClicked: popup.close()
+        }
 
-                PopupButton {
-                    Layout.fillWidth: true
-                    indicator: Item{}
-                    text: qsTr("Confirm")
-                    visible: modesModel.count > 0
-                    onClicked: {
-                        popup.selectedMode(modesModel.get(buttonGroup.checkedButton.pos))
-                        popup.close()
-                    }
-                    checked: true
-                }
+        PopupButton {
+            anchors {
+                right: parent.right; rightMargin: 48
+                bottom: parent.bottom; bottomMargin: 40
+            }
+
+            text: qsTr("Confirm")
+            visible: modesModel.count > 0
+            onClicked: {
+                popup.selectedMode(modesModel.get(buttonGroup.checkedButton.pos))
+                popup.close()
             }
         }
     }

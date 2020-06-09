@@ -144,7 +144,7 @@ void HalApi::InitADC() {
   // datasheet for the voltage regulator to become ready.
   // The time in the datasheet is 20 microseconds, but
   // I'll wait for 30 just to be extra conservative
-  BusyWaitUsec(30);
+  Hal.delay(microseconds(30));
 
   // Calibrate the A/D for single ended channels
   adc->adc[0].ctrl |= 0x80000000;

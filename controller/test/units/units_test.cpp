@@ -185,26 +185,36 @@ TEST(Units, Duration) {
   EXPECT_FLOAT_EQ((seconds(1) - milliseconds(1000)).seconds(), 0);
 
   checkRelationalOperators(seconds);
-  checkRelationalOperators(milliseconds);
+
+  // Test all the overloads of the milliseconds factory function.  static_cast
+  // is one of C++'s weird ways of getting the address of an overloaded
+  // function, see
+  // https://en.cppreference.com/w/cpp/language/overloaded_address
+  checkRelationalOperators(static_cast<Duration (*)(int64_t)>(milliseconds));
+  checkRelationalOperators(static_cast<Duration (*)(float)>(milliseconds));
+  checkRelationalOperators(static_cast<Duration (*)(double)>(milliseconds));
 }
 
 TEST(Units, Time) {
-  // "millisSinceStartup" is long and makes this test hard to read; shorten it.
-  auto ms = &millisSinceStartup;
+  // "microsSinceStartup" is long and makes this test hard to read; shorten it.
+  auto us = &microsSinceStartup;
 
-  EXPECT_EQ(ms(42).millisSinceStartup(), 42u);
-  EXPECT_EQ((ms(10) + milliseconds(1)).millisSinceStartup(), 11u);
-  EXPECT_EQ((milliseconds(42) + ms(100)).millisSinceStartup(), 142u);
-  EXPECT_EQ((ms(2000) - milliseconds(1000)).millisSinceStartup(), 1000u);
-  EXPECT_EQ((ms(5432) - seconds(3)).millisSinceStartup(), 2432u);
-  EXPECT_FLOAT_EQ((ms(1000) - millisSinceStartup(500)).seconds(), 0.5f);
+  EXPECT_EQ(us(42).microsSinceStartup(), 42u);
+  EXPECT_EQ((us(10) + microseconds(1)).microsSinceStartup(), 11u);
+  EXPECT_EQ((microseconds(42) + us(100)).microsSinceStartup(), 142u);
+  EXPECT_EQ((us(2000) - microseconds(1000)).microsSinceStartup(), 1000u);
+  EXPECT_EQ((us(5432) - milliseconds(3)).microsSinceStartup(), 2432u);
+  EXPECT_EQ((us(2 * 1000 * 1000) - seconds(1)).microsSinceStartup(), 1'000'000);
+  EXPECT_FLOAT_EQ((us(1000) - microsSinceStartup(500)).milliseconds(), 0.5f);
+  EXPECT_EQ((us(1000) + microseconds(-500)).microsSinceStartup(), 500);
+  EXPECT_EQ((microseconds(-100) + us(1000)).microsSinceStartup(), 900);
   // Negative times are not supported:
-  // EXPECT_EQ((ms(500) - ms(1000)).seconds(), ???);
-  Time time = ms(2000);
-  time += milliseconds(1000);
-  EXPECT_EQ(time.millisSinceStartup(), static_cast<uint64_t>(3000));
-  time -= milliseconds(2000);
-  EXPECT_EQ(time.millisSinceStartup(), static_cast<uint64_t>(1000));
+  // EXPECT_EQ((us(500) - us(1000)).seconds(), ???);
+  Time time = us(2000);
+  time += microseconds(1000);
+  EXPECT_EQ(time.microsSinceStartup(), static_cast<uint64_t>(3000));
+  time -= microseconds(2000);
+  EXPECT_EQ(time.microsSinceStartup(), static_cast<uint64_t>(1000));
 
-  checkRelationalOperators(millisSinceStartup);
+  checkRelationalOperators(microsSinceStartup);
 }

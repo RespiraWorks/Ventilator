@@ -259,27 +259,13 @@ void HalApi::InitSysTimer() {
   tmr->reload = 9999;
   tmr->prescale = (CPU_FREQ_MHZ / 10 - 1);
   tmr->event = 1;
-  tmr->ctrl[0] = 1;
+  // Enable UIFREMAP.  This causes the top bit of tmr->counter to be true if a
+  // timer interrupt is pending.
+  tmr->ctrl1.s.uifremap = 1;
+  tmr->ctrl1.s.cen = 1;
   tmr->intEna = 1;
 
   EnableInterrupt(InterruptVector::TIMER6, IntPriority::STANDARD);
-}
-
-// Just spin for a specified number of microseconds
-void HalApi::BusyWaitUsec(uint16_t usec) {
-  constexpr uint16_t one_ms = 1000;
-  while (usec > one_ms) {
-    BusyWaitUsec(one_ms);
-    usec = static_cast<uint16_t>(usec - one_ms);
-  }
-
-  TimerRegs *tmr = TIMER6_BASE;
-  uint16_t start = static_cast<uint16_t>(tmr->counter);
-  while (true) {
-    uint16_t dt = static_cast<uint16_t>(tmr->counter - start);
-    if (dt >= usec * 10)
-      return;
-  }
 }
 
 static void Timer6ISR() {
@@ -288,12 +274,29 @@ static void Timer6ISR() {
 }
 
 void HalApi::delay(Duration d) {
-  int64_t start = msCount;
-  while (msCount - start < d.milliseconds()) {
+  Time start = now();
+  while (now() - start < d) {
   }
 }
 
-Time HalApi::now() { return millisSinceStartup(msCount); }
+Time HalApi::now() {
+  // Disable interrupts so we can read msCount and the timer state without
+  // racing with the timer's interrupt handler.
+  BlockInterrupts block_interrupts;
+
+  // Bottom 16 bits of the counter are a value in the range [0, 1ms) in units
+  // of 100ns.  Top bit of the counter is UIFCOPY, which indicates whether the
+  // counter has rolled over and an interrupt to increment msCount is pending.
+  //
+  // Since the counter is actively running, we need to read both the counter
+  // value and UIFCOPY atomically.
+  uint32_t counter = TIMER6_BASE->counter;
+  int64_t micros = (counter & 0xffff) / 10;
+  bool interrupt_pending = counter >> 31;
+
+  return microsSinceStartup(msCount * 1000 + micros +
+                            (interrupt_pending ? 1 : 0));
+}
 
 /******************************************************************
  * Loop timer
@@ -334,7 +337,7 @@ void HalApi::startLoopTimer(const Duration &period, void (*callback)(void *),
   tmr->reload = reload - 1;
   tmr->prescale = prescale - 1;
   tmr->event = 1;
-  tmr->ctrl[0] = 1;
+  tmr->ctrl1.s.cen = 1;
   tmr->intEna = 1;
 
   // Enable the interrupt that will call the controller
@@ -433,7 +436,8 @@ void HalApi::InitPwmOut() {
   tmr->event = 1;
 
   // Start the counter
-  tmr->ctrl[0] = 0x81;
+  tmr->ctrl1.s.arpe = 1;
+  tmr->ctrl1.s.cen = 1;
 }
 
 // Set the PWM period.

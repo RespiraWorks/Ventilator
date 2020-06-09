@@ -23,22 +23,20 @@ Arduino Nano and the MPXV5004GP and MPXV7002DP pressure sensors.
 #include "vars.h"
 #include <cmath>
 
-// Debug variables useful for tracing
-static float dp_inhale, dp_exhale, pressure;
-static DebugVar d1("dp_inhale", &dp_inhale, "Inhale diff pressure, cm/h2O",
-                   "%.4f");
-static DebugVar d2("dp_exhale", &dp_exhale, "Exhale diff pressure, cm/h2O",
-                   "%.4f");
-static DebugVar d3("pressure", &pressure, "Patient pressure, cm/h2O", "%.4f");
-
-static float flow_inhale, flow_exhale, flow_delta, volume;
-static DebugVar d4("flow_inhale", &flow_inhale, "Inhale flow rate, cc/sec",
-                   "%.3f");
-static DebugVar d5("flow_exhale", &flow_exhale, "Exhale flow rate, cc/sec",
-                   "%.3f");
-static DebugVar d6("flow_delta", &flow_delta,
-                   "Inhale - Exhale flow rate, cc/sec", "%.3f");
-static DebugVar d7("volume", &volume, "Tidal volume, ml", "%0.3f");
+static DebugFloat dbg_dp_inhale("dp_inhale", "Inhale diff pressure, cmH2O");
+static DebugFloat dbg_dp_exhale("dp_exhale", "Exhale diff pressure, cmH2O");
+static DebugFloat dbg_pressure("pressure", "Patient pressure, cmH2O");
+static DebugFloat dbg_flow_inhale("flow_inhale", "Inhale flow rate, cc/sec");
+static DebugFloat dbg_flow_exhale("flow_exhale", "Exhale flow rate, cc/sec");
+static DebugFloat dbg_flow_corrected("flow", "Net flow rate, cc/sec");
+static DebugFloat dbg_volume("volume", "Tidal volume, ml");
+static DebugFloat dbg_flow_uncorrected("flow_uncorrected",
+                                       "Uncorrected net flow rate, cc/sec");
+static DebugFloat
+    dbg_flow_correction("flow_correction",
+                        "Adjustment to flow to make TV go to 0, cc/sec");
+static DebugFloat dbg_volume_uncorrected("volume_uncorrected",
+                                         "Tidal volume uncorrected, ml");
 
 //@TODO: Potential Caution: Density of air slightly varies over temperature and
 // altitude - need mechanism to adjust based on delivery? Constant involving
@@ -71,7 +69,61 @@ static constexpr Duration VOLUME_INTEGRAL_INTERVAL = milliseconds(5);
   __builtin_unreachable();
 }
 
-Sensors::Sensors() {}
+// Tuning params for PID that calculates error in our flow measurements.
+// Calculated using the
+// https://en.wikipedia.org/wiki/Ziegler%E2%80%93Nichols_method The constants in
+// the constructor are for the "classic PID" control type, which seemed to work
+// well.
+//
+// Note that we have to choose a nominal sample period for the PID.  In reality
+// we sample the PID once per breath; the exact value we use for the sample
+// period is not important so long as it's shorter than our breath period.  If
+// we were to choose a value longer than our breath period, then the PID
+// wouldn't update on some breaths, which is not desirable!
+//
+// TODO: Consider updating the PID interface so that instead of taking sample
+// time as a constructor parameter and rejecting calls that occur before the
+// designated time, it always recomputes based on the new data.  Doing this
+// would require improving the resolution of our clock from milliseconds to
+// microseconds so we don't break the main controller loop's PID, which runs
+// once every few ms, and so wouldn't be happy with rounding errors between x
+// and x+1 ms.
+//
+// FLOW_PID_OUTPUT_MAX is a sanity check, preventing us from using absurdly
+// high flow corrections.  The value below may strike you as absurdly high, but
+// we've seen corrections of 40ml/s be necessary, and 100ml/s gives a safety
+// margin.
+//
+// Even 40ml/s may seem way higher than should ever occur, but it's actually
+// easy to get an error this high at zero flow.  Since we have two sensors,
+// we'd need an error of +/-20ml in each.  At zero flow, this corresponds to
+// significantly less than 1 Pa of pressure, and just two or three bits in our
+// 12-bit ADC!  See
+// https://docs.google.com/spreadsheets/d/1G9Kb-ImlluK8MOx-ce2rlHUBnTOtAFQvKjjs1bEhlpM
+//
+// In theory the story is better at higher flows (because the venturi response
+// is the square root of pressure), and we may run a bias flow through our
+// device to put us into a regime where we're less sensitive to error
+// (equivalently, where the venturi response has a lower slope).  But we still
+// want to handle the low-flow case as best we can.
+static constexpr float FLOW_PID_KU = 0.20f;
+static constexpr float FLOW_PID_TU = 5;
+static constexpr Duration FLOW_PID_SAMPLE_PERIOD = seconds(1);
+static constexpr VolumetricFlow FLOW_PID_OUTPUT_MAX = ml_per_sec(100);
+
+Sensors::Sensors()
+    : flow_error_pid_(
+          /*kp=*/0.6f * FLOW_PID_KU,
+          /*ki=*/1.2f * FLOW_PID_KU / FLOW_PID_TU,
+          /*kd=*/3 * FLOW_PID_KU * FLOW_PID_TU / 40,
+          // ProportionalTerm::ON_ERROR and DifferentialTerm::ON_MEASUREMENT
+          // makes for your "standard" PID.  TODO: perhaps these shouldn't even
+          // be options.
+          ProportionalTerm::ON_ERROR,        //
+          DifferentialTerm::ON_MEASUREMENT,  //
+          -FLOW_PID_OUTPUT_MAX.ml_per_sec(), //
+          FLOW_PID_OUTPUT_MAX.ml_per_sec(),  //
+          FLOW_PID_SAMPLE_PERIOD) {}
 
 // NOTE - I can't do this in the constructor now because it gets called before
 // the HAL is set up, so the busy wait never finishes.
@@ -136,9 +188,6 @@ void TVIntegrator::AddFlow(Time now, VolumetricFlow flow) {
   // TODO: This calculation should be much more sophisticated.  Some possible
   // improvements.
   //
-  //  - Periodically re-zero the volume (e.g. what happens if the tubes are
-  //    disconnected from the patient?)
-  //
   //  - Measure time with better than millisecond granularity.
   Duration delta = now - last_flow_measurement_time_;
   if (delta >= VOLUME_INTEGRAL_INTERVAL) {
@@ -151,29 +200,44 @@ void TVIntegrator::AddFlow(Time now, VolumetricFlow flow) {
 SensorReadings Sensors::GetSensorReadings() {
   // Flow rate is inhalation flow minus exhalation flow. Positive value is flow
   // into lungs, and negative is flow out of lungs.
+  auto now = Hal.now();
   auto patient_pressure = ReadPressureSensor(PATIENT_PRESSURE);
   auto inflow_delta = ReadPressureSensor(INFLOW_PRESSURE_DIFF);
   auto outflow_delta = ReadPressureSensor(OUTFLOW_PRESSURE_DIFF);
 
-  dp_inhale = inflow_delta.cmH2O();
-  dp_exhale = outflow_delta.cmH2O();
-  pressure = patient_pressure.cmH2O();
-
   VolumetricFlow inflow = PressureDeltaToFlow(inflow_delta);
   VolumetricFlow outflow = PressureDeltaToFlow(outflow_delta);
-  VolumetricFlow flow = inflow - outflow;
-  tv_integrator_.AddFlow(Hal.now(), flow);
+  VolumetricFlow uncorrected_flow = inflow - outflow;
+  VolumetricFlow corrected_flow = uncorrected_flow + flow_correction_;
+  uncorrected_tv_integrator_.AddFlow(now, uncorrected_flow);
+  tv_integrator_.AddFlow(now, corrected_flow);
 
-  flow_inhale = inflow.ml_per_sec();
-  flow_exhale = outflow.ml_per_sec();
-  flow_delta = flow.ml_per_sec();
-  volume = tv_integrator_.GetTV().ml();
+  // Set debug variables.
+  //
+  // TODO: This is repetitive and easy to mess up.  Can we improve the DebugVar
+  // API somehow?
+  dbg_dp_inhale.Set(inflow_delta.cmH2O());
+  dbg_dp_exhale.Set(outflow_delta.cmH2O());
+  dbg_pressure.Set(patient_pressure.cmH2O());
+  dbg_flow_inhale.Set(inflow.ml_per_sec());
+  dbg_flow_exhale.Set(outflow.ml_per_sec());
+  dbg_flow_uncorrected.Set(uncorrected_flow.ml_per_sec());
+  dbg_flow_corrected.Set(corrected_flow.ml_per_sec());
+  dbg_volume.Set(tv_integrator_.GetTV().ml());
+  dbg_volume_uncorrected.Set(uncorrected_tv_integrator_.GetTV().ml());
 
   return {
       .patient_pressure_cm_h2o = patient_pressure.cmH2O(),
       .volume_ml = tv_integrator_.GetTV().ml(),
-      .flow_ml_per_min = flow.ml_per_min(),
+      .flow_ml_per_min = corrected_flow.ml_per_min(),
       .inflow_pressure_diff_cm_h2o = inflow_delta.cmH2O(),
       .outflow_pressure_diff_cm_h2o = outflow_delta.cmH2O(),
   };
+}
+
+void Sensors::NoteNewBreath() {
+  Time now = Hal.now();
+  flow_correction_ =
+      ml_per_sec(flow_error_pid_.Compute(now, tv_integrator_.GetTV().ml(), 0));
+  dbg_flow_correction.Set(flow_correction_.ml_per_sec());
 }

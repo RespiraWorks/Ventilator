@@ -17,3 +17,4 @@ If you do need to purchase parts, follow the process below. Note: This process i
 2. One of the Purchasing team members will source the items and confirm with you before placing the order (unless it’s obvious).
 3. Everything will be purchased using a RespiraWorks credit card whenever possible.
 4. The Purchasing team member will reply to your message in [#purchasing-sourcing](https://respiraworks.slack.com/archives/C011FD2TEQM) with tracking info when available.
+5. in the rare case that you do buy something urgent with your own payment methods, submit your receipts to #accounting-reimburse.

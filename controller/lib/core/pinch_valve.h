@@ -71,6 +71,9 @@ public:
   // before it can be used
   void Disable();
 
+  // Return true if the pinch valve is ready for action
+  bool IsReady() { return home_state_ == PinchValveHomeState::HOMED; }
+
 private:
   Time move_start_time_;
 

@@ -9,6 +9,12 @@ ApplicationWindow {
     id: window
     visible: true
     width: 1024
+    // Setting max and  min size
+    // to avoid resize screens on windowed mode
+    minimumWidth: 1024
+    maximumWidth: 1024
+    minimumHeight: 600
+    maximumHeight: 600
     height: 600
     title: qsTr("Ventilator")
 
@@ -82,16 +88,19 @@ ApplicationWindow {
             ListElement {
                 mode: "command_pressure_mode"
                 title: qsTr("Command Pressure")
+                description: "Space for a short, but well-crafted message summarizing the main reasons for choosing this mode over the others available."
                 acronym: "PC"
             }
             ListElement {
                 mode: "pressure_assist_mode"
                 title: qsTr("Pressure Assist")
+                description: "Space for a short, but well-crafted message summarizing the main reasons for choosing this mode over the others available."
                 acronym: "A/C PC"
             }
             ListElement {
                 mode: "high_flow_nasal_cannula_mode"
                 title: qsTr("High-flow nasal cannula")
+                description: "Space for a short, but well-crafted message summarizing the main reasons for choosing this mode over the others available."
                 acronym: "HFNC"
             }
         }

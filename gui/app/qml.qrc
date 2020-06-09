@@ -9,7 +9,6 @@
         <file>ModeSelectionPopup.qml</file>
         <file>controls/FpsItem.qml</file>
         <file>controls/PopupButton.qml</file>
-        <file>controls/ScopeView.qml</file>
         <file>controls/StepCounter.qml</file>
         <file>controls/Mode.qml</file>
         <file>modes/PressureAssistMode.qml</file>
@@ -40,5 +39,7 @@
         <file>images/RW_battery-75_24.svg</file>
         <file>images/RW_battery-100_24.svg</file>
         <file>images/RW_adjust_24.svg</file>
+        <file>controls/ScopeView.qml</file>
+        <file>images/RW_log_24.svg</file>
     </qresource>
 </RCC>

@@ -19,30 +19,18 @@ limitations under the License.
 #include "vars.h"
 #include <math.h>
 
-// PID-tuning were chosen by following the Ziegler-Nichols method,
-// https://en.wikipedia.org/wiki/Ziegler%E2%80%93Nichols_method
-//
-// Note that Ku and Tu only seem to work with this particular sample time.
 static constexpr Duration PID_SAMPLE_PERIOD = milliseconds(10);
-static constexpr float Ku = 200;
-static constexpr Duration Tu = seconds(1.5f);
-
-// "No overshoot" settings from the Ziegler-Nichols Wikipedia page.  This
-// avoids overpressurizing the patient's lungs.
-static constexpr float Kp = 0.2f * Ku;
-static constexpr float Ki = 0.4f * Ku / Tu.seconds();
-static constexpr float Kd = Ku * Tu.seconds() / 15;
 
 static DebugFloat dbg_setpoint("setpoint", "Setpoint pressure, kPa");
 
+static DebugFloat dbg_kp("kp", "Proportional gain for main loop", 3.5);
+static DebugFloat dbg_ki("ki", "Integral gain for main loop", 1.0);
+static DebugFloat dbg_kd("kd", "Derivative gain for main loop");
+static DebugFloat dbg_sp("pc_setpoint", "Pressure control setpoint (cmH2O)");
+
 Controller::Controller()
-    : pid_(Kp, Ki, Kd, ProportionalTerm::ON_ERROR,
-           DifferentialTerm::ON_MEASUREMENT,
-           // Increases in the blower fan speed should result in increased
-           // pressure.
-           ControlDirection::DIRECT,
-           // Our output is an 8-bit PWM.
-           /*output_min=*/0.f, /*output_max=*/255.f, PID_SAMPLE_PERIOD) {}
+    : pid_(0.0f, 0.0f, 0.0f, ProportionalTerm::ON_ERROR,
+           DifferentialTerm::ON_MEASUREMENT, 0.f, 1.0f, PID_SAMPLE_PERIOD) {}
 
 Duration Controller::GetLoopPeriod() { return PID_SAMPLE_PERIOD; }
 
@@ -50,34 +38,53 @@ ActuatorsState Controller::Run(Time now, const VentParams &params,
                                const SensorReadings &readings) {
   BlowerSystemState desired_state = fsm_.DesiredState(now, params);
 
-  return {.fan_setpoint_cm_h2o = desired_state.setpoint_pressure.cmH2O(),
-          .expire_valve_state = desired_state.expire_valve_state,
-          .fan_power = ComputeFanPower(now, desired_state, readings),
-          .fan_valve = 1.0f /* not used yet */};
-}
+  ActuatorsState actuator_state;
 
-float Controller::ComputeFanPower(Time now,
-                                  const BlowerSystemState &desired_state,
-                                  const SensorReadings &sensor_readings) {
-  // If the blower is not enabled, immediately shut down the fan.  But for
-  // consistency, we still run the PID iteration above.
-  float output;
+  pid_.SetKP(dbg_kp.Get());
+  pid_.SetKI(dbg_ki.Get());
+  pid_.SetKD(dbg_kd.Get());
+
+  // Not used yet
+  actuator_state.fio2_valve = 0.0f;
+
+  float pressure = cmH2O(readings.patient_pressure_cm_h2o).kPa();
   float setpoint = desired_state.setpoint_pressure.kPa();
-  dbg_setpoint.Set(setpoint);
+  dbg_sp.Set(desired_state.setpoint_pressure.cmH2O());
 
-  if (desired_state.blower_enabled) {
-    output = pid_.Compute(
-        /*time=*/now,
-        /*input=*/cmH2O(sensor_readings.patient_pressure_cm_h2o).kPa(),
-        /*setpoint=*/setpoint);
-  } else {
-    output = 0;
-    pid_.Observe(/*time=*/now,
-                 /*input=*/cmH2O(sensor_readings.patient_pressure_cm_h2o).kPa(),
-                 /*setpoint=*/setpoint,
-                 /*output=*/output);
+  // TODO(jlebar): Add a boolean in ActuatorState that indicates whether
+  // the blower and other actuators should be on. Then remove this switch
+  // statement; we shouldn't be switching on the VentMode here.
+  switch (params.mode) {
+  case VentMode_OFF:
+    actuator_state.setpoint_cm_h2o = 0.0f;
+    actuator_state.blower_valve = std::nullopt;
+    actuator_state.exhale_valve = std::nullopt;
+    actuator_state.blower_power = 0.0f;
+    break;
+
+  case VentMode_PRESSURE_CONTROL:
+
+    // If the pinch valves aren't ready yet then keep the
+    // blower off so we don't force full pressure down the
+    // patients throat.
+    if (!AreActuatorsReady()) {
+      actuator_state.exhale_valve = 1.0f;
+      actuator_state.blower_valve = 1.0f;
+      actuator_state.blower_power = 0.0f;
+      break;
+    }
+
+    actuator_state.setpoint_cm_h2o = desired_state.setpoint_pressure.cmH2O();
+    if (desired_state.expire_valve_state == ValveState::OPEN)
+      actuator_state.exhale_valve = 1.0f;
+    else
+      actuator_state.exhale_valve = 0.0f;
+
+    actuator_state.blower_power = 1.0f;
+
+    actuator_state.blower_valve = pid_.Compute(now, pressure, setpoint);
+    break;
   }
 
-  // fan_power is in range [0, 1].
-  return output / 255.f;
+  return actuator_state;
 }

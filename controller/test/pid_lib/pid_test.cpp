@@ -180,6 +180,100 @@ TEST(PidTest, DerivativeOnError) {
                     sample_period.seconds());
 }
 
+TEST(PidTest, CallFasterThanSample) {
+  // This test calls PID::Compute faster than sample time to check this has no
+  // effect on output
+  const float setpoint = 25;
+  const float input = setpoint - 10;
+  PID pid(/*kp=*/5.5f, /*ki=*/1.1f, /*kd=*/1.5f, ProportionalTerm::ON_ERROR,
+          DifferentialTerm::ON_MEASUREMENT, MIN_OUTPUT, MAX_OUTPUT,
+          sample_period);
+  int t = 0;
+
+  float last_output = pid.Compute(ticks(t), input, setpoint);
+  // check that call with no time change has no effect
+  EXPECT_EQ(pid.Compute(ticks(t), input, setpoint), last_output);
+
+  // Run PID a few times in rapid succession and check output doesn't change
+  // unless a sample time has passed
+  Time next_sample = ticks(t) + sample_period;
+  // chose dt to not be a divisor of SampleTime, for better coverage
+  Duration dt = milliseconds(6);
+  for (int i = 0; i < 100; i++) {
+    Time now = ticks(t) + i * dt;
+    float output = pid.Compute(now, input, setpoint);
+    if (now >= next_sample) {
+      last_output = output;
+      next_sample += sample_period;
+    } else {
+      EXPECT_EQ(output, last_output);
+    }
+  }
+}
+
+TEST(PidTest, TaskJitter) {
+  // This test uses integral to check the effect of time between calls on the
+  // PID output. Introducing jitter in call frequency and checking that the
+  // integral takes this jitter into account.
+  const float Ki = 0.5f;
+  const float setpoint = 25;
+  const float input = setpoint - 10;
+  PID pid(/*kp=*/0, Ki, /*kd=*/0, ProportionalTerm::ON_ERROR,
+          DifferentialTerm::ON_MEASUREMENT, MIN_OUTPUT, MAX_OUTPUT,
+          sample_period);
+  Time now = base;
+
+  float integral = (setpoint - input) * sample_period.seconds();
+  EXPECT_OUTPUT(pid.Compute(now, input, setpoint), integral * Ki);
+
+  // Advance time with jitter
+  Duration dt_high = sample_period + max_task_jitter;
+  now += dt_high;
+  // Expect output to take jitter into account in integral
+  integral += (setpoint - input) * dt_high.seconds();
+  EXPECT_OUTPUT(pid.Compute(now, input, setpoint), integral * Ki);
+
+  // Advance time and compensate previous jitter to have total time
+  // elapsed = 2*sample time
+  Duration dt_low = sample_period - max_task_jitter;
+  integral += (setpoint - input) * dt_low.seconds();
+  now += dt_low;
+  EXPECT_OUTPUT(pid.Compute(now, input, setpoint), integral * Ki);
+}
+
+TEST(PidTest, MissedSample) {
+  // This test uses integral to check the effect of missing a sample in the
+  // execution of PID
+  const float Ki = 0.2f;
+  const float setpoint = 25;
+  const float input = setpoint - 10;
+  PID pid(/*kp=*/0, Ki, /*kd=*/0, ProportionalTerm::ON_ERROR,
+          DifferentialTerm::ON_MEASUREMENT, MIN_OUTPUT, MAX_OUTPUT,
+          sample_period);
+  Time now = base;
+
+  float integral = (setpoint - input) * (sample_period.seconds());
+  EXPECT_OUTPUT(pid.Compute(now, input, setpoint), integral * Ki);
+
+  // Advance time
+  now += 2 * sample_period;
+  float output = pid.Compute(now, input, setpoint);
+  // Expect output to integrate this
+  integral += (setpoint - input) * 2 * sample_period.seconds();
+  EXPECT_OUTPUT(output, integral * Ki);
+
+  // check that a new call without change in time has no effect, even if we
+  // missed a sample
+  EXPECT_EQ(pid.Compute(now, input, setpoint), output);
+
+  // Advance time a small amount to allow PID to catch up to missed sample
+  Duration dt = max_task_jitter;
+  now += dt;
+  integral += (setpoint - input) * dt.seconds();
+  // Expect output to have a new update
+  EXPECT_OUTPUT(pid.Compute(now, input, setpoint), integral * Ki);
+}
+
 TEST(PidTest, Observe) {
   float Ki = 1;
   float setpoint = 25;

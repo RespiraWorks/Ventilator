@@ -49,8 +49,8 @@ TEST(PidTest, Proportional) {
 
   // Create PID and run once
   PID pid(Kp, /*ki=*/0, /*kd=*/0, ProportionalTerm::ON_ERROR,
-          DifferentialTerm::ON_MEASUREMENT, ControlDirection::DIRECT,
-          MIN_OUTPUT, MAX_OUTPUT, sample_period);
+          DifferentialTerm::ON_MEASUREMENT, MIN_OUTPUT, MAX_OUTPUT,
+          sample_period);
   int t = 0;
 
   // Ki and Kd = 0 therefore output = Kp*error, nothing more
@@ -66,8 +66,8 @@ TEST(PidTest, IntegralBasic) {
   const float input = setpoint - 10;
 
   PID pid(/*kp=*/0, Ki, /*kd=*/0, ProportionalTerm::ON_ERROR,
-          DifferentialTerm::ON_MEASUREMENT, ControlDirection::DIRECT,
-          MIN_OUTPUT, MAX_OUTPUT, sample_period);
+          DifferentialTerm::ON_MEASUREMENT, MIN_OUTPUT, MAX_OUTPUT,
+          sample_period);
   int t = 0;
 
   // on first call, integral = error*sample time, output = Ki*integral
@@ -85,8 +85,8 @@ TEST(PidTest, IntegralSaturationMax) {
   const float input = setpoint - 10;
 
   PID pid(/*kp=*/0, Ki, /*kd=*/0, ProportionalTerm::ON_ERROR,
-          DifferentialTerm::ON_MEASUREMENT, ControlDirection::DIRECT,
-          MIN_OUTPUT, MAX_OUTPUT, sample_period);
+          DifferentialTerm::ON_MEASUREMENT, MIN_OUTPUT, MAX_OUTPUT,
+          sample_period);
   int t = 0;
 
   float output = 0;
@@ -115,8 +115,8 @@ TEST(PidTest, IntegralSaturationMin) {
 
   // Create PID and run once
   PID pid(/*kp=*/0, Ki, /*kd=*/0, ProportionalTerm::ON_ERROR,
-          DifferentialTerm::ON_MEASUREMENT, ControlDirection::DIRECT,
-          MIN_OUTPUT, MAX_OUTPUT, sample_period);
+          DifferentialTerm::ON_MEASUREMENT, MIN_OUTPUT, MAX_OUTPUT,
+          sample_period);
   int t = 0;
 
   float output = 0;
@@ -150,8 +150,8 @@ TEST(PidTest, DerivativeOnMeasure) {
   const float setpoint2 = 17;
   const float input2 = setpoint2 - 13;
   PID pid(/*kp=*/0, /*ki=*/0, Kd, ProportionalTerm::ON_MEASUREMENT,
-          DifferentialTerm::ON_MEASUREMENT, ControlDirection::DIRECT,
-          MIN_OUTPUT, MAX_OUTPUT, sample_period);
+          DifferentialTerm::ON_MEASUREMENT, MIN_OUTPUT, MAX_OUTPUT,
+          sample_period);
   int t = 0;
 
   // Expect no derivative on first call
@@ -170,8 +170,7 @@ TEST(PidTest, DerivativeOnError) {
   const float setpoint2 = 17;
   const float input2 = setpoint2 - 13;
   PID pid(/*kp=*/0, /*ki=*/0, Kd, ProportionalTerm::ON_MEASUREMENT,
-          DifferentialTerm::ON_ERROR, ControlDirection::DIRECT, MIN_OUTPUT,
-          MAX_OUTPUT, sample_period);
+          DifferentialTerm::ON_ERROR, MIN_OUTPUT, MAX_OUTPUT, sample_period);
   int t = 0;
 
   // Expect no derivative on first call
@@ -186,8 +185,8 @@ TEST(PidTest, Observe) {
   float setpoint = 25;
   float input = setpoint - 10;
   PID pid(/*kp=*/0, Ki, /*kd=*/0, ProportionalTerm::ON_ERROR,
-          DifferentialTerm::ON_MEASUREMENT, ControlDirection::DIRECT,
-          MIN_OUTPUT, MAX_OUTPUT, sample_period);
+          DifferentialTerm::ON_MEASUREMENT, MIN_OUTPUT, MAX_OUTPUT,
+          sample_period);
   int t = 0;
 
   // Run PID a few times

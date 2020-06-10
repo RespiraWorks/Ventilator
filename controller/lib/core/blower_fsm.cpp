@@ -14,6 +14,7 @@ limitations under the License.
 */
 
 #include "blower_fsm.h"
+#include <algorithm>
 
 // Given t = secs_per_breath and r = I:E ratio, calculate inspiration and
 // expiration durations (I and E).
@@ -48,7 +49,15 @@ PressureControlFsm::PressureControlFsm(Time now, const VentParams &params)
 
 BlowerSystemState PressureControlFsm::desired_state(Time now) {
   if (now < inspire_end_) {
-    return {.blower_enabled = true, inspire_pressure_, ValveState::CLOSED};
+    // Go from expire_pressure_ to inspire_pressure_ over a duration of
+    // RISE_TIME.  Then for the rest of the inspire time, hold at
+    // inspire_pressure_.
+    static_assert(RISE_TIME > milliseconds(0));
+    float rise_frac = std::min(1.f, (now - start_time_) / RISE_TIME);
+    Pressure setpoint =
+        expire_pressure_ + (inspire_pressure_ - expire_pressure_) * rise_frac;
+
+    return {.blower_enabled = true, setpoint, ValveState::CLOSED};
   }
   return {.blower_enabled = true, expire_pressure_, ValveState::OPEN};
 }

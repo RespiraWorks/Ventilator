@@ -113,6 +113,10 @@ public:
 // an acceptable waveform, although it remains to be seen.
 class PressureControlFsm {
 public:
+  // Transition from PEEP to PIP pressure over this length of time.  Citation:
+  // https://respiraworks.slack.com/archives/C011CJQV4Q7/p1591763842312500?thread_ts=1591759016.310200&cid=C011CJQV4Q7
+  static constexpr inline Duration RISE_TIME = milliseconds(100);
+
   explicit PressureControlFsm(Time now, const VentParams &params);
   BlowerSystemState desired_state(Time now);
 

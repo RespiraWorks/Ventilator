@@ -61,7 +61,7 @@ public:
     }
   }
 
-  void onTxComplete() override {
+  void OnTxComplete() override {
     if (schedule_tx) {
       // started flag can be safely ignored as we are in TxComplete handler that
       // gets called when there is no more active tx happening
@@ -73,7 +73,7 @@ public:
 
   // Only Very Bad (tm) things can cause this.
   // meaning that DMA configuration is not right.
-  void onTxError() override { tx_error = true; }
+  void OnTxError() override { tx_error = true; }
 
 private:
   // Starts DMA transmission if transmission is not ongoing

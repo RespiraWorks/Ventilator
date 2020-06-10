@@ -78,7 +78,7 @@ bool UART_DMA::startTX(const uint8_t *buf, uint32_t length, TxListener *txl) {
 
 void UART_DMA::DMA_TX_ISR() {
   is_txing = false;
-  tx_listener->onTxComplete();
+  tx_listener->OnTxComplete();
 }
 
 UART_DMA uart_dma;

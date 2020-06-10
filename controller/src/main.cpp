@@ -152,6 +152,16 @@ static void high_priority_task(void *arg) {
 // after some basic system init.  Pretty much everything not time critical
 // should go here.
 static void background_loop() {
+  // Sleep for a few seconds.  In the current iteration of the PCB, the fan
+  // briefly turns on when the device starts up.  If we don't wait for the fan
+  // to spin down, the sensors will miscalibrate.  This is a hardware issue
+  // that will be fixed in the PCB revision after 0.2.
+  // https://respiraworks.slack.com/archives/C011CJQV4Q7/p1591745893290300?thread_ts=1591745582.289600&cid=C011CJQV4Q7
+  Time sleepStart = Hal.now();
+  while (Hal.now() - sleepStart < seconds(10)) {
+    Hal.delay(milliseconds(10));
+    Hal.watchdog_handler();
+  }
 
   // Calibrate the sensors.
   // This needs to be done before the sensors are used.

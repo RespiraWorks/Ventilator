@@ -75,7 +75,7 @@ You may also find other variations of the design meant for special testing/calib
 | 4      |        1 | McMaster-Carr   | 91390A117           |  4.75 / 100  | [C][4mcmc]           | M5x5mm set screw. Attaches rotor to stepper |
 | 5      |        3 | FastEddy        | TFE4262             |  12.50 / 10  | [F][5fast]           | 5x16x5 Metal shielded bearings |
 | 6      |        2 | McMaster-Carr   | 5463K648            |  8.20 / 10   | [C][6mcmc]           | 3/8"ID <-> 3/4"ID adapter  **READ WARNING BELOW**|
-| 7      | 6in/15cm | McMaster-Carr   | 5894K38             |  12.30 / 2 ft| [C][7mcmc]           | Continuous-Flex Soft Tygon PVC Tubing, 1/2" ID, 5/8" OD |
+| 7      | 6in/15cm | McMaster-Carr   | 5894K38             |  12.30 / 2 ft| [C][7mcmc]           | Continuous-Flex Soft Tygon PVC Tubing, 3/8" ID, 5/8" OD |
 | 8      |        2 | McMaster-Carr   | 9579K67             |  12.63 / 20  | [C][8mcmc]           | Herbie clip E, 12-13.8mm, to clamp tubing to fittings |
 | 9      |        1 | Digikey         | X-NUCLEO-IHM03A1    | 10.64 / each | [K][9key] [M][9mr]   | Stepper driver dev board |
 | 10     |        1 | ST              | X-NUCLEO-IHM02A1    | 15.00 / each | [S][10st] [R][10rs]  | **ALT for item 10:** Two-axis stepper driver dev board |

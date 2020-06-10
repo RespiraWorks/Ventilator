@@ -7,12 +7,16 @@ If you decide to buy them, do so at your own risk... oh, and thank you ;).**
 
 **TODO:** explain purpose and contents
 
-## Purchasing source abbreviations
+## Parts List (BOM)
+
+**Note: If you are a member of the RespiraWorks team, review [part purchasing guidelines](../../ventilator-build/README.md) BEFORE purchasing any parts.**
+
+### Purchasing Source Abbreviations
 
 * **Z** = Amazon
 * **K** = Digikey
 
-## Parts BOM
+### Parts 
 
 | RefDes | Quantity | Manufacturer  | Part #              | Price($)     | Sources         | Notes |
 | ------ |---------:| ------------- | ------------------- | ------------:|-----------------| ----- |
@@ -27,8 +31,9 @@ If you decide to buy them, do so at your own risk... oh, and thank you ;).**
 | 7      |        2 | TE            | 1-1123722-2         |         0.18 | [K][7digi]      | VH housing 2 pin, for blower power |
 | 8      |        1 | JST           | VHR-3N              |         0.14 | [K][8digi]      | VH housing 3 pin, for main power |
 | 9      |        1 | AIMHD         | AHD-DC20-F-PT       |    9.99 / 20 | [Z][9amzn]      | Female Power Pigtail DC 5.5mm x 2.1mm Connectors, for main power |
-| 10     |        - | Remington     | 16UL1007STRKIT      |        29.70 | [K][10amzn]     | 16 AWG wire, for blower power cable |
-| 11     |        - | Remington     | 26UL1007STRKIT10COLOR |      31.60 | [K][11amzn]     | 26 AWG wire, for signal/control cables |
+| 10     |        - | Remington     | 16UL1007STRKIT      |        29.70 | [Z][10amzn]     | 16 AWG wire, for blower power cable |
+| 11     |        - | Remington     | 26UL1007STRKIT10COLOR |      31.60 | [Z][11amzn]     | 26 AWG wire, for signal/control cables |
+| 12     |        - | Remington     | 22UL1015STRKIT10COLOR |      37.75 | [Z][12amzn]     | 22 AWG wire, for signal/control cables |
  
 [1digi]:    https://www.digikey.com/short/z44f8d
 [2digi]:    https://www.digikey.com/short/z44f8f
@@ -43,8 +48,9 @@ If you decide to buy them, do so at your own risk... oh, and thank you ;).**
 [9amzn]:    https://www.amazon.com/Connectors-Upgraded-Surveillance-Transformer-Connection/dp/B0768V9V5Q
 [10amzn]: https://www.amazon.com/gp/product/B00N51OJJ4
 [11amzn]: https://www.amazon.com/gp/product/B011JC76OA
+[12amzn]: https://www.amazon.com/gp/product/B073SDGNKW
 
-## Tooling BOM
+### Tools
 
 We try to make few assumptions about what tools you have. Here are recommended tools you might need.
 

@@ -44,6 +44,8 @@ We are still providing 5/8" tubing as an option below, since some people may sti
 
 ## Parts List (BOM)
 
+**Note: If you are a member of the RespiraWorks team, review [part purchasing guidelines](../README.md) BEFORE purchasing any parts.**
+
 ### Purchasing Source Key
 
 * **Z** = Amazon
@@ -53,7 +55,7 @@ We are still providing 5/8" tubing as an option below, since some people may sti
 
 | Item | Quantity | Manufacturer  | Part #              | Price (USD)     |  Sources       | Notes |
 | ---- |---------:| ------------- | ------------------- | ------------:|----------------| ----- |
-| b1   |      5ft |               |                     | 22.99 / 5ft  | [Z][b1amzn]    | soft 3/4"ID 1"OD tubing |
+| b1   |      5ft |      OCSParts |            117062-5 | 22.99 / 5ft  | [Z][b1amzn]    | soft 3/4"ID 1"OD tubing |
 | b2   |      5ft | McMaster-Carr | 5233K71             | 14.20 / 10ft | [C][b2mcmc]    | hard 3/4"ID 1"OD tubing, alternative to b1, not as fun to work with, not for medical use |
 | b3   |       20 | McMaster-Carr | 9579K73             | 12.24 / 20   | [C][b3mcmc]    | Herbie clip K (22.2-24.9mm) for clamping 1"OD tubing, works better for soft tubing |
 | b4   |       20 | McMaster-Carr | 9579K74             | 12.33 / 20   | [C][b4mcmc]    | Herbie clip L (24.5-27.6mm) for clamping 1"OD tubing, maybe works better for hard tubing? |
@@ -62,7 +64,7 @@ We are still providing 5/8" tubing as an option below, since some people may sti
 | b7   |       ~6 | McMaster-Carr | 5463K648            | 10.20 / 10   | [C][b7mcmc]    | 3/4"ID <-> 3/8"ID adapter, to interface with alternative pinch valve tubing, **read note below** |
 | b8   |       ~3 | McMaster-Carr | 4596K33             | 4.18         | [C][b8mcmc]    | 3/4 NTP female tee, if you plan to have bypass or oxygen limb |
 | b9   |       ~5 | McMaster-Carr | 53415K217           | 12.89 / 10   | [C][b9mcmc]    | 3/4 NTP male <-> 3/4"ID single barb, for tee junctions, if you plan to have bypass or oxygen limb |
-| b10  |        2 |               |                     | 13.45 / 2    | [Z][b10amzn]    | 2pac of ball valves 3/4"ID |
+| b10  |        2 |      Antelco |           (unknown) | 13.45 / 2    | [Z][b10amzn]    | 2pac of ball valves 3/4"ID |
 
 **NOTE:** You should select either **b6** or **b7** depending on what your pinch valve tubing diameter will be.**
 
@@ -90,7 +92,7 @@ Note: This is NOT the default tube size. If you are purchasing parts to assemble
 | a5   |       ~6 | McMaster-Carr | 5463K646            |  6.60 / 10   | [C][a5mcmc]     | 5/8"ID <-> 3/8"ID, adapter, to interface with alternative pinch valve tubing, **read note below** |
 | a6   |       ~3 | McMaster-Carr | 5372K128            | 2.82         | [C][a6mcmc]     | 1/2 NTP female tee, if you plan to have bypass or oxygen limb |
 | a7   |       ~5 | McMaster-Carr | 5372K128            | 4.89 / 10    | [C][a7mcmc]     | 1/2 NTP male <-> 5/8"ID multibarbed, for tee junctions, if you plan to have bypass or oxygen limb |
-| a8   |        2 |               |                     | 13.45 / 2    | [Z][a8amzn]     | 2pac of ball valves 5/8"ID |
+| a8   |        2 |      Antelco |            (unknown) | 13.45 / 2    | [Z][a8amzn]     | 2pac of ball valves 5/8"ID |
 
 **NOTE:** You should select either **a4** or **a5** depending on what your pinch valve tubing diameter will be.**
 
@@ -116,10 +118,10 @@ Also, scissors or a sharp knife might be ok instead of T3.
 
 | Item | Manufacturer  | Part number        | Price (USD) | Sources         | Notes |
 | ---- |--------------:| ------------------ | -------- | ---------------:|------ |
-| c1   |               |                    |    13.00 | [Z][c1amzn]     | 8 inch slip-joint pliers, for clamping tubes onto fittings | 
-| c2   |               |                    |    19.99 | [Z][c2amzn]     | Adjustable wrench, at least 1" wide opening, for screwing in NTP fittings |
-| c3   |               |                    |    15.88 | [Z][c3amzn]     | Pipe and PVC cutter, for cutting tubing |
-| c4   |               |                    |     8.90 | [Z][c4amzn]     | Long nose pliers, for removing herbie clips |
+| c1   |        TEKTON |              37122 |    13.00 | [Z][c1amzn]     | 8 inch slip-joint pliers, for clamping tubes onto fittings | 
+| c2   |   Duda Energy |     LPpvc075-005ft |    19.99 | [Z][c2amzn]     | Adjustable wrench, at least 1" wide opening, for screwing in NTP fittings |
+| c3   |        DEWILL |          (unknown) |    15.88 | [Z][c3amzn]     | Pipe and PVC cutter, for cutting tubing |
+| c4   |         IRWIN |            2078216 |     8.90 | [Z][c4amzn]     | Long nose pliers, for removing herbie clips |
 | c5   |          PTFE | vanguardSealantsPTFE-01 |     6.49 | [Z][c5amzn]     | It's advisable to teflon tape all NTP threaded components. Not only will they be more airtight, but also they will be easier to tighten and release. |
 
 [c1amzn]: https://www.amazon.com/TEKTON-2-Inch-Joint-Pliers-37122/dp/B00KLY1FAY

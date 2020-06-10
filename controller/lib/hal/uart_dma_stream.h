@@ -1,5 +1,5 @@
-#ifndef __UART_DMA_STREAM__
-#define __UART_DMA_STREAM__
+#ifndef UART_DMA_STREAM_H_
+#define UART_DMA_STREAM_H_
 #include "uart_dma.h"
 extern UART_DMA uart_dma;
 

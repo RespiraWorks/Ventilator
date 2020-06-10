@@ -1,5 +1,5 @@
-#ifndef __FRAMING_STREAMS_H_
-#define __FRAMING_STREAMS_H_
+#ifndef FRAMING_STREAMS_H_
+#define FRAMING_STREAMS_H_
 
 #include "checksum.h"
 #include "framing_spec_chars.h"

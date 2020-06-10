@@ -174,7 +174,9 @@ TEST(BlowerFsmTest, PressureAssist) {
       // need to run with non-breath flow while already in exhale leg to
       // initialize detection threshold
       {p, zero, /*blower_enabled=*/true, 5002, cmH2O(10), ValveState::OPEN},
-      {p, breath, /*blower_enabled=*/true, 5201, cmH2O(20), ValveState::CLOSED},
+      {p, breath, /*blower_enabled=*/true, 5200, cmH2O(20), ValveState::CLOSED},
+      {p, zero, /*blower_enabled=*/true, 7199, cmH2O(20), ValveState::CLOSED},
+      {p, zero, /*blower_enabled=*/true, 7201, cmH2O(10), ValveState::OPEN},
 
   });
 }

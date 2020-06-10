@@ -24,11 +24,6 @@ limitations under the License.
 #include <optional>
 
 struct ActuatorsState {
-  // Pressure set point in cm H2O.
-  // Not really an actuator state (maybe it should move?)
-  // Only meaningful in pressure control mode.
-  float setpoint_cm_h2o{0.0f};
-
   // Valve setting for the FIO2 proportional solenoid
   // Range 0 to 1 where 0 is fully closed and 1 is fully open.
   float fio2_valve{0.0f};

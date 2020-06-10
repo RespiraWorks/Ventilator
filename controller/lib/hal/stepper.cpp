@@ -22,9 +22,10 @@ limitations under the License.
 #include <string.h>
 
 // Static data members
-StepMotor StepMotor::motor_[StepMotor::kTotalMotors];
-uint8_t StepMotor::dma_buff_[StepMotor::kTotalMotors];
+StepMotor StepMotor::motor_[StepMotor::kMaxMotors];
+uint8_t StepMotor::dma_buff_[StepMotor::kMaxMotors];
 StepCommState StepMotor::coms_state_ = StepCommState::IDLE;
+int StepMotor::total_motors_;
 
 // This array holds the length of each parameter in units of
 // bytes, rounded up to the nearest byte.  This info is based
@@ -272,12 +273,20 @@ void HalApi::StepperMotorInit() {
 // make them spin the motors
 void StepMotor::OneTimeInit() {
   uint32_t val;
-  for (int i = 0; i < kTotalMotors; i++) {
+
+  ProbeChips();
+
+  for (int i = 0; i < total_motors_; i++) {
 
     StepMotor *mtr = StepMotor::GetStepper(i);
 
-    // Reset the chip to default values
     mtr->Reset();
+
+    // We need to delay briefly after reset before sending
+    // a new command.  For the power-step chip this delay
+    // time is specified as 500 microseconds in the data sheet.
+    // For the L6470 it's only 45 max
+    Hal.delay(microseconds(500));
 
     // Get the first gate config register of the powerSTEP01.
     // This is actually the config register on the L6470
@@ -733,7 +742,7 @@ void StepMotor::UpdateComState() {
     // For each motor, grab the next byte from the queue
     // and add it to my DMA buffer.  For any empty queue
     // I just add a NOP command
-    for (int i = 0; i < kTotalMotors; i++) {
+    for (int i = 0; i < total_motors_; i++) {
 
       // This really should already be false
       motor_[i].save_response_ = false;
@@ -765,7 +774,7 @@ void StepMotor::UpdateComState() {
   //////////////////////////////////////////////
   case StepCommState::SEND_SYNC:
 
-    for (int i = 0; i < kTotalMotors; i++) {
+    for (int i = 0; i < total_motors_; i++) {
 
       // If we sent this motor driver chip a command from
       // this state last time, save the response in the same
@@ -808,8 +817,8 @@ void StepMotor::UpdateComState() {
   dma->channel[C3].config.enable = 0;
   dma->channel[C4].config.enable = 0;
 
-  dma->channel[C3].count = kTotalMotors;
-  dma->channel[C4].count = kTotalMotors;
+  dma->channel[C3].count = total_motors_;
+  dma->channel[C4].count = total_motors_;
   dma->channel[C3].mAddr = dma_buff_;
   dma->channel[C4].mAddr = dma_buff_;
 
@@ -837,6 +846,84 @@ void StepMotor::DMA_ISR() {
 void StepMotor::StartQueuedCommands() {
   if (coms_state_ == StepCommState::IDLE)
     UpdateComState();
+}
+
+// This is used to send a command to the stepper chips during
+// startup.
+void StepMotor::SendInitCmd(uint8_t *buff, int len) {
+  int C3 = static_cast<int>(DMA_Chan::C3);
+  int C4 = static_cast<int>(DMA_Chan::C4);
+
+  DMA_Regs *dma = DMA2_BASE;
+  dma->channel[C3].config.enable = 0;
+  dma->channel[C4].config.enable = 0;
+
+  dma->channel[C3].count = len;
+  dma->channel[C4].count = len;
+  dma->channel[C3].mAddr = buff;
+  dma->channel[C4].mAddr = buff;
+
+  CS_Low();
+
+  // I prevent interrupts during this because I don't
+  // want the normal interrupt handler to run.
+  BlockInterrupts block;
+  dma->channel[C3].config.enable = 1;
+  dma->channel[C4].config.enable = 1;
+  while (!dma->intStat.tcif3) {
+  }
+
+  // Clear the interrupt flag so I won't get an interrupt
+  // as soon as I re-enable them
+  DMA_ClearInt(DMA2_BASE, DMA_Chan::C3, DmaInterrupt::GLOBAL);
+
+  // Raise the chip select line and wait 1 microsecond.
+  // The minimum time the CS needs to be high is just under
+  // 1 microsecond.
+  CS_High();
+  Hal.delay(microseconds(1));
+}
+
+// This is run at startup before the DMA interrupts are enabled.
+// It checks to determine how many stepper driver chips are
+// present in the system.  Once the hardware stabilizes enough
+// for everyone to have the same number of chips we can remove
+// this, but it's convenient for right now.
+void StepMotor::ProbeChips() {
+
+  // I use a buffer a bit larger then the max number of motors
+  // to try to continue to work even if there are a few more
+  // driver chips then I support on the bus.
+  uint8_t probe_buff[kMaxMotors + 4];
+
+  // First, send NO OP commands to all the chips a few times.
+  // This will flush any data being sent by chips that were in
+  // the middle of a command when the controller was restarted.
+  for (int i = 0; i < 5; i++) {
+    memset(probe_buff, static_cast<uint8_t>(StepMtrCmd::NOP),
+           sizeof(probe_buff));
+    SendInitCmd(probe_buff, sizeof(probe_buff));
+  }
+
+  // Now send a reset to all the chips on the bus.
+  memset(probe_buff, static_cast<uint8_t>(StepMtrCmd::RESET_DEVICE),
+         sizeof(probe_buff));
+  SendInitCmd(probe_buff, sizeof(probe_buff));
+
+  // The first N bytes of the returned array should be 0 and the rest should be
+  // the reset command.
+  total_motors_ = 0;
+  for (int i = 0; i < sizeof(probe_buff); i++) {
+    if (probe_buff[i] == 0x00)
+      total_motors_++;
+    else
+      break;
+  }
+
+  // If all the bytes in the buffer were zero, then most likely there is
+  // nothing connected at all.
+  if (total_motors_ == sizeof(probe_buff))
+    total_motors_ = 0;
 }
 
 #endif

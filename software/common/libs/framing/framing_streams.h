@@ -103,7 +103,6 @@ public:
       r += output.Put(b);
       FrameDone();
       return r;
-      break;
     case FRAMING_MARK:
     case FRAMING_ESC:
       r = StartFrameIfDone();
@@ -111,13 +110,11 @@ public:
       r += output.Put(b ^ 0x20);
       FrameStartedMaybe();
       return r;
-      break;
     default:
       r = StartFrameIfDone();
       r += output.Put(b);
       FrameStartedMaybe();
       return r;
-      break;
     };
   }
 

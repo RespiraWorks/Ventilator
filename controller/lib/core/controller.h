@@ -11,6 +11,9 @@
 struct ControllerState {
   // True if this is the first breath of a new cycle.
   bool is_new_breath;
+
+  // Patient pressure the controller wants to achieve.
+  Pressure setpoint_pressure;
 };
 
 // This class is here to allow integration of our controller into Modelica

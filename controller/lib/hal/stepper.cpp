@@ -285,7 +285,7 @@ void StepMotor::OneTimeInit() {
     // We need to delay briefly after reset before sending
     // a new command.  For the power-step chip this delay
     // time is specified as 500 microseconds in the data sheet.
-    // For the L6470 it's only 45 max
+    // For the L6470 its only 45 max
     Hal.delay(microseconds(500));
 
     // Get the first gate config register of the powerSTEP01.
@@ -370,7 +370,7 @@ StepMtrErr StepMotor::GetMaxSpeed(float *ret) {
 //
 // NOTE - Setting a non-zero minimum speed doesn't mean
 // the motor can't stop, this is the minimum speed for
-// a move.  When you start a move, rathern then increase
+// a move.  When you start a move, rathern than increase
 // linearly from 0, the stepper will jump to this speed
 // immediately, then ramp up from there.
 // This can help with vibration.
@@ -429,7 +429,7 @@ StepMtrErr StepMotor::SetAccel(float acc) {
 // so be careful.
 //
 // There are four different values that can be set which control the
-// output to the motor in different phases of it's motion:
+// output to the motor in different phases of its motion:
 //   hold - Value used when the motor is holding position (not moving)
 //   run  - Value used when running at constant velocity.
 //   accel - Value used when accelerating
@@ -824,7 +824,7 @@ void StepMotor::UpdateComState() {
 
   // NOTE - CS has to be high for at least 650ns between bytes.
   // I don't bother timing this because I've found that in
-  // practice it takes longer then that to handle the interrupt
+  // practice it takes longer than that to handle the interrupt
   CS_Low();
 
   dma->channel[C3].config.enable = 1;
@@ -867,6 +867,10 @@ void StepMotor::SendInitCmd(uint8_t *buff, int len) {
 
   // I prevent interrupts during this because I don't
   // want the normal interrupt handler to run.
+  // The normal interrupt handler is designed to be used
+  // with normal commands after startup and I don't want
+  // to add the additional logic to it to handle these
+  // unusual startup commands.
   BlockInterrupts block;
   dma->channel[C3].config.enable = 1;
   dma->channel[C4].config.enable = 1;
@@ -891,9 +895,9 @@ void StepMotor::SendInitCmd(uint8_t *buff, int len) {
 // this, but it's convenient for right now.
 void StepMotor::ProbeChips() {
 
-  // I use a buffer a bit larger then the max number of motors
+  // I use a buffer a bit larger than the max number of motors
   // to try to continue to work even if there are a few more
-  // driver chips then I support on the bus.
+  // driver chips than I support on the bus.
   uint8_t probe_buff[kMaxMotors + 4];
 
   // First, send NO OP commands to all the chips a few times.

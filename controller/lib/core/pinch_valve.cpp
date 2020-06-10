@@ -26,6 +26,10 @@ limitations under the License.
 // be able to come up with a good set of values here that
 // won't need further modification.
 
+// move_dir should be set to either 1 or -1 depending on the
+// desired direction of motion of the pinch valve.
+static constexpr float move_dir = -1.0f;
+
 // Amplitude of the power level used for homing.
 // 0.1 is 10% of maximum.  There's no need for high
 // power when homing, we're intentionally driving the
@@ -36,15 +40,15 @@ static constexpr float home_amp = 0.1f;
 // and distance (deg) to move during the home
 static constexpr float home_vel = 60.0f;
 static constexpr float home_accel = home_vel / 0.1f;
-static constexpr float home_dist = 90.0f;
+static constexpr float home_dist = 90.0f * move_dir;
 
 // Amount we can move away from the homing end stop before
 // we start to touch the tube (deg)
-static constexpr float home_offset = 30.0f;
+static constexpr float home_offset = 30.0f * move_dir;
 
 // This is the distance (deg) from the zero position until
 // the tube is completely shut.
-static constexpr float max_move = 45.0f;
+static constexpr float max_move = 45.0f * move_dir;
 
 // Amplitude of power level for normal operation.
 // Don't go crazy here, you can easily overheat the
@@ -70,21 +74,12 @@ static constexpr float flow_table[] = {0.0f,   0.125f, 0.161f, 0.197f,
                                        0.232f, 0.271f, 0.310f, 0.358f,
                                        0.425f, 0.542f, 0.9f};
 
-PinchValve::PinchValve(int motor_index) {
-
-  // Find the stepper motor associated with this
-  // pinch valve.
-  //
-  // NOTE - If this returns NULL then it means the
-  // constant in stepper.h is wrong.
-  // If mtr ends up being NULL I can never home or
-  // move
-  mtr_ = StepMotor::GetStepper(motor_index);
-}
+PinchValve::PinchValve(int motor_index) { mtr_ndx_ = motor_index; }
 
 // Disable the pinch valve
 void PinchValve::Disable() {
 
+  StepMotor *mtr_ = StepMotor::GetStepper(mtr_ndx_);
   if (!mtr_)
     return;
 
@@ -98,6 +93,7 @@ void PinchValve::Disable() {
 //
 void PinchValve::Home() {
 
+  StepMotor *mtr_ = StepMotor::GetStepper(mtr_ndx_);
   if (!mtr_)
     return;
 
@@ -192,6 +188,10 @@ void PinchValve::SetOutput(float value) {
     Home();
     return;
   }
+
+  StepMotor *mtr_ = StepMotor::GetStepper(mtr_ndx_);
+  if (!mtr_)
+    return;
 
   value = std::clamp(value, 0.0f, 1.0f);
 

@@ -56,6 +56,8 @@ public:
   void SetKI(float ki) { ki_ = ki; }
   void SetKD(float kd) { kd_ = kd; }
 
+  void Reset() { initialized_ = false; }
+
 private:
   float kp_; // * (P)roportional Tuning Parameter
   float ki_; // * (I)ntegral Tuning Parameter

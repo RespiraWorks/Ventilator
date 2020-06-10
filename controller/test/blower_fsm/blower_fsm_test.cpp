@@ -150,21 +150,32 @@ TEST(BlowerFsmTest, PressureAssist) {
                            .net_flow = ml_per_min(20000.0f)
   };
 
-  // test when flow is zero: breath is triggered on last_expire_end_ rather than
+  // - when flow is zero: breath is triggered on latest_expire_end_ rather than
   // patient triggered, to enforce minimum respiratory rate
-  // test when flow is breath: trigger breath if in expire mode and
+  // - when flow is breath: trigger breath if in expire mode
   testSequence({
-      {p, zero, /*blower_enabled=*/true, 0, cmH2O(10), ValveState::OPEN},
-      {p, zero, /*blower_enabled=*/true, 999, cmH2O(10), ValveState::OPEN},
-      {p, zero, /*blower_enabled=*/true, 1001, cmH2O(20), ValveState::CLOSED},
+      // first breath is mandatory
+      {p, zero, /*blower_enabled=*/true, 0, cmH2O(20), ValveState::CLOSED},
       // breath has no effect during inspire phase
-      {p, breath, /*blower_enabled=*/true, 2000, cmH2O(20), ValveState::CLOSED},
-      {p, zero, /*blower_enabled=*/true, 2999, cmH2O(20), ValveState::CLOSED},
-      {p, zero, /*blower_enabled=*/true, 3001, cmH2O(10), ValveState::OPEN},
-      // trigger breath before end of expire: inspire time is still 2s
-      {p, breath, /*blower_enabled=*/true, 3200, cmH2O(20), ValveState::CLOSED},
-      {p, zero, /*blower_enabled=*/true, 5199, cmH2O(20), ValveState::CLOSED},
-      {p, zero, /*blower_enabled=*/true, 5201, cmH2O(10), ValveState::OPEN},
+      {p, breath, /*blower_enabled=*/true, 1000, cmH2O(20), ValveState::CLOSED},
+      {p, zero, /*blower_enabled=*/true, 1999, cmH2O(20), ValveState::CLOSED},
+      {p, zero, /*blower_enabled=*/true, 2001, cmH2O(10), ValveState::OPEN},
+      // need to run with non-breath flow while already in exhale leg to
+      // initialize detection threshold
+      {p, zero, /*blower_enabled=*/true, 2002, cmH2O(10), ValveState::OPEN},
+      // check that calling with zero flow before the end of the breath does not
+      // tigger the next breath
+      {p, zero, /*blower_enabled=*/true, 2500, cmH2O(10), ValveState::OPEN},
+      {p, zero, /*blower_enabled=*/true, 2999, cmH2O(10), ValveState::OPEN},
+      // trigger breath on latest_expire_end_
+      {p, zero, /*blower_enabled=*/true, 3001, cmH2O(20), ValveState::CLOSED},
+      {p, zero, /*blower_enabled=*/true, 4999, cmH2O(20), ValveState::CLOSED},
+      {p, zero, /*blower_enabled=*/true, 5001, cmH2O(10), ValveState::OPEN},
+      // need to run with non-breath flow while already in exhale leg to
+      // initialize detection threshold
+      {p, zero, /*blower_enabled=*/true, 5002, cmH2O(10), ValveState::OPEN},
+      {p, breath, /*blower_enabled=*/true, 5201, cmH2O(20), ValveState::CLOSED},
+
   });
 }
 

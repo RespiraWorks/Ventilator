@@ -76,8 +76,8 @@ typedef struct _GuiStatus {
 
 /* Helper constants for enums */
 #define _VentMode_MIN VentMode_OFF
-#define _VentMode_MAX VentMode_PRESSURE_CONTROL
-#define _VentMode_ARRAYSIZE ((VentMode)(VentMode_PRESSURE_CONTROL+1))
+#define _VentMode_MAX VentMode_PRESSURE_ASSIST
+#define _VentMode_ARRAYSIZE ((VentMode)(VentMode_PRESSURE_ASSIST+1))
 
 #define _AlarmKind_MIN AlarmKind_RESPIRATORY_RATE_TOO_LOW
 #define _AlarmKind_MAX AlarmKind_TIDAL_VOLUME_TOO_HIGH

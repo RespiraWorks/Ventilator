@@ -42,6 +42,7 @@ Controller::Run(Time now, const VentParams &params,
   ActuatorsState actuator_state;
   ControllerState controller_state = {
       .is_new_breath = desired_state.is_new_breath,
+      .setpoint_pressure = desired_state.setpoint_pressure,
   };
 
   pid_.SetKP(dbg_kp.Get());
@@ -60,7 +61,6 @@ Controller::Run(Time now, const VentParams &params,
   // statement; we shouldn't be switching on the VentMode here.
   switch (params.mode) {
   case VentMode_OFF:
-    actuator_state.setpoint_cm_h2o = 0.0f;
     actuator_state.blower_valve = std::nullopt;
     actuator_state.exhale_valve = std::nullopt;
     actuator_state.blower_power = 0.0f;
@@ -78,7 +78,6 @@ Controller::Run(Time now, const VentParams &params,
       break;
     }
 
-    actuator_state.setpoint_cm_h2o = desired_state.setpoint_pressure.cmH2O();
     if (desired_state.expire_valve_state == ValveState::OPEN)
       actuator_state.exhale_valve = 1.0f;
     else

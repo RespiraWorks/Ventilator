@@ -26,6 +26,10 @@ limitations under the License.
 // be able to come up with a good set of values here that
 // won't need further modification.
 
+// move_dir should be set to either 1 or -1 depending on the
+// desired direction of motion of the pinch valve.
+static constexpr float move_dir = -1.0f;
+
 // Amplitude of the power level used for homing.
 // 0.1 is 10% of maximum.  There's no need for high
 // power when homing, we're intentionally driving the
@@ -36,15 +40,15 @@ static constexpr float home_amp = 0.1f;
 // and distance (deg) to move during the home
 static constexpr float home_vel = 60.0f;
 static constexpr float home_accel = home_vel / 0.1f;
-static constexpr float home_dist = 90.0f;
+static constexpr float home_dist = 90.0f * move_dir;
 
 // Amount we can move away from the homing end stop before
 // we start to touch the tube (deg)
-static constexpr float home_offset = 30.0f;
+static constexpr float home_offset = 30.0f * move_dir;
 
 // This is the distance (deg) from the zero position until
 // the tube is completely shut.
-static constexpr float max_move = 45.0f;
+static constexpr float max_move = 45.0f * move_dir;
 
 // Amplitude of power level for normal operation.
 // Don't go crazy here, you can easily overheat the
@@ -70,26 +74,17 @@ static constexpr float flow_table[] = {0.0f,   0.125f, 0.161f, 0.197f,
                                        0.232f, 0.271f, 0.310f, 0.358f,
                                        0.425f, 0.542f, 0.9f};
 
-PinchValve::PinchValve(int motor_index) {
-
-  // Find the stepper motor associated with this
-  // pinch valve.
-  //
-  // NOTE - If this returns NULL then it means the
-  // constant in stepper.h is wrong.
-  // If mtr ends up being NULL I can never home or
-  // move
-  mtr_ = StepMotor::GetStepper(motor_index);
-}
+PinchValve::PinchValve(int motor_index) { motor_index_ = motor_index; }
 
 // Disable the pinch valve
 void PinchValve::Disable() {
 
-  if (!mtr_)
+  StepMotor *mtr = StepMotor::GetStepper(motor_index_);
+  if (!mtr)
     return;
 
   home_state_ = PinchValveHomeState::DISABLED;
-  mtr_->HardDisable();
+  mtr->HardDisable();
 }
 
 // This runs through the homing procedure.  The pinch valves need
@@ -98,7 +93,8 @@ void PinchValve::Disable() {
 //
 void PinchValve::Home() {
 
-  if (!mtr_)
+  StepMotor *mtr = StepMotor::GetStepper(motor_index_);
+  if (!mtr)
     return;
 
   StepMtrErr err;
@@ -111,16 +107,16 @@ void PinchValve::Home() {
 
   // Limit motor power during homing.
   case PinchValveHomeState::LOWER_AMP:
-    err = mtr_->SetAmpAll(home_amp);
+    err = mtr->SetAmpAll(home_amp);
     if (err == StepMtrErr::OK)
       home_state_ = PinchValveHomeState::SET_HOME_SPEED;
     break;
 
   // Set the move speed/accel to be used during homing
   case PinchValveHomeState::SET_HOME_SPEED:
-    err = mtr_->SetMaxSpeed(home_vel);
+    err = mtr->SetMaxSpeed(home_vel);
     if (err == StepMtrErr::OK)
-      err = mtr_->SetAccel(home_accel);
+      err = mtr->SetAccel(home_accel);
     if (err == StepMtrErr::OK)
       home_state_ = PinchValveHomeState::MOVE_TO_STOP;
     break;
@@ -128,7 +124,7 @@ void PinchValve::Home() {
   // Start a relative move into the hard stop
   case PinchValveHomeState::MOVE_TO_STOP:
     move_start_time_ = Hal.now();
-    err = mtr_->MoveRel(home_dist);
+    err = mtr->MoveRel(home_dist);
     if (err == StepMtrErr::OK)
       home_state_ = PinchValveHomeState::WAIT_MOVE_STOP;
     break;
@@ -143,7 +139,7 @@ void PinchValve::Home() {
 
   // Switch to normal power setting
   case PinchValveHomeState::SET_NORMAL_AMP:
-    err = mtr_->SetAmpAll(move_amp);
+    err = mtr->SetAmpAll(move_amp);
     if (err == StepMtrErr::OK)
       home_state_ = PinchValveHomeState::MOVE_OFFSET;
     break;
@@ -153,7 +149,7 @@ void PinchValve::Home() {
   // just touching the tube, but not squeezing it.
   case PinchValveHomeState::MOVE_OFFSET:
     move_start_time_ = Hal.now();
-    err = mtr_->MoveRel(-home_offset);
+    err = mtr->MoveRel(-home_offset);
     if (err == StepMtrErr::OK)
       home_state_ = PinchValveHomeState::WAIT_MOVE_OFFSET;
     break;
@@ -167,7 +163,7 @@ void PinchValve::Home() {
 
   // Set the current position to zero
   case PinchValveHomeState::ZERO_POS:
-    err = mtr_->ClearPosition();
+    err = mtr->ClearPosition();
     if (err == StepMtrErr::OK)
       home_state_ = PinchValveHomeState::SET_NORMAL_SPEED;
     break;
@@ -175,9 +171,9 @@ void PinchValve::Home() {
   // Switch to normal move speed/accel
   case PinchValveHomeState::SET_NORMAL_SPEED:
 
-    err = mtr_->SetMaxSpeed(move_vel);
+    err = mtr->SetMaxSpeed(move_vel);
     if (err == StepMtrErr::OK)
-      err = mtr_->SetAccel(move_acc);
+      err = mtr->SetAccel(move_acc);
     if (err == StepMtrErr::OK)
       home_state_ = PinchValveHomeState::HOMED;
 
@@ -192,6 +188,10 @@ void PinchValve::SetOutput(float value) {
     Home();
     return;
   }
+
+  StepMotor *mtr = StepMotor::GetStepper(motor_index_);
+  if (!mtr)
+    return;
 
   value = std::clamp(value, 0.0f, 1.0f);
 
@@ -214,5 +214,5 @@ void PinchValve::SetOutput(float value) {
   // The valve is closed at a position of -max_move;
 
   float pos = (value - 1.0f) * max_move;
-  mtr_->GotoPos(pos);
+  mtr->GotoPos(pos);
 }

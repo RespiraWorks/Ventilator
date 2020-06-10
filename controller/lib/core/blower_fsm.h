@@ -89,22 +89,26 @@ struct BlowerSystemState {
 //    for a single breath starting at the given time and with the given params.
 //    Those params don't change during the life of the FSM.
 //
-//  - BlowerSystemState desired_state(Time now): Gets the solenoid open/closed
-//    state and the pressure that the fan should be trying to hit at this point
-//    in time.
+//  - BlowerSystemState update(Time now, const SensorReadings readings):
+//    Updates the state of the fsm based on time and sensor readings.
 //
-//  - bool finished(Time now, SensorReadings readings): Has this breath FSM
-//    completed its work (namely, running a single breath) at the given time?
+//  - BlowerSystemState desired_state(): Gets the solenoid open/closed
+//    state and the pressure that the fan should be trying to hit for the
+//    current state of the fsm.
+//
+//  - bool finished(): Has this breath FSM completed its work (namely, running
+//    a single breath) ?
 //    If so, it is ready to be replaced with a new one.
 //
 class OffFsm {
 public:
   OffFsm() = default;
   explicit OffFsm(Time now, const VentParams &) {}
-  BlowerSystemState desired_state(Time now) {
+  void update(Time now, const SensorReadings &readings) {}
+  BlowerSystemState desired_state() {
     return {.blower_enabled = false, kPa(0), ValveState::OPEN};
   }
-  bool finished(Time now, const SensorReadings &readings) { return true; }
+  bool finished() { return true; }
 };
 
 // "Breath finite state machine" for pressure control mode.
@@ -121,18 +125,20 @@ public:
   static constexpr inline Duration RISE_TIME = milliseconds(100);
 
   explicit PressureControlFsm(Time now, const VentParams &params);
-  BlowerSystemState desired_state(Time now);
+  void update(Time now, const SensorReadings &readings);
+  BlowerSystemState desired_state() const;
 
-  bool finished(Time now, const SensorReadings &readings) {
-    return now > expire_end_;
-  }
+  bool finished() const { return finished_; }
 
 private:
   const Pressure inspire_pressure_;
   const Pressure expire_pressure_;
+  Pressure setpoint_;
   Time start_time_;
   Time inspire_end_;
   Time expire_end_;
+  bool inspire_finished_ = false;
+  bool finished_ = false;
 };
 
 // "Breath finite state machine" for pressure assist mode.
@@ -153,9 +159,9 @@ private:
 class PressureAssistFsm {
 public:
   explicit PressureAssistFsm(Time now, const VentParams &params);
-  BlowerSystemState desired_state(Time now) ;
-
-  bool finished(Time now, const SensorReadings &readings);
+  void update(Time now, const SensorReadings &readings);
+  BlowerSystemState desired_state() const;
+  bool finished() const { return finished_; }
 private:
   bool PatientInspiring(const SensorReadings &readings);
 
@@ -166,8 +172,11 @@ private:
   Time inspire_end_;
   Time latest_expire_end_;
 
-  VolumetricFlow inspiratory_effort_threshold_ = ml_per_min(-1.0f);
-  bool patient_expiring_ = false;
+  // initialize threshold at insanely high flow to not trigger breath before
+  // a proper threshold has been computed
+  VolumetricFlow inspiratory_effort_threshold_ = cubic_m_per_sec(9);
+  bool inspire_finished_ = false;
+  bool finished_ = false;
 };
 
 class BlowerFsm {

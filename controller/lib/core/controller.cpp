@@ -27,6 +27,8 @@ static DebugFloat dbg_kp("kp", "Proportional gain for main loop", 3.5);
 static DebugFloat dbg_ki("ki", "Integral gain for main loop", 1.0);
 static DebugFloat dbg_kd("kd", "Derivative gain for main loop");
 static DebugFloat dbg_sp("pc_setpoint", "Pressure control setpoint (cmH2O)");
+static DebugUInt32 dbg_per("loop_period", "Loop period (usec)",
+                           static_cast<uint32_t>(LOOP_PERIOD.microseconds()));
 
 Controller::Controller()
     : pid_(dbg_kp.Get(), dbg_ki.Get(), dbg_kd.Get(), ProportionalTerm::ON_ERROR,

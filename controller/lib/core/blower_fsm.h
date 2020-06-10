@@ -93,18 +93,18 @@ struct BlowerSystemState {
 //    state and the pressure that the fan should be trying to hit at this point
 //    in time.
 //
-//  - bool finished(Time now): Has this breath FSM completed its work (namely,
-//    running a single breath) at the given time?  If so, it is ready to be
-//    replaced with a new one.
+//  - bool finished(Time now, SensorReadings readings): Has this breath FSM
+//    completed its work (namely, running a single breath) at the given time?
+//    If so, it is ready to be replaced with a new one.
 //
 class OffFsm {
 public:
   OffFsm() = default;
   explicit OffFsm(Time now, const VentParams &) {}
-  BlowerSystemState desired_state(Time now, const SensorReadings &readings) {
+  BlowerSystemState desired_state(Time now) {
     return {.blower_enabled = false, kPa(0), ValveState::OPEN};
   }
-  bool finished(Time now) { return true; }
+  bool finished(Time now, const SensorReadings &readings) { return true; }
 };
 
 // "Breath finite state machine" for pressure control mode.
@@ -121,9 +121,11 @@ public:
   static constexpr inline Duration RISE_TIME = milliseconds(100);
 
   explicit PressureControlFsm(Time now, const VentParams &params);
-  BlowerSystemState desired_state(Time now, const SensorReadings &readings);
+  BlowerSystemState desired_state(Time now);
 
-  bool finished(Time now) { return now > expire_end_; }
+  bool finished(Time now, const SensorReadings &readings) {
+    return now > expire_end_;
+  }
 
 private:
   const Pressure inspire_pressure_;
@@ -140,27 +142,32 @@ private:
 // by the ventilator: inspiration time is set by the ventilator.
 // This mode enforce a minimum respiratory rate in case the patient does not
 // initiate enough breaths.
-// Similarly to pressure control, uses a square wave, only the length of the
-// exhale leg can vary depending on the patient breath initiation.
-// Unlike pressure control, this fsm starts with exhale and ends at the end of
-// inhale to be able to start the first inhale on patient trigger.
+// Similarly to pressure control, uses a square wave, but the duration of the
+// exhale leg can vary depending on the patient breath initiation, meaning the
+// breath can be finished (and the next one started) before the full breath
+// duration has passed.
+// In case the full breath duration passes, the fsm enforces a "mandatory
+// breath" to make sure the patient's RR does not go below the desired one.
+// Because the inhale is the first leg and only the exhale leg can vary in
+// duration, the first breath in this mode is always a "mandatory breath".
 class PressureAssistFsm {
 public:
   explicit PressureAssistFsm(Time now, const VentParams &params);
-  BlowerSystemState desired_state(Time now, const SensorReadings &readings) ;
+  BlowerSystemState desired_state(Time now) ;
 
-  bool finished(Time now) { return now > inspire_end_; }
-
+  bool finished(Time now, const SensorReadings &readings);
 private:
+  bool PatientInspiring(const SensorReadings &readings);
+
   const Pressure inspire_pressure_;
   const Pressure expire_pressure_;
 
   Time start_time_;
-  Time latest_expire_end_;
   Time inspire_end_;
+  Time latest_expire_end_;
 
   VolumetricFlow inspiratory_effort_threshold_ = ml_per_min(-1.0f);
-  bool patient_inspiring_ = false;
+  bool patient_expiring_ = false;
 };
 
 class BlowerFsm {

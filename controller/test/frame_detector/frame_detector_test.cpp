@@ -13,9 +13,8 @@ using State = FrameDetector<SoftRxBuffer<LEN>, LEN>::State;
 using FrameDetectorTest = FrameDetector<SoftRxBuffer<LEN>, LEN>;
 constexpr uint8_t MARK = static_cast<uint8_t>('.');
 
-SoftRxBuffer<LEN> rx_buf('.');
-
 TEST(FrameDetector, MarkFirstInLost) {
+  SoftRxBuffer<LEN> rx_buf(MARK);
   FrameDetectorTest frame_detector(rx_buf);
   EXPECT_TRUE(frame_detector.Begin());
   ASSERT_EQ(State::LOST, frame_detector.get_state());
@@ -27,6 +26,7 @@ TEST(FrameDetector, MarkFirstInLost) {
 }
 
 TEST(FrameDetector, JunkWhileWaitForStart) {
+  SoftRxBuffer<LEN> rx_buf(MARK);
   FrameDetectorTest frame_detector(rx_buf);
   EXPECT_TRUE(frame_detector.Begin());
   ASSERT_EQ(State::LOST, frame_detector.get_state());
@@ -50,6 +50,7 @@ TEST(FrameDetector, JunkWhileWaitForStart) {
 }
 
 TEST(FrameDetector, RxFullSizeFrame) {
+  SoftRxBuffer<LEN> rx_buf(MARK);
   FrameDetectorTest frame_detector(rx_buf);
   EXPECT_TRUE(frame_detector.Begin());
   ASSERT_EQ(State::LOST, frame_detector.get_state());
@@ -69,6 +70,7 @@ TEST(FrameDetector, RxFullSizeFrame) {
 }
 
 TEST(FrameDetector, RxComplete) {
+  SoftRxBuffer<LEN> rx_buf(MARK);
   FrameDetectorTest frame_detector(rx_buf);
   EXPECT_TRUE(frame_detector.Begin());
   ASSERT_EQ(State::LOST, frame_detector.get_state());
@@ -87,6 +89,7 @@ TEST(FrameDetector, RxComplete) {
 }
 
 TEST(FrameDetector, RxFrameIllegalyLong) {
+  SoftRxBuffer<LEN> rx_buf(MARK);
   FrameDetectorTest frame_detector(rx_buf);
   EXPECT_TRUE(frame_detector.Begin());
   ASSERT_EQ(State::LOST, frame_detector.get_state());
@@ -106,6 +109,7 @@ TEST(FrameDetector, RxFrameIllegalyLong) {
 }
 
 TEST(FrameDetector, ErrorWhileRx) {
+  SoftRxBuffer<LEN> rx_buf(MARK);
   FrameDetectorTest frame_detector(rx_buf);
   EXPECT_TRUE(frame_detector.Begin());
   ASSERT_EQ(State::LOST, frame_detector.get_state());
@@ -154,6 +158,7 @@ TEST(FrameDetector, ErrorWhileRx) {
 
 vector<string> fakeRx(string frame) {
   vector<string> ret;
+  SoftRxBuffer<LEN> rx_buf(MARK);
   FrameDetectorTest frame_detector(rx_buf);
   if (!frame_detector.Begin()) {
     return ret;
@@ -190,6 +195,8 @@ TEST(FrameDetector, FramesTooLong) {
 
 TEST(FrameDetector, FuzzyInputs) {
   EXPECT_THAT(fakeRx(".aaa..bbb..a."), testing::ElementsAre("aaa", "bbb", "a"));
+  EXPECT_THAT(fakeRx("..aaa..bbb..a."),
+              testing::ElementsAre("aaa", "bbb", "a"));
   EXPECT_THAT(fakeRx("aaa.bbb.a."), testing::ElementsAre());
   EXPECT_THAT(fakeRx("aaa.....bbb.a."), testing::ElementsAre("bbb"));
   EXPECT_THAT(fakeRx(".aaa....bbb.a."), testing::ElementsAre("aaa", "bbb"));

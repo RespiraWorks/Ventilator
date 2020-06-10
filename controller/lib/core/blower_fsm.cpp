@@ -44,41 +44,54 @@ static Duration expire_duration(const VentParams &params) {
 PressureControlFsm::PressureControlFsm(Time now, const VentParams &params)
     : inspire_pressure_(cmH2O(static_cast<float>(params.pip_cm_h2o))),
       expire_pressure_(cmH2O(static_cast<float>(params.peep_cm_h2o))),
-      start_time_(now), inspire_end_(start_time_ + inspire_duration(params)),
+      setpoint_(expire_pressure_), start_time_(now),
+      inspire_end_(start_time_ + inspire_duration(params)),
       expire_end_(inspire_end_ + expire_duration(params)) {}
 
-BlowerSystemState PressureControlFsm::desired_state(Time now) {
-  if (now < inspire_end_) {
+void PressureControlFsm::update(Time now, const SensorReadings &readings) {
+  if (now >= inspire_end_) {
+    inspire_finished_ = true;
+  }else{
     // Go from expire_pressure_ to inspire_pressure_ over a duration of
     // RISE_TIME.  Then for the rest of the inspire time, hold at
     // inspire_pressure_.
     static_assert(RISE_TIME > milliseconds(0));
     float rise_frac = std::min(1.f, (now - start_time_) / RISE_TIME);
-    Pressure setpoint =
-        expire_pressure_ + (inspire_pressure_ - expire_pressure_) * rise_frac;
-
-    return {.blower_enabled = true, setpoint, ValveState::CLOSED};
+    setpoint_ =
+      expire_pressure_ + (inspire_pressure_ - expire_pressure_) * rise_frac;
   }
-  return {.blower_enabled = true, expire_pressure_, ValveState::OPEN};
+  if (now > expire_end_) {
+    finished_ = true;
+  }
+}
+
+BlowerSystemState PressureControlFsm::desired_state() const {
+  if (inspire_finished_) {
+    return {.blower_enabled = true, expire_pressure_, ValveState::OPEN};
+  }
+  return {.blower_enabled = true, setpoint_, ValveState::CLOSED};
 }
 
 PressureAssistFsm::PressureAssistFsm(Time now, const VentParams &params)
-      : inspire_pressure_(cmH2O(static_cast<float>(params.pip_cm_h2o))),
-        expire_pressure_(cmH2O(static_cast<float>(params.peep_cm_h2o))),
-        start_time_(now),
-        inspire_end_(start_time_ + inspire_duration(params)),
-        latest_expire_end_(inspire_end_ + expire_duration(params)) {}
+    : inspire_pressure_(cmH2O(static_cast<float>(params.pip_cm_h2o))),
+      expire_pressure_(cmH2O(static_cast<float>(params.peep_cm_h2o))),
+      start_time_(now), inspire_end_(start_time_ + inspire_duration(params)),
+      latest_expire_end_(inspire_end_ + expire_duration(params)) {}
 
-BlowerSystemState PressureAssistFsm::desired_state(Time now) {
-  if (now < inspire_end_) {
-    return {.blower_enabled = true, inspire_pressure_, ValveState::CLOSED};
+void PressureAssistFsm::update(Time now, const SensorReadings &readings) {
+  if (now >= inspire_end_) {
+    inspire_finished_ = true;
   }
-  patient_expiring_ = true;
-  return {.blower_enabled = true, expire_pressure_, ValveState::OPEN};
+  if (now > latest_expire_end_ || PatientInspiring(readings)) {
+    finished_ = true;
+  }
 }
 
-bool PressureAssistFsm::finished(Time now, const SensorReadings &readings) {
-  return PatientInspiring(readings) || now > latest_expire_end_;
+BlowerSystemState PressureAssistFsm::desired_state() const {
+  if (inspire_finished_) {
+    return {.blower_enabled = true, expire_pressure_, ValveState::OPEN};
+  }
+  return {.blower_enabled = true, inspire_pressure_, ValveState::CLOSED};
 }
 
 //TODO don't rely on fsm inner states to make this usable in any fsm
@@ -90,8 +103,8 @@ bool PressureAssistFsm::PatientInspiring(const SensorReadings &readings) {
   // According to data from Ingmar test lung
   // (https://drive.google.com/open?id=11_A8KEDdBa5l7rqUegfKsj71rug1l7Sx),
   // this should work OK as a first approximation.
-  if (patient_expiring_ && inspiratory_effort_threshold_ < ml_per_min(0) &&
-      readings.net_flow >= ml_per_min(0)) {
+  if (inspire_finished_ && readings.net_flow >= ml_per_min(0) &&
+      inspiratory_effort_threshold_ >= cubic_m_per_sec(9)) {
     // Not sure how to go about this: when we enter this breath fsm, either we
     // were Off and flow should be 0, which means this is OK: the first
     // positive flow we see is either noise or the blower starting to provide
@@ -109,7 +122,7 @@ bool PressureAssistFsm::PatientInspiring(const SensorReadings &readings) {
     //      complicated (and not yet determined) breath detection algorithm.
   }
 
-  return patient_expiring_ && readings.net_flow > inspiratory_effort_threshold_;
+  return inspire_finished_ && readings.net_flow > inspiratory_effort_threshold_;
 }
 
 BlowerSystemState BlowerFsm::DesiredState(Time now, const VentParams &params,
@@ -117,8 +130,9 @@ BlowerSystemState BlowerFsm::DesiredState(Time now, const VentParams &params,
   // Immediately turn off the ventilator if params.mode == OFF; otherwise,
   // wait until the end of a cycle before implementing the mode change.
   bool is_new_breath = false;
+  std::visit([&](auto &fsm) { return fsm.update(now, readings); }, fsm_);
   if ((params.mode == VentMode_OFF && !std::holds_alternative<OffFsm>(fsm_)) ||
-      std::visit([&](auto &fsm) { return fsm.finished(now, readings); }, fsm_)) {
+      std::visit([&](auto &fsm) { return fsm.finished(); }, fsm_)) {
     // Set is_new_breath to true even when the ventilator transitions from on
     // to off.  It's a little arbitrary, but for the most part, is_new_breath
     // is used to mark breath boundaries rather than simply signal the
@@ -139,7 +153,7 @@ BlowerSystemState BlowerFsm::DesiredState(Time now, const VentParams &params,
   }
 
   BlowerSystemState s =
-      std::visit([&](auto &fsm) { return fsm.desired_state(now); }, fsm_);
+      std::visit([&](auto &fsm) { return fsm.desired_state(); }, fsm_);
   s.is_new_breath = is_new_breath;
   return s;
 }

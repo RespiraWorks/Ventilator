@@ -42,11 +42,6 @@ limitations under the License.
 // high priority loop.  If an illegal command (i.e. one that returns a value)
 // is called from the high priority control loop it will result in an error.
 //
-// For communications to work properly it's important that the constant value
-// kTotalMotors matches the actual number of driver chips wired up in the
-// hardware.  If you're experiencing problems using this module, please check
-// that first.
-//
 ///////////////////////////////////////////////////////////////////////////////
 
 #ifndef STEPPER_H_
@@ -167,10 +162,13 @@ struct StepperStatus {
 // Represents one of the stepper motors in the system
 class StepMotor {
 
-  // This constant represents the number of motors wired in
-  // to the system.  It needs to match the hardware or the
-  // interface wont work.
-  static constexpr int kTotalMotors = {1};
+  // This constant gives the maximum number of motors we
+  // can support with this driver.
+  static constexpr int kMaxMotors = {4};
+
+  // Number of motor driver chips present in the system.
+  // This is automatically detected at startup.
+  static int total_motors_;
 
 public:
   StepMotor();
@@ -182,7 +180,7 @@ public:
   //
   // Returns NULL for an invalid input
   static StepMotor *GetStepper(int n) {
-    if ((n < 0) || (n >= kTotalMotors))
+    if ((n < 0) || (n >= total_motors_))
       return nullptr;
     return &motor_[n];
   }
@@ -297,8 +295,8 @@ public:
   StepMtrErr GetParam(StepMtrParam param, uint32_t *value);
 
 private:
-  static StepMotor motor_[kTotalMotors];
-  static uint8_t dma_buff_[kTotalMotors];
+  static StepMotor motor_[kMaxMotors];
+  static uint8_t dma_buff_[kMaxMotors];
   static uint8_t param_len_[32];
   static StepCommState coms_state_;
 
@@ -332,6 +330,8 @@ private:
   StepMtrErr EnqueueCmd(uint8_t *cmd, uint32_t len);
 
   static void UpdateComState();
+  static void SendInitCmd(uint8_t *buff, int len);
+  static void ProbeChips();
 
   // True if this is a powerSTEP chip.
   bool power_step_{false};

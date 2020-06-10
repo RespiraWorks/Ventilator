@@ -77,7 +77,8 @@ public:
 private:
   Time move_start_time_;
 
-  StepMotor *mtr_{nullptr};
+  int mtr_ndx_;
+
   PinchValveHomeState home_state_{PinchValveHomeState::DISABLED};
 };
 

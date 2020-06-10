@@ -19,30 +19,27 @@ we will experiment with a much simpler orificing venturi, or design for manufact
 The venturi outer diameter is defined by the tubing standard. The venturi is available in 3/4" or 5/8" ID tubing, as we
 have moved from 5/8" to 3/4" tubing during the design process. 
 
-The pressure sensor we are using, the [MPXV5004DP](https://www.nxp.com/docs/en/data-sheet/MPXV5004G.pdf) (see below)
-has 2.5 mm or 3/32" barbs. Note that this is not sufficiently close in size to use more common 3mm or 1/8" tubing.
-This model has printed threads to accept an adapter from #10-32 pipe to 3/32" adapter. Other adapters could be
-incorporated eventually by changing the interface design.
+The pressure sensor we are using, the [MPXV5004DP](https://www.nxp.com/docs/en/data-sheet/MPXV5004G.pdf) (see below) has 2.5 mm or 3/32" barbs. Note that this is not sufficiently close in size to use more common 3mm or 1/8" tubing.
+This model has printed threads to accept an adapter from #10-32 pipe to 3/32" adapter. Other adapters could be incorporated eventually by changing the interface design.
 
 You can use a zip tie or hose clamp to improve the seal by tightening it behind the barb.
 
-There is an arrow printed onto the body between the two ports to indicate the direction of flow. The venturi is
-asymmetrical, with a tighter constriction on entrance than exit. 
+There is an arrow printed onto the body between the two ports to indicate the direction of flow. The venturi is asymmetrical, with a tighter constriction on entrance than exit. 
 
-## 19mm or 3/4" version (beta)
+## 19mm or 3/4" Version (beta)
 
 The [beta](../../ventilator-build/beta-build-instructions) version of the ventilator uses 3/4"ID or 19mm ID tubing throughout. 
 
-This version has received more updates as it is a later version. Relative to the 16mm sensor, it has a slightly larger
-orifice (design 5.50 mm) and a more aggressive chamfer at the inlet to improve the aerodynamic flow. It also obviously
+This version has received more updates as it is a later version. Relative to the 16mm sensor, it has a slightly larger orifice (design 5.50 mm) and a more aggressive chamfer at the inlet to improve the aerodynamic flow. It also obviously
 has a slightly larger internal diameter compared to the 16mm sensor.
 
 ### Files
+
 * [.stl format](assets/venturi-3-4.stl)
 * [.iges format](assets/venturi-3-4.iges)
 * [.f3d format](assets/venturi-3-4.f3d)
 
-## 16mm or 5/8" sensor
+## 16mm or 5/8" Sensor
 
 The Alpha version is designed to insert into 5/8" ID or 16mm ID tubing.
 
@@ -96,6 +93,9 @@ of the printed venturi; a good way to do this is to put a drill into the venturi
 the diameter of that drill bit. (Any round thing will work.)
 
 ## Parts List (BOM)
+
+
+**Note: If you are a member of the RespiraWorks team, review [part purchasing guidelines](../../ventilator-build/README.md) BEFORE purchasing any parts.**
 
 ### Purchasing Source Key 
 

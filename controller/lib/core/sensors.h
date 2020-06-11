@@ -28,6 +28,31 @@ Arduino Nano and the MPXV5004GP and MPXV7002DP pressure sensors.
 #include "pid.h"
 #include "units.h"
 
+struct SensorReadings {
+  Pressure patient_pressure;
+  // Pressure differences read at the inflow/outflow venturis.
+  Pressure inflow_pressure_diff;
+  Pressure outflow_pressure_diff;
+
+  // Inflow and outflow at the two venturis, calculated from inflow/outflow
+  // pressure diff.
+  //
+  // These are "uncorrected" values.  We account for high-frequency noise by
+  // e.g. averaging many samples, but we don't account here for low-frequency
+  // sensor zero-point drift.
+  VolumetricFlow inflow;
+  VolumetricFlow outflow;
+
+  // TODO(jlebar): Move volume and flow out of this class and into
+  // ControllerStatus.  Volume/flow error correction relies on info from the
+  // controller about e.g. when the next breath is starting, so it should be
+  // computed at that layer.
+  Volume volume;
+  // This net flow is corrected for low-frequency sensor zero-point drift, so
+  // it's not necessarily equal to inflow - outflow.
+  VolumetricFlow net_flow;
+};
+
 // Provides calibrated sensor readings, including tidal volume (TV)
 // integrated from flow.
 class Sensors {
@@ -55,9 +80,8 @@ public:
   // have been 0.  That should be enough for us to calibrate to.
   void NoteNewBreath();
 
-  // get the sensor readings (patient pressure, volumetric flow and tidal
-  // volume) from the sensors
-  SensorsProto GetSensorReadings();
+  // Read the sensors.
+  SensorReadings GetReadings();
 
   // min/max possible reading from MPXV5004GP pressure sensors
   // The canonical list of hardware in the device is: https://bit.ly/3aERr69

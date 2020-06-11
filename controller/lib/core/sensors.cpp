@@ -133,7 +133,7 @@ Pressure Sensors::ReadPressureSensor(Sensor s) {
       std::sqrt(pow2(portArea) - pow2(chokeArea)));
 }
 
-SensorsProto Sensors::GetSensorReadings() {
+SensorReadings Sensors::GetReadings() {
   // Flow rate is inhalation flow minus exhalation flow. Positive value is flow
   // into lungs, and negative is flow out of lungs.
   auto now = Hal.now();
@@ -164,11 +164,13 @@ SensorsProto Sensors::GetSensorReadings() {
   dbg_volume_uncorrected.Set(uncorrected_flow_integrator_.GetTV().ml());
 
   return {
-      .patient_pressure_cm_h2o = patient_pressure.cmH2O(),
-      .volume_ml = flow_integrator_.GetTV().ml(),
-      .flow_ml_per_min = corrected_flow.ml_per_min(),
-      .inflow_pressure_diff_cm_h2o = inflow_delta.cmH2O(),
-      .outflow_pressure_diff_cm_h2o = outflow_delta.cmH2O(),
+      .patient_pressure = patient_pressure,
+      .inflow_pressure_diff = inflow_delta,
+      .outflow_pressure_diff = outflow_delta,
+      .inflow = inflow,
+      .outflow = outflow,
+      .volume = flow_integrator_.GetTV(),
+      .net_flow = (inflow - outflow) + flow_integrator_.FlowCorrection(),
   };
 }
 

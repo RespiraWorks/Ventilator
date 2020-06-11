@@ -59,10 +59,10 @@ static Voltage MPXV5004_PressureToVoltage(Pressure pressure) {
 
 // Function that helps change the readings by setting the pressure sensor pins,
 // advancing time and then getting sensors readings
-static SensorsProto update_readings(Duration dt, Pressure patient_pressure,
-                                    Pressure inflow_pressure,
-                                    Pressure outflow_pressure,
-                                    Sensors *sensors) {
+static SensorReadings update_readings(Duration dt, Pressure patient_pressure,
+                                      Pressure inflow_pressure,
+                                      Pressure outflow_pressure,
+                                      Sensors *sensors) {
   Hal.test_setAnalogPin(AnalogPin::PATIENT_PRESSURE,
                         MPXV5004_PressureToVoltage(patient_pressure));
   Hal.test_setAnalogPin(AnalogPin::INFLOW_PRESSURE_DIFF,
@@ -70,7 +70,7 @@ static SensorsProto update_readings(Duration dt, Pressure patient_pressure,
   Hal.test_setAnalogPin(AnalogPin::OUTFLOW_PRESSURE_DIFF,
                         MPXV5004_PressureToVoltage(outflow_pressure));
   Hal.delay(dt);
-  return sensors->GetSensorReadings();
+  return sensors->GetReadings();
 }
 
 TEST(SensorTests, FullScaleReading) {
@@ -99,8 +99,7 @@ TEST(SensorTests, FullScaleReading) {
     SCOPED_TRACE("Pressure " + std::to_string(p.kPa()));
     Hal.test_setAnalogPin(AnalogPin::PATIENT_PRESSURE,
                           MPXV5004_PressureToVoltage(p));
-    auto readings = sensors.GetSensorReadings();
-    EXPECT_PRESSURE_NEAR(cmH2O(readings.patient_pressure_cm_h2o), p);
+    EXPECT_PRESSURE_NEAR(sensors.GetReadings().patient_pressure, p);
   }
 }
 
@@ -143,10 +142,8 @@ TEST(SensorTests, TotalFlowCalculation) {
       auto readings =
           update_readings(/*dt=*/seconds(0.0f), /*patient_pressure=*/kPa(0.0f),
                           p_in, p_out, &sensors);
-
-      EXPECT_FLOW_NEAR(ml_per_min(readings.flow_ml_per_min),
-                       (Sensors::PressureDeltaToFlow(p_in) -
-                        Sensors::PressureDeltaToFlow(p_out)));
+      EXPECT_FLOW_NEAR(readings.inflow, Sensors::PressureDeltaToFlow(p_in));
+      EXPECT_FLOW_NEAR(readings.outflow, Sensors::PressureDeltaToFlow(p_out));
     }
   }
 }
@@ -234,12 +231,12 @@ TEST(SensorTests, TidalVolume) {
     Pressure p_in = pressure_in[i];
     Pressure p_out = pressure_out[i];
     Duration dt = sampling_time[i];
-    SensorsProto readings = update_readings(dt, /*patient_pressure=*/kPa(0.0f),
-                                            p_in, p_out, &sensors);
+    SensorReadings readings = update_readings(
+        dt, /*patient_pressure=*/kPa(0.0f), p_in, p_out, &sensors);
 
     tidal_volume.AddFlow(Hal.now(), Sensors::PressureDeltaToFlow(p_in) -
                                         Sensors::PressureDeltaToFlow(p_out));
-    EXPECT_FLOAT_EQ(tidal_volume.GetTV().ml(), readings.volume_ml);
+    EXPECT_VOLUME_NEAR(tidal_volume.GetTV(), readings.volume);
   }
 }
 
@@ -260,21 +257,23 @@ TEST(SensorTests, Calibration) {
   sensors.Calibrate();
 
   // get the sensor readings for the init signals, expect 0
-  SensorsProto readings = sensors.GetSensorReadings();
+  SensorReadings readings = sensors.GetReadings();
 
-  EXPECT_PRESSURE_NEAR(cmH2O(readings.patient_pressure_cm_h2o), kPa(0.0f));
-  EXPECT_FLOW_NEAR(ml_per_min(readings.flow_ml_per_min), ml_per_sec(0.0f));
+  EXPECT_PRESSURE_NEAR(readings.patient_pressure, kPa(0.0f));
+  EXPECT_FLOW_NEAR(readings.inflow, ml_per_sec(0.0f));
+  EXPECT_FLOW_NEAR(readings.outflow, ml_per_sec(0.0f));
 
   // set measured signals to 0 and expect -1*init values
   readings = update_readings(/*dt=*/seconds(0), /*patient_pressure=*/kPa(0),
                              /*inflow_pressure=*/kPa(0),
                              /*outflow_pressure=*/kPa(0), &sensors);
 
-  EXPECT_PRESSURE_NEAR(cmH2O(readings.patient_pressure_cm_h2o),
+  EXPECT_PRESSURE_NEAR(readings.patient_pressure,
                        cmH2O(-1 * init_pressure.cmH2O()));
-  EXPECT_FLOW_NEAR(ml_per_min(readings.flow_ml_per_min),
-                   -1 * (Sensors::PressureDeltaToFlow(init_inflow_delta) -
-                         Sensors::PressureDeltaToFlow(init_outflow_delta)));
+  EXPECT_FLOW_NEAR(readings.inflow,
+                   -1 * Sensors::PressureDeltaToFlow(init_inflow_delta));
+  EXPECT_FLOW_NEAR(readings.outflow,
+                   -1 * Sensors::PressureDeltaToFlow(init_outflow_delta));
 
   // set measured signals to some random values + init values and expect init
   // value to be removed from the readings
@@ -283,10 +282,9 @@ TEST(SensorTests, Calibration) {
       /*inflow_pressure=*/kPa(1.1f) + init_inflow_delta,
       /*outflow_pressure=*/kPa(0.01f) + init_outflow_delta, &sensors);
 
-  EXPECT_PRESSURE_NEAR(cmH2O(readings.patient_pressure_cm_h2o), kPa(-0.5f));
-  EXPECT_FLOW_NEAR(ml_per_min(readings.flow_ml_per_min),
-                   (Sensors::PressureDeltaToFlow(kPa(1.1f)) -
-                    Sensors::PressureDeltaToFlow(kPa(0.01f))));
+  EXPECT_PRESSURE_NEAR(readings.patient_pressure, kPa(-0.5f));
+  EXPECT_FLOW_NEAR(readings.inflow, Sensors::PressureDeltaToFlow(kPa(1.1f)));
+  EXPECT_FLOW_NEAR(readings.outflow, Sensors::PressureDeltaToFlow(kPa(0.01f)));
 }
 
 TEST(SensorTests, FlowDrift) {
@@ -308,7 +306,7 @@ TEST(SensorTests, FlowDrift) {
                                  /*patient_pressure=*/cmH2O(0),
                                  /*inflow_pressure=*/cmH2O(0.005f),
                                  /*outflow_pressure=*/cmH2O(0), &sensors)
-                     .volume_ml);
+                     .volume.ml());
   }
   // At first TV should increase, but eventually this should be detected as
   // flow sensor drift, and the TV should level off and start decreasing.
@@ -330,7 +328,7 @@ TEST(SensorTests, FlowDrift) {
                                  /*patient_pressure=*/cmH2O(0),
                                  /*inflow_pressure=*/cmH2O(0),
                                  /*outflow_pressure=*/cmH2O(0), &sensors)
-                     .volume_ml);
+                     .volume.ml());
   }
   // At first TV should decrease, but eventually it should level off.  Check
   // that min derivative (i.e. the min flow) isn't the first element.

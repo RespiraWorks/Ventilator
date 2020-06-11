@@ -710,7 +710,7 @@ def TraceSaveDat(dat, fname, separator="  "):
     fp.write(separator.join(line) + "\n")
 
     for i in range(len(dat[0])):
-        # First colume is time in seconds
+        # First column is time in seconds
         line = ["%.3f" % dat[0][i]]
         for j in range(len(tv)):
             line.append(tv[j].fmt % dat[j + 1][i])

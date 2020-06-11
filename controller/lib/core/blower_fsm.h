@@ -66,6 +66,8 @@ struct BlowerSystemState {
   //  - if setpoint_pressure == 0, PID spins down the fan to attempt to read 0
   //    kPa measured patient pressure.
   //
+  // TODO: Combine this field with setpoint_pressure into an
+  // std::optional<Pressure>.
   bool blower_enabled;
 
   Pressure setpoint_pressure;

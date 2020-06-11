@@ -42,56 +42,51 @@ Controller::Run(Time now, const VentParams &params,
                 const SensorReadings &readings) {
   BlowerSystemState desired_state = fsm_.DesiredState(now, params);
 
-  ActuatorsState actuator_state;
-  ControllerState controller_state = {
-      .is_new_breath = desired_state.is_new_breath,
-      .setpoint_pressure = desired_state.setpoint_pressure,
-  };
+  if (!desired_state.blower_enabled) {
+    pid_.Reset();
+  }
 
   pid_.SetKP(dbg_kp.Get());
   pid_.SetKI(dbg_ki.Get());
   pid_.SetKD(dbg_kd.Get());
 
-  // Not used yet
-  actuator_state.fio2_valve = 0.0f;
-
   float pressure = cmH2O(readings.patient_pressure_cm_h2o).kPa();
   float setpoint = desired_state.setpoint_pressure.kPa();
   dbg_sp.Set(desired_state.setpoint_pressure.cmH2O());
 
-  // TODO(jlebar): Add a boolean in ActuatorState that indicates whether
-  // the blower and other actuators should be on. Then remove this switch
-  // statement; we shouldn't be switching on the VentMode here.
-  switch (params.mode) {
-  case VentMode_OFF:
-    actuator_state.blower_valve = std::nullopt;
-    actuator_state.exhale_valve = std::nullopt;
-    actuator_state.blower_power = 0.0f;
-    pid_.Reset();
-    break;
+  ControllerState controller_state = {
+      .is_new_breath = desired_state.is_new_breath,
+      .setpoint_pressure = desired_state.setpoint_pressure,
+  };
 
-  case VentMode_PRESSURE_CONTROL:
-
-    // If the pinch valves aren't ready yet then keep the
-    // blower off so we don't force full pressure down the
-    // patients throat.
-    if (!AreActuatorsReady()) {
-      actuator_state.exhale_valve = 1.0f;
-      actuator_state.blower_valve = 1.0f;
-      actuator_state.blower_power = 0.0f;
-      break;
+  ActuatorsState actuators_state = [&]() -> ActuatorsState {
+    if (!desired_state.blower_enabled) {
+      // System disabled.  Disable blower, close inspiratory pinch valve, and
+      // open expiratory pinch valve.  This way if someone is hooked up, they
+      // can breathe through the expiratory branch, and they can't contaminate
+      // the inspiratory branch.
+      //
+      // If the pinch valves are not yet homed, this will home them and then
+      // move them to the desired positions.
+      return {
+          .fio2_valve = 0,
+          .blower_power = 0,
+          .blower_valve = 0,
+          .exhale_valve = 1,
+      };
     }
 
-    if (desired_state.expire_valve_state == ValveState::OPEN)
-      actuator_state.exhale_valve = 1.0f;
-    else
-      actuator_state.exhale_valve = 0.0f;
+    // Start controlling pressure.
+    return {
+        .fio2_valve = 0, // not used yet
+        // In normal mode, blower is always full power; pid controls pressure by
+        // actuating the blower pinch valve.
+        .blower_power = 1,
+        .blower_valve = pid_.Compute(now, pressure, setpoint),
+        .exhale_valve =
+            desired_state.expire_valve_state == ValveState::OPEN ? 1 : 0,
+    };
+  }();
 
-    actuator_state.blower_power = 1.0f;
-
-    actuator_state.blower_valve = pid_.Compute(now, pressure, setpoint);
-    break;
-  }
-
-  return {actuator_state, controller_state};
+  return {actuators_state, controller_state};
 }

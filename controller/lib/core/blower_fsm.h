@@ -89,14 +89,14 @@ struct BlowerSystemState {
 //    for a single breath starting at the given time and with the given params.
 //    Those params don't change during the life of the FSM.
 //
-//  - BlowerSystemState update(Time now, const SensorReadings readings):
+//  - void Update(Time now, const SensorReadings readings):
 //    Updates the state of the fsm based on time and sensor readings.
 //
-//  - BlowerSystemState desired_state(): Gets the solenoid open/closed
+//  - BlowerSystemState DesiredState(): Gets the solenoid open/closed
 //    state and the pressure that the fan should be trying to hit for the
 //    current state of the fsm.
 //
-//  - bool finished(): Has this breath FSM completed its work (namely, running
+//  - bool Finished(): Has this breath FSM completed its work (namely, running
 //    a single breath) ?
 //    If so, it is ready to be replaced with a new one.
 //
@@ -104,11 +104,11 @@ class OffFsm {
 public:
   OffFsm() = default;
   explicit OffFsm(Time now, const VentParams &) {}
-  void update(Time now, const SensorReadings &readings) {}
-  BlowerSystemState desired_state() {
+  void Update(Time now, const SensorReadings &readings) {}
+  BlowerSystemState DesiredState() {
     return {.blower_enabled = false, kPa(0), ValveState::OPEN};
   }
-  bool finished() { return true; }
+  bool Finished() { return true; }
 };
 
 // "Breath finite state machine" for pressure control mode.
@@ -125,10 +125,10 @@ public:
   static constexpr inline Duration RISE_TIME = milliseconds(100);
 
   explicit PressureControlFsm(Time now, const VentParams &params);
-  void update(Time now, const SensorReadings &readings);
-  BlowerSystemState desired_state() const;
+  void Update(Time now, const SensorReadings &readings);
+  BlowerSystemState DesiredState() const;
 
-  bool finished() const { return finished_; }
+  bool Finished() const { return finished_; }
 
 private:
   const Pressure inspire_pressure_;
@@ -159,9 +159,9 @@ private:
 class PressureAssistFsm {
 public:
   explicit PressureAssistFsm(Time now, const VentParams &params);
-  void update(Time now, const SensorReadings &readings);
-  BlowerSystemState desired_state() const;
-  bool finished() const { return finished_; }
+  void Update(Time now, const SensorReadings &readings);
+  BlowerSystemState DesiredState() const;
+  bool Finished() const { return finished_; }
 private:
   bool PatientInspiring(const SensorReadings &readings);
 

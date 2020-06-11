@@ -49,11 +49,11 @@ float PID::Compute(Time now, float input, float setpoint) {
   // dt may be 0 (e.g. on the first call to Compute()), in which case we simply
   // skip using the derivative term.
   if (dt > 0) {
-  if (d_term_ == DifferentialTerm::ON_MEASUREMENT) {
-    res -= kd_ * dInput / dt;
-  } else {
-    res += kd_ * (error - last_error_) / dt;
-  }
+    if (d_term_ == DifferentialTerm::ON_MEASUREMENT) {
+      res -= kd_ * dInput / dt;
+    } else {
+      res += kd_ * (error - last_error_) / dt;
+    }
   }
 
   // Remember some variables for next time

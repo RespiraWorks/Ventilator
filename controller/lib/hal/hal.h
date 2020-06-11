@@ -227,6 +227,11 @@ public:
   uint16_t debugBytesAvailableForWrite();
   uint16_t debugBytesAvailableForRead();
 
+  // Buzzer used for alarms.  These functions turn the buzzer
+  // on/off.
+  void BuzzerOn(float volume = 1.0f);
+  void BuzzerOff();
+
 #ifndef TEST_MODE
   // Translates to a numeric pin that can be passed to the Arduino API.
   uint8_t rawPin(PwmPin pin);
@@ -330,6 +335,7 @@ private:
   void EnableClock(void *ptr);
   void EnableInterrupt(InterruptVector vec, IntPriority pri);
   void StepperMotorInit();
+  void InitBuzzer();
 #endif
 
   void setDigitalPinMode(PwmPin pin, PinMode mode);
@@ -535,6 +541,8 @@ inline void TestSerialPort::PutIncomingData(const char *data, uint16_t len) {
 inline void HalApi::startLoopTimer(const Duration &period,
                                    void (*callback)(void *), void *arg) {}
 
+inline void BuzzerOn(float volume) {}
+inline void BuzzerOff() {}
 #endif
 
 #endif // HAL_H

@@ -28,13 +28,13 @@ limitations under the License.
 //  E =     t / (1 + r)
 //
 // https://www.wolframalpha.com/input/?i=solve+t+%3D+x+%2B+y+and+r+%3D+x%2Fy+for+x%2Cy
-static Duration inspire_duration(const VentParams &params) {
+static Duration InspireDuration(const VentParams &params) {
   float t =
       60.f / static_cast<float>(params.breaths_per_min); // secs per breath
   float r = params.inspiratory_expiratory_ratio;         // I:E
   return seconds(t * r / (1 + r));
 }
-static Duration expire_duration(const VentParams &params) {
+static Duration ExpireDuration(const VentParams &params) {
   float t =
       60.f / static_cast<float>(params.breaths_per_min); // secs per breath
   float r = params.inspiratory_expiratory_ratio;         // I:E
@@ -45,10 +45,10 @@ PressureControlFsm::PressureControlFsm(Time now, const VentParams &params)
     : inspire_pressure_(cmH2O(static_cast<float>(params.pip_cm_h2o))),
       expire_pressure_(cmH2O(static_cast<float>(params.peep_cm_h2o))),
       setpoint_(expire_pressure_), start_time_(now),
-      inspire_end_(start_time_ + inspire_duration(params)),
-      expire_end_(inspire_end_ + expire_duration(params)) {}
+      inspire_end_(start_time_ + InspireDuration(params)),
+      expire_end_(inspire_end_ + ExpireDuration(params)) {}
 
-void PressureControlFsm::update(Time now, const SensorReadings &readings) {
+void PressureControlFsm::Update(Time now, const SensorReadings &readings) {
   if (now >= inspire_end_) {
     inspire_finished_ = true;
   }else{
@@ -65,7 +65,7 @@ void PressureControlFsm::update(Time now, const SensorReadings &readings) {
   }
 }
 
-BlowerSystemState PressureControlFsm::desired_state() const {
+BlowerSystemState PressureControlFsm::DesiredState() const {
   if (inspire_finished_) {
     return {.blower_enabled = true, expire_pressure_, ValveState::OPEN};
   }
@@ -75,10 +75,10 @@ BlowerSystemState PressureControlFsm::desired_state() const {
 PressureAssistFsm::PressureAssistFsm(Time now, const VentParams &params)
     : inspire_pressure_(cmH2O(static_cast<float>(params.pip_cm_h2o))),
       expire_pressure_(cmH2O(static_cast<float>(params.peep_cm_h2o))),
-      start_time_(now), inspire_end_(start_time_ + inspire_duration(params)),
-      latest_expire_end_(inspire_end_ + expire_duration(params)) {}
+      start_time_(now), inspire_end_(start_time_ + InspireDuration(params)),
+      latest_expire_end_(inspire_end_ + ExpireDuration(params)) {}
 
-void PressureAssistFsm::update(Time now, const SensorReadings &readings) {
+void PressureAssistFsm::Update(Time now, const SensorReadings &readings) {
   if (now >= inspire_end_) {
     inspire_finished_ = true;
   }
@@ -87,7 +87,7 @@ void PressureAssistFsm::update(Time now, const SensorReadings &readings) {
   }
 }
 
-BlowerSystemState PressureAssistFsm::desired_state() const {
+BlowerSystemState PressureAssistFsm::DesiredState() const {
   if (inspire_finished_) {
     return {.blower_enabled = true, expire_pressure_, ValveState::OPEN};
   }
@@ -130,9 +130,9 @@ BlowerSystemState BlowerFsm::DesiredState(Time now, const VentParams &params,
   // Immediately turn off the ventilator if params.mode == OFF; otherwise,
   // wait until the end of a cycle before implementing the mode change.
   bool is_new_breath = false;
-  std::visit([&](auto &fsm) { return fsm.update(now, readings); }, fsm_);
+  std::visit([&](auto &fsm) { return fsm.Update(now, readings); }, fsm_);
   if ((params.mode == VentMode_OFF && !std::holds_alternative<OffFsm>(fsm_)) ||
-      std::visit([&](auto &fsm) { return fsm.finished(); }, fsm_)) {
+      std::visit([&](auto &fsm) { return fsm.Finished(); }, fsm_)) {
     // Set is_new_breath to true even when the ventilator transitions from on
     // to off.  It's a little arbitrary, but for the most part, is_new_breath
     // is used to mark breath boundaries rather than simply signal the
@@ -153,7 +153,7 @@ BlowerSystemState BlowerFsm::DesiredState(Time now, const VentParams &params,
   }
 
   BlowerSystemState s =
-      std::visit([&](auto &fsm) { return fsm.desired_state(); }, fsm_);
+      std::visit([&](auto &fsm) { return fsm.DesiredState(); }, fsm_);
   s.is_new_breath = is_new_breath;
   return s;
 }

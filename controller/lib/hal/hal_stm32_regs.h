@@ -37,7 +37,7 @@ Detailed information on these modules and the registers
 used to configure them can be found in the reference
 manual for this chip
 
-[RM] Reference Manual for the STM32L452 processor 
+[RM] Reference Manual for the STM32L452 processor
   https://www.st.com/resource/en/reference_manual/dm00151940-stm32l41xxx42xxx43xxx44xxx45xxx46xxx-advanced-armbased-32bit-mcus-stmicroelectronics.pdf
 
 [PM] Programmer's manual for the Cortex M4 line of processors:
@@ -76,12 +76,12 @@ struct SysCtrl_Reg {
   REG intType;       // 0xE000E004
   REG auxCtrl;       // 0xE000E008 - Auxiliary Control Register
   REG rsvd1;         // 0xE000E00C
-  REG systick[3];    // 0xE000E010 - SysTick Timer 
+  REG systick[3];    // 0xE000E010 - SysTick Timer
   REG rsvd2[57];
   REG nvic[768];     // 0xE000E100 - NVIC Register [RM] 4.3 (pg 208)
   REG cpuid;         // 0xE000ED00 - CPUID Base Register
   REG intCtrl;       // 0xE000ED04 - Interrupt Control and State Register
-  REG vtable;        // 0xE000ED08 - Vector Table Offset Register   
+  REG vtable;        // 0xE000ED08 - Vector Table Offset Register
   REG apInt;         // 0xE000ED0C - Application Interrupt and Reset Control Register
   REG sysCtrl;       // 0xE000ED10 - System Control Register
   REG cfgCtrl;       // 0xE000ED14 - Configuration and Control Register
@@ -472,9 +472,9 @@ struct FlashReg {
   REG key;        // 0x08 - Key Register (FLASH_KEYR)
   REG optKey;     // 0x0C - Option Key Register (FLASH_OPTKEYR)
   REG status;     // 0x10 - Status Register (FLASH_SR)
-  REG ctrl;       // 0x14 - Control Register (FLASH_CR) 
+  REG ctrl;       // 0x14 - Control Register (FLASH_CR)
   REG ecc;        // 0x18 - EEC Register (FLASH_EECR)
-  REG rsvd1;      
+  REG rsvd1;
   REG option;     // 0x20 - Option Register (FLASH_OPTR)
   REG pcropStart; // 0x24 - PCROP Start Address Register (FLASH_PCROP1SR)
   REG pcropEnd;   // 0x28 - PCROP End Address Register (FLASH_PCROP1ER)
@@ -610,25 +610,26 @@ inline DMA_Regs *const DMA2_BASE = reinterpret_cast<DMA_Regs *>(0x40020400);
   @param dma        Address of DMA registers
   @param chan       DMA channel to modify.  Channels are numbered from 0
   @param selection  Selects which peripherial request to map to the channel
-  
+
   DMA request mapping [RM] 11.3.2 (pg 296)
-  
+
   Channel Selection Register [RM] 11.6.7 (pg 317)
     Bits 27:24 C7S[3:0]: DMA channel 7 selection
     Bits 23:20 C6S[3:0]: DMA channel 6 selection
     Bits 19:16 C5S[3:0]: DMA channel 5 selection
-    Bits 15:12 C4S[3:0]: DMA channel 4 selection 
+    Bits 15:12 C4S[3:0]: DMA channel 4 selection
     Bits 11:8 C3S[3:0]:  DMA channel 3 selection
-    Bits 7:4 C2S[3:0]:   DMA channel 2 selection         
+    Bits 7:4 C2S[3:0]:   DMA channel 2 selection
     Bits 3:0 C1S[3:0]:   DMA channel 1 selection
-    
-  selection &= 0x0F                 Converts selection to binary and truncates 
+
+  selection &= 0x0F                 Converts selection to binary and truncates
                                       digits after 4th bit
   val = dma->chanSel.r              Holds DMA Channel Selection Register
   2^(4 * chan)                        MSB position
-  val &= ~(0xF * 2^(4 * chan))      Clears bits storing channel selection on register
-  val |= selection * 2^(4 * chan)   Writes selection to channel selection on register
-  dma->chanSel.r = val              Write changes to channel selection register
+  val &= ~(0xF * 2^(4 * chan))      Clears bits storing channel selection on
+  register val |= selection * 2^(4 * chan)   Writes selection to channel
+  selection on register dma->chanSel.r = val              Write changes to
+  channel selection register
 */
 
 inline void DMA_SelectChannel(DMA_Regs *dma, DMA_Chan chan, int selection) {
@@ -649,10 +650,10 @@ enum class DmaInterrupt {
   XFER_ERR = 8
 };
 
-/* Clear a DMA Interrupt 
+/* Clear a DMA Interrupt
   @param dma        Address of DMA registers
   @param chan       DMA channel to modify
-  @param interrupt  DMA interrupt event 
+  @param interrupt  DMA interrupt event
 
   DMA interrupt flag clear register (DMA_IFCR) [RM] 11.6.2
   Bit i             global interrupt flag clear for channel i
@@ -661,7 +662,8 @@ enum class DmaInterrupt {
   Bit i+3           transfer error flag clear for channel i
 
   2^(4 * chan)                DMA interrupt event flag clear bits for channel
-  interrupt * 2^(4 * chan)    bit that matches appropriate interrupt event for channel
+  interrupt * 2^(4 * chan)    bit that matches appropriate interrupt event for
+  channel
 */
 inline void DMA_ClearInt(DMA_Regs *dma, DMA_Chan chan, DmaInterrupt interrupt) {
 

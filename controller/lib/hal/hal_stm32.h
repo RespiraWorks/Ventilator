@@ -15,7 +15,7 @@ limitations under the License.
 
 /*
 This file implements the HAL (Hardware Abstraction Layer) for the
-STM32L452 processor used on the controller. 
+STM32L452 processor used on the controller.
 
 SOURCES OF TRUTH
 ================
@@ -75,7 +75,7 @@ enum class InterruptVector {
       01: General purpose output mode
       10: Alternate function mode
       11: Analog mode (reset state)
-  
+
     pin * 2        bit pair position on GPIOx_MODER corresponding to pin
     2^(pin * 2)    binary representation of bit position
 */
@@ -86,7 +86,7 @@ enum class GPIO_PinMode {
   ANALOG = 3,
 };
 /* Set GPIO Pin Mode:
-    (3 * 2^(pin * 2)            writes 1 to second value in bit pair of 
+    (3 * 2^(pin * 2)            writes 1 to second value in bit pair of
     mode &= ~(3 * 2^(pin * 2)   resets bit pair corresponding to pin
     mode |= 2^(pin * 2)         writes passed mode to register
 */
@@ -102,7 +102,7 @@ inline void GPIO_PinMode(GPIO_Regs *gpio, int pin, GPIO_PinMode mode) {
 */
 enum class GPIO_OutType { PUSHPULL = 0, OPENDRAIN = 1 };
 /*
-  Set GPIO Output Type: 
+  Set GPIO Output Type:
     outType |= 2^(pin)       writes 1 to register
     outType &= ~(2^(pin))    writes 0 to register
 */
@@ -138,14 +138,14 @@ inline void GPIO_OutSpeed(GPIO_Regs *gpio, int pin, GPIO_OutSpeed speed) {
    (x = A to E and H) (pg 272)
    [RM] 8.4.10 GPIO alternate function high register (GPIOx_AFRH)
    (x = A to E and H) (pg 272)
-      Bits 31:0 AFSEL[7:0][3:0]: Alternate function selection 
+      Bits 31:0 AFSEL[7:0][3:0]: Alternate function selection
       for port x I/O pin y (y = 7 to 0)
-      Bits 31:0 AFSEL[15:8][3:0]: Alternate function selection 
+      Bits 31:0 AFSEL[15:8][3:0]: Alternate function selection
       for port x I/O pin y (y = 15 to 8)
         0000: AF0
         0001: AF1
         0010: AF2
-        ... 
+        ...
         1111: AF15
 
    Set GPIO Pin Alternate Function:

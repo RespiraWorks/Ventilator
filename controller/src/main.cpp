@@ -157,10 +157,20 @@ static void background_loop() {
   // to spin down, the sensors will miscalibrate.  This is a hardware issue
   // that will be fixed in the PCB revision after 0.2.
   // https://respiraworks.slack.com/archives/C011CJQV4Q7/p1591745893290300?thread_ts=1591745582.289600&cid=C011CJQV4Q7
+  //
+  // Take this opportunity while we're sleeping to home the pinch valves.  This
+  // way we're guaranteed that they're ready before we start ventilating.
   Time sleepStart = Hal.now();
-  while (Hal.now() - sleepStart < seconds(10)) {
+  while (!AreActuatorsReady() || Hal.now() - sleepStart < seconds(10)) {
+    actuators_execute({
+        .fio2_valve = 0,
+        .blower_power = 0,
+        .blower_valve = 1,
+        .exhale_valve = 1,
+    });
     Hal.delay(milliseconds(10));
     Hal.watchdog_handler();
+    debug.Poll();
   }
 
   // Calibrate the sensors.

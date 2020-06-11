@@ -288,8 +288,8 @@ void HalApi::InitADC() {
      Start the A/D converter  
         Bit 2 ADSTART: ADC start of regular conversion
         0: No ADC regular conversion is ongoing.
-        1: Write 1 to start regular conversions. Read 1 means that the ADC is operating an
-            eventually converting a regular channel.
+        1: Write 1 to start regular conversions. Read 1 means that the ADC is 
+        operating and eventually converting a regular channel.
   */
   adc->adc[0].ctrl |= 4;
 }

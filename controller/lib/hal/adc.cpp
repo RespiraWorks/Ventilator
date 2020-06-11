@@ -155,10 +155,11 @@ void HalApi::InitADC() {
   Hal.delay(microseconds(30));
 
   /* [RM] 16.4.8: Software procedure to calibrate the ADC (pg. 384)
-        1. Ensure DEEPPWD=0, ADVREGEN=1 and that ADC voltage regulator startup time has elapsed.
+        1. Ensure DEEPPWD=0, ADVREGEN=1 and that ADC voltage regulator startup
+     time has elapsed.
         2. Ensure that ADEN=0.
-        3. Select the input mode for this calibration by setting ADCALDIF=0 (single-ended input)
-            or ADCALDIF=1 (differential input).
+        3. Select the input mode for this calibration by setting ADCALDIF=0
+     (single-ended input) or ADCALDIF=1 (differential input).
         4. Set ADCAL=1.
         5. Wait until ADCAL=0.
         6. The calibration factor can be read from ADC_CALFACT register.
@@ -174,9 +175,10 @@ void HalApi::InitADC() {
   /* [RM] 16.4.9: ADC on-off control (ADEN, ADDIS, ADRDY) (pg 386)
         1. Clear the ADRDY bit in the ADC_ISR register by writing ‘1’.
         2. Set ADEN=1.
-        3. Wait until ADRDY=1 (ADRDY is set after the ADC startup time). This can be done
-            using the associated interrupt (setting ADRDYIE=1).
-        4. Clear the ADRDY bit in the ADC_ISR register by writing ‘1’ (optional).
+        3. Wait until ADRDY=1 (ADRDY is set after the ADC startup time). This
+     can be done using the associated interrupt (setting ADRDYIE=1).
+        4. Clear the ADRDY bit in the ADC_ISR register by writing ‘1’
+     (optional).
   */
 
   // Clear all the status bits

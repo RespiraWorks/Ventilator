@@ -95,10 +95,9 @@ inline void GPIO_PinMode(GPIO_Regs *gpio, int pin, GPIO_PinMode mode) {
   gpio->mode |= (static_cast<int>(mode) << (pin * 2));
 }
 
-/* [RM] 8.4.2 GPIO port output type register (GPIOx_OTYPER) (x = A to E and H) (pg 268)
-    Bits 15:0 OT[15:0]: Port x configuration I/O pin y (y = 15 to 0)
-      0: Output push-pull (reset state)
-      1: Output open-drain
+/* [RM] 8.4.2 GPIO port output type register (GPIOx_OTYPER) (x = A to E and H)
+   (pg 268) Bits 15:0 OT[15:0]: Port x configuration I/O pin y (y = 15 to 0) 0:
+   Output push-pull (reset state) 1: Output open-drain
 */
 enum class GPIO_OutType { PUSHPULL = 0, OPENDRAIN = 1 };
 /*

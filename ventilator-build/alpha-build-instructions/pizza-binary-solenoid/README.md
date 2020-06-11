@@ -9,6 +9,8 @@ We refer to this as a binary solenoid because it has only two states - open or c
 
 ## Parts List (BOM)
 
+**Note: If you are a member of the RespiraWorks team, review [part purchasing guidelines](../../README.md) BEFORE purchasing any parts.**
+
 ### Purchasing Source Key
 
 * **Z** = Amazon

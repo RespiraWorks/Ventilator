@@ -1,10 +1,14 @@
-# Pizza build: Test Lung Sub-Assembly
+# Pizza Build: Test Lung Sub-Assembly
 
 True test lungs are expensive and hard to come by, so we must do with what's available. 
 
 This page explains how to adapt off-the-shelf parts into a basic test lung for our ventilator prototype.
 
+Note: You can optionally add-on to this simple test lung to make a reduced-compliance test lung; [instructions for that are here](../pizza-compliance-test-lung).
+
 ## Parts List (BOM)
+
+**Note: If you are a member of the RespiraWorks team, review [part purchasing guidelines](../../README.md) BEFORE purchasing any parts.**
 
 ### Purchasing Source Key
 
@@ -16,29 +20,33 @@ This page explains how to adapt off-the-shelf parts into a basic test lung for o
 
 | Item | Quantity | Manufacturer  | Part #         | Price (USD)     | Action | Sources         | Notes |
 | ---- |---------:| ------------- | ------------------- | ------------:|-----------|----------------| ----- |
-| 1    |        1 | Portex        | 370924              | 15.00        |*ask first*| [E][1ebay]     | test "lung", ask build-team if they have extra |
-| 2    |        2 | Mars Wellness | 4332593260          | 16.99 / 2    | buy       | [Z][2amzn]     | CPAP tubing |
-| 3    |        2 | McMaster-Carr | 5463K167            | 13.16 / 10   | buy       | [C][3mcmc]     | 3/4"ID <-> 5/8"ID single barb adapter |
+| 1    |        1 | Portex        | 370924              | 15.00        |*ask first*| [E][1ebay]     | test "lung" or breathing bag. |
+| 2  |        1 | South Pacific   | SPB-6110-5PK        |   129.00 / 5 |*ask first*| [Z][2amzn]     | **ALT for item 1** |
+| 3    |        2 | Mars Wellness | 4332593260          | 16.99 / 2    | buy       | [Z][2amzn]     | CPAP tubing |
+| 4    |        2 | McMaster-Carr | 5463K167            | 13.16 / 10   | buy       | [C][3mcmc]     | 3/4"ID <-> 5/8"ID single barb adapter |
 
 [1ebay]:  https://www.ebay.com/itm/PORTEX-Adult-Disposable-Anesthesia-Breathing-Circuit-3L-Breathing-Bag-370924/362943456196
-[2amzn]:  https://www.amazon.com/gp/product/B01N14F1MV
-[3mcmc]:  https://www.mcmaster.com/5463K167
+[2amzn]:  https://www.amazon.com/FlexLung-Biomedical-Ventilator-Testing-Demonstration/dp/B07B876P9C
+[3amzn]:  https://www.amazon.com/gp/product/B01N14F1MV
+[4mcmc]:  https://www.mcmaster.com/5463K167
 
 ### Parts: Alt Tee
 
 | Item | Quantity | Manufacturer  | Part #         | Price (USD)     | Sources        | Notes |
 | ---- |---------:| ------------- | ------------------- | ------------:|----------------|----------------|
-| a1    |  ~10 cm  | McMaster-Carr | 5234K57             | 21.50 / 5ft  | [C][a1mcmc]     | Soft latex tubing, 5/8" ID, 7/8" OD, optional? |
-| a2    |       1  | McMaster-Carr | 9579K72             | 12.21 / 20   | [C][a2mcmc]     | Herbie clip J (20.3-23mm) for clamping 7/8"OD tubing, optional? |
+| a1   |  ~10 cm  | McMaster-Carr | 5234K57             | 21.50 / 5ft  | [C][a1mcmc]     | Soft latex tubing, 5/8" ID, 7/8" OD, optional? |
+| a2   |       1  | McMaster-Carr | 9579K72             | 12.21 / 20   | [C][a2mcmc]     | Herbie clip J (20.3-23mm) for clamping 7/8"OD tubing, optional? |
 | a3   |       1  | McMaster-Carr | 4880K154            | 2.82         | [C][a3mcmc]     | 1/2 NTP tee female |
 | a4   |       3  | McMaster-Carr | 5372K128            | 4.89 / 10    | [C][a4mcmc]     | 1/2 NTP <-> 5/8"ID male multibarbed |
-| a5   |       1  | McMaster-Carr | 5372K625            | 9.59 / 10    | [C][a5mcmc]     | 5/8"ID tee, multibarbed, *alternative to items 6 & 7 above* |
+| a5   |        1 | McMaster-Carr | 5463K615            |     12.37 for pack of 10| [C][a5mcmc]     | Tee junction - *alternative to item a3* |
+| a6   |       1  | McMaster-Carr | 5372K625            | 9.59 / 10    | [C][a6mcmc]     | 5/8"ID tee, multibarbed, *alternative to items a3 & a5* |
 
 [a1mcmc]:  https://www.mcmaster.com/5234K57
 [a2mcmc]:  https://www.mcmaster.com/9579K72
 [a3mcmc]:  https://www.mcmaster.com/4880K154
 [a4mcmc]:  https://www.mcmaster.com/5372K128
-[a5mcmc]:  https://www.mcmaster.com/5372K625
+[a5mcmc]:  https://www.mcmaster.com/5463K615
+[a6mcmc]:  https://www.mcmaster.com/5372K625
 
 **TODO:** pricing analysis
 

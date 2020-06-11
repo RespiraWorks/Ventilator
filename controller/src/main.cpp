@@ -111,6 +111,16 @@ static Controller controller;
 static ControllerStatus controller_status;
 static Sensors sensors;
 
+static SensorsProto AsSensorsProto(SensorReadings r) {
+  SensorsProto proto = SensorsProto_init_zero;
+  proto.patient_pressure_cm_h2o = r.patient_pressure.cmH2O();
+  proto.inflow_pressure_diff_cm_h2o = r.inflow_pressure_diff.cmH2O();
+  proto.outflow_pressure_diff_cm_h2o = r.outflow_pressure_diff.cmH2O();
+  proto.flow_ml_per_min = r.net_flow.ml_per_min();
+  proto.volume_ml = r.volume.ml();
+  return proto;
+}
+
 // This function handles all the high priority tasks which need to be called
 // periodically.  The HAL calls this function from a timer interrupt.
 //
@@ -119,12 +129,11 @@ static Sensors sensors;
 static void high_priority_task(void *arg) {
 
   // Read the sensors
-  controller_status.sensor_readings = sensors.GetSensorReadings();
+  SensorReadings sensor_readings = sensors.GetReadings();
 
   // Run our PID loop
-  auto [actuators_state, controller_state] =
-      controller.Run(Hal.now(), controller_status.active_params,
-                     controller_status.sensor_readings);
+  auto [actuators_state, controller_state] = controller.Run(
+      Hal.now(), controller_status.active_params, sensor_readings);
 
   if (controller_state.is_new_breath) {
     sensors.NoteNewBreath();
@@ -136,7 +145,8 @@ static void high_priority_task(void *arg) {
   // Update the outputs from the PID
   actuators_execute(actuators_state);
 
-  // Update some status info
+  // Update controller_status.  This is periodically sent back to the GUI.
+  controller_status.sensor_readings = AsSensorsProto(sensor_readings);
   controller_status.fan_power = actuators_state.blower_power;
   controller_status.fan_setpoint_cm_h2o =
       controller_state.setpoint_pressure.cmH2O();

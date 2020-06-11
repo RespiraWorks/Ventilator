@@ -39,7 +39,7 @@ Duration Controller::GetLoopPeriod() { return LOOP_PERIOD; }
 
 std::pair<ActuatorsState, ControllerState>
 Controller::Run(Time now, const VentParams &params,
-                const SensorReadings &readings) {
+                const SensorsProto &readings) {
   BlowerSystemState desired_state = fsm_.DesiredState(now, params);
 
   if (!desired_state.blower_enabled) {

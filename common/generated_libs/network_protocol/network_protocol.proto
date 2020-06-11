@@ -106,7 +106,7 @@ message ControllerStatus {
   required VentParams active_params = 2;
 
   // Current sensor readings.
-  required SensorReadings sensor_readings = 3;
+  required SensorsProto sensor_readings = 3;
 
   // Active alarms fired by the controller.
   //
@@ -202,7 +202,13 @@ enum VentMode {
   // ADAPTIVE_CONTROL_BREATH = 3;
 }
 
-message SensorReadings {
+// Sensor readings.
+//
+// To be consistent with the other names in this file, this message should be
+// called SensorReadings.  But we have a C++ class called that, and without
+// naming this one "Proto", it's going to be really hard to remember which is
+// which.
+message SensorsProto {
   required float patient_pressure_cm_h2o = 1;
   required float volume_ml = 2;
   required float flow_ml_per_min = 3;

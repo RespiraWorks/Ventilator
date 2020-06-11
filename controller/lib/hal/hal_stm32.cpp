@@ -139,6 +139,7 @@ void HalApi::init() {
   InitADC();
   InitPwmOut();
   InitUARTs();
+  InitBuzzer();
   crc32_init();
   Hal.enableInterrupts();
   StepperMotorInit();
@@ -386,7 +387,6 @@ static void Timer15ISR() {
  * PA8  - Timer 1 Channel 1 - heater control
  * PA11 - Timer 1 Channel 4 - solenoid
  * PB3  - Timer 2 Channel 2 - blower control
- * PB4  - Timer 3 Channel 1 - buzzer
  *
  * For now I'll just set up the blower since that's the only
  * one called out in the HAL
@@ -746,19 +746,18 @@ void HalApi::EnableClock(void *ptr) {
     int ndx;
     int bit;
   } rccInfo[] = {
-      {DMA1_BASE, 0, 0},     {DMA2_BASE, 0, 1},   {FLASH_BASE, 0, 8},
-      {GPIO_A_BASE, 1, 0},   {GPIO_B_BASE, 1, 1}, {GPIO_C_BASE, 1, 2},
-      {GPIO_D_BASE, 1, 3},   {GPIO_E_BASE, 1, 4}, {GPIO_H_BASE, 1, 7},
-      {ADC_BASE, 1, 13},     {TIMER2_BASE, 4, 0}, {TIMER6_BASE, 4, 4},
-      {UART2_BASE, 4, 17},   {UART3_BASE, 4, 18}, {SPI1_BASE, 6, 12},
-      {TIMER15_BASE, 6, 16},
+      {DMA1_BASE, 0, 0},   {DMA2_BASE, 0, 1},     {FLASH_BASE, 0, 8},
+      {GPIO_A_BASE, 1, 0}, {GPIO_B_BASE, 1, 1},   {GPIO_C_BASE, 1, 2},
+      {GPIO_D_BASE, 1, 3}, {GPIO_E_BASE, 1, 4},   {GPIO_H_BASE, 1, 7},
+      {ADC_BASE, 1, 13},   {TIMER2_BASE, 4, 0},   {TIMER3_BASE, 4, 1},
+      {TIMER6_BASE, 4, 4}, {UART2_BASE, 4, 17},   {UART3_BASE, 4, 18},
+      {SPI1_BASE, 6, 12},  {TIMER15_BASE, 6, 16},
 
       // The following entries are probably correct, but have
       // not been tested yet.  When adding support for one of
       // these peripherials just comment out the line.  And
       // test of course.
       //      {CRC_BASE, 0, 12},
-      //      {TIMER3_BASE, 4, 1},
       //      {SPI2_BASE, 4, 14},
       //      {SPI3_BASE, 4, 15},
       //      {UART4_BASE, 4, 19},

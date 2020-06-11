@@ -15,7 +15,7 @@ limitations under the License.
 
 /*
 This file implements the HAL (Hardware Abstraction Layer) for the
-STM32L452 processor used on the controller. 
+STM32L452 processor used on the controller.
 
 SOURCES OF TRUTH
 ================
@@ -773,7 +773,7 @@ void HalApi::EnableClock(void *ptr) {
       // these peripherials just comment out the line.  And
       // test of course.
       //      {CRC_BASE, 0, 12},
-      //      {TIMER3_BASE, 4, 1}, 
+      //      {TIMER3_BASE, 4, 1},
       //      {SPI2_BASE, 4, 14},
       //      {SPI3_BASE, 4, 15},
       //      {UART4_BASE, 4, 19},

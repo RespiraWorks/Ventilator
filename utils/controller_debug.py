@@ -629,8 +629,10 @@ def TraceActiveVars():
 def TraceDownload():
     """Fetches a trace from the controller.
 
-    Returns a list of N lists where N is the number of active trace variables.
-    Each of those lists holds the trace data for one variable.
+    Returns a list of N+1 lists where N is the number of active trace variables.
+    The first list gives the time in seconds of each sample relative to the
+    start of the trace, and the remaining N lists each holds the trace data
+    for one variable.
     """
     traceVars = TraceActiveVars()
     if len(traceVars) < 1:
@@ -666,6 +668,9 @@ def TraceDownload():
     per = GetVar("trace_period", raw=True)
     if per < 1:
         per = 1
+
+    # Scale this by the loop period which is an integer in microseconds.
+    # I multiply by 1e-6 (i.e. 1/1,000,000) to convert it to seconds.
     per *= GetVar("loop_period", raw=True) * 1e-6
 
     time = [x * per for x in range(len(ret[0]))]
@@ -699,12 +704,13 @@ def TraceSaveDat(dat, fname, separator="  "):
     tv = TraceActiveVars()
 
     fp = open(fname, "w")
-    line = ["time"]
+    line = ["time(sec)"]
     for v in tv:
         line.append(v.name)
     fp.write(separator.join(line) + "\n")
 
     for i in range(len(dat[0])):
+        # First colume is time in seconds
         line = ["%.3f" % dat[0][i]]
         for j in range(len(tv)):
             line.append(tv[j].fmt % dat[j + 1][i])

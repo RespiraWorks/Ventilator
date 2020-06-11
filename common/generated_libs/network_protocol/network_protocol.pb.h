@@ -32,13 +32,13 @@ typedef struct _Alarm {
     AlarmKind kind;
 } Alarm;
 
-typedef struct _SensorReadings {
+typedef struct _SensorsProto {
     float patient_pressure_cm_h2o;
     float volume_ml;
     float flow_ml_per_min;
     float inflow_pressure_diff_cm_h2o;
     float outflow_pressure_diff_cm_h2o;
-} SensorReadings;
+} SensorsProto;
 
 typedef struct _VentParams {
     VentMode mode;
@@ -58,7 +58,7 @@ typedef struct _VentParams {
 typedef struct _ControllerStatus {
     uint64_t uptime_ms;
     VentParams active_params;
-    SensorReadings sensor_readings;
+    SensorsProto sensor_readings;
     pb_size_t controller_alarms_count;
     Alarm controller_alarms[4];
     float fan_setpoint_cm_h2o;
@@ -85,24 +85,24 @@ typedef struct _GuiStatus {
 
 /* Initializer values for message structs */
 #define GuiStatus_init_default                   {0, VentParams_init_default, 0, {Alarm_init_default, Alarm_init_default, Alarm_init_default, Alarm_init_default}}
-#define ControllerStatus_init_default            {0, VentParams_init_default, SensorReadings_init_default, 0, {Alarm_init_default, Alarm_init_default, Alarm_init_default, Alarm_init_default}, 0, 0}
+#define ControllerStatus_init_default            {0, VentParams_init_default, SensorsProto_init_default, 0, {Alarm_init_default, Alarm_init_default, Alarm_init_default, Alarm_init_default}, 0, 0}
 #define VentParams_init_default                  {_VentMode_MIN, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
-#define SensorReadings_init_default              {0, 0, 0, 0, 0}
+#define SensorsProto_init_default                {0, 0, 0, 0, 0}
 #define Alarm_init_default                       {0, _AlarmKind_MIN}
 #define GuiStatus_init_zero                      {0, VentParams_init_zero, 0, {Alarm_init_zero, Alarm_init_zero, Alarm_init_zero, Alarm_init_zero}}
-#define ControllerStatus_init_zero               {0, VentParams_init_zero, SensorReadings_init_zero, 0, {Alarm_init_zero, Alarm_init_zero, Alarm_init_zero, Alarm_init_zero}, 0, 0}
+#define ControllerStatus_init_zero               {0, VentParams_init_zero, SensorsProto_init_zero, 0, {Alarm_init_zero, Alarm_init_zero, Alarm_init_zero, Alarm_init_zero}, 0, 0}
 #define VentParams_init_zero                     {_VentMode_MIN, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
-#define SensorReadings_init_zero                 {0, 0, 0, 0, 0}
+#define SensorsProto_init_zero                   {0, 0, 0, 0, 0}
 #define Alarm_init_zero                          {0, _AlarmKind_MIN}
 
 /* Field tags (for use in manual encoding/decoding) */
 #define Alarm_start_time_tag                     1
 #define Alarm_kind_tag                           2
-#define SensorReadings_patient_pressure_cm_h2o_tag 1
-#define SensorReadings_inflow_pressure_diff_cm_h2o_tag 4
-#define SensorReadings_outflow_pressure_diff_cm_h2o_tag 5
-#define SensorReadings_volume_ml_tag             2
-#define SensorReadings_flow_ml_per_min_tag       3
+#define SensorsProto_patient_pressure_cm_h2o_tag 1
+#define SensorsProto_volume_ml_tag               2
+#define SensorsProto_flow_ml_per_min_tag         3
+#define SensorsProto_inflow_pressure_diff_cm_h2o_tag 4
+#define SensorsProto_outflow_pressure_diff_cm_h2o_tag 5
 #define VentParams_mode_tag                      1
 #define VentParams_peep_cm_h2o_tag               3
 #define VentParams_breaths_per_min_tag           4
@@ -145,7 +145,7 @@ X(a, STATIC,   REQUIRED, FLOAT,    fan_power,         6)
 #define ControllerStatus_CALLBACK NULL
 #define ControllerStatus_DEFAULT NULL
 #define ControllerStatus_active_params_MSGTYPE VentParams
-#define ControllerStatus_sensor_readings_MSGTYPE SensorReadings
+#define ControllerStatus_sensor_readings_MSGTYPE SensorsProto
 #define ControllerStatus_controller_alarms_MSGTYPE Alarm
 
 #define VentParams_FIELDLIST(X, a) \
@@ -164,14 +164,14 @@ X(a, STATIC,   REQUIRED, UINT32,   alarm_hi_breaths_per_min,  13)
 #define VentParams_CALLBACK NULL
 #define VentParams_DEFAULT NULL
 
-#define SensorReadings_FIELDLIST(X, a) \
+#define SensorsProto_FIELDLIST(X, a) \
 X(a, STATIC,   REQUIRED, FLOAT,    patient_pressure_cm_h2o,   1) \
 X(a, STATIC,   REQUIRED, FLOAT,    volume_ml,         2) \
 X(a, STATIC,   REQUIRED, FLOAT,    flow_ml_per_min,   3) \
 X(a, STATIC,   REQUIRED, FLOAT,    inflow_pressure_diff_cm_h2o,   4) \
 X(a, STATIC,   REQUIRED, FLOAT,    outflow_pressure_diff_cm_h2o,   5)
-#define SensorReadings_CALLBACK NULL
-#define SensorReadings_DEFAULT NULL
+#define SensorsProto_CALLBACK NULL
+#define SensorsProto_DEFAULT NULL
 
 #define Alarm_FIELDLIST(X, a) \
 X(a, STATIC,   REQUIRED, UINT64,   start_time,        1) \
@@ -182,21 +182,21 @@ X(a, STATIC,   REQUIRED, UENUM,    kind,              2)
 extern const pb_msgdesc_t GuiStatus_msg;
 extern const pb_msgdesc_t ControllerStatus_msg;
 extern const pb_msgdesc_t VentParams_msg;
-extern const pb_msgdesc_t SensorReadings_msg;
+extern const pb_msgdesc_t SensorsProto_msg;
 extern const pb_msgdesc_t Alarm_msg;
 
 /* Defines for backwards compatibility with code written before nanopb-0.4.0 */
 #define GuiStatus_fields &GuiStatus_msg
 #define ControllerStatus_fields &ControllerStatus_msg
 #define VentParams_fields &VentParams_msg
-#define SensorReadings_fields &SensorReadings_msg
+#define SensorsProto_fields &SensorsProto_msg
 #define Alarm_fields &Alarm_msg
 
 /* Maximum encoded size of messages (where known) */
 #define GuiStatus_size                           140
 #define ControllerStatus_size                    177
 #define VentParams_size                          67
-#define SensorReadings_size                      25
+#define SensorsProto_size                        25
 #define Alarm_size                               13
 
 #ifdef __cplusplus

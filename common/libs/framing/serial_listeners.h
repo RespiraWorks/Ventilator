@@ -1,7 +1,7 @@
 #ifndef __SERIAL_LISTENERS_H
 #define __SERIAL_LISTENERS_H
 
-enum class RxError { UNKNOWN, OVERRUN, SERIAL_FRAMING, TIMEOUT, DMA };
+enum class RxError { UNKNOWN, OVERRUN, SERIAL_FRAMING, DMA };
 
 // An interface that gets called on serial events.
 // NOTE: all callbacks are called from interrupt context!

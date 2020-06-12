@@ -3,7 +3,6 @@
 #include "uart_dma.h"
 #include "hal_stm32.h"
 #include "hal_stm32_regs.h"
-#include "units.h"
 
 // STM32 UART3 driver based on DMA transfers.
 
@@ -26,7 +25,7 @@ void UART_DMA::init(uint32_t baud) {
   uart_->ctrl3.s.dmar = 1;  // set DMAR bit to enable DMA for receiver
   uart_->ctrl3.s.dmat = 1;  // set DMAT bit to enable DMA for transmitter
   uart_->ctrl3.s.ddre = 1;  // DMA is disabled following a reception error
-  uart_->ctrl2.s.rtoen = 1; // Enable receive timeout feature
+  uart_->ctrl2.s.rtoen = 0; // Disable receive timeout feature
   uart_->ctrl2.s.addr = match_char_; // set match char
 
   uart_->ctrl3.s.eie = 1; // enable interrupt on error
@@ -127,13 +126,6 @@ void UART_DMA::stopTX() {
   }
 }
 
-// Converts Duration to the number of baudrate bits as that is used for rx
-// timeout. Max timeout supported by STM32 UART is 24 bit
-UART_DMA::uint24_t UART_DMA::DurationToBits(Duration d) {
-  return {0,
-          static_cast<uint32_t>(d.milliseconds() * baud_ / 1000) & 0x00FFFFFF};
-}
-
 // Sets up reception of exactly [length] chars from UART3 into [buf]
 // [timeout] is the number of baudrate bits for which RX line is
 // allowed to be idle before issuing timeout error.
@@ -155,8 +147,7 @@ UART_DMA::uint24_t UART_DMA::DurationToBits(Duration d) {
 // Returns false if reception is in progress, new reception is not setup.
 // Returns true if no reception is in progress and new reception was setup.
 
-bool UART_DMA::startRX(const uint8_t *buf, uint32_t length, Duration timeout,
-                       RxListener *rxl) {
+bool UART_DMA::startRX(const uint8_t *buf, uint32_t length, RxListener *rxl) {
   // UART3 reception happens on DMA1 channel 3
   if (isRxInProgress()) {
     return false;
@@ -174,11 +165,8 @@ bool UART_DMA::startRX(const uint8_t *buf, uint32_t length, Duration timeout,
   // data length
   dma_->channel[rx_ch_].count = length;
 
-  // setup rx timeout
-  uart_->timeout.s.rto = DurationToBits(timeout).bits;
   uart_->intClear.s.rtocf = 1; // Clear rx timeout flag
   uart_->request.s.rxfrq = 1;  // Clear RXNE flag
-  uart_->ctrl1.s.rtoie = 1;    // Enable receive timeout interrupt
 
   dma_->channel[rx_ch_].config.enable = 1; // go!
 
@@ -202,14 +190,9 @@ static bool isCharacterMatchInterrupt() {
   return UART3_BASE->status.s.cmf != 0;
 }
 
-static bool isRxTimeout() {
-  // Timeout interrupt enable and RTOF - Receiver timeout
-  return UART3_BASE->ctrl1.s.rtoie && UART3_BASE->status.s.rtof;
-}
-
 static bool isRxError() {
-  return isRxTimeout() || UART3_BASE->status.s.ore || // overrun error
-         UART3_BASE->status.s.fe;                     // frame error
+  return UART3_BASE->status.s.ore || // overrun error
+         UART3_BASE->status.s.fe;    // frame error
 
   // TODO(miceuz): Enable these?
   // UART3_BASE->status.s.pe || // parity error

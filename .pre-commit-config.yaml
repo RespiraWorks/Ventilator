@@ -3,16 +3,16 @@
 exclude: '\.pb\.|common/third_party'
 repos:
 - repo: https://github.com/jlebar/pre-commit-hooks
-  rev: b55cb6fe2de1bd4a3cfe77d454207f24e23e3c20
+  rev: 349213c5414e360385e74f04964e6d5c43cdad36
   hooks:
-  - id: clang-format
+  - id: clang-format-whole-file
     name: clang-format C++
     types: [c++]
-  - id: clang-format
+  - id: clang-format-whole-file
     name: clang-format C
     types: [c]
     exclude_types: [c++]
-  - id: clang-format
+  - id: clang-format-whole-file
     name: clang-format protobuf
     types: [proto]
 - repo: https://github.com/psf/black

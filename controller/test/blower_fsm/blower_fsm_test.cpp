@@ -22,20 +22,21 @@ limitations under the License.
 
 namespace {
 
-static constexpr SensorReadings readings_zero = {.patient_pressure = kPa(0),
-                                                 .inflow_pressure_diff = kPa(0),
-                                                 .outflow_pressure_diff =
-                                                     kPa(0),
-                                                 .inflow = ml_per_min(0),
-                                                 .outflow = ml_per_min(0),
-                                                 .volume = ml(0),
-                                                 .net_flow = ml_per_min(0)};
+constexpr SensorReadings readings_zero = {
+    .patient_pressure = kPa(0),
+    .inflow_pressure_diff = kPa(0),
+    .outflow_pressure_diff = kPa(0),
+    .inflow = ml_per_min(0),
+    .outflow = ml_per_min(0),
+    .volume = ml(0),
+    .net_flow = ml_per_min(0),
+};
 
 TEST(BlowerFsmTest, InitiallyOff) {
   BlowerFsm fsm;
   VentParams p = VentParams_init_zero;
   BlowerSystemState s = fsm.DesiredState(Hal.now(), p, readings_zero);
-  EXPECT_FLOAT_EQ(s.setpoint_pressure.cmH2O(), 0);
+  EXPECT_FLOAT_EQ(s.pressure_setpoint.cmH2O(), 0);
   EXPECT_EQ(s.expire_valve_state, ValveState::OPEN);
 }
 
@@ -44,7 +45,7 @@ TEST(BlowerFsmTest, StaysOff) {
   VentParams p = VentParams_init_zero;
   Hal.delay(milliseconds(1000));
   BlowerSystemState s = fsm.DesiredState(Hal.now(), p, readings_zero);
-  EXPECT_FLOAT_EQ(s.setpoint_pressure.cmH2O(), 0);
+  EXPECT_FLOAT_EQ(s.pressure_setpoint.cmH2O(), 0);
   EXPECT_EQ(s.expire_valve_state, ValveState::OPEN);
 }
 
@@ -56,7 +57,7 @@ void testSequence(
                    /*sensor_readings*/ SensorReadings,
                    /*blower_enabled*/ bool,
                    /*time_millis*/ uint64_t,
-                   /*expected_setpoint_pressure*/ Pressure,
+                   /*expected_pressure_setpoint*/ Pressure,
                    /*expected_expiratory_valve_state*/ ValveState>> &seq) {
   BlowerFsm fsm;
   for (const auto &[params, readings, blower_enabled, time_millis,
@@ -67,7 +68,7 @@ void testSequence(
 
     BlowerSystemState s = fsm.DesiredState(Hal.now(), params, readings);
     EXPECT_EQ(s.blower_enabled, blower_enabled);
-    EXPECT_EQ(s.setpoint_pressure.cmH2O(), expected_pressure.cmH2O());
+    EXPECT_EQ(s.pressure_setpoint.cmH2O(), expected_pressure.cmH2O());
     EXPECT_EQ(s.expire_valve_state, expected_valve_state);
   }
 }

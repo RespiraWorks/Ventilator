@@ -13,7 +13,7 @@ public:
   // Sets up underlying receive infrastructure and starts the first reception
   [[nodiscard]] bool Begin(RxListener *rxl) {
     uart_dma_.charMatchEnable();
-    return uart_dma_.startRX(rx_buf_, RX_BYTES_MAX, RX_TIMEOUT_, rxl);
+    return uart_dma_.startRX(rx_buf_, RX_BYTES_MAX, rxl);
   }
 
   // Restarts the ongoing reception, this means the rx_buf will be written from
@@ -21,7 +21,7 @@ public:
   void RestartRX(RxListener *rxl) {
     uart_dma_.stopRX();
     [[maybe_unused]] bool started =
-        uart_dma_.startRX(rx_buf_, RX_BYTES_MAX, RX_TIMEOUT_, rxl);
+        uart_dma_.startRX(rx_buf_, RX_BYTES_MAX, rxl);
   }
 
   // Returns how many bytes were written into rx_buf
@@ -42,10 +42,6 @@ private:
   UART_DMA &uart_dma_;
   // Buffer into which the data is received
   uint8_t rx_buf_[RX_BYTES_MAX];
-  // If no activity is happening on RX line for the given amount of time,
-  // listener will get an onError callback.
-  // TODO determine the right amount of time via risk analysis
-  static constexpr Duration RX_TIMEOUT_ = seconds(10);
 };
 
 #ifdef TEST_MODE

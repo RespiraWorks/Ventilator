@@ -62,7 +62,7 @@ typedef struct _ControllerStatus {
     SensorsProto sensor_readings;
     pb_size_t controller_alarms_count;
     Alarm controller_alarms[4];
-    float fan_setpoint_cm_h2o;
+    float pressure_setpoint_cm_h2o;
     float fan_power;
 } ControllerStatus;
 
@@ -120,7 +120,7 @@ typedef struct _GuiStatus {
 #define ControllerStatus_active_params_tag       2
 #define ControllerStatus_sensor_readings_tag     3
 #define ControllerStatus_controller_alarms_tag   4
-#define ControllerStatus_fan_setpoint_cm_h2o_tag 5
+#define ControllerStatus_pressure_setpoint_cm_h2o_tag 5
 #define ControllerStatus_fan_power_tag           6
 #define GuiStatus_uptime_ms_tag                  1
 #define GuiStatus_desired_params_tag             2
@@ -141,7 +141,7 @@ X(a, STATIC,   REQUIRED, UINT64,   uptime_ms,         1) \
 X(a, STATIC,   REQUIRED, MESSAGE,  active_params,     2) \
 X(a, STATIC,   REQUIRED, MESSAGE,  sensor_readings,   3) \
 X(a, STATIC,   REPEATED, MESSAGE,  controller_alarms,   4) \
-X(a, STATIC,   REQUIRED, FLOAT,    fan_setpoint_cm_h2o,   5) \
+X(a, STATIC,   REQUIRED, FLOAT,    pressure_setpoint_cm_h2o,   5) \
 X(a, STATIC,   REQUIRED, FLOAT,    fan_power,         6)
 #define ControllerStatus_CALLBACK NULL
 #define ControllerStatus_DEFAULT NULL

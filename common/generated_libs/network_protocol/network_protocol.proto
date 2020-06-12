@@ -114,8 +114,8 @@ message ControllerStatus {
   // The max here should match GuiStatus.controller_alarms's max.
   repeated Alarm controller_alarms = 4 [ (nanopb).max_count = 4 ];
 
-  // Pressure we're trying to achieve with the fan.
-  required float fan_setpoint_cm_h2o = 5;
+  // Patient pressure we're trying to achieve.
+  required float pressure_setpoint_cm_h2o = 5;
 
   // Value in range [0, 1] indicating how fast we're spinning the fan.
   required float fan_power = 6;

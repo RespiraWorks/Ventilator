@@ -31,8 +31,7 @@ TEST(BlowerFsmTest, InitiallyOff) {
                       .inflow = ml_per_min(0),
                       .outflow = ml_per_min(0),
                       .volume = ml(0),
-                      .net_flow = ml_per_min(0)
-  };
+                      .net_flow = ml_per_min(0)};
   BlowerSystemState s = fsm.DesiredState(Hal.now(), p, r);
   EXPECT_FLOAT_EQ(s.setpoint_pressure.cmH2O(), 0);
   EXPECT_EQ(s.expire_valve_state, ValveState::OPEN);
@@ -47,8 +46,7 @@ TEST(BlowerFsmTest, StaysOff) {
                       .inflow = ml_per_min(0),
                       .outflow = ml_per_min(0),
                       .volume = ml(0),
-                      .net_flow = ml_per_min(0)
-  };
+                      .net_flow = ml_per_min(0)};
   Hal.delay(milliseconds(1000));
   BlowerSystemState s = fsm.DesiredState(Hal.now(), p, r);
   EXPECT_FLOAT_EQ(s.setpoint_pressure.cmH2O(), 0);
@@ -93,8 +91,7 @@ TEST(BlowerFsmTest, PressureControl) {
                       .inflow = ml_per_min(0),
                       .outflow = ml_per_min(0),
                       .volume = ml(0),
-                      .net_flow = ml_per_min(0)
-  };
+                      .net_flow = ml_per_min(0)};
 
   constexpr int64_t rise_time_us = PressureControlFsm::RISE_TIME.microseconds();
   static_assert(rise_time_us % 1000 == 0,
@@ -139,16 +136,14 @@ TEST(BlowerFsmTest, PressureAssist) {
                          .inflow = ml_per_min(0),
                          .outflow = ml_per_min(0),
                          .volume = ml(0),
-                         .net_flow = ml_per_min(0)
-  };
+                         .net_flow = ml_per_min(0)};
   SensorReadings breath = {.patient_pressure = kPa(0),
                            .inflow_pressure_diff = kPa(0),
                            .outflow_pressure_diff = kPa(0),
                            .inflow = ml_per_min(20000.0f),
                            .outflow = ml_per_min(0),
                            .volume = ml(0),
-                           .net_flow = ml_per_min(20000.0f)
-  };
+                           .net_flow = ml_per_min(20000.0f)};
 
   // - when flow is zero: breath is triggered on expire_deadline_ rather than
   // patient triggered, to enforce minimum respiratory rate
@@ -196,8 +191,7 @@ TEST(BlowerFsmTest, TurnOff) {
                       .inflow = ml_per_min(0),
                       .outflow = ml_per_min(0),
                       .volume = ml(0),
-                      .net_flow = ml_per_min(0)
-  };
+                      .net_flow = ml_per_min(0)};
   VentParams p_off = VentParams_init_zero;
 
   testSequence({
@@ -223,8 +217,7 @@ TEST(BlowerFsmTest, ChangeOfParamsStartAtTheNextBreath) {
                       .inflow = ml_per_min(0),
                       .outflow = ml_per_min(0),
                       .volume = ml(0),
-                      .net_flow = ml_per_min(0)
-  };
+                      .net_flow = ml_per_min(0)};
 
   VentParams p_change = p_init;
   p_change.breaths_per_min = 30;
@@ -247,7 +240,8 @@ TEST(BlowerFsmTest, ChangeOfParamsStartAtTheNextBreath) {
       {p_change, r, /*blower_enabled=*/true, 2000, cmH2O(10), ValveState::OPEN},
       {p_change, r, /*blower_enabled=*/true, 3000, cmH2O(10), ValveState::OPEN},
       // Previous state finished, switch to p_change settings, 1sec In 1sec Ex.
-      {p_change, r, /*blower_enabled=*/true, 3001, cmH2O(15), ValveState::CLOSED},
+      {p_change, r, /*blower_enabled=*/true, 3001, cmH2O(15),
+       ValveState::CLOSED},
       {p_init, r, /*blower_enabled=*/true, 4000, cmH2O(30), ValveState::CLOSED},
       // Ignore p_init setting in the middle of a breath.
       {p_init, r, /*blower_enabled=*/true, 4001, cmH2O(15), ValveState::OPEN},

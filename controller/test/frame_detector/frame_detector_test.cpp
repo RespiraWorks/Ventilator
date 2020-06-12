@@ -119,10 +119,6 @@ TEST(FrameDetector, ErrorWhileRx) {
   ASSERT_EQ(State::RECEIVING_FRAME, frame_detector.get_state());
   EXPECT_FALSE(frame_detector.is_frame_available());
 
-  frame_detector.OnRxError(RxError::TIMEOUT);
-  ASSERT_EQ(State::LOST, frame_detector.get_state());
-  EXPECT_FALSE(frame_detector.is_frame_available());
-
   rx_buf.PutByte(MARK);
   ASSERT_EQ(State::RECEIVING_FRAME, frame_detector.get_state());
   EXPECT_FALSE(frame_detector.is_frame_available());

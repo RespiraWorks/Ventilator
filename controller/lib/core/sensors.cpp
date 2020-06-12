@@ -58,9 +58,6 @@ constexpr static float VENTURI_CORRECTION = 0.97f;
 static_assert(VENTURI_PORT_DIAM > VENTURI_CHOKE_DIAM);
 static_assert(VENTURI_CHOKE_DIAM > meters(0));
 
-// TODO: VOLUME_INTEGRAL_INTERVAL was not chosen carefully.
-static constexpr Duration VOLUME_INTEGRAL_INTERVAL = milliseconds(5);
-
 /*static*/ AnalogPin Sensors::PinFor(Sensor s) {
   switch (s) {
   case PATIENT_PRESSURE:
@@ -74,45 +71,7 @@ static constexpr Duration VOLUME_INTEGRAL_INTERVAL = milliseconds(5);
   __builtin_unreachable();
 }
 
-// Tuning params for PID that calculates error in our flow measurements.
-// Calculated using the
-// https://en.wikipedia.org/wiki/Ziegler%E2%80%93Nichols_method The constants in
-// the constructor are for the "classic PID" control type, which seemed to work
-// well.
-//
-// FLOW_PID_OUTPUT_MAX is a sanity check, preventing us from using absurdly
-// high flow corrections.  The value below may strike you as absurdly high, but
-// we've seen corrections of 40ml/s be necessary, and 100ml/s gives a safety
-// margin.
-//
-// Even 40ml/s may seem way higher than should ever occur, but it's actually
-// easy to get an error this high at zero flow.  Since we have two sensors,
-// we'd need an error of +/-20ml in each.  At zero flow, this corresponds to
-// significantly less than 1 Pa of pressure, and just two or three bits in our
-// 12-bit ADC!  See
-// https://docs.google.com/spreadsheets/d/1G9Kb-ImlluK8MOx-ce2rlHUBnTOtAFQvKjjs1bEhlpM
-//
-// In theory the story is better at higher flows (because the venturi response
-// is the square root of pressure), and we may run a bias flow through our
-// device to put us into a regime where we're less sensitive to error
-// (equivalently, where the venturi response has a lower slope).  But we still
-// want to handle the low-flow case as best we can.
-static constexpr float FLOW_PID_KU = 0.20f;
-static constexpr float FLOW_PID_TU = 5;
-static constexpr VolumetricFlow FLOW_PID_OUTPUT_MAX = ml_per_sec(100);
-
-Sensors::Sensors()
-    : flow_error_pid_(
-          /*kp=*/0.6f * FLOW_PID_KU,
-          /*ki=*/1.2f * FLOW_PID_KU / FLOW_PID_TU,
-          /*kd=*/3 * FLOW_PID_KU * FLOW_PID_TU / 40,
-          // ProportionalTerm::ON_ERROR and DifferentialTerm::ON_MEASUREMENT
-          // makes for your "standard" PID.  TODO: perhaps these shouldn't even
-          // be options.
-          ProportionalTerm::ON_ERROR,        //
-          DifferentialTerm::ON_MEASUREMENT,  //
-          -FLOW_PID_OUTPUT_MAX.ml_per_sec(), //
-          FLOW_PID_OUTPUT_MAX.ml_per_sec()) {}
+Sensors::Sensors() = default;
 
 // NOTE - I can't do this in the constructor now because it gets called before
 // the HAL is set up, so the busy wait never finishes.
@@ -174,19 +133,6 @@ Pressure Sensors::ReadPressureSensor(Sensor s) {
       std::sqrt(pow2(portArea) - pow2(chokeArea)));
 }
 
-void TVIntegrator::AddFlow(Time now, VolumetricFlow flow) {
-  // TODO: This calculation should be much more sophisticated.  Some possible
-  // improvements.
-  //
-  //  - Measure time with better than millisecond granularity.
-  Duration delta = now - last_flow_measurement_time_;
-  if (delta >= VOLUME_INTEGRAL_INTERVAL) {
-    volume_ += delta * (last_flow_ + flow) / 2.0f;
-    last_flow_measurement_time_ = now;
-    last_flow_ = flow;
-  }
-}
-
 SensorReadings Sensors::GetSensorReadings() {
   // Flow rate is inhalation flow minus exhalation flow. Positive value is flow
   // into lungs, and negative is flow out of lungs.
@@ -198,9 +144,10 @@ SensorReadings Sensors::GetSensorReadings() {
   VolumetricFlow inflow = PressureDeltaToFlow(inflow_delta);
   VolumetricFlow outflow = PressureDeltaToFlow(outflow_delta);
   VolumetricFlow uncorrected_flow = inflow - outflow;
-  VolumetricFlow corrected_flow = uncorrected_flow + flow_correction_;
-  uncorrected_tv_integrator_.AddFlow(now, uncorrected_flow);
-  tv_integrator_.AddFlow(now, corrected_flow);
+  flow_integrator_.AddFlow(now, uncorrected_flow);
+  uncorrected_flow_integrator_.AddFlow(now, uncorrected_flow);
+  VolumetricFlow corrected_flow =
+      uncorrected_flow + flow_integrator_.FlowCorrection();
 
   // Set debug variables.
   //
@@ -213,12 +160,12 @@ SensorReadings Sensors::GetSensorReadings() {
   dbg_flow_exhale.Set(outflow.ml_per_sec());
   dbg_flow_uncorrected.Set(uncorrected_flow.ml_per_sec());
   dbg_flow_corrected.Set(corrected_flow.ml_per_sec());
-  dbg_volume.Set(tv_integrator_.GetTV().ml());
-  dbg_volume_uncorrected.Set(uncorrected_tv_integrator_.GetTV().ml());
+  dbg_volume.Set(flow_integrator_.GetTV().ml());
+  dbg_volume_uncorrected.Set(uncorrected_flow_integrator_.GetTV().ml());
 
   return {
       .patient_pressure_cm_h2o = patient_pressure.cmH2O(),
-      .volume_ml = tv_integrator_.GetTV().ml(),
+      .volume_ml = flow_integrator_.GetTV().ml(),
       .flow_ml_per_min = corrected_flow.ml_per_min(),
       .inflow_pressure_diff_cm_h2o = inflow_delta.cmH2O(),
       .outflow_pressure_diff_cm_h2o = outflow_delta.cmH2O(),
@@ -226,8 +173,6 @@ SensorReadings Sensors::GetSensorReadings() {
 }
 
 void Sensors::NoteNewBreath() {
-  Time now = Hal.now();
-  flow_correction_ =
-      ml_per_sec(flow_error_pid_.Compute(now, tv_integrator_.GetTV().ml(), 0));
-  dbg_flow_correction.Set(flow_correction_.ml_per_sec());
+  flow_integrator_.NoteExpectedVolume(ml(0));
+  dbg_flow_correction.Set(flow_integrator_.FlowCorrection().ml_per_sec());
 }

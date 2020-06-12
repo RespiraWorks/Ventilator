@@ -17,6 +17,7 @@ limitations under the License.
 #define UNITS_H
 
 #include <stdint.h>
+#include <type_traits>
 
 // Wrappers for measurements of different physical quantities [1] (length,
 // time, etc.).
@@ -113,25 +114,57 @@ protected:
   ValTy val_;
 };
 
-// Represents a Scalar where:
-// - addition and subtraction are well-defined
-// - multiplication and division by an external factor of type ValTy is defined
+// Represents a Scalar where certain arithmetic operations are defined.
 //
-// Note that multiplication and division by an external factor require
-// multiplication and division to be well defined on ValTy type.
+// Let x and y be ArithScalars of the same type, and let c be a constant of
+// type ValTy.  Then the following operations are defined.
+//
+// - x + y and x += y
+// - x - y and x -= y
+// - x / y (ratio of two measurements, yields a float)
+// - c * x, x * c, and x *= c
+// - if ValTy is floating point, x / c and x /= c.  If ValTy is not
+//   floating-point, these operators are not defined.
+//
 // Be aware that dividing by 0 yields Inf and needs to be protected.
 template <class Q, class ValTy> class ArithScalar : public Scalar<Q, ValTy> {
 public:
-  constexpr Q operator+(const ArithScalar &a) { return Q(this->val_ + a.val_); }
-  constexpr Q operator-(const ArithScalar &a) { return Q(this->val_ - a.val_); }
-  ArithScalar &operator+=(const ArithScalar &a) { return *this = *this + a; }
-  ArithScalar &operator-=(const ArithScalar &a) { return *this = *this - a; }
-  constexpr Q operator*(const ValTy &a) { return Q(this->val_ * a); }
-  constexpr Q operator/(const ValTy &a) { return Q(this->val_ / a); }
-  ArithScalar &operator*=(const ValTy &a) { return *this = *this * a; }
-  ArithScalar &operator/=(const ValTy &a) { return *this = *this / a; }
+  constexpr Q operator+(const ArithScalar &a) const {
+    return Q(this->val_ + a.val_);
+  }
+  Q &operator+=(const ArithScalar &a) {
+    return static_cast<Q &>(*this = *this + a);
+  }
+
+  constexpr Q operator-(const ArithScalar &a) const {
+    return Q(this->val_ - a.val_);
+  }
+  Q &operator-=(const ArithScalar &a) {
+    return static_cast<Q &>(*this = *this - a);
+  }
+
+  constexpr Q operator*(const ValTy &a) const { return Q(this->val_ * a); }
   constexpr friend Q operator*(const ValTy &a, const Q &b) {
     return Q(b.val_ * a);
+  }
+  Q &operator*=(const ValTy &a) { return static_cast<Q &>(*this = *this * a); }
+
+  // Division by a unitless scalar, defined only if ValTy is floating-point.
+  template <typename VT = ValTy,
+            std::enable_if_t<std::is_floating_point_v<VT>, int> = 0>
+  constexpr Q operator/(const ValTy &a) const {
+    return Q(this->val_ / a);
+  }
+  template <typename VT = ValTy,
+            std::enable_if_t<std::is_floating_point_v<VT>, int> = 0>
+  Q &operator/=(const ValTy &a) {
+    return static_cast<Q &>(*this = *this / a);
+  }
+
+  // Ratio of two measurements.  Always defined, and always returns a float,
+  // irrespective of ValTy.
+  constexpr float operator/(const ArithScalar &a) const {
+    return static_cast<float>(this->val_) / static_cast<float>(a.val_);
   }
 
 protected:
@@ -329,7 +362,7 @@ class Time;
 // This is unfortunate, but the alternative (not offering a
 // milliseconds(int64_t) factory) is worse, because converting an int64
 // milliseconds to float may lose useful precision.
-class Duration : public units_detail::Scalar<Duration, int64_t> {
+class Duration : public units_detail::ArithScalar<Duration, int64_t> {
 public:
   [[nodiscard]] constexpr int64_t microseconds() const { return val_; }
   [[nodiscard]] constexpr float milliseconds() const {
@@ -340,8 +373,6 @@ public:
   }
   [[nodiscard]] constexpr float minutes() const { return seconds() / 60; }
 
-  constexpr friend Duration operator+(const Duration &a, const Duration &b);
-  constexpr friend Duration operator-(const Duration &a, const Duration &b);
   constexpr friend Time operator+(const Time &a, const Duration &b);
   constexpr friend Time operator+(const Duration &a, const Time &b);
   constexpr friend Time operator-(const Time &a, const Duration &b);
@@ -350,7 +381,7 @@ public:
 private:
   constexpr friend Duration microseconds(int64_t micros);
 
-  using units_detail::Scalar<Duration, int64_t>::Scalar;
+  using units_detail::ArithScalar<Duration, int64_t>::ArithScalar;
 };
 
 constexpr Duration microseconds(int64_t micros) { return Duration(micros); }
@@ -370,12 +401,6 @@ template <int /*dummy*/ = 0> constexpr Duration milliseconds(double millis) {
 
 constexpr Duration seconds(float secs) { return milliseconds(secs * 1000); }
 constexpr Duration minutes(float mins) { return seconds(mins * 60); }
-constexpr Duration operator*(int n, Duration d) {
-  return microseconds(static_cast<int64_t>(n) * d.microseconds());
-}
-constexpr Duration operator*(Duration d, int n) {
-  return microseconds(static_cast<int64_t>(n) * d.microseconds());
-}
 
 // Represents a point in time, relative to when the device started up.  See
 // details above.
@@ -406,12 +431,6 @@ private:
 
 constexpr Time microsSinceStartup(uint64_t micros) { return Time(micros); }
 
-constexpr inline Duration operator+(const Duration &a, const Duration &b) {
-  return Duration(a.val_ + b.val_);
-}
-constexpr inline Duration operator-(const Duration &a, const Duration &b) {
-  return Duration(a.val_ - b.val_);
-}
 constexpr inline Time operator+(const Time &t, const Duration &dt) {
   return Time(t.val_ + static_cast<uint64_t>(dt.val_));
 }

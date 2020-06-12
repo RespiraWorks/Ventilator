@@ -55,28 +55,16 @@ limitations under the License.
 #include "hal_stm32.h"
 
 /*
-SOURCES OF TRUTHS
-=================
-
-This code refers to the following references by their associated abbreviations
-
-[PCB] RespiraWorks custom printed circuit board schematic
-  https://github.com/RespiraWorks/pcbreathe/blob/master/NIGHTLY/20200424v2-RELEASE-CANDIDATE-2/20200424v2-RespiraWorks-Ventilator-Rev1.0-RC2-DWG-SCH.PDF
-
-[PCBsp] A less definitive, easier to read spreadsheeet
-  https://docs.google.com/spreadsheets/d/1JOSQKxkQxXJ6MCMDI9PwUQ6kiuGdujR4D6EJN9u2LWg/edit#gid=0
-
-[RM] Reference Manual for the STM32L452 processor
-  https://www.st.com/resource/en/reference_manual/dm00151940-stm32l41xxx42xxx43xxx44xxx45xxx46xxx-advanced-armbased-32bit-mcus-stmicroelectronics.pdf
-
-The following pins are used as analog inputs on the rev-1 PCB
-PA0 (ADC1_IN5)  - vin (not currently used)
-PA1 (ADC1_IN6)  - pressure
-PA4 (ADC1_IN9)  - inhale flow
-PB0 (ADC1_IN15) - exhale flow
+The following pins are used as analog inputs on the rev-1 PCB:
+- PA0 (ADC1_IN5)  - vin (not currently used)
+- PA1 (ADC1_IN6)  - pressure
+- PA4 (ADC1_IN9)  - inhale flow
+- PB0 (ADC1_IN15) - exhale flow
 
 Please refer to the PCB schematic as the ultimate source of which
-pin is used for which function
+pin is used for which function.
+
+Reference abbreviations ([RM], [PCB], etc) are defined in hal/README.md
 */
 
 // How long a period (in seconds) we want to average the A/D readings.
@@ -98,7 +86,7 @@ static constexpr int oversample_count = 1 << oversample_log2;
 static constexpr int max_adc_reading =
     (oversample_log2 >= 4) ? 65536 : (1 << (12 + oversample_log2));
 
-// [RM] 16.4.12: Channel-wise programmable sampling time (pg 389)
+// Set sample time ([RM] 16.4.12). I'm using 92.5 A/D clocks to sample.
 // A/D sample time in CPU clock cycles.  Fixed for now
 // This is the time we give the analog input to charge the A/D sampling cap.
 static constexpr int adc_samp_time = 92;
@@ -154,17 +142,7 @@ void HalApi::InitADC() {
   // I'll wait for 30 just to be extra conservative
   Hal.delay(microseconds(30));
 
-  /* [RM] 16.4.8: Software procedure to calibrate the ADC (pg. 384)
-        1. Ensure DEEPPWD=0, ADVREGEN=1 and that ADC voltage regulator startup
-     time has elapsed.
-        2. Ensure that ADEN=0.
-        3. Select the input mode for this calibration by setting ADCALDIF=0
-     (single-ended input) or ADCALDIF=1 (differential input).
-        4. Set ADCAL=1.
-        5. Wait until ADCAL=0.
-        6. The calibration factor can be read from ADC_CALFACT register.
-  */
-  // Calibrate the A/D for single ended channels
+  // Calibrate the A/D for single ended channels ([RM] 16.4.8)
   adc->adc[0].ctrl |= 0x80000000;
 
   // Wait until the CAL bit is cleared meaning
@@ -172,15 +150,7 @@ void HalApi::InitADC() {
   while (adc->adc[0].ctrl & 0x80000000) {
   }
 
-  /* [RM] 16.4.9: ADC on-off control (ADEN, ADDIS, ADRDY) (pg 386)
-        1. Clear the ADRDY bit in the ADC_ISR register by writing ‘1’.
-        2. Set ADEN=1.
-        3. Wait until ADRDY=1 (ADRDY is set after the ADC startup time). This
-     can be done using the associated interrupt (setting ADRDYIE=1).
-        4. Clear the ADRDY bit in the ADC_ISR register by writing ‘1’
-     (optional).
-  */
-
+  // Enable the A/D ([RM] 16.4.9)
   // Clear all the status bits
   adc->adc[0].stat = 0x3FF;
 
@@ -195,43 +165,10 @@ void HalApi::InitADC() {
   adc->adc[0].cfg1.dmacfg = 1;
   adc->adc[0].cfg1.cont = 1;
 
-  // [RM] 16.6.5: ADC configuration register 2 (ADC_CFGR2) (pg 462)
-  /*
-  Enable ADC oversampling: Write 1 to bit 0
-  Bit 0 ROVSE: Regular Oversampling Enable
-    0: Regular Oversampling disabled
-    1: Regular Oversampling enabled
-  */
   adc->adc[0].cfg2.rovse = (oversample_log2 > 0) ? 1 : 0;
 
-  /*
-  Set oversample setting: Write log2(oversample)-1 to bits 4:2
-  Bits 4:2 OVSR[2:0]: Oversampling ratio
-    000: 2x
-    001: 4x
-    010: 8x
-    011: 16x <- e.g. 16 samples: log2(16)-1 = 3
-    100: 32x
-    101: 64x
-    110: 128x
-    111: 256x
-  */
   adc->adc[0].cfg2.ovsr = (oversample_log2 > 0) ? oversample_log2 - 1 : 0;
 
-  /*
-  Set oversampling shift: Truncate data to 16 bits for A/D data register
-    by downshifting the sum if necessary
-  Bits 8:5 OVSS[3:0]: Oversampling shift
-    0000: No shift <- e.g. 16 samples: No downshift necessary (log2(16) - 4 = 0)
-    0001: Shift 1-bit <- e.g. 32 samples: downshift by 1 bit (log2(32) - 4 = 1)
-    0010: Shift 2-bits
-    0011: Shift 3-bits
-    0100: Shift 4-bits
-    0101: Shift 5-bits
-    0110: Shift 6-bits
-    0111: Shift 7-bits
-    1000: Shift 8-bits
-  */
   adc->adc[0].cfg2.ovss = (oversample_log2 < 4) ? 0 : (oversample_log2 - 4);
 
   // [RM] 16.4.12: Channel-wise programmable sampling time (pg 389)
@@ -242,28 +179,14 @@ void HalApi::InitADC() {
   adc->adc[0].samp.smp9 = 5;
   adc->adc[0].samp.smp15 = 5;
 
-  // [RM] 16.6.11: ADC regular sequence register 1 (ADC_SQR1) (pg 468)
-  /* Set channel sequence length:
-    Bits 3:0 L[3:0]: Regular channel sequence length
-      0000: 1 conversion
-      0001: 2 conversions
-      0010: 3 conversions <- e.g. 3 channels: adc_channels - 1 = 2
-      ...
-      1111: 16 conversions
-  */
+  // Set conversion sequence length:
   adc->adc[0].seq.len = adc_channels - 1;
-  /* Assign channel numbers to ith position in the
-      regular conversion sequence
-      Bits 10:6 SQ1[4:0]
-      Bits 16:12 SQ2[4:0]
-      Bits 22:18 SQ3[4:0]
-  */
+
   adc->adc[0].seq.sq1 = 6;
   adc->adc[0].seq.sq2 = 9;
   adc->adc[0].seq.sq3 = 15;
 
-  // [RM] 11.4.4 DMA channels (pg 302)
-  // I use DMA1 channel 1 to copy my A/D readings into my buffer
+  // I use DMA1 channel 1 to copy my A/D readings into my buffer ([RM] 11.4.4)
   EnableClock(DMA1_BASE);
   DMA_Regs *dma = DMA1_BASE;
   int C1 = static_cast<int>(DMA_Chan::C1);
@@ -286,13 +209,7 @@ void HalApi::InitADC() {
   dma->channel[C1].config.priority = 0;
   dma->channel[C1].config.enable = 1;
 
-  /* [RM] 16.6.3: ADC control register (ADC_CR) (pg 457)
-     Start the A/D converter
-        Bit 2 ADSTART: ADC start of regular conversion
-        0: No ADC regular conversion is ongoing.
-        1: Write 1 to start regular conversions. Read 1 means that the ADC is
-        operating and eventually converting a regular channel.
-  */
+  // Start the A/D converter
   adc->adc[0].ctrl |= 4;
 }
 

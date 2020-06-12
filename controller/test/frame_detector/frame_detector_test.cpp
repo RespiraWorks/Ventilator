@@ -3,8 +3,10 @@
 #include "soft_rx_buffer.h"
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
+#include <cmath>
 #include <string>
 #include <vector>
+
 using namespace std;
 
 constexpr uint32_t LEN = 20;
@@ -152,10 +154,10 @@ TEST(FrameDetector, ErrorWhileRx) {
   EXPECT_FALSE(frame_detector.is_frame_available());
 }
 
-vector<string> fakeRx(string frame) {
+template <int BUF_LEN> vector<string> fakeRx(string frame) {
   vector<string> ret;
-  SoftRxBuffer<LEN> rx_buf(MARK);
-  FrameDetectorTest frame_detector(rx_buf);
+  SoftRxBuffer<BUF_LEN> rx_buf(MARK);
+  FrameDetector<SoftRxBuffer<BUF_LEN>, BUF_LEN> frame_detector(rx_buf);
   if (!frame_detector.Begin()) {
     return ret;
   }
@@ -190,38 +192,70 @@ vector<string> fakeRx(string frame) {
 }
 
 TEST(FrameDetector, FuzzMoreMarkers) {
-  EXPECT_THAT(fakeRx(".aaa..."), testing::ElementsAre("aaa"));
-  EXPECT_THAT(fakeRx("..aaa...."), testing::ElementsAre("aaa"));
-  EXPECT_THAT(fakeRx("...aaa.."), testing::ElementsAre("aaa"));
-  EXPECT_THAT(fakeRx("....aaa."), testing::ElementsAre("aaa"));
+  EXPECT_THAT(fakeRx<LEN>(".aaa..."), testing::ElementsAre("aaa"));
+  EXPECT_THAT(fakeRx<LEN>("..aaa...."), testing::ElementsAre("aaa"));
+  EXPECT_THAT(fakeRx<LEN>("...aaa.."), testing::ElementsAre("aaa"));
+  EXPECT_THAT(fakeRx<LEN>("....aaa."), testing::ElementsAre("aaa"));
 }
 
 TEST(FrameDetector, FramesTooLong) {
-  EXPECT_THAT(fakeRx(".aaaaaaaaaaaaaaaaaaaa..aaa."),
+  EXPECT_THAT(fakeRx<LEN>(".aaaaaaaaaaaaaaaaaaaa..aaa."),
               testing::ElementsAre("aaa"));
-  EXPECT_THAT(fakeRx(".aaaaaaaaaaaaaaaaaaa..aaa."),
+  EXPECT_THAT(fakeRx<LEN>(".aaaaaaaaaaaaaaaaaaa..aaa."),
               testing::ElementsAre("aaa"));
-  EXPECT_THAT(fakeRx("....................aaa."), testing::ElementsAre("aaa"));
-  EXPECT_THAT(fakeRx("...................aaa."), testing::ElementsAre("aaa"));
+  EXPECT_THAT(fakeRx<LEN>("....................aaa."),
+              testing::ElementsAre("aaa"));
+  EXPECT_THAT(fakeRx<LEN>("...................aaa."),
+              testing::ElementsAre("aaa"));
 }
 
 TEST(FrameDetector, FuzzyInputs) {
-  EXPECT_THAT(fakeRx(".aaa..bbb..a."), testing::ElementsAre("aaa", "bbb", "a"));
-  EXPECT_THAT(fakeRx("..aaa..bbb..a."),
+  EXPECT_THAT(fakeRx<LEN>(".aaa..bbb..a."),
               testing::ElementsAre("aaa", "bbb", "a"));
-  EXPECT_THAT(fakeRx("aaa.bbb.a."), testing::ElementsAre());
-  EXPECT_THAT(fakeRx("aaa.....bbb.a."), testing::ElementsAre("bbb"));
-  EXPECT_THAT(fakeRx(".aaa....bbb.a."), testing::ElementsAre("aaa", "bbb"));
-  EXPECT_THAT(fakeRx("aa.bbb.b...bbbb..s.ss.s...ssss..ss.ssss..aaaaa.sa.aaaa."),
-              testing::ElementsAre("bbbb", "s", "ssss", "ss", "aaaaa"));
+  EXPECT_THAT(fakeRx<LEN>("..aaa..bbb..a."),
+              testing::ElementsAre("aaa", "bbb", "a"));
+  EXPECT_THAT(fakeRx<LEN>("aaa.bbb.a."), testing::ElementsAre());
+  EXPECT_THAT(fakeRx<LEN>("aaa.....bbb.a."), testing::ElementsAre("bbb"));
+  EXPECT_THAT(fakeRx<LEN>(".aaa....bbb.a."),
+              testing::ElementsAre("aaa", "bbb"));
+  EXPECT_THAT(
+      fakeRx<LEN>("aa.bbb.b...bbbb..s.ss.s...ssss..ss.ssss..aaaaa.sa.aaaa."),
+      testing::ElementsAre("bbbb", "s", "ssss", "ss", "aaaaa"));
 }
 
 TEST(FrameDetector, FuzzyErrors) {
-  EXPECT_THAT(fakeRx(".aaa..bUb..a."), testing::ElementsAre("aaa", "a"));
-  EXPECT_THAT(fakeRx("..aaaF.bbb..a."), testing::ElementsAre("bbb", "a"));
-  EXPECT_THAT(fakeRx("aaa.bbb.a."), testing::ElementsAre());
-  EXPECT_THAT(fakeRx("aaa.....bbb.a."), testing::ElementsAre("bbb"));
-  EXPECT_THAT(fakeRx(".aaa...Dbbb.a."), testing::ElementsAre("aaa"));
-  EXPECT_THAT(fakeRx("aa.bbb.b...bbbb..s.ss.s...ssss..ss.ssss.Oaaaaa.sa.aaaa."),
-              testing::ElementsAre("bbbb", "s", "ssss", "ss"));
+  EXPECT_THAT(fakeRx<LEN>(".aaa..bUb..a."), testing::ElementsAre("aaa", "a"));
+  EXPECT_THAT(fakeRx<LEN>("..aaaF.bbb..a."), testing::ElementsAre("bbb", "a"));
+  EXPECT_THAT(fakeRx<LEN>("aaa.bbb.a."), testing::ElementsAre());
+  EXPECT_THAT(fakeRx<LEN>("aaa.....bbb.a."), testing::ElementsAre("bbb"));
+  EXPECT_THAT(fakeRx<LEN>(".aaa...Dbbb.a."), testing::ElementsAre("aaa"));
+  EXPECT_THAT(
+      fakeRx<LEN>("aa.bbb.b...bbbb..s.ss.s...ssss..ss.ssss.Oaaaaa.sa.aaaa."),
+      testing::ElementsAre("bbbb", "s", "ssss", "ss"));
+}
+
+TEST(FrameDetector, FuzzRandomEvents) {
+  string valid_frames = "..aa..bb..cc.";
+
+  for (int j = 0; j < pow(3, 10); j++) {
+    string noise = "";
+    for (int i = 0; i < 10; i++) {
+      int r = rand() % static_cast<int>(3);
+      switch (r) {
+      case 0:
+        noise += ".";
+        break;
+      case 1:
+        noise += "a";
+        break;
+      case 2:
+        noise += "F";
+        break;
+      default:
+        noise += "b";
+      }
+    }
+    EXPECT_THAT(fakeRx<4>(noise + valid_frames),
+                testing::IsSupersetOf({"aa", "bb", "cc"}));
+  }
 }

@@ -51,14 +51,14 @@ PressureControlFsm::PressureControlFsm(Time now, const VentParams &params)
 void PressureControlFsm::Update(Time now, const SensorReadings &readings) {
   if (now >= inspire_end_) {
     inspire_finished_ = true;
-  }else{
+  } else {
     // Go from expire_pressure_ to inspire_pressure_ over a duration of
     // RISE_TIME.  Then for the rest of the inspire time, hold at
     // inspire_pressure_.
     static_assert(RISE_TIME > milliseconds(0));
     float rise_frac = std::min(1.f, (now - start_time_) / RISE_TIME);
     setpoint_ =
-      expire_pressure_ + (inspire_pressure_ - expire_pressure_) * rise_frac;
+        expire_pressure_ + (inspire_pressure_ - expire_pressure_) * rise_frac;
   }
   if (now > expire_end_) {
     finished_ = true;
@@ -94,7 +94,7 @@ BlowerSystemState PressureAssistFsm::DesiredState() const {
   return {.blower_enabled = true, inspire_pressure_, ValveState::CLOSED};
 }
 
-//TODO don't rely on fsm inner states to make this usable in any fsm
+// TODO don't rely on fsm inner states to make this usable in any fsm
 bool PressureAssistFsm::PatientInspiring(const SensorReadings &readings) {
   // TODO: change this when we get better understanding of inspiratory effort
   // detection strategy, right now this is just set to trigger for any flow
@@ -126,7 +126,7 @@ bool PressureAssistFsm::PatientInspiring(const SensorReadings &readings) {
 }
 
 BlowerSystemState BlowerFsm::DesiredState(Time now, const VentParams &params,
-                                 const SensorReadings &readings) {
+                                          const SensorReadings &readings) {
   // Immediately turn off the ventilator if params.mode == OFF; otherwise,
   // wait until the end of a cycle before implementing the mode change.
   bool is_new_breath = false;

@@ -17,25 +17,9 @@ limitations under the License.
 This file implements the HAL (Hardware Abstraction Layer) for the
 STM32L452 processor used on the controller.
 
-SOURCES OF TRUTH
-================
+Details of the processor's peripherals can be found in [RM].
 
-This code is implemented on the basis of the following specifications.
-In comments that accompany the code, they will be referred to by letter
-abbreviation and some section or page number.
-
-[DS] Data Sheet for Nucleo board we are using:
-  https://www.st.com/resource/en/datasheet/stm32l452re.pdf
-
-[RM] Reference Manual for the STM32L452 processor.
-   https://www.st.com/resource/en/reference_manual/dm00151940-stm32l41xxx42xxx43xxx44xxx45xxx46xxx-advanced-armbased-32bit-mcus-stmicroelectronics.pdf
-   Details of the processor's peripherals can be found here.
-
-[PM] Programmer's manual for the Cortex M4 line of processors:
-   https://www.st.com/resource/en/programming_manual/dm00046982-stm32-cortexm4-mcus-and-mpus-programming-manual-stmicroelectronics.pdf
-
-[PCB] RespiraWorks custom printed circuit board schematic
-  https://github.com/RespiraWorks/pcbreathe/blob/master/NIGHTLY/20200424v2-RELEASE-CANDIDATE-2/20200424v2-RespiraWorks-Ventilator-Rev1.0-RC2-DWG-SCH.PDF
+Abbreviations [RM], [DS], etc are defined in hal/README.md.
 */
 
 #if defined(BARE_STM32)

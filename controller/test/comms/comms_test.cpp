@@ -17,7 +17,6 @@ TEST(CommTests, SendControllerStatus) {
   s.active_params.breaths_per_min = 15;
   s.active_params.pip_cm_h2o = 1;
   s.active_params.inspiratory_expiratory_ratio = 2;
-  s.active_params.rise_time_ms = 100;
   s.active_params.inspiratory_trigger_cm_h2o = 5;
   s.active_params.expiratory_trigger_ml_per_min = 9;
   // Set very large values here because they take up more space in the encoded
@@ -63,7 +62,6 @@ TEST(CommTests, CommandRx) {
   s.desired_params.breaths_per_min = 15;
   s.desired_params.pip_cm_h2o = 1;
   s.desired_params.inspiratory_expiratory_ratio = 2;
-  s.desired_params.rise_time_ms = 100;
   s.desired_params.inspiratory_trigger_cm_h2o = 5;
   s.desired_params.expiratory_trigger_ml_per_min = 9;
   // Set very large values here because they take up more space in the encoded

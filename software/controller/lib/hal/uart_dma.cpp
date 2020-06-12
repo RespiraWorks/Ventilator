@@ -239,6 +239,7 @@ void UartDma::UartISR() {
     uart_->interrupt_clear.bitfield.overrun_clear = 1;
     uart_->interrupt_clear.bitfield.rx_timeout_clear = 1;
 
+    StopRx();
     if (rx_listener_) {
       rx_listener_->OnRxError(e);
     }
@@ -258,13 +259,12 @@ void UartDma::UartISR() {
 // ISR handler for the DMA peripheral responsible for transmission.
 // Calls OnTxError and OnTxComplete functions of the tx_listener_
 void UartDma::DmaTxISR() {
+  StopTX();
   if (dma_->interrupt_status.teif2) {
-    StopTX();
     if (tx_listener_) {
       tx_listener_->OnTxError();
     }
   } else {
-    StopTX();
     if (tx_listener_) {
       tx_listener_->OnTxComplete();
     }
@@ -274,13 +274,12 @@ void UartDma::DmaTxISR() {
 // ISR handler for the DMA peripheral responsible for reception.
 // Calls OnRxError and OnRxComplete functions of the rx_listener_
 void UartDma::DmaRxISR() {
+  StopRX();
   if (dma_->interrupt_status.teif3) {
-    StopRX();
     if (rx_listener_) {
       rx_listener_->OnRxError(RxError::DMA);
     }
   } else {
-    StopRX();
     if (rx_listener_) {
       rx_listener_->OnRxComplete();
     }

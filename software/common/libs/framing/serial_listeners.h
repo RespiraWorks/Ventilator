@@ -1,6 +1,6 @@
 #pragma once
 
-enum class RxError { Unknown, Overflow, SerialFraming, Timeout, DMA };
+enum class RxError { Unknown, Overflow, SerialFraming, DMA };
 
 // An interface that gets called on serial events.
 // NOTE: all callbacks are called from interrupt context!

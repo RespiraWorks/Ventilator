@@ -47,7 +47,6 @@ typedef struct _VentParams {
     uint32_t breaths_per_min;
     uint32_t pip_cm_h2o;
     float inspiratory_expiratory_ratio;
-    uint32_t rise_time_ms;
     uint32_t inspiratory_trigger_cm_h2o;
     uint32_t expiratory_trigger_ml_per_min;
     uint32_t alarm_lo_tidal_volume_ml;
@@ -87,12 +86,12 @@ typedef struct _GuiStatus {
 /* Initializer values for message structs */
 #define GuiStatus_init_default                   {0, VentParams_init_default, 0, {Alarm_init_default, Alarm_init_default, Alarm_init_default, Alarm_init_default}}
 #define ControllerStatus_init_default            {0, VentParams_init_default, SensorsProto_init_default, 0, {Alarm_init_default, Alarm_init_default, Alarm_init_default, Alarm_init_default}, 0, 0}
-#define VentParams_init_default                  {_VentMode_MIN, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+#define VentParams_init_default                  {_VentMode_MIN, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
 #define SensorsProto_init_default                {0, 0, 0, 0, 0}
 #define Alarm_init_default                       {0, _AlarmKind_MIN}
 #define GuiStatus_init_zero                      {0, VentParams_init_zero, 0, {Alarm_init_zero, Alarm_init_zero, Alarm_init_zero, Alarm_init_zero}}
 #define ControllerStatus_init_zero               {0, VentParams_init_zero, SensorsProto_init_zero, 0, {Alarm_init_zero, Alarm_init_zero, Alarm_init_zero, Alarm_init_zero}, 0, 0}
-#define VentParams_init_zero                     {_VentMode_MIN, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+#define VentParams_init_zero                     {_VentMode_MIN, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
 #define SensorsProto_init_zero                   {0, 0, 0, 0, 0}
 #define Alarm_init_zero                          {0, _AlarmKind_MIN}
 
@@ -109,7 +108,6 @@ typedef struct _GuiStatus {
 #define VentParams_breaths_per_min_tag           4
 #define VentParams_pip_cm_h2o_tag                5
 #define VentParams_inspiratory_expiratory_ratio_tag 6
-#define VentParams_rise_time_ms_tag              7
 #define VentParams_inspiratory_trigger_cm_h2o_tag 8
 #define VentParams_expiratory_trigger_ml_per_min_tag 9
 #define VentParams_alarm_lo_tidal_volume_ml_tag  10
@@ -155,7 +153,6 @@ X(a, STATIC,   REQUIRED, UINT32,   peep_cm_h2o,       3) \
 X(a, STATIC,   REQUIRED, UINT32,   breaths_per_min,   4) \
 X(a, STATIC,   REQUIRED, UINT32,   pip_cm_h2o,        5) \
 X(a, STATIC,   REQUIRED, FLOAT,    inspiratory_expiratory_ratio,   6) \
-X(a, STATIC,   REQUIRED, UINT32,   rise_time_ms,      7) \
 X(a, STATIC,   REQUIRED, UINT32,   inspiratory_trigger_cm_h2o,   8) \
 X(a, STATIC,   REQUIRED, UINT32,   expiratory_trigger_ml_per_min,   9) \
 X(a, STATIC,   REQUIRED, UINT32,   alarm_lo_tidal_volume_ml,  10) \
@@ -194,9 +191,9 @@ extern const pb_msgdesc_t Alarm_msg;
 #define Alarm_fields &Alarm_msg
 
 /* Maximum encoded size of messages (where known) */
-#define GuiStatus_size                           140
-#define ControllerStatus_size                    177
-#define VentParams_size                          67
+#define GuiStatus_size                           134
+#define ControllerStatus_size                    171
+#define VentParams_size                          61
 #define SensorsProto_size                        25
 #define Alarm_size                               13
 

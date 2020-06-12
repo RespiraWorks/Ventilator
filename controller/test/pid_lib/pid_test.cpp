@@ -186,8 +186,7 @@ TEST(PidTest, TaskJitter) {
   const float setpoint = 25;
   const float input = setpoint - 10;
   PID pid(/*kp=*/0, Ki, /*kd=*/0, ProportionalTerm::ON_ERROR,
-          DifferentialTerm::ON_MEASUREMENT,
-          MIN_OUTPUT, MAX_OUTPUT);
+          DifferentialTerm::ON_MEASUREMENT, MIN_OUTPUT, MAX_OUTPUT);
   Time now = base;
 
   float integral = (setpoint - input) * sample_period.seconds();
@@ -215,8 +214,7 @@ TEST(PidTest, MissedSample) {
   const float setpoint = 25;
   const float input = setpoint - 10;
   PID pid(/*kp=*/0, Ki, /*kd=*/0, ProportionalTerm::ON_ERROR,
-          DifferentialTerm::ON_MEASUREMENT,
-          MIN_OUTPUT, MAX_OUTPUT);
+          DifferentialTerm::ON_MEASUREMENT, MIN_OUTPUT, MAX_OUTPUT);
   Time now = base;
 
   float integral = (setpoint - input) * (sample_period.seconds());
@@ -269,4 +267,44 @@ TEST(PidTest, Observe) {
   float integral = (setpoint - input) * sample_period.seconds();
   EXPECT_OUTPUT(pid.Compute(ticks(t++), input, setpoint),
                 128 + 10 + integral * Ki);
+}
+
+TEST(PidTest, Reset) {
+
+  PID pid(0, 0, 0, ProportionalTerm::ON_ERROR, DifferentialTerm::ON_ERROR,
+          MIN_OUTPUT, MAX_OUTPUT);
+
+  // Run one cycle to set last error
+  int t = 0;
+  float kp = 1;
+  float setpoint = 25;
+  float error = 10;
+  pid.SetKP(kp);
+  float output = pid.Compute(ticks(t++), setpoint - error, setpoint);
+  EXPECT_EQ(output, kp * error);
+
+  // Normally the kd term would act on the change in error.
+  // If I reset the PID then the change in error will be zero, so
+  // if the reset works the output will be zero
+  pid.SetKP(0);
+  pid.SetKD(1);
+  error = 20;
+  pid.Reset();
+  output = pid.Compute(ticks(t++), setpoint - error, setpoint);
+  EXPECT_EQ(output, 0.0f);
+
+  // Build up an integral sum
+  pid.SetKD(0);
+  pid.SetKI(1);
+  for (int i = 0; i < 10; i++)
+    output = pid.Compute(ticks(t++), setpoint - error, setpoint);
+
+  // With all gains set to zero, running again will not change the output
+  // it will still be the output_sum_ value
+  pid.SetKI(0);
+  EXPECT_EQ(output, pid.Compute(ticks(t++), setpoint - error, setpoint));
+
+  // Resetting the PID will reset output_sum to zero
+  pid.Reset();
+  EXPECT_EQ(0.0f, pid.Compute(ticks(t++), setpoint - error, setpoint));
 }

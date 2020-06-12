@@ -376,20 +376,17 @@ struct ADC_Regs {
       REG rsvd4 : 20;
     } seq; // ADC Regular Sequence Register
 
-    REG data; // 0x40 - Regular data register [RM] 16.6.15 (pg 471)
+    REG data; // 0x40 - Regular Data register [RM] 16.6.15 (pg 471)
     REG rsvd3[2];
-    REG iSeq; // 0x4C - Injected sequence regiseter [RM] 16.6.16 (pg 472)
+    REG iSeq; // 0x4C - Injected Sequence register [RM] 16.6.16 (pg 472)
     REG rsvd4[4];
     REG offset[4]; // 0x60 - Offset Register [RM] 16.6.17 (pg 473)
     REG rsvd5[4];
-    REG iData[4]; // 0x80 - - Injected Channel Data Register [RM] 16.6.18 (pg
-                  // 474)
+    REG iData[4]; // 0x80 - Injected Chan Data Reg [RM] 16.6.18 (pg 474)
     REG rsvd6[4];
-    REG wdCfg[2]; // 0xA0 - Analog Watchdog Config Register [RM] 16.6.19 (pg
-                  // 474)
+    REG wdCfg[2]; // 0xA0 - Anlg Watchdog Config Reg [RM] 16.6.19 (pg 474)
     REG rsvd7[2];
-    REG diffSel; // 0xB0 - Differential Mode Selection Register [RM] 16.6.21 (pg
-                 // 476)
+    REG diffSel; // 0xB0 - Differential Mode Selection Reg [RM] 16.6.21 (pg 476)
     REG cal;     // 0xB4 - Calibration Factors [RM] 16.6.22 (pg 476)
     REG rsvd8[18];
   } adc[2]; // Master ADC1, Slave ADC2
@@ -398,8 +395,7 @@ struct ADC_Regs {
   REG comStat; // 0x300 - Common Status Register [RM] 16.7.1 (pg 477)
   REG rsvd9;
   REG comCtrl; // 0x304 - Common Control Register [RM] 16.7.2 (pg 479)
-  REG comData; // 0x308 - Common Data Register for Dual Mode [RM] 16.7.3 (pg
-               // 482)
+  REG comData; // 0x308 - Common Data Reg Dual Mode [RM] 16.7.3 (pg 482)
 };
 inline ADC_Regs *const ADC_BASE = reinterpret_cast<ADC_Regs *>(0X50040000);
 

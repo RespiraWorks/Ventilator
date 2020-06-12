@@ -55,14 +55,14 @@ limitations under the License.
 #include "hal_stm32.h"
 
 /*
+Please refer to [PCB] as the ultimate source of which
+pin is used for which function.
+
 The following pins are used as analog inputs on the rev-1 PCB:
 - PA0 (ADC1_IN5)  - vin (not currently used)
 - PA1 (ADC1_IN6)  - pressure
 - PA4 (ADC1_IN9)  - inhale flow
 - PB0 (ADC1_IN15) - exhale flow
-
-Please refer to the PCB schematic as the ultimate source of which
-pin is used for which function.
 
 Reference abbreviations ([RM], [PCB], etc) are defined in hal/README.md
 */
@@ -171,8 +171,7 @@ void HalApi::InitADC() {
 
   adc->adc[0].cfg2.ovss = (oversample_log2 < 4) ? 0 : (oversample_log2 - 4);
 
-  // [RM] 16.4.12: Channel-wise programmable sampling time (pg 389)
-  // Set sample time. I'm using 92.5 A/D clocks to sample.
+  // Set sample times ([RM] 16.4.12). I'm using 92.5 A/D clocks to sample.
   static_assert(adc_samp_time == 92);
   adc->adc[0].samp.smp5 = 5;
   adc->adc[0].samp.smp6 = 5;

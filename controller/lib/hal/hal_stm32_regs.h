@@ -19,17 +19,15 @@ limitations under the License.
 #include <stdint.h>
 
 // Represents a 32-bit register
-using REG = volatile uint32_t;
+typedef volatile uint32_t REG;
 
 // 16-bit short register
-using SREG = volatile uint16_t;
+typedef volatile uint16_t SREG;
 
 // 8-bit byte sized register
-using BREG = volatile uint8_t;
+typedef volatile uint8_t BREG;
 
 /*
-SOURCES OF TRUTH
-================
 The structures below represent the STM32 registers used
 to configure various modules (like timers, serial ports, etc).
 
@@ -37,11 +35,7 @@ Detailed information on these modules and the registers
 used to configure them can be found in the reference
 manual for this chip
 
-[RM] Reference Manual for the STM32L452 processor
-  https://www.st.com/resource/en/reference_manual/dm00151940-stm32l41xxx42xxx43xxx44xxx45xxx46xxx-advanced-armbased-32bit-mcus-stmicroelectronics.pdf
-
-[PM] Programmer's manual for the Cortex M4 line of processors:
-   https://www.st.com/resource/en/programming_manual/dm00046982-stm32-cortexm4-mcus-and-mpus-programming-manual-stmicroelectronics.pdf
+Reference abbreviations ([RM], [PCB], etc) are defined in hal/README.md
 */
 
 // [PM] 4.4 System control block (SCB) (pg 221)
@@ -51,17 +45,17 @@ struct RCC_Regs { // <Offset> <Name>
   REG clkCfg;    // 0x08 clock configuration register (RCC_CFGR)
   REG pllCfg;    // 0x0C PLL configuration register (RCC_PLLCFGR)
   REG pllSaiCfg; // 0x10 PLLSAI1 configuration register (RCC_PLLSAI1CFGR)
-  REG rsvd1;     //      Reserved
+  REG rsvd1;
   REG clkIntEna; // 0x18 Clock interrupt enable register ( RCC_CIER)
   REG clkIntFlg; // 0x1C Clock interrupt flag register ( RCC_CIFR)
   REG clkIntClr; // 0x20 Clock interrupt clear register ( RCC_CICR)
-  REG rsvd2;     //      Reserved
+  REG rsvd2;
   REG periphReset[8];  // 0x28 peripheral reset registers
   REG periphClkEna[8]; // 0x48 peripheral clock registers
   REG sleepClkEna[8];  // 0x68 Clock enable in sleep
   REG indClkCfg;  // 0x88 Peripherals independent clock configuration register
                   // (RCC_CCIPR)
-  REG rsvd3;      //      Reserved
+  REG rsvd3;
   REG backup;     // 0x90 Backup domain control register (RCC_BDCR)
   REG status;     // 0x94 control & status register (RCC_CSR)
   REG recovery;   // 0x98 Clock recovery RC register (RCC_CRRCR)
@@ -590,9 +584,9 @@ struct DMA_Regs {
     REG count;            // channel x number of data to transfer register
     volatile void *pAddr; // channel x peripheral address register
     volatile void *mAddr; // channel x memory address register
-    REG rsvd;             // reserved
+    REG rsvd;
   } channel[7];
-  REG rsvd[5]; // reserved
+  REG rsvd[5];
   union {
     struct {
       REG c1s : 4;
@@ -614,32 +608,11 @@ inline DMA_Regs *const DMA2_BASE = reinterpret_cast<DMA_Regs *>(0x40020400);
   @param dma        Address of DMA registers
   @param chan       DMA channel to modify.  Channels are numbered from 0
   @param selection  Selects which peripherial request to map to the channel
-
-  DMA request mapping [RM] 11.3.2 (pg 296)
-
-  Channel Selection Register [RM] 11.6.7 (pg 317)
-    Bits 27:24 C7S[3:0]: DMA channel 7 selection
-    Bits 23:20 C6S[3:0]: DMA channel 6 selection
-    Bits 19:16 C5S[3:0]: DMA channel 5 selection
-    Bits 15:12 C4S[3:0]: DMA channel 4 selection
-    Bits 11:8 C3S[3:0]:  DMA channel 3 selection
-    Bits 7:4 C2S[3:0]:   DMA channel 2 selection
-    Bits 3:0 C1S[3:0]:   DMA channel 1 selection
-
-  selection &= 0x0F                 Converts selection to binary and truncates
-                                      digits after 4th bit
-  val = dma->chanSel.r              Holds DMA Channel Selection Register
-  2^(4 * chan)                        MSB position
-  val &= ~(0xF * 2^(4 * chan))      Clears bits storing channel selection on
-  register val |= selection * 2^(4 * chan)   Writes selection to channel
-  selection on register dma->chanSel.r = val              Write changes to
-  channel selection register
 */
-
 inline void DMA_SelectChannel(DMA_Regs *dma, DMA_Chan chan, int selection) {
   selection &= 0x0F;
 
-  int x = 4 * static_cast<int>(chan);
+  int x = 4 * static_cast<int>(chan); // 4 bits per channel ([RM] 11.3.2)
 
   uint32_t val = dma->chanSel.r;
   val &= ~(0xF << x);
@@ -654,28 +627,15 @@ enum class DmaInterrupt {
   XFER_ERR = 8
 };
 
-/* Clear a DMA Interrupt
-  @param dma        Address of DMA registers
-  @param chan       DMA channel to modify
-  @param interrupt  DMA interrupt event
-
-  DMA interrupt flag clear register (DMA_IFCR) [RM] 11.6.2
-  Bit i             global interrupt flag clear for channel i
-  Bit i+1           transfer complete flag clear for channel i
-  Bit i+2           half transfer flag clear for channel i
-  Bit i+3           transfer error flag clear for channel i
-
-  2^(4 * chan)                DMA interrupt event flag clear bits for channel
-  interrupt * 2^(4 * chan)    bit that matches appropriate interrupt event for
-  channel
-*/
+// Clear a DMA Interrupt
 inline void DMA_ClearInt(DMA_Regs *dma, DMA_Chan chan, DmaInterrupt interrupt) {
 
   int x = static_cast<int>(interrupt);
-  x <<= 4 * static_cast<int>(chan);
+  x <<= 4 * static_cast<int>(chan); // 4 events per channel ([RM] 11.6.2)
   dma->intClr.r = x;
 }
 
+// [RM] 40.6 SPI Registers (pg 1330)
 struct SPI_Regs {
   struct {
     REG cpha : 1;       // Clock phase
@@ -693,7 +653,7 @@ struct SPI_Regs {
     REG bidir_oe : 1;   // Bidirectional output enable
     REG bidir_mode : 1; // Bidirectional data mode enable
     REG rsvd : 16;
-  } ctrl1;
+  } ctrl1; // Control register 1 (SPIx_CR1) [RM] 40.6.1 (pg 1330)
   struct {
     REG rx_dma_en : 1; // Receive buffer DMA enable
     REG tx_dma_en : 1; // Transmit buffer DMA enable
@@ -708,27 +668,28 @@ struct SPI_Regs {
     REG ldma_rx : 1;   // Last DMA xfer for receive
     REG ldma_tx : 1;   // Last DMA xfer for transmit
     REG rsvd : 17;
-  } ctrl2;
-  REG status;
-  REG data;
-  REG crcPoly;
-  REG rxCRC;
-  REG txCRC;
+  } ctrl2;     // Control register 2 (SPIx_CR2) [RM] 40.6.2
+  REG status;  // Status register (SPIx_SR) [RM] 40.6.3
+  REG data;    // Data register (SPIx_Dr) [RM] 40.6.4
+  REG crcPoly; // CRC polynomial register (SPIx_CRCPR) [RM] 40.6.5
+  REG rxCRC;   // Rx CRC register (SPIx_RXCRCR) [RM] 40.6.6
+  REG txCRC;   // Tx CRC register (SPIx_TXCRCR) [RM] 40.6.7
 };
 inline SPI_Regs *const SPI1_BASE = reinterpret_cast<SPI_Regs *>(0x40013000);
 inline SPI_Regs *const SPI2_BASE = reinterpret_cast<SPI_Regs *>(0x40003800);
 inline SPI_Regs *const SPI3_BASE = reinterpret_cast<SPI_Regs *>(0x40003C00);
 
+// [RM] 37.7 I2C Registers
 struct I2C_Regs {
-  REG ctrl[2];
-  REG addr[2];
-  REG timing;
-  REG timeout;
-  REG status;
-  REG intClr;
-  REG pec;
-  REG rxData;
-  REG txData;
+  REG ctrl[2]; // Control register (1-2) [RM] 37.7.{1,2}
+  REG addr[2]; // Own address (1-2) register [RM] 37.7.{3,4}
+  REG timing;  // Timing register [RM] 37.7.5
+  REG timeout; // Timout register [RM] 37.7.6
+  REG status;  // Interrupt & status register [RM] 37.7.7
+  REG intClr;  // Interrupt clear register [RM] 37.7.8
+  REG pec;     // PEC register [RM] 37.7.9
+  REG rxData;  // Receive data register [RM] 37.7.10
+  REG txData;  // Transmit data register [RM] 37.7.11
 };
 inline I2C_Regs *const I2C1_BASE = reinterpret_cast<I2C_Regs *>(0x40005400);
 inline I2C_Regs *const I2C2_BASE = reinterpret_cast<I2C_Regs *>(0x40005800);
@@ -736,40 +697,43 @@ inline I2C_Regs *const I2C3_BASE = reinterpret_cast<I2C_Regs *>(0x40005c00);
 inline I2C_Regs *const I2C4_BASE = reinterpret_cast<I2C_Regs *>(0x40008400);
 
 // Watchdog timer
+// [RM] 32.4 Watchdog Registers (pg 1016)
 struct Watchdog_Regs {
-  REG key;
-  REG prescale;
-  REG reload;
-  REG status;
-  REG window;
+  REG key;      // Key register [RM] 32.4.1
+  REG prescale; // Prescale register [RM] 32.4.2
+  REG reload;   // Reload register [RM] 32.4.3
+  REG status;   // Status register [RM] 32.4.4
+  REG window;   // Winow register [RM] 32.4.5
 };
 inline Watchdog_Regs *const WATCHDOG_BASE =
     reinterpret_cast<Watchdog_Regs *>(0x40003000);
 
 // CRC calculation unit
+// [RM] 14.4 CRC Registers (pg 341)
 struct CRC_Regs {
-  REG data;
-  REG scratch;
-  REG ctrl;
+  REG data;    // Data register [RM] 14.4.1
+  REG scratch; // Independent data register [RM] 14.4.2
+  REG ctrl;    // Control register [RM] 14.4.3
   REG rsvd;
-  REG init;
-  REG poly;
+  REG init; // Initial CRC value [RM] 14.4.4
+  REG poly; // CRC polynomial [RM] 14.4.5
 };
 inline CRC_Regs *const CRC_BASE = reinterpret_cast<CRC_Regs *>(0x40023000);
 
 // General Purpose I/O
+// [RM] 8.4 GPIO Registers (pg 267)
 struct GPIO_Regs {
-  REG mode;
-  REG outType;
-  REG outSpeed;
-  REG pullUpDn;
-  REG inDat;
-  REG outDat;
-  SREG set;
-  SREG clr;
-  REG lock;
-  REG alt[2];
-  REG reset;
+  REG mode;     // Mode register [RM] 8.4.1
+  REG outType;  // Output type register [RM] 8.4.2
+  REG outSpeed; // Output speed register [RM] 8.4.3
+  REG pullUpDn; // Pull-up/pull-down register [RM] 8.4.4
+  REG inDat;    // Input data register [RM] 8.4.5
+  REG outDat;   // Output data register [RM] 8.4.6
+  SREG set;     // Bit set register [RM] 8.4.7
+  SREG clr;     // Bit reset register [RM] 8.4.7
+  REG lock;     // Configuration lock register [RM] 8.4.8
+  REG alt[2];   // Alternate function low/high register [RM] 8.4.{9,10}
+  REG reset;    // Reset register [RM] 8.4.11
 };
 inline GPIO_Regs *const GPIO_A_BASE = reinterpret_cast<GPIO_Regs *>(0x48000000);
 inline GPIO_Regs *const GPIO_B_BASE = reinterpret_cast<GPIO_Regs *>(0x48000400);

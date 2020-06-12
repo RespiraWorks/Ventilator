@@ -161,7 +161,23 @@ vector<string> fakeRx(string frame) {
   }
 
   for (auto &c : frame) {
-    rx_buf.PutByte(c);
+    switch (c) {
+    case 'F':
+      frame_detector.OnRxError(RxError::SERIAL_FRAMING);
+      break;
+    case 'U':
+      frame_detector.OnRxError(RxError::UNKNOWN);
+      break;
+    case 'D':
+      frame_detector.OnRxError(RxError::DMA);
+      break;
+    case 'O':
+      frame_detector.OnRxError(RxError::OVERRUN);
+      break;
+    default:
+      rx_buf.PutByte(c);
+    }
+
     if (frame_detector.is_frame_available()) {
       string s;
       auto length = static_cast<size_t>(frame_detector.get_frame_length());

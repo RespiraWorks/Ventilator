@@ -11,16 +11,13 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
+*/
 
+/*
 This file implements the HAL (Hardware Abstraction Layer) for the
-STM32L452 processor used on the controller.  Details of the processor's
-peripherals can be found in the reference manual for that processor:
-   https://www.st.com/resource/en/reference_manual/dm00151940-stm32l41xxx42xxx43xxx44xxx45xxx46xxx-advanced-armbased-32bit-mcus-stmicroelectronics.pdf
+STM32L452 processor used on the controller.
 
-Details specific to the ARM processor used in this chip can be found in
-the programmer's manual for the processor available here:
-   https://www.st.com/resource/en/programming_manual/dm00046982-stm32-cortexm4-mcus-and-mpus-programming-manual-stmicroelectronics.pdf
-
+Reference abbreviations [RM], [DS], etc are defined in hal/README.md.
 */
 
 #ifndef HAL_STM32_H_
@@ -54,21 +51,23 @@ enum class InterruptVector {
 
 // Handy functions for controlling GPIO
 
-// Each pin has a 2-bit mode value that can be set using this function
-// Pin 0 mode is in bits 0-1, pin 1 in 2-3, etc.
+// Each pin has a 2-bit mode value that can be set using this function.
+// Pin 0 mode is in bits 0-1, pin 1 in 2-3, etc.  ([RM] 8.4.1)
 enum class GPIO_PinMode {
   IN = 0,
   OUT = 1,
   ALT = 2,
   ANALOG = 3,
 };
+
 inline void GPIO_PinMode(GPIO_Regs *gpio, int pin, GPIO_PinMode mode) {
-  gpio->mode &= ~(3 << (pin * 2));
+  gpio->mode &= ~(0b11 << (pin * 2));
   gpio->mode |= (static_cast<int>(mode) << (pin * 2));
 }
 
-// The output type is controlled by a single bit in a register.
+// Value for GPIO{A,B,...E,H}_OTYPER ([RM] 8.4.2)
 enum class GPIO_OutType { PUSHPULL = 0, OPENDRAIN = 1 };
+
 inline void GPIO_OutType(GPIO_Regs *gpio, int pin, GPIO_OutType outType) {
   if (outType == GPIO_OutType::OPENDRAIN)
     gpio->outType |= 1 << pin;
@@ -80,20 +79,18 @@ inline void GPIO_OutType(GPIO_Regs *gpio, int pin, GPIO_OutType outType) {
 enum class GPIO_OutSpeed { LOW = 0, MEDIUM = 1, HIGH = 2, SMOKIN = 3 };
 inline void GPIO_OutSpeed(GPIO_Regs *gpio, int pin, GPIO_OutSpeed speed) {
   int S = static_cast<int>(speed);
-  gpio->outSpeed &= ~(3 << (2 * pin));
+  gpio->outSpeed &= ~(0b11 << (2 * pin));
   gpio->outSpeed |= (S << (2 * pin));
 }
 
-// Many pins on the processor can be assigned special functions.
-// There's a table in the chip datasheet that lists the possible
-// functions for each pin.
-// This function sets the alternate function associated with a
-// particular pin.
+// Many GPIO pins can be repurposed with an alternate function
+// See Table 17 and 18 [DS] for alternate functions
+// See [RM] 8.4.9 and 8.4.10 for GPIO alternate function selection
 inline void GPIO_PinAltFunc(GPIO_Regs *gpio, int pin, int func) {
   GPIO_PinMode(gpio, pin, GPIO_PinMode::ALT);
 
   int x = (pin < 8) ? 0 : 1;
-  gpio->alt[x] |= (func << ((pin & 7) * 4));
+  gpio->alt[x] |= (func << ((pin & 0b111) * 4));
 }
 
 // Set a specific output pin

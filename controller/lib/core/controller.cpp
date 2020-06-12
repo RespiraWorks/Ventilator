@@ -23,8 +23,8 @@ static constexpr Duration LOOP_PERIOD = milliseconds(10);
 
 static DebugFloat dbg_setpoint("setpoint", "Setpoint pressure, kPa");
 
-static DebugFloat dbg_kp("kp", "Proportional gain for main loop", 3.5);
-static DebugFloat dbg_ki("ki", "Integral gain for main loop", 1.0);
+static DebugFloat dbg_kp("kp", "Proportional gain for main loop", 0.7f);
+static DebugFloat dbg_ki("ki", "Integral gain for main loop", 1.0f);
 static DebugFloat dbg_kd("kd", "Derivative gain for main loop");
 static DebugFloat dbg_sp("pc_setpoint", "Pressure control setpoint (cmH2O)");
 static DebugUInt32 dbg_per("loop_period", "Loop period (usec)",
@@ -32,7 +32,8 @@ static DebugUInt32 dbg_per("loop_period", "Loop period (usec)",
 
 Controller::Controller()
     : pid_(dbg_kp.Get(), dbg_ki.Get(), dbg_kd.Get(), ProportionalTerm::ON_ERROR,
-           DifferentialTerm::ON_MEASUREMENT, /*output_min=*/0.f, /*output_max=*/1.0f) {}
+           DifferentialTerm::ON_MEASUREMENT, /*output_min=*/0.f,
+           /*output_max=*/1.0f) {}
 
 Duration Controller::GetLoopPeriod() { return LOOP_PERIOD; }
 
@@ -66,6 +67,7 @@ Controller::Run(Time now, const VentParams &params,
     actuator_state.blower_valve = std::nullopt;
     actuator_state.exhale_valve = std::nullopt;
     actuator_state.blower_power = 0.0f;
+    pid_.Reset();
     break;
 
   case VentMode_PRESSURE_CONTROL:

@@ -57,7 +57,7 @@ public:
 
   // get the sensor readings (patient pressure, volumetric flow and tidal
   // volume) from the sensors
-  SensorReadings GetSensorReadings();
+  SensorsProto GetSensorReadings();
 
   // min/max possible reading from MPXV5004GP pressure sensors
   // The canonical list of hardware in the device is: https://bit.ly/3aERr69

@@ -69,6 +69,8 @@ TEST(FrameDetector, RxFullSizeFrame) {
 
   EXPECT_EQ(State::WAIT_FOR_START_MARKER, frame_detector.get_state());
   ASSERT_TRUE(frame_detector.is_frame_available());
+  ASSERT_EQ(string("                  "),
+            string(reinterpret_cast<char *>(frame_detector.TakeFrame())));
 }
 
 TEST(FrameDetector, RxComplete) {
@@ -86,6 +88,8 @@ TEST(FrameDetector, RxComplete) {
     rx_buf.PutByte(' ');
   }
 
+  // We've put too many bytes into the rx_buffer, causing RxComplete event
+  // That should not happen as frames must fit into the buffer by design
   EXPECT_EQ(State::LOST, frame_detector.get_state());
   ASSERT_FALSE(frame_detector.is_frame_available());
 }

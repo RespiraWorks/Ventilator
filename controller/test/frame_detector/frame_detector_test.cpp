@@ -215,3 +215,13 @@ TEST(FrameDetector, FuzzyInputs) {
   EXPECT_THAT(fakeRx("aa.bbb.b...bbbb..s.ss.s...ssss..ss.ssss..aaaaa.sa.aaaa."),
               testing::ElementsAre("bbbb", "s", "ssss", "ss", "aaaaa"));
 }
+
+TEST(FrameDetector, FuzzyErrors) {
+  EXPECT_THAT(fakeRx(".aaa..bUb..a."), testing::ElementsAre("aaa", "a"));
+  EXPECT_THAT(fakeRx("..aaaF.bbb..a."), testing::ElementsAre("bbb", "a"));
+  EXPECT_THAT(fakeRx("aaa.bbb.a."), testing::ElementsAre());
+  EXPECT_THAT(fakeRx("aaa.....bbb.a."), testing::ElementsAre("bbb"));
+  EXPECT_THAT(fakeRx(".aaa...Dbbb.a."), testing::ElementsAre("aaa"));
+  EXPECT_THAT(fakeRx("aa.bbb.b...bbbb..s.ss.s...ssss..ss.ssss.Oaaaaa.sa.aaaa."),
+              testing::ElementsAre("bbbb", "s", "ssss", "ss"));
+}

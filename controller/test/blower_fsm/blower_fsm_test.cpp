@@ -150,7 +150,7 @@ TEST(BlowerFsmTest, PressureAssist) {
                            .net_flow = ml_per_min(20000.0f)
   };
 
-  // - when flow is zero: breath is triggered on latest_expire_end_ rather than
+  // - when flow is zero: breath is triggered on expire_deadline_ rather than
   // patient triggered, to enforce minimum respiratory rate
   // - when flow is breath: trigger breath if in expire mode
   testSequence({
@@ -167,7 +167,7 @@ TEST(BlowerFsmTest, PressureAssist) {
       // tigger the next breath
       {p, zero, /*blower_enabled=*/true, 2500, cmH2O(10), ValveState::OPEN},
       {p, zero, /*blower_enabled=*/true, 2999, cmH2O(10), ValveState::OPEN},
-      // trigger breath on latest_expire_end_
+      // trigger breath on expire_deadline_
       {p, zero, /*blower_enabled=*/true, 3001, cmH2O(20), ValveState::CLOSED},
       {p, zero, /*blower_enabled=*/true, 4999, cmH2O(20), ValveState::CLOSED},
       {p, zero, /*blower_enabled=*/true, 5001, cmH2O(10), ValveState::OPEN},

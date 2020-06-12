@@ -205,9 +205,6 @@ static bool isRxError() {
 void UART_DMA::UART_ISR() {
   if (isRxError()) {
     RxError e = RxError::UNKNOWN;
-    if (isRxTimeout()) {
-      e = RxError::TIMEOUT;
-    }
     if (uart_->status.s.ore) {
       e = RxError::OVERFLOW;
     }
@@ -222,6 +219,7 @@ void UART_DMA::UART_ISR() {
     uart_->intClear.s.orecf = 1;
     uart_->intClear.s.rtocf = 1;
 
+    stopRx();
     if (rx_listener_) {
       rx_listener_->OnRxError(e);
     }
@@ -241,13 +239,12 @@ void UART_DMA::UART_ISR() {
 // ISR handler for the DMA peripheral responsible for transmission.
 // Calls OnRxError and OnTxComplete functions of the tx_listener_
 void UART_DMA::DMA_TX_ISR() {
+  stopTX();
   if (dma_->intStat.teif2) {
-    stopTX();
     if (tx_listener_) {
       tx_listener_->OnTxError();
     }
   } else {
-    stopTX();
     if (tx_listener_) {
       tx_listener_->OnTxComplete();
     }
@@ -257,13 +254,12 @@ void UART_DMA::DMA_TX_ISR() {
 // ISR handler for the DMA peripheral responsible for reception.
 // Calls OnRxError and OnRxComplete functions of the rx_listener_
 void UART_DMA::DMA_RX_ISR() {
+  stopRX();
   if (dma_->intStat.teif3) {
-    stopRX();
     if (rx_listener_) {
       rx_listener_->OnRxError(RxError::DMA);
     }
   } else {
-    stopRX();
     if (rx_listener_) {
       rx_listener_->OnRxComplete();
     }

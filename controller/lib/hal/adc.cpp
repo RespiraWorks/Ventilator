@@ -54,24 +54,18 @@ limitations under the License.
 #include "hal.h"
 #include "hal_stm32.h"
 
-/******************************************************************
- * A/D inputs.
- *
- * The following pins are used as analog inputs on the rev-1 PCB
- *
- * Please refer to the PCB schematic as the ultimate source of which
- * pin is used for which function.  A less definitive, but perhaps
- * easier to read spreadsheet is availabe here:
- * https://docs.google.com/spreadsheets/d/1JOSQKxkQxXJ6MCMDI9PwUQ6kiuGdujR4D6EJN9u2LWg/edit#gid=0
- *
- * PA0 (ADC1_IN5)  - vin (not currently used)
- * PA1 (ADC1_IN6)  - pressure
- * PA4 (ADC1_IN9)  - inhale flow
- * PB0 (ADC1_IN15) - exhale flow
- *
- * See chapter 16 of the reference manual
- *
- *****************************************************************/
+/*
+Please refer to [PCB] as the ultimate source of which
+pin is used for which function.
+
+The following pins are used as analog inputs on the rev-1 PCB:
+- PA0 (ADC1_IN5)  - vin (not currently used)
+- PA1 (ADC1_IN6)  - pressure
+- PA4 (ADC1_IN9)  - inhale flow
+- PB0 (ADC1_IN15) - exhale flow
+
+Reference abbreviations ([RM], [PCB], etc) are defined in hal/README.md
+*/
 
 // How long a period (in seconds) we want to average the A/D readings.
 static constexpr float sample_history_time_sec = 0.001f;
@@ -86,11 +80,13 @@ static constexpr int adc_channels = 3;
 static constexpr int oversample_log2 = 4;
 static constexpr int oversample_count = 1 << oversample_log2;
 
+// [RM] 16.4.30: Oversampler (pg 425)
 // This calculated constant gives the maximum A/D reading based on the
 // number of samples.
 static constexpr int max_adc_reading =
     (oversample_log2 >= 4) ? 65536 : (1 << (12 + oversample_log2));
 
+// Set sample time ([RM] 16.4.12). I'm using 92.5 A/D clocks to sample.
 // A/D sample time in CPU clock cycles.  Fixed for now
 // This is the time we give the analog input to charge the A/D sampling cap.
 static constexpr int adc_samp_time = 92;
@@ -146,7 +142,7 @@ void HalApi::InitADC() {
   // I'll wait for 30 just to be extra conservative
   Hal.delay(microseconds(30));
 
-  // Calibrate the A/D for single ended channels
+  // Calibrate the A/D for single ended channels ([RM] 16.4.8)
   adc->adc[0].ctrl |= 0x80000000;
 
   // Wait until the CAL bit is cleared meaning
@@ -154,6 +150,7 @@ void HalApi::InitADC() {
   while (adc->adc[0].ctrl & 0x80000000) {
   }
 
+  // Enable the A/D ([RM] 16.4.9)
   // Clear all the status bits
   adc->adc[0].stat = 0x3FF;
 
@@ -168,33 +165,27 @@ void HalApi::InitADC() {
   adc->adc[0].cfg1.dmacfg = 1;
   adc->adc[0].cfg1.cont = 1;
 
-  // Enable ADC oversampling.
   adc->adc[0].cfg2.rovse = (oversample_log2 > 0) ? 1 : 0;
 
-  // The over sample setting is the log base 2 of the number of samples
-  // less one.
-  // For example, for 16 samples we would use log2(16)-1 = 3
   adc->adc[0].cfg2.ovsr = (oversample_log2 > 0) ? oversample_log2 - 1 : 0;
 
-  // The A/D data register can only return 16 bits, so we could get
-  // truncated data if our oversampling is higher then 16.  In this
-  // case I need to tell the hardware to downshift the sum
   adc->adc[0].cfg2.ovss = (oversample_log2 < 4) ? 0 : (oversample_log2 - 4);
 
-  // Set sample time. I'm using 92.5 A/D clocks to sample.
+  // Set sample times ([RM] 16.4.12). I'm using 92.5 A/D clocks to sample.
   static_assert(adc_samp_time == 92);
   adc->adc[0].samp.smp5 = 5;
   adc->adc[0].samp.smp6 = 5;
   adc->adc[0].samp.smp9 = 5;
   adc->adc[0].samp.smp15 = 5;
 
-  // Set the conversion sequence
+  // Set conversion sequence length:
   adc->adc[0].seq.len = adc_channels - 1;
+
   adc->adc[0].seq.sq1 = 6;
   adc->adc[0].seq.sq2 = 9;
   adc->adc[0].seq.sq3 = 15;
 
-  // I use DMA1 channel 1 to copy my A/D readings into my buffer
+  // I use DMA1 channel 1 to copy my A/D readings into my buffer ([RM] 11.4.4)
   EnableClock(DMA1_BASE);
   DMA_Regs *dma = DMA1_BASE;
   int C1 = static_cast<int>(DMA_Chan::C1);

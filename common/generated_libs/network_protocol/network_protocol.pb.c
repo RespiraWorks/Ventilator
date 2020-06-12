@@ -15,7 +15,7 @@ PB_BIND(ControllerStatus, ControllerStatus, AUTO)
 PB_BIND(VentParams, VentParams, AUTO)
 
 
-PB_BIND(SensorReadings, SensorReadings, AUTO)
+PB_BIND(SensorsProto, SensorsProto, AUTO)
 
 
 PB_BIND(Alarm, Alarm, AUTO)

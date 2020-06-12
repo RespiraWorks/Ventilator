@@ -71,13 +71,31 @@ TEST(BlowerFsmTest, PressureControl) {
   p.peep_cm_h2o = 10;
   p.pip_cm_h2o = 20;
 
+  constexpr int64_t rise_time_us = PressureControlFsm::RISE_TIME.microseconds();
+  static_assert(rise_time_us % 1000 == 0,
+                "test assumes rise time is a whole number of ms.");
+  constexpr int64_t rise_time_ms = rise_time_us / 1000;
+  static_assert(rise_time_ms % 4 == 0,
+                "test assumes we can divide rise time ms by 4.");
   testSequence({
-      {p, /*blower_enabled=*/true, 0, cmH2O(20), ValveState::CLOSED},
+      // Pressure starts out at PEEP and rises to PIP over period
+      // PressureControlFsm::RISE_TIME.
+      {p, /*blower_enabled=*/true, 0, cmH2O(10), ValveState::CLOSED},
+      {p, /*blower_enabled=*/true, rise_time_ms / 4, cmH2O(12.5),
+       ValveState::CLOSED},
+      {p, /*blower_enabled=*/true, rise_time_ms / 2, cmH2O(15),
+       ValveState::CLOSED},
+      {p, /*blower_enabled=*/true, 3 * rise_time_ms / 4, cmH2O(17.5),
+       ValveState::CLOSED},
       {p, /*blower_enabled=*/true, 1000, cmH2O(20), ValveState::CLOSED},
       {p, /*blower_enabled=*/true, 1999, cmH2O(20), ValveState::CLOSED},
       {p, /*blower_enabled=*/true, 2001, cmH2O(10), ValveState::OPEN},
       {p, /*blower_enabled=*/true, 2999, cmH2O(10), ValveState::OPEN},
-      {p, /*blower_enabled=*/true, 3001, cmH2O(20), ValveState::CLOSED},
+      {p, /*blower_enabled=*/true, 3001, cmH2O(10), ValveState::CLOSED},
+      {p, /*blower_enabled=*/true, 3001 + rise_time_ms / 2, cmH2O(15),
+       ValveState::CLOSED},
+      {p, /*blower_enabled=*/true, 3001 + rise_time_ms, cmH2O(20),
+       ValveState::CLOSED},
   });
 }
 
@@ -94,7 +112,9 @@ TEST(BlowerFsmTest, TurnOff) {
 
   testSequence({
       {p_off, /*blower_enabled=*/false, 0, cmH2O(0), ValveState::OPEN},
-      {p_on, /*blower_enabled=*/true, 1000, cmH2O(20), ValveState::CLOSED},
+      // This is PEEP pressure even though it's inspiration, because ramp it up
+      // to PIP over a duration of PressureControlFsm::RISE_TIME.
+      {p_on, /*blower_enabled=*/true, 1000, cmH2O(10), ValveState::CLOSED},
       {p_off, /*blower_enabled=*/false, 1001, cmH2O(0), ValveState::OPEN},
   });
 }
@@ -118,15 +138,16 @@ TEST(BlowerFsmTest, ChangeOfParamsStartAtTheNextBreath) {
   // 0                   1999        2999       3999       4999
   //         I                 E           I          E
   testSequence({
-      // Switching ON mode takes effect immidiately.
-      {p_init, /*blower_enabled=*/true, 0, cmH2O(20), ValveState::CLOSED},
+      // Switching ON mode takes effect immidiately.  Because of pressure
+      // control mode's ramp time, the initial pressure is PEEP, not PIP.
+      {p_init, /*blower_enabled=*/true, 0, cmH2O(10), ValveState::CLOSED},
       // 2sec of inhalation 1sec of exhalation. Ignores param change, stays on
       // p_init pip.
       {p_change, /*blower_enabled=*/true, 1999, cmH2O(20), ValveState::CLOSED},
       {p_change, /*blower_enabled=*/true, 2000, cmH2O(10), ValveState::OPEN},
       {p_change, /*blower_enabled=*/true, 3000, cmH2O(10), ValveState::OPEN},
       // Previous state finished, switch to p_change settings, 1sec In 1sec Ex.
-      {p_change, /*blower_enabled=*/true, 3001, cmH2O(30), ValveState::CLOSED},
+      {p_change, /*blower_enabled=*/true, 3001, cmH2O(15), ValveState::CLOSED},
       {p_init, /*blower_enabled=*/true, 4000, cmH2O(30), ValveState::CLOSED},
       // Ignore p_init setting in the middle of a breath.
       {p_init, /*blower_enabled=*/true, 4001, cmH2O(15), ValveState::OPEN},
@@ -134,7 +155,7 @@ TEST(BlowerFsmTest, ChangeOfParamsStartAtTheNextBreath) {
       // Switching OFF device, takes effect immidiately.
       {p_off, /*blower_enabled*/ false, 5005, cmH2O(0), ValveState::OPEN},
       // Switching ON device, takes effect immidiately.
-      {p_init, /*blower_enabled*/ true, 5010, cmH2O(20), ValveState::CLOSED},
+      {p_init, /*blower_enabled*/ true, 5010, cmH2O(10), ValveState::CLOSED},
   });
 }
 

@@ -74,6 +74,5 @@ private:
   float output_sum_ = 0;
   float last_input_ = 0;
   float last_error_ = 0;
-  float last_output_ = 0;
 };
 #endif

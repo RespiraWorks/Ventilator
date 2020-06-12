@@ -149,7 +149,7 @@ static void high_priority_task(void *arg) {
   controller_status.sensor_readings = AsSensorsProto(sensor_readings);
   controller_status.fan_power = actuators_state.blower_power;
   controller_status.pressure_setpoint_cm_h2o =
-      controller_state.setpoint_pressure.cmH2O();
+      controller_state.pressure_setpoint.cmH2O();
 
   // Sample any trace variables that are enabled
   trace.MaybeSample();

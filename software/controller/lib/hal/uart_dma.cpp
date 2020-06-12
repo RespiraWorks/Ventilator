@@ -19,7 +19,6 @@ limitations under the License.
 #include "uart_dma.h"
 #include "hal_stm32.h"
 #include "hal_stm32_regs.h"
-#include "units.h"
 
 // STM32 UART3 driver based on DMA transfers.
 
@@ -42,7 +41,7 @@ void UartDma::Init(uint32_t baud) {
   uart_->control3.bitfield.rx_dma = 1;         // set DMAR bit to enable DMA for receiver
   uart_->control3.bitfield.tx_dma = 1;         // set DMAT bit to enable DMA for transmitter
   uart_->control3.bitfield.dma_disable_on_rx_error = 1;         // DMA is disabled following a reception error
-  uart_->control2.bitfield.rx_timeout_enable = 1;        // Enable receive timeout feature
+  uart_->control2.bitfield.rx_timeout_enable = 0;        // Disable receive timeout feature
   uart_->control2.bitfield.addr = match_char_; // set match char
 
   uart_->control3.bitfield.error_interrupt = 1; // enable interrupt on error
@@ -146,14 +145,6 @@ void UartDma::StopTX() {
   }
 }
 
-// Converts Duration to the number of baudrate bits as that is used for rx
-// timeout. Max timeout supported by STM32 UART is 24 bit
-UartDma::uint24_t UartDma::DurationToBits(Duration d) {
-  return {0,
-          static_cast<uint32_t>(d.milliseconds() *
-          static_cast<float>(baud_) / 1000.0) & 0x00FFFFFF};
-}
-
 // Sets up reception of exactly [length] chars from UART3 into [buf]
 // [timeout] is the number of baudrate bits for which RX line is
 // allowed to be idle before issuing timeout error.
@@ -175,8 +166,7 @@ UartDma::uint24_t UartDma::DurationToBits(Duration d) {
 // Returns false if reception is in progress, new reception is not setup.
 // Returns true if no reception is in progress and new reception was setup.
 
-bool UartDma::StartRX(uint8_t *buf, uint32_t length, Duration timeout,
-                       RxListener *rxl) {
+bool UartDma::StartRX(uint8_t *buf, uint32_t length, RxListener *rxl) {
   // UART3 reception happens on DMA1 channel 3
   if (RxInProgress()) {
     return false;
@@ -194,11 +184,8 @@ bool UartDma::StartRX(uint8_t *buf, uint32_t length, Duration timeout,
   // data length
   dma_->channel[rx_channel_].count = length;
 
-  // setup rx timeout
-  uart_->timeout.bitfield.rx_timeout = DurationToBits(timeout).bits;
   uart_->interrupt_clear.bitfield.rx_timeout_clear = 1; // Clear rx timeout flag
   uart_->request.bitfield.flush_rx = 1;  // Clear RXNE flag
-  uart_->control_reg1.bitfield.rx_timeout_interrupt = 1;    // Enable receive timeout interrupt
 
   dma_->channel[rx_channel_].config.enable = 1; // go!
 
@@ -222,14 +209,8 @@ static bool CharacterMatchInterrupt() {
   return Uart3Base->status.bitfield.char_match != 0;
 }
 
-static bool GetRxTimeout() {
-  // Timeout interrupt enable and RTOF - Receiver timeout
-  return Uart3Base->control_reg1.bitfield.rx_timeout_interrupt &&
-  Uart3Base->status.bitfield.rx_timeout;
-}
-
 static bool GetRxError() {
-  return GetRxTimeout() ||
+  return
   Uart3Base->status.bitfield.overrun_error || // overrun error
   Uart3Base->status.bitfield.framing_error;   // frame error
 
@@ -244,9 +225,6 @@ static bool GetRxError() {
 void UartDma::UartISR() {
   if (GetRxError()) {
     RxError e = RxError::Unknown;
-    if (GetRxTimeout()) {
-      e = RxError::Timeout;
-    }
     if (uart_->status.bitfield.overrun_error) {
       e = RxError::Overflow;
     }

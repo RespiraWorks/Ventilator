@@ -17,7 +17,6 @@ limitations under the License.
 #pragma once
 #include "hal_stm32_regs.h"
 #include "serial_listeners.h"
-#include "units.h"
 
 class DMACtrl {
  public:
@@ -55,8 +54,8 @@ public:
 
   void StopTX();
 
-  [[nodiscard]] bool StartRX(uint8_t *buf, uint32_t length,
-                             Duration timeout, RxListener *rxl);
+  [[nodiscard]] bool StartRX(uint8_t *buf, uint32_t length, RxListener *rxl);
+
   void StopRX();
   void CharMatchEnable();
 
@@ -69,8 +68,6 @@ private:
     uint32_t ignored : 8;
     uint32_t bits : 24;
   } uint24_t;
-
-  uint24_t DurationToBits(Duration d);
 
   UartReg *const uart_ {nullptr};
   DmaReg *const dma_ {nullptr};

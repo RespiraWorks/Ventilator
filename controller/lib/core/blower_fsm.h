@@ -170,7 +170,7 @@ private:
 
   Time start_time_;
   Time inspire_end_;
-  Time latest_expire_end_;
+  Time expire_deadline_;
 
   // initialize threshold at insanely high flow to not trigger breath before
   // a proper threshold has been computed

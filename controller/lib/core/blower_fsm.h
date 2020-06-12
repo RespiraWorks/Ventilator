@@ -16,6 +16,7 @@ limitations under the License.
 #ifndef BLOWER_FSM_H
 #define BLOWER_FSM_H
 
+#include <optional>
 #include <variant>
 
 #include "network_protocol.pb.h"
@@ -26,22 +27,21 @@ limitations under the License.
 //
 // The controllable parts of the "blower system" are
 //
-//  - the blower fan, which generates air pressure, and
-//  - the expire valve, a solenoid which, when open, allows air to exit the
-//    system.
+//  - the blower fan, which generates air pressure,
+//  - the inspiratory pinch valve, which sits between the fan and the patient,
+//  - the expiratory pinch valve, which sits between the patient and the
+//    outside world.
 //
 // The purpose of this module is to determine, at any point in time, the ideal
 // state of the blower system:
 //
-//  - the pressure that (ideally) should exist in the system, and
-//  - whether the expire valve is open or closed.
-//
-// In other words, it's responsible for generating an idealized pressure curve
-// and a valve on/off control over time.
+//  - the pressure that ideally should exist in the system, and
+//  - whether the primary flow of air should be outside -> in (patient
+//    inhaling) or inside -> out (patient exhaling).
 //
 // Once this module has determined the ideal state, it's the responsibility of
-// the PID inside the Controller module to open/close the valve and drive the
-// blower to achieve the desired pressure.
+// the PID inside the Controller module to choose blower power and valve
+// settings that achieve the state.
 //
 // The main() loop queries DesiredState() on each iteration, which delegates to
 // a "breath FSM" (e.g. PressureControlFsm), which is responsible for *one
@@ -51,28 +51,23 @@ limitations under the License.
 // Decision that params should only change at breath boundaries:
 // https://respiraworks.slack.com/archives/CV4MTUJHF/p1588001011133500
 
-enum class ValveState {
-  OPEN,
-  CLOSED,
+enum class FlowDirection {
+  INSPIRATORY,
+  EXPIRATORY,
 };
 
 // Represents a state that the blower FSM wants us to achieve at a given point
 // in time.
 struct BlowerSystemState {
-  // Is the blower on?
+  // The setpoint pressure we're trying to achieve.
   //
-  // Note: blower_enabled == false isn't the same as pressure_setpoint == 0:
-  //
-  //  - If blower_enabled is false, we shut down the fan immediately, whereas
-  //  - if pressure_setpoint == 0, PID spins down the fan to attempt to read 0
-  //    kPa measured patient pressure.
-  //
-  // TODO: Combine this field with pressure_setpoint into an
-  // std::optional<Pressure>.
-  bool blower_enabled;
+  // pressure_setpoint == nullopt means "disable the system, shut down
+  // immediately", whereas pressure_setpoint == 0 instructs the system to try
+  // to achieve 0 pressure by e.g. closing valves.
+  std::optional<Pressure> pressure_setpoint;
 
-  Pressure pressure_setpoint;
-  ValveState expire_valve_state;
+  // Should air be primarily flowing into the patient, or out of the patient?
+  FlowDirection flow_direction;
 
   // Is this the first BlowerSystemState returned for a brand-new breath cycle?
   //
@@ -106,18 +101,20 @@ public:
   explicit OffFsm(Time now, const VentParams &) {}
   void Update(Time now, const SensorReadings &readings) {}
   BlowerSystemState DesiredState() {
-    return {.blower_enabled = false, kPa(0), ValveState::OPEN};
+    return {
+        .pressure_setpoint = std::nullopt,
+        // TODO: It doesn't make much sense to specify a flow direction when the
+        // device is off and therefore there's no flow!  It might be better to
+        // have a different BlowerSystemState struct for different categories of
+        // modes: One for pressure modes, one for volume modes, one for flow
+        // modes (high-flow nasal cannula), and one for the off mode.
+        FlowDirection::EXPIRATORY,
+    };
   }
   bool Finished() { return true; }
 };
 
 // "Breath finite state machine" for pressure control mode.
-//
-// Currently our pressure-control mode drives a simple square wave: We go from
-// PIP pressure on inhale to PEEP pressure on exhale.  Edwin currently
-// (2020-04-29) believes that the physical limitations of the system (i.e. the
-// fact that the blower can't spin up instantaneously) will lead this to being
-// an acceptable waveform, although it remains to be seen.
 class PressureControlFsm {
 public:
   // Transition from PEEP to PIP pressure over this length of time.  Citation:

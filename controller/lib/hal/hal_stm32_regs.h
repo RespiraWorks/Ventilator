@@ -53,8 +53,8 @@ struct RCC_Regs { // <Offset> <Name>
   REG periphReset[8];  // 0x28 peripheral reset registers
   REG periphClkEna[8]; // 0x48 peripheral clock registers
   REG sleepClkEna[8];  // 0x68 Clock enable in sleep
-  REG indClkCfg;  // 0x88 Peripherals independent clock configuration register
-                  // (RCC_CCIPR)
+  REG indClkCfg; // 0x88 Peripherals independent clock configuration register
+                 // (RCC_CCIPR)
   REG rsvd3;
   REG backup;     // 0x90 Backup domain control register (RCC_BDCR)
   REG status;     // 0x94 control & status register (RCC_CSR)

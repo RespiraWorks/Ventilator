@@ -40,7 +40,8 @@ Controller::Controller()
 std::pair<ActuatorsState, ControllerState>
 Controller::Run(Time now, const VentParams &params,
                 const SensorReadings &sensor_readings) {
-  BlowerSystemState desired_state = fsm_.DesiredState(now, params, sensor_readings);
+  BlowerSystemState desired_state =
+      fsm_.DesiredState(now, params, sensor_readings);
 
   if (!desired_state.blower_enabled) {
     pid_.Reset();

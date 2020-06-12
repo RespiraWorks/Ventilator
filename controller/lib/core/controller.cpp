@@ -35,11 +35,11 @@ Controller::Controller()
            DifferentialTerm::ON_MEASUREMENT, /*output_min=*/0.f,
            /*output_max=*/1.0f) {}
 
-Duration Controller::GetLoopPeriod() { return LOOP_PERIOD; }
+/*static*/ Duration Controller::GetLoopPeriod() { return LOOP_PERIOD; }
 
 std::pair<ActuatorsState, ControllerState>
 Controller::Run(Time now, const VentParams &params,
-                const SensorsProto &readings) {
+                const SensorReadings &sensor_readings) {
   BlowerSystemState desired_state = fsm_.DesiredState(now, params);
 
   if (!desired_state.blower_enabled) {
@@ -50,7 +50,7 @@ Controller::Run(Time now, const VentParams &params,
   pid_.SetKI(dbg_ki.Get());
   pid_.SetKD(dbg_kd.Get());
 
-  float pressure = cmH2O(readings.patient_pressure_cm_h2o).kPa();
+  float pressure = sensor_readings.patient_pressure.kPa();
   float setpoint = desired_state.setpoint_pressure.kPa();
   dbg_sp.Set(desired_state.setpoint_pressure.cmH2O());
 

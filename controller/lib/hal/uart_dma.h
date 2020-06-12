@@ -2,7 +2,6 @@
 #define __UART_DMA
 #include "hal_stm32_regs.h"
 #include "serial_listeners.h"
-#include "units.h"
 
 class DMACtrl {
   DMA_Regs *const dma_;
@@ -48,7 +47,7 @@ public:
   void stopTX();
 
   [[nodiscard]] bool startRX(const uint8_t *buf, uint32_t length,
-                             Duration timeout, RxListener *rxl);
+                             RxListener *rxl);
   void stopRX();
   void charMatchEnable();
 
@@ -62,7 +61,6 @@ private:
     uint32_t bits : 24;
   } uint24_t;
 
-  uint24_t DurationToBits(Duration d);
   bool tx_in_progress;
   bool rx_in_progress;
 };

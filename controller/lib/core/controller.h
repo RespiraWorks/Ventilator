@@ -5,6 +5,7 @@
 #include "blower_fsm.h"
 #include "network_protocol.pb.h"
 #include "pid.h"
+#include "sensors.h"
 #include "units.h"
 #include <utility>
 
@@ -20,21 +21,15 @@ struct ControllerState {
 // software and run closed-loop tests in a simulated physical environment
 class Controller {
 public:
+  static Duration GetLoopPeriod();
+
   Controller();
 
   std::pair<ActuatorsState, ControllerState>
-  Run(Time now, const VentParams &params, const SensorsProto &readings);
-
-  Duration GetLoopPeriod();
+  Run(Time now, const VentParams &params,
+      const SensorReadings &sensor_readings);
 
 private:
-  // Computes the fan power necessary to match pressure setpoint in desired
-  // state by running the necessary step of the pid with input = current
-  // pressure fan power represents the necessary power between 0 (Off) and 1
-  // (full power)
-  float ComputeFanPower(Time now, const BlowerSystemState &desired_state,
-                        const SensorsProto &sensor_readings);
-
   BlowerFsm fsm_;
   PID pid_;
 };

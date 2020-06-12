@@ -376,9 +376,9 @@ struct ADC_Regs {
       REG rsvd4 : 20;
     } seq; // ADC Regular Sequence Register
 
-    REG data; // 0x40 - Regular Data register [RM] 16.6.15 (pg 471)
+    REG data; // 0x40 - Regular Data Register [RM] 16.6.15 (pg 471)
     REG rsvd3[2];
-    REG iSeq; // 0x4C - Injected Sequence register [RM] 16.6.16 (pg 472)
+    REG iSeq; // 0x4C - Injected Sequence Register [RM] 16.6.16 (pg 472)
     REG rsvd4[4];
     REG offset[4]; // 0x60 - Offset Register [RM] 16.6.17 (pg 473)
     REG rsvd5[4];

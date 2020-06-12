@@ -24,6 +24,7 @@ float PID::Compute(Time now, float input, float setpoint) {
     last_input_ = input;
     last_error_ = setpoint - input;
     last_update_time_ = now;
+    output_sum_ = 0;
     initialized_ = true;
   }
 
@@ -60,8 +61,7 @@ float PID::Compute(Time now, float input, float setpoint) {
   last_input_ = input;
   last_error_ = error;
   last_update_time_ = now;
-  last_output_ = std::clamp(res, out_min_, out_max_);
-  return last_output_;
+  return std::clamp(res, out_min_, out_max_);
 }
 
 void PID::Observe(Time now, float input, float setpoint, float actual_output) {

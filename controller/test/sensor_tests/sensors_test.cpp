@@ -59,10 +59,10 @@ static Voltage MPXV5004_PressureToVoltage(Pressure pressure) {
 
 // Function that helps change the readings by setting the pressure sensor pins,
 // advancing time and then getting sensors readings
-static SensorReadings update_readings(Duration dt, Pressure patient_pressure,
-                                      Pressure inflow_pressure,
-                                      Pressure outflow_pressure,
-                                      Sensors *sensors) {
+static SensorsProto update_readings(Duration dt, Pressure patient_pressure,
+                                    Pressure inflow_pressure,
+                                    Pressure outflow_pressure,
+                                    Sensors *sensors) {
   Hal.test_setAnalogPin(AnalogPin::PATIENT_PRESSURE,
                         MPXV5004_PressureToVoltage(patient_pressure));
   Hal.test_setAnalogPin(AnalogPin::INFLOW_PRESSURE_DIFF,
@@ -201,7 +201,7 @@ TEST(SensorTests, FlowIntegrator) {
   }
 }
 
-// This test checks encapsulation of FlowIntegrator in getSensorReadings with
+// This test checks encapsulation of FlowIntegrator in getSensorsProto with
 // irregular sampling
 TEST(SensorTests, TidalVolume) {
   // define pressure waveforms over which integration will take place
@@ -234,8 +234,8 @@ TEST(SensorTests, TidalVolume) {
     Pressure p_in = pressure_in[i];
     Pressure p_out = pressure_out[i];
     Duration dt = sampling_time[i];
-    SensorReadings readings = update_readings(
-        dt, /*patient_pressure=*/kPa(0.0f), p_in, p_out, &sensors);
+    SensorsProto readings = update_readings(dt, /*patient_pressure=*/kPa(0.0f),
+                                            p_in, p_out, &sensors);
 
     tidal_volume.AddFlow(Hal.now(), Sensors::PressureDeltaToFlow(p_in) -
                                         Sensors::PressureDeltaToFlow(p_out));
@@ -260,7 +260,7 @@ TEST(SensorTests, Calibration) {
   sensors.Calibrate();
 
   // get the sensor readings for the init signals, expect 0
-  SensorReadings readings = sensors.GetSensorReadings();
+  SensorsProto readings = sensors.GetSensorReadings();
 
   EXPECT_PRESSURE_NEAR(cmH2O(readings.patient_pressure_cm_h2o), kPa(0.0f));
   EXPECT_FLOW_NEAR(ml_per_min(readings.flow_ml_per_min), ml_per_sec(0.0f));

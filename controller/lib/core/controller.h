@@ -23,7 +23,7 @@ public:
   Controller();
 
   std::pair<ActuatorsState, ControllerState>
-  Run(Time now, const VentParams &params, const SensorReadings &readings);
+  Run(Time now, const VentParams &params, const SensorsProto &readings);
 
   Duration GetLoopPeriod();
 
@@ -33,7 +33,7 @@ private:
   // pressure fan power represents the necessary power between 0 (Off) and 1
   // (full power)
   float ComputeFanPower(Time now, const BlowerSystemState &desired_state,
-                        const SensorReadings &sensor_readings);
+                        const SensorsProto &sensor_readings);
 
   BlowerFsm fsm_;
   PID pid_;

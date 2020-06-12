@@ -133,7 +133,7 @@ Pressure Sensors::ReadPressureSensor(Sensor s) {
       std::sqrt(pow2(portArea) - pow2(chokeArea)));
 }
 
-SensorReadings Sensors::GetSensorReadings() {
+SensorsProto Sensors::GetSensorReadings() {
   // Flow rate is inhalation flow minus exhalation flow. Positive value is flow
   // into lungs, and negative is flow out of lungs.
   auto now = Hal.now();

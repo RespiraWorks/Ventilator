@@ -162,6 +162,7 @@ public:
   void Update(Time now, const SensorReadings &readings);
   BlowerSystemState DesiredState() const;
   bool Finished() const { return finished_; }
+
 private:
   bool PatientInspiring(const SensorReadings &readings);
 

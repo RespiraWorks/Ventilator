@@ -44,6 +44,8 @@ static DebugFloat
                              "Net flow rate w/o correction, cc/sec");
 static DebugFloat dbg_volume_uncorrected("uncorrected_volume",
                                          "Patient volume w/o correction, ml");
+static DebugFloat dbg_flow_correction("flow_correction",
+                                      "Correction to flow, cc/sec");
 
 Controller::Controller()
     : blower_valve_pid_(dbg_blower_valve_kp.Get(), dbg_blower_valve_ki.Get(),
@@ -128,6 +130,7 @@ Controller::Run(Time now, const VentParams &params,
       (sensor_readings.inflow - sensor_readings.outflow).ml_per_sec());
   dbg_volume.Set(controller_state.patient_volume.ml());
   dbg_volume_uncorrected.Set(uncorrected_flow_integrator_->GetVolume().ml());
+  dbg_flow_correction.Set(flow_integrator_->FlowCorrection().ml_per_sec());
 
   return {actuators_state, controller_state};
 }

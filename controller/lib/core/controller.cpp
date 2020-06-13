@@ -65,7 +65,7 @@ Controller::Run(Time now, const VentParams &params,
   flow_integrator_->AddFlow(now, uncorrected_net_flow);
   uncorrected_flow_integrator_->AddFlow(now, uncorrected_net_flow);
 
-  Volume patient_volume = flow_integrator_->GetTV();
+  Volume patient_volume = flow_integrator_->GetVolume();
   VolumetricFlow net_flow =
       uncorrected_net_flow + flow_integrator_->FlowCorrection();
 
@@ -127,7 +127,7 @@ Controller::Run(Time now, const VentParams &params,
   dbg_net_flow_uncorrected.Set(
       (sensor_readings.inflow - sensor_readings.outflow).ml_per_sec());
   dbg_volume.Set(controller_state.patient_volume.ml());
-  dbg_volume_uncorrected.Set(uncorrected_flow_integrator_->GetTV().ml());
+  dbg_volume_uncorrected.Set(uncorrected_flow_integrator_->GetVolume().ml());
 
   return {actuators_state, controller_state};
 }

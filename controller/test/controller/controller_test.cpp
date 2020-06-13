@@ -65,7 +65,8 @@ TEST(ControllerTest, ControllerVolumeMatchesFlowIntegrator) {
     EXPECT_FLOAT_EQ(
         status.net_flow.ml_per_sec(),
         (uncorrected_flow + flow_integrator.FlowCorrection()).ml_per_sec());
-    EXPECT_FLOAT_EQ(status.patient_volume.ml(), flow_integrator.GetTV().ml());
+    EXPECT_FLOAT_EQ(status.patient_volume.ml(),
+                    flow_integrator.GetVolume().ml());
 
     if (breath_pos == 0) {
       flow_integrator.NoteExpectedVolume(ml(0));

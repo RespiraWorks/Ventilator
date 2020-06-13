@@ -32,7 +32,7 @@ public:
   // don't pre-correct it yourself!
   void AddFlow(Time now, VolumetricFlow uncorrected_flow);
 
-  Volume GetTV() const { return volume_; }
+  Volume GetVolume() const { return volume_; }
 
   // FlowIntegrator adds this value to measured flow when computing volume, in
   // an attempt to drive flow to the "correct" volume (as given by

@@ -16,6 +16,7 @@ limitations under the License.
 #include "hal.h"
 #include "pid.h"
 #include "units.h"
+#include <optional>
 
 // Integrates flow over time to calculate volume.
 //
@@ -60,6 +61,10 @@ public:
   void NoteExpectedVolume(Volume v);
 
 private:
+  std::optional<Time> last_flow_measurement_time_;
+  Volume volume_ = ml(0);
+  VolumetricFlow last_flow_ = cubic_m_per_sec(0);
+
   // Our flow sensors are subject to roughly two kinds of error:
   //
   //  - high-frequency error (i.e. "noise"), which we handle by reading the ADC
@@ -69,23 +74,11 @@ private:
   //    observe is equal to true flow plus an error, and that error changes
   //    slowly relative to how quickly we can read the sensor.
   //
-  // We use a PID controller invoked at each call to NoteExpectedVolume to
-  // estimate the zero-point drift.  If the patient is breathing normally,
-  // tidal volume should be 0 between breath.  The job of the PID is to output
-  // a flow offset so that the measured flow plus the offset takes tidal volume
-  // to its "correct" value at the next breath.
-  //
-  //  - PID input: Tidal volume in ml right between two breaths.
-  //  - PID setpoint: Desired volume between breaths, i.e. 0 ml.
-  //  - PID output: A flow in ml/sec that should be added to every measured
-  //    flow.
-  //
-  // TODO: When the ventilator blower is disabled and re-enabled, presumably we
-  // should clear some or all of these values!
-  PID flow_correction_pid_;
+  // flow_correction_ handles this low-frequency error.  It's common to see
+  // this error change by as much as 15ml/s between breaths.
   VolumetricFlow flow_correction_ = cubic_m_per_sec(0);
-
-  Time last_flow_measurement_time_ = Hal.now();
-  Volume volume_ = ml(0);
-  VolumetricFlow last_flow_ = cubic_m_per_sec(0);
+  // Time of last call to NoteExpectedVolume.
+  std::optional<Time> last_note_time_;
+  // Volume when NoteExpectedVolume was last called.
+  Volume last_note_vol_ = ml(0);
 };

@@ -53,9 +53,10 @@ private:
   std::optional<FlowIntegrator> flow_integrator_ = FlowIntegrator();
   std::optional<FlowIntegrator> uncorrected_flow_integrator_ = FlowIntegrator();
 
-  // This state allows resetting integrators when transitioning from Off state
-  // to On state.
-  bool ventilator_was_off_ = true;
+  // This state tells the controller whether the vent was already On when Run()
+  // was last called, and allows resetting integrators when transitioning from
+  // Off state to On state.
+  bool ventilator_was_on_ = false;
 };
 
 #endif // CONTROLLER_H_

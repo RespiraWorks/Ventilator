@@ -56,6 +56,14 @@ enum class FlowDirection {
   EXPIRATORY,
 };
 
+// Sensor readeings etc that are used by BlowerFsm to do e.g. breath detection.
+struct BlowerFsmInputs {
+  // Current patient volume, corrected for sensor zero-point drift.
+  Volume patient_volume;
+  // inflow - outflow, corrected for sensor zero-point drift.
+  VolumetricFlow net_flow;
+};
+
 // Represents a state that the blower FSM wants us to achieve at a given point
 // in time.
 struct BlowerSystemState {
@@ -80,12 +88,13 @@ struct BlowerSystemState {
 //
 // All breath FSMs should implement the following "duck-typed API".
 //
-//  - <constructor>(Time now, const VentParams& params): Constructs a new FSM
-//    for a single breath starting at the given time and with the given params.
-//    Those params don't change during the life of the FSM.
+//  - <constructor>(Time now, const VentParams& params):
+//    Constructs a new FSM for a single breath starting at the given time and
+//    with the given params.  Those params don't change during the life of the
+//    FSM.
 //
-//  - void Update(Time now, const SensorReadings readings):
-//    Updates the state of the fsm based on time and sensor readings.
+//  - void Update(Time now, const BlowerFsmInputs& inputs):
+//    Updates the state of the fsm based on time and values in inputs.
 //
 //  - BlowerSystemState DesiredState(): Gets the solenoid open/closed
 //    state and the pressure that the fan should be trying to hit for the
@@ -99,7 +108,7 @@ class OffFsm {
 public:
   OffFsm() = default;
   explicit OffFsm(Time now, const VentParams &) {}
-  void Update(Time now, const SensorReadings &readings) {}
+  void Update(Time now, const BlowerFsmInputs &inputs) {}
   BlowerSystemState DesiredState() {
     return {
         .pressure_setpoint = std::nullopt,
@@ -122,9 +131,8 @@ public:
   static constexpr inline Duration RISE_TIME = milliseconds(100);
 
   explicit PressureControlFsm(Time now, const VentParams &params);
-  void Update(Time now, const SensorReadings &readings);
+  void Update(Time now, const BlowerFsmInputs &inputs);
   BlowerSystemState DesiredState() const;
-
   bool Finished() const { return finished_; }
 
 private:
@@ -156,12 +164,12 @@ private:
 class PressureAssistFsm {
 public:
   explicit PressureAssistFsm(Time now, const VentParams &params);
-  void Update(Time now, const SensorReadings &readings);
+  void Update(Time now, const BlowerFsmInputs &inputs);
   BlowerSystemState DesiredState() const;
   bool Finished() const { return finished_; }
 
 private:
-  bool PatientInspiring(const SensorReadings &readings);
+  bool PatientInspiring(const BlowerFsmInputs &inputs);
 
   const Pressure inspire_pressure_;
   const Pressure expire_pressure_;
@@ -182,7 +190,7 @@ public:
   // Gets the state that the the blower system should (ideally) deliver right
   // now.
   BlowerSystemState DesiredState(Time now, const VentParams &params,
-                                 const SensorReadings &readings);
+                                 const BlowerFsmInputs &inputs);
 
 private:
   std::variant<OffFsm, PressureControlFsm, PressureAssistFsm> fsm_;

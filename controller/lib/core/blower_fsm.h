@@ -61,17 +61,17 @@ enum class ValveState {
 struct BlowerSystemState {
   // Is the blower on?
   //
-  // Note: blower_enabled == false isn't the same as setpoint_pressure == 0:
+  // Note: blower_enabled == false isn't the same as pressure_setpoint == 0:
   //
   //  - If blower_enabled is false, we shut down the fan immediately, whereas
-  //  - if setpoint_pressure == 0, PID spins down the fan to attempt to read 0
+  //  - if pressure_setpoint == 0, PID spins down the fan to attempt to read 0
   //    kPa measured patient pressure.
   //
-  // TODO: Combine this field with setpoint_pressure into an
+  // TODO: Combine this field with pressure_setpoint into an
   // std::optional<Pressure>.
   bool blower_enabled;
 
-  Pressure setpoint_pressure;
+  Pressure pressure_setpoint;
   ValveState expire_valve_state;
 
   // Is this the first BlowerSystemState returned for a brand-new breath cycle?

@@ -90,20 +90,19 @@ Controller::Run(Time now, const VentParams &params,
     // them to the desired positions.
     blower_valve_pid_.Reset();
 
-    // Reset the flow integrators, forcing volume to 0 when vent transitions
-    // from Off state to any other state.
-    //
-    if (desired_state.start_ventilation) {
-      flow_integrator_.emplace();
-      uncorrected_flow_integrator_.emplace();
-    }
     actuators_state = {
         .fio2_valve = 0,
         .blower_power = 0,
         .blower_valve = 0,
         .exhale_valve = 1,
     };
+    ventilator_was_off_ = true;
   } else {
+    if (ventilator_was_off_) {
+      // reset volume integrators
+      flow_integrator_.emplace();
+      uncorrected_flow_integrator_.emplace();
+    }
     // Start controlling pressure.
     actuators_state = {
         .fio2_valve = 0, // not used yet
@@ -116,6 +115,7 @@ Controller::Run(Time now, const VentParams &params,
         .exhale_valve =
             desired_state.flow_direction == FlowDirection::EXPIRATORY ? 1 : 0,
     };
+    ventilator_was_off_ = false;
   }
 
   ControllerState controller_state = {

@@ -96,9 +96,9 @@ Controller::Run(Time now, const VentParams &params,
         .blower_valve = 0,
         .exhale_valve = 1,
     };
-    ventilator_was_off_ = true;
+    ventilator_was_on_ = false;
   } else {
-    if (ventilator_was_off_) {
+    if (!ventilator_was_on_) {
       // reset volume integrators
       flow_integrator_.emplace();
       uncorrected_flow_integrator_.emplace();
@@ -115,7 +115,7 @@ Controller::Run(Time now, const VentParams &params,
         .exhale_valve =
             desired_state.flow_direction == FlowDirection::EXPIRATORY ? 1 : 0,
     };
-    ventilator_was_off_ = false;
+    ventilator_was_on_ = true;
   }
 
   ControllerState controller_state = {

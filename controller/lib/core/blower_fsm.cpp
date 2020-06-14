@@ -140,24 +140,19 @@ BlowerSystemState BlowerFsm::DesiredState(Time now, const VentParams &params,
   // Immediately turn off the ventilator if params.mode == OFF; otherwise,
   // wait until the end of a cycle before implementing the mode change.
   bool is_new_breath = false;
-  bool start_ventilation = false;
 
   std::visit([&](auto &fsm) { return fsm.Update(now, inputs); }, fsm_);
 
   if (params.mode == VentMode_OFF ||
       std::visit([&](auto &fsm) { return fsm.Finished(); }, fsm_)) {
-    // Set is_new_breath to true even when the ventilator transitions from on
-    // to off, but not when ventilator stays off.
-    // It's a little arbitrary, but for the most part, is_new_breath is used to
-    // mark breath boundaries rather than simply signal the beginning of a
-    // breath, and it would be weird if the last breath before turning off the
-    // ventilator appeared to continue indefinitely.
+    // Set is_new_breath to true only when entering a new cycle, not if this
+    // is the continuation of the Off Fsm.
+    // This means setting it to true on the transition from On to Off, which
+    // allows the controller to keep track of volume once the ventilator is
+    // turned Off, assuming the user will stop the ventilator when volume
+    // is close to 0.
     if (!std::holds_alternative<OffFsm>(fsm_)) {
       is_new_breath = true;
-    }
-    // Set start_ventilation to true when we leave Off State
-    if (std::holds_alternative<OffFsm>(fsm_) && params.mode != VentMode_OFF) {
-      start_ventilation = true;
     }
 
     switch (params.mode) {
@@ -176,6 +171,5 @@ BlowerSystemState BlowerFsm::DesiredState(Time now, const VentParams &params,
   BlowerSystemState s =
       std::visit([&](auto &fsm) { return fsm.DesiredState(); }, fsm_);
   s.is_new_breath = is_new_breath;
-  s.start_ventilation = start_ventilation;
   return s;
 }

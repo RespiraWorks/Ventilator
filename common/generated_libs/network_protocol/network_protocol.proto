@@ -135,7 +135,6 @@ message VentParams {
   required uint32 breaths_per_min = 4; // RR - respiratory rate
   required uint32 pip_cm_h2o = 5;      // PIP - peak inspiratory pressure
   required float inspiratory_expiratory_ratio = 6; // I:E
-  required uint32 rise_time_ms = 7; // time to reach inspiratory press. plateau
 
   required uint32 inspiratory_trigger_cm_h2o = 8; // P-trigger
 

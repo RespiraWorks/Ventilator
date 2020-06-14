@@ -28,6 +28,13 @@ constexpr BlowerFsmInputs inputs_zero = {
     .net_flow = ml_per_sec(0),
 };
 
+constexpr int64_t rise_time_us = RISE_TIME.microseconds();
+static_assert(rise_time_us % 1000 == 0,
+              "blower fsm tests assume rise time is a whole number of ms.");
+constexpr int64_t rise_time_ms = rise_time_us / 1000;
+static_assert(rise_time_ms % 4 == 0,
+              "blower fsm tests assume we can divide rise time ms by 4.");
+
 TEST(BlowerFsmTest, InitiallyOff) {
   BlowerFsm fsm;
   VentParams p = VentParams_init_zero;
@@ -68,13 +75,6 @@ void testSequence(
     EXPECT_EQ(s.flow_direction, expected_flow_direction);
   }
 }
-
-constexpr int64_t rise_time_us = RISE_TIME.microseconds();
-static_assert(rise_time_us % 1000 == 0,
-              "blower fsm tests assume rise time is a whole number of ms.");
-constexpr int64_t rise_time_ms = rise_time_us / 1000;
-static_assert(rise_time_ms % 4 == 0,
-              "blower fsm tests assume we can divide rise time ms by 4.");
 
 TEST(BlowerFsmTest, PressureControl) {
   VentParams p = VentParams_init_zero;

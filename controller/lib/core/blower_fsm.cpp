@@ -76,12 +76,21 @@ BlowerSystemState PressureControlFsm::DesiredState() const {
 PressureAssistFsm::PressureAssistFsm(Time now, const VentParams &params)
     : inspire_pressure_(cmH2O(static_cast<float>(params.pip_cm_h2o))),
       expire_pressure_(cmH2O(static_cast<float>(params.peep_cm_h2o))),
-      start_time_(now), inspire_end_(start_time_ + InspireDuration(params)),
+      setpoint_(expire_pressure_), start_time_(now),
+      inspire_end_(start_time_ + InspireDuration(params)),
       expire_deadline_(inspire_end_ + ExpireDuration(params)) {}
 
 void PressureAssistFsm::Update(Time now, const BlowerFsmInputs &inputs) {
   if (now >= inspire_end_) {
     inspire_finished_ = true;
+  } else {
+    // Go from expire_pressure_ to inspire_pressure_ over a duration of
+    // RISE_TIME.  Then for the rest of the inspire time, hold at
+    // inspire_pressure_.
+    static_assert(RISE_TIME > milliseconds(0));
+    float rise_frac = std::min(1.f, (now - start_time_) / RISE_TIME);
+    setpoint_ =
+        expire_pressure_ + (inspire_pressure_ - expire_pressure_) * rise_frac;
   }
   if (now >= expire_deadline_ || PatientInspiring(inputs)) {
     finished_ = true;
@@ -92,7 +101,7 @@ BlowerSystemState PressureAssistFsm::DesiredState() const {
   if (inspire_finished_) {
     return {expire_pressure_, FlowDirection::EXPIRATORY};
   }
-  return {inspire_pressure_, FlowDirection::INSPIRATORY};
+  return {setpoint_, FlowDirection::INSPIRATORY};
 }
 
 // TODO don't rely on fsm inner states to make this usable in any fsm

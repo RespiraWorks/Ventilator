@@ -18,9 +18,5 @@ PB_BIND(VentParams, VentParams, AUTO)
 PB_BIND(SensorsProto, SensorsProto, AUTO)
 
 
-PB_BIND(Alarm, Alarm, AUTO)
-
-
-
 
 

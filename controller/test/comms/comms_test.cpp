@@ -19,17 +19,6 @@ TEST(CommTests, SendControllerStatus) {
   s.active_params.inspiratory_expiratory_ratio = 2;
   s.active_params.inspiratory_trigger_cm_h2o = 5;
   s.active_params.expiratory_trigger_ml_per_min = 9;
-  // Set very large values here because they take up more space in the encoded
-  // proto, and our goal is to make it big.
-  s.active_params.alarm_lo_tidal_volume_ml =
-      std::numeric_limits<uint32_t>::max();
-  s.active_params.alarm_hi_tidal_volume_ml =
-      std::numeric_limits<uint32_t>::max();
-  s.active_params.alarm_lo_breaths_per_min =
-      std::numeric_limits<uint32_t>::max();
-  s.active_params.alarm_hi_breaths_per_min =
-      std::numeric_limits<uint32_t>::max();
-  s.sensor_readings.patient_pressure_cm_h2o = 11;
   s.sensor_readings.volume_ml = 800;
   s.sensor_readings.flow_ml_per_min = 1000;
 
@@ -64,16 +53,6 @@ TEST(CommTests, CommandRx) {
   s.desired_params.inspiratory_expiratory_ratio = 2;
   s.desired_params.inspiratory_trigger_cm_h2o = 5;
   s.desired_params.expiratory_trigger_ml_per_min = 9;
-  // Set very large values here because they take up more space in the encoded
-  // proto, and our goal is to make it big.
-  s.desired_params.alarm_lo_tidal_volume_ml =
-      std::numeric_limits<uint32_t>::max();
-  s.desired_params.alarm_hi_tidal_volume_ml =
-      std::numeric_limits<uint32_t>::max();
-  s.desired_params.alarm_lo_breaths_per_min =
-      std::numeric_limits<uint32_t>::max();
-  s.desired_params.alarm_hi_breaths_per_min =
-      std::numeric_limits<uint32_t>::max();
 
   char rx_buffer[GuiStatus_size];
   pb_ostream_t stream = pb_ostream_from_buffer(

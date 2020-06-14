@@ -86,7 +86,7 @@ struct BlowerSystemState {
 
 // Transition from PEEP to PIP pressure over this length of time.  Citation:
 // https://respiraworks.slack.com/archives/C011CJQV4Q7/p1591763842312500?thread_ts=1591759016.310200&cid=C011CJQV4Q7
-static constexpr Duration RISE_TIME = milliseconds(100);
+inline constexpr Duration RISE_TIME = milliseconds(100);
 
 // A "breath finite state machine" where the blower is always off.
 //

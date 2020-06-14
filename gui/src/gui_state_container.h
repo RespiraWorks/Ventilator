@@ -130,9 +130,17 @@ public:
   Q_PROPERTY(SimpleClock *clock READ get_clock NOTIFY clock_changed)
   Q_PROPERTY(PipExceededAlarm *pipExceededAlarm READ get_pip_exceeded_alarm
                  NOTIFY pip_exceeded_alarm_changed)
+  Q_PROPERTY(bool isDebugBuild READ IsDebugBuild NOTIFY IsDebugBuildChanged)
 
   QVector<QPointF> GetPressureSeries() const { return pressure_series_; }
 
+  bool IsDebugBuild() const {
+#ifdef QT_DEBUG
+    return true;
+#else
+    return false;
+#endif
+  }
   void SetPressureSeries(QVector<QPointF> &&series) {
     pressure_series_ = series;
     emit PressureSeriesChanged();
@@ -161,6 +169,7 @@ signals:
   void PressureSeriesChanged();
   void FlowSeriesChanged();
   void TidalSeriesChanged();
+  void IsDebugBuildChanged();
 
 public slots:
   // Adds a data point of controller status to the history.

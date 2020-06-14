@@ -52,6 +52,10 @@ private:
   // objects.
   std::optional<FlowIntegrator> flow_integrator_ = FlowIntegrator();
   std::optional<FlowIntegrator> uncorrected_flow_integrator_ = FlowIntegrator();
+
+  // This state allows resetting integrators when transitioning from Off state
+  // to On state.
+  bool ventilator_was_off_ = true;
 };
 
 #endif // CONTROLLER_H_

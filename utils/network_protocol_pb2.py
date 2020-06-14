@@ -22,7 +22,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
     syntax="proto2",
     serialized_options=None,
     create_key=_descriptor._internal_create_key,
-    serialized_pb=b'\n\x16network_protocol.proto\x1a\x0cnanopb.proto"h\n\tGuiStatus\x12\x11\n\tuptime_ms\x18\x01 \x02(\x04\x12#\n\x0e\x64\x65sired_params\x18\x02 \x02(\x0b\x32\x0b.VentParams\x12#\n\x0c\x61\x63ked_alarms\x18\x03 \x03(\x0b\x32\x06.AlarmB\x05\x92?\x02\x10\x04"\xcb\x01\n\x10\x43ontrollerStatus\x12\x11\n\tuptime_ms\x18\x01 \x02(\x04\x12"\n\ractive_params\x18\x02 \x02(\x0b\x32\x0b.VentParams\x12&\n\x0fsensor_readings\x18\x03 \x02(\x0b\x32\r.SensorsProto\x12(\n\x11\x63ontroller_alarms\x18\x04 \x03(\x0b\x32\x06.AlarmB\x05\x92?\x02\x10\x04\x12\x1b\n\x13\x66\x61n_setpoint_cm_h2o\x18\x05 \x02(\x02\x12\x11\n\tfan_power\x18\x06 \x02(\x02"\xf6\x02\n\nVentParams\x12\x17\n\x04mode\x18\x01 \x02(\x0e\x32\t.VentMode\x12\x13\n\x0bpeep_cm_h2o\x18\x03 \x02(\r\x12\x17\n\x0f\x62reaths_per_min\x18\x04 \x02(\r\x12\x12\n\npip_cm_h2o\x18\x05 \x02(\r\x12$\n\x1cinspiratory_expiratory_ratio\x18\x06 \x02(\x02\x12\x14\n\x0crise_time_ms\x18\x07 \x02(\r\x12"\n\x1ainspiratory_trigger_cm_h2o\x18\x08 \x02(\r\x12%\n\x1d\x65xpiratory_trigger_ml_per_min\x18\t \x02(\r\x12 \n\x18\x61larm_lo_tidal_volume_ml\x18\n \x02(\r\x12 \n\x18\x61larm_hi_tidal_volume_ml\x18\x0b \x02(\r\x12 \n\x18\x61larm_lo_breaths_per_min\x18\x0c \x02(\r\x12 \n\x18\x61larm_hi_breaths_per_min\x18\r \x02(\r"\xa6\x01\n\x0cSensorsProto\x12\x1f\n\x17patient_pressure_cm_h2o\x18\x01 \x02(\x02\x12\x11\n\tvolume_ml\x18\x02 \x02(\x02\x12\x17\n\x0f\x66low_ml_per_min\x18\x03 \x02(\x02\x12#\n\x1binflow_pressure_diff_cm_h2o\x18\x04 \x02(\x02\x12$\n\x1coutflow_pressure_diff_cm_h2o\x18\x05 \x02(\x02"5\n\x05\x41larm\x12\x12\n\nstart_time\x18\x01 \x02(\x04\x12\x18\n\x04kind\x18\x02 \x02(\x0e\x32\n.AlarmKind*)\n\x08VentMode\x12\x07\n\x03OFF\x10\x00\x12\x14\n\x10PRESSURE_CONTROL\x10\x01*}\n\tAlarmKind\x12\x1c\n\x18RESPIRATORY_RATE_TOO_LOW\x10\x01\x12\x1d\n\x19RESPIRATORY_RATE_TOO_HIGH\x10\x02\x12\x18\n\x14TIDAL_VOLUME_TOO_LOW\x10\x03\x12\x19\n\x15TIDAL_VOLUME_TOO_HIGH\x10\x04',
+    serialized_pb=b'\n\x16network_protocol.proto\x1a\x0cnanopb.proto"h\n\tGuiStatus\x12\x11\n\tuptime_ms\x18\x01 \x02(\x04\x12#\n\x0e\x64\x65sired_params\x18\x02 \x02(\x0b\x32\x0b.VentParams\x12#\n\x0c\x61\x63ked_alarms\x18\x03 \x03(\x0b\x32\x06.AlarmB\x05\x92?\x02\x10\x04"\xd0\x01\n\x10\x43ontrollerStatus\x12\x11\n\tuptime_ms\x18\x01 \x02(\x04\x12"\n\ractive_params\x18\x02 \x02(\x0b\x32\x0b.VentParams\x12&\n\x0fsensor_readings\x18\x03 \x02(\x0b\x32\r.SensorsProto\x12(\n\x11\x63ontroller_alarms\x18\x04 \x03(\x0b\x32\x06.AlarmB\x05\x92?\x02\x10\x04\x12 \n\x18pressure_setpoint_cm_h2o\x18\x05 \x02(\x02\x12\x11\n\tfan_power\x18\x06 \x02(\x02"\xf6\x02\n\nVentParams\x12\x17\n\x04mode\x18\x01 \x02(\x0e\x32\t.VentMode\x12\x13\n\x0bpeep_cm_h2o\x18\x03 \x02(\r\x12\x17\n\x0f\x62reaths_per_min\x18\x04 \x02(\r\x12\x12\n\npip_cm_h2o\x18\x05 \x02(\r\x12$\n\x1cinspiratory_expiratory_ratio\x18\x06 \x02(\x02\x12\x14\n\x0crise_time_ms\x18\x07 \x02(\r\x12"\n\x1ainspiratory_trigger_cm_h2o\x18\x08 \x02(\r\x12%\n\x1d\x65xpiratory_trigger_ml_per_min\x18\t \x02(\r\x12 \n\x18\x61larm_lo_tidal_volume_ml\x18\n \x02(\r\x12 \n\x18\x61larm_hi_tidal_volume_ml\x18\x0b \x02(\r\x12 \n\x18\x61larm_lo_breaths_per_min\x18\x0c \x02(\r\x12 \n\x18\x61larm_hi_breaths_per_min\x18\r \x02(\r"\xa6\x01\n\x0cSensorsProto\x12\x1f\n\x17patient_pressure_cm_h2o\x18\x01 \x02(\x02\x12\x11\n\tvolume_ml\x18\x02 \x02(\x02\x12\x17\n\x0f\x66low_ml_per_min\x18\x03 \x02(\x02\x12#\n\x1binflow_pressure_diff_cm_h2o\x18\x04 \x02(\x02\x12$\n\x1coutflow_pressure_diff_cm_h2o\x18\x05 \x02(\x02"5\n\x05\x41larm\x12\x12\n\nstart_time\x18\x01 \x02(\x04\x12\x18\n\x04kind\x18\x02 \x02(\x0e\x32\n.AlarmKind*)\n\x08VentMode\x12\x07\n\x03OFF\x10\x00\x12\x14\n\x10PRESSURE_CONTROL\x10\x01*}\n\tAlarmKind\x12\x1c\n\x18RESPIRATORY_RATE_TOO_LOW\x10\x01\x12\x1d\n\x19RESPIRATORY_RATE_TOO_HIGH\x10\x02\x12\x18\n\x14TIDAL_VOLUME_TOO_LOW\x10\x03\x12\x19\n\x15TIDAL_VOLUME_TOO_HIGH\x10\x04',
     dependencies=[nanopb__pb2.DESCRIPTOR,],
 )
 
@@ -52,8 +52,8 @@ _VENTMODE = _descriptor.EnumDescriptor(
     ],
     containing_type=None,
     serialized_options=None,
-    serialized_start=953,
-    serialized_end=994,
+    serialized_start=958,
+    serialized_end=999,
 )
 _sym_db.RegisterEnumDescriptor(_VENTMODE)
 
@@ -100,8 +100,8 @@ _ALARMKIND = _descriptor.EnumDescriptor(
     ],
     containing_type=None,
     serialized_options=None,
-    serialized_start=996,
-    serialized_end=1121,
+    serialized_start=1001,
+    serialized_end=1126,
 )
 _sym_db.RegisterEnumDescriptor(_ALARMKIND)
 
@@ -278,8 +278,8 @@ _CONTROLLERSTATUS = _descriptor.Descriptor(
             create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
-            name="fan_setpoint_cm_h2o",
-            full_name="ControllerStatus.fan_setpoint_cm_h2o",
+            name="pressure_setpoint_cm_h2o",
+            full_name="ControllerStatus.pressure_setpoint_cm_h2o",
             index=4,
             number=5,
             type=2,
@@ -325,7 +325,7 @@ _CONTROLLERSTATUS = _descriptor.Descriptor(
     extension_ranges=[],
     oneofs=[],
     serialized_start=147,
-    serialized_end=350,
+    serialized_end=355,
 )
 
 
@@ -574,8 +574,8 @@ _VENTPARAMS = _descriptor.Descriptor(
     syntax="proto2",
     extension_ranges=[],
     oneofs=[],
-    serialized_start=353,
-    serialized_end=727,
+    serialized_start=358,
+    serialized_end=732,
 )
 
 
@@ -691,8 +691,8 @@ _SENSORSPROTO = _descriptor.Descriptor(
     syntax="proto2",
     extension_ranges=[],
     oneofs=[],
-    serialized_start=730,
-    serialized_end=896,
+    serialized_start=735,
+    serialized_end=901,
 )
 
 
@@ -751,8 +751,8 @@ _ALARM = _descriptor.Descriptor(
     syntax="proto2",
     extension_ranges=[],
     oneofs=[],
-    serialized_start=898,
-    serialized_end=951,
+    serialized_start=903,
+    serialized_end=956,
 )
 
 _GUISTATUS.fields_by_name["desired_params"].message_type = _VENTPARAMS

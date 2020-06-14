@@ -28,15 +28,9 @@ static DebugFloat dbg_dp_exhale("dp_exhale", "Exhale diff pressure, cmH2O");
 static DebugFloat dbg_pressure("pressure", "Patient pressure, cmH2O");
 static DebugFloat dbg_flow_inhale("flow_inhale", "Inhale flow rate, cc/sec");
 static DebugFloat dbg_flow_exhale("flow_exhale", "Exhale flow rate, cc/sec");
-static DebugFloat dbg_flow_corrected("flow", "Net flow rate, cc/sec");
-static DebugFloat dbg_volume("volume", "Tidal volume, ml");
+// Flow correction happens as part of volume computation, in the Controller.
 static DebugFloat dbg_flow_uncorrected("flow_uncorrected",
                                        "Uncorrected net flow rate, cc/sec");
-static DebugFloat
-    dbg_flow_correction("flow_correction",
-                        "Adjustment to flow to make TV go to 0, cc/sec");
-static DebugFloat dbg_volume_uncorrected("volume_uncorrected",
-                                         "Tidal volume uncorrected, ml");
 
 //@TODO: Potential Caution: Density of air slightly varies over temperature and
 // altitude - need mechanism to adjust based on delivery? Constant involving
@@ -136,7 +130,6 @@ Pressure Sensors::ReadPressureSensor(Sensor s) {
 SensorReadings Sensors::GetReadings() {
   // Flow rate is inhalation flow minus exhalation flow. Positive value is flow
   // into lungs, and negative is flow out of lungs.
-  auto now = Hal.now();
   auto patient_pressure = ReadPressureSensor(PATIENT_PRESSURE);
   auto inflow_delta = ReadPressureSensor(INFLOW_PRESSURE_DIFF);
   auto outflow_delta = ReadPressureSensor(OUTFLOW_PRESSURE_DIFF);
@@ -144,24 +137,14 @@ SensorReadings Sensors::GetReadings() {
   VolumetricFlow inflow = PressureDeltaToFlow(inflow_delta);
   VolumetricFlow outflow = PressureDeltaToFlow(outflow_delta);
   VolumetricFlow uncorrected_flow = inflow - outflow;
-  flow_integrator_.AddFlow(now, uncorrected_flow);
-  uncorrected_flow_integrator_.AddFlow(now, uncorrected_flow);
-  VolumetricFlow corrected_flow =
-      uncorrected_flow + flow_integrator_.FlowCorrection();
 
   // Set debug variables.
-  //
-  // TODO: This is repetitive and easy to mess up.  Can we improve the DebugVar
-  // API somehow?
   dbg_dp_inhale.Set(inflow_delta.cmH2O());
   dbg_dp_exhale.Set(outflow_delta.cmH2O());
   dbg_pressure.Set(patient_pressure.cmH2O());
   dbg_flow_inhale.Set(inflow.ml_per_sec());
   dbg_flow_exhale.Set(outflow.ml_per_sec());
   dbg_flow_uncorrected.Set(uncorrected_flow.ml_per_sec());
-  dbg_flow_corrected.Set(corrected_flow.ml_per_sec());
-  dbg_volume.Set(flow_integrator_.GetTV().ml());
-  dbg_volume_uncorrected.Set(uncorrected_flow_integrator_.GetTV().ml());
 
   return {
       .patient_pressure = patient_pressure,
@@ -169,12 +152,5 @@ SensorReadings Sensors::GetReadings() {
       .outflow_pressure_diff = outflow_delta,
       .inflow = inflow,
       .outflow = outflow,
-      .volume = flow_integrator_.GetTV(),
-      .net_flow = (inflow - outflow) + flow_integrator_.FlowCorrection(),
   };
-}
-
-void Sensors::NoteNewBreath() {
-  flow_integrator_.NoteExpectedVolume(ml(0));
-  dbg_flow_correction.Set(flow_integrator_.FlowCorrection().ml_per_sec());
 }

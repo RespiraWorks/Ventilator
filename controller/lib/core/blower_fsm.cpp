@@ -14,6 +14,7 @@ limitations under the License.
 */
 
 #include "blower_fsm.h"
+#include "controller.h"
 #include <algorithm>
 
 // Given t = secs_per_breath and r = I:E ratio, calculate inspiration and
@@ -48,7 +49,7 @@ PressureControlFsm::PressureControlFsm(Time now, const VentParams &params)
       inspire_end_(start_time_ + InspireDuration(params)),
       expire_end_(inspire_end_ + ExpireDuration(params)) {}
 
-void PressureControlFsm::Update(Time now, const SensorReadings &readings) {
+void PressureControlFsm::Update(Time now, const BlowerFsmInputs &inputs) {
   if (now >= inspire_end_) {
     inspire_finished_ = true;
   } else {
@@ -60,7 +61,7 @@ void PressureControlFsm::Update(Time now, const SensorReadings &readings) {
     setpoint_ =
         expire_pressure_ + (inspire_pressure_ - expire_pressure_) * rise_frac;
   }
-  if (now > expire_end_) {
+  if (now >= expire_end_) {
     finished_ = true;
   }
 }
@@ -78,11 +79,11 @@ PressureAssistFsm::PressureAssistFsm(Time now, const VentParams &params)
       start_time_(now), inspire_end_(start_time_ + InspireDuration(params)),
       expire_deadline_(inspire_end_ + ExpireDuration(params)) {}
 
-void PressureAssistFsm::Update(Time now, const SensorReadings &readings) {
+void PressureAssistFsm::Update(Time now, const BlowerFsmInputs &inputs) {
   if (now >= inspire_end_) {
     inspire_finished_ = true;
   }
-  if (now > expire_deadline_ || PatientInspiring(readings)) {
+  if (now >= expire_deadline_ || PatientInspiring(inputs)) {
     finished_ = true;
   }
 }
@@ -95,7 +96,7 @@ BlowerSystemState PressureAssistFsm::DesiredState() const {
 }
 
 // TODO don't rely on fsm inner states to make this usable in any fsm
-bool PressureAssistFsm::PatientInspiring(const SensorReadings &readings) {
+bool PressureAssistFsm::PatientInspiring(const BlowerFsmInputs &inputs) {
   // TODO: change this when we get better understanding of inspiratory effort
   // detection strategy, right now this is just set to trigger for any flow
   // that is higher than twice the flowmeter's flow noise :
@@ -103,7 +104,7 @@ bool PressureAssistFsm::PatientInspiring(const SensorReadings &readings) {
   // According to data from Ingmar test lung
   // (https://drive.google.com/open?id=11_A8KEDdBa5l7rqUegfKsj71rug1l7Sx),
   // this should work OK as a first approximation.
-  if (inspire_finished_ && readings.net_flow >= ml_per_min(0) &&
+  if (inspire_finished_ && inputs.net_flow >= ml_per_min(0) &&
       inspiratory_effort_threshold_ >= cubic_m_per_sec(9)) {
     // Not sure how to go about this: when we enter this breath fsm, either we
     // were Off and flow should be 0, which means this is OK: the first
@@ -111,7 +112,7 @@ bool PressureAssistFsm::PatientInspiring(const SensorReadings &readings) {
     // PEEP we can take that as an  "almost zero" reference flow, or we are at
     // PIP, I assume the flow will be negative until we reach PEEP, where it
     // will approximately be 0 and we may assume to be back to the first case.
-    inspiratory_effort_threshold_ = readings.net_flow + ml_per_min(12000.0f);
+    inspiratory_effort_threshold_ = inputs.net_flow + ml_per_min(12000.0f);
     // Note 12000 ml/min looks like a lot but it is actually 200 ml/sec which
     // is in the high end of our sensor's sensitivity for relatively low flows
     // that are expected during exhale, especially when summing two sensors.
@@ -122,15 +123,17 @@ bool PressureAssistFsm::PatientInspiring(const SensorReadings &readings) {
     //      complicated (and not yet determined) breath detection algorithm.
   }
 
-  return inspire_finished_ && readings.net_flow > inspiratory_effort_threshold_;
+  return inspire_finished_ && inputs.net_flow > inspiratory_effort_threshold_;
 }
 
 BlowerSystemState BlowerFsm::DesiredState(Time now, const VentParams &params,
-                                          const SensorReadings &readings) {
+                                          const BlowerFsmInputs &inputs) {
   // Immediately turn off the ventilator if params.mode == OFF; otherwise,
   // wait until the end of a cycle before implementing the mode change.
   bool is_new_breath = false;
-  std::visit([&](auto &fsm) { return fsm.Update(now, readings); }, fsm_);
+
+  std::visit([&](auto &fsm) { return fsm.Update(now, inputs); }, fsm_);
+
   if ((params.mode == VentMode_OFF && !std::holds_alternative<OffFsm>(fsm_)) ||
       std::visit([&](auto &fsm) { return fsm.Finished(); }, fsm_)) {
     // Set is_new_breath to true even when the ventilator transitions from on

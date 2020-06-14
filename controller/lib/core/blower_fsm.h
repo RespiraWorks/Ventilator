@@ -56,7 +56,7 @@ enum class FlowDirection {
   EXPIRATORY,
 };
 
-// Sensor readeings etc that are used by BlowerFsm to do e.g. breath detection.
+// Sensor readings etc that are used by BlowerFsm to do e.g. breath detection.
 struct BlowerFsmInputs {
   // Current patient volume, corrected for sensor zero-point drift.
   Volume patient_volume;
@@ -83,6 +83,10 @@ struct BlowerSystemState {
   // the individual FSM classes (OffFsm, PressureControlFsm, etc).
   bool is_new_breath = false;
 };
+
+// Transition from PEEP to PIP pressure over this length of time.  Citation:
+// https://respiraworks.slack.com/archives/C011CJQV4Q7/p1591763842312500?thread_ts=1591759016.310200&cid=C011CJQV4Q7
+static constexpr Duration RISE_TIME = milliseconds(100);
 
 // A "breath finite state machine" where the blower is always off.
 //
@@ -126,10 +130,6 @@ public:
 // "Breath finite state machine" for pressure control mode.
 class PressureControlFsm {
 public:
-  // Transition from PEEP to PIP pressure over this length of time.  Citation:
-  // https://respiraworks.slack.com/archives/C011CJQV4Q7/p1591763842312500?thread_ts=1591759016.310200&cid=C011CJQV4Q7
-  static constexpr inline Duration RISE_TIME = milliseconds(100);
-
   explicit PressureControlFsm(Time now, const VentParams &params);
   void Update(Time now, const BlowerFsmInputs &inputs);
   BlowerSystemState DesiredState() const;
@@ -173,7 +173,7 @@ private:
 
   const Pressure inspire_pressure_;
   const Pressure expire_pressure_;
-
+  Pressure setpoint_;
   Time start_time_;
   Time inspire_end_;
   Time expire_deadline_;

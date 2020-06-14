@@ -40,7 +40,7 @@ alarm = stat.controller_alarms.add()
 alarm.start_time = int(time.time()) - 1
 alarm.kind = network_protocol_pb2.RESPIRATORY_RATE_TOO_LOW
 
-stat.fan_setpoint_cm_h2o = 1
+stat.pressure_setpoint_cm_h2o = 1
 stat.fan_power = 0.8
 
 stat.active_params.mode = network_protocol_pb2.OFF

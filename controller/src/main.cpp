@@ -97,7 +97,7 @@ static void DEV_MODE_comms_handler(const ControllerStatus &controller_status,
   last_sent = now;
 
   auto &r = controller_status.sensor_readings;
-  debug.Print("%.2f, ", controller_status.fan_setpoint_cm_h2o);
+  debug.Print("%.2f, ", controller_status.pressure_setpoint_cm_h2o);
   debug.Print("%.2f, ", r.patient_pressure_cm_h2o);
   debug.Print("%.2f, ", r.inflow_pressure_diff_cm_h2o);
   debug.Print("%.2f, ", r.outflow_pressure_diff_cm_h2o);
@@ -140,7 +140,7 @@ static void high_priority_task(void *arg) {
   }
 
   // TODO update pb library to replace fan_power in ControllerStatus with
-  // actuators_state, and remove fan_setpoint_cm_h2o from ControllerStatus
+  // actuators_state, and remove pressure_setpoint_cm_h2o from ControllerStatus
 
   // Update the outputs from the PID
   actuators_execute(actuators_state);
@@ -148,7 +148,7 @@ static void high_priority_task(void *arg) {
   // Update controller_status.  This is periodically sent back to the GUI.
   controller_status.sensor_readings = AsSensorsProto(sensor_readings);
   controller_status.fan_power = actuators_state.blower_power;
-  controller_status.fan_setpoint_cm_h2o =
+  controller_status.pressure_setpoint_cm_h2o =
       controller_state.setpoint_pressure.cmH2O();
 
   // Sample any trace variables that are enabled

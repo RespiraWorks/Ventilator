@@ -145,15 +145,9 @@ BlowerSystemState BlowerFsm::DesiredState(Time now, const VentParams &params,
 
   if (params.mode == VentMode_OFF ||
       std::visit([&](auto &fsm) { return fsm.Finished(); }, fsm_)) {
-    // Set is_new_breath to true only when entering a new cycle, not if this
-    // is the continuation of the Off Fsm.
-    // This means setting it to true on the transition from On to Off, which
-    // allows the controller to keep track of volume once the ventilator is
-    // turned Off, assuming the user will stop the ventilator when volume
-    // is close to 0.
-    if (!std::holds_alternative<OffFsm>(fsm_)) {
-      is_new_breath = true;
-    }
+    // For the purpose of is_new_breath, treat multiple occurrences of OffFsm
+    // as a "single breath".
+    is_new_breath = !std::holds_alternative<OffFsm>(fsm_);
 
     switch (params.mode) {
     case VentMode_OFF:

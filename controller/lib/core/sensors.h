@@ -22,7 +22,6 @@ Arduino Nano and the MPXV5004GP and MPXV7002DP pressure sensors.
 #ifndef SENSORS_H
 #define SENSORS_H
 
-#include "flow_integrator.h"
 #include "hal.h"
 #include "network_protocol.pb.h"
 #include "pid.h"
@@ -42,15 +41,6 @@ struct SensorReadings {
   // sensor zero-point drift.
   VolumetricFlow inflow;
   VolumetricFlow outflow;
-
-  // TODO(jlebar): Move volume and flow out of this class and into
-  // ControllerStatus.  Volume/flow error correction relies on info from the
-  // controller about e.g. when the next breath is starting, so it should be
-  // computed at that layer.
-  Volume volume;
-  // This net flow is corrected for low-frequency sensor zero-point drift, so
-  // it's not necessarily equal to inflow - outflow.
-  VolumetricFlow net_flow;
 };
 
 // Provides calibrated sensor readings, including tidal volume (TV)
@@ -63,22 +53,6 @@ public:
   // be called on system startup before any other sensor functions
   // are called.
   void Calibrate();
-
-  // Called once for every breath cycle.  Sensors assume that tidal volume
-  // should be 0 at the beginning of a breath and will calibrate to that
-  // over time.
-  //
-  // TODO: This will not work as-is in pressure-assist mode.  TV is 0 at the
-  // beginning of inspiratory effort by assumption, but by the time the
-  // ventilator notices that an effort has occurred, TV is no longer 0 --
-  // indeed, the way the ventilator notices that effort has occurred is by
-  // detecting a flow over time, i.e. a change in volume!
-  //
-  // One way to fix this for pressure-assist mode is for us to keep track of
-  // the measured TV at the start of the detected inspiratory effort.  Then we
-  // can tell the Sensors module, TV was X mL Y milliseconds ago, but it should
-  // have been 0.  That should be enough for us to calibrate to.
-  void NoteNewBreath();
 
   // Read the sensors.
   SensorReadings GetReadings();
@@ -116,13 +90,6 @@ private:
 
   // Calibrated average sensor values in a zero state.
   Voltage sensors_zero_vals_[NUM_SENSORS];
-
-  // We integrate flow to calculate tidal volume.  For debugging purposes, we
-  // keep track of volume both with and without error correction.  (With error
-  // correction we call NoteExpectedVolume, and without we don't.)  See
-  // description of errors in FlowIntegrator.h.
-  FlowIntegrator flow_integrator_;
-  FlowIntegrator uncorrected_flow_integrator_;
 };
 
 #endif // SENSORS_H

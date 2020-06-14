@@ -38,33 +38,33 @@ TEST(FlowIntegrator, FlowIntegrator) {
   int t = 0;
   tidal_volume.AddFlow(ticks(t++), flow);
   // first call to AddFlow ==> initialization and TV is 0, even if flow is not
-  EXPECT_EQ(tidal_volume.GetTV().ml(), 0.0f);
+  EXPECT_EQ(tidal_volume.GetVolume().ml(), 0.0f);
   tidal_volume.AddFlow(ticks(t++), flow);
   // integrate 1 l/s flow over 10 ms ==> 5 ml (rectangle rule with initial flow
   // set to 0)
-  EXPECT_VOLUME_NEAR(tidal_volume.GetTV(), ml(5));
+  EXPECT_VOLUME_NEAR(tidal_volume.GetVolume(), ml(5));
 
   tidal_volume.AddFlow(ticks(t++), cubic_m_per_sec(2e-3f));
   // add 2 l/s flow over 10 ms ==> 20 ml ()
-  EXPECT_VOLUME_NEAR(tidal_volume.GetTV(), ml(20));
+  EXPECT_VOLUME_NEAR(tidal_volume.GetVolume(), ml(20));
 
   tidal_volume.AddFlow(ticks(t++), ml_per_min(0.0f));
   // add 0 l/s flow over 10 ms ==> 30 ml (rectangle rule)
-  EXPECT_VOLUME_NEAR(tidal_volume.GetTV(), ml(30.0f));
+  EXPECT_VOLUME_NEAR(tidal_volume.GetVolume(), ml(30.0f));
 
   // integrate 0 for some time ==> still 30 ms
   while (t < 100) {
     tidal_volume.AddFlow(ticks(t++), ml_per_min(0.0f));
   }
 
-  EXPECT_VOLUME_NEAR(tidal_volume.GetTV(), ml(30.0f));
+  EXPECT_VOLUME_NEAR(tidal_volume.GetVolume(), ml(30.0f));
 
   // reverse flow
   flow = liters_per_sec(-1.0f);
   // this does not increment t in order to allow oversampling (following test)
   tidal_volume.AddFlow(ticks(t), flow);
   // remove 1 l/s flow over 10 ms ==> 25 ml (rectangle rule)
-  EXPECT_VOLUME_NEAR(tidal_volume.GetTV(), ml(25.0f));
+  EXPECT_VOLUME_NEAR(tidal_volume.GetVolume(), ml(25.0f));
 
   // oversampling and expect volume to not change except on multiples of 5 ms
   for (int i = 0; i < 50; i++) {
@@ -72,6 +72,7 @@ TEST(FlowIntegrator, FlowIntegrator) {
 
     // remove 1l/s flow over 5 ms only when i is a multiple of 5
     int j = i / 5 * 5;
-    EXPECT_VOLUME_NEAR(tidal_volume.GetTV(), ml(25.0f - static_cast<float>(j)));
+    EXPECT_VOLUME_NEAR(tidal_volume.GetVolume(),
+                       ml(25.0f - static_cast<float>(j)));
   }
 }

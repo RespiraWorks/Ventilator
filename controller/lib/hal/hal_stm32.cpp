@@ -139,6 +139,7 @@ void HalApi::init() {
   InitPwmOut();
   InitUARTs();
   InitBuzzer();
+  InitPSOL();
   crc32_init();
   Hal.enableInterrupts();
   StepperMotorInit();
@@ -178,11 +179,6 @@ void HalApi::init() {
  *  PC13 - red
  *  PC14 - yellow
  *  PC15 - green
- *
- * Solenoid
- *  PA11 - Note, this is also a timer pin so we may want to
- *         PWM it to reduce the solenoid voltage.
- *         For no I'm treating it as a digital output.
  *****************************************************************/
 void HalApi::InitGPIO() {
   // See chapter 8 of the reference manual for details on GPIO
@@ -208,18 +204,18 @@ void HalApi::InitGPIO() {
   GPIO_ClrPin(GPIO_C_BASE, 13);
   GPIO_ClrPin(GPIO_C_BASE, 14);
   GPIO_ClrPin(GPIO_C_BASE, 15);
-
-  // Configure the solenoid and turn it off
-  GPIO_PinMode(GPIO_A_BASE, 11, GPIO_PinMode::OUT);
-  GPIO_ClrPin(GPIO_A_BASE, 11);
 }
 
 // Set or clear the specified digital output
 void HalApi::digitalWrite(BinaryPin pin, VoltageLevel value) {
   auto [base, bit] = [&]() -> std::pair<GPIO_Regs *, int> {
     switch (pin) {
-    case BinaryPin::SOLENOID:
-      return {GPIO_A_BASE, 11};
+    case BinaryPin::LED_RED:
+      return {GPIO_C_BASE, 13};
+    case BinaryPin::LED_YELLOW:
+      return {GPIO_C_BASE, 14};
+    case BinaryPin::LED_GREEN:
+      return {GPIO_C_BASE, 15};
     }
     // All cases covered above (and GCC checks this).
     __builtin_unreachable();
@@ -384,7 +380,6 @@ static void Timer15ISR() {
  * as PWM outputs:
  *
  * PA8  - Timer 1 Channel 1 - heater control
- * PA11 - Timer 1 Channel 4 - solenoid
  * PB3  - Timer 2 Channel 2 - blower control
  *
  * For now I'll just set up the blower since that's the only
@@ -745,12 +740,12 @@ void HalApi::EnableClock(void *ptr) {
     int ndx;
     int bit;
   } rccInfo[] = {
-      {DMA1_BASE, 0, 0},   {DMA2_BASE, 0, 1},     {FLASH_BASE, 0, 8},
-      {GPIO_A_BASE, 1, 0}, {GPIO_B_BASE, 1, 1},   {GPIO_C_BASE, 1, 2},
-      {GPIO_D_BASE, 1, 3}, {GPIO_E_BASE, 1, 4},   {GPIO_H_BASE, 1, 7},
-      {ADC_BASE, 1, 13},   {TIMER2_BASE, 4, 0},   {TIMER3_BASE, 4, 1},
-      {TIMER6_BASE, 4, 4}, {UART2_BASE, 4, 17},   {UART3_BASE, 4, 18},
-      {SPI1_BASE, 6, 12},  {TIMER15_BASE, 6, 16},
+      {DMA1_BASE, 0, 0},    {DMA2_BASE, 0, 1},   {FLASH_BASE, 0, 8},
+      {GPIO_A_BASE, 1, 0},  {GPIO_B_BASE, 1, 1}, {GPIO_C_BASE, 1, 2},
+      {GPIO_D_BASE, 1, 3},  {GPIO_E_BASE, 1, 4}, {GPIO_H_BASE, 1, 7},
+      {ADC_BASE, 1, 13},    {TIMER2_BASE, 4, 0}, {TIMER3_BASE, 4, 1},
+      {TIMER6_BASE, 4, 4},  {UART2_BASE, 4, 17}, {UART3_BASE, 4, 18},
+      {TIMER1_BASE, 6, 11}, {SPI1_BASE, 6, 12},  {TIMER15_BASE, 6, 16},
 
       // The following entries are probably correct, but have
       // not been tested yet.  When adding support for one of
@@ -764,7 +759,6 @@ void HalApi::EnableClock(void *ptr) {
       //      {I2C2_BASE, 4, 22},
       //      {I2C3_BASE, 4, 23},
       //      {I2C4_BASE, 5, 1},
-      //      {TIMER1_BASE, 6, 11},
       //      {UART1_BASE, 6, 14},
       //      {TIMER16_BASE, 6, 17},
   };

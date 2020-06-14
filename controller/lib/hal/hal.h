@@ -107,7 +107,9 @@ enum class PwmPin {
 // Pins default to INPUT, so if you add a new pin here, be sure to update
 // HalApi::init() and set it to OUTPUT!
 enum class BinaryPin {
-  SOLENOID,
+  LED_RED,
+  LED_YELLOW,
+  LED_GREEN,
 };
 
 // Interrupts on the STM32 are prioritized.  This allows
@@ -231,6 +233,10 @@ public:
   // on/off.
   void BuzzerOn(float volume = 1.0f);
   void BuzzerOff();
+
+  // PSOL (Proportional Solenoid) support
+  void InitPSOL();
+  void PSOL_Value(float val);
 
 #ifndef TEST_MODE
   // Translates to a numeric pin that can be passed to the Arduino API.
@@ -543,6 +549,8 @@ inline void HalApi::startLoopTimer(const Duration &period,
 
 inline void BuzzerOn(float volume) {}
 inline void BuzzerOff() {}
+inline void InitPSOL() {}
+inline void PSOL_Value(float val) {}
 #endif
 
 #endif // HAL_H

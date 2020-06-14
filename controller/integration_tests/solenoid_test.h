@@ -11,8 +11,7 @@ void run_test() {
   bool solenoid_state = false;
 
   while (true) {
-    Hal.digitalWrite(BinaryPin::SOLENOID,
-                     solenoid_state ? VoltageLevel::LOW : VoltageLevel::HIGH);
+    Hal.PSOL_Value(solenoid_state ? 0.0f : 1.0f);
 
     Hal.delay(milliseconds(delay_ms));
 

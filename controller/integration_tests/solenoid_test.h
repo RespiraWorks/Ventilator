@@ -1,4 +1,8 @@
 // This test switches the binary solenoid between the open and closed position
+//
+// TODO - This test should be updated because the solenoid is now a proportional
+//        solenoid with variable positions between 0 and 1 and no longer a
+//        simple binary solenoid
 
 #include "hal.h"
 

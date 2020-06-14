@@ -31,15 +31,12 @@ Time ticks(int num_ticks) { return base + num_ticks * sample_period; }
 // sensors_test, etc?
 
 TEST(FlowIntegrator, FlowIntegrator) {
-  // this Hal.delay is needed to allow TV construction with proper init time
-  Hal.delay(base - Hal.now());
   FlowIntegrator tidal_volume;
-  VolumetricFlow flow = liters_per_sec(1.0f);
   int t = 0;
-  tidal_volume.AddFlow(ticks(t++), flow);
+  tidal_volume.AddFlow(ticks(t++), ml_per_sec(0));
   // first call to AddFlow ==> initialization and TV is 0, even if flow is not
   EXPECT_EQ(tidal_volume.GetVolume().ml(), 0.0f);
-  tidal_volume.AddFlow(ticks(t++), flow);
+  tidal_volume.AddFlow(ticks(t++), liters_per_sec(1.0f));
   // integrate 1 l/s flow over 10 ms ==> 5 ml (rectangle rule with initial flow
   // set to 0)
   EXPECT_VOLUME_NEAR(tidal_volume.GetVolume(), ml(5));
@@ -59,20 +56,57 @@ TEST(FlowIntegrator, FlowIntegrator) {
 
   EXPECT_VOLUME_NEAR(tidal_volume.GetVolume(), ml(30.0f));
 
-  // reverse flow
-  flow = liters_per_sec(-1.0f);
-  // this does not increment t in order to allow oversampling (following test)
-  tidal_volume.AddFlow(ticks(t), flow);
+  // Reverse flow.  This does not increment t in order to allow oversampling
+  // (following test).
+  tidal_volume.AddFlow(ticks(t), liters_per_sec(-1.0f));
   // remove 1 l/s flow over 10 ms ==> 25 ml (rectangle rule)
   EXPECT_VOLUME_NEAR(tidal_volume.GetVolume(), ml(25.0f));
 
   // oversampling and expect volume to not change except on multiples of 5 ms
   for (int i = 0; i < 50; i++) {
-    tidal_volume.AddFlow(ticks(t) + milliseconds(i), flow);
+    tidal_volume.AddFlow(ticks(t) + milliseconds(i), liters_per_sec(-1));
 
     // remove 1l/s flow over 5 ms only when i is a multiple of 5
     int j = i / 5 * 5;
     EXPECT_VOLUME_NEAR(tidal_volume.GetVolume(),
                        ml(25.0f - static_cast<float>(j)));
+  }
+}
+
+TEST(FlowIntegrator, NoteExpectedVolume) {
+  FlowIntegrator f;
+  int t = 0;
+  f.AddFlow(ticks(t++), ml_per_sec(1000));
+  f.AddFlow(ticks(t++), ml_per_sec(1000));
+  EXPECT_VOLUME_NEAR(f.GetVolume(), ml(1000 * 0.01));
+  f.AddFlow(ticks(t++), ml_per_sec(1000));
+  EXPECT_VOLUME_NEAR(f.GetVolume(), ml(1000 * 0.02));
+  f.NoteExpectedVolume(ml(0));
+  EXPECT_FLOAT_EQ(f.FlowCorrection().ml_per_sec(), -2000);
+
+  // Triangle rule; this is integrated as (1000ml/s + -1000ml/s) / 2.
+  f.AddFlow(ticks(t++), ml_per_sec(1000));
+  EXPECT_VOLUME_NEAR(f.GetVolume(), ml(1000 * 0.02f));
+
+  // This is intgrated as -1000ml/s.
+  f.AddFlow(ticks(t++), ml_per_sec(1000));
+  EXPECT_VOLUME_NEAR(f.GetVolume(), ml(1000 * 0.01f));
+
+  // Triangle rule; this is integrated as (-1000ml/s + -2000ml/s) / 2.
+  f.AddFlow(ticks(t++), ml_per_sec(0));
+  EXPECT_VOLUME_NEAR(f.GetVolume(), ml(1000 * -0.005f));
+}
+
+TEST(FlowIntegrator, DrivesVolumeToZero) {
+  FlowIntegrator f;
+  int t = 0;
+  for (int i = 0; i < 100; i++) {
+    for (int i = 0; i < 100; i++) {
+      f.AddFlow(ticks(t++), ml_per_sec(100));
+    }
+    f.NoteExpectedVolume(ml(0));
+    if (i >= 25) {
+      EXPECT_VOLUME_NEAR(f.GetVolume(), ml(0));
+    }
   }
 }

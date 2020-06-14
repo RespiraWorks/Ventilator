@@ -18,6 +18,7 @@ limitations under the License.
 #include "hal.h"
 #include "gmock/gmock-matchers.h"
 #include "gtest/gtest.h"
+#include <optional>
 #include <string>
 
 namespace {
@@ -36,8 +37,8 @@ TEST(BlowerFsmTest, InitiallyOff) {
   BlowerFsm fsm;
   VentParams p = VentParams_init_zero;
   BlowerSystemState s = fsm.DesiredState(Hal.now(), p, readings_zero);
-  EXPECT_FLOAT_EQ(s.pressure_setpoint.cmH2O(), 0);
-  EXPECT_EQ(s.expire_valve_state, ValveState::OPEN);
+  EXPECT_TRUE(s.pressure_setpoint == std::nullopt);
+  EXPECT_EQ(s.flow_direction, FlowDirection::EXPIRATORY);
 }
 
 TEST(BlowerFsmTest, StaysOff) {
@@ -45,8 +46,8 @@ TEST(BlowerFsmTest, StaysOff) {
   VentParams p = VentParams_init_zero;
   Hal.delay(milliseconds(1000));
   BlowerSystemState s = fsm.DesiredState(Hal.now(), p, readings_zero);
-  EXPECT_FLOAT_EQ(s.pressure_setpoint.cmH2O(), 0);
-  EXPECT_EQ(s.expire_valve_state, ValveState::OPEN);
+  EXPECT_TRUE(s.pressure_setpoint == std::nullopt);
+  EXPECT_EQ(s.flow_direction, FlowDirection::EXPIRATORY);
 }
 
 // Checks that a sequence of calls to blower_fsm_desired_state() yield the
@@ -55,21 +56,21 @@ void testSequence(
     const std::vector<
         std::tuple<VentParams,
                    /*sensor_readings*/ SensorReadings,
-                   /*blower_enabled*/ bool,
                    /*time_millis*/ uint64_t,
-                   /*expected_pressure_setpoint*/ Pressure,
-                   /*expected_expiratory_valve_state*/ ValveState>> &seq) {
+                   /*expected_pressure_setpoint*/ std::optional<Pressure>,
+                   /*expected_flow_direction*/ FlowDirection>> &seq) {
   BlowerFsm fsm;
-  for (const auto &[params, readings, blower_enabled, time_millis,
-                    expected_pressure, expected_valve_state] : seq) {
+  for (const auto &[params, readings, time_millis, expected_pressure,
+                    expected_flow_direction] : seq) {
     Hal.delay(microsSinceStartup(time_millis * 1000) - Hal.now());
     SCOPED_TRACE("time = " + std::to_string(time_millis));
     EXPECT_EQ(time_millis * 1000, Hal.now().microsSinceStartup());
 
     BlowerSystemState s = fsm.DesiredState(Hal.now(), params, readings);
-    EXPECT_EQ(s.blower_enabled, blower_enabled);
-    EXPECT_EQ(s.pressure_setpoint.cmH2O(), expected_pressure.cmH2O());
-    EXPECT_EQ(s.expire_valve_state, expected_valve_state);
+    EXPECT_EQ(s.pressure_setpoint.has_value(), expected_pressure.has_value());
+    EXPECT_EQ(s.pressure_setpoint.value_or(cmH2O(0)).cmH2O(),
+              expected_pressure.value_or(cmH2O(0)).cmH2O());
+    EXPECT_EQ(s.flow_direction, expected_flow_direction);
   }
 }
 
@@ -91,28 +92,22 @@ TEST(BlowerFsmTest, PressureControl) {
   testSequence({
       // Pressure starts out at PEEP and rises to PIP over period
       // PressureControlFsm::RISE_TIME.
-      {p, readings_zero, /*blower_enabled=*/true, 0, cmH2O(10),
-       ValveState::CLOSED},
-      {p, readings_zero, /*blower_enabled=*/true, rise_time_ms / 4, cmH2O(12.5),
-       ValveState::CLOSED},
-      {p, readings_zero, /*blower_enabled=*/true, rise_time_ms / 2, cmH2O(15),
-       ValveState::CLOSED},
-      {p, readings_zero, /*blower_enabled=*/true, 3 * rise_time_ms / 4,
-       cmH2O(17.5), ValveState::CLOSED},
-      {p, readings_zero, /*blower_enabled=*/true, 1000, cmH2O(20),
-       ValveState::CLOSED},
-      {p, readings_zero, /*blower_enabled=*/true, 1999, cmH2O(20),
-       ValveState::CLOSED},
-      {p, readings_zero, /*blower_enabled=*/true, 2001, cmH2O(10),
-       ValveState::OPEN},
-      {p, readings_zero, /*blower_enabled=*/true, 2999, cmH2O(10),
-       ValveState::OPEN},
-      {p, readings_zero, /*blower_enabled=*/true, 3001, cmH2O(10),
-       ValveState::CLOSED},
-      {p, readings_zero, /*blower_enabled=*/true, 3001 + rise_time_ms / 2,
-       cmH2O(15), ValveState::CLOSED},
-      {p, readings_zero, /*blower_enabled=*/true, 3001 + rise_time_ms,
-       cmH2O(20), ValveState::CLOSED},
+      {p, readings_zero, 0, cmH2O(10), FlowDirection::INSPIRATORY},
+      {p, readings_zero, rise_time_ms / 4, cmH2O(12.5),
+       FlowDirection::INSPIRATORY},
+      {p, readings_zero, rise_time_ms / 2, cmH2O(15),
+       FlowDirection::INSPIRATORY},
+      {p, readings_zero, 3 * rise_time_ms / 4, cmH2O(17.5),
+       FlowDirection::INSPIRATORY},
+      {p, readings_zero, 1000, cmH2O(20), FlowDirection::INSPIRATORY},
+      {p, readings_zero, 1999, cmH2O(20), FlowDirection::INSPIRATORY},
+      {p, readings_zero, 2001, cmH2O(10), FlowDirection::EXPIRATORY},
+      {p, readings_zero, 2999, cmH2O(10), FlowDirection::EXPIRATORY},
+      {p, readings_zero, 3001, cmH2O(10), FlowDirection::INSPIRATORY},
+      {p, readings_zero, 3001 + rise_time_ms / 2, cmH2O(15),
+       FlowDirection::INSPIRATORY},
+      {p, readings_zero, 3001 + rise_time_ms, cmH2O(20),
+       FlowDirection::INSPIRATORY},
   });
 }
 
@@ -138,43 +133,28 @@ TEST(BlowerFsmTest, PressureAssist) {
   // - when flow is breath: trigger breath if in expire mode
   testSequence({
       // first breath is mandatory
-      {p, readings_zero, /*blower_enabled=*/true, 0, cmH2O(20),
-       ValveState::CLOSED},
+      {p, readings_zero, 0, cmH2O(20), FlowDirection::INSPIRATORY},
       // breath has no effect during inspire phase
-      {p, readings_breath, /*blower_enabled=*/true, 1000, cmH2O(20),
-       ValveState::CLOSED},
-      {p, readings_zero, /*blower_enabled=*/true, 1999, cmH2O(20),
-       ValveState::CLOSED},
-      {p, readings_zero, /*blower_enabled=*/true, 2001, cmH2O(10),
-       ValveState::OPEN},
+      {p, readings_breath, 1000, cmH2O(20), FlowDirection::INSPIRATORY},
+      {p, readings_zero, 1999, cmH2O(20), FlowDirection::INSPIRATORY},
+      {p, readings_zero, 2001, cmH2O(10), FlowDirection::EXPIRATORY},
       // need to run with non-breath flow while already in exhale leg to
       // initialize detection threshold
-      {p, readings_zero, /*blower_enabled=*/true, 2002, cmH2O(10),
-       ValveState::OPEN},
+      {p, readings_zero, 2002, cmH2O(10), FlowDirection::EXPIRATORY},
       // check that calling with zero flow before the end of the breath does not
       // tigger the next breath
-      {p, readings_zero, /*blower_enabled=*/true, 2500, cmH2O(10),
-       ValveState::OPEN},
-      {p, readings_zero, /*blower_enabled=*/true, 2999, cmH2O(10),
-       ValveState::OPEN},
+      {p, readings_zero, 2500, cmH2O(10), FlowDirection::EXPIRATORY},
+      {p, readings_zero, 2999, cmH2O(10), FlowDirection::EXPIRATORY},
       // trigger breath on expire_deadline_
-      {p, readings_zero, /*blower_enabled=*/true, 3001, cmH2O(20),
-       ValveState::CLOSED},
-      {p, readings_zero, /*blower_enabled=*/true, 4999, cmH2O(20),
-       ValveState::CLOSED},
-      {p, readings_zero, /*blower_enabled=*/true, 5001, cmH2O(10),
-       ValveState::OPEN},
+      {p, readings_zero, 3001, cmH2O(20), FlowDirection::INSPIRATORY},
+      {p, readings_zero, 4999, cmH2O(20), FlowDirection::INSPIRATORY},
+      {p, readings_zero, 5001, cmH2O(10), FlowDirection::EXPIRATORY},
       // need to run with non-breath flow while already in exhale leg to
       // initialize detection threshold
-      {p, readings_zero, /*blower_enabled=*/true, 5002, cmH2O(10),
-       ValveState::OPEN},
-      {p, readings_breath, /*blower_enabled=*/true, 5200, cmH2O(20),
-       ValveState::CLOSED},
-      {p, readings_zero, /*blower_enabled=*/true, 7199, cmH2O(20),
-       ValveState::CLOSED},
-      {p, readings_zero, /*blower_enabled=*/true, 7201, cmH2O(10),
-       ValveState::OPEN},
-
+      {p, readings_zero, 5002, cmH2O(10), FlowDirection::EXPIRATORY},
+      {p, readings_breath, 5200, cmH2O(20), FlowDirection::INSPIRATORY},
+      {p, readings_zero, 7199, cmH2O(20), FlowDirection::INSPIRATORY},
+      {p, readings_zero, 7201, cmH2O(10), FlowDirection::EXPIRATORY},
   });
 }
 
@@ -190,14 +170,11 @@ TEST(BlowerFsmTest, TurnOff) {
   VentParams p_off = VentParams_init_zero;
 
   testSequence({
-      {p_off, readings_zero, /*blower_enabled=*/false, 0, cmH2O(0),
-       ValveState::OPEN},
+      {p_off, readings_zero, 0, std::nullopt, FlowDirection::EXPIRATORY},
       // This is PEEP pressure even though it's inspiration, because ramp it up
       // to PIP over a duration of PressureControlFsm::RISE_TIME.
-      {p_on, readings_zero, /*blower_enabled=*/true, 1000, cmH2O(10),
-       ValveState::CLOSED},
-      {p_off, readings_zero, /*blower_enabled=*/false, 1001, cmH2O(0),
-       ValveState::OPEN},
+      {p_on, readings_zero, 1000, cmH2O(10), FlowDirection::INSPIRATORY},
+      {p_off, readings_zero, 1001, std::nullopt, FlowDirection::EXPIRATORY},
   });
 }
 
@@ -222,32 +199,22 @@ TEST(BlowerFsmTest, ChangeOfParamsStartAtTheNextBreath) {
   testSequence({
       // Switching ON mode takes effect immidiately.  Because of pressure
       // control mode's ramp time, the initial pressure is PEEP, not PIP.
-      {p_init, readings_zero, /*blower_enabled=*/true, 0, cmH2O(10),
-       ValveState::CLOSED},
+      {p_init, readings_zero, 0, cmH2O(10), FlowDirection::INSPIRATORY},
       // 2sec of inhalation 1sec of exhalation. Ignores param change, stays on
       // p_init pip.
-      {p_change, readings_zero, /*blower_enabled=*/true, 1999, cmH2O(20),
-       ValveState::CLOSED},
-      {p_change, readings_zero, /*blower_enabled=*/true, 2000, cmH2O(10),
-       ValveState::OPEN},
-      {p_change, readings_zero, /*blower_enabled=*/true, 3000, cmH2O(10),
-       ValveState::OPEN},
+      {p_change, readings_zero, 1999, cmH2O(20), FlowDirection::INSPIRATORY},
+      {p_change, readings_zero, 2000, cmH2O(10), FlowDirection::EXPIRATORY},
+      {p_change, readings_zero, 3000, cmH2O(10), FlowDirection::EXPIRATORY},
       // Previous state finished, switch to p_change settings, 1sec In 1sec Ex.
-      {p_change, readings_zero, /*blower_enabled=*/true, 3001, cmH2O(15),
-       ValveState::CLOSED},
-      {p_init, readings_zero, /*blower_enabled=*/true, 4000, cmH2O(30),
-       ValveState::CLOSED},
+      {p_change, readings_zero, 3001, cmH2O(15), FlowDirection::INSPIRATORY},
+      {p_init, readings_zero, 4000, cmH2O(30), FlowDirection::INSPIRATORY},
       // Ignore p_init setting in the middle of a breath.
-      {p_init, readings_zero, /*blower_enabled=*/true, 4001, cmH2O(15),
-       ValveState::OPEN},
-      {p_init, readings_zero, /*blower_enabled=*/true, 5000, cmH2O(15),
-       ValveState::OPEN},
+      {p_init, readings_zero, 4001, cmH2O(15), FlowDirection::EXPIRATORY},
+      {p_init, readings_zero, 5000, cmH2O(15), FlowDirection::EXPIRATORY},
       // Switching OFF device, takes effect immidiately.
-      {p_off, readings_zero, /*blower_enabled*/ false, 5005, cmH2O(0),
-       ValveState::OPEN},
+      {p_off, readings_zero, 5005, std::nullopt, FlowDirection::EXPIRATORY},
       // Switching ON device, takes effect immidiately.
-      {p_init, readings_zero, /*blower_enabled*/ true, 5010, cmH2O(10),
-       ValveState::CLOSED},
+      {p_init, readings_zero, 5010, cmH2O(10), FlowDirection::INSPIRATORY},
   });
 }
 

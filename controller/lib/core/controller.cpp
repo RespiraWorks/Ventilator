@@ -43,7 +43,7 @@ Controller::Run(Time now, const VentParams &params,
   BlowerSystemState desired_state =
       fsm_.DesiredState(now, params, sensor_readings);
 
-  if (!desired_state.blower_enabled) {
+  if (desired_state.pressure_setpoint == std::nullopt) {
     pid_.Reset();
   }
 
@@ -52,16 +52,15 @@ Controller::Run(Time now, const VentParams &params,
   pid_.SetKD(dbg_kd.Get());
 
   float pressure = sensor_readings.patient_pressure.kPa();
-  float setpoint = desired_state.pressure_setpoint.kPa();
-  dbg_sp.Set(desired_state.pressure_setpoint.cmH2O());
+  dbg_sp.Set(desired_state.pressure_setpoint.value_or(kPa(0)).cmH2O());
 
   ControllerState controller_state = {
       .is_new_breath = desired_state.is_new_breath,
-      .pressure_setpoint = desired_state.pressure_setpoint,
+      .pressure_setpoint = desired_state.pressure_setpoint.value_or(kPa(0)),
   };
 
   ActuatorsState actuators_state = [&]() -> ActuatorsState {
-    if (!desired_state.blower_enabled) {
+    if (desired_state.pressure_setpoint == std::nullopt) {
       // System disabled.  Disable blower, close inspiratory pinch valve, and
       // open expiratory pinch valve.  This way if someone is hooked up, they
       // can breathe through the expiratory branch, and they can't contaminate
@@ -83,9 +82,10 @@ Controller::Run(Time now, const VentParams &params,
         // In normal mode, blower is always full power; pid controls pressure by
         // actuating the blower pinch valve.
         .blower_power = 1,
-        .blower_valve = pid_.Compute(now, pressure, setpoint),
+        .blower_valve =
+            pid_.Compute(now, pressure, desired_state.pressure_setpoint->kPa()),
         .exhale_valve =
-            desired_state.expire_valve_state == ValveState::OPEN ? 1 : 0,
+            desired_state.flow_direction == FlowDirection::EXPIRATORY ? 1 : 0,
     };
   }();
 

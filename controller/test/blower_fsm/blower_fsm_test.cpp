@@ -69,6 +69,13 @@ void testSequence(
   }
 }
 
+constexpr int64_t rise_time_us = RISE_TIME.microseconds();
+static_assert(rise_time_us % 1000 == 0,
+              "blower fsm tests assume rise time is a whole number of ms.");
+constexpr int64_t rise_time_ms = rise_time_us / 1000;
+static_assert(rise_time_ms % 4 == 0,
+              "blower fsm tests assume we can divide rise time ms by 4.");
+
 TEST(BlowerFsmTest, PressureControl) {
   VentParams p = VentParams_init_zero;
   p.mode = VentMode_PRESSURE_CONTROL;
@@ -78,15 +85,8 @@ TEST(BlowerFsmTest, PressureControl) {
   p.peep_cm_h2o = 10;
   p.pip_cm_h2o = 20;
 
-  constexpr int64_t rise_time_us = PressureControlFsm::RISE_TIME.microseconds();
-  static_assert(rise_time_us % 1000 == 0,
-                "test assumes rise time is a whole number of ms.");
-  constexpr int64_t rise_time_ms = rise_time_us / 1000;
-  static_assert(rise_time_ms % 4 == 0,
-                "test assumes we can divide rise time ms by 4.");
   testSequence({
-      // Pressure starts out at PEEP and rises to PIP over period
-      // PressureControlFsm::RISE_TIME.
+      // Pressure starts out at PEEP and rises to PIP over period RISE_TIME.
       {p, inputs_zero, 0, cmH2O(10), FlowDirection::INSPIRATORY},
       {p, inputs_zero, rise_time_ms / 4, cmH2O(12.5),
        FlowDirection::INSPIRATORY},
@@ -123,8 +123,15 @@ TEST(BlowerFsmTest, PressureAssist) {
   // patient triggered, to enforce minimum respiratory rate
   // - when flow is breath: trigger breath if in expire mode
   testSequence({
-      // first breath is mandatory
-      {p, inputs_zero, 0, cmH2O(20), FlowDirection::INSPIRATORY},
+      // first breath is mandatory, starts out at PEEP and rises to PIP over
+      // period of RISE_TIME
+      {p, inputs_zero, 0, cmH2O(10), FlowDirection::INSPIRATORY},
+      {p, inputs_zero, rise_time_ms / 4, cmH2O(12.5),
+       FlowDirection::INSPIRATORY},
+      {p, inputs_zero, rise_time_ms / 2, cmH2O(15), FlowDirection::INSPIRATORY},
+      {p, inputs_zero, 3 * rise_time_ms / 4, cmH2O(17.5),
+       FlowDirection::INSPIRATORY},
+      {p, inputs_zero, rise_time_ms, cmH2O(20), FlowDirection::INSPIRATORY},
       // breath has no effect during inspire phase
       {p, inputs_breath, 1000, cmH2O(20), FlowDirection::INSPIRATORY},
       {p, inputs_zero, 1999, cmH2O(20), FlowDirection::INSPIRATORY},
@@ -136,14 +143,24 @@ TEST(BlowerFsmTest, PressureAssist) {
       // tigger the next breath
       {p, inputs_zero, 2500, cmH2O(10), FlowDirection::EXPIRATORY},
       {p, inputs_zero, 2999, cmH2O(10), FlowDirection::EXPIRATORY},
-      // trigger breath on expire_deadline_
-      {p, inputs_zero, 3001, cmH2O(20), FlowDirection::INSPIRATORY},
-      {p, inputs_zero, 4999, cmH2O(20), FlowDirection::INSPIRATORY},
+      // trigger breath on expire_deadline_ (wise rise over RISE_TIME)
+      {p, inputs_zero, 3001, cmH2O(10), FlowDirection::INSPIRATORY},
+      {p, inputs_breath, 3001 + rise_time_ms / 2, cmH2O(15),
+       FlowDirection::INSPIRATORY},
+      {p, inputs_breath, 3001 + rise_time_ms, cmH2O(20),
+       FlowDirection::INSPIRATORY},
+      {p, inputs_breath, 4999, cmH2O(20), FlowDirection::INSPIRATORY},
       {p, inputs_zero, 5001, cmH2O(10), FlowDirection::EXPIRATORY},
       // need to run with non-breath flow while already in exhale leg to
       // initialize detection threshold
       {p, inputs_zero, 5002, cmH2O(10), FlowDirection::EXPIRATORY},
-      {p, inputs_breath, 5200, cmH2O(20), FlowDirection::INSPIRATORY},
+      // triggered breath
+      {p, inputs_breath, 5200, cmH2O(10), FlowDirection::INSPIRATORY},
+      {p, inputs_breath, 5200 + rise_time_ms / 2, cmH2O(15),
+       FlowDirection::INSPIRATORY},
+      {p, inputs_breath, 5200 + rise_time_ms, cmH2O(20),
+       FlowDirection::INSPIRATORY},
+      // triggered breath is of normal duration
       {p, inputs_zero, 7199, cmH2O(20), FlowDirection::INSPIRATORY},
       {p, inputs_zero, 7201, cmH2O(10), FlowDirection::EXPIRATORY},
   });

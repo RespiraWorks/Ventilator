@@ -82,11 +82,6 @@ struct BlowerSystemState {
   // This is defaulted to false here and is handled by BlowerFsm, rather than
   // the individual FSM classes (OffFsm, PressureControlFsm, etc).
   bool is_new_breath = false;
-
-  // Is this the first BlowerSystemState for a state different from Off state?
-  // Used to reset some variables (volume integrators) to 0 when we start the
-  // ventilator (transition from Off mode to any other mode).
-  bool start_ventilation = false;
 };
 
 // Transition from PEEP to PIP pressure over this length of time.  Citation:

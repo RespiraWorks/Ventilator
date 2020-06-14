@@ -1,4 +1,8 @@
 // This test switches the binary solenoid between the open and closed position
+//
+// TODO - This test should be updated because the solenoid is now a proportional
+//        solenoid with variable positions between 0 and 1 and no longer a
+//        simple binary solenoid
 
 #include "hal.h"
 
@@ -11,8 +15,7 @@ void run_test() {
   bool solenoid_state = false;
 
   while (true) {
-    Hal.digitalWrite(BinaryPin::SOLENOID,
-                     solenoid_state ? VoltageLevel::LOW : VoltageLevel::HIGH);
+    Hal.PSOL_Value(solenoid_state ? 0.0f : 1.0f);
 
     Hal.delay(milliseconds(delay_ms));
 

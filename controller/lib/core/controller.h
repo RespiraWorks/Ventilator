@@ -50,13 +50,17 @@ private:
 
   // These objects accumulate flow to calculate volume.
   //
-  // For debugging, we accumulate flow with and without error correction.  See
-  // FlowIntegrator definition for description of errors.
+  // For debugging, we accumulate flow with and without error correction, with
+  // raw flow (no re-zero) and with rezero-ed flow.  See FlowIntegrator
+  // definition for description of errors.
   //
   // These are never nullopt; we use std::optional to let us clear/reset these
   // objects.
   std::optional<FlowIntegrator> flow_integrator_ = FlowIntegrator();
   std::optional<FlowIntegrator> uncorrected_flow_integrator_ = FlowIntegrator();
+  std::optional<FlowIntegrator> flow_integrator_raw_ = FlowIntegrator();
+  std::optional<FlowIntegrator> flow_integrator_raw_corrected_ =
+      FlowIntegrator();
 
   // This state tells the controller whether the vent was already On when Run()
   // was last called, and allows resetting integrators when transitioning from

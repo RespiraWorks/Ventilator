@@ -36,15 +36,54 @@ struct SensorReadings {
   // Inflow and outflow at the two venturis, calculated from inflow/outflow
   // pressure diff.
   //
-  // These are "uncorrected" values.  We account for high-frequency noise by
-  // e.g. averaging many samples, but we don't account here for low-frequency
-  // sensor zero-point drift.
+  // These are raw values (i.e uncorrected). We account for high-frequency noise
+  // by e.g. averaging many samples, but we don't account here for low-frequency
+  // sensor zero-point drift - for sensor-rezero evaluation
+  VolumetricFlow inflow_raw;
+  VolumetricFlow outflow_raw;
+  // These are corrected values, which autozero when the flow is low enough or
+  // constant enough to allow a rezero : drift is taken into account when the
+  // ventilator is Off and when the flow is near-constant (assume the dynamic
+  // of the system is fast, compared to sensor drift)
   VolumetricFlow inflow;
   VolumetricFlow outflow;
 };
 
-// Provides calibrated sensor readings, including tidal volume (TV)
-// integrated from flow.
+// Provides a re-zeroing algorithm for the flow sensors
+class FlowSensorRezero {
+public:
+  FlowSensorRezero();
+  // ZeroOffset needs to be called every loop iteration to update the average dp
+  // and summation states, even if there is no need to rezero the sensor.
+  // Output is a "voltage delta" that needs to be incorporated into the sensor
+  // zero value. This new zero should also lead to a new computation of sensor
+  // output in order for the new value to take this new zero into account.
+  Voltage ZeroOffset(Pressure dp);
+
+private:
+  // cycles counter to keep track of passing time
+  int cycles_ = 0;
+
+  // States to know how the average dp changed.
+  Pressure average_dp_ = kPa(0);
+  Pressure last_average_dp_ = kPa(0);
+
+  // States to integrate deviation from average and evaluate whether it is close
+  // enough to zero to allow re-zeroing the corresponding sensor
+  Pressure error_sum_ = kPa(0);
+
+  // States for deadband definition (deadband is last_average_dp_ +/- noise).
+  // Init at noise around 0.
+  Pressure min_dp_ = cmH2O(-0.013f);
+  Pressure max_dp_ = cmH2O(0.013f);
+
+  // Duration since last rezero, used to compute max sensor average that can be
+  // attributed to drift, as allowable_drift * duration, capped to an absolute
+  // maximum
+  Duration duration_since_last_rezero_ = seconds(0);
+};
+
+// Provides calibrated sensor readings.
 class Sensors {
 public:
   Sensors();
@@ -90,6 +129,15 @@ private:
 
   // Calibrated average sensor values in a zero state.
   Voltage sensors_zero_vals_[NUM_SENSORS];
+
+  // States used to access rezero_algorithms
+  FlowSensorRezero inhale_zero_;
+  FlowSensorRezero exhale_zero_;
+
+  // Used for Before/After comparison - remove this once we have enough
+  // comparison data
+  Pressure OldReadPressureSensor(Sensor s);
+  Voltage initial_sensors_zero_vals_[NUM_SENSORS];
 };
 
 #endif // SENSORS_H

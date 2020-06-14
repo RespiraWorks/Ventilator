@@ -26,6 +26,14 @@ Arduino Nano and the MPXV5004GP and MPXV7002DP pressure sensors.
 static DebugFloat dbg_dp_inhale("dp_inhale", "Inhale diff pressure, cmH2O");
 static DebugFloat dbg_dp_exhale("dp_exhale", "Exhale diff pressure, cmH2O");
 static DebugFloat dbg_pressure("pressure", "Patient pressure, cmH2O");
+static DebugFloat dbg_dp_inhale_raw("dp_inhale_raw",
+                                    "Inhale diff pressure - no rezero, cmH2O");
+static DebugFloat dbg_dp_exhale_raw("dp_exhale_raw",
+                                    "Exhale diff pressure - no rezero, cmH2O");
+static DebugFloat dbg_raw_flow_inhale("flow_inhale_raw",
+                                      "Inhale flow rate - no rezero, cc/sec");
+static DebugFloat dbg_raw_flow_exhale("flow_exhale_raw",
+                                      "Exhale flow rate - no rezero, cc/sec");
 static DebugFloat dbg_flow_inhale("flow_inhale", "Inhale flow rate, cc/sec");
 static DebugFloat dbg_flow_exhale("flow_exhale", "Exhale flow rate, cc/sec");
 // Flow correction happens as part of volume computation, in the Controller.
@@ -65,7 +73,97 @@ static_assert(VENTURI_CHOKE_DIAM > meters(0));
   __builtin_unreachable();
 }
 
+// The pressure sensors output 1-5V, and each additional 1V of output
+// corresponds to an additional 1kPa of pressure difference.
+// https://www.nxp.com/docs/en/data-sheet/MPXV5004G.pdf.
+//
+// The pressure sensor is scaled to 0-3.3V, which is the range captured by
+// our ADC.  Therefore, if we multiply the received voltage by 5/3.3, we get
+// a pressure in kPa.
+static constexpr float PRESSURE_SENSOR_TRANSFER_FN_COEFF = 5.f / 3.3f;
+
 Sensors::Sensors() = default;
+
+FlowSensorRezero::FlowSensorRezero() {}
+
+Voltage FlowSensorRezero::ZeroOffset(Pressure dp) {
+  // TODO: refine value for these drift-suppression parameters
+  static constexpr int rezero_sampling = 20;
+  static constexpr Pressure max_drift = cmH2O(0.01f);
+  static constexpr Pressure max_sum_outliers = cmH2O(0);
+  // TODO: refine these sensor characterisation values with new venturi geometry
+  static constexpr Pressure zero_flow_noise = cmH2O(0.012f);
+  static constexpr float dp_signal_to_noise = 0.1f;
+  static constexpr Pressure max_zeroing_dp = kPa(0.075f);
+
+  // Compute rolling averages and error integrals with deadband to eventually
+  // re-zero the sensors:
+  average_dp_ += dp / static_cast<float>(rezero_sampling);
+  if ((dp < min_dp_) || (dp > max_dp_)) {
+    // Sum absolute value in order to make sure one high outlier does not
+    // compensate a low one that occured previously. This is used to check
+    // whether some measures in the integration interval could be attributed to
+    // actual signal rather than noise.
+    if (dp > last_average_dp_) {
+      error_sum_ += (dp - last_average_dp_);
+    } else {
+      error_sum_ += (last_average_dp_ - dp);
+    }
+  }
+
+  Voltage sensor_zero_delta = volts(0);
+  if (cycles_ % rezero_sampling == 0) {
+    // Don't increase duration if higher than 2 seconds to prevent compensating
+    // bigger values in case we could not rezero for more than two second.
+    // Basically: if we haven't rezeroed for more than two second, stop
+    // increasing the change in flow that we allow to compensate
+    if (duration_since_last_rezero_ < seconds(2)) {
+      // TODO: define sample time outside this method
+      duration_since_last_rezero_ += rezero_sampling * milliseconds(10.0f);
+    }
+    // if there were too many outliers, we cannot proceed with re-zero
+    if (error_sum_ <= max_sum_outliers) {
+      // check whether it is possible to attribute current value to drift
+      if (average_dp_ <
+          max_drift *
+              static_cast<float>(duration_since_last_rezero_.seconds())) {
+        sensor_zero_delta =
+            volts((average_dp_).kPa() / PRESSURE_SENSOR_TRANSFER_FN_COEFF);
+        duration_since_last_rezero_ = seconds(0);
+        // In essence, this made it so average_dp_ = 0.
+        average_dp_ = kPa(0);
+      }
+      // check whether the last change can be attributed to drift
+      else if (average_dp_ - last_average_dp_ < max_drift) {
+        sensor_zero_delta = volts((average_dp_ - last_average_dp_).kPa() /
+                                  PRESSURE_SENSOR_TRANSFER_FN_COEFF);
+        // In essence, this made it so average_dp_ = last_average_dp_.
+        average_dp_ = last_average_dp_;
+      }
+    }
+    last_average_dp_ = average_dp_;
+    // compute new deadband
+    Pressure dp_noise = kPa(fabsf(last_average_dp_.kPa())) / dp_signal_to_noise;
+    if (dp_noise > zero_flow_noise) {
+      dp_noise = zero_flow_noise;
+    }
+    // Don't allow noise if value is too high. In effect what this does is make
+    // the integral pick up all the noise and become large, preventing any
+    // rezeroing
+    if (last_average_dp_ > max_zeroing_dp) {
+      dp_noise = kPa(0);
+    }
+    min_dp_ = last_average_dp_ - dp_noise;
+    max_dp_ = last_average_dp_ + dp_noise;
+
+    // reset summation states
+    average_dp_ = kPa(0);
+    error_sum_ = kPa(0);
+  }
+  cycles_ = (cycles_ + 1) % rezero_sampling;
+
+  return sensor_zero_delta;
+};
 
 // NOTE - I can't do this in the constructor now because it gets called before
 // the HAL is set up, so the busy wait never finishes.
@@ -91,6 +189,9 @@ void Sensors::Calibrate() {
   for (Sensor s :
        {PATIENT_PRESSURE, INFLOW_PRESSURE_DIFF, OUTFLOW_PRESSURE_DIFF}) {
     sensors_zero_vals_[s] = Hal.analogRead(PinFor(s));
+    // Used for Before/After comparison - remove this once we have enough
+    // comparison data
+    initial_sensors_zero_vals_[s] = sensors_zero_vals_[s];
   }
 }
 
@@ -98,16 +199,19 @@ void Sensors::Calibrate() {
 //
 // @TODO: Add alarms if sensor value is out of expected range?
 Pressure Sensors::ReadPressureSensor(Sensor s) {
+  return kPa(PRESSURE_SENSOR_TRANSFER_FN_COEFF *
+             (Hal.analogRead(PinFor(s)) - sensors_zero_vals_[s]).volts());
+}
+
+// Used for Before/After comparison - remove this once we have enough
+// comparison data
+Pressure Sensors::OldReadPressureSensor(Sensor s) {
   // The pressure sensors output 1-5V, and each additional 1V of output
   // corresponds to an additional 1kPa of pressure difference.
   // https://www.nxp.com/docs/en/data-sheet/MPXV5004G.pdf.
-  //
-  // The pressure sensor is scaled to 0-3.3V, which is the range captured by
-  // our ADC.  Therefore, if we multiply the received voltage by 5/3.3, we get
-  // a pressure in kPa.
-  static const float TRANSFER_FN_COEFF = 5.f / 3.3f;
-  return kPa(TRANSFER_FN_COEFF *
-             (Hal.analogRead(PinFor(s)) - sensors_zero_vals_[s]).volts());
+  return kPa(
+      PRESSURE_SENSOR_TRANSFER_FN_COEFF *
+      (Hal.analogRead(PinFor(s)) - initial_sensors_zero_vals_[s]).volts());
 }
 
 /*static*/ VolumetricFlow Sensors::PressureDeltaToFlow(Pressure delta) {
@@ -134,6 +238,22 @@ SensorReadings Sensors::GetReadings() {
   auto inflow_delta = ReadPressureSensor(INFLOW_PRESSURE_DIFF);
   auto outflow_delta = ReadPressureSensor(OUTFLOW_PRESSURE_DIFF);
 
+  // used for sensor-rezero evaluation - to be removed once we have enough data
+  auto inflow_delta_raw = OldReadPressureSensor(INFLOW_PRESSURE_DIFF);
+  auto outflow_delta_raw = OldReadPressureSensor(OUTFLOW_PRESSURE_DIFF);
+  VolumetricFlow inflow_raw = PressureDeltaToFlow(inflow_delta_raw);
+  VolumetricFlow outflow_raw = PressureDeltaToFlow(outflow_delta_raw);
+
+  // Update the flow sensors zeros if possible
+  sensors_zero_vals_[INFLOW_PRESSURE_DIFF] +=
+      inhale_zero_.ZeroOffset(inflow_delta);
+  sensors_zero_vals_[OUTFLOW_PRESSURE_DIFF] +=
+      exhale_zero_.ZeroOffset(outflow_delta);
+
+  // reacquire deltas based on the new zero
+  inflow_delta = ReadPressureSensor(INFLOW_PRESSURE_DIFF);
+  outflow_delta = ReadPressureSensor(OUTFLOW_PRESSURE_DIFF);
+
   VolumetricFlow inflow = PressureDeltaToFlow(inflow_delta);
   VolumetricFlow outflow = PressureDeltaToFlow(outflow_delta);
   VolumetricFlow uncorrected_flow = inflow - outflow;
@@ -142,6 +262,10 @@ SensorReadings Sensors::GetReadings() {
   dbg_dp_inhale.Set(inflow_delta.cmH2O());
   dbg_dp_exhale.Set(outflow_delta.cmH2O());
   dbg_pressure.Set(patient_pressure.cmH2O());
+  dbg_dp_inhale_raw.Set(inflow_delta_raw.cmH2O());
+  dbg_dp_exhale_raw.Set(outflow_delta_raw.cmH2O());
+  dbg_raw_flow_inhale.Set(inflow_raw.ml_per_sec());
+  dbg_raw_flow_exhale.Set(outflow_raw.ml_per_sec());
   dbg_flow_inhale.Set(inflow.ml_per_sec());
   dbg_flow_exhale.Set(outflow.ml_per_sec());
   dbg_flow_uncorrected.Set(uncorrected_flow.ml_per_sec());
@@ -150,6 +274,8 @@ SensorReadings Sensors::GetReadings() {
       .patient_pressure = patient_pressure,
       .inflow_pressure_diff = inflow_delta,
       .outflow_pressure_diff = outflow_delta,
+      .inflow_raw = inflow_raw,
+      .outflow_raw = outflow_raw,
       .inflow = inflow,
       .outflow = outflow,
   };

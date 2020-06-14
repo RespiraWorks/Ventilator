@@ -44,6 +44,8 @@ TEST(ControllerTest, ControllerVolumeMatchesFlowIntegrator) {
       .patient_pressure = kPa(0),
       .inflow_pressure_diff = kPa(0),
       .outflow_pressure_diff = kPa(0),
+      .inflow_raw = ml_per_min(0),
+      .outflow_raw = ml_per_min(0),
       .inflow = ml_per_min(0),
       .outflow = ml_per_min(0),
   };
@@ -62,13 +64,13 @@ TEST(ControllerTest, ControllerVolumeMatchesFlowIntegrator) {
         static_cast<float>(i % steps_per_breath) / steps_per_breath;
     Pressure inflow_pressure = cmH2O(0.5f + (breath_pos < 0.5 ? 1.f : 0.f));
     Pressure outflow_pressure = cmH2O(0.4f + (breath_pos >= 0.5 ? 1.f : 0.f));
-    readings = {
-        .patient_pressure = kPa(0),
-        .inflow_pressure_diff = inflow_pressure,
-        .outflow_pressure_diff = outflow_pressure,
-        .inflow = Sensors::PressureDeltaToFlow(inflow_pressure),
-        .outflow = Sensors::PressureDeltaToFlow(outflow_pressure),
-    };
+    readings = {.patient_pressure = kPa(0),
+                .inflow_pressure_diff = inflow_pressure,
+                .outflow_pressure_diff = outflow_pressure,
+                .inflow_raw = Sensors::PressureDeltaToFlow(inflow_pressure),
+                .outflow_raw = Sensors::PressureDeltaToFlow(outflow_pressure),
+                .inflow = Sensors::PressureDeltaToFlow(inflow_pressure),
+                .outflow = Sensors::PressureDeltaToFlow(outflow_pressure)};
     VolumetricFlow uncorrected_flow = readings.inflow - readings.outflow;
     flow_integrator.AddFlow(now, uncorrected_flow);
 

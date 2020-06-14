@@ -46,6 +46,18 @@ static DebugFloat dbg_volume_uncorrected("uncorrected_volume",
                                          "Patient volume w/o correction, ml");
 static DebugFloat dbg_flow_correction("flow_correction",
                                       "Correction to flow, cc/sec");
+static DebugFloat dbg_net_flow_raw("net_flow_raw",
+                                   "Net flow rate w/o rezero, cc/sec");
+static DebugFloat dbg_volume_raw("volume_raw", "Patient volume w/o rezero, ml");
+static DebugFloat dbg_net_flow_raw_corrected(
+    "net_flow_raw_corrected",
+    "Net flow rate w/o rezero with correction, cc/sec");
+static DebugFloat
+    dbg_volume_raw_corrected("volume_raw_corrected",
+                             "Patient volume w/o rezero with correction, ml");
+static DebugFloat
+    dbg_flow_correction_raw("flow_correction_raw",
+                            "Correction to flow without re-zero, cc/sec");
 
 Controller::Controller()
     : blower_valve_pid_(dbg_blower_valve_kp.Get(), dbg_blower_valve_ki.Get(),
@@ -71,12 +83,21 @@ Controller::Run(Time now, const VentParams &params,
   VolumetricFlow net_flow =
       uncorrected_net_flow + flow_integrator_->FlowCorrection();
 
+  // Compute volume with raw flows (no autozero)
+  VolumetricFlow net_flow_raw =
+      sensor_readings.inflow_raw - sensor_readings.outflow_raw;
+  flow_integrator_raw_->AddFlow(now, net_flow_raw);
+  flow_integrator_raw_corrected_->AddFlow(now, net_flow_raw);
+  VolumetricFlow net_flow_raw_corrected =
+      net_flow_raw + flow_integrator_raw_corrected_->FlowCorrection();
+
   BlowerSystemState desired_state = fsm_.DesiredState(
       now, params, {.patient_volume = patient_volume, .net_flow = net_flow});
 
   if (desired_state.is_new_breath) {
     // The "correct" volume at the breath boundary is 0.
     flow_integrator_->NoteExpectedVolume(ml(0));
+    flow_integrator_raw_corrected_->NoteExpectedVolume(ml(0));
     breath_id_ = now.microsSinceStartup();
   }
 
@@ -103,6 +124,8 @@ Controller::Run(Time now, const VentParams &params,
       // reset volume integrators
       flow_integrator_.emplace();
       uncorrected_flow_integrator_.emplace();
+      flow_integrator_raw_.emplace();
+      flow_integrator_raw_corrected_.emplace();
     }
     // Start controlling pressure.
     actuators_state = {
@@ -128,11 +151,17 @@ Controller::Run(Time now, const VentParams &params,
 
   dbg_sp.Set(desired_state.pressure_setpoint.value_or(kPa(0)).cmH2O());
   dbg_net_flow.Set(controller_state.net_flow.ml_per_sec());
-  dbg_net_flow_uncorrected.Set(
-      (sensor_readings.inflow - sensor_readings.outflow).ml_per_sec());
+  dbg_net_flow_uncorrected.Set(uncorrected_net_flow.ml_per_sec());
   dbg_volume.Set(controller_state.patient_volume.ml());
   dbg_volume_uncorrected.Set(uncorrected_flow_integrator_->GetVolume().ml());
   dbg_flow_correction.Set(flow_integrator_->FlowCorrection().ml_per_sec());
+  dbg_net_flow_raw.Set(net_flow_raw.ml_per_sec());
+  dbg_net_flow_raw_corrected.Set(net_flow_raw_corrected.ml_per_sec());
+  dbg_volume_raw.Set(flow_integrator_raw_->GetVolume().ml());
+  dbg_volume_raw_corrected.Set(
+      flow_integrator_raw_corrected_->GetVolume().ml());
+  dbg_flow_correction_raw.Set(
+      flow_integrator_raw_corrected_->FlowCorrection().ml_per_sec());
 
   return {actuators_state, controller_state};
 }

@@ -64,7 +64,7 @@ BasePopup {
                 fillMode: Image.PreserveAspectFit
                 source: 'qrc:/images/RW_substract_24.svg'
             }
-            enabled: root.value > root.minValue
+            visible: root.value > root.minValue
             onClicked: {
                 root.value -= root.stepSize
             }
@@ -82,7 +82,7 @@ BasePopup {
                 fillMode: Image.PreserveAspectFit
                 source: 'qrc:/images/RW_add_24.svg'
             }
-            enabled: root.value < root.maxValue
+            visible: root.value < root.maxValue
             onClicked: {
                 root.value += root.stepSize
             }

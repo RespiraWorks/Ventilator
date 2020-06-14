@@ -22,20 +22,23 @@ import "nanopb.proto";
 // There are also no retries in this protocol.  If a message gets dropped,
 // well, we're going to send another one soon anyway.
 //
-// # Regenerating the C code
+// # Regenerating the C and Python code
 //
-// When you modify this file you also need to regenerate the C code.  On my
-// Mac:
-//
-//  $ brew install nanopb-generator
-//  $ pip3 install protobuf
-//  $ cd common/libs/network_protocol
-//  $ protoc \
-//      --plugin=/usr/local/Cellar/nanopb-generator/0.4.1/bin/protoc-gen-nanopb
-//      \
-//      -I/usr/local/Cellar/nanopb-generator/0.4.1/libexec/proto -I. \
-//      --nanopb_out=. network_protocol.proto
-//
+// When you modify this file you also need to regenerate the C and Python code.
+// On my Mac:
+/*
+    $ brew install nanopb-generator
+    $ pip3 install protobuf
+    $ NANOPB_PATH=$(brew --cellar nanopb-generator)/$(brew list --versions \
+          nanopb-generator | awk '{print $2}')
+    $ protoc \
+        --plugin=$NANOPB_PATH/bin/protoc-gen-nanopb \
+        -I $NANOPB_PATH/libexec/proto \
+        -Icommon/generated_libs/network_protocol \
+        --nanopb_out=common/generated_libs/network_protocol
+        --python_out=utils \
+        common/generated_libs/network_protocol/network_protocol.proto
+*/
 // # Note about optional vs. required fields
 //
 // That this proto uses required fields instead of optional fields.  At Google,
@@ -85,13 +88,6 @@ message GuiStatus {
   // params.
   required VentParams desired_params = 2;
 
-  // Active alarms fired by the controller.  This is used to ACK the
-  // controller's alarms.
-  //
-  // TODO: The max number of alarms wasn't chosen carefully.
-  // The max here should match ControllerStatus.controller_alarms's max.
-  repeated Alarm acked_alarms = 3 [ (nanopb).max_count = 4 ];
-
   // TODO: Include some sort of code version, e.g. git sha that the gui was
   // built from?
 }
@@ -107,12 +103,6 @@ message ControllerStatus {
 
   // Current sensor readings.
   required SensorsProto sensor_readings = 3;
-
-  // Active alarms fired by the controller.
-  //
-  // TODO: The max number of alarms wasn't chosen carefully.
-  // The max here should match GuiStatus.controller_alarms's max.
-  repeated Alarm controller_alarms = 4 [ (nanopb).max_count = 4 ];
 
   // Patient pressure we're trying to achieve.
   required float pressure_setpoint_cm_h2o = 5;
@@ -144,14 +134,6 @@ message VentParams {
   // Notably missing here is FiO2 -- fraction of oxygen in inhaled air.
   // Currently (2020-04-27) we anticipate this will be controlled externally,
   // not within the ventilator.
-
-  // Alarm if tidal volume falls outside this range.
-  required uint32 alarm_lo_tidal_volume_ml = 10;
-  required uint32 alarm_hi_tidal_volume_ml = 11;
-
-  // Alarm if respiratory rate falls outside this range.
-  required uint32 alarm_lo_breaths_per_min = 12;
-  required uint32 alarm_hi_breaths_per_min = 13;
 }
 
 // See
@@ -168,12 +150,6 @@ enum VentMode {
   //   RR   - breaths_per_min
   //   PIP  - pip_cm_h2o
   //   I:E  - inspiratory_expiratory_ratio
-  //
-  // Alarm parameters:
-  //
-  //   alarm_lo_tidal_volume_ml
-  //   alarm_hi_tidal_volume_ml
-  //
   PRESSURE_CONTROL = 1;
 
   // Patients can trigger a breath for themselves so long as they exceed the
@@ -187,13 +163,6 @@ enum VentMode {
   //   PIP       - pip_cm_h2o
   //   I:E       - inspiratory_expiratory_ratio
   //   P-trigger - inspiratory_trigger_cm_h2o
-  //
-  // Alarm parameters:
-  //
-  //   alarm_lo_tidal_volume_ml
-  //   alarm_hi_tidal_volume_ml
-  //   alarm_hi_breaths_per_min
-  //
   PRESSURE_ASSIST = 2;
 
   // TODO: Implement me!
@@ -212,17 +181,4 @@ message SensorsProto {
   required float flow_ml_per_min = 3;
   required float inflow_pressure_diff_cm_h2o = 4;
   required float outflow_pressure_diff_cm_h2o = 5;
-}
-
-enum AlarmKind {
-  RESPIRATORY_RATE_TOO_LOW = 1;
-  RESPIRATORY_RATE_TOO_HIGH = 2;
-  TIDAL_VOLUME_TOO_LOW = 3;
-  TIDAL_VOLUME_TOO_HIGH = 4;
-}
-
-message Alarm {
-  // Relative to uptime_ms of the device that fired the alarm.
-  required uint64 start_time = 1;
-  required AlarmKind kind = 2;
 }

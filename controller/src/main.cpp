@@ -111,13 +111,14 @@ static Controller controller;
 static ControllerStatus controller_status;
 static Sensors sensors;
 
-static SensorsProto AsSensorsProto(SensorReadings r) {
+static SensorsProto AsSensorsProto(const SensorReadings &r,
+                                   const ControllerState &c) {
   SensorsProto proto = SensorsProto_init_zero;
   proto.patient_pressure_cm_h2o = r.patient_pressure.cmH2O();
   proto.inflow_pressure_diff_cm_h2o = r.inflow_pressure_diff.cmH2O();
   proto.outflow_pressure_diff_cm_h2o = r.outflow_pressure_diff.cmH2O();
-  proto.flow_ml_per_min = r.net_flow.ml_per_min();
-  proto.volume_ml = r.volume.ml();
+  proto.flow_ml_per_min = c.net_flow.ml_per_min();
+  proto.volume_ml = c.patient_volume.ml();
   return proto;
 }
 
@@ -135,10 +136,6 @@ static void high_priority_task(void *arg) {
   auto [actuators_state, controller_state] = controller.Run(
       Hal.now(), controller_status.active_params, sensor_readings);
 
-  if (controller_state.is_new_breath) {
-    sensors.NoteNewBreath();
-  }
-
   // TODO update pb library to replace fan_power in ControllerStatus with
   // actuators_state, and remove pressure_setpoint_cm_h2o from ControllerStatus
 
@@ -146,7 +143,8 @@ static void high_priority_task(void *arg) {
   actuators_execute(actuators_state);
 
   // Update controller_status.  This is periodically sent back to the GUI.
-  controller_status.sensor_readings = AsSensorsProto(sensor_readings);
+  controller_status.sensor_readings =
+      AsSensorsProto(sensor_readings, controller_state);
   controller_status.fan_power = actuators_state.blower_power;
   controller_status.pressure_setpoint_cm_h2o =
       controller_state.pressure_setpoint.cmH2O();

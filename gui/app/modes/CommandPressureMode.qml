@@ -218,7 +218,7 @@ Mode {
             parameterName: qsTr("RR")
             parameterUnit: "b/min"
             parameterMaxValue: 30
-            parameterMinValue: 5
+            parameterMinValue: 10
             parameterStepSize: 1
             parameterValue: GuiStateContainer.rr
             onValueConfirmed: GuiStateContainer.rr = value

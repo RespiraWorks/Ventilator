@@ -20,7 +20,7 @@ limitations under the License.
 //
 // The function of the PSOL is similar to that of the pinch valve,
 // but the PSOL handles the higher pressure of the O2 better then
-// a pinch valve would which is why it's used for that purpose.
+// a pinch valve would, which is why it's used for that purpose.
 //
 // The PSOL we're using is made by SMC pneumatics and is model number
 // PVQ31-6G-40-01.  You can find it described in the series catelog

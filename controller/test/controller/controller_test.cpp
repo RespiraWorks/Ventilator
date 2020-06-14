@@ -39,6 +39,19 @@ TEST(ControllerTest, ControllerVolumeMatchesFlowIntegrator) {
   params.inspiratory_expiratory_ratio = 1;
 
   FlowIntegrator flow_integrator;
+
+  SensorReadings readings = {
+      .patient_pressure = kPa(0),
+      .inflow_pressure_diff = kPa(0),
+      .outflow_pressure_diff = kPa(0),
+      .inflow = ml_per_min(0),
+      .outflow = ml_per_min(0),
+  };
+  // need to Run once in order to initialize the volume integrators
+  auto [unused_actuator_state, unused_status] = c.Run(start, params, readings);
+  (void)unused_actuator_state;
+  (void)unused_status;
+
   for (int i = 0; i < breaths_to_test * steps_per_breath; i++) {
     Time now = start + i * step_duration;
     SCOPED_TRACE("i = " + std::to_string(i) +
@@ -49,7 +62,7 @@ TEST(ControllerTest, ControllerVolumeMatchesFlowIntegrator) {
         static_cast<float>(i % steps_per_breath) / steps_per_breath;
     Pressure inflow_pressure = cmH2O(0.5f + (breath_pos < 0.5 ? 1.f : 0.f));
     Pressure outflow_pressure = cmH2O(0.4f + (breath_pos >= 0.5 ? 1.f : 0.f));
-    SensorReadings readings = {
+    readings = {
         .patient_pressure = kPa(0),
         .inflow_pressure_diff = inflow_pressure,
         .outflow_pressure_diff = outflow_pressure,
@@ -59,8 +72,8 @@ TEST(ControllerTest, ControllerVolumeMatchesFlowIntegrator) {
     VolumetricFlow uncorrected_flow = readings.inflow - readings.outflow;
     flow_integrator.AddFlow(now, uncorrected_flow);
 
-    auto [unused_actuator_status, status] = c.Run(now, params, readings);
-    (void)unused_actuator_status;
+    auto [unused_actuator_state, status] = c.Run(now, params, readings);
+    (void)unused_actuator_state;
 
     EXPECT_FLOAT_EQ(
         status.net_flow.ml_per_sec(),

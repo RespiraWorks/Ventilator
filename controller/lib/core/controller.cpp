@@ -52,12 +52,12 @@ Controller::Run(Time now, const VentParams &params,
   pid_.SetKD(dbg_kd.Get());
 
   float pressure = sensor_readings.patient_pressure.kPa();
-  float setpoint = desired_state.setpoint_pressure.kPa();
-  dbg_sp.Set(desired_state.setpoint_pressure.cmH2O());
+  float setpoint = desired_state.pressure_setpoint.kPa();
+  dbg_sp.Set(desired_state.pressure_setpoint.cmH2O());
 
   ControllerState controller_state = {
       .is_new_breath = desired_state.is_new_breath,
-      .setpoint_pressure = desired_state.setpoint_pressure,
+      .pressure_setpoint = desired_state.pressure_setpoint,
   };
 
   ActuatorsState actuators_state = [&]() -> ActuatorsState {

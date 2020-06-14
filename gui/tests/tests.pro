@@ -1,19 +1,13 @@
-QT += testlib gui
-
-CONFIG += qt warn_on depend_includepath testcase
-
+include( ../defaults.pri )
 ! include( ../common.pri ) {
     error( "Couldn't find the common.pri file!" )
 }
-
-
 TEMPLATE = app
 
-SOURCES +=  \
-    goodbyetest.cpp \
-    hellotest.cpp \
-    tst_main.cpp
+QT += testlib gui
+CONFIG += qt warn_on depend_includepath testcase
 
-HEADERS += \
-    goodbyetest.h \
-    hellotest.h
+SOURCES += tst_main.cpp
+HEADERS += max_pressure_alarm_test.h
+
+LIBS += -L../src -leverything

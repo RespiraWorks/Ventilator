@@ -1,15 +1,16 @@
-QT += core quick charts serialport
-
+include( ../defaults.pri )
 ! include( ../common.pri ) {
     error( "Couldn't find the common.pri file!" )
 }
 
+QT += core quick charts serialport
+
+TEMPLATE = app
 TARGET = ProjectVentilatorGUI
 
-
 SOURCES += $$files("*.cpp")
-
 HEADERS += $$files("*.h")
+LIBS += -L../src -leverything
 
 RESOURCES += qml.qrc images/Logo.png
 

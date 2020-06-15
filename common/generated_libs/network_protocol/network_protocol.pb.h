@@ -27,6 +27,7 @@ typedef struct _SensorsProto {
     float flow_ml_per_min;
     float inflow_pressure_diff_cm_h2o;
     float outflow_pressure_diff_cm_h2o;
+    uint64_t breath_id;
 } SensorsProto;
 
 typedef struct _VentParams {
@@ -63,11 +64,11 @@ typedef struct _GuiStatus {
 #define GuiStatus_init_default                   {0, VentParams_init_default}
 #define ControllerStatus_init_default            {0, VentParams_init_default, SensorsProto_init_default, 0, 0}
 #define VentParams_init_default                  {_VentMode_MIN, 0, 0, 0, 0, 0, 0}
-#define SensorsProto_init_default                {0, 0, 0, 0, 0}
+#define SensorsProto_init_default                {0, 0, 0, 0, 0, 0}
 #define GuiStatus_init_zero                      {0, VentParams_init_zero}
 #define ControllerStatus_init_zero               {0, VentParams_init_zero, SensorsProto_init_zero, 0, 0}
 #define VentParams_init_zero                     {_VentMode_MIN, 0, 0, 0, 0, 0, 0}
-#define SensorsProto_init_zero                   {0, 0, 0, 0, 0}
+#define SensorsProto_init_zero                   {0, 0, 0, 0, 0, 0}
 
 /* Field tags (for use in manual encoding/decoding) */
 #define SensorsProto_patient_pressure_cm_h2o_tag 1
@@ -75,6 +76,7 @@ typedef struct _GuiStatus {
 #define SensorsProto_flow_ml_per_min_tag         3
 #define SensorsProto_inflow_pressure_diff_cm_h2o_tag 4
 #define SensorsProto_outflow_pressure_diff_cm_h2o_tag 5
+#define SensorsProto_breath_id_tag               6
 #define VentParams_mode_tag                      1
 #define VentParams_peep_cm_h2o_tag               3
 #define VentParams_breaths_per_min_tag           4
@@ -125,7 +127,8 @@ X(a, STATIC,   REQUIRED, FLOAT,    patient_pressure_cm_h2o,   1) \
 X(a, STATIC,   REQUIRED, FLOAT,    volume_ml,         2) \
 X(a, STATIC,   REQUIRED, FLOAT,    flow_ml_per_min,   3) \
 X(a, STATIC,   REQUIRED, FLOAT,    inflow_pressure_diff_cm_h2o,   4) \
-X(a, STATIC,   REQUIRED, FLOAT,    outflow_pressure_diff_cm_h2o,   5)
+X(a, STATIC,   REQUIRED, FLOAT,    outflow_pressure_diff_cm_h2o,   5) \
+X(a, STATIC,   REQUIRED, UINT64,   breath_id,         6)
 #define SensorsProto_CALLBACK NULL
 #define SensorsProto_DEFAULT NULL
 
@@ -142,9 +145,9 @@ extern const pb_msgdesc_t SensorsProto_msg;
 
 /* Maximum encoded size of messages (where known) */
 #define GuiStatus_size                           50
-#define ControllerStatus_size                    87
+#define ControllerStatus_size                    98
 #define VentParams_size                          37
-#define SensorsProto_size                        25
+#define SensorsProto_size                        36
 
 #ifdef __cplusplus
 } /* extern "C" */

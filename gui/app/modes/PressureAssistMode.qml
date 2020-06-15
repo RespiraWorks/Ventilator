@@ -153,8 +153,8 @@ Mode {
                 // Meaning, 2000 should be enough for a human of ~300kg body mass;
                 // I don't know whether heavier humans have even larger
                 // tidal volume.
-                yMin: 0
-                yMax: 2000
+                yMin: -3000
+                yMax: 3000
                 showBottomLine: false
                 Layout.fillHeight: true
                 Layout.fillWidth: true

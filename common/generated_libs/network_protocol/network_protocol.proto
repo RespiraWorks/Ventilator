@@ -166,7 +166,7 @@ enum VentMode {
   PRESSURE_ASSIST = 2;
 
   // TODO: Implement me!
-  // ADAPTIVE_CONTROL_BREATH = 3;
+  HIGH_FLOW_NASAL_CANNULA = 3;
 }
 
 // Sensor readings.

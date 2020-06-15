@@ -26,9 +26,9 @@ struct ControllerState {
   Volume patient_volume;
   VolumetricFlow net_flow;
 
-  // Sequentially increasing index of the current breath among all breaths
-  // handled since controller startup.
-  int32_t breath_id = 0;
+  // Identifies the current breath among all breaths handled since controller
+  // startup.
+  uint64_t breath_id = 0;
 };
 
 // This class is here to allow integration of our controller into Modelica
@@ -44,7 +44,7 @@ public:
       const SensorReadings &sensor_readings);
 
 private:
-  int32_t breath_id_ = 0;
+  uint64_t breath_id_ = 0;
   BlowerFsm fsm_;
   PID blower_valve_pid_;
 

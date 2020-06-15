@@ -23,7 +23,7 @@ duties reliably with high confidence over extended periods of time. The goal is 
 
 5. **Open source** - we want this project to be something that anyone who wants can build off of and leverage. Therefore, all designs, rationales behind those designs, requirements, processes, etc. will be documented in a common repo that everyone has access to. **#todo** - go through and make sure all of the links in here are in git so that people can access them (some slack links exist temporarily before the information is fully resolved and moved to git)
 
-## System conopS/System Design:
+## System CONOPS/System Design
 
 More detailed thoughts on this [here](conop.md).
 
@@ -137,12 +137,16 @@ More detailed thoughts on this [here](conop.md).
 
 ## PCB/Electronics
 
-* **SRM32 Microcontroller**
+* **SRM32 Microcontroller For the Cycle Controller**
     * More powerful than the simpler arduino and Raspberry pis, but still cheap and widely available
     * Used in other medical devices
     * Comes with more powerful/extensive debugging tools
     * Familiar to many of the members of our team
     * See [this ticket](https://github.com/RespiraWorks/SystemDesign/issues/1) for more details on why a STM32 microcontroller was chosen.
+* **Rasperry PI and Rasperry PI Touch Screen for GUI**
+    * Cheap and widely available
+    * Existing libraries for touch screen interactions that can be leveraged
+    * Has lower performance requirements than the cycle controller
 * **Power Supply**
     * 12V standard chosen to ensure flexibility of power supplies (e.g. battery or UPC)
     * Open question on internal alarms battery

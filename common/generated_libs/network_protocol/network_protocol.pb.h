@@ -27,7 +27,7 @@ typedef struct _SensorsProto {
     float flow_ml_per_min;
     float inflow_pressure_diff_cm_h2o;
     float outflow_pressure_diff_cm_h2o;
-    int32_t breath_id;
+    uint64_t breath_id;
 } SensorsProto;
 
 typedef struct _VentParams {
@@ -128,7 +128,7 @@ X(a, STATIC,   REQUIRED, FLOAT,    volume_ml,         2) \
 X(a, STATIC,   REQUIRED, FLOAT,    flow_ml_per_min,   3) \
 X(a, STATIC,   REQUIRED, FLOAT,    inflow_pressure_diff_cm_h2o,   4) \
 X(a, STATIC,   REQUIRED, FLOAT,    outflow_pressure_diff_cm_h2o,   5) \
-X(a, STATIC,   REQUIRED, INT32,    breath_id,         6)
+X(a, STATIC,   REQUIRED, UINT64,   breath_id,         6)
 #define SensorsProto_CALLBACK NULL
 #define SensorsProto_DEFAULT NULL
 

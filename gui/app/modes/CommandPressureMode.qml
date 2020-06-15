@@ -122,7 +122,7 @@ Mode {
             {
                 id: flowView
                 name: "Flow"
-                unit: "mL/min"
+                unit: "L/min"
                 // TODO: Are these reasonable lower and upper bounds?
                 // Source for current value:
                 // https://www.sciencedirect.com/topics/medicine-and-dentistry/peak-inspiratory-flow
@@ -140,16 +140,12 @@ Mode {
                 id: tidalVolumeView
                 name: "Tidal Volume"
                 unit: "mL"
-                // TODO: Are these reasonable lower and upper bounds?
-                // Source for current value:
-                // https://en.wikipedia.org/wiki/Tidal_volume
-                // "In a healthy, young human adult, tidal volume is
-                // approximately 500 mL per inspiration or 7 mL/kg of body mass."
-                // Meaning, 2000 should be enough for a human of ~300kg body mass;
-                // I don't know whether heavier humans have even larger
-                // tidal volume.
-                yMin: 0
-                yMax: 2000
+
+                // Software requirement 49 says TV should be in the range of
+                // 0..3000 mL.
+                yMin: -3000
+                yMax: 3000
+
                 showBottomLine: false
                 Layout.fillHeight: true
                 Layout.fillWidth: true

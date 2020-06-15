@@ -87,34 +87,34 @@ ApplicationWindow {
 
         property ListModel modesModel: ListModel {
             ListElement {
-                mode: "command_pressure_mode"
+                mode: GuiStateContainer.COMMAND_PRESSURE
                 title: qsTr("Command Pressure")
                 description: "Space for a short, but well-crafted message summarizing the main reasons for choosing this mode over the others available."
                 acronym: "PC"
             }
             ListElement {
-                mode: "pressure_assist_mode"
+                mode: GuiStateContainer.PRESSURE_ASSIST
                 title: qsTr("Pressure Assist")
                 description: "Space for a short, but well-crafted message summarizing the main reasons for choosing this mode over the others available."
                 acronym: "A/C PC"
             }
             ListElement {
-                mode: "high_flow_nasal_cannula_mode"
+                mode: GuiStateContainer.HIGH_FLOW_NASAL_CANNULA
                 title: qsTr("High-flow nasal cannula")
                 description: "Space for a short, but well-crafted message summarizing the main reasons for choosing this mode over the others available."
                 acronym: "HFNC"
             }
         }
 
-        property var components: {
-            "command_pressure_mode": commandPressureMode,
-            "pressure_assist_mode": pressureAssistMode,
-            "high_flow_nasal_cannula_mode": highFlowNasalCannulaMode
-        }
-
         onCurrentModeChanged: {
-            pageStack.replace(components[currentMode.mode])
-            GuiStateContainer.mode_str = currentMode.mode
+            if (currentMode.mode == GuiStateContainer.COMMAND_PRESSURE) {
+              pageStack.replace(commandPressureMode)
+            } else if (currentMode.mode == GuiStateContainer.PRESSURE_ASSIST) {
+              pageStack.replace(pressureAssistMode);
+            } else if (currentMode.mode == GuiStateContainer.HIGH_FLOW_NASAL_CANNULA) {
+              pageStack.replace(highFlowNasalCannulaMode);
+            }
+            GuiStateContainer.mode = currentMode.mode
         }
 
         Connections {

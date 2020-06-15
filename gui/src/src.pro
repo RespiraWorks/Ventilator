@@ -16,6 +16,7 @@ TEMPLATE = lib
 CONFIG += staticlib
 
 HEADERS += chrono.h \
+  alarm_manager.h \
   connected_device.h \
   controller_history.h \
   gui_state_container.h \

@@ -42,6 +42,10 @@ QtObject {
 
             property color textPrimary: "white"
             property color textAlternative:"#AFAFAF"
+
+            property color alarmHigh: "#D72638"
+            property color alarmLow: "#4487A3"
+            property color alarmMedium: "#F0D85D"
         }
 
         property QtObject font: QtObject {

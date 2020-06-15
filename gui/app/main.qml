@@ -2,7 +2,6 @@ import QtQuick 2.11
 import QtQuick.Layouts 1.3
 import QtQuick.Controls 2.4
 import Respira 1.0
-
 import "modes"
 import "controls"
 
@@ -36,6 +35,7 @@ ApplicationWindow {
     }
 
     header: ToolBar {
+
         contentHeight: 60
         background:  Item {  }
 
@@ -46,7 +46,7 @@ ApplicationWindow {
             }
 
             onMenuClicked: console.log("Menu Click")
-            onAlarmSettingsClicked: console.log("Alarm Settings Clicked")
+            onAlarmSettingsClicked: alarmNotificationBanner.enabled = true
             onModeSelectionClicked: modeSelectionPopup.open()
         }
 
@@ -55,6 +55,17 @@ ApplicationWindow {
                 right: parent.right; rightMargin: 8
                 verticalCenter: parent.verticalCenter
             }
+        }
+
+        AlarmNotificationBanner {
+            id: alarmNotificationBanner
+            Component.onCompleted: console.log(GuiStateContainer.alarmManager.highestPriorityAlarm.isValid)
+            enabled: GuiStateContainer.alarmManager.highestPriorityAlarm.isValid
+            priority: GuiStateContainer.alarmManager.highestPriorityAlarm.priority
+            title: GuiStateContainer.alarmManager.highestPriorityAlarm.text
+            alarmsCount: GuiStateContainer.alarmManager.alarmsCount
+            onPauseAlarmClicked: GuiStateContainer.alarmManager.ackownledge()
+            z: 999 // just to make sure its always on top
         }
     }
 

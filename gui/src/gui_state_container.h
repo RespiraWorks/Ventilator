@@ -4,6 +4,7 @@
 #include <QObject>
 #include <stdint.h>
 
+#include "alarm_manager.h"
 #include "chrono.h"
 #include "controller_history.h"
 #include "simple_clock.h"
@@ -97,6 +98,8 @@ public:
       QVector<QPointF> flowSeries READ GetFlowSeries NOTIFY FlowSeriesChanged)
   Q_PROPERTY(QVector<QPointF> tidalSeries READ GetTidalSeries NOTIFY
                  TidalSeriesChanged)
+  Q_PROPERTY(AlarmManager *alarmManager READ GetAlarmManager NOTIFY
+                 AlarmManagerChanged)
 
   QVector<QPointF> GetPressureSeries() const { return pressure_series_; }
 
@@ -119,6 +122,8 @@ public:
     emit TidalSeriesChanged();
   }
 
+  AlarmManager *GetAlarmManager() { return &alarm_manager_; }
+
 signals:
   void readouts_changed();
   void params_changed();
@@ -127,6 +132,7 @@ signals:
   void PressureSeriesChanged();
   void FlowSeriesChanged();
   void TidalSeriesChanged();
+  void AlarmManagerChanged();
 
 public slots:
   void update();
@@ -239,6 +245,8 @@ private:
   QVector<QPointF> pressure_series_;
   QVector<QPointF> flow_series_;
   QVector<QPointF> tidal_series_;
+
+  AlarmManager alarm_manager_;
 };
 
 #endif // GUI_STATE_CONTAINER_H

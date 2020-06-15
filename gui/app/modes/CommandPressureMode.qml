@@ -11,7 +11,7 @@ Mode {
     Timer // TODO: Make data sources be updated as we get data
     {
         id: refreshTimer
-        interval: 1 / 60 * 1000 // 60 Hz
+        interval: 1 / 30 * 1000 // 60 Hz
         running: mode.visible
         repeat: true
         onTriggered: {

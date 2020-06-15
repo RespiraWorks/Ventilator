@@ -5,7 +5,9 @@
 #include "periodic_closure.h"
 #include "respira_connected_device.h"
 
+#include "time_series_graph.h"
 #include <QCommandLineParser>
+#include <QDebug>
 #include <QFontDatabase>
 #include <QFontInfo>
 #include <QGuiApplication>
@@ -17,8 +19,6 @@
 #include <cmath>
 #include <iostream>
 #include <memory>
-
-#include "time_series_graph.h"
 
 QObject *gui_state_instance(QQmlEngine *engine, QJSEngine *scriptEngine) {
   static GuiStateContainer state_container(
@@ -142,6 +142,11 @@ int main(int argc, char *argv[]) {
   communicate.Start();
 
   qmlRegisterType<TimeSeriesGraph>("Respira", 1, 0, "TimeSeriesGraph");
+  qmlRegisterUncreatableType<AlarmManager>(
+      "Respira", 1, 0, "AlarmManager",
+      "AlarmManager cannot be instantiated from QML");
+  qmlRegisterUncreatableType<Alarm>("Respira", 1, 0, "Alarm",
+                                    "Alarm cannot be instantiated from QML");
   qmlRegisterSingletonType<GuiStateContainer>(
       "Respira", 1, 0, "GuiStateContainer", &gui_state_instance);
 

@@ -17,7 +17,8 @@ void GuiStateContainer::update() {
                 controller_status.sensor_readings.patient_pressure_cm_h2o));
     flow_points.append(
         QPointF(neg_millis_ago * 0.001,
-                controller_status.sensor_readings.flow_ml_per_min));
+                // The graph should be in L/min, but the data is ml/min
+                0.001 * controller_status.sensor_readings.flow_ml_per_min));
     tv_points.append(QPointF(neg_millis_ago * 0.001,
                              controller_status.sensor_readings.volume_ml));
   }

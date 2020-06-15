@@ -77,7 +77,7 @@ Controller::Run(Time now, const VentParams &params,
   if (desired_state.is_new_breath) {
     // The "correct" volume at the breath boundary is 0.
     flow_integrator_->NoteExpectedVolume(ml(0));
-    breath_id_++;
+    breath_id_ = now.microsSinceStartup();
   }
 
   ActuatorsState actuators_state;

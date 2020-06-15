@@ -1,6 +1,7 @@
 import QtQuick 2.11
 import QtQuick.Layouts 1.3
 import QtQuick.Controls 2.4
+import Respira 1.0
 
 import "modes"
 import "controls"
@@ -113,6 +114,7 @@ ApplicationWindow {
 
         onCurrentModeChanged: {
             pageStack.replace(components[currentMode.mode])
+            GuiStateContainer.mode_str = currentMode.mode
         }
 
         Connections {

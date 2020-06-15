@@ -41,5 +41,6 @@
         <file>images/RW_adjust_24.svg</file>
         <file>controls/ScopeView.qml</file>
         <file>images/RW_log_24.svg</file>
+        <file>sample-data/2020-05-14-pip15-peep5-rr12-ie23.csv</file>
     </qresource>
 </RCC>

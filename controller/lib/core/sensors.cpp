@@ -89,14 +89,15 @@ FlowSensorRezero::FlowSensorRezero() {}
 Voltage FlowSensorRezero::ZeroOffset(Pressure dp) {
   // TODO: refine value for these drift-suppression parameters
   static constexpr int rezero_sampling = 20;
-  static constexpr Pressure max_drift = cmH2O(0.01f);
+  static constexpr Pressure max_drift = cmH2O(0.05f);
   static constexpr Pressure max_sum_outliers = cmH2O(0);
   // TODO: refine these sensor characterisation values with new venturi geometry
   static constexpr Pressure zero_flow_noise = cmH2O(0.012f);
   static constexpr float dp_signal_to_noise = 0.1f;
   // maximum value to allow rezeroing: if the measure is higher than this dp,
-  // the noise model we are using fails and rezeroing is harder to perform
-  static constexpr Pressure max_zeroing_dp = kPa(0.075f);
+  // the noise model we are using fails, rezeroing is harder to perform and may
+  // lead to wrong re-zeroing.
+  static constexpr Pressure max_zeroing_dp = kPa(0.75f);
 
   // Compute rolling averages and error integrals with deadband to eventually
   // re-zero the sensors:
@@ -120,9 +121,9 @@ Voltage FlowSensorRezero::ZeroOffset(Pressure dp) {
     // First rezeroing condition: no outlier in signal
     if (error_sum_ <= max_sum_outliers) {
       // Max pressure that can be attributed to drift when pressure is close to
-      // zero, maxed out at 1 second of max drift.
+      // zero, maxed out at 3 seconds of max drift.
       Pressure max_zero =
-          max_drift * std::min(1.0f, duration_since_last_rezero_.seconds());
+          max_drift * std::min(3.0f, duration_since_last_rezero_.seconds());
       // note: negative average should always be attributed to drift: it does
       // not correspond to an actual physical phenomenon in the flow sensor
       if (average_dp_ < max_zero) {

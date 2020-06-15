@@ -69,9 +69,6 @@ public:
     return gui_status_;
   }
 
-  // TODO: Add mutators of GuiStatus when there are any UI elements
-  // that change parameters.
-
   // Returns the recent history of ControllerStatus.
   std::vector<std::tuple<SteadyInstant, ControllerStatus>>
   GetControllerStatusHistory() {
@@ -84,6 +81,8 @@ public:
   Q_PROPERTY(qreal flowReadout READ get_flow_readout NOTIFY readouts_changed)
   Q_PROPERTY(qreal tvReadout READ get_tv_readout NOTIFY readouts_changed)
 
+  Q_PROPERTY(VentMode mode READ get_mode NOTIFY params_changed)
+  Q_PROPERTY(QString mode_str WRITE set_mode_str NOTIFY params_changed)
   Q_PROPERTY(quint32 rr READ get_rr WRITE set_rr NOTIFY params_changed)
   Q_PROPERTY(quint32 peep READ get_peep WRITE set_peep NOTIFY params_changed)
   Q_PROPERTY(quint32 pip READ get_pip WRITE set_pip NOTIFY params_changed)
@@ -150,6 +149,30 @@ private:
   qreal get_tv_readout() const {
     std::unique_lock<std::mutex> l(mu_);
     return history_.GetLastStatus().sensor_readings.volume_ml;
+  }
+
+  VentMode get_mode() const {
+    std::unique_lock<std::mutex> l(mu_);
+    return gui_status_.desired_params.mode;
+  }
+  void set_mode_str(QString mode) {
+    {
+      std::unique_lock<std::mutex> l(mu_);
+      gui_status_.desired_params.mode = [&] {
+        if (mode == "command_pressure_mode") {
+          return VentMode::VentMode_PRESSURE_CONTROL;
+        } else if (mode == "pressure_assist_mode") {
+          return VentMode::VentMode_PRESSURE_ASSIST;
+        } else if (mode == "high_flow_nasal_cannula_mode") {
+          // TODO: Not yet implemented.
+        }
+
+        // Unrecognized mode; don't change anything.
+        // TODO: Raise a warning somehow?
+        return gui_status_.desired_params.mode;
+      }();
+    }
+    params_changed();
   }
 
   quint32 get_rr() const {

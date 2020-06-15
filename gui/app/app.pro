@@ -18,7 +18,7 @@ SOURCES += main.cpp
 
 LIBS += -L../src -leverything
 
-RESOURCES += qml.qrc images/Logo.png
+RESOURCES += qml.qrc images/ controls/ fonts/ modes/ sample-data/
 
 DISTFILES += images/Logo.png
 

@@ -17,7 +17,8 @@ extern "C" {
 typedef enum _VentMode {
     VentMode_OFF = 0,
     VentMode_PRESSURE_CONTROL = 1,
-    VentMode_PRESSURE_ASSIST = 2
+    VentMode_PRESSURE_ASSIST = 2,
+    VentMode_HIGH_FLOW_NASAL_CANNULA = 3
 } VentMode;
 
 /* Struct definitions */
@@ -56,8 +57,8 @@ typedef struct _GuiStatus {
 
 /* Helper constants for enums */
 #define _VentMode_MIN VentMode_OFF
-#define _VentMode_MAX VentMode_PRESSURE_ASSIST
-#define _VentMode_ARRAYSIZE ((VentMode)(VentMode_PRESSURE_ASSIST+1))
+#define _VentMode_MAX VentMode_HIGH_FLOW_NASAL_CANNULA
+#define _VentMode_ARRAYSIZE ((VentMode)(VentMode_HIGH_FLOW_NASAL_CANNULA+1))
 
 
 /* Initializer values for message structs */

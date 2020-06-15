@@ -8,16 +8,6 @@ import ".."
 // TODO: Common this with PressureAssistMode.qml.
 Mode {
     id: mode
-    Timer // TODO: Make data sources be updated as we get data
-    {
-        id: refreshTimer
-        interval: 1 / 60 * 1000 // 60 Hz
-        running: mode.visible
-        repeat: true
-        onTriggered: {
-            GuiStateContainer.update();
-        }
-    }
 
     Rectangle {
         id: parameterDisplayPanel
@@ -75,10 +65,10 @@ Mode {
             ParameterDisplay {
                 parameterName: qsTr("TV")
                 parameterUnit: qsTr("mL")
-		// TODO: Instead of showing the current volume, should this
-		// show *max* volume averaged over the past few breaths?  This
-		// is what "TV" actually means, and I suspect it's much more
-		// meaningful than showing the last-measured patient volume.
+                // TODO: Instead of showing the current volume, should this
+                // show *max* volume averaged over the past few breaths?  This
+                // is what "TV" actually means, and I suspect it's much more
+                // meaningful than showing the last-measured patient volume.
                 parameterValue: GuiStateContainer.tvReadout.toFixed(0);
             }
 

@@ -35,6 +35,17 @@ ApplicationWindow {
         z: 10
     }
 
+    Timer
+    {
+        id: refreshTimer
+        interval: 1 / 60 * 1000 // 60 Hz
+        running: true
+        repeat: true
+        onTriggered: {
+            GuiStateContainer.update();
+        }
+    }
+
     header: ToolBar {
         contentHeight: 60
         background:  Item {  }

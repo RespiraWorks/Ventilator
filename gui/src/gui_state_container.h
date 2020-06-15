@@ -145,7 +145,7 @@ private:
   }
   qreal get_flow_readout() const {
     std::unique_lock<std::mutex> l(mu_);
-    return history_.GetLastStatus().sensor_readings.flow_ml_per_min;
+    return 0.001 * history_.GetLastStatus().sensor_readings.flow_ml_per_min;
   }
   qreal get_tv_readout() const {
     std::unique_lock<std::mutex> l(mu_);

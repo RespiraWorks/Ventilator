@@ -11,3 +11,5 @@ For each test, please do the following:
     * Information for how the output commands from the controller are mapped to the actual voltages for the actuators
     * The lung compliance/resistance used (if there is a way to measure it, e.g. like the quick lung offers)
     * Any other hardware settings that have been variable or might change (e.g. the bit resolution for the raw sensor valves)
+
+Note: a README_template is provided to help

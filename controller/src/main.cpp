@@ -119,6 +119,7 @@ static SensorsProto AsSensorsProto(const SensorReadings &r,
   proto.outflow_pressure_diff_cm_h2o = r.outflow_pressure_diff.cmH2O();
   proto.flow_ml_per_min = c.net_flow.ml_per_min();
   proto.volume_ml = c.patient_volume.ml();
+  proto.breath_id = c.breath_id;
   return proto;
 }
 

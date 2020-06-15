@@ -10,8 +10,9 @@ This is a template file to use when you're creating a README file for a ventilat
 
 * **Date of test:** [Date]
 * **Tester:** [Full name / email address]
-* **Software repo and branch used:** [Branch name here]
+* **Software version** *(link to specific commit by hash so we know the state of the software you tested)*: [Commit link]
 * **Test data:** [Link to file]
+* **Ventilator prototype serial #:** [serial number] 
 * **User settings (specify here or in test file):**
     * **PIP:** [value]
     * **PEEP:** [value]

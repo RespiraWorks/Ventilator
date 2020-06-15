@@ -1,7 +1,6 @@
 import QtQuick 2.11
 import QtQuick.Controls 2.4
 import Respira 1.0
-
 import ".."
 
 Item {
@@ -12,13 +11,14 @@ Item {
     property double yMin: -1.5
     property double yMax: 1.5
     property double rangeInSeconds: 30
+    property int alarmPriority: AlarmPriority.NONE
 
     property alias name: nameLabel.text
     property alias unit: unitLabel.text
 
     property alias showBottomLine: bottomLine.visible
     property alias dataset: timeSeriesGraph.dataset
-    property alias color: timeSeriesGraph.color
+
 
     Text {
         id: yMaxLabel
@@ -70,7 +70,8 @@ Item {
 
     TimeSeriesGraph {
         id: timeSeriesGraph
-        color: "white"
+        lineColor: Style.theme.color.timeSeries.lineByPriority(alarmPriority)
+        areaColor: Style.theme.color.timeSeries.areaByPriority(alarmPriority)
         anchors {
             top: parent.top; topMargin: 12
             left: parent.left; leftMargin: 48

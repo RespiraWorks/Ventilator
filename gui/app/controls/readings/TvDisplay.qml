@@ -10,5 +10,5 @@ ParameterDisplay {
     // show *max* volume averaged over the past few breaths?  This
     // is what "TV" actually means, and I suspect it's much more
     // meaningful than showing the last-measured patient volume.
-    parameterValue: GuiStateContainer.tvReadout.toFixed(0);
+    parameterValue: GuiStateContainer.measured_tv.toFixed(0);
 }

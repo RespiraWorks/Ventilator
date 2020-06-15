@@ -6,5 +6,5 @@ import ".."
 ParameterDisplay {
     parameterName: qsTr("PIP")
     parameterUnit: qsTr("cmH<sub>2</sub>O")
-    parameterValue: GuiStateContainer.pip.toString()
+    parameterValue: GuiStateContainer.measured_pip.toString()
 }

@@ -8,7 +8,6 @@
 #include "controller_history.h"
 #include "simple_clock.h"
 
-#include <mutex>
 #include <tuple>
 #include <vector>
 
@@ -25,11 +24,6 @@
 // object.
 //
 // In other words, this is essentially an MVC "Model".
-//
-// GUI rendering and callbacks happen asynchronously to interaction
-// with the controller, so thread safety is important, and it is easiest
-// to centralize it in the current class, simply protecting everything
-// by a single mutex.
 //
 // TODO(jkff, paulovap): This class embodies the "God object" antipattern. We
 // should split it into several parts, with GuiStateContainer being only the
@@ -63,18 +57,8 @@ public:
   // Returns when the GUI started up.
   SteadyInstant GetStartupTime() { return startup_time_; }
 
-  // Adds a data point of controller status to the history.
-  void AppendHistory(const ControllerStatus &status) {
-    {
-      std::unique_lock<std::mutex> l(mu_);
-      history_.Append(SteadyClock::now(), status);
-    }
-    readouts_changed();
-  }
-
   // Returns the current GuiStatus to be sent to the controller.
   GuiStatus GetGuiStatus() {
-    std::unique_lock<std::mutex> l(mu_);
     gui_status_.uptime_ms =
         TimeAMinusB(SteadyClock::now(), startup_time_).count();
     return gui_status_;
@@ -83,7 +67,6 @@ public:
   // Returns the recent history of ControllerStatus.
   std::vector<std::tuple<SteadyInstant, ControllerStatus>>
   GetControllerStatusHistory() {
-    std::unique_lock<std::mutex> l(mu_);
     return history_.GetHistory();
   }
 
@@ -132,7 +115,7 @@ public:
 
 signals:
   void readouts_changed();
-  void params_changed();
+  void params_changed(const GuiStatus &status);
   void battery_percentage_changed();
   void clock_changed();
   void PressureSeriesChanged();
@@ -140,6 +123,13 @@ signals:
   void TidalSeriesChanged();
 
 public slots:
+  // Adds a data point of controller status to the history.
+  void controller_status_changed(SteadyInstant now,
+                                 const ControllerStatus &status) {
+    history_.Append(now, status);
+    readouts_changed();
+  }
+
   void update();
 
 private:
@@ -150,20 +140,16 @@ private:
   }
   SimpleClock *get_clock() const { return const_cast<SimpleClock *>(&clock_); }
   qreal get_pressure_readout() const {
-    std::unique_lock<std::mutex> l(mu_);
     return history_.GetLastStatus().sensor_readings.patient_pressure_cm_h2o;
   }
   qreal get_flow_readout() const {
-    std::unique_lock<std::mutex> l(mu_);
     return 0.001 * history_.GetLastStatus().sensor_readings.flow_ml_per_min;
   }
   qreal get_tv_readout() const {
-    std::unique_lock<std::mutex> l(mu_);
     return history_.GetLastStatus().sensor_readings.volume_ml;
   }
 
   VentilationMode get_mode() const {
-    std::unique_lock<std::mutex> l(mu_);
     switch (gui_status_.desired_params.mode) {
     case VentMode::VentMode_PRESSURE_CONTROL:
       return VentilationMode::COMMAND_PRESSURE;
@@ -177,81 +163,50 @@ private:
     }
   }
   void set_mode(VentilationMode mode) {
-    {
-      std::unique_lock<std::mutex> l(mu_);
-      gui_status_.desired_params.mode = [&] {
-        switch (mode) {
-        case VentilationMode::COMMAND_PRESSURE:
-          return VentMode::VentMode_PRESSURE_CONTROL;
-        case VentilationMode::PRESSURE_ASSIST:
-          return VentMode::VentMode_PRESSURE_ASSIST;
-        case VentilationMode::HIGH_FLOW_NASAL_CANNULA:
-          return VentMode::VentMode_HIGH_FLOW_NASAL_CANNULA;
-        default:
-          // Should never happen, keep unchanged.
-          return gui_status_.desired_params.mode;
-        }
-      }();
-    }
-    params_changed();
+    gui_status_.desired_params.mode = [&] {
+      switch (mode) {
+      case VentilationMode::COMMAND_PRESSURE:
+        return VentMode::VentMode_PRESSURE_CONTROL;
+      case VentilationMode::PRESSURE_ASSIST:
+        return VentMode::VentMode_PRESSURE_ASSIST;
+      case VentilationMode::HIGH_FLOW_NASAL_CANNULA:
+        return VentMode::VentMode_HIGH_FLOW_NASAL_CANNULA;
+      default:
+        // Should never happen, keep unchanged.
+        return gui_status_.desired_params.mode;
+      }
+    }();
+    params_changed(gui_status_);
   }
 
-  quint32 get_rr() const {
-    std::unique_lock<std::mutex> l(mu_);
-    return gui_status_.desired_params.breaths_per_min;
-  }
+  quint32 get_rr() const { return gui_status_.desired_params.breaths_per_min; }
 
   void set_rr(quint32 value) {
-    {
-      std::unique_lock<std::mutex> l(mu_);
-      gui_status_.desired_params.breaths_per_min = value;
-    }
-    params_changed();
+    gui_status_.desired_params.breaths_per_min = value;
+    params_changed(gui_status_);
   }
 
-  quint32 get_peep() const {
-    std::unique_lock<std::mutex> l(mu_);
-    return gui_status_.desired_params.peep_cm_h2o;
-  }
+  quint32 get_peep() const { return gui_status_.desired_params.peep_cm_h2o; }
   void set_peep(quint32 value) {
-    {
-      std::unique_lock<std::mutex> l(mu_);
-      gui_status_.desired_params.peep_cm_h2o = value;
-    }
-    params_changed();
+    gui_status_.desired_params.peep_cm_h2o = value;
+    params_changed(gui_status_);
   }
 
-  quint32 get_pip() const {
-    std::unique_lock<std::mutex> l(mu_);
-    return gui_status_.desired_params.pip_cm_h2o;
-  }
+  quint32 get_pip() const { return gui_status_.desired_params.pip_cm_h2o; }
   void set_pip(quint32 value) {
-    {
-      std::unique_lock<std::mutex> l(mu_);
-      gui_status_.desired_params.pip_cm_h2o = value;
-    }
-    params_changed();
+    gui_status_.desired_params.pip_cm_h2o = value;
+    params_changed(gui_status_);
   }
 
   qreal get_ier() const {
-    std::unique_lock<std::mutex> l(mu_);
     return gui_status_.desired_params.inspiratory_expiratory_ratio;
   }
   void set_ier(qreal value) {
-    {
-      std::unique_lock<std::mutex> l(mu_);
-      gui_status_.desired_params.inspiratory_expiratory_ratio = value;
-    }
-    params_changed();
+    gui_status_.desired_params.inspiratory_expiratory_ratio = value;
+    params_changed(gui_status_);
   }
 
   const SteadyInstant startup_time_;
-
-  mutable std::mutex mu_;
-  // TODO: Use thread safety annotations here and throughout the project.
-  // https://clang.llvm.org/docs/ThreadSafetyAnalysis.html
-  // They only work with clang, so we'll need a wrapper macro to have them
-  // be no-ops on gcc.
   GuiStatus gui_status_ = GuiStatus_init_zero;
   ControllerHistory history_;
   int battery_percentage_ = 70;

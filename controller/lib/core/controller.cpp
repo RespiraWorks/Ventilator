@@ -118,15 +118,17 @@ Controller::Run(Time now, const VentParams &params,
         .blower_valve = 0,
         .exhale_valve = 1,
     };
-    ventilator_was_on_ = false;
-  } else {
-    if (!ventilator_was_on_) {
-      // reset volume integrators
+
+    if (ventilator_was_on_) {
+      // Reset volume integrators that use sensor rezero: both the sensor
+      // re-zeroing and flow compensation try to correct for zero-flow error,
+      // which is then twice compensated for, leading to volume drifting again
+      // in the opposite direction
       flow_integrator_.emplace();
       uncorrected_flow_integrator_.emplace();
-      flow_integrator_raw_.emplace();
-      flow_integrator_raw_corrected_.emplace();
     }
+    ventilator_was_on_ = false;
+  } else {
     // Start controlling pressure.
     actuators_state = {
         .fio2_valve = 0, // not used yet
@@ -139,6 +141,13 @@ Controller::Run(Time now, const VentParams &params,
         .exhale_valve =
             desired_state.flow_direction == FlowDirection::EXPIRATORY ? 1 : 0,
     };
+    if (!ventilator_was_on_) {
+      // reset volume integrators on transition from Off to On
+      flow_integrator_.emplace();
+      uncorrected_flow_integrator_.emplace();
+      flow_integrator_raw_.emplace();
+      flow_integrator_raw_corrected_.emplace();
+    }
     ventilator_was_on_ = true;
   }
 

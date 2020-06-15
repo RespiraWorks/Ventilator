@@ -10,19 +10,27 @@
 
 import argparse
 import cmd
+import dataclasses
 import glob
 import json
 import math
 import matplotlib.pyplot as plt
 import os
-import readline
 import serial
 import struct
 import subprocess
 import sys
+import textwrap
 import threading
 import time
 import traceback
+from typing import Dict, Union
+
+try:
+    import readline
+except ImportError:
+    # readline package isn't available on Windows.
+    pass
 
 # Command codes.  See debug.h in the controller debug library
 OP_MODE = 0x00
@@ -57,6 +65,84 @@ TRACE_VAR_CT = 4
 # This is handy for debugging the low level serial interface
 # It can be toggled with the 'debug' command
 showSerial = False
+
+# Copied from network_protocol.proto.
+# TODO: Import the proto instead!
+VentMode_OFF = 0
+VentMode_PRESSURE_CONTROL = 1
+VentMode_PRESSURE_ASSIST = 2
+
+
+@dataclasses.dataclass
+class Preset:
+    """A named list of DebugVars + values."""
+
+    name: str
+    desc: str
+    vars: Dict[str, Union[int, float]]
+
+    def ShortDesc(self):
+        return f"{self.name} - {self.vars}"
+
+    def LongDesc(self):
+        return (
+            self.desc
+            + "\n"
+            + "\n".join(f"  - {var} = {val}" for var, val in self.vars.items())
+        )
+
+
+def CoventPCPreset(
+    test_num,
+    intended_tv,
+    lung_compliance,
+    lung_resistance,
+    rr,
+    inspiratory_time,
+    delta_inspiratory_pressure,
+    fio2,
+    bap,
+):
+    """Constructs a Preset object for a particular covent pressure-control test.
+
+    Copied from CoVent-19 Ventilator Testing Procedure, table 201.105:
+    https://drive.google.com/file/d/1FJOs6pdwHqV-Ygm5gMwIRBAmqH6Xxby8
+    """
+    desc = f"""\
+CoVent-19 pressure-control test #{test_num}
+
+If you have a calibrated test lung, configure it as follows:
+
+ - Compliance: {lung_compliance} ml/hPa +/- 10%
+ - Linear resistance: {lung_resistance} hPa/l/s +/- 10%
+
+Intended TV: {intended_tv} ml
+"""
+
+    sec_per_breath = 60 / rr
+    ie_ratio = inspiratory_time / sec_per_breath
+    vars = {
+        "gui_mode": VentMode_PRESSURE_CONTROL,
+        "gui_bpm": rr,
+        "gui_ie_ratio": round(ie_ratio, 2),
+        "gui_pip": bap + delta_inspiratory_pressure,
+        "gui_peep": bap,
+        # TODO: FiO2 not currently supported.
+    }
+    return Preset(f"covent_pc_{test_num}", desc, vars)
+
+
+# DebugVar presets recognized by the `preset` command.
+PRESETS = [
+    CoventPCPreset(1, 500, 50, 5, 20, 1, 10, 30, 5),
+    CoventPCPreset(2, 500, 50, 20, 12, 1, 15, 90, 10),
+    CoventPCPreset(3, 500, 20, 5, 20, 1, 25, 90, 5),
+    CoventPCPreset(4, 500, 20, 20, 20, 1, 25, 30, 10),
+    CoventPCPreset(5, 300, 20, 20, 20, 1, 15, 30, 5),
+    CoventPCPreset(6, 300, 20, 50, 12, 1, 25, 90, 10),
+    CoventPCPreset(7, 300, 10, 50, 20, 1, 30, 90, 5),
+    CoventPCPreset(8, 200, 10, 10, 20, 1, 25, 30, 10),
+]
 
 
 class Error(Exception):
@@ -99,7 +185,7 @@ class CmdArgumentParser(argparse.ArgumentParser):
 # more details.
 class CmdLine(cmd.Cmd):
     def __init__(self):
-        cmd.Cmd.__init__(self)
+        super().__init__()
         self.scriptsDir = "scripts/"
         self.GetVarInfo()
 
@@ -343,6 +429,50 @@ A couple optional parameters can be passed as arguments to this command:
         print("Variables currently defined:")
         for k in varDict.keys():
             print("   %-10s - %s" % (k, varDict[k].help))
+
+    def do_preset(self, line):
+        parser = CmdArgumentParser("preset")
+        parser.add_argument("preset", metavar="PRESET", type=str)
+        args = parser.parse_args(line.split())
+
+        candidates = [p for p in PRESETS if p.name.lower() == args.preset.lower()]
+        if not candidates:
+            print(f"No preset named {args.preset}")
+            return
+        if len(candidates) > 1:
+            print(
+                f"Two or more presets named {args.preset} (case-insensitive)!  "
+                "Fix the PRESETS variable in the code."
+            )
+            return
+
+        preset = candidates[0]
+        print(f"Applying preset {preset.name}:\n")
+        print(textwrap.indent(preset.LongDesc(), "    "))
+
+        for var, val in preset.vars.items():
+            SetVar(var, val)
+
+        print(f"\nPreset {preset.name} successfully applied!")
+
+    def help_preset(self):
+        print(
+            """\
+Apply a preset list of settings, all at once.
+
+Usage:
+
+preset PRESET
+  Apply the given preset.
+
+Available PRESETs:
+"""
+        )
+        for p in PRESETS:
+            print(f"  - {p.ShortDesc()}")
+
+    def complete_preset(self, text, line, begidx, endidx):
+        return [k for k in PRESETS.keys() if k.lower().startswith(text.lower())]
 
     def do_set(self, line):
         cl = line.split()

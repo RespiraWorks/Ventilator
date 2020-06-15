@@ -5,6 +5,7 @@
 #include "chrono.h"
 #include "network_protocol.pb.h"
 
+#include <QtCore/QObject>
 #include <optional>
 
 // An alarm with a latching audio signal that can be silenced.
@@ -17,13 +18,17 @@
 // 2 minutes or when the condition becomes inactive, whichever is earlier.
 // The terminology is taken from
 // https://github.com/RespiraWorks/VentilatorSoftware/wiki/Alarm-Subsystem.
-class LatchingAlarm {
+class LatchingAlarm : public QObject {
+  Q_OBJECT
+
 private:
   virtual bool IsActive(SteadyInstant now, const ControllerStatus &status,
                         const BreathSignals &breath_signals) = 0;
 
 public:
   virtual ~LatchingAlarm() = default;
+
+  Q_PROPERTY(bool isVisualActive READ IsVisualActive NOTIFY updated)
 
   // Updates the state of the alarm and its signals according to current
   // sensor readings.
@@ -50,6 +55,7 @@ public:
       }
       break;
     }
+    updated();
   }
 
   // Whether the audio signal should currently be active.
@@ -65,7 +71,11 @@ public:
       return;
     audio_state_ = AudioState::SILENCED;
     silenced_until_ = now + DurationMs(120'000);
+    updated();
   }
+
+signals:
+  void updated();
 
 private:
   // Whether on the last Update() call the alarm condition was met.

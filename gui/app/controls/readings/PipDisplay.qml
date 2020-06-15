@@ -7,4 +7,5 @@ ParameterDisplay {
     parameterName: qsTr("PIP")
     parameterUnit: qsTr("cmH<sub>2</sub>O")
     parameterValue: GuiStateContainer.measured_pip.toString()
+    alarmPriority: GuiStateContainer.pipExceededAlarm.isVisualActive ? AlarmPriority.HIGH : AlarmPriority.NONE
 }

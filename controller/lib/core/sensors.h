@@ -49,12 +49,39 @@ struct SensorReadings {
   VolumetricFlow outflow;
 };
 
-// Provides a re-zeroing algorithm for the flow sensors
+// Provides a re-zeroing algorithm for the flow sensors, and correct for their
+// estimated zero-point drift:
+// Monitor the pressure measurements and check whether their evolution can be
+// attributed to drift, in which case we can declare a new sensor zero.
+//
+// Mathematically:
+// Periodically compute:
+//   A = average of the last n measurements (goal is to remove the noise).
+//   S = sum of measurement we know are not noise (any measurement outside
+//     A (from previous period) +/- noise)
+// If S. is 0 (no data point is *definitely* not noise) and compute a new
+// sensor zero, using either one of these logics:
+//   - A is close enough to 0 to be attributed to drift over time since the
+//     last successful re-zero ==> bring sensor zero to average
+//   - A is close enough to "A from previous period" to be attributed to drift
+//     over 1 period ==> bring sensor zero to previous zero + change in average
+//
+// Some known limits of this algorithm:
+// - This makes us blind to minute leaks (while we are only near-sighted in
+//   this regard when not using this)
+// - Similarly, any leak that starts out small and slowly increases over time
+//   will be harder to detect (but it can be detected by making sure the sensor
+//   zero does not get too high - something we are not doing for now)
+// - More importantly, this makes us blind to minute changes in flow that can
+//   occur when ventilating a patient. My assumption right now is that this is
+//   not happening on "normal" breathing (even for an ARDS patient) but this
+//   needs confirmation.
 class FlowSensorRezero {
 public:
   FlowSensorRezero();
   // ZeroOffset needs to be called every loop iteration to update the average dp
-  // and summation states, even if there is no need to rezero the sensor.
+  // and summation states, even if there is no need or we don't meet the
+  // conditions to rezero the sensor.
   // Output is a "voltage delta" that needs to be incorporated into the sensor
   // zero value. This new zero should also lead to a new computation of sensor
   // output in order for the new value to take this new zero into account.

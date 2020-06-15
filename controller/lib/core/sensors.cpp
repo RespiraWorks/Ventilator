@@ -94,6 +94,8 @@ Voltage FlowSensorRezero::ZeroOffset(Pressure dp) {
   // TODO: refine these sensor characterisation values with new venturi geometry
   static constexpr Pressure zero_flow_noise = cmH2O(0.012f);
   static constexpr float dp_signal_to_noise = 0.1f;
+  // maximum value to allow rezeroing: if the measure is higher than this dp,
+  // the noise model we are using fails and rezeroing is harder to perform
   static constexpr Pressure max_zeroing_dp = kPa(0.075f);
 
   // Compute rolling averages and error integrals with deadband to eventually
@@ -113,49 +115,54 @@ Voltage FlowSensorRezero::ZeroOffset(Pressure dp) {
 
   Voltage sensor_zero_delta = volts(0);
   if (cycles_ % rezero_sampling == 0) {
-    // Don't increase duration if higher than 2 seconds to prevent compensating
-    // bigger values in case we could not rezero for more than two second.
-    // Basically: if we haven't rezeroed for more than two second, stop
-    // increasing the change in flow that we allow to compensate
-    if (duration_since_last_rezero_ < seconds(2)) {
-      // TODO: define sample time outside this method
-      duration_since_last_rezero_ += rezero_sampling * milliseconds(10.0f);
-    }
-    // if there were too many outliers, we cannot proceed with re-zero
+    // TODO: define sample time outside this method
+    duration_since_last_rezero_ += rezero_sampling * milliseconds(10.0f);
+    // First rezeroing condition: no outlier in signal
     if (error_sum_ <= max_sum_outliers) {
-      // check whether it is possible to attribute current value to drift
-      if (average_dp_ <
-          max_drift *
-              static_cast<float>(duration_since_last_rezero_.seconds())) {
+      // Max pressure that can be attributed to drift when pressure is close to
+      // zero, maxed out at 1 second of max drift.
+      Pressure max_zero =
+          max_drift * std::min(1.0f, duration_since_last_rezero_.seconds());
+      // note: negative average should always be attributed to drift: it does
+      // not correspond to an actual physical phenomenon in the flow sensor
+      if (average_dp_ < max_zero) {
         sensor_zero_delta =
             volts((average_dp_).kPa() / PRESSURE_SENSOR_TRANSFER_FN_COEFF);
-        duration_since_last_rezero_ = seconds(0);
         // In essence, this made it so average_dp_ = 0.
         average_dp_ = kPa(0);
-      }
-      // check whether the last change can be attributed to drift
-      else if (average_dp_ - last_average_dp_ < max_drift) {
-        sensor_zero_delta = volts((average_dp_ - last_average_dp_).kPa() /
-                                  PRESSURE_SENSOR_TRANSFER_FN_COEFF);
-        // In essence, this made it so average_dp_ = last_average_dp_.
-        average_dp_ = last_average_dp_;
+        duration_since_last_rezero_ = seconds(0);
+      } else {
+        // compute local change for rezeroing with non-zero flow
+        Pressure dp_change = kPa(0);
+        if (average_dp_ < last_average_dp_) {
+          dp_change = average_dp_ - last_average_dp_;
+        } else {
+          dp_change = last_average_dp_ - average_dp_;
+        }
+        if (dp_change < max_drift) {
+          sensor_zero_delta = volts((average_dp_ - last_average_dp_).kPa() /
+                                    PRESSURE_SENSOR_TRANSFER_FN_COEFF);
+          // In essence, this made it so average_dp_ = last_average_dp_.
+          average_dp_ = last_average_dp_;
+          // In this case we don't update
+        }
       }
     }
-    last_average_dp_ = average_dp_;
     // compute new deadband
-    Pressure dp_noise = kPa(fabsf(last_average_dp_.kPa())) / dp_signal_to_noise;
+    Pressure dp_noise = kPa(fabsf(average_dp_.kPa())) / dp_signal_to_noise;
     if (dp_noise > zero_flow_noise) {
       dp_noise = zero_flow_noise;
     }
     // Don't allow noise if value is too high. In effect what this does is make
     // the integral pick up all the noise and become large, preventing any
     // rezeroing
-    if (last_average_dp_ > max_zeroing_dp) {
+    if (average_dp_ > max_zeroing_dp) {
       dp_noise = kPa(0);
     }
-    min_dp_ = last_average_dp_ - dp_noise;
-    max_dp_ = last_average_dp_ + dp_noise;
+    min_dp_ = average_dp_ - dp_noise;
+    max_dp_ = average_dp_ + dp_noise;
 
+    last_average_dp_ = average_dp_;
     // reset summation states
     average_dp_ = kPa(0);
     error_sum_ = kPa(0);

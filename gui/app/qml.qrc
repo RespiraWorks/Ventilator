@@ -1,46 +1,9 @@
 <RCC>
     <qresource prefix="/">
-        <file>main.qml</file>
         <file>ControlPanel.qml</file>
-        <file>images/respiraWorksLogoHorizontalTransparent.png</file>
-        <file>images/Logo.png</file>
-        <file>Style.qml</file>
-        <file>qmldir</file>
         <file>ModeSelectionPopup.qml</file>
-        <file>controls/FpsItem.qml</file>
-        <file>controls/PopupButton.qml</file>
-        <file>controls/StepCounter.qml</file>
-        <file>controls/Mode.qml</file>
-        <file>modes/PressureAssistMode.qml</file>
-        <file>modes/CommandPressureMode.qml</file>
-        <file>modes/HighFlowNasalCannulaMode.qml</file>
-        <file>controls/HeaderButton.qml</file>
-        <file>fonts/NotoSans-Bold.ttf</file>
-        <file>fonts/NotoSans-BoldItalic.ttf</file>
-        <file>fonts/NotoSans-Italic.ttf</file>
-        <file>fonts/NotoSans-Regular.ttf</file>
-        <file>controls/MainHeader.qml</file>
-        <file>controls/ParameterButton.qml</file>
-        <file>fonts/Oxygen-Bold.ttf</file>
-        <file>fonts/Oxygen-Light.ttf</file>
-        <file>fonts/Oxygen-Regular.ttf</file>
-        <file>controls/ParameterDisplay.qml</file>
-        <file>controls/DeviceStatusDisplay.qml</file>
-        <file>controls/ParameterAdjustPopup.qml</file>
-        <file>controls/BasePopup.qml</file>
-        <file>controls/BaseButton.qml</file>
-        <file>images/RW_add_24.svg</file>
-        <file>images/RW_substract_24.svg</file>
-        <file>images/RW_menu_24.svg</file>
-        <file>images/RW_inspsenssettings_24.svg</file>
-        <file>images/RW_alarm_24.svg</file>
-        <file>images/RW_battery-25_24.svg</file>
-        <file>images/RW_battery-50_24.svg</file>
-        <file>images/RW_battery-75_24.svg</file>
-        <file>images/RW_battery-100_24.svg</file>
-        <file>images/RW_adjust_24.svg</file>
-        <file>controls/ScopeView.qml</file>
-        <file>images/RW_log_24.svg</file>
-        <file>sample-data/2020-05-14-pip15-peep5-rr12-ie23.csv</file>
+        <file>Style.qml</file>
+        <file>main.qml</file>
+        <file>qmldir</file>
     </qresource>
 </RCC>

@@ -1,3 +1,4 @@
+#include "alarm.h"
 #include "chrono.h"
 #include "connected_device.h"
 #include "controller_history.h"
@@ -155,6 +156,8 @@ int main(int argc, char *argv[]) {
   communicate.Start();
 
   qmlRegisterType<TimeSeriesGraph>("Respira", 1, 0, "TimeSeriesGraph");
+  qmlRegisterUncreatableType<AlarmPriority>("Respira", 1, 0, "AlarmPriority",
+                                            "is an enum");
   qmlRegisterSingletonType<GuiStateContainer>(
       "Respira", 1, 0, "GuiStateContainer", &gui_state_instance);
 

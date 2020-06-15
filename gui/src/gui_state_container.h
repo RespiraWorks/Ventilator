@@ -6,6 +6,7 @@
 
 #include "chrono.h"
 #include "controller_history.h"
+#include "max_pressure_alarm.h"
 #include "simple_clock.h"
 
 #include <iostream>
@@ -122,6 +123,8 @@ public:
   Q_PROPERTY(int batteryPercentage READ get_battery_percentage NOTIFY
                  battery_percentage_changed)
   Q_PROPERTY(SimpleClock *clock READ get_clock NOTIFY clock_changed)
+  Q_PROPERTY(MaxPressureAlarm *maxPressureAlarm READ get_max_pressure_alarm
+                 NOTIFY max_pressure_alarm_changed)
 
   QVector<QPointF> GetPressureSeries() const { return pressure_series_; }
 
@@ -147,6 +150,7 @@ public:
 signals:
   void measurements_changed();
   void params_changed();
+  void max_pressure_alarm_changed();
   void battery_percentage_changed();
   void clock_changed();
   void PressureSeriesChanged();
@@ -158,12 +162,17 @@ public slots:
   void controller_status_changed(SteadyInstant now,
                                  const ControllerStatus &status) {
     history_.Append(now, status);
+    UpdateAlarms(now, status);
     measurements_changed();
   }
 
   void update();
 
 private:
+  void UpdateAlarms(SteadyInstant now, const ControllerStatus &status) {
+    max_pressure_alarm_.Update(now, status);
+  }
+
   int get_battery_percentage() const {
     return battery_percentage_;
     // TODO: Figure our how battery will be implemented
@@ -200,7 +209,9 @@ private:
     return commanded_i_time_ / commanded_e_time;
   }
 
-  // ====================== Commanded parameters ========================
+  // ============================== Alarms ============================
+  MaxPressureAlarm *get_max_pressure_alarm() { return &max_pressure_alarm_; }
+
   const SteadyInstant startup_time_;
   ControllerHistory history_;
   int battery_percentage_ = 70;
@@ -218,6 +229,8 @@ private:
   quint32 commanded_pip_ = 15;
   quint32 commanded_peep_ = 5;
   qreal commanded_i_time_ = 1.0;
+
+  MaxPressureAlarm max_pressure_alarm_;
 };
 
 #endif // GUI_STATE_CONTAINER_H

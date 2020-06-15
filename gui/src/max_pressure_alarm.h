@@ -4,6 +4,8 @@
 #include "chrono.h"
 #include "network_protocol.pb.h"
 
+#include <QtCore/QObject>
+#include <iostream>
 #include <optional>
 
 // An alarm for the condition "pressure > threshold".
@@ -18,8 +20,12 @@
 // This class is deliberately single-purpose for now. As we develop more alarms,
 // we'll need to introduce some base classes and ways of handling alarms
 // generically.
-class MaxPressureAlarm {
+class MaxPressureAlarm : public QObject {
+  Q_OBJECT
+
 public:
+  Q_PROPERTY(bool isVisualActive READ IsVisualActive NOTIFY updated)
+
   // Updates the state of the alarm and its signals according to current
   // sensor readings.
   void Update(SteadyInstant now, const ControllerStatus &status) {
@@ -31,6 +37,7 @@ public:
     if (audio_suppressed_until_.has_value() && now > *audio_suppressed_until_) {
       audio_suppressed_until_ = std::nullopt;
     }
+    updated();
   }
 
   // Whether the audio signal should currently be active.
@@ -40,9 +47,7 @@ public:
   }
 
   // Whether the visual signal should currently be active.
-  bool IsVisualActive([[maybe_unused]] SteadyInstant now) {
-    return latched_since_.has_value();
-  }
+  bool IsVisualActive() { return latched_since_.has_value(); }
 
   // Whether the ACKNOWLEDGE action should currently be available.
   bool CanAcknowledge() {
@@ -53,6 +58,7 @@ public:
     if (!CanAcknowledge())
       return;
     audio_suppressed_until_ = now + DurationMs(120'000);
+    updated();
   }
 
   // Whether the RESET action should currently be available.
@@ -64,6 +70,7 @@ public:
       return;
     latched_since_ = std::nullopt;
     audio_suppressed_until_ = std::nullopt;
+    updated();
   }
 
   float GetThresholdCmH2O() const { return threshold_cmh2o_; }
@@ -71,8 +78,11 @@ public:
     threshold_cmh2o_ = threshold_cmh2o;
   }
 
+signals:
+  void updated();
+
 private:
-  float threshold_cmh2o_ = 60;
+  float threshold_cmh2o_ = 12;
 
   // Whether on the last Update() call the alarm condition was met.
   bool currently_active_ = false;

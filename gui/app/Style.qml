@@ -1,5 +1,6 @@
 pragma Singleton
 import QtQuick 2.11
+import Respira 1.0
 
 /*!
     \qmltype Style
@@ -42,6 +43,15 @@ QtObject {
 
             property color textPrimary: "white"
             property color textAlternative:"#AFAFAF"
+
+            property var timeSeries: QtObject {
+              property var lineByPriority: function(p) {
+                return (p == AlarmPriority.HIGH) ? "#C6393F" : "white";
+              }
+              property var areaByPriority: function(p) {
+                return (p == AlarmPriority.HIGH) ? "#521F28" : "#202A32";
+              }
+            }
         }
 
         property QtObject font: QtObject {

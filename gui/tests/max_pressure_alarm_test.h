@@ -29,7 +29,7 @@ private slots:
 
     auto now = t(0);
     QVERIFY(!alarm.IsAudioActive(now));
-    QVERIFY(!alarm.IsVisualActive(now));
+    QVERIFY(!alarm.IsVisualActive());
     QVERIFY(!alarm.CanAcknowledge());
     QVERIFY(!alarm.CanReset());
 
@@ -37,7 +37,7 @@ private slots:
     // Go above pressure threshold.
     alarm.Update(now, pressure(100));
     QVERIFY(alarm.IsAudioActive(now));
-    QVERIFY(alarm.IsVisualActive(now));
+    QVERIFY(alarm.IsVisualActive());
     // Allowed to acknowledge - audio is active.
     QVERIFY(alarm.CanAcknowledge());
     // Not allowed to reset because condition is currently met.
@@ -48,7 +48,7 @@ private slots:
     // active.
     alarm.Update(now, pressure(30));
     QVERIFY(alarm.IsAudioActive(now));
-    QVERIFY(alarm.IsVisualActive(now));
+    QVERIFY(alarm.IsVisualActive());
     QVERIFY(alarm.CanAcknowledge());
     // Allowed to reset now, as the condition is not currently met.
     QVERIFY(alarm.CanReset());
@@ -81,7 +81,7 @@ private slots:
     QVERIFY(alarm.CanReset());
     alarm.Reset(now);
     QVERIFY(!alarm.IsAudioActive(now));
-    QVERIFY(!alarm.IsVisualActive(now));
+    QVERIFY(!alarm.IsVisualActive());
 
     // Activate again.
     now = t(126);
@@ -89,7 +89,7 @@ private slots:
     now = t(127);
     alarm.Update(now, pressure(50));
     QVERIFY(alarm.IsAudioActive(now));
-    QVERIFY(alarm.IsVisualActive(now));
+    QVERIFY(alarm.IsVisualActive());
     QVERIFY(alarm.CanAcknowledge());
     QVERIFY(alarm.CanReset());
   }

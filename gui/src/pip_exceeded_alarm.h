@@ -6,18 +6,29 @@
 #include "latching_alarm.h"
 #include "network_protocol.pb.h"
 
-#include <QtCore/QObject>
+#include <QObject>
+#include <QString>
 
 // An alarm for the condition "PIP > threshold".
 class PipExceededAlarm : public LatchingAlarm {
   Q_OBJECT
 
+public:
+  PipExceededAlarm() : LatchingAlarm(AlarmPriority::HIGH) {}
+
 private:
-  bool IsActive(SteadyInstant now, const ControllerStatus &status,
-                const BreathSignals &breath_signals) override {
+  std::optional<QString>
+  IsActive(SteadyInstant now, const ControllerStatus &status,
+           const BreathSignals &breath_signals) override {
     (void)now;
     (void)status;
-    return breath_signals.pip().value_or(0) > threshold_cmh2o_;
+    float pip = breath_signals.pip().value_or(0);
+    if (pip > threshold_cmh2o_) {
+      return {QString("PIP exceeded: measured %1, threshold %2")
+                  .arg(QString::number(pip, 'f', 1),
+                       QString::number(threshold_cmh2o_, 'f', 1))};
+    }
+    return std::nullopt;
   }
 
 public:

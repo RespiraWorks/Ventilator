@@ -135,7 +135,7 @@ Voltage FlowSensorRezero::ZeroOffset(Pressure dp) {
       } else {
         // compute local change for rezeroing with non-zero flow
         Pressure dp_change = kPa(0);
-        if (average_dp_ < last_average_dp_) {
+        if (average_dp_ > last_average_dp_) {
           dp_change = average_dp_ - last_average_dp_;
         } else {
           dp_change = last_average_dp_ - average_dp_;

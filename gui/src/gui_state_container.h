@@ -30,6 +30,10 @@
 // with the controller, so thread safety is important, and it is easiest
 // to centralize it in the current class, simply protecting everything
 // by a single mutex.
+//
+// TODO(jkff, paulovap): This class embodies the "God object" antipattern. We
+// should split it into several parts, with GuiStateContainer being only the
+// entry point for them.
 class GuiStateContainer : public QObject {
   Q_OBJECT
 

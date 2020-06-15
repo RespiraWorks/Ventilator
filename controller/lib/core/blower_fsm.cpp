@@ -159,6 +159,9 @@ BlowerSystemState BlowerFsm::DesiredState(Time now, const VentParams &params,
     case VentMode_PRESSURE_ASSIST:
       fsm_.emplace<PressureAssistFsm>(now, params);
       break;
+    case VentMode_HIGH_FLOW_NASAL_CANNULA:
+      // TODO: Implement me. For now, keep mode unchanged.
+      break;
     }
   }
 

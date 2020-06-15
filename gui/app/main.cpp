@@ -70,7 +70,6 @@ int main(int argc, char *argv[]) {
 
   GuiStateContainer *state_container =
       static_cast<GuiStateContainer *>(gui_state_instance(nullptr, nullptr));
-  auto startup_time = state_container->GetStartupTime();
   // Check out utils/mock-cycle-controller.py - it is
   // a script that bangs ControllerState at the set rate into serial
   // port.
@@ -132,12 +131,27 @@ int main(int argc, char *argv[]) {
   }
 
   // Run comm thread at the same time interval as Cycle Controller.
+  std::mutex gui_status_mutex;
+  GuiStatus gui_status = state_container->GetGuiStatus();
+  QObject::connect(state_container, &GuiStateContainer::params_changed,
+                   [&](const GuiStatus &status) {
+                     std::unique_lock<std::mutex> l(gui_status_mutex);
+                     gui_status = status;
+                   });
   PeriodicClosure communicate(DurationMs(30), [&] {
+    auto now = SteadyClock::now();
     ControllerStatus controller_status;
     if (device->ReceiveControllerStatus(&controller_status)) {
-      state_container->AppendHistory(controller_status);
+      QMetaObject::invokeMethod(state_container, [=]() {
+        state_container->controller_status_changed(now, controller_status);
+      });
     }
-    device->SendGuiStatus(state_container->GetGuiStatus());
+    GuiStatus status;
+    {
+      std::unique_lock<std::mutex> l(gui_status_mutex);
+      status = gui_status;
+    }
+    device->SendGuiStatus(status);
   });
   communicate.Start();
 

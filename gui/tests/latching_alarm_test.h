@@ -15,6 +15,7 @@ private:
   bool IsActive(SteadyInstant now, const ControllerStatus &status,
                 const BreathSignals &breath_signals) override {
     (void)now;
+    (void)breath_signals;
     return (status.sensor_readings.patient_pressure_cm_h2o > 60.0);
   }
 };

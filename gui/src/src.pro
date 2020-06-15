@@ -1,5 +1,4 @@
-# TODO see if I can minimize this
-QT += core quick serialport
+QT += core quick charts serialport qml
 
 include( ../defaults.pri )
 ! include( ../common.pri ) {
@@ -16,6 +15,7 @@ TEMPLATE = lib
 CONFIG += staticlib
 
 HEADERS += \
+  alarm.h \
   chrono.h \
   connected_device.h \
   controller_history.h \

@@ -4,10 +4,10 @@
 #include <QObject>
 #include <stdint.h>
 
+#include "alarm_manager.h"
 #include "breath_signals.h"
 #include "chrono.h"
 #include "controller_history.h"
-#include "pip_exceeded_alarm.h"
 #include "simple_clock.h"
 
 #include <iostream>
@@ -48,7 +48,8 @@ public:
         history_(history_window, granularity) {
     QObject::connect(this, &GuiStateContainer::params_changed, [this]() {
       // TODO: This should come from GUI alarm settings instead.
-      pip_exceeded_alarm_.SetThresholdCmH2O(commanded_pip_ + 2);
+      alarm_manager_.get_pip_exceeded_alarm()->SetThresholdCmH2O(
+          commanded_pip_ + 2);
     });
   }
 
@@ -114,6 +115,8 @@ public:
       QVector<QPointF> flowSeries READ GetFlowSeries NOTIFY FlowSeriesChanged)
   Q_PROPERTY(QVector<QPointF> tidalSeries READ GetTidalSeries NOTIFY
                  TidalSeriesChanged)
+  Q_PROPERTY(AlarmManager *alarmManager READ GetAlarmManager NOTIFY
+                 AlarmManagerChanged)
 
   // Commanded parameters
   Q_PROPERTY(VentilationMode commanded_mode MEMBER commanded_mode_ NOTIFY
@@ -129,8 +132,6 @@ public:
   Q_PROPERTY(int batteryPercentage READ get_battery_percentage NOTIFY
                  battery_percentage_changed)
   Q_PROPERTY(SimpleClock *clock READ get_clock NOTIFY clock_changed)
-  Q_PROPERTY(PipExceededAlarm *pipExceededAlarm READ get_pip_exceeded_alarm
-                 NOTIFY pip_exceeded_alarm_changed)
   Q_PROPERTY(bool isDebugBuild READ IsDebugBuild NOTIFY IsDebugBuildChanged)
 
   QVector<QPointF> GetPressureSeries() const { return pressure_series_; }
@@ -161,23 +162,25 @@ public:
     emit TidalSeriesChanged();
   }
 
+  AlarmManager *GetAlarmManager() { return &alarm_manager_; }
+
 signals:
   void measurements_changed();
   void params_changed();
-  void pip_exceeded_alarm_changed();
   void battery_percentage_changed();
   void clock_changed();
   void PressureSeriesChanged();
   void FlowSeriesChanged();
   void TidalSeriesChanged();
   void IsDebugBuildChanged();
+  void AlarmManagerChanged();
 
 public slots:
   // Adds a data point of controller status to the history.
   void controller_status_changed(SteadyInstant now,
                                  const ControllerStatus &status) {
     breath_signals_.Update(now, status);
-    pip_exceeded_alarm_.Update(now, status, breath_signals_);
+    alarm_manager_.Update(now, status, breath_signals_);
     if (history_.Append(now, status)) {
       UpdateGraphs();
       measurements_changed();
@@ -219,10 +222,7 @@ private:
     return commanded_i_time_ / commanded_e_time;
   }
 
-  // ============================== Alarms ============================
-  PipExceededAlarm *get_pip_exceeded_alarm() { return &pip_exceeded_alarm_; }
-
-  const SteadyInstant startup_time_;
+  const SteadyInstant startup_time_ = SteadyClock::now();
   ControllerHistory history_;
   BreathSignals breath_signals_;
   int battery_percentage_ = 70;
@@ -241,7 +241,7 @@ private:
   quint32 commanded_peep_ = 5;
   qreal commanded_i_time_ = 1.0;
 
-  PipExceededAlarm pip_exceeded_alarm_;
+  AlarmManager alarm_manager_;
 };
 
 #endif // GUI_STATE_CONTAINER_H

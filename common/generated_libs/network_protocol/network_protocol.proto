@@ -35,7 +35,7 @@ import "nanopb.proto";
         --plugin=$NANOPB_PATH/bin/protoc-gen-nanopb \
         -I $NANOPB_PATH/libexec/proto \
         -Icommon/generated_libs/network_protocol \
-        --nanopb_out=common/generated_libs/network_protocol
+        --nanopb_out=common/generated_libs/network_protocol \
         --python_out=utils \
         common/generated_libs/network_protocol/network_protocol.proto
 */
@@ -181,4 +181,10 @@ message SensorsProto {
   required float flow_ml_per_min = 3;
   required float inflow_pressure_diff_cm_h2o = 4;
   required float outflow_pressure_diff_cm_h2o = 5;
+  // Identifies the current breath among all breaths handled since controller
+  // startup. Increases when a new breath begins; can be used on the receiver
+  // side for detecting breath boundaries from subsampled or lossy data.
+  // Receiver MUST NOT assume that this identifier is increasing, or dense.
+  // It might decrease e.g. in case of controller restart, and might be sparse.
+  required uint64 breath_id = 6;
 }

@@ -77,6 +77,7 @@ Controller::Run(Time now, const VentParams &params,
   if (desired_state.is_new_breath) {
     // The "correct" volume at the breath boundary is 0.
     flow_integrator_->NoteExpectedVolume(ml(0));
+    breath_id_ = now.microsSinceStartup();
   }
 
   ActuatorsState actuators_state;
@@ -122,6 +123,7 @@ Controller::Run(Time now, const VentParams &params,
       .pressure_setpoint = desired_state.pressure_setpoint.value_or(kPa(0)),
       .patient_volume = patient_volume,
       .net_flow = net_flow,
+      .breath_id = breath_id_,
   };
 
   dbg_sp.Set(desired_state.pressure_setpoint.value_or(kPa(0)).cmH2O());

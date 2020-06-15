@@ -11,6 +11,7 @@ repos:
   - id: clang-format-whole-file
     name: clang-format C
     types: [c]
+    exclude: ^gui/app/third_party
     exclude_types: [c++]
   - id: clang-format-whole-file
     name: clang-format protobuf
@@ -30,7 +31,9 @@ repos:
   hooks:
   - id: check-yaml
   - id: end-of-file-fixer
+    exclude: ^gui/app/third_party
   - id: trailing-whitespace
+    exclude: ^gui/app/third_party
 - repo: local
   hooks:
     - id: c-file-naming
@@ -38,3 +41,4 @@ repos:
       entry: C++ sources and headers must be named in snake case (like_this)
       language: fail
       files: '[A-Z-].*\.(h|cpp|c)$'
+      exclude: ^gui/app/third_party

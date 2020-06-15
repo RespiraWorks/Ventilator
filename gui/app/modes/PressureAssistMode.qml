@@ -8,16 +8,6 @@ import ".."
 // TODO: Common this with CommandPressureMode.qml.
 Mode {
     id: mode
-    Timer // TODO: Make data sources be updated as we get data
-    {
-        id: refreshTimer
-        interval: 1 / 60 * 1000 // 60 Hz
-        running: mode.visible
-        repeat: true
-        onTriggered: {
-            GuiStateContainer.update();
-        }
-    }
 
     Rectangle {
         id: parameterDisplayPanel

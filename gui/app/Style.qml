@@ -47,22 +47,43 @@ QtObject {
             property color alarmHighBright: "#C6393F"
             property color alarmHighDim: "#521F28"
 
-            property color graphLine: "white"
-            property color graphArea: "#202A32"
+            property color alarmMediumBright: "#F0D95D"
+            property color alarmMediumDim: "#656231"
+
+            property color alarmLowBright: "#4586A3"
+            property color alarmLowDim: "#204050"
+
+            property color normalGraphLine: "white"
+            property color normalGraphArea: "#202A31"
 
             property var parameterBackgroundByPriority: function(p) {
               var c = Style.theme.color
-              return (p == AlarmPriority.HIGH) ? c.alarmHighBright : "transparent";
+              switch (p) {
+                  case AlarmPriority.HIGH: return c.alarmHighBright;
+                  case AlarmPriority.MEDIUM: return c.alarmMediumBright;
+                  case AlarmPriority.LOW: return c.alarmLowBright;
+                  default: return "transparent";
+              }
             }
 
             property var timeSeries: QtObject {
               property var lineByPriority: function(p) {
                 var c = Style.theme.color
-                return (p == AlarmPriority.HIGH) ? c.alarmHighBright : c.graphLine;
+                switch (p) {
+                    case AlarmPriority.HIGH: return c.alarmHighBright;
+                    case AlarmPriority.MEDIUM: return c.alarmMediumBright;
+                    case AlarmPriority.LOW: return c.alarmLowBright;
+                    default: return c.normalGraphLine;
+                }
               }
               property var areaByPriority: function(p) {
                 var c = Style.theme.color
-                return (p == AlarmPriority.HIGH) ? c.alarmHighDim : c.graphArea;
+                switch (p) {
+                    case AlarmPriority.HIGH: return c.alarmHighDim;
+                    case AlarmPriority.MEDIUM: return c.alarmMediumDim;
+                    case AlarmPriority.LOW: return c.alarmLowDim;
+                    default: return c.normalGraphArea;
+                }
               }
             }
         }

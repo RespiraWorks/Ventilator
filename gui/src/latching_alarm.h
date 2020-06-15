@@ -5,8 +5,24 @@
 #include "chrono.h"
 #include "network_protocol.pb.h"
 
-#include <QtCore/QObject>
+#include <QObject>
+#include <QString>
+
 #include <optional>
+
+class AlarmPriority {
+  Q_GADGET
+
+public:
+  enum Enum {
+    NONE,
+    LOW,
+    MEDIUM,
+    HIGH,
+  };
+
+  Q_ENUM(Enum)
+};
 
 // An alarm with a latching audio signal that can be silenced.
 // Has two signals: visual and audio.
@@ -22,40 +38,74 @@ class LatchingAlarm : public QObject {
   Q_OBJECT
 
 private:
-  virtual bool IsActive(SteadyInstant now, const ControllerStatus &status,
-                        const BreathSignals &breath_signals) = 0;
+  // If the alarm condition is active, returns a human-readable string
+  // describing it, otherwise nullopt.
+  virtual std::optional<QString>
+  IsActive(SteadyInstant now, const ControllerStatus &status,
+           const BreathSignals &breath_signals) = 0;
+
+protected:
+  explicit LatchingAlarm(AlarmPriority::Enum priority) : priority_(priority) {}
 
 public:
   virtual ~LatchingAlarm() = default;
 
-  Q_PROPERTY(bool isVisualActive READ IsVisualActive NOTIFY updated)
+  Q_PROPERTY(AlarmPriority::Enum effectiveVisualPriority READ
+                 GetEffectiveVisualPriority NOTIFY updated)
+  Q_PROPERTY(AlarmPriority::Enum effectiveAudioPriority READ
+                 GetEffectiveAudioPriority NOTIFY updated)
+  Q_PROPERTY(QString bannerText READ GetBannerText NOTIFY updated)
 
   // Updates the state of the alarm and its signals according to current
   // sensor readings.
   void Update(SteadyInstant now, const ControllerStatus &status,
               const BreathSignals &breath_signals) {
-    currently_active_ = IsActive(now, status, breath_signals);
+    auto banner_text = IsActive(now, status, breath_signals);
+    is_condition_active_ = banner_text.has_value();
+    if (is_condition_active_) {
+      banner_text_ = banner_text;
+    }
     switch (audio_state_) {
     case AudioState::INACTIVE:
       audio_state_ =
-          currently_active_ ? AudioState::BEEPING : AudioState::INACTIVE;
+          is_condition_active_ ? AudioState::BEEPING : AudioState::INACTIVE;
       break;
     case AudioState::BEEPING:
       audio_state_ = AudioState::BEEPING;
       break;
     case AudioState::SILENCED:
       if (now > silenced_until_) {
+        // Silencing period elapsed.
+        // If condition is active, we should go back to beeping, otherwise go
+        // back to normal.
         silenced_until_ = std::nullopt;
         audio_state_ =
-            currently_active_ ? AudioState::BEEPING : AudioState::INACTIVE;
+            is_condition_active_ ? AudioState::BEEPING : AudioState::INACTIVE;
       } else {
-        audio_state_ = currently_active_ ? AudioState::SILENCED
-                                         : (silenced_until_ = std::nullopt,
-                                            AudioState::INACTIVE);
+        // Silencing period is still in effect.
+        // If condition is active, silencing continues.
+        // If condition stops being active while silent, that clears the
+        // silencing because it applied only to the current occurrence of the
+        // condition.
+        if (is_condition_active_) {
+          audio_state_ = AudioState::SILENCED;
+        } else {
+          silenced_until_ = std::nullopt;
+          banner_text_ = std::nullopt;
+          audio_state_ = AudioState::INACTIVE;
+        }
       }
       break;
     }
     updated();
+  }
+
+  AlarmPriority::Enum GetEffectiveVisualPriority() const {
+    return IsVisualActive() ? priority_ : AlarmPriority::NONE;
+  }
+
+  AlarmPriority::Enum GetEffectiveAudioPriority() const {
+    return IsAudioActive() ? priority_ : AlarmPriority::NONE;
   }
 
   // Whether the audio signal should currently be active.
@@ -63,7 +113,9 @@ public:
   bool IsAudioActive() const { return audio_state_ == AudioState::BEEPING; }
 
   // Whether the visual signal should currently be active.
-  bool IsVisualActive() const { return currently_active_; }
+  bool IsVisualActive() const { return is_condition_active_; }
+
+  QString GetBannerText() const { return banner_text_.value_or("(inactive)"); }
 
   // ACKNOWLEDGEs the alarm, suppressing audio for 2 minutes.
   void Acknowledge(SteadyInstant now) {
@@ -78,11 +130,15 @@ signals:
   void updated();
 
 private:
-  // Whether on the last Update() call the alarm condition was met.
-  bool currently_active_ = false;
+  bool is_condition_active_ = false;
+  // Present if IsAudioActive().
+  // Corresponds to the text returned by Update() last time the condition was
+  // active.
+  std::optional<QString> banner_text_;
 
   enum class AudioState { INACTIVE, BEEPING, SILENCED };
 
+  const AlarmPriority::Enum priority_;
   AudioState audio_state_ = AudioState::INACTIVE;
   // Present only in SILENCED.
   std::optional<SteadyInstant> silenced_until_ = std::nullopt;

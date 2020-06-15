@@ -34,6 +34,13 @@ class GuiStateContainer : public QObject {
   Q_OBJECT
 
 public:
+  enum VentilationMode {
+    COMMAND_PRESSURE,
+    PRESSURE_ASSIST,
+    HIGH_FLOW_NASAL_CANNULA,
+  };
+  Q_ENUM(VentilationMode)
+
   // Initializes the state container to keep the history of controller
   // statuses in a given time window.
   GuiStateContainer(DurationMs history_window)
@@ -81,8 +88,8 @@ public:
   Q_PROPERTY(qreal flowReadout READ get_flow_readout NOTIFY readouts_changed)
   Q_PROPERTY(qreal tvReadout READ get_tv_readout NOTIFY readouts_changed)
 
-  Q_PROPERTY(VentMode mode READ get_mode NOTIFY params_changed)
-  Q_PROPERTY(QString mode_str WRITE set_mode_str NOTIFY params_changed)
+  Q_PROPERTY(
+      VentilationMode mode READ get_mode WRITE set_mode NOTIFY params_changed)
   Q_PROPERTY(quint32 rr READ get_rr WRITE set_rr NOTIFY params_changed)
   Q_PROPERTY(quint32 peep READ get_peep WRITE set_peep NOTIFY params_changed)
   Q_PROPERTY(quint32 pip READ get_pip WRITE set_pip NOTIFY params_changed)
@@ -151,25 +158,35 @@ private:
     return history_.GetLastStatus().sensor_readings.volume_ml;
   }
 
-  VentMode get_mode() const {
+  VentilationMode get_mode() const {
     std::unique_lock<std::mutex> l(mu_);
-    return gui_status_.desired_params.mode;
+    switch (gui_status_.desired_params.mode) {
+    case VentMode::VentMode_PRESSURE_CONTROL:
+      return VentilationMode::COMMAND_PRESSURE;
+    case VentMode::VentMode_PRESSURE_ASSIST:
+      return VentilationMode::PRESSURE_ASSIST;
+    case VentMode::VentMode_HIGH_FLOW_NASAL_CANNULA:
+      return VentilationMode::HIGH_FLOW_NASAL_CANNULA;
+    default:
+      // Should never happen.
+      return VentilationMode::COMMAND_PRESSURE;
+    }
   }
-  void set_mode_str(QString mode) {
+  void set_mode(VentilationMode mode) {
     {
       std::unique_lock<std::mutex> l(mu_);
       gui_status_.desired_params.mode = [&] {
-        if (mode == "command_pressure_mode") {
+        switch (mode) {
+        case VentilationMode::COMMAND_PRESSURE:
           return VentMode::VentMode_PRESSURE_CONTROL;
-        } else if (mode == "pressure_assist_mode") {
+        case VentilationMode::PRESSURE_ASSIST:
           return VentMode::VentMode_PRESSURE_ASSIST;
-        } else if (mode == "high_flow_nasal_cannula_mode") {
-          // TODO: Not yet implemented.
+        case VentilationMode::HIGH_FLOW_NASAL_CANNULA:
+          return VentMode::VentMode_HIGH_FLOW_NASAL_CANNULA;
+        default:
+          // Should never happen, keep unchanged.
+          return gui_status_.desired_params.mode;
         }
-
-        // Unrecognized mode; don't change anything.
-        // TODO: Raise a warning somehow?
-        return gui_status_.desired_params.mode;
       }();
     }
     params_changed();

@@ -181,9 +181,10 @@ message SensorsProto {
   required float flow_ml_per_min = 3;
   required float inflow_pressure_diff_cm_h2o = 4;
   required float outflow_pressure_diff_cm_h2o = 5;
-  // Sequentially increasing index of the current breath among all breaths
-  // handled since controller startup. Increases when a new breath begins;
-  // can be used on the receiver side for detecting breath boundaries from
-  // subsampled or lossy data.
-  required int32 breath_id = 6;
+  // Identifies the current breath among all breaths handled since controller
+  // startup. Increases when a new breath begins; can be used on the receiver
+  // side for detecting breath boundaries from subsampled or lossy data.
+  // Receiver MUST NOT assume that this identifier is increasing, or dense.
+  // It might decrease e.g. in case of controller restart, and might be sparse.
+  required uint64 breath_id = 6;
 }

@@ -113,6 +113,7 @@ TEST(ControllerTest, BreathId) {
     Time now = start + i * step_duration;
     auto [unused_actuator_state, status] = c.Run(now, params, readings);
     (void)unused_actuator_state;
-    EXPECT_EQ(i / steps_per_breath, status.breath_id);
+    Time breath_start = (start + (i - i % steps_per_breath) * step_duration);
+    EXPECT_EQ(breath_start.microsSinceStartup(), status.breath_id);
   }
 }

@@ -3,6 +3,9 @@ import QtQuick.Layouts 1.3
 import QtQuick.Controls 2.4
 import Respira 1.0
 import "../controls"
+import "../controls/parameters"
+import "../controls/readings"
+import "../controls/graphs"
 import ".."
 
 // TODO: Common this with PressureAssistMode.qml.

@@ -68,6 +68,7 @@ if [ "$1" == "--install" ] ; then
     apt-get update && \
     apt-get install -y \
     build-essential \
+    git \
     qt5-default \
     qtbase5-dev-tools \
     qtdeclarative5-dev \
@@ -93,6 +94,7 @@ fi
 if [ "$1" == "--build" ] ; then
   create_clean_directory build
   qmake -unset QMAKEFEATURES
+  git submodule update --init --recursive
   cd build && qmake .. && make -j && cd -
 fi
 

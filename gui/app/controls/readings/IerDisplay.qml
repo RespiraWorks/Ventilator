@@ -6,5 +6,5 @@ import ".."
 ParameterDisplay {
     parameterName: qsTr("I:E")
     parameterUnit: qsTr("ratio")
-    parameterValue: GuiStateContainer.ier.toFixed(1).toString()
+    parameterValue: GuiStateContainer.measured_ier.toFixed(2).toString()
 }

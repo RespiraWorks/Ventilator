@@ -23,7 +23,7 @@ duties reliably with high confidence over extended periods of time. The goal is 
 
 5. **Open source** - we want this project to be something that anyone who wants can build off of and leverage. Therefore, all designs, rationales behind those designs, requirements, processes, etc. will be documented in a common repo that everyone has access to. **#todo** - go through and make sure all of the links in here are in git so that people can access them (some slack links exist temporarily before the information is fully resolved and moved to git)
 
-## System CONOPS/System Design:
+## System CONOPS/System Design
 
 More detailed thoughts on this [here](conop.md).
 

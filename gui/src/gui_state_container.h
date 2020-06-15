@@ -12,10 +12,9 @@
 #include <tuple>
 #include <vector>
 
-#include <QtCharts/QAbstractSeries>
+#include <QPointF>
+#include <QVector>
 #include <QtCore/QObject>
-
-QT_CHARTS_USE_NAMESPACE
 
 // A thread-safe container for readable and writable state
 // of the GUI.
@@ -89,20 +88,49 @@ public:
   Q_PROPERTY(quint32 peep READ get_peep WRITE set_peep NOTIFY params_changed)
   Q_PROPERTY(quint32 pip READ get_pip WRITE set_pip NOTIFY params_changed)
   Q_PROPERTY(qreal ier READ get_ier WRITE set_ier NOTIFY params_changed)
-
   Q_PROPERTY(int batteryPercentage READ get_battery_percentage NOTIFY
                  battery_percentage_changed)
   Q_PROPERTY(SimpleClock *clock READ get_clock NOTIFY clock_changed)
+
+  Q_PROPERTY(QVector<QPointF> pressureSeries READ GetPressureSeries NOTIFY
+                 PressureSeriesChanged)
+  Q_PROPERTY(
+      QVector<QPointF> flowSeries READ GetFlowSeries NOTIFY FlowSeriesChanged)
+  Q_PROPERTY(QVector<QPointF> tidalSeries READ GetTidalSeries NOTIFY
+                 TidalSeriesChanged)
+
+  QVector<QPointF> GetPressureSeries() const { return pressure_series_; }
+
+  void SetPressureSeries(QVector<QPointF> &&series) {
+    pressure_series_ = series;
+    emit PressureSeriesChanged();
+  }
+
+  QVector<QPointF> GetFlowSeries() const { return flow_series_; }
+
+  void SetFlowSeries(QVector<QPointF> &&series) {
+    flow_series_ = series;
+    emit FlowSeriesChanged();
+  }
+
+  QVector<QPointF> GetTidalSeries() const { return tidal_series_; }
+
+  void SetTidalSeries(QVector<QPointF> &&series) {
+    tidal_series_ = series;
+    emit TidalSeriesChanged();
+  }
 
 signals:
   void readouts_changed();
   void params_changed();
   void battery_percentage_changed();
   void clock_changed();
+  void PressureSeriesChanged();
+  void FlowSeriesChanged();
+  void TidalSeriesChanged();
 
 public slots:
-  void update(QAbstractSeries *pressure_series, QAbstractSeries *flow_series,
-              QAbstractSeries *tv_series);
+  void update();
 
 private:
   int get_battery_percentage() const {
@@ -184,6 +212,10 @@ private:
   ControllerHistory history_;
   int battery_percentage_ = 70;
   SimpleClock clock_;
+
+  QVector<QPointF> pressure_series_;
+  QVector<QPointF> flow_series_;
+  QVector<QPointF> tidal_series_;
 };
 
 #endif // GUI_STATE_CONTAINER_H

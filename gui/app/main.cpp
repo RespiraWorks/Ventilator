@@ -5,10 +5,10 @@
 #include "periodic_closure.h"
 #include "respira_connected_device.h"
 
-#include <QApplication>
 #include <QCommandLineParser>
 #include <QFontDatabase>
 #include <QFontInfo>
+#include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QtCore/QDir>
 #include <QtQml/QQmlContext>
@@ -18,7 +18,7 @@
 #include <iostream>
 #include <memory>
 
-#include "simple_clock.h"
+#include "time_series_graph.h"
 
 QObject *gui_state_instance(QQmlEngine *engine, QJSEngine *scriptEngine) {
   static GuiStateContainer state_container(
@@ -44,8 +44,7 @@ void install_fonts() {
 }
 
 int main(int argc, char *argv[]) {
-
-  QApplication app(argc, argv);
+  QGuiApplication app(argc, argv);
 
   app.setWindowIcon(QIcon(":/images/Logo.png"));
 
@@ -118,6 +117,7 @@ int main(int argc, char *argv[]) {
   });
   communicate.Start();
 
+  qmlRegisterType<TimeSeriesGraph>("Respira", 1, 0, "TimeSeriesGraph");
   qmlRegisterSingletonType<GuiStateContainer>(
       "Respira", 1, 0, "GuiStateContainer", &gui_state_instance);
 

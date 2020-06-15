@@ -10,14 +10,11 @@ Mode {
     Timer // TODO: Make data sources be updated as we get data
     {
         id: refreshTimer
-        interval: 1 / 15 * 1000 // 15 Hz
+        interval: 1 / 60 * 1000 // 60 Hz
         running: mode.visible
         repeat: true
         onTriggered: {
-            GuiStateContainer.update(
-                        pressureView.serie,
-                        flowView.serie,
-                        tidalVolumeView.serie);
+            GuiStateContainer.update();
         }
     }
 
@@ -114,9 +111,9 @@ Mode {
                 // Source for current value:
                 // https://www.rtmagazine.com/public-health/pediatrics/neonatal/selecting-appropriate-ventilator-parameters/
                 // mentions values in the range 5-30 cmH2O.
+                dataset: GuiStateContainer.pressureSeries
                 yMin: -3
                 yMax: 30
-
                 Layout.fillHeight: true
                 Layout.fillWidth: true
             }
@@ -133,7 +130,7 @@ Mode {
                 // 60 and 120 L/min. "
                 yMin: -150
                 yMax: 150
-
+                dataset: GuiStateContainer.flowSeries
                 Layout.fillHeight: true
                 Layout.fillWidth: true
             }
@@ -153,10 +150,10 @@ Mode {
                 // tidal volume.
                 yMin: 0
                 yMax: 2000
-
                 showBottomLine: false
                 Layout.fillHeight: true
                 Layout.fillWidth: true
+                dataset: GuiStateContainer.tidalSeries
             }
 
         }

@@ -133,11 +133,10 @@ int main(int argc, char *argv[]) {
   // Run comm thread at the same time interval as Cycle Controller.
   std::mutex gui_status_mutex;
   GuiStatus gui_status = state_container->GetGuiStatus();
-  QObject::connect(state_container, &GuiStateContainer::params_changed,
-                   [&](const GuiStatus &status) {
-                     std::unique_lock<std::mutex> l(gui_status_mutex);
-                     gui_status = status;
-                   });
+  QObject::connect(state_container, &GuiStateContainer::params_changed, [&]() {
+    std::unique_lock<std::mutex> l(gui_status_mutex);
+    gui_status = state_container->GetGuiStatus();
+  });
   PeriodicClosure communicate(DurationMs(30), [&] {
     auto now = SteadyClock::now();
     ControllerStatus controller_status;

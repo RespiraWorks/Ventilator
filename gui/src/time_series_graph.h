@@ -23,7 +23,10 @@ class TimeSeriesGraph : public QNanoQuickItem {
       float maxValue READ GetMaxValue WRITE SetMaxValue NOTIFY MaxValueChanged)
   Q_PROPERTY(float rangeInSeconds READ GetRangeInSeconds WRITE SetRangeInSeconds
                  NOTIFY RangeInSecondsChanged)
-  Q_PROPERTY(QColor color READ GetColor WRITE SetColor NOTIFY ColorChanged)
+  Q_PROPERTY(QColor lineColor READ GetLineColor WRITE SetLineColor NOTIFY
+                 LineColorChanged)
+  Q_PROPERTY(QColor areaColor READ GetAreaColor WRITE SetAreaColor NOTIFY
+                 AreaColorChanged)
   Q_PROPERTY(bool showBaseline READ GetShowBaseline WRITE SetShowBaseline NOTIFY
                  ShowBaselineChanged)
   Q_PROPERTY(float baselineValue READ GetBaselineValue WRITE SetBaselineValue
@@ -40,7 +43,9 @@ public:
 
   float GetRangeInSeconds() const { return range_in_secs_; };
 
-  QColor GetColor() const { return color_; };
+  QColor GetLineColor() const { return line_color_; };
+
+  QColor GetAreaColor() const { return area_color_; };
 
   bool GetShowBaseline() const { return show_baseline_; }
 
@@ -68,10 +73,17 @@ public slots:
     }
   }
 
-  void SetColor(QColor color) {
-    if (color_ != color) {
-      color_ = color;
-      emit ColorChanged();
+  void SetLineColor(QColor color) {
+    if (line_color_ != color) {
+      line_color_ = color;
+      emit LineColorChanged();
+    }
+  }
+
+  void SetAreaColor(QColor color) {
+    if (area_color_ != color) {
+      area_color_ = color;
+      emit AreaColorChanged();
     }
   }
 
@@ -103,7 +115,8 @@ signals:
   void DatasetChanged();
   void MinValueChanged();
   void MaxValueChanged();
-  void ColorChanged();
+  void LineColorChanged();
+  void AreaColorChanged();
   void RangeInSecondsChanged();
   void ShowBaselineChanged();
   void BaselineValueChanged();
@@ -111,7 +124,8 @@ signals:
 private:
   QVector<QPointF> dataset_;
 
-  QColor color_ = QColor(255, 255, 255, 255);
+  QColor line_color_ = QColor(255, 255, 255, 255);
+  QColor area_color_ = QColor(255, 255, 255, 255);
   float max_value_ = 0;
   float min_value_ = 0;
   float range_in_secs_ = 30.0;

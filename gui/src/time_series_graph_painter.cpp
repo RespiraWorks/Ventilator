@@ -68,10 +68,10 @@ void TimeSeriesGraphPainter::synchronize(QNanoQuickItem *item) {
   min_value_ = realItem->GetMinValue();
   max_value_ = realItem->GetMaxValue();
   range_in_sec = realItem->GetRangeInSeconds();
-  color_line_ =
-      QNanoColor(realItem->GetColor().red(), realItem->GetColor().green(),
-                 realItem->GetColor().blue(), realItem->GetColor().alpha());
-
-  color_fill_ = QNanoColor(color_line_);
-  color_fill_.setAlpha(0x1A);
+  color_line_ = QNanoColor(
+      realItem->GetLineColor().red(), realItem->GetLineColor().green(),
+      realItem->GetLineColor().blue(), realItem->GetLineColor().alpha());
+  color_fill_ = QNanoColor(
+      realItem->GetAreaColor().red(), realItem->GetAreaColor().green(),
+      realItem->GetAreaColor().blue(), realItem->GetAreaColor().alpha());
 }

@@ -1,12 +1,17 @@
 import QtQuick 2.11
 import QtQuick.Controls 2.4
+import Respira 1.0
 import ".."
 
 Rectangle {
     id: control
     width: 104; height: 104
 
-    color: "#05121C"
+    color: Style.theme.color.parameterBackgroundByPriority(alarmPriority)
+    antialiasing: true
+    radius: 8
+
+    property int alarmPriority: AlarmPriority.NONE
 
     // define parameter name, e.g. PIP
     property alias parameterName: parameterNameText.text

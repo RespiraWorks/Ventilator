@@ -9,7 +9,7 @@ This is a template file to use when you're creating a README file for a ventilat
 # [Test Number]
 
 * **Date of test:** [Date]
-* **Person who did test:** [Full name / email address]
+* **Tester:** [Full name / email address]
 * **Software repo and branch used:** [Branch name here]
 * **Test data:** [Link to file]
 * **User settings (specify here or in test file):**

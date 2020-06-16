@@ -9,6 +9,6 @@ ParameterButton {
     parameterMaxValue: 20
     parameterMinValue: 0
     parameterStepSize: 2
-    parameterValue: GuiStateContainer.peep
-    onValueConfirmed: GuiStateContainer.peep = value
+    parameterValue: GuiStateContainer.commanded_peep
+    onValueConfirmed: GuiStateContainer.commanded_peep = value
 }

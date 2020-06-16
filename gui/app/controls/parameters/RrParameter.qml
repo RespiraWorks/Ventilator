@@ -9,6 +9,6 @@ ParameterButton {
     parameterMaxValue: 30
     parameterMinValue: 10
     parameterStepSize: 1
-    parameterValue: GuiStateContainer.rr
-    onValueConfirmed: GuiStateContainer.rr = value
+    parameterValue: GuiStateContainer.commanded_rr
+    onValueConfirmed: GuiStateContainer.commanded_rr = value
 }

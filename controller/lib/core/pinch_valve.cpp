@@ -48,7 +48,7 @@ static constexpr float home_offset = 30.0f * move_dir;
 
 // This is the distance (deg) from the zero position until
 // the tube is completely shut.
-static constexpr float max_move = 45.0f * move_dir;
+static constexpr float max_move = 50.0f * move_dir;
 
 // Amplitude of power level for normal operation.
 // Don't go crazy here, you can easily overheat the
@@ -70,9 +70,9 @@ static constexpr float move_acc = move_vel / 0.05f;
 // the setting for 0 flow rate (normally 0) and the last entry
 // should be the setting for 100% flow rate.  The minimum
 // length of the table is 2 entries.
-static constexpr float flow_table[] = {0.0f,   0.125f, 0.161f, 0.197f,
-                                       0.232f, 0.271f, 0.310f, 0.358f,
-                                       0.425f, 0.542f, 0.9f};
+static constexpr float flow_table[] = {0.0000f, 0.0410f, 0.0689f, 0.0987f,
+                                       0.1275f, 0.1590f, 0.1932f, 0.2359f,
+                                       0.2940f, 0.3988f, 1.0000f};
 
 PinchValve::PinchValve(int motor_index) { motor_index_ = motor_index; }
 

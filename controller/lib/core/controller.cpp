@@ -21,7 +21,9 @@ limitations under the License.
 
 static constexpr Duration LOOP_PERIOD = milliseconds(10);
 
+// =============================================================================
 // Inputs - set from external debug program, read but never modified here.
+// =============================================================================
 static DebugFloat dbg_blower_valve_kp("blower_valve_kp",
                                       "Proportional gain for blower valve PID",
                                       0.7f);
@@ -31,11 +33,30 @@ static DebugFloat dbg_blower_valve_ki("blower_valve_ki",
 static DebugFloat dbg_blower_valve_kd("blower_valve_kd",
                                       "Derivative gain for blower valve PID");
 
+// In an ideal world we'd fully close the exhale valve during inhale, so as not
+// to waste any oxygen.  In practice having the valve be somewhat open is
+// helpful for the following reasons.
+//
+//  - If the exhale valve is not open, then (modulo leakage) pressure can never
+//    go down.  This means that if our control overshoots, we can't recover.
+//
+//  - With the blower at full speed, there's some leakage through the inhale
+//    pinch valve even when it's fully closed.  This means that pressure may
+//    continue to increase once we hit PIP -- unless we have an outlet for that
+//    pressure.
+static DebugFloat dbg_exhale_valve_on_pip(
+    "exhale_valve_on_pip",
+    "Position of exhale valve [0 = closed, to 1 = open] during inhale.", 0.3f);
+
+// =============================================================================
 // Unchanging outputs - read from external debug program, never modified here.
+// =============================================================================
 static DebugUInt32 dbg_per("loop_period", "Loop period, read-only (usec)",
                            static_cast<uint32_t>(LOOP_PERIOD.microseconds()));
 
+// =============================================================================
 // Outputs - read from external debug program, modified here.
+// =============================================================================
 static DebugFloat dbg_sp("pc_setpoint", "Pressure control setpoint (cmH2O)");
 static DebugFloat dbg_net_flow("net_flow", "Net flow rate, cc/sec");
 static DebugFloat dbg_volume("volume", "Patient volume, ml");
@@ -114,7 +135,9 @@ Controller::Run(Time now, const VentParams &params,
             now, sensor_readings.patient_pressure.kPa(),
             desired_state.pressure_setpoint->kPa()),
         .exhale_valve =
-            desired_state.flow_direction == FlowDirection::EXPIRATORY ? 1 : 0,
+            desired_state.flow_direction == FlowDirection::EXPIRATORY
+                ? 1
+                : dbg_exhale_valve_on_pip.Get(),
     };
     ventilator_was_on_ = true;
   }

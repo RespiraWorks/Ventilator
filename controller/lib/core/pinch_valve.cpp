@@ -18,6 +18,8 @@ limitations under the License.
 #include "stepper.h"
 #include <algorithm>
 #include <array>
+#include <cfloat>
+#include <cmath>
 
 // These constants define various properties of the pinch
 // value and how we control it.  As the mechanical design
@@ -48,7 +50,7 @@ static constexpr float home_offset = 30.0f * move_dir;
 
 // This is the distance (deg) from the zero position until
 // the tube is completely shut.
-static constexpr float max_move = 45.0f * move_dir;
+static constexpr float max_move = 50.0f * move_dir;
 
 // Amplitude of power level for normal operation.
 // Don't go crazy here, you can easily overheat the
@@ -70,9 +72,9 @@ static constexpr float move_acc = move_vel / 0.05f;
 // the setting for 0 flow rate (normally 0) and the last entry
 // should be the setting for 100% flow rate.  The minimum
 // length of the table is 2 entries.
-static constexpr float flow_table[] = {0.0f,   0.125f, 0.161f, 0.197f,
-                                       0.232f, 0.271f, 0.310f, 0.358f,
-                                       0.425f, 0.542f, 0.9f};
+static constexpr float flow_table[] = {0.0000f, 0.0410f, 0.0689f, 0.0987f,
+                                       0.1275f, 0.1590f, 0.1932f, 0.2359f,
+                                       0.2940f, 0.3988f, 1.0000f};
 
 PinchValve::PinchValve(int motor_index) { motor_index_ = motor_index; }
 
@@ -212,7 +214,15 @@ void PinchValve::SetOutput(float value) {
   // The motor's zero position is at the home offset
   // which corresponds to fully open (i.e. 100% flow)
   // The valve is closed at a position of -max_move;
-
   float pos = (value - 1.0f) * max_move;
+
+  // If the commanded position changed since last cycle
+  // halt the previous move if it's still in progress.
+  // This makes the valve control much smoother when used
+  // within a servo loop
+  if (fabsf(pos - last_command_) > FLT_EPSILON)
+    mtr->HardStop();
+
+  last_command_ = pos;
   mtr->GotoPos(pos);
 }

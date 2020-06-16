@@ -74,6 +74,10 @@ struct BlowerSystemState {
   // to achieve 0 pressure by e.g. closing valves.
   std::optional<Pressure> pressure_setpoint;
 
+  // Maximum pressure we'll want to achieve during this breath, i.e. PIP.
+  // TODO: Test me!
+  Pressure max_pressure;
+
   // Should air be primarily flowing into the patient, or out of the patient?
   FlowDirection flow_direction;
 
@@ -116,6 +120,7 @@ public:
   BlowerSystemState DesiredState() {
     return {
         .pressure_setpoint = std::nullopt,
+        .max_pressure = kPa(0),
         // TODO: It doesn't make much sense to specify a flow direction when the
         // device is off and therefore there's no flow!  It might be better to
         // have a different BlowerSystemState struct for different categories of

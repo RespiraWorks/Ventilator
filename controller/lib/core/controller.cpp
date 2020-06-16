@@ -15,6 +15,7 @@ limitations under the License.
 
 #include "controller.h"
 
+#include "fan_pressures.h"
 #include "pid.h"
 #include "vars.h"
 #include <math.h>
@@ -128,9 +129,9 @@ Controller::Run(Time now, const VentParams &params,
     // Start controlling pressure.
     actuators_state = {
         .fio2_valve = 0, // not used yet
-        // In normal mode, blower is always full power; pid controls pressure by
-        // actuating the blower pinch valve.
-        .blower_power = 1,
+        // TODO: Add a comment.
+        // TODO: Make 10 cmH2O a DebugVar.
+        .blower_power = FanPowerFor(desired_state.max_pressure + cmH2O(10)),
         .blower_valve = blower_valve_pid_.Compute(
             now, sensor_readings.patient_pressure.kPa(),
             desired_state.pressure_setpoint->kPa()),

@@ -6,6 +6,6 @@ import ".."
 ParameterButton {
     parameterName: qsTr("PIP")
     parameterUnit: qsTr("cmH<sub>2</sub>0")
-    parameterValue: GuiStateContainer.pip
-    onValueConfirmed: GuiStateContainer.pip = value
+    parameterValue: GuiStateContainer.commanded_pip
+    onValueConfirmed: GuiStateContainer.commanded_pip = value
 }

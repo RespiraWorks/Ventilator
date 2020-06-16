@@ -6,5 +6,5 @@ import ".."
 ParameterDisplay {
     parameterName: qsTr("Flow")
     parameterUnit: qsTr("L/min")
-    parameterValue: GuiStateContainer.flowReadout.toFixed(0)
+    parameterValue: GuiStateContainer.measured_flow.toFixed(0)
 }

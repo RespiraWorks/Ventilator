@@ -6,5 +6,5 @@ import ".."
 ParameterDisplay {
     parameterName: qsTr("RR")
     parameterUnit: qsTr("b/min")
-    parameterValue: GuiStateContainer.rr.toString()
+    parameterValue: GuiStateContainer.measured_rr.toString()
 }

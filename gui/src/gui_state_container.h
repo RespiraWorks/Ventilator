@@ -4,6 +4,7 @@
 #include <QObject>
 #include <stdint.h>
 
+#include "breath_signals.h"
 #include "chrono.h"
 #include "controller_history.h"
 #include "simple_clock.h"
@@ -158,6 +159,7 @@ public slots:
   void controller_status_changed(SteadyInstant now,
                                  const ControllerStatus &status) {
     history_.Append(now, status);
+    breath_signals_.Update(now, status);
     measurements_changed();
   }
 
@@ -182,20 +184,16 @@ private:
     return history_.GetLastStatus().sensor_readings.volume_ml;
   }
   qreal get_measured_rr() const {
-    // TODO: Compute based on last breath. For now, return commanded value.
-    return commanded_rr_;
+    return breath_signals_.rr().value_or(commanded_rr_);
   }
   qreal get_measured_peep() const {
-    // TODO: Compute based on last breath. For now, return commanded value.
-    return commanded_peep_;
+    return breath_signals_.peep().value_or(commanded_peep_);
   }
   qreal get_measured_pip() const {
-    // TODO: Compute based on last breath. For now, return commanded value.
-    return commanded_pip_;
+    return breath_signals_.pip().value_or(commanded_pip_);
   }
   qreal get_measured_ier() const {
-    // TODO: Compute based on last breath. For now, return commanded value.
-    float breath_duration_sec = 60.0 / commanded_rr_;
+    float breath_duration_sec = 60.0 / get_measured_rr();
     float commanded_e_time = breath_duration_sec - commanded_i_time_;
     return commanded_i_time_ / commanded_e_time;
   }
@@ -203,6 +201,7 @@ private:
   // ====================== Commanded parameters ========================
   const SteadyInstant startup_time_;
   ControllerHistory history_;
+  BreathSignals breath_signals_;
   int battery_percentage_ = 70;
   SimpleClock clock_;
 

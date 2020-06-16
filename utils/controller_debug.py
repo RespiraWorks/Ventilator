@@ -1360,7 +1360,7 @@ def DetectSerialPort():
             f"yielded multiple STM32 devices: {', '.join(ports)}.  "
             "Choose port explicitly with --port."
         )
-    print(f"Detected device connected to {ports[0]}")
+    print(f"Detected device connected to {ports[0]}", file=sys.stderr)
     return ports[0]
 
 
@@ -1375,11 +1375,23 @@ if __name__ == "__main__":
     parser.add_argument(
         "--command", "-c", type=str, help="Run the given command and exit."
     )
+    parser.add_argument(
+        "--detect-port-and-quit",
+        action="store_true",
+        help="""Detect the port that the device is connected to and then
+immediately exit.  This is useful for scripts that invoke this program multiple
+times.  Port detection is the slowest part of startup, so this option lets you
+do it once upfront.""",
+    )
 
     args = parser.parse_args()
 
     if not args.port:
         args.port = DetectSerialPort()
+
+    if args.detect_port_and_quit:
+        print(args.port)
+        sys.exit(0)
 
     global ser
     ser = serial.Serial(port=args.port, baudrate=115200)

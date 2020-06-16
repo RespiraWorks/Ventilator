@@ -79,6 +79,8 @@ private:
 
   int motor_index_;
 
+  float last_command_{-1.0f};
+
   PinchValveHomeState home_state_{PinchValveHomeState::DISABLED};
 };
 

@@ -25,7 +25,7 @@ Data was collected using a modified version of 'pcbreathe-bringup.ino'
 * "ptg_venturi_i2c_0607_x1"
   * [ptg_venturi_i2c_0607_x1_labchart.txt](assets/ptg_venturi_i2c_0607_x1_labchart.txt)
   * [ptg_venturi_i2c_0607_x1_pcb.txt](assets/ptg_venturi_i2c_0607_x1_pcb.txt)
-  * [pcbreathe-bringup_0607.ino](assets/pcbreathe-bringup_0607.ino)
+  * [pcbreathe-bringup_Venturi_char.ino](assets/pcbreathe-bringup_Venturi_char.ino)
   * [Venturi_Characterization.py](assets/Venturi_Characterization.py)
  
 ## Results

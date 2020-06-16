@@ -110,9 +110,7 @@ int main(int argc, char *argv[]) {
       status.sensor_readings.patient_pressure_cm_h2o = tokens[1].toFloat();
       status.sensor_readings.flow_ml_per_min = 1000 * tokens[4].toFloat();
       status.sensor_readings.volume_ml = 10 * tokens[5].toFloat();
-      // TODO(jkff) Wait until
-      // https://github.com/RespiraWorks/VentilatorSoftware/pull/519
-      // status.sensor_readings.breath_id = breath_id,
+      status.sensor_readings.breath_id = breath_id;
       statuses.push_back(status);
     }
 

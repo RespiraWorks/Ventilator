@@ -9,10 +9,13 @@ This is a template file to use when you're creating a README file for a ventilat
 # [Test Number]
 
 * **Date of test:** [Date]
+
 * **Tester:** [Full name / email address]
+
 * **Software version** *(link to specific commit by hash so we know the state of the software you tested)*: [Commit link]
+
 * **Test data:** [Link to file]
-* **Ventilator prototype serial #:** [serial number] 
+
 * **User settings (specify here or in test file):**
     * **PIP:** [value]
     * **PEEP:** [value]
@@ -21,24 +24,33 @@ This is a template file to use when you're creating a README file for a ventilat
     * **FiO2:** [value]
     * **Ventilator Mode** *(PC = pressure control (transitions triggered by time), PA = pressure assist (inhale triggered by patient), PAC = pressure assist/control, PS = pressure support)*: [value]
     * Alarm settings if relevant: [value]
+
 * **Lung values:**
     * **Type of test lung used:** [value]
     * **Compliance:** [value]
     * **Resistance:** [value]
+
 * **Are sensor readings included in the file?** [Y/N]
+
 * **Are controller commands to each of the actuators included in the file?** [Y/N]
+
 * **Open loop state actuators - provide info here or specify that they are contained in the file:**
     * **Blower speed on inhale:** [value]
     * **Blower speed on exhale:** [value]
     * **Exhale Valve state on inhale:** [value]
     * **Exhale Valve state on exhale:** [value]
+
 * **Controller gains used (or other relevant controller information)**
     * **Kp:** [value]
     * **Ki:** [value]
     * **Kd:** [value]
+
 * **Information about mappings to/from controller (either provide mapping or pont to where in the code this is done):**
     * **Pressure sensor voltage to controller value mapping:** [value]
     * **Air pinch valve command to voltage mapping:** [value]
     * **Ox PSOL valve command to voltage mapping:** [value]
 
 * **Any other hardware settings that have been variable or might change** *(e.g. the bit resolution for the raw sensor valves):* [Details here]
+
+* **Images** 
+[Embed images of the ventilator prototype you used for testing]

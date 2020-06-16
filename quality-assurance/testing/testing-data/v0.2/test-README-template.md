@@ -17,19 +17,18 @@ This is a template file to use when you're creating a README file for a ventilat
 * **Test data:** [Link to file]
 
 * **User settings (specify here or in test file):**
-    * **PIP:** [value]
-    * **PEEP:** [value]
-    * **RR:** [value]
+    * **PIP (cmH20):** [value]
+    * **PEEP (cmH20):** [value]
+    * **RR (bpm):** [value]
     * **IE Ratio:** [value]
-    * **FiO2:** [value]
+    * **FiO2 (%):** [value]
     * **Ventilator Mode** *(PC = pressure control (transitions triggered by time), PA = pressure assist (inhale triggered by patient), PAC = pressure assist/control, PS = pressure support)*: [value]
     * Alarm settings if relevant: [value]
 
 * **Lung values:**
     * **Type of test lung used:** [value]
-    * **Compliance:** [value]
-    * **Resistance:** [value]
-
+    * **Compliance (ml/cmH20):** [value]
+    * **Resistance (cmH20/L/s):** [value]
 * **Are sensor readings included in the file?** [Y/N]
 
 * **Are controller commands to each of the actuators included in the file?** [Y/N]

@@ -8,6 +8,8 @@
 #
 # For a list of available commands, enter 'help'
 
+from datetime import datetime
+from typing import List, Dict, Union
 import argparse
 import cmd
 import dataclasses
@@ -17,6 +19,7 @@ import math
 import matplotlib.pyplot as plt
 import os
 import serial
+import shlex
 import struct
 import subprocess
 import sys
@@ -24,8 +27,6 @@ import textwrap
 import threading
 import time
 import traceback
-from typing import List, Dict, Union
-from datetime import datetime
 
 try:
     import readline
@@ -245,7 +246,7 @@ named {self.scriptsDir} will be searched for the python script.
         )
 
     def do_run(self, line):
-        p = str.split(line)
+        p = shlex.split(line)
         if os.path.exists(p[0]):
             fname = p[0]
         elif os.path.exists(self.scriptsDir + p[0]):
@@ -299,7 +300,7 @@ ex: peek <addr> <ct> <fmt> <file>
    The default formatting string if none is supplied is +XXXX
    i.e. Data is displayed as a series of 4 32-bit hex values / line
 """
-        param = str.split(line)
+        param = shlex.split(line)
         if len(param) < 1:
             print("Please specify the address at which to peek at a minimum")
             return
@@ -327,7 +328,7 @@ ex: poke [type] <addr> <data>
 
    data - One or more data items to write.
 """
-        param = str.split(line)
+        param = shlex.split(line)
         if len(param) < 2:
             print("Please pass the address and at least one value to write")
             return
@@ -525,10 +526,14 @@ trace start [--period p] [var1 ... ]
   whatever is in the trace_period debug variable.
 
 trace graph [--dest=<filename>] [--title=<title>] [--nointeractive]
+            [--scale=<field>/scale --scale=<field>*scale]
   Downloads the data and displays it graphically.
 
   The plain-text graph data and the rendered figure are saved to your local
   machine as last_graph.dat/png; --dest configures this.
+
+  --scale lets you multiply or divide a field by a given scaling factor.  This
+  makes it feasible to fit values with different magnitudes on the same Y axis.
 
   You can add a title to the rendered graph with --title.
 
@@ -559,7 +564,7 @@ trace_ctrl
 trace_samples
   This variable gives the number of samples stored in the buffer currently.
 """
-        cl = line.split()
+        cl = shlex.split(line)
         if len(cl) < 1:
             print("Error, please specify the trace command to run.")
             print(self.do_trace.__doc__)
@@ -831,6 +836,9 @@ def GitRevInfo():
 
 def TraceMetadataStr(title=""):
     """Gets a human-readable metadata string for a trace we just captured."""
+    if not title:
+        title = ""
+
     ret = title
     if ret and not ret.endswith("\n"):
         ret += "\n"
@@ -859,12 +867,38 @@ def TraceGraph(raw_args: List[str]):
         action="store_true",
         help="Don't show the graph interactively.  Useful for scripts.",
     )
+    parser.add_argument(
+        "--scale",
+        default=[],
+        action="append",
+        metavar="FIELD / SCLAE or FIELD * SCALE",
+        help="Scale a var by the given amount, e.g. "
+        "--scale=volume/100 or --scale=pressure*10",
+    )
+
     args = parser.parse_args(raw_args)
+
+    scalings = {}
+    for s in args.scale:
+        if "/" in s:
+            var, n = (x.strip() for x in s.split("/"))
+            scalings[var] = ("/", float(n))
+        elif "*" in s:
+            var, n = s.split("*")
+            scalings[var] = ("*", float(n))
+        else:
+            raise Error(f"Invalid scaling parameter {s}")
 
     (base, _) = os.path.splitext(args.dest)
     graph_img_filename = base + ".png"
 
     traceVars = TraceActiveVars()
+    unrecognized_scale_vars = set(scalings.keys()) - set(v.name for v in traceVars)
+    if unrecognized_scale_vars:
+        raise Error(
+            f"Can't scale by vars that aren't being traced: {unrecognized_scale_vars}"
+        )
+
     dat = TraceDownload()
     TraceSaveDat(dat, args.dest, title=args.title)
 
@@ -872,7 +906,21 @@ def TraceGraph(raw_args: List[str]):
     dat = dat[1:]
     plt.figure()
     for i, d in enumerate(dat):
-        plt.plot(timestamps_sec, d, label=traceVars[i].help)
+        var = traceVars[i]
+
+        scale_kind, scale = scalings.get(var.name, (None, None))
+        label = var.help
+        if scale_kind:
+            label += f", scaled {scale_kind} {scale}"
+
+        if scale_kind == "*":
+            multiplier = scale
+        elif scale_kind == "/":
+            multiplier = 1 / scale
+        else:
+            multiplier = 1
+
+        plt.plot(timestamps_sec, [v * multiplier for v in d], label=label)
 
     # Draw a black gridline at y=0 to highlight the x-axis.
     plt.axhline(linewidth=1, color="black")

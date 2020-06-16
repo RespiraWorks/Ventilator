@@ -6,7 +6,7 @@ This folder stores test data from v0.2 of the ventilator.
 
 For people running tests—for each test, please do the following:
 1. Create a directory for your test set up within `SystemDesign/quality-assurance/testing/testing-data/v0.2`.
-    * Use a format of `mmddyyyy` for the directory name (e.g., a test conducted on June 14, 2020 would have a directory name of `06142020`).
+    * Use a format of `yyyymmdd` for the directory name (e.g., a test conducted on June 14, 2020 would have a directory name of `20200614`).
     * Add data files for a given test into that directory. 
 2.  Within the dated directory for the test, create a README.md (markdown file) explaining the overall test set up as well as information about the specific test. 
     * **Please use the [README template here](test-README-template.md). For additional information on how to structure your file using markdown,see [the repository wiki here](https://github.com/RespiraWorks/SystemDesign/wiki).** 

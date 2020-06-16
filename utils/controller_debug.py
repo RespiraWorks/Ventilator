@@ -124,12 +124,15 @@ Intended TV: {intended_tv} ml
     sec_per_breath = 60 / rr
     ie_ratio = inspiratory_time / sec_per_breath
     vars = {
-        "gui_mode": VentMode_PRESSURE_CONTROL,
         "gui_bpm": rr,
         "gui_ie_ratio": round(ie_ratio, 2),
         "gui_pip": bap + delta_inspiratory_pressure,
         "gui_peep": bap,
         # TODO: FiO2 not currently supported.
+        # It's important to set gui_mode last.  Otherwise we'll start breathing
+        # immediately, with whatever the old parameters happen to be.  (Python3
+        # dicts have consistent ordering.)
+        "gui_mode": VentMode_PRESSURE_CONTROL,
     }
     return Preset(f"covent_pc_{test_num}", desc, vars)
 

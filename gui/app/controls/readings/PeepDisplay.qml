@@ -6,5 +6,5 @@ import ".."
 ParameterDisplay {
     parameterName: qsTr("PEEP")
     parameterUnit: qsTr("cmH<sub>2</sub>O")
-    parameterValue: GuiStateContainer.peep.toString()
+    parameterValue: GuiStateContainer.measured_peep.toString()
 }

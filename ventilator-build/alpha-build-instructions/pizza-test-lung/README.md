@@ -22,8 +22,8 @@ Note: You can optionally add-on to this simple test lung to make a reduced-compl
 | ---- |---------:| ------------- | ------------------- | ------------:|-----------|----------------| ----- |
 | 1    |        1 | Portex        | 370924              | 15.00        |*ask first*| [E][1ebay]     | test "lung" or breathing bag. |
 | 2  |        1 | South Pacific   | SPB-6110-5PK        |   129.00 / 5 |*ask first*| [Z][2amzn]     | **ALT for item 1** |
-| 3    |        2 | Mars Wellness | 4332593260          | 16.99 / 2    | buy       | [Z][2amzn]     | CPAP tubing |
-| 4    |        2 | McMaster-Carr | 5463K167            | 13.16 / 10   | buy       | [C][3mcmc]     | 3/4"ID <-> 5/8"ID single barb adapter |
+| 3    |        2 | Mars Wellness | 4332593260          | 16.99 / 2    | buy       | [Z][3amzn]     | CPAP tubing |
+| 4    |        2 | McMaster-Carr | 5463K167            | 13.16 / 10   | buy       | [C][4mcmc]     | 3/4"ID <-> 5/8"ID single barb adapter |
 
 [1ebay]:  https://www.ebay.com/itm/PORTEX-Adult-Disposable-Anesthesia-Breathing-Circuit-3L-Breathing-Bag-370924/362943456196
 [2amzn]:  https://www.amazon.com/FlexLung-Biomedical-Ventilator-Testing-Demonstration/dp/B07B876P9C

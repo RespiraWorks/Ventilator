@@ -22,7 +22,9 @@ private slots:
     auto base = SteadyClock::now();
     auto t = [=](int seconds) { return base + DurationMs(1000 * seconds); };
     auto pressure = [](float p) -> ControllerStatus {
-      return {.sensor_readings = {.patient_pressure_cm_h2o = p}};
+      ControllerStatus res;
+      res.sensor_readings.patient_pressure_cm_h2o = p;
+      return res;
     };
 
     QCOMPARE(60, alarm.GetThresholdCmH2O());

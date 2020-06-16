@@ -18,6 +18,8 @@ limitations under the License.
 #include "stepper.h"
 #include <algorithm>
 #include <array>
+#include <cfloat>
+#include <cmath>
 
 // These constants define various properties of the pinch
 // value and how we control it.  As the mechanical design
@@ -212,7 +214,15 @@ void PinchValve::SetOutput(float value) {
   // The motor's zero position is at the home offset
   // which corresponds to fully open (i.e. 100% flow)
   // The valve is closed at a position of -max_move;
-
   float pos = (value - 1.0f) * max_move;
+
+  // If the commanded position changed since last cycle
+  // halt the previous move if it's still in progress.
+  // This makes the valve control much smoother when used
+  // within a servo loop
+  if (fabsf(pos - last_command_) > FLT_EPSILON)
+    mtr->HardStop();
+
+  last_command_ = pos;
   mtr->GotoPos(pos);
 }

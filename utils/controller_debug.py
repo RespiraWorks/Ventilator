@@ -24,7 +24,8 @@ import textwrap
 import threading
 import time
 import traceback
-from typing import Dict, Union
+from typing import List, Dict, Union
+from datetime import datetime
 
 try:
     import readline
@@ -523,11 +524,16 @@ trace start [--period p] [var1 ... ]
   controller's high-priority loop.  If you don't specify a period, we use
   whatever is in the trace_period debug variable.
 
-trace graph
+trace graph [--dest=<filename>] [--title=<title>] [--nointeractive]
   Downloads the data and displays it graphically.
 
-  The trace data will also be stored to the file last_graph.dat, which will be
-  overwritten if it exists
+  The plain-text graph data and the rendered figure are saved to your local
+  machine as last_graph.dat/png; --dest configures this.
+
+  You can add a title to the rendered graph with --title.
+
+  By default the figure is also shown interactively.  --nointeractive
+  configures this.
 
 trace download [--separator=<str>] [--dest=<filename>]
   This will download the data and save it to a file with the given name.  If no
@@ -607,7 +613,7 @@ trace_samples
             TraceSaveDat(dat, fname=args.dest, separator=args.separator)
 
         elif cl[0] == "graph":
-            TraceGraph()
+            TraceGraph(cl[1:])
 
         else:
             print("Unknown trace sub-command %s" % cl[0])
@@ -809,10 +815,58 @@ def TraceDownload():
     return ret
 
 
-def TraceGraph():
+def GitRevInfo():
+    """Returns a description of the current repository."""
+    try:
+        rev = (
+            subprocess.check_output(["git", "rev-parse", "--short", "HEAD"])
+            .decode("utf-8")
+            .strip()
+        )
+        is_dirty = len(subprocess.check_output(["git", "status", "-s"])) > 0
+        return f"{rev} ({'dirty' if is_dirty else 'clean'})"
+    except subprocess.CalledProcessError:
+        return "(unknown)"
+
+
+def TraceMetadataStr(title=""):
+    """Gets a human-readable metadata string for a trace we just captured."""
+    ret = title
+    if ret and not ret.endswith("\n"):
+        ret += "\n"
+
+    ret += f"Captured {datetime.now()} by {os.environ.get('USER', 'unknown user')}\n"
+    ret += f"Built at revision {GitRevInfo()}\n"
+    return ret
+
+
+def TraceGraph(raw_args: List[str]):
+    parser = CmdArgumentParser("trace graph")
+    parser.add_argument(
+        "--dest",
+        default="last_graph.dat",
+        metavar="FILE",
+        help="Filename to save trace data to.  The rendered graph will be "
+        "saved to this destination with the extension (if present) replaced "
+        "by '.png'.",
+    )
+    parser.add_argument(
+        "--title", default=None, metavar="TITLE", help="Graph title",
+    )
+    parser.add_argument(
+        "--nointeractive",
+        default=False,
+        action="store_true",
+        help="Don't show the graph interactively.  Useful for scripts.",
+    )
+    args = parser.parse_args(raw_args)
+
+    (base, _) = os.path.splitext(args.dest)
+    graph_img_filename = base + ".png"
+
     traceVars = TraceActiveVars()
     dat = TraceDownload()
-    TraceSaveDat(dat, "last_graph.dat")
+    TraceSaveDat(dat, args.dest, title=args.title)
 
     timestamps_sec = dat[0]
     dat = dat[1:]
@@ -826,26 +880,35 @@ def TraceGraph():
     plt.xlabel("Seconds")
     plt.grid()
     plt.legend()
-    plt.show()
+    if args.title:
+        plt.title(args.title)
+
+    fig_md = {"Description": TraceMetadataStr(args.title)}
+    if args.title:
+        fig_md["Title"] = args.title
+    plt.savefig(graph_img_filename, format="png", metadata=fig_md)
+
+    if not args.nointeractive:
+        plt.show()
 
 
-def TraceSaveDat(dat, fname, separator="  "):
-
+def TraceSaveDat(dat, fname, separator="  ", title=""):
     tv = TraceActiveVars()
 
-    fp = open(fname, "w")
-    line = ["time(sec)"]
-    for v in tv:
-        line.append(v.name)
-    fp.write(separator.join(line) + "\n")
+    with open(fname, "w") as fp:
+        fp.write(textwrap.indent(TraceMetadataStr(title), "# "))
 
-    for i in range(len(dat[0])):
-        # First column is time in seconds
-        line = ["%.3f" % dat[0][i]]
-        for j in range(len(tv)):
-            line.append(tv[j].fmt % dat[j + 1][i])
+        line = ["time(sec)"]
+        for v in tv:
+            line.append(v.name)
         fp.write(separator.join(line) + "\n")
-    fp.close()
+
+        for i in range(len(dat[0])):
+            # First column is time in seconds
+            line = ["%.3f" % dat[0][i]]
+            for j in range(len(tv)):
+                line.append(tv[j].fmt % dat[j + 1][i])
+            fp.write(separator.join(line) + "\n")
 
 
 def FmtPeek(dat, fmt="+XXXX", addr=0):

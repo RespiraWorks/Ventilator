@@ -149,18 +149,12 @@ private:
 // "Breath finite state machine" for pressure assist mode.
 //
 // This mode is used for a patient that is not fully sedated and can initiate
-// breaths by himself, but once a breath has started, it is fully controlled
-// by the ventilator: inspiration time is set by the ventilator.
-// This mode enforce a minimum respiratory rate in case the patient does not
-// initiate enough breaths.
-// Similarly to pressure control, uses a square wave, but the duration of the
-// exhale leg can vary depending on the patient breath initiation, meaning the
-// breath can be finished (and the next one started) before the full breath
-// duration has passed.
-// In case the full breath duration passes, the fsm enforces a "mandatory
-// breath" to make sure the patient's RR does not go below the desired one.
-// Because the inhale is the first leg and only the exhale leg can vary in
-// duration, the first breath in this mode is always a "mandatory breath".
+// breaths themselves, but once a breath has started, it is fully controlled by
+// the ventilator.  In other words, expiration time is controlled by the
+// patient, and inspiration time is controlled by the ventilator.
+//
+// This mode enforces a minimum respiratory rate in case the patient does not
+// initiate a breath quickly enough.
 class PressureAssistFsm {
 public:
   explicit PressureAssistFsm(Time now, const VentParams &params);
@@ -169,7 +163,7 @@ public:
   bool Finished() const { return finished_; }
 
 private:
-  bool PatientInspiring(const BlowerFsmInputs &inputs);
+  bool PatientInspiring(Time now, const BlowerFsmInputs &inputs);
 
   const Pressure inspire_pressure_;
   const Pressure expire_pressure_;
@@ -178,11 +172,20 @@ private:
   Time inspire_end_;
   Time expire_deadline_;
 
-  // initialize threshold at insanely high flow to not trigger breath before
-  // a proper threshold has been computed
-  VolumetricFlow inspiratory_effort_threshold_ = cubic_m_per_sec(9);
   bool inspire_finished_ = false;
   bool finished_ = false;
+
+  // During exhale we maintain two exponentially-weighted averages of flow, one
+  // which updates quickly (fast_avg_flow_), and one which updates slowly
+  // (slow_avg_flow_).
+  //
+  // When fast_avg_flow_ exceeds slow_avg_flow_ by a threshold, we trigger a
+  // breath.
+  //
+  // More discussion of this algorithm:
+  // https://respiraworks.slack.com/archives/C011CJQV4Q7/p1592417313120400
+  std::optional<VolumetricFlow> fast_avg_flow_;
+  std::optional<VolumetricFlow> slow_avg_flow_;
 };
 
 class BlowerFsm {

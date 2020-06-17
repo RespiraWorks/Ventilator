@@ -1,8 +1,6 @@
 #ifndef TIME_SERIES_GRAPH_H_
 #define TIME_SERIES_GRAPH_H_
 
-#include "qnanoquickitem.h"
-#include "qnanoquickitempainter.h"
 #include "time_series_graph_painter.h"
 #include <QColor>
 #include <QPointF>

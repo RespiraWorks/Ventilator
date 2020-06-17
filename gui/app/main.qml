@@ -2,7 +2,6 @@ import QtQuick 2.11
 import QtQuick.Layouts 1.3
 import QtQuick.Controls 2.4
 import Respira 1.0
-
 import "modes"
 import "controls"
 
@@ -18,7 +17,9 @@ ApplicationWindow {
     maximumHeight: 600
     height: 600
     title: qsTr("Ventilator")
-
+    visibility: GuiStateContainer.isDebugBuild ?
+                    ApplicationWindow.Windowed :
+                    ApplicationWindow.FullScreen
     // uncomment this like if you want to see it full-screen
     // But that shouldn't matter on rPI running on EGLFS
     //visibility: Qt.WindowFullScreen
@@ -28,6 +29,7 @@ ApplicationWindow {
     }
 
     FpsItem {
+        visible: GuiStateContainer.isDebugBuild
         anchors {
             right: parent.right; rightMargin: 8
             bottom: parent.bottom; bottomMargin: 8

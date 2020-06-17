@@ -61,6 +61,8 @@ This document will track desired characterization tests and link to the correspo
 
     4. When there is a change in flow rate, how long does it take for the sensor to settle?
 
+    [View Venturi tests](project-venturi/characterization-tests/06072020/README.md)
+
 * **Pressure sensor characterization**
 
     1. For pressures from 1 to 60 cm H20, how accurate is the pressure reading and how does this accuracy change over time (if sitting at a specific FiO2)?

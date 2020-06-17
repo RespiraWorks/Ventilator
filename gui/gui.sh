@@ -95,7 +95,11 @@ if [ "$1" == "--build" ] ; then
   create_clean_directory build
   qmake -unset QMAKEFEATURES
   git submodule update --init --recursive
-  cd build && qmake .. && make -j && cd -
+  if [ "$2" == "--debug" ] ; then
+    cd build && qmake "CONFIG+=debug" .. && make -j && cd -
+  else
+    cd build && qmake "CONFIG+=release" .. && make -j && cd -
+  fi
 fi
 
 ########

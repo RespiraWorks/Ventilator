@@ -7,6 +7,7 @@
 #include "breath_signals.h"
 #include "chrono.h"
 #include "controller_history.h"
+#include "pip_exceeded_alarm.h"
 #include "simple_clock.h"
 
 #include <iostream>
@@ -17,8 +18,7 @@
 #include <QVector>
 #include <QtCore/QObject>
 
-// A thread-safe container for readable and writable state
-// of the GUI.
+// A container for readable and writable state of the GUI.
 //
 // The rest of the GUI must bind itself to accessors and mutators
 // of this class - e.g. render graphs from GetControllerStatusHistory(),
@@ -44,7 +44,12 @@ public:
   // Initializes the state container to keep the history of controller
   // statuses in a given time window.
   GuiStateContainer(DurationMs history_window)
-      : startup_time_(SteadyClock::now()), history_(history_window) {}
+      : startup_time_(SteadyClock::now()), history_(history_window) {
+    QObject::connect(this, &GuiStateContainer::params_changed, [this]() {
+      // TODO: This should come from GUI alarm settings instead.
+      pip_exceeded_alarm_.SetThresholdCmH2O(commanded_pip_ + 2);
+    });
+  }
 
   // Returns when the GUI started up.
   SteadyInstant GetStartupTime() { return startup_time_; }
@@ -123,6 +128,8 @@ public:
   Q_PROPERTY(int batteryPercentage READ get_battery_percentage NOTIFY
                  battery_percentage_changed)
   Q_PROPERTY(SimpleClock *clock READ get_clock NOTIFY clock_changed)
+  Q_PROPERTY(PipExceededAlarm *pipExceededAlarm READ get_pip_exceeded_alarm
+                 NOTIFY pip_exceeded_alarm_changed)
 
   QVector<QPointF> GetPressureSeries() const { return pressure_series_; }
 
@@ -148,6 +155,7 @@ public:
 signals:
   void measurements_changed();
   void params_changed();
+  void pip_exceeded_alarm_changed();
   void battery_percentage_changed();
   void clock_changed();
   void PressureSeriesChanged();
@@ -160,6 +168,7 @@ public slots:
                                  const ControllerStatus &status) {
     history_.Append(now, status);
     breath_signals_.Update(now, status);
+    pip_exceeded_alarm_.Update(now, status, breath_signals_);
     measurements_changed();
   }
 
@@ -198,7 +207,9 @@ private:
     return commanded_i_time_ / commanded_e_time;
   }
 
-  // ====================== Commanded parameters ========================
+  // ============================== Alarms ============================
+  PipExceededAlarm *get_pip_exceeded_alarm() { return &pip_exceeded_alarm_; }
+
   const SteadyInstant startup_time_;
   ControllerHistory history_;
   BreathSignals breath_signals_;
@@ -217,6 +228,8 @@ private:
   quint32 commanded_pip_ = 15;
   quint32 commanded_peep_ = 5;
   qreal commanded_i_time_ = 1.0;
+
+  PipExceededAlarm pip_exceeded_alarm_;
 };
 
 #endif // GUI_STATE_CONTAINER_H

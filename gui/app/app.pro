@@ -4,7 +4,6 @@ include( ../defaults.pri )
     error( "Couldn't find the common.pri file!" )
 }
 
-
 ! include( ../src/third_party/qnanopainter/libqnanopainter/include.pri ) {
     error( "Couldn't find the libqnanopainter file!" )
 }

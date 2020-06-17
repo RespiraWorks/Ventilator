@@ -2,14 +2,14 @@
 #include <QtTest>
 
 #include "breath_signals_test.h"
-#include "max_pressure_alarm_test.h"
+#include "latching_alarm_test.h"
 
 int main(int argc, char *argv[]) {
   QGuiApplication app(argc, argv);
 
   int status = 0;
   {
-    MaxPressureAlarmTest tc;
+    LatchingAlarmTest tc;
     status += QTest::qExec(&tc, argc, argv);
   }
 

@@ -15,6 +15,8 @@ limitations under the License.
 
 #include "blower_fsm.h"
 
+#include "blower_fsm_test_data.h"
+#include "controller.h"
 #include "hal.h"
 #include "gmock/gmock-matchers.h"
 #include "gtest/gtest.h"
@@ -32,8 +34,10 @@ constexpr int64_t rise_time_us = RISE_TIME.microseconds();
 static_assert(rise_time_us % 1000 == 0,
               "blower fsm tests assume rise time is a whole number of ms.");
 constexpr int64_t rise_time_ms = rise_time_us / 1000;
-static_assert(rise_time_ms % 4 == 0,
-              "blower fsm tests assume we can divide rise time ms by 4.");
+static_assert(rise_time_ms % 5 == 0,
+              "blower fsm tests assume we can divide rise time ms by 5.");
+static_assert(rise_time_ms % 2 == 0,
+              "blower fsm tests assume we can divide rise time ms by 2.");
 
 TEST(BlowerFsmTest, InitiallyOff) {
   BlowerFsm fsm;
@@ -62,17 +66,36 @@ void testSequence(
                    /*expected_pressure_setpoint*/ std::optional<Pressure>,
                    /*expected_flow_direction*/ FlowDirection>> &seq) {
   BlowerFsm fsm;
+  if (seq.empty()) {
+    return;
+  }
+
+  // Reset time to test's start time.
+  // TODO: Add a Hal.test_ResetClockToZero() command?
+  Hal.delay(microseconds(-Hal.now().microsSinceStartup()));
+  Hal.delay(milliseconds(std::get<uint64_t>(seq.front())));
+
+  VentParams last_params;
+  BlowerFsmInputs last_inputs;
   for (const auto &[params, inputs, time_millis, expected_pressure,
                     expected_flow_direction] : seq) {
-    Hal.delay(microsSinceStartup(time_millis * 1000) - Hal.now());
     SCOPED_TRACE("time = " + std::to_string(time_millis));
-    EXPECT_EQ(time_millis * 1000, Hal.now().microsSinceStartup());
+    // Move time forward to t in steps of Controller::GetLoopPeriod().
+    Time t = microsSinceStartup(1000 * time_millis);
+    while (Hal.now() < t) {
+      Hal.delay(Controller::GetLoopPeriod());
+      (void)fsm.DesiredState(Hal.now(), last_params, last_inputs);
+    }
+    EXPECT_EQ(t.microsSinceStartup(), Hal.now().microsSinceStartup());
 
     BlowerSystemState s = fsm.DesiredState(Hal.now(), params, inputs);
     EXPECT_EQ(s.pressure_setpoint.has_value(), expected_pressure.has_value());
-    EXPECT_EQ(s.pressure_setpoint.value_or(cmH2O(0)).cmH2O(),
-              expected_pressure.value_or(cmH2O(0)).cmH2O());
+    EXPECT_FLOAT_EQ(s.pressure_setpoint.value_or(cmH2O(0)).cmH2O(),
+                    expected_pressure.value_or(cmH2O(0)).cmH2O());
     EXPECT_EQ(s.flow_direction, expected_flow_direction);
+
+    last_params = params;
+    last_inputs = inputs;
   }
 }
 
@@ -88,142 +111,159 @@ TEST(BlowerFsmTest, PressureControl) {
   testSequence({
       // Pressure starts out at PEEP and rises to PIP over period RISE_TIME.
       {p, inputs_zero, 0, cmH2O(10), FlowDirection::INSPIRATORY},
-      {p, inputs_zero, rise_time_ms / 4, cmH2O(12.5),
+      {p, inputs_zero, 1 * rise_time_ms / 5, cmH2O(12),
        FlowDirection::INSPIRATORY},
-      {p, inputs_zero, rise_time_ms / 2, cmH2O(15), FlowDirection::INSPIRATORY},
-      {p, inputs_zero, 3 * rise_time_ms / 4, cmH2O(17.5),
+      {p, inputs_zero, 2 * rise_time_ms / 5, cmH2O(14),
+       FlowDirection::INSPIRATORY},
+      {p, inputs_zero, 3 * rise_time_ms / 5, cmH2O(16),
+       FlowDirection::INSPIRATORY},
+      {p, inputs_zero, 4 * rise_time_ms / 5, cmH2O(18),
+       FlowDirection::INSPIRATORY},
+      {p, inputs_zero, 5 * rise_time_ms / 5, cmH2O(20),
        FlowDirection::INSPIRATORY},
       {p, inputs_zero, 1000, cmH2O(20), FlowDirection::INSPIRATORY},
-      {p, inputs_zero, 1999, cmH2O(20), FlowDirection::INSPIRATORY},
-      {p, inputs_zero, 2001, cmH2O(10), FlowDirection::EXPIRATORY},
-      {p, inputs_zero, 2999, cmH2O(10), FlowDirection::EXPIRATORY},
-      {p, inputs_zero, 3001, cmH2O(10), FlowDirection::INSPIRATORY},
-      {p, inputs_zero, 3001 + rise_time_ms / 2, cmH2O(15),
+      {p, inputs_zero, 1990, cmH2O(20), FlowDirection::INSPIRATORY},
+      {p, inputs_zero, 2010, cmH2O(10), FlowDirection::EXPIRATORY},
+      {p, inputs_zero, 2990, cmH2O(10), FlowDirection::EXPIRATORY},
+      {p, inputs_zero, 3000, cmH2O(10), FlowDirection::INSPIRATORY},
+      {p, inputs_zero, 3000 + rise_time_ms / 2, cmH2O(15),
        FlowDirection::INSPIRATORY},
-      {p, inputs_zero, 3001 + rise_time_ms, cmH2O(20),
+      {p, inputs_zero, 3000 + rise_time_ms, cmH2O(20),
        FlowDirection::INSPIRATORY},
   });
 }
 
-TEST(BlowerFsmTest, PressureAssist) {
+struct FlowTraceResults {
+  // Time relative to start of breath when flow direction switched from
+  // INSPIRATORY to EXPIRATORY.
+  std::optional<Duration> expire_start_time;
+
+  // Time relative to start of breath when FSM indicated it was done.
+  std::optional<Duration> finish_time;
+};
+
+// Runs a breath using a fresh FSM of type FsmTy, using the given array of
+// flows (length n, time period between entries trace_interval).
+//
+// At every time named in setpoint_checks, check that the setpoint pressure is
+// as specified.
+template <typename FsmTy>
+FlowTraceResults
+RunFlowTrace(const VolumetricFlow *trace, size_t n, const VentParams &params,
+             Duration trace_interval,
+             std::vector<std::tuple</*time ms*/ uint64_t,
+                                    /*setpoint pressure, cmH2O*/ float>>
+                 setpoint_checks) {
+  FsmTy fsm(Hal.now(), params);
+
+  Time start = Hal.now();
+  FlowTraceResults results;
+  auto check_it = setpoint_checks.begin();
+
+  for (size_t i = 0; i < n; i++) {
+    auto ms = (Hal.now() - start).microseconds() / 1000;
+    SCOPED_TRACE("time = " + std::to_string(ms));
+
+    VolumetricFlow f = trace[i];
+
+    // Our traces don't contain volume measurements, but this is OK for now.
+    fsm.Update(Hal.now(), {.patient_volume = ml(0), .net_flow = f});
+    FlowDirection dir = fsm.DesiredState().flow_direction;
+    if (dir == FlowDirection::EXPIRATORY && !results.expire_start_time) {
+      results.expire_start_time = Hal.now() - start;
+    }
+
+    if (results.expire_start_time == std::nullopt) {
+      EXPECT_EQ(FlowDirection::INSPIRATORY, dir);
+    } else {
+      EXPECT_EQ(FlowDirection::EXPIRATORY, dir);
+    }
+
+    if (check_it != setpoint_checks.end()) {
+      const auto &[check_ms, check_cmh2o] = *check_it;
+      if (check_ms == ms) {
+        auto sp = fsm.DesiredState().pressure_setpoint;
+        EXPECT_TRUE(sp.has_value());
+        if (sp.has_value()) {
+          EXPECT_EQ(sp->cmH2O(), check_cmh2o);
+        }
+      }
+      ++check_it;
+    }
+
+    if (fsm.Finished()) {
+      results.finish_time = Hal.now() - start;
+      break;
+    }
+
+    Hal.delay(trace_interval);
+  }
+
+  EXPECT_TRUE(check_it == setpoint_checks.end())
+      << "didn't see every expected pressure checkpoint";
+
+  return results;
+}
+
+// Test a pressure-assist trace which has inspiratory effort.
+TEST(BlowerFsmTest, PressureAssistFlowTrace1) {
   VentParams p = VentParams_init_zero;
   p.mode = VentMode_PRESSURE_ASSIST;
-  // 20 breaths/min = 3s/breath.  I:E = 2 means 2s for inspire, 1s for expire.
-  p.breaths_per_min = 20;
-  p.inspiratory_expiratory_ratio = 2;
+  p.breaths_per_min = 12;
+  p.inspiratory_expiratory_ratio = 0.25;
   p.peep_cm_h2o = 10;
   p.pip_cm_h2o = 20;
 
-  BlowerFsmInputs inputs_breath = {
-      .patient_volume = ml(0),
-      .net_flow = ml_per_min(20000.0f),
-  };
+  FlowTraceResults results = RunFlowTrace<PressureAssistFsm>(
+      FLOW_TRACE_INSPIRATORY_EFFORT, std::size(FLOW_TRACE_INSPIRATORY_EFFORT),
+      p, milliseconds(10),
+      {
+          {0, 10},    // start at PEEP
+          {500, 20},  // rise to PIP
+          {1000, 20}, // end inspire at PIP
+          {1100, 10}, // fall to PEEP
+          {1500, 10},
+      });
 
-  // - when flow is zero: breath is triggered on expire_deadline_ rather than
-  // patient triggered, to enforce minimum respiratory rate
-  // - when flow is breath: trigger breath if in expire mode
-  testSequence({
-      // first breath is mandatory, starts out at PEEP and rises to PIP over
-      // period of RISE_TIME
-      {p, inputs_zero, 0, cmH2O(10), FlowDirection::INSPIRATORY},
-      {p, inputs_zero, rise_time_ms / 4, cmH2O(12.5),
-       FlowDirection::INSPIRATORY},
-      {p, inputs_zero, rise_time_ms / 2, cmH2O(15), FlowDirection::INSPIRATORY},
-      {p, inputs_zero, 3 * rise_time_ms / 4, cmH2O(17.5),
-       FlowDirection::INSPIRATORY},
-      {p, inputs_zero, rise_time_ms, cmH2O(20), FlowDirection::INSPIRATORY},
-      // breath has no effect during inspire phase
-      {p, inputs_breath, 1000, cmH2O(20), FlowDirection::INSPIRATORY},
-      {p, inputs_zero, 1999, cmH2O(20), FlowDirection::INSPIRATORY},
-      {p, inputs_zero, 2001, cmH2O(10), FlowDirection::EXPIRATORY},
-      // need to run with non-breath flow while already in exhale leg to
-      // initialize detection threshold
-      {p, inputs_zero, 2002, cmH2O(10), FlowDirection::EXPIRATORY},
-      // check that calling with zero flow before the end of the breath does not
-      // tigger the next breath
-      {p, inputs_zero, 2500, cmH2O(10), FlowDirection::EXPIRATORY},
-      {p, inputs_zero, 2999, cmH2O(10), FlowDirection::EXPIRATORY},
-      // trigger breath on expire_deadline_ (wise rise over RISE_TIME)
-      {p, inputs_zero, 3001, cmH2O(10), FlowDirection::INSPIRATORY},
-      {p, inputs_breath, 3001 + rise_time_ms / 2, cmH2O(15),
-       FlowDirection::INSPIRATORY},
-      {p, inputs_breath, 3001 + rise_time_ms, cmH2O(20),
-       FlowDirection::INSPIRATORY},
-      {p, inputs_breath, 4999, cmH2O(20), FlowDirection::INSPIRATORY},
-      {p, inputs_zero, 5001, cmH2O(10), FlowDirection::EXPIRATORY},
-      // need to run with non-breath flow while already in exhale leg to
-      // initialize detection threshold
-      {p, inputs_zero, 5002, cmH2O(10), FlowDirection::EXPIRATORY},
-      // triggered breath
-      {p, inputs_breath, 5200, cmH2O(10), FlowDirection::INSPIRATORY},
-      {p, inputs_breath, 5200 + rise_time_ms / 2, cmH2O(15),
-       FlowDirection::INSPIRATORY},
-      {p, inputs_breath, 5200 + rise_time_ms, cmH2O(20),
-       FlowDirection::INSPIRATORY},
-      // triggered breath is of normal duration
-      {p, inputs_zero, 7199, cmH2O(20), FlowDirection::INSPIRATORY},
-      {p, inputs_zero, 7201, cmH2O(10), FlowDirection::EXPIRATORY},
-  });
+  ASSERT_TRUE(results.expire_start_time.has_value());
+  ASSERT_TRUE(results.finish_time.has_value());
+  EXPECT_EQ(results.expire_start_time->milliseconds(), 1000.f);
+
+  // Finished means either we detected inspiratory effort or we timed out
+  // (started next breath).  In this trace, inspiratory effort begins at
+  // around 1800ms and ends at around 2040ms.
+  EXPECT_GE(results.finish_time->milliseconds(), 1800.f);
+  EXPECT_LE(results.finish_time->milliseconds(), 2000.f);
 }
 
-TEST(BlowerFsmTest, TurnOff) {
-  VentParams p_on = VentParams_init_zero;
-  p_on.mode = VentMode_PRESSURE_CONTROL;
-  // 20 breaths/min = 3s/breath.  I:E = 2 means 2s for inspire, 1s for expire.
-  p_on.breaths_per_min = 20;
-  p_on.inspiratory_expiratory_ratio = 2;
-  p_on.peep_cm_h2o = 10;
-  p_on.pip_cm_h2o = 20;
+// Test a pressure-assist trace which doesn't have inspiratory effort.
+TEST(BlowerFsmTest, PressureAssistFlowTrace2) {
+  VentParams p = VentParams_init_zero;
+  p.mode = VentMode_PRESSURE_ASSIST;
+  p.breaths_per_min = 12;
+  p.inspiratory_expiratory_ratio = 0.25;
+  p.peep_cm_h2o = 10;
+  p.pip_cm_h2o = 20;
 
-  VentParams p_off = VentParams_init_zero;
+  FlowTraceResults results = RunFlowTrace<PressureAssistFsm>(
+      FLOW_TRACE_NO_INSPIRATORY_EFFORT,
+      std::size(FLOW_TRACE_NO_INSPIRATORY_EFFORT), p, milliseconds(10),
+      {
+          {0, 10},    // start at PEEP
+          {500, 20},  // rise to PIP
+          {1000, 20}, // end inspire at PIP
+          {1100, 10}, // fall to PEEP
+          {1500, 10},
+          {5000, 10},
+      });
 
-  testSequence({
-      {p_off, inputs_zero, 0, std::nullopt, FlowDirection::EXPIRATORY},
-      // This is PEEP pressure even though it's inspiration, because ramp it up
-      // to PIP over a duration of PressureControlFsm::RISE_TIME.
-      {p_on, inputs_zero, 1000, cmH2O(10), FlowDirection::INSPIRATORY},
-      {p_off, inputs_zero, 1001, std::nullopt, FlowDirection::EXPIRATORY},
-  });
-}
+  ASSERT_TRUE(results.expire_start_time.has_value());
+  ASSERT_TRUE(results.finish_time.has_value());
+  EXPECT_EQ(results.expire_start_time->milliseconds(), 1000.f);
 
-TEST(BlowerFsmTest, ChangeOfParamsStartAtTheNextBreath) {
-  VentParams p_init = VentParams_init_zero;
-  p_init.mode = VentMode_PRESSURE_CONTROL;
-  p_init.breaths_per_min = 20;
-  p_init.inspiratory_expiratory_ratio = 2; // I: 2s, E: 1s
-  p_init.pip_cm_h2o = 20;
-  p_init.peep_cm_h2o = 10;
-
-  VentParams p_change = p_init;
-  p_change.breaths_per_min = 30;
-  p_change.inspiratory_expiratory_ratio = 1; // I: 1s, E: 1s
-  p_change.pip_cm_h2o = 30;
-  p_change.peep_cm_h2o = 15;
-
-  VentParams p_off = VentParams_init_default;
-  //|---------------------|----------|----------|----------|
-  // 0                   1999        2999       3999       4999
-  //         I                 E           I          E
-  testSequence({
-      // Switching ON mode takes effect immidiately.  Because of pressure
-      // control mode's ramp time, the initial pressure is PEEP, not PIP.
-      {p_init, inputs_zero, 0, cmH2O(10), FlowDirection::INSPIRATORY},
-      // 2sec of inhalation 1sec of exhalation. Ignores param change, stays on
-      // p_init pip.
-      {p_change, inputs_zero, 1999, cmH2O(20), FlowDirection::INSPIRATORY},
-      {p_change, inputs_zero, 2000, cmH2O(10), FlowDirection::EXPIRATORY},
-      {p_change, inputs_zero, 2999, cmH2O(10), FlowDirection::EXPIRATORY},
-      // Previous state finished, switch to p_change settings, 1sec In 1sec Ex.
-      {p_change, inputs_zero, 3001, cmH2O(15), FlowDirection::INSPIRATORY},
-      {p_init, inputs_zero, 3999, cmH2O(30), FlowDirection::INSPIRATORY},
-      // Ignore p_init setting in the middle of a breath.
-      {p_init, inputs_zero, 4001, cmH2O(15), FlowDirection::EXPIRATORY},
-      {p_init, inputs_zero, 4999, cmH2O(15), FlowDirection::EXPIRATORY},
-      // Switching OFF device, takes effect immidiately.
-      {p_off, inputs_zero, 5005, std::nullopt, FlowDirection::EXPIRATORY},
-      // Switching ON device, takes effect immidiately.
-      {p_init, inputs_zero, 5010, cmH2O(10), FlowDirection::INSPIRATORY},
-  });
+  // No inspiratory effort, so this trace should end right at 5s, according to
+  // the minimum respiratory rate in the VentParams.
+  EXPECT_GE(results.finish_time->milliseconds(), 5000.f);
 }
 
 } // anonymous namespace

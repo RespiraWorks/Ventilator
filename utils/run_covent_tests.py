@@ -13,6 +13,7 @@ import math
 import os
 import subprocess
 import time
+import sys
 
 PRESETS = [f"covent_pc_{i}" for i in range(1, 9)]
 
@@ -21,7 +22,9 @@ DBG_SCRIPT = Path(__file__).absolute().parent.joinpath("controller_debug.py")
 
 def run_test(test, cmd_args):
     def run(args):
-        subprocess.check_call([DBG_SCRIPT, "--port", cmd_args.port, "-c", args])
+        subprocess.check_call(
+            [sys.executable, DBG_SCRIPT, "--port", cmd_args.port, "-c", args]
+        )
 
     outfile = cmd_args.dest.joinpath(f"{test}.dat")
 
@@ -111,7 +114,9 @@ def main():
 
     if not args.port:
         args.port = (
-            subprocess.check_output([DBG_SCRIPT, "--detect-port-and-quit"])
+            subprocess.check_output(
+                [sys.executable, DBG_SCRIPT, "--detect-port-and-quit"]
+            )
             .decode("utf-8")
             .strip()
         )
@@ -129,7 +134,9 @@ def main():
 
     # Stop ventilating if this script exits abnormally, e.g. due to ctrl+c.
     def stop_ventilation():
-        subprocess.check_call([DBG_SCRIPT, "--port", args.port, "-c", "set gui_mode 0"])
+        subprocess.check_call(
+            [sys.executable, DBG_SCRIPT, "--port", args.port, "-c", "set gui_mode 0"]
+        )
 
     atexit.register(stop_ventilation)
 

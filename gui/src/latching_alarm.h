@@ -1,6 +1,7 @@
 #ifndef LATCHING_ALARM_H_
 #define LATCHING_ALARM_H_
 
+#include "breath_signals.h"
 #include "chrono.h"
 #include "network_protocol.pb.h"
 
@@ -18,15 +19,17 @@
 // https://github.com/RespiraWorks/VentilatorSoftware/wiki/Alarm-Subsystem.
 class LatchingAlarm {
 private:
-  virtual bool IsActive(SteadyInstant now, const ControllerStatus &status) = 0;
+  virtual bool IsActive(SteadyInstant now, const ControllerStatus &status,
+                        const BreathSignals &breath_signals) = 0;
 
 public:
   virtual ~LatchingAlarm() = default;
 
   // Updates the state of the alarm and its signals according to current
   // sensor readings.
-  void Update(SteadyInstant now, const ControllerStatus &status) {
-    currently_active_ = IsActive(now, status);
+  void Update(SteadyInstant now, const ControllerStatus &status,
+              const BreathSignals &breath_signals) {
+    currently_active_ = IsActive(now, status, breath_signals);
     switch (audio_state_) {
     case AudioState::INACTIVE:
       audio_state_ =

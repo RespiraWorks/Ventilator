@@ -15,12 +15,14 @@ TARGET = everything
 TEMPLATE = lib
 CONFIG += staticlib
 
-HEADERS += chrono.h \
+HEADERS += \
+  chrono.h \
   connected_device.h \
   controller_history.h \
   gui_state_container.h \
-  max_pressure_alarm.h \
+  latching_alarm.h \
   periodic_closure.h \
+  pip_exceeded_alarm.h \
   respira_connected_device.h \
   simple_clock.h \
   time_series_graph.h \

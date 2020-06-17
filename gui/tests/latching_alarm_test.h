@@ -1,18 +1,27 @@
-#ifndef MAX_PRESSURE_ALARM_TEST_H_
-#define MAX_PRESSURE_ALARM_TEST_H_
+#ifndef LATCHING_ALARM_TEST_H_
+#define LATCHING_ALARM_TEST_H_
 
 #include "chrono.h"
-#include "max_pressure_alarm.h"
+#include "latching_alarm.h"
 #include "network_protocol.pb.h"
 
 #include <QCoreApplication>
 #include <QtTest>
 
-class MaxPressureAlarmTest : public QObject {
+// A test alarm for the condition "pressure > 60".
+class MaxPressureAlarm : public LatchingAlarm {
+private:
+  bool IsActive(SteadyInstant now, const ControllerStatus &status) override {
+    (void)now;
+    return (status.sensor_readings.patient_pressure_cm_h2o > 60.0);
+  }
+};
+
+class LatchingAlarmTest : public QObject {
   Q_OBJECT
 public:
-  MaxPressureAlarmTest() = default;
-  ~MaxPressureAlarmTest() = default;
+  LatchingAlarmTest() = default;
+  ~LatchingAlarmTest() = default;
 
 private slots:
   void initTestCase() {}
@@ -21,8 +30,6 @@ private slots:
   void testCommonCase() {
     int i = 0;
     MaxPressureAlarm alarm;
-
-    QCOMPARE(60, alarm.GetThresholdCmH2O());
 
     QVERIFY(!alarm.IsVisualActive());
     QVERIFY(!alarm.IsAudioActive());
@@ -82,8 +89,6 @@ private slots:
     int i = 0;
     MaxPressureAlarm alarm;
 
-    QCOMPARE(60, alarm.GetThresholdCmH2O());
-
     // Fire condition
     alarm.Update(t(i++), pressure(100.0));
     QVERIFY(alarm.IsVisualActive());
@@ -120,4 +125,4 @@ private:
   SteadyInstant base_ = SteadyClock::now();
 };
 
-#endif // MAX_PRESSURE_ALARM_TEST_H_
+#endif // LATCHING_ALARM_TEST_H_

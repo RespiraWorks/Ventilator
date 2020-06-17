@@ -122,7 +122,7 @@ Intended TV: {intended_tv} ml
 """
 
     sec_per_breath = 60 / rr
-    ie_ratio = inspiratory_time / sec_per_breath
+    ie_ratio = inspiratory_time / (sec_per_breath - inspiratory_time)
     vars = {
         "gui_bpm": rr,
         "gui_ie_ratio": round(ie_ratio, 2),

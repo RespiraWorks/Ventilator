@@ -216,10 +216,19 @@ void PinchValve::SetOutput(float value) {
   // The valve is closed at a position of -max_move;
   float pos = (value - 1.0f) * max_move;
 
-  // If the commanded position changed since last cycle
-  // halt the previous move if it's still in progress.
-  // This makes the valve control much smoother when used
-  // within a servo loop
+  // Once you put a move in motion you can't change the destination position
+  // until the move ends. That means that if the servo loop commands a
+  // relatively large move of the valve in one cycle, then any new commands
+  // will be ignored until that move finishes. This can cause the pinch valve
+  // to oscillate if you turn the gains up too high.
+  //
+  // To fix this, we hard-stop the valve before sending a new position. This
+  // doesn't do anything if the valve was already stopped, but if it was in the
+  // middle of a big move it tells it to abandon that old move and start a new
+  // move to the new commanded position.
+  //
+  // This seems to really smooth out the pinch valve motion and allow for
+  // higher gains.
   if (fabsf(pos - last_command_) > FLT_EPSILON)
     mtr->HardStop();
 

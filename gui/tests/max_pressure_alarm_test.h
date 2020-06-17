@@ -17,84 +17,107 @@ public:
 private slots:
   void initTestCase() {}
   void cleanupTestCase() {}
-  void test() {
+
+  void testCommonCase() {
+    int i = 0;
     MaxPressureAlarm alarm;
-    auto base = SteadyClock::now();
-    auto t = [=](int seconds) { return base + DurationMs(1000 * seconds); };
-    auto pressure = [](float p) -> ControllerStatus {
-      ControllerStatus res;
-      res.sensor_readings.patient_pressure_cm_h2o = p;
-      return res;
-    };
 
     QCOMPARE(60, alarm.GetThresholdCmH2O());
 
-    auto now = t(0);
-    QVERIFY(!alarm.IsAudioActive(now));
-    QVERIFY(!alarm.IsVisualActive(now));
-    QVERIFY(!alarm.CanAcknowledge());
-    QVERIFY(!alarm.CanReset());
+    QVERIFY(!alarm.IsVisualActive());
+    QVERIFY(!alarm.IsAudioActive());
 
-    now = t(1);
-    // Go above pressure threshold.
-    alarm.Update(now, pressure(100));
-    QVERIFY(alarm.IsAudioActive(now));
-    QVERIFY(alarm.IsVisualActive(now));
-    // Allowed to acknowledge - audio is active.
-    QVERIFY(alarm.CanAcknowledge());
-    // Not allowed to reset because condition is currently met.
-    QVERIFY(!alarm.CanReset());
+    // Normal operation.
+    alarm.Update(t(i++), pressure(25.0));
+    QVERIFY(!alarm.IsVisualActive());
+    QVERIFY(!alarm.IsAudioActive());
 
-    now = t(2);
-    // Go below threshold - but the signals are latching so they should stay
-    // active.
-    alarm.Update(now, pressure(30));
-    QVERIFY(alarm.IsAudioActive(now));
-    QVERIFY(alarm.IsVisualActive(now));
-    QVERIFY(alarm.CanAcknowledge());
-    // Allowed to reset now, as the condition is not currently met.
-    QVERIFY(alarm.CanReset());
+    // Condition activates.
+    alarm.Update(t(i++), pressure(100.0));
+    QVERIFY(alarm.IsVisualActive());
+    QVERIFY(alarm.IsAudioActive());
 
-    // ACKNOWLEDGE - should suppress audio for 2 minutes.
-    alarm.Acknowledge(now);
-    QVERIFY(!alarm.IsAudioActive(now));
-    QVERIFY(!alarm.IsAudioActive(now + DurationMs(120'000)));
-    QVERIFY(alarm.IsAudioActive(now + DurationMs(120'001)));
-    // Can't acknowledge any more because it's already acknowledged.
-    QVERIFY(!alarm.CanAcknowledge());
-    // Can still reset because the signal is still latched.
-    QVERIFY(alarm.CanReset());
+    // Condition stays on.
+    alarm.Update(t(i++), pressure(100.0));
+    QVERIFY(alarm.IsVisualActive());
+    QVERIFY(alarm.IsAudioActive());
 
-    now = t(3);
-    // Stay under threshold - audio stays off
-    alarm.Update(now, pressure(25));
-    QVERIFY(!alarm.IsAudioActive(now));
-    // Still can't acknowledge.
-    QVERIFY(!alarm.CanAcknowledge());
+    // Acknowledge the alarm.
+    alarm.Acknowledge(t(i++));
+    QVERIFY(alarm.IsVisualActive());
+    QVERIFY(!alarm.IsAudioActive());
 
-    // Wait until the ACK expires, stay under threshold.
-    // Audio should become active and acknowledgeable.
-    now = t(125);
-    alarm.Update(now, pressure(25));
-    QVERIFY(alarm.IsAudioActive(now));
-    QVERIFY(alarm.CanAcknowledge());
+    // Condition stays on, but alarm is still silenced.
+    alarm.Update(t(i++), pressure(100.0));
+    QVERIFY(alarm.IsVisualActive());
+    QVERIFY(!alarm.IsAudioActive());
 
-    // Reset the alarm - both signals go down.
-    QVERIFY(alarm.CanReset());
-    alarm.Reset(now);
-    QVERIFY(!alarm.IsAudioActive(now));
-    QVERIFY(!alarm.IsVisualActive(now));
-
-    // Activate again.
-    now = t(126);
-    alarm.Update(now, pressure(100));
-    now = t(127);
-    alarm.Update(now, pressure(50));
-    QVERIFY(alarm.IsAudioActive(now));
-    QVERIFY(alarm.IsVisualActive(now));
-    QVERIFY(alarm.CanAcknowledge());
-    QVERIFY(alarm.CanReset());
+    // Silencing timeout elapses, audio back on.
+    alarm.Update(t(i += 120), pressure(100.0));
+    QVERIFY(alarm.IsVisualActive());
+    QVERIFY(alarm.IsAudioActive());
   }
+
+  void testConditionBlipWhileBeeping() {
+    int i = 0;
+    MaxPressureAlarm alarm;
+
+    // Fire condition
+    alarm.Update(t(i++), pressure(100.0));
+    QVERIFY(alarm.IsVisualActive());
+    QVERIFY(alarm.IsAudioActive());
+
+    // Condition goes down: visual goes down, audio stays.
+    alarm.Update(t(i++), pressure(25.0));
+    QVERIFY(!alarm.IsVisualActive());
+    QVERIFY(alarm.IsAudioActive());
+
+    // Condition goes back up: visual goes back up, audio stays.
+    alarm.Update(t(i++), pressure(100.0));
+    QVERIFY(alarm.IsVisualActive());
+    QVERIFY(alarm.IsAudioActive());
+  }
+
+  void testConditionBlipWhileSilenced() {
+    int i = 0;
+    MaxPressureAlarm alarm;
+
+    QCOMPARE(60, alarm.GetThresholdCmH2O());
+
+    // Fire condition
+    alarm.Update(t(i++), pressure(100.0));
+    QVERIFY(alarm.IsVisualActive());
+    QVERIFY(alarm.IsAudioActive());
+
+    // Silence the alarm
+    alarm.Acknowledge(t(i++));
+    QVERIFY(alarm.IsVisualActive());
+    QVERIFY(!alarm.IsAudioActive());
+
+    // Condition goes down while silenced: visual goes down, and the blip
+    // terminates the ACK.
+    alarm.Update(t(i++), pressure(25.0));
+    QVERIFY(!alarm.IsVisualActive());
+    QVERIFY(!alarm.IsAudioActive());
+
+    // Condition goes back up: visual goes back up, audio beeps again because
+    // it is no longer silenced.
+    alarm.Update(t(i++), pressure(100.0));
+    QVERIFY(alarm.IsVisualActive());
+    QVERIFY(alarm.IsAudioActive());
+  }
+
+private:
+  SteadyInstant t(int seconds) const {
+    return base_ + DurationMs(1000 * seconds);
+  }
+  ControllerStatus pressure(float p) const {
+    ControllerStatus res;
+    res.sensor_readings.patient_pressure_cm_h2o = p;
+    return res;
+  }
+
+  SteadyInstant base_ = SteadyClock::now();
 };
 
 #endif // MAX_PRESSURE_ALARM_TEST_H_

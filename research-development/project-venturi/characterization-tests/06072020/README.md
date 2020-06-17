@@ -23,7 +23,7 @@ Data was collected using a modified version of 'pcbreathe-bringup.ino'
 ## Data, Collection, and Analysis Files
 
 * "ptg_venturi_i2c_0607_x1"
-  * [ptg_venturi_i2c_0607_x1_labchart.txt](ptg-venturi-i2c-0607-x1-labchart.txt)
+  * [ptg_venturi_i2c_0607_x1_labchart.txt](assets/ptg-venturi-i2c-0607-x1-labchart.txt)
   * [ptg_venturi_i2c_0607_x1_pcb.txt](assets/ptg-venturi-i2c-0607-x1-pcb.txt)
   * [pcbreathe-bringup_Venturi_char.ino](assets/pcbreathe-bringup-venturi-char.ino)
   * [Venturi_Characterization.py](assets/venturi-characterization.py)

@@ -28,9 +28,19 @@ def run_test(test, cmd_args):
 
     outfile = cmd_args.dest.joinpath(f"{test}.dat")
 
-    # TODO: Prompt user to set test lung appropriately.
-
     run(f"preset {test}")
+    run("set gui_mode 0")
+
+    # Give the user a chance to adjust the test lung.
+    if not cmd_args.nointeractive:
+        input(
+            "Adjust test lung per above, then press enter.  "
+            "(Skip this with --nointeractive.)"
+        )
+
+    # This assumes that all of the covent_pc_n tests are gui_mode 1.  Which is
+    # reasonable, because "pc" stands for "pressure control", which is mode 1.
+    run("set gui_mode 1")
     time.sleep(cmd_args.ignore_secs)
 
     # It would be possible to trace flow here too, but the graphs get noisy.
@@ -105,11 +115,10 @@ def main():
         type=int,
     )
     parser.add_argument("--dest", help="Output directory (must not exist)")
-    # TODO: Not yet implemented.
-    # parser.add_argument(
-    #     "--nointeractive",
-    #     help="Run without prompting the user to e.g. change lung compliance",
-    # )
+    parser.add_argument(
+        "--nointeractive",
+        help="Run without prompting the user to e.g. change lung compliance",
+    )
     args = parser.parse_args()
 
     if not args.port:

@@ -1,5 +1,6 @@
 pragma Singleton
 import QtQuick 2.11
+import Respira 1.0
 
 /*!
     \qmltype Style
@@ -42,6 +43,28 @@ QtObject {
 
             property color textPrimary: "white"
             property color textAlternative:"#AFAFAF"
+
+            property color alarmHighBright: "#C6393F"
+            property color alarmHighDim: "#521F28"
+
+            property color graphLine: "white"
+            property color graphArea: "#202A32"
+
+            property var parameterBackgroundByPriority: function(p) {
+              var c = Style.theme.color
+              return (p == AlarmPriority.HIGH) ? c.alarmHighBright : "transparent";
+            }
+
+            property var timeSeries: QtObject {
+              property var lineByPriority: function(p) {
+                var c = Style.theme.color
+                return (p == AlarmPriority.HIGH) ? c.alarmHighBright : c.graphLine;
+              }
+              property var areaByPriority: function(p) {
+                var c = Style.theme.color
+                return (p == AlarmPriority.HIGH) ? c.alarmHighDim : c.graphArea;
+              }
+            }
         }
 
         property QtObject font: QtObject {

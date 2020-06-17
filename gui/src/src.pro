@@ -1,5 +1,4 @@
-# TODO see if I can minimize this
-QT += core quick serialport
+QT += core quick charts serialport qml
 
 include( ../defaults.pri )
 ! include( ../common.pri ) {
@@ -15,12 +14,15 @@ TARGET = everything
 TEMPLATE = lib
 CONFIG += staticlib
 
-HEADERS += chrono.h \
+HEADERS += \
+  alarm.h \
+  chrono.h \
   connected_device.h \
   controller_history.h \
   gui_state_container.h \
-  max_pressure_alarm.h \
+  latching_alarm.h \
   periodic_closure.h \
+  pip_exceeded_alarm.h \
   respira_connected_device.h \
   simple_clock.h \
   time_series_graph.h \

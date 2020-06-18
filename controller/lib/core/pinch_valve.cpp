@@ -72,12 +72,9 @@ static constexpr float move_acc = move_vel / 0.05f;
 // the setting for 0 flow rate (normally 0) and the last entry
 // should be the setting for 100% flow rate.  The minimum
 // length of the table is 2 entries.
-/*static constexpr float flow_table[] = {0.0000f, 0.0410f, 0.0689f, 0.0987f,
+static constexpr float flow_table[] = {0.0000f, 0.0410f, 0.0689f, 0.0987f,
                                        0.1275f, 0.1590f, 0.1932f, 0.2359f,
-                                       0.2940f, 0.3988f, 1.0000f};*/
-static constexpr float flow_table[] = {0.0000f, 0.1428f, 0.1752f, 0.2044f, //updated cal table for Edwin's setup
-                                       0.2251f, 0.2534f, 0.2869f, 0.3242f,
-                                       0.3827f, 0.4695f, 1.0000f};
+                                       0.2940f, 0.3988f, 1.0000f};
 
 PinchValve::PinchValve(int motor_index) { motor_index_ = motor_index; }
 
@@ -219,19 +216,10 @@ void PinchValve::SetOutput(float value) {
   // The valve is closed at a position of -max_move;
   float pos = (value - 1.0f) * max_move;
 
-  // Once you put a move in motion you can't change the destination position
-  // until the move ends. That means that if the servo loop commands a
-  // relatively large move of the valve in one cycle, then any new commands
-  // will be ignored until that move finishes. This can cause the pinch valve
-  // to oscillate if you turn the gains up too high.
-  //
-  // To fix this, we hard-stop the valve before sending a new position. This
-  // doesn't do anything if the valve was already stopped, but if it was in the
-  // middle of a big move it tells it to abandon that old move and start a new
-  // move to the new commanded position.
-  //
-  // This seems to really smooth out the pinch valve motion and allow for
-  // higher gains.
+  // If the commanded position changed since last cycle
+  // halt the previous move if it's still in progress.
+  // This makes the valve control much smoother when used
+  // within a servo loop
   if (fabsf(pos - last_command_) > FLT_EPSILON)
     mtr->HardStop();
 

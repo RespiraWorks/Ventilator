@@ -24,6 +24,7 @@ HEADERS += \
   latching_alarm.h \
   periodic_closure.h \
   pip_exceeded_alarm.h \
+  pip_not_reached_alarm.h \
   respira_connected_device.h \
   simple_clock.h \
   time_series_graph.h \

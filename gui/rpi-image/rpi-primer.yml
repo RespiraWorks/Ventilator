@@ -50,7 +50,7 @@
 
   - name: Copy openbox autostart folder from root to pi
     shell: cp -r /etc/xdg/openbox /home/pi/.config/
-    
+
   - name: Disable first-time boot setup wizard
     shell: rm -f /etc/xdg/autostart/piwiz.desktop
 

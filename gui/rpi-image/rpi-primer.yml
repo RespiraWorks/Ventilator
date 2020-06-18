@@ -51,7 +51,10 @@
   - name: Copy openbox autostart folder from root to pi
     shell: cp -r /etc/xdg/openbox /home/pi/.config/
 
+  - name: Disable first-time boot setup wizard
+    shell: rm -f /etc/xdg/autostart/piwiz.desktop
+
   - name: Add script to spin up gui docker instance on boot
     lineinfile:
       dest: /home/pi/.config/openbox/autostart
-      line: 'docker run --name=gui --privileged -d --restart unless-stopped --volume="$HOME/.Xauthority:/root/.Xauthority:rw" --env="DISPLAY" --net=host -i -t respiraworks/gui /gui/build/app/ProjectVentilatorGUI &'
+      line: 'docker run --name=gui --privileged -d --restart unless-stopped --volume="$HOME/.Xauthority:/root/.Xauthority:rw" --env="DISPLAY" --net=host -i -t respiraworks/gui /gui/build/app/ProjectVentilatorGUI --serial-port /dev/ttyS0 &'

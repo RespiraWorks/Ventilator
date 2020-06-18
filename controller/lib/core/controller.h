@@ -47,6 +47,7 @@ private:
   uint64_t breath_id_ = 0;
   BlowerFsm fsm_;
   PID blower_valve_pid_;
+  PID psol_pid_;
 
   // These objects accumulate flow to calculate volume.
   //

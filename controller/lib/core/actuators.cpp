@@ -24,7 +24,6 @@ static PinchValve exhale_pinch(1);
 // actuators that need it
 
 void actuators_execute(const ActuatorsState &desired_state) {
-
   // set blower PWM
   Hal.analogWrite(PwmPin::BLOWER, desired_state.blower_power);
 
@@ -39,6 +38,8 @@ void actuators_execute(const ActuatorsState &desired_state) {
     exhale_pinch.SetOutput(*desired_state.exhale_valve);
   else
     exhale_pinch.Disable();
+
+  Hal.PSOL_Value(desired_state.fio2_valve);
 }
 
 // Return true if all actuators are enabled and ready for action

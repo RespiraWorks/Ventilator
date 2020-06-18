@@ -81,6 +81,9 @@ static DebugUInt32 gui_peep("gui_peep", "PEEP (cm/h2O) for GUI free testing",
 static DebugUInt32 gui_pip("gui_pip", "PIP (cm/h2O) for GUI free testing", 15);
 static DebugFloat gui_ie_ratio("gui_ie_ratio", "I/E ratio for GUI free testing",
                                0.66f);
+static DebugFloat
+    gui_fio2("gui_fio2", "Percent oxygen (range [21,100]) for GUI-free testing",
+             21);
 static void DEV_MODE_comms_handler(const ControllerStatus &controller_status,
                                    GuiStatus *gui_status) {
   gui_status->desired_params.mode = static_cast<VentMode>(gui_mode.Get());
@@ -88,6 +91,7 @@ static void DEV_MODE_comms_handler(const ControllerStatus &controller_status,
   gui_status->desired_params.peep_cm_h2o = gui_peep.Get();
   gui_status->desired_params.pip_cm_h2o = gui_pip.Get();
   gui_status->desired_params.inspiratory_expiratory_ratio = gui_ie_ratio.Get();
+  gui_status->desired_params.fio2 = gui_fio2.Get() / 100.f;
 
   static std::optional<Time> last_sent;
   Time now = Hal.now();

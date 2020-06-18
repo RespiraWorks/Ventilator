@@ -8,7 +8,7 @@ include( ../defaults.pri )
     error( "Couldn't find the libqnanopainter file!" )
 }
 
-QT += core quick charts serialport
+QT += core quick serialport
 
 TEMPLATE = app
 TARGET = ProjectVentilatorGUI

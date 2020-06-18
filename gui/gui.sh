@@ -73,8 +73,6 @@ if [ "$1" == "--install" ] ; then
     qtbase5-dev-tools \
     qtdeclarative5-dev \
     qtmultimedia5-dev \
-    libqt5charts5 \
-    libqt5charts5-dev \
     qml-module-qtcharts \
     libqt5multimedia5-plugins \
     qtquickcontrols2-5-dev \

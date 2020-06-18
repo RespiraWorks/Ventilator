@@ -18,24 +18,28 @@ public:
   // meaning, if the oldest point is more than this much older than
   // the point being added, it gets kicked out.
   //
-  // TODO: Consider limiting also the total number of items, e.g. by
-  // evicting items in the middle to maintain the overall thing more
-  // or less uniformly sampled in time. This is harder to do efficiently
-  // though.
-  ControllerHistory(DurationMs window) : window_(window) {}
+  // "granularity" signals how many points to keep: if a new point is less than
+  // this much later than the latest point, it doesn't get added.
+  ControllerHistory(DurationMs window, DurationMs granularity)
+      : window_(window), granularity_(granularity) {}
 
   // Appends a ControllerStatus obtained at a given time point in GUI time.
   // We cannot use the controller's uptime, because if controller restarts,
   // uptime will appear to go backwards.
   // For a similar reason we also must use specifically a steady clock
   // (clock that never goes backwards) - as opposed to, say, the system clock.
-  void Append(SteadyInstant gui_now, const ControllerStatus &status) {
+  bool Append(SteadyInstant gui_now, const ControllerStatus &status) {
+    if (!history_.empty() &&
+        gui_now - std::get<SteadyInstant>(history_.back()) < granularity_) {
+      return false;
+    }
     history_.push_back({gui_now, status});
     // Kick out points that are too old.
     while (!history_.empty() &&
-           gui_now - std::get<0>(history_.front()) > window_) {
+           gui_now - std::get<SteadyInstant>(history_.front()) > window_) {
       history_.pop_front();
     }
+    return true;
   }
 
   int Size() const { return history_.size(); }
@@ -53,6 +57,7 @@ public:
 
 private:
   DurationMs window_;
+  DurationMs granularity_;
   std::deque<std::tuple<SteadyInstant, ControllerStatus>> history_;
 };
 

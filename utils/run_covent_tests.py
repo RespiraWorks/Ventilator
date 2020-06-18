@@ -14,6 +14,7 @@ import os
 import subprocess
 import time
 import sys
+import shlex
 
 PRESETS = [f"covent_pc_{i}" for i in range(1, 9)]
 
@@ -48,7 +49,7 @@ def run_test(test, cmd_args):
     time.sleep(cmd_args.capture_secs)
 
     run(
-        f"trace graph --dest={outfile} --title={test} "
+        f"trace graph --dest={shlex.quote(str(outfile))} --title={test} "
         "--nointeractive --scale=volume/10"
     )
     run(f"set gui_mode 0")
@@ -107,6 +108,7 @@ def main():
         "--ignore-secs",
         help="Ignore this many seconds of data before starting to capture.",
         default=10,
+        type=int,
     )
     parser.add_argument(
         "--capture-secs",

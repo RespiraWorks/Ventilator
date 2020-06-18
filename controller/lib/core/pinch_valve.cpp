@@ -72,9 +72,12 @@ static constexpr float move_acc = move_vel / 0.05f;
 // the setting for 0 flow rate (normally 0) and the last entry
 // should be the setting for 100% flow rate.  The minimum
 // length of the table is 2 entries.
-static constexpr float flow_table[] = {0.0000f, 0.0410f, 0.0689f, 0.0987f,
+/*static constexpr float flow_table[] = {0.0000f, 0.0410f, 0.0689f, 0.0987f,
                                        0.1275f, 0.1590f, 0.1932f, 0.2359f,
-                                       0.2940f, 0.3988f, 1.0000f};
+                                       0.2940f, 0.3988f, 1.0000f};*/
+static constexpr float flow_table[] = {0.0000f, 0.1428f, 0.1752f, 0.2044f, //updated cal table for Edwin's setup
+                                       0.2251f, 0.2534f, 0.2869f, 0.3242f,
+                                       0.3827f, 0.4695f, 1.0000f};
 
 PinchValve::PinchValve(int motor_index) { motor_index_ = motor_index; }
 

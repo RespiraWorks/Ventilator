@@ -32,7 +32,18 @@ limitations under the License.
 
 #include "hal.h"
 #include "hal_stm32.h"
+#include "vars.h"
 #include <algorithm>
+
+// Testing in Edwin's garage, we found that the psol was fully closed at
+// somewhere between 0.75 and 0.80 (i.e. definitely zero at 0.75 and probably
+// zero a bit above that) and fully open at 0.90.
+static DebugFloat dbg_psol_pwm_closed("psol_pwm_closed",
+                                      "PWM power that closes the psol [0,1]",
+                                      0.75);
+static DebugFloat dbg_psol_pwm_open("psol_pwm_open",
+                                    "PWM power that opens the psol [0,1]",
+                                    0.9f);
 
 void HalApi::InitPSOL() {
   // I'm using a 20kHz PWM frequency to drive the solenoid
@@ -89,8 +100,17 @@ void HalApi::PSOL_Value(float val) {
 
   val = std::clamp(val, 0.0f, 1.0f);
 
-  // We get maximum volume at about 50% duty cycle
-  float duty = val * static_cast<float>(tmr->reload);
+  // Scale linearly between our fully-open and fully-closed PWM values, except
+  // to be a little paranoid, we say "0 means 0".
+  float scaled;
+  if (val == 0) {
+    scaled = 0;
+  } else {
+    float open_pwm = dbg_psol_pwm_open.Get();
+    float closed_pwm = dbg_psol_pwm_closed.Get();
+    scaled = closed_pwm + val * (open_pwm - closed_pwm);
+  }
+  float duty = scaled * static_cast<float>(tmr->reload);
   tmr->compare[3] = static_cast<int>(duty);
 }
 

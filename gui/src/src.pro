@@ -1,4 +1,4 @@
-QT += core quick charts serialport qml
+QT += core quick serialport qml
 
 include( ../defaults.pri )
 ! include( ../common.pri ) {

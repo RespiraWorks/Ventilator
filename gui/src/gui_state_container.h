@@ -83,6 +83,7 @@ public:
     float commanded_e_time = breath_duration_sec - commanded_i_time_;
     status.desired_params.inspiratory_expiratory_ratio =
         commanded_i_time_ / commanded_e_time;
+    status.desired_params.fio2 = commanded_fio2_percent_ * 0.01;
 
     return status;
   }
@@ -127,6 +128,8 @@ public:
   Q_PROPERTY(quint32 commanded_pip MEMBER commanded_pip_ NOTIFY params_changed)
   Q_PROPERTY(
       qreal commanded_i_time MEMBER commanded_i_time_ NOTIFY params_changed)
+  Q_PROPERTY(qreal commanded_fio2_percent MEMBER commanded_fio2_percent_ NOTIFY
+                 params_changed)
 
   // Other properties
   Q_PROPERTY(int batteryPercentage READ get_battery_percentage NOTIFY
@@ -240,6 +243,7 @@ private:
   quint32 commanded_pip_ = 15;
   quint32 commanded_peep_ = 5;
   qreal commanded_i_time_ = 1.0;
+  qreal commanded_fio2_percent_ = 100.0;
 
   AlarmManager alarm_manager_;
 };

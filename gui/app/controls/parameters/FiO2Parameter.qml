@@ -9,6 +9,9 @@ ParameterButton {
     parameterMaxValue: 100
     parameterMinValue: 21
     parameterStepSize: 0.5
-    parameterValue: 10
-    onValueConfirmed: parameterValue = value
+    parameterValue: GuiStateContainer.commanded_fio2_percent
+    onValueConfirmed: GuiStateContainer.commanded_fio2_percent = value
+    parameterDisplayFormatter: function (value) {
+      return Number(value).toFixed(1)
+    }
 }

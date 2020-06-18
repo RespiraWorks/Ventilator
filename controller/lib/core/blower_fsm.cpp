@@ -15,7 +15,43 @@ limitations under the License.
 
 #include "blower_fsm.h"
 #include "controller.h"
+#include "vars.h"
 #include <algorithm>
+
+// dbg_pa_* are pressure assist configuration vars.
+//
+// These are read but never modified here.
+
+// TODO: This should be configurable from the GUI.
+static DebugFloat dbg_pa_flow_trigger("pa_flow_trigger",
+                                      "pressure assist flow trigger (ml/s)",
+                                      200);
+
+// TODO: Is 250ms right?  Or can it be a fixed value at all; should it depend
+// on the RR or something?
+static DebugFloat
+    dbg_pa_min_expire_ms("pa_min_expire_ms",
+                         "minimum amount of time after ventilator exits PIP "
+                         "before we're eligible to trigger a breath",
+                         250);
+
+// pa_fast_avg_alpha and pa_slow_avg_alpha were tuned for a control loop that
+// runs at a particular frequency.
+//
+// In theory if the control loop gets slower, the alpha terms should get
+// bigger, placing more weight on newer readings, and similarly if the control
+// loop gets faster, the alpha terms should get smaller.  We've tried to encode
+// this here, although it remains to be seen if it actually works.
+static DebugFloat dbg_pa_fast_avg_alpha(
+    "pa_fast_avg_alpha",
+    "alpha term in pressure assist mode's fast-updating "
+    "exponentially-weighted average of flow",
+    0.2f * (Controller::GetLoopPeriod() / milliseconds(10)));
+static DebugFloat dbg_pa_slow_avg_alpha(
+    "pa_slow_avg_alpha",
+    "alpha term in pressure assist mode's slow-updating "
+    "exponentially-weighted average of flow",
+    0.01f * (Controller::GetLoopPeriod() / milliseconds(10)));
 
 // Given t = secs_per_breath and r = I:E ratio, calculate inspiration and
 // expiration durations (I and E).
@@ -92,7 +128,7 @@ void PressureAssistFsm::Update(Time now, const BlowerFsmInputs &inputs) {
     setpoint_ =
         expire_pressure_ + (inspire_pressure_ - expire_pressure_) * rise_frac;
   }
-  if (now >= expire_deadline_ || PatientInspiring(inputs)) {
+  if (now >= expire_deadline_ || PatientInspiring(now, inputs)) {
     finished_ = true;
   }
 }
@@ -105,34 +141,35 @@ BlowerSystemState PressureAssistFsm::DesiredState() const {
 }
 
 // TODO don't rely on fsm inner states to make this usable in any fsm
-bool PressureAssistFsm::PatientInspiring(const BlowerFsmInputs &inputs) {
-  // TODO: change this when we get better understanding of inspiratory effort
-  // detection strategy, right now this is just set to trigger for any flow
-  // that is higher than twice the flowmeter's flow noise :
-  //   flow = flow_inhale (+/- noise) - flow_exhale (+/- noise).
-  // According to data from Ingmar test lung
-  // (https://drive.google.com/open?id=11_A8KEDdBa5l7rqUegfKsj71rug1l7Sx),
-  // this should work OK as a first approximation.
-  if (inspire_finished_ && inputs.net_flow >= ml_per_min(0) &&
-      inspiratory_effort_threshold_ >= cubic_m_per_sec(9)) {
-    // Not sure how to go about this: when we enter this breath fsm, either we
-    // were Off and flow should be 0, which means this is OK: the first
-    // positive flow we see is either noise or the blower starting to provide
-    // PEEP we can take that as an  "almost zero" reference flow, or we are at
-    // PIP, I assume the flow will be negative until we reach PEEP, where it
-    // will approximately be 0 and we may assume to be back to the first case.
-    inspiratory_effort_threshold_ = inputs.net_flow + ml_per_min(12000.0f);
-    // Note 12000 ml/min looks like a lot but it is actually 200 ml/sec which
-    // is in the high end of our sensor's sensitivity for relatively low flows
-    // that are expected during exhale, especially when summing two sensors.
-    // I can see two ways to improve this sensitivity:
-    //   a: provide a denoised flow in SensorReadings, at the cost of reducing
-    //      response time
-    //   b: provide separate inflow and outflow, at the cost of a more
-    //      complicated (and not yet determined) breath detection algorithm.
+bool PressureAssistFsm::PatientInspiring(Time now,
+                                         const BlowerFsmInputs &inputs) {
+  if (!inspire_finished_ || inputs.net_flow < ml_per_sec(0)) {
+    return false;
   }
 
-  return inspire_finished_ && inputs.net_flow > inspiratory_effort_threshold_;
+  // Once we're done inspiring and flow is non-negative, start calculating two
+  // exponentially-weighted averages of net flow: slow_avg_flow_ and
+  // fast_avg_flow_.
+  //
+  // The slow one has a smaller alpha term, so updates slower than the fast
+  // one.  You can think of the slow average as estimating "flow at dwell" and
+  // the fast average as estimating "current flow".
+  //
+  // If the fast average exceeds the slow average by a threshold, we trigger a
+  // breath.
+  float slow_alpha = dbg_pa_slow_avg_alpha.Get();
+  float fast_alpha = dbg_pa_fast_avg_alpha.Get();
+
+  // TODO: This could be encapsulated in an exponentially-weighted-average
+  // class.
+  slow_avg_flow_ = slow_alpha * inputs.net_flow +
+                   (1 - slow_alpha) * slow_avg_flow_.value_or(inputs.net_flow);
+  fast_avg_flow_ = fast_alpha * inputs.net_flow +
+                   (1 - fast_alpha) * fast_avg_flow_.value_or(inputs.net_flow);
+
+  return now >= inspire_end_ + milliseconds(dbg_pa_min_expire_ms.Get()) &&
+         *fast_avg_flow_ >
+             *slow_avg_flow_ + ml_per_sec(dbg_pa_flow_trigger.Get());
 }
 
 BlowerSystemState BlowerFsm::DesiredState(Time now, const VentParams &params,

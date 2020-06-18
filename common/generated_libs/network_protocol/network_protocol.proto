@@ -131,7 +131,7 @@ message VentParams {
   // TODO(jlebar): Is ml/min the correct unit for this?
   required uint32 expiratory_trigger_ml_per_min = 9; // V-trigger
 
-  // A value between 0..1.
+  // A value between 0..1. Technically only values in [0.21, 1] are allowed.
   required float fio2 = 10;
 }
 

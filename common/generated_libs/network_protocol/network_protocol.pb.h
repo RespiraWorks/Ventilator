@@ -39,6 +39,7 @@ typedef struct _VentParams {
     float inspiratory_expiratory_ratio;
     uint32_t inspiratory_trigger_cm_h2o;
     uint32_t expiratory_trigger_ml_per_min;
+    float fio2;
 } VentParams;
 
 typedef struct _ControllerStatus {
@@ -64,11 +65,11 @@ typedef struct _GuiStatus {
 /* Initializer values for message structs */
 #define GuiStatus_init_default                   {0, VentParams_init_default}
 #define ControllerStatus_init_default            {0, VentParams_init_default, SensorsProto_init_default, 0, 0}
-#define VentParams_init_default                  {_VentMode_MIN, 0, 0, 0, 0, 0, 0}
+#define VentParams_init_default                  {_VentMode_MIN, 0, 0, 0, 0, 0, 0, 0}
 #define SensorsProto_init_default                {0, 0, 0, 0, 0, 0}
 #define GuiStatus_init_zero                      {0, VentParams_init_zero}
 #define ControllerStatus_init_zero               {0, VentParams_init_zero, SensorsProto_init_zero, 0, 0}
-#define VentParams_init_zero                     {_VentMode_MIN, 0, 0, 0, 0, 0, 0}
+#define VentParams_init_zero                     {_VentMode_MIN, 0, 0, 0, 0, 0, 0, 0}
 #define SensorsProto_init_zero                   {0, 0, 0, 0, 0, 0}
 
 /* Field tags (for use in manual encoding/decoding) */
@@ -85,6 +86,7 @@ typedef struct _GuiStatus {
 #define VentParams_inspiratory_expiratory_ratio_tag 6
 #define VentParams_inspiratory_trigger_cm_h2o_tag 8
 #define VentParams_expiratory_trigger_ml_per_min_tag 9
+#define VentParams_fio2_tag                      10
 #define ControllerStatus_uptime_ms_tag           1
 #define ControllerStatus_active_params_tag       2
 #define ControllerStatus_sensor_readings_tag     3
@@ -119,7 +121,8 @@ X(a, STATIC,   REQUIRED, UINT32,   breaths_per_min,   4) \
 X(a, STATIC,   REQUIRED, UINT32,   pip_cm_h2o,        5) \
 X(a, STATIC,   REQUIRED, FLOAT,    inspiratory_expiratory_ratio,   6) \
 X(a, STATIC,   REQUIRED, UINT32,   inspiratory_trigger_cm_h2o,   8) \
-X(a, STATIC,   REQUIRED, UINT32,   expiratory_trigger_ml_per_min,   9)
+X(a, STATIC,   REQUIRED, UINT32,   expiratory_trigger_ml_per_min,   9) \
+X(a, STATIC,   REQUIRED, FLOAT,    fio2,             10)
 #define VentParams_CALLBACK NULL
 #define VentParams_DEFAULT NULL
 
@@ -145,9 +148,9 @@ extern const pb_msgdesc_t SensorsProto_msg;
 #define SensorsProto_fields &SensorsProto_msg
 
 /* Maximum encoded size of messages (where known) */
-#define GuiStatus_size                           50
-#define ControllerStatus_size                    98
-#define VentParams_size                          37
+#define GuiStatus_size                           55
+#define ControllerStatus_size                    103
+#define VentParams_size                          42
 #define SensorsProto_size                        36
 
 #ifdef __cplusplus

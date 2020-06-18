@@ -27,15 +27,31 @@ public:
     }
   }
 
-  Q_PROPERTY(LatchingAlarm *highestPriorityAlarm READ GetHighestPriorityAlarm
-                 NOTIFY updated)
+  Q_PROPERTY(LatchingAlarm *highestPriorityActiveAlarm READ
+                 GetHighestPriorityActiveAlarm NOTIFY updated)
+  Q_PROPERTY(LatchingAlarm *highestPrioritySilencedAlarm READ
+                 GetHighestPrioritySilencedAlarm NOTIFY updated)
   Q_PROPERTY(int numActiveAlarms READ GetNumActiveAlarms NOTIFY updated)
+  Q_PROPERTY(int numSilencedAlarms READ GetNumSilencedAlarms NOTIFY updated)
 
-  LatchingAlarm *GetHighestPriorityAlarm() {
+  LatchingAlarm *GetHighestPriorityActiveAlarm() {
     LatchingAlarm *res = nullptr;
     for (auto *alarm : alarms_) {
       if (res == nullptr || alarm->GetEffectiveAudioPriority() >
                                 res->GetEffectiveAudioPriority()) {
+        res = alarm;
+      }
+    }
+    return res;
+  }
+
+  LatchingAlarm *GetHighestPrioritySilencedAlarm() {
+    LatchingAlarm *res = nullptr;
+    for (auto *alarm : alarms_) {
+      if (!alarm->GetSilencedUntil().has_value())
+        continue;
+      if (res == nullptr ||
+          alarm->GetNominalPriority() > res->GetNominalPriority()) {
         res = alarm;
       }
     }
@@ -50,8 +66,18 @@ public:
     }
     return res;
   }
-  Q_INVOKABLE void acknowledgeHighestPriorityAlarm() {
-    GetHighestPriorityAlarm()->Acknowledge(SteadyClock::now());
+
+  int GetNumSilencedAlarms() const {
+    int res = 0;
+    for (auto *alarm : alarms_) {
+      if (alarm->GetSilencedUntil().has_value())
+        ++res;
+    }
+    return res;
+  }
+
+  Q_INVOKABLE void acknowledgeHighestPriorityActiveAlarm() {
+    GetHighestPriorityActiveAlarm()->Acknowledge(SteadyClock::now());
   }
 
   Q_PROPERTY(

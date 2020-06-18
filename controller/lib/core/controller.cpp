@@ -31,6 +31,34 @@ static DebugFloat dbg_blower_valve_ki("blower_valve_ki",
 static DebugFloat dbg_blower_valve_kd("blower_valve_kd",
                                       "Derivative gain for blower valve PID");
 
+static DebugFloat dbg_psol_kp("psol_kp", "Proportional gain for O2 psol PID",
+                              0.1f);
+static DebugFloat dbg_psol_ki("psol_ki", "Integral gain for O2 psol PID", 0.f);
+static DebugFloat dbg_psol_kd("psol_kd", "Derivative gain for O2 psol PID",
+                              0.f);
+
+static DebugFloat dbg_forced_blower_power(
+    "forced_blower_power",
+    "Force the blower fan to a particular power [0,1].  Specify a value "
+    "outside this range to let the controller control it.",
+    -1.f);
+static DebugFloat dbg_forced_exhale_valve_pos(
+    "forced_exhale_valve_pos",
+    "Force the exhale valve to a particular position [0,1].  Specify a value "
+    "outside this range to let the controller control it.",
+    -1.f);
+static DebugFloat dbg_forced_blower_valve_pos(
+    "forced_blower_valve_pos",
+    "Force the blower valve to a particular position [0,1].  Specify a value "
+    "outside this range to let the controller control it.",
+    -1.f);
+static DebugFloat dbg_forced_psol_pos(
+    "forced_psol_pos",
+    "Force the O2 psol to a particular position [0,1].  (Note that psol.cpp "
+    "scales this further; see psol_pwm_closed and psol_pwm_open.)  Specify a "
+    "value outside this range to let the controller control the psol.",
+    -1.f);
+
 // Unchanging outputs - read from external debug program, never modified here.
 static DebugUInt32 dbg_per("loop_period", "Loop period, read-only (usec)",
                            static_cast<uint32_t>(LOOP_PERIOD.microseconds()));
@@ -51,7 +79,10 @@ Controller::Controller()
     : blower_valve_pid_(dbg_blower_valve_kp.Get(), dbg_blower_valve_ki.Get(),
                         dbg_blower_valve_kd.Get(), ProportionalTerm::ON_ERROR,
                         DifferentialTerm::ON_MEASUREMENT, /*output_min=*/0.f,
-                        /*output_max=*/1.0f) {}
+                        /*output_max=*/1.0f),
+      psol_pid_(dbg_psol_kp.Get(), dbg_psol_ki.Get(), dbg_psol_kd.Get(),
+                ProportionalTerm::ON_ERROR, DifferentialTerm::ON_MEASUREMENT,
+                /*output_min=*/0.f, /*output_max=*/1.f) {}
 
 /*static*/ Duration Controller::GetLoopPeriod() { return LOOP_PERIOD; }
 
@@ -61,6 +92,9 @@ Controller::Run(Time now, const VentParams &params,
   blower_valve_pid_.SetKP(dbg_blower_valve_kp.Get());
   blower_valve_pid_.SetKI(dbg_blower_valve_ki.Get());
   blower_valve_pid_.SetKD(dbg_blower_valve_kd.Get());
+  psol_pid_.SetKP(dbg_psol_kp.Get());
+  psol_pid_.SetKI(dbg_psol_ki.Get());
+  psol_pid_.SetKD(dbg_psol_kd.Get());
 
   VolumetricFlow uncorrected_net_flow =
       sensor_readings.inflow - sensor_readings.outflow;
@@ -90,6 +124,7 @@ Controller::Run(Time now, const VentParams &params,
     // If the pinch valves are not yet homed, this will home them and then move
     // them to the desired positions.
     blower_valve_pid_.Reset();
+    psol_pid_.Reset();
 
     actuators_state = {
         .fio2_valve = 0,
@@ -133,6 +168,18 @@ Controller::Run(Time now, const VentParams &params,
   dbg_volume.Set(controller_state.patient_volume.ml());
   dbg_volume_uncorrected.Set(uncorrected_flow_integrator_->GetVolume().ml());
   dbg_flow_correction.Set(flow_integrator_->FlowCorrection().ml_per_sec());
+
+  // Handle DebugVars that force the actuators.
+  auto set_force = [](DebugFloat &var, auto &state) {
+    float v = var.Get();
+    if (v >= 0 && v <= 1) {
+      state = v;
+    }
+  };
+  set_force(dbg_forced_blower_power, actuators_state.blower_power);
+  set_force(dbg_forced_blower_valve_pos, actuators_state.blower_valve);
+  set_force(dbg_forced_exhale_valve_pos, actuators_state.exhale_valve);
+  set_force(dbg_forced_psol_pos, actuators_state.fio2_valve);
 
   return {actuators_state, controller_state};
 }

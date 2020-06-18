@@ -1,6 +1,6 @@
 #include "gui_state_container.h"
 
-void GuiStateContainer::update() {
+void GuiStateContainer::UpdateGraphs() {
   auto now = SteadyClock::now();
   QVector<QPointF> pressure_points, flow_points, tv_points;
 

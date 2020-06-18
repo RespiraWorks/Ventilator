@@ -9,7 +9,7 @@ It is based on QT.  **Please note** that on the Rpi, we are currently using vers
 To install the necessary Qt dependencies, use:
 
 ```
-sudo apt install build-essential qml-module-qtquick-controls2 qml-module-qtquick-layouts qtdeclarative5-dev qtquickcontrols2-5-dev libqt5quick* libqt5charts5-dev qt5-qmake qml-module-qtquick2 qt5-default qml-module-qtcharts
+sudo apt install build-essential qml-module-qtquick-controls2 qml-module-qtquick-layouts qtdeclarative5-dev qtquickcontrols2-5-dev libqt5quick*  libqt5serialport5-dev libqt5serialport5 qt5-qmake qml-module-qtquick2 qt5-default qml-module-qtcharts
 ```
 
 (TODO update these instructions to use 5.11.3)

@@ -14,4 +14,8 @@ ScopeView {
     dataset: GuiStateContainer.pressureSeries
     yMin: -3
     yMax: 30
+
+    alarmPriority: Math.max(
+      GuiStateContainer.alarmManager.pipExceededAlarm.effectiveVisualPriority,
+      GuiStateContainer.alarmManager.pipNotReachedAlarm.effectiveVisualPriority)
 }

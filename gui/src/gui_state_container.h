@@ -42,9 +42,10 @@ public:
   Q_ENUM(VentilationMode)
 
   // Initializes the state container to keep the history of controller
-  // statuses in a given time window.
-  GuiStateContainer(DurationMs history_window)
-      : startup_time_(SteadyClock::now()), history_(history_window) {
+  // statuses in a given time window with given granularity.
+  GuiStateContainer(DurationMs history_window, DurationMs granularity)
+      : startup_time_(SteadyClock::now()),
+        history_(history_window, granularity) {
     QObject::connect(this, &GuiStateContainer::params_changed, [this]() {
       // TODO: This should come from GUI alarm settings instead.
       pip_exceeded_alarm_.SetThresholdCmH2O(commanded_pip_ + 2);
@@ -175,13 +176,15 @@ public slots:
   // Adds a data point of controller status to the history.
   void controller_status_changed(SteadyInstant now,
                                  const ControllerStatus &status) {
-    history_.Append(now, status);
     breath_signals_.Update(now, status);
     pip_exceeded_alarm_.Update(now, status, breath_signals_);
-    measurements_changed();
+    if (history_.Append(now, status)) {
+      UpdateGraphs();
+      measurements_changed();
+    }
   }
 
-  void update();
+  void UpdateGraphs();
 
 private:
   int get_battery_percentage() const {

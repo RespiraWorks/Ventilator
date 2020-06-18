@@ -22,15 +22,7 @@ limitations under the License.
 // is_end_of_breath.  Then we can merge Update and DesiredState(), getting rid
 // of a lot of mutable state in the FSMs.
 
-// dbg_pa_* are pressure assist configuration vars.
-//
-// These are read but never modified here.
-
-// TODO: This should be configurable from the GUI.
-static DebugFloat dbg_pa_flow_trigger("pa_flow_trigger",
-                                      "pressure assist flow trigger (ml/s)",
-                                      200);
-
+// This is a pressure assist tuning parameter, read but never modified here
 // TODO: Is 250ms right?  Or can it be a fixed value at all; should it depend
 // on the RR or something?
 static DebugFloat
@@ -38,29 +30,6 @@ static DebugFloat
                          "minimum amount of time after ventilator exits PIP "
                          "before we're eligible to trigger a breath",
                          250);
-
-// fast_flow_avg_alpha and slow_flow_avg_alpha were tuned for a control loop
-// that runs at a particular frequency.
-//
-// In theory if the control loop gets slower, the alpha terms should get
-// bigger, placing more weight on newer readings, and similarly if the control
-// loop gets faster, the alpha terms should get smaller.  We've tried to encode
-// this here, although it remains to be seen if it actually works.
-static DebugFloat dbg_fast_flow_avg_alpha(
-    "fast_flow_avg_alpha",
-    "alpha term in pressure assist mode's fast-updating "
-    "exponentially-weighted average of flow",
-    0.2f * (Controller::GetLoopPeriod() / milliseconds(10)));
-static DebugFloat dbg_slow_flow_avg_alpha(
-    "slow_flow_avg_alpha",
-    "alpha term in pressure assist mode's slow-updating "
-    "exponentially-weighted average of flow",
-    0.01f * (Controller::GetLoopPeriod() / milliseconds(10)));
-
-static DebugFloat dbg_fast_flow_avg("fast_flow_avg",
-                                    "fast-updating flow average (ml/s)", 0.f);
-static DebugFloat dbg_slow_flow_avg("slow_flow_avg",
-                                    "slow-updating flow average (ml/s)", 0.f);
 
 // Given t = secs_per_breath and r = I:E ratio, calculate inspiration and
 // expiration durations (I and E).
@@ -94,14 +63,13 @@ PressureControlFsm::PressureControlFsm(Time now, const VentParams &params)
       inspire_end_(start_time_ + InspireDuration(params)),
       expire_end_(inspire_end_ + ExpireDuration(params)) {}
 
-void PressureControlFsm::Update(Time now, const BlowerFsmInputs &inputs) {
+void PressureControlFsm::Update(Time now, const BreathDetectionInputs &inputs) {
   if (now >= inspire_end_) {
     inspire_finished_ = true;
   } else {
     // Go from expire_pressure_ to inspire_pressure_ over a duration of
     // RISE_TIME.  Then for the rest of the inspire time, hold at
     // inspire_pressure_.
-    static_assert(RISE_TIME > milliseconds(0));
     float rise_frac = std::min(1.f, (now - start_time_) / RISE_TIME);
     setpoint_ =
         expire_pressure_ + (inspire_pressure_ - expire_pressure_) * rise_frac;
@@ -134,24 +102,25 @@ PressureAssistFsm::PressureAssistFsm(Time now, const VentParams &params)
       setpoint_(expire_pressure_), start_time_(now),
       inspire_end_(start_time_ + InspireDuration(params)),
       expire_deadline_(inspire_end_ + ExpireDuration(params)) {
-  dbg_slow_flow_avg.Set(0.f);
-  dbg_fast_flow_avg.Set(0.f);
 }
 
-void PressureAssistFsm::Update(Time now, const BlowerFsmInputs &inputs) {
+void PressureAssistFsm::Update(Time now, const BreathDetectionInputs &inputs) {
   if (now >= inspire_end_) {
     inspire_finished_ = true;
+    // Only run inspire_detection_ after inspire_end_
+    if (now >= expire_deadline_ ||
+        inspire_detection_.PatientInspiring(
+            inputs,
+            now > inspire_end_ + milliseconds(dbg_pa_min_expire_ms.Get()))) {
+      finished_ = true;
+    }
   } else {
     // Go from expire_pressure_ to inspire_pressure_ over a duration of
     // RISE_TIME.  Then for the rest of the inspire time, hold at
     // inspire_pressure_.
-    static_assert(RISE_TIME > milliseconds(0));
     float rise_frac = std::min(1.f, (now - start_time_) / RISE_TIME);
     setpoint_ =
         expire_pressure_ + (inspire_pressure_ - expire_pressure_) * rise_frac;
-  }
-  if (now >= expire_deadline_ || PatientInspiring(now, inputs)) {
-    finished_ = true;
   }
 }
 
@@ -172,42 +141,8 @@ BlowerSystemState PressureAssistFsm::DesiredState() const {
   };
 }
 
-// TODO don't rely on fsm inner states to make this usable in any fsm
-bool PressureAssistFsm::PatientInspiring(Time now,
-                                         const BlowerFsmInputs &inputs) {
-  if (!inspire_finished_ || inputs.net_flow < ml_per_sec(0)) {
-    return false;
-  }
-
-  // Once we're done inspiring and flow is non-negative, start calculating two
-  // exponentially-weighted averages of net flow: slow_flow_avg_ and
-  // fast_flow_avg_.
-  //
-  // The slow one has a smaller alpha term, so updates slower than the fast
-  // one.  You can think of the slow average as estimating "flow at dwell" and
-  // the fast average as estimating "current flow".
-  //
-  // If the fast average exceeds the slow average by a threshold, we trigger a
-  // breath.
-  float slow_alpha = dbg_slow_flow_avg_alpha.Get();
-  float fast_alpha = dbg_fast_flow_avg_alpha.Get();
-
-  // TODO: This could be encapsulated in an exponentially-weighted-average
-  // class.
-  slow_flow_avg_ = slow_alpha * inputs.net_flow +
-                   (1 - slow_alpha) * slow_flow_avg_.value_or(inputs.net_flow);
-  dbg_slow_flow_avg.Set(slow_flow_avg_->ml_per_sec());
-  fast_flow_avg_ = fast_alpha * inputs.net_flow +
-                   (1 - fast_alpha) * fast_flow_avg_.value_or(inputs.net_flow);
-  dbg_fast_flow_avg.Set(fast_flow_avg_->ml_per_sec());
-
-  return now >= inspire_end_ + milliseconds(dbg_pa_min_expire_ms.Get()) &&
-         *fast_flow_avg_ >
-             *slow_flow_avg_ + ml_per_sec(dbg_pa_flow_trigger.Get());
-}
-
 BlowerSystemState BlowerFsm::DesiredState(Time now, const VentParams &params,
-                                          const BlowerFsmInputs &inputs) {
+                                          const BreathDetectionInputs &inputs) {
   // Immediately turn off the ventilator if params.mode == OFF; otherwise,
   // wait until the end of a cycle before implementing the mode change.
   bool is_new_breath = false;

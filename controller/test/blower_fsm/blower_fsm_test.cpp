@@ -25,7 +25,7 @@ limitations under the License.
 
 namespace {
 
-constexpr BlowerFsmInputs inputs_zero = {
+constexpr BreathDetectionInputs inputs_zero = {
     .patient_volume = ml(0),
     .net_flow = ml_per_sec(0),
 };
@@ -106,7 +106,7 @@ TEST(BlowerFsmTest, DesiredPipPeep) {
 void testSequence(
     const std::vector<
         std::tuple<VentParams,
-                   /*inputs*/ BlowerFsmInputs,
+                   /*inputs*/ BreathDetectionInputs,
                    /*time_millis*/ uint64_t,
                    /*expected_pressure_setpoint*/ std::optional<Pressure>,
                    /*expected_flow_direction*/ FlowDirection>> &seq) {
@@ -121,7 +121,7 @@ void testSequence(
   Hal.delay(milliseconds(std::get<uint64_t>(seq.front())));
 
   VentParams last_params;
-  BlowerFsmInputs last_inputs;
+  BreathDetectionInputs last_inputs;
   for (const auto &[params, inputs, time_millis, expected_pressure,
                     expected_flow_direction] : seq) {
     SCOPED_TRACE("time = " + std::to_string(time_millis));

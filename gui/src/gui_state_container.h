@@ -50,6 +50,8 @@ public:
       // TODO: This should come from GUI alarm settings instead.
       alarm_manager_.get_pip_exceeded_alarm()->SetThresholdCmH2O(
           commanded_pip_ + 2);
+      alarm_manager_.get_pip_not_reached_alarm()->SetThresholdCmH2O(
+          commanded_pip_ - 2);
     });
   }
 

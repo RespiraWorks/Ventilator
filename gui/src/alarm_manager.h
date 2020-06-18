@@ -4,6 +4,7 @@
 #include "chrono.h"
 #include "latching_alarm.h"
 #include "pip_exceeded_alarm.h"
+#include "pip_not_reached_alarm.h"
 
 #include <QDebug>
 #include <QObject>
@@ -13,23 +14,41 @@ class AlarmManager : public QObject {
   Q_OBJECT
 public:
   AlarmManager() {
-    QObject::connect(&pip_exceeded_alarm_, &LatchingAlarm::updated, this,
-                     &AlarmManager::updated);
+    for (auto *alarm : alarms_) {
+      QObject::connect(alarm, &LatchingAlarm::updated, this,
+                       &AlarmManager::updated);
+    }
   }
 
   void Update(SteadyInstant now, const ControllerStatus &status,
               const BreathSignals &breath_signals) {
-    pip_exceeded_alarm_.Update(now, status, breath_signals);
+    for (auto *alarm : alarms_) {
+      alarm->Update(now, status, breath_signals);
+    }
   }
 
   Q_PROPERTY(LatchingAlarm *highestPriorityAlarm READ GetHighestPriorityAlarm
                  NOTIFY updated)
   Q_PROPERTY(int numActiveAlarms READ GetNumActiveAlarms NOTIFY updated)
 
-  LatchingAlarm *GetHighestPriorityAlarm() { return &pip_exceeded_alarm_; }
+  LatchingAlarm *GetHighestPriorityAlarm() {
+    LatchingAlarm *res = nullptr;
+    for (auto *alarm : alarms_) {
+      if (res == nullptr || alarm->GetEffectiveAudioPriority() >
+                                res->GetEffectiveAudioPriority()) {
+        res = alarm;
+      }
+    }
+    return res;
+  }
 
   int GetNumActiveAlarms() const {
-    return pip_exceeded_alarm_.IsAudioActive() ? 1 : 0;
+    int res = 0;
+    for (auto *alarm : alarms_) {
+      if (alarm->IsAudioActive())
+        ++res;
+    }
+    return res;
   }
   Q_INVOKABLE void acknowledgeHighestPriorityAlarm() {
     GetHighestPriorityAlarm()->Acknowledge(SteadyClock::now());
@@ -37,14 +56,22 @@ public:
 
   Q_PROPERTY(
       PipExceededAlarm *pipExceededAlarm READ get_pip_exceeded_alarm CONSTANT)
+  Q_PROPERTY(PipNotReachedAlarm *pipNotReachedAlarm READ
+                 get_pip_not_reached_alarm CONSTANT)
 
   PipExceededAlarm *get_pip_exceeded_alarm() { return &pip_exceeded_alarm_; }
+  PipNotReachedAlarm *get_pip_not_reached_alarm() {
+    return &pip_not_reached_alarm_;
+  }
 
 signals:
   void updated();
 
 private:
   PipExceededAlarm pip_exceeded_alarm_;
+  PipNotReachedAlarm pip_not_reached_alarm_;
+  std::vector<LatchingAlarm *> alarms_{&pip_exceeded_alarm_,
+                                       &pip_not_reached_alarm_};
 };
 
 #endif // ALARM_MANAGER_H_

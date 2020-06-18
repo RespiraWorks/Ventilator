@@ -31,11 +31,11 @@ static DebugFloat dbg_blower_valve_ki("blower_valve_ki",
 static DebugFloat dbg_blower_valve_kd("blower_valve_kd",
                                       "Derivative gain for blower valve PID");
 
+// TODO: These need to be tuned.
 static DebugFloat dbg_psol_kp("psol_kp", "Proportional gain for O2 psol PID",
-                              0.1f);
-static DebugFloat dbg_psol_ki("psol_ki", "Integral gain for O2 psol PID", 0.f);
-static DebugFloat dbg_psol_kd("psol_kd", "Derivative gain for O2 psol PID",
-                              0.f);
+                              0.5);
+static DebugFloat dbg_psol_ki("psol_ki", "Integral gain for O2 psol PID", 2);
+static DebugFloat dbg_psol_kd("psol_kd", "Derivative gain for O2 psol PID", 0);
 
 static DebugFloat dbg_forced_blower_power(
     "forced_blower_power",
@@ -139,18 +139,40 @@ Controller::Run(Time now, const VentParams &params,
       flow_integrator_.emplace();
       uncorrected_flow_integrator_.emplace();
     }
+
+    // At the moment we don't support oxygen mixing -- we deliver either pure
+    // air or pure oxygen.  For any fio2 < 1, deliver air.
+    if (params.fio2 < 1) {
+      // Delivering pure air.
+      psol_pid_.Reset();
+
+      actuators_state = {
+          .fio2_valve = 0,
+          // In normal mode, blower is always full power; pid controls pressure
+          // by actuating the blower pinch valve.
+          .blower_power = 1,
+          .blower_valve = blower_valve_pid_.Compute(
+              now, sensor_readings.patient_pressure.kPa(),
+              desired_state.pressure_setpoint->kPa()),
+          .exhale_valve =
+              desired_state.flow_direction == FlowDirection::EXPIRATORY ? 1 : 0,
+      };
+    } else {
+      // Delivering pure oxygen.
+      blower_valve_pid_.Reset();
+
+      actuators_state = {
+          .fio2_valve =
+              psol_pid_.Compute(now, sensor_readings.patient_pressure.kPa(),
+                                desired_state.pressure_setpoint->kPa()),
+          .blower_power = 0,
+          .blower_valve = 0,
+          .exhale_valve =
+              desired_state.flow_direction == FlowDirection::EXPIRATORY ? 1 : 0,
+      };
+    }
+
     // Start controlling pressure.
-    actuators_state = {
-        .fio2_valve = 0, // not used yet
-        // In normal mode, blower is always full power; pid controls pressure by
-        // actuating the blower pinch valve.
-        .blower_power = 1,
-        .blower_valve = blower_valve_pid_.Compute(
-            now, sensor_readings.patient_pressure.kPa(),
-            desired_state.pressure_setpoint->kPa()),
-        .exhale_valve =
-            desired_state.flow_direction == FlowDirection::EXPIRATORY ? 1 : 0,
-    };
     ventilator_was_on_ = true;
   }
 

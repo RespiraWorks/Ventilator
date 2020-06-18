@@ -62,11 +62,11 @@ ApplicationWindow {
 
         AlarmNotificationBanner {
             id: alarmNotificationBanner
-            priority: GuiStateContainer.alarmManager.highestPriorityAlarm.effectiveAudioPriority
-            title: GuiStateContainer.alarmManager.highestPriorityAlarm.bannerText
-            alarmsCount: GuiStateContainer.alarmManager.numActiveAlarms
+            priority: GuiStateContainer.alarmManager.highestPriorityActiveAlarm.effectiveAudioPriority
+            title: GuiStateContainer.alarmManager.highestPriorityActiveAlarm.bannerText
+            numActiveAlarms: GuiStateContainer.alarmManager.numActiveAlarms
             onPauseAlarmClicked: {
-              GuiStateContainer.alarmManager.acknowledgeHighestPriorityAlarm()
+              GuiStateContainer.alarmManager.acknowledgeHighestPriorityActiveAlarm()
             }
             z: 999 // just to make sure its always on top
         }

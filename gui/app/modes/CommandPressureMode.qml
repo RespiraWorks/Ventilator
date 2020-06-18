@@ -58,11 +58,7 @@ Mode {
             id: scopeGridLayout
             anchors.fill: parent
             spacing: 0
-
-            PressureGraph {
-              Layout.fillHeight: true; Layout.fillWidth: true
-              alarmPriority: GuiStateContainer.alarmManager.pipExceededAlarm.effectiveVisualPriority
-            }
+            PressureGraph { Layout.fillHeight: true; Layout.fillWidth: true }
             FlowGraph { Layout.fillHeight: true; Layout.fillWidth: true }
             TvGraph { Layout.fillHeight: true; Layout.fillWidth: true }
         }

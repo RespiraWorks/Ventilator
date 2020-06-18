@@ -131,9 +131,8 @@ message VentParams {
   // TODO(jlebar): Is ml/min the correct unit for this?
   required uint32 expiratory_trigger_ml_per_min = 9; // V-trigger
 
-  // Notably missing here is FiO2 -- fraction of oxygen in inhaled air.
-  // Currently (2020-04-27) we anticipate this will be controlled externally,
-  // not within the ventilator.
+  // A value between 0..1.
+  required float fio2 = 10;
 }
 
 // See

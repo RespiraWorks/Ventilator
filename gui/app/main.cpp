@@ -1,12 +1,14 @@
-#include "alarm.h"
 #include "chrono.h"
 #include "connected_device.h"
 #include "controller_history.h"
 #include "gui_state_container.h"
+#include "latching_alarm.h"
 #include "periodic_closure.h"
 #include "respira_connected_device.h"
 
+#include "time_series_graph.h"
 #include <QCommandLineParser>
+#include <QDebug>
 #include <QFontDatabase>
 #include <QFontInfo>
 #include <QGuiApplication>
@@ -18,8 +20,6 @@
 #include <cmath>
 #include <iostream>
 #include <memory>
-
-#include "time_series_graph.h"
 
 QObject *gui_state_instance(QQmlEngine *engine, QJSEngine *scriptEngine) {
   static GuiStateContainer state_container(
@@ -158,6 +158,12 @@ int main(int argc, char *argv[]) {
   qmlRegisterType<TimeSeriesGraph>("Respira", 1, 0, "TimeSeriesGraph");
   qmlRegisterUncreatableType<AlarmPriority>("Respira", 1, 0, "AlarmPriority",
                                             "is an enum");
+  qmlRegisterUncreatableType<AlarmManager>(
+      "Respira", 1, 0, "AlarmManager",
+      "AlarmManager cannot be instantiated from QML");
+  qmlRegisterUncreatableType<LatchingAlarm>(
+      "Respira", 1, 0, "LatchingAlarm",
+      "LatchingAlarm cannot be instantiated from QML");
   qmlRegisterSingletonType<GuiStateContainer>(
       "Respira", 1, 0, "GuiStateContainer", &gui_state_instance);
 

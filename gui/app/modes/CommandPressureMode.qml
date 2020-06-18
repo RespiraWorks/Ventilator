@@ -61,7 +61,7 @@ Mode {
 
             PressureGraph {
               Layout.fillHeight: true; Layout.fillWidth: true
-              alarmPriority: GuiStateContainer.pipExceededAlarm.isVisualActive ? AlarmPriority.HIGH : AlarmPriority.NONE
+              alarmPriority: GuiStateContainer.alarmManager.pipExceededAlarm.effectiveVisualPriority
             }
             FlowGraph { Layout.fillHeight: true; Layout.fillWidth: true }
             TvGraph { Layout.fillHeight: true; Layout.fillWidth: true }

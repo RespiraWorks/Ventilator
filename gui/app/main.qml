@@ -38,6 +38,7 @@ ApplicationWindow {
     }
 
     header: ToolBar {
+
         contentHeight: 60
         background:  Item {  }
 
@@ -48,7 +49,7 @@ ApplicationWindow {
             }
 
             onMenuClicked: console.log("Menu Click")
-            onAlarmSettingsClicked: console.log("Alarm Settings Clicked")
+            onAlarmSettingsClicked: console.log("Alarm settings clicked")
             onModeSelectionClicked: modeSelectionPopup.open()
         }
 
@@ -57,6 +58,17 @@ ApplicationWindow {
                 right: parent.right; rightMargin: 8
                 verticalCenter: parent.verticalCenter
             }
+        }
+
+        AlarmNotificationBanner {
+            id: alarmNotificationBanner
+            priority: GuiStateContainer.alarmManager.highestPriorityAlarm.effectiveAudioPriority
+            title: GuiStateContainer.alarmManager.highestPriorityAlarm.bannerText
+            alarmsCount: GuiStateContainer.alarmManager.numActiveAlarms
+            onPauseAlarmClicked: {
+              GuiStateContainer.alarmManager.acknowledgeHighestPriorityAlarm()
+            }
+            z: 999 // just to make sure its always on top
         }
     }
 

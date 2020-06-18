@@ -16,6 +16,7 @@ CONFIG += staticlib
 
 HEADERS += \
   alarm.h \
+  alarm_manager.h \
   chrono.h \
   connected_device.h \
   controller_history.h \

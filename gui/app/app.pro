@@ -19,7 +19,8 @@ LIBS += -L../src -leverything
 
 RESOURCES += qml.qrc images/ controls/ fonts/ modes/ sample-data/
 
-DISTFILES += images/Logo.png
+DISTFILES += images/Logo.png \
+    controls/AlarmButton.qml
 
 TRANSLATIONS += ProjectVentilatorGUI_es_GT.ts
 

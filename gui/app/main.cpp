@@ -23,7 +23,9 @@
 
 QObject *gui_state_instance(QQmlEngine *engine, QJSEngine *scriptEngine) {
   static GuiStateContainer state_container(
-      /*history_window=*/DurationMs(30000));
+      /*history_window=*/DurationMs(30000),
+      // 100ms looks a little janky, 50ms is fine.
+      /*granularity=*/DurationMs(50));
   Q_UNUSED(engine);
   Q_UNUSED(scriptEngine);
   // Since we are returning just a pointer, QQmlEngine does not know the object

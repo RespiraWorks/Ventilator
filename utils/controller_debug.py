@@ -123,12 +123,15 @@ Intended TV: {intended_tv} ml
 
     sec_per_breath = 60 / rr
     ie_ratio = inspiratory_time / (sec_per_breath - inspiratory_time)
+    # TODO: For now fio2 is intentionally ignored.  Most of us don't have
+    # access to pressurized gas, so all tests have to run with the blower.
+    # run_covent_tests.py is able to respect the fio2 settings if you have
+    # pressurized gas available.
     vars = {
         "gui_bpm": rr,
         "gui_ie_ratio": round(ie_ratio, 2),
         "gui_pip": bap + delta_inspiratory_pressure,
         "gui_peep": bap,
-        # TODO: FiO2 not currently supported.
         # It's important to set gui_mode last.  Otherwise we'll start breathing
         # immediately, with whatever the old parameters happen to be.  (Python3
         # dicts have consistent ordering.)

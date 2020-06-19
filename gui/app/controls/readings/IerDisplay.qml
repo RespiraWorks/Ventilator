@@ -6,5 +6,8 @@ import ".."
 ParameterDisplay {
     parameterName: qsTr("I:E")
     parameterUnit: qsTr("ratio")
-    parameterValue: GuiStateContainer.measured_ier.toFixed(2).toString()
+    parameterValue: {
+      var inv = 1.0 / GuiStateContainer.measured_ier
+      return "1:" + inv.toFixed(Number.isInteger(inv) ? 0 : 1)
+    }
 }

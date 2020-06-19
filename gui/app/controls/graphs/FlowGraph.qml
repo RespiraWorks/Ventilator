@@ -7,12 +7,8 @@ ScopeView {
     id: flowView
     name: "Flow"
     unit: "L/min"
-    // TODO: Are these reasonable lower and upper bounds?
-    // Source for current value:
-    // https://www.sciencedirect.com/topics/medicine-and-dentistry/peak-inspiratory-flow
-    // "Most modern ventilators can deliver flow rates between
-    // 60 and 120 L/min. "
-    yMin: -150
-    yMax: 150
+    // https://respiraworks.slack.com/archives/C011UMNUWGZ/p1592606104221700?thread_ts=1592603466.221100&cid=C011UMNUWGZ
+    yMin: -60
+    yMax: 60
     dataset: GuiStateContainer.flowSeries
 }

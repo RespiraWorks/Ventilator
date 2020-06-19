@@ -6,12 +6,16 @@ import ".."
 ParameterButton {
     parameterName: qsTr("FiO<sub>2</sub>")
     parameterUnit: "%"
-    parameterMaxValue: 100
+    // RW-SYS-072 requests 21-100% in increments of 5%.
     parameterMinValue: 21
-    parameterStepSize: 0.5
+    parameterMaxValue: 100
+    parameterStepSize: 5
     parameterValue: GuiStateContainer.commanded_fio2_percent
     onValueConfirmed: GuiStateContainer.commanded_fio2_percent = value
     parameterDisplayFormatter: function (value) {
-      return Number(value).toFixed(1)
+      return Number(value).toFixed(0)
+    }
+    parameterFixup: function(value) {
+      return Math.max(parameterMinValue, value - value % parameterStepSize)
     }
 }

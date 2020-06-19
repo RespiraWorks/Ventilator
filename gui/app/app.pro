@@ -8,7 +8,7 @@ include( ../defaults.pri )
     error( "Couldn't find the libqnanopainter file!" )
 }
 
-QT += core quick serialport
+QT += core quick serialport multimedia
 
 TEMPLATE = app
 TARGET = ProjectVentilatorGUI
@@ -17,7 +17,7 @@ SOURCES += main.cpp
 
 LIBS += -L../src -leverything
 
-RESOURCES += qml.qrc images/ controls/ fonts/ modes/ sample-data/
+RESOURCES += qml.qrc images/ sounds/ controls/ fonts/ modes/ sample-data/
 
 DISTFILES += images/Logo.png
 

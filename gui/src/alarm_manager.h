@@ -3,6 +3,7 @@
 
 #include "chrono.h"
 #include "latching_alarm.h"
+#include "patient_detached_alarm.h"
 #include "pip_exceeded_alarm.h"
 #include "pip_not_reached_alarm.h"
 
@@ -84,10 +85,15 @@ public:
       PipExceededAlarm *pipExceededAlarm READ get_pip_exceeded_alarm CONSTANT)
   Q_PROPERTY(PipNotReachedAlarm *pipNotReachedAlarm READ
                  get_pip_not_reached_alarm CONSTANT)
+  Q_PROPERTY(PatientDetachedAlarm *patientDetachedAlarm READ
+                 get_patient_detached_alarm CONSTANT)
 
   PipExceededAlarm *get_pip_exceeded_alarm() { return &pip_exceeded_alarm_; }
   PipNotReachedAlarm *get_pip_not_reached_alarm() {
     return &pip_not_reached_alarm_;
+  }
+  PatientDetachedAlarm *get_patient_detached_alarm() {
+    return &patient_detached_alarm_;
   }
 
 signals:
@@ -96,8 +102,9 @@ signals:
 private:
   PipExceededAlarm pip_exceeded_alarm_;
   PipNotReachedAlarm pip_not_reached_alarm_;
-  std::vector<LatchingAlarm *> alarms_{&pip_exceeded_alarm_,
-                                       &pip_not_reached_alarm_};
+  PatientDetachedAlarm patient_detached_alarm_;
+  std::vector<LatchingAlarm *> alarms_{
+      &pip_exceeded_alarm_, &pip_not_reached_alarm_, &patient_detached_alarm_};
 };
 
 #endif // ALARM_MANAGER_H_

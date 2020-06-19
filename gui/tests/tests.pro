@@ -4,7 +4,7 @@ include( ../defaults.pri )
 }
 TEMPLATE = app
 
-QT += testlib gui
+QT += testlib gui multimedia
 CONFIG += qt warn_on depend_includepath testcase
 
 SOURCES += tst_main.cpp

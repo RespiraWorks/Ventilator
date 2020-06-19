@@ -1,4 +1,4 @@
-QT += core quick serialport qml
+QT += core quick serialport qml multimedia
 
 include( ../defaults.pri )
 ! include( ../common.pri ) {

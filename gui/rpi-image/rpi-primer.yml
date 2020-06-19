@@ -37,13 +37,40 @@
 
   - name: Install Debian menu for Openbox
     apt:
-      name: menu
+      pkg:
+        - pulseaudio
+        - lightdm
+        - openbox
+        - menu
+
+  - name: Creates /lib/systemd/user directory
+    file:
+      path: /lib/systemd/user
+      state: directory
+
+  - name: Add pulseaudio socket systemd config
+    copy:
+      src: pulseaudio.socket
+      dest: /lib/systemd/user/pulseaudio.socket
+      mode: '0644'
+
+  - name: Add pulseaudio service systemd config
+    copy:
+      src: pulseaudio.service
+      dest: /lib/systemd/user/pulseaudio.service
+      mode: '0644'
 
   - name: Set pi user's .xsession
     lineinfile:
       dest: /home/pi/.xsession
       line: 'exec openbox-session'
       create: yes
+
+  - name: Enable auto-login
+    lineinfile:
+      dest: /etc/lightdm/lightdm.conf
+      line: 'autologin-user=pi'
+      create: no
 
   - name: Cache most recent gui docker image from dockerhub
     shell: docker pull respiraworks/gui

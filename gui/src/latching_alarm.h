@@ -50,11 +50,14 @@ protected:
 public:
   virtual ~LatchingAlarm() = default;
 
+  Q_PROPERTY(
+      AlarmPriority::Enum nominalPriority READ GetNominalPriority CONSTANT)
   Q_PROPERTY(AlarmPriority::Enum effectiveVisualPriority READ
                  GetEffectiveVisualPriority NOTIFY updated)
   Q_PROPERTY(AlarmPriority::Enum effectiveAudioPriority READ
                  GetEffectiveAudioPriority NOTIFY updated)
   Q_PROPERTY(QString bannerText READ GetBannerText NOTIFY updated)
+  Q_PROPERTY(int remainingSilenceMs READ GetRemainingSilenceMs NOTIFY updated)
 
   // Updates the state of the alarm and its signals according to current
   // sensor readings.
@@ -100,12 +103,14 @@ public:
     updated();
   }
 
+  AlarmPriority::Enum GetNominalPriority() const { return priority_; }
+
   AlarmPriority::Enum GetEffectiveVisualPriority() const {
-    return IsVisualActive() ? priority_ : AlarmPriority::NONE;
+    return IsVisualActive() ? GetNominalPriority() : AlarmPriority::NONE;
   }
 
   AlarmPriority::Enum GetEffectiveAudioPriority() const {
-    return IsAudioActive() ? priority_ : AlarmPriority::NONE;
+    return IsAudioActive() ? GetNominalPriority() : AlarmPriority::NONE;
   }
 
   // Whether the audio signal should currently be active.
@@ -124,6 +129,16 @@ public:
     audio_state_ = AudioState::SILENCED;
     silenced_until_ = now + DurationMs(120'000);
     updated();
+  }
+
+  std::optional<SteadyInstant> GetSilencedUntil() const {
+    return silenced_until_;
+  }
+
+  int GetRemainingSilenceMs() {
+    return silenced_until_.has_value()
+               ? TimeAMinusB(*silenced_until_, SteadyClock::now()).count()
+               : 0;
   }
 
 signals:

@@ -1,7 +1,7 @@
 import QtQuick 2.11
 import QtQuick.Layouts 1.3
 import QtQuick.Controls 2.4
-
+import Respira 1.0
 import ".."
 
 /*!
@@ -72,45 +72,20 @@ Control {
         }
     }
 
-    HeaderButton {
-        id: alarmSettingsButton
-
-        width: 104; height: 40
-
+    AlarmButton {
         anchors {
             verticalCenter: parent.verticalCenter
             right: parent.right
         }
-        text: pageStack.currentMode.acronym
-
-        onClicked: alarmSettingsClicked()
-
-        contentItem: Item {
-            anchors.centerIn: parent
-
-            Row {
-                spacing: 10
-                anchors.centerIn: parent
-
-                Text {
-                    anchors.verticalCenter: parent.verticalCenter
-                    width: 16; height: 27
-                    text: "0"
-                    font: Style.theme.font.headerButton
-                    color: Style.theme.color.textPrimary
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment: Text.AlignVCenter
-                    elide: Text.ElideRight
-                }
-
-                Image {
-                    anchors.verticalCenter: parent.verticalCenter
-                    width: 20; height: 20
-                    sourceSize: Qt.size(width, height)
-                    fillMode: Image.PreserveAspectFit
-                    source: 'qrc:/images/RW_alarm_24.svg'
-                }
-            }
+        priority: {
+          var alarm = GuiStateContainer.alarmManager.highestPrioritySilencedAlarm
+          return (alarm == null) ? AlarmPriority.NONE : alarm.nominalPriority
         }
+        numAlarms: GuiStateContainer.alarmManager.numSilencedAlarms
+        remainingSilenceMs: {
+          var alarm = GuiStateContainer.alarmManager.highestPrioritySilencedAlarm
+          return (alarm == null) ? 0 : alarm.remainingSilenceMs
+        }
+        onClicked: console.log("Alarm Button clicked")
     }
 }

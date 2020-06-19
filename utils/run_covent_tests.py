@@ -43,9 +43,13 @@ def run_test(test, cmd_args):
     else:
         run("set gui_fio2 21")
 
-    # Ensure the ventilator is blowing with some params.  Edwin's request is
-    # that the ventilator is continuously on during these tests.
-    run("set gui_mode 1")
+    # Ensure the ventilator fan is on, and disconnect the fan from the system
+    # so it's not inflating the test lung.  Edwin's request is that the fan
+    # doesn't have to spin up during these tests.
+    run("set forced_exhale_valve_pos 1")
+    run("set forced_blower_valve_pos 0")
+    run("set forced_blower_power 1")
+    run("set gui_mode 0")
 
     # Switch to this preset.
     run(f"preset {test}")
@@ -56,6 +60,14 @@ def run_test(test, cmd_args):
             "Adjust test lung per above, then press enter.  "
             "(Skip this with --nointeractive.)"
         )
+    # Unforce parameters we set above so they can be controlled by the
+    # controller.  Note that we unforce the blower power *after* setting the
+    # gui_mode to 1 because if we unforced it while we were still in mode 0
+    # (i.e. "ventilator off"), the fan would momentarily spin down.
+    run("set forced_exhale_valve_pos -1")
+    run("set forced_blower_valve_pos -1")
+    run("set gui_mode 1")
+    run("set forced_blower_power -1")
     time.sleep(cmd_args.ignore_secs)
 
     # It would be possible to trace flow here too, but the graphs get noisy.

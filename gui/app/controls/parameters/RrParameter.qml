@@ -6,8 +6,9 @@ import ".."
 ParameterButton {
     parameterName: qsTr("RR")
     parameterUnit: "b/min"
+    // Per SR-10, RW-SYS-020
+    parameterMinValue: 5
     parameterMaxValue: 30
-    parameterMinValue: 10
     parameterStepSize: 1
     parameterValue: GuiStateContainer.commanded_rr
     onValueConfirmed: GuiStateContainer.commanded_rr = value

@@ -81,8 +81,8 @@ void HalApi::BuzzerOn(float volume) {
 
   volume = std::clamp(volume, 0.0f, 1.0f);
 
-  // We get maximum volume at about 50% duty cycle
-  float duty = volume * 0.5f * static_cast<float>(tmr->reload);
+  // We get maximum volume at about 80% duty cycle
+  float duty = volume * 0.8f * static_cast<float>(tmr->reload);
   tmr->compare[0] = static_cast<int>(duty);
 }
 

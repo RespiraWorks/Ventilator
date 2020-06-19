@@ -60,6 +60,10 @@ ApplicationWindow {
             }
         }
 
+        AlarmSound {
+            priority: GuiStateContainer.alarmManager.highestPriorityAlarm.effectiveAudioPriority
+        }
+
         AlarmNotificationBanner {
             id: alarmNotificationBanner
             priority: GuiStateContainer.alarmManager.highestPriorityAlarm.effectiveAudioPriority

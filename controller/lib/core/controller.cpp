@@ -203,6 +203,7 @@ Controller::Run(Time now, const VentParams &params,
       .pressure_setpoint = desired_state.pressure_setpoint.value_or(kPa(0)),
       .patient_volume = patient_volume,
       .net_flow = net_flow,
+      .flow_correction = flow_integrator_->FlowCorrection(),
       .breath_id = breath_id_,
   };
 

@@ -7,8 +7,8 @@ ParameterButton {
     parameterName: qsTr("Peep")
     parameterUnit: qsTr("cmH<sub>2</sub>0")
     parameterMaxValue: 20
-    parameterMinValue: 0
-    parameterStepSize: 2
+    parameterMinValue: 5
+    parameterStepSize: 1
     parameterValue: GuiStateContainer.commanded_peep
     onValueConfirmed: GuiStateContainer.commanded_peep = value
 }

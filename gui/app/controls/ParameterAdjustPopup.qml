@@ -35,6 +35,11 @@ BasePopup {
         return value.toString()
     }
 
+    // Function to fix up a value after increment/decrement
+    property var fixupValue: function(value) {
+      return value
+    }
+
     signal valueConfirmed
 
     onConfirm: root.valueConfirmed()
@@ -66,7 +71,7 @@ BasePopup {
             }
             visible: root.value > root.minValue
             onClicked: {
-                root.value -= root.stepSize
+                root.value = root.fixupValue(root.value - root.stepSize)
             }
         }
 
@@ -84,7 +89,7 @@ BasePopup {
             }
             visible: root.value < root.maxValue
             onClicked: {
-                root.value += root.stepSize
+                root.value = root.fixupValue(root.value + root.stepSize)
             }
         }
 

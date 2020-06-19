@@ -119,13 +119,12 @@ Controller::Run(Time now, const VentParams &params,
   // Gain scheduling of blower Ki based on PIP and PEEP settings.  Artisanally
   // hand-tuned by Edwin.
   //
-  // TODO(jlebar): Using params.{pip,peep}_cm_h2o is not quite correct.  When
-  // the params change, Controller receives that change immediately, but
-  // BlowerFsm doesn't apply them until the next breath.  Add fields to
-  // BlowerSystemState for current pip/peep and use those instead.
+  // Note that we use desired_state.pip/peep and not params.pip/peep because
+  // desired_state updates at breath boundaries, whereas params updates
+  // whenever the user clicks the touchscreen.
   float blower_ki = std::clamp(
-      2.0f * static_cast<float>(params.pip_cm_h2o - params.peep_cm_h2o) - 10.0f,
-      10.0f, 20.0f);
+      2.0f * (desired_state.pip - desired_state.peep).cmH2O() - 10.0f, 10.0f,
+      20.0f);
   dbg_blower_valve_computed_ki.Set(blower_ki);
 
   blower_valve_pid_.SetKP(dbg_blower_valve_kp.Get());

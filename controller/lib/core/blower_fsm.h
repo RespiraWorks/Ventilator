@@ -77,6 +77,14 @@ struct BlowerSystemState {
   // Should air be primarily flowing into the patient, or out of the patient?
   FlowDirection flow_direction;
 
+  // Max/min pressure that the blower will try to achieve over this breath.
+  //
+  // These may not be equal to the VentParams.pip/peep that you pass in to
+  // BlowerFsm::DesiredState, because BlowerFsm's parameters change only at
+  // breath boundaries.
+  Pressure pip;
+  Pressure peep;
+
   // Is this the first BlowerSystemState returned for a brand-new breath cycle?
   //
   // This is defaulted to false here and is handled by BlowerFsm, rather than

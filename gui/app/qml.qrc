@@ -5,5 +5,6 @@
         <file>Style.qml</file>
         <file>main.qml</file>
         <file>qmldir</file>
+        <file>AlarmSound.qml</file>
     </qresource>
 </RCC>

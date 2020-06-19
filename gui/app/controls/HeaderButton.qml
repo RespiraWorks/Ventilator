@@ -9,9 +9,11 @@ import ".."
 Button {
     id: control
 
-    implicitWidth:40; implicitHeight: 40
+    property alias color: bg.color
+    //implicitWidth:40; implicitHeight: 40
 
     background: Rectangle {
+        id: bg
         antialiasing: true
         color: control.down ? Style.theme.color.headerButtonHighlighted :
                               Style.theme.color.headerButton

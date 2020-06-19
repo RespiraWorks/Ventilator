@@ -15,7 +15,7 @@ Item {
     width: parent.width; height: 72
 
     property alias title: titleText.text
-    property int alarmsCount: 0
+    property int numActiveAlarms: 0
     property int priority: AlarmPriority.NONE
 
     enabled: priority != AlarmPriority.NONE
@@ -125,7 +125,7 @@ Item {
             left: titleText.right; leftMargin: 8
             verticalCenter: parent.verticalCenter
         }
-        text: root.alarmsCount > 0 ? "+" + root.alarmsCount : ""
+        text: root.numActiveAlarms > 1 ? "+" + (root.numActiveAlarms - 1) : ""
         color: root.alarm_button_fg
         font: Style.theme.font.modalTitle
     }

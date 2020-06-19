@@ -18,6 +18,10 @@ import shlex
 
 PRESETS = [f"covent_pc_{i}" for i in range(1, 9)]
 
+# Covent tests come in two flavors, ones which are meant to run at 30%
+# fio2, and ones which are meant to run at 90%.
+HIGH_OX_TESTS = {f"covent_pc_{i}" for i in [2, 3, 6, 7]}
+
 DBG_SCRIPT = Path(__file__).absolute().parent.joinpath("controller_debug.py")
 
 
@@ -29,8 +33,22 @@ def run_test(test, cmd_args):
 
     outfile = cmd_args.dest.joinpath(f"{test}.dat")
 
+    # Tell the controller whether to generate pressure using the fan or the
+    # high-pressure oxygen source.
+    #
+    # TODO: Although these tests are meant to run at 30%/90% fio2, we currently
+    # can't mix air and oxygen, so we run them at 21% and 100%.
+    if cmd_args.oxygen == "on" or (cmd_args.oxygen == "auto" and test in HIGH_OX_TESTS):
+        run("set gui_fio2 100")
+    else:
+        run("set gui_fio2 21")
+
+    # Ensure the ventilator is blowing with some params.  Edwin's request is
+    # that the ventilator is continuously on during these tests.
+    run("set gui_mode 1")
+
+    # Switch to this preset.
     run(f"preset {test}")
-    run("set gui_mode 0")
 
     # Give the user a chance to adjust the test lung.
     if not cmd_args.nointeractive:
@@ -38,21 +56,15 @@ def run_test(test, cmd_args):
             "Adjust test lung per above, then press enter.  "
             "(Skip this with --nointeractive.)"
         )
-
-    # This assumes that all of the covent_pc_n tests are gui_mode 1.  Which is
-    # reasonable, because "pc" stands for "pressure control", which is mode 1.
-    run("set gui_mode 1")
     time.sleep(cmd_args.ignore_secs)
 
     # It would be possible to trace flow here too, but the graphs get noisy.
     run(f"trace start pc_setpoint pressure volume")
     time.sleep(cmd_args.capture_secs)
-
     run(
         f"trace graph --dest={shlex.quote(str(outfile))} --title={test} "
         "--nointeractive --scale=volume/10"
     )
-    run(f"set gui_mode 0")
 
 
 def concat_images(cmd_args):
@@ -105,6 +117,13 @@ def main():
         "(default: run all covent tests)",
     )
     parser.add_argument(
+        "--oxygen",
+        choices=["off", "auto", "on"],
+        default="off",
+        help="Deliver air from the blower (off), from the pressurized oxygen "
+        "source (on), or according to the particular test (auto).",
+    )
+    parser.add_argument(
         "--ignore-secs",
         help="Ignore this many seconds of data before starting to capture.",
         default=10,
@@ -152,6 +171,7 @@ def main():
     atexit.register(stop_ventilation)
 
     args.dest.mkdir(exist_ok=False)
+
     for i, t in enumerate(tests):
         run_test(t, args)
 

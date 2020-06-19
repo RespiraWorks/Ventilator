@@ -21,63 +21,28 @@ limitations under the License.
 #include "network_protocol.pb.h"
 #include "sensors.h"
 #include "trace.h"
+#include <limits>
 #include <optional>
 
-// NO_GUI_DEV_MODE is a hacky development mode until we have the GUI working.
-//
-// Uncomment this line to get started:
-//
-#define NO_GUI_DEV_MODE
-//
-// Then see comment on DEV_MODE_comms_handler below.
-//
-// TODO: Remove NO_GUI_DEV_MODE once the GUI is working.
-#ifdef NO_GUI_DEV_MODE
-// Fake "development mode" version of sending and receiving data over the
-// network.
-//
-// "Receives" data from the "GUI" just by setting gui_status directly.  Change
-// these params and reflash to simulate the GUI changing its settings.
-//
-// "Sends" data to the "GUI" via a simple serial protocol.  This can be parsed
-// and graphed by e.g. the Arduino IDE (tools -> serial plotter).
-static DebugUInt32 gui_mode("gui_mode", "Mode setting for GUI free testing",
-                            static_cast<uint32_t>(VentMode::VentMode_OFF));
-static DebugUInt32 gui_bpm("gui_bpm", "Breaths/min for GUI free testing", 15);
-static DebugUInt32 gui_peep("gui_peep", "PEEP (cm/h2O) for GUI free testing",
+// By default, the controller receives settings (on/off, pip, rr, etc.) from
+// the GUI.  But you can also command the controller by setting the gui_foo
+// DebugVars below.
+static DebugUInt32
+    gui_mode("gui_mode",
+             "Mode the controller should run in; see VentMode enum in "
+             "network_protocol.proto.  If this is out of range (e.g. set to "
+             "-1), this and all of the other gui_foo DebugVars are ignored, "
+             "and instead the controller takes orders from the GUI itself.",
+             std::numeric_limits<uint32_t>::max());
+static DebugUInt32 gui_bpm("gui_bpm", "Breaths/min for GUI-free testing", 15);
+static DebugUInt32 gui_peep("gui_peep", "PEEP (cm/h2O) for GUI-free testing",
                             5);
-static DebugUInt32 gui_pip("gui_pip", "PIP (cm/h2O) for GUI free testing", 15);
-static DebugFloat gui_ie_ratio("gui_ie_ratio", "I/E ratio for GUI free testing",
+static DebugUInt32 gui_pip("gui_pip", "PIP (cm/h2O) for GUI-free testing", 15);
+static DebugFloat gui_ie_ratio("gui_ie_ratio", "I/E ratio for GUI-free testing",
                                0.66f);
 static DebugFloat
     gui_fio2("gui_fio2", "Percent oxygen (range [21,100]) for GUI-free testing",
              21);
-static void DEV_MODE_comms_handler(const ControllerStatus &controller_status,
-                                   GuiStatus *gui_status) {
-  gui_status->desired_params.mode = static_cast<VentMode>(gui_mode.Get());
-  gui_status->desired_params.breaths_per_min = gui_bpm.Get();
-  gui_status->desired_params.peep_cm_h2o = gui_peep.Get();
-  gui_status->desired_params.pip_cm_h2o = gui_pip.Get();
-  gui_status->desired_params.inspiratory_expiratory_ratio = gui_ie_ratio.Get();
-  gui_status->desired_params.fio2 = gui_fio2.Get() / 100.f;
-
-  static std::optional<Time> last_sent;
-  Time now = Hal.now();
-  if (last_sent != std::nullopt && now - *last_sent < seconds(0.1f)) {
-    return;
-  }
-  last_sent = now;
-
-  auto &r = controller_status.sensor_readings;
-  debug.Print("%.2f, ", controller_status.pressure_setpoint_cm_h2o);
-  debug.Print("%.2f, ", r.patient_pressure_cm_h2o);
-  debug.Print("%.2f, ", r.inflow_pressure_diff_cm_h2o);
-  debug.Print("%.2f, ", r.outflow_pressure_diff_cm_h2o);
-  debug.Print("%.2f, ", r.flow_ml_per_min / 1000.0f);
-  debug.Print("%.2f, ", r.volume_ml / 10.f);
-  debug.Print("\n");
-}
-#endif
 
 static Controller controller;
 static ControllerStatus controller_status;
@@ -182,11 +147,19 @@ static void background_loop() {
       local_controller_status = controller_status;
     }
 
-#ifndef NO_GUI_DEV_MODE
     comms_handler(local_controller_status, &gui_status);
-#else
-    DEV_MODE_comms_handler(local_controller_status, &gui_status);
-#endif
+
+    // Override received gui_status from the RPi with values from DebugVars iff
+    // the gui_mode DebugVar has a legal value.
+    if (uint32_t m = gui_mode.Get(); m >= _VentMode_MIN && m <= _VentMode_MAX) {
+      auto &p = gui_status.desired_params;
+      p.mode = static_cast<VentMode>(m);
+      p.breaths_per_min = gui_bpm.Get();
+      p.peep_cm_h2o = gui_peep.Get();
+      p.pip_cm_h2o = gui_pip.Get();
+      p.inspiratory_expiratory_ratio = gui_ie_ratio.Get();
+      p.fio2 = gui_fio2.Get() / 100.f;
+    }
 
     // Copy the gui_status data into our controller status
     // with interrupts disabled.  This ensures that the data

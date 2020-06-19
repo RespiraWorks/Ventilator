@@ -26,6 +26,10 @@ struct ControllerState {
   Volume patient_volume;
   VolumetricFlow net_flow;
 
+  // Offset that was added to raw measured flow when computing net_flow.  If
+  // this is a large negative value, it may indicate a leak in the system.
+  VolumetricFlow flow_correction;
+
   // Identifies the current breath among all breaths handled since controller
   // startup.
   uint64_t breath_id = 0;

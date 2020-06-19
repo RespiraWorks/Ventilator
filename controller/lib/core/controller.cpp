@@ -24,10 +24,7 @@ static constexpr Duration LOOP_PERIOD = milliseconds(10);
 // Inputs - set from external debug program, read but never modified here.
 static DebugFloat dbg_blower_valve_kp("blower_valve_kp",
                                       "Proportional gain for blower valve PID",
-                                      0.7f);
-static DebugFloat dbg_blower_valve_ki("blower_valve_ki",
-                                      "Integral gain for blower valve PID",
-                                      1.0f);
+                                      0.05f);
 static DebugFloat dbg_blower_valve_kd("blower_valve_kd",
                                       "Derivative gain for blower valve PID");
 
@@ -75,8 +72,20 @@ static DebugFloat dbg_volume_uncorrected("uncorrected_volume",
 static DebugFloat dbg_flow_correction("flow_correction",
                                       "Correction to flow, cc/sec");
 
+// TODO: If we had a notion of read-only DebugVars, we could call this
+// blower_valve_ki, which would be kind of nice?  Alternatively, if we had a
+// notion of DebugVars that a user had set/pinned to a certain value, we could
+// use this as a read/write param -- read it, and write it unless the user set
+// it, in which case, use that value.
+static DebugFloat
+    dbg_blower_valve_computed_ki("blower_valve_computed_ki",
+                                 "Integral gain for blower valve PID.  READ "
+                                 "ONLY - This value is gain-scheduled.",
+                                 10.0f);
+
 Controller::Controller()
-    : blower_valve_pid_(dbg_blower_valve_kp.Get(), dbg_blower_valve_ki.Get(),
+    : blower_valve_pid_(dbg_blower_valve_kp.Get(),
+                        dbg_blower_valve_computed_ki.Get(),
                         dbg_blower_valve_kd.Get(), ProportionalTerm::ON_ERROR,
                         DifferentialTerm::ON_MEASUREMENT, /*output_min=*/0.f,
                         /*output_max=*/1.0f),
@@ -89,13 +98,6 @@ Controller::Controller()
 std::pair<ActuatorsState, ControllerState>
 Controller::Run(Time now, const VentParams &params,
                 const SensorReadings &sensor_readings) {
-  blower_valve_pid_.SetKP(dbg_blower_valve_kp.Get());
-  blower_valve_pid_.SetKI(dbg_blower_valve_ki.Get());
-  blower_valve_pid_.SetKD(dbg_blower_valve_kd.Get());
-  psol_pid_.SetKP(dbg_psol_kp.Get());
-  psol_pid_.SetKI(dbg_psol_ki.Get());
-  psol_pid_.SetKD(dbg_psol_kd.Get());
-
   VolumetricFlow uncorrected_net_flow =
       sensor_readings.inflow - sensor_readings.outflow;
   flow_integrator_->AddFlow(now, uncorrected_net_flow);
@@ -113,6 +115,25 @@ Controller::Run(Time now, const VentParams &params,
     flow_integrator_->NoteExpectedVolume(ml(0));
     breath_id_ = now.microsSinceStartup();
   }
+
+  // Gain scheduling of blower Ki based on PIP and PEEP settings.  Artisanally
+  // hand-tuned by Edwin.
+  //
+  // TODO(jlebar): Using params.{pip,peep}_cm_h2o is not quite correct.  When
+  // the params change, Controller receives that change immediately, but
+  // BlowerFsm doesn't apply them until the next breath.  Add fields to
+  // BlowerSystemState for current pip/peep and use those instead.
+  float blower_ki = std::clamp(
+      2.0f * static_cast<float>(params.pip_cm_h2o - params.peep_cm_h2o) - 10.0f,
+      10.0f, 20.0f);
+  dbg_blower_valve_computed_ki.Set(blower_ki);
+
+  blower_valve_pid_.SetKP(dbg_blower_valve_kp.Get());
+  blower_valve_pid_.SetKI(blower_ki);
+  blower_valve_pid_.SetKD(dbg_blower_valve_kd.Get());
+  psol_pid_.SetKP(dbg_psol_kp.Get());
+  psol_pid_.SetKI(dbg_psol_ki.Get());
+  psol_pid_.SetKD(dbg_psol_kd.Get());
 
   ActuatorsState actuators_state;
   if (desired_state.pressure_setpoint == std::nullopt) {
@@ -146,16 +167,19 @@ Controller::Run(Time now, const VentParams &params,
       // Delivering pure air.
       psol_pid_.Reset();
 
+      // Calculate blower valve command using calculated gains
+      float blower_valve =
+          blower_valve_pid_.Compute(now, sensor_readings.patient_pressure.kPa(),
+                                    desired_state.pressure_setpoint->kPa());
+
       actuators_state = {
           .fio2_valve = 0,
           // In normal mode, blower is always full power; pid controls pressure
           // by actuating the blower pinch valve.
           .blower_power = 1,
-          .blower_valve = blower_valve_pid_.Compute(
-              now, sensor_readings.patient_pressure.kPa(),
-              desired_state.pressure_setpoint->kPa()),
-          .exhale_valve =
-              desired_state.flow_direction == FlowDirection::EXPIRATORY ? 1 : 0,
+          .blower_valve = blower_valve,
+          // coupled control: exhale valve tracks inhale valve command
+          .exhale_valve = 1.0f - 0.8f * blower_valve - 0.2f,
       };
     } else {
       // Delivering pure oxygen.

@@ -18,6 +18,10 @@ limitations under the License.
 #include "vars.h"
 #include <algorithm>
 
+// TODO(jlebar): Refactor this so that instead of is_new_breath, we have
+// is_end_of_breath.  Then we can merge Update and DesiredState(), getting rid
+// of a lot of mutable state in the FSMs.
+
 // dbg_pa_* are pressure assist configuration vars.
 //
 // These are read but never modified here.
@@ -104,9 +108,19 @@ void PressureControlFsm::Update(Time now, const BlowerFsmInputs &inputs) {
 
 BlowerSystemState PressureControlFsm::DesiredState() const {
   if (inspire_finished_) {
-    return {expire_pressure_, FlowDirection::EXPIRATORY};
+    return {
+        .pressure_setpoint = expire_pressure_,
+        .flow_direction = FlowDirection::EXPIRATORY,
+        .pip = inspire_pressure_,
+        .peep = expire_pressure_,
+    };
   }
-  return {setpoint_, FlowDirection::INSPIRATORY};
+  return {
+      .pressure_setpoint = setpoint_,
+      .flow_direction = FlowDirection::INSPIRATORY,
+      .pip = inspire_pressure_,
+      .peep = expire_pressure_,
+  };
 }
 
 PressureAssistFsm::PressureAssistFsm(Time now, const VentParams &params)
@@ -135,9 +149,19 @@ void PressureAssistFsm::Update(Time now, const BlowerFsmInputs &inputs) {
 
 BlowerSystemState PressureAssistFsm::DesiredState() const {
   if (inspire_finished_) {
-    return {expire_pressure_, FlowDirection::EXPIRATORY};
+    return {
+        .pressure_setpoint = expire_pressure_,
+        .flow_direction = FlowDirection::EXPIRATORY,
+        .pip = inspire_pressure_,
+        .peep = expire_pressure_,
+    };
   }
-  return {setpoint_, FlowDirection::INSPIRATORY};
+  return {
+      .pressure_setpoint = setpoint_,
+      .flow_direction = FlowDirection::INSPIRATORY,
+      .pip = inspire_pressure_,
+      .peep = expire_pressure_,
+  };
 }
 
 // TODO don't rely on fsm inner states to make this usable in any fsm

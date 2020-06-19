@@ -56,6 +56,51 @@ TEST(BlowerFsmTest, StaysOff) {
   EXPECT_EQ(s.flow_direction, FlowDirection::EXPIRATORY);
 }
 
+TEST(BlowerFsmTest, OffFsmDesiredPipPeep) {
+  BlowerFsm fsm;
+  VentParams p = VentParams_init_zero;
+  p.mode = VentMode_OFF;
+  p.breaths_per_min = 20;
+  p.inspiratory_expiratory_ratio = 2;
+  p.peep_cm_h2o = 10;
+  p.pip_cm_h2o = 20;
+
+  BlowerSystemState s = fsm.DesiredState(Hal.now(), p, inputs_zero);
+  EXPECT_EQ(s.pip.cmH2O(), 0.f);
+  EXPECT_EQ(s.peep.cmH2O(), 0.f);
+}
+
+TEST(BlowerFsmTest, DesiredPipPeep) {
+  for (VentMode mode : {VentMode_PRESSURE_CONTROL, VentMode_PRESSURE_ASSIST}) {
+    BlowerFsm fsm;
+    VentParams p = VentParams_init_zero;
+    p.mode = mode;
+    p.breaths_per_min = 20; // 3s/breath
+    p.inspiratory_expiratory_ratio = 2;
+    p.pip_cm_h2o = 20;
+    p.peep_cm_h2o = 10;
+
+    BlowerSystemState s = fsm.DesiredState(Hal.now(), p, inputs_zero);
+    EXPECT_EQ(s.pip.cmH2O(), 20.f);
+    EXPECT_EQ(s.peep.cmH2O(), 10.f);
+
+    Hal.delay(seconds(1));
+    p.pip_cm_h2o = 25;
+    p.peep_cm_h2o = 15;
+
+    // pip/peep unchanged, because we haven't hit a breath boundary yet.
+    s = fsm.DesiredState(Hal.now(), p, inputs_zero);
+    EXPECT_EQ(s.pip.cmH2O(), 20.f);
+    EXPECT_EQ(s.peep.cmH2O(), 10.f);
+
+    // Now the pip/peep values update.
+    Hal.delay(seconds(2));
+    s = fsm.DesiredState(Hal.now(), p, inputs_zero);
+    EXPECT_EQ(s.pip.cmH2O(), 25.f);
+    EXPECT_EQ(s.peep.cmH2O(), 15.f);
+  }
+}
+
 // Checks that a sequence of calls to blower_fsm_desired_state() yield the
 // expected results.
 void testSequence(

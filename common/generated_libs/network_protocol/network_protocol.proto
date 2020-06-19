@@ -186,4 +186,9 @@ message SensorsProto {
   // Receiver MUST NOT assume that this identifier is increasing, or dense.
   // It might decrease e.g. in case of controller restart, and might be sparse.
   required uint64 breath_id = 6;
+
+  // Offset that the controller added to measured flow when computing
+  // flow_ml_per_min, in an attempt to make the volume graph look "right".  If
+  // this is a large negative number, it may indicate a leak in the system.
+  required float flow_correction_ml_per_min = 7;
 }

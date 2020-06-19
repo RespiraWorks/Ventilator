@@ -24,10 +24,10 @@ static constexpr Duration LOOP_PERIOD = milliseconds(10);
 // Inputs - set from external debug program, read but never modified here.
 static DebugFloat dbg_blower_valve_kp("blower_valve_kp",
                                       "Proportional gain for blower valve PID",
-                                      0.7f);
+                                      0.05f);
 static DebugFloat dbg_blower_valve_ki("blower_valve_ki",
                                       "Integral gain for blower valve PID",
-                                      1.0f);
+                                      10.0f);
 static DebugFloat dbg_blower_valve_kd("blower_valve_kd",
                                       "Derivative gain for blower valve PID");
 
@@ -145,17 +145,22 @@ Controller::Run(Time now, const VentParams &params,
     if (params.fio2 < 1) {
       // Delivering pure air.
       psol_pid_.Reset();
-
-      actuators_state = {
+	  
+	  //Gain Scheduling Ki based on PIP and PEEP settings
+	  dbg_blower_valve_ki.Set(std::clamp(2.0f*(static_cast<float>(params.pip_cm_h2o)-static_cast<float>(params.peep_cm_h2o))-10.0f, 10.0f, 20.0f));
+      
+	  //calculate blower valve command using calculated gains
+	  float blower_valve = blower_valve_pid_.Compute(
+              now, sensor_readings.patient_pressure.kPa(),
+              desired_state.pressure_setpoint->kPa());
+			  
+	  actuators_state = {
           .fio2_valve = 0,
           // In normal mode, blower is always full power; pid controls pressure
           // by actuating the blower pinch valve.
           .blower_power = 1,
-          .blower_valve = blower_valve_pid_.Compute(
-              now, sensor_readings.patient_pressure.kPa(),
-              desired_state.pressure_setpoint->kPa()),
-          .exhale_valve =
-              desired_state.flow_direction == FlowDirection::EXPIRATORY ? 1 : 0,
+          .blower_valve = blower_valve,
+          .exhale_valve = (1.0f-0.8f*blower_valve-0.2f), //coupled control: exhale valve tracks inhale valve command
       };
     } else {
       // Delivering pure oxygen.
@@ -167,7 +172,7 @@ Controller::Run(Time now, const VentParams &params,
                                 desired_state.pressure_setpoint->kPa()),
           .blower_power = 0,
           .blower_valve = 0,
-          .exhale_valve =
+          .exhale_valve = 
               desired_state.flow_direction == FlowDirection::EXPIRATORY ? 1 : 0,
       };
     }

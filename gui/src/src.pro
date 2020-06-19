@@ -22,6 +22,7 @@ HEADERS += \
   controller_history.h \
   gui_state_container.h \
   latching_alarm.h \
+  patient_detached_alarm.h \
   periodic_closure.h \
   pip_exceeded_alarm.h \
   pip_not_reached_alarm.h \

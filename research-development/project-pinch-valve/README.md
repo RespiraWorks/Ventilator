@@ -2,7 +2,7 @@
 
   CAD File         |  Assembled         | In action          
 :------------------:|:-----------------:|:-------------------------:
-![](assets/rendering-1-6.png)  |  ![](assets/assembled.jpg)  |  ![](assets/animation.gif)
+![](assets/rendering-1-6.png)  |  ![](assets/assembled_smaller.jpg)  |  ![](assets/animation.gif)
 
 ## Overview
 

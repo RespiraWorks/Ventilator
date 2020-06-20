@@ -18,13 +18,14 @@ public:
     uint64_t breath_id = status.sensor_readings.breath_id;
 
     if (breath_id != latest_breath_id_) {
+      ++num_breaths_;
+      latest_breath_id_ = status.sensor_readings.breath_id;
+
       latest_pip_ = current_pip_;
       current_pip_ = pressure;
 
       latest_peep_ = current_peep_;
       current_peep_ = pressure;
-
-      latest_breath_id_ = status.sensor_readings.breath_id;
 
       recent_breath_starts_.push_back(now);
       if (recent_breath_starts_.size() > kMaxRecentBreathStarts) {
@@ -39,6 +40,7 @@ public:
         current_peep_.value_or(std::numeric_limits<float>::max()), pressure);
   }
 
+  uint32_t num_breaths() const { return num_breaths_; }
   std::optional<float> pip() const { return latest_pip_; }
   std::optional<float> peep() const { return latest_peep_; }
   std::optional<float> rr() const {
@@ -54,6 +56,8 @@ public:
   }
 
 private:
+  uint32_t num_breaths_ = 0;
+
   std::optional<float> latest_pip_;
   std::optional<float> current_pip_;
 

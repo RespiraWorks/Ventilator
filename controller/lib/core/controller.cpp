@@ -71,7 +71,6 @@ static DebugFloat dbg_volume_uncorrected("uncorrected_volume",
                                          "Patient volume w/o correction, ml");
 static DebugFloat dbg_flow_correction("flow_correction",
                                       "Correction to flow, cc/sec");
-									 									 
 
 // TODO: If we had a notion of read-only DebugVars, we could call this
 // blower_valve_ki, which would be kind of nice?  Alternatively, if we had a
@@ -123,14 +122,11 @@ Controller::Run(Time now, const VentParams &params,
   // Note that we use desired_state.pip/peep and not params.pip/peep because
   // desired_state updates at breath boundaries, whereas params updates
   // whenever the user clicks the touchscreen.
-  
-  
-  float blower_ki = std::clamp(
-      0.5f * (desired_state.pip - desired_state.peep).cmH2O() + 5.0f, 10.0f,
-      20.0f);
-  
+  float blower_ki =
+      std::clamp(0.5f * (desired_state.pip - desired_state.peep).cmH2O() + 5.0f,
+                 10.0f, 20.0f);
+
   dbg_blower_valve_computed_ki.Set(blower_ki);
-  
 
   blower_valve_pid_.SetKP(dbg_blower_valve_kp.Get());
   blower_valve_pid_.SetKI(blower_ki);

@@ -10,6 +10,8 @@ The terminal will ask for the SUDO password for Raspbian. By default, this is "r
 
 The `inventory` parameter specifies a file containing a list of hosts to provision. For the default `hosts` file, this will be a virtual machine. However, you can also use the `hosts.raspberrypi` file to deploy to a Raspberry Pi on your network (having the default hostname `raspberrypi.local`.) This will be useful for development testing.
 
+For more rapid testing of the configuration (without testing the GUI itself) you can add `--skip-tags docker` to the `ansible-playbook` arguments. This will skip installing Docker and pulling the GUI image.
+
 ### hosts
 This is Ansible's inventory file that keeps track of the targets of playbooks. Place this file at `/etc/ansible/` or replace the contents of the preexisting `hosts` file
 

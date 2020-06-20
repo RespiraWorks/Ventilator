@@ -116,10 +116,11 @@
       create: yes
 
   - name: Configure lightdm (enables auto-login)
-    file:
+    copy:
       src: lightdm.conf
       dest: /etc/lightdm/lightdm.conf
       mode: '0644'
+      force: yes
 
   - name: Cache most recent gui docker image from dockerhub
     shell: docker pull respiraworks/gui

@@ -6,8 +6,9 @@ import ".."
 ParameterButton {
     parameterName: qsTr("Peep")
     parameterUnit: qsTr("cmH<sub>2</sub>0")
+    // Per SR-08, RW-SYS-005
+    parameterMinValue: 0
     parameterMaxValue: 20
-    parameterMinValue: 5
     parameterStepSize: 1
     parameterValue: GuiStateContainer.commanded_peep
     onValueConfirmed: GuiStateContainer.commanded_peep = value

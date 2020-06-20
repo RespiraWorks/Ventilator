@@ -8,10 +8,9 @@ ScopeView {
     name: "Tidal Volume"
     unit: "mL"
 
-    // Software requirement 49 says TV should be in the range of
-    // 0..3000 mL.
-    yMin: -3000
-    yMax: 3000
+    // RW-SYS-032
+    yMin: 0
+    yMax: 1000
 
     showBottomLine: false
     dataset: GuiStateContainer.tidalSeries

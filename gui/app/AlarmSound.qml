@@ -12,7 +12,9 @@ SoundEffect {
         switch(root.priority) {
         case AlarmPriority.HIGH: source = 'qrc:/sounds/alarm_high.wav'; break;
         case AlarmPriority.MEDIUM: source = 'qrc:/sounds/alarm_medium.wav'; break;
-        case AlarmPriority.LOW: source = 'qrc:/sounds/alarm_low.wav'; break;
+        // TODO: Currently we don't have any low priority alarms, but this needs
+        // a tone similar to alarm_medium.wav but with only two beeps.
+        case AlarmPriority.LOW: source = ''; break;
         case AlarmPriority.NONE: source = ''; break;
         }
 

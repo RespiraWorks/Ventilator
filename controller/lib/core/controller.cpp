@@ -83,6 +83,9 @@ static DebugFloat
                                  "ONLY - This value is gain-scheduled.",
                                  10.0f);
 
+static DebugUInt32 dbg_breath_id("breath_id",
+                                 "ID of the current breath, read-only", 0);
+
 Controller::Controller()
     : blower_valve_pid_(dbg_blower_valve_kp.Get(),
                         dbg_blower_valve_computed_ki.Get(),
@@ -115,6 +118,12 @@ Controller::Run(Time now, const VentParams &params,
     flow_integrator_->NoteExpectedVolume(ml(0));
     breath_id_ = now.microsSinceStartup();
   }
+
+  // Precision loss 64->32 bits ok: we only care about equality of these values,
+  // not their absolute value, and the top 32 bits will change with each new
+  // breath.
+  // TODO: Maybe we should just make breath id a 32-bit value.
+  dbg_breath_id.Set(static_cast<uint32_t>(breath_id_));
 
   // Gain scheduling of blower Ki based on PIP and PEEP settings.  Artisanally
   // hand-tuned by Edwin.

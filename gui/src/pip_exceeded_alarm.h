@@ -6,6 +6,8 @@
 #include "latching_alarm.h"
 #include "network_protocol.pb.h"
 
+#include <cmath>
+
 #include <QObject>
 #include <QString>
 
@@ -22,10 +24,12 @@ private:
            const BreathSignals &breath_signals) override {
     (void)now;
     (void)status;
+    if (breath_signals.num_breaths() < 3)
+      return std::nullopt;
     float pip = breath_signals.pip().value_or(0);
-    if (pip > threshold_cmh2o_) {
-      return {QString("PIP exceeded: measured %1, threshold %2")
-                  .arg(QString::number(pip, 'f', 1),
+    if (std::floor(pip) > threshold_cmh2o_) {
+      return {QString("PIP exceeded (%1 > %2)")
+                  .arg(QString::number(pip, 'f', 0),
                        QString::number(threshold_cmh2o_, 'f', 1))};
     }
     return std::nullopt;

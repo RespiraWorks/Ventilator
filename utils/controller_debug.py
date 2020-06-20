@@ -946,7 +946,7 @@ def TraceGraph(raw_args: List[str]):
         plt.show()
 
 
-def TraceSaveDat(dat, fname, separator="  ", title=""):
+def TraceSaveDat(dat, fname, separator=" ", title=""):
     tv = TraceActiveVars()
 
     with open(fname, "w") as fp:

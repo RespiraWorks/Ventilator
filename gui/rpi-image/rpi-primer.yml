@@ -14,6 +14,8 @@
     apt_key:
       url: https://download.docker.com/linux/raspbian/gpg
       state: present
+    tags:
+      - docker
 
   - name: Update apt packages
     apt:
@@ -28,12 +30,18 @@
 
   - name: Download Docker convenience script
     shell: curl -fsSL https://get.docker.com -o get-docker.sh
+    tags:
+      - docker
 
   - name: Run Docker convenience script
     shell: sh get-docker.sh
+    tags:
+      - docker
 
   - name: Adding user pi to docker group
     shell: usermod -aG docker pi
+    tags:
+      - docker
 
   - name: Install Debian menu for Openbox
     apt:
@@ -66,14 +74,21 @@
       line: 'exec openbox-session'
       create: yes
 
-  - name: Enable auto-login
-    lineinfile:
+  - name: Configure lightdm (enables auto-login)
+    file:
+      src: lightdm.conf
       dest: /etc/lightdm/lightdm.conf
-      line: 'autologin-user=pi'
-      create: no
+      mode: '0644'
 
   - name: Cache most recent gui docker image from dockerhub
     shell: docker pull respiraworks/gui
+    tags:
+      - docker
+
+  - name: Create config directory
+    file:
+      path: /home/pi/.config
+      state: directory
 
   - name: Copy openbox autostart folder from root to pi
     shell: cp -r /etc/xdg/openbox /home/pi/.config/

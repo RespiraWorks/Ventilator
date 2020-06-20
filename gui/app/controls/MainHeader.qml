@@ -27,7 +27,7 @@ Control {
             sourceSize: Qt.size(32, 32)
             fillMode: Image.PreserveAspectFit
             anchors.centerIn: parent
-            source: 'qrc:/images/RW_menu_24.svg'
+            source: GuiStateContainer.is_using_fake_data ? 'qrc:/images/RW_debug.svg' : 'qrc:/images/RW_menu_24.svg'
         }
 
         onClicked: menuClicked()

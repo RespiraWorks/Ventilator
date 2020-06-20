@@ -122,9 +122,10 @@ Controller::Run(Time now, const VentParams &params,
   // Note that we use desired_state.pip/peep and not params.pip/peep because
   // desired_state updates at breath boundaries, whereas params updates
   // whenever the user clicks the touchscreen.
-  float blower_ki = std::clamp(
-      2.0f * (desired_state.pip - desired_state.peep).cmH2O() - 10.0f, 10.0f,
-      20.0f);
+  float blower_ki =
+      std::clamp(0.5f * (desired_state.pip - desired_state.peep).cmH2O() + 5.0f,
+                 10.0f, 20.0f);
+
   dbg_blower_valve_computed_ki.Set(blower_ki);
 
   blower_valve_pid_.SetKP(dbg_blower_valve_kp.Get());
@@ -178,7 +179,7 @@ Controller::Run(Time now, const VentParams &params,
           .blower_power = 1,
           .blower_valve = blower_valve,
           // coupled control: exhale valve tracks inhale valve command
-          .exhale_valve = 1.0f - 0.8f * blower_valve - 0.2f,
+          .exhale_valve = 1.0f - 0.55f * blower_valve - 0.35f,
       };
     } else {
       // Delivering pure oxygen.

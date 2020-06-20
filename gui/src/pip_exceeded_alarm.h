@@ -30,7 +30,7 @@ private:
     if (std::floor(pip) > threshold_cmh2o_) {
       return {QString("PIP exceeded (%1 > %2)")
                   .arg(QString::number(pip, 'f', 0),
-                       QString::number(threshold_cmh2o_, 'f', 1))};
+                       QString::number(threshold_cmh2o_, 'f', 0))};
     }
     return std::nullopt;
   }

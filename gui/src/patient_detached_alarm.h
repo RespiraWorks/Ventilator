@@ -18,7 +18,7 @@ public:
   // TODO: This is a medium-priority alarm in the requirements, but are we sure
   // that's correct?  Seems kind of strange; if the patient isn't connected,
   // isn't that kind of a big deal?
-  PatientDetachedAlarm() : LatchingAlarm(AlarmPriority::MEDIUM) {}
+  PatientDetachedAlarm() : LatchingAlarm(AlarmPriority::HIGH) {}
 
 private:
   std::optional<QString>
@@ -27,12 +27,7 @@ private:
     VolumetricFlow flow_correction =
         ml_per_min(status.sensor_readings.flow_correction_ml_per_min);
     if (flow_correction <= threshold_) {
-      return {
-          QString(
-              "Patient detached from device: measured flow correction of %1 "
-              "ml/s, threshold %2 ml/s")
-              .arg(QString::number(flow_correction.ml_per_sec(), 'f', 0),
-                   QString::number(threshold_.ml_per_sec(), 'f', 0))};
+      return {QString("Patient detached from device")};
     }
     return std::nullopt;
   }

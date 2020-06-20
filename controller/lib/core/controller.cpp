@@ -31,7 +31,8 @@ static DebugFloat dbg_blower_valve_kd("blower_valve_kd",
 // TODO: These need to be tuned.
 static DebugFloat dbg_psol_kp("psol_kp", "Proportional gain for O2 psol PID",
                               0.05f);
-static DebugFloat dbg_psol_ki("psol_ki", "Integral gain for O2 psol PID", 20.0f);
+static DebugFloat dbg_psol_ki("psol_ki", "Integral gain for O2 psol PID",
+                              20.0f);
 static DebugFloat dbg_psol_kd("psol_kd", "Derivative gain for O2 psol PID", 0);
 
 static DebugFloat dbg_forced_blower_power(
@@ -184,10 +185,10 @@ Controller::Run(Time now, const VentParams &params,
     } else {
       // Delivering pure oxygen.
       blower_valve_pid_.Reset();
-	  
-	  float psol_valve = psol_pid_.Compute(now, sensor_readings.patient_pressure.kPa(),
-                                desired_state.pressure_setpoint->kPa());
 
+      float psol_valve =
+          psol_pid_.Compute(now, sensor_readings.patient_pressure.kPa(),
+                            desired_state.pressure_setpoint->kPa());
       actuators_state = {
           .fio2_valve = psol_valve,
           .blower_power = 0,

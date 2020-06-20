@@ -30,6 +30,7 @@ Button {
     property alias parameterMaxValue: popup.maxValue
     property alias parameterStepSize: popup.stepSize
     property alias parameterDisplayFormatter: popup.displayFormatter
+    property alias parameterFixup: popup.fixupValue
 
     signal valueConfirmed(real value)
 

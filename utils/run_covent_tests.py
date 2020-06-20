@@ -71,7 +71,7 @@ def run_test(test, cmd_args):
     time.sleep(cmd_args.ignore_secs)
 
     # It would be possible to trace flow here too, but the graphs get noisy.
-    run(f"trace start pc_setpoint pressure volume")
+    run(f"trace start pc_setpoint pressure volume net_flow")
     time.sleep(cmd_args.capture_secs)
     run(
         f"trace graph --dest={shlex.quote(str(outfile))} --title={test} "

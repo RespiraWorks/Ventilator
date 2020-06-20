@@ -1,1 +1,1 @@
-pi@raspberrypi.local ansible_connection=ssh ansible_ssh_pass=raspberry ansible_port=22
+pi@raspberrypi.local ansible_connection=ssh ansible_ssh_pass=respiraworks ansible_port=22

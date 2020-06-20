@@ -14,6 +14,8 @@
     apt_key:
       url: https://download.docker.com/linux/raspbian/gpg
       state: present
+    tags:
+      - docker
 
   - name: Update apt packages
     apt:
@@ -28,12 +30,18 @@
 
   - name: Download Docker convenience script
     shell: curl -fsSL https://get.docker.com -o get-docker.sh
+    tags:
+      - docker
 
   - name: Run Docker convenience script
     shell: sh get-docker.sh
+    tags:
+      - docker
 
   - name: Adding user pi to docker group
     shell: usermod -aG docker pi
+    tags:
+      - docker
 
   - name: Install Debian menu for Openbox
     apt:
@@ -42,6 +50,43 @@
         - lightdm
         - openbox
         - menu
+
+  - name: Create config directory
+    file:
+      path: /home/pi/.config
+      state: directory
+      owner: pi
+      group: pi
+
+  - name: Create user systemd default.target.wants directory
+    file:
+      path: /home/pi/.config/systemd/user/default.target.wants/
+      state: directory
+      owner: pi
+      group: pi
+
+  - name: Create user systemd socket.target.wants directory
+    file:
+      path: /home/pi/.config/systemd/user/socket.target.wants/
+      state: directory
+      owner: pi
+      group: pi
+
+  - name: Create user systemd default.target.wants directory
+    file:
+      src: /usr/lib/systemd/user/pulseaudio.service
+      dest: /home/pi/.config/systemd/user/default.target.wants/pulseaudio.service
+      state: link
+      owner: pi
+      group: pi
+
+  - name: Create user systemd socket.target.wants directory
+    file:
+      src: /usr/lib/systemd/user/pulseaudio.socket
+      dest: /home/pi/.config/systemd/user/sockets.target.wants/pulseaudio.socket
+      state: directory
+      owner: pi
+      group: pi
 
   - name: Creates /lib/systemd/user directory
     file:
@@ -53,12 +98,16 @@
       src: pulseaudio.socket
       dest: /lib/systemd/user/pulseaudio.socket
       mode: '0644'
+      owner: pi
+      group: pi
 
   - name: Add pulseaudio service systemd config
     copy:
       src: pulseaudio.service
       dest: /lib/systemd/user/pulseaudio.service
       mode: '0644'
+      owner: pi
+      group: pi
 
   - name: Set pi user's .xsession
     lineinfile:
@@ -66,14 +115,17 @@
       line: 'exec openbox-session'
       create: yes
 
-  - name: Enable auto-login
-    lineinfile:
+  - name: Configure lightdm (enables auto-login)
+    copy:
+      src: lightdm.conf
       dest: /etc/lightdm/lightdm.conf
-      line: 'autologin-user=pi'
-      create: no
+      mode: '0644'
+      force: yes
 
   - name: Cache most recent gui docker image from dockerhub
     shell: docker pull respiraworks/gui
+    tags:
+      - docker
 
   - name: Copy openbox autostart folder from root to pi
     shell: cp -r /etc/xdg/openbox /home/pi/.config/

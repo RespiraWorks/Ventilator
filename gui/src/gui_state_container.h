@@ -55,7 +55,12 @@ public:
       alarm_manager_.get_pip_not_reached_alarm()->SetThresholdCmH2O(
           commanded_pip_ - 5);
     });
+    // Set initial alarm parameters per above.
+    params_changed();
   }
+
+  bool get_is_using_fake_data() const { return is_using_fake_data_; }
+  void set_is_using_fake_data(bool value) { is_using_fake_data_ = value; }
 
   // Returns when the GUI started up.
   SteadyInstant GetStartupTime() { return startup_time_; }
@@ -98,6 +103,7 @@ public:
     return history_.GetHistory();
   }
 
+  Q_PROPERTY(bool is_using_fake_data READ get_is_using_fake_data CONSTANT)
   // Measured parameters
   Q_PROPERTY(qreal measured_pressure READ get_measured_pressure NOTIFY
                  measurements_changed)
@@ -230,6 +236,7 @@ private:
   }
 
   const SteadyInstant startup_time_ = SteadyClock::now();
+  bool is_using_fake_data_ = false;
   ControllerHistory history_;
   BreathSignals breath_signals_;
   int battery_percentage_ = 70;

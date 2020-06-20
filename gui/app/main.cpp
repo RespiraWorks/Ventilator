@@ -79,41 +79,31 @@ int main(int argc, char *argv[]) {
 
   std::unique_ptr<ConnectedDevice> device;
   if (parser.isSet(serialPortOption)) {
+    state_container->set_is_using_fake_data(false);
     device = std::make_unique<RespiraConnectedDevice>(
         parser.value(serialPortOption));
   } else {
+    state_container->set_is_using_fake_data(true);
     // NOTE: The code below is specialized to this particular file.
-    // The file also does not match the default (or, of course, current) mode
-    // settings: settings used in the file are PIP 15, PEEP 5, RR 12, IE 2/3.
     std::vector<ControllerStatus> statuses;
-    QFile file(":/sample-data/2020-05-14-pip15-peep5-rr12-ie23.csv");
+    QFile file(":/sample-data/2020-06-20-pip15-peep5-rr12-itime1.dat");
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
       std::cerr << "Failed to open sample data file";
       return 1;
     }
-    int breath_id = 0;
-    bool last_setpoint_was_5 = false;
     while (!file.atEnd()) {
       QString line{file.readLine()};
       line = line.trimmed();
-      if (line.isEmpty() || line.startsWith("#"))
+      if (line.isEmpty() || line.startsWith("#") || line.startsWith("time"))
         continue;
-      auto tokens = line.split(",").toVector();
-
-      float fan_setpoint_cm_h2o = tokens[0].toFloat();
-      if (fan_setpoint_cm_h2o == 5.0f) {
-        if (!last_setpoint_was_5)
-          breath_id++;
-        last_setpoint_was_5 = true;
-      } else {
-        last_setpoint_was_5 = false;
-      }
+      auto tokens = line.split(" ").toVector();
 
       ControllerStatus status = ControllerStatus_init_zero;
       status.sensor_readings.patient_pressure_cm_h2o = tokens[1].toFloat();
-      status.sensor_readings.flow_ml_per_min = 1000 * tokens[4].toFloat();
-      status.sensor_readings.volume_ml = 10 * tokens[5].toFloat();
-      status.sensor_readings.breath_id = breath_id;
+      // net flow in the file is in ml/sec.
+      status.sensor_readings.flow_ml_per_min = 60 * tokens[2].toFloat();
+      status.sensor_readings.volume_ml = tokens[3].toFloat();
+      status.sensor_readings.breath_id = tokens[4].toInt();
       statuses.push_back(status);
     }
 

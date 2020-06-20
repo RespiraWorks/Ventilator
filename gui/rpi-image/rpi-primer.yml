@@ -51,6 +51,43 @@
         - openbox
         - menu
 
+  - name: Create config directory
+    file:
+      path: /home/pi/.config
+      state: directory
+      owner: pi
+      group: pi
+
+  - name: Create user systemd default.target.wants directory
+    file:
+      path: /home/pi/.config/systemd/user/default.target.wants/
+      state: directory
+      owner: pi
+      group: pi
+
+  - name: Create user systemd socket.target.wants directory
+    file:
+      path: /home/pi/.config/systemd/user/socket.target.wants/
+      state: directory
+      owner: pi
+      group: pi
+
+  - name: Create user systemd default.target.wants directory
+    file:
+      src: /usr/lib/systemd/user/pulseaudio.service
+      dest: /home/pi/.config/systemd/user/default.target.wants/pulseaudio.service
+      state: link
+      owner: pi
+      group: pi
+
+  - name: Create user systemd socket.target.wants directory
+    file:
+      src: /usr/lib/systemd/user/pulseaudio.socket
+      dest: /home/pi/.config/systemd/user/sockets.target.wants/pulseaudio.socket
+      state: directory
+      owner: pi
+      group: pi
+
   - name: Creates /lib/systemd/user directory
     file:
       path: /lib/systemd/user
@@ -61,12 +98,16 @@
       src: pulseaudio.socket
       dest: /lib/systemd/user/pulseaudio.socket
       mode: '0644'
+      owner: pi
+      group: pi
 
   - name: Add pulseaudio service systemd config
     copy:
       src: pulseaudio.service
       dest: /lib/systemd/user/pulseaudio.service
       mode: '0644'
+      owner: pi
+      group: pi
 
   - name: Set pi user's .xsession
     lineinfile:
@@ -84,11 +125,6 @@
     shell: docker pull respiraworks/gui
     tags:
       - docker
-
-  - name: Create config directory
-    file:
-      path: /home/pi/.config
-      state: directory
 
   - name: Copy openbox autostart folder from root to pi
     shell: cp -r /etc/xdg/openbox /home/pi/.config/

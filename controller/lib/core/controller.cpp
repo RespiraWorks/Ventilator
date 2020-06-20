@@ -30,8 +30,9 @@ static DebugFloat dbg_blower_valve_kd("blower_valve_kd",
 
 // TODO: These need to be tuned.
 static DebugFloat dbg_psol_kp("psol_kp", "Proportional gain for O2 psol PID",
-                              0.5);
-static DebugFloat dbg_psol_ki("psol_ki", "Integral gain for O2 psol PID", 2);
+                              0.05f);
+static DebugFloat dbg_psol_ki("psol_ki", "Integral gain for O2 psol PID",
+                              20.0f);
 static DebugFloat dbg_psol_kd("psol_kd", "Derivative gain for O2 psol PID", 0);
 
 static DebugFloat dbg_forced_blower_power(
@@ -179,20 +180,20 @@ Controller::Run(Time now, const VentParams &params,
           .blower_power = 1,
           .blower_valve = blower_valve,
           // coupled control: exhale valve tracks inhale valve command
-          .exhale_valve = 1.0f - 0.55f * blower_valve - 0.35f,
+          .exhale_valve = 1.0f - 0.65f * blower_valve - 0.35f,
       };
     } else {
       // Delivering pure oxygen.
       blower_valve_pid_.Reset();
 
+      float psol_valve =
+          psol_pid_.Compute(now, sensor_readings.patient_pressure.kPa(),
+                            desired_state.pressure_setpoint->kPa());
       actuators_state = {
-          .fio2_valve =
-              psol_pid_.Compute(now, sensor_readings.patient_pressure.kPa(),
-                                desired_state.pressure_setpoint->kPa()),
+          .fio2_valve = psol_valve,
           .blower_power = 0,
           .blower_valve = 0,
-          .exhale_valve =
-              desired_state.flow_direction == FlowDirection::EXPIRATORY ? 1 : 0,
+          .exhale_valve = 1.0f - 0.6f * psol_valve - 0.4f,
       };
     }
 

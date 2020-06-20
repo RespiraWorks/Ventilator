@@ -47,11 +47,13 @@ public:
       : startup_time_(SteadyClock::now()),
         history_(history_window, granularity) {
     QObject::connect(this, &GuiStateContainer::params_changed, [this]() {
-      // TODO: This should come from GUI alarm settings instead.
+      // TODO: This could come from GUI alarm settings instead.
+      // Source for +/-5 is this thread:
+      // https://respiraworks.slack.com/archives/C011UMNUWGZ/p1592606104221700?thread_ts=1592603466.221100&cid=C011UMNUWGZ
       alarm_manager_.get_pip_exceeded_alarm()->SetThresholdCmH2O(
-          commanded_pip_ + 2);
+          commanded_pip_ + 5);
       alarm_manager_.get_pip_not_reached_alarm()->SetThresholdCmH2O(
-          commanded_pip_ - 2);
+          commanded_pip_ - 5);
     });
   }
 
@@ -245,7 +247,8 @@ private:
   quint32 commanded_pip_ = 15;
   quint32 commanded_peep_ = 5;
   qreal commanded_i_time_ = 1.0;
-  qreal commanded_fio2_percent_ = 100.0;
+  // https://respiraworks.slack.com/archives/C011UMNUWGZ/p1592608246223200?thread_ts=1592603466.221100&cid=C011UMNUWGZ
+  qreal commanded_fio2_percent_ = 21.0;
 
   AlarmManager alarm_manager_;
 };

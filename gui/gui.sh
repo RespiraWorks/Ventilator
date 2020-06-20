@@ -82,6 +82,7 @@ if [ "$1" == "--install" ] ; then
     qtquickcontrols2-5-dev \
     qml-module-qtquick-controls \
     qml-module-qtquick-controls2 \
+    qml-module-qtmultimedia \
     libqt5serialport5-dev \
     libqt5serialport5 \
     qtdeclarative5-dev-tools \

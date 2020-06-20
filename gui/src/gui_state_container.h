@@ -230,7 +230,10 @@ private:
     return breath_signals_.pip().value_or(commanded_pip_);
   }
   qreal get_measured_ier() const {
-    float breath_duration_sec = 60.0 / get_measured_rr();
+    float breath_duration_sec =
+        60.0 / ((commanded_mode_ == VentilationMode::COMMAND_PRESSURE)
+                    ? commanded_rr_
+                    : get_measured_rr());
     float commanded_e_time = breath_duration_sec - commanded_i_time_;
     return commanded_i_time_ / commanded_e_time;
   }

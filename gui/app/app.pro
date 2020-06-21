@@ -17,7 +17,7 @@ SOURCES += main.cpp
 
 LIBS += -L../src -leverything
 
-RESOURCES += qml.qrc images/ sounds/ controls/ fonts/ modes/ sample-data/
+RESOURCES += qml.qrc images/ sounds/ controls/ fonts/ modes/
 
 DISTFILES += images/Logo.png \
     controls/AlarmButton.qml

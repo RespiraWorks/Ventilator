@@ -105,8 +105,8 @@ ApplicationWindow {
 
         property ListModel modesModel: ListModel {
             ListElement {
-                mode: GuiStateContainer.COMMAND_PRESSURE
-                title: qsTr("Command Pressure")
+                mode: GuiStateContainer.PRESSURE_CONTROL
+                title: qsTr("Pressure control")
                 description: "Space for a short, but well-crafted message summarizing the main reasons for choosing this mode over the others available."
                 acronym: "PC"
             }
@@ -118,15 +118,15 @@ ApplicationWindow {
             }
             ListElement {
                 mode: GuiStateContainer.HIGH_FLOW_NASAL_CANNULA
-                title: qsTr("High-flow nasal cannula")
-                description: "Space for a short, but well-crafted message summarizing the main reasons for choosing this mode over the others available."
+                title: qsTr("High-flow Nasal Cannula")
+                description: "This mode is not supported yet."
                 acronym: "HFNC"
             }
         }
 
         onCurrentModeChanged: {
-            if (currentMode.mode == GuiStateContainer.COMMAND_PRESSURE) {
-              pageStack.replace(commandPressureMode)
+            if (currentMode.mode == GuiStateContainer.PRESSURE_CONTROL) {
+              pageStack.replace(pressureControlMode)
             } else if (currentMode.mode == GuiStateContainer.PRESSURE_ASSIST) {
               pageStack.replace(pressureAssistMode);
             } else if (currentMode.mode == GuiStateContainer.HIGH_FLOW_NASAL_CANNULA) {
@@ -147,8 +147,8 @@ ApplicationWindow {
     }
 
     Component {
-        id: commandPressureMode
-        CommandPressureMode {}
+        id: pressureControlMode
+        PressureControlMode {}
     }
 
     Component {

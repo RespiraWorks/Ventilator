@@ -11,6 +11,6 @@ Run for record using compressed air (stand-in for pure oxygen) only.
 
 Setup Photo:
 
-![Setup Photo 1](SetupPhoto1.jpg)
+![Setup Photo 1](SetupPhoto1.jpeg)
 
-![Setup Photo 2](SetupPhoto2.jpg)
+![Setup Photo 2](SetupPhoto2.jpeg)

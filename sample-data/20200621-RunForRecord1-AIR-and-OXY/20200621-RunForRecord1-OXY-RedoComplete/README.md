@@ -9,6 +9,8 @@
 
 Run for record using compressed air (stand-in for pure oxygen) only.
 
+[Test Video link](https://youtu.be/_IBKMVM-e7I)
+
 Setup Photo:
 
 ![Setup Photo 1](SetupPhoto1.jpeg)

@@ -6,5 +6,5 @@ import ".."
 ParameterDisplay {
     parameterName: qsTr("FiO<sub>2</sub>")
     parameterUnit: qsTr("%")
-    parameterValue: "15"
+    parameterValue: GuiStateContainer.measured_fio2_percent.toString()
 }

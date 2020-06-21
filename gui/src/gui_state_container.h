@@ -35,7 +35,7 @@ class GuiStateContainer : public QObject {
 
 public:
   enum VentilationMode {
-    COMMAND_PRESSURE,
+    PRESSURE_CONTROL,
     PRESSURE_ASSIST,
     HIGH_FLOW_NASAL_CANNULA,
   };
@@ -72,7 +72,7 @@ public:
     status.uptime_ms = TimeAMinusB(SteadyClock::now(), startup_time_).count();
     status.desired_params.mode = [&] {
       switch (commanded_mode_) {
-      case VentilationMode::COMMAND_PRESSURE:
+      case VentilationMode::PRESSURE_CONTROL:
         return VentMode::VentMode_PRESSURE_CONTROL;
       case VentilationMode::PRESSURE_ASSIST:
         return VentMode::VentMode_PRESSURE_ASSIST;
@@ -221,7 +221,9 @@ private:
     return history_.GetLastStatus().sensor_readings.volume_ml;
   }
   qreal get_measured_rr() const {
-    return breath_signals_.rr().value_or(commanded_rr_);
+    return (commanded_mode_ == VentilationMode::PRESSURE_CONTROL)
+               ? commanded_rr_
+               : breath_signals_.rr().value_or(commanded_rr_);
   }
   qreal get_measured_peep() const {
     return breath_signals_.peep().value_or(commanded_peep_);
@@ -230,10 +232,7 @@ private:
     return breath_signals_.pip().value_or(commanded_pip_);
   }
   qreal get_measured_ier() const {
-    float breath_duration_sec =
-        60.0 / ((commanded_mode_ == VentilationMode::COMMAND_PRESSURE)
-                    ? commanded_rr_
-                    : get_measured_rr());
+    float breath_duration_sec = 60.0 / get_measured_rr();
     float commanded_e_time = breath_duration_sec - commanded_i_time_;
     return commanded_i_time_ / commanded_e_time;
   }
@@ -252,7 +251,7 @@ private:
   // Commanded parameters
   // Initialize to default parameters like in
   // https://github.com/RespiraWorks/VentilatorSoftware/blob/89b817af/controller/src/main.cpp#L84
-  VentilationMode commanded_mode_ = VentilationMode::COMMAND_PRESSURE;
+  VentilationMode commanded_mode_ = VentilationMode::PRESSURE_CONTROL;
   quint32 commanded_rr_ = 12;
   quint32 commanded_pip_ = 15;
   quint32 commanded_peep_ = 5;

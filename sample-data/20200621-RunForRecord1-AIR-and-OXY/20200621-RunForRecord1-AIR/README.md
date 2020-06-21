@@ -11,6 +11,6 @@ Run for record using ambient blower-driven air only.
 
 Setup Photos:
 
-![Setup Photo 1](SetupPhoto1.jpg)
+![Setup Photo 1](SetupPhoto1.jpeg)
 
-![Setup Photo 2](SetupPhoto2.jpg)
+![Setup Photo 2](SetupPhoto2.jpeg)

@@ -132,8 +132,8 @@ Controller::Run(Time now, const VentParams &params,
   // Note that we use desired_state.pip/peep and not params.pip/peep because
   // desired_state updates at breath boundaries, whereas params updates
   // whenever the user clicks the touchscreen.
-  float blower_ki =
-      std::clamp(1.0f * (desired_state.pip - desired_state.peep).cmH2O() - 5.0f,
+  float blower_ki = std::clamp(
+      (desired_state.pip - desired_state.peep).cmH2O() - 5.0f, 10.0f, 20.0f);
 
   dbg_blower_valve_computed_ki.Set(blower_ki);
 
@@ -198,6 +198,10 @@ Controller::Run(Time now, const VentParams &params,
           psol_pid_.Compute(now, sensor_readings.patient_pressure.kPa(),
                             desired_state.pressure_setpoint->kPa());
       actuators_state = {
+          // Force psol to stay very slightly open to avoid the discontinuity
+          // caused by valve hysteresis at very low command.  The exhale valve
+          // compensates for this intentional leakage by staying open when the
+          // psol valve is closed.
           .fio2_valve = std::clamp(psol_valve + 0.05f, 0.0f, 1.0f),
           .blower_power = 0,
           .blower_valve = 0,

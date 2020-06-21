@@ -118,6 +118,8 @@ public:
       quint32 measured_pip READ get_measured_pip NOTIFY measurements_changed)
   Q_PROPERTY(
       qreal measured_ier READ get_measured_ier NOTIFY measurements_changed)
+  Q_PROPERTY(qreal measured_fio2_percent READ get_measured_fio2_percent NOTIFY
+                 measurements_changed)
 
   // Graphs
   Q_PROPERTY(QVector<QPointF> pressureSeries READ GetPressureSeries NOTIFY
@@ -235,6 +237,10 @@ private:
     float breath_duration_sec = 60.0 / get_measured_rr();
     float commanded_e_time = breath_duration_sec - commanded_i_time_;
     return commanded_i_time_ / commanded_e_time;
+  }
+  qreal get_measured_fio2_percent() const {
+    // TODO: Change this to sensor value when we have a FiO2 sensor.
+    return commanded_fio2_percent_;
   }
 
   const SteadyInstant startup_time_ = SteadyClock::now();

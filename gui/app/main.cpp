@@ -86,7 +86,7 @@ int main(int argc, char *argv[]) {
     state_container->set_is_using_fake_data(true);
     // NOTE: The code below is specialized to this particular file.
     std::vector<ControllerStatus> statuses;
-    QFile file(":/sample-data/2020-06-20-pip15-peep5-rr12-itime1.dat");
+    QFile file(":/sample-data/gui-sample-data.dat");
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
       std::cerr << "Failed to open sample data file";
       return 1;

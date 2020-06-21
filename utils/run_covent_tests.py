@@ -70,12 +70,15 @@ def run_test(test, cmd_args):
     run("set forced_blower_power -1")
     time.sleep(cmd_args.ignore_secs)
 
-    # It would be possible to trace flow here too, but the graphs get noisy.
-    run(f"trace start pc_setpoint pressure volume")
+    run(f"trace start pc_setpoint pressure volume net_flow")
     time.sleep(cmd_args.capture_secs)
+
+    # Graphing flow at any scale is noisy and overwhelms the rest of the chart.
+    # trace graph can't currently exclude fields, so as a hack, graph flow
+    # divided by a large number, essentially zeroing it out.
     run(
         f"trace graph --dest={shlex.quote(str(outfile))} --title={test} "
-        "--nointeractive --scale=volume/10"
+        "--nointeractive --scale=volume/10 --scale=net_flow/1e9"
     )
 
 

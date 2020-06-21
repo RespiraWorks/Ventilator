@@ -9,6 +9,8 @@
 
 Run for record using ambient blower-driven air only.
 
+[Test Video](https://youtu.be/tyYFPTh4At0)
+
 Setup Photos:
 
 ![Setup Photo 1](SetupPhoto1.jpeg)

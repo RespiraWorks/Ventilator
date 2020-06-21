@@ -2,7 +2,7 @@
 # Built at revision 15e86df (dirty - added the breath_id debug variable)
 #
 # This uses default GUI parameters:
-#  Command Pressure mode
+#  Pressure Control mode
 #  PIP 15
 #  PEEP 5
 #  RR 12

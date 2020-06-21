@@ -4,7 +4,7 @@ import Respira 1.0
 import ".."
 
 ParameterButton {
-    parameterName: qsTr("Peep")
+    parameterName: qsTr("PEEP")
     parameterUnit: qsTr("cmH<sub>2</sub>0")
     // Per SR-08, RW-SYS-005
     parameterMinValue: 0

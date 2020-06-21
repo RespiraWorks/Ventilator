@@ -8,7 +8,7 @@ import "../controls/readings"
 import "../controls/graphs"
 import ".."
 
-// TODO: Common this with CommandPressureMode.qml.
+// TODO: Common this with PressureControlMode.qml.
 Mode {
     id: mode
 

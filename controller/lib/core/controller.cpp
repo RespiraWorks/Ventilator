@@ -24,13 +24,13 @@ static constexpr Duration LOOP_PERIOD = milliseconds(10);
 // Inputs - set from external debug program, read but never modified here.
 static DebugFloat dbg_blower_valve_kp("blower_valve_kp",
                                       "Proportional gain for blower valve PID",
-                                      0.05f);
+                                      0.04f);
 static DebugFloat dbg_blower_valve_kd("blower_valve_kd",
                                       "Derivative gain for blower valve PID");
 
 // TODO: These need to be tuned.
 static DebugFloat dbg_psol_kp("psol_kp", "Proportional gain for O2 psol PID",
-                              0.05f);
+                              0.04f);
 static DebugFloat dbg_psol_ki("psol_ki", "Integral gain for O2 psol PID",
                               20.0f);
 static DebugFloat dbg_psol_kd("psol_kd", "Derivative gain for O2 psol PID", 0);
@@ -132,9 +132,8 @@ Controller::Run(Time now, const VentParams &params,
   // Note that we use desired_state.pip/peep and not params.pip/peep because
   // desired_state updates at breath boundaries, whereas params updates
   // whenever the user clicks the touchscreen.
-  float blower_ki =
-      std::clamp(0.5f * (desired_state.pip - desired_state.peep).cmH2O() + 5.0f,
-                 10.0f, 20.0f);
+  float blower_ki = std::clamp(
+      (desired_state.pip - desired_state.peep).cmH2O() - 5.0f, 10.0f, 20.0f);
 
   dbg_blower_valve_computed_ki.Set(blower_ki);
 
@@ -187,9 +186,9 @@ Controller::Run(Time now, const VentParams &params,
           // In normal mode, blower is always full power; pid controls pressure
           // by actuating the blower pinch valve.
           .blower_power = 1,
-          .blower_valve = blower_valve,
+          .blower_valve = std::clamp(blower_valve + 0.05f, 0.0f, 1.0f),
           // coupled control: exhale valve tracks inhale valve command
-          .exhale_valve = 1.0f - 0.65f * blower_valve - 0.35f,
+          .exhale_valve = 1.0f - 0.55f * blower_valve - 0.4f,
       };
     } else {
       // Delivering pure oxygen.
@@ -199,7 +198,11 @@ Controller::Run(Time now, const VentParams &params,
           psol_pid_.Compute(now, sensor_readings.patient_pressure.kPa(),
                             desired_state.pressure_setpoint->kPa());
       actuators_state = {
-          .fio2_valve = psol_valve,
+          // Force psol to stay very slightly open to avoid the discontinuity
+          // caused by valve hysteresis at very low command.  The exhale valve
+          // compensates for this intentional leakage by staying open when the
+          // psol valve is closed.
+          .fio2_valve = std::clamp(psol_valve + 0.05f, 0.0f, 1.0f),
           .blower_power = 0,
           .blower_valve = 0,
           .exhale_valve = 1.0f - 0.6f * psol_valve - 0.4f,

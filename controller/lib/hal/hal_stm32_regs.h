@@ -576,8 +576,8 @@ struct DMA_Regs {
       REG priority : 2; // priority level 0b00 - low, 0b11 - high
       REG mem2mem : 1;  // memory-to-memory mode
       REG rsvd : 17;
-    } config; // channel x configuration register [RM] 11.6.3 (pg 312)
-    REG count;            // channel x number of data to transfer register
+    } config;  // channel x configuration register [RM] 11.6.3 (pg 312)
+    REG count; // channel x number of data to transfer register
     volatile void *pAddr; // channel x peripheral address register
     volatile void *mAddr; // channel x memory address register
     REG rsvd;

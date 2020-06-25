@@ -35,7 +35,7 @@ jobs:
       - run:
           name: Check for broken links with Liche
           command: |
-            for f in $(find . -type f -name "*.md"); do liche -d . -v -x "mouser.com|cypress.com|digikey.com|st.com" -t 30 "$f"; done
+            git ls-files -z '**/*.md' | xargs -0 liche -d . -x "mouser.com|cypress.com|digikey.com|st.com" -t 30
   common-precommit-checks:
     docker:
       - image: circleci/python:3.8

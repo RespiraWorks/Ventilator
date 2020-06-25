@@ -212,8 +212,9 @@ RunFlowTrace(const VolumetricFlow *trace, size_t n, const VentParams &params,
     VolumetricFlow f = trace[i];
 
     // Our traces don't contain volume measurements, but this is OK for now.
-    fsm.Update(Hal.now(), {.patient_volume = ml(0), .net_flow = f});
-    FlowDirection dir = fsm.DesiredState().flow_direction;
+    BlowerSystemState desired_state =
+        fsm.DesiredState(Hal.now(), {.patient_volume = ml(0), .net_flow = f});
+    FlowDirection dir = desired_state.flow_direction;
     if (dir == FlowDirection::EXPIRATORY && !results.expire_start_time) {
       results.expire_start_time = Hal.now() - start;
     }
@@ -227,7 +228,7 @@ RunFlowTrace(const VolumetricFlow *trace, size_t n, const VentParams &params,
     if (check_it != setpoint_checks.end()) {
       const auto &[check_ms, check_cmh2o] = *check_it;
       if (check_ms == ms) {
-        auto sp = fsm.DesiredState().pressure_setpoint;
+        auto sp = desired_state.pressure_setpoint;
         EXPECT_TRUE(sp.has_value());
         if (sp.has_value()) {
           EXPECT_EQ(sp->cmH2O(), check_cmh2o);

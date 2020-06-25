@@ -194,7 +194,7 @@ class CmdArgumentParser(argparse.ArgumentParser):
 class CmdLine(cmd.Cmd):
     def __init__(self):
         super().__init__()
-        self.scriptsDir = "scripts/"
+        self.scriptsDir = "utils/controller_debug_scripts/"
         self.GetVarInfo()
 
     def UpdatePrompt(self, mode=None):

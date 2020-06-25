@@ -52,9 +52,9 @@ This is a template file to use when you're creating a README file for a ventilat
     * **Air pinch valve command to voltage mapping:** [value]
     * **Ox PSOL valve command to voltage mapping:** [value]
 
-* **Any other hardware settings that have been variable or might change** *(e.g. the bit resolution for the raw sensor valves):* 
+* **Any other hardware settings that have been variable or might change** *(e.g. the bit resolution for the raw sensor valves):*
   * [Details here]
 
-* **Images** 
+* **Images**
 
 [Embed images of the ventilator prototype you used for testing]

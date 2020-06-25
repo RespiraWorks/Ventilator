@@ -11,12 +11,12 @@ It is also not enclosed like the final product and is meant to be operated in an
 
 It can also come in various configurations, depending on your testing needs:
 
-| Solenoid valve setup  |  Pinch valve setup   | Blower bypass setup     |           
+| Solenoid valve setup  |  Pinch valve setup   | Blower bypass setup     |
 |:---------------------:|:--------------------:|:-----------------------:|
 ![](assets/photo-solenoid.jpg) |![](assets/photo-pinch.jpg)  |![](assets/photo-advanced.jpg)  |
 
 **DISCLAIMER:** These are live documents.
-There are duplicate and alternative items for undecided aspects of the physical design. 
+There are duplicate and alternative items for undecided aspects of the physical design.
 
 RespiraWorks may or may not compensate you for any of these parts if you choose to buy them. Please connect with Edwin, Martin or Ethan first.
 If you decide to buy them, do so at your own risk... oh, and thank you ;).**
@@ -40,7 +40,7 @@ The first thing you will need is a [Brain build](pizza-brain), which contains th
 
 We are using 3/4" ID tube as the default standard (and adapters where needed, like to the blower and the pinch valves).
 This easily can have 19mm ID tubing substituted in metric manufacturing settings (3/4" = 19.05mm).
-All rigid plumbing fittings should be NPT/imperial standard (3/4 NPS preferable, to keep ID consistent throughout the flowpath). 
+All rigid plumbing fittings should be NPT/imperial standard (3/4 NPS preferable, to keep ID consistent throughout the flowpath).
 
 ## Parts List (BOM)
 
@@ -81,7 +81,7 @@ Also, scissors or a sharp knife might be ok instead of T3.
 
 | Item | Manufacturer  | Part number        | Price (USD) | Sources         | Notes |
 | ---- |--------------:| ------------------ | -------- | ---------------:|------ |
-| c1   |        TEKTON |              37122 |    13.00 | [Z][c1amzn]     | 8 inch slip-joint pliers, for clamping tubes onto fittings | 
+| c1   |        TEKTON |              37122 |    13.00 | [Z][c1amzn]     | 8 inch slip-joint pliers, for clamping tubes onto fittings |
 | c2   |   Duda Energy |     LPpvc075-005ft |    19.99 | [Z][c2amzn]     | Adjustable wrench, at least 1" wide opening, for screwing in NTP fittings |
 | c3   |        DEWILL |          (unknown) |    15.88 | [Z][c3amzn]     | Pipe and PVC cutter, for cutting tubing |
 | c4   |         IRWIN |            2078216 |     8.90 | [Z][c4amzn]     | Long nose pliers, for removing herbie clips |
@@ -96,7 +96,7 @@ Also, scissors or a sharp knife might be ok instead of T3.
 
 ## Sub-assemblies
 
-The following are essential sub-assemblies that you'll need no matter what additional/optional "toppings" you chose to have. 
+The following are essential sub-assemblies that you'll need no matter what additional/optional "toppings" you chose to have.
 
 * [Blower assembly](pizza-blower) - the main driver of pressure in the pneumatic circuit
 * [Basic test lung](pizza-test-lung) - something to simulate a lung
@@ -119,7 +119,7 @@ You may need anywhere between 1 and 3 such pinch valves, depending on the comple
 but can really only work up to 10cmH2O. To be able to test higher PIP values, you need to reduce the compliance of the
 lung so you don’t just inflate it like a balloon (or pop it). View more details on reduced compliance test lung [here](pizza-compliance-test-lung).
 * **#TODO: check valve**
-* **#TODO: oxygen supply limb** 
+* **#TODO: oxygen supply limb**
 
 ## Assembly Instructions
 

@@ -11,7 +11,7 @@
 - Summary of key constraints
 - Understanding of current intra-breath cycle control for the development (“Pizza”) board.
 - Preliminary description of system operation for next iteration of system with O2 mixing
-- Envisioned Inter and Intra-breath cycle control states 
+- Envisioned Inter and Intra-breath cycle control states
 - Open questions / points to resolve.
 
 ## Functional Diagram
@@ -31,7 +31,7 @@ The Alpha build (first iteration) did closed loop control on the blower speed an
 
 The intra-breath control cycle for the Alpha build is:
 - **Inhale:**
-Increase pressure set point for closed loop control to PIP pressure 
+Increase pressure set point for closed loop control to PIP pressure
 Exhale moves to exhale position (fully closed)
 Controller adjusts blower speed based on PID control closed around the measured patient pressure
 PIP pressure target is maintained for a specified amount of time - then step transition to exhale

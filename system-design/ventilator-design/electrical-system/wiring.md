@@ -1,7 +1,7 @@
 # Wiring
 
 **DISCLAIMER: These are live documents.
-There are duplicate and alternative items for undecided aspects of the physical design. 
+There are duplicate and alternative items for undecided aspects of the physical design.
 RespiraWorks may or may not compensate you for any of these parts if you choose to buy them. Please connect with Edwin or Ethan first.
 If you decide to buy them, do so at your own risk... oh, and thank you ;).**
 
@@ -16,7 +16,7 @@ If you decide to buy them, do so at your own risk... oh, and thank you ;).**
 * **Z** = Amazon
 * **K** = Digikey
 
-### Parts 
+### Parts
 
 | RefDes | Quantity | Manufacturer  | Part #              | Price($)     | Sources         | Notes |
 | ------ |---------:| ------------- | ------------------- | ------------:|-----------------| ----- |
@@ -34,7 +34,7 @@ If you decide to buy them, do so at your own risk... oh, and thank you ;).**
 | 10     |        - | Remington     | 16UL1007STRKIT      |        29.70 | [Z][10amzn]     | 16 AWG wire, for blower power cable |
 | 11     |        - | Remington     | 26UL1007STRKIT10COLOR |      31.60 | [Z][11amzn]     | 26 AWG wire, for signal/control cables |
 | 12     |        - | Remington     | 22UL1015STRKIT10COLOR |      37.75 | [Z][12amzn]     | 22 AWG wire, for signal/control cables |
- 
+
 [1digi]:    https://www.digikey.com/short/z44f8d
 [2digi]:    https://www.digikey.com/short/z44f8f
 [3digi]:    https://www.digikey.com/short/z44fb9
@@ -68,7 +68,7 @@ We try to make few assumptions about what tools you have. Here are recommended t
 
 ## Assembly
 
-As much as possible we should try to keep the cables one-to-one 
+As much as possible we should try to keep the cables one-to-one
 (for example the wiring of the PCB to blower driver cables are all pin 1 to pin 1,
 pin 2 to pin 2, etc. with the same connector style on both ends.
 

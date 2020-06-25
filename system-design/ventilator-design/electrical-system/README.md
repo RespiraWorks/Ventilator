@@ -17,4 +17,3 @@
 **TODO:** provide context for the following:
 
 [Plotting and recording live data from MCU](data-from-mcu.md)
-

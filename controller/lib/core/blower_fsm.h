@@ -173,22 +173,7 @@ private:
 
   bool inspire_finished_ = false;
   bool finished_ = false;
-<<<<<<< HEAD
-
-  // During exhale we maintain two exponentially-weighted averages of flow, one
-  // which updates quickly (fast_flow_avg_), and one which updates slowly
-  // (slow_flow_avg_).
-  //
-  // When fast_flow_avg_ exceeds slow_flow_avg_ by a threshold, we trigger a
-  // breath.
-  //
-  // More discussion of this algorithm:
-  // https://respiraworks.slack.com/archives/C011CJQV4Q7/p1592417313120400
-  std::optional<VolumetricFlow> fast_flow_avg_;
-  std::optional<VolumetricFlow> slow_flow_avg_;
-=======
   BreathDetection inspire_detection_;
->>>>>>> Refactor pressure assist mode so breath detection can be used in other breath FSM in the future
 };
 
 class BlowerFsm {

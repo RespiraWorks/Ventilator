@@ -101,8 +101,7 @@ PressureAssistFsm::PressureAssistFsm(Time now, const VentParams &params)
       expire_pressure_(cmH2O(static_cast<float>(params.peep_cm_h2o))),
       setpoint_(expire_pressure_), start_time_(now),
       inspire_end_(start_time_ + InspireDuration(params)),
-      expire_deadline_(inspire_end_ + ExpireDuration(params)) {
-}
+      expire_deadline_(inspire_end_ + ExpireDuration(params)) {}
 
 void PressureAssistFsm::Update(Time now, const BreathDetectionInputs &inputs) {
   if (now >= inspire_end_) {

@@ -23,8 +23,8 @@ limitations under the License.
 // These are read but never modified here.
 
 // TODO: This should be configurable from the GUI.
-static DebugFloat dbg_bd_flow_trigger("pa_flow_trigger",
-                                      "pressure assist flow trigger (ml/s)",
+static DebugFloat dbg_bd_flow_trigger("bd_flow_trigger",
+                                      "breath detection flow trigger (ml/s)",
                                       200);
 
 // pa_fast_avg_alpha and pa_slow_avg_alpha were tuned for a control loop that
@@ -35,17 +35,25 @@ static DebugFloat dbg_bd_flow_trigger("pa_flow_trigger",
 // loop gets faster, the alpha terms should get smaller.  We've tried to encode
 // this here, although it remains to be seen if it actually works.
 static DebugFloat dbg_bd_fast_avg_alpha(
-    "pa_fast_avg_alpha",
-    "alpha term in pressure assist mode's fast-updating "
+    "bd_fast_avg_alpha",
+    "alpha term in breath detection's fast-updating "
     "exponentially-weighted average of flow",
     0.2f * (Controller::GetLoopPeriod() / milliseconds(10)));
 static DebugFloat dbg_bd_slow_avg_alpha(
-    "pa_slow_avg_alpha",
-    "alpha term in pressure assist mode's slow-updating "
+    "bd_slow_avg_alpha",
+    "alpha term in breath detection's slow-updating "
     "exponentially-weighted average of flow",
     0.01f * (Controller::GetLoopPeriod() / milliseconds(10)));
 
-BreathDetection::BreathDetection() = default;
+static DebugFloat dbg_fast_flow_avg("fast_flow_avg",
+                                    "fast-updating flow average (ml/s)", 0.f);
+static DebugFloat dbg_slow_flow_avg("slow_flow_avg",
+                                    "slow-updating flow average (ml/s)", 0.f);
+
+BreathDetection::BreathDetection() {
+  dbg_slow_flow_avg.Set(0.f);
+  dbg_fast_flow_avg.Set(0.f);
+};
 
 bool BreathDetection::PatientInspiring(const BreathDetectionInputs &inputs,
                                        bool at_dwell) {
@@ -71,6 +79,9 @@ bool BreathDetection::PatientInspiring(const BreathDetectionInputs &inputs,
                    (1 - slow_alpha) * slow_avg_flow_.value_or(inputs.net_flow);
   fast_avg_flow_ = fast_alpha * inputs.net_flow +
                    (1 - fast_alpha) * fast_avg_flow_.value_or(inputs.net_flow);
+
+  dbg_slow_flow_avg.Set(slow_avg_flow_->ml_per_min());
+  dbg_fast_flow_avg.Set(fast_avg_flow_->ml_per_min());
 
   return at_dwell &&
          *fast_avg_flow_ >

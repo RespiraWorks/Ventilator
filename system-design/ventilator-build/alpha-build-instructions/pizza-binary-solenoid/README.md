@@ -3,7 +3,7 @@
 A solenoid valve can be used as a valve in the pneumatic circuit.
 A solenoid is a common car component, relatively cheap and easy to obtain.
 
-We refer to this as a binary solenoid because it has only two states - open or closed, as opposed to a proportional solenoid, which would have other degrees in between.  
+We refer to this as a binary solenoid because it has only two states - open or closed, as opposed to a proportional solenoid, which would have other degrees in between.
 
 **#TODO:** unit price analysis
 
@@ -51,6 +51,3 @@ To connect it electrically to the PCB you will need to crimp a 2-pin XH connecto
 Depending on your table-top setup, you may want to extend the included wires.
 
 ![Lung-with-new-tubes](binary-solenoid.jpg)
-
-
-

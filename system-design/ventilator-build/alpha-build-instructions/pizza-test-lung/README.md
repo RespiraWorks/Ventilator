@@ -1,6 +1,6 @@
 # Pizza Build: Test Lung Sub-Assembly
 
-True test lungs are expensive and hard to come by, so we must do with what's available. 
+True test lungs are expensive and hard to come by, so we must do with what's available.
 
 This page explains how to adapt off-the-shelf parts into a basic test lung for our ventilator prototype.
 
@@ -34,7 +34,7 @@ Note: You can optionally add-on to this simple test lung to make a reduced-compl
 
 The test lung (*item 1*) will arrive with elbow fitting, tee-connector and CPAP hoses.
 
-| As purchased         |  without hoses       |           
+| As purchased         |  without hoses       |
 |:--------------------:|:--------------------:|
 ![](assets/lung-purchased.jpg)|![](assets/lung-no-tubes.jpg)|
 
@@ -43,4 +43,3 @@ These hoses are not great for interfacing with our system, so you should replace
 The rubber ends work well with 3/4"ID fittings and can be clamped to seal air tight.
 
 ![Lung-with-new-tubes](assets/lung-new-tubes.jpg)
-

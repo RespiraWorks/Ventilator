@@ -1,7 +1,7 @@
 Interval=	0.001 s
 ExcelDateTime=	4.3989764391330122e+004	6/7/2020 18:20:43.410923
 TimeFormat=	StartOfBlock
-DateFormat=	
+DateFormat=
 ChannelTitle=	Flow
 Range=	20.000 L/s
 0	0.01253125

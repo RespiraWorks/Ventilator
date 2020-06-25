@@ -1,6 +1,6 @@
 # Beta Build Plan
 
-This page contains a running list of notes and planned updates that will be organized and added to as we get further into beta design and build. 
+This page contains a running list of notes and planned updates that will be organized and added to as we get further into beta design and build.
 
 ## Venturi Updates
 
@@ -8,7 +8,7 @@ We're planning to use 3/4"ID tubing throughout. The venturi will most likely be 
 
 ## Nucleo Module Updates
 
-We're planning to move the STM32 onto the PCB, so there won't be a need to buy nucleo module. 
+We're planning to move the STM32 onto the PCB, so there won't be a need to buy nucleo module.
 
 ## STM32 Updates
 

@@ -85,11 +85,11 @@ struct BlowerSystemState {
   Pressure pip;
   Pressure peep;
 
-  // Is this the first BlowerSystemState returned for a brand-new breath cycle?
+  // Is this the last BlowerSystemState returned at the end of the breath cycle?
   //
   // This is defaulted to false here and is handled by BlowerFsm, rather than
   // the individual FSM classes (OffFsm, PressureControlFsm, etc).
-  bool is_new_breath = false;
+  bool is_end_of_breath = false;
 };
 
 // Transition from PEEP to PIP pressure over this length of time.  Citation:
@@ -120,8 +120,7 @@ class OffFsm {
 public:
   OffFsm() = default;
   explicit OffFsm(Time now, const VentParams &) {}
-  void Update(Time now, const BlowerFsmInputs &inputs) {}
-  BlowerSystemState DesiredState() {
+  BlowerSystemState DesiredState(Time now, const BlowerFsmInputs &inputs) {
     return {
         .pressure_setpoint = std::nullopt,
         // TODO: It doesn't make much sense to specify a flow direction when the
@@ -139,18 +138,15 @@ public:
 class PressureControlFsm {
 public:
   explicit PressureControlFsm(Time now, const VentParams &params);
-  void Update(Time now, const BlowerFsmInputs &inputs);
-  BlowerSystemState DesiredState() const;
+  BlowerSystemState DesiredState(Time now, const BlowerFsmInputs &inputs);
   bool Finished() const { return finished_; }
 
 private:
   const Pressure inspire_pressure_;
   const Pressure expire_pressure_;
-  Pressure setpoint_;
   Time start_time_;
   Time inspire_end_;
   Time expire_end_;
-  bool inspire_finished_ = false;
   bool finished_ = false;
 };
 
@@ -166,8 +162,7 @@ private:
 class PressureAssistFsm {
 public:
   explicit PressureAssistFsm(Time now, const VentParams &params);
-  void Update(Time now, const BlowerFsmInputs &inputs);
-  BlowerSystemState DesiredState() const;
+  BlowerSystemState DesiredState(Time now, const BlowerFsmInputs &inputs);
   bool Finished() const { return finished_; }
 
 private:
@@ -175,12 +170,9 @@ private:
 
   const Pressure inspire_pressure_;
   const Pressure expire_pressure_;
-  Pressure setpoint_;
   Time start_time_;
   Time inspire_end_;
   Time expire_deadline_;
-
-  bool inspire_finished_ = false;
   bool finished_ = false;
 
   // During exhale we maintain two exponentially-weighted averages of flow, one

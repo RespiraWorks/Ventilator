@@ -8,15 +8,15 @@
 
 ## Test Specifications
 
-The blower/fan was directly in series with a venturi tube, with 3x MXPV5004DP pressure sensors attached. 
+The blower/fan was directly in series with a venturi tube, with 3x MXPV5004DP pressure sensors attached.
 Sensor #1 measured the venturi choke point ("high" side of sensor #1) and atmospheric pressure ("low" side).
-Sensors #2 & #3 of the pressure sensors measured dP across the venturi (they measured the same exact thing). 
+Sensors #2 & #3 of the pressure sensors measured dP across the venturi (they measured the same exact thing).
 
 3 tests were conducted, each at a different fan speed. Fan speed was deduced by soldering leads to a Hall sensor
 ("HA") and ground on the blower driver board, and read using an oscilloscope. The test files are named for nominal speed.
 
 Data was recorded using "PCBreathe" SN07. Unfortunately the STM was programmed using "STMduino"
-(using the Arduino IDE), so data was collected at just 10-bit resolution. 
+(using the Arduino IDE), so data was collected at just 10-bit resolution.
 
 Post-processing enabled by a rachety python script. Ask Bryan for more details.
 

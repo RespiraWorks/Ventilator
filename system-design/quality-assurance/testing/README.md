@@ -1,5 +1,5 @@
 # Testing
 
-This section contains testing information, including testing plans, and resulting data. 
+This section contains testing information, including testing plans, and resulting data.
 
 **#TODO** Add content.

@@ -3,7 +3,7 @@
 -------------
 
 **DISCLAIMER: These are live documents.
-There are duplicate and alternative items for undecided aspects of the physical design. 
+There are duplicate and alternative items for undecided aspects of the physical design.
 RespiraWorks may, or may not compensate you for any of these parts.
 If you decide to buy them, do so at your own risk.**
 
@@ -20,4 +20,3 @@ Lives on your table and is customizable, like a pizza. Here are the various comp
 * [Optional: reduced compliance test lung](pizza-compliance-test-lung)
 
 [Enclosed alpha assembly instructions](alpha-assembly-instructions.md)
-

@@ -6,8 +6,8 @@ This is an optional add-on (topping!) to the [pizza build](../pizza-build.md).
 
 To test basic function a ventilator check lung or a breathing bag is sufficient, but can really only work up to 10cmH2O.
 
-To be able to test higher PIP values, you need to reduce the conpliance of the lung so you don't just inflate it like a 
-balloon (or pop it).  These are partial instructions, and there is currently a shortage of test lungs, so what model you get 
+To be able to test higher PIP values, you need to reduce the conpliance of the lung so you don't just inflate it like a
+balloon (or pop it).  These are partial instructions, and there is currently a shortage of test lungs, so what model you get
 can vary, so expect to do some tinkering to these instrutions if you are going to build you own.
 
 This is completely uncalibrated, so it is not intended for instrumentation, just for functional observation.
@@ -47,12 +47,12 @@ This is completely uncalibrated, so it is not intended for instrumentation, just
 
 ![Panels](assets/test-lung-1.jpg)
 
-* Drill 2 holes at one end of each panel to form a zip tie hinge.  Drill two additional holes in one of the panels as a 
-securing point for the test lung.  Measure with the rubber band and cut 2 notches at the opposite end of both panels to 
-accomodate the rubber band.  
-* If your lung does not have an attachment loop, make a fold of duct tape attached to the end of the lung and poke a hole in 
+* Drill 2 holes at one end of each panel to form a zip tie hinge.  Drill two additional holes in one of the panels as a
+securing point for the test lung.  Measure with the rubber band and cut 2 notches at the opposite end of both panels to
+accomodate the rubber band.
+* If your lung does not have an attachment loop, make a fold of duct tape attached to the end of the lung and poke a hole in
 it for the zip tie to secure.  Secure the lung to the panel.
-* Put the zip ties into the end of the panel for the hinge. Make sure the ties are loose enough to allow the panels to fold 
+* Put the zip ties into the end of the panel for the hinge. Make sure the ties are loose enough to allow the panels to fold
 over completely.
 
 ![Fold hinge](assets/test-lung-2.jpg)

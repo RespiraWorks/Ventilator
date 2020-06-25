@@ -1,3 +1,5 @@
+*	text=auto
+*.eps   -text
 *.zip filter=lfs diff=lfs merge=lfs -text
 *.step filter=lfs diff=lfs merge=lfs -text
 *.PDF filter=lfs diff=lfs merge=lfs -text

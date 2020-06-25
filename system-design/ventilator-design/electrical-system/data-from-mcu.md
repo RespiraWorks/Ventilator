@@ -70,9 +70,3 @@ To clear the data, click the blank plot icon in the toolbar, 4th icon from the r
 Click stop at the bottom left at any time to stop the plotting.
 
 You can save the data in the plot by clicking the 'Export Collected Data' icon in the toolbar, the second from the right.  You can export as an image, or as an excel or CSV.  Note that this seems to be limited to the most recent 10,000 points of data.  If you need to record longer datasets, use the procedure in the section above.
-
-
-
-
-
-

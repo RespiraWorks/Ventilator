@@ -1,18 +1,18 @@
 # Stepper Proportional Pinch Valve
 
-  CAD File         |  Assembled         | In action          
+  CAD File         |  Assembled         | In action
 :------------------:|:-----------------:|:-------------------------:
 ![](assets/rendering-1-6.png)  |  ![](assets/assembled_smaller.jpg)  |  ![](assets/animation.gif)
 
 ## Overview
 
-This contains details, BOM, & instructions for one pinch valve assembly for the pneumatic circuit. 
+This contains details, BOM, & instructions for one pinch valve assembly for the pneumatic circuit.
 
 The module is something that can be "spliced" into any location in the pneumatic circuit.
 This makes it interchangeable with solenoid or whatever other valve implementation we might consider/test.
 
 For a full prototype build you will need 2 pinch valves, in which case it makes sense to purchase a 2-axis stepper driver,
-though you can work with two single-stepper drivers if that's what you already have. 
+though you can work with two single-stepper drivers if that's what you already have.
 
 ### Change history
 
@@ -31,7 +31,7 @@ v1.7: set screw removed, 3/8"OD version added for potential use as oxygen supply
 
 These files should not be printed with FDM. Instead, a leak-tight method like SLA or MJF should be used.
 
-### Files 
+### Files
 
 - [Base - .step format](assets/exhaust-pinch-valve-1.6-base.step)
 - [Rotor - .step format](assets/exhaust-pinch-valve-1.6-rotor.step)
@@ -59,7 +59,7 @@ You may also find other variations of the design meant for special testing/calib
 (**note**: links provided are for worldwide customers; there are local RS retail sites for most countries that use the same product reference (RS Stock No.) and will probably ship faster if you order from your country's site)
 * **T**  = Stepperonline.com
 
-### Parts 
+### Parts
 
 | Item   | Quantity | Manufacturer    | Part #              | Price (USD)  | Sources              | Notes |
 | ------ |---------:| --------------- | ------------------- | ------------:| ---------------------| ----- |
@@ -110,9 +110,9 @@ machines they way print too tight and you may crack the rotor trying to just mus
 threads first.  Prop tip: only chase a portion of the threads for the bolt that holds on the bearings, leaving a bit
 to act as a lock nut.
 
-Rotor Assembly                     |  Base Assembly           |   
-:---------------------------------:|:-------------------------: 
-![Assembled](assets/rotor.jpg)|  ![Assembled](assets/assembled.jpg)  
+Rotor Assembly                     |  Base Assembly           |
+:---------------------------------:|:-------------------------:
+![Assembled](assets/rotor.jpg)|  ![Assembled](assets/assembled.jpg)
 3mm hex and 2.5mm hex driver are required for assembling rotor.|  2mm hex driver is required for attaching base.
 
 Assembled it should look something like this, ready to be integrated:

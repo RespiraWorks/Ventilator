@@ -21,7 +21,7 @@ For an upgrade, check the [Pizza build](../pizza-build.md).
 * **M** = Mouser
 * **O** = Monoprice
 * **K** = Digikey
-* **R** = RS Computing 
+* **R** = RS Computing
 (**note**: links provided are for worldwide customers; there are local RS retail sites for most countries that use the same product reference (RS Stock No.) and will probably ship faster if you order from your country's site)
 * **B** = Built by RespiraWorks
 
@@ -80,7 +80,7 @@ For an upgrade, check the [Pizza build](../pizza-build.md).
 
 | Item | Manufacturer  | Part number        | Price (USD) | Sources         | Notes |
 | ---- |--------------:| ------------------ | -------- | ---------------:|------ |
-| a1   |         Anker |     68ANREADER-B2A |    12.99 | [Z][a1amzn]     | microSD-USB adapter, for flashing RasPi images | 
+| a1   |         Anker |     68ANREADER-B2A |    12.99 | [Z][a1amzn]     | microSD-USB adapter, for flashing RasPi images |
 | a2   | Preciva       | PR-3254 (PR102001) |    39.99 | [Z][a2amzn]     | Crimping tool for HX and HV connectors |
 
 [a1amzn]:https://www.amazon.com/Anker-Portable-Reader-RS-MMC-Micro/dp/B006T9B6R2

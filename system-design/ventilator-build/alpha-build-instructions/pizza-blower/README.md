@@ -2,7 +2,7 @@
 
 The blower/fan is what provides air pressure to the ventilator's pneumatic circuit.
 
-The pneumatic aspect of the blower assembly includes the blower and a short segment of tubing compatible with blower outlet diameter. 
+The pneumatic aspect of the blower assembly includes the blower and a short segment of tubing compatible with blower outlet diameter.
 
 The electrical aspect of the blower assembly encompasses the driver board and wires of sufficient length to interface
 with the [PCB](https://github.com/respiraworks/pcbreathe).
@@ -27,7 +27,7 @@ with the [PCB](https://github.com/respiraworks/pcbreathe).
 ### Parts
 
 **NOTE:** Before you buy anything on this list, check with Edwin, Martin or Ethan. Blower takes a while to deliver.
-We may have parts to send you from our inventory. 
+We may have parts to send you from our inventory.
 
 
 | Item | Quantity | Manufacturer  | Part #              | Price (USD)  |Sources                | Notes |
@@ -76,7 +76,7 @@ We may have parts to send you from our inventory.
 
 ![Parts](assets/parts.jpg)
 
-Use short segment of tubing, clamp to blower and adapter. 
+Use short segment of tubing, clamp to blower and adapter.
 Use Herbie clip to secure tubing to blower. Alternatively, you can use a zip-tie.
 
 ![Parts](assets/subassembly.jpg)
@@ -85,5 +85,3 @@ You will have to crimp connectors to the second end of the wiring that connects 
 to the [PCB](https://github.com/respiraworks/pcbreathe).
 It depends on your build layout, but in the case that you need longer wires, you will have to crimp both ends.
 In this case you will need the higher number of XH and VH connector components listed in the BOM above.
-
-

@@ -4,10 +4,10 @@
 
 This file is meant to document the rationales for the design decisions we're making - or things we considered and rejected.
 
-Caution: this document has not been formally reviewed and is a work in progress. Be responsible to 
+Caution: this document has not been formally reviewed and is a work in progress. Be responsible to
 understand the provenance of documentation.
 
-Also note: right now we are collecting initial information here since it is easier - we may split 
+Also note: right now we are collecting initial information here since it is easier - we may split
 this up to have the different sections live with the different component folders, but we'll figure that out later.
 
 ## Guiding Principles
@@ -19,7 +19,7 @@ duties reliably with high confidence over extended periods of time. The goal is 
 
 3. **Make it something that doctors will use** - it won't necessarily do everything, but we want the ventilator to provide the key needs of doctors. Therefore, we must keep doctors extremely in the loop and constantly get feedback from them on what we're doing.
 
-4. **Amenable to developing world supply chains and maitenance** - don't presume that the medical context we might be used to is the same in our target market. The only way to get this information is contact with doctors and workers familiar with the facts on the ground. 
+4. **Amenable to developing world supply chains and maitenance** - don't presume that the medical context we might be used to is the same in our target market. The only way to get this information is contact with doctors and workers familiar with the facts on the ground.
 
 5. **Open source** - we want this project to be something that anyone who wants can build off of and leverage. Therefore, all designs, rationales behind those designs, requirements, processes, etc. will be documented in a common repo that everyone has access to. **#todo** - go through and make sure all of the links in here are in git so that people can access them (some slack links exist temporarily before the information is fully resolved and moved to git)
 
@@ -27,13 +27,13 @@ duties reliably with high confidence over extended periods of time. The goal is 
 
 More detailed thoughts on this [here](conop.md).
 
-* Targeting **pressure control** for two reasons: 
+* Targeting **pressure control** for two reasons:
     1. We got early feedback that this was most important to doctors - though we have gotten feedback that volume control is also important.
     2. A lower cost pressure controlled system seemed more achievable - and theoretically a good pressure controlled system should be able to do volume control. Currently we are pursuing pressure control and will be evaluating how accurate volume measurements we can get to determine if the design can also support volume control.
 
 * **Doctors need fine control of FiO2** -> this drives the need for an oxygen supply, the need to support oxygen mixing and sensing, and the need for a variable state valve on the O2 supply to adjust the flow rate dynamically. **#todo** Need more info on the ox system design we pick.
 
-* **Multiple closed loop (feedback control) systems create complexity by creating interacting dynamics** -> we're attempting to only have a single closed loop controlled part of the system at a time and to target one key feature (e.g. pressure with FiO2 achieved across cycles). We're also working to determine which components (e.g., valves, blower) need to be controlled and how in order to figure out what will actually support the system requirements. 
+* **Multiple closed loop (feedback control) systems create complexity by creating interacting dynamics** -> we're attempting to only have a single closed loop controlled part of the system at a time and to target one key feature (e.g. pressure with FiO2 achieved across cycles). We're also working to determine which components (e.g., valves, blower) need to be controlled and how in order to figure out what will actually support the system requirements.
 
 * Anything that will be exposed to high oxygen contrations and pressures needs to be safe and ox-clean. This drives a desire to **reduce the number of items directly in the flow as much as possible**, especially for high-pressure (greater than 1 bar O2)
 
@@ -46,7 +46,7 @@ More detailed thoughts on this [here](conop.md).
 * **Anti-asphyxiation design** (**#todo** need to confirm all this)
     * **Pneumatic** If the ventilator loses power, it is important that the patient is able to breathe and is not given dangerous amounts of pressure/flow. The oxygen system is fed by an external pressure source that the ventilator doesn't control; therefore, in the loss of power it is important to shut off flow from the oxygen system to keep the patient safe. We accomplish this by using a normally closed solenoid on the oxygen limb. The air/blower valve and the exhale valve are made to be normally open so that those paths are unobstructed to allow the patient to breathe.
     * **Electrical** To support the air/blower valves and exhale valves being normally open, the Cycle Controller watchdog timer is connected to the stepper motor drivers, which will default them to an unpowered state in the event of a Cycle Controller computing failure, causing the valves to snap open.
-    
+
 
 * **Use of stepper motors** - **#todo** need to fill this out
 
@@ -55,7 +55,7 @@ More detailed thoughts on this [here](conop.md).
 ## Valves
 
 * **Pinch Valve (Custom design)**
-    * Low cost, robust design for achieving variable flow based on peristaltic tubing. 
+    * Low cost, robust design for achieving variable flow based on peristaltic tubing.
     * The valve mechanical components are not exposed to the flow, which means it is not exposed to high O2 concentrations directly.
     * Normally open, which is important for anti-asphyxiation in the case of power loss
     * Still evaluating fatigue and lifetime / sealing.
@@ -63,32 +63,32 @@ More detailed thoughts on this [here](conop.md).
     * For more informatin about the design of this valve, see [here](../research-development/project-pinch-valve)
 
 * **Idle Air Control Valve (IAC)**
-    * Common automotive part that is cheap and widely available. 
+    * Common automotive part that is cheap and widely available.
     * A linear stepper motor drives a pintle up and down to create a variable orifice.
     * Unclear how these valves perform in high O2 environments or if they could be sufficiently rated/cleaned.
     * Significantly cheaper, more robust, and more widely avaiable than the pinch valve.
-    
+
 * **Proportional Solenoid (PSOL)**
-    * Relatively uncommon part but used in traditional ventilators. 
-    * Provides precise, reliable control of high-pressure gasses. 
+    * Relatively uncommon part but used in traditional ventilators.
+    * Provides precise, reliable control of high-pressure gasses.
     * May be cost effective but requires a high-pressure source of oxygen (can not use low pressure sources like oxygen conentrators without a booster pump).
-    * O2 cleaned PSOLs are relatively hard to find, though are already in use on ventilators. We may be able to clean automotive PSOLs.    
+    * O2 cleaned PSOLs are relatively hard to find, though are already in use on ventilators. We may be able to clean automotive PSOLs.
     * Normally closed, which is important for anti-asphyxiation. **#todo** need to confirm this
-    
+
 * **One way valve (check valve)**
     * Needs to work in an O2 environment
     * Needs to be reliable and relatively low cost
     * Still figuring out the exact one way valve design
-    * Two possibilities are a normal umbrella seat check valve, problem is these have a high cracking pressure. This could be OK on the intake side where the fan can generate this but would be a problem on exhale. 
-    * duckbill valves have also been explored, but these can chatter at low flow rates. 
-    * Could possibly modify a normal check valve by cutting the spring down or out. 
+    * Two possibilities are a normal umbrella seat check valve, problem is these have a high cracking pressure. This could be OK on the intake side where the fan can generate this but would be a problem on exhale.
+    * duckbill valves have also been explored, but these can chatter at low flow rates.
+    * Could possibly modify a normal check valve by cutting the spring down or out.
 
 * **Relief Valve**
     * **#todo** when we figure this out
 
 ## Tubing
 * Pick peristaltic tubing in the pinch valves so that it can withstand many cycles
-* Otherwise any biocompatible tubing is fine, gneerally Tygon for most of the testing. 
+* Otherwise any biocompatible tubing is fine, gneerally Tygon for most of the testing.
 * Needs to be O2 safe
 * 3/4 inch standard allows relatively cheap fittings. Need to transition to metric for int'l.
 
@@ -100,11 +100,11 @@ More detailed thoughts on this [here](conop.md).
     * Currently we are using the difference between the two flow measurements (one for inhale and one for exhale) to determine the tidal volume delivered to the patient. We are still evaluating how to do this - see [this ticket](https://github.com/RespiraWorks/SystemDesign/issues/57) for more information.
     * Another open questions is manufacturing of the venturis - currently the goal is to design a venturi that can be injection molded.
     * For more informatni about the venturi design, see [here](../research-development/project-venturi).
-    
+
 * **Patient Pressure sensors**
     * Needs to be reliable, handle many cycles, and meet the required ranges and accuracies of the requirements (#todo flesh this out more).
     * Currently only one sensor is used, but maybe a second one is required for reliability.
-    
+
 * **O2 sensor**
     * The O2 sensor needs to be able to measure up to 100% O2
     * Right now we are using a galvanic cell O2 sensor - but those are known to degrade quickly. [This ticket](https://github.com/RespiraWorks/SystemDesign/issues/56) is tracking our discussions on this topic.
@@ -121,7 +121,7 @@ More detailed thoughts on this [here](conop.md).
 
 ## Blower
 * Current blower is not rated to 100% O2, which drives the lack of a blower on the O2 system and a one way valve in front of the blower to keep it separate from the high O2 part of the system
-* We have evaluated a large number of blowers. When balancing supply chain, ubiquity of specification, and future avaialability, we settled on this one. However, there is an issue with the pressure spec for the fan. If we needed to reach 60 cm H2O, this fan might be under powered. We are currently leaning to not support those high pressures 
+* We have evaluated a large number of blowers. When balancing supply chain, ubiquity of specification, and future avaialability, we settled on this one. However, there is an issue with the pressure spec for the fan. If we needed to reach 60 cm H2O, this fan might be under powered. We are currently leaning to not support those high pressures
 * **#todo:** link to the fan we picked
 
 ## Enclosure
@@ -162,8 +162,8 @@ More detailed thoughts on this [here](conop.md).
 * NOTE: Neither of the controllers are a complete backup for the other - this is not a redundant system.  If either fails in a way that is not fixed through the watchdog reset, an immediate intervention will be needed to keep the patient alive.  The objective in the case of either failure is to sound the alarm so that the intervention can happen - and to design the system such that in the event of a failure there is time to make an intervention.  Making a truly redundant system will add cost and time, and so has been deferred for now.
 
 * **Watchdog Timers**
-    * In the event of a computing failure in either the UI Computer or the Cycle Controller, a watchdog timer monitors each and will reset the offending computer, which should then be able to regain control of the valves. 
-    * **#todo** it will need to be confirmed in the final design that the UI Computer cannot command any modes that will cause the Cycle Controller to hold these valves closed. 
+    * In the event of a computing failure in either the UI Computer or the Cycle Controller, a watchdog timer monitors each and will reset the offending computer, which should then be able to regain control of the valves.
+    * **#todo** it will need to be confirmed in the final design that the UI Computer cannot command any modes that will cause the Cycle Controller to hold these valves closed.
 
 ### GUI / UI Controller
 * **#todo** - needs more

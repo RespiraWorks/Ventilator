@@ -58,6 +58,16 @@ void DMA1_CH3_ISR();
 // It calls the Hal function used to initialize the processor.
 extern "C" void _init() { Hal.EarlyInit(); }
 
+// This replaces the standard abort function which really should never
+// be getting called.  It's getting linked in from std::variant though
+// and causing lots of other cruft to get linked in as well.
+// If we ever did call abort we would just get here and loop until
+// the watchdog timer kills us.
+extern "C" void abort() {
+  while (1) {
+  };
+}
+
 // This function is called _init() above.  It does some basic
 // chip initialization.
 //

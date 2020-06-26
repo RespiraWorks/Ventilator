@@ -10,7 +10,7 @@ source/config/*
 !.gitignore
 
 #IDE
-CMakeLists.txt.user
+CMakeLists*
 cmake-build-*/
 .idea/
 .idea

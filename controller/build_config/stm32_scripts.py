@@ -23,4 +23,4 @@ env.Append(
 # These link flags tell the linker that the processor we're using has
 # hardware floating point, so the software floating point libraries aren't
 # needed.
-env.Append(LINKFLAGS=["-mfpu=fpv4-sp-d16", "-mfloat-abi=hard"])
+env.Append(LINKFLAGS=["-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-nostartfiles"])

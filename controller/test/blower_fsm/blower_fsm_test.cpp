@@ -93,11 +93,19 @@ TEST(BlowerFsmTest, DesiredPipPeep) {
     EXPECT_EQ(s.pip.cmH2O(), 20.f);
     EXPECT_EQ(s.peep.cmH2O(), 10.f);
 
-    // Now the pip/peep values update.
+    // We are at the breath boundary; the FSM will return the last desired state
+    // for the just-completed breath; is_end_of_breath flag should be true
     Hal.delay(seconds(2));
+    s = fsm.DesiredState(Hal.now(), p, inputs_zero);
+    EXPECT_EQ(s.pip.cmH2O(), 20.f);
+    EXPECT_EQ(s.peep.cmH2O(), 10.f);
+    EXPECT_EQ(s.is_end_of_breath, true);
+
+    // the next desired state should contain updated values
     s = fsm.DesiredState(Hal.now(), p, inputs_zero);
     EXPECT_EQ(s.pip.cmH2O(), 25.f);
     EXPECT_EQ(s.peep.cmH2O(), 15.f);
+    EXPECT_EQ(s.is_end_of_breath, false);
   }
 }
 
@@ -237,7 +245,7 @@ RunFlowTrace(const VolumetricFlow *trace, size_t n, const VentParams &params,
       ++check_it;
     }
 
-    if (fsm.Finished()) {
+    if (desired_state.is_end_of_breath) {
       results.finish_time = Hal.now() - start;
       break;
     }

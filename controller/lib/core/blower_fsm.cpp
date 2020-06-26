@@ -86,13 +86,14 @@ static Duration ExpireDuration(const VentParams &params) {
 PressureControlFsm::PressureControlFsm(Time now, const VentParams &params)
     : inspire_pressure_(cmH2O(static_cast<float>(params.pip_cm_h2o))),
       expire_pressure_(cmH2O(static_cast<float>(params.peep_cm_h2o))),
-      start_time_(now),
-      inspire_end_(start_time_ + InspireDuration(params)),
+      start_time_(now), inspire_end_(start_time_ + InspireDuration(params)),
       expire_end_(inspire_end_ + ExpireDuration(params)) {}
 
-BlowerSystemState PressureControlFsm::DesiredState(Time now, const BlowerFsmInputs &inputs) {
+BlowerSystemState
+PressureControlFsm::DesiredState(Time now, const BlowerFsmInputs &inputs) {
+  bool is_end_of_breath = false;
   if (now >= expire_end_) {
-    finished_ = true;
+    is_end_of_breath = true;
   }
   if (now >= inspire_end_) {
     return {
@@ -100,6 +101,7 @@ BlowerSystemState PressureControlFsm::DesiredState(Time now, const BlowerFsmInpu
         .flow_direction = FlowDirection::EXPIRATORY,
         .pip = inspire_pressure_,
         .peep = expire_pressure_,
+        .is_end_of_breath = is_end_of_breath,
     };
   } else {
     // Go from expire_pressure_ to inspire_pressure_ over a duration of
@@ -114,6 +116,7 @@ BlowerSystemState PressureControlFsm::DesiredState(Time now, const BlowerFsmInpu
         .flow_direction = FlowDirection::INSPIRATORY,
         .pip = inspire_pressure_,
         .peep = expire_pressure_,
+        .is_end_of_breath = is_end_of_breath,
     };
   }
 }
@@ -128,9 +131,11 @@ PressureAssistFsm::PressureAssistFsm(Time now, const VentParams &params)
   dbg_fast_flow_avg.Set(0.f);
 }
 
-BlowerSystemState PressureAssistFsm::DesiredState(Time now, const BlowerFsmInputs &inputs) {
+BlowerSystemState
+PressureAssistFsm::DesiredState(Time now, const BlowerFsmInputs &inputs) {
+  bool is_end_of_breath = false;
   if (now >= expire_deadline_ || PatientInspiring(now, inputs)) {
-    finished_ = true;
+    is_end_of_breath = true;
   }
   if (now >= inspire_end_) {
     return {
@@ -138,6 +143,7 @@ BlowerSystemState PressureAssistFsm::DesiredState(Time now, const BlowerFsmInput
         .flow_direction = FlowDirection::EXPIRATORY,
         .pip = inspire_pressure_,
         .peep = expire_pressure_,
+        .is_end_of_breath = is_end_of_breath,
     };
   } else {
     // Go from expire_pressure_ to inspire_pressure_ over a duration of
@@ -152,6 +158,7 @@ BlowerSystemState PressureAssistFsm::DesiredState(Time now, const BlowerFsmInput
         .flow_direction = FlowDirection::INSPIRATORY,
         .pip = inspire_pressure_,
         .peep = expire_pressure_,
+        .is_end_of_breath = is_end_of_breath,
     };
   }
 }
@@ -192,19 +199,26 @@ bool PressureAssistFsm::PatientInspiring(Time now,
 
 BlowerSystemState BlowerFsm::DesiredState(Time now, const VentParams &params,
                                           const BlowerFsmInputs &inputs) {
-  // Immediately turn off the ventilator if params.mode == OFF; otherwise,
-  // wait until the end of a cycle before implementing the mode change.
-  bool is_end_of_breath = false;
 
-  BlowerSystemState s =
-      std::visit([&](auto &fsm) { return fsm.DesiredState(now, inputs); }, fsm_);
+  BlowerSystemState s = std::visit(
+      [&](auto &fsm) { return fsm.DesiredState(now, inputs); }, fsm_);
 
-  if (params.mode == VentMode_OFF ||
-      std::visit([&](auto &fsm) { return fsm.Finished(); }, fsm_)) {
-    // For the purpose of is_end_of_breath, treat multiple occurrences of OffFsm
-    // as a "single breath".
-    is_end_of_breath = !std::holds_alternative<OffFsm>(fsm_);
+  // Before returning the state just obtained, we check if mode change is
+  // needed. If the ventilator is being switched on, recompute the desired
+  // state.
+  //
+  // Implement the mode change if at least one of the following is true:
+  // (1) current mode is off and params.mode is not OFF:
+  //     immediately turn on the ventilator and recompute desired state
+  // (2) params.mode == OFF: immediately turn off the ventilator
+  // (3) just-obtained desired state `s` indicates that this is the end of
+  //     the breath cycle: create an FSM for the new breath in accordance
+  //     with the desired mode in params.mode
+  bool switching_on =
+      (std::holds_alternative<OffFsm>(fsm_) && params.mode != VentMode_OFF);
+  bool switching_off = (params.mode == VentMode_OFF);
 
+  if (switching_on || switching_off || s.is_end_of_breath) {
     switch (params.mode) {
     case VentMode_OFF:
       fsm_.emplace<OffFsm>(now, params);
@@ -220,7 +234,9 @@ BlowerSystemState BlowerFsm::DesiredState(Time now, const VentParams &params,
       break;
     }
   }
-
-  s.is_end_of_breath = is_end_of_breath;
+  if (switching_on) {
+    s = std::visit([&](auto &fsm) { return fsm.DesiredState(now, inputs); },
+                   fsm_);
+  }
   return s;
 }

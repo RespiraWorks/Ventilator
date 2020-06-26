@@ -1,4 +1,13 @@
-// This test repeatedly opens and closes a pinch valve
+
+// Summary:
+//      This test repeatedly opens and closes a pinch valve
+//
+// How to run:
+//      TEST=TEST_PINCH_VALVE pio run -e integration-test -t upload
+//
+// Automation:
+//      TBD - which python script to run?
+//
 
 #include "hal.h"
 #include "pinch_valve.h"

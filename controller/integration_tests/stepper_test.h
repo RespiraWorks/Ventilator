@@ -1,4 +1,13 @@
-// This test rotates a stepper clockwise at a predefined rate and steps
+
+// Summary:
+//      This test rotates a stepper clockwise at a predefined rate and steps
+//
+// How to run:
+//      TEST=TEST_STEPPER pio run -e integration-test -t upload
+//
+// Automation:
+//      TBD - which python script to run?
+//
 
 #include "hal.h"
 #include "stepper.h"
@@ -12,7 +21,7 @@ void run_test() {
   Hal.init();
 
   // Configure stepper
-  StepMotor *stepper_motor = StepMotor::GetStepper(0);
+  StepMotor *stepper_motor = StepMotor::GetStepper(1);
   stepper_motor->SetAmpAll(0.1f);
   stepper_motor->SetMaxSpeed(100.0f);
   stepper_motor->SetAccel(100.0f / 0.1f);

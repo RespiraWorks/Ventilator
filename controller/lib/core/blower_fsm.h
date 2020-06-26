@@ -86,9 +86,6 @@ struct BlowerSystemState {
   Pressure peep;
 
   // Is this the last BlowerSystemState returned at the end of the breath cycle?
-  //
-  // Individual FSM classes are responsible for setting this to true if
-  // end-of-cycle condition is encountered while computing the desired state.
   bool is_end_of_breath = false;
 };
 
@@ -104,9 +101,6 @@ inline constexpr Duration RISE_TIME = milliseconds(100);
 //    Constructs a new FSM for a single breath starting at the given time and
 //    with the given params.  Those params don't change during the life of the
 //    FSM.
-//
-//  - void Update(Time now, const BlowerFsmInputs& inputs):
-//    Updates the state of the fsm based on time and values in inputs.
 //
 //  - BlowerSystemState DesiredState(): Gets the solenoid open/closed
 //    state and the pressure that the fan should be trying to hit for the
@@ -128,6 +122,8 @@ public:
         // Same applies to the is_end_of_breath flag: it doesn't really pertain
         // to the off state but hardcode it to false by convention.
         .flow_direction = FlowDirection::EXPIRATORY,
+        .pip = cmH2O(0.0f),
+        .peep = cmH2O(0.0f),
         .is_end_of_breath = false,
     };
   }

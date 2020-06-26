@@ -1,6 +1,41 @@
 version: 2.1
 
 jobs:
+  dead-link-test:
+    machine:
+      image: ubuntu-1604:201903-01
+    steps:
+      - checkout
+      - run:
+          name: Install & Set up go
+          command: |
+            sudo apt-get update -qq
+            sudo apt-get install git
+            sudo apt-get install -y python-dev python3-dev -qq
+            if  [ -f goinstall.sh ]; then
+                rm goinstall.sh
+            fi
+            if [ -d ~/.go ]; then
+              rm -rf ~/.go
+            fi
+            wget https://raw.githubusercontent.com/canha/golang-tools-install-script/master/goinstall.sh
+            sudo chown circleci goinstall.sh
+            sudo chmod +x goinstall.sh
+            ./goinstall.sh
+      - run:
+          name: Install Liche
+          command: |
+            echo 'export GOROOT=~/.go' >> $BASH_ENV
+            echo 'export PATH=$GOROOT/bin:$PATH' >> $BASH_ENV
+            echo 'export GOPATH=~/go' >> $BASH_ENV
+            echo 'export PATH=$GOPATH/bin:$PATH' >> $BASH_ENV
+            echo 'export GO111MODULE="on"' >> $BASH_ENV
+            source $BASH_ENV
+            go get -u github.com/raviqqe/liche
+      - run:
+          name: Check for broken links with Liche
+          command: |
+            git ls-files -z '**/*.md' | xargs -0 liche -d . -x "amazon.com|mouser.com|cypress.com|digikey.com|st.com" -t 30
   common-precommit-checks:
     docker:
       - image: circleci/python:3.8
@@ -106,6 +141,7 @@ jobs:
 workflows:
   commit:
     jobs:
+      - dead-link-test
       - common-precommit-checks
       - controller-test
       - gui-static-analysis

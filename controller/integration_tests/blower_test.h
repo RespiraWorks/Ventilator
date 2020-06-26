@@ -1,4 +1,12 @@
-// This test ramps the blower up and down repeatedly
+// Summary:
+//      This test ramps the blower up and down repeatedly
+//
+// How to run:
+//      TEST=TEST_BLOWER pio run -e integration-test -t upload
+//
+// Automation:
+//      TBD - which python script to run?
+//
 
 #include "hal.h"
 

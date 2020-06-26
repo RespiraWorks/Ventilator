@@ -87,8 +87,8 @@ struct BlowerSystemState {
 
   // Is this the last BlowerSystemState returned at the end of the breath cycle?
   //
-  // This is defaulted to false here and is handled by BlowerFsm, rather than
-  // the individual FSM classes (OffFsm, PressureControlFsm, etc).
+  // Individual FSM classes are responsible for setting this to true if
+  // end-of-cycle condition is encountered while computing the desired state.
   bool is_end_of_breath = false;
 };
 
@@ -112,10 +112,6 @@ inline constexpr Duration RISE_TIME = milliseconds(100);
 //    state and the pressure that the fan should be trying to hit for the
 //    current state of the fsm.
 //
-//  - bool Finished(): Has this breath FSM completed its work (namely, running
-//    a single breath) ?
-//    If so, it is ready to be replaced with a new one.
-//
 class OffFsm {
 public:
   OffFsm() = default;
@@ -128,10 +124,13 @@ public:
         // have a different BlowerSystemState struct for different categories of
         // modes: One for pressure modes, one for volume modes, one for flow
         // modes (high-flow nasal cannula), and one for the off mode.
-        FlowDirection::EXPIRATORY,
+        //
+        // Same applies to the is_end_of_breath flag: it doesn't really pertain
+        // to the off state but hardcode it to false by convention.
+        .flow_direction = FlowDirection::EXPIRATORY,
+        .is_end_of_breath = false,
     };
   }
-  bool Finished() { return true; }
 };
 
 // "Breath finite state machine" for pressure control mode.
@@ -139,7 +138,6 @@ class PressureControlFsm {
 public:
   explicit PressureControlFsm(Time now, const VentParams &params);
   BlowerSystemState DesiredState(Time now, const BlowerFsmInputs &inputs);
-  bool Finished() const { return finished_; }
 
 private:
   const Pressure inspire_pressure_;
@@ -147,7 +145,6 @@ private:
   Time start_time_;
   Time inspire_end_;
   Time expire_end_;
-  bool finished_ = false;
 };
 
 // "Breath finite state machine" for pressure assist mode.
@@ -163,7 +160,6 @@ class PressureAssistFsm {
 public:
   explicit PressureAssistFsm(Time now, const VentParams &params);
   BlowerSystemState DesiredState(Time now, const BlowerFsmInputs &inputs);
-  bool Finished() const { return finished_; }
 
 private:
   bool PatientInspiring(Time now, const BlowerFsmInputs &inputs);
@@ -173,7 +169,6 @@ private:
   Time start_time_;
   Time inspire_end_;
   Time expire_deadline_;
-  bool finished_ = false;
 
   // During exhale we maintain two exponentially-weighted averages of flow, one
   // which updates quickly (fast_flow_avg_), and one which updates slowly

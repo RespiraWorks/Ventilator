@@ -90,10 +90,19 @@ void HalApi::EarlyInit() {
   // on the embedded flash module
   EnableClock(FLASH_BASE);
   FlashReg *flash = FLASH_BASE;
-  flash->access = 0x00000004;
-  flash->access = 0x00001804;
-  flash->access = 0x00001804;
-  flash->access = 0x00000604;
+
+  // Set four wait states (required to run at 80MHz)
+  flash->access.latency = 4;
+
+  // Reset the instruction and data caches
+  flash->access.icache_rst = 1;
+  flash->access.dcache_rst = 1;
+  flash->access.icache_rst = 0;
+  flash->access.dcache_rst = 0;
+
+  // Enable the caches
+  flash->access.icache_ena = 0;
+  flash->access.dcache_ena = 0;
 
   // Enable the PLL.
   // We use the MSI clock as the source for the PLL

@@ -1,0 +1,1964 @@
+Archive member included to satisfy reference by file (symbol)
+
+.pio/build/int-test-blower/libaa8/libnanopb.a(pb_decode.o)
+                              .pio/build/int-test-blower/src/lib/core/comms.o (pb_istream_from_buffer)
+.pio/build/int-test-blower/libaa8/libnanopb.a(pb_encode.o)
+                              .pio/build/int-test-blower/src/lib/core/comms.o (pb_ostream_from_buffer)
+.pio/build/int-test-blower/libaa8/libnanopb.a(pb_common.o)
+                              .pio/build/int-test-blower/libaa8/libnanopb.a(pb_decode.o) (pb_field_iter_begin)
+.pio/build/int-test-blower/libcc6/libnetwork_protocol.a(network_protocol.pb.o)
+                              .pio/build/int-test-blower/src/lib/core/comms.o (ControllerStatus_msg)
+/Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/libgcc.a(_arm_muldf3.o)
+                              .pio/build/int-test-blower/src/lib/hal/hal_stm32.o (__aeabi_dmul)
+/Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/libgcc.a(_arm_addsubdf3.o)
+                              .pio/build/int-test-blower/src/lib/hal/hal_stm32.o (__aeabi_i2d)
+/Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/libgcc.a(_arm_cmpdf2.o)
+                              .pio/build/int-test-blower/src/lib/hal/stepper.o (__aeabi_dcmplt)
+/Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/libgcc.a(_arm_fixdfsi.o)
+                              .pio/build/int-test-blower/src/lib/hal/hal_stm32.o (__aeabi_d2iz)
+/Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/libgcc.a(_arm_truncdfsf2.o)
+                              .pio/build/int-test-blower/src/lib/debug/sprintf.o (__aeabi_d2f)
+/Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/libgcc.a(_arm_addsubsf3.o)
+                              .pio/build/int-test-blower/src/lib/core/blower_fsm.o (__aeabi_l2f)
+/Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/libgcc.a(_fixsfdi.o)
+                              .pio/build/int-test-blower/src/lib/core/blower_fsm.o (__aeabi_f2lz)
+/Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/libgcc.a(_fixunssfdi.o)
+                              /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/libgcc.a(_fixsfdi.o) (__aeabi_f2ulz)
+/Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/libgcc.a(_arm_fixunsdfsi.o)
+                              /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/libgcc.a(_fixunssfdi.o) (__aeabi_d2uiz)
+/Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-sf_floor.o)
+                              .pio/build/int-test-blower/src/lib/debug/sprintf.o (floorf)
+/Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-wf_log10.o)
+                              .pio/build/int-test-blower/src/lib/debug/sprintf.o (log10f)
+/Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-wf_pow.o)
+                              .pio/build/int-test-blower/src/lib/debug/sprintf.o (powf)
+/Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-wf_sqrt.o)
+                              .pio/build/int-test-blower/src/lib/core/sensors.o (sqrtf)
+/Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-ef_log10.o)
+                              /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-wf_log10.o) (__ieee754_log10f)
+/Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-ef_pow.o)
+                              /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-wf_pow.o) (__ieee754_powf)
+/Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-ef_sqrt.o)
+                              /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-wf_sqrt.o) (__ieee754_sqrtf)
+/Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-s_lib_ver.o)
+                              /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-wf_log10.o) (__fdlib_version)
+/Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-s_matherr.o)
+                              /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-wf_log10.o) (matherr)
+/Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-s_nan.o)
+                              /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-wf_log10.o) (nan)
+/Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-sf_fabs.o)
+                              /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-ef_pow.o) (fabsf)
+/Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-sf_finite.o)
+                              /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-wf_pow.o) (finitef)
+/Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-sf_nan.o)
+                              /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-ef_pow.o) (nanf)
+/Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-sf_rint.o)
+                              /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-wf_pow.o) (rintf)
+/Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-sf_scalbn.o)
+                              /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-ef_pow.o) (scalbnf)
+/Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-ef_log.o)
+                              /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-ef_log10.o) (__ieee754_logf)
+/Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-abort.o)
+                              .pio/build/int-test-blower/src/lib/core/blower_fsm.o (abort)
+/Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-errno.o)
+                              /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-wf_log10.o) (__errno)
+/Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-exit.o)
+                              /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/crt0.o (exit)
+/Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-impure.o)
+                              /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-exit.o) (_global_impure_ptr)
+/Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-init.o)
+                              /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/crt0.o (__libc_init_array)
+/Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-memcpy.o)
+                              .pio/build/int-test-blower/src/lib/debug/peek_cmd.o (memcpy)
+/Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-memset.o)
+                              /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/crt0.o (memset)
+/Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-signal.o)
+                              /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-abort.o) (raise)
+/Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-signalr.o)
+                              /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-signal.o) (_kill_r)
+/Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-strlen.o)
+                              .pio/build/int-test-blower/src/lib/debug/sprintf.o (strlen)
+/Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-strncpy.o)
+                              .pio/build/int-test-blower/src/lib/debug/sprintf.o (strncpy)
+/Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-__call_atexit.o)
+                              /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-exit.o) (__call_exitprocs)
+/Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-atexit.o)
+                              /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-__call_atexit.o) (atexit)
+/Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-fini.o)
+                              /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-__call_atexit.o) (__libc_fini_array)
+/Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-lock.o)
+                              /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-__call_atexit.o) (__retarget_lock_acquire_recursive)
+/Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-mallocr.o)
+                              /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-signal.o) (_malloc_r)
+/Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-mlock.o)
+                              /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-mallocr.o) (__malloc_lock)
+/Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-reent.o)
+                              /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-signalr.o) (errno)
+/Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-sbrkr.o)
+                              /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-mallocr.o) (_sbrk_r)
+/Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-__atexit.o)
+                              /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-atexit.o) (__register_exitproc)
+/Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-freer.o)
+                              /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-mallocr.o) (_free_r)
+/Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/libgcc.a(_arm_muldivdf3.o)
+                              /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-wf_sqrt.o) (__aeabi_ddiv)
+
+Allocating common symbols
+Common symbol       size              file
+
+__lock___atexit_recursive_mutex
+                    0x1               /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-lock.o)
+__lock___arc4random_mutex
+                    0x1               /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-lock.o)
+errno               0x4               /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-reent.o)
+__lock___env_recursive_mutex
+                    0x1               /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-lock.o)
+__lock___sinit_recursive_mutex
+                    0x1               /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-lock.o)
+__lock___malloc_recursive_mutex
+                    0x1               /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-lock.o)
+__lock___at_quick_exit_mutex
+                    0x1               /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-lock.o)
+__lock___dd_hash_mutex
+                    0x1               /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-lock.o)
+__lock___tz_mutex   0x1               /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-lock.o)
+__lock___sfp_recursive_mutex
+                    0x1               /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-lock.o)
+
+Discarded input sections
+
+ .text          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/crti.o
+ .data          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/crti.o
+ .bss           0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/crti.o
+ .text          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/crtbegin.o
+ .data          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/crtbegin.o
+ .bss           0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/crtbegin.o
+ .data.__dso_handle
+                0x0000000000000000        0x4 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/crtbegin.o
+ .text          0x0000000000000000       0x74 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/crt0.o
+ .data          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/crt0.o
+ .bss           0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/crt0.o
+ .ARM.extab     0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/crt0.o
+ .ARM.exidx     0x0000000000000000        0x8 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/crt0.o
+ .ARM.attributes
+                0x0000000000000000       0x1c /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/crt0.o
+ .text          0x0000000000000000        0x0 .pio/build/int-test-blower/src/integration_tests/main.o
+ .data          0x0000000000000000        0x0 .pio/build/int-test-blower/src/integration_tests/main.o
+ .bss           0x0000000000000000        0x0 .pio/build/int-test-blower/src/integration_tests/main.o
+ .text          0x0000000000000000        0x0 .pio/build/int-test-blower/src/integration_tests/pure_virtual.o
+ .data          0x0000000000000000        0x0 .pio/build/int-test-blower/src/integration_tests/pure_virtual.o
+ .bss           0x0000000000000000        0x0 .pio/build/int-test-blower/src/integration_tests/pure_virtual.o
+ .text          0x0000000000000000        0x0 .pio/build/int-test-blower/src/lib/core/actuators.o
+ .data          0x0000000000000000        0x0 .pio/build/int-test-blower/src/lib/core/actuators.o
+ .bss           0x0000000000000000        0x0 .pio/build/int-test-blower/src/lib/core/actuators.o
+ .text._Z17actuators_executeRK14ActuatorsState
+                0x0000000000000000       0x58 .pio/build/int-test-blower/src/lib/core/actuators.o
+ .text._Z17AreActuatorsReadyv
+                0x0000000000000000       0x24 .pio/build/int-test-blower/src/lib/core/actuators.o
+ .group         0x0000000000000000        0x8 .pio/build/int-test-blower/src/lib/core/blower_fsm.o
+ .group         0x0000000000000000        0x8 .pio/build/int-test-blower/src/lib/core/blower_fsm.o
+ .group         0x0000000000000000        0xc .pio/build/int-test-blower/src/lib/core/blower_fsm.o
+ .group         0x0000000000000000        0xc .pio/build/int-test-blower/src/lib/core/blower_fsm.o
+ .text          0x0000000000000000        0x0 .pio/build/int-test-blower/src/lib/core/blower_fsm.o
+ .data          0x0000000000000000        0x0 .pio/build/int-test-blower/src/lib/core/blower_fsm.o
+ .bss           0x0000000000000000        0x0 .pio/build/int-test-blower/src/lib/core/blower_fsm.o
+ .text._ZNSt8__detail9__variant17__gen_vtable_implILb1ENS0_12_Multi_arrayIPFvOZN9BlowerFsm12DesiredStateE4TimeRK11_VentParamsRK15BlowerFsmInputsEUlRT_E_RSt7variantIJ6OffFsm18PressureControlFsm17PressureAssistFsmEEEJEEESt5tupleIJSK_EESt16integer_sequenceIjJLj0EEEE14__visit_invokeESE_SK_
+                0x0000000000000000        0x2 .pio/build/int-test-blower/src/lib/core/blower_fsm.o
+ .text._ZNSt8__detail9__variant17__gen_vtable_implILb1ENS0_12_Multi_arrayIPFbOZN9BlowerFsm12DesiredStateE4TimeRK11_VentParamsRK15BlowerFsmInputsEUlRT_E0_RSt7variantIJ6OffFsm18PressureControlFsm17PressureAssistFsmEEEJEEESt5tupleIJSK_EESt16integer_sequenceIjJLj0EEEE14__visit_invokeESE_SK_
+                0x0000000000000000        0x4 .pio/build/int-test-blower/src/lib/core/blower_fsm.o
+ .text._ZNSt8__detail9__variant17__gen_vtable_implILb1ENS0_12_Multi_arrayIPFbOZN9BlowerFsm12DesiredStateE4TimeRK11_VentParamsRK15BlowerFsmInputsEUlRT_E0_RSt7variantIJ6OffFsm18PressureControlFsm17PressureAssistFsmEEEJEEESt5tupleIJSK_EESt16integer_sequenceIjJLj1EEEE14__visit_invokeESE_SK_
+                0x0000000000000000        0x6 .pio/build/int-test-blower/src/lib/core/blower_fsm.o
+ .text._ZNSt8__detail9__variant17__gen_vtable_implILb1ENS0_12_Multi_arrayIPF17BlowerSystemStateOZN9BlowerFsm12DesiredStateE4TimeRK11_VentParamsRK15BlowerFsmInputsEUlRT_E1_RSt7variantIJ6OffFsm18PressureControlFsm17PressureAssistFsmEEEJEEESt5tupleIJSL_EESt16integer_sequenceIjJLj0EEEE14__visit_invokeESF_SL_
+                0x0000000000000000       0x14 .pio/build/int-test-blower/src/lib/core/blower_fsm.o
+ .text._ZNSt8__detail9__variant17__gen_vtable_implILb1ENS0_12_Multi_arrayIPFbOZN9BlowerFsm12DesiredStateE4TimeRK11_VentParamsRK15BlowerFsmInputsEUlRT_E0_RSt7variantIJ6OffFsm18PressureControlFsm17PressureAssistFsmEEEJEEESt5tupleIJSK_EESt16integer_sequenceIjJLj2EEEE14__visit_invokeESE_SK_
+                0x0000000000000000        0x6 .pio/build/int-test-blower/src/lib/core/blower_fsm.o
+ .text._ZN18PressureControlFsmC2E4TimeRK11_VentParams
+                0x0000000000000000       0xb4 .pio/build/int-test-blower/src/lib/core/blower_fsm.o
+ .text._ZN18PressureControlFsm6UpdateE4TimeRK15BlowerFsmInputs
+                0x0000000000000000       0x74 .pio/build/int-test-blower/src/lib/core/blower_fsm.o
+ .text._ZNSt8__detail9__variant17__gen_vtable_implILb1ENS0_12_Multi_arrayIPFvOZN9BlowerFsm12DesiredStateE4TimeRK11_VentParamsRK15BlowerFsmInputsEUlRT_E_RSt7variantIJ6OffFsm18PressureControlFsm17PressureAssistFsmEEEJEEESt5tupleIJSK_EESt16integer_sequenceIjJLj1EEEE14__visit_invokeESE_SK_
+                0x0000000000000000       0x18 .pio/build/int-test-blower/src/lib/core/blower_fsm.o
+ .text._ZNK18PressureControlFsm12DesiredStateEv
+                0x0000000000000000       0x2e .pio/build/int-test-blower/src/lib/core/blower_fsm.o
+ .text._ZNSt8__detail9__variant17__gen_vtable_implILb1ENS0_12_Multi_arrayIPF17BlowerSystemStateOZN9BlowerFsm12DesiredStateE4TimeRK11_VentParamsRK15BlowerFsmInputsEUlRT_E1_RSt7variantIJ6OffFsm18PressureControlFsm17PressureAssistFsmEEEJEEESt5tupleIJSL_EESt16integer_sequenceIjJLj1EEEE14__visit_invokeESF_SL_
+                0x0000000000000000        0xa .pio/build/int-test-blower/src/lib/core/blower_fsm.o
+ .text._ZN17PressureAssistFsmC2E4TimeRK11_VentParams
+                0x0000000000000000       0xcc .pio/build/int-test-blower/src/lib/core/blower_fsm.o
+ .text._ZNK17PressureAssistFsm12DesiredStateEv
+                0x0000000000000000       0x2e .pio/build/int-test-blower/src/lib/core/blower_fsm.o
+ .text._ZNSt8__detail9__variant17__gen_vtable_implILb1ENS0_12_Multi_arrayIPF17BlowerSystemStateOZN9BlowerFsm12DesiredStateE4TimeRK11_VentParamsRK15BlowerFsmInputsEUlRT_E1_RSt7variantIJ6OffFsm18PressureControlFsm17PressureAssistFsmEEEJEEESt5tupleIJSL_EESt16integer_sequenceIjJLj2EEEE14__visit_invokeESF_SL_
+                0x0000000000000000        0xa .pio/build/int-test-blower/src/lib/core/blower_fsm.o
+ .text._ZN17PressureAssistFsm16PatientInspiringE4TimeRK15BlowerFsmInputs
+                0x0000000000000000      0x10c .pio/build/int-test-blower/src/lib/core/blower_fsm.o
+ .text._ZN17PressureAssistFsm6UpdateE4TimeRK15BlowerFsmInputs
+                0x0000000000000000       0x8c .pio/build/int-test-blower/src/lib/core/blower_fsm.o
+ .text._ZNSt8__detail9__variant17__gen_vtable_implILb1ENS0_12_Multi_arrayIPFvOZN9BlowerFsm12DesiredStateE4TimeRK11_VentParamsRK15BlowerFsmInputsEUlRT_E_RSt7variantIJ6OffFsm18PressureControlFsm17PressureAssistFsmEEEJEEESt5tupleIJSK_EESt16integer_sequenceIjJLj2EEEE14__visit_invokeESE_SK_
+                0x0000000000000000       0x18 .pio/build/int-test-blower/src/lib/core/blower_fsm.o
+ .text._ZN9BlowerFsm12DesiredStateE4TimeRK11_VentParamsRK15BlowerFsmInputs
+                0x0000000000000000       0xcc .pio/build/int-test-blower/src/lib/core/blower_fsm.o
+ .rodata._ZNSt8__detail9__variant12__gen_vtableILb1E17BlowerSystemStateOZN9BlowerFsm12DesiredStateE4TimeRK11_VentParamsRK15BlowerFsmInputsEUlRT_E1_JRSt7variantIJ6OffFsm18PressureControlFsm17PressureAssistFsmEEEE9_S_vtableE
+                0x0000000000000000        0xc .pio/build/int-test-blower/src/lib/core/blower_fsm.o
+ .rodata._ZNSt8__detail9__variant12__gen_vtableILb1EbOZN9BlowerFsm12DesiredStateE4TimeRK11_VentParamsRK15BlowerFsmInputsEUlRT_E0_JRSt7variantIJ6OffFsm18PressureControlFsm17PressureAssistFsmEEEE9_S_vtableE
+                0x0000000000000000        0xc .pio/build/int-test-blower/src/lib/core/blower_fsm.o
+ .rodata._ZNSt8__detail9__variant12__gen_vtableILb1EvOZN9BlowerFsm12DesiredStateE4TimeRK11_VentParamsRK15BlowerFsmInputsEUlRT_E_JRSt7variantIJ6OffFsm18PressureControlFsm17PressureAssistFsmEEEE9_S_vtableE
+                0x0000000000000000        0xc .pio/build/int-test-blower/src/lib/core/blower_fsm.o
+ .text          0x0000000000000000        0x0 .pio/build/int-test-blower/src/lib/core/comms.o
+ .data          0x0000000000000000        0x0 .pio/build/int-test-blower/src/lib/core/comms.o
+ .bss           0x0000000000000000        0x0 .pio/build/int-test-blower/src/lib/core/comms.o
+ .text._Z10comms_initv
+                0x0000000000000000        0x2 .pio/build/int-test-blower/src/lib/core/comms.o
+ .text._Z13comms_handlerRK17_ControllerStatusP10_GuiStatus
+                0x0000000000000000      0x1a8 .pio/build/int-test-blower/src/lib/core/comms.o
+ .bss._ZL14rx_in_progress
+                0x0000000000000000        0x1 .pio/build/int-test-blower/src/lib/core/comms.o
+ .bss._ZL18tx_bytes_remaining
+                0x0000000000000000        0x2 .pio/build/int-test-blower/src/lib/core/comms.o
+ .bss._ZL6rx_idx
+                0x0000000000000000        0x2 .pio/build/int-test-blower/src/lib/core/comms.o
+ .bss._ZL6tx_idx
+                0x0000000000000000        0x2 .pio/build/int-test-blower/src/lib/core/comms.o
+ .bss._ZL7last_tx
+                0x0000000000000000       0x10 .pio/build/int-test-blower/src/lib/core/comms.o
+ .bss._ZL9rx_buffer
+                0x0000000000000000       0x37 .pio/build/int-test-blower/src/lib/core/comms.o
+ .bss._ZL9tx_buffer
+                0x0000000000000000       0x6c .pio/build/int-test-blower/src/lib/core/comms.o
+ .group         0x0000000000000000        0x8 .pio/build/int-test-blower/src/lib/core/controller.o
+ .group         0x0000000000000000        0x8 .pio/build/int-test-blower/src/lib/core/controller.o
+ .group         0x0000000000000000        0xc .pio/build/int-test-blower/src/lib/core/controller.o
+ .group         0x0000000000000000        0xc .pio/build/int-test-blower/src/lib/core/controller.o
+ .group         0x0000000000000000        0xc .pio/build/int-test-blower/src/lib/core/controller.o
+ .group         0x0000000000000000        0xc .pio/build/int-test-blower/src/lib/core/controller.o
+ .text          0x0000000000000000        0x0 .pio/build/int-test-blower/src/lib/core/controller.o
+ .data          0x0000000000000000        0x0 .pio/build/int-test-blower/src/lib/core/controller.o
+ .bss           0x0000000000000000        0x0 .pio/build/int-test-blower/src/lib/core/controller.o
+ .text._ZN8DebugVar8GetValueEv
+                0x0000000000000000        0x6 .pio/build/int-test-blower/src/lib/core/controller.o
+ .text._ZN8DebugVar8SetValueEm
+                0x0000000000000000        0x6 .pio/build/int-test-blower/src/lib/core/controller.o
+ .text._ZN10DebugFloatC2EPKcS1_fS1_
+                0x0000000000000000       0x40 .pio/build/int-test-blower/src/lib/core/controller.o
+ .text._ZN10ControllerC2Ev
+                0x0000000000000000       0xf4 .pio/build/int-test-blower/src/lib/core/controller.o
+ .text._ZNSt8optionalI14FlowIntegratorE7emplaceIJEEENSt9enable_ifIX18is_constructible_vIS0_DpOT_EERS0_E4typeES6_
+                0x0000000000000000       0x20 .pio/build/int-test-blower/src/lib/core/controller.o
+ .text._ZN10Controller3RunE4TimeRK11_VentParamsRK14SensorReadings
+                0x0000000000000000      0x3a8 .pio/build/int-test-blower/src/lib/core/controller.o
+ .rodata._ZTV10DebugFloat
+                0x0000000000000000       0x10 .pio/build/int-test-blower/src/lib/core/controller.o
+ .text          0x0000000000000000        0x0 .pio/build/int-test-blower/src/lib/core/flow_integrator.o
+ .data          0x0000000000000000        0x0 .pio/build/int-test-blower/src/lib/core/flow_integrator.o
+ .bss           0x0000000000000000        0x0 .pio/build/int-test-blower/src/lib/core/flow_integrator.o
+ .text._ZN14FlowIntegratorC2Ev
+                0x0000000000000000       0x14 .pio/build/int-test-blower/src/lib/core/flow_integrator.o
+ .text._ZN14FlowIntegrator7AddFlowE4Time14VolumetricFlow
+                0x0000000000000000       0xc0 .pio/build/int-test-blower/src/lib/core/flow_integrator.o
+ .text._ZN14FlowIntegrator18NoteExpectedVolumeE6Volume
+                0x0000000000000000       0xc0 .pio/build/int-test-blower/src/lib/core/flow_integrator.o
+ .comment       0x0000000000000000       0x67 .pio/build/int-test-blower/src/lib/core/flow_integrator.o
+ .ARM.attributes
+                0x0000000000000000       0x34 .pio/build/int-test-blower/src/lib/core/flow_integrator.o
+ .text          0x0000000000000000        0x0 .pio/build/int-test-blower/src/lib/core/pinch_valve.o
+ .data          0x0000000000000000        0x0 .pio/build/int-test-blower/src/lib/core/pinch_valve.o
+ .bss           0x0000000000000000        0x0 .pio/build/int-test-blower/src/lib/core/pinch_valve.o
+ .text._ZN10PinchValve7DisableEv
+                0x0000000000000000       0x28 .pio/build/int-test-blower/src/lib/core/pinch_valve.o
+ .text._ZN10PinchValve4HomeEv
+                0x0000000000000000      0x190 .pio/build/int-test-blower/src/lib/core/pinch_valve.o
+ .text._ZN10PinchValve9SetOutputEf
+                0x0000000000000000       0xec .pio/build/int-test-blower/src/lib/core/pinch_valve.o
+ .rodata._ZL10flow_table
+                0x0000000000000000       0x2c .pio/build/int-test-blower/src/lib/core/pinch_valve.o
+ .group         0x0000000000000000        0x8 .pio/build/int-test-blower/src/lib/core/sensors.o
+ .group         0x0000000000000000        0x8 .pio/build/int-test-blower/src/lib/core/sensors.o
+ .group         0x0000000000000000        0xc .pio/build/int-test-blower/src/lib/core/sensors.o
+ .group         0x0000000000000000        0xc .pio/build/int-test-blower/src/lib/core/sensors.o
+ .text          0x0000000000000000        0x0 .pio/build/int-test-blower/src/lib/core/sensors.o
+ .data          0x0000000000000000        0x0 .pio/build/int-test-blower/src/lib/core/sensors.o
+ .bss           0x0000000000000000        0x0 .pio/build/int-test-blower/src/lib/core/sensors.o
+ .text._ZN8DebugVar8GetValueEv
+                0x0000000000000000        0x6 .pio/build/int-test-blower/src/lib/core/sensors.o
+ .text._ZN8DebugVar8SetValueEm
+                0x0000000000000000        0x6 .pio/build/int-test-blower/src/lib/core/sensors.o
+ .text._ZN10DebugFloatC2EPKcS1_fS1_
+                0x0000000000000000       0x40 .pio/build/int-test-blower/src/lib/core/sensors.o
+ .text._ZN7Sensors6PinForENS_6SensorE
+                0x0000000000000000        0x2 .pio/build/int-test-blower/src/lib/core/sensors.o
+ .text._ZN7SensorsC2Ev
+                0x0000000000000000        0xa .pio/build/int-test-blower/src/lib/core/sensors.o
+ .text._ZN7Sensors9CalibrateEv
+                0x0000000000000000       0x3c .pio/build/int-test-blower/src/lib/core/sensors.o
+ .text._ZN7Sensors18ReadPressureSensorENS_6SensorE
+                0x0000000000000000       0x2c .pio/build/int-test-blower/src/lib/core/sensors.o
+ .text._ZN7Sensors19PressureDeltaToFlowE8Pressure
+                0x0000000000000000       0x70 .pio/build/int-test-blower/src/lib/core/sensors.o
+ .text._ZN7Sensors11GetReadingsEv
+                0x0000000000000000       0xcc .pio/build/int-test-blower/src/lib/core/sensors.o
+ .rodata._ZTV10DebugFloat
+                0x0000000000000000       0x10 .pio/build/int-test-blower/src/lib/core/sensors.o
+ .rodata.C.1.76234
+                0x0000000000000000        0x3 .pio/build/int-test-blower/src/lib/core/sensors.o
+ .group         0x0000000000000000        0x8 .pio/build/int-test-blower/src/lib/debug/debug.o
+ .group         0x0000000000000000        0x8 .pio/build/int-test-blower/src/lib/debug/debug.o
+ .group         0x0000000000000000        0xc .pio/build/int-test-blower/src/lib/debug/debug.o
+ .group         0x0000000000000000        0xc .pio/build/int-test-blower/src/lib/debug/debug.o
+ .text          0x0000000000000000        0x0 .pio/build/int-test-blower/src/lib/debug/debug.o
+ .data          0x0000000000000000        0x0 .pio/build/int-test-blower/src/lib/debug/debug.o
+ .bss           0x0000000000000000        0x0 .pio/build/int-test-blower/src/lib/debug/debug.o
+ .text._ZN11DebugSerial5PrintEPKcz
+                0x0000000000000000       0x66 .pio/build/int-test-blower/src/lib/debug/debug.o
+ .text._ZN11DebugSerial12ReadNextByteEv
+                0x0000000000000000       0x78 .pio/build/int-test-blower/src/lib/debug/debug.o
+ .text._ZN11DebugSerial12SendNextByteEv
+                0x0000000000000000       0x7c .pio/build/int-test-blower/src/lib/debug/debug.o
+ .text._ZN11DebugSerial7CalcCRCEPhj
+                0x0000000000000000       0x5c .pio/build/int-test-blower/src/lib/debug/debug.o
+ .text._ZN11DebugSerial9SendErrorE10DbgErrCode
+                0x0000000000000000       0x30 .pio/build/int-test-blower/src/lib/debug/debug.o
+ .text._ZN11DebugSerial10ProcessCmdEv
+                0x0000000000000000       0xb8 .pio/build/int-test-blower/src/lib/debug/debug.o
+ .text._ZN11DebugSerial4PollEv
+                0x0000000000000000       0x3c .pio/build/int-test-blower/src/lib/debug/debug.o
+ .bss._ZZN11DebugSerial7CalcCRCEPhjE3tbl
+                0x0000000000000000      0x200 .pio/build/int-test-blower/src/lib/debug/debug.o
+ .bss._ZZN11DebugSerial7CalcCRCEPhjE4init
+                0x0000000000000000        0x1 .pio/build/int-test-blower/src/lib/debug/debug.o
+ .group         0x0000000000000000        0xc .pio/build/int-test-blower/src/lib/debug/pb_read_cmd.o
+ .group         0x0000000000000000        0xc .pio/build/int-test-blower/src/lib/debug/pb_read_cmd.o
+ .text          0x0000000000000000        0x0 .pio/build/int-test-blower/src/lib/debug/pb_read_cmd.o
+ .data          0x0000000000000000        0x0 .pio/build/int-test-blower/src/lib/debug/pb_read_cmd.o
+ .bss           0x0000000000000000        0x0 .pio/build/int-test-blower/src/lib/debug/pb_read_cmd.o
+ .group         0x0000000000000000        0xc .pio/build/int-test-blower/src/lib/debug/peek_cmd.o
+ .group         0x0000000000000000        0xc .pio/build/int-test-blower/src/lib/debug/peek_cmd.o
+ .text          0x0000000000000000        0x0 .pio/build/int-test-blower/src/lib/debug/peek_cmd.o
+ .data          0x0000000000000000        0x0 .pio/build/int-test-blower/src/lib/debug/peek_cmd.o
+ .bss           0x0000000000000000        0x0 .pio/build/int-test-blower/src/lib/debug/peek_cmd.o
+ .group         0x0000000000000000        0x8 .pio/build/int-test-blower/src/lib/debug/poke_cmd.o
+ .group         0x0000000000000000        0xc .pio/build/int-test-blower/src/lib/debug/poke_cmd.o
+ .text          0x0000000000000000        0x0 .pio/build/int-test-blower/src/lib/debug/poke_cmd.o
+ .data          0x0000000000000000        0x0 .pio/build/int-test-blower/src/lib/debug/poke_cmd.o
+ .bss           0x0000000000000000        0x0 .pio/build/int-test-blower/src/lib/debug/poke_cmd.o
+ .text          0x0000000000000000        0x0 .pio/build/int-test-blower/src/lib/debug/sprintf.o
+ .data          0x0000000000000000        0x0 .pio/build/int-test-blower/src/lib/debug/sprintf.o
+ .bss           0x0000000000000000        0x0 .pio/build/int-test-blower/src/lib/debug/sprintf.o
+ .text._ZL9FormatIntP9FieldInfolPci
+                0x0000000000000000      0x196 .pio/build/int-test-blower/src/lib/debug/sprintf.o
+ .rodata._ZL11FormatFloatP9FieldInfofPci.str1.1
+                0x0000000000000000       0x12 .pio/build/int-test-blower/src/lib/debug/sprintf.o
+ .text._ZL11FormatFloatP9FieldInfofPci
+                0x0000000000000000      0x1e4 .pio/build/int-test-blower/src/lib/debug/sprintf.o
+ .rodata._Z11RWvsnprintfPcjPKcSt9__va_list.str1.1
+                0x0000000000000000        0x5 .pio/build/int-test-blower/src/lib/debug/sprintf.o
+ .text._Z11RWvsnprintfPcjPKcSt9__va_list
+                0x0000000000000000      0x408 .pio/build/int-test-blower/src/lib/debug/sprintf.o
+ .text._Z10RWsnprintfPcjPKcz
+                0x0000000000000000       0x1a .pio/build/int-test-blower/src/lib/debug/sprintf.o
+ .rodata._ZZL11FormatFloatP9FieldInfofPciE6_round
+                0x0000000000000000       0x28 .pio/build/int-test-blower/src/lib/debug/sprintf.o
+ .comment       0x0000000000000000       0x67 .pio/build/int-test-blower/src/lib/debug/sprintf.o
+ .ARM.attributes
+                0x0000000000000000       0x34 .pio/build/int-test-blower/src/lib/debug/sprintf.o
+ .text          0x0000000000000000        0x0 .pio/build/int-test-blower/src/lib/debug/trace.o
+ .data          0x0000000000000000        0x0 .pio/build/int-test-blower/src/lib/debug/trace.o
+ .bss           0x0000000000000000        0x0 .pio/build/int-test-blower/src/lib/debug/trace.o
+ .group         0x0000000000000000        0x8 .pio/build/int-test-blower/src/lib/debug/trace_cmd.o
+ .group         0x0000000000000000        0x8 .pio/build/int-test-blower/src/lib/debug/trace_cmd.o
+ .group         0x0000000000000000        0xc .pio/build/int-test-blower/src/lib/debug/trace_cmd.o
+ .group         0x0000000000000000        0x8 .pio/build/int-test-blower/src/lib/debug/trace_cmd.o
+ .group         0x0000000000000000        0xc .pio/build/int-test-blower/src/lib/debug/trace_cmd.o
+ .group         0x0000000000000000        0xc .pio/build/int-test-blower/src/lib/debug/trace_cmd.o
+ .group         0x0000000000000000        0xc .pio/build/int-test-blower/src/lib/debug/trace_cmd.o
+ .text          0x0000000000000000        0x0 .pio/build/int-test-blower/src/lib/debug/trace_cmd.o
+ .data          0x0000000000000000        0x0 .pio/build/int-test-blower/src/lib/debug/trace_cmd.o
+ .bss           0x0000000000000000        0x0 .pio/build/int-test-blower/src/lib/debug/trace_cmd.o
+ .text          0x0000000000000000        0x0 .pio/build/int-test-blower/src/lib/debug/var_cmd.o
+ .data          0x0000000000000000        0x0 .pio/build/int-test-blower/src/lib/debug/var_cmd.o
+ .bss           0x0000000000000000        0x0 .pio/build/int-test-blower/src/lib/debug/var_cmd.o
+ .text          0x0000000000000000        0x0 .pio/build/int-test-blower/src/lib/debug/vars.o
+ .data          0x0000000000000000        0x0 .pio/build/int-test-blower/src/lib/debug/vars.o
+ .bss           0x0000000000000000        0x0 .pio/build/int-test-blower/src/lib/debug/vars.o
+ .text          0x0000000000000000        0x0 .pio/build/int-test-blower/src/lib/hal/adc.o
+ .data          0x0000000000000000        0x0 .pio/build/int-test-blower/src/lib/hal/adc.o
+ .bss           0x0000000000000000        0x0 .pio/build/int-test-blower/src/lib/hal/adc.o
+ .text._ZN6HalApi10analogReadE9AnalogPin
+                0x0000000000000000       0x38 .pio/build/int-test-blower/src/lib/hal/adc.o
+ .text          0x0000000000000000        0x0 .pio/build/int-test-blower/src/lib/hal/buzzer.o
+ .data          0x0000000000000000        0x0 .pio/build/int-test-blower/src/lib/hal/buzzer.o
+ .bss           0x0000000000000000        0x0 .pio/build/int-test-blower/src/lib/hal/buzzer.o
+ .text._ZN6HalApi9BuzzerOffEv
+                0x0000000000000000        0xc .pio/build/int-test-blower/src/lib/hal/buzzer.o
+ .text._ZN6HalApi8BuzzerOnEf
+                0x0000000000000000       0x50 .pio/build/int-test-blower/src/lib/hal/buzzer.o
+ .text          0x0000000000000000        0x0 .pio/build/int-test-blower/src/lib/hal/hal.o
+ .data          0x0000000000000000        0x0 .pio/build/int-test-blower/src/lib/hal/hal.o
+ .bss           0x0000000000000000        0x0 .pio/build/int-test-blower/src/lib/hal/hal.o
+ .group         0x0000000000000000        0x8 .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+ .group         0x0000000000000000        0x8 .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+ .group         0x0000000000000000        0x8 .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+ .group         0x0000000000000000        0x8 .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+ .group         0x0000000000000000        0xc .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+ .group         0x0000000000000000        0xc .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+ .group         0x0000000000000000        0xc .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+ .group         0x0000000000000000        0xc .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+ .group         0x0000000000000000        0xc .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+ .group         0x0000000000000000        0xc .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+ .group         0x0000000000000000        0xc .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+ .group         0x0000000000000000        0xc .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+ .text          0x0000000000000000        0x0 .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+ .data          0x0000000000000000        0x0 .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+ .bss           0x0000000000000000        0x0 .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+ .text._ZN8DebugVar8GetValueEv
+                0x0000000000000000        0x6 .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+ .text._ZN8DebugVar8SetValueEm
+                0x0000000000000000        0x6 .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+ .text._ZN15BlockInterruptsC2Ev
+                0x0000000000000000       0x14 .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+ .text._ZN15BlockInterruptsD2Ev
+                0x0000000000000000        0x8 .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+ .text._ZN6HalApi12digitalWriteE9BinaryPin12VoltageLevel
+                0x0000000000000000       0x34 .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+ .text._ZN6HalApi13watchdog_initEv
+                0x0000000000000000       0x2c .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+ .text._ZN6HalApi16crc32_accumulateEh
+                0x0000000000000000        0xc .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+ .text._ZN6HalApi9crc32_getEv
+                0x0000000000000000       0x14 .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+ .text._ZN6HalApi11crc32_resetEv
+                0x0000000000000000        0xc .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+ .text._ZN6HalApi5crc32EPhm
+                0x0000000000000000       0x24 .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+ .text._ZN6HalApi9EarlyInitEv
+                0x0000000000000000       0x58 .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+ .text._init    0x0000000000000000        0xc .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+ .text._ZN6HalApi14startLoopTimerERK8DurationPFvPvES3_
+                0x0000000000000000       0xa8 .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+ .text._ZN4UART5writeEPKct
+                0x0000000000000000       0x38 .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+ .text._ZN6HalApi11serialWriteEPKct
+                0x0000000000000000       0x10 .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+ .text._ZN6HalApi10debugWriteEPKct
+                0x0000000000000000       0x10 .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+ .text._ZN4UART4readEPct
+                0x0000000000000000       0x38 .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+ .text._ZN6HalApi10serialReadEPct
+                0x0000000000000000       0x10 .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+ .text._ZN6HalApi9debugReadEPct
+                0x0000000000000000       0x10 .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+ .text._ZN8CircBuffIhLi128EE6FullCtEv
+                0x0000000000000000       0x24 .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+ .text._ZN6HalApi27serialBytesAvailableForReadEv
+                0x0000000000000000       0x10 .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+ .text._ZN6HalApi28serialBytesAvailableForWriteEv
+                0x0000000000000000       0x14 .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+ .text._ZN6HalApi27debugBytesAvailableForWriteEv
+                0x0000000000000000       0x14 .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+ .group         0x0000000000000000        0x8 .pio/build/int-test-blower/src/lib/hal/psol.o
+ .group         0x0000000000000000        0x8 .pio/build/int-test-blower/src/lib/hal/psol.o
+ .group         0x0000000000000000        0xc .pio/build/int-test-blower/src/lib/hal/psol.o
+ .text          0x0000000000000000        0x0 .pio/build/int-test-blower/src/lib/hal/psol.o
+ .data          0x0000000000000000        0x0 .pio/build/int-test-blower/src/lib/hal/psol.o
+ .bss           0x0000000000000000        0x0 .pio/build/int-test-blower/src/lib/hal/psol.o
+ .text._ZN8DebugVar8GetValueEv
+                0x0000000000000000        0x6 .pio/build/int-test-blower/src/lib/hal/psol.o
+ .text._ZN8DebugVar8SetValueEm
+                0x0000000000000000        0x6 .pio/build/int-test-blower/src/lib/hal/psol.o
+ .text._ZN6HalApi10PSOL_ValueEf
+                0x0000000000000000       0x6c .pio/build/int-test-blower/src/lib/hal/psol.o
+ .rodata._ZTV10DebugFloat
+                0x0000000000000000       0x10 .pio/build/int-test-blower/src/lib/hal/psol.o
+ .text          0x0000000000000000       0x14 .pio/build/int-test-blower/src/lib/hal/startup_stm32l452xx.o
+ .data          0x0000000000000000        0x0 .pio/build/int-test-blower/src/lib/hal/startup_stm32l452xx.o
+ .bss           0x0000000000000000        0x0 .pio/build/int-test-blower/src/lib/hal/startup_stm32l452xx.o
+ .group         0x0000000000000000        0x8 .pio/build/int-test-blower/src/lib/hal/stepper.o
+ .text          0x0000000000000000        0x0 .pio/build/int-test-blower/src/lib/hal/stepper.o
+ .data          0x0000000000000000        0x0 .pio/build/int-test-blower/src/lib/hal/stepper.o
+ .bss           0x0000000000000000        0x0 .pio/build/int-test-blower/src/lib/hal/stepper.o
+ .text._ZN15BlockInterruptsC2Ev
+                0x0000000000000000       0x14 .pio/build/int-test-blower/src/lib/hal/stepper.o
+ .text._ZN9StepMotor11DpsToVelRegEff
+                0x0000000000000000       0x20 .pio/build/int-test-blower/src/lib/hal/stepper.o
+ .text._ZN9StepMotor11RegVelToDpsElf
+                0x0000000000000000       0x28 .pio/build/int-test-blower/src/lib/hal/stepper.o
+ .text._ZN9StepMotor10DegToUstepEf
+                0x0000000000000000       0x28 .pio/build/int-test-blower/src/lib/hal/stepper.o
+ .text._ZN9StepMotor7SetKvalE12StepMtrParamf
+                0x0000000000000000       0x80 .pio/build/int-test-blower/src/lib/hal/stepper.o
+ .text._ZN9StepMotor10SetAmpHoldEf
+                0x0000000000000000        0x6 .pio/build/int-test-blower/src/lib/hal/stepper.o
+ .text._ZN9StepMotor9SetAmpRunEf
+                0x0000000000000000        0x6 .pio/build/int-test-blower/src/lib/hal/stepper.o
+ .text._ZN9StepMotor11SetAmpAccelEf
+                0x0000000000000000        0x6 .pio/build/int-test-blower/src/lib/hal/stepper.o
+ .text._ZN9StepMotor11SetAmpDecelEf
+                0x0000000000000000        0x6 .pio/build/int-test-blower/src/lib/hal/stepper.o
+ .text._ZN9StepMotor9SetAmpAllEf
+                0x0000000000000000       0x42 .pio/build/int-test-blower/src/lib/hal/stepper.o
+ .text._ZN9StepMotor11SetMaxSpeedEf
+                0x0000000000000000       0x4c .pio/build/int-test-blower/src/lib/hal/stepper.o
+ .text._ZN9StepMotor11SetMinSpeedEf
+                0x0000000000000000       0x4c .pio/build/int-test-blower/src/lib/hal/stepper.o
+ .text._ZN9StepMotor8SetAccelEf
+                0x0000000000000000       0x64 .pio/build/int-test-blower/src/lib/hal/stepper.o
+ .text._ZN9StepMotor15GetCurrentSpeedEPf
+                0x0000000000000000       0x2c .pio/build/int-test-blower/src/lib/hal/stepper.o
+ .text._ZN9StepMotor11GetMaxSpeedEPf
+                0x0000000000000000       0x2c .pio/build/int-test-blower/src/lib/hal/stepper.o
+ .text._ZN9StepMotor11GetMinSpeedEPf
+                0x0000000000000000       0x2c .pio/build/int-test-blower/src/lib/hal/stepper.o
+ .text._ZN9StepMotor13RunAtVelocityEf
+                0x0000000000000000       0x6c .pio/build/int-test-blower/src/lib/hal/stepper.o
+ .text._ZN9StepMotor8SoftStopEv
+                0x0000000000000000       0x18 .pio/build/int-test-blower/src/lib/hal/stepper.o
+ .text._ZN9StepMotor8HardStopEv
+                0x0000000000000000       0x18 .pio/build/int-test-blower/src/lib/hal/stepper.o
+ .text._ZN9StepMotor11SoftDisableEv
+                0x0000000000000000       0x18 .pio/build/int-test-blower/src/lib/hal/stepper.o
+ .text._ZN9StepMotor11HardDisableEv
+                0x0000000000000000       0x18 .pio/build/int-test-blower/src/lib/hal/stepper.o
+ .text._ZN9StepMotor13ClearPositionEv
+                0x0000000000000000       0x18 .pio/build/int-test-blower/src/lib/hal/stepper.o
+ .text._ZN9StepMotor9GetStatusEP13StepperStatus
+                0x0000000000000000       0xac .pio/build/int-test-blower/src/lib/hal/stepper.o
+ .text._ZN9StepMotor7GotoPosEf
+                0x0000000000000000       0x2a .pio/build/int-test-blower/src/lib/hal/stepper.o
+ .text._ZN9StepMotor7MoveRelEf
+                0x0000000000000000       0x3c .pio/build/int-test-blower/src/lib/hal/stepper.o
+ .rodata        0x0000000000000000        0x3 .pio/build/int-test-blower/src/lib/hal/stepper.o
+ .text          0x0000000000000000        0x0 .pio/build/int-test-blower/src/lib/hal/uart_dma.o
+ .data          0x0000000000000000        0x0 .pio/build/int-test-blower/src/lib/hal/uart_dma.o
+ .bss           0x0000000000000000        0x0 .pio/build/int-test-blower/src/lib/hal/uart_dma.o
+ .comment       0x0000000000000000       0x67 .pio/build/int-test-blower/src/lib/hal/uart_dma.o
+ .ARM.attributes
+                0x0000000000000000       0x39 .pio/build/int-test-blower/src/lib/hal/uart_dma.o
+ .text          0x0000000000000000        0x0 .pio/build/int-test-blower/src/lib/pid/pid.o
+ .data          0x0000000000000000        0x0 .pio/build/int-test-blower/src/lib/pid/pid.o
+ .bss           0x0000000000000000        0x0 .pio/build/int-test-blower/src/lib/pid/pid.o
+ .text._ZN3PID7ComputeE4Timeff
+                0x0000000000000000      0x124 .pio/build/int-test-blower/src/lib/pid/pid.o
+ .text._ZN3PID7ObserveE4Timefff
+                0x0000000000000000       0x36 .pio/build/int-test-blower/src/lib/pid/pid.o
+ .comment       0x0000000000000000       0x67 .pio/build/int-test-blower/src/lib/pid/pid.o
+ .ARM.attributes
+                0x0000000000000000       0x34 .pio/build/int-test-blower/src/lib/pid/pid.o
+ .text          0x0000000000000000        0x0 .pio/build/int-test-blower/src/lib/stl/algorithm.o
+ .data          0x0000000000000000        0x0 .pio/build/int-test-blower/src/lib/stl/algorithm.o
+ .bss           0x0000000000000000        0x0 .pio/build/int-test-blower/src/lib/stl/algorithm.o
+ .comment       0x0000000000000000       0x67 .pio/build/int-test-blower/src/lib/stl/algorithm.o
+ .ARM.attributes
+                0x0000000000000000       0x39 .pio/build/int-test-blower/src/lib/stl/algorithm.o
+ .text          0x0000000000000000        0x0 .pio/build/int-test-blower/libaa8/libnanopb.a(pb_decode.o)
+ .data          0x0000000000000000        0x0 .pio/build/int-test-blower/libaa8/libnanopb.a(pb_decode.o)
+ .bss           0x0000000000000000        0x0 .pio/build/int-test-blower/libaa8/libnanopb.a(pb_decode.o)
+ .text.buf_read
+                0x0000000000000000       0x1e .pio/build/int-test-blower/libaa8/libnanopb.a(pb_decode.o)
+ .text.check_wire_type
+                0x0000000000000000       0x38 .pio/build/int-test-blower/libaa8/libnanopb.a(pb_decode.o)
+ .rodata.pb_readbyte.str1.1
+                0x0000000000000000       0x17 .pio/build/int-test-blower/libaa8/libnanopb.a(pb_decode.o)
+ .text.pb_readbyte
+                0x0000000000000000       0x40 .pio/build/int-test-blower/libaa8/libnanopb.a(pb_decode.o)
+ .rodata.pb_decode_varint32_eof.str1.1
+                0x0000000000000000       0x10 .pio/build/int-test-blower/libaa8/libnanopb.a(pb_decode.o)
+ .text.pb_decode_varint32_eof
+                0x0000000000000000       0x9c .pio/build/int-test-blower/libaa8/libnanopb.a(pb_decode.o)
+ .text.pb_read  0x0000000000000000       0x80 .pio/build/int-test-blower/libaa8/libnanopb.a(pb_decode.o)
+ .text.pb_istream_from_buffer
+                0x0000000000000000       0x14 .pio/build/int-test-blower/libaa8/libnanopb.a(pb_decode.o)
+ .text.pb_decode_varint32
+                0x0000000000000000        0x6 .pio/build/int-test-blower/libaa8/libnanopb.a(pb_decode.o)
+ .text.pb_decode_varint
+                0x0000000000000000       0x6c .pio/build/int-test-blower/libaa8/libnanopb.a(pb_decode.o)
+ .text.pb_decode_tag
+                0x0000000000000000       0x28 .pio/build/int-test-blower/libaa8/libnanopb.a(pb_decode.o)
+ .rodata.pb_skip_field.str1.1
+                0x0000000000000000       0x12 .pio/build/int-test-blower/libaa8/libnanopb.a(pb_decode.o)
+ .text.pb_skip_field
+                0x0000000000000000       0x5c .pio/build/int-test-blower/libaa8/libnanopb.a(pb_decode.o)
+ .rodata.pb_make_string_substream.str1.1
+                0x0000000000000000       0x18 .pio/build/int-test-blower/libaa8/libnanopb.a(pb_decode.o)
+ .text.pb_make_string_substream
+                0x0000000000000000       0x40 .pio/build/int-test-blower/libaa8/libnanopb.a(pb_decode.o)
+ .text.pb_close_string_substream
+                0x0000000000000000       0x24 .pio/build/int-test-blower/libaa8/libnanopb.a(pb_decode.o)
+ .text.pb_decode_bool
+                0x0000000000000000       0x1a .pio/build/int-test-blower/libaa8/libnanopb.a(pb_decode.o)
+ .text.pb_decode_svarint
+                0x0000000000000000       0x32 .pio/build/int-test-blower/libaa8/libnanopb.a(pb_decode.o)
+ .text.pb_decode_fixed32
+                0x0000000000000000       0x18 .pio/build/int-test-blower/libaa8/libnanopb.a(pb_decode.o)
+ .text.pb_decode_fixed64
+                0x0000000000000000       0x1a .pio/build/int-test-blower/libaa8/libnanopb.a(pb_decode.o)
+ .rodata.decode_basic_field.str1.1
+                0x0000000000000000       0xc9 .pio/build/int-test-blower/libaa8/libnanopb.a(pb_decode.o)
+ .text.decode_basic_field
+                0x0000000000000000      0x2a8 .pio/build/int-test-blower/libaa8/libnanopb.a(pb_decode.o)
+ .rodata.decode_field.str1.1
+                0x0000000000000000       0x2f .pio/build/int-test-blower/libaa8/libnanopb.a(pb_decode.o)
+ .text.decode_field
+                0x0000000000000000      0x204 .pio/build/int-test-blower/libaa8/libnanopb.a(pb_decode.o)
+ .text.pb_message_set_to_defaults
+                0x0000000000000000      0x118 .pio/build/int-test-blower/libaa8/libnanopb.a(pb_decode.o)
+ .rodata.pb_decode_inner.str1.1
+                0x0000000000000000       0x53 .pio/build/int-test-blower/libaa8/libnanopb.a(pb_decode.o)
+ .text.pb_decode_inner
+                0x0000000000000000      0x26c .pio/build/int-test-blower/libaa8/libnanopb.a(pb_decode.o)
+ .text.pb_decode_ex
+                0x0000000000000000       0x44 .pio/build/int-test-blower/libaa8/libnanopb.a(pb_decode.o)
+ .text.pb_decode
+                0x0000000000000000        0x6 .pio/build/int-test-blower/libaa8/libnanopb.a(pb_decode.o)
+ .comment       0x0000000000000000       0x67 .pio/build/int-test-blower/libaa8/libnanopb.a(pb_decode.o)
+ .ARM.attributes
+                0x0000000000000000       0x34 .pio/build/int-test-blower/libaa8/libnanopb.a(pb_decode.o)
+ .text          0x0000000000000000        0x0 .pio/build/int-test-blower/libaa8/libnanopb.a(pb_encode.o)
+ .data          0x0000000000000000        0x0 .pio/build/int-test-blower/libaa8/libnanopb.a(pb_encode.o)
+ .bss           0x0000000000000000        0x0 .pio/build/int-test-blower/libaa8/libnanopb.a(pb_encode.o)
+ .text.buf_write
+                0x0000000000000000       0x1a .pio/build/int-test-blower/libaa8/libnanopb.a(pb_encode.o)
+ .text.pb_check_proto3_default_value
+                0x0000000000000000       0x92 .pio/build/int-test-blower/libaa8/libnanopb.a(pb_encode.o)
+ .text.pb_ostream_from_buffer
+                0x0000000000000000       0x18 .pio/build/int-test-blower/libaa8/libnanopb.a(pb_encode.o)
+ .rodata.pb_write.str1.1
+                0x0000000000000000       0x15 .pio/build/int-test-blower/libaa8/libnanopb.a(pb_encode.o)
+ .text.pb_write
+                0x0000000000000000       0x4c .pio/build/int-test-blower/libaa8/libnanopb.a(pb_encode.o)
+ .text.pb_encode_varint
+                0x0000000000000000       0x82 .pio/build/int-test-blower/libaa8/libnanopb.a(pb_encode.o)
+ .text.pb_encode_svarint
+                0x0000000000000000       0x22 .pio/build/int-test-blower/libaa8/libnanopb.a(pb_encode.o)
+ .rodata.pb_enc_varint.str1.1
+                0x0000000000000000       0x12 .pio/build/int-test-blower/libaa8/libnanopb.a(pb_encode.o)
+ .text.pb_enc_varint
+                0x0000000000000000       0x94 .pio/build/int-test-blower/libaa8/libnanopb.a(pb_encode.o)
+ .text.pb_encode_fixed32
+                0x0000000000000000       0x16 .pio/build/int-test-blower/libaa8/libnanopb.a(pb_encode.o)
+ .text.pb_encode_fixed64
+                0x0000000000000000       0x2c .pio/build/int-test-blower/libaa8/libnanopb.a(pb_encode.o)
+ .text.pb_enc_fixed
+                0x0000000000000000       0x2c .pio/build/int-test-blower/libaa8/libnanopb.a(pb_encode.o)
+ .text.pb_encode_tag
+                0x0000000000000000        0xc .pio/build/int-test-blower/libaa8/libnanopb.a(pb_encode.o)
+ .rodata.pb_encode_tag_for_field.str1.1
+                0x0000000000000000       0x13 .pio/build/int-test-blower/libaa8/libnanopb.a(pb_encode.o)
+ .text.pb_encode_tag_for_field
+                0x0000000000000000       0x44 .pio/build/int-test-blower/libaa8/libnanopb.a(pb_encode.o)
+ .text.pb_encode_string
+                0x0000000000000000       0x24 .pio/build/int-test-blower/libaa8/libnanopb.a(pb_encode.o)
+ .rodata.pb_encode_submessage.str1.1
+                0x0000000000000000       0x14 .pio/build/int-test-blower/libaa8/libnanopb.a(pb_encode.o)
+ .text.pb_encode_submessage
+                0x0000000000000000       0x98 .pio/build/int-test-blower/libaa8/libnanopb.a(pb_encode.o)
+ .rodata.encode_basic_field.str1.1
+                0x0000000000000000       0x54 .pio/build/int-test-blower/libaa8/libnanopb.a(pb_encode.o)
+ .text.encode_basic_field
+                0x0000000000000000      0x130 .pio/build/int-test-blower/libaa8/libnanopb.a(pb_encode.o)
+ .rodata.encode_field.str1.1
+                0x0000000000000000       0x45 .pio/build/int-test-blower/libaa8/libnanopb.a(pb_encode.o)
+ .text.encode_field
+                0x0000000000000000      0x1f0 .pio/build/int-test-blower/libaa8/libnanopb.a(pb_encode.o)
+ .rodata.pb_encode.str1.1
+                0x0000000000000000       0x12 .pio/build/int-test-blower/libaa8/libnanopb.a(pb_encode.o)
+ .text.pb_encode
+                0x0000000000000000       0x78 .pio/build/int-test-blower/libaa8/libnanopb.a(pb_encode.o)
+ .text.pb_get_encoded_size
+                0x0000000000000000       0x28 .pio/build/int-test-blower/libaa8/libnanopb.a(pb_encode.o)
+ .text.pb_encode_ex
+                0x0000000000000000       0x36 .pio/build/int-test-blower/libaa8/libnanopb.a(pb_encode.o)
+ .comment       0x0000000000000000       0x67 .pio/build/int-test-blower/libaa8/libnanopb.a(pb_encode.o)
+ .ARM.attributes
+                0x0000000000000000       0x34 .pio/build/int-test-blower/libaa8/libnanopb.a(pb_encode.o)
+ .text          0x0000000000000000        0x0 .pio/build/int-test-blower/libaa8/libnanopb.a(pb_common.o)
+ .data          0x0000000000000000        0x0 .pio/build/int-test-blower/libaa8/libnanopb.a(pb_common.o)
+ .bss           0x0000000000000000        0x0 .pio/build/int-test-blower/libaa8/libnanopb.a(pb_common.o)
+ .text.load_descriptor_values
+                0x0000000000000000       0xd4 .pio/build/int-test-blower/libaa8/libnanopb.a(pb_common.o)
+ .text.advance_iterator
+                0x0000000000000000       0x52 .pio/build/int-test-blower/libaa8/libnanopb.a(pb_common.o)
+ .text.pb_field_iter_begin
+                0x0000000000000000       0x20 .pio/build/int-test-blower/libaa8/libnanopb.a(pb_common.o)
+ .text.pb_field_iter_begin_extension
+                0x0000000000000000       0x28 .pio/build/int-test-blower/libaa8/libnanopb.a(pb_common.o)
+ .text.pb_field_iter_next
+                0x0000000000000000       0x16 .pio/build/int-test-blower/libaa8/libnanopb.a(pb_common.o)
+ .text.pb_field_iter_find
+                0x0000000000000000       0x52 .pio/build/int-test-blower/libaa8/libnanopb.a(pb_common.o)
+ .text.pb_field_iter_begin_const
+                0x0000000000000000        0x4 .pio/build/int-test-blower/libaa8/libnanopb.a(pb_common.o)
+ .text.pb_field_iter_begin_extension_const
+                0x0000000000000000        0x4 .pio/build/int-test-blower/libaa8/libnanopb.a(pb_common.o)
+ .text.pb_default_field_callback
+                0x0000000000000000       0x34 .pio/build/int-test-blower/libaa8/libnanopb.a(pb_common.o)
+ .comment       0x0000000000000000       0x67 .pio/build/int-test-blower/libaa8/libnanopb.a(pb_common.o)
+ .ARM.attributes
+                0x0000000000000000       0x34 .pio/build/int-test-blower/libaa8/libnanopb.a(pb_common.o)
+ .text          0x0000000000000000        0x0 .pio/build/int-test-blower/libcc6/libnetwork_protocol.a(network_protocol.pb.o)
+ .data          0x0000000000000000        0x0 .pio/build/int-test-blower/libcc6/libnetwork_protocol.a(network_protocol.pb.o)
+ .bss           0x0000000000000000        0x0 .pio/build/int-test-blower/libcc6/libnetwork_protocol.a(network_protocol.pb.o)
+ .rodata.ControllerStatus_field_info
+                0x0000000000000000       0x20 .pio/build/int-test-blower/libcc6/libnetwork_protocol.a(network_protocol.pb.o)
+ .rodata.ControllerStatus_msg
+                0x0000000000000000       0x12 .pio/build/int-test-blower/libcc6/libnetwork_protocol.a(network_protocol.pb.o)
+ .rodata.ControllerStatus_submsg_info
+                0x0000000000000000        0xc .pio/build/int-test-blower/libcc6/libnetwork_protocol.a(network_protocol.pb.o)
+ .rodata.GuiStatus_field_info
+                0x0000000000000000       0x10 .pio/build/int-test-blower/libcc6/libnetwork_protocol.a(network_protocol.pb.o)
+ .rodata.GuiStatus_msg
+                0x0000000000000000       0x12 .pio/build/int-test-blower/libcc6/libnetwork_protocol.a(network_protocol.pb.o)
+ .rodata.GuiStatus_submsg_info
+                0x0000000000000000        0x8 .pio/build/int-test-blower/libcc6/libnetwork_protocol.a(network_protocol.pb.o)
+ .rodata.SensorsProto_field_info
+                0x0000000000000000       0x20 .pio/build/int-test-blower/libcc6/libnetwork_protocol.a(network_protocol.pb.o)
+ .rodata.SensorsProto_msg
+                0x0000000000000000       0x12 .pio/build/int-test-blower/libcc6/libnetwork_protocol.a(network_protocol.pb.o)
+ .rodata.SensorsProto_submsg_info
+                0x0000000000000000        0x4 .pio/build/int-test-blower/libcc6/libnetwork_protocol.a(network_protocol.pb.o)
+ .rodata.VentParams_field_info
+                0x0000000000000000       0x24 .pio/build/int-test-blower/libcc6/libnetwork_protocol.a(network_protocol.pb.o)
+ .rodata.VentParams_msg
+                0x0000000000000000       0x12 .pio/build/int-test-blower/libcc6/libnetwork_protocol.a(network_protocol.pb.o)
+ .rodata.VentParams_submsg_info
+                0x0000000000000000        0x4 .pio/build/int-test-blower/libcc6/libnetwork_protocol.a(network_protocol.pb.o)
+ .comment       0x0000000000000000       0x67 .pio/build/int-test-blower/libcc6/libnetwork_protocol.a(network_protocol.pb.o)
+ .ARM.attributes
+                0x0000000000000000       0x39 .pio/build/int-test-blower/libcc6/libnetwork_protocol.a(network_protocol.pb.o)
+ .text          0x0000000000000000      0x254 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/libgcc.a(_arm_muldf3.o)
+ .data          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/libgcc.a(_arm_muldf3.o)
+ .bss           0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/libgcc.a(_arm_muldf3.o)
+ .debug_frame   0x0000000000000000       0x30 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/libgcc.a(_arm_muldf3.o)
+ .ARM.attributes
+                0x0000000000000000       0x1e /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/libgcc.a(_arm_muldf3.o)
+ .text          0x0000000000000000      0x378 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/libgcc.a(_arm_addsubdf3.o)
+ .data          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/libgcc.a(_arm_addsubdf3.o)
+ .bss           0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/libgcc.a(_arm_addsubdf3.o)
+ .debug_frame   0x0000000000000000       0xac /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/libgcc.a(_arm_addsubdf3.o)
+ .ARM.attributes
+                0x0000000000000000       0x1e /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/libgcc.a(_arm_addsubdf3.o)
+ .text          0x0000000000000000      0x110 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/libgcc.a(_arm_cmpdf2.o)
+ .data          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/libgcc.a(_arm_cmpdf2.o)
+ .bss           0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/libgcc.a(_arm_cmpdf2.o)
+ .debug_frame   0x0000000000000000       0xc4 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/libgcc.a(_arm_cmpdf2.o)
+ .ARM.attributes
+                0x0000000000000000       0x1e /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/libgcc.a(_arm_cmpdf2.o)
+ .text          0x0000000000000000       0x50 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/libgcc.a(_arm_fixdfsi.o)
+ .data          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/libgcc.a(_arm_fixdfsi.o)
+ .bss           0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/libgcc.a(_arm_fixdfsi.o)
+ .debug_frame   0x0000000000000000       0x24 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/libgcc.a(_arm_fixdfsi.o)
+ .ARM.attributes
+                0x0000000000000000       0x1e /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/libgcc.a(_arm_fixdfsi.o)
+ .text          0x0000000000000000       0xa0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/libgcc.a(_arm_truncdfsf2.o)
+ .data          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/libgcc.a(_arm_truncdfsf2.o)
+ .bss           0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/libgcc.a(_arm_truncdfsf2.o)
+ .debug_frame   0x0000000000000000       0x24 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/libgcc.a(_arm_truncdfsf2.o)
+ .ARM.attributes
+                0x0000000000000000       0x1e /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/libgcc.a(_arm_truncdfsf2.o)
+ .data          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/libgcc.a(_arm_addsubsf3.o)
+ .bss           0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/libgcc.a(_arm_addsubsf3.o)
+ .text          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/libgcc.a(_fixsfdi.o)
+ .data          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/libgcc.a(_fixsfdi.o)
+ .bss           0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/libgcc.a(_fixsfdi.o)
+ .text.__fixsfdi
+                0x0000000000000000       0x28 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/libgcc.a(_fixsfdi.o)
+ .debug_frame   0x0000000000000000       0x28 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/libgcc.a(_fixsfdi.o)
+ .ARM.attributes
+                0x0000000000000000       0x34 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/libgcc.a(_fixsfdi.o)
+ .text          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/libgcc.a(_fixunssfdi.o)
+ .data          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/libgcc.a(_fixunssfdi.o)
+ .bss           0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/libgcc.a(_fixunssfdi.o)
+ .text.__fixunssfdi
+                0x0000000000000000       0x40 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/libgcc.a(_fixunssfdi.o)
+ .debug_frame   0x0000000000000000       0x2c /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/libgcc.a(_fixunssfdi.o)
+ .ARM.attributes
+                0x0000000000000000       0x34 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/libgcc.a(_fixunssfdi.o)
+ .text          0x0000000000000000       0x40 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/libgcc.a(_arm_fixunsdfsi.o)
+ .data          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/libgcc.a(_arm_fixunsdfsi.o)
+ .bss           0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/libgcc.a(_arm_fixunsdfsi.o)
+ .debug_frame   0x0000000000000000       0x24 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/libgcc.a(_arm_fixunsdfsi.o)
+ .ARM.attributes
+                0x0000000000000000       0x1e /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/libgcc.a(_arm_fixunsdfsi.o)
+ .text          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-sf_floor.o)
+ .data          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-sf_floor.o)
+ .bss           0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-sf_floor.o)
+ .text.floorf   0x0000000000000000       0x8c /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-sf_floor.o)
+ .debug_frame   0x0000000000000000       0x20 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-sf_floor.o)
+ .ARM.attributes
+                0x0000000000000000       0x34 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-sf_floor.o)
+ .text          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-wf_log10.o)
+ .data          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-wf_log10.o)
+ .bss           0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-wf_log10.o)
+ .rodata.log10f.str1.4
+                0x0000000000000000        0x9 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-wf_log10.o)
+ .text.log10f   0x0000000000000000       0xfc /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-wf_log10.o)
+ .debug_frame   0x0000000000000000       0x50 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-wf_log10.o)
+ .ARM.attributes
+                0x0000000000000000       0x34 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-wf_log10.o)
+ .text          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-wf_pow.o)
+ .data          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-wf_pow.o)
+ .bss           0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-wf_pow.o)
+ .rodata.powf.str1.4
+                0x0000000000000000        0x5 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-wf_pow.o)
+ .text.powf     0x0000000000000000      0x354 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-wf_pow.o)
+ .debug_frame   0x0000000000000000       0x64 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-wf_pow.o)
+ .ARM.attributes
+                0x0000000000000000       0x34 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-wf_pow.o)
+ .text          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-wf_sqrt.o)
+ .data          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-wf_sqrt.o)
+ .bss           0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-wf_sqrt.o)
+ .rodata.sqrtf.str1.4
+                0x0000000000000000        0x6 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-wf_sqrt.o)
+ .text.sqrtf    0x0000000000000000       0xb0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-wf_sqrt.o)
+ .debug_frame   0x0000000000000000       0x50 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-wf_sqrt.o)
+ .ARM.attributes
+                0x0000000000000000       0x34 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-wf_sqrt.o)
+ .text          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-ef_log10.o)
+ .data          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-ef_log10.o)
+ .bss           0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-ef_log10.o)
+ .text.__ieee754_log10f
+                0x0000000000000000       0xc0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-ef_log10.o)
+ .debug_frame   0x0000000000000000       0x58 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-ef_log10.o)
+ .ARM.attributes
+                0x0000000000000000       0x34 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-ef_log10.o)
+ .text          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-ef_pow.o)
+ .data          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-ef_pow.o)
+ .bss           0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-ef_pow.o)
+ .rodata.__ieee754_powf.str1.4
+                0x0000000000000000        0x1 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-ef_pow.o)
+ .text.__ieee754_powf
+                0x0000000000000000      0x600 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-ef_pow.o)
+ .debug_frame   0x0000000000000000       0x74 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-ef_pow.o)
+ .ARM.attributes
+                0x0000000000000000       0x34 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-ef_pow.o)
+ .text          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-ef_sqrt.o)
+ .data          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-ef_sqrt.o)
+ .bss           0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-ef_sqrt.o)
+ .text.__ieee754_sqrtf
+                0x0000000000000000        0x8 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-ef_sqrt.o)
+ .debug_frame   0x0000000000000000       0x20 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-ef_sqrt.o)
+ .ARM.attributes
+                0x0000000000000000       0x34 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-ef_sqrt.o)
+ .text          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-s_lib_ver.o)
+ .data          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-s_lib_ver.o)
+ .bss           0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-s_lib_ver.o)
+ .data.__fdlib_version
+                0x0000000000000000        0x1 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-s_lib_ver.o)
+ .ARM.attributes
+                0x0000000000000000       0x32 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-s_lib_ver.o)
+ .text          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-s_matherr.o)
+ .data          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-s_matherr.o)
+ .bss           0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-s_matherr.o)
+ .text.matherr  0x0000000000000000        0x4 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-s_matherr.o)
+ .debug_frame   0x0000000000000000       0x20 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-s_matherr.o)
+ .ARM.attributes
+                0x0000000000000000       0x34 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-s_matherr.o)
+ .text          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-s_nan.o)
+ .data          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-s_nan.o)
+ .bss           0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-s_nan.o)
+ .text.nan      0x0000000000000000       0x10 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-s_nan.o)
+ .debug_frame   0x0000000000000000       0x20 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-s_nan.o)
+ .ARM.attributes
+                0x0000000000000000       0x34 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-s_nan.o)
+ .text          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-sf_fabs.o)
+ .data          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-sf_fabs.o)
+ .bss           0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-sf_fabs.o)
+ .text.fabsf    0x0000000000000000       0x10 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-sf_fabs.o)
+ .debug_frame   0x0000000000000000       0x20 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-sf_fabs.o)
+ .ARM.attributes
+                0x0000000000000000       0x34 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-sf_fabs.o)
+ .text          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-sf_finite.o)
+ .data          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-sf_finite.o)
+ .bss           0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-sf_finite.o)
+ .text.finitef  0x0000000000000000       0x1c /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-sf_finite.o)
+ .debug_frame   0x0000000000000000       0x28 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-sf_finite.o)
+ .ARM.attributes
+                0x0000000000000000       0x34 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-sf_finite.o)
+ .text          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-sf_nan.o)
+ .data          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-sf_nan.o)
+ .bss           0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-sf_nan.o)
+ .text.nanf     0x0000000000000000        0xc /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-sf_nan.o)
+ .debug_frame   0x0000000000000000       0x20 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-sf_nan.o)
+ .ARM.attributes
+                0x0000000000000000       0x34 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-sf_nan.o)
+ .text          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-sf_rint.o)
+ .data          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-sf_rint.o)
+ .bss           0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-sf_rint.o)
+ .text.rintf    0x0000000000000000       0xbc /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-sf_rint.o)
+ .rodata.TWO23  0x0000000000000000        0x8 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-sf_rint.o)
+ .debug_frame   0x0000000000000000       0x34 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-sf_rint.o)
+ .ARM.attributes
+                0x0000000000000000       0x34 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-sf_rint.o)
+ .text          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-sf_scalbn.o)
+ .data          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-sf_scalbn.o)
+ .bss           0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-sf_scalbn.o)
+ .text.scalbnf  0x0000000000000000       0xe4 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-sf_scalbn.o)
+ .debug_frame   0x0000000000000000       0x3c /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-sf_scalbn.o)
+ .ARM.attributes
+                0x0000000000000000       0x34 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-sf_scalbn.o)
+ .text          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-ef_log.o)
+ .data          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-ef_log.o)
+ .bss           0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-ef_log.o)
+ .text.__ieee754_logf
+                0x0000000000000000      0x200 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-ef_log.o)
+ .debug_frame   0x0000000000000000       0x48 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-ef_log.o)
+ .ARM.attributes
+                0x0000000000000000       0x34 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a(lib_a-ef_log.o)
+ .text          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-abort.o)
+ .data          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-abort.o)
+ .bss           0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-abort.o)
+ .text.abort    0x0000000000000000       0x10 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-abort.o)
+ .debug_frame   0x0000000000000000       0x28 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-abort.o)
+ .ARM.attributes
+                0x0000000000000000       0x34 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-abort.o)
+ .text          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-errno.o)
+ .data          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-errno.o)
+ .bss           0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-errno.o)
+ .text.__errno  0x0000000000000000        0xc /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-errno.o)
+ .debug_frame   0x0000000000000000       0x20 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-errno.o)
+ .ARM.attributes
+                0x0000000000000000       0x34 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-errno.o)
+ .text          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-exit.o)
+ .data          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-exit.o)
+ .bss           0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-exit.o)
+ .text.exit     0x0000000000000000       0x20 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-exit.o)
+ .debug_frame   0x0000000000000000       0x28 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-exit.o)
+ .ARM.attributes
+                0x0000000000000000       0x34 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-exit.o)
+ .text          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-impure.o)
+ .data          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-impure.o)
+ .bss           0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-impure.o)
+ .data._impure_ptr
+                0x0000000000000000        0x4 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-impure.o)
+ .text          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-init.o)
+ .data          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-init.o)
+ .bss           0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-init.o)
+ .data          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-memcpy.o)
+ .bss           0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-memcpy.o)
+ .text          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-memset.o)
+ .data          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-memset.o)
+ .bss           0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-memset.o)
+ .text          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-signal.o)
+ .data          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-signal.o)
+ .bss           0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-signal.o)
+ .text._init_signal_r.part.0
+                0x0000000000000000       0x2c /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-signal.o)
+ .text._init_signal_r
+                0x0000000000000000       0x10 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-signal.o)
+ .text._signal_r
+                0x0000000000000000       0x38 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-signal.o)
+ .text._raise_r
+                0x0000000000000000       0x58 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-signal.o)
+ .text.__sigtramp_r
+                0x0000000000000000       0x54 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-signal.o)
+ .text.raise    0x0000000000000000       0x10 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-signal.o)
+ .text.signal   0x0000000000000000       0x10 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-signal.o)
+ .text._init_signal
+                0x0000000000000000       0x18 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-signal.o)
+ .text.__sigtramp
+                0x0000000000000000       0x10 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-signal.o)
+ .debug_frame   0x0000000000000000       0xe0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-signal.o)
+ .ARM.attributes
+                0x0000000000000000       0x34 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-signal.o)
+ .text          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-signalr.o)
+ .data          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-signalr.o)
+ .bss           0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-signalr.o)
+ .text._kill_r  0x0000000000000000       0x2c /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-signalr.o)
+ .text._getpid_r
+                0x0000000000000000        0x4 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-signalr.o)
+ .debug_frame   0x0000000000000000       0x3c /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-signalr.o)
+ .ARM.attributes
+                0x0000000000000000       0x34 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-signalr.o)
+ .data          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-strlen.o)
+ .bss           0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-strlen.o)
+ .text          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-strncpy.o)
+ .data          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-strncpy.o)
+ .bss           0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-strncpy.o)
+ .text.strncpy  0x0000000000000000       0x68 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-strncpy.o)
+ .debug_frame   0x0000000000000000       0x38 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-strncpy.o)
+ .ARM.attributes
+                0x0000000000000000       0x34 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-strncpy.o)
+ .text          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-__call_atexit.o)
+ .data          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-__call_atexit.o)
+ .bss           0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-__call_atexit.o)
+ .text.__call_exitprocs
+                0x0000000000000000       0xcc /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-__call_atexit.o)
+ .text          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-atexit.o)
+ .data          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-atexit.o)
+ .bss           0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-atexit.o)
+ .text          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-fini.o)
+ .data          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-fini.o)
+ .bss           0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-fini.o)
+ .text          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-lock.o)
+ .data          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-lock.o)
+ .bss           0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-lock.o)
+ .text.__retarget_lock_init
+                0x0000000000000000        0x4 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-lock.o)
+ .text.__retarget_lock_init_recursive
+                0x0000000000000000        0x4 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-lock.o)
+ .text.__retarget_lock_close
+                0x0000000000000000        0x4 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-lock.o)
+ .text.__retarget_lock_close_recursive
+                0x0000000000000000        0x4 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-lock.o)
+ .text.__retarget_lock_acquire
+                0x0000000000000000        0x4 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-lock.o)
+ .text.__retarget_lock_try_acquire
+                0x0000000000000000        0x4 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-lock.o)
+ .text.__retarget_lock_try_acquire_recursive
+                0x0000000000000000        0x4 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-lock.o)
+ .text.__retarget_lock_release
+                0x0000000000000000        0x4 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-lock.o)
+ .text          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-mallocr.o)
+ .data          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-mallocr.o)
+ .bss           0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-mallocr.o)
+ .text._malloc_r
+                0x0000000000000000      0x574 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-mallocr.o)
+ .bss.__malloc_current_mallinfo
+                0x0000000000000000       0x28 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-mallocr.o)
+ .bss.__malloc_max_sbrked_mem
+                0x0000000000000000        0x4 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-mallocr.o)
+ .bss.__malloc_max_total_mem
+                0x0000000000000000        0x4 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-mallocr.o)
+ .bss.__malloc_top_pad
+                0x0000000000000000        0x4 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-mallocr.o)
+ .data.__malloc_av_
+                0x0000000000000000      0x408 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-mallocr.o)
+ .data.__malloc_sbrk_base
+                0x0000000000000000        0x4 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-mallocr.o)
+ .data.__malloc_trim_threshold
+                0x0000000000000000        0x4 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-mallocr.o)
+ .debug_frame   0x0000000000000000       0x4c /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-mallocr.o)
+ .ARM.attributes
+                0x0000000000000000       0x34 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-mallocr.o)
+ .text          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-mlock.o)
+ .data          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-mlock.o)
+ .bss           0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-mlock.o)
+ .text.__malloc_lock
+                0x0000000000000000        0xc /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-mlock.o)
+ .text.__malloc_unlock
+                0x0000000000000000        0xc /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-mlock.o)
+ .debug_frame   0x0000000000000000       0x30 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-mlock.o)
+ .ARM.attributes
+                0x0000000000000000       0x34 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-mlock.o)
+ .text          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-reent.o)
+ .data          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-reent.o)
+ .bss           0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-reent.o)
+ .text.cleanup_glue
+                0x0000000000000000       0x1c /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-reent.o)
+ .text._reclaim_reent
+                0x0000000000000000       0x84 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-reent.o)
+ .debug_frame   0x0000000000000000       0x60 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-reent.o)
+ .ARM.attributes
+                0x0000000000000000       0x34 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-reent.o)
+ COMMON         0x0000000000000000        0x4 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-reent.o)
+ .text          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-sbrkr.o)
+ .data          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-sbrkr.o)
+ .bss           0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-sbrkr.o)
+ .text._sbrk_r  0x0000000000000000       0x24 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-sbrkr.o)
+ .debug_frame   0x0000000000000000       0x2c /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-sbrkr.o)
+ .ARM.attributes
+                0x0000000000000000       0x34 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-sbrkr.o)
+ .text          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-__atexit.o)
+ .data          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-__atexit.o)
+ .bss           0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-__atexit.o)
+ .text          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-freer.o)
+ .data          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-freer.o)
+ .bss           0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-freer.o)
+ .text._malloc_trim_r
+                0x0000000000000000       0xa0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-freer.o)
+ .text._free_r  0x0000000000000000      0x208 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-freer.o)
+ .debug_frame   0x0000000000000000       0x8c /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-freer.o)
+ .ARM.attributes
+                0x0000000000000000       0x34 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-freer.o)
+ .text          0x0000000000000000      0x424 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/libgcc.a(_arm_muldivdf3.o)
+ .data          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/libgcc.a(_arm_muldivdf3.o)
+ .bss           0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/libgcc.a(_arm_muldivdf3.o)
+ .debug_frame   0x0000000000000000       0x50 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/libgcc.a(_arm_muldivdf3.o)
+ .ARM.attributes
+                0x0000000000000000       0x1e /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/libgcc.a(_arm_muldivdf3.o)
+ .text          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/crtend.o
+ .data          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/crtend.o
+ .bss           0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/crtend.o
+ .eh_frame      0x0000000000000000        0x4 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/crtend.o
+ .ARM.attributes
+                0x0000000000000000       0x32 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/crtend.o
+ .text          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/crtn.o
+ .data          0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/crtn.o
+ .bss           0x0000000000000000        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/crtn.o
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+RAM              0x0000000020000000 0x0000000000028000 xrw
+FLASH            0x0000000008000000 0x0000000000080000 xr
+*default*        0x0000000000000000 0xffffffffffffffff
+
+Linker script and memory map
+
+LOAD /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/crti.o
+LOAD /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/crtbegin.o
+LOAD /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/crt0.o
+LOAD .pio/build/int-test-blower/src/integration_tests/main.o
+LOAD .pio/build/int-test-blower/src/integration_tests/pure_virtual.o
+LOAD .pio/build/int-test-blower/src/lib/core/actuators.o
+LOAD .pio/build/int-test-blower/src/lib/core/blower_fsm.o
+LOAD .pio/build/int-test-blower/src/lib/core/comms.o
+LOAD .pio/build/int-test-blower/src/lib/core/controller.o
+LOAD .pio/build/int-test-blower/src/lib/core/flow_integrator.o
+LOAD .pio/build/int-test-blower/src/lib/core/pinch_valve.o
+LOAD .pio/build/int-test-blower/src/lib/core/sensors.o
+LOAD .pio/build/int-test-blower/src/lib/debug/debug.o
+LOAD .pio/build/int-test-blower/src/lib/debug/pb_read_cmd.o
+LOAD .pio/build/int-test-blower/src/lib/debug/peek_cmd.o
+LOAD .pio/build/int-test-blower/src/lib/debug/poke_cmd.o
+LOAD .pio/build/int-test-blower/src/lib/debug/sprintf.o
+LOAD .pio/build/int-test-blower/src/lib/debug/trace.o
+LOAD .pio/build/int-test-blower/src/lib/debug/trace_cmd.o
+LOAD .pio/build/int-test-blower/src/lib/debug/var_cmd.o
+LOAD .pio/build/int-test-blower/src/lib/debug/vars.o
+LOAD .pio/build/int-test-blower/src/lib/hal/adc.o
+LOAD .pio/build/int-test-blower/src/lib/hal/buzzer.o
+LOAD .pio/build/int-test-blower/src/lib/hal/hal.o
+LOAD .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+LOAD .pio/build/int-test-blower/src/lib/hal/psol.o
+LOAD .pio/build/int-test-blower/src/lib/hal/startup_stm32l452xx.o
+LOAD .pio/build/int-test-blower/src/lib/hal/stepper.o
+LOAD .pio/build/int-test-blower/src/lib/hal/uart_dma.o
+LOAD .pio/build/int-test-blower/src/lib/pid/pid.o
+LOAD .pio/build/int-test-blower/src/lib/stl/algorithm.o
+START GROUP
+LOAD .pio/build/int-test-blower/libeb1/libstl.a
+LOAD .pio/build/int-test-blower/lib08f/libunits.a
+LOAD .pio/build/int-test-blower/lib85e/libchecksum.a
+LOAD .pio/build/int-test-blower/libaa8/libnanopb.a
+LOAD .pio/build/int-test-blower/libcc6/libnetwork_protocol.a
+LOAD .pio/build/int-test-blower/lib827/libpid.a
+LOAD .pio/build/int-test-blower/lib5fe/libdebug.a
+LOAD .pio/build/int-test-blower/libda9/libcore.a
+LOAD .pio/build/int-test-blower/lib5ce/libhal.a
+LOAD /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/libgcc.a
+LOAD /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libstdc++.a
+END GROUP
+LOAD /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libstdc++.a
+LOAD /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a
+LOAD /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a
+START GROUP
+LOAD /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/libgcc.a
+LOAD /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a
+END GROUP
+LOAD /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/crtend.o
+LOAD /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/crtn.o
+
+.isr_vector     0x0000000008000000      0x194
+                0x0000000008000000                . = ALIGN (0x4)
+ *(.isr_vector)
+ .isr_vector    0x0000000008000000      0x194 .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+                0x0000000008000194                . = ALIGN (0x4)
+
+.text           0x00000000080001c0     0x24f8
+                0x00000000080001c0                . = ALIGN (0x4)
+ *(.text)
+ .text          0x00000000080001c0      0x21c /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/libgcc.a(_arm_addsubsf3.o)
+                0x00000000080001c0                __aeabi_frsub
+                0x00000000080001c8                __aeabi_fsub
+                0x00000000080001c8                __subsf3
+                0x00000000080001cc                __aeabi_fadd
+                0x00000000080001cc                __addsf3
+                0x000000000800032c                __aeabi_ui2f
+                0x000000000800032c                __floatunsisf
+                0x0000000008000334                __floatsisf
+                0x0000000008000334                __aeabi_i2f
+                0x0000000008000350                __aeabi_ul2f
+                0x0000000008000350                __floatundisf
+                0x0000000008000360                __aeabi_l2f
+                0x0000000008000360                __floatdisf
+ .text          0x00000000080003dc      0x134 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-memcpy.o)
+                0x00000000080003dc                memcpy
+ *fill*         0x0000000008000510       0x30 
+ .text          0x0000000008000540       0xdc /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-strlen.o)
+                0x0000000008000540                strlen
+ *(.text*)
+ .text.__do_global_dtors_aux
+                0x000000000800061c       0x24 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/crtbegin.o
+ .text.frame_dummy
+                0x0000000008000640       0x1c /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/crtbegin.o
+ .text._Z8run_testv
+                0x000000000800065c       0x7c .pio/build/int-test-blower/src/integration_tests/main.o
+                0x000000000800065c                run_test()
+ .text.startup.main
+                0x00000000080006d8        0x6 .pio/build/int-test-blower/src/integration_tests/main.o
+                0x00000000080006d8                main
+ *fill*         0x00000000080006de        0x2 
+ .text.__cxa_pure_virtual
+                0x00000000080006e0        0xc .pio/build/int-test-blower/src/integration_tests/pure_virtual.o
+                0x00000000080006e0                __cxa_pure_virtual
+ .text.startup._GLOBAL__sub_I__Z17actuators_executeRK14ActuatorsState
+                0x00000000080006ec       0x20 .pio/build/int-test-blower/src/lib/core/actuators.o
+ .text._ZN8DebugVar8GetValueEv
+                0x000000000800070c        0x6 .pio/build/int-test-blower/src/lib/core/blower_fsm.o
+                0x000000000800070c                DebugVar::GetValue()
+ .text._ZN8DebugVar8SetValueEm
+                0x0000000008000712        0x6 .pio/build/int-test-blower/src/lib/core/blower_fsm.o
+                0x0000000008000712                DebugVar::SetValue(unsigned long)
+ .text._ZN10DebugFloatC2EPKcS1_fS1_
+                0x0000000008000718       0x40 .pio/build/int-test-blower/src/lib/core/blower_fsm.o
+                0x0000000008000718                DebugFloat::DebugFloat(char const*, char const*, float, char const*)
+                0x0000000008000718                DebugFloat::DebugFloat(char const*, char const*, float, char const*)
+ .text.startup._GLOBAL__sub_I__ZN18PressureControlFsmC2E4TimeRK11_VentParams
+                0x0000000008000758      0x114 .pio/build/int-test-blower/src/lib/core/blower_fsm.o
+ .text.startup._GLOBAL__sub_I__Z10comms_initv
+                0x000000000800086c       0x14 .pio/build/int-test-blower/src/lib/core/comms.o
+ .text._ZN10Controller13GetLoopPeriodEv
+                0x0000000008000880        0xc .pio/build/int-test-blower/src/lib/core/controller.o
+                0x0000000008000880                Controller::GetLoopPeriod()
+ .text.startup._GLOBAL__sub_I__ZN10ControllerC2Ev
+                0x000000000800088c      0x264 .pio/build/int-test-blower/src/lib/core/controller.o
+ .text._ZN10PinchValveC2Ei
+                0x0000000008000af0       0x1c .pio/build/int-test-blower/src/lib/core/pinch_valve.o
+                0x0000000008000af0                PinchValve::PinchValve(int)
+                0x0000000008000af0                PinchValve::PinchValve(int)
+ .text.startup._GLOBAL__sub_I__ZN7Sensors6PinForENS_6SensorE
+                0x0000000008000b0c       0xbc .pio/build/int-test-blower/src/lib/core/sensors.o
+ .text._ZN8DebugCmd9HandleCmdEP10CmdContext
+                0x0000000008000bc8        0x4 .pio/build/int-test-blower/src/lib/debug/debug.o
+                0x0000000008000bc8                DebugCmd::HandleCmd(CmdContext*)
+ .text._ZN7ModeCmd9HandleCmdEP10CmdContext
+                0x0000000008000bcc        0xc .pio/build/int-test-blower/src/lib/debug/debug.o
+                0x0000000008000bcc                ModeCmd::HandleCmd(CmdContext*)
+ .text._ZN11DebugSerialC2Ev
+                0x0000000008000bd8       0x78 .pio/build/int-test-blower/src/lib/debug/debug.o
+                0x0000000008000bd8                DebugSerial::DebugSerial()
+                0x0000000008000bd8                DebugSerial::DebugSerial()
+ .text._ZN8DebugCmdC2E10DbgCmdCode
+                0x0000000008000c50       0x14 .pio/build/int-test-blower/src/lib/debug/debug.o
+                0x0000000008000c50                DebugCmd::DebugCmd(DbgCmdCode)
+                0x0000000008000c50                DebugCmd::DebugCmd(DbgCmdCode)
+ .text.startup._GLOBAL__sub_I_modeCmd
+                0x0000000008000c64       0x20 .pio/build/int-test-blower/src/lib/debug/debug.o
+ .text._ZN16PrintBuffReadCmd9HandleCmdEP10CmdContext
+                0x0000000008000c84       0x60 .pio/build/int-test-blower/src/lib/debug/pb_read_cmd.o
+                0x0000000008000c84                PrintBuffReadCmd::HandleCmd(CmdContext*)
+ .text.startup._GLOBAL__sub_I_pbReadCmd
+                0x0000000008000ce4       0x1c .pio/build/int-test-blower/src/lib/debug/pb_read_cmd.o
+ .text._ZN7PeekCmd9HandleCmdEP10CmdContext
+                0x0000000008000d00       0x94 .pio/build/int-test-blower/src/lib/debug/peek_cmd.o
+                0x0000000008000d00                PeekCmd::HandleCmd(CmdContext*)
+ .text.startup._GLOBAL__sub_I_peekCmd
+                0x0000000008000d94       0x1c .pio/build/int-test-blower/src/lib/debug/peek_cmd.o
+ .text._ZN7PokeCmd9HandleCmdEP10CmdContext
+                0x0000000008000db0       0x6a .pio/build/int-test-blower/src/lib/debug/poke_cmd.o
+                0x0000000008000db0                PokeCmd::HandleCmd(CmdContext*)
+ *fill*         0x0000000008000e1a        0x2 
+ .text.startup._GLOBAL__sub_I_pokeCmd
+                0x0000000008000e1c       0x1c .pio/build/int-test-blower/src/lib/debug/poke_cmd.o
+ .text.startup._GLOBAL__sub_I_trace
+                0x0000000008000e38       0x28 .pio/build/int-test-blower/src/lib/debug/trace.o
+ .text._ZN10FnDebugVarIUlvE3_UlmE4_E8SetValueEm
+                0x0000000008000e60        0x2 .pio/build/int-test-blower/src/lib/debug/trace_cmd.o
+ *fill*         0x0000000008000e62        0x2 
+ .text._ZN10FnDebugVarIUlvE1_UlmE2_E8GetValueEv
+                0x0000000008000e64        0xc .pio/build/int-test-blower/src/lib/debug/trace_cmd.o
+ .text._ZN10FnDebugVarIUlvE1_UlmE2_E8SetValueEm
+                0x0000000008000e70        0xc .pio/build/int-test-blower/src/lib/debug/trace_cmd.o
+ .text._ZN10FnDebugVarIUlvE_UlmE0_E8GetValueEv
+                0x0000000008000e7c        0xc .pio/build/int-test-blower/src/lib/debug/trace_cmd.o
+ .text._ZN10FnDebugVarIUlvE5_UllE6_E8GetValueEv
+                0x0000000008000e88       0x14 .pio/build/int-test-blower/src/lib/debug/trace_cmd.o
+ .text._ZN10FnDebugVarIUlvE7_UllE8_E8GetValueEv
+                0x0000000008000e9c       0x14 .pio/build/int-test-blower/src/lib/debug/trace_cmd.o
+ .text._ZN10FnDebugVarIUlvE9_UllE10_E8GetValueEv
+                0x0000000008000eb0       0x14 .pio/build/int-test-blower/src/lib/debug/trace_cmd.o
+ .text._ZN10FnDebugVarIUlvE11_UllE12_E8GetValueEv
+                0x0000000008000ec4       0x14 .pio/build/int-test-blower/src/lib/debug/trace_cmd.o
+ .text._ZN15BlockInterruptsC2Ev
+                0x0000000008000ed8       0x14 .pio/build/int-test-blower/src/lib/debug/trace_cmd.o
+                0x0000000008000ed8                BlockInterrupts::BlockInterrupts()
+                0x0000000008000ed8                BlockInterrupts::BlockInterrupts()
+ .text._ZN15BlockInterruptsD2Ev
+                0x0000000008000eec        0x8 .pio/build/int-test-blower/src/lib/debug/trace_cmd.o
+                0x0000000008000eec                BlockInterrupts::~BlockInterrupts()
+                0x0000000008000eec                BlockInterrupts::~BlockInterrupts()
+ .text._ZN12DebugVarBaseC2E7VarTypePKcS2_S2_
+                0x0000000008000ef4       0x34 .pio/build/int-test-blower/src/lib/debug/trace_cmd.o
+                0x0000000008000ef4                DebugVarBase::DebugVarBase(VarType, char const*, char const*, char const*)
+                0x0000000008000ef4                DebugVarBase::DebugVarBase(VarType, char const*, char const*, char const*)
+ .text._ZN5Trace16GetNumActiveVarsEv
+                0x0000000008000f28       0x1c .pio/build/int-test-blower/src/lib/debug/trace_cmd.o
+                0x0000000008000f28                Trace::GetNumActiveVars()
+ .text._ZN8CircBuffImLi16384EE5FlushEv
+                0x0000000008000f44       0x1e .pio/build/int-test-blower/src/lib/debug/trace_cmd.o
+                0x0000000008000f44                CircBuff<unsigned long, 16384>::Flush()
+ *fill*         0x0000000008000f62        0x2 
+ .text._ZN10FnDebugVarIUlvE_UlmE0_E8SetValueEm
+                0x0000000008000f64       0x24 .pio/build/int-test-blower/src/lib/debug/trace_cmd.o
+ .text._ZN10FnDebugVarIUlvE5_UllE6_E8SetValueEm
+                0x0000000008000f88       0x28 .pio/build/int-test-blower/src/lib/debug/trace_cmd.o
+ .text._ZN10FnDebugVarIUlvE7_UllE8_E8SetValueEm
+                0x0000000008000fb0       0x28 .pio/build/int-test-blower/src/lib/debug/trace_cmd.o
+ .text._ZN10FnDebugVarIUlvE9_UllE10_E8SetValueEm
+                0x0000000008000fd8       0x28 .pio/build/int-test-blower/src/lib/debug/trace_cmd.o
+ .text._ZN10FnDebugVarIUlvE11_UllE12_E8SetValueEm
+                0x0000000008001000       0x28 .pio/build/int-test-blower/src/lib/debug/trace_cmd.o
+ .text._ZN8CircBuffImLi16384EE6FullCtEv
+                0x0000000008001028       0x26 .pio/build/int-test-blower/src/lib/debug/trace_cmd.o
+                0x0000000008001028                CircBuff<unsigned long, 16384>::FullCt()
+ *fill*         0x000000000800104e        0x2 
+ .text._ZN8TraceCmd13ReadTraceBuffEP10CmdContext
+                0x0000000008001050      0x114 .pio/build/int-test-blower/src/lib/debug/trace_cmd.o
+                0x0000000008001050                TraceCmd::ReadTraceBuff(CmdContext*)
+ .text._ZN8TraceCmd9HandleCmdEP10CmdContext
+                0x0000000008001164       0x2c .pio/build/int-test-blower/src/lib/debug/trace_cmd.o
+                0x0000000008001164                TraceCmd::HandleCmd(CmdContext*)
+ .text._ZN10FnDebugVarIUlvE3_UlmE4_E8GetValueEv
+                0x0000000008001190       0x20 .pio/build/int-test-blower/src/lib/debug/trace_cmd.o
+ .text.startup._GLOBAL__sub_I__ZN8TraceCmd9HandleCmdEP10CmdContext
+                0x00000000080011b0      0x120 .pio/build/int-test-blower/src/lib/debug/trace_cmd.o
+ .text._ZN6VarCmd10GetVarInfoEP10CmdContext
+                0x00000000080012d0       0xc4 .pio/build/int-test-blower/src/lib/debug/var_cmd.o
+                0x00000000080012d0                VarCmd::GetVarInfo(CmdContext*)
+ .text._ZN6VarCmd6GetVarEP10CmdContext
+                0x0000000008001394       0x54 .pio/build/int-test-blower/src/lib/debug/var_cmd.o
+                0x0000000008001394                VarCmd::GetVar(CmdContext*)
+ .text._ZN6VarCmd6SetVarEP10CmdContext
+                0x00000000080013e8       0x40 .pio/build/int-test-blower/src/lib/debug/var_cmd.o
+                0x00000000080013e8                VarCmd::SetVar(CmdContext*)
+ .text._ZN6VarCmd9HandleCmdEP10CmdContext
+                0x0000000008001428       0x28 .pio/build/int-test-blower/src/lib/debug/var_cmd.o
+                0x0000000008001428                VarCmd::HandleCmd(CmdContext*)
+ .text.startup._GLOBAL__sub_I__ZN6VarCmd9HandleCmdEP10CmdContext
+                0x0000000008001450       0x1c .pio/build/int-test-blower/src/lib/debug/var_cmd.o
+ .text._ZN6HalApi7InitADCEv
+                0x000000000800146c      0x19c .pio/build/int-test-blower/src/lib/hal/adc.o
+                0x000000000800146c                HalApi::InitADC()
+ .text._ZN6HalApi10InitBuzzerEv
+                0x0000000008001608       0x54 .pio/build/int-test-blower/src/lib/hal/buzzer.o
+                0x0000000008001608                HalApi::InitBuzzer()
+ .text._ZL9Timer6ISRv
+                0x000000000800165c       0x24 .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+ .text._ZL3NMIv
+                0x0000000008001680        0x2 .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+ .text._ZL8FaultISRv
+                0x0000000008001682        0x2 .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+ .text._ZL11MPUFaultISRv
+                0x0000000008001684        0x2 .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+ .text._ZL11BusFaultISRv
+                0x0000000008001686        0x2 .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+ .text._ZL13UsageFaultISRv
+                0x0000000008001688        0x2 .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+ .text._ZL6BadISRv
+                0x000000000800168a        0x2 .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+ .text._ZL10StepperISRv
+                0x000000000800168c        0x4 .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+ .text._ZL10Timer15ISRv
+                0x0000000008001690       0x84 .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+ .text._ZN8DebugVarC2EPKcPfS1_S1_
+                0x0000000008001714       0x38 .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+                0x0000000008001714                DebugVar::DebugVar(char const*, float*, char const*, char const*)
+                0x0000000008001714                DebugVar::DebugVar(char const*, float*, char const*, char const*)
+ .text._ZN6HalApi12reset_deviceEv
+                0x000000000800174c       0x10 .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+                0x000000000800174c                HalApi::reset_device()
+ .text._ZN6HalApi3nowEv
+                0x000000000800175c       0x58 .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+                0x000000000800175c                HalApi::now()
+ .text._ZN6HalApi5delayE8Duration
+                0x00000000080017b4       0x38 .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+                0x00000000080017b4                HalApi::delay(Duration)
+ .text._ZN6HalApi11analogWriteE6PwmPinf
+                0x00000000080017ec       0x1a .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+                0x00000000080017ec                HalApi::analogWrite(PwmPin, float)
+ *fill*         0x0000000008001806        0x2 
+ .text._ZN6HalApi16watchdog_handlerEv
+                0x0000000008001808       0x10 .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+                0x0000000008001808                HalApi::watchdog_handler()
+ .text._ZN6HalApi10crc32_initEv
+                0x0000000008001818       0x30 .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+                0x0000000008001818                HalApi::crc32_init()
+ .text._ZN6HalApi11EnableClockEPv
+                0x0000000008001848       0x3c .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+                0x0000000008001848                HalApi::EnableClock(void*)
+ .text._ZN6HalApi8InitGPIOEv
+                0x0000000008001884       0xac .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+                0x0000000008001884                HalApi::InitGPIO()
+ .text._ZN6HalApi10InitPwmOutEv
+                0x0000000008001930       0x58 .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+                0x0000000008001930                HalApi::InitPwmOut()
+ .text._ZN6HalApi12InitSysTimerEv
+                0x0000000008001988       0x40 .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+                0x0000000008001988                HalApi::InitSysTimer()
+ .text._ZN6HalApi9InitUARTsEv
+                0x00000000080019c8      0x16c .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+                0x00000000080019c8                HalApi::InitUARTs()
+ .text._ZN6HalApi4initEv
+                0x0000000008001b34       0x3c .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+                0x0000000008001b34                HalApi::init()
+ .text._ZN6HalApi15EnableInterruptE15InterruptVector11IntPriority
+                0x0000000008001b70       0x2c .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+                0x0000000008001b70                HalApi::EnableInterrupt(InterruptVector, IntPriority)
+ .text._ZN8CircBuffIhLi128EE3PutEh
+                0x0000000008001b9c       0x3c .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+                0x0000000008001b9c                CircBuff<unsigned char, 128>::Put(unsigned char)
+ .text._ZN8CircBuffIhLi128EE3GetEv
+                0x0000000008001bd8       0x5e .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+                0x0000000008001bd8                CircBuff<unsigned char, 128>::Get()
+ .text._ZN4UART3ISREv
+                0x0000000008001c36       0x72 .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+                0x0000000008001c36                UART::ISR()
+ .text._Z9UART3_ISRv
+                0x0000000008001ca8       0x10 .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+                0x0000000008001ca8                UART3_ISR()
+ .text._ZL9UART2_ISRv
+                0x0000000008001cb8       0x10 .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+ .text.startup._GLOBAL__sub_I_systemStack
+                0x0000000008001cc8       0xa8 .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+ .text._ZN6HalApi8InitPSOLEv
+                0x0000000008001d70       0x5c .pio/build/int-test-blower/src/lib/hal/psol.o
+                0x0000000008001d70                HalApi::InitPSOL()
+ .text.startup._GLOBAL__sub_I__ZN6HalApi8InitPSOLEv
+                0x0000000008001dcc       0xa0 .pio/build/int-test-blower/src/lib/hal/psol.o
+ .text.Reset_Handler
+                0x0000000008001e6c       0x44 .pio/build/int-test-blower/src/lib/hal/startup_stm32l452xx.o
+                0x0000000008001e6c                Reset_Handler
+ .text._ZN9StepMotorC2Ev
+                0x0000000008001eb0       0x18 .pio/build/int-test-blower/src/lib/hal/stepper.o
+                0x0000000008001eb0                StepMotor::StepMotor()
+                0x0000000008001eb0                StepMotor::StepMotor()
+ .text._ZN9StepMotor10EnqueueCmdEPhm
+                0x0000000008001ec8       0x4c .pio/build/int-test-blower/src/lib/hal/stepper.o
+                0x0000000008001ec8                StepMotor::EnqueueCmd(unsigned char*, unsigned long)
+ .text._ZN9StepMotor14UpdateComStateEv
+                0x0000000008001f14      0x138 .pio/build/int-test-blower/src/lib/hal/stepper.o
+                0x0000000008001f14                StepMotor::UpdateComState()
+ .text._ZN9StepMotor7SendCmdEPhm
+                0x000000000800204c       0x40 .pio/build/int-test-blower/src/lib/hal/stepper.o
+                0x000000000800204c                StepMotor::SendCmd(unsigned char*, unsigned long)
+ .text._ZN9StepMotor8SetParamE12StepMtrParamm.part.0
+                0x000000000800208c       0x38 .pio/build/int-test-blower/src/lib/hal/stepper.o
+ .text._ZN9StepMotor8SetParamE12StepMtrParamm
+                0x00000000080020c4        0xc .pio/build/int-test-blower/src/lib/hal/stepper.o
+                0x00000000080020c4                StepMotor::SetParam(StepMtrParam, unsigned long)
+ .text._ZN9StepMotor8GetParamE12StepMtrParamPm.part.0
+                0x00000000080020d0       0x58 .pio/build/int-test-blower/src/lib/hal/stepper.o
+ .text._ZN9StepMotor8GetParamE12StepMtrParamPm
+                0x0000000008002128        0xc .pio/build/int-test-blower/src/lib/hal/stepper.o
+                0x0000000008002128                StepMotor::GetParam(StepMtrParam, unsigned long*)
+ .text._ZN9StepMotor5ResetEv
+                0x0000000008002134       0x18 .pio/build/int-test-blower/src/lib/hal/stepper.o
+                0x0000000008002134                StepMotor::Reset()
+ .text._ZN9StepMotor7DMA_ISREv
+                0x000000000800214c       0x1c .pio/build/int-test-blower/src/lib/hal/stepper.o
+                0x000000000800214c                StepMotor::DMA_ISR()
+ .text._ZN9StepMotor19StartQueuedCommandsEv
+                0x0000000008002168       0x10 .pio/build/int-test-blower/src/lib/hal/stepper.o
+                0x0000000008002168                StepMotor::StartQueuedCommands()
+ .text._ZN9StepMotor11SendInitCmdEPhi
+                0x0000000008002178       0x6c .pio/build/int-test-blower/src/lib/hal/stepper.o
+                0x0000000008002178                StepMotor::SendInitCmd(unsigned char*, int)
+ .text._ZN9StepMotor10ProbeChipsEv
+                0x00000000080021e4       0x54 .pio/build/int-test-blower/src/lib/hal/stepper.o
+                0x00000000080021e4                StepMotor::ProbeChips()
+ .text._ZN9StepMotor11OneTimeInitEv
+                0x0000000008002238       0x6c .pio/build/int-test-blower/src/lib/hal/stepper.o
+                0x0000000008002238                StepMotor::OneTimeInit()
+ .text._ZN6HalApi16StepperMotorInitEv
+                0x00000000080022a4      0x218 .pio/build/int-test-blower/src/lib/hal/stepper.o
+                0x00000000080022a4                HalApi::StepperMotorInit()
+ .text.startup._GLOBAL__sub_I__ZN9StepMotor6motor_E
+                0x00000000080024bc       0x1c .pio/build/int-test-blower/src/lib/hal/stepper.o
+ .text.__libc_init_array
+                0x00000000080024d8       0x48 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-init.o)
+                0x00000000080024d8                __libc_init_array
+ .text.memset   0x0000000008002520       0xa0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-memset.o)
+                0x0000000008002520                memset
+ .text.startup.register_fini
+                0x00000000080025c0       0x14 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-__call_atexit.o)
+ .text.atexit   0x00000000080025d4        0xc /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-atexit.o)
+                0x00000000080025d4                atexit
+ .text.__libc_fini_array
+                0x00000000080025e0       0x2c /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-fini.o)
+                0x00000000080025e0                __libc_fini_array
+ .text.__retarget_lock_acquire_recursive
+                0x000000000800260c        0x4 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-lock.o)
+                0x000000000800260c                __retarget_lock_acquire_recursive
+ .text.__retarget_lock_release_recursive
+                0x0000000008002610        0x4 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-lock.o)
+                0x0000000008002610                __retarget_lock_release_recursive
+ .text.__register_exitproc
+                0x0000000008002614       0x8c /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-__atexit.o)
+                0x0000000008002614                __register_exitproc
+ *(.glue_7)
+ .glue_7        0x00000000080026a0        0x0 linker stubs
+ *(.glue_7t)
+ .glue_7t       0x00000000080026a0        0x0 linker stubs
+ *(.eh_frame)
+ .eh_frame      0x00000000080026a0        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/crtbegin.o
+ *(.init)
+ .init          0x00000000080026a0        0x4 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/crti.o
+                0x00000000080026a0                _init
+ .init          0x00000000080026a4        0x8 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/crtn.o
+ *(.fini)
+ .fini          0x00000000080026ac        0x4 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/crti.o
+                0x00000000080026ac                _fini
+ .fini          0x00000000080026b0        0x8 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/crtn.o
+                0x00000000080026b8                . = ALIGN (0x4)
+                0x00000000080026b8                _etext = .
+
+.vfp11_veneer   0x00000000080026b8        0x0
+ .vfp11_veneer  0x00000000080026b8        0x0 linker stubs
+
+.v4_bx          0x00000000080026b8        0x0
+ .v4_bx         0x00000000080026b8        0x0 linker stubs
+
+.iplt           0x00000000080026b8        0x0
+ .iplt          0x00000000080026b8        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/crtbegin.o
+
+.rodata         0x00000000080026b8      0xb00
+                0x00000000080026b8                . = ALIGN (0x4)
+ *(.rodata)
+ *(.rodata*)
+ .rodata._GLOBAL__sub_I__ZN18PressureControlFsmC2E4TimeRK11_VentParams.str1.1
+                0x00000000080026b8      0x1e2 .pio/build/int-test-blower/src/lib/core/blower_fsm.o
+ *fill*         0x000000000800289a        0x2 
+ .rodata._ZTV10DebugFloat
+                0x000000000800289c       0x10 .pio/build/int-test-blower/src/lib/core/blower_fsm.o
+                0x000000000800289c                vtable for DebugFloat
+ .rodata._GLOBAL__sub_I__ZN10ControllerC2Ev.str1.1
+                0x00000000080028ac      0x537 .pio/build/int-test-blower/src/lib/core/controller.o
+                                        0x543 (size before relaxing)
+ *fill*         0x0000000008002de3        0x1 
+ .rodata._ZTV11DebugUInt32
+                0x0000000008002de4       0x10 .pio/build/int-test-blower/src/lib/core/controller.o
+                0x0000000008002de4                vtable for DebugUInt32
+ .rodata._GLOBAL__sub_I__ZN7Sensors6PinForENS_6SensorE.str1.1
+                0x0000000008002df4       0xd9 .pio/build/int-test-blower/src/lib/core/sensors.o
+                                         0xef (size before relaxing)
+ *fill*         0x0000000008002ecd        0x3 
+ .rodata._ZTV8DebugCmd
+                0x0000000008002ed0        0xc .pio/build/int-test-blower/src/lib/debug/debug.o
+                0x0000000008002ed0                vtable for DebugCmd
+ .rodata._ZTV7ModeCmd
+                0x0000000008002edc        0xc .pio/build/int-test-blower/src/lib/debug/debug.o
+                0x0000000008002edc                vtable for ModeCmd
+ .rodata._ZTV16PrintBuffReadCmd
+                0x0000000008002ee8        0xc .pio/build/int-test-blower/src/lib/debug/pb_read_cmd.o
+                0x0000000008002ee8                vtable for PrintBuffReadCmd
+ .rodata._ZTV7PeekCmd
+                0x0000000008002ef4        0xc .pio/build/int-test-blower/src/lib/debug/peek_cmd.o
+                0x0000000008002ef4                vtable for PeekCmd
+ .rodata._ZTV7PokeCmd
+                0x0000000008002f00        0xc .pio/build/int-test-blower/src/lib/debug/poke_cmd.o
+                0x0000000008002f00                vtable for PokeCmd
+ .rodata._GLOBAL__sub_I__ZN8TraceCmd9HandleCmdEP10CmdContext.str1.1
+                0x0000000008002f0c      0x105 .pio/build/int-test-blower/src/lib/debug/trace_cmd.o
+                                        0x108 (size before relaxing)
+ *fill*         0x0000000008003011        0x3 
+ .rodata._ZTV12DebugVarBase
+                0x0000000008003014       0x10 .pio/build/int-test-blower/src/lib/debug/trace_cmd.o
+                0x0000000008003014                vtable for DebugVarBase
+ .rodata._ZTV10FnDebugVarIUlvE11_UllE12_E
+                0x0000000008003024       0x10 .pio/build/int-test-blower/src/lib/debug/trace_cmd.o
+ .rodata._ZTV10FnDebugVarIUlvE1_UlmE2_E
+                0x0000000008003034       0x10 .pio/build/int-test-blower/src/lib/debug/trace_cmd.o
+ .rodata._ZTV10FnDebugVarIUlvE3_UlmE4_E
+                0x0000000008003044       0x10 .pio/build/int-test-blower/src/lib/debug/trace_cmd.o
+ .rodata._ZTV10FnDebugVarIUlvE5_UllE6_E
+                0x0000000008003054       0x10 .pio/build/int-test-blower/src/lib/debug/trace_cmd.o
+ .rodata._ZTV10FnDebugVarIUlvE7_UllE8_E
+                0x0000000008003064       0x10 .pio/build/int-test-blower/src/lib/debug/trace_cmd.o
+ .rodata._ZTV10FnDebugVarIUlvE9_UllE10_E
+                0x0000000008003074       0x10 .pio/build/int-test-blower/src/lib/debug/trace_cmd.o
+ .rodata._ZTV10FnDebugVarIUlvE_UlmE0_E
+                0x0000000008003084       0x10 .pio/build/int-test-blower/src/lib/debug/trace_cmd.o
+ .rodata._ZTV8TraceCmd
+                0x0000000008003094        0xc .pio/build/int-test-blower/src/lib/debug/trace_cmd.o
+                0x0000000008003094                vtable for TraceCmd
+ .rodata._ZTV6VarCmd
+                0x00000000080030a0        0xc .pio/build/int-test-blower/src/lib/debug/var_cmd.o
+                0x00000000080030a0                vtable for VarCmd
+ .rodata._GLOBAL__sub_I_systemStack.str1.1
+                0x00000000080030ac       0x8e .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+ *fill*         0x000000000800313a        0x2 
+ .rodata._ZTV8DebugVar
+                0x000000000800313c       0x10 .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+                0x000000000800313c                vtable for DebugVar
+ .rodata._GLOBAL__sub_I__ZN6HalApi8InitPSOLEv.str1.1
+                0x000000000800314c       0x67 .pio/build/int-test-blower/src/lib/hal/psol.o
+                                         0x6c (size before relaxing)
+ *fill*         0x00000000080031b3        0x1 
+ .rodata._global_impure_ptr
+                0x00000000080031b4        0x4 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-impure.o)
+                0x00000000080031b4                _global_impure_ptr
+                0x00000000080031b8                . = ALIGN (0x4)
+
+.rel.dyn        0x00000000080031b8        0x0
+ .rel.iplt      0x00000000080031b8        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/crtbegin.o
+
+.ARM.extab      0x00000000080031b8        0x0
+                0x00000000080031b8                . = ALIGN (0x4)
+ *(.ARM.extab* .gnu.linkonce.armextab.*)
+                0x00000000080031b8                . = ALIGN (0x4)
+
+.ARM            0x00000000080031b8        0x0
+                0x00000000080031b8                . = ALIGN (0x4)
+                0x00000000080031b8                __exidx_start = .
+ *(.ARM.exidx*)
+                0x00000000080031b8                __exidx_end = .
+                0x00000000080031b8                . = ALIGN (0x4)
+
+.preinit_array  0x00000000080031b8        0x0
+                0x00000000080031b8                . = ALIGN (0x4)
+                0x00000000080031b8                PROVIDE (__preinit_array_start = .)
+ *(.preinit_array*)
+                0x00000000080031b8                PROVIDE (__preinit_array_end = .)
+                0x00000000080031b8                . = ALIGN (0x4)
+
+.init_array     0x00000000080031b8       0x44
+                0x00000000080031b8                . = ALIGN (0x4)
+                0x00000000080031b8                PROVIDE (__init_array_start = .)
+ *(SORT_BY_NAME(.init_array.*))
+ .init_array.00000
+                0x00000000080031b8        0x4 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-__call_atexit.o)
+ *(.init_array*)
+ .init_array    0x00000000080031bc        0x4 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/crtbegin.o
+ .init_array    0x00000000080031c0        0x4 .pio/build/int-test-blower/src/lib/core/actuators.o
+ .init_array    0x00000000080031c4        0x4 .pio/build/int-test-blower/src/lib/core/blower_fsm.o
+ .init_array    0x00000000080031c8        0x4 .pio/build/int-test-blower/src/lib/core/comms.o
+ .init_array    0x00000000080031cc        0x4 .pio/build/int-test-blower/src/lib/core/controller.o
+ .init_array    0x00000000080031d0        0x4 .pio/build/int-test-blower/src/lib/core/sensors.o
+ .init_array    0x00000000080031d4        0x4 .pio/build/int-test-blower/src/lib/debug/debug.o
+ .init_array    0x00000000080031d8        0x4 .pio/build/int-test-blower/src/lib/debug/pb_read_cmd.o
+ .init_array    0x00000000080031dc        0x4 .pio/build/int-test-blower/src/lib/debug/peek_cmd.o
+ .init_array    0x00000000080031e0        0x4 .pio/build/int-test-blower/src/lib/debug/poke_cmd.o
+ .init_array    0x00000000080031e4        0x4 .pio/build/int-test-blower/src/lib/debug/trace.o
+ .init_array    0x00000000080031e8        0x4 .pio/build/int-test-blower/src/lib/debug/trace_cmd.o
+ .init_array    0x00000000080031ec        0x4 .pio/build/int-test-blower/src/lib/debug/var_cmd.o
+ .init_array    0x00000000080031f0        0x4 .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+ .init_array    0x00000000080031f4        0x4 .pio/build/int-test-blower/src/lib/hal/psol.o
+ .init_array    0x00000000080031f8        0x4 .pio/build/int-test-blower/src/lib/hal/stepper.o
+                0x00000000080031fc                PROVIDE (__init_array_end = .)
+                0x00000000080031fc                . = ALIGN (0x4)
+
+.fini_array     0x00000000080031fc        0x4
+                0x00000000080031fc                . = ALIGN (0x4)
+                0x00000000080031fc                PROVIDE (__fini_array_start = .)
+ *(SORT_BY_NAME(.fini_array.*))
+ *(.fini_array*)
+ .fini_array    0x00000000080031fc        0x4 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/crtbegin.o
+                0x0000000008003200                PROVIDE (__fini_array_end = .)
+                0x0000000008003200                . = ALIGN (0x4)
+                0x0000000008003200                _sidata = LOADADDR (.data)
+
+.data           0x0000000020000000      0x524 load address 0x0000000008003200
+                0x0000000020000000                . = ALIGN (0x4)
+                0x0000000020000000                _sdata = .
+ *(.data)
+ *(.data*)
+ .data._ZZN6HalApi11EnableClockEPvE7rccInfo
+                0x0000000020000000       0xd8 .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+ .data._ZN9StepMotor10param_len_E
+                0x00000000200000d8       0x20 .pio/build/int-test-blower/src/lib/hal/stepper.o
+                0x00000000200000d8                StepMotor::param_len_
+ .data.impure_data
+                0x00000000200000f8      0x428 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-impure.o)
+ .data.__atexit_recursive_mutex
+                0x0000000020000520        0x4 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-__call_atexit.o)
+                0x0000000020000520                __atexit_recursive_mutex
+                0x0000000020000524                . = ALIGN (0x4)
+                0x0000000020000524                _edata = .
+
+.igot.plt       0x0000000020000524        0x0 load address 0x0000000008003724
+ .igot.plt      0x0000000020000524        0x0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/crtbegin.o
+                0x0000000020000524                . = ALIGN (0x4)
+
+.bss            0x0000000020000528    0x141f0 load address 0x0000000008003724
+                0x0000000020000528                _sbss = .
+                0x0000000020000528                __bss_start__ = _sbss
+ *(.bss)
+ *(.bss*)
+ .bss.completed.10274
+                0x0000000020000528        0x1 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/crtbegin.o
+ *fill*         0x0000000020000529        0x3 
+ .bss.object.10279
+                0x000000002000052c       0x18 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/crtbegin.o
+ *fill*         0x0000000020000544        0x4 
+ .bss._ZL12blower_pinch
+                0x0000000020000548       0x18 .pio/build/int-test-blower/src/lib/core/actuators.o
+ .bss._ZL12exhale_pinch
+                0x0000000020000560       0x18 .pio/build/int-test-blower/src/lib/core/actuators.o
+ .bss._ZL17dbg_fast_flow_avg
+                0x0000000020000578       0x20 .pio/build/int-test-blower/src/lib/core/blower_fsm.o
+ .bss._ZL17dbg_slow_flow_avg
+                0x0000000020000598       0x20 .pio/build/int-test-blower/src/lib/core/blower_fsm.o
+ .bss._ZL19dbg_pa_flow_trigger
+                0x00000000200005b8       0x20 .pio/build/int-test-blower/src/lib/core/blower_fsm.o
+ .bss._ZL20dbg_pa_min_expire_ms
+                0x00000000200005d8       0x20 .pio/build/int-test-blower/src/lib/core/blower_fsm.o
+ .bss._ZL23dbg_fast_flow_avg_alpha
+                0x00000000200005f8       0x20 .pio/build/int-test-blower/src/lib/core/blower_fsm.o
+ .bss._ZL23dbg_slow_flow_avg_alpha
+                0x0000000020000618       0x20 .pio/build/int-test-blower/src/lib/core/blower_fsm.o
+ .bss._ZL7last_rx
+                0x0000000020000638        0x8 .pio/build/int-test-blower/src/lib/core/comms.o
+ .bss._ZL10dbg_volume
+                0x0000000020000640       0x20 .pio/build/int-test-blower/src/lib/core/controller.o
+ .bss._ZL11dbg_psol_kd
+                0x0000000020000660       0x20 .pio/build/int-test-blower/src/lib/core/controller.o
+ .bss._ZL11dbg_psol_ki
+                0x0000000020000680       0x20 .pio/build/int-test-blower/src/lib/core/controller.o
+ .bss._ZL11dbg_psol_kp
+                0x00000000200006a0       0x20 .pio/build/int-test-blower/src/lib/core/controller.o
+ .bss._ZL12dbg_net_flow
+                0x00000000200006c0       0x20 .pio/build/int-test-blower/src/lib/core/controller.o
+ .bss._ZL13dbg_breath_id
+                0x00000000200006e0       0x20 .pio/build/int-test-blower/src/lib/core/controller.o
+ .bss._ZL19dbg_blower_valve_kd
+                0x0000000020000700       0x20 .pio/build/int-test-blower/src/lib/core/controller.o
+ .bss._ZL19dbg_blower_valve_kp
+                0x0000000020000720       0x20 .pio/build/int-test-blower/src/lib/core/controller.o
+ .bss._ZL19dbg_flow_correction
+                0x0000000020000740       0x20 .pio/build/int-test-blower/src/lib/core/controller.o
+ .bss._ZL19dbg_forced_psol_pos
+                0x0000000020000760       0x20 .pio/build/int-test-blower/src/lib/core/controller.o
+ .bss._ZL22dbg_volume_uncorrected
+                0x0000000020000780       0x20 .pio/build/int-test-blower/src/lib/core/controller.o
+ .bss._ZL23dbg_forced_blower_power
+                0x00000000200007a0       0x20 .pio/build/int-test-blower/src/lib/core/controller.o
+ .bss._ZL24dbg_net_flow_uncorrected
+                0x00000000200007c0       0x20 .pio/build/int-test-blower/src/lib/core/controller.o
+ .bss._ZL27dbg_forced_blower_valve_pos
+                0x00000000200007e0       0x20 .pio/build/int-test-blower/src/lib/core/controller.o
+ .bss._ZL27dbg_forced_exhale_valve_pos
+                0x0000000020000800       0x20 .pio/build/int-test-blower/src/lib/core/controller.o
+ .bss._ZL28dbg_blower_valve_computed_ki
+                0x0000000020000820       0x20 .pio/build/int-test-blower/src/lib/core/controller.o
+ .bss._ZL6dbg_sp
+                0x0000000020000840       0x20 .pio/build/int-test-blower/src/lib/core/controller.o
+ .bss._ZL7dbg_per
+                0x0000000020000860       0x20 .pio/build/int-test-blower/src/lib/core/controller.o
+ .bss._ZL12dbg_pressure
+                0x0000000020000880       0x20 .pio/build/int-test-blower/src/lib/core/sensors.o
+ .bss._ZL13dbg_dp_exhale
+                0x00000000200008a0       0x20 .pio/build/int-test-blower/src/lib/core/sensors.o
+ .bss._ZL13dbg_dp_inhale
+                0x00000000200008c0       0x20 .pio/build/int-test-blower/src/lib/core/sensors.o
+ .bss._ZL15dbg_flow_exhale
+                0x00000000200008e0       0x20 .pio/build/int-test-blower/src/lib/core/sensors.o
+ .bss._ZL15dbg_flow_inhale
+                0x0000000020000900       0x20 .pio/build/int-test-blower/src/lib/core/sensors.o
+ .bss._ZL20dbg_flow_uncorrected
+                0x0000000020000920       0x20 .pio/build/int-test-blower/src/lib/core/sensors.o
+ .bss._ZN8DebugCmd13cmd_registry_E
+                0x0000000020000940      0x400 .pio/build/int-test-blower/src/lib/debug/debug.o
+                0x0000000020000940                DebugCmd::cmd_registry_
+ .bss.debug     0x0000000020000d40      0xbd4 .pio/build/int-test-blower/src/lib/debug/debug.o
+                0x0000000020000d40                debug
+ .bss.modeCmd   0x0000000020001914        0x4 .pio/build/int-test-blower/src/lib/debug/debug.o
+                0x0000000020001914                modeCmd
+ .bss.pbReadCmd
+                0x0000000020001918        0x4 .pio/build/int-test-blower/src/lib/debug/pb_read_cmd.o
+                0x0000000020001918                pbReadCmd
+ .bss.peekCmd   0x000000002000191c        0x4 .pio/build/int-test-blower/src/lib/debug/peek_cmd.o
+                0x000000002000191c                peekCmd
+ .bss.pokeCmd   0x0000000020001920        0x4 .pio/build/int-test-blower/src/lib/debug/poke_cmd.o
+                0x0000000020001920                pokeCmd
+ .bss.trace     0x0000000020001924    0x10024 .pio/build/int-test-blower/src/lib/debug/trace.o
+                0x0000000020001924                trace
+ .bss._ZL12varTraceCtrl
+                0x0000000020011948       0x18 .pio/build/int-test-blower/src/lib/debug/trace_cmd.o
+ .bss._ZL12varTraceSamp
+                0x0000000020011960       0x18 .pio/build/int-test-blower/src/lib/debug/trace_cmd.o
+ .bss._ZL13vartrace_var1
+                0x0000000020011978       0x18 .pio/build/int-test-blower/src/lib/debug/trace_cmd.o
+ .bss._ZL13vartrace_var2
+                0x0000000020011990       0x18 .pio/build/int-test-blower/src/lib/debug/trace_cmd.o
+ .bss._ZL13vartrace_var3
+                0x00000000200119a8       0x18 .pio/build/int-test-blower/src/lib/debug/trace_cmd.o
+ .bss._ZL13vartrace_var4
+                0x00000000200119c0       0x18 .pio/build/int-test-blower/src/lib/debug/trace_cmd.o
+ .bss._ZL14varTracePeriod
+                0x00000000200119d8       0x18 .pio/build/int-test-blower/src/lib/debug/trace_cmd.o
+ .bss.traceCmd  0x00000000200119f0        0x4 .pio/build/int-test-blower/src/lib/debug/trace_cmd.o
+                0x00000000200119f0                traceCmd
+ .bss.varCmd    0x00000000200119f4        0x4 .pio/build/int-test-blower/src/lib/debug/var_cmd.o
+                0x00000000200119f4                varCmd
+ .bss._ZN12DebugVarBase8var_listE
+                0x00000000200119f8      0x190 .pio/build/int-test-blower/src/lib/debug/vars.o
+                0x00000000200119f8                DebugVarBase::var_list
+ .bss._ZN12DebugVarBase9var_countE
+                0x0000000020011b88        0x2 .pio/build/int-test-blower/src/lib/debug/vars.o
+                0x0000000020011b88                DebugVarBase::var_count
+ .bss._ZL8adc_buff
+                0x0000000020011b8a       0x5a .pio/build/int-test-blower/src/lib/hal/adc.o
+ .bss.Hal       0x0000000020011be4        0x1 .pio/build/int-test-blower/src/lib/hal/hal.o
+                0x0000000020011be4                Hal
+ *fill*         0x0000000020011be5        0x3 
+ .bss._ZL11max_latency
+                0x0000000020011be8        0x4 .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+ .bss._ZL14controller_arg
+                0x0000000020011bec        0x4 .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+ .bss._ZL19controller_callback
+                0x0000000020011bf0        0x4 .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+ .bss._ZL2d1    0x0000000020011bf4       0x1c .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+ .bss._ZL2d2    0x0000000020011c10       0x1c .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+ .bss._ZL2d3    0x0000000020011c2c       0x1c .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+ .bss._ZL6rpUART
+                0x0000000020011c48      0x114 .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+ .bss._ZL7dbgUART
+                0x0000000020011d5c      0x114 .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+ .bss._ZL7latency
+                0x0000000020011e70        0x4 .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+ *fill*         0x0000000020011e74        0x4 
+ .bss._ZL7msCount
+                0x0000000020011e78        0x8 .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+ .bss._ZL9loop_time
+                0x0000000020011e80        0x4 .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+ *fill*         0x0000000020011e84        0x4 
+ .bss.systemStack
+                0x0000000020011e88     0x2710 .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+                0x0000000020011e88                systemStack
+ .bss._ZL17dbg_psol_pwm_open
+                0x0000000020014598       0x20 .pio/build/int-test-blower/src/lib/hal/psol.o
+ .bss._ZL19dbg_psol_pwm_closed
+                0x00000000200145b8       0x20 .pio/build/int-test-blower/src/lib/hal/psol.o
+ .bss._ZN9StepMotor11coms_state_E
+                0x00000000200145d8        0x4 .pio/build/int-test-blower/src/lib/hal/stepper.o
+                0x00000000200145d8                StepMotor::coms_state_
+ .bss._ZN9StepMotor13total_motors_E
+                0x00000000200145dc        0x4 .pio/build/int-test-blower/src/lib/hal/stepper.o
+                0x00000000200145dc                StepMotor::total_motors_
+ .bss._ZN9StepMotor6motor_E
+                0x00000000200145e0      0x110 .pio/build/int-test-blower/src/lib/hal/stepper.o
+                0x00000000200145e0                StepMotor::motor_
+ .bss._ZN9StepMotor9dma_buff_E
+                0x00000000200146f0        0x4 .pio/build/int-test-blower/src/lib/hal/stepper.o
+                0x00000000200146f0                StepMotor::dma_buff_
+ *(COMMON)
+ COMMON         0x00000000200146f4       0x21 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-lock.o)
+                0x00000000200146f4                __lock___atexit_recursive_mutex
+                0x00000000200146f8                __lock___arc4random_mutex
+                0x00000000200146fc                __lock___env_recursive_mutex
+                0x0000000020014700                __lock___sinit_recursive_mutex
+                0x0000000020014704                __lock___malloc_recursive_mutex
+                0x0000000020014708                __lock___at_quick_exit_mutex
+                0x000000002001470c                __lock___dd_hash_mutex
+                0x0000000020014710                __lock___tz_mutex
+                0x0000000020014714                __lock___sfp_recursive_mutex
+                0x0000000020014718                . = ALIGN (0x4)
+ *fill*         0x0000000020014715        0x3 
+                0x0000000020014718                _ebss = .
+                0x0000000020014718                __bss_end__ = _ebss
+
+/DISCARD/
+ libc.a(*)
+ libm.a(*)
+ libgcc.a(*)
+
+.ARM.attributes
+                0x0000000000000000       0x30
+ *(.ARM.attributes)
+ .ARM.attributes
+                0x0000000000000000       0x1e /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/crti.o
+ .ARM.attributes
+                0x000000000000001e       0x34 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/crtbegin.o
+ .ARM.attributes
+                0x0000000000000052       0x34 .pio/build/int-test-blower/src/integration_tests/main.o
+ .ARM.attributes
+                0x0000000000000086       0x34 .pio/build/int-test-blower/src/integration_tests/pure_virtual.o
+ .ARM.attributes
+                0x00000000000000ba       0x34 .pio/build/int-test-blower/src/lib/core/actuators.o
+ .ARM.attributes
+                0x00000000000000ee       0x34 .pio/build/int-test-blower/src/lib/core/blower_fsm.o
+ .ARM.attributes
+                0x0000000000000122       0x34 .pio/build/int-test-blower/src/lib/core/comms.o
+ .ARM.attributes
+                0x0000000000000156       0x34 .pio/build/int-test-blower/src/lib/core/controller.o
+ .ARM.attributes
+                0x000000000000018a       0x34 .pio/build/int-test-blower/src/lib/core/pinch_valve.o
+ .ARM.attributes
+                0x00000000000001be       0x34 .pio/build/int-test-blower/src/lib/core/sensors.o
+ .ARM.attributes
+                0x00000000000001f2       0x34 .pio/build/int-test-blower/src/lib/debug/debug.o
+ .ARM.attributes
+                0x0000000000000226       0x34 .pio/build/int-test-blower/src/lib/debug/pb_read_cmd.o
+ .ARM.attributes
+                0x000000000000025a       0x34 .pio/build/int-test-blower/src/lib/debug/peek_cmd.o
+ .ARM.attributes
+                0x000000000000028e       0x34 .pio/build/int-test-blower/src/lib/debug/poke_cmd.o
+ .ARM.attributes
+                0x00000000000002c2       0x34 .pio/build/int-test-blower/src/lib/debug/trace.o
+ .ARM.attributes
+                0x00000000000002f6       0x34 .pio/build/int-test-blower/src/lib/debug/trace_cmd.o
+ .ARM.attributes
+                0x000000000000032a       0x34 .pio/build/int-test-blower/src/lib/debug/var_cmd.o
+ .ARM.attributes
+                0x000000000000035e       0x39 .pio/build/int-test-blower/src/lib/debug/vars.o
+ .ARM.attributes
+                0x0000000000000397       0x34 .pio/build/int-test-blower/src/lib/hal/adc.o
+ .ARM.attributes
+                0x00000000000003cb       0x34 .pio/build/int-test-blower/src/lib/hal/buzzer.o
+ .ARM.attributes
+                0x00000000000003ff       0x39 .pio/build/int-test-blower/src/lib/hal/hal.o
+ .ARM.attributes
+                0x0000000000000438       0x34 .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+ .ARM.attributes
+                0x000000000000046c       0x34 .pio/build/int-test-blower/src/lib/hal/psol.o
+ .ARM.attributes
+                0x00000000000004a0       0x21 .pio/build/int-test-blower/src/lib/hal/startup_stm32l452xx.o
+ .ARM.attributes
+                0x00000000000004c1       0x34 .pio/build/int-test-blower/src/lib/hal/stepper.o
+ .ARM.attributes
+                0x00000000000004f5       0x1e /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/libgcc.a(_arm_addsubsf3.o)
+ .ARM.attributes
+                0x0000000000000513       0x32 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-impure.o)
+ .ARM.attributes
+                0x0000000000000545       0x34 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-init.o)
+ .ARM.attributes
+                0x0000000000000579       0x1c /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-memcpy.o)
+ .ARM.attributes
+                0x0000000000000595       0x34 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-memset.o)
+ .ARM.attributes
+                0x00000000000005c9       0x1c /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-strlen.o)
+ .ARM.attributes
+                0x00000000000005e5       0x34 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-__call_atexit.o)
+ .ARM.attributes
+                0x0000000000000619       0x34 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-atexit.o)
+ .ARM.attributes
+                0x000000000000064d       0x34 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-fini.o)
+ .ARM.attributes
+                0x0000000000000681       0x34 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-lock.o)
+ .ARM.attributes
+                0x00000000000006b5       0x34 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-__atexit.o)
+ .ARM.attributes
+                0x00000000000006e9       0x1e /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/crtn.o
+OUTPUT(.pio/build/int-test-blower/firmware.elf elf32-littlearm)
+
+.comment        0x0000000000000000       0x66
+ .comment       0x0000000000000000       0x66 .pio/build/int-test-blower/src/integration_tests/main.o
+                                         0x67 (size before relaxing)
+ .comment       0x0000000000000066       0x67 .pio/build/int-test-blower/src/integration_tests/pure_virtual.o
+ .comment       0x0000000000000066       0x67 .pio/build/int-test-blower/src/lib/core/actuators.o
+ .comment       0x0000000000000066       0x67 .pio/build/int-test-blower/src/lib/core/blower_fsm.o
+ .comment       0x0000000000000066       0x67 .pio/build/int-test-blower/src/lib/core/comms.o
+ .comment       0x0000000000000066       0x67 .pio/build/int-test-blower/src/lib/core/controller.o
+ .comment       0x0000000000000066       0x67 .pio/build/int-test-blower/src/lib/core/pinch_valve.o
+ .comment       0x0000000000000066       0x67 .pio/build/int-test-blower/src/lib/core/sensors.o
+ .comment       0x0000000000000066       0x67 .pio/build/int-test-blower/src/lib/debug/debug.o
+ .comment       0x0000000000000066       0x67 .pio/build/int-test-blower/src/lib/debug/pb_read_cmd.o
+ .comment       0x0000000000000066       0x67 .pio/build/int-test-blower/src/lib/debug/peek_cmd.o
+ .comment       0x0000000000000066       0x67 .pio/build/int-test-blower/src/lib/debug/poke_cmd.o
+ .comment       0x0000000000000066       0x67 .pio/build/int-test-blower/src/lib/debug/trace.o
+ .comment       0x0000000000000066       0x67 .pio/build/int-test-blower/src/lib/debug/trace_cmd.o
+ .comment       0x0000000000000066       0x67 .pio/build/int-test-blower/src/lib/debug/var_cmd.o
+ .comment       0x0000000000000066       0x67 .pio/build/int-test-blower/src/lib/debug/vars.o
+ .comment       0x0000000000000066       0x67 .pio/build/int-test-blower/src/lib/hal/adc.o
+ .comment       0x0000000000000066       0x67 .pio/build/int-test-blower/src/lib/hal/buzzer.o
+ .comment       0x0000000000000066       0x67 .pio/build/int-test-blower/src/lib/hal/hal.o
+ .comment       0x0000000000000066       0x67 .pio/build/int-test-blower/src/lib/hal/hal_stm32.o
+ .comment       0x0000000000000066       0x67 .pio/build/int-test-blower/src/lib/hal/psol.o
+ .comment       0x0000000000000066       0x67 .pio/build/int-test-blower/src/lib/hal/stepper.o
+
+.debug_frame    0x0000000000000000      0x250
+ .debug_frame   0x0000000000000000       0x4c /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7e-m+fp/hard/libgcc.a(_arm_addsubsf3.o)
+ .debug_frame   0x000000000000004c       0x2c /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-init.o)
+ .debug_frame   0x0000000000000078       0x38 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-memset.o)
+ .debug_frame   0x00000000000000b0       0x68 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-__call_atexit.o)
+ .debug_frame   0x0000000000000118       0x20 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-atexit.o)
+ .debug_frame   0x0000000000000138       0x34 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-fini.o)
+ .debug_frame   0x000000000000016c       0xb0 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-lock.o)
+ .debug_frame   0x000000000000021c       0x34 /Users/jlebar/.platformio/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(lib_a-__atexit.o)

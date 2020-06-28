@@ -93,11 +93,19 @@ TEST(BlowerFsmTest, DesiredPipPeep) {
     EXPECT_EQ(s.pip.cmH2O(), 20.f);
     EXPECT_EQ(s.peep.cmH2O(), 10.f);
 
-    // Now the pip/peep values update.
+    // We are at the breath boundary; the FSM will return the last desired state
+    // for the just-completed breath; is_end_of_breath flag should be true
     Hal.delay(seconds(2));
+    s = fsm.DesiredState(Hal.now(), p, inputs_zero);
+    EXPECT_EQ(s.pip.cmH2O(), 20.f);
+    EXPECT_EQ(s.peep.cmH2O(), 10.f);
+    EXPECT_EQ(s.is_end_of_breath, true);
+
+    // the next desired state should contain updated values
     s = fsm.DesiredState(Hal.now(), p, inputs_zero);
     EXPECT_EQ(s.pip.cmH2O(), 25.f);
     EXPECT_EQ(s.peep.cmH2O(), 15.f);
+    EXPECT_EQ(s.is_end_of_breath, false);
   }
 }
 
@@ -212,8 +220,9 @@ RunFlowTrace(const VolumetricFlow *trace, size_t n, const VentParams &params,
     VolumetricFlow f = trace[i];
 
     // Our traces don't contain volume measurements, but this is OK for now.
-    fsm.Update(Hal.now(), {.patient_volume = ml(0), .net_flow = f});
-    FlowDirection dir = fsm.DesiredState().flow_direction;
+    BlowerSystemState desired_state =
+        fsm.DesiredState(Hal.now(), {.patient_volume = ml(0), .net_flow = f});
+    FlowDirection dir = desired_state.flow_direction;
     if (dir == FlowDirection::EXPIRATORY && !results.expire_start_time) {
       results.expire_start_time = Hal.now() - start;
     }
@@ -227,7 +236,7 @@ RunFlowTrace(const VolumetricFlow *trace, size_t n, const VentParams &params,
     if (check_it != setpoint_checks.end()) {
       const auto &[check_ms, check_cmh2o] = *check_it;
       if (check_ms == ms) {
-        auto sp = fsm.DesiredState().pressure_setpoint;
+        auto sp = desired_state.pressure_setpoint;
         EXPECT_TRUE(sp.has_value());
         if (sp.has_value()) {
           EXPECT_EQ(sp->cmH2O(), check_cmh2o);
@@ -236,7 +245,7 @@ RunFlowTrace(const VolumetricFlow *trace, size_t n, const VentParams &params,
       ++check_it;
     }
 
-    if (fsm.Finished()) {
+    if (desired_state.is_end_of_breath) {
       results.finish_time = Hal.now() - start;
       break;
     }

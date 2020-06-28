@@ -238,6 +238,10 @@ public:
   void InitPSOL();
   void PSOL_Value(float val);
 
+  // Flash access
+  bool FlashErasePage(uint32_t address);
+  bool FlashWrite(uint32_t addr, uint32_t *data, int ct);
+
 #ifndef TEST_MODE
   // Translates to a numeric pin that can be passed to the Arduino API.
   uint8_t rawPin(PwmPin pin);
@@ -342,6 +346,7 @@ private:
   void EnableInterrupt(InterruptVector vec, IntPriority pri);
   void StepperMotorInit();
   void InitBuzzer();
+
 #endif
 
   void setDigitalPinMode(PwmPin pin, PinMode mode);

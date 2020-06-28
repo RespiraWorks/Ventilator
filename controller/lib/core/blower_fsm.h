@@ -85,11 +85,8 @@ struct BlowerSystemState {
   Pressure pip;
   Pressure peep;
 
-  // Is this the first BlowerSystemState returned for a brand-new breath cycle?
-  //
-  // This is defaulted to false here and is handled by BlowerFsm, rather than
-  // the individual FSM classes (OffFsm, PressureControlFsm, etc).
-  bool is_new_breath = false;
+  // Is this the last BlowerSystemState returned at the end of the breath cycle?
+  bool is_end_of_breath = false;
 };
 
 // Transition from PEEP to PIP pressure over this length of time.  Citation:
@@ -105,23 +102,15 @@ inline constexpr Duration RISE_TIME = milliseconds(100);
 //    with the given params.  Those params don't change during the life of the
 //    FSM.
 //
-//  - void Update(Time now, const BlowerFsmInputs& inputs):
-//    Updates the state of the fsm based on time and values in inputs.
-//
 //  - BlowerSystemState DesiredState(): Gets the solenoid open/closed
 //    state and the pressure that the fan should be trying to hit for the
 //    current state of the fsm.
-//
-//  - bool Finished(): Has this breath FSM completed its work (namely, running
-//    a single breath) ?
-//    If so, it is ready to be replaced with a new one.
 //
 class OffFsm {
 public:
   OffFsm() = default;
   explicit OffFsm(Time now, const VentParams &) {}
-  void Update(Time now, const BlowerFsmInputs &inputs) {}
-  BlowerSystemState DesiredState() {
+  BlowerSystemState DesiredState(Time now, const BlowerFsmInputs &inputs) {
     return {
         .pressure_setpoint = std::nullopt,
         // TODO: It doesn't make much sense to specify a flow direction when the
@@ -129,29 +118,29 @@ public:
         // have a different BlowerSystemState struct for different categories of
         // modes: One for pressure modes, one for volume modes, one for flow
         // modes (high-flow nasal cannula), and one for the off mode.
-        FlowDirection::EXPIRATORY,
+        //
+        // Same applies to the is_end_of_breath flag: it doesn't really pertain
+        // to the off state but hardcode it to false by convention.
+        .flow_direction = FlowDirection::EXPIRATORY,
+        .pip = cmH2O(0.0f),
+        .peep = cmH2O(0.0f),
+        .is_end_of_breath = false,
     };
   }
-  bool Finished() { return true; }
 };
 
 // "Breath finite state machine" for pressure control mode.
 class PressureControlFsm {
 public:
   explicit PressureControlFsm(Time now, const VentParams &params);
-  void Update(Time now, const BlowerFsmInputs &inputs);
-  BlowerSystemState DesiredState() const;
-  bool Finished() const { return finished_; }
+  BlowerSystemState DesiredState(Time now, const BlowerFsmInputs &inputs);
 
 private:
   const Pressure inspire_pressure_;
   const Pressure expire_pressure_;
-  Pressure setpoint_;
   Time start_time_;
   Time inspire_end_;
   Time expire_end_;
-  bool inspire_finished_ = false;
-  bool finished_ = false;
 };
 
 // "Breath finite state machine" for pressure assist mode.
@@ -166,22 +155,16 @@ private:
 class PressureAssistFsm {
 public:
   explicit PressureAssistFsm(Time now, const VentParams &params);
-  void Update(Time now, const BlowerFsmInputs &inputs);
-  BlowerSystemState DesiredState() const;
-  bool Finished() const { return finished_; }
+  BlowerSystemState DesiredState(Time now, const BlowerFsmInputs &inputs);
 
 private:
   bool PatientInspiring(Time now, const BlowerFsmInputs &inputs);
 
   const Pressure inspire_pressure_;
   const Pressure expire_pressure_;
-  Pressure setpoint_;
   Time start_time_;
   Time inspire_end_;
   Time expire_deadline_;
-
-  bool inspire_finished_ = false;
-  bool finished_ = false;
 
   // During exhale we maintain two exponentially-weighted averages of flow, one
   // which updates quickly (fast_flow_avg_), and one which updates slowly

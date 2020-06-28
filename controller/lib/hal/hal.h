@@ -556,6 +556,11 @@ inline void BuzzerOn(float volume) {}
 inline void BuzzerOff() {}
 inline void InitPSOL() {}
 inline void PSOL_Value(float val) {}
+inline bool HalApi::FlashErasePage(uint32_t address) { return true; }
+inline bool HalApi::FlashWrite(uint32_t addr, uint32_t *data, int ct) {
+  return true;
+}
+
 #endif
 
 #endif // HAL_H

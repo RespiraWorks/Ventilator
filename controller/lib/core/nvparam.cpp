@@ -117,7 +117,9 @@ void NVparamsInit(void) {
   nvparam_addr = flash_params_start;
 }
 
-const NVparams *FindStore(void) { return (const NVparams *)nvparam_addr; }
+const NVparams *FindStore(void) {
+  return reinterpret_cast<const NVparams *>(nvparam_addr);
+}
 
 bool NVparamsUpdtOff(uint32_t offset, const void *value, uint8_t len) {
 

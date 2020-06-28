@@ -19,6 +19,7 @@ limitations under the License.
 #include "debug.h"
 #include "hal.h"
 #include "network_protocol.pb.h"
+#include "nvparam.h"
 #include "sensors.h"
 #include "trace.h"
 #include <limits>
@@ -178,6 +179,9 @@ int main() {
   // Initialize Hal first because it initializes the watchdog. See comment on
   // HalApi::init().
   Hal.init();
+
+  // Locate our non-volatile parameter block in flash
+  NVparamsInit();
 
   comms_init();
 

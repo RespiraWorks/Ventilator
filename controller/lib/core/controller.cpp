@@ -114,7 +114,7 @@ Controller::Run(Time now, const VentParams &params,
   BlowerSystemState desired_state = fsm_.DesiredState(
       now, params, {.patient_volume = patient_volume, .net_flow = net_flow});
 
-  if (desired_state.is_new_breath) {
+  if (desired_state.is_end_of_breath) {
     // The "correct" volume at the breath boundary is 0.
     flow_integrator_->NoteExpectedVolume(ml(0));
     breath_id_ = now.microsSinceStartup();

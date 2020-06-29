@@ -24,10 +24,11 @@ limitations under the License.
 // The structure should be exactly 512 bytes long.
 struct NVparams {
   // Header info used to keep track of parameter info
-  uint32_t crc;  // 32-bit CRC of remaining structure
-  uint8_t count; // Incremented on each write.
-  uint8_t mark;  // Used to corrupt old blocks
-  uint16_t info; // For future use, just zero for now
+  uint32_t crc;    // 32-bit CRC of remaining structure
+  uint8_t count;   // Incremented on each write.
+  uint8_t mark;    // Used to corrupt old blocks
+  uint8_t version; // Version of the structure.  0 for now.
+  uint8_t info;    // For future use, just zero for now
 
   // Non-volatile parameters should be added here
   // As parameteters are added, reduce the size of the reserved
@@ -49,6 +50,10 @@ bool NVparamsUpdtOff(uint32_t offset, const void *value, uint8_t len);
 
 // Update a 32-bit non-volatile parameter
 #define NVparamsUpdt32(member, value)                                          \
-  NVparamsUpdtOff(offsetof(NVparams, member), value, sizeof(uint32_t))
+  NVparamsUpdtOff(offsetof(NVparams, member), &value, sizeof(uint32_t))
+
+// Update a float non-volatile parameter
+#define NVparamsUpdtFlt(member, value)                                         \
+  NVparamsUpdtOff(offsetof(NVparams, member), &value, sizeof(float))
 
 #endif

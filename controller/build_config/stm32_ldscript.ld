@@ -54,6 +54,10 @@
 MEMORY
 {
    RAM   (xrw)    : ORIGIN = 0x20000000, LENGTH = 160K
+
+   /* The chip has 512k of flash, but we reserve a few K at the end for parameter
+    * storage, that's why the length here is less then 512k
+    */
    FLASH (rx)     : ORIGIN = 0x08000000, LENGTH = 508K
 }
 

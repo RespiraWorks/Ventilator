@@ -102,8 +102,7 @@ void NVparamsInit(void) {
   blank.crc = BlockCRC(&blank);
 
   Hal.FlashErasePage(flash_params_start);
-  Hal.FlashWrite(flash_params_start, reinterpret_cast<uint32_t *>(&blank),
-                 sizeof(blank) / sizeof(uint32_t));
+  Hal.FlashWrite(flash_params_start, &blank, sizeof(blank));
   nvparam_addr = flash_params_start;
 }
 
@@ -165,8 +164,7 @@ static bool SaveBlock(NVparams *blk, uint32_t addr) {
       return false;
   }
 
-  int ok = Hal.FlashWrite(addr, reinterpret_cast<uint32_t *>(blk),
-                          nvparam_size / sizeof(uint32_t));
+  int ok = Hal.FlashWrite(addr, blk, nvparam_size);
   if (!ok)
     return false;
 

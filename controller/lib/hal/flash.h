@@ -20,16 +20,16 @@ limitations under the License.
 #include <stdint.h>
 
 // Flash memory location & size info
-const uint32_t flash_start_addr = 0x08000000;
-const uint32_t flash_size = 0x00080000;
-const uint32_t flash_page_size = 0x00000800;
+inline constexpr uint32_t flash_start_addr = 0x08000000;
+inline constexpr uint32_t flash_size = 0x00080000;
+inline constexpr uint32_t flash_page_size = 0x00000800;
 
 // Main program memory area
-const uint32_t flash_code_start = 0x08000000;
-const uint32_t flash_code_size = 0x0007f000;
+inline constexpr uint32_t flash_code_start = 0x08000000;
+inline constexpr uint32_t flash_code_size = 0x0007f000;
 
 // Last two flash pages used for parameter storage
-const uint32_t flash_params_start = 0x0807f000;
-const uint32_t flash_params_size = 0x00001000;
+inline constexpr uint32_t flash_params_start = 0x0807f000;
+inline constexpr uint32_t flash_params_size = 0x00001000;
 
 #endif

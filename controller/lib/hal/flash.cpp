@@ -63,19 +63,28 @@ bool HalApi::FlashErasePage(uint32_t addr) {
   return true;
 }
 
-// Write ct 32-bit integers to flash starting at the given address.
-// ct must be even since flash is programmed 64-bits at a time.
-// The address must be a multiple of 8 for the same reason
-bool HalApi::FlashWrite(uint32_t addr, uint32_t *data, int ct) {
+inline uint32_t u8_to_u32(uint8_t *ptr) {
+  uint32_t a = *ptr++;
+  uint32_t b = *ptr++;
+  uint32_t c = *ptr++;
+  uint32_t d = *ptr++;
+  return a | (b << 8) | (c << 16) | (d << 24);
+}
+
+// Write ct bytes to flash starting at the given address.
+// ct must be a multiple of 8 because flash is programmed 64-bits
+// at a time.  If ct isn't a multiple of 8 this function will fail.
+// The address must also be a multiple of 8 for the same reason.
+bool HalApi::FlashWrite(uint32_t addr, void *data, int ct) {
   // Make sure the address is the start of a flash page
   if ((addr < flash_start_addr) ||
-      ((addr + 4 * ct) > flash_start_addr + flash_size))
+      ((addr + ct) > flash_start_addr + flash_size))
     return false;
 
-  if ((ct < 0) || (ct & 1) || (addr & 7))
+  if ((ct < 0) || (ct & 7) || (addr & 7))
     return false;
 
-  FlashReg *reg = (FlashReg *)FLASH_BASE;
+  FlashReg *reg = FLASH_BASE;
 
   // Clear all the status bits
   reg->status = 0x0000C3FB;
@@ -87,11 +96,16 @@ bool HalApi::FlashWrite(uint32_t addr, uint32_t *data, int ct) {
   // Set the PG bit to start programming
   reg->ctrl.program = 1;
 
+  uint8_t *ptr = (uint8_t *)data;
+
   uint32_t *dest = (uint32_t *)addr;
-  for (int i = 0; i < ct / 2; i++) {
+  for (int i = 0; i < ct / 8; i++) {
     // Write 64-bits
-    *dest++ = *data++;
-    *dest++ = *data++;
+    *dest++ = u8_to_u32(ptr);
+    ptr += 4;
+
+    *dest++ = u8_to_u32(ptr);
+    ptr += 4;
 
     // Wait for busy bit to clear
     while (reg->status & 0x00010000) {

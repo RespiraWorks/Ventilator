@@ -30,7 +30,9 @@ struct NVparams {
   uint16_t info; // For future use, just zero for now
 
   // Non-volatile parameters should be added here
-  uint32_t rsvd[126];
+  // As parameteters are added, reduce the size of the reserved
+  // area to maintain the fixed length of the NVparams structure
+  uint8_t rsvd[504];
 };
 
 static_assert(sizeof(NVparams) == 512);

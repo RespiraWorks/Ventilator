@@ -2,6 +2,9 @@
 
 [RespiraWorks](https://respira.works/) is a 501(c)(3) non-profit organization with over 100 contributors worldwide working to rapidly develop, manufacture, and deploy a low-cost and open-source ventilator for communities under-served by the global supply chain.
 
+A full progress status report (updated for CoVent as of June 2020) is [available here]
+(assets/covent-june-2020-progress-status-report.pdf).
+
 ![Ventilator under construction](assets/open_box.jpg)
 
 ## Design Origin

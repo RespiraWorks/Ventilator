@@ -133,7 +133,7 @@ private slots:
     alarm.Update(t(i++), pressure(25.0), bs);
     QVERIFY(!alarm.IsVisualActive());
     QVERIFY(!alarm.IsAudioActive());
-    QCOMPARE("(inactive)", alarm.GetBannerText());
+    QCOMPARE("", alarm.GetBannerText());
 
     // Condition goes back up: visual goes back up, audio beeps again because
     // it is no longer silenced.

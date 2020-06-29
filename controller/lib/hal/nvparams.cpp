@@ -40,6 +40,8 @@ limitations under the License.
 // Size of the parameter block including the header
 static constexpr uint32_t nvparam_size = 512;
 
+#ifdef BARE_STM32
+
 // This is the value of the 'mark' field of a good structure
 // in flash.  It's pretty arbitrary, anything but 0 or 0xff
 static constexpr uint8_t good_mark = 0x55;
@@ -208,3 +210,26 @@ static void Invalidate(uint32_t addr) {
   uint32_t zero[2] = {0, 0};
   Hal.FlashWrite(addr, zero, sizeof(zero));
 }
+
+// Fake NVparams implementation for testing purposes
+#else
+
+static NVparams fakeParams;
+
+void NVparamsInit(void) {}
+
+const NVparams *FindStore(void) { return &fakeParams; }
+
+bool NVparamsUpdtOff(uint32_t offset, const void *value, uint8_t len) {
+  if ((offset < 8) || ((offset + len) > nvparam_size))
+    return false;
+
+  // Update the contents in RAM
+  memcpy(reinterpret_cast<uint8_t *>(&fakeParams) + offset, value, len);
+
+  // Make sure the reserved area is kept at zero
+  memset(&fakeParams.rsvd, 0, sizeof(fakeParams.rsvd));
+  return true;
+}
+
+#endif

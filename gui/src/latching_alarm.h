@@ -120,7 +120,7 @@ public:
   // Whether the visual signal should currently be active.
   bool IsVisualActive() const { return is_condition_active_; }
 
-  QString GetBannerText() const { return banner_text_.value_or("(inactive)"); }
+  QString GetBannerText() const { return banner_text_.value_or(""); }
 
   // ACKNOWLEDGEs the alarm, suppressing audio for 2 minutes.
   void Acknowledge(SteadyInstant now) {

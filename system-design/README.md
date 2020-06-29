@@ -40,7 +40,7 @@ Contents may also be out of date. RespiraWorks may, or may not compensate you fo
       * [Design Rationale](ventilator-design/design-rationales.md) - An explanation of the rationale that went into specific parts can be found here.
       * [Pneumatic System](ventilator-design/pneumatic-system)
       * [Electrical System](ventilator-design/electrical-system)
-      * [Software (separate repository)](https://github.com/RespiraWorks/VentilatorSoftware)
+      * [Software](https://github.com/RespiraWorks/VentilatorSoftware)
   * [Research & Development](research-development)
       * [Project: Fan](research-development/project-fan)
       * [Project: IAV Air Control](research-development/project-iav-air-control)

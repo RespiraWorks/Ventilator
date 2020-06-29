@@ -33,6 +33,8 @@ struct NVparams {
   uint32_t rsvd[126];
 };
 
+static_assert(sizeof(NVparams) == 512);
+
 // prototypes
 void NVparamsInit(void);
 const NVparams *FindStore(void);

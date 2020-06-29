@@ -20,9 +20,9 @@ limitations under the License.
 //
 // On system startup we look through these two pages of flash to find the
 // valid parameters.  There should only be one valid copy under normal
-// conditions If multiple copies are found (which could happen if we lose power
-// during an update for example), then the most recently written copy will be
-// kept.
+// conditions.  If multiple copies are found (which could happen if we lose
+// power during an update for example), then the most recently written copy will
+// be kept.
 //
 // When a parameter value is changed, the function NVparamsUpdt is called to
 // update the values in flash.  This function first writes a new copy of
@@ -55,16 +55,6 @@ static bool SaveBlock(NVparams *blk, uint32_t addr);
 
 // One time init of non-volatile parameter area.
 void NVparamsInit(void) {
-  // Make sure the size of the storage structure is correct.
-  // This catches mistakes when adding new variables.
-  // If it's wrong, then I call a function that doesn't actually
-  // exist.  That generates a link time error, so the program
-  // won't actually be built.
-  // If the size is correct then the compiler will optimize this out.
-  if (sizeof(NVparams) != nvparam_size) {
-    extern void CheckSizeOfNVparams(void);
-    CheckSizeOfNVparams();
-  }
 
   // Total structures in two pages of flash
   int N = flash_params_size / nvparam_size;

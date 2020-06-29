@@ -31,10 +31,10 @@ limitations under the License.
 // it.  In this way there should always be at least one valid copy of the
 // parameters in flash memory and normally only one.
 
+#include "nvparams.h"
 #include "checksum.h"
 #include "flash.h"
 #include "hal.h"
-#include "nvparam.h"
 #include <string.h>
 
 // Size of the parameter block including the header
@@ -115,7 +115,7 @@ bool NVparamsUpdtOff(uint32_t offset, const void *value, uint8_t len) {
 
   // Make sure the passed pointer is pointing to somewhere
   // in the current page and isn't in the reserved first 8 bytes
-  if ((offset < 8) || (offset >= nvparam_size))
+  if ((offset < 8) || ((offset + len) > nvparam_size))
     return false;
 
   // Copy the current parameter block to RAM
@@ -165,8 +165,8 @@ static bool SaveBlock(NVparams *blk, uint32_t addr) {
       return false;
   }
 
-  int ok =
-      Hal.FlashWrite(addr, (uint32_t *)blk, nvparam_size / sizeof(uint32_t));
+  int ok = Hal.FlashWrite(addr, reinterpret_cast<uint32_t *>(blk),
+                          nvparam_size / sizeof(uint32_t));
   if (!ok)
     return false;
 
@@ -201,7 +201,11 @@ static uint32_t BlockCRC(void *blk) {
 }
 
 // Invalidate a block by zeroing out the first 64-bits
-// which includes the CRC and mark
+// which includes the CRC and mark.
+// When flash memory is erased all bits are set to 1.
+// You can program bits to 0, but can't change a 0 to a 1 without erasing
+// the whole page.  I invalite the block by setting the beginning of the
+// header (including the CRC and mark) to all zeros.
 static void Invalidate(uint32_t addr) {
   uint32_t zero[2] = {0, 0};
   Hal.FlashWrite(addr, zero, sizeof(zero));

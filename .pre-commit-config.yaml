@@ -34,15 +34,15 @@ repos:
   hooks:
   - id: check-yaml
   - id: end-of-file-fixer
-    exclude: ^gui/app/third_party
+    exclude: ^gui/app/third_party|^pcb/
   - id: trailing-whitespace
-    exclude: ^gui/app/third_party
+    exclude: ^gui/app/third_party|^pcb/
 
 - repo: https://github.com/Lucas-C/pre-commit-hooks
   rev: v1.1.7
   hooks:
     - id: remove-crlf
-      exclude: \.eps$
+      exclude: \.eps$|^pcb/
 
 - repo: local
   hooks:

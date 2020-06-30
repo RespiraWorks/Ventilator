@@ -16,7 +16,7 @@
 
 ## Functional Diagram
 
-![Functional Block Diagram](functional-block-diagram.png)
+![Functional Block Diagram](assets/functional-block-diagram.png)
 
 ## “Pizza Build” Intra-breath Cycle Control
 

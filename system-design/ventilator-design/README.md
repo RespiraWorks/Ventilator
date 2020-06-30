@@ -31,7 +31,7 @@ mechanisms are required. The designs end up rather heavy and expensive. Bellows-
 devices can be helpful in addressing the volume issue, but are very challenging to design
 for the millions of cycles required, in addition to being difficult to source.
 
-![Ventilator Design Overview](functional-block-diagram.png)
+![Ventilator Design Overview](assets/functional-block-diagram.png)
 
 [Source](https://docs.google.com/presentation/d/1ye96itSLfdbO9PQT0MSiq6xR2ArqD2MpV1Wj8ORfHeo/edit#slide=id.g7330d84036_1_0)
 

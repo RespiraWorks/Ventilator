@@ -3,7 +3,11 @@
 This contains details on the alpha and beta build assemblies, including parts information and assembly instructions.
 
 * [Alpha Build Instructions](alpha-build-instructions)
+  * Note: Comprehensive step-by-step [assembly instructions can be found here](assets/covent-june-2020-assembly-instructions.pdf)
 * [Beta Build Plan](beta-build-instructions)
+* [Production methods for custom components](assets/covent-june-2020-production-methods-for-custom-components.pdf)
+
+
 
 # Part Purchasing Guidelines
 

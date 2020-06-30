@@ -1,5 +1,7 @@
 # Design Rationales
 
+NOTE: The documentation below is a summary. Comprehensive details on design rationale for the entirety of the ventilator  (updated for CoVent as of June 2020) is [available here](assets/covent-june-2020-design-overview-document.pdf).
+
 ## Overview
 
 This file is meant to document the rationales for the design decisions we're making - or things we considered and rejected.

@@ -2,6 +2,9 @@
 
 [RespiraWorks](https://respira.works/) is a 501(c)(3) non-profit organization with over 100 contributors worldwide working to rapidly develop, manufacture, and deploy a low-cost and open-source ventilator for communities under-served by the global supply chain.
 
+A full progress status report (updated for CoVent as of June 2020) is [available here]
+(assets/covent-june-2020-progress-status-report.pdf).
+
 ![Ventilator under construction](assets/open_box.jpg)
 
 ## Design Origin
@@ -37,7 +40,7 @@ Contents may also be out of date. RespiraWorks may, or may not compensate you fo
       * [Design Rationale](ventilator-design/design-rationales.md) - An explanation of the rationale that went into specific parts can be found here.
       * [Pneumatic System](ventilator-design/pneumatic-system)
       * [Electrical System](ventilator-design/electrical-system)
-      * [Software (separate repository)](https://github.com/RespiraWorks/VentilatorSoftware)
+      * [Software](https://github.com/RespiraWorks/VentilatorSoftware)
   * [Research & Development](research-development)
       * [Project: Fan](research-development/project-fan)
       * [Project: IAV Air Control](research-development/project-iav-air-control)

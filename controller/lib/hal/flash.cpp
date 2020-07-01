@@ -111,7 +111,7 @@ bool HalApi::FlashWrite(uint32_t addr, void *data, int ct) {
     while (reg->status & 0x00010000) {
     }
 
-    // Check fo rerrors
+    // Check for errors
     if (reg->status & 0x0000C3FA)
       break;
 

@@ -108,7 +108,7 @@ void NVparamsInit(void) {
   nvparam_addr = flash_params_start;
 }
 
-const NVparams *FindStore(void) {
+const NVparams *GetNvParams(void) {
   return reinterpret_cast<const NVparams *>(nvparam_addr);
 }
 
@@ -166,7 +166,7 @@ static bool SaveBlock(NVparams *blk, uint32_t addr) {
       return false;
   }
 
-  int ok = Hal.FlashWrite(addr, blk, nvparam_size);
+  bool ok = Hal.FlashWrite(addr, blk, nvparam_size);
   if (!ok)
     return false;
 
@@ -218,7 +218,7 @@ static NVparams fakeParams;
 
 void NVparamsInit(void) {}
 
-const NVparams *FindStore(void) { return &fakeParams; }
+const NVparams *GetNvParams(void) { return &fakeParams; }
 
 bool NVparamsUpdtOff(uint32_t offset, const void *value, uint8_t len) {
   if ((offset < 8) || ((offset + len) > nvparam_size))

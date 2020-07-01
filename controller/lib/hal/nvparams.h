@@ -40,7 +40,7 @@ static_assert(sizeof(NVparams) == 512);
 
 // prototypes
 void NVparamsInit(void);
-const NVparams *FindStore(void);
+const NVparams *GetNvParams(void);
 bool NVparamsUpdtOff(uint32_t offset, const void *value, uint8_t len);
 
 // Convenience macro to update a member of the non-volatile

@@ -1,13 +1,15 @@
-# RespiraWorks Ventilator Software
+# RespiraWorks Ventilator
 
-[![CircleCI Build Status](https://circleci.com/gh/RespiraWorks/VentilatorSoftware.svg?style=shield)](https://circleci.com/gh/RespiraWorks/VentilatorSoftware/tree/master)
+**work in progress:** repository is undergoing restructuring. Links may not persist.
+
+[![CircleCI Build Status](https://circleci.com/gh/RespiraWorks/Ventilator.svg?style=shield)](https://circleci.com/gh/RespiraWorks/Ventilator/tree/master)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![Code style: clang-format](https://img.shields.io/badge/code%20style-clang--format-blue)](https://clang.llvm.org/docs/ClangFormat.html)
 [![Built with: platformio](https://img.shields.io/badge/built%20with-platformio-orange)](https://platformio.org/)
-[![GitHub commit activity](https://img.shields.io/github/commit-activity/m/RespiraWorks/VentilatorSoftware)](https://github.com/RespiraWorks/VentilatorSoftware/pulse)
+[![GitHub commit activity](https://img.shields.io/github/commit-activity/m/RespiraWorks/Ventilator)](https://github.com/RespiraWorks/Ventilator/pulse)
 
-This is a common repository for all software components of the [RespiraWorks](http://respira.works) open source ventilator project.
+This is a common repository for all hardware and software components of the [RespiraWorks](http://respira.works) open source ventilator project.
 
 ## Repository structure
 
@@ -17,6 +19,8 @@ This is a common repository for all software components of the [RespiraWorks](ht
 * [gui](gui) - code for the ventilator graphical interface (Qt)
 * [sample-data](sample-data) - some sample data for something **TODO: explain**
 * [scripts](scripts) - for testing something **TODO: explain**
+* [pcb](pcb) - design of the custom circuit board
+* [system-design](system-design) - total system and mechanical design documentation
 * [utils](utils) - scripts for debugging controller / simple integration tests
 
-To contribute, please check the [onboarding wiki](https://github.com/RespiraWorks/VentilatorSoftware/wiki).
+To contribute, please check the [onboarding wiki](https://github.com/RespiraWorks/Ventilator/wiki).

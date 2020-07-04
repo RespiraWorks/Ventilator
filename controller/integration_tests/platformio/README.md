@@ -30,3 +30,5 @@ Now, you can deploy controller to a particular device by doing, for example:
 ```
 SERIAL=066BFF303435554157104916 TEST=TEST_IDLE pio run -e integration-test -t upload
 ```
+
+Or, you can modify the [deploy_test.sh](../deploy_test.sh) script to include an option for your specific unit.

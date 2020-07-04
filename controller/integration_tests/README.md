@@ -71,7 +71,7 @@ To tap into arbitrary points in the tubing, the following components might be us
 
 The following sensors are are in our possession and hopefully soon to be connected to the system:
 * [Posifa PMF4103V](https://posifatech.com/wp-content/uploads/2019/10/DataSheet_PMF4000_MassAirFlow_RevE_C2.pdf)
-* [Siargo FS6122](https://www.digikey.com/short/z9trm5)
+* [Siargo FS6122](https://www.servoflo.com/mass-flow-sensors/siargo-mass-flow-sensors/1229-fs6122)
 
 ### Blower
 

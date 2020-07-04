@@ -12,8 +12,8 @@
 
 // test parameters
 static constexpr int64_t delay_ms{1000};
-static constexpr float volume_min{0.0f};
-static constexpr float volume_max{1.0f};
+static constexpr float volume_min{TEST_PARAM_1};
+static constexpr float volume_max{TEST_PARAM_2};
 static constexpr float initial_step{0.1f};
 
 void run_test() {
@@ -26,7 +26,7 @@ void run_test() {
 
   while (true) {
     if (buzzer_on) {
-      Hal.BuzzerOn();
+      Hal.BuzzerOn(volume);
     } else {
       Hal.BuzzerOff();
     }

@@ -12,8 +12,8 @@
 
 // test parameters
 static constexpr int64_t delay_ms{10};
-static constexpr float fan_min{0.0f};
-static constexpr float fan_max{200.0f / 255.0f};
+static constexpr float fan_min{TEST_PARAM_1};
+static constexpr float fan_max{TEST_PARAM_2};
 static constexpr float initial_step{0.002f};
 
 void run_test() {

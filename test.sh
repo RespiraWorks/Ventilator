@@ -28,12 +28,13 @@ cd "$(dirname "$0")"
 pio test -e native
 
 # Make sure controller integration tests build for target platform.
-TEST=TEST_IDLE pio run -e integration-test
-TEST=TEST_BUZZER pio run -e integration-test
-TEST=TEST_BLOWER pio run -e integration-test
-TEST=TEST_STEPPER pio run -e integration-test
-TEST=TEST_PINCH_VALVE pio run -e integration-test
-TEST=TEST_SOLENOID pio run -e integration-test
+# TODO(martukas) This will actually have to be build and tested on Jenkins and not here
+INTEGRATION_TEST_H=idle_test.h pio run -e integration-test
+INTEGRATION_TEST_H=buzzer_test.h TEST_PARAM_1=0.0f TEST_PARAM_2=1.0f pio run -e integration-test
+INTEGRATION_TEST_H=blower_test.h TEST_PARAM_1=0.0f TEST_PARAM_2=1.0f pio run -e integration-test
+INTEGRATION_TEST_H=stepper_test.h TEST_PARAM_1=0 TEST_PARAM_2=90.0f pio run -e integration-test
+INTEGRATION_TEST_H=pinch_valve_test.h TEST_PARAM_1=0 pio run -e integration-test
+INTEGRATION_TEST_H=solenoid_test.h pio run -e integration-test
 
 # Make sure controller builds for target platform.
 pio run -e stm32

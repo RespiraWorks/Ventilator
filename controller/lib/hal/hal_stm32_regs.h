@@ -461,13 +461,47 @@ inline TimerRegs *const TIMER16_BASE =
 
 // [RM] 3.7 Flash Registers (pg 100)
 struct FlashReg {
-  REG access; // 0x00 - Access Control Register (FLASH_ACR
+
+  // Access control register
+  struct {
+    REG latency : 3; // Number of ait states
+    REG rsvd1 : 5;
+    REG prefecth_ena : 1; // Enable pre-fetch
+    REG icache_ena : 1;   // Instruction cache enable
+    REG dcache_ena : 1;   // Data cache enable
+    REG icache_rst : 1;   // Instruction cache reset
+    REG dcache_rst : 1;   // Data cache reset
+    REG run_pd : 1;       // Power-down during run or low power mode
+    REG sleep_pd : 1;     // Power-down during sleep mode
+    REG rsvd2 : 17;
+  } access;
+
   REG pdKey;  // 0x04 - Power-down Key Register (FLASH_PDKEYR)
   REG key;    // 0x08 - Key Register (FLASH_KEYR)
   REG optKey; // 0x0C - Option Key Register (FLASH_OPTKEYR)
   REG status; // 0x10 - Status Register (FLASH_SR)
-  REG ctrl;   // 0x14 - Control Register (FLASH_CR)
-  REG ecc;    // 0x18 - EEC Register (FLASH_EECR)
+
+  // 0x14 - Control Register (FLASH_CR)
+  struct {
+    REG program : 1;    // Set to program flash
+    REG page_erase : 1; // Pase erase
+    REG mass_erase : 1; // Mass erase
+    REG page : 8;       // Page number
+    REG rsvd1 : 5;
+    REG start : 1;     // Flash operation start
+    REG opt_start : 1; // Options modification start
+    REG fast_prog : 1; // Fast programming
+    REG rsvd2 : 5;
+    REG eop_ie : 1;     // End of operation interrupt enable
+    REG err_ie : 1;     // Error interrupt enable
+    REG rderr_ie : 1;   // read error interrupt enable
+    REG obl_launch : 1; // Force option byte reloading
+    REG rsvd3 : 2;
+    REG opt_lock : 1; // Lock the options area
+    REG lock : 1;     // Lock the flash
+  } ctrl;
+
+  REG ecc; // 0x18 - EEC Register (FLASH_EECR)
   REG rsvd1;
   REG option;     // 0x20 - Option Register (FLASH_OPTR)
   REG pcropStart; // 0x24 - PCROP Start Address Register (FLASH_PCROP1SR)

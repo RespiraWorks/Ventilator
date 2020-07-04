@@ -238,6 +238,20 @@ public:
   void InitPSOL();
   void PSOL_Value(float val);
 
+  // Erase a page of flash given the starting address of that page.
+  bool FlashErasePage(uint32_t address);
+
+  // Write data to flash memory at the specified address
+  // Note that the STM32 only allows writing in multiples of 8 bytes
+  // to addresses that are a multiple of 8.
+  //
+  // @param addr - Address in flash memory at which to write.
+  //               NOTE - must be a multiple of 8
+  // @param data - Pointer to data to write
+  // @param ct   - Number of bytes to write
+  //               NOTE - must be a multiple of 8
+  bool FlashWrite(uint32_t addr, void *data, int ct);
+
 #ifndef TEST_MODE
   // Translates to a numeric pin that can be passed to the Arduino API.
   uint8_t rawPin(PwmPin pin);
@@ -342,6 +356,7 @@ private:
   void EnableInterrupt(InterruptVector vec, IntPriority pri);
   void StepperMotorInit();
   void InitBuzzer();
+
 #endif
 
   void setDigitalPinMode(PwmPin pin, PinMode mode);
@@ -551,6 +566,11 @@ inline void BuzzerOn(float volume) {}
 inline void BuzzerOff() {}
 inline void InitPSOL() {}
 inline void PSOL_Value(float val) {}
+inline bool HalApi::FlashErasePage(uint32_t address) { return true; }
+inline bool HalApi::FlashWrite(uint32_t addr, void *data, int ct) {
+  return true;
+}
+
 #endif
 
 #endif // HAL_H

@@ -19,6 +19,7 @@ limitations under the License.
 #include "debug.h"
 #include "hal.h"
 #include "network_protocol.pb.h"
+#include "nvparams.h"
 #include "sensors.h"
 #include "trace.h"
 #include <limits>
@@ -64,7 +65,7 @@ static SensorsProto AsSensorsProto(const SensorReadings &r,
 // This function handles all the high priority tasks which need to be called
 // periodically.  The HAL calls this function from a timer interrupt.
 //
-// NOTE - it's important that anything being called from this function executes
+// NOTE - its important that anything being called from this function executes
 // quickly.  No busy waiting here.
 static void high_priority_task(void *arg) {
 
@@ -178,6 +179,9 @@ int main() {
   // Initialize Hal first because it initializes the watchdog. See comment on
   // HalApi::init().
   Hal.init();
+
+  // Locate our non-volatile parameter block in flash
+  NVparamsInit();
 
   comms_init();
 

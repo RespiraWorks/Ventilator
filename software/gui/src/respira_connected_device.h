@@ -1,11 +1,11 @@
 #include "chrono.h"
 #include "connected_device.h"
+#include "logger.h"
 #include "network_protocol.pb.h"
 #include "pb_common.h"
 #include "pb_decode.h"
 #include "pb_encode.h"
 #include <QSerialPort>
-#include <QtDebug>
 #include <memory>
 
 // Connects to system serial port, does nanopb serialization/deserialization
@@ -63,9 +63,9 @@ public:
 
   bool SendGuiStatus(const GuiStatus &gui_status) override {
     if (!createPortMaybe()) {
-      // TODO log an error, Serial port could not be opened, raise an Alert
-      qFatal("Could not open serial port for sending %s",
-             serialPortName_.toStdString().c_str());
+      CRIT("Could not open serial port for sending {}",
+           serialPortName_.toStdString());
+      // TODO Raise an Alert?
       return false;
     }
 
@@ -73,17 +73,16 @@ public:
 
     pb_ostream_t stream = pb_ostream_from_buffer(tx_buffer, sizeof(tx_buffer));
     if (!pb_encode(&stream, GuiStatus_fields, &gui_status)) {
-      // TODO: Serialization failure; log an error and/or raise an alert.
-      qCritical() << "Could not serialize GuiStatus";
+      // TODO Raise an Alert?
+      CRIT("Could not serialize GuiStatus");
       return false;
     }
 
     serialPort_->write((const char *)tx_buffer, stream.bytes_written);
 
     if (!serialPort_->waitForBytesWritten(WRITE_TIMEOUT_MS.count())) {
-      // TODO communication failure, port closed? Log an error and raise
-      // an alert
-      qCritical() << "Timeout while sending GuiStatus";
+      // TODO Raise an Alert?
+      CRIT("Timeout while sending GuiStatus");
       return false;
     }
     return true;
@@ -91,17 +90,16 @@ public:
 
   bool ReceiveControllerStatus(ControllerStatus *controller_status) override {
     if (!createPortMaybe()) {
-      qFatal("Could not open serial port for reading %s",
-             serialPortName_.toStdString().c_str());
-      // TODO log an Error, raise an alert. Serial port can not be opened.
+      CRIT("Could not open serial port for reading {}",
+           serialPortName_.toStdString());
+      // TODO Raise an Alert?
       return false;
     }
 
     // wait for incomming data
     if (!serialPort_->waitForReadyRead(INTER_FRAME_TIMEOUT_MS.count())) {
-      // TODO frame from CycleController is not on schedule, raise an alert
-      qCritical()
-          << "Timeout while waiting for a serial frame from Cycle Controller";
+      // TODO Raise an Alert?
+      CRIT("Timeout while waiting for a serial frame from Cycle Controller");
       return false;
     }
 
@@ -117,9 +115,8 @@ public:
         (const uint8_t *)responseData.data(), responseData.length());
 
     if (!pb_decode(&stream, ControllerStatus_fields, controller_status)) {
-      qCritical()
-          << "Could not de-serialize received data as Controller Status";
-      // TODO: Log an error. Raise an Alert?
+      CRIT("Could not de-serialize received data as Controller Status");
+      // TODO: Raise an Alert?
       return false;
     }
 

@@ -5,5 +5,5 @@ FROM debian:buster
 WORKDIR /root/Ventilator/software
 COPY . ./
 RUN bash software/gui/gui.sh --install
-RUN bash software/gui/gui.sh --build
+RUN bash software/gui/gui.sh --build -f -j
 CMD ["bash"]

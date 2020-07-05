@@ -14,6 +14,7 @@
 #include <tuple>
 #include <vector>
 
+#include "logger.h"
 #include <QPointF>
 #include <QVector>
 #include <QtCore/QObject>
@@ -80,8 +81,7 @@ public:
         return VentMode::VentMode_HIGH_FLOW_NASAL_CANNULA;
       default:
         // Should never happen.
-        std::cerr << "Unexpected commanded_mode: " << commanded_mode_
-                  << std::endl;
+        CRIT("Unexpected commanded_mode: {}", commanded_mode_);
         return VentMode::VentMode_PRESSURE_CONTROL;
       }
     }();

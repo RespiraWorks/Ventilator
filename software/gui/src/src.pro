@@ -29,8 +29,10 @@ HEADERS += \
   respira_connected_device.h \
   simple_clock.h \
   time_series_graph.h \
-  time_series_graph_painter.h
+  time_series_graph_painter.h \
+  logger.h
 
 SOURCES += gui_state_container.cpp \
   periodic_closure.cpp \
-  time_series_graph_painter.cpp
+  time_series_graph_painter.cpp \
+  logger.cpp

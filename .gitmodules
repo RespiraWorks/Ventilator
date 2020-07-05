@@ -1,3 +1,6 @@
 [submodule "software/gui/src/third_party/qnanopainter"]
 	path = software/gui/src/third_party/qnanopainter
 	url = https://github.com/QUItCoding/qnanopainter
+[submodule "software/gui/src/third_party/spdlog"]
+	path = software/gui/src/third_party/spdlog
+	url = https://github.com/gabime/spdlog.git

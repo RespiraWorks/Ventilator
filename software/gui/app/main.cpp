@@ -6,6 +6,7 @@
 #include "periodic_closure.h"
 #include "respira_connected_device.h"
 
+#include "logs.h"
 #include "time_series_graph.h"
 #include <QCommandLineParser>
 #include <QDebug>
@@ -47,6 +48,7 @@ void install_fonts() {
 }
 
 int main(int argc, char *argv[]) {
+  qInstallMessageHandler(logOutputToFile);
   QGuiApplication app(argc, argv);
 
   app.setWindowIcon(QIcon(":/images/Logo.png"));

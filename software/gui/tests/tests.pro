@@ -12,6 +12,7 @@ QMAKE_LFLAGS += --coverage
 
 SOURCES += tst_main.cpp
 HEADERS += \
+  logger_test.h \
   breath_signals_test.h \
   latching_alarm_test.h \
   patient_detached_alarm_test.h

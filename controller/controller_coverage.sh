@@ -1,12 +1,16 @@
 #!/bin/bash
 
-# Usage: ./controller_coverage.sh
+# This script generates an HTML coverage report for the controller unit tests.
+# It requires lcov to run.
+#
+# Usage: ./controller_coverage.sh [repo root]
 # Then run: firefox controller_coverage/index.html
+
 
 set -e
 set -x
 
-cd "$(dirname "$0")"
+cd "$(dirname "$0")"/..
 ENVIRONMENT=native
 OUTPUT_DIR=controller_coverage
 SRC_DIR=".pio/build/$ENVIRONMENT"
@@ -19,7 +23,7 @@ pio test -e native
 
 
 # delete the old report as "safely" as possible
-find "$OUTPUT_DIR" -name "*.html" -delete
+find "$OUTPUT_DIR" -name "*.html" -delete || true
 mkdir -p "$OUTPUT_DIR"
 lcov --directory "$SRC_DIR" --capture --output-file "$OUTPUT_DIR/$ENVIRONMENT.info"
 

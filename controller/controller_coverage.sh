@@ -29,7 +29,7 @@ lcov --directory "$SRC_DIR" --capture --output-file "$OUTPUT_DIR/$ENVIRONMENT.in
 
 # the file "output_export.cpp" causes an lcov error, but it doesn't appear to be part of our source, so I'm excluding it
 lcov -r "$OUTPUT_DIR/$ENVIRONMENT.info" --output-file "$OUTPUT_DIR/${ENVIRONMENT}_trimmed.info" \
-    "*output_export.cpp" \
+    "*output_export.c*" \
     "*.pio/libdeps/*" \
     "/usr/include*"
 genhtml "$OUTPUT_DIR/${ENVIRONMENT}_trimmed.info" --output-directory "$OUTPUT_DIR"

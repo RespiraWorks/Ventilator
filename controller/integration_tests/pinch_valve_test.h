@@ -13,11 +13,12 @@
 #include "pinch_valve.h"
 
 // test parameters
+static constexpr int motor_index{TEST_PARAM_1};
 static constexpr int64_t delay_ms{1000};
 
 void run_test() {
   Hal.init();
-  PinchValve pinch_valve(0);
+  PinchValve pinch_valve(motor_index);
   pinch_valve.Home();
 
   bool valve_open{false};

@@ -4,6 +4,10 @@
 #
 # Reusing some Labjack sample Python code from here: https://labjack.com/support/software/examples/ljm/python
 #
+# Here is how Edwin used it with the Adruino libs:
+#   https://github.com/inceptionev/pcbreathe-bringup/blob/pcbreathe-PinchValve-characterization/pcbreathe-bringup.ino
+#   https://github.com/bolderflight/AMS5915
+#
 # Some of Riley's code modified by Martin
 # It does not crash. But data does not seem meaningful.
 # Help!

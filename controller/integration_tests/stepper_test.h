@@ -14,14 +14,15 @@
 #include <cmath>
 
 // test parameters
-static constexpr float step_degrees{-30.0f};
+static constexpr int motor_index{TEST_PARAM_1};
+static constexpr float step_degrees{TEST_PARAM_2};
 static constexpr int64_t delay_ms{1000};
 
 void run_test() {
   Hal.init();
 
   // Configure stepper
-  StepMotor *stepper_motor = StepMotor::GetStepper(1);
+  StepMotor *stepper_motor = StepMotor::GetStepper(motor_index);
   stepper_motor->SetAmpAll(0.1f);
   stepper_motor->SetMaxSpeed(100.0f);
   stepper_motor->SetAccel(100.0f / 0.1f);

@@ -45,8 +45,8 @@ deviceType = info[0]
 #   Range: +/-10.0 V (10.0)
 #   Resolution index = Default (0)
 #   Settling, in microseconds = Auto (0)
-names = ["AIN0_NEGATIVE_CH", "AIN0_RANGE", "AIN0_RESOLUTION_INDEX", "AIN0_SETTLING_US"]
-aValues = [199, 10, 1, 0]
+names = ["AIN1_NEGATIVE_CH", "AIN1_RANGE", "AIN1_RESOLUTION_INDEX", "AIN1_SETTLING_US"]
+aValues = [199, 6, 1, 0]
 
 
 numFrames = len(names)
@@ -58,13 +58,14 @@ for i in range(numFrames):
 
 # Read AIN0 and AIN1 from the LabJack with eReadNames in a loop.
 
-read_names = ["AIN0"]
+read_names = ["AIN1"]
 num_read_frames = len(read_names)
 print("\nStarting %s read loops.%s\n" % (str(loopAmount), loopMessage))
 interval_handle = 1
 ljm.startInterval(interval_handle, 100000)  # Delay between readings (in microseconds)
 
-dac_out = 0
+dac1_out = 10
+ljm.eWriteNames(handle, 1, ["DAC1"], [dac1_out])
 
 while True:
     try:
@@ -73,13 +74,6 @@ while True:
         labjack_value_0 = results[0]
         print("Time: {}  Value: {:.3f} V".format(time, labjack_value_0))
         ljm.waitForNextInterval(interval_handle)
-
-        ljm.eWriteNames(handle, 1, ["DAC0"], [dac_out])
-
-        if dac_out < 10:
-            dac_out += 0.05
-        else:
-            dac_out = 0
 
     except Exception:
         print(sys.exc_info()[1])

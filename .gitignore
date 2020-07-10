@@ -24,3 +24,5 @@ gui/build
 __pycache__/
 last_graph.dat
 .pytype/
+
+controller_coverage

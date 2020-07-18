@@ -1,0 +1,39 @@
+---
+# TODO(jkff): Re-enable google-readability-casting: it can be annoying, but it
+# can catch some nasty bugs. E.g. C-style casts happily cast a pointer to the
+# wrong type.
+Checks: >
+  *,
+  -*-magic-numbers,
+  -hicpp-*,
+  -cppcoreguidelines-*,
+  -fuchsia-*,
+  -clion-*,
+  -cert-*,
+  -readability-named-parameter,
+  -llvm-header-guard,
+  -google-readability-todo,
+  -misc-unused-parameters,
+  -*-braces-around-statements,
+  -google-readability-casting,
+  -readability-else-after-return,
+  -modernize-use-auto,
+  -modernize-use-trailing-return-type,
+  -modernize-deprecated-headers,
+  -llvm-include-order,
+  -modernize-avoid-c-arrays,
+  -readability-uppercase-literal-suffix,
+  -bugprone-narrowing-conversions,
+  -readability-isolate-declaration,
+  -readability-convert-member-functions-to-static,
+  -modernize-use-default-member-init,
+  -misc-non-private-member-variables-in-classes,
+  -readability-implicit-bool-conversion,
+  -modernize-use-using,
+  -modernize-use-nodiscard,
+  -readability-non-const-parameter
+
+WarningsAsErrors: '*'
+
+# TODO: Add naming style checks (readability-identifier-naming).
+...

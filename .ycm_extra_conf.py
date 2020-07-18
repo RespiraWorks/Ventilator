@@ -3,7 +3,7 @@
 #   https://raw.githubusercontent.com/ycm-core/ycmd/66030cd94299114ae316796f3cad181cac8a007c/.ycm_extra_conf.py
 #
 # It has been modified to fit your screen (and work with the
-# RespiraWorks/VentilatorSoftware repository).  Original license follows.
+# RespiraWorks/Ventilator repository).  Original license follows.
 
 # This file is NOT licensed under the GPLv3, which is the license for the rest
 # of YouCompleteMe.

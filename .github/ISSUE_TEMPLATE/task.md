@@ -1,9 +1,10 @@
 ---
 name: Task
 about: Something needs to be done
-title: ""
-labels: ""
-assignees: ""
+title: ''
+labels: ''
+assignees: ''
+
 ---
 
 Please take the time to describe the problem in detail, so that other contributors can pick it up and implement or declare it done/obsolete in case if was completed out of band.

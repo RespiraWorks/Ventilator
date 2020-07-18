@@ -1,0 +1,11 @@
+# This Dockerfile creates an image that has the necessary tools to build and test the controller code.
+FROM ubuntu:bionic
+RUN apt-get update && apt-get install build-essential python-pip git -y
+RUN pip install -U pip
+
+# NOTE: pre-commit version is pinned to prevent installing a Python 3-only version.
+RUN pip install pre-commit==1.21.0 platformio
+RUN platformio update
+WORKDIR /root/Ventilator
+COPY . ./
+CMD /bin/bash software/controller/test.sh

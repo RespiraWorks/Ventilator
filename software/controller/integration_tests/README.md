@@ -122,6 +122,10 @@ measure that was used to judge the acceptance, and should also save the relevant
 
 ## Current status
 
-For now there is a [bash script](run_all.sh) that runs a sequence of simple HAL tests each for about 10 seconds, ending
-by putting the controller into an idle loop. You must specify the device on which you want to run those tests.
-Documentation is in the script itself.
+The following two scripts are available for (semi-)automated integration testing.
+
+[deploy_test.sh](deploy_test.sh) - will build and deploy a specified integration test to a specific prototype
+referenced by serial designation alias. Script is self-documented.
+
+[bash script](run_all.sh) - will deploy a sequence of integration tests each for about 15 seconds, ending
+by putting the controller into an idle loop. Must specify serial alias.

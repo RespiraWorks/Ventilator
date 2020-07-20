@@ -5,7 +5,7 @@ Here resides the code for the ventilator controller.
 ## High-level graph of components
 
 <!-- See https://github.com/TLmaK0/gravizo -->
-![Graph of components in cycle controller](https://g.gravizo.com/source/cc_graph_mark?https%3A%2F%2Fraw.githubusercontent.com%2FRespiraWorks%2FVentilator%2Fmaster%2Fcontroller%2FREADME.md)
+![Graph of components in cycle controller](https://g.gravizo.com/source/cc_graph_mark?https%3A%2F%2Fraw.githubusercontent.com%2FRespiraWorks%2FVentilator%2Fmaster%2Fsoftware%2Fcontroller%2FREADME.md)
 <!--
 cc_graph_mark
 digraph G {
@@ -47,16 +47,23 @@ smaller, easier to maintain, and lessens the risk of unexpected behavior.
 The controller shares the [common communications code](../common) with the GUI.
 The part of the code specific to the controller resides here.
 
-Most of the substantive code is in the [lib](lib) directory, because
-this is required by [platformio](https://platformio.org/) to unit test that code.
+**Directories:**
+* [build_config](build_config) -  files used by platformio for building stm32 controller software
+* [integration_tests](integration_tests) - code for (semi-)automated hardware-in-the-loop testbeds
+* [lib](lib) - most of the substantive controller code, must all be libraries to be unit-testable by platformio
+* [src](src) - just the main loop for controller
+* [src_test](src_test) - just main loop for unit tests
+* [test](test) - unit tests
 
-The equivalent of a "make file" which governs which targets platformio builds
-and how is the [platfomio.ini](platformio.ini) file.
+**Files:**
+* [platfomio.ini](platformio.ini) - the equivalent of a "make file" which governs how platformio builds targets
+* [controller_coverage.sh](controller_coverage.sh) - script for generating unit test code coverage reports
+* [test.sh](test.sh) - script for running all unit tests
+* [tests_Dockerfile](tests_Dockerfile) - script for running unit tests in docker container (for CI)
 
 ## Development toolchain
 
-The target platform for this code is the STM32 processor.
-**#TODO: be more specific**
+The target platform for this code is the STM32 processor (currently, the Nucleo L452RE to be precise).
 
 We use [platformio](https://platformio.org/) for building the controller code.
 Platformio has a CLI and an IDE. You'll need the platformio CLI in order to build
@@ -75,9 +82,6 @@ and [Python](https://www.python.org/downloads/windows/).
 (Note: you may be asked to install Python 2.7, but PlatformIO works with Python 3.5+ as well, ostensibly.)
 
 ## Building and testing
-
-**All shell scripts should be run in the root directory of this repo
-(same as where `platformnio.ini` lives).**
 
 After installing platformio, you should be able to build and test as follows.
 
@@ -115,7 +119,8 @@ Hardware ID: USB VID:PID=1A86:7523 LOCATION=20-2.2
 Description: USB2.0-Serial
 ```
 
-Now you can build and upload to the device:
+Now you can build and upload to the device.
+**Note:** The following command should be run in this directory (same as where `platformnio.ini` lives).
 
 ```
 $ pio run -t upload
@@ -128,10 +133,15 @@ If you get the following error, it means platformio was unable to find a connect
 Error: Please specify `upload_port` for environment or use global `--upload-port` option.
 ```
 
-Alternatively, you can upload the firmware.elf and firmware.bin files to the controller
-mounted as a USB storage device.
+You may have to modify your `udev` rule to enable flashing of the controller. The following two articles have
+proven to be helpful:
+[platformio FAQ](https://docs.platformio.org/en/latest/faq.html#platformio-udev-rules)
+[community forums](https://community.platformio.org/t/stm32-vs-code-mbed-upload-issue-error-libusb-open-failed-with-libusb-error-access-error-open-failed/10650)
+
+Alternatively, you can upload the firmware.elf and firmware.bin files to the controller mounted as a USB storage device.
 
 ## Testing with hardware
 
-There are some basic integration tests and manual testing utilities
- in the [../utils](../utils) directory.
+Some (semi-)automated integration tests are in the [integration_tests](integration_tests) directory.
+
+Debug interface and manual testing utilities are in the [../utils](../utils) directory.

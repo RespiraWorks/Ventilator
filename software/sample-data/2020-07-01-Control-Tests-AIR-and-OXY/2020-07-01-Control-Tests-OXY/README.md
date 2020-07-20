@@ -6,7 +6,7 @@
 
 * **Software version**: [a9175b3](https://github.com/RespiraWorks/Ventilator/commit/a9175b35f3580fbd728a8149b355841b48c7dc06)
 
-* **Test data:** [Link to file](https://github.com/RespiraWorks/Ventilator/tree/master/sample-data/2020-07-01-Control-Tests-AIR-and-OXY)
+* **Test data:** [Link to file](https://github.com/RespiraWorks/Ventilator/tree/master/software/sample-data/2020-07-01-Control-Tests-AIR-and-OXY)
 
 * **Summarize test setup's main components:**
   * Pizzabuild SN01 (Edwin) Inhale and Exhale pinch valves, oxygen PSOL

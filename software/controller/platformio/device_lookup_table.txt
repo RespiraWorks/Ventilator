@@ -1,0 +1,5 @@
+ALIAS  NUCLEO_SERIAL                COMMENT
+p1     0668FF303435554157122853     Pizza #1 at Edwin's Workshop
+p3     0668FF303435554157105440     Pizza #3 at Martin's farm
+p4     066BFF303435554157104916     Pizza #4 at Martin's farm
+p5     066FFF303435554157105014     Pizza #5 at Martin's farm

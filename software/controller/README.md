@@ -48,18 +48,18 @@ The controller shares the [common communications code](../common) with the GUI.
 The part of the code specific to the controller resides here.
 
 **Directories:**
-* [build_config](build_config) -  files used by platformio for building stm32 controller software
-* [integration_tests](integration_tests) - code for (semi-)automated hardware-in-the-loop testbeds
 * [lib](lib) - most of the substantive controller code, must all be libraries to be unit-testable by platformio
-* [src](src) - just the main loop for controller
-* [src_test](src_test) - just main loop for unit tests
 * [test](test) - unit tests
+* [integration_tests](integration_tests) - code for (semi-)automated hardware-in-the-loop testbeds
+* [platformio](platformio) - build configurations and deployment scripts
+* [src](src) - just the main loop for controller
+* [src_test](src_test) - just the main loop for unit tests
 
 **Files:**
 * [platfomio.ini](platformio.ini) - the equivalent of a "make file" which governs how platformio builds targets
 * [controller_coverage.sh](controller_coverage.sh) - script for generating unit test code coverage reports
 * [test.sh](test.sh) - script for running all unit tests
-* [tests_Dockerfile](tests_Dockerfile) - script for running unit tests in docker container (for CI)
+* [upload.sh](upload.sh) - uploads firmware to ventilator controller
 
 ## Development toolchain
 
@@ -72,6 +72,8 @@ from the command-line, even if you also install the IDE.
 Instructions for installing:
  * [CLI](https://docs.platformio.org/en/latest/core/installation.html#super-quick-mac-linux)
  * [IDE](https://docs.platformio.org/en/latest/integration/ide/vscode.html#installation)
+
+In case of unix systems, the `pip`-provided platformio package tends to be more up to date, so opt for that over `apt`.
 
 Here's a [video introduction](https://www.youtube.com/watch?v=EIkGTwLOD7o) to platformio.
 
@@ -133,8 +135,17 @@ If you get the following error, it means platformio was unable to find a connect
 Error: Please specify `upload_port` for environment or use global `--upload-port` option.
 ```
 
-You may have to modify your `udev` rule to enable flashing of the controller. The following two articles have
-proven to be helpful:
+You may have to modify your `udev` rule to enable flashing of the controller as follows:
+
+```
+curl -fsSL https://raw.githubusercontent.com/platformio/platformio-core/master/scripts/99-platformio-udev.rules | sudo tee /etc/udev/rules.d/99-platformio-udev.rules
+sudo service udev restart
+sudo usermod -a -G dialout $USER
+sudo usermod -a -G plugdev $USER
+```
+and then either re-login or restart machine.
+
+For more details on this, see the following articles:
 [platformio FAQ](https://docs.platformio.org/en/latest/faq.html#platformio-udev-rules)
 [community forums](https://community.platformio.org/t/stm32-vs-code-mbed-upload-issue-error-libusb-open-failed-with-libusb-error-access-error-open-failed/10650)
 

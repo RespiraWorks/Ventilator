@@ -45,7 +45,7 @@ We may have parts to send you from our inventory.
 | 11   |        - | Remington     | 16UL1007STRKIT      |        29.70 | [K][11amzn]           | 16 AWG wire, for power cable, **optional** if not included or more length needed |
 | 12   |        - | Remington     | 26UL1007STRKIT10COLOR |      31.60 | [K][12amzn]           | 26 AWG wire, for control cable, **optional** if not included or more length needed  |
 
-[1ali]:   https://www.aliexpress.com/item/32698107687.html
+[1ali]:   https://www.aliexpress.com/item/32980201709.html
 [2won]:   https://wonsmart-motor.en.made-in-china.com/product/hsjxFewOppVg/China-Air-Pump12V-Brushless-Motor-12V-Blower-Fan-Driver.html
 [3mcmc]:  https://www.mcmaster.com/5234K57
 [4mcmc]:  https://www.mcmaster.com/9579K72

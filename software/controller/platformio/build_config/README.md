@@ -1,4 +1,4 @@
-# Boards
+# Platformio build configuration
 
 This directory holds files used by platformio when building the stm32 controller
 software.

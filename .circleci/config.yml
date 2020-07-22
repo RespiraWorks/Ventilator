@@ -66,7 +66,7 @@ jobs:
       - run:
           name: Run Docker build
           command: |
-            docker build -f software/controller/tests_Dockerfile -t controller-test-image .
+            docker build -f .circleci/controller_tests_Dockerfile -t controller-test-image .
       - run:
           name: Run tests
           command: |
@@ -124,7 +124,7 @@ jobs:
             docker buildx create --name gui
             docker buildx use gui
             docker buildx inspect --bootstrap
-            cd ~/project/ && docker buildx build --platform linux/arm/v7 -t respiraworks/gui:$CIRCLE_SHA1 --load -f software/gui/Dockerfile .
+            cd ~/project/ && docker buildx build --platform linux/arm/v7 -t respiraworks/gui:$CIRCLE_SHA1 --load -f .circleci/gui_Dockerfile .
       - run:
           name: Run tests
           command: |

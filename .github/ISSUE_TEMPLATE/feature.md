@@ -18,5 +18,8 @@ Link any documents, Slack threads, quote personal communication, reference your 
 **Code pointers**
 Give some thoughts on roughly where in code do you think the necessary changes might be located.
 
-**Other**
-Link the issue with a milestone, add appropriate labels, and mention dependent/blocked issues if any.
+**Don't forget**
+- [ ] Put the issue in a milestone
+- [ ] Assign it to one of the projects
+- [ ] Add appropriate labels
+- [ ] Mention dependent/blocked issues if any

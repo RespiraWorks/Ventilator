@@ -15,8 +15,8 @@ labor intensive customization of hardware and means of interpreting complex elec
 It may not be cost effective to develop such testing infrastructure, so in scope some of these tests
 may appear to be more like functional tests and system tests. For a broader view,
 please read
-[wiki](https://github.com/RespiraWorks/Ventilator/wiki/Embedded-software-testing)
-on the subject of embedded system testing.
+[page](../../design/embedded_software_testing.md)
+on strategy for embedded system testing.
 
 In the end, the goal is to test some subsets of our system with hardware on a regular basis and
 in a systematic way, to increase the likelihood of catching at least some problems early.

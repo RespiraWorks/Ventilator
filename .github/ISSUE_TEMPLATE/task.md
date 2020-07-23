@@ -7,11 +7,6 @@ assignees: ''
 
 ---
 
-- [ ] Put the issue in a milestone
-- [ ] Assign it to one of the projects
-- [ ] Add appropriate labels
-- [ ] Mention dependent/blocked issues if any
-
 Please take the time to describe the problem in detail, so that other contributors can pick it up and implement or declare it done/obsolete in case if was completed out of band.
 
 **When to create Feature request or Task?**
@@ -29,5 +24,8 @@ Link any documents, Slack threads, quote personal communication, reference your 
 **Code pointers**
 Give some thoughts on roughly where in code do you think the necessary changes might be located.
 
-**Other**
-Anything else to mention?
+**Don't forget**
+- [ ] Put the issue in a milestone
+- [ ] Assign it to one of the projects
+- [ ] Add appropriate labels
+- [ ] Mention dependent/blocked issues if any

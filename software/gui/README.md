@@ -5,6 +5,10 @@
 Here resides the code for the ventilator graphical user interface. It is based on QT and runs
 on Raspberry Pi (henceforth "*RPi*").
 
+Please also see the [Software design pages](../design) for more information on GUI architecture.
+
+## Building and deploying
+
 For development purposes you may build and run it locally on a Linux or macOS machine of your choice.
 
 To deploy it as intended for the ventilator you will need:
@@ -36,7 +40,7 @@ are generated with every change to the master branch of the code, approximately
 within 10 minutes of a merged change.
 
 If you are interested in the details for how this image generation and deployment works,
-you can check out this [page](https://github.com/RespiraWorks/Ventilator/wiki/GUI-Deployment-Strategy).
+you can read our plan for [GUI deployment strategy](deployment_strategy.md).
 
 The Docker image contained in the *RPIOS image* is the latest Docker image at the time of building the
 *RPIOS image* (which is not that often), so it may not actually contain the latest version of the GUI.

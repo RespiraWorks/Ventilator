@@ -35,6 +35,8 @@ digraph G {
 cc_graph_mark
 -->
 
+Please also see the [Software design pages](../design) for more information on controller architecture.
+
 ## Rationale and structure
 
 The ventilator actuators must be driven by control loops ensuring continuous
@@ -127,6 +129,9 @@ Now you can build and upload to the device.
 ```
 $ pio run -t upload
 ```
+
+A more convenient way to run is to use the [upload.sh](upload.sh) script. If you have multiple Nucleos that you
+want to deploy to, you should consult the [platformio configuration guide](platformio).
 
 If you get the following error, it means platformio was unable to find a connected device.
 

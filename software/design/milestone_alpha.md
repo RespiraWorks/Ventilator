@@ -12,7 +12,7 @@ _Information below only for posterity._
 # Requirements
 
 * Must have a minimal GUI (graphical user interface) that can display pressure trace, flow trace, volume trace
-  * GUI is ideally our specialized QT GUI, but if that's not ready by demo time, we can use [this approach](https://github.com/RespiraWorks/PhysicalDesign/wiki/Plotting-and-recording-live-data-from-an-MCU)
+  * GUI is ideally our specialized QT GUI, but if that's not ready by demo time, we can use [DEPRECATED LINK].
     * *jlebar*: That approach won't work with our current protobuf-based protocol.  We can change our code to output something parseable by that tool if necessary, but my preference would be to do something that we don't have to throw away.  For example, Albertas put together a [proof of concept Python script](https://github.com/RespiraWorks/Ventilator/commit/330895ea391ee70cf156fb5bd8673434b3908846) that reads protobuf data from the Arduino.  We could use an approach like this to draw graphs in Python.
 
 * GUI must obtain pressure, flow, volume data from the controller
@@ -46,7 +46,7 @@ This is a narrative description of how we expect the alpha test to go.  We will 
 
 # Excluded
 
-The alpha milestone is part of the project's overall [requirements](https://github.com/RespiraWorks/Ventilator/wiki/Requirements). Anything mentioned there but not here, is excluded from alpha.
+The alpha milestone is part of the project's overall [requirements](../../requirements). Anything mentioned there but not here, is excluded from alpha.
 
 If you have further questions, ask on [#alpha-reqs](https://app.slack.com/client/T0102KRCH5M/C012H3G1GQ5/thread/C0100SF3N5T-1587858521.093800).
 

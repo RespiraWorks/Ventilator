@@ -11,14 +11,12 @@ Please take the time to describe the bug in detail, so other contributors can pi
 
 **Current behaviour**
 Describe what is wrong with the system as of writing: what is the actual state of things.
+* Instructions to reproduce the bug.
+* Screenshots, screencasts, or video to help explain your problem.
 
 **Expected behaviour**
-Describe what is the expected state of things.
-Describe which documentation has to be updated once the issue is done. For example, in case of hardware, assembly procedure might have to be updated.
-
-**Steps to reproduce**
-If this is a bug reproducible by a user, provide instructions to reproduce.
-If applicable, add screenshots, screencasts, or video to help explain your problem.
+* Describe what is the expected state of things.
+* Identify documents that need to be updated, especially in case of hardware component choices or changes assembly.
 
 **How do you know it is wrong**
 Link any documents, Slack threads, quote personal communication, reference your personal domain expertise etc. explaining why you think the current state of things is bad and the expected state of things is good.

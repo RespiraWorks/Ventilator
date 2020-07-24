@@ -26,3 +26,5 @@ last_graph.dat
 .pytype/
 
 controller_coverage
+pcb/History
+pcb/__Previews/

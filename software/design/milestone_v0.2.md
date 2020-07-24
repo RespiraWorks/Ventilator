@@ -16,11 +16,11 @@ Deliver to Covent by June 18th.
  2. (stretch goal) High-flow nasal cannula (HFNC). Ventilator provides light continuous positive pressure, patient breathes on their own.
  3. (stretch goal) Pre-test mode (a.k.a. self-test mode).
 
-Full description of all ventilator modes is [here](Ventilator-modes).
+Full description of all ventilator modes is [here](ventilation_modes.md).
 
 ## User Interaction
 
-See [UI Requirements](UI-Requirements).
+See [UI Requirements](UI_requirements.md).
 
 ## Alarms
 We need 6 alarms that were in covent requirements:

@@ -1,13 +1,17 @@
 # RespiraWorks Open Source Ventilator
 
+[![Open Source Love svg1](https://badges.frapsoft.com/os/v1/open-source.svg?v=103)](https://github.com/ellerbrock/open-source-badges/)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![CircleCI Build Status](https://circleci.com/gh/RespiraWorks/Ventilator.svg?style=shield)](https://circleci.com/gh/RespiraWorks/Ventilator/tree/master)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![Code style: clang-format](https://img.shields.io/badge/code%20style-clang--format-blue)](https://clang.llvm.org/docs/ClangFormat.html)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![Built with: platformio](https://img.shields.io/badge/built%20with-platformio-orange)](https://platformio.org/)
 [![GitHub commit activity](https://img.shields.io/github/commit-activity/m/RespiraWorks/Ventilator)](https://github.com/RespiraWorks/Ventilator/pulse)
+[![Donate](https://img.shields.io/badge/donate-gofundme-blueviolet)](https://www.gofundme.com/f/RespiraWorks)
 
 This is a common repository for all hardware and software components of the RespiraWorks open source ventilator project.
+If you want to contribute, please see our [wiki](https://github.com/RespiraWorks/Ventilator/wiki).
 
 [RespiraWorks](https://respira.works/) is a 501(c)(3) non-profit organization with over 100 contributors worldwide
 working to rapidly develop, manufacture, and deploy a low-cost and open-source ventilator for communities under-served

@@ -24,6 +24,7 @@ limitations under the License.
 #include "trace.h"
 #include <limits>
 #include <optional>
+#include "alarm.h"
 
 // By default, the controller receives settings (on/off, pip, rr, etc.) from
 // the GUI.  But you can also command the controller by setting the gui_foo
@@ -150,6 +151,8 @@ static void background_loop() {
 
     comms_handler(local_controller_status, &gui_status);
 
+    alarm_handler();
+
     // Override received gui_status from the RPi with values from DebugVars iff
     // the gui_mode DebugVar has a legal value.
     if (uint32_t m = gui_mode.Get(); m >= _VentMode_MIN && m <= _VentMode_MAX) {
@@ -184,6 +187,8 @@ int main() {
   NVparamsInit();
 
   comms_init();
+
+  alarm_init();
 
   background_loop();
 }

@@ -134,6 +134,10 @@ static void process_rx(GuiStatus *gui_status) {
   }
 }
 
+Time comms_get_lastrx_time(void) {
+  return last_rx;
+}
+
 void comms_handler(const ControllerStatus &controller_status,
                    GuiStatus *gui_status) {
   process_tx(controller_status);

@@ -119,22 +119,21 @@ Pressure Sensors::ReadPressureSensor(Sensor s) {
 // compensated to get an accurate FIO2.
 float Sensors::ReadOxygenSensor(const Pressure p_ambient) {
   // Teledyne R24-compatible Electrochemical Cell Oxygen Sensor
-  // Sensitivity of 0.06V/fio2, where fio2 is 0.0 to 1.0, at atmospheric
-  //   pressure
+  // Sensitivity of 0.061V/fio2, where fio2 is 0.0 to 1.0, at pressure = 1atm
   // PCB has an op-amp to gain the output up by 50V/V
   // This gives about 3.0V full scale.
 
-  // Base air O2 concentration (which should correspond to sensor zero)
+  // Standard air O2 concentration. This assumes that calibration occured with
+  // pure air, meaning the system has been filled with air only.
   static const float O2_AIR = 0.21f;
 
   static const float G_AMP = 50.0f;
   static const float G_OXYGEN_SENSOR = 0.061f;
 
-  return std::clamp(
-      (Hal.analogRead(PinFor(FIO2)) - sensors_zero_vals_[FIO2]).volts() /
-              (G_AMP * G_OXYGEN_SENSOR) / p_ambient.atm() +
-          O2_AIR,
-      0.0f, 1.0f);
+  // TODO: raise alarm if fio2 is out of expected (0,1) range
+  return (Hal.analogRead(PinFor(FIO2)) - sensors_zero_vals_[FIO2]).volts() /
+             (G_AMP * G_OXYGEN_SENSOR) / p_ambient.atm() +
+         O2_AIR;
 }
 
 VolumetricFlow Sensors::PressureDeltaToFlow(Pressure delta) {

@@ -33,6 +33,9 @@ struct SensorReadings {
   Pressure inflow_pressure_diff;
   Pressure outflow_pressure_diff;
 
+  // fraction of inspired oxygen (fiO2)
+  float fio2;
+
   // Inflow and outflow at the two venturis, calculated from inflow/outflow
   // pressure diff.
   //
@@ -55,12 +58,12 @@ public:
   void Calibrate();
 
   // Read the sensors.
-  SensorReadings GetReadings();
+  SensorReadings GetReadings() const;
 
   // min/max possible reading from MPXV5004GP pressure sensors
   // The canonical list of hardware in the device is: https://bit.ly/3aERr69
-  inline constexpr static Pressure P_VAL_MIN = kPa(0.0f);
-  inline constexpr static Pressure P_VAL_MAX = kPa(3.92f);
+  constexpr static Pressure kMinPressure{kPa(0.0f)};
+  constexpr static Pressure kMaxPressure{kPa(3.92f)};
 
   /*
    * @brief Method implements Bernoulli's equation assuming the Venturi Effect.
@@ -77,19 +80,21 @@ public:
   static VolumetricFlow PressureDeltaToFlow(Pressure delta);
 
 private:
-  enum Sensor {
-    PATIENT_PRESSURE,
-    INFLOW_PRESSURE_DIFF,
-    OUTFLOW_PRESSURE_DIFF,
+  enum class Sensor {
+    kPatientPressure,
+    kInflowPressureDiff,
+    kOutflowPressureDiff,
+    kFIO2,
   };
   // Keep this in sync with the Sensor enum!
-  inline constexpr static int NUM_SENSORS = 3;
+  constexpr static int kNumSensors{4};
 
   static AnalogPin PinFor(Sensor s);
-  Pressure ReadPressureSensor(Sensor s);
+  Pressure ReadPressureSensor(Sensor s) const;
+  float ReadOxygenSensor(const Pressure p_ambient) const;
 
   // Calibrated average sensor values in a zero state.
-  Voltage sensors_zero_vals_[NUM_SENSORS];
+  Voltage sensors_zero_vals_[kNumSensors];
 };
 
 #endif // SENSORS_H

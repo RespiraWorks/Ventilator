@@ -44,6 +44,7 @@ TEST(ControllerTest, ControllerVolumeMatchesFlowIntegrator) {
       .patient_pressure = kPa(0),
       .inflow_pressure_diff = kPa(0),
       .outflow_pressure_diff = kPa(0),
+      .fio2 = 0.21f,
       .inflow = ml_per_min(0),
       .outflow = ml_per_min(0),
   };
@@ -66,6 +67,7 @@ TEST(ControllerTest, ControllerVolumeMatchesFlowIntegrator) {
         .patient_pressure = kPa(0),
         .inflow_pressure_diff = inflow_pressure,
         .outflow_pressure_diff = outflow_pressure,
+        .fio2 = 0.21f,
         .inflow = Sensors::PressureDeltaToFlow(inflow_pressure),
         .outflow = Sensors::PressureDeltaToFlow(outflow_pressure),
     };

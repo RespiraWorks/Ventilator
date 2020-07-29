@@ -63,6 +63,7 @@ The following pins are used as analog inputs on the rev-1 PCB:
 - PA1 (ADC1_IN6)  - pressure
 - PA4 (ADC1_IN9)  - inhale flow
 - PB0 (ADC1_IN15) - exhale flow
+- PC3 (ADC1_IN2) - oxygen sensor
 
 Reference abbreviations ([RM], [PCB], etc) are defined in hal/README.md
 */
@@ -71,7 +72,7 @@ Reference abbreviations ([RM], [PCB], etc) are defined in hal/README.md
 static constexpr float sample_history_time_sec = 0.001f;
 
 // Total number of A/D inputs we're sampling
-static constexpr int adc_channels = 3;
+static constexpr int adc_channels = 4;
 
 // This constant controls how many times we have the A/D sample each input
 // and sum them before moving on to the next input.  The constant is set
@@ -127,6 +128,7 @@ void HalApi::InitADC() {
   GPIO_PinMode(GPIO_A_BASE, 1, GPIO_PinMode::ANALOG);
   GPIO_PinMode(GPIO_A_BASE, 4, GPIO_PinMode::ANALOG);
   GPIO_PinMode(GPIO_B_BASE, 0, GPIO_PinMode::ANALOG);
+  GPIO_PinMode(GPIO_C_BASE, 1, GPIO_PinMode::ANALOG);
 
   // Perform a power-up and calibration sequence on
   // the A/D converter
@@ -177,6 +179,7 @@ void HalApi::InitADC() {
   adc->adc[0].samp.smp6 = 5;
   adc->adc[0].samp.smp9 = 5;
   adc->adc[0].samp.smp15 = 5;
+  adc->adc[0].samp.smp2 = 5;
 
   // Set conversion sequence length:
   adc->adc[0].seq.len = adc_channels - 1;
@@ -184,6 +187,7 @@ void HalApi::InitADC() {
   adc->adc[0].seq.sq1 = 6;
   adc->adc[0].seq.sq2 = 9;
   adc->adc[0].seq.sq3 = 15;
+  adc->adc[0].seq.sq4 = 2;
 
   // I use DMA1 channel 1 to copy my A/D readings into my buffer ([RM] 11.4.4)
   EnableClock(DMA1_BASE);
@@ -222,6 +226,8 @@ Voltage HalApi::analogRead(AnalogPin pin) {
       return 1;
     case AnalogPin::OUTFLOW_PRESSURE_DIFF:
       return 2;
+    case AnalogPin::FIO2:
+      return 3;
     }
     // All cases covered above (and GCC checks this).
     __builtin_unreachable();

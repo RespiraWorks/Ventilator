@@ -181,19 +181,24 @@ protected:
 // Units:
 //  - kPa (kilopascals)
 //  - cm h2o (centimeters of water)
+//  - atm (atmospheres)
 //
 // Native unit (implementation detail): kPa
 class Pressure : public units_detail::ArithScalar<Pressure, float> {
 public:
   [[nodiscard]] constexpr float kPa() const { return val_; }
   [[nodiscard]] constexpr float cmH2O() const { return val_ * CM_H2O_PER_KPA; }
+  [[nodiscard]] constexpr float atm() const { return val_ / KPA_PER_ATM; }
 
 private:
   // https://www.google.com/search?q=kpa+to+cmh2o
   static inline constexpr float CM_H2O_PER_KPA = 10.1972f;
+  // https://www.google.com/search?q=atm+to+kPa
+  static inline constexpr float KPA_PER_ATM = 101.325f;
 
   constexpr friend Pressure kPa(float kpa);
   constexpr friend Pressure cmH2O(float cm_h2o);
+  constexpr friend Pressure atm(float atm);
 
   using units_detail::ArithScalar<Pressure, float>::ArithScalar;
 };
@@ -201,6 +206,9 @@ private:
 constexpr Pressure kPa(float kpa) { return Pressure(kpa); }
 constexpr Pressure cmH2O(float cm_h2o) {
   return Pressure(cm_h2o / Pressure::CM_H2O_PER_KPA);
+}
+constexpr Pressure atm(float atm) {
+  return Pressure(atm * Pressure::KPA_PER_ATM);
 }
 
 // Represents a length.

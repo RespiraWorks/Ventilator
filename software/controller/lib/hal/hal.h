@@ -78,15 +78,15 @@ enum class PinMode {
 enum class VoltageLevel { HIGH, LOW };
 
 enum class AnalogPin {
-  // MPXV5004DP pressure sensors.
-  //
-  // PATIENT_PRESSURE reads an absolute pressure value at the patient.
-  //
-  // {INFLOW,OUTFLOW}_PRESSURE_DIFF, read a differential across a venturi.
-  // They let us measure volumetric flow into and out of the patient.
+  // MPXV5004DP pressure sensors:
+  // - PATIENT_PRESSURE reads an absolute pressure value at the patient.
+  // - {INFLOW,OUTFLOW}_PRESSURE_DIFF, read a differential across a venturi.
+  //   They let us measure volumetric flow into and out of the patient.
   PATIENT_PRESSURE,
   INFLOW_PRESSURE_DIFF,
   OUTFLOW_PRESSURE_DIFF,
+  // Teledyne R24-compatible Electrochemical Cell Oxygen Sensor
+  FIO2,
 };
 
 // Pulse-width modulated outputs from the controller.  These can be set to

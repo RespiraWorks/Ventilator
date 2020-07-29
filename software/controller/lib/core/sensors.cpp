@@ -28,6 +28,7 @@ static DebugFloat dbg_dp_exhale("dp_exhale", "Exhale diff pressure, cmH2O");
 static DebugFloat dbg_pressure("pressure", "Patient pressure, cmH2O");
 static DebugFloat dbg_flow_inhale("flow_inhale", "Inhale flow rate, cc/sec");
 static DebugFloat dbg_flow_exhale("flow_exhale", "Exhale flow rate, cc/sec");
+static DebugFloat dbg_fio2("fio2", "Fraction of inspired oxygen, [0,100%]");
 // Flow correction happens as part of volume computation, in the Controller.
 static DebugFloat dbg_flow_uncorrected("flow_uncorrected",
                                        "Uncorrected net flow rate, cc/sec");
@@ -52,7 +53,7 @@ constexpr static float VENTURI_CORRECTION = 0.97f;
 static_assert(VENTURI_PORT_DIAM > VENTURI_CHOKE_DIAM);
 static_assert(VENTURI_CHOKE_DIAM > meters(0));
 
-/*static*/ AnalogPin Sensors::PinFor(Sensor s) {
+AnalogPin Sensors::PinFor(Sensor s) {
   switch (s) {
   case PATIENT_PRESSURE:
     return AnalogPin::PATIENT_PRESSURE;
@@ -60,6 +61,8 @@ static_assert(VENTURI_CHOKE_DIAM > meters(0));
     return AnalogPin::INFLOW_PRESSURE_DIFF;
   case OUTFLOW_PRESSURE_DIFF:
     return AnalogPin::OUTFLOW_PRESSURE_DIFF;
+  case FIO2:
+    return AnalogPin::FIO2;
   }
   // Switch above covers all cases.
   __builtin_unreachable();
@@ -89,12 +92,12 @@ void Sensors::Calibrate() {
   Hal.delay(milliseconds(20));
 
   for (Sensor s :
-       {PATIENT_PRESSURE, INFLOW_PRESSURE_DIFF, OUTFLOW_PRESSURE_DIFF}) {
+       {PATIENT_PRESSURE, INFLOW_PRESSURE_DIFF, OUTFLOW_PRESSURE_DIFF, FIO2}) {
     sensors_zero_vals_[s] = Hal.analogRead(PinFor(s));
   }
 }
 
-// Reads a sensor, returning its value in kPa.
+// Reads a pressure sensor, returning its value in kPa.
 //
 // @TODO: Add alarms if sensor value is out of expected range?
 Pressure Sensors::ReadPressureSensor(Sensor s) {
@@ -110,7 +113,31 @@ Pressure Sensors::ReadPressureSensor(Sensor s) {
              (Hal.analogRead(PinFor(s)) - sensors_zero_vals_[s]).volts());
 }
 
-/*static*/ VolumetricFlow Sensors::PressureDeltaToFlow(Pressure delta) {
+// Reads an oxygen sensor, returning the concentration of oxygen [0 ; 1.0]
+//
+// Output scales with partial pressure of O2, so ambient pressure must be
+// compensated to get an accurate FIO2.
+float Sensors::ReadOxygenSensor(const Pressure p_ambient) {
+  // Teledyne R24-compatible Electrochemical Cell Oxygen Sensor
+  // Sensitivity of 0.06V/fio2, where fio2 is 0.0 to 1.0, at atmospheric
+  //   pressure
+  // PCB has an op-amp to gain the output up by 50V/V
+  // This gives about 3.0V full scale.
+
+  // Base air O2 concentration (which should correspond to sensor zero)
+  static const float O2_AIR = 0.21f;
+
+  static const float G_AMP = 50.0f;
+  static const float G_OXYGEN_SENSOR = 0.061f;
+
+  return std::clamp(
+      (Hal.analogRead(PinFor(FIO2)) - sensors_zero_vals_[FIO2]).volts() /
+              (G_AMP * G_OXYGEN_SENSOR) / p_ambient.atm() +
+          O2_AIR,
+      0.0f, 1.0f);
+}
+
+VolumetricFlow Sensors::PressureDeltaToFlow(Pressure delta) {
   auto pow2 = [](float f) { return f * f; };
 
   // Returns an area in meters squared.
@@ -128,11 +155,16 @@ Pressure Sensors::ReadPressureSensor(Sensor s) {
 }
 
 SensorReadings Sensors::GetReadings() {
+  auto patient_pressure = ReadPressureSensor(PATIENT_PRESSURE);
   // Flow rate is inhalation flow minus exhalation flow. Positive value is flow
   // into lungs, and negative is flow out of lungs.
-  auto patient_pressure = ReadPressureSensor(PATIENT_PRESSURE);
   auto inflow_delta = ReadPressureSensor(INFLOW_PRESSURE_DIFF);
   auto outflow_delta = ReadPressureSensor(OUTFLOW_PRESSURE_DIFF);
+  // Fraction of Inspired Oxygen assuming ambient pressure of 101.3 kPa
+  // TODO: measure ambient pressure from an additional sensor and/or estimate
+  // from user input (from altitude?)
+  Pressure p_ambient = kPa(101.3f);
+  auto fio2 = ReadOxygenSensor(p_ambient);
 
   VolumetricFlow inflow = PressureDeltaToFlow(inflow_delta);
   VolumetricFlow outflow = PressureDeltaToFlow(outflow_delta);
@@ -142,6 +174,7 @@ SensorReadings Sensors::GetReadings() {
   dbg_dp_inhale.Set(inflow_delta.cmH2O());
   dbg_dp_exhale.Set(outflow_delta.cmH2O());
   dbg_pressure.Set(patient_pressure.cmH2O());
+  dbg_fio2.Set(fio2 * 100.0f);
   dbg_flow_inhale.Set(inflow.ml_per_sec());
   dbg_flow_exhale.Set(outflow.ml_per_sec());
   dbg_flow_uncorrected.Set(uncorrected_flow.ml_per_sec());
@@ -150,6 +183,7 @@ SensorReadings Sensors::GetReadings() {
       .patient_pressure = patient_pressure,
       .inflow_pressure_diff = inflow_delta,
       .outflow_pressure_diff = outflow_delta,
+      .fio2 = fio2,
       .inflow = inflow,
       .outflow = outflow,
   };

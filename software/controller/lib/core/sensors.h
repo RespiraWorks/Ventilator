@@ -33,6 +33,9 @@ struct SensorReadings {
   Pressure inflow_pressure_diff;
   Pressure outflow_pressure_diff;
 
+  // fraction of inspired oxygen (fiO2)
+  float fio2;
+
   // Inflow and outflow at the two venturis, calculated from inflow/outflow
   // pressure diff.
   //
@@ -81,12 +84,14 @@ private:
     PATIENT_PRESSURE,
     INFLOW_PRESSURE_DIFF,
     OUTFLOW_PRESSURE_DIFF,
+    FIO2,
   };
   // Keep this in sync with the Sensor enum!
-  inline constexpr static int NUM_SENSORS = 3;
+  inline constexpr static int NUM_SENSORS = 4;
 
   static AnalogPin PinFor(Sensor s);
   Pressure ReadPressureSensor(Sensor s);
+  float ReadOxygenSensor(const Pressure p_ambient);
 
   // Calibrated average sensor values in a zero state.
   Voltage sensors_zero_vals_[NUM_SENSORS];

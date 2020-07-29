@@ -97,7 +97,11 @@ There is a bit of code for this under [/labjack](labjack).
 
 ### Visual observation
 
-Webcams are being procured to allow visual confirmation of system function.
+Two webcams are connected to server.
+
+Some proof-of-concept code for how to stream is in the [webcam](webcam) directory.
+
+**TODO:** Set up daemon to always stream webcams, or at least make a very simple script to start streaming on demand.
 
 ## Computing
 
@@ -120,7 +124,7 @@ Results might be of the `PASS`/`FAIL` variety, but more likely will involve comp
 to be within some degree of error from each other. In addition to reporting acceptance, they should report some aggregate
 measure that was used to judge the acceptance, and should also save the relevant raw data for later examination.
 
-## Current status
+## Hardware-in-the-loop tests
 
 The following two scripts are available for (semi-)automated integration testing.
 
@@ -129,3 +133,21 @@ referenced by serial designation alias. Script is self-documented.
 
 [bash script](run_all.sh) - will deploy a sequence of integration tests each for about 15 seconds, ending
 by putting the controller into an idle loop. Must specify serial alias.
+
+### How to create a new test
+
+Take something like [buzzer_test.h](buzzer_test.h) as a template. Create a new header in this directory ending
+in `_test.h`. It should contain a function `void run_test()`.
+
+Now you can use the [deploy_test.sh](deploy_test.sh) script and provide the name of your test as a parameter. For
+example, if the header you created is called `starship_test.h`, then you would run something like:
+
+```
+./deploy_test.sh p3 starship
+```
+
+If you want to use parameters, they will be provided as pre-processor macros following the pattern of
+`TEST_PARAM_1`, `TEST_PARAM_2`, etc..
+
+If you need more parameters, you may have to modify [deploy_test.sh](deploy_test.sh) as well as the
+`[env:integration-test]` entry in [../platformio.ini](../platformio.ini).

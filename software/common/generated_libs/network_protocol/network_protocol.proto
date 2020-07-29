@@ -191,4 +191,5 @@ message SensorsProto {
   // flow_ml_per_min, in an attempt to make the volume graph look "right".  If
   // this is a large negative number, it may indicate a leak in the system.
   required float flow_correction_ml_per_min = 7;
+  required float fio2 = 8;
 }

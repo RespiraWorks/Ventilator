@@ -83,9 +83,10 @@ std::pair<ActuatorsState, ControllerState> Controller::Run(Time now, const VentP
       // Calculate blower valve command using calculated gains
       float blower_valve = blower_valve_pid_.compute(now, sensor_readings.patient_pressure.kPa(),
                                                      desired_state.pressure_setpoint->kPa());
+	  float fio2_coupling_value = fio2_pid_.compute(now, sensor_readings.fio2, params.fio2);
 
       actuators_state = {
-          .fio2_valve = 0,
+          .fio2_valve = blower_valve * fio2_coupling_value,
           // In normal mode, blower is always full power; pid controls pressure
           // by actuating the blower pinch valve.
           .blower_power = 1,

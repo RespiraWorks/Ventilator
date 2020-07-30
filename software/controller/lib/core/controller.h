@@ -66,6 +66,7 @@ class Controller {
   uint32_t breath_id_{0};
   BlowerFsm fsm_;
 
+  // TODO: These params need to be tuned.
   PID blower_valve_pid_{"blower_valve_",
                         " for blower valve PID",
                         /*kp=*/0.04f,
@@ -76,7 +77,6 @@ class Controller {
                         /*output_min=*/0.f,
                         /*output_max=*/1.0f};
 
-  // TODO: These params need to be tuned.
   PID psol_pid_{"psol_",
                 " for O2 psol PID",
                 /*kp=*/0.04f,
@@ -86,6 +86,16 @@ class Controller {
                 /*d_term=*/PID::TermApplication::OnMeasurement,
                 /*output_min=*/0.f,
                 /*output_max=*/1.0f};
+
+  PID fio2_pid_{"fio2_",
+                " for FIO2 PID",
+      /*kp=*/0.001f,
+      /*ki=*/0.01f,
+      /*kd=*/0.0f,
+      /*p_term=*/PID::TermApplication::OnError,
+      /*d_term=*/PID::TermApplication::OnMeasurement,
+      /*output_min=*/0.f,
+      /*output_max=*/1.0f};
 
   // These objects accumulate flow to calculate volume.
   //

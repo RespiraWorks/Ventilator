@@ -14,6 +14,7 @@ limitations under the License.
 */
 
 #include <stdint.h>
+#include "debug.h"
 #include "hal.h"
 #include "alarm.h"
 #include "commfail_alarm.h"
@@ -37,6 +38,7 @@ void commfail_alarm_cb(void)
             }
         }
         alarms[COMM_CHECK_ALARM].triggered = 1;
+        debug.Print("alarm_triggered");
     }
     else {
         // take the latest timestamp when alarm occured again

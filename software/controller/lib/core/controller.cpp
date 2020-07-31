@@ -47,6 +47,7 @@ std::pair<ActuatorsState, ControllerState> Controller::Run(Time now, const VentP
     breath_id_ = static_cast<uint32_t>(now.microsSinceStartup());
   }
   dbg_breath_id_.set(breath_id_);
+  dbg_fio2_setpoint_.set(params.fio2);
 
   ActuatorsState actuators_state;
   if (desired_state.pressure_setpoint == std::nullopt) {
@@ -57,9 +58,9 @@ std::pair<ActuatorsState, ControllerState> Controller::Run(Time now, const VentP
     //
     // If the pinch valves are not yet homed, this will home them and then move
     // them to the desired positions.
-    blower_valve_pid_.Reset();
-    psol_pid_.Reset();
-	fio2_pid_.Reset();
+    blower_valve_pid_.reset();
+    psol_pid_.reset();
+	fio2_pid_.reset();
 
     actuators_state = {
         .fio2_valve = 0,

@@ -143,6 +143,10 @@ class Controller {
   // Outputs - read from external debug program, modified by the controller.
   DbgFloat dbg_pc_setpoint_{"pc_setpoint", DbgAccess::ReadOnly, 0.0f, "cmH2O",
                             "Pressure control set-point"};
+  // \todo: need a forced_fio2 variable
+  DbgFloat dbg_fio2_setpoint_{"fio2_setpoint", DbgAccess::ReadOnly, 0.21f, "ratio",
+                              "FiO2 setpoint [0.0, 1.0] as commanded by GUI"};
+
   DbgFloat dbg_net_flow_{"net_flow", DbgAccess::ReadOnly, 0.0f, "mL/s", "Net flow rate"};
   DbgFloat dbg_net_flow_uncorrected_{"net_flow_uncorrected", DbgAccess::ReadOnly, 0.0f, "mL/s",
                                      "Net flow rate w/o correction"};

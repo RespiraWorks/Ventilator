@@ -110,7 +110,7 @@ a mouse and keyboard to control it.
 8. Install OS on μSD card and plug it into RasPi.
 9. If you got a PCB, go [here](https://github.com/respiraworks/pcbreathe) for further instructions
 10. If you did not get a PCB, it's jumper wire time to connect Nucleo to RasPi.
-Here is reference for [RasPi pinout](https://pinout.xyz/pinout/pin2_5v_power) and here it is for the [Nucleo](https://docs.zephyrproject.org/latest/_images/nucleo-l452re-pinout.png).
+Here is reference for [RasPi pinout](https://pinout.xyz/pinout/pin2_5v_power) and here it is for the [Nucleo](https://docs.zephyrproject.org/latest/_images/nucleo_l452re_pinout.png).
     - Raspi UART-TXD (pin 8) <--> Nucleo USART3-RX (CN10 pin 18)
     - Raspi UART-RXD (pin 10) <--> Nucleo USART3-TX (CN10 pin 25)
     - Raspi GPIO12 (pin 32) <--> Nucleo USART3-RTS (CN10 pin 30)

@@ -1,4 +1,4 @@
-# 2020-07-01 Control Variable Tests - OXY
+# 2020-07-31 UFlow IBV19M PSOL Performance Test
 
 * **Date of test:** 2020-07-01
 
@@ -6,10 +6,10 @@
 
 * **Software version**: [1cc2523](https://github.com/RespiraWorks/Ventilator/commit/1cc252376c78fb6796afd2caeaa50d72c056ad4e)
 
-* **Test data:** [Link to file](https://github.com/RespiraWorks/Ventilator/tree/master/software/sample-data/2020-07-01-Control-Tests-AIR-and-OXY)
+* **Test data:** [Link to file](https://github.com/RespiraWorks/Ventilator/tree/master/software/sample-data/2020-07-31-UFlow-Performance)
 
 * **Summarize test setup's main components:**
-  * Pizzabuild SN01 (Edwin) Inhale and Exhale pinch valves, oxygen PSOL
+  * Pizzabuild SN01 (Edwin) Inhale and Exhale pinch valves, oxygen PSOL using UFlow IBV19M
 
 * **User settings (specify here or in test file):**
     * **PIP (cmH20):** CoVent tests 1-8 as defined in 80601 Table 201.105
@@ -48,7 +48,9 @@
     * **Ox PSOL valve command to voltage mapping:** /controller/lib/hal/psol.cpp
 
 * **Any other hardware settings that have been variable or might change** *(e.g. the bit resolution for the raw sensor valves):*
-  * [Details here]
+  * This software branch add_uflow_psol incorporates changes to the psol.cpp calibration values to support the new UFlow IBV19M PSOL
+  * Hardware: IBV19M PSOL installed, replacing SMC pvq31-6g-40-01
+  * Hardware: Per issue #846, caps C33 and C34 removed, fixing PWM solenoid drive issue.
 
 * **Images**
 

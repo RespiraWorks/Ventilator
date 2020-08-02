@@ -62,6 +62,7 @@ std::pair<ActuatorsState, ControllerState> Controller::Run(Time now, const VentP
     blower_valve_pid_.reset();
     psol_pid_.reset();
     fio2_pid_.reset();
+    air_flow_pid_.reset();
 
     actuators_state = {
         .fio2_valve = 0,
@@ -79,8 +80,8 @@ std::pair<ActuatorsState, ControllerState> Controller::Run(Time now, const VentP
 
     // At the moment we don't support oxygen mixing -- we deliver either pure
     // air or pure oxygen.  For any fio2 < 1, deliver air.
-    if (params.fio2 < 1) {
-      // Delivering pure air.
+    if (params.fio2 < 0.6) {
+      // Delivering air + oxygen mixes from 21 to 59%.
       psol_pid_.reset();
 
       // Calculate blower valve command using calculated gains
@@ -89,7 +90,7 @@ std::pair<ActuatorsState, ControllerState> Controller::Run(Time now, const VentP
       float fio2_coupling_value = fio2_pid_.compute(now, sensor_readings.fio2, params.fio2);
 
       actuators_state = {
-          .fio2_valve = blower_valve * fio2_coupling_value,
+          .fio2_valve = sensor_readings.air_inflow.liters_per_sec() * fio2_coupling_value,
           // In normal mode, blower is always full power; pid controls pressure
           // by actuating the blower pinch valve.
           .blower_power = 1,
@@ -98,21 +99,48 @@ std::pair<ActuatorsState, ControllerState> Controller::Run(Time now, const VentP
           .exhale_valve = 1.0f - 0.55f * blower_valve - 0.4f,
       };
     } else {
-      // Delivering pure oxygen.
+      // Delivering air + oxygen mixes from 60 to 100%
       blower_valve_pid_.reset();
 
-      float psol_valve = psol_pid_.compute(now, sensor_readings.patient_pressure.kPa(),
-                                           desired_state.pressure_setpoint->kPa());
+      float blower_valve = air_flow_pid_.compute(now, sensor_readings.air_inflow.liters_per_sec(),
+                                                 dbg_air_flow_setpoint_.get());
+
+      /*float blower_valve =
+              air_flow_pid_.Compute(now, sensor_readings.inflow.liters_per_sec(),
+                        psol_valve * (1-fio2_coupling_value));
+
+  float psol_valve =
+      psol_pid_.Compute(now, sensor_readings.patient_pressure.kPa(),
+                        desired_state.pressure_setpoint->kPa());
+
+      float fio2_coupling_value = fio2_pid_.Compute(now, sensor_readings.fio2,
+                                params.fio2);
+
+      */
+
+      // experimental shit
       actuators_state = {
+          // Force psol to stay very slightly open to avoid the discontinuity
+          // caused by valve hysteresis at very low command.  The exhale valve
+          // compensates for this intentional leakage by staying open when the
+          // psol valve is closed.
+          .fio2_valve = 0,
+          .blower_power = 1,
+          .blower_valve = blower_valve,
+          .exhale_valve = 1.0f,  // - 0.6f * psol_valve - 0.4f,
+      };
+
+      /*actuators_state = {
           // Force psol to stay very slightly open to avoid the discontinuity
           // caused by valve hysteresis at very low command.  The exhale valve
           // compensates for this intentional leakage by staying open when the
           // psol valve is closed.
           .fio2_valve = std::clamp(psol_valve + 0.05f, 0.0f, 1.0f),
           .blower_power = 0,
-          .blower_valve = 0,
+          .blower_valve = blower_valve,
           .exhale_valve = 1.0f - 0.6f * psol_valve - 0.4f,
-      };
+                  };
+                  */
     }
 
     // Start controlling pressure.

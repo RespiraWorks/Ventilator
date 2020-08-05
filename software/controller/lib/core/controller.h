@@ -94,7 +94,7 @@ class Controller {
                 /*kd=*/0.0f,
                 /*p_term=*/PID::TermApplication::OnError,
                 /*d_term=*/PID::TermApplication::OnMeasurement,
-                /*output_min=*/0.f,
+                /*output_min=*/-1.0f,
                 /*output_max=*/1.0f};
 
   PID air_flow_pid_{"air_flow_",

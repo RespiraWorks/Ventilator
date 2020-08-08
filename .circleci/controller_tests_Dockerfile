@@ -12,4 +12,3 @@ WORKDIR /root/Ventilator
 COPY . ./
 CMD /bin/bash software/controller/test.sh
 CMD /bin/bash software/controller/controller_coverage.sh
-COPY . ./

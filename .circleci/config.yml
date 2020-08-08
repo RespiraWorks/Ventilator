@@ -64,14 +64,19 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Install codecov
+          command: |
+            sudo apt-get install python-pip
+            sudo pip install codecov
+      - run:
           name: Run Docker build
           command: |
             docker build -f .circleci/controller_tests_Dockerfile -t controller-test-image .
       - run:
           name: Run tests
           command: |
-            docker run --privileged -t controller-test-image
-            docker cp controller-test-image:/root/Ventilator/software/controller/controller_coverage .
+            docker run --privileged --name controller-1 -t controller-test-image
+            docker cp controller-1:/root/Ventilator/software/controller/controller_coverage .
             bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports"
   gui-static-analysis:
     machine:

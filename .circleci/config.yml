@@ -71,6 +71,8 @@ jobs:
           name: Run tests
           command: |
             docker run --privileged -t controller-test-image
+            docker cp controller-test-image:/root/Ventilator/software/controller/controller_coverage .
+            bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports"
   gui-static-analysis:
     machine:
       resource_class: 2xlarge

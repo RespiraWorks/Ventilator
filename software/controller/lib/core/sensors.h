@@ -62,8 +62,8 @@ public:
 
   // min/max possible reading from MPXV5004GP pressure sensors
   // The canonical list of hardware in the device is: https://bit.ly/3aERr69
-  inline constexpr static Pressure P_VAL_MIN = kPa(0.0f);
-  inline constexpr static Pressure P_VAL_MAX = kPa(3.92f);
+  constexpr static Pressure P_VAL_MIN = kPa(0.0f);
+  constexpr static Pressure P_VAL_MAX = kPa(3.92f);
 
   /*
    * @brief Method implements Bernoulli's equation assuming the Venturi Effect.
@@ -80,21 +80,21 @@ public:
   static VolumetricFlow PressureDeltaToFlow(Pressure delta);
 
 private:
-  enum Sensor {
-    PATIENT_PRESSURE,
-    INFLOW_PRESSURE_DIFF,
-    OUTFLOW_PRESSURE_DIFF,
-    FIO2,
+  enum class Sensor {
+    kPatientPressure,
+    kInflowPressureDiff,
+    kOutflowPressureDiff,
+    kFIO2,
   };
   // Keep this in sync with the Sensor enum!
-  inline constexpr static int NUM_SENSORS = 4;
+  constexpr static int kNumSensors{4};
 
   static AnalogPin PinFor(Sensor s);
   Pressure ReadPressureSensor(Sensor s);
   float ReadOxygenSensor(const Pressure p_ambient);
 
   // Calibrated average sensor values in a zero state.
-  Voltage sensors_zero_vals_[NUM_SENSORS];
+  Voltage sensors_zero_vals_[kNumSensors];
 };
 
 #endif // SENSORS_H

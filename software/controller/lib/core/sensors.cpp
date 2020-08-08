@@ -37,7 +37,7 @@ static DebugFloat dbg_flow_uncorrected("flow_uncorrected",
 // altitude - need mechanism to adjust based on delivery? Constant involving
 // density of air. Density assumed at 15 deg. Celsius and 1 atm of pressure.
 // Sourced from https://en.wikipedia.org/wiki/Density_of_air
-static const float DENSITY_OF_AIR_KG_PER_CUBIC_METER = 1.225f; // kg/m^3
+static const float kDensityOfAirKgPerCubicMeter{1.225f}; // kg/m^3
 
 // Diameters and correction coefficient relating to 3/4in Venturi, see
 // https://bit.ly/2ARuReg.
@@ -46,22 +46,22 @@ static const float DENSITY_OF_AIR_KG_PER_CUBIC_METER = 1.225f; // kg/m^3
 // roughly 10^4 and machined (rather than cast) surfaces. Data fit is in good
 // agreement based on comparison to Fleisch pneumotachograph; see
 // https://github.com/RespiraWorks/Ventilator/pull/476
-constexpr static Length VENTURI_PORT_DIAM = millimeters(15.05f);
-constexpr static Length VENTURI_CHOKE_DIAM = millimeters(5.5f);
-constexpr static float VENTURI_CORRECTION = 0.97f;
+constexpr static Length kVenturiPortDiameter{millimeters(15.05f)};
+constexpr static Length kVenturiChokeDiameter{millimeters(5.5f)};
+constexpr static float kVenturiCorrection{0.97f};
 
-static_assert(VENTURI_PORT_DIAM > VENTURI_CHOKE_DIAM);
-static_assert(VENTURI_CHOKE_DIAM > meters(0));
+static_assert(kVenturiPortDiameter > kVenturiChokeDiameter);
+static_assert(kVenturiChokeDiameter > meters(0));
 
 AnalogPin Sensors::PinFor(Sensor s) {
   switch (s) {
-  case PATIENT_PRESSURE:
+  case Sensor::kPatientPressure:
     return AnalogPin::PATIENT_PRESSURE;
-  case INFLOW_PRESSURE_DIFF:
+  case Sensor::kInflowPressureDiff:
     return AnalogPin::INFLOW_PRESSURE_DIFF;
-  case OUTFLOW_PRESSURE_DIFF:
+  case Sensor::kOutflowPressureDiff:
     return AnalogPin::OUTFLOW_PRESSURE_DIFF;
-  case FIO2:
+  case Sensor::kFIO2:
     return AnalogPin::FIO2;
   }
   // Switch above covers all cases.
@@ -91,9 +91,9 @@ void Sensors::Calibrate() {
   // open any necessary valves, and recalibrate.
   Hal.delay(milliseconds(20));
 
-  for (Sensor s :
-       {PATIENT_PRESSURE, INFLOW_PRESSURE_DIFF, OUTFLOW_PRESSURE_DIFF, FIO2}) {
-    sensors_zero_vals_[s] = Hal.analogRead(PinFor(s));
+  for (Sensor s : {Sensor::kPatientPressure, Sensor::kInflowPressureDiff,
+                   Sensor::kOutflowPressureDiff, Sensor::kFIO2}) {
+    sensors_zero_vals_[static_cast<int>(s)] = Hal.analogRead(PinFor(s));
   }
 }
 
@@ -108,9 +108,10 @@ Pressure Sensors::ReadPressureSensor(Sensor s) {
   // The pressure sensor is scaled to 0-3.3V, which is the range captured by
   // our ADC.  Therefore, if we multiply the received voltage by 5/3.3, we get
   // a pressure in kPa.
-  static const float TRANSFER_FN_COEFF = 5.f / 3.3f;
-  return kPa(TRANSFER_FN_COEFF *
-             (Hal.analogRead(PinFor(s)) - sensors_zero_vals_[s]).volts());
+  static const float kPressureSensorGain{5.f / 3.3f};
+  return kPa(kPressureSensorGain * (Hal.analogRead(PinFor(s)) -
+                                    sensors_zero_vals_[static_cast<int>(s)])
+                                       .volts());
 }
 
 // Reads an oxygen sensor, returning the concentration of oxygen [0 ; 1.0]
@@ -119,21 +120,24 @@ Pressure Sensors::ReadPressureSensor(Sensor s) {
 // compensated to get an accurate FIO2.
 float Sensors::ReadOxygenSensor(const Pressure p_ambient) {
   // Teledyne R24-compatible Electrochemical Cell Oxygen Sensor
+  // http://www.medicalsolutiontechnology.com/wp-content/uploads/2012/09/GO-04-DATA-SHEET.pdf
   // Sensitivity of 0.061V/fio2, where fio2 is 0.0 to 1.0, at pressure = 1atm
   // PCB has an op-amp to gain the output up by 50V/V
   // This gives about 3.0V full scale.
 
   // Standard air O2 concentration. This assumes that calibration occured with
   // pure air, meaning the system has been filled with air only.
-  static const float O2_AIR = 0.21f;
+  static const float kO2ConcentrationInAir{0.21f};
 
-  static const float G_AMP = 50.0f;
-  static const float G_OXYGEN_SENSOR = 0.061f;
+  static const float kAmplifierGain{50.0f};
+  static const float kOxygenSensorGain{0.061f};
 
   // TODO: raise alarm if fio2 is out of expected (0,1) range
-  return (Hal.analogRead(PinFor(FIO2)) - sensors_zero_vals_[FIO2]).volts() /
-             (G_AMP * G_OXYGEN_SENSOR) / p_ambient.atm() +
-         O2_AIR;
+  return (Hal.analogRead(PinFor(Sensor::kFIO2)) -
+          sensors_zero_vals_[static_cast<int>(Sensor::kFIO2)])
+                 .volts() /
+             (kAmplifierGain * kOxygenSensorGain) / p_ambient.atm() +
+         kO2ConcentrationInAir;
 }
 
 VolumetricFlow Sensors::PressureDeltaToFlow(Pressure delta) {
@@ -144,21 +148,21 @@ VolumetricFlow Sensors::PressureDeltaToFlow(Pressure delta) {
     return static_cast<float>(M_PI) / 4.0f * pow2(diameter.meters());
   };
 
-  float portArea = diameter_to_area_m2(VENTURI_PORT_DIAM);
-  float chokeArea = diameter_to_area_m2(VENTURI_CHOKE_DIAM);
+  float portArea = diameter_to_area_m2(kVenturiPortDiameter);
+  float chokeArea = diameter_to_area_m2(kVenturiChokeDiameter);
   return cubic_m_per_sec(
-      VENTURI_CORRECTION *
+      kVenturiCorrection *
       std::copysign(std::sqrt(std::abs(delta.kPa()) * 1000.0f), delta.kPa()) *
-      std::sqrt(2 / DENSITY_OF_AIR_KG_PER_CUBIC_METER) * portArea * chokeArea /
+      std::sqrt(2 / kDensityOfAirKgPerCubicMeter) * portArea * chokeArea /
       std::sqrt(pow2(portArea) - pow2(chokeArea)));
 }
 
 SensorReadings Sensors::GetReadings() {
-  auto patient_pressure = ReadPressureSensor(PATIENT_PRESSURE);
+  auto patient_pressure = ReadPressureSensor(Sensor::kPatientPressure);
   // Flow rate is inhalation flow minus exhalation flow. Positive value is flow
   // into lungs, and negative is flow out of lungs.
-  auto inflow_delta = ReadPressureSensor(INFLOW_PRESSURE_DIFF);
-  auto outflow_delta = ReadPressureSensor(OUTFLOW_PRESSURE_DIFF);
+  auto inflow_delta = ReadPressureSensor(Sensor::kInflowPressureDiff);
+  auto outflow_delta = ReadPressureSensor(Sensor::kOutflowPressureDiff);
   // Fraction of Inspired Oxygen assuming ambient pressure of 101.3 kPa
   // TODO: measure ambient pressure from an additional sensor and/or estimate
   // from user input (from altitude?)

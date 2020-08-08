@@ -58,12 +58,12 @@ public:
   void Calibrate();
 
   // Read the sensors.
-  SensorReadings GetReadings();
+  SensorReadings GetReadings() const;
 
   // min/max possible reading from MPXV5004GP pressure sensors
   // The canonical list of hardware in the device is: https://bit.ly/3aERr69
-  constexpr static Pressure P_VAL_MIN = kPa(0.0f);
-  constexpr static Pressure P_VAL_MAX = kPa(3.92f);
+  constexpr static Pressure kMinPressure{kPa(0.0f)};
+  constexpr static Pressure kMaxPressure{kPa(3.92f)};
 
   /*
    * @brief Method implements Bernoulli's equation assuming the Venturi Effect.
@@ -90,8 +90,8 @@ private:
   constexpr static int kNumSensors{4};
 
   static AnalogPin PinFor(Sensor s);
-  Pressure ReadPressureSensor(Sensor s);
-  float ReadOxygenSensor(const Pressure p_ambient);
+  Pressure ReadPressureSensor(Sensor s) const;
+  float ReadOxygenSensor(const Pressure p_ambient) const;
 
   // Calibrated average sensor values in a zero state.
   Voltage sensors_zero_vals_[kNumSensors];

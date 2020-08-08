@@ -56,13 +56,13 @@ static_assert(kVenturiChokeDiameter > meters(0));
 AnalogPin Sensors::PinFor(Sensor s) {
   switch (s) {
   case Sensor::kPatientPressure:
-    return AnalogPin::PATIENT_PRESSURE;
+    return AnalogPin::kPatientPressure;
   case Sensor::kInflowPressureDiff:
-    return AnalogPin::INFLOW_PRESSURE_DIFF;
+    return AnalogPin::kInflowPressureDiff;
   case Sensor::kOutflowPressureDiff:
-    return AnalogPin::OUTFLOW_PRESSURE_DIFF;
+    return AnalogPin::kOutflowPressureDiff;
   case Sensor::kFIO2:
-    return AnalogPin::FIO2;
+    return AnalogPin::kFIO2;
   }
   // Switch above covers all cases.
   __builtin_unreachable();
@@ -100,7 +100,7 @@ void Sensors::Calibrate() {
 // Reads a pressure sensor, returning its value in kPa.
 //
 // @TODO: Add alarms if sensor value is out of expected range?
-Pressure Sensors::ReadPressureSensor(Sensor s) {
+Pressure Sensors::ReadPressureSensor(Sensor s) const {
   // The pressure sensors output 1-5V, and each additional 1V of output
   // corresponds to an additional 1kPa of pressure difference.
   // https://www.nxp.com/docs/en/data-sheet/MPXV5004G.pdf.
@@ -118,7 +118,7 @@ Pressure Sensors::ReadPressureSensor(Sensor s) {
 //
 // Output scales with partial pressure of O2, so ambient pressure must be
 // compensated to get an accurate FIO2.
-float Sensors::ReadOxygenSensor(const Pressure p_ambient) {
+float Sensors::ReadOxygenSensor(const Pressure p_ambient) const {
   // Teledyne R24-compatible Electrochemical Cell Oxygen Sensor
   // http://www.medicalsolutiontechnology.com/wp-content/uploads/2012/09/GO-04-DATA-SHEET.pdf
   // Sensitivity of 0.061V/fio2, where fio2 is 0.0 to 1.0, at pressure = 1atm
@@ -157,7 +157,7 @@ VolumetricFlow Sensors::PressureDeltaToFlow(Pressure delta) {
       std::sqrt(pow2(portArea) - pow2(chokeArea)));
 }
 
-SensorReadings Sensors::GetReadings() {
+SensorReadings Sensors::GetReadings() const {
   auto patient_pressure = ReadPressureSensor(Sensor::kPatientPressure);
   // Flow rate is inhalation flow minus exhalation flow. Positive value is flow
   // into lungs, and negative is flow out of lungs.

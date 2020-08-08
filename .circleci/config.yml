@@ -36,6 +36,7 @@ jobs:
           name: Check for broken links with Liche
           command: |
             git ls-files -z '**/*.md' | xargs -0 liche -d . -x "amazon.com|mouser.com|cypress.com|digikey.com|st.com|rsdelivers.com" -t 30
+
   common-precommit-checks:
     docker:
       - image: circleci/python:3.8
@@ -54,23 +55,6 @@ jobs:
             git reset --soft $merge_base
             pre-commit run --show-diff-on-failure --files $changed_files
 
-  # This job creates an image that has the necessary tools to build and test the controller code, then runs it.
-  controller-test:
-    # See https://circleci.com/docs/2.0/executor-types/#docker-benefits-and-limitations
-    # We use a machine executor here because we must run the container in privileged mode.
-    # This is because LeakSanitizer, which runs during the build, requires ptrace.
-    machine:
-      image: ubuntu-1604:201903-01
-    steps:
-      - checkout
-      - run:
-          name: Run Docker build
-          command: |
-            docker build -f .circleci/controller_tests_Dockerfile -t controller-test-image .
-      - run:
-          name: Run tests
-          command: |
-            docker run --privileged -t controller-test-image
   gui-static-analysis:
     machine:
       resource_class: 2xlarge
@@ -87,6 +71,43 @@ jobs:
           name: Run cppcheck on /software/gui
           command: |
             cd ~/project/software/gui && cppcheck -ithird_party . --error-exitcode=1 && cd -
+
+  controller-tests:
+    # See https://circleci.com/docs/2.0/executor-types/#docker-benefits-and-limitations
+    # We use a machine executor here because we must run the container in privileged mode.
+    # This is because LeakSanitizer, which runs during the build, requires ptrace.
+    machine:
+      image: ubuntu-1604:201903-01
+    steps:
+      - checkout
+      - run:
+          name: Build docker image
+          command: |
+            docker build -f .circleci/controller_tests_Dockerfile -t controller-test-image .
+      - run:
+          name: Run tests & publish coverage
+          command: |
+            ci_env=`/bin/bash <(curl -s https://codecov.io/env)`
+            docker run $ci_env --privileged -t controller-test-image
+
+  gui-tests:
+    machine:
+      image: ubuntu-1604:201903-01
+    steps:
+      - checkout
+      - run:
+          name: Checkout submodules
+          command: |
+            git submodule update --init --recursive
+      - run:
+          name: Build docker image
+          command: |
+            docker build -f .circleci/gui_tests_Dockerfile -t gui-test-image .
+      - run:
+          name: Run tests & publish coverage
+          command: |
+            ci_env=`/bin/bash <(curl -s https://codecov.io/env)`
+            docker run $ci_env --privileged -t gui-test-image
 
   gui-build-image:
     machine:
@@ -124,11 +145,7 @@ jobs:
             docker buildx create --name gui
             docker buildx use gui
             docker buildx inspect --bootstrap
-            cd ~/project/ && docker buildx build --platform linux/arm/v7 -t respiraworks/gui:$CIRCLE_SHA1 --load -f .circleci/gui_Dockerfile .
-      - run:
-          name: Run tests
-          command: |
-            docker run -i respiraworks/gui:$CIRCLE_SHA1 software/gui/gui.sh --test
+            cd ~/project/ && docker buildx build --platform linux/arm/v7 -t respiraworks/gui:$CIRCLE_SHA1 --load -f .circleci/gui_image_Dockerfile .
       - run:
           name: Push docker image
           command: |
@@ -143,9 +160,12 @@ workflows:
     jobs:
       - dead-link-test
       - common-precommit-checks
-      - controller-test
+      - controller-tests
+      - gui-tests
       - gui-static-analysis
       - gui-build-image:
           requires:
             - common-precommit-checks
             - gui-static-analysis
+            - gui-tests
+            - controller-tests

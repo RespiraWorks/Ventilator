@@ -80,7 +80,7 @@ jobs:
             docker cp controller-1:/root/Ventilator/software/controller/controller_coverage software/controller
             docker cp controller-1:/root/Ventilator/software/controller/.pio software/controller
             cd software && bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports"
-            coveralls --build-root controller/.pio --gcov-options '\-lp'
+            # coveralls --build-root controller/.pio --gcov-options '\-lp'
   gui-static-analysis:
     machine:
       resource_class: 2xlarge

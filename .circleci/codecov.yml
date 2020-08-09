@@ -1,0 +1,3 @@
+ignore:
+  - "**/test/**/*"  # ignore folders and all its contents
+  - "**/third_party/**/*"  # ignore folders and all its contents

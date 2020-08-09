@@ -1,3 +1,0 @@
-ignore:
-  - "**/controller/test"  # ignore folders and all its contents
-  - "**/common/third_party"  # ignore folders and all its contents

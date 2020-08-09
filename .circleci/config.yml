@@ -75,7 +75,6 @@ jobs:
             docker build -f .circleci/controller_tests_Dockerfile -t controller-test-image .
       - run:
           name: Run tests
-          shell: /bin/bash
           command: |
             ci_env=`bash <(curl -s https://codecov.io/env)`
             docker run $ci_env --privileged --name controller-1 -t controller-test-image

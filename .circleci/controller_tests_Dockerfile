@@ -7,8 +7,11 @@ RUN pip install -U pip
 RUN pip install pre-commit==1.21.0 platformio
 RUN platformio update
 RUN pip install codecov
+RUN pip install cpp-coveralls
 
 WORKDIR /root/Ventilator
 COPY . ./
 CMD /bin/bash software/controller/test.sh
 CMD /bin/bash software/controller/controller_coverage.sh
+CMD bash <(curl -s https://codecov.io/bash)
+# CMD coveralls --build-root software/controller/.pio --gcov-options '\-lp'

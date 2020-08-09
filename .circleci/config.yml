@@ -76,10 +76,11 @@ jobs:
       - run:
           name: Run tests
           command: |
-            docker run --privileged --name controller-1 -t controller-test-image
-            docker cp controller-1:/root/Ventilator/software/controller/controller_coverage software/controller
-            docker cp controller-1:/root/Ventilator/software/controller/.pio software/controller
-            cd software && bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports"
+            ci_env=`bash <(curl -s https://codecov.io/env)`
+            docker run $ci_env --privileged --name controller-1 -t controller-test-image
+            # docker cp controller-1:/root/Ventilator/software/controller/controller_coverage software/controller
+            # docker cp controller-1:/root/Ventilator/software/controller/.pio software/controller
+            # cd software && bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports"
             # coveralls --build-root controller/.pio --gcov-options '\-lp'
   gui-static-analysis:
     machine:

@@ -64,10 +64,11 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Install codecov
+          name: Install coverage tools
           command: |
             sudo apt-get install python-pip
             sudo pip install codecov
+            sudo pip install cpp-coveralls
       - run:
           name: Run Docker build
           command: |
@@ -78,7 +79,8 @@ jobs:
             docker run --privileged --name controller-1 -t controller-test-image
             docker cp controller-1:/root/Ventilator/software/controller/controller_coverage software/controller
             docker cp controller-1:/root/Ventilator/software/controller/.pio software/controller
-            bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports"
+            cd software && bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports"
+            coveralls --build-root controller/.pio --gcov-options '\-lp'
   gui-static-analysis:
     machine:
       resource_class: 2xlarge

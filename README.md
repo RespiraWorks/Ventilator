@@ -1,6 +1,6 @@
 # RespiraWorks Open Source Ventilator
 
-[![Open Source Love svg1](https://badges.frapsoft.com/os/v1/open-source.svg?v=103)](https://github.com/ellerbrock/open-source-badges/)
+[![Open Source Love](https://badges.frapsoft.com/os/v1/open-source.png?v=103)](https://github.com/ellerbrock/open-source-badges/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![CircleCI Build Status](https://circleci.com/gh/RespiraWorks/Ventilator.svg?style=shield)](https://circleci.com/gh/RespiraWorks/Ventilator/tree/master)
 [![Coverage Status](https://coveralls.io/repos/github/RespiraWorks/Ventilator/badge.svg?branch=master)](https://coveralls.io/github/RespiraWorks/Ventilator?branch=master)

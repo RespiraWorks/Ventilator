@@ -14,4 +14,4 @@ COPY . ./
 CMD /bin/bash software/controller/test.sh
 CMD /bin/bash software/controller/controller_coverage.sh
 CMD coveralls --build-root software/controller/.pio --gcov-options '\-lp'
-CMD /bin/bash <(curl -s https://codecov.io/bash)
+CMD /bin/bash /bin/bash <(curl -s https://codecov.io/bash)

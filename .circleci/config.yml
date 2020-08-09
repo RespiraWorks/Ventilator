@@ -76,7 +76,8 @@ jobs:
           name: Run tests
           command: |
             docker run --privileged --name controller-1 -t controller-test-image
-            docker cp controller-1:/root/Ventilator/software/controller/controller_coverage .
+            docker cp controller-1:/root/Ventilator/software/controller/controller_coverage software/controller
+            docker cp controller-1:/root/Ventilator/software/controller/.pio software/controller
             bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports"
   gui-static-analysis:
     machine:

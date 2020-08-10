@@ -54,36 +54,6 @@ jobs:
             git reset --soft $merge_base
             pre-commit run --show-diff-on-failure --files $changed_files
 
-  # This job creates an image that has the necessary tools to build and test the controller code, then runs it.
-  controller-test:
-    # See https://circleci.com/docs/2.0/executor-types/#docker-benefits-and-limitations
-    # We use a machine executor here because we must run the container in privileged mode.
-    # This is because LeakSanitizer, which runs during the build, requires ptrace.
-    machine:
-      image: ubuntu-1604:201903-01
-    steps:
-      - checkout
-      - run:
-          name: Install coverage tools
-          command: |
-            sudo apt-get install python-pip
-            sudo pip install codecov
-            sudo pip install cpp-coveralls
-      - run:
-          name: Run Docker build
-          command: |
-            docker build -f .circleci/controller_tests_Dockerfile -t controller-test-image .
-      - run:
-          name: Run tests
-          command: |
-            docker run --privileged --name controller-1 -t controller-test-image
-            # ci_env=`/bin/bash <(curl -s https://codecov.io/env)`
-            # docker run $ci_env --privileged --name controller-1 -t controller-test-image
-            # docker cp controller-1:/root/Ventilator/software/controller/controller_coverage software/controller
-            # docker cp controller-1:/root/Ventilator/software/controller/.pio software/controller
-            # cd software && bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports"
-            # coveralls --build-root controller/.pio --gcov-options '\-lp'
-            # /bin/bash <(curl -s https://codecov.io/env)
   gui-static-analysis:
     machine:
       resource_class: 2xlarge
@@ -100,6 +70,35 @@ jobs:
           name: Run cppcheck on /software/gui
           command: |
             cd ~/project/software/gui && cppcheck -ithird_party . --error-exitcode=1 && cd -
+
+  # Runs all unit tests and publishes code coverage results
+  unit-tests:
+    # See https://circleci.com/docs/2.0/executor-types/#docker-benefits-and-limitations
+    # We use a machine executor here because we must run the container in privileged mode.
+    # This is because LeakSanitizer, which runs during the build, requires ptrace.
+    machine:
+      image: ubuntu-1604:201903-01
+    steps:
+      - checkout
+      - run:
+          name: Checkout submodules
+          command: |
+              git submodule update --init --recursive
+      - run:
+          name: Build docker image
+          command: |
+            docker build -f .circleci/controller_tests_Dockerfile -t controller-test-image .
+      - run:
+          name: Run tests & publish coverage
+          command: |
+            ci_env=`/bin/bash <(curl -s https://codecov.io/env)`
+            docker run $ci_env --privileged --name controller-1 -t controller-test-image
+            # docker run $ci_env --privileged --name controller-1 -t controller-test-image
+            # docker cp controller-1:/root/Ventilator/software/controller/controller_coverage software/controller
+            # docker cp controller-1:/root/Ventilator/software/controller/.pio software/controller
+            # cd software && bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports"
+            # coveralls --build-root controller/.pio --gcov-options '\-lp'
+            # /bin/bash <(curl -s https://codecov.io/env)
 
   gui-build-image:
     machine:
@@ -156,7 +155,7 @@ workflows:
     jobs:
       - dead-link-test
       - common-precommit-checks
-      - controller-test
+      - unit-tests
       - gui-static-analysis
       - gui-build-image:
           requires:

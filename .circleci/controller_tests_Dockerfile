@@ -1,6 +1,6 @@
 # This Dockerfile creates an image that has the necessary tools to build and test the controller code.
 FROM ubuntu:bionic
-RUN apt-get update && apt-get install build-essential python-pip lcov git -y
+RUN apt-get update && apt-get install build-essential python-pip lcov git curl -y
 RUN pip install -U pip
 
 # NOTE: pre-commit version is pinned to prevent installing a Python 3-only version.
@@ -11,7 +11,9 @@ RUN pip install cpp-coveralls
 
 WORKDIR /root/Ventilator
 COPY . ./
+CMD /bin/bash software/gui/gui.sh --install
+CMD /bin/bash software/gui/gui.sh --test
 CMD /bin/bash software/controller/test.sh
 CMD /bin/bash software/controller/controller_coverage.sh
 CMD coveralls --build-root software/controller/.pio --gcov-options '\-lp'
-CMD /bin/bash /bin/bash <(curl -s https://codecov.io/bash)
+RUN bash <(curl -s https://codecov.io/bash) || echo 'Codecov did not collect coverage reports'

@@ -1,5 +1,5 @@
 # This Dockerfile creates an image that has the necessary tools to build and test the controller code.
-FROM ubuntu:bionic
+FROM debian:buster
 RUN apt-get update && apt-get install build-essential python-pip lcov git curl -y
 RUN pip install -U pip
 
@@ -16,4 +16,4 @@ CMD /bin/bash software/gui/gui.sh --test
 CMD /bin/bash software/controller/test.sh
 CMD /bin/bash software/controller/controller_coverage.sh
 CMD coveralls --build-root software/controller/.pio --gcov-options '\-lp'
-CMD /bin/bash bash <(curl -s https://codecov.io/bash) || echo 'Codecov did not collect coverage reports'
+#CMD /bin/bash bash <(curl -s https://codecov.io/bash) || echo 'Codecov did not collect coverage reports'

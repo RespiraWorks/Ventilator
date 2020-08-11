@@ -1,0 +1,52 @@
+codecov:
+  require_ci_to_pass: yes
+
+coverage:
+  status:
+    project:
+      default: off
+      controller:
+        target: auto
+        precision: 5
+        round: down
+        range: "70...100"
+        flags:
+          - controller
+      gui:
+        target: auto
+        precision: 5
+        round: down
+        range: "70...100"
+        flags:
+          - gui
+
+comment:
+  layout: "reach, diff, flags, files"
+  behavior: new
+  require_changes: false
+  require_base: yes
+  require_head: yes
+  branches: null
+
+flags:
+  controller:
+    paths:
+      - software/controller
+    carryforward: false
+  gui:
+    paths:
+      - software/gui
+    carryforward: false
+
+parsers:
+  gcov:
+    branch_detection:
+      conditional: yes
+      loop: yes
+      method: no
+      macro: no
+
+ignore:
+  - "**/tests"
+  - "**/third_party"
+  - "**/test"

@@ -153,11 +153,12 @@ jobs:
 workflows:
   commit:
     jobs:
-      - dead-link-test
-      - common-precommit-checks
+      #- dead-link-test
+      #- common-precommit-checks
       - unit-tests
-      - gui-static-analysis
-      - gui-build-image:
-          requires:
-            - common-precommit-checks
-            - gui-static-analysis
+      #- gui-static-analysis
+      #- gui-build-image:
+      #    requires:
+      #      - common-precommit-checks
+      #      - gui-static-analysis
+      #      - unit-tests

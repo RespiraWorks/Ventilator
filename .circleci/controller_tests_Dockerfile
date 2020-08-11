@@ -12,4 +12,4 @@ WORKDIR /root/Ventilator
 COPY . ./
 CMD /bin/bash software/controller/test.sh \
     && software/controller/controller_coverage.sh \
-    && coveralls -y .circleci/.coveralls.yml --build-root software/controller -e test -e libdeps -E ".*output_export.c" --gcov-options '\-lp'
+    && coveralls -y .circleci/.coveralls.yml --build-root software/controller -E ".*test.*" -E ".*libdeps.*" -E ".*output_export.c" --gcov-options '\-lp'

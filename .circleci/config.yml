@@ -160,7 +160,7 @@ workflows:
       #- dead-link-test
       #- common-precommit-checks
       - controller-tests
-      - gui-tests
+      # - gui-tests
       #- gui-static-analysis
       #- gui-build-image:
       #    requires:

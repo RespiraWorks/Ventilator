@@ -121,16 +121,17 @@ Pressure Sensors::ReadPressureSensor(Sensor s) const {
 float Sensors::ReadOxygenSensor(const Pressure p_ambient) const {
   // Teledyne R24-compatible Electrochemical Cell Oxygen Sensor
   // http://www.medicalsolutiontechnology.com/wp-content/uploads/2012/09/GO-04-DATA-SHEET.pdf
-  // Sensitivity of 0.061V/fio2, where fio2 is 0.0 to 1.0, at pressure = 1atm
-  // PCB has an op-amp to gain the output up by 50V/V
-  // This gives about 3.0V full scale.
+  // Sensitivity of 0.060V/fio2, where fio2 is 0.0 to 1.0, at pressure = 1atm
+  // https://www.apogeeinstruments.com/content/SO-100-200-spec-sheet.pdf:
+  // sensitivity similar to SO-210-SS PCB has an op-amp to gain the output up by
+  // 50V/V This gives about 3.0V full scale.
 
   // Standard air O2 concentration. This assumes that calibration occured with
   // pure air, meaning the system has been filled with air only.
   static const float kO2ConcentrationInAir{0.21f};
 
   static const float kAmplifierGain{50.0f};
-  static const float kOxygenSensorGain{0.061f};
+  static const float kOxygenSensorGain{0.060f};
 
   // TODO: raise alarm if fio2 is out of expected (0,1) range
   return (Hal.analogRead(PinFor(Sensor::kFIO2)) -

@@ -87,7 +87,7 @@ jobs:
       - run:
           name: Run tests & publish coverage
           command: |
-            run --privileged -t controller-test-image
+            docker run --privileged -t controller-test-image
 
   gui-tests:
     machine:

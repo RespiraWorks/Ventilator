@@ -45,6 +45,7 @@ Specific tasks are captured as GitHub Issues in the following milestones:
  - [v0.2 GUI](https://github.com/RespiraWorks/Ventilator/milestone/12)
  - [v0.2 Alarms](https://github.com/RespiraWorks/Ventilator/milestone/11)
  - [Pressure Assist Mode](https://github.com/RespiraWorks/Ventilator/milestone/8)
+ - **HFNC mode** - deleted milestone (August 2020)
  - (stretch) [Self-test mode](https://github.com/RespiraWorks/Ventilator/milestone/10)
  - (stretch) [v0.2 Controller](https://github.com/RespiraWorks/Ventilator/milestone/13)
 

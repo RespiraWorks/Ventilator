@@ -12,4 +12,6 @@ COPY . ./
 CMD ["/bin/bash", "software/gui/gui.sh --install \
     && software/gui/gui.sh --build \
     && software/gui/gui.sh --test \
-    && /bin/bash <(curl -s https://codecov.io/bash)"]
+    && curl https://codecov.io/bash > codecov_uploader.sh \
+    && chmod +x codecov_uploader.sh \
+    && ./codecov_uploader.sh"]

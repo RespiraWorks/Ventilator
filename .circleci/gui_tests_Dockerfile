@@ -13,8 +13,6 @@ CMD /bin/bash \
     software/gui/gui.sh --install && \
     software/gui/gui.sh --build && \
     software/gui/gui.sh --test && \
-    cp software/gui/build/tests/*.gcda . && \
-    cp software/gui/build/tests/*.gcno . && \
     curl https://codecov.io/bash > codecov_uploader.sh && \
     chmod +x codecov_uploader.sh && \
     ./codecov_uploader.sh

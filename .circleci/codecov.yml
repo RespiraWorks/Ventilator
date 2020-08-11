@@ -2,5 +2,11 @@ codecov:
   token: a570973b-0fb7-4c26-867c-ce2fc9d7458e
 
 ignore:
-  - "**/test/**/*"  # ignore folders and all its contents
-  - "**/third_party/**/*"  # ignore folders and all its contents
+  - "**/tests/**/*"
+  - "**/third_party/**/*"
+  - "**/moc_*.cpp"
+  - "/usr/**/*"
+
+fixes:
+  - "../../../common::software/common"
+  - "../../src::software/gui/src"

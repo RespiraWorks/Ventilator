@@ -4,16 +4,16 @@ FROM debian:buster
 
 RUN apt-get update && apt-get install build-essential python-pip lcov git curl -y \
     && pip install -U pip \
-    && pip install platformio codecov \
-    && platformio update
+    && pip install codecov
 
 WORKDIR /root/Ventilator
 COPY . ./
 CMD /bin/bash \
-    software/controller/test.sh && \
-    software/controller/controller_coverage.sh && \
-    cd software/controller && \
+    software/gui/gui.sh --install && \
+    software/gui/gui.sh --build && \
+    software/gui/gui.sh --test && \
+    cd software/gui/build/tests && \
     curl https://codecov.io/bash > codecov_uploader.sh && \
     chmod +x codecov_uploader.sh && \
     cat codecov_uploader.sh && \
-    ./codecov_uploader.sh -F controller
+    ./codecov_uploader.sh -F gui

@@ -7,6 +7,9 @@ TEMPLATE = app
 QT += testlib gui multimedia
 CONFIG += qt warn_on depend_includepath testcase
 
+QMAKE_CXXFLAGS += --coverage
+QMAKE_LFLAGS += --coverage
+
 SOURCES += tst_main.cpp
 HEADERS += \
   breath_signals_test.h \

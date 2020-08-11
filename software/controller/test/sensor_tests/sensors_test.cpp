@@ -61,7 +61,7 @@ static Voltage MPXV5004_PressureToVoltage(Pressure pressure) {
 // Offset is assumed to be 10 mV
 // Analog amplifier with gain 50 is used on the PCB
 static Voltage FIO2ToVoltage(float fio2, Pressure p_amb) {
-  return volts(fio2 * p_amb.atm() * 0.061f + 0.01f) * 50.0f;
+  return volts(fio2 * p_amb.atm() * 0.06f + 0.01f) * 50.0f;
 }
 
 // Function that helps change the readings by setting the pressure sensor pins,

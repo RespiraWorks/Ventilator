@@ -15,7 +15,6 @@ CMD /bin/bash software/gui/gui.sh --install \
     && software/gui/gui.sh --test \
     && software/controller/test.sh \
     && software/controller/controller_coverage.sh \
-    && coveralls --build-root software/controller --gcov-options '\-lp'
-
+    && coveralls --build-root software/controller/.pio/build --gcov-options '\-lp'
 
 ## && bash <(curl -s https://codecov.io/bash)

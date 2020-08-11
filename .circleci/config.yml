@@ -72,8 +72,7 @@ jobs:
           command: |
             cd ~/project/software/gui && cppcheck -ithird_party . --error-exitcode=1 && cd -
 
-  # Runs all unit tests and publishes code coverage results
-  unit-tests:
+  controller-tests:
     # See https://circleci.com/docs/2.0/executor-types/#docker-benefits-and-limitations
     # We use a machine executor here because we must run the container in privileged mode.
     # This is because LeakSanitizer, which runs during the build, requires ptrace.
@@ -82,18 +81,32 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Build docker image
+          command: |
+            docker build -f .circleci/controller_tests_Dockerfile -t controller-test-image .
+      - run:
+          name: Run tests & publish coverage
+          command: |
+            run --privileged -t controller-test-image
+
+  gui-tests:
+    machine:
+      image: ubuntu-1604:201903-01
+    steps:
+      - checkout
+      - run:
           name: Checkout submodules
           command: |
-              git submodule update --init --recursive
+            git submodule update --init --recursive
       - run:
           name: Build docker image
           command: |
-            docker build -f .circleci/unit_tests_Dockerfile -t unit-test-image .
+            docker build -f .circleci/gui_tests_Dockerfile -t gui-test-image .
       - run:
           name: Run tests & publish coverage
           command: |
             ci_env=`/bin/bash <(curl -s https://codecov.io/env)`
-            docker run $ci_env --privileged -t unit-test-image
+            docker run $ci_env --privileged -t gui-test-image
 
   gui-build-image:
     machine:
@@ -131,11 +144,7 @@ jobs:
             docker buildx create --name gui
             docker buildx use gui
             docker buildx inspect --bootstrap
-            cd ~/project/ && docker buildx build --platform linux/arm/v7 -t respiraworks/gui:$CIRCLE_SHA1 --load -f .circleci/gui_Dockerfile .
-      - run:
-          name: Run tests
-          command: |
-            docker run -i respiraworks/gui:$CIRCLE_SHA1 software/gui/gui.sh --test
+            cd ~/project/ && docker buildx build --platform linux/arm/v7 -t respiraworks/gui:$CIRCLE_SHA1 --load -f .circleci/gui_image_Dockerfile .
       - run:
           name: Push docker image
           command: |
@@ -150,10 +159,12 @@ workflows:
     jobs:
       #- dead-link-test
       #- common-precommit-checks
-      - unit-tests
+      - controller-tests
+      - gui-tests
       #- gui-static-analysis
       #- gui-build-image:
       #    requires:
       #      - common-precommit-checks
       #      - gui-static-analysis
-      #      - unit-tests
+      #      - gui-tests
+      #      - controller-tests

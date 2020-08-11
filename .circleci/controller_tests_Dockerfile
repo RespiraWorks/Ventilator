@@ -1,0 +1,15 @@
+# This Dockerfile creates an image that has the necessary tools to run unit tests and publish coverage reports
+
+FROM debian:buster
+
+# NOTE: pre-commit version is pinned to prevent installing a Python 3-only version.
+RUN apt-get update && apt-get install build-essential python-pip lcov git -y \
+    && pip install -U pip \
+    && pip install pre-commit==1.21.0 platformio cpp-coveralls \
+    && platformio update
+
+WORKDIR /root/Ventilator
+COPY . ./
+CMD /bin/bash software/controller/test.sh \
+    && software/controller/controller_coverage.sh \
+    && coveralls --build-root software/controller/.pio/build --gcov-options '\-lp'

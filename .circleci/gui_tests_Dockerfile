@@ -9,8 +9,8 @@ RUN apt-get update && apt-get install build-essential python-pip lcov git curl -
 
 WORKDIR /root/Ventilator
 COPY . ./
-CMD /bin/bash \ 
-    && software/gui/gui.sh --install \
+CMD /bin/bash
+    software/gui/gui.sh --install \
     && software/gui/gui.sh --build \
     && software/gui/gui.sh --test \
     && cp software/gui/build/tests/*.gcda . \

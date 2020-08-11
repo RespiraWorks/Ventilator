@@ -159,7 +159,7 @@ workflows:
     jobs:
       #- dead-link-test
       #- common-precommit-checks
-      - controller-tests
+      #- controller-tests
       - gui-tests
       #- gui-static-analysis
       #- gui-build-image:

@@ -12,4 +12,11 @@ WORKDIR /root/Ventilator
 COPY . ./
 CMD /bin/bash software/controller/test.sh \
     && software/controller/controller_coverage.sh \
-    && coveralls --build-root software/controller/.pio/build --gcov-options '\-lp'
+    && coveralls -t gAzLK7LL42kEJ2FMCj6ikfQwLFvoY94Tk \
+        --build-root software/controller \
+        -E ".*test.*" \
+        -E ".*libdeps.*" \
+        -E ".*third_party.*" \
+        -E ".*gui.*" \
+        -E ".*output_export.c" \
+        --gcov-options '\-lp'

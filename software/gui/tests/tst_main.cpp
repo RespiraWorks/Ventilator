@@ -1,9 +1,9 @@
 #include <QCoreApplication>
 #include <QtTest>
 
-#include "logger_test.h"
 #include "breath_signals_test.h"
 #include "latching_alarm_test.h"
+#include "logger_test.h"
 #include "patient_detached_alarm_test.h"
 
 int main(int argc, char *argv[]) {

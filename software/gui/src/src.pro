@@ -34,4 +34,5 @@ HEADERS += \
 
 SOURCES += gui_state_container.cpp \
   periodic_closure.cpp \
-  time_series_graph_painter.cpp
+  time_series_graph_painter.cpp \
+  logs.cpp

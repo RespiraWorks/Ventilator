@@ -38,14 +38,14 @@ We may have parts to send you from our inventory.
 | 3    |        1 | Roomba        | Filter               | $8/6pk           | [Z][3amzn] | removed from filter unit as delivered |
 | 4    |        1 | RespiraWorks  | Filter Inner Gasket  | $0.10 (material) | B          | make using item 6 below |
 | 5    |        1 | RespiraWorks  | Filter Outer Gasket  | $0.10 (material) | B          | make using item 6 below |
-| 6    | ~4 sq in | Amazon        | Gasket Material      | $0.10 (material) | [Z][6amzn] | cut with jigs to make items 4 and 5 |
+| 6    | ~4 sq in | McMaster-Carr | Gasket Material      | $22.22/ 12x12" sheet | [C][9mcmc] | cut with jigs to make items 4 and 5 |
 | 7    |        2 | McMaster-Carr | 96016A556            | $5.50/10pk       | [C][7mcmc] | thumbscrews |
 | 8    |        2 | McMaster-Carr | 94180A333            | $16.69/100pk     | [C][8mcmc] | thumbscrews |
 
 [1rw]: assets/SmallFilterHousing.stl
 [2rw]: assets/SmallFilterPatientConnector.stl
 [3amzn]: https://www.amazon.com/gp/product/B01KNZCW8E
-[6amzn]: https://www.amazon.com/gp/product/B07BKP6KFX
+[9mcmc]: https://www.mcmaster.com/8785K82-8785K822/
 [7mcmc]: https://www.mcmaster.com/96016A556-96016A831/
 [8mcmc]: https://www.mcmaster.com/94180A333/
 

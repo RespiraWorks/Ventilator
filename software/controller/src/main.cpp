@@ -59,6 +59,7 @@ static SensorsProto AsSensorsProto(const SensorReadings &r,
   proto.volume_ml = c.patient_volume.ml();
   proto.breath_id = c.breath_id;
   proto.flow_correction_ml_per_min = c.flow_correction.ml_per_min();
+  proto.fio2 = r.fio2;
   return proto;
 }
 

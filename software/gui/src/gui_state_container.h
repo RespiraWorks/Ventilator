@@ -17,6 +17,7 @@
 #include <QPointF>
 #include <QVector>
 #include <QtCore/QObject>
+#include <QtDebug>
 
 // A container for readable and writable state of the GUI.
 //
@@ -80,8 +81,7 @@ public:
         return VentMode::VentMode_HIGH_FLOW_NASAL_CANNULA;
       default:
         // Should never happen.
-        std::cerr << "Unexpected commanded_mode: " << commanded_mode_
-                  << std::endl;
+        qCritical() << "Unexpected commanded_mode: " << commanded_mode_;
         return VentMode::VentMode_PRESSURE_CONTROL;
       }
     }();

@@ -7,6 +7,9 @@
 #include "respira_connected_device.h"
 
 #include "logs.h"
+#include <QStandardPaths>
+#include <QtDebug>
+
 #include "time_series_graph.h"
 #include <QCommandLineParser>
 #include <QDebug>
@@ -48,7 +51,15 @@ void install_fonts() {
 }
 
 int main(int argc, char *argv[]) {
+  auto log_path =
+      QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
+  printf("Saving logs in %s\n", log_path.toLatin1().data());
+  QDir().mkpath(log_path);
+  FileLogger::singleton().set_path(log_path + "/gui.log");
   qInstallMessageHandler(logOutputToFile);
+
+  qInfo("Starting Ventilator GUI app");
+
   QGuiApplication app(argc, argv);
 
   app.setWindowIcon(QIcon(":/images/Logo.png"));
@@ -90,8 +101,8 @@ int main(int argc, char *argv[]) {
     std::vector<ControllerStatus> statuses;
     QFile file(":/sample-data/gui-sample-data.dat");
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-      std::cerr << "Failed to open sample data file";
-      return 1;
+      qCritical("Failed to open sample data file");
+      return EXIT_FAILURE;
     }
     while (!file.atEnd()) {
       QString line{file.readLine()};

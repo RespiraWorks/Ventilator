@@ -100,12 +100,16 @@ TEST(Units, Pressure) {
   EXPECT_FLOAT_EQ(kPa(1).kPa(), 1);
   EXPECT_FLOAT_EQ(kPa(1).cmH2O(), 10.1972f);
   EXPECT_FLOAT_EQ(cmH2O(1).cmH2O(), 1);
+  EXPECT_FLOAT_EQ(atm(1).atm(), 1);
+  EXPECT_FLOAT_EQ(atm(1).kPa(), 101.325f);
   EXPECT_FLOAT_EQ((kPa(1) - kPa(2)).kPa(), -1);
   EXPECT_FLOAT_EQ((cmH2O(1) + cmH2O(10)).cmH2O(), 11);
   EXPECT_FLOAT_EQ((kPa(1) - cmH2O(10.1972f)).kPa(), 0);
+  EXPECT_FLOAT_EQ((atm(1) - kPa(101.325f)).kPa(), 0);
 
   checkRelationalOperators(kPa);
   checkRelationalOperators(cmH2O);
+  checkRelationalOperators(atm);
   checkArithmeticOperators(kPa, &Pressure::kPa);
 
   EXPECT_FLOAT_EQ((cmH2O(2.5f) * 101.972f).kPa(), 25);

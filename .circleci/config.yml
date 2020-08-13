@@ -107,7 +107,7 @@ jobs:
           name: Run tests & publish coverage
           command: |
             ci_env=`/bin/bash <(curl -s https://codecov.io/env)`
-            docker run $ci_env --privileged -t gui-test-image
+            docker run $ci_env -t gui-test-image
 
   gui-build-image:
     machine:

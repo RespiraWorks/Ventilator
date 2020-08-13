@@ -8,7 +8,6 @@
 
 #include "logger.h"
 #include <QStandardPaths>
-#include <QtDebug>
 
 #include "time_series_graph.h"
 #include <QCommandLineParser>
@@ -76,6 +75,7 @@ int main(int argc, char *argv[]) {
 #endif
 
   INFO("VentilatorUI starting");
+  INFO("  git version: {}", GIT_VERSION);
 
   QGuiApplication app(argc, argv);
   app.setWindowIcon(QIcon(":/images/Logo.png"));

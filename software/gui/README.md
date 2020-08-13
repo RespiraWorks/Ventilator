@@ -111,14 +111,12 @@ To build the application, run:
 ./gui.sh --build
 ```
 
-When building natively on the *RPi* you may run out of virtual memory. This is because the build
-script is trying to hog too many resources. If your build fails for this reason, you should still
-have the build configured correctly by the script and you can do:
+You can run this latest step with `-j` option to make it faster, but when compiling on *RPi* you may run out of virtual
+memory.
 
-```
-cd build
-make
-```
+You can also compile with `--debug` option. You will see additional information on the screen, and logs
+will be more detailed (`debug` and `trace` level messages will be written), and will output to console
+in addition to file.
 
 ### Mac OS X
 
@@ -152,16 +150,15 @@ sudo apt-get install qtcreator
 ### Running natively
 
 Upon a successful compilation, the executable file is accessible on Linux as:
+
 ```
-./build/app/ProjectVentilatorGUI --serial-port /dev/ttyS0
+./gui.sh --run --serial-port /dev/ttyS0
 ```
+
 Where you may specify whatever serial port the ventilator controller is for the GUI to communicate
 with. The above has been the correct port for all prototypes tested to date.
 
-On Mac OS X, you would run it as as:
-```
-./build/app/ProjectVentilatorGUI.app/Contents/MacOS/ProjectVentilatorGUI
-```
+If you do not specify a serial-port, the app will run with pre-recorded data.
 
 If you are running the application remotely, via ssh for example, don't forget to set
 the display environment variable:
@@ -171,13 +168,27 @@ export DISPLAY=:0
 
 ### Testing
 
-To run unit tests as a developer, type:
+To run unit tests, type:
 
 ```
 ./gui.sh --build && ./gui.sh --test
 ```
 
-**TODO:** add something about manual testing with fake data.
+### Logs & debugging
+
+Upon start, the application will log the git hash of the commit it was built from.
+
+Timestamped logs written by the app should be found locally at:
+
+```
+$HOME/.local/share/RespiraWorks/VentilatorUI/gui.log
+```
+
+If app was built in release mode, messages down to `info` level should be seen. In debug mode, `debug` as well as
+`trace` level messages will also be written to log.
+
+If you add additional debug messages, refer to [logger.h](src/logger.h). This is a thread-safe logger.
+Log macros accept [fmt](https://github.com/fmtlib/fmt) syntax.
 
 ### Screen resolution issues
 

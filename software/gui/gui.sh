@@ -85,6 +85,11 @@ if [ "$1" == "--install" ]; then
   fi
 
   if [ "$PLATFORM" == "Linux" ]; then
+    if [ "$EUID" -ne 0 ]
+      then echo "Please run install with root privileges!"
+      exit 1
+    fi
+
     apt-get update &&
       apt-get install -y \
         build-essential \
@@ -127,6 +132,12 @@ fi
 #########
 
 if [ "$1" == "--build" ]; then
+
+  if [ "$EUID" -eq 0 ]
+    then echo "Please do not run build with root privileges!"
+    exit 1
+  fi
+
   create_clean_directory build
   qmake -unset QMAKEFEATURES
   git submodule update --init --recursive
@@ -153,6 +164,12 @@ fi
 
 if [ "$1" == "--test" ]; then
 
+  if [ "$EUID" -eq 0 ]
+    then echo "Please do not run tests with root privileges!"
+    exit 1
+  fi
+
+
   pushd build
 
   if [ "$PLATFORM" == "Darwin" ]; then
@@ -176,6 +193,11 @@ fi
 #######
 
 if [ "$1" == "--run" ]; then
+
+  if [ "$EUID" -eq 0 ]
+    then echo "Please do not run the app with root privileges!"
+    exit 1
+  fi
 
   pushd build/app
 

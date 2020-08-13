@@ -40,6 +40,7 @@ The following options are provided:
   --run       Run the application, forwards app options:
       [--startup-only] - just start up momentarily and shutdown
       [--serial-port]  - port for communicating with controller
+  -f          Forces run, bypassing root privilege check. For CI only. Please don't do this!
 EOF
 }
 
@@ -85,8 +86,8 @@ if [ "$1" == "--install" ]; then
   fi
 
   if [ "$PLATFORM" == "Linux" ]; then
-    if [ "$EUID" -ne 0 ]
-      then echo "Please run install with root privileges!"
+    if [ "$EUID" -ne 0 ]; then
+      echo "Please run install with root privileges!"
       exit 1
     fi
 
@@ -133,8 +134,8 @@ fi
 
 if [ "$1" == "--build" ]; then
 
-  if [ "$EUID" -eq 0 ]
-    then echo "Please do not run build with root privileges!"
+  if [ "$EUID" -eq 0 ] && [ "$2" != "-f" ]; then
+    echo "Please do not run build with root privileges!"
     exit 1
   fi
 
@@ -164,11 +165,10 @@ fi
 
 if [ "$1" == "--test" ]; then
 
-  if [ "$EUID" -eq 0 ]
-    then echo "Please do not run tests with root privileges!"
+  if [ "$EUID" -eq 0 ] && [ "$2" != "-f" ]; then
+    echo "Please do not run tests with root privileges!"
     exit 1
   fi
-
 
   pushd build
 
@@ -176,7 +176,7 @@ if [ "$1" == "--test" ]; then
     make check
   fi
   if [ "$PLATFORM" == "Linux" ]; then
-    if [ "$2" == "-x" ]; then
+    if [ "$2" == "-x" ] || [ "$3" == "-x" ]; then
       Xvfb :1 &
       DISPLAY=:1 make check
     else
@@ -194,8 +194,8 @@ fi
 
 if [ "$1" == "--run" ]; then
 
-  if [ "$EUID" -eq 0 ]
-    then echo "Please do not run the app with root privileges!"
+  if [ "$EUID" -eq 0 ] && [ "$2" != "-f" ]; then
+    echo "Please do not run the app with root privileges!"
     exit 1
   fi
 

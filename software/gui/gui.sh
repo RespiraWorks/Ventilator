@@ -1,26 +1,62 @@
 #!/bin/bash
 
 # This script is designed for local unix usage.
-# ./gui.sh --build
+# ./gui.sh --help
 
+# Fail if any command fails
 set -e
 set -o pipefail
+
+# Print each command as it executes
 set -o xtrace
+
+# This script should work no matter where you call it from.
 cd "$(dirname "$0")"
+
+# Check if Darwin or Linux
+PLATFORM="$(uname -s)"
+if [ $PLATFORM != "Darwin" ] && [ $PLATFORM != "Linux" ]; then
+  echo "Error: This script only supports 'Darwin' or 'Linux'. You passed $PLATFORM."
+  exit 1
+fi
+
 
 #########
 # UTILS #
 #########
 
-create_clean_directory(){
+print_help() {
+    cat <<EOF
+RespiraWorks VentilatorUI build utilities.
+The following options are provided:
+  --help      Display this dialog
+  --install   Install dependencies for your platform [$PLATFORM]
+  --clean     Clean build directory and deinit submodules
+  --build     Build the gui to /build, options:
+      [--relase/--debug] - what it says
+      [-j]               - parallel build
+  --test      Run the unit QTest autotest suite
+  --run       Run the application, forwards options:
+      [--startup-only] - just start up momentarily and shutdown
+      [--serial-port]  - port for communicating with controller
+EOF
+}
+
+clean_dir() {
   dir_name=$1
   if [ -d "$dir_name" ]; then
     echo "Removing $dir_name"
     rm -rf "$dir_name"
+    return 0
   elif [ -f "$dir_name" ]; then
     echo "File with this name already exists, not a directory."
-    exit
+    return 1
   fi
+}
+
+create_clean_directory() {
+  dir_name=$1
+  clean_dir "$dir_name"
   if mkdir "$dir_name"; then
     echo "Clean directory created: $dir_name"
     return 0
@@ -30,95 +66,125 @@ create_clean_directory(){
   fi
 }
 
-
-#########
-# SETUP #
-#########
-
-# Check if Darwin or Linux
-PLATFORM="$(uname -s)"
-if [ $PLATFORM != "Darwin" ] && [ $PLATFORM != "Linux" ]; then
-  echo "Error: This script only supports 'Darwin' or 'Linux'. You passed $PLATFORM."
-  exit 1
-fi
-
 ########
 # HELP #
 ########
 
-if [ "$1" == "--help" ] ; then
-cat << EOF
---help      Display this dialog
---install   Install dependencies for your platform [$PLATFORM]
---build     Build the gui to /build
---test      Run the unit QTest autotest suite
-EOF
+if [ "$1" == "--help" ]; then
+  print_help
 fi
 
 ###########
 # INSTALL #
 ###########
 
-if [ "$1" == "--install" ] ; then
+if [ "$1" == "--install" ]; then
   if [ "$PLATFORM" == "Darwin" ]; then
     brew install qt5
   fi
 
   if [ "$PLATFORM" == "Linux" ]; then
-    apt-get update && \
-    apt-get install -y \
-    build-essential \
-    git \
-    qt5-default \
-    qtbase5-dev-tools \
-    qtdeclarative5-dev \
-    qtmultimedia5-dev \
-    libqt5multimediawidgets5 \
-    libqt5multimedia5 \
-    libqt5multimedia5-plugins \
-    libqt5multimediaquick5 \
-    pulseaudio \
-    qml-module-qtcharts \
-    qtquickcontrols2-5-dev \
-    qml-module-qtquick-controls \
-    qml-module-qtquick-controls2 \
-    qml-module-qtmultimedia \
-    libqt5serialport5-dev \
-    libqt5serialport5 \
-    qtdeclarative5-dev-tools \
-    xvfb
+    apt-get update &&
+      apt-get install -y \
+        build-essential \
+        git \
+        qt5-default \
+        qtbase5-dev-tools \
+        qtdeclarative5-dev \
+        qtmultimedia5-dev \
+        libqt5multimediawidgets5 \
+        libqt5multimedia5 \
+        libqt5multimedia5-plugins \
+        libqt5multimediaquick5 \
+        pulseaudio \
+        qml-module-qtcharts \
+        qtquickcontrols2-5-dev \
+        qml-module-qtquick-controls \
+        qml-module-qtquick-controls2 \
+        qml-module-qtmultimedia \
+        libqt5serialport5-dev \
+        libqt5serialport5 \
+        qtdeclarative5-dev-tools \
+        xvfb
   fi
+  exit 0
+fi
+
+#########
+# CLEAN #
+#########
+
+if [ "$1" == "--clean" ]; then
+  clean_dir build
+  qmake -unset QMAKEFEATURES
+  git submodule deinit .
+  exit 0
 fi
 
 #########
 # BUILD #
 #########
 
-if [ "$1" == "--build" ] ; then
+if [ "$1" == "--build" ]; then
   create_clean_directory build
   qmake -unset QMAKEFEATURES
   git submodule update --init --recursive
-  if [ "$2" == "--debug" ] ; then
-    cd build && qmake "CONFIG+=debug" .. && make -j && cd -
-  else
-    cd build && qmake "CONFIG+=release" .. && make -j && cd -
+
+  config_opt="CONFIG+=release"
+  if [ "$2" == "--debug" ] || [ "$3" == "--debug" ]; then
+    config_opt="CONFIG+=debug"
   fi
+
+  j_opt=""
+  if [ "$2" == "-j" ] || [ "$3" == "-j" ]; then
+    j_opt="-j"
+  fi
+
+  pushd build && qmake $config_opt .. && make $j_opt && popd
+
+  exit 0
 fi
 
 ########
 # TEST #
 ########
 
-if [ "$1" == "--test" ] ; then
+if [ "$1" == "--test" ]; then
 
-  cd build
+  pushd build
 
   if [ "$PLATFORM" == "Darwin" ]; then
     make check
   fi
   if [ "$PLATFORM" == "Linux" ]; then
-    Xvfb :1 &
-    DISPLAY=:1 make check
+    make check
+    #Xvfb :1 &
+    #DISPLAY=:1 make check
   fi
-  cd -
+  popd
+  exit 0
 fi
+
+
+
+#######
+# RUN #
+#######
+
+if [ "$1" == "--run" ]; then
+
+  pushd build/app
+
+  if [ "$PLATFORM" == "Darwin" ]; then
+    ./ProjectVentilatorGUI.app/Contents/MacOS/ProjectVentilatorGUI "${@:2}"
+  fi
+  if [ "$PLATFORM" == "Linux" ]; then
+    ./ProjectVentilatorGUI "${@:2}"
+  fi
+  popd
+  exit 0
+fi
+
+echo No valid options provided :\(
+print_help
+exit 1

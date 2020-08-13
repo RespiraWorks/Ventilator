@@ -51,6 +51,9 @@ void install_fonts() {
 }
 
 int main(int argc, char *argv[]) {
+  QGuiApplication::setOrganizationName("RespiraWorks");
+  QGuiApplication::setApplicationName("VentilatorUI");
+
   auto log_path =
       QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
   printf("Saving logs in %s\n", log_path.toLatin1().data());
@@ -58,10 +61,10 @@ int main(int argc, char *argv[]) {
   FileLogger::singleton().set_path(log_path + "/gui.log");
   qInstallMessageHandler(logOutputToFile);
 
-  qInfo("Starting Ventilator GUI app");
+  qCritical("Starting Ventilator GUI app 1");
+  qDebug() << "Starting Ventilator GUI app 2";
 
   QGuiApplication app(argc, argv);
-
   app.setWindowIcon(QIcon(":/images/Logo.png"));
 
   QCommandLineParser parser;
@@ -176,6 +179,8 @@ int main(int argc, char *argv[]) {
   engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
 
   if (parser.isSet(startupOnlyOption)) {
+    qCritical(
+        "VentilatorUI stated with startup-only. Shutting down immediately.");
     return EXIT_SUCCESS;
   }
 

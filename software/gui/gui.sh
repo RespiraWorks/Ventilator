@@ -31,12 +31,13 @@ RespiraWorks VentilatorUI build utilities.
 The following options are provided:
   --help      Display this dialog
   --install   Install dependencies for your platform [$PLATFORM]
-  --clean     Clean build directory and deinit submodules
+  --clean     Clean build directory and deinitialize git submodules
   --build     Build the gui to /build, options:
       [--relase/--debug] - what it says
       [-j]               - parallel build
-  --test      Run the unit QTest autotest suite
-  --run       Run the application, forwards options:
+  --test      Run the unit QTest autotest suite, options:
+      [-x]               - forwards to Xvfb (for CLI-only testing)
+  --run       Run the application, forwards app options:
       [--startup-only] - just start up momentarily and shutdown
       [--serial-port]  - port for communicating with controller
 EOF
@@ -145,6 +146,7 @@ if [ "$1" == "--build" ]; then
   exit 0
 fi
 
+
 ########
 # TEST #
 ########
@@ -157,14 +159,16 @@ if [ "$1" == "--test" ]; then
     make check
   fi
   if [ "$PLATFORM" == "Linux" ]; then
-    make check
-    #Xvfb :1 &
-    #DISPLAY=:1 make check
+    if [ "$2" == "-x" ]; then
+      Xvfb :1 &
+      DISPLAY=:1 make check
+    else
+      make check
+    fi
   fi
   popd
   exit 0
 fi
-
 
 
 #######
@@ -177,12 +181,13 @@ if [ "$1" == "--run" ]; then
 
   if [ "$PLATFORM" == "Darwin" ]; then
     ./ProjectVentilatorGUI.app/Contents/MacOS/ProjectVentilatorGUI "${@:2}"
+    exit 0
   fi
   if [ "$PLATFORM" == "Linux" ]; then
     ./ProjectVentilatorGUI "${@:2}"
+    exit 0
   fi
   popd
-  exit 0
 fi
 
 echo No valid options provided :\(

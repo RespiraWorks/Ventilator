@@ -6,7 +6,7 @@
 #include "periodic_closure.h"
 #include "respira_connected_device.h"
 
-#include "logs.h"
+#include "logger.h"
 #include <QStandardPaths>
 #include <QtDebug>
 
@@ -41,28 +41,41 @@ QObject *gui_state_instance(QQmlEngine *engine, QJSEngine *scriptEngine) {
 
 void install_fonts() {
   if (QFontDatabase::addApplicationFont(":/fonts/NotoSans-Regular.ttf") == -1)
-    qWarning() << "Failed to load NatoSans-Regular.ttf";
+    WARN("Failed to load NatoSans-Regular.ttf");
 
   if (QFontDatabase::addApplicationFont(":/fonts/Oxygen-Regular.ttf") == -1)
-    qWarning() << "Failed to load Oxygen-Regular.ttf";
+    WARN("Failed to load Oxygen-Regular.ttf");
 
   if (QFontDatabase::addApplicationFont(":/fonts/Oxygen-Bold.ttf") == -1)
-    qWarning() << "Failed to load Oxygen-Bold.ttf";
+    WARN("Failed to load Oxygen-Bold.ttf");
+}
+
+void init_logger(bool debug_mode) {
+  auto log_path =
+      QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
+  QDir().mkpath(log_path);
+  auto log_file = log_path + "/gui.log";
+  printf("Saving logs in %s\n", log_file.toLatin1().data());
+  if (debug_mode) {
+    CustomLogger::initLogger(spdlog::level::trace, true,
+                             log_file.toStdString());
+  } else {
+    CustomLogger::initLogger(spdlog::level::info, false,
+                             log_file.toStdString());
+  }
 }
 
 int main(int argc, char *argv[]) {
   QGuiApplication::setOrganizationName("RespiraWorks");
   QGuiApplication::setApplicationName("VentilatorUI");
 
-  auto log_path =
-      QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
-  printf("Saving logs in %s\n", log_path.toLatin1().data());
-  QDir().mkpath(log_path);
-  FileLogger::singleton().set_path(log_path + "/gui.log");
-  qInstallMessageHandler(logOutputToFile);
+#ifdef QT_DEBUG
+  init_logger(true);
+#else
+  init_logger(false);
+#endif
 
-  qCritical("Starting Ventilator GUI app 1");
-  qDebug() << "Starting Ventilator GUI app 2";
+  INFO("VentilatorUI starting");
 
   QGuiApplication app(argc, argv);
   app.setWindowIcon(QIcon(":/images/Logo.png"));
@@ -104,7 +117,7 @@ int main(int argc, char *argv[]) {
     std::vector<ControllerStatus> statuses;
     QFile file(":/sample-data/gui-sample-data.dat");
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-      qCritical("Failed to open sample data file");
+      CRIT("Failed to open sample data file");
       return EXIT_FAILURE;
     }
     while (!file.atEnd()) {
@@ -179,8 +192,7 @@ int main(int argc, char *argv[]) {
   engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
 
   if (parser.isSet(startupOnlyOption)) {
-    qCritical(
-        "VentilatorUI stated with startup-only. Shutting down immediately.");
+    CRIT("VentilatorUI stated with startup-only. Shutting down immediately.");
     return EXIT_SUCCESS;
   }
 

@@ -22,7 +22,6 @@ HEADERS += \
   controller_history.h \
   gui_state_container.h \
   latching_alarm.h \
-  logs.h \
   patient_detached_alarm.h \
   periodic_closure.h \
   pip_exceeded_alarm.h \
@@ -30,9 +29,10 @@ HEADERS += \
   respira_connected_device.h \
   simple_clock.h \
   time_series_graph.h \
-  time_series_graph_painter.h
+  time_series_graph_painter.h \
+  logger.h
 
 SOURCES += gui_state_container.cpp \
   periodic_closure.cpp \
   time_series_graph_painter.cpp \
-  logs.cpp
+  logger.cpp

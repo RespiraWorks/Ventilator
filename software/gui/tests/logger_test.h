@@ -1,6 +1,6 @@
 #pragma once
 
-#include "logs.h"
+#include "logger.h"
 #include <QCoreApplication>
 #include <QStandardPaths>
 #include <QtDebug>
@@ -16,16 +16,23 @@ private slots:
   void initTestCase() {
     auto log_path =
         QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
-    printf("Saving logs in %s\n", log_path.toLatin1().data());
     QDir().mkpath(log_path);
-    FileLogger::singleton().set_path(log_path + "/gui.log");
-    qInstallMessageHandler(logOutputToFile);
+    auto log_file = log_path + "/gui.log";
+    printf("Saving logs in %s\n", log_file.toLatin1().data());
+    CustomLogger::initLogger(spdlog::level::trace, true,
+                             log_file.toStdString());
   }
-  void cleanupTestCase() {}
+  void cleanupTestCase() { CustomLogger::closeLogger(); }
 
-  void testWriteInfo() { qInfo("Info test message"); }
+  void testWriteCritical() { CRIT("Critical test message"); }
 
-  void testWriteWarning() { qWarning("Warning test message"); }
+  void testWriteError() { ERR("Error test message"); }
 
-  void testWriteCritical() { qCritical("Critical test message"); }
+  void testWriteWarning() { WARN("Warning test message"); }
+
+  void testWriteInfo() { INFO("Info test message"); }
+
+  void testWriteDebug() { DBG("Debug test message"); }
+
+  void testWriteTrace() { TRC("Trace test message"); }
 };

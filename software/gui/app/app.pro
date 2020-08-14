@@ -1,3 +1,5 @@
+DEFINES += GIT_VERSION='"\\\"$$system(git rev-parse HEAD)\\\""'
+
 include( ../defaults.pri )
 
 ! include( ../common.pri ) {

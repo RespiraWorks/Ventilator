@@ -23,7 +23,12 @@ or, for a more scalable setup, [this](https://www.amazon.com/dp/B07XF2SLQ1).
 
 [controller_debug.py](controller_debug.py)
 
-**#TODO:** add some instructions on how to use it
+This Python script can be used to interface with the controller via the virtual serial
+port that is created when the USB cable to the Nucleo board is plugged in.
+
+There is a [brief tutorial](controller_debug.md) on how to use it.
+
+This interface is the basis for automated performance tests, such as [run_covent_tests.py](run_covent_tests.py).
 
 ### decoder
 

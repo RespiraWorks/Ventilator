@@ -21,12 +21,13 @@ A more complete list of hardware components is on
 
 There are two ways to run the GUI on your *RPi* - by building it natively on the *RPi*
 or by installing a pre-generated image of the *RPi* OS (henceforth "*RPIOS image*") that
-automatically loads the GUI on bootup. The latter is the default usage for the final product.
+automatically loads the GUI on boot up. The latter is the default usage for the final product.
 However, if you are doing any development on the GUI, testing bleeding edge features or just
 having problems with the *RPIOS image*, you might want to build and run the GUI manually.
 
 If you are looking for how to build and use the GUI natively, you can jump ahead to the
-[going native](#going-native) section below.
+[going native](#going-native) section below. **This is actually the recommended way
+of using it, as the image deployment strategy is not reliably implemented yet**
 
 ## Deploying *RPIOS image*
 
@@ -97,8 +98,20 @@ or on the *RPi*. Building natively on *RPi* assumes a vanilla OS image from
 the [Raspberry Pi website](https://www.raspberrypi.org/) and **NOT** the RespiraWorks-generated
 image referred to in the sections above.
 
-The [gui.sh](gui.sh) script will both install dependencies and build the application.
-The script should work for most debian systems using `apt` as the package manager.
+The [gui.sh](gui.sh) script does almost everything you need:
+* installs dependencies
+* builds the app
+* runs the app
+* runs unit tests
+
+The script should work for most debian systems using `apt` as the package manager. It should also work on macOS. For
+a comprehensive list of commands and options you can always run:
+
+```
+./gui.sh --help
+```
+
+Here is a quick summary of some of those options (which may not be up to date).
 
 To install dependencies, run:
 ```
@@ -111,18 +124,16 @@ To build the application, run:
 ./gui.sh --build
 ```
 
-When building natively on the *RPi* you may run out of virtual memory. This is because the build
-script is trying to hog too many resources. If your build fails for this reason, you should still
-have the build configured correctly by the script and you can do:
+You can run this latest step with `-j` option to make it faster, but when compiling on *RPi* you may run out of virtual
+memory.
 
-```
-cd build
-make
-```
+You can also compile with `--debug` option. You will see additional information on the screen, and logs
+will be more detailed (`debug` and `trace` level messages will be written), and will output to console
+in addition to file.
 
 ### Mac OS X
 
-You may also build and run on MacOS, but you will have to install dependencies manually.
+You may also build and run on MacOS, but you may have to install some dependencies manually.
 This section may be out of date.
 
 Go to https://www.qt.io/download-open-source and download the Qt Online Installer.
@@ -152,16 +163,15 @@ sudo apt-get install qtcreator
 ### Running natively
 
 Upon a successful compilation, the executable file is accessible on Linux as:
+
 ```
-./build/app/ProjectVentilatorGUI --serial-port /dev/ttyS0
+./gui.sh --run --serial-port /dev/ttyS0
 ```
+
 Where you may specify whatever serial port the ventilator controller is for the GUI to communicate
 with. The above has been the correct port for all prototypes tested to date.
 
-On Mac OS X, you would run it as as:
-```
-./build/app/ProjectVentilatorGUI.app/Contents/MacOS/ProjectVentilatorGUI
-```
+If you do not specify a serial-port, the app will run with pre-recorded data.
 
 If you are running the application remotely, via ssh for example, don't forget to set
 the display environment variable:
@@ -171,13 +181,27 @@ export DISPLAY=:0
 
 ### Testing
 
-To run unit tests as a developer, type:
+To run unit tests, type:
 
 ```
 ./gui.sh --build && ./gui.sh --test
 ```
 
-**TODO:** add something about manual testing with fake data.
+### Logs & debugging
+
+Timestamped logs written by the app should be found locally at:
+
+```
+$HOME/.local/share/RespiraWorks/VentilatorUI/gui.log
+```
+
+Upon start, the application will log the git hash of the commit it was built from.
+
+If app was built in release mode, messages down to `info` level should be seen. In debug mode, `debug` as well as
+`trace` level messages will also be written to log.
+
+If you want to add additional debug messages, refer to [logger.h](src/logger.h). This is a thread-safe logger.
+Log macros accept [fmt](https://github.com/fmtlib/fmt) syntax.
 
 ### Screen resolution issues
 

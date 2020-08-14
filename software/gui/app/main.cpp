@@ -6,6 +6,9 @@
 #include "periodic_closure.h"
 #include "respira_connected_device.h"
 
+#include "logger.h"
+#include <QStandardPaths>
+
 #include "time_series_graph.h"
 #include <QCommandLineParser>
 #include <QDebug>
@@ -37,18 +40,44 @@ QObject *gui_state_instance(QQmlEngine *engine, QJSEngine *scriptEngine) {
 
 void install_fonts() {
   if (QFontDatabase::addApplicationFont(":/fonts/NotoSans-Regular.ttf") == -1)
-    qWarning() << "Failed to load NatoSans-Regular.ttf";
+    WARN("Failed to load NatoSans-Regular.ttf");
 
   if (QFontDatabase::addApplicationFont(":/fonts/Oxygen-Regular.ttf") == -1)
-    qWarning() << "Failed to load Oxygen-Regular.ttf";
+    WARN("Failed to load Oxygen-Regular.ttf");
 
   if (QFontDatabase::addApplicationFont(":/fonts/Oxygen-Bold.ttf") == -1)
-    qWarning() << "Failed to load Oxygen-Bold.ttf";
+    WARN("Failed to load Oxygen-Bold.ttf");
+}
+
+void init_logger(bool debug_mode) {
+  auto log_path =
+      QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
+  QDir().mkpath(log_path);
+  auto log_file = log_path + "/gui.log";
+  printf("Saving logs in %s\n", log_file.toLatin1().data());
+  if (debug_mode) {
+    CustomLogger::initLogger(spdlog::level::trace, true,
+                             log_file.toStdString());
+  } else {
+    CustomLogger::initLogger(spdlog::level::info, false,
+                             log_file.toStdString());
+  }
 }
 
 int main(int argc, char *argv[]) {
-  QGuiApplication app(argc, argv);
+  QGuiApplication::setOrganizationName("RespiraWorks");
+  QGuiApplication::setApplicationName("VentilatorUI");
 
+#ifdef QT_DEBUG
+  init_logger(true);
+#else
+  init_logger(false);
+#endif
+
+  INFO("VentilatorUI starting");
+  INFO("  git version: {}", GIT_VERSION);
+
+  QGuiApplication app(argc, argv);
   app.setWindowIcon(QIcon(":/images/Logo.png"));
 
   QCommandLineParser parser;
@@ -88,8 +117,8 @@ int main(int argc, char *argv[]) {
     std::vector<ControllerStatus> statuses;
     QFile file(":/sample-data/gui-sample-data.dat");
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-      std::cerr << "Failed to open sample data file";
-      return 1;
+      CRIT("Failed to open sample data file");
+      return EXIT_FAILURE;
     }
     while (!file.atEnd()) {
       QString line{file.readLine()};
@@ -163,6 +192,7 @@ int main(int argc, char *argv[]) {
   engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
 
   if (parser.isSet(startupOnlyOption)) {
+    CRIT("VentilatorUI stated with startup-only. Shutting down immediately.");
     return EXIT_SUCCESS;
   }
 

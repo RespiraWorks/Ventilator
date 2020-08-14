@@ -10,8 +10,8 @@ WORKDIR /root/Ventilator
 COPY . ./
 CMD /bin/bash \
     software/gui/gui.sh --install && \
-    software/gui/gui.sh --build && \
-    software/gui/gui.sh --test && \
+    software/gui/gui.sh --build -f -j && \
+    software/gui/gui.sh --test -f -x && \
     cd software/gui/build/tests && \
     curl https://codecov.io/bash > codecov_uploader.sh && \
     chmod +x codecov_uploader.sh && \

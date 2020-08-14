@@ -85,8 +85,15 @@ std::pair<ActuatorsState, ControllerState> Controller::Run(Time now, const VentP
       psol_pid_.reset();
 
       // Calculate blower valve command using calculated gains
-      float blower_valve = blower_valve_pid_.compute(now, sensor_readings.patient_pressure.kPa(),
-                                                     desired_state.pressure_setpoint->kPa());
+      /*float blower_valve =
+          blower_valve_pid_.Compute(now, sensor_readings.patient_pressure.kPa(),
+                                    desired_state.pressure_setpoint->kPa());*/
+
+      float flow_cmd = blower_valve_pid_.compute(now, sensor_readings.patient_pressure.kPa(),
+                                                 desired_state.pressure_setpoint->kPa());
+      float blower_valve =
+          air_flow_pid_.compute(now, sensor_readings.air_inflow.liters_per_sec(), flow_cmd);
+
       float fio2_coupling_value =
           std::clamp(params.fio2 + fio2_pid_.compute(now, sensor_readings.fio2, params.fio2), 0.0f,
                      1.0f);  // just a little bit of feed-forward
@@ -108,8 +115,8 @@ std::pair<ActuatorsState, ControllerState> Controller::Run(Time now, const VentP
       // experimental shit
       /*
       float blower_valve =
-              air_flow_pid_.compute(now, sensor_readings.air_inflow.liters_per_sec(),
-                        dbg_air_flow_setpoint_.get());
+              air_flow_pid_.Compute(now,
+      sensor_readings.inflow.liters_per_sec(), dbg_air_flow_setpoint.Get());
   */
 
       float psol_valve = psol_pid_.compute(now, sensor_readings.patient_pressure.kPa(),

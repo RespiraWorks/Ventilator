@@ -32,7 +32,7 @@ struct ControllerState {
 
   // Identifies the current breath among all breaths handled since controller
   // startup.
-  uint64_t breath_id = 0;
+  uint64_t breath_id{0};
 };
 
 // This class is here to allow integration of our controller into Modelica
@@ -48,7 +48,7 @@ public:
       const SensorReadings &sensor_readings);
 
 private:
-  uint64_t breath_id_ = 0;
+  uint64_t breath_id_{0};
   BlowerFsm fsm_;
   PID blower_valve_pid_;
   PID psol_pid_;
@@ -66,7 +66,7 @@ private:
   // This state tells the controller whether the vent was already On when Run()
   // was last called, and allows resetting integrators when transitioning from
   // Off state to On state.
-  bool ventilator_was_on_ = false;
+  bool ventilator_was_on_{false};
 };
 
 #endif // CONTROLLER_H_

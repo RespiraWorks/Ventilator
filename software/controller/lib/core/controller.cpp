@@ -22,6 +22,10 @@ limitations under the License.
 static constexpr Duration LOOP_PERIOD = milliseconds(10);
 
 // Inputs - set from external debug program, read but never modified here.
+static DebugFloat dbg_blower_valve_ki("blower_valve_ki",
+                                      "Integral gain for blower valve PID",
+                                      -1.0f);
+
 static DebugFloat dbg_blower_valve_kp("blower_valve_kp",
                                       "Proportional gain for blower valve PID",
                                       0.04f);
@@ -132,10 +136,18 @@ Controller::Run(Time now, const VentParams &params,
   // Note that we use desired_state.pip/peep and not params.pip/peep because
   // desired_state updates at breath boundaries, whereas params updates
   // whenever the user clicks the touchscreen.
-  float blower_ki = std::clamp(
-      (desired_state.pip - desired_state.peep).cmH2O() - 5.0f, 10.0f, 20.0f);
 
-  dbg_blower_valve_computed_ki.Set(blower_ki);
+  float blower_ki = 0;
+
+  if (dbg_blower_valve_ki.Get() < 0) {
+    blower_ki = std::clamp(
+        (desired_state.pip - desired_state.peep).cmH2O() - 5.0f, 10.0f, 20.0f);
+
+    dbg_blower_valve_computed_ki.Set(blower_ki);
+
+  } else {
+    blower_ki = dbg_blower_valve_ki.Get();
+  }
 
   blower_valve_pid_.SetKP(dbg_blower_valve_kp.Get());
   blower_valve_pid_.SetKI(blower_ki);

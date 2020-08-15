@@ -239,8 +239,7 @@ private:
     return commanded_i_time_ / commanded_e_time;
   }
   qreal get_measured_fio2_percent() const {
-    // TODO: Change this to sensor value when we have a FiO2 sensor.
-    return commanded_fio2_percent_;
+    return 100 * history_.GetLastStatus().sensor_readings.fio2;
   }
 
   const SteadyInstant startup_time_ = SteadyClock::now();

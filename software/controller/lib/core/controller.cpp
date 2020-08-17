@@ -77,6 +77,19 @@ static DebugFloat dbg_volume_uncorrected("uncorrected_volume",
 static DebugFloat dbg_flow_correction("flow_correction",
                                       "Correction to flow, cc/sec");
 
+static DebugFloat dbg_net_flow_raw("net_flow_raw",
+                                   "Net flow rate w/o rezero, cc/sec");
+static DebugFloat dbg_volume_raw("volume_raw", "Patient volume w/o rezero, ml");
+static DebugFloat dbg_net_flow_raw_uncorrected(
+    "net_flow_raw_uncorrected",
+    "Net flow rate w/o correction nor rezero, cc/sec");
+static DebugFloat
+    dbg_volume_raw_uncorrected("uncorrected_volume_raw",
+                               "Patient volume w/o correction nor rezero, ml");
+static DebugFloat
+    dbg_flow_raw_correction("flow_correction_raw",
+                            "Correction to flow w/o rezero, cc/sec");
+
 // TODO: If we had a notion of read-only DebugVars, we could call this
 // blower_valve_ki, which would be kind of nice?  Alternatively, if we had a
 // notion of DebugVars that a user had set/pinned to a certain value, we could
@@ -111,9 +124,19 @@ Controller::Run(Time now, const VentParams &params,
   flow_integrator_->AddFlow(now, uncorrected_net_flow);
   uncorrected_flow_integrator_->AddFlow(now, uncorrected_net_flow);
 
+  VolumetricFlow uncorrected_net_flow_raw =
+      sensor_readings.inflow_raw - sensor_readings.outflow_raw;
+  flow_integrator_raw_corrected_->AddFlow(now, uncorrected_net_flow_raw);
+  flow_integrator_raw_->AddFlow(now, uncorrected_net_flow_raw);
+
   Volume patient_volume = flow_integrator_->GetVolume();
   VolumetricFlow net_flow =
       uncorrected_net_flow + flow_integrator_->FlowCorrection();
+
+  Volume patient_volume_raw = flow_integrator_raw_corrected_->GetVolume();
+  VolumetricFlow net_flow_raw =
+      uncorrected_net_flow_raw +
+      flow_integrator_raw_corrected_->FlowCorrection();
 
   BlowerSystemState desired_state = fsm_.DesiredState(
       now, params, {.patient_volume = patient_volume, .net_flow = net_flow});
@@ -121,6 +144,7 @@ Controller::Run(Time now, const VentParams &params,
   if (desired_state.is_end_of_breath) {
     // The "correct" volume at the breath boundary is 0.
     flow_integrator_->NoteExpectedVolume(ml(0));
+    flow_integrator_raw_corrected_->NoteExpectedVolume(ml(0));
     breath_id_ = now.microsSinceStartup();
   }
 
@@ -180,6 +204,8 @@ Controller::Run(Time now, const VentParams &params,
       // reset volume integrators
       flow_integrator_.emplace();
       uncorrected_flow_integrator_.emplace();
+      flow_integrator_raw_corrected_.emplace();
+      flow_integrator_raw_.emplace();
     }
 
     // At the moment we don't support oxygen mixing -- we deliver either pure
@@ -221,6 +247,14 @@ Controller::Run(Time now, const VentParams &params,
       };
     }
 
+    if (!ventilator_was_on_) {
+      // reset volume integrators on transition from Off to On
+      flow_integrator_.emplace();
+      uncorrected_flow_integrator_.emplace();
+      flow_integrator_raw_.emplace();
+      flow_integrator_raw_corrected_.emplace();
+    }
+
     // Start controlling pressure.
     ventilator_was_on_ = true;
   }
@@ -235,11 +269,16 @@ Controller::Run(Time now, const VentParams &params,
 
   dbg_sp.Set(desired_state.pressure_setpoint.value_or(kPa(0)).cmH2O());
   dbg_net_flow.Set(controller_state.net_flow.ml_per_sec());
-  dbg_net_flow_uncorrected.Set(
-      (sensor_readings.inflow - sensor_readings.outflow).ml_per_sec());
+  dbg_net_flow_uncorrected.Set(uncorrected_net_flow.ml_per_sec());
   dbg_volume.Set(controller_state.patient_volume.ml());
   dbg_volume_uncorrected.Set(uncorrected_flow_integrator_->GetVolume().ml());
   dbg_flow_correction.Set(flow_integrator_->FlowCorrection().ml_per_sec());
+  dbg_net_flow_raw.Set(net_flow_raw.ml_per_sec());
+  dbg_net_flow_raw_uncorrected.Set(uncorrected_net_flow_raw.ml_per_sec());
+  dbg_volume_raw.Set(patient_volume_raw.ml());
+  dbg_volume_raw_uncorrected.Set(flow_integrator_raw_->GetVolume().ml());
+  dbg_flow_raw_correction.Set(
+      flow_integrator_raw_corrected_->FlowCorrection().ml_per_sec());
 
   // Handle DebugVars that force the actuators.
   auto set_force = [](DebugFloat &var, auto &state) {

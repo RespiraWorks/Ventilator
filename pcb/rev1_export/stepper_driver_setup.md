@@ -2,8 +2,8 @@
 
 When the PCB was originally designed, the ability to add a stepper driver was essentially a hedge, a backup *just in
 case* we wanted to try something that required a stepper motor, so if some of this looks hackey, that's why.  Now that
-the stepper-driven valve concept is moving towards the main design, we need to support it.  This is the beginning of a
-guide to using stepper motors with the PCB, which will be completed in the following few days.
+the stepper-driven valve concept is moving towards the main design, we need to support it.  This is a guide to using
+stepper motors with the PCB.
 
 * This will assume some knowledge and practice with electrical tinkering.
 * For bakground on stepper motors in general, the always-excellent Great Scott provides a good

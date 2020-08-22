@@ -13,7 +13,7 @@ This document will track desired characterization tests and link to the correspo
 
 **#TODO** Add content
 
-[View fan tests](project-fan/characterization-tests)
+[View fan tests](blower/characterization-tests)
 
 * **PIP/PEEP/Timing Tests**
 
@@ -61,7 +61,7 @@ This document will track desired characterization tests and link to the correspo
 
     4. When there is a change in flow rate, how long does it take for the sensor to settle?
 
-    [View Venturi tests](project-venturi/characterization-tests/06072020/README.md)
+    [View Venturi tests](venturi/characterization-tests/06072020/README.md)
 
 * **Pressure sensor characterization**
 

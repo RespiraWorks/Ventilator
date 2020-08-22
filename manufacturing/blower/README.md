@@ -1,17 +1,22 @@
-# Pizza Build: Blower Sub-assembly
+# Blower Sub-assembly
 
 The blower/fan is what provides air pressure to the ventilator's pneumatic circuit.
 
 The pneumatic aspect of the blower assembly includes the blower and a short segment of tubing compatible with blower outlet diameter.
 
 The electrical aspect of the blower assembly encompasses the driver board and wires of sufficient length to interface
-with the [PCB](https://github.com/respiraworks/pcbreathe).
+with the [PCB](../../pcb).
+
+Characterization tests for the blower are [here](characterization-tests).
 
 **#TODO:** unit price analysis
 
 ## Parts List (BOM)
 
-**Note: If you are a member of the RespiraWorks team, review [part purchasing guidelines](../../README.md) BEFORE purchasing any parts.**
+**Note: If you are a member of the RespiraWorks team, review the
+[part purchasing guidelines](../../manufacturing/README.md#part-purchasing-guidelines)
+BEFORE purchasing any parts.**
+
 
 ### Purchasing Source Key
 
@@ -70,7 +75,7 @@ We may have parts to send you from our inventory.
 
 [a1amzn]:https://www.amazon.com/gp/product/B07R1H3Z8X
 
-**NOTE: Items 6-12 and a1 above are also duplicated in the [wiring BOM](../../../design/electrical-system/wiring.md)**
+**NOTE: Items 6-12 and a1 above are also duplicated in the [wiring BOM](../../design/electrical-system/wiring.md)**
 
 ## Assembly Instructions
 
@@ -82,6 +87,6 @@ Use Herbie clip to secure tubing to blower. Alternatively, you can use a zip-tie
 ![Parts](assets/subassembly.jpg)
 
 You will have to crimp connectors to the second end of the wiring that connects the driver board
-to the [PCB](https://github.com/respiraworks/pcbreathe).
+to the [PCB](../../pcb).
 It depends on your build layout, but in the case that you need longer wires, you will have to crimp both ends.
 In this case you will need the higher number of XH and VH connector components listed in the BOM above.

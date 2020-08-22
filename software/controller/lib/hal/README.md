@@ -15,7 +15,7 @@ The code refers to the following references by their associated abbreviations
 
 `[PCB]` [RespiraWorks custom printed circuit board schematic](../../../../pcb)
 
-*Note: The latest revision of PCB release candidates can be found under: NIGHTLY/YYYYMMDDvI-RELEASE-CANDIDATE-J*
+*Note: The latest revision of PCB release candidates can be found under: export/YYYYMMDDvI-RELEASE-CANDIDATE-J*
 
 `[PCBsp]` [Rev 1.0 Electrical Hardware Requirements and PCB Interface Control Document](https://docs.google.com/spreadsheets/d/1JOSQKxkQxXJ6MCMDI9PwUQ6kiuGdujR4D6EJN9u2LWg/edit#gid=0)
 

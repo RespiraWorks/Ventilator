@@ -17,7 +17,7 @@ To deploy it as intended for the ventilator you will need:
 * Card reader USB
 
 A more complete list of hardware components is on
-[Brain build page](../../manufacturing/alpha-build-instructions/pizza-brain).
+[Brain build page](../../manufacturing/brain).
 
 There are two ways to run the GUI on your *RPi* - by building it natively on the *RPi*
 or by installing a pre-generated image of the *RPi* OS (henceforth "*RPIOS image*") that

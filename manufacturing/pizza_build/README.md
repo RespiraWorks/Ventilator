@@ -5,7 +5,7 @@
 This is a ventilator prototype for testing and development.
 The build consists of a functional ventilator pneumatic assembly with controller and user interface. This build is adequate for integration and systems testing.
 
-It lacks heating, humidification, battery backup and air filtering.
+It lacks heating, humidification and battery backup.
 
 It is also not enclosed like the final product and is meant to be operated in an open layout on your table, like a pizza.
 
@@ -13,7 +13,7 @@ It can also come in various configurations, depending on your testing needs:
 
 | Solenoid valve setup  |  Pinch valve setup   | Blower bypass setup     |
 |:---------------------:|:--------------------:|:-----------------------:|
-![](assets/photo-solenoid.jpg) |![](assets/photo-pinch.jpg)  |![](assets/photo-advanced.jpg)  |
+![](graphics/photo-solenoid.jpg) |![](graphics/photo-pinch.jpg)  |![](graphics/photo-advanced.jpg)  |
 
 **DISCLAIMER:** These are live documents.
 There are duplicate and alternative items for undecided aspects of the physical design.
@@ -36,7 +36,7 @@ Also ask the team if anything should be ordered on the company account.
 
 ## Essentials
 
-The first thing you will need is a [Brain build](pizza-brain), which contains the computing components.
+The first thing you will need is a [Brain build](../brain), which contains the computing components.
 
 We are using 3/4" ID tube as the default standard (and adapters where needed, like to the blower and the pinch valves).
 This easily can have 19mm ID tubing substituted in metric manufacturing settings (3/4" = 19.05mm).
@@ -44,7 +44,9 @@ All rigid plumbing fittings should be NPT/imperial standard (3/4 NPS preferable,
 
 ## Parts List (BOM)
 
-**Note: If you are a member of the RespiraWorks team, review [part purchasing guidelines](../README.md) BEFORE purchasing any parts.**
+**Note: If you are a member of the RespiraWorks team, review the
+[part purchasing guidelines](../../manufacturing/README.md#part-purchasing-guidelines)
+BEFORE purchasing any parts.**
 
 ### Purchasing Source Key
 
@@ -98,36 +100,23 @@ Also, scissors or a sharp knife might be ok instead of T3.
 
 The following are essential sub-assemblies that you'll need no matter what additional/optional "toppings" you chose to have.
 
-* [Blower assembly](pizza-blower) - the main driver of pressure in the pneumatic circuit
-* [Basic test lung](pizza-test-lung) - something to simulate a lung
-* 2x [Venturi flow sensors](../../research-development/project-venturi) and corresponding tubing, to provide the controller feedback
-* Some sort of valve or valves, which leads us to...
-
-## Optional Components
-
-**Optional additions (toppings) for your pizza build:**
-These can be added or customized based on what functions you will be developing or testing.
-
-* **Binary solenoid:** One option for inhale or exhale valve is a binary solenoid, which either opens or closes.
-The sub-assembly for this component is documented [here](pizza-binary-solenoid). The PCB can only power/control one such
-solenoid, so for more advanced designs you will want to (also) start using other valves.
-* **Proportional pinch valve:** A proportional pinch valve can control the airflow constriction with much better precision.
-Multiple such pinch valves can be used in our prototype, the part is buildable from 3d-printed plastic components and
-easily obtainable generic parts. Instructions are [here](../../research-development/project-pinch-valve).
-You may need anywhere between 1 and 3 such pinch valves, depending on the complexity of your system.
-* **Reduced compliance test lung:** To test basic function a ventilator check lung or a breathing bag is sufficient,
-but can really only work up to 10cmH2O. To be able to test higher PIP values, you need to reduce the compliance of the
-lung so you don’t just inflate it like a balloon (or pop it). View more details on reduced compliance test lung [here](pizza-compliance-test-lung).
-* **#TODO: check valve**
-* **#TODO: oxygen supply limb**
+* 1x [Blower assembly](../blower) - the main driver of pressure in the pneumatic circuit
+* 2-3x [Venturi flow sensors](../venturi) and corresponding tubing, to provide the controller feedback
+* 2x [Pinch valves](../pinch_valve) - a proportional pinch valve to control the airflow constriction with precision
+* optional [Air filter assemblies](../filter_holder) - for the safety of patient and health workers. Constricts air flow
+  to some extent and thus will affect the ventilator performance
 
 ## Assembly Instructions
 
 Use the following diagrams as well as the pictures of the most recent builds at the top of the page to help you assemble this lego set.
-
-![Pizza pneumatics](assets/pizza-pneumatics.png)
-[Pneumatics diagram source](assets/pizza-pneumatics.eps)
-
 Note: mind which tubes go into the bottom and top ports of the sensors on the PCB.
 
-![Pizza drawing](assets/pizza-diagram.jpg)
+Additionally, the following document was produced for the Covent19 challenge. It encompasses some aspects of both the
+pizza and the enclosed build. **TODO:** Contents therein should at some point be migrated over into the repository as
+plain text: [Covent19 assembly instructions](../assets/covent-june-2020-assembly-instructions.pdf)
+
+| Pneumatics schematic  |  Shitty diagram     |
+|:---------------------:|:--------------------:|
+![](graphics/pizza-pneumatics.png) |![](graphics/pizza-diagram.jpg)  |
+
+[Pneumatics diagram source](graphics/pizza-pneumatics.eps)

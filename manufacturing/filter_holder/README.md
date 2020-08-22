@@ -12,8 +12,9 @@ McMaster heat-set inserts; for production we'll consult with the manufacturer. W
 
 ## Parts List (BOM)
 
-**Note: If you are a member of the RespiraWorks team, review [part purchasing guidelines](../../README.md) BEFORE
-purchasing any parts.**
+**Note: If you are a member of the RespiraWorks team, review the
+[part purchasing guidelines](../../manufacturing/README.md#part-purchasing-guidelines)
+BEFORE purchasing any parts.**
 
 ### Purchasing Source Key
 

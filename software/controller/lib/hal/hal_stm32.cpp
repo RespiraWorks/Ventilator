@@ -64,7 +64,7 @@ extern "C" void _init() { Hal.EarlyInit(); }
 // If we ever did call abort we would just get here and loop until
 // the watchdog timer kills us.
 extern "C" void abort() {
-  while (1) {
+  while (true) {
   };
 }
 

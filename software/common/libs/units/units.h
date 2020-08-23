@@ -381,9 +381,9 @@ public:
   }
   [[nodiscard]] constexpr float minutes() const { return seconds() / 60; }
 
-  constexpr friend Time operator+(const Time &a, const Duration &b);
-  constexpr friend Time operator+(const Duration &a, const Time &b);
-  constexpr friend Time operator-(const Time &a, const Duration &b);
+  constexpr friend Time operator+(const Time &t, const Duration &dt);
+  constexpr friend Time operator+(const Duration &dt, const Time &t);
+  constexpr friend Time operator-(const Time &t, const Duration &dt);
   constexpr friend Duration operator-(const Time &a, const Time &b);
 
 private:
@@ -424,9 +424,9 @@ class Time : public units_detail::Scalar<Time, uint64_t> {
 public:
   [[nodiscard]] uint64_t microsSinceStartup() const { return val_; }
 
-  constexpr friend Time operator+(const Time &a, const Duration &b);
-  constexpr friend Time operator+(const Duration &a, const Time &b);
-  constexpr friend Time operator-(const Time &a, const Duration &b);
+  constexpr friend Time operator+(const Time &t, const Duration &dt);
+  constexpr friend Time operator+(const Duration &dt, const Time &t);
+  constexpr friend Time operator-(const Time &t, const Duration &dt);
   constexpr friend Duration operator-(const Time &a, const Time &b);
   Time &operator+=(const Duration &dt) { return *this = *this + dt; }
   Time &operator-=(const Duration &dt) { return *this = *this - dt; }

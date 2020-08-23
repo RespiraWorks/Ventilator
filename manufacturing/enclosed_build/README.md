@@ -48,7 +48,34 @@ Note that the check valve should be included with any build where oxygen is used
 
 ![](images/blower_check_valve.png)
 
-### Venturi Updates
+The purpose of the Beta Build is to build the complete ventilator in an enclosure.
+
+The Components/Sub assemblies of the Beta Build is as follows:
+
+Top Assy - This acts as the highest assembly, it includes all of the parts and sub assemblies to complete the beta build. (includes image of assy, link to CAD, links to stp files, etc) #TODO
+
+Blower Sub Assembly
+
+Brain Sub Assembly
+
+Venturi Sub Assembly
+
+Pinch Valve Sub Assembly
+
+Int & Pneumatic Sub Assembly
+
+Filter Sub Assembly
+
+
+
+
+For Testing purposes, the Testing Lung Assembly can be used to support testing and QA.
+
+
+
+In addition to reviewing the enclosure design, the below are some design features included within the Beta Build.
+
+## Venturi Updates
 
 We're planning to use 3/4"ID tubing throughout. The venturi will most likely be redesigned to have barbs that fit 3/4" ID tubing directly.
 
@@ -67,3 +94,7 @@ We're planning to move the steppers driver onto the PCB. Because of this, there 
 ### RTC Battery
 
 We're planning to add an RTC battery, which will allow controller to keep track of time while off - Pizza build no change, this feature not available for now
+
+
+## Beta Build Assembly Instructions
+To be completed when enclosure build is completed. #TODO

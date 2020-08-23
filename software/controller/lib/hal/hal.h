@@ -324,7 +324,7 @@ public:
   // Returns true if interrupts are currently enabled.
   //
   // Where possible, prefer using the BlockInterrupts RAII class.
-  bool interruptsEnabled();
+  bool interruptsEnabled() const;
 
   // Return true if we are currently executing in an interrupt handler
   bool InInterruptHandler();
@@ -425,7 +425,7 @@ inline void HalApi::disableInterrupts() {
   asm volatile("cpsid i" ::: "memory");
 }
 inline void HalApi::enableInterrupts() { asm volatile("cpsie i" ::: "memory"); }
-inline bool HalApi::interruptsEnabled() {
+inline bool HalApi::interruptsEnabled() const {
   int ret;
   asm volatile("mrs %[output], primask" : [output] "=r"(ret));
   return ret == 0;
@@ -508,7 +508,7 @@ inline void HalApi::test_debugPutIncomingData(const char *data, uint16_t len) {
 
 inline void HalApi::disableInterrupts() { interruptsEnabled_ = false; }
 inline void HalApi::enableInterrupts() { interruptsEnabled_ = true; }
-inline bool HalApi::interruptsEnabled() { return interruptsEnabled_; }
+inline bool HalApi::interruptsEnabled() const { return interruptsEnabled_; }
 inline bool HalApi::InInterruptHandler() { return false; }
 
 inline uint32_t HalApi::crc32(uint8_t *data, uint32_t length) {

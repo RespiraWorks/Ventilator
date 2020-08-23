@@ -242,7 +242,7 @@ Controller::Run(Time now, const VentParams &params,
   dbg_flow_correction.Set(flow_integrator_->FlowCorrection().ml_per_sec());
 
   // Handle DebugVars that force the actuators.
-  auto set_force = [](DebugFloat &var, auto &state) {
+  auto set_force = [](const DebugFloat &var, auto &state) {
     float v = var.Get();
     if (v >= 0 && v <= 1) {
       state = v;

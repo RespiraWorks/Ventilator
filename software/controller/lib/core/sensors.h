@@ -91,7 +91,7 @@ private:
 
   static AnalogPin PinFor(Sensor s);
   Pressure ReadPressureSensor(Sensor s) const;
-  float ReadOxygenSensor(const Pressure p_ambient) const;
+  float ReadOxygenSensor(Pressure p_ambient) const;
 
   // Calibrated average sensor values in a zero state.
   Voltage sensors_zero_vals_[kNumSensors];

@@ -438,7 +438,7 @@ static int FormatLong(FieldInfo *info, long long val, char *str, int max) {
 
 static int FormatFloat(FieldInfo *info, float val, char *str, int max) {
   // Check for outliers
-  const char *bad = 0;
+  const char *bad = nullptr;
   if (isnan(val))
     bad = (val < 0) ? "-nan" : "nan";
   if (isinf(val))

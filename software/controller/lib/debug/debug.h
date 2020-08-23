@@ -63,7 +63,7 @@ class DebugCmd {
   static DebugCmd *cmd_registry_[256];
 
 public:
-  DebugCmd(DbgCmdCode opcode);
+  explicit DebugCmd(DbgCmdCode opcode);
 
   // Command handler.
   //   data_in - Buffer holding command data on entry.

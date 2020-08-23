@@ -85,7 +85,7 @@ static const int ustep_per_step_ = 128;
 inline void CS_High() { GPIO_SetPin(GPIO_B_BASE, 6); }
 inline void CS_Low() { GPIO_ClrPin(GPIO_B_BASE, 6); }
 
-StepMotor::StepMotor() {}
+StepMotor::StepMotor() = default;
 
 StepMtrErr StepMotor::SetParam(StepMtrParam param, uint32_t value) {
   uint8_t p = static_cast<uint8_t>(param);
@@ -318,7 +318,7 @@ void StepMotor::OneTimeInit() {
 
 // Convert a velocity from Deg/sec units to the value to program
 // into one of the stepper controller registers
-float StepMotor::DpsToVelReg(float vel, float cnv) {
+float StepMotor::DpsToVelReg(float vel, float cnv) const {
 
   // Convert to steps / sec
   float step_per_sec = vel * static_cast<float>(steps_per_rev_) / 360.0f;
@@ -328,7 +328,7 @@ float StepMotor::DpsToVelReg(float vel, float cnv) {
 }
 
 // Convert a velocity from a register value to deg/sec
-float StepMotor::RegVelToDps(int32_t val, float cnv) {
+float StepMotor::RegVelToDps(int32_t val, float cnv) const {
   return static_cast<float>(val) * 360.0f /
          (cnv * static_cast<float>(steps_per_rev_));
 }
@@ -592,7 +592,7 @@ StepMtrErr StepMotor::GetStatus(StepperStatus *stat) {
   return err;
 }
 
-int32_t StepMotor::DegToUstep(float deg) {
+int32_t StepMotor::DegToUstep(float deg) const {
   uint32_t ustep_per_rev = ustep_per_step_ * steps_per_rev_;
 
   float steps = static_cast<float>(ustep_per_rev) * deg / 360.0f;
@@ -782,7 +782,7 @@ void StepMotor::UpdateComState() {
       if (motor_[i].save_response_) {
         *motor_[i].cmd_ptr_++ = dma_buff_[i];
         if (--motor_[i].cmd_remain_ <= 0)
-          motor_[i].cmd_ptr_ = 0;
+          motor_[i].cmd_ptr_ = nullptr;
       }
 
       // If this motor has an active command to send,

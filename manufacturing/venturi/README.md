@@ -28,7 +28,7 @@ There is an arrow printed onto the body between the two ports to indicate the di
 
 ## 19mm or 3/4" Version (beta)
 
-The [beta](../../manufacturing/beta-build-instructions) version of the ventilator uses 3/4"ID or 19mm ID tubing throughout.
+The beta build of the ventilator uses 3/4"ID or 19mm ID tubing throughout.
 
 This version has received more updates as it is a later version. Relative to the 16mm sensor, it has a slightly larger orifice (design 5.50 mm) and a more aggressive chamfer at the inlet to improve the aerodynamic flow. It also obviously
 has a slightly larger internal diameter compared to the 16mm sensor.
@@ -94,8 +94,9 @@ the diameter of that drill bit. (Any round thing will work.)
 
 ## Parts List (BOM)
 
-
-**Note: If you are a member of the RespiraWorks team, review [part purchasing guidelines](../../manufacturing/README.md) BEFORE purchasing any parts.**
+**Note: If you are a member of the RespiraWorks team, review the
+[part purchasing guidelines](../../manufacturing/README.md#part-purchasing-guidelines)
+BEFORE purchasing any parts.**
 
 ### Purchasing Source Key
 
@@ -170,3 +171,7 @@ The response curve is shown below over a varying flow signal. Note there is no c
 ![flow curve](assets/pneumotachograph_compare.png)
 
 **TODO:** add flow accuracy curve and get improved correlation.
+
+## Characterization tests
+
+Characterization tests are included [here](characterization-tests).

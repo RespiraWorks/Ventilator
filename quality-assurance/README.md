@@ -2,7 +2,9 @@
 
 This directory is for regulatory and testing-related assets.
 
-* [Testing](testing)
+## Testing
+
+Documentation relating to the testing equipment, strategy and test data is in the [testing](testing) subdirectory.
 
 ## Regulatory documentation
 

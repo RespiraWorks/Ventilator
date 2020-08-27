@@ -1,9 +1,0 @@
-# Important: this Dockerfile requires that the repo root be build context (in order to include the common code)
-
-FROM debian:buster
-
-WORKDIR /root/Ventilator/software
-COPY . ./
-RUN bash software/gui/gui.sh --install
-RUN bash software/gui/gui.sh --build -f -j
-CMD ["bash"]

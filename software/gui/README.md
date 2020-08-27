@@ -7,7 +7,7 @@ on Raspberry Pi (henceforth "*RPi*").
 
 Please also see the [Software design pages](../design) for more information on GUI architecture.
 
-## Building and deploying
+## Requirements
 
 For development purposes you may build and run it locally on a Linux or macOS machine of your choice.
 
@@ -17,36 +17,7 @@ To deploy it as intended for the ventilator you will need:
 * Card reader USB
 
 A more complete list of hardware components is on
-[Brain build page](../../manufacturing/alpha-build-instructions/pizza-brain).
-
-There are two ways to run the GUI on your *RPi* - by building it natively on the *RPi*
-or by installing a pre-generated image of the *RPi* OS (henceforth "*RPIOS image*") that
-automatically loads the GUI on boot up. The latter is the default usage for the final product.
-However, if you are doing any development on the GUI, testing bleeding edge features or just
-having problems with the *RPIOS image*, you might want to build and run the GUI manually.
-
-If you are looking for how to build and use the GUI natively, you can jump ahead to the
-[going native](#going-native) section below. **This is actually the recommended way
-of using it, as the image deployment strategy is not reliably implemented yet**
-
-## Deploying *RPIOS image*
-
-The pre-generated *RPIOS image*s are available for download here:
-[http://ps3.respira.works/rpi-images/](http://ps3.respira.works/rpi-images/).
-
-In a digital case of the Russian doll, the *RPIOS image* actually comes packaged with another image,
-which it will run as virtual machine. This Docker image (henceforth "Docker image") contains
-the GUI application and all necessary runtime dependencies. Docker images
-are generated with every change to the master branch of the code, approximately
-within 10 minutes of a merged change.
-
-If you are interested in the details for how this image generation and deployment works,
-you can read our plan for [GUI deployment strategy](deployment_strategy.md).
-
-The Docker image contained in the *RPIOS image* is the latest Docker image at the time of building the
-*RPIOS image* (which is not that often), so it may not actually contain the latest version of the GUI.
-You may have to update the Docker image on the *RPi*. For this reason, and for troubleshooting
-other problems, you may want to log into the *RPi* remotely.
+[Brain build page](../../manufacturing/brain).
 
 ### SSH access to *RPi*
 
@@ -69,29 +40,7 @@ Now you may ssh into the *RPi* from another machine by running `ssh pi@IP_ADDRES
 If you have any trouble with serial communications, you may also double on check your
 *RPi* configuration with `sudo raspi-config`.
 
-### Updating Docker image
-
-To update the Docker image on the *RPi*, run the following commands:
-```
-docker stop gui
-docker container rm gui
-docker system prune
-docker pull respiraworks/gui
-sudo shutdown -r now
-```
-
-To see logs from GUI running within the Docker image, try this:
-```
-docker logs gui
-```
-
-To find out what version of the GUI app is running, do the following:
-```
-docker exec -it gui /bin/bash
-git log
-```
-
-## Going native
+## Building the GUI
 
 You may want to build and run the GUI application natively, either on your primary machine
 or on the *RPi*. Building natively on *RPi* assumes a vanilla OS image from
@@ -160,7 +109,7 @@ To install Qt Creator on Linux, use:
 sudo apt-get install qtcreator
 ```
 
-### Running natively
+### Running
 
 Upon a successful compilation, the executable file is accessible on Linux as:
 

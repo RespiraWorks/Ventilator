@@ -4,14 +4,15 @@ This build constitutes the computing and digital user interface components.
 It is enough to fully deploy and run all developed software, to test the GUI interface and
 possibly the communications protocol between controller and UI. Since it contains none of the sensors
 or drivers, system integration testing with this bare build is not possible.
-For an upgrade, check the [Pizza build](../pizza-build.md).
+For an upgrade, check the [Pizza build](../pizza_build).
 
 **#TODO:** add pictures
 
 ## Part List (BOM)
 
-**Note: If you are a member of the RespiraWorks team, review [part purchasing guidelines](../../README.md) BEFORE purchasing any parts.**
-
+**Note: If you are a member of the RespiraWorks team, review the
+[part purchasing guidelines](../../manufacturing/README.md#part-purchasing-guidelines)
+BEFORE purchasing any parts.**
 
 ### Purchasing Source Key
 
@@ -63,7 +64,7 @@ For an upgrade, check the [Pizza build](../pizza-build.md).
 [7mono]:   https://www.monoprice.com/product?p_id=13924
 [8amzn]:   https://www.amazon.com/Seadream-Degree-Down-toward-Adapter-Connector/dp/B01EQC345A/
 [9amzn]:   https://www.amazon.com/dp/B06XWMQ81P
-[10rw]:    https://github.com/respiraworks/pcbreathe
+[10rw]:    ../../pcb
 [11mcmc]:  https://www.mcmaster.com/3791N024
 [12amzn]:  https://www.amazon.com/gp/product/B00Z9X4GLW
 [13amzn]:  https://www.amazon.com/gp/product/B01MYXTA6N
@@ -86,7 +87,7 @@ For an upgrade, check the [Pizza build](../pizza-build.md).
 [a1amzn]:https://www.amazon.com/Anker-Portable-Reader-RS-MMC-Micro/dp/B006T9B6R2
 [a2amzn]:https://www.amazon.com/gp/product/B07R1H3Z8X
 
-**NOTE: Items 15-17 and a2 above are also duplicated in the [wiring BOM](../../../design/electrical-system/wiring.md)**
+**NOTE: Items 15-17 and a2 above are also duplicated in the [wiring BOM](../../design/electrical-system/wiring.md)**
 
 ### Purchasing Guide
 
@@ -108,7 +109,7 @@ a mouse and keyboard to control it.
 6. Connect RasPi USB to 5V_TS microUSB on screen.
 7. Connect mini USB to Nucleo and USB to your laptop, or raspi, if you're feeling frisky.
 8. Install OS on μSD card and plug it into RasPi.
-9. If you got a PCB, go [here](https://github.com/respiraworks/pcbreathe) for further instructions
+9. If you got a PCB, go [here](../../pcb) for further instructions
 10. If you did not get a PCB, it's jumper wire time to connect Nucleo to RasPi.
 Here is reference for [RasPi pinout](https://pinout.xyz/pinout/pin2_5v_power) and here it is for the [Nucleo](https://docs.zephyrproject.org/latest/_images/nucleo_l452re_pinout.png).
     - Raspi UART-TXD (pin 8) <--> Nucleo USART3-RX (CN10 pin 18)

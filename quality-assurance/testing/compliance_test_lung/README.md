@@ -1,6 +1,4 @@
-# Pizza Build: Reduced Compliance Test Lung Add-on
-
-This is an optional add-on (topping!) to the [pizza build](../pizza-build.md).
+# Reduced Compliance Test Lung
 
 ![Completed](assets/test-lung-4.jpg)
 
@@ -12,13 +10,17 @@ can vary, so expect to do some tinkering to these instrutions if you are going t
 
 This is completely uncalibrated, so it is not intended for instrumentation, just for functional observation.
 
-**NOTE: As a prerequisite for this reduced-compliance test lung, please first follow instructions and buy parts as needed for the [simple test lung](../pizza-test-lung). See additional notes on part redundancies in the Part List section below.**
+**NOTE: As a prerequisite for this reduced-compliance test lung, please first follow instructions and buy parts as
+needed for the [simple test lung](../simple_test_lung). See additional notes on part redundancies in the Part List
+section below.**
 
 ## Part List (BOM)
 
-**Note: If you are a member of the RespiraWorks team, review [part purchasing guidelines](../../README.md) BEFORE purchasing any parts.**
+**Note: If you are a member of the RespiraWorks team, review the
+[part purchasing guidelines](../../../manufacturing/README.md#part-purchasing-guidelines)
+BEFORE purchasing any parts.**
 
-**Add-on part redundancies: You'll first need to secure parts for the [simple test lung](../pizza-test-lung).**
+**Add-on part redundancies: You'll first need to secure parts for the [simple test lung](../simple_test_lung).**
 
 ### Purchasing Source Key
 

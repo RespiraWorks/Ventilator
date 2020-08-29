@@ -56,7 +56,7 @@ static void Invalidate(uint32_t addr);
 static bool SaveBlock(NVparams *blk, uint32_t addr);
 
 // One time init of non-volatile parameter area.
-void NVparamsInit(void) {
+void NVparamsInit() {
 
   // Total structures in two pages of flash
   int N = flash_params_size / nvparam_size;
@@ -108,7 +108,7 @@ void NVparamsInit(void) {
   nvparam_addr = flash_params_start;
 }
 
-const NVparams *GetNvParams(void) {
+const NVparams *GetNvParams() {
   return reinterpret_cast<const NVparams *>(nvparam_addr);
 }
 
@@ -216,9 +216,9 @@ static void Invalidate(uint32_t addr) {
 
 static NVparams fakeParams;
 
-void NVparamsInit(void) {}
+void NVparamsInit() {}
 
-const NVparams *GetNvParams(void) { return &fakeParams; }
+const NVparams *GetNvParams() { return &fakeParams; }
 
 bool NVparamsUpdtOff(uint32_t offset, const void *value, uint8_t len) {
   if ((offset < 8) || ((offset + len) > nvparam_size))

@@ -123,9 +123,7 @@ bool HalApi::FlashWrite(uint32_t addr, void *data, int ct) {
   reg->ctrl.program = 0;
   reg->ctrl.lock = 1;
 
-  if (reg->status & 0x0000C3FA)
-    return false;
-  return true;
+  return !(reg->status & 0x0000C3FA);
 }
 
 #endif

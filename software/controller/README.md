@@ -85,6 +85,8 @@ You'll need to install [Atom](https://atom.io/),
 and [Python](https://www.python.org/downloads/windows/).
 (Note: you may be asked to install Python 2.7, but PlatformIO works with Python 3.5+ as well, ostensibly.)
 
+You also need to install the package `libtinfo5` on Linux. Clang-tidy needs this package to run its checks, but platformio will just say all checks have passed without giving an error if it's missing.
+
 ## Building and testing
 
 After installing platformio, you should be able to build and test as follows.

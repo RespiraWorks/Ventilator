@@ -118,7 +118,7 @@ Pressure Sensors::ReadPressureSensor(Sensor s) const {
 //
 // Output scales with partial pressure of O2, so ambient pressure must be
 // compensated to get an accurate FIO2.
-float Sensors::ReadOxygenSensor(const Pressure p_ambient) const {
+float Sensors::ReadOxygenSensor(Pressure p_ambient) const {
   // Teledyne R24-compatible Electrochemical Cell Oxygen Sensor
   // http://www.medicalsolutiontechnology.com/wp-content/uploads/2012/09/GO-04-DATA-SHEET.pdf
   // Sensitivity of 0.060V/fio2, where fio2 is 0.0 to 1.0, at pressure = 1atm

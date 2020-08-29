@@ -39,8 +39,8 @@ struct NVparams {
 static_assert(sizeof(NVparams) == 512);
 
 // prototypes
-void NVparamsInit(void);
-const NVparams *GetNvParams(void);
+void NVparamsInit();
+const NVparams *GetNvParams();
 bool NVparamsUpdtOff(uint32_t offset, const void *value, uint8_t len);
 
 // Convenience macro to update a member of the non-volatile
@@ -50,10 +50,10 @@ bool NVparamsUpdtOff(uint32_t offset, const void *value, uint8_t len);
 
 // Update a 32-bit non-volatile parameter
 #define NVparamsUpdt32(member, value)                                          \
-  NVparamsUpdtOff(offsetof(NVparams, member), &value, sizeof(uint32_t))
+  NVparamsUpdtOff(offsetof(NVparams, (member)), &(value), sizeof(uint32_t))
 
 // Update a float non-volatile parameter
 #define NVparamsUpdtFlt(member, value)                                         \
-  NVparamsUpdtOff(offsetof(NVparams, member), &value, sizeof(float))
+  NVparamsUpdtOff(offsetof(NVparams, (member)), &(value), sizeof(float))
 
 #endif

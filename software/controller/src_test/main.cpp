@@ -59,7 +59,7 @@ int main() {
     debugPrint("!");
   }
 
-  while (1) {
+  while (true) {
     Hal.watchdog_handler();
     char i[1];
     if (1 == debugRead(i, 1)) {

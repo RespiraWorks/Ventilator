@@ -24,6 +24,29 @@ set -o xtrace
 # This script should work no matter where you call it from.
 cd "$(dirname "$0")"
 
+
+#########
+# UTILS #
+#########
+
+print_help() {
+    cat <<EOF
+RespiraWorks controller build utilities. Will build and run most tests. Will also build embedded controller code.
+The following options are provided:
+  --help      Display this dialog
+  --no_checks Do not run clangtidy and cppcheck (yes, it's to annoy you!)
+EOF
+}
+
+########
+# HELP #
+########
+
+if [ "$1" == "--help" ]; then
+  print_help
+  exit 0
+fi
+
 # Controller unit tests on native.
 pio test -e native
 
@@ -39,11 +62,22 @@ INTEGRATION_TEST_H=psol_test.h pio run -e integration-test
 # Make sure controller builds for target platform.
 pio run -e stm32
 
-# TODO(martukas) Since this should be done at one level higher than controller, it should probably be scripted not via platformio?
-# Code style / bug-prone pattern checks (eg. clang-tidy)
-# WARNING: This might sometimes give different results for different people,
-# and different results on CI:
-# See https://community.platformio.org/t/no-version-of-tool-clangtidy-works-on-all-os/13219
-# Feel free to edit .clang_tidy to blacklist problematic checks.
-# TODO(jkff) Currently this fails with a bunch of errors. Need to uncomment and fix errors.
-# pio check -e native --fail-on-defect=high
+if [ "$1" != "--no-checks" ]; then
+  # Code style / bug-prone pattern checks (eg. clang-tidy)
+  # WARNING: This might sometimes give different results for different people,
+  # and different results on CI:
+  # See https://community.platformio.org/t/no-version-of-tool-clangtidy-works-on-all-os/13219
+  # Feel free to edit .clang_tidy to blacklist problematic checks.
+
+  # Since this is not for CI but just for devs to see, let's maximize the feedback
+  # Checks should run on both environments successively regardless if the first one fails
+  # It will likely fail for now...
+  set +e
+  set +o pipefail
+
+  # STM32 - clangtidy [TODO(a-vinod) cppcheck]
+  # Native - cppcheck & clangtidy
+
+  pio check -e stm32 --fail-on-defect=high
+  pio check -e native --fail-on-defect=high
+fi

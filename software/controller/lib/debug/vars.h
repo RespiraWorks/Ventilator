@@ -137,7 +137,7 @@ public:
       : DebugVar(name, &value_, help, fmt), value_(init) {}
 
   void Set(int32_t v) { value_ = v; }
-  int32_t Get() { return value_; }
+  int32_t Get() const { return value_; }
 
 private:
   int32_t value_;
@@ -150,7 +150,7 @@ public:
       : DebugVar(name, &value_, help, fmt), value_(init) {}
 
   void Set(uint32_t v) { value_ = v; }
-  uint32_t Get() { return value_; }
+  uint32_t Get() const { return value_; }
 
 private:
   uint32_t value_;
@@ -163,7 +163,7 @@ public:
       : DebugVar(name, &value_, help, fmt), value_(init) {}
 
   void Set(float v) { value_ = v; }
-  float Get() { return value_; }
+  float Get() const { return value_; }
 
 private:
   float value_;

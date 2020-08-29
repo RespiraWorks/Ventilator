@@ -194,7 +194,7 @@ public:
   // degrees and steps.
   void SetStepsPerRev(int spr) { steps_per_rev_ = spr; }
 
-  int GetStepsPerRev() { return steps_per_rev_; }
+  int GetStepsPerRev() const { return steps_per_rev_; }
 
   // Read the current absolute motor velocity and return it
   // in deg/sec units
@@ -310,7 +310,7 @@ private:
   // This pointer and count are used to hold the command being
   // sent to the motor and its response.
   // They're volatile because the interrupt handler updates them
-  volatile uint8_t *volatile cmd_ptr_{0};
+  volatile uint8_t *volatile cmd_ptr_{nullptr};
   volatile int cmd_remain_{0};
   bool save_response_{false};
 
@@ -318,9 +318,9 @@ private:
   // Defaults to the standard value for most steppers
   int steps_per_rev_{200};
 
-  float DpsToVelReg(float vel, float cnv);
-  float RegVelToDps(int32_t val, float cnv);
-  int32_t DegToUstep(float deg);
+  float DpsToVelReg(float vel, float cnv) const;
+  float RegVelToDps(int32_t val, float cnv) const;
+  int32_t DegToUstep(float deg) const;
   StepMtrErr SetKval(StepMtrParam param, float amp);
 
   // Send a command and wait for the response

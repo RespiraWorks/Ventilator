@@ -1,19 +1,14 @@
 # Enclosed build
 
+![](graphics/enclosure_CAD_2020_august.png)
+
+## India build
+
 Preliminary enclosed build was produced by our partners, Foundry-M in Visakhapatnam, India.
 
-## Insides
-
 |     |     |
 |:---:|:---:|
-|![](graphics/insides.jpg) | ![](graphics/open_back.jpeg)  |
-
-
-## With software
-
-|     |     |
-|:---:|:---:|
-|![](graphics/india1.jpeg) | ![](graphics/india2.jpeg) |
+|![](graphics/India_build_yellow.jpeg) | ![](graphics/open_back.jpeg)  |
 
 
 ## Beta Build Plan

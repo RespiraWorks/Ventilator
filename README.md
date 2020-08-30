@@ -16,41 +16,46 @@ This is a common repository for all hardware and software components of the Resp
 **If you intend to contribute, please read our [wiki](https://github.com/RespiraWorks/Ventilator/wiki).**
 
 [RespiraWorks](https://respira.works/) is a 501(c)(3) non-profit organization with over 200 contributors worldwide
-working to rapidly develop, manufacture, and deploy a low-cost and open-source ventilator for communities underserved
-by the global supply chain.
+working to rapidly design a low-cost and open-source ventilator for communities underserved by the global supply chain.
+Our objective is to provide the know-how and technology to enable others to manufacture these systems and put them in
+the hands of those who need them most.
 
-| Next prototype rendering    | First enclosed prototype in India    |
+| First enclosed prototype in India    | Rendering of upcoming build    |
 |:---:|:---:|
-|![](manufacturing/enclosed_build/graphics/enclosure_CAD_2020_august.png) | ![](manufacturing/enclosed_build/graphics/India_build_yellow.jpeg)  |
+|![](manufacturing/enclosed_build/graphics/India_build_yellow.jpeg) | ![](manufacturing/enclosed_build/graphics/enclosure_CAD_2020_august.png)  |
 
 
-## Design Vision
+## Design Goals
 
 We are dedicated to making this ventilator:
 * fully open source (software and hardware)
-* affordable (materials cost under $2000)
+* affordable (materials cost under US$2000)
 * fully featured for extended clinical use through weaning and recovery
-* regulatory-approved or filing-ready in multiple regimes around the world
-* optimized to side-step constrained supply chains for specialized medical components
-* clinically useful beyond the pandemic
+* vetted and filing-ready for regulatory review in multiple regimes around the world
+* bill of materials optimized to account for constrained (medical) supply chains
+* designed for long-term clinical use beyond the pandemic
 
 Most low-cost ventilator designs that have emerged in light of the COVID-19 crisis tackle the 'bridge' problem —
 keeping a patient alive for 6-8 hours of closely monitored care until they can be transitioned to a full
-ventilator. We aim to design that full ventilator, which is a highly valued medical device critical to care beyond our
+ventilator. We are designing that full ventilator, a highly valued medical device critical to care beyond the
 current crisis.
 
-Our design will provide essential features such as an intuitive, localized user interface, adaptive pressure- and
+Our design shall provide essential features such as an intuitive, localized user interface, adaptive pressure- and
 volume-based operating modes, fine control of oxygen concentration, High Flow Nasal Cannula and other advanced features.
 What sets us apart from other similarly ambitious projects is our dedication to being fully open source. This repository
 embodies that promise.
 
-We plan on targeting middle- and low-income parts of the world that will deal with COVID-19 for longer, with less access
-to healthcare, and a larger deficit of medical devices. RespiraWorks provides solutions for these communities where
-existing manufacturers cannot.
+We are targeting middle- and low-income parts of the world that will deal with COVID-19 for longer, with less access
+to healthcare, and a larger deficit of medical devices. We aim to deliver a design which meets the same operational
+rigors of current commercial ventilators, while addressing the high barrier to entry for such devices.
 
 The maturity of our design is attested to by our collaboration with [Foundry-M](http://www.foundrym.in/), a startup
 in Visakhapatnam, India. We are working closely with our colleagues in India to adapt this design to their local
 manufacturing capabilities and regulatory needs.
+
+If you can lend your skills towards achieving this goal, please contact us at
+[join-us@respira.works](mailto:join-us@respira.works?subject=[GitHub]%20Join%20request). A list of roles we are looking
+to fill is also on our [website](https://respira.works/join-us).
 
 ## DISCLAIMER
 

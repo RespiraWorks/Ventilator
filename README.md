@@ -19,7 +19,10 @@ This is a common repository for all hardware and software components of the Resp
 working to rapidly develop, manufacture, and deploy a low-cost and open-source ventilator for communities underserved
 by the global supply chain.
 
-![Ventilator under construction](manufacturing/enclosed_build/graphics/india1.jpeg)
+| Next prototype rendering    | First enclosed prototype in India    |
+|:---:|:---:|
+|![](manufacturing/enclosed_build/graphics/enclosure_CAD_2020_august.png) | ![](manufacturing/enclosed_build/graphics/India_build_yellow.jpeg)  |
+
 
 ## Design Vision
 

@@ -72,9 +72,9 @@ BEFORE purchasing any parts.**
 | 5      | 6in/15cm | McMaster-Carr   | 5894K38             |  12.30 / 2 ft| [C][5mcmc]           | Continuous-Flex Soft Tygon PVC Tubing, 3/8" ID, 5/8" OD |
 | 6      |        2 | McMaster-Carr   | 9579K67             |  12.63 / 20  | [C][6mcmc]           | Herbie clip E, 12-13.8mm, to clamp tubing to fittings |
 | 7      |        1 | Digikey         | X-NUCLEO-IHM03A1    | 10.64 / each | [K][7key] [M][7mr]   | Stepper driver dev board |
-| 8      |        1 | ST              | X-NUCLEO-IHM02A1    | 15.00 / each | [S][8st] [R][8rs]    | **ALT for item 10:** Two-axis stepper driver dev board |
-| 9      |        1 | RespiraWorks    | N/A                 |       N/A    | [3D][9print]         | BASE - 3D printed |
-| 10     |        1 | RespiraWorks    | N/A                 |       N/A    | [3D][10print]        | ROTOR - 3D printed |
+| ALT 7  |        1 | ST              | X-NUCLEO-IHM02A1    | 15.00 / each | [S][8st] [R][8rs]    | **ALT for item 7:** Two-axis stepper driver dev board |
+| 8      |        1 | RespiraWorks    | N/A                 |       N/A    | [3D][9print]         | BASE - 3D printed |
+| 9      |        1 | RespiraWorks    | N/A                 |       N/A    | [3D][10print]        | ROTOR - 3D printed |
 
 [1step]:   https://www.omc-stepperonline.com/nema-17-stepper-motor/nema-17-bipolar-59ncm-84oz-in-2a-42x48mm-4-wires-w-1m-cable-and-connector-full-d-cut-shaft.html
 [1amzn]:   https://www.amazon.com/dp/B07Z1J8JWH

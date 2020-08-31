@@ -1,22 +1,19 @@
 # Enclosed build
 
+![](graphics/enclosure_CAD_2020_august.png)
+
+## India build
+
 Preliminary enclosed build was produced by our partners, Foundry-M in Visakhapatnam, India.
 
-## Insides
-
 |     |     |
 |:---:|:---:|
-|![](graphics/insides.jpg) | ![](graphics/open_back.jpeg)  |
-
-
-## With software
-
-|     |     |
-|:---:|:---:|
-|![](graphics/india1.jpeg) | ![](graphics/india2.jpeg) |
+|![](graphics/India_build_yellow.jpeg) | ![](graphics/open_back.jpeg)  |
 
 
 ## Beta Build Plan
+
+Here is the CAD model for viewing: [autodesk360 link](https://a360.co/2PTyRzh)
 
 This page contains a running list of notes and planned updates that will be organized and added to as we get further into beta design and build.
 

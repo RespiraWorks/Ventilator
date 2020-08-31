@@ -31,8 +31,8 @@ We are dedicated to making this ventilator:
 * fully open source (software and hardware)
 * affordable (materials cost under US$2000)
 * fully featured for extended clinical use through weaning and recovery
-* vetted and filing-ready for regulatory review in multiple regimes around the world
-* bill of materials optimized to account for constrained (medical) supply chains
+* vetted and filing-ready for regulatory review around the world
+* optimized bill of materials to account for constrained (medical) supply chains
 * designed for long-term clinical use beyond the pandemic
 
 Most low-cost ventilator designs that have emerged in light of the COVID-19 crisis tackle the 'bridge' problem —
@@ -81,7 +81,7 @@ In time, this information should be transferred to the repository as plain text.
   describes the requirement architecture, hierarchy, and process. Links to the releases of our system requirements, hardware specifications, and software requirements.
 * [**System Design**](design) -
   describes the functional implementation and design theory of the system. This document also defines the hierarchy for the subsystems below.
-    * [Design Rationale](design/design-rationales.md) - An explanation of the rationale that went into specific parts can be found here.
+    * [Design Rationale](design/design-rationales.md) - An explanation of the rationale that went into the design of specific parts can be found here.
     * [Pneumatic System](design/pneumatic-system)
     * [Electrical System](design/electrical-system)
 * [**Manufacturing Design**](manufacturing)
@@ -93,6 +93,6 @@ In time, this information should be transferred to the repository as plain text.
     * [Blower assembly](manufacturing/blower) - provides pressure
     * [Characterization Test Plan](manufacturing/characterization-test-plan.md)
 * [**Main Circuit Board**](pcb) - design, materials, assembly instructions
-* [**Software**](software) - Source code for cycle controller and user interface; debug tools, test scripts and test data
+* [**Software**](software) - Source code for cycle controller and user interface, debug tools, test scripts, and test data
 * [**Quality Assurance**](quality-assurance) - quality assurance strategy
-    * [Testing](quality-assurance/testing) - testing setups, plans, data
+    * [Testing](quality-assurance/testing) - testing setups, plans, and data

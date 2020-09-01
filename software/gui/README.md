@@ -5,7 +5,7 @@
 Here resides the code for the ventilator graphical user interface. It is based on QT and runs
 on Raspberry Pi (henceforth "*RPi*").
 
-Please also see the [Software design pages](../design) for more information on GUI architecture.
+Please also see the [Software design pages](../design/GUI_architecture.md) for more information on GUI architecture.
 
 ## Requirements
 

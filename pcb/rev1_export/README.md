@@ -9,6 +9,10 @@ Previous versions of this iteration are found in the repository up through
 
 ## Contents:
 
+The complete turn-key manufacturing files for Rev 1.0 are provided here. This package includes PCB artwork files, NC 
+drill data, fabrication and assembly drawings, Bill of Materials, and machine-assembly centroid (pick-and-place) files.
+Any standard PCB fabrication and assembly vendor will be able to manufacture these boards using the provided files.
+
 [Schematic](20200424v2-RespiraWorks-Ventilator-Rev1.0-RC2-DWG-SCH.PDF)
 
 [3D STEP file](20200424v2-RespiraWorks-Ventilator-Rev1.0-RC2-3D-STEP.step)
@@ -111,5 +115,6 @@ If you are a RespiraWorks contributor, request dev hardware by making an entry
 ## Stepper driver setup
 
 When the PCB was originally designed, the ability to add a stepper driver was essentially a hedge, a backup *just in
-case* we wanted to try something that required a stepper motor. To use stepper motors, you must add stepper driver
-boards as described in [this guide](stepper_driver_setup.md).
+case* we wanted to try something that required a stepper motor.
+
+To use stepper motors, you must add stepper driver boards as described in [this guide](stepper_driver_setup.md).

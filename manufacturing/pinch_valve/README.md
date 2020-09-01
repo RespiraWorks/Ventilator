@@ -1,18 +1,52 @@
 # Stepper Proportional Pinch Valve
 
-  CAD File         |  Assembled         | In action
-:------------------:|:-----------------:|:-------------------------:
-![](assets/rendering-1-6.png)  |  ![](assets/assembled_smaller.jpg)  |  ![](assets/animation.gif)
+|   CAD File         |  Assembled        |  In action    |
+|:------------------:|:-----------------:|:-------------:|
+![](assets/rendering-1-6.png)  |  ![](assets/assembled_smaller.jpg)  |  ![](assets/animation.gif) |
 
 ## Overview
 
 This contains details, BOM, & instructions for one pinch valve assembly for the pneumatic circuit.
 
-The module is something that can be "spliced" into any location in the pneumatic circuit.
-This makes it interchangeable with solenoid or whatever other valve implementation we might consider/test.
-
 For a full prototype build you will need 2 pinch valves, in which case it makes sense to purchase a 2-axis stepper driver,
 though you can work with two single-stepper drivers if that's what you already have.
+
+## Design
+
+Two custom pinch valves are used to modulate flow through the ventilator: a valve on the inspiratory path works in
+conjunction with the blower to enable quick responses to required flow changes; an identical valve on the expiratory
+path closes periodically to minimize oxygen wastage due to excess bias flow during high pressure periods of the
+breathing cycle.
+
+Flexible tubing-based pinch valves were selected based on the requirements for quick response time, and the ability to
+keep the gas pathway clean (a feature unique to pinch valves, as most other forms of actuated valves require passing the
+gas through the valve workings).
+
+The soft rubber tubing selected is manufactured and rated for peristaltic pumps, which have similar loads consisting of
+cyclical stresses on the tubing walls. This tubing is 5/8"OD x 3/8"ID, somewhat smaller than the main ventilator circuit
+tubing standard in order to make it easier to completely seal the tube when the valve is closed. Roller bearings on the
+rotor eliminate frictional wear on the outer surface of the tubing. While this tubing is rugged enough for weeks of use
+in this application, it will likely need to be replaced periodically. Current testing is underway using a
+[life leader](../../quality-assurance/testing/README.md#durability-and-life-leader-testing) to demonstrate the
+lifetime of the tubing and to quantify degradation in performance over time.
+
+The valves are an assembly of two custom plastic parts with commonly available off-the-shelf hardware. The design of the
+custom plastic parts requires minor modification to be amenable to injection molding in ABS plastic, which is the
+intended at-scale production method.
+
+### Fabrication at Scale
+
+For the pinch valve fabrication at scale, the key difference would be to use the enclosure mounting plate as part of the
+assembly, removing the housing (item 10) in the BOM above. The tube supports would be replaced with routing clamps and
+the pinch plate would be a single injection molded ABS piece affixed to the mounting plate.
+
+The rotor is slightly more complicated, and a few different iterations have been proposed. Likely the cheapest and
+fastest method to produce would be to procure aluminum 60601 bar stock with the correct outer dimensions. Blanks for
+each rotor would be cut and milled to final size. A group of 10-15 rotors would be placed in a vice with the central
+channel milled out. The set screw hole would be through-drilled and tapped. A third operation would be required to drill
+and tap the axel and bearing shaft holes.
+
+The boss on the rotors to isolate the inner race of the bearing would be replaced with a small shim washer.
 
 ### Change history
 
@@ -102,7 +136,7 @@ BEFORE purchasing any parts.**
 [a2amzn]:  https://www.amazon.com/Wiha-71397-Metric-Insert-6-Piece/dp/B0084B7S70/ref=sr_1_4?dchild=1&keywords=3mm+hex&qid=1590347774&sr=8-4
 [a3mcmc]:  https://www.mcmaster.com/26475A38
 
-## Assembly Instructions
+## Prototype fabrication
 
 ![Components](assets/components.jpg)
 
@@ -117,8 +151,12 @@ Rotor Assembly                     |  Base Assembly           |
 ![Assembled](assets/rotor.jpg)|  ![Assembled](assets/assembled.jpg)
 3mm hex and 2.5mm hex driver are required for assembling rotor.|  2mm hex driver is required for attaching base.
 
-Assembled it should look something like this, ready to be integrated:
+Each pinch valve must also include some additional wiring and a driver board for controlling the stepper motor. A
+pigtail with male dupont connectors must be manufactured for interfacing to the driver board. Furthermore, since a
+single ventilator contains two pinch valves, each must come with its own driver board configured with 0-ohm resistors
+soldered appropriately. All of this is documented in a subset of the PCB documentation
+[here](../../pcb/rev1_export/stepper_driver_setup.md).
+
+With the tygon tube and clamps, a single pinch valve sub assembly appears like so:
 
 ![Assembled](assets/full_assembly.jpg)
-
-Instructions on wiring the pinch valve to the PCB can be found [here](../../pcb/rev1_export/stepper_driver_setup.md).

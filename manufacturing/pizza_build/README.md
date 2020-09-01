@@ -1,6 +1,8 @@
 # Pizza Build
 
-**WARNING: This is not intended to be used on patients and lacks a number of safety features.**
+## DISCLAIMER
+
+**This is an incomplete, as yet untested design that is not yet intended to be used on patients.**
 
 This is a ventilator prototype for testing and development.
 The build consists of a functional ventilator pneumatic assembly with controller and user interface. This build is adequate for integration and systems testing.
@@ -13,26 +15,7 @@ It can also come in various configurations, depending on your testing needs:
 
 | Solenoid valve setup  |  Pinch valve setup   | Blower bypass setup     |
 |:---------------------:|:--------------------:|:-----------------------:|
-![](graphics/photo-solenoid.jpg) |![](graphics/photo-pinch.jpg)  |![](graphics/photo-advanced.jpg)  |
-
-**DISCLAIMER:** These are live documents.
-There are duplicate and alternative items for undecided aspects of the physical design.
-
-RespiraWorks may or may not compensate you for any of these parts if you choose to buy them. Please connect with Edwin, Martin or Ethan first.
-If you decide to buy them, do so at your own risk... oh, and thank you ;).**
-
-## Planning
-
-Before you start, it would be wise to plan the configuration you will build and order adequate amounts of components.
-Try to plan for what you'll need in a few weeks rather than what you need now.
-Supply chains are quirky and shipping times can be long, so your surprise at having missed something will soon turn to frustration.
-The goal of this documentation has been precisely to help you avoid unproductive waiting. **PLAN NOW!**
-
-Read over as much of the following documentation as you can and then come back to this point.
-
-Now, contact the team to see if we have components in stock that we can send you.
-Once you know what you are getting from "headquarters", only then should you start filling up your baskets.
-Also ask the team if anything should be ordered on the company account.
+![](images/photo-solenoid.jpg) |![](images/photo-pinch.jpg)  |![](images/photo-advanced.jpg)  |
 
 ## Essentials
 
@@ -108,15 +91,133 @@ The following are essential sub-assemblies that you'll need no matter what addit
 
 ## Assembly Instructions
 
-Use the following diagrams as well as the pictures of the most recent builds at the top of the page to help you assemble this lego set.
-Note: mind which tubes go into the bottom and top ports of the sensors on the PCB.
-
-Additionally, the following document was produced for the Covent19 challenge. It encompasses some aspects of both the
-pizza and the enclosed build. **TODO:** Contents therein should at some point be migrated over into the repository as
-plain text: [Covent19 assembly instructions](../assets/covent-june-2020-assembly-instructions.pdf)
-
 | Pneumatics schematic  |  Shitty diagram     |
 |:---------------------:|:--------------------:|
-![](graphics/pizza-pneumatics.png) |![](graphics/pizza-diagram.jpg)  |
+![](images/pizza-pneumatics.png) |![](images/pizza-diagram.jpg)  |
 
-[Pneumatics diagram source](graphics/pizza-pneumatics.eps)
+[Pneumatics diagram source](images/pizza-pneumatics.eps)
+
+### Create a base
+
+A base for the table top ventilator can be created out of any sturdy material, such as plywood, preferably with some
+4cm high supports:
+
+|         |          |
+|:-------:|:--------:|
+| ![](images/base_marked.jpg) | ![](images/base_legs.jpg) |
+
+In the picture on the right we have marked down positions for the components to be attached.
+
+### Attach Sub-Assemblies
+
+1. Bolt down the pinch valves to the base using some M5 bolts, washers and lock nuts.
+
+|         |          |
+|:-------:|:--------:|
+| ![](images/pinch_valves_front.jpg) | ![](images/pinch_valves_back.jpg) |
+
+2.  Take the tube that belongs with pinch valve and attach it to the blower sub-assembly. lide the tube through pinch
+valve and bolt down the blower from the back, using some M2.5 thread-forming screws:
+
+|         |          |
+|:-------:|:--------:|
+| ![](images/blower_unattached.jpg) | ![](images/blower_attached.jpg) |
+
+3.  Assemble a tee for the oxygen branch (in development), with a transition from ⅜ "ID tubing to ¾ "ID tubing, about 8
+inches of ¾ "tubing and the inflow venturi. Here we have highlighted the flow direction arrow on the venturi:
+4.  Connect the oxygen tee and venturi to the first pinch valve to complete the inhale limb of the pneumatic assembly:
+
+|         |          |
+|:-------:|:--------:|
+| ![](images/oxy_tee_unattached.jpg) | ![](images/oxy_tee_attached.jpg) |
+
+5.  Assemble the exhale limb of the pneumatic assembly, which includes the outflow venturi, 15cm of ¾ "ID tubing, a
+tubing adapter and the ⅜ "ID tubing for the second pinch valve. Then, slide it into the pinch valve and zip tie the
+adapter to secure it to the base board.
+
+|         |          |
+|:-------:|:--------:|
+| ![](images/exhale_unattached.jpg) | ![](images/exhale_attached.jpg) |
+
+### Assemble electrical components
+
+These computing and digital user interface components enable full deploy and execution of all developed software.
+
+1.  Secure the blower driver board to the base and attach spacer standoffs for supporting the main circuit board:
+    ![](images/blower_driver.jpg)
+
+2.  Install the PCB, running the blower’s power and control cables in the space between the base board and the PCB:
+
+|         |          |
+|:-------:|:--------:|
+| ![](images/pcb1.jpg) | ![](images/pcb2.jpg) |
+
+3.  Move the JP5 jumper in the upper-middle-center of the Nucleo board to the E5V position. This tells the board to
+    expect external power from the PCB. This will avoid programming problems. If you wish to remove the Nucleo board and
+    work with it on its own without the PCB, move the jumper back to the U5V position to power it from USB.
+
+4.  Prepare the stepper boards, and label the pigtails accordingly. Also prepare a couple of 16AWG wires (~4cm each) for
+    powering both boards.
+
+![](images/stepper_boards.jpg)
+
+5.  Run the pigtails from the back of the board, connecting them to the pinch valves as follows:
+
+|         |          |
+|:-------:|:--------:|
+| ![](images/stepper_connection1.jpg) | ![](images/stepper_connection2.jpg) |
+
+6.  Stack the stepper boards onto the Nucleo and wire up as follows:
+
+![](images/stepper_connection3.jpg)
+
+Additional details for how to attach stepper drivers to PCB can be found in the
+[pcb section](../../pcb/rev1_export/stepper_driver_setup.md) of the repository.
+
+### Raspberry Pi
+
+Plug Raspberry Pi 4 into the Raspberry Pi socket. Note that if you have the standoffs fitted, do not over-tighten them
+as this can damage the Raspberry Pi.
+
+**#TODO:** Needs picture
+
+### Connect sensor tubing
+
+Connect tubing to the exhale venturi and inhale venturi, check the arrow on the venturis for direction to ensure the
+ports are correctly oriented.  Connect the tubing from the inhale venturi to the board mounted pressure sensor using
+2.5mm tubing. Note that of the two ports on the differential pressure sensors on the circuit board - the upper port
+must connect to the upstream orifice of the venturi, while the lower port must connect to the downstream orifice.
+
+1.  Fist, connect tubing to the inhale venturi. The tubes should be about 20 and 18 cm long.
+2.  Now, connect a tube about 25 cm long from the downstream of the exhale venturi to the lower port of the exhale
+    sensor.
+3.  Run a tube (13cm) from the upstream orifice of the exhale venturi to a tee connector, and another tube (10cm) from
+    tee connector to the upper port of the patient pressure sensor.
+4.  The last tube (15cm) runs from the tee connector to the upper port of the exhale sensor.
+
+|         |          |
+|:-------:|:--------:|
+| ![](images/sensor_tubing1.jpg) | ![](images/sensor_tubing2.jpg) |
+| ![](images/sensor_tubing3.jpg) | ![](images/sensor_tubing4.jpg) |
+
+### Connect test lung
+
+Lastly, you may connect the test lung to the venturis, clamp the patient tubing and secure the venturis to the board
+with some zipties:
+
+![](images/test_lung.jpg)
+
+### Connect touchscreen
+
+Connect an HDMI cable (included with Touchscreen package) between the Pi and the Touchscreen. Similarly, connect a USB
+micro cable (included with Touchscreen package) between the Pi and the TOUCH+5V connector on the Touchscreen.
+
+### Connect power cable
+
+The PCB must be powered in order for the Nucleo to program correctly. A power cable which plugs into the upper left
+corner of the PCB is provided with the board and allows it to be powered from any 12V, 1.2A or greater power adapter
+with a 5.5x2.1mm center-positive barrel jack.
+
+With this, the table-top ventilator prototype is complete:
+
+![](images/assembled.jpg)

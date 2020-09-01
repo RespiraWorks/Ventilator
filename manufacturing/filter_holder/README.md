@@ -1,5 +1,31 @@
 # Air filter assembly
 
+## Design basis
+
+The ventilator uses four mass-manufactured replaceable HEPA filter cartridges to isolate the patient from the device,
+and to isolate the device gas path from the environment. These filters were selected based on research described in the
+design overview document. Currently this form factor HEPA filter is available in quantities exceeding 10,000. A set of
+custom panel-mount components houses this filter cartridge and serves as the connector for the inspiratory and
+expiratory ends of the patient breathing circuit. A modified version of these connectors, utilizing the same filter,
+is used as an additional barrier on the inspiratory and expiratory pathway to the device.
+
+While the prototype components are 3D printed using SLA resin, these parts are designed to be injection molded in ABS,
+and have undergone several iterations of feedback from a fabrication partner that specializes in injection molding. As
+such, they have a draft angle of 2 degrees and uniform wall thickness to simplify mold-making.
+
+These parts are modular in design: the fixed component of the filter housing can accommodate several sizes of flexible
+tubing connections on the back side (options for 3/4 in / 19mm ID, and 1 in / 25 mm ID). This allows the same part to be
+used for all four filter housings, decreasing part cost by economies of scale and simplifying the assembly procedure.
+The fixed panel-mount component includes two M4 press-in or heat-set threaded metal inserts to be used as a mounting
+point for the filter cartridge hold-down parts.
+
+The replaceable filter cartridges are held in place by one of two component options - for the device inlet and outlet,
+a simple screw-down tab holds the filter in place; for the patient breathing circuit connectors, a 22mm cone (male) port
+is provided to interface with standard 22mm socket (female) breathing circuits. The patient breathing circuit connector
+cone is dimensioned according to [ISO 5356-1](https://www.iso.org/obp/ui#iso:std:iso:5356:-1:ed-4:v1:en).
+
+# Implementation
+
 - This is a panel mount filter housing, which allows the use of inexpensive vacuum HEPA filters in line between the
 machine and the patient tubing.
 - The filters we're using are from the Roomba 700 series. These are widely available and cost around $0.50/unit. To use

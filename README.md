@@ -1,6 +1,6 @@
 # RespiraWorks Open Source Ventilator
 
-[![Open Source Love](https://badges.frapsoft.com/os/v1/open-source.png?v=103)](https://en.wikipedia.org/wiki/Open-source_hardware)
+[![Open Source Love](https://badges.frapsoft.com/os/v1/open-source.png?v=103)](open_source.md)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![CircleCI Build Status](https://circleci.com/gh/RespiraWorks/Ventilator.svg?style=shield)](https://circleci.com/gh/RespiraWorks/Ventilator/tree/master)
 [![codecov](https://codecov.io/gh/RespiraWorks/Ventilator/branch/master/graph/badge.svg)](https://codecov.io/gh/RespiraWorks/Ventilator)
@@ -16,19 +16,19 @@ This is a common repository for all hardware and software components of the Resp
 **If you intend to contribute, please read our [wiki](https://github.com/RespiraWorks/Ventilator/wiki).**
 
 [RespiraWorks](https://respira.works/) is a 501(c)(3) non-profit organization with over 200 contributors worldwide
-working to rapidly design a low-cost and open-source ventilator for communities underserved by the global supply chain.
-Our objective is to provide the know-how and technology to enable others to manufacture these systems and put them in
-the hands of those who need them most.
+working to rapidly design a low-cost and [open-source](open_source.md) ventilator for communities underserved by the
+global supply chain. Our objective is to provide the know-how and technology to enable others to manufacture these
+systems and put them in the hands of those who need them most.
 
 | First enclosed prototype in India    | Rendering of upcoming build    |
 |:---:|:---:|
-|![](manufacturing/enclosed_build/graphics/India_build_yellow.jpeg) | ![](manufacturing/enclosed_build/graphics/enclosure_CAD_2020_august.png)  |
+|![](manufacturing/enclosed_build/images/India_build_yellow.jpeg) | ![](manufacturing/enclosed_build/images/enclosed_CAD_2020_august.png)  |
 
 
 ## Design Goals
 
 We are dedicated to making this ventilator:
-* fully open source (software and hardware)
+* [fully open source (software and hardware)](open_source.md)
 * affordable (materials cost under US$2000)
 * fully featured for extended clinical use through weaning and recovery
 * vetted and filing-ready for regulatory review around the world
@@ -65,25 +65,15 @@ to fill is also on our [website](https://respira.works/join-us).
 physical design. Components may or may not connect and integrate as intended. Contents may also be out of date. If you
 decide to buy or build anything, do so at your own risk.**
 
-## CoVent Documentation
-
-Our ventilator placed 3rd in the [CoVent-19 Challege](https://www.coventchallenge.com/) in late June 2020.
-Some comprehensive documents denoting the current state of the ventilator design were created for this competition.
-Links to key documents follow. Some of this may be more detailed than the documentation contained in the repository.
-In time, this information should be transferred to the repository as plain text.
-
-* [Design Overview document](design/assets/covent-june-2020-design-overview-document.pdf)
-* [Progress Status Report](design/assets/covent-june-2020-progress-status-report.pdf)
-
 ## Repository Structure
 
 * [**System Requirements**](requirements) -
   describes the requirement architecture, hierarchy, and process. Links to the releases of our system requirements, hardware specifications, and software requirements.
 * [**System Design**](design) -
   describes the functional implementation and design theory of the system. This document also defines the hierarchy for the subsystems below.
-    * [Design Rationale](design/design-rationales.md) - An explanation of the rationale that went into the design of specific parts can be found here.
     * [Pneumatic System](design/pneumatic-system)
     * [Electrical System](design/electrical-system)
+    * [Mechanical assembly](design/mechanical)
 * [**Manufacturing Design**](manufacturing)
     * [**Pizza build**](manufacturing/pizza_build) - instructions for assembly table-top prototype for development/testing purposes
     * [**Enclosed build**](manufacturing/enclosed_build) - evolving design of the enclosed ventilator approaching the final product

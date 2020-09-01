@@ -10,7 +10,7 @@ This is an intermedtate performance test of the pinch valve from the life leader
 
 * **Software version**: [a9175b3](https://github.com/RespiraWorks/Ventilator/commit/a9175b35f3580fbd728a8149b355841b48c7dc06)
 
-* **Test data:** [Link to file](https://github.com/RespiraWorks/VentilatorSoftware/tree/master/sample-data/2020-07-03-LifeLeader-594hrs-Performance-AIR)
+* **Test data:** [Link to file - update to a absolute link in a subsequent PR](/)
 
 * **Summarize test setup's main components:**
   * Pizzabuild SN01 (Edwin) Inhale and Exhale pinch valves, oxygen PSOL
@@ -56,26 +56,26 @@ This is an intermedtate performance test of the pinch valve from the life leader
 
 * **Images**
 
-![Setup Photo 1](SetupPhoto1.jpeg)
+![Setup Photo 1](SetupPhoto1.jpg)
 
-![Setup Photo 2](SetupPhoto2.jpeg)
+![Setup Photo 2](SetupPhoto2.jpg)
 
-![Setup Photo 3](SetupPhoto3.jpeg)
+![Setup Photo 3](SetupPhoto3.jpg)
 
-![Setup Photo 4](SetupPhoto4.jpeg)
+![Setup Photo 4](SetupPhoto4.jpg)
 
-![Setup Photo 5](SetupPhoto5.jpeg)
+![Setup Photo 5](SetupPhoto5.jpg)
 
-![Setup Photo 6](SetupPhoto6.jpeg)
+![Setup Photo 6](SetupPhoto6.jpg)
 
-![Setup Photo 7](SetupPhoto7.jpeg)
+![Setup Photo 7](SetupPhoto7.jpg)
 
-![Setup Photo 8](SetupPhoto8.jpeg)
+![Setup Photo 8](SetupPhoto8.jpg)
 
-![Setup Photo 9](SetupPhoto9.jpeg)
+![Setup Photo 9](SetupPhoto9.jpg)
 
-![Setup Photo 10](SetupPhoto10.jpeg)
+![Setup Photo 10](SetupPhoto10.jpg)
 
-![Setup Photo 11](SetupPhoto11.jpeg)
+![Setup Photo 11](SetupPhoto11.jpg)
 
-![Setup Photo 12](SetupPhoto12.jpeg)
+![Setup Photo 12](SetupPhoto12.jpg)

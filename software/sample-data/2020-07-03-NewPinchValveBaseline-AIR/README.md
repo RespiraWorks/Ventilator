@@ -10,7 +10,7 @@ This is a set of tests run using a just-assembled new pinch valve with completel
 
 * **Software version**: [a9175b3](https://github.com/RespiraWorks/Ventilator/commit/a9175b35f3580fbd728a8149b355841b48c7dc06)
 
-* **Test data:** [Link to file](https://github.com/RespiraWorks/VentilatorSoftware/tree/master/sample-data/2020-07-03-NewPinchValveBaseline-AIR)
+* **Test data:** [Link to file - update to a absolute link in a subsequent PR](/)
 
 * **Summarize test setup's main components:**
   * Pizzabuild SN01 (Edwin) Inhale and Exhale pinch valves, oxygen PSOL
@@ -56,4 +56,4 @@ This is a set of tests run using a just-assembled new pinch valve with completel
 
 * **Images**
 
-![Setup Photo 1](SetupPhoto1.jpeg)
+![Setup Photo 1](SetupPhoto1.jpg)

@@ -10,6 +10,17 @@ themselves this way in bulk in the future.
 - The top and bottom connect by 2x m3x20 thumb screws, which go into threaded inserts. Right now we're using standard
 McMaster heat-set inserts; for production we'll consult with the manufacturer. We might upgrade from m3 to m4.
 
+## Custom parts CAD
+There are two types of filter assemblies to be used in our ventilator.
+
+|   [Patient Connectors][PC]       |  [Non Patient connectors][NPC]  |
+|:--------------------------------:|:-------------------------------:|
+|![Assembled](assets/PatientConnectorAssembly.png)|  ![Assembled](assets/NonPatientConnectorAssembly.png) |
+|![Sectional](assets/PatientConnectorSection.png) |  ![Sectional](assets/NonPatientConnectorSection.png)  |
+
+[PC]: https://cad.onshape.com/documents/3fe0c1f79c482144c267173d/w/2ad1c08071a25185f9c78c68/e/3f7805d0bb1b53e700b6c7eb
+[NPC]: https://cad.onshape.com/documents/3fe0c1f79c482144c267173d/w/2ad1c08071a25185f9c78c68/e/11907480755add4f9ca862c4
+
 ## Parts List (BOM)
 
 **Note: If you are a member of the RespiraWorks team, review the
@@ -18,39 +29,37 @@ BEFORE purchasing any parts.**
 
 ### Purchasing Source Key
 
-* **A** = Ali Express
 * **C** = McMaster-Carr
-* **W** = Wonsmart
-* **K** = Digikey
 * **B** = Built by RespiraWorks
 * **Z** = Amazon
-* **R** = RS computing
 
 ### Parts
 
-**NOTE:** Before you buy anything on this list, check with Edwin, Martin or Ethan. Blower takes a while to deliver.
-We may have parts to send you from our inventory.
-
+**NOTE:** The below quantities are for building 4 complete sets which are needed for one Ventilator.
 
 | Item | Quantity | Manufacturer  | Part #               | Price (USD)      |Sources     | Notes |
 | ---- |---------:| ------------- | -------------------- | ----------------:|:-----------|:------|
-| 1    |        1 | RespiraWorks  | Filter Outer Housing | $1 (material)    | [B][1rw]   | 3D printed from data in link |
-| 2    |        1 | RespiraWorks  | Filter Inner Housing | $1 (material)    | [B][2rw]   | 3D printed from data in link |
-| 3    |        1 | Roomba        | Filter               | $8/6pk           | [Z][3amzn] | removed from filter unit as delivered |
-| 4    |        1 | RespiraWorks  | Filter Inner Gasket  | $0.10 (material) | B          | make using item 6 below |
-| 5    |        1 | RespiraWorks  | Filter Outer Gasket  | $0.10 (material) | B          | make using item 6 below |
-| 6    | ~4 sq in | McMaster-Carr | Gasket Material      | $22.22/ 12x12" sheet | [C][9mcmc] | cut with jigs to make items 4 and 5 |
-| 7    |        2 | McMaster-Carr | 96016A556            | $5.50/10pk       | [C][7mcmc] | thumbscrews |
-| 8    |        2 | McMaster-Carr | 94180A333            | $16.69/100pk     | [C][8mcmc] | thumbscrews |
+| 1    |        4 | RespiraWorks  | Filter Inner Housing | $1 (material)    | [B][1rw]   | 3D printed from data in link |
+| 2    |        2 | RespiraWorks  | Outer housing with patient tubing interface  | $1 (material)    | [B][2rw]   | 3D printed from data in link |
+| 3    |        2 | RespiraWorks  | outer housing without tubing interface | $1 (material)    | [B][3rw]   | 3D printed from data in link |
+| 4    |        1 | Roomba        | Filter               | $8/6pk           | [Z][4amzn] | removed from filter unit as delivered |
+| 5    |        4 | RespiraWorks  | Filter Inner Gasket  | $0.10 (material) | B          | make using item 6 below |
+| 6    |        4 | RespiraWorks  | Filter Outer Gasket  | $0.10 (material) | B          | make using item 6 below |
+| 7    | ~4 sq in | McMaster-Carr | Gasket Material      | $22.22/ 12x12" sheet | [C][9mcmc] | cut with jigs to make items 4 and 5 |
+| 8    |        8 | McMaster-Carr | 96016A556            | $5.50/10pk       | [C][7mcmc] | thumbscrews |
+| 9    |        8 | McMaster-Carr | 94180A333            | $16.69/100pk     | [C][8mcmc] | inserts |
+
 
 [1rw]: assets/SmallFilterHousing.stl
 [2rw]: assets/SmallFilterPatientConnector.stl
-[3amzn]: https://www.amazon.com/gp/product/B01KNZCW8E
+[3rw]: assets/SmallFilterNonPatientConnector.stl
+[4amzn]: https://www.amazon.com/gp/product/B01KNZCW8E
 [9mcmc]: https://www.mcmaster.com/8785K82-8785K822/
 [7mcmc]: https://www.mcmaster.com/96016A556-96016A831/
 [8mcmc]: https://www.mcmaster.com/94180A333/
 
-**Note: items 4 and 5 are made in this procedure from the material in item 6
+
+**Note:** items 5 and 6 are made in this procedure from the material in item 7
 
 ## Tools
 

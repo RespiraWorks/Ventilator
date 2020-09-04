@@ -9,16 +9,16 @@
 ## Document Content
 
 - Summary of key constraints
-- Understanding of current intra-breath cycle control for the development (“Pizza”) board.
+- Understanding of current intra-breath cycle control for the development ("Pizza") board.
 - Preliminary description of system operation for next iteration of system with O2 mixing
 - Envisioned Inter and Intra-breath cycle control states
 - Open questions / points to resolve.
 
 ## Functional Diagram
 
-![Functional Block Diagram](assets/functional-block-diagram.png)
+![Functional Block Diagram](images/functional_block_diagram.png)
 
-## “Pizza Build” Intra-breath Cycle Control
+## "Pizza Build" Intra-breath Cycle Control
 
 The Alpha system flow path is:
 - Fan
@@ -31,13 +31,14 @@ The Alpha build (first iteration) did closed loop control on the blower speed an
 
 The intra-breath control cycle for the Alpha build is:
 - **Inhale:**
-Increase pressure set point for closed loop control to PIP pressure
-Exhale moves to exhale position (fully closed)
-Controller adjusts blower speed based on PID control closed around the measured patient pressure
-PIP pressure target is maintained for a specified amount of time - then step transition to exhale
+    - Increase pressure set point for closed loop control to PIP pressure
+    - Exhale moves to exhale position (fully closed)
+    - Controller adjusts blower speed based on PID control closed around the measured patient pressure
+    - PIP pressure target is maintained for a specified amount of time - then step transition to exhale
 - **Exhale:**
-Exhale valve moves to exhale position (fully open)
-Controlled adjusts pressure set point for closed loop control to PEEP pressure - controller adjusts blower speed to meet PEEP.
-PEEP pressure target is maintained for a specified amount of time - then transition back to inhale
+    - Exhale valve moves to exhale position (fully open)
+    - Controller adjusts pressure set point for closed loop control to PEEP pressure
+    - Controller adjusts blower speed to meet PEEP.
+    - PEEP pressure target is maintained for a specified amount of time - then transition back to inhale
 
-Alpha build has no inter-breath or “adaptive” control on top of this.
+Alpha build has no inter-breath or "adaptive" control on top of this.

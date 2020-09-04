@@ -5,7 +5,17 @@ This directory contains files for the Ventilator mainboard design.
 This includes the original Altium files, exported files of latest release for manufacture, and instructions for setting
 up the board and optional stepper drivers.
 
-![picture of board](rev1_export/readme_photos/IMG_9306.jpg)
+![](rev1_export/readme_photos/6boards.png)
+
+Due to the coupled nature of the controls, electrical, and mechanical components and their design the RespiraWorks
+ventilator contains a custom fabricated printed circuit board (PCB) to connect the microcontroller, interface processor,
+and sensor interfaces. The use of a custom PCB greatly reduces the chance for electrical assembly and fabrication errors
+and is far more amenable to a quality fabrication process than hand-soldered components. We do not intend for this
+component to be hand-assembled, and engineering turnkey fabrication instructions have been generated as part of the
+submission; no assembly instructions are provided here.
+
+The RespiraWorks Ventilator Mainboard PCB is a custom component that integrates the Cycle Controller, UI Computer,
+sensors, actuator drives, power supplies, filtering, and protection components.
 
 ## Contents
 
@@ -24,7 +34,6 @@ The following are Altium files for various aspects of the circuit design.
 Exported files for the most recent release of the board and set-up instructions are provided [here](rev1_export).
 
 Instructions for adding stepper motor support to Rev 1.0 board are [here](rev1_export/stepper_driver_setup.md).
-
 
 ## Current issues
 

@@ -3,34 +3,40 @@
 This section of the repository describes the physical design of the ventilator and the process of manufacturing the
 components and fully assembled units.
 
+If you are a member of the team and intend to build your own prototype, please read the
+[purchasing guidelines](#part-purchasing-guidelines) first.
+
 Broadly there are two types of ventilator builds we are currently testing with:
 - open table-top prototypes for testing components and various pneumatic configurations, kindly referred to as "pizza build"
 - "enclosed build", more like the final product; more expensive to make and slower to iterate on
 
 | Pizza build  |  Enclosed build   |
 |:---------------------:|:--------------------:|
-![](pizza_build/graphics/3_pizzas_small.jpg) |![](enclosed_build/graphics/India_build_yellow.jpeg) |
-
-If you are a member of the team and intend to build your own prototype, please read the
-[purchasing guidelines](#part-purchasing-guidelines) first.
+![](pizza_build/images/assembled.jpg) |![](enclosed_build/images/India_build_yellow.jpeg) |
 
 ## Sub-assemblies
 
 Components and sub-assemblies have firstly been tested and documented in the context of the pizza build. They should
 generally be similar for the enclosed build, but documentation might be lagging.
 
+One of the foundational principles of the ventilator design was to avoid, where possible, custom components. However,
+for several parts, it was unavoidable to design a new component if price, availability, and functional performance
+requirements could not be achieved with already-available components. Some of the following contain components that
+have been custom designed for this application. The manufacturing process for the prototypes is discussed, as well as
+plans and features for production at larger volumes, with an approximate scale-point of 1,000 units. For smaller orders
+of less than 100 units production, some of the prototype production methods may prove more cost- and time-effective.
+
 For each component, the goal is to document:
 * the reasoning for the design
-* production process and common problems to watch out for
-* link characterization tests and data
+* summary of design history
+* files or links to original CAD, derived step files and 3d-printer files with scaffolding
+* prototype fabrication process and common problems to watch out for
+* plans for fabrication at scale
+* link to characterization tests and data
 * link to software that interfaces with component
 * link to any validation tests that are available to evaluate individual assemblies
 
 Some of the above may not be done for each component. Feel free to help us fill this out.
-
-The following document was produced for the Covent19 challenge. Contents therein should at some point be migrated
-over into the repository as plain text:
-[Production methods for custom components (PDF)](assets/covent-june-2020-production-methods-for-custom-components.pdf)
 
 ### Components
 
@@ -54,10 +60,6 @@ It is not enclosed like the final product and is meant to be operated in an open
 [**Enclosed build**](enclosed_build)
 This is our work-in-progress towards a "beta" version of the ventilator, which should be rather close to the final
 product.
-
-Additionally, the following document was produced for the Covent19 challenge. It encompasses some aspects of both the
-pizza and the enclosed build. **TODO:** Contents therein should at some point be migrated over into the repository as
-plain text: [Covent19 assembly instructions](assets/covent-june-2020-assembly-instructions.pdf)
 
 ## Test equipment
 

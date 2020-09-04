@@ -2,40 +2,7 @@
 
 Here resides the code for the ventilator controller.
 
-## High-level graph of components
-
-<!-- See https://github.com/TLmaK0/gravizo -->
-![Graph of components in cycle controller](https://g.gravizo.com/source/cc_graph_mark?https%3A%2F%2Fraw.githubusercontent.com%2FRespiraWorks%2FVentilator%2Fmaster%2Fsoftware%2Fcontroller%2FREADME.md)
-<!--
-cc_graph_mark
-digraph G {
-  subgraph cluster_RPI {
-    label="GUI (Raspberry Pi)"
-    labelloc=b;
-    GUI [label="Qt app"]
-  }
-
-  subgraph cluster_CC {
-    label = "Cycle Controller (STM32)";
-    labelloc = b;
-    "Main loop" -> "Controller"
-    "Main loop" -> "Comms"
-
-    "Controller" -> "Sensors"
-    "Controller" -> "Actuators"
-    "Controller" -> "Breath FSM"
-
-    "Actuators" -> HAL
-    "Sensors" -> HAL
-  }
-
-  "Comms" -> GUI
-  GUI -> "Comms"
-}
-cc_graph_mark
--->
-
-Please also see the [Software design pages](../design) for more information on controller architecture.
+Please also see the [Software design pages](../design/controller_architecture.md) for more information on controller architecture.
 
 ## Rationale and structure
 

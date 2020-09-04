@@ -74,4 +74,4 @@ As much as possible we should try to keep the cables one-to-one
 (for example the wiring of the PCB to blower driver cables are all pin 1 to pin 1,
 pin 2 to pin 2, etc. with the same connector style on both ends.
 
-![Pizza pneumatics](assets/wires.jpg)
+![Pizza pneumatics](images/wires.jpg)

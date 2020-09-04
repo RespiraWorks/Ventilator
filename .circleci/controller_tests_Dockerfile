@@ -4,7 +4,7 @@ FROM debian:buster
 
 RUN apt-get update && apt-get install build-essential python-pip lcov git curl libtinfo5 -y \
     && pip install -U pip \
-    && pip install platformio codecov \
+    && pip install platformio==4.3.4 codecov \
     && platformio update
 
 WORKDIR /root/Ventilator

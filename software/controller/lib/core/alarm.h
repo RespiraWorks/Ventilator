@@ -18,35 +18,43 @@ limitations under the License.
 
 #include <stdint.h>
 
-enum alarm_proirity {
-    NONE,
-    ALARM_LOW_PRIORITY,
-    ALARM_MEDIUM_PRIORITY,
-    ALARM_HIGH_PRIORITY,
+enum class AlarmProirity : uint8_t {
+  NONE = 0x00,
+  ALARM_LOW_PRIORITY = 0x01,
+  ALARM_MEDIUM_PRIORITY = 0x02,
+  ALARM_HIGH_PRIORITY = 0x03,
 };
 
-enum active_alarms {
-    COMM_CHECK_ALARM = 0,
-    UNDEFINED_ALARM = 1,
+enum class ActiveAlarms : uint8_t {
+  COMM_CHECK_ALARM = 0,
+  UNDEFINED_ALARM = 1,
 };
 
-typedef struct _alarm_cb_t {
-    Time        timestamp;
-    void        (*callthis)(void);
-    uint8_t     priority;
-    uint8_t     triggered;
-    uint8_t     alarm_pause;
-    uint8_t     audio_pause;
-    uint8_t     trigger_count;
-    uint8_t     dummy[3];               // can be used for future
-} alarm_cb_t;
+struct AlarmCb{
+  Time          timestamp;
+  void          (*callthis)(void);
+  bool          triggered;
+  bool          alarm_pause;
+  bool          audio_pause;
+  AlarmProirity priority;
+  uint8_t       trigger_count;
+};
 
-// This module monitors if any alarms are triggered
+// Represents one of the stepper motors in the system
+class Alarm {
+public:
+  static constexpr uint8_t kMaxControllerAlarms = {2};
+  // This module monitors if any alarms are triggered
 
-void alarm_init(void);
+  Alarm();
+  AlarmCb alarms[kMaxControllerAlarms];
+  ActiveAlarms alarm_check_counter;
+  void AlarmInit(void);
+  // alarm_handler monitors/checks is there are any faults and despatches alarms
+  // accordingly.
+  void AlarmHandler(void);
+};
 
-// alarm_handler monitors/checks is there are any faults and despatches alarms
-// accordingly.
-void alarm_handler(void);
+extern Alarm alarm;
 
 #endif // COMMS_H

@@ -152,7 +152,7 @@ static void background_loop() {
 
     comms_handler(local_controller_status, &gui_status);
 
-    alarm_handler();
+    alarm.AlarmHandler();
 
     // Override received gui_status from the RPi with values from DebugVars iff
     // the gui_mode DebugVar has a legal value.
@@ -189,7 +189,7 @@ int main() {
 
   comms_init();
 
-  alarm_init();
+  alarm.AlarmInit();
 
   background_loop();
 }

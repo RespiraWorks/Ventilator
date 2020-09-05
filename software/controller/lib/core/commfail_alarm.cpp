@@ -19,30 +19,31 @@ limitations under the License.
 #include "alarm.h"
 #include "commfail_alarm.h"
 
-extern alarm_cb_t alarms[];
-
 void commfail_alarm_cb(void)
 {
-    if ((alarms[COMM_CHECK_ALARM].triggered == 0) &&
-            (alarms[COMM_CHECK_ALARM].priority == ALARM_HIGH_PRIORITY)) {
-        // take the time stamp when alarm occured
-        alarms[COMM_CHECK_ALARM].timestamp = Hal.now();
-        // if triggered is more than 0;
-        if (alarms[COMM_CHECK_ALARM].trigger_count > 0) {
-            if ((alarms[COMM_CHECK_ALARM].alarm_pause == 0) &&
-                    (alarms[COMM_CHECK_ALARM].audio_pause == 0)) {
-                Hal.BuzzerOn(1.0f);
-            }
-            else {
-                Hal.BuzzerOff();
-            }
-        }
-        alarms[COMM_CHECK_ALARM].triggered = 1;
-        debug.Print("alarm_triggered");
+  uint8_t idx;
+
+  idx = static_cast<uint8_t>(ActiveAlarms::COMM_CHECK_ALARM);
+  if ((alarm.alarms[idx].triggered == 0) &&
+      (alarm.alarms[idx].priority == AlarmProirity::ALARM_HIGH_PRIORITY)) {
+    // take the time stamp when alarm occured
+    alarm.alarms[idx].timestamp = Hal.now();
+    // if triggered is more than 0;
+    if (alarm.alarms[idx].trigger_count > 0) {
+      if ((alarm.alarms[idx].alarm_pause == 0) &&
+          (alarm.alarms[idx].audio_pause == 0)) {
+        Hal.BuzzerOn(1.0f);
+      }
+      else {
+        Hal.BuzzerOff();
+      }
     }
-    else {
-        // take the latest timestamp when alarm occured again
-        alarms[COMM_CHECK_ALARM].timestamp = Hal.now();
-    }
+    alarm.alarms[idx].triggered = 1;
+    debug.Print("alarm_triggered\n");
+  }
+  else {
+    // take the latest timestamp when alarm occured again
+    alarm.alarms[idx].timestamp = Hal.now();
+  }
 }
 

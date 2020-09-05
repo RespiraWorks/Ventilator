@@ -45,6 +45,10 @@ static constexpr Duration RX_TIMEOUT = milliseconds(1);
 // bytes, we need at least 1/115200.*10*300=26ms to transmit.
 static constexpr Duration TX_INTERVAL = milliseconds(30);
 
+// There should be a packet from GUI for every 30ms. Assuming something went
+// wrong, we wait for 50ms before raising a communication failure alarm
+static constexpr Duration COMMUNICATION_TIMEOUT = milliseconds(10000);
+
 void comms_init() {}
 
 static bool is_time_to_process_packet() {
@@ -134,12 +138,13 @@ static void process_rx(GuiStatus *gui_status) {
   }
 }
 
-Time comms_get_lastrx_time(void) {
-  return last_rx;
-}
-
 void comms_handler(const ControllerStatus &controller_status,
                    GuiStatus *gui_status) {
   process_tx(controller_status);
   process_rx(gui_status);
 }
+
+bool comms_is_time_to_raise_commfail_alarm(void) {
+  return Hal.now() - last_rx > COMMUNICATION_TIMEOUT;
+}
+

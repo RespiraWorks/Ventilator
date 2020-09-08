@@ -24,7 +24,7 @@ limitations under the License.
 #include "trace.h"
 #include <limits>
 #include <optional>
-#include "alarm.h"
+#include "commfail_alarm.h"
 
 // By default, the controller receives settings (on/off, pip, rr, etc.) from
 // the GUI.  But you can also command the controller by setting the gui_foo
@@ -152,7 +152,7 @@ static void background_loop() {
 
     comms_handler(local_controller_status, &gui_status);
 
-    alarm.AlarmHandler();
+    commfailalarm.AlarmHandler();
 
     // Override received gui_status from the RPi with values from DebugVars iff
     // the gui_mode DebugVar has a legal value.
@@ -189,7 +189,7 @@ int main() {
 
   comms_init();
 
-  alarm.AlarmInit();
+  commfailalarm.AlarmInit();
 
   background_loop();
 }

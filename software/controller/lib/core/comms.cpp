@@ -46,8 +46,8 @@ static constexpr Duration RX_TIMEOUT = milliseconds(1);
 static constexpr Duration TX_INTERVAL = milliseconds(30);
 
 // There should be a packet from GUI for every 30ms. Assuming something went
-// wrong, we wait for 50ms before raising a communication failure alarm
-static constexpr Duration COMMUNICATION_TIMEOUT = milliseconds(10000);
+// wrong, we wait for 100ms before raising a communication failure alarm
+static constexpr Duration kCommunicationTimeoutMs = milliseconds(100);
 
 void comms_init() {}
 
@@ -144,7 +144,7 @@ void comms_handler(const ControllerStatus &controller_status,
   process_rx(gui_status);
 }
 
-bool comms_is_time_to_raise_commfail_alarm(void) {
-  return Hal.now() - last_rx > COMMUNICATION_TIMEOUT;
+bool CommsIsTimeToRaiseCommFailAlarm(void) {
+  return Hal.now() - last_rx > kCommunicationTimeoutMs;
 }
 

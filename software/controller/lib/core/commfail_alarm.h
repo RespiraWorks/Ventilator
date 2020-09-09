@@ -16,6 +16,7 @@ limitations under the License.
 #ifndef COMMFAIL_ALARM_H
 #define COMMFAIL_ALARM_H
 
+#include "hal.h"
 #include <stdint.h>
 
 // This module monitors if any alarms are triggered

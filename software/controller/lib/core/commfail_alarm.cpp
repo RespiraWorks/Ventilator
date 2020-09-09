@@ -13,92 +13,57 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include <stdint.h>
-#include "debug.h"
-#include "hal.h"
 #include "commfail_alarm.h"
 #include "comms.h"
+#include "debug.h"
+#include "hal.h"
+#include <stdint.h>
+
+extern CommFailAlarm alarm;
 
 // This count checks how many times alarm is triggered before it raises alarm
-// for medium & low priority alarms, where as alarm will be raised 
-// immediately for high priority alarms
-static constexpr uint8_t kTriggerCount = 100;
+// Alarm will be raised immediately considering as high priority alarm
+static constexpr uint8_t kTriggerCount = 1;
 
-CommFailAlarm commfailalarm;
-
-CommFailAlarm::CommFailAlarm()
-{
-}
-
-void CommFailAlarm::AlarmInit(void)
-{
+void CommFailAlarm::Initialize() {
   // for COMMUNICATION_CHECK_ALARM
-  commfailalarm.time_stamp_ = Hal.now();
-  commfailalarm.priority_ = AlarmProirity::ALARM_HIGH_PRIORITY;
-  commfailalarm.triggered_ = false;
-  commfailalarm.alarm_pause_ = false;    // false not pausable, true pausable
-  commfailalarm.audio_pause_ = false;    // false not pausable, true pausable
-  commfailalarm.trigger_count_ = 0;
-  debug.Print("alarm_init ");
+  alarm.time_stamp_ = Hal.now();
+  debug.Print("Communication Failure Alarm Initialized\n");
 }
 
-void CommFailAlarm::AlarmHandler(void)
-{
+void CommFailAlarm::Handler() {
   // does the communication timed out
   if (CommsIsTimeToRaiseCommFailAlarm()) {
-    if (commfailalarm.trigger_count_ < kTriggerCount) {
-      commfailalarm.trigger_count_++;
-      if (commfailalarm.trigger_count_ == kTriggerCount) {
-        if ((commfailalarm.priority_ ==
-              AlarmProirity::ALARM_MEDIUM_PRIORITY) ||
-            (commfailalarm.priority_ ==
-             AlarmProirity::ALARM_LOW_PRIORITY)) {
-          commfailalarm.triggered_ = true;
-        }
-        debug.Print("yes_alarm ");
+    if (alarm.trigger_count_ < kTriggerCount) {
+      alarm.trigger_count_++;
+      if (alarm.trigger_count_ == kTriggerCount) {
+        alarm.triggered_ = true;
+        alarm.CommFailAlarmCb();
+        debug.Print("Communication Failed, Raised Alarm\n");
       }
-      commfailalarm.CommFailAlarmCb();
     }
-  }
-  else {
+  } else {
     // communication resumed so clear alarm
-    if (commfailalarm.trigger_count_ > 0) {
-      commfailalarm.trigger_count_--;
-      if (commfailalarm.trigger_count_ == 0) {
-        commfailalarm.time_stamp_ = Hal.now();
-        commfailalarm.triggered_ = false;
+    if (alarm.trigger_count_ > 0) {
+      alarm.trigger_count_--;
+      if (alarm.trigger_count_ == 0) {
+        alarm.time_stamp_ = Hal.now();
+        alarm.triggered_ = false;
         Hal.BuzzerOff();
-        debug.Print("no_alarm ");
+        debug.Print("Communication Normal/Resumed, Hence No Alarm\n");
       }
     }
   }
 }
 
-void CommFailAlarm::CommFailAlarmCb(void)
-{
-  if (commfailalarm.triggered_ == false) {
-    if (commfailalarm.priority_ == AlarmProirity::ALARM_HIGH_PRIORITY) {
-      commfailalarm.triggered_ = true;
+void CommFailAlarm::CommFailAlarmCb() {
+  if (alarm.triggered_) {
+    // take the time stamp when alarm occured
+    alarm.time_stamp_ = Hal.now();
+    if ((!alarm.alarm_pause_) && (!alarm.audio_pause_)) {
+      Hal.BuzzerOn(1.0f);
+    } else {
+      Hal.BuzzerOff();
     }
-    if (commfailalarm.triggered_ == true) {
-      // take the time stamp when alarm occured
-      commfailalarm.time_stamp_ = Hal.now();
-      // if triggered is true
-      if (commfailalarm.trigger_count_ > 0) {
-        if ((commfailalarm.alarm_pause_ == false) &&
-            (commfailalarm.audio_pause_ == false)) {
-          Hal.BuzzerOn(1.0f);
-        }
-        else {
-          Hal.BuzzerOff();
-        }
-      }
-      debug.Print("alarm_triggered\n");
-    }
-  }
-  else {
-    // take the latest timestamp when alarm occured again
-    commfailalarm.time_stamp_ = Hal.now();
   }
 }
-

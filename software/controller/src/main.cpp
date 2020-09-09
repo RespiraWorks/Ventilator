@@ -14,6 +14,7 @@ limitations under the License.
 */
 
 #include "actuators.h"
+#include "commfail_alarm.h"
 #include "comms.h"
 #include "controller.h"
 #include "debug.h"
@@ -24,7 +25,6 @@ limitations under the License.
 #include "trace.h"
 #include <limits>
 #include <optional>
-#include "commfail_alarm.h"
 
 // By default, the controller receives settings (on/off, pip, rr, etc.) from
 // the GUI.  But you can also command the controller by setting the gui_foo
@@ -49,6 +49,7 @@ static DebugFloat
 static Controller controller;
 static ControllerStatus controller_status;
 static Sensors sensors;
+CommFailAlarm alarm;
 
 static SensorsProto AsSensorsProto(const SensorReadings &r,
                                    const ControllerState &c) {
@@ -152,7 +153,7 @@ static void background_loop() {
 
     comms_handler(local_controller_status, &gui_status);
 
-    commfailalarm.AlarmHandler();
+    alarm.Handler();
 
     // Override received gui_status from the RPi with values from DebugVars iff
     // the gui_mode DebugVar has a legal value.
@@ -189,7 +190,7 @@ int main() {
 
   comms_init();
 
-  commfailalarm.AlarmInit();
+  alarm.Initialize();
 
   background_loop();
 }

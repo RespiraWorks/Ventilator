@@ -120,23 +120,30 @@ TEST(ControllerTest, BreathId) {
   }
 }
 
+struct ActuatorsTest {
+  Time time{microsSinceStartup(0)};
+  VentParams params;
+  SensorReadings readings;
+  ActuatorsState expected_state;
+};
+
 // Checks that a sequence of calls to controller_run() yields the expected
 // actuators state
-void actuatorsTestSequence(
-    const std::vector<std::tuple<
-        VentParams, SensorReadings, /*time_millis*/ uint64_t,
-        /*expected_blower_power*/ float, /*expected_oxy_valve*/ float,
-        /*expected_air_vave*/ float, /*expected_exhale_valve*/ float>> &seq) {
+void actuatorsTestSequence(const std::vector<ActuatorsTest> &seq) {
   if (seq.empty()) {
+    // I see two ways to handle the call with an empty vector:
+    //  - fail test because it really shouldn't be empty, but this may become an
+    //  issue if we read input data from a file
+    //  - pass test assuming the caller knew what he was doing. This is what I
+    //  choose for now.
     return;
   }
   constexpr float kValveStateTolerance{.001f};
 
   // Reset time to test's start time.
-  Hal.delay(microseconds(-Hal.now().microsSinceStartup()));
-  Hal.delay(milliseconds(std::get<uint64_t>(seq.front())));
+  Hal.delay(seq.front().time - Hal.now());
 
-  Controller c;
+  Controller controller;
   VentParams last_params = VentParams_init_zero;
   SensorReadings last_readings = {
       .patient_pressure = cmH2O(0),
@@ -147,29 +154,33 @@ void actuatorsTestSequence(
       .outflow = ml_per_min(0),
   };
 
-  for (const auto &[params, readings, time_millis, blower, psol, air_valve,
-                    exhale_valve] : seq) {
+  for (const auto &actuators_test : seq) {
 
-    SCOPED_TRACE("time = " + std::to_string(time_millis));
+    SCOPED_TRACE("time = " + actuators_test.time.microsSinceStartup() / 1000);
     // Move time forward to t in steps of Controller::GetLoopPeriod().
-    Time t = microsSinceStartup(1000 * time_millis);
-    while (Hal.now() < t) {
+    while (Hal.now() < actuators_test.time) {
       Hal.delay(Controller::GetLoopPeriod());
-      (void)c.Run(Hal.now(), last_params, last_readings);
+      (void)controller.Run(Hal.now(), last_params, last_readings);
     }
-    EXPECT_EQ(t.microsSinceStartup(), Hal.now().microsSinceStartup());
+    EXPECT_EQ(actuators_test.time.microsSinceStartup(),
+              Hal.now().microsSinceStartup());
 
-    auto [act_state, unused_status] = c.Run(Hal.now(), params, readings);
+    auto [act_state, unused_status] = controller.Run(
+        Hal.now(), actuators_test.params, actuators_test.readings);
     (void)unused_status;
 
-    EXPECT_FLOAT_EQ(act_state.blower_power, blower);
-    EXPECT_NEAR(act_state.fio2_valve, psol, kValveStateTolerance);
-    EXPECT_NEAR(act_state.blower_valve.value(), air_valve,
+    EXPECT_FLOAT_EQ(act_state.blower_power,
+                    actuators_test.expected_state.blower_power);
+    EXPECT_NEAR(act_state.fio2_valve, actuators_test.expected_state.fio2_valve,
                 kValveStateTolerance);
-    EXPECT_NEAR(act_state.exhale_valve.value(), exhale_valve,
+    EXPECT_NEAR(act_state.blower_valve.value(),
+                actuators_test.expected_state.blower_valve.value(),
                 kValveStateTolerance);
-    last_params = params;
-    last_readings = readings;
+    EXPECT_NEAR(act_state.exhale_valve.value(),
+                actuators_test.expected_state.exhale_valve.value(),
+                kValveStateTolerance);
+    last_params = actuators_test.params;
+    last_readings = actuators_test.readings;
   }
 }
 
@@ -182,6 +193,11 @@ TEST(ControllerTest, ControlLaws) {
   constexpr float kAlmostClosed{0.05f};
   constexpr float kValveClosed{0};
   constexpr float kExhaleMaxOpen{0.6f};
+  // typical 02 param/reading
+  constexpr float kAmbientAir{0.21f};
+  // Very low pressure to make readings below desired PIP trigger a maximum
+  // inflow with outlet valve closed or almost closed.
+  constexpr Pressure kVeryLowPressure{cmH2O(-500)};
 
   VentParams params = VentParams_init_zero;
   params.mode = VentMode::VentMode_PRESSURE_CONTROL;
@@ -190,52 +206,72 @@ TEST(ControllerTest, ControlLaws) {
   params.pip_cm_h2o = params.peep_cm_h2o;
   params.breaths_per_min = 15;
   params.inspiratory_expiratory_ratio = 1;
-  params.fio2 = 0.21f;
+  params.fio2 = kAmbientAir;
 
   // Readings with patient pressure == Setpoint, should lead to inlet valve
-  // almost closed and exhale valve in its max openness state
+  // almost closed and exhale valve in its max openness state.
   SensorReadings readings_pip = {
       .patient_pressure = cmH2O(static_cast<float>(params.pip_cm_h2o)),
       .inflow_pressure_diff = kPa(0),
       .outflow_pressure_diff = kPa(0),
-      .fio2 = 0.21f,
+      .fio2 = kAmbientAir,
       .inflow = ml_per_min(0),
       .outflow = ml_per_min(0),
   };
 
-  // Readings with patient pressure << Setpoint, should lead to inlet valve
-  // fully open and exhale valve either almost closed (when using air) or fully
-  // closed (when using oxygen, in order not to waste oxygen)
+  // Readings with very low patient pressure (much smaller than Setpoint), which
+  // should lead to inlet valve fully open and exhale valve either almost closed
+  // (when using air) or fully closed (when using oxygen, in order not to waste
+  // oxygen), whatever the controller gains and desired params are.
   SensorReadings readings_below_pip = {
-      .patient_pressure = cmH2O(-500),
+      .patient_pressure = kVeryLowPressure,
       .inflow_pressure_diff = kPa(0),
       .outflow_pressure_diff = kPa(0),
-      .fio2 = 0.21f,
+      .fio2 = kAmbientAir,
       .inflow = ml_per_min(0),
       .outflow = ml_per_min(0),
   };
 
   // pressure control pure air test
-  actuatorsTestSequence(
-      {{params, readings_pip, 0, /*blower=*/kBlowerOn, /*psol=*/kValveClosed,
-        /*air_valve=*/kAlmostClosed, kExhaleMaxOpen},
-       {params, readings_below_pip, 1000, /*blower=*/kBlowerOn,
-        /*psol=*/kValveClosed,
-        /*air_valve=*/kValveOpen, /*exhale=*/kAlmostClosed}});
+  actuatorsTestSequence({{.time = microsSinceStartup(0),
+                          .params = params,
+                          .readings = readings_pip,
+                          .expected_state = {.fio2_valve = kValveClosed,
+                                             .blower_power = kBlowerOn,
+                                             .blower_valve = kAlmostClosed,
+                                             .exhale_valve = kExhaleMaxOpen}},
+                         {.time = microsSinceStartup(1E6),
+                          .params = params,
+                          .readings = readings_below_pip,
+                          .expected_state = {.fio2_valve = kValveClosed,
+                                             .blower_power = kBlowerOn,
+                                             .blower_valve = kValveOpen,
+                                             .exhale_valve = kAlmostClosed}}});
 
-  // pressure control oxygen test: pp = PEEP == PIP
+  // pressure control oxygen test (same tests but with oxygen).
   params.fio2 = 1.0f;
-  actuatorsTestSequence(
-      {{params, readings_pip, 0, /*blower=*/kBlowerOff,
-        /*psol=*/kAlmostClosed,
-        /*air_valve=*/kValveClosed, kExhaleMaxOpen},
-       {params, readings_below_pip, 1000,
-        /*blower=*/kBlowerOff, /*psol=*/kValveOpen,
-        /*air_valve=*/kValveClosed, /*exhale=*/kValveClosed}});
+  actuatorsTestSequence({{.time = microsSinceStartup(0),
+                          .params = params,
+                          .readings = readings_pip,
+                          .expected_state = {.fio2_valve = kAlmostClosed,
+                                             .blower_power = kBlowerOff,
+                                             .blower_valve = kValveClosed,
+                                             .exhale_valve = kExhaleMaxOpen}},
+                         {.time = microsSinceStartup(1E6),
+                          .params = params,
+                          .readings = readings_below_pip,
+                          .expected_state = {.fio2_valve = kValveOpen,
+                                             .blower_power = kBlowerOff,
+                                             .blower_valve = kValveClosed,
+                                             .exhale_valve = kValveClosed}}});
 
-  // Off mode: blower is off, inhale valves are closed, exhale valve is open
+  // Off mode: blower is off, inhale valves are closed, exhale valve is open.
   params.mode = VentMode::VentMode_OFF;
-  actuatorsTestSequence(
-      {{params, readings_pip, 0, /*blower=*/kBlowerOff, /*psol=*/kValveClosed,
-        /*air_valve=*/kValveClosed, /*exhale=*/kValveOpen}});
+  actuatorsTestSequence({{.time = microsSinceStartup(0),
+                          .params = params,
+                          .readings = readings_pip,
+                          .expected_state = {.fio2_valve = kValveClosed,
+                                             .blower_power = kBlowerOff,
+                                             .blower_valve = kValveClosed,
+                                             .exhale_valve = kValveOpen}}});
 }

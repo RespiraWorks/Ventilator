@@ -17,53 +17,56 @@ limitations under the License.
 #include "comms.h"
 #include "debug.h"
 #include "hal.h"
+#include "units.h"
 #include <stdint.h>
 
-extern CommFailAlarm alarm;
+// There should be a packet from GUI for every 30ms. If a packet is not
+// recived periodically, then assuming something went wrong we wait for
+// 100ms before raising a communication failure alarm
+static constexpr Duration kCommunicationTimeoutMs{milliseconds(100)};
 
 // This count checks how many times alarm is triggered before it raises alarm
 // Alarm will be raised immediately considering as high priority alarm
-static constexpr uint8_t kTriggerCount = 1;
+static constexpr uint8_t kTriggerCount{1};
 
-void CommFailAlarm::Initialize() {
-  // for COMMUNICATION_CHECK_ALARM
-  alarm.time_stamp_ = Hal.now();
+// Initialize the time_stamp vartiable for CommFail_Alarm object
+void CommFailAlarm::Initialize(CommFailAlarm *alarm) {
+  alarm->time_stamp_ = Hal.now();
   debug.Print("Communication Failure Alarm Initialized\n");
 }
 
-void CommFailAlarm::Handler() {
+// This function checks for communication timeout, if yes raises alarm, if
+// no suppresses alarm. in both the cases it notes the occurance time stamp
+void CommFailAlarm::Handler(CommFailAlarm *alarm) {
+  Time ts;
+
+  ts = Hal.now();
   // does the communication timed out
-  if (CommsIsTimeToRaiseCommFailAlarm()) {
-    if (alarm.trigger_count_ < kTriggerCount) {
-      alarm.trigger_count_++;
-      if (alarm.trigger_count_ == kTriggerCount) {
-        alarm.triggered_ = true;
-        alarm.CommFailAlarmCb();
+  if (ts - CommsGetLastRxTime() > kCommunicationTimeoutMs) {
+    if (alarm->trigger_count_ < kTriggerCount) {
+      alarm->trigger_count_++;
+      if (alarm->trigger_count_ == kTriggerCount) {
+        alarm->triggered_ = true;
+        // take the time stamp when alarm occured
+        alarm->time_stamp_ = ts;
+        if ((!alarm->alarm_pause_) && (!alarm->audio_pause_)) {
+          Hal.BuzzerOn(1.0f);
+        } else {
+          Hal.BuzzerOff();
+        }
         debug.Print("Communication Failed, Raised Alarm\n");
       }
     }
   } else {
     // communication resumed so clear alarm
-    if (alarm.trigger_count_ > 0) {
-      alarm.trigger_count_--;
-      if (alarm.trigger_count_ == 0) {
-        alarm.time_stamp_ = Hal.now();
-        alarm.triggered_ = false;
+    if (alarm->trigger_count_ > 0) {
+      alarm->trigger_count_--;
+      if (alarm->trigger_count_ == 0) {
+        alarm->time_stamp_ = ts;
+        alarm->triggered_ = false;
         Hal.BuzzerOff();
         debug.Print("Communication Normal/Resumed, Hence No Alarm\n");
       }
-    }
-  }
-}
-
-void CommFailAlarm::CommFailAlarmCb() {
-  if (alarm.triggered_) {
-    // take the time stamp when alarm occured
-    alarm.time_stamp_ = Hal.now();
-    if ((!alarm.alarm_pause_) && (!alarm.audio_pause_)) {
-      Hal.BuzzerOn(1.0f);
-    } else {
-      Hal.BuzzerOff();
     }
   }
 }

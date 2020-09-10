@@ -19,13 +19,15 @@ limitations under the License.
 #include "hal.h"
 #include <stdint.h>
 
-// This module monitors if any alarms are triggered
+// This module monitor & raise/suppress alarm:
+// When communication between controller board & GUI fails, alarm will be
+// raised with timestamp of occurance
+// When communication between controller board & GUI resumes, alarm will be
+// suppressed with timestamp of occurance
 class CommFailAlarm {
 public:
-  void Initialize();
-  // alarm_handler monitors/checks is there are any faults and despatches alarms
-  // accordingly.
-  void Handler();
+  void Initialize(CommFailAlarm *alarm);
+  void Handler(CommFailAlarm *alarm);
 
 private:
   Time time_stamp_;
@@ -33,7 +35,6 @@ private:
   bool alarm_pause_{false};
   bool audio_pause_{false};
   uint8_t trigger_count_{0};
-  void CommFailAlarmCb();
 };
 
 #endif // COMMFAIL_ALARM_H

@@ -49,7 +49,7 @@ static DebugFloat
 static Controller controller;
 static ControllerStatus controller_status;
 static Sensors sensors;
-CommFailAlarm alarm;
+static CommFailAlarm alarm;
 
 static SensorsProto AsSensorsProto(const SensorReadings &r,
                                    const ControllerState &c) {
@@ -153,7 +153,7 @@ static void background_loop() {
 
     comms_handler(local_controller_status, &gui_status);
 
-    alarm.Handler();
+    alarm.Handler(&alarm);
 
     // Override received gui_status from the RPi with values from DebugVars iff
     // the gui_mode DebugVar has a legal value.
@@ -190,7 +190,7 @@ int main() {
 
   comms_init();
 
-  alarm.Initialize();
+  alarm.Initialize(&alarm);
 
   background_loop();
 }

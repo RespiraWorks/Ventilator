@@ -16,7 +16,7 @@ limitations under the License.
 #ifndef COMMFAIL_ALARM_H
 #define COMMFAIL_ALARM_H
 
-#include "hal.h"
+#include "debug.h"
 #include <stdint.h>
 
 // This module monitor & raise/suppress alarm:
@@ -26,15 +26,15 @@ limitations under the License.
 // suppressed with timestamp of occurance
 class CommFailAlarm {
 public:
-  void Initialize(CommFailAlarm *alarm);
-  void Handler(CommFailAlarm *alarm);
+  void Initialize(Time ts);
+  bool Handler(Time ts, Time lastrx);
 
 private:
   Time time_stamp_;
   bool triggered_{false};
-  bool alarm_pause_{false};
-  bool audio_pause_{false};
   uint8_t trigger_count_{0};
+  void CommunicationFailed(Time ts);
+  void CommunicationResumed(Time ts);
 };
 
 #endif // COMMFAIL_ALARM_H

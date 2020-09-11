@@ -141,4 +141,4 @@ void comms_handler(const ControllerStatus &controller_status,
 }
 
 // just return last rx time which is used in commfail_alarm module
-Time CommsGetLastRxTime(void) { return last_rx; }
+Time CommsGetLastRxTime() { return last_rx; }

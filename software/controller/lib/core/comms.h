@@ -32,6 +32,6 @@ void comms_init();
 void comms_handler(const ControllerStatus &controller_status,
                    GuiStatus *gui_status);
 
-Time CommsGetLastRxTime(void);
+Time CommsGetLastRxTime();
 
 #endif // COMMS_H

@@ -8,6 +8,7 @@
 #include "pid.h"
 #include "sensors.h"
 #include "units.h"
+#include "vars.h"
 #include <optional>
 #include <utility>
 
@@ -35,13 +36,43 @@ struct ControllerState {
   uint64_t breath_id{0};
 };
 
+// Controller gains, as inputs - set from external debug program, read but never
+// modified by controller.
+static DebugFloat dbg_blower_valve_ki("blower_valve_ki",
+                                      "Integral gain for blower valve PID",
+                                      -1.0f);
+
+static DebugFloat dbg_blower_valve_kp("blower_valve_kp",
+                                      "Proportional gain for blower valve PID",
+                                      0.04f);
+static DebugFloat dbg_blower_valve_kd("blower_valve_kd",
+                                      "Derivative gain for blower valve PID");
+
+// TODO: These need to be tuned.
+static DebugFloat dbg_psol_kp("psol_kp", "Proportional gain for O2 psol PID",
+                              0.04f);
+static DebugFloat dbg_psol_ki("psol_ki", "Integral gain for O2 psol PID",
+                              20.0f);
+static DebugFloat dbg_psol_kd("psol_kd", "Derivative gain for O2 psol PID", 0);
+
+// TODO: If we had a notion of read-only DebugVars, we could call this
+// blower_valve_ki, which would be kind of nice?  Alternatively, if we had a
+// notion of DebugVars that a user had set/pinned to a certain value, we could
+// use this as a read/write param -- read it, and write it unless the user set
+// it, in which case, use that value.
+static DebugFloat
+    dbg_blower_valve_computed_ki("blower_valve_computed_ki",
+                                 "Integral gain for blower valve PID.  READ "
+                                 "ONLY - This value is gain-scheduled.",
+                                 10.0f);
+
 // This class is here to allow integration of our controller into Modelica
 // software and run closed-loop tests in a simulated physical environment
 class Controller {
 public:
   static Duration GetLoopPeriod();
 
-  Controller();
+  Controller() = default;
 
   std::pair<ActuatorsState, ControllerState>
   Run(Time now, const VentParams &params,
@@ -50,8 +81,15 @@ public:
 private:
   uint64_t breath_id_{0};
   BlowerFsm fsm_;
-  PID blower_valve_pid_;
-  PID psol_pid_;
+  PID blower_valve_pid_ =
+      PID(dbg_blower_valve_kp.Get(), dbg_blower_valve_computed_ki.Get(),
+          dbg_blower_valve_kd.Get(), ProportionalTerm::ON_ERROR,
+          DifferentialTerm::ON_MEASUREMENT, /*output_min=*/0.f,
+          /*output_max=*/1.0f);
+  PID psol_pid_ =
+      PID(dbg_psol_kp.Get(), dbg_psol_ki.Get(), dbg_psol_kd.Get(),
+          ProportionalTerm::ON_ERROR, DifferentialTerm::ON_MEASUREMENT,
+          /*output_min=*/0.f, /*output_max=*/1.0f);
 
   // These objects accumulate flow to calculate volume.
   //

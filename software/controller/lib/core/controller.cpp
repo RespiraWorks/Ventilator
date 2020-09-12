@@ -15,29 +15,9 @@ limitations under the License.
 
 #include "controller.h"
 
-#include "pid.h"
-#include "vars.h"
 #include <math.h>
 
 static constexpr Duration LOOP_PERIOD = milliseconds(10);
-
-// Inputs - set from external debug program, read but never modified here.
-static DebugFloat dbg_blower_valve_ki("blower_valve_ki",
-                                      "Integral gain for blower valve PID",
-                                      -1.0f);
-
-static DebugFloat dbg_blower_valve_kp("blower_valve_kp",
-                                      "Proportional gain for blower valve PID",
-                                      0.04f);
-static DebugFloat dbg_blower_valve_kd("blower_valve_kd",
-                                      "Derivative gain for blower valve PID");
-
-// TODO: These need to be tuned.
-static DebugFloat dbg_psol_kp("psol_kp", "Proportional gain for O2 psol PID",
-                              0.04f);
-static DebugFloat dbg_psol_ki("psol_ki", "Integral gain for O2 psol PID",
-                              20.0f);
-static DebugFloat dbg_psol_kd("psol_kd", "Derivative gain for O2 psol PID", 0);
 
 static DebugFloat dbg_forced_blower_power(
     "forced_blower_power",
@@ -77,29 +57,8 @@ static DebugFloat dbg_volume_uncorrected("uncorrected_volume",
 static DebugFloat dbg_flow_correction("flow_correction",
                                       "Correction to flow, cc/sec");
 
-// TODO: If we had a notion of read-only DebugVars, we could call this
-// blower_valve_ki, which would be kind of nice?  Alternatively, if we had a
-// notion of DebugVars that a user had set/pinned to a certain value, we could
-// use this as a read/write param -- read it, and write it unless the user set
-// it, in which case, use that value.
-static DebugFloat
-    dbg_blower_valve_computed_ki("blower_valve_computed_ki",
-                                 "Integral gain for blower valve PID.  READ "
-                                 "ONLY - This value is gain-scheduled.",
-                                 10.0f);
-
 static DebugUInt32 dbg_breath_id("breath_id",
                                  "ID of the current breath, read-only", 0);
-
-Controller::Controller()
-    : blower_valve_pid_(dbg_blower_valve_kp.Get(),
-                        dbg_blower_valve_computed_ki.Get(),
-                        dbg_blower_valve_kd.Get(), ProportionalTerm::ON_ERROR,
-                        DifferentialTerm::ON_MEASUREMENT, /*output_min=*/0.f,
-                        /*output_max=*/1.0f),
-      psol_pid_(dbg_psol_kp.Get(), dbg_psol_ki.Get(), dbg_psol_kd.Get(),
-                ProportionalTerm::ON_ERROR, DifferentialTerm::ON_MEASUREMENT,
-                /*output_min=*/0.f, /*output_max=*/1.f) {}
 
 /*static*/ Duration Controller::GetLoopPeriod() { return LOOP_PERIOD; }
 

@@ -26,15 +26,16 @@ limitations under the License.
 // suppressed with timestamp of occurance
 class CommFailAlarm {
 public:
-  void Initialize(Time ts);
-  bool Handler(Time ts, Time lastrx);
+  void Initialize(Time start_time);
+  bool Handler(Time current_time, Time lastrx_time);
+  bool CommunicationFailed(Time occurance_time);
+  bool CommunicationResumed(Time occurance_time);
 
 private:
-  Time time_stamp_;
-  bool triggered_{false};
-  uint8_t trigger_count_{0};
-  void CommunicationFailed(Time ts);
-  void CommunicationResumed(Time ts);
+  Time time_stamp_;          // time stamp of instance when failed/resumed
+  bool triggered_{false};    // true = alarm, false = no alarm
+  uint8_t trigger_count_{0}; // number of times alarm triggered before
+                             // reaching threshold
 };
 
 #endif // COMMFAIL_ALARM_H

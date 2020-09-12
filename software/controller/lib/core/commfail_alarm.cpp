@@ -25,45 +25,50 @@ static constexpr Duration kCommunicationTimeoutMs{milliseconds(100)};
 static constexpr uint8_t kTriggerCountThreshold{1};
 
 // Initialize the time_stamp vartiable for CommFail_Alarm object
-void CommFailAlarm::Initialize(Time ts) {
-  time_stamp_ = ts;
+void CommFailAlarm::Initialize(Time start_time) {
+  time_stamp_ = start_time;
   debug.Print("Communication Failure Alarm Initialized\n");
 }
 
 // This function checks for communication timeout, if yes raises alarm, if
 // no suppresses alarm. in both the cases it notes the occurance time stamp
-bool CommFailAlarm::Handler(Time ts, Time lastrx) {
-  // does the communication timed out
-  if (ts - lastrx > kCommunicationTimeoutMs) {
-    CommunicationFailed(ts);
-  } else {
-    CommunicationResumed(ts);
+bool CommFailAlarm::Handler(Time current_time, Time lastrx_time) {
+  bool status{false};
+  if (current_time > lastrx_time) {
+    // does the communication timed out
+    if (current_time - lastrx_time > kCommunicationTimeoutMs) {
+      status = CommunicationFailed(current_time);
+    } else {
+      status = CommunicationResumed(current_time);
+    }
   }
-  return triggered_;
+  return status;
 }
 
 // communication failed so raise alarm
-void CommFailAlarm::CommunicationFailed(Time ts) {
+bool CommFailAlarm::CommunicationFailed(Time occurance_time) {
   if (trigger_count_ < kTriggerCountThreshold) {
     trigger_count_++;
     if (trigger_count_ == kTriggerCountThreshold) {
       // take the time stamp when alarm occured
-      time_stamp_ = ts;
+      time_stamp_ = occurance_time;
       triggered_ = true;
       debug.Print("Communication Failed, Raised Alarm\n");
     }
   }
+  return triggered_;
 }
 
 // communication resumed so clear alarm
-void CommFailAlarm::CommunicationResumed(Time ts) {
+bool CommFailAlarm::CommunicationResumed(Time occurance_time) {
   if (trigger_count_ > 0) {
     trigger_count_--;
     if (trigger_count_ == 0) {
       // take the time stamp when alarm cleared
-      time_stamp_ = ts;
+      time_stamp_ = occurance_time;
       triggered_ = false;
       debug.Print("Communication Normal/Resumed, Hence No Alarm\n");
     }
   }
+  return triggered_;
 }

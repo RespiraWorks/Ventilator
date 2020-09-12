@@ -18,25 +18,51 @@ limitations under the License.
 #include <cmath>
 #include <tuple>
 
-TEST(CommFailAlarmTest, RaiseClearAlarm) {
-  constexpr Time ts = microsSinceStartup(0);
-  constexpr Time lastrx = microsSinceStartup(0);
-  constexpr int itr_to_test = 15;
-  constexpr int steps = 100;
-  constexpr Duration test_duration = seconds(1);
-  constexpr Duration step_duration =
-      microseconds(test_duration.microseconds() / steps);
-
+// To test Handler function
+TEST(CommFailAlarmTest, AlarmRaiseHandler) {
+  Time ts = microsSinceStartup(0);               // start
+  constexpr Time lastrx = microsSinceStartup(0); // start
+  constexpr Duration step = milliseconds(10);
   CommFailAlarm cfa;
 
   cfa.Initialize(ts);
-  for (int i = 0; i < itr_to_test; i++) {
-    Time now = ts + i * step_duration;
-    bool status = cfa.Handler(now, lastrx);
-    if (status) {
-      EXPECT_EQ(status, true);
+  for (int i = 0; i < 20; i++) {
+    ts += step;
+    if (ts - lastrx < milliseconds(101)) {
+      EXPECT_FALSE(cfa.Handler(ts, lastrx)); // false for <= 100ms
     } else {
-      EXPECT_EQ(status, false);
+      EXPECT_TRUE(cfa.Handler(ts, lastrx)); // true for > 100ms
     }
   }
+}
+
+// To test CommunicationFailed function
+TEST(CommFailAlarmTest, RaiseAlarm) {
+  constexpr Time ts = microsSinceStartup(0); // start
+  CommFailAlarm cfa;
+  bool status = false;
+
+  cfa.Initialize(ts);
+  for (int i = 0; i < 5; i++) { // when i = 0, trigger_count_ will become 1
+    status = cfa.CommunicationFailed(ts);
+  }
+  EXPECT_TRUE(status);
+}
+
+// To test CommunicationResumed function
+TEST(CommFailAlarmTest, ClearAlarm) {
+  constexpr Time ts = microsSinceStartup(0); // start
+  CommFailAlarm cfa;
+  bool status = true;
+
+  cfa.Initialize(ts);
+  for (int i = 0; i < 5; i++) { // in fail case when i = 0,
+                                // trigger_count_ will become 1
+    cfa.CommunicationFailed(ts);
+  }
+  for (int i = 0; i < 5; i++) { // in resume case when i = 0,
+                                // trigger_count_ wlll become 0
+    status = cfa.CommunicationResumed(ts);
+  }
+  EXPECT_FALSE(status);
 }

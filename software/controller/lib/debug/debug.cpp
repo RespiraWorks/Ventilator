@@ -51,7 +51,7 @@ limitations under the License.
 #include "pb_read_cmd.h"
 #include "peek_cmd.h"
 #include "poke_cmd.h"
-#include "sprintf.h"
+#include "printf.h"
 #include "trace_cmd.h"
 #include "var_cmd.h"
 #include <stdarg.h>
@@ -143,7 +143,7 @@ int DebugSerial::Print(const char *fmt, ...) {
   // allocate memory.
   va_list ap;
   va_start(ap, fmt);
-  int len = RWvsnprintf(buff, sizeof(buff), fmt, ap);
+  int len = vsnprintf(buff, sizeof(buff), fmt, ap);
   va_end(ap);
 
   // Write as much as will fit to my print buffer.

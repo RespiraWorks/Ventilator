@@ -31,7 +31,8 @@ Checks: >
   -readability-implicit-bool-conversion,
   -modernize-use-using,
   -modernize-use-nodiscard,
-  -readability-non-const-parameter
+  -readability-non-const-parameter,
+  -google-runtime-int
 
 WarningsAsErrors: '*'
 

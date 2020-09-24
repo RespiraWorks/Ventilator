@@ -31,8 +31,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
-using namespace std;
-
 #include <cstdbool>
 #include <cstdio>
 #include <cstdint>
@@ -392,7 +390,7 @@ static size_t _ftoa(out_fct_type out, char* buffer, size_t idx, size_t maxlen, d
   static const double pow10[] = { 1, I_10, I_100, I_1000, I_10000, I_100000, I_1000000, I_10000000, I_100000000, I_1000000000 };
 
   // test for special values
-  if ( isnan(value) ) {
+  if ( std::isnan(value) ) {
     return _out_rev(out, buffer, idx, maxlen, "nan", 3, width, flags);
   }
   if (value < -DBL_MAX) {
@@ -516,13 +514,13 @@ static size_t _ftoa(out_fct_type out, char* buffer, size_t idx, size_t maxlen, d
 static size_t _etoa(out_fct_type out, char* buffer, size_t idx, size_t maxlen, double value, unsigned int prec, unsigned int width, unsigned int flags)
 {
   // check for NaN and special values
-  if ( isnan(value) ) {
+  if ( std::isnan(value) ) {
     return _ftoa(out, buffer, idx, maxlen, value, prec, width, flags);
   }
-  if ( (isinf(value) && (value > 0)) || (value > +DBL_MAX) ) {
+  if ( (std::isinf(value) && (value > 0)) || (value > +DBL_MAX) ) {
     return _ftoa(out, buffer, idx, maxlen, value, prec, width, flags);
   }
-  if ( (isinf(value) && (value < 0)) || (value < -DBL_MAX) ) {
+  if ( (std::isinf(value) && (value < 0)) || (value < -DBL_MAX) ) {
     return _ftoa(out, buffer, idx, maxlen, value, prec, width, flags);
   }
 

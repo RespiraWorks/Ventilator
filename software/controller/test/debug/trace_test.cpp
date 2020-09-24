@@ -104,7 +104,7 @@ TEST(Trace, BufferFull) {
   trace.SetFlags(1);
 
   // A buffer of size N actually holds only N-1 values.
-  int expected_capacity = 0x4000 - 1;
+  int expected_capacity = 0x4000;
   for (int i = 0; i < expected_capacity; ++i) {
     EXPECT_EQ(uint32_t{1}, trace.GetFlags());
     trace.MaybeSample();

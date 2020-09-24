@@ -22,10 +22,7 @@ limitations under the License.
 TEST(CircBuff, Counts) {
   CircBuff<uint8_t, 128> buff;
 
-  // Note that a buffer with 128 bytes of storage can only actually
-  // hold 127 bytes.  This is a side effect of how we represent a
-  // full buffer.
-  ASSERT_EQ(buff.FreeCt(), 127);
+  ASSERT_EQ(buff.FreeCt(), 128);
   ASSERT_EQ(buff.FullCt(), 0);
 
   // Add/remove bytes from the buffer and check counts along the way.
@@ -34,9 +31,11 @@ TEST(CircBuff, Counts) {
   // that logic
   for (int i = 0; i < 100; i++) {
     int full = 0;
-    int free = 127;
+    int free = 128;
     for (int j = 0; j < 20; j++) {
-      bool ok = buff.Put(0);
+      // By putting j in the buffer, I can then check that it is stays a FIFO
+      // even when it wraps around
+      bool ok = buff.Put(static_cast<uint8_t>(j));
       ASSERT_EQ(ok, true);
 
       full++;
@@ -47,7 +46,7 @@ TEST(CircBuff, Counts) {
 
     for (int j = 0; j < 20; j++) {
       std::optional<uint8_t> ch = buff.Get();
-      ASSERT_EQ(*ch, 0);
+      ASSERT_EQ(*ch, static_cast<uint8_t>(j));
 
       full--;
       free++;
@@ -66,36 +65,98 @@ TEST(CircBuff, DataIO) {
   for (uint32_t i = 0; i < sizeof(TestSet); i++)
     TestSet[i] = static_cast<uint8_t>(rand());
 
-  // Add data to the buffer until failure
-  for (int i = 0; i < 128; i++) {
+  // Add data to the buffer until failure - multiple failures should not affect
+  // our test results: the buffer's content stays unchanged during failure to
+  // put more data
+  for (int i = 0; i < 150; i++) {
     bool ok = buff.Put(TestSet[i]);
-    if (i < 127) {
+    if (i < 128) {
       ASSERT_EQ(ok, true);
-    }
-
-    else {
+      ASSERT_EQ(buff.FullCt(), i + 1);
+      ASSERT_EQ(buff.FreeCt(), 127 - i);
+    } else {
       ASSERT_EQ(ok, false);
+      ASSERT_EQ(buff.FullCt(), 128);
+      ASSERT_EQ(buff.FreeCt(), 0);
       break;
     }
   }
 
-  for (int i = 0; i < 127; i++) {
+  // Retrieve all the data that was succesfully put in the buffer and check its
+  // integrity
+  for (int i = 0; i < 128; i++) {
     std::optional<uint8_t> x = buff.Get();
     ASSERT_EQ(*x, TestSet[i]);
   }
 
   // The buffer should be empty now
+  ASSERT_EQ(buff.FullCt(), 0);
+  ASSERT_EQ(buff.FreeCt(), 128);
+  ASSERT_EQ(buff.Get(), std::nullopt);
+  // failure to Get() has not changed anything
+  ASSERT_EQ(buff.FullCt(), 0);
+  ASSERT_EQ(buff.FreeCt(), 128);
   ASSERT_EQ(buff.Get(), std::nullopt);
 }
 
-// TODO - some other good tests to add when there's time:
-//
-// - Test that when Put() and Get() fail, they have no effect
-//
-// - Test what happens when the buffer is empty or has size 1
-//
-// - Exhaustively test the state space of a small circular buffer (if it
-//   works for a buffer of size 5, it probably also works for 128 - but
-//   with size 5 it's easy to write a completely exhaustive test that
-//   verifies that the buffer implements all operations correctly in states
-//   with all combinations of (head, tail))
+// Test that the buffer of minimal size (uint N = 0) is always empty
+// This has no practical use but this way we make sure the template is safe
+TEST(CircBuff, Size0) {
+  CircBuff<uint8_t, 0> buff;
+  ASSERT_EQ(buff.FullCt(), 0);
+  ASSERT_EQ(buff.FreeCt(), 0);
+  ASSERT_EQ(buff.Put(0), false);
+  ASSERT_EQ(buff.Get(), std::nullopt);
+}
+
+TEST(CircBuff, SmallBufferFullTest) {
+  CircBuff<uint8_t, 4> buff;
+  ASSERT_EQ(buff.FullCt(), 0);
+  ASSERT_EQ(buff.FreeCt(), 4);
+  ASSERT_EQ(buff.Get(), std::nullopt);
+
+  // put a first element in the buffer
+  uint8_t k = 0;
+  ASSERT_EQ(buff.Put(k++), true);
+  ASSERT_EQ(buff.FullCt(), 1);
+  ASSERT_EQ(buff.FreeCt(), 3);
+
+  // This loop tests that for all configurations of a non-empty buffer,
+  // we can put and get stuff as we want, and that stuff is properly handled.
+  for (int i = 0; i < 5; i++) {
+    // fill the buffer and check the counts while we are at it
+    for (int j = 2; j < 5; j++) {
+      ASSERT_EQ(buff.Put(k++), true);
+      ASSERT_EQ(buff.FullCt(), j);
+      ASSERT_EQ(buff.FreeCt(), 4 - j);
+    }
+    // Buffer must now be full, we can't put any more data in
+    ASSERT_EQ(buff.Put(0), false);
+    // Pop all but one element and check the counts.
+    // Because we leave 1 element, the next loop will iterate
+    // with a different tail location: mod(tail - 1, N).
+    for (int j = 1; j < 4; j++) {
+      std::optional<uint8_t> ch = buff.Get();
+      ASSERT_EQ(*ch, k - static_cast<uint8_t>(5 - j));
+      ASSERT_EQ(buff.FullCt(), 4 - j);
+      ASSERT_EQ(buff.FreeCt(), j);
+    }
+  }
+
+  // flush the buffer and go back to head=tail=0
+  buff.Flush();
+  ASSERT_EQ(buff.FullCt(), 0);
+  ASSERT_EQ(buff.FreeCt(), 4);
+  ASSERT_EQ(buff.Get(), std::nullopt);
+
+  // fill in the gap left by the original loop to include empty buffers
+  for (int i = 0; i < 5; i++) {
+    ASSERT_EQ(buff.Put(k), true);
+    ASSERT_EQ(buff.FullCt(), 1);
+    ASSERT_EQ(buff.FreeCt(), 3);
+    std::optional<uint8_t> ch = buff.Get();
+    ASSERT_EQ(*ch, k++);
+    ASSERT_EQ(buff.FullCt(), 0);
+    ASSERT_EQ(buff.FreeCt(), 4);
+  }
+}

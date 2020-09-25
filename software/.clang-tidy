@@ -2,6 +2,8 @@
 # TODO(jkff): Re-enable google-readability-casting: it can be annoying, but it
 # can catch some nasty bugs. E.g. C-style casts happily cast a pointer to the
 # wrong type.
+# The last entry in this list is ignored, so duplicate it.
+#  
 Checks: >
   *,
   -*-magic-numbers,
@@ -32,7 +34,9 @@ Checks: >
   -modernize-use-using,
   -modernize-use-nodiscard,
   -readability-non-const-parameter,
+  -google-runtime-int,
   -google-runtime-int
+
 
 WarningsAsErrors: '*'
 

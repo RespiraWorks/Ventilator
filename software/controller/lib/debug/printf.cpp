@@ -38,6 +38,21 @@
 
 #include "printf.h"
 
+// dummy putchar
+static char   printf_buffer[100];
+static size_t printf_idx = 0U;
+
+void _putchar(char character)
+{
+  printf_buffer[printf_idx++] = character;
+}
+
+void _out_fct(char character, void* arg)
+{
+  (void)arg;
+  printf_buffer[printf_idx++] = character;
+}
+
 
 // define this globally (e.g. gcc -DPRINTF_INCLUDE_CONFIG_H ...) to include the
 // printf_config.h header file
@@ -291,6 +306,19 @@ static size_t _ntoa_format(out_fct_type out, char* buffer, size_t idx, size_t ma
         len--;
       }
     }
+    if ( len < PRINTF_NTOA_BUFFER_SIZE ) {
+      if ( base == BASE_16U ) {
+        if ( !(flags & FLAGS_UPPERCASE) ) {
+          buf[len++] = 'x';
+        } else {
+          buf[len++] = 'X';
+        }
+      } else if ( base == BASE_2U ) {
+        buf[len++] = 'b';
+      }
+    }
+
+    /*
     if ((base == BASE_16U) && !(flags & FLAGS_UPPERCASE) && (len < PRINTF_NTOA_BUFFER_SIZE)) {
       buf[len++] = 'x';
     }
@@ -300,6 +328,8 @@ static size_t _ntoa_format(out_fct_type out, char* buffer, size_t idx, size_t ma
     else if ((base == BASE_2U) && (len < PRINTF_NTOA_BUFFER_SIZE)) {
       buf[len++] = 'b';
     }
+    */
+
     if (len < PRINTF_NTOA_BUFFER_SIZE) {
       buf[len++] = '0';
     }

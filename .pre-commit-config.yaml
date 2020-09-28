@@ -42,7 +42,7 @@ repos:
   rev: v1.1.7
   hooks:
     - id: remove-crlf
-      exclude: \.eps$|^pcb/
+      exclude: \.eps$|\.dxf$|^pcb/
 
 - repo: local
   hooks:

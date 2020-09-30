@@ -18,13 +18,13 @@ limitations under the License.
 #include <cstdlib>
 #include <optional>
 
-// Test the buffer counts and
-TEST(CircBuff, Counts) {
+// Test the buffer counts and rollover
+TEST(CircularBuffer, Counts) {
   constexpr uint kBufferSize = 128;
-  CircBuff<uint8_t, kBufferSize> buff;
+  CircularBuffer<uint8_t, kBufferSize> buff;
 
-  ASSERT_EQ(buff.FreeCt(), kBufferSize);
-  ASSERT_EQ(buff.FullCt(), 0);
+  ASSERT_EQ(buff.FreeCount(), kBufferSize);
+  ASSERT_EQ(buff.FullCount(), 0);
 
   // Add/remove bytes from the buffer and check counts along the way.
   // The full/free calculations change when the buffer wraps, so I
@@ -41,8 +41,8 @@ TEST(CircBuff, Counts) {
 
       full++;
       free--;
-      ASSERT_EQ(buff.FreeCt(), free);
-      ASSERT_EQ(buff.FullCt(), full);
+      ASSERT_EQ(buff.FreeCount(), free);
+      ASSERT_EQ(buff.FullCount(), full);
     }
 
     for (int j = 0; j < 20; j++) {
@@ -51,17 +51,17 @@ TEST(CircBuff, Counts) {
 
       full--;
       free++;
-      ASSERT_EQ(buff.FreeCt(), free);
-      ASSERT_EQ(buff.FullCt(), full);
+      ASSERT_EQ(buff.FreeCount(), free);
+      ASSERT_EQ(buff.FullCount(), full);
     }
   }
 }
 
 // Make sure the data we add to the buffer is the same
 // as the data we get out of it
-TEST(CircBuff, DataIO) {
+TEST(CircularBuffer, DataIO) {
   constexpr uint kBufferSize = 256;
-  CircBuff<uint8_t, kBufferSize> buff;
+  CircularBuffer<uint8_t, kBufferSize> buff;
 
   uint8_t TestSet[kBufferSize + 20];
   for (uint32_t i = 0; i < sizeof(TestSet); i++)
@@ -74,12 +74,12 @@ TEST(CircBuff, DataIO) {
     bool ok = buff.Put(TestSet[i]);
     if (i < kBufferSize) {
       ASSERT_EQ(ok, true);
-      ASSERT_EQ(buff.FullCt(), i + 1);
-      ASSERT_EQ(buff.FreeCt(), kBufferSize - 1 - i);
+      ASSERT_EQ(buff.FullCount(), i + 1);
+      ASSERT_EQ(buff.FreeCount(), kBufferSize - 1 - i);
     } else {
       ASSERT_EQ(ok, false);
-      ASSERT_EQ(buff.FullCt(), kBufferSize);
-      ASSERT_EQ(buff.FreeCt(), 0);
+      ASSERT_EQ(buff.FullCount(), kBufferSize);
+      ASSERT_EQ(buff.FreeCount(), 0);
       break;
     }
   }
@@ -92,38 +92,38 @@ TEST(CircBuff, DataIO) {
   }
 
   // The buffer should be empty now
-  ASSERT_EQ(buff.FullCt(), 0);
-  ASSERT_EQ(buff.FreeCt(), kBufferSize);
+  ASSERT_EQ(buff.FullCount(), 0);
+  ASSERT_EQ(buff.FreeCount(), kBufferSize);
   ASSERT_EQ(buff.Get(), std::nullopt);
   // failure to Get() has not changed anything
-  ASSERT_EQ(buff.FullCt(), 0);
-  ASSERT_EQ(buff.FreeCt(), kBufferSize);
+  ASSERT_EQ(buff.FullCount(), 0);
+  ASSERT_EQ(buff.FreeCount(), kBufferSize);
   ASSERT_EQ(buff.Get(), std::nullopt);
 }
 
 // Test that the buffer of minimal size (uint N = 0) is always empty
 // This has no practical use but this way we make sure the template is safe.
-TEST(CircBuff, Size0) {
-  CircBuff<uint8_t, 0> buff;
-  ASSERT_EQ(buff.FullCt(), 0);
-  ASSERT_EQ(buff.FreeCt(), 0);
+TEST(CircularBuffer, Size0) {
+  CircularBuffer<uint8_t, 0> buff;
+  ASSERT_EQ(buff.FullCount(), 0);
+  ASSERT_EQ(buff.FreeCount(), 0);
   ASSERT_EQ(buff.Put(0), false);
   ASSERT_EQ(buff.Get(), std::nullopt);
 }
 
-TEST(CircBuff, SmallBufferFullTest) {
+TEST(CircularBuffer, SmallBufferFullTest) {
   constexpr uint kBufferSize = 5;
-  CircBuff<uint8_t, kBufferSize> buff;
-  ASSERT_EQ(buff.FullCt(), 0);
-  ASSERT_EQ(buff.FreeCt(), kBufferSize);
+  CircularBuffer<uint8_t, kBufferSize> buff;
+  ASSERT_EQ(buff.FullCount(), 0);
+  ASSERT_EQ(buff.FreeCount(), kBufferSize);
   ASSERT_EQ(buff.Get(), std::nullopt);
 
   // Put a first element in the buffer.  This allows the next part to be just
   // one big for loop.
   uint8_t elem = 0;
   ASSERT_EQ(buff.Put(elem++), true);
-  ASSERT_EQ(buff.FullCt(), 1);
-  ASSERT_EQ(buff.FreeCt(), kBufferSize - 1);
+  ASSERT_EQ(buff.FullCount(), 1);
+  ASSERT_EQ(buff.FreeCount(), kBufferSize - 1);
 
   // This loop tests that for all configurations of a non-empty buffer,
   // we can put and get stuff as we want, and that stuff is properly handled.
@@ -132,8 +132,8 @@ TEST(CircBuff, SmallBufferFullTest) {
     // already one elem in buffer so we only add kBufferSize - 1 new elements.
     for (int j = 1; j < kBufferSize; j++) {
       ASSERT_EQ(buff.Put(elem++), true);
-      ASSERT_EQ(buff.FullCt(), j + 1);
-      ASSERT_EQ(buff.FreeCt(), kBufferSize - j - 1);
+      ASSERT_EQ(buff.FullCount(), j + 1);
+      ASSERT_EQ(buff.FreeCount(), kBufferSize - j - 1);
     }
     // Buffer must now be full, we can't put any more data in.
     ASSERT_EQ(buff.Put(0), false);
@@ -144,30 +144,30 @@ TEST(CircBuff, SmallBufferFullTest) {
       std::optional<uint8_t> ch = buff.Get();
       ASSERT_EQ(*ch, static_cast<uint8_t>(
                          elem - static_cast<uint8_t>(kBufferSize + 1 - j)));
-      ASSERT_EQ(buff.FullCt(), kBufferSize - j);
-      ASSERT_EQ(buff.FreeCt(), j);
+      ASSERT_EQ(buff.FullCount(), kBufferSize - j);
+      ASSERT_EQ(buff.FreeCount(), j);
     }
   }
 
   // Flush the buffer and go back to head=tail=0.
   buff.Flush();
-  ASSERT_EQ(buff.FullCt(), 0);
-  ASSERT_EQ(buff.FreeCt(), kBufferSize);
+  ASSERT_EQ(buff.FullCount(), 0);
+  ASSERT_EQ(buff.FreeCount(), kBufferSize);
   ASSERT_EQ(buff.Get(), std::nullopt);
 
   // Fill in the gap left by the original loop to include empty buffers.
   for (int i = 0; i < 5; i++) {
     ASSERT_EQ(buff.Put(elem), true);
-    ASSERT_EQ(buff.FullCt(), 1);
-    ASSERT_EQ(buff.FreeCt(), kBufferSize - 1);
+    ASSERT_EQ(buff.FullCount(), 1);
+    ASSERT_EQ(buff.FreeCount(), kBufferSize - 1);
     std::optional<uint8_t> ch = buff.Get();
     ASSERT_EQ(*ch, elem++);
-    ASSERT_EQ(buff.FullCt(), 0);
-    ASSERT_EQ(buff.FreeCt(), kBufferSize);
+    ASSERT_EQ(buff.FullCount(), 0);
+    ASSERT_EQ(buff.FreeCount(), kBufferSize);
     // Trying to get an element from an empty buffer doesn't change anything,
     // whatever the head/tail
     ASSERT_EQ(buff.Get(), std::nullopt);
-    ASSERT_EQ(buff.FullCt(), 0);
-    ASSERT_EQ(buff.FreeCt(), kBufferSize);
+    ASSERT_EQ(buff.FullCount(), 0);
+    ASSERT_EQ(buff.FreeCount(), kBufferSize);
   }
 }

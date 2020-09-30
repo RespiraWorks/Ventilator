@@ -26,18 +26,18 @@ limitations under the License.
 // and the interrupt handlers, so it needs to be thread safe.
 // I'm disabling interrupts during the critical sections to
 // ensure that's the case.
-template <class T, uint N> class CircBuff {
+template <class T, uint N> class CircularBuffer {
   // Uses an array of size N+1 to hold all N elements of the buffer, as
-  // buff_[head_] is by definition inaccessible.
+  // buffer_[head_] is by definition inaccessible.
   // This also makes the template safe against N = 0.
-  volatile T buff_[N + 1];
+  volatile T buffer_[N + 1];
   volatile int head_, tail_;
 
 public:
-  CircBuff() { head_ = tail_ = 0; }
+  CircularBuffer() { head_ = tail_ = 0; }
 
   // Return number of elements available in the buffer to read.
-  int FullCt() const {
+  int FullCount() const {
     BlockInterrupts block;
     int ct = head_ - tail_;
     if (ct < 0)
@@ -47,7 +47,7 @@ public:
 
   // Return number of free spaces in the buffer where more
   // elements can be written.
-  int FreeCt() const { return N - FullCt(); }
+  int FreeCount() const { return N - FullCount(); }
 
   // Get the oldest element from the buffer, popping it from the buffer.
   std::optional<T> Get() {
@@ -57,7 +57,7 @@ public:
       return std::nullopt;
     }
 
-    T val = std::move(buff_[tail_++]);
+    T val = std::move(buffer_[tail_++]);
     if (tail_ > N) {
       tail_ = 0;
     }
@@ -78,7 +78,7 @@ public:
       return false;
     }
 
-    buff_[head_] = std::move(dat);
+    buffer_[head_] = std::move(dat);
     head_ = h;
     return true;
   }

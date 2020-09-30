@@ -473,8 +473,8 @@ void HalApi::analogWrite(PwmPin pin, float duty) {
  *****************************************************************/
 
 class UART {
-  CircBuff<uint8_t, 128> rxDat;
-  CircBuff<uint8_t, 128> txDat;
+  CircularBuffer<uint8_t, 128> rxDat;
+  CircularBuffer<uint8_t, 128> txDat;
   UART_Regs *const reg;
 
 public:
@@ -565,11 +565,11 @@ public:
 
   // Return the number of bytes currently in the
   // receive buffer and ready to be read.
-  uint16_t RxFull() { return static_cast<uint16_t>(rxDat.FullCt()); }
+  uint16_t RxFull() { return static_cast<uint16_t>(rxDat.FullCount()); }
 
   // Returns the number of free locations in the
   // transmit buffer.
-  uint16_t TxFree() { return static_cast<uint16_t>(txDat.FreeCt()); }
+  uint16_t TxFree() { return static_cast<uint16_t>(txDat.FreeCount()); }
 };
 
 static UART rpUART(UART3_BASE);

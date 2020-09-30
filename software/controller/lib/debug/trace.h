@@ -74,7 +74,7 @@ public:
     trace_buffer_.Flush();
   }
 
-  int GetNumSamples() { return trace_buffer_.FullCt() / GetNumActiveVars(); }
+  int GetNumSamples() { return trace_buffer_.FullCount() / GetNumActiveVars(); }
 
   int GetNumActiveVars() {
     int res = 0;
@@ -131,7 +131,7 @@ private:
     // If there are no enabled trace variables, or
     // if there isn't enough space in the buffer for
     // a full sample, then signal to stop the trace
-    if (trace_buffer_.FreeCt() < GetNumActiveVars()) {
+    if (trace_buffer_.FreeCount() < GetNumActiveVars()) {
       return false;
     }
 
@@ -159,7 +159,7 @@ private:
 
   std::array<DebugVarBase *, TRACE_VAR_CT> traced_vars_ = {nullptr};
 
-  CircBuff<uint32_t, 0x4000> trace_buffer_;
+  CircularBuffer<uint32_t, 0x4000> trace_buffer_;
 };
 
 extern Trace trace;

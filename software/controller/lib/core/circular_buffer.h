@@ -26,37 +26,40 @@ limitations under the License.
 // and the interrupt handlers, so it needs to be thread safe.
 // I'm disabling interrupts during the critical sections to
 // ensure that's the case.
-template <class T, int N> class CircBuff {
-  volatile T buff[N];
-  volatile int head, tail;
+template <class T, uint N> class CircularBuffer {
+  // Uses an array of size N+1 to hold all N elements of the buffer, as
+  // buffer_[head_] is by definition inaccessible.
+  // This also makes the template safe against N = 0.
+  volatile T buffer_[N + 1];
+  volatile int head_, tail_;
 
 public:
-  CircBuff() { head = tail = 0; }
+  CircularBuffer() { head_ = tail_ = 0; }
 
   // Return number of elements available in the buffer to read.
-  int FullCt() {
+  int FullCount() const {
     BlockInterrupts block;
-    int ct = head - tail;
+    int ct = head_ - tail_;
     if (ct < 0)
-      ct += N;
+      ct += N + 1;
     return ct;
   }
 
   // Return number of free spaces in the buffer where more
   // elements can be written.
-  int FreeCt() { return N - 1 - FullCt(); }
+  int FreeCount() const { return N - FullCount(); }
 
   // Get the oldest element from the buffer, popping it from the buffer.
   std::optional<T> Get() {
     BlockInterrupts block;
 
-    if (head == tail) {
+    if (head_ == tail_) {
       return std::nullopt;
     }
 
-    T val = std::move(buff[tail++]);
-    if (tail >= N) {
-      tail = 0;
+    T val = std::move(buffer_[tail_++]);
+    if (tail_ > N) {
+      tail_ = 0;
     }
     return val;
   }
@@ -66,23 +69,23 @@ public:
   // Returns false if the buffer is full.
   [[nodiscard]] bool Put(T dat) {
     BlockInterrupts block;
-    int h = head + 1;
-    if (h >= N) {
+    int h = head_ + 1;
+    if (h > N) {
       h = 0;
     }
 
-    if (h == tail) {
+    if (h == tail_) {
       return false;
     }
 
-    buff[head] = std::move(dat);
-    head = h;
+    buffer_[head_] = std::move(dat);
+    head_ = h;
     return true;
   }
 
   void Flush() {
     BlockInterrupts block;
-    head = tail = 0;
+    head_ = tail_ = 0;
   }
 };
 

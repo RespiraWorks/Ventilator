@@ -104,7 +104,7 @@ public:
   static uint16_t CalcCRC(uint8_t *buff, size_t len);
 
 private:
-  CircBuff<uint8_t, 2000> printBuff;
+  CircularBuffer<uint8_t, 2000> printBuff;
 
   // Buffer into which request data is written when poll_state_ == WAIT_CMD
   uint8_t request_[500] = {0};

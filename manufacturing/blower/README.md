@@ -92,3 +92,16 @@ You will have to crimp connectors to the second end of the wiring that connects 
 to the [PCB](../../pcb).
 It depends on your build layout, but in the case that you need longer wires, you will have to crimp both ends.
 In such a case you might need a greater number of XH and VH connector components listed in the BOM above.
+
+## Assembly Instructions of Blower to the Enclosure
+
+**STEP:1** Place the Blower Adapter into the Adapter Mounting plate and place the Gasket-1 on the adapter.
+
+**STEP:2** Place Gasket-2 below the blower and place them on the Main plate.
+
+**STEP:3** Place the Blower Holding plate on the top of the Blower.
+
+**STEP:4** Attach the Blower Driver to the Driver mounting plate and fix the assembly to the Blower holding plate and Adapter Mounting plate by using 1" spacers for the blower wires to connect the driver.
+
+**NOTE:** M4x80mm Lenght screws are to be useed for monting all the plates together.
+

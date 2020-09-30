@@ -112,7 +112,10 @@ if [ "$1" == "--install" ]; then
         libqt5serialport5-dev \
         libqt5serialport5 \
         qtdeclarative5-dev-tools \
-        xvfb
+        xvfb \
+	bear \
+	cppcheck \
+	clang-tidy
   fi
   exit 0
 fi
@@ -131,7 +134,6 @@ fi
 #########
 # BUILD #
 #########
-
 if [ "$1" == "--build" ]; then
 
   if [ "$EUID" -eq 0 ] && [ "$2" != "-f" ]; then
@@ -143,17 +145,35 @@ if [ "$1" == "--build" ]; then
   qmake -unset QMAKEFEATURES
   git submodule update --init --recursive
 
+  if [ "$2" == "--no-checks" ] || [ "$3" == "--no-checks" ] || [ "$4" == "--no-checks" ]; then
+    set +e
+    set +o pipefail
+  fi
+
+  cppcheck -ithird_party -ibuild .
+
   config_opt="CONFIG+=release"
-  if [ "$2" == "--debug" ] || [ "$3" == "--debug" ]; then
+  if [ "$2" == "--debug" ] || [ "$3" == "--debug" ] || [ "$4" == "--debug" ]; then
     config_opt="CONFIG+=debug"
   fi
 
   j_opt=""
-  if [ "$2" == "-j" ] || [ "$3" == "-j" ]; then
+  if [ "$2" == "-j" ] || [ "$3" == "-j" ] || [ "$4" == "-j" ]; then
     j_opt="-j"
   fi
 
-  pushd build && qmake $config_opt .. && make $j_opt && popd
+  pushd build && qmake $config_opt .. && bear make $j_opt && popd
+
+  cd build
+
+  cppcheck --project=compile_commands.json -i ../../src/third_party -i ../../../common/third_party .
+
+  CLANG_TIDY_VERSION=$(echo "$(clang-tidy --version | sed -n 2p)" | awk -F[" ".] '{print $5}')
+  if [ "$CLANG_TIDY_VERSION" = "6" ]; then
+    run-clang-tidy-6.0.py -p .
+  else
+    eval "run-clang-tidy-${CLANG_TIDY_VERSION}.py"
+  fi
 
   exit 0
 fi

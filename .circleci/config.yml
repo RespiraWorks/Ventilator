@@ -55,23 +55,6 @@ jobs:
             git reset --soft $merge_base
             pre-commit run --show-diff-on-failure --files $changed_files
 
-  gui-static-analysis:
-    machine:
-      resource_class: 2xlarge
-      image: ubuntu-1604:201903-01
-      docker_layer_caching: true
-    steps:
-      - checkout
-      - run:
-          name: Install cppcheck
-          command: |
-            sudo apt-get update
-            sudo apt-get install -y cppcheck
-      - run:
-          name: Run cppcheck on /software/gui
-          command: |
-            cd ~/project/software/gui && cppcheck -ithird_party . --error-exitcode=1 && cd -
-
   controller-tests:
     # See https://circleci.com/docs/2.0/executor-types/#docker-benefits-and-limitations
     # We use a machine executor here because we must run the container in privileged mode.
@@ -116,4 +99,3 @@ workflows:
       - common-precommit-checks
       - controller-tests
       - gui-tests
-      - gui-static-analysis

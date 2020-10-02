@@ -32,8 +32,8 @@ limitations under the License.
 // observe whether mocked methods are called.  So far that hasn't been
 // necessary.
 
-#include "algorithm.h"
 #include "units.h"
+#include <algorithm>
 #include <stdint.h>
 
 #ifdef TEST_MODE

@@ -20,7 +20,6 @@ limitations under the License.
 #include <variant>
 
 #include "network_protocol.pb.h"
-#include "sensors.h"
 #include "units.h"
 
 // This module encapsulates the blower system's finite state machine (FSM).

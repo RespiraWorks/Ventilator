@@ -19,7 +19,6 @@ Arduino Nano and the MPXV5004GP and MPXV7002DP pressure sensors.
 */
 
 #include "sensors.h"
-#include "hal.h"
 #include "vars.h"
 #include <cmath>
 

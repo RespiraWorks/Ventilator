@@ -69,17 +69,17 @@ public:
   // Returns false if the buffer is full.
   [[nodiscard]] bool Put(T dat) {
     BlockInterrupts block;
-    int h = head_ + 1;
-    if (h > N) {
-      h = 0;
+    int new_head = head_ + 1;
+    if (new_head > N) {
+      new_head = 0;
     }
 
-    if (h == tail_) {
+    if (new_head == tail_) {
       return false;
     }
 
     buffer_[head_] = std::move(dat);
-    head_ = h;
+    head_ = new_head;
     return true;
   }
 

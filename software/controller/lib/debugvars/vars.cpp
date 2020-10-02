@@ -13,5 +13,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-// This file intentionally left blank.  It's only here because platformio
-// requires all libraries to have a cpp file.
+#include "vars.h"
+#include <string.h>
+
+// static member variables
+DebugVarBase *DebugVarBase::var_list[100];
+uint16_t DebugVarBase::var_count = 0;

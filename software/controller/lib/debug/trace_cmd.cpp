@@ -15,7 +15,6 @@ limitations under the License.
 */
 
 #include "trace_cmd.h"
-#include "debug.h"
 #include "trace.h"
 
 // These variables are used control the trace function

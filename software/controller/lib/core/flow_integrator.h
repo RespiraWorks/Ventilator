@@ -14,7 +14,6 @@ limitations under the License.
 */
 
 #include "hal.h"
-#include "pid.h"
 #include "units.h"
 #include <optional>
 

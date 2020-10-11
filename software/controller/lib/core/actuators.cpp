@@ -14,6 +14,7 @@ limitations under the License.
 */
 
 #include "actuators.h"
+#include "hal.h"
 #include "pinch_valve.h"
 
 // local data

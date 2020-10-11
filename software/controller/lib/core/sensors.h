@@ -23,8 +23,6 @@ Arduino Nano and the MPXV5004GP and MPXV7002DP pressure sensors.
 #define SENSORS_H
 
 #include "hal.h"
-#include "network_protocol.pb.h"
-#include "pid.h"
 #include "units.h"
 
 struct SensorReadings {

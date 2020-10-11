@@ -1,7 +1,6 @@
 #if defined(BARE_STM32) && defined(UART_VIA_DMA)
 
 #include "uart_dma.h"
-#include "debug.h"
 #include "hal_stm32.h"
 #include "hal_stm32_regs.h"
 

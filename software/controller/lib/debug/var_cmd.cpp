@@ -14,7 +14,6 @@ limitations under the License.
 */
 
 #include "var_cmd.h"
-#include "debug.h"
 #include "vars.h"
 #include <stdint.h>
 #include <string.h>

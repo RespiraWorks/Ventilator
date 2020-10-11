@@ -17,7 +17,7 @@ limitations under the License.
  **********************************************************************************************/
 
 #include "pid.h"
-#include "algorithm.h"
+#include <algorithm>
 
 float PID::Compute(Time now, float input, float setpoint) {
   if (!initialized_) {

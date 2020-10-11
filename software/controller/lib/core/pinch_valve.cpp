@@ -15,7 +15,6 @@ limitations under the License.
 
 #include "pinch_valve.h"
 #include "hal.h"
-#include "stepper.h"
 #include <algorithm>
 #include <array>
 #include <cfloat>

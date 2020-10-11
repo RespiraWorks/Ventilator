@@ -19,8 +19,6 @@ limitations under the License.
 #ifndef ACTUATORS_H
 #define ACTUATORS_H
 
-#include "blower_fsm.h"
-#include "hal.h"
 #include <optional>
 
 struct ActuatorsState {

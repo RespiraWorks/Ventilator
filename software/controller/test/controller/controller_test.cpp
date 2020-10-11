@@ -16,7 +16,6 @@ limitations under the License.
 #include "controller.h"
 #include "gtest/gtest.h"
 #include <cmath>
-#include <tuple>
 
 // TODO: There ought to be many more tests in here.
 

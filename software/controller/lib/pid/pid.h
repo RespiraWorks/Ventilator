@@ -18,7 +18,6 @@ limitations under the License.
 
 #ifndef PID_H
 #define PID_H
-#define LIBRARY_VERSION 1.2.1
 
 #include "units.h"
 
@@ -75,4 +74,4 @@ private:
   float last_input_ = 0;
   float last_error_ = 0;
 };
-#endif
+#endif // PID_H

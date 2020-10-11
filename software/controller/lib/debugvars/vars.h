@@ -16,7 +16,6 @@ limitations under the License.
 #ifndef VARS_H
 #define VARS_H
 
-#include "debug.h"
 #include <array>
 #include <cstring>
 

@@ -69,7 +69,7 @@ public:
   // Returns false if the buffer is full.
   [[nodiscard]] bool Put(T dat) {
     BlockInterrupts block;
-    int new_head = head_ + 1;
+    auto new_head = head_ + 1;
     if (new_head > N) {
       new_head = 0;
     }

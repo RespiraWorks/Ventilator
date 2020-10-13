@@ -51,6 +51,11 @@ We may have parts to send you from our inventory.
 | 10   |   1 or 2 | TE            | 1-1123722-2         |         0.18 | [K][10digi] [R][10rs] | VH housing 2 pin, for power connector |
 | 11   |        - | Remington     | 16UL1007STRKIT      |        29.70 | [K][11amzn]           | 16 AWG wire, for power cable, **optional** if not included or more length needed |
 | 12   |        - | Remington     | 26UL1007STRKIT10COLOR |      31.60 | [K][12amzn]           | 26 AWG wire, for control cable, **optional** if not included or more length needed  |
+| 13   |        1 | RespiraWorks  | Blower Adapter      | $1 (material) | [B][13rw]            | 3D printed from data in link |
+| 14   |        1 | RespiraWorks  | Blower Adapter holding plate      | $1 (material) | [B][14rw]            | Acrylic sheet cut from data in link |
+| 15   |        1 | RespiraWorks  | Blower Driver Mounting plate     | $1 (material) | [B][15rw]            | Acrylic sheet cut from data in link |
+| 16   |        1 | RespiraWorks  | Blower Holding plate      | $1 (material) | [B][16rw]            | Acrylic sheet cut from data in link |
+
 
 [1ali]:   https://www.aliexpress.com/item/32980201709.html
 [2won]:   https://wonsmart-motor.en.made-in-china.com/product/hsjxFewOppVg/China-Air-Pump12V-Brushless-Motor-12V-Blower-Fan-Driver.html
@@ -68,14 +73,26 @@ We may have parts to send you from our inventory.
 [10rs]:   https://export.rsdelivers.com/product/jst/vhr-2n/jst-vhr-female-connector-housing-396mm-pitch-2/8201172
 [11amzn]: https://www.amazon.com/gp/product/B00N51OJJ4
 [12amzn]: https://www.amazon.com/gp/product/B011JC76OA
+[13rw]:   assets/blower_adapter.stl
+[14rw]:   assets/blower_adapter_holding_plate.dxf
+[15rw]:   assets/blower_driver_mounting.dxf
+[16rw]:   assets/blower_holding_plate.dxf
+
+
 
 ## Tools
 
 | Item | Quantity | Manufacturer  | Part #              | Price (USD) | Sources         | Notes |
 | ---- |---------:| ------------- | ------------------- | -----------:|-----------------| ----- |
 | a1   |        1 | Preciva       | PR-3254 (PR102001)  |    39.99 | [Z][a1amzn]     | Crimping tool for HX and HV connectors |
+| a2   |        1 | RespiraWorks  | Blower Adapter Gasket      | $1 (material) | [B][a2rw]            | Acrylic sheet cut from data in link |
+| a3   |        1 | RespiraWorks  | Blower Gasket      | $1 (material) | [B][a3rw]            | Acrylic sheet cut from data in link |
+
 
 [a1amzn]:https://www.amazon.com/gp/product/B07R1H3Z8X
+[a2rw]:assets/blower_adapter_gasket_.dxf
+[a3rw]:assets/blower_gasket_.dxf
+
 
 **NOTE: Items 6-12 and a1 above are also duplicated in the [wiring BOM](../../design/electrical-system/wiring.md)**
 
@@ -95,17 +112,15 @@ In such a case you might need a greater number of XH and VH connector components
 
 ## Assembly Instructions of Blower to the Enclosure
 
-**STEP:1** Place the Blower Adapter into the Adapter Mounting plate and place the Gasket-1 on the adapter.
-![](assets/blower_adapter_mounting.jpg)
-
-**STEP:2** Place Gasket-2 below the blower and place them on the Main plate.
-![](assets/blower_mounting.jpg)
-
-**STEP:3** Place the Blower Holding plate on the top of the Blower.
-
-**STEP:4** Attach the Blower Driver to the Driver mounting plate and fix the assembly to the Blower holding plate and Adapter Mounting plate by using 1" spacers for the blower wires to connect the driver.
+**STEP:1** Attach the Blower Driver to the Driver mounting plate and fix the assembly to the Blower holding plate and Adapter Mounting plate by using 1" spacers for the blower wires to connect the driver.
 ![](assets/blower_driver_mounting.jpg)
 
-**NOTE:** M4x80mm Lenght screws are to be useed for monting all the plates together.
-![](assets/blower_subassembly.jpg)
+**STEP:2** Place the Blower Holding plate on the top of the Blower.
 
+**STEP:3** Place Gasket-2 below the blower and place them on the Main plate.
+![](assets/blower_mounting.jpg)
+
+**STEP:4** Place the Blower Adapter into the Adapter Mounting plate and place the Gasket-1 on the adapter.
+![](assets/blower_adapter_mounting.jpg)
+
+**NOTE:** M4x80mm Lenght screws are to be useed for monting all the plates together.

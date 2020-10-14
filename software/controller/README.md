@@ -38,11 +38,18 @@ We use [platformio](https://platformio.org/) for building the controller code.
 Platformio has a CLI and an IDE. You'll need the platformio CLI in order to build
 from the command-line, even if you also install the IDE.
 
-Instructions for installing:
+Note that an issue prevents platformio CLI version 5.0 or higher to build (and subsequently run) many of our unit tests. We are therefore keeping platformio CLI version 4.3.4 until that bug is resolved.
+Because platformio IDE version 2.0 and higher require CLI version 5.0 or higher, if you choose to use platformio IDE, you need to install an earlier version (1.10.0 is the latest that supports CLI version 4.3.4).
+
+It seems easier to install the latest version of each tool and then downgrade to the proper version rather than manually look for the old installation files.
+Instructions for installing (latest version):
  * [CLI](https://docs.platformio.org/en/latest/core/installation.html#super-quick-mac-linux)
  * [IDE](https://docs.platformio.org/en/latest/integration/ide/vscode.html#installation)
 
-In case of unix systems, the `pip`-provided platformio package tends to be more up to date, so opt for that over `apt`.
+Downgrading the IDE to version 1.10.0 can be done using [this procedure](https://community.platformio.org/t/stop-platformio-core-from-updating/10766/2).
+It is advised that you close the IDE before downgrading the CLI to version 4.3.4.
+On Linux, use the following command line: $ pip install -U platformio==4.3.4
+On MacOs, use: $ brew uninstall platformio ; brew install platformio@4.3.4
 
 Here's a [video introduction](https://www.youtube.com/watch?v=EIkGTwLOD7o) to platformio.
 

@@ -55,6 +55,9 @@ We may have parts to send you from our inventory.
 | 14   |        1 | RespiraWorks  | Blower Adapter holding plate      | $1 (material) | [B][14rw]            | Acrylic sheet cut from data in link |
 | 15   |        1 | RespiraWorks  | Blower Driver Mounting plate     | $1 (material) | [B][15rw]            | Acrylic sheet cut from data in link |
 | 16   |        1 | RespiraWorks  | Blower Holding plate      | $1 (material) | [B][16rw]            | Acrylic sheet cut from data in link |
+| 17    |        1 | RespiraWorks  | Blower Gasket  | $0.10 (material) | B          | make using item a3 below |
+| 18    |        1 | RespiraWorks  | Blower Adapter Gasket  | $0.10 (material) | B          | make using item a2 below |
+| 19    | ~4 sq in | McMaster-Carr | Gasket Material      | $22.22/ 12x12" sheet | [C][19mcmc] | cut with jigs to make items 17 and 18 |
 
 
 [1ali]:   https://www.aliexpress.com/item/32980201709.html
@@ -77,6 +80,7 @@ We may have parts to send you from our inventory.
 [14rw]:   assets/blower_adapter_holding_plate.dxf
 [15rw]:   assets/blower_driver_mounting.dxf
 [16rw]:   assets/blower_holding_plate.dxf
+[19mcmc]: https://www.mcmaster.com/8785K82-8785K822/
 
 
 
@@ -115,12 +119,12 @@ In such a case you might need a greater number of XH and VH connector components
 **STEP:1** Attach the Blower Driver to the Driver mounting plate and fix the assembly to the Blower holding plate and Adapter Mounting plate by using 1" spacers for the blower wires to connect the driver.
 ![](assets/blower_driver_mounting.jpg)
 
-**STEP:2** Place the Blower Holding plate on the top of the Blower.
+**STEP:2** Place the ([Blower Holding Plate](#parts)) on the top of the Blower.
 
-**STEP:3** Place Gasket-2 below the blower and place them on the Main plate.
+**STEP:3** Place ([Blower Gasket](#tools)) below the blower and place them on the Main plate.
 ![](assets/blower_mounting.jpg)
 
-**STEP:4** Place the Blower Adapter into the Adapter Mounting plate and place the Gasket-1 on the adapter.
+**STEP:4** Place the Blower Adapter into the ([Adapter Mounting Plate](#parts)) and place the ([Blower Adapter Gasket](#tools)) on the ([Blower Adapter](#parts)).
 ![](assets/blower_adapter_mounting.jpg)
 
 **NOTE:** M4x80mm Lenght screws are to be useed for monting all the plates together.

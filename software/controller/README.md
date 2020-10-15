@@ -48,8 +48,15 @@ Instructions for installing (latest version):
 
 Downgrading the IDE to version 1.10.0 can be done using [this procedure](https://community.platformio.org/t/stop-platformio-core-from-updating/10766/2).
 It is advised that you close the IDE before downgrading the CLI to version 4.3.4.
-On Linux, use the following command line: $ pip install -U platformio==4.3.4
-On MacOs, use: $ brew uninstall platformio ; brew install platformio@4.3.4
+On Linux, use the following command line:
+```
+$ pip install -U platformio==4.3.4
+```
+On MacOs, use:
+```
+$ brew uninstall platformio
+$ brew install platformio@4.3.4
+```
 
 Here's a [video introduction](https://www.youtube.com/watch?v=EIkGTwLOD7o) to platformio.
 

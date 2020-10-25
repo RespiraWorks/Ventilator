@@ -8,7 +8,7 @@ Tried playing with `motion` first. The conf file is included which should go int
 But it appears motion will not support sound, which I think we may want to have at some point.
 
 Next up is ffmpeg.
-- Uses the video4linux2 (or simply v4l2) input device to capture live input such as from a webcam. 
+- Uses the video4linux2 (or simply v4l2) input device to capture live input such as from a webcam.
 - To list the supported, connected capture devices you can use the v4l-ctl tool: v4l2-ctl --list-devices
 
 Gets sound:
@@ -48,10 +48,16 @@ Live streaming:
 - YouTube was chosen for live streaming the ventilator prototypes
 - Go to https://www.youtube.com/features?nv=1 and request "Live streaming"
 - Wait 24 hours for "Live streaming" to be enabled on your account
-- Go to YouTube Dashboard: https://www.youtube.com/live_dashboard?nv=1 
+- Go to YouTube Dashboard: https://www.youtube.com/live_dashboard?nv=1
 - Change category to "Nonprofits & Activism" and privacy to Unlisted
-- Copy "Stream name/key" and paste it in the KEY variable of the stream-to-youtube.sh script 
+- Copy "Stream name/key" and paste it in the KEY variable of the stream-to-youtube.sh script
 - Add execute permissions to the script: chmod +x stream-to-youtube.sh
 - Run the script with the KEY passed as the argument: ./stream-to-youtube.sh 8yuc-2eb2-74e9-tmb6-2cm6 (this is an example key)
 - Check that on the YouTube Dashboard that the status has gone from OFFLINE to STARTING to LIVE
 - The URL for the stream is available at the bottom of the page
+
+- There are two webcams connected to Martin's setup, the server name is bigcheese.
+
+- There are two scripts called stream-webcam1_to-youtube.sh and stream-webcam2_to-youtube.sh added to /usr/local/bin.
+- Just run them as sudo to stream the live on Youtube from a selected webcam. The current setup is not allowed to
+- stream both webcams onto YouTube.

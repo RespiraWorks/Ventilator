@@ -1,0 +1,10 @@
+Here are instructions to build the sainsmartrelay command line utility.
+
+    1. Clone the source code from GitHub - "git clone https://github.com/labbots/SainsmartUsbRelay.git".
+    2. Install any dependent libraries as listed in GitHub page of SainsmartUsbRelay.
+    3. Change the code in following files:
+
+       makefile: Add -fPIE option to CFLAGS.
+       sainsmartrelay.h: Update the value of MAX_NUM_RELAYS to 8 (if you are building the tool for 8-Channel relay).
+
+    4. Run make.

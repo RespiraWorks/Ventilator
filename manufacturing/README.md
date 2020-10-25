@@ -6,9 +6,19 @@ components and fully assembled units.
 If you are a member of the team and intend to build your own prototype, please read the
 [purchasing guidelines](#part-purchasing-guidelines) first.
 
-Broadly there are two types of ventilator builds we are currently testing with:
-- open table-top prototypes for testing components and various pneumatic configurations, kindly referred to as "pizza build"
-- "enclosed build", more like the final product; more expensive to make and slower to iterate on
+If you are 3d-printing any custom components yourself, please check out the [3d printing guidelines](3d_printing).
+
+## Development prototypes
+
+Broadly speaking there are two types of ventilator prototypes we are currently testing with:
+
+[**Pizza build**](pizza_build)
+A fundamentally functional ventilator that that includes sensors, drivers and pneumatics.
+It is not enclosed like the final product and is meant to be operated in an open layout on your table, like a pizza.
+
+[**Enclosed build**](enclosed_build)
+This is our work-in-progress towards a "beta" version of the ventilator, which should be rather close to the final
+product. This is currently more expensive to make and slower to iterate on.
 
 | Pizza build  |  Enclosed build   |
 |:---------------------:|:--------------------:|
@@ -50,16 +60,6 @@ Some of the above may not be done for each component. Feel free to help us fill 
 ### Characterization Testing
 
 For details on characterization tests, see the [Characterization Test Plan](characterization-test-plan.md).
-
-## Full builds
-
-[**Pizza build**](pizza_build)
-A fundamentally functional ventilator that is an upgrade that includes sensors, drivers and pneumatics.
-It is not enclosed like the final product and is meant to be operated in an open layout on your table, like a pizza.
-
-[**Enclosed build**](enclosed_build)
-This is our work-in-progress towards a "beta" version of the ventilator, which should be rather close to the final
-product.
 
 ## Test equipment
 

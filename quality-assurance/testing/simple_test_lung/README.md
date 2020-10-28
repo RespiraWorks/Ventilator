@@ -14,33 +14,38 @@ BEFORE purchasing any parts.**
 
 ### Purchasing Source Key
 
-* **E** = ebay
 * **Z** = Amazon
-* **C** = McMaster-Carr
+* **R** = Made by RespiraWorks
 
 ### Parts
 
-| Item | Quantity | Manufacturer  | Part #         | Price (USD)     | Action | Sources         | Notes |
-| ---- |---------:| ------------- | ------------------- | ------------:|-----------|----------------| ----- |
-| 1    |        1 | Portex        | 370924              | 15.00        |*ask first*| search ebay     | test "lung" or breathing bag. |
-| 2    |        1 | South Pacific | SPB-6110-5PK        |   129.00 / 5 |*ask first*| [Z][2amzn]     | **ALT for item 1** |
-| 3    |        2 | Mars Wellness | 4332593260          | 16.99 / 2    | buy       | [Z][3amzn]     | CPAP tubing |
+| Item | Quantity | Manufacturer  | Part #                 | Price (USD)  | Sources        | Notes |
+| ---- |---------:| ------------- | ---------------------- | ------------:|----------------| ----- |
+| 1    |        1 | South Pacific | SPB-6110-5PK           | 129.00 / 5   | [Z][1amzn]     | Test lung |
+| 2    |        2 | Mars Wellness | 4332593260             | 16.99 / 2    | [Z][2amzn]     | CPAP tubing |
+| 3    |        1 | RespiraWorks  | patient_tubing_adapter | ~$1.0        | [R][3rw]       | Y-adapter for 22mm tubing |
 
-[2amzn]:  https://www.amazon.com/FlexLung-Biomedical-Ventilator-Testing-Demonstration/dp/B07B876P9C
-[3amzn]:  https://www.amazon.com/gp/product/B01N14F1MV
 
-**TODO:** pricing analysis
+[1amzn]:  https://www.amazon.com/FlexLung-Biomedical-Ventilator-Testing-Demonstration/dp/B07B876P9C
+[2amzn]:  https://www.amazon.com/gp/product/B01N14F1MV
+[3rw]: #tubing-adapter
+
+#### Tubing adapter
+
+A "tee" or "wye" adapter is needed to connect both the inhale and the exhale tubes to the single port on the test lung.
+Some are available for sale, and indeed some come included with various test lungs, but it has been hard to find
+a consistent source. Thus we have designed a 22mm patient tubing adapter that can be 3d printed. Simple placement
+without scaffolding works well and the part has been successfully printed with Siraya Fast.
+Please see the [3d printing guidelines](../../../manufacturing/3d_printing) for general advice.
+
+[STL file for 3d printing](assets/patient_tubing_adapter.stl)
+
+![](assets/patient_tubing_adapter.jpg)
+
+#### Pricing analysis
+
+Lung $26 + Tubing $17 + Adapter $1 = $44
 
 ## Assembly
 
-The test lung (*item 1*) will arrive with elbow fitting, tee-connector and CPAP hoses.
-
-| As purchased         |  without hoses       |
-|:--------------------:|:--------------------:|
-![](assets/lung-purchased.jpg)|![](assets/lung-no-tubes.jpg)|
-
-These hoses are not great for interfacing with our system, so you should replace them with the set bought separately (*item 3*).
-
-The rubber ends work well with 3/4"ID fittings and can be clamped to seal air tight.
-
-![Lung-with-new-tubes](assets/lung-new-tubes.jpg)
+![](assets/test_lung_assembly.jpg)

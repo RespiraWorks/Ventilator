@@ -1,8 +1,8 @@
 # Venturi Flow Sensor
 
-|  Design           |  Implementation   |
+|  Cross-section           |  Solid   |
 :------------------:|:-----------------:|
-![](assets/beta_screenshot.png)  |  ![](assets/beta_nipples_small.jpg)  |
+![](assets/v1_cross_section.jpg)  |  ![](assets/v1_solid.jpg)  |
 
 ## Design basis
 
@@ -31,49 +31,169 @@ has 2.5 mm or 3/32" barbs. Note that this is not sufficiently close in size to u
 This model has printed threads to accept an adapter from #10-32 pipe to 3/32" adapter. Other adapters could be
 incorporated eventually by changing the interface design.
 
-There is an arrow printed onto the body between the two ports to indicate the direction of flow. The venturi is
-asymmetrical, with a tighter constriction on entrance than exit.
+## Version history
 
-You can use a zip tie or hose clamp to improve the seal by tightening it behind the barb.
+### Alpha
 
-### Fabrication at Scale
+This was the first proof of concept, tested with arduino code. It was made for 5/8"(~16mm) ID tubing.
 
-The basis for the design came from previous experience using adapted fertilizer injection venturis as flow measurement
-devices. The original part is shown below.
+### Beta
 
-There is no fundamental reason why the exact same design cannot be used for this application, especially if these are
-being produced at scale. However, the dimensions of this part are not quite right to optimize for the flow regime of
-patient inspiration. The commonly available ½-NPT fertilizer venturi has an entrance diameter of 12.7mm and a throat
-diameter of 4.1 mm. After experimentation with the prototype venturi, the final dimensions were selected as an entrance
-diameter of 15.05 mm and a throat diameter of 5.5 mm. These are significantly different from a flow measurement
-standpoint, but not particularly different from a manufacturing standpoint.
+It was decided that the next iteration of the ventilator will use 3/4"(~19mm) ID tubing throughout. The venturi was
+adjusted to match.
 
-The fabrication for the above process is to produce two mirror half-molds with partial thread blanks for the three
-threads and alignment pins in the molds. Glue is applied to the mold halves, with the pins used to precisely align the
-components. After the glue sets, additional flashing and the alignment pins are machined off, and the threads are
-cleaned up with a cutting die. By using common thread fittings (1/2 NPT on other end, and 1/4 NPT on the pressure tap)
-readily available adapters can be attached. For the upstream pressure tap, a 1/2 NPT tee is used, with the flow entering
-the tee from upstream, and a barb adapter used to connect to the 3/32 tubing. For the throat tap, a 1/4 NPT female to
-3/32 barb adapter is required.
+Relative to the 16mm sensor, it has a slightly larger orifice (design 5.50 mm) and a more aggressive chamfer at the
+inlet to improve the aerodynamic flow.
 
-## 19mm or 3/4" Version (beta)
+An arrow was added to indicate the direction of flow.
 
-The beta build of the ventilator uses 3/4"ID or 19mm ID tubing throughout.
+The venturi was made asymmetrical, with a tighter constriction on entrance than exit.
 
-This version has received more updates as it is a later version. Relative to the 16mm sensor, it has a slightly larger orifice (design 5.50 mm) and a more aggressive chamfer at the inlet to improve the aerodynamic flow. It also obviously
-has a slightly larger internal diameter compared to the 16mm sensor.
+### Version 1
 
-### Files
+It was decided to consolidate all CAD for better configuration and BOM management. To this end, the venturi has been
+redesigned in AutoDesk Inventor. This marks the start of formal design tracking for this component.
 
-* [.stl format](assets/venturi-3-4.stl)
-* [.iges format](assets/venturi-3-4.iges)
-* [.f3d format](assets/venturi-3-4.f3d)
+Tube length has been moderately increased to decrease turbulence (user parameter-controlled).
 
-## Transfer Function
+Tubing interface barbs have been improved for better clamping.
+
+Barb interfaces can easily be modified to interface with tubing of various diameters. Most recent prototypes have
+shown that variation in tubing diameter could not be avoided and some of these transitions may have to be integrated
+into manifolds or components such as the venturi to simplify the manufacturing process and make the ventilator more
+compact.
+
+The CAD includes optional features that can be enabled/disabled, such as integrated U-turn manifolds required for
+the latest enclosed build. A number of different configurations have been exported below.
+
+## Files
+
+The original CAD with constraints is an AutoDesk Inventor part file. Parameters may be changed to
+include transitions and barbs for different diameter tubing: [**venturi.ipt**](assets/venturi.ipt)
+
+Below are a number of STL files exported for manufacture using 3d printing. Some versions are adapted for particular
+positions in the enclosed assembly, incorporating tubing diameter transitions up- and down-stream of pinch valves.
+Some have also been elongated (within the limits of what the enclosure space allows). The elongation and elimination of
+discrete reducers should help mitigate turbulence and thus improve sensor precision. Empirical testing is pending.
+
+Listed variables are the parameters that need to be configured in the CAD in order to produce this particular variation
+of the part. The variables `diams_before_venturi` and `diams_after_venturi` define additional length of tubing
+before and after the tapering to venturi constriction in multiples of inner tube diameter. Greater numbers should
+result in less turbulence and better sensor performance.
+
+Note that explicit clamp space may does not need to be provided when tubing diameter matched the 3/4" outer diameter
+of the main venturi flow sensor body. In such cases, additional clamping also adds to straight tubing length dictated
+by the two variables described above.
+
+|           | Generic | Air influx | Oxygen influx | Exhale sensor |
+|:---------:|:-------:|:----------:|:-------------:|:-------------:|
+| **Use**   | General testing / "Pizza build" | Enclosed build | Enclosed build | Enclosed build |
+| **Image** |![](assets/venturi_generic.jpg) | ![](assets/venturi_air_influx.jpg) | ![](assets/venturi_oxygen_influx.jpg) | ![](assets/venturi_exhale.jpg) |
+| diams_before_venturi | 2.0 | 2.5 | 2.5 | 2.0 |
+| diams_after_venturi  | 0.5 | 1.0 | 1.0 | 1.0 |
+| input_outer_diameter | 3/4" | 3/8" | 3/4" | 3/4" |
+| input_thk | 2mm | 1.5mm | 2mm | 2mm |
+| input_clamp_nominal_len | 0mm | 12mm | 12mm | 12mm |
+| Straight output barb features | enabled | disabled | disabled | enabled |
+| output_outer_diameter | 3/4" | - | - | 3/8" |
+| output_thk | 2mm | - | -  | 1.5mm |
+| output_clamp_nominal_len | 0mm | - | - | 12mm |
+| Left U-turn features | disabled | enabled | disabled | disabled |
+| Right U-turn features | disabled | disabled | enabled | disabled |
+| u_turn_parallel_distance | - | 10mm | 10mm | - |
+| u_turn_output_tube_len | - | 30mm | 30mm | -  |
+| **STL file** | [venturi_generic.stl](assets/venturi_generic.stl) | [venturi_air_influx.stl](assets/venturi_air_influx.stl) | [venturi_oxygen_influx.stl](assets/venturi_oxygen_influx.stl) | [venturi_exhale.jpg](assets/venturi_exhale.stl) |
+| **Total length** | 106.1mm | 143mm | 138mm | 142.5mm |
+| **Notes** | | | Requires discrete 1/4"-3/4" adapter upstream | |
+
+### 3D Printing guidelines
+
+These should not be printed with FDM. Instead, a leak-tight method like SLA or MJF should be used. The model
+contains printed threads and is designed to interface with the referenced mcmaster barbed fitting (item 2 below).
+
+Please see the [3d printing guidelines](../3d_printing) for general advice.
+
+When slicing, it is best to position the part vertically to maintain authentic tapering and orifice geometry.
+No scaffolding should be required. Part has been successfully printed with Siraya Fast of various colors.
+
+## Parts List (BOM)
+
+**Note: If you are a member of the RespiraWorks team, review the
+[part purchasing guidelines](../../manufacturing/README.md#part-purchasing-guidelines)
+BEFORE purchasing any parts.**
+
+### Purchasing Source Key
+
+* **C** = McMaster-Carr
+* **Z** = Amazon
+* **3D** = 3D printed
+
+### Parts
+
+| Item | Quantity | Manufacturer  | Part #          | Price (USD)  | Sources     | Notes |
+| ---- |---------:| ------------- | --------------- | ------------:| ----------- | ----- |
+| 1    |        1 | RespiraWorks  |                 |              |  **3D**     | 3D-printed venturi |
+| 2    |        2 | McMaster-Carr | 5463K3          | 3.93 / 10    | [C][2mcmc]  | Barbed fitting 3/32" AKA nipple |
+| 3    |        1 | McMaster-Carr | 5463K4          | 7.39 / 10    | [C][3mcmc]  | sensing tube 3/23" t-junction, in full vent assembly, for teeing off to patient pressure sensor |
+| 4    |        - | uxcell        | a16031400ux0163 | 6.49 / 16ft  | [Z][4amzn]  | 2.5 mm tubing for connecting to sensors |
+| 5    |        - | McMaster-Carr | 50315K68        | 5.75 / 25ft  | [C][5mcmc]  | 2.5 mm tubing, alternative to *3* |
+
+[2mcmc]: https://www.mcmaster.com/5463K33
+[3mcmc]: https://www.mcmaster.com/5463K44
+[4amzn]: https://www.amazon.com/gp/product/B01F4BJ7PI
+[5mcmc]: https://www.mcmaster.com/50315K68
+
+### Tools
+
+We try to make few assumptions about what tools you have. Here are recommended tools you might need. You might already
+have some of these.
+
+| Item | Quantity | Manufacturer  | Part #         | Price (USD) | Sources         | Notes |
+| ---- |---------:| ------------- | ------------------- | --------:|-----------------| ----- |
+| a1   |        1 | McMaster-Carr | 2636A251            |     6.76 | [C][a1mcmc]     | Tap for 10-32 threading nipple ports. |
+| a2   |        1 | Kaufhof       | KF-ATW-0053         |    14.11 | [Z][a2amzn]     | Hand-operated tap wrenches, for use with a1 above |
+| a3   |        1 | uxcell        | a19032000ux0738     |     6.89 | [Z][a3amzn]     | 5.5 reamer for ensuring venturi diameter |
+| a4   |        1 | DeWalt        | DWA1205             |     2.58 | [Z][a4amzn]     | (optional) 5/64" drill bit, should optimally be 2mm |
+
+[a1mcmc]:https://www.mcmaster.com/2636A251
+[a2amzn]:https://www.amazon.com/gp/product/B003GKJYKI
+[a3amzn]:https://www.amazon.com/gp/product/B07QQPJB1V
+[a4amzn]:https://www.amazon.com/DEWALT-DWA1205-Pilot-Industrial-Cobalt/dp/B015J5HN2S
+
+## Manufacturing instructions
+
+![](assets/v1_assembly_tools.jpg)
+
+Note that the flow measurement is very sensitive to the exact geometry, particularly the thread geometry. 3D printing
+may result in variable shrinkage or expansion. This may cause uncertainty in the throat size, and thus the flow rates.
+Threads for sensor connection may also not be perfectly formed.
+
+You should therefore use mechanical tools to ensure all orifices are adequately prepared:
+* Use 2mm (or 5/64") drill bit ([a4](#tools) above) to ensure sensor port holes clearly reach the main venturi tube
+* Use reamer ([a3](#tools) above) to carefully ream the venturi constriction to be precisely 5.5mm.
+* Use tapering tap ([a1](#tools) above) to chase the printed threads for the nipples.
+
+Lastly, screw the nipples into the 3d-printed venturi. You may require an adjustable wrench.
+
+**Note: reamer may be too short to reach orifice in case of modified designs for the enclosure. Geometry discrepancies
+will likely have to be compensated for in software using calibration lookup tables.**
+
+### Verification
+
+Check for leaks by plugging the holes and pulling some vacuum.
+
+* Plug one large end, plug both nipples, suck on the remaining end.  If you have a vacuum pump handy do a regular vacuum hold leak test.
+* Or, blow into each port with your fingers over the other three.
+
+## System integration
+
+Connecting tubes to pressure sensors should be covered in the general ventilator prototype assembly instructions.
+
+### Transfer Function
 
 To go from voltage to flow rate, you must correlate the flow rate to a change in pressure, and the change in pressure to a voltage.
 
-The fundamental equation for a ventiru flow meter is:
+The fundamental equation for a venturi flow meter is:
 
 ![Equation](https://wikimedia.org/api/rest_v1/media/math/render/svg/164d293785917d5d5bb07cdb01d96bafbc603a61)
 
@@ -90,7 +210,7 @@ to return the transfer function.
 
 **#TODO:** make spreadsheet contents visible here
 
-## Pressure Sensor
+### Pressure Sensor
 
 This venturi is designed to be paired with this sensor and a 14-bit ADC. A 12-bit ADC would work, but accuracy at the
 low end is improved.
@@ -99,88 +219,13 @@ low end is improved.
 
 Adjust values in the spreadsheet above accordingly to see how it will perform in your setup.
 
-## 3D Printing
+## Performance Data
 
-### Guidelines
-
-These should not be printed with FDM. Instead, a leaktight method like SLA or MJF should be used. Also, this model
-contains printed threads and is designed to interface with the referenced mcmaster barbed fitting (item 2 below).
-
-Note that the flow measurement is very sensitive to the exact geometry, particularly the thread geometry. 3D printing
-can have variable shrinkage that results in uncertainty in the throat size, and thus the flow rates. Check the diameter
-of the printed venturi; a good way to do this is to put a drill into the venturi that just barely fits, and then measure
-the diameter of that drill bit. (Any round thing will work.)
-
-## Parts List (BOM)
-
-**Note: If you are a member of the RespiraWorks team, review the
-[part purchasing guidelines](../../manufacturing/README.md#part-purchasing-guidelines)
-BEFORE purchasing any parts.**
-
-### Purchasing Source Key
-
-* **C** = McMaster-Carr
-* **Z** = Amazon
-* **3D** = 3D printed
-
-### Parts
-
-| Item | Quantity | Manufacturer  | Part #         | Price (USD)     | Action | Sources    | Notes |
-| ---- |---------:| ------------- | ------------------- | ------------:| ------- |-------------| ----- |
-| 1    |        1 | RespiraWorks  |                     |              | **ask** | **3D**      | 3D-printed venturi |
-| 2    |        2 | McMaster-Carr | 5463K33             | 3.93 / 10    | buy     | [C][2mcmc]  | Barbed fitting 3/32" AKA nipple |
-| 3    |        1 | McMaster-Carr | 5463K44             | 7.39 / 10    | buy     | [C][3mcmc]  | sensing tube 3/23" t-junction |
-| 4    |        - | uxcell        | a16031400ux0163     | 6.49 / 16ft  | buy     | [Z][4amzn]  | 2.5 mm tubing for connecting to sensors |
-| 5    |        - | McMaster-Carr | 50315K68            | 5.75 / 25ft  | buy     | [C][5mcmc]  | 2.5 mm tubing, alternative to *3* |
-
-[2mcmc]:   https://www.mcmaster.com/5463K33
-[3mcmc]:    https://www.mcmaster.com/5463K44
-[4amzn]:   https://www.amazon.com/gp/product/B01F4BJ7PI
-[5mcmc]:   https://www.mcmaster.com/50315K68
-
-### Tools
-
-We try to make few assumptions about what tools you have. Here are recommended tools you might need. You might already
-have some of these.
-
-| Item | Quantity | Manufacturer  | Part #         | Price (USD) | Sources         | Notes |
-| ------ |---------:| ------------- | ------------------- | --------:|-----------------| ----- |
-| a1     |        1 | McMaster-Carr | 2636A251            |     6.76 | [C][a1mcmc]     | Tap for 10-32 threading nipple ports. |
-| a2     |        1 | Kaufhof       | KF-ATW-0053         |    14.11 | [Z][a2amzn]     | Hand-operated tap wrenches, for use with a1 above |
-
-[a1mcmc]:https://www.mcmaster.com/2636A251
-[a2amzn]:https://www.amazon.com/gp/product/B003GKJYKI
-
-## Assembly
-
-**TODO:** pictures of assembly process
-
-**TODO:** reaming might be required
-
-Screw the nipples into the 3d-printed venturi.
-There are threads in the print but they don’t always come out right if resin gets trapped in the grooves while it prints.
-In such a case you might need a tap (listed in tooling BOM above) to clean the threads. You do not need a bottoming tap,
-since there is enough depth in the holes and the threads are short.
-
-In the latest tested version, no hand-tapping was required to insert nipples. With good enough 3d printing, this step
-should not be necessary.
-
-**TODO:** instructions on connecting tubes to sensors
-
-## Verification
-
-Check for leaks by plugging the holes and pulling some vacuum.
-
-* Plug one large end, plug both nipples, suck on the remaining end.  If you have a vacuum pump handy do a regular vacuum hold leak test.
-* Or, blow into each port with your fingers over the other three.
-
-# Performance Data
-
-## Pressure Loss curve
+### Pressure Loss curve
 
 **TODO:** add flow loss curve
 
-## Flow Rate
+### Flow Rate
 
 Without calibration, using the NXP sensor above, the 16mm sensor was compared to a Fleisch Pneumotachograph.
 The response curve is shown below over a varying flow signal. Note there is no calibration factor applied, so there is some offset.
@@ -189,6 +234,26 @@ The response curve is shown below over a varying flow signal. Note there is no c
 
 **TODO:** add flow accuracy curve and get improved correlation.
 
-## Characterization tests
+### Characterization tests
 
 Characterization tests are included [here](characterization-tests).
+
+## Fabrication at Scale
+
+The basis for the design came from previous experience using adapted fertilizer injection venturis as flow measurement
+devices. The original part is shown below.
+
+There is no fundamental reason why the exact same design cannot be used for this application, especially if these are
+being produced at scale. However, the dimensions of this part are not quite right to optimize for the flow regime of
+patient inspiration. The commonly available 1/2-NPT fertilizer venturi has an entrance diameter of 12.7mm and a throat
+diameter of 4.1 mm. After experimentation with the prototype venturi, the final dimensions were selected as an entrance
+diameter of 15.05 mm and a throat diameter of 5.5 mm. These are significantly different from a flow measurement
+standpoint, but not particularly different from a manufacturing standpoint.
+
+The fabrication for the above process is to produce two mirror half-molds with partial thread blanks for the three
+threads and alignment pins in the molds. Glue is applied to the mold halves, with the pins used to precisely align the
+components. After the glue sets, additional flashing and the alignment pins are machined off, and the threads are
+cleaned up with a cutting die. By using common thread fittings (1/2 NPT on other end, and 1/4 NPT on the pressure tap)
+readily available adapters can be attached. For the upstream pressure tap, a 1/2 NPT tee is used, with the flow entering
+the tee from upstream, and a barb adapter used to connect to the 3/32 tubing. For the throat tap, a 1/4 NPT female to
+3/32 barb adapter is required.

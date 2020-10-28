@@ -12,4 +12,6 @@
 *.adicht filter=lfs diff=lfs merge=lfs -text
 *.stl filter=lfs diff=lfs merge=lfs -text
 *.dxf filter=lfs diff=lfs merge=lfs -text
+*.ipt filter=lfs diff=lfs merge=lfs -text
+*.xcf filter=lfs diff=lfs merge=lfs -text
 *.idw filter=lfs diff=lfs merge=lfs -text

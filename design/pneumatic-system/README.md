@@ -26,11 +26,10 @@ the fan speed to conserve power and increase response time has not been
 incorporated in the current release. After leaving the fan, the
 pressurized (5 kPa) air passes through a check valve included to prevent
 oxygen backflow into the blower, as the blower is not rated for oxygen
-duty and could present a fire
-risk^[[1]](#ftnt1)^. Following the check
-valve, a proportional pinch valve regulates the downstream airflow. It
-does this by adjusting the cross sectional area of the flow path in the
-tubing built-in to the pinch-valve.
+duty and could present a fire risk. Following the check valve, a
+proportional pinch valve regulates the downstream airflow. It does this by
+adjusting the cross sectional area of the flow path in the tubing
+built-in to the pinch-valve.
 
 ### Oxygen Path
 
@@ -66,7 +65,7 @@ dedicated oxygen blender; instead, the oxygen blending function is
 provided by proportional control of the two input streams. A galvanic
 cell oxygen sensor is used to measure the oxygen content as the gasses
 mix and provide feedback to the controller to calculate, display, and
-enable closed-loop control of FiO2.^[[2]](#ftnt2)^
+enable closed-loop control of FiO2.
 
 ### In-flow Measurement
 
@@ -246,9 +245,17 @@ tubing. The cam pinches the tubing against a platform affixed to the
 base. Other than the interior tubing, the valve assembly never comes
 into contact with the gas stream. The highest wear portion of the design
 is the tubing itself, which can be replaced for less than 1 USD when it
-must be
-replaced^[[3]](#ftnt3)^ Life-leader
-testing is currently underway to demonstrate the ultimate lifetime of
+must be replaced.
+
+One option explored, not currently implemented, is to
+provision the device and arrange the components with an extra length of
+tubing (not shown above) such that it can be fed through the valve over
+time; pushing the extra from upstream to downstream of the valve and
+changing the wear point. This maintenance operation will extend valve
+lifetime significantly and should be able to be performed by hospital
+staff in addition to maintenance technicians.
+
+Life-leader testing is currently underway to demonstrate the ultimate lifetime of
 the valve; though it will take time to accumulate. As of submission of
 this proposal, the valve has been running at a 200% duty cycle for 21
 days continuously. Further information on life leader testing can be
@@ -440,22 +447,3 @@ These include:
     the oxygen sensor.
 -   Adding redundant pressure differential sensors to make it easier to
     detect a sensor failure.
-
-## Notes
-
-[[1]](#ftnt_ref1) For a more complete discussion of risk and hazards,
-refer to 01-07 Hazard Analysis Risk Assessment
-
-[[2]](#ftnt_ref2) Note that as of the v0.2 release, oxygen blending has
-not been fully implemented, with the only two modes available (FiO2 =
-0.21 and 1.0). Being able to achieve fine control (+/- 0.05 FiO2) is a
-target for the beta/v1.0 release. More information on this can be found
-in 01-2 Progress Status Report.
-
-[[3]](#ftnt_ref3) One option explored, not currently implemented, is to
-provision the device and arrange the components with an extra length of
-tubing (not shown above) such that it can be fed through the valve over
-time; pushing the extra from upstream to downstream of the valve and
-changing the wear point. This maintenance operation will extend valve
-lifetime significantly and should be able to be performed by hospital
-staff in addition to maintenance technicians.

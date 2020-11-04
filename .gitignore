@@ -9,6 +9,11 @@ source/config/*
 *.log
 !.gitignore
 
+.ctags
+ctags
+.cscope.out
+cscope.out
+
 #IDE
 CMakeLists*
 cmake-build-*/

@@ -1,16 +1,18 @@
 # Relay code
 
-If not installed globally, you might need to:
+The Relay switch is 8-Channel from the SainSmart vendor.
+The command line utility sainsmartrelay is available in /usr/local/bin on bigcheese server.
+The control Commands of the Relay swtich are:
+
 ```shell script
-pip install pyserial
+	sainsmartrelay --on 1
+	sainsmartrelay --off 1
 ```
 
-To get a list of available ports, you can do:
-```shell script
-python3 -m serial.tools.list_ports
-```
+You can use --help option to find out all available options of sainsmartrelay.
 
-Currently the code does not work.
+Please do NOT use relay8.py for now, currently this script is not working.
+
 
 ## Current setup
 

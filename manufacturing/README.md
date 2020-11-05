@@ -55,7 +55,7 @@ Some of the above may not be done for each component. Feel free to help us fill 
 * [Venturi flow sensors](venturi) - in-house design of affordable flow sensors
 * [Pinch valve](pinch_valve) - in-house design of affordable valve for inhale and exhale control
 * [Air filter assembly](filter_holder) - air filters for keeping patient safe and system clean
-* **TODO:** oxygen limb of pneumatic circuit
+* [Oxygen subsystem](oxygen) - pneumatics and sensing components for controlled oxygen delivery
 
 ### Characterization Testing
 

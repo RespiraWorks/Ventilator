@@ -9,17 +9,20 @@ source/config/*
 *.log
 !.gitignore
 
-.ctags
-ctags
-.cscope.out
-cscope.out
-
 #IDE
 CMakeLists*
 cmake-build-*/
 .idea/
 .idea
 .vscode/
+.ctags
+ctags
+.cscope.out
+cscope.out
+
+#CAD/Inventor
+*.lck
+OldVersions/
 
 gui/build
 .DS_Store

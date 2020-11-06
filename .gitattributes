@@ -14,4 +14,5 @@
 *.dxf filter=lfs diff=lfs merge=lfs -text
 *.ipt filter=lfs diff=lfs merge=lfs -text
 *.xcf filter=lfs diff=lfs merge=lfs -text
+*.iam filter=lfs diff=lfs merge=lfs -text
 *.idw filter=lfs diff=lfs merge=lfs -text

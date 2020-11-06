@@ -39,13 +39,10 @@ McMaster heat-set inserts; for production we'll consult with the manufacturer. W
 ## Custom parts CAD
 There are two types of filter assemblies to be used in our ventilator.
 
-|   [Patient Connectors][PC]       |  [Non Patient connectors][NPC]  |
+|   Patient Connectors       |  Non Patient connectors  |
 |:--------------------------------:|:-------------------------------:|
 |![Assembled](assets/PatientConnectorAssembly.png)|  ![Assembled](assets/NonPatientConnectorAssembly.png) |
 |![Sectional](assets/PatientConnectorSection.png) |  ![Sectional](assets/NonPatientConnectorSection.png)  |
-
-[PC]: https://cad.onshape.com/documents/3fe0c1f79c482144c267173d/w/2ad1c08071a25185f9c78c68/e/3f7805d0bb1b53e700b6c7eb
-[NPC]: https://cad.onshape.com/documents/3fe0c1f79c482144c267173d/w/2ad1c08071a25185f9c78c68/e/11907480755add4f9ca862c4
 
 ## Parts List (BOM)
 
@@ -76,9 +73,9 @@ BEFORE purchasing any parts.**
 | 9    |        8 | McMaster-Carr | 94180A333            | $16.69/100pk     | [C][8mcmc] | inserts |
 
 
-[1rw]: assets/SmallFilterHousing.stl
-[2rw]: assets/SmallFilterPatientConnector.stl
-[3rw]: assets/SmallFilterNonPatientConnector.stl
+[1rw]: assets/Filter%20housing.stl
+[2rw]: assets/Filter%20cover%20-%20patient%20connector.stl
+[3rw]: assets/Filter%20cover%20-%20air%20vent.stl
 [4amzn]: https://www.amazon.com/gp/product/B01KNZCW8E
 [9mcmc]: https://www.mcmaster.com/8785K82-8785K822/
 [7mcmc]: https://www.mcmaster.com/96016A556-96016A831/

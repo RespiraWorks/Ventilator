@@ -34,7 +34,7 @@ print_help() {
 RespiraWorks controller build utilities. Will build and run most tests. Will also build embedded controller code.
 The following options are provided:
   --help      Display this dialog
-  --no_checks Do not run clangtidy and cppcheck (yes, it's to annoy you!)
+  --no-checks Do not run clangtidy and cppcheck (yes, it's to annoy you!)
 EOF
 }
 

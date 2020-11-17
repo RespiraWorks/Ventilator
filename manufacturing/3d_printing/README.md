@@ -13,15 +13,22 @@ for any particular purpose.
 We have been printing with SLA printers, such as:
 
 * [Anycubic Photon](https://www.anycubic.com/collections/anycubic-photon-3d-printers/products/anycubic-photon-3d-printer)
-* [Elegoo Mars](https://www.elegoo.com/collections/3d-printer-accessories/products/elegoo-mars-uv-photocuring-lcd-3d-printer)
+* [Elegoo Mars](https://www.elegoo.com/collections/mars-series)
 
 ## Resin
 
 We have been using either:
-* [SirayaTech Fast](https://www.amazon.com/ABS-Like-Curing-Non-Brittle-Printing-Resin/dp/B07WFJ53LP) ABS-like resin (comes in various colors)
-* The above mixed with ~30% [SirayaTech Tenacious](https://www.amazon.com/Tenacious-Flexible-Resistant-Siraya-Tech/dp/B07PLJ9XW9) to mitigate brittleness
-  * If you have problems with parts cracking from impacts, try this mix.  It strong but slightly flexible, which makes it resistant to cracking.
-  * The densities are similar so it doesn't matter too much if you mix it by mass or volume.  If you have a scale, you can mix it by mass right in the bottle, and this may reduce mess.
+* [SirayaTech Fast](https://www.amazon.com/ABS-Like-Curing-Non-Brittle-Printing-Resin/dp/B07WFJ53LP) ABS-like resin
+  (comes in various colors)
+* The above mixed with ~30% [SirayaTech Tenacious](https://www.amazon.com/Tenacious-Flexible-Resistant-Siraya-Tech/dp/B07PLJ9XW9)
+  to mitigate brittleness
+  * If you have problems with parts cracking from impacts, try this mix.  It strong but slightly flexible, which makes
+    it resistant to cracking.
+  * The densities are similar so it doesn't matter too much if you mix it by mass or volume.  If you have a scale, you
+    can mix it by mass right in the bottle, and this may reduce mess.
+* [SirayaTech Clear V2](https://www.amazon.com/Blu-Strong-Precise-Resolution-Printing/dp/B083DLSR1W) Nearly transparent,
+  but harder to print with. Good for things like filter housings that need to look good but don't require precision
+  and strength.
 
 Guides for printing and curing are provided on the [manufacturer's website](https://siraya.tech/pages/support).
 
@@ -34,6 +41,7 @@ systems, including Linux.
 The following are configuration profiles we have used in Chitubox for some of the above-mentioned printer-resin combinations:
 * [Anycubic Photon & Fast resin](AnyCubic_Photon_Siraya_fast_profile.cfg)
 * [Anycubic Photon & 70:30 Fast:Tenacious blend](AnyCubic_Photon_Fast7_+_tenacious3_profile.cfg)
+* [Anycubic Photon & Blu Clear 2 resin](AnyCubic_Photon_Siraya_Blu_Clear_2_profile.cfg)
 * Elegoo Mars & Fast Resin: the default settings in Chitubox for Printer: "Elegoo Mars" and Resin: "Elegoo Standard Resin Grey for 0.05mm" work perfectly.
 * [Elegoo Mars & 70:30 Fast:Tenacious blend](Elegoo_Mars_70fast_30tenacious_profile.cfg)
   * This is exactly the same as the Elegoo Standard Grey resin profile, except with lifting speed reduced to 60mm/min to prevent layer separation issues.

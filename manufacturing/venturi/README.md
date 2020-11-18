@@ -1,8 +1,8 @@
 # Venturi Flow Sensor
 
-|  Cross-section           |  Solid   |
-:------------------:|:-----------------:|
-![](assets/v1_cross_section.jpg)  |  ![](assets/v1_solid.jpg)  |
+| Cross1-section                   | Solid                    |
+|:--------------------------------:|:------------------------:|
+| ![](assets/v1_cross_section.jpg) | ![](assets/v1_solid.jpg) |
 
 ## Design basis
 
@@ -89,20 +89,20 @@ by the two variables described above.
 |:---------:|:-------:|:----------:|:-------------:|:-------------:|
 | **Use**   | General testing / "Pizza build" | Enclosed build | Enclosed build | Enclosed build |
 | **Image** |![](assets/venturi_generic.jpg) | ![](assets/venturi_air_influx.jpg) | ![](assets/venturi_oxygen_influx.jpg) | ![](assets/venturi_exhale.jpg) |
-| diams_before_venturi | 2.0 | 2.5 | 2.5 | 2.0 |
-| diams_after_venturi  | 0.5 | 1.0 | 1.0 | 1.0 |
-| input_outer_diameter | 3/4" | 3/8" | 3/4" | 3/4" |
-| input_thk | 2mm | 1.5mm | 2mm | 2mm |
-| input_clamp_nominal_len | 0mm | 12mm | 12mm | 12mm |
-| Straight output barb features | enabled | disabled | disabled | enabled |
-| output_outer_diameter | 3/4" | - | - | 3/8" |
-| output_thk | 2mm | - | -  | 1.5mm |
-| output_clamp_nominal_len | 0mm | - | - | 12mm |
-| Left U-turn features | disabled | enabled | disabled | disabled |
-| Right U-turn features | disabled | disabled | enabled | disabled |
-| u_turn_parallel_distance | - | 10mm | 10mm | - |
-| u_turn_output_tube_len | - | 30mm | 30mm | -  |
-| **STL file** | [venturi_generic.stl](assets/venturi_generic.stl) | [venturi_air_influx.stl](assets/venturi_air_influx.stl) | [venturi_oxygen_influx.stl](assets/venturi_oxygen_influx.stl) | [venturi_exhale.jpg](assets/venturi_exhale.stl) |
+| diams_before_venturi          | 2.0      | 2.5      | 2.5      | 2.0      |
+| diams_after_venturi           | 0.5      | 1.0      | 1.0      | 1.0      |
+| input_outer_diameter          | 3/4"     | 3/8"     | 3/4"     | 3/4"     |
+| input_thk                     | 2mm      | 1.5mm    | 2mm      | 2mm      |
+| input_clamp_nominal_len       | 0mm      | 12mm     | 12mm     | 12mm     |
+| Straight output barb features | enabled  | disabled | disabled | enabled  |
+| output_outer_diameter         | 3/4"     | -        | -        | 3/8"     |
+| output_thk                    | 2mm      | -        | -        | 1.5mm    |
+| output_clamp_nominal_len      | 0mm      | -        | -        | 12mm     |
+| Left U-turn features          | disabled | enabled  | disabled | disabled |
+| Right U-turn features         | disabled | disabled | enabled  | disabled |
+| u_turn_parallel_distance      | -        | 10mm     | 10mm     | -        |
+| u_turn_output_tube_len        | -        | 30mm     | 30mm     | -        |
+| **STL file**  | [venturi_generic.stl](assets/venturi_generic.stl) | [venturi_air_influx.stl](assets/venturi_air_influx.stl) | [venturi_oxygen_influx.stl](assets/venturi_oxygen_influx.stl) | [venturi_exhale.jpg](assets/venturi_exhale.stl) |
 | **Total length** | 106.1mm | 143mm | 138mm | 142.5mm |
 | **Notes** | | | Requires discrete 1/4"-3/4" adapter upstream | |
 
@@ -116,49 +116,40 @@ Please see the [3d printing guidelines](../3d_printing) for general advice.
 When slicing, it is best to position the part vertically to maintain authentic tapering and orifice geometry.
 No scaffolding should be required. Part has been successfully printed with Siraya Fast of various colors.
 
-## Parts List (BOM)
+## Parts
 
-**Note: If you are a member of the RespiraWorks team, review the
-[part purchasing guidelines](../../manufacturing/README.md#part-purchasing-guidelines)
+**Note: If you are a member of the RespiraWorks team, review the [part purchasing guidelines][ppg]
 BEFORE purchasing any parts.**
 
-### Purchasing Source Key
+[ppg]: ../../manufacturing/purchasing_guidelines.md
 
-* **C** = McMaster-Carr
-* **Z** = Amazon
-* **3D** = 3D printed
+| Item | Quantity | Manufacturer  | Part #          | Price (USD)  | Sources[*][ppg] | Notes |
+| ---- |---------:| ------------- | --------------- | ------------:|:---------------:| ----- |
+|**A1**| 1        | RespiraWorks  |                 | ~1           | [B][1rw]        | 3D-printed venturi |
+|**A2**| 2        | McMaster-Carr | 5463K3          | 3.93 / 10    | [C][2mcmc]      | Barbed fitting 3/32" AKA nipple |
+|**A3**| -        | McMaster-Carr | 5463K4          | 7.39 / 10    | [C][3mcmc]      | sensing tube 3/23" t-junction, for teeing off to patient pressure sensor, **part of pneumatic assembly** |
+|**A4**| -        | uxcell        | a16031400ux0163 | 6.49 / 16ft  | [Z][4amzn]      | 2.5 mm tubing for connecting to sensors, **part of pneumatic assembly** |
+|**A5**| -        | McMaster-Carr | 50315K68        | 5.75 / 25ft  | [C][5mcmc]      | 2.5 mm tubing, **alternative to A4** |
 
-### Parts
-
-| Item | Quantity | Manufacturer  | Part #          | Price (USD)  | Sources     | Notes |
-| ---- |---------:| ------------- | --------------- | ------------:| ----------- | ----- |
-| 1    |        1 | RespiraWorks  |                 |              |  **3D**     | 3D-printed venturi |
-| 2    |        2 | McMaster-Carr | 5463K3          | 3.93 / 10    | [C][2mcmc]  | Barbed fitting 3/32" AKA nipple |
-| 3    |        1 | McMaster-Carr | 5463K4          | 7.39 / 10    | [C][3mcmc]  | sensing tube 3/23" t-junction, in full vent assembly, for teeing off to patient pressure sensor |
-| 4    |        - | uxcell        | a16031400ux0163 | 6.49 / 16ft  | [Z][4amzn]  | 2.5 mm tubing for connecting to sensors |
-| 5    |        - | McMaster-Carr | 50315K68        | 5.75 / 25ft  | [C][5mcmc]  | 2.5 mm tubing, alternative to *3* |
-
+[1rw]:   #files
 [2mcmc]: https://www.mcmaster.com/5463K33
 [3mcmc]: https://www.mcmaster.com/5463K44
 [4amzn]: https://www.amazon.com/gp/product/B01F4BJ7PI
 [5mcmc]: https://www.mcmaster.com/50315K68
 
-### Tools
+## Tools
 
-We try to make few assumptions about what tools you have. Here are recommended tools you might need. You might already
-have some of these.
+| Item | Quantity | Manufacturer  | Part #          | Price (USD) | Sources[*][ppg] | Notes |
+| ---- |---------:| ------------- | --------------- | -----------:|:---------------:| ----- |
+|**B1**| 1        | McMaster-Carr | 2636A251        | 6.76        | [C][b1mcmc]     | Tap for 10-32 threading nipple ports. |
+|**B2**| 1        | Kaufhof       | KF-ATW-0053     | 14.11       | [Z][b2amzn]     | Hand-operated tap wrenches, for use with **B1** above |
+|**B3**| 1        | uxcell        | a19032000ux0738 | 6.89        | [Z][b3amzn]     | 5.5 reamer for ensuring venturi diameter |
+|**B4**| 1        | DeWalt        | DWA1205         | 2.58        | [Z][b4amzn]     | (optional) 5/64" drill bit, should optimally be 2mm |
 
-| Item | Quantity | Manufacturer  | Part #         | Price (USD) | Sources         | Notes |
-| ---- |---------:| ------------- | ------------------- | --------:|-----------------| ----- |
-| a1   |        1 | McMaster-Carr | 2636A251            |     6.76 | [C][a1mcmc]     | Tap for 10-32 threading nipple ports. |
-| a2   |        1 | Kaufhof       | KF-ATW-0053         |    14.11 | [Z][a2amzn]     | Hand-operated tap wrenches, for use with a1 above |
-| a3   |        1 | uxcell        | a19032000ux0738     |     6.89 | [Z][a3amzn]     | 5.5 reamer for ensuring venturi diameter |
-| a4   |        1 | DeWalt        | DWA1205             |     2.58 | [Z][a4amzn]     | (optional) 5/64" drill bit, should optimally be 2mm |
-
-[a1mcmc]:https://www.mcmaster.com/2636A251
-[a2amzn]:https://www.amazon.com/gp/product/B003GKJYKI
-[a3amzn]:https://www.amazon.com/gp/product/B07QQPJB1V
-[a4amzn]:https://www.amazon.com/DEWALT-DWA1205-Pilot-Industrial-Cobalt/dp/B015J5HN2S
+[b1mcmc]:https://www.mcmaster.com/2636A251
+[b2amzn]:https://www.amazon.com/gp/product/B003GKJYKI
+[b3amzn]:https://www.amazon.com/gp/product/B07QQPJB1V
+[b4amzn]:https://www.amazon.com/DEWALT-DWA1205-Pilot-Industrial-Cobalt/dp/B015J5HN2S
 
 ## Manufacturing instructions
 
@@ -169,11 +160,11 @@ may result in variable shrinkage or expansion. This may cause uncertainty in the
 Threads for sensor connection may also not be perfectly formed.
 
 You should therefore use mechanical tools to ensure all orifices are adequately prepared:
-* Use 2mm (or 5/64") drill bit ([a4](#tools) above) to ensure sensor port holes clearly reach the main venturi tube
-* Use reamer ([a3](#tools) above) to carefully ream the venturi constriction to be precisely 5.5mm.
-* Use tapering tap ([a1](#tools) above) to chase the printed threads for the nipples.
+* Use 2mm (or 5/64") drill bit (**B4**) above) to ensure sensor port holes clearly reach the main venturi tube
+* Use reamer (**B3**) above) to carefully ream the venturi constriction to be precisely 5.5mm.
+* Use tapering tap (**B1**) above) to chase the printed threads for the nipples.
 
-Lastly, screw the nipples into the 3d-printed venturi. You may require an adjustable wrench.
+Lastly, screw the nipples (**A2**) into the 3d-printed venturi (**A1**). You may require an adjustable wrench.
 
 **Note: reamer may be too short to reach orifice in case of modified designs for the enclosure. Geometry discrepancies
 will likely have to be compensated for in software using calibration lookup tables.**

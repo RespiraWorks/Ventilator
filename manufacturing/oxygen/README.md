@@ -12,22 +12,17 @@ The oxygen pneumatic sub-system consists of the following components (colorized)
 * Air+oxygen mixing chamber (passive)
 * Oxygen sensor
 
-## Tubing and adapters
-
-**Note: If you are a member of the RespiraWorks team, review the
-[part purchasing guidelines](../../manufacturing/README.md#part-purchasing-guidelines)
+**Note: If you are a member of the RespiraWorks team, review the [part purchasing guidelines][ppg]
 BEFORE purchasing any parts.**
 
-### Purchasing Source Key
+[ppg]: ../../manufacturing/purchasing_guidelines.md
 
-* **Z** = Amazon
-* **C** = McMaster-Carr
-* **B** = Built by RespiraWorks
+## Tubing and adapters
 
 ### Materials
 
-| Item | Quantity | Manufacturer  | Part #              | Price (USD)  | Sources        | Notes |
-| ---- |---------:| ------------- | ------------------- | ------------:|----------------| ----- |
+| Item | Quantity | Manufacturer  | Part #              | Price (USD)  | Sources[*][ppg]| Notes |
+| ---- |---------:| ------------- | ------------------- | ------------:|:--------------:| ----- |
 | 1    |      5ft | McMaster-Carr | 5894K34             | 12.15 / 5ft  | [C][1mcmc]     | 1/4"ID 3/8"OD Tygon tubing |
 | 2    |        5 | McMaster-Carr | 5121K451            | 5.78 / 10    | [C][2mcmc]     | 1/4 NPT x 1/4" ID barbed adapter |
 | 3    |        1 | RespiraWorks  |                     |              | [B][3rw]       | 1/4"ID x 3/4"ID reducer |
@@ -115,7 +110,7 @@ carried out on the best solution for this. It may very well be that a simple T- 
 purpose.
 
 Currently, two options may be employed:
-* [22-mm patient tubing tee](../../quality-assurance/testing/simple_test_lung/README.md#tubing-adapter), same as used for test lungs.
+* [22-mm patient tubing tee](../../quality-assurance/testing/test_lung/README.md#tubing-adapter), same as used for test lungs.
 * [3/4" why with barbed fittings](https://www.mcmaster.com/5463K62/) from McMaster Carr
 
 Further refinements to this solution are tracked in [Issue #915](https://github.com/RespiraWorks/Ventilator/issues/915).

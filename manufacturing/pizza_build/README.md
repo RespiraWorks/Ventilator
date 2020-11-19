@@ -38,20 +38,23 @@ BEFORE purchasing any parts.**
 
 ### 3/4" ID Tubing Components
 
-| Item | Quantity | Manufacturer  | Part #              | Price (USD)     |  Sources       | Notes |
+| Item | Quantity | Manufacturer  | Part #              | Price (USD)  |  Sources       | Notes |
 | ---- |---------:| ------------- | ------------------- | ------------:|----------------| ----- |
-| a1   |      5ft |      OCSParts |            117062-5 | 22.99 / 5ft  | [Z][a1amzn]    | soft 3/4"ID 1"OD tubing |
+| a1   |      5ft | OCSParts      | 117062-5            | 22.99 / 5ft  | [Z][a1amzn]    | soft 3/4"ID 1"OD tubing |
 | a2   |      5ft | McMaster-Carr | 5233K71             | 14.20 / 10ft | [C][a2mcmc]    | hard 3/4"ID 1"OD tubing, **alternative to a1**, not as fun to work with, not for medical use |
 | a3   |        6 | McMaster-Carr | 9579K73             | 12.24 / 20   | [C][a3mcmc]    | Herbie clip K (22.2-24.9mm) for clamping 1"OD tubing, works better for soft tubing |
 | a4   |        6 | McMaster-Carr | 9579K74             | 12.33 / 20   | [C][a4mcmc]    | Herbie clip L (24.5-27.6mm) for clamping 1"OD tubing, **alternate to a3** maybe works better for hard tubing? |
-| a5   |        1 | McMaster-Carr | 5463K648            | 10.20 / 10   | [C][a5mcmc]    | 3/4"ID <-> 3/8"ID adapter, to interface with pinch valve tubing |
-
+| a5   |        1 | McMaster-Carr | 5463K648            | 10.20 / 10   | [C][a5mcmc]    | 3/4"ID x 3/8"ID adapter, to interface with pinch valve tubing |
+| a6   |        1 | McMaster-Carr | 5463K644            | 7.80 / 10    | [C][a6mcmc]    | 5/8"ID x 3/8"ID adapter, for blower-to-pinch valve transition |
+| a7   |        3 | McMaster-Carr | 96817A896           | 7.89 / 25    | [C][a7mcmc]    | m2.5 x 10mm thread-forming screws, for holding down blower to base board |
 
 [a1amzn]: https://www.amazon.com/gp/product/B01LZ5ZK53
 [a2mcmc]: https://www.mcmaster.com/5233K71
 [a3mcmc]: https://www.mcmaster.com/9579K73
 [a4mcmc]: https://www.mcmaster.com/9579K74
 [a5mcmc]: https://www.mcmaster.com/5463K648
+[a6mcmc]: https://www.mcmaster.com/5463K644
+[a7mcmc]: https://www.mcmaster.com/96817A896/
 
 ### Metric Version
 
@@ -64,20 +67,19 @@ Assembling the pneumatic system will likely need the following tools.
 T1 might be enough and T4 might be unnecessary.
 Also, scissors or a sharp knife might be ok instead of T3.
 
-| Item | Manufacturer  | Part number        | Price (USD) | Sources         | Notes |
-| ---- |--------------:| ------------------ | -------- | ---------------:|------ |
-| c1   |        TEKTON |              37122 |    13.00 | [Z][c1amzn]     | 8 inch slip-joint pliers, for clamping tubes onto fittings |
-| c2   |   Duda Energy |     LPpvc075-005ft |    19.99 | [Z][c2amzn]     | Adjustable wrench, at least 1" wide opening, for screwing in NTP fittings |
-| c3   |        DEWILL |          (unknown) |    15.88 | [Z][c3amzn]     | Pipe and PVC cutter, for cutting tubing |
-| c4   |         IRWIN |            2078216 |     8.90 | [Z][c4amzn]     | Long nose pliers, for removing herbie clips |
-| c5   |          PTFE | vanguardSealantsPTFE-01 |     6.49 | [Z][c5amzn]     | It's advisable to teflon tape all NTP threaded components. Not only will they be more airtight, but also they will be easier to tighten and release. |
+| Item | Manufacturer | Part number             | Price (USD) | Sources         | Notes |
+| ---- |-------------:| ----------------------- | ----------- | ---------------:|------ |
+| c1   | TEKTON       | 37122                   | 13.00       | [Z][c1amzn]     | 8 inch slip-joint pliers, for clamping tubes onto fittings |
+| c2   | Duda Energy  | LPpvc075-005ft          | 19.99       | [Z][c2amzn]     | Adjustable wrench, at least 1" wide opening, for screwing in NTP fittings |
+| c3   | DEWILL       | (unknown)               | 15.88       | [Z][c3amzn]     | Pipe and PVC cutter, for cutting tubing |
+| c4   | IRWIN        | 2078216                 | 8.90        | [Z][c4amzn]     | Long nose pliers, for removing herbie clips |
+| c5   | Vanguard     | vanguardSealantsPTFE-01 | 6.49        | [Z][c5amzn]     | It's advisable to teflon tape all NTP threaded components. Not only will they be more airtight, but also they will be easier to tighten and release. |
 
 [c1amzn]: https://www.amazon.com/TEKTON-2-Inch-Joint-Pliers-37122/dp/B00KLY1FAY
 [c2amzn]: https://www.amazon.com/GETUPOWER-10-Inch-Adjustable-Opening-Vanadium/dp/B07RGV2VK1
 [c3amzn]: https://www.amazon.com/gp/product/B07Y997XKC
 [c4amzn]: https://www.amazon.com/Tools-VISE-GRIP-Pliers-6-Inch-2078216/dp/B000A0OW2M
 [c5amzn]: https://www.amazon.com/gp/product/B01L2F428C
-
 
 ## Sub-assemblies
 
@@ -117,7 +119,7 @@ In the picture on the right we have marked down positions for the components to 
 | ![](images/pinch_valves_front.jpg) | ![](images/pinch_valves_back.jpg) |
 
 2.  Take the tube that belongs with pinch valve and attach it to the blower sub-assembly. lide the tube through pinch
-valve and bolt down the blower from the back, using some M2.5 thread-forming screws:
+valve and bolt down the blower from the back, using some M2.5 thread-forming screws (item a7 above):
 
 |         |          |
 |:-------:|:--------:|

@@ -349,6 +349,7 @@ private:
 
   void InitGPIO();
   void InitADC();
+  void InitI2C();
   void InitSysTimer();
   void InitPwmOut();
   void InitUARTs();
@@ -356,6 +357,9 @@ private:
   void EnableInterrupt(InterruptVector vec, IntPriority pri);
   void StepperMotorInit();
   void InitBuzzer();
+
+  uint32_t I2C_timing(uint8_t prescaler, uint8_t scl_high, uint8_t scl_low,
+                      uint8_t scl_delay, uint8_t sda_hold);
 
 #endif
 

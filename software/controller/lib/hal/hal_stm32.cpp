@@ -51,6 +51,10 @@ static void Timer15ISR();
 void UART3_ISR();
 void DMA1_CH2_ISR();
 void DMA1_CH3_ISR();
+void I2C1_EV_ISR();
+void I2C1_ER_ISR();
+void DMA2_CH6_ISR();
+void DMA2_CH7_ISR();
 
 // This function is called from the libc initialization code
 // before any static constructors are called.
@@ -765,7 +769,7 @@ void HalApi::EnableClock(void *ptr) {
       {ADC_BASE, 1, 13},    {TIMER2_BASE, 4, 0}, {TIMER3_BASE, 4, 1},
       {TIMER6_BASE, 4, 4},  {UART2_BASE, 4, 17}, {UART3_BASE, 4, 18},
       {TIMER1_BASE, 6, 11}, {SPI1_BASE, 6, 12},  {TIMER15_BASE, 6, 16},
-
+      {I2C1_BASE, 4, 21},
       // The following entries are probably correct, but have
       // not been tested yet.  When adding support for one of
       // these peripherials just comment out the line.  And
@@ -775,7 +779,6 @@ void HalApi::EnableClock(void *ptr) {
       //      {SPI2_BASE, 4, 14},
       //      {SPI3_BASE, 4, 15},
       //      {UART4_BASE, 4, 19},
-      //      {I2C1_BASE, 4, 21},
       //      {I2C2_BASE, 4, 22},
       //      {I2C3_BASE, 4, 23},
       //      {I2C4_BASE, 5, 1},

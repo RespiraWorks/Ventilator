@@ -146,9 +146,9 @@ wiring.
 
 To 3d print this component see the [general 3d printing guidelines](../3d_printing).
 
-| Rendering | STL | Source |
-|:---------:|:---:|:------:|
-|![](CAD/tubing_adapter.jpg)|[tubing_adapter.stl](CAD/tubing_adapter.stl)|[tubing_adapter.SLDPRT](CAD/tubing_adapter.sldprt)|
+| Rendering | STL | Solidworks | Inventor (Editable) |
+|:---------:|:---:|:----------:|:--------------------|
+|![](CAD/tubing_adapter.jpg)|[tubing_adapter.stl](CAD/tubing_adapter.stl)|[tubing_adapter.SLDPRT](CAD/tubing_adapter.sldprt)|[tubing_adapter.ipt](CAD/tubing_adapter.ipt)|
 
 #### Gaskets
 

@@ -6,9 +6,7 @@ This section contains testing information, including testing plans, and resultin
 
 The following custom in-house developed test equipment is used.
 
-[Simple test lung](simple_test_lung)
-
-[Test lung with adjustable compliance](compliance_test_lung)
+[DIY test lung](test_lung)
 
 ## Testing data
 

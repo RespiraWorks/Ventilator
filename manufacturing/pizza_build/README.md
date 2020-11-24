@@ -13,9 +13,9 @@ It is also not enclosed like the final product and is meant to be operated in an
 
 It can also come in various configurations, depending on your testing needs:
 
-| Solenoid valve setup  |  Pinch valve setup   | Blower bypass setup     |
-|:---------------------:|:--------------------:|:-----------------------:|
-![](images/photo-solenoid.jpg) |![](images/photo-pinch.jpg)  |![](images/photo-advanced.jpg)  |
+| Solenoid valve setup           | Pinch valve setup            | Blower bypass setup            |
+|:------------------------------:|:----------------------------:|:------------------------------:|
+| ![](images/photo-solenoid.jpg) | ![](images/photo-pinch.jpg)  | ![](images/photo-advanced.jpg) |
 
 ## Essentials
 
@@ -23,61 +23,50 @@ The first thing you will need is a [Brain build](../brain), which contains the c
 
 We are using 3/4" ID tube as the default standard (and adapters where needed, like to the blower and the pinch valves).
 This easily can have 19mm ID tubing substituted in metric manufacturing settings (3/4" = 19.05mm).
-All rigid plumbing fittings should be NPT/imperial standard (3/4 NPS preferable, to keep ID consistent throughout the flowpath).
+All rigid plumbing fittings should be NPT/imperial standard (3/4 NPS preferable, to keep ID consistent throughout the flow path).
 
-## Parts List (BOM)
+## Parts
 
-**Note: If you are a member of the RespiraWorks team, review the
-[part purchasing guidelines](../../manufacturing/README.md#part-purchasing-guidelines)
+**Note: If you are a member of the RespiraWorks team, review the [part purchasing guidelines][ppg]
 BEFORE purchasing any parts.**
 
-### Purchasing Source Key
+[ppg]: ../../manufacturing/purchasing_guidelines.md
 
-* **Z** = Amazon
-* **C** = McMaster-Carr
-
-### 3/4" ID Tubing Components
-
-| Item | Quantity | Manufacturer  | Part #              | Price (USD)     |  Sources       | Notes |
-| ---- |---------:| ------------- | ------------------- | ------------:|----------------| ----- |
-| a1   |      5ft |      OCSParts |            117062-5 | 22.99 / 5ft  | [Z][a1amzn]    | soft 3/4"ID 1"OD tubing |
-| a2   |      5ft | McMaster-Carr | 5233K71             | 14.20 / 10ft | [C][a2mcmc]    | hard 3/4"ID 1"OD tubing, **alternative to a1**, not as fun to work with, not for medical use |
-| a3   |        6 | McMaster-Carr | 9579K73             | 12.24 / 20   | [C][a3mcmc]    | Herbie clip K (22.2-24.9mm) for clamping 1"OD tubing, works better for soft tubing |
-| a4   |        6 | McMaster-Carr | 9579K74             | 12.33 / 20   | [C][a4mcmc]    | Herbie clip L (24.5-27.6mm) for clamping 1"OD tubing, **alternate to a3** maybe works better for hard tubing? |
-| a5   |        1 | McMaster-Carr | 5463K648            | 10.20 / 10   | [C][a5mcmc]    | 3/4"ID <-> 3/8"ID adapter, to interface with pinch valve tubing |
-
+| Item | Quantity | Manufacturer  | Part #     | Price (USD)  | Sources[*][ppg] | Notes |
+| ---- |---------:| ------------- | ---------- | ------------:|:---------------:| ----- |
+|**A1**| 5ft      | OCSParts      | 117062-5   | 22.99 / 5ft  | [Z][a1amzn]     | soft 3/4"ID 1"OD tubing |
+|**A2**| 5ft      | McMaster-Carr | 5233K71    | 14.20 / 10ft | [C][a2mcmc]     | hard 3/4"ID 1"OD tubing, **alternative to a1**, not as fun to work with, not for medical use |
+|**A3**| 6        | McMaster-Carr | 9579K73    | 12.24 / 20   | [C][a3mcmc]     | Herbie clip K (22.2-24.9mm) for clamping 1"OD tubing, works better for soft tubing |
+|**A4**| 6        | McMaster-Carr | 9579K74    | 12.33 / 20   | [C][a4mcmc]     | Herbie clip L (24.5-27.6mm) for clamping 1"OD tubing, **alternate to a3** maybe works better for hard tubing? |
+|**A5**| 1        | McMaster-Carr | 5463K648   | 10.20 / 10   | [C][a5mcmc]     | 3/4"ID x 3/8"ID adapter, to interface with pinch valve tubing |
+|**A6**| 1        | McMaster-Carr | 5463K644   | 7.80 / 10    | [C][a6mcmc]     | 5/8"ID x 3/8"ID adapter, for blower-to-pinch valve transition |
+|**A7**| 3        | McMaster-Carr | 96817A896  | 7.89 / 25    | [C][a7mcmc]     | m2.5 x 10mm thread-forming screws, for holding down blower to base board |
+|**A8**| 4        | Bolt Dropper  | B079Y9DT1K | 6.40 / 100   | [A][a8amzn]     | #4 x 1/2" Stainless Flat Head Phillips Wood Screw |
 
 [a1amzn]: https://www.amazon.com/gp/product/B01LZ5ZK53
 [a2mcmc]: https://www.mcmaster.com/5233K71
 [a3mcmc]: https://www.mcmaster.com/9579K73
 [a4mcmc]: https://www.mcmaster.com/9579K74
 [a5mcmc]: https://www.mcmaster.com/5463K648
+[a6mcmc]: https://www.mcmaster.com/5463K644
+[a7mcmc]: https://www.mcmaster.com/96817A896/
+[a8amzn]: https://www.amazon.com/Stainless-Phillips-Screw-Bolt-Dropper/dp/B079Y9DT1K
 
-### Metric Version
+## Tools
 
-**#TODO: document how to build with metric components**
-
-
-### Tools
-
-Assembling the pneumatic system will likely need the following tools.
-T1 might be enough and T4 might be unnecessary.
-Also, scissors or a sharp knife might be ok instead of T3.
-
-| Item | Manufacturer  | Part number        | Price (USD) | Sources         | Notes |
-| ---- |--------------:| ------------------ | -------- | ---------------:|------ |
-| c1   |        TEKTON |              37122 |    13.00 | [Z][c1amzn]     | 8 inch slip-joint pliers, for clamping tubes onto fittings |
-| c2   |   Duda Energy |     LPpvc075-005ft |    19.99 | [Z][c2amzn]     | Adjustable wrench, at least 1" wide opening, for screwing in NTP fittings |
-| c3   |        DEWILL |          (unknown) |    15.88 | [Z][c3amzn]     | Pipe and PVC cutter, for cutting tubing |
-| c4   |         IRWIN |            2078216 |     8.90 | [Z][c4amzn]     | Long nose pliers, for removing herbie clips |
-| c5   |          PTFE | vanguardSealantsPTFE-01 |     6.49 | [Z][c5amzn]     | It's advisable to teflon tape all NTP threaded components. Not only will they be more airtight, but also they will be easier to tighten and release. |
+| Item | Manufacturer | Part number             | Price (USD) | Sources[*][ppg] | Notes |
+| ---- |-------------:| ----------------------- | ----------- |:---------------:|------ |
+|**C1**| TEKTON       | 37122                   | 13.00       | [Z][c1amzn]     | 8 inch slip-joint pliers, for clamping tubes onto fittings |
+|**C2**| Duda Energy  | LPpvc075-005ft          | 19.99       | [Z][c2amzn]     | Adjustable wrench, at least 1" wide opening, for screwing in NTP fittings |
+|**C3**| DEWILL       | (unknown)               | 15.88       | [Z][c3amzn]     | Pipe and PVC cutter, for cutting tubing. Scissors might also work. |
+|**C4**| IRWIN        | 2078216                 | 8.90        | [Z][c4amzn]     | Long nose pliers, for removing herbie clips |
+|**C5**| Vanguard     | vanguardSealantsPTFE-01 | 6.49        | [Z][c5amzn]     | It's advisable to teflon tape all NTP threaded components. Not only will they be more airtight, but also they will be easier to tighten and release. |
 
 [c1amzn]: https://www.amazon.com/TEKTON-2-Inch-Joint-Pliers-37122/dp/B00KLY1FAY
 [c2amzn]: https://www.amazon.com/GETUPOWER-10-Inch-Adjustable-Opening-Vanadium/dp/B07RGV2VK1
 [c3amzn]: https://www.amazon.com/gp/product/B07Y997XKC
 [c4amzn]: https://www.amazon.com/Tools-VISE-GRIP-Pliers-6-Inch-2078216/dp/B000A0OW2M
 [c5amzn]: https://www.amazon.com/gp/product/B01L2F428C
-
 
 ## Sub-assemblies
 
@@ -116,23 +105,23 @@ In the picture on the right we have marked down positions for the components to 
 |:-------:|:--------:|
 | ![](images/pinch_valves_front.jpg) | ![](images/pinch_valves_back.jpg) |
 
-2.  Take the tube that belongs with pinch valve and attach it to the blower sub-assembly. lide the tube through pinch
-valve and bolt down the blower from the back, using some M2.5 thread-forming screws:
+2.  Take the tube that belongs with pinch valve and attach it to the blower sub-assembly. Slide the tube through pinch
+valve and bolt down the blower from the back, using some M2.5 thread-forming screws (**A7**):
 
 |         |          |
 |:-------:|:--------:|
 | ![](images/blower_unattached.jpg) | ![](images/blower_attached.jpg) |
 
-3.  Assemble a tee for the oxygen branch (in development), with a transition from ⅜ "ID tubing to ¾ "ID tubing, about 8
-inches of ¾ "tubing and the inflow venturi. Here we have highlighted the flow direction arrow on the venturi:
+3.  Assemble a tee for the oxygen branch (in development), with a transition from 3/8"ID tubing to 3/4"ID tubing, about
+8 cm of 3/4"tubing and the inflow venturi. Here we have highlighted the flow direction arrow on the venturi:
 4.  Connect the oxygen tee and venturi to the first pinch valve to complete the inhale limb of the pneumatic assembly:
 
 |         |          |
 |:-------:|:--------:|
 | ![](images/oxy_tee_unattached.jpg) | ![](images/oxy_tee_attached.jpg) |
 
-5.  Assemble the exhale limb of the pneumatic assembly, which includes the outflow venturi, 15cm of ¾ "ID tubing, a
-tubing adapter and the ⅜ "ID tubing for the second pinch valve. Then, slide it into the pinch valve and zip tie the
+5.  Assemble the exhale limb of the pneumatic assembly, which includes the outflow venturi, 15cm of 3/4"ID tubing, a
+tubing adapter and the 3/8"ID tubing for the second pinch valve. Then, slide it into the pinch valve and zip tie the
 adapter to secure it to the base board.
 
 |         |          |
@@ -143,7 +132,8 @@ adapter to secure it to the base board.
 
 These computing and digital user interface components enable full deploy and execution of all developed software.
 
-1.  Secure the blower driver board to the base and attach spacer standoffs for supporting the main circuit board:
+1.  Secure the blower driver board to the base (using **A8**) and attach spacer standoffs for supporting the main
+circuit board:
     ![](images/blower_driver.jpg)
 
 2.  Install the PCB, running the blower’s power and control cables in the space between the base board and the PCB:

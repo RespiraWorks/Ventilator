@@ -12,6 +12,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+#if defined(BARE_STM32)
 
 #include "eeprom.h"
 #include "hal.h"
@@ -82,3 +83,5 @@ bool I2Ceeprom::WriteBytes(uint16_t offset, uint16_t length, const void *data,
 
   return i2c1.SendRequest(request);
 };
+
+#endif // BARE_STM32

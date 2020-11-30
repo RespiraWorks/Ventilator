@@ -267,6 +267,7 @@ void I2CChannel::StartTransfer() {
     dma_->channel[chan].config.enable = 1;
   }
   transfer_in_progress_ = true;
+  error_retry_ = kMaxRetries;
   if (remaining_size_ == last_request_.size) {
     // we only need to send start on the first transfer of a request
     i2c_->ctrl2.start = 1;
@@ -308,7 +309,7 @@ void I2CChannel::I2CEventHandler() {
       StartTransfer();
     }
     if (i2c_->status.nack) {
-      // clear the error
+      // clear the nack
       i2c_->intClr = 0x10;
       // the peripheral is non-responsive --> start the transfer anew
       next_data_ = reinterpret_cast<uint8_t *>(last_request_.data);
@@ -321,10 +322,12 @@ void I2CChannel::I2CEventHandler() {
 void I2CChannel::I2CErrorHandler() {
   // i2c error --> clear all error flags (except those that are SMBus only)
   i2c_->intClr = 0x720;
-  // and restart the transfer
-  next_data_ = reinterpret_cast<uint8_t *>(last_request_.data);
-  remaining_size_ = last_request_.size;
-  StartTransfer();
+  // and restart the transfer up to error_retry_ times
+  if (--error_retry_ > 0) {
+    next_data_ = reinterpret_cast<uint8_t *>(last_request_.data);
+    remaining_size_ = last_request_.size;
+    StartTransfer();
+  }
 }
 
 void I2CChannel::DMAIntHandler(DMA_Chan chan) {

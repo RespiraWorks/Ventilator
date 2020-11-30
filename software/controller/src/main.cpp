@@ -173,6 +173,7 @@ static void background_loop() {
 
     // Handle the debug serial interface
     debug.Poll();
+    nv_params.DebugHandler();
   }
 }
 
@@ -182,7 +183,7 @@ int main() {
   Hal.init();
 
   // Locate our non-volatile parameter block in flash
-  NVparamsInit();
+  nv_params.Init();
 
   comms_init();
 

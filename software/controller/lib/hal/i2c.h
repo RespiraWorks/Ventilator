@@ -71,6 +71,9 @@ private:
   DMA_Chan rx_channel_;
   DMA_Chan tx_channel_;
 
+  static constexpr int8_t kMaxRetries{5};
+  int8_t error_retry_{kMaxRetries};
+
   bool dma_enable_{false};
 
   bool transfer_in_progress_{false};

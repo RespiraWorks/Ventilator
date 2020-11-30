@@ -14,11 +14,11 @@ submission; no assembly instructions are provided here.
 The RespiraWorks Ventilator Mainboard PCB is a custom component that integrates the Cycle Controller, UI Computer,
 sensors, actuator drives, power supplies, filtering, and protection components.
 
-Note the the information below currently pertains to the Rev 1 PCB, done in Alitum.  For the next rev, Rev A, the project is currently moving to KiCad for better accessibility.  This Readme will transition over to supporting the new KiCad-based design as it develops.
+Note that the Rev 1 PCB was done in Alitum.  For the next rev, Rev A, the project is currently moving to KiCad for better accessibility.  This Readme will transition over to supporting the new KiCad-based design as it develops.
 
 ## Rev 1.0
 
-The exported complete Rev 1 files for manufacture can be found in the folder [rev1_export](rev1_export).  For support, setup instructions and errata on Rev 1, please refer to [rev 1 readme](/rev1_export/README.md).
+The exported complete Rev 1 files for manufacture can be found in the folder [rev1_export](rev1_export).  For support, setup instructions and errata on Rev 1, please refer to [rev 1 readme](rev1_export/README.md).
 
 Instructions for adding stepper motor support to Rev 1.0 board are [here](rev1_export/stepper_driver_setup.md).
 

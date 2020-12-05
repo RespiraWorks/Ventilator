@@ -25,8 +25,6 @@ struct I2CRequest {
   void *data{nullptr};      // pointer to the data to be sent or recieved.
   bool *processed{nullptr}; // pointer to a boolean that informs the caller that
                             // his request has been processed
-  bool sequential{false};   // indicates whether to issue a stop between this
-                            // request and the following one
 };
 
 // Class that represents an I2C channel (we have 4 of those on the STM32)

@@ -217,7 +217,7 @@ bool I2CChannel::SendRequest(const I2CRequest request) {
   } else {
     return false;
   }
-  if (i2c_->status.busy == 0) {
+  if (!transfer_in_progress_) {
     StartTransfer();
   }
   // if the bus is busy, the transfer will be initiated by the interrupt
@@ -235,8 +235,7 @@ void I2CChannel::StartTransfer() {
     // send the next request in the queue.
     std::optional<uint8_t> ind = buffer_.Get();
     if (ind == std::nullopt) {
-      // trigger stop condition and end
-      i2c_->ctrl2.stop = 1;
+      // no request in the queue
       return;
     }
     last_request_ = queue_[*ind];
@@ -252,11 +251,7 @@ void I2CChannel::StartTransfer() {
   if (remaining_size_ <= 255) {
     i2c_->ctrl2.n_bytes = static_cast<uint8_t>(remaining_size_);
     i2c_->ctrl2.reload = 0;
-    if (last_request_.sequential) {
-      i2c_->ctrl2.autoend = 0;
-    } else {
-      i2c_->ctrl2.autoend = 1;
-    }
+    i2c_->ctrl2.autoend = 1;
   } else {
     i2c_->ctrl2.n_bytes = 255;
     i2c_->ctrl2.reload = 1;
@@ -307,8 +302,8 @@ void I2CChannel::StartTransfer() {
 
     dma_->channel[chan].config.enable = 1;
   }
-  transfer_in_progress_ = true;
   error_retry_ = kMaxRetries;
+  transfer_in_progress_ = true;
   if (remaining_size_ == last_request_.size) {
     // we only need to send start on the first transfer of a request
     i2c_->ctrl2.start = 1;
@@ -348,6 +343,7 @@ void I2CChannel::I2CEventHandler() {
     }
     if (i2c_->status.transfer_complete) {
       *last_request_.processed = true;
+      transfer_in_progress_ = false;
       i2c_->ctrl2.stop = 1;
       if (last_request_.read_write == I2CExchangeDir::kWrite) {
         // free the part of the write buffer that was dedicated to this request
@@ -359,7 +355,7 @@ void I2CChannel::I2CEventHandler() {
           write_buffer_start_ = 0;
         }
       }
-      // start transfer to initiate the next request (or stop if there is none)
+      // start transfer to initiate the next request (if there is one)
       StartTransfer();
     }
     if (i2c_->status.nack) {

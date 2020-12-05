@@ -8,12 +8,13 @@ display_usage() {
   echo
   echo "<device> is device id as defined in ../platformio/device_lookup_table.txt"
   echo
-  echo "<test_name> if one of the following + additional parameters"
+  echo "<test_name> is one of the following + additional parameters"
   echo "    idle"
   echo "    blower <min_speed> <max_speed>"
   echo "    buzzer <min_volume> <max_volume>"
   echo "    stepper <motor_index> <step_degrees>"
   echo "    pinch_valve <motor_index>"
+  echo "    eeprom <address> <data> <length>"
   echo
   echo "To specify additional devices and for troubleshooting, see ../platformio/README.md"
   echo

@@ -34,9 +34,6 @@ limitations under the License.
 // Size of the parameter block including the header
 static constexpr uint32_t nvparam_size = sizeof(NVparams);
 
-#if defined(BARE_STM32)
-NVParams nv_params;
-
 // local functions
 static bool ReadFullParams(NVParamsAddress address, void *param);
 static void WriteFullParams(NVParamsAddress address, void *param);
@@ -44,7 +41,7 @@ static uint32_t ParamsCRC(void *param);
 static bool IsValid(NVparams *param) { return param->crc == ParamsCRC(param); };
 
 static DebugUInt32
-    dbg_reinit("NV Params reinit",
+    dbg_reinit("NV_Params_reinit",
                "Set to 1 to request a reinit of NV params on next boot", 0);
 
 // One time init of non-volatile parameter area.
@@ -95,7 +92,7 @@ void NVParams::Init() {
   }
 }
 
-bool NVParams::Set(uint16_t offset, const void *value, uint8_t len) {
+bool NVParams::Set(uint16_t offset, void *value, uint8_t len) {
   // Make sure the passed pointer is pointing to somewhere
   // in the structure and isn't in the reserved first 3 bytes
   if ((offset < 3) || ((offset + len) > nvparam_size))
@@ -179,32 +176,3 @@ static void WriteFullParams(NVParamsAddress address, void *param) {
   // the I2C queue should ensure nothing is lost.
   return;
 }
-
-// Fake NVparams implementation for testing purposes
-#else
-
-NVParams fakeParams;
-
-void NVParams::Init() {}
-
-bool NVParams::Set(uint16_t offset, const void *value, uint8_t len) {
-  if ((offset < 3) || ((offset + len) > nvparam_size))
-    return false;
-
-  // Update the contents in RAM
-  memcpy(reinterpret_cast<uint8_t *>(&nv_param_) + offset, value, len);
-
-  return true;
-}
-
-bool NVParams::Get(uint16_t offset, void *value, uint8_t len) {
-  if ((offset < 3) || ((offset + len) > nvparam_size))
-    return false;
-
-  // Update the contents in RAM
-  memcpy(value, reinterpret_cast<uint8_t *>(&nv_param_) + offset, len);
-
-  return true;
-}
-
-#endif

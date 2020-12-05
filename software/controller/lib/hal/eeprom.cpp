@@ -42,7 +42,6 @@ bool I2Ceeprom::ReadBytes(uint16_t offset, uint16_t length, void *data,
       .size = 2,
       .data = &offset_address[0],
       .processed = &discarded,
-      .sequential = true,
   };
 
   I2CRequest read_request = {
@@ -51,7 +50,6 @@ bool I2Ceeprom::ReadBytes(uint16_t offset, uint16_t length, void *data,
       .size = length,
       .data = data,
       .processed = processed,
-      .sequential = false,
   };
 
   // Queue both requests back to back, the second only if the first is succesful
@@ -61,7 +59,7 @@ bool I2Ceeprom::ReadBytes(uint16_t offset, uint16_t length, void *data,
     return false;
   }
 #elif defined(TEST_MODE)
-  // mocked when testing
+  // faked when testing
   uint reconstructed_offset = (offset_address[0] << 8) | offset_address[1];
   memcpy(data, &memory_[reconstructed_offset], length);
   return true;
@@ -75,7 +73,7 @@ bool I2Ceeprom::WriteBytes(uint16_t offset, uint16_t length, void *data,
     return false;
   }
 
-  // Break write requests into page writes, with no write accross pages
+  // Break write requests into page writes, no write accross page boudaries
   bool success{true};
   uint16_t current_offset{offset};
   uint8_t *current_data = reinterpret_cast<uint8_t *>(data);
@@ -84,15 +82,10 @@ bool I2Ceeprom::WriteBytes(uint16_t offset, uint16_t length, void *data,
     // provision request length from current offset to the end of the page
     uint8_t request_length =
         static_cast<uint8_t>(kPageLength - (current_offset % kPageLength));
-#ifndef TEST_MODE
-    bool *finished{processed};
-#endif
+
     if (current_offset + request_length > offset + length) {
       // last request, only write the remaining bytes and not a full page
       request_length = static_cast<uint8_t>(offset + length - current_offset);
-#ifndef TEST_MODE
-      finished = processed;
-#endif
     }
 
     uint8_t write_data[request_length + 2];
@@ -107,13 +100,15 @@ bool I2Ceeprom::WriteBytes(uint16_t offset, uint16_t length, void *data,
         .read_write = I2CExchangeDir::kWrite,
         .size = static_cast<uint8_t>(request_length + 2),
         .data = &write_data[0],
-        .processed = finished,
-        .sequential = false,
+        .processed = processed,
     };
 
     success &= i2c1.SendRequest(request);
+    if (!success) {
+      break;
+    }
 #elif defined(TEST_MODE)
-    // mocked when testing
+    // faked when testing
     memcpy(&memory_[current_offset], &write_data[2], request_length);
 #endif
     current_offset = static_cast<uint16_t>(current_offset + request_length);

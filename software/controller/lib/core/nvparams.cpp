@@ -32,7 +32,7 @@ limitations under the License.
 #include <string.h>
 
 // Size of the parameter block including the header
-static constexpr uint32_t nvparam_size = sizeof(NVparams);
+static constexpr uint32_t nvparam_size{sizeof(NVparams)};
 
 // local functions
 static bool ReadFullParams(NVParamsAddress address, void *param);
@@ -41,13 +41,18 @@ static uint32_t ParamsCRC(void *param);
 static bool IsValid(NVparams *param) { return param->crc == ParamsCRC(param); };
 
 static DebugUInt32
-    dbg_reinit("NV_Params_reinit",
-               "Set to 1 to request a reinit of NV params on next boot", 0);
+    dbg_reinit("nvparams_reinit",
+               "Set to 1 to request a reinit of NV params on next boot.", 0);
+static DebugUInt32 dbg_serial("serial_number",
+                              "Serial number of the ventilator, in EEPROM", 0);
+
+static DebugUInt32 dbg_nvparams("nvparams_address", "Address of nv_params", 0);
 
 // One time init of non-volatile parameter area.
 // This must not be done when a watchdog is enabled, as it blocks
 // execution while it reads through the I2C EEPROM.
 void NVParams::Init() {
+  dbg_nvparams.Set(reinterpret_cast<uint32_t>(&nv_param_));
   // Read flip side
   if (ReadFullParams(NVParamsAddress::kFlip, &nv_param_)) {
     // check its validity
@@ -78,8 +83,10 @@ void NVParams::Init() {
       }
     }
   } else {
-    // timeout while reading the flip side --> reinit nv_param
-    nv_param_ = NVparams();
+    // timeout while reading the flip side --> reinit nv_param and disable
+    // sending write requests when updating values (eeprom failure)
+    // TODO: this should not happen --> take action (alarm?)
+    nv_param_.reinit = 1;
     linked_ = false;
   }
   if (nv_param_.reinit == 1) {
@@ -87,15 +94,21 @@ void NVParams::Init() {
     // a reinit is needed (debug-user request or no valid params found)
     nv_param_ = NVparams();
     nv_param_.crc = ParamsCRC(&nv_param_);
-    WriteFullParams(NVParamsAddress::kFlip, &nv_param_);
-    WriteFullParams(NVParamsAddress::kFlop, &nv_param_);
+    if (linked_) {
+      WriteFullParams(NVParamsAddress::kFlip, &nv_param_);
+      WriteFullParams(NVParamsAddress::kFlop, &nv_param_);
+    }
   }
+  // set write access dbg_vars = nv_params to prevent the first pass in
+  // handler to reset those to their default values in nv_params
+  dbg_reinit.Set(nv_param_.reinit);
+  dbg_serial.Set(nv_param_.vent_serial_number);
 }
 
 bool NVParams::Set(uint16_t offset, void *value, uint8_t len) {
   // Make sure the passed pointer is pointing to somewhere
-  // in the structure and isn't in the reserved first 3 bytes
-  if ((offset < 3) || ((offset + len) > nvparam_size))
+  // in the structure and isn't in the reserved first 6 bytes
+  if ((offset < 6) || ((offset + len) > nvparam_size))
     return false;
 
   // Update the contents in nv_params
@@ -106,22 +119,27 @@ bool NVParams::Set(uint16_t offset, void *value, uint8_t len) {
 
   if (linked_) {
     // Update the contents in eeprom (with flip/flop logic)
-    uint16_t base_address = static_cast<uint16_t>(NVParamsAddress::kFlip);
+    uint16_t new_address{static_cast<uint16_t>(NVParamsAddress::kFlip)};
     if (nvparam_addr_ == NVParamsAddress::kFlip) {
-      base_address = static_cast<uint16_t>(NVParamsAddress::kFlop);
+      new_address = static_cast<uint16_t>(NVParamsAddress::kFlop);
     }
     // write the changed data and both crc+counter to the new side
-    eeprom.WriteBytes(static_cast<uint16_t>(base_address + offset), len, value,
+    dbg_nvparams.Set(new_address + offset);
+    eeprom.WriteBytes(static_cast<uint16_t>(new_address + offset), len, value,
                       nullptr);
-    eeprom.WriteBytes(base_address, 2, &nv_param_, nullptr);
+    eeprom.WriteBytes(new_address, 5, &nv_param_, nullptr);
 
-    // only write the changed data to the old side in preparation of the next
+    // write the changed data to the old side in preparation of the next
     // operation. This makes it invalid as a desired side effect.
     eeprom.WriteBytes(
         static_cast<uint16_t>(static_cast<uint16_t>(nvparam_addr_) + offset),
         len, value, nullptr);
     // point nvparam_address to the newly-written side
-    nvparam_addr_ = static_cast<NVParamsAddress>(base_address);
+    if (nvparam_addr_ == NVParamsAddress::kFlip) {
+      nvparam_addr_ = NVParamsAddress::kFlop;
+    } else {
+      nvparam_addr_ = NVParamsAddress::kFlip;
+    }
   }
   return true;
 }
@@ -137,9 +155,13 @@ bool NVParams::Get(uint16_t offset, void *value, uint8_t len) {
 
 // call this function in order to write debugvars to nv_params
 void NVParams::DebugHandler() {
-  uint8_t var = static_cast<uint8_t>(dbg_reinit.Get());
-  if (var != nv_param_.reinit) {
-    Set(offsetof(NVparams, reinit), &var, 1);
+  uint8_t reinit = static_cast<uint8_t>(dbg_reinit.Get());
+  if (reinit != nv_param_.reinit) {
+    Set(offsetof(NVparams, reinit), &reinit, 1);
+  }
+  uint32_t serial = dbg_serial.Get();
+  if (serial != nv_param_.vent_serial_number) {
+    Set(offsetof(NVparams, vent_serial_number), &serial, 4);
   }
 }
 
@@ -159,9 +181,9 @@ static bool ReadFullParams(NVParamsAddress address, void *param) {
   // Wait until the read is performed, or at most 500 ms: reading 4kB should
   // take under 100 ms if the 400 kHz I²C bus is used at 100% capacity.
   // If this takes longer, it most likely means our EEPROM is irresponsive (or
-  // absent...) and we will most likely clog the request queue after a while.
+  // absent...).
   while (!read_finished) {
-    if (Hal.now() < start_time + milliseconds(500)) {
+    if (Hal.now() > start_time + milliseconds(500)) {
       // maybe we should have an alarm in case our EEPROM is irresponsive?
       return false;
     }

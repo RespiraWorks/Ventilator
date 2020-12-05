@@ -25,6 +25,7 @@ limitations under the License.
 #include "i2c.h"
 #include "hal.h"
 #include "hal_stm32.h"
+#include <cstring>
 
 I2CChannel i2c1;
 
@@ -49,8 +50,13 @@ void HalApi::InitI2C() {
   GPIO_PullUp(GPIO_B_BASE, 8);
   GPIO_PullUp(GPIO_B_BASE, 9);
 
+  EnableInterrupt(InterruptVector::I2C1_EV, IntPriority::LOW);
+  EnableInterrupt(InterruptVector::I2C1_ERR, IntPriority::LOW);
+  EnableInterrupt(InterruptVector::DMA2_CH6, IntPriority::LOW);
+  EnableInterrupt(InterruptVector::DMA2_CH7, IntPriority::LOW);
+
   // init i2c1
-  i2c1.Init(I2C1_BASE, DMA2_BASE, I2CSpeed::kFast);
+  i2c1.Init(I2C1_BASE, nullptr, I2CSpeed::kFast);
 }
 
 // Those interrupt handlers are specific to our configuration, unlike the
@@ -173,11 +179,40 @@ void I2CChannel::Init(I2C_Regs *i2c, DMA_Regs *dma, I2CSpeed speed) {
 }
 
 bool I2CChannel::SendRequest(const I2CRequest request) {
-  // queue the request if possible
-  if (buffer_.Put(ind_queue_)) {
-    queue_[ind_queue_] = request;
-    if (++ind_queue_ >= kQueueLength) {
-      ind_queue_ = 0;
+  *request.processed = false;
+  // Queue the request if possible
+  if (buffer_.FreeCount() > 0) {
+    I2CRequest new_request = request;
+    // In case of a write request, copy data to our write buffer
+    if (request.read_write == I2CExchangeDir::kWrite) {
+      // We don't want a single request to wrap around in the buffer.
+      // Especially true for DMA transfers, which can't handle this, and to
+      // simplify handling non-DMA ones.
+      if (write_buffer_index_ + request.size > kWriteBufferSize) {
+        // Check if the data can safely be put at the begining of the buffer
+        // instead
+        if (request.size < write_buffer_start_) {
+          // remember that we wrap at that index in order to properly wrap
+          // when updating write_buffer_start_
+          wrapping_index_ = write_buffer_index_;
+          write_buffer_index_ = 0;
+        } else {
+          // No contiguous space left in buffer, we can't safely send this Write
+          // request.
+          return false;
+        }
+      }
+      memcpy(&write_buffer_[write_buffer_index_], request.data, request.size);
+      new_request.data = &write_buffer_[write_buffer_index_];
+      write_buffer_index_ += request.size;
+    }
+    if (buffer_.Put(ind_queue_)) {
+      queue_[ind_queue_] = new_request;
+      if (++ind_queue_ >= kQueueLength) {
+        ind_queue_ = 0;
+      }
+    } else {
+      return false;
     }
   } else {
     return false;
@@ -205,7 +240,7 @@ void I2CChannel::StartTransfer() {
       return;
     }
     last_request_ = queue_[*ind];
-    next_data_ = reinterpret_cast<uint8_t *>(last_request_.data);
+    next_data_ = last_request_.data;
     remaining_size_ = last_request_.size;
   }
 
@@ -217,9 +252,15 @@ void I2CChannel::StartTransfer() {
   if (remaining_size_ <= 255) {
     i2c_->ctrl2.n_bytes = static_cast<uint8_t>(remaining_size_);
     i2c_->ctrl2.reload = 0;
+    if (last_request_.sequential) {
+      i2c_->ctrl2.autoend = 0;
+    } else {
+      i2c_->ctrl2.autoend = 1;
+    }
   } else {
     i2c_->ctrl2.n_bytes = 255;
     i2c_->ctrl2.reload = 1;
+    i2c_->ctrl2.autoend = 0;
   }
 
   // configure interrupts
@@ -281,15 +322,17 @@ void I2CChannel::ByteTransfer() {
     // this shouldn't happen, but just to be safe, we stop here.
     return;
   }
+  uint8_t *ptr = reinterpret_cast<uint8_t *>(next_data_);
   if (last_request_.read_write == I2CExchangeDir::kRead) {
-    *next_data_ = static_cast<uint8_t>(i2c_->rxData);
+    *ptr = static_cast<uint8_t>(i2c_->rxData);
   } else {
-    i2c_->txData = *next_data_;
+    i2c_->txData = *ptr;
   }
   if (--remaining_size_ > 0) {
     // increment next_data_ pointer only in case we are still expecting more
     // data to prevent unwarranted memory access
-    next_data_ += sizeof(uint8_t);
+    ptr += sizeof(uint8_t);
+    next_data_ = ptr;
   };
 }
 
@@ -305,6 +348,17 @@ void I2CChannel::I2CEventHandler() {
     }
     if (i2c_->status.transfer_complete) {
       *last_request_.processed = true;
+      i2c_->ctrl2.stop = 1;
+      if (last_request_.read_write == I2CExchangeDir::kWrite) {
+        // free the part of the write buffer that was dedicated to this request
+        write_buffer_start_ += last_request_.size;
+        if (write_buffer_start_ >= wrapping_index_) {
+          // We don't allow data in the same request to wrap around, so we must
+          // detect that the next write data actually starts at index 0 to
+          // properly free the end of the buffer as well
+          write_buffer_start_ = 0;
+        }
+      }
       // start transfer to initiate the next request (or stop if there is none)
       StartTransfer();
     }

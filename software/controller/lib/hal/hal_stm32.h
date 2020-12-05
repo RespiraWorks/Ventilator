@@ -42,11 +42,15 @@ enum class InterruptVector {
   DMA1_CH2 = 0x70,
   DMA1_CH3 = 0x074,
   TIMER15 = 0xA0,
+  I2C1_EV = 0xBC,
+  I2C1_ERR = 0xC0,
   SPI1 = 0xCC,
   UART2 = 0x0D8,
   UART3 = 0x0DC,
   TIMER6 = 0x118,
   DMA2_CH3 = 0x128,
+  DMA2_CH6 = 0x150,
+  DMA2_CH7 = 0x157,
 };
 
 // Handy functions for controlling GPIO

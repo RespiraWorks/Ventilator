@@ -12,11 +12,9 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-#if defined(BARE_STM32)
 
 #include "eeprom.h"
 #include "hal.h"
-#include "hal_stm32.h"
 #include "i2c.h"
 #include <string.h>
 
@@ -32,8 +30,11 @@ bool I2Ceeprom::ReadBytes(uint16_t offset, uint16_t length, void *data,
 
   // set the read pointer to the desired offset
   // split the offset into two bytes and send this to the chip (write request)
-  uint8_t offset_address[2] = {static_cast<uint8_t>((offset & 0xFF00) >> 8),
-                               static_cast<uint8_t>(offset & 0xFF)};
+  uint8_t offset_address[2];
+  offset_address[0] = static_cast<uint8_t>((offset & 0x7F00) >> 8);
+  offset_address[1] = static_cast<uint8_t>(offset & 0xFF);
+
+#ifdef BARE_STM32
   bool discarded = false;
   I2CRequest pointer_set = {
       .slave_address = address_,
@@ -41,6 +42,7 @@ bool I2Ceeprom::ReadBytes(uint16_t offset, uint16_t length, void *data,
       .size = 2,
       .data = &offset_address[0],
       .processed = &discarded,
+      .sequential = true,
   };
 
   I2CRequest read_request = {
@@ -49,6 +51,7 @@ bool I2Ceeprom::ReadBytes(uint16_t offset, uint16_t length, void *data,
       .size = length,
       .data = data,
       .processed = processed,
+      .sequential = false,
   };
 
   // Queue both requests back to back, the second only if the first is succesful
@@ -57,31 +60,64 @@ bool I2Ceeprom::ReadBytes(uint16_t offset, uint16_t length, void *data,
   } else {
     return false;
   }
+#elif defined(TEST_MODE)
+  // mocked when testing
+  uint reconstructed_offset = (offset_address[0] << 8) | offset_address[1];
+  memcpy(data, &memory_[reconstructed_offset], length);
+  return true;
+#endif
 };
 
-bool I2Ceeprom::WriteBytes(uint16_t offset, uint16_t length, const void *data,
+bool I2Ceeprom::WriteBytes(uint16_t offset, uint16_t length, void *data,
                            bool *processed) {
   if (offset + length > size_) {
     // requesting outside of memory capacity
     return false;
   }
 
-  // Write operations are a single request where data is prefixed with the
-  // offset where we write
-  uint8_t write_data[length + 2];
-  write_data[0] = static_cast<uint8_t>(offset & 0xFF00 >> 8);
-  write_data[1] = static_cast<uint8_t>(offset & 0xFF);
-  memcpy(&write_data[2], data, length);
+  // Break write requests into page writes, with no write accross pages
+  bool success{true};
+  uint16_t current_offset{offset};
+  uint8_t *current_data = reinterpret_cast<uint8_t *>(data);
 
-  I2CRequest request = {
-      .slave_address = address_,
-      .read_write = I2CExchangeDir::kWrite,
-      .size = static_cast<uint8_t>(length + 2),
-      .data = &write_data[0],
-      .processed = processed,
-  };
+  while (current_offset < offset + length) {
+    // provision request length from current offset to the end of the page
+    uint8_t request_length =
+        static_cast<uint8_t>(kPageLength - (current_offset % kPageLength));
+#ifndef TEST_MODE
+    bool *finished{processed};
+#endif
+    if (current_offset + request_length > offset + length) {
+      // last request, only write the remaining bytes and not a full page
+      request_length = static_cast<uint8_t>(offset + length - current_offset);
+#ifndef TEST_MODE
+      finished = processed;
+#endif
+    }
 
-  return i2c1.SendRequest(request);
+    uint8_t write_data[request_length + 2];
+    write_data[0] = static_cast<uint8_t>((current_offset & 0x7F00) >> 8);
+    write_data[1] = static_cast<uint8_t>(current_offset & 0xFF);
+
+    memcpy(&write_data[2], current_data, request_length);
+
+#ifdef BARE_STM32
+    I2CRequest request = {
+        .slave_address = address_,
+        .read_write = I2CExchangeDir::kWrite,
+        .size = static_cast<uint8_t>(request_length + 2),
+        .data = &write_data[0],
+        .processed = finished,
+        .sequential = false,
+    };
+
+    success &= i2c1.SendRequest(request);
+#elif defined(TEST_MODE)
+    // mocked when testing
+    memcpy(&memory_[current_offset], &write_data[2], request_length);
+#endif
+    current_offset = static_cast<uint16_t>(current_offset + request_length);
+    current_data = current_data + request_length;
+  }
+  return success;
 };
-
-#endif // BARE_STM32

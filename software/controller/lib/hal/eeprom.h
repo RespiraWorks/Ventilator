@@ -16,7 +16,6 @@ limitations under the License.
 #ifndef EEPROM_H_
 #define EEPROM_H_
 
-#if defined(BARE_STM32)
 #include <stdint.h>
 
 // This class defines an I2C addressable EEPROM.
@@ -32,15 +31,18 @@ public:
   // data are consistent.
   bool ReadBytes(uint16_t offset, uint16_t length, void *data, bool *processed);
 
-  bool WriteBytes(uint16_t offset, uint16_t length, const void *data,
+  bool WriteBytes(uint16_t offset, uint16_t length, void *data,
                   bool *processed);
 
 private:
+  static const uint8_t kPageLength{64};
   uint8_t address_; // 7 bits I2C address
   uint16_t size_;   // in bytes
+#ifdef TEST_MODE
+  uint8_t memory_[32768];
+#endif
 };
 
 extern I2Ceeprom eeprom;
 
-#endif // BARE_STM32
 #endif // EEPROM_H_

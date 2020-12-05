@@ -56,7 +56,7 @@ enum class NVParamsAddress {
 class NVParams {
 public:
   void Init();
-  bool Set(uint16_t offset, const void *value, uint8_t len);
+  bool Set(uint16_t offset, void *value, uint8_t len);
   bool Get(uint16_t offset, void *value, uint8_t len);
   void DebugHandler();
 
@@ -67,7 +67,7 @@ private:
   NVParamsAddress nvparam_addr_{NVParamsAddress::kFlip};
 };
 
-extern NVParams nv_params;
+static NVParams nv_params;
 
 // Convenience macro to read/write a member of the non-volatile
 // parameter structure given it's name

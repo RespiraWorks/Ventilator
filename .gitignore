@@ -34,3 +34,7 @@ last_graph.dat
 .pytype/
 
 controller_coverage
+
+# KiCAD backups
+*.sch-bak
+*.kicad_pcb-bak

@@ -173,7 +173,9 @@ static void background_loop() {
 
     // Handle the debug serial interface
     debug.Poll();
-    nv_params.DebugHandler();
+
+    // Update nv_params
+    nv_params.Update(Hal.now(), gui_status.desired_params);
   }
 }
 

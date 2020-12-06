@@ -37,9 +37,10 @@ struct NVparams {
 
   uint32_t vent_serial_number{0};
   // Non-volatile parameters should be added here
-  uint32_t power_cycles{0};               // Count of device ON/OFF cycles.
-  Duration cumulated_service{seconds(0)}; // Cumulated power-ON time.
-  VentParams last_settings_ =
+  uint32_t power_cycles{0};      // Count of device ON/OFF cycles.
+  uint32_t cumulated_service{0}; // Cumulated power-ON time, stored in seconds.
+                                 // May rollover after 136 years
+  VentParams last_settings =
       VentParams_init_default; // Last settings seen by the vent
 };
 
@@ -61,13 +62,16 @@ public:
   void Init();
   bool Set(uint16_t offset, void *value, uint8_t len);
   bool Get(uint16_t offset, void *value, uint8_t len);
-  void DebugHandler();
+  void Update(const Time now, const VentParams params);
 
 private:
   NVparams nv_param_;
   bool linked_{true};
   // Address of valid parameter block - defaulted to Flip
   NVParamsAddress nvparam_addr_{NVParamsAddress::kFlip};
+  Time last_update_{microsSinceStartup(0)};
+  // Update cumulated service interval
+  static constexpr Duration kUpdateInterval = seconds(60);
 };
 
 static NVParams nv_params;

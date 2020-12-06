@@ -193,7 +193,7 @@ bool I2CChannel::SendRequest(const I2CRequest request) {
         // instead
         if (request.size < write_buffer_start_) {
           // remember that we wrap at that index in order to properly wrap
-          // when updating write_buffer_start_
+          // when updating write_buffer_start_ (end of transfer)
           wrapping_index_ = write_buffer_index_;
           write_buffer_index_ = 0;
         } else {

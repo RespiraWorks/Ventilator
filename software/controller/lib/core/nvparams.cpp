@@ -84,7 +84,7 @@ void NVParams::Init() {
     }
   } else {
     // timeout while reading the flip side --> reinit nv_param and disable
-    // sending write requests when updating values (eeprom failure)
+    // sending write requests when updating values (eeprom or I2C failure)
     // TODO: this should not happen --> take action (alarm?)
     nv_param_.reinit = 1;
     linked_ = false;
@@ -103,6 +103,9 @@ void NVParams::Init() {
   // handler to reset those to their default values in nv_params
   dbg_reinit.Set(nv_param_.reinit);
   dbg_serial.Set(nv_param_.vent_serial_number);
+  // increase power cycles counter in nv_params
+  uint32_t counter = nv_param_.power_cycles + 1;
+  Set(offsetof(NVparams, power_cycles), &counter, 4);
 }
 
 bool NVParams::Set(uint16_t offset, void *value, uint8_t len) {
@@ -153,8 +156,32 @@ bool NVParams::Get(uint16_t offset, void *value, uint8_t len) {
   return true;
 }
 
-// call this function in order to write debugvars to nv_params
-void NVParams::DebugHandler() {
+// call this function in order to write variables to nv_params
+void NVParams::Update(const Time now, VentParams params) {
+  // We only update cumulated service every so often
+  if (now > last_update_ + kUpdateInterval) {
+    uint32_t cumulated =
+        nv_param_.cumulated_service +
+        static_cast<uint32_t>(kUpdateInterval.milliseconds() / 1000.0);
+    Set(offsetof(NVparams, cumulated_service), &cumulated, 4);
+    last_update_ = now;
+  }
+
+  if (params.mode != nv_param_.last_settings.mode ||
+      params.peep_cm_h2o != nv_param_.last_settings.peep_cm_h2o ||
+      params.pip_cm_h2o != nv_param_.last_settings.pip_cm_h2o ||
+      params.breaths_per_min != nv_param_.last_settings.breaths_per_min ||
+      params.fio2 != nv_param_.last_settings.fio2 ||
+      params.inspiratory_expiratory_ratio !=
+          nv_param_.last_settings.inspiratory_expiratory_ratio ||
+      params.inspiratory_trigger_cm_h2o !=
+          nv_param_.last_settings.inspiratory_trigger_cm_h2o ||
+      params.expiratory_trigger_ml_per_min !=
+          nv_param_.last_settings.expiratory_trigger_ml_per_min) {
+    Set(offsetof(NVparams, last_settings), &params, sizeof(VentParams));
+  }
+
+  // Update debug variables
   uint8_t reinit = static_cast<uint8_t>(dbg_reinit.Get());
   if (reinit != nv_param_.reinit) {
     Set(offsetof(NVparams, reinit), &reinit, 1);

@@ -28,7 +28,7 @@ struct I2CRequest {
 };
 
 // Class that represents an I2C channel (we have 4 of those on the STM32)
-// Said channel may or may not use DMA (spoiler alert: the one we do use does).
+// Said channel may or may not use DMA (spoiler alert: ours doesn't (yet)).
 //
 // I2C requests are queued in the class and processed in order.
 // A request consists of one or several transfers of up to 255 bytes.

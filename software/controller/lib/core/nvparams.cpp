@@ -52,9 +52,12 @@ static DebugUInt32 dbg_nvparams("nvparams_address", "Address of nv_params", 0);
 // This must not be done when a watchdog is enabled, as it blocks
 // execution while it reads through the I2C EEPROM.
 void NVParams::Init() {
+#ifndef TEST_MODE // this leads to conversion error when compiling on native
   dbg_nvparams.Set(reinterpret_cast<uint32_t>(&nv_param_));
+#endif
   // Read flip side
   if (ReadFullParams(NVParamsAddress::kFlip, &nv_param_)) {
+    nvparam_addr_ = NVParamsAddress::kFlip;
     // check its validity
     if (IsValid(&nv_param_)) {
       // Still read the flop in case they are both valid (which normally
@@ -148,24 +151,29 @@ bool NVParams::Set(uint16_t offset, void *value, uint8_t len) {
 }
 
 bool NVParams::Get(uint16_t offset, void *value, uint8_t len) {
+#ifndef TEST_MODE // in test mode I need to be able to access any byte
   // Make sure the passed pointer is pointing to somewhere
-  // in the structure and isn't in the reserved first 3 bytes
-  if ((offset < 3) || ((offset + len) > nvparam_size))
+  // in the structure and isn't in the reserved first 6 bytes
+  if ((offset < 6) || ((offset + len) > nvparam_size))
     return false;
-  memcpy(value, (&nv_param_) + offset, len);
+#endif
+  memcpy(value, reinterpret_cast<uint8_t *>(&nv_param_) + offset, len);
   return true;
 }
 
 // call this function in order to write variables to nv_params
 void NVParams::Update(const Time now, VentParams params) {
   // We only update cumulated service every so often
-  if (now > last_update_ + kUpdateInterval) {
-    uint32_t cumulated =
-        nv_param_.cumulated_service +
-        static_cast<uint32_t>(kUpdateInterval.milliseconds() / 1000.0);
+  if (now >= last_update_ + kUpdateInterval) {
+    uint32_t cumulated = nv_param_.cumulated_service +
+                         static_cast<uint32_t>((now - last_update_).seconds());
     Set(offsetof(NVparams, cumulated_service), &cumulated, 4);
     last_update_ = now;
   }
+
+  // assert that the size of VentParams is still good - if it isn't, we need to
+  // update the condition below to capture all members
+  static_assert(sizeof(VentParams) == 32);
 
   if (params.mode != nv_param_.last_settings.mode ||
       params.peep_cm_h2o != nv_param_.last_settings.peep_cm_h2o ||
@@ -204,6 +212,7 @@ static bool ReadFullParams(NVParamsAddress address, void *param) {
   bool read_finished{false};
   eeprom.ReadBytes(static_cast<uint16_t>(address), nvparam_size, param,
                    &read_finished);
+#ifndef TEST_MODE
   Time start_time = Hal.now();
   // Wait until the read is performed, or at most 500 ms: reading 4kB should
   // take under 100 ms if the 400 kHz I²C bus is used at 100% capacity.
@@ -215,6 +224,7 @@ static bool ReadFullParams(NVParamsAddress address, void *param) {
       return false;
     }
   }
+#endif
   return true;
 }
 

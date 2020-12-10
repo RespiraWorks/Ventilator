@@ -78,9 +78,11 @@ static NVParams nv_params;
 
 // Convenience macro to read/write a member of the non-volatile
 // parameter structure given it's name
-#define NVparamsUpdate(member, value, len)                                     \
-  nv_params.Set(static_cast<uint16_t>(offsetof(NVparams, member)), value, len)
-#define NVparamsRead(member, value, len)                                       \
-  nv_params.Get(static_cast<uint16_t>(offsetof(NVparams, member)), value, len)
+#define NVparamsUpdate(member, value)                                          \
+  nv_params.Set(static_cast<uint16_t>(offsetof(NVparams, member)), value,      \
+                (sizeof(((NVparams *)0)->member)))
+#define NVparamsRead(member, value)                                            \
+  nv_params.Get(static_cast<uint16_t>(offsetof(NVparams, member)), value,      \
+                (sizeof(((NVparams *)0)->member)))
 
 #endif // NVPARAM_H_

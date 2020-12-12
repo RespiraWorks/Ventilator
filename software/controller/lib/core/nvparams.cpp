@@ -130,7 +130,6 @@ bool NVParams::Set(uint16_t offset, void *value, uint8_t len) {
       new_address = static_cast<uint16_t>(NVParamsAddress::kFlop);
     }
     // write the changed data and both crc+counter to the new side
-    dbg_nvparams.Set(new_address + offset);
     eeprom.WriteBytes(static_cast<uint16_t>(new_address + offset), len, value,
                       nullptr);
     eeprom.WriteBytes(new_address, 5, &nv_param_, nullptr);

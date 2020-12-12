@@ -20,14 +20,14 @@ limitations under the License.
 //
 ////////////////////////////////////////////////////////////////////
 
-#if defined(BARE_STM32)
-
 #include "i2c.h"
 #include "hal.h"
-#include "hal_stm32.h"
 #include <cstring>
 
 I2CChannel i2c1;
+
+#if defined(BARE_STM32)
+#include "hal_stm32.h"
 
 // Reference abbreviations ([RM], [PCB], etc) are defined in hal/README.md
 void HalApi::InitI2C() {
@@ -177,6 +177,7 @@ void I2CChannel::Init(I2C_Regs *i2c, DMA_Regs *dma, I2CSpeed speed) {
   // enable I2C peripheral
   i2c_->ctrl1.peripheral_en = 1;
 }
+#endif // BARE_STM32
 
 bool I2CChannel::SendRequest(const I2CRequest &request) {
   *request.processed = false;
@@ -243,6 +244,7 @@ void I2CChannel::StartTransfer() {
     remaining_size_ = last_request_.size;
   }
 
+#if defined(BARE_STM32)
   // Per [RM] p1149 to 1158
   // set transfer-specific registers
   i2c_->ctrl2.slave_addr_7b = last_request_.slave_address & 0x7f;
@@ -302,12 +304,13 @@ void I2CChannel::StartTransfer() {
 
     dma_->channel[chan].config.enable = 1;
   }
-  error_retry_ = kMaxRetries;
-  transfer_in_progress_ = true;
   if (remaining_size_ == last_request_.size) {
     // we only need to send start on the first transfer of a request
     i2c_->ctrl2.start = 1;
   }
+#endif // BARE_STM32
+  error_retry_ = kMaxRetries;
+  transfer_in_progress_ = true;
 }
 
 // Method called by interrupt handler when dma is disabled. This method
@@ -319,9 +322,25 @@ void I2CChannel::ByteTransfer() {
   }
   uint8_t *ptr = reinterpret_cast<uint8_t *>(next_data_);
   if (last_request_.read_write == I2CExchangeDir::kRead) {
+#if defined(BARE_STM32)
     *ptr = static_cast<uint8_t>(i2c_->rxData);
+#elif defined(TEST_MODE)
+    std::optional<uint8_t> data = rx_buffer_.Get();
+    if (data != std::nullopt) {
+      *ptr = *data;
+    } else {
+      return;
+    }
+#endif
   } else {
+#if defined(BARE_STM32)
     i2c_->txData = *ptr;
+#elif defined(TEST_MODE)
+    bool OK = sent_buffer_.Put(*ptr);
+    if (!OK) {
+      return;
+    }
+#endif
   }
   if (--remaining_size_ > 0) {
     // increment next_data_ pointer only in case we are still expecting more
@@ -331,36 +350,77 @@ void I2CChannel::ByteTransfer() {
   };
 }
 
+bool I2CChannel::NextByteNeeded() {
+#if defined(BARE_STM32)
+  return i2c_->status.rx_not_empty || i2c_->status.tx_interrupt;
+#elif defined(TEST_MODE)
+  return remaining_size_ > 0;
+#endif
+}
+
+bool I2CChannel::TransferReload() {
+#if defined(BARE_STM32)
+  return i2c_->status.transfer_reload;
+#elif defined(TEST_MODE)
+  return (remaining_size_ % 255 == 0 && remaining_size_ > 0);
+#endif
+}
+
+bool I2CChannel::TransferComplete() {
+#if defined(BARE_STM32)
+  return i2c_->status.transfer_complete;
+#elif defined(TEST_MODE)
+  return remaining_size_ == 0;
+#endif
+}
+
+bool I2CChannel::NackDetected() {
+#if defined(BARE_STM32)
+  return i2c_->status.nack;
+#elif defined(TEST_MODE)
+  bool return_value = nack_;
+  nack_ = false;
+  return return_value;
+#endif
+}
+
 void I2CChannel::I2CEventHandler() {
   if (transfer_in_progress_) {
-    if (i2c_->status.rx_not_empty || i2c_->status.tx_interrupt) {
-      // carry on with the current transfer
-      ByteTransfer();
-    }
-    if (i2c_->status.transfer_reload) {
-      // Start the next transfer, which is part of the current request
-      StartTransfer();
-    }
-    if (i2c_->status.transfer_complete) {
-      *last_request_.processed = true;
-      transfer_in_progress_ = false;
-      i2c_->ctrl2.stop = 1;
-      if (last_request_.read_write == I2CExchangeDir::kWrite) {
-        // free the part of the write buffer that was dedicated to this request
-        write_buffer_start_ += last_request_.size;
-        if (write_buffer_start_ >= wrapping_index_) {
-          // We don't allow data in the same request to wrap around, so we must
-          // detect that the next write data actually starts at index 0 to
-          // properly free the end of the buffer as well
-          write_buffer_start_ = 0;
-        }
+    if (!dma_enable_) {
+      if (NextByteNeeded()) {
+        // carry on with the current transfer
+        ByteTransfer();
       }
-      // start transfer to initiate the next request (if there is one)
-      StartTransfer();
+      if (TransferReload()) {
+        // Start the next transfer, which is part of the current request
+        StartTransfer();
+      }
+      if (TransferComplete()) {
+        *last_request_.processed = true;
+        transfer_in_progress_ = false;
+#if defined(BARE_STM32)
+        i2c_->ctrl2.stop = 1;
+#endif
+        if (last_request_.read_write == I2CExchangeDir::kWrite) {
+          // free the part of the write buffer that was dedicated to this
+          // request
+          write_buffer_start_ += last_request_.size;
+          if (write_buffer_start_ >= wrapping_index_) {
+            // We don't allow data in the same request to wrap around, so we
+            // must detect that the next write data actually starts at index 0
+            // to properly free the end of the buffer as well
+            write_buffer_start_ = 0;
+          }
+        }
+        // start transfer to initiate the next request (if there is one)
+        StartTransfer();
+      }
     }
-    if (i2c_->status.nack) {
+    if (NackDetected()) {
       // clear the nack
+#if defined(BARE_STM32)
       i2c_->intClr = 0x10;
+#endif
       // the peripheral is non-responsive --> start the transfer anew
       next_data_ = reinterpret_cast<uint8_t *>(last_request_.data);
       remaining_size_ = last_request_.size;
@@ -371,7 +431,9 @@ void I2CChannel::I2CEventHandler() {
 
 void I2CChannel::I2CErrorHandler() {
   // i2c error --> clear all error flags (except those that are SMBus only)
+#if defined(BARE_STM32)
   i2c_->intClr = 0x720;
+#endif
   // and restart the transfer up to error_retry_ times
   if (--error_retry_ > 0) {
     next_data_ = reinterpret_cast<uint8_t *>(last_request_.data);
@@ -380,8 +442,9 @@ void I2CChannel::I2CErrorHandler() {
   }
 }
 
+#if defined(BARE_STM32)
 void I2CChannel::DMAIntHandler(DMA_Chan chan) {
-  if (dma_enable_) {
+  if (dma_enable_ && transfer_in_progress_) {
     if (DMA_IntStatus(dma_, chan, DmaInterrupt::XFER_COMPLETE)) {
       if (remaining_size_ > 255) {
         // decrement remaining size by 255 (the size of the DMA transfer)
@@ -389,19 +452,36 @@ void I2CChannel::DMAIntHandler(DMA_Chan chan) {
       } else {
         // indicate the last request as processed
         *last_request_.processed = true;
+        transfer_in_progress_ = false;
+        i2c_->ctrl2.stop = 1;
         remaining_size_ = 0;
+        dma_->channel[static_cast<uint8_t>(chan)].config.enable = 0;
+        if (last_request_.read_write == I2CExchangeDir::kWrite) {
+          // free the part of the write buffer that was dedicated to this
+          // request
+          write_buffer_start_ += last_request_.size;
+          if (write_buffer_start_ >= wrapping_index_) {
+            // We don't allow data in the same request to wrap around, so we
+            // must detect that the next write data actually starts at index 0
+            // to properly free the end of the buffer as well
+            write_buffer_start_ = 0;
+          }
+        }
       }
     } else if (DMA_IntStatus(dma_, chan, DmaInterrupt::XFER_ERR)) {
-      // we are dealing with an error --> reset transfer
-      next_data_ = reinterpret_cast<uint8_t *>(last_request_.data);
-      remaining_size_ = last_request_.size;
+      // we are dealing with an error --> reset transfer (up to kMaxRetry times)
+      if (--error_retry_ > 0) {
+        next_data_ = reinterpret_cast<uint8_t *>(last_request_.data);
+        remaining_size_ = last_request_.size;
+      }
     }
     // clear all interrupts
     DMA_ClearInt(dma_, chan, DmaInterrupt::GLOBAL);
-    // in all cases start a transfer, either to restart the last transfer after
-    // an error or to start the next one (if there is one...)
-    StartTransfer();
+    // in all cases (except after kMaxRetry errors), start a transfer, either to
+    // restart after the error or to start the next one (if there is one...)
+    if (error_retry_ > 0) {
+      StartTransfer();
+    }
   }
 }
-
 #endif // BARE_STM32

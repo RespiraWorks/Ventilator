@@ -813,11 +813,6 @@ inline I2C_Regs *const I2C2_BASE = reinterpret_cast<I2C_Regs *>(0x40005800);
 inline I2C_Regs *const I2C3_BASE = reinterpret_cast<I2C_Regs *>(0x40005c00);
 inline I2C_Regs *const I2C4_BASE = reinterpret_cast<I2C_Regs *>(0x40008400);
 
-enum class I2CExchangeDir {
-  kWrite = 0,
-  kRead = 1,
-};
-
 // Watchdog timer
 // [RM] 32.4 Watchdog Registers (pg 1016)
 struct Watchdog_Regs {

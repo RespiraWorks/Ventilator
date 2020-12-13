@@ -173,7 +173,7 @@ void NVParams::Update(const Time now, VentParams *params) {
   // assert that the size of VentParams is still good - if it isn't, we need to
   // update the condition below to capture all members
   static_assert(sizeof(VentParams) == 32);
-  
+
   if (params->mode != nv_param_.last_settings.mode ||
       params->peep_cm_h2o != nv_param_.last_settings.peep_cm_h2o ||
       params->pip_cm_h2o != nv_param_.last_settings.pip_cm_h2o ||

@@ -242,6 +242,7 @@ void I2CChannel::StartTransfer() {
     last_request_ = queue_[*ind];
     next_data_ = last_request_.data;
     remaining_size_ = last_request_.size;
+    error_retry_ = kMaxRetries;
   }
 
 #if defined(BARE_STM32)
@@ -309,7 +310,6 @@ void I2CChannel::StartTransfer() {
     i2c_->ctrl2.start = 1;
   }
 #endif // BARE_STM32
-  error_retry_ = kMaxRetries;
   transfer_in_progress_ = true;
 }
 
@@ -421,7 +421,7 @@ void I2CChannel::I2CEventHandler() {
 #if defined(BARE_STM32)
       i2c_->intClr = 0x10;
 #endif
-      // the peripheral is non-responsive --> start the transfer anew
+      // the peripheral is non-responsive --> start the request anew
       next_data_ = reinterpret_cast<uint8_t *>(last_request_.data);
       remaining_size_ = last_request_.size;
       StartTransfer();
@@ -434,7 +434,7 @@ void I2CChannel::I2CErrorHandler() {
 #if defined(BARE_STM32)
   i2c_->intClr = 0x720;
 #endif
-  // and restart the transfer up to error_retry_ times
+  // and restart the request up to error_retry_ times
   if (--error_retry_ > 0) {
     next_data_ = reinterpret_cast<uint8_t *>(last_request_.data);
     remaining_size_ = last_request_.size;
@@ -469,7 +469,8 @@ void I2CChannel::DMAIntHandler(DMA_Chan chan) {
         }
       }
     } else if (DMA_IntStatus(dma_, chan, DmaInterrupt::XFER_ERR)) {
-      // we are dealing with an error --> reset transfer (up to kMaxRetry times)
+      // we are dealing with an error --> reset transfer (up to kMaxRetries
+      // times)
       if (--error_retry_ > 0) {
         next_data_ = reinterpret_cast<uint8_t *>(last_request_.data);
         remaining_size_ = last_request_.size;
@@ -477,8 +478,8 @@ void I2CChannel::DMAIntHandler(DMA_Chan chan) {
     }
     // clear all interrupts
     DMA_ClearInt(dma_, chan, DmaInterrupt::GLOBAL);
-    // in all cases (except after kMaxRetry errors), start a transfer, either to
-    // restart after the error or to start the next one (if there is one...)
+    // in all cases (except after kMaxRetries errors), start a transfer, either
+    // to restart after the error or to start the next one (if there is one...)
     if (error_retry_ > 0) {
       StartTransfer();
     }

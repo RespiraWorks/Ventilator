@@ -1,0 +1,4 @@
+(fp_lib_table
+  (lib (name RespiraWorks)(type KiCad)(uri ${KIPRJMOD}/../../KiCad-Library/RespiraWorks.pretty)(options "")(descr ""))
+  (lib (name RespiraWorks_Std)(type KiCad)(uri ${KIPRJMOD}/../../KiCad-Library/RespiraWorks_Std.pretty)(options "")(descr ""))
+)

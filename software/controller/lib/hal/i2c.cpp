@@ -178,20 +178,20 @@ void I2CChannel::Init(I2C_Regs *i2c, DMA_Regs *dma, I2CSpeed speed) {
   i2c_->ctrl1.peripheral_en = 1;
 }
 
-bool I2CChannel::SendRequest(const I2CRequest request) {
+bool I2CChannel::SendRequest(const I2CRequest &request) {
   *request.processed = false;
   // Queue the request if possible
   if (buffer_.FreeCount() > 0) {
     I2CRequest new_request = request;
     // In case of a write request, copy data to our write buffer
-    if (request.read_write == I2CExchangeDir::kWrite) {
+    if (new_request.read_write == I2CExchangeDir::kWrite) {
       // We don't want a single request to wrap around in the buffer.
       // Especially true for DMA transfers, which can't handle this, and to
       // simplify handling non-DMA ones.
-      if (write_buffer_index_ + request.size > kWriteBufferSize) {
+      if (write_buffer_index_ + new_request.size > kWriteBufferSize) {
         // Check if the data can safely be put at the begining of the buffer
         // instead
-        if (request.size < write_buffer_start_) {
+        if (new_request.size < write_buffer_start_) {
           // remember that we wrap at that index in order to properly wrap
           // when updating write_buffer_start_ (end of transfer)
           wrapping_index_ = write_buffer_index_;
@@ -204,7 +204,7 @@ bool I2CChannel::SendRequest(const I2CRequest request) {
       }
       memcpy(&write_buffer_[write_buffer_index_], request.data, request.size);
       new_request.data = &write_buffer_[write_buffer_index_];
-      write_buffer_index_ += request.size;
+      write_buffer_index_ += new_request.size;
     }
     if (buffer_.Put(ind_queue_)) {
       queue_[ind_queue_] = new_request;

@@ -57,7 +57,7 @@ public:
   // (if the request is a Read) *request.data contains desired data.
   // Return value is false in case the request cannot be processed (this can
   // only happen if queue is full).
-  bool SendRequest(const I2CRequest request);
+  bool SendRequest(const I2CRequest &request);
 
   // Interrupt handlers
   void I2CEventHandler();

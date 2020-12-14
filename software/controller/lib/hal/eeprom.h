@@ -22,7 +22,13 @@ limitations under the License.
 class I2Ceeprom {
 public:
   I2Ceeprom(uint8_t address, uint16_t page_size, uint16_t size)
-      : address_(address), size_(size){};
+      : address_(address), size_(size) {
+#ifdef TEST_MODE
+    for (int i = 0; i < size; ++i) {
+      memory_[i] = 0xFF;
+    }
+#endif
+  };
 
   // Because of the way I2C works, read/write operations take some time,
   // we use pointers to the place the data has to be put and to a boolean

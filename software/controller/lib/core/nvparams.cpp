@@ -150,14 +150,15 @@ bool NVParams::Set(uint16_t offset, void *value, uint8_t len) {
 bool NVParams::Get(uint16_t offset, void *value, uint8_t len) {
   // Make sure the passed pointer is pointing to somewhere
   // in the structure and isn't in the reserved first 3 bytes
-  if ((offset < 3) || ((offset + len) > nvparam_size))
+  if ((offset < 3) || ((offset + len) > nvparam_size)) {
     return false;
+  }
   memcpy(value, (&nv_param_) + offset, len);
   return true;
 }
 
 // call this function in order to write variables to nv_params
-void NVParams::Update(const Time now, VentParams params) {
+void NVParams::Update(const Time now, VentParams *params) {
   // We only update cumulated service every so often
   if (now > last_update_ + kUpdateInterval) {
     uint32_t cumulated =
@@ -167,18 +168,18 @@ void NVParams::Update(const Time now, VentParams params) {
     last_update_ = now;
   }
 
-  if (params.mode != nv_param_.last_settings.mode ||
-      params.peep_cm_h2o != nv_param_.last_settings.peep_cm_h2o ||
-      params.pip_cm_h2o != nv_param_.last_settings.pip_cm_h2o ||
-      params.breaths_per_min != nv_param_.last_settings.breaths_per_min ||
-      params.fio2 != nv_param_.last_settings.fio2 ||
-      params.inspiratory_expiratory_ratio !=
+  if (params->mode != nv_param_.last_settings.mode ||
+      params->peep_cm_h2o != nv_param_.last_settings.peep_cm_h2o ||
+      params->pip_cm_h2o != nv_param_.last_settings.pip_cm_h2o ||
+      params->breaths_per_min != nv_param_.last_settings.breaths_per_min ||
+      params->fio2 != nv_param_.last_settings.fio2 ||
+      params->inspiratory_expiratory_ratio !=
           nv_param_.last_settings.inspiratory_expiratory_ratio ||
-      params.inspiratory_trigger_cm_h2o !=
+      params->inspiratory_trigger_cm_h2o !=
           nv_param_.last_settings.inspiratory_trigger_cm_h2o ||
-      params.expiratory_trigger_ml_per_min !=
+      params->expiratory_trigger_ml_per_min !=
           nv_param_.last_settings.expiratory_trigger_ml_per_min) {
-    Set(offsetof(NVparams, last_settings), &params, sizeof(VentParams));
+    Set(offsetof(NVparams, last_settings), params, sizeof(VentParams));
   }
 
   // Update debug variables
@@ -223,5 +224,4 @@ static void WriteFullParams(NVParamsAddress address, void *param) {
                     nullptr);
   // for a write, we don't really need to wait until the request is processed:
   // the I2C queue should ensure nothing is lost.
-  return;
 }

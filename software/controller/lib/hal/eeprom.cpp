@@ -34,7 +34,12 @@ bool I2Ceeprom::ReadBytes(uint16_t offset, uint16_t length, void *data,
   offset_address[0] = static_cast<uint8_t>((offset & 0x7F00) >> 8);
   offset_address[1] = static_cast<uint8_t>(offset & 0xFF);
 
-#ifdef BARE_STM32
+#ifdef TEST_MODE
+  // faked when testing
+  uint reconstructed_offset = (offset_address[0] << 8) | offset_address[1];
+  memcpy(data, &memory_[reconstructed_offset], length);
+  return true;
+#elif defined(BARE_STM32)
   bool discarded = false;
   I2CRequest pointer_set = {
       .slave_address = address_,
@@ -58,11 +63,6 @@ bool I2Ceeprom::ReadBytes(uint16_t offset, uint16_t length, void *data,
   } else {
     return false;
   }
-#elif defined(TEST_MODE)
-  // faked when testing
-  uint reconstructed_offset = (offset_address[0] << 8) | offset_address[1];
-  memcpy(data, &memory_[reconstructed_offset], length);
-  return true;
 #endif
 };
 
@@ -94,7 +94,10 @@ bool I2Ceeprom::WriteBytes(uint16_t offset, uint16_t length, void *data,
 
     memcpy(&write_data[2], current_data, request_length);
 
-#ifdef BARE_STM32
+#ifdef TEST_MODE
+    // faked when testing
+    memcpy(&memory_[current_offset], &write_data[2], request_length);
+#elif defined(BARE_STM32)
     I2CRequest request = {
         .slave_address = address_,
         .read_write = I2CExchangeDir::kWrite,
@@ -107,9 +110,6 @@ bool I2Ceeprom::WriteBytes(uint16_t offset, uint16_t length, void *data,
     if (!success) {
       break;
     }
-#elif defined(TEST_MODE)
-    // faked when testing
-    memcpy(&memory_[current_offset], &write_data[2], request_length);
 #endif
     current_offset = static_cast<uint16_t>(current_offset + request_length);
     current_data = current_data + request_length;

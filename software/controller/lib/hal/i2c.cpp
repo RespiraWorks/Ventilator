@@ -231,7 +231,7 @@ void I2CChannel::StartTransfer() {
   // bytes. Therefore we need to check whether this call is a continuation of a
   // long request or a new request.
   // Also in case of transfer error, we may need to re-send the last request
-  if (remaining_size_ <= 0) {
+  if (remaining_size_ == 0) {
     // This indicates the last request has been successfully sent, hence we will
     // send the next request in the queue.
     std::optional<uint8_t> ind = buffer_.Get();
@@ -316,7 +316,7 @@ void I2CChannel::StartTransfer() {
 // Method called by interrupt handler when dma is disabled. This method
 // transfers data to/from the tx/rx registers from/to *request.data
 void I2CChannel::ByteTransfer() {
-  if (remaining_size_ <= 0) {
+  if (remaining_size_ == 0) {
     // this shouldn't happen, but just to be safe, we stop here.
     return;
   }
@@ -350,7 +350,7 @@ void I2CChannel::ByteTransfer() {
   };
 }
 
-bool I2CChannel::NextByteNeeded() {
+bool I2CChannel::NextByteNeeded() const {
 #if defined(BARE_STM32)
   return i2c_->status.rx_not_empty || i2c_->status.tx_interrupt;
 #elif defined(TEST_MODE)
@@ -358,7 +358,7 @@ bool I2CChannel::NextByteNeeded() {
 #endif
 }
 
-bool I2CChannel::TransferReload() {
+bool I2CChannel::TransferReload() const {
 #if defined(BARE_STM32)
   return i2c_->status.transfer_reload;
 #elif defined(TEST_MODE)
@@ -366,7 +366,7 @@ bool I2CChannel::TransferReload() {
 #endif
 }
 
-bool I2CChannel::TransferComplete() {
+bool I2CChannel::TransferComplete() const {
 #if defined(BARE_STM32)
   return i2c_->status.transfer_complete;
 #elif defined(TEST_MODE)

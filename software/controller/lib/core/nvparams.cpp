@@ -188,7 +188,7 @@ void NVParams::Update(const Time now, VentParams *params) {
     Set(offsetof(NVparams, last_settings), params, sizeof(VentParams));
   }
 
-  // Update debug variables
+  // Update from debug variables
   uint8_t reinit = static_cast<uint8_t>(dbg_reinit.Get());
   if (reinit != nv_param_.reinit) {
     Set(offsetof(NVparams, reinit), &reinit, 1);

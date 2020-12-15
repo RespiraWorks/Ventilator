@@ -143,12 +143,12 @@ wiring.
 ### Custom component manufacture
 
 #### Tubing adapter (C1)
-
+![](CAD/tubing_adapter.png)
 To 3d print this component see the [general 3d printing guidelines](../3d_printing).
 
-| Rendering | STL | Solidworks | Inventor (Editable) |
-|:---------:|:---:|:----------:|:--------------------|
-|![](CAD/tubing_adapter.jpg)|[tubing_adapter.stl](CAD/tubing_adapter.stl)|[tubing_adapter.SLDPRT](CAD/tubing_adapter.sldprt)|[tubing_adapter.ipt](CAD/tubing_adapter.ipt)|
+| Rendering | STL | Inventor | Engineering Drawing |
+|:---------:|:---:|:----------:|:---------------------------|
+|![](CAD/tubing_adapter.jpg)|[tubing_adapter.stl](CAD/tubing_adapter.stl)|[tubing_adapter.ipt](CAD/tubing_adapter.ipt)<br>[tubing_adapter.idw](CAD/tubing_adapter.idw)|[tubing_adapter.pdf](CAD/tubing_adapter.pdf)
 
 #### Gaskets
 
@@ -175,12 +175,14 @@ Out of the drill sets, you will need:
 You might also want to use some 200 grit sandpaper to clean up the edges of the pieces you cut and drill.
 
 |     | Driver mounting plate (C3) | Blower holding plate (C4) | Tubing adapter holding plate (C5) |
-|----:|:--------------------------:|:-------------------------:|:---------------------------------:|
-| PNG |![](CAD/driver_mounting_plate.png)|![](CAD/blower_holding_plate.png)|![](CAD/tubing_adapter_holding_plate.png)|
+|:-----:|:--------------------------:|:-------------------------:|:---------------------------------:|
+| Drawings |![](CAD/driver_mounting_plate.png)|![](CAD/blower_holding_plate.png)<br>[Blower Holding Plate](CAD/blower_holding_plate.pdf)|![](CAD/tubing_adapter_holding_plate.png)|
 | DXF |[driver_mounting_plate.dxf](CAD/driver_mounting_plate.dxf)|[blower_holding_plate.dxf](CAD/blower_holding_plate.dxf)|[tubing_adapter_holding_plate.dxf](CAD/tubing_adapter_holding_plate.dxf)|
+| Inventor | |[blower_holding_plate.ipt](CAD/blower_holding_plate.ipt)<br>[blower_holding_plate.idw](CAD/blower_holding_plate.idw)| |
+
 
 You can use one of these plates as a template to drill the appropriate holes in the main acrylic plate and the metal
-fame that supports it.
+frame that supports it.
 
 The above manufactured components (excluding gaskets) should appear as follows:
 

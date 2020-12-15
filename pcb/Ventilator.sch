@@ -32,10 +32,17 @@ F0 "UI Computer" 50
 F1 "ui_computer.sch" 50
 $EndSheet
 $Sheet
-S 6400 1000 1200 400 
+S 5400 600  650  900 
 U 5FCD4D85
 F0 "STM Programmer for cycle controller" 50
 F1 "stm_programmer.sch" 50
+F2 "CC_SWCLK" O R 6050 700 50 
+F3 "CC_SWDIO" O R 6050 800 50 
+F4 "~CC_RST" O R 6050 900 50 
+F5 "CC_SWO" O R 6050 1000 50 
+F6 "~USB_Pwr_En" O R 6050 1150 50 
+F7 "UART_Tx" O R 6050 1300 50 
+F8 "UART_Rx" I R 6050 1400 50 
 $EndSheet
 $Sheet
 S 6400 3900 2000 1050

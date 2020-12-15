@@ -49,6 +49,7 @@ struct I2CRequest {
 // what is sent on the bus.
 class I2CChannel {
 public:
+  I2CChannel() = default;
   // Init I2C channel, setting up registers DMA_Reg and I2C_Reg to enable the
   // channel using DMA if possible.
   // If DMA_Reg is invalid (or that DMA cannot be linked to this I2C), dma is
@@ -100,9 +101,9 @@ private:
   void ByteTransfer();  // transfer a single byte (for non-DMA transfer)
 
   // I2C interrupt getters to allow testing of I2C handler
-  bool NextByteNeeded();
-  bool TransferReload();
-  bool TransferComplete();
+  bool NextByteNeeded() const;
+  bool TransferReload() const;
+  bool TransferComplete() const;
   bool NackDetected();
 
   // store the last request in order to be able to resume in case of errors

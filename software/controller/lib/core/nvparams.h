@@ -23,7 +23,7 @@ limitations under the License.
 
 // This structure defines the layout of the non-volatile
 // parameter info stored in the I²C EEPROM.
-struct NVparams {
+struct NVparams_struct {
   // Header info used to keep track of parameter info
   uint32_t crc{0};    // 32-bit CRC of remaining structure
   uint8_t count{0};   // Incremented on each write.
@@ -45,15 +45,15 @@ struct NVparams {
 };
 
 // We are reserving the first 8 kB out of our 32kB eeprom for nv params.
-// Since we use a flip/flop that means NVparams should be at most 4kB.
-static_assert(sizeof(NVparams) <= 4096);
+// Since we use a flip/flop that means NVparams_struct should be at most 4kB.
+static_assert(sizeof(NVparams_struct) <= 4096);
 
 enum class NVParamsAddress {
   kFlip = 0,
   kFlop = 4096,
 };
 
-// Class that encapsulates NVparams. We need the NVparams struct to be
+// Class that encapsulates NVparams. We need the NVparams_struct to be
 // defined independently in order to facilitate access and casting, but
 // the actual struct we use is encapsulated here in order to write the
 // changes made to the struct in EEPROM.
@@ -66,13 +66,13 @@ public:
   void Update(Time now, VentParams *params);
 
 private:
-  NVparams nv_param_;
+  NVparams_struct nv_param_;
   bool linked_{true};
   // Address of valid parameter block - defaulted to Flip
   NVParamsAddress nvparam_addr_{NVParamsAddress::kFlip};
   Time last_update_{microsSinceStartup(0)};
   // Update cumulated service interval
-  static constexpr Duration kUpdateInterval = seconds(60);
+  static constexpr Duration kUpdateInterval{seconds(60)};
 };
 
 static NVParams nv_params;
@@ -80,10 +80,10 @@ static NVParams nv_params;
 // Convenience macro to read/write a member of the non-volatile
 // parameter structure given it's name
 #define NVparamsUpdate(member, value)                                          \
-  nv_params.Set(static_cast<uint16_t>(offsetof(NVparams, member)), value,      \
-                (sizeof(((NVparams *)0)->member)))
+  nv_params.Set(static_cast<uint16_t>(offsetof(NVparams_struct, member)),      \
+                value, (sizeof(((NVparams_struct *)0)->member)))
 #define NVparamsRead(member, value)                                            \
-  nv_params.Get(static_cast<uint16_t>(offsetof(NVparams, member)), value,      \
-                (sizeof(((NVparams *)0)->member)))
+  nv_params.Get(static_cast<uint16_t>(offsetof(NVparams_struct, member)),      \
+                value, (sizeof(((NVparams_struct *)0)->member)))
 
 #endif // NVPARAM_H_

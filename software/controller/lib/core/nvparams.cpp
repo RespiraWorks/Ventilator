@@ -32,13 +32,15 @@ limitations under the License.
 #include <string.h>
 
 // Size of the parameter block including the header
-static constexpr uint32_t nvparam_size{sizeof(NVparams)};
+static constexpr uint32_t nvparam_size{sizeof(NVparams_struct)};
 
 // local functions
 static bool ReadFullParams(NVParamsAddress address, void *param);
 static void WriteFullParams(NVParamsAddress address, void *param);
 static uint32_t ParamsCRC(void *param);
-static bool IsValid(NVparams *param) { return param->crc == ParamsCRC(param); };
+static bool IsValid(NVparams_struct *param) {
+  return param->crc == ParamsCRC(param);
+};
 
 static DebugUInt32
     dbg_reinit("nvparams_reinit",
@@ -63,7 +65,7 @@ void NVParams::Init() {
       // Still read the flop in case they are both valid (which normally
       // shouldn't happen but could if power is lost at just the right time when
       // writing).
-      NVparams Flop;
+      NVparams_struct Flop;
       ReadFullParams(NVParamsAddress::kFlop, &Flop);
       // check its validity
       if (IsValid(&Flop)) {
@@ -95,7 +97,7 @@ void NVParams::Init() {
   if (nv_param_.reinit == 1) {
     // Write the correct structure with init values to both sides in case
     // a reinit is needed (debug-user request or no valid params found)
-    nv_param_ = NVparams();
+    nv_param_ = NVparams_struct();
     nv_param_.crc = ParamsCRC(&nv_param_);
     if (linked_) {
       WriteFullParams(NVParamsAddress::kFlip, &nv_param_);
@@ -108,7 +110,7 @@ void NVParams::Init() {
   dbg_serial.Set(nv_param_.vent_serial_number);
   // increase power cycles counter in nv_params
   uint32_t counter = nv_param_.power_cycles + 1;
-  Set(offsetof(NVparams, power_cycles), &counter, 4);
+  Set(offsetof(NVparams_struct, power_cycles), &counter, 4);
 }
 
 bool NVParams::Set(uint16_t offset, void *value, uint8_t len) {
@@ -166,7 +168,7 @@ void NVParams::Update(const Time now, VentParams *params) {
   if (now >= last_update_ + kUpdateInterval) {
     uint32_t cumulated = nv_param_.cumulated_service +
                          static_cast<uint32_t>((now - last_update_).seconds());
-    Set(offsetof(NVparams, cumulated_service), &cumulated, 4);
+    Set(offsetof(NVparams_struct, cumulated_service), &cumulated, 4);
     last_update_ = now;
   }
 
@@ -185,17 +187,17 @@ void NVParams::Update(const Time now, VentParams *params) {
           nv_param_.last_settings.inspiratory_trigger_cm_h2o ||
       params->expiratory_trigger_ml_per_min !=
           nv_param_.last_settings.expiratory_trigger_ml_per_min) {
-    Set(offsetof(NVparams, last_settings), params, sizeof(VentParams));
+    Set(offsetof(NVparams_struct, last_settings), params, sizeof(VentParams));
   }
 
   // Update from debug variables
   uint8_t reinit = static_cast<uint8_t>(dbg_reinit.Get());
   if (reinit != nv_param_.reinit) {
-    Set(offsetof(NVparams, reinit), &reinit, 1);
+    Set(offsetof(NVparams_struct, reinit), &reinit, 1);
   }
   uint32_t serial = dbg_serial.Get();
   if (serial != nv_param_.vent_serial_number) {
-    Set(offsetof(NVparams, vent_serial_number), &serial, 4);
+    Set(offsetof(NVparams_struct, vent_serial_number), &serial, 4);
   }
 }
 
@@ -211,7 +213,6 @@ static bool ReadFullParams(NVParamsAddress address, void *param) {
   bool read_finished{false};
   eeprom.ReadBytes(static_cast<uint16_t>(address), nvparam_size, param,
                    &read_finished);
-#ifndef TEST_MODE
   Time start_time = Hal.now();
   // Wait until the read is performed, or at most 500 ms: reading 4kB should
   // take under 100 ms if the 400 kHz I²C bus is used at 100% capacity.
@@ -223,7 +224,6 @@ static bool ReadFullParams(NVParamsAddress address, void *param) {
       return false;
     }
   }
-#endif
   return true;
 }
 

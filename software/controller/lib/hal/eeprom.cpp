@@ -38,6 +38,8 @@ bool I2Ceeprom::ReadBytes(uint16_t offset, uint16_t length, void *data,
   // faked when testing
   uint reconstructed_offset = (offset_address[0] << 8) | offset_address[1];
   memcpy(data, &memory_[reconstructed_offset], length);
+  if (processed != nullptr)
+    *processed = true;
   return true;
 #elif defined(BARE_STM32)
   bool discarded = false;
@@ -114,5 +116,9 @@ bool I2Ceeprom::WriteBytes(uint16_t offset, uint16_t length, void *data,
     current_offset = static_cast<uint16_t>(current_offset + request_length);
     current_data = current_data + request_length;
   }
+#ifdef TEST_MODE
+  if (processed != nullptr)
+    *processed = true;
+#endif
   return success;
 };

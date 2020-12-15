@@ -43,7 +43,7 @@ void run_test() {
 
   eeprom.ReadBytes(address, length, &eeprom_after, &processed[2]);
 
-  // Hal.BuzzerOn(0.1f);
+  Hal.BuzzerOn(0.1f);
   dbg_addr_before.Set(reinterpret_cast<uint32_t>(&eeprom_before));
   dbg_write_data.Set(reinterpret_cast<uint32_t>(&write_data));
   dbg_addr_after.Set(reinterpret_cast<uint32_t>(&eeprom_after));

@@ -16,22 +16,27 @@ limitations under the License.
 #include "eeprom.h"
 #include "gtest/gtest.h"
 
+static constexpr uint32_t kMemSize{32768};
+// initialize memory with data = address % 256
+uint8_t memory[kMemSize];
+
 // This test check that the read address is built correctly
 TEST(I2C_EEPROM, Read_Write) {
-  static constexpr uint32_t kMemSize{32768};
 
-  // initialize memory with data = address % 256
-  uint8_t memory[kMemSize];
   for (int i = 0; i < kMemSize; ++i) {
     memory[i] = static_cast<uint8_t>(i % 256);
   }
 
+  bool processed{false};
   // Write full memory
-  eeprom.WriteBytes(0, kMemSize, &memory, nullptr);
+  eeprom.WriteBytes(0, kMemSize, &memory, &processed);
+  ASSERT_TRUE(processed);
 
   // Check the memory content
   uint8_t eeprom_memory[kMemSize];
-  eeprom.ReadBytes(0, kMemSize, &eeprom_memory, nullptr);
+  processed = false;
+  eeprom.ReadBytes(0, kMemSize, &eeprom_memory, &processed);
+  ASSERT_TRUE(processed);
 
   for (int i = 0; i < kMemSize; ++i) {
     ASSERT_EQ(eeprom_memory[i], static_cast<uint8_t>(i % 256));
@@ -61,4 +66,9 @@ TEST(I2C_EEPROM, Read_Write) {
   for (int i = 0; i < kMemSize; ++i) {
     ASSERT_EQ(eeprom_memory[i], memory[i]);
   }
+}
+
+TEST(I2C_EEPROM, InvalidAccess) {
+  ASSERT_FALSE(eeprom.ReadBytes(0, kMemSize + 1, &memory, nullptr));
+  ASSERT_FALSE(eeprom.WriteBytes(0, kMemSize + 1, &memory, nullptr));
 }

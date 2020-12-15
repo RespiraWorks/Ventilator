@@ -110,11 +110,8 @@ TEST(I2C, WriteBuffer) {
   for (int byte = 0; byte < kWriteBufferLength - buffer_head + 1; ++byte) {
     i2c.I2CEventHandler();
     std::optional<uint8_t> data = i2c.TEST_GetSentData();
-    if (data != std::nullopt) {
-      ASSERT_EQ(data, byte % 256);
-    } else {
-      ADD_FAILURE();
-    }
+    ASSERT_TRUE(data != std::nullopt);
+    ASSERT_EQ(data, byte % 256);
   }
   ASSERT_FALSE(i2c.SendRequest(write_array));
 
@@ -122,11 +119,8 @@ TEST(I2C, WriteBuffer) {
   for (int byte = kWriteBufferLength - buffer_head + 1; byte < 256; ++byte) {
     i2c.I2CEventHandler();
     std::optional<uint8_t> data = i2c.TEST_GetSentData();
-    if (data != std::nullopt) {
-      ASSERT_EQ(data, byte % 256);
-    } else {
-      ADD_FAILURE();
-    }
+    ASSERT_TRUE(data != std::nullopt);
+    ASSERT_EQ(data, byte % 256);
   }
   ASSERT_FALSE(i2c.SendRequest(write_array));
 
@@ -134,11 +128,8 @@ TEST(I2C, WriteBuffer) {
   for (int byte = 256; byte < kRequestLength; ++byte) {
     i2c.I2CEventHandler();
     std::optional<uint8_t> data = i2c.TEST_GetSentData();
-    if (data != std::nullopt) {
-      ASSERT_EQ(data, byte % 256);
-    } else {
-      ADD_FAILURE();
-    }
+    ASSERT_TRUE(data != std::nullopt);
+    ASSERT_EQ(data, byte % 256);
   }
 
   ASSERT_TRUE(processed[0]);
@@ -153,11 +144,8 @@ TEST(I2C, WriteBuffer) {
     for (int byte = 0; byte < kRequestLength; ++byte) {
       i2c.I2CEventHandler();
       std::optional<uint8_t> data = i2c.TEST_GetSentData();
-      if (data != std::nullopt) {
-        ASSERT_EQ(data, (byte + req) % 256);
-      } else {
-        ADD_FAILURE();
-      }
+      ASSERT_TRUE(data != std::nullopt);
+      ASSERT_EQ(data, (byte + req) % 256);
     }
     ASSERT_TRUE(processed[req]);
     ASSERT_FALSE(processed[req + 1]);
@@ -173,11 +161,8 @@ TEST(I2C, WriteBuffer) {
   for (int byte = 0; byte < write_array.size; ++byte) {
     i2c.I2CEventHandler();
     std::optional<uint8_t> data = i2c.TEST_GetSentData();
-    if (data != std::nullopt) {
-      ASSERT_EQ(data, (byte + kNumReq) % 256);
-    } else {
-      ADD_FAILURE();
-    }
+    ASSERT_TRUE(data != std::nullopt);
+    ASSERT_EQ(data, (byte + kNumReq) % 256);
   }
   ASSERT_TRUE(processed[kNumReq]);
   ASSERT_FALSE(processed[kNumReq + 1]);

@@ -1,4 +1,4 @@
-18744093544315928
+18748917304249460
 Battery
 BatteryHolder_Bulgin_BX0036_1xC
 Bulgin Battery Holder, BX0036, Battery Type C (https://www.bulgin.com/products/pub/media/bulgin/data/Battery_holders.pdf)
@@ -75481,6 +75481,13 @@ capacitor
 2
 2
 RespiraWorks_Std
+Crystal_SMD_HC49-SD
+SMD Crystal HC-49-SD http://cdn-reichelt.de/documents/datenblatt/B400/xxx-HC49-SMD.pdf, 11.4x4.7mm^2 package
+SMD SMT crystal
+0
+2
+2
+RespiraWorks_Std
 D_PowerDI-5
 PowerDI,Diode,Vishay,https://www.diodes.com/assets/Package-Files/PowerDI5.pdf
 PowerDI diode vishay
@@ -75724,6 +75731,20 @@ tactile push button, 6x6mm modfied for type TD-0341
 tact sw push 6mm smd td-0341
 0
 4
+2
+RespiraWorks_Std
+SolderJumper-2_P1.3mm_Bridged_RoundedPad1.0x1.5mm
+SMD Solder Jumper, 1x1.5mm, rounded Pads, 0.3mm gap, bridged with 1 copper strip
+solder jumper open
+0
+2
+2
+RespiraWorks_Std
+SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm
+SMD Solder Jumper, 1x1.5mm, rounded Pads, 0.3mm gap, open
+solder jumper open
+0
+2
 2
 RespiraWorks_Std
 TI_SO-PowerPAD-8

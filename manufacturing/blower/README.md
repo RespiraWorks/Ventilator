@@ -176,9 +176,9 @@ You might also want to use some 200 grit sandpaper to clean up the edges of the 
 
 |     | Driver mounting plate (C3) | Blower holding plate (C4) | Tubing adapter holding plate (C5) |
 |:-----:|:--------------------------:|:-------------------------:|:---------------------------------:|
-| Drawings |![](CAD/driver_mounting_plate.png)|![](CAD/blower_holding_plate.png)<br>[Blower Holding Plate](CAD/blower_holding_plate.pdf)|![](CAD/tubing_adapter_holding_plate.png)|
+| Drawings |![](CAD/driver_mounting_plate.png)|![](CAD/blower_holding_plate.png)<br>[Blower Holding Plate](CAD/blower_holding_plate.pdf)|![](CAD/tubing_adapter_holding_plate.png)<br>[Tubing Adapter Holding Plate](CAD/tubing_adapter_holding_plate.pdf)|
 | DXF |[driver_mounting_plate.dxf](CAD/driver_mounting_plate.dxf)|[blower_holding_plate.dxf](CAD/blower_holding_plate.dxf)|[tubing_adapter_holding_plate.dxf](CAD/tubing_adapter_holding_plate.dxf)|
-| Inventor | |[blower_holding_plate.ipt](CAD/blower_holding_plate.ipt)<br>[blower_holding_plate.idw](CAD/blower_holding_plate.idw)| |
+| Inventor | |[blower_holding_plate.ipt](CAD/blower_holding_plate.ipt)<br>[blower_holding_plate.idw](CAD/blower_holding_plate.idw)| [tubing adapter_holding_plate.ipt](CAD/tubing_adapter_holding_plate.ipt)<br>[tubing_adapter_holding_plate.idw](CAD/tubing_adapter_holding_plate.idw)|
 
 
 You can use one of these plates as a template to drill the appropriate holes in the main acrylic plate and the metal

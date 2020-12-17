@@ -135,4 +135,5 @@ F 3 "" H 3950 4500 50  0001 C CNN
 $EndComp
 Text Label 4200 4100 0    50   ~ 0
 UI_ID1
+NoConn ~ 5000 2800
 $EndSCHEMATC

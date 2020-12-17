@@ -107,32 +107,122 @@ ApplicationWindow {
             ListElement {
                 mode: GuiStateContainer.PRESSURE_CONTROL
                 title: qsTr("Pressure control")
-                description: "Space for a short, but well-crafted message summarizing the main reasons for choosing this mode over the others available."
-                acronym: "PC"
+                description: "Continuous Mandatory Ventilation"
+                acronym: "PC-CMV"
             }
             ListElement {
                 mode: GuiStateContainer.PRESSURE_ASSIST
                 title: qsTr("Pressure Assist")
-                description: "Space for a short, but well-crafted message summarizing the main reasons for choosing this mode over the others available."
-                acronym: "A/C PC"
+                description: "Pressure Control - Assist Control"
+                acronym: "PC-AC"
             }
             ListElement {
                 mode: GuiStateContainer.HIGH_FLOW_NASAL_CANNULA
                 title: qsTr("High-flow Nasal Cannula")
-                description: "This mode is not supported yet."
+                description: "High flow nasal cannula"
                 acronym: "HFNC"
             }
-        }
+            ListElement {
+                mode: GuiStateContainer.VC
+                title: qsTr("VC")
+                description: "Volume Control - Continuous Mandatory Ventilation"
+                acronym: "VC-CMV"
+            }
+            ListElement {
+                mode: GuiStateContainer.CPAP
+                title: qsTr("CPAP")
+                description: "CPAP"
+                acronym: "CPAP"
+            }
+            ListElement {
+                mode: GuiStateContainer.VC_AC
+                title: qsTr("VC_AC")
+                description: "Volume Control - Assist Control"
+                acronym: "VC-AC"
+            }
 
+            ListElement {
+                mode: GuiStateContainer.PSV
+                title: qsTr("PSV")
+                description: "Pressure Support Ventilation"
+                acronym: "PC-PSV"
+            }
+            ListElement {
+                mode: GuiStateContainer.SIMVPC
+                title: qsTr("SIMVPC")
+                description: "Synchronized Intermittent Mandatory Ventilation"
+                acronym: "PC-SIMV"
+            }
+            ListElement {
+                mode: GuiStateContainer.SIMVVC
+                title: qsTr("SIMVVC")
+                description: "Synchronized Intermittent Mandatory Ventilation"
+                acronym: "VC-SIMV"
+            }
+
+            ListElement {
+                mode: GuiStateContainer.BIPAP
+                title: qsTr("BIPAP")
+                description: "Pressure Control- Bi-level Positive Airway Pressure"
+                acronym: "PC-BIPAP"
+            }
+
+            ListElement {
+                mode: GuiStateContainer.PRVC
+                title: qsTr("PRVC")
+                description: "Pressure Regulated Volume Control"
+                acronym: "PRVC"
+            }
+            ListElement {
+                mode: GuiStateContainer.SPV
+                title: qsTr("SPV")
+                description: "SPV"
+                acronym: "SPV"
+            }
+      /*      ListElement {
+                mode: GuiStateContainer.OFF
+                title: qsTr("OFF")
+                description: "OFF"
+                acronym: "OFF"
+            }*/
+        }
         onCurrentModeChanged: {
-            if (currentMode.mode == GuiStateContainer.PRESSURE_CONTROL) {
+           if (currentMode.mode === GuiStateContainer.PRESSURE_CONTROL) {
               pageStack.replace(pressureControlMode)
-            } else if (currentMode.mode == GuiStateContainer.PRESSURE_ASSIST) {
+            } else if (currentMode.mode === GuiStateContainer.PRESSURE_ASSIST) {
               pageStack.replace(pressureAssistMode);
-            } else if (currentMode.mode == GuiStateContainer.HIGH_FLOW_NASAL_CANNULA) {
+            } else if (currentMode.mode === GuiStateContainer.HIGH_FLOW_NASAL_CANNULA) {
               pageStack.replace(highFlowNasalCannulaMode);
             }
+            else if (currentMode.mode === GuiStateContainer.VC) {
+              pageStack.replace(volumeControlVentilationMode);
+            }
+            else if (currentMode.mode === GuiStateContainer.CPAP) {
+              pageStack.replace(cpapMode);
+            }
+            else if (currentMode.mode === GuiStateContainer.VC_AC) {
+              pageStack.replace(volumeAssistVentilationMode);
+            }
+            else if (currentMode.mode === GuiStateContainer.PSV) {
+              pageStack.replace(presureSupportVentilationMode);
+            }
+            else if (currentMode.mode === GuiStateContainer.SIMVPC) {
+              pageStack.replace(syncIMVPCMode);
+            }
+            else if (currentMode.mode === GuiStateContainer.SIMVVC) {
+              pageStack.replace(syncIMVVCMode);
+            }
+            else if (currentMode.mode === GuiStateContainer.BIPAP) {
+              pageStack.replace(bIPAPMode);
+            }
+            else if (currentMode.mode === GuiStateContainer.PRVC) {
+              pageStack.replace(pressureRegulatedVolumeControlMode);
+            }
+            else if (currentMode.mode === GuiStateContainer.SPV) {
+              pageStack.replace(spontaneousVentilationModel);
+            }
             GuiStateContainer.mode = currentMode.mode
+            GuiStateContainer.commanded_mode = currentMode.mode
         }
 
         Connections {
@@ -154,5 +244,41 @@ ApplicationWindow {
     Component {
         id: highFlowNasalCannulaMode
         HighFlowNasalCannulaMode {}
+    }
+    Component {
+        id: volumeControlVentilationMode
+        VolumeControlVentilationMode {}
+    }
+    Component {
+        id: volumeAssistVentilationMode
+        VolumeAssistVentilationMode {}
+    }
+    Component {
+        id: cpapMode
+        CPAPMode {}
+    }
+    Component {
+        id: presureSupportVentilationMode
+        PresureSupportVentilation {}
+    }
+    Component {
+        id: syncIMVPCMode
+        SyncIMVPC {}
+    }
+    Component {
+        id: syncIMVVCMode
+        SyncIMVVC {}
+    }
+    Component {
+        id: bIPAPMode
+        BIPAP {}
+    }
+    Component {
+        id: pressureRegulatedVolumeControlMode
+        PressureRegulatedVolumeControlMode {}
+    }
+    Component {
+        id: spontaneousVentilationModel
+        SpontaneousVentilationModel {}
     }
 }

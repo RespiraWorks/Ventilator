@@ -166,6 +166,12 @@ QtObject {
                                                         letterSpacing: 0,
                                                         weight: Font.Normal
                                                     })
+            property font inputparameterDisplay: Qt.font({
+                                                        family: "Oxygen",
+                                                        pixelSize: 45,
+                                                        letterSpacing: 0,
+                                                        weight: Font.Normal
+                                                    })
 
             property font parameterDisplayValue: Qt.font({
                                                              family: "Oxygen",

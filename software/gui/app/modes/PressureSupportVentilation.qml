@@ -8,6 +8,7 @@ import "../controls/readings"
 import "../controls/graphs"
 import ".."
 
+
 Mode {
     id: mode
 
@@ -30,18 +31,13 @@ Mode {
             columnSpacing: 8
             rowSpacing: 8
 
-            // TODO: Add control for inspiratory effort threshold.
-
             PipDisplay {}
             PeepDisplay {}
-            FlowDisplay {}
-
-            // TODO: Presumably this should be the measured RR, not the set
-            // RR?  In pressure-assist mode, those aren't the same thing.
-            RrDisplay {}
-            IerDisplay {}
-            TvDisplay {}
             FiO2Display {}
+            FlowDisplay {}
+            TvDisplay {}
+            RrDisplay {}
+
         }
     }
 
@@ -61,7 +57,6 @@ Mode {
             id: scopeGridLayout
             anchors.fill: parent
             spacing: 0
-
             PressureGraph { Layout.fillHeight: true; Layout.fillWidth: true }
             FlowGraph { Layout.fillHeight: true; Layout.fillWidth: true }
             TvGraph { Layout.fillHeight: true; Layout.fillWidth: true }
@@ -79,12 +74,10 @@ Mode {
         }
 
         Layout.alignment: Qt.AlignHCenter
-
         PipParameter {}
         PeepParameter {}
+        PSUPPParameter {}
         FiO2Parameter {}
-        ITimeParameter {}
         RrParameter {}
-
     }
 }

@@ -18,7 +18,16 @@ typedef enum _VentMode {
     VentMode_OFF = 0,
     VentMode_PRESSURE_CONTROL = 1,
     VentMode_PRESSURE_ASSIST = 2,
-    VentMode_HIGH_FLOW_NASAL_CANNULA = 3
+    VentMode_HIGH_FLOW_NASAL_CANNULA = 3,
+    VentMode_VOLUME_CONTROL = 4,
+    VentMode_CPAP = 5,
+    VentMode_VOLUME_ASSIST = 6,
+    VentMode_PRESSURE_SUPPORT = 7,
+    VentMode_PC_SIMV = 8,
+    VentMode_VC_SIMV = 9,
+    VentMode_BIPAP = 10,
+    VentMode_PRESSURE_REG_VC = 11,
+    VentMode_SPONTANEOUS_BREATHS = 12,
 } VentMode;
 
 /* Struct definitions */
@@ -42,6 +51,10 @@ typedef struct _VentParams {
     uint32_t inspiratory_trigger_cm_h2o;
     uint32_t expiratory_trigger_ml_per_min;
     float fio2;
+    float viv_ml;
+    float flow_l_per_min;
+    uint32_t psupp_cm_h2o;
+    uint32_t pstep_cm_h2o;
 } VentParams;
 
 typedef struct _ControllerStatus {
@@ -60,18 +73,18 @@ typedef struct _GuiStatus {
 
 /* Helper constants for enums */
 #define _VentMode_MIN VentMode_OFF
-#define _VentMode_MAX VentMode_HIGH_FLOW_NASAL_CANNULA
-#define _VentMode_ARRAYSIZE ((VentMode)(VentMode_HIGH_FLOW_NASAL_CANNULA+1))
+#define _VentMode_MAX VentMode_SPONTANEOUS_BREATHS
+#define _VentMode_ARRAYSIZE ((VentMode)(VentMode_SPONTANEOUS_BREATHS+1))
 
 
 /* Initializer values for message structs */
 #define GuiStatus_init_default                   {0, VentParams_init_default}
 #define ControllerStatus_init_default            {0, VentParams_init_default, SensorsProto_init_default, 0, 0}
-#define VentParams_init_default                  {_VentMode_MIN, 0, 0, 0, 0, 0, 0, 0}
+#define VentParams_init_default                  {_VentMode_MIN, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
 #define SensorsProto_init_default                {0, 0, 0, 0, 0, 0, 0, 0}
 #define GuiStatus_init_zero                      {0, VentParams_init_zero}
 #define ControllerStatus_init_zero               {0, VentParams_init_zero, SensorsProto_init_zero, 0, 0}
-#define VentParams_init_zero                     {_VentMode_MIN, 0, 0, 0, 0, 0, 0, 0}
+#define VentParams_init_zero                     {_VentMode_MIN, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
 #define SensorsProto_init_zero                   {0, 0, 0, 0, 0, 0, 0, 0}
 
 /* Field tags (for use in manual encoding/decoding) */
@@ -91,6 +104,10 @@ typedef struct _GuiStatus {
 #define VentParams_inspiratory_trigger_cm_h2o_tag 8
 #define VentParams_expiratory_trigger_ml_per_min_tag 9
 #define VentParams_fio2_tag                      10
+#define VentParams_viv_ml_tag                    11
+#define VentParams_flow_l_per_min_tag            12
+#define VentParams_psupp_cm_h2o_tag              13
+#define VentParams_pstep_cm_h2o_tag              14
 #define ControllerStatus_uptime_ms_tag           1
 #define ControllerStatus_active_params_tag       2
 #define ControllerStatus_sensor_readings_tag     3
@@ -126,7 +143,11 @@ X(a, STATIC,   REQUIRED, UINT32,   pip_cm_h2o,        5) \
 X(a, STATIC,   REQUIRED, FLOAT,    inspiratory_expiratory_ratio,   6) \
 X(a, STATIC,   REQUIRED, UINT32,   inspiratory_trigger_cm_h2o,   8) \
 X(a, STATIC,   REQUIRED, UINT32,   expiratory_trigger_ml_per_min,   9) \
-X(a, STATIC,   REQUIRED, FLOAT,    fio2,             10)
+X(a, STATIC,   REQUIRED, FLOAT,    fio2,              10) \
+X(a, STATIC,   REQUIRED, FLOAT,    viv_ml,            11) \
+X(a, STATIC,   REQUIRED, FLOAT,    flow_l_per_min,    12) \
+X(a, STATIC,   REQUIRED, UINT32,    psupp_cm_h2o,     13) \
+X(a, STATIC,   REQUIRED, UINT32,    pstep_cm_h2o,     14)
 #define VentParams_CALLBACK NULL
 #define VentParams_DEFAULT NULL
 
@@ -154,9 +175,9 @@ extern const pb_msgdesc_t SensorsProto_msg;
 #define SensorsProto_fields &SensorsProto_msg
 
 /* Maximum encoded size of messages (where known) */
-#define GuiStatus_size                           55
-#define ControllerStatus_size                    108
-#define VentParams_size                          42
+#define GuiStatus_size                           71
+#define ControllerStatus_size                    124
+#define VentParams_size                          58
 #define SensorsProto_size                        45
 
 #ifdef __cplusplus

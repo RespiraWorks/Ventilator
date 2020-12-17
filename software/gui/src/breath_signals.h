@@ -30,10 +30,15 @@ class BreathSignals {
   uint32_t num_breaths() const;
   std::optional<float> pip() const;
   std::optional<float> peep() const;
+  std::optional<float> viv() const;
+  uint32_t currentmode() const;
   std::optional<float> rr() const;
 
  private:
   uint32_t num_breaths_{0};
+
+  uint32_t currentmode_;
+  uint64_t latest_breath_id_{0};
 
   std::optional<float> latest_pip_;
   std::optional<float> current_pip_;
@@ -41,7 +46,8 @@ class BreathSignals {
   std::optional<float> latest_peep_;
   std::optional<float> current_peep_;
 
-  uint64_t latest_breath_id_{0};
+  std::optional<float> latest_viv_;
+  std::optional<float> current_viv_;
 
   static constexpr int MinRecentBreathStarts{3};
   static constexpr int MaxRecentBreathStarts{5};

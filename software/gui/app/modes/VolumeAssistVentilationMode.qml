@@ -1,3 +1,8 @@
+/*import QtQuick 2.0
+
+Item {
+
+}*/
 import QtQuick 2.11
 import QtQuick.Layouts 1.3
 import QtQuick.Controls 2.4
@@ -30,22 +35,19 @@ Mode {
             columnSpacing: 8
             rowSpacing: 8
 
-            // TODO: Add control for inspiratory effort threshold.
 
-            PipDisplay {}
-            PeepDisplay {}
-            FlowDisplay {}
 
-            // TODO: Presumably this should be the measured RR, not the set
-            // RR?  In pressure-assist mode, those aren't the same thing.
-            RrDisplay {}
-            IerDisplay {}
-            TvDisplay {}
-            FiO2Display {}
+             PeepDisplay {}
+             FiO2Display {}
+             FlowDisplay {}
+             RrDisplay {}
+             IerDisplay {}
+             TvDisplay {}
+
         }
     }
 
-    Rectangle {
+   Rectangle {
         width: 784; height: 440
         radius: 8
         anchors {
@@ -61,7 +63,6 @@ Mode {
             id: scopeGridLayout
             anchors.fill: parent
             spacing: 0
-
             PressureGraph { Layout.fillHeight: true; Layout.fillWidth: true }
             FlowGraph { Layout.fillHeight: true; Layout.fillWidth: true }
             TvGraph { Layout.fillHeight: true; Layout.fillWidth: true }
@@ -80,11 +81,20 @@ Mode {
 
         Layout.alignment: Qt.AlignHCenter
 
-        PipParameter {}
-        PeepParameter {}
-        FiO2Parameter {}
-        ITimeParameter {}
-        RrParameter {}
 
+
+        VIVParameter {}
+        PeepParameter {}
+        ITimeParameter {}
+        FiO2Parameter {}
+        RrParameter {}
     }
 }
+
+
+/*##^##
+Designer {
+    D{i:0;autoSize:true;height:480;width:640}
+}
+##^##*/
+

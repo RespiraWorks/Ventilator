@@ -189,13 +189,17 @@ void Handler::Update(const Time now, VentParams *params) {
 
   // assert that the size of VentParams is still good - if it isn't, we need
   // to update the condition below to capture all members
-  static_assert(sizeof(VentParams) == 32);
+  static_assert(sizeof(VentParams) == 48);
 
   if (params->mode != nv_param_.last_settings.mode ||
       params->peep_cm_h2o != nv_param_.last_settings.peep_cm_h2o ||
       params->pip_cm_h2o != nv_param_.last_settings.pip_cm_h2o ||
       params->breaths_per_min != nv_param_.last_settings.breaths_per_min ||
       params->fio2 != nv_param_.last_settings.fio2 ||
+      params->viv_ml != nv_param_.last_settings.viv_ml ||
+      params->flow_l_per_min != nv_param_.last_settings.flow_l_per_min ||
+      params->psupp_cm_h2o != nv_param_.last_settings.psupp_cm_h2o ||
+      params->pstep_cm_h2o != nv_param_.last_settings.pstep_cm_h2o ||
       params->inspiratory_expiratory_ratio !=
           nv_param_.last_settings.inspiratory_expiratory_ratio ||
       params->inspiratory_trigger_cm_h2o != nv_param_.last_settings.inspiratory_trigger_cm_h2o ||

@@ -76,3 +76,7 @@ PipNotReachedAlarm *AlarmManager::get_pip_not_reached_alarm() { return &pip_not_
 PatientDetachedAlarm *AlarmManager::get_patient_detached_alarm() {
   return &patient_detached_alarm_;
 }
+
+VivExceededAlarm *AlarmManager::get_viv_exceeded_alarm() { return &viv_exceeded_alarm_; }
+
+VivNotReachedAlarm *AlarmManager::get_viv_not_reached_alarm() { return &viv_not_reached_alarm_; }

@@ -48,7 +48,7 @@ Popup {
             width: parent.width
             height: 120
 
-            Image {
+           Image {
                 id: icon
                 width: 96; height: 96
                 anchors {
@@ -56,8 +56,8 @@ Popup {
                 }
                 sourceSize: Qt.size(96, 96)
 
-                fillMode: Image.PreserveAspectFit
-                source: 'qrc:/images/RW_log_24.svg'
+               fillMode: Image.PreserveAspectFit
+               source: 'qrc:/images/RW_log_24.svg'
             }
 
             Text {
@@ -81,14 +81,25 @@ Popup {
 
         ButtonGroup { id: buttonGroup }
 
-        Row {
+
+       /* Row {
+
 
             spacing: 8
             anchors {
                 top: header.bottom; topMargin: 56
                 verticalCenter: parent.verticalCenter
                 left: parent.left; leftMargin: 48
-            }
+            }*/
+        Grid {
+
+             columns: 3
+             spacing: 6
+             anchors {
+                 top: header.bottom; topMargin: 10//56
+                 verticalCenter: parent.verticalCenter
+                 left: parent.left; leftMargin: 40 //48
+             }
 
             Repeater {
                 id: buttonsRepeater
@@ -99,7 +110,8 @@ Popup {
 
                     property int pos: index
 
-                    width: 304; height: 240
+                    width: 320; height: 80
+                    //width: 304; height: 240
                     objectName: model.mode
                     checked: popup.currentMode.mode === objectName
                     text: model.title
@@ -108,7 +120,7 @@ Popup {
                     contentItem: Item {
                         width: btn.width; height: btn.height
 
-                        Image {
+                       /* Image {
                             id: delegateIcon
                             anchors {
                                 horizontalCenter: parent.horizontalCenter
@@ -118,7 +130,7 @@ Popup {
                             width: 40; height: 40
                             sourceSize: Qt.size(40, 40)
                             source: 'qrc:/images/RW_inspsenssettings_24.svg'
-                        }
+                        }*/
 
                         Text {
                             id: delegateTitle
@@ -155,8 +167,8 @@ Popup {
 
         PopupButton {
             anchors {
-                left: parent.left; leftMargin: 48
-                bottom: parent.bottom; bottomMargin: 40
+                left: parent.left; leftMargin: 40 //48
+                bottom: parent.bottom; bottomMargin: 22
             }
 
             text: qsTr("Cancel")
@@ -165,8 +177,8 @@ Popup {
 
         PopupButton {
             anchors {
-                right: parent.right; rightMargin: 48
-                bottom: parent.bottom; bottomMargin: 40
+                right: parent.right; rightMargin: 40 //48
+                bottom: parent.bottom; bottomMargin: 22//40
             }
 
             text: qsTr("Confirm")

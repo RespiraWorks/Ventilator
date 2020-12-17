@@ -41,6 +41,8 @@ set(${this_target}_headers
   simple_clock.h
   time_series_graph.h
   time_series_graph_painter.h
+  viv_exceeded_alarm.h
+  viv_not_reached_alarm.h
   )
 
 # Mostly for qnanopainter \TODO make it an external lib

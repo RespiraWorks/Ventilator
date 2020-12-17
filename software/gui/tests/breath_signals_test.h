@@ -43,17 +43,18 @@ class BreathSignalsTest : public QObject {
     BreathSignals b;
     QVERIFY(!b.pip().has_value());
     QVERIFY(!b.peep().has_value());
-
+    QVERIFY(!b.viv().has_value());
     b.Update(now, pressure(1, 5.0f));
     b.Update(now, pressure(1, 7.0f));
     b.Update(now, pressure(1, 6.0f));
     QCOMPARE(b.pip().value_or(0), 0);
     QCOMPARE(b.peep().value_or(0), 0);
-
+     QCOMPARE(b.viv().value_or(0), 0);
     // New breath started - previous breath's values become available.
     b.Update(now, pressure(2, 4.0f));
     QCOMPARE(b.pip().value_or(0), 7.0);
     QCOMPARE(b.peep().value_or(0), 5.0);
+    QCOMPARE(b.viv().value_or(0), 5.0);
     b.Update(now, pressure(2, 6.0f));
     b.Update(now, pressure(2, 5.0f));
 
@@ -61,6 +62,7 @@ class BreathSignalsTest : public QObject {
     b.Update(now, pressure(3, 4.0f));
     QCOMPARE(b.pip().value_or(0), 6.0);
     QCOMPARE(b.peep().value_or(0), 4.0);
+    QCOMPARE(b.viv().value_or(0), 4.0);
   }
 
   void testRr() {

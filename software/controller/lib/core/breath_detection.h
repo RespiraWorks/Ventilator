@@ -34,6 +34,10 @@ class BreathDetection {
   // - at_dwell, telling BreathDetection that the dwell plateau has been reached
   // TODO: automatically detect dwell plateau from flow
   bool PatientInspiring(const BreathDetectionInputs &inputs, bool at_dwell);
+  bool PatientExhaling(const BreathDetectionInputs &inputs, bool at_dwell);
+
+ protected:
+  void update_averages(const BreathDetectionInputs &inputs);
 
  private:
   // During breath we maintain two exponentially-weighted averages of flow, one

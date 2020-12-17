@@ -38,10 +38,11 @@ Control {
         anchors {
             verticalCenter: parent.verticalCenter
             left: menuButton.right
-            leftMargin: 8
+            leftMargin: 20 //180
         }
         width: 168; height: 40
         text: pageStack.currentMode.acronym
+        anchors.verticalCenterOffset: -12
         onClicked: modeSelectionClicked()
 
         contentItem: Item {
@@ -71,6 +72,7 @@ Control {
             }
         }
     }
+
 
     AlarmButton {
         anchors {

@@ -88,8 +88,7 @@ message GuiStatus {
   // params.
   required VentParams desired_params = 2;
 
-  // TODO: Include some sort of code version, e.g. git sha that the gui was
-  // built from?
+  // TODO: Include some sort of code version, e.g. git sha that the gui was built from?
 }
 
 // Periodically sent from the controller to the GUI.
@@ -110,8 +109,7 @@ message ControllerStatus {
   // Value in range [0, 1] indicating how fast we're spinning the fan.
   required float fan_power = 6;
 
-  // TODO: Include some sort of code version, e.g. git sha that the controller
-  // was built from?
+  // TODO: Include some sort of code version, e.g. git sha that the controller was built from?
 }
 
 // Values set by the ventilator operator.
@@ -133,6 +131,10 @@ message VentParams {
 
   // A value between 0..1. Technically only values in [0.21, 1] are allowed.
   required float fio2 = 10;
+  required float viv_ml = 11;
+  required float flow_l_per_min = 12;
+  required uint32 psupp_cm_h2o = 13;
+  required uint32 pstep_cm_h2o = 14;
 }
 
 // See
@@ -164,8 +166,17 @@ enum VentMode {
   //   P-trigger - inspiratory_trigger_cm_h2o
   PRESSURE_ASSIST = 2;
 
-  // TODO: Implement me!
+  // TODO: Document these!
   HIGH_FLOW_NASAL_CANNULA = 3;
+  VOLUME_CONTROL = 4;
+  CPAP = 5;
+  VOLUME_ASSIST = 6;
+  PRESSURE_SUPPORT = 7;
+  PC_SIMV = 8;
+  VC_SIMV = 9;
+  BIPAP = 10;
+  PRESSURE_REG_VC = 11;
+  SPONTANEOUS_BREATHS = 12;
 }
 
 // Sensor readings.

@@ -49,9 +49,19 @@ class GuiStateContainer : public QObject {
 
  public:
   enum VentilationMode {
-    PRESSURE_CONTROL,
-    PRESSURE_ASSIST,
-    HIGH_FLOW_NASAL_CANNULA,
+      OFF,
+      PRESSURE_CONTROL ,
+      PRESSURE_ASSIST ,
+      HIGH_FLOW_NASAL_CANNULA,
+      VC ,
+      CPAP,
+      VC_AC ,
+      PSV ,
+      SIMVPC ,
+      SIMVVC ,
+      BIPAP ,
+      PRVC ,
+      SPV
   };
   Q_ENUM(VentilationMode)
 
@@ -72,12 +82,15 @@ class GuiStateContainer : public QObject {
   std::vector<std::tuple<SteadyInstant, ControllerStatus>> GetControllerStatusHistory();
 
   Q_PROPERTY(bool is_using_fake_data READ get_is_using_fake_data CONSTANT)
+
   // Measured parameters
   Q_PROPERTY(qreal measured_pressure READ get_measured_pressure NOTIFY measurements_changed)
   Q_PROPERTY(qreal measured_flow READ get_measured_flow NOTIFY measurements_changed)
   Q_PROPERTY(qreal measured_tv READ get_measured_tv NOTIFY measurements_changed)
   Q_PROPERTY(quint32 measured_rr READ get_measured_rr NOTIFY measurements_changed)
   Q_PROPERTY(quint32 measured_peep READ get_measured_peep NOTIFY measurements_changed)
+  Q_PROPERTY(quint32 measured_viv READ get_measured_viv NOTIFY measurements_changed)
+  Q_PROPERTY(quint32 measured_psupp READ get_measured_psupp NOTIFY measurements_changed)
   Q_PROPERTY(quint32 measured_pip READ get_measured_pip NOTIFY measurements_changed)
   Q_PROPERTY(qreal measured_ier READ get_measured_ier NOTIFY measurements_changed)
   Q_PROPERTY(qreal measured_fio2_percent READ get_measured_fio2_percent NOTIFY measurements_changed)
@@ -92,6 +105,10 @@ class GuiStateContainer : public QObject {
   Q_PROPERTY(VentilationMode commanded_mode MEMBER commanded_mode_ NOTIFY params_changed)
   Q_PROPERTY(quint32 commanded_rr MEMBER commanded_rr_ NOTIFY params_changed)
   Q_PROPERTY(quint32 commanded_peep MEMBER commanded_peep_ NOTIFY params_changed)
+  Q_PROPERTY(quint32 commanded_viv MEMBER commanded_viv_ NOTIFY params_changed)
+  Q_PROPERTY(quint32 commanded_flow MEMBER commanded_flow_ NOTIFY params_changed)
+  Q_PROPERTY(quint32 commanded_psupp MEMBER commanded_psupp_ NOTIFY params_changed)
+  Q_PROPERTY(quint32 commanded_pstep MEMBER commanded_pstep_ NOTIFY params_changed)
   Q_PROPERTY(quint32 commanded_pip MEMBER commanded_pip_ NOTIFY params_changed)
   Q_PROPERTY(qreal commanded_i_time MEMBER commanded_i_time_ NOTIFY params_changed)
   Q_PROPERTY(qreal commanded_fio2_percent MEMBER commanded_fio2_percent_ NOTIFY params_changed)
@@ -144,6 +161,8 @@ class GuiStateContainer : public QObject {
   qreal get_measured_tv() const;
   qreal get_measured_rr() const;
   qreal get_measured_peep() const;
+  qreal get_measured_psupp() const;
+  qreal get_measured_viv() const;
   qreal get_measured_pip() const;
   qreal get_measured_ier() const;
   qreal get_measured_fio2_percent() const;
@@ -167,6 +186,10 @@ class GuiStateContainer : public QObject {
   quint32 commanded_pip_{15};
   quint32 commanded_peep_{5};
   qreal commanded_i_time_{1.0};
+  quint32 commanded_viv_{300};
+  quint32 commanded_psupp_{5};
+  quint32 commanded_pstep_{1};
+  quint32 commanded_flow_{1};
   // https://respiraworks.slack.com/archives/C011UMNUWGZ/p1592608246223200?thread_ts=1592603466.221100&cid=C011UMNUWGZ
   qreal commanded_fio2_percent_{21.0};
 

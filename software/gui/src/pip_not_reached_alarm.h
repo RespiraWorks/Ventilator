@@ -36,7 +36,7 @@ class PipNotReachedAlarm : public LatchingAlarm {
                                   const BreathSignals &breath_signals) override {
     (void)now;
     (void)status;
-    if (breath_signals.num_breaths() < 3) return std::nullopt;
+    if (breath_signals.num_breaths() < 4) return std::nullopt;
     auto pip = breath_signals.pip();
     if (pip.has_value() && std::ceil(*pip) < threshold_cmh2o_) {
       return {QString("PIP not reached (%1 < %2)")

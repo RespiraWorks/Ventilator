@@ -5,10 +5,8 @@
 #include "latching_alarm.h"
 #include "periodic_closure.h"
 #include "respira_connected_device.h"
-
 #include "logger.h"
 #include <QStandardPaths>
-
 #include "time_series_graph.h"
 #include <QCommandLineParser>
 #include <QDebug>

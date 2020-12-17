@@ -148,7 +148,7 @@ To 3d print this component see the [general 3d printing guidelines](../3d_printi
 
 | Rendering | STL | Inventor | Engineering Drawing |
 |:---------:|:---:|:----------:|:---------------------------|
-|![](CAD/tubing_adapter.jpg)|[tubing_adapter.stl](CAD/tubing_adapter.stl)|[tubing_adapter.ipt](CAD/tubing_adapter.ipt)<br>[tubing_adapter.idw](CAD/tubing_adapter.idw)|[tubing_adapter.pdf](CAD/tubing_adapter.pdf)
+|![](CAD/tubing_adapter.jpg)|[tubing_adapter.stl](CAD/tubing_adapter.stl)|[tubing_adapter.ipt](CAD/tubing_adapter.ipt)|[tubing_adapter.pdf](CAD/tubing_adapter.pdf)
 
 #### Gaskets
 
@@ -178,7 +178,7 @@ You might also want to use some 200 grit sandpaper to clean up the edges of the 
 |:-----:|:--------------------------:|:-------------------------:|:---------------------------------:|
 | Drawings |![](CAD/driver_mounting_plate.png)<br>[Driver Mounting Plate](CAD/driver_mounting_plate.pdf)|![](CAD/blower_holding_plate.png)<br>[Blower Holding Plate](CAD/blower_holding_plate.pdf)|![](CAD/tubing_adapter_holding_plate.png)<br>[Tubing Adapter Holding Plate](CAD/tubing_adapter_holding_plate.pdf)|
 | DXF |[driver_mounting_plate.dxf](CAD/driver_mounting_plate.dxf)|[blower_holding_plate.dxf](CAD/blower_holding_plate.dxf)|[tubing_adapter_holding_plate.dxf](CAD/tubing_adapter_holding_plate.dxf)|
-| Inventor | [driver_mounting_plate.ipt](CAD/driver_mounting_plate.ipt)<br>[driver_mounting_plate.idw](CAD/driver_mounting_plate.idw) |[blower_holding_plate.ipt](CAD/blower_holding_plate.ipt)<br>[blower_holding_plate.idw](CAD/blower_holding_plate.idw)| [tubing adapter_holding_plate.ipt](CAD/tubing_adapter_holding_plate.ipt)<br>[tubing_adapter_holding_plate.idw](CAD/tubing_adapter_holding_plate.idw)|
+| Inventor | [driver_mounting_plate.ipt](CAD/driver_mounting_plate.ipt)|[blower_holding_plate.ipt](CAD/blower_holding_plate.ipt)| [tubing adapter_holding_plate.ipt](CAD/tubing_adapter_holding_plate.ipt)|
 
 
 You can use one of these plates as a template to drill the appropriate holes in the main acrylic plate and the metal

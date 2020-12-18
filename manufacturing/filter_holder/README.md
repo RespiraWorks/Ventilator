@@ -74,6 +74,8 @@ The custom design and assembly have been carried out in Autodesk Inventor, and t
 * [Filter cover.ipt](assets/Filter%20cover.ipt) - Inventor part file for filter cover (pictured in blue above), which has two configurations.
 * [Filter gasket.ipt](assets/Filter%20gasket.ipt) - Inventor part file for filter gasket design
 * [Filter stand-in.ipt](assets/Filter%20stand-in.ipt) - Stand-in for the actual HEPA filter.
+* [Upper acrylic face plate.ipt](assets/Upper_Acrylic_Face_Plate_ebk%20v1.ipt) - Inventor part file for upper acrylic face plate.
+* [Lower acrylic face plate.ipt](assets/Lower_Acrylic_Face_Plate_ebk%20v3.ipt) - Inventor part file for lower acrylic face plate, redesigned with filter mounting holes that can accommodate M4 screws.
 
 Previous versions of these parts were designed in OnShape, and the history of those previous iterations can be found
 [here](https://cad.onshape.com/documents/3fe0c1f79c482144c267173d/w/2ad1c08071a25185f9c78c68/e/c3b817c7fd516ff612068657).

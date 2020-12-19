@@ -50,23 +50,23 @@ GuiStatus GuiStateContainer::GetGuiStatus() {
       case VentilationMode::HIGH_FLOW_NASAL_CANNULA:
         return VentMode::VentMode_HIGH_FLOW_NASAL_CANNULA;
       case VentilationMode::VC:
-        return VentMode::VentMode_VC;
+        return VentMode::VentMode_VOLUME_CONTROL;
       case VentilationMode::CPAP:
         return VentMode::VentMode_CPAP;
       case VentilationMode::VC_AC:
-        return VentMode::VentMode_VC_AC;
+        return VentMode::VentMode_VOLUME_ASSIST;
       case VentilationMode::PSV:
-        return VentMode::VentMode_PSV;
+        return VentMode::VentMode_PRESSURE_SUPPORT;
       case VentilationMode::SIMVPC:
-        return VentMode::VentMode_SIMVPC;
+        return VentMode::VentMode_PC_SIMV;
       case VentilationMode::SIMVVC:
-        return VentMode::VentMode_SIMVVC;
+        return VentMode::VentMode_VC_SIMV;
       case VentilationMode::BIPAP:
         return VentMode:: VentMode_BIPAP;
       case VentilationMode::PRVC:
-        return VentMode::VentMode_PRVC;
+        return VentMode::VentMode_PRESSURE_REG_VC;
       case VentilationMode::SPV:
-        return VentMode::VentMode_SPV;
+        return VentMode::VentMode_SPONTANEOUS_BREATHS;
       default:
         // Should never happen.
         CRIT("Unexpected commanded_mode: {}", commanded_mode_);
@@ -76,10 +76,10 @@ GuiStatus GuiStateContainer::GetGuiStatus() {
   status.desired_params.peep_cm_h2o = commanded_peep_;
   status.desired_params.breaths_per_min = commanded_rr_;
   status.desired_params.pip_cm_h2o = commanded_pip_;
-  status.desired_params.viv = commanded_viv_;
+  status.desired_params.viv_ml = commanded_viv_;
   status.desired_params.flow_l_per_min = commanded_flow_;
-  status.desired_params.psupp = commanded_psupp_;
-  status.desired_params.pstep = commanded_pstep_;
+  status.desired_params.psupp_cm_h2o = commanded_psupp_;
+  status.desired_params.pstep_cm_h2o = commanded_pstep_;
   float breath_duration_sec = 60.0 / commanded_rr_;
   float commanded_e_time = breath_duration_sec - commanded_i_time_;
   status.desired_params.inspiratory_expiratory_ratio = commanded_i_time_ / commanded_e_time;

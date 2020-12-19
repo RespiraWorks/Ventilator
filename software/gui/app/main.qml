@@ -204,7 +204,7 @@ ApplicationWindow {
               pageStack.replace(volumeAssistVentilationMode);
             }
             else if (currentMode.mode === GuiStateContainer.PSV) {
-              pageStack.replace(presureSupportVentilationMode);
+              pageStack.replace(pressureSupportVentilationMode);
             }
             else if (currentMode.mode === GuiStateContainer.SIMVPC) {
               pageStack.replace(syncIMVPCMode);
@@ -258,8 +258,8 @@ ApplicationWindow {
         CPAPMode {}
     }
     Component {
-        id: presureSupportVentilationMode
-        PresureSupportVentilation {}
+        id: pressureSupportVentilationMode
+        PressureSupportVentilation {}
     }
     Component {
         id: syncIMVPCMode

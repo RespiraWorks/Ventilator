@@ -1,4 +1,4 @@
-18758568836051437
+18760177417524425
 Battery
 BatteryHolder_Bulgin_BX0036_1xC
 Bulgin Battery Holder, BX0036, Battery Type C (https://www.bulgin.com/products/pub/media/bulgin/data/Battery_holders.pdf)
@@ -75872,6 +75872,13 @@ QFN NoLead
 0
 65
 49
+RespiraWorks_Std
+Texas_S-PWQFN-N32_EP2.8x2.8mm_ThermalVias
+QFN, 32 Pin (https://www.ti.com/lit/ds/symlink/bq25703a.pdf#page=90), generated with kicad-footprint-generator ipc_noLead_generator.py
+QFN NoLead
+0
+47
+33
 RespiraWorks_Std
 VSSOP-8_3.0x3.0mm_P0.65mm
 VSSOP-8 3.0 x 3.0, http://www.ti.com/lit/ds/symlink/lm75b.pdf

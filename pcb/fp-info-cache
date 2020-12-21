@@ -1,4 +1,4 @@
-18748917304249460
+18758568836051437
 Battery
 BatteryHolder_Bulgin_BX0036_1xC
 Bulgin Battery Holder, BX0036, Battery Type C (https://www.bulgin.com/products/pub/media/bulgin/data/Battery_holders.pdf)
@@ -56693,6 +56693,20 @@ terminal pcb spring wire
 8
 8
 Martinos
+DLP-232PC
+DLP Designs DLP-232PC USB data acquisition module
+USB
+0
+18
+18
+Martinos
+DLP-232PC_panel
+DLP Designs DLP-232PC USB data acquisition module, meant to sit at board edge for opening in panel
+USB
+0
+18
+18
+Martinos
 Diodes_PowerDI3333-8
 Diodes Incorporated PowerDI3333-8, Plastic Dual Flat No Lead Package, 3.3x3.3x0.8mm Body, pin numbering modified to fit with Q_PMOS_SGD, https://www.diodes.com/assets/Package-Files/PowerDI3333-8.pdf
 PowerDI 0.65
@@ -56731,6 +56745,20 @@ Martinos
 Inductor_Vishay_IHLP2020
 Vishay IHLP2020 series inductors
 inductor vishay smt smd
+0
+2
+2
+Martinos
+Jumper_SMT_Gap-3mm
+SMT jumper, 3.0 mm gap w/extra vert. clearance: Harwin S1731-46R or Keystone 5100
+
+0
+2
+2
+Martinos
+Jumper_SMT_Gap-8.1mm
+SMT jumper, 8.1 mm gap: Harwin S1621-46R or Keystone 5104
+jumper smt wide
 0
 2
 2
@@ -56860,6 +56888,13 @@ relay reed
 0
 4
 4
+Martinos
+SMDIP-8_W8.5mm
+
+
+0
+8
+8
 Martinos
 Switch_PushbuttonRA_TE_1-1825027-1,2
 TE Connectivity 1-1825027-1 / -2 right-angle SPST-NO pushbutton, through-hole, with 5.7mm plunger
@@ -75389,6 +75424,13 @@ CT-1205H-SMT-TR
 0
 2
 2
+RespiraWorks
+DFN-6-1EP_3x3mm_P0.95mm_EP1.75x2.5mm
+DFN-6, 3x3 mm, 0.95 mm pitch, exposed pad 1.75x2.5 mm (based on ST LD39050)
+DFN 0.95
+0
+13
+7
 RespiraWorks
 ESQ-120-44-L-D
 

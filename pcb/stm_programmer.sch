@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 8 15
+Sheet 8 16
 Title "STM Programmer for Cycle Controller"
 Date ""
 Rev "2.0"
@@ -1162,7 +1162,7 @@ L Device:Jumper_NO_Small JP?
 U 1 1 600FB375
 P 9350 2750
 F 0 "JP?" V 9350 2900 50  0000 C CNN
-F 1 "Jumper_NC_Small" H 9350 2871 50  0001 C CNN
+F 1 "Jumper_NO_Small" H 9350 2871 50  0001 C CNN
 F 2 "RespiraWorks_Std:SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm" H 9350 2750 50  0001 C CNN
 F 3 "~" H 9350 2750 50  0001 C CNN
 	1    9350 2750

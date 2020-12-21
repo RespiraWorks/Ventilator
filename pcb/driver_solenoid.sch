@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 14 15
+Sheet 14 16
 Title "Proportional Solenoid Driver"
 Date ""
 Rev "2.0"
@@ -153,7 +153,7 @@ AR Path="/5E8DFCAD/5FD6C66B" Ref="R?"  Part="1"
 AR Path="/5E8E0754/5FD6C66B" Ref="R?"  Part="1" 
 AR Path="/5FCD5082/5FD6C66B" Ref="R?"  Part="1" 
 F 0 "R?" H 5250 3400 50  0000 C CNN
-F 1 "2.4K" H 5250 3500 50  0000 C CNN
+F 1 "2.4K 1%" H 5250 3500 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 5330 3450 50  0001 C CNN
 F 3 "~" H 5400 3450 50  0001 C CNN
 F 4 "KOA Speer" H 5400 3450 50  0001 C CNN "Manufacturer"
@@ -197,7 +197,7 @@ AR Path="/5E8DFCAD/5FD6C67B" Ref="R?"  Part="1"
 AR Path="/5E8E0754/5FD6C67B" Ref="R?"  Part="1" 
 AR Path="/5FCD5082/5FD6C67B" Ref="R?"  Part="1" 
 F 0 "R?" H 4800 3250 50  0000 C CNN
-F 1 "1.5K" H 4800 3350 50  0000 C CNN
+F 1 "1.5K 1%" H 4800 3350 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 4880 3300 50  0001 C CNN
 F 3 "~" H 4950 3300 50  0001 C CNN
 F 4 "KOA Speer" H 4950 3300 50  0001 C CNN "Manufacturer"
@@ -239,7 +239,7 @@ AR Path="/5E8DFCAD/5FD6C68A" Ref="R?"  Part="1"
 AR Path="/5E8E0754/5FD6C68A" Ref="R?"  Part="1" 
 AR Path="/5FCD5082/5FD6C68A" Ref="R?"  Part="1" 
 F 0 "R?" V 3700 2700 50  0000 C CNN
-F 1 "10K" V 3900 2700 50  0000 C CNN
+F 1 "10K 1%" V 3900 2700 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 3730 2700 50  0001 C CNN
 F 3 "~" H 3800 2700 50  0001 C CNN
 F 4 "KOA Speer" H 3800 2700 50  0001 C CNN "Manufacturer"
@@ -285,7 +285,7 @@ AR Path="/5E8DFCAD/5FD6C69E" Ref="R?"  Part="1"
 AR Path="/5E8E0754/5FD6C69E" Ref="R?"  Part="1" 
 AR Path="/5FCD5082/5FD6C69E" Ref="R?"  Part="1" 
 F 0 "R?" V 2150 2750 50  0000 C CNN
-F 1 "10K" V 2350 2750 50  0000 C CNN
+F 1 "10K 1%" V 2350 2750 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 2180 2750 50  0001 C CNN
 F 3 "~" H 2250 2750 50  0001 C CNN
 F 4 "KOA Speer" H 2250 2750 50  0001 C CNN "Manufacturer"
@@ -501,7 +501,7 @@ AR Path="/5E8DFCAD/5FE9C28A" Ref="R?"  Part="1"
 AR Path="/5E8E0754/5FE9C28A" Ref="R?"  Part="1" 
 AR Path="/5FCD5082/5FE9C28A" Ref="R?"  Part="1" 
 F 0 "R?" H 5050 6000 50  0000 C CNN
-F 1 "10K" H 5050 5900 50  0000 C CNN
+F 1 "10K 1%" H 4950 5900 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 5130 6000 50  0001 C CNN
 F 3 "~" H 5200 6000 50  0001 C CNN
 F 4 "KOA Speer" H 5200 6000 50  0001 C CNN "Manufacturer"
@@ -543,7 +543,7 @@ AR Path="/5E8DFCAD/5FE9E66C" Ref="R?"  Part="1"
 AR Path="/5E8E0754/5FE9E66C" Ref="R?"  Part="1" 
 AR Path="/5FCD5082/5FE9E66C" Ref="R?"  Part="1" 
 F 0 "R?" V 4550 5850 50  0000 C CNN
-F 1 "1K" V 4650 5850 50  0000 C CNN
+F 1 "1K 1%" V 4650 5850 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 4680 5850 50  0001 C CNN
 F 3 "~" H 4750 5850 50  0001 C CNN
 F 4 "KOA Speer" H 4750 5850 50  0001 C CNN "Manufacturer"

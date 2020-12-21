@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr B 17000 11000
 encoding utf-8
-Sheet 1 15
+Sheet 1 16
 Title "Ventilator Top-Level"
 Date ""
 Rev "2.0"
@@ -14,10 +14,12 @@ Comment3 ""
 Comment4 ""
 $EndDescr
 $Sheet
-S 2150 1600 1350 750 
+S 2200 5600 1350 750 
 U 5FCD4B8E
 F0 "Power Supplies" 50
 F1 "power.sch" 50
+F2 "~Alarm_Bat_Active" O R 3550 6100 50 
+F3 "Low_Alarm_Bat" O R 3550 6200 50 
 $EndSheet
 $Sheet
 S 6400 1750 2150 1050
@@ -45,10 +47,14 @@ F7 "UART_Tx" O R 6050 1300 50
 F8 "UART_Rx" I R 6050 1400 50 
 $EndSheet
 $Sheet
-S 6400 3900 2000 1050
+S 6400 3900 1400 750 
 U 5FCD4DF5
-F0 "Alarms and Safety" 50
+F0 "Alarms and Power Monitoring" 50
 F1 "alarms.sch" 50
+F2 "~+5V_On" O L 6400 4050 50 
+F3 "~FPGA_RST" O L 6400 4150 50 
+F4 "Buzzer_CC" I L 6400 4400 50 
+F5 "Buzzer_GUI" I L 6400 4500 50 
 $EndSheet
 $Sheet
 S 9300 3900 650  1350

@@ -35,7 +35,8 @@ public:
   // that informs the caller once his request is processed.
   // As for the I2CRequests, it is up to the caller to ensure length and
   // data are consistent.
-  bool ReadBytes(uint16_t offset, uint16_t length, void *data, bool *processed);
+  bool ReadBytes(uint16_t offset, uint16_t length, void *data,
+                 bool *processed) const;
 
   bool WriteBytes(uint16_t offset, uint16_t length, void *data,
                   bool *processed);

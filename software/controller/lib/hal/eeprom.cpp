@@ -21,7 +21,7 @@ limitations under the License.
 I2Ceeprom eeprom = I2Ceeprom(0x50, 64, 32768);
 
 bool I2Ceeprom::ReadBytes(uint16_t offset, uint16_t length, void *data,
-                          bool *processed) {
+                          bool *processed) const {
 
   if (offset + length > size_) {
     // requesting outside of memory capacity

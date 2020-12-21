@@ -251,14 +251,13 @@ void I2CChannel::StartTransfer() {
   i2c_->ctrl2.slave_addr_7b = last_request_.slave_address & 0x7f;
   i2c_->ctrl2.transfer_dir = static_cast<bool>(last_request_.read_write);
 
+  i2c_->ctrl2.autoend = 0;
   if (remaining_size_ <= 255) {
     i2c_->ctrl2.n_bytes = static_cast<uint8_t>(remaining_size_);
     i2c_->ctrl2.reload = 0;
-    i2c_->ctrl2.autoend = 1;
   } else {
     i2c_->ctrl2.n_bytes = 255;
     i2c_->ctrl2.reload = 1;
-    i2c_->ctrl2.autoend = 0;
   }
 
   // configure interrupts
@@ -391,10 +390,18 @@ void I2CChannel::I2CEventHandler() {
         // carry on with the current transfer
         ByteTransfer();
       }
+#if defined(BARE_STM32)
       if (TransferReload()) {
         // Start the next transfer, which is part of the current request
-        StartTransfer();
+        if (remaining_size_ <= 255) {
+          i2c_->ctrl2.n_bytes = static_cast<uint8_t>(remaining_size_);
+          i2c_->ctrl2.reload = 0;
+        } else {
+          i2c_->ctrl2.n_bytes = 255;
+          i2c_->ctrl2.reload = 1;
+        }
       }
+#endif
       if (TransferComplete()) {
         *last_request_.processed = true;
         transfer_in_progress_ = false;
@@ -438,8 +445,11 @@ void I2CChannel::I2CErrorHandler() {
   if (--error_retry_ > 0) {
     next_data_ = reinterpret_cast<uint8_t *>(last_request_.data);
     remaining_size_ = last_request_.size;
-    StartTransfer();
+  } else {
+    // skip this request and go to next one;
+    remaining_size_ = 0;
   }
+  StartTransfer();
 }
 
 #if defined(BARE_STM32)
@@ -474,15 +484,14 @@ void I2CChannel::DMAIntHandler(DMA_Chan chan) {
       if (--error_retry_ > 0) {
         next_data_ = reinterpret_cast<uint8_t *>(last_request_.data);
         remaining_size_ = last_request_.size;
+      } else {
+        // skip this request and go to next request;
+        remaining_size_ = 0;
       }
     }
-    // clear all interrupts
+    // clear all interrupts and (re-)start the current or next transfer
     DMA_ClearInt(dma_, chan, DmaInterrupt::GLOBAL);
-    // in all cases (except after kMaxRetries errors), start a transfer, either
-    // to restart after the error or to start the next one (if there is one...)
-    if (error_retry_ > 0) {
-      StartTransfer();
-    }
+    StartTransfer();
   }
 }
 #endif // BARE_STM32

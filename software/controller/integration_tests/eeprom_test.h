@@ -2,7 +2,7 @@
 //      This test read, writes and reads data again to the EEPROM
 //
 // How to run:
-//      deploy_test.sh <device_id> eeprom <min> <max> <step>
+//      deploy_test.sh <device_id> eeprom <address> <data> <length>
 //
 // Automation:
 //      TBD - which python script to run?
@@ -36,7 +36,6 @@ void run_test() {
     write_data[i] = data;
   }
 
-  // Read
   eeprom.ReadBytes(address, length, &eeprom_before, &processed[0]);
 
   eeprom.WriteBytes(address, length, &write_data, &processed[1]);
@@ -48,7 +47,7 @@ void run_test() {
   dbg_write_data.Set(reinterpret_cast<uint32_t>(&write_data));
   dbg_addr_after.Set(reinterpret_cast<uint32_t>(&eeprom_after));
 
-  while (!processed[2]) {
+  while (!processed[2] && Hal.now() < microsSinceStartup(500000)) {
     asm volatile("nop");
   };
 

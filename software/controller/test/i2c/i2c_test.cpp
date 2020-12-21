@@ -198,12 +198,23 @@ TEST(I2C, RetryOnError) {
   // Queue a long read request
   uint8_t read_data[kRequestLength];
   bool processed{false};
-  I2CRequest read_byte{
+  I2CRequest long_read{
       .slave_address = 0,
       .read_write = I2CExchangeDir::kRead,
       .size = kRequestLength,
       .data = &read_data[0],
       .processed = &processed,
+  };
+  i2c.SendRequest(long_read);
+
+  uint8_t read2{0};
+  bool processed2{false};
+  I2CRequest read_byte{
+      .slave_address = 0,
+      .read_write = I2CExchangeDir::kRead,
+      .size = 1,
+      .data = &read2,
+      .processed = &processed2,
   };
   i2c.SendRequest(read_byte);
 
@@ -237,11 +248,12 @@ TEST(I2C, RetryOnError) {
   i2c.I2CEventHandler();
   ASSERT_EQ(read_data[0], 20);
   // This is where I get stuck... the I2C design is currently not robust passed
-  // this point... if I simulate another error, it will just carry-on with the
-  // request, which is incorrect outside of test mode.
+  // this point... if I simulate another error, it will just start the next
+  // request, which is not really satisfactory.
   i2c.I2CErrorHandler();
   i2c.TEST_QueueReceiveData(40);
   i2c.I2CEventHandler();
   ASSERT_EQ(read_data[0], 20);
-  ASSERT_EQ(read_data[1], 40);
+  ASSERT_EQ(read2, 40);
+  ASSERT_TRUE(processed2);
 }

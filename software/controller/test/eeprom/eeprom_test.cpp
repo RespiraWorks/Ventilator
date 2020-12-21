@@ -69,6 +69,12 @@ TEST(I2C_EEPROM, Read_Write) {
 }
 
 TEST(I2C_EEPROM, InvalidAccess) {
+  ASSERT_TRUE(eeprom.ReadBytes(0, kMemSize, &memory, nullptr));
+  ASSERT_TRUE(eeprom.WriteBytes(0, kMemSize, &memory, nullptr));
   ASSERT_FALSE(eeprom.ReadBytes(0, kMemSize + 1, &memory, nullptr));
   ASSERT_FALSE(eeprom.WriteBytes(0, kMemSize + 1, &memory, nullptr));
+  ASSERT_TRUE(eeprom.ReadBytes(kMemSize - 1, 1, &memory, nullptr));
+  ASSERT_TRUE(eeprom.WriteBytes(kMemSize - 1, 1, &memory, nullptr));
+  ASSERT_FALSE(eeprom.ReadBytes(kMemSize, 1, &memory, nullptr));
+  ASSERT_FALSE(eeprom.WriteBytes(kMemSize, 1, &memory, nullptr));
 }

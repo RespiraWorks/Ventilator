@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 8 16
+Sheet 9 16
 Title "STM Programmer for Cycle Controller"
 Date ""
 Rev "2.0"
@@ -1139,7 +1139,6 @@ NoConn ~ 8450 3350
 NoConn ~ 8450 3450
 NoConn ~ 8450 3550
 NoConn ~ 8450 3650
-NoConn ~ 8450 3850
 NoConn ~ 8450 4850
 NoConn ~ 7000 4000
 NoConn ~ 7000 3900
@@ -1187,7 +1186,7 @@ Text Notes 9650 2950 0    50   ~ 0
 High: can draw 100 mA max. from USB\n  (will always self-power successfully)\nLow: can draw 300 mA max. from USB\n  (needs to negotiate power draw)
 Wire Wire Line
 	8450 2850 9350 2850
-Text Notes 9450 3700 0    50   ~ 0
+Text Notes 9200 3650 0    50   ~ 0
 Unsure of purpose
 Text Notes 9050 5350 0    50   ~ 0
 Board identity
@@ -1195,4 +1194,8 @@ Text Notes 4300 1550 0    50   ~ 0
 Ext. voltage sense; unsure why\nset @ 2.5V
 Text Notes 2750 5050 0    50   ~ 0
 Cut jumpers to use\nan external programmer\nto program the cycle\ncontroller instead of this\nbuilt-in programmer
+Text Label 9050 3850 2    50   ~ 0
+CC_SWCLK_Out
+Wire Wire Line
+	8450 3850 9050 3850
 $EndSCHEMATC

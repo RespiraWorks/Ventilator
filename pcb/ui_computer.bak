@@ -95,24 +95,24 @@ $Comp
 L Device:R R?
 U 1 1 5FDB08DB
 P 3950 4350
-F 0 "R?" H 4020 4396 50  0000 L CNN
-F 1 "R" H 4020 4305 50  0000 L CNN
-F 2 "" V 3880 4350 50  0001 C CNN
+F 0 "R?" H 3800 4400 50  0000 L CNN
+F 1 "10K" H 3750 4300 50  0000 L CNN
+F 2 "RespiraWorks_std:R_0603_1608Metric" V 3880 4350 50  0001 C CNN
 F 3 "~" H 3950 4350 50  0001 C CNN
 	1    3950 4350
 	1    0    0    -1  
 $EndComp
-Text Notes 3350 4400 0    50   ~ 0
-Change this R\n
+Text Notes 1850 3750 0    39   ~ 0
+Added small R value/ strong pull-up. Can always change to 0 ohm\n
 $Comp
 L RespiraWorks:+3V3_RPi #PWR?
 U 1 1 5FDB0BF2
-P 3950 4000
-F 0 "#PWR?" H 3950 4050 50  0001 C CNN
-F 1 "+3V3_RPi" H 3935 4173 50  0000 C CNN
-F 2 "" H 3950 4000 50  0001 C CNN
-F 3 "" H 3950 4000 50  0001 C CNN
-	1    3950 4000
+P 3950 3700
+F 0 "#PWR?" H 3950 3750 50  0001 C CNN
+F 1 "+3V3_RPi" H 3935 3873 50  0000 C CNN
+F 2 "" H 3950 3700 50  0001 C CNN
+F 3 "" H 3950 3700 50  0001 C CNN
+	1    3950 3700
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
@@ -135,4 +135,152 @@ F 3 "" H 3950 4500 50  0001 C CNN
 $EndComp
 Text Label 4200 4100 0    50   ~ 0
 UI_ID1
+NoConn ~ 5000 2800
+$Comp
+L Device:R R?
+U 1 1 5FE66293
+P 3950 3850
+F 0 "R?" H 3800 3900 50  0000 L CNN
+F 1 "1K" H 3750 3800 50  0000 L CNN
+F 2 "RespiraWorks_std:R_0603_1608Metric" V 3880 3850 50  0001 C CNN
+F 3 "~" H 3950 3850 50  0001 C CNN
+	1    3950 3850
+	1    0    0    -1  
+$EndComp
+NoConn ~ 5000 3000
+Wire Wire Line
+	4750 2300 4750 3100
+Wire Wire Line
+	4750 3100 5000 3100
+Connection ~ 4750 2300
+NoConn ~ 5000 3200
+NoConn ~ 5000 3300
+NoConn ~ 5000 3400
+NoConn ~ 5000 3600
+NoConn ~ 5000 4000
+$Comp
+L RespiraWorks:+5V_RPi #PWR?
+U 1 1 5FE675EB
+P 6750 2300
+F 0 "#PWR?" H 6750 2300 50  0001 C CNN
+F 1 "+5V_RPi" H 6735 2473 50  0000 C CNN
+F 2 "" H 6750 2300 50  0001 C CNN
+F 3 "" H 6750 2300 50  0001 C CNN
+	1    6750 2300
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6450 2300 6750 2300
+Wire Wire Line
+	6450 2400 6750 2400
+Wire Wire Line
+	6750 2400 6750 2300
+Connection ~ 6750 2300
+Wire Wire Line
+	6650 4300 6650 3900
+Wire Wire Line
+	6650 2500 6450 2500
+$Comp
+L power:GND #PWR?
+U 1 1 5FE67C8B
+P 6650 4300
+F 0 "#PWR?" H 6650 4050 50  0001 C CNN
+F 1 "GND" H 6655 4127 50  0000 C CNN
+F 2 "" H 6650 4300 50  0001 C CNN
+F 3 "" H 6650 4300 50  0001 C CNN
+	1    6650 4300
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6450 2900 6650 2900
+Connection ~ 6650 2900
+Wire Wire Line
+	6650 2900 6650 2500
+Wire Wire Line
+	6450 3200 6650 3200
+Connection ~ 6650 3200
+Wire Wire Line
+	6650 3200 6650 2900
+Wire Wire Line
+	6450 3700 6650 3700
+Connection ~ 6650 3700
+Wire Wire Line
+	6650 3700 6650 3200
+Wire Wire Line
+	6450 3900 6650 3900
+Connection ~ 6650 3900
+Wire Wire Line
+	6650 3900 6650 3700
+Text Notes 6600 1900 0    50   ~ 0
+Need to make footprint for this part
+Wire Wire Line
+	6450 2600 7000 2600
+Text HLabel 7000 2600 2    50   Output ~ 0
+USART-RX
+Wire Wire Line
+	6450 2700 7000 2700
+Text HLabel 7000 2700 2    50   Input ~ 0
+USART-TX
+NoConn ~ 6450 2800
+NoConn ~ 6450 3000
+NoConn ~ 6450 3100
+NoConn ~ 6450 3400
+NoConn ~ 6450 3500
+NoConn ~ 6450 3600
+NoConn ~ 6450 4000
+NoConn ~ 6450 4100
+NoConn ~ 6450 4200
+Wire Wire Line
+	6450 3300 7750 3300
+Text Label 7350 3300 2    50   ~ 0
+UI_ID0
+$Comp
+L Device:R R?
+U 1 1 5FE6BCEC
+P 7750 3000
+F 0 "R?" H 7850 3050 50  0000 L CNN
+F 1 "1K" H 7850 2950 50  0000 L CNN
+F 2 "RespiraWorks_std:R_0603_1608Metric" V 7680 3000 50  0001 C CNN
+F 3 "~" H 7750 3000 50  0001 C CNN
+	1    7750 3000
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 5FE6BE04
+P 7750 3600
+F 0 "R?" H 7600 3650 50  0000 L CNN
+F 1 "10K" H 7550 3550 50  0000 L CNN
+F 2 "RespiraWorks_std:R_0603_1608Metric" V 7680 3600 50  0001 C CNN
+F 3 "~" H 7750 3600 50  0001 C CNN
+	1    7750 3600
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 5FE6BE44
+P 7750 3750
+F 0 "#PWR?" H 7750 3500 50  0001 C CNN
+F 1 "GND" H 7755 3577 50  0000 C CNN
+F 2 "" H 7750 3750 50  0001 C CNN
+F 3 "" H 7750 3750 50  0001 C CNN
+	1    7750 3750
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	7750 3150 7750 3300
+Wire Wire Line
+	7750 3450 7750 3300
+Connection ~ 7750 3300
+$Comp
+L RespiraWorks:+3V3_RPi #PWR?
+U 1 1 5FE6C7D6
+P 7750 2850
+F 0 "#PWR?" H 7750 2900 50  0001 C CNN
+F 1 "+3V3_RPi" H 7735 3023 50  0000 C CNN
+F 2 "" H 7750 2850 50  0001 C CNN
+F 3 "" H 7750 2850 50  0001 C CNN
+	1    7750 2850
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC

@@ -33,6 +33,21 @@ X +3V3_Rpi 1 0 0 0 U 50 50 1 1 W N
 ENDDRAW
 ENDDEF
 #
+# RespiraWorks_+5V_RPi
+#
+DEF RespiraWorks_+5V_RPi #PWR 0 40 Y Y 1 F P
+F0 "#PWR" 0 0 50 H I C CNN
+F1 "RespiraWorks_+5V_RPi" 0 200 50 H V C CNN
+F2 "" 0 0 50 H I C CNN
+F3 "" 0 0 50 H I C CNN
+DRAW
+P 2 1 1 0 -30 50 0 100 N
+P 2 1 1 0 0 0 0 100 N
+P 2 1 1 0 0 100 30 50 N
+X +5V_RPi 1 0 0 0 U 50 50 1 1 W N
+ENDDRAW
+ENDDEF
+#
 # RespiraWorks_ESQ-120-44-L-D
 #
 DEF RespiraWorks_ESQ-120-44-L-D J 0 40 Y Y 1 F N

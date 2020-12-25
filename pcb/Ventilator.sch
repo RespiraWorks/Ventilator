@@ -27,12 +27,6 @@ F0 "Cycle Controller" 50
 F1 "cycle_controller.sch" 50
 $EndSheet
 $Sheet
-S 4900 1750 900  1100
-U 5FCD4D4C
-F0 "UI Computer" 50
-F1 "ui_computer.sch" 50
-$EndSheet
-$Sheet
 S 6400 1000 1200 400 
 U 5FCD4D85
 F0 "STM Programmer for cycle controller" 50
@@ -81,5 +75,23 @@ S 12950 6450 900  600
 U 5FCD50A5
 F0 "Stepper Motor Driver (...)" 50
 F1 "driver_stepper.sch" 50
+$EndSheet
+$Sheet
+S 4650 1750 1150 1150
+U 5FCD4D4C
+F0 "UI Computer" 50
+F1 "ui_computer.sch" 50
+F2 "UI_LED_R" O R 5800 2050 50 
+F3 "GUI_BUZZER" O R 5800 2200 50 
+F4 "UI_LED_Y" O R 5800 1850 50 
+F5 "UI_LED_G" O R 5800 1950 50 
+F6 "UART_CTS" O R 5800 2350 50 
+F7 "USART-RX" O R 5800 2500 50 
+F8 "USART-TX" I L 4650 2500 50 
+F9 "USART-RTS" O R 5800 2650 50 
+F10 "USD-MISO" O R 5800 2800 50 
+F11 "USD-CS" I L 4650 2700 50 
+F12 "USD-MOSI" I L 4650 2600 50 
+F13 "USD-SCLK" I L 4650 2800 50 
 $EndSheet
 $EndSCHEMATC

@@ -4,7 +4,7 @@ EELAYER 26 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 6 14
+Sheet 14 14
 Title "UI Computer"
 Date ""
 Rev "2.0"
@@ -88,7 +88,7 @@ Wire Wire Line
 Text Notes 5400 1850 0    50   ~ 0
 RPI powered by 5V\n
 Text HLabel 4550 3900 0    50   Output ~ 0
-UART_CTS
+USART_CTS
 Wire Wire Line
 	5000 3900 4550 3900
 $Comp
@@ -285,7 +285,7 @@ F 3 "" H 7750 2850 50  0001 C CNN
 $EndComp
 Wire Wire Line
 	6450 3800 7000 3800
-Text HLabel 7000 3800 2    50   Output ~ 0
+Text HLabel 7000 3800 2    50   Input ~ 0
 USART-RTS
 $Comp
 L RespiraWorks:503182-1852 J?

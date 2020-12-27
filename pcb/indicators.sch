@@ -4,7 +4,7 @@ EELAYER 26 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 9 14
+Sheet 8 14
 Title "Indicators"
 Date ""
 Rev "2.0"
@@ -14,4 +14,558 @@ Comment2 ""
 Comment3 ""
 Comment4 ""
 $EndDescr
+$Comp
+L power:+5V #PWR?
+U 1 1 5FE8C69F
+P 1700 1200
+F 0 "#PWR?" H 1700 1050 50  0001 C CNN
+F 1 "+5V" H 1715 1373 50  0000 C CNN
+F 2 "" H 1700 1200 50  0001 C CNN
+F 3 "" H 1700 1200 50  0001 C CNN
+	1    1700 1200
+	1    0    0    -1  
+$EndComp
+$Comp
+L Transistor_BJT:MMBT3904 Q?
+U 1 1 5FE907AC
+P 2700 2800
+F 0 "Q?" H 2890 2846 50  0000 L CNN
+F 1 "MMBT3904" H 2890 2755 50  0000 L CNN
+F 2 "Package_TO_SOT_SMD:SOT-23" H 2900 2725 50  0001 L CIN
+F 3 "https://www.fairchildsemi.com/datasheets/2N/2N3904.pdf" H 2700 2800 50  0001 L CNN
+	1    2700 2800
+	-1   0    0    -1  
+$EndComp
+$Comp
+L Device:LED D?
+U 1 1 5FE908E8
+P 2600 2200
+F 0 "D?" V 2638 2083 50  0000 R CNN
+F 1 "LED" V 2547 2083 50  0000 R CNN
+F 2 "" H 2600 2200 50  0001 C CNN
+F 3 "~" H 2600 2200 50  0001 C CNN
+	1    2600 2200
+	0    -1   -1   0   
+$EndComp
+Text Notes 1250 750  0    50   ~ 0
+Check NPNs
+Text Notes 1250 850  0    50   ~ 0
+Check Parallel Rs values w/ selected LEDs
+$Comp
+L Device:R R?
+U 1 1 5FE90972
+P 2600 1700
+F 0 "R?" H 2670 1746 50  0000 L CNN
+F 1 "R" H 2670 1655 50  0000 L CNN
+F 2 "" V 2530 1700 50  0001 C CNN
+F 3 "~" H 2600 1700 50  0001 C CNN
+	1    2600 1700
+	1    0    0    -1  
+$EndComp
+$Comp
+L Transistor_BJT:MMBT3904 Q?
+U 1 1 5FE90C05
+P 4450 2800
+F 0 "Q?" H 4640 2846 50  0000 L CNN
+F 1 "MMBT3904" H 4640 2755 50  0000 L CNN
+F 2 "Package_TO_SOT_SMD:SOT-23" H 4650 2725 50  0001 L CIN
+F 3 "https://www.fairchildsemi.com/datasheets/2N/2N3904.pdf" H 4450 2800 50  0001 L CNN
+	1    4450 2800
+	-1   0    0    -1  
+$EndComp
+$Comp
+L Device:LED D?
+U 1 1 5FE90C0C
+P 4350 2200
+F 0 "D?" V 4388 2083 50  0000 R CNN
+F 1 "LED" V 4297 2083 50  0000 R CNN
+F 2 "" H 4350 2200 50  0001 C CNN
+F 3 "~" H 4350 2200 50  0001 C CNN
+	1    4350 2200
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 5FE90C13
+P 4350 1700
+F 0 "R?" H 4420 1746 50  0000 L CNN
+F 1 "R" H 4420 1655 50  0000 L CNN
+F 2 "" V 4280 1700 50  0001 C CNN
+F 3 "~" H 4350 1700 50  0001 C CNN
+	1    4350 1700
+	1    0    0    -1  
+$EndComp
+$Comp
+L Transistor_BJT:MMBT3904 Q?
+U 1 1 5FE90D52
+P 6350 2800
+F 0 "Q?" H 6540 2846 50  0000 L CNN
+F 1 "MMBT3904" H 6540 2755 50  0000 L CNN
+F 2 "Package_TO_SOT_SMD:SOT-23" H 6550 2725 50  0001 L CIN
+F 3 "https://www.fairchildsemi.com/datasheets/2N/2N3904.pdf" H 6350 2800 50  0001 L CNN
+	1    6350 2800
+	-1   0    0    -1  
+$EndComp
+$Comp
+L Device:LED D?
+U 1 1 5FE90D59
+P 6250 2200
+F 0 "D?" V 6288 2083 50  0000 R CNN
+F 1 "LED" V 6197 2083 50  0000 R CNN
+F 2 "" H 6250 2200 50  0001 C CNN
+F 3 "~" H 6250 2200 50  0001 C CNN
+	1    6250 2200
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 5FE90D60
+P 6250 1700
+F 0 "R?" H 6320 1746 50  0000 L CNN
+F 1 "R" H 6320 1655 50  0000 L CNN
+F 2 "" V 6180 1700 50  0001 C CNN
+F 3 "~" H 6250 1700 50  0001 C CNN
+	1    6250 1700
+	1    0    0    -1  
+$EndComp
+$Comp
+L Transistor_BJT:MMBT3904 Q?
+U 1 1 5FE90F2F
+P 2750 5300
+F 0 "Q?" H 2940 5346 50  0000 L CNN
+F 1 "MMBT3904" H 2940 5255 50  0000 L CNN
+F 2 "Package_TO_SOT_SMD:SOT-23" H 2950 5225 50  0001 L CIN
+F 3 "https://www.fairchildsemi.com/datasheets/2N/2N3904.pdf" H 2750 5300 50  0001 L CNN
+	1    2750 5300
+	-1   0    0    -1  
+$EndComp
+$Comp
+L Device:LED D?
+U 1 1 5FE90F36
+P 2650 4700
+F 0 "D?" V 2688 4583 50  0000 R CNN
+F 1 "LED" V 2597 4583 50  0000 R CNN
+F 2 "" H 2650 4700 50  0001 C CNN
+F 3 "~" H 2650 4700 50  0001 C CNN
+	1    2650 4700
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 5FE90F3D
+P 2650 4200
+F 0 "R?" H 2720 4246 50  0000 L CNN
+F 1 "R" H 2720 4155 50  0000 L CNN
+F 2 "" V 2580 4200 50  0001 C CNN
+F 3 "~" H 2650 4200 50  0001 C CNN
+	1    2650 4200
+	1    0    0    -1  
+$EndComp
+$Comp
+L Transistor_BJT:MMBT3904 Q?
+U 1 1 5FE90F44
+P 4500 5300
+F 0 "Q?" H 4690 5346 50  0000 L CNN
+F 1 "MMBT3904" H 4690 5255 50  0000 L CNN
+F 2 "Package_TO_SOT_SMD:SOT-23" H 4700 5225 50  0001 L CIN
+F 3 "https://www.fairchildsemi.com/datasheets/2N/2N3904.pdf" H 4500 5300 50  0001 L CNN
+	1    4500 5300
+	-1   0    0    -1  
+$EndComp
+$Comp
+L Device:LED D?
+U 1 1 5FE90F4B
+P 4400 4700
+F 0 "D?" V 4438 4583 50  0000 R CNN
+F 1 "LED" V 4347 4583 50  0000 R CNN
+F 2 "" H 4400 4700 50  0001 C CNN
+F 3 "~" H 4400 4700 50  0001 C CNN
+	1    4400 4700
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 5FE90F52
+P 4400 4200
+F 0 "R?" H 4470 4246 50  0000 L CNN
+F 1 "R" H 4470 4155 50  0000 L CNN
+F 2 "" V 4330 4200 50  0001 C CNN
+F 3 "~" H 4400 4200 50  0001 C CNN
+	1    4400 4200
+	1    0    0    -1  
+$EndComp
+$Comp
+L Transistor_BJT:MMBT3904 Q?
+U 1 1 5FE90F59
+P 6400 5300
+F 0 "Q?" H 6590 5346 50  0000 L CNN
+F 1 "MMBT3904" H 6590 5255 50  0000 L CNN
+F 2 "Package_TO_SOT_SMD:SOT-23" H 6600 5225 50  0001 L CIN
+F 3 "https://www.fairchildsemi.com/datasheets/2N/2N3904.pdf" H 6400 5300 50  0001 L CNN
+	1    6400 5300
+	-1   0    0    -1  
+$EndComp
+$Comp
+L Device:LED D?
+U 1 1 5FE90F60
+P 6300 4700
+F 0 "D?" V 6338 4583 50  0000 R CNN
+F 1 "LED" V 6247 4583 50  0000 R CNN
+F 2 "" H 6300 4700 50  0001 C CNN
+F 3 "~" H 6300 4700 50  0001 C CNN
+	1    6300 4700
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 5FE90F67
+P 6300 4200
+F 0 "R?" H 6370 4246 50  0000 L CNN
+F 1 "R" H 6370 4155 50  0000 L CNN
+F 2 "" V 6230 4200 50  0001 C CNN
+F 3 "~" H 6300 4200 50  0001 C CNN
+	1    6300 4200
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	1700 1200 1700 1550
+Wire Wire Line
+	1700 1550 2600 1550
+Wire Wire Line
+	2600 1550 4350 1550
+Connection ~ 2600 1550
+Wire Wire Line
+	4350 1550 6250 1550
+Connection ~ 4350 1550
+Wire Wire Line
+	1700 1550 1700 4050
+Wire Wire Line
+	1700 4050 2650 4050
+Connection ~ 1700 1550
+Wire Wire Line
+	2650 4050 4400 4050
+Connection ~ 2650 4050
+Wire Wire Line
+	4400 4050 6300 4050
+Connection ~ 4400 4050
+$Comp
+L Device:R R?
+U 1 1 5FE9136D
+P 3000 3100
+F 0 "R?" H 3070 3146 50  0000 L CNN
+F 1 "1K" H 3070 3055 50  0000 L CNN
+F 2 "" V 2930 3100 50  0001 C CNN
+F 3 "~" H 3000 3100 50  0001 C CNN
+	1    3000 3100
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 5FE91421
+P 3200 2800
+F 0 "R?" V 2993 2800 50  0000 C CNN
+F 1 "1K" V 3084 2800 50  0000 C CNN
+F 2 "" V 3130 2800 50  0001 C CNN
+F 3 "~" H 3200 2800 50  0001 C CNN
+	1    3200 2800
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 5FE9184C
+P 4950 2800
+F 0 "R?" V 4743 2800 50  0000 C CNN
+F 1 "1K" V 4834 2800 50  0000 C CNN
+F 2 "" V 4880 2800 50  0001 C CNN
+F 3 "~" H 4950 2800 50  0001 C CNN
+	1    4950 2800
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 5FE9189A
+P 6800 2800
+F 0 "R?" V 6593 2800 50  0000 C CNN
+F 1 "1K" V 6684 2800 50  0000 C CNN
+F 2 "" V 6730 2800 50  0001 C CNN
+F 3 "~" H 6800 2800 50  0001 C CNN
+	1    6800 2800
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 5FE918FA
+P 3250 5300
+F 0 "R?" V 3043 5300 50  0000 C CNN
+F 1 "1K" V 3134 5300 50  0000 C CNN
+F 2 "" V 3180 5300 50  0001 C CNN
+F 3 "~" H 3250 5300 50  0001 C CNN
+	1    3250 5300
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 5FE91952
+P 5000 5300
+F 0 "R?" V 4793 5300 50  0000 C CNN
+F 1 "1K" V 4884 5300 50  0000 C CNN
+F 2 "" V 4930 5300 50  0001 C CNN
+F 3 "~" H 5000 5300 50  0001 C CNN
+	1    5000 5300
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 5FE919AA
+P 6900 5300
+F 0 "R?" V 6693 5300 50  0000 C CNN
+F 1 "1K" V 6784 5300 50  0000 C CNN
+F 2 "" V 6830 5300 50  0001 C CNN
+F 3 "~" H 6900 5300 50  0001 C CNN
+	1    6900 5300
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 5FE91E53
+P 4750 3100
+F 0 "R?" H 4820 3146 50  0000 L CNN
+F 1 "1K" H 4820 3055 50  0000 L CNN
+F 2 "" V 4680 3100 50  0001 C CNN
+F 3 "~" H 4750 3100 50  0001 C CNN
+	1    4750 3100
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 5FE91EB3
+P 6600 3150
+F 0 "R?" H 6670 3196 50  0000 L CNN
+F 1 "1K" H 6670 3105 50  0000 L CNN
+F 2 "" V 6530 3150 50  0001 C CNN
+F 3 "~" H 6600 3150 50  0001 C CNN
+	1    6600 3150
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 5FE91F66
+P 3050 5550
+F 0 "R?" H 3120 5596 50  0000 L CNN
+F 1 "1K" H 3120 5505 50  0000 L CNN
+F 2 "" V 2980 5550 50  0001 C CNN
+F 3 "~" H 3050 5550 50  0001 C CNN
+	1    3050 5550
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 5FE91FD6
+P 4800 5550
+F 0 "R?" H 4870 5596 50  0000 L CNN
+F 1 "1K" H 4870 5505 50  0000 L CNN
+F 2 "" V 4730 5550 50  0001 C CNN
+F 3 "~" H 4800 5550 50  0001 C CNN
+	1    4800 5550
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 5FE9202A
+P 6700 5550
+F 0 "R?" H 6770 5596 50  0000 L CNN
+F 1 "1K" H 6770 5505 50  0000 L CNN
+F 2 "" V 6630 5550 50  0001 C CNN
+F 3 "~" H 6700 5550 50  0001 C CNN
+	1    6700 5550
+	1    0    0    -1  
+$EndComp
+Text HLabel 3350 2800 2    50   Input ~ 0
+CC-LED-G
+Text HLabel 5100 2800 2    50   Input ~ 0
+CC-LED-R
+Text HLabel 6950 2800 2    50   Input ~ 0
+CC-LED-Y
+Text HLabel 3400 5300 2    50   Input ~ 0
+UI-LED-G
+Text HLabel 5150 5300 2    50   Input ~ 0
+UI-LED-R
+Text HLabel 7050 5300 2    50   Input ~ 0
+UI-LED-Y
+Wire Wire Line
+	2600 1850 2600 2050
+Wire Wire Line
+	2600 2600 2600 2350
+Wire Wire Line
+	3050 2800 3000 2800
+Wire Wire Line
+	4350 2050 4350 1850
+Wire Wire Line
+	4350 2600 4350 2350
+Wire Wire Line
+	3000 2950 3000 2800
+Connection ~ 3000 2800
+Wire Wire Line
+	3000 2800 2900 2800
+Wire Wire Line
+	4650 2800 4750 2800
+Wire Wire Line
+	4750 2950 4750 2800
+Connection ~ 4750 2800
+Wire Wire Line
+	4750 2800 4800 2800
+Wire Wire Line
+	6250 2050 6250 1850
+Wire Wire Line
+	6250 2600 6250 2350
+Wire Wire Line
+	6550 2800 6600 2800
+Wire Wire Line
+	6600 3000 6600 2800
+Connection ~ 6600 2800
+Wire Wire Line
+	6600 2800 6650 2800
+$Comp
+L power:GND #PWR?
+U 1 1 5FE93112
+P 2600 3400
+F 0 "#PWR?" H 2600 3150 50  0001 C CNN
+F 1 "GND" H 2605 3227 50  0000 C CNN
+F 2 "" H 2600 3400 50  0001 C CNN
+F 3 "" H 2600 3400 50  0001 C CNN
+	1    2600 3400
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 5FE9319C
+P 4350 3400
+F 0 "#PWR?" H 4350 3150 50  0001 C CNN
+F 1 "GND" H 4355 3227 50  0000 C CNN
+F 2 "" H 4350 3400 50  0001 C CNN
+F 3 "" H 4350 3400 50  0001 C CNN
+	1    4350 3400
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 5FE931E3
+P 6250 3400
+F 0 "#PWR?" H 6250 3150 50  0001 C CNN
+F 1 "GND" H 6255 3227 50  0000 C CNN
+F 2 "" H 6250 3400 50  0001 C CNN
+F 3 "" H 6250 3400 50  0001 C CNN
+	1    6250 3400
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2600 3000 2600 3250
+Wire Wire Line
+	3000 3250 2600 3250
+Connection ~ 2600 3250
+Wire Wire Line
+	2600 3250 2600 3400
+Wire Wire Line
+	4750 3250 4350 3250
+Wire Wire Line
+	4350 3000 4350 3250
+Connection ~ 4350 3250
+Wire Wire Line
+	4350 3250 4350 3400
+Wire Wire Line
+	6600 3300 6250 3300
+Wire Wire Line
+	6250 3000 6250 3300
+Connection ~ 6250 3300
+Wire Wire Line
+	6250 3300 6250 3400
+Text Notes 2350 950  2    50   ~ 0
+Do we want any more LEDs?
+Wire Wire Line
+	2650 4350 2650 4550
+Wire Wire Line
+	2650 4850 2650 5100
+Wire Wire Line
+	4400 4350 4400 4550
+Wire Wire Line
+	4400 4850 4400 5100
+Wire Wire Line
+	6300 4350 6300 4550
+Wire Wire Line
+	6300 4850 6300 5100
+Wire Wire Line
+	3100 5300 3050 5300
+Wire Wire Line
+	3050 5400 3050 5300
+Connection ~ 3050 5300
+Wire Wire Line
+	3050 5300 2950 5300
+Wire Wire Line
+	4700 5300 4800 5300
+Wire Wire Line
+	4800 5400 4800 5300
+Connection ~ 4800 5300
+Wire Wire Line
+	4800 5300 4850 5300
+Wire Wire Line
+	6600 5300 6700 5300
+Wire Wire Line
+	6700 5400 6700 5300
+Connection ~ 6700 5300
+Wire Wire Line
+	6700 5300 6750 5300
+$Comp
+L power:GND #PWR?
+U 1 1 5FE98608
+P 2650 5850
+F 0 "#PWR?" H 2650 5600 50  0001 C CNN
+F 1 "GND" H 2655 5677 50  0000 C CNN
+F 2 "" H 2650 5850 50  0001 C CNN
+F 3 "" H 2650 5850 50  0001 C CNN
+	1    2650 5850
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 5FE9864F
+P 4400 5900
+F 0 "#PWR?" H 4400 5650 50  0001 C CNN
+F 1 "GND" H 4405 5727 50  0000 C CNN
+F 2 "" H 4400 5900 50  0001 C CNN
+F 3 "" H 4400 5900 50  0001 C CNN
+	1    4400 5900
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 5FE98696
+P 6300 5900
+F 0 "#PWR?" H 6300 5650 50  0001 C CNN
+F 1 "GND" H 6305 5727 50  0000 C CNN
+F 2 "" H 6300 5900 50  0001 C CNN
+F 3 "" H 6300 5900 50  0001 C CNN
+	1    6300 5900
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2650 5850 2650 5700
+Wire Wire Line
+	3050 5700 2650 5700
+Connection ~ 2650 5700
+Wire Wire Line
+	2650 5700 2650 5500
+Wire Wire Line
+	4400 5500 4400 5700
+Wire Wire Line
+	4800 5700 4400 5700
+Connection ~ 4400 5700
+Wire Wire Line
+	4400 5700 4400 5900
+Wire Wire Line
+	6300 5500 6300 5700
+Wire Wire Line
+	6700 5700 6300 5700
+Connection ~ 6300 5700
+Wire Wire Line
+	6300 5700 6300 5900
 $EndSCHEMATC

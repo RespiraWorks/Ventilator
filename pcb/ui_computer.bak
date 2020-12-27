@@ -440,4 +440,6 @@ Text HLabel 2700 5950 0    50   Input ~ 0
 USD-MOSI
 Text HLabel 2700 6050 0    50   Input ~ 0
 USD-SCLK
+Text Notes 5900 5650 0    50   ~ 0
+Check Directions on UART/SPI
 $EndSCHEMATC

@@ -66,6 +66,7 @@ Please see the [3d printing guidelines](../3d_printing) for general advice.
 
 - [Base - .ipt format](assets/pinchvalve_base.ipt)
 - [Rotor - .step format](assets/exhaust-pinch-valve-1.6-rotor.step)
+- [Bearing - .ipt format](assets/pinchvalve_bearing.ipt)
 
 Original designs found
 [here](https://cad.onshape.com/documents/3fe0c1f79c482144c267173d/w/2ad1c08071a25185f9c78c68/e/03a49465e4e026f9f102d0af).

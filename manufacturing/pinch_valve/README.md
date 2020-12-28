@@ -64,7 +64,7 @@ v1.7: set screw removed, 3/8"OD version added for potential use as oxygen supply
 These files should not be printed with FDM. Instead, a leak-tight method like SLA or MJF should be used.
 Please see the [3d printing guidelines](../3d_printing) for general advice.
 
-- [Base - .step format](assets/pinchvalve_base.ipt)
+- [Base - .ipt format](assets/pinchvalve_base.ipt)
 - [Rotor - .step format](assets/exhaust-pinch-valve-1.6-rotor.step)
 
 Original designs found

@@ -65,7 +65,7 @@ These files should not be printed with FDM. Instead, a leak-tight method like SL
 Please see the [3d printing guidelines](../3d_printing) for general advice.
 
 - [Base - .ipt format](assets/pinchvalve_base.ipt)
-- [Rotor - .step format](assets/exhaust-pinch-valve-1.6-rotor.step)
+- [Rotor - .ipt format](assets/pinchvalve_rotor.ipt)
 - [Bearing - .ipt format](assets/pinchvalve_bearing.ipt)
 
 Original designs found

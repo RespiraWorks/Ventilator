@@ -1,8 +1,8 @@
 # Stepper Proportional Pinch Valve
 
-| CAD File                    | Assembled                         | In action                 |
+| CAD Rendering               | Assembled                         | In action                 |
 |:---------------------------:|:---------------------------------:|:-------------------------:|
-![](assets/rendering-1-6.png) | ![](assets/assembled_smaller.jpg) | ![](assets/animation.gif) |
+|[![](images/rendered_assembly_smaller.jpg)](images/rendered_assembly.jpg) | ![](images/assembled_smaller.jpg) | ![](images/animation.gif) |
 
 ## Overview
 
@@ -55,22 +55,33 @@ The stop is now flat. We might need to tweak exact dimensions further to get a p
 Watching the video I'm pretty concerned watching that stop flex. I made it run the full width, I made it thicker, and I also bulked out the tube holders.
 Bearings are now better aligned with the tube.
 
-v1.6: Broader shelf, slightly larger bump.
+**v1.6** Broader shelf, slightly larger bump.
 
-v1.7: set screw removed, 3/8"OD version added for potential use as oxygen supply valve.
+**v1.7** set screw removed, 3/8"OD version added for potential use as oxygen supply valve.
+
+**v1.8** gussets added to support main shelf, for improved durability. Last version developed in
+[OnShape](https://cad.onshape.com/documents/3fe0c1f79c482144c267173d/w/2ad1c08071a25185f9c78c68/e/03a49465e4e026f9f102d0af).
+
+**v2.0** All CAD migrated to Inventor. Following improvements implemented:
+* rotor space in the base is tighter, for improved durability
+* rotor is taller to better interface with 30mm axle bolt
+* mounting screw positions changed for improved assembly and durability
+* stop shelf distance from shaft is dictated by tube diameter and compression slack parameters
+* highly parametrized model for improved adaptability in the future
+* full assembly model with hardware
 
 ## Custom parts
 
 These files should not be printed with FDM. Instead, a leak-tight method like SLA or MJF should be used.
 Please see the [3d printing guidelines](../3d_printing) for general advice.
 
-- [Base - .step format](assets/exhaust-pinch-valve-1.6-base.step)
-- [Rotor - .step format](assets/exhaust-pinch-valve-1.6-rotor.step)
+|     | Stepper base (Item 9)      | Stepper rotor (Item 10)     |
+|----:|:--------------------------:|:---------------------------:|
+| Rendering | ![](images/rendered_base.jpg) | ![](images/rendered_rotor.jpg) |
+| Inventor IPT |[Pinch valve base.ipt](CAD/Pinch%20valve%20base.ipt)|[Pinch valve rotor.ipt](CAD/Pinch%20valve%20rotor.ipt)|
+| STL for printing |[Pinch valve base.stl](CAD/Pinch%20valve%20base.stl)|[Pinch valve rotor.stl](CAD/Pinch%20valve%20rotor.stl)|
 
-Original designs found
-[here](https://cad.onshape.com/documents/3fe0c1f79c482144c267173d/w/2ad1c08071a25185f9c78c68/e/03a49465e4e026f9f102d0af).
-
-You may also find other variations of the design meant for special testing/calibration units.
+There is also an Inventor assembly with all the hardware [CAD/Pinch valve assembly.iam](CAD/Pinch%20valve%20assembly.iam).
 
 ## Parts
 
@@ -103,8 +114,8 @@ BEFORE purchasing any parts.**
 [7mr]:   https://www.mouser.com/ProductDetail/511-X-NUCLEO-IHM03A1
 [8st]:   https://www.st.com/en/ecosystems/x-nucleo-ihm02a1.html#sample-and-buy
 [8rs]:   https://export.rsdelivers.com/product/stmicroelectronics/x-nucleo-ihm02a1/stmicroelectronics-x-nucleo-ihm02a1-two-axis/1646982
-[9rw]:   #files
-[10rw]:  #files
+[9rw]:   #Custom-parts
+[10rw]:  #Custom-parts
 
 ## Tools
 
@@ -120,7 +131,7 @@ BEFORE purchasing any parts.**
 
 ## Prototype fabrication
 
-![Components](assets/components.jpg)
+![Components](images/components.jpg)
 
 You’ll need a vice to press on the rotors to the stepper motor shafts.  You may also need a tap ([Item a3](#tools)) to
 chase the threads in the rotor ([Item 10](#parts)) for the bolt ([Item 2](#parts)) holding the bearings. On some
@@ -130,7 +141,7 @@ to act as a lock nut.
 
 | Rotor Assembly                | Base Assembly                      |
 |:-----------------------------:|:----------------------------------:|
-|![Assembled](assets/rotor.jpg) | ![Assembled](assets/assembled.jpg) |
+|![Assembled](images/rotor.jpg) | ![Assembled](images/assembled.jpg) |
 3mm hex and 2.5mm hex driver are required for assembling rotor.|  2mm hex driver is required for attaching base.
 
 Each pinch valve must also include some additional wiring and a driver board for controlling the stepper motor. A
@@ -139,6 +150,6 @@ single ventilator contains two pinch valves, each must come with its own driver 
 soldered appropriately. All of this is documented in a subset of the PCB documentation
 [here](../../pcb/rev1_export/stepper_driver_setup.md).
 
-With the tygon tube and clamps, a single pinch valve sub assembly appears like so:
+With the Tygon tube and clamps, a single pinch valve sub assembly appears like so:
 
-![Assembled](assets/full_assembly.jpg)
+![Assembled](images/full_assembly.jpg)

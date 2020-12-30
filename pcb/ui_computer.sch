@@ -36,8 +36,6 @@ F 3 "" H 4750 2250 50  0001 C CNN
 	1    4750 2250
 	1    0    0    -1  
 $EndComp
-Text Notes 5200 1950 0    50   ~ 0
-RPI has internal I2C pull-ups\n
 NoConn ~ 5000 2400
 NoConn ~ 5000 2500
 Text HLabel 4550 2600 0    50   Output ~ 0
@@ -158,24 +156,12 @@ NoConn ~ 5000 3300
 NoConn ~ 5000 3400
 NoConn ~ 5000 3600
 NoConn ~ 5000 4000
-$Comp
-L RespiraWorks:+5V_RPi #PWR?
-U 1 1 5FE675EB
-P 6750 2300
-F 0 "#PWR?" H 6750 2300 50  0001 C CNN
-F 1 "+5V_RPi" H 6735 2473 50  0000 C CNN
-F 2 "" H 6750 2300 50  0001 C CNN
-F 3 "" H 6750 2300 50  0001 C CNN
-	1    6750 2300
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
 	6450 2300 6750 2300
 Wire Wire Line
 	6450 2400 6750 2400
 Wire Wire Line
 	6750 2400 6750 2300
-Connection ~ 6750 2300
 Wire Wire Line
 	6650 4300 6650 3900
 Wire Wire Line
@@ -442,4 +428,16 @@ Text HLabel 2700 6050 0    50   Input ~ 0
 USD-SCLK
 Text Notes 5900 5650 0    50   ~ 0
 Check Directions on UART/SPI
+$Comp
+L RespiraWorks:+5V_GUI #PWR?
+U 1 1 5FEBC42B
+P 6750 2300
+F 0 "#PWR?" H 6750 2300 50  0001 C CNN
+F 1 "+5V_GUI" H 6735 2473 50  0000 C CNN
+F 2 "" H 6750 2300 50  0001 C CNN
+F 3 "" H 6750 2300 50  0001 C CNN
+	1    6750 2300
+	1    0    0    -1  
+$EndComp
+Connection ~ 6750 2300
 $EndSCHEMATC

@@ -77,4 +77,3 @@ That interface can be a specific interface (a second UART channel?) accessible o
 This interface must :
 * Have unit tests of its own to make sure it gives a reliable copy of the desired data and properly writes data at the correct place
 * Prevent accidental write on the write data (secure write privilege by a discrete signal, a specific sequence to enable writing, ...)
-

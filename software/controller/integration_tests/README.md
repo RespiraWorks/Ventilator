@@ -85,7 +85,9 @@ It may be necessary to power cycle prototype ventilators or specific components 
 To this end, we will be using a simple
 [8-channel relay](https://www.amazon.com/SainSmart-Eight-Channel-Relay-Automation/dp/B0093Y89DE).
 
-There is a bit of code for this under [/relay8](relay8).
+The relay is confirmed to work and currently we have a powerful shop light to illuminate the testing rig.
+
+Instructions for how to operate the relay are [here](relay8).
 
 ### Data acquisition
 
@@ -97,11 +99,9 @@ There is a bit of code for this under [/labjack](labjack).
 
 ### Visual observation
 
-Two webcams are connected to server.
+Two webcams are connected to server and each may be streamed to Youtube.
 
-Some proof-of-concept code for how to stream is in the [webcam](webcam) directory.
-
-**TODO:** Set up daemon to always stream webcams, or at least make a very simple script to start streaming on demand.
+Instructions for how to use them are [here](webcam).
 
 ## Computing
 

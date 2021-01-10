@@ -1,4 +1,4 @@
-18769841230533915
+18776293668150649
 Battery
 BatteryHolder_Bulgin_BX0036_1xC
 Bulgin Battery Holder, BX0036, Battery Type C (https://www.bulgin.com/products/pub/media/bulgin/data/Battery_holders.pdf)
@@ -75411,6 +75411,13 @@ Crystal, ABS25
 4
 4
 RespiraWorks
+BatteryHolder_CR2016_MPD_BLP2016SM-G
+Memory Protection Devices Inc. BLP2016SM-G CR2016 coin cell holder
+
+0
+0
+0
+RespiraWorks
 Bosch_BMP280
 Bosch BMP280 atmospheric pressure sensor
 
@@ -75480,6 +75487,13 @@ POWERSTEP01
 0
 94
 90
+RespiraWorks
+Pressure_sensor_daughterboard
+Mechanical mounting for pressure sensor daughterboard
+
+0
+36
+1
 RespiraWorks
 SRP5015TA
 
@@ -75655,6 +75669,20 @@ connector Molex Micro-Fit_3.0 vertical
 0
 3
 3
+RespiraWorks_Std
+Molex_Micro-Fit_3.0_43650-0415_1x04_P3.00mm_Vertical
+Molex Micro-Fit 3.0 Connector System, 43650-0415 (compatible alternatives: 43650-0416, 43650-0417), 4 Pins per row (http://www.molex.com/pdm_docs/sd/436500215_sd.pdf), generated with kicad-footprint-generator
+connector Molex Micro-Fit_3.0 vertical
+0
+4
+4
+RespiraWorks_Std
+Molex_Micro-Fit_3.0_43650-0515_1x05_P3.00mm_Vertical
+Molex Micro-Fit 3.0 Connector System, 43650-0515 (compatible alternatives: 43650-0516, 43650-0517), 5 Pins per row (http://www.molex.com/pdm_docs/sd/436500215_sd.pdf), generated with kicad-footprint-generator
+connector Molex Micro-Fit_3.0 vertical
+0
+5
+5
 RespiraWorks_Std
 PinHeader_1x02_P2.54mm_Horizontal
 Through hole angled pin header, 1x02, 2.54mm pitch, 6mm pin length, single row

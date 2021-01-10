@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr B 17000 11000
 encoding utf-8
-Sheet 1 16
+Sheet 1 30
 Title "Ventilator Top-Level"
 Date ""
 Rev "2.0"
@@ -69,16 +69,30 @@ F0 "Safety FPGA" 50
 F1 "fpga.sch" 50
 $EndSheet
 $Sheet
-S 12950 1700 750  1500
+S 12950 1700 1000 1000
 U 5FCD4E9D
 F0 "Pressure Sensors" 50
 F1 "sensors_pressure.sch" 50
+F2 "Inh_Flow" O R 13950 1800 50 
+F3 "Mix_Tank_Pressure" O R 13950 1900 50 
+F4 "Patient_Pressure" O R 13950 2000 50 
+F5 "Oxy_Pressure" O R 13950 2100 50 
+F6 "Oxy_Flow" O R 13950 2200 50 
+F7 "Exh_Flow" O R 13950 2300 50 
+F8 "CC-SDA" B R 13950 2500 50 
+F9 "CC-SCL" I R 13950 2600 50 
 $EndSheet
 $Sheet
-S 12950 3600 800  1300
+S 12950 3600 800  700 
 U 5FCD4EEA
 F0 "Oxygen and Temperature Sensors" 50
 F1 "sensors_o2_temp.sch" 50
+F2 "Stepper1_Temp" O R 13750 3700 50 
+F3 "Stepper2_Temp" O R 13750 3800 50 
+F4 "Blower_Temp" O R 13750 3900 50 
+F5 "Batt_Temp" O R 13750 4000 50 
+F6 "Spare_Temp" O R 13750 4100 50 
+F7 "Oxy_Level" O R 13750 4200 50 
 $EndSheet
 Text Notes 1250 850  0    50   ~ 0
 Notes on arrangement, naming, components, whatever
@@ -87,11 +101,20 @@ S 12950 5600 900  550
 U 5FCD5082
 F0 "PSOL Driver (...)" 50
 F1 "driver_solenoid.sch" 50
+F2 "CS" O L 12950 6050 50 
+F3 "~Fault" O L 12950 5950 50 
+F4 "In" I L 12950 5700 50 
 $EndSheet
 $Sheet
 S 12950 6450 900  600 
 U 5FCD50A5
 F0 "Stepper Motor Driver (...)" 50
 F1 "driver_stepper.sch" 50
+$EndSheet
+$Sheet
+S 12900 700  1050 650 
+U 6017BD7E
+F0 "Add'l aux functions" 50
+F1 "misc.sch" 50
 $EndSheet
 $EndSCHEMATC

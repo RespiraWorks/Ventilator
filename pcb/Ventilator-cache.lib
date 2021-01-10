@@ -41,6 +41,29 @@ X Pin_3 3 -200 -100 150 R 50 50 1 1 P
 ENDDRAW
 ENDDEF
 #
+# Connector_Generic_Conn_01x04
+#
+DEF Connector_Generic_Conn_01x04 J 0 40 Y N 1 F N
+F0 "J" 0 200 50 H V C CNN
+F1 "Connector_Generic_Conn_01x04" 0 -300 50 H V C CNN
+F2 "" 0 0 50 H I C CNN
+F3 "" 0 0 50 H I C CNN
+$FPLIST
+ Connector*:*_1x??_*
+$ENDFPLIST
+DRAW
+S -50 -195 0 -205 1 1 6 N
+S -50 -95 0 -105 1 1 6 N
+S -50 5 0 -5 1 1 6 N
+S -50 105 0 95 1 1 6 N
+S -50 150 50 -250 1 1 10 f
+X Pin_1 1 -200 100 150 R 50 50 1 1 P
+X Pin_2 2 -200 0 150 R 50 50 1 1 P
+X Pin_3 3 -200 -100 150 R 50 50 1 1 P
+X Pin_4 4 -200 -200 150 R 50 50 1 1 P
+ENDDRAW
+ENDDEF
+#
 # Connector_Generic_Conn_01x05
 #
 DEF Connector_Generic_Conn_01x05 J 0 40 Y N 1 F N
@@ -581,6 +604,31 @@ X Gnd 7 100 -300 100 U 50 50 1 1 W
 ENDDRAW
 ENDDEF
 #
+# RespiraWorks_Pressure_sensor_daughterboard
+#
+DEF RespiraWorks_Pressure_sensor_daughterboard H 0 40 N N 1 F N
+F0 "H" 0 550 50 H V C CNN
+F1 "RespiraWorks_Pressure_sensor_daughterboard" 0 575 50 H I C CNN
+F2 "RespiraWorks:Pressure_sensor_daughterboard" 0 0 50 H I C CNN
+F3 "" 0 0 50 H I C CNN
+$FPLIST
+ MountingHole*Pad*
+$ENDFPLIST
+DRAW
+C -150 100 50 0 1 50 N
+C -150 400 50 1 1 50 N
+C 150 100 50 1 1 50 N
+C 150 400 50 1 1 50 N
+T 0 0 250 50 0 0 0 #4/M3 Normal 0 C C
+S -250 500 250 0 0 1 0 f
+P 2 0 0 0 -50 50 50 50 N
+P 2 0 0 0 -30 70 30 70 N
+P 2 0 0 0 -15 90 15 90 N
+P 2 0 0 0 0 0 0 50 N
+X 1 1 0 -100 100 U 50 50 1 1 I
+ENDDRAW
+ENDDEF
+#
 # RespiraWorks_Q_NMOS_SSSGDDDD
 #
 DEF RespiraWorks_Q_NMOS_SSSGDDDD Q 0 0 Y N 1 F N
@@ -612,6 +660,26 @@ X D 5 100 200 100 D 50 50 1 1 P
 X D 6 200 200 100 D 50 50 1 1 P
 X D 7 300 200 100 D 50 50 1 1 P
 X D 8 400 200 100 D 50 50 1 1 P
+ENDDRAW
+ENDDEF
+#
+# RespiraWorks_SN74LVC2T45DCTR
+#
+DEF RespiraWorks_SN74LVC2T45DCTR U 0 40 Y Y 1 F N
+F0 "U" -350 400 50 H V C CNN
+F1 "RespiraWorks_SN74LVC2T45DCTR" 400 -350 50 H V C CNN
+F2 "RespiraWorks:SSOP-8_3.15x2.9mm_P0.65mm" 350 -850 50 H I C CNN
+F3 "" 350 -850 50 H I C CNN
+DRAW
+S 300 -300 -300 400 0 1 0 f
+X VCCA 1 -100 500 100 D 50 50 1 1 W
+X A1 2 -400 100 100 R 50 50 1 1 B
+X A2 3 -400 0 100 R 50 50 1 1 B
+X GND 4 0 -400 100 U 50 50 1 1 B
+X DIR 5 -400 -100 100 R 50 50 1 1 I
+X B2 6 400 0 100 L 50 50 1 1 B
+X B1 7 400 100 100 L 50 50 1 1 B
+X VCCB 8 100 500 100 D 50 50 1 1 W
 ENDDRAW
 ENDDEF
 #

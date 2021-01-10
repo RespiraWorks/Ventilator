@@ -116,5 +116,10 @@ S 12900 700  1050 650
 U 6017BD7E
 F0 "Add'l aux functions" 50
 F1 "misc.sch" 50
+F2 "CC-SDA" B L 12900 800 50 
+F3 "CC-SCL" I L 12900 900 50 
+F4 "Blower_Speed" I L 12900 1150 50 
+F5 "~Aux_I2C_Int" O L 12900 1000 50 
+F6 "Blower_Enable" I L 12900 1250 50 
 $EndSheet
 $EndSCHEMATC

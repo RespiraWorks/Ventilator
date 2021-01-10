@@ -1,0 +1,225 @@
+EESchema Schematic File Version 4
+EELAYER 30 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 1 1
+Title "Pressure Sensor Daughterboard: MPXV5004DP"
+Date ""
+Rev "1.0"
+Comp "RespiraWorks"
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L RespiraWorks:MPXV5004DP U?
+U 1 1 5FFA0C0F
+P 5550 3700
+F 0 "U?" H 5222 3721 50  0000 R CNN
+F 1 "MPXV5004DP" H 5222 3630 50  0000 R CNN
+F 2 "RespiraWorks:NXP_MPXV5004DP" H 5550 3850 50  0001 C CNN
+F 3 "" H 5550 3750 50  0001 C CNN
+	1    5550 3700
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C C?
+U 1 1 5FFA6CA1
+P 6550 2750
+AR Path="/5FFA6CA1" Ref="C?"  Part="1" 
+AR Path="/5E8AFE9D/5FFA6CA1" Ref="C?"  Part="1" 
+AR Path="/5E8FBD97/5FFA6CA1" Ref="C?"  Part="1" 
+AR Path="/5E8E0754/5FFA6CA1" Ref="C?"  Part="1" 
+AR Path="/5E8DFCAD/5FFA6CA1" Ref="C?"  Part="1" 
+AR Path="/5E8DEDC0/5FFA6CA1" Ref="C?"  Part="1" 
+AR Path="/5E8C8865/5FFA6CA1" Ref="C?"  Part="1" 
+AR Path="/5E8E1F08/5FFA6CA1" Ref="C?"  Part="1" 
+AR Path="/5FCD4DF5/5FFA6CA1" Ref="C?"  Part="1" 
+AR Path="/5FCD4E9D/5FFA6CA1" Ref="C?"  Part="1" 
+F 0 "C?" H 6300 2750 50  0000 C CNN
+F 1 "10nF 100V NP0" H 6200 2850 50  0000 C CNN
+F 2 "RespiraWorks_Std:C_0603_1608Metric" H 6588 2600 50  0001 C CNN
+F 3 "~" H 6550 2750 50  0001 C CNN
+F 4 "Murata" H 6550 2750 50  0001 C CNN "Manufacturer"
+F 5 "GRM1885C1H103JA01D" H 6550 2750 50  0001 C CNN "Part Number"
+	1    6550 2750
+	-1   0    0    1   
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 5FFA6CA7
+P 6550 2900
+AR Path="/5FFA6CA7" Ref="#PWR?"  Part="1" 
+AR Path="/5E8AFE9D/5FFA6CA7" Ref="#PWR?"  Part="1" 
+AR Path="/5E8FBD97/5FFA6CA7" Ref="#PWR?"  Part="1" 
+AR Path="/5E8E0754/5FFA6CA7" Ref="#PWR?"  Part="1" 
+AR Path="/5E8DFCAD/5FFA6CA7" Ref="#PWR?"  Part="1" 
+AR Path="/5E8DEDC0/5FFA6CA7" Ref="#PWR?"  Part="1" 
+AR Path="/5E8C8865/5FFA6CA7" Ref="#PWR?"  Part="1" 
+AR Path="/5E8E1F08/5FFA6CA7" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4DF5/5FFA6CA7" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4E9D/5FFA6CA7" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 6550 2650 50  0001 C CNN
+F 1 "GND" H 6555 2727 50  0000 C CNN
+F 2 "" H 6550 2900 50  0001 C CNN
+F 3 "" H 6550 2900 50  0001 C CNN
+	1    6550 2900
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C C?
+U 1 1 5FFA6CAD
+P 6250 2750
+AR Path="/5FCD4B8E/5FCD4BC5/5FFA6CAD" Ref="C?"  Part="1" 
+AR Path="/5FCD4B8E/5FE27F70/5FFA6CAD" Ref="C?"  Part="1" 
+AR Path="/5FCD4B8E/5FCD4BF6/5FFA6CAD" Ref="C?"  Part="1" 
+AR Path="/5FCD4B8E/606EF10F/5FFA6CAD" Ref="C?"  Part="1" 
+AR Path="/5FCD4E9D/5FFA6CAD" Ref="C?"  Part="1" 
+F 0 "C?" H 6550 2750 50  0000 L CNN
+F 1 "1uF 10V X7R" H 6350 2850 50  0000 L CNN
+F 2 "RespiraWorks_Std:C_0603_1608Metric" H 6288 2600 50  0001 C CNN
+F 3 "~" H 6250 2750 50  0001 C CNN
+	1    6250 2750
+	-1   0    0    1   
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 5FFA6CB3
+P 6250 2900
+AR Path="/5FCD4B8E/5FCD4BC5/5FFA6CB3" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4B8E/5FE27F70/5FFA6CB3" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4B8E/5FCD4BF6/5FFA6CB3" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4B8E/606EF10F/5FFA6CB3" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4E9D/5FFA6CB3" Ref="#PWR?"  Part="1" 
+AR Path="/5FFA6CB3" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 6250 2650 50  0001 C CNN
+F 1 "GND" H 6255 2727 50  0000 C CNN
+F 2 "" H 6250 2900 50  0001 C CNN
+F 3 "" H 6250 2900 50  0001 C CNN
+	1    6250 2900
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5350 3200 5350 2600
+Wire Wire Line
+	5350 2600 6250 2600
+Connection ~ 6250 2600
+Wire Wire Line
+	6250 2600 6550 2600
+$Comp
+L Connector_Generic:Conn_01x03 J?
+U 1 1 5FFA737A
+P 7200 3700
+F 0 "J?" H 7280 3742 50  0000 L CNN
+F 1 "0.1\" female header, bottom entry" H 7280 3651 50  0000 L CNN
+F 2 "RespiraWorks_Std:PinSocket_1x03_P2.54mm_Vertical_SMD_Samtec_SSM-103-x-SV-BE" H 7200 3700 50  0001 C CNN
+F 3 "~" H 7200 3700 50  0001 C CNN
+	1    7200 3700
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x03 J?
+U 1 1 5FFA26A3
+P 7200 4700
+F 0 "J?" H 7280 4742 50  0000 L CNN
+F 1 "0.1\" female header, bottom entry" H 7280 4651 50  0000 L CNN
+F 2 "RespiraWorks_Std:PinSocket_1x03_P2.54mm_Vertical_SMD_Samtec_SSM-103-x-SV-BE" H 7200 4700 50  0001 C CNN
+F 3 "~" H 7200 4700 50  0001 C CNN
+	1    7200 4700
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 5FFA361A
+P 5350 4250
+AR Path="/5FCD4B8E/5FCD4BC5/5FFA361A" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4B8E/5FE27F70/5FFA361A" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4B8E/5FCD4BF6/5FFA361A" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4B8E/606EF10F/5FFA361A" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4E9D/5FFA361A" Ref="#PWR?"  Part="1" 
+AR Path="/5FFA361A" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 5350 4000 50  0001 C CNN
+F 1 "GND" H 5355 4077 50  0000 C CNN
+F 2 "" H 5350 4250 50  0001 C CNN
+F 3 "" H 5350 4250 50  0001 C CNN
+	1    5350 4250
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 5FFA3C31
+P 6900 3800
+AR Path="/5FCD4B8E/5FCD4BC5/5FFA3C31" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4B8E/5FE27F70/5FFA3C31" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4B8E/5FCD4BF6/5FFA3C31" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4B8E/606EF10F/5FFA3C31" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4E9D/5FFA3C31" Ref="#PWR?"  Part="1" 
+AR Path="/5FFA3C31" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 6900 3550 50  0001 C CNN
+F 1 "GND" H 6905 3627 50  0000 C CNN
+F 2 "" H 6900 3800 50  0001 C CNN
+F 3 "" H 6900 3800 50  0001 C CNN
+	1    6900 3800
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	7000 3800 6900 3800
+Wire Wire Line
+	6900 3800 6900 3600
+Wire Wire Line
+	6900 3600 7000 3600
+Connection ~ 6900 3800
+Wire Wire Line
+	7000 3700 5950 3700
+$Comp
+L power:VCC #PWR?
+U 1 1 5FFA5E37
+P 5350 2600
+F 0 "#PWR?" H 5350 2450 50  0001 C CNN
+F 1 "VCC" H 5365 2773 50  0000 C CNN
+F 2 "" H 5350 2600 50  0001 C CNN
+F 3 "" H 5350 2600 50  0001 C CNN
+	1    5350 2600
+	1    0    0    -1  
+$EndComp
+Connection ~ 5350 2600
+$Comp
+L power:VCC #PWR?
+U 1 1 5FFA6270
+P 6750 4600
+F 0 "#PWR?" H 6750 4450 50  0001 C CNN
+F 1 "VCC" H 6765 4773 50  0000 C CNN
+F 2 "" H 6750 4600 50  0001 C CNN
+F 3 "" H 6750 4600 50  0001 C CNN
+	1    6750 4600
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6750 4600 7000 4600
+$Comp
+L power:GND #PWR?
+U 1 1 5FFA7110
+P 6750 4800
+AR Path="/5FCD4B8E/5FCD4BC5/5FFA7110" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4B8E/5FE27F70/5FFA7110" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4B8E/5FCD4BF6/5FFA7110" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4B8E/606EF10F/5FFA7110" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4E9D/5FFA7110" Ref="#PWR?"  Part="1" 
+AR Path="/5FFA7110" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 6750 4550 50  0001 C CNN
+F 1 "GND" H 6755 4627 50  0000 C CNN
+F 2 "" H 6750 4800 50  0001 C CNN
+F 3 "" H 6750 4800 50  0001 C CNN
+	1    6750 4800
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	7000 4800 6750 4800
+Wire Wire Line
+	6750 4700 6750 4800
+Connection ~ 6750 4800
+Wire Wire Line
+	6750 4700 7000 4700
+$EndSCHEMATC

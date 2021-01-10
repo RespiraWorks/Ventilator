@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr B 17000 11000
 encoding utf-8
-Sheet 10 16
+Sheet 10 30
 Title "Alarms and Safety"
 Date ""
 Rev "2.0"

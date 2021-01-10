@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr B 17000 11000
 encoding utf-8
-Sheet 2 16
+Sheet 2 30
 Title "Power Supplies"
 Date ""
 Rev "2.0"

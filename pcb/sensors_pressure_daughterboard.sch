@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 14 30
+Sheet 19 30
 Title "Pressure Sensor Daughterboard Connections, Analog"
 Date ""
 Rev "2.0"
@@ -105,8 +105,6 @@ F 3 "" H 4900 2900 50  0001 C CNN
 	1    4900 2900
 	1    0    0    -1  
 $EndComp
-Text Notes 4050 1950 0    50   ~ 0
-TODO: create dummy component for mech placement\nw/mounting holes, etc.
 $Comp
 L Device:C C?
 U 1 1 6009F001
@@ -284,4 +282,36 @@ Text HLabel 7550 2800 2    50   Output ~ 0
 Out
 Wire Wire Line
 	4800 2800 5350 2800
+$Comp
+L RespiraWorks:Pressure_sensor_daughterboard H?
+U 1 1 60540D89
+P 3700 2950
+F 0 "H?" H 3650 3500 50  0000 L CNN
+F 1 "Pressure_sensor_daughterboard" H 3700 3525 50  0001 C CNN
+F 2 "RespiraWorks:Pressure_sensor_daughterboard" H 3700 2950 50  0001 C CNN
+F 3 "~" H 3700 2950 50  0001 C CNN
+	1    3700 2950
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 6054140C
+P 3700 3050
+AR Path="/5FCD4B8E/5FCD4BC5/6054140C" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4B8E/5FE27F70/6054140C" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4D85/6054140C" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4E9D/6054140C" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4E9D/600630A6/6054140C" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4E9D/60073FCF/6054140C" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4E9D/6007AC3B/6054140C" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4E9D/6007BD34/6054140C" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4E9D/6007DA64/6054140C" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4E9D/6007E2BB/6054140C" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 3700 2800 50  0001 C CNN
+F 1 "GND" H 3705 2877 50  0000 C CNN
+F 2 "" H 3700 3050 50  0001 C CNN
+F 3 "" H 3700 3050 50  0001 C CNN
+	1    3700 3050
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC

@@ -250,8 +250,10 @@ U 1 1 60191BD9
 P 5550 1350
 F 0 "BT?" H 5668 1446 50  0000 L CNN
 F 1 "CR2016" H 5668 1355 50  0000 L CNN
-F 2 "" V 5550 1410 50  0001 C CNN
+F 2 "RespiraWorks:BatteryHolder_CR2016_MPD_BLP2016SM-G" V 5550 1410 50  0001 C CNN
 F 3 "~" V 5550 1410 50  0001 C CNN
+F 4 "MPD" H 5550 1350 50  0001 C CNN "Manufacturer"
+F 5 "BLP2016SM-GTR" H 5550 1350 50  0001 C CNN "Part Number"
 	1    5550 1350
 	1    0    0    -1  
 $EndComp
@@ -284,181 +286,23 @@ F 3 "" H 5550 1450 50  0001 C CNN
 $EndComp
 Text Notes 2850 3400 0    50   ~ 0
 I2C address: 1010 001
-Text HLabel 1950 8950 0    50   Input ~ 0
-Blower_Ctrl
-$Comp
-L Transistor_BJT:MMBT3904 Q?
-U 1 1 601A096C
-P 3000 8950
-AR Path="/5FCD4DF5/601A096C" Ref="Q?"  Part="1" 
-AR Path="/5FCD4B8E/601A096C" Ref="Q?"  Part="1" 
-AR Path="/6017BD7E/601A096C" Ref="Q?"  Part="1" 
-F 0 "Q?" H 3250 8950 50  0000 L CNN
-F 1 "MMBT3904" H 3200 8850 50  0000 L CNN
-F 2 "Ventilator:SOT-23" H 3200 8875 50  0001 L CIN
-F 3 "https://www.fairchildsemi.com/datasheets/2N/2N3904.pdf" H 3000 8950 50  0001 L CNN
-F 4 "Diodes Inc." H 3000 8950 50  0001 C CNN "Manufacturer"
-F 5 "MMBT3904-7-F" H 3000 8950 50  0001 C CNN "Part Number"
-	1    3000 8950
-	1    0    0    -1  
-$EndComp
-$Comp
-L Transistor_BJT:MMBT3906 Q?
-U 1 1 601A097C
-P 3300 8450
-AR Path="/5FCD4DF5/601A097C" Ref="Q?"  Part="1" 
-AR Path="/5FCD4B8E/601A097C" Ref="Q?"  Part="1" 
-AR Path="/6017BD7E/601A097C" Ref="Q?"  Part="1" 
-F 0 "Q?" H 3600 8400 50  0000 C CNN
-F 1 "MMBT3906" H 3700 8500 50  0000 C CNN
-F 2 "Ventilator:SOT-23" H 3500 8375 50  0001 L CIN
-F 3 "https://www.fairchildsemi.com/datasheets/2N/2N3906.pdf" H 3300 8450 50  0001 L CNN
-F 4 "Nexperia" H 3300 8450 50  0001 C CNN "Manufacturer"
-F 5 "MMBT3906,215" H 3300 8450 50  0001 C CNN "Part Number"
-	1    3300 8450
-	1    0    0    1   
-$EndComp
-$Comp
-L Device:R R?
-U 1 1 601A0989
-P 2500 9100
-AR Path="/601A0989" Ref="R?"  Part="1" 
-AR Path="/5E8AFE9D/601A0989" Ref="R?"  Part="1" 
-AR Path="/5E8A4ABF/601A0989" Ref="R?"  Part="1" 
-AR Path="/5E8E1F08/601A0989" Ref="R?"  Part="1" 
-AR Path="/5FCD4DF5/601A0989" Ref="R?"  Part="1" 
-AR Path="/5FCD4B8E/601A0989" Ref="R?"  Part="1" 
-AR Path="/6017BD7E/601A0989" Ref="R?"  Part="1" 
-F 0 "R?" H 2350 9150 50  0000 C CNN
-F 1 "1K 1%" H 2300 9050 50  0000 C CNN
-F 2 "RespiraWorks_Std:R_0603_1608Metric" V 2430 9100 50  0001 C CNN
-F 3 "~" H 2500 9100 50  0001 C CNN
-F 4 "" H 2500 9100 50  0001 C CNN "Manufacturer"
-F 5 "" H 2500 9100 50  0001 C CNN "Part Number"
-	1    2500 9100
-	-1   0    0    -1  
-$EndComp
-$Comp
-L power:GND #PWR?
-U 1 1 601A098F
-P 3100 9150
-AR Path="/601A098F" Ref="#PWR?"  Part="1" 
-AR Path="/5E8AFE9D/601A098F" Ref="#PWR?"  Part="1" 
-AR Path="/5E8A4ABF/601A098F" Ref="#PWR?"  Part="1" 
-AR Path="/5E8E1F08/601A098F" Ref="#PWR?"  Part="1" 
-AR Path="/5FCD4DF5/601A098F" Ref="#PWR?"  Part="1" 
-AR Path="/5FCD4B8E/601A098F" Ref="#PWR?"  Part="1" 
-AR Path="/6017BD7E/601A098F" Ref="#PWR?"  Part="1" 
-F 0 "#PWR?" H 3100 8900 50  0001 C CNN
-F 1 "GND" H 3105 8977 50  0000 C CNN
-F 2 "" H 3100 9150 50  0001 C CNN
-F 3 "" H 3100 9150 50  0001 C CNN
-	1    3100 9150
-	1    0    0    -1  
-$EndComp
-$Comp
-L Device:R R?
-U 1 1 601A57F6
-P 2250 8950
-AR Path="/601A57F6" Ref="R?"  Part="1" 
-AR Path="/5E8AFE9D/601A57F6" Ref="R?"  Part="1" 
-AR Path="/5E8A4ABF/601A57F6" Ref="R?"  Part="1" 
-AR Path="/5E8E1F08/601A57F6" Ref="R?"  Part="1" 
-AR Path="/5FCD4DF5/601A57F6" Ref="R?"  Part="1" 
-AR Path="/5FCD4B8E/601A57F6" Ref="R?"  Part="1" 
-AR Path="/6017BD7E/601A57F6" Ref="R?"  Part="1" 
-F 0 "R?" V 2450 8950 50  0000 C CNN
-F 1 "1K 1%" V 2350 8950 50  0000 C CNN
-F 2 "RespiraWorks_Std:R_0603_1608Metric" V 2180 8950 50  0001 C CNN
-F 3 "~" H 2250 8950 50  0001 C CNN
-F 4 "" H 2250 8950 50  0001 C CNN "Manufacturer"
-F 5 "" H 2250 8950 50  0001 C CNN "Part Number"
-	1    2250 8950
-	0    1    -1   0   
-$EndComp
-Wire Wire Line
-	2400 8950 2500 8950
-Connection ~ 2500 8950
-$Comp
-L power:GND #PWR?
-U 1 1 601A65EC
-P 2500 9250
-AR Path="/601A65EC" Ref="#PWR?"  Part="1" 
-AR Path="/5E8AFE9D/601A65EC" Ref="#PWR?"  Part="1" 
-AR Path="/5E8A4ABF/601A65EC" Ref="#PWR?"  Part="1" 
-AR Path="/5E8E1F08/601A65EC" Ref="#PWR?"  Part="1" 
-AR Path="/5FCD4DF5/601A65EC" Ref="#PWR?"  Part="1" 
-AR Path="/5FCD4B8E/601A65EC" Ref="#PWR?"  Part="1" 
-AR Path="/6017BD7E/601A65EC" Ref="#PWR?"  Part="1" 
-F 0 "#PWR?" H 2500 9000 50  0001 C CNN
-F 1 "GND" H 2505 9077 50  0000 C CNN
-F 2 "" H 2500 9250 50  0001 C CNN
-F 3 "" H 2500 9250 50  0001 C CNN
-	1    2500 9250
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	2500 8950 2800 8950
-$Comp
-L Device:R R?
-U 1 1 601A9B8D
-P 3100 8300
-AR Path="/601A9B8D" Ref="R?"  Part="1" 
-AR Path="/5E8AFE9D/601A9B8D" Ref="R?"  Part="1" 
-AR Path="/5E8A4ABF/601A9B8D" Ref="R?"  Part="1" 
-AR Path="/5E8E1F08/601A9B8D" Ref="R?"  Part="1" 
-AR Path="/5FCD4DF5/601A9B8D" Ref="R?"  Part="1" 
-AR Path="/5FCD4B8E/601A9B8D" Ref="R?"  Part="1" 
-AR Path="/6017BD7E/601A9B8D" Ref="R?"  Part="1" 
-F 0 "R?" H 2950 8350 50  0000 C CNN
-F 1 "1K 1%" H 2900 8250 50  0000 C CNN
-F 2 "RespiraWorks_Std:R_0603_1608Metric" V 3030 8300 50  0001 C CNN
-F 3 "~" H 3100 8300 50  0001 C CNN
-F 4 "" H 3100 8300 50  0001 C CNN "Manufacturer"
-F 5 "" H 3100 8300 50  0001 C CNN "Part Number"
-	1    3100 8300
-	1    0    0    -1  
-$EndComp
-$Comp
-L Device:R R?
-U 1 1 601A9F75
-P 3100 8600
-AR Path="/601A9F75" Ref="R?"  Part="1" 
-AR Path="/5E8AFE9D/601A9F75" Ref="R?"  Part="1" 
-AR Path="/5E8A4ABF/601A9F75" Ref="R?"  Part="1" 
-AR Path="/5E8E1F08/601A9F75" Ref="R?"  Part="1" 
-AR Path="/5FCD4DF5/601A9F75" Ref="R?"  Part="1" 
-AR Path="/5FCD4B8E/601A9F75" Ref="R?"  Part="1" 
-AR Path="/6017BD7E/601A9F75" Ref="R?"  Part="1" 
-F 0 "R?" H 2950 8650 50  0000 C CNN
-F 1 "1K 1%" H 2900 8550 50  0000 C CNN
-F 2 "RespiraWorks_Std:R_0603_1608Metric" V 3030 8600 50  0001 C CNN
-F 3 "~" H 3100 8600 50  0001 C CNN
-F 4 "" H 3100 8600 50  0001 C CNN "Manufacturer"
-F 5 "" H 3100 8600 50  0001 C CNN "Part Number"
-	1    3100 8600
-	1    0    0    -1  
-$EndComp
-Connection ~ 3100 8450
+Text HLabel 1450 8500 0    50   Input ~ 0
+Blower_Speed
 $Comp
 L power:+5V #PWR?
 U 1 1 601AC55D
-P 3100 7800
-F 0 "#PWR?" H 3100 7650 50  0001 C CNN
-F 1 "+5V" H 3115 7973 50  0000 C CNN
-F 2 "" H 3100 7800 50  0001 C CNN
-F 3 "" H 3100 7800 50  0001 C CNN
-	1    3100 7800
+P 2950 7500
+F 0 "#PWR?" H 2950 7350 50  0001 C CNN
+F 1 "+5V" H 2965 7673 50  0000 C CNN
+F 2 "" H 2950 7500 50  0001 C CNN
+F 3 "" H 2950 7500 50  0001 C CNN
+	1    2950 7500
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	3400 8650 4000 8650
-Wire Wire Line
-	1950 8950 2100 8950
 $Comp
 L Device:R R?
 U 1 1 601AE14E
-P 4250 8800
+P 3300 8700
 AR Path="/601AE14E" Ref="R?"  Part="1" 
 AR Path="/5E8AFE9D/601AE14E" Ref="R?"  Part="1" 
 AR Path="/5E8A4ABF/601AE14E" Ref="R?"  Part="1" 
@@ -466,20 +310,19 @@ AR Path="/5E8E1F08/601AE14E" Ref="R?"  Part="1"
 AR Path="/5FCD4DF5/601AE14E" Ref="R?"  Part="1" 
 AR Path="/5FCD4B8E/601AE14E" Ref="R?"  Part="1" 
 AR Path="/6017BD7E/601AE14E" Ref="R?"  Part="1" 
-F 0 "R?" H 4100 8850 50  0000 C CNN
-F 1 "1K 1%" H 4050 8750 50  0000 C CNN
-F 2 "RespiraWorks_Std:R_0603_1608Metric" V 4180 8800 50  0001 C CNN
-F 3 "~" H 4250 8800 50  0001 C CNN
-F 4 "" H 4250 8800 50  0001 C CNN "Manufacturer"
-F 5 "" H 4250 8800 50  0001 C CNN "Part Number"
-	1    4250 8800
+F 0 "R?" H 3150 8750 50  0000 C CNN
+F 1 "10K 1%" H 3100 8650 50  0000 C CNN
+F 2 "RespiraWorks_Std:R_0603_1608Metric" V 3230 8700 50  0001 C CNN
+F 3 "~" H 3300 8700 50  0001 C CNN
+F 4 "" H 3300 8700 50  0001 C CNN "Manufacturer"
+F 5 "" H 3300 8700 50  0001 C CNN "Part Number"
+	1    3300 8700
 	-1   0    0    -1  
 $EndComp
-Connection ~ 4250 8650
 $Comp
 L power:GND #PWR?
 U 1 1 601AE53D
-P 4250 8950
+P 3300 8850
 AR Path="/601AE53D" Ref="#PWR?"  Part="1" 
 AR Path="/5E8AFE9D/601AE53D" Ref="#PWR?"  Part="1" 
 AR Path="/5E8A4ABF/601AE53D" Ref="#PWR?"  Part="1" 
@@ -487,51 +330,17 @@ AR Path="/5E8E1F08/601AE53D" Ref="#PWR?"  Part="1"
 AR Path="/5FCD4DF5/601AE53D" Ref="#PWR?"  Part="1" 
 AR Path="/5FCD4B8E/601AE53D" Ref="#PWR?"  Part="1" 
 AR Path="/6017BD7E/601AE53D" Ref="#PWR?"  Part="1" 
-F 0 "#PWR?" H 4250 8700 50  0001 C CNN
-F 1 "GND" H 4255 8777 50  0000 C CNN
-F 2 "" H 4250 8950 50  0001 C CNN
-F 3 "" H 4250 8950 50  0001 C CNN
-	1    4250 8950
+F 0 "#PWR?" H 3300 8600 50  0001 C CNN
+F 1 "GND" H 3305 8677 50  0000 C CNN
+F 2 "" H 3300 8850 50  0001 C CNN
+F 3 "" H 3300 8850 50  0001 C CNN
+	1    3300 8850
 	1    0    0    -1  
 $EndComp
 $Comp
-L Device:D_ALT D?
-U 1 1 601B9B7B
-P 3200 9700
-AR Path="/5E8FBD97/601B9B7B" Ref="D?"  Part="1" 
-AR Path="/5E8DEDC0/601B9B7B" Ref="D?"  Part="1" 
-AR Path="/5E8DFCAD/601B9B7B" Ref="D?"  Part="1" 
-AR Path="/5E8E0754/601B9B7B" Ref="D?"  Part="1" 
-AR Path="/5E8E1F08/601B9B7B" Ref="D?"  Part="1" 
-AR Path="/601B9B7B" Ref="D?"  Part="1" 
-AR Path="/5FCD4DF5/601B9B7B" Ref="D?"  Part="1" 
-AR Path="/5FCD4B8E/601B9B7B" Ref="D?"  Part="1" 
-AR Path="/6017BD7E/601B9B7B" Ref="D?"  Part="1" 
-F 0 "D?" H 3100 9600 50  0000 L CNN
-F 1 "1N4448W" H 3000 9500 50  0000 L CNN
-F 2 "RespiraWorks_Std:D_SOD-123" H 3200 9700 50  0001 C CNN
-F 3 "~" H 3200 9700 50  0001 C CNN
-F 4 "" H 3200 9700 50  0001 C CNN "Manufacturer"
-F 5 "" H 3200 9700 50  0001 C CNN "Part Number"
-	1    3200 9700
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	3050 9700 2100 9700
-Wire Wire Line
-	2100 9700 2100 8950
-Connection ~ 2100 8950
-Wire Wire Line
-	3350 9700 4000 9700
-Wire Wire Line
-	4000 9700 4000 8650
-Connection ~ 4000 8650
-Wire Wire Line
-	4000 8650 4250 8650
-$Comp
-L Connector_Generic:Conn_01x03 J?
+L Connector_Generic:Conn_01x04 J?
 U 1 1 601BE689
-P 5050 8650
+P 5000 8500
 AR Path="/5FCD4EEA/600F5EF3/601BE689" Ref="J?"  Part="1" 
 AR Path="/5FCD4EEA/600F7154/601BE689" Ref="J?"  Part="1" 
 AR Path="/5FCD4EEA/600F719E/601BE689" Ref="J?"  Part="1" 
@@ -539,19 +348,17 @@ AR Path="/5FCD4EEA/600F71F1/601BE689" Ref="J?"  Part="1"
 AR Path="/5FCD4EEA/600F723B/601BE689" Ref="J?"  Part="1" 
 AR Path="/5FCD4EEA/601BE689" Ref="J?"  Part="1" 
 AR Path="/6017BD7E/601BE689" Ref="J?"  Part="1" 
-F 0 "J?" H 4968 8967 50  0000 C CNN
-F 1 "Molex Micro-Fit" H 4968 8876 50  0000 C CNN
-F 2 "RespiraWorks_Std:Molex_Micro-Fit_3.0_43650-0315_1x03_P3.00mm_Vertical" H 5050 8650 50  0001 C CNN
-F 3 "~" H 5050 8650 50  0001 C CNN
-	1    5050 8650
+F 0 "J?" H 4918 8817 50  0000 C CNN
+F 1 "Molex Micro-Fit" H 4918 8726 50  0000 C CNN
+F 2 "RespiraWorks_Std:Molex_Micro-Fit_3.0_43650-0415_1x04_P3.00mm_Vertical" H 5000 8500 50  0001 C CNN
+F 3 "~" H 5000 8500 50  0001 C CNN
+	1    5000 8500
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	4250 8650 4850 8650
 $Comp
 L power:GND #PWR?
 U 1 1 601BEFD4
-P 4850 8750
+P 4800 8700
 AR Path="/601BEFD4" Ref="#PWR?"  Part="1" 
 AR Path="/5E8AFE9D/601BEFD4" Ref="#PWR?"  Part="1" 
 AR Path="/5E8A4ABF/601BEFD4" Ref="#PWR?"  Part="1" 
@@ -559,32 +366,19 @@ AR Path="/5E8E1F08/601BEFD4" Ref="#PWR?"  Part="1"
 AR Path="/5FCD4DF5/601BEFD4" Ref="#PWR?"  Part="1" 
 AR Path="/5FCD4B8E/601BEFD4" Ref="#PWR?"  Part="1" 
 AR Path="/6017BD7E/601BEFD4" Ref="#PWR?"  Part="1" 
-F 0 "#PWR?" H 4850 8500 50  0001 C CNN
-F 1 "GND" H 4855 8577 50  0000 C CNN
-F 2 "" H 4850 8750 50  0001 C CNN
-F 3 "" H 4850 8750 50  0001 C CNN
-	1    4850 8750
-	1    0    0    -1  
-$EndComp
-$Comp
-L power:+5V #PWR?
-U 1 1 601BF210
-P 4500 8400
-F 0 "#PWR?" H 4500 8250 50  0001 C CNN
-F 1 "+5V" H 4515 8573 50  0000 C CNN
-F 2 "" H 4500 8400 50  0001 C CNN
-F 3 "" H 4500 8400 50  0001 C CNN
-	1    4500 8400
+F 0 "#PWR?" H 4800 8450 50  0001 C CNN
+F 1 "GND" H 4805 8527 50  0000 C CNN
+F 2 "" H 4800 8700 50  0001 C CNN
+F 3 "" H 4800 8700 50  0001 C CNN
+	1    4800 8700
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	4500 8400 4500 8550
-Wire Wire Line
-	4500 8550 4850 8550
+	4450 8400 4800 8400
 $Comp
 L Device:C C?
 U 1 1 601C2B44
-P 3700 7950
+P 3150 8000
 AR Path="/601C2B44" Ref="C?"  Part="1" 
 AR Path="/5E8AFE9D/601C2B44" Ref="C?"  Part="1" 
 AR Path="/5E8FBD97/601C2B44" Ref="C?"  Part="1" 
@@ -601,19 +395,19 @@ AR Path="/5FCD4EEA/600F71F1/601C2B44" Ref="C?"  Part="1"
 AR Path="/5FCD4EEA/600F723B/601C2B44" Ref="C?"  Part="1" 
 AR Path="/5FCD4EEA/601C2B44" Ref="C?"  Part="1" 
 AR Path="/6017BD7E/601C2B44" Ref="C?"  Part="1" 
-F 0 "C?" H 3800 7750 50  0000 C CNN
-F 1 "100nF 100V X7R" H 4050 7850 50  0000 C CNN
-F 2 "RespiraWorks_Std:C_0603_1608Metric" H 3738 7800 50  0001 C CNN
-F 3 "~" H 3700 7950 50  0001 C CNN
-F 4 "" H 3700 7950 50  0001 C CNN "Manufacturer"
-F 5 "" H 3700 7950 50  0001 C CNN "Part Number"
-	1    3700 7950
+F 0 "C?" H 3300 8000 50  0000 C CNN
+F 1 "100nF 100V X7R" H 3500 8100 50  0000 C CNN
+F 2 "RespiraWorks_Std:C_0603_1608Metric" H 3188 7850 50  0001 C CNN
+F 3 "~" H 3150 8000 50  0001 C CNN
+F 4 "" H 3150 8000 50  0001 C CNN "Manufacturer"
+F 5 "" H 3150 8000 50  0001 C CNN "Part Number"
+	1    3150 8000
 	1    0    0    1   
 $EndComp
 $Comp
 L power:GND #PWR?
 U 1 1 601C2B4A
-P 3700 8100
+P 3150 8150
 AR Path="/601C2B4A" Ref="#PWR?"  Part="1" 
 AR Path="/5E8AFE9D/601C2B4A" Ref="#PWR?"  Part="1" 
 AR Path="/5E8FBD97/601C2B4A" Ref="#PWR?"  Part="1" 
@@ -630,25 +424,13 @@ AR Path="/5FCD4EEA/600F71F1/601C2B4A" Ref="#PWR?"  Part="1"
 AR Path="/5FCD4EEA/600F723B/601C2B4A" Ref="#PWR?"  Part="1" 
 AR Path="/5FCD4EEA/601C2B4A" Ref="#PWR?"  Part="1" 
 AR Path="/6017BD7E/601C2B4A" Ref="#PWR?"  Part="1" 
-F 0 "#PWR?" H 3700 7850 50  0001 C CNN
-F 1 "GND" H 3705 7927 50  0000 C CNN
-F 2 "" H 3700 8100 50  0001 C CNN
-F 3 "" H 3700 8100 50  0001 C CNN
-	1    3700 8100
+F 0 "#PWR?" H 3150 7900 50  0001 C CNN
+F 1 "GND" H 3155 7977 50  0000 C CNN
+F 2 "" H 3150 8150 50  0001 C CNN
+F 3 "" H 3150 8150 50  0001 C CNN
+	1    3150 8150
 	-1   0    0    -1  
 $EndComp
-Wire Wire Line
-	3700 7800 3400 7800
-Wire Wire Line
-	3100 7800 3100 8150
-Connection ~ 3400 7800
-Wire Wire Line
-	3400 7800 3100 7800
-Wire Wire Line
-	3400 8250 3400 7800
-Connection ~ 3100 7800
-Text Notes 5150 8650 0    50   ~ 0
-Blower control
 $Comp
 L RespiraWorks:24LC256T-I_MS U?
 U 1 1 601D3E25
@@ -1792,10 +1574,441 @@ Wire Wire Line
 	6850 6550 1750 6550
 Text Notes 6500 5550 0    79   ~ 16
 Global I2C pull-ups
-Text Notes 2550 7400 0    79   ~ 0
+Text Notes 2500 7200 0    79   ~ 0
 Blower PWM control signal level shifter
 Text Notes 2750 950  0    79   ~ 0
 Real-Time Clock
 Text Notes 3150 4050 0    79   ~ 0
 EEPROM
+$Comp
+L Device:Jumper_NC_Small JP?
+U 1 1 6033F675
+P 3400 7500
+F 0 "JP?" H 3350 7600 50  0000 L CNN
+F 1 "Jumper_NC_Small" V 3445 7574 50  0001 L CNN
+F 2 "" H 3400 7500 50  0001 C CNN
+F 3 "~" H 3400 7500 50  0001 C CNN
+	1    3400 7500
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3300 7500 2950 7500
+Text Notes 2700 7700 0    50   ~ 0
+Control output powered\nfrom internal +5V
+$Comp
+L Device:Jumper_NO_Small JP?
+U 1 1 603508F0
+P 3850 7500
+F 0 "JP?" H 3850 7593 50  0000 C CNN
+F 1 "Jumper_NO_Small" H 3850 7594 50  0001 C CNN
+F 2 "" H 3850 7500 50  0001 C CNN
+F 3 "~" H 3850 7500 50  0001 C CNN
+	1    3850 7500
+	1    0    0    -1  
+$EndComp
+Text Notes 3950 7450 0    50   ~ 0
+Control output powered\nfrom motor driver's +5V
+Text Notes 5400 8750 0    50   ~ 0
+Blower control\n\n1: +5V in\n2: PWM out/Speed control voltage out\n3: ~Enable~\n4: Gnd
+Text HLabel 3400 9900 0    50   Input ~ 0
+Blower_Enable
+$Comp
+L Transistor_BJT:MMBT3904 Q?
+U 1 1 60376E01
+P 4450 9900
+AR Path="/5FCD4DF5/60376E01" Ref="Q?"  Part="1" 
+AR Path="/5FCD4B8E/60376E01" Ref="Q?"  Part="1" 
+AR Path="/6017BD7E/60376E01" Ref="Q?"  Part="1" 
+F 0 "Q?" H 4700 9900 50  0000 L CNN
+F 1 "MMBT3904" H 4650 9800 50  0000 L CNN
+F 2 "Ventilator:SOT-23" H 4650 9825 50  0001 L CIN
+F 3 "https://www.fairchildsemi.com/datasheets/2N/2N3904.pdf" H 4450 9900 50  0001 L CNN
+F 4 "Diodes Inc." H 4450 9900 50  0001 C CNN "Manufacturer"
+F 5 "MMBT3904-7-F" H 4450 9900 50  0001 C CNN "Part Number"
+	1    4450 9900
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 60376E09
+P 3950 10050
+AR Path="/60376E09" Ref="R?"  Part="1" 
+AR Path="/5E8AFE9D/60376E09" Ref="R?"  Part="1" 
+AR Path="/5E8A4ABF/60376E09" Ref="R?"  Part="1" 
+AR Path="/5E8E1F08/60376E09" Ref="R?"  Part="1" 
+AR Path="/5FCD4DF5/60376E09" Ref="R?"  Part="1" 
+AR Path="/5FCD4B8E/60376E09" Ref="R?"  Part="1" 
+AR Path="/6017BD7E/60376E09" Ref="R?"  Part="1" 
+F 0 "R?" H 3800 10100 50  0000 C CNN
+F 1 "1K 1%" H 3750 10000 50  0000 C CNN
+F 2 "RespiraWorks_Std:R_0603_1608Metric" V 3880 10050 50  0001 C CNN
+F 3 "~" H 3950 10050 50  0001 C CNN
+F 4 "" H 3950 10050 50  0001 C CNN "Manufacturer"
+F 5 "" H 3950 10050 50  0001 C CNN "Part Number"
+	1    3950 10050
+	-1   0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 60376E0F
+P 4550 10100
+AR Path="/60376E0F" Ref="#PWR?"  Part="1" 
+AR Path="/5E8AFE9D/60376E0F" Ref="#PWR?"  Part="1" 
+AR Path="/5E8A4ABF/60376E0F" Ref="#PWR?"  Part="1" 
+AR Path="/5E8E1F08/60376E0F" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4DF5/60376E0F" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4B8E/60376E0F" Ref="#PWR?"  Part="1" 
+AR Path="/6017BD7E/60376E0F" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 4550 9850 50  0001 C CNN
+F 1 "GND" H 4555 9927 50  0000 C CNN
+F 2 "" H 4550 10100 50  0001 C CNN
+F 3 "" H 4550 10100 50  0001 C CNN
+	1    4550 10100
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 60376E17
+P 3700 9900
+AR Path="/60376E17" Ref="R?"  Part="1" 
+AR Path="/5E8AFE9D/60376E17" Ref="R?"  Part="1" 
+AR Path="/5E8A4ABF/60376E17" Ref="R?"  Part="1" 
+AR Path="/5E8E1F08/60376E17" Ref="R?"  Part="1" 
+AR Path="/5FCD4DF5/60376E17" Ref="R?"  Part="1" 
+AR Path="/5FCD4B8E/60376E17" Ref="R?"  Part="1" 
+AR Path="/6017BD7E/60376E17" Ref="R?"  Part="1" 
+F 0 "R?" V 3900 9900 50  0000 C CNN
+F 1 "1K 1%" V 3800 9900 50  0000 C CNN
+F 2 "RespiraWorks_Std:R_0603_1608Metric" V 3630 9900 50  0001 C CNN
+F 3 "~" H 3700 9900 50  0001 C CNN
+F 4 "" H 3700 9900 50  0001 C CNN "Manufacturer"
+F 5 "" H 3700 9900 50  0001 C CNN "Part Number"
+	1    3700 9900
+	0    1    -1   0   
+$EndComp
+Wire Wire Line
+	3850 9900 3950 9900
+Connection ~ 3950 9900
+$Comp
+L power:GND #PWR?
+U 1 1 60376E1F
+P 3950 10200
+AR Path="/60376E1F" Ref="#PWR?"  Part="1" 
+AR Path="/5E8AFE9D/60376E1F" Ref="#PWR?"  Part="1" 
+AR Path="/5E8A4ABF/60376E1F" Ref="#PWR?"  Part="1" 
+AR Path="/5E8E1F08/60376E1F" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4DF5/60376E1F" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4B8E/60376E1F" Ref="#PWR?"  Part="1" 
+AR Path="/6017BD7E/60376E1F" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 3950 9950 50  0001 C CNN
+F 1 "GND" H 3955 10027 50  0000 C CNN
+F 2 "" H 3950 10200 50  0001 C CNN
+F 3 "" H 3950 10200 50  0001 C CNN
+	1    3950 10200
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3950 9900 4250 9900
+Wire Wire Line
+	4550 8600 4800 8600
+Text Notes 5300 9500 0    50   ~ 0
+Blower connections\nWM9290: Uses both ~enable~ and speed control voltage (populate PWM filter);\n    small control connector pin 1=+5V out, 2=speed ctrl voltage, 3=gnd, 4=~enable~\nWM7060: (uses same driver as WM9290)\nWS7040: ?\nTKFAN BA7050H24B: ? (no driver included)
+Wire Wire Line
+	4550 8600 4550 9700
+$Comp
+L Device:R R?
+U 1 1 60411487
+P 3900 8500
+AR Path="/60411487" Ref="R?"  Part="1" 
+AR Path="/5E8AFE9D/60411487" Ref="R?"  Part="1" 
+AR Path="/5E8A4ABF/60411487" Ref="R?"  Part="1" 
+AR Path="/5E8E1F08/60411487" Ref="R?"  Part="1" 
+AR Path="/5FCD4DF5/60411487" Ref="R?"  Part="1" 
+AR Path="/5FCD4B8E/60411487" Ref="R?"  Part="1" 
+AR Path="/6017BD7E/60411487" Ref="R?"  Part="1" 
+F 0 "R?" V 4100 8500 50  0000 C CNN
+F 1 "0" V 4000 8500 50  0000 C CNN
+F 2 "RespiraWorks_Std:R_0603_1608Metric" V 3830 8500 50  0001 C CNN
+F 3 "~" H 3900 8500 50  0001 C CNN
+F 4 "" H 3900 8500 50  0001 C CNN "Manufacturer"
+F 5 "" H 3900 8500 50  0001 C CNN "Part Number"
+	1    3900 8500
+	0    1    -1   0   
+$EndComp
+Wire Wire Line
+	4050 8500 4150 8500
+$Comp
+L Device:C C?
+U 1 1 604393FD
+P 4150 8700
+AR Path="/604393FD" Ref="C?"  Part="1" 
+AR Path="/5E8AFE9D/604393FD" Ref="C?"  Part="1" 
+AR Path="/5E8FBD97/604393FD" Ref="C?"  Part="1" 
+AR Path="/5E8E0754/604393FD" Ref="C?"  Part="1" 
+AR Path="/5E8DFCAD/604393FD" Ref="C?"  Part="1" 
+AR Path="/5E8DEDC0/604393FD" Ref="C?"  Part="1" 
+AR Path="/5E8C8865/604393FD" Ref="C?"  Part="1" 
+AR Path="/5E8E1F08/604393FD" Ref="C?"  Part="1" 
+AR Path="/5FCD4DF5/604393FD" Ref="C?"  Part="1" 
+AR Path="/5FCD4EEA/600F5EF3/604393FD" Ref="C?"  Part="1" 
+AR Path="/5FCD4EEA/600F7154/604393FD" Ref="C?"  Part="1" 
+AR Path="/5FCD4EEA/600F719E/604393FD" Ref="C?"  Part="1" 
+AR Path="/5FCD4EEA/600F71F1/604393FD" Ref="C?"  Part="1" 
+AR Path="/5FCD4EEA/600F723B/604393FD" Ref="C?"  Part="1" 
+AR Path="/5FCD4EEA/604393FD" Ref="C?"  Part="1" 
+AR Path="/6017BD7E/604393FD" Ref="C?"  Part="1" 
+F 0 "C?" H 3850 8700 50  0000 C CNN
+F 1 "DNP" H 3950 8800 50  0000 C CNN
+F 2 "RespiraWorks_Std:C_0603_1608Metric" H 4188 8550 50  0001 C CNN
+F 3 "~" H 4150 8700 50  0001 C CNN
+F 4 "" H 4150 8700 50  0001 C CNN "Manufacturer"
+F 5 "" H 4150 8700 50  0001 C CNN "Part Number"
+	1    4150 8700
+	1    0    0    1   
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 60439403
+P 4150 8850
+AR Path="/60439403" Ref="#PWR?"  Part="1" 
+AR Path="/5E8AFE9D/60439403" Ref="#PWR?"  Part="1" 
+AR Path="/5E8FBD97/60439403" Ref="#PWR?"  Part="1" 
+AR Path="/5E8E0754/60439403" Ref="#PWR?"  Part="1" 
+AR Path="/5E8DFCAD/60439403" Ref="#PWR?"  Part="1" 
+AR Path="/5E8DEDC0/60439403" Ref="#PWR?"  Part="1" 
+AR Path="/5E8C8865/60439403" Ref="#PWR?"  Part="1" 
+AR Path="/5E8E1F08/60439403" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4DF5/60439403" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4EEA/600F5EF3/60439403" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4EEA/600F7154/60439403" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4EEA/600F719E/60439403" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4EEA/600F71F1/60439403" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4EEA/600F723B/60439403" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4EEA/60439403" Ref="#PWR?"  Part="1" 
+AR Path="/6017BD7E/60439403" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 4150 8600 50  0001 C CNN
+F 1 "GND" H 4155 8677 50  0000 C CNN
+F 2 "" H 4150 8850 50  0001 C CNN
+F 3 "" H 4150 8850 50  0001 C CNN
+	1    4150 8850
+	-1   0    0    -1  
+$EndComp
+Wire Wire Line
+	4150 8550 4150 8500
+Connection ~ 4150 8500
+Wire Wire Line
+	4150 8500 4800 8500
+Wire Notes Line
+	3700 9100 4300 9100
+Wire Notes Line
+	4300 9100 4300 8200
+Wire Notes Line
+	4300 8200 3700 8200
+Wire Notes Line
+	3700 8200 3700 9100
+Text Notes 3650 9350 0    50   ~ 0
+Optional PWM filter\nto produce analog\ncontrol voltage
+$Comp
+L RespiraWorks:SN74LVC2T45DCTR U?
+U 1 1 6045598A
+P 2700 8600
+F 0 "U?" H 2150 8300 50  0000 C CNN
+F 1 "SN74LVC2T45DCTR" H 2200 8200 50  0000 C CNN
+F 2 "RespiraWorks:SSOP-8_3.15x2.9mm_P0.65mm" H 3050 7750 50  0001 C CNN
+F 3 "https://www.ti.com/lit/ds/symlink/sn74lvc2t45.pdf?HQS=TI-null-null-digikeymode-df-pf-null-wwe&ts=1605630505243" H 3050 7750 50  0001 C CNN
+	1    2700 8600
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3300 8550 3300 8500
+Wire Wire Line
+	3300 8500 3750 8500
+Wire Wire Line
+	3300 8500 3100 8500
+Connection ~ 3300 8500
+NoConn ~ 3100 8600
+Wire Wire Line
+	3950 7500 4450 7500
+Wire Wire Line
+	4450 7500 4450 8400
+Wire Wire Line
+	2800 8100 2800 7850
+Wire Wire Line
+	2800 7850 3150 7850
+Wire Wire Line
+	3150 7850 3650 7850
+Wire Wire Line
+	3650 7850 3650 7500
+Wire Wire Line
+	3650 7500 3750 7500
+Connection ~ 3150 7850
+Wire Wire Line
+	3650 7500 3500 7500
+Connection ~ 3650 7500
+$Comp
+L Device:C C?
+U 1 1 604ABE7D
+P 2050 7650
+AR Path="/604ABE7D" Ref="C?"  Part="1" 
+AR Path="/5E8AFE9D/604ABE7D" Ref="C?"  Part="1" 
+AR Path="/5E8FBD97/604ABE7D" Ref="C?"  Part="1" 
+AR Path="/5E8E0754/604ABE7D" Ref="C?"  Part="1" 
+AR Path="/5E8DFCAD/604ABE7D" Ref="C?"  Part="1" 
+AR Path="/5E8DEDC0/604ABE7D" Ref="C?"  Part="1" 
+AR Path="/5E8C8865/604ABE7D" Ref="C?"  Part="1" 
+AR Path="/5E8E1F08/604ABE7D" Ref="C?"  Part="1" 
+AR Path="/5FCD4DF5/604ABE7D" Ref="C?"  Part="1" 
+AR Path="/5FCD4EEA/600F5EF3/604ABE7D" Ref="C?"  Part="1" 
+AR Path="/5FCD4EEA/600F7154/604ABE7D" Ref="C?"  Part="1" 
+AR Path="/5FCD4EEA/600F719E/604ABE7D" Ref="C?"  Part="1" 
+AR Path="/5FCD4EEA/600F71F1/604ABE7D" Ref="C?"  Part="1" 
+AR Path="/5FCD4EEA/600F723B/604ABE7D" Ref="C?"  Part="1" 
+AR Path="/5FCD4EEA/604ABE7D" Ref="C?"  Part="1" 
+AR Path="/6017BD7E/604ABE7D" Ref="C?"  Part="1" 
+F 0 "C?" H 2200 7650 50  0000 C CNN
+F 1 "100nF 100V X7R" H 2400 7750 50  0000 C CNN
+F 2 "RespiraWorks_Std:C_0603_1608Metric" H 2088 7500 50  0001 C CNN
+F 3 "~" H 2050 7650 50  0001 C CNN
+F 4 "" H 2050 7650 50  0001 C CNN "Manufacturer"
+F 5 "" H 2050 7650 50  0001 C CNN "Part Number"
+	1    2050 7650
+	-1   0    0    1   
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 604ABE83
+P 2050 7800
+AR Path="/604ABE83" Ref="#PWR?"  Part="1" 
+AR Path="/5E8AFE9D/604ABE83" Ref="#PWR?"  Part="1" 
+AR Path="/5E8FBD97/604ABE83" Ref="#PWR?"  Part="1" 
+AR Path="/5E8E0754/604ABE83" Ref="#PWR?"  Part="1" 
+AR Path="/5E8DFCAD/604ABE83" Ref="#PWR?"  Part="1" 
+AR Path="/5E8DEDC0/604ABE83" Ref="#PWR?"  Part="1" 
+AR Path="/5E8C8865/604ABE83" Ref="#PWR?"  Part="1" 
+AR Path="/5E8E1F08/604ABE83" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4DF5/604ABE83" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4EEA/600F5EF3/604ABE83" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4EEA/600F7154/604ABE83" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4EEA/600F719E/604ABE83" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4EEA/600F71F1/604ABE83" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4EEA/600F723B/604ABE83" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4EEA/604ABE83" Ref="#PWR?"  Part="1" 
+AR Path="/6017BD7E/604ABE83" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 2050 7550 50  0001 C CNN
+F 1 "GND" H 2055 7627 50  0000 C CNN
+F 2 "" H 2050 7800 50  0001 C CNN
+F 3 "" H 2050 7800 50  0001 C CNN
+	1    2050 7800
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2600 8100 2600 7500
+Wire Wire Line
+	2600 7500 2050 7500
+$Comp
+L RespiraWorks:+3.3V_Ctrl #PWR?
+U 1 1 604BAC6D
+P 2050 7500
+F 0 "#PWR?" H 2050 7500 50  0001 C CNN
+F 1 "+3.3V_Ctrl" H 2035 7673 50  0000 C CNN
+F 2 "" H 2050 7500 50  0001 C CNN
+F 3 "" H 2050 7500 50  0001 C CNN
+	1    2050 7500
+	1    0    0    -1  
+$EndComp
+Connection ~ 2050 7500
+$Comp
+L Device:R R?
+U 1 1 604D5F20
+P 1500 8650
+AR Path="/604D5F20" Ref="R?"  Part="1" 
+AR Path="/5E8AFE9D/604D5F20" Ref="R?"  Part="1" 
+AR Path="/5E8A4ABF/604D5F20" Ref="R?"  Part="1" 
+AR Path="/5E8E1F08/604D5F20" Ref="R?"  Part="1" 
+AR Path="/5FCD4DF5/604D5F20" Ref="R?"  Part="1" 
+AR Path="/5FCD4B8E/604D5F20" Ref="R?"  Part="1" 
+AR Path="/6017BD7E/604D5F20" Ref="R?"  Part="1" 
+F 0 "R?" H 1350 8700 50  0000 C CNN
+F 1 "10K 1%" H 1300 8600 50  0000 C CNN
+F 2 "RespiraWorks_Std:R_0603_1608Metric" V 1430 8650 50  0001 C CNN
+F 3 "~" H 1500 8650 50  0001 C CNN
+F 4 "" H 1500 8650 50  0001 C CNN "Manufacturer"
+F 5 "" H 1500 8650 50  0001 C CNN "Part Number"
+	1    1500 8650
+	-1   0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 604D5F26
+P 1500 8800
+AR Path="/604D5F26" Ref="#PWR?"  Part="1" 
+AR Path="/5E8AFE9D/604D5F26" Ref="#PWR?"  Part="1" 
+AR Path="/5E8A4ABF/604D5F26" Ref="#PWR?"  Part="1" 
+AR Path="/5E8E1F08/604D5F26" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4DF5/604D5F26" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4B8E/604D5F26" Ref="#PWR?"  Part="1" 
+AR Path="/6017BD7E/604D5F26" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 1500 8550 50  0001 C CNN
+F 1 "GND" H 1505 8627 50  0000 C CNN
+F 2 "" H 1500 8800 50  0001 C CNN
+F 3 "" H 1500 8800 50  0001 C CNN
+	1    1500 8800
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	1450 8500 1500 8500
+Connection ~ 1500 8500
+$Comp
+L power:GND #PWR?
+U 1 1 604E5690
+P 2700 9000
+AR Path="/604E5690" Ref="#PWR?"  Part="1" 
+AR Path="/5E8AFE9D/604E5690" Ref="#PWR?"  Part="1" 
+AR Path="/5E8A4ABF/604E5690" Ref="#PWR?"  Part="1" 
+AR Path="/5E8E1F08/604E5690" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4DF5/604E5690" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4B8E/604E5690" Ref="#PWR?"  Part="1" 
+AR Path="/6017BD7E/604E5690" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 2700 8750 50  0001 C CNN
+F 1 "GND" H 2705 8827 50  0000 C CNN
+F 2 "" H 2700 9000 50  0001 C CNN
+F 3 "" H 2700 9000 50  0001 C CNN
+	1    2700 9000
+	1    0    0    -1  
+$EndComp
+$Comp
+L RespiraWorks:+3.3V_Ctrl #PWR?
+U 1 1 604E5D5D
+P 1900 8450
+F 0 "#PWR?" H 1900 8450 50  0001 C CNN
+F 1 "+3.3V_Ctrl" H 1885 8623 50  0000 C CNN
+F 2 "" H 1900 8450 50  0001 C CNN
+F 3 "" H 1900 8450 50  0001 C CNN
+	1    1900 8450
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	1900 8450 1900 8600
+Wire Wire Line
+	2100 8600 1900 8600
+Connection ~ 1900 8600
+Wire Wire Line
+	1900 8600 1900 8700
+Wire Wire Line
+	1500 8500 2300 8500
+Wire Wire Line
+	3550 9900 3400 9900
+$Comp
+L Device:Jumper_NC_Small JP?
+U 1 1 605272F8
+P 2200 8600
+F 0 "JP?" H 1950 8650 50  0000 L CNN
+F 1 "Jumper_NC_Small" V 2245 8674 50  0001 L CNN
+F 2 "" H 2200 8600 50  0001 C CNN
+F 3 "~" H 2200 8600 50  0001 C CNN
+	1    2200 8600
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	1900 8700 2300 8700
 $EndSCHEMATC

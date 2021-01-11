@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 24 30
+Sheet 27 30
 Title "NTC Temperature Sensor Input"
 Date ""
 Rev "2.0"
@@ -20,17 +20,17 @@ Vcc
 $Comp
 L Connector_Generic:Conn_01x02 J?
 U 1 1 6010AD26
-P 2950 3200
+P 1550 3200
 AR Path="/5FCD4EEA/600F5EF3/6010AD26" Ref="J?"  Part="1" 
 AR Path="/5FCD4EEA/600F7154/6010AD26" Ref="J?"  Part="1" 
 AR Path="/5FCD4EEA/600F719E/6010AD26" Ref="J?"  Part="1" 
 AR Path="/5FCD4EEA/600F71F1/6010AD26" Ref="J?"  Part="1" 
 AR Path="/5FCD4EEA/600F723B/6010AD26" Ref="J?"  Part="1" 
-F 0 "J?" H 2868 3417 50  0000 C CNN
-F 1 "Molex Micro-Fit" H 2868 3326 50  0000 C CNN
-F 2 "RespiraWorks_Std:Molex_Micro-Fit_3.0_43650-0215_1x02_P3.00mm_Vertical" H 2950 3200 50  0001 C CNN
-F 3 "~" H 2950 3200 50  0001 C CNN
-	1    2950 3200
+F 0 "J?" H 1468 3417 50  0000 C CNN
+F 1 "Molex Micro-Fit" H 1468 3326 50  0000 C CNN
+F 2 "RespiraWorks_Std:Molex_Micro-Fit_3.0_43650-0215_1x02_P3.00mm_Vertical" H 1550 3200 50  0001 C CNN
+F 3 "~" H 1550 3200 50  0001 C CNN
+	1    1550 3200
 	-1   0    0    -1  
 $EndComp
 $Comp
@@ -56,7 +56,7 @@ F 3 "" H 4300 3850 50  0001 C CNN
 	1    4300 3850
 	-1   0    0    -1  
 $EndComp
-Text Notes 2350 3250 0    50   ~ 0
+Text Notes 1000 3300 0    50   ~ 0
 PT100 RTD
 $Comp
 L Device:C C?
@@ -79,7 +79,7 @@ AR Path="/5FCD4EEA/600F723B/60117C61" Ref="C?"  Part="1"
 AR Path="/5FCD4EEA/600F7154/60117C61" Ref="C?"  Part="1" 
 AR Path="/5FCD4EEA/600F719E/60117C61" Ref="C?"  Part="1" 
 F 0 "C?" H 5900 3450 50  0000 L CNN
-F 1 "1uF 10V X7R" H 5700 3550 50  0000 L CNN
+F 1 "4.7uF 10V X5R" H 5700 3550 50  0000 L CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 5638 3300 50  0001 C CNN
 F 3 "~" H 5600 3450 50  0001 C CNN
 	1    5600 3450
@@ -176,11 +176,11 @@ F 5 "RK73H2BTTD1004F" H 4300 3600 50  0001 C CNN "Part Number"
 	-1   0    0    1   
 $EndComp
 Wire Wire Line
-	3150 3300 4300 3300
+	1750 3300 2300 3300
 Wire Wire Line
 	4300 3300 4300 3450
 Wire Wire Line
-	3150 3200 4300 3200
+	1750 3200 4300 3200
 Wire Wire Line
 	4300 3200 4300 2850
 Text Notes 3500 2700 0    50   ~ 0
@@ -192,4 +192,56 @@ Wire Wire Line
 Connection ~ 4300 3300
 Wire Wire Line
 	5600 3600 5600 3850
+$Comp
+L Power_Protection:USBLC6-2SC6 U?
+U 1 1 5FFD5C58
+P 2400 3900
+F 0 "U?" V 1950 4100 50  0000 L CNN
+F 1 "USBLC6-2SC6" V 2050 4100 50  0000 L CNN
+F 2 "Package_TO_SOT_SMD:SOT-23-6" H 2400 3400 50  0001 C CNN
+F 3 "https://www.st.com/resource/en/datasheet/usblc6-2.pdf" H 2600 4250 50  0001 C CNN
+	1    2400 3900
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	2500 3500 2500 3300
+Wire Wire Line
+	2500 3300 4300 3300
+Wire Wire Line
+	2300 3500 2300 3300
+NoConn ~ 2300 4300
+NoConn ~ 2500 4300
+Wire Wire Line
+	2800 3900 3100 3900
+Text Label 2850 3900 0    50   ~ 0
+Vcc
+Text Label 4150 2550 0    50   ~ 0
+Vcc
+$Comp
+L power:GND #PWR?
+U 1 1 5FFDA1EB
+P 1800 4050
+AR Path="/5FCD4B8E/5FCD4BC5/5FFDA1EB" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4B8E/5FE27F70/5FFDA1EB" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4B8E/5FCD4BF6/5FFDA1EB" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4B8E/606EF10F/5FFDA1EB" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4E9D/5FFDA1EB" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4E9D/6007E2BB/5FFDA1EB" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4E9D/60073FCF/5FFDA1EB" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4EEA/600F5EF3/5FFDA1EB" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4EEA/600F7154/5FFDA1EB" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4EEA/600F719E/5FFDA1EB" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4EEA/600F71F1/5FFDA1EB" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4EEA/600F723B/5FFDA1EB" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 1800 3800 50  0001 C CNN
+F 1 "GND" H 1805 3877 50  0000 C CNN
+F 2 "" H 1800 4050 50  0001 C CNN
+F 3 "" H 1800 4050 50  0001 C CNN
+	1    1800 4050
+	-1   0    0    -1  
+$EndComp
+Wire Wire Line
+	2000 3900 1800 3900
+Wire Wire Line
+	1800 3900 1800 4050
 $EndSCHEMATC

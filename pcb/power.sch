@@ -1113,4 +1113,82 @@ Wire Wire Line
 	12950 1700 12650 1700
 Text Notes 9850 7150 0    50   Italic 0
 +BATT voltage range is about\n4V (+5V minus large diode Vf) to\n5.5V (6V battery minus small diode Vf)
+$Comp
+L Device:R R?
+U 1 1 5FFBEFBD
+P 14900 6550
+AR Path="/5FFBEFBD" Ref="R?"  Part="1" 
+AR Path="/5E8AFE9D/5FFBEFBD" Ref="R?"  Part="1" 
+AR Path="/5E8C8865/5FFBEFBD" Ref="R?"  Part="1" 
+AR Path="/5E8E1F08/5FFBEFBD" Ref="R?"  Part="1" 
+AR Path="/5FCD4DF5/5FFBEFBD" Ref="R?"  Part="1" 
+AR Path="/5FCD4B8E/5FFBEFBD" Ref="R?"  Part="1" 
+F 0 "R?" V 15000 6550 50  0000 C CNN
+F 1 "0" V 14800 6550 50  0000 C CNN
+F 2 "RespiraWorks_Std:R_0603_1608Metric" V 14830 6550 50  0001 C CNN
+F 3 "~" H 14900 6550 50  0001 C CNN
+F 4 "" H 14900 6550 50  0001 C CNN "Manufacturer"
+F 5 "" H 14900 6550 50  0001 C CNN "Part Number"
+	1    14900 6550
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	14750 6550 14200 6550
+Wire Wire Line
+	14200 6550 14200 6050
+Connection ~ 14200 6050
+$Comp
+L Device:CP1 C?
+U 1 1 5FFC8F5E
+P 15350 6800
+AR Path="/5FFC8F5E" Ref="C?"  Part="1" 
+AR Path="/5E8E1F08/5FFC8F5E" Ref="C?"  Part="1" 
+AR Path="/5FCD4DF5/5FFC8F5E" Ref="C?"  Part="1" 
+AR Path="/5FCD4B8E/5FFC8F5E" Ref="C?"  Part="1" 
+F 0 "C?" H 15000 6750 50  0000 L CNN
+F 1 "100uF 50V AlPoly" V 15200 6350 50  0000 L CNN
+F 2 "Capacitor_SMD:CP_Elec_10x10.5" H 15350 6800 50  0001 C CNN
+F 3 "~" H 15350 6800 50  0001 C CNN
+F 4 "Panasonic" H 15350 6800 50  0001 C CNN "Manufacturer"
+F 5 "EEH-ZC1H101P" H 15350 6800 50  0001 C CNN "Part Number"
+	1    15350 6800
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	15350 6650 15350 6550
+$Comp
+L power:GND #PWR?
+U 1 1 5FFC8F65
+P 15350 6950
+AR Path="/5FFC8F65" Ref="#PWR?"  Part="1" 
+AR Path="/5E8AFE9D/5FFC8F65" Ref="#PWR?"  Part="1" 
+AR Path="/5E8A4ABF/5FFC8F65" Ref="#PWR?"  Part="1" 
+AR Path="/5E8E1F08/5FFC8F65" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4DF5/5FFC8F65" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4B8E/5FFC8F65" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 15350 6700 50  0001 C CNN
+F 1 "GND" H 15355 6777 50  0000 C CNN
+F 2 "" H 15350 6950 50  0001 C CNN
+F 3 "" H 15350 6950 50  0001 C CNN
+	1    15350 6950
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	15050 6550 15350 6550
+Text Notes 14350 6850 0    50   ~ 0
+Optional filter
+$Comp
+L RespiraWorks:+5V_Sns #PWR?
+U 1 1 5FFCBEE7
+P 15700 6550
+F 0 "#PWR?" H 15700 6550 50  0001 C CNN
+F 1 "+5V_Sns" H 15685 6723 50  0000 C CNN
+F 2 "" H 15700 6550 50  0001 C CNN
+F 3 "" H 15700 6550 50  0001 C CNN
+	1    15700 6550
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	15700 6550 15350 6550
+Connection ~ 15350 6550
 $EndSCHEMATC

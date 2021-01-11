@@ -1,4 +1,4 @@
-18776293668150649
+18781124760944259
 Battery
 BatteryHolder_Bulgin_BX0036_1xC
 Bulgin Battery Holder, BX0036, Battery Type C (https://www.bulgin.com/products/pub/media/bulgin/data/Battery_holders.pdf)
@@ -75415,8 +75415,8 @@ BatteryHolder_CR2016_MPD_BLP2016SM-G
 Memory Protection Devices Inc. BLP2016SM-G CR2016 coin cell holder
 
 0
-0
-0
+2
+2
 RespiraWorks
 Bosch_BMP280
 Bosch BMP280 atmospheric pressure sensor
@@ -75712,6 +75712,20 @@ Surface mounted pin header SMD 1x03 2.54mm single row style1 pin1 left
 3
 3
 RespiraWorks_Std
+PinHeader_1x04_P2.54mm_Vertical
+Through hole straight pin header, 1x04, 2.54mm pitch, single row
+Through hole pin header THT 1x04 2.54mm single row
+0
+4
+4
+RespiraWorks_Std
+PinHeader_1x04_P2.54mm_Vertical_SMD_Pin1Left
+surface-mounted straight pin header, 1x04, 2.54mm pitch, single row, style 1 (pin 1 left)
+Surface mounted pin header SMD 1x04 2.54mm single row style1 pin1 left
+0
+4
+4
+RespiraWorks_Std
 PinHeader_1x05_P2.54mm_Vertical
 Through hole straight pin header, 1x05, 2.54mm pitch, single row
 Through hole pin header THT 1x05 2.54mm single row
@@ -75739,6 +75753,13 @@ PinSocket_1x03_P2.54mm_Vertical_SMD_Samtec_SSM-103-x-SV-BE
 0
 3
 3
+RespiraWorks_Std
+PinSocket_1x04_P2.54mm_Vertical_SMD_Samtec_SSM-104-x-SV-BE
+0.1"/2.54 mm female header, vertical SMT, bottom entry: Samtec SSM-104-*-SV-BE
+
+0
+4
+4
 RespiraWorks_Std
 R_0603_1608Metric
 Resistor SMD 0603 (1608 Metric), square (rectangular) end terminal, IPC_7351 nominal, (Body size source: http://www.tortai-tech.com/upload/download/2011102023233369053.pdf), generated with kicad-footprint-generator

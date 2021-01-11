@@ -440,4 +440,6 @@ F 3 "" H 6750 2300 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Connection ~ 6750 2300
+Text Notes 2450 1850 0    50   ~ 0
+Place USB to UART for FPGA comms
 $EndSCHEMATC

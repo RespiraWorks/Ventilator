@@ -823,4 +823,6 @@ Wire Wire Line
 	6700 4100 6400 4100
 Wire Wire Line
 	6700 4200 6400 4200
+Text Notes 2500 950  0    50   ~ 0
+Add VDD regulators or are those already somewhere
 $EndSCHEMATC

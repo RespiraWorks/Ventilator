@@ -815,4 +815,14 @@ Wire Wire Line
 Wire Wire Line
 	2700 4750 2450 4750
 Connection ~ 2700 4750
+Text HLabel 6700 4100 2    50   BiDi ~ 0
+CC-SCL
+Text HLabel 6700 4200 2    50   BiDi ~ 0
+CC-SDA
+Wire Wire Line
+	6700 4100 6400 4100
+Wire Wire Line
+	6700 4200 6400 4200
+Text Notes 2500 950  0    50   ~ 0
+Add VDD regulators or are those already somewhere
 $EndSCHEMATC

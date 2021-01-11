@@ -16,40 +16,40 @@ $EndDescr
 $Sheet
 S 1100 1000 1450 350 
 U 600F5EF3
-F0 "RTD Temp. Sensor (Stepper 1)" 50
-F1 "sensors_temp_rtd.sch" 50
+F0 "NTC Temp. Sensor (Stepper 1)" 50
+F1 "sensors_temp_ntc.sch" 50
 F2 "Out" O R 2550 1250 50 
 F3 "Vcc" I R 2550 1100 50 
 $EndSheet
 $Sheet
 S 1100 1700 1450 350 
 U 600F7154
-F0 "RTD Temp. Sensor (Stepper 2)" 50
-F1 "sensors_temp_rtd.sch" 50
+F0 "NTC Temp. Sensor (Stepper 2)" 50
+F1 "sensors_temp_ntc.sch" 50
 F2 "Out" O R 2550 1950 50 
 F3 "Vcc" I R 2550 1800 50 
 $EndSheet
 $Sheet
 S 1100 2400 1450 350 
 U 600F719E
-F0 "RTD Temp. Sensor (Blower)" 50
-F1 "sensors_temp_rtd.sch" 50
+F0 "NTC Temp. Sensor (Blower)" 50
+F1 "sensors_temp_ntc.sch" 50
 F2 "Out" O R 2550 2650 50 
 F3 "Vcc" I R 2550 2500 50 
 $EndSheet
 $Sheet
 S 1100 3100 1450 350 
 U 600F71F1
-F0 "RTD Temp. Sensor (Battery)" 50
-F1 "sensors_temp_rtd.sch" 50
+F0 "NTC Temp. Sensor (Battery)" 50
+F1 "sensors_temp_ntc.sch" 50
 F2 "Out" O R 2550 3350 50 
 F3 "Vcc" I R 2550 3200 50 
 $EndSheet
 $Sheet
 S 1100 3800 1450 350 
 U 600F723B
-F0 "RTD Temp. Sensor (Spare)" 50
-F1 "sensors_temp_rtd.sch" 50
+F0 "NTC Temp. Sensor (Spare)" 50
+F1 "sensors_temp_ntc.sch" 50
 F2 "Out" O R 2550 4050 50 
 F3 "Vcc" I R 2550 3900 50 
 $EndSheet
@@ -368,7 +368,7 @@ Wire Wire Line
 Wire Wire Line
 	5100 5850 4400 5850
 Text Notes 6850 5400 0    50   ~ 0
-0 to 3.3V output = ??? to ???
+Gain = 49.8\nSensor output = approx. 0.0006V/%FiO2\n0 to 3.3V output = 0V (0% FiO2) to 3.0V (100% FiO2)\nMust be calibrated in software - this is just a general range - galvanic sensors drift!
 $Comp
 L Device:R R?
 U 1 1 60132ACE

@@ -70,6 +70,8 @@ Our near term plans also include the following:
 
 ### Hardware-in-the-loop testing
 
+There is a strategy defined for [embedded software testing](../../software/design/embedded_software_testing.md).
+
 The goal of these tests is to test some subsets of our system with hardware on a regular basis and in a systematic way,
 to increase the likelihood of catching at least some problems early.  These tests consider some cross-section of the
 hardware-software stack. To avoid the "fox watching the hen-house" situation, we have aimed at using an alternative

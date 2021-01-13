@@ -1,23 +1,40 @@
-# Relay code
+# 8-channel relay
 
-The Relay switch is 8-Channel from the SainSmart vendor.
-The command line utility sainsmartrelay is available in /usr/local/bin on bigcheese server.
-The control Commands of the Relay swtich are:
+The test server has an 8-Channel relay switch from SainSmart. Two of the channels, 1 and 3 are wired to control
+two power outlets. Currently, channel 1 has a powerful LED shop light connected to it.
+
+| Relay contraption  | Lighting setup          |
+|:------------------:|:-----------------------:|
+| ![](relay_rig.jpg) | ![](lighting_setup.jpg) |
+
+
+## Operating the relay
+
+A command line utility `sainsmartrelay` is available at `/usr/local/bin` on `bigcheese` server.
+
+The control Commands of the Relay switch are:
 
 ```shell script
 	sainsmartrelay --on 1
 	sainsmartrelay --off 1
 ```
 
-You can use --help option to find out all available options of sainsmartrelay.
+You can use the `--help` option to find out all available options of `sainsmartrelay`.
 
-Please do NOT use relay8.py for now, currently this script is not working.
+## Background
 
+The following describes how the above script was made to work.
 
-## Current setup
+The relay was purchased from [here](https://www.amazon.com/SainSmart-Eight-Channel-Relay-Automation/dp/B0093Y89DE).
 
-![Current setup](setup.jpg)
+The relay is hooked up to `ttyUSB0`.
 
-Relay is hooked up to ttyUSB0. The power line runs to an incandescen bulb.
-The bulb has been confirmed to work.
-Also, the relay briefly switched it on when powering up.
+Here are instructions to build the `sainsmartrelay` command line utility:
+
+- please see the [labbots/SainsmartUsbRelay](https://github.com/labbots/SainsmartUsbRelay.git) project on github.
+- clone the source: `git clone https://github.com/labbots/SainsmartUsbRelay.git`
+- install any dependent libraries as listed on the github project page.
+- Change the code in following files:
+  - in the `makefile`, add `-fPIE` option to `CFLAGS`
+  - in `sainsmartrelay.h`, update the value of `MAX_NUM_RELAYS` to `8`
+- run `make`

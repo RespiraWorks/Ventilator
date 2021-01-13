@@ -1712,7 +1712,7 @@ Wire Wire Line
 Wire Wire Line
 	4550 8600 4800 8600
 Text Notes 5300 9500 0    50   ~ 0
-Blower connections\nWM9290: Uses both ~enable~ and speed control voltage (populate PWM filter);\n    small control connector pin 1=+5V out, 2=speed ctrl voltage, 3=gnd, 4=~enable~\nWM7060: (uses same driver as WM9290)\nWS7040: ?\nTKFAN BA7050H24B: ? (no driver included)
+Blower connections\nWM9290: Uses both ~enable~ and speed control voltage (populate PWM filter);\n    small control connector pin 1=+5V out, 2=speed ctrl voltage, 3=gnd, 4=~enable~\nWM7060: (uses same driver as WM9290)\nWS7040: Uses speed control voltage (populate PWM filter)\nTKFAN BA7050H12B: Uses PWM input (leave PWM filter unpopulated)
 Wire Wire Line
 	4550 8600 4550 9700
 $Comp

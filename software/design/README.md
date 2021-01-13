@@ -104,7 +104,7 @@ There is a document defining the [ventilation modes](ventilation_modes.md) we in
 
 ## Testing considerations
 
-There is a strategy defined for [Embedded_software_testing](embedded_software_testing.md).
+There is a strategy defined for [embedded software testing](embedded_software_testing.md).
 
 ## Milestones
 

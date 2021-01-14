@@ -33,7 +33,7 @@ a mouse and keyboard to control it.
 |**A7** | 1   | Monoprice     | 13924              | 1.05        | [Z][a7amzn] [O][a7mono] | USB-A to microUSB-B cable, 3ft, **only for RPI3B+** |
 |**A8** | 1   | Seadream      | 26121600           | 7.00        | [Z][a8amzn]             | microHDMI adapter, **for RPI4** |
 |**A9** | 1   | SanDisk       | SDSQXAF-032G-GN6MA | 10.73       | [Z][a9amzn]             | UHS-1 Class 10 micro SD, memory for Raspberry Pi |
-|**A10**| 1   | RespiraWorks  | PCB                |             | [B][a10rw]              | RespiraWorks custom PCB |
+|**A10**| 1   | RespiraWorks  | PCB                |             | [Rw][a10rw]             | RespiraWorks custom PCB |
 |**A11**| 1   | McMaster Carr | 3791N024           | 85.03       | [C][a11mcmc]            | 12v Power supply adapter, medical grade, 9A, for **PCB** |
 |**A12**| 1   | BINZET        | FBA_LTC0487-3      | 19.99       | [Z][a12amzn]            | 12v Power supply adapter, 10A, alternative for A11, for **PCB** |
 |**A13**| 1   | HISVISION     | AY60WDC            | 13.99       | [Z][a13amzn]            | 12v Power supply adapter, 5A, alternative for A11-12, for **PCB** |

@@ -76,12 +76,12 @@ decide to buy or build anything, do so at your own risk.**
     * [Mechanical assembly](design/mechanical)
 * [**Manufacturing Design**](manufacturing)
     * [**Pizza build**](manufacturing/pizza_build) - instructions for assembly table-top prototype for development/testing purposes
-    * [**Enclosed build**](manufacturing/enclosed_build) - evolving design of the enclosed ventilator approaching the final product
-    * [Venturi](manufacturing/venturi) - custom flow sensor
-    * [Pinch valve](manufacturing/pinch_valve) - custom valve for air flow control
-    * [Blower assembly](manufacturing/blower) - provides pressure
-    * [Oxygen subsystem](manufacturing/oxygen) - regulates supply and mixing of oxygen
     * [Filter holder](manufacturing/filter_holder) - for integration of HEPA filters
+    * [**Enclosed build**](manufacturing/enclosed_build) - evolving design of the enclosed ventilator approaching the final product
+      * [**Pneumatic assembly**](manufacturing/enclosed_build/pneumatics) - full pneumatic assembly, which includes some of the following:
+        * [Venturi](manufacturing/venturi) - custom flow sensor
+        * [Pinch valve](manufacturing/pinch_valve) - custom valve for air flow control
+        * [Blower assembly](manufacturing/blower) - provides pressure
     * [Characterization Test Plan](manufacturing/characterization-test-plan.md)
 * [**Main Circuit Board**](pcb) - design, materials, assembly instructions
 * [**Software**](software) - Source code for cycle controller and user interface, debug tools, test scripts, and test data

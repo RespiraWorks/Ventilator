@@ -4,7 +4,7 @@ EELAYER 26 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 4 14
+Sheet 4 28
 Title "3.3V LDO Regulator"
 Date ""
 Rev "2.0"

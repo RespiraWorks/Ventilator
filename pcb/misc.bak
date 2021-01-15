@@ -4,11 +4,11 @@ EELAYER 26 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 10 28
-Title "Safety FPGA"
+Sheet 28 28
+Title ""
 Date ""
-Rev "2.0"
-Comp "RespiraWorks"
+Rev ""
+Comp ""
 Comment1 ""
 Comment2 ""
 Comment3 ""

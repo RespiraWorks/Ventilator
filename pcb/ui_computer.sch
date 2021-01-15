@@ -4,7 +4,7 @@ EELAYER 26 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 14 14
+Sheet 6 28
 Title "UI Computer"
 Date ""
 Rev "2.0"
@@ -440,6 +440,6 @@ F 3 "" H 6750 2300 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Connection ~ 6750 2300
-Text Notes 2450 1850 0    50   ~ 0
-Place USB to UART for FPGA comms
+Text Notes 1200 1450 0    50   ~ 0
+USB TO UART adapter: https://www.ftdichip.com/Support/Documents/DataSheets/Modules/DS_DB9-USB-RS232.pdf
 $EndSCHEMATC

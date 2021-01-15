@@ -1,9 +1,10 @@
 EESchema Schematic File Version 4
-EELAYER 30 0
+LIBS:Ventilator-cache
+EELAYER 26 0
 EELAYER END
 $Descr B 17000 11000
 encoding utf-8
-Sheet 10 30
+Sheet 10 28
 Title "Alarms and Safety"
 Date ""
 Rev "2.0"

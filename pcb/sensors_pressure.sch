@@ -1,9 +1,10 @@
 EESchema Schematic File Version 4
-EELAYER 30 0
+LIBS:Ventilator-cache
+EELAYER 26 0
 EELAYER END
 $Descr A 11000 8500
 encoding utf-8
-Sheet 13 30
+Sheet 13 28
 Title "Pressure Sensors"
 Date ""
 Rev "2.0"

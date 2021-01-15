@@ -1002,17 +1002,6 @@ F 3 "" H 1100 5850 50  0001 C CNN
 	1    1100 5850
 	1    0    0    -1  
 $EndComp
-$Comp
-L Device:C C?
-U 1 1 604CB70B
-P 800 5800
-F 0 "C?" H 900 5700 50  0000 L CNN
-F 1 "100 nF" H 850 5900 50  0000 L CNN
-F 2 "" H 838 5650 50  0001 C CNN
-F 3 "~" H 800 5800 50  0001 C CNN
-	1    800  5800
-	-1   0    0    1   
-$EndComp
 Wire Wire Line
 	2500 5300 1700 5300
 Wire Wire Line
@@ -1065,7 +1054,6 @@ Wire Wire Line
 	800  5650 850  5650
 Wire Wire Line
 	850  5650 850  5550
-Connection ~ 800  5650
 Connection ~ 850  5550
 Wire Wire Line
 	850  5550 1100 5550
@@ -1080,7 +1068,6 @@ F 3 "" H 800 5950 50  0001 C CNN
 	1    800  5950
 	1    0    0    -1  
 $EndComp
-Connection ~ 800  5950
 $Comp
 L Connector:TestPoint TP?
 U 1 1 604E4B49
@@ -1296,38 +1283,484 @@ D10
 Wire Wire Line
 	1450 6100 1600 6100
 Wire Wire Line
-	2500 6000 2300 6000
+	2500 6000 2200 6000
 Wire Wire Line
-	2300 6000 2300 6450
-Text Notes 1800 6450 0    50   ~ 0
+	2200 6000 2200 6650
+Text Notes 1350 6600 0    50   ~ 0
 why 39k
-Text HLabel 1000 6450 0    50   Input ~ 0
+Text HLabel 650  6650 0    50   Input ~ 0
 D9
 $Comp
 L Device:R R?
 U 1 1 605F10A8
-P 1100 6300
-F 0 "R?" H 950 6300 50  0000 L CNN
-F 1 "39K" H 900 6350 50  0000 L CNN
-F 2 "RespiraWorks_std:R_0603_1608Metric" V 1030 6300 50  0001 C CNN
-F 3 "~" H 1100 6300 50  0001 C CNN
-	1    1100 6300
+P 1100 6500
+F 0 "R?" H 950 6500 50  0000 L CNN
+F 1 "39K" H 900 6600 50  0000 L CNN
+F 2 "RespiraWorks_std:R_0603_1608Metric" V 1030 6500 50  0001 C CNN
+F 3 "~" H 1100 6500 50  0001 C CNN
+	1    1100 6500
 	-1   0    0    1   
 $EndComp
 Wire Wire Line
-	1100 6450 1000 6450
+	1100 6650 650  6650
 Wire Wire Line
-	1100 6450 2300 6450
-Connection ~ 1100 6450
+	1100 6650 2200 6650
+Connection ~ 1100 6650
 $Comp
 L RespiraWorks:+3.3V_Ctrl #PWR?
 U 1 1 605FE109
-P 800 6350
-F 0 "#PWR?" H 800 6350 50  0001 C CNN
-F 1 "+3.3V_Ctrl" H 785 6523 50  0000 C CNN
-F 2 "" H 800 6350 50  0001 C CNN
-F 3 "" H 800 6350 50  0001 C CNN
-	1    800  6350
+P 1100 6350
+F 0 "#PWR?" H 1100 6350 50  0001 C CNN
+F 1 "+3.3V_Ctrl" H 1085 6523 50  0000 C CNN
+F 2 "" H 1100 6350 50  0001 C CNN
+F 3 "" H 1100 6350 50  0001 C CNN
+	1    1100 6350
 	1    0    0    -1  
 $EndComp
+$Comp
+L Device:C C?
+U 1 1 60664D60
+P 2450 6400
+F 0 "C?" H 2550 6300 50  0000 L CNN
+F 1 "100 nF" H 2150 6500 50  0000 L CNN
+F 2 "" H 2488 6250 50  0001 C CNN
+F 3 "~" H 2450 6400 50  0001 C CNN
+	1    2450 6400
+	-1   0    0    1   
+$EndComp
+Text HLabel 2400 6150 0    50   Input ~ 0
+D8
+Wire Wire Line
+	2500 6150 2450 6150
+$Comp
+L power:GND #PWR?
+U 1 1 60671A98
+P 2450 6550
+F 0 "#PWR?" H 2450 6300 50  0001 C CNN
+F 1 "GND" H 2455 6377 50  0000 C CNN
+F 2 "" H 2450 6550 50  0001 C CNN
+F 3 "" H 2450 6550 50  0001 C CNN
+	1    2450 6550
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2450 6250 2450 6150
+Connection ~ 2450 6150
+Wire Wire Line
+	2450 6150 2400 6150
+Wire Wire Line
+	10700 2650 10950 2650
+Wire Wire Line
+	10950 2650 10950 2750
+Wire Wire Line
+	10700 2950 10950 2950
+Wire Wire Line
+	10950 2950 10950 2850
+Wire Wire Line
+	10700 2850 10950 2850
+Connection ~ 10950 2850
+Wire Wire Line
+	10700 2750 10950 2750
+Connection ~ 10950 2750
+Wire Wire Line
+	10700 3150 10950 3150
+Wire Wire Line
+	10950 3150 10950 3250
+Wire Wire Line
+	10700 3450 10950 3450
+Wire Wire Line
+	10950 3450 10950 3350
+Wire Wire Line
+	10700 3350 10950 3350
+Connection ~ 10950 3350
+Wire Wire Line
+	10700 3250 10950 3250
+Connection ~ 10950 3250
+Wire Wire Line
+	10700 3850 10950 3850
+Wire Wire Line
+	10950 3850 10950 3950
+Wire Wire Line
+	10700 4150 10950 4150
+Wire Wire Line
+	10950 4150 10950 4050
+Wire Wire Line
+	10700 4050 10950 4050
+Connection ~ 10950 4050
+Wire Wire Line
+	10700 3950 10950 3950
+Connection ~ 10950 3950
+Wire Wire Line
+	10700 4300 10950 4300
+Wire Wire Line
+	10950 4300 10950 4400
+Wire Wire Line
+	10700 4600 10950 4600
+Wire Wire Line
+	10950 4600 10950 4500
+Wire Wire Line
+	10700 4500 10950 4500
+Connection ~ 10950 4500
+Wire Wire Line
+	10700 4400 10950 4400
+Connection ~ 10950 4400
+Text Label 10750 2650 0    50   ~ 0
+OUTA1
+Wire Wire Line
+	10950 2750 10950 2850
+Wire Wire Line
+	10950 3250 10950 3350
+Text Label 10750 3150 0    50   ~ 0
+OUTA2
+Wire Wire Line
+	10950 3950 10950 4050
+Wire Wire Line
+	10950 4400 10950 4500
+Text Label 10750 3850 0    50   ~ 0
+OUTB1
+Text Label 10750 4300 0    50   ~ 0
+OUTB2
+$Comp
+L Connector:Conn_01x04_Male J?
+U 1 1 6070D08D
+P 4700 6850
+F 0 "J?" H 4673 6730 50  0000 R CNN
+F 1 "Conn_01x04_Male" H 4673 6821 50  0000 R CNN
+F 2 "" H 4700 6850 50  0001 C CNN
+F 3 "~" H 4700 6850 50  0001 C CNN
+	1    4700 6850
+	-1   0    0    1   
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 6070D1FA
+P 4200 7450
+F 0 "R?" H 4050 7450 50  0000 L CNN
+F 1 "10K" H 4000 7550 50  0000 L CNN
+F 2 "RespiraWorks_std:R_0603_1608Metric" V 4130 7450 50  0001 C CNN
+F 3 "~" H 4200 7450 50  0001 C CNN
+	1    4200 7450
+	-1   0    0    1   
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 6070D306
+P 3950 7450
+F 0 "R?" H 3800 7450 50  0000 L CNN
+F 1 "10K" H 3750 7550 50  0000 L CNN
+F 2 "RespiraWorks_std:R_0603_1608Metric" V 3880 7450 50  0001 C CNN
+F 3 "~" H 3950 7450 50  0001 C CNN
+	1    3950 7450
+	-1   0    0    1   
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 6070D3DC
+P 3450 7450
+F 0 "R?" H 3300 7450 50  0000 L CNN
+F 1 "10K" H 3250 7550 50  0000 L CNN
+F 2 "RespiraWorks_std:R_0603_1608Metric" V 3380 7450 50  0001 C CNN
+F 3 "~" H 3450 7450 50  0001 C CNN
+	1    3450 7450
+	-1   0    0    1   
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 6070D370
+P 3700 7450
+F 0 "R?" H 3550 7450 50  0000 L CNN
+F 1 "10K" H 3500 7550 50  0000 L CNN
+F 2 "RespiraWorks_std:R_0603_1608Metric" V 3630 7450 50  0001 C CNN
+F 3 "~" H 3700 7450 50  0001 C CNN
+	1    3700 7450
+	-1   0    0    1   
+$EndComp
+$Comp
+L Device:D D?
+U 1 1 6070D552
+P 3450 7150
+F 0 "D?" V 3550 7250 50  0000 R CNN
+F 1 "Yellow" V 3350 7400 50  0000 R CNN
+F 2 "" H 3450 7150 50  0001 C CNN
+F 3 "~" H 3450 7150 50  0001 C CNN
+	1    3450 7150
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Device:D D?
+U 1 1 6070D909
+P 3700 7150
+F 0 "D?" V 3800 7250 50  0000 R CNN
+F 1 "Yellow" V 3600 7400 50  0000 R CNN
+F 2 "" H 3700 7150 50  0001 C CNN
+F 3 "~" H 3700 7150 50  0001 C CNN
+	1    3700 7150
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Device:D D?
+U 1 1 6070D97D
+P 3950 7150
+F 0 "D?" V 4050 7250 50  0000 R CNN
+F 1 "Yellow" V 3850 7400 50  0000 R CNN
+F 2 "" H 3950 7150 50  0001 C CNN
+F 3 "~" H 3950 7150 50  0001 C CNN
+	1    3950 7150
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Device:D D?
+U 1 1 6070D9F3
+P 4200 7150
+F 0 "D?" V 4300 7250 50  0000 R CNN
+F 1 "Yellow" V 4100 7400 50  0000 R CNN
+F 2 "" H 4200 7150 50  0001 C CNN
+F 3 "~" H 4200 7150 50  0001 C CNN
+	1    4200 7150
+	0    -1   -1   0   
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 6070DA69
+P 4200 7600
+F 0 "#PWR?" H 4200 7350 50  0001 C CNN
+F 1 "GND" H 4205 7427 50  0000 C CNN
+F 2 "" H 4200 7600 50  0001 C CNN
+F 3 "" H 4200 7600 50  0001 C CNN
+	1    4200 7600
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 6070DAD6
+P 3950 7600
+F 0 "#PWR?" H 3950 7350 50  0001 C CNN
+F 1 "GND" H 3955 7427 50  0000 C CNN
+F 2 "" H 3950 7600 50  0001 C CNN
+F 3 "" H 3950 7600 50  0001 C CNN
+	1    3950 7600
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 6070DB43
+P 3700 7600
+F 0 "#PWR?" H 3700 7350 50  0001 C CNN
+F 1 "GND" H 3705 7427 50  0000 C CNN
+F 2 "" H 3700 7600 50  0001 C CNN
+F 3 "" H 3700 7600 50  0001 C CNN
+	1    3700 7600
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 6070DBB0
+P 3450 7600
+F 0 "#PWR?" H 3450 7350 50  0001 C CNN
+F 1 "GND" H 3455 7427 50  0000 C CNN
+F 2 "" H 3450 7600 50  0001 C CNN
+F 3 "" H 3450 7600 50  0001 C CNN
+	1    3450 7600
+	1    0    0    -1  
+$EndComp
+Text Label 2900 7000 0    50   ~ 0
+OUTB2
+Text Label 2900 6900 0    50   ~ 0
+OUTB1
+Text Label 2900 6800 0    50   ~ 0
+OUTA2
+Text Label 2900 6700 0    50   ~ 0
+OUTA1
+Wire Wire Line
+	2900 6700 4200 6700
+Wire Wire Line
+	4200 6700 4200 6650
+Wire Wire Line
+	4200 6650 4500 6650
+Wire Wire Line
+	2900 6800 3300 6800
+Wire Wire Line
+	3300 6800 3300 6950
+Wire Wire Line
+	3300 6950 3450 6950
+Wire Wire Line
+	3200 6750 3200 6900
+Wire Wire Line
+	3200 6900 2900 6900
+Wire Wire Line
+	3250 6850 3250 7000
+Wire Wire Line
+	3250 7000 2900 7000
+Wire Wire Line
+	3250 6850 3700 6850
+Wire Wire Line
+	4200 7000 4200 6700
+Connection ~ 4200 6700
+Wire Wire Line
+	3950 7000 3950 6750
+Wire Wire Line
+	3200 6750 3950 6750
+Connection ~ 3950 6750
+Wire Wire Line
+	3950 6750 4500 6750
+Wire Wire Line
+	3700 7000 3700 6850
+Connection ~ 3700 6850
+Wire Wire Line
+	3700 6850 4500 6850
+Wire Wire Line
+	3450 7000 3450 6950
+Connection ~ 3450 6950
+Wire Wire Line
+	3450 6950 4500 6950
+Wire Wire Line
+	10700 5850 10950 5850
+Text Label 10750 5850 0    50   ~ 0
+BUSY
+$Comp
+L Device:R R?
+U 1 1 6084D0B2
+P 5400 7350
+F 0 "R?" H 5250 7350 50  0000 L CNN
+F 1 "39K" H 5200 7450 50  0000 L CNN
+F 2 "RespiraWorks_std:R_0603_1608Metric" V 5330 7350 50  0001 C CNN
+F 3 "~" H 5400 7350 50  0001 C CNN
+	1    5400 7350
+	-1   0    0    1   
+$EndComp
+$Comp
+L RespiraWorks:+3.3V_Ctrl #PWR?
+U 1 1 6084D138
+P 5400 7200
+F 0 "#PWR?" H 5400 7200 50  0001 C CNN
+F 1 "+3.3V_Ctrl" H 5385 7373 50  0000 C CNN
+F 2 "" H 5400 7200 50  0001 C CNN
+F 3 "" H 5400 7200 50  0001 C CNN
+	1    5400 7200
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5750 7500 5400 7500
+Text Label 5100 7500 0    50   ~ 0
+BUSY
+Text HLabel 5400 7600 3    50   Output ~ 0
+D4
+Wire Wire Line
+	6050 7500 5950 7500
+Connection ~ 5400 7500
+Wire Wire Line
+	5400 7500 5000 7500
+$Comp
+L Device:R R?
+U 1 1 60872E4C
+P 6150 7350
+F 0 "R?" H 6000 7350 50  0000 L CNN
+F 1 "330" H 5950 7450 50  0000 L CNN
+F 2 "RespiraWorks_std:R_0603_1608Metric" V 6080 7350 50  0001 C CNN
+F 3 "~" H 6150 7350 50  0001 C CNN
+	1    6150 7350
+	-1   0    0    1   
+$EndComp
+$Comp
+L Device:D D?
+U 1 1 60873125
+P 5900 7500
+F 0 "D?" V 6000 7600 50  0000 R CNN
+F 1 "Yellow" V 5800 7750 50  0000 R CNN
+F 2 "" H 5900 7500 50  0001 C CNN
+F 3 "~" H 5900 7500 50  0001 C CNN
+	1    5900 7500
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6050 7500 6150 7500
+Connection ~ 6050 7500
+$Comp
+L RespiraWorks:+3.3V_Ctrl #PWR?
+U 1 1 608864B8
+P 6150 7200
+F 0 "#PWR?" H 6150 7200 50  0001 C CNN
+F 1 "+3.3V_Ctrl" H 6135 7373 50  0000 C CNN
+F 2 "" H 6150 7200 50  0001 C CNN
+F 3 "" H 6150 7200 50  0001 C CNN
+	1    6150 7200
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5400 7500 5400 7600
+Wire Wire Line
+	10700 6000 10950 6000
+Text Label 10750 6000 0    50   ~ 0
+FLAG
+$Comp
+L Device:R R?
+U 1 1 608AE29E
+P 10100 6700
+F 0 "R?" H 9950 6700 50  0000 L CNN
+F 1 "39K" H 9900 6800 50  0000 L CNN
+F 2 "RespiraWorks_std:R_0603_1608Metric" V 10030 6700 50  0001 C CNN
+F 3 "~" H 10100 6700 50  0001 C CNN
+	1    10100 6700
+	-1   0    0    1   
+$EndComp
+$Comp
+L RespiraWorks:+3.3V_Ctrl #PWR?
+U 1 1 608AE2A5
+P 10100 6550
+F 0 "#PWR?" H 10100 6550 50  0001 C CNN
+F 1 "+3.3V_Ctrl" H 10085 6723 50  0000 C CNN
+F 2 "" H 10100 6550 50  0001 C CNN
+F 3 "" H 10100 6550 50  0001 C CNN
+	1    10100 6550
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	10450 6850 10100 6850
+Text Label 9800 6850 0    50   ~ 0
+FLAG
+Text HLabel 10100 6950 3    50   Output ~ 0
+D2
+Wire Wire Line
+	10750 6850 10650 6850
+Connection ~ 10100 6850
+Wire Wire Line
+	10100 6850 9700 6850
+$Comp
+L Device:R R?
+U 1 1 608AE2B1
+P 10850 6700
+F 0 "R?" H 10700 6700 50  0000 L CNN
+F 1 "330" H 10650 6800 50  0000 L CNN
+F 2 "RespiraWorks_std:R_0603_1608Metric" V 10780 6700 50  0001 C CNN
+F 3 "~" H 10850 6700 50  0001 C CNN
+	1    10850 6700
+	-1   0    0    1   
+$EndComp
+$Comp
+L Device:D D?
+U 1 1 608AE2B8
+P 10600 6850
+F 0 "D?" V 10700 6950 50  0000 R CNN
+F 1 "Yellow" V 10500 7100 50  0000 R CNN
+F 2 "" H 10600 6850 50  0001 C CNN
+F 3 "~" H 10600 6850 50  0001 C CNN
+	1    10600 6850
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	10750 6850 10850 6850
+Connection ~ 10750 6850
+$Comp
+L RespiraWorks:+3.3V_Ctrl #PWR?
+U 1 1 608AE2C1
+P 10850 6550
+F 0 "#PWR?" H 10850 6550 50  0001 C CNN
+F 1 "+3.3V_Ctrl" H 10835 6723 50  0000 C CNN
+F 2 "" H 10850 6550 50  0001 C CNN
+F 3 "" H 10850 6550 50  0001 C CNN
+	1    10850 6550
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	10100 6850 10100 6950
 $EndSCHEMATC

@@ -621,17 +621,6 @@ F 3 "" H 8950 1600 50  0001 C CNN
 	1    8950 1600
 	1    0    0    -1  
 $EndComp
-$Comp
-L RespiraWorks:POWERSTEP01 U?
-U 1 1 60037C79
-P 2550 2350
-F 0 "U?" H 6600 -1994 60  0000 C CNN
-F 1 "POWERSTEP01" H 6600 -2100 60  0000 C CNN
-F 2 "" H 3850 2590 60  0001 C CNN
-F 3 "https://www.st.com/content/ccc/resource/technical/document/datasheet/3f/48/e2/37/6b/ac/4c/f5/DM00090983.pdf/files/DM00090983.pdf/jcr:content/translations/en.DM00090983.pdf" H 3300 3300 60  0001 C CNN
-	1    2550 2350
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
 	9250 1850 9250 1400
 Connection ~ 9250 1400
@@ -957,4 +946,388 @@ F 3 "" H 8250 1300 50  0001 C CNN
 $EndComp
 Wire Wire Line
 	8400 1300 8250 1300
+$Comp
+L RespiraWorks:POWERSTEP01 U?
+U 1 1 6049D3EE
+P 2550 2350
+F 0 "U?" H 6600 -1994 60  0000 C CNN
+F 1 "POWERSTEP01" H 6600 -2100 60  0000 C CNN
+F 2 "" H 3850 2590 60  0001 C CNN
+F 3 "https://www.st.com/content/ccc/resource/technical/document/datasheet/3f/48/e2/37/6b/ac/4c/f5/DM00090983.pdf/files/DM00090983.pdf/jcr:content/translations/en.DM00090983.pdf" H 3300 3300 60  0001 C CNN
+	1    2550 2350
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 6049D4A4
+P 2300 5200
+F 0 "R?" V 2250 4950 50  0000 L CNN
+F 1 "0" V 2350 4950 50  0000 L CNN
+F 2 "RespiraWorks_std:R_0603_1608Metric" V 2230 5200 50  0001 C CNN
+F 3 "~" H 2300 5200 50  0001 C CNN
+	1    2300 5200
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	2500 5200 2450 5200
+Wire Wire Line
+	2000 5100 2000 5200
+Wire Wire Line
+	2000 5200 2150 5200
+Wire Wire Line
+	2000 5100 2500 5100
+Text Notes 1850 5300 0    50   ~ 0
+DNP
+Text HLabel 800  5550 0    50   Input ~ 0
+ADCIN
+$Comp
+L RespiraWorks:+12V_Step1 #PWR?
+U 1 1 604CB513
+P 1100 5250
+F 0 "#PWR?" H 1100 5250 50  0001 C CNN
+F 1 "+12V_Step1" H 1085 5423 50  0000 C CNN
+F 2 "" H 1100 5250 50  0001 C CNN
+F 3 "" H 1100 5250 50  0001 C CNN
+	1    1100 5250
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 604CB640
+P 1100 5850
+F 0 "#PWR?" H 1100 5600 50  0001 C CNN
+F 1 "GND" H 1105 5677 50  0000 C CNN
+F 2 "" H 1100 5850 50  0001 C CNN
+F 3 "" H 1100 5850 50  0001 C CNN
+	1    1100 5850
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C C?
+U 1 1 604CB70B
+P 800 5800
+F 0 "C?" H 900 5700 50  0000 L CNN
+F 1 "100 nF" H 850 5900 50  0000 L CNN
+F 2 "" H 838 5650 50  0001 C CNN
+F 3 "~" H 800 5800 50  0001 C CNN
+	1    800  5800
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	2500 5300 1700 5300
+Wire Wire Line
+	1700 5300 1700 5550
+Wire Wire Line
+	1700 5550 1100 5550
+$Comp
+L Device:R R?
+U 1 1 604D3656
+P 1100 5400
+F 0 "R?" H 950 5400 50  0000 L CNN
+F 1 "0" H 1000 5500 50  0000 L CNN
+F 2 "RespiraWorks_std:R_0603_1608Metric" V 1030 5400 50  0001 C CNN
+F 3 "~" H 1100 5400 50  0001 C CNN
+	1    1100 5400
+	-1   0    0    1   
+$EndComp
+Connection ~ 1100 5550
+$Comp
+L Device:R R?
+U 1 1 604D36E6
+P 1100 5700
+F 0 "R?" H 950 5800 50  0000 L CNN
+F 1 "0" H 1000 5900 50  0000 L CNN
+F 2 "RespiraWorks_std:R_0603_1608Metric" V 1030 5700 50  0001 C CNN
+F 3 "~" H 1100 5700 50  0001 C CNN
+	1    1100 5700
+	-1   0    0    1   
+$EndComp
+Text Notes 900  5450 0    50   ~ 0
+DNP
+Text Notes 900  5700 0    50   ~ 0
+DNP
+$Comp
+L Device:C C?
+U 1 1 604D3B92
+P 800 5800
+F 0 "C?" H 900 5700 50  0000 L CNN
+F 1 "100 nF" H 850 5900 50  0000 L CNN
+F 2 "" H 838 5650 50  0001 C CNN
+F 3 "~" H 800 5800 50  0001 C CNN
+	1    800  5800
+	-1   0    0    1   
+$EndComp
+Text Notes 550  5850 0    50   ~ 0
+DNP
+Wire Wire Line
+	800  5550 850  5550
+Wire Wire Line
+	800  5650 850  5650
+Wire Wire Line
+	850  5650 850  5550
+Connection ~ 800  5650
+Connection ~ 850  5550
+Wire Wire Line
+	850  5550 1100 5550
+$Comp
+L power:GND #PWR?
+U 1 1 604E3F2D
+P 800 5950
+F 0 "#PWR?" H 800 5700 50  0001 C CNN
+F 1 "GND" H 805 5777 50  0000 C CNN
+F 2 "" H 800 5950 50  0001 C CNN
+F 3 "" H 800 5950 50  0001 C CNN
+	1    800  5950
+	1    0    0    -1  
+$EndComp
+Connection ~ 800  5950
+$Comp
+L Connector:TestPoint TP?
+U 1 1 604E4B49
+P 2050 5450
+F 0 "TP?" V 2100 5550 50  0000 C CNN
+F 1 "TestPoint" V 1950 5500 50  0000 C CNN
+F 2 "" H 2250 5450 50  0001 C CNN
+F 3 "~" H 2250 5450 50  0001 C CNN
+	1    2050 5450
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	2500 5450 2050 5450
+Text HLabel 1450 5650 0    50   Input ~ 0
+D11
+Wire Wire Line
+	2500 5600 1900 5600
+Wire Wire Line
+	1900 5600 1900 5650
+Wire Wire Line
+	1900 5650 1850 5650
+$Comp
+L Device:R R?
+U 1 1 604FF83F
+P 1700 5650
+F 0 "R?" V 1650 5400 50  0000 L CNN
+F 1 "0" V 1750 5400 50  0000 L CNN
+F 2 "RespiraWorks_std:R_0603_1608Metric" V 1630 5650 50  0001 C CNN
+F 3 "~" H 1700 5650 50  0001 C CNN
+	1    1700 5650
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	1550 5650 1450 5650
+Text HLabel 11000 5400 2    50   Output ~ 0
+D12
+Wire Wire Line
+	10700 5600 10700 5400
+$Comp
+L Device:R R?
+U 1 1 60508DE0
+P 10850 5400
+F 0 "R?" V 10800 5150 50  0000 L CNN
+F 1 "0" V 10900 5150 50  0000 L CNN
+F 2 "RespiraWorks_std:R_0603_1608Metric" V 10780 5400 50  0001 C CNN
+F 3 "~" H 10850 5400 50  0001 C CNN
+	1    10850 5400
+	0    1    1    0   
+$EndComp
+Text Label 2250 5600 0    50   ~ 0
+SDI
+Text Label 10700 5550 0    50   ~ 0
+SDO
+$Comp
+L Connector:Conn_01x02_Male J?
+U 1 1 6051328E
+P 1050 7150
+F 0 "J?" H 1156 7328 50  0000 C CNN
+F 1 "Conn_01x02_Male" H 950 6950 50  0000 C CNN
+F 2 "" H 1050 7150 50  0001 C CNN
+F 3 "~" H 1050 7150 50  0001 C CNN
+	1    1050 7150
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 60513526
+P 1650 7050
+F 0 "R?" V 1600 6800 50  0000 L CNN
+F 1 "0" V 1700 6800 50  0000 L CNN
+F 2 "RespiraWorks_std:R_0603_1608Metric" V 1580 7050 50  0001 C CNN
+F 3 "~" H 1650 7050 50  0001 C CNN
+	1    1650 7050
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 60513584
+P 1650 7250
+F 0 "R?" V 1600 7000 50  0000 L CNN
+F 1 "0" V 1700 7000 50  0000 L CNN
+F 2 "RespiraWorks_std:R_0603_1608Metric" V 1580 7250 50  0001 C CNN
+F 3 "~" H 1650 7250 50  0001 C CNN
+	1    1650 7250
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 605136C0
+P 1650 7450
+F 0 "R?" V 1600 7200 50  0000 L CNN
+F 1 "0" V 1700 7200 50  0000 L CNN
+F 2 "RespiraWorks_std:R_0603_1608Metric" V 1580 7450 50  0001 C CNN
+F 3 "~" H 1650 7450 50  0001 C CNN
+	1    1650 7450
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 6051371A
+P 1650 6900
+F 0 "R?" V 1600 6650 50  0000 L CNN
+F 1 "0" V 1700 6650 50  0000 L CNN
+F 2 "RespiraWorks_std:R_0603_1608Metric" V 1580 6900 50  0001 C CNN
+F 3 "~" H 1650 6900 50  0001 C CNN
+	1    1650 6900
+	0    1    1    0   
+$EndComp
+Text Notes 1600 6850 0    50   ~ 0
+DNP
+Text Notes 1750 7150 0    50   ~ 0
+DNP
+Text Notes 1600 7200 0    50   ~ 0
+DNP
+Text Notes 1600 7600 0    50   ~ 0
+DNP
+Wire Wire Line
+	1500 6900 1250 6900
+Wire Wire Line
+	1250 6900 1250 7050
+Connection ~ 1250 7050
+Wire Wire Line
+	1250 7050 1250 7150
+Wire Wire Line
+	1500 7450 1250 7450
+Wire Wire Line
+	1250 7450 1250 7250
+Connection ~ 1250 7250
+Wire Wire Line
+	1250 7250 1500 7250
+Wire Wire Line
+	1800 6900 2000 6900
+Wire Wire Line
+	1800 7050 2000 7050
+Wire Wire Line
+	1800 7250 2000 7250
+Wire Wire Line
+	1800 7450 2000 7450
+Text Label 1800 6900 0    50   ~ 0
+SDI
+Text Label 1800 7250 0    50   ~ 0
+SDI
+Text Label 1800 7050 0    50   ~ 0
+SDO
+Text Label 1800 7450 0    50   ~ 0
+SDO
+Wire Wire Line
+	2500 5700 2000 5700
+Wire Wire Line
+	2000 5700 2000 5800
+Wire Wire Line
+	2000 5800 1900 5800
+Wire Wire Line
+	2000 5900 1900 5900
+Wire Wire Line
+	2000 5800 2000 5900
+Connection ~ 2000 5800
+$Comp
+L Device:R R?
+U 1 1 6058461F
+P 1750 5800
+F 0 "R?" V 1700 5550 50  0000 L CNN
+F 1 "0" V 1700 5900 50  0000 L CNN
+F 2 "RespiraWorks_std:R_0603_1608Metric" V 1680 5800 50  0001 C CNN
+F 3 "~" H 1750 5800 50  0001 C CNN
+	1    1750 5800
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 6058467F
+P 1750 5900
+F 0 "R?" V 1700 5650 50  0000 L CNN
+F 1 "0" V 1800 5650 50  0000 L CNN
+F 2 "RespiraWorks_std:R_0603_1608Metric" V 1680 5900 50  0001 C CNN
+F 3 "~" H 1750 5900 50  0001 C CNN
+	1    1750 5900
+	0    1    1    0   
+$EndComp
+Text Notes 1700 6050 0    50   ~ 0
+DNP
+Text HLabel 1450 5800 0    50   Input ~ 0
+D13
+Text HLabel 1450 5900 0    50   Input ~ 0
+D3
+Wire Wire Line
+	1250 7050 1500 7050
+Wire Wire Line
+	1600 5800 1450 5800
+Wire Wire Line
+	1600 5900 1450 5900
+$Comp
+L Device:R R?
+U 1 1 605A6934
+P 1750 6100
+F 0 "R?" V 1700 5850 50  0000 L CNN
+F 1 "0" V 1700 6200 50  0000 L CNN
+F 2 "RespiraWorks_std:R_0603_1608Metric" V 1680 6100 50  0001 C CNN
+F 3 "~" H 1750 6100 50  0001 C CNN
+	1    1750 6100
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	2500 5800 2100 5800
+Wire Wire Line
+	2100 5800 2100 6100
+Wire Wire Line
+	2100 6100 1900 6100
+Text Notes 1900 5950 0    50   ~ 0
+DNP
+Text HLabel 1450 6100 0    50   Input ~ 0
+D10
+Wire Wire Line
+	1450 6100 1600 6100
+Wire Wire Line
+	2500 6000 2300 6000
+Wire Wire Line
+	2300 6000 2300 6450
+Text Notes 1800 6450 0    50   ~ 0
+why 39k
+Text HLabel 1000 6450 0    50   Input ~ 0
+D9
+$Comp
+L Device:R R?
+U 1 1 605F10A8
+P 1100 6300
+F 0 "R?" H 950 6300 50  0000 L CNN
+F 1 "39K" H 900 6350 50  0000 L CNN
+F 2 "RespiraWorks_std:R_0603_1608Metric" V 1030 6300 50  0001 C CNN
+F 3 "~" H 1100 6300 50  0001 C CNN
+	1    1100 6300
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	1100 6450 1000 6450
+Wire Wire Line
+	1100 6450 2300 6450
+Connection ~ 1100 6450
+$Comp
+L RespiraWorks:+3.3V_Ctrl #PWR?
+U 1 1 605FE109
+P 800 6350
+F 0 "#PWR?" H 800 6350 50  0001 C CNN
+F 1 "+3.3V_Ctrl" H 785 6523 50  0000 C CNN
+F 2 "" H 800 6350 50  0001 C CNN
+F 3 "" H 800 6350 50  0001 C CNN
+	1    800  6350
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC

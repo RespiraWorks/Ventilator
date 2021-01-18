@@ -18,7 +18,7 @@ $Comp
 L MCU_ST_STM32L4:STM32L496RGTx U?
 U 1 1 5FEB9E53
 P 5800 3200
-F 0 "U?" H 5200 5000 50  0000 C CNN
+F 0 "U?" H 5250 4950 50  0000 C CNN
 F 1 "STM32L496RGTx" H 6300 1350 50  0000 C CNN
 F 2 "Package_QFP:LQFP-64_10x10mm_P0.5mm" H 5200 1500 50  0001 R CNN
 F 3 "http://www.st.com/st-web-ui/static/active/en/resource/technical/document/datasheet/DM00284211.pdf" H 5800 3200 50  0001 C CNN
@@ -36,8 +36,6 @@ F 3 "" H 5700 700 50  0001 C CNN
 	1    5700 700 
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	6000 1400 6000 1350
 Wire Wire Line
 	6000 700  5800 700 
 Wire Wire Line
@@ -355,19 +353,6 @@ F 3 "~" H 2850 3000 50  0001 C CNN
 	1    2850 3000
 	0    1    1    0   
 $EndComp
-Text HLabel 1700 2650 0    50   Input ~ 0
-MCO
-$Comp
-L Device:Jumper JP?
-U 1 1 5FEE2B9D
-P 2100 2650
-F 0 "JP?" H 2100 2914 50  0000 C CNN
-F 1 "Jumper" H 2100 2823 50  0000 C CNN
-F 2 "" H 2100 2650 50  0001 C CNN
-F 3 "~" H 2100 2650 50  0001 C CNN
-	1    2100 2650
-	1    0    0    -1  
-$EndComp
 $Comp
 L Device:C C?
 U 1 1 5FEE2BA5
@@ -454,11 +439,6 @@ Wire Wire Line
 Wire Wire Line
 	2300 2800 2300 3250
 Connection ~ 2300 3250
-Wire Wire Line
-	3250 2700 3250 2650
-Wire Wire Line
-	3250 2650 2400 2650
-Connection ~ 3250 2700
 Text HLabel 4650 4200 0    50   Input ~ 0
 CC-LED-Y
 Wire Wire Line
@@ -473,6 +453,7 @@ F 0 "Y?" V 3800 4650 50  0000 L CNN
 F 1 "ABS25-32.768KHZ-6-T" V 4350 4550 50  0000 L CNN
 F 2 "" H 3950 4800 50  0001 C CNN
 F 3 "~" H 3950 4800 50  0001 C CNN
+F 4 "DNP" V 4100 4900 50  0000 C CNN "DNP"
 	1    3950 4800
 	0    1    1    0   
 $EndComp
@@ -565,8 +546,6 @@ USART-CTS
 Text HLabel 6700 2800 2    50   Output ~ 0
 USART-RTS
 Wire Wire Line
-	8200 2500 7950 2500
-Wire Wire Line
 	8200 2600 7950 2600
 Wire Wire Line
 	6700 2700 6400 2700
@@ -578,12 +557,6 @@ Text HLabel 7450 2200 2    50   Input ~ 0
 USD-MISO
 Text HLabel 7450 2300 2    50   Output ~ 0
 USD-MOSI
-Wire Wire Line
-	6400 2100 7400 2100
-Wire Wire Line
-	6400 2200 7200 2200
-Wire Wire Line
-	6400 2300 7400 2300
 Text HLabel 6700 1800 2    50   Output ~ 0
 USART-TX-STLINK
 Text HLabel 6700 1900 2    50   Input ~ 0
@@ -596,12 +569,8 @@ Text HLabel 6700 2000 2    50   Output ~ 0
 USD-nCS
 Wire Wire Line
 	6700 2000 6400 2000
-Text HLabel 6700 1600 2    50   Input ~ 0
-TP-100-TEMP-SENSOR
 Text HLabel 6700 1700 2    50   Output ~ 0
 INH-FLOW-OUT
-Wire Wire Line
-	6400 1600 6700 1600
 Wire Wire Line
 	6400 1700 6700 1700
 Text Notes 3400 550  0    50   ~ 0
@@ -620,8 +589,6 @@ Wire Wire Line
 	6400 3400 6700 3400
 Text HLabel 7450 3500 2    50   Output ~ 0
 BLOWER-CTRL
-Wire Wire Line
-	6400 3500 7350 3500
 Text HLabel 4850 3300 0    50   Input ~ 0
 OXYGEN-SENSOR
 Wire Wire Line
@@ -650,10 +617,6 @@ Text HLabel 6700 3900 2    50   Output ~ 0
 OXY-FLOW-OUT
 Wire Wire Line
 	6400 3700 6700 3700
-Text HLabel 3550 4000 0    50   Input ~ 0
-USD-DETECT
-Wire Wire Line
-	3550 4000 3650 4000
 Text HLabel 4650 4300 0    50   Input ~ 0
 SWO
 Wire Wire Line
@@ -835,43 +798,6 @@ D8
 Text HLabel 6700 4400 2    50   BiDi ~ 0
 D2
 $Comp
-L Device:Jumper JP?
-U 1 1 60094469
-P 8250 2900
-F 0 "JP?" H 8100 3000 50  0000 C CNN
-F 1 "Jumper" H 8450 3000 50  0000 C CNN
-F 2 "" H 8250 2900 50  0001 C CNN
-F 3 "~" H 8250 2900 50  0001 C CNN
-	1    8250 2900
-	1    0    0    -1  
-$EndComp
-$Comp
-L Device:Jumper JP?
-U 1 1 600944C5
-P 8250 3050
-F 0 "JP?" H 8000 2950 50  0000 C CNN
-F 1 "Jumper" H 8450 3000 50  0000 C CNN
-F 2 "" H 8250 3050 50  0001 C CNN
-F 3 "~" H 8250 3050 50  0001 C CNN
-	1    8250 3050
-	1    0    0    -1  
-$EndComp
-$Comp
-L Device:Jumper JP?
-U 1 1 60094513
-P 8250 2300
-F 0 "JP?" H 8250 2564 50  0000 C CNN
-F 1 "Jumper" H 8250 2473 50  0000 C CNN
-F 2 "" H 8250 2300 50  0001 C CNN
-F 3 "~" H 8250 2300 50  0001 C CNN
-	1    8250 2300
-	1    0    0    -1  
-$EndComp
-Text HLabel 8750 2300 2    50   BiDi ~ 0
-D1
-Text HLabel 8750 3050 2    50   BiDi ~ 0
-D0
-$Comp
 L RespiraWorks:+3.3V_Ctrl_A #PWR?
 U 1 1 60094AC3
 P 8800 2850
@@ -883,16 +809,9 @@ F 3 "" H 8800 2850 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	7950 2300 7950 2500
-Connection ~ 7950 2500
-Wire Wire Line
 	8550 2900 8800 2900
 Wire Wire Line
 	8800 2900 8800 2850
-Wire Wire Line
-	8550 3050 8750 3050
-Wire Wire Line
-	8550 2300 8750 2300
 Text HLabel 7550 4000 2    50   BiDi ~ 0
 D15
 Text HLabel 7550 4300 2    50   BiDi ~ 0
@@ -911,47 +830,13 @@ Wire Wire Line
 Connection ~ 7450 4200
 Wire Wire Line
 	7450 4200 6400 4200
-Wire Wire Line
-	7950 2600 7950 2900
-Connection ~ 7950 2900
-Wire Wire Line
-	7950 2900 7950 3050
 Connection ~ 7950 2600
 Wire Wire Line
 	6400 2600 7950 2600
-Text HLabel 7450 2000 2    50   BiDi ~ 0
-D13
-Text HLabel 7450 2400 2    50   BiDi ~ 0
-D7
-Text HLabel 7200 2000 2    50   BiDi ~ 0
-D11
-Wire Wire Line
-	7450 2000 7400 2000
-Wire Wire Line
-	7400 2000 7400 2100
-Connection ~ 7400 2100
-Wire Wire Line
-	7400 2100 7450 2100
-Wire Wire Line
-	7200 2000 7200 2200
-Connection ~ 7200 2200
-Wire Wire Line
-	7200 2200 7450 2200
-Wire Wire Line
-	7400 2300 7400 2400
-Wire Wire Line
-	7400 2400 7450 2400
-Connection ~ 7400 2300
-Wire Wire Line
-	7400 2300 7450 2300
-Text Notes 3400 650  0    50   ~ 0
-Any cleanup suggestions for "D" signals, lmk
 Text HLabel 6700 4500 2    50   BiDi ~ 0
 D10
 Text HLabel 6700 4600 2    50   BiDi ~ 0
 D9
-Wire Wire Line
-	6400 2500 7950 2500
 Text HLabel 7050 4700 2    50   Output ~ 0
 CC-BUZZER
 Text HLabel 7050 4600 2    50   Output ~ 0
@@ -973,46 +858,10 @@ Wire Wire Line
 	6400 4400 6700 4400
 Wire Wire Line
 	6400 4300 6700 4300
-Text HLabel 7450 3400 2    50   Output ~ 0
-D3
-Wire Wire Line
-	7450 3400 7350 3400
-Wire Wire Line
-	7350 3400 7350 3500
-Connection ~ 7350 3500
-Wire Wire Line
-	7350 3500 7450 3500
 Text HLabel 6700 4800 2    50   BiDi ~ 0
 D4
 Wire Wire Line
 	6400 4800 6700 4800
-Wire Wire Line
-	4250 4000 5100 4000
-$Comp
-L Device:Jumper JP?
-U 1 1 601A7BF1
-P 3950 4000
-F 0 "JP?" H 3800 3850 50  0000 C CNN
-F 1 "Jumper" H 3750 3950 50  0000 C CNN
-F 2 "" H 3950 4000 50  0001 C CNN
-F 3 "~" H 3950 4000 50  0001 C CNN
-	1    3950 4000
-	1    0    0    -1  
-$EndComp
-$Comp
-L Device:Jumper JP?
-U 1 1 601B7860
-P 3350 3800
-F 0 "JP?" H 3550 3750 50  0000 C CNN
-F 1 "Jumper" H 3150 3750 50  0000 C CNN
-F 2 "" H 3350 3800 50  0001 C CNN
-F 3 "~" H 3350 3800 50  0001 C CNN
-	1    3350 3800
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	3650 4000 3650 3800
-Connection ~ 3650 4000
 $Comp
 L RespiraWorks:+3.3V_Ctrl_A #PWR?
 U 1 1 601BF945
@@ -1024,8 +873,6 @@ F 3 "" H 3050 3700 50  0001 C CNN
 	1    3050 3700
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	3050 3800 3050 3700
 $Comp
 L RespiraWorks:+3.3V_Ctrl #PWR?
 U 1 1 601C83BE
@@ -1061,55 +908,10 @@ F 3 "" H 9500 1050 50  0001 C CNN
 $EndComp
 Text Notes 9350 550  2    50   ~ 0
 VBAT pin
-$Comp
-L Device:Jumper JP?
-U 1 1 601E0703
-P 5300 1050
-F 0 "JP?" H 5300 1314 50  0000 C CNN
-F 1 "Jumper" H 5300 1223 50  0000 C CNN
-F 2 "" H 5300 1050 50  0001 C CNN
-F 3 "~" H 5300 1050 50  0001 C CNN
-	1    5300 1050
-	0    -1   -1   0   
-$EndComp
 Connection ~ 5700 700 
 Wire Wire Line
 	5700 700  5700 1400
-$Comp
-L Device:Jumper JP?
-U 1 1 60219CEF
-P 6000 1050
-F 0 "JP?" H 6000 1314 50  0000 C CNN
-F 1 "Jumper" H 6000 1223 50  0000 C CNN
-F 2 "" H 6000 1050 50  0001 C CNN
-F 3 "~" H 6000 1050 50  0001 C CNN
-	1    6000 1050
-	0    1    1    0   
-$EndComp
-Wire Wire Line
-	6000 750  6000 700 
-$Comp
-L Device:Jumper JP?
-U 1 1 60219D81
-P 5600 1100
-F 0 "JP?" H 5750 1200 50  0000 C CNN
-F 1 "Jumper" H 5550 1050 50  0000 C CNN
-F 2 "" H 5600 1100 50  0001 C CNN
-F 3 "~" H 5600 1100 50  0001 C CNN
-	1    5600 1100
-	0    -1   -1   0   
-$EndComp
-Wire Wire Line
-	5600 800  5600 700 
-Wire Wire Line
-	5600 700  5300 700 
-Wire Wire Line
-	5300 700  5300 750 
 Connection ~ 5600 700 
-Wire Wire Line
-	5300 1350 5300 1400
-Wire Wire Line
-	5300 1400 5500 1400
 $Comp
 L Device:C C?
 U 1 1 6024B9CE
@@ -1118,6 +920,7 @@ F 0 "C?" H 4965 5276 50  0000 L CNN
 F 1 "2.2uF, 10V" H 4900 5150 25  0000 L CNN
 F 2 "RespiraWorks_std:C_0603_1608Metric" H 4888 5100 50  0001 C CNN
 F 3 "~" H 4850 5250 50  0001 C CNN
+F 4 "DNP" H 4850 5250 50  0001 C CNN "DNP"
 	1    4850 5250
 	1    0    0    -1  
 $EndComp
@@ -1129,6 +932,7 @@ F 0 "C?" H 5315 5276 50  0000 L CNN
 F 1 "2.2uF, 10V" H 5250 5150 25  0000 L CNN
 F 2 "RespiraWorks_std:C_0603_1608Metric" H 5238 5100 50  0001 C CNN
 F 3 "~" H 5200 5250 50  0001 C CNN
+F 4 "DNP" H 5200 5250 50  0001 C CNN "DNP"
 	1    5200 5250
 	1    0    0    -1  
 $EndComp
@@ -1166,54 +970,10 @@ Text Notes 4700 5400 0    50   ~ 0
 DNP
 Text Notes 5250 5450 0    50   ~ 0
 DNP
-Text Label 7700 2500 0    50   ~ 0
-PA9
-Text Label 4600 6600 0    50   ~ 0
-PA9
 Wire Wire Line
 	5600 5050 5600 5900
-$Comp
-L Device:Jumper JP?
-U 1 1 602A5056
-P 4900 6200
-F 0 "JP?" H 4900 6464 50  0000 C CNN
-F 1 "Jumper" H 4900 6373 50  0000 C CNN
-F 2 "" H 4900 6200 50  0001 C CNN
-F 3 "~" H 4900 6200 50  0001 C CNN
-	1    4900 6200
-	0    1    1    0   
-$EndComp
-$Comp
-L Device:Jumper JP?
-U 1 1 602A516C
-P 4600 6200
-F 0 "JP?" H 4600 6464 50  0000 C CNN
-F 1 "Jumper" H 4600 6373 50  0000 C CNN
-F 2 "" H 4600 6200 50  0001 C CNN
-F 3 "~" H 4600 6200 50  0001 C CNN
-	1    4600 6200
-	0    1    1    0   
-$EndComp
-Wire Wire Line
-	4600 6500 4600 6600
 Wire Wire Line
 	5500 5000 5500 5900
-Wire Wire Line
-	5500 5900 4900 5900
-Wire Wire Line
-	4600 5900 4900 5900
-Connection ~ 4900 5900
-$Comp
-L power:GND #PWR?
-U 1 1 602C0EA8
-P 4900 6500
-F 0 "#PWR?" H 4900 6250 50  0001 C CNN
-F 1 "GND" H 4905 6327 50  0000 C CNN
-F 2 "" H 4900 6500 50  0001 C CNN
-F 3 "" H 4900 6500 50  0001 C CNN
-	1    4900 6500
-	1    0    0    -1  
-$EndComp
 $Comp
 L power:GNDA #PWR?
 U 1 1 602C1A6B
@@ -1227,4 +987,360 @@ F 3 "" H 5900 5900 50  0001 C CNN
 $EndComp
 Wire Wire Line
 	5900 5000 5900 5900
+$Comp
+L RespiraWorks:503182-1852 J?
+U 1 1 6016937E
+P 2450 6400
+AR Path="/5FCD4D4C/6016937E" Ref="J?"  Part="1" 
+AR Path="/5FCD4D18/6016937E" Ref="J?"  Part="1" 
+F 0 "J?" H 2250 6750 50  0000 L CNN
+F 1 "503182-1852" H 2800 6050 50  0000 L CNN
+F 2 "RespiraWorks:5031821852" H 3250 6000 50  0001 C CNN
+F 3 "https://www.molex.com/pdm_docs/sd/5031821852_sd.pdf" H 3850 5900 50  0001 C CNN
+	1    2450 6400
+	1    0    0    -1  
+$EndComp
+Text Notes 2900 5700 2    50   ~ 0
+MicroSD Card Connector
+$Comp
+L RespiraWorks:+3.3V_Ctrl #PWR?
+U 1 1 60169386
+P 2650 6000
+AR Path="/5FCD4D4C/60169386" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4D18/60169386" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 2650 6000 50  0001 C CNN
+F 1 "+3.3V_Ctrl" H 2635 6173 50  0000 C CNN
+F 2 "" H 2650 6000 50  0001 C CNN
+F 3 "" H 2650 6000 50  0001 C CNN
+	1    2650 6000
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C C?
+U 1 1 6016938C
+P 3100 6100
+AR Path="/5FCD4D4C/6016938C" Ref="C?"  Part="1" 
+AR Path="/5FCD4D18/6016938C" Ref="C?"  Part="1" 
+F 0 "C?" H 3150 6200 50  0000 L CNN
+F 1 "1uF/10V" H 3150 6000 39  0000 L CNN
+F 2 "" H 3138 5950 50  0001 C CNN
+F 3 "~" H 3100 6100 50  0001 C CNN
+	1    3100 6100
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C C?
+U 1 1 60169393
+P 3500 6100
+AR Path="/5FCD4D4C/60169393" Ref="C?"  Part="1" 
+AR Path="/5FCD4D18/60169393" Ref="C?"  Part="1" 
+F 0 "C?" H 3550 6200 50  0000 L CNN
+F 1 "0.1uF/16V" H 3550 6000 39  0000 L CNN
+F 2 "" H 3538 5950 50  0001 C CNN
+F 3 "~" H 3500 6100 50  0001 C CNN
+	1    3500 6100
+	1    0    0    -1  
+$EndComp
+$Comp
+L RespiraWorks:+3.3V_Ctrl #PWR?
+U 1 1 6016939A
+P 3300 5900
+AR Path="/5FCD4D4C/6016939A" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4D18/6016939A" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 3300 5900 50  0001 C CNN
+F 1 "+3.3V_Ctrl" H 3285 6073 50  0000 C CNN
+F 2 "" H 3300 5900 50  0001 C CNN
+F 3 "" H 3300 5900 50  0001 C CNN
+	1    3300 5900
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3100 5950 3100 5900
+Wire Wire Line
+	3100 5900 3300 5900
+Wire Wire Line
+	3300 5900 3500 5900
+Wire Wire Line
+	3500 5900 3500 5950
+Connection ~ 3300 5900
+$Comp
+L power:GND #PWR?
+U 1 1 601693A5
+P 3300 6300
+AR Path="/5FCD4D4C/601693A5" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4D18/601693A5" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 3300 6050 50  0001 C CNN
+F 1 "GND" H 3305 6127 50  0000 C CNN
+F 2 "" H 3300 6300 50  0001 C CNN
+F 3 "" H 3300 6300 50  0001 C CNN
+	1    3300 6300
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3100 6250 3300 6250
+Wire Wire Line
+	3300 6250 3300 6300
+Wire Wire Line
+	3500 6250 3300 6250
+Connection ~ 3300 6250
+$Comp
+L power:GND #PWR?
+U 1 1 601693AF
+P 2600 7100
+AR Path="/5FCD4D4C/601693AF" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4D18/601693AF" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 2600 6850 50  0001 C CNN
+F 1 "GND" H 2605 6927 50  0000 C CNN
+F 2 "" H 2600 7100 50  0001 C CNN
+F 3 "" H 2600 7100 50  0001 C CNN
+	1    2600 7100
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2600 7100 2650 7100
+Wire Wire Line
+	2650 7100 2650 7050
+Wire Wire Line
+	2550 7050 2550 7100
+Wire Wire Line
+	2550 7100 2600 7100
+Connection ~ 2600 7100
+Text Notes 1700 5950 2    50   ~ 0
+Double Check sw/dt footprint
+NoConn ~ 2000 6250
+NoConn ~ 2000 6350
+NoConn ~ 2000 6750
+Text Label 1700 6850 2    50   ~ 0
+USD-Detect
+Wire Wire Line
+	1000 6850 2000 6850
+Wire Wire Line
+	1000 6850 1000 6700
+$Comp
+L Device:R R?
+U 1 1 601693C1
+P 1000 6550
+AR Path="/5FCD4D4C/601693C1" Ref="R?"  Part="1" 
+AR Path="/5FCD4D18/601693C1" Ref="R?"  Part="1" 
+F 0 "R?" H 850 6600 50  0000 L CNN
+F 1 "10K" H 800 6500 50  0000 L CNN
+F 2 "RespiraWorks_std:R_0603_1608Metric" V 930 6550 50  0001 C CNN
+F 3 "~" H 1000 6550 50  0001 C CNN
+	1    1000 6550
+	1    0    0    -1  
+$EndComp
+$Comp
+L RespiraWorks:+3.3V_Ctrl #PWR?
+U 1 1 601693C8
+P 1000 6400
+AR Path="/5FCD4D4C/601693C8" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4D18/601693C8" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 1000 6400 50  0001 C CNN
+F 1 "+3.3V_Ctrl" H 985 6573 50  0000 C CNN
+F 2 "" H 1000 6400 50  0001 C CNN
+F 3 "" H 1000 6400 50  0001 C CNN
+	1    1000 6400
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2000 6650 1800 6650
+Wire Wire Line
+	2000 6550 1800 6550
+Wire Wire Line
+	2000 6450 1800 6450
+Wire Wire Line
+	2000 6150 1800 6150
+Text HLabel 1800 6150 0    50   Output ~ 0
+USD-MISO
+Text HLabel 1800 6450 0    50   Input ~ 0
+USD-CS
+Text HLabel 1800 6550 0    50   Input ~ 0
+USD-MOSI
+Text HLabel 1800 6650 0    50   Input ~ 0
+USD-SCLK
+Wire Notes Line
+	500  5500 4050 5500
+Wire Notes Line
+	4050 5500 4050 7800
+NoConn ~ 6400 1600
+Wire Wire Line
+	5300 1350 5300 1400
+Wire Wire Line
+	5300 1400 5500 1400
+Wire Wire Line
+	5300 700  5300 750 
+Wire Wire Line
+	5600 700  5300 700 
+$Comp
+L Device:Jumper JP?
+U 1 1 601E0703
+P 5300 1050
+F 0 "JP?" H 5300 1314 50  0000 C CNN
+F 1 "Jumper" H 5300 1223 50  0000 C CNN
+F 2 "" H 5300 1050 50  0001 C CNN
+F 3 "~" H 5300 1050 50  0001 C CNN
+	1    5300 1050
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	5300 1400 4850 1400
+Connection ~ 5300 1400
+$Comp
+L power:+BATT #PWR?
+U 1 1 601BF7A9
+P 4850 900
+F 0 "#PWR?" H 4850 750 50  0001 C CNN
+F 1 "+BATT" H 4865 1073 50  0000 C CNN
+F 2 "" H 4850 900 50  0001 C CNN
+F 3 "" H 4850 900 50  0001 C CNN
+	1    4850 900 
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C C?
+U 1 1 601CB6EF
+P 4600 1100
+F 0 "C?" H 4715 1126 50  0000 L CNN
+F 1 "1uF, 10V" H 4650 1000 25  0000 L CNN
+F 2 "RespiraWorks_std:C_0603_1608Metric" H 4638 950 50  0001 C CNN
+F 3 "~" H 4600 1100 50  0001 C CNN
+	1    4600 1100
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4850 900  4850 950 
+Wire Wire Line
+	4600 950  4850 950 
+Connection ~ 4850 950 
+Wire Wire Line
+	4850 950  4850 1400
+$Comp
+L power:GND #PWR?
+U 1 1 601E377B
+P 4600 1250
+F 0 "#PWR?" H 4600 1000 50  0001 C CNN
+F 1 "GND" H 4605 1077 50  0000 C CNN
+F 2 "" H 4600 1250 50  0001 C CNN
+F 3 "" H 4600 1250 50  0001 C CNN
+	1    4600 1250
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6000 700  6000 1400
+Wire Wire Line
+	5600 700  5600 1400
+Text Notes 7650 1500 2    39   ~ 0
+Had trouble copying symbol to move VDDA to outside
+$Comp
+L RespiraWorks:+3.3V_Ctrl_A #PWR?
+U 1 1 6020D1C2
+P 6200 700
+F 0 "#PWR?" H 6200 700 50  0001 C CNN
+F 1 "+3.3V_Ctrl_A" H 6185 873 50  0000 C CNN
+F 2 "" H 6200 700 50  0001 C CNN
+F 3 "" H 6200 700 50  0001 C CNN
+	1    6200 700 
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5900 1400 5900 850 
+Wire Wire Line
+	5900 850  6200 850 
+Wire Wire Line
+	6200 850  6200 700 
+Text Notes 10100 1450 2    39   ~ 0
+Match name of power port for VDDA with the one from edwin's branch!
+Wire Wire Line
+	5600 5900 5500 5900
+Connection ~ 5600 5900
+$Comp
+L Device:R R?
+U 1 1 60234886
+P 3050 3850
+F 0 "R?" H 3150 3900 50  0000 C CNN
+F 1 "10K" H 3200 3800 50  0000 C CNN
+F 2 "RespiraWorks_std:R_0603_1608Metric" V 2980 3850 50  0001 C CNN
+F 3 "~" H 3050 3850 50  0001 C CNN
+	1    3050 3850
+	1    0    0    -1  
+$EndComp
+Text HLabel 7450 3400 2    50   Output ~ 0
+D3
+Wire Wire Line
+	7350 3500 7450 3500
+Wire Wire Line
+	6400 3500 7350 3500
+Connection ~ 7350 3500
+Wire Wire Line
+	7350 3400 7350 3500
+Wire Wire Line
+	7450 3400 7350 3400
+Text HLabel 7450 2400 2    50   BiDi ~ 0
+D7
+Wire Wire Line
+	7400 2300 7450 2300
+Wire Wire Line
+	6400 2300 7400 2300
+Connection ~ 7400 2300
+Wire Wire Line
+	7400 2300 7400 2400
+Wire Wire Line
+	7400 2400 7450 2400
+Text HLabel 7200 2000 2    50   BiDi ~ 0
+D11
+Wire Wire Line
+	7200 2200 7450 2200
+Wire Wire Line
+	6400 2200 7200 2200
+Connection ~ 7200 2200
+Wire Wire Line
+	7200 2000 7200 2200
+Text HLabel 7450 2000 2    50   BiDi ~ 0
+D13
+Wire Wire Line
+	7450 2000 7400 2000
+Wire Wire Line
+	7400 2100 7450 2100
+Wire Wire Line
+	6400 2100 7400 2100
+Connection ~ 7400 2100
+Wire Wire Line
+	7400 2000 7400 2100
+Text HLabel 8150 3050 2    50   BiDi ~ 0
+D0
+Wire Wire Line
+	7950 3050 8150 3050
+Wire Wire Line
+	7950 2300 8150 2300
+Text HLabel 8150 2300 2    50   BiDi ~ 0
+D1
+Wire Wire Line
+	6400 2500 7950 2500
+Wire Wire Line
+	8200 2500 7950 2500
+Connection ~ 7950 2500
+Wire Wire Line
+	7950 2300 7950 2500
+Wire Wire Line
+	3050 4000 5100 4000
+Text Label 3750 4000 2    50   ~ 0
+USD-Detect
+Wire Wire Line
+	7950 2600 7950 2900
+$Comp
+L Device:R R?
+U 1 1 6027E19E
+P 8400 2900
+F 0 "R?" V 8300 3000 50  0000 C CNN
+F 1 "10K" V 8300 2850 50  0000 C CNN
+F 2 "RespiraWorks_std:R_0603_1608Metric" V 8330 2900 50  0001 C CNN
+F 3 "~" H 8400 2900 50  0001 C CNN
+	1    8400 2900
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	8250 2900 7950 2900
+Connection ~ 7950 2900
+Wire Wire Line
+	7950 2900 7950 3050
 $EndSCHEMATC

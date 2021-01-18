@@ -568,4 +568,6 @@ Wire Wire Line
 Connection ~ 6300 5700
 Wire Wire Line
 	6300 5700 6300 5900
+Text Notes 1950 3950 0    236  ~ 0
+Might move to connector for daughterboard
 $EndSCHEMATC

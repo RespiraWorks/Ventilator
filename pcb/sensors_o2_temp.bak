@@ -4,7 +4,7 @@ EELAYER 26 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 22 28
+Sheet 20 28
 Title "Oxygen and Temperature Sensors"
 Date ""
 Rev "2.0"

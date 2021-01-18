@@ -1068,21 +1068,10 @@ F 3 "" H 800 5950 50  0001 C CNN
 	1    800  5950
 	1    0    0    -1  
 $EndComp
-$Comp
-L Connector:TestPoint TP?
-U 1 1 604E4B49
-P 2050 5450
-F 0 "TP?" V 2100 5550 50  0000 C CNN
-F 1 "TestPoint" V 1950 5500 50  0000 C CNN
-F 2 "" H 2250 5450 50  0001 C CNN
-F 3 "~" H 2250 5450 50  0001 C CNN
-	1    2050 5450
-	0    -1   -1   0   
-$EndComp
 Wire Wire Line
 	2500 5450 2050 5450
 Text HLabel 1450 5650 0    50   Input ~ 0
-D11
+SDI
 Wire Wire Line
 	2500 5600 1900 5600
 Wire Wire Line
@@ -1103,7 +1092,7 @@ $EndComp
 Wire Wire Line
 	1550 5650 1450 5650
 Text HLabel 11000 5400 2    50   Output ~ 0
-D12
+SDO
 Wire Wire Line
 	10700 5600 10700 5400
 $Comp
@@ -1117,103 +1106,6 @@ F 3 "~" H 10850 5400 50  0001 C CNN
 	1    10850 5400
 	0    1    1    0   
 $EndComp
-Text Label 2250 5600 0    50   ~ 0
-SDI
-Text Label 10700 5550 0    50   ~ 0
-SDO
-$Comp
-L Connector:Conn_01x02_Male J?
-U 1 1 6051328E
-P 1050 7150
-F 0 "J?" H 1156 7328 50  0000 C CNN
-F 1 "Conn_01x02_Male" H 950 6950 50  0000 C CNN
-F 2 "" H 1050 7150 50  0001 C CNN
-F 3 "~" H 1050 7150 50  0001 C CNN
-	1    1050 7150
-	1    0    0    -1  
-$EndComp
-$Comp
-L Device:R R?
-U 1 1 60513526
-P 1650 7050
-F 0 "R?" V 1600 6800 50  0000 L CNN
-F 1 "0" V 1700 6800 50  0000 L CNN
-F 2 "RespiraWorks_std:R_0603_1608Metric" V 1580 7050 50  0001 C CNN
-F 3 "~" H 1650 7050 50  0001 C CNN
-	1    1650 7050
-	0    1    1    0   
-$EndComp
-$Comp
-L Device:R R?
-U 1 1 60513584
-P 1650 7250
-F 0 "R?" V 1600 7000 50  0000 L CNN
-F 1 "0" V 1700 7000 50  0000 L CNN
-F 2 "RespiraWorks_std:R_0603_1608Metric" V 1580 7250 50  0001 C CNN
-F 3 "~" H 1650 7250 50  0001 C CNN
-	1    1650 7250
-	0    1    1    0   
-$EndComp
-$Comp
-L Device:R R?
-U 1 1 605136C0
-P 1650 7450
-F 0 "R?" V 1600 7200 50  0000 L CNN
-F 1 "0" V 1700 7200 50  0000 L CNN
-F 2 "RespiraWorks_std:R_0603_1608Metric" V 1580 7450 50  0001 C CNN
-F 3 "~" H 1650 7450 50  0001 C CNN
-	1    1650 7450
-	0    1    1    0   
-$EndComp
-$Comp
-L Device:R R?
-U 1 1 6051371A
-P 1650 6900
-F 0 "R?" V 1600 6650 50  0000 L CNN
-F 1 "0" V 1700 6650 50  0000 L CNN
-F 2 "RespiraWorks_std:R_0603_1608Metric" V 1580 6900 50  0001 C CNN
-F 3 "~" H 1650 6900 50  0001 C CNN
-	1    1650 6900
-	0    1    1    0   
-$EndComp
-Text Notes 1600 6850 0    50   ~ 0
-DNP
-Text Notes 1750 7150 0    50   ~ 0
-DNP
-Text Notes 1600 7200 0    50   ~ 0
-DNP
-Text Notes 1600 7600 0    50   ~ 0
-DNP
-Wire Wire Line
-	1500 6900 1250 6900
-Wire Wire Line
-	1250 6900 1250 7050
-Connection ~ 1250 7050
-Wire Wire Line
-	1250 7050 1250 7150
-Wire Wire Line
-	1500 7450 1250 7450
-Wire Wire Line
-	1250 7450 1250 7250
-Connection ~ 1250 7250
-Wire Wire Line
-	1250 7250 1500 7250
-Wire Wire Line
-	1800 6900 2000 6900
-Wire Wire Line
-	1800 7050 2000 7050
-Wire Wire Line
-	1800 7250 2000 7250
-Wire Wire Line
-	1800 7450 2000 7450
-Text Label 1800 6900 0    50   ~ 0
-SDI
-Text Label 1800 7250 0    50   ~ 0
-SDI
-Text Label 1800 7050 0    50   ~ 0
-SDO
-Text Label 1800 7450 0    50   ~ 0
-SDO
 Wire Wire Line
 	2500 5700 2000 5700
 Wire Wire Line
@@ -1250,11 +1142,9 @@ $EndComp
 Text Notes 1700 6050 0    50   ~ 0
 DNP
 Text HLabel 1450 5800 0    50   Input ~ 0
-D13
+CK
 Text HLabel 1450 5900 0    50   Input ~ 0
-D3
-Wire Wire Line
-	1250 7050 1500 7050
+CK_2
 Wire Wire Line
 	1600 5800 1450 5800
 Wire Wire Line
@@ -1276,20 +1166,18 @@ Wire Wire Line
 	2100 5800 2100 6100
 Wire Wire Line
 	2100 6100 1900 6100
-Text Notes 1900 5950 0    50   ~ 0
+Text Notes 1850 6000 0    50   ~ 0
 DNP
 Text HLabel 1450 6100 0    50   Input ~ 0
-D10
+CS
 Wire Wire Line
 	1450 6100 1600 6100
 Wire Wire Line
-	2500 6000 2200 6000
+	2500 6000 2150 6000
 Wire Wire Line
-	2200 6000 2200 6650
-Text Notes 1350 6600 0    50   ~ 0
-why 39k
-Text HLabel 650  6650 0    50   Input ~ 0
-D9
+	2150 6000 2150 6650
+Text HLabel 750  6650 0    50   Input ~ 0
+STCK
 $Comp
 L Device:R R?
 U 1 1 605F10A8
@@ -1302,9 +1190,9 @@ F 3 "~" H 1100 6500 50  0001 C CNN
 	-1   0    0    1   
 $EndComp
 Wire Wire Line
-	1100 6650 650  6650
+	1100 6650 750  6650
 Wire Wire Line
-	1100 6650 2200 6650
+	1100 6650 2150 6650
 Connection ~ 1100 6650
 $Comp
 L RespiraWorks:+3.3V_Ctrl #PWR?
@@ -1329,7 +1217,7 @@ F 3 "~" H 2450 6400 50  0001 C CNN
 	-1   0    0    1   
 $EndComp
 Text HLabel 2400 6150 0    50   Input ~ 0
-D8
+STBY
 Wire Wire Line
 	2500 6150 2450 6150
 $Comp
@@ -1420,17 +1308,6 @@ Text Label 10750 3850 0    50   ~ 0
 OUTB1
 Text Label 10750 4300 0    50   ~ 0
 OUTB2
-$Comp
-L Connector:Conn_01x04_Male J?
-U 1 1 6070D08D
-P 4700 6850
-F 0 "J?" H 4673 6730 50  0000 R CNN
-F 1 "Conn_01x04_Male" H 4673 6821 50  0000 R CNN
-F 2 "" H 4700 6850 50  0001 C CNN
-F 3 "~" H 4700 6850 50  0001 C CNN
-	1    4700 6850
-	-1   0    0    1   
-$EndComp
 $Comp
 L Device:R R?
 U 1 1 6070D1FA
@@ -1574,45 +1451,7 @@ OUTA1
 Wire Wire Line
 	2900 6700 4200 6700
 Wire Wire Line
-	4200 6700 4200 6650
-Wire Wire Line
-	4200 6650 4500 6650
-Wire Wire Line
-	2900 6800 3300 6800
-Wire Wire Line
-	3300 6800 3300 6950
-Wire Wire Line
-	3300 6950 3450 6950
-Wire Wire Line
-	3200 6750 3200 6900
-Wire Wire Line
-	3200 6900 2900 6900
-Wire Wire Line
-	3250 6850 3250 7000
-Wire Wire Line
-	3250 7000 2900 7000
-Wire Wire Line
-	3250 6850 3700 6850
-Wire Wire Line
 	4200 7000 4200 6700
-Connection ~ 4200 6700
-Wire Wire Line
-	3950 7000 3950 6750
-Wire Wire Line
-	3200 6750 3950 6750
-Connection ~ 3950 6750
-Wire Wire Line
-	3950 6750 4500 6750
-Wire Wire Line
-	3700 7000 3700 6850
-Connection ~ 3700 6850
-Wire Wire Line
-	3700 6850 4500 6850
-Wire Wire Line
-	3450 7000 3450 6950
-Connection ~ 3450 6950
-Wire Wire Line
-	3450 6950 4500 6950
 Wire Wire Line
 	10700 5850 10950 5850
 Text Label 10750 5850 0    50   ~ 0
@@ -1763,4 +1602,38 @@ F 3 "" H 10850 6550 50  0001 C CNN
 $EndComp
 Wire Wire Line
 	10100 6850 10100 6950
+Text Notes 2100 5600 0    39   ~ 0
+D11
+Text Notes 10700 5550 0    39   ~ 0
+D12
+Wire Wire Line
+	3950 6800 3950 7000
+Wire Wire Line
+	2900 6800 3950 6800
+Wire Wire Line
+	2900 6900 3700 6900
+Wire Wire Line
+	3700 6900 3700 7000
+Wire Wire Line
+	2900 7000 3450 7000
+Text HLabel 2900 6700 0    39   Output ~ 0
+OUTA1
+Text HLabel 2900 6800 0    39   Output ~ 0
+OUTA2
+Text HLabel 2900 6900 0    39   Output ~ 0
+OUTB1
+Text HLabel 2900 7000 0    39   Output ~ 0
+OUTB2
+Text HLabel 2050 5450 0    39   Output ~ 0
+SW
+Text Notes 850  6650 2    39   ~ 0
+D9
+Text Notes 2350 6250 2    39   ~ 0
+D8
+Text Notes 2050 6100 2    39   ~ 0
+D10
+Text Notes 1950 5900 2    39   ~ 0
+D3
+Text Notes 2000 5750 2    39   ~ 0
+D13
 $EndSCHEMATC

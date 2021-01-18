@@ -202,11 +202,11 @@ Need to make footprint for this part
 Wire Wire Line
 	6450 2600 7000 2600
 Text HLabel 7000 2600 2    50   Output ~ 0
-USART-RX
+USART-TX
 Wire Wire Line
 	6450 2700 7000 2700
 Text HLabel 7000 2700 2    50   Input ~ 0
-USART-TX
+USART-RX
 NoConn ~ 6450 2800
 NoConn ~ 6450 3000
 NoConn ~ 6450 3100

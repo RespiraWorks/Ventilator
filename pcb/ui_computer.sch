@@ -100,8 +100,6 @@ F 3 "~" H 3950 4350 50  0001 C CNN
 	1    3950 4350
 	1    0    0    -1  
 $EndComp
-Text Notes 1850 3750 0    39   ~ 0
-Added small R value/ strong pull-up. Can always change to 0 ohm\n
 $Comp
 L RespiraWorks:+3V3_RPi #PWR?
 U 1 1 5FDB0BF2
@@ -142,6 +140,7 @@ F 0 "R?" H 3800 3900 50  0000 L CNN
 F 1 "1K" H 3750 3800 50  0000 L CNN
 F 2 "RespiraWorks_std:R_0603_1608Metric" V 3880 3850 50  0001 C CNN
 F 3 "~" H 3950 3850 50  0001 C CNN
+F 4 "DNP" H 3700 3850 50  0000 C CNN "DNP"
 	1    3950 3850
 	1    0    0    -1  
 $EndComp
@@ -202,11 +201,11 @@ Need to make footprint for this part
 Wire Wire Line
 	6450 2600 7000 2600
 Text HLabel 7000 2600 2    50   Output ~ 0
-USART-RX
+USART-TX
 Wire Wire Line
 	6450 2700 7000 2700
 Text HLabel 7000 2700 2    50   Input ~ 0
-USART-TX
+USART-RX
 NoConn ~ 6450 2800
 NoConn ~ 6450 3000
 NoConn ~ 6450 3100
@@ -228,6 +227,7 @@ F 0 "R?" H 7850 3050 50  0000 L CNN
 F 1 "1K" H 7850 2950 50  0000 L CNN
 F 2 "RespiraWorks_std:R_0603_1608Metric" V 7680 3000 50  0001 C CNN
 F 3 "~" H 7750 3000 50  0001 C CNN
+F 4 "DNP" H 7600 3000 50  0000 C CNN "DNP"
 	1    7750 3000
 	1    0    0    -1  
 $EndComp

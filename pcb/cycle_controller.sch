@@ -538,13 +538,13 @@ Wire Wire Line
 NoConn ~ 4150 4800
 NoConn ~ 3750 4800
 Text HLabel 8200 2500 2    50   Output ~ 0
-USART-TX
+USART-TX-RPI
 Text HLabel 8200 2600 2    50   Input ~ 0
-USART-RX
+USART-RX-RPI
 Text HLabel 6700 2700 2    50   Input ~ 0
-USART-CTS
+USART-CTS-RPI
 Text HLabel 6700 2800 2    50   Output ~ 0
-USART-RTS
+USART-RTS-RPI
 Wire Wire Line
 	8200 2600 7950 2600
 Wire Wire Line
@@ -562,7 +562,7 @@ USART-TX-STLINK
 Text HLabel 6700 1900 2    50   Input ~ 0
 USART-RX-STLINK
 Wire Wire Line
-	6400 1800 6700 1800
+	6400 1800 6500 1800
 Wire Wire Line
 	6400 1900 6700 1900
 Text HLabel 6700 2000 2    50   Output ~ 0
@@ -586,7 +586,7 @@ HEATER-CTRL
 Wire Wire Line
 	6400 3300 6700 3300
 Wire Wire Line
-	6400 3400 6700 3400
+	6400 3400 6500 3400
 Text HLabel 7450 3500 2    50   Output ~ 0
 BLOWER-CTRL
 Text HLabel 4850 3300 0    50   Input ~ 0
@@ -1276,7 +1276,7 @@ Wire Wire Line
 Wire Wire Line
 	7450 3400 7350 3400
 Text HLabel 7450 2400 2    50   BiDi ~ 0
-D7
+D11
 Wire Wire Line
 	7400 2300 7450 2300
 Wire Wire Line
@@ -1287,7 +1287,7 @@ Wire Wire Line
 Wire Wire Line
 	7400 2400 7450 2400
 Text HLabel 7200 2000 2    50   BiDi ~ 0
-D11
+D12
 Wire Wire Line
 	7200 2200 7450 2200
 Wire Wire Line
@@ -1343,4 +1343,218 @@ Wire Wire Line
 Connection ~ 7950 2900
 Wire Wire Line
 	7950 2900 7950 3050
+$Comp
+L Connector:Conn_01x10_Female J?
+U 1 1 602AB666
+P 10850 4600
+F 0 "J?" H 10877 4576 50  0000 L CNN
+F 1 "Conn_01x10_Female" H 10350 4000 50  0000 L CNN
+F 2 "" H 10850 4600 50  0001 C CNN
+F 3 "~" H 10850 4600 50  0001 C CNN
+	1    10850 4600
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector:Conn_01x08_Female J?
+U 1 1 602AB6F0
+P 10850 5750
+F 0 "J?" H 10877 5726 50  0000 L CNN
+F 1 "Conn_01x08_Female" H 10300 5200 50  0000 L CNN
+F 2 "" H 10850 5750 50  0001 C CNN
+F 3 "~" H 10850 5750 50  0001 C CNN
+	1    10850 5750
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector:Conn_01x06_Female J?
+U 1 1 602AB793
+P 10850 3500
+F 0 "J?" H 10877 3476 50  0000 L CNN
+F 1 "Conn_01x06_Female" H 10250 3100 50  0000 L CNN
+F 2 "" H 10850 3500 50  0001 C CNN
+F 3 "~" H 10850 3500 50  0001 C CNN
+	1    10850 3500
+	1    0    0    -1  
+$EndComp
+Text Notes 10800 3200 2    39   ~ 0
+0.1 headers?
+Wire Notes Line
+	9350 2950 9350 6550
+NoConn ~ 10650 3300
+Wire Wire Line
+	10650 3400 10150 3400
+Wire Wire Line
+	10650 3500 10150 3500
+Wire Wire Line
+	10650 3600 10150 3600
+Wire Wire Line
+	10650 3700 10150 3700
+Wire Wire Line
+	10650 3800 10150 3800
+Text Label 10650 3400 2    39   ~ 0
+INH-FLOW-OUT
+Text Label 6400 1700 0    24   ~ 0
+INH-FLOW-OUT
+Text Label 6400 2400 0    24   ~ 0
+EXH-FLOW-OUT
+Text Label 10650 3500 2    39   ~ 0
+EXH-FLOW-OUT
+Text Label 6400 3900 0    24   ~ 0
+OXY-FLOW-OUT
+Text Label 10650 3600 2    39   ~ 0
+OXY-FLOW-OUT
+Text Label 5050 3400 2    39   ~ 0
+PPO
+Text Label 10300 3700 2    39   ~ 0
+PPO
+Text Label 5050 3300 2    39   ~ 0
+OXY
+Text Label 10300 3800 2    39   ~ 0
+OXY
+Text HLabel 6600 3200 2    50   BiDi ~ 0
+D7
+Wire Wire Line
+	6600 3200 6500 3200
+Wire Wire Line
+	6500 3200 6500 3400
+Connection ~ 6500 3400
+Wire Wire Line
+	6500 3400 6700 3400
+Wire Wire Line
+	10650 4200 10150 4200
+Wire Wire Line
+	10650 4300 10150 4300
+Wire Wire Line
+	10650 4400 10150 4400
+Wire Wire Line
+	10650 4500 10150 4500
+Wire Wire Line
+	10650 4600 10150 4600
+Wire Wire Line
+	10650 4700 10150 4700
+Wire Wire Line
+	10650 5000 10150 5000
+Wire Wire Line
+	10650 5100 10150 5100
+Text Label 10200 4200 0    39   ~ 0
+D8
+Text Label 10200 4300 0    39   ~ 0
+D9
+Text Label 10200 4400 0    39   ~ 0
+D10
+Text Label 10200 4500 0    39   ~ 0
+D11
+Text Label 10200 4600 0    39   ~ 0
+D12
+Text Label 10200 4700 0    39   ~ 0
+D13
+Text Label 10200 5000 0    39   ~ 0
+D14
+Text Label 10200 5100 0    39   ~ 0
+D15
+$Comp
+L RespiraWorks:+3.3V_Ctrl_A #PWR?
+U 1 1 60390EE2
+P 9800 4250
+F 0 "#PWR?" H 9800 4250 50  0001 C CNN
+F 1 "+3.3V_Ctrl_A" H 9785 4423 50  0000 C CNN
+F 2 "" H 9800 4250 50  0001 C CNN
+F 3 "" H 9800 4250 50  0001 C CNN
+	1    9800 4250
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 60390FBB
+P 9900 5150
+F 0 "#PWR?" H 9900 4900 50  0001 C CNN
+F 1 "GND" H 9905 4977 50  0000 C CNN
+F 2 "" H 9900 5150 50  0001 C CNN
+F 3 "" H 9900 5150 50  0001 C CNN
+	1    9900 5150
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	10650 4800 9900 4800
+Wire Wire Line
+	9900 4800 9900 5150
+Wire Wire Line
+	10650 4900 9800 4900
+Wire Wire Line
+	9800 4900 9800 4250
+Wire Notes Line
+	9350 2950 11200 2950
+Text Label 6500 4300 0    39   ~ 0
+D8
+Text Label 6500 4600 0    39   ~ 0
+D9
+Text Label 6500 4500 0    39   ~ 0
+D10
+Text Label 6500 4400 0    39   ~ 0
+D2
+Text Label 6500 4800 0    39   ~ 0
+D4
+Text Label 7450 4300 0    39   ~ 0
+D14
+Text Label 7450 4000 0    39   ~ 0
+D15
+Text Label 7350 3400 0    39   ~ 0
+D3
+Text Label 6500 3200 0    39   ~ 0
+D7
+Text Label 8000 3050 0    39   ~ 0
+D0
+Text Label 8000 2300 0    39   ~ 0
+D1
+Text Label 7400 2400 0    24   ~ 0
+D11
+Text Label 7400 2000 0    20   ~ 0
+D13
+Text Label 7200 2050 0    20   ~ 0
+D12
+Wire Wire Line
+	10650 5450 10150 5450
+Wire Wire Line
+	10650 5550 10150 5550
+Wire Wire Line
+	10650 5650 10150 5650
+Wire Wire Line
+	10650 5750 10150 5750
+Wire Wire Line
+	10650 5850 10150 5850
+Wire Wire Line
+	10650 5950 10150 5950
+Wire Wire Line
+	10650 6050 10150 6050
+Wire Wire Line
+	10650 6150 10150 6150
+Text Label 10200 5450 0    39   ~ 0
+D0
+Text Label 10200 5550 0    39   ~ 0
+D1
+Text Label 10200 5650 0    39   ~ 0
+D2
+Text Label 10200 5750 0    39   ~ 0
+D3
+Text Label 10200 5850 0    39   ~ 0
+D4
+Text Label 10200 6150 0    39   ~ 0
+D7
+Text Label 6950 4600 0    39   ~ 0
+D5
+Text Label 10200 5950 0    39   ~ 0
+D5
+Text HLabel 6700 1600 2    50   BiDi ~ 0
+D6
+Wire Wire Line
+	6700 1600 6500 1600
+Wire Wire Line
+	6500 1600 6500 1800
+Connection ~ 6500 1800
+Wire Wire Line
+	6500 1800 6700 1800
+Text Label 6550 1600 0    39   ~ 0
+D6
+Text Label 10200 6050 0    39   ~ 0
+D6
 $EndSCHEMATC

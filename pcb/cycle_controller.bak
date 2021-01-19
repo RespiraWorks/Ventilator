@@ -537,45 +537,31 @@ Wire Wire Line
 	3300 5050 3300 5150
 NoConn ~ 4150 4800
 NoConn ~ 3750 4800
-Text HLabel 8200 2500 2    50   Output ~ 0
+Text HLabel 7850 2500 2    50   Output ~ 0
 USART-TX-RPI
-Text HLabel 8200 2600 2    50   Input ~ 0
+Text HLabel 7850 2600 2    50   Input ~ 0
 USART-RX-RPI
 Text HLabel 6700 2700 2    50   Input ~ 0
 USART-CTS-RPI
 Text HLabel 6700 2800 2    50   Output ~ 0
 USART-RTS-RPI
 Wire Wire Line
-	8200 2600 7950 2600
-Wire Wire Line
 	6700 2700 6400 2700
 Wire Wire Line
 	6700 2800 6400 2800
-Text HLabel 7450 2100 2    50   Output ~ 0
-USD-SCLK
-Text HLabel 7450 2200 2    50   Input ~ 0
-USD-MISO
-Text HLabel 7450 2300 2    50   Output ~ 0
-USD-MOSI
 Text HLabel 6700 1800 2    50   Output ~ 0
 USART-TX-STLINK
 Text HLabel 6700 1900 2    50   Input ~ 0
 USART-RX-STLINK
 Wire Wire Line
-	6400 1800 6500 1800
-Wire Wire Line
 	6400 1900 6700 1900
-Text HLabel 6700 2000 2    50   Output ~ 0
-USD-nCS
-Wire Wire Line
-	6700 2000 6400 2000
-Text HLabel 6700 1700 2    50   Output ~ 0
+Text HLabel 6700 1700 2    50   Input ~ 0
 INH-FLOW-OUT
 Wire Wire Line
 	6400 1700 6700 1700
 Text Notes 3400 550  0    50   ~ 0
 Note: some pinouts changed, inform sw
-Text HLabel 6700 2400 2    50   Output ~ 0
+Text HLabel 6700 2400 2    50   Input ~ 0
 EXH-FLOW-OUT
 Wire Wire Line
 	6400 2400 6700 2400
@@ -585,9 +571,7 @@ Text HLabel 6700 3400 2    50   Output ~ 0
 HEATER-CTRL
 Wire Wire Line
 	6400 3300 6700 3300
-Wire Wire Line
-	6400 3400 6500 3400
-Text HLabel 7450 3500 2    50   Output ~ 0
+Text HLabel 6700 3500 2    50   Output ~ 0
 BLOWER-CTRL
 Text HLabel 4850 3300 0    50   Input ~ 0
 OXYGEN-SENSOR
@@ -613,7 +597,7 @@ Wire Wire Line
 	4850 3700 5100 3700
 Wire Wire Line
 	4850 3800 5100 3800
-Text HLabel 6700 3900 2    50   Output ~ 0
+Text HLabel 6700 3900 2    50   Input ~ 0
 OXY-FLOW-OUT
 Wire Wire Line
 	6400 3700 6700 3700
@@ -718,14 +702,10 @@ Wire Wire Line
 Wire Wire Line
 	2700 4750 2450 4750
 Connection ~ 2700 4750
-Text HLabel 7550 4100 2    50   BiDi ~ 0
+Text HLabel 6700 4100 2    50   BiDi ~ 0
 CC-SCL
-Text HLabel 7550 4200 2    50   BiDi ~ 0
+Text HLabel 6700 4200 2    50   BiDi ~ 0
 CC-SDA
-Wire Wire Line
-	7550 4100 7450 4100
-Wire Wire Line
-	7550 4200 7450 4200
 $Comp
 L RespiraWorks:+3.3V_Ctrl_A #PWR?
 U 1 1 60010B9C
@@ -793,63 +773,33 @@ Text HLabel 6700 4000 2    50   Output ~ 0
 CC-GPIO
 Wire Wire Line
 	6400 4000 6700 4000
-Text HLabel 6700 4300 2    50   BiDi ~ 0
+Text HLabel 10150 4200 0    50   BiDi ~ 0
 D8
-Text HLabel 6700 4400 2    50   BiDi ~ 0
+Text HLabel 10150 5650 0    50   BiDi ~ 0
 D2
 $Comp
 L RespiraWorks:+3.3V_Ctrl_A #PWR?
 U 1 1 60094AC3
-P 8800 2850
-F 0 "#PWR?" H 8800 2850 50  0001 C CNN
-F 1 "+3.3V_Ctrl_A" H 8785 3023 50  0000 C CNN
-F 2 "" H 8800 2850 50  0001 C CNN
-F 3 "" H 8800 2850 50  0001 C CNN
-	1    8800 2850
+P 7750 2100
+F 0 "#PWR?" H 7750 2100 50  0001 C CNN
+F 1 "+3.3V_Ctrl_A" H 7735 2273 50  0000 C CNN
+F 2 "" H 7750 2100 50  0001 C CNN
+F 3 "" H 7750 2100 50  0001 C CNN
+	1    7750 2100
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	8550 2900 8800 2900
-Wire Wire Line
-	8800 2900 8800 2850
-Text HLabel 7550 4000 2    50   BiDi ~ 0
+Text HLabel 10150 5100 0    50   BiDi ~ 0
 D15
-Text HLabel 7550 4300 2    50   BiDi ~ 0
+Text HLabel 10150 5000 0    50   BiDi ~ 0
 D14
-Wire Wire Line
-	7550 4000 7450 4000
-Wire Wire Line
-	7450 4000 7450 4100
-Connection ~ 7450 4100
-Wire Wire Line
-	7450 4100 6400 4100
-Wire Wire Line
-	7550 4300 7450 4300
-Wire Wire Line
-	7450 4300 7450 4200
-Connection ~ 7450 4200
-Wire Wire Line
-	7450 4200 6400 4200
-Connection ~ 7950 2600
-Wire Wire Line
-	6400 2600 7950 2600
-Text HLabel 6700 4500 2    50   BiDi ~ 0
+Text HLabel 10150 4400 0    50   BiDi ~ 0
 D10
-Text HLabel 6700 4600 2    50   BiDi ~ 0
+Text HLabel 10150 4300 0    50   BiDi ~ 0
 D9
-Text HLabel 7050 4700 2    50   Output ~ 0
+Text HLabel 6700 4700 2    50   Output ~ 0
 CC-BUZZER
-Text HLabel 7050 4600 2    50   Output ~ 0
+Text HLabel 10150 5950 0    50   BiDi ~ 0
 D5
-Wire Wire Line
-	6400 4700 6900 4700
-Wire Wire Line
-	7050 4600 6900 4600
-Wire Wire Line
-	6900 4600 6900 4700
-Connection ~ 6900 4700
-Wire Wire Line
-	6900 4700 7050 4700
 Wire Wire Line
 	6400 4600 6700 4600
 Wire Wire Line
@@ -858,7 +808,7 @@ Wire Wire Line
 	6400 4400 6700 4400
 Wire Wire Line
 	6400 4300 6700 4300
-Text HLabel 6700 4800 2    50   BiDi ~ 0
+Text HLabel 10150 5850 0    50   BiDi ~ 0
 D4
 Wire Wire Line
 	6400 4800 6700 4800
@@ -1142,22 +1092,6 @@ F 3 "" H 1050 6650 50  0001 C CNN
 	1    1050 6650
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	2050 6900 1850 6900
-Wire Wire Line
-	2050 6800 1850 6800
-Wire Wire Line
-	2050 6700 1850 6700
-Wire Wire Line
-	2050 6400 1850 6400
-Text HLabel 1850 6400 0    50   Output ~ 0
-USD-MISO
-Text HLabel 1850 6700 0    50   Input ~ 0
-USD-CS
-Text HLabel 1850 6800 0    50   Input ~ 0
-USD-MOSI
-Text HLabel 1850 6900 0    50   Input ~ 0
-USD-SCLK
 Wire Notes Line
 	500  5850 4050 5850
 Wire Notes Line
@@ -1264,85 +1198,31 @@ F 3 "~" H 3050 3850 50  0001 C CNN
 	1    3050 3850
 	1    0    0    -1  
 $EndComp
-Text HLabel 7450 3400 2    50   Output ~ 0
+Text HLabel 10150 5750 0    50   BiDi ~ 0
 D3
-Wire Wire Line
-	7350 3500 7450 3500
-Wire Wire Line
-	6400 3500 7350 3500
-Connection ~ 7350 3500
-Wire Wire Line
-	7350 3400 7350 3500
-Wire Wire Line
-	7450 3400 7350 3400
-Text HLabel 7450 2400 2    50   BiDi ~ 0
+Text HLabel 10150 4500 0    50   BiDi ~ 0
 D11
-Wire Wire Line
-	7400 2300 7450 2300
-Wire Wire Line
-	6400 2300 7400 2300
-Connection ~ 7400 2300
-Wire Wire Line
-	7400 2300 7400 2400
-Wire Wire Line
-	7400 2400 7450 2400
-Text HLabel 7200 2000 2    50   BiDi ~ 0
-D12
-Wire Wire Line
-	7200 2200 7450 2200
-Wire Wire Line
-	6400 2200 7200 2200
-Connection ~ 7200 2200
-Wire Wire Line
-	7200 2000 7200 2200
-Text HLabel 7450 2000 2    50   BiDi ~ 0
+Text HLabel 10150 4700 0    50   BiDi ~ 0
 D13
-Wire Wire Line
-	7450 2000 7400 2000
-Wire Wire Line
-	7400 2100 7450 2100
-Wire Wire Line
-	6400 2100 7400 2100
-Connection ~ 7400 2100
-Wire Wire Line
-	7400 2000 7400 2100
-Text HLabel 8150 3050 2    50   BiDi ~ 0
+Text HLabel 10150 5450 0    50   BiDi ~ 0
 D0
-Wire Wire Line
-	7950 3050 8150 3050
-Wire Wire Line
-	7950 2300 8150 2300
-Text HLabel 8150 2300 2    50   BiDi ~ 0
+Text HLabel 10150 5550 0    50   BiDi ~ 0
 D1
-Wire Wire Line
-	6400 2500 7950 2500
-Wire Wire Line
-	8200 2500 7950 2500
-Connection ~ 7950 2500
-Wire Wire Line
-	7950 2300 7950 2500
 Wire Wire Line
 	3050 4000 5100 4000
 Text Label 3750 4000 2    50   ~ 0
 USD-Detect
-Wire Wire Line
-	7950 2600 7950 2900
 $Comp
 L Device:R R?
 U 1 1 6027E19E
-P 8400 2900
-F 0 "R?" V 8300 3000 50  0000 C CNN
-F 1 "10K" V 8300 2850 50  0000 C CNN
-F 2 "RespiraWorks_std:R_0603_1608Metric" V 8330 2900 50  0001 C CNN
-F 3 "~" H 8400 2900 50  0001 C CNN
-	1    8400 2900
-	0    1    1    0   
+P 7750 2250
+F 0 "R?" H 7650 2350 50  0000 C CNN
+F 1 "10K" H 7600 2200 50  0000 C CNN
+F 2 "RespiraWorks_std:R_0603_1608Metric" V 7680 2250 50  0001 C CNN
+F 3 "~" H 7750 2250 50  0001 C CNN
+	1    7750 2250
+	-1   0    0    1   
 $EndComp
-Wire Wire Line
-	8250 2900 7950 2900
-Connection ~ 7950 2900
-Wire Wire Line
-	7950 2900 7950 3050
 $Comp
 L Connector:Conn_01x10_Female J?
 U 1 1 602AB666
@@ -1411,15 +1291,8 @@ Text Label 5050 3300 2    39   ~ 0
 OXY
 Text Label 10300 3800 2    39   ~ 0
 OXY
-Text HLabel 6600 3200 2    50   BiDi ~ 0
+Text HLabel 10150 6150 0    50   BiDi ~ 0
 D7
-Wire Wire Line
-	6600 3200 6500 3200
-Wire Wire Line
-	6500 3200 6500 3400
-Connection ~ 6500 3400
-Wire Wire Line
-	6500 3400 6700 3400
 Wire Wire Line
 	10650 4200 10150 4200
 Wire Wire Line
@@ -1442,12 +1315,6 @@ Text Label 10200 4300 0    39   ~ 0
 D9
 Text Label 10200 4400 0    39   ~ 0
 D10
-Text Label 10200 4500 0    39   ~ 0
-D11
-Text Label 10200 4600 0    39   ~ 0
-D12
-Text Label 10200 4700 0    39   ~ 0
-D13
 Text Label 10200 5000 0    39   ~ 0
 D14
 Text Label 10200 5100 0    39   ~ 0
@@ -1484,34 +1351,28 @@ Wire Wire Line
 	9800 4900 9800 4250
 Wire Notes Line
 	9350 2950 11200 2950
-Text Label 6500 4300 0    39   ~ 0
+Text Label 6450 4300 0    39   ~ 0
 D8
-Text Label 6500 4600 0    39   ~ 0
+Text Label 6450 4600 0    39   ~ 0
 D9
-Text Label 6500 4500 0    39   ~ 0
+Text Label 6450 4500 0    39   ~ 0
 D10
-Text Label 6500 4400 0    39   ~ 0
+Text Label 6450 4400 0    39   ~ 0
 D2
-Text Label 6500 4800 0    39   ~ 0
+Text Label 6450 4800 0    39   ~ 0
 D4
-Text Label 7450 4300 0    39   ~ 0
+Text Label 6450 4200 0    39   ~ 0
 D14
-Text Label 7450 4000 0    39   ~ 0
+Text Label 6450 4100 0    39   ~ 0
 D15
-Text Label 7350 3400 0    39   ~ 0
+Text Label 6450 3500 0    39   ~ 0
 D3
-Text Label 6500 3200 0    39   ~ 0
+Text Label 6450 3400 0    39   ~ 0
 D7
-Text Label 8000 3050 0    39   ~ 0
+Text Label 6450 2600 0    39   ~ 0
 D0
-Text Label 8000 2300 0    39   ~ 0
+Text Label 6450 2500 0    39   ~ 0
 D1
-Text Label 7400 2400 0    24   ~ 0
-D11
-Text Label 7400 2000 0    20   ~ 0
-D13
-Text Label 7200 2050 0    20   ~ 0
-D12
 Wire Wire Line
 	10650 5450 10150 5450
 Wire Wire Line
@@ -1540,21 +1401,75 @@ Text Label 10200 5850 0    39   ~ 0
 D4
 Text Label 10200 6150 0    39   ~ 0
 D7
-Text Label 6950 4600 0    39   ~ 0
+Text Label 6450 4700 0    39   ~ 0
 D5
 Text Label 10200 5950 0    39   ~ 0
 D5
-Text HLabel 6700 1600 2    50   BiDi ~ 0
+Text HLabel 10150 6050 0    50   BiDi ~ 0
 D6
-Wire Wire Line
-	6700 1600 6500 1600
-Wire Wire Line
-	6500 1600 6500 1800
-Connection ~ 6500 1800
-Wire Wire Line
-	6500 1800 6700 1800
-Text Label 6550 1600 0    39   ~ 0
+Text Label 6450 1800 0    39   ~ 0
 D6
 Text Label 10200 6050 0    39   ~ 0
 D6
+Wire Wire Line
+	1550 6900 2050 6900
+Text Label 1650 6900 0    39   ~ 0
+USD-SCLK
+Wire Wire Line
+	1550 6800 2050 6800
+Text Label 1650 6800 0    39   ~ 0
+USD-MOSI
+Wire Wire Line
+	1550 6700 2050 6700
+Text Label 1650 6700 0    39   ~ 0
+USD-CS
+Wire Wire Line
+	1550 6400 2050 6400
+Text Label 1650 6400 0    39   ~ 0
+USD-MISO
+Wire Wire Line
+	6400 2000 6800 2000
+Text Label 6450 2000 0    39   ~ 0
+USD-CS
+Wire Wire Line
+	6400 2100 6800 2100
+Text Label 6450 2100 0    39   ~ 0
+USD-SCLK
+Text Label 6450 2200 0    39   ~ 0
+USD-MISO
+Text Label 6450 2300 0    39   ~ 0
+USD-MOSI
+Wire Wire Line
+	6400 2300 6800 2300
+Text HLabel 10150 4600 0    50   BiDi ~ 0
+D12
+Wire Wire Line
+	6400 2200 6800 2200
+Wire Wire Line
+	6400 1800 6700 1800
+Text Label 10200 4700 0    39   ~ 0
+USD-SCLK
+Text Label 10200 4600 0    39   ~ 0
+USD-MISO
+Text Label 10200 4500 0    39   ~ 0
+USD-MOSI
+Wire Wire Line
+	6400 2500 7850 2500
+Wire Wire Line
+	7750 2400 7750 2600
+Wire Wire Line
+	6400 2600 7750 2600
+Connection ~ 7750 2600
+Wire Wire Line
+	7750 2600 7850 2600
+Wire Wire Line
+	6400 3400 6700 3400
+Wire Wire Line
+	6400 3500 6700 3500
+Wire Wire Line
+	6400 4100 6700 4100
+Wire Wire Line
+	6400 4200 6700 4200
+Wire Wire Line
+	6400 4700 6700 4700
 $EndSCHEMATC

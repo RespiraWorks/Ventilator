@@ -14,4 +14,6 @@ Comment2 ""
 Comment3 ""
 Comment4 ""
 $EndDescr
+Text Notes 3800 1500 0    39   ~ 0
+FPGA used: MAX 10; PN:10M08DAF484C8G
 $EndSCHEMATC

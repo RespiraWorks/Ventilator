@@ -86,7 +86,7 @@ Wire Wire Line
 Text Notes 5400 1850 0    50   ~ 0
 RPI powered by 5V\n
 Text HLabel 4550 3900 0    50   Output ~ 0
-USART_CTS
+USART_RTS
 Wire Wire Line
 	5000 3900 4550 3900
 $Comp
@@ -272,7 +272,7 @@ $EndComp
 Wire Wire Line
 	6450 3800 7000 3800
 Text HLabel 7000 3800 2    50   Input ~ 0
-USART-RTS
+USART-CTS
 $Comp
 L RespiraWorks:+5V_GUI #PWR?
 U 1 1 5FEBC42B

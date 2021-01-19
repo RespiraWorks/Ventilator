@@ -332,9 +332,9 @@ Text HLabel 6700 3600 2    50   Input ~ 0
 TDO
 Wire Wire Line
 	6700 3600 6400 3600
-Text HLabel 4850 4100 0    50   Input ~ 0
+Text HLabel 4850 4100 0    50   Output ~ 0
 CC-LED-R
-Text HLabel 4850 3900 0    50   Input ~ 0
+Text HLabel 4850 3900 0    50   Output ~ 0
 CC-LED-G
 Wire Wire Line
 	5100 3900 4850 3900
@@ -437,7 +437,7 @@ Wire Wire Line
 Wire Wire Line
 	2300 2700 2300 3250
 Connection ~ 2300 3250
-Text HLabel 4850 4200 0    50   Input ~ 0
+Text HLabel 4850 4200 0    50   Output ~ 0
 CC-LED-Y
 Wire Wire Line
 	3250 2700 5100 2700

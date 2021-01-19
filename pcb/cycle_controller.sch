@@ -332,16 +332,16 @@ Text HLabel 6700 3600 2    50   Input ~ 0
 TDO
 Wire Wire Line
 	6700 3600 6400 3600
-Text HLabel 4650 4100 0    50   Input ~ 0
+Text HLabel 4850 4100 0    50   Input ~ 0
 CC-LED-R
-Text HLabel 4650 3900 0    50   Input ~ 0
+Text HLabel 4850 3900 0    50   Input ~ 0
 CC-LED-G
 Wire Wire Line
-	5100 3900 4650 3900
+	5100 3900 4850 3900
 Wire Wire Line
-	5100 4100 4650 4100
+	5100 4100 4850 4100
 Wire Wire Line
-	5100 4200 4650 4200
+	5100 4200 4850 4200
 $Comp
 L Device:Crystal Y?
 U 1 1 5FEE2B95
@@ -437,7 +437,7 @@ Wire Wire Line
 Wire Wire Line
 	2300 2700 2300 3250
 Connection ~ 2300 3250
-Text HLabel 4650 4200 0    50   Input ~ 0
+Text HLabel 4850 4200 0    50   Input ~ 0
 CC-LED-Y
 Wire Wire Line
 	3250 2700 5100 2700
@@ -497,7 +497,7 @@ F 0 "C?" V 3700 4450 50  0000 L CNN
 F 1 "6.8pF" V 3500 4400 25  0000 L CNN
 F 2 "RespiraWorks_std:C_0603_1608Metric" H 3638 4450 50  0001 C CNN
 F 3 "~" H 3600 4600 50  0001 C CNN
-F 4 "DNP" V 3650 4700 50  0000 C CNN "DNP"
+F 4 "DNP" V 3750 4600 50  0000 C CNN "DNP"
 	1    3600 4600
 	0    1    1    0   
 $EndComp
@@ -597,10 +597,10 @@ Text HLabel 6700 3900 2    50   Input ~ 0
 OXY-FLOW-OUT
 Wire Wire Line
 	6400 3700 6700 3700
-Text HLabel 4650 4300 0    50   Input ~ 0
+Text HLabel 4850 4300 0    50   Input ~ 0
 SWO
 Wire Wire Line
-	5100 4300 4650 4300
+	5100 4300 4850 4300
 $Comp
 L Switch:SW_Push SW?
 U 1 1 5FF60966
@@ -743,13 +743,7 @@ Connection ~ 3950 5050
 Connection ~ 3950 4600
 Wire Wire Line
 	4300 4600 4300 4700
-Wire Wire Line
-	5100 4500 4800 4500
-Wire Wire Line
-	4800 4500 4800 4450
-Wire Wire Line
-	4800 4450 4600 4450
-Text HLabel 4600 4450 0    50   Output ~ 0
+Text HLabel 4800 4450 0    50   Output ~ 0
 UART-TX-FPGA
 Wire Wire Line
 	3700 4550 4700 4550
@@ -811,12 +805,12 @@ Wire Wire Line
 $Comp
 L RespiraWorks:+3.3V_Ctrl_A #PWR?
 U 1 1 601BF945
-P 3050 3700
-F 0 "#PWR?" H 3050 3700 50  0001 C CNN
-F 1 "+3.3V_Ctrl_A" H 3035 3873 50  0000 C CNN
-F 2 "" H 3050 3700 50  0001 C CNN
-F 3 "" H 3050 3700 50  0001 C CNN
-	1    3050 3700
+P 3250 3700
+F 0 "#PWR?" H 3250 3700 50  0001 C CNN
+F 1 "+3.3V_Ctrl_A" H 3235 3873 50  0000 C CNN
+F 2 "" H 3250 3700 50  0001 C CNN
+F 3 "" H 3250 3700 50  0001 C CNN
+	1    3250 3700
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -1186,12 +1180,12 @@ Connection ~ 5600 5900
 $Comp
 L Device:R R?
 U 1 1 60234886
-P 3050 3850
-F 0 "R?" H 3150 3900 50  0000 C CNN
-F 1 "10K" H 3200 3800 50  0000 C CNN
-F 2 "RespiraWorks_std:R_0603_1608Metric" V 2980 3850 50  0001 C CNN
-F 3 "~" H 3050 3850 50  0001 C CNN
-	1    3050 3850
+P 3250 3850
+F 0 "R?" H 3350 3900 50  0000 C CNN
+F 1 "10K" H 3400 3800 50  0000 C CNN
+F 2 "RespiraWorks_std:R_0603_1608Metric" V 3180 3850 50  0001 C CNN
+F 3 "~" H 3250 3850 50  0001 C CNN
+	1    3250 3850
 	1    0    0    -1  
 $EndComp
 Text HLabel 10150 5750 0    50   BiDi ~ 0
@@ -1204,9 +1198,7 @@ Text HLabel 10150 5450 0    50   BiDi ~ 0
 D0
 Text HLabel 10150 5550 0    50   BiDi ~ 0
 D1
-Wire Wire Line
-	3050 4000 5100 4000
-Text Label 3750 4000 2    50   ~ 0
+Text Label 4000 4000 2    50   ~ 0
 USD-Detect
 $Comp
 L Device:R R?
@@ -1524,4 +1516,12 @@ Wire Wire Line
 Wire Wire Line
 	4150 5450 4250 5450
 Connection ~ 4150 5450
+Wire Wire Line
+	4800 4450 4950 4450
+Wire Wire Line
+	4950 4450 4950 4500
+Wire Wire Line
+	4950 4500 5100 4500
+Wire Wire Line
+	3250 4000 5100 4000
 $EndSCHEMATC

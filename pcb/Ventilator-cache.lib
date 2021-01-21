@@ -786,6 +786,21 @@ X +5V_GUI 1 0 0 0 U 50 50 1 1 W N
 ENDDRAW
 ENDDEF
 #
+# RespiraWorks_+5V_Sns
+#
+DEF RespiraWorks_+5V_Sns #PWR 0 40 Y Y 1 F P
+F0 "#PWR" 0 0 50 H I C CNN
+F1 "RespiraWorks_+5V_Sns" 0 150 50 H V C CNN
+F2 "" 0 0 50 H I C CNN
+F3 "" 0 0 50 H I C CNN
+DRAW
+P 2 1 1 0 -30 50 0 100 N
+P 2 1 1 0 0 0 0 100 N
+P 2 1 1 0 0 100 30 50 N
+X +5V_Sns 1 0 0 0 U 50 50 1 1 W N
+ENDDRAW
+ENDDEF
+#
 # RespiraWorks_+5V_USB
 #
 DEF RespiraWorks_+5V_USB #PWR 0 40 Y Y 1 F P
@@ -1030,6 +1045,31 @@ X VS EPAD6 4750 500 300 D 59 59 1 1 W
 X OUTB1 EPAD7 8150 -1800 300 L 59 59 1 1 w
 X OUTB2 EPAD8 8150 -2250 300 L 59 59 1 1 w
 X GND EPAD9 3600 -4250 300 U 59 59 1 1 W
+ENDDRAW
+ENDDEF
+#
+# RespiraWorks_Pressure_sensor_daughterboard
+#
+DEF ~RespiraWorks_Pressure_sensor_daughterboard H 0 40 N N 1 F N
+F0 "H" 0 550 50 H V C CNN
+F1 "RespiraWorks_Pressure_sensor_daughterboard" 0 575 50 H I C CNN
+F2 "RespiraWorks:Pressure_sensor_daughterboard" 0 0 50 H I C CNN
+F3 "" 0 0 50 H I C CNN
+$FPLIST
+ MountingHole*Pad*
+$ENDFPLIST
+DRAW
+C -150 100 50 0 1 50 N
+C -150 400 50 1 1 50 N
+C 150 100 50 1 1 50 N
+C 150 400 50 1 1 50 N
+T 0 0 250 50 0 0 0 #4/M3 Normal 0 C C
+S -250 500 250 0 0 1 0 f
+P 2 0 0 0 -50 50 50 50 N
+P 2 0 0 0 -30 70 30 70 N
+P 2 0 0 0 -15 90 15 90 N
+P 2 0 0 0 0 0 0 50 N
+X 1 1 0 -100 100 U 50 50 1 1 I
 ENDDRAW
 ENDDEF
 #

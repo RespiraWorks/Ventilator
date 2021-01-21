@@ -183,17 +183,6 @@ F 3 "~" H 8700 950 50  0001 C CNN
 	1    8700 950 
 	1    0    0    -1  
 $EndComp
-$Comp
-L power:GND #PWR?
-U 1 1 5FEBD51B
-P 8550 1150
-F 0 "#PWR?" H 8550 900 50  0001 C CNN
-F 1 "GND" H 8555 977 50  0000 C CNN
-F 2 "" H 8550 1150 50  0001 C CNN
-F 3 "" H 8550 1150 50  0001 C CNN
-	1    8550 1150
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
 	8350 1100 8550 1100
 Wire Wire Line
@@ -557,10 +546,10 @@ Wire Wire Line
 	6400 1700 6700 1700
 Text Notes 3400 550  0    50   ~ 0
 Note: some pinouts changed, inform sw
-Text HLabel 6700 2400 2    50   Input ~ 0
+Text HLabel 7000 2400 2    50   Input ~ 0
 EXH-FLOW-OUT
 Wire Wire Line
-	6400 2400 6700 2400
+	6400 2400 7000 2400
 Text HLabel 6700 3300 2    50   Output ~ 0
 SOLENOID-CTRL
 Text HLabel 6700 3400 2    50   Output ~ 0
@@ -593,7 +582,7 @@ Wire Wire Line
 	4850 3700 5100 3700
 Wire Wire Line
 	4850 3800 5100 3800
-Text HLabel 6700 3900 2    50   Input ~ 0
+Text HLabel 7000 3900 2    50   Input ~ 0
 OXY-FLOW-OUT
 Wire Wire Line
 	6400 3700 6700 3700
@@ -752,7 +741,7 @@ UART-RX-FPGA
 Wire Wire Line
 	4800 3100 5100 3100
 Wire Wire Line
-	6400 3900 6700 3900
+	6400 3900 7000 3900
 Text HLabel 6700 3700 2    50   Output ~ 0
 UART-RTS-FPGA
 Text HLabel 6700 3800 2    50   Input ~ 0
@@ -767,17 +756,6 @@ Text HLabel 10150 4200 0    50   BiDi ~ 0
 D8
 Text HLabel 10150 5650 0    50   BiDi ~ 0
 D2
-$Comp
-L RespiraWorks:+3.3V_Ctrl_A #PWR?
-U 1 1 60094AC3
-P 7750 2100
-F 0 "#PWR?" H 7750 2100 50  0001 C CNN
-F 1 "+3.3V_Ctrl_A" H 7735 2273 50  0000 C CNN
-F 2 "" H 7750 2100 50  0001 C CNN
-F 3 "" H 7750 2100 50  0001 C CNN
-	1    7750 2100
-	1    0    0    -1  
-$EndComp
 Text HLabel 10150 5100 0    50   BiDi ~ 0
 D15
 Text HLabel 10150 5000 0    50   BiDi ~ 0
@@ -802,17 +780,6 @@ Text HLabel 10150 5850 0    50   BiDi ~ 0
 D4
 Wire Wire Line
 	6400 4800 6700 4800
-$Comp
-L RespiraWorks:+3.3V_Ctrl_A #PWR?
-U 1 1 601BF945
-P 3250 3700
-F 0 "#PWR?" H 3250 3700 50  0001 C CNN
-F 1 "+3.3V_Ctrl_A" H 3235 3873 50  0000 C CNN
-F 2 "" H 3250 3700 50  0001 C CNN
-F 3 "" H 3250 3700 50  0001 C CNN
-	1    3250 3700
-	1    0    0    -1  
-$EndComp
 $Comp
 L RespiraWorks:+3.3V_Ctrl #PWR?
 U 1 1 601C83BE
@@ -860,7 +827,7 @@ F 0 "C?" H 4965 5276 50  0000 L CNN
 F 1 "2.2uF, 10V" H 4900 5150 25  0000 L CNN
 F 2 "RespiraWorks_std:C_0603_1608Metric" H 4888 5100 50  0001 C CNN
 F 3 "~" H 4850 5250 50  0001 C CNN
-F 4 "DNP" H 4850 5250 50  0001 C CNN "DNP"
+F 4 "DNP" H 4750 5150 50  0000 C CNN "DNP"
 	1    4850 5250
 	1    0    0    -1  
 $EndComp
@@ -872,7 +839,7 @@ F 0 "C?" H 5315 5276 50  0000 L CNN
 F 1 "2.2uF, 10V" H 5250 5150 25  0000 L CNN
 F 2 "RespiraWorks_std:C_0603_1608Metric" H 5238 5100 50  0001 C CNN
 F 3 "~" H 5200 5250 50  0001 C CNN
-F 4 "DNP" H 5200 5250 50  0001 C CNN "DNP"
+F 4 "DNP" H 5300 5350 50  0000 C CNN "DNP"
 	1    5200 5250
 	1    0    0    -1  
 $EndComp
@@ -906,10 +873,6 @@ Wire Wire Line
 Wire Wire Line
 	5200 5500 5050 5500
 Connection ~ 5050 5500
-Text Notes 4700 5400 0    50   ~ 0
-DNP
-Text Notes 5250 5450 0    50   ~ 0
-DNP
 Wire Wire Line
 	5600 5050 5600 5900
 Wire Wire Line
@@ -1177,17 +1140,6 @@ Match name of power port for VDDA with the one from edwin's branch!
 Wire Wire Line
 	5600 5900 5500 5900
 Connection ~ 5600 5900
-$Comp
-L Device:R R?
-U 1 1 60234886
-P 3250 3850
-F 0 "R?" H 3350 3900 50  0000 C CNN
-F 1 "10K" H 3400 3800 50  0000 C CNN
-F 2 "RespiraWorks_std:R_0603_1608Metric" V 3180 3850 50  0001 C CNN
-F 3 "~" H 3250 3850 50  0001 C CNN
-	1    3250 3850
-	1    0    0    -1  
-$EndComp
 Text HLabel 10150 5750 0    50   BiDi ~ 0
 D3
 Text HLabel 10150 4500 0    50   BiDi ~ 0
@@ -1198,7 +1150,7 @@ Text HLabel 10150 5450 0    50   BiDi ~ 0
 D0
 Text HLabel 10150 5550 0    50   BiDi ~ 0
 D1
-Text Label 4000 4000 2    50   ~ 0
+Text Label 4850 4000 2    50   ~ 0
 USD-Detect
 $Comp
 L Device:R R?
@@ -1263,11 +1215,11 @@ Text Label 10650 3400 2    39   ~ 0
 INH-FLOW-OUT
 Text Label 6400 1700 0    24   ~ 0
 INH-FLOW-OUT
-Text Label 6400 2400 0    24   ~ 0
+Text Label 6450 2400 0    39   ~ 0
 EXH-FLOW-OUT
 Text Label 10650 3500 2    39   ~ 0
 EXH-FLOW-OUT
-Text Label 6400 3900 0    24   ~ 0
+Text Label 6450 3900 0    39   ~ 0
 OXY-FLOW-OUT
 Text Label 10650 3600 2    39   ~ 0
 OXY-FLOW-OUT
@@ -1523,5 +1475,33 @@ Wire Wire Line
 Wire Wire Line
 	4950 4500 5100 4500
 Wire Wire Line
-	3250 4000 5100 4000
+	4350 4000 5100 4000
+NoConn ~ 5100 4400
+$Comp
+L RespiraWorks:+3.3V_Ctrl #PWR?
+U 1 1 606EA65F
+P 7750 2100
+F 0 "#PWR?" H 7750 2100 50  0001 C CNN
+F 1 "+3.3V_Ctrl" H 7735 2273 50  0000 C CNN
+F 2 "" H 7750 2100 50  0001 C CNN
+F 3 "" H 7750 2100 50  0001 C CNN
+	1    7750 2100
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GNDA #PWR?
+U 1 1 606ED0BF
+P 8550 1150
+F 0 "#PWR?" H 8550 900 50  0001 C CNN
+F 1 "GNDA" H 8555 977 50  0000 C CNN
+F 2 "" H 8550 1150 50  0001 C CNN
+F 3 "" H 8550 1150 50  0001 C CNN
+	1    8550 1150
+	1    0    0    -1  
+$EndComp
+Text HLabel 3850 1600 0    39   Input ~ 0
+NRST
+Wire Wire Line
+	3850 1600 4100 1600
+Connection ~ 4100 1600
 $EndSCHEMATC

@@ -1,11 +1,10 @@
 EESchema Schematic File Version 4
-LIBS:Ventilator-cache
-EELAYER 26 0
+EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 24 30
-Title "Stepper Motor Driver"
+Sheet 6 30
+Title "UI Computer"
 Date ""
 Rev "2.0"
 Comp "RespiraWorks"

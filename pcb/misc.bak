@@ -1,5 +1,6 @@
 EESchema Schematic File Version 4
-EELAYER 30 0
+LIBS:Ventilator-cache
+EELAYER 26 0
 EELAYER END
 $Descr B 17000 11000
 encoding utf-8
@@ -18,7 +19,7 @@ CC-SDA
 Text HLabel 1650 2450 0    50   Input ~ 0
 CC-SCL
 $Comp
-L Timer_RTC:PCF85363ATT U?
+L Ventilator-rescue:PCF85363ATT-Timer_RTC U?
 U 1 1 6017F9A5
 P 3350 2650
 F 0 "U?" H 3800 2600 50  0000 L CNN

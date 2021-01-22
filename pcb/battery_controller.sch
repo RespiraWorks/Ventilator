@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 7 18
+Sheet 17 17
 Title ""
 Date ""
 Rev ""
@@ -621,8 +621,6 @@ Wire Wire Line
 Wire Wire Line
 	8850 2550 8850 1900
 Connection ~ 8850 1900
-Wire Wire Line
-	10100 3050 9900 3050
 $Comp
 L Device:C C?
 U 1 1 5FEFF38F
@@ -636,8 +634,6 @@ F 3 "~" H 9700 3100 50  0001 C CNN
 $EndComp
 Wire Wire Line
 	9700 3250 9800 3250
-Wire Wire Line
-	9900 3250 9900 3050
 $Comp
 L power:GND #PWR?
 U 1 1 5FF03BDB
@@ -650,11 +646,9 @@ F 3 "" H 9800 3250 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Connection ~ 9800 3250
-Wire Wire Line
-	9800 3250 9900 3250
 Text Label 9900 2950 0    50   ~ 0
 BAT_P
-Text Label 9900 3050 0    50   ~ 0
+Text Label 9900 3250 0    50   ~ 0
 BAT_N
 Wire Wire Line
 	3100 1900 3100 2600
@@ -1065,29 +1059,20 @@ Wire Wire Line
 Wire Wire Line
 	9100 5100 9250 5100
 Connection ~ 9100 5100
-$Comp
-L Connector:Conn_01x04_Female J?
-U 1 1 60067C72
-P 10300 3050
-F 0 "J?" H 9900 3400 50  0000 L CNN
-F 1 "Conn_01x04_Female" H 9600 3300 50  0000 L CNN
-F 2 "" H 10300 3050 50  0001 C CNN
-F 3 "~" H 10300 3050 50  0001 C CNN
-	1    10300 3050
-	1    0    0    -1  
-$EndComp
-Text Notes 9600 3600 0    50   ~ 0
-TODO: replace this with molex
+Text Notes 9650 3700 0    50   ~ 0
+Pin count to prevent incorrect mating
 Text Notes 9250 4500 0    50   ~ 0
 TODO: add NO BAT detection
 $Comp
 L Connector:Conn_01x02_Male J?
 U 1 1 600737AA
 P 700 2000
-F 0 "J?" H 700 1650 50  0000 R CNN
-F 1 "Conn_01x02_Male" H 1250 1750 50  0000 R CNN
-F 2 "" H 700 2000 50  0001 C CNN
+F 0 "J?" H 750 2300 50  0000 R CNN
+F 1 "MegaFit 2x1" H 1100 2400 50  0000 R CNN
+F 2 "RespiraWorks_Std:Molex_Mega-Fit_76829-0102_2x01_P5.70mm_Vertical" H 700 2000 50  0001 C CNN
 F 3 "~" H 700 2000 50  0001 C CNN
+F 4 "Molex" H 700 2000 50  0001 C CNN "Manufacturer"
+F 5 "768290102" H 850 2500 50  0000 C CNN "Manufacturer P/N"
 	1    700  2000
 	1    0    0    1   
 $EndComp
@@ -1102,8 +1087,6 @@ F 3 "" H 900 2000 50  0001 C CNN
 	1    900  2000
 	1    0    0    -1  
 $EndComp
-Text Notes 600  1550 0    50   ~ 0
-TODO: replace this with molex
 $Comp
 L Device:C C?
 U 1 1 6008077D
@@ -1230,7 +1213,7 @@ Wire Wire Line
 	9700 2950 10100 2950
 Connection ~ 9700 2950
 Wire Wire Line
-	900  1900 1650 1900
+	900  1900 1200 1900
 $Comp
 L Device:C C?
 U 1 1 6012788B
@@ -1575,4 +1558,63 @@ Wire Wire Line
 	10500 1900 10900 1900
 Text HLabel 10900 1900 2    50   Input ~ 0
 VSYS
+Wire Wire Line
+	9800 3250 10250 3250
+Wire Wire Line
+	10100 2950 10100 3150
+Wire Wire Line
+	10100 3150 10250 3150
+$Comp
+L Connector:Conn_01x04_Male J?
+U 1 1 600E3A57
+P 10450 3150
+F 0 "J?" H 10550 3350 50  0000 R CNN
+F 1 "MegaFit 2x2" H 10550 3450 50  0000 R CNN
+F 2 "RespiraWorks_Std:Molex_Mega-Fit_76829-0104_2x02_P5.70mm_Vertical" H 10450 3150 50  0001 C CNN
+F 3 "~" H 10450 3150 50  0001 C CNN
+F 4 "Molex" H 10450 3150 50  0001 C CNN "Manufacturer"
+F 5 "768290104" H 10550 3550 50  0000 R CNN "Manufacturer P/N"
+	1    10450 3150
+	-1   0    0    1   
+$EndComp
+NoConn ~ 10250 2950
+NoConn ~ 10250 3050
+Text Label 950  1900 0    50   ~ 0
+VIN_12V
+$Comp
+L Device:D_Schottky D?
+U 1 1 600F596B
+P 2250 6600
+F 0 "D?" H 2250 6383 50  0000 C CNN
+F 1 "D_Schottky" H 2250 6474 50  0000 C CNN
+F 2 "" H 2250 6600 50  0001 C CNN
+F 3 "~" H 2250 6600 50  0001 C CNN
+	1    2250 6600
+	-1   0    0    1   
+$EndComp
+$Comp
+L Device:D_Zener D?
+U 1 1 600F8058
+P 1200 2050
+F 0 "D?" V 1154 2130 50  0000 L CNN
+F 1 "D_Zener" V 1245 2130 50  0000 L CNN
+F 2 "" H 1200 2050 50  0001 C CNN
+F 3 "~" H 1200 2050 50  0001 C CNN
+	1    1200 2050
+	0    1    1    0   
+$EndComp
+Connection ~ 1200 1900
+Wire Wire Line
+	1200 1900 1650 1900
+$Comp
+L power:GND #PWR?
+U 1 1 600F9746
+P 1200 2150
+F 0 "#PWR?" H 1200 1900 50  0001 C CNN
+F 1 "GND" H 1205 1977 50  0000 C CNN
+F 2 "" H 1200 2150 50  0001 C CNN
+F 3 "" H 1200 2150 50  0001 C CNN
+	1    1200 2150
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC

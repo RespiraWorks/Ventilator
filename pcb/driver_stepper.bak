@@ -4,7 +4,7 @@ EELAYER 26 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 29 30
+Sheet 27 28
 Title "Stepper Motor Driver"
 Date ""
 Rev "2.0"
@@ -420,10 +420,21 @@ L Device:R R?
 U 1 1 5FFAE20F
 P 1250 3800
 F 0 "R?" H 1320 3846 50  0000 L CNN
-F 1 "0.1 0.5W+" H 1320 3755 50  0000 L CNN
-F 2 "RespiraWorks_Std:C_2512_6332Metric" V 1180 3800 50  0001 C CNN
+F 1 "0.1 1%" H 1320 3755 50  0000 L CNN
+F 2 "RespiraWorks_std:R_0603_1608Metric" V 1180 3800 50  0001 C CNN
 F 3 "~" H 1250 3800 50  0001 C CNN
 	1    1250 3800
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 5FFAE2C4
+P 1550 5100
+F 0 "R?" H 1620 5146 50  0000 L CNN
+F 1 "0.1 1%" H 1620 5055 50  0000 L CNN
+F 2 "RespiraWorks_std:R_0603_1608Metric" V 1480 5100 50  0001 C CNN
+F 3 "~" H 1550 5100 50  0001 C CNN
+	1    1550 5100
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
@@ -1686,15 +1697,4 @@ Wire Wire Line
 Wire Wire Line
 	7850 1950 7850 1900
 Connection ~ 7950 1950
-$Comp
-L Device:R R?
-U 1 1 600B4627
-P 1550 5100
-F 0 "R?" H 1620 5146 50  0000 L CNN
-F 1 "0.1 0.5W+" H 1650 5250 50  0000 L CNN
-F 2 "RespiraWorks_Std:C_2512_6332Metric" V 1480 5100 50  0001 C CNN
-F 3 "~" H 1550 5100 50  0001 C CNN
-	1    1550 5100
-	1    0    0    -1  
-$EndComp
 $EndSCHEMATC

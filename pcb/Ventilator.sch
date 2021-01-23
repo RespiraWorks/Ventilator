@@ -19,7 +19,7 @@ U 5FCD4B8E
 F0 "Power Supplies" 50
 F1 "power.sch" 50
 F2 "Low_Alarm_Bat" O R 3550 6200 50 
-F3 "Alarm_Bat_nActive" O R 3550 6100 50 
+F3 "nActive_Alarm_Bat" O R 3550 6100 50 
 $EndSheet
 $Sheet
 S 6400 1750 2150 1050
@@ -53,8 +53,8 @@ F0 "Alarms and Power Monitoring" 50
 F1 "alarms.sch" 50
 F2 "Buzzer_CC" I L 6400 4400 50 
 F3 "Buzzer_GUI" I L 6400 4500 50 
-F4 "+5V_nOn" O L 6400 4050 50 
-F5 "FPGA_nRST" O L 6400 4150 50 
+F4 "nOn_+5V" O L 6400 4100 50 
+F5 "nRST_FPGA" O L 6400 4200 50 
 $EndSheet
 $Sheet
 S 9300 3900 650  1350
@@ -120,6 +120,6 @@ F2 "CC-SDA" B L 12900 800 50
 F3 "CC-SCL" I L 12900 900 50 
 F4 "Blower_Speed" I L 12900 1150 50 
 F5 "Blower_Enable" I L 12900 1250 50 
-F6 "Aux_I2C_nInt" O L 12900 1000 50 
+F6 "nInt_Aux_I2C" O L 12900 1000 50 
 $EndSheet
 $EndSCHEMATC

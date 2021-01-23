@@ -1471,7 +1471,7 @@ Wire Wire Line
 Text Notes 8500 5350 0    79   ~ 0
 I2C expander
 Text HLabel 6500 6750 0    50   Output ~ 0
-Aux_I2C_nInt
+nInt_Aux_I2C
 Wire Wire Line
 	6500 6750 7450 6750
 $Comp

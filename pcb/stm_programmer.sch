@@ -489,13 +489,13 @@ $EndComp
 Wire Wire Line
 	2800 1550 2300 1550
 Text Label 3650 1550 2    50   ~ 0
-USB_nRenum
+nRenum_USB
 Wire Wire Line
 	3100 1550 3650 1550
 Wire Wire Line
 	7000 4700 6500 4700
 Text Label 6500 4700 0    50   ~ 0
-USB_nRenum
+nRenum_USB
 $Comp
 L Connector_Generic:Conn_01x06 J?
 U 1 1 5FF4C966

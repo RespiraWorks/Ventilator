@@ -19,14 +19,14 @@ degree accessibility to components during initial assembly. When complete, this 
 enclosure, and the enclosure is screwed shut. The top-rear positioning of the removable enclosure lid provides
 access to components that will need routine maintenance.
 
-Further aspects of the production packaged design are detailed in the first section of the\
-[Assembly Video](https://youtu.be/2hdV5CWcLb4).
-
 | production ventilator assembly    |  back panel removed   |
 |:---:|:---:|
 | ![](images/enclosed_rendering_face.png) | ![](images/enclosed_rendering_open_back.png)  |
 
 >*Include GA/Sectional Here*
+
+Further aspects of the production packaged design are detailed in the first section of the\
+[Assembly Video](https://youtu.be/2hdV5CWcLb4).
 
 ## India build
 
@@ -35,7 +35,6 @@ Preliminary enclosed build was produced by our partners, Foundry-M in Visakhapat
 |     |     |
 |:---:|:---:|
 |![](images/India_build_yellow.jpeg) | ![](images/India_build_open_back.jpeg)  |
-
 
 ## Outline
 

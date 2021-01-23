@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 23 30
+Sheet 27 30
 Title "NTC Temperature Sensor Input"
 Date ""
 Rev "2.0"
@@ -196,6 +196,8 @@ $Comp
 L Power_Protection:USBLC6-2SC6 U?
 U 1 1 5FFD5C58
 P 2400 3900
+AR Path="/5FCD4EEA/600F5EF3/5FFD5C58" Ref="U?"  Part="1" 
+AR Path="/5FCD4EEA/600F723B/5FFD5C58" Ref="U?"  Part="1" 
 F 0 "U?" V 1950 4100 50  0000 L CNN
 F 1 "USBLC6-2SC6" V 2050 4100 50  0000 L CNN
 F 2 "Package_TO_SOT_SMD:SOT-23-6" H 2400 3400 50  0001 C CNN

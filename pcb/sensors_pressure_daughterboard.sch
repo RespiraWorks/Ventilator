@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 20 30
+Sheet 16 30
 Title "Pressure Sensor Daughterboard Connections, Analog"
 Date ""
 Rev "2.0"
@@ -83,6 +83,7 @@ U 1 1 60540D89
 P 5100 3650
 AR Path="/5FCD4E9D/600630A6/60540D89" Ref="H?"  Part="1" 
 AR Path="/5FCD4E9D/600CF516/60540D89" Ref="H?"  Part="1" 
+AR Path="/5FCD4E9D/6007AC3B/60540D89" Ref="H?"  Part="1" 
 F 0 "H?" H 5050 4200 50  0000 L CNN
 F 1 "Pressure_sensor_daughterboard" H 5100 4225 50  0001 C CNN
 F 2 "RespiraWorks:Pressure_sensor_daughterboard" H 5100 3650 50  0001 C CNN
@@ -155,6 +156,7 @@ U 1 1 5FFDC39B
 P 3450 3250
 AR Path="/5FCD4E9D/600630A6/5FFDC39B" Ref="#PWR?"  Part="1" 
 AR Path="/5FCD4E9D/600CF516/5FFDC39B" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4E9D/6007AC3B/5FFDC39B" Ref="#PWR?"  Part="1" 
 F 0 "#PWR?" H 3450 3250 50  0001 C CNN
 F 1 "+5V_Sns" H 3435 3423 50  0000 C CNN
 F 2 "" H 3450 3250 50  0001 C CNN
@@ -168,6 +170,7 @@ U 1 1 5FFDC7DB
 P 3250 3450
 AR Path="/5FCD4E9D/600630A6/5FFDC7DB" Ref="#PWR?"  Part="1" 
 AR Path="/5FCD4E9D/600CF516/5FFDC7DB" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4E9D/6007AC3B/5FFDC7DB" Ref="#PWR?"  Part="1" 
 F 0 "#PWR?" H 3250 3450 50  0001 C CNN
 F 1 "+3.3V_Sns" H 3235 3623 50  0000 C CNN
 F 2 "" H 3250 3450 50  0001 C CNN

@@ -451,7 +451,7 @@ Connection ~ 12500 8500
 Wire Wire Line
 	12500 8500 13000 8500
 Text HLabel 13000 8500 2    50   Output ~ 0
-~Alarm_Bat_Active
+Alarm_Bat_nActive
 Text Notes 12450 8850 0    50   ~ 0
 Signal to FPGA, goes low when\nrunning from alarm battery\npower
 $Comp

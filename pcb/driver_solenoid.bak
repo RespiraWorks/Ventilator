@@ -1,6 +1,5 @@
 EESchema Schematic File Version 4
-LIBS:Ventilator-cache
-EELAYER 26 0
+EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
@@ -84,7 +83,7 @@ F 5 "" H 6050 4250 50  0001 C CNN "Part Number"
 $EndComp
 Connection ~ 6050 5300
 $Comp
-L Ventilator-rescue:TPS1H100B-RespiraWorks U?
+L RespiraWorks:TPS1H100B U?
 U 1 1 5FD6C64E
 P 5700 2600
 AR Path="/5E8FBD97/5FD6C64E" Ref="U?"  Part="1" 
@@ -358,7 +357,7 @@ Wire Wire Line
 Wire Wire Line
 	3950 2700 4800 2700
 $Comp
-L Ventilator-rescue:Q_NMOS_SSSGDDDD-RespiraWorks Q?
+L RespiraWorks:Q_NMOS_SSSGDDDD Q?
 U 1 1 5FE5C4FB
 P 5650 5850
 F 0 "Q?" H 6050 5900 50  0000 L CNN

@@ -1,6 +1,5 @@
 EESchema Schematic File Version 4
-LIBS:Ventilator-cache
-EELAYER 26 0
+EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
@@ -79,7 +78,7 @@ F 3 "" H 6300 3650 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Ventilator-rescue:Pressure_sensor_daughterboard-RespiraWorks H?
+L RespiraWorks:Pressure_sensor_daughterboard H?
 U 1 1 60540D89
 P 5100 3650
 AR Path="/5FCD4E9D/600630A6/60540D89" Ref="H?"  Part="1" 
@@ -151,7 +150,7 @@ Connection ~ 3650 3550
 Wire Wire Line
 	3650 3550 3650 3350
 $Comp
-L Ventilator-rescue:+5V_Sns-RespiraWorks #PWR?
+L RespiraWorks:+5V_Sns #PWR?
 U 1 1 5FFDC39B
 P 3450 3250
 AR Path="/5FCD4E9D/600630A6/5FFDC39B" Ref="#PWR?"  Part="1" 
@@ -164,7 +163,7 @@ F 3 "" H 3450 3250 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Ventilator-rescue:+3.3V_Sns-RespiraWorks #PWR?
+L RespiraWorks:+3.3V_Sns #PWR?
 U 1 1 5FFDC7DB
 P 3250 3450
 AR Path="/5FCD4E9D/600630A6/5FFDC7DB" Ref="#PWR?"  Part="1" 

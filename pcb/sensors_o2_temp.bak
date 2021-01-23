@@ -1,6 +1,5 @@
 EESchema Schematic File Version 4
-LIBS:Ventilator-cache
-EELAYER 26 0
+EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
@@ -55,7 +54,7 @@ F2 "Out" O R 2550 4050 50
 F3 "Vcc" I R 2550 3900 50 
 $EndSheet
 $Comp
-L Ventilator-rescue:+3.3V_Sns-RespiraWorks #PWR?
+L RespiraWorks:+3.3V_Sns #PWR?
 U 1 1 60107496
 P 3000 1100
 AR Path="/5FCD4EEA/600F5EF3/60107496" Ref="#PWR?"  Part="1" 
@@ -90,7 +89,7 @@ Wire Wire Line
 	3750 1250 3450 1250
 Connection ~ 3450 1250
 $Comp
-L Ventilator-rescue:+3.3V_Sns-RespiraWorks #PWR?
+L RespiraWorks:+3.3V_Sns #PWR?
 U 1 1 6011C562
 P 3000 1800
 AR Path="/5FCD4EEA/600F5EF3/6011C562" Ref="#PWR?"  Part="1" 
@@ -125,7 +124,7 @@ Wire Wire Line
 	3750 1950 3450 1950
 Connection ~ 3450 1950
 $Comp
-L Ventilator-rescue:+3.3V_Sns-RespiraWorks #PWR?
+L RespiraWorks:+3.3V_Sns #PWR?
 U 1 1 6011C9C4
 P 3000 2500
 AR Path="/5FCD4EEA/600F5EF3/6011C9C4" Ref="#PWR?"  Part="1" 
@@ -160,7 +159,7 @@ Wire Wire Line
 	3750 2650 3450 2650
 Connection ~ 3450 2650
 $Comp
-L Ventilator-rescue:+3.3V_Sns-RespiraWorks #PWR?
+L RespiraWorks:+3.3V_Sns #PWR?
 U 1 1 6011CE53
 P 3000 3200
 AR Path="/5FCD4EEA/600F5EF3/6011CE53" Ref="#PWR?"  Part="1" 
@@ -195,7 +194,7 @@ Wire Wire Line
 	3750 3350 3450 3350
 Connection ~ 3450 3350
 $Comp
-L Ventilator-rescue:+3.3V_Sns-RespiraWorks #PWR?
+L RespiraWorks:+3.3V_Sns #PWR?
 U 1 1 6011D298
 P 3000 3900
 AR Path="/5FCD4EEA/600F5EF3/6011D298" Ref="#PWR?"  Part="1" 
@@ -232,7 +231,7 @@ Connection ~ 3450 4050
 Text HLabel 7250 5950 2    50   Output ~ 0
 Oxy_Level
 $Comp
-L Ventilator-rescue:INA333AIDGKR-RespiraWorks U?
+L RespiraWorks:INA333AIDGKR U?
 U 1 1 60132AA0
 P 5400 5950
 AR Path="/5FCD4EEA/600F5EF3/60132AA0" Ref="U?"  Part="1" 
@@ -661,7 +660,7 @@ Wire Notes Line
 	5650 6200 5650 6800
 NoConn ~ 1700 5850
 $Comp
-L Ventilator-rescue:+3.3V_Sns-RespiraWorks #PWR?
+L RespiraWorks:+3.3V_Sns #PWR?
 U 1 1 60148A3F
 P 5400 5100
 AR Path="/5FCD4EEA/600F5EF3/60148A3F" Ref="#PWR?"  Part="1" 
@@ -675,7 +674,7 @@ F 3 "" H 5400 5100 50  0001 C CNN
 $EndComp
 Connection ~ 5400 5100
 $Comp
-L Ventilator-rescue:+3.3V_Sns-RespiraWorks #PWR?
+L RespiraWorks:+3.3V_Sns #PWR?
 U 1 1 60148D99
 P 2700 5450
 AR Path="/5FCD4EEA/600F5EF3/60148D99" Ref="#PWR?"  Part="1" 

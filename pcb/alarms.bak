@@ -1,6 +1,5 @@
 EESchema Schematic File Version 4
-LIBS:Ventilator-cache
-EELAYER 26 0
+EELAYER 30 0
 EELAYER END
 $Descr B 17000 11000
 encoding utf-8
@@ -621,7 +620,7 @@ Wire Wire Line
 Text Notes 2750 2700 0    50   ~ 0
 Keeps FPGA from\nloading config.\nuntil +3.3V rail\nis high enough
 $Comp
-L Ventilator-rescue:TLC555-RespiraWorks U?
+L RespiraWorks:TLC555 U?
 U 1 1 601E7AD0
 P 7250 2300
 F 0 "U?" H 7400 2750 50  0000 C CNN
@@ -835,7 +834,7 @@ $EndComp
 Wire Wire Line
 	9650 1450 10000 1450
 $Comp
-L Ventilator-rescue:TLC555-RespiraWorks U?
+L RespiraWorks:TLC555 U?
 U 1 1 6029C2C2
 P 10000 2300
 F 0 "U?" H 10150 2750 50  0000 C CNN
@@ -1010,7 +1009,7 @@ Wire Wire Line
 Wire Wire Line
 	9250 2100 9500 2100
 $Comp
-L Ventilator-rescue:Speaker_diode-RespiraWorks_Std S?
+L RespiraWorks_Std:Speaker_diode S?
 U 1 1 6036DD4A
 P 11600 1600
 F 0 "S?" H 11750 1700 50  0000 L CNN
@@ -1021,7 +1020,7 @@ F 3 "~" H 11590 1550 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Ventilator-rescue:Speaker_diode-RespiraWorks_Std S?
+L RespiraWorks_Std:Speaker_diode S?
 U 1 1 6036EAC4
 P 9450 5450
 F 0 "S?" H 9600 5550 50  0000 L CNN
@@ -1032,7 +1031,7 @@ F 3 "~" H 9440 5400 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Ventilator-rescue:Speaker_diode-RespiraWorks_Std S?
+L RespiraWorks_Std:Speaker_diode S?
 U 1 1 6036FD31
 P 11550 5450
 F 0 "S?" H 11700 5550 50  0000 L CNN
@@ -1315,7 +1314,7 @@ Wire Wire Line
 	10900 5950 11200 5950
 Connection ~ 11200 5950
 $Comp
-L Ventilator-rescue:+5V_GUI-RespiraWorks #PWR?
+L RespiraWorks:+5V_GUI #PWR?
 U 1 1 6042D8C7
 P 11500 5250
 F 0 "#PWR?" H 11500 5250 50  0001 C CNN
@@ -1343,7 +1342,7 @@ Buzzer_GUI
 Wire Wire Line
 	10500 2100 10550 2100
 $Comp
-L Ventilator-rescue:+3.3V_Ctrl-RespiraWorks #PWR?
+L RespiraWorks:+3.3V_Ctrl #PWR?
 U 1 1 60475DD7
 P 1350 2200
 F 0 "#PWR?" H 1350 2200 50  0001 C CNN
@@ -1365,7 +1364,7 @@ F 3 "" H 3650 3200 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Ventilator-rescue:+3.3V_Ctrl-RespiraWorks #PWR?
+L RespiraWorks:+3.3V_Ctrl #PWR?
 U 1 1 604B82FB
 P 4750 3500
 F 0 "#PWR?" H 4750 3500 50  0001 C CNN

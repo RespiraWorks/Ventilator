@@ -1,10 +1,10 @@
 EESchema Schematic File Version 4
-LIBS:Ventilator-cache
+LIBS:cycle_controller-cache
 EELAYER 26 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 1 30
+Sheet 1 1
 Title "Cycle Controller"
 Date ""
 Rev "2.0"
@@ -26,7 +26,7 @@ F 3 "http://www.st.com/st-web-ui/static/active/en/resource/technical/document/da
 	1    0    0    -1  
 $EndComp
 $Comp
-L Ventilator-rescue:+3.3V_Ctrl-RespiraWorks #PWR?
+L RespiraWorks:+3.3V_Ctrl #PWR?
 U 1 1 5FEBC752
 P 5700 700
 F 0 "#PWR?" H 5700 700 50  0001 C CNN
@@ -46,7 +46,7 @@ Wire Wire Line
 Wire Wire Line
 	5700 700  5600 700 
 $Comp
-L Ventilator-rescue:+3.3V_Ctrl-RespiraWorks #PWR?
+L RespiraWorks:+3.3V_Ctrl #PWR?
 U 1 1 5FEBC80C
 P 7100 800
 F 0 "#PWR?" H 7100 800 50  0001 C CNN
@@ -644,7 +644,7 @@ F 3 "~" H 2700 4200 50  0001 C CNN
 $EndComp
 Connection ~ 2700 4350
 $Comp
-L Ventilator-rescue:+3.3V_Ctrl-RespiraWorks #PWR?
+L RespiraWorks:+3.3V_Ctrl #PWR?
 U 1 1 5FF77EF3
 P 2700 4050
 F 0 "#PWR?" H 2700 4050 50  0001 C CNN
@@ -777,7 +777,7 @@ D4
 Wire Wire Line
 	6400 4800 6550 4800
 $Comp
-L Ventilator-rescue:+3.3V_Ctrl-RespiraWorks #PWR?
+L RespiraWorks:+3.3V_Ctrl #PWR?
 U 1 1 601C83BE
 P 9500 750
 F 0 "#PWR?" H 9500 750 50  0001 C CNN
@@ -846,7 +846,7 @@ $EndComp
 Text Notes 2950 5950 2    50   ~ 0
 MicroSD Card Connector
 $Comp
-L Ventilator-rescue:+3.3V_Ctrl-RespiraWorks #PWR?
+L RespiraWorks:+3.3V_Ctrl #PWR?
 U 1 1 60169386
 P 2700 6250
 AR Path="/5FCD4D4C/60169386" Ref="#PWR?"  Part="1" 
@@ -885,7 +885,7 @@ F 3 "~" H 3550 6350 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Ventilator-rescue:+3.3V_Ctrl-RespiraWorks #PWR?
+L RespiraWorks:+3.3V_Ctrl #PWR?
 U 1 1 6016939A
 P 3350 6150
 AR Path="/5FCD4D4C/6016939A" Ref="#PWR?"  Part="1" 
@@ -973,7 +973,7 @@ F 3 "~" H 1050 6800 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Ventilator-rescue:+3.3V_Ctrl-RespiraWorks #PWR?
+L RespiraWorks:+3.3V_Ctrl #PWR?
 U 1 1 601693C8
 P 1050 6650
 AR Path="/5FCD4D4C/601693C8" Ref="#PWR?"  Part="1" 

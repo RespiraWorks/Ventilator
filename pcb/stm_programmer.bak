@@ -1,6 +1,5 @@
 EESchema Schematic File Version 4
-LIBS:Ventilator-cache
-EELAYER 26 0
+EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
@@ -15,7 +14,7 @@ Comment3 ""
 Comment4 ""
 $EndDescr
 $Comp
-L Ventilator-rescue:STM32F103CxTx-RespiraWorks U?
+L RespiraWorks:STM32F103CxTx U?
 U 1 1 5FEEC109
 P 7750 3700
 F 0 "U?" H 7500 5450 50  0000 C CNN
@@ -838,7 +837,7 @@ F 3 "" H 5450 5800 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Ventilator-rescue:+5V_USB-RespiraWorks #PWR?
+L RespiraWorks:+5V_USB #PWR?
 U 1 1 5FFFC08C
 P 1550 2250
 F 0 "#PWR?" H 1550 2250 50  0001 C CNN
@@ -851,7 +850,7 @@ $EndComp
 Wire Wire Line
 	1550 2250 1550 2300
 $Comp
-L Ventilator-rescue:+5V_USB-RespiraWorks #PWR?
+L RespiraWorks:+5V_USB #PWR?
 U 1 1 5FFFF9F0
 P 2300 1250
 F 0 "#PWR?" H 2300 1250 50  0001 C CNN
@@ -862,7 +861,7 @@ F 3 "" H 2300 1250 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Ventilator-rescue:+3.3V_Ctrl-RespiraWorks #PWR?
+L RespiraWorks:+3.3V_Ctrl #PWR?
 U 1 1 6000178D
 P 1750 1350
 F 0 "#PWR?" H 1750 1350 50  0001 C CNN
@@ -873,7 +872,7 @@ F 3 "" H 1750 1350 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Ventilator-rescue:+3.3V_Ctrl-RespiraWorks #PWR?
+L RespiraWorks:+3.3V_Ctrl #PWR?
 U 1 1 60001E93
 P 2100 4900
 F 0 "#PWR?" H 2100 4900 50  0001 C CNN
@@ -884,7 +883,7 @@ F 3 "" H 2100 4900 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Ventilator-rescue:+3.3V_Ctrl-RespiraWorks #PWR?
+L RespiraWorks:+3.3V_Ctrl #PWR?
 U 1 1 6000A757
 P 2100 6400
 F 0 "#PWR?" H 2100 6400 50  0001 C CNN
@@ -895,7 +894,7 @@ F 3 "" H 2100 6400 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Ventilator-rescue:+3.3V_Ctrl-RespiraWorks #PWR?
+L RespiraWorks:+3.3V_Ctrl #PWR?
 U 1 1 6000EE0D
 P 5450 4250
 F 0 "#PWR?" H 5450 4250 50  0001 C CNN
@@ -906,7 +905,7 @@ F 3 "" H 5450 4250 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Ventilator-rescue:+3.3V_Ctrl-RespiraWorks #PWR?
+L RespiraWorks:+3.3V_Ctrl #PWR?
 U 1 1 6001037F
 P 6550 1550
 F 0 "#PWR?" H 6550 1550 50  0001 C CNN
@@ -917,7 +916,7 @@ F 3 "" H 6550 1550 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Ventilator-rescue:+3.3V_Ctrl-RespiraWorks #PWR?
+L RespiraWorks:+3.3V_Ctrl #PWR?
 U 1 1 6001165E
 P 7950 1450
 F 0 "#PWR?" H 7950 1450 50  0001 C CNN
@@ -929,7 +928,7 @@ F 3 "" H 7950 1450 50  0001 C CNN
 $EndComp
 Connection ~ 7950 1450
 $Comp
-L Ventilator-rescue:+3.3V_Ctrl-RespiraWorks #PWR?
+L RespiraWorks:+3.3V_Ctrl #PWR?
 U 1 1 60013B92
 P 9350 2650
 F 0 "#PWR?" H 9350 2650 50  0001 C CNN
@@ -992,7 +991,7 @@ $EndComp
 Wire Wire Line
 	8450 2750 8800 2750
 $Comp
-L Ventilator-rescue:+3.3V_Ctrl-RespiraWorks #PWR?
+L RespiraWorks:+3.3V_Ctrl #PWR?
 U 1 1 6006697C
 P 4250 1850
 F 0 "#PWR?" H 4250 1850 50  0001 C CNN

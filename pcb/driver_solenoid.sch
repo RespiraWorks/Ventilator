@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 14 30
+Sheet 28 30
 Title "Proportional Solenoid Driver"
 Date ""
 Rev "2.0"
@@ -317,7 +317,7 @@ Wire Wire Line
 Wire Wire Line
 	2450 2900 2250 2900
 Text HLabel 2100 2900 0    50   Output ~ 0
-~Fault
+nFault
 Wire Wire Line
 	2100 2900 2250 2900
 Connection ~ 2250 2900

@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 24 30
+Sheet 29 30
 Title "Stepper Motor Driver"
 Date ""
 Rev "2.0"

@@ -218,4 +218,6 @@ Wire Wire Line
 Connection ~ 3450 1800
 Wire Wire Line
 	3450 1800 3200 1800
+Text Notes 3900 5350 0    50   ~ 0
+AND/OR for valve drivers
 $EndSCHEMATC

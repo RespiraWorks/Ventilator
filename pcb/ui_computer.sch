@@ -196,8 +196,6 @@ Wire Wire Line
 Connection ~ 6650 3900
 Wire Wire Line
 	6650 3900 6650 3700
-Text Notes 6600 1900 0    50   ~ 0
-Need to make footprint for this part
 Wire Wire Line
 	6450 2600 7000 2600
 Text HLabel 7000 2600 2    50   Output ~ 0

@@ -1,5 +1,6 @@
 EESchema Schematic File Version 4
-EELAYER 30 0
+LIBS:Ventilator-cache
+EELAYER 26 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
@@ -13,4 +14,208 @@ Comment2 ""
 Comment3 ""
 Comment4 ""
 $EndDescr
+$Comp
+L Connector_Generic:Conn_02x20_Odd_Even J?
+U 1 1 600DFD7D
+P 3900 2700
+F 0 "J?" H 3950 3817 50  0000 C CNN
+F 1 "Mates J4 on BeMicro MAX10" H 4000 1300 50  0000 C CNN
+F 2 "" H 3900 2700 50  0001 C CNN
+F 3 "~" H 3900 2700 50  0001 C CNN
+	1    3900 2700
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector_Generic:Conn_02x20_Odd_Even J?
+U 1 1 600DFDA5
+P 5950 2700
+F 0 "J?" H 6000 3817 50  0000 C CNN
+F 1 "Mates J5 on BEMicro MAX10" H 6150 1250 50  0000 C CNN
+F 2 "" H 5950 2700 50  0001 C CNN
+F 3 "~" H 5950 2700 50  0001 C CNN
+	1    5950 2700
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 600DFDD9
+P 3450 3800
+F 0 "#PWR?" H 3450 3550 50  0001 C CNN
+F 1 "GND" H 3455 3627 50  0000 C CNN
+F 2 "" H 3450 3800 50  0001 C CNN
+F 3 "" H 3450 3800 50  0001 C CNN
+	1    3450 3800
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 600DFDF3
+P 4450 3800
+F 0 "#PWR?" H 4450 3550 50  0001 C CNN
+F 1 "GND" H 4455 3627 50  0000 C CNN
+F 2 "" H 4450 3800 50  0001 C CNN
+F 3 "" H 4450 3800 50  0001 C CNN
+	1    4450 3800
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3700 2100 3450 2100
+Wire Wire Line
+	3700 2200 3450 2200
+Wire Wire Line
+	3450 2100 3450 2200
+Connection ~ 3450 2200
+Wire Wire Line
+	3450 2200 3450 2600
+Wire Wire Line
+	3700 2600 3450 2600
+Connection ~ 3450 2600
+Wire Wire Line
+	3450 2600 3450 3000
+Wire Wire Line
+	3700 3000 3450 3000
+Connection ~ 3450 3000
+Wire Wire Line
+	3450 3000 3450 3400
+Wire Wire Line
+	3700 3400 3450 3400
+Connection ~ 3450 3400
+Wire Wire Line
+	3450 3400 3450 3800
+Wire Wire Line
+	4200 2100 4450 2100
+Wire Wire Line
+	4200 2200 4450 2200
+Wire Wire Line
+	4450 2100 4450 2200
+Connection ~ 4450 2200
+Wire Wire Line
+	4450 2200 4450 2600
+Wire Wire Line
+	4200 2600 4450 2600
+Connection ~ 4450 2600
+Wire Wire Line
+	4450 2600 4450 3000
+Wire Wire Line
+	4200 3000 4450 3000
+Connection ~ 4450 3000
+Wire Wire Line
+	4450 3000 4450 3400
+Wire Wire Line
+	4200 3400 4450 3400
+Connection ~ 4450 3400
+Wire Wire Line
+	4450 3400 4450 3800
+$Comp
+L power:GND #PWR?
+U 1 1 600E0195
+P 6600 3800
+F 0 "#PWR?" H 6600 3550 50  0001 C CNN
+F 1 "GND" H 6605 3627 50  0000 C CNN
+F 2 "" H 6600 3800 50  0001 C CNN
+F 3 "" H 6600 3800 50  0001 C CNN
+	1    6600 3800
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6250 2300 6600 2300
+Wire Wire Line
+	6600 2300 6600 3200
+Wire Wire Line
+	6250 3200 6600 3200
+Connection ~ 6600 3200
+Wire Wire Line
+	6600 3200 6600 3800
+Wire Wire Line
+	5750 2300 5500 2300
+Wire Wire Line
+	5500 2300 5500 1750
+$Comp
+L power:+5V #PWR?
+U 1 1 600E148C
+P 5500 1750
+F 0 "#PWR?" H 5500 1600 50  0001 C CNN
+F 1 "+5V" H 5515 1923 50  0000 C CNN
+F 2 "" H 5500 1750 50  0001 C CNN
+F 3 "" H 5500 1750 50  0001 C CNN
+	1    5500 1750
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3700 1800 3450 1800
+Wire Wire Line
+	4200 1800 4350 1800
+Text HLabel 3200 1800 0    50   BiDi ~ 0
+I2C_SDA
+Text HLabel 4600 1800 2    50   BiDi ~ 0
+I2C_SCL
+$Comp
+L RespiraWorks:+3.3V_FPGA #PWR?
+U 1 1 600E4515
+P 5200 1750
+F 0 "#PWR?" H 5200 1750 50  0001 C CNN
+F 1 "+3.3V_FPGA" H 5185 1923 50  0000 C CNN
+F 2 "" H 5200 1750 50  0001 C CNN
+F 3 "" H 5200 1750 50  0001 C CNN
+	1    5200 1750
+	1    0    0    -1  
+$EndComp
+Text Notes 3550 1050 0    50   ~ 0
++3.3V_FPGA comes from FPGA board
+$Comp
+L RespiraWorks:+3.3V_FPGA #PWR?
+U 1 1 600E4532
+P 3950 1300
+F 0 "#PWR?" H 3950 1300 50  0001 C CNN
+F 1 "+3.3V_FPGA" H 3935 1473 50  0000 C CNN
+F 2 "" H 3950 1300 50  0001 C CNN
+F 3 "" H 3950 1300 50  0001 C CNN
+	1    3950 1300
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5750 3200 5200 3200
+Wire Wire Line
+	5200 3200 5200 1750
+$Comp
+L Device:R R?
+U 1 1 600E5183
+P 3450 1600
+F 0 "R?" H 3520 1646 50  0000 L CNN
+F 1 "4.7K" H 3520 1555 50  0000 L CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" V 3380 1600 50  0001 C CNN
+F 3 "~" H 3450 1600 50  0001 C CNN
+	1    3450 1600
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 600E5200
+P 4350 1600
+F 0 "R?" H 4420 1646 50  0000 L CNN
+F 1 "4.7K" H 4420 1555 50  0000 L CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" V 4280 1600 50  0001 C CNN
+F 3 "~" H 4350 1600 50  0001 C CNN
+	1    4350 1600
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3950 1300 4350 1300
+Wire Wire Line
+	4350 1300 4350 1450
+Wire Wire Line
+	3950 1300 3450 1300
+Wire Wire Line
+	3450 1300 3450 1450
+Connection ~ 3950 1300
+Wire Wire Line
+	4350 1750 4350 1800
+Connection ~ 4350 1800
+Wire Wire Line
+	4350 1800 4600 1800
+Wire Wire Line
+	3450 1750 3450 1800
+Connection ~ 3450 1800
+Wire Wire Line
+	3450 1800 3200 1800
 $EndSCHEMATC

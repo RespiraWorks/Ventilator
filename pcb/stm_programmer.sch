@@ -293,6 +293,8 @@ $Comp
 L Connector:USB_B_Micro J?
 U 1 1 5FF1A7AE
 P 1250 2500
+AR Path="/5FF1A7AE" Ref="J?"  Part="1" 
+AR Path="/5FCD4D85/5FF1A7AE" Ref="J?"  Part="1" 
 F 0 "J?" H 800 2600 50  0000 C CNN
 F 1 "USB B micro" H 750 2500 50  0000 C CNN
 F 2 "" H 1400 2450 50  0001 C CNN
@@ -487,13 +489,13 @@ $EndComp
 Wire Wire Line
 	2800 1550 2300 1550
 Text Label 3650 1550 2    50   ~ 0
-~USB_Renum
+nRenum_USB
 Wire Wire Line
 	3100 1550 3650 1550
 Wire Wire Line
 	7000 4700 6500 4700
 Text Label 6500 4700 0    50   ~ 0
-~USB_Renum
+nRenum_USB
 $Comp
 L Connector_Generic:Conn_01x06 J?
 U 1 1 5FF4C966
@@ -677,7 +679,7 @@ Wire Wire Line
 Text Label 3800 5450 2    50   ~ 0
 CC_SWDIO_Out
 Text Label 3800 5550 2    50   ~ 0
-~CC_RST_Out
+CC_nRST_Out
 Text Label 3800 5650 2    50   ~ 0
 CC_SWO_Out
 Wire Wire Line
@@ -691,10 +693,8 @@ Wire Wire Line
 	8450 3950 9150 3950
 Text Label 9850 3950 2    50   ~ 0
 CC_SWDIO_Out
-Wire Wire Line
-	8450 2550 8900 2550
-Text Label 8900 2550 2    50   ~ 0
-~CC_RST_Out
+Text Label 9000 2550 2    50   ~ 0
+CC_nRST_Out
 Wire Wire Line
 	7000 4200 6500 4200
 Text Label 6500 4200 0    50   ~ 0
@@ -708,7 +708,7 @@ Wire Wire Line
 Text Label 6500 4600 0    50   ~ 0
 Prog_SWCLK
 Text Label 6700 1850 0    50   ~ 0
-~Prog_RST
+Prog_nRST
 $Comp
 L Connector_Generic:Conn_01x06 J?
 U 1 1 5FFB0E8E
@@ -753,7 +753,7 @@ Prog_SWCLK
 Text Label 2850 6850 2    50   ~ 0
 Prog_SWDIO
 Text Label 2850 6950 2    50   ~ 0
-~Prog_RST
+Prog_nRST
 Wire Wire Line
 	1750 7050 1850 7050
 Connection ~ 1850 7050
@@ -943,7 +943,7 @@ CC_SWCLK
 Text HLabel 2450 5700 0    50   Output ~ 0
 CC_SWDIO
 Text HLabel 2450 5800 0    50   Output ~ 0
-~CC_RST
+CC_nRST
 Text HLabel 2450 5900 0    50   Output ~ 0
 CC_SWO
 Wire Wire Line
@@ -1115,7 +1115,7 @@ $EndComp
 Wire Wire Line
 	8450 4050 8900 4050
 Text HLabel 8900 4050 2    50   Output ~ 0
-~USB_Pwr_En
+USB_Pwr_nEn
 Text Label 5250 1850 2    50   ~ 0
 VSense
 Text Label 6250 3200 0    50   ~ 0
@@ -1198,4 +1198,6 @@ Text Label 9050 3850 2    50   ~ 0
 CC_SWCLK_Out
 Wire Wire Line
 	8450 3850 9050 3850
+Wire Wire Line
+	8450 2550 9000 2550
 $EndSCHEMATC

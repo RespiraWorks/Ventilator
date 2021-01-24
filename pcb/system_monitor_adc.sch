@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 31 31
+Sheet 1 1
 Title ""
 Date ""
 Rev ""
@@ -14,12 +14,12 @@ Comment3 ""
 Comment4 ""
 $EndDescr
 $Comp
-L Analog_ADC:ADC128D818 U?
+L RespiraWorks_Std:ADC128D818 U?
 U 1 1 5FF978B8
 P 7500 3200
 F 0 "U?" H 7600 4050 50  0000 C CNN
 F 1 "ADC128D818" H 7800 3950 50  0000 C CNN
-F 2 "Package_SO:TSSOP-16_4.4x5mm_P0.65mm" H 7500 3200 50  0001 C CIN
+F 2 "RespiraWorks_Std:TSSOP-16_4.4x5mm_P0.65mm" H 7500 3200 50  0001 C CIN
 F 3 "http://www.ti.com/lit/ds/symlink/adc128d818.pdf" H 7500 3200 50  0001 C CNN
 	1    7500 3200
 	1    0    0    -1  
@@ -42,7 +42,7 @@ Wire Wire Line
 	7500 2400 7500 1400
 Wire Wire Line
 	7500 1400 7700 1400
-Text HLabel 9150 1400 2    50   Output ~ 0
+Text HLabel 9150 1400 2    50   Input ~ 0
 Vcc_3V3
 Text Label 7500 1400 0    50   ~ 0
 Vcc_3V3
@@ -280,7 +280,7 @@ Wire Wire Line
 Connection ~ 6550 4250
 Wire Wire Line
 	6550 3750 6100 3750
-Text HLabel 2700 3500 0    50   Output ~ 0
+Text HLabel 2700 3500 0    50   Input ~ 0
 Vcc_5V
 $Comp
 L Device:C C?

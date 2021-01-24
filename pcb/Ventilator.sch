@@ -18,8 +18,8 @@ S 2200 5600 1350 750
 U 5FCD4B8E
 F0 "Power Supplies" 50
 F1 "power.sch" 50
-F2 "~Alarm_Bat_Active" O R 3550 6100 50 
-F3 "Low_Alarm_Bat" O R 3550 6200 50 
+F2 "Low_Alarm_Bat" O R 3550 6200 50 
+F3 "nActive_Alarm_Bat" O R 3550 6100 50 
 $EndSheet
 $Sheet
 S 6400 1750 2150 1050
@@ -40,21 +40,21 @@ F0 "STM Programmer for cycle controller" 50
 F1 "stm_programmer.sch" 50
 F2 "CC_SWCLK" O R 6050 700 50 
 F3 "CC_SWDIO" O R 6050 800 50 
-F4 "~CC_RST" O R 6050 900 50 
-F5 "CC_SWO" O R 6050 1000 50 
-F6 "~USB_Pwr_En" O R 6050 1150 50 
-F7 "UART_Tx" O R 6050 1300 50 
-F8 "UART_Rx" I R 6050 1400 50 
+F4 "CC_SWO" O R 6050 1000 50 
+F5 "UART_Tx" O R 6050 1300 50 
+F6 "UART_Rx" I R 6050 1400 50 
+F7 "CC_nRST" O R 6050 900 50 
+F8 "USB_Pwr_nEn" O R 6050 1150 50 
 $EndSheet
 $Sheet
 S 6400 3900 1400 750 
 U 5FCD4DF5
 F0 "Alarms and Power Monitoring" 50
 F1 "alarms.sch" 50
-F2 "~+5V_On" O L 6400 4050 50 
-F3 "~FPGA_RST" O L 6400 4150 50 
-F4 "Buzzer_CC" I L 6400 4400 50 
-F5 "Buzzer_GUI" I L 6400 4500 50 
+F2 "Buzzer_CC" I L 6400 4400 50 
+F3 "Buzzer_GUI" I L 6400 4500 50 
+F4 "nOn_+5V" O L 6400 4100 50 
+F5 "nRST_FPGA" O L 6400 4200 50 
 $EndSheet
 $Sheet
 S 9300 3900 650  1350
@@ -102,8 +102,8 @@ U 5FCD5082
 F0 "PSOL Driver (...)" 50
 F1 "driver_solenoid.sch" 50
 F2 "CS" O L 12950 6050 50 
-F3 "~Fault" O L 12950 5950 50 
-F4 "In" I L 12950 5700 50 
+F3 "In" I L 12950 5700 50 
+F4 "nFault" O L 12950 5950 50 
 $EndSheet
 $Sheet
 S 12950 6450 900  600 
@@ -119,7 +119,7 @@ F1 "misc.sch" 50
 F2 "CC-SDA" B L 12900 800 50 
 F3 "CC-SCL" I L 12900 900 50 
 F4 "Blower_Speed" I L 12900 1150 50 
-F5 "~Aux_I2C_Int" O L 12900 1000 50 
-F6 "Blower_Enable" I L 12900 1250 50 
+F5 "Blower_Enable" I L 12900 1250 50 
+F6 "nInt_Aux_I2C" O L 12900 1000 50 
 $EndSheet
 $EndSCHEMATC

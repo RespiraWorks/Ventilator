@@ -67,7 +67,7 @@ Most recent changes also include thickening of the walls to make the 3d prints l
 
 ### Lower Face Plate
 
-This is a clear acrylic sheet that houses the filter assembly. It is mounted using heat inserts. Link to the part file is given in [Source files](#Source-files) below. Some other useful files for the same part are [.idw 2D drawing](assets/LowerAcrylicFacePLate.idw), [.pdf 2D drawing](assets/LowerAcrylicFacePLate.pdf),[.stl for 3D printing](assets/LowerAcrylicFacePLate.stl),[.dxf of the front face for laser cutting](assets/LowerAcrylicFacePLate_FrontFace.dxf).
+This is a clear acrylic sheet that houses the filter assembly. It is mounted using heat inserts. Link to the part file is given in [Source files](#Source-files) below. Some other useful files for the same part are [.idw 2D drawing](assets/LowerAcrylicFacePlate.idw), [.pdf 2D drawing](assets/LowerAcrylicFacePlate.pdf),[.stl for 3D printing](assets/LowerAcrylicFacePlate.stl),[.dxf of the front face for laser cutting](assets/LowerAcrylicFacePlate_FrontFace.dxf).
 
 ![](assets/LowerAcrylicFacePlate.png)
 

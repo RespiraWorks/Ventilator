@@ -1,5 +1,4 @@
 (sym_lib_table
   (lib (name RespiraWorks)(type Legacy)(uri ${KIPRJMOD}/../../KiCad-Library/RespiraWorks.lib)(options "")(descr ""))
   (lib (name RespiraWorks_Std)(type Legacy)(uri ${KIPRJMOD}/../../KiCad-Library/RespiraWorks_Std.lib)(options "")(descr ""))
-  (lib (name Ventilator-rescue)(type Legacy)(uri ${KIPRJMOD}/Ventilator-rescue.lib)(options "")(descr ""))
 )

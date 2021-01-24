@@ -65,6 +65,12 @@ tubing, and the other - with vents for air in/out-flow.
 
 Most recent changes also include thickening of the walls to make the 3d prints less fragile.
 
+### Lower Face Plate
+
+This is a clear acrylic sheet that houses the filter assembly. It is mounted using heat inserts. Link to the part file is given in [Source files](#Source-files) below. Some other useful files for the same part are [.idw 2D drawing](assets/LowerAcrylicFacePLate.idw), [.pdf 2D drawing](assets/LowerAcrylicFacePLate.pdf),[.stl for 3D printing](assets/LowerAcrylicFacePLate.stl),[.dxf of the front face for laser cutting](assets/LowerAcrylicFacePLate_FrontFace.dxf).
+
+![](assets/LowerAcrylicFacePlate.png)
+
 ### Source files
 
 The custom design and assembly have been carried out in Autodesk Inventor, and the following "source" files are provided:
@@ -74,8 +80,8 @@ The custom design and assembly have been carried out in Autodesk Inventor, and t
 * [Filter cover.ipt](assets/Filter%20cover.ipt) - Inventor part file for filter cover (pictured in blue above), which has two configurations.
 * [Filter gasket.ipt](assets/Filter%20gasket.ipt) - Inventor part file for filter gasket design
 * [Filter stand-in.ipt](assets/Filter%20stand-in.ipt) - Stand-in for the actual HEPA filter.
-* [Upper acrylic face plate.ipt](assets/Upper_Acrylic_Face_Plate.ipt) - Inventor part file for upper acrylic face plate.
-* [Lower acrylic face plate.ipt](assets/Lower_Acrylic_Face_Plate.ipt) - Inventor part file for lower acrylic face plate, redesigned with filter mounting holes that can accommodate M4 screws.
+* [Upper acrylic face plate.ipt](assets/UpperAcrylicFacePlate.ipt) - Inventor part file for upper acrylic face plate.
+* [Lower acrylic face plate.ipt](assets/LowerAcrylicFacePlate.ipt) - Inventor part file for lower acrylic face plate.
 
 Previous versions of these parts were designed in OnShape, and the history of those previous iterations can be found
 [here](https://cad.onshape.com/documents/3fe0c1f79c482144c267173d/w/2ad1c08071a25185f9c78c68/e/c3b817c7fd516ff612068657).

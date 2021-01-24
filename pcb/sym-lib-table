@@ -1,10 +1,3 @@
 (sym_lib_table
-<<<<<<< HEAD
-  (lib (name RespiraWorks)(type Legacy)(uri ${KIPRJMOD}/../../../KiCad-Library/RespiraWorks.lib)(options "")(descr ""))
-  (lib (name RespiraWorks_Std)(type Legacy)(uri ${KIPRJMOD}/../../../KiCad-Library/RespiraWorks_Std.lib)(options "")(descr ""))
   (lib (name Ventilator-rescue)(type Legacy)(uri ${KIPRJMOD}/Ventilator-rescue.lib)(options "")(descr ""))
-=======
-  (lib (name RespiraWorks)(type Legacy)(uri ${KIPRJMOD}/../../KiCad-Library/RespiraWorks.lib)(options "")(descr ""))
-  (lib (name RespiraWorks_Std)(type Legacy)(uri ${KIPRJMOD}/../../KiCad-Library/RespiraWorks_Std.lib)(options "")(descr ""))
->>>>>>> 3fd0ed798f29a28c8a8b70ab2700dd51bbfd7d3a
 )

@@ -1,10 +1,6 @@
 EESchema Schematic File Version 4
-<<<<<<< HEAD
 LIBS:Ventilator-cache
 EELAYER 26 0
-=======
-EELAYER 30 0
->>>>>>> 3fd0ed798f29a28c8a8b70ab2700dd51bbfd7d3a
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
@@ -30,7 +26,7 @@ F 3 "http://www.st.com/st-web-ui/static/active/en/resource/technical/document/da
 	1    0    0    -1  
 $EndComp
 $Comp
-L Ventilator-rescue:+3.3V_Ctrl-RespiraWorks #PWR?
+L Ventilator-rescue:+3.3V_Ctrl-RespiraWorks-Ventilator-rescue #PWR?
 U 1 1 5FEBC752
 P 5700 700
 F 0 "#PWR?" H 5700 700 50  0001 C CNN
@@ -50,7 +46,7 @@ Wire Wire Line
 Wire Wire Line
 	5700 700  5600 700 
 $Comp
-L Ventilator-rescue:+3.3V_Ctrl-RespiraWorks #PWR?
+L Ventilator-rescue:+3.3V_Ctrl-RespiraWorks-Ventilator-rescue #PWR?
 U 1 1 5FEBC80C
 P 7350 850
 F 0 "#PWR?" H 7350 850 50  0001 C CNN
@@ -643,7 +639,7 @@ F 3 "~" H 2200 4200 50  0001 C CNN
 $EndComp
 Connection ~ 2200 4350
 $Comp
-L Ventilator-rescue:+3.3V_Ctrl-RespiraWorks #PWR?
+L Ventilator-rescue:+3.3V_Ctrl-RespiraWorks-Ventilator-rescue #PWR?
 U 1 1 5FF77EF3
 P 2200 4050
 F 0 "#PWR?" H 2200 4050 50  0001 C CNN
@@ -689,9 +685,11 @@ CC-SCL
 Text HLabel 6700 4200 2    50   BiDi ~ 0
 CC-SDA
 $Comp
-L RespiraWorks:+3.3V_Ctrl_A #PWR?
+L Ventilator-rescue:+3.3V_Ctrl_A-RespiraWorks #PWR?
 U 1 1 60010B9C
 P 9600 800
+AR Path="/60010B9C" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4D18/60010B9C" Ref="#PWR?"  Part="1" 
 F 0 "#PWR?" H 9600 800 50  0001 C CNN
 F 1 "+3.3V_Ctrl_A" H 9585 973 50  0000 C CNN
 F 2 "" H 9600 800 50  0001 C CNN
@@ -700,20 +698,13 @@ F 3 "" H 9600 800 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-<<<<<<< HEAD
-	8350 750  8350 800 
-Wire Wire Line
 	8700 750  8700 800 
-=======
-	9600 800  9400 800 
 Wire Wire Line
 	9400 800  9400 850 
 Wire Wire Line
 	9750 800  9750 850 
 Wire Wire Line
 	9600 800  9750 800 
-Connection ~ 9600 800 
->>>>>>> 3fd0ed798f29a28c8a8b70ab2700dd51bbfd7d3a
 $Comp
 L power:GND #PWR?
 U 1 1 5FED05CB
@@ -782,7 +773,7 @@ D4
 Wire Wire Line
 	6400 4800 6550 4800
 $Comp
-L Ventilator-rescue:+3.3V_Ctrl-RespiraWorks #PWR?
+L Ventilator-rescue:+3.3V_Ctrl-RespiraWorks-Ventilator-rescue #PWR?
 U 1 1 601C83BE
 P 10550 800
 F 0 "#PWR?" H 10550 800 50  0001 C CNN
@@ -836,7 +827,7 @@ $EndComp
 Wire Wire Line
 	5900 5000 5900 5300
 $Comp
-L RespiraWorks:503182-1852 J?
+L Ventilator-rescue:503182-1852-RespiraWorks J?
 U 1 1 6016937E
 P 2500 6650
 AR Path="/5FCD4D4C/6016937E" Ref="J?"  Part="1" 
@@ -851,7 +842,7 @@ $EndComp
 Text Notes 2950 5950 2    50   ~ 0
 MicroSD Card Connector
 $Comp
-L Ventilator-rescue:+3.3V_Ctrl-RespiraWorks #PWR?
+L Ventilator-rescue:+3.3V_Ctrl-RespiraWorks-Ventilator-rescue #PWR?
 U 1 1 60169386
 P 2700 6250
 AR Path="/5FCD4D4C/60169386" Ref="#PWR?"  Part="1" 
@@ -890,7 +881,7 @@ F 3 "~" H 3550 6300 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Ventilator-rescue:+3.3V_Ctrl-RespiraWorks #PWR?
+L Ventilator-rescue:+3.3V_Ctrl-RespiraWorks-Ventilator-rescue #PWR?
 U 1 1 6016939A
 P 3350 6100
 AR Path="/5FCD4D4C/6016939A" Ref="#PWR?"  Part="1" 
@@ -978,7 +969,7 @@ F 3 "~" H 1050 6800 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Ventilator-rescue:+3.3V_Ctrl-RespiraWorks #PWR?
+L Ventilator-rescue:+3.3V_Ctrl-RespiraWorks-Ventilator-rescue #PWR?
 U 1 1 601693C8
 P 1050 6650
 AR Path="/5FCD4D4C/601693C8" Ref="#PWR?"  Part="1" 
@@ -1053,9 +1044,11 @@ Wire Wire Line
 Text Notes 7650 1500 2    39   ~ 0
 Had trouble copying symbol to move VDDA to outside
 $Comp
-L RespiraWorks:+3.3V_Ctrl_A #PWR?
+L Ventilator-rescue:+3.3V_Ctrl_A-RespiraWorks #PWR?
 U 1 1 6020D1C2
 P 6200 700
+AR Path="/6020D1C2" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4D18/6020D1C2" Ref="#PWR?"  Part="1" 
 F 0 "#PWR?" H 6200 700 50  0001 C CNN
 F 1 "+3.3V_Ctrl_A" H 6185 873 50  0000 C CNN
 F 2 "" H 6200 700 50  0001 C CNN
@@ -1092,63 +1085,22 @@ Wire Notes Line
 	9350 1550 9350 6550
 NoConn ~ 10650 3600
 Wire Wire Line
-<<<<<<< HEAD
-	10650 3700 10150 3700
+	10650 3900 10050 3900
 Wire Wire Line
-	10650 3800 10150 3800
+	10650 4000 10050 4000
 Wire Wire Line
-	10650 3900 10150 3900
-Wire Wire Line
-	10650 4000 10150 4000
-Wire Wire Line
-	10650 4100 10150 4100
-Text Label 10150 3700 0    39   ~ 0
-=======
-	10650 3400 10050 3400
-Wire Wire Line
-	10650 3500 10050 3500
-Wire Wire Line
-	10650 3600 10050 3600
+	10650 4100 10050 4100
 Wire Wire Line
 	10650 3700 10050 3700
-Wire Wire Line
-	10650 3800 10050 3800
-Text Label 10050 3400 0    50   ~ 0
->>>>>>> 3fd0ed798f29a28c8a8b70ab2700dd51bbfd7d3a
-INH-FLOW-OUT
 Text Label 6450 1700 0    50   ~ 0
 INH-FLOW-OUT
 Text Label 6450 2400 0    50   ~ 0
 EXH-FLOW-OUT
-<<<<<<< HEAD
-Text Label 10150 3800 0    39   ~ 0
-=======
-Text Label 10050 3500 0    50   ~ 0
->>>>>>> 3fd0ed798f29a28c8a8b70ab2700dd51bbfd7d3a
-EXH-FLOW-OUT
 Text Label 6550 3900 0    50   ~ 0
-OXY-FLOW-OUT
-<<<<<<< HEAD
-Text Label 10150 3900 0    39   ~ 0
-=======
-Text Label 10050 3600 0    50   ~ 0
->>>>>>> 3fd0ed798f29a28c8a8b70ab2700dd51bbfd7d3a
 OXY-FLOW-OUT
 Text Label 5050 3400 2    50   ~ 0
 PPO
-<<<<<<< HEAD
-Text Label 10150 4000 0    39   ~ 0
-=======
-Text Label 10050 3700 0    50   ~ 0
->>>>>>> 3fd0ed798f29a28c8a8b70ab2700dd51bbfd7d3a
-PPO
 Text Label 5050 3300 2    50   ~ 0
-OXY
-<<<<<<< HEAD
-Text Label 10150 4100 0    39   ~ 0
-=======
-Text Label 10050 3800 0    50   ~ 0
->>>>>>> 3fd0ed798f29a28c8a8b70ab2700dd51bbfd7d3a
 OXY
 Text HLabel 10150 6350 0    50   BiDi ~ 0
 D7
@@ -1166,35 +1118,20 @@ Wire Wire Line
 	10650 4900 10150 4900
 Wire Wire Line
 	10650 5200 10150 5200
-Wire Wire Line
-<<<<<<< HEAD
-	10650 5300 10150 5300
-Text Label 10200 4400 0    39   ~ 0
-D8
-Text Label 10200 4500 0    39   ~ 0
-D9
-Text Label 10200 4600 0    39   ~ 0
-D10
-Text Label 10200 5200 0    39   ~ 0
-D14
-Text Label 10200 5300 0    39   ~ 0
-=======
-	10650 5100 10150 5100
-Text Label 10200 4200 0    50   ~ 0
-D8
-Text Label 10200 4300 0    50   ~ 0
-D9
 Text Label 10200 4400 0    50   ~ 0
+D8
+Text Label 10200 4500 0    50   ~ 0
+D9
+Text Label 10200 4600 0    50   ~ 0
 D10
-Text Label 10200 5000 0    50   ~ 0
+Text Label 10200 5200 0    50   ~ 0
 D14
-Text Label 10200 5100 0    50   ~ 0
->>>>>>> 3fd0ed798f29a28c8a8b70ab2700dd51bbfd7d3a
-D15
 $Comp
-L RespiraWorks:+3.3V_Ctrl_A #PWR?
+L Ventilator-rescue:+3.3V_Ctrl_A-RespiraWorks #PWR?
 U 1 1 60390EE2
 P 9800 4450
+AR Path="/60390EE2" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4D18/60390EE2" Ref="#PWR?"  Part="1" 
 F 0 "#PWR?" H 9800 4450 50  0001 C CNN
 F 1 "+3.3V_Ctrl_A" H 9785 4623 50  0000 C CNN
 F 2 "" H 9800 4450 50  0001 C CNN
@@ -1221,15 +1158,6 @@ Wire Wire Line
 	10650 5100 9800 5100
 Wire Wire Line
 	9800 5100 9800 4450
-Wire Notes Line
-<<<<<<< HEAD
-	9350 1550 11250 1550
-Text Label 6550 4300 2    39   ~ 0
-=======
-	9350 2950 11200 2950
-Text Label 6550 4300 2    50   ~ 0
->>>>>>> 3fd0ed798f29a28c8a8b70ab2700dd51bbfd7d3a
-D8
 Text Label 6550 4600 2    50   ~ 0
 D9
 Text Label 6550 4500 2    50   ~ 0
@@ -1262,53 +1190,25 @@ Wire Wire Line
 	10650 6050 10150 6050
 Wire Wire Line
 	10650 6150 10150 6150
-<<<<<<< HEAD
 Wire Wire Line
 	10650 6250 10150 6250
 Wire Wire Line
 	10650 6350 10150 6350
-Text Label 10200 5650 0    39   ~ 0
-D0
-Text Label 10200 5750 0    39   ~ 0
-D1
-Text Label 10200 5850 0    39   ~ 0
-D2
-Text Label 10200 5950 0    39   ~ 0
-D3
-Text Label 10200 6050 0    39   ~ 0
-D4
-Text Label 10200 6350 0    39   ~ 0
-=======
-Text Label 10200 5450 0    50   ~ 0
-D0
-Text Label 10200 5550 0    50   ~ 0
-D1
 Text Label 10200 5650 0    50   ~ 0
-D2
+D0
 Text Label 10200 5750 0    50   ~ 0
-D3
+D1
 Text Label 10200 5850 0    50   ~ 0
-D4
-Text Label 10200 6150 0    50   ~ 0
->>>>>>> 3fd0ed798f29a28c8a8b70ab2700dd51bbfd7d3a
-D7
-Text Label 6550 4700 2    50   ~ 0
-D5
-<<<<<<< HEAD
-Text Label 10200 6150 0    39   ~ 0
-=======
+D2
 Text Label 10200 5950 0    50   ~ 0
->>>>>>> 3fd0ed798f29a28c8a8b70ab2700dd51bbfd7d3a
+D3
+Text Label 10200 6050 0    50   ~ 0
+D4
+Text Label 6550 4700 2    50   ~ 0
 D5
 Text HLabel 10150 6250 0    50   BiDi ~ 0
 D6
 Text Label 6450 1800 0    50   ~ 0
-D6
-<<<<<<< HEAD
-Text Label 10200 6250 0    39   ~ 0
-=======
-Text Label 10200 6050 0    50   ~ 0
->>>>>>> 3fd0ed798f29a28c8a8b70ab2700dd51bbfd7d3a
 D6
 Wire Wire Line
 	1550 6900 2050 6900
@@ -1339,32 +1239,11 @@ USD-MISO
 Text Label 6850 2300 2    50   ~ 0
 USD-MOSI
 Wire Wire Line
-<<<<<<< HEAD
-	6400 2300 6800 2300
-Text HLabel 10150 4800 0    50   BiDi ~ 0
-=======
-	6400 2300 6850 2300
-Text HLabel 10150 4600 0    50   BiDi ~ 0
->>>>>>> 3fd0ed798f29a28c8a8b70ab2700dd51bbfd7d3a
-D12
-Wire Wire Line
 	6400 2200 6850 2200
 Wire Wire Line
 	6400 1800 6700 1800
-<<<<<<< HEAD
-Text Label 10200 4900 0    39   ~ 0
+Text Label 10200 4900 0    50   ~ 0
 USD-SCLK
-Text Label 10200 4800 0    39   ~ 0
-USD-MISO
-Text Label 10200 4700 0    39   ~ 0
-=======
-Text Label 10200 4700 0    50   ~ 0
-USD-SCLK
-Text Label 10200 4600 0    50   ~ 0
-USD-MISO
-Text Label 10200 4500 0    50   ~ 0
->>>>>>> 3fd0ed798f29a28c8a8b70ab2700dd51bbfd7d3a
-USD-MOSI
 Wire Wire Line
 	6400 2500 6700 2500
 Wire Wire Line
@@ -1462,9 +1341,6 @@ Wire Wire Line
 	5600 5000 5600 5350
 Wire Wire Line
 	6400 2600 6700 2600
-Wire Wire Line
-<<<<<<< HEAD
-	8350 750  8700 750 
 $Comp
 L Connector_Generic:Conn_01x06 J?
 U 1 1 600E75AE
@@ -1583,7 +1459,7 @@ Wire Wire Line
 Wire Wire Line
 	10200 2950 10200 2750
 $Comp
-L Ventilator-rescue:+3.3V_Ctrl-RespiraWorks #PWR?
+L Ventilator-rescue:+3.3V_Ctrl-RespiraWorks-Ventilator-rescue #PWR?
 U 1 1 6017D8F4
 P 10200 2650
 F 0 "#PWR?" H 10200 2650 50  0001 C CNN
@@ -1644,8 +1520,6 @@ Wire Wire Line
 	10650 1950 10550 1950
 Wire Wire Line
 	10650 2350 10550 2350
-=======
-	2200 4350 2600 4350
 Wire Wire Line
 	3200 4350 3700 4350
 Wire Wire Line
@@ -1665,5 +1539,36 @@ F 3 "~" H 4600 1100 50  0001 C CNN
 	1    4600 1100
 	1    0    0    -1  
 $EndComp
->>>>>>> 3fd0ed798f29a28c8a8b70ab2700dd51bbfd7d3a
+Wire Wire Line
+	10050 3800 10650 3800
+Wire Wire Line
+	6400 2300 6850 2300
+Text Label 10200 6150 0    50   ~ 0
+D5
+Text Label 10200 6250 0    50   ~ 0
+D6
+Text Label 10200 6350 0    50   ~ 0
+D7
+Wire Wire Line
+	10150 5300 10650 5300
+Text HLabel 10150 4800 0    50   BiDi ~ 0
+D12
+Text Label 10200 5300 0    50   ~ 0
+D15
+Text Label 10200 4800 0    50   ~ 0
+USD-MISO
+Text Label 10600 4700 2    50   ~ 0
+USD-MOSI
+Text Label 6550 4300 2    50   ~ 0
+D8
+Text Label 10050 3700 0    50   ~ 0
+INH-FLOW-OUT
+Text Label 10050 3800 0    50   ~ 0
+EXH-FLOW-OUT
+Text Label 10050 3900 0    50   ~ 0
+OXY-FLOW-OUT
+Text Label 10050 4000 0    50   ~ 0
+PPO
+Text Label 10050 4100 0    50   ~ 0
+OXY
 $EndSCHEMATC

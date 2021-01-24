@@ -15,7 +15,7 @@ Comment3 ""
 Comment4 ""
 $EndDescr
 $Comp
-L RespiraWorks:TPS54561 U?
+L Ventilator-rescue:TPS54561-RespiraWorks U?
 U 1 1 5FD565BA
 P 6300 2950
 AR Path="/5FCD4B8E/5FCD4BC5/5FD565BA" Ref="U?"  Part="1" 

@@ -293,7 +293,7 @@ Wire Wire Line
 Wire Wire Line
 	9650 3350 9650 4050
 $Comp
-L RespiraWorks:BMP280 U?
+L Ventilator-rescue:BMP280-RespiraWorks U?
 U 1 1 5FFC4410
 P 3250 6300
 F 0 "U?" H 2922 6321 50  0000 R CNN
@@ -416,7 +416,7 @@ F 3 "" H 3300 5650 50  0001 C CNN
 	-1   0    0    -1  
 $EndComp
 $Comp
-L RespiraWorks:+3.3V_Sns #PWR?
+L Ventilator-rescue:+3.3V_Sns-RespiraWorks #PWR?
 U 1 1 5FFCC68E
 P 3100 5350
 F 0 "#PWR?" H 3100 5350 50  0001 C CNN
@@ -469,7 +469,7 @@ F 3 "" H 3050 6850 50  0001 C CNN
 	-1   0    0    -1  
 $EndComp
 $Comp
-L RespiraWorks:+3.3V_Sns #PWR?
+L Ventilator-rescue:+3.3V_Sns-RespiraWorks #PWR?
 U 1 1 5FFD1C23
 P 3950 6300
 F 0 "#PWR?" H 3950 6300 50  0001 C CNN

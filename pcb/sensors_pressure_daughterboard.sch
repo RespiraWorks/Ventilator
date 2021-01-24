@@ -79,7 +79,7 @@ F 3 "" H 6300 3650 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L RespiraWorks:Pressure_sensor_daughterboard H?
+L Ventilator-rescue:Pressure_sensor_daughterboard-RespiraWorks H?
 U 1 1 60540D89
 P 5100 3650
 AR Path="/5FCD4E9D/600630A6/60540D89" Ref="H?"  Part="1" 
@@ -152,7 +152,7 @@ Connection ~ 3650 3550
 Wire Wire Line
 	3650 3550 3650 3350
 $Comp
-L RespiraWorks:+5V_Sns #PWR?
+L Ventilator-rescue:+5V_Sns-RespiraWorks #PWR?
 U 1 1 5FFDC39B
 P 3450 3250
 AR Path="/5FCD4E9D/600630A6/5FFDC39B" Ref="#PWR?"  Part="1" 
@@ -166,7 +166,7 @@ F 3 "" H 3450 3250 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L RespiraWorks:+3.3V_Sns #PWR?
+L Ventilator-rescue:+3.3V_Sns-RespiraWorks #PWR?
 U 1 1 5FFDC7DB
 P 3250 3450
 AR Path="/5FCD4E9D/600630A6/5FFDC7DB" Ref="#PWR?"  Part="1" 

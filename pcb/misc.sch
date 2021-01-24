@@ -132,7 +132,7 @@ Wire Wire Line
 Wire Wire Line
 	3000 1700 3250 1700
 $Comp
-L RespiraWorks:+3.3V_Ctrl #PWR?
+L Ventilator-rescue:+3.3V_Ctrl-RespiraWorks #PWR?
 U 1 1 60185739
 P 3250 1250
 F 0 "#PWR?" H 3250 1250 50  0001 C CNN
@@ -433,7 +433,7 @@ F 3 "" H 3150 8150 50  0001 C CNN
 	-1   0    0    -1  
 $EndComp
 $Comp
-L RespiraWorks:24LC256T-I_MS U?
+L Ventilator-rescue:24LC256T-I_MS-RespiraWorks U?
 U 1 1 601D3E25
 P 3400 5350
 F 0 "U?" H 3550 5800 50  0000 C CNN
@@ -527,7 +527,7 @@ Wire Wire Line
 Wire Wire Line
 	3150 4400 3400 4400
 $Comp
-L RespiraWorks:+3.3V_Ctrl #PWR?
+L Ventilator-rescue:+3.3V_Ctrl-RespiraWorks #PWR?
 U 1 1 601D6F2C
 P 3400 4350
 F 0 "#PWR?" H 3400 4350 50  0001 C CNN
@@ -593,7 +593,7 @@ Connection ~ 1750 2450
 Wire Wire Line
 	1750 2450 2850 2450
 $Comp
-L RespiraWorks_Std:TCA9544APWR U?
+L Ventilator-rescue:TCA9544APWR-RespiraWorks_Std U?
 U 1 1 601E8307
 P 8800 7250
 F 0 "U?" H 8950 8200 50  0000 C CNN
@@ -674,7 +674,7 @@ Wire Wire Line
 Wire Wire Line
 	8550 5800 8800 5800
 $Comp
-L RespiraWorks:+3.3V_Ctrl #PWR?
+L Ventilator-rescue:+3.3V_Ctrl-RespiraWorks #PWR?
 U 1 1 601F3395
 P 8800 5750
 F 0 "#PWR?" H 8800 5750 50  0001 C CNN
@@ -1034,7 +1034,7 @@ Wire Wire Line
 Wire Wire Line
 	14000 6750 10100 6750
 $Comp
-L RespiraWorks:+3.3V_Ctrl #PWR?
+L Ventilator-rescue:+3.3V_Ctrl-RespiraWorks #PWR?
 U 1 1 602134DD
 P 13250 6850
 F 0 "#PWR?" H 13250 6850 50  0001 C CNN
@@ -1085,7 +1085,7 @@ $EndComp
 Wire Wire Line
 	14000 7350 13100 7350
 $Comp
-L RespiraWorks:+3.3V_Ctrl #PWR?
+L Ventilator-rescue:+3.3V_Ctrl-RespiraWorks #PWR?
 U 1 1 60218CEF
 P 13250 7450
 F 0 "#PWR?" H 13250 7450 50  0001 C CNN
@@ -1136,7 +1136,7 @@ $EndComp
 Wire Wire Line
 	14000 7950 11900 7950
 $Comp
-L RespiraWorks:+3.3V_Ctrl #PWR?
+L Ventilator-rescue:+3.3V_Ctrl-RespiraWorks #PWR?
 U 1 1 6021A884
 P 13250 8050
 F 0 "#PWR?" H 13250 8050 50  0001 C CNN
@@ -1187,7 +1187,7 @@ $EndComp
 Wire Wire Line
 	14000 8550 12650 8550
 $Comp
-L RespiraWorks:+3.3V_Ctrl #PWR?
+L Ventilator-rescue:+3.3V_Ctrl-RespiraWorks #PWR?
 U 1 1 6021D3EE
 P 13250 8650
 F 0 "#PWR?" H 13250 8650 50  0001 C CNN
@@ -1456,7 +1456,7 @@ Connection ~ 9800 5900
 Wire Wire Line
 	9800 5900 10100 5900
 $Comp
-L RespiraWorks:+3.3V_Ctrl #PWR?
+L Ventilator-rescue:+3.3V_Ctrl-RespiraWorks #PWR?
 U 1 1 602C4B67
 P 11150 5900
 F 0 "#PWR?" H 11150 5900 50  0001 C CNN
@@ -1501,7 +1501,7 @@ Connection ~ 7450 6750
 Wire Wire Line
 	7450 6750 8400 6750
 $Comp
-L RespiraWorks:+3.3V_Ctrl #PWR?
+L Ventilator-rescue:+3.3V_Ctrl-RespiraWorks #PWR?
 U 1 1 602E4F93
 P 7450 5850
 F 0 "#PWR?" H 7450 5850 50  0001 C CNN
@@ -1810,7 +1810,7 @@ Wire Notes Line
 Text Notes 3650 9350 0    50   ~ 0
 Optional PWM filter\nto produce analog\ncontrol voltage
 $Comp
-L RespiraWorks:SN74LVC2T45DCTR U?
+L Ventilator-rescue:SN74LVC2T45DCTR-RespiraWorks U?
 U 1 1 6045598A
 P 2700 8600
 F 0 "U?" H 2150 8300 50  0000 C CNN
@@ -1907,7 +1907,7 @@ Wire Wire Line
 Wire Wire Line
 	2600 7500 2050 7500
 $Comp
-L RespiraWorks:+3.3V_Ctrl #PWR?
+L Ventilator-rescue:+3.3V_Ctrl-RespiraWorks #PWR?
 U 1 1 604BAC6D
 P 2050 7500
 F 0 "#PWR?" H 2050 7500 50  0001 C CNN
@@ -1978,7 +1978,7 @@ F 3 "" H 2700 9000 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L RespiraWorks:+3.3V_Ctrl #PWR?
+L Ventilator-rescue:+3.3V_Ctrl-RespiraWorks #PWR?
 U 1 1 604E5D5D
 P 1900 8450
 F 0 "#PWR?" H 1900 8450 50  0001 C CNN

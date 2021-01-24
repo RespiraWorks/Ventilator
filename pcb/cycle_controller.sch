@@ -1518,7 +1518,7 @@ OXY
 Wire Wire Line
 	2200 4350 3700 4350
 $Comp
-L RespiraWorks:+3.3V_Sns #PWR?
+L Ventilator-rescue:+3.3V_Sns-RespiraWorks #PWR?
 U 1 1 600F7198
 P 6200 700
 F 0 "#PWR?" H 6200 700 50  0001 C CNN
@@ -1540,7 +1540,7 @@ F 3 "" H 10550 800 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L RespiraWorks:+3.3V_Sns #PWR?
+L Ventilator-rescue:+3.3V_Sns-RespiraWorks #PWR?
 U 1 1 600F7606
 P 9600 800
 F 0 "#PWR?" H 9600 800 50  0001 C CNN

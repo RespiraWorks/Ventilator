@@ -19,7 +19,7 @@ In
 Text HLabel 6850 3600 2    50   Output ~ 0
 Out
 $Comp
-L RespiraWorks:LD39050 U?
+L Ventilator-rescue:LD39050-RespiraWorks U?
 U 1 1 606AF9B2
 P 5300 3750
 AR Path="/5FCD4B8E/5FCD4BF6/606AF9B2" Ref="U?"  Part="1" 

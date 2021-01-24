@@ -822,7 +822,7 @@ F 3 "" H 9350 1250 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Ventilator-rescue:+3.3V_Ctrl-RespiraWorks #PWR?
+L RespiraWorks:+3.3V_Ctrl #PWR?
 U 1 1 60479878
 P 9400 1950
 F 0 "#PWR?" H 9400 1950 50  0001 C CNN
@@ -1104,7 +1104,7 @@ Wire Wire Line
 	1750 7600 2800 7600
 Connection ~ 1750 7600
 $Comp
-L Ventilator-rescue:+3.3V_Ctrl-RespiraWorks #PWR?
+L RespiraWorks:+3.3V_Ctrl #PWR?
 U 1 1 605FE109
 P 1750 7300
 F 0 "#PWR?" H 1750 7300 50  0001 C CNN
@@ -1225,7 +1225,7 @@ F 3 "~" H 12550 6650 50  0001 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L Ventilator-rescue:+3.3V_Ctrl-RespiraWorks #PWR?
+L RespiraWorks:+3.3V_Ctrl #PWR?
 U 1 1 6084D138
 P 12550 6500
 F 0 "#PWR?" H 12550 6500 50  0001 C CNN
@@ -1263,7 +1263,7 @@ F 3 "~" H 13050 6800 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Ventilator-rescue:+3.3V_Ctrl-RespiraWorks #PWR?
+L RespiraWorks:+3.3V_Ctrl #PWR?
 U 1 1 608864B8
 P 13300 6500
 F 0 "#PWR?" H 13300 6500 50  0001 C CNN
@@ -1287,7 +1287,7 @@ F 3 "~" H 12550 7500 50  0001 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L Ventilator-rescue:+3.3V_Ctrl-RespiraWorks #PWR?
+L RespiraWorks:+3.3V_Ctrl #PWR?
 U 1 1 608AE2A5
 P 12550 7350
 F 0 "#PWR?" H 12550 7350 50  0001 C CNN
@@ -1322,7 +1322,7 @@ F 3 "~" H 12950 7700 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Ventilator-rescue:+3.3V_Ctrl-RespiraWorks #PWR?
+L RespiraWorks:+3.3V_Ctrl #PWR?
 U 1 1 608AE2C1
 P 13300 7350
 F 0 "#PWR?" H 13300 7350 50  0001 C CNN
@@ -1356,7 +1356,7 @@ Connection ~ 9900 2350
 Wire Wire Line
 	9900 1950 9900 2350
 $Comp
-L Ventilator-rescue:+3.3V_Ctrl-RespiraWorks #PWR?
+L RespiraWorks:+3.3V_Ctrl #PWR?
 U 1 1 60102336
 P 8600 1950
 F 0 "#PWR?" H 8600 1950 50  0001 C CNN

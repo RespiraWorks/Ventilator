@@ -194,7 +194,7 @@ Connection ~ 4300 3300
 Wire Wire Line
 	5600 3600 5600 3850
 $Comp
-L Ventilator-rescue:USBLC6-2SC6-Power_Protection U?
+L Power_Protection:USBLC6-2SC6 U?
 U 1 1 5FFD5C58
 P 2400 3900
 F 0 "U?" V 1950 4100 50  0000 L CNN

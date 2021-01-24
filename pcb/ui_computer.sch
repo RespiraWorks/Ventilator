@@ -274,7 +274,7 @@ Wire Wire Line
 Text HLabel 7000 3800 2    50   Input ~ 0
 USART-CTS
 $Comp
-L Ventilator-rescue:+5V_GUI-RespiraWorks #PWR?
+L RespiraWorks:+5V_GUI #PWR?
 U 1 1 5FEBC42B
 P 6750 2300
 F 0 "#PWR?" H 6750 2300 50  0001 C CNN

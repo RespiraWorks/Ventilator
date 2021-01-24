@@ -519,7 +519,7 @@ F 5 "ES2G-E3/52T" H 11850 7500 50  0001 C CNN "Part Number"
 	1    0    0    -1  
 $EndComp
 $Comp
-L Ventilator-rescue:+3.3V_Ctrl-RespiraWorks #PWR?
+L RespiraWorks:+3.3V_Ctrl #PWR?
 U 1 1 605A385D
 P 12500 8200
 F 0 "#PWR?" H 12500 8200 50  0001 C CNN
@@ -775,7 +775,7 @@ Wire Wire Line
 Text Notes 1200 8950 0    50   ~ 0
 ~~25µA battery load
 $Comp
-L Ventilator-rescue:TL431DBZ-RespiraWorks_Std U?
+L RespiraWorks_Std:TL431DBZ U?
 U 1 1 605F022C
 P 3550 8850
 AR Path="/5FCD4DF5/605F022C" Ref="U?"  Part="1" 
@@ -1036,7 +1036,7 @@ $EndComp
 Text Notes 13250 4600 0    50   ~ 0
 Populate resistor to +BATT to\npower controls (cycle controller,\nFPGA) from alarm battery when\nmain power is out\n\nPopulate resistor to +5V to\nonly power alarm from alarm\nbattery when main power is out
 $Comp
-L Ventilator-rescue:+3.3V_Ctrl-RespiraWorks #PWR?
+L RespiraWorks:+3.3V_Ctrl #PWR?
 U 1 1 606E6802
 P 15700 5250
 F 0 "#PWR?" H 15700 5250 50  0001 C CNN
@@ -1072,7 +1072,7 @@ $EndComp
 Wire Wire Line
 	14200 6050 14400 6050
 $Comp
-L Ventilator-rescue:+3.3V_Sns-RespiraWorks #PWR?
+L RespiraWorks:+3.3V_Sns #PWR?
 U 1 1 606F1EA3
 P 15700 6050
 F 0 "#PWR?" H 15700 6050 50  0001 C CNN
@@ -1100,7 +1100,7 @@ $EndComp
 Wire Wire Line
 	12650 2550 12950 2550
 $Comp
-L Ventilator-rescue:+5V_GUI-RespiraWorks #PWR?
+L RespiraWorks:+5V_GUI #PWR?
 U 1 1 6071208B
 P 12950 1700
 F 0 "#PWR?" H 12950 1700 50  0001 C CNN
@@ -1179,7 +1179,7 @@ Wire Wire Line
 Text Notes 14350 6850 0    50   ~ 0
 Optional filter
 $Comp
-L Ventilator-rescue:+5V_Sns-RespiraWorks #PWR?
+L RespiraWorks:+5V_Sns #PWR?
 U 1 1 5FFCBEE7
 P 15700 6550
 F 0 "#PWR?" H 15700 6550 50  0001 C CNN

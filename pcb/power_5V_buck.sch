@@ -15,7 +15,7 @@ Comment3 ""
 Comment4 ""
 $EndDescr
 $Comp
-L Ventilator-rescue:TPS54561-RespiraWorks U?
+L RespiraWorks:TPS54561 U?
 U 1 1 5FD565BA
 P 6300 2950
 AR Path="/5FCD4B8E/5FCD4BC5/5FD565BA" Ref="U?"  Part="1" 
@@ -554,7 +554,7 @@ $EndComp
 Text Notes 10500 3750 0    50   ~ 0
 ~~1 mA on
 $Comp
-L Ventilator-rescue:D_Schottky_AAK-Device D?
+L Device:D_Schottky_AAK D?
 U 1 1 5FDAE590
 P 7400 2950
 AR Path="/5FCD4B8E/5FCD4BC5/5FDAE590" Ref="D?"  Part="1" 

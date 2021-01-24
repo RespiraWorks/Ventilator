@@ -235,7 +235,7 @@ different PEEP levels and to avoid significant wasted flow during
 inhale. In the process of development, it was realized that the same
 design could also be used to provide a rapid pressure swing on the
 inhale flow, in addition to exhale.
-![](../../manufacturing/pinch_valve/assets/full_assembly.jpg)
+![](../../manufacturing/pinch_valve/images/full_assembly.jpg)
 
 One of two pinch valves in each ventilator (early model)
 

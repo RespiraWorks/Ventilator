@@ -596,17 +596,6 @@ F 3 "" H 2200 4750 50  0001 C CNN
 	1    2200 4550
 	0    1    1    0   
 $EndComp
-$Comp
-L Device:Jumper JP?
-U 1 1 5FF609B4
-P 2900 4350
-F 0 "JP?" H 2900 4550 50  0000 C CNN
-F 1 "Jumper" H 2900 4523 50  0001 C CNN
-F 2 "" H 2900 4350 50  0001 C CNN
-F 3 "~" H 2900 4350 50  0001 C CNN
-	1    2900 4350
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
 	4700 4550 4700 4600
 Wire Wire Line
@@ -684,19 +673,6 @@ Text HLabel 6700 4100 2    50   BiDi ~ 0
 CC-SCL
 Text HLabel 6700 4200 2    50   BiDi ~ 0
 CC-SDA
-$Comp
-L Ventilator-rescue:+3.3V_Ctrl_A-RespiraWorks #PWR?
-U 1 1 60010B9C
-P 9600 800
-AR Path="/60010B9C" Ref="#PWR?"  Part="1" 
-AR Path="/5FCD4D18/60010B9C" Ref="#PWR?"  Part="1" 
-F 0 "#PWR?" H 9600 800 50  0001 C CNN
-F 1 "+3.3V_Ctrl_A" H 9585 973 50  0000 C CNN
-F 2 "" H 9600 800 50  0001 C CNN
-F 3 "" H 9600 800 50  0001 C CNN
-	1    9600 800 
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
 	8700 750  8700 800 
 Wire Wire Line
@@ -773,17 +749,6 @@ D4
 Wire Wire Line
 	6400 4800 6550 4800
 $Comp
-L Ventilator-rescue:+3.3V_Ctrl-RespiraWorks-Ventilator-rescue #PWR?
-U 1 1 601C83BE
-P 10550 800
-F 0 "#PWR?" H 10550 800 50  0001 C CNN
-F 1 "+3.3V_Ctrl" H 10535 973 50  0000 C CNN
-F 2 "" H 10550 800 50  0001 C CNN
-F 3 "" H 10550 800 50  0001 C CNN
-	1    10550 800 
-	1    0    0    -1  
-$EndComp
-$Comp
 L Device:C C?
 U 1 1 601C8478
 P 10550 950
@@ -816,16 +781,16 @@ Wire Wire Line
 $Comp
 L power:GNDA #PWR?
 U 1 1 602C1A6B
-P 5900 5300
-F 0 "#PWR?" H 5900 5050 50  0001 C CNN
-F 1 "GNDA" H 5905 5127 50  0000 C CNN
-F 2 "" H 5900 5300 50  0001 C CNN
-F 3 "" H 5900 5300 50  0001 C CNN
-	1    5900 5300
+P 5900 5350
+F 0 "#PWR?" H 5900 5100 50  0001 C CNN
+F 1 "GNDA" H 5905 5177 50  0000 C CNN
+F 2 "" H 5900 5350 50  0001 C CNN
+F 3 "" H 5900 5350 50  0001 C CNN
+	1    5900 5350
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	5900 5000 5900 5300
+	5900 5000 5900 5350
 $Comp
 L Ventilator-rescue:503182-1852-RespiraWorks J?
 U 1 1 6016937E
@@ -1041,29 +1006,12 @@ Wire Wire Line
 	6000 700  6000 1400
 Wire Wire Line
 	5600 700  5600 1400
-Text Notes 7650 1500 2    39   ~ 0
-Had trouble copying symbol to move VDDA to outside
-$Comp
-L Ventilator-rescue:+3.3V_Ctrl_A-RespiraWorks #PWR?
-U 1 1 6020D1C2
-P 6200 700
-AR Path="/6020D1C2" Ref="#PWR?"  Part="1" 
-AR Path="/5FCD4D18/6020D1C2" Ref="#PWR?"  Part="1" 
-F 0 "#PWR?" H 6200 700 50  0001 C CNN
-F 1 "+3.3V_Ctrl_A" H 6185 873 50  0000 C CNN
-F 2 "" H 6200 700 50  0001 C CNN
-F 3 "" H 6200 700 50  0001 C CNN
-	1    6200 700 
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
 	5900 1400 5900 850 
 Wire Wire Line
 	5900 850  6200 850 
 Wire Wire Line
 	6200 850  6200 700 
-Text Notes 11150 1500 2    39   ~ 0
-Match name of power port for VDDA with the one from edwin's branch!
 Wire Wire Line
 	5600 5350 5500 5350
 Connection ~ 5600 5350
@@ -1085,15 +1033,11 @@ Wire Notes Line
 	9350 1550 9350 6550
 NoConn ~ 10650 3600
 Wire Wire Line
-	10650 3900 10150 3900
+	10650 3900 10050 3900
 Wire Wire Line
-	10650 4000 10150 4000
+	10650 4000 10050 4000
 Wire Wire Line
-	10650 4100 10150 4100
-Wire Wire Line
-	10650 3500 10050 3500
-Wire Wire Line
-	10650 3600 10050 3600
+	10650 4100 10050 4100
 Wire Wire Line
 	10650 3700 10050 3700
 Text Label 6450 1700 0    50   ~ 0
@@ -1516,16 +1460,14 @@ Wire Wire Line
 Wire Wire Line
 	10650 2450 10500 2450
 Connection ~ 10500 2450
-Text Label 10550 1950 0    39   ~ 0
+Text Label 10550 1950 0    50   ~ 0
 D6
-Text Label 10550 2350 0    39   ~ 0
+Text Label 10550 2350 0    50   ~ 0
 D7
 Wire Wire Line
 	10650 1950 10550 1950
 Wire Wire Line
 	10650 2350 10550 2350
-Wire Wire Line
-	3200 4350 3700 4350
 Wire Wire Line
 	7350 850  7500 850 
 Connection ~ 7500 850 
@@ -1565,4 +1507,54 @@ Text Label 10600 4700 2    50   ~ 0
 USD-MOSI
 Text Label 6550 4300 2    50   ~ 0
 D8
+Text Label 10050 3700 0    50   ~ 0
+INH-FLOW-OUT
+Text Label 10050 3800 0    50   ~ 0
+EXH-FLOW-OUT
+Text Label 10050 3900 0    50   ~ 0
+OXY-FLOW-OUT
+Text Label 10050 4000 0    50   ~ 0
+PPO
+Text Label 10050 4100 0    50   ~ 0
+OXY
+Wire Wire Line
+	2200 4350 3700 4350
+$Comp
+L RespiraWorks:+3.3V_Sns #PWR?
+U 1 1 600F7198
+P 6200 700
+F 0 "#PWR?" H 6200 700 50  0001 C CNN
+F 1 "+3.3V_Sns" H 6185 873 50  0000 C CNN
+F 2 "" H 6200 700 50  0001 C CNN
+F 3 "" H 6200 700 50  0001 C CNN
+	1    6200 700 
+	1    0    0    -1  
+$EndComp
+$Comp
+L Ventilator-rescue:+3.3V_Ctrl-RespiraWorks-Ventilator-rescue #PWR?
+U 1 1 601C83BE
+P 10550 800
+F 0 "#PWR?" H 10550 800 50  0001 C CNN
+F 1 "+3.3V_Ctrl" H 10535 973 50  0000 C CNN
+F 2 "" H 10550 800 50  0001 C CNN
+F 3 "" H 10550 800 50  0001 C CNN
+	1    10550 800 
+	1    0    0    -1  
+$EndComp
+$Comp
+L RespiraWorks:+3.3V_Sns #PWR?
+U 1 1 600F7606
+P 9600 800
+F 0 "#PWR?" H 9600 800 50  0001 C CNN
+F 1 "+3.3V_Sns" H 9585 973 50  0000 C CNN
+F 2 "" H 9600 800 50  0001 C CNN
+F 3 "" H 9600 800 50  0001 C CNN
+	1    9600 800 
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	9400 800  9600 800 
+Connection ~ 9600 800 
+Wire Notes Line
+	9350 1550 11200 1550
 $EndSCHEMATC

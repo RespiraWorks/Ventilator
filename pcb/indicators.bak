@@ -14,79 +14,79 @@ Comment2 ""
 Comment3 ""
 Comment4 ""
 $EndDescr
-Text HLabel 4300 1700 0    50   Input ~ 0
+Text HLabel 4300 2750 0    50   Input ~ 0
 CC-LED-G
-Text HLabel 4300 1800 0    50   Input ~ 0
+Text HLabel 4300 2850 0    50   Input ~ 0
 CC-LED-R
-Text HLabel 4300 1900 0    50   Input ~ 0
+Text HLabel 4300 2950 0    50   Input ~ 0
 CC-LED-Y
-Text HLabel 4300 2000 0    50   Input ~ 0
+Text HLabel 4300 3050 0    50   Input ~ 0
 UI-LED-G
-Text HLabel 4300 2100 0    50   Input ~ 0
+Text HLabel 4300 3150 0    50   Input ~ 0
 UI-LED-R
-Text HLabel 4300 2200 0    50   Input ~ 0
+Text HLabel 4300 3250 0    50   Input ~ 0
 UI-LED-Y
 Wire Wire Line
-	4300 1700 4900 1700
+	4300 2750 4900 2750
 Wire Wire Line
-	4300 1800 4900 1800
+	4300 2850 4900 2850
 Wire Wire Line
-	4300 1900 4900 1900
+	4300 2950 4900 2950
 Wire Wire Line
-	4300 2000 4900 2000
+	4300 3050 4900 3050
 Wire Wire Line
-	4300 2100 4900 2100
+	4300 3150 4900 3150
 Wire Wire Line
-	4300 2200 4900 2200
+	4300 3250 4900 3250
 $Comp
 L power:+5V #PWR?
 U 1 1 600A1896
-P 3550 1600
-F 0 "#PWR?" H 3550 1450 50  0001 C CNN
-F 1 "+5V" H 3565 1773 50  0000 C CNN
-F 2 "" H 3550 1600 50  0001 C CNN
-F 3 "" H 3550 1600 50  0001 C CNN
-	1    3550 1600
+P 3500 2200
+F 0 "#PWR?" H 3500 2050 50  0001 C CNN
+F 1 "+5V" H 3515 2373 50  0000 C CNN
+F 2 "" H 3500 2200 50  0001 C CNN
+F 3 "" H 3500 2200 50  0001 C CNN
+	1    3500 2200
 	1    0    0    -1  
 $EndComp
 $Comp
 L power:GND #PWR?
 U 1 1 600A18CF
-P 3550 2700
-F 0 "#PWR?" H 3550 2450 50  0001 C CNN
-F 1 "GND" H 3555 2527 50  0000 C CNN
-F 2 "" H 3550 2700 50  0001 C CNN
-F 3 "" H 3550 2700 50  0001 C CNN
-	1    3550 2700
+P 3650 3250
+F 0 "#PWR?" H 3650 3000 50  0001 C CNN
+F 1 "GND" H 3655 3077 50  0000 C CNN
+F 2 "" H 3650 3250 50  0001 C CNN
+F 3 "" H 3650 3250 50  0001 C CNN
+	1    3650 3250
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	4900 2300 3550 2300
-Wire Wire Line
-	3550 2300 3550 1600
-Wire Wire Line
-	4900 2400 3550 2400
-Wire Wire Line
-	3550 2400 3550 2300
-Connection ~ 3550 2300
-Wire Wire Line
-	4900 2500 3550 2500
-Wire Wire Line
-	3550 2500 3550 2600
-Wire Wire Line
-	4900 2600 3550 2600
-Connection ~ 3550 2600
-Wire Wire Line
-	3550 2600 3550 2700
 $Comp
 L Connector_Generic:Conn_01x10 J?
 U 1 1 600DAE2F
-P 5100 2100
-F 0 "J?" H 5179 2092 50  0000 L CNN
-F 1 "Cable to indicator board" H 5179 2001 50  0000 L CNN
-F 2 "" H 5100 2100 50  0001 C CNN
-F 3 "~" H 5100 2100 50  0001 C CNN
-	1    5100 2100
+P 5100 2750
+F 0 "J?" H 5179 2742 50  0000 L CNN
+F 1 "Cable to indicator board" H 5179 2651 50  0000 L CNN
+F 2 "" H 5100 2750 50  0001 C CNN
+F 3 "~" H 5100 2750 50  0001 C CNN
+	1    5100 2750
 	1    0    0    -1  
 $EndComp
+Wire Wire Line
+	4900 2650 3500 2650
+Wire Wire Line
+	4900 2550 3500 2550
+Wire Wire Line
+	3500 2200 3500 2550
+Connection ~ 3500 2550
+Wire Wire Line
+	3500 2550 3500 2650
+Wire Wire Line
+	4900 2450 3650 2450
+Wire Wire Line
+	3650 2450 3650 3250
+Wire Wire Line
+	4900 2350 3650 2350
+Wire Wire Line
+	3650 2350 3650 2450
+Connection ~ 3650 2450
 $EndSCHEMATC

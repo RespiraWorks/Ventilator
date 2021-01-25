@@ -71,6 +71,8 @@ This is a clear acrylic sheet that houses the filter assembly. It is mounted usi
 
 ![](assets/LowerAcrylicFacePlate.png)
 
+The sizing for the mounting holes was based on [this](https://www.pemnet.com/fastening_products/pdf/sidata.pdf) catalog for heat set insert
+
 ### Source files
 
 The custom design and assembly have been carried out in Autodesk Inventor, and the following "source" files are provided:

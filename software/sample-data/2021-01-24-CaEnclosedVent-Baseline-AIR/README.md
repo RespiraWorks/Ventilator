@@ -8,6 +8,10 @@
 
 * **Test data:** /RespiraWorks/Ventilator/tree/master/software/sample-data/2021-01-24-CaEnclosedVent-Baseline-AIR
 
+* **Summary Observations:**
+  * There is a lot of chatter in both the air and oxygen check valves
+  * As expected, the dynamics of the enclosed ventilator are different than those of the pizza build and there is some oscillation in the control.
+
 * **Summarize test setup's main components:**
   * This the first test of the Enclosed Ventilator build in California, using unmodified and untuned pizzabuild software
   * The main objective of this test is to establish baseline of perfromance before pursuing any changes or tuning.

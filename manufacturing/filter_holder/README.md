@@ -77,12 +77,12 @@ The sizing for the mounting holes was based on [this](https://www.pemnet.com/fas
 
 The custom design and assembly have been carried out in Autodesk Inventor, and the following "source" files are provided:
 
-* [Filter assembly.iam](assets/Filter%20assembly.iam) - Inventor assembly file for a single filter holder
-* [Filter housing.ipt](assets/Filter%20housing.ipt) - Inventor part file for filter housing/panel mount (pictured in purple above).
-* [Filter cover.ipt](assets/Filter%20cover.ipt) - Inventor part file for filter cover (pictured in blue above), which has two configurations.
-* [Filter gasket.ipt](assets/Filter%20gasket.ipt) - Inventor part file for filter gasket design
-* [Filter stand-in.ipt](assets/Filter%20stand-in.ipt) - Stand-in for the actual HEPA filter.
-* [Lower acrylic face plate.ipt](assets/LowerAcrylicFacePlate.ipt) - Inventor part file for lower acrylic face plate.
+* [Filter assembly.iam](CAD/Filter%20assembly.iam) - Inventor assembly file for a single filter holder
+* [Filter housing.ipt](CAD/Filter%20housing.ipt) - Inventor part file for filter housing/panel mount (pictured in purple above).
+* [Filter cover.ipt](CAD/Filter%20cover.ipt) - Inventor part file for filter cover (pictured in blue above), which has two configurations.
+* [Filter gasket.ipt](CAD/Filter%20gasket.ipt) - Inventor part file for filter gasket design
+* [Filter stand-in.ipt](CAD/Filter%20stand-in.ipt) - Stand-in for the actual HEPA filter.
+* [Lower acrylic face plate.ipt](CAD/LowerAcrylicFacePlate.ipt) - Inventor part file for lower acrylic face plate.
 
 Previous versions of these parts were designed in OnShape, and the history of those previous iterations can be found
 [here](https://cad.onshape.com/documents/3fe0c1f79c482144c267173d/w/2ad1c08071a25185f9c78c68/e/c3b817c7fd516ff612068657).
@@ -90,9 +90,9 @@ Previous versions of these parts were designed in OnShape, and the history of th
 ### 3d printing
 
 The following STL files have been exported for 3d printing:
-* [Filter housing.stl](assets/Filter%20housing.stl) - should need 4 of these
-* [Filter cover - patient connector.stl](assets/Filter%20cover%20-%20patient%20connector.stl) - should need 2 of these
-* [Filter cover - air vent.stl](assets/Filter%20cover%20-%20air%20vent.stl) - should need 2 of these
+* [Filter housing.stl](CAD/Filter%20housing.stl) - should need 4 of these
+* [Filter cover - patient connector.stl](CAD/Filter%20cover%20-%20patient%20connector.stl) - should need 2 of these
+* [Filter cover - air vent.stl](CAD/Filter%20cover%20-%20air%20vent.stl) - should need 2 of these
 
 Quantities identified above assume a full set of 4 filter assemblies for a single ventilator.
 
@@ -120,9 +120,9 @@ BEFORE purchasing any parts.**
 |**A7**| 8         | McMaster-Carr | 96016A556                           | 5.50 / 10           | [C][a7mcmc] | m3 thumbscrews |
 |**A8**| 8         | McMaster-Carr | 94180A333                           | 16.69 / 100         | [C][a8mcmc] | heat-set inserts for m3 screws |
 
-[a1rw]: assets/Filter%20housing.stl
-[a2rw]: assets/Filter%20cover%20-%20patient%20connector.stl
-[a3rw]: assets/Filter%20cover%20-%20air%20vent.stl
+[a1rw]: CAD/Filter%20housing.stl
+[a2rw]: CAD/Filter%20cover%20-%20patient%20connector.stl
+[a3rw]: CAD/Filter%20cover%20-%20air%20vent.stl
 [a4amzn]: https://www.amazon.com/gp/product/B01KNZCW8E
 [a5mcmc]: https://www.mcmaster.com/8785K82/
 [a7mcmc]: https://www.mcmaster.com/96016A556/
@@ -138,8 +138,8 @@ BEFORE purchasing any parts.**
 |**B4**| 1        | General       | 707475                  | 31.75        | [G][b4grai] | Needle file set (might be needed, depending on quality of 3d prints) |
 |**B5**| 1        | Walnut Hollow | 38283                   | 32.01        | [A][b5amzn] | Wood burning tool, or soldering iron if you have one, for installing inserts |
 
-[b1rw]:   assets/filter-gasket-jig-inside.stl
-[b2rw]:   assets/filter-gasket-jig-outside.stl
+[b1rw]:   CAD/filter-gasket-jig-inside.stl
+[b2rw]:   CAD/filter-gasket-jig-outside.stl
 [b3amzn]: https://www.amazon.com/Fiskars-167110-1001-Heavy-Craft-Knife/dp/B001A42CTW
 [b4grai]: https://www.grainger.com/product/23N602
 [b5amzn]: https://www.amazon.com/Walnut-Hollow-Versa-Temp-Temperature-Woodburning/dp/B005P1TRAS

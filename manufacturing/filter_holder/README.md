@@ -69,7 +69,7 @@ Most recent changes also include thickening of the walls to make the 3d prints l
 
 This is a clear acrylic sheet that houses the filter assembly. It is mounted using heat inserts. Link to the part file is given in [Source files](#Source-files) below. Some other useful files for the same part are [.idw 2D drawing](CAD/LowerAcrylicFacePlate.idw), [.pdf 2D drawing](CAD/LowerAcrylicFacePlate.pdf),[.stl for 3D printing](CAD/LowerAcrylicFacePlate.stl),[.dxf of the front face for laser cutting](CAD/LowerAcrylicFacePlate_FrontFace.dxf).
 
-![](CAD/LowerAcrylicFacePlate.png)
+![](CAD/LowerAcrylicFacePlate.jpg)
 
 The sizing for the mounting holes was based on [this](https://www.pemnet.com/fastening_products/pdf/sidata.pdf) catalog for heat set insert. The relevant info can be found on page 6 in the metric table. This specification was chosen for its simplicity due to self-alignment
 

@@ -71,10 +71,7 @@ This is a clear acrylic sheet that houses the filter assembly. It is mounted usi
 
 ![](assets/LowerAcrylicFacePlate.jpg)
 
-The sizing for the mounting holes was based on [this](https://www.pemnet.com/fastening_products/pdf/sidata.pdf) catalog for heat set insert. 
-M4 screws were chosen to mount the acrylic face plate to the sheet metal enclosure. 
-For corresponding M4 nuts (refer page 6, metric table, row 6), length code 1 was chosen since acrylic thickness (6.35 mm) was more than minimum hole depth specification (5.72 mm).
-Hence the corresponding outer diamater for insertion i.e. acrylic mounting diamater would be 5.94 mm, which is refelcted in the CAD.
+The sizing for the mounting holes was based on [this](https://www.pemnet.com/fastening_products/pdf/sidata.pdf) catalog for heat set insert. M4 screws were chosen to mount the acrylic face plate to the sheet metal enclosure. For corresponding M4 nuts (refer page 6, metric table, row 6), length code 1 was chosen since acrylic thickness (6.35 mm) was more than minimum hole depth specification (5.72 mm). Hence the corresponding outer diamater for insertion i.e. acrylic mounting diamater would be 5.94 mm, which is refelcted in the CAD.
 
 ### Source files
 

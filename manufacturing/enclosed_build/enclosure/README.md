@@ -22,6 +22,7 @@ Acrylic sheets are either fastened to or hung from the bracket to allow for desi
 bracket. The internal equipment bracket is attached to the main enclosure using (6) M4 x 0.7 x 6mm long, phillips, pan
 head, 18-8 stainless steel screws.
 
+The part files are available in the CAD folder. [.ipt for enclosure](CAD/ventilator_enclosure.ipt), [.ipt for equipment bracket](CAD/equipment_bracket.ipt), [.ipt for closure panel](CAD/ventilator_closure_panel.ipt). The assembly file is also available [.iam for enclosure assembly](CAD/enclosure_assembly.iam) For mounting the front acrylic plates, heat insert nuts were chosen. Size references were taken from [this](https://www.pemnet.com/fastening_products/pdf/sidata.pdf) catalog. Only placeholder fasteners were used to create the CAD model.
 ## Fabrication Drawings
 
 Enclosure fabrication drawings.

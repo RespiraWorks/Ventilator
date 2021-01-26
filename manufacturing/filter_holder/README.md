@@ -69,9 +69,12 @@ Most recent changes also include thickening of the walls to make the 3d prints l
 
 This is a clear acrylic sheet that houses the filter assembly. It is mounted using heat inserts. Link to the part file is given in [Source files](#Source-files) below. Some other useful files for the same part are [.idw 2D drawing](CAD/LowerAcrylicFacePlate.idw), [.pdf 2D drawing](CAD/LowerAcrylicFacePlate.pdf),[.dxf of the front face for laser cutting](CAD/LowerAcrylicFacePlate_FrontFace.dxf).
 
-![](CAD/LowerAcrylicFacePlate.jpg)
+![](assets/LowerAcrylicFacePlate.jpg)
 
-The sizing for the mounting holes was based on [this](https://www.pemnet.com/fastening_products/pdf/sidata.pdf) catalog for heat set insert. The relevant info can be found on page 6 in the metric table. This specification was chosen for its simplicity due to self-alignment
+The sizing for the mounting holes was based on [this](https://www.pemnet.com/fastening_products/pdf/sidata.pdf) catalog for heat set insert. 
+M4 screws were chosen to mount the acrylic face plate to the sheet metal enclosure. 
+For corresponding M4 nuts (refer page 6, metric table, row 6), length code 1 was chosen since acrylic thickness (6.35 mm) was more than minimum hole depth specification (5.72 mm).
+Hence the corresponding outer diamater for insertion i.e. acrylic mounting diamater would be 5.94 mm, which is refelcted in the CAD.
 
 ### Source files
 
@@ -119,6 +122,10 @@ BEFORE purchasing any parts.**
 |**A6**| 8         | RespiraWorks  | filter_gasket                       | 0.10 (material)     | Rw          | Filter gaskets, made from **A5**, using jigs **B1+B2** |
 |**A7**| 8         | McMaster-Carr | 96016A556                           | 5.50 / 10           | [C][a7mcmc] | m3 thumbscrews |
 |**A8**| 8         | McMaster-Carr | 94180A333                           | 16.69 / 100         | [C][a8mcmc] | heat-set inserts for m3 screws |
+|**A6**| 8         | RespiraWorks  | filter_gasket                       | 0.10 (material)     | B           | Filter gaskets, made from **A5**, using jigs **B1+B2** |
+|**A7**| 8         | McMaster-Carr | 96016A556                           | 5.50 / 10           | [C][a7mcmc] | M3 thumbscrews |
+|**A8**| 8         | McMaster-Carr | 94180A333                           | 16.69 / 100         | [C][a8mcmc] | Heat-set inserts for m3 screws |
+|**A9**| 8         | Penn Engineering | IUA-M4-1                         |                     | [C][a9penn] | Heat-set inserts for m4 screws |
 
 [a1rw]: CAD/Filter%20housing.stl
 [a2rw]: CAD/Filter%20cover%20-%20patient%20connector.stl
@@ -127,6 +134,7 @@ BEFORE purchasing any parts.**
 [a5mcmc]: https://www.mcmaster.com/8785K82/
 [a7mcmc]: https://www.mcmaster.com/96016A556/
 [a8mcmc]: https://www.mcmaster.com/94180A333/
+[a9penn]: https://catalog.pemnet.com/item/tapered-thru-threaded-inserts-types-iua-iub-iuc/red-thru-threaded-inserts-types-iua-iub-iuc-metric/22398
 
 ## Tools
 

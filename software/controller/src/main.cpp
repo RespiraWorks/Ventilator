@@ -17,6 +17,7 @@ limitations under the License.
 #include "comms.h"
 #include "controller.h"
 #include "debug.h"
+#include "eeprom.h"
 #include "hal.h"
 #include "network_protocol.pb.h"
 #include "nvparams.h"
@@ -48,6 +49,8 @@ static DebugFloat
 static Controller controller;
 static ControllerStatus controller_status;
 static Sensors sensors;
+static NVParams::Handler nv_params;
+static I2Ceeprom eeprom = I2Ceeprom(0x50, 64, 32768, &i2c1);
 
 static SensorsProto AsSensorsProto(const SensorReadings &r,
                                    const ControllerState &c) {
@@ -135,7 +138,7 @@ static void background_loop() {
 
   // After all initialization is done, ask the HAL
   // to start our high priority thread.
-  Hal.startLoopTimer(controller.GetLoopPeriod(), high_priority_task, nullptr);
+  Hal.startLoopTimer(Controller::GetLoopPeriod(), high_priority_task, nullptr);
 
   while (true) {
     controller_status.uptime_ms = Hal.now().microsSinceStartup() / 1000;
@@ -173,6 +176,9 @@ static void background_loop() {
 
     // Handle the debug serial interface
     debug.Poll();
+
+    // Update nv_params
+    nv_params.Update(Hal.now(), &gui_status.desired_params);
   }
 }
 
@@ -182,7 +188,7 @@ int main() {
   Hal.init();
 
   // Locate our non-volatile parameter block in flash
-  NVparamsInit();
+  nv_params.Init(&eeprom);
 
   comms_init();
 

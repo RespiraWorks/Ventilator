@@ -31,4 +31,7 @@ sleep $wait_time
 ./deploy_test.sh $device_name pinch_valve 1
 sleep $wait_time
 
+./deploy_test.sh $device_name eeprom 0 85 10
+sleep $wait_time
+
 ./deploy_test.sh $device_name idle

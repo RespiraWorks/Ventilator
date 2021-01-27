@@ -32,8 +32,7 @@ The structures below represent the STM32 registers used
 to configure various modules (like timers, serial ports, etc).
 
 Detailed information on these modules and the registers
-used to configure them can be found in the reference
-manual for this chip
+used to configure them can be found in [RM]
 
 Reference abbreviations ([RM], [PCB], etc) are defined in hal/README.md
 */
@@ -657,11 +656,20 @@ enum class DmaInterrupt {
   XFER_ERR = 8
 };
 
+// Detect a DMA Interrupt
+inline bool DMA_IntStatus(DMA_Regs *dma, DMA_Chan chan,
+                          DmaInterrupt interrupt) {
+
+  uint32_t x = static_cast<uint32_t>(interrupt);
+  x <<= 4 * static_cast<uint8_t>(chan); // 4 events per channel ([RM] 11.6.2)
+  return (x & dma->intStat.r) > 0;
+}
+
 // Clear a DMA Interrupt
 inline void DMA_ClearInt(DMA_Regs *dma, DMA_Chan chan, DmaInterrupt interrupt) {
 
-  int x = static_cast<int>(interrupt);
-  x <<= 4 * static_cast<int>(chan); // 4 events per channel ([RM] 11.6.2)
+  uint32_t x = static_cast<uint32_t>(interrupt);
+  x <<= 4 * static_cast<uint8_t>(chan); // 4 events per channel ([RM] 11.6.2)
   dma->intClr.r = x;
 }
 
@@ -711,15 +719,93 @@ inline SPI_Regs *const SPI3_BASE = reinterpret_cast<SPI_Regs *>(0x40003C00);
 
 // [RM] 37.7 I2C Registers
 struct I2C_Regs {
-  REG ctrl[2]; // Control register (1-2) [RM] 37.7.{1,2}
-  REG addr[2]; // Own address (1-2) register [RM] 37.7.{3,4}
-  REG timing;  // Timing register [RM] 37.7.5
+  union {
+    struct {
+      REG peripheral_en : 1;   // Set to enable the I2C bus
+      REG tx_interrupts : 1;   // Interrupt when TX empty while channel active
+      REG rx_interrupts : 1;   // Interrupt when RX not empty
+      REG addr_interrupts : 1; // Generate interrupts on address match (slave)
+      REG nack_interrupts : 1; // Generate interrupts on NACK
+      REG stop_interrupts : 1; // Generate interrupts on stop detection (slave)
+      REG tx_complete_interrupts : 1; // Interrupt when transfer complete
+      REG error_interrupts : 1;       // Interrupt on error
+      REG dnf_cntrl : 4;              // Configure digital noise filtering
+      REG anf_off : 1;                // Disable analog noise filtering
+      REG reserved1 : 1;
+      REG dma_tx : 1;        // Enable DMA for TX
+      REG dma_rx : 1;        // Enable DMA for RX
+      REG slave_byte_en : 1; // Enable slave byte control (slave)
+      REG no_stretch : 1;    // Disable Clock stretching (slave)
+      REG wup_en : 1;        // Wake up from Stop Mode
+      REG gc_en : 1;         // General call (slave)
+      REG smd_h_en : 1;      // Use SMBus default host adress
+      REG smb_d_en : 1;      // Use SMBus default device adress
+      REG alert_en : 1;      // SMBus Alert enable
+      REG pec_en : 1;        // Use SMBus Packet error checking
+      REG reserved2 : 8;
+    };
+    REG r;
+  } ctrl1; // Control register 1 [RM] 37.7.1
+  union {
+    struct {
+      REG slave_addr_lsb : 1; // lsb of 10 bits slave adress (master)
+      REG slave_addr_7b : 7;  // middle 7b bits of slave adress (master)
+      REG slave_addr_msb : 2; // msb of 10 bits slave adress (master)
+      REG transfer_dir : 1;   // 0 = write, 1 = read (master)
+      REG address_10b : 1;    // Set to enable 10 bits address header (master)
+      REG read_10b_head : 1;  // Clear to send complete read sequence (master)
+      REG start : 1;          // Set to generate START condition
+      REG stop : 1;    // Set to generate STOP after byte transfer (master)
+      REG nack : 1;    // Generate NACK after byte reception (slave)
+      REG n_bytes : 8; // Set to the number of bytes to send
+      REG reload : 1;  // Set to allow several consecutive transfers
+      REG autoend : 1; // Set to automatically send stop condition
+      REG pecbyte : 1; // Set to send SMBus packet error checking byte
+      REG reserved : 5;
+    };
+    REG r;
+  } ctrl2;     // Control register 2 [RM] 37.7.2
+  REG addr[2]; // Own address (1-2) register [RM] 37.7.{3,4} (slave)
+  union {
+    struct {
+      REG scl_low : 8;   // Duration of SCL Low state (cycles)
+      REG scl_high : 8;  // Duration of SCL High state (cycles)
+      REG sda_hold : 4;  // Delay between SCL falling edge and SDA edge (cycles)
+      REG scl_delay : 4; // Delay between SDA edge and SCL rising edge (cycles)
+      REG reserved : 4;
+      REG prescaler : 4; // Prescaler
+    };
+    REG r;
+  } timing;    // Timing register [RM] 37.7.5
   REG timeout; // Timout register [RM] 37.7.6
-  REG status;  // Interrupt & status register [RM] 37.7.7
-  REG intClr;  // Interrupt clear register [RM] 37.7.8
-  REG pec;     // PEC register [RM] 37.7.9
-  REG rxData;  // Receive data register [RM] 37.7.10
-  REG txData;  // Transmit data register [RM] 37.7.11
+  union {
+    struct {
+      REG tx_empty : 1;
+      REG tx_interrupt : 1;
+      REG rx_not_empty : 1;
+      REG address_match : 1;
+      REG nack : 1;
+      REG stop : 1;
+      REG transfer_complete : 1;
+      REG transfer_reload : 1;
+      REG bus_error : 1;
+      REG arbitration_loss : 1;
+      REG overrun : 1;
+      REG packet_check_error : 1;
+      REG timeout : 1;
+      REG alert : 1;
+      REG reserved1 : 1;
+      REG busy : 1;
+      REG transfer_dir : 1;
+      REG address_code : 7;
+      REG reserved : 8;
+    };
+    REG r;
+  } status;   // Interrupt & status register [RM] 37.7.7
+  REG intClr; // Interrupt clear register [RM] 37.7.8
+  REG pec;    // PEC register [RM] 37.7.9
+  REG rxData; // Receive data register [RM] 37.7.10
+  REG txData; // Transmit data register [RM] 37.7.11
 };
 inline I2C_Regs *const I2C1_BASE = reinterpret_cast<I2C_Regs *>(0x40005400);
 inline I2C_Regs *const I2C2_BASE = reinterpret_cast<I2C_Regs *>(0x40005800);

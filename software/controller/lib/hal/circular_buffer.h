@@ -31,10 +31,13 @@ template <class T, uint N> class CircularBuffer {
   // buffer_[head_] is by definition inaccessible.
   // This also makes the template safe against N = 0.
   volatile T buffer_[N + 1];
-  volatile int head_, tail_;
+  volatile int head_{0}, tail_{0};
 
 public:
-  CircularBuffer() { head_ = tail_ = 0; }
+  CircularBuffer() {
+    for (uint i = 0; i <= N; ++i)
+      buffer_[i] = T();
+  }
 
   // Return number of elements available in the buffer to read.
   int FullCount() const {

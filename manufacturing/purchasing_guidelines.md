@@ -62,6 +62,8 @@ suppliers.
 (**note**: links provided are for worldwide customers; there are local RS retail sites for most countries that use the
 same product reference (RS Stock No.) and will probably ship faster if you order from your country's site)
 * **S** = ST
+* **SM** = SMC Pneumatics
 * **T** = Stepperonline.com
+* **U** = Uflow
 * **W** = Wonsmart
 * **Z** = Amazon

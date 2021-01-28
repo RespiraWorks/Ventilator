@@ -23,13 +23,13 @@ BEFORE purchasing any parts.**
 
 | Item | Quantity | Manufacturer  | Part #              | Price (USD)  | Sources[*][ppg]| Notes |
 | ---- |---------:| ------------- | ------------------- | ------------:|:--------------:| ----- |
-| 1    |      5ft | McMaster-Carr | 5894K34             | 12.15 / 5ft  | [C][1mcmc]     | 1/4"ID 3/8"OD Tygon tubing |
-| 2    |        5 | McMaster-Carr | 5121K451            | 5.78 / 10    | [C][2mcmc]     | 1/4 NPT x 1/4" ID barbed adapter |
-| 3    |        1 | RespiraWorks  |                     |              | [B][3rw]       | 1/4"ID x 3/4"ID reducer |
+| A1   |      5ft | McMaster-Carr | 5894K34             | 12.15 / 5ft  | [C][a1mcmc]    | 1/4"ID 3/8"OD Tygon tubing |
+| A2   |        5 | McMaster-Carr | 5121K451            | 5.78 / 10    | [C][a2mcmc]    | 1/4 NPT x 1/4" ID barbed adapter |
+| A3   |        1 | RespiraWorks  |                     |              | [B][a3rw]      | 1/4"ID x 3/4"ID reducer |
 
-[1mcmc]: https://www.mcmaster.com/5894K34
-[2mcmc]: https://www.mcmaster.com/5121K451
-[3rw]: #tubing-reducer
+[a1mcmc]: https://www.mcmaster.com/5894K34
+[a2mcmc]: https://www.mcmaster.com/5121K451
+[a3rw]: #tubing-reducer
 
 ### Tubing reducer
 
@@ -80,21 +80,33 @@ It requires 2x of 1/4"ID tubing adapter (item 3 in [materials list above](#mater
 
 ## Proportional solenoid valve
 
-We are currently testing with:
+Supply of oxygen is controlled by a proportional solenoid. We are currently testing with 2 different solenoids.
+Parts for both variants are listed below.
 
-https://www.smcpneumatics.com/PVQ31-6G-40-01N.html
+| Item | Quantity | Manufacturer   | Part #              | Price (USD)  | Sources[*][ppg]| Notes |
+| ---- |---------:| -------------- | ------------------- | ------------:|:--------------:| ----- |
+| B1   |        1 | SMC Pneumatics | PVQ31-6G-40-01N     | 96.10        | [SM][b1smc]     | Proportional solenoid |
+| B2   |        2 | McMaster-Carr  | 5121K391            | 5.58 / 10    | [C][b2mcmc]    | 1/8 NPT x 1/4" ID barbed adapter **(with B1 only)** |
+| B3   |      (1) | Uflow          | IBV19M              | 87.00        | [U][b3uflow]   | Proportional solenoid **(alternate for B1)** |
+| B4   |      (2) | McMaster-Carr  | 1786N249            | 8.16         | [C][b4mcmc]    | 1/8 BSPT x 1/4 NTP brass threaded pipe fitting **(with B3 only)** |
+| B5   |      (2) | McMaster-Carr  | 5121K451            | 5.78 / 10    | [C][b5mcmc]    | 1/4 NPT x 1/4" ID barbed adapter **(with B3 only)** |
+| B6   |        2 | McMaster-Carr  | 92000A120           | 5.15 / 100   | [C][b6mcmc]    | M3 x 10mm screws, for mounting to assembly plate |
+| B7   |        2 | McMaster-Carr  | 98689A112           | 2.71 / 100   | [C][b7mcmc]    | M3 washers, for mounting to assembly plate |
 
-It requires 2x of 1/4"ID tubing adapter (item 3 in [materials list above](#materials)) to interface with tubing.
+[b1smc]:   https://www.smcpneumatics.com/PVQ31-6G-40-01N.html
+[b2mcmc]:  https://www.mcmaster.com/5121K391/
+[b3uflow]: https://www.uflowvalve.com/solenoid-proportional-flow-control-valve/product/2-2-way-miniature-high-flow-proportional-valve
+[b4mcmc]:  https://www.mcmaster.com/1786N249/
+[b5mcmc]:  https://www.mcmaster.com/5121K451/
+[b6mcmc]:  https://www.mcmaster.com/92000A120/
+[b7mcmc]:  https://www.mcmaster.com/98689A112/
 
-Depending on the version procured (NPT or BSPT), it may also required 2x of the following adapters:
+Note that mounting the Uflow solenoid may require tapping of M3 threads in the aluminium manifold.
 
-https://www.mcmaster.com/1786N249/
+**ATTENTION: tools for tapping not listed here.**
 
-In collaboration with Foundry-M in India, we are also testing with the following locally sourced solenoids:
-
-https://www.uflowvalve.com/solenoid-proportional-flow-control-valve/product/2-2-way-miniature-high-flow-proportional-valve
-
-https://www.uflowvalve.com/solenoid-proportional-flow-control-valve/product/2-2-way-miniature-low-flow-proportional-valve
+To connect the solenoid to the PCB, you will need to crimp a 2-pin XH connector to the wires. Parts and tooling
+are documented on the [wiring page](../../design/electrical-system/wiring.md).
 
 ## Gas flow sensor
 

@@ -1,6 +1,8 @@
 # Blower Sub-assembly
 
-![](images/basic_assembly.jpg)
+|                            |                             |
+|:--------------------------:|:---------------------------:|
+|![](images/assembly_rendering.jpg) | ![](images/integrated.jpg) |
 
 The blower/fan provides air pressure to the ventilator's pneumatic circuit. Currently this is only responsible for
 delivery of ambient air, independent of the question of oxygen supply. In a full system that includes oxygen supply,
@@ -143,12 +145,12 @@ wiring.
 ### Custom component manufacture
 
 #### Tubing adapter (C1)
-![](CAD/tubing_adapter.png)
+
 To 3d print this component see the [general 3d printing guidelines](../3d_printing).
 
-| Rendering | STL | Inventor | Engineering Drawing |
-|:---------:|:---:|:----------:|:---------------------------|
-|![](CAD/tubing_adapter.jpg)|[tubing_adapter.stl](CAD/tubing_adapter.stl)|[tubing_adapter.ipt](CAD/tubing_adapter.ipt)|[tubing_adapter.pdf](CAD/tubing_adapter.pdf)
+|For 3D printing: [tubing_adapter.stl](CAD/exports/tubing_adapter.stl)| Inventor source: [tubing_adapter.ipt](CAD/exports/tubing_adapter.ipt)|
+|:---:|:---:|
+|![](images/tubing_adapter.jpg)|[![](CAD/exports/tubing_adapter.png)](CAD/exports/tubing_adapter.pdf)|
 
 #### Gaskets
 
@@ -156,8 +158,8 @@ Use craft knife (**D1**) to cut these from the gasket material (**C6**).
 
 |     | Blower gasket (C7)         | Tubing adapter gasket (C8)  |
 |----:|:--------------------------:|:---------------------------:|
-| PNG | ![](CAD/blower_gasket.png) | ![](CAD/tubing_adapter_gasket.png) |
-| DXF |[blower_gasket.dxf](CAD/blower_gasket.dxf)|[tubing_adapter_gasket.dxf](CAD/tubing_adapter_gasket.dxf)|
+| PNG | ![](CAD/exports/blower_gasket.png) | ![](CAD/exports/tubing_adapter_gasket.png) |
+| DXF |[blower_gasket.dxf](CAD/exports/blower_gasket.dxf)|[tubing_adapter_gasket.dxf](CAD/exports/tubing_adapter_gasket.dxf)|
 
 #### Acrylic plates
 
@@ -176,9 +178,10 @@ You might also want to use some 200 grit sandpaper to clean up the edges of the 
 
 |     | Driver mounting plate (C3) | Blower holding plate (C4) | Tubing adapter holding plate (C5) |
 |:-----:|:--------------------------:|:-------------------------:|:---------------------------------:|
-| Drawings |![](CAD/driver_mounting_plate.png)<br>[Driver Mounting Plate](CAD/driver_mounting_plate.pdf)|![](CAD/blower_holding_plate.png)<br>[Blower Holding Plate](CAD/blower_holding_plate.pdf)|![](CAD/tubing_adapter_holding_plate.png)<br>[Tubing Adapter Holding Plate](CAD/tubing_adapter_holding_plate.pdf)|
-| DXF |[driver_mounting_plate.dxf](CAD/driver_mounting_plate.dxf)|[blower_holding_plate.dxf](CAD/blower_holding_plate.dxf)|[tubing_adapter_holding_plate.dxf](CAD/tubing_adapter_holding_plate.dxf)|
-| Inventor | [driver_mounting_plate.ipt](CAD/driver_mounting_plate.ipt)|[blower_holding_plate.ipt](CAD/blower_holding_plate.ipt)| [tubing adapter_holding_plate.ipt](CAD/tubing_adapter_holding_plate.ipt)|
+|  |![](CAD/exports/driver_mounting_plate.png)|![](CAD/exports/blower_holding_plate.png)|![](CAD/exports/tubing_adapter_holding_plate.png)|
+| Drawings |[Driver Mounting Plate](CAD/exports/driver_mounting_plate.pdf)|[Blower Holding Plate](CAD/exports/blower_holding_plate.pdf)|[Tubing Adapter Holding Plate](CAD/exports/tubing_adapter_holding_plate.pdf)|
+| DXF |[driver_mounting_plate.dxf](CAD/exports/driver_mounting_plate.dxf)|[blower_holding_plate.dxf](CAD/exports/blower_holding_plate.dxf)|[tubing_adapter_holding_plate.dxf](CAD/exports/tubing_adapter_holding_plate.dxf)|
+| Inventor | [driver_mounting_plate.ipt](CAD/exports/driver_mounting_plate.ipt)|[blower_holding_plate.ipt](CAD/exports/blower_holding_plate.ipt)| [tubing adapter_holding_plate.ipt](CAD/exports/tubing_adapter_holding_plate.ipt)|
 
 
 You can use one of these plates as a template to drill the appropriate holes in the main acrylic plate and the metal

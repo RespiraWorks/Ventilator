@@ -71,7 +71,7 @@ void run_test() {
   uint8_t eeprom_before[length];
   uint8_t write_data[length];
   uint8_t eeprom_after[length];
-  bool second_read_finished;
+  bool second_read_finished{false};
 
   for (int i = 0; i < length; ++i) {
     write_data[i] = data;

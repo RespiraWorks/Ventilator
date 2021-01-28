@@ -15,7 +15,7 @@ limitations under the License.
 
 ////////////////////////////////////////////////////////////////////
 //
-// This file contains code to setup, send and recieve data on the i2c channel
+// This file contains code to setup, send and recieve data on the I²C channel
 // See header file for implementation philosophy.
 //
 ////////////////////////////////////////////////////////////////////
@@ -38,7 +38,7 @@ void HalApi::InitI2C() {
   // The following pins are used as i2c1 bus on the rev-1 PCB (see [PCB]):
   // - PB8 (I2C1 - DATA)
   // - PB9 (I2C1 - CLOCK)
-  // Set Pin Function to I2C (see [DS] Table 17)
+  // Set Pin Function to I²C (see [DS] Table 17)
   GPIO_PinAltFunc(GPIO_B_BASE, 8, 4);
   GPIO_PinAltFunc(GPIO_B_BASE, 9, 4);
   // Set output speed to HIGH
@@ -57,11 +57,11 @@ void HalApi::InitI2C() {
   EnableInterrupt(InterruptVector::DMA2_CH7, IntPriority::LOW);
 
   // init i2c1
-  i2c1.Init(I2C1_BASE, nullptr, I2C::Speed::kFast);
+  i2c1.Init(I2C1_BASE, DMA2_BASE, I2C::Speed::kFast);
 }
 
 // Those interrupt service routines are specific to our configuration, unlike
-// the I2C::Channel::*ISR() which are generic ISR associated with an I2C channel
+// the I2C::Channel::*ISR() which are generic ISR associated with an I²C channel
 void I2C1_EV_ISR() { i2c1.I2CEventHandler(); };
 
 void I2C1_ER_ISR() { i2c1.I2CErrorHandler(); };
@@ -73,10 +73,10 @@ void DMA2_CH7_ISR() { i2c1.DMAIntHandler(DMA_Chan::C7); };
 void I2C::Channel::Init(I2C_Regs *i2c, DMA_Regs *dma, Speed speed) {
   i2c_ = i2c;
 
-  // Disable I2C peripheral
+  // Disable I²C peripheral
   i2c_->ctrl1.peripheral_en = 0;
 
-  // Set I2C speed using timing values from [RM] table 182
+  // Set I²C speed using timing values from [RM] table 182
   i2c_->timing.r = static_cast<uint32_t>(speed);
 
   // Setup DMA channels
@@ -84,10 +84,10 @@ void I2C::Channel::Init(I2C_Regs *i2c, DMA_Regs *dma, Speed speed) {
     SetupDMAChannels(dma);
   }
 
-  // enable I2C peripheral
+  // enable I²C peripheral
   i2c_->ctrl1.peripheral_en = 1;
 
-  // configure i2c interrupts
+  // configure I²C interrupts
   i2c_->ctrl1.nack_interrupts = 1;
   i2c_->ctrl1.error_interrupts = 1;
   // in DMA mode, we do not treat the transfer-specific ones
@@ -117,7 +117,7 @@ bool I2C::Channel::SendRequest(const Request &request) {
   }
 
   // In case of a write request, copy data to our write buffer
-  if (request.read_write == ExchangeDirection::kWrite) {
+  if (request.direction == ExchangeDirection::kWrite) {
     if (!CopyDataToWriteBuffer(request.data, request.size)) {
       return false;
     }
@@ -125,10 +125,10 @@ bool I2C::Channel::SendRequest(const Request &request) {
     // caller's scope variable
     queue_[ind_queue_].data = &write_buffer_[write_buffer_index_];
 
-    // update the write_buffer index
+    // update the write buffer index
     write_buffer_index_ += request.size;
   }
-  // increment ind_queue, which is the index at which the next request will be
+  // increment ind_queue_, which is the index at which the next request will be
   // put in the queue, with wrapping around the queue.
   if (++ind_queue_ >= kQueueLength) {
     ind_queue_ = 0;
@@ -142,7 +142,8 @@ bool I2C::Channel::SendRequest(const Request &request) {
   return true;
 }
 
-bool I2C::Channel::CopyDataToWriteBuffer(void *data, const uint16_t size) {
+bool I2C::Channel::CopyDataToWriteBuffer(const void *data,
+                                         const uint16_t size) {
   // Check if the empty space at the end of the buffer is big enough to
   // store all of the data
   if (write_buffer_index_ + size > kWriteBufferSize) {
@@ -187,22 +188,31 @@ void I2C::Channel::StartTransfer() {
 #if defined(BARE_STM32)
   // set transfer-specific registers per [RM] p1149 to 1158
   i2c_->ctrl2.slave_addr_7b = last_request_.slave_address & 0x7f;
-  i2c_->ctrl2.transfer_dir = static_cast<bool>(last_request_.read_write);
+  i2c_->ctrl2.transfer_dir = static_cast<bool>(last_request_.direction);
 
-  i2c_->ctrl2.autoend = 0;
+  if (dma_enable_) {
+    SetupDMATransfer();
+  }
+
   if (remaining_size_ <= 255) {
     i2c_->ctrl2.n_bytes = static_cast<uint8_t>(remaining_size_);
     i2c_->ctrl2.reload = 0;
   } else {
     i2c_->ctrl2.n_bytes = 255;
-    i2c_->ctrl2.reload = 1;
+    // Transfer reload is not currently supported by our HAL in DMA mode,
+    // we will treat a reload as a new transfer. In effect this means we
+    // will have to reissue the I²C header and start condition.
+    if (!dma_enable_) {
+      i2c_->ctrl2.reload = 1;
+    } else {
+      i2c_->ctrl2.reload = 0;
+    }
   }
 
-  if (dma_enable_) {
-    SetupDMATransfer();
-  }
-  if (remaining_size_ == last_request_.size) {
-    // we only need to send start on the first transfer of a request
+  if (dma_enable_ || remaining_size_ == last_request_.size) {
+    // we only need to send start if this is not a reloaded transfer
+    // i.e either we are in DMA mode or this is the first transfer of the
+    // ongoing request.
     i2c_->ctrl2.start = 1;
   }
 #endif // BARE_STM32
@@ -216,7 +226,7 @@ void I2C::Channel::TransferByte() {
     // this shouldn't happen, but just to be safe, we stop here.
     return;
   }
-  if (last_request_.read_write == ExchangeDirection::kRead) {
+  if (last_request_.direction == ExchangeDirection::kRead) {
 #if defined(BARE_STM32)
     *next_data_ = static_cast<uint8_t>(i2c_->rxData);
 #elif defined(TEST_MODE)
@@ -245,12 +255,16 @@ void I2C::Channel::TransferByte() {
 }
 
 void I2C::Channel::EndTransfer() {
+#if defined(BARE_STM32)
+  // Trigger stop condition, except in DMA (which uses autoend)
+  if (!dma_enable_) {
+    i2c_->ctrl2.stop = 1;
+  }
+#endif
   *last_request_.processed = true;
   transfer_in_progress_ = false;
-#if defined(BARE_STM32)
-  i2c_->ctrl2.stop = 1;
-#endif
-  if (last_request_.read_write == ExchangeDirection::kWrite) {
+
+  if (last_request_.direction == ExchangeDirection::kWrite) {
     // free the part of the write buffer that was dedicated to this request
     write_buffer_start_ += last_request_.size;
     if (write_buffer_start_ >= wrapping_index_) {
@@ -313,7 +327,7 @@ void I2C::Channel::I2CEventHandler() {
     StartTransfer();
   }
 
-  // When we are using DMA, NACK is the only I2C event we are worried about
+  // When we are using DMA, NACK is the only I²C event we are dealing with
   if (dma_enable_) {
     return;
   }
@@ -345,7 +359,7 @@ void I2C::Channel::I2CEventHandler() {
 }
 
 void I2C::Channel::I2CErrorHandler() {
-  // i2c error --> clear all error flags (except those that are SMBus only)
+  // I²C error --> clear all error flags (except those that are SMBus only)
 #if defined(BARE_STM32)
   i2c_->intClr = 0x720;
 #endif
@@ -363,7 +377,7 @@ void I2C::Channel::I2CErrorHandler() {
 #if defined(BARE_STM32)
 // DMA functions are only meaningful in BARE_STM32
 void I2C::Channel::SetupDMAChannels(DMA_Regs *dma) {
-  // DMA mapping for I2C (see [RM] p299)
+  // DMA mapping for I²C (see [RM] p299)
   static struct {
     void *dma;
     void *i2c;
@@ -377,101 +391,83 @@ void I2C::Channel::SetupDMAChannels(DMA_Regs *dma) {
       {DMA2_BASE, I2C1_BASE, DMA_Chan::C7, DMA_Chan::C6, 5},
       {DMA2_BASE, I2C4_BASE, DMA_Chan::C2, DMA_Chan::C1, 0},
   };
-  dma_enable_ = false;
   for (auto &map : DMAmap) {
     if (dma == map.dma && i2c_ == map.i2c) {
 
       dma_ = dma;
-      tx_channel_ = map.tx_channel;
-      rx_channel_ = map.rx_channel;
+      tx_channel_ = &(dma_->channel[static_cast<uint8_t>(map.tx_channel)]);
+      rx_channel_ = &(dma_->channel[static_cast<uint8_t>(map.rx_channel)]);
 
-      DMA_SelectChannel(dma, *rx_channel_, map.request);
-      DMA_SelectChannel(dma, *tx_channel_, map.request);
+      // Tell the STM32 that those two DMA channels are used for I2C
+      DMA_SelectChannel(dma, map.rx_channel, map.request);
+      DMA_SelectChannel(dma, map.tx_channel, map.request);
+
+      // configure both DMA channels to handle I²C transfers
+      ConfigureDMAChannel(rx_channel_, ExchangeDirection::kRead);
+      ConfigureDMAChannel(tx_channel_, ExchangeDirection::kWrite);
 
       dma_enable_ = true;
-      uint8_t rx_chan = static_cast<uint8_t>(*rx_channel_);
-      uint8_t tx_chan = static_cast<uint8_t>(*tx_channel_);
-
-      // set DMA channels to be used for this I2C channel
-      dma_->channel[rx_chan].config.priority = 0b01; // medium priority
-      dma_->channel[rx_chan].config.teie = 1;        // interrupt on error
-      dma_->channel[rx_chan].config.htie = 0; // no half-transfer interrupt
-      dma_->channel[rx_chan].config.tcie = 1; // interrupt on DMA complete
-      dma_->channel[rx_chan].config.mem2mem =
-          0; // memory-to-memory mode disabled
-      dma_->channel[rx_chan].config.msize =
-          static_cast<uint8_t>(DmaTransferSize::BITS8);
-      dma_->channel[rx_chan].config.psize =
-          static_cast<uint8_t>(DmaTransferSize::BITS8);
-      dma_->channel[rx_chan].config.memInc = 1; // increment dest address
-      dma_->channel[rx_chan].config.perInc =
-          0; // don't increment source address
-      dma_->channel[rx_chan].config.circular = 0;
-      dma_->channel[rx_chan].config.dir =
-          static_cast<uint8_t>(DmaChannelDir::PERIPHERAL_TO_MEM);
-      dma_->channel[rx_chan].pAddr = &i2c_->rxData;
-
-      dma_->channel[tx_chan].config.priority = 0b01; // medium priority
-      dma_->channel[tx_chan].config.teie = 1;        // interrupt on error
-      dma_->channel[tx_chan].config.htie = 0; // no half-transfer interrupt
-      dma_->channel[tx_chan].config.tcie = 1; // DMA complete interrupt enable
-      dma_->channel[tx_chan].config.mem2mem =
-          0; // memory-to-memory mode disabled
-      dma_->channel[tx_chan].config.msize =
-          static_cast<uint8_t>(DmaTransferSize::BITS8);
-      dma_->channel[tx_chan].config.psize =
-          static_cast<uint8_t>(DmaTransferSize::BITS8);
-      dma_->channel[tx_chan].config.memInc = 1; // increment source address
-      dma_->channel[tx_chan].config.perInc = 0; // don't increment dest address
-      dma_->channel[tx_chan].config.circular = 0;
-      dma_->channel[tx_chan].config.dir =
-          static_cast<uint8_t>(DmaChannelDir::MEM_TO_PERIPHERAL);
-      dma_->channel[tx_chan].pAddr = &i2c_->txData;
-
+      i2c_->ctrl1.dma_rx = 1;
+      i2c_->ctrl1.dma_tx = 1;
       break;
     }
   }
 }
 
+void I2C::Channel::ConfigureDMAChannel(DMA_Regs::ChannelRegs *channel,
+                                       ExchangeDirection direction) {
+  channel->config.priority = 0b01; // medium priority
+  channel->config.teie = 1;        // interrupt on error
+  channel->config.htie = 0;        // no half-transfer interrupt
+  channel->config.tcie = 1;        // interrupt on DMA complete
+  channel->config.mem2mem = 0;     // memory-to-memory mode disabled
+  channel->config.msize = static_cast<uint8_t>(DmaTransferSize::BITS8);
+  channel->config.psize = static_cast<uint8_t>(DmaTransferSize::BITS8);
+  channel->config.memInc = 1; // increment dest address
+  channel->config.perInc = 0; // don't increment source address
+  channel->config.circular = 0;
+  if (direction == ExchangeDirection::kRead) {
+    channel->config.dir =
+        static_cast<uint8_t>(DmaChannelDir::PERIPHERAL_TO_MEM);
+    channel->pAddr = &(i2c_->rxData);
+  } else {
+    channel->config.dir =
+        static_cast<uint8_t>(DmaChannelDir::MEM_TO_PERIPHERAL);
+    channel->pAddr = &(i2c_->txData);
+  }
+}
+
 void I2C::Channel::SetupDMATransfer() {
-  if (!dma_enable_ || rx_channel_ == std::nullopt ||
-      tx_channel_ == std::nullopt) {
+  if (!dma_enable_) {
     return;
   }
   // to be on the safe size, disable both channels in case they weren't
   // (likely when this is called as a "retry after error")
-  dma_->channel[static_cast<uint8_t>(*rx_channel_)].config.enable = 0;
-  i2c_->ctrl1.dma_rx = 0;
-  dma_->channel[static_cast<uint8_t>(*tx_channel_)].config.enable = 0;
-  i2c_->ctrl1.dma_tx = 0;
+  rx_channel_->config.enable = 0;
+  tx_channel_->config.enable = 0;
 
-  uint8_t chan{0};
-  if (last_request_.read_write == ExchangeDirection::kRead) {
-    chan = static_cast<uint8_t>(*rx_channel_);
+  DMA_Regs::ChannelRegs *channel{nullptr};
+  if (last_request_.direction == ExchangeDirection::kRead) {
+    channel = rx_channel_;
   } else {
-    chan = static_cast<uint8_t>(*tx_channel_);
+    channel = tx_channel_;
   }
 
-  dma_->channel[chan].mAddr = next_data_;
+  channel->mAddr = next_data_;
 
   if (remaining_size_ <= 255) {
-    dma_->channel[chan].count = remaining_size_;
-    i2c_->ctrl2.reload = 0;
+    channel->count = remaining_size_;
   } else {
-    dma_->channel[chan].count = 255;
-    i2c_->ctrl2.reload = 1;
-  }
-  dma_->channel[chan].config.enable = 1;
-
-  if (last_request_.read_write == ExchangeDirection::kRead) {
-    i2c_->ctrl1.dma_rx = 1;
-  } else {
-    i2c_->ctrl1.dma_tx = 1;
+    channel->count = 255;
   }
 
-  // flush TX register (after DMA transfers, the Tx register appears to
-  // contain data, we need to flush it before sending the next transfer)
-  i2c_->status.tx_empty = 1;
+  // when using DMA, we need to use autoend, otherwise the STOP condition which
+  // we issue at the end of the DMA transfer (which means the last byte is
+  // written to the register) may arrive before the last byte is actually
+  // written on the line.
+  i2c_->ctrl2.autoend = 1;
+
+  channel->config.enable = 1;
 }
 
 void I2C::Channel::DMAIntHandler(DMA_Chan chan) {
@@ -482,6 +478,7 @@ void I2C::Channel::DMAIntHandler(DMA_Chan chan) {
     if (remaining_size_ > 255) {
       // decrement remaining size by 255 (the size of the DMA transfer)
       remaining_size_ = static_cast<uint16_t>(remaining_size_ - 255);
+      next_data_ += 255 * sizeof(uint8_t);
     } else {
       remaining_size_ = 0;
       EndTransfer();

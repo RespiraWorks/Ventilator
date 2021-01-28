@@ -594,7 +594,7 @@ struct DMA_Regs {
     };
     REG r;
   } intClr; // Interrupt Flag Clear Register [RM] 11.6.2 (pg 311)
-  struct {
+  struct ChannelRegs {
     struct {
       REG enable : 1;   // channel enable
       REG tcie : 1;     // transfer complete interrupt enable

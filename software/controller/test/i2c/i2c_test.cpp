@@ -29,7 +29,7 @@ TEST(I2C, RequestQueue) {
   for (int req = 0; req < kQueueLength + 5; ++req) {
     Request read_byte{
         .slave_address = 0,
-        .read_write = ExchangeDirection::kRead,
+        .direction = ExchangeDirection::kRead,
         .size = 1,
         .data = &read_data[req],
         .processed = &processed[req],
@@ -52,7 +52,7 @@ TEST(I2C, RequestQueue) {
   for (int req = kQueueLength + 1; req < kQueueLength + 5; ++req) {
     Request read_byte{
         .slave_address = 0,
-        .read_write = ExchangeDirection::kRead,
+        .direction = ExchangeDirection::kRead,
         .size = 1,
         .data = &read_data[req],
         .processed = &processed[req],
@@ -89,7 +89,7 @@ TEST(I2C, WriteBuffer) {
   for (int req = 0; req < kNumReq; ++req) {
     Request write_array{
         .slave_address = 0,
-        .read_write = ExchangeDirection::kWrite,
+        .direction = ExchangeDirection::kWrite,
         .size = kRequestLength,
         .data = &test_array[req],
         .processed = &processed[req],
@@ -100,7 +100,7 @@ TEST(I2C, WriteBuffer) {
   // Check that a request of "remaining + 1" bytes request is rejected
   Request write_array{
       .slave_address = 0,
-      .read_write = ExchangeDirection::kWrite,
+      .direction = ExchangeDirection::kWrite,
       .size = static_cast<uint16_t>(kWriteBufferLength - buffer_head + 1),
       .data = &test_array[kNumReq],
       .processed = &processed[kNumReq],
@@ -202,7 +202,7 @@ TEST(I2C, RetryOnError) {
   bool processed{false};
   Request long_read{
       .slave_address = 0,
-      .read_write = ExchangeDirection::kRead,
+      .direction = ExchangeDirection::kRead,
       .size = kRequestLength,
       .data = &read_data[0],
       .processed = &processed,
@@ -213,7 +213,7 @@ TEST(I2C, RetryOnError) {
   bool processed2{false};
   Request read_byte{
       .slave_address = 0,
-      .read_write = ExchangeDirection::kRead,
+      .direction = ExchangeDirection::kRead,
       .size = 1,
       .data = &read2,
       .processed = &processed2,

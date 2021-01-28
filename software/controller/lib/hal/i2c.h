@@ -13,12 +13,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-////////////////////////////////////////////////////////////////////
-//
-// This file contains code to setup, send and recieve data on the i2c channel
-// See header file for implementation philosophy.
-//
-////////////////////////////////////////////////////////////////////
+// This file defines the interface to the I²C peripherals in the STM32 HAL.
+// See [RM] chapter 37 for details on their inner workings.
+// Our design uses the STM32 as an I²C master
 
 #ifndef I2C_H
 #define I2C_H
@@ -43,14 +40,14 @@ enum class ExchangeDirection {
   kRead = 1,
 };
 
-// Structure that represents an I2C request. It is up to the caller to ensure
+// Structure that represents an I²C request. It is up to the caller to ensure
 // that size is consistent with data limits.
 // For read requests, the caller must use a variable with the appropriate scope
 // (ideally a static variable) to ensure the result is put at a safe memory.
 struct Request {
   uint8_t slave_address{0}; // for now we only support 7 bits addresses and NOT
-                            // 10 bits addresses (I2C bus is one or the other)
-  ExchangeDirection read_write{ExchangeDirection::kRead};
+                            // 10 bits addresses (I²C bus is one or the other)
+  ExchangeDirection direction{ExchangeDirection::kRead};
   uint16_t size{1};         // size (in bytes) of the data to be sent or
                             // recieved - limited to 16 bytes because of DMA
                             // limitation
@@ -59,17 +56,17 @@ struct Request {
                             // his request has been processed
 };
 
-// Class that represents an I2C channel (we have 4 of those on the STM32)
-// Said channel may or may not use DMA (spoiler alert: ours doesn't (yet)).
+// Class that represents an I²C channel (we have 4 of those on the STM32)
+// Said channel may or may not use DMA (spoiler alert: ours does).
 //
-// I2C requests are queued in the class and processed in order.
+// I²C requests are queued in the class and processed in order.
 // On the STM32, a request consists of one or several transfers of up to 255
 // bytes.
 //
 // When we use DMA, a transfer is performed directly in hardware and the end of
 // transfer triggers a DMA interrupt which we use to start the next transfer.
 //
-// When we don't, we listen to the I2C interrupts to know when to read/write
+// When we don't, we listen to the I²C interrupts to know when to read/write
 // the next byte in a transfer, and when a transfer is complete.
 //
 // We don't necessarily plan to use the second mode in production, but it should
@@ -78,14 +75,14 @@ struct Request {
 class Channel {
 public:
   Channel() = default;
-  // Init I2C channel, setting up registers DMA_Reg and I2C_Reg to enable the
+  // Init I²C channel, setting up registers DMA_Reg and I²C_Reg to enable the
   // channel using DMA if possible.
-  // If DMA_Reg is invalid (or that DMA cannot be linked to this I2C), dma is
+  // If DMA_Reg is invalid (or that DMA cannot be linked to this I²C), dma is
   // disabled and all transfers are handled in software.
 #if defined(BARE_STM32)
   void Init(I2C_Regs *i2c, DMA_Regs *dma, Speed speed);
 #endif
-  // Method that ultimately sends a request over the I2C channel, note that it
+  // Method that ultimately sends a request over the I²C channel, note that it
   // may take some time to be processed: if the line is already busy, the
   // request ends up in a queue.
   // Once the request has been completed, *request.processed is set to True and
@@ -125,8 +122,8 @@ private:
 #if defined(BARE_STM32)
   I2C_Regs *i2c_{nullptr};
   DMA_Regs *dma_{nullptr};
-  std::optional<DMA_Chan> rx_channel_;
-  std::optional<DMA_Chan> tx_channel_;
+  DMA_Regs::ChannelRegs *rx_channel_{nullptr};
+  DMA_Regs::ChannelRegs *tx_channel_{nullptr};
 #endif
 
   // retry countdown - set to kMaxRetries when startng a request
@@ -141,7 +138,7 @@ private:
   void TransferByte();  // transfer a single byte (for non-DMA transfer)
   void EndTransfer();   // send stop condition and clear necessary states
 
-  // I2C interrupt getters to allow testing of I2C handler
+  // I²C interrupt getters to allow testing of I²C handler
   bool NextByteNeeded() const; // Indicates that the hardware has processed the
                                // current byte and we can read (or write) the
                                // next one in the Tx (or Rx) register.
@@ -162,10 +159,10 @@ private:
   // data that is still expected to be recieved/sent
   uint16_t remaining_size_{0};
 
-  // Because I2Crequest cannot be std::move'd (and is therefore not compatible
+  // Because Request cannot be std::move'd (and is therefore not compatible
   // with our circular buffer template), we use a circular buffer of indexes to
   // know the queue state and let the tested template worry about buffer
-  // management but we also use our own I2Crequest table (to which the circular
+  // management but we also use our own Request table (to which the circular
   // buffer elements lead)
   CircularBuffer<uint8_t, kQueueLength> buffer_;
   Request queue_[kQueueLength];
@@ -180,17 +177,19 @@ private:
   //    simplify handling non-DMA ones.
   //    This cannot be achieved with the circular buffer template.
   // b. Data in a circular buffer is pop'ed out of the buffer when used, which
-  //    means we lose the ability to retry a request after an I2C (or DMA)
+  //    means we lose the ability to retry a request after an I²C (or DMA)
   //    error.
   uint8_t write_buffer_[kWriteBufferSize];
   uint32_t write_buffer_index_{0};
   uint32_t write_buffer_start_{0};
   uint32_t wrapping_index_{kWriteBufferSize};
-  bool CopyDataToWriteBuffer(void *data, uint16_t size);
+  bool CopyDataToWriteBuffer(const void *data, uint16_t size);
 
 #ifdef BARE_STM32
   // DMA only makes sense on the actual chip
   void SetupDMAChannels(DMA_Regs *dma);
+  void ConfigureDMAChannel(DMA_Regs::ChannelRegs *channel,
+                           ExchangeDirection direction);
   void SetupDMATransfer();
 #endif
 

@@ -86,43 +86,45 @@ wiring.
 |**C4** | 1        | RespiraWorks  | blower_holding_plate         | ~0.9 (material)  | [Rw][c4rw]              | Blower holding plate cut from acrylic (**C2**) using drawing in link, uses ~60 cm² |
 |**C5** | 1        | RespiraWorks  | tubing_adapter_holding_plate | ~0.9 (material)  | [Rw][c5rw]              | Tubing adapter holding plate cut from acrylic (**C2**) using drawing in link, uses ~60 cm² |
 |**C6** | ~80cm²   | McMaster-Carr | 1370N13-1370N131             | 6.75 / 232cm²    | [C][c6mcmc]             | 1/16" durometer 30 neoprene gasket material, to make items **C7** and **C8** below |
-|**C7** | 1        | RespiraWorks  | blower_gasket                | ~1.2 (material)  | [Rw][c7rw]              | Blower gasket cut from (**C6**) using drawing in link, uses ~40 cm² |
-|**C8** | 1        | RespiraWorks  | tubing_adapter_gasket        | ~1.2 (material)  | [Rw][c8rw]              | Tubing adapter Gasket cut from (**C6**) using drawing in link, uses ~40 cm² |
-|**C9** | 8        | McMaster-Carr | 93625A150                    | 6.04 / 100       | [C][c9mcmc]             | M4 nylon insert lock nuts |
+|**C7** | 1        | RespiraWorks  | blower_gasket                | ~1.2 (material)  | [B][c7rw]               | Blower gasket cut from (**C6**) using drawing in link, uses ~40 cm² |
+|**C8** | 1        | RespiraWorks  | tubing_adapter_gasket        | ~1.2 (material)  | [B][c8rw]               | Tubing adapter Gasket cut from (**C6**) using drawing in link, uses ~40 cm² |
+|**C9** | 8        | McMaster-Carr | 93625A150                    | 6.04 / 100       | [C][c9mcmc]             | M4 lock nuts |
 |**C10**| 16       | McMaster-Carr | 93475A230                    | 1.86 / 100       | [C][c10mcmc]            | M4 washers |
-|**C11**| 4        | McMaster-Carr | 92000A224                    | 9.60 / 100       | [C][c11mcmc]            | M4 x 14mm Philips head screws, for blower driver |
-|**C12**| 4        | McMaster-Carr | 91290A574                    | 15.45 / 10       | [C][c12mcmc]            | M4 x 85 mm hex head screws |
+|**C11**| 4        | McMaster-Carr | 92095A168                    | 9.55 / 50        | [C][c11mcmc]            | M3 x 14mm button head screws, for blower driver |
+|**C12**| 4        | McMaster-Carr | 91290A574                    | 15.45 / 10       | [C][c12mcmc]            | M4 x 85mm socket head screws |
 |**C13**| 4        | McMaster-Carr | 99072A203                    | 1.21             | [C][c13mcmc]            | 10mm nylon spacers |
 |**C14**| 4        | McMaster-Carr | 91828A231                    | 6.45 / 100       | [C][c14mcmc]            | M4 nuts (non locking) |
-|**C15**| 12       | JST           | SXH-001T-P0.6                | 0.10             | [K][c15digi] [R][c15rs] | XH crimps, for control connector |
-|**C16**| 2        | JST           | XHP-6                        | 0.14             | [K][c16digi] [R][c16rs] | XH 6-pin housing, for control connector |
-|**C17**| -        | CQRobot       | CQRJST254-BGB                | 9.99             | [Z][c17amzn]            | **optional** XH connector kit for 6/7/8 pins, alternative for b15+b16 above |
-|**C18**| ~1m      | Remington     | 16UL1007STRKIT               | 29.70 / 25m      | [K][c18amzn]            | 16 AWG wire, for power cable, ~42cm per wire |
-|**C19**| ~3m      | Remington     | 26UL1007STRKIT10COLOR        | 31.60 / 75m      | [K][c19amzn]            | 26 AWG wire, for control cable, ~42cm per wire  |
+|**C15**| 4        | McMaster-Carr | 93625A100                    | 5.31 / 100       | [C][c15mcmc]            | M3 lock nuts |
+|**C16**| 12       | JST           | SXH-001T-P0.6                | 0.10             | [K][c16digi] [R][c16rs] | XH crimps, for control connector |
+|**C17**| 2        | JST           | XHP-6                        | 0.14             | [K][c17digi] [R][c17rs] | XH 6-pin housing, for control connector |
+|**C18**| -        | CQRobot       | CQRJST254-BGB                | 9.99             | [Z][c18amzn]            | **optional** XH connector kit for 6/7/8 pins, alternative for b15+b16 above |
+|**C19**| ~1m      | Remington     | 16UL1007STRKIT               | 29.70 / 25m      | [K][c19amzn]            | 16 AWG wire, for power cable, ~42cm per wire |
+|**C20**| ~3m      | Remington     | 26UL1007STRKIT10COLOR        | 31.60 / 75m      | [K][c20amzn]            | 26 AWG wire, for control cable, ~42cm per wire  |
 
-[c1rw]:    CAD/tubing_adapter.stl
+[c1rw]:    CAD/exports/tubing_adapter.stl
 [c2mcmc]:  https://www.mcmaster.com/8560K357/
-[c3rw]:    CAD/driver_mounting_plate.dxf
-[c4rw]:    CAD/blower_holding_plate.dxf
-[c5rw]:    CAD/tubing_adapter_holding_plate.dxf
+[c3rw]:    CAD/exports/driver_mounting_plate.dxf
+[c4rw]:    CAD/exports/blower_holding_plate.dxf
+[c5rw]:    CAD/exports/tubing_adapter_holding_plate.dxf
 [c6mcmc]:  https://www.mcmaster.com/1370N13-1370N131/
-[c7rw]:    CAD/blower_gasket.dxf
-[c8rw]:    CAD/tubing_adapter_gasket.dxf
+[c7rw]:    CAD/exports/blower_gasket.dxf
+[c8rw]:    CAD/exports/tubing_adapter_gasket.dxf
 [c9mcmc]:  https://www.mcmaster.com/93625A150/
 [c10mcmc]: https://www.mcmaster.com/93475A230/
-[c11mcmc]: https://www.mcmaster.com/92000A224/
+[c11mcmc]: https://www.mcmaster.com/92095A168/
 [c12mcmc]: https://www.mcmaster.com/91290A574/
 [c13mcmc]: https://www.mcmaster.com/99072A203/
 [c14mcmc]: https://www.mcmaster.com/91828A231/
-[c15digi]: https://www.digikey.com/short/z44f8d
-[c15rs]:   https://export.rsdelivers.com/product/jst/sxh-002t-p06/jst-xh-female-crimp-terminal-contact-26awg-sxh/1755645
-[c16digi]: https://www.digikey.com/short/z44ff8
-[c16rs]:   https://export.rsdelivers.com/product/jst/xhp-6/jst-xhp-female-connector-housing-25mm-pitch-6-way/8201620
-[c17amzn]: https://www.amazon.com/gp/product/B079MJ1RYN
-[c18amzn]: https://www.amazon.com/gp/product/B00N51OJJ4
-[c19amzn]: https://www.amazon.com/gp/product/B011JC76OA
+[c15mcmc]: https://www.mcmaster.com/93625A100/
+[c16digi]: https://www.digikey.com/short/z44f8d
+[c16rs]:   https://export.rsdelivers.com/product/jst/sxh-002t-p06/jst-xh-female-crimp-terminal-contact-26awg-sxh/1755645
+[c17digi]: https://www.digikey.com/short/z44ff8
+[c17rs]:   https://export.rsdelivers.com/product/jst/xhp-6/jst-xhp-female-connector-housing-25mm-pitch-6-way/8201620
+[c18amzn]: https://www.amazon.com/gp/product/B079MJ1RYN
+[c19amzn]: https://www.amazon.com/gp/product/B00N51OJJ4
+[c20amzn]: https://www.amazon.com/gp/product/B011JC76OA
 
-**NOTE: Items **C15-C19** above are also duplicated in the [wiring BOM](../../design/electrical-system/wiring.md)**
+**NOTE: Items **C16-C20** above are also duplicated in the [wiring BOM](../../design/electrical-system/wiring.md)**
 
 ### Tools 2
 
@@ -148,7 +150,7 @@ wiring.
 
 To 3d print this component see the [general 3d printing guidelines](../3d_printing).
 
-|For 3D printing: [tubing_adapter.stl](CAD/exports/tubing_adapter.stl)| Inventor source: [tubing_adapter.ipt](CAD/exports/tubing_adapter.ipt)|
+|For 3D printing: [tubing_adapter.stl](CAD/exports/tubing_adapter.stl)| Inventor source: [tubing_adapter.ipt](CAD/tubing_adapter.ipt)|
 |:---:|:---:|
 |![](images/tubing_adapter.jpg)|[![](CAD/exports/tubing_adapter.png)](CAD/exports/tubing_adapter.pdf)|
 
@@ -160,6 +162,7 @@ Use craft knife (**D1**) to cut these from the gasket material (**C6**).
 |----:|:--------------------------:|:---------------------------:|
 | PNG | ![](CAD/exports/blower_gasket.png) | ![](CAD/exports/tubing_adapter_gasket.png) |
 | DXF |[blower_gasket.dxf](CAD/exports/blower_gasket.dxf)|[tubing_adapter_gasket.dxf](CAD/exports/tubing_adapter_gasket.dxf)|
+| Inventor |[blower_gasket.ipt](CAD/blower_gasket.ipt)|[tubing_adapter_gasket.ipt](CAD/tubing_adapter_gasket.ipt)|
 
 #### Acrylic plates
 
@@ -181,7 +184,7 @@ You might also want to use some 200 grit sandpaper to clean up the edges of the 
 |  |![](CAD/exports/driver_mounting_plate.png)|![](CAD/exports/blower_holding_plate.png)|![](CAD/exports/tubing_adapter_holding_plate.png)|
 | Drawings |[Driver Mounting Plate](CAD/exports/driver_mounting_plate.pdf)|[Blower Holding Plate](CAD/exports/blower_holding_plate.pdf)|[Tubing Adapter Holding Plate](CAD/exports/tubing_adapter_holding_plate.pdf)|
 | DXF |[driver_mounting_plate.dxf](CAD/exports/driver_mounting_plate.dxf)|[blower_holding_plate.dxf](CAD/exports/blower_holding_plate.dxf)|[tubing_adapter_holding_plate.dxf](CAD/exports/tubing_adapter_holding_plate.dxf)|
-| Inventor | [driver_mounting_plate.ipt](CAD/exports/driver_mounting_plate.ipt)|[blower_holding_plate.ipt](CAD/exports/blower_holding_plate.ipt)| [tubing adapter_holding_plate.ipt](CAD/exports/tubing_adapter_holding_plate.ipt)|
+| Inventor | [driver_mounting_plate.ipt](CAD/driver_mounting_plate.ipt)|[blower_holding_plate.ipt](CAD/blower_holding_plate.ipt)| [tubing adapter_holding_plate.ipt](CAD/tubing_adapter_holding_plate.ipt)|
 
 
 You can use one of these plates as a template to drill the appropriate holes in the main acrylic plate and the metal
@@ -196,9 +199,8 @@ The above manufactured components (excluding gaskets) should appear as follows:
 #### Mount the blower driver
 
 Use the following hardware:
-* 4x M4 lock nuts (**C9**)
-* 4x M4 washers (**C10**)
-* 4x M4 14mm screws (**C11**)
+* 4x M3 14mm screws (**C11**)
+* 4x M3 lock nuts (**C15**)
 
 Mount the blower driver (**A2**) to the Driver mounting plate (**C3**). It is advisable to run the screws from the
 bottom up, because the screw heads may be too wide to fit next to the circuit board.
@@ -238,7 +240,7 @@ You will likely need some sort of small clamps for this step, to ensure that com
 #### Manufacture extended wiring
 
 The power and signal cables that come included with the blower are too short to reach the PCB, so new ones must be
-manufactured using **A5, A6, and C15-C19**. Please follow the old cables included with blower as examples as well as
+manufactured using **A5, A6, and C16-C20**. Please follow the old cables included with blower as examples as well as
 any advice on the [wiring assembly page](../../design/electrical-system/wiring.md).
 
 The new cables should each be about 42cm in length.

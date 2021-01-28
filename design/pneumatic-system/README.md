@@ -110,9 +110,9 @@ provide an additional safety factor for staff protection.
 A key decision was made early on to use a blower (rather than a
 pressurized oxygen source and control valve), to deliver patient air.
 
-![](../../manufacturing/blower/images/basic_assembly.jpg)
+![](../../manufacturing/blower/images/assembly_rendering.jpg)
 
-WS7040 fan and driver board
+WS7040 fan with air intake assembly
 
 The rationale for use of a blower in general, and this blower in
 particular, had a few bases. First, using a blower (rather than

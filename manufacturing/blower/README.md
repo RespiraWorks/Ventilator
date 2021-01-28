@@ -90,7 +90,7 @@ wiring.
 |**C10**| 16       | McMaster-Carr | 93475A230                    | 1.86 / 100       | [C][c10mcmc]            | M4 washers |
 |**C11**| 4        | McMaster-Carr | 92000A224                    | 9.60 / 100       | [C][c11mcmc]            | M4 x 14mm Philips head screws, for blower driver |
 |**C12**| 4        | McMaster-Carr | 91290A574                    | 15.45 / 10       | [C][c12mcmc]            | M4 x 85 mm hex head screws |
-|**C13**| 4        | McMaster-Carr | 93657A079                    | 1.21             | [C][c13mcmc]            | 10mm nylon spacers |
+|**C13**| 4        | McMaster-Carr | 99072A203                    | 1.21             | [C][c13mcmc]            | 10mm nylon spacers |
 |**C14**| 4        | McMaster-Carr | 91828A231                    | 6.45 / 100       | [C][c14mcmc]            | M4 nuts (non locking) |
 |**C15**| 12       | JST           | SXH-001T-P0.6                | 0.10             | [K][c15digi] [R][c15rs] | XH crimps, for control connector |
 |**C16**| 2        | JST           | XHP-6                        | 0.14             | [K][c16digi] [R][c16rs] | XH 6-pin housing, for control connector |
@@ -110,7 +110,7 @@ wiring.
 [c10mcmc]: https://www.mcmaster.com/93475A230/
 [c11mcmc]: https://www.mcmaster.com/92000A224/
 [c12mcmc]: https://www.mcmaster.com/91290A574/
-[c13mcmc]: https://www.mcmaster.com/93657A079/
+[c13mcmc]: https://www.mcmaster.com/99072A203/
 [c14mcmc]: https://www.mcmaster.com/91828A231/
 [c15digi]: https://www.digikey.com/short/z44f8d
 [c15rs]:   https://export.rsdelivers.com/product/jst/sxh-002t-p06/jst-xh-female-crimp-terminal-contact-26awg-sxh/1755645

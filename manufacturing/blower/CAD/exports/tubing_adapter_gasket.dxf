@@ -1843,7 +1843,7 @@ DOTTED
  70
      0
   3
-Dotted . . . . . . . . . . . . . . . . . . . . 
+Dotted . . . . . . . . . . . . . . . . . . . .
  72
     65
  73
@@ -2073,7 +2073,7 @@ LONG_DASH_DOUBLE_DOT
  70
      0
   3
-Long Dash Double Dot ________  .  .  ________  
+Long Dash Double Dot ________  .  .  ________
  72
     65
  73
@@ -2759,7 +2759,7 @@ DOTX2
  70
      0
   3
-Dot (2x) .  .  .  .  .  .  .  .  .  .  .  .  . 
+Dot (2x) .  .  .  .  .  .  .  .  .  .  .  .  .
  72
     65
  73
@@ -3367,7 +3367,7 @@ ACAD_ISO11W100
  70
      0
   3
-ISO double-dash dot __ __ . __ __ . __ __ . __ 
+ISO double-dash dot __ __ . __ __ . __ __ . __
  72
     65
  73
@@ -3459,7 +3459,7 @@ ACAD_ISO13W100
  70
      0
   3
-ISO double-dash double-dot __ __ . . __ __ . . 
+ISO double-dash double-dot __ __ . . __ __ . .
  72
     65
  73
@@ -3513,7 +3513,7 @@ ACAD_ISO14W100
  70
      0
   3
-ISO dash triple-dot __ . . . __ . . . __ . . . 
+ISO dash triple-dot __ . . . __ . . . __ . . .
  72
     65
  73
@@ -3567,7 +3567,7 @@ ACAD_ISO15W100
  70
      0
   3
-ISO double-dash triple-dot __ __ . . . __ __ . 
+ISO double-dash triple-dot __ __ . . . __ __ .
  72
     65
  73

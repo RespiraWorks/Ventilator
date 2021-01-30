@@ -1,9 +1,9 @@
 EESchema Schematic File Version 4
-EELAYER 26 0
+EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 1 1
+Sheet 7 30
 Title "Cycle Controller"
 Date ""
 Rev "2.0"
@@ -17,7 +17,7 @@ $Comp
 L MCU_ST_STM32L4:STM32L496RGTx U?
 U 1 1 5FEB9E53
 P 5800 3200
-F 0 "U?" H 5250 4950 50  0000 C CNN
+F 0 "U?" H 6100 4950 50  0000 C CNN
 F 1 "STM32L496RGTx" H 6300 1350 50  0000 C CNN
 F 2 "Package_QFP:LQFP-64_10x10mm_P0.5mm" H 5200 1500 50  0001 R CNN
 F 3 "http://www.st.com/st-web-ui/static/active/en/resource/technical/document/datasheet/DM00284211.pdf" H 5800 3200 50  0001 C CNN
@@ -155,37 +155,37 @@ Wire Wire Line
 Connection ~ 7800 1250
 Text Notes 8300 700  2    50   ~ 0
 VDD pins
-Text Notes 9800 550  2    50   ~ 0
+Text Notes 9950 600  2    50   ~ 0
 VDDA pins
 $Comp
 L Device:C C?
 U 1 1 5FEBD47E
-P 9400 1000
-F 0 "C?" H 9300 1250 50  0000 L CNN
-F 1 "0.1uF, 10V" H 9150 800 50  0000 L CNN
-F 2 "RespiraWorks_std:C_0603_1608Metric" H 9438 850 50  0001 C CNN
-F 3 "~" H 9400 1000 50  0001 C CNN
-	1    9400 1000
+P 9550 1050
+F 0 "C?" H 9450 1300 50  0000 L CNN
+F 1 "0.1uF, 10V" H 9300 850 50  0000 L CNN
+F 2 "RespiraWorks_std:C_0603_1608Metric" H 9588 900 50  0001 C CNN
+F 3 "~" H 9550 1050 50  0001 C CNN
+	1    9550 1050
 	1    0    0    -1  
 $EndComp
 $Comp
 L Device:C C?
 U 1 1 5FEBD4CF
-P 9750 1000
-F 0 "C?" H 9700 1250 50  0000 L CNN
-F 1 "1uF, 10V" H 9800 900 50  0000 L CNN
-F 2 "RespiraWorks_std:C_0603_1608Metric" H 9788 850 50  0001 C CNN
-F 3 "~" H 9750 1000 50  0001 C CNN
-	1    9750 1000
+P 9900 1050
+F 0 "C?" H 9850 1300 50  0000 L CNN
+F 1 "1uF, 10V" H 9950 950 50  0000 L CNN
+F 2 "RespiraWorks_std:C_0603_1608Metric" H 9938 900 50  0001 C CNN
+F 3 "~" H 9900 1050 50  0001 C CNN
+	1    9900 1050
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	9400 1150 9600 1150
+	9550 1200 9750 1200
 Wire Wire Line
-	9600 1150 9600 1200
+	9750 1200 9750 1250
 Wire Wire Line
-	9750 1150 9600 1150
-Connection ~ 9600 1150
+	9900 1200 9750 1200
+Connection ~ 9750 1200
 Wire Wire Line
 	5700 5350 5600 5350
 Wire Wire Line
@@ -242,7 +242,7 @@ L Switch:SW_Push SW?
 U 1 1 5FED4D7F
 P 4100 1800
 F 0 "SW?" V 4054 1948 50  0000 L CNN
-F 1 "SW_Push" V 4145 1948 50  0000 L CNN
+F 1 "Reset CC" V 4145 1948 50  0000 L CNN
 F 2 "" H 4100 2000 50  0001 C CNN
 F 3 "" H 4100 2000 50  0001 C CNN
 	1    4100 1800
@@ -297,8 +297,8 @@ Wire Wire Line
 	5100 2900 3700 2900
 Text Label 4400 2900 2    50   ~ 0
 BOOT0
-Text Notes 4650 3000 2    50   ~ 0
-Check Boot0 pin
+Text Notes 3950 3150 0    50   ~ 0
+Boots from main\nFlash memory\nby default
 Text HLabel 6700 2900 2    50   Input ~ 0
 TMS
 Wire Wire Line
@@ -315,10 +315,6 @@ Text HLabel 6700 3600 2    50   Input ~ 0
 TDO
 Wire Wire Line
 	6700 3600 6400 3600
-Text HLabel 4850 4100 0    50   Output ~ 0
-CC-LED-R
-Text HLabel 4850 3900 0    50   Output ~ 0
-CC-LED-G
 Wire Wire Line
 	5100 3900 4850 3900
 Wire Wire Line
@@ -420,8 +416,6 @@ Wire Wire Line
 Wire Wire Line
 	2300 2700 2300 3250
 Connection ~ 2300 3250
-Text HLabel 4850 4200 0    50   Output ~ 0
-CC-LED-Y
 Wire Wire Line
 	3250 2700 5100 2700
 Wire Wire Line
@@ -431,10 +425,12 @@ L Device:Crystal_GND23 Y?
 U 1 1 5FEE6F6E
 P 3950 4800
 F 0 "Y?" V 3800 4650 50  0000 L CNN
-F 1 "ABS25-32.768KHZ-6-T" V 3950 3600 50  0000 L CNN
-F 2 "" H 3950 4800 50  0001 C CNN
+F 1 "32.768 kHz" V 3650 4650 50  0000 L CNN
+F 2 "RespiraWorks:Crystal_SMD_Abracon_ABS25" H 3950 4800 50  0001 C CNN
 F 3 "~" H 3950 4800 50  0001 C CNN
 F 4 "DNP" V 4100 4900 50  0000 C CNN "DNP"
+F 5 "Abracon" V 3950 4800 50  0001 C CNN "Manufacturer"
+F 6 "ABS25-32.768KHZ-6-T" V 3950 4800 50  0001 C CNN "Manufacturer PN"
 	1    3950 4800
 	0    1    1    0   
 $EndComp
@@ -472,18 +468,6 @@ F 4 "DNP" V 3950 5050 50  0000 C CNN "DNP"
 	1    3600 5050
 	0    1    1    0   
 $EndComp
-$Comp
-L Device:C C?
-U 1 1 5FEE8ADE
-P 3600 4600
-F 0 "C?" V 3450 4550 50  0000 L CNN
-F 1 "6.8pF" V 3550 4300 50  0000 L CNN
-F 2 "RespiraWorks_std:C_0603_1608Metric" H 3638 4450 50  0001 C CNN
-F 3 "~" H 3600 4600 50  0001 C CNN
-F 4 "DNP" V 3450 4400 50  0000 C CNN "DNP"
-	1    3600 4600
-	0    1    1    0   
-$EndComp
 Wire Wire Line
 	5100 4800 4600 4800
 Wire Wire Line
@@ -516,68 +500,30 @@ Wire Wire Line
 	3300 5050 3300 5150
 NoConn ~ 4150 4800
 NoConn ~ 3750 4800
-Text HLabel 6700 2500 2    50   Output ~ 0
-USART-TX-RPI
-Text HLabel 6700 2600 2    50   Input ~ 0
-USART-RX-RPI
-Text HLabel 6700 2700 2    50   Input ~ 0
-USART-CTS-RPI
-Text HLabel 6700 2800 2    50   Output ~ 0
-USART-RTS-RPI
 Wire Wire Line
 	6700 2700 6400 2700
 Wire Wire Line
 	6700 2800 6400 2800
-Text HLabel 6700 1800 2    50   Output ~ 0
-USART-TX-STLINK
-Text HLabel 6700 1900 2    50   Input ~ 0
-USART-RX-STLINK
 Wire Wire Line
 	6400 1900 6700 1900
-Text HLabel 7050 1700 2    50   Input ~ 0
-INH-FLOW-OUT
-Wire Wire Line
-	6400 1700 7050 1700
 Text Notes 3400 550  0    50   ~ 0
 Note: some pinouts changed, inform sw
-Text HLabel 7100 2400 2    50   Input ~ 0
-EXH-FLOW-OUT
 Wire Wire Line
-	6400 2400 7100 2400
-Text HLabel 6700 3300 2    50   Output ~ 0
-SOLENOID-CTRL
-Text HLabel 6700 3400 2    50   Output ~ 0
-HEATER-CTRL
+	6400 2400 6700 2400
 Wire Wire Line
 	6400 3300 6700 3300
-Text HLabel 6700 3500 2    50   Output ~ 0
-BLOWER-CTRL
-Text HLabel 4850 3300 0    50   Input ~ 0
-OXYGEN-SENSOR
 Wire Wire Line
 	5100 3300 4850 3300
-Text HLabel 4850 3400 0    50   Input ~ 0
-PATIENT-PRESSURE-OUT
-Text HLabel 4850 3500 0    50   Input ~ 0
-MIXING-TANK-PRESSURE-OUT
-Text HLabel 4850 3600 0    50   Input ~ 0
-OXYGEN-PRESSURE-OUT
 Wire Wire Line
 	5100 3400 4850 3400
 Wire Wire Line
 	5100 3500 4850 3500
 Wire Wire Line
 	5100 3600 4850 3600
-Text HLabel 4850 3700 0    50   Input ~ 0
-VIN-SENSE-OUT
-Text HLabel 4850 3800 0    50   Input ~ 0
-POWER-SWITCH-OVER
 Wire Wire Line
 	4850 3700 5100 3700
 Wire Wire Line
 	4850 3800 5100 3800
-Text HLabel 7200 3900 2    50   Input ~ 0
-OXY-FLOW-OUT
 Wire Wire Line
 	6400 3700 6700 3700
 Text HLabel 4850 4300 0    50   Input ~ 0
@@ -589,7 +535,7 @@ L Switch:SW_Push SW?
 U 1 1 5FF60966
 P 2200 4550
 F 0 "SW?" V 2154 4698 50  0000 L CNN
-F 1 "SW_Push" V 2245 4698 50  0000 L CNN
+F 1 "User TBD" V 2245 4698 50  0000 L CNN
 F 2 "" H 2200 4750 50  0001 C CNN
 F 3 "" H 2200 4750 50  0001 C CNN
 	1    2200 4550
@@ -673,9 +619,9 @@ CC-SCL
 Text HLabel 6700 4200 2    50   BiDi ~ 0
 CC-SDA
 Wire Wire Line
-	9400 800  9400 850 
+	9550 850  9550 900 
 Wire Wire Line
-	9750 800  9750 850 
+	9900 850  9900 900 
 $Comp
 L power:GND #PWR?
 U 1 1 5FED05CB
@@ -695,54 +641,18 @@ Connection ~ 3950 5050
 Connection ~ 3950 4600
 Wire Wire Line
 	4300 4600 4300 4700
-Text HLabel 4800 4450 0    50   Output ~ 0
-UART-TX-FPGA
 Wire Wire Line
 	3700 4550 4700 4550
-Text HLabel 4800 3100 0    50   Input ~ 0
-UART-RX-FPGA
 Wire Wire Line
-	4800 3100 5100 3100
+	4850 3100 5100 3100
 Wire Wire Line
-	6400 3900 7200 3900
-Text HLabel 6700 3700 2    50   Output ~ 0
-UART-RTS-FPGA
-Text HLabel 6700 3800 2    50   Input ~ 0
-UART-CTS-FPGA
+	6400 3900 6700 3900
 Wire Wire Line
 	6700 3800 6400 3800
 Text HLabel 6700 4000 2    50   Output ~ 0
 CC-GPIO
 Wire Wire Line
 	6400 4000 6700 4000
-Text HLabel 10150 4400 0    50   BiDi ~ 0
-D8
-Text HLabel 10150 5850 0    50   BiDi ~ 0
-D2
-Text HLabel 10150 5300 0    50   BiDi ~ 0
-D15
-Text HLabel 10150 5200 0    50   BiDi ~ 0
-D14
-Text HLabel 10150 4600 0    50   BiDi ~ 0
-D10
-Text HLabel 10150 4500 0    50   BiDi ~ 0
-D9
-Text HLabel 6700 4700 2    50   Output ~ 0
-CC-BUZZER
-Text HLabel 10150 6150 0    50   BiDi ~ 0
-D5
-Wire Wire Line
-	6400 4600 6550 4600
-Wire Wire Line
-	6400 4500 6550 4500
-Wire Wire Line
-	6400 4400 6550 4400
-Wire Wire Line
-	6400 4300 6550 4300
-Text HLabel 10150 6050 0    50   BiDi ~ 0
-D4
-Wire Wire Line
-	6400 4800 6550 4800
 Connection ~ 5700 700 
 Wire Wire Line
 	5700 700  5700 1400
@@ -922,20 +832,16 @@ Wire Notes Line
 	4050 5850 4050 7800
 NoConn ~ 6400 1600
 Wire Wire Line
-	5300 1350 5300 1400
-Wire Wire Line
 	5300 1400 5500 1400
-Wire Wire Line
-	5300 700  5300 750 
 Wire Wire Line
 	5600 700  5300 700 
 $Comp
-L Device:Jumper JP?
+L Device:Jumper_NO_Small JP?
 U 1 1 601E0703
 P 5300 1050
 F 0 "JP?" H 5300 1200 50  0000 C CNN
 F 1 "Jumper" H 5300 1223 50  0001 C CNN
-F 2 "" H 5300 1050 50  0001 C CNN
+F 2 "RespiraWorks_Std:SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm" H 5300 1050 50  0001 C CNN
 F 3 "~" H 5300 1050 50  0001 C CNN
 	1    5300 1050
 	0    -1   -1   0   
@@ -943,22 +849,8 @@ $EndComp
 Wire Wire Line
 	5300 1400 4850 1400
 Connection ~ 5300 1400
-$Comp
-L power:+BATT #PWR?
-U 1 1 601BF7A9
-P 4850 900
-F 0 "#PWR?" H 4850 750 50  0001 C CNN
-F 1 "+BATT" H 4865 1073 50  0000 C CNN
-F 2 "" H 4850 900 50  0001 C CNN
-F 3 "" H 4850 900 50  0001 C CNN
-	1    4850 900 
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	4850 900  4850 950 
 Wire Wire Line
 	4600 950  4850 950 
-Connection ~ 4850 950 
 Wire Wire Line
 	4850 950  4850 1400
 $Comp
@@ -985,97 +877,73 @@ Wire Wire Line
 Wire Wire Line
 	5600 5350 5500 5350
 Connection ~ 5600 5350
-Text HLabel 10150 5950 0    50   BiDi ~ 0
-D3
-Text HLabel 10150 4700 0    50   BiDi ~ 0
-D11
-Text HLabel 10150 4900 0    50   BiDi ~ 0
-D13
-Text HLabel 10150 5650 0    50   BiDi ~ 0
-D0
-Text HLabel 10150 5750 0    50   BiDi ~ 0
-D1
 Text Label 4350 4000 0    50   ~ 0
 USD-Detect
-Text Notes 9900 1700 2    39   ~ 0
-0.1in headers?
 Wire Notes Line
-	9350 1550 9350 6550
-NoConn ~ 10650 3600
+	9350 2000 9350 6500
+NoConn ~ 10500 3200
 Wire Wire Line
-	10650 3900 10050 3900
+	10500 3500 9900 3500
 Wire Wire Line
-	10650 4000 10050 4000
+	10500 3600 9900 3600
 Wire Wire Line
-	10650 4100 10050 4100
+	10500 3700 9900 3700
 Wire Wire Line
-	10650 3700 10050 3700
-Text Label 6450 1700 0    50   ~ 0
-INH-FLOW-OUT
-Text Label 6450 2400 0    50   ~ 0
-EXH-FLOW-OUT
-Text Label 6550 3900 0    50   ~ 0
-OXY-FLOW-OUT
-Text Label 5050 3400 2    50   ~ 0
-PPO
-Text Label 5050 3300 2    50   ~ 0
-OXY
-Text HLabel 10150 6350 0    50   BiDi ~ 0
-D7
+	10500 3300 9900 3300
 Wire Wire Line
-	10650 4400 10150 4400
+	10500 4300 10050 4300
 Wire Wire Line
-	10650 4500 10150 4500
+	10500 4400 10050 4400
 Wire Wire Line
-	10650 4600 10150 4600
+	10500 4500 10050 4500
 Wire Wire Line
-	10650 4700 10150 4700
+	10500 4600 10050 4600
 Wire Wire Line
-	10650 4800 10150 4800
+	10500 4700 10050 4700
 Wire Wire Line
-	10650 4900 10150 4900
+	10500 4800 10050 4800
 Wire Wire Line
-	10650 5200 10150 5200
-Text Label 10200 4400 0    50   ~ 0
+	10500 5100 10050 5100
+Text Label 10050 4300 0    50   ~ 0
 D8
-Text Label 10200 4500 0    50   ~ 0
+Text Label 10050 4400 0    50   ~ 0
 D9
-Text Label 10200 4600 0    50   ~ 0
+Text Label 10050 4500 0    50   ~ 0
 D10
-Text Label 10200 5200 0    50   ~ 0
-D14
+Text Label 10050 5100 0    50   ~ 0
+D18
 $Comp
 L RespiraWorks:+3.3V_Ctrl_A #PWR?
 U 1 1 60390EE2
-P 9800 4450
+P 9650 4350
 AR Path="/60390EE2" Ref="#PWR?"  Part="1" 
 AR Path="/5FCD4D18/60390EE2" Ref="#PWR?"  Part="1" 
-F 0 "#PWR?" H 9800 4450 50  0001 C CNN
-F 1 "+3.3V_Ctrl_A" H 9785 4623 50  0000 C CNN
-F 2 "" H 9800 4450 50  0001 C CNN
-F 3 "" H 9800 4450 50  0001 C CNN
-	1    9800 4450
+F 0 "#PWR?" H 9650 4350 50  0001 C CNN
+F 1 "+3.3V_Ctrl_A" H 9635 4523 50  0000 C CNN
+F 2 "" H 9650 4350 50  0001 C CNN
+F 3 "" H 9650 4350 50  0001 C CNN
+	1    9650 4350
 	1    0    0    -1  
 $EndComp
 $Comp
 L power:GND #PWR?
 U 1 1 60390FBB
-P 9900 5350
-F 0 "#PWR?" H 9900 5100 50  0001 C CNN
-F 1 "GND" H 9905 5177 50  0000 C CNN
-F 2 "" H 9900 5350 50  0001 C CNN
-F 3 "" H 9900 5350 50  0001 C CNN
-	1    9900 5350
+P 9750 5250
+F 0 "#PWR?" H 9750 5000 50  0001 C CNN
+F 1 "GND" H 9755 5077 50  0000 C CNN
+F 2 "" H 9750 5250 50  0001 C CNN
+F 3 "" H 9750 5250 50  0001 C CNN
+	1    9750 5250
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	10650 5000 9900 5000
+	10500 4900 9750 4900
 Wire Wire Line
-	9900 5000 9900 5350
+	9750 4900 9750 5250
 Wire Wire Line
-	10650 5100 9800 5100
+	10500 5000 9650 5000
 Wire Wire Line
-	9800 5100 9800 4450
+	9650 5000 9650 4350
 Text Label 6550 4600 2    50   ~ 0
 D9
 Text Label 6550 4500 2    50   ~ 0
@@ -1085,9 +953,9 @@ D2
 Text Label 6550 4800 2    50   ~ 0
 D4
 Text Label 6450 4200 0    50   ~ 0
-D14
+D18
 Text Label 6450 4100 0    50   ~ 0
-D15
+D19
 Text Label 6450 3500 0    50   ~ 0
 D3
 Text Label 6450 3400 0    50   ~ 0
@@ -1097,35 +965,23 @@ D0
 Text Label 6450 2500 0    50   ~ 0
 D1
 Wire Wire Line
-	10650 5650 10150 5650
+	10500 5550 10050 5550
 Wire Wire Line
-	10650 5750 10150 5750
+	10500 5650 10050 5650
 Wire Wire Line
-	10650 5850 10150 5850
+	10500 5750 10050 5750
 Wire Wire Line
-	10650 5950 10150 5950
+	10500 5850 10050 5850
 Wire Wire Line
-	10650 6050 10150 6050
+	10500 5950 10050 5950
 Wire Wire Line
-	10650 6150 10150 6150
+	10500 6050 10050 6050
 Wire Wire Line
-	10650 6250 10150 6250
+	10500 6150 10050 6150
 Wire Wire Line
-	10650 6350 10150 6350
-Text Label 10200 5650 0    50   ~ 0
-D0
-Text Label 10200 5750 0    50   ~ 0
-D1
-Text Label 10200 5850 0    50   ~ 0
-D2
-Text Label 10200 5950 0    50   ~ 0
-D3
-Text Label 10200 6050 0    50   ~ 0
-D4
+	10500 6250 10050 6250
 Text Label 6550 4700 2    50   ~ 0
 D5
-Text HLabel 10150 6250 0    50   BiDi ~ 0
-D6
 Text Label 6450 1800 0    50   ~ 0
 D6
 Wire Wire Line
@@ -1158,14 +1014,12 @@ Text Label 6850 2300 2    50   ~ 0
 USD-MOSI
 Wire Wire Line
 	6400 2200 6850 2200
-Wire Wire Line
-	6400 1800 6700 1800
-Text Label 10200 4900 0    50   ~ 0
+Text Label 10050 4800 0    50   ~ 0
 USD-SCLK
 Wire Wire Line
 	6400 2500 6700 2500
 Wire Wire Line
-	6400 3400 6700 3400
+	6400 3400 7150 3400
 Wire Wire Line
 	6400 3500 6700 3500
 Wire Wire Line
@@ -1193,6 +1047,7 @@ F 0 "R?" H 4150 5250 50  0000 C CNN
 F 1 "0" H 4150 5350 50  0000 C CNN
 F 2 "RespiraWorks_std:R_0603_1608Metric" V 4180 5250 50  0001 C CNN
 F 3 "~" H 4250 5250 50  0001 C CNN
+F 4 "DNP" H 4100 5450 50  0000 C CNN "DNP"
 	1    4250 5250
 	-1   0    0    1   
 $EndComp
@@ -1208,6 +1063,7 @@ F 0 "R?" H 4200 5250 50  0000 C CNN
 F 1 "0" H 4200 5350 50  0000 C CNN
 F 2 "RespiraWorks_std:R_0603_1608Metric" V 4030 5250 50  0001 C CNN
 F 3 "~" H 4100 5250 50  0001 C CNN
+F 4 "DNP" H 4200 5450 50  0000 C CNN "DNP"
 	1    4100 5250
 	-1   0    0    1   
 $EndComp
@@ -1242,12 +1098,12 @@ NoConn ~ 5100 4400
 $Comp
 L power:GNDA #PWR?
 U 1 1 606ED0BF
-P 9600 1200
-F 0 "#PWR?" H 9600 950 50  0001 C CNN
-F 1 "GNDA" H 9605 1027 50  0000 C CNN
-F 2 "" H 9600 1200 50  0001 C CNN
-F 3 "" H 9600 1200 50  0001 C CNN
-	1    9600 1200
+P 9750 1250
+F 0 "#PWR?" H 9750 1000 50  0001 C CNN
+F 1 "GNDA" H 9755 1077 50  0000 C CNN
+F 2 "" H 9750 1250 50  0001 C CNN
+F 3 "" H 9750 1250 50  0001 C CNN
+	1    9750 1250
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
@@ -1262,182 +1118,169 @@ Wire Wire Line
 $Comp
 L Connector_Generic:Conn_01x06 J?
 U 1 1 600E75AE
-P 10850 3800
-F 0 "J?" H 10930 3792 50  0000 L CNN
-F 1 "Arduino Connector" H 10500 3400 50  0000 L CNN
-F 2 "" H 10850 3800 50  0001 C CNN
-F 3 "~" H 10850 3800 50  0001 C CNN
-	1    10850 3800
+P 10700 3400
+F 0 "J?" H 10550 2900 50  0000 L CNN
+F 1 "Arduino Connector" H 10350 3000 50  0000 L CNN
+F 2 "RespiraWorks_Std:PinSocket_1x06_P2.54mm_Vertical" H 10700 3400 50  0001 C CNN
+F 3 "~" H 10700 3400 50  0001 C CNN
+	1    10700 3400
 	1    0    0    -1  
 $EndComp
 $Comp
 L Connector_Generic:Conn_01x08 J?
 U 1 1 600E7637
-P 10850 5950
-F 0 "J?" H 10930 5942 50  0000 L CNN
-F 1 "Arduino Connector" H 10450 5450 50  0000 L CNN
-F 2 "" H 10850 5950 50  0001 C CNN
-F 3 "~" H 10850 5950 50  0001 C CNN
-	1    10850 5950
+P 10700 5850
+F 0 "J?" H 10600 5250 50  0000 L CNN
+F 1 "Arduino Connector" H 10300 5350 50  0000 L CNN
+F 2 "RespiraWorks_Std:PinSocket_1x08_P2.54mm_Vertical" H 10700 5850 50  0001 C CNN
+F 3 "~" H 10700 5850 50  0001 C CNN
+	1    10700 5850
 	1    0    0    -1  
 $EndComp
 $Comp
 L Connector_Generic:Conn_01x10 J?
 U 1 1 600E76C6
-P 10850 4800
-F 0 "J?" H 10930 4792 50  0000 L CNN
-F 1 "Arduino Connector" H 10500 4200 50  0000 L CNN
-F 2 "" H 10850 4800 50  0001 C CNN
-F 3 "~" H 10850 4800 50  0001 C CNN
-	1    10850 4800
+P 10700 4700
+F 0 "J?" H 10550 5250 50  0000 L CNN
+F 1 "Arduino Connector" H 10350 4100 50  0000 L CNN
+F 2 "RespiraWorks_Std:PinSocket_1x10_P2.54mm_Vertical" H 10700 4700 50  0001 C CNN
+F 3 "~" H 10700 4700 50  0001 C CNN
+	1    10700 4700
 	1    0    0    -1  
 $EndComp
 $Comp
 L Connector_Generic:Conn_01x08 J?
 U 1 1 600F2AA2
-P 10850 2950
-F 0 "J?" H 10930 2942 50  0000 L CNN
-F 1 "Arduino Connector" H 10450 2450 50  0000 L CNN
-F 2 "" H 10850 2950 50  0001 C CNN
-F 3 "~" H 10850 2950 50  0001 C CNN
-	1    10850 2950
+P 10700 2550
+F 0 "J?" H 10650 2950 50  0000 L CNN
+F 1 "Arduino Connector" H 10300 2050 50  0000 L CNN
+F 2 "RespiraWorks_Std:PinSocket_1x08_P2.54mm_Vertical" H 10700 2550 50  0001 C CNN
+F 3 "~" H 10700 2550 50  0001 C CNN
+	1    10700 2550
 	1    0    0    -1  
 $EndComp
 $Comp
 L Connector_Generic:Conn_01x03 J?
 U 1 1 600F2B33
-P 10850 1950
-F 0 "J?" H 10930 1992 50  0000 L CNN
-F 1 "Optical end stop 1" H 9600 1950 50  0000 L CNN
-F 2 "" H 10850 1950 50  0001 C CNN
-F 3 "~" H 10850 1950 50  0001 C CNN
-	1    10850 1950
+P 8850 2900
+F 0 "J?" H 8800 3200 50  0000 L CNN
+F 1 "Optical end stop 1" H 8500 3100 50  0000 L CNN
+F 2 "RespiraWorks_Std:Molex_Micro-Fit_3.0_43650-0315_1x03_P3.00mm_Vertical" H 8850 2900 50  0001 C CNN
+F 3 "~" H 8850 2900 50  0001 C CNN
+	1    8850 2900
 	1    0    0    -1  
 $EndComp
 $Comp
 L Connector_Generic:Conn_01x03 J?
 U 1 1 600F2BC2
-P 10850 2350
-F 0 "J?" H 10930 2392 50  0000 L CNN
-F 1 "Optical end stop 2" H 9600 2400 50  0000 L CNN
-F 2 "" H 10850 2350 50  0001 C CNN
-F 3 "~" H 10850 2350 50  0001 C CNN
-	1    10850 2350
+P 8850 3300
+F 0 "J?" H 8800 3000 50  0000 L CNN
+F 1 "Optical end stop 2" H 8450 2900 50  0000 L CNN
+F 2 "RespiraWorks_Std:Molex_Micro-Fit_3.0_43650-0315_1x03_P3.00mm_Vertical" H 8850 3300 50  0001 C CNN
+F 3 "~" H 8850 3300 50  0001 C CNN
+	1    8850 3300
 	1    0    0    -1  
 $EndComp
-NoConn ~ 10650 2650
+NoConn ~ 10500 2250
 Text Label 3850 1600 0    50   ~ 0
-NRST
-Text Label 10350 2850 0    50   ~ 0
-NRST
+nRST
+Text Label 10200 2450 0    50   ~ 0
+nRST
 Wire Wire Line
-	10650 2850 10350 2850
+	10500 2450 10200 2450
 Wire Wire Line
-	10650 3150 9750 3150
+	10500 2750 9600 2750
 Wire Wire Line
-	9750 3150 9750 3250
+	9600 2750 9600 2850
 Wire Wire Line
-	10650 3250 9750 3250
-Connection ~ 9750 3250
+	10500 2850 9600 2850
+Connection ~ 9600 2850
 Wire Wire Line
-	9750 3250 9750 3550
+	9600 2850 9600 3150
 $Comp
 L power:GND #PWR?
 U 1 1 601571EF
-P 9750 3550
-F 0 "#PWR?" H 9750 3300 50  0001 C CNN
-F 1 "GND" H 9755 3377 50  0000 C CNN
-F 2 "" H 9750 3550 50  0001 C CNN
-F 3 "" H 9750 3550 50  0001 C CNN
-	1    9750 3550
+P 9600 3150
+F 0 "#PWR?" H 9600 2900 50  0001 C CNN
+F 1 "GND" H 9605 2977 50  0000 C CNN
+F 2 "" H 9600 3150 50  0001 C CNN
+F 3 "" H 9600 3150 50  0001 C CNN
+	1    9600 3150
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	10650 3350 9850 3350
+	10500 2950 9700 2950
 Wire Wire Line
-	9850 3350 9850 3050
+	9700 2950 9700 2650
 $Comp
 L power:+5V #PWR?
 U 1 1 60165EBB
-P 9850 2650
-F 0 "#PWR?" H 9850 2500 50  0001 C CNN
-F 1 "+5V" H 9865 2823 50  0000 C CNN
-F 2 "" H 9850 2650 50  0001 C CNN
-F 3 "" H 9850 2650 50  0001 C CNN
-	1    9850 2650
+P 9700 2250
+F 0 "#PWR?" H 9700 2100 50  0001 C CNN
+F 1 "+5V" H 9715 2423 50  0000 C CNN
+F 2 "" H 9700 2250 50  0001 C CNN
+F 3 "" H 9700 2250 50  0001 C CNN
+	1    9700 2250
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	10650 3050 9850 3050
-Connection ~ 9850 3050
+	10500 2650 9700 2650
+Connection ~ 9700 2650
 Wire Wire Line
-	9850 3050 9850 2650
+	9700 2650 9700 2250
 Wire Wire Line
-	10650 2950 10200 2950
+	10500 2550 10050 2550
 Wire Wire Line
-	10200 2950 10200 2750
+	10050 2550 10050 2350
 $Comp
 L RespiraWorks:+3.3V_Ctrl #PWR?
 U 1 1 6017D8F4
-P 10200 2650
-F 0 "#PWR?" H 10200 2650 50  0001 C CNN
-F 1 "+3.3V_Ctrl" H 10185 2823 50  0000 C CNN
-F 2 "" H 10200 2650 50  0001 C CNN
-F 3 "" H 10200 2650 50  0001 C CNN
-	1    10200 2650
+P 10050 2250
+F 0 "#PWR?" H 10050 2250 50  0001 C CNN
+F 1 "+3.3V_Ctrl" H 10035 2423 50  0000 C CNN
+F 2 "" H 10050 2250 50  0001 C CNN
+F 3 "" H 10050 2250 50  0001 C CNN
+	1    10050 2250
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	10650 2750 10200 2750
-Connection ~ 10200 2750
+	10500 2350 10050 2350
+Connection ~ 10050 2350
 Wire Wire Line
-	10200 2750 10200 2650
+	10050 2350 10050 2250
 $Comp
 L power:+5V #PWR?
 U 1 1 6020E488
-P 10350 1800
-F 0 "#PWR?" H 10350 1650 50  0001 C CNN
-F 1 "+5V" H 10365 1973 50  0000 C CNN
-F 2 "" H 10350 1800 50  0001 C CNN
-F 3 "" H 10350 1800 50  0001 C CNN
-	1    10350 1800
+P 8350 2750
+F 0 "#PWR?" H 8350 2600 50  0001 C CNN
+F 1 "+5V" H 8365 2923 50  0000 C CNN
+F 2 "" H 8350 2750 50  0001 C CNN
+F 3 "" H 8350 2750 50  0001 C CNN
+	1    8350 2750
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	10650 2250 10350 2250
+	8650 3200 8350 3200
 Wire Wire Line
-	10350 2250 10350 1850
-Wire Wire Line
-	10650 1850 10350 1850
-Connection ~ 10350 1850
-Wire Wire Line
-	10350 1850 10350 1800
+	8650 2800 8350 2800
 $Comp
 L power:GND #PWR?
 U 1 1 60226FFE
-P 10500 2450
-F 0 "#PWR?" H 10500 2200 50  0001 C CNN
-F 1 "GND" H 10505 2277 50  0000 C CNN
-F 2 "" H 10500 2450 50  0001 C CNN
-F 3 "" H 10500 2450 50  0001 C CNN
-	1    10500 2450
+P 8500 3400
+F 0 "#PWR?" H 8500 3150 50  0001 C CNN
+F 1 "GND" H 8505 3227 50  0000 C CNN
+F 2 "" H 8500 3400 50  0001 C CNN
+F 3 "" H 8500 3400 50  0001 C CNN
+	1    8500 3400
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	10650 2050 10500 2050
+	8650 3000 8500 3000
 Wire Wire Line
-	10500 2050 10500 2450
+	8500 3000 8500 3400
 Wire Wire Line
-	10650 2450 10500 2450
-Connection ~ 10500 2450
-Text Label 10550 1950 0    50   ~ 0
-D6
-Text Label 10550 2350 0    50   ~ 0
-D7
-Wire Wire Line
-	10650 1950 10550 1950
-Wire Wire Line
-	10650 2350 10550 2350
+	8650 3400 8500 3400
+Connection ~ 8500 3400
 Wire Wire Line
 	7350 850  7500 850 
 Connection ~ 7500 850 
@@ -1456,37 +1299,19 @@ F 3 "~" H 4600 1100 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	10050 3800 10650 3800
+	9900 3400 10500 3400
 Wire Wire Line
 	6400 2300 6850 2300
-Text Label 10200 6150 0    50   ~ 0
-D5
-Text Label 10200 6250 0    50   ~ 0
-D6
-Text Label 10200 6350 0    50   ~ 0
-D7
 Wire Wire Line
-	10150 5300 10650 5300
-Text HLabel 10150 4800 0    50   BiDi ~ 0
-D12
-Text Label 10200 5300 0    50   ~ 0
-D15
-Text Label 10200 4800 0    50   ~ 0
+	10050 5200 10500 5200
+Text Label 10050 5200 0    50   ~ 0
+D19
+Text Label 10050 4700 0    50   ~ 0
 USD-MISO
-Text Label 10600 4700 2    50   ~ 0
+Text Label 10050 4600 0    50   ~ 0
 USD-MOSI
 Text Label 6550 4300 2    50   ~ 0
 D8
-Text Label 10050 3700 0    50   ~ 0
-INH-FLOW-OUT
-Text Label 10050 3800 0    50   ~ 0
-EXH-FLOW-OUT
-Text Label 10050 3900 0    50   ~ 0
-OXY-FLOW-OUT
-Text Label 10050 4000 0    50   ~ 0
-PPO
-Text Label 10050 4100 0    50   ~ 0
-OXY
 Wire Wire Line
 	2200 4350 3700 4350
 $Comp
@@ -1503,18 +1328,260 @@ $EndComp
 $Comp
 L RespiraWorks:+3.3V_Sns #PWR?
 U 1 1 600F7606
-P 9600 800
-F 0 "#PWR?" H 9600 800 50  0001 C CNN
-F 1 "+3.3V_Sns" H 9585 973 50  0000 C CNN
-F 2 "" H 9600 800 50  0001 C CNN
-F 3 "" H 9600 800 50  0001 C CNN
-	1    9600 800 
+P 9750 850
+F 0 "#PWR?" H 9750 850 50  0001 C CNN
+F 1 "+3.3V_Sns" H 9735 1023 50  0000 C CNN
+F 2 "" H 9750 850 50  0001 C CNN
+F 3 "" H 9750 850 50  0001 C CNN
+	1    9750 850 
 	1    0    0    -1  
 $EndComp
 Wire Notes Line
-	9350 1550 11200 1550
+	9350 2000 11200 2000
 Wire Wire Line
-	9400 800  9750 800 
+	9550 850  9750 850 
 Wire Wire Line
 	3150 6100 3550 6100
+Wire Wire Line
+	8350 2750 8350 2800
+Connection ~ 8350 2800
+Wire Wire Line
+	8350 2800 8350 3200
+Text Notes 9300 1950 0    79   ~ 0
+Arduino headers for expansion
+Text HLabel 4850 3300 0    50   BiDi ~ 0
+PC0
+Text HLabel 4850 3400 0    50   BiDi ~ 0
+PC1
+Text HLabel 4850 3500 0    50   BiDi ~ 0
+PC2
+Text HLabel 4850 3600 0    50   BiDi ~ 0
+PC3
+Text HLabel 4850 3700 0    50   BiDi ~ 0
+PC4
+Text HLabel 4850 3800 0    50   BiDi ~ 0
+PC5
+Text HLabel 4850 3900 0    50   BiDi ~ 0
+PC6
+Text HLabel 4850 4100 0    50   BiDi ~ 0
+PC8
+Text HLabel 4850 4200 0    50   BiDi ~ 0
+PC9
+Text HLabel 4800 4450 0    50   BiDi ~ 0
+PC12
+Text HLabel 6700 4700 2    50   BiDi ~ 0
+PB14
+Text HLabel 6700 3900 2    50   BiDi ~ 0
+PB6
+Text HLabel 6700 3800 2    50   BiDi ~ 0
+PB5
+Text HLabel 6700 3700 2    50   BiDi ~ 0
+PB4
+Text HLabel 6700 3500 2    50   BiDi ~ 0
+PB2
+Text HLabel 7200 3400 2    50   BiDi ~ 0
+PB1
+Text HLabel 6700 3300 2    50   BiDi ~ 0
+PB0
+Text HLabel 6700 2800 2    50   BiDi ~ 0
+PA12
+Text HLabel 6700 2700 2    50   BiDi ~ 0
+PA11
+Text HLabel 6700 2600 2    50   BiDi ~ 0
+PA10
+Text HLabel 6700 2500 2    50   BiDi ~ 0
+PA9
+Text HLabel 6700 2400 2    50   BiDi ~ 0
+PA8
+Text HLabel 6700 1900 2    50   BiDi ~ 0
+PA3
+Text HLabel 7200 1800 2    50   BiDi ~ 0
+PA2
+Text HLabel 6700 1700 2    50   BiDi ~ 0
+PA1
+Text HLabel 4850 3100 0    50   BiDi ~ 0
+PD2
+Text Label 9900 3300 0    50   ~ 0
+A1
+Text Label 9900 3400 0    50   ~ 0
+A2
+Text Label 9900 3500 0    50   ~ 0
+A3
+Text Label 9900 3600 0    50   ~ 0
+A4
+Text Label 9900 3700 0    50   ~ 0
+A5
+Text Label 6450 1700 0    50   ~ 0
+A1
+Text Label 6450 2400 0    50   ~ 0
+A2
+Text Label 6450 3900 0    50   ~ 0
+A3
+Text Label 4950 3400 0    50   ~ 0
+A4
+Text Label 4950 3300 0    50   ~ 0
+A5
+Wire Notes Line
+	9350 4000 11200 4000
+Text Notes 10800 4350 0    50   ~ 0
+D8
+Text Notes 10800 4450 0    50   ~ 0
+D9
+Text Notes 10800 4550 0    50   ~ 0
+D10
+Text Notes 10800 4650 0    50   ~ 0
+D11
+Text Notes 10800 4750 0    50   ~ 0
+D12
+Text Notes 10800 4850 0    50   ~ 0
+D13
+Text Notes 10800 5150 0    50   ~ 0
+D18/SDA
+Text Notes 10800 5250 0    50   ~ 0
+D19/SCL
+Text Notes 10800 5600 0    50   ~ 0
+D0
+Text Notes 10800 5700 0    50   ~ 0
+D1
+Text Notes 10800 5800 0    50   ~ 0
+D2
+Text Notes 10800 5900 0    50   ~ 0
+D3
+Text Notes 10800 6000 0    50   ~ 0
+D4
+Text Notes 10800 6100 0    50   ~ 0
+D5
+Text Notes 10800 6200 0    50   ~ 0
+D6
+Text Notes 10800 6300 0    50   ~ 0
+D7
+Text Notes 10800 5050 0    50   ~ 0
+AREF
+Text HLabel 3850 1600 0    50   Input ~ 0
+nRST
+Text Notes 10800 3000 0    50   ~ 0
+VIN
+Text Notes 10800 2400 0    50   ~ 0
+IOREF
+Text Notes 10800 2500 0    50   ~ 0
+RESET
+Text Notes 10800 3250 0    50   ~ 0
+A0
+Text Notes 10800 2300 0    50   ~ 0
+NC
+Text HLabel 6700 4300 2    50   BiDi ~ 0
+PB10
+Text HLabel 6700 4400 2    50   BiDi ~ 0
+PB11
+Text HLabel 6700 4500 2    50   BiDi ~ 0
+PB12
+Text HLabel 6700 4600 2    50   BiDi ~ 0
+PB13
+Text HLabel 6700 4800 2    50   BiDi ~ 0
+PB15
+Text Label 10050 6250 0    50   ~ 0
+D7
+Text Label 10050 6150 0    50   ~ 0
+D6
+Text Label 10050 6050 0    50   ~ 0
+D5
+Text Label 10050 5950 0    50   ~ 0
+D4
+Text Label 10050 5850 0    50   ~ 0
+D3
+Text Label 10050 5750 0    50   ~ 0
+D2
+Text Label 10050 5650 0    50   ~ 0
+D1
+Text Label 10050 5550 0    50   ~ 0
+D0
+Wire Wire Line
+	6400 1800 7150 1800
+Wire Wire Line
+	6400 1700 6700 1700
+Wire Wire Line
+	7150 1800 7150 2900
+Connection ~ 7150 1800
+Wire Wire Line
+	7150 1800 7200 1800
+Wire Wire Line
+	7150 3300 7150 3400
+Connection ~ 7150 3400
+Wire Wire Line
+	7150 3400 7200 3400
+Wire Wire Line
+	7150 2900 8650 2900
+Wire Wire Line
+	7150 3300 8650 3300
+Wire Wire Line
+	6400 4300 6700 4300
+Wire Wire Line
+	6400 4400 6700 4400
+Wire Wire Line
+	6400 4500 6700 4500
+Wire Wire Line
+	6400 4600 6700 4600
+Wire Wire Line
+	6400 4800 6700 4800
+Connection ~ 9750 850 
+Wire Wire Line
+	9750 850  9900 850 
+Wire Wire Line
+	5300 1150 5300 1400
+Wire Wire Line
+	5300 700  5300 950 
+$Comp
+L Device:Battery_Cell BT?
+U 1 1 6017902B
+P 3950 1150
+F 0 "BT?" H 4068 1246 50  0000 L CNN
+F 1 "CR2016" H 4068 1155 50  0000 L CNN
+F 2 "RespiraWorks:BatteryHolder_CR2016_MPD_BLP2016SM-G" V 3950 1210 50  0001 C CNN
+F 3 "~" V 3950 1210 50  0001 C CNN
+F 4 "MPD" H 3950 1150 50  0001 C CNN "Manufacturer"
+F 5 "BLP2016SM-GTR" H 3950 1150 50  0001 C CNN "Part Number"
+	1    3950 1150
+	-1   0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 60179031
+P 3950 1250
+AR Path="/5FCD4B8E/5FCD4BC5/60179031" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4B8E/5FE27F70/60179031" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4D85/60179031" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4E9D/60179031" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4E9D/600630A6/60179031" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4E9D/60073FCF/60179031" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4E9D/6007AC3B/60179031" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4E9D/6007BD34/60179031" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4E9D/6007DA64/60179031" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4E9D/6007E2BB/60179031" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4E9D/600CF516/60179031" Ref="#PWR?"  Part="1" 
+AR Path="/6017BD7E/60179031" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4D18/60179031" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 3950 1000 50  0001 C CNN
+F 1 "GND" H 3955 1077 50  0000 C CNN
+F 2 "" H 3950 1250 50  0001 C CNN
+F 3 "" H 3950 1250 50  0001 C CNN
+	1    3950 1250
+	-1   0    0    -1  
+$EndComp
+Wire Wire Line
+	3950 950  4600 950 
+Connection ~ 4600 950 
+Text Label 4000 950  0    50   ~ 0
+RTC-Batt
+$Comp
+L Device:C C?
+U 1 1 5FEE8ADE
+P 3600 4600
+F 0 "C?" V 3450 4550 50  0000 L CNN
+F 1 "6.8pF" V 3550 4300 50  0000 L CNN
+F 2 "RespiraWorks_std:C_0603_1608Metric" H 3638 4450 50  0001 C CNN
+F 3 "~" H 3600 4600 50  0001 C CNN
+F 4 "DNP" V 3450 4400 50  0000 C CNN "DNP"
+	1    3600 4600
+	0    1    1    0   
+$EndComp
 $EndSCHEMATC

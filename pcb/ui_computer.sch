@@ -36,10 +36,8 @@ F 3 "" H 4750 2250 50  0001 C CNN
 	1    4750 2250
 	1    0    0    -1  
 $EndComp
-NoConn ~ 5000 2400
-NoConn ~ 5000 2500
-Text HLabel 4550 2600 0    50   Output ~ 0
-UI_LED_R
+Text HLabel 4550 2600 0    50   BiDi ~ 0
+GPIO4(GPCLK0)
 Wire Wire Line
 	4550 2600 5000 2600
 $Comp
@@ -71,8 +69,8 @@ Wire Wire Line
 	5000 2300 4750 2300
 Wire Wire Line
 	4750 2300 4750 2250
-Text HLabel 4550 2900 0    50   Output ~ 0
-GUI_BUZZER
+Text HLabel 4550 2900 0    50   BiDi ~ 0
+GPIO27
 Wire Wire Line
 	4550 2900 5000 2900
 Text HLabel 4550 3700 0    50   Output ~ 0
@@ -131,7 +129,6 @@ F 3 "" H 3950 4500 50  0001 C CNN
 $EndComp
 Text Label 4200 4100 0    50   ~ 0
 UI_ID1
-NoConn ~ 5000 2800
 $Comp
 L Device:R R?
 U 1 1 5FE66293
@@ -144,14 +141,11 @@ F 4 "DNP" H 3700 3850 50  0000 C CNN "DNP"
 	1    3950 3850
 	1    0    0    -1  
 $EndComp
-NoConn ~ 5000 3000
 Wire Wire Line
 	4750 2300 4750 3100
 Wire Wire Line
 	4750 3100 5000 3100
 Connection ~ 4750 2300
-NoConn ~ 5000 3200
-NoConn ~ 5000 3300
 NoConn ~ 5000 3400
 NoConn ~ 5000 3600
 NoConn ~ 5000 4000
@@ -307,4 +301,30 @@ F 3 "" H 5800 5700 50  0001 C CNN
 	1    5800 5700
 	1    0    0    -1  
 $EndComp
+Text Notes 1300 2450 0    50   ~ 0
+caps and ports for I/O and power
+Text HLabel 4550 2400 0    50   BiDi ~ 0
+GPIO2(SDA)
+Text HLabel 4550 2500 0    50   BiDi ~ 0
+GPIO3(SCL)
+Wire Wire Line
+	4550 2400 5000 2400
+Wire Wire Line
+	4550 2500 5000 2500
+Text HLabel 4550 2800 0    50   BiDi ~ 0
+GPIO17
+Wire Wire Line
+	5000 2800 4550 2800
+Text HLabel 4550 3000 0    50   BiDi ~ 0
+GPIO22
+Wire Wire Line
+	4550 3000 5000 3000
+Text HLabel 4550 3200 0    50   BiDi ~ 0
+GPIO10(MOSI)
+Text HLabel 4550 3300 0    50   BiDi ~ 0
+GPIO9(MISO)
+Wire Wire Line
+	4550 3200 5000 3200
+Wire Wire Line
+	4550 3300 5000 3300
 $EndSCHEMATC

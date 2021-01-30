@@ -14,7 +14,7 @@ Comment3 ""
 Comment4 ""
 $EndDescr
 $Comp
-L MCU_ST_STM32L4:STM32L496RGTx U?
+L RespiraWorks_Std:STM32L496RGTx U?
 U 1 1 5FEB9E53
 P 5800 3200
 F 0 "U?" H 6100 4950 50  0000 C CNN
@@ -27,23 +27,19 @@ $EndComp
 $Comp
 L RespiraWorks:+3.3V_Ctrl #PWR?
 U 1 1 5FEBC752
-P 5700 700
-F 0 "#PWR?" H 5700 700 50  0001 C CNN
-F 1 "+3.3V_Ctrl" H 5685 873 50  0000 C CNN
-F 2 "" H 5700 700 50  0001 C CNN
-F 3 "" H 5700 700 50  0001 C CNN
-	1    5700 700 
+P 5700 1050
+F 0 "#PWR?" H 5700 1050 50  0001 C CNN
+F 1 "+3.3V_Ctrl" H 5685 1223 50  0000 C CNN
+F 2 "" H 5700 1050 50  0001 C CNN
+F 3 "" H 5700 1050 50  0001 C CNN
+	1    5700 1050
 	1    0    0    -1  
 $EndComp
+Connection ~ 5800 1050
 Wire Wire Line
-	6000 700  5800 700 
+	5800 1050 5700 1050
 Wire Wire Line
-	5800 1400 5800 700 
-Connection ~ 5800 700 
-Wire Wire Line
-	5800 700  5700 700 
-Wire Wire Line
-	5700 700  5600 700 
+	5700 1050 5600 1050
 $Comp
 L RespiraWorks:+3.3V_Ctrl #PWR?
 U 1 1 5FEBC80C
@@ -156,7 +152,7 @@ Connection ~ 7800 1250
 Text Notes 8300 700  2    50   ~ 0
 VDD pins
 Text Notes 9950 600  2    50   ~ 0
-VDDA pins
+VDDA pin
 $Comp
 L Device:C C?
 U 1 1 5FEBD47E
@@ -327,7 +323,7 @@ U 1 1 5FEE2B95
 P 2850 2950
 F 0 "Y?" V 2804 3081 50  0000 L CNN
 F 1 "8MHz(16pF)" V 2895 3081 50  0000 L CNN
-F 2 "" H 2850 2950 50  0001 C CNN
+F 2 "RespiraWorks_Std:Crystal_SMD_HC49-SD" H 2850 2950 50  0001 C CNN
 F 3 "~" H 2850 2950 50  0001 C CNN
 	1    2850 2950
 	0    1    1    0   
@@ -653,10 +649,10 @@ Text HLabel 6700 4000 2    50   Output ~ 0
 CC-GPIO
 Wire Wire Line
 	6400 4000 6700 4000
-Connection ~ 5700 700 
+Connection ~ 5700 1050
 Wire Wire Line
-	5700 700  5700 1400
-Connection ~ 5600 700 
+	5700 1050 5700 1400
+Connection ~ 5600 1050
 Wire Wire Line
 	5500 5000 5500 5350
 $Comp
@@ -834,16 +830,16 @@ NoConn ~ 6400 1600
 Wire Wire Line
 	5300 1400 5500 1400
 Wire Wire Line
-	5600 700  5300 700 
+	5600 1050 5300 1050
 $Comp
 L Device:Jumper_NO_Small JP?
 U 1 1 601E0703
-P 5300 1050
-F 0 "JP?" H 5300 1200 50  0000 C CNN
-F 1 "Jumper" H 5300 1223 50  0001 C CNN
-F 2 "RespiraWorks_Std:SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm" H 5300 1050 50  0001 C CNN
-F 3 "~" H 5300 1050 50  0001 C CNN
-	1    5300 1050
+P 5300 1200
+F 0 "JP?" V 5300 1400 50  0000 C CNN
+F 1 "Jumper" H 5300 1373 50  0001 C CNN
+F 2 "RespiraWorks_Std:SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm" H 5300 1200 50  0001 C CNN
+F 3 "~" H 5300 1200 50  0001 C CNN
+	1    5300 1200
 	0    -1   -1   0   
 $EndComp
 Wire Wire Line
@@ -865,15 +861,7 @@ F 3 "" H 4600 1250 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	6000 700  6000 1400
-Wire Wire Line
-	5600 700  5600 1400
-Wire Wire Line
-	5900 1400 5900 850 
-Wire Wire Line
-	5900 850  6200 850 
-Wire Wire Line
-	6200 850  6200 700 
+	5600 1050 5600 1400
 Wire Wire Line
 	5600 5350 5500 5350
 Connection ~ 5600 5350
@@ -1317,12 +1305,12 @@ Wire Wire Line
 $Comp
 L RespiraWorks:+3.3V_Sns #PWR?
 U 1 1 600F7198
-P 6200 700
-F 0 "#PWR?" H 6200 700 50  0001 C CNN
-F 1 "+3.3V_Sns" H 6185 873 50  0000 C CNN
-F 2 "" H 6200 700 50  0001 C CNN
-F 3 "" H 6200 700 50  0001 C CNN
-	1    6200 700 
+P 6200 1050
+F 0 "#PWR?" H 6200 1050 50  0001 C CNN
+F 1 "+3.3V_Sns" H 6185 1223 50  0000 C CNN
+F 2 "" H 6200 1050 50  0001 C CNN
+F 3 "" H 6200 1050 50  0001 C CNN
+	1    6200 1050
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -1527,9 +1515,9 @@ Connection ~ 9750 850
 Wire Wire Line
 	9750 850  9900 850 
 Wire Wire Line
-	5300 1150 5300 1400
+	5300 1300 5300 1400
 Wire Wire Line
-	5300 700  5300 950 
+	5300 1050 5300 1100
 $Comp
 L Device:Battery_Cell BT?
 U 1 1 6017902B
@@ -1584,4 +1572,14 @@ F 4 "DNP" V 3450 4400 50  0000 C CNN "DNP"
 	1    3600 4600
 	0    1    1    0   
 $EndComp
+Wire Wire Line
+	5900 1050 5800 1050
+Wire Wire Line
+	6000 1400 6000 1050
+Wire Wire Line
+	6000 1050 6200 1050
+Wire Wire Line
+	5800 1400 5800 1050
+Wire Wire Line
+	5900 1400 5900 1050
 $EndSCHEMATC

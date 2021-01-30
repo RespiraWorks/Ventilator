@@ -1,10 +1,9 @@
 EESchema Schematic File Version 4
-LIBS:Ventilator-cache
 EELAYER 26 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 8 30
+Sheet 1 1
 Title "UI Computer"
 Date ""
 Rev "2.0"
@@ -38,6 +37,8 @@ F 3 "" H 4750 2250 50  0001 C CNN
 $EndComp
 Text HLabel 4550 2600 0    50   BiDi ~ 0
 GPIO4(GPCLK0)
+NoConn ~ 5000 2400
+NoConn ~ 5000 2500
 Wire Wire Line
 	4550 2600 5000 2600
 $Comp
@@ -129,6 +130,7 @@ F 3 "" H 3950 4500 50  0001 C CNN
 $EndComp
 Text Label 4200 4100 0    50   ~ 0
 UI_ID1
+NoConn ~ 5000 2800
 $Comp
 L Device:R R?
 U 1 1 5FE66293
@@ -141,11 +143,14 @@ F 4 "DNP" H 3700 3850 50  0000 C CNN "DNP"
 	1    3950 3850
 	1    0    0    -1  
 $EndComp
+NoConn ~ 5000 3000
 Wire Wire Line
 	4750 2300 4750 3100
 Wire Wire Line
 	4750 3100 5000 3100
 Connection ~ 4750 2300
+NoConn ~ 5000 3200
+NoConn ~ 5000 3300
 NoConn ~ 5000 3400
 NoConn ~ 5000 3600
 NoConn ~ 5000 4000

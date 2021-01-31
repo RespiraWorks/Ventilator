@@ -821,6 +821,17 @@ Wire Wire Line
 	2550 6550 2550 6600
 Text HLabel 11850 6550 2    50   Output ~ 0
 SDO
+$Comp
+L Device:R R?
+U 1 1 60508DE0
+P 11550 6550
+F 0 "R?" V 11450 6450 50  0000 L CNN
+F 1 "0" V 11600 6400 50  0000 L CNN
+F 2 "RespiraWorks_std:R_0603_1608Metric" V 11480 6550 50  0001 C CNN
+F 3 "~" H 11550 6550 50  0001 C CNN
+	1    11550 6550
+	0    1    1    0   
+$EndComp
 Wire Wire Line
 	3150 6650 2650 6650
 Wire Wire Line
@@ -1084,6 +1095,8 @@ F 3 "" H 13300 7350 50  0001 C CNN
 	1    13300 7350
 	1    0    0    -1  
 $EndComp
+Text Notes 11700 6550 0    39   ~ 0
+D12
 Text HLabel 2700 6400 0    50   Output ~ 0
 SW
 Text Notes 1500 7600 2    39   ~ 0
@@ -1153,6 +1166,10 @@ Wire Wire Line
 	11700 5750 11850 5750
 Wire Wire Line
 	11350 6050 11700 6050
+Wire Wire Line
+	11350 6550 11400 6550
+Wire Wire Line
+	11700 6550 11850 6550
 Wire Wire Line
 	11350 6800 12550 6800
 Wire Wire Line
@@ -1581,6 +1598,4 @@ F 4 "10V" V 8250 2750 50  0001 C CNN "Voltage"
 	1    8250 2750
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	11350 6550 11850 6550
 $EndSCHEMATC

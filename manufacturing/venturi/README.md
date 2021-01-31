@@ -125,17 +125,11 @@ BEFORE purchasing any parts.**
 
 | Item | Quantity | Manufacturer  | Part #          | Price (USD)  | Sources[*][ppg] | Notes |
 | ---- |---------:| ------------- | --------------- | ------------:|:---------------:| ----- |
-|**A1**| 1        | RespiraWorks  |                 | ~1           | [B][1rw]        | 3D-printed venturi |
+|**A1**| 1        | RespiraWorks  |                 | ~1           | [Rw][1rw]       | 3D-printed venturi |
 |**A2**| 2        | McMaster-Carr | 5463K3          | 3.93 / 10    | [C][2mcmc]      | Barbed fitting 3/32" AKA nipple |
-|**A3**| -        | McMaster-Carr | 5463K4          | 7.39 / 10    | [C][3mcmc]      | sensing tube 3/23" t-junction, for teeing off to patient pressure sensor, **part of pneumatic assembly** |
-|**A4**| -        | uxcell        | a16031400ux0163 | 6.49 / 16ft  | [Z][4amzn]      | 2.5 mm tubing for connecting to sensors, **part of pneumatic assembly** |
-|**A5**| -        | McMaster-Carr | 50315K68        | 5.75 / 25ft  | [C][5mcmc]      | 2.5 mm tubing, **alternative to A4** |
 
 [1rw]:   #files
 [2mcmc]: https://www.mcmaster.com/5463K33
-[3mcmc]: https://www.mcmaster.com/5463K44
-[4amzn]: https://www.amazon.com/gp/product/B01F4BJ7PI
-[5mcmc]: https://www.mcmaster.com/50315K68
 
 ## Tools
 

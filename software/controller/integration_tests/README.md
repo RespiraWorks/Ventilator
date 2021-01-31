@@ -55,7 +55,7 @@ sensor signals on the stepper board.
 ### Pressure sensing
 A redundant, more precise pressure sensor will be used to help validate
 blower, on-board pressure sensors and venturi flow sensors:
-[AMS5915-0100-D Amplified Low Pressure Sensor](https://store.ncd.io/product/ams5915-0100-d-amplified-low-pressure-sensor-0-100-mbar-0-to-1-450-psi-i2c-mini-module/)
+[AMS5915-0100-D Amplified Low Pressure Sensor](https://www.analog-micro.com/products/pressure-sensors/board-mount-pressure-sensors/ams5915/ams5915-datasheet.pdf)
 
 The sensor can deliver data using the i2c protocol, so it will require a capable data acquisition
 system separate from the ventilator controller itself.

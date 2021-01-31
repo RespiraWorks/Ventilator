@@ -50,12 +50,13 @@ Some of the above may not be done for each component. Feel free to help us fill 
 
 ### Components
 
-* [Brain build](brain) - constitutes just the computing components
-* [Blower assembly](blower) - this provides pressurized air
-* [Venturi flow sensors](venturi) - in-house design of affordable flow sensors
-* [Pinch valve](pinch_valve) - in-house design of affordable valve for inhale and exhale control
+* [Brain build](brain) - constitutes just the computing components, and some of the electrical components
 * [Air filter assembly](filter_holder) - air filters for keeping patient safe and system clean
-* [Oxygen subsystem](oxygen) - pneumatics and sensing components for controlled oxygen delivery
+* [**Pneumatic assembly**](enclosed_build/pneumatics) - full pneumatic assembly, which includes some instances of the following:
+  * [Blower assembly](blower) - this provides pressurized air
+  * [Venturi flow sensors](venturi) - in-house design of affordable flow sensors
+  * [Pinch valve](pinch_valve) - in-house design of affordable valve for inhale and exhale control
+* [Enclosure assembly](enclosed_build/enclosure) - rigid frame and enclosure components
 
 ### Characterization Testing
 

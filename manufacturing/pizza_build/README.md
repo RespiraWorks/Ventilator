@@ -32,16 +32,18 @@ BEFORE purchasing any parts.**
 
 [ppg]: ../../manufacturing/purchasing_guidelines.md
 
-| Item | Quantity | Manufacturer  | Part #     | Price (USD)  | Sources[*][ppg] | Notes |
-| ---- |---------:| ------------- | ---------- | ------------:|:---------------:| ----- |
-|**A1**| 5ft      | OCSParts      | 117062-5   | 22.99 / 5ft  | [Z][a1amzn]     | soft 3/4"ID 1"OD tubing |
-|**A2**| 5ft      | McMaster-Carr | 5233K71    | 14.20 / 10ft | [C][a2mcmc]     | hard 3/4"ID 1"OD tubing, **alternative to a1**, not as fun to work with, not for medical use |
-|**A3**| 6        | McMaster-Carr | 9579K73    | 12.24 / 20   | [C][a3mcmc]     | Herbie clip K (22.2-24.9mm) for clamping 1"OD tubing, works better for soft tubing |
-|**A4**| 6        | McMaster-Carr | 9579K74    | 12.33 / 20   | [C][a4mcmc]     | Herbie clip L (24.5-27.6mm) for clamping 1"OD tubing, **alternate to a3** maybe works better for hard tubing? |
-|**A5**| 1        | McMaster-Carr | 5463K648   | 10.20 / 10   | [C][a5mcmc]     | 3/4"ID x 3/8"ID adapter, to interface with pinch valve tubing |
-|**A6**| 1        | McMaster-Carr | 5463K644   | 7.80 / 10    | [C][a6mcmc]     | 5/8"ID x 3/8"ID adapter, for blower-to-pinch valve transition |
-|**A7**| 3        | McMaster-Carr | 96817A896  | 7.89 / 25    | [C][a7mcmc]     | m2.5 x 10mm thread-forming screws, for holding down blower to base board |
-|**A8**| 4        | Bolt Dropper  | B079Y9DT1K | 6.40 / 100   | [A][a8amzn]     | #4 x 1/2" Stainless Flat Head Phillips Wood Screw |
+| Item  | Quantity | Manufacturer  | Part #     | Price (USD)  | Sources[*][ppg] | Notes |
+| ----- |---------:| ------------- | ---------- | ------------:|:---------------:| ----- |
+|**A1** | 5ft      | OCSParts      | 117062-5   | 22.99 / 5ft  | [Z][a1amzn]     | soft 3/4"ID 1"OD tubing |
+|**A2** | 5ft      | McMaster-Carr | 5233K71    | 14.20 / 10ft | [C][a2mcmc]     | hard 3/4"ID 1"OD tubing, **alternative to a1**, not as fun to work with, not for medical use |
+|**A3** | 6        | McMaster-Carr | 9579K73    | 12.24 / 20   | [C][a3mcmc]     | Herbie clip K (22.2-24.9mm) for clamping 1"OD tubing, works better for soft tubing |
+|**A4** | 6        | McMaster-Carr | 9579K74    | 12.33 / 20   | [C][a4mcmc]     | Herbie clip L (24.5-27.6mm) for clamping 1"OD tubing, **alternate to a3** maybe works better for hard tubing? |
+|**A5** | 1        | McMaster-Carr | 5463K648   | 10.20 / 10   | [C][a5mcmc]     | 3/4"ID x 3/8"ID adapter, to interface with pinch valve tubing |
+|**A6** | 1        | McMaster-Carr | 5463K644   | 7.80 / 10    | [C][a6mcmc]     | 5/8"ID x 3/8"ID adapter, for blower-to-pinch valve transition |
+|**A7** | 3        | McMaster-Carr | 96817A896  | 7.89 / 25    | [C][a7mcmc]     | m2.5 x 10mm thread-forming screws, for holding down blower to base board |
+|**A8** | 4        | Bolt Dropper  | B079Y9DT1K | 6.40 / 100   | [A][a8amzn]     | #4 x 1/2" Stainless Flat Head Phillips Wood Screw |
+|**A9** | ~3ft     | uxcell   | a16031400ux0163 | 6.49 / 16ft  | [Z][a9amzn]    | 2.5 mm tubing for connecting venturis to pressure sensors |
+|**A10**| 1        | McMaster-Carr | 5463K4     | 7.39 / 10    | [C][a10mcmc]    | sensing tube 3/23" t-junction, for teeing off to patient pressure sensor|
 
 [a1amzn]: https://www.amazon.com/gp/product/B01LZ5ZK53
 [a2mcmc]: https://www.mcmaster.com/5233K71
@@ -51,6 +53,8 @@ BEFORE purchasing any parts.**
 [a6mcmc]: https://www.mcmaster.com/5463K644
 [a7mcmc]: https://www.mcmaster.com/96817A896/
 [a8amzn]: https://www.amazon.com/Stainless-Phillips-Screw-Bolt-Dropper/dp/B079Y9DT1K
+[a9amzn]: https://www.amazon.com/gp/product/B01F4BJ7PI
+[a10mcmc]: https://www.mcmaster.com/5463K44
 
 ## Tools
 

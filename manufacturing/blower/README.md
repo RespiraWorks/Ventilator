@@ -78,14 +78,14 @@ wiring.
 
 | Item  | Quantity | Manufacturer  | Part #                       | Price (USD)      | Sources[*][ppg]         | Notes |
 | ----- |---------:| ------------- | ---------------------------- | ----------------:|:-----------------------:|-------|
-|**C1** | 1        | RespiraWorks  | tubing_adapter               | 1 (material)     | [B][c1rw]               | 3D printed from data in link |
+|**C1** | 1        | RespiraWorks  | tubing_adapter               | 1 (material)     | [Rw][c1rw]              | 3D printed from data in link |
 |**C2** | ~200cm²  | McMaster-Carr | 8560K357                     | 54.68 / 3716cm²  | [C][c2mcmc]             | 1/4" (~6mm) thick clear acrylic sheet, to make **C3-C5** below |
-|**C3** | 1        | RespiraWorks  | driver_mounting_plate        | ~1.1 (material)  | [B][c3rw]               | Driver mounting plate cut from acrylic (**C2**) using drawing in link, uses ~75 cm² |
-|**C4** | 1        | RespiraWorks  | blower_holding_plate         | ~0.9 (material)  | [B][c4rw]               | Blower holding plate cut from acrylic (**C2**) using drawing in link, uses ~60 cm² |
-|**C5** | 1        | RespiraWorks  | tubing_adapter_holding_plate | ~0.9 (material)  | [B][c5rw]               | Tubing adapter holding plate cut from acrylic (**C2**) using drawing in link, uses ~60 cm² |
+|**C3** | 1        | RespiraWorks  | driver_mounting_plate        | ~1.1 (material)  | [Rw][c3rw]              | Driver mounting plate cut from acrylic (**C2**) using drawing in link, uses ~75 cm² |
+|**C4** | 1        | RespiraWorks  | blower_holding_plate         | ~0.9 (material)  | [Rw][c4rw]              | Blower holding plate cut from acrylic (**C2**) using drawing in link, uses ~60 cm² |
+|**C5** | 1        | RespiraWorks  | tubing_adapter_holding_plate | ~0.9 (material)  | [Rw][c5rw]              | Tubing adapter holding plate cut from acrylic (**C2**) using drawing in link, uses ~60 cm² |
 |**C6** | ~80cm²   | McMaster-Carr | 1370N13-1370N131             | 6.75 / 232cm²    | [C][c6mcmc]             | 1/16" durometer 30 neoprene gasket material, to make items **C7** and **C8** below |
-|**C7** | 1        | RespiraWorks  | blower_gasket                | ~1.2 (material)  | [B][c7rw]               | Blower gasket cut from (**C6**) using drawing in link, uses ~40 cm² |
-|**C8** | 1        | RespiraWorks  | tubing_adapter_gasket        | ~1.2 (material)  | [B][c8rw]               | Tubing adapter Gasket cut from (**C6**) using drawing in link, uses ~40 cm² |
+|**C7** | 1        | RespiraWorks  | blower_gasket                | ~1.2 (material)  | [Rw][c7rw]              | Blower gasket cut from (**C6**) using drawing in link, uses ~40 cm² |
+|**C8** | 1        | RespiraWorks  | tubing_adapter_gasket        | ~1.2 (material)  | [Rw][c8rw]              | Tubing adapter Gasket cut from (**C6**) using drawing in link, uses ~40 cm² |
 |**C9** | 8        | McMaster-Carr | 93625A150                    | 6.04 / 100       | [C][c9mcmc]             | M4 nylon insert lock nuts |
 |**C10**| 16       | McMaster-Carr | 93475A230                    | 1.86 / 100       | [C][c10mcmc]            | M4 washers |
 |**C11**| 4        | McMaster-Carr | 92000A224                    | 9.60 / 100       | [C][c11mcmc]            | M4 x 14mm Philips head screws, for blower driver |

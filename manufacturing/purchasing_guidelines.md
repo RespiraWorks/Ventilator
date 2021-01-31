@@ -50,11 +50,13 @@ In such cases please either:
 Items listed in the sub-assembly pages throughout this repo use the following abbreviations to identify the various
 suppliers.
 
+* **Rw** = Built by RespiraWorks / DIY
 * **A** = Ali Express
-* **B** = Built by RespiraWorks
 * **C** = McMaster-Carr
+* **Cs** = Cables & Sensors
 * **F** = Fast Eddy Bearings
 * **G** = Grainger
+* **Gn** = Generant
 * **K** = Digikey
 * **M** = Mouser
 * **O** = Monoprice
@@ -62,7 +64,7 @@ suppliers.
 (**note**: links provided are for worldwide customers; there are local RS retail sites for most countries that use the
 same product reference (RS Stock No.) and will probably ship faster if you order from your country's site)
 * **S** = ST
-* **SM** = SMC Pneumatics
+* **Sm** = SMC Pneumatics
 * **T** = Stepperonline.com
 * **U** = Uflow
 * **W** = Wonsmart

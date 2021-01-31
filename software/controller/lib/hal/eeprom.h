@@ -28,35 +28,49 @@ static constexpr uint32_t kMaxMemorySize{65535};
 // This class defines an I²C addressable EEPROM.
 class I2Ceeprom {
 public:
-  I2Ceeprom(uint8_t address, uint16_t page_size, uint16_t size,
+  I2Ceeprom(uint8_t address, uint8_t page_size, uint16_t size,
             I2C::Channel *channel)
-      : address_(address), size_(size), channel_(channel) {
-#ifdef TEST_MODE
-    for (int i = 0; i < size_; ++i) {
-      memory_[i] = 0xFF;
-    }
-#endif
-  };
+      : address_(address), size_(size), page_size_(page_size),
+        channel_(channel){};
 
   // Because of the way I²C works, read/write operations take some time,
   // we use pointers to the place the data has to be put and to a boolean
   // that informs the caller once his request is processed.
   // As for the I2C::Requests, it is up to the caller to ensure length and
   // data are consistent.
-  bool ReadBytes(uint16_t offset, uint16_t length, void *data,
-                 bool *processed) const;
-
+  bool ReadBytes(uint16_t offset, uint16_t length, void *data, bool *processed);
   bool WriteBytes(uint16_t offset, uint16_t length, void *data,
                   bool *processed);
 
+protected:
+  uint8_t address_;   // 7 bits I²C address
+  uint16_t size_;     // in bytes
+  uint8_t page_size_; // in bytes
+  // pointer to the I²C channel the EEPROM is wired to
+  I2C::Channel *channel_;
+  virtual bool SendBytes(const I2C::Request &request) {
+    return channel_->SendRequest(request);
+  }
+  virtual bool ReceiveBytes(const I2C::Request &request) {
+    return channel_->SendRequest(request);
+  }
+};
+
+class TestEeprom : public I2Ceeprom {
+public:
+  TestEeprom(uint8_t address, uint8_t page_size, uint16_t size,
+             I2C::Channel *channel)
+      : I2Ceeprom(address, page_size, size, channel) {
+    for (int i = 0; i < size_; ++i) {
+      memory_[i] = 0xFF;
+    };
+  }
+
 private:
-  static const uint8_t kPageLength{64};
-  uint8_t address_;       // 7 bits I²C address
-  uint16_t size_;         // in bytes
-  I2C::Channel *channel_; // pointer to the I²C channel the EEPROM is wired to
-#ifdef TEST_MODE
+  uint32_t address_pointer_{0};
   uint8_t memory_[kMaxMemorySize];
-#endif
+  bool SendBytes(const I2C::Request &request);
+  bool ReceiveBytes(const I2C::Request &request);
 };
 
 #endif // EEPROM_H_

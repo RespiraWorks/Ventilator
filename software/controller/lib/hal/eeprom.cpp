@@ -18,7 +18,7 @@ limitations under the License.
 #include <string.h>
 
 bool I2Ceeprom::ReadBytes(uint16_t offset, uint16_t length, void *data,
-                          bool *processed) const {
+                          bool *processed) {
 
   if (offset + length > size_) {
     // requesting outside of memory capacity
@@ -31,14 +31,6 @@ bool I2Ceeprom::ReadBytes(uint16_t offset, uint16_t length, void *data,
   offset_address[0] = static_cast<uint8_t>((offset & 0x7F00) >> 8);
   offset_address[1] = static_cast<uint8_t>(offset & 0xFF);
 
-#ifdef TEST_MODE
-  // faked when testing
-  uint reconstructed_offset = (offset_address[0] << 8) | offset_address[1];
-  memcpy(data, &memory_[reconstructed_offset], length);
-  if (processed != nullptr)
-    *processed = true;
-  return true;
-#elif defined(BARE_STM32)
   bool discarded = false;
   I2C::Request pointer_set = {
       .slave_address = address_,
@@ -57,12 +49,11 @@ bool I2Ceeprom::ReadBytes(uint16_t offset, uint16_t length, void *data,
   };
 
   // Queue both requests back to back, the second only if the first is succesful
-  if (i2c1.SendRequest(pointer_set)) {
-    return i2c1.SendRequest(read_request);
+  if (SendBytes(pointer_set)) {
+    return ReceiveBytes(read_request);
   } else {
     return false;
   }
-#endif
 };
 
 bool I2Ceeprom::WriteBytes(uint16_t offset, uint16_t length, void *data,
@@ -80,7 +71,7 @@ bool I2Ceeprom::WriteBytes(uint16_t offset, uint16_t length, void *data,
   while (current_offset < offset + length) {
     // provision request length from current offset to the end of the page
     uint8_t request_length =
-        static_cast<uint8_t>(kPageLength - (current_offset % kPageLength));
+        static_cast<uint8_t>(page_size_ - (current_offset % page_size_));
 
     if (current_offset + request_length > offset + length) {
       // last request, only write the remaining bytes and not a full page
@@ -93,10 +84,6 @@ bool I2Ceeprom::WriteBytes(uint16_t offset, uint16_t length, void *data,
 
     memcpy(&write_data[2], current_data, request_length);
 
-#ifdef TEST_MODE
-    // faked when testing
-    memcpy(&memory_[current_offset], &write_data[2], request_length);
-#elif defined(BARE_STM32)
     I2C::Request request = {
         .slave_address = address_,
         .direction = I2C::ExchangeDirection::kWrite,
@@ -105,17 +92,32 @@ bool I2Ceeprom::WriteBytes(uint16_t offset, uint16_t length, void *data,
         .processed = processed,
     };
 
-    success &= i2c1.SendRequest(request);
+    success &= SendBytes(request);
     if (!success) {
       break;
     }
-#endif
     current_offset = static_cast<uint16_t>(current_offset + request_length);
     current_data = current_data + request_length;
   }
-#ifdef TEST_MODE
-  if (processed != nullptr)
-    *processed = true;
-#endif
   return success;
 };
+
+bool TestEeprom::SendBytes(const I2C::Request &request) {
+  address_pointer_ = reinterpret_cast<uint8_t *>(request.data)[0] << 8 |
+                     reinterpret_cast<uint8_t *>(request.data)[1];
+  for (uint32_t i = 2; i < request.size; ++i) {
+    memory_[address_pointer_++] = reinterpret_cast<uint8_t *>(request.data)[i];
+  }
+  if (request.processed != nullptr)
+    *(request.processed) = true;
+  return true;
+}
+
+bool TestEeprom::ReceiveBytes(const I2C::Request &request) {
+  for (uint32_t i = 0; i < request.size; ++i) {
+    reinterpret_cast<uint8_t *>(request.data)[i] = memory_[address_pointer_++];
+  }
+  if (request.processed != nullptr)
+    *(request.processed) = true;
+  return true;
+}

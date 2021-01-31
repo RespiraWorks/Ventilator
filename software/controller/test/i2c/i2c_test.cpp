@@ -21,7 +21,7 @@ using namespace I2C;
 TEST(I2C, RequestQueue) {
   constexpr uint kQueueLength{80};
 
-  Channel i2c;
+  TestChannel i2c;
 
   // Queue kQueueLength+5 read requests
   uint8_t read_data[kQueueLength + 5];
@@ -74,7 +74,7 @@ TEST(I2C, WriteBuffer) {
   constexpr uint16_t kWriteBufferLength{4096};
   constexpr uint16_t kRequestLength{400};
   uint buffer_head{0};
-  Channel i2c;
+  TestChannel i2c;
 
   // Initialize a long array to be sent over I2C
   uint8_t test_array[kRequestLength + 50];
@@ -195,7 +195,7 @@ TEST(I2C, RetryOnError) {
   constexpr uint kMaxRetries{5};
   constexpr uint16_t kRequestLength{400};
 
-  Channel i2c;
+  TestChannel i2c;
 
   // Queue a long read request
   uint8_t read_data[kRequestLength];
@@ -245,16 +245,16 @@ TEST(I2C, RetryOnError) {
   // the retry count
   i2c.TEST_SimulateNack();
   i2c.I2CEventHandler();
-  i2c.TEST_QueueReceiveData(20);
   i2c.I2CEventHandler();
-  ASSERT_EQ(read_data[0], 20);
+  ASSERT_EQ(read_data[0], kMaxRetries - 2 + 45);
   // This is where I get stuck... the I2C design is currently not robust passed
   // this point... if I simulate another error, it will just start the next
   // request, which is not really satisfactory.
   i2c.I2CErrorHandler();
-  i2c.TEST_QueueReceiveData(40);
+  i2c.TEST_QueueReceiveData(20);
   i2c.I2CEventHandler();
-  ASSERT_EQ(read_data[0], 20);
-  ASSERT_EQ(read2, 40);
+  ASSERT_EQ(read_data[0], kMaxRetries - 2 + 45);
+  ASSERT_FALSE(processed);
+  ASSERT_EQ(read2, 20);
   ASSERT_TRUE(processed2);
 }

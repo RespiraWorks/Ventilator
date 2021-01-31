@@ -16,15 +16,15 @@ limitations under the License.
 #include "eeprom.h"
 #include "gtest/gtest.h"
 
-static constexpr uint32_t kMemSize{32768};
-// initialize memory with data = address % 256
+static constexpr uint32_t kMemSize{512};
 uint8_t memory[kMemSize];
 
-static I2Ceeprom eeprom = I2Ceeprom(0x50, 64, 32768, &i2c1);
+static TestEeprom eeprom = TestEeprom(0x50, 64, kMemSize, nullptr);
 
 // This test check that the read address is built correctly
 TEST(I2C_EEPROM, Read_Write) {
 
+  // initialize memory with data = address % 256
   for (int i = 0; i < kMemSize; ++i) {
     memory[i] = static_cast<uint8_t>(i % 256);
   }

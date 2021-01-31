@@ -24,10 +24,9 @@ limitations under the License.
 #include "hal.h"
 #include <cstring>
 
-I2C::Channel i2c1;
-
 #if defined(BARE_STM32)
 #include "hal_stm32.h"
+I2C::STM32Channel i2c1;
 
 // Reference abbreviations ([RM], [PCB], etc) are defined in hal/README.md
 void HalApi::InitI2C() {
@@ -69,38 +68,6 @@ void I2C1_ER_ISR() { i2c1.I2CErrorHandler(); };
 void DMA2_CH6_ISR() { i2c1.DMAIntHandler(DMA_Chan::C6); };
 
 void DMA2_CH7_ISR() { i2c1.DMAIntHandler(DMA_Chan::C7); };
-
-void I2C::Channel::Init(I2C_Regs *i2c, DMA_Regs *dma, Speed speed) {
-  i2c_ = i2c;
-
-  // Disable I²C peripheral
-  i2c_->ctrl1.peripheral_en = 0;
-
-  // Set I²C speed using timing values from [RM] table 182
-  i2c_->timing.r = static_cast<uint32_t>(speed);
-
-  // Setup DMA channels
-  if (dma != nullptr) {
-    SetupDMAChannels(dma);
-  }
-
-  // enable I²C peripheral
-  i2c_->ctrl1.peripheral_en = 1;
-
-  // configure I²C interrupts
-  i2c_->ctrl1.nack_interrupts = 1;
-  i2c_->ctrl1.error_interrupts = 1;
-  // in DMA mode, we do not treat the transfer-specific ones
-  if (!dma_enable_) {
-    i2c_->ctrl1.rx_interrupts = 1;
-    i2c_->ctrl1.tx_interrupts = 1;
-    i2c_->ctrl1.tx_complete_interrupts = 1;
-  } else {
-    i2c_->ctrl1.rx_interrupts = 0;
-    i2c_->ctrl1.tx_interrupts = 0;
-    i2c_->ctrl1.tx_complete_interrupts = 0;
-  }
-}
 #endif // BARE_STM32
 
 bool I2C::Channel::SendRequest(const Request &request) {
@@ -185,7 +152,134 @@ void I2C::Channel::StartTransfer() {
     error_retry_ = kMaxRetries;
   }
 
+  SetupI2CTransfer();
+
+  transfer_in_progress_ = true;
+}
+
+// Method called by interrupt handler when dma is disabled. This method
+// transfers data to/from the tx/rx registers from/to *request.data
+void I2C::Channel::TransferByte() {
+  if (remaining_size_ == 0) {
+    // this shouldn't happen, but just to be safe, we stop here.
+    return;
+  }
+  if (last_request_.direction == ExchangeDirection::kRead) {
+    ReceiveByte();
+  } else {
+    SendByte();
+  }
+  if (--remaining_size_ > 0) {
+    // increment next_data_ pointer only in case we are still expecting more
+    // data to prevent unwarranted memory access
+    next_data_ += sizeof(uint8_t);
+  };
+}
+
+void I2C::Channel::EndTransfer() {
+  *last_request_.processed = true;
+  transfer_in_progress_ = false;
+  if (last_request_.direction == ExchangeDirection::kWrite) {
+    // free the part of the write buffer that was dedicated to this request
+    write_buffer_start_ += last_request_.size;
+    if (write_buffer_start_ >= wrapping_index_) {
+      // We don't allow data in the same request to wrap around, so we must
+      // detect that the next write data actually starts at index 0 to properly
+      // free the end of the buffer as well
+      write_buffer_start_ = 0;
+    }
+  }
+}
+
+void I2C::Channel::I2CEventHandler() {
+  if (!transfer_in_progress_) {
+    return;
+  }
+
+  // resend the request in case the slave NACK'd our request
+  if (NackDetected()) {
+    // clear the nack
+    ClearNack();
+    // the slave is non-responsive --> start the request anew
+    next_data_ = reinterpret_cast<uint8_t *>(last_request_.data);
+    remaining_size_ = last_request_.size;
+    StartTransfer();
+  }
+
+  // When we are using DMA, NACK is the only I²C event we are dealing with
+  if (dma_enable_) {
+    return;
+  }
+
+  if (NextByteNeeded()) {
+    // carry on with the current transfer
+    TransferByte();
+  }
+
 #if defined(BARE_STM32)
+  if (TransferReload()) {
+    ReloadTransfer();
+  }
+#endif
+
+  if (TransferComplete()) {
+    // Send stop condition
+    StopTransfer();
+    // Clean necessary states
+    EndTransfer();
+    // And start the next one (if any)
+    StartTransfer();
+  }
+}
+
+void I2C::Channel::I2CErrorHandler() {
+  // I²C error --> clear all error flags (except those that are SMBus only)
+  ClearErrors();
+  // and restart the request up to error_retry_ times
+  if (--error_retry_ > 0) {
+    next_data_ = reinterpret_cast<uint8_t *>(last_request_.data);
+    remaining_size_ = last_request_.size;
+  } else {
+    // skip this request and go to next one;
+    remaining_size_ = 0;
+  }
+  StartTransfer();
+}
+
+#if defined(BARE_STM32)
+void I2C::STM32Channel::Init(I2C_Regs *i2c, DMA_Regs *dma, Speed speed) {
+  i2c_ = i2c;
+
+  // Disable I²C peripheral
+  i2c_->ctrl1.peripheral_en = 0;
+
+  // Set I²C speed using timing values from [RM] table 182
+  i2c_->timing.r = static_cast<uint32_t>(speed);
+
+  // Setup DMA channels
+  if (dma != nullptr) {
+    SetupDMAChannels(dma);
+  }
+
+  // enable I²C peripheral
+  i2c_->ctrl1.peripheral_en = 1;
+
+  // configure I²C interrupts
+  i2c_->ctrl1.nack_interrupts = 1;
+  i2c_->ctrl1.error_interrupts = 1;
+  // in DMA mode, we do not treat the transfer-specific ones
+  if (!dma_enable_) {
+    i2c_->ctrl1.rx_interrupts = 1;
+    i2c_->ctrl1.tx_interrupts = 1;
+    i2c_->ctrl1.tx_complete_interrupts = 1;
+  } else {
+    i2c_->ctrl1.rx_interrupts = 0;
+    i2c_->ctrl1.tx_interrupts = 0;
+    i2c_->ctrl1.tx_complete_interrupts = 0;
+  }
+}
+
+void I2C::STM32Channel::SetupI2CTransfer() {
   // set transfer-specific registers per [RM] p1149 to 1158
   i2c_->ctrl2.slave_addr_7b = last_request_.slave_address & 0x7f;
   i2c_->ctrl2.transfer_dir = static_cast<bool>(last_request_.direction);
@@ -215,168 +309,21 @@ void I2C::Channel::StartTransfer() {
     // ongoing request.
     i2c_->ctrl2.start = 1;
   }
-#endif // BARE_STM32
-  transfer_in_progress_ = true;
 }
 
-// Method called by interrupt handler when dma is disabled. This method
-// transfers data to/from the tx/rx registers from/to *request.data
-void I2C::Channel::TransferByte() {
-  if (remaining_size_ == 0) {
-    // this shouldn't happen, but just to be safe, we stop here.
-    return;
-  }
-  if (last_request_.direction == ExchangeDirection::kRead) {
-#if defined(BARE_STM32)
-    *next_data_ = static_cast<uint8_t>(i2c_->rxData);
-#elif defined(TEST_MODE)
-    std::optional<uint8_t> data = rx_buffer_.Get();
-    if (data != std::nullopt) {
-      *next_data_ = *data;
-    } else {
-      return;
-    }
-#endif
+// Start the next transfer, which is part of the current request
+void I2C::STM32Channel::ReloadTransfer() {
+  if (remaining_size_ <= 255) {
+    i2c_->ctrl2.n_bytes = static_cast<uint8_t>(remaining_size_);
+    i2c_->ctrl2.reload = 0;
   } else {
-#if defined(BARE_STM32)
-    i2c_->txData = *next_data_;
-#elif defined(TEST_MODE)
-    bool OK = sent_buffer_.Put(*next_data_);
-    if (!OK) {
-      return;
-    }
-#endif
-  }
-  if (--remaining_size_ > 0) {
-    // increment next_data_ pointer only in case we are still expecting more
-    // data to prevent unwarranted memory access
-    next_data_ += sizeof(uint8_t);
-  };
-}
-
-void I2C::Channel::EndTransfer() {
-#if defined(BARE_STM32)
-  // Trigger stop condition, except in DMA (which uses autoend)
-  if (!dma_enable_) {
-    i2c_->ctrl2.stop = 1;
-  }
-#endif
-  *last_request_.processed = true;
-  transfer_in_progress_ = false;
-
-  if (last_request_.direction == ExchangeDirection::kWrite) {
-    // free the part of the write buffer that was dedicated to this request
-    write_buffer_start_ += last_request_.size;
-    if (write_buffer_start_ >= wrapping_index_) {
-      // We don't allow data in the same request to wrap around, so we must
-      // detect that the next write data actually starts at index 0 to properly
-      // free the end of the buffer as well
-      write_buffer_start_ = 0;
-    }
+    i2c_->ctrl2.n_bytes = 255;
+    i2c_->ctrl2.reload = 1;
   }
 }
 
-bool I2C::Channel::NextByteNeeded() const {
-#if defined(BARE_STM32)
-  return i2c_->status.rx_not_empty || i2c_->status.tx_interrupt;
-#elif defined(TEST_MODE)
-  return remaining_size_ > 0;
-#endif
-}
-
-bool I2C::Channel::TransferReload() const {
-#if defined(BARE_STM32)
-  return i2c_->status.transfer_reload;
-#elif defined(TEST_MODE)
-  return (remaining_size_ % 255 == 0 && remaining_size_ > 0);
-#endif
-}
-
-bool I2C::Channel::TransferComplete() const {
-#if defined(BARE_STM32)
-  return i2c_->status.transfer_complete;
-#elif defined(TEST_MODE)
-  return remaining_size_ == 0;
-#endif
-}
-
-bool I2C::Channel::NackDetected() const {
-#if defined(BARE_STM32)
-  return i2c_->status.nack;
-#elif defined(TEST_MODE)
-  return nack_;
-#endif
-}
-
-void I2C::Channel::I2CEventHandler() {
-  if (!transfer_in_progress_) {
-    return;
-  }
-
-  // resend the request in case the slave NACK'd our request
-  if (NackDetected()) {
-    // clear the nack
-#if defined(BARE_STM32)
-    i2c_->intClr = 0x10;
-#elif defined(TEST_MODE)
-    nack_ = false;
-#endif
-    // the slave is non-responsive --> start the request anew
-    next_data_ = reinterpret_cast<uint8_t *>(last_request_.data);
-    remaining_size_ = last_request_.size;
-    StartTransfer();
-  }
-
-  // When we are using DMA, NACK is the only I²C event we are dealing with
-  if (dma_enable_) {
-    return;
-  }
-
-  if (NextByteNeeded()) {
-    // carry on with the current transfer
-    TransferByte();
-  }
-
-#if defined(BARE_STM32)
-  if (TransferReload()) {
-    // Start the next transfer, which is part of the current request
-    if (remaining_size_ <= 255) {
-      i2c_->ctrl2.n_bytes = static_cast<uint8_t>(remaining_size_);
-      i2c_->ctrl2.reload = 0;
-    } else {
-      i2c_->ctrl2.n_bytes = 255;
-      i2c_->ctrl2.reload = 1;
-    }
-  }
-#endif
-
-  if (TransferComplete()) {
-    // Properly finish the transfer, cleanup
-    EndTransfer();
-    // And start the next one (if any)
-    StartTransfer();
-  }
-}
-
-void I2C::Channel::I2CErrorHandler() {
-  // I²C error --> clear all error flags (except those that are SMBus only)
-#if defined(BARE_STM32)
-  i2c_->intClr = 0x720;
-#endif
-  // and restart the request up to error_retry_ times
-  if (--error_retry_ > 0) {
-    next_data_ = reinterpret_cast<uint8_t *>(last_request_.data);
-    remaining_size_ = last_request_.size;
-  } else {
-    // skip this request and go to next one;
-    remaining_size_ = 0;
-  }
-  StartTransfer();
-}
-
-#if defined(BARE_STM32)
 // DMA functions are only meaningful in BARE_STM32
-void I2C::Channel::SetupDMAChannels(DMA_Regs *dma) {
+void I2C::STM32Channel::SetupDMAChannels(DMA_Regs *dma) {
   // DMA mapping for I²C (see [RM] p299)
   static struct {
     void *dma;
@@ -414,8 +361,8 @@ void I2C::Channel::SetupDMAChannels(DMA_Regs *dma) {
   }
 }
 
-void I2C::Channel::ConfigureDMAChannel(DMA_Regs::ChannelRegs *channel,
-                                       ExchangeDirection direction) {
+void I2C::STM32Channel::ConfigureDMAChannel(DMA_Regs::ChannelRegs *channel,
+                                            ExchangeDirection direction) {
   channel->config.priority = 0b01; // medium priority
   channel->config.teie = 1;        // interrupt on error
   channel->config.htie = 0;        // no half-transfer interrupt
@@ -437,7 +384,7 @@ void I2C::Channel::ConfigureDMAChannel(DMA_Regs::ChannelRegs *channel,
   }
 }
 
-void I2C::Channel::SetupDMATransfer() {
+void I2C::STM32Channel::SetupDMATransfer() {
   if (!dma_enable_) {
     return;
   }
@@ -470,7 +417,7 @@ void I2C::Channel::SetupDMATransfer() {
   channel->config.enable = 1;
 }
 
-void I2C::Channel::DMAIntHandler(DMA_Chan chan) {
+void I2C::STM32Channel::DMAIntHandler(DMA_Chan chan) {
   if (!dma_enable_ || !transfer_in_progress_)
     return;
   dma_->channel[static_cast<uint8_t>(chan)].config.enable = 0;

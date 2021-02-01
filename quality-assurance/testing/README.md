@@ -16,20 +16,20 @@ Some testing data is [here](testing-data)
 
 ![](images/life_leader.png)
 
-To validate that the ventilator components are suitable for extended periods of operation, we are setting up automated
-durability and life-leader tests. These tests will cycle both individual components and assembled ventilators over time,
+To validate that the ventilator components are suitable for extended periods of continuous operation, we are setting up automated
+durability and life-leader tests. These tests will eventually cycle both individual components and assembled ventilators over time,
 measuring any change in performance. The goal is that these test units will have more cycles on them than any
-operational ventilators, giving us confidence that the design can withstand continued operation.
+operational ventilators in the field, giving us confidence that the design can withstand continued operation.
 
-Our initial life-leader testing has focused on the custom proportional pinch valve design. As discussed in more detail
-elsewhere, the pinch valve design results in cyclical stress both on the valve and on the tubing - a key question is how
+Our Preliminary Life Leader Test has focused on the custom proportional pinch valve design and the blower, the two major moving parts in the ventilator. As discussed in more detail elsewhere, the pinch valve design results in cyclical stress both on the valve and on the tubing - a key question is how
 well the design will hold up over time. We have had one pinch valve running continuously for a few weeks and are doing
-performance testing to see how it compares to fresh valves.
+performance testing to see how it compares to fresh valves.  The blower operates at over 40,000 RPM and so also is a potential service life concern.  This life leader testing incorportates partial wear life acceleration: the pinch valve operates at 60 cycles/minute at 0-100% actuation, whereas in actual ventilator use, the fastest rate will be 30 cycles/minute.  The blower operates at 100% throttle, which is the highest throttle expected in practice.  This means that every hour of this prelimiary life leader test is worth 2 hours of pinch valve operation and 1 hour of blower operations.
 
-To date (2020.09.01), 1080 hours and 3.9 million cycles, or 12 weeks of continuous ventilator operation at 30 bpm,
-equivalent to 2160 hours of continuous use. Testing continues 24/7.
+As of 2020.09.01, 1108 hours, had elapsed on the Preliminary Life Leader Test.  This represents 3.99 million cycles on the pinch valve, representing at minimum 92 days of continuous ventilator operation at the highest setting of 30 bpm, equivalent to 2160 hours of continuous use.  On the blower, this represents 46 days of continuous operation.
 
-**TODO:** link to life-leader tests
+**[Link to 600hr Intermediate Life Leader Test](https://github.com/RespiraWorks/Ventilator/tree/master/software/sample-data/2020-07-03-LifeLeader-594hrs-Performance-AIR)**
+
+In the future, we will do Life Leader Testing on a full ventilator unit in order to provide a life leader for all the components.
 
 ## Status of SiL (Software-in-the-Loop) Testing
 

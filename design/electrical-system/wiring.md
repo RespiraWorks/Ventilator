@@ -83,3 +83,19 @@ manufactured using **A1, A5, A7-A9, A12-A13**. Please follow the old cables incl
 The new cables should each be about 42cm in length.
 
 **#TODO:** Some sort of shrink tubing should also be used
+
+**#TODO:** illustrate this
+
+### Proportional solenoid valve
+
+To connect the solenoid to the PCB, you will need to crimp a 2-pin XH connector to the wires.
+
+**#TODO:** expand on this and illustrate this
+
+### Oxygen sensor
+
+**#TODO:** missing info
+
+## Pricing totals
+
+**#TODO:** missing info

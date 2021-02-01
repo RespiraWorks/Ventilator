@@ -71,7 +71,14 @@ This is a clear acrylic sheet that houses the filter assembly. It is mounted usi
 
 ![](assets/LowerAcrylicFacePlate.jpg)
 
+<<<<<<< HEAD
 The sizing for the mounting holes was based on [this](https://www.pemnet.com/fastening_products/pdf/sidata.pdf) catalog for heat set insert. M4 screws were chosen to mount the acrylic face plate to the sheet metal enclosure. For corresponding M4 nuts (refer page 6, metric table, row 6), length code 1 was chosen since acrylic thickness (6.35 mm) was more than minimum hole depth specification (5.72 mm). Hence the corresponding outer diamater for insertion i.e. acrylic mounting diamater would be 5.94 mm, which is refelcted in the CAD.
+=======
+The sizing for the mounting holes was based on [this](https://www.pemnet.com/fastening_products/pdf/sidata.pdf) catalog for heat set insert. 
+M4 screws were chosen to mount the acrylic face plate to the sheet metal enclosure. 
+For corresponding M4 nuts (refer page 6, metric table, row 6), length code 1 was chosen since acrylic thickness (6.35 mm) was more than minimum hole depth specification (5.72 mm).
+Hence the corresponding outer diamater for insertion i.e. acrylic mounting diamater would be 5.94 mm, which is refelcted in the CAD.
+>>>>>>> b3fcfaef (CAD & readme updated with heat set insert spec; updates #938)
 
 ### Source files
 
@@ -116,9 +123,6 @@ BEFORE purchasing any parts.**
 |**A3**| 2         | RespiraWorks  | Filter cover with vent              | 1 (material)        | [Rw][a3rw]  | 3D printed from STL in link |
 |**A4**| 4         | Amyehouse     | 20160819-1a                         | 8 / 6pk             | [Z][a4amzn] | Roomba 700-compatible HEPA filters |
 |**A5**| ~16 sq in | McMaster-Carr | 8785K82                             | 22.22/ 12x12" sheet | [C][a5mcmc] | Gasket material, cut with jigs(**B1+B2**) to make **A6** |
-|**A6**| 8         | RespiraWorks  | filter_gasket                       | 0.10 (material)     | Rw          | Filter gaskets, made from **A5**, using jigs **B1+B2** |
-|**A7**| 8         | McMaster-Carr | 96016A556                           | 5.50 / 10           | [C][a7mcmc] | m3 thumbscrews |
-|**A8**| 8         | McMaster-Carr | 94180A333                           | 16.69 / 100         | [C][a8mcmc] | heat-set inserts for m3 screws |
 |**A6**| 8         | RespiraWorks  | filter_gasket                       | 0.10 (material)     | B           | Filter gaskets, made from **A5**, using jigs **B1+B2** |
 |**A7**| 8         | McMaster-Carr | 96016A556                           | 5.50 / 10           | [C][a7mcmc] | M3 thumbscrews |
 |**A8**| 8         | McMaster-Carr | 94180A333                           | 16.69 / 100         | [C][a8mcmc] | Heat-set inserts for m3 screws |

@@ -832,7 +832,7 @@ Wire Wire Line
 Wire Wire Line
 	2750 6750 2750 7050
 Text HLabel 2100 7050 0    50   Input ~ 0
-CS
+nCS
 Wire Wire Line
 	3150 6950 2800 6950
 Wire Wire Line

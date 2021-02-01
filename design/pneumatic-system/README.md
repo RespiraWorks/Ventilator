@@ -110,7 +110,7 @@ provide an additional safety factor for staff protection.
 A key decision was made early on to use a blower (rather than a
 pressurized oxygen source and control valve), to deliver patient air.
 
-![](../../manufacturing/blower/images/assembly_rendering.jpg)
+![](../../manufacturing/enclosed_build/pneumatics/blower/images/assembly_rendering.jpg)
 
 WS7040 fan with air intake assembly
 
@@ -235,7 +235,7 @@ different PEEP levels and to avoid significant wasted flow during
 inhale. In the process of development, it was realized that the same
 design could also be used to provide a rapid pressure swing on the
 inhale flow, in addition to exhale.
-![](../../manufacturing/pinch_valve/images/full_assembly.jpg)
+![](../../manufacturing/enclosed_build/pneumatics/pinch_valve/images/full_assembly.jpg)
 
 One of two pinch valves in each ventilator (early model)
 
@@ -313,7 +313,7 @@ volume accuracy, though still within spec. In return, by producing an
 easy-to-sterilize sensor the device can avoid proprietary and costly
 proximal flow sensors.
 
-![](../../manufacturing/venturi/assets/beta_nipples_small.jpg)
+![](../../manufacturing/enclosed_build/pneumatics/venturi/assets/beta_nipples_small.jpg)
 
 A venturi flow sensor with a differential pressure sensor used to
 calculate flow

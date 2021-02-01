@@ -24,7 +24,7 @@ Characterization tests for the blower are [here](characterization-tests).
 **Note: If you are a member of the RespiraWorks team, review the [part purchasing guidelines][ppg]
 BEFORE purchasing any parts.**
 
-[ppg]: ../../manufacturing/purchasing_guidelines.md
+[ppg]: ../../../purchasing_guidelines.md
 
 | Item  | Quantity | Manufacturer  | Part #                       | Price (USD)      | Sources[*][ppg] | Notes |
 | ----- |---------:| ------------- | ---------------------------- | ----------------:|:---------------:|-------|
@@ -86,7 +86,7 @@ BEFORE purchasing any parts.**
 
 #### Tubing adapter (C1)
 
-To 3d print this component see the [general 3d printing guidelines](../3d_printing).
+To 3d print this component see the [general 3d printing guidelines](../../../3d_printing).
 
 |For 3D printing: [tubing_adapter.stl](CAD/exports/tubing_adapter.stl)| Inventor source: [tubing_adapter.ipt](CAD/tubing_adapter.ipt)|
 |:---:|:---:|
@@ -177,10 +177,10 @@ You will likely need some sort of small clamps for this step, to ensure that com
 
 ## System integration
 
-Integration into the pneumatic system is covered in either [pizza build](../pizza_build) or
-[enclosed build pneumatics](../enclosed_build/pneumatics) pages, depending on which version you are building.
+Integration into the pneumatic system is covered in either [pizza build](../../../pizza_build) or
+[enclosed build pneumatics](..) pages, depending on which version you are building.
 
-Integration into the electrical/controls system is covered in [wiring page](../../design/electrical-system/wiring.md).
+Integration into the electrical/controls system is covered in [wiring page](../../../../design/electrical-system/wiring.md).
 
 ## Price estimate
 

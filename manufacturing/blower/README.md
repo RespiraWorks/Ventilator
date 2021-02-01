@@ -30,30 +30,11 @@ BEFORE purchasing any parts.**
 |**A2**| 1        |               | WS1208                | 24.00        | [W][a2won]            | **optional** blower driver, in case blower above did not come with driver. |
 |**A3**| ~50 mm   | McMaster-Carr | 5234K57               | 21.50 / 5ft  | [C][a3mcmc]           | Soft latex tubing, 5/8" ID, 7/8" OD |
 |**A4**| 2        | McMaster-Carr | 9579K72               | 12.21 / 20   | [C][a4mcmc]           | Herbie clip J (20.3-23mm) for clamping 7/8"OD tubing |
-|**A5**| 2 or 4   | JST           | SVH-21T-P1.1          | 0.11         | [K][a5digi] [R][a5rs] | VH crimps, for power connector |
-|**A6**| 1 or 2   | TE            | 1-1123722-2           | 0.18         | [K][a6digi] [R][a6rs] | VH housing 2 pin, for power connector |
 
 [a1ali]:  https://www.aliexpress.com/item/32980201709.html
 [a2won]:  https://wonsmart-motor.en.made-in-china.com/product/hsjxFewOppVg/China-Air-Pump12V-Brushless-Motor-12V-Blower-Fan-Driver.html
 [a3mcmc]: https://www.mcmaster.com/5234K57
 [a4mcmc]: https://www.mcmaster.com/9579K72
-[a5digi]: https://www.digikey.com/short/z44fjr
-[a5rs]:   https://export.rsdelivers.com/product/jst/svh-41t-p11/jst-nv-vh-female-crimp-terminal-contact-16awg-svh/7620692
-[a6digi]: https://www.digikey.com/short/z44fwj
-[a6rs]:   https://export.rsdelivers.com/product/jst/vhr-2n/jst-vhr-female-connector-housing-396mm-pitch-2/8201172
-
-**Please note:** Quantities of items a5+a6 depend on whether you intend to integrate the blower into an enclosed
-ventilator assembly as [described below](#enclosed-assembly).
-
-### Tools
-
-| Item | Quantity | Manufacturer  | Part #              | Price (USD) | Sources[*][ppg] | Notes |
-| ---- |---------:| ------------- | ------------------- | -----------:|:---------------:| ----- |
-|**B1**| 1        | Preciva       | PR-3254 (PR102001)  | 39.99       | [Z][b1amzn]     | Crimping tool for HX and HV connectors |
-
-[b1amzn]:https://www.amazon.com/gp/product/B07R1H3Z8X
-
-**Note: Items a5, a6 and b1 above are duplicated in the [wiring BOM](../../design/electrical-system/wiring.md)**
 
 ### Instructions for basic assembly
 
@@ -61,15 +42,7 @@ Attach a short segment of tubing (**A3**) to blower (**A1**) outlet.
 
 Use Herbie clip (**A4**) to secure tubing to blower outlet. Alternatively, you can use a zip-tie.
 
-You will also have to crimp connectors (**A5 + A6**) to the second end of the wiring (using **B1**) that connects the
-driver board to the [PCB](../../pcb).
-
-A basic assembly is pictured at the top of this page.
-
-**Please note:** the picture above includes an optional tubing reducer that is specified on the [pizza build](../pizza_build) page.
-
 ## Enclosed assembly
-
 
 
 ![](CAD/exports/blower_assembly.jpg)
@@ -77,7 +50,7 @@ A basic assembly is pictured at the top of this page.
 |Download Type|Link|
 |:------|:-------|
 |Assembly Drawing PDF|[PDF](CAD/exports/blower_assembly.pdf)|
-|Autodesk Inventor CAD Assembly|[.iam](CAD/exports/blower_assembly.iam)|
+|Autodesk Inventor CAD Assembly|[.iam](CAD/blower_assembly.iam)|
 
 
 ### Parts 2
@@ -99,11 +72,6 @@ A basic assembly is pictured at the top of this page.
 |**C13**| 4        | McMaster-Carr | 99072A203                    | 1.21             | [C][c13mcmc]            | 10mm nylon spacers |
 |**C14**| 4        | McMaster-Carr | 91828A231                    | 6.45 / 100       | [C][c14mcmc]            | M4 nuts (non locking) |
 |**C15**| 4        | McMaster-Carr | 93625A100                    | 5.31 / 100       | [C][c15mcmc]            | M3 lock nuts |
-|**C16**| 12       | JST           | SXH-001T-P0.6                | 0.10             | [K][c16digi] [R][c16rs] | XH crimps, for control connector |
-|**C17**| 2        | JST           | XHP-6                        | 0.14             | [K][c17digi] [R][c17rs] | XH 6-pin housing, for control connector |
-|**C18**| -        | CQRobot       | CQRJST254-BGB                | 9.99             | [Z][c18amzn]            | **optional** XH connector kit for 6/7/8 pins, alternative for b15+b16 above |
-|**C19**| ~1m      | Remington     | 16UL1007STRKIT               | 29.70 / 25m      | [K][c19amzn]            | 16 AWG wire, for power cable, ~42cm per wire |
-|**C20**| ~3m      | Remington     | 26UL1007STRKIT10COLOR        | 31.60 / 75m      | [K][c20amzn]            | 26 AWG wire, for control cable, ~42cm per wire  |
 
 [c1rw]:    CAD/exports/tubing_adapter.stl
 [c2mcmc]:  https://www.mcmaster.com/8560K357/
@@ -121,14 +89,6 @@ A basic assembly is pictured at the top of this page.
 [c14mcmc]: https://www.mcmaster.com/91828A231/
 [c15mcmc]: https://www.mcmaster.com/93625A100/
 [c16digi]: https://www.digikey.com/short/z44f8d
-[c16rs]:   https://export.rsdelivers.com/product/jst/sxh-002t-p06/jst-xh-female-crimp-terminal-contact-26awg-sxh/1755645
-[c17digi]: https://www.digikey.com/short/z44ff8
-[c17rs]:   https://export.rsdelivers.com/product/jst/xhp-6/jst-xhp-female-connector-housing-25mm-pitch-6-way/8201620
-[c18amzn]: https://www.amazon.com/gp/product/B079MJ1RYN
-[c19amzn]: https://www.amazon.com/gp/product/B00N51OJJ4
-[c20amzn]: https://www.amazon.com/gp/product/B011JC76OA
-
-**NOTE: Items **C16-C20** above are also duplicated in the [wiring BOM](../../design/electrical-system/wiring.md)**
 
 ### Tools 2
 
@@ -240,18 +200,6 @@ You will likely need some sort of small clamps for this step, to ensure that com
 |                            |                             |
 |:--------------------------:|:---------------------------:|
 |![](images/tubing_adapter_holding_plate.jpg) | ![](images/integrated.jpg) |
-
-#### Manufacture extended wiring
-
-The power and signal cables that come included with the blower are too short to reach the PCB, so new ones must be
-manufactured using **A5, A6, and C16-C20**. Please follow the old cables included with blower as examples as well as
-any advice on the [wiring assembly page](../../design/electrical-system/wiring.md).
-
-The new cables should each be about 42cm in length.
-
-**#TODO:** Some sort of shrink tubing should also be used
-
-![](images/wired.jpg)
 
 ## Price estimate
 

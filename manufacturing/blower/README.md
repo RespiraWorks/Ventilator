@@ -152,7 +152,7 @@ To 3d print this component see the [general 3d printing guidelines](../3d_printi
 
 |For 3D printing: [tubing_adapter.stl](CAD/exports/tubing_adapter.stl)| Inventor source: [tubing_adapter.ipt](CAD/tubing_adapter.ipt)|
 |:---:|:---:|
-|![](images/tubing_adapter.jpg)|[![](CAD/exports/tubing_adapter.png)](CAD/exports/tubing_adapter.pdf)|
+|![](images/tubing_adapter_rendering.jpg)|[![](CAD/exports/tubing_adapter.jpg)](CAD/exports/tubing_adapter.pdf)|
 
 #### Gaskets
 

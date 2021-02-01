@@ -505,14 +505,10 @@ Wire Wire Line
 	6700 2800 6400 2800
 Wire Wire Line
 	6400 1900 6700 1900
-Text Notes 3400 550  0    50   ~ 0
-Note: some pinouts changed, inform sw
 Wire Wire Line
 	6400 2400 6700 2400
 Wire Wire Line
 	6400 3300 6700 3300
-Wire Wire Line
-	5100 3300 4850 3300
 Wire Wire Line
 	5100 3400 4850 3400
 Wire Wire Line
@@ -614,9 +610,9 @@ Wire Wire Line
 	2200 4750 1950 4750
 Connection ~ 2200 4750
 Text HLabel 6700 4100 2    50   BiDi ~ 0
-CC-SCL
+PB8
 Text HLabel 6700 4200 2    50   BiDi ~ 0
-CC-SDA
+PB9
 Wire Wire Line
 	9550 850  9550 900 
 Wire Wire Line
@@ -648,8 +644,8 @@ Wire Wire Line
 	6400 3900 6700 3900
 Wire Wire Line
 	6700 3800 6400 3800
-Text HLabel 6700 4000 2    50   Output ~ 0
-CC-GPIO
+Text HLabel 6700 4000 2    50   BiDi ~ 0
+PB7
 Wire Wire Line
 	6400 4000 6700 4000
 Connection ~ 5700 1050
@@ -680,7 +676,7 @@ AR Path="/5FCD4D18/6016937E" Ref="J?"  Part="1"
 AR Path="/6016937E" Ref="J?"  Part="1" 
 F 0 "J?" H 2300 7000 50  0000 L CNN
 F 1 "503182-1852" H 2850 6300 50  0000 L CNN
-F 2 "RespiraWorks:5031821852" H 3300 6250 50  0001 C CNN
+F 2 "RespiraWorks:SD_Molex_5031821852" H 3300 6250 50  0001 C CNN
 F 3 "https://www.molex.com/pdm_docs/sd/5031821852_sd.pdf" H 3900 6150 50  0001 C CNN
 	1    2500 6650
 	1    0    0    -1  
@@ -787,8 +783,6 @@ Wire Wire Line
 Wire Wire Line
 	2600 7350 2650 7350
 Connection ~ 2650 7350
-Text Notes 1750 6200 2    50   ~ 0
-Double Check sw/dt footprint
 NoConn ~ 2050 6500
 NoConn ~ 2050 6600
 NoConn ~ 2050 7000
@@ -829,7 +823,6 @@ Wire Notes Line
 	500  5850 4050 5850
 Wire Notes Line
 	4050 5850 4050 7800
-NoConn ~ 6400 1600
 Wire Wire Line
 	5300 1400 5500 1400
 Wire Wire Line
@@ -895,14 +888,6 @@ Wire Wire Line
 	10500 4800 10050 4800
 Wire Wire Line
 	10500 5100 10050 5100
-Text Label 10050 4300 0    50   ~ 0
-D8
-Text Label 10050 4400 0    50   ~ 0
-D9
-Text Label 10050 4500 0    50   ~ 0
-D10
-Text Label 10050 5100 0    50   ~ 0
-D18
 $Comp
 L RespiraWorks:+3.3V_Ctrl_A #PWR?
 U 1 1 60390EE2
@@ -935,26 +920,6 @@ Wire Wire Line
 	10500 5000 9650 5000
 Wire Wire Line
 	9650 5000 9650 4350
-Text Label 6550 4600 2    50   ~ 0
-D9
-Text Label 6550 4500 2    50   ~ 0
-D10
-Text Label 6550 4400 2    50   ~ 0
-D2
-Text Label 6550 4800 2    50   ~ 0
-D4
-Text Label 6450 4200 0    50   ~ 0
-D18
-Text Label 6450 4100 0    50   ~ 0
-D19
-Text Label 6450 3500 0    50   ~ 0
-D3
-Text Label 6450 3400 0    50   ~ 0
-D7
-Text Label 6450 2600 0    50   ~ 0
-D0
-Text Label 6450 2500 0    50   ~ 0
-D1
 Wire Wire Line
 	10500 5550 10050 5550
 Wire Wire Line
@@ -971,10 +936,6 @@ Wire Wire Line
 	10500 6150 10050 6150
 Wire Wire Line
 	10500 6250 10050 6250
-Text Label 6550 4700 2    50   ~ 0
-D5
-Text Label 6450 1800 0    50   ~ 0
-D6
 Wire Wire Line
 	1550 6900 2050 6900
 Text Label 1550 6900 0    50   ~ 0
@@ -1295,14 +1256,10 @@ Wire Wire Line
 	6400 2300 6850 2300
 Wire Wire Line
 	10050 5200 10500 5200
-Text Label 10050 5200 0    50   ~ 0
-D19
 Text Label 10050 4700 0    50   ~ 0
 USD-MISO
 Text Label 10050 4600 0    50   ~ 0
 USD-MOSI
-Text Label 6550 4300 2    50   ~ 0
-D8
 Wire Wire Line
 	2200 4350 3700 4350
 $Comp
@@ -1392,26 +1349,6 @@ Text HLabel 6700 1700 2    50   BiDi ~ 0
 PA1
 Text HLabel 4850 3100 0    50   BiDi ~ 0
 PD2
-Text Label 9900 3300 0    50   ~ 0
-A1
-Text Label 9900 3400 0    50   ~ 0
-A2
-Text Label 9900 3500 0    50   ~ 0
-A3
-Text Label 9900 3600 0    50   ~ 0
-A4
-Text Label 9900 3700 0    50   ~ 0
-A5
-Text Label 6450 1700 0    50   ~ 0
-A1
-Text Label 6450 2400 0    50   ~ 0
-A2
-Text Label 6450 3900 0    50   ~ 0
-A3
-Text Label 4950 3400 0    50   ~ 0
-A4
-Text Label 4950 3300 0    50   ~ 0
-A5
 Wire Notes Line
 	9350 4000 11200 4000
 Text Notes 10800 4350 0    50   ~ 0
@@ -1470,22 +1407,6 @@ Text HLabel 6700 4600 2    50   BiDi ~ 0
 PB13
 Text HLabel 6700 4800 2    50   BiDi ~ 0
 PB15
-Text Label 10050 6250 0    50   ~ 0
-D7
-Text Label 10050 6150 0    50   ~ 0
-D6
-Text Label 10050 6050 0    50   ~ 0
-D5
-Text Label 10050 5950 0    50   ~ 0
-D4
-Text Label 10050 5850 0    50   ~ 0
-D3
-Text Label 10050 5750 0    50   ~ 0
-D2
-Text Label 10050 5650 0    50   ~ 0
-D1
-Text Label 10050 5550 0    50   ~ 0
-D0
 Wire Wire Line
 	6400 1800 7150 1800
 Wire Wire Line
@@ -1587,4 +1508,56 @@ Wire Wire Line
 	5900 1400 5900 1050
 Text Notes 2400 2450 0    50   ~ 0
 Uses MSI internal 4 Mhz clock\nby default
+Wire Wire Line
+	6400 1600 6700 1600
+Text HLabel 6700 1600 2    50   BiDi ~ 0
+PA0
+Text Notes 10800 3350 0    50   ~ 0
+A1
+Text Notes 10800 3450 0    50   ~ 0
+A2
+Text Notes 10800 3550 0    50   ~ 0
+A3
+Text Notes 10800 3650 0    50   ~ 0
+A4
+Text Notes 10800 3750 0    50   ~ 0
+A5
+Text Label 9900 3700 0    50   ~ 0
+PC0
+Text Label 9900 3600 0    50   ~ 0
+PC1
+Text Label 9900 3500 0    50   ~ 0
+PB6
+Text Label 9900 3400 0    50   ~ 0
+PA8
+Text Label 9900 3300 0    50   ~ 0
+PA1
+Wire Wire Line
+	5100 3300 4850 3300
+Text Label 10050 4300 0    50   ~ 0
+PB10
+Text Label 10050 4400 0    50   ~ 0
+PB13
+Text Label 10050 4500 0    50   ~ 0
+PB12
+Text Label 10050 5100 0    50   ~ 0
+PB9
+Text Label 10050 5200 0    50   ~ 0
+PB8
+Text Label 10050 5550 0    50   ~ 0
+PA10
+Text Label 10050 5650 0    50   ~ 0
+PA9
+Text Label 10050 5750 0    50   ~ 0
+PB11
+Text Label 10050 5850 0    50   ~ 0
+PB2
+Text Label 10050 5950 0    50   ~ 0
+PB15
+Text Label 10050 6050 0    50   ~ 0
+PB14
+Text Label 10050 6150 0    50   ~ 0
+PA2
+Text Label 10050 6250 0    50   ~ 0
+PB1
 $EndSCHEMATC

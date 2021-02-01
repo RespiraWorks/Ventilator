@@ -1,6 +1,6 @@
 # Venturi Flow Sensor
 
-| Cross1-section                   | Solid                    |
+| Cross-section                   | Solid                    |
 |:--------------------------------:|:------------------------:|
 | ![](assets/v1_cross_section.jpg) | ![](assets/v1_solid.jpg) |
 

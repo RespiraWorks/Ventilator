@@ -70,11 +70,15 @@ A basic assembly is pictured at the top of this page.
 
 ## Enclosed assembly
 
-The basic assembly needs further modifications to be mounted into an [enclosed ventilator assembly](../enclosed_build).
-The pneumatic interface includes gaskets and adapter for tubing that runs to the filtered air inlet on the front panel.
-The mechanical aspect of this assembly includes all hold-down and mounting plates for the blower and blower
-driver board, and for the above pneumatic interface components. Electrically, the enclosed assembly also requires longer
-wiring.
+
+
+![](CAD/exports/blower_assembly.jpg)
+
+|Download Type|Link|
+|:------|:-------|
+|Assembly Drawing PDF|[PDF](CAD/exports/blower_assembly.pdf)|
+|Autodesk Inventor CAD Assembly|[.iam](CAD/exports/blower_assembly.iam)|
+
 
 ### Parts 2
 
@@ -181,7 +185,7 @@ You might also want to use some 200 grit sandpaper to clean up the edges of the 
 
 |     | Driver mounting plate (C3) | Blower holding plate (C4) | Tubing adapter holding plate (C5) |
 |:-----:|:--------------------------:|:-------------------------:|:---------------------------------:|
-|  |![](CAD/exports/driver_mounting_plate.png)|![](CAD/exports/blower_holding_plate.png)|![](CAD/exports/tubing_adapter_holding_plate.png)|
+|  |![](CAD/exports/driver_mounting_plate.jpg)|![](CAD/exports/blower_holding_plate.jpg)|![](CAD/exports/tubing_adapter_holding_plate.jpg)|
 | Drawings |[Driver Mounting Plate](CAD/exports/driver_mounting_plate.pdf)|[Blower Holding Plate](CAD/exports/blower_holding_plate.pdf)|[Tubing Adapter Holding Plate](CAD/exports/tubing_adapter_holding_plate.pdf)|
 | DXF |[driver_mounting_plate.dxf](CAD/exports/driver_mounting_plate.dxf)|[blower_holding_plate.dxf](CAD/exports/blower_holding_plate.dxf)|[tubing_adapter_holding_plate.dxf](CAD/exports/tubing_adapter_holding_plate.dxf)|
 | Inventor | [driver_mounting_plate.ipt](CAD/driver_mounting_plate.ipt)|[blower_holding_plate.ipt](CAD/blower_holding_plate.ipt)| [tubing adapter_holding_plate.ipt](CAD/tubing_adapter_holding_plate.ipt)|

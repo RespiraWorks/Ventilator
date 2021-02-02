@@ -2,7 +2,7 @@
 
 |             |     |
 :------------------:|:-----------------:|
-| ![](images/enclosure_assembled.jpg)  | ![](images/enclosure_exploded.jpg)  |
+| ![](images/enclosure_rendering.jpg)  | ![](images/enclosure_exploded.jpg)  |
 
 The ventilator enclosure is made up of three folded, 1.52mm thick, stainless steel sheets; the main enclosure, the rear
 closure panel and the internal equipment bracket.
@@ -47,6 +47,11 @@ BEFORE purchasing any parts.**
 
 [ppg]: ../../purchasing_guidelines.md
 
+**#TODO: locknuts and washers for main tray?**
+
+**#TODO: How much sheet metal?**
+
+
 | Item  | Quantity | Manufacturer  | Part #                   | Price (USD) | Sources[*][ppg]| Notes |
 | ----- |---------:| ------------- | ------------------------ | -----------:|:----------:|:------|
 |**A1** | 1        | RespiraWorks  | ventilator_enclosure     |             | [Rw][a1rw]   | Ventilator enclosure, bent sheet metal |
@@ -54,12 +59,10 @@ BEFORE purchasing any parts.**
 |**A3** | 1        | RespiraWorks  | ventilator_closure       |             | [Rw][a3rw]   | Ventilator closure (back panel), bent sheet metal |
 |**A4** | 10       | McMaster-Carr | 97525A415                | 8.87 / 100  | [C][a4mcmc]  | 1/8" blind rivets |
 |**A5** | 4        | McMaster-Carr | 96439A710                | 6.04 / 5    | [C][a5mcmc]  | M6 self-clinching / press-fit nut |
-|**A6** | 16       | McMaster-Carr | 96439A650                | 3.89 / 10   | [C][a6mcmc]  | M4 self-clinching / press-fit nut |
+|**A6** | 12       | McMaster-Carr | 96439A650                | 3.89 / 10   | [C][a6mcmc]  | M4 self-clinching / press-fit nut |
 |**A7** | 4        | McMaster-Carr | 9541K82                  | 8.34 / 10   | [C][a7mcmc]  | M6 threaded-stud bumper, used as feet |
-|**A8** |          | McMaster-Carr | 92000A224                | 9.60 / 100  | [C][a8mcmc]  | M4 x 14mm screws, phillips drive |
-|**A9** |          | McMaster-Carr | 92095A193                | 8.95 / 50   | [C][a9mcmc]  | M4 x 14mm screws, hex drive, **alternate to A8** |
-|**A10**|          | McMaster-Carr | 92000A216                | 9.10 / 100  | [C][a10mcmc] | M4 x 6mm screws, pan head, phillips drive |
-|**A11**|          | McMaster-Carr | 92095A188                | 10.04 / 100 | [C][a11mcmc] | M4 x 6mm screws, hex drive, **alternate to A10** |
+|**A8** | 4        | McMaster-Carr | 92095A193                | 8.95 / 50   | [C][a8mcmc]  | M4 x 14mm screws, hex drive |
+|**A9** | 12       | McMaster-Carr | 92095A188                | 10.04 / 100 | [C][a9mcmc]  | M4 x 6mm screws, hex drive |
 
 [a1rw]:   #fabrication-drawings
 [a2rw]:   #fabrication-drawings
@@ -68,7 +71,5 @@ BEFORE purchasing any parts.**
 [a5mcmc]: https://www.mcmaster.com/96439A710/
 [a6mcmc]: https://www.mcmaster.com/96439A650/
 [a7mcmc]: https://www.mcmaster.com/9541K82/
-[a8mcmc]: https://www.mcmaster.com/92000A224/
-[a9mcmc]: https://www.mcmaster.com/92095A193/
-[a10mcmc]: https://www.mcmaster.com/92000A216/
-[a11mcmc]: https://www.mcmaster.com/92095A188/
+[a8mcmc]: https://www.mcmaster.com/92095A193/
+[a9mcmc]: https://www.mcmaster.com/92095A188/

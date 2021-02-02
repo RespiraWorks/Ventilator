@@ -19,7 +19,7 @@ degree accessibility to components during initial assembly. When complete, this 
 enclosure, and the enclosure is screwed shut. The top-rear positioning of the removable enclosure lid provides
 access to components that will need routine maintenance.
 
-| production ventilator assembly    |  back panel removed   |
+| enclosed ventilator assembly    |  back panel removed   |
 |:---:|:---:|
 | ![](images/enclosed_rendering_face.png) | ![](images/enclosed_rendering_open_back.png)  |
 
@@ -36,12 +36,20 @@ Preliminary enclosed build was produced by our partners, Foundry-M in Visakhapat
 |![](images/India_build_yellow.jpeg) | ![](images/India_build_open_back.jpeg)  |
 
 
-## Build Plan
-
-Here is a page on the [metal enclosure assembly](enclosure).
-
-Here is a page on the [pneumatic assembly](pneumatics).
+## Outline
 
 **TODO:** electrical assembly
 
-Here is a preliminary CAD model for viewing: [autodesk360 link](https://a360.co/2PTyRzh)
+* [Enclosure assembly](enclosure) - rigid frame and enclosure components
+* [Display assembly](display_panel) - Mechanical support for user interface touchscreen
+* [Filter panel](filter_panel) - Mechanical support for air filter assemblies
+  * [Air filter assembly](filter_panel/filter_holder) - air filters for keeping patient safe and system clean
+* [**Pneumatic assembly**](pneumatics) - full pneumatic assembly, which includes some instances of the following:
+  * [Blower assembly](pneumatics/blower) - this provides pressurized air
+  * [Venturi flow sensors](pneumatics/venturi) - in-house design of affordable flow sensors
+  * [Pinch valve](pneumatics/pinch_valve) - in-house design of affordable valve for inhale and exhale control
+  * [Oxygen mixer](pneumatics/mixer) - for mixing air and oxygen before delivery to patient
+  * [Manifold](pneumatics/manifold) - for oxygen sensor and overpressure relief valve
+  * [Tubing reducer](pneumatics/reducer_3-4_1-4) for change in tubing diameter in oxygen supply
+
+Here is a preliminary (obsolete) CAD model for viewing: [autodesk360 link](https://a360.co/2PTyRzh)

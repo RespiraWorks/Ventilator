@@ -76,10 +76,10 @@ BEFORE purchasing any parts.**
 
 The following are essential sub-assemblies that you'll need no matter what additional/optional "toppings" you chose to have.
 
-* 1x [Blower assembly](../blower) - the main driver of pressure in the pneumatic circuit
-* 2-3x [Venturi flow sensors](../venturi) and corresponding tubing, to provide the controller feedback
-* 2x [Pinch valves](../pinch_valve) - a proportional pinch valve to control the airflow constriction with precision
-* optional [Air filter assemblies](../filter_holder) - for the safety of patient and health workers. Constricts air flow
+* 1x [Blower assembly](../enclosed_build/pneumatics/blower) - the main driver of pressure in the pneumatic circuit
+* 2-3x [Venturi flow sensors](../enclosed_build/pneumatics/venturi) and corresponding tubing, to provide the controller feedback
+* 2x [Pinch valves](../enclosed_build/pneumatics/pinch_valve) - a proportional pinch valve to control the airflow constriction with precision
+* optional [Air filter assemblies](../enclosed_build/filter_panel) - for the safety of patient and health workers. Constricts air flow
   to some extent and thus will affect the ventilator performance
 
 ## Assembly Instructions

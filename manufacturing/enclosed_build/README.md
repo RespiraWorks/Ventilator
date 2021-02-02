@@ -50,6 +50,6 @@ Preliminary enclosed build was produced by our partners, Foundry-M in Visakhapat
   * [Pinch valve](pneumatics/pinch_valve) - in-house design of affordable valve for inhale and exhale control
   * [Oxygen mixer](pneumatics/mixer) - for mixing air and oxygen before delivery to patient
   * [Manifold](pneumatics/manifold) - for oxygen sensor and overpressure relief valve
-  * [Tubing reducer](reducer_3-4_1-4) for change in tubing diameter in oxygen supply
+  * [Tubing reducer](pneumatics/reducer_3-4_1-4) for change in tubing diameter in oxygen supply
 
 Here is a preliminary (obsolete) CAD model for viewing: [autodesk360 link](https://a360.co/2PTyRzh)

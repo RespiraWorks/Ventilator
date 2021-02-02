@@ -92,26 +92,27 @@ BEFORE purchasing any parts.**
 
 | Item   | Quantity | Manufacturer    | Part #              | Price (USD)  | Sources[*][ppg]      | Notes |
 | ------ |---------:| --------------- | ------------------- | ------------:|:--------------------:| ----- |
-| 1      |        1 | STEPPERONLINE   | 17HS19-2004S2       |11.59 / each  | [T][1step] [Z][1amzn]| Stepper motor. Make sure to get one with the full-cut D-shaft. |
-| 2      |        1 | McMaster-Carr   | 92095A218           |   7.64 / 25  | [C][2mcmc]           | M5x30mm button head. Axle for bearing. |
-| 3      |        3 | McMaster-Carr   | 91294A128           |  4.82 / 100  | [C][3mcmc]           | M3x8mm flat head. Attaches frame to stepper body |
-| 4      |        3 | FastEddy        | TFE4262             |  12.50 / 10  | [F][4fast]           | 5x16x5 Metal shielded bearings |
-| 5      | 6in/15cm | McMaster-Carr   | 5894K38             |  12.30 / 2 ft| [C][5mcmc]           | Continuous-Flex Soft Tygon PVC Tubing, 3/8" ID, 5/8" OD |
-| 6      |        2 | McMaster-Carr   | 9579K67             |  12.63 / 20  | [C][6mcmc]           | Herbie clip E, 12-13.8mm, to clamp tubing to fittings |
-| 7      |        1 | Digikey         | X-NUCLEO-IHM03A1    | 10.64 / each | [K][7key] [M][7mr]   | Stepper driver dev board |
-| 8      |        1 | ST              | X-NUCLEO-IHM02A1    | 15.00 / each | [S][8st] [R][8rs]    | **ALT for item 10:** Two-axis stepper driver dev board |
-| 9      |        1 | RespiraWorks    | stepper_base        |              | [Rw][9rw]            | BASE - 3D printed |
-| 10     |        1 | RespiraWorks    | stepper_rotor       |              | [Rw][10rw]           | ROTOR - 3D printed |
+| **A1** |        1 | STEPPERONLINE   | 17HS19-2004S2       |11.59 / each  | [T][a1step] [Z][a1amzn] | Stepper motor. Make sure to get one with the full-cut D-shaft. |
+| **A2** |        1 | McMaster-Carr   | 92095A218           |   7.64 / 25  | [C][a2mcmc]             | M5x30mm button head. Axle for bearing. |
+| **A3** |        3 | McMaster-Carr   | 91294A128           |  4.82 / 100  | [C][a3mcmc]             | M3x8mm flat head. Attaches frame to stepper body |
+| **A4** |        3 | FastEddy        | TFE4262             |  12.50 / 10  | [F][a4fast] [C][a4mcmc] | 5x16x5 Metal shielded bearings |
+| **A5** | 6in/15cm | McMaster-Carr   | 5894K38             |  12.30 / 2 ft| [C][a5mcmc]             | Continuous-Flex Soft Tygon PVC Tubing, 3/8" ID, 5/8" OD |
+| **A6** |        2 | McMaster-Carr   | 9579K67             |  12.63 / 20  | [C][a6mcmc]             | Herbie clip E, 12-13.8mm, to clamp tubing to fittings |
+| **A7** |        1 | Digikey         | X-NUCLEO-IHM03A1    | 10.64 / each | [K][a7key] [M][a7mau]   | Stepper driver dev board |
+| **A8** |        1 | ST              | X-NUCLEO-IHM02A1    | 15.00 / each | [S][a8st] [R][a8rs]     | **ALT for item 10:** Two-axis stepper driver dev board |
+| **A9** |        1 | RespiraWorks    | stepper_base        |              | [Rw][a9rw]              | BASE - 3D printed |
+| **A10**|        1 | RespiraWorks    | stepper_rotor       |              | [Rw][a10rw]             | ROTOR - 3D printed |
 
 [1step]: https://www.omc-stepperonline.com/nema-17-stepper-motor/nema-17-bipolar-59ncm-84oz-in-2a-42x48mm-4-wires-w-1m-cable-and-connector-full-d-cut-shaft.html
 [1amzn]: https://www.amazon.com/dp/B07Z1J8JWH
 [2mcmc]: https://www.mcmaster.com/92095A218
 [3mcmc]: https://www.mcmaster.com/91294A128
 [4fast]: https://www.fasteddybearings.com/5x16x5-metal-shielded-bearing-625-zz-10-units/
+[4mcmc]: https://www.mcmaster.com/6153K15/
 [5mcmc]: https://www.mcmaster.com/5894K38
 [6mcmc]: https://www.mcmaster.com/9579K67
 [7key]:  https://www.digikey.com/short/z442qt
-[7mr]:   https://www.mouser.com/ProductDetail/511-X-NUCLEO-IHM03A1
+[7mau]:  https://www.mouser.com/ProductDetail/511-X-NUCLEO-IHM03A1
 [8st]:   https://www.st.com/en/ecosystems/x-nucleo-ihm02a1.html#sample-and-buy
 [8rs]:   https://export.rsdelivers.com/product/stmicroelectronics/x-nucleo-ihm02a1/stmicroelectronics-x-nucleo-ihm02a1-two-axis/1646982
 [9rw]:   #Custom-parts

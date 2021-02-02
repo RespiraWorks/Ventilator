@@ -1,6 +1,6 @@
 # Display panel
 
-![](images/through-fitting_1.jpg)
+![](images/rendering.jpg)
 
 ## Upper Face Plate
 

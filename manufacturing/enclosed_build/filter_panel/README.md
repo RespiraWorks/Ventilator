@@ -1,8 +1,10 @@
 # Air filter panel
 
-![](images/panel2.jpg)
+![](images/rendering.jpg)
 
-### Lower Face Plate
+## Lower Face Plate
+
+**#TODO: present CAD links nicely**
 
 This is a clear acrylic sheet that houses the filter assembly. It is mounted using heat inserts. Link to the part file
 is given in [Source files](#Source-files) below. Some other useful files for the same part are

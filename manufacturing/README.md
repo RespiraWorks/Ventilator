@@ -52,7 +52,7 @@ Some of the above may not be done for each component. Feel free to help us fill 
 
 * [Brain build](brain) - constitutes just the computing components, and some of the electrical components
 * [Enclosure assembly](enclosed_build/enclosure) - rigid frame and enclosure components
-* [Display assembly](enclosed_build/filter_panel) - Mechanical support for user interface touchscreen
+* [Display assembly](enclosed_build/display_panel) - Mechanical support for user interface touchscreen
 * [Filter panel](enclosed_build/filter_panel) - Mechanical support for air filter assemblies
   * [Air filter assembly](enclosed_build/filter_panel/filter_holder) - air filters for keeping patient safe and system clean
 * [**Pneumatic assembly**](enclosed_build/pneumatics) - full pneumatic assembly, which includes some instances of the following:

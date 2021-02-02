@@ -30,9 +30,9 @@ BEFORE purchasing any parts.**
 
 | Item | Quantity  | Manufacturer  | Part #                              | Price (USD)         | Sources[*][ppg]| Notes |
 | ---- |----------:| ------------- | ----------------------------------- | -------------------:|:----------:|:------|
-|**A1**| 1         | RespiraWorks  | lower_acrylic_face_panel            |                     | [C][a1rw]   | Lower acrylic face panel |
-|**A2**| 2         | RespiraWorks  | patient_tubing_filter_assembly      |                     | [C][a2rw]   | Filter housing assembly, variant with patient tubing |
-|**A3**| 2         | RespiraWorks  | outlet_filter_assembly              |                     | [C][a3rw]   | Filter housing assembly, variant with outlet vent |
+|**A1**| 1         | RespiraWorks  | lower_acrylic_face_panel            |                     | [Rw][a1rw]  | Lower acrylic face panel |
+|**A2**| 2         | RespiraWorks  | patient_tubing_filter_assembly      |                     | [Rw][a2rw]  | Filter housing assembly, variant with patient tubing |
+|**A3**| 2         | RespiraWorks  | outlet_filter_assembly              |                     | [Rw][a3rw]  | Filter housing assembly, variant with outlet vent |
 |**A4**| 4         | McMaster-Carr | 94180A351                           | 15.47 / 100         | [C][a4mcmc] | Heat-set inserts for m4 screws |
 |**A5**| 16        | McMaster-Carr | 93625A150                           | 6.04 / 100          | [C][a5mcmc] | M4 lock nut |
 |**A6**| 16        | McMaster-Carr | 93475A230                           | 1.86 / 100          | [C][a6mcmc] | M4 washer |

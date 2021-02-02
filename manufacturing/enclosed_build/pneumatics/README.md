@@ -14,9 +14,9 @@ plastics.
 
 Please see the [3d printing guidelines](../../3d_printing) for general advice on printing components.
 
-* [Blower assembly](../../blower)
-* 3x [Venturi flow sensors](../../venturi) - one of each variant
-* 2x [Pinch valves](../../pinch_valve)
+* [Blower assembly](blower)
+* 3x [Venturi flow sensors](venturi) - one of each variant
+* 2x [Pinch valves](pinch_valve)
 * [Tubing reducer](reducer_3-4_1-4)
 * [Oxygen mixing chamber](mixer)
 * [Oxygen sensor and overpressure relief valve manifold](manifold)
@@ -33,7 +33,7 @@ BEFORE purchasing any parts.**
 | Item  | Quantity | Manufacturer   | Part #              | Price (USD)  | Sources[*][ppg]| Notes |
 | ----- |---------:| -------------- | ------------------- | ------------:|:--------------:| ----- |
 |**A1** | 1        | McMaster-Carr  | 7768K22             | 11.62        | [C][a1mcmc]    | brass threaded check valve |
-|**A2** | 1        | McMaster-Carr  | 50785K273           | 8.23         | [C][a2mcmc]    | through-wall straight connector |
+|**A2** | 1        | McMaster-Carr  | 50785K273           | 8.23         | [C][a2mcmc]    | through-wall straight connector, 1/4NPT female |
 |**A3** | 1        | SMC Pneumatics | IR2010-N02B         | 77.62        | [Sm][a3smc]    | precision pressure regulator |
 |**A4** | 1        | SMC Pneumatics | PVQ31-6G-40-01N     | 96.10        | [Sm][a4smc]    | Proportional solenoid |
 |**A5** | 2        | McMaster-Carr  | 5121K391            | 5.58 / 10    | [C][a5mcmc]    | 1/8 NPT x 1/4" ID barbed adapter **(with B1 only)** |
@@ -75,7 +75,7 @@ BEFORE purchasing any parts.**
 [a9mcmc]:  https://www.mcmaster.com/92000A120/
 [a10mcmc]: https://www.mcmaster.com/98689A112/
 [a11rw]:   reducer_3-4_1-4
-[a12rw]:   ../../venturi
+[a12rw]:   venturi
 [a13rw]:   mixer
 [a14rw]:   manifold
 [a15cns]:  https://www.cablesandsensors.com/products/compatible-o2-cell-for-hamilton-medical-396008
@@ -89,12 +89,12 @@ BEFORE purchasing any parts.**
 [a23mcmc]: https://www.mcmaster.com/5492K13/
 [a24mcmc]: https://www.mcmaster.com/5372K128/
 [a25mcmc]: https://www.mcmaster.com/53055K434/
-[a26rw]:   ../../pinch_valve
-[a27rw]:   ../../venturi
-[a28rw]:   ../../venturi
+[a26rw]:   pinch_valve
+[a27rw]:   venturi
+[a28rw]:   venturi
 [a29mcmc]: https://www.mcmaster.com/5894K34
 [a30mcmc]: https://www.mcmaster.com/5121K451
-[a31rw]:   ../../blower
+[a31rw]:   blower
 
 **TODO: review adapter and clip counts**
 
@@ -118,15 +118,10 @@ BEFORE purchasing any parts.**
 
 ### Oxygen input and check valve
 
-The brass threaded check valve (**A1**) interfaces with a through-wall straight connector (**A2**) that will be on the
-enclosed ventilator's front panel.
+The oxygen check valve is installed on the upper acrylic panel. There is a separate page about the
+[display panel sub-assembly](../display_panel).
 
-On the opposite end of the fitting, a 1/4"ID tubing adapter (**A24**) should be attached. Together with this adapter,
-the oxygen input port should appear like this:
-
-|  Front    |  Back   |
-:------------------:|:-----------------:|
-![](images/through-fitting_1.jpg)  |  ![](images/through-fitting_2.jpg)  |
+The oxygen input assembly also requires a 1/4"ID tubing adapter (**A24**) to interface with tubing.
 
 It is not clear whether the check valve has the correct cracking pressure and other pneumatic properties for our system.
 

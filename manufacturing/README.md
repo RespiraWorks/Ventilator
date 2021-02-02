@@ -51,12 +51,16 @@ Some of the above may not be done for each component. Feel free to help us fill 
 ### Components
 
 * [Brain build](brain) - constitutes just the computing components, and some of the electrical components
-* [Air filter assembly](filter_holder) - air filters for keeping patient safe and system clean
-* [**Pneumatic assembly**](enclosed_build/pneumatics) - full pneumatic assembly, which includes some instances of the following:
-  * [Blower assembly](blower) - this provides pressurized air
-  * [Venturi flow sensors](venturi) - in-house design of affordable flow sensors
-  * [Pinch valve](pinch_valve) - in-house design of affordable valve for inhale and exhale control
 * [Enclosure assembly](enclosed_build/enclosure) - rigid frame and enclosure components
+* [Display assembly](enclosed_build/display_panel) - Mechanical support for user interface touchscreen
+* [Filter panel](enclosed_build/filter_panel) - Mechanical support for air filter assemblies
+  * [Air filter assembly](enclosed_build/filter_panel/filter_holder) - air filters for keeping patient safe and system clean
+* [**Pneumatic assembly**](enclosed_build/pneumatics) - full pneumatic assembly, which includes some instances of the following:
+  * [Blower assembly](enclosed_build/pneumatics/blower) - this provides pressurized air
+  * [Venturi flow sensors](enclosed_build/pneumatics/venturi) - in-house design of affordable flow sensors
+  * [Pinch valve](enclosed_build/pneumatics/pinch_valve) - in-house design of affordable valve for inhale and exhale control
+  * [Oxygen mixer](enclosed_build/pneumatics/mixer) - for mixing air and oxygen before delivery to patient
+  * [Manifold](enclosed_build/pneumatics/manifold) - for oxygen sensor and overpressure relief valve
 
 ### Characterization Testing
 

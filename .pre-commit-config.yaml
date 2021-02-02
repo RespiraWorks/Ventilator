@@ -36,7 +36,7 @@ repos:
   - id: end-of-file-fixer
     exclude: ^gui/app/third_party|^pcb/
   - id: trailing-whitespace
-    exclude: ^gui/app/third_party|^pcb/
+    exclude: \.dxf$|^gui/app/third_party|^pcb/
 
 - repo: https://github.com/Lucas-C/pre-commit-hooks
   rev: v1.1.7

@@ -2,7 +2,7 @@
 
 | Cross-section                   | Solid                    |
 |:--------------------------------:|:------------------------:|
-| ![](assets/v1_cross_section.jpg) | ![](assets/v1_solid.jpg) |
+| ![](images/v1_cross_section.jpg) | ![](images/v1_solid.jpg) |
 
 ## Design basis
 
@@ -71,14 +71,14 @@ the latest enclosed build. A number of different configurations have been export
 The original CAD with constraints is an AutoDesk Inventor part file. Parameters may be changed to
 include transitions and barbs for different diameter tubing, as can be seen in the drawing below:
 
-![](assets/venturi_drawing.jpg)
+![](images/venturi_drawing.jpg)
 
 The venturi outline drawing and Inventor CAD can be found here:
 
 |File Type| Download Link |
 |:-----:|:-------:|
-|Outline Drawing PDF |[**venturi.pdf**](assets/venturi.pdf)|
-|Venturi Inventor CAD |[**venturi.ipt**](assets/venturi.ipt)|
+|Outline Drawing PDF |[**venturi.pdf**](exports/venturi.pdf)|
+|Venturi Inventor CAD |[**venturi.ipt**](venturi.ipt)|
 
 **Note: the venturi configurations are saved as iPart Configurations, which can be acessed by expanding the "Tables" tab in the Feature Tree of the venturi .ipt part.**
 
@@ -99,7 +99,7 @@ by the two variables described above.
 |           | Generic | Air influx | Oxygen influx | Exhale sensor |
 |:---------:|:-------:|:----------:|:-------------:|:-------------:|
 | **Use**   | General testing / "Pizza build" | Enclosed build | Enclosed build | Enclosed build |
-| **Image** |![](assets/venturi_generic.jpg) | ![](assets/venturi_air_influx.jpg) | ![](assets/venturi_oxygen_influx.jpg) | ![](assets/venturi_exhale.jpg) |
+| **Image** |![](images/venturi_generic.jpg) | ![](images/venturi_air_influx.jpg) | ![](images/venturi_oxygen_influx.jpg) | ![](images/venturi_exhale.jpg) |
 | diams_before_venturi          | 2.0      | 2.5      | 2.5      | 2.0      |
 | diams_after_venturi           | 0.5      | 1.0      | 1.0      | 1.0      |
 | input_outer_diameter          | 3/4"     | 3/8"     | 3/4"     | 3/4"     |
@@ -113,7 +113,7 @@ by the two variables described above.
 | Right U-turn features         | disabled | disabled | enabled  | disabled |
 | u_turn_parallel_distance      | -        | 10mm     | 10mm     | -        |
 | u_turn_output_tube_len        | -        | 30mm     | 30mm     | -        |
-| **STL file**  | [venturi_generic.stl](assets/venturi_generic.stl) | [venturi_air_influx.stl](assets/venturi_air_influx.stl) | [venturi_oxygen_influx.stl](assets/venturi_oxygen_influx.stl) | [venturi_exhale.jpg](assets/venturi_exhale.stl) |
+| **STL file**  | [venturi_generic.stl](exports/venturi_generic.stl) | [venturi_air_influx.stl](exports/venturi_air_influx.stl) | [venturi_oxygen_influx.stl](exports/venturi_oxygen_influx.stl) | [venturi_exhale.jpg](exports/venturi_exhale.stl) |
 | **Total length** | 106.1mm | 143mm | 138mm | 142.5mm |
 | **Notes** | | | Requires discrete 1/4"-3/4" adapter upstream | |
 
@@ -159,7 +159,7 @@ BEFORE purchasing any parts.**
 ## Manufacturing instructions
 |           |             |
 |:---------:|:-----------:|
-|![](assets/assembly_influx.jpg) |![](assets/v1_assembly_tools.jpg)|
+|![](images/assembly_influx.jpg) |![](images/v1_assembly_tools.jpg)|
 
 
 Note that the flow measurement is very sensitive to the exact geometry, particularly the thread geometry. 3D printing
@@ -176,7 +176,7 @@ Lastly, screw the nipples (**A2**) into the 3d-printed venturi (**A1**). You may
 **Note: reamer may be too short to reach orifice in case of modified designs for the enclosure. Geometry discrepancies
 will likely have to be compensated for in software using calibration lookup tables.**
 
-An Inventor CAD Assembly Model can be found [here](assets/venturi_assembly.iam).
+An Inventor CAD Assembly Model can be found [here](venturi_assembly.iam).
 
 ### Verification
 
@@ -230,7 +230,7 @@ Adjust values in the spreadsheet above accordingly to see how it will perform in
 Without calibration, using the NXP sensor above, the 16mm sensor was compared to a Fleisch Pneumotachograph.
 The response curve is shown below over a varying flow signal. Note there is no calibration factor applied, so there is some offset.
 
-![flow curve](assets/pneumotachograph_compare.png)
+![flow curve](images/pneumotachograph_compare.png)
 
 **TODO:** add flow accuracy curve and get improved correlation.
 

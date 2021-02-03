@@ -115,7 +115,7 @@ by the two variables described above.
 | u_turn_output_tube_len        | -        | 30mm     | 30mm     | -        |
 | **STL file**  | [venturi_generic.stl](exports/venturi_generic.stl) | [venturi_air_influx.stl](exports/venturi_air_influx.stl) | [venturi_oxygen_influx.stl](exports/venturi_oxygen_influx.stl) | [venturi_exhale.jpg](exports/venturi_exhale.stl) |
 | **Total length** | 106.1mm | 143mm | 138mm | 142.5mm |
-| **Notes** | | | Requires discrete 1/4"-3/4" adapter upstream | |
+| **Notes** | | | Requires discrete [1/4"-3/4" adapter](../reducer_3-4_1-4) upstream | |
 
 ### 3D Printing guidelines
 

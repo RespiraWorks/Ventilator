@@ -313,7 +313,7 @@ volume accuracy, though still within spec. In return, by producing an
 easy-to-sterilize sensor the device can avoid proprietary and costly
 proximal flow sensors.
 
-![](../../manufacturing/enclosed_build/pneumatics/venturi/assets/beta_nipples_small.jpg)
+![](../../manufacturing/enclosed_build/pneumatics/venturi/images/venturi_assembly_rendering.jpg)
 
 A venturi flow sensor with a differential pressure sensor used to
 calculate flow

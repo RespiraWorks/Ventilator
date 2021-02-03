@@ -16,8 +16,8 @@ To deploy it as intended for the ventilator you will need:
 * SD card
 * Card reader USB
 
-A more complete list of hardware components is on
-[Brain build page](../../manufacturing/brain).
+A more complete list of hardware components is on the
+[Electrical system assembly page](../../manufacturing/electrical).
 
 ### SSH access to *RPi*
 

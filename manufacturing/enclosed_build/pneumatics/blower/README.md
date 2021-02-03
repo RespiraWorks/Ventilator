@@ -180,7 +180,7 @@ You will likely need some sort of small clamps for this step, to ensure that com
 Integration into the pneumatic system is covered in either [pizza build](../../../pizza_build) or
 [enclosed build pneumatics](..) pages, depending on which version you are building.
 
-Integration into the electrical/controls system is covered in [wiring page](../../../../design/electrical-system/wiring.md).
+Integration into the electrical/controls system is covered in [wiring page](../../../electrical/wiring).
 
 ## Price estimate
 

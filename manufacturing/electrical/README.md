@@ -1,4 +1,4 @@
-# Brain Build
+# Electrical system assembly
 
 This build constitutes the computing and digital user interface components.
 It is enough to fully deploy and run all developed software, to test the GUI interface and
@@ -12,10 +12,6 @@ For an upgrade, check the [Pizza build](../pizza_build).
 
 **Note: If you are a member of the RespiraWorks team, review the [part purchasing guidelines][ppg]
 BEFORE purchasing any parts.**
-
-Additional notes:
-- If you are feeling stingy, don't get the touchscreen (**A3**). You can connect the RasPi to any monitor and use
-a mouse and keyboard to control it.
 
 [ppg]: ../../manufacturing/purchasing_guidelines.md
 
@@ -45,10 +41,15 @@ a mouse and keyboard to control it.
 [a7amzn]:   https://www.amazon.com/dp/B06XWMQ81P
 [a8rw]:    ../../pcb
 [a9key]:  https://www.digikey.com/en/products/detail/mean-well-usa-inc/GSM160A12-R7B/7703457
-[a20key]:  https://www.digikey.com/short/z442qt
-[a20mau]:  https://www.mouser.com/ProductDetail/511-X-NUCLEO-IHM03A1
+[a10key]:  https://www.digikey.com/short/z442qt
+[a10mau]:  https://www.mouser.com/ProductDetail/511-X-NUCLEO-IHM03A1
 [a11st]:   https://www.st.com/en/ecosystems/x-nucleo-ihm02a1.html#sample-and-buy
 [a11rs]:   https://export.rsdelivers.com/product/stmicroelectronics/x-nucleo-ihm02a1/stmicroelectronics-x-nucleo-ihm02a1-two-axis/1646982
+
+**Note:** If you are feeling stingy, don't get the touchscreen (**A3**). You can connect the RasPi to any monitor and
+use a mouse and keyboard to control it.
+
+**NOTE: Please also see [wiring guide](wiring) for manufacture of custom wiring harnesses.**
 
 ### Tools
 
@@ -57,8 +58,6 @@ a mouse and keyboard to control it.
 |**B1**| Anker         | 68ANREADER-B2A     | 12.99       | [Z][b1amzn]     | microSD-USB adapter, for flashing RasPi images |
 
 [b1amzn]:https://www.amazon.com/Anker-Portable-Reader-RS-MMC-Micro/dp/B006T9B6R2
-
-**NOTE: Items **A15-17** and **B2** above are also duplicated in the [wiring BOM](../../design/electrical-system/wiring.md)**
 
 ## Assembly Instructions
 
@@ -77,3 +76,14 @@ Here is reference for [RasPi pinout](https://pinout.xyz/pinout/pin2_5v_power) an
     - Raspi UART-RXD (pin 10) <--> Nucleo USART3-TX (CN10 pin 25)
     - Raspi GPIO12 (pin 32) <--> Nucleo USART3-RTS (CN10 pin 30)
     - Raspi GPIO13 (pin 33) <--> Nucleo USART3-CTS (CN10 pin 28)
+
+
+### Stepper wiring
+
+**#TODO:** link to pigtails
+
+Each pinch valve must also include some additional wiring and a driver board for controlling the stepper motor. A
+pigtail with male dupont connectors must be manufactured for interfacing to the driver board. Furthermore, since a
+single ventilator contains two pinch valves, each must come with its own driver board configured with 0-ohm resistors
+soldered appropriately. All of this is documented in a subset of the PCB documentation
+[here](../../pcb/rev1_export/stepper_driver_setup.md).

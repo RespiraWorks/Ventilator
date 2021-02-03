@@ -138,3 +138,7 @@ to act as a lock nut.
 With the Tygon tube and clamps, a single pinch valve sub assembly appears like so:
 
 ![Assembled](images/full_assembly.jpg)
+
+## System integration
+
+Integration into the electrical/controls system is covered in [electrical assembly page](../../../electrical).

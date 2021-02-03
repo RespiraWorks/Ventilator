@@ -12,7 +12,7 @@ If you decide to buy them, do so at your own risk... oh, and thank you ;).**
 **Note: If you are a member of the RespiraWorks team, review the [part purchasing guidelines][ppg]
 BEFORE purchasing any parts.**
 
-[ppg]: ../../manufacturing/purchasing_guidelines.md
+[ppg]: ../../purchasing_guidelines.md
 
 | Item  | Quantity | Manufacturer  | Part #              | Price (USD)  | Sources[*][ppg]       | Notes |
 | ----- |---------:| ------------- | ------------------- | ------------:|:---------------------:| ----- |
@@ -75,7 +75,7 @@ pin 2 to pin 2, etc. with the same connector style on both ends.
 ### Blower wiring
 
 For pizza builds: You will also have to crimp connectors (**A8 + A9**) to the second end of the wiring (using **B1**) that connects the
-blower driver board to the [PCB](../../pcb).
+blower driver board to the [PCB](../../../pcb).
 
 The power and signal cables that come included with the blower are too short to reach the PCB, so new ones must be
 manufactured using **A1, A5, A7-A9, A12-A13**. Please follow the old cables included with blower as examples.
@@ -89,12 +89,6 @@ The new cables should each be about 42cm in length.
 ### Stepper wiring
 
 **#TODO:** make pigtails
-
-Each pinch valve must also include some additional wiring and a driver board for controlling the stepper motor. A
-pigtail with male dupont connectors must be manufactured for interfacing to the driver board. Furthermore, since a
-single ventilator contains two pinch valves, each must come with its own driver board configured with 0-ohm resistors
-soldered appropriately. All of this is documented in a subset of the PCB documentation
-[here](../../pcb/rev1_export/stepper_driver_setup.md).
 
 ### Proportional solenoid valve
 

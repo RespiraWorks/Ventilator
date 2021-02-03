@@ -121,11 +121,9 @@ BEFORE purchasing any parts.**
 
 ### Pneumatics tray
 
-The following part files are available in the CAD folder
+[Pneumatics tray](pneumatics_tray.ipt)
 
-[Pneumatics tray](CAD/PneumaticsTray.ipt)
-
-Other helpful Files are [.idw 2D drawing](CAD/PneumaticsTray.ipt), [.pdf 2D drawing](CAD/PneumaticsTray.pdf), [.stl for 3D printing](CAD/PneumaticsTray.stl), [.dxf for laser cutting](CAD/PneumaticsTray_FrontFace.dxf)
+**TODO:** Make this look good and explain manufacturing process
 
 ### Oxygen input and check valve
 

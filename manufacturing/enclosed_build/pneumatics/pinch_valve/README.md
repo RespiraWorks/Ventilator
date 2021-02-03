@@ -78,10 +78,10 @@ Please see the [3d printing guidelines](../../../3d_printing) for general advice
 |     | Stepper base (Item 9)      | Stepper rotor (Item 10)     |
 |----:|:--------------------------:|:---------------------------:|
 | Rendering | ![](images/rendered_base.jpg) | ![](images/rendered_rotor.jpg) |
-| Inventor IPT |[Pinch valve base.ipt](CAD/Pinch%20valve%20base.ipt)|[Pinch valve rotor.ipt](CAD/Pinch%20valve%20rotor.ipt)|
-| STL for printing |[Pinch valve base.stl](CAD/Pinch%20valve%20base.stl)|[Pinch valve rotor.stl](CAD/Pinch%20valve%20rotor.stl)|
+| Inventor IPT |[Pinch valve base.ipt](pinch_valve_base.ipt)|[Pinch valve rotor.ipt](pinch_valve_rotor.ipt)|
+| STL for printing |[Pinch valve base.stl](exports/pinch_valve_base.stl)|[Pinch valve rotor.stl](exports/pinch_valve_rotor.stl)|
 
-There is also an Inventor assembly with all the hardware [CAD/Pinch valve assembly.iam](CAD/Pinch%20valve%20assembly.iam).
+There is also an Inventor assembly with all the hardware [Pinch valve assembly.iam](pinch_valve_assembly.iam).
 
 ## Parts
 

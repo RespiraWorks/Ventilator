@@ -78,10 +78,10 @@ Please see the [3d printing guidelines](../../../3d_printing) for general advice
 |     | Stepper base (Item 9)      | Stepper rotor (Item 10)     |
 |----:|:--------------------------:|:---------------------------:|
 | Rendering | ![](images/rendered_base.jpg) | ![](images/rendered_rotor.jpg) |
-| Inventor IPT |[Pinch valve base.ipt](CAD/Pinch%20valve%20base.ipt)|[Pinch valve rotor.ipt](CAD/Pinch%20valve%20rotor.ipt)|
-| STL for printing |[Pinch valve base.stl](CAD/Pinch%20valve%20base.stl)|[Pinch valve rotor.stl](CAD/Pinch%20valve%20rotor.stl)|
+| Inventor IPT |[Pinch valve base.ipt](pinch_valve_base.ipt)|[Pinch valve rotor.ipt](pinch_valve_rotor.ipt)|
+| STL for printing |[Pinch valve base.stl](exports/pinch_valve_base.stl)|[Pinch valve rotor.stl](exports/pinch_valve_rotor.stl)|
 
-There is also an Inventor assembly with all the hardware [CAD/Pinch valve assembly.iam](CAD/Pinch%20valve%20assembly.iam).
+There is also an Inventor assembly with all the hardware [Pinch valve assembly.iam](pinch_valve_assembly.iam).
 
 ## Parts
 
@@ -97,38 +97,28 @@ BEFORE purchasing any parts.**
 | **A3** |        3 | McMaster-Carr   | 91294A128           |  4.82 / 100  | [C][a3mcmc]             | M3x8mm flat head. Attaches frame to stepper body |
 | **A4** |        3 | FastEddy        | TFE4262             |  12.50 / 10  | [F][a4fast] [C][a4mcmc] | 5x16x5 Metal shielded bearings |
 | **A5** | 6in/15cm | McMaster-Carr   | 5894K38             |  12.30 / 2 ft| [C][a5mcmc]             | Continuous-Flex Soft Tygon PVC Tubing, 3/8" ID, 5/8" OD |
-| **A6** |        2 | McMaster-Carr   | 9579K67             |  12.63 / 20  | [C][a6mcmc]             | Herbie clip E, 12-13.8mm, to clamp tubing to fittings |
-| **A7** |        1 | Digikey         | X-NUCLEO-IHM03A1    | 10.64 / each | [K][a7key] [M][a7mau]   | Stepper driver dev board |
-| **A8** |        1 | ST              | X-NUCLEO-IHM02A1    | 15.00 / each | [S][a8st] [R][a8rs]     | **ALT for item 10:** Two-axis stepper driver dev board |
-| **A9** |        1 | RespiraWorks    | stepper_base        |              | [Rw][a9rw]              | BASE - 3D printed |
-| **A10**|        1 | RespiraWorks    | stepper_rotor       |              | [Rw][a10rw]             | ROTOR - 3D printed |
+| **A6** |        1 | RespiraWorks    | stepper_base        |              | [Rw][a6rw]              | BASE - 3D printed |
+| **A7** |        1 | RespiraWorks    | stepper_rotor       |              | [Rw][a7rw]             | ROTOR - 3D printed |
 
-[1step]: https://www.omc-stepperonline.com/nema-17-stepper-motor/nema-17-bipolar-59ncm-84oz-in-2a-42x48mm-4-wires-w-1m-cable-and-connector-full-d-cut-shaft.html
-[1amzn]: https://www.amazon.com/dp/B07Z1J8JWH
-[2mcmc]: https://www.mcmaster.com/92095A218
-[3mcmc]: https://www.mcmaster.com/91294A128
-[4fast]: https://www.fasteddybearings.com/5x16x5-metal-shielded-bearing-625-zz-10-units/
-[4mcmc]: https://www.mcmaster.com/6153K15/
-[5mcmc]: https://www.mcmaster.com/5894K38
-[6mcmc]: https://www.mcmaster.com/9579K67
-[7key]:  https://www.digikey.com/short/z442qt
-[7mau]:  https://www.mouser.com/ProductDetail/511-X-NUCLEO-IHM03A1
-[8st]:   https://www.st.com/en/ecosystems/x-nucleo-ihm02a1.html#sample-and-buy
-[8rs]:   https://export.rsdelivers.com/product/stmicroelectronics/x-nucleo-ihm02a1/stmicroelectronics-x-nucleo-ihm02a1-two-axis/1646982
-[9rw]:   #Custom-parts
-[10rw]:  #Custom-parts
+[a1step]: https://www.omc-stepperonline.com/nema-17-stepper-motor/nema-17-bipolar-59ncm-84oz-in-2a-42x48mm-4-wires-w-1m-cable-and-connector-full-d-cut-shaft.html
+[a1amzn]: https://www.amazon.com/dp/B07Z1J8JWH
+[a2mcmc]: https://www.mcmaster.com/92095A218
+[a3mcmc]: https://www.mcmaster.com/91294A128
+[a4fast]: https://www.fasteddybearings.com/5x16x5-metal-shielded-bearing-625-zz-10-units/
+[a4mcmc]: https://www.mcmaster.com/6153K15/
+[a5mcmc]: https://www.mcmaster.com/5894K38
+[a6rw]:   #Custom-parts
+[a7rw]:   #Custom-parts
 
 ## Tools
 
 | Item | Quantity | Manufacturer  | Part #     | Price (USD) | Sources[*][ppg]  | Notes |
 | ---- |---------:| ------------- | ----------- | ----------:|:----------------:| ----- |
-| a1   |        1 | TEKTON        | 37122       |       9.99 | [Z][a1amzn]      | Some sort of wrench/pliers, to clamp the herbie clips around the tubing+fitting. |
-| a2   |        1 | Wiha          | 71397       |       6.76 | [Z][a2amzn]      | 2, 3mm hex drivers required for assembly.  |
-| a3   |        1 | McMaster-Carr | 26475A38    |       9.55 | [Z][a3mcmc]      | M5x0.8mm taper chamfer tap, for bearing axle.  |
+| a1   |        1 | Wiha          | 71397       |       6.76 | [Z][a1amzn]      | 2, 3mm hex drivers required for assembly.  |
+| a2   |        1 | McMaster-Carr | 26475A38    |       9.55 | [Z][a2mcmc]      | M5x0.8mm taper chamfer tap, for bearing axle.  |
 
-[a1amzn]: https://www.amazon.com/TEKTON-2-Inch-Joint-Pliers-37122/dp/B00KLY1FAY
-[a2amzn]: https://www.amazon.com/Wiha-71397-Metric-Insert-6-Piece/dp/B0084B7S70/ref=sr_1_4?dchild=1&keywords=3mm+hex&qid=1590347774&sr=8-4
-[a3mcmc]: https://www.mcmaster.com/26475A38
+[a1amzn]: https://www.amazon.com/Wiha-71397-Metric-Insert-6-Piece/dp/B0084B7S70/ref=sr_1_4?dchild=1&keywords=3mm+hex&qid=1590347774&sr=8-4
+[a2mcmc]: https://www.mcmaster.com/26475A38
 
 ## Prototype fabrication
 
@@ -145,12 +135,10 @@ to act as a lock nut.
 |![Assembled](images/rotor.jpg) | ![Assembled](images/assembled.jpg) |
 3mm hex and 2.5mm hex driver are required for assembling rotor.|  2mm hex driver is required for attaching base.
 
-Each pinch valve must also include some additional wiring and a driver board for controlling the stepper motor. A
-pigtail with male dupont connectors must be manufactured for interfacing to the driver board. Furthermore, since a
-single ventilator contains two pinch valves, each must come with its own driver board configured with 0-ohm resistors
-soldered appropriately. All of this is documented in a subset of the PCB documentation
-[here](../../../../pcb/rev1_export/stepper_driver_setup.md).
-
 With the Tygon tube and clamps, a single pinch valve sub assembly appears like so:
 
 ![Assembled](images/full_assembly.jpg)
+
+## System integration
+
+Integration into the electrical/controls system is covered in [electrical assembly page](../../../electrical).

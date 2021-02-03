@@ -12,12 +12,12 @@ Characterization tests for the blower are [here](characterization-tests).
 
 ## Enclosed assembly
 
-![](CAD/exports/blower_assembly.jpg)
+![](exports/blower_assembly.jpg)
 
 |Download Type|Link|
 |:------|:-------|
-|Assembly Drawing PDF|[PDF](CAD/exports/blower_assembly.pdf)|
-|Autodesk Inventor CAD Assembly|[.iam](CAD/blower_assembly.iam)|
+|Assembly Drawing PDF|[PDF](exports/blower_assembly.pdf)|
+|Autodesk Inventor CAD Assembly|[.iam](blower_assembly.iam)|
 
 ### Parts
 
@@ -48,14 +48,14 @@ BEFORE purchasing any parts.**
 
 [a1ali]:  https://www.aliexpress.com/item/32980201709.html
 [a2won]:  https://wonsmart-motor.en.made-in-china.com/product/hsjxFewOppVg/China-Air-Pump12V-Brushless-Motor-12V-Blower-Fan-Driver.html
-[a3rw]:    CAD/exports/tubing_adapter.stl
+[a3rw]:    exports/tubing_adapter.stl
 [a4mcmc]:  https://www.mcmaster.com/8560K357/
-[a5rw]:    CAD/exports/driver_mounting_plate.dxf
-[a6rw]:    CAD/exports/blower_holding_plate.dxf
-[a7rw]:    CAD/exports/tubing_adapter_holding_plate.dxf
+[a5rw]:    exports/driver_mounting_plate.dxf
+[a6rw]:    exports/blower_holding_plate.dxf
+[a7rw]:    exports/tubing_adapter_holding_plate.dxf
 [a8mcmc]:  https://www.mcmaster.com/1370N13-1370N131/
-[a9rw]:    CAD/exports/blower_gasket.dxf
-[a10rw]:    CAD/exports/tubing_adapter_gasket.dxf
+[a9rw]:    exports/blower_gasket.dxf
+[a10rw]:    exports/tubing_adapter_gasket.dxf
 [a11mcmc]:  https://www.mcmaster.com/93625A150/
 [a12mcmc]: https://www.mcmaster.com/93475A230/
 [a13mcmc]: https://www.mcmaster.com/92095A168/
@@ -88,9 +88,9 @@ BEFORE purchasing any parts.**
 
 To 3d print this component see the [general 3d printing guidelines](../../../3d_printing).
 
-|For 3D printing: [tubing_adapter.stl](CAD/exports/tubing_adapter.stl)| Inventor source: [tubing_adapter.ipt](CAD/tubing_adapter.ipt)|
+|For 3D printing: [tubing_adapter.stl](exports/tubing_adapter.stl)| Inventor source: [tubing_adapter.ipt](tubing_adapter.ipt)|
 |:---:|:---:|
-|![](images/tubing_adapter_rendering.jpg)|[![](CAD/exports/tubing_adapter.jpg)](CAD/exports/tubing_adapter.pdf)|
+|![](images/tubing_adapter_rendering.jpg)|[![](exports/tubing_adapter.jpg)](exports/tubing_adapter.pdf)|
 
 #### Gaskets
 
@@ -98,9 +98,9 @@ Use craft knife (**B1**) to cut these from the gasket material (**A8**).
 
 |     | Blower gasket (C9)         | Tubing adapter gasket (C10) |
 |----:|:--------------------------:|:---------------------------:|
-| PNG | ![](CAD/exports/blower_gasket.png) | ![](CAD/exports/tubing_adapter_gasket.png) |
-| DXF |[blower_gasket.dxf](CAD/exports/blower_gasket.dxf)|[tubing_adapter_gasket.dxf](CAD/exports/tubing_adapter_gasket.dxf)|
-| Inventor |[blower_gasket.ipt](CAD/blower_gasket.ipt)|[tubing_adapter_gasket.ipt](CAD/tubing_adapter_gasket.ipt)|
+| PNG | ![](exports/blower_gasket.png) | ![](exports/tubing_adapter_gasket.png) |
+| DXF |[blower_gasket.dxf](exports/blower_gasket.dxf)|[tubing_adapter_gasket.dxf](exports/tubing_adapter_gasket.dxf)|
+| Inventor |[blower_gasket.ipt](blower_gasket.ipt)|[tubing_adapter_gasket.ipt](tubing_adapter_gasket.ipt)|
 
 #### Acrylic plates
 
@@ -119,10 +119,10 @@ You might also want to use some 200 grit sandpaper to clean up the edges of the 
 
 |     | Driver mounting plate (C5) | Blower holding plate (C6) | Tubing adapter holding plate (C7) |
 |:-----:|:--------------------------:|:-------------------------:|:---------------------------------:|
-|  |![](CAD/exports/driver_mounting_plate.jpg)|![](CAD/exports/blower_holding_plate.jpg)|![](CAD/exports/tubing_adapter_holding_plate.jpg)|
-| Drawings |[Driver Mounting Plate](CAD/exports/driver_mounting_plate.pdf)|[Blower Holding Plate](CAD/exports/blower_holding_plate.pdf)|[Tubing Adapter Holding Plate](CAD/exports/tubing_adapter_holding_plate.pdf)|
-| DXF |[driver_mounting_plate.dxf](CAD/exports/driver_mounting_plate.dxf)|[blower_holding_plate.dxf](CAD/exports/blower_holding_plate.dxf)|[tubing_adapter_holding_plate.dxf](CAD/exports/tubing_adapter_holding_plate.dxf)|
-| Inventor | [driver_mounting_plate.ipt](CAD/driver_mounting_plate.ipt)|[blower_holding_plate.ipt](CAD/blower_holding_plate.ipt)| [tubing adapter_holding_plate.ipt](CAD/tubing_adapter_holding_plate.ipt)|
+|  |![](exports/driver_mounting_plate.jpg)|![](exports/blower_holding_plate.jpg)|![](exports/tubing_adapter_holding_plate.jpg)|
+| Drawings |[Driver Mounting Plate](exports/driver_mounting_plate.pdf)|[Blower Holding Plate](exports/blower_holding_plate.pdf)|[Tubing Adapter Holding Plate](exports/tubing_adapter_holding_plate.pdf)|
+| DXF |[driver_mounting_plate.dxf](exports/driver_mounting_plate.dxf)|[blower_holding_plate.dxf](exports/blower_holding_plate.dxf)|[tubing_adapter_holding_plate.dxf](exports/tubing_adapter_holding_plate.dxf)|
+| Inventor | [driver_mounting_plate.ipt](driver_mounting_plate.ipt)|[blower_holding_plate.ipt](blower_holding_plate.ipt)| [tubing adapter_holding_plate.ipt](tubing_adapter_holding_plate.ipt)|
 
 
 You can use one of these plates as a template to drill the appropriate holes in the main acrylic plate and the metal
@@ -180,7 +180,7 @@ You will likely need some sort of small clamps for this step, to ensure that com
 Integration into the pneumatic system is covered in either [pizza build](../../../pizza_build) or
 [enclosed build pneumatics](..) pages, depending on which version you are building.
 
-Integration into the electrical/controls system is covered in [wiring page](../../../../design/electrical-system/wiring.md).
+Integration into the electrical/controls system is covered in [wiring page](../../../electrical/wiring).
 
 ## Price estimate
 

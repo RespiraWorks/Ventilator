@@ -26,7 +26,7 @@ BEFORE purchasing any parts.**
 |**A8** |        6 | JST           | SVH-21T-P1.1        |         0.11 | [K][a8digi] [R][a8rs] | VH crimps, for main power, for blower power |
 |**A9** |        2 | TE            | 1-1123722-2         |         0.18 | [K][a9digi] [R][a9rs] | VH housing 2 pin, for blower power |
 |**A10**|        1 | JST           | VHR-3N              |         0.14 | [K][a10digi]          | VH housing 3 pin, for main power |
-|**A11**|        1 | AIMHD         | AHD-DC20-F-PT       |    9.99 / 20 | [Z][a11amzn]          | Female Power Pigtail DC 5.5mm x 2.1mm Connectors, for main power |
+|**A11**|        1 | Kycon         | KPJX-PM-4S          |         2.89 | [Z][a11key]          | Female Power Pigtail DC 5.5mm x 2.1mm Connectors, for main power |
 |**A12**|        - | Remington     | 16UL1007STRKIT      |        29.70 | [Z][a12amzn]          | 16 AWG wire, for blower power cable |
 |**A13**|        - | Remington     | 26UL1007STRKIT10COLOR |      31.60 | [Z][a13amzn]          | 26 AWG wire, for signal/control cables |
 |**A14**|        - | Remington     | 22UL1015STRKIT10COLOR |      37.75 | [Z][a14amzn]          | 22 AWG wire, for signal/control cables |
@@ -43,7 +43,7 @@ BEFORE purchasing any parts.**
 [a9digi]:  https://www.digikey.com/short/z44fwj
 [a9rs]:    https://export.rsdelivers.com/product/jst/vhr-2n/jst-vhr-female-connector-housing-396mm-pitch-2/8201172
 [a10digi]: https://www.digikey.com/short/z44fwp
-[a11amzn]: https://www.amazon.com/Connectors-Upgraded-Surveillance-Transformer-Connection/dp/B0768V9V5Q
+[a11key]: https://www.digikey.com/en/products/detail/kycon-inc/KPJX-PM-4S/9990081
 [a12amzn]: https://www.amazon.com/gp/product/B00N51OJJ4
 [a13amzn]: https://www.amazon.com/gp/product/B011JC76OA
 [a14amzn]: https://www.amazon.com/gp/product/B073SDGNKW
@@ -85,6 +85,16 @@ The new cables should each be about 42cm in length.
 **#TODO:** Some sort of shrink tubing should also be used
 
 **#TODO:** illustrate this
+
+### Stepper wiring
+
+**#TODO:** make pigtails
+
+Each pinch valve must also include some additional wiring and a driver board for controlling the stepper motor. A
+pigtail with male dupont connectors must be manufactured for interfacing to the driver board. Furthermore, since a
+single ventilator contains two pinch valves, each must come with its own driver board configured with 0-ohm resistors
+soldered appropriately. All of this is documented in a subset of the PCB documentation
+[here](../../pcb/rev1_export/stepper_driver_setup.md).
 
 ### Proportional solenoid valve
 

@@ -63,6 +63,7 @@ BEFORE purchasing any parts.**
 |**A29**| ~3ft     | McMaster-Carr  | 5894K34             | 12.15 / 5ft  | [C][a29mcmc]   | 1/4"ID 3/8"OD Tygon tubing, for oxygen line tubing |
 |**A30**| 5        | McMaster-Carr  | 5121K451            | 5.78 / 10    | [C][a30mcmc]   | 1/4 NPT x 1/4" ID barbed adapter |
 |**A31**| 1        | RespiraWorks   | blower_assembly     |              | [Rw][a31rw]    | Blower mechanical sub-assembly |
+|**A32**| 4        | McMaster-Carr  | 9579K67             |  12.63 / 20  | [C][a32mcmc]    | Herbie clip E, 12-13.8mm, to clamping 5/8"OD pinch valve tubing |
 
 [a1mcmc]:  https://www.mcmaster.com/7768K22/
 [a2mcmc]:  https://www.mcmaster.com/50785K273/
@@ -95,6 +96,7 @@ BEFORE purchasing any parts.**
 [a29mcmc]: https://www.mcmaster.com/5894K34
 [a30mcmc]: https://www.mcmaster.com/5121K451
 [a31rw]:   blower
+[a32mcmc]: https://www.mcmaster.com/9579K67
 
 **TODO: review adapter and clip counts**
 

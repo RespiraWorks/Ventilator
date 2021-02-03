@@ -159,7 +159,7 @@ BEFORE purchasing any parts.**
 ## Manufacturing instructions
 |           |             |
 |:---------:|:-----------:|
-|![](images/assembly_influx.jpg) |![](images/v1_assembly_tools.jpg)|
+|![](images/venturi_assembly_rendering.jpg) |![](images/v1_assembly_tools.jpg)|
 
 
 Note that the flow measurement is very sensitive to the exact geometry, particularly the thread geometry. 3D printing

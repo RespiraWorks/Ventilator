@@ -69,7 +69,18 @@ the latest enclosed build. A number of different configurations have been export
 ## Files
 
 The original CAD with constraints is an AutoDesk Inventor part file. Parameters may be changed to
-include transitions and barbs for different diameter tubing: [**venturi.ipt**](assets/venturi.ipt)
+include transitions and barbs for different diameter tubing, as can be seen in the drawing below: 
+
+![](assets/venturi_drawing.jpg)
+
+The venturi outline drawing and Inventor CAD can be found here: 
+
+|File Type| Download Link |
+|:-----:|:-------:|
+|Outline Drawing PDF |[**venturi.pdf**](assets/venturi.pdf)| 
+|Venturi Inventor CAD |[**venturi.ipt**](assets/venturi.ipt)|
+
+**Note: the venturi configurations are saved as iPart Configurations, which can be acessed by expanding the "Tables" tab in the Feature Tree of the venturi .ipt part.**
 
 Below are a number of STL files exported for manufacture using 3d printing. Some versions are adapted for particular
 positions in the enclosed assembly, incorporating tubing diameter transitions up- and down-stream of pinch valves.
@@ -83,7 +94,7 @@ result in less turbulence and better sensor performance.
 
 Note that explicit clamp space may does not need to be provided when tubing diameter matched the 3/4" outer diameter
 of the main venturi flow sensor body. In such cases, additional clamping also adds to straight tubing length dictated
-by the two variables described above.
+by the two variables described above. 
 
 |           | Generic | Air influx | Oxygen influx | Exhale sensor |
 |:---------:|:-------:|:----------:|:-------------:|:-------------:|
@@ -146,8 +157,10 @@ BEFORE purchasing any parts.**
 [b4amzn]:https://www.amazon.com/DEWALT-DWA1205-Pilot-Industrial-Cobalt/dp/B015J5HN2S
 
 ## Manufacturing instructions
+|           |             |
+|:---------:|:-----------:|
+|![](assets/assembly_influx.jpg) |![](assets/v1_assembly_tools.jpg)|
 
-![](assets/v1_assembly_tools.jpg)
 
 Note that the flow measurement is very sensitive to the exact geometry, particularly the thread geometry. 3D printing
 may result in variable shrinkage or expansion. This may cause uncertainty in the throat size, and thus the flow rates.
@@ -162,6 +175,8 @@ Lastly, screw the nipples (**A2**) into the 3d-printed venturi (**A1**). You may
 
 **Note: reamer may be too short to reach orifice in case of modified designs for the enclosure. Geometry discrepancies
 will likely have to be compensated for in software using calibration lookup tables.**
+
+An Inventor CAD Assembly Model can be found [here](assets/venturi_assembly.iam).
 
 ### Verification
 

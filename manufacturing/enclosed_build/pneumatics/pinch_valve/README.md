@@ -103,20 +103,20 @@ BEFORE purchasing any parts.**
 | **A9** |        1 | RespiraWorks    | stepper_base        |              | [Rw][a9rw]              | BASE - 3D printed |
 | **A10**|        1 | RespiraWorks    | stepper_rotor       |              | [Rw][a10rw]             | ROTOR - 3D printed |
 
-[1step]: https://www.omc-stepperonline.com/nema-17-stepper-motor/nema-17-bipolar-59ncm-84oz-in-2a-42x48mm-4-wires-w-1m-cable-and-connector-full-d-cut-shaft.html
-[1amzn]: https://www.amazon.com/dp/B07Z1J8JWH
-[2mcmc]: https://www.mcmaster.com/92095A218
-[3mcmc]: https://www.mcmaster.com/91294A128
-[4fast]: https://www.fasteddybearings.com/5x16x5-metal-shielded-bearing-625-zz-10-units/
-[4mcmc]: https://www.mcmaster.com/6153K15/
-[5mcmc]: https://www.mcmaster.com/5894K38
-[6mcmc]: https://www.mcmaster.com/9579K67
-[7key]:  https://www.digikey.com/short/z442qt
-[7mau]:  https://www.mouser.com/ProductDetail/511-X-NUCLEO-IHM03A1
-[8st]:   https://www.st.com/en/ecosystems/x-nucleo-ihm02a1.html#sample-and-buy
-[8rs]:   https://export.rsdelivers.com/product/stmicroelectronics/x-nucleo-ihm02a1/stmicroelectronics-x-nucleo-ihm02a1-two-axis/1646982
-[9rw]:   #Custom-parts
-[10rw]:  #Custom-parts
+[a1step]: https://www.omc-stepperonline.com/nema-17-stepper-motor/nema-17-bipolar-59ncm-84oz-in-2a-42x48mm-4-wires-w-1m-cable-and-connector-full-d-cut-shaft.html
+[a1amzn]: https://www.amazon.com/dp/B07Z1J8JWH
+[a2mcmc]: https://www.mcmaster.com/92095A218
+[a3mcmc]: https://www.mcmaster.com/91294A128
+[a4fast]: https://www.fasteddybearings.com/5x16x5-metal-shielded-bearing-625-zz-10-units/
+[a4mcmc]: https://www.mcmaster.com/6153K15/
+[a5mcmc]: https://www.mcmaster.com/5894K38
+[a6mcmc]: https://www.mcmaster.com/9579K67
+[a7key]:  https://www.digikey.com/short/z442qt
+[a7mau]:  https://www.mouser.com/ProductDetail/511-X-NUCLEO-IHM03A1
+[a8st]:   https://www.st.com/en/ecosystems/x-nucleo-ihm02a1.html#sample-and-buy
+[a8rs]:   https://export.rsdelivers.com/product/stmicroelectronics/x-nucleo-ihm02a1/stmicroelectronics-x-nucleo-ihm02a1-two-axis/1646982
+[a9rw]:   #Custom-parts
+[a10rw]:  #Custom-parts
 
 ## Tools
 

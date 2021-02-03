@@ -31,11 +31,11 @@ BEFORE purchasing any parts.**
 |**A13**|        - | Remington     | 26UL1007STRKIT10COLOR |      31.60 | [Z][a13amzn]          | 26 AWG wire, for signal/control cables |
 |**A14**|        - | Remington     | 22UL1015STRKIT10COLOR |      37.75 | [Z][a14amzn]          | 22 AWG wire, for signal/control cables |
 
-[1digi]:   https://www.digikey.com/short/z44f8d
-[2digi]:   https://www.digikey.com/short/z44f8f
-[3digi]:   https://www.digikey.com/short/z44fb9
-[4digi]:   https://www.digikey.com/short/z44r0b
-[5digi]:   https://www.digikey.com/short/z44ff8
+[a1digi]:   https://www.digikey.com/short/z44f8d
+[a2digi]:   https://www.digikey.com/short/z44f8f
+[a3digi]:   https://www.digikey.com/short/z44fb9
+[a4digi]:   https://www.digikey.com/short/z44r0b
+[a5digi]:   https://www.digikey.com/short/z44ff8
 [a6amzn]:  https://www.amazon.com/gp/product/B06ZZ45G7G
 [a7amzn]:  https://www.amazon.com/gp/product/B079MJ1RYN
 [a8digi]:  https://www.digikey.com/short/z44fjr

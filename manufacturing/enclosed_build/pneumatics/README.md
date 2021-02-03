@@ -14,6 +14,7 @@ plastics.
 
 Please see the [3d printing guidelines](../../3d_printing) for general advice on printing components.
 
+* Pneumatics tray (**TODO**)
 * [Blower assembly](blower)
 * 3x [Venturi flow sensors](venturi) - one of each variant
 * 2x [Pinch valves](pinch_valve)

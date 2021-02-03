@@ -19,7 +19,7 @@ It can also come in various configurations, depending on your testing needs:
 
 ## Essentials
 
-The first thing you will need is a [Brain build](../brain), which contains the computing components.
+Firstly, you will need a full [Electrical assembly](../electrical), which contains the computing components.
 
 We are using 3/4" ID tube as the default standard (and adapters where needed, like to the blower and the pinch valves).
 This easily can have 19mm ID tubing substituted in metric manufacturing settings (3/4" = 19.05mm).

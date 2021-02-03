@@ -21,14 +21,14 @@ BEFORE purchasing any parts.**
 
 [ppg]: ../../purchasing_guidelines.md
 [pneu]: ../pneumatics
-[brain]: ../../brain
+[elec]: ../../electrical
 
 | Item  | Quantity  | Manufacturer  | Part #                   | Price (USD)  | Sources[*][ppg]| Notes |
 | ----- |----------:| ------------- | ------------------------ | ------------:|:----------:|:------|
 |**A1** | 1         | RespiraWorks  | upper_acrylic_face_panel |              | [Rw][a1rw]  | Upper acrylic face panel |
 |**A2** | (1)       | McMaster-Carr | 7768K22                  | 11.62        | [C][a2mcmc] | brass threaded check valve, **DUPLICATE in [pneumatic assembly][pneu]** |
 |**A3** | (1)       | McMaster-Carr | 50785K273                | 8.23         | [C][a3mcmc] | through-wall straight connector, 1/4NPT female, **DUPLICATE in [pneumatic assembly][pneu]** |
-|**A4** | (1)       | UPerfect      | -                        | 49.00        | [A][a4ali]  | 7" capacitive touchscreen, **DUPLICATE in [brain build][brain]** |
+|**A4** | (1)       | UPerfect      | -                        | 49.00        | [A][a4ali]  | 7" capacitive touchscreen, **DUPLICATE in [electrical assembly][elec]** |
 |**A5** | 4         | McMaster-Carr | 93625A101                | 7.70 / 10    | [C][a5mcmc] | M2 locknut |
 |**A6** | 8         | McMaster-Carr | 93475A195                | 1.06 / 100   | [C][a6mcmc] | M2 washer, 5mm OD |
 |**A7** | (8)       | McMaster-Carr | 91116A240                | 2.40 / 100   | [C][a7mcmc] | M2 washer, 7mm OD, **alternate to A6** |

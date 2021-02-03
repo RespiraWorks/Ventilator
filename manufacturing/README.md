@@ -50,7 +50,8 @@ Some of the above may not be done for each component. Feel free to help us fill 
 
 ### Components
 
-* [Brain build](brain) - constitutes just the computing components, and some of the electrical components
+* [Electrical assembly](electrical) - encompasses the electrical and computing components
+  * [Wiring guide](electrical/wiring) - custom wiring harnesses and connectors
 * [Enclosure assembly](enclosed_build/enclosure) - rigid frame and enclosure components
 * [Display assembly](enclosed_build/display_panel) - Mechanical support for user interface touchscreen
 * [Filter panel](enclosed_build/filter_panel) - Mechanical support for air filter assemblies

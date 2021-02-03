@@ -12,7 +12,7 @@ If you decide to buy them, do so at your own risk... oh, and thank you ;).**
 **Note: If you are a member of the RespiraWorks team, review the [part purchasing guidelines][ppg]
 BEFORE purchasing any parts.**
 
-[ppg]: ../../manufacturing/purchasing_guidelines.md
+[ppg]: ../../purchasing_guidelines.md
 
 | Item  | Quantity | Manufacturer  | Part #              | Price (USD)  | Sources[*][ppg]       | Notes |
 | ----- |---------:| ------------- | ------------------- | ------------:|:---------------------:| ----- |
@@ -26,16 +26,16 @@ BEFORE purchasing any parts.**
 |**A8** |        6 | JST           | SVH-21T-P1.1        |         0.11 | [K][a8digi] [R][a8rs] | VH crimps, for main power, for blower power |
 |**A9** |        2 | TE            | 1-1123722-2         |         0.18 | [K][a9digi] [R][a9rs] | VH housing 2 pin, for blower power |
 |**A10**|        1 | JST           | VHR-3N              |         0.14 | [K][a10digi]          | VH housing 3 pin, for main power |
-|**A11**|        1 | AIMHD         | AHD-DC20-F-PT       |    9.99 / 20 | [Z][a11amzn]          | Female Power Pigtail DC 5.5mm x 2.1mm Connectors, for main power |
+|**A11**|        1 | Kycon         | KPJX-PM-4S          |         2.89 | [Z][a11key]          | Female Power Pigtail DC 5.5mm x 2.1mm Connectors, for main power |
 |**A12**|        - | Remington     | 16UL1007STRKIT      |        29.70 | [Z][a12amzn]          | 16 AWG wire, for blower power cable |
 |**A13**|        - | Remington     | 26UL1007STRKIT10COLOR |      31.60 | [Z][a13amzn]          | 26 AWG wire, for signal/control cables |
 |**A14**|        - | Remington     | 22UL1015STRKIT10COLOR |      37.75 | [Z][a14amzn]          | 22 AWG wire, for signal/control cables |
 
-[1digi]:   https://www.digikey.com/short/z44f8d
-[2digi]:   https://www.digikey.com/short/z44f8f
-[3digi]:   https://www.digikey.com/short/z44fb9
-[4digi]:   https://www.digikey.com/short/z44r0b
-[5digi]:   https://www.digikey.com/short/z44ff8
+[a1digi]:   https://www.digikey.com/short/z44f8d
+[a2digi]:   https://www.digikey.com/short/z44f8f
+[a3digi]:   https://www.digikey.com/short/z44fb9
+[a4digi]:   https://www.digikey.com/short/z44r0b
+[a5digi]:   https://www.digikey.com/short/z44ff8
 [a6amzn]:  https://www.amazon.com/gp/product/B06ZZ45G7G
 [a7amzn]:  https://www.amazon.com/gp/product/B079MJ1RYN
 [a8digi]:  https://www.digikey.com/short/z44fjr
@@ -43,7 +43,7 @@ BEFORE purchasing any parts.**
 [a9digi]:  https://www.digikey.com/short/z44fwj
 [a9rs]:    https://export.rsdelivers.com/product/jst/vhr-2n/jst-vhr-female-connector-housing-396mm-pitch-2/8201172
 [a10digi]: https://www.digikey.com/short/z44fwp
-[a11amzn]: https://www.amazon.com/Connectors-Upgraded-Surveillance-Transformer-Connection/dp/B0768V9V5Q
+[a11key]: https://www.digikey.com/en/products/detail/kycon-inc/KPJX-PM-4S/9990081
 [a12amzn]: https://www.amazon.com/gp/product/B00N51OJJ4
 [a13amzn]: https://www.amazon.com/gp/product/B011JC76OA
 [a14amzn]: https://www.amazon.com/gp/product/B073SDGNKW
@@ -75,7 +75,7 @@ pin 2 to pin 2, etc. with the same connector style on both ends.
 ### Blower wiring
 
 For pizza builds: You will also have to crimp connectors (**A8 + A9**) to the second end of the wiring (using **B1**) that connects the
-blower driver board to the [PCB](../../pcb).
+blower driver board to the [PCB](../../../pcb).
 
 The power and signal cables that come included with the blower are too short to reach the PCB, so new ones must be
 manufactured using **A1, A5, A7-A9, A12-A13**. Please follow the old cables included with blower as examples.
@@ -85,6 +85,10 @@ The new cables should each be about 42cm in length.
 **#TODO:** Some sort of shrink tubing should also be used
 
 **#TODO:** illustrate this
+
+### Stepper wiring
+
+**#TODO:** make pigtails
 
 ### Proportional solenoid valve
 

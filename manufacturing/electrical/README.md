@@ -22,7 +22,7 @@ BEFORE purchasing any parts.**
 |**A3** | (1)      | Duracell      | 2016 3V            | 1.67        | [Z][a3amzn]             | CR2016 battery, for interim board **OPTIONAL** |
 |**A4** | 1        | ST Micro      | NUCLEO-L452-RE     | 14.43       | [M][a4mous] [R][a4rs]   | STM32 Nucleo dev board, **DO NOT get the -P** version |
 |**A5** | 2        | Digikey       | X-NUCLEO-IHM03A1   | 10.64       | [K][a5key] [M][a5mous]  | Stepper driver board |
-|**A6** | (1)      | ST            | X-NUCLEO-IHM02A1   | 15.00       | [S][a6st] [R][a6rs]     | Two-axis stepper driver board, **Alternative to A10x2:**  |
+|**A6** | (1)      | ST            | X-NUCLEO-IHM02A1   | 15.00       | [S][a6st] [R][a6rs]     | Two-axis stepper driver board, **Alternative to 2x`[A5]`**  |
 |**A7** | 1        | Raspberry Pi  | RPI4-MODBP-2GB     | 53.23       | [M][a7mous]             | Raspberry Pi 4 |
 |**A8** | 1        | Pastall       | PT2019120501       | 9.99 / 40   | [Z][a8amzn]             | Heat sink for Rpi |
 |**A9** | 1        | SanDisk       | SDSQXAF-032G-GN6MA | 10.73       | [Z][a9amzn]             | UHS-1 Class 10 micro SD, memory for Raspberry Pi |
@@ -52,7 +52,7 @@ BEFORE purchasing any parts.**
 [a14key]:  https://www.digikey.com/en/products/detail/mean-well-usa-inc/GSM160A12-R7B/7703457
 [a15amzn]: https://www.amazon.com/Cablelera-North-American-Hospital-ZWACPCAY-10/dp/B00GP6CB5A
 
-**Note:** If you are feeling stingy, don't get the touchscreen (**A10**). You can connect the RasPi to any monitor and
+**Note:** If you are feeling stingy, don't get the touchscreen `[A10]`. You can connect the RasPi to any monitor and
 use a mouse and keyboard to control it.
 
 **NOTE: Please also see [wiring guide](wiring) for manufacture of custom wiring harnesses.**
@@ -98,7 +98,7 @@ The Nucleo dev board serves as the main cycle controller processor and is to be 
 
 ### Interim board
 
-You might want to install an interim board (**A2**) if you intend to test any of the following functionality:
+You might want to install an interim board `[A2]` if you intend to test any of the following functionality:
 * oxygen control
 * EEPROM nonvolatile memory
 * real-time clock
@@ -106,7 +106,7 @@ You might want to install an interim board (**A2**) if you intend to test any of
 Design and manufacturing files can be found in this
 [separate repository](https://github.com/inceptionev/VentilatorRev1InterimDaughtercard).
 
-You will need to install a battery (**A3**).
+You will need to install a battery `[A3]`.
 
 The card goes directly onto the Nucleo, **before** the stepper drivers.
 
@@ -116,7 +116,7 @@ You will probably also want to connect the oxygen sensor wire to this board befo
 
 ### Stepper drivers
 
-Pinch valves require either 2 stepper driver boards (**A5**) or a single 2-axis board (**A6**).
+Pinch valves require either 2 stepper driver boards `[A5]` or a single 2-axis board `[A6]`.
 
 Each pinch valve must also include some additional wiring and a driver board for controlling the stepper motor. A
 pigtail with male dupont connectors must be manufactured for interfacing to the driver board. Furthermore, since a
@@ -137,11 +137,11 @@ Now you can connect the steppers to their driver pigtails as follows:
 The Raspberry Pi serves as the user interface computer for the ventilator.
 
 Prior to installing it on the PCB, you should:
-* install a heat sink (**A8**) on the processor
-* load the memory card (**A9**) with the standard [RaspberryPi OS](https://www.raspberrypi.org/software/),
-  using a microSD adapter (**B1**)
+* install a heat sink `[A8]` on the processor
+* load the memory card `[A9]` with the standard [RaspberryPi OS](https://www.raspberrypi.org/software/),
+  using a microSD adapter `[B1]`
 * install memory card into the RaspberryPi
-* give it a keyboard and mouse (**B3**) or
+* give it a keyboard and mouse `[B3]` or
 * alternatively, you can configure it for remote ssh control as described on our [GUI page](../../software/gui).
 
 Unless you are doing a [Pizza build](../pizza_build), you will **NOT** want to install the Raspberry Pi onto the PCB
@@ -151,8 +151,8 @@ quite yet. You will first want to mount the PCB onto the touch-screen, as descri
 ### Touch screen
 
 The touch screen needs two connections:
-* RaspberryPi `USB` to touchscreen `5V+Touch` microUSB, using **A11**
-* RaspberryPi `microHDMI` to touchscreen `HDMI IN`, using **A12** and **A13**
+* RaspberryPi's `USB` to touchscreen's `5V+Touch` microUSB, using `[A11]`
+* RaspberryPi's `microHDMI` to touchscreen's `HDMI IN`, using `[A12]` and `[A13]`
 
 **#TODO:** pictures
 
@@ -169,9 +169,9 @@ By this point you should have completed all the mechanical and pneumatic sub-ass
 
 **#TODO:** pictures
 
-You may also want to use **B2** to connect the controller to your PC from which you will be flashing
+You may also want to use `[B2]` to connect the controller to your PC from which you will be flashing
 controller firmware.
 
 ### Power
 
-Once the ventilator is assembled, you may use **A14** and **A15** power it.
+Once the ventilator is assembled, you may use `[A14]` and `[A15]` power it.

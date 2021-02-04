@@ -167,7 +167,7 @@ circuit board:
 ![](images/stepper_connection3.jpg)
 
 Additional details for how to attach stepper drivers to PCB can be found in the
-[pcb section](../../pcb/rev1_export/stepper_driver_setup.md) of the repository.
+[pcb section](../electrical/stepper_drivers) of the repository.
 
 ### Raspberry Pi
 

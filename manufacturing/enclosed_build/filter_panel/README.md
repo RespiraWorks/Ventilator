@@ -1,6 +1,6 @@
 # Air filter panel
 
-![](images/rendering.jpg)
+![](images/filter_panel_assembly_rendering.jpg)
 
 ## Lower Face Plate
 
@@ -11,7 +11,7 @@ is given in [Source files](#Source-files) below. Some other useful files for the
 [.idw 2D drawing](CAD/LowerAcrylicFacePlate.idw), [.pdf 2D drawing](CAD/LowerAcrylicFacePlate.pdf),
 [.dxf of the front face for laser cutting](CAD/LowerAcrylicFacePlate_FrontFace.dxf).
 
-![](images/LowerAcrylicFacePlate.jpg)
+![](images/filter_panel_acrylic_plate_rendering.jpg)
 
 The sizing for the mounting holes was based on [this](https://www.pemnet.com/fastening_products/pdf/sidata.pdf) catalog
 for heat set insert.

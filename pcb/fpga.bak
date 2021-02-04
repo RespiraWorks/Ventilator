@@ -397,4 +397,76 @@ Text HLabel 6600 3650 0    50   BiDi ~ 0
 DIFF-RX-1+
 Text HLabel 6600 3750 0    50   BiDi ~ 0
 DIFF-RX-0+
+Wire Wire Line
+	7850 1850 8550 1850
+Wire Wire Line
+	7850 1950 8550 1950
+Wire Wire Line
+	7850 2050 8550 2050
+Wire Wire Line
+	7850 2150 8550 2150
+Wire Wire Line
+	7850 2250 8550 2250
+Text HLabel 8550 1850 2    50   BiDi ~ 0
+GPIO-02
+Text HLabel 8550 1950 2    50   BiDi ~ 0
+GPIO-04
+Text HLabel 8550 2050 2    50   BiDi ~ 0
+GPIO-06
+Text HLabel 8550 2150 2    50   BiDi ~ 0
+GPIO-08
+Text HLabel 8550 2250 2    50   BiDi ~ 0
+GPIO-10
+Wire Wire Line
+	7850 2450 8550 2450
+Wire Wire Line
+	7850 2550 8550 2550
+Wire Wire Line
+	7850 2650 8550 2650
+Wire Wire Line
+	7850 2750 8550 2750
+Wire Wire Line
+	7850 2850 8550 2850
+Wire Wire Line
+	7850 2950 8550 2950
+Wire Wire Line
+	7850 3050 8550 3050
+Wire Wire Line
+	7850 3150 8550 3150
+Text HLabel 8550 2450 2    50   BiDi ~ 0
+GPIO-12
+Text HLabel 8550 2550 2    50   BiDi ~ 0
+DIFF-RX-B-
+Text HLabel 8550 2650 2    50   BiDi ~ 0
+DIFF-RX-A-
+Text HLabel 8550 2750 2    50   BiDi ~ 0
+DIFF-RX-9-
+Text HLabel 8550 2850 2    50   BiDi ~ 0
+DIFF-RX-8-
+Text HLabel 8550 2950 2    50   BiDi ~ 0
+DIFF-RX-7-
+Text HLabel 8550 3050 2    50   BiDi ~ 0
+DIFF-RX-6-
+Text HLabel 8550 3150 2    50   BiDi ~ 0
+DIFF-RX-5-
+Wire Wire Line
+	7850 3350 8550 3350
+Wire Wire Line
+	7850 3450 8550 3450
+Wire Wire Line
+	7850 3550 8550 3550
+Wire Wire Line
+	7850 3650 8550 3650
+Wire Wire Line
+	7850 3750 8550 3750
+Text HLabel 8550 3350 2    50   BiDi ~ 0
+DIFF-RX-4-
+Text HLabel 8550 3450 2    50   BiDi ~ 0
+DIFF-RX-3-
+Text HLabel 8550 3550 2    50   BiDi ~ 0
+DIFF-RX-2-
+Text HLabel 8550 3650 2    50   BiDi ~ 0
+DIFF-RX-1-
+Text HLabel 8550 3750 2    50   BiDi ~ 0
+DIFF-RX-0-
 $EndSCHEMATC

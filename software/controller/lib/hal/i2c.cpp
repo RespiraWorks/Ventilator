@@ -15,7 +15,7 @@ limitations under the License.
 
 ////////////////////////////////////////////////////////////////////
 //
-// This file contains code to setup, send and recieve data on the I²C channel
+// This file contains code to setup, send and receive data on the I²C channel
 // See header file for implementation philosophy.
 //
 ////////////////////////////////////////////////////////////////////
@@ -30,7 +30,7 @@ I2C::STM32Channel i2c1;
 
 // Reference abbreviations ([RM], [PCB], etc) are defined in hal/README.md
 void HalApi::InitI2C() {
-  // Enable I2C1 and DMA2 peripheral clocks (we use DMA2 to send/recieve data)
+  // Enable I2C1 and DMA2 peripheral clocks (we use DMA2 to send/receive data)
   EnableClock(I2C1_BASE);
   EnableClock(DMA2_BASE);
 
@@ -72,10 +72,16 @@ void DMA2_CH7_ISR() { i2c1.DMAIntHandler(DMA_Chan::C7); };
 
 bool I2C::Channel::SendRequest(const Request &request) {
   *(request.processed) = false;
+  // We need to ensure thread safety as this function might be
+  // called from a timer interrupt as well as the main loop.
+  // Also, because our ISR change the transfer_in_progress_ member variable.
+  BlockInterrupts block;
+
   // Queue the request if possible: check that there is room in the index buffer
   if (buffer_.FreeCount() <= 0) {
     return false;
   }
+
   // Add the current queue_ index into the buffer
   if (buffer_.Put(ind_queue_)) {
     queue_[ind_queue_] = request;
@@ -104,13 +110,18 @@ bool I2C::Channel::SendRequest(const Request &request) {
   if (!transfer_in_progress_) {
     StartTransfer();
   }
-  // if the bus is busy, the transfer will be initiated by the interrupt
-  // handlers, our work is done!
+  // if a transfer is already in progress, this request will be initiated by the
+  // interrupt handlers, our work is done!
   return true;
 }
 
 bool I2C::Channel::CopyDataToWriteBuffer(const void *data,
                                          const uint16_t size) {
+  // This protected function is only called from an already thread safe
+  // function, but leaning on the safe side here, I am disabling interrupts
+  // for this one anyway, in case someone changes the design of the I²C class.
+  BlockInterrupts block;
+
   // Check if the empty space at the end of the buffer is big enough to
   // store all of the data
   if (write_buffer_index_ + size > kWriteBufferSize) {
@@ -122,9 +133,9 @@ bool I2C::Channel::CopyDataToWriteBuffer(const void *data,
       return false;
     }
 
-    // We can write at the begining of the buffer, need to remember that we wrap
-    // at that index in order to properly wrap when updating write_buffer_start_
-    // when the (previous) transfer will end.
+    // We can write at the beginning of the buffer, need to remember that we
+    // wrap at that index in order to properly wrap when updating
+    // write_buffer_start_ when the (previous) transfer will end.
     wrapping_index_ = write_buffer_index_;
     write_buffer_index_ = 0;
   }
@@ -134,9 +145,11 @@ bool I2C::Channel::CopyDataToWriteBuffer(const void *data,
 }
 
 void I2C::Channel::StartTransfer() {
-  // A single request can lead to several transfers, when it is longer than 255
-  // bytes. Therefore we need to check whether this call is a continuation of a
-  // long request or a new request.
+  // Ensure thread safety
+  BlockInterrupts block;
+  // In DMA mode, a single request can lead to several transfers, when it is
+  // longer than 255 bytes. Therefore we need to check whether this call is a
+  // continuation of a long request or a new request.
   // Also in case of transfer error, we may need to re-send the last request
   if (remaining_size_ == 0) {
     // This indicates the last request has been successfully sent, hence we will
@@ -152,9 +165,8 @@ void I2C::Channel::StartTransfer() {
     error_retry_ = kMaxRetries;
   }
 
-  SetupI2CTransfer();
-
   transfer_in_progress_ = true;
+  SetupI2CTransfer();
 }
 
 // Method called by interrupt handler when dma is disabled. This method
@@ -177,8 +189,9 @@ void I2C::Channel::TransferByte() {
 }
 
 void I2C::Channel::EndTransfer() {
+  // Ensure thread safety
+  BlockInterrupts block;
   *last_request_.processed = true;
-  transfer_in_progress_ = false;
   if (last_request_.direction == ExchangeDirection::kWrite) {
     // free the part of the write buffer that was dedicated to this request
     write_buffer_start_ += last_request_.size;
@@ -189,6 +202,7 @@ void I2C::Channel::EndTransfer() {
       write_buffer_start_ = 0;
     }
   }
+  transfer_in_progress_ = false;
 }
 
 void I2C::Channel::I2CEventHandler() {
@@ -216,11 +230,12 @@ void I2C::Channel::I2CEventHandler() {
     TransferByte();
   }
 
-#if defined(BARE_STM32)
   if (TransferReload()) {
-    ReloadTransfer();
+    // To continue a request that is longer than 255 bits, all we need to do is
+    // write a non-zero transfer size, and set the reload byte accordingly (see
+    // [RM] p1151 (Write request) and 1155 (Read request))
+    WriteTransferSize();
   }
-#endif
 
   if (TransferComplete()) {
     // Send stop condition
@@ -288,6 +303,13 @@ void I2C::STM32Channel::SetupI2CTransfer() {
     SetupDMATransfer();
   }
 
+  WriteTransferSize();
+
+  i2c_->ctrl2.start = 1;
+}
+
+// Write the remaining size to the appropriate register with reload logic
+void I2C::STM32Channel::WriteTransferSize() {
   if (remaining_size_ <= 255) {
     i2c_->ctrl2.n_bytes = static_cast<uint8_t>(remaining_size_);
     i2c_->ctrl2.reload = 0;
@@ -296,29 +318,15 @@ void I2C::STM32Channel::SetupI2CTransfer() {
     // Transfer reload is not currently supported by our HAL in DMA mode,
     // we will treat a reload as a new transfer. In effect this means we
     // will have to reissue the I²C header and start condition.
+    // It also means that any request that has a (functionnal) header inside
+    // its data and is longer than 255 bytes may not be processed correctly by
+    // the I²C slave, as it will be split (this is referred to as a Restart
+    // condition rather than Reload)
     if (!dma_enable_) {
       i2c_->ctrl2.reload = 1;
     } else {
       i2c_->ctrl2.reload = 0;
     }
-  }
-
-  if (dma_enable_ || remaining_size_ == last_request_.size) {
-    // we only need to send start if this is not a reloaded transfer
-    // i.e either we are in DMA mode or this is the first transfer of the
-    // ongoing request.
-    i2c_->ctrl2.start = 1;
-  }
-}
-
-// Start the next transfer, which is part of the current request
-void I2C::STM32Channel::ReloadTransfer() {
-  if (remaining_size_ <= 255) {
-    i2c_->ctrl2.n_bytes = static_cast<uint8_t>(remaining_size_);
-    i2c_->ctrl2.reload = 0;
-  } else {
-    i2c_->ctrl2.n_bytes = 255;
-    i2c_->ctrl2.reload = 1;
   }
 }
 
@@ -409,9 +417,10 @@ void I2C::STM32Channel::SetupDMATransfer() {
   }
 
   // when using DMA, we need to use autoend, otherwise the STOP condition which
-  // we issue at the end of the DMA transfer (which means the last byte is
+  // we issue at the end of the DMA transfer (which means the last byte has been
   // written to the register) may arrive before the last byte is actually
-  // written on the line.
+  // written on the line. Tests with both DMA and I2C interrupts enabled to send
+  // Stop at the end of the I2C transfer were inconclusive.
   i2c_->ctrl2.autoend = 1;
 
   channel->config.enable = 1;

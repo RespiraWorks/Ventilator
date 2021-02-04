@@ -48,12 +48,12 @@ bool I2Ceeprom::ReadBytes(uint16_t offset, uint16_t length, void *data,
       .processed = processed,
   };
 
-  // Queue both requests back to back, the second only if the first is succesful
-  if (SendBytes(pointer_set)) {
-    return ReceiveBytes(read_request);
-  } else {
+  // Queue both requests back to back, the second only if the first is
+  // successful
+  if (!SendBytes(pointer_set)) {
     return false;
   }
+  return ReceiveBytes(read_request);
 };
 
 bool I2Ceeprom::WriteBytes(uint16_t offset, uint16_t length, void *data,
@@ -63,7 +63,7 @@ bool I2Ceeprom::WriteBytes(uint16_t offset, uint16_t length, void *data,
     return false;
   }
 
-  // Break write requests into page writes, no write accross page boudaries
+  // Break write requests into page writes, no write across page boundaries
   bool success{true};
   uint16_t current_offset{offset};
   uint8_t *current_data = reinterpret_cast<uint8_t *>(data);

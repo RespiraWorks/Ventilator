@@ -58,9 +58,8 @@ protected:
 
 class TestEeprom : public I2Ceeprom {
 public:
-  TestEeprom(uint8_t address, uint8_t page_size, uint16_t size,
-             I2C::Channel *channel)
-      : I2Ceeprom(address, page_size, size, channel) {
+  TestEeprom(uint8_t address, uint8_t page_size, uint16_t size)
+      : I2Ceeprom(address, page_size, size, nullptr) {
     for (int i = 0; i < size_; ++i) {
       memory_[i] = 0xFF;
     };
@@ -69,8 +68,8 @@ public:
 private:
   uint32_t address_pointer_{0};
   uint8_t memory_[kMaxMemorySize];
-  bool SendBytes(const I2C::Request &request);
-  bool ReceiveBytes(const I2C::Request &request);
+  bool SendBytes(const I2C::Request &request) override;
+  bool ReceiveBytes(const I2C::Request &request) override;
 };
 
 #endif // EEPROM_H_

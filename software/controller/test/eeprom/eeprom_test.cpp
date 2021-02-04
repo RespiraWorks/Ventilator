@@ -19,7 +19,7 @@ limitations under the License.
 static constexpr uint32_t kMemSize{512};
 uint8_t memory[kMemSize];
 
-static TestEeprom eeprom = TestEeprom(0x50, 64, kMemSize, nullptr);
+static TestEeprom eeprom = TestEeprom(0x50, 64, kMemSize);
 
 // This test check that the read address is built correctly
 TEST(I2C_EEPROM, Read_Write) {

@@ -21,7 +21,7 @@ using namespace NVParams;
 
 static NVParams::Handler nv_params;
 static constexpr uint32_t kMemSize{8192};
-static TestEeprom eeprom = TestEeprom(0x50, 64, kMemSize, nullptr);
+static TestEeprom eeprom = TestEeprom(0x50, 64, kMemSize);
 
 // Helper function to compare params in memory (in RAM if address is negative)
 static void CompareParams(int16_t address, const Structure &ref) {

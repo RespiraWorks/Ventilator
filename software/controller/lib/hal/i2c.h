@@ -49,9 +49,9 @@ struct Request {
                             // 10 bits addresses (I²C bus is one or the other)
   ExchangeDirection direction{ExchangeDirection::kRead};
   uint16_t size{1};         // size (in bytes) of the data to be sent or
-                            // recieved - limited to 16 bytes because of DMA
+                            // received - limited to 16 bits because of DMA
                             // limitation
-  void *data{nullptr};      // pointer to the data to be sent or recieved.
+  void *data{nullptr};      // pointer to the data to be sent or received.
   bool *processed{nullptr}; // pointer to a boolean that informs the caller that
                             // his request has been processed
 };
@@ -100,7 +100,7 @@ protected:
   // Max retry-after-error allowed for a single request.
   static constexpr int8_t kMaxRetries{5};
 
-  // retry countdown - set to kMaxRetries when startng a request
+  // retry countdown - set to kMaxRetries when starting a request
   // If it hits zero, we abort the request.
   int8_t error_retry_{kMaxRetries};
 
@@ -112,13 +112,10 @@ protected:
   virtual void SetupI2CTransfer(){}; // configure a transfer
   void TransferByte(); // transfer a single byte (for non-DMA transfer)
   virtual void ReceiveByte(){};
-  // {*next_data_ = static_cast<uint8_t>(i2c_->rxData);};
   virtual void SendByte(){};
-  // {i2c_->txData = *next_data_;};
-  virtual void ReloadTransfer(){};
+  virtual void WriteTransferSize(){};
   void EndTransfer();            // Clear necessary states
   virtual void StopTransfer(){}; // send stop condition
-  // {i2c_->ctrl2.stop = 1;};
 
   // I²C interrupt getters:
   // Indicates that the hardware has processed the current byte and we can read
@@ -139,10 +136,10 @@ protected:
 
   // Store the last request in order to be able to resume in case of errors.
   Request last_request_;
-  // For non-DMA transfers, store pointer to the next data to be sent/recieved
+  // For non-DMA transfers, store pointer to the next data to be sent/received
   uint8_t *next_data_{nullptr};
   // For transfers longer than 255 bytes and non-DMA transfers, store size of
-  // data that is still expected to be recieved/sent
+  // data that is still expected to be received/sent
   uint16_t remaining_size_{0};
 
   // Because Request cannot be std::move'd (and is therefore not compatible
@@ -190,22 +187,26 @@ private:
   DMA_Regs::ChannelRegs *rx_channel_{nullptr};
   DMA_Regs::ChannelRegs *tx_channel_{nullptr};
 
-  void SetupI2CTransfer(); // configure a transfer
-  void ReceiveByte() { *next_data_ = static_cast<uint8_t>(i2c_->rxData); };
-  void SendByte() { i2c_->txData = *next_data_; };
-  void ReloadTransfer();
-  void StopTransfer() { i2c_->ctrl2.stop = 1; };
+  void SetupI2CTransfer() override; // configure a transfer
+  void ReceiveByte() override {
+    *next_data_ = static_cast<uint8_t>(i2c_->rxData);
+  };
+  void SendByte() override { i2c_->txData = *next_data_; };
+  void WriteTransferSize() override;
+  void StopTransfer() override { i2c_->ctrl2.stop = 1; };
 
   // Override interrupt getters:
-  bool NextByteNeeded() const {
+  bool NextByteNeeded() const override {
     return i2c_->status.rx_not_empty || i2c_->status.tx_interrupt;
   };
-  bool TransferReload() const { return i2c_->status.transfer_reload; };
-  bool TransferComplete() const { return i2c_->status.transfer_complete; };
-  bool NackDetected() const { return i2c_->status.nack; };
+  bool TransferReload() const override { return i2c_->status.transfer_reload; };
+  bool TransferComplete() const override {
+    return i2c_->status.transfer_complete;
+  };
+  bool NackDetected() const override { return i2c_->status.nack; };
   // Override Interrupt clear
-  void ClearNack() { i2c_->intClr = 0x10; }
-  void ClearErrors() { i2c_->intClr = 0x720; }
+  void ClearNack() override { i2c_->intClr = 0x10; }
+  void ClearErrors() override { i2c_->intClr = 0x720; }
 
   void SetupDMAChannels(DMA_Regs *dma);
   void ConfigureDMAChannel(DMA_Regs::ChannelRegs *channel,
@@ -232,13 +233,13 @@ private:
   // fake a NACK condition on next handler call
   bool nack_{false};
 
-  // mock the sending and recieving of bytes from internal buffers
-  void SendByte() {
+  // mock the sending and receiving of bytes from internal buffers
+  void SendByte() override {
     bool OK = sent_buffer_.Put(*next_data_);
     if (OK)
       return;
   };
-  void ReceiveByte() {
+  void ReceiveByte() override {
     std::optional<uint8_t> data = rx_buffer_.Get();
     if (data != std::nullopt) {
       *next_data_ = *data;
@@ -246,14 +247,14 @@ private:
   };
 
   // Override I²C interrupt getters for Mock
-  bool NextByteNeeded() const { return remaining_size_ > 0; };
-  bool TransferReload() const {
+  bool NextByteNeeded() const override { return remaining_size_ > 0; };
+  bool TransferReload() const override {
     return remaining_size_ % 255 == 0 && remaining_size_ > 0;
   };
-  bool TransferComplete() const { return remaining_size_ == 0; };
-  bool NackDetected() const { return nack_; };
+  bool TransferComplete() const override { return remaining_size_ == 0; };
+  bool NackDetected() const override { return nack_; };
 
-  void ClearNack() { nack_ = false; };
+  void ClearNack() override { nack_ = false; };
 };
 
 } // namespace I2C

@@ -18,9 +18,7 @@ Note that the Rev 1 PCB was done in Alitum.  For the next rev, Rev A, the projec
 
 ## Rev 1.0
 
-The exported complete Rev 1 files for manufacture can be found in the folder [rev1_export](rev1_export).  For support, setup instructions and errata on Rev 1, please refer to [rev 1 readme](rev1_export/README.md).
-
-Instructions for adding stepper motor support to Rev 1.0 board are [here](rev1_export/stepper_driver_setup.md).
+The exported complete Rev 1 files for manufacture can be found in the folder [rev1_export](rev1_export).
 
 The old Altium-based design project, including a snapshot of this readme, can be found in the folder [rev1_export/archived-Altium-Version-RevA-work-in-progress](rev1_export/archived-Altium-Version-RevA-work-in-progress)
 

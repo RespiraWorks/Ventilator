@@ -17,7 +17,7 @@ Any standard PCB fabrication and assembly vendor will be able to manufacture the
 
 [3D STEP file](20200424v2-RespiraWorks-Ventilator-Rev1.0-RC2-3D-STEP.step)
 
-[Manufacturing Pacakge](20200424v2-RespiraWorks-Ventilator-Rev1.0-RC2-PKG-TURNKEY.zip)
+[Manufacturing Package](20200424v2-RespiraWorks-Ventilator-Rev1.0-RC2-PKG-TURNKEY.zip)
 
 **TODO:** identify the remaining files.
 
@@ -45,7 +45,13 @@ If you are a RespiraWorks contributor, request dev hardware by making an entry
   connected loads like the PSOL.  Remove C33 and C34.
 
 ## Rev 1.0 PCB Quick Start Guide
-* If you have SN 01, 02, 03, or 05, make sure you check the errata above before you proceed or you may damange the Rpi.
+* If you have SN 01, 02, 03, or 05, make sure you check the errata above before you proceed or you may damage the Rpi.
+* If you intend to use the stepper motor-based pinch valves, you will need to solder some wires to power the stepper
+  driver as it takes a power input for the motor that is separate  from the logic power it gets from the Nucleo below.
+  We will piggyback off the blower driver power socket.  Solder two 20cm wires of 22awg or thicker to the backside of
+  J10, the blower power connector. The square pin pad is negative.
+
+![solder power connection](readme_photos/stepper_power.jpg)
 * Verify that you have an STM32-L452RE module (not an STM32-L452RE-P module, they have different pinouts - see #51)
 
 ![verify model](readme_photos/IMG_9305.jpg)
@@ -61,7 +67,7 @@ If you are a RespiraWorks contributor, request dev hardware by making an entry
   long gold pins of this module can get bent so make sure they are straight and they all go into their respective
   sockets successfully.  The stepper driver green connectors go in the direction of the white connectors on the
   mainboard PCB.  For setting up multiple stepper boards and/or connecting actual steppers, see
-  [this guide](stepper_driver_setup.md).
+  [this guide](../../manufacturing/electrical/stepper_drivers).
 
 ![plug in the stepper driver](readme_photos/IMG_9307.jpg)
 * If you are using an Rpi 3B+ or 4 with this PCB, plug this into the RPI socket.  Note that if you have the standoffs
@@ -92,15 +98,12 @@ If you are a RespiraWorks contributor, request dev hardware by making an entry
   basic instructions for setting up STM32dino and programming the STM32. (disclaimer: this code is not part of the
   project and is pretty much unsupported, use at your own risk.  The listing of hardware pin #defines at the top might
   be useful): [pcbreathe-bringup](https://github.com/inceptionev/pcbreathe-bringup)
-    * for more test code with a state machine for running a ventilator setup in closed-loop control mode, see:
-      [FMLtest] (https://github.com/inceptionev/FMLtest)
+    * for more test code with a state machine for running a ventilator setup in closed-loop control mode,
+      see this repo: [FMLtest](https://github.com/inceptionev/FMLtest)
 * The main reference for pin and GPIO assignments on this board are in the
   [Electrical Hardware Requirements and PCB Interface Control Document](https://docs.google.com/spreadsheets/d/1JOSQKxkQxXJ6MCMDI9PwUQ6kiuGdujR4D6EJN9u2LWg/edit?usp=sharing)
-* The large power connectors on the PCB are JST VH type.  [Purchase Link](https://www.amazon.com/gp/product/B07LBZ3LCR)
+* The large power connectors on the PCB are JST VH type.
 * The smaller peripheral connectors on the PCB are JST XH type.
-  * [Purchase link for 2/3/4/5-pin](https://www.amazon.com/gp/product/B06ZZ45G7G)
-  * [Purchase link for 5/6/7-pin](https://www.amazon.com/gp/product/B079MJ1RYN)
-* Here is a crimper that can crimp both types of contacts.  [Purchase Link](https://www.amazon.com/gp/product/B01N4L8QMW)
 * The buzzer requires an oscillating signal to make sound, it is designed for peak output at 2.4kHz.  Take off the
   kapton cover at your own hearing risk.
 * On the MPXV5004DP differential pressure sensors, the upper port is the positive measurement, and the lower port is the
@@ -117,4 +120,5 @@ If you are a RespiraWorks contributor, request dev hardware by making an entry
 When the PCB was originally designed, the ability to add a stepper driver was essentially a hedge, a backup *just in
 case* we wanted to try something that required a stepper motor.
 
-To use stepper motors, you must add stepper driver boards as described in [this guide](stepper_driver_setup.md).
+To use stepper motors, you must add stepper driver boards as described in
+[this guide](../../manufacturing/electrical/stepper_drivers).

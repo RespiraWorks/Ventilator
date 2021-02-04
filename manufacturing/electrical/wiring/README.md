@@ -27,7 +27,7 @@ BEFORE purchasing any parts.**
 |**A14**|        - | Remington     | 26UL1007STRKIT10COLOR |  31.60 / 75m | [Z][a14amzn]         | 26 AWG wire, for signal/control cables |
 |**A15**| (1)      | WGCD          | 4330589508            |         8.99 | [Z][a15amzn]         | XH connector kit for 2/3/4/5 pins, **alternative for A1-3** |
 |**A16**| (1)      | CQRobot       | CQRJST254-BGB         |         9.99 | [Z][a16amzn]         | XH connector kit for 6/7/8 pins, **alternative for A1 and A4** |
-|**A17**| (1)      | Chenbo        | WJ-Z01                |        11.98 | [Z][a17amzn]         | 2.54mm connector, **alternative for A10 and A11** |
+|**A17**| (1)      | Chenbo        | WJ-Z01                |        11.98 | [Z][a17amzn]         | 2.54mm connector kit, **alternative for A10 and A11** |
 
 [a1key]:   https://www.digikey.com/short/z44f8d
 [a2key]:   https://www.digikey.com/short/z44f8f
@@ -76,40 +76,71 @@ As much as possible we should try to keep the cables one-to-one
 (for example the wiring of the PCB to blower driver cables are all pin 1 to pin 1,
 pin 2 to pin 2, etc. with the same connector style on both ends.
 
-![Pizza pneumatics](images/wires.jpg)
-
 ### Main power
 
-**#TODO:**
+**#TODO: how to? what is the DIN pinout? @inceptionev**
+
+Using:
+* DIN female `A9`
+* 22AWG wire (length?) `A12`
+* 3x VH crimps `A5`
+* VH 3-pin housing `A7`
 
 ### Blower wiring
 
-For pizza builds: You will also have to crimp connectors (**A8 + A9**) to the second end of the wiring (using **B1**) that connects the
-blower driver board to the [PCB](../../../pcb).
+The power and signal cables that come included with the blower will be too short to reach the PCB, so new ones
+must be manufactured using crimping tool `B1`:
 
-The power and signal cables that come included with the blower are too short to reach the PCB, so new ones must be
-manufactured using **A1, A5, A7-A9, A12-A13**. Please follow the old cables included with blower as examples.
+* power cable:
+  - 16AWG 60cm `[A12]`
+  - 4x VH crimps `[A5]`
+  - 2x VH 2-pin housings `[A6]`
+* control cable:
+  - 26AWG 60cm `[A14]`
+  - 12x XH crimps `[A1]`
+  - 2x XH 6-pin housings `[A4]`
 
-The new cables should each be about 42cm in length.
+Please follow the old cables included with blower as examples.
 
 **#TODO:** Some sort of shrink tubing should also be used
 
-**#TODO:** illustrate this
+**#TODO:** pictures
 
 ### Stepper wiring
 
-**#TODO:** make pigtails
+To power and control the pinch valves, they will need to be wired to the stepper driver boards. Two pigtails
+can be produced for this purpose:
+
+Recipe for one pigtail:
+* 22AWG 15cm `[A13]`
+* 4x male 2.54mm pins `[A10]`
+* 2.54mm 4-pin housing `[A11]`
+
+On the other end, each wire should be stripped about 5mm and solder applied to bind the threads.
+
+It is advisable to label these pigtails to identify which stepper driver they shall be wired up to.
+The same can be done for the stepper motors belonging to each pinch valve assembly.
+
+| Pigtails | Stepper wires  |
+|:--------:|:--------:|
+| ![](images/pigtails.jpg) | ![](images/stepper_labels.jpg) |
+
+**#TODO: power wires in case of 2 boards**
 
 ### Proportional solenoid valve
 
-To connect the solenoid to the PCB, you will need to crimp a 2-pin XH connector to the wires.
+To connect the solenoid to the PCB, you will need to crimp a 2-pin XH connector to the wires:
+- 2x XH crimps `[A1]`
+- XH 6-pin housings `[A2]`
 
-**#TODO:** expand on this and illustrate this
+**#TODO: polarity does not matter? @inceptionev**
+
+**#TODO:** pictures
 
 ### Oxygen sensor
 
-**#TODO:** missing info
+**#TODO: what is the right plug for this? @inceptionev**
 
 ## Pricing totals
 
-**#TODO:** missing info
+**#TODO:** do this when finalized

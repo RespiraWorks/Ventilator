@@ -85,11 +85,14 @@ Design and manufacturing files for the main board can be found on the
 Revision 1 of the custom circuit board (PCB) requires some modification to work with the current prototype.
 Please follow instructions on that page to make the necessary modifications.
 
+If you are building an enclosed ventilator prototype, you may stop following the PCB instructions right before
+installation of the Raspberry Pi. Follow the sequence of steps below instead.
+
 **#TODO:** does errata explain how to do the bodge wire?
 
 ### Cycle controller
 
-The Nucleo dev board serves as the main cycle controller processor and is to be installed onto the PCB as follows:
+The Nucleo dev board serves as the main cycle controller processor and is to be installed onto the PCB.
 
 **#TODO:** move relevant parts of PCB doc and/or illustrate
 
@@ -109,20 +112,25 @@ The card goes directly onto the Nucleo, **before** the stepper drivers.
 
 You will probably also want to connect the oxygen sensor wire to this board before stacking the stepper drivers.
 
-### Stepper driver(s)
+**#TODO:** pictures
+
+### Stepper drivers
+
+Pinch valves require either 2 stepper driver boards (**A5**) or a single 2-axis board (**A6**).
 
 Each pinch valve must also include some additional wiring and a driver board for controlling the stepper motor. A
 pigtail with male dupont connectors must be manufactured for interfacing to the driver board. Furthermore, since a
 single ventilator contains two pinch valves, each must come with its own driver board configured with 0-ohm resistors
-soldered appropriately. All of this is documented in a subset of the PCB documentation
-[here](../../pcb/rev1_export/stepper_driver_setup.md).
-
-Pinch valves require either 2 stepper driver boards (**A5**) or a single 2-axis board (**A6**).
+soldered appropriately.
 
 It is advisable that you first manufacture the 2 pigtails of appropriate length as described on the
 [wiring page](wiring).
 
-You must next modify the stepper driver board(s) [as follows](../../pcb/rev1_export/stepper_driver_setup.md)
+Stepper board modification and mounting to Nucleo is documented [here](stepper_drivers).
+
+Now you can connect the steppers to their driver pigtails as follows:
+* top - inhale
+* bottom - exhale
 
 ### Raspberry Pi
 
@@ -157,7 +165,7 @@ By this point you should have completed all the mechanical and pneumatic sub-ass
 * connect stepper motors to the stepper driver pigtails as follows:
   * top - inhale
   * bottom - exhale
-* connect power supply cable
+* connect power supply cable to PCB
 
 **#TODO:** pictures
 

@@ -22,7 +22,7 @@ SCL
 Text HLabel 4600 4900 0    50   BiDi ~ 0
 SDA
 Text Notes 4600 1550 0    50   ~ 0
-Design notes:\n- 6.3A max current, 19V input\n- Inductor selection: Isat 9.1A, 3.3uH\n- Wurth 7443330330 or Bourns SRP1038A-3R3M (OPL alt: MWSA1004-3R3MT)\n- Voltage will range from 10.8V to 12.6V for 3s Li-Ion battery\n- 11.5 to 13.0V for SLA (lead acid)\n- N-CH FET: CSD17304Q3 (OPL) or BSZ050N03LSGATMA1 (OPL)\n- P-CH FET: CSD25402Q3A (OPL) or CSD25404Q3T (OPL)\n
+Design notes:\n- 6.3A max current, 19V input\n- Inductor selection: Isat 9.1A, 3.3uH\n- Wurth 7443330330 or Bourns SRP1038A-3R3M (OPL alt: MWSA1004-3R3MT)\n- Voltage will range from 12V to 16.8V for 4s Li-Ion battery\n- 11.5 to 13.0V for SLA (lead acid)\n- N-CH FET: CSD17304Q3 (OPL) or BSZ050N03LSGATMA1 (OPL)\n- P-CH FET: CSD25402Q3A (OPL) or CSD25404Q3T (OPL)\n
 $Comp
 L RespiraWorks_Std:SRP1038A-3R3M L?
 U 1 1 60580E76
@@ -476,11 +476,11 @@ F 3 "" H 8000 5650 50  0001 C CNN
 	1    8000 5650
 	1    0    0    -1  
 $EndComp
-Text HLabel 7850 5000 2    50   Input ~ 0
+Text HLabel 7850 5000 2    50   Output ~ 0
 PSYS
-Text HLabel 8350 4800 2    50   Input ~ 0
+Text HLabel 8350 4800 2    50   Output ~ 0
 IBAT
-Text HLabel 9500 4700 2    50   Input ~ 0
+Text HLabel 9500 4700 2    50   Output ~ 0
 IADPT
 Wire Wire Line
 	7850 5000 7750 5000
@@ -627,7 +627,7 @@ Wire Wire Line
 Connection ~ 7150 4500
 Wire Wire Line
 	7150 4500 9000 4500
-Text HLabel 9000 4500 2    50   Input ~ 0
+Text HLabel 9000 4500 2    50   Output ~ 0
 ACOK
 Wire Wire Line
 	1800 4200 5300 4200
@@ -799,7 +799,7 @@ Wire Wire Line
 	3950 2000 4150 2000
 Wire Wire Line
 	3950 4000 5300 4000
-Text HLabel 10500 2000 2    50   Input ~ 0
+Text HLabel 10500 2000 2    50   Output ~ 0
 VLINK
 Wire Wire Line
 	10100 2000 10500 2000
@@ -1337,7 +1337,7 @@ Wire Wire Line
 Wire Wire Line
 	7800 3200 8850 3200
 Connection ~ 7800 3200
-Text HLabel 8850 3200 2    50   Input ~ 0
+Text HLabel 8850 3200 2    50   BiDi ~ 0
 BAT_P
 Wire Wire Line
 	1800 2000 1250 2000

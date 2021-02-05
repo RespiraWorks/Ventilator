@@ -6,7 +6,7 @@
 
 |Download Type|Link|
 |:------|:-------|
-|Filter Panel Assembly CAD|[.iam](filter_panel_assembly.iam)|
+|Filter Panel Assembly CAD|[.iam](CAD/filter_panel_assembly.iam)|
 
 ## Overview
 

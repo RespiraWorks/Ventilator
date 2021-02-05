@@ -7,7 +7,7 @@
 |Download Type|Link|
 |:------|:-------|
 |Display Panel Assembly CAD|[.iam](display_panel_assembly.iam)|
-|Display Assembly CAD|[.iam](display_assembly.ipt)|
+|Display Assembly CAD|[.iam](display_assembly.iam)|
 |#TODO - Display Panel Assembly Drawing PDF|
 
 ## Overview

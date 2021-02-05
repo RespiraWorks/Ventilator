@@ -1327,7 +1327,7 @@ Wire Wire Line
 Wire Wire Line
 	3050 4900 2600 4900
 Text Label 2600 4550 0    50   ~ 0
-BAT_P
+PACK_P
 Text Label 2600 4900 0    50   ~ 0
 VIN_ADP
 Wire Wire Line
@@ -1338,7 +1338,7 @@ Wire Wire Line
 	7800 3200 8850 3200
 Connection ~ 7800 3200
 Text HLabel 8850 3200 2    50   BiDi ~ 0
-BAT_P
+PACK_P
 Wire Wire Line
 	1800 2000 1250 2000
 Connection ~ 1800 2000
@@ -1477,9 +1477,9 @@ F 3 "" H 4250 6650 50  0001 C CNN
 	-1   0    0    -1  
 $EndComp
 Text Label 8350 3200 0    50   ~ 0
-BAT_P
+PACK_P
 Text Label 4000 6050 0    50   ~ 0
-BAT_P
+PACK_P
 Wire Wire Line
 	4250 6050 4000 6050
 Text Notes 2200 6450 0    50   ~ 0

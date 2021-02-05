@@ -90,25 +90,31 @@ BEFORE purchasing any parts.**
 
 [ppg]: ../../../purchasing_guidelines.md
 
-| Item   | Quantity | Manufacturer    | Part #              | Price (USD)  | Sources[*][ppg]      | Notes |
-| ------ |---------:| --------------- | ------------------- | ------------:|:--------------------:| ----- |
-| **A1** |        1 | STEPPERONLINE   | 17HS19-2004S2       |11.59 / each  | [T][a1step] [Z][a1amzn] | Stepper motor. Make sure to get one with the full-cut D-shaft. |
-| **A2** |        1 | McMaster-Carr   | 92095A218           |   7.64 / 25  | [C][a2mcmc]             | M5x30mm button head. Axle for bearing. |
-| **A3** |        3 | McMaster-Carr   | 91294A128           |  4.82 / 100  | [C][a3mcmc]             | M3x8mm flat head. Attaches frame to stepper body |
-| **A4** |        3 | FastEddy        | TFE4262             |  12.50 / 10  | [F][a4fast] [C][a4mcmc] | 5x16x5 Metal shielded bearings |
-| **A5** | 6in/15cm | McMaster-Carr   | 5894K38             |  12.30 / 2 ft| [C][a5mcmc]             | Continuous-Flex Soft Tygon PVC Tubing, 3/8" ID, 5/8" OD |
-| **A6** |        1 | RespiraWorks    | stepper_base        |              | [Rw][a6rw]              | BASE - 3D printed |
-| **A7** |        1 | RespiraWorks    | stepper_rotor       |              | [Rw][a7rw]             | ROTOR - 3D printed |
+| Item  | Quantity | Manufacturer  | Part #              | Price (USD)  | Sources[*][ppg]      | Notes |
+| ----- |---------:| ------------- | ------------------- | ------------:|:--------------------:| ----- |
+|**A1** |        1 | RespiraWorks  | stepper_base        |              | [Rw][a1rw]              | BASE - 3D printed |
+|**A2** |        1 | RespiraWorks  | stepper_rotor       |              | [Rw][a2rw]              | ROTOR - 3D printed |
+|**A3** |        1 | STEPPERONLINE | 17HS19-2004S2       | 11.59        | [T][a3step] [Z][a3amzn] | Stepper motor. Make sure to get one with the full-cut D-shaft. |
+|**A4** |        3 | McMaster-Carr | 91294A128           | 4.82 / 100   | [C][a4mcmc]             | M3x8mm flat head. Attaches frame to stepper body |
+|**A5** |        1 | McMaster-Carr | 92095A218           | 7.64 / 25    | [C][a5mcmc]             | M5x30mm button head. Axle for bearing. |
+|**A6** |        3 | FastEddy      | TFE4262             | 12.50 / 10   | [F][a6fast] [C][a6mcmc] | 5x16x5 Metal shielded bearings |
+|**A7** |        4 | McMaster-Carr | 92095A478           | 11.29 / 100  | [C][a7mcmc]             | M4x18mm button head hex drive, base mounting screw |
+|**A8** | 4        | McMaster-Carr | 93625A150           | 6.04 / 100   | [C][a8mcmc]             | M4 lock nuts |
+|**A9** | 8        | McMaster-Carr | 93475A230           | 1.86 / 100   | [C][a9mcmc]             | M4 washers |
+|**A10**| 6in/15cm | McMaster-Carr   | 5894K38             | 12.30 / 2 ft | [C][a10mcmc]            | Continuous-Flex Soft Tygon PVC Tubing, 3/8" ID, 5/8" OD |
 
-[a1step]: https://www.omc-stepperonline.com/nema-17-stepper-motor/nema-17-bipolar-59ncm-84oz-in-2a-42x48mm-4-wires-w-1m-cable-and-connector-full-d-cut-shaft.html
-[a1amzn]: https://www.amazon.com/dp/B07Z1J8JWH
-[a2mcmc]: https://www.mcmaster.com/92095A218
-[a3mcmc]: https://www.mcmaster.com/91294A128
-[a4fast]: https://www.fasteddybearings.com/5x16x5-metal-shielded-bearing-625-zz-10-units/
-[a4mcmc]: https://www.mcmaster.com/6153K15/
-[a5mcmc]: https://www.mcmaster.com/5894K38
-[a6rw]:   #Custom-parts
-[a7rw]:   #Custom-parts
+[a1rw]:   #Custom-parts
+[a2rw]:   #Custom-parts
+[a3step]: https://www.omc-stepperonline.com/nema-17-stepper-motor/nema-17-bipolar-59ncm-84oz-in-2a-42x48mm-4-wires-w-1m-cable-and-connector-full-d-cut-shaft.html
+[a3amzn]: https://www.amazon.com/dp/B07Z1J8JWH
+[a4mcmc]: https://www.mcmaster.com/91294A128
+[a5mcmc]: https://www.mcmaster.com/92095A218
+[a6fast]: https://www.fasteddybearings.com/5x16x5-metal-shielded-bearing-625-zz-10-units/
+[a6mcmc]: https://www.mcmaster.com/6153K15/
+[a7mcmc]: https://www.mcmaster.com/92095A478/
+[a8mcmc]:  https://www.mcmaster.com/93625A150/
+[a9mcmc]: https://www.mcmaster.com/93475A230/
+[a10mcmc]: https://www.mcmaster.com/5894K38
 
 ## Tools
 

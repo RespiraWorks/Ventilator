@@ -41,8 +41,8 @@ BEFORE purchasing any parts.**
 |**A6** |(1)       | Uflow          | IBV19M              | 87.00        | [U][a6uflow]   | Proportional solenoid **(alternate for B1)** |
 |**A7** |(2)       | McMaster-Carr  | 1786N249            | 8.16         | [C][a7mcmc]    | 1/8 BSPT x 1/4 NTP brass threaded pipe fitting **(with B3 only)** |
 |**A8** |(2)       | McMaster-Carr  | 5121K451            | 5.78 / 10    | [C][a8mcmc]    | 1/4 NPT x 1/4" ID barbed adapter **(with B3 only)** |
-|**A9** | 2        | McMaster-Carr  | 92000A120           | 5.15 / 100   | [C][a9mcmc]    | M3 x 10mm screws, for mounting to assembly plate |
-|**A10**| 2        | McMaster-Carr  | 98689A112           | 2.71 / 100   | [C][a10mcmc]   | M3 washers, for mounting to assembly plate |
+|**A9** | 2        | McMaster-Carr  | 92095A182           | 8.38 / 100   | [C][a9mcmc]    | M3 x 10mm screws, button head hex drive, for PSOL mounting to assembly plate |
+|**A10**| 2        | McMaster-Carr  | 91116A120           | 2.77 / 100   | [C][a10mcmc]   | M3 washers, 9mm OD, for PSOL mounting to assembly plate |
 |**A11**| 1        | RespiraWorks   | reducer_3-4_1-4     |              | [Rw][a11rw]    | 1/4"ID x 3/4"ID reducer |
 |**A12**| 1        | RespiraWorks   | venturi_oxygen_influx |            | [Rw][a12rw]    | Venturi flow sensor, oxygen influx variant |
 |**A13**| 1        | RespiraWorks   | oxgen_mixer         |              | [Rw][a13rw]    | Oxygen mixing chamber |
@@ -50,9 +50,9 @@ BEFORE purchasing any parts.**
 |**A15**| 1        | Cables&Sensors | G0-040              | 76.00        | [Cs][a15cns]   | Oxygen sensor |
 |**A16**| 1        | Generant       | VRVI-250B-V-0.8     | 54.00        | [Gn][a16gene]  | Overpressure relief valve |
 |**A17**| ~2ft     | OCSParts       | 117062-5            | 22.99 / 5ft  | [Z][a17amzn]   | Soft 3/4"ID 1"OD tubing, for main line tubing |
-|**A18**| ~50 mm   | McMaster-Carr  | 5234K57             | 21.50 / 5ft  | [C][a18mcmc]   | Soft latex tubing, 5/8" ID, 7/8" OD |
-|**A19**| 2        | McMaster-Carr  | 9579K72             | 12.21 / 20   | [C][a19mcmc]   | Herbie clip J (20.3-23mm) for clamping 7/8"OD tubing |
-|**A20**| 6        | McMaster-Carr  | 9579K73             | 12.24 / 20   | [C][a20mcmc]   | Herbie clip K (22.2-24.9mm) for clamping 1"OD tubing |
+|**A18**| ~50 mm   | McMaster-Carr  | 5234K57             | 21.50 / 5ft  | [C][a18mcmc]   | Soft latex tubing, 5/8" ID, 7/8" OD, for blower |
+|**A19**| 2        | McMaster-Carr  | 9579K72             | 12.21 / 20   | [C][a19mcmc]   | Herbie clip J (20.3-23mm) for clamping 7/8"OD, blower tubing |
+|**A20**| 6        | McMaster-Carr  | 9579K73             | 12.24 / 20   | [C][a20mcmc]   | Herbie clip K (22.2-24.9mm) for clamping 1"OD, main tubing |
 |**A21**| ~3ft     | uxcell         | a16031400ux0163     | 6.49 / 16ft  | [Z][a21amzn]   | 2.5 mm tubing for connecting venturis to pressure sensors |
 |**A22**| 1        | McMaster-Carr  | 5463K4              | 7.39 / 10    | [C][a22mcmc]   | sensing tube 3/23" t-junction, for teeing off to patient pressure sensor |
 |**A23**| 1        | McMaster-Carr  | 5492K13             | 12.88        | [C][a23mcmc]   | Plastic threaded check valve, 1/2NPT |
@@ -64,7 +64,10 @@ BEFORE purchasing any parts.**
 |**A29**| ~3ft     | McMaster-Carr  | 5894K34             | 12.15 / 5ft  | [C][a29mcmc]   | 1/4"ID 3/8"OD Tygon tubing, for oxygen line tubing |
 |**A30**| 5        | McMaster-Carr  | 5121K451            | 5.78 / 10    | [C][a30mcmc]   | 1/4 NPT x 1/4" ID barbed adapter |
 |**A31**| 1        | RespiraWorks   | blower_assembly     |              | [Rw][a31rw]    | Blower mechanical sub-assembly |
-|**A32**| 4        | McMaster-Carr  | 9579K67             |  12.63 / 20  | [C][a32mcmc]    | Herbie clip E, 12-13.8mm, to clamping 5/8"OD pinch valve tubing |
+|**A32**| 4        | McMaster-Carr  | 9579K67             |  12.63 / 20  | [C][a32mcmc]   | Herbie clip E, 12-13.8mm, to clamping 5/8"OD, pinch valve tubing |
+|**A33**| 5        | McMaster-Carr  | 53415K153           |  13.16 / 10  | [C][a33mcmc]   | 3/4"ID barbed elbow |
+|**A34**| 2        | McMaster-Carr  | 5121K907            |  8.15 / 10   | [C][a34mcmc]   | 3/8"ID barbed elbow |
+|**A35**| 1        | McMaster-Carr  | 5463K648            |  8.40 / 10   | [C][a35mcmc]   | 3/4"ID x 3/8"ID barbed reducer |
 
 [a1mcmc]:  https://www.mcmaster.com/7768K22/
 [a2mcmc]:  https://www.mcmaster.com/50785K273/
@@ -74,8 +77,8 @@ BEFORE purchasing any parts.**
 [a6uflow]: https://www.uflowvalve.com/solenoid-proportional-flow-control-valve/product/2-2-way-miniature-high-flow-proportional-valve
 [a7mcmc]:  https://www.mcmaster.com/1786N249/
 [a8mcmc]:  https://www.mcmaster.com/5121K451/
-[a9mcmc]:  https://www.mcmaster.com/92000A120/
-[a10mcmc]: https://www.mcmaster.com/98689A112/
+[a9mcmc]:  https://www.mcmaster.com/92095A182/
+[a10mcmc]: https://www.mcmaster.com/91116A120/
 [a11rw]:   reducer_3-4_1-4
 [a12rw]:   venturi
 [a13rw]:   mixer
@@ -98,6 +101,9 @@ BEFORE purchasing any parts.**
 [a30mcmc]: https://www.mcmaster.com/5121K451
 [a31rw]:   blower
 [a32mcmc]: https://www.mcmaster.com/9579K67
+[a33mcmc]: https://www.mcmaster.com/53415K153/
+[a34mcmc]: https://www.mcmaster.com/5121K907/
+[a35mcmc]: https://www.mcmaster.com/5463K648
 
 **TODO: review adapter and clip counts**
 

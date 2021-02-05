@@ -1,13 +1,37 @@
 # Enclosure
 
-|             |     |
+| Assembly CAD Rendering | Exploded View |
 :------------------:|:-----------------:|
 | ![](images/enclosure_rendering.jpg)  | ![](images/enclosure_exploded.jpg)  |
 
-The ventilator enclosure is made up of three folded, 1.52mm thick, stainless steel sheets; the main enclosure, the rear
-closure panel and the internal equipment bracket.
+|Download Type|Link|
+|:------|:-------|
+|Enclosure Assembly CAD|[.iam](CAD/enclosure_assembly.iam)|
 
-The main enclosure is folded from a single sheet and fastened together using stainless steel blind rivets. There
+#TODO : Add photos of only the assembled enclosure?
+
+## Overview
+
+This readme contains the details, BOM, assembly instructions for one display panel assembly for the enclosed build.
+
+## Design Rationale
+
+The principal reasons for using a sheet metal enclosure were threefold:
+1. Cheap and quick - Great for prototyping stages, sheet metal is cheap to fabricate. Unlike plastic parts, it doesn't require any expensive molds. Any changes in the design would still end up going through the same process - cutting, forming and finishing. Plastic enclosures necessitate new molds for every design revision. Getting a new prototype ready based on a new design would take a very short amount of time.
+2. Pre-assembly assembly - Our principal requirement for the design was the ability to assemble the entire pneumatic setup outside the enclosure, with the last few steps being attaching the pneumatics sub-assembly to the enclosure. A sheet metal design offered a very simple solution by means of two separate parts - the main enclosure and the removable closure panel.
+3. Strength and durability - A well designed and meticulously fabricated sheet metal enclosure would not only be durable but also corrosion resistant.
+
+## Design Overview
+The ventilator enclosure is made up of three folded, 1.52mm thick, stainless steel sheets; the main panel, the rear
+closure panel and the internal equipment tray. All three are custom parts. 
+
+|Download Type|Link|
+|:------|:-------|
+|Enclosure Main Panel CAD|[.ipt](CAD/enclosure_main_panel.ipt)|
+|Enclosure Equipment Tray CAD|[.ipt](CAD/enclosure_equipment_tray.ipt)|
+|Enclosure Closure Panel CAD|[.ipt](CAD/enclosure_closure_panel.ipt)|
+
+The main panel is folded from a single sheet and fastened together using stainless steel blind rivets. There
 are rubber bumper feet on the bottom of the enclosure that are threaded into M6 press-fit nuts. The rubber bumpers
 can be removed to allow the enclosure to be mounted to a medical cart.
 
@@ -17,11 +41,7 @@ The internal equipment bracket is folded from a single sheet. The bracket is des
 Acrylic sheets are either fastened to or hung from the bracket to allow for design adjustments while utilizing the same
 bracket.
 
-**#TODO: present CAD information properly, in a structured, attractive way**
-
-The part files are available in the CAD folder. [.ipt for enclosure](CAD/ventilator_enclosure.ipt),
-[.ipt for equipment bracket](CAD/equipment_bracket.ipt), [.ipt for closure panel](CAD/ventilator_closure_panel.ipt).
-The assembly file is also available [.iam for enclosure assembly](CAD/enclosure_assembly.iam).
+We are currently on v0.3. However, the design is being altered. Changes and updates are being tracked in the issue tickets [#957](https://github.com/RespiraWorks/Ventilator/issues/957) (this is an umbrella ticket and contains references to some of the other tickets), [#958](https://github.com/RespiraWorks/Ventilator/issues/958), [#959](https://github.com/RespiraWorks/Ventilator/issues/959), [#961](https://github.com/RespiraWorks/Ventilator/issues/961), [#962](https://github.com/RespiraWorks/Ventilator/issues/962), [#963](https://github.com/RespiraWorks/Ventilator/issues/963), [#964](https://github.com/RespiraWorks/Ventilator/issues/964), [#965](https://github.com/RespiraWorks/Ventilator/issues/965), [#970](https://github.com/RespiraWorks/Ventilator/issues/970).
 
 ## Fabrication Drawings
 

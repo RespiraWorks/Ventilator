@@ -332,8 +332,8 @@ F 3 "" H 1800 4550 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Connection ~ 1800 4200
-Text Notes 3800 6600 0    50   ~ 0
-V_ilim = 3.57V > ILIM = 6400mA\nShort ILIM_HIZ to GND to shut off all power
+Text Notes 2500 5400 0    50   ~ 0
+V_ilim = 20*IPDM*Rac\nV_ilim = 1.29V -> 6.45A
 $Comp
 L Device:R R?
 U 1 1 60580F0C
@@ -434,14 +434,14 @@ $EndComp
 $Comp
 L Device:C C?
 U 1 1 60580F39
-P 8000 5250
+P 4100 5450
 AR Path="/601A64F8/60580F39" Ref="C?"  Part="1" 
 AR Path="/601A64F8/60567144/60580F39" Ref="C?"  Part="1" 
-F 0 "C?" H 8115 5296 50  0000 L CNN
-F 1 "100pF" H 8115 5205 50  0000 L CNN
-F 2 "Capacitor_SMD:C_0603_1608Metric" H 8038 5100 50  0001 C CNN
-F 3 "~" H 8000 5250 50  0001 C CNN
-	1    8000 5250
+F 0 "C?" H 4215 5496 50  0000 L CNN
+F 1 "0.01uF" H 4215 5405 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 4138 5300 50  0001 C CNN
+F 3 "~" H 4100 5450 50  0001 C CNN
+	1    4100 5450
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
@@ -1292,7 +1292,7 @@ Wire Wire Line
 	9500 2000 9800 2000
 Wire Wire Line
 	7800 2000 8300 2000
-Text Label 4150 5100 0    50   ~ 0
+Text Label 3900 5000 0    50   ~ 0
 REGN
 Wire Wire Line
 	5050 5100 5300 5100
@@ -1344,4 +1344,197 @@ Wire Wire Line
 Connection ~ 1800 2000
 Text HLabel 1250 2000 0    50   Input ~ 0
 VIN_ADP
+$Comp
+L Device:R R?
+U 1 1 60332888
+P 3850 5150
+AR Path="/601A64F8/60332888" Ref="R?"  Part="1" 
+AR Path="/601A64F8/60567144/60332888" Ref="R?"  Part="1" 
+F 0 "R?" H 3600 5200 50  0000 L CNN
+F 1 "316k" H 3600 5100 50  0000 L CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" V 3780 5150 50  0001 C CNN
+F 3 "~" H 3850 5150 50  0001 C CNN
+	1    3850 5150
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 6033CD9E
+P 3850 5450
+AR Path="/601A64F8/6033CD9E" Ref="R?"  Part="1" 
+AR Path="/601A64F8/60567144/6033CD9E" Ref="R?"  Part="1" 
+F 0 "R?" H 3600 5500 50  0000 L CNN
+F 1 "100k" H 3600 5400 50  0000 L CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" V 3780 5450 50  0001 C CNN
+F 3 "~" H 3850 5450 50  0001 C CNN
+	1    3850 5450
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 60341EC1
+P 3850 5600
+AR Path="/601A64F8/60341EC1" Ref="#PWR?"  Part="1" 
+AR Path="/601A64F8/60567144/60341EC1" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 3850 5350 50  0001 C CNN
+F 1 "GND" H 3855 5427 50  0000 C CNN
+F 2 "" H 3850 5600 50  0001 C CNN
+F 3 "" H 3850 5600 50  0001 C CNN
+	1    3850 5600
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5300 5300 4100 5300
+Connection ~ 3850 5300
+Wire Wire Line
+	3850 5000 4150 5000
+Wire Wire Line
+	4150 5000 4150 5100
+Connection ~ 4100 5300
+Wire Wire Line
+	4100 5300 3850 5300
+Wire Wire Line
+	4100 5600 3850 5600
+Connection ~ 3850 5600
+$Comp
+L Device:C C?
+U 1 1 6035868D
+P 8000 5250
+AR Path="/601A64F8/6035868D" Ref="C?"  Part="1" 
+AR Path="/601A64F8/60567144/6035868D" Ref="C?"  Part="1" 
+F 0 "C?" H 8115 5296 50  0000 L CNN
+F 1 "100pF" H 8115 5205 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 8038 5100 50  0001 C CNN
+F 3 "~" H 8000 5250 50  0001 C CNN
+	1    8000 5250
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 6035E290
+P 5000 5900
+AR Path="/601A64F8/6035E290" Ref="R?"  Part="1" 
+AR Path="/601A64F8/60567144/6035E290" Ref="R?"  Part="1" 
+F 0 "R?" V 5050 6100 50  0000 L CNN
+F 1 "0" V 5050 5650 50  0000 L CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" V 4930 5900 50  0001 C CNN
+F 3 "~" H 5000 5900 50  0001 C CNN
+	1    5000 5900
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	5300 5900 5150 5900
+Wire Wire Line
+	4850 5900 4650 5900
+Wire Wire Line
+	4650 5900 4650 5700
+Wire Wire Line
+	4650 5700 5150 5700
+Wire Wire Line
+	5300 5500 4850 5500
+Wire Wire Line
+	4550 5500 4550 6350
+$Comp
+L Device:R R?
+U 1 1 60376C83
+P 4250 6200
+AR Path="/601A64F8/60376C83" Ref="R?"  Part="1" 
+AR Path="/601A64F8/60567144/60376C83" Ref="R?"  Part="1" 
+F 0 "R?" H 4000 6250 50  0000 L CNN
+F 1 "316k" H 4000 6150 50  0000 L CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" V 4180 6200 50  0001 C CNN
+F 3 "~" H 4250 6200 50  0001 C CNN
+	1    4250 6200
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 60376C89
+P 4250 6500
+AR Path="/601A64F8/60376C89" Ref="R?"  Part="1" 
+AR Path="/601A64F8/60567144/60376C89" Ref="R?"  Part="1" 
+F 0 "R?" H 4000 6550 50  0000 L CNN
+F 1 "100k" H 4000 6450 50  0000 L CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" V 4180 6500 50  0001 C CNN
+F 3 "~" H 4250 6500 50  0001 C CNN
+	1    4250 6500
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4550 6350 4250 6350
+Connection ~ 4250 6350
+$Comp
+L power:GND #PWR?
+U 1 1 60384778
+P 4250 6650
+AR Path="/601A64F8/60384778" Ref="#PWR?"  Part="1" 
+AR Path="/601A64F8/60567144/60384778" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 4250 6400 50  0001 C CNN
+F 1 "GND" H 4255 6477 50  0000 C CNN
+F 2 "" H 4250 6650 50  0001 C CNN
+F 3 "" H 4250 6650 50  0001 C CNN
+	1    4250 6650
+	-1   0    0    -1  
+$EndComp
+Text Label 8350 3200 0    50   ~ 0
+BAT_P
+Text Label 4000 6050 0    50   ~ 0
+BAT_P
+Wire Wire Line
+	4250 6050 4000 6050
+Text Notes 2200 6450 0    50   ~ 0
+Threshold here is 1.2V, max of 7V\nnBATPRES asserted when BAT_P over 9.6V\nReused ILIM resistor values to reduce BOM.
+$Comp
+L Device:R R?
+U 1 1 603A873E
+P 5000 5600
+AR Path="/601A64F8/603A873E" Ref="R?"  Part="1" 
+AR Path="/601A64F8/60567144/603A873E" Ref="R?"  Part="1" 
+F 0 "R?" V 5050 5800 50  0000 L CNN
+F 1 "3M" V 5050 5350 50  0000 L CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" V 4930 5600 50  0001 C CNN
+F 3 "~" H 5000 5600 50  0001 C CNN
+F 4 "DNP" V 5000 5600 50  0000 C CNN "DNP"
+	1    5000 5600
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	4850 5600 4850 5500
+Connection ~ 4850 5500
+Wire Wire Line
+	4850 5500 4550 5500
+Wire Wire Line
+	5150 5600 5150 5700
+Connection ~ 5150 5700
+Wire Wire Line
+	5150 5700 5300 5700
+Text Notes 4750 6250 0    50   ~ 0
+Optional: R between CMPIN and\nCMPOUT sets hysteresis
+$Comp
+L Device:C C?
+U 1 1 603BD7CB
+P 4550 6500
+AR Path="/601A64F8/603BD7CB" Ref="C?"  Part="1" 
+AR Path="/601A64F8/60567144/603BD7CB" Ref="C?"  Part="1" 
+F 0 "C?" H 4665 6546 50  0000 L CNN
+F 1 "0.01uF" H 4665 6455 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 4588 6350 50  0001 C CNN
+F 3 "~" H 4550 6500 50  0001 C CNN
+	1    4550 6500
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 603C4110
+P 4550 6650
+AR Path="/601A64F8/603C4110" Ref="#PWR?"  Part="1" 
+AR Path="/601A64F8/60567144/603C4110" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 4550 6400 50  0001 C CNN
+F 1 "GND" H 4555 6477 50  0000 C CNN
+F 2 "" H 4550 6650 50  0001 C CNN
+F 3 "" H 4550 6650 50  0001 C CNN
+	1    4550 6650
+	-1   0    0    -1  
+$EndComp
+Connection ~ 4550 6350
 $EndSCHEMATC

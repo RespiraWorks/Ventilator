@@ -114,10 +114,12 @@ U 1 1 605C3588
 P 2400 3450
 AR Path="/601A64F8/605C3588" Ref="D?"  Part="1" 
 AR Path="/601A64F8/60567144/605C3588" Ref="D?"  Part="1" 
-F 0 "D?" V 2400 3600 50  0000 L CNN
-F 1 "24V" V 2500 3600 50  0000 L CNN
-F 2 "" H 2400 3450 50  0001 C CNN
-F 3 "~" H 2400 3450 50  0001 C CNN
+F 0 "D?" V 2350 3550 50  0000 L CNN
+F 1 "20V" V 2450 3550 50  0000 L CNN
+F 2 "Diode_SMD:D_SMC" H 2400 3450 50  0001 C CNN
+F 3 "https://www.diodes.com/assets/Datasheets/ds40740.pdf" H 2400 3450 50  0001 C CNN
+F 4 "Diodes Inc." V 2400 3450 50  0001 C CNN "Manufacturer"
+F 5 "SMBJ20AQ-13-F" V 2550 3800 50  0000 C CNN "Manufacturer PN"
 	1    2400 3450
 	0    1    1    0   
 $EndComp
@@ -162,7 +164,9 @@ P 3200 3300
 F 0 "F?" V 3003 3300 50  0000 C CNN
 F 1 "Fuse 10A" V 3094 3300 50  0000 C CNN
 F 2 "" V 3130 3300 50  0001 C CNN
-F 3 "~" H 3200 3300 50  0001 C CNN
+F 3 "https://www.littelfuse.com/~/media/electronics/datasheets/fuses/littelfuse_fuse_154_154t_154l_154tl_datasheet.pdf.pdf" H 3200 3300 50  0001 C CNN
+F 4 "Littelfuse" V 3200 3300 50  0001 C CNN "Manufacturer"
+F 5 "0154010.DR" V 3300 3300 50  0000 C CNN "Manufacturer PN"
 	1    3200 3300
 	0    1    1    0   
 $EndComp
@@ -269,12 +273,14 @@ Wire Wire Line
 	7950 4850 8050 4850
 $Comp
 L Device:Fuse F?
-U 1 1 603A4540
+U 1 1 602914E1
 P 8200 4850
-F 0 "F?" V 8003 4850 50  0000 C CNN
-F 1 "Fuse 10A" V 8094 4850 50  0000 C CNN
+F 0 "F?" V 7900 4850 50  0000 C CNN
+F 1 "Fuse 10A" V 8000 4850 50  0000 C CNN
 F 2 "" V 8130 4850 50  0001 C CNN
-F 3 "~" H 8200 4850 50  0001 C CNN
+F 3 "https://www.littelfuse.com/~/media/electronics/datasheets/fuses/littelfuse_fuse_154_154t_154l_154tl_datasheet.pdf.pdf" H 8200 4850 50  0001 C CNN
+F 4 "Littelfuse" V 8200 4850 50  0001 C CNN "Manufacturer"
+F 5 "0154010.DR" V 8100 4850 50  0000 C CNN "Manufacturer PN"
 	1    8200 4850
 	0    1    1    0   
 $EndComp

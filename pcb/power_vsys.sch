@@ -112,23 +112,6 @@ $EndComp
 Wire Wire Line
 	6450 2950 7250 2950
 Connection ~ 7250 2950
-Wire Wire Line
-	4950 1800 4950 2150
-Connection ~ 4950 1800
-$Comp
-L Device:D_Schottky D?
-U 1 1 60205CBE
-P 5100 1800
-AR Path="/601A64F8/60205CBE" Ref="D?"  Part="1" 
-AR Path="/601A64F8/60567144/60205CBE" Ref="D?"  Part="1" 
-AR Path="/601A64F8/60567D6E/60205CBE" Ref="D?"  Part="1" 
-F 0 "D?" H 5050 1700 50  0000 C CNN
-F 1 "D_Schottky" H 5400 1700 50  0000 C CNN
-F 2 "" H 5100 1800 50  0001 C CNN
-F 3 "~" H 5100 1800 50  0001 C CNN
-	1    5100 1800
-	1    0    0    -1  
-$EndComp
 Text Notes 2550 1250 0    50   ~ 0
 13-20V IN
 Text HLabel 2750 1350 0    50   Input ~ 0
@@ -461,8 +444,6 @@ F 3 "" H 4500 2300 50  0001 C CNN
 	1    4500 2300
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	4950 1650 4950 1800
 Connection ~ 4700 1350
 $Comp
 L RespiraWorks_Std:CSD17304Q3 Q?
@@ -843,4 +824,20 @@ Wire Wire Line
 	7150 4700 7450 4700
 Wire Wire Line
 	6450 4400 7450 4400
+$Comp
+L Diode:BAT54J D?
+U 1 1 6028E91B
+P 5100 1800
+F 0 "D?" H 5100 1900 50  0000 C CNN
+F 1 "BAT54J" H 5150 1650 50  0000 C CNN
+F 2 "Diode_SMD:D_SOD-323F" H 5100 1625 50  0001 C CNN
+F 3 "https://assets.nexperia.com/documents/data-sheet/BAT54J.pdf" H 5100 1800 50  0001 C CNN
+	1    5100 1800
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4950 1650 4950 1800
+Connection ~ 4950 1800
+Wire Wire Line
+	4950 1800 4950 2150
 $EndSCHEMATC

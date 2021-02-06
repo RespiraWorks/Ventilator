@@ -65,6 +65,9 @@ struct Request {
 //
 // When we use DMA, a transfer is performed directly in hardware and the end of
 // transfer triggers a DMA interrupt which we use to start the next transfer.
+// Note that a current limitation is that DMA cannot be used for transfers that
+// are longer than 255 bytes AND include a functional header within their data
+// because our implementation doesn't support reload mode with DMA.
 //
 // When we don't, we listen to the I²C interrupts to know when to read/write
 // the next byte in a transfer, and when a transfer is complete.

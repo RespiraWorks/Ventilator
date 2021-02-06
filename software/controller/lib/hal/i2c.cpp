@@ -145,18 +145,20 @@ bool I2C::Channel::CopyDataToWriteBuffer(const void *data,
 }
 
 void I2C::Channel::StartTransfer() {
-  // Ensure thread safety
-  BlockInterrupts block;
+  transfer_in_progress_ = true;
   // In DMA mode, a single request can lead to several transfers, when it is
   // longer than 255 bytes. Therefore we need to check whether this call is a
   // continuation of a long request or a new request.
   // Also in case of transfer error, we may need to re-send the last request
   if (remaining_size_ == 0) {
+    // Ensure thread safety
+    BlockInterrupts block;
     // This indicates the last request has been successfully sent, hence we will
     // send the next request in the queue.
     std::optional<uint8_t> index = buffer_.Get();
     if (index == std::nullopt) {
       // no request in the queue
+      transfer_in_progress_ = false;
       return;
     }
     last_request_ = queue_[*index];
@@ -165,7 +167,6 @@ void I2C::Channel::StartTransfer() {
     error_retry_ = kMaxRetries;
   }
 
-  transfer_in_progress_ = true;
   SetupI2CTransfer();
 }
 
@@ -318,7 +319,7 @@ void I2C::STM32Channel::WriteTransferSize() {
     // Transfer reload is not currently supported by our HAL in DMA mode,
     // we will treat a reload as a new transfer. In effect this means we
     // will have to reissue the I²C header and start condition.
-    // It also means that any request that has a (functionnal) header inside
+    // It also means that any request that has a (functional) header inside
     // its data and is longer than 255 bytes may not be processed correctly by
     // the I²C slave, as it will be split (this is referred to as a Restart
     // condition rather than Reload)

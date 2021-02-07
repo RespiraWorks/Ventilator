@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr B 17000 11000
 encoding utf-8
-Sheet 30 30
+Sheet 1 30
 Title "Add'l aux. functions"
 Date ""
 Rev "2.0"
@@ -13,279 +13,10 @@ Comment2 ""
 Comment3 ""
 Comment4 ""
 $EndDescr
-Text HLabel 1650 2550 0    50   BiDi ~ 0
+Text HLabel 1600 5450 0    50   BiDi ~ 0
 CC-SDA
-Text HLabel 1650 2450 0    50   Input ~ 0
+Text HLabel 1600 5550 0    50   Input ~ 0
 CC-SCL
-$Comp
-L Timer_RTC:PCF85363ATT U?
-U 1 1 6017F9A5
-P 3350 2650
-F 0 "U?" H 3800 2600 50  0000 L CNN
-F 1 "PCF85363ATT" H 3800 2500 50  0000 L CNN
-F 2 "Package_SO:TSSOP-8_3x3mm_P0.65mm" H 3350 1800 50  0001 C CNN
-F 3 "https://www.nxp.com/docs/en/data-sheet/PCF85363A.pdf" H 3350 2450 50  0001 C CNN
-	1    3350 2650
-	1    0    0    -1  
-$EndComp
-$Comp
-L Device:Crystal Y?
-U 1 1 60180690
-P 2250 2900
-F 0 "Y?" V 2204 3031 50  0000 L CNN
-F 1 "32.768 kHz" V 2295 3031 50  0000 L CNN
-F 2 "RespiraWorks:Crystal_SMD_Abracon_ABS05" H 2250 2900 50  0001 C CNN
-F 3 "~" H 2250 2900 50  0001 C CNN
-F 4 "Abracon" V 2250 2900 50  0001 C CNN "Manufacturer"
-F 5 "ABS05-32.768KHZ-T" V 2250 2900 50  0001 C CNN "Part Number"
-	1    2250 2900
-	0    1    1    0   
-$EndComp
-Wire Wire Line
-	2250 2750 2850 2750
-Wire Wire Line
-	2850 2850 2850 3050
-Wire Wire Line
-	2850 3050 2250 3050
-$Comp
-L power:GND #PWR?
-U 1 1 60181FAB
-P 3350 3050
-AR Path="/5FCD4B8E/5FCD4BC5/60181FAB" Ref="#PWR?"  Part="1" 
-AR Path="/5FCD4B8E/5FE27F70/60181FAB" Ref="#PWR?"  Part="1" 
-AR Path="/5FCD4D85/60181FAB" Ref="#PWR?"  Part="1" 
-AR Path="/5FCD4E9D/60181FAB" Ref="#PWR?"  Part="1" 
-AR Path="/5FCD4E9D/600630A6/60181FAB" Ref="#PWR?"  Part="1" 
-AR Path="/5FCD4E9D/60073FCF/60181FAB" Ref="#PWR?"  Part="1" 
-AR Path="/5FCD4E9D/6007AC3B/60181FAB" Ref="#PWR?"  Part="1" 
-AR Path="/5FCD4E9D/6007BD34/60181FAB" Ref="#PWR?"  Part="1" 
-AR Path="/5FCD4E9D/6007DA64/60181FAB" Ref="#PWR?"  Part="1" 
-AR Path="/5FCD4E9D/6007E2BB/60181FAB" Ref="#PWR?"  Part="1" 
-AR Path="/5FCD4E9D/600CF516/60181FAB" Ref="#PWR?"  Part="1" 
-AR Path="/6017BD7E/60181FAB" Ref="#PWR?"  Part="1" 
-F 0 "#PWR?" H 3350 2800 50  0001 C CNN
-F 1 "GND" H 3355 2877 50  0000 C CNN
-F 2 "" H 3350 3050 50  0001 C CNN
-F 3 "" H 3350 3050 50  0001 C CNN
-	1    3350 3050
-	1    0    0    -1  
-$EndComp
-$Comp
-L Device:C C?
-U 1 1 60185478
-P 3000 1850
-AR Path="/60185478" Ref="C?"  Part="1" 
-AR Path="/5E8AFE9D/60185478" Ref="C?"  Part="1" 
-AR Path="/5E8FBD97/60185478" Ref="C?"  Part="1" 
-AR Path="/5E8E0754/60185478" Ref="C?"  Part="1" 
-AR Path="/5E8DFCAD/60185478" Ref="C?"  Part="1" 
-AR Path="/5E8DEDC0/60185478" Ref="C?"  Part="1" 
-AR Path="/5E8C8865/60185478" Ref="C?"  Part="1" 
-AR Path="/5E8E1F08/60185478" Ref="C?"  Part="1" 
-AR Path="/5FCD4DF5/60185478" Ref="C?"  Part="1" 
-AR Path="/5FCD4EEA/600F5EF3/60185478" Ref="C?"  Part="1" 
-AR Path="/5FCD4EEA/600F7154/60185478" Ref="C?"  Part="1" 
-AR Path="/5FCD4EEA/600F719E/60185478" Ref="C?"  Part="1" 
-AR Path="/5FCD4EEA/600F71F1/60185478" Ref="C?"  Part="1" 
-AR Path="/5FCD4EEA/600F723B/60185478" Ref="C?"  Part="1" 
-AR Path="/5FCD4EEA/60185478" Ref="C?"  Part="1" 
-AR Path="/6017BD7E/60185478" Ref="C?"  Part="1" 
-F 0 "C?" H 3100 1650 50  0000 C CNN
-F 1 "100nF 100V X7R" H 3350 1750 50  0000 C CNN
-F 2 "RespiraWorks_Std:C_0603_1608Metric" H 3038 1700 50  0001 C CNN
-F 3 "~" H 3000 1850 50  0001 C CNN
-F 4 "" H 3000 1850 50  0001 C CNN "Manufacturer"
-F 5 "" H 3000 1850 50  0001 C CNN "Part Number"
-	1    3000 1850
-	-1   0    0    1   
-$EndComp
-$Comp
-L power:GND #PWR?
-U 1 1 6018547E
-P 3000 2000
-AR Path="/6018547E" Ref="#PWR?"  Part="1" 
-AR Path="/5E8AFE9D/6018547E" Ref="#PWR?"  Part="1" 
-AR Path="/5E8FBD97/6018547E" Ref="#PWR?"  Part="1" 
-AR Path="/5E8E0754/6018547E" Ref="#PWR?"  Part="1" 
-AR Path="/5E8DFCAD/6018547E" Ref="#PWR?"  Part="1" 
-AR Path="/5E8DEDC0/6018547E" Ref="#PWR?"  Part="1" 
-AR Path="/5E8C8865/6018547E" Ref="#PWR?"  Part="1" 
-AR Path="/5E8E1F08/6018547E" Ref="#PWR?"  Part="1" 
-AR Path="/5FCD4DF5/6018547E" Ref="#PWR?"  Part="1" 
-AR Path="/5FCD4EEA/600F5EF3/6018547E" Ref="#PWR?"  Part="1" 
-AR Path="/5FCD4EEA/600F7154/6018547E" Ref="#PWR?"  Part="1" 
-AR Path="/5FCD4EEA/600F719E/6018547E" Ref="#PWR?"  Part="1" 
-AR Path="/5FCD4EEA/600F71F1/6018547E" Ref="#PWR?"  Part="1" 
-AR Path="/5FCD4EEA/600F723B/6018547E" Ref="#PWR?"  Part="1" 
-AR Path="/5FCD4EEA/6018547E" Ref="#PWR?"  Part="1" 
-AR Path="/6017BD7E/6018547E" Ref="#PWR?"  Part="1" 
-F 0 "#PWR?" H 3000 1750 50  0001 C CNN
-F 1 "GND" H 3005 1827 50  0000 C CNN
-F 2 "" H 3000 2000 50  0001 C CNN
-F 3 "" H 3000 2000 50  0001 C CNN
-	1    3000 2000
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	3250 1700 3250 2250
-Wire Wire Line
-	3000 1700 3250 1700
-$Comp
-L RespiraWorks:+3.3V_Ctrl #PWR?
-U 1 1 60185739
-P 3250 1250
-F 0 "#PWR?" H 3250 1250 50  0001 C CNN
-F 1 "+3.3V_Ctrl" H 3235 1423 50  0000 C CNN
-F 2 "" H 3250 1250 50  0001 C CNN
-F 3 "" H 3250 1250 50  0001 C CNN
-	1    3250 1250
-	1    0    0    -1  
-$EndComp
-$Comp
-L Device:C C?
-U 1 1 60187042
-P 3700 1850
-AR Path="/60187042" Ref="C?"  Part="1" 
-AR Path="/5E8AFE9D/60187042" Ref="C?"  Part="1" 
-AR Path="/5E8FBD97/60187042" Ref="C?"  Part="1" 
-AR Path="/5E8E0754/60187042" Ref="C?"  Part="1" 
-AR Path="/5E8DFCAD/60187042" Ref="C?"  Part="1" 
-AR Path="/5E8DEDC0/60187042" Ref="C?"  Part="1" 
-AR Path="/5E8C8865/60187042" Ref="C?"  Part="1" 
-AR Path="/5E8E1F08/60187042" Ref="C?"  Part="1" 
-AR Path="/5FCD4DF5/60187042" Ref="C?"  Part="1" 
-AR Path="/5FCD4EEA/600F5EF3/60187042" Ref="C?"  Part="1" 
-AR Path="/5FCD4EEA/600F7154/60187042" Ref="C?"  Part="1" 
-AR Path="/5FCD4EEA/600F719E/60187042" Ref="C?"  Part="1" 
-AR Path="/5FCD4EEA/600F71F1/60187042" Ref="C?"  Part="1" 
-AR Path="/5FCD4EEA/600F723B/60187042" Ref="C?"  Part="1" 
-AR Path="/5FCD4EEA/60187042" Ref="C?"  Part="1" 
-AR Path="/6017BD7E/60187042" Ref="C?"  Part="1" 
-F 0 "C?" H 3800 1650 50  0000 C CNN
-F 1 "100nF 100V X7R" H 4050 1750 50  0000 C CNN
-F 2 "RespiraWorks_Std:C_0603_1608Metric" H 3738 1700 50  0001 C CNN
-F 3 "~" H 3700 1850 50  0001 C CNN
-F 4 "" H 3700 1850 50  0001 C CNN "Manufacturer"
-F 5 "" H 3700 1850 50  0001 C CNN "Part Number"
-	1    3700 1850
-	1    0    0    1   
-$EndComp
-$Comp
-L power:GND #PWR?
-U 1 1 60187048
-P 3700 2000
-AR Path="/60187048" Ref="#PWR?"  Part="1" 
-AR Path="/5E8AFE9D/60187048" Ref="#PWR?"  Part="1" 
-AR Path="/5E8FBD97/60187048" Ref="#PWR?"  Part="1" 
-AR Path="/5E8E0754/60187048" Ref="#PWR?"  Part="1" 
-AR Path="/5E8DFCAD/60187048" Ref="#PWR?"  Part="1" 
-AR Path="/5E8DEDC0/60187048" Ref="#PWR?"  Part="1" 
-AR Path="/5E8C8865/60187048" Ref="#PWR?"  Part="1" 
-AR Path="/5E8E1F08/60187048" Ref="#PWR?"  Part="1" 
-AR Path="/5FCD4DF5/60187048" Ref="#PWR?"  Part="1" 
-AR Path="/5FCD4EEA/600F5EF3/60187048" Ref="#PWR?"  Part="1" 
-AR Path="/5FCD4EEA/600F7154/60187048" Ref="#PWR?"  Part="1" 
-AR Path="/5FCD4EEA/600F719E/60187048" Ref="#PWR?"  Part="1" 
-AR Path="/5FCD4EEA/600F71F1/60187048" Ref="#PWR?"  Part="1" 
-AR Path="/5FCD4EEA/600F723B/60187048" Ref="#PWR?"  Part="1" 
-AR Path="/5FCD4EEA/60187048" Ref="#PWR?"  Part="1" 
-AR Path="/6017BD7E/60187048" Ref="#PWR?"  Part="1" 
-F 0 "#PWR?" H 3700 1750 50  0001 C CNN
-F 1 "GND" H 3705 1827 50  0000 C CNN
-F 2 "" H 3700 2000 50  0001 C CNN
-F 3 "" H 3700 2000 50  0001 C CNN
-	1    3700 2000
-	-1   0    0    -1  
-$EndComp
-Wire Wire Line
-	3700 1700 3600 1700
-Wire Wire Line
-	3350 1700 3350 2250
-$Comp
-L Device:Jumper_NC_Small JP?
-U 1 1 6018A29B
-P 3600 1350
-F 0 "JP?" V 3600 1425 50  0000 L CNN
-F 1 "Jumper_NC_Small" V 3645 1424 50  0001 L CNN
-F 2 "" H 3600 1350 50  0001 C CNN
-F 3 "~" H 3600 1350 50  0001 C CNN
-	1    3600 1350
-	0    1    1    0   
-$EndComp
-Wire Wire Line
-	3600 1450 3600 1500
-Connection ~ 3600 1700
-Wire Wire Line
-	3600 1700 3350 1700
-$Comp
-L Device:Jumper_NO_Small JP?
-U 1 1 6018DDFF
-P 3400 1500
-F 0 "JP?" H 3400 1593 50  0000 C CNN
-F 1 "Jumper_NO_Small" H 3400 1594 50  0001 C CNN
-F 2 "" H 3400 1500 50  0001 C CNN
-F 3 "~" H 3400 1500 50  0001 C CNN
-	1    3400 1500
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	3300 1500 3250 1500
-Wire Wire Line
-	3250 1500 3250 1250
-Wire Wire Line
-	3250 1500 3250 1700
-Connection ~ 3250 1500
-Connection ~ 3250 1700
-Wire Wire Line
-	3500 1500 3600 1500
-Connection ~ 3600 1500
-Wire Wire Line
-	3600 1500 3600 1700
-Text Notes 4000 1450 0    50   ~ 0
-Break NC jumper and solder NO\njumper to disable RTC battery
-NoConn ~ 3850 2550
-$Comp
-L Device:Battery_Cell BT?
-U 1 1 60191BD9
-P 5550 1350
-F 0 "BT?" H 5668 1446 50  0000 L CNN
-F 1 "CR2016" H 5668 1355 50  0000 L CNN
-F 2 "RespiraWorks:BatteryHolder_CR2016_MPD_BLP2016SM-G" V 5550 1410 50  0001 C CNN
-F 3 "~" V 5550 1410 50  0001 C CNN
-F 4 "MPD" H 5550 1350 50  0001 C CNN "Manufacturer"
-F 5 "BLP2016SM-GTR" H 5550 1350 50  0001 C CNN "Part Number"
-	1    5550 1350
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	3600 1250 3600 1150
-Wire Wire Line
-	3600 1150 5550 1150
-$Comp
-L power:GND #PWR?
-U 1 1 60192E03
-P 5550 1450
-AR Path="/5FCD4B8E/5FCD4BC5/60192E03" Ref="#PWR?"  Part="1" 
-AR Path="/5FCD4B8E/5FE27F70/60192E03" Ref="#PWR?"  Part="1" 
-AR Path="/5FCD4D85/60192E03" Ref="#PWR?"  Part="1" 
-AR Path="/5FCD4E9D/60192E03" Ref="#PWR?"  Part="1" 
-AR Path="/5FCD4E9D/600630A6/60192E03" Ref="#PWR?"  Part="1" 
-AR Path="/5FCD4E9D/60073FCF/60192E03" Ref="#PWR?"  Part="1" 
-AR Path="/5FCD4E9D/6007AC3B/60192E03" Ref="#PWR?"  Part="1" 
-AR Path="/5FCD4E9D/6007BD34/60192E03" Ref="#PWR?"  Part="1" 
-AR Path="/5FCD4E9D/6007DA64/60192E03" Ref="#PWR?"  Part="1" 
-AR Path="/5FCD4E9D/6007E2BB/60192E03" Ref="#PWR?"  Part="1" 
-AR Path="/5FCD4E9D/600CF516/60192E03" Ref="#PWR?"  Part="1" 
-AR Path="/6017BD7E/60192E03" Ref="#PWR?"  Part="1" 
-F 0 "#PWR?" H 5550 1200 50  0001 C CNN
-F 1 "GND" H 5555 1277 50  0000 C CNN
-F 2 "" H 5550 1450 50  0001 C CNN
-F 3 "" H 5550 1450 50  0001 C CNN
-	1    5550 1450
-	1    0    0    -1  
-$EndComp
-Text Notes 2850 3400 0    50   ~ 0
-I2C address: 1010 001
 Text HLabel 1450 8500 0    50   Input ~ 0
 Blower_Speed
 $Comp
@@ -576,21 +307,9 @@ Wire Wire Line
 Wire Wire Line
 	3000 5450 1850 5450
 Wire Wire Line
-	1850 5450 1850 2550
-Wire Wire Line
-	1650 2550 1850 2550
-Connection ~ 1850 2550
-Wire Wire Line
-	1850 2550 2850 2550
-Wire Wire Line
-	1650 2450 1750 2450
+	1600 5450 1850 5450
 Wire Wire Line
 	3000 5550 1750 5550
-Wire Wire Line
-	1750 5550 1750 2450
-Connection ~ 1750 2450
-Wire Wire Line
-	1750 2450 2850 2450
 $Comp
 L RespiraWorks_Std:TCA9544APWR U?
 U 1 1 601E8307
@@ -1576,8 +1295,6 @@ Text Notes 6500 5550 0    79   ~ 16
 Global I2C pull-ups
 Text Notes 2500 7200 0    79   ~ 0
 Blower PWM control signal level shifter
-Text Notes 2750 950  0    79   ~ 0
-Real-Time Clock
 Text Notes 3150 4050 0    79   ~ 0
 EEPROM
 $Comp
@@ -2011,4 +1728,6 @@ F 3 "~" H 2200 8600 50  0001 C CNN
 $EndComp
 Wire Wire Line
 	1900 8700 2300 8700
+Wire Wire Line
+	1600 5550 1750 5550
 $EndSCHEMATC

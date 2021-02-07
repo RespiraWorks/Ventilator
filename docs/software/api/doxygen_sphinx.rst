@@ -1,4 +1,4 @@
-.. _api_foo:
+.. _api_ventilator:
 
 Controller
 ==========

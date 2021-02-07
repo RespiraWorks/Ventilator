@@ -1,4 +1,4 @@
-.. _api:API
+.. _api:
 
 API
 ===

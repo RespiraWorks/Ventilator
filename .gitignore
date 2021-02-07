@@ -17,8 +17,10 @@ cmake-build-*/
 .vscode/
 .ctags
 ctags
+tags
 .cscope.out
 cscope.out
+*~
 
 #CAD/Inventor
 *.lck

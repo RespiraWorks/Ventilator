@@ -99,7 +99,7 @@ BEFORE purchasing any parts.**
 
 **#TODO: Drawings**
 
-### Heat-set insert istallation
+### Heat-set insert installation
 
 * You should first install the heat-set inserts, while the acrylic panel is flat and no electronics or
 fitting are in the way of your and your soldering iron.

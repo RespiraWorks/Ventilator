@@ -21,9 +21,9 @@ The ventilator enclosure is made up of three parts, each made out of a folded, 1
 
 | Part  | Source | Export |
 |:------|:-------|---|
-| Main enclosure | [.ipt](CAD/enclosure_main_panel.ipt)     | **TODO** |
-| Equipment tray | [.ipt](CAD/enclosure_equipment_tray.ipt) | **TODO** |
-| Closure panel  | [.ipt](CAD/enclosure_closure_panel.ipt)  | **TODO** |
+| Main enclosure | [.ipt](enclosure.ipt)     | **TODO** |
+| Equipment tray | [.ipt](equipment_bracket.ipt) | **TODO** |
+| Closure panel  | [.ipt](closure_panel.ipt)  | **TODO** |
 
 ### Fabrication Drawings
 
@@ -72,9 +72,10 @@ BEFORE purchasing any parts.**
 
 ## Assembly
 
-|Download Type|Link|
-|:------|:-------|
-|Source: enclosure assembly|[.iam](CAD/enclosure_assembly.iam)|
+| Assembly | Source |
+|:---------|:-------|
+| Equipment bracket assembly | [.iam](equipment_bracket.iam)  |
+| Enclosure assembly         | [.iam](enclosure_assembly.iam) |
 
 The main panel is folded from a single sheet and fastened together using stainless steel blind rivets. There
 are rubber bumper feet on the bottom of the enclosure that are threaded into M6 press-fit nuts. The rubber bumpers

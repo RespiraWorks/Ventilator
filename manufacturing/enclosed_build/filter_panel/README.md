@@ -1,38 +1,35 @@
-# Air Filter Panel
+# Air filter panel
 
-| Assembly CAD Rendering | Assembled View |
+| Rendering | Assembled |
 :------------------:|:-----------------:|
 | ![](images/rendering.jpg)  | ![](images/panel2.jpg)  |
 
-|Download Type|Link|
-|:------|:-------|
-|Filter Panel Assembly CAD|[.iam](CAD/filter_panel_assembly.iam)|
-
 ## Overview
 
-This readme contains the details, BOM, assembly instructions for one display panel assembly for the enclosed build.
+The filter panel accommodates four [filter housing assemblies](filter_holder) - two with patient tubing adapters,
+and two without. The filter housings are installed on a clear acrylic sheet. In case of different filters being
+available and/or required in particular markets or settings, this assembly can be easily redesigned and
+swapped out without significantly altering the rest of the ventilator design.
 
-## Design Rationale
+The acrylic sheet is to be mounted to the main equipment bracket using heat inserts and screws.
+An explanation for the choice of heat-set inserts is given
+[here](../display_panel/README.md#Display-Panel-mounting-choice)
 
-The filter panel accommodates four filter assemblies. You can read more about those in detail [here](filter_holder/README.md). The filter assembly houses these by means of a clear acrylic sheet. An acrylic sheet was chosen because it is cheap and easy to customize. The acrylic sheet is mounted to the enclosure main panel using heat inserts and screws. An explanation for the choice of heat-set inserts is given [here](../display_panel/README.md#Display-Panel-mounting-choice) 
+## Custom parts
 
-## Custom Parts
+This is the design for the custom cut acrylic plate for the filter housings.
 
-In addition to the individual filter assemblies themselves (which have several custom parts), the other custom part in this assembly is the custom cut filter acrylic plate. For our build, we used *insert type of acrylic here* and used *insert laser cutting machine specs here* to cut the acrylic. 
-
-| Filter panel acrylic plate CAD rendering |
+| Acrylic plate rendering |
 :------------------:|
-| ![](images/filter_panel_acrylic_plate_rendering.jpg)  | 
+| ![](images/filter_panel_acrylic_plate_rendering.jpg)  |
 
-The necessary files are presented below:
-|Download Type|Link|
-|:------|:-------|
-|Filter Panel Acrylic Plate CAD|[.ipt](CAD/filter_panel_acrylic_plate.ipt)|
-|Filter Panel Acrylic Plate drawing|[.idw](CAD/filter_panel_acrylic_plate.idw)|
-|Filter Panel Acrylic Plate drawing|[.pdf](CAD/filter_panel_acrylic_plate.pdf)|
-|Filter Panel Acrylic Plate for laser cutting|[.dxf](CAD/filter_panel_acrylic_plate.dxf)| 
+| Download Type | Link   |
+|:--------------|:-------|
+| Source: Inventor part file | [.ipt](CAD/filter_panel_acrylic_plate.ipt) |
+| Drawing                    | [.idw](CAD/filter_panel_acrylic_plate.idw) [.pdf](CAD/filter_panel_acrylic_plate.pdf)|
+| Export for laser cutting   | [.dxf](CAD/filter_panel_acrylic_plate.dxf) |
 
- 
+The plate may be produced using a laser cutter or with common woodworking tools.
 
 ## Parts
 
@@ -52,7 +49,13 @@ BEFORE purchasing any parts.**
 |**A7**| 16        | McMaster-Carr | 92000A224                           | 9.60 / 100          | [C][a7mcmc] | M4 14mm screw, phillips drive |
 |**A8**| (16)      | McMaster-Carr | 92095A193                           | 8.95 / 100          | [C][a8mcmc] | M4 14mm screw, hex drive, **alternate to A7** |
 
-[a1rw]: #lower-face-plate
+**#TODO: type of acrylic**
+
+**#TODO: laser cutting machine specs**
+
+**#TODO: mounting screws**
+
+[a1rw]: #custom-parts
 [a2rw]: filter_holder
 [a3rw]: filter_holder
 [a4mcmc]: https://www.mcmaster.com/94180A351/
@@ -61,10 +64,19 @@ BEFORE purchasing any parts.**
 [a7mcmc]: https://www.mcmaster.com/92000A224/
 [a8mcmc]: https://www.mcmaster.com/92095A193/
 
-## Assembly Instructions
+## Assembly
 
-Disassemble the individual holders and integrate the housings with the acrylic panel. For latest enclosed build, this requires M4x14mm screws (assuming 1/4" or 6.5mm acrylic panel).  
-For instructions on how to install heat-set inserts, see similar instructions for the display panel [here](../display_panel/README.md#Heat-Set-Inserts-Installation)
+| Part  | Source |
+|:------|:-------|
+| Filter panel assembly | [.iam](CAD/filter_panel_assembly.iam) |
+
+### Instructions
+
+Disassemble the individual holders and integrate the housings with the acrylic panel.
+For latest enclosed build, this requires M4x14mm screws (assuming 1/4" or 6.5mm acrylic panel).
+
+Instructions on how to install heat-set inserts are found on the
+[display panel page](../display_panel/README.md#heat-set-inserts-installation)
 
 |                            |
 |:--------------------------:|

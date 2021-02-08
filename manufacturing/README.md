@@ -33,17 +33,14 @@ our [wiki](https://github.com/RespiraWorks/Ventilator/wiki), by which we mean **
 
 ## Assembly
 
-| full assembly rendering    |  back panel removed   |
+| full assembly rendering    |  internals   |
 |:---:|:---:|
-| [![](images/rendering_smaller.jpg)](images/rendering_full.jpg) | ![](images/rendering_back.jpg)  |
+| [![](images/rendering_smaller.jpg)](images/rendering_full.jpg) | [![](pneumatics/images/rendering_smaller.jpg)](pneumatics/images/rendering_full.jpg)  |
 
 
 Ventilator full assembly CAD model: [.iam](ventilator_assembly.iam)
 
 >*Include GA/Sectional Here*
-
-Some aspects of the production packaged design are detailed in the first section of the (somewhat obsolete)
-[assembly video](https://youtu.be/2hdV5CWcLb4).
 
 ### Sub-assemblies
 
@@ -70,6 +67,9 @@ pages for the various sub-assemblies.
 While this page is not comprehensive yet, some aspects of connecting sensor tubing and electronics may still be
 better cover in the (somewhat obsolete) "pizza build" [guide](../quality-assurance/testing/pizza_build).
 
+Some aspects of the production packaged design are detailed in the first section of the (somewhat obsolete)
+[assembly video](https://youtu.be/2hdV5CWcLb4).
+
 ### India build
 
 Preliminary enclosed build was produced by our partners, Foundry-M in Visakhapatnam, India.
@@ -82,8 +82,5 @@ Preliminary enclosed build was produced by our partners, Foundry-M in Visakhapat
 ### Test equipment
 
 To test a prototype you will need some additional components that are not strictly part of the ventilator itself, such
-as test lungs.
-
-
-There is a page dedicated to [Testing](../quality-assurance/testing) under the quality assurance section of the
-repository.
+as test lungs. There is additional information on the [testing](../quality-assurance/testing) page under the quality
+assurance section of the repository.

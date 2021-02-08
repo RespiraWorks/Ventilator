@@ -6,11 +6,17 @@
 
 ## Design rationale
 
+The current version of the ventilator assembly is meant to demonstrate its packaging in "production" housing. Based
+on lessons learned from previous iterations, the ventilator will use a detachable internal assembly, to which all
+pneumatic components can be mounted and connected. This allows for 360 degree accessibility to components during initial
+assembly. When complete, this internal assembly is bolted into the enclosure, and the enclosure is screwed shut. The
+top-rear positioning of the removable enclosure lid provides access to components that will need routine maintenance.
+
 We chose a sheet metal construction because:
 * it is cheap and quick - sheet metal is cheap to fabricate. Unlike plastic parts, it doesn't require any expensive
   molds. This is great for prototyping stages and should also be an accessible manufacture process in many countries.
 * strength and durability - stainless steel and other highly durable materials can be used. The frame and enclosure
-  should be rigid and withstand mechanical stresses. The simple two-piece enclosure should prove to be quite durable.
+  should be rigid and withstand mechanical stresses. The simple two-piece enclosure should prove to be quite rugged.
 * staged assembly - we wanted the ability to assemble all internals outside the enclosure. The design is built around
   a strong bracket upon which all pneumatics and electrical equipment is installed. This makes assembly and maintenance
   easier. Also useful when prototyping and making design modifications.
@@ -21,9 +27,9 @@ The ventilator enclosure is made up of three parts, each made out of a folded, 1
 
 | Part  | Source | Export |
 |:------|:-------|---|
-| Main enclosure | [.ipt](enclosure.ipt)     | **TODO** |
+| Main enclosure | [.ipt](enclosure.ipt)         | **TODO** |
 | Equipment tray | [.ipt](equipment_bracket.ipt) | **TODO** |
-| Closure panel  | [.ipt](closure_panel.ipt)  | **TODO** |
+| Closure panel  | [.ipt](closure_panel.ipt)     | **TODO** |
 
 ### Fabrication Drawings
 

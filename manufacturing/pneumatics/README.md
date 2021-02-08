@@ -123,7 +123,9 @@ BEFORE purchasing any parts.**
 [b4amzn]: https://www.amazon.com/Tools-VISE-GRIP-Pliers-6-Inch-2078216/dp/B000A0OW2M
 [b5amzn]: https://www.amazon.com/gp/product/B01L2F428C
 
-## Assembly instructions
+## Assembly
+
+[Pneumatics assembly model](pneumatics.iam)
 
 ### Pneumatics tray
 
@@ -148,6 +150,8 @@ Related issues are being tracked here:
 
 The oxygen regulator requires 2x of 1/4"ID tubing adapters (**A24**) to interface with tubing.
 
+Regulator sub-assembly CAD: [.iam](regulator_assembly.iam)
+
 ### Proportional solenoid valve
 
 Supply of oxygen is controlled by a proportional solenoid. We are currently testing with 2 different solenoids.
@@ -156,6 +160,8 @@ Parts for both variants are listed in BOM above.
 Note that mounting the Uflow solenoid may require tapping of M3 threads in the aluminium manifold.
 
 **ATTENTION: tools for tapping not listed here.**
+
+PSOL sub-assembly CAD: [.iam](PSOL.iam)
 
 ### Oxygen sensor
 
@@ -173,6 +179,8 @@ Use Herbie clip (**A19**) to secure tubing to blower outlet.
 ### Blower check valve
 
 A check valve following the blower should be included with any build where oxygen is used.
+
+Blower check valve sub-assembly CAD: [.iam](blower_check_valve.iam)
 
 **TODO:** explain choice and assembly
 

@@ -144,8 +144,8 @@ Prior to installing it on the PCB, you should:
 * give it a keyboard and mouse `[B3]` or
 * alternatively, you can configure it for remote ssh control as described on our [GUI page](../../software/gui).
 
-Unless you are doing a [Pizza build](../pizza_build), you will **NOT** want to install the Raspberry Pi onto the PCB
-quite yet. You will first want to mount the PCB onto the touch-screen, as described on the
+Unless you are doing a [Pizza build](../../quality-assurance/testing/pizza_build), you will **NOT** want to install the
+Raspberry Pi onto the PCB quite yet. You will first want to mount the PCB onto the touch-screen, as described on the
 [display panel sub-assembly](../enclosed_build/display_panel) page.
 
 ### Touch screen

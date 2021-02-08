@@ -1,39 +1,39 @@
 # Enclosure
 
-|             |     |
+| Rendering | Exploded View |
 :------------------:|:-----------------:|
 | ![](images/enclosure_rendering.jpg)  | ![](images/enclosure_exploded.jpg)  |
 
-The ventilator enclosure is made up of three folded, 1.52mm thick, stainless steel sheets; the main enclosure, the rear
-closure panel and the internal equipment bracket.
+## Design rationale
 
-The main enclosure is folded from a single sheet and fastened together using stainless steel blind rivets. There
-are rubber bumper feet on the bottom of the enclosure that are threaded into M6 press-fit nuts. The rubber bumpers
-can be removed to allow the enclosure to be mounted to a medical cart.
+We chose a sheet metal construction because:
+* it is cheap and quick - sheet metal is cheap to fabricate. Unlike plastic parts, it doesn't require any expensive
+  molds. This is great for prototyping stages and should also be an accessible manufacture process in many countries.
+* strength and durability - stainless steel and other highly durable materials can be used. The frame and enclosure
+  should be rigid and withstand mechanical stresses. The simple two-piece enclosure should prove to be quite durable.
+* staged assembly - we wanted the ability to assemble all internals outside the enclosure. The design is built around
+  a strong bracket upon which all pneumatics and electrical equipment is installed. This makes assembly and maintenance
+  easier. Also useful when prototyping and making design modifications.
 
-The rear closure panel is folded from a single sheet.
+## Custom parts
 
-The internal equipment bracket is folded from a single sheet. The bracket is designed to be simple and lightweight.
-Acrylic sheets are either fastened to or hung from the bracket to allow for design adjustments while utilizing the same
-bracket.
+The ventilator enclosure is made up of three parts, each made out of a folded, 1.52mm thick, stainless steel sheet.
 
-**#TODO: present CAD information properly, in a structured, attractive way**
+| Part  | Source | Export |
+|:------|:-------|---|
+| Main enclosure | [.ipt](CAD/enclosure_main_panel.ipt)     | **TODO** |
+| Equipment tray | [.ipt](CAD/enclosure_equipment_tray.ipt) | **TODO** |
+| Closure panel  | [.ipt](CAD/enclosure_closure_panel.ipt)  | **TODO** |
 
-The part files are available in the CAD folder. [.ipt for enclosure](CAD/ventilator_enclosure.ipt),
-[.ipt for equipment bracket](CAD/equipment_bracket.ipt), [.ipt for closure panel](CAD/ventilator_closure_panel.ipt).
-The assembly file is also available [.iam for enclosure assembly](CAD/enclosure_assembly.iam).
-
-## Fabrication Drawings
+### Fabrication Drawings
 
 Enclosure fabrication drawings.
 
-|             |     |
-:------------------:|:-----------------:|
-| ![](images/fab_drawing_1.png) | ![](images/fab_drawing_2.png) |
-| ![](images/fab_drawing_3.png) | ![](images/fab_drawing_4.png) |
-| ![](images/fab_drawing_5.png) | ![](images/fab_drawing_6.png) |
-| ![](images/fab_drawing_7.png) | ![](images/fab_drawing_8.png) |
-| ![](images/fab_drawing_9.png) | |
+|             |     |  |
+:------------------:|:-----------------:|:---:|
+| ![](images/fab_drawing_1.png) | ![](images/fab_drawing_2.png) | ![](images/fab_drawing_3.png) |
+| ![](images/fab_drawing_4.png) | ![](images/fab_drawing_5.png) | ![](images/fab_drawing_6.png) |
+| ![](images/fab_drawing_7.png) | ![](images/fab_drawing_8.png) | ![](images/fab_drawing_9.png) |
 
 
 ## Parts
@@ -42,11 +42,6 @@ Enclosure fabrication drawings.
 BEFORE purchasing any parts.**
 
 [ppg]: ../../purchasing_guidelines.md
-
-**#TODO: locknuts and washers for main tray?**
-
-**#TODO: How much sheet metal?**
-
 
 | Item  | Quantity | Manufacturer  | Part #                   | Price (USD) | Sources[*][ppg]| Notes |
 | ----- |---------:| ------------- | ------------------------ | -----------:|:----------:|:------|
@@ -60,12 +55,35 @@ BEFORE purchasing any parts.**
 |**A8** | 4        | McMaster-Carr | 92095A193                | 8.95 / 50   | [C][a8mcmc]  | M4 x 14mm screws, hex drive |
 |**A9** | 12       | McMaster-Carr | 92095A188                | 10.04 / 100 | [C][a9mcmc]  | M4 x 6mm screws, hex drive |
 
-[a1rw]:   #fabrication-drawings
-[a2rw]:   #fabrication-drawings
-[a3rw]:   #fabrication-drawings
+**#TODO: locknuts and washers for main tray?**
+
+**#TODO: How much sheet metal?**
+
+[a1rw]:   #custom-parts
+[a2rw]:   #custom-parts
+[a3rw]:   #custom-parts
 [a4mcmc]: https://www.mcmaster.com/97525A415/
 [a5mcmc]: https://www.mcmaster.com/96439A710/
 [a6mcmc]: https://www.mcmaster.com/96439A650/
 [a7mcmc]: https://www.mcmaster.com/9541K82/
 [a8mcmc]: https://www.mcmaster.com/92095A193/
 [a9mcmc]: https://www.mcmaster.com/92095A188/
+
+
+## Assembly
+
+|Download Type|Link|
+|:------|:-------|
+|Source: enclosure assembly|[.iam](CAD/enclosure_assembly.iam)|
+
+The main panel is folded from a single sheet and fastened together using stainless steel blind rivets. There
+are rubber bumper feet on the bottom of the enclosure that are threaded into M6 press-fit nuts. The rubber bumpers
+can be removed to allow the enclosure to be mounted to a medical cart.
+
+The rear closure panel is folded from a single sheet.
+
+The internal equipment bracket is folded from a single sheet. The bracket is designed to be simple and lightweight.
+Acrylic sheets are either fastened to or hung from the bracket to allow for design adjustments while utilizing the same
+bracket.
+
+**#TODO : Add photos of only the assembled enclosure**

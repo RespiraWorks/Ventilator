@@ -1,25 +1,35 @@
 # Air filter panel
 
-![](images/rendering.jpg)
+| Rendering | Assembled |
+:------------------:|:-----------------:|
+| ![](images/rendering.jpg)  | ![](images/panel2.jpg)  |
 
-## Lower Face Plate
+## Overview
 
-**#TODO: present CAD links nicely**
+The filter panel accommodates four [filter housing assemblies](filter_holder) - two with patient tubing adapters,
+and two without. The filter housings are installed on a clear acrylic sheet. In case of different filters being
+available and/or required in particular markets or settings, this assembly can be easily redesigned and
+swapped out without significantly altering the rest of the ventilator design.
 
-This is a clear acrylic sheet that houses the filter assembly. It is mounted using heat inserts. Link to the part file
-is given in [Source files](#Source-files) below. Some other useful files for the same part are
-[.idw 2D drawing](CAD/LowerAcrylicFacePlate.idw), [.pdf 2D drawing](CAD/LowerAcrylicFacePlate.pdf),
-[.dxf of the front face for laser cutting](CAD/LowerAcrylicFacePlate_FrontFace.dxf).
+The acrylic sheet is to be mounted to the main equipment bracket using heat inserts and screws.
+An explanation for the choice of heat-set inserts is given
+[here](../display_panel/README.md#Display-Panel-mounting-choice)
 
-![](images/LowerAcrylicFacePlate.jpg)
+## Custom parts
 
-The sizing for the mounting holes was based on [this](https://www.pemnet.com/fastening_products/pdf/sidata.pdf) catalog
-for heat set insert.
-M4 screws were chosen to mount the acrylic face plate to the sheet metal enclosure.
-For corresponding M4 nuts (refer page 6, metric table, row 6), length code 1 was chosen since acrylic thickness
-(6.35 mm) was more than minimum hole depth specification (5.72 mm).
-Hence the corresponding outer diameter for insertion i.e. acrylic mounting diameter would be 5.94 mm, which is
-reflected in the CAD.
+This is the design for the custom cut acrylic plate for the filter housings.
+
+| Acrylic plate rendering |
+:------------------:|
+| ![](images/filter_panel_acrylic_plate_rendering.jpg)  |
+
+| Download Type | Link   |
+|:--------------|:-------|
+| Source: Inventor part file | [.ipt](CAD/filter_panel_acrylic_plate.ipt) |
+| Drawing                    | [.idw](CAD/filter_panel_acrylic_plate.idw) [.pdf](CAD/filter_panel_acrylic_plate.pdf)|
+| Export for laser cutting   | [.dxf](CAD/filter_panel_acrylic_plate.dxf) |
+
+The plate may be produced using a laser cutter or with common woodworking tools.
 
 ## Parts
 
@@ -39,7 +49,13 @@ BEFORE purchasing any parts.**
 |**A7**| 16        | McMaster-Carr | 92000A224                           | 9.60 / 100          | [C][a7mcmc] | M4 14mm screw, phillips drive |
 |**A8**| (16)      | McMaster-Carr | 92095A193                           | 8.95 / 100          | [C][a8mcmc] | M4 14mm screw, hex drive, **alternate to A7** |
 
-[a1rw]: #lower-face-plate
+**#TODO: type of acrylic**
+
+**#TODO: laser cutting machine specs**
+
+**#TODO: mounting screws**
+
+[a1rw]: #custom-parts
 [a2rw]: filter_holder
 [a3rw]: filter_holder
 [a4mcmc]: https://www.mcmaster.com/94180A351/
@@ -48,11 +64,24 @@ BEFORE purchasing any parts.**
 [a7mcmc]: https://www.mcmaster.com/92000A224/
 [a8mcmc]: https://www.mcmaster.com/92095A193/
 
-## Assembly Instructions
+## Assembly
 
-Disassemble the individual holders and integrate the housings with the acrylic panel. For latest
-enclosed build, this requires M4x14mm screws (assuming 1/4" or 6.5mm acrylic panel).
+| Part  | Source |
+|:------|:-------|
+| Filter panel assembly | [.iam](CAD/filter_panel_assembly.iam) |
 
-![](images/panel1.jpg)
+### Instructions
 
-![](images/panel2.jpg)
+Disassemble the individual holders and integrate the housings with the acrylic panel.
+For latest enclosed build, this requires M4x14mm screws (assuming 1/4" or 6.5mm acrylic panel).
+
+Instructions on how to install heat-set inserts are found on the
+[display panel page](../display_panel/README.md#heat-set-inserts-installation)
+
+|                            |
+|:--------------------------:|
+|![](images/panel1.jpg) |
+
+|                            |
+|:--------------------------:|
+|![](images/panel2.jpg) |

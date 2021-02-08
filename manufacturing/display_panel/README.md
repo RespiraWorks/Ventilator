@@ -54,9 +54,9 @@ The only custom part in this assembly is the custom cut display acrylic.
 **Note: If you are a member of the RespiraWorks team, review the [part purchasing guidelines][ppg]
 BEFORE purchasing any parts.**
 
-[ppg]: ../../purchasing_guidelines.md
+[ppg]: ../purchasing_guidelines.md
 [pneu]: ../pneumatics
-[elec]: ../../electrical
+[elec]: ../electrical
 
 | Item  | Quantity  | Manufacturer  | Part #                   | Price (USD)  | Sources[*][ppg]| Notes |
 | ----- |----------:| ------------- | ------------------------ | ------------:|:------------:|:------|

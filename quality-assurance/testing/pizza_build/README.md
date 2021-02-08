@@ -19,7 +19,7 @@ It can also come in various configurations, depending on your testing needs:
 
 ## Essentials
 
-Firstly, you will need a full [Electrical assembly](../electrical), which contains the computing components.
+Firstly, you will need a full [Electrical assembly](../../../manufacturing/electrical), which contains the computing components.
 
 We are using 3/4" ID tube as the default standard (and adapters where needed, like to the blower and the pinch valves).
 This easily can have 19mm ID tubing substituted in metric manufacturing settings (3/4" = 19.05mm).
@@ -30,7 +30,7 @@ All rigid plumbing fittings should be NPT/imperial standard (3/4 NPS preferable,
 **Note: If you are a member of the RespiraWorks team, review the [part purchasing guidelines][ppg]
 BEFORE purchasing any parts.**
 
-[ppg]: ../../manufacturing/purchasing_guidelines.md
+[ppg]: ../../../manufacturing/purchasing_guidelines.md
 
 | Item  | Quantity | Manufacturer  | Part #     | Price (USD)  | Sources[*][ppg] | Notes |
 | ----- |---------:| ------------- | ---------- | ------------:|:---------------:| ----- |
@@ -76,10 +76,10 @@ BEFORE purchasing any parts.**
 
 The following are essential sub-assemblies that you'll need no matter what additional/optional "toppings" you chose to have.
 
-* 1x [Blower assembly](../enclosed_build/pneumatics/blower) - the main driver of pressure in the pneumatic circuit
-* 2-3x [Venturi flow sensors](../enclosed_build/pneumatics/venturi) and corresponding tubing, to provide the controller feedback
-* 2x [Pinch valves](../enclosed_build/pneumatics/pinch_valve) - a proportional pinch valve to control the airflow constriction with precision
-* optional [Air filter assemblies](../enclosed_build/filter_panel) - for the safety of patient and health workers. Constricts air flow
+* 1x [Blower assembly](../../../manufacturing/enclosed_build/pneumatics/blower) - the main driver of pressure in the pneumatic circuit
+* 2-3x [Venturi flow sensors](../../../manufacturing/enclosed_build/pneumatics/venturi) and corresponding tubing, to provide the controller feedback
+* 2x [Pinch valves](../../../manufacturing/enclosed_build/pneumatics/pinch_valve) - a proportional pinch valve to control the airflow constriction with precision
+* optional [Air filter assemblies](../../../manufacturing/enclosed_build/filter_panel) - for the safety of patient and health workers. Constricts air flow
   to some extent and thus will affect the ventilator performance
 
 ## Assembly Instructions
@@ -167,7 +167,7 @@ circuit board:
 ![](images/stepper_connection3.jpg)
 
 Additional details for how to attach stepper drivers to PCB can be found in the
-[pcb section](../electrical/stepper_drivers) of the repository.
+[pcb section](../../../manufacturing/electrical/stepper_drivers) of the repository.
 
 ### Raspberry Pi
 

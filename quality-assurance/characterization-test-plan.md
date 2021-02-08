@@ -1,8 +1,12 @@
 # Characterization Test Plan
 
-This document will track desired characterization tests and link to the corresponding data when the test is performed. Eventually the info from this document will likely be formalized into a record of tests that have been performed as part of the development and validation of the ventilator - integration tests with the real software are expected to be defined elsewhere, though they could be folded into this.
+This document will track desired characterization tests and link to the corresponding data when the test is performed.
+Eventually the info from this document will likely be formalized into a record of tests that have been performed as part
+of the development and validation of the ventilator - integration tests with the real software are expected to be
+defined elsewhere, though they could be folded into this.
 
-**Caution:** this document has not been formally reviewed and is a work in progress. Be responsible to understand the provenance of documentation.
+**Caution:** this document has not been formally reviewed and is a work in progress. Be responsible to understand the
+provenance of documentation.
 
 **NOTE:** these tests are supposed to be iteratively developed. As we progress, the tests will become more granular.
 
@@ -13,7 +17,7 @@ This document will track desired characterization tests and link to the correspo
 
 **#TODO** Add content
 
-[View fan tests](enclosed_build/pneumatics/blower/characterization-tests)
+[View fan tests](../manufacturing/enclosed_build/pneumatics/blower/characterization-tests)
 
 * **PIP/PEEP/Timing Tests**
 
@@ -39,7 +43,7 @@ This document will track desired characterization tests and link to the correspo
 
     2. How quickly can the pinch valve be fully closed? How does this change as a function of pressure (up to at least 60 cm H20)
 
-    3. What is the leak rate past a fully closed pinch valve as a functin of pressure (up to at least 60 cm H20)?
+    3. What is the leak rate past a fully closed pinch valve as a function of pressure (up to at least 60 cm H20)?
 
 * **Proportional Solenoid Characterization**
 
@@ -47,7 +51,7 @@ This document will track desired characterization tests and link to the correspo
 
     2. How quickly can the solenoid be fully closed? How does this change as a function of pressure (up to at least 60 cm H20)
 
-    3. What is the leak rate past a fully closed soleonid valve as a function of pressure (up to at least 60 cm H20)?
+    3. What is the leak rate past a fully closed solenoid valve as a function of pressure (up to at least 60 cm H20)?
 
 ## Sensor Tests
 
@@ -61,7 +65,7 @@ This document will track desired characterization tests and link to the correspo
 
     4. When there is a change in flow rate, how long does it take for the sensor to settle?
 
-    [View Venturi tests](enclosed_build/pneumatics/venturi/characterization-tests/06072020/README.md)
+    [View Venturi tests](../manufacturing/enclosed_build/pneumatics/venturi/characterization-tests/06072020/README.md)
 
 * **Pressure sensor characterization**
 
@@ -79,7 +83,7 @@ This document will track desired characterization tests and link to the correspo
 
     1. For FiO2s from 21% to 100%, how accurate is the o2 sensor reading and how does this accuracy change over time (if sitting at a specific FiO2)?
 
-    2. How do the measurements for #1 change as a function of temperature and humdity?
+    2. How do the measurements for #1 change as a function of temperature and humidity?
 
     3. How do the measurements from #1 change as a function of flow rate?
 

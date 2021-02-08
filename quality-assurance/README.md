@@ -12,6 +12,10 @@ design of a product that will be responsible for a human life.
 Conforming with existing quality standards facilitates the regulatory
 approval process for our initial deployment.
 
+### Characterization Testing
+
+For details on component characterization tests, see the [Characterization Test Plan](characterization-test-plan.md).
+
 ## Testing
 
 Documentation relating to the testing equipment, strategy and test data is in the [testing](testing) subdirectory.

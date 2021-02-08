@@ -6,7 +6,15 @@ This section contains testing information, including testing plans, and resultin
 
 The following custom in-house developed test equipment is used.
 
-[DIY test lung](test_lung)
+## Development prototypes - AKA "pizza build"
+
+[DIY test lung](test_lung) - a simple test lung for prototyping purposes
+
+[**Pizza build**](pizza_build) -  a fundamentally functional ventilator that that includes sensors, drivers and pneumatics.
+It is not enclosed like the final product and is meant to be operated in an open layout on your table, like a pizza.
+
+![](pizza_build/images/assembled.jpg)
+
 
 ## Testing data
 

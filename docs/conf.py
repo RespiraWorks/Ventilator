@@ -24,7 +24,7 @@ subprocess.call("doxygen", shell=True)
 project = "RespiraWorks Ventilator"
 copyright = "2021, RespiraWorks"
 author = "RespiraWorks"
-
+version = "0.3"
 
 # -- General configuration ---------------------------------------------------
 
@@ -45,6 +45,8 @@ extensions = [
     "breathe",
 ]
 
+todo_include_todos = True
+
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
 
@@ -63,7 +65,7 @@ highlight_language = "c++"
 html_theme = "sphinx_rtd_theme"
 html_theme_options = {
     "canonical_url": "",
-    "analytics_id": "",  #  Provided by Google in your dashboard
+    "analytics_id": "",  # Provided by Google in your dashboard
     "display_version": True,
     "prev_next_buttons_location": "bottom",
     "style_external_links": False,
@@ -89,3 +91,10 @@ html_static_path = ["_static"]
 breathe_projects = {"RespiraWorks Ventilator": "_build/xml/"}
 breathe_default_project = "RespiraWorks Ventilator"
 breathe_default_members = ("members", "undoc-members")
+
+rst_prolog = """
+    .. |SW_CLASSIFICATION| replace:: **C**
+    .. |PROJECT_NAME| replace:: {0}
+    .. |PROJECT_VERSION| replace:: {1}""".format(
+    project, version
+)

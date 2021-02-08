@@ -16,9 +16,9 @@ jobs:
 
     steps:
     - name: Requirements
-      run: apt install graphviz
-        && apt install doxygen
-        && apt install sphinx-doc
+      run: sudo apt-get install graphviz
+        && sudo apt-get install doxygen
+        && sudo apt-get install sphinx-doc
         && pip3 install sphinx-rtd-theme
         && pip3 install breathe
         && pip3 install sphinx-sitemap

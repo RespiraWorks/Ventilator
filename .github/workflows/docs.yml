@@ -16,9 +16,9 @@ jobs:
 
     steps:
     - name: Requirements
-      run: brew install graphviz
-        && brew install doxygen
-        && brew install sphinx-doc
+      run: apt install graphviz
+        && apt install doxygen
+        && apt install sphinx-doc
         && pip3 install sphinx-rtd-theme
         && pip3 install breathe
         && pip3 install sphinx-sitemap

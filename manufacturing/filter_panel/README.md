@@ -45,15 +45,14 @@ BEFORE purchasing any parts.**
 |**A3**| 2        | RespiraWorks  | outlet_filter_assembly         |             | [Rw][a3rw]     | Filter housing assembly, variant with outlet vent |
 |**A4**| 4        | McMaster-Carr | 94180A351                      | 15.47 / 100 | [C][a4mcmc]    | Heat-set inserts for m4 screws |
 |**A5**| 16       | McMaster-Carr | 93625A150                      | 6.04 / 100  | [C][a5mcmc]    | M4 lock nut |
-|**A6**| 16       | McMaster-Carr | 93475A230                      | 1.86 / 100  | [C][a6mcmc]    | M4 washer |
+|**A6**| 20       | McMaster-Carr | 93475A230                      | 1.86 / 100  | [C][a6mcmc]    | M4 washer, 9mm OD |
 |**A7**| 16       | McMaster-Carr | 92000A224                      | 9.60 / 100  | [C][a7mcmc]    | M4 14mm screw, phillips drive |
 |**A8**| (16)     | McMaster-Carr | 92095A193                      | 8.95 / 100  | [C][a8mcmc]    | M4 14mm screw, hex drive, **alternate to A7** |
+|**A9**| 4        | McMaster-Carr | 92095A189                      | 8.89 / 100  | [C][a9mcmc]    | M4 8mm screw, hex drive |
 
 **#TODO: type of acrylic**
 
 **#TODO: laser cutting machine specs**
-
-**#TODO: mounting screws**
 
 [a1rw]: #custom-parts
 [a2rw]: filter_holder
@@ -63,6 +62,8 @@ BEFORE purchasing any parts.**
 [a6mcmc]: https://www.mcmaster.com/93475A230/
 [a7mcmc]: https://www.mcmaster.com/92000A224/
 [a8mcmc]: https://www.mcmaster.com/92095A193/
+[a9mcmc]: https://www.mcmaster.com/92095A189/
+
 
 ## Assembly
 

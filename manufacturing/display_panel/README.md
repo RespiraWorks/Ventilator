@@ -58,25 +58,25 @@ BEFORE purchasing any parts.**
 [pneu]: ../pneumatics
 [elec]: ../electrical
 
-| Item  | Quantity  | Manufacturer  | Part #                   | Price (USD)  | Sources[*][ppg]| Notes |
-| ----- |----------:| ------------- | ------------------------ | ------------:|:------------:|:------|
-|**A1** | 1         | RespiraWorks  | upper_acrylic_face_panel |              | [Rw][a1rw]   | Upper acrylic face panel |
-|**A2** | (1)       | McMaster-Carr | 7768K22                  | 11.62        | [C][a2mcmc]  | brass threaded check valve, **DUPLICATE in [pneumatic assembly][pneu]** |
-|**A3** | (1)       | McMaster-Carr | 50785K273                | 8.23         | [C][a3mcmc]  | through-wall straight connector, 1/4NPT female, **DUPLICATE in [pneumatic assembly][pneu]** |
-|**A4** | 1         | McMaster-Carr | 5121K451                 | 5.78 / 10    | [C][a4mcmc]  | 1/4 NPT x 1/4" ID barbed adapter, **DUPLICATE in [pneumatic assembly][pneu]** |
-|**A5** | (1)       | UPerfect      | -                        | 49.00        | [A][a5ali]   | 7" capacitive touchscreen, **DUPLICATE in [electrical assembly][elec]** |
-|**A6** | 4         | McMaster-Carr | 93625A101                | 7.70 / 10    | [C][a6mcmc]  | M2 locknut |
-|**A7** | 8         | McMaster-Carr | 93475A195                | 1.06 / 100   | [C][a7mcmc]  | M2 washer, 5mm OD |
-|**A8** | (8)       | McMaster-Carr | 91116A240                | 2.40 / 100   | [C][a8mcmc]  | M2 washer, 7mm OD, **alternate to A7** |
-|**A9** | 4         | McMaster-Carr | 92000A019                | 6.75 / 100   | [C][a9mcmc]  | M2 screw 12mm, Phillips drive |
-|**A10**| (4)       | McMaster-Carr | 92095A455                | 7.44 / 24    | [C][a10mcmc] | M2 screw 12mm, hex drive, **alternate to A9** |
-|**A11**| 4         | McMaster-Carr | 94180A351                | 15.47 / 100  | [C][a11mcmc] | Heat-set inserts for M4 screws |
+| Item  | Quantity | Manufacturer  | Part #                   | Price (USD)  | Sources[*][ppg]| Notes |
+| ----- |---------:| ------------- | ------------------------ | ------------:|:------------:|:------|
+|**A1** | 1        | RespiraWorks  | upper_acrylic_face_panel |              | [Rw][a1rw]   | Upper acrylic face panel |
+|**A2** | (1)      | McMaster-Carr | 7768K22                  | 11.62        | [C][a2mcmc]  | brass threaded check valve, **DUPLICATE in [pneumatic assembly][pneu]** |
+|**A3** | (1)      | McMaster-Carr | 50785K273                | 8.23         | [C][a3mcmc]  | through-wall straight connector, 1/4NPT female, **DUPLICATE in [pneumatic assembly][pneu]** |
+|**A4** | 1        | McMaster-Carr | 5121K451                 | 5.78 / 10    | [C][a4mcmc]  | 1/4 NPT x 1/4" ID barbed adapter, **DUPLICATE in [pneumatic assembly][pneu]** |
+|**A5** | (1)      | UPerfect      | -                        | 49.00        | [A][a5ali]   | 7" capacitive touchscreen, **DUPLICATE in [electrical assembly][elec]** |
+|**A6** | 4        | McMaster-Carr | 93625A101                | 7.70 / 10    | [C][a6mcmc]  | M2 locknut |
+|**A7** | 8        | McMaster-Carr | 93475A195                | 1.06 / 100   | [C][a7mcmc]  | M2 washer, 5mm OD |
+|**A8** | (8)      | McMaster-Carr | 91116A240                | 2.40 / 100   | [C][a8mcmc]  | M2 washer, 7mm OD, **alternate to A7** |
+|**A9** | 4        | McMaster-Carr | 92000A019                | 6.75 / 100   | [C][a9mcmc]  | M2 screw 12mm, Phillips drive |
+|**A10**| (4)      | McMaster-Carr | 92095A455                | 7.44 / 24    | [C][a10mcmc] | M2 screw 12mm, hex drive, **alternate to A9** |
+|**A11**| 4        | McMaster-Carr | 94180A351                | 15.47 / 100  | [C][a11mcmc] | Heat-set inserts for M4 screws |
+|**A12**| 4        | McMaster-Carr | 93475A230                | 1.86 / 100   | [C][a12mcmc] | M4 washer, 9mm OD |
+|**A13**| 4        | McMaster-Carr | 92095A189                | 8.89 / 100   | [C][a13mcmc] | M4 8mm screw, hex drive |
 
 **#TODO: type of acrylic**
 
 **#TODO: laser cutting machine specs**
-
-**#TODO: mounting screws**
 
 [a1rw]:    #custom-parts
 [a2mcmc]:  https://www.mcmaster.com/7768K22/
@@ -89,6 +89,8 @@ BEFORE purchasing any parts.**
 [a9mcmc]:  https://www.mcmaster.com/92000A019/
 [a10mcmc]: https://www.mcmaster.com/92095A455/
 [a11mcmc]: https://www.mcmaster.com/94180A351/
+[a12mcmc]: https://www.mcmaster.com/93475A230/
+[a13mcmc]: https://www.mcmaster.com/92095A189/
 
 ## Assembly
 

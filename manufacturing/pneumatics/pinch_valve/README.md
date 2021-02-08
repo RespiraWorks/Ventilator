@@ -100,8 +100,8 @@ BEFORE purchasing any parts.**
 |**A6** |        3 | FastEddy      | TFE4262             | 12.50 / 10   | [F][a6fast] [C][a6mcmc] | 5x16x5 Metal shielded bearings |
 |**A7** |        4 | McMaster-Carr | 92095A478           | 11.29 / 100  | [C][a7mcmc]             | M4x18mm button head hex drive, base mounting screw |
 |**A8** | 4        | McMaster-Carr | 93625A150           | 6.04 / 100   | [C][a8mcmc]             | M4 lock nuts |
-|**A9** | 8        | McMaster-Carr | 93475A230           | 1.86 / 100   | [C][a9mcmc]             | M4 washers |
-|**A10**| 6in/15cm | McMaster-Carr   | 5894K38             | 12.30 / 2 ft | [C][a10mcmc]            | Continuous-Flex Soft Tygon PVC Tubing, 3/8" ID, 5/8" OD |
+|**A9** | 8        | McMaster-Carr | 93475A230           | 1.86 / 100   | [C][a9mcmc]             | M4 washers, 9mm OD |
+|**A10**| 6in/15cm | McMaster-Carr | 5894K38             | 12.30 / 2 ft | [C][a10mcmc]            | Continuous-Flex Soft Tygon PVC Tubing, 3/8" ID, 5/8" OD |
 
 [a1rw]:   #Custom-parts
 [a2rw]:   #Custom-parts

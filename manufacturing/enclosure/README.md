@@ -61,7 +61,7 @@ BEFORE purchasing any parts.**
 |**A8** | 4        | McMaster-Carr | 92095A193                | 8.95 / 50   | [C][a8mcmc]  | M4 x 14mm screws, hex drive |
 |**A9** | 12       | McMaster-Carr | 92095A188                | 10.04 / 100 | [C][a9mcmc]  | M4 x 6mm screws, hex drive |
 
-**#TODO: locknuts and washers for main tray?**
+**#TODO: locknuts and washers for main tray**
 
 **#TODO: How much sheet metal?**
 

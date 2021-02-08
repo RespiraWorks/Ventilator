@@ -151,6 +151,13 @@ Related issues are being tracked here:
 
 The oxygen regulator requires 2x of 1/4"ID tubing adapters (**A24**) to interface with tubing.
 
+Mounts to acrylic with 2x:
+* M4x14 screws
+* M4 washers 9mm OD
+* M4 lock nuts
+
+**TODO:** needs its BOM bom and probably subassembly page
+
 Regulator sub-assembly CAD: [.iam](regulator_assembly.iam)
 
 ### Proportional solenoid valve
@@ -161,6 +168,12 @@ Parts for both variants are listed in BOM above.
 Note that mounting the Uflow solenoid may require tapping of M3 threads in the aluminium manifold.
 
 **ATTENTION: tools for tapping not listed here.**
+
+Mounts to acrylic with 2x:
+* M3x10 screws
+* M3 washers 9mm OD
+
+**TODO:** needs its BOM bom and probably subassembly page
 
 PSOL sub-assembly CAD: [.iam](PSOL.iam)
 

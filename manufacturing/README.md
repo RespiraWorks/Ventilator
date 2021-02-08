@@ -33,9 +33,9 @@ our [wiki](https://github.com/RespiraWorks/Ventilator/wiki), by which we mean **
 
 ## Assembly
 
-| production ventilator assembly    |  back panel removed   |
+| full assembly rendering    |  back panel removed   |
 |:---:|:---:|
-| ![](images/enclosed_rendering_face.png) | ![](images/enclosed_rendering_open_back.png)  |
+| [![](images/rendering_smaller.jpg)](images/rendering_full.jpg) | ![](images/rendering_back.jpg)  |
 
 
 Ventilator full assembly CAD model: [.iam](ventilator_assembly.iam)

@@ -1,8 +1,9 @@
 # Pneumatic assembly
 
-This page documents the pneumatic assembly, which consists of the following components (colorized):
-
-![](images/oxygen_diagram.jpg)
+|  |  |
+:------------------:|:-----------------:|
+| [![](images/rendering_smaller.jpg)](images/rendering_full.jpg)  | ![](images/pneumatic_assembly.jpg)
+|
 
 ## Materials
 
@@ -12,7 +13,7 @@ Some components do not exist as off-the-shelf products, or would be too cumberso
 following can be manufactured, using some 3d printing or, eventually, could be mass produced as injection-molded
 plastics.
 
-Please see the [3d printing guidelines](../../3d_printing) for general advice on printing components.
+Please see the [3d printing guidelines](../3d_printing) for general advice on printing components.
 
 * Pneumatics tray (**TODO**)
 * [Blower assembly](blower)
@@ -29,7 +30,7 @@ The above components are also listed in the BOM below.
 **Note: If you are a member of the RespiraWorks team, review the [part purchasing guidelines][ppg]
 BEFORE purchasing any parts.**
 
-[ppg]: ../../../manufacturing/purchasing_guidelines.md
+[ppg]: ../purchasing_guidelines.md
 
 | Item  | Quantity | Manufacturer   | Part #              | Price (USD)  | Sources[*][ppg]| Notes |
 | ----- |---------:| -------------- | ------------------- | ------------:|:--------------:| ----- |
@@ -189,5 +190,3 @@ Blower check valve sub-assembly CAD: [.iam](blower_check_valve.iam)
 **TODO:** document sensor tube connections
 
 **TODO:** point out components in photo
-
-![](images/pneumatic_assembly.jpg)

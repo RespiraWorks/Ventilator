@@ -74,10 +74,10 @@ decide to buy or build anything, do so at your own risk.**
     * [Pneumatic System](design/pneumatic-system)
     * [Electrical System](design/electrical-system)
     * [Mechanical assembly](design/mechanical)
-* [**Manufacturing Design**](manufacturing) - describes the physical design of the ventilator and its components
+* [**Manufacturing Design**](manufacturing) - describes the physical design of the ventilator and its components, including:
   * [Enclosure](manufacturing/enclosure) - rigid frame and enclosure components
   * [Filter panel](manufacturing/filter_panel) - Mechanical support for air filter assemblies
-  * [**Pneumatic assembly**](manufacturing/pneumatics) - full pneumatic assembly, which includes some of the following:
+  * [**Pneumatic assembly**](manufacturing/pneumatics) - full pneumatic assembly, including:
     * [Venturi flow sensors](manufacturing/pneumatics/venturi) - in-house design of affordable flow sensors
     * [Pinch valves](manufacturing/pneumatics/pinch_valve) - in-house design of affordable valve for inhale and exhale control
   * [Electrical assembly](manufacturing/electrical) - encompasses the electrical and computing components

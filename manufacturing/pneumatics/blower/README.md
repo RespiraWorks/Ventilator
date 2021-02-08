@@ -24,7 +24,7 @@ Characterization tests for the blower are [here](characterization-tests).
 **Note: If you are a member of the RespiraWorks team, review the [part purchasing guidelines][ppg]
 BEFORE purchasing any parts.**
 
-[ppg]: ../../../purchasing_guidelines.md
+[ppg]: ../../purchasing_guidelines.md
 
 | Item  | Quantity | Manufacturer  | Part #                       | Price (USD)      | Sources[*][ppg] | Notes |
 | ----- |---------:| ------------- | ---------------------------- | ----------------:|:---------------:|-------|
@@ -86,7 +86,7 @@ BEFORE purchasing any parts.**
 
 #### Tubing adapter (C1)
 
-To 3d print this component see the [general 3d printing guidelines](../../../3d_printing).
+To 3d print this component see the [general 3d printing guidelines](../../3d_printing).
 
 |For 3D printing: [tubing_adapter.stl](exports/tubing_adapter.stl)| Inventor source: [tubing_adapter.ipt](tubing_adapter.ipt)|
 |:---:|:---:|

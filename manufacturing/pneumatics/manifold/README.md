@@ -37,7 +37,7 @@ Notes on modeling threads have been published in our
 
 ## Manufacturing
 
-Please see the [3d printing guidelines](../../../3d_printing) for general advice on printing components.
+Please see the [3d printing guidelines](../../3d_printing) for general advice on printing components.
 
 3d printing has been successful using Siraya Fast.
 

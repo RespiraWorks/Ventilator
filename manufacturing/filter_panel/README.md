@@ -36,7 +36,7 @@ The plate may be produced using a laser cutter or with common woodworking tools.
 **Note: If you are a member of the RespiraWorks team, review the [part purchasing guidelines][ppg]
 BEFORE purchasing any parts.**
 
-[ppg]: ../../purchasing_guidelines.md
+[ppg]: ../purchasing_guidelines.md
 
 | Item | Quantity | Manufacturer  | Part #                         | Price (USD) | Sources[*][ppg]| Notes |
 | ---- |---------:| ------------- | ------------------------------ | -----------:|:--------------:|:------|

@@ -17,4 +17,4 @@ In a future iteration, the reducer may be integrated right into the venturi that
 
 ## Manufacturing
 
-Please see the [3d printing guidelines](../../../3d_printing) for general advice on printing components.
+Please see the [3d printing guidelines](../../3d_printing) for general advice on printing components.

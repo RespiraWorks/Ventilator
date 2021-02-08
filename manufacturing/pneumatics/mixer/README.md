@@ -23,4 +23,4 @@ The following simple Y-connector with barbs for 3/4"ID tubing has been designed.
 
 ## Manufacturing
 
-Please see the [3d printing guidelines](../../../3d_printing) for general advice on printing components.
+Please see the [3d printing guidelines](../../3d_printing) for general advice on printing components.

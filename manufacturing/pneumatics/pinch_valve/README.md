@@ -27,7 +27,7 @@ cyclical stresses on the tubing walls. This tubing is 5/8"OD x 3/8"ID, somewhat 
 tubing standard in order to make it easier to completely seal the tube when the valve is closed. Roller bearings on the
 rotor eliminate frictional wear on the outer surface of the tubing. While this tubing is rugged enough for weeks of use
 in this application, it will likely need to be replaced periodically. Current testing is underway using a
-[life leader](../../../../quality-assurance/testing/README.md#durability-and-life-leader-testing) to demonstrate the
+[life leader](../../../quality-assurance/testing/README.md#durability-and-life-leader-testing) to demonstrate the
 lifetime of the tubing and to quantify degradation in performance over time.
 
 The valves are an assembly of two custom plastic parts with commonly available off-the-shelf hardware. The design of the
@@ -73,7 +73,7 @@ Bearings are now better aligned with the tube.
 ## Custom parts
 
 These files should not be printed with FDM. Instead, a leak-tight method like SLA or MJF should be used.
-Please see the [3d printing guidelines](../../../3d_printing) for general advice.
+Please see the [3d printing guidelines](../../3d_printing) for general advice.
 
 |     | Stepper base (Item 9)      | Stepper rotor (Item 10)     |
 |----:|:--------------------------:|:---------------------------:|
@@ -88,7 +88,7 @@ There is also an Inventor assembly with all the hardware [Pinch valve assembly.i
 **Note: If you are a member of the RespiraWorks team, review the [part purchasing guidelines][ppg]
 BEFORE purchasing any parts.**
 
-[ppg]: ../../../purchasing_guidelines.md
+[ppg]: ../../purchasing_guidelines.md
 
 | Item  | Quantity | Manufacturer  | Part #              | Price (USD)  | Sources[*][ppg]      | Notes |
 | ----- |---------:| ------------- | ------------------- | ------------:|:--------------------:| ----- |
@@ -147,4 +147,4 @@ With the Tygon tube and clamps, a single pinch valve sub assembly appears like s
 
 ## System integration
 
-Integration into the electrical/controls system is covered in [electrical assembly page](../../../electrical).
+Integration into the electrical/controls system is covered in [electrical assembly page](../../electrical).

@@ -6,7 +6,14 @@ This section contains testing information, including testing plans, and resultin
 
 The following custom in-house developed test equipment is used.
 
-[DIY test lung](test_lung)
+## Development prototypes - AKA "pizza build"
+
+[DIY test lung](test_lung) - a simple test lung for prototyping purposes
+
+[**Pizza build**](pizza_build) -  a fundamentally functional ventilator that that includes sensors, drivers and pneumatics.
+It is not enclosed like the final product and is meant to be operated in an open layout on your table, like a pizza.
+This page may be somewhat `OBSOLETE`, so please also read the [manufacturing](../../manufacturing) section for
+information about the latest pneumatic/mechanical design decisions.
 
 ## Testing data
 
@@ -96,7 +103,7 @@ In particular:
 This testing lab will remain functional for the duration of further ventilator design through final product deployment
 and beyond, while any software development is taking place.
 
-![](../../manufacturing/pizza_build/images/3_pizzas_small.jpg)
+![](pizza_build/images/3_pizzas_small.jpg)
 
 Some of the developed test infrastructure will likely inform the development of validation and testing suites for the
 manufacturers of the final product.

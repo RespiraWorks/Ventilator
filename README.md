@@ -22,7 +22,7 @@ systems and put them in the hands of those who need them most.
 
 | First enclosed prototype in India    | Rendering of upcoming build    |
 |:---:|:---:|
-|![](manufacturing/enclosed_build/images/India_build_yellow.jpeg) | ![](manufacturing/enclosed_build/images/enclosed_CAD_2020_august.png)  |
+|![](manufacturing/images/India_build_yellow_smaller.jpeg) | ![](manufacturing/images/rendering_smaller.jpg)  |
 
 
 ## Design Goals
@@ -74,18 +74,15 @@ decide to buy or build anything, do so at your own risk.**
     * [Pneumatic System](design/pneumatic-system)
     * [Electrical System](design/electrical-system)
     * [Mechanical assembly](design/mechanical)
-* [**Manufacturing Design**](manufacturing)
+* [**Manufacturing Design**](manufacturing) - describes the physical design of the ventilator and its components, including:
+  * [Enclosure](manufacturing/enclosure) - rigid frame and enclosure components
+  * [Filter panel](manufacturing/filter_panel) - Mechanical support for air filter assemblies
+  * [**Pneumatic assembly**](manufacturing/pneumatics) - full pneumatic assembly, including:
+    * [Venturi flow sensors](manufacturing/pneumatics/venturi) - in-house design of affordable flow sensors
+    * [Pinch valves](manufacturing/pneumatics/pinch_valve) - in-house design of affordable valve for inhale and exhale control
   * [Electrical assembly](manufacturing/electrical) - encompasses the electrical and computing components
-    * [Wiring guide](manufacturing/electrical/wiring) - custom wiring harnesses and connectors
-  * [**Pizza build**](manufacturing/pizza_build) - instructions for assembly table-top prototype for development/testing purposes
-  * [**Enclosed build**](manufacturing/enclosed_build) - evolving design of the enclosed ventilator approaching the final product
-    * [Filter assembly](manufacturing/enclosed_build/filter_panel) - air filters for keeping patient safe and system clean
-    * [**Pneumatic assembly**](manufacturing/enclosed_build/pneumatics) - full pneumatic assembly, which includes some of the following:
-      * [Blower assembly](manufacturing/enclosed_build/pneumatics/blower) - provides pressure
-      * [Venturi](manufacturing/enclosed_build/pneumatics/venturi) - custom flow sensor
-      * [Pinch valve](manufacturing/enclosed_build/pneumatics/pinch_valve) - custom valve for air flow control
-  * [Characterization Test Plan](manufacturing/characterization-test-plan.md)
 * [**Main Circuit Board**](pcb) - design, materials, assembly instructions
 * [**Software**](software) - Source code for cycle controller and user interface, debug tools, test scripts, and test data
 * [**Quality Assurance**](quality-assurance) - quality assurance strategy
     * [Testing](quality-assurance/testing) - testing setups, plans, and data
+    * [Characterization test plan](quality-assurance/characterization-test-plan.md) - component characterization and evaluation

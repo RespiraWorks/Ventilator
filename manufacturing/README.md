@@ -3,74 +3,84 @@
 This section of the repository describes the physical design of the ventilator and the process of manufacturing the
 components and fully assembled units.
 
+## DISCLAIMERS
+
+**This is an incomplete, as yet untested design that is not yet intended to be used on patients.**
+
+**This repository contains live documents. There are duplicate and alternative items for undecided aspects of the
+physical design. Components may or may not connect and integrate as intended. Contents may also be out of date. If you
+decide to buy or build anything, do so at your own risk.**
+
+**No endorsements:** materials listed in these pages include links to various suppliers. This does not constitute
+any endorsement of specific products nor indication that those components are appropriate and reliable for use in
+medical devices. These links are simply here for our own convenience, since we all use the repository as our common
+collaboration space.
+
+**Acknowledgements:** The following pages contain CAD models for various off-the-shelf components, such as valves,
+fittings and screws. These have been provided by various suppliers on their websites and may be intellectual
+property of the respective manufacturer. These models come with no guarantees and do **NOT** fall under the
+[Apache license](../LICENSE) which generally applies the rest of our project.
+
+## Contributing
+
 If you are a member of the team and intend to build your own prototype, please read the
 [purchasing guidelines](purchasing_guidelines.md) first.
 
 If you are 3d-printing any custom components yourself, please check out the [3d printing guidelines](3d_printing).
 
-## Development prototypes
+If you are a pneumatics or mechanical engineer and intend to contribute to our design, please read
+our [wiki](https://github.com/RespiraWorks/Ventilator/wiki), by which we mean **all of it**.
 
-Broadly speaking there are two types of ventilator prototypes we are currently testing with:
+## Assembly
 
-[**Pizza build**](pizza_build)
-A fundamentally functional ventilator that that includes sensors, drivers and pneumatics.
-It is not enclosed like the final product and is meant to be operated in an open layout on your table, like a pizza.
+| full assembly rendering    |  internals   |
+|:---:|:---:|
+| [![](images/rendering_smaller.jpg)](images/rendering_full.jpg) | [![](pneumatics/images/rendering_smaller.jpg)](pneumatics/images/rendering_full.jpg)  |
 
-[**Enclosed build**](enclosed_build)
-This is our work-in-progress towards a "beta" version of the ventilator, which should be rather close to the final
-product. This is currently more expensive to make and slower to iterate on.
 
-| Pizza build                           | Enclosed build                                     |
-|:-------------------------------------:|:--------------------------------------------------:|
-| ![](pizza_build/images/assembled.jpg) | ![](enclosed_build/images/India_build_yellow.jpeg) |
+Ventilator full assembly CAD model: [.iam](ventilator_assembly.iam)
 
-## Sub-assemblies
+>*Include GA/Sectional Here*
 
-Components and sub-assemblies have firstly been tested and documented in the context of the pizza build. They should
-generally be similar for the enclosed build, but documentation might be lagging.
+### Sub-assemblies
 
-One of the foundational principles of the ventilator design was to avoid, where possible, custom components. However,
-for several parts, it was unavoidable to design a new component if price, availability, and functional performance
-requirements could not be achieved with already-available components. Some of the following contain components that
-have been custom designed for this application. The manufacturing process for the prototypes is discussed, as well as
-plans and features for production at larger volumes, with an approximate scale-point of 1,000 units. For smaller orders
-of less than 100 units production, some of the prototype production methods may prove more cost- and time-effective.
+The following is a general outline of the sub-assemblies comprising a full ventilator build. Some smaller
+sub-assemblies that do not contain custom components are not listed in this tree, but are linked and explained in the
+pages for the various sub-assemblies.
 
-For each component, the goal is to document:
-* the reasoning for the design
-* summary of design history
-* files or links to original CAD, derived step files and possibly 3d-printer files with scaffolding
-* prototype fabrication process and common problems to watch out for
-* tentative plans or implications for fabrication at scale
-* link to characterization tests and data
-* link to software that interfaces with component
-* link to any validation tests that are available to evaluate individual assemblies
-
-Some of the above may not be done for each component. Feel free to help us fill this out.
-
-### Components
-
+* [Enclosure](enclosure) - rigid frame and enclosure components
+* [Display panel](display_panel) - Mechanical support for user interface touchscreen
+* [Filter panel](filter_panel) - Mechanical support for air filter assemblies
+  * [Air filter holders](filter_panel/filter_holder) - custom housings for air filters, to keep patient safe and system clean
+* [**Pneumatic assembly**](pneumatics) - full pneumatic assembly, which includes some instances of the following:
+  * [Blower](pneumatics/blower) - this provides pressurized air
+  * [Venturi flow sensors](pneumatics/venturi) - in-house design of affordable flow sensors
+  * [Pinch valves](pneumatics/pinch_valve) - in-house design of affordable valve for inhale and exhale control
+  * [Oxygen mixer](pneumatics/mixer) - for mixing air and oxygen before delivery to patient
+  * [Manifold](pneumatics/manifold) - for oxygen sensor and overpressure relief valve
+  * [Tubing reducer](pneumatics/reducer_3-4_1-4) for change in tubing diameter in oxygen supply
 * [Electrical assembly](electrical) - encompasses the electrical and computing components
   * [Wiring guide](electrical/wiring) - custom wiring harnesses and connectors
-* [Enclosure assembly](enclosed_build/enclosure) - rigid frame and enclosure components
-* [Display assembly](enclosed_build/display_panel) - Mechanical support for user interface touchscreen
-* [Filter panel](enclosed_build/filter_panel) - Mechanical support for air filter assemblies
-  * [Air filter assembly](enclosed_build/filter_panel/filter_holder) - air filters for keeping patient safe and system clean
-* [**Pneumatic assembly**](enclosed_build/pneumatics) - full pneumatic assembly, which includes some instances of the following:
-  * [Blower assembly](enclosed_build/pneumatics/blower) - this provides pressurized air
-  * [Venturi flow sensors](enclosed_build/pneumatics/venturi) - in-house design of affordable flow sensors
-  * [Pinch valve](enclosed_build/pneumatics/pinch_valve) - in-house design of affordable valve for inhale and exhale control
-  * [Oxygen mixer](enclosed_build/pneumatics/mixer) - for mixing air and oxygen before delivery to patient
-  * [Manifold](enclosed_build/pneumatics/manifold) - for oxygen sensor and overpressure relief valve
 
-### Characterization Testing
+## Additional notes
 
-For details on component characterization tests, see the [Characterization Test Plan](characterization-test-plan.md).
+While this page is not comprehensive yet, some aspects of connecting sensor tubing and electronics may still be
+better cover in the (somewhat obsolete) "pizza build" [guide](../quality-assurance/testing/pizza_build).
 
-## Test equipment
+Some aspects of the production packaged design are detailed in the first section of the (somewhat obsolete)
+[assembly video](https://youtu.be/2hdV5CWcLb4).
+
+### India build
+
+Preliminary enclosed build was produced by our partners, Foundry-M in Visakhapatnam, India.
+
+|     |     |
+|:---:|:---:|
+|![](images/India_build_yellow.jpeg) | ![](images/India_build_open_back.jpeg)  |
+
+
+### Test equipment
 
 To test a prototype you will need some additional components that are not strictly part of the ventilator itself, such
-as test lungs.
-
-There is a page dedicated to [Testing](../quality-assurance/testing) under the quality assurance section of the
-repository.
+as test lungs. There is additional information on the [testing](../quality-assurance/testing) page under the quality
+assurance section of the repository.

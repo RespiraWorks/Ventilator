@@ -45,12 +45,18 @@ static volatile int64_t msCount;
 
 // local static functions.  I don't want to add any private
 // functions to the Hal class to avoid complexity with other
-// builds
+// builds.
+// Those are Interrupt Service Routines, i.e callback functions for the
+// interrupt handlers. They are referenced in the Interrupt Vector Table.
 static void Timer6ISR();
 static void Timer15ISR();
 void UART3_ISR();
 void DMA1_CH2_ISR();
 void DMA1_CH3_ISR();
+void I2C1_EV_ISR();
+void I2C1_ER_ISR();
+void DMA2_CH6_ISR();
+void DMA2_CH7_ISR();
 
 // This function is called from the libc initialization code
 // before any static constructors are called.
@@ -79,15 +85,13 @@ extern "C" void abort() {
 void HalApi::EarlyInit() {
   // Enable the FPU.  This allows floating point to be used without
   // generating a hard fault.
-  // The system control registers are documented in the programmers
-  // manual (not the reference manual) chapter 4.
+  // The system control registers are documented in [PM] chapter 4.
   // Details on enabling the FPU are in section 4.6.6.
   SysCtrl_Reg *sysCtl = SYSCTL_BASE;
   sysCtl->cpac = 0x00F00000;
 
   // Reset caches and set latency for 80MHz opperation
-  // See chapter 3 of the reference manual for details
-  // on the embedded flash module
+  // See chapter 3 of [RM] for details on the embedded flash module
   EnableClock(FLASH_BASE);
   FlashReg *flash = FLASH_BASE;
 
@@ -110,7 +114,7 @@ void HalApi::EarlyInit() {
   // 4MHz.
   //
   // The PLL can generate several clocks with somewhat
-  // less then descriptive names in the reference manual.
+  // less then descriptive names in the [RM].
   // These clocks are:
   //   P clock - Used for the SAI peripherial.  Not used here
   //   Q clock - 48MHz output clock used for USB.  Not used here.
@@ -118,16 +122,15 @@ void HalApi::EarlyInit() {
   //
   // When configuring the PLL there are several constants programmed
   // into the PLL register to set the frequency of the internal VCO
-  // These constants are called N and M in the reference manual:
+  // These constants are called N and M in the [RM]:
   //
   // Fin = 4MHz
   // Fvco = Fin * (N/M)
   //
-  // Legal range for Fvco is 96MHz to 344MHz according to the
-  // data sheet.  I'll use 160MHz for Fvco and divide by 2
-  // to get an 80MHz output clock
+  // Legal range for Fvco is 96MHz to 344MHz according to [DS].
+  // I'll use 160MHz for Fvco and divide by 2 to get an 80MHz output clock
   //
-  // See chapter 6 of the reference manual
+  // See [RM] chapter 6
   int N = 40;
   int M = 1;
   RCC_Regs *rcc = RCC_BASE;
@@ -159,16 +162,16 @@ void HalApi::init() {
   InitUARTs();
   InitBuzzer();
   InitPSOL();
+  InitI2C();
   crc32_init();
-  Hal.enableInterrupts();
+  enableInterrupts();
   StepperMotorInit();
 }
 
 // Reset the processor
 [[noreturn]] void HalApi::reset_device() {
   // Note that the system control registers are a standard ARM peripherial
-  // they aren't documented in the normal STM32 reference manual, rather
-  // they're in the processor programming manual.
+  // they are documented in the [PM] rather than the [RM].
   // The register we use to reset the system is called the
   // "Application interrupt and reset control register (AIRCR)"
   SysCtrl_Reg *sysCtl = SYSCTL_BASE;
@@ -186,8 +189,7 @@ void HalApi::init() {
  *
  * Please refer to the PCB schematic as the ultimate source of which
  * pin is used for which function.  A less definitive, but perhaps
- * easier to read spreadsheet is availabe here:
- * https://docs.google.com/spreadsheets/d/1JOSQKxkQxXJ6MCMDI9PwUQ6kiuGdujR4D6EJN9u2LWg/edit#gid=0
+ * easier to read version is availabe in [PCBsp]
  *
  * ID inputs.  These can be used to identify the PCB revision
  * we're running on.
@@ -200,7 +202,7 @@ void HalApi::init() {
  *  PC15 - green
  *****************************************************************/
 void HalApi::InitGPIO() {
-  // See chapter 8 of the reference manual for details on GPIO
+  // See [RM] chapter 8 for details on GPIO
 
   // Enable all the GPIO clocks
   EnableClock(GPIO_A_BASE);
@@ -258,8 +260,7 @@ void HalApi::digitalWrite(BinaryPin pin, VoltageLevel value) {
  * I configure it to count every 100ns and generate an interrupt
  * every millisecond
  *
- * The basic timers (like timer 6) are documented in chapter 29 of
- * the reference manual
+ * The basic timers (like timer 6) are documented in [RM] chapter 29.
  *****************************************************************/
 void HalApi::InitSysTimer() {
   // Enable the clock to the timer
@@ -404,8 +405,7 @@ static void Timer15ISR() {
  * For now I'll just set up the blower since that's the only
  * one called out in the HAL
  *
- * These timers are documented in chapters 26 and 27 of the reference
- * manual.
+ * These timers are documented in [RM] chapters 26 and 27.
  *****************************************************************/
 void HalApi::InitPwmOut() {
   // The PWM frequency isn't mentioned anywhere that I can find, so
@@ -469,7 +469,7 @@ void HalApi::analogWrite(PwmPin pin, float duty) {
 
 /******************************************************************
  * Serial port to GUI
- * Chapter 38 of the reference manual defines the USART registers.
+ * [RM] Chapter 38 defines the USART registers.
  *****************************************************************/
 
 class UART {
@@ -591,11 +591,10 @@ extern UART_DMA dmaUART;
 //
 // Please refer to the PCB schematic as the ultimate source of which
 // pin is used for which function.  A less definitive, but perhaps
-// easier to read spreadsheet is availabe here:
-// https://docs.google.com/spreadsheets/d/1JOSQKxkQxXJ6MCMDI9PwUQ6kiuGdujR4D6EJN9u2LWg/edit#gid=0
+// easier to read version is availabe at [PCBsp].
 //
 // These pins are connected to UART3
-// The UART is described in chapter 38 of the reference manual
+// The UART is described in [RM] chapter 38
 void HalApi::InitUARTs() {
   // NOTE - The UART functionality hasn't been tested due to lack of hardware!
   //        Need to do that as soon as the boards are available.
@@ -654,7 +653,7 @@ uint16_t HalApi::debugRead(char *buf, uint16_t len) {
 uint16_t HalApi::debugBytesAvailableForWrite() { return dbgUART.TxFree(); }
 
 /******************************************************************
- * Watchdog timer (see chapter 32 of reference manual).
+ * Watchdog timer (see [RM] chapter 32).
  *
  * The watchdog timer will reset the system if it hasn't been
  * re-initialized within a specific amount of time.  It's used
@@ -765,7 +764,7 @@ void HalApi::EnableClock(void *ptr) {
       {ADC_BASE, 1, 13},    {TIMER2_BASE, 4, 0}, {TIMER3_BASE, 4, 1},
       {TIMER6_BASE, 4, 4},  {UART2_BASE, 4, 17}, {UART3_BASE, 4, 18},
       {TIMER1_BASE, 6, 11}, {SPI1_BASE, 6, 12},  {TIMER15_BASE, 6, 16},
-
+      {I2C1_BASE, 4, 21},
       // The following entries are probably correct, but have
       // not been tested yet.  When adding support for one of
       // these peripherials just comment out the line.  And
@@ -775,7 +774,6 @@ void HalApi::EnableClock(void *ptr) {
       //      {SPI2_BASE, 4, 14},
       //      {SPI3_BASE, 4, 15},
       //      {UART4_BASE, 4, 19},
-      //      {I2C1_BASE, 4, 21},
       //      {I2C2_BASE, 4, 22},
       //      {I2C3_BASE, 4, 23},
       //      {I2C4_BASE, 5, 1},
@@ -785,7 +783,7 @@ void HalApi::EnableClock(void *ptr) {
 
   // I don't include all the peripherials here, just the ones that we currently
   // use or seem likely to be used in the future.  To add more peripherials,
-  // just look up the appropriate bit in the reference manual RCC chapter.
+  // just look up the appropriate bit in [RM] chapter 6.
   int ndx = -1;
   int bit = 0;
   for (auto &info : rccInfo) {
@@ -851,9 +849,8 @@ __attribute__((section(".isr_vector"))) void (*const vectors[101])() = {
     reinterpret_cast<void (*)()>(reinterpret_cast<uintptr_t>(Reset_Handler) +
                                  1),
 
-    // The rest of the table is a list of exception and
-    // interrupt handlers.  Chapter 12 (NVIC) of the reference
-    // manual gives a listing of the vector table offsets.
+    // The rest of the table is a list of exception and interrupt handlers.
+    // [RM] chapter 12 (NVIC) gives a listing of the vector table offsets.
     NMI,           //   2 - 0x008 The NMI handler
     FaultISR,      //   3 - 0x00C The hard fault handler
     MPUFaultISR,   //   4 - 0x010 The MPU fault handler
@@ -887,81 +884,81 @@ __attribute__((section(".isr_vector"))) void (*const vectors[101])() = {
     BadISR, //  28 - 0x070
     BadISR, //  29 - 0x074
 #endif
-    BadISR,     //  30 - 0x078
-    BadISR,     //  31 - 0x07C
-    BadISR,     //  32 - 0x080
-    BadISR,     //  33 - 0x084
-    BadISR,     //  34 - 0x088
-    BadISR,     //  35 - 0x08C
-    BadISR,     //  36 - 0x090
-    BadISR,     //  37 - 0x094
-    BadISR,     //  38 - 0x098
-    BadISR,     //  39 - 0x09C
-    Timer15ISR, //  40 - 0x0A0
-    BadISR,     //  41 - 0x0A4
-    BadISR,     //  42 - 0x0A8
-    BadISR,     //  43 - 0x0AC
-    BadISR,     //  44 - 0x0B0
-    BadISR,     //  45 - 0x0B4
-    BadISR,     //  46 - 0x0B8
-    BadISR,     //  47 - 0x0BC
-    BadISR,     //  48 - 0x0C0
-    BadISR,     //  49 - 0x0C4
-    BadISR,     //  50 - 0x0C8
-    BadISR,     //  51 - 0x0CC
-    BadISR,     //  52 - 0x0D0
-    BadISR,     //  53 - 0x0D4
-    UART2_ISR,  //  54 - 0x0D8
-    UART3_ISR,  //  55 - 0x0DC
-    BadISR,     //  56 - 0x0E0
-    BadISR,     //  57 - 0x0E4
-    BadISR,     //  58 - 0x0E8
-    BadISR,     //  59 - 0x0EC
-    BadISR,     //  60 - 0x0F0
-    BadISR,     //  61 - 0x0F4
-    BadISR,     //  62 - 0x0F8
-    BadISR,     //  63 - 0x0FC
-    BadISR,     //  64 - 0x100
-    BadISR,     //  65 - 0x104
-    BadISR,     //  66 - 0x108
-    BadISR,     //  67 - 0x10C
-    BadISR,     //  68 - 0x110
-    BadISR,     //  69 - 0x114
-    Timer6ISR,  //  70 - 0x118
-    BadISR,     //  71 - 0x11C
-    BadISR,     //  72 - 0x120
-    BadISR,     //  73 - 0x124
-    StepperISR, //  74 - 0x128
-    BadISR,     //  75 - 0x12C
-    BadISR,     //  76 - 0x130
-    BadISR,     //  77 - 0x134
-    BadISR,     //  78 - 0x138
-    BadISR,     //  79 - 0x13C
-    BadISR,     //  80 - 0x140
-    BadISR,     //  81 - 0x144
-    BadISR,     //  82 - 0x148
-    BadISR,     //  83 - 0x14C
-    BadISR,     //  84 - 0x150
-    BadISR,     //  85 - 0x154
-    BadISR,     //  86 - 0x158
-    BadISR,     //  87 - 0x15C
-    BadISR,     //  88 - 0x160
-    BadISR,     //  89 - 0x164
-    BadISR,     //  90 - 0x168
-    BadISR,     //  91 - 0x16C
-    BadISR,     //  92 - 0x170
-    BadISR,     //  93 - 0x174
-    BadISR,     //  94 - 0x178
-    BadISR,     //  95 - 0x17C
-    BadISR,     //  96 - 0x180
-    BadISR,     //  97 - 0x184
-    BadISR,     //  98 - 0x188
-    BadISR,     //  99 - 0x18C
-    BadISR,     // 100 - 0x190
+    BadISR,       //  30 - 0x078
+    BadISR,       //  31 - 0x07C
+    BadISR,       //  32 - 0x080
+    BadISR,       //  33 - 0x084
+    BadISR,       //  34 - 0x088
+    BadISR,       //  35 - 0x08C
+    BadISR,       //  36 - 0x090
+    BadISR,       //  37 - 0x094
+    BadISR,       //  38 - 0x098
+    BadISR,       //  39 - 0x09C
+    Timer15ISR,   //  40 - 0x0A0
+    BadISR,       //  41 - 0x0A4
+    BadISR,       //  42 - 0x0A8
+    BadISR,       //  43 - 0x0AC
+    BadISR,       //  44 - 0x0B0
+    BadISR,       //  45 - 0x0B4
+    BadISR,       //  46 - 0x0B8
+    I2C1_EV_ISR,  //  47 - 0x0BC I2C1 Events
+    I2C1_ER_ISR,  //  48 - 0x0C0 I2C1 Errors
+    BadISR,       //  49 - 0x0C4
+    BadISR,       //  50 - 0x0C8
+    BadISR,       //  51 - 0x0CC
+    BadISR,       //  52 - 0x0D0
+    BadISR,       //  53 - 0x0D4
+    UART2_ISR,    //  54 - 0x0D8
+    UART3_ISR,    //  55 - 0x0DC
+    BadISR,       //  56 - 0x0E0
+    BadISR,       //  57 - 0x0E4
+    BadISR,       //  58 - 0x0E8
+    BadISR,       //  59 - 0x0EC
+    BadISR,       //  60 - 0x0F0
+    BadISR,       //  61 - 0x0F4
+    BadISR,       //  62 - 0x0F8
+    BadISR,       //  63 - 0x0FC
+    BadISR,       //  64 - 0x100
+    BadISR,       //  65 - 0x104
+    BadISR,       //  66 - 0x108
+    BadISR,       //  67 - 0x10C
+    BadISR,       //  68 - 0x110
+    BadISR,       //  69 - 0x114
+    Timer6ISR,    //  70 - 0x118
+    BadISR,       //  71 - 0x11C
+    BadISR,       //  72 - 0x120
+    BadISR,       //  73 - 0x124
+    StepperISR,   //  74 - 0x128
+    BadISR,       //  75 - 0x12C
+    BadISR,       //  76 - 0x130
+    BadISR,       //  77 - 0x134
+    BadISR,       //  78 - 0x138
+    BadISR,       //  79 - 0x13C
+    BadISR,       //  80 - 0x140
+    BadISR,       //  81 - 0x144
+    BadISR,       //  82 - 0x148
+    BadISR,       //  83 - 0x14C
+    DMA2_CH6_ISR, //  84 - 0x150
+    DMA2_CH7_ISR, //  85 - 0x154
+    BadISR,       //  86 - 0x158
+    BadISR,       //  87 - 0x15C
+    BadISR,       //  88 - 0x160
+    BadISR,       //  89 - 0x164
+    BadISR,       //  90 - 0x168
+    BadISR,       //  91 - 0x16C
+    BadISR,       //  92 - 0x170
+    BadISR,       //  93 - 0x174
+    BadISR,       //  94 - 0x178
+    BadISR,       //  95 - 0x17C
+    BadISR,       //  96 - 0x180
+    BadISR,       //  97 - 0x184
+    BadISR,       //  98 - 0x188
+    BadISR,       //  99 - 0x18C
+    BadISR,       // 100 - 0x190
 };
 
 // Enable an interrupt with a specified priority (0 to 15)
-// See the NVIC chapter of the manual for more information.
+// See [RM] chapter 12 for more information on the NVIC.
 void HalApi::EnableInterrupt(InterruptVector vec, IntPriority pri) {
   IntCtrl_Regs *nvic = NVIC_BASE;
 

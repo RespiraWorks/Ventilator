@@ -35,22 +35,22 @@ BEFORE purchasing any parts.**
 [a2key]:   https://www.digikey.com/short/z44f8f
 [a3key]:   https://www.digikey.com/short/z44fb9
 [a4key]:   https://www.digikey.com/short/z44ff8
-[a5key]:  https://www.digikey.com/short/z44fjr
+[a5key]:   https://www.digikey.com/short/z44fjr
 [a5rs]:    https://export.rsdelivers.com/product/jst/svh-41t-p11/jst-nv-vh-female-crimp-terminal-contact-16awg-svh/7620692
-[a6key]:  https://www.digikey.com/short/z44fwj
+[a6key]:   https://www.digikey.com/short/z44fwj
 [a6rs]:    https://export.rsdelivers.com/product/jst/vhr-2n/jst-vhr-female-connector-housing-396mm-pitch-2/8201172
-[a7key]: https://www.digikey.com/short/z44fwp
-[a9key]: https://www.digikey.com/en/products/detail/kycon-inc/KPJX-PM-4S/9990081
-[a10key]: https://www.digikey.com/en/products/detail/te-connectivity-amp-connectors/102107-3/298993
-[a11key]: https://www.digikey.com/en/products/detail/te-connectivity-amp-connectors/87499-7/29911
+[a7key]:   https://www.digikey.com/short/z44fwp
+[a9key]:   https://www.digikey.com/en/products/detail/kycon-inc/KPJX-PM-4S/9990081
+[a10key]:  https://www.digikey.com/en/products/detail/te-connectivity-amp-connectors/102107-3/298993
+[a11key]:  https://www.digikey.com/en/products/detail/te-connectivity-amp-connectors/87499-7/29911
 [a12amzn]: https://www.amazon.com/gp/product/B00N51OJJ4
 [a13amzn]: https://www.amazon.com/gp/product/B073SDGNKW
 [a14amzn]: https://www.amazon.com/gp/product/B011JC76OA
-[a15amzn]:  https://www.amazon.com/gp/product/B06ZZ45G7G
-[a16amzn]:  https://www.amazon.com/gp/product/B079MJ1RYN
+[a15amzn]: https://www.amazon.com/gp/product/B06ZZ45G7G
+[a16amzn]: https://www.amazon.com/gp/product/B079MJ1RYN
 [a17amzn]: https://www.amazon.com/CHENBO-Connector-Housing-Assortment-Terminal/dp/B077X8XV2J
-[a18key]: https://www.digikey.com/en/products/detail/molex/0022013037/26433
-[a19key]: https://www.digikey.com/en/products/detail/molex/0008550102/172056
+[a18key]:  https://www.digikey.com/en/products/detail/molex/0022013037/26433
+[a19key]:  https://www.digikey.com/en/products/detail/molex/0008550102/172056
 
 **#TODO:** Add shrink tubing
 

@@ -28,8 +28,8 @@ BEFORE purchasing any parts.**
 |**A15**| (1)      | WGCD          | 4330589508            |         8.99 | [Z][a15amzn]         | XH connector kit for 2/3/4/5 pins, **alternative for A1-3** |
 |**A16**| (1)      | CQRobot       | CQRJST254-BGB         |         9.99 | [Z][a16amzn]         | XH connector kit for 6/7/8 pins, **alternative for A1 and A4** |
 |**A17**| (1)      | Chenbo        | WJ-Z01                |        11.98 | [Z][a17amzn]         | 2.54mm connector kit, **alternative for A10 and A11** |
-|**A18**| 2        | Molex        | 22013037                |        0.20/ea | [K][a18key]         | KK-series 3-pin sockets connector housing (oxygen sensor) |
-|**A19**| 4        | Molex        | 08550102                |        0.21/ea | [K][a19key]         | crimp sockets for the above |
+|**A18**| 2        | Molex         | 22013037              |      0.20/ea | [K][a18key]          | KK-series 3-pin sockets connector housing (oxygen sensor) |
+|**A19**| 4        | Molex         | 08550102              |      0.21/ea | [K][a19key]          | crimp sockets for the above |
 
 [a1key]:   https://www.digikey.com/short/z44f8d
 [a2key]:   https://www.digikey.com/short/z44f8f

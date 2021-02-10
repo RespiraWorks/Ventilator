@@ -145,7 +145,14 @@ To connect the solenoid to the PCB, you will need to crimp a 2-pin XH connector 
 
 | Cable Image | Cable Drawing (PDF)  |
 |:--------:|:--------:|
-| ![Oxygen Sensor Cable](images/OxygenSensorCable.jpg) | [![Oxygen Sensor Cable Drawing](images/OxygenSensorCableDrawingImage.JPG)](assets/20200209-RespiraWorks-Ventilator-Wiring-OxygenSensorCable.pdf) |
+| ![Oxygen Sensor Cable](images/OxygenSensorCable.jpg) | [![Oxygen Sensor Cable Drawing](images/OxygenSensorCableDrawingImage.JPG)](drawings/20200209-RespiraWorks-Ventilator-Wiring-OxygenSensorCable.pdf) |
+
+- Measure out two 40cm lengths of 26AWG wire, in green and white `[A14]`
+- Strip the ends of the wires
+- Using the crimper `[B1]` in position 1, crimp 4x contacts `[A19]` onto the ends of the wires.
+- A proper crimp should crimp the insulation in the lower half and the wire in the upper half of the crimp portion of the contact.
+- Insert the wires into the connector housings `[A18]`, according to the drawing, until they click.  Pin 1 is marked by a tiny '1' molded into the connector housing.
+- Do a gentle pull test to make sure that the contacts are properly crimped and seated.
 
 ## Pricing totals
 

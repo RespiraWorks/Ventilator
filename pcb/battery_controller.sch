@@ -21,13 +21,13 @@ F1 "battery_charger.sch" 50
 F2 "SCL" I L 3950 3700 50 
 F3 "SDA" B L 3950 3800 50 
 F4 "VLOGIC" I L 3950 3600 50 
-F5 "PSYS" I R 5150 3500 50 
-F6 "IBAT" I R 5150 3600 50 
-F7 "IADPT" I R 5150 3700 50 
-F8 "ACOK" I R 5150 3800 50 
-F9 "VIN_ADP" I L 3950 3300 50 
-F10 "VLINK" I R 5150 3300 50 
-F11 "PACK_P" B R 5150 3400 50 
+F5 "VIN_ADP" I L 3950 3300 50 
+F6 "PACK_P" B R 5150 3400 50 
+F7 "VLINK" O R 5150 3300 50 
+F8 "PSYS" O R 5150 3500 50 
+F9 "IBAT" O R 5150 3600 50 
+F10 "IADPT" O R 5150 3700 50 
+F11 "ACOK" O R 5150 3800 50 
 $EndSheet
 $Sheet
 S 6350 4550 900  550 
@@ -55,14 +55,14 @@ $EndSheet
 $Comp
 L Connector:Conn_01x04_Male J?
 U 1 1 605A607B
-P 2000 3300
-F 0 "J?" H 2250 2750 50  0000 R CNN
-F 1 "MegaFit 2x2" H 2250 2850 50  0000 R CNN
-F 2 "RespiraWorks_Std:Molex_Mega-Fit_76829-0104_2x02_P5.70mm_Vertical" H 2000 3300 50  0001 C CNN
-F 3 "~" H 2000 3300 50  0001 C CNN
-F 4 "Molex" H 2000 3300 50  0001 C CNN "Manufacturer"
-F 5 "768290104" H 2250 2950 50  0000 R CNN "Manufacturer P/N"
-	1    2000 3300
+P 1250 3300
+F 0 "J?" H 1500 2750 50  0000 R CNN
+F 1 "MegaFit 2x2" H 1500 2850 50  0000 R CNN
+F 2 "RespiraWorks_Std:Molex_Mega-Fit_76829-0104_2x02_P5.70mm_Vertical" H 1250 3300 50  0001 C CNN
+F 3 "~" H 1250 3300 50  0001 C CNN
+F 4 "Molex" H 1250 3300 50  0001 C CNN "Manufacturer"
+F 5 "768290104" H 1500 2950 50  0000 R CNN "Manufacturer P/N"
+	1    1250 3300
 	1    0    0    1   
 $EndComp
 Text Label 7750 4950 0    50   ~ 0
@@ -86,6 +86,7 @@ U 1 1 605C357B
 P 8700 4950
 AR Path="/601A64F8/605C357B" Ref="J?"  Part="1" 
 AR Path="/601A64F8/60567144/605C357B" Ref="J?"  Part="1" 
+AR Path="/6023BF6A/605C357B" Ref="J?"  Part="1" 
 F 0 "J?" H 8800 5050 50  0000 R CNN
 F 1 "MegaFit 2x1" H 8800 5150 50  0000 R CNN
 F 2 "RespiraWorks_Std:Molex_Mega-Fit_76829-0102_2x01_P5.70mm_Vertical" H 8700 4950 50  0001 C CNN
@@ -98,59 +99,62 @@ $EndComp
 $Comp
 L power:GND #PWR?
 U 1 1 605C3581
-P 2200 3400
+P 1450 3400
 AR Path="/601A64F8/605C3581" Ref="#PWR?"  Part="1" 
 AR Path="/601A64F8/60567144/605C3581" Ref="#PWR?"  Part="1" 
-F 0 "#PWR?" H 2200 3150 50  0001 C CNN
-F 1 "GND" H 2205 3227 50  0000 C CNN
-F 2 "" H 2200 3400 50  0001 C CNN
-F 3 "" H 2200 3400 50  0001 C CNN
-	1    2200 3400
+AR Path="/6023BF6A/605C3581" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 1450 3150 50  0001 C CNN
+F 1 "GND" H 1455 3227 50  0000 C CNN
+F 2 "" H 1450 3400 50  0001 C CNN
+F 3 "" H 1450 3400 50  0001 C CNN
+	1    1450 3400
 	1    0    0    -1  
 $EndComp
 $Comp
 L Device:D_Zener D?
 U 1 1 605C3588
-P 2400 3450
+P 1650 3450
 AR Path="/601A64F8/605C3588" Ref="D?"  Part="1" 
 AR Path="/601A64F8/60567144/605C3588" Ref="D?"  Part="1" 
-F 0 "D?" V 2350 3550 50  0000 L CNN
-F 1 "20V" V 2450 3550 50  0000 L CNN
-F 2 "Diode_SMD:D_SMC" H 2400 3450 50  0001 C CNN
-F 3 "https://www.diodes.com/assets/Datasheets/ds40740.pdf" H 2400 3450 50  0001 C CNN
-F 4 "Diodes Inc." V 2400 3450 50  0001 C CNN "Manufacturer"
-F 5 "SMBJ20AQ-13-F" V 2550 3800 50  0000 C CNN "Manufacturer PN"
-	1    2400 3450
+AR Path="/6023BF6A/605C3588" Ref="D?"  Part="1" 
+F 0 "D?" V 1600 3550 50  0000 L CNN
+F 1 "20V" V 1700 3550 50  0000 L CNN
+F 2 "Diode_SMD:D_SMC" H 1650 3450 50  0001 C CNN
+F 3 "https://www.diodes.com/assets/Datasheets/ds40740.pdf" H 1650 3450 50  0001 C CNN
+F 4 "Diodes Inc." V 1650 3450 50  0001 C CNN "Manufacturer"
+F 5 "SMBJ20AQ-13-F" V 1800 3800 50  0000 C CNN "Manufacturer PN"
+	1    1650 3450
 	0    1    1    0   
 $EndComp
 $Comp
 L power:GND #PWR?
 U 1 1 605C358F
-P 2400 3600
+P 1650 3600
 AR Path="/601A64F8/605C358F" Ref="#PWR?"  Part="1" 
 AR Path="/601A64F8/60567144/605C358F" Ref="#PWR?"  Part="1" 
-F 0 "#PWR?" H 2400 3350 50  0001 C CNN
-F 1 "GND" H 2405 3427 50  0000 C CNN
-F 2 "" H 2400 3600 50  0001 C CNN
-F 3 "" H 2400 3600 50  0001 C CNN
-	1    2400 3600
+AR Path="/6023BF6A/605C358F" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 1650 3350 50  0001 C CNN
+F 1 "GND" H 1655 3427 50  0000 C CNN
+F 2 "" H 1650 3600 50  0001 C CNN
+F 3 "" H 1650 3600 50  0001 C CNN
+	1    1650 3600
 	1    0    0    -1  
 $EndComp
-Connection ~ 2400 3300
+Connection ~ 1650 3300
 Text Label 3600 3300 0    50   ~ 0
 VIN_ADP
 Wire Wire Line
-	2200 3200 2800 3200
+	1450 3200 2050 3200
 Wire Wire Line
-	2800 3100 2200 3100
-Text Label 2800 3100 2    50   ~ 0
+	2050 3100 1450 3100
+Text Label 2050 3100 2    50   ~ 0
 POWER_SW_P
-Text Label 2800 3200 2    50   ~ 0
+Text Label 2050 3200 2    50   ~ 0
 POWER_SW_N
 Wire Wire Line
-	2200 3300 2400 3300
+	1450 3300 1650 3300
 Wire Wire Line
-	6600 3300 7200 3300
+	6600 3300 7150 3300
 Text Label 6600 3300 0    50   ~ 0
 POWER_SW_N
 Wire Wire Line
@@ -163,15 +167,13 @@ U 1 1 603A1854
 P 3200 3300
 F 0 "F?" V 3003 3300 50  0000 C CNN
 F 1 "Fuse 10A" V 3094 3300 50  0000 C CNN
-F 2 "" V 3130 3300 50  0001 C CNN
+F 2 "RespiraWorks:Fuseholder_Littelfuse_OMNI-BLOK-154" V 3130 3300 50  0001 C CNN
 F 3 "https://www.littelfuse.com/~/media/electronics/datasheets/fuses/littelfuse_fuse_154_154t_154l_154tl_datasheet.pdf.pdf" H 3200 3300 50  0001 C CNN
 F 4 "Littelfuse" V 3200 3300 50  0001 C CNN "Manufacturer"
 F 5 "0154010.DR" V 3300 3300 50  0000 C CNN "Manufacturer PN"
 	1    3200 3300
 	0    1    1    0   
 $EndComp
-Wire Wire Line
-	2400 3300 3050 3300
 Wire Wire Line
 	3350 3300 3950 3300
 Wire Wire Line
@@ -232,6 +234,7 @@ U 1 1 6047EA81
 P 6150 5200
 AR Path="/601A64F8/6047EA81" Ref="#PWR?"  Part="1" 
 AR Path="/601A64F8/60567144/6047EA81" Ref="#PWR?"  Part="1" 
+AR Path="/6023BF6A/6047EA81" Ref="#PWR?"  Part="1" 
 F 0 "#PWR?" H 6150 4950 50  0001 C CNN
 F 1 "GND" H 6155 5027 50  0000 C CNN
 F 2 "" H 6150 5200 50  0001 C CNN
@@ -277,11 +280,57 @@ U 1 1 602914E1
 P 8200 4850
 F 0 "F?" V 7900 4850 50  0000 C CNN
 F 1 "Fuse 10A" V 8000 4850 50  0000 C CNN
-F 2 "" V 8130 4850 50  0001 C CNN
+F 2 "RespiraWorks:Fuseholder_Littelfuse_OMNI-BLOK-154" V 8130 4850 50  0001 C CNN
 F 3 "https://www.littelfuse.com/~/media/electronics/datasheets/fuses/littelfuse_fuse_154_154t_154l_154tl_datasheet.pdf.pdf" H 8200 4850 50  0001 C CNN
 F 4 "Littelfuse" V 8200 4850 50  0001 C CNN "Manufacturer"
 F 5 "0154010.DR" V 8100 4850 50  0000 C CNN "Manufacturer PN"
 	1    8200 4850
 	0    1    1    0   
 $EndComp
+Wire Wire Line
+	7150 3300 7150 3000
+Wire Wire Line
+	7150 3000 8150 3000
+Connection ~ 7150 3300
+Wire Wire Line
+	7150 3300 7200 3300
+Text HLabel 8150 3000 2    50   Output ~ 0
+SWITCHED_VLINK
+Text Notes 7600 3000 0    50   ~ 0
+12.0-16.8V
+Wire Wire Line
+	1650 3300 2550 3300
+$Comp
+L Device:CP C?
+U 1 1 6026FB4D
+P 2550 3450
+AR Path="/601A64F8/6026FB4D" Ref="C?"  Part="1" 
+AR Path="/601A64F8/60567144/6026FB4D" Ref="C?"  Part="1" 
+AR Path="/6023BF6A/60567144/6026FB4D" Ref="C?"  Part="1" 
+AR Path="/6023BF6A/6026FB4D" Ref="C?"  Part="1" 
+F 0 "C?" H 2700 3450 50  0000 L CNN
+F 1 "33uF" H 2700 3350 50  0000 L CNN
+F 2 "" H 2588 3300 50  0001 C CNN
+F 3 "~" H 2550 3450 50  0001 C CNN
+F 4 "50V" H 2700 3250 50  0000 L CNN "Voltage"
+	1    2550 3450
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 602707F0
+P 2550 3600
+AR Path="/601A64F8/602707F0" Ref="#PWR?"  Part="1" 
+AR Path="/601A64F8/60567144/602707F0" Ref="#PWR?"  Part="1" 
+AR Path="/6023BF6A/602707F0" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 2550 3350 50  0001 C CNN
+F 1 "GND" H 2555 3427 50  0000 C CNN
+F 2 "" H 2550 3600 50  0001 C CNN
+F 3 "" H 2550 3600 50  0001 C CNN
+	1    2550 3600
+	1    0    0    -1  
+$EndComp
+Connection ~ 2550 3300
+Wire Wire Line
+	2550 3300 3050 3300
 $EndSCHEMATC

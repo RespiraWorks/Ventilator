@@ -5,7 +5,7 @@
 # Run from main repo directory with platformio.ini file as follows:
 # Syntax:
 #   ./controller/integration_tests/run_all.sh DEVICED_NAME
-# where DEVICE_NAME if one of predefined ID for devices available on the system.
+# where DEVICE_NAME is one of predefined ID for devices available on the system.
 #
 
 device_name="$1"
@@ -29,6 +29,9 @@ sleep $wait_time
 sleep $wait_time
 
 ./deploy_test.sh $device_name pinch_valve 1
+sleep $wait_time
+
+./deploy_test.sh $device_name eeprom 0 85 10
 sleep $wait_time
 
 ./deploy_test.sh $device_name idle

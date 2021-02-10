@@ -349,6 +349,7 @@ private:
 
   void InitGPIO();
   void InitADC();
+  void InitI2C();
   void InitSysTimer();
   void InitPwmOut();
   void InitUARTs();

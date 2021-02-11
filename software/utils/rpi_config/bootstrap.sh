@@ -24,10 +24,10 @@ fi
 
 apt-get install git-lfs
 
-cd "$HOME"
+cd ~
 
-git clone https://github.com/RespiraWorks/Ventilator.git
+sudo -u pi git clone https://github.com/RespiraWorks/Ventilator.git
 cd Ventilator
-git checkout issue_1028_general_deployment_scripts
+sudo -u pi git checkout issue_1028_general_deployment_scripts
 
 software/utils/rpi_config/run_me_first.sh

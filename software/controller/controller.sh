@@ -77,8 +77,8 @@ fi
 ###########
 
 if [ "$1" == "--install" ]; then
-  if [ "$EUID" -ne 0 ]; then
-    echo "Please run install with root privileges!"
+  if [ "$EUID" -eq 0 ] && [ "$2" != "-f" ]; then
+    echo "Please do not run install with root privileges!"
     exit 1
   fi
 
@@ -91,6 +91,8 @@ if [ "$1" == "--install" ]; then
   sudo service udev restart
   sudo usermod -a -G dialout "$USER"
   sudo usermod -a -G plugdev "$USER"
+
+  echo "Updated udev rules. You might have to restart your machine for changes to become effective."
 
   exit 0
 fi

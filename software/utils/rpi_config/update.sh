@@ -25,6 +25,7 @@ if [ "$EUID" -eq 0 ] && [ "$2" != "-f" ]; then
   exit 1
 fi
 
+../../controller/controller.sh --clean
 ../../controller/controller.sh --run
 
 ../../gui/gui.sh --build --release --no-checks

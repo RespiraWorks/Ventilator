@@ -26,9 +26,9 @@ if [ "$EUID" -ne 0 ]; then
 fi
 
 apt-get update
-apt-get uprade -y
+apt-get -y upgrade
 
-apt-get install -y guake
+apt-get install guake
 
 ### enable serial interface but not console
 raspi-config nonint do_serial 2
@@ -39,18 +39,23 @@ echo 'ATTRS{idVendor}=="0483", ATTRS{idProduct}=="374b", MODE="666"' > /etc/udev
 ### No screensaver, but guake
 /bin/cp -f autostart /etc/xdg/lxsession/LXDE-pi/autostart
 
-### RW theme :)
-pcmanfm --set-wallpaper /home/pi/Ventilator/manufacturing/images/rendering_full.jpg
-
 ### Desktop shortcuts
-cp ./Github "$HOME"/Desktop
-cp ./*.desktop "$HOME"/Desktop
+cp ./Github /home/pi/Desktop
+cp ./*.desktop /home/pi/Desktop
+chown pi:pi /home/pi/Desktop/*
+
+##open file manager here first to generate config file
+sudo -u pi pcmanfm &
+sleep 2
+kill %-
 
 ### Execute desktop shortcuts without bitching
-sed 's/quick_exec=0/quick_exec=1/' "$HOME"/.config/libfm/libfm.conf
+sed -i 's/quick_exec=0/quick_exec=1/' /home/pi/.config/libfm/libfm.conf
 
-../../controller/controller.sh --install
+### RW theme :)
+sudo -u pi pcmanfm --set-wallpaper /home/pi/Ventilator/manufacturing/images/rendering_full.jpg
 
 ../../gui/gui.sh --install
+sudo -u pi ../../controller/controller.sh --install
 
 #shutdown -r now

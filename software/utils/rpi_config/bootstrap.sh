@@ -19,8 +19,8 @@ fi
 
 sudo apt-get update
 sudo apt-get -y upgrade
-sudo apt-get install guake
-sudo apt-get install git-lfs
+sudo apt-get -y install guake
+sudo apt-get -y install git-lfs
 
 git clone https://github.com/RespiraWorks/Ventilator.git
 cd Ventilator

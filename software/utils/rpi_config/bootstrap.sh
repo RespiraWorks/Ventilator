@@ -41,8 +41,8 @@ cp software/utils/rpi_config/*.desktop /home/pi/Desktop
 
 ##open file manager here first to generate config file
 pcmanfm &
-sleep 2
-kill %-
+sleep 10
+kill %1
 
 ### Execute desktop shortcuts without bitching
 sed -i 's/quick_exec=0/quick_exec=1/' /home/pi/.config/libfm/libfm.conf

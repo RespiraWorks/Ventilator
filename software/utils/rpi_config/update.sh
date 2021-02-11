@@ -11,7 +11,7 @@ set -o pipefail
 set -o xtrace
 
 # This script should work no matter where you call it from.
-cd "$(dirname "$0")"
+cd "$(dirname "$0")"/../..
 
 # Check if Linux
 PLATFORM="$(uname -s)"
@@ -25,7 +25,9 @@ if [ "$EUID" -eq 0 ] && [ "$2" != "-f" ]; then
   exit 1
 fi
 
-../../controller/controller.sh --clean
-../../controller/controller.sh --run
+git pull
 
-../../gui/gui.sh --build --release --no-checks
+./controller/controller.sh --clean
+./controller/controller.sh --run
+
+./gui/gui.sh --build --release --no-checks

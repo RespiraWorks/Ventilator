@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name[en_US]=Update Vent
+Path=/home/pi/Ventilator/software/utils
+Exec=/home/pi/Ventilator/software/utils/update.sh
+Icon=/home/pi/Ventilator/software/utils/icons/logo.png
+Terminal=true
+Type=Application
+Categories=Application

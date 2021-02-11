@@ -22,15 +22,15 @@ sudo apt-get -y upgrade
 sudo apt-get --yes --force-yes install guake
 sudo apt-get --yes --force-yes install git-lfs
 
-git clone https://github.com/RespiraWorks/Ventilator.git
-cd Ventilator
-git checkout issue_1028_general_deployment_scripts
-
 ### enable serial interface but not console
 sudo raspi-config nonint do_serial 2
 
 ### configure USB permissions to deploy to Nucleo
-sudo echo 'ATTRS{idVendor}=="0483", ATTRS{idProduct}=="374b", MODE="666"' > /etc/udev/rules.d/99-openocd.rules
+echo 'ATTRS{idVendor}=="0483", ATTRS{idProduct}=="374b", MODE="666"' | sudo tee /etc/udev/rules.d/99-openocd.rules > /dev/null
+
+git clone https://github.com/RespiraWorks/Ventilator.git
+cd Ventilator
+git checkout issue_1028_general_deployment_scripts
 
 ### No screensaver, but guake
 sudo /bin/cp -f software/utils/rpi_config/autostart /etc/xdg/lxsession/LXDE-pi/autostart

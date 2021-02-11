@@ -22,10 +22,12 @@ if [ "$EUID" -ne 0 ]; then
   exit 1
 fi
 
-apt-get install -y git
+apt-get install git-lfs
 
 cd "$HOME"
 
-GIT_LFS_SKIP_SMUDGE=1 git clone https://github.com/RespiraWorks/Ventilator.git
+git clone https://github.com/RespiraWorks/Ventilator.git
+cd Ventilator
+git checkout issue_1028_general_deployment_scripts
 
-Ventilator/software/utils/run_me_first.sh
+software/utils/rpi_config/run_me_first.sh

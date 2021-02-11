@@ -53,4 +53,4 @@ sed 's/quick_exec=0/quick_exec=1/' "$HOME"/.config/libfm/libfm.conf
 
 ../../gui/gui.sh --install
 
-shutdown -r now
+#shutdown -r now

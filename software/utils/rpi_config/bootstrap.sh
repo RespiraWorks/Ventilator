@@ -17,17 +17,40 @@ if [ $PLATFORM != "Linux" ]; then
   exit 1
 fi
 
-if [ "$EUID" -ne 0 ]; then
-  echo "Please run install with root privileges!"
-  exit 1
-fi
+sudo apt-get update
+sudo apt-get -y upgrade
+sudo apt-get install guake
+sudo apt-get install git-lfs
 
-apt-get install git-lfs
-
-cd ~
-
-sudo -u pi git clone https://github.com/RespiraWorks/Ventilator.git
+git clone https://github.com/RespiraWorks/Ventilator.git
 cd Ventilator
-sudo -u pi git checkout issue_1028_general_deployment_scripts
+git checkout issue_1028_general_deployment_scripts
 
-software/utils/rpi_config/run_me_first.sh
+### enable serial interface but not console
+sudo raspi-config nonint do_serial 2
+
+### configure USB permissions to deploy to Nucleo
+sudo echo 'ATTRS{idVendor}=="0483", ATTRS{idProduct}=="374b", MODE="666"' > /etc/udev/rules.d/99-openocd.rules
+
+### No screensaver, but guake
+sudo /bin/cp -f software/utils/rpi_config/autostart /etc/xdg/lxsession/LXDE-pi/autostart
+
+### Desktop shortcuts
+cp software/utils/rpi_config/Github /home/pi/Desktop
+cp software/utils/rpi_config/*.desktop /home/pi/Desktop
+
+##open file manager here first to generate config file
+pcmanfm &
+sleep 2
+kill %-
+
+### Execute desktop shortcuts without bitching
+sed -i 's/quick_exec=0/quick_exec=1/' /home/pi/.config/libfm/libfm.conf
+
+### RW theme :)
+pcmanfm --set-wallpaper /home/pi/Ventilator/manufacturing/images/rendering_full.jpg
+
+sudo ./software/gui/gui.sh --install
+./software/controller/controller.sh --install
+
+#shutdown -r now

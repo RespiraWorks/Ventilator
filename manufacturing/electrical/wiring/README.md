@@ -28,8 +28,8 @@ BEFORE purchasing any parts.**
 |**A15**| (1)      | WGCD          | 4330589508            |         8.99 | [Z][a15amzn]         | XH connector kit for 2/3/4/5 pins, **alternative for A1-3** |
 |**A16**| (1)      | CQRobot       | CQRJST254-BGB         |         9.99 | [Z][a16amzn]         | XH connector kit for 6/7/8 pins, **alternative for A1 and A4** |
 |**A17**| (1)      | Chenbo        | WJ-Z01                |        11.98 | [Z][a17amzn]         | 2.54mm connector kit, **alternative for A10 and A11** |
-|**A18**| 2      | Molex        | 22013037                |        0.20/ea | [K][a12key]         | KK-series 3-pin sockets connector housing (oxygen sensor) |
-|**A19**| 4      | Molex        | 08550102                |        0.21/ea | [K][a13key]         | crimp sockets for the above |
+|**A18**| 2      | Molex        | 22013037                |        0.20/ea | [K][a18key]         | KK-series 3-pin sockets connector housing (oxygen sensor) |
+|**A19**| 4      | Molex        | 08550102                |        0.21/ea | [K][a19key]         | crimp sockets for the above |
 
 [a1key]:   https://www.digikey.com/short/z44f8d
 [a2key]:   https://www.digikey.com/short/z44f8f
@@ -49,8 +49,8 @@ BEFORE purchasing any parts.**
 [a15amzn]:  https://www.amazon.com/gp/product/B06ZZ45G7G
 [a16amzn]:  https://www.amazon.com/gp/product/B079MJ1RYN
 [a17amzn]: https://www.amazon.com/CHENBO-Connector-Housing-Assortment-Terminal/dp/B077X8XV2J
-[a12key]: https://www.digikey.com/en/products/detail/molex/0022013037/26433
-[a13key]: https://www.digikey.com/en/products/detail/molex/0008550102/172056
+[a18key]: https://www.digikey.com/en/products/detail/molex/0022013037/26433
+[a19key]: https://www.digikey.com/en/products/detail/molex/0008550102/172056
 
 **#TODO:** Add shrink tubing
 
@@ -145,7 +145,7 @@ To connect the solenoid to the PCB, you will need to crimp a 2-pin XH connector 
 
 | Cable Image | Cable Drawing (PDF)  |
 |:--------:|:--------:|
-| ![Oxygen Sensor Cable](images/OxygenSensorCable.jpg) | [![Oxygen Sensor Cable Drawing](images/OxygenSensorCableDrawingImage.JPG)](drawings/20200209-RespiraWorks-Ventilator-Wiring-OxygenSensorCable.pdf) |
+| ![Oxygen Sensor Cable](images/oxygen_sensor_cable.jpg) | [![Oxygen Sensor Cable Drawing](images/oxygen_sensor_cable_drawing_image.jpg)](drawings/20210209_oxygen_sensor_cable_drawing.pdf) |
 
 - Measure out two 40cm lengths of 26AWG wire, in green and white `[A14]`
 - Strip the ends of the wires

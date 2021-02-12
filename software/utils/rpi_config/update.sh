@@ -14,7 +14,7 @@ echo "  -- a 'git pull' will be performed, but branch will not be changed"
 echo "  -- if you have made any local changes, take care"
 echo "  -- neither unit tests nor static checks will be performed"
 echo " "
-read -n 1 -s -r -p "Press any key to continue"
+read -n1 -s -r -p $'Press any key to continue...\n' key
 
 # Print each command as it executes
 set -o xtrace
@@ -43,4 +43,4 @@ git pull
 
 echo "Installation complete. Please check that this terminated with no errors."
 echo " "
-read -n 1 -s -r -p "Press any key to close this window."
+read -n1 -s -r -p $'Press any key to close this window.\n' key

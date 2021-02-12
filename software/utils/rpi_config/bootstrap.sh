@@ -21,7 +21,7 @@ echo "  -- installs toolchains and dependencies for building controller and GUI"
 echo "  -- will require a restart when done"
 echo " "
 echo " Will require a restart when complete."
-read -n 1 -s -r -p "Press any key to continue"
+read -n1 -s -r -p $'Press any key to continue...\n' key
 
 # Print each command as it executes
 set -o xtrace
@@ -76,6 +76,6 @@ sudo ./software/gui/gui.sh --install
 echo "Installation complete. Please check that this terminated with no errors."
 echo "Upon restart, please run the 'Ventilator update' app from your desktop."
 echo " "
-read -n 1 -s -r -p "Press any key to restart the machine."
+read -n1 -s -r -p $'Press any key to restart the machine\n' key
 
 sudo shutdown -r now

@@ -62,7 +62,7 @@ U 1 1 605A6090
 P 8750 4800
 F 0 "C?" H 8550 4850 50  0000 L CNN
 F 1 "10uF" H 8550 4700 50  0000 L CNN
-F 2 "Capacitor_SMD:C_0603_1608Metric" H 8788 4650 50  0001 C CNN
+F 2 "RespiraWorks_Std:C_0603_1608Metric" H 8788 4650 50  0001 C CNN
 F 3 "~" H 8750 4800 50  0001 C CNN
 	1    8750 4800
 	1    0    0    -1  
@@ -106,7 +106,7 @@ AR Path="/601A64F8/60567144/605C3588" Ref="D?"  Part="1"
 AR Path="/6023BF6A/605C3588" Ref="D?"  Part="1" 
 F 0 "D?" V 3050 3550 50  0000 L CNN
 F 1 "20V" V 3150 3550 50  0000 L CNN
-F 2 "Diode_SMD:D_SMC" H 3100 3450 50  0001 C CNN
+F 2 "RespiraWorks_Std:D_SMC" H 3100 3450 50  0001 C CNN
 F 3 "https://www.diodes.com/assets/Datasheets/ds40740.pdf" H 3100 3450 50  0001 C CNN
 F 4 "Diodes Inc." V 3100 3450 50  0001 C CNN "Manufacturer"
 F 5 "SMBJ20AQ-13-F" V 3250 3800 50  0000 C CNN "Manufacturer PN"
@@ -146,7 +146,7 @@ Wire Wire Line
 Text Label 6950 3300 2    50   ~ 0
 POWER_SW_P
 $Comp
-L Device:Fuse F?
+L RespiraWorks:0154010.DR F?
 U 1 1 603A1854
 P 2700 3300
 F 0 "F?" V 2503 3300 50  0000 C CNN
@@ -257,7 +257,7 @@ Wire Wire Line
 Wire Wire Line
 	9150 4850 9250 4850
 $Comp
-L Device:Fuse F?
+L RespiraWorks:0154010.DR F?
 U 1 1 602914E1
 P 9400 4850
 F 0 "F?" V 9100 4850 50  0000 C CNN
@@ -292,9 +292,11 @@ AR Path="/6023BF6A/60567144/6026FB4D" Ref="C?"  Part="1"
 AR Path="/6023BF6A/6026FB4D" Ref="C?"  Part="1" 
 F 0 "C?" H 4050 3450 50  0000 L CNN
 F 1 "33uF" H 4050 3350 50  0000 L CNN
-F 2 "" H 3938 3300 50  0001 C CNN
-F 3 "~" H 3900 3450 50  0001 C CNN
+F 2 "RespiraWorks_Std:CP_Elec_6.3x7.7" H 3938 3300 50  0001 C CNN
+F 3 "https://industrial.panasonic.com/cdbs/www-data/pdf/RDE0000/ABA0000C1181.pdf" H 3900 3450 50  0001 C CNN
 F 4 "50V" H 4050 3250 50  0000 L CNN "Voltage"
+F 5 "Panasonic" H 3900 3450 50  0001 C CNN "Manufacturer"
+F 6 "EEE-FK1H330XP" H 3900 3450 50  0001 C CNN "Manufacturer PN"
 	1    3900 3450
 	1    0    0    -1  
 $EndComp
@@ -321,7 +323,7 @@ Wire Wire Line
 	2850 3300 3100 3300
 Connection ~ 3100 3300
 $Comp
-L Connector_Generic:Conn_01x04 J?
+L RespiraWorks_Std:Conn_01x04 J?
 U 1 1 605A607B
 P 1550 3300
 F 0 "J?" H 1500 2750 50  0000 R CNN

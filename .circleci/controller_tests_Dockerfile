@@ -12,7 +12,7 @@ WORKDIR /root/Ventilator
 COPY . ./
 CMD /bin/bash \
     software/controller/controller.sh --test --no-checks && \
-    software/controller/controller_coverage.sh && \
+    software/controller/coverage.sh && \
     cd software/controller && \
     curl https://codecov.io/bash > codecov_uploader.sh && \
     chmod +x codecov_uploader.sh && \

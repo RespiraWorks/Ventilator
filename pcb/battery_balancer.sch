@@ -27,19 +27,6 @@ F 5 "MAX17320G20+" H 5600 3700 50  0000 C CNN "Manufacturer PN"
 	1    0    0    -1  
 $EndComp
 $Comp
-L Connector:Conn_01x05_Male J?
-U 1 1 603D30AF
-P 8700 4250
-F 0 "J?" H 8672 4137 50  0000 R CNN
-F 1 "Conn_01x05_Male" H 8672 4228 50  0000 R CNN
-F 2 "" H 8700 4250 50  0001 C CNN
-F 3 "https://www.jst-mfg.com/product/pdf/eng/eXH.pdf" H 8700 4250 50  0001 C CNN
-F 4 "JST" H 8700 4250 50  0001 C CNN "Manufacturer"
-F 5 "B5B-XH-A(LF)(SN)" H 8672 4319 50  0000 R CNN "Manufacturer PN"
-	1    8700 4250
-	-1   0    0    1   
-$EndComp
-$Comp
 L Device:R R?
 U 1 1 603D71EF
 P 6750 5200
@@ -183,16 +170,16 @@ $EndComp
 $Comp
 L Device:R R?
 U 1 1 603DAD46
-P 9800 3400
+P 9950 3400
 AR Path="/601A64F8/603DAD46" Ref="R?"  Part="1" 
 AR Path="/601A64F8/60567144/603DAD46" Ref="R?"  Part="1" 
 AR Path="/601A64F8/60567757/603DAD46" Ref="R?"  Part="1" 
 AR Path="/6023BF6A/60567757/603DAD46" Ref="R?"  Part="1" 
-F 0 "R?" H 9950 3450 50  0000 C CNN
-F 1 "10" H 9950 3350 50  0000 C CNN
-F 2 "RespiraWorks_Std:R_0603_1608Metric" V 9730 3400 50  0001 C CNN
-F 3 "~" H 9800 3400 50  0001 C CNN
-	1    9800 3400
+F 0 "R?" H 10100 3450 50  0000 C CNN
+F 1 "10" H 10100 3350 50  0000 C CNN
+F 2 "RespiraWorks_Std:R_0603_1608Metric" V 9880 3400 50  0001 C CNN
+F 3 "~" H 9950 3400 50  0001 C CNN
+	1    9950 3400
 	1    0    0    -1  
 $EndComp
 Connection ~ 6600 4750
@@ -204,12 +191,8 @@ Wire Wire Line
 	8300 4450 8300 4250
 Wire Wire Line
 	7300 3850 8300 3850
-Text Notes 8550 4550 0    50   ~ 0
-Battery Balancing Connector
 Wire Wire Line
-	6300 5050 6750 5050
-Wire Wire Line
-	6600 4750 6300 4750
+	6600 4750 6500 4750
 Wire Wire Line
 	6750 5350 6750 6100
 Wire Wire Line
@@ -217,8 +200,6 @@ Wire Wire Line
 Connection ~ 6750 5350
 Wire Wire Line
 	6600 4750 7000 4750
-Wire Wire Line
-	6750 5050 9800 5050
 Connection ~ 6750 5050
 $Comp
 L RespiraWorks_Std:CSD17304Q3 Q?
@@ -268,16 +249,16 @@ $EndComp
 $Comp
 L Device:C C?
 U 1 1 603EA3B2
-P 9800 3700
+P 9950 3700
 AR Path="/601A64F8/603EA3B2" Ref="C?"  Part="1" 
 AR Path="/601A64F8/60567144/603EA3B2" Ref="C?"  Part="1" 
 AR Path="/601A64F8/60567757/603EA3B2" Ref="C?"  Part="1" 
 AR Path="/6023BF6A/60567757/603EA3B2" Ref="C?"  Part="1" 
-F 0 "C?" H 9950 3750 50  0000 L CNN
-F 1 "0.1uF" H 9950 3650 50  0000 L CNN
-F 2 "Capacitor_SMD:C_0603_1608Metric" H 9838 3550 50  0001 C CNN
-F 3 "~" H 9800 3700 50  0001 C CNN
-	1    9800 3700
+F 0 "C?" H 10100 3750 50  0000 L CNN
+F 1 "0.1uF" H 10100 3650 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 9988 3550 50  0001 C CNN
+F 3 "~" H 9950 3700 50  0001 C CNN
+	1    9950 3700
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -305,8 +286,7 @@ Wire Wire Line
 	7300 4150 8500 4150
 Wire Wire Line
 	6300 3850 6600 3850
-Connection ~ 9800 3550
-Connection ~ 9800 1550
+Connection ~ 9950 3550
 Wire Wire Line
 	6300 3550 6500 3550
 $Comp
@@ -324,9 +304,6 @@ F 3 "~" H 6500 3400 50  0001 C CNN
 	1    6500 3400
 	1    0    0    -1  
 $EndComp
-Connection ~ 6500 3550
-Wire Wire Line
-	6500 3550 9800 3550
 Wire Wire Line
 	6300 3250 6500 3250
 $Comp
@@ -435,7 +412,7 @@ F 3 "~" H 3800 5100 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	9800 1550 9800 3250
+	9950 1550 9950 3250
 $Comp
 L Device:R R?
 U 1 1 6041FF36
@@ -538,8 +515,7 @@ NoConn ~ 4850 3950
 NoConn ~ 4850 4150
 NoConn ~ 4850 4350
 Wire Wire Line
-	9800 3850 9800 5050
-Connection ~ 9800 5050
+	9950 3850 9950 5050
 Wire Wire Line
 	7050 3150 7050 3350
 Wire Wire Line
@@ -611,22 +587,85 @@ SYS_P
 Text HLabel 1600 6100 0    50   Output ~ 0
 SYS_N
 Wire Wire Line
-	6400 1550 9800 1550
-Wire Wire Line
 	8300 3850 8300 4050
 Wire Wire Line
 	8300 4050 8500 4050
-Wire Wire Line
-	9800 5050 10050 5050
 Text HLabel 10050 5050 2    50   Input ~ 0
 BAT_N
-Wire Wire Line
-	9800 1550 10050 1550
 Text HLabel 10050 1550 2    50   Input ~ 0
 BAT_P
 Wire Wire Line
 	6100 1850 5800 1850
 Connection ~ 5800 1850
 Text Notes 7400 3750 0    50   ~ 0
-Balancing current: 100mA MAX
+IC max balancing current: 100mA\nSet balancing current: 71mA
+Connection ~ 6500 4750
+Connection ~ 6500 5050
+Wire Wire Line
+	6500 5050 6750 5050
+Connection ~ 9950 1550
+Wire Wire Line
+	9950 1550 10050 1550
+Connection ~ 9950 5050
+Wire Wire Line
+	9950 5050 10050 5050
+Wire Wire Line
+	6300 5050 6500 5050
+Wire Wire Line
+	6750 5050 9950 5050
+Wire Wire Line
+	6400 1550 9950 1550
+Wire Wire Line
+	6300 4750 6500 4750
+Wire Wire Line
+	6500 3550 9950 3550
+Connection ~ 6500 3550
+$Comp
+L Connector_Generic:Conn_01x05 J?
+U 1 1 603D30AF
+P 8700 4250
+F 0 "J?" H 8900 4100 50  0000 R CNN
+F 1 "BAT-BALANCE JST XH 5-pin" H 9900 4200 50  0000 R CNN
+F 2 "" H 8700 4250 50  0001 C CNN
+F 3 "https://www.jst-mfg.com/product/pdf/eng/eXH.pdf" H 8700 4250 50  0001 C CNN
+F 4 "JST" H 8700 4250 50  0001 C CNN "Manufacturer"
+F 5 "B5B-XH-A(LF)(SN)" H 9550 4300 50  0000 R CNN "Manufacturer PN"
+	1    8700 4250
+	1    0    0    1   
+$EndComp
+Text Notes 8800 4450 0    50   ~ 0
+Battery Balancing Connector
+NoConn ~ 8500 4450
+$Comp
+L Device:R R?
+U 1 1 6029693C
+P 3550 3900
+AR Path="/601A64F8/6029693C" Ref="R?"  Part="1" 
+AR Path="/601A64F8/60567144/6029693C" Ref="R?"  Part="1" 
+AR Path="/601A64F8/60567757/6029693C" Ref="R?"  Part="1" 
+AR Path="/6023BF6A/60567757/6029693C" Ref="R?"  Part="1" 
+F 0 "R?" H 3700 3950 50  0000 C CNN
+F 1 "10k" H 3700 3850 50  0000 C CNN
+F 2 "RespiraWorks_Std:R_0603_1608Metric" V 3480 3900 50  0001 C CNN
+F 3 "~" H 3550 3900 50  0001 C CNN
+	1    3550 3900
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4000 3750 3550 3750
+Connection ~ 4000 3750
+$Comp
+L power:GND #PWR?
+U 1 1 6029AB22
+P 3550 4050
+AR Path="/601A64F8/6029AB22" Ref="#PWR?"  Part="1" 
+AR Path="/601A64F8/60567757/6029AB22" Ref="#PWR?"  Part="1" 
+AR Path="/6023BF6A/60567757/6029AB22" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 3550 3800 50  0001 C CNN
+F 1 "GND" H 3555 3877 50  0000 C CNN
+F 2 "" H 3550 4050 50  0001 C CNN
+F 3 "" H 3550 4050 50  0001 C CNN
+	1    3550 4050
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC

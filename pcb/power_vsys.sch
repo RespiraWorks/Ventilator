@@ -20,8 +20,6 @@ Wire Wire Line
 Wire Wire Line
 	4050 3150 4550 3150
 Wire Wire Line
-	5000 3500 4600 3500
-Wire Wire Line
 	4550 2550 4550 2750
 Connection ~ 4550 2750
 Wire Wire Line
@@ -116,7 +114,7 @@ Wire Wire Line
 	6450 2950 7250 2950
 Connection ~ 7250 2950
 Text Notes 2550 1250 0    50   ~ 0
-13-20V IN
+12.5-16.8V IN
 Text HLabel 2750 1350 0    50   Input ~ 0
 VIN
 Text HLabel 8700 1350 2    50   Output ~ 0
@@ -273,49 +271,16 @@ Wire Wire Line
 	6600 2150 6600 1650
 Wire Wire Line
 	6450 2150 6600 2150
-Connection ~ 6600 1650
-Wire Wire Line
-	6000 1650 6600 1650
 Wire Wire Line
 	7250 1350 7500 1350
 Wire Wire Line
 	7250 1350 7250 2650
 Wire Wire Line
-	7050 1350 7250 1350
-Wire Wire Line
 	4200 1550 4200 2750
 Wire Wire Line
 	4500 1750 4500 1850
-Connection ~ 7050 1350
-Connection ~ 6900 1650
-Wire Wire Line
-	7050 1650 7050 1350
-Wire Wire Line
-	6900 1650 7050 1650
 Wire Wire Line
 	6900 2350 6900 1650
-Wire Wire Line
-	5450 1350 5600 1350
-Connection ~ 5450 1350
-Wire Wire Line
-	5450 1650 5450 1350
-Wire Wire Line
-	5700 1650 5450 1650
-$Comp
-L Device:R R?
-U 1 1 601EDEE1
-P 5850 1650
-AR Path="/601A64F8/601EDEE1" Ref="R?"  Part="1" 
-AR Path="/601A64F8/60567144/601EDEE1" Ref="R?"  Part="1" 
-AR Path="/601A64F8/60567D6E/601EDEE1" Ref="R?"  Part="1" 
-AR Path="/6023BF6A/60567D6E/601EDEE1" Ref="R?"  Part="1" 
-F 0 "R?" V 5800 1400 50  0000 L CNN
-F 1 "3k" V 5800 1800 50  0000 L CNN
-F 2 "Resistor_SMD:R_0603_1608Metric" V 5780 1650 50  0001 C CNN
-F 3 "~" H 5850 1650 50  0001 C CNN
-	1    5850 1650
-	0    1    1    0   
-$EndComp
 $Comp
 L Device:C C?
 U 1 1 601ED324
@@ -324,8 +289,8 @@ AR Path="/601A64F8/601ED324" Ref="C?"  Part="1"
 AR Path="/601A64F8/60567144/601ED324" Ref="C?"  Part="1" 
 AR Path="/601A64F8/60567D6E/601ED324" Ref="C?"  Part="1" 
 AR Path="/6023BF6A/60567D6E/601ED324" Ref="C?"  Part="1" 
-F 0 "C?" V 6900 1850 50  0000 L CNN
-F 1 "0.22uF" V 6800 1700 50  0000 L CNN
+F 0 "C?" V 6600 1700 50  0000 L CNN
+F 1 "33pF" V 6500 1600 50  0000 L CNN
 F 2 "Capacitor_SMD:C_0603_1608Metric" H 6788 1500 50  0001 C CNN
 F 3 "~" H 6750 1650 50  0001 C CNN
 	1    6750 1650
@@ -406,9 +371,7 @@ $EndComp
 Wire Wire Line
 	4050 1650 4050 3150
 Wire Wire Line
-	5900 1350 7050 1350
-Wire Wire Line
-	4950 1350 5450 1350
+	5900 1350 6600 1350
 Connection ~ 4950 1350
 $Comp
 L RespiraWorks_Std:CSD17304Q3 Q?
@@ -567,10 +530,6 @@ F 3 "~" H 7750 3750 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	5000 3700 4600 3700
-Wire Wire Line
-	4600 3700 4600 3500
-Wire Wire Line
 	6450 3900 7750 3900
 Wire Wire Line
 	7750 3600 8100 3600
@@ -653,7 +612,6 @@ Wire Wire Line
 	6450 4900 7150 4900
 Wire Wire Line
 	6450 5100 7150 5100
-Connection ~ 4600 3500
 Connection ~ 3750 1350
 Wire Wire Line
 	3450 1350 3750 1350
@@ -755,10 +713,6 @@ F 4 "DNP" H 1950 3650 50  0000 C CNN "DNP"
 	1    2150 3750
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	4600 3500 3750 3500
-Wire Wire Line
-	3750 3500 3750 1350
 $Comp
 L Device:C C?
 U 1 1 602493D1
@@ -893,4 +847,117 @@ F 3 "~" H 4700 2550 50  0001 C CNN
 $EndComp
 Wire Wire Line
 	4850 2550 5000 2550
+$Comp
+L Device:R R?
+U 1 1 60286B7B
+P 6750 1350
+AR Path="/601A64F8/60286B7B" Ref="R?"  Part="1" 
+AR Path="/601A64F8/60567144/60286B7B" Ref="R?"  Part="1" 
+AR Path="/601A64F8/60567D6E/60286B7B" Ref="R?"  Part="1" 
+AR Path="/6023BF6A/60567D6E/60286B7B" Ref="R?"  Part="1" 
+F 0 "R?" V 6550 1300 50  0000 L CNN
+F 1 "0.006" V 6650 1250 50  0000 L CNN
+F 2 "RespiraWorks_Std:R_1206_3216Metric" V 6680 1350 50  0001 C CNN
+F 3 "https://www.te.com/commerce/DocumentDelivery/DDEController?Action=srchrtrv&DocNm=1773449-3&DocType=DS&DocLang=English" H 6750 1350 50  0001 C CNN
+F 4 "TE Connectivity" V 6750 1350 50  0001 C CNN "Manufacturer"
+F 5 "TLR2B10DR006FTDG" V 6750 1350 50  0001 C CNN "Manufacturer PN"
+	1    6750 1350
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	4950 1350 5600 1350
+Wire Wire Line
+	6900 1350 7250 1350
+Wire Wire Line
+	6600 1650 6600 1350
+Connection ~ 6600 1650
+Connection ~ 6600 1350
+Wire Wire Line
+	6900 1650 6900 1350
+Connection ~ 6900 1650
+Connection ~ 6900 1350
+Text Notes 6100 1050 0    50   ~ 0
+Cycle-by-cycle current limit: 75mA -> 12.5A
+Wire Wire Line
+	3750 3500 3750 2500
+$Comp
+L Transistor_BJT:MMBT3904 Q?
+U 1 1 602A3DA2
+P 2900 3100
+F 0 "Q?" H 3091 3146 50  0000 L CNN
+F 1 "MMBT3904" H 3091 3055 50  0000 L CNN
+F 2 "Package_TO_SOT_SMD:SOT-23" H 3100 3025 50  0001 L CIN
+F 3 "https://www.onsemi.com/pub/Collateral/2N3903-D.PDF" H 2900 3100 50  0001 L CNN
+	1    2900 3100
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 602A5044
+P 3000 3300
+AR Path="/601A64F8/602A5044" Ref="#PWR?"  Part="1" 
+AR Path="/601A64F8/60567144/602A5044" Ref="#PWR?"  Part="1" 
+AR Path="/601A64F8/60567D6E/602A5044" Ref="#PWR?"  Part="1" 
+AR Path="/6023BF6A/60567D6E/602A5044" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 3000 3050 50  0001 C CNN
+F 1 "GND" H 3005 3127 50  0000 C CNN
+F 2 "" H 3000 3300 50  0001 C CNN
+F 3 "" H 3000 3300 50  0001 C CNN
+	1    3000 3300
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 602A8288
+P 3000 2650
+AR Path="/601A64F8/602A8288" Ref="R?"  Part="1" 
+AR Path="/601A64F8/60567144/602A8288" Ref="R?"  Part="1" 
+AR Path="/601A64F8/60567D6E/602A8288" Ref="R?"  Part="1" 
+AR Path="/6023BF6A/60567D6E/602A8288" Ref="R?"  Part="1" 
+F 0 "R?" H 2700 2700 50  0000 L CNN
+F 1 "10k" H 2700 2600 50  0000 L CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" V 2930 2650 50  0001 C CNN
+F 3 "~" H 3000 2650 50  0001 C CNN
+	1    3000 2650
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3000 2500 3750 2500
+Connection ~ 3750 2500
+Wire Wire Line
+	3750 2500 3750 1350
+Wire Wire Line
+	3000 2800 3000 2850
+Wire Wire Line
+	3000 2850 3600 2850
+Wire Wire Line
+	3600 2850 3600 3700
+Connection ~ 3000 2850
+Wire Wire Line
+	3000 2850 3000 2900
+Wire Wire Line
+	3600 3700 5000 3700
+Wire Wire Line
+	3750 3500 5000 3500
+Wire Wire Line
+	2700 3100 2300 3100
+Text HLabel 1350 3100 0    50   Input ~ 0
+VSYS_EN
+$Comp
+L Device:R R?
+U 1 1 602BAB86
+P 2150 3100
+AR Path="/601A64F8/602BAB86" Ref="R?"  Part="1" 
+AR Path="/601A64F8/60567144/602BAB86" Ref="R?"  Part="1" 
+AR Path="/601A64F8/60567D6E/602BAB86" Ref="R?"  Part="1" 
+AR Path="/6023BF6A/60567D6E/602BAB86" Ref="R?"  Part="1" 
+F 0 "R?" V 1950 3050 50  0000 L CNN
+F 1 "10k" V 2050 3050 50  0000 L CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" V 2080 3100 50  0001 C CNN
+F 3 "~" H 2150 3100 50  0001 C CNN
+	1    2150 3100
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	2000 3100 1350 3100
 $EndSCHEMATC

@@ -111,12 +111,6 @@ fi
 ########
 
 if [ "$1" == "--test" ]; then
-
-  if [ "$EUID" -eq 0 ] && [ "$2" != "-f" ]; then
-    echo "Please do not run tests with root privileges!"
-    exit 1
-  fi
-
   # Controller unit tests on native.
   pio test -e native
 

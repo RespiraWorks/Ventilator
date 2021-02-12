@@ -26,9 +26,13 @@ The part of the code specific to the controller resides here.
 
 **Files:**
 * [platfomio.ini](platformio.ini) - the equivalent of a "make file" which governs how platformio builds targets
-* [controller_coverage.sh](controller_coverage.sh) - script for generating unit test code coverage reports
-* [test.sh](test.sh) - script for running all unit tests
-* [upload.sh](upload.sh) - uploads firmware to ventilator controller
+* [coverage.sh](coverage.sh) - script for generating unit test code coverage reports
+* [controller.sh](controller.sh) - general utility script for:
+  * building controller firmware
+  * running unit tests
+  * running static checks
+  * uploading/deploying firmware
+  * self documented if you run it without parameters...
 
 ## Development toolchain
 
@@ -103,7 +107,7 @@ Now you can build and upload to the device.
 $ pio run -t upload
 ```
 
-A more convenient way to run is to use the [upload.sh](upload.sh) script. If you have multiple Nucleos that you
+A more convenient way to run is to use the `./controller.sh --run`. If you have multiple Nucleos that you
 want to deploy to, you should consult the [platformio configuration guide](platformio).
 
 ### USB permission problems

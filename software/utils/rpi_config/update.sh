@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# This script is designed for local unix usage.
-# ./gui.sh --help
-
 # Fail if any command fails
 set -e
 set -o pipefail

@@ -57,17 +57,6 @@ BAT_N
 Text Label 8950 4650 0    50   ~ 0
 BAT_P
 $Comp
-L Device:C C?
-U 1 1 605A6090
-P 8750 4800
-F 0 "C?" H 8550 4850 50  0000 L CNN
-F 1 "10uF" H 8550 4700 50  0000 L CNN
-F 2 "RespiraWorks_Std:C_0603_1608Metric" H 8788 4650 50  0001 C CNN
-F 3 "~" H 8750 4800 50  0001 C CNN
-	1    8750 4800
-	1    0    0    -1  
-$EndComp
-$Comp
 L Connector_Generic:Conn_01x02 J?
 U 1 1 605C357B
 P 9900 4950
@@ -202,14 +191,6 @@ Wire Wire Line
 	5150 3800 4650 3800
 Text HLabel 4650 3800 0    50   BiDi ~ 0
 SDA
-Wire Wire Line
-	8750 4950 9700 4950
-Wire Wire Line
-	8750 4650 8450 4650
-Connection ~ 8750 4650
-Wire Wire Line
-	8750 4950 8450 4950
-Connection ~ 8750 4950
 $Comp
 L power:GND #PWR?
 U 1 1 6047EA81
@@ -250,8 +231,6 @@ Wire Wire Line
 	7050 4950 7550 4950
 Text HLabel 7050 4950 0    50   Output ~ 0
 BAT_ALRT
-Wire Wire Line
-	8750 4650 9150 4650
 Wire Wire Line
 	9150 4650 9150 4850
 Wire Wire Line
@@ -335,4 +314,30 @@ F 5 "768290104" H 1800 2950 50  0000 R CNN "Manufacturer P/N"
 	1    1550 3300
 	-1   0    0    1   
 $EndComp
+Wire Wire Line
+	8450 4650 8650 4650
+Wire Wire Line
+	8450 4950 8650 4950
+$Comp
+L Device:C C?
+U 1 1 603046C0
+P 8650 4800
+AR Path="/601A64F8/603046C0" Ref="C?"  Part="1" 
+AR Path="/601A64F8/60567144/603046C0" Ref="C?"  Part="1" 
+AR Path="/6023BF6A/60567144/603046C0" Ref="C?"  Part="1" 
+AR Path="/6023BF6A/603046C0" Ref="C?"  Part="1" 
+F 0 "C?" H 8750 4900 50  0000 L CNN
+F 1 "10uF" H 8750 4800 50  0000 L CNN
+F 2 "RespiraWorks_Std:C_0805_2012Metric" H 8688 4650 50  0001 C CNN
+F 3 "~" H 8650 4800 50  0001 C CNN
+F 4 "25V" H 8750 4700 50  0000 L CNN "Voltage"
+	1    8650 4800
+	1    0    0    -1  
+$EndComp
+Connection ~ 8650 4650
+Wire Wire Line
+	8650 4650 9150 4650
+Connection ~ 8650 4950
+Wire Wire Line
+	8650 4950 9700 4950
 $EndSCHEMATC

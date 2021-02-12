@@ -455,7 +455,7 @@ AR Path="/601A64F8/60567D6E/601DFDD4" Ref="L?"  Part="1"
 AR Path="/6023BF6A/60567D6E/601DFDD4" Ref="L?"  Part="1" 
 F 0 "L?" H 5750 1650 50  0000 C CNN
 F 1 "6.8uH" H 5750 1550 50  0000 C CNN
-F 2 "Inductor_SMD:L_TDK_SLF12565" V 5750 1350 50  0001 C CNN
+F 2 "RespiraWorks:L_TDK_SPM12565VT" V 5750 1350 50  0001 C CNN
 F 3 "https://product.tdk.com/info/en/catalog/datasheets/inductor_automotive_power_spm12565vt-d_en.pdf" V 5750 1350 50  0001 C CNN
 F 4 "TDK" H 5750 1350 50  0001 C CNN "Manufacturer"
 F 5 "SPM12565VT-6R8M-D" H 5800 1450 50  0000 C CNN "manufacturer PN"

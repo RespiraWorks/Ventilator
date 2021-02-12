@@ -32,8 +32,10 @@ AR Path="/601A64F8/60567144/60580E76" Ref="L?"  Part="1"
 AR Path="/6023BF6A/60567144/60580E76" Ref="L?"  Part="1" 
 F 0 "L?" H 6050 2190 50  0000 C CNN
 F 1 "SRP1038A-3R3M" H 6050 2099 50  0000 C CNN
-F 2 "" V 6050 2000 50  0001 C CNN
+F 2 "RespiraWorks:L_Bourns-SRP1038" V 6050 2000 50  0001 C CNN
 F 3 "https://www.bourns.com/docs/Product-Datasheets/SRP1038A.pdf" V 6050 2000 50  0001 C CNN
+F 4 "Bourns" H 6050 2000 50  0001 C CNN "Manufacturer"
+F 5 "SRP1038A-3R3M" H 6050 2000 50  0001 C CNN "Manufacturer PN"
 	1    6050 2000
 	1    0    0    -1  
 $EndComp

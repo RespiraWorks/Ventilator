@@ -1,7 +1,17 @@
-# Automatic deployment on Pi
+# Automatic deployment on integrated prototypes
+
+The following scripts and configurations are here to help alleviate the frustration of having to perform the many
+arcane incantations to get a prototype running with software.
+
+**DISCLAIMER: It goes without saying that you should not use this on any living beings - as an actual ventilator, or in
+any other way. These are utilities for bench with mechanical lung simulators only.**
+
+The following assumes that you have a working hardware prototype with all necessary electronics, correctly wired for
+power and communication. See the [manufacturing](../../../manufacturing) section for details.
 
 ## How to set up
 
+* Start with a clean SD card of about 32GB. Building the software can be a resource-greedy process.
 * Prepare an SD card with a vanilla Raspberry Pi OS, the full desktop variety.
 * Make sure you have a USB connection from Raspi to Nucleo if you intend to flash firmware locally
 * Boot up and go through the standard Raspi configuration steps - locale, Wifi, update

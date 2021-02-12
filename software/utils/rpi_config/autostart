@@ -1,6 +1,3 @@
 @lxpanel --profile LXDE-pi
 @pcmanfm --desktop --profile LXDE-pi
 @guake
-@xset s noblank
-@xset s off
-@xset s -dpms

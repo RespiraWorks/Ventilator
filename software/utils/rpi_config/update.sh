@@ -4,10 +4,22 @@
 set -e
 set -o pipefail
 
+echo "==============================================================================="
+echo "================== RespiraWorks Ventilator update utility ====================="
+echo "==============================================================================="
+echo " "
+echo "  -- this will rebuild and flash controller firmware"
+echo "  -- this will rebuild the GUI"
+echo "  -- a 'git pull' will be performed, but branch will not be changed"
+echo "  -- if you have made any local changes, take care"
+echo "  -- neither unit tests nor static checks will be performed"
+echo " "
+read -n 1 -s -r -p "Press any key to continue"
+
 # Print each command as it executes
 set -o xtrace
 
-# This script should work no matter where you call it from.
+# This script should run from repo/software dir
 cd "$(dirname "$0")"/../..
 
 # Check if Linux
@@ -28,3 +40,7 @@ git pull
 ./controller/controller.sh --run
 
 ./gui/gui.sh --build --release --no-checks
+
+echo "Installation complete. Please check that this terminated with no errors."
+echo " "
+read -n 1 -s -r -p "Press any key to close this window."

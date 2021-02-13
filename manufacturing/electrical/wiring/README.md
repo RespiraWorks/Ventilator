@@ -28,25 +28,29 @@ BEFORE purchasing any parts.**
 |**A15**| (1)      | WGCD          | 4330589508            |         8.99 | [Z][a15amzn]         | XH connector kit for 2/3/4/5 pins, **alternative for A1-3** |
 |**A16**| (1)      | CQRobot       | CQRJST254-BGB         |         9.99 | [Z][a16amzn]         | XH connector kit for 6/7/8 pins, **alternative for A1 and A4** |
 |**A17**| (1)      | Chenbo        | WJ-Z01                |        11.98 | [Z][a17amzn]         | 2.54mm connector kit, **alternative for A10 and A11** |
+|**A18**| 2        | Molex         | 22013037              |      0.20/ea | [K][a18key]          | KK-series 3-pin sockets connector housing (oxygen sensor) |
+|**A19**| 4        | Molex         | 08550102              |      0.21/ea | [K][a19key]          | crimp sockets for the above |
 
 [a1key]:   https://www.digikey.com/short/z44f8d
 [a2key]:   https://www.digikey.com/short/z44f8f
 [a3key]:   https://www.digikey.com/short/z44fb9
 [a4key]:   https://www.digikey.com/short/z44ff8
-[a5key]:  https://www.digikey.com/short/z44fjr
+[a5key]:   https://www.digikey.com/short/z44fjr
 [a5rs]:    https://export.rsdelivers.com/product/jst/svh-41t-p11/jst-nv-vh-female-crimp-terminal-contact-16awg-svh/7620692
-[a6key]:  https://www.digikey.com/short/z44fwj
+[a6key]:   https://www.digikey.com/short/z44fwj
 [a6rs]:    https://export.rsdelivers.com/product/jst/vhr-2n/jst-vhr-female-connector-housing-396mm-pitch-2/8201172
-[a7key]: https://www.digikey.com/short/z44fwp
-[a9key]: https://www.digikey.com/en/products/detail/kycon-inc/KPJX-PM-4S/9990081
-[a10key]: https://www.digikey.com/en/products/detail/te-connectivity-amp-connectors/102107-3/298993
-[a11key]: https://www.digikey.com/en/products/detail/te-connectivity-amp-connectors/87499-7/29911
+[a7key]:   https://www.digikey.com/short/z44fwp
+[a9key]:   https://www.digikey.com/en/products/detail/kycon-inc/KPJX-PM-4S/9990081
+[a10key]:  https://www.digikey.com/en/products/detail/te-connectivity-amp-connectors/102107-3/298993
+[a11key]:  https://www.digikey.com/en/products/detail/te-connectivity-amp-connectors/87499-7/29911
 [a12amzn]: https://www.amazon.com/gp/product/B00N51OJJ4
 [a13amzn]: https://www.amazon.com/gp/product/B073SDGNKW
 [a14amzn]: https://www.amazon.com/gp/product/B011JC76OA
-[a15amzn]:  https://www.amazon.com/gp/product/B06ZZ45G7G
-[a16amzn]:  https://www.amazon.com/gp/product/B079MJ1RYN
+[a15amzn]: https://www.amazon.com/gp/product/B06ZZ45G7G
+[a16amzn]: https://www.amazon.com/gp/product/B079MJ1RYN
 [a17amzn]: https://www.amazon.com/CHENBO-Connector-Housing-Assortment-Terminal/dp/B077X8XV2J
+[a18key]:  https://www.digikey.com/en/products/detail/molex/0022013037/26433
+[a19key]:  https://www.digikey.com/en/products/detail/molex/0008550102/172056
 
 **#TODO:** Add shrink tubing
 
@@ -62,11 +66,11 @@ BEFORE purchasing any parts.**
 [b1amzn]: https://www.amazon.com/gp/product/B07R1H3Z8X
 [b2amzn]: https://www.amazon.com/NovelLife-Mini-TS100-Soldering-Digital/dp/B07D35B75T
 [b3amzn]: https://www.amazon.com/Chandler-Tool-Embossing-Heat-Gun/dp/B07GC5N3QC
-[b4key]: https://www.digikey.com/en/products/detail/kester-solder/24-6040-0010/265622
+[b4key]:  https://www.digikey.com/en/products/detail/kester-solder/24-6040-0010/265622
 
 **Crimper Tips:**
 
-* Position 1 on the crimper will crimp XH contacts
+* Position 1 on the crimper will crimp JST XH contacts and Molex KK contacts
 * Position 2 on the crimper will crimp VH contacts.  However, with certain gauges of wire, this crimper may bend the contact into a shrimp-like shape.  If this happens, bend the contact back straight (it should be pretty obvious as it blocks insertion)
 * It comes with a lot of XH contacts, but not any VH contacts.
 
@@ -139,7 +143,16 @@ To connect the solenoid to the PCB, you will need to crimp a 2-pin XH connector 
 
 ### Oxygen sensor
 
-**#TODO: what is the right plug for this? @inceptionev**
+| Cable Image | Cable Drawing (PDF)  |
+|:--------:|:--------:|
+| ![Oxygen Sensor Cable](images/oxygen_sensor_cable.jpg) | [![Oxygen Sensor Cable Drawing](images/oxygen_sensor_cable_drawing_image.jpg)](drawings/20210209_oxygen_sensor_cable_drawing.pdf) |
+
+- Measure out two 40cm lengths of 26AWG wire, in green and white `[A14]`
+- Strip the ends of the wires
+- Using the crimper `[B1]` in position 1, crimp 4x contacts `[A19]` onto the ends of the wires.
+- A proper crimp should crimp the insulation in the lower half and the wire in the upper half of the crimp portion of the contact.
+- Insert the wires into the connector housings `[A18]`, according to the drawing, until they click.  Pin 1 is marked by a tiny '1' molded into the connector housing.
+- Do a gentle pull test to make sure that the contacts are properly crimped and seated.
 
 ## Pricing totals
 

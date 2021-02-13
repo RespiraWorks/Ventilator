@@ -470,15 +470,16 @@ Connection ~ 8950 4700
 Text Label 1400 2000 0    50   ~ 0
 VIN_ADP
 $Comp
-L RespiraWorks:BQ25773 U?
+L RespiraWorks:BQ24773 U?
 U 1 1 60580F88
 P 6050 4000
 AR Path="/601A64F8/60580F88" Ref="U?"  Part="1" 
 AR Path="/601A64F8/60567144/60580F88" Ref="U?"  Part="1" 
 AR Path="/6023BF6A/60567144/60580F88" Ref="U?"  Part="1" 
+AR Path="/60580F88" Ref="U?"  Part="1" 
 F 0 "U?" H 6075 5847 50  0000 C CNN
-F 1 "BQ25773" H 6075 5756 50  0000 C CNN
-F 2 "RespiraWorks_Std:QFN-28-1EP_4x4mm_P0.4mm_EP2.6x2.6mm_ThermalVias" H 6100 1700 50  0001 C CNN
+F 1 "BQ24773" H 6075 5756 50  0000 C CNN
+F 2 "Package_DFN_QFN:QFN-28-1EP_4x4mm_P0.4mm_EP2.6x2.6mm_ThermalVias" H 6100 1700 50  0001 C CNN
 F 3 "https://www.ti.com/lit/ds/symlink/bq24773.pdf" H 8750 5050 50  0001 C CNN
 F 4 "Texas Instruments" H 6075 5665 50  0000 C CNN "Manufacturer"
 F 5 "BQ24773RUYR" H 6075 5574 50  0000 C CNN "Manufacturer PN"

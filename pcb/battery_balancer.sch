@@ -520,22 +520,6 @@ Wire Wire Line
 	7050 3150 7050 3350
 Wire Wire Line
 	7050 3350 7400 3350
-Text Label 7400 3350 2    50   ~ 0
-BAT_N
-$Comp
-L power:GND #PWR?
-U 1 1 60422DE7
-P 3850 2600
-AR Path="/601A64F8/60422DE7" Ref="#PWR?"  Part="1" 
-AR Path="/601A64F8/60567757/60422DE7" Ref="#PWR?"  Part="1" 
-AR Path="/6023BF6A/60567757/60422DE7" Ref="#PWR?"  Part="1" 
-F 0 "#PWR?" H 3850 2350 50  0001 C CNN
-F 1 "GND" H 3855 2427 50  0000 C CNN
-F 2 "" H 3850 2600 50  0001 C CNN
-F 3 "" H 3850 2600 50  0001 C CNN
-	1    3850 2600
-	1    0    0    -1  
-$EndComp
 $Comp
 L Device:C C?
 U 1 1 60421F86
@@ -568,20 +552,6 @@ Text HLabel 4300 3350 0    50   BiDi ~ 0
 SDA
 Text HLabel 4300 3550 0    50   Output ~ 0
 ALRT
-$Comp
-L power:GND #PWR?
-U 1 1 6046FA21
-P 4000 4050
-AR Path="/601A64F8/6046FA21" Ref="#PWR?"  Part="1" 
-AR Path="/601A64F8/60567757/6046FA21" Ref="#PWR?"  Part="1" 
-AR Path="/6023BF6A/60567757/6046FA21" Ref="#PWR?"  Part="1" 
-F 0 "#PWR?" H 4000 3800 50  0001 C CNN
-F 1 "GND" H 4005 3877 50  0000 C CNN
-F 2 "" H 4000 4050 50  0001 C CNN
-F 3 "" H 4000 4050 50  0001 C CNN
-	1    4000 4050
-	1    0    0    -1  
-$EndComp
 Text HLabel 1600 1550 0    50   Output ~ 0
 SYS_P
 Text HLabel 1600 6100 0    50   Output ~ 0
@@ -654,18 +624,23 @@ $EndComp
 Wire Wire Line
 	4000 3750 3550 3750
 Connection ~ 4000 3750
-$Comp
-L power:GND #PWR?
-U 1 1 6029AB22
-P 3550 4050
-AR Path="/601A64F8/6029AB22" Ref="#PWR?"  Part="1" 
-AR Path="/601A64F8/60567757/6029AB22" Ref="#PWR?"  Part="1" 
-AR Path="/6023BF6A/60567757/6029AB22" Ref="#PWR?"  Part="1" 
-F 0 "#PWR?" H 3550 3800 50  0001 C CNN
-F 1 "GND" H 3555 3877 50  0000 C CNN
-F 2 "" H 3550 4050 50  0001 C CNN
-F 3 "" H 3550 4050 50  0001 C CNN
-	1    3550 4050
-	1    0    0    -1  
-$EndComp
+Text Label 7400 3350 2    50   ~ 0
+BAT_N
+Wire Wire Line
+	4000 4050 4000 4150
+Wire Wire Line
+	4000 4150 3550 4150
+Wire Wire Line
+	3550 4050 3550 4150
+Connection ~ 3550 4150
+Wire Wire Line
+	3550 4150 2850 4150
+Text Label 2850 4150 0    50   ~ 0
+BAT_N
+Wire Wire Line
+	3850 2600 3850 2700
+Wire Wire Line
+	3850 2700 2850 2700
+Text Label 2850 2700 0    50   ~ 0
+BAT_N
 $EndSCHEMATC

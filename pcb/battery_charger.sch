@@ -22,7 +22,7 @@ SCL
 Text HLabel 4600 4900 0    50   BiDi ~ 0
 SDA
 Text Notes 4600 1550 0    50   ~ 0
-Design notes:\n- 6.3A max current, 17-20V input, approx 120W\n- Inductor selection: Isat 9.1A, 3.3uH\n- Wurth 7443330330 or Bourns SRP1038A-3R3M (OPL alt: MWSA1004-3R3MT)\n- Voltage will range from 12V to 16.8V for 4s Li-Ion battery\n- 11.5 to 13.0V for SLA (lead acid)\n- N-CH FET: CSD17304Q3 (OPL) or BSZ050N03LSGATMA1 (OPL)\n- P-CH FET: CSD25402Q3A (OPL) or CSD25404Q3T (OPL)\n
+Design notes:\n- 6.3A max current, 17-20V input, approx 120W\n- Inductor selection: Isat 9.1A, 3.3uH\n- Wurth 7443330330 or Bourns SRP1038A-3R3M (OPL alt: MWSA1004-3R3MT)\n- Voltage will range from 12V to 16.8V for 4s Li-Ion battery\n- 11.5 to 13.0V for SLA (lead acid)\n- N-CH FET (30V, 3.3x3.3mm): CSD17304Q3 (OPL) or BSZ050N03LSGATMA1 (OPL)\n- P-CH FET (20V, 3.3x3.3mm): CSD25402Q3A (OPL) or CSD25404Q3T (OPL)\n- N-CH FET (60V, 5x6mm): CSD18563Q5A\n- P-CH FET (30V, 3.3x3.3mm): DMP3013SFV-7\n
 $Comp
 L RespiraWorks_Std:SRP1038A-3R3M L?
 U 1 1 60580E76
@@ -43,20 +43,6 @@ Wire Wire Line
 	5000 2000 5000 2800
 Wire Wire Line
 	5000 2800 5300 2800
-$Comp
-L RespiraWorks_Std:CSD17304Q3 Q?
-U 1 1 60580E7E
-P 4350 2100
-AR Path="/601A64F8/60580E7E" Ref="Q?"  Part="1" 
-AR Path="/601A64F8/60567144/60580E7E" Ref="Q?"  Part="1" 
-AR Path="/6023BF6A/60567144/60580E7E" Ref="Q?"  Part="1" 
-F 0 "Q?" V 4750 2100 50  0000 C CNN
-F 1 "CSD17304Q3" V 4650 2150 50  0000 C CNN
-F 2 "RespiraWorks_Std:VSON-8_3.3x3.3mm_P0.65mm_NexFET" H 4550 2025 50  0001 L CIN
-F 3 "https://www.ti.com/lit/ds/symlink/csd17304q3.pdf?ts=1608773956037" V 4350 2100 50  0001 L CNN
-	1    4350 2100
-	0    -1   -1   0   
-$EndComp
 Connection ~ 5000 2000
 Wire Wire Line
 	4500 3000 5300 3000
@@ -234,11 +220,6 @@ Text Label 7150 4100 0    50   ~ 0
 VLOGIC
 Wire Wire Line
 	5300 2600 5250 2600
-Connection ~ 4800 2000
-Wire Wire Line
-	4550 2000 4800 2000
-Wire Wire Line
-	4800 2000 5000 2000
 $Comp
 L Device:C C?
 U 1 1 60580ED6
@@ -253,20 +234,6 @@ F 3 "~" H 4650 2600 50  0001 C CNN
 F 4 "50V" V 4900 2550 50  0000 C CNN "Voltage"
 	1    4650 2600
 	0    1    1    0   
-$EndComp
-$Comp
-L RespiraWorks_Std:CSD17304Q3 Q?
-U 1 1 60580EDC
-P 4700 2200
-AR Path="/601A64F8/60580EDC" Ref="Q?"  Part="1" 
-AR Path="/601A64F8/60567144/60580EDC" Ref="Q?"  Part="1" 
-AR Path="/6023BF6A/60567144/60580EDC" Ref="Q?"  Part="1" 
-F 0 "Q?" H 4750 2600 50  0000 L CNN
-F 1 "CSD17304Q3" H 4600 2500 50  0000 L CNN
-F 2 "RespiraWorks_Std:VSON-8_3.3x3.3mm_P0.65mm_NexFET" H 4900 2125 50  0001 L CIN
-F 3 "https://www.ti.com/lit/ds/symlink/csd17304q3.pdf?ts=1608773956037" V 4700 2200 50  0001 L CNN
-	1    4700 2200
-	1    0    0    -1  
 $EndComp
 Connection ~ 4500 2600
 Wire Wire Line
@@ -614,28 +581,16 @@ AR Path="/601A64F8/60580FC0" Ref="Q?"  Part="1"
 AR Path="/601A64F8/60567144/60580FC0" Ref="Q?"  Part="1" 
 AR Path="/6023BF6A/60567144/60580FC0" Ref="Q?"  Part="1" 
 F 0 "Q?" V 2500 2100 50  0000 C CNN
-F 1 "CSD17304Q3" V 2400 2150 50  0000 C CNN
-F 2 "RespiraWorks_Std:VSON-8_3.3x3.3mm_P0.65mm_NexFET" H 2300 2025 50  0001 L CIN
-F 3 "https://www.ti.com/lit/ds/symlink/csd17304q3.pdf?ts=1608773956037" V 2100 2100 50  0001 L CNN
+F 1 "CSD18563Q5A" V 2400 2150 50  0000 C CNN
+F 2 "RespiraWorks:VSONP-8-1EP_5x6_P1.27mm" H 2300 2025 50  0001 L CIN
+F 3 "https://www.ti.com/lit/ds/symlink/csd18563q5a.pdf" V 2100 2100 50  0001 L CNN
+F 4 "TI" V 2100 2100 50  0001 C CNN "Manufacturer"
+F 5 "CSD18563Q5A" V 2100 2100 50  0001 C CNN "Manufacturer PN"
 	1    2100 2100
 	0    -1   -1   0   
 $EndComp
 Wire Wire Line
 	2300 2000 2350 2000
-$Comp
-L RespiraWorks_Std:CSD17304Q3 Q?
-U 1 1 60580FC7
-P 2700 2100
-AR Path="/601A64F8/60580FC7" Ref="Q?"  Part="1" 
-AR Path="/601A64F8/60567144/60580FC7" Ref="Q?"  Part="1" 
-AR Path="/6023BF6A/60567144/60580FC7" Ref="Q?"  Part="1" 
-F 0 "Q?" V 3100 2100 50  0000 C CNN
-F 1 "CSD17304Q3" V 3000 2150 50  0000 C CNN
-F 2 "RespiraWorks_Std:VSON-8_3.3x3.3mm_P0.65mm_NexFET" H 2900 2025 50  0001 L CIN
-F 3 "https://www.ti.com/lit/ds/symlink/csd17304q3.pdf?ts=1608773956037" V 2700 2100 50  0001 L CNN
-	1    2700 2100
-	0    1    -1   0   
-$EndComp
 Wire Wire Line
 	2900 2000 3100 2000
 $Comp
@@ -652,7 +607,6 @@ F 3 "~" H 3800 4000 50  0001 C CNN
 	1    3800 4000
 	0    1    1    0   
 $EndComp
-Connection ~ 2500 2000
 Wire Wire Line
 	2100 2300 2100 2450
 Wire Wire Line
@@ -1110,20 +1064,6 @@ F 3 "~" H 8600 2150 50  0001 C CNN
 F 4 "25V" H 8650 1850 50  0000 L CNN "Voltage"
 	1    8600 2150
 	1    0    0    -1  
-$EndComp
-$Comp
-L RespiraWorks_Std:CSD25402Q3A Q?
-U 1 1 605810DE
-P 7800 3000
-AR Path="/601A64F8/605810DE" Ref="Q?"  Part="1" 
-AR Path="/601A64F8/60567144/605810DE" Ref="Q?"  Part="1" 
-AR Path="/6023BF6A/60567144/605810DE" Ref="Q?"  Part="1" 
-F 0 "Q?" V 7850 2700 50  0000 L CNN
-F 1 "CSD25402Q3A" V 7950 2650 50  0000 L CNN
-F 2 "RespiraWorks_Std:VSON-8_3.3x3.3mm_P0.65mm_NexFET" H 8300 2850 50  0001 C CNN
-F 3 "https://www.ti.com/lit/ds/symlink/csd25402q3a.pdf" H 7700 3000 50  0001 C CNN
-	1    7800 3000
-	1    0    0    1   
 $EndComp
 Wire Wire Line
 	6200 2000 7800 2000
@@ -1643,5 +1583,75 @@ F 4 "35V" H 3700 1850 50  0000 L CNN "Voltage"
 F 5 "X5R" H 3650 2150 50  0001 C CNN "Dielectric"
 	1    3650 2150
 	1    0    0    -1  
+$EndComp
+$Comp
+L RespiraWorks_Std:CSD17304Q3 Q?
+U 1 1 60321C9D
+P 2700 2100
+AR Path="/601A64F8/60321C9D" Ref="Q?"  Part="1" 
+AR Path="/601A64F8/60567144/60321C9D" Ref="Q?"  Part="1" 
+AR Path="/6023BF6A/60567144/60321C9D" Ref="Q?"  Part="1" 
+F 0 "Q?" V 3100 2100 50  0000 C CNN
+F 1 "CSD18563Q5A" V 3000 2150 50  0000 C CNN
+F 2 "RespiraWorks:VSONP-8-1EP_5x6_P1.27mm" H 2900 2025 50  0001 L CIN
+F 3 "https://www.ti.com/lit/ds/symlink/csd18563q5a.pdf" V 2700 2100 50  0001 L CNN
+F 4 "TI" V 2700 2100 50  0001 C CNN "Manufacturer"
+F 5 "CSD18563Q5A" V 2700 2100 50  0001 C CNN "Manufacturer PN"
+	1    2700 2100
+	0    1    -1   0   
+$EndComp
+Connection ~ 2500 2000
+Wire Wire Line
+	4550 2000 4800 2000
+Wire Wire Line
+	4800 2000 5000 2000
+Connection ~ 4800 2000
+$Comp
+L RespiraWorks_Std:CSD17304Q3 Q?
+U 1 1 60337344
+P 4700 2200
+AR Path="/601A64F8/60337344" Ref="Q?"  Part="1" 
+AR Path="/601A64F8/60567144/60337344" Ref="Q?"  Part="1" 
+AR Path="/6023BF6A/60567144/60337344" Ref="Q?"  Part="1" 
+F 0 "Q?" H 4750 2600 50  0000 C CNN
+F 1 "CSD18563Q5A" H 4900 2500 50  0000 C CNN
+F 2 "RespiraWorks:VSONP-8-1EP_5x6_P1.27mm" H 4900 2125 50  0001 L CIN
+F 3 "https://www.ti.com/lit/ds/symlink/csd18563q5a.pdf" V 4700 2200 50  0001 L CNN
+F 4 "TI" V 4700 2200 50  0001 C CNN "Manufacturer"
+F 5 "CSD18563Q5A" V 4700 2200 50  0001 C CNN "Manufacturer PN"
+	1    4700 2200
+	1    0    0    -1  
+$EndComp
+$Comp
+L RespiraWorks_Std:CSD17304Q3 Q?
+U 1 1 6032FCBA
+P 4350 2100
+AR Path="/601A64F8/6032FCBA" Ref="Q?"  Part="1" 
+AR Path="/601A64F8/60567144/6032FCBA" Ref="Q?"  Part="1" 
+AR Path="/6023BF6A/60567144/6032FCBA" Ref="Q?"  Part="1" 
+F 0 "Q?" V 4750 2100 50  0000 C CNN
+F 1 "CSD18563Q5A" V 4650 2150 50  0000 C CNN
+F 2 "RespiraWorks:VSONP-8-1EP_5x6_P1.27mm" H 4550 2025 50  0001 L CIN
+F 3 "https://www.ti.com/lit/ds/symlink/csd18563q5a.pdf" V 4350 2100 50  0001 L CNN
+F 4 "TI" V 4350 2100 50  0001 C CNN "Manufacturer"
+F 5 "CSD18563Q5A" V 4350 2100 50  0001 C CNN "Manufacturer PN"
+	1    4350 2100
+	0    -1   -1   0   
+$EndComp
+$Comp
+L RespiraWorks_Std:DMP3013SFV-7 Q?
+U 1 1 605810DE
+P 7800 3000
+AR Path="/601A64F8/605810DE" Ref="Q?"  Part="1" 
+AR Path="/601A64F8/60567144/605810DE" Ref="Q?"  Part="1" 
+AR Path="/6023BF6A/60567144/605810DE" Ref="Q?"  Part="1" 
+F 0 "Q?" V 7850 2700 50  0000 L CNN
+F 1 "DMP3013SFV-7" V 7950 2550 50  0000 L CNN
+F 2 "Package_SON:Diodes_PowerDI3333-8" H 8300 2850 50  0001 C CNN
+F 3 "https://www.diodes.com/assets/Datasheets/DMP3013SFV.pdf" H 7700 3000 50  0001 C CNN
+F 4 "Diodes Inc." V 7800 3000 50  0001 C CNN "Manufacturer"
+F 5 "DMP3013SFV-7" V 7800 3000 50  0001 C CNN "Manufacturer PN"
+	1    7800 3000
+	1    0    0    1   
 $EndComp
 $EndSCHEMATC

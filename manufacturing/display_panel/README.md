@@ -79,7 +79,9 @@ BEFORE purchasing any parts.**
 |**A17**| 4        | McMaster-Carr | 94180A351                | 15.47 / 100  | [C][a17mcmc] | Heat-set inserts for M4 screws |
 |**A18**| 4        | McMaster-Carr | 93475A230                | 1.86 / 100   | [C][a18mcmc] | M4 washer, 9mm OD |
 |**A19**| 4        | McMaster-Carr | 92095A189                | 8.89 / 100   | [C][a19mcmc] | M4 8mm screw, hex socket drive |
-|**A20**| 4        | McMaster-Carr | 91292A010                | 4.97 / 100   | [C][a20mcmc] | M2.5 6mm screw, hex socket drive |  
+|**A20**| 4        | McMaster-Carr | 91292A010                | 4.97 / 100   | [C][a20mcmc] | M2.5 6mm screw, hex socket drive |
+|**A21**| 4        | Würth Elektronik | 971090151                |    | [W][a21mcmc] | M2.5 9mm hex standoff |
+|**A22**| 4        | Würth Elektronik | 971200151                |    | [W][a22mcmc] | M2.5 20mm hex standoff |
 
 **#TODO: type of acrylic**  
 **#TODO: laser cutting machine specs**
@@ -107,6 +109,8 @@ BEFORE purchasing any parts.**
 [a18mcmc]: https://www.mcmaster.com/93475A230/
 [a19mcmc]: https://www.mcmaster.com/92095A189/
 [a20mcmc]: https://www.mcmaster.com/91292A010/
+[a21mcmc]: https://www.we-online.com/catalog/en/SSTIE_STEEL_SPACER_STUD_METRIC_INTERNAL_EXTERNAL
+[a22mcmc]: https://www.we-online.com/catalog/en/SSTIE_STEEL_SPACER_STUD_METRIC_INTERNAL_EXTERNAL  
 
 ## Assembly
 

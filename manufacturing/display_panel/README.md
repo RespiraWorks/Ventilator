@@ -67,7 +67,7 @@ BEFORE purchasing any parts.**
 |**A5** | (1)      | UPerfect      | -                        | 49.00        | [A][a5ali]   | 7" capacitive touchscreen, **DUPLICATE in [electrical assembly][elec]** |
 |**A6** | 1        | RespiraWorks  | PCB                      |             | [Rw][a6rw]    | RespiraWorks custom PCB, **DUPLICATE in [electrical assembly][elec]** |
 |**A7** | (1)      | RespiraWorks  | PCB_interim_board        |             | [Rw][a7rw]    | RespiraWorks Rev1 interim board **OPTIONAL**, **DUPLICATE in [electrical assembly][elec]** |
-|**A8** | 1        | ST Micro      | NUCLEO-L452-RE           | 14.43       | [M][a8mous] [R][a8rs]   | STM32 Nucleo dev board, **DUPLICATE in [electrical assembly][elec]**, **DO NOT get the -P** version |
+|**A8** | 1        | ST Micro      | NUCLEO-L452-RE           | 14.43       | [M][a8mous] [R][a8rs]   | STM32 Nucleo dev board, **DO NOT get the -P** version , **DUPLICATE in [electrical assembly][elec]** |
 |**A9** | 2        | Digikey       | X-NUCLEO-IHM03A1         | 10.64       | [K][a9key] [M][a9mous]  | Stepper driver board, **DUPLICATE in [electrical assembly][elec]** |
 |**A10** | (1)      | ST            | X-NUCLEO-IHM02A1         | 15.00       | [S][a10st] [R][a10rs]     | Two-axis stepper driver board, **Alternative to 2x`[A10]`**, **DUPLICATE in [electrical assembly][elec]**  |
 |**A11** | 1        | Raspberry Pi  | RPI4-MODBP-2GB           | 53.23       | [M][a11mous]             | Raspberry Pi 4, **DUPLICATE in [electrical assembly][elec]** |
@@ -79,9 +79,9 @@ BEFORE purchasing any parts.**
 |**A17**| 4        | McMaster-Carr | 94180A351                | 15.47 / 100  | [C][a17mcmc] | Heat-set inserts for M4 screws |
 |**A18**| 4        | McMaster-Carr | 93475A230                | 1.86 / 100   | [C][a18mcmc] | M4 washer, 9mm OD |
 |**A19**| 4        | McMaster-Carr | 92095A189                | 8.89 / 100   | [C][a19mcmc] | M4 8mm screw, hex socket drive |
-|**A20**| 4        | McMaster-Carr | 91292A010                | 4.97 / 100   | [C][a20mcmc] | M2.5 6mm screw, hex socket drive |
-|**A21**| 4        | Würth Elektronik | 971090151                |    | [W][a21mcmc] | M2.5 9mm hex standoff |
-|**A22**| 4        | Würth Elektronik | 971200151                |    | [W][a22mcmc] | M2.5 20mm hex standoff |
+|**A20**| 4        | McMaster-Carr | 92095A458                | 4.97 / 100   | [C][a20mcmc] | M2.5 6mm screw, hex socket drive |
+|**A21**| 4        | DigiKey       | 732-10395-ND             | 48.40/100    | [K][a21mcmc] | M2.5 9mm hex standoff |
+|**A22**| 4        | DigiKey       | 732-10435-ND             | 50.82/100    | [K][a22mcmc] | M2.5 20mm hex standoff |
 
 **#TODO: type of acrylic**  
 **#TODO: laser cutting machine specs**
@@ -108,9 +108,9 @@ BEFORE purchasing any parts.**
 [a17mcmc]: https://www.mcmaster.com/94180A351/
 [a18mcmc]: https://www.mcmaster.com/93475A230/
 [a19mcmc]: https://www.mcmaster.com/92095A189/
-[a20mcmc]: https://www.mcmaster.com/91292A010/
-[a21mcmc]: https://www.we-online.com/catalog/en/SSTIE_STEEL_SPACER_STUD_METRIC_INTERNAL_EXTERNAL
-[a22mcmc]: https://www.we-online.com/catalog/en/SSTIE_STEEL_SPACER_STUD_METRIC_INTERNAL_EXTERNAL  
+[a20mcmc]: https://www.mcmaster.com/92095A458/
+[a21mcmc]: https://www.digikey.com/en/products/detail/w-rth-elektronik/971090151/6174614
+[a22mcmc]: https://www.digikey.com/en/products/detail/würth-elektronik/971200151/6174654   
 
 ## Assembly
 
@@ -148,6 +148,8 @@ fitting are in the way of your and your soldering iron.
 * Install check valve `[A2]` on the outside of the panel.
 
 * Use PTFE tape on al NPT joints.
+
+* For instructions on how to assemble the PCB stack, refer to the [rev1 export subfolder of the PCB folder](../../pcb/rev1_export).
 
 |  Front    |  Back   |
 :------------------:|:-----------------:|

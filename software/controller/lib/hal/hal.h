@@ -1,4 +1,4 @@
-/* Copyright 2020, RespiraWorks
+/* Copyright 2020-2021, RespiraWorks
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -66,8 +66,8 @@ limitations under the License.
 // Mode of a digital pin.
 // Usage: PinMode::INPUT etc.
 enum class PinMode {
-  // Test code relies on INPUT being the first enumeration (to get the behavior
-  // that INPUT pins are the default).
+  // Test code relies on INPUT being the first enumeration (to get the
+  // behavior that INPUT pins are the default).
   INPUT,
   OUTPUT,
   INPUT_PULLUP
@@ -124,7 +124,7 @@ enum class BinaryPin {
 enum class IntPriority {
   CRITICAL = 2, // Very important interrupt
   STANDARD = 5, // Normal hardware interrupts
-  LOW = 8,      // Less important.  Hardware interrutps can interrupt this
+  LOW = 8,      // Less important.  Hardware interrupts can interrupt this
 };
 
 enum class InterruptVector;
@@ -164,14 +164,14 @@ public:
 
   // Sleeps for some number of milliseconds.
   //
-  // Faked when testing.  Does not sleep, but does advance the time returned by
-  // millis().
+  // Faked when testing.  Does not sleep, but does advance the time returned
+  // by millis().
   void delay(Duration d);
 
-  // Caveat for people new to Arduino: analogRead and analogWrite are completely
-  // separate from each other and do not even refer to the same pins.
-  // analogRead() reads the value of an analog input pin. analogWrite() writes
-  // to a PWM pin - some of the digital pins are PWM pins.
+  // Caveat for people new to Arduino: analogRead and analogWrite are
+  // completely separate from each other and do not even refer to the same
+  // pins. analogRead() reads the value of an analog input pin. analogWrite()
+  // writes to a PWM pin - some of the digital pins are PWM pins.
 
   // Reads from analog sensor using an analog-to-digital converter.
   //
@@ -187,8 +187,8 @@ public:
   // Causes `pin` to output a square wave with the given duty cycle (range
   // [0, 1]).
   //
-  // Perhaps a better name would be "pwmWrite", but we also want to be somewhat
-  // consistent with the Arduino API that people are familiar with.
+  // Perhaps a better name would be "pwmWrite", but we also want to be
+  // somewhat consistent with the Arduino API that people are familiar with.
   void analogWrite(PwmPin pin, float duty);
 
   // Sets `pin` to high or low.
@@ -210,11 +210,11 @@ public:
 
   // Sends bytes to the GUI controller along the serial bus.
   //
-  // Arduino's SerialIO will block if len > serialBytesAvailableForWrite(), but
-  // this function will never block.  Instead, it returns the number of bytes
-  // written.  number of bytes written.  It's up to you to check how many bytes
-  // were actually written and handle "short writes" where we wrote less than
-  // the whole buffer.
+  // Arduino's SerialIO will block if len > serialBytesAvailableForWrite(),
+  // but this function will never block.  Instead, it returns the number of
+  // bytes written.  number of bytes written.  It's up to you to check how
+  // many bytes were actually written and handle "short writes" where we wrote
+  // less than the whole buffer.
   [[nodiscard]] uint16_t serialWrite(const char *buf, uint16_t len);
   [[nodiscard]] uint16_t serialWrite(uint8_t data) {
     return serialWrite(reinterpret_cast<const char *>(&data), 1);
@@ -229,8 +229,7 @@ public:
   uint16_t debugBytesAvailableForWrite();
   uint16_t debugBytesAvailableForRead();
 
-  // Buzzer used for alarms.  These functions turn the buzzer
-  // on/off.
+  // Buzzer used for alarms.  These functions turn the buzzer on/off.
   void BuzzerOn(float volume = 1.0f);
   void BuzzerOff();
 
@@ -250,7 +249,7 @@ public:
   // @param data - Pointer to data to write
   // @param ct   - Number of bytes to write
   //               NOTE - must be a multiple of 8
-  bool FlashWrite(uint32_t addr, void *data, int ct);
+  bool FlashWrite(uint32_t addr, void *data, size_t ct);
 
 #ifndef TEST_MODE
   // Translates to a numeric pin that can be passed to the Arduino API.
@@ -262,8 +261,8 @@ public:
   void EarlyInit();
 
 #else
-  // Reads up to `len` bytes of data "sent" via serialWrite.  Returns the total
-  // number of bytes read.
+  // Reads up to `len` bytes of data "sent" via serialWrite.  Returns the
+  // total number of bytes read.
   //
   // TODO: Once we have explicit message framing, this should simply read one
   // message.
@@ -330,7 +329,7 @@ public:
   bool InInterruptHandler();
 
   // Calculate CRC32 for data buffer
-  uint32_t crc32(uint8_t *data, uint32_t length);
+  uint32_t crc32(const uint8_t *data, uint32_t length);
 
 private:
   // Initializes watchdog, sets appropriate pins to OUTPUT, etc.  Called by
@@ -353,7 +352,7 @@ private:
   void InitSysTimer();
   void InitPwmOut();
   void InitUARTs();
-  void EnableClock(void *ptr);
+  void EnableClock(volatile void *ptr);
   void EnableInterrupt(InterruptVector vec, IntPriority pri);
   void StepperMotorInit();
   void InitBuzzer();
@@ -403,8 +402,8 @@ public:
     }
   }
 
-  // Not copyable or moveable.  (Technically we could make this class
-  // moveable if necessary, but it probably isn't!)
+  // Not copyable or movable.  (Technically we could make this class
+  // movable if necessary, but it probably isn't!)
   BlockInterrupts(const BlockInterrupts &) = delete;
   BlockInterrupts(BlockInterrupts &&) = delete;
   BlockInterrupts &operator=(const BlockInterrupts &) = delete;
@@ -512,8 +511,8 @@ inline void HalApi::enableInterrupts() { interruptsEnabled_ = true; }
 inline bool HalApi::interruptsEnabled() const { return interruptsEnabled_; }
 inline bool HalApi::InInterruptHandler() { return false; }
 
-inline uint32_t HalApi::crc32(uint8_t *data, uint32_t length) {
-  return soft_crc32(reinterpret_cast<char *>(data), length);
+inline uint32_t HalApi::crc32(const uint8_t *data, uint32_t length) {
+  return soft_crc32(data, length);
 }
 
 inline uint16_t TestSerialPort::Read(char *buf, uint16_t len) {
@@ -568,7 +567,7 @@ inline void BuzzerOff() {}
 inline void InitPSOL() {}
 inline void PSOL_Value(float val) {}
 inline bool HalApi::FlashErasePage(uint32_t address) { return true; }
-inline bool HalApi::FlashWrite(uint32_t addr, void *data, int ct) {
+inline bool HalApi::FlashWrite(uint32_t addr, void *data, size_t ct) {
   return true;
 }
 

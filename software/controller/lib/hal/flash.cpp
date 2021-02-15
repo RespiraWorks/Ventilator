@@ -1,4 +1,4 @@
-/* Copyright 2020, RespiraWorks
+/* Copyright 2020-2021, RespiraWorks
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -18,6 +18,40 @@ limitations under the License.
 #include "hal.h"
 #include "hal_stm32.h"
 
+/* Write ct bytes to flash starting at the given address.
+ * ct must be a multiple of 8 because flash is programmed 64-bits
+ * at a time. The address must be a multiple of 8 for the same reason.
+ * [RM] 3.3.7
+ */
+static bool ValidFlashParameters(uint32_t addr, size_t ct) {
+  return (addr >= flash_start_addr) and
+         (addr + ct <= flash_start_addr + flash_size) and !(ct & 7) and
+         !(addr & 7);
+}
+
+/* After reset, write is not allowed in the Flash control register (FLASH_CR)
+ * to protect the Flash memory against possible unwanted operations due,
+ * for example, to electric disturbances. [RM] 3.3.5
+ * Any wrong sequence will lock up the FLASH_CR register until the next system
+ * reset. In the case of a wrong key sequence, a bus error is detected and a
+ * Hard Fault interrupt is generated
+ */
+static inline void UnlockFlash(FlashReg *reg) {
+  // Unlock flash by writing two special values to the key register
+  reg->key = 0x45670123;
+  reg->key = 0xCDEF89AB;
+}
+
+/*
+ * The FLASH_CR register can be locked again by software by setting the
+ * LOCK bit in the FLASH_CR register.
+ * WARNING: The FLASH_CR register cannot be written when the BSY bit in the
+ * Flash status register (FLASH_SR) is set. Any attempt to write to it with the
+ * BSY bit set will cause the AHB bus to stall until the BSY bit is cleared.
+ * [RM] 3.3.5
+ */
+static inline void LockFlash(FlashReg *reg) { reg->ctrl.lock = 1; }
+
 /*
  * Erase a single 2k page of flash given the starting
  * address of that page.
@@ -25,25 +59,14 @@ limitations under the License.
  * Returns true on success or false on failure
  */
 bool HalApi::FlashErasePage(uint32_t addr) {
-
-  // Check for a reasonable address
-  if (addr < flash_start_addr)
-    return false;
-
-  if (addr >= flash_start_addr + flash_size)
-    return false;
-
-  // Address needs to be the start of a page
-  if (addr & (flash_page_size - 1))
+  if (!ValidFlashParameters(addr, flash_page_size))
     return false;
 
   // Clear all the status bits
   FlashReg *reg = FLASH_BASE;
   reg->status = 0x0000C3FB;
 
-  // Unlock flash by writing two special values to the key register
-  reg->key = 0x45670123;
-  reg->key = 0xCDEF89AB;
+  UnlockFlash(reg);
 
   // Find the page number
   uint8_t n = static_cast<uint8_t>((addr - flash_start_addr) / flash_page_size);
@@ -56,56 +79,33 @@ bool HalApi::FlashErasePage(uint32_t addr) {
   while (reg->status & 0x00010000) {
   }
 
-  // Lock the flash again
   reg->ctrl.page = 0;
   reg->ctrl.page_erase = 0;
-  reg->ctrl.lock = 1;
+
+  LockFlash(reg);
   return true;
 }
 
-inline uint32_t u8_to_u32(uint8_t *ptr) {
-  uint32_t a = *ptr++;
-  uint32_t b = *ptr++;
-  uint32_t c = *ptr++;
-  uint32_t d = *ptr++;
-  return a | (b << 8) | (c << 16) | (d << 24);
-}
+bool HalApi::FlashWrite(uint32_t addr, void *data, size_t ct) {
 
-// Write ct bytes to flash starting at the given address.
-// ct must be a multiple of 8 because flash is programmed 64-bits
-// at a time.  If ct isn't a multiple of 8 this function will fail.
-// The address must also be a multiple of 8 for the same reason.
-bool HalApi::FlashWrite(uint32_t addr, void *data, int ct) {
-  // Make sure the address is the start of a flash page
-  if ((addr < flash_start_addr) ||
-      ((addr + ct) > flash_start_addr + flash_size))
+  if (!ValidFlashParameters(addr, ct))
     return false;
-
-  if ((ct < 0) || (ct & 7) || (addr & 7))
-    return false;
-
   FlashReg *reg = FLASH_BASE;
 
   // Clear all the status bits
   reg->status = 0x0000C3FB;
 
-  // Unlock flash
-  reg->key = 0x45670123;
-  reg->key = 0xCDEF89AB;
+  UnlockFlash(reg);
 
   // Set the PG bit to start programming
   reg->ctrl.program = 1;
 
-  uint8_t *ptr = (uint8_t *)data;
-
-  uint32_t *dest = (uint32_t *)addr;
+  auto *dest = (uint32_t *)addr;
+  auto *ptr = (uint32_t *)data;
   for (int i = 0; i < ct / 8; i++) {
     // Write 64-bits
-    *dest++ = u8_to_u32(ptr);
-    ptr += 4;
-
-    *dest++ = u8_to_u32(ptr);
-    ptr += 4;
+    *dest++ = *ptr++;
+    *dest++ = *ptr++;
 
     // Wait for busy bit to clear
     while (reg->status & 0x00010000) {
@@ -119,10 +119,9 @@ bool HalApi::FlashWrite(uint32_t addr, void *data, int ct) {
     reg->status = 0x00000001;
   }
 
-  // Lock flash
   reg->ctrl.program = 0;
-  reg->ctrl.lock = 1;
 
+  LockFlash(reg);
   return !(reg->status & 0x0000C3FA);
 }
 

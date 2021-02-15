@@ -1,4 +1,4 @@
-/* Copyright 2020, RespiraWorks
+/* Copyright 2020-2021, RespiraWorks
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@ limitations under the License.
 ////////////////////////////////////////////////////////////////////
 //
 // This file contains code to read the A/D inputs used in the system.
+// The A/D converters are described in [RM] section 16.
 //
 // The A/D inputs all connect to relatively slow signals that we want
 // to read precisely, so to improve the results we do a lot of
@@ -114,7 +115,7 @@ static volatile uint16_t adc_buff[adc_samp_history * kAdcChannels];
 // - We want the A/D reading to be fast, so summing up a really large
 //   array might be too slow.
 //
-// If you get hit with this assertion you may beed to rethink the
+// If you get hit with this assertion you may need to rethink the
 // way this function works.
 static_assert(adc_samp_history < 100);
 
@@ -138,10 +139,10 @@ void HalApi::InitADC() {
   // internal voltage regulator.
   adc->adc[0].ctrl = 0x10000000;
 
-  // Wait for the startup time specified in the STM32
-  // datasheet for the voltage regulator to become ready.
-  // The time in the datasheet is 20 microseconds, but
-  // I'll wait for 30 just to be extra conservative
+  // Wait for the startup time ([RM] 16.4.6) specified in the STM32
+  // [DS] for the voltage regulator to become ready.
+  // The time in the [DS] is 20 microseconds ([DS] 6.3.18)
+  // but I'll wait for 30 just to be extra conservative
   Hal.delay(microseconds(30));
 
   // Calibrate the A/D for single ended channels ([RM] 16.4.8)
@@ -203,7 +204,7 @@ void HalApi::InitADC() {
   dma->channel[C1].config.htie = 0;
   dma->channel[C1].config.teie = 0;
   dma->channel[C1].config.dir =
-      static_cast<REG>(DmaChannelDir::PERIPHERAL_TO_MEM);
+      static_cast<uint32_t>(DmaChannelDir::PERIPHERAL_TO_MEM);
   dma->channel[C1].config.circular = 1;
   dma->channel[C1].config.perInc = 0;
   dma->channel[C1].config.memInc = 1;

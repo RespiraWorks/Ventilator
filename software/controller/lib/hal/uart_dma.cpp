@@ -1,3 +1,19 @@
+/* Copyright 2020-2021, RespiraWorks
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+*/
+
 #if defined(BARE_STM32) && defined(UART_VIA_DMA)
 
 #include "uart_dma.h"
@@ -50,13 +66,16 @@ void UART_DMA::init(int baud) {
   dma->channel[rxCh].config.tcie = 1;        // interrupt on DMA complete
 
   dma->channel[rxCh].config.mem2mem = 0; // memory-to-memory mode disabled
-  dma->channel[rxCh].config.msize = DmaTransferSize::BITS8;
-  dma->channel[rxCh].config.psize = DmaTransferSize::BITS8;
+  dma->channel[rxCh].config.msize =
+      static_cast<uint32_t>(DmaTransferSize::BITS8);
+  dma->channel[rxCh].config.psize =
+      static_cast<uint32_t>(DmaTransferSize::BITS8);
   dma->channel[rxCh].config.memInc = 1;   // increment destination (memory)
   dma->channel[rxCh].config.perInc = 0;   // don't increment source
                                           // (peripheral) address
   dma->channel[rxCh].config.circular = 0; // not circular
-  dma->channel[rxCh].config.dir = DmaChannelDir::PERIPHERAL_TO_MEM;
+  dma->channel[rxCh].config.dir =
+      static_cast<uint32_t>(DmaChannelDir::PERIPHERAL_TO_MEM);
 
   dma->channel[txCh].config.priority = 0b11; // high priority
   dma->channel[txCh].config.teie = 1;        // interrupt on error
@@ -64,29 +83,32 @@ void UART_DMA::init(int baud) {
   dma->channel[txCh].config.tcie = 1;        // DMA complete interrupt enabled
 
   dma->channel[txCh].config.mem2mem = 0; // memory-to-memory mode disabled
-  dma->channel[txCh].config.msize = DmaTransferSize::BITS8;
-  dma->channel[txCh].config.psize = DmaTransferSize::BITS8;
+  dma->channel[txCh].config.msize =
+      static_cast<uint32_t>(DmaTransferSize::BITS8);
+  dma->channel[txCh].config.psize =
+      static_cast<uint32_t>(DmaTransferSize::BITS8);
   dma->channel[txCh].config.memInc = 1;   // increment source (memory) address
   dma->channel[txCh].config.perInc = 0;   // don't increment dest (peripheral)
                                           // address
   dma->channel[txCh].config.circular = 0; // not circular
-  dma->channel[txCh].config.dir = DmaChannelDir::MEM_TO_PERIPHERAL;
+  dma->channel[txCh].config.dir =
+      static_cast<uint32_t>(DmaChannelDir::MEM_TO_PERIPHERAL);
 }
 
-// Sets up an interrupt on matching char incomming form UART3
+// Sets up an interrupt on matching char incoming form UART3
 void UART_DMA::charMatchEnable() {
   uart->intClear.s.cmcf = 1; // Clear char match flag
   uart->ctrl1.s.cmie = 1;    // Enable character match interrupt
 }
 
 // Returns true if DMA TX is in progress
-bool UART_DMA::isTxInProgress() {
+bool UART_DMA::isTxInProgress() const {
   // TODO thread safety
   return tx_in_progress;
 }
 
 // Returns true if DMA RX is in progress
-bool UART_DMA::isRxInProgress() {
+bool UART_DMA::isRxInProgress() const {
   // TODO thread safety
   return rx_in_progress;
 }
@@ -95,16 +117,16 @@ bool UART_DMA::isRxInProgress() {
 // Returns false if DMA transmission is in progress, does not
 // interrupt previous transmission.
 // Returns true if no transmission is in progress
-bool UART_DMA::startTX(const char *buf, uint32_t length) {
+bool UART_DMA::startTX(char *buf, uint32_t length) {
   if (isTxInProgress()) {
     return false;
   }
 
   dma->channel[txCh].config.enable = 0; // Disable channel before config
   // data sink
-  dma->channel[txCh].pAddr = reinterpret_cast<REG>(&(uart->txDat));
+  dma->channel[txCh].pAddr = &(uart->txDat);
   // data source
-  dma->channel[txCh].mAddr = reinterpret_cast<REG>(buf);
+  dma->channel[txCh].mAddr = buf;
   // data length
   dma->channel[txCh].count = length & 0x0000FFFF;
 
@@ -131,8 +153,7 @@ void UART_DMA::stopTX() {
 // setup. Returns true if no reception is in progress and new reception
 // was setup.
 
-bool UART_DMA::startRX(const char *buf, const uint32_t length,
-                       const uint32_t timeout) {
+bool UART_DMA::startRX(char *buf, uint32_t length, uint32_t timeout) {
   // UART3 reception happens on DMA1 channel 3
   if (isRxInProgress()) {
     return false;
@@ -141,9 +162,9 @@ bool UART_DMA::startRX(const char *buf, const uint32_t length,
   dma->channel[rxCh].config.enable = 0; // don't enable yet
 
   // data source
-  dma->channel[rxCh].pAddr = reinterpret_cast<REG>(&(uart->rxDat));
+  dma->channel[rxCh].pAddr = &(uart->rxDat);
   // data sink
-  dma->channel[rxCh].mAddr = reinterpret_cast<REG>(buf);
+  dma->channel[rxCh].mAddr = buf;
   // data length
   dma->channel[rxCh].count = length;
 
@@ -168,7 +189,7 @@ void UART_DMA::stopRX() {
     uart->ctrl1.s.rtoie = 0;           // Disable receive timeout interrupt
     dma->channel[2].config.enable = 0; // Disable DMA channel
     // TODO thread safety
-    rx_in_progress = 0;
+    rx_in_progress = false;
   }
 }
 

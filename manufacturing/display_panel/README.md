@@ -73,13 +73,12 @@ BEFORE purchasing any parts.**
 |**A11**| 1        | Raspberry Pi  | RPI4-MODBP-2GB           | 53.23        | [M][a11mous] | Raspberry Pi 4, **DUPLICATE in [electrical assembly][elec]** |
 |**A12**| 4        | McMaster-Carr | 93625A101                | 7.70 / 10    | [C][a12mcmc] | M2 locknut |
 |**A13**| 8        | McMaster-Carr | 93475A195                | 1.06 / 100   | [C][a13mcmc] | M2 washer, 5mm OD |
-|**A14**| (8)      | McMaster-Carr | 91116A240                | 2.40 / 100   | [C][a14mcmc] | M2 washer, 7mm OD, **alternate to `[A7]`** |
-|**A15**| 4        | McMaster-Carr | 92000A019                | 6.75 / 100   | [C][a15mcmc] | M2 screw 12mm, Phillips drive |
-|**A16**| (4)      | McMaster-Carr | 92095A455                | 7.44 / 24    | [C][a16mcmc] | M2 screw 12mm, hex drive, **alternate to `[A9]`** |
+|**A14**| (8)      | McMaster-Carr | 91116A240                | 2.40 / 100   | [C][a14mcmc] | M2 washer, 7mm OD |
+|**A16**| (4)      | McMaster-Carr | 92095A455                | 7.44 / 25    | [C][a16mcmc] | M2 12mm screw |
 |**A17**| 4        | McMaster-Carr | 94180A351                | 15.47 / 100  | [C][a17mcmc] | Heat-set inserts for M4 screws |
 |**A18**| 4        | McMaster-Carr | 93475A230                | 1.86 / 100   | [C][a18mcmc] | M4 washer, 9mm OD |
-|**A19**| 4        | McMaster-Carr | 92095A189                | 8.89 / 100   | [C][a19mcmc] | M4 8mm screw, hex socket drive |
-|**A20**| 4        | McMaster-Carr | 92095A458                | 4.97 / 100   | [C][a20mcmc] | M2.5 6mm screw, hex socket drive |
+|**A19**| 4        | McMaster-Carr | 92095A189                | 8.89 / 100   | [C][a19mcmc] | M4 8mm screw |
+|**A20**| 4        | McMaster-Carr | 92095A458                | 4.97 / 100   | [C][a20mcmc] | M2.5 6mm screw |
 |**A21**| 4        | DigiKey       | 732-10395-ND             | 48.40/100    | [K][a21key]  | M2.5 9mm hex standoff |
 |**A22**| 4        | DigiKey       | 732-10435-ND             | 50.82/100    | [K][a22key]  | M2.5 20mm hex standoff |
 
@@ -103,7 +102,6 @@ BEFORE purchasing any parts.**
 [a12mcmc]: https://www.mcmaster.com/93625A101/
 [a13mcmc]: https://www.mcmaster.com/93475A195/
 [a14mcmc]: https://www.mcmaster.com/91116A240/
-[a15mcmc]: https://www.mcmaster.com/92000A019/
 [a16mcmc]: https://www.mcmaster.com/92095A455/
 [a17mcmc]: https://www.mcmaster.com/94180A351/
 [a18mcmc]: https://www.mcmaster.com/93475A230/

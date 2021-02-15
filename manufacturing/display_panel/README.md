@@ -80,8 +80,8 @@ BEFORE purchasing any parts.**
 |**A18**| 4        | McMaster-Carr | 93475A230                | 1.86 / 100   | [C][a18mcmc] | M4 washer, 9mm OD |
 |**A19**| 4        | McMaster-Carr | 92095A189                | 8.89 / 100   | [C][a19mcmc] | M4 8mm screw, hex socket drive |
 |**A20**| 4        | McMaster-Carr | 92095A458                | 4.97 / 100   | [C][a20mcmc] | M2.5 6mm screw, hex socket drive |
-|**A21**| 4        | DigiKey       | 732-10395-ND             | 48.40/100    | [K][a21mcmc] | M2.5 9mm hex standoff |
-|**A22**| 4        | DigiKey       | 732-10435-ND             | 50.82/100    | [K][a22mcmc] | M2.5 20mm hex standoff |
+|**A21**| 4        | DigiKey       | 732-10395-ND             | 48.40/100    | [K][a21key] | M2.5 9mm hex standoff |
+|**A22**| 4        | DigiKey       | 732-10435-ND             | 50.82/100    | [K][a22key] | M2.5 20mm hex standoff |
 
 **#TODO: type of acrylic**  
 **#TODO: laser cutting machine specs**
@@ -109,8 +109,8 @@ BEFORE purchasing any parts.**
 [a18mcmc]: https://www.mcmaster.com/93475A230/
 [a19mcmc]: https://www.mcmaster.com/92095A189/
 [a20mcmc]: https://www.mcmaster.com/92095A458/
-[a21mcmc]: https://www.digikey.com/en/products/detail/w-rth-elektronik/971090151/6174614
-[a22mcmc]: https://www.digikey.com/en/products/detail/würth-elektronik/971200151/6174654   
+[a21key]: https://www.digikey.com/en/products/detail/w-rth-elektronik/971090151/6174614
+[a22key]: https://www.digikey.com/en/products/detail/würth-elektronik/971200151/6174654   
 
 ## Assembly
 

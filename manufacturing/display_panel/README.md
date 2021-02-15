@@ -2,7 +2,7 @@
 
 | Rendering | Assembled |
 |:-------------------------:|:-------------------------:|
-| ![](images/display_panel_assembly_rendering.jpg) | ![](images/through-fitting_2.jpg) |
+| ![](images/display_panel_assembly_rendering.jpg) | ![](images/assembly_with_stack.jpg) |
 
 ## Design rationale
 
@@ -65,25 +65,25 @@ BEFORE purchasing any parts.**
 |**A3** | (1)      | McMaster-Carr | 50785K273                | 8.23         | [C][a3mcmc]  | through-wall straight connector, 1/4NPT female, **DUPLICATE in [pneumatic assembly][pneu]** |
 |**A4** | 1        | McMaster-Carr | 5121K451                 | 5.78 / 10    | [C][a4mcmc]  | 1/4 NPT x 1/4" ID barbed adapter, **DUPLICATE in [pneumatic assembly][pneu]** |
 |**A5** | (1)      | UPerfect      | -                        | 49.00        | [A][a5ali]   | 7" capacitive touchscreen, **DUPLICATE in [electrical assembly][elec]** |
-|**A6** | 1        | RespiraWorks  | PCB                      |             | [Rw][a6rw]    | RespiraWorks custom PCB, **DUPLICATE in [electrical assembly][elec]** |
-|**A7** | (1)      | RespiraWorks  | PCB_interim_board        |             | [Rw][a7rw]    | RespiraWorks Rev1 interim board **OPTIONAL**, **DUPLICATE in [electrical assembly][elec]** |
-|**A8** | 1        | ST Micro      | NUCLEO-L452-RE           | 14.43       | [M][a8mous] [R][a8rs]   | STM32 Nucleo dev board, **DO NOT get the -P** version , **DUPLICATE in [electrical assembly][elec]** |
-|**A9** | 2        | Digikey       | X-NUCLEO-IHM03A1         | 10.64       | [K][a9key] [M][a9mous]  | Stepper driver board, **DUPLICATE in [electrical assembly][elec]** |
-|**A10** | (1)      | ST            | X-NUCLEO-IHM02A1         | 15.00       | [S][a10st] [R][a10rs]     | Two-axis stepper driver board, **Alternative to 2x`[A10]`**, **DUPLICATE in [electrical assembly][elec]**  |
-|**A11** | 1        | Raspberry Pi  | RPI4-MODBP-2GB           | 53.23       | [M][a11mous]             | Raspberry Pi 4, **DUPLICATE in [electrical assembly][elec]** |
-|**A12** | 4        | McMaster-Carr | 93625A101                | 7.70 / 10    | [C][a12mcmc]  | M2 locknut |
-|**A13** | 8        | McMaster-Carr | 93475A195                | 1.06 / 100   | [C][a13mcmc]  | M2 washer, 5mm OD |
-|**A14** | (8)      | McMaster-Carr | 91116A240                | 2.40 / 100   | [C][a14mcmc]  | M2 washer, 7mm OD, **alternate to A7** |
-|**A15** | 4        | McMaster-Carr | 92000A019                | 6.75 / 100   | [C][a15mcmc]  | M2 screw 12mm, Phillips drive |
-|**A16**| (4)      | McMaster-Carr | 92095A455                | 7.44 / 24    | [C][a16mcmc] | M2 screw 12mm, hex drive, **alternate to A9** |
+|**A6** | 1        | RespiraWorks  | PCB                      |              | [Rw][a6rw]   | RespiraWorks custom PCB, **DUPLICATE in [electrical assembly][elec]** |
+|**A7** | (1)      | RespiraWorks  | PCB_interim_board        |              | [Rw][a7rw]   | RespiraWorks Rev1 interim board **OPTIONAL**, **DUPLICATE in [electrical assembly][elec]** |
+|**A8** | 1        | ST Micro      | NUCLEO-L452-RE           | 14.43        | [M][a8mous] [R][a8rs]   | STM32 Nucleo dev board, **DO NOT get the -P version** , **DUPLICATE in [electrical assembly][elec]** |
+|**A9** | 2        | Digikey       | X-NUCLEO-IHM03A1         | 10.64        | [K][a9key] [M][a9mous]  | Stepper driver board, **DUPLICATE in [electrical assembly][elec]** |
+|**A10**| (1)      | ST            | X-NUCLEO-IHM02A1         | 15.00        | [S][a10st] [R][a10rs]   | Two-axis stepper driver board, **Alternative to 2x`[A10]`**, **DUPLICATE in [electrical assembly][elec]**  |
+|**A11**| 1        | Raspberry Pi  | RPI4-MODBP-2GB           | 53.23        | [M][a11mous] | Raspberry Pi 4, **DUPLICATE in [electrical assembly][elec]** |
+|**A12**| 4        | McMaster-Carr | 93625A101                | 7.70 / 10    | [C][a12mcmc] | M2 locknut |
+|**A13**| 8        | McMaster-Carr | 93475A195                | 1.06 / 100   | [C][a13mcmc] | M2 washer, 5mm OD |
+|**A14**| (8)      | McMaster-Carr | 91116A240                | 2.40 / 100   | [C][a14mcmc] | M2 washer, 7mm OD, **alternate to `[A7]`** |
+|**A15**| 4        | McMaster-Carr | 92000A019                | 6.75 / 100   | [C][a15mcmc] | M2 screw 12mm, Phillips drive |
+|**A16**| (4)      | McMaster-Carr | 92095A455                | 7.44 / 24    | [C][a16mcmc] | M2 screw 12mm, hex drive, **alternate to `[A9]`** |
 |**A17**| 4        | McMaster-Carr | 94180A351                | 15.47 / 100  | [C][a17mcmc] | Heat-set inserts for M4 screws |
 |**A18**| 4        | McMaster-Carr | 93475A230                | 1.86 / 100   | [C][a18mcmc] | M4 washer, 9mm OD |
 |**A19**| 4        | McMaster-Carr | 92095A189                | 8.89 / 100   | [C][a19mcmc] | M4 8mm screw, hex socket drive |
 |**A20**| 4        | McMaster-Carr | 92095A458                | 4.97 / 100   | [C][a20mcmc] | M2.5 6mm screw, hex socket drive |
-|**A21**| 4        | DigiKey       | 732-10395-ND             | 48.40/100    | [K][a21key] | M2.5 9mm hex standoff |
-|**A22**| 4        | DigiKey       | 732-10435-ND             | 50.82/100    | [K][a22key] | M2.5 20mm hex standoff |
+|**A21**| 4        | DigiKey       | 732-10395-ND             | 48.40/100    | [K][a21key]  | M2.5 9mm hex standoff |
+|**A22**| 4        | DigiKey       | 732-10435-ND             | 50.82/100    | [K][a22key]  | M2.5 20mm hex standoff |
 
-**#TODO: type of acrylic**  
+**#TODO: type of acrylic**
 **#TODO: laser cutting machine specs**
 
 [a1rw]:    #custom-parts
@@ -97,20 +97,20 @@ BEFORE purchasing any parts.**
 [a8rs]:    https://export.rsdelivers.com/product/stmicroelectronics/nucleo-l452re/stmicroelectronics-stm32-nucleo-64-mcu/1261775
 [a9key]:   https://www.digikey.com/short/z442qt
 [a9mous]:  https://www.mouser.com/ProductDetail/511-X-NUCLEO-IHM03A1
-[a10st]:    https://www.st.com/en/ecosystems/x-nucleo-ihm02a1.html#sample-and-buy
-[a10rs]:    https://export.rsdelivers.com/product/stmicroelectronics/x-nucleo-ihm02a1/stmicroelectronics-x-nucleo-ihm02a1-two-axis/1646982
-[a11mous]:  https://www.mouser.com/ProductDetail/Raspberry-Pi/RPI4-MODBP-2GB-BULK?qs=%2Fha2pyFaduiq9oc0d1uK569Mu3%252BsSMVa9bhYkyZbjQ1oNl8pHrdrS2f8pDbixKgb
-[a12mcmc]:  https://www.mcmaster.com/93625A101/
-[a13mcmc]:  https://www.mcmaster.com/93475A195/
-[a14mcmc]:  https://www.mcmaster.com/91116A240/
-[a15mcmc]:  https://www.mcmaster.com/92000A019/
+[a10st]:   https://www.st.com/en/ecosystems/x-nucleo-ihm02a1.html#sample-and-buy
+[a10rs]:   https://export.rsdelivers.com/product/stmicroelectronics/x-nucleo-ihm02a1/stmicroelectronics-x-nucleo-ihm02a1-two-axis/1646982
+[a11mous]: https://www.mouser.com/ProductDetail/Raspberry-Pi/RPI4-MODBP-2GB-BULK?qs=%2Fha2pyFaduiq9oc0d1uK569Mu3%252BsSMVa9bhYkyZbjQ1oNl8pHrdrS2f8pDbixKgb
+[a12mcmc]: https://www.mcmaster.com/93625A101/
+[a13mcmc]: https://www.mcmaster.com/93475A195/
+[a14mcmc]: https://www.mcmaster.com/91116A240/
+[a15mcmc]: https://www.mcmaster.com/92000A019/
 [a16mcmc]: https://www.mcmaster.com/92095A455/
 [a17mcmc]: https://www.mcmaster.com/94180A351/
 [a18mcmc]: https://www.mcmaster.com/93475A230/
 [a19mcmc]: https://www.mcmaster.com/92095A189/
 [a20mcmc]: https://www.mcmaster.com/92095A458/
-[a21key]: https://www.digikey.com/en/products/detail/w-rth-elektronik/971090151/6174614
-[a22key]: https://www.digikey.com/en/products/detail/würth-elektronik/971200151/6174654   
+[a21key]:  https://www.digikey.com/en/products/detail/w-rth-elektronik/971090151/6174614
+[a22key]:  https://www.digikey.com/en/products/detail/würth-elektronik/971200151/6174654
 
 ## Assembly
 
@@ -143,13 +143,15 @@ fitting are in the way of your and your soldering iron.
 
 * Mount the touch-screen to the acrylic using M2 bolts and nuts. Use washers on both sides.
 
+* The next logical step is probably the CPB stack, which is explained in detail on the
+  [electrical assembly](../electrical) page.
+
 * Install the brass through-fitting `[A3]` with the lock-nut on the outside of of the panel.
 
 * Install check valve `[A2]` on the outside of the panel.
 
-* Use PTFE tape on al NPT joints.
+* Use PTFE tape on all NPT joints.
 
-* For instructions on how to assemble the PCB stack, refer to the [rev1 export subfolder of the PCB folder](../../pcb/rev1_export).
 
 |  Front    |  Back   |
 :------------------:|:-----------------:|

@@ -586,8 +586,8 @@ $Comp
 L Device:C C?
 U 1 1 60664D60
 P 3500 8050
-F 0 "C?" H 3600 7950 50  0000 L CNN
-F 1 "100 nF, 10V" H 3250 8150 24  0000 L CNN
+F 0 "C?" H 3300 8050 50  0000 L CNN
+F 1 "100nF" H 3200 8150 50  0000 L CNN
 F 2 "" H 3538 7900 50  0001 C CNN
 F 3 "~" H 3500 8050 50  0001 C CNN
 	1    3500 8050
@@ -752,8 +752,6 @@ F 3 "~" H 8950 8600 50  0001 C CNN
 $EndComp
 Text Notes 1900 8300 2    39   ~ 0
 D9
-Text Notes 3400 7900 2    39   ~ 0
-D8
 $Comp
 L Device:C C?
 U 1 1 601449F4
@@ -918,14 +916,6 @@ F 3 "" H 9000 6150 50  0001 C CNN
 	1    9000 6150
 	1    0    0    -1  
 $EndComp
-Text HLabel 10900 3900 2    59   Output ~ 0
-OUTA1
-Text HLabel 10300 4400 2    59   Output ~ 0
-OUTA2
-Text HLabel 9700 5100 2    59   Output ~ 0
-OUTB1
-Text HLabel 9050 5550 2    59   Output ~ 0
-OUTB2
 Wire Wire Line
 	7600 3900 10800 3900
 Connection ~ 7600 3900
@@ -1209,20 +1199,12 @@ Wire Wire Line
 Wire Wire Line
 	7600 5550 9000 5550
 Connection ~ 9000 5550
-Wire Wire Line
-	9000 5550 9050 5550
 Connection ~ 10200 4400
-Wire Wire Line
-	10200 4400 10300 4400
 Connection ~ 9650 5100
-Wire Wire Line
-	9650 5100 9700 5100
 Wire Wire Line
 	7600 4400 10200 4400
 Connection ~ 7600 4400
 Connection ~ 10800 3900
-Wire Wire Line
-	10800 3900 10900 3900
 Connection ~ 3300 2500
 Connection ~ 4400 3300
 Wire Wire Line
@@ -1504,4 +1486,55 @@ Wire Wire Line
 Connection ~ 13900 7650
 Wire Wire Line
 	13900 7650 13900 7850
+$Comp
+L RespiraWorks_Std:Conn_01x04 J?
+U 1 1 602ECFB3
+P 11800 4850
+F 0 "J?" H 11880 4842 50  0000 L CNN
+F 1 "Stepper Motor Windings" H 11880 4751 50  0000 L CNN
+F 2 "RespiraWorks_Std:Molex_Micro-Fit_3.0_43650-0415_1x04_P3.00mm_Vertical" H 11800 4850 50  0001 C CNN
+F 3 "~" H 11800 4850 50  0001 C CNN
+	1    11800 4850
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	11400 3900 11400 4750
+Wire Wire Line
+	11400 4750 11600 4750
+Wire Wire Line
+	10800 3900 11400 3900
+Wire Wire Line
+	10600 4400 10600 4850
+Wire Wire Line
+	10600 4850 11600 4850
+Wire Wire Line
+	10200 4400 10600 4400
+Wire Wire Line
+	10000 5100 10000 5300
+Wire Wire Line
+	10000 5300 11200 5300
+Wire Wire Line
+	11200 5300 11200 4950
+Wire Wire Line
+	11200 4950 11600 4950
+Wire Wire Line
+	9650 5100 10000 5100
+Wire Wire Line
+	9450 5550 9450 6050
+Wire Wire Line
+	9450 6050 11300 6050
+Wire Wire Line
+	11300 6050 11300 5050
+Wire Wire Line
+	11300 5050 11600 5050
+Wire Wire Line
+	9000 5550 9450 5550
+Text Label 11000 3900 0    50   ~ 0
+Out-A1
+Text Label 10900 4850 0    50   ~ 0
+Out-A2
+Text Label 10650 5300 0    50   ~ 0
+Out-B1
+Text Label 10650 6050 0    50   ~ 0
+Out-B2
 $EndSCHEMATC

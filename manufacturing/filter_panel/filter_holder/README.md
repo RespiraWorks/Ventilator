@@ -85,7 +85,7 @@ The following STL files have been exported for 3d printing:
 
 Quantities identified above assume a full set of 4 filter assemblies for a single ventilator.
 
-Please see the [3d printing guidelines](../../3d_printing) for general advice.
+There are notes on 3d printing in the [manufacturing methods guide][mmg].
 
 ![](images/printed_set.jpg)
 
@@ -98,80 +98,64 @@ BEFORE purchasing any parts.**
 
 **Note:** The below quantities are for building a complete set of 4 filter housings needed for one ventilator assembly.
 
-| Item | Quantity  | Manufacturer  | Part #                              | Price (USD)         | Sources[*][ppg]| Notes |
-| ---- |----------:| ------------- | ----------------------------------- | -------------------:|:----------:|:------|
-|**A1**| 4         | RespiraWorks  | Filter housing                      | 1 (material)        | [Rw][a1rw]  | 3D printed from STL in link |
-|**A2**| 2         | RespiraWorks  | Filter cover with patient connector | 1 (material)        | [Rw][a2rw]  | 3D printed from STL in link |
-|**A3**| 2         | RespiraWorks  | Filter cover with vent              | 1 (material)        | [Rw][a3rw]  | 3D printed from STL in link |
-|**A4**| 4         | Amyehouse     | 20160819-1a                         | 8 / 6pk             | [Z][a4amzn] | Roomba 700-compatible HEPA filters |
-|**A5**| ~16 sq in | McMaster-Carr | 8785K82                             | 22.22/ 12x12" sheet | [C][a5mcmc] | Gasket material, cut with jigs(**B1+B2**) to make **A6** |
-|**A6**| 8         | RespiraWorks  | filter_gasket                       | 0.10 (material)     | Rw          | Filter gaskets, made from **A5**, using jigs **B1+B2** |
-|**A7**| 8         | McMaster-Carr | 96016A556                           | 5.50 / 10           | [C][a7mcmc] | M3 thumbscrews |
-|**A8**| 8         | McMaster-Carr | 94180A333                           | 16.69 / 100         | [C][a8mcmc] | Heat-set inserts for m3 screws |
+| Item  | Quantity  | Manufacturer  | Part #                              | Price (USD)         | Sources[*][ppg]| Notes |
+| ----- |----------:| ------------- | ----------------------------------- | -------------------:|:----------:|:------|
+|**A1** | 4         | RespiraWorks  | Filter housing                      | 1 (material)        | [Rw][a1rw]  | 3D printed from STL in link |
+|**A2** | 2         | RespiraWorks  | Filter cover with patient connector | 1 (material)        | [Rw][a2rw]  | 3D printed from STL in link |
+|**A3** | 2         | RespiraWorks  | Filter cover with vent              | 1 (material)        | [Rw][a3rw]  | 3D printed from STL in link |
+|**A4** | 4         | Amyehouse     | 20160819-1a                         | 8 / 6pk             | [Z][a4amzn] | Roomba 700-compatible HEPA filters |
+|**A5** | ~16 sq in | McMaster-Carr | 8785K82                             | 22.22/ 12x12" sheet | [C][a5mcmc] | Gasket material, cut with jigs(**A9+A10**) to make **A6** |
+|**A6** | 8         | RespiraWorks  | filter_gasket                       | 0.10 (material)     | Rw          | Filter gaskets, made from **A5**, using jigs **A9+A10** |
+|**A7** | 8         | McMaster-Carr | 96016A556                           | 5.50 / 10           | [C][a7mcmc] | M3 thumbscrews |
+|**A8** | 8         | McMaster-Carr | 94180A333                           | 16.69 / 100         | [C][a8mcmc] | Heat-set inserts for m3 screws |
+|**A9** | 1         | RespiraWorks  | Filter inside cut jig               | 1 (material)        | [Rw][b1rw]  | 3D printed from STL in link |
+|**A10**| 1         | RespiraWorks  | Filter outside cut jig              | 1 (material)        | [Rw][b2rw]  | 3D printed from STL in link |
 
-[a1rw]: exports/filter_housing.stl
-[a2rw]: exports/filter_cover_patient_connector.stl
-[a3rw]: exports/filter_cover_air_vent.stl
+[a1rw]:   exports/filter_housing.stl
+[a2rw]:   exports/filter_cover_patient_connector.stl
+[a3rw]:   exports/filter_cover_air_vent.stl
 [a4amzn]: https://www.amazon.com/gp/product/B01KNZCW8E
 [a5mcmc]: https://www.mcmaster.com/8785K82/
 [a7mcmc]: https://www.mcmaster.com/96016A556/
 [a8mcmc]: https://www.mcmaster.com/94180A333/
+[a9rw]:   exports/filter-gasket-jig-inside.stl
+[a10rw]:  exports/filter-gasket-jig-outside.stl
 
-## Tools
+## Assembly
 
-| Item | Quantity | Manufacturer  | Part #                  | Price (USD)  | Sources[*][ppg]| Notes |
-| ---- |---------:| ------------- | ------------------------| ------------:|:-----------:|:------|
-|**B1**| 1        | RespiraWorks  | Filter inside cut jig   | 1 (material) | [Rw][b1rw]  | 3D printed from STL in link |
-|**B2**| 1        | RespiraWorks  | Filter outside cut jig  | 1 (material) | [Rw][b2rw]  | 3D printed from STL in link |
-|**B3**| 1        | Fiskars       | 167110-1001             | 5.49         | [A][b3amzn] | Craft knife, for cutting gaskets |
-|**B4**| 1        | General       | 707475                  | 31.75        | [G][b4grai] | Needle file set (might be needed, depending on quality of 3d prints) |
-|**B5**| 1        | Walnut Hollow | 38283                   | 32.01        | [A][b5amzn] | Wood burning tool, or soldering iron if you have one, for installing inserts |
+**Note: Please also see general advice in the [manufacturing methods guide](../../methods).**
 
-[b1rw]:   exports/filter-gasket-jig-inside.stl
-[b2rw]:   exports/filter-gasket-jig-outside.stl
-[b3amzn]: https://www.amazon.com/Fiskars-167110-1001-Heavy-Craft-Knife/dp/B001A42CTW
-[b4grai]: https://www.grainger.com/product/23N602
-[b5amzn]: https://www.amazon.com/Walnut-Hollow-Versa-Temp-Temperature-Woodburning/dp/B005P1TRAS
+- 3D print the parts and tools called out in the [Parts list](#parts).
 
-## Assembly Instructions
+- Install heat set inserts into the filter housings.
+  **#TODO: add picture of installed**
 
-- Step 1: 3D print the parts and tools called out in the [Parts list](#parts).
-
-- Step 2: Remove the filters (**A4**) from the housings that they arrive in from the manufacturer.
+- Remove the filters (**A4**) from the housings that they arrive in from the manufacturer.
 
 |                            |                             |
 |:--------------------------:|:---------------------------:|
 |![](images/roomba1.jpg) | ![](images/roomba2.jpg) |
 
 
-- Step 3:  Start installing the heat-set inserts (**A8**), pushing them halfway into filter housing (**A1**).
-Now let the the plastic/resin cool off before pushing the inserts in all the way. This goes best if you get the inserts
-halfway into each of the 4 units in turn and then come back to them.
-
-|                            |                             |
-|:--------------------------:|:---------------------------:|
-|![](images/insert1.jpg) | ![](images/insert2.jpg) |
-
-
-- Step 4: Cut the inner edge of the gasket in the gasket material using the inside cut jig (**B1**).
+- Cut the inner edge of the gasket in the gasket material using the inside cut jig (**A9**).
 
 |                            |                             |
 |:--------------------------:|:---------------------------:|
 |![](images/MakeGasket2.jpg) | ![](images/MakeGasket3.jpg) |
 
-- Step 5: Place the outer cut jig (**B2**) into the hole you just made.
+- Place the outer cut jig (**A10**) into the hole you just made.
 
 ![](images/MakeGasket4.jpg)
 
-- Step 6: Cut the outer edge of the gasket.
+- Cut the outer edge of the gasket.
 
 |                            |                             |
 |:--------------------------:|:---------------------------:|
 |![](images/MakeGasket5.jpg) | ![](images/MakeGasket6.jpg) |
 
-- Step 7: Repeat steps above to produce a total of 8 gaskets for 4 filter assemblies
+- Repeat steps above to produce a total of 8 gaskets for 4 filter assemblies
 
-- Step 8: Test the fit of all filter assemblies with gaskets and filters. You may need to sand or file the printed
+- Test the fit of all filter assemblies with gaskets and filters. You may need to sand or file the printed
 housing components to ensure that all edges and corners are clean to maintain a tight seal.
 
 |                            |                             |

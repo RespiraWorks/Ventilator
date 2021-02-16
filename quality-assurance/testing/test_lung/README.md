@@ -20,7 +20,8 @@ A "tee" or "wye" adapter is needed to connect both the inhale and the exhale tub
 Some are available for sale, and indeed some come included with various test lungs, but it has been hard to find
 a consistent source. Thus we have designed a 22mm patient tubing adapter that can be 3d printed. Simple placement
 without scaffolding works well and the part has been successfully printed with Siraya Fast.
-Please see the [3d printing guidelines](../../../manufacturing/3d_printing) for general advice.
+
+**Note: Please also see general advice in the [manufacturing methods guide](../../../manufacturing/methods).**
 
 [STL file for 3d printing](assets/patient_tubing_adapter.stl)
 

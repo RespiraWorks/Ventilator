@@ -73,7 +73,8 @@ Bearings are now better aligned with the tube.
 ## Custom parts
 
 These files should not be printed with FDM. Instead, a leak-tight method like SLA or MJF should be used.
-Please see the [3d printing guidelines](../../3d_printing) for general advice.
+
+**Note: Please also see general advice in the [manufacturing methods guide](../../methods).**
 
 |     | Stepper base (Item 9)      | Stepper rotor (Item 10)     |
 |----:|:--------------------------:|:---------------------------:|

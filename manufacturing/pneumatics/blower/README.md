@@ -19,7 +19,7 @@ Characterization tests for the blower are [here](characterization-tests).
 |Assembly Drawing PDF|[PDF](exports/blower_assembly.pdf)|
 |Autodesk Inventor CAD Assembly|[.iam](blower_assembly.iam)|
 
-### Parts
+## Parts
 
 **Note: If you are a member of the RespiraWorks team, review the [part purchasing guidelines][ppg]
 BEFORE purchasing any parts.**
@@ -64,37 +64,20 @@ BEFORE purchasing any parts.**
 [a16mcmc]: https://www.mcmaster.com/91828A231/
 [a17mcmc]: https://www.mcmaster.com/93625A100/
 
-### Tools
+## Assembly
 
-| Item   | Quantity | Manufacturer   | Part #             | Price (USD)  | Sources[*][ppg] | Notes |
-| ------ |---------:| -------------- | -------------------| ------------:|:---------------:|:------|
-| **B1** | 1        | Fiskars        | 167110-1001        | 5.49         | [A][b1amzn]     | Craft knife, for cutting gaskets |
-| **B2** | 1        | Black & Decker | BDEJS300C          | 24.49        | [A][b2amzn]     | Jigsaw, for cutting acrylic |
-| **B3** | 1        | Black & Decker | BDEDMT             | 29.99        | [A][b3amzn]     | Electric hand drill, **drill press preferred if you have one**, for drilling acrylic |
-| **B4** | 1        | XLCMSY         | EAN: 0742880496381 | 12.99        | [A][b4amzn]     | Cobalt metric drill bits, in particular - 4.5mm |
-| **B5** | 1        | Porter Cable   | PC1014             | 59.59        | [A][b5amzn]     | Forstner bits, **preferred for drill press** |
-| **B6** | 1        | KATA TOOLS     | KTL89020           | 19.99        | [A][b5amzn]     | Hole saws, **preferred for hand drill** |
+**Note: Please also see general advice in the [manufacturing methods guide](../../methods).**
 
-[b1amzn]: https://www.amazon.com/Fiskars-167110-1001-Heavy-Craft-Knife/dp/B001A42CTW
-[b2amzn]: https://www.amazon.com/BLACK-DECKER-Jig-Amp-BDEJS300C/dp/B00OJ72L84
-[b3amzn]: https://www.amazon.com/BLACK-DECKER-BDEDMT-Matrix-Driver/dp/B0094B9BHE
-[b4amzn]: https://www.amazon.com/XLCMSY-Straight-Resistant-Stainless-1-5-6-5mm/dp/B07ZQGXWGL
-[b5amzn]: https://www.amazon.com/PORTER-CABLE-PC1014-Forstner-Bit-14-Piece/dp/B004TSZEB4
-[b6amzn]: https://www.amazon.com/KATA-19-152mm-Mandrels-Installation-Plywood/dp/B08JCHY2DM
+### Tubing adapter (C1)
 
-### Custom component manufacture
-
-#### Tubing adapter (C1)
-
-To 3d print this component see the [general 3d printing guidelines](../../3d_printing).
 
 |For 3D printing: [tubing_adapter.stl](exports/tubing_adapter.stl)| Inventor source: [tubing_adapter.ipt](tubing_adapter.ipt)|
 |:---:|:---:|
 |![](images/tubing_adapter_rendering.jpg)|[![](exports/tubing_adapter.jpg)](exports/tubing_adapter.pdf)|
 
-#### Gaskets
+### Gaskets
 
-Use craft knife (**B1**) to cut these from the gasket material (**A8**).
+There are notes on manufacturing gaskets in the [manufacturing methods guide][mmg].
 
 |     | Blower gasket (C9)         | Tubing adapter gasket (C10) |
 |----:|:--------------------------:|:---------------------------:|
@@ -102,20 +85,9 @@ Use craft knife (**B1**) to cut these from the gasket material (**A8**).
 | DXF |[blower_gasket.dxf](exports/blower_gasket.dxf)|[tubing_adapter_gasket.dxf](exports/tubing_adapter_gasket.dxf)|
 | Inventor |[blower_gasket.ipt](blower_gasket.ipt)|[tubing_adapter_gasket.ipt](tubing_adapter_gasket.ipt)|
 
-#### Acrylic plates
+### Acrylic plates
 
 You will have to cut the following mounting and holding plates from an acrylic sheet (**A4**).
-
-If you have access to an adequately powerful laser cutter, it should be able to perform all perimeter and hole cuts.
-
-Otherwise you will need some combination of tools (**B2-6**) listed in the [Tools 2](#tools-2) section above.
-
-Out of the drill sets, you will need:
-- 4.5mm (11/64") drill bit (from **B4**) for fastener holes (make them slightly larger than specified in drawings)
-- 30mm (1-1/4") Forstner bit or hole cutter (from either **B5** or **B6**)
-- 37mm (1-1/2") Forstner bit or hole cutter (from either **B5** or **B6**)
-
-You might also want to use some 200 grit sandpaper to clean up the edges of the pieces you cut and drill.
 
 |     | Driver mounting plate (C5) | Blower holding plate (C6) | Tubing adapter holding plate (C7) |
 |:-----:|:--------------------------:|:-------------------------:|:---------------------------------:|
@@ -124,17 +96,11 @@ You might also want to use some 200 grit sandpaper to clean up the edges of the 
 | DXF |[driver_mounting_plate.dxf](exports/driver_mounting_plate.dxf)|[blower_holding_plate.dxf](exports/blower_holding_plate.dxf)|[tubing_adapter_holding_plate.dxf](exports/tubing_adapter_holding_plate.dxf)|
 | Inventor | [driver_mounting_plate.ipt](driver_mounting_plate.ipt)|[blower_holding_plate.ipt](blower_holding_plate.ipt)| [tubing adapter_holding_plate.ipt](tubing_adapter_holding_plate.ipt)|
 
-
-You can use one of these plates as a template to drill the appropriate holes in the main acrylic plate and the metal
-frame that supports it.
-
 The above manufactured components (excluding gaskets) should appear as follows:
 
 ![](images/assembly_parts.jpg)
 
-### Assembly instructions
-
-#### Mount the blower driver
+### Mount the blower driver
 
 Use the following hardware:
 * 4x M3 14mm screws (**A13**)
@@ -145,7 +111,7 @@ bottom up, because the screw heads may be too wide to fit next to the circuit bo
 
 ![](images/blower_driver_mounting.jpg)
 
-#### Make blower sandwich
+### Make blower sandwich
 
 |                            |                             |
 |:--------------------------:|:---------------------------:|
@@ -159,7 +125,7 @@ bottom up, because the screw heads may be too wide to fit next to the circuit bo
 
 Tighten carefully one nut at a time, ensuring a tight gasket seal. Do not over-tighten. If you see the acrylic holding plate begin to bend, relax the fasteners somewhat.
 
-#### Install tubing adapter
+### Install tubing adapter
 
 You will likely need some sort of small clamps for this step, to ensure that components stay in place while you fasten them.
 

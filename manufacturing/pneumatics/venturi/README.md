@@ -119,10 +119,10 @@ by the two variables described above.
 
 ### 3D Printing guidelines
 
+**Note: Please see general advice in the [manufacturing methods guide](../../methods).**
+
 These should not be printed with FDM. Instead, a leak-tight method like SLA or MJF should be used. The model
 contains printed threads and is designed to interface with the referenced mcmaster barbed fitting (item 2 below).
-
-Please see the [3d printing guidelines](../../3d_printing) for general advice.
 
 When slicing, it is best to position the part vertically to maintain authentic tapering and orifice geometry.
 No scaffolding should be required. Part has been successfully printed with Siraya Fast of various colors.

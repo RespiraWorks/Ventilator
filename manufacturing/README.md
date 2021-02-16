@@ -26,10 +26,11 @@ property of the respective manufacturer. These models come with no guarantees an
 If you are a member of the team and intend to build your own prototype, please read the
 [purchasing guidelines](purchasing_guidelines.md) first.
 
-If you are 3d-printing any custom components yourself, please check out the [3d printing guidelines](3d_printing).
-
 If you are a pneumatics or mechanical engineer and intend to contribute to our design, please read
 our [wiki](https://github.com/RespiraWorks/Ventilator/wiki), by which we mean **all of it**.
+
+If you intend to make any physical components yourself, please become familiar with the
+[manufacturing methods guide](methods). And please help maintain it.
 
 ## Assembly
 

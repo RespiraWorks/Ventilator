@@ -83,7 +83,6 @@ BEFORE purchasing any parts.**
 |**A22**| 4        | DigiKey       | 732-10435-ND             | 50.82/100    | [K][a22key]  | M2.5 20mm hex standoff |
 
 **#TODO: type of acrylic**
-**#TODO: laser cutting machine specs**
 
 [a1rw]:    #custom-parts
 [a2mcmc]:  https://www.mcmaster.com/7768K22/
@@ -119,25 +118,11 @@ BEFORE purchasing any parts.**
 
 **#TODO: Drawings**
 
-### Heat-set insert installation
+**Note: Please also see general advice in the [manufacturing methods guide](../../methods).**
 
-* You should first install the heat-set inserts, while the acrylic panel is flat and no electronics or
-fitting are in the way of your and your soldering iron.
 
-1. Select a soldering iron tip large enough to provide uniform pressure on the center of the heat-set insert, but small
-   enough to not touch the surrounding material.
-2. Heat up your soldering iron to an operating temperature of around 343-399&deg;C (650-750&deg;F).
-3. Place the heat-set insert `[A11]` into the mounting hole (one of the four corner holes on the display acrylic) with
-   the smaller diameter facing down into the hole away from you.
-4. Touch the tip of the soldering iron to the top of the heat-set insert and wait for a few seconds.
-5. The weight of the soldering iron should gently push the heat-set insert into the now melted acrylic.
-6. Press down slowly until the half the heat-set insert inserted into the acrylic. At this point only the first set of
-   knurls should be inside the acrylic.
-7. Allow the acrylic to cool. Then push inserts in all the way till it is flush with the face of the acrylic. Works best
-   if you push each of the four halfway, let them cool and come back to them.
-8. Remove heat and allow to cool and harden.
-
-### Additional notes
+* You should first install the heat-set inserts, while the acrylic panel is flat and no electronics or fitting are in
+  the way of your and your soldering iron.
 
 * Mount the touch-screen to the acrylic using M2 bolts and nuts. Use washers on both sides.
 
@@ -147,9 +132,6 @@ fitting are in the way of your and your soldering iron.
 * Install the brass through-fitting `[A3]` with the lock-nut on the outside of of the panel.
 
 * Install check valve `[A2]` on the outside of the panel.
-
-* Use PTFE tape on all NPT joints.
-
 
 |  Front    |  Back   |
 :------------------:|:-----------------:|

@@ -13,7 +13,7 @@ Some components do not exist as off-the-shelf products, or would be too cumberso
 following can be manufactured, using some 3d printing or, eventually, could be mass produced as injection-molded
 plastics.
 
-Please see the [3d printing guidelines](../3d_printing) for general advice on printing components.
+**Note: Please see general advice in the [manufacturing methods guide](../methods).**
 
 * Pneumatics tray (**TODO**)
 * [Blower assembly](blower)

@@ -13,7 +13,7 @@ swapped out without significantly altering the rest of the ventilator design.
 
 The acrylic sheet is to be mounted to the main equipment bracket using heat inserts and screws.
 An explanation for the choice of heat-set inserts is given
-[here](../display_panel/README.md#heat-set-insert-installation)
+[here](../display_panel/README.md#bracket-mounts)
 
 ## Custom parts
 
@@ -51,8 +51,6 @@ BEFORE purchasing any parts.**
 
 **#TODO: type of acrylic**
 
-**#TODO: laser cutting machine specs**
-
 [a1rw]: #custom-parts
 [a2rw]: filter_holder
 [a3rw]: filter_holder
@@ -62,20 +60,17 @@ BEFORE purchasing any parts.**
 [a7mcmc]: https://www.mcmaster.com/92095A193/
 [a8mcmc]: https://www.mcmaster.com/92095A189/
 
-
 ## Assembly
 
 | Part  | Source |
 |:------|:-------|
 | Filter panel assembly | [.iam](filter_panel_assembly.iam) |
 
-### Instructions
+**Note: Please also see general advice in the [manufacturing methods guide](../methods).**
 
-Disassemble the individual holders and integrate the housings with the acrylic panel.
-For latest enclosed build, this requires M4x14mm screws (assuming 1/4" or 6.5mm acrylic panel).
+* Install heat set inserts into the corner holes for mounting to main equipment bracket.
 
-Instructions on how to install heat-set inserts are found on the
-[display panel page](../display_panel/README.md#heat-set-insert-installation)
+* Disassemble the individual holders and integrate the housings with the acrylic panel using M4 hardware.
 
 |                            |
 |:--------------------------:|

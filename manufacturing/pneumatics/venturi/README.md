@@ -117,7 +117,7 @@ by the two variables described above.
 | **Total length** | 106.1mm | 143mm | 138mm | 142.5mm |
 | **Notes** | | | Requires discrete [1/4"-3/4" adapter](../reducer_3-4_1-4) upstream | |
 
-### 3D Printing guidelines
+### 3D Printing
 
 **Note: Please see general advice in the [manufacturing methods guide](../../methods).**
 

@@ -108,22 +108,6 @@ BEFORE purchasing any parts.**
 
 **TODO: review adapter and clip counts**
 
-### Tools
-
-| Item | Manufacturer | Part number             | Price (USD) | Sources[*][ppg] | Notes |
-| ---- |-------------:| ----------------------- | ----------- |:---------------:|------ |
-|**B1**| TEKTON       | 37122                   | 13.00       | [Z][b1amzn]     | 8 inch slip-joint pliers, for clamping tubes onto fittings |
-|**B2**| Duda Energy  | LPpvc075-005ft          | 19.99       | [Z][b2amzn]     |**Adjustable wrench, at least 1" wide opening, for screwing in NTP fittings |
-|**B3**| DEWILL       | (unknown)               | 15.88       | [Z][b3amzn]     | Pipe and PVC cutter, for cutting tubing. Scissors might also work. |
-|**B4**| IRWIN        | 2078216                 | 8.90        | [Z][b4amzn]     | Long nose pliers, for removing herbie clips |
-|**B5**| Vanguard     | vanguardSealantsPTFE-01 | 6.49        | [Z][b5amzn]     | It's advisable to teflon tape all NTP threaded components. Not only will they be more airtight, but also they will be easier to tighten and release. |
-
-[b1amzn]: https://www.amazon.com/TEKTON-2-Inch-Joint-Pliers-37122/dp/B00KLY1FAY
-[b2amzn]: https://www.amazon.com/GETUPOWER-10-Inch-Adjustable-Opening-Vanadium/dp/B07RGV2VK1
-[b3amzn]: https://www.amazon.com/gp/product/B07Y997XKC
-[b4amzn]: https://www.amazon.com/Tools-VISE-GRIP-Pliers-6-Inch-2078216/dp/B000A0OW2M
-[b5amzn]: https://www.amazon.com/gp/product/B01L2F428C
-
 ## Assembly
 
 [Pneumatics assembly model](pneumatics.iam)

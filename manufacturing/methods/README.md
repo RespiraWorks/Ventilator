@@ -18,7 +18,9 @@ Below you will find advice on the following:
 * [Gaskets](#gaskets)
 * [Heat set inserts](#heat-set-inserts)
 * [Acrylic panels](#acrylic-panels)
+* [Flexible tubing](#flexible-tubing)
 * [Tapered thread connectors](#tapered-threads)
+* [Screwdrivers](#screwdrivers)
 
 ## 3d Printing
 
@@ -148,6 +150,37 @@ Common woodworking tools are perfectly adequate for modifying acrylic panels. So
 
 You might also want to use some 200 grit sandpaper to clean up the edges of the pieces you cut and drill.
 
+## Flexible tubing
+
+We have been using various types of rubber, silicon and Tygon tubing. Not all cut easily with the same type of tools.
+Sometimes a [PVC pipe cutter](https://www.amazon.com/gp/product/B07Y997XKC) has worked well, other times - household
+scissors or a sharp knife will do.
+
+You may have to clamp tubing to barbed fittings, or you may want to remove the clips so that you can remove the tubing.
+These [self-adjusting pliers](https://www.amazon.com/gp/product/B008S0FVWG) have proven themselves useful for either
+task.
+
 ## Tapered threads
 
-Use PTFE tape on all NPT joints.
+Use PTFE tape ([McMaster](https://www.mcmaster.com/6802K11/) or [Amazon](https://www.amazon.com/gp/product/B01L2F428C))
+on all tapered thread joints, such as NPT. The tape not only ensures a tighter seal, but also makes it go in easier and
+prevents it from seizing up if you do eventually need to remove the part.
+
+Make sure you wrap it in the same direction as the threads will go in. There are videos online on how
+to do this correctly.
+
+You may need an [adjustable wrench](https://www.amazon.com/GETUPOWER-10-Inch-Adjustable-Opening-Vanadium/dp/B07RGV2VK1)
+as well, though depending on the type of fitting you are attempting to thread pliers might also work.
+
+## Screwdrivers
+
+Most of the screws in the ventilator assembly require a metric hex-shaped driver.
+
+If you already have some sort of socket driver, you could just get some
+[metric hex bits](https://www.amazon.com/Wiha-71397-Metric-Insert-6-Piece/dp/B0084B7S70).
+
+If you got nothing, a cheap choice would be a set of
+[hex key wrenches](https://www.amazon.com/TEKTON-Wrench-Metric-30-Piece-25253/dp/B00I5TH074).
+
+For something more comfortable and versatile, you could also go with a
+[precision screw driver set](https://www.amazon.com/gp/product/B07R9VTWG5).

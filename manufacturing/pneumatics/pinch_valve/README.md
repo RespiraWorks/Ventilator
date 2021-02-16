@@ -121,11 +121,9 @@ BEFORE purchasing any parts.**
 
 | Item | Quantity | Manufacturer  | Part #     | Price (USD) | Sources[*][ppg]  | Notes |
 | ---- |---------:| ------------- | ----------- | ----------:|:----------------:| ----- |
-| a1   |        1 | Wiha          | 71397       |       6.76 | [Z][a1amzn]      | 2, 3mm hex drivers required for assembly.  |
-| a2   |        1 | McMaster-Carr | 26475A38    |       9.55 | [Z][a2mcmc]      | M5x0.8mm taper chamfer tap, for bearing axle.  |
+| a1   |        1 | McMaster-Carr | 26475A38    |       9.55 | [Z][a1mcmc]      | M5x0.8mm taper chamfer tap, for bearing axle.  |
 
-[a1amzn]: https://www.amazon.com/Wiha-71397-Metric-Insert-6-Piece/dp/B0084B7S70/ref=sr_1_4?dchild=1&keywords=3mm+hex&qid=1590347774&sr=8-4
-[a2mcmc]: https://www.mcmaster.com/26475A38
+[a1mcmc]: https://www.mcmaster.com/26475A38
 
 ## Prototype fabrication
 

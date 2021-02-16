@@ -118,8 +118,7 @@ BEFORE purchasing any parts.**
 
 **#TODO: Drawings**
 
-**Note: Please also see general advice in the [manufacturing methods guide](../../methods).**
-
+**Note: Please also see general advice in the [manufacturing methods guide](../methods).**
 
 * You should first install the heat-set inserts, while the acrylic panel is flat and no electronics or fitting are in
   the way of your and your soldering iron.

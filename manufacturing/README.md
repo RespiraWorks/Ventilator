@@ -33,9 +33,9 @@ our [wiki](https://github.com/RespiraWorks/Ventilator/wiki), by which we mean **
 
 ## Assembly
 
-| full assembly rendering    |  internals   |
+| Full assembly rendering    |  Internals   |
 |:---:|:---:|
-| [![](images/rendering_smaller.jpg)](images/rendering_full.jpg) | [![](pneumatics/images/rendering_smaller.jpg)](pneumatics/images/rendering_full.jpg)  |
+| [![](images/rendering_smaller.jpg)](images/rendering_full.jpg) | [![](pneumatics/images/rendering_smaller.jpg)](pneumatics/images/rendering_full.jpg) |
 
 
 Ventilator full assembly CAD model: [.iam](ventilator_assembly.iam)

@@ -67,10 +67,12 @@ decide to buy or build anything, do so at your own risk.**
 ## Repository Structure
 
 * [**System Requirements**](requirements) -
-  describes the requirement architecture, hierarchy, and process. Links to the releases of our system requirements, hardware specifications, and software requirements.
+  describes the requirement architecture, hierarchy, and process. Links to the releases of our system requirements,
+  hardware specifications, and software requirements
 * [**System Design**](design) -
-  describes the functional implementation and design theory of the system. This document also defines the hierarchy for the subsystems below.
-* [**Manufacturing Design**](manufacturing) - describes the physical design of the ventilator and its components, including:
-* [**Main Circuit Board**](pcb) - design, materials, assembly instructions
+  describes the functional implementation and design theory of the system
+* [**Manufacturing Design**](manufacturing) - describes the physical design of the ventilator and its components.
+  Includes CAD models and notes on the manufacturing process
+* [**Main Circuit Board**](pcb) - design, materials, assembly instructions for the ventilator main circuit board
 * [**Software**](software) - Source code for cycle controller and user interface, debug tools, test scripts, and test data
 * [**Quality Assurance**](quality-assurance) - quality assurance strategy, testing plans, data

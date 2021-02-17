@@ -34,7 +34,7 @@ BEFORE purchasing any parts.**
 
 >**TODO:** where do standoffs go?
 
-[a1rw]:    ../../../pcb
+[a1rw]:    ../../../../pcb
 [a2rw]:    https://github.com/inceptionev/VentilatorRev1InterimDaughtercard
 [a3amzn]:  https://www.amazon.com/Duracell-Lithium-Battery-lasting-battery/dp/B00006JPGV
 [a4mous]:  https://www.mouser.com/ProductDetail/STMicroelectronics/NUCLEO-L452RE?qs=sGAEpiMZZMtw0nEwywcFgEEYp888DlnM1Y5kGes2rJIHvcJjT1ZDkw%3D%3D

@@ -19,7 +19,7 @@ Related issues are being tracked here:
 ### Bracket mounts
 
 For serviceability, ventilator internals should be completely removable from the enclosure as a single assembly.
-It was necessary to secure the display panel to the [main equipment bracket](../enclosure) while also allowing it
+It was necessary to secure the display panel to the [main equipment bracket](../../enclosure) while also allowing it
 to lay flush with the front face of the enclosure. This means we should not have either screws or bolts some out
 above the front surface of the panel. We chose to use heat-set inserts. Tapped/plastic threads are easy to overload and strip out. Metal threads provide a
 reliable way of fastening plastic and acrylic parts. M4 hardware was chosen because of their prevalence in the rest of

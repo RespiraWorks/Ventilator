@@ -50,17 +50,21 @@ sub-assemblies that do not contain custom components are not listed in this tree
 pages for the various sub-assemblies.
 
 * [Enclosure](enclosure) - rigid frame and enclosure components
-* [**Internals assembly**](internals) - full internals assembly, which includes some instances of the following:
-  * [Display panel](internals/display_panel) - support for touchscreen and computing components
-    * [Electrical assembly](internals/display_panel/electronics) - encompasses the electrical and computing components
-  * [Filter panel](internals/filter_panel) - Mechanical support for air filter assemblies
-    * [Air filter holders](internals/filter_panel/filter_holder) - custom housings for air filters, to keep patient safe and system clean
+* [**Internals**](internals) - full internals assembly, which includes some instances of the following:
+  * [Pneumatics tray](internals/tray) - for mounting the main pneumatics assembly
+  * [Filter panel](internals/filter_panel) - mechanical support for air filter assemblies
+    * [Air filter holders](internals/filter_panel/filter_holder) - custom housings for air filters
   * [Blower](internals/blower) - this provides pressurized air
-  * [Venturi flow sensors](internals/venturi) - in-house design of affordable flow sensors
-  * [Pinch valves](internals/pinch_valve) - in-house design of affordable valve for inhale and exhale control
-  * [Oxygen mixer](internals/mixer) - for mixing air and oxygen before delivery to patient
+  * [Air check valve](internals/air_check_valve) - prevents concentrated oxygen back-flow
+  * [Pinch valves](internals/pinch_valve) - air influx and exhale control valves
+  * [Oxygen regulator](internals/regulator) - oxygen pressure regulator sub-assembly
+  * [Proportional solenoid](internals/PSOL) - oxygen control valve
   * [Manifold](internals/manifold) - for oxygen sensor and overpressure relief valve
-  * [Tubing reducer](internals/reducer_3-4_1-4) for change in tubing diameter in oxygen supply
+  * [Oxygen mixer](internals/mixer) - for mixing air and oxygen before delivery to patient
+  * [Venturi flow sensors](internals/venturi) - in-house design of affordable flow sensors
+  * [Display panel](internals/display_panel) - touchscreen, electronics and oxygen input
+    * [Electronics assembly](internals/display_panel/electronics) - encompasses the electrical and computing components
+  * Various tubing, manifolds and adapters
 * [Wiring guide](wiring) - custom wiring harnesses and connectors
 * [Peripherals](peripherals.md) - indispensable components that are strictly outside of the assembly itself
 

@@ -27,9 +27,9 @@ BEFORE purchasing any parts.**
 |**A11**| 1        | RespiraWorks   | venturi_oxygen_influx |              | [Rw][a11rw]    | Venturi flow sensor, oxygen influx variant |
 |**A12**| 1        | RespiraWorks   | venturi_exhale        |              | [Rw][a12rw]    | Venturi flow sensor, exhale variant |
 |**A13**| 1        | RespiraWorks   | oxgen_mixer           |              | [Rw][a13rw]    | Oxygen mixing chamber |
-|**A11**| 1        | RespiraWorks   | reducer_3-4_1-4       |              | [Rw][a14rw]    | 1/4"ID x 3/4"ID reducer |
-|**A33**| 5        | McMaster-Carr  | 53415K153             | 13.16 / 10   | [C][a15mcmc]   | 3/4"ID barbed elbow |
-|**A35**| 1        | McMaster-Carr  | 5463K648              | 8.40 / 10    | [C][a16mcmc]   | 3/4"ID x 3/8"ID barbed reducer |
+|**A14**| 1        | RespiraWorks   | reducer_3-4_1-4       |              | [Rw][a14rw]    | 1/4"ID x 3/4"ID reducer |
+|**A15**| 5        | McMaster-Carr  | 53415K153             | 13.16 / 10   | [C][a15mcmc]   | 3/4"ID barbed elbow |
+|**A16**| 1        | McMaster-Carr  | 5463K648              | 8.40 / 10    | [C][a16mcmc]   | 3/4"ID x 3/8"ID barbed reducer |
 |**A17**| ~1m      | OCSParts       | 117062-5              | 22.99 / 5ft  | [Z][a17amzn]   | Soft 3/4"ID 1"OD tubing, for main line tubing |
 |**A18**| 24       | McMaster-Carr  | 9579K73               | 12.24 / 20   | [C][a18mcmc]   | Herbie clip K (22.2-24.9mm) for clamping 1"OD, main tubing |
 |**A19**| 1        | RespiraWorks   | display_panel         |              | [Rw][a19rw]    | Display panel and electronics assembly |
@@ -68,8 +68,30 @@ BEFORE purchasing any parts.**
 
 [Pneumatics assembly model](internals.iam)
 
-### Full Assembly
+The rough order/hierarchy of assembly is as follows:
+
+* Equipment bracket -- from the [enclosure assembly](../enclosure)
+* [Pneumatics tray](tray) - for mounting the main pneumatics assembly
+* [Filter panel](filter_panel) - mechanical support for air filter assemblies
+    * [Air filter holders](filter_panel/filter_holder) - custom housings for air filters
+* [Blower](blower) - this provides pressurized air
+* [Air check valve](air_check_valve) - prevents concentrated oxygen back-flow
+* [Pinch valves](pinch_valve) - air influx and exhale control valves
+* [Oxygen regulator](regulator) - oxygen pressure regulator sub-assembly
+* [Proportional solenoid](PSOL) - oxygen control valve
+* Main tubing, sensors and manifolds:
+    * [Manifold](manifold) - for oxygen sensor and overpressure relief valve
+    * [Oxygen mixer](mixer) - for mixing air and oxygen before delivery to patient
+    * [Venturi flow sensors](venturi) - in-house design of affordable flow sensors
+    * Various tubing adapters `[14-16]`
+    * 3/4 tubing `[17]` and clamps `[18]`
+* [Display panel](display_panel) - touchscreen, electronics and oxygen input
+    * [Electronics assembly](display_panel/electronics) - encompasses the electrical and computing components
+* Oxygen line tubing `[A20]` and clamps `[21]`
+* Sensor tubing `[A22-23]`, connecting venturis to pressure sensors on mainboard
 
 >**TODO:** document sensor tube connections
+
+>**TODO:** do renderings of sub-systems and intermediate steps
 
 >**TODO:** point out components in photo

@@ -70,18 +70,7 @@ decide to buy or build anything, do so at your own risk.**
   describes the requirement architecture, hierarchy, and process. Links to the releases of our system requirements, hardware specifications, and software requirements.
 * [**System Design**](design) -
   describes the functional implementation and design theory of the system. This document also defines the hierarchy for the subsystems below.
-    * [Pneumatic System](design/pneumatic-system)
-    * [Electrical System](design/electrical-system)
-    * [Mechanical assembly](design/mechanical)
 * [**Manufacturing Design**](manufacturing) - describes the physical design of the ventilator and its components, including:
-  * [Enclosure](manufacturing/enclosure) - rigid frame and enclosure components
-  * [Filter panel](manufacturing/filter_panel) - Mechanical support for air filter assemblies
-  * [**Pneumatic assembly**](manufacturing/pneumatics) - full pneumatic assembly, including:
-    * [Venturi flow sensors](manufacturing/internals/venturi) - in-house design of affordable flow sensors
-    * [Pinch valves](manufacturing/internals/pinch_valve) - in-house design of affordable valve for inhale and exhale control
-  * [Electrical assembly](manufacturing/electrical) - encompasses the electrical and computing components
 * [**Main Circuit Board**](pcb) - design, materials, assembly instructions
 * [**Software**](software) - Source code for cycle controller and user interface, debug tools, test scripts, and test data
-* [**Quality Assurance**](quality-assurance) - quality assurance strategy
-    * [Testing](quality-assurance/testing) - testing setups, plans, and data
-    * [Characterization test plan](quality-assurance/characterization-test-plan.md) - component characterization and evaluation
+* [**Quality Assurance**](quality-assurance) - quality assurance strategy, testing plans, data

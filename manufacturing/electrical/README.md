@@ -26,8 +26,8 @@ BEFORE purchasing any parts.**
 |**A11**| 1        | UGREEN        | B0773N757H         | 6.99        | [Z][a11amzn]            | USB-A to micro-USB cable, 1.5ft |
 |**A12**| 1        | Seadream      | 26121600           | 7.00        | [Z][a12amzn]            | microHDMI adapter |
 |**A13**| 1        | C2G           | 56781              | 7.99        | [Z][a13amzn]            | HDMI cable, 1ft |
-|**A14**| 1        | Mean Well     | GSM160A12-R7B      | 63.99       | [K][a14key]             | 12v Power supply adapter, medical grade, 11.5A |
-|**A15**| 1        | Cablelera     | ZWACPCAY-10        | 8.99        | [Z][a15amzn]            | Hospital grade power cord |
+
+>**TODO:** add miniUSB cable for embedded deployment
 
 [a1rw]:    ../../pcb
 [a2rw]:    https://github.com/inceptionev/VentilatorRev1InterimDaughtercard
@@ -45,26 +45,11 @@ BEFORE purchasing any parts.**
 [a11amzn]: https://www.amazon.com/UGREEN-Braided-Charger-Charging-Controller/dp/B01MTXZ3U8
 [a12amzn]: https://www.amazon.com/Seadream-Degree-Down-toward-Adapter-Connector/dp/B01EQC345A/
 [a13amzn]: https://www.amazon.com/C2G-56781-Ethernet-Devices-Chromebooks/dp/B00J4LAKQA
-[a14key]:  https://www.digikey.com/en/products/detail/mean-well-usa-inc/GSM160A12-R7B/7703457
-[a15amzn]: https://www.amazon.com/Cablelera-North-American-Hospital-ZWACPCAY-10/dp/B00GP6CB5A
 
 **Note:** If you are feeling stingy, don't get the touchscreen `[A10]`. You can connect the RasPi to any monitor and
 use a mouse and keyboard to control it.
 
 **NOTE: Please also see [wiring guide](wiring) for manufacture of custom wiring harnesses.**
-
-### Tools
-
-| Item | Manufacturer  | Part number        | Price (USD) | Sources[*][ppg]         | Notes |
-| ---- |:--------------| ------------------ | -----------:|:-----------------------:|------ |
-|**B1**| Anker         | 68ANREADER-B2A     | 12.99       | [Z][b1amzn]             | microSD-USB adapter, for flashing RasPi images |
-|**B2**| Monoprice     | 3896               | 0.83        | [Z][b2amzn] [O][b2mono] | USB-A to miniUSB-B cable, for programming the nucleo |
-|**B3**| VicTsing      | IC192305US         | 23.99       | [Z][b3amzn]             | Wireless keyboard and mouse, for setting up Rpi, **OPTIONAL** |
-
-[b1amzn]: https://www.amazon.com/Anker-Portable-Reader-RS-MMC-Micro/dp/B006T9B6R2
-[b2amzn]: https://www.amazon.com/AmazonBasics-USB-2-0-Cable-Male/dp/B00NH13S44/
-[b2mono]: https://www.monoprice.com/product?p_id=3896
-[b3amzn]: https://www.amazon.com/VicTsing-Keyboard-Adjustable-Independent-Indicator/dp/B07TT3VN4X
 
 ## Assembly Instructions
 

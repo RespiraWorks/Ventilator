@@ -136,8 +136,8 @@ BEFORE purchasing any parts.**
 
 | Item | Quantity | Manufacturer  | Part #          | Price (USD)  | Sources[*][ppg] | Notes |
 | ---- |---------:| ------------- | --------------- | ------------:|:---------------:| ----- |
-|**A1**| 1        | RespiraWorks  |                 | ~1           | [Rw][1rw]       | 3D-printed venturi |
-|**A2**| 2        | McMaster-Carr | 5463K3          | 3.93 / 10    | [C][2mcmc]      | Barbed fitting 3/32" AKA nipple |
+|**A1**| 1        | RespiraWorks  |                 | ~1           | [Rw][1rw]       | 3D-printed venturi body |
+|**A2**| 2        | McMaster-Carr | 5463K3          | 3.93 / 10    | [C][2mcmc]      | Barbed fitting 3/32" UNF, nipple for sensor tubing |
 
 [1rw]:   #files
 [2mcmc]: https://www.mcmaster.com/5463K33
@@ -147,14 +147,12 @@ BEFORE purchasing any parts.**
 | Item | Quantity | Manufacturer  | Part #          | Price (USD) | Sources[*][ppg] | Notes |
 | ---- |---------:| ------------- | --------------- | -----------:|:---------------:| ----- |
 |**B1**| 1        | McMaster-Carr | 2636A251        | 6.76        | [C][b1mcmc]     | Tap for 10-32 threading nipple ports. |
-|**B2**| 1        | Kaufhof       | KF-ATW-0053     | 14.11       | [Z][b2amzn]     | Hand-operated tap wrenches, for use with **B1** above |
-|**B3**| 1        | uxcell        | a19032000ux0738 | 6.89        | [Z][b3amzn]     | 5.5 reamer for ensuring venturi diameter |
-|**B4**| 1        | DeWalt        | DWA1205         | 2.58        | [Z][b4amzn]     | (optional) 5/64" drill bit, should optimally be 2mm |
+|**B2**| 1        | uxcell        | a19032000ux0738 | 6.89        | [Z][b2amzn]     | 5.5 reamer for ensuring venturi diameter |
+|**B3**| 1        | DeWalt        | DWA1205         | 2.58        | [Z][b3amzn]     | (optional) 5/64" drill bit, should optimally be 2mm |
 
 [b1mcmc]:https://www.mcmaster.com/2636A251
-[b2amzn]:https://www.amazon.com/gp/product/B003GKJYKI
-[b3amzn]:https://www.amazon.com/gp/product/B07QQPJB1V
-[b4amzn]:https://www.amazon.com/DEWALT-DWA1205-Pilot-Industrial-Cobalt/dp/B015J5HN2S
+[b2amzn]:https://www.amazon.com/gp/product/B07QQPJB1V
+[b3amzn]:https://www.amazon.com/DEWALT-DWA1205-Pilot-Industrial-Cobalt/dp/B015J5HN2S
 
 ## Manufacturing instructions
 |           |             |
@@ -167,8 +165,8 @@ may result in variable shrinkage or expansion. This may cause uncertainty in the
 Threads for sensor connection may also not be perfectly formed.
 
 You should therefore use mechanical tools to ensure all orifices are adequately prepared:
-* Use 2mm (or 5/64") drill bit (**B4**) above) to ensure sensor port holes clearly reach the main venturi tube
-* Use reamer (**B3**) above) to carefully ream the venturi constriction to be precisely 5.5mm.
+* Use 2mm (or 5/64") drill bit (**B3**) above) to ensure sensor port holes clearly reach the main venturi tube
+* Use reamer (**B2**) above) to carefully ream the venturi constriction to be precisely 5.5mm.
 * Use tapering tap (**B1**) above) to chase the printed threads for the nipples.
 
 Lastly, screw the nipples (**A2**) into the 3d-printed venturi (**A1**). You may require an adjustable wrench.

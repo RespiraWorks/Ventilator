@@ -62,6 +62,7 @@ pages for the various sub-assemblies.
   * [Tubing reducer](pneumatics/reducer_3-4_1-4) for change in tubing diameter in oxygen supply
 * [Electrical assembly](electrical) - encompasses the electrical and computing components
   * [Wiring guide](electrical/wiring) - custom wiring harnesses and connectors
+* [Peripherals](peripherals.md) - indispensable components that are strictly outside of the assembly itself
 
 ## Additional notes
 

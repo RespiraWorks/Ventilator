@@ -95,14 +95,14 @@ BEFORE purchasing any parts.**
 | ----- |---------:| ------------- | ------------------- | ------------:|:--------------------:| ----- |
 |**A1** |        1 | RespiraWorks  | stepper_base        |              | [Rw][a1rw]              | BASE - 3D printed |
 |**A2** |        1 | RespiraWorks  | stepper_rotor       |              | [Rw][a2rw]              | ROTOR - 3D printed |
-|**A3** |        1 | STEPPERONLINE | 17HS19-2004S2       | 11.59        | [T][a3step] [Z][a3amzn] | Stepper motor. Make sure to get one with the full-cut D-shaft. |
-|**A4** |        3 | McMaster-Carr | 91294A128           | 4.82 / 100   | [C][a4mcmc]             | M3x8mm flat head. Attaches frame to stepper body |
-|**A5** |        1 | McMaster-Carr | 92095A218           | 7.64 / 25    | [C][a5mcmc]             | M5x30mm button head. Axle for bearing. |
+|**A3** |        1 | STEPPERONLINE | 17HS19-2004S2       | 11.59        | [T][a3step] [Z][a3amzn] | Stepper motor. Make sure to get version with the full-cut D-shaft. |
+|**A4** |        3 | McMaster-Carr | 91294A128           | 4.82 / 100   | [C][a4mcmc]             | M3 screws, 8mm, flat head: mounting stepper to base |
+|**A5** |        1 | McMaster-Carr | 92095A218           | 7.64 / 25    | [C][a5mcmc]             | M5 screws, 30mm: axle for bearing |
 |**A6** |        3 | FastEddy      | TFE4262             | 12.50 / 10   | [F][a6fast] [C][a6mcmc] | 5x16x5 Metal shielded bearings |
-|**A7** |        4 | McMaster-Carr | 92095A478           | 11.29 / 100  | [C][a7mcmc]             | M4x18mm button head hex drive, base mounting screw |
+|**A7** |        4 | McMaster-Carr | 92095A478           | 11.29 / 100  | [C][a7mcmc]             | M4 screws, 18mm: base mounting to main assembly |
 |**A8** | 4        | McMaster-Carr | 93625A150           | 6.04 / 100   | [C][a8mcmc]             | M4 lock nuts |
 |**A9** | 8        | McMaster-Carr | 93475A230           | 1.86 / 100   | [C][a9mcmc]             | M4 washers, 9mm OD |
-|**A10**| 6in/15cm | McMaster-Carr | 5894K38             | 12.30 / 2 ft | [C][a10mcmc]            | Continuous-Flex Soft Tygon PVC Tubing, 3/8" ID, 5/8" OD |
+|**A10**| 6in/15cm | McMaster-Carr | 5894K38             | 12.30 / 2 ft | [C][a10mcmc]            | PVC Tubing, 3/8" ID, 5/8" OD, continuous-flex soft Tygon |
 
 [a1rw]:   #Custom-parts
 [a2rw]:   #Custom-parts
@@ -121,7 +121,7 @@ BEFORE purchasing any parts.**
 
 | Item | Quantity | Manufacturer  | Part #     | Price (USD) | Sources[*][ppg]  | Notes |
 | ---- |---------:| ------------- | ----------- | ----------:|:----------------:| ----- |
-| a1   |        1 | McMaster-Carr | 26475A38    |       9.55 | [Z][a1mcmc]      | M5x0.8mm taper chamfer tap, for bearing axle.  |
+| a1   |        1 | McMaster-Carr | 26475A38    |       9.55 | [Z][a1mcmc]      | M5x0.8mm taper chamfer tap, for bearing axle  |
 
 [a1mcmc]: https://www.mcmaster.com/26475A38
 

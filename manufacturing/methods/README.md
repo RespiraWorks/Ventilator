@@ -1,6 +1,6 @@
 # Manufacturing methods
 
-Since you may have to print some of the custom prototype components yourself, it is worth trying to do so in as
+Since we have to manufacture some custom components for the prototypes, it is worth trying to do so in as
 reproducible a way as possible, so that we are testing (even in the prototyping phase) with components of similar
 properties. Secondarily, this should help everyone get started faster and avoid having to reinvent the wheel.
 
@@ -20,7 +20,7 @@ Below you will find advice on the following:
 * [Acrylic panels](#acrylic-panels)
 * [Flexible tubing](#flexible-tubing)
 * [Tapered thread connectors](#tapered-threads)
-* [Screwdrivers](#screwdrivers)
+* [Screwdrivers and hand taps](#screwdrivers)
 
 ## 3d Printing
 
@@ -184,3 +184,9 @@ If you got nothing, a cheap choice would be a set of
 
 For something more comfortable and versatile, you could also go with a
 [precision screw driver set](https://www.amazon.com/gp/product/B07R9VTWG5).
+
+There may be a few components that require tapping or chasing of printed threads. The dedicated parts pages
+will hopefully identify the exact type of tap you need. However, you may need a handle to operate these taps.
+
+Something like [this set](https://www.amazon.com/gp/product/B003GKJYKI) should be able to handle the range of diameters
+of the taps listed.

@@ -1,4 +1,4 @@
-/* Copyright 2020, RespiraWorks
+/* Copyright 2020-2021, RespiraWorks
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,19 +17,12 @@ limitations under the License.
 #ifndef FLASH_H_
 #define FLASH_H_
 
-#include <stdint.h>
+#include <cstddef>
+#include <cstdint>
 
 // Flash memory location & size info
-inline constexpr uint32_t flash_start_addr = 0x08000000;
-inline constexpr uint32_t flash_size = 0x00080000;
-inline constexpr uint32_t flash_page_size = 0x00000800;
-
-// Main program memory area
-inline constexpr uint32_t flash_code_start = 0x08000000;
-inline constexpr uint32_t flash_code_size = 0x0007f000;
-
-// Last two flash pages used for parameter storage
-inline constexpr uint32_t flash_params_start = 0x0807f000;
-inline constexpr uint32_t flash_params_size = 0x00001000;
+inline constexpr uint32_t flash_start_addr{0x08000000};
+inline constexpr size_t flash_size{32 * 1024};
+inline constexpr size_t flash_page_size{2 * 1024};
 
 #endif

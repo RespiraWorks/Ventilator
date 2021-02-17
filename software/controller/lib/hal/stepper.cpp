@@ -1,4 +1,4 @@
-/* Copyright 2020, RespiraWorks
+/* Copyright 2020-2021, RespiraWorks
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -18,8 +18,8 @@ limitations under the License.
 #include "stepper.h"
 #include "hal.h"
 #include "hal_stm32.h"
-#include <math.h>
-#include <string.h>
+#include <cmath>
+#include <cstring>
 
 // Static data members
 StepMotor StepMotor::motor_[StepMotor::kMaxMotors];
@@ -158,7 +158,7 @@ StepMtrErr StepMotor::GetParam(StepMtrParam param, uint32_t *value) {
  * handler.
  *
  * One positive is that you can daisy chain multiple stepper drivers
- * and commuicate with them all at once.  If you have N drivers then
+ * and communicate with them all at once.  If you have N drivers then
  * you would send N bytes all at once and bring the CS line high
  * between sets of N bytes.  The bits flow through the chain of
  * stepper drivers all connected together and the data is latched
@@ -187,7 +187,7 @@ void HalApi::StepperMotorInit() {
   // Configure the CS and reset pins as outputs.
   // pulled high.  I don't really use the reset pin,
   // I just want it to be high so I don't reset the
-  // part inadvertantly
+  // part inadvertently
   CS_High();
   GPIO_SetPin(GPIO_A_BASE, 9);
   GPIO_PinMode(GPIO_B_BASE, 6, GPIO_PinMode::OUT);
@@ -241,7 +241,7 @@ void HalApi::StepperMotorInit() {
   dma->channel[C3].config.htie = 0;
   dma->channel[C3].config.teie = 0;
   dma->channel[C3].config.dir =
-      static_cast<REG>(DmaChannelDir::PERIPHERAL_TO_MEM);
+      static_cast<uint32_t>(DmaChannelDir::PERIPHERAL_TO_MEM);
   dma->channel[C3].config.circular = 0;
   dma->channel[C3].config.perInc = 0;
   dma->channel[C3].config.memInc = 1;
@@ -255,7 +255,7 @@ void HalApi::StepperMotorInit() {
   dma->channel[C4].config.htie = 0;
   dma->channel[C4].config.teie = 0;
   dma->channel[C4].config.dir =
-      static_cast<REG>(DmaChannelDir::MEM_TO_PERIPHERAL);
+      static_cast<uint32_t>(DmaChannelDir::MEM_TO_PERIPHERAL);
   dma->channel[C4].config.circular = 0;
   dma->channel[C4].config.perInc = 0;
   dma->channel[C4].config.memInc = 1;
@@ -370,7 +370,7 @@ StepMtrErr StepMotor::GetMaxSpeed(float *ret) {
 //
 // NOTE - Setting a non-zero minimum speed doesn't mean
 // the motor can't stop, this is the minimum speed for
-// a move.  When you start a move, rathern than increase
+// a move.  When you start a move, rather than increase
 // linearly from 0, the stepper will jump to this speed
 // immediately, then ramp up from there.
 // This can help with vibration.
@@ -914,11 +914,11 @@ void StepMotor::ProbeChips() {
          sizeof(probe_buff));
   SendInitCmd(probe_buff, sizeof(probe_buff));
 
-  // The first N bytes of the returned array should be 0 and the rest should be
-  // the reset command.
+  // The first N bytes of the returned array should be 0 and the rest should
+  // be the reset command.
   total_motors_ = 0;
-  for (int i = 0; i < sizeof(probe_buff); i++) {
-    if (probe_buff[i] == 0x00)
+  for (unsigned char i : probe_buff) {
+    if (i == 0x00)
       total_motors_++;
     else
       break;

@@ -40,20 +40,22 @@ enum class ExchangeDirection {
   kRead = 1,
 };
 
-// Structure that represents an I²C request. It is up to the caller to ensure
-// that size is consistent with data limits.
-// For read requests, the caller must use a variable with the appropriate scope
-// (ideally a static variable) to ensure the result is put at a safe memory.
+// Structure that represents an I²C request. It is up to the caller to
+// ensure that size is consistent with data limits. For read requests, the
+// caller must use a variable with the appropriate scope (ideally a static
+// variable) to ensure the result is put at a safe memory.
 struct Request {
-  uint8_t slave_address{0}; // for now we only support 7 bits addresses and NOT
-                            // 10 bits addresses (I²C bus is one or the other)
+  uint8_t slave_address{0}; // for now we only support 7 bits addresses
+                            // and NOT 10 bits addresses (I²C bus is one
+                            // or the other)
   ExchangeDirection direction{ExchangeDirection::kRead};
   uint16_t size{1};         // size (in bytes) of the data to be sent or
                             // received - limited to 16 bits because of DMA
                             // limitation
   void *data{nullptr};      // pointer to the data to be sent or received.
-  bool *processed{nullptr}; // pointer to a boolean that informs the caller that
-                            // his request has been processed
+  bool *processed{nullptr}; // pointer to a boolean that informs the
+                            // caller that his request has been
+                            // processed
 };
 
 // Class that represents an I²C channel (we have 4 of those on the STM32)
@@ -63,28 +65,29 @@ struct Request {
 // On the STM32, a request consists of one or several transfers of up to 255
 // bytes.
 //
-// When we use DMA, a transfer is performed directly in hardware and the end of
-// transfer triggers a DMA interrupt which we use to start the next transfer.
-// Note that a current limitation is that DMA cannot be used for transfers that
-// are longer than 255 bytes AND include a functional header within their data
-// because our implementation doesn't support reload mode with DMA.
+// When we use DMA, a transfer is performed directly in hardware and the end
+// of transfer triggers a DMA interrupt which we use to start the next
+// transfer. Note that a current limitation is that DMA cannot be used for
+// transfers that are longer than 255 bytes AND include a functional header
+// within their data because our implementation doesn't support reload mode
+// with DMA.
 //
 // When we don't, we listen to the I²C interrupts to know when to read/write
 // the next byte in a transfer, and when a transfer is complete.
 //
-// We don't necessarily plan to use the second mode in production, but it should
-// come in handy during integration testing, when we want to closely monitor
-// what is sent on the bus.
+// We don't necessarily plan to use the second mode in production, but it
+// should come in handy during integration testing, when we want to closely
+// monitor what is sent on the bus.
 class Channel {
 public:
   Channel() = default;
-  // Method that ultimately sends a request over the I²C channel, note that it
-  // may take some time to be processed: if the line is already busy, the
-  // request ends up in a queue.
-  // Once the request has been completed, *request.processed is set to True and
-  // (if the request is a Read) *request.data contains desired data.
-  // Return value is false in case the request cannot be processed (this can
-  // only happen if queue is full).
+  // Method that ultimately sends a request over the I²C channel, note
+  // that it may take some time to be processed: if the line is already
+  // busy, the request ends up in a queue. Once the request has been
+  // completed, *request.processed is set to True and (if the request is a
+  // Read) *request.data contains desired data. Return value is false in
+  // case the request cannot be processed (this can only happen if queue
+  // is full).
   bool SendRequest(const Request &request);
 
   // Interrupt handlers
@@ -92,12 +95,12 @@ public:
   void I2CErrorHandler();
 
 protected:
-  // We queue of a few requests. The number of requests is arbitrary but should
-  // be enough for all intents and purposes.
+  // We queue of a few requests. The number of requests is arbitrary but
+  // should be enough for all intents and purposes.
   static constexpr uint8_t kQueueLength{80};
 
-  // We copy the write data into a buffer to make sure nothing can be lost due
-  // to the scope of the caller's variable. This is the buffer size.
+  // We copy the write data into a buffer to make sure nothing can be lost
+  // due to the scope of the caller's variable. This is the buffer size.
   static constexpr uint32_t kWriteBufferSize{4096};
 
   // Max retry-after-error allowed for a single request.
@@ -121,48 +124,51 @@ protected:
   virtual void StopTransfer(){}; // send stop condition
 
   // I²C interrupt getters:
-  // Indicates that the hardware has processed the current byte and we can read
-  // (or write) the next one in the Tx (or Rx) register.
+  // Indicates that the hardware has processed the current byte and we can
+  // read (or write) the next one in the Tx (or Rx) register.
   virtual bool NextByteNeeded() const { return false; };
-  // Indicates that a 255 bytes transfer that does not end the current request
-  // is completed.
+  // Indicates that a 255 bytes transfer that does not end the current
+  // request is completed.
   virtual bool TransferReload() const { return false; };
   // Indicates that a transfer is completed.
   virtual bool TransferComplete() const { return false; };
-  // Indicates that the slave is busy, while this is not an error, per say, we
-  // need to retry when a NACK occurs.  Because this is not an error, this retry
-  // does not decrement the error_retry countdown.
+  // Indicates that the slave is busy, while this is not an error, per
+  // say, we need to retry when a NACK occurs.  Because this is not an
+  // error, this retry does not decrement the error_retry countdown.
   virtual bool NackDetected() const { return false; };
   // Interrupt clear
   virtual void ClearNack(){};
   virtual void ClearErrors(){};
 
-  // Store the last request in order to be able to resume in case of errors.
+  // Store the last request in order to be able to resume in case of
+  // errors.
   Request last_request_;
-  // For non-DMA transfers, store pointer to the next data to be sent/received
+  // For non-DMA transfers, store pointer to the next data to be
+  // sent/received
   uint8_t *next_data_{nullptr};
-  // For transfers longer than 255 bytes and non-DMA transfers, store size of
-  // data that is still expected to be received/sent
+  // For transfers longer than 255 bytes and non-DMA transfers, store size
+  // of data that is still expected to be received/sent
   uint16_t remaining_size_{0};
 
-  // Because Request cannot be std::move'd (and is therefore not compatible
-  // with our circular buffer template), we use a circular buffer of indexes to
-  // know the queue state and let the tested template worry about buffer
-  // management but we also use our own Request table (to which the circular
-  // buffer elements lead)
+  // Because Request cannot be std::move'd (and is therefore not
+  // compatible with our circular buffer template), we use a circular
+  // buffer of indexes to know the queue state and let the tested template
+  // worry about buffer management but we also use our own Request table
+  // (to which the circular buffer elements lead)
   CircularBuffer<uint8_t, kQueueLength> buffer_;
   Request queue_[kQueueLength];
   uint8_t ind_queue_{0};
 
-  // Write buffer: the caller may send a write request with the address of a non
-  // static variable, or alter that variable after requesting, therefore we need
-  // to store the bytes to write in our own buffer.
-  // We might have used a circular buffer for this purpose but:
-  // a. We don't want a single transfer to wrap around in the buffer.
+  // Write buffer: the caller may send a write request with the address of
+  // a non static variable, or alter that variable after requesting,
+  // therefore we need to store the bytes to write in our own buffer. We
+  // might have used a circular buffer for this purpose but: a. We don't
+  // want a single transfer to wrap around in the buffer.
   //    Especially true for DMA transfers, which can't handle this, and to
   //    simplify handling non-DMA ones.
   //    This cannot be achieved with the circular buffer template.
-  // b. Data in a circular buffer is pop'ed out of the buffer when used, which
+  // b. Data in a circular buffer is pop'ed out of the buffer when used,
+  // which
   //    means we lose the ability to retry a request after an I²C (or DMA)
   //    error.
   uint8_t write_buffer_[kWriteBufferSize];
@@ -176,10 +182,10 @@ protected:
 class STM32Channel : public Channel {
 public:
   STM32Channel() = default;
-  // Init I²C channel, setting up registers DMA_Reg and I²C_Reg to enable the
-  // channel using DMA if possible.
-  // If DMA_Reg is invalid (or that DMA cannot be linked to this I²C), dma is
-  // disabled and all transfers are handled in software.
+  // Init I²C channel, setting up registers DMA_Reg and I²C_Reg to enable
+  // the channel using DMA if possible. If DMA_Reg is invalid (or that DMA
+  // cannot be linked to this I²C), dma is disabled and all transfers are
+  // handled in software.
   void Init(I2C_Regs *i2c, DMA_Regs *dma, Speed speed);
   // Interrupt handlers for DMA, which only makes sense on the STM32
   void DMAIntHandler(DMA_Chan chan);
@@ -187,8 +193,8 @@ public:
 private:
   I2C_Regs *i2c_{nullptr};
   DMA_Regs *dma_{nullptr};
-  DMA_Regs::ChannelRegs *rx_channel_{nullptr};
-  DMA_Regs::ChannelRegs *tx_channel_{nullptr};
+  volatile DMA_Regs::ChannelRegs *rx_channel_{nullptr};
+  volatile DMA_Regs::ChannelRegs *tx_channel_{nullptr};
 
   void SetupI2CTransfer() override; // configure a transfer
   void ReceiveByte() override {
@@ -212,7 +218,7 @@ private:
   void ClearErrors() override { i2c_->intClr = 0x720; }
 
   void SetupDMAChannels(DMA_Regs *dma);
-  void ConfigureDMAChannel(DMA_Regs::ChannelRegs *channel,
+  void ConfigureDMAChannel(volatile DMA_Regs::ChannelRegs *channel,
                            ExchangeDirection direction);
   void SetupDMATransfer();
 };
@@ -228,10 +234,11 @@ public:
   void TEST_SimulateNack() { nack_ = true; };
 
 private:
-  // in test mode, fake sending and receiving data through circular buffers.
+  // in test mode, fake sending and receiving data through circular
+  // buffers.
   CircularBuffer<uint8_t, kWriteBufferSize> sent_buffer_;
-  // note it is up to the tester to put data in the rx_buffer before calling
-  // I2CEventHandler during a read request
+  // note it is up to the tester to put data in the rx_buffer before
+  // calling I2CEventHandler during a read request
   CircularBuffer<uint8_t, kWriteBufferSize> rx_buffer_;
   // fake a NACK condition on next handler call
   bool nack_{false};

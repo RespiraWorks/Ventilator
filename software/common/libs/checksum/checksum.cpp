@@ -1,4 +1,4 @@
-/* Copyright 2020, Edwin Chiu
+/* Copyright 2020-2021, Edwin Chiu
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -59,7 +59,7 @@ uint32_t crc32_single(uint32_t crc, uint8_t data) {
   return crc;
 }
 
-uint32_t soft_crc32(const char *data, uint32_t count) {
+uint32_t soft_crc32(const uint8_t *data, uint32_t count) {
   if (0 == count) {
     return 0;
   }

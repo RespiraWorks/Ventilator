@@ -1,3 +1,19 @@
+/* Copyright 2020-2021, RespiraWorks
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+*/
+
 #ifndef __UART_DMA
 #define __UART_DMA
 #include "hal_stm32_regs.h"
@@ -62,15 +78,15 @@ public:
 
   void init(int baud);
   // Returns true if DMA TX is in progress
-  bool isTxInProgress();
+  bool isTxInProgress() const;
   // Returns true if DMA RX is in progress
-  bool isRxInProgress();
+  bool isRxInProgress() const;
 
   // Sets up UART3 to transfer [length] characters from [buf]
   // Returns false if DMA transmission is in progress, does not
   // interrupt previous transmission.
   // Returns true if no transmission is in progress
-  bool startTX(const char *buf, uint32_t length);
+  bool startTX(char *buf, uint32_t length);
 
   uint32_t getRxBytesLeft();
 
@@ -83,7 +99,7 @@ public:
   // setup. Returns true if no reception is in progress and new reception
   // was setup.
 
-  bool startRX(const char *buf, uint32_t length, uint32_t timeout);
+  bool startRX(char *buf, uint32_t length, uint32_t timeout);
   void stopRX();
   void charMatchEnable();
 

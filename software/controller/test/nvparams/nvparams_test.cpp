@@ -63,7 +63,7 @@ static void CompareParams(int16_t address, const Structure &ref) {
 }
 
 uint32_t ParamsCRC(Structure *params) {
-  char *ptr = reinterpret_cast<char *>(params);
+  uint8_t *ptr = reinterpret_cast<uint8_t *>(params);
   return soft_crc32(ptr + 4, sizeof(Structure) - 4);
 }
 
@@ -82,8 +82,8 @@ TEST(NVparams, FirstInitEver) {
   SCOPED_TRACE("Flip side check");
   CompareParams(static_cast<uint16_t>(Address::kFlip), ref_params);
 
-  // Increment count, then compute crc, this should get us in the state of flop
-  // and current params
+  // Increment count, then compute crc, this should get us in the state of
+  // flop and current params
   ref_params.count++;
   ref_params.crc = ParamsCRC(&ref_params);
   SCOPED_TRACE("Flop side check");
@@ -95,7 +95,8 @@ TEST(NVparams, FirstInitEver) {
 
 TEST(NVparams, Update) {
   Structure ref_params;
-  // We are reusing the resulting nv_params and eeprom state from previous test
+  // We are reusing the resulting nv_params and eeprom state from previous
+  // test
   nv_params.Get(0, &ref_params, sizeof(Structure));
   ref_params.last_settings.mode = VentMode::VentMode_PRESSURE_CONTROL;
 
@@ -425,7 +426,8 @@ TEST(NVparams, InitBothValid) {
   SCOPED_TRACE("nv_param_ check after Init");
   CompareParams(-1, valid_params);
 
-  // update those values in flip_params, the rest was kept in its previous state
+  // update those values in flip_params, the rest was kept in its previous
+  // state
   flip_params.count = valid_params.count;
   flip_params.power_cycles = valid_params.power_cycles;
   flip_params.crc = valid_params.crc;

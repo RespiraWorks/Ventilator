@@ -1,4 +1,4 @@
-/* Copyright 2020, RespiraWorks
+/* Copyright 2020-2021, RespiraWorks
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -98,12 +98,12 @@ inline void GPIO_PinAltFunc(GPIO_Regs *gpio, int pin, int func) {
 
 // Set a specific output pin
 inline void GPIO_SetPin(GPIO_Regs *gpio, int pin) {
-  gpio->set = static_cast<SREG>(1 << pin);
+  gpio->set = static_cast<uint16_t>(1 << pin);
 }
 
 // Clear a specific output pin
 inline void GPIO_ClrPin(GPIO_Regs *gpio, int pin) {
-  gpio->clr = static_cast<SREG>(1 << pin);
+  gpio->clr = static_cast<uint16_t>(1 << pin);
 }
 
 // Return the current value of an input pin

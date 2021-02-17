@@ -1,4 +1,4 @@
-/* Copyright 2020, RespiraWorks
+/* Copyright 2020-2021, RespiraWorks
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ static constexpr uint32_t size{sizeof(Structure)};
 
 // Calculate the CRC of the params at this address
 static uint32_t CRC(Structure *param) {
-  char *ptr = reinterpret_cast<char *>(param);
+  uint8_t *ptr = reinterpret_cast<uint8_t *>(param);
   return soft_crc32(ptr + sizeof(uint32_t), size - sizeof(uint32_t));
 }
 
@@ -70,8 +70,8 @@ void NVParams::Handler::Init(I2Ceeprom *eeprom) {
     // check its validity
     if (IsValid(&nv_param_)) {
       // Still read the flop in case they are both valid (which normally
-      // shouldn't happen but could if power is lost at just the right time when
-      // writing).
+      // shouldn't happen but could if power is lost at just the right
+      // time when writing).
       Structure Flop;
       ReadFullParams(Address::kFlop, &Flop, eeprom_);
       // check its validity
@@ -179,8 +179,8 @@ void NVParams::Handler::Update(const Time now, VentParams *params) {
     last_update_ = now;
   }
 
-  // assert that the size of VentParams is still good - if it isn't, we need to
-  // update the condition below to capture all members
+  // assert that the size of VentParams is still good - if it isn't, we need
+  // to update the condition below to capture all members
   static_assert(sizeof(VentParams) == 32);
 
   if (params->mode != nv_param_.last_settings.mode ||

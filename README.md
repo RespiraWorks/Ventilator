@@ -20,10 +20,9 @@ working to rapidly design a low-cost and [open-source](open_source.md) ventilato
 global supply chain. Our objective is to provide the know-how and technology to enable others to manufacture these
 systems and put them in the hands of those who need them most.
 
-| First enclosed prototype in India    | Rendering of upcoming build    |
+| Rendering of upcoming build  | Assembled v0.3 prototype |
 |:---:|:---:|
-|![](manufacturing/images/India_build_yellow_smaller.jpeg) | ![](manufacturing/images/rendering_smaller.jpg)  |
-
+| [![](manufacturing/images/rendering_smaller.jpg)](manufacturing/images/rendering_full.jpg) | [![](manufacturing/images/assembled_smaller.jpg)](manufacturing/images/assembled_full.jpg) |
 
 ## Design Goals
 
@@ -57,32 +56,23 @@ If you can lend your skills towards achieving this goal, please contact us at
 [join-us@respira.works](mailto:join-us@respira.works?subject=[GitHub]%20Join%20request). A list of roles we are looking
 to fill is also on our [website](https://respira.works/join-us).
 
-## DISCLAIMER
+## DISCLAIMERS
 
 **This is an incomplete, as yet untested design that is not yet intended to be used on patients.**
 
-**This repository contains live documents. There are duplicate and alternative items for undecided aspects of the
-physical design. Components may or may not connect and integrate as intended. Contents may also be out of date. If you
+**The repository contains live documents. There may be incomplete or contradictory information about various aspects
+of the design. Components may or may not connect and integrate as intended. Contents may also be out of date. If you
 decide to buy or build anything, do so at your own risk.**
 
 ## Repository Structure
 
 * [**System Requirements**](requirements) -
-  describes the requirement architecture, hierarchy, and process. Links to the releases of our system requirements, hardware specifications, and software requirements.
+  describes the requirement architecture, hierarchy, and process. Links to the releases of our system requirements,
+  hardware specifications, and software requirements
 * [**System Design**](design) -
-  describes the functional implementation and design theory of the system. This document also defines the hierarchy for the subsystems below.
-    * [Pneumatic System](design/pneumatic-system)
-    * [Electrical System](design/electrical-system)
-    * [Mechanical assembly](design/mechanical)
-* [**Manufacturing Design**](manufacturing) - describes the physical design of the ventilator and its components, including:
-  * [Enclosure](manufacturing/enclosure) - rigid frame and enclosure components
-  * [Filter panel](manufacturing/filter_panel) - Mechanical support for air filter assemblies
-  * [**Pneumatic assembly**](manufacturing/pneumatics) - full pneumatic assembly, including:
-    * [Venturi flow sensors](manufacturing/pneumatics/venturi) - in-house design of affordable flow sensors
-    * [Pinch valves](manufacturing/pneumatics/pinch_valve) - in-house design of affordable valve for inhale and exhale control
-  * [Electrical assembly](manufacturing/electrical) - encompasses the electrical and computing components
-* [**Main Circuit Board**](pcb) - design, materials, assembly instructions
+  describes the functional implementation and design theory of the system
+* [**Manufacturing Design**](manufacturing) - describes the physical design of the ventilator and its components.
+  Includes CAD models and notes on the manufacturing process
+* [**Main Circuit Board**](pcb) - design, materials, assembly instructions for the ventilator main circuit board
 * [**Software**](software) - Source code for cycle controller and user interface, debug tools, test scripts, and test data
-* [**Quality Assurance**](quality-assurance) - quality assurance strategy
-    * [Testing](quality-assurance/testing) - testing setups, plans, and data
-    * [Characterization test plan](quality-assurance/characterization-test-plan.md) - component characterization and evaluation
+* [**Quality Assurance**](quality-assurance) - quality assurance strategy, testing plans, data

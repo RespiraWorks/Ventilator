@@ -64,7 +64,7 @@ BEFORE purchasing any parts.**
 
 | Item  | Quantity | Manufacturer  | Part #                   | Price (USD)  | Sources[*][ppg]| Notes |
 | ----- |---------:| ------------- | ------------------------ | ------------:|:--------------:|:------|
-|**A1** | ~200cm²  | McMaster-Carr | 8560K357                 | 55 / 3716cm² | [C][a1mcmc]    | 1/4" (6.35mm) thick clear acrylic sheet, to make `[A2]` below |
+|**A1** | ~550cm²  | McMaster-Carr | 8560K357                 | 150 / m²     | [C][a1mcmc]    | 1/4" (6.35mm) thick clear acrylic sheet, to make `[A2]` below |
 |**A2** | 1        | RespiraWorks  | upper_acrylic_face_panel |              | [Rw][a2rw]     | Upper acrylic face panel, cut from acrylic `[A1]` |
 |**A3** | 2        | RespiraWorks  | electrical_assembly      |              | [Rw][a3rw]     |  |
 |**A4** | 1        | McMaster-Carr | 7768K22                  | 11.62        | [C][a4mcmc]    | brass threaded check valve |
@@ -77,8 +77,6 @@ BEFORE purchasing any parts.**
 |**A11**| 4        | McMaster-Carr | 94180A351                | 15.47 / 100  | [C][a11mcmc]   | Heat-set inserts for M4 screws |
 |**A12**| 4        | McMaster-Carr | 93475A230                | 1.86 / 100   | [C][a12mcmc]   | M4 washer, 9mm OD |
 |**A13**| 4        | McMaster-Carr | 92095A189                | 8.89 / 100   | [C][a13mcmc]   | M4 screw, 8mm |
-
->**TODO:** acrylic size in BOM
 
 [a1mcmc]:  https://www.mcmaster.com/8560K357/
 [a2rw]:    #custom-parts

@@ -40,7 +40,7 @@ BEFORE purchasing any parts.**
 
 | Item | Quantity | Manufacturer  | Part #                         | Price (USD) | Sources[*][ppg]| Notes |
 | ---- |---------:| ------------- | ------------------------------ | ------------:|:--------------:|:------|
-|**A1**| ~200cm²  | McMaster-Carr | 8560K357                       | 55 / 3716cm² | [C][a1mcmc]    | 1/4" (6.35mm) thick clear acrylic sheet, to make `[A2]` below |
+|**A1**| ~250cm²  | McMaster-Carr | 8560K357                       | 150 / m²     | [C][a1mcmc]    | 1/4" (6.35mm) thick clear acrylic sheet, to make `[A2]` below |
 |**A2**| 1        | RespiraWorks  | lower_acrylic_face_panel       |              | [Rw][a2rw]     | Lower acrylic face panel, cut from acrylic `[A1]`  |
 |**A3**| 2        | RespiraWorks  | patient_tubing_filter_assembly |              | [Rw][a3rw]     | Filter housing assembly, variant with patient tubing |
 |**A4**| 2        | RespiraWorks  | outlet_filter_assembly         |              | [Rw][a4rw]     | Filter housing assembly, variant with outlet vent |
@@ -49,8 +49,6 @@ BEFORE purchasing any parts.**
 |**A7**| 20       | McMaster-Carr | 93475A230                      | 1.86 / 100   | [C][a7mcmc]    | M4 washer, 9mm OD |
 |**A8**| 16       | McMaster-Carr | 92095A193                      | 8.95 / 100   | [C][a8mcmc]    | M4 screw, 14mm |
 |**A9**| 4        | McMaster-Carr | 92095A189                      | 8.89 / 100   | [C][a9mcmc]    | M4 screw, 8mm |
-
->**TODO:** acrylic size in BOM
 
 [a1mcmc]:  https://www.mcmaster.com/8560K357/
 [a2rw]: #custom-parts

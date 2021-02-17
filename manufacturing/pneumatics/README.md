@@ -34,8 +34,6 @@ BEFORE purchasing any parts.**
 
 | Item  | Quantity | Manufacturer   | Part #              | Price (USD)  | Sources[*][ppg]| Notes |
 | ----- |---------:| -------------- | ------------------- | ------------:|:--------------:| ----- |
-|**A1** | 1        | McMaster-Carr  | 7768K22             | 11.62        | [C][a1mcmc]    | brass threaded check valve |
-|**A2** | 1        | McMaster-Carr  | 50785K273           | 8.23         | [C][a2mcmc]    | through-wall straight connector, 1/4NPT female |
 |**A3** | 1        | SMC Pneumatics | IR2010-N02B         | 77.62        | [Sm][a3smc]    | precision pressure regulator |
 |**A4** | 1        | SMC Pneumatics | PVQ31-6G-40-01N     | 96.10        | [Sm][a4smc]    | Proportional solenoid |
 |**A5** | 2        | McMaster-Carr  | 5121K391            | 5.58 / 10    | [C][a5mcmc]    | 1/8 NPT x 1/4" ID barbed adapter **(with B1 only)** |
@@ -70,8 +68,6 @@ BEFORE purchasing any parts.**
 |**A34**| 2        | McMaster-Carr  | 5121K907            |  8.15 / 10   | [C][a34mcmc]   | 3/8"ID barbed elbow |
 |**A35**| 1        | McMaster-Carr  | 5463K648            |  8.40 / 10   | [C][a35mcmc]   | 3/4"ID x 3/8"ID barbed reducer |
 
-[a1mcmc]:  https://www.mcmaster.com/7768K22/
-[a2mcmc]:  https://www.mcmaster.com/50785K273/
 [a3smc]:   https://www.smcpneumatics.com/IR2010-N02B.html
 [a4smc]:   https://www.smcpneumatics.com/PVQ31-6G-40-01N.html
 [a5mcmc]:  https://www.mcmaster.com/5121K391/
@@ -117,19 +113,6 @@ BEFORE purchasing any parts.**
 [Pneumatics tray](pneumatics_tray.ipt)
 
 **TODO:** Make this look good and explain manufacturing process
-
-### Oxygen input and check valve
-
-The oxygen check valve is installed on the upper acrylic panel. There is a separate page about the
-[display panel sub-assembly](../display_panel).
-
-The oxygen input assembly also requires a 1/4"ID tubing adapter (**A24**) to interface with tubing.
-
-It is not clear whether the check valve has the correct cracking pressure and other pneumatic properties for our system.
-
-Related issues are being tracked here:
-[#653](https://github.com/RespiraWorks/Ventilator/issues/653)
-[#646](https://github.com/RespiraWorks/Ventilator/issues/646)
 
 ### Oxygen regulator
 

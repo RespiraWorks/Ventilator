@@ -25,3 +25,11 @@ BEFORE purchasing any parts.**
 [a4amzn]: https://www.amazon.com/AmazonBasics-USB-2-0-Cable-Male/dp/B00NH13S44/
 [a4mono]: https://www.monoprice.com/product?p_id=3896
 [a5amzn]: https://www.amazon.com/VicTsing-Keyboard-Adjustable-Independent-Indicator/dp/B07TT3VN4X
+
+
+### Power
+
+Once the ventilator is assembled, you may use `[A1]` and `[A2]` power it.
+
+You may also want to use `[A4]` to connect the controller to your PC from which you will be flashing
+controller firmware.

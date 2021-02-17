@@ -29,9 +29,9 @@ BEFORE purchasing any parts.**
 | Item  | Quantity | Manufacturer  | Part #                       | Price (USD)      | Sources[*][ppg] | Notes |
 | ----- |---------:| ------------- | ---------------------------- | ----------------:|:---------------:|-------|
 |**A1** | 1        |               | WS7040-12-X200N              | 65.00            | [A][a1ali]      | 12v blower and driver. Make sure to choose with driver when ordering. |
-|**A2** | 1        |               | WS1208                       | 24.00            | [W][a2won]      | **optional** blower driver, in case blower above did not come with driver. |
+|**A2** | (1)      |               | WS1208                       | 24.00            | [W][a2won]      | **optional** blower driver, in case blower above did not come with driver. |
 |**A3** | 1        | RespiraWorks  | tubing_adapter               | 1 (material)     | [Rw][a3rw]      | 3D printed from data in link |
-|**A4** | ~200cm²  | McMaster-Carr | 8560K357                     | 54.68 / 3716cm²  | [C][a4mcmc]     | 1/4" (~6mm) thick clear acrylic sheet, to make **A3-C5** below |
+|**A4** | ~200cm²  | McMaster-Carr | 8560K357                     | 55 / 3716cm²     | [C][a4mcmc]     | 1/4" (6.35mm) thick clear acrylic sheet, to make **A3-C5** below |
 |**A5** | 1        | RespiraWorks  | driver_mounting_plate        | ~1.1 (material)  | [Rw][a5rw]      | Driver mounting plate cut from acrylic (**A2**) using drawing in link, uses ~75 cm² |
 |**A6** | 1        | RespiraWorks  | blower_holding_plate         | ~0.9 (material)  | [Rw][a6rw]      | Blower holding plate cut from acrylic (**A2**) using drawing in link, uses ~60 cm² |
 |**A7** | 1        | RespiraWorks  | tubing_adapter_holding_plate | ~0.9 (material)  | [Rw][a7rw]      | Tubing adapter holding plate cut from acrylic (**A2**) using drawing in link, uses ~60 cm² |

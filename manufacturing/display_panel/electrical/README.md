@@ -9,7 +9,7 @@ This build constitutes the electrical, computing and digital user interface comp
 **Note: If you are a member of the RespiraWorks team, review the [part purchasing guidelines][ppg]
 BEFORE purchasing any parts.**
 
-[ppg]: ../../manufacturing/purchasing_guidelines.md
+[ppg]: ../../purchasing_guidelines.md
 
 | Item  | Quantity | Manufacturer  | Part Number        | Price (USD) | Sources[*][ppg]         | Notes |
 | ----  |---------:| --------------| ------------------ | -----------:|:-----------------------:| ----- |
@@ -26,10 +26,15 @@ BEFORE purchasing any parts.**
 |**A11**| 1        | UGREEN        | B0773N757H         | 6.99        | [Z][a11amzn]            | USB-A to micro-USB cable, 1.5ft |
 |**A12**| 1        | Seadream      | 26121600           | 7.00        | [Z][a12amzn]            | microHDMI adapter |
 |**A13**| 1        | C2G           | 56781              | 7.99        | [Z][a13amzn]            | HDMI cable, 1ft |
+|**A14**| 4        | McMaster-Carr | 92095A458          | 4.97 / 100  | [C][a14mcmc]            | M2.5 screw, 6mm |
+|**A15**| 4        | DigiKey       | 732-10395-ND       | 48.40/100   | [K][a15key]             | M2.5 standoff, 9mm tall |
+|**A16**| 4        | DigiKey       | 732-10435-ND       | 50.82/100   | [K][a16key]             | M2.5 standoff, 20mm tall |
 
 >**TODO:** add miniUSB cable for embedded deployment
 
-[a1rw]:    ../../pcb
+>**TODO:** where do standoffs go?
+
+[a1rw]:    ../../../pcb
 [a2rw]:    https://github.com/inceptionev/VentilatorRev1InterimDaughtercard
 [a3amzn]:  https://www.amazon.com/Duracell-Lithium-Battery-lasting-battery/dp/B00006JPGV
 [a4mous]:  https://www.mouser.com/ProductDetail/STMicroelectronics/NUCLEO-L452RE?qs=sGAEpiMZZMtw0nEwywcFgEEYp888DlnM1Y5kGes2rJIHvcJjT1ZDkw%3D%3D
@@ -45,23 +50,25 @@ BEFORE purchasing any parts.**
 [a11amzn]: https://www.amazon.com/UGREEN-Braided-Charger-Charging-Controller/dp/B01MTXZ3U8
 [a12amzn]: https://www.amazon.com/Seadream-Degree-Down-toward-Adapter-Connector/dp/B01EQC345A/
 [a13amzn]: https://www.amazon.com/C2G-56781-Ethernet-Devices-Chromebooks/dp/B00J4LAKQA
+[a14mcmc]: https://www.mcmaster.com/92095A458/
+[a15key]:  https://www.digikey.com/en/products/detail/w-rth-elektronik/971090151/6174614
+[a16key]:  https://www.digikey.com/en/products/detail/würth-elektronik/971200151/6174654
+
 
 **Note:** If you are feeling stingy, don't get the touchscreen `[A10]`. You can connect the RasPi to any monitor and
 use a mouse and keyboard to control it.
-
-**NOTE: Please also see [wiring guide](wiring) for manufacture of custom wiring harnesses.**
 
 ## Assembly Instructions
 
 ### Custom wiring
 
 The ventilator assembly requires some custom wiring. Please use materials and instructions on the
-[wiring page](wiring) to prepare those custom components.
+[wiring page](../../wiring) to prepare those custom components first.
 
 ### Main circuit board (PCB)
 
 Design and manufacturing files for the main board can be found on the
-[PCB Rev1 page](../../pcb/rev1_export).
+[PCB Rev1 page](../../../pcb/rev1_export).
 
 Revision 1 of the custom circuit board (PCB) requires some modification to work with the current prototype.
 Please follow instructions on that page to make the necessary modifications.
@@ -105,7 +112,7 @@ single ventilator contains two pinch valves, each must come with its own driver 
 soldered appropriately.
 
 It is advisable that you first manufacture the 2 pigtails of appropriate length as described on the
-[wiring page](wiring).
+[wiring page](../../wiring).
 
 Stepper board modification and mounting to Nucleo is documented [here](stepper_drivers).
 
@@ -123,11 +130,11 @@ Prior to installing it on the PCB, you should:
   using a microSD adapter `[B1]`
 * install memory card into the RaspberryPi
 * give it a keyboard and mouse `[B3]` or
-* alternatively, you can configure it for remote ssh control as described on our [GUI page](../../software/gui).
+* alternatively, you can configure it for remote ssh control as described on our [GUI page](../../../software/gui).
 
-Unless you are doing a [Pizza build](../../quality-assurance/testing/pizza_build), you will **NOT** want to install the
-Raspberry Pi onto the PCB quite yet. You will first want to mount the PCB onto the touch-screen, as described on the
-[display panel sub-assembly](../display_panel) page.
+Unless you are doing a [Pizza build](../../../quality-assurance/testing/pizza_build), you will **NOT** want to install
+the Raspberry Pi onto the PCB quite yet. You will first want to mount the PCB onto the touch-screen, as described on the
+[display panel sub-assembly](..) page.
 
 ### Touch screen
 
@@ -136,23 +143,3 @@ The touch screen needs two connections:
 * RaspberryPi's `microHDMI` to touchscreen's `HDMI IN`, using `[A12]` and `[A13]`
 
 **#TODO:** pictures
-
-### Final wiring
-
-By this point you should have completed all the mechanical and pneumatic sub-assemblies of the ventilator.
-
-* connect blower power and control wires to CPB
-* connect proportional solenoid to PCB
-* connect stepper motors to the stepper driver pigtails as follows:
-  * top - inhale
-  * bottom - exhale
-* connect power supply cable to PCB
-
-**#TODO:** pictures
-
-You may also want to use `[B2]` to connect the controller to your PC from which you will be flashing
-controller firmware.
-
-### Power
-
-Once the ventilator is assembled, you may use `[A14]` and `[A15]` power it.

@@ -50,7 +50,8 @@ sub-assemblies that do not contain custom components are not listed in this tree
 pages for the various sub-assemblies.
 
 * [Enclosure](enclosure) - rigid frame and enclosure components
-* [Display panel](display_panel) - Mechanical support for user interface touchscreen
+* [Display panel](display_panel) - support for touchscreen and computing components
+  * [Electrical assembly](electrical) - encompasses the electrical and computing components
 * [Filter panel](filter_panel) - Mechanical support for air filter assemblies
   * [Air filter holders](filter_panel/filter_holder) - custom housings for air filters, to keep patient safe and system clean
 * [**Pneumatic assembly**](pneumatics) - full pneumatic assembly, which includes some instances of the following:
@@ -60,8 +61,7 @@ pages for the various sub-assemblies.
   * [Oxygen mixer](pneumatics/mixer) - for mixing air and oxygen before delivery to patient
   * [Manifold](pneumatics/manifold) - for oxygen sensor and overpressure relief valve
   * [Tubing reducer](pneumatics/reducer_3-4_1-4) for change in tubing diameter in oxygen supply
-* [Electrical assembly](electrical) - encompasses the electrical and computing components
-  * [Wiring guide](electrical/wiring) - custom wiring harnesses and connectors
+* [Wiring guide](wiring) - custom wiring harnesses and connectors
 * [Peripherals](peripherals.md) - indispensable components that are strictly outside of the assembly itself
 
 ## Additional notes

@@ -154,6 +154,19 @@ To connect the solenoid to the PCB, you will need to crimp a 2-pin XH connector 
 - Insert the wires into the connector housings `[A18]`, according to the drawing, until they click.  Pin 1 is marked by a tiny '1' molded into the connector housing.
 - Do a gentle pull test to make sure that the contacts are properly crimped and seated.
 
+### Final wiring
+
+By this point you should have completed all the mechanical and pneumatic sub-assemblies of the ventilator.
+
+* connect blower power and control wires to CPB
+* connect proportional solenoid to PCB
+* connect stepper motors to the stepper driver pigtails as follows:
+  * top - inhale
+  * bottom - exhale
+* connect power supply cable to PCB
+
+**#TODO:** pictures
+
 ## Pricing totals
 
 **#TODO:** do this when finalized

@@ -17,7 +17,7 @@ The current pneumatic control system (Ventilator Rev 0.3) is based on a single c
 
 The proposed control starting with Ventilator Rev 0.4 adds a separate flow sensor for air and oxygen input. Flow becomes controlled instead of merely observed.  Air and oxygen limbs will each have their own closed-loop flow controller, with the blower pinch valve and oxygen PSOL as actuators.  The flow commands to these inner loops, as well as to the exhale pinch valve, come from an outer loop pressure controller which is closed around the patient pressure sensor. The pressure command to this outer loop comes from the state machine. FiO2 is controlled by a slow, outer-most control loop that changes the ratio of mixing between air and oxygen flow commands, and is closed around the oxygen sensor.
 
-![](flow_control_diagram_proposed.png)
+![](images/flow_control_diagram_proposed.png)
 
 ## Overview
 

@@ -56,12 +56,12 @@ If you can lend your skills towards achieving this goal, please contact us at
 [join-us@respira.works](mailto:join-us@respira.works?subject=[GitHub]%20Join%20request). A list of roles we are looking
 to fill is also on our [website](https://respira.works/join-us).
 
-## DISCLAIMER
+## DISCLAIMERS
 
 **This is an incomplete, as yet untested design that is not yet intended to be used on patients.**
 
-**This repository contains live documents. There are duplicate and alternative items for undecided aspects of the
-physical design. Components may or may not connect and integrate as intended. Contents may also be out of date. If you
+**The repository contains live documents. There may be incomplete or contradictory information about various aspects
+of the design. Components may or may not connect and integrate as intended. Contents may also be out of date. If you
 decide to buy or build anything, do so at your own risk.**
 
 ## Repository Structure

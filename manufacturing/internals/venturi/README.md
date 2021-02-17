@@ -117,16 +117,6 @@ by the two variables described above.
 | **Total length** | 106.1mm | 143mm | 138mm | 142.5mm |
 | **Notes** | | | Requires discrete [1/4"-3/4" adapter](../reducer_3-4_1-4) upstream | |
 
-### 3D Printing
-
-**Note: Please see general advice in the [manufacturing methods guide](../../methods).**
-
-These should not be printed with FDM. Instead, a leak-tight method like SLA or MJF should be used. The model
-contains printed threads and is designed to interface with the referenced mcmaster barbed fitting (item 2 below).
-
-When slicing, it is best to position the part vertically to maintain authentic tapering and orifice geometry.
-No scaffolding should be required. Part has been successfully printed with Siraya Fast of various colors.
-
 ## Parts
 
 **Note: If you are a member of the RespiraWorks team, review the [part purchasing guidelines][ppg]
@@ -144,37 +134,55 @@ BEFORE purchasing any parts.**
 
 ## Tools
 
-| Item | Quantity | Manufacturer  | Part #          | Price (USD) | Sources[*][ppg] | Notes |
-| ---- |---------:| ------------- | --------------- | -----------:|:---------------:| ----- |
-|**B1**| 1        | McMaster-Carr | 2636A251        | 6.76        | [C][b1mcmc]     | Tap for 10-32 threading nipple ports. |
-|**B2**| 1        | uxcell        | a19032000ux0738 | 6.89        | [Z][b2amzn]     | 5.5 reamer for ensuring venturi diameter |
-|**B3**| 1        | DeWalt        | DWA1205         | 2.58        | [Z][b3amzn]     | (optional) 5/64" drill bit, should optimally be 2mm |
+These may or may not be useful.
 
-[b1mcmc]:https://www.mcmaster.com/2636A251
-[b2amzn]:https://www.amazon.com/gp/product/B07QQPJB1V
-[b3amzn]:https://www.amazon.com/DEWALT-DWA1205-Pilot-Industrial-Cobalt/dp/B015J5HN2S
+| Item | Manufacturer  | Part #          | Price (USD) | Sources[*][ppg] | Notes |
+| ---- | ------------- | --------------- | -----------:|:---------------:| ----- |
+|**B1**| McMaster-Carr | 2636A251        | 6.76        | [C][b1mcmc]     | 10-32 UNF bottoming tap for threading nipple ports |
+|**B2**| McMaster-Carr | 2636A251        | 6.76        | [C][b2mcmc]     | 10-32 UNF tapered tap for threading nipple ports |
+|**B3**| uxcell        | a19032000ux0738 | 6.89        | [Z][b3amzn]     | 5.5 reamer for ensuring venturi diameter |
+|**B4**| DeWalt        | DWA1205         | 2.58        | [Z][b4amzn]     | 5/64" drill bit, should optimally be 2mm |
+
+[b1mcmc]: https://www.mcmaster.com/26955A86/
+[b2mcmc]: https://www.mcmaster.com/2636A251
+[b3amzn]: https://www.amazon.com/gp/product/B07QQPJB1V
+[b4amzn]: https://www.amazon.com/DEWALT-DWA1205-Pilot-Industrial-Cobalt/dp/B015J5HN2S
 
 ## Manufacturing instructions
+
+**Note: Please see general advice in the [manufacturing methods guide](../../methods).**
+
+An Inventor CAD Assembly Model can be found [here](venturi_assembly.iam).
+
+### 3D Printing
+
+These should not be printed with FDM. Instead, a leak-tight method like SLA or MJF should be used. The model
+contains printed threads and is designed to interface with the referenced mcmaster barbed fitting (item 2 below).
+
+When slicing, it is best to position the part vertically to maintain authentic tapering and orifice geometry.
+No scaffolding should be required. Part has been successfully printed with Siraya Fast of various colors.
+
 |           |             |
 |:---------:|:-----------:|
 |![](images/venturi_assembly_rendering.jpg) |![](images/v1_assembly_tools.jpg)|
 
+### Post-printing
 
 Note that the flow measurement is very sensitive to the exact geometry, particularly the thread geometry. 3D printing
 may result in variable shrinkage or expansion. This may cause uncertainty in the throat size, and thus the flow rates.
 Threads for sensor connection may also not be perfectly formed.
 
-You should therefore use mechanical tools to ensure all orifices are adequately prepared:
-* Use 2mm (or 5/64") drill bit (**B3**) above) to ensure sensor port holes clearly reach the main venturi tube
-* Use reamer (**B2**) above) to carefully ream the venturi constriction to be precisely 5.5mm.
-* Use tapering tap (**B1**) above) to chase the printed threads for the nipples.
+You might therefore want to use mechanical tools to ensure all orifices are of uniform geometry:
+* Use 2mm (or 5/64") drill bit `[B4]` to ensure sensor port holes clearly reach the main venturi tube
+* Use reamer `[B3]` above) to carefully ream the venturi constriction to be precisely 5.5mm.
+* Threads should print precisely enough that you should be able to thread the nipples into them with a little effort
+  and achieve an air-tight fit. However, if they did not come out as such, you may use a tapering
+  tap, such as `[B1]` or `[B2]` to chase the printed threads.
 
-Lastly, screw the nipples (**A2**) into the 3d-printed venturi (**A1**). You may require an adjustable wrench.
+Screw the nipples `[A2]` into the 3d-printed venturi `[A1]`. You may require an adjustable wrench.
 
 **Note: reamer may be too short to reach orifice in case of modified designs for the enclosure. Geometry discrepancies
 will likely have to be compensated for in software using calibration lookup tables.**
-
-An Inventor CAD Assembly Model can be found [here](venturi_assembly.iam).
 
 ### Verification
 

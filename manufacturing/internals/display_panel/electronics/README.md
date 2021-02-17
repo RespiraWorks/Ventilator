@@ -145,3 +145,18 @@ The touch screen needs two connections:
 * RaspberryPi's `microHDMI` to touchscreen's `HDMI IN`, using `[A12]` and `[A13]`
 
 **#TODO:** pictures
+
+### Final wiring
+
+By this point you should have completed all the mechanical and pneumatic sub-assemblies of the ventilator.
+
+* connect blower power wires to CPB
+* connect blower control wires
+  * to the interim board, if you have one
+  * else, to the PCB
+* connect proportional solenoid to PCB
+* connect oxygen sensor to interim board
+* connect stepper motors to the stepper driver pigtails as follows:
+  * top - inhale
+  * bottom - exhale
+* connect power supply cable to PCB

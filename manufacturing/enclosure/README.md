@@ -74,10 +74,15 @@ BEFORE purchasing any parts.**
 
 ## Assembly
 
+**Note: Please see general advice in the [manufacturing methods guide](../methods).**
+
 | Assembly | Source |
 |:---------|:-------|
 | Equipment bracket assembly | [.iam](equipment_bracket.iam)  |
 | Enclosure assembly         | [.iam](enclosure_assembly.iam) |
+
+**Hazard:** sheet metal edges may be sharp and you could hurt yourself while working with these components.
+It is highly advise that you deburr, file and/or send all edges before you do anything else.
 
 The main panel is folded from a single sheet and fastened together using stainless steel blind rivets. There
 are rubber bumper feet on the bottom of the enclosure that are threaded into M6 press-fit nuts. The rubber bumpers

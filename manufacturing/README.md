@@ -1,5 +1,10 @@
 # Manufacturing design
 
+| Full assembly rendering    |  Internals   |
+|:---:|:---:|
+| [![](images/rendering_smaller.jpg)](images/rendering_full.jpg) | [![](internals/images/rendering_smaller.jpg)](internals/images/rendering_full.jpg) |
+
+
 This section of the repository describes the physical design of the ventilator and the process of manufacturing the
 components and fully assembled units.
 
@@ -7,11 +12,18 @@ components and fully assembled units.
 
 **This is an incomplete, as yet untested design that is not yet intended to be used on patients.**
 
-**This repository contains live documents. There are duplicate and alternative items for undecided aspects of the
-physical design. Components may or may not connect and integrate as intended. Contents may also be out of date. If you
+**The repository contains live documents. All documentation here is on a "best effort" but no guarantee basis.
+Information is incomplete. Pictures, renderings, parts lists and fabrication instructions may contradict each other.
+Components may or may not connect and integrate as intended. Contents may also be out of date. If you
 decide to buy or build anything, do so at your own risk.**
 
-**No endorsements:** materials listed in these pages include links to various suppliers. This does not constitute
+**FIRE HAZARD** The below design is not fundamentally safe to be used or tested with oxygen or other volatile gases.
+Parts of the pneumatic design address the need for controlled pressurized oxygen supply. These aspects of the design
+have only been tested with pressurized air as proof of concept. Listed components are not safe to use with
+concentrated oxygen. Oxygen is a volatile substance and at high concentration is an extreme fire hazard. Do not
+do anything stupid.
+
+**No endorsements.** Materials listed in these pages include links to various suppliers. This does not constitute
 any endorsement of specific products nor indication that those components are appropriate and reliable for use in
 medical devices. These links are simply here for our own convenience, since we all use the repository as our common
 collaboration space.
@@ -32,12 +44,22 @@ our [wiki](https://github.com/RespiraWorks/Ventilator/wiki), by which we mean **
 If you intend to make any physical components yourself, please become familiar with the
 [manufacturing methods guide](methods). And please help maintain it.
 
+## General considerations
+
+### Choice of hardware
+
+* **metric** - preference has been given to metric hardware. Metric standard hardware is available worldwide, including
+  countries that prefer imperial standard.
+* **hex drive** - screws with hex drive interface have been chosen. Phillips drive screws are prone to cam-out. Torx
+  and other interfaces may be too exotic and supply chains may be limited in some parts of the world. Hex drive is
+  practical and ubiquitous enough.
+* **button head** - preference is given to button head screws. These are smaller and more flush with the surface than
+  pan head or socket head screws and thus less likely to catch on clothing or other materials, and are also the least
+  visually obtrusive.
+* **predominantly M4** - where possible, we are standardizing to M4 mounting components. This is to minimize the variety
+  of components to keep in inventory.
+
 ## Assembly
-
-| Full assembly rendering    |  Internals   |
-|:---:|:---:|
-| [![](images/rendering_smaller.jpg)](images/rendering_full.jpg) | [![](internals/images/rendering_smaller.jpg)](internals/images/rendering_full.jpg) |
-
 
 Ventilator full assembly CAD model: [.iam](ventilator_assembly.iam)
 
@@ -47,6 +69,7 @@ The following is a general outline of the sub-assemblies comprising a full venti
 sub-assemblies that do not contain custom components are not listed in this tree, but are linked and explained in the
 pages for the various sub-assemblies.
 
+* [Wiring](wiring) - custom wiring harnesses and connectors
 * [Enclosure](enclosure) - rigid frame and enclosure components
 * [**Internals**](internals) - full internals assembly, which includes some instances of the following:
   * [Pneumatics tray](internals/tray) - for mounting the main pneumatics assembly
@@ -63,7 +86,6 @@ pages for the various sub-assemblies.
   * [Display panel](internals/display_panel) - touchscreen, electronics and oxygen input
     * [Electronics assembly](internals/display_panel/electronics) - encompasses the electrical and computing components
   * Various tubing, manifolds and adapters
-* [Wiring guide](wiring) - custom wiring harnesses and connectors
 * [Peripherals](peripherals.md) - indispensable components that are strictly outside of the assembly itself
 
 ## Additional notes

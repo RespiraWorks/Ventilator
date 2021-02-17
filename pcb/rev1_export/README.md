@@ -67,7 +67,7 @@ If you are a RespiraWorks contributor, request dev hardware by making an entry
   long gold pins of this module can get bent so make sure they are straight and they all go into their respective
   sockets successfully.  The stepper driver green connectors go in the direction of the white connectors on the
   mainboard PCB.  For setting up multiple stepper boards and/or connecting actual steppers, see
-  [this guide](../../manufacturing/electrical/stepper_drivers).
+  [this guide](../../manufacturing/display_panel/electrical/stepper_drivers).
 
 ![plug in the stepper driver](readme_photos/IMG_9307.jpg)
 * If you are using an Rpi 3B+ or 4 with this PCB, plug this into the RPI socket.  Note that if you have the standoffs

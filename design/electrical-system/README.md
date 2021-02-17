@@ -83,7 +83,7 @@ immunity of the electronics.
 All mainboard design files are maintained in this repository
 in the [../../pcb](../../pcb) directory.
 
-Wiring materials and assembly guide on [this page](../../manufacturing/electrical/wiring).
+Wiring materials and assembly guide on [this page](../../manufacturing/wiring).
 
 ## Closed-Loop Pneumatic Control
 

@@ -146,4 +146,4 @@ With the Tygon tube and clamps, a single pinch valve sub assembly appears like s
 
 ## System integration
 
-Integration into the electrical/controls system is covered in [electrical assembly page](../../electrical).
+Integration into the electrical/controls system is covered in [electrical assembly page](../../display_panel/electrical).

@@ -19,7 +19,8 @@ It can also come in various configurations, depending on your testing needs:
 
 ## Essentials
 
-Firstly, you will need a full [Electrical assembly](../../../manufacturing/electrical), which contains the computing components.
+Firstly, you will need a full [Electrical assembly](../../../manufacturing/display_panel/electrical),
+which contains the computing components.
 
 We are using 3/4" ID tube as the default standard (and adapters where needed, like to the blower and the pinch valves).
 This easily can have 19mm ID tubing substituted in metric manufacturing settings (3/4" = 19.05mm).
@@ -167,7 +168,7 @@ circuit board:
 ![](images/stepper_connection3.jpg)
 
 Additional details for how to attach stepper drivers to PCB can be found in the
-[pcb section](../../../manufacturing/electrical/stepper_drivers) of the repository.
+[pcb section](../../../manufacturing/display_panel/electrical/stepper_drivers) of the repository.
 
 ### Raspberry Pi
 

@@ -87,7 +87,7 @@ There are notes on manufacturing gaskets in the [manufacturing methods guide][mm
 
 ### Acrylic plates
 
-You will have to cut the following mounting and holding plates from an acrylic sheet (**A4**).
+You will have to cut the following mounting and holding plates from an acrylic sheet `[A4]`.
 
 |     | Driver mounting plate (C5) | Blower holding plate (C6) | Tubing adapter holding plate (C7) |
 |:-----:|:--------------------------:|:-------------------------:|:---------------------------------:|
@@ -103,10 +103,10 @@ The above manufactured components (excluding gaskets) should appear as follows:
 ### Mount the blower driver
 
 Use the following hardware:
-* 4x M3 14mm screws (**A13**)
-* 4x M3 lock nuts (**A17**)
+* 4x M3 14mm screws `[A13]`
+* 4x M3 lock nuts `[A17]`
 
-Mount the blower driver (**A2**) to the Driver mounting plate (**A5**). It is advisable to run the screws from the
+Mount the blower driver `[A2]` to the Driver mounting plate `[A5]`. It is advisable to run the screws from the
 bottom up, because the screw heads may be too wide to fit next to the circuit board.
 
 ![](images/blower_driver_mounting.jpg)
@@ -115,12 +115,12 @@ bottom up, because the screw heads may be too wide to fit next to the circuit bo
 
 |                            |                             |
 |:--------------------------:|:---------------------------:|
-|Take the mounted blower driver from step above, and run four 85mm screws (**A14**) with m4 washers (**A12**) downwards. | Flip this assembly upside down. Put four spacers (**A15**) on the screws. Run the wiring of blower (**A1**) through hole in blower holding plate (**A6**)|
+|Take the mounted blower driver from step above, and run four 85mm screws `[A14]` with M4 washers `[A12]` downwards. | Flip this assembly upside down. Put four spacers `[A15]` on the screws. Run the wiring of blower `[A1]` through hole in blower holding plate `[A6]`|
 |![](images/blower_mounting.jpg) | ![](images/blower_mounting2.jpg) |
 
 |                            |                             |
 |:--------------------------:|:---------------------------:|
-| Slide the blower holding plate over the screws so that wiring comes out through the space between the two plates, with blower on top. Place blower gasket (**A9**) on main enclosed ventilator assembly. | Carefully to not lose the screws, flip the blower sandwich and install it onto the main assembly. Fasten with m4 washers (**A12**) and regular non-locking nuts (**A16**).|
+| Slide the blower holding plate over the screws so that wiring comes out through the space between the two plates, with blower on top. Place blower gasket `[A9]` on main enclosed ventilator assembly. | Carefully to not lose the screws, flip the blower sandwich and install it onto the main assembly. Fasten with m4 washers `[A12]` and regular non-locking nuts `[A16]`.|
 |![](images/blower_mounting3.jpg) | ![](images/blower_mounting4.jpg) |
 
 Tighten carefully one nut at a time, ensuring a tight gasket seal. Do not over-tighten. If you see the acrylic holding plate begin to bend, relax the fasteners somewhat.
@@ -131,11 +131,11 @@ You will likely need some sort of small clamps for this step, to ensure that com
 
 * Make sure the air filter assembly plate is (temporarily) fitted to the main ventilator assembly.
 * Flip the ventilator assembly face-down, so that the bottom of the main assembly plate faces you vertically.
-* Insert tubing adapter (**A3**) through the tubing adapter holding plate (**A7**) and place this assembly on the bottom side of the main mounting plate.
-* Now insert the tubing adapter gasket (**A10**) in the gap, adjust its position to be centered on the blower inlet and apply pressure with the tubing adapter to hold it in place.
+* Insert tubing adapter `[A3]` through the tubing adapter holding plate `[A7]` and place this assembly on the bottom side of the main mounting plate.
+* Now insert the tubing adapter gasket `[A10]` in the gap, adjust its position to be centered on the blower inlet and apply pressure with the tubing adapter to hold it in place.
 * Turn the tubing adapter so that the tubing barb faces the general direction of the air filter assembly that it will connect to.
 * Temporarily clamp the entire blower assembly in place.
-* Fasten with m4 washers (**A12**) and lock nuts (**A11**).
+* Fasten with m4 washers `[A12]` and lock nuts `[A11]`.
 
 |                            |                             |
 |:--------------------------:|:---------------------------:|
@@ -146,7 +146,7 @@ You will likely need some sort of small clamps for this step, to ensure that com
 Integration into the pneumatic system is covered in either [pizza build](../../../quality-assurance/testing/pizza_build) or
 [enclosed build pneumatics](..) pages, depending on which version you are building.
 
-Integration into the electrical/controls system is covered in [wiring page](../../electrical/wiring).
+Integration into the electrical/controls system is covered in [wiring page](../../wiring).
 
 ## Price estimate
 

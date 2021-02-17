@@ -272,7 +272,7 @@ void HalApi::InitSysTimer() {
   TimerRegs *tmr = TIMER6_BASE;
 
   // The reload register gives the number of clock ticks (100ns in our case)
-  // -1 until the clock wraps back to zero and generates an interrupt This
+  // -1 until the clock wraps back to zero and generates an interrupt. This
   // setting will cause an interrupt every 10,000 clocks or 1 millisecond
   tmr->reload = 9999;
   tmr->prescale = (CPU_FREQ_MHZ / 10 - 1);

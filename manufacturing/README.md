@@ -43,8 +43,6 @@ Ventilator full assembly CAD model: [.iam](ventilator_assembly.iam)
 
 >*Include GA/Sectional Here*
 
-### Sub-assemblies
-
 The following is a general outline of the sub-assemblies comprising a full ventilator build. Some smaller
 sub-assemblies that do not contain custom components are not listed in this tree, but are linked and explained in the
 pages for the various sub-assemblies.

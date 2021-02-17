@@ -101,7 +101,7 @@ exhale. **#TODO** need to confirm this/flesh this out as we go
     * Still evaluating fatigue and lifetime / sealing.
     * Originally designed as the exhale valve to give control for maintaining PEEP - under considering to use for both
       the air inlet and for the oxygen inlet
-    * For more informatin about the design of this valve, see [here](../manufacturing/pneumatics/pinch_valve)
+    * For more informatin about the design of this valve, see [here](../manufacturing/internals/pinch_valve)
 
 * **Idle Air Control Valve (IAC)**
     * Common automotive part that is cheap and widely available.
@@ -148,7 +148,7 @@ exhale. **#TODO** need to confirm this/flesh this out as we go
       [this ticket](https://github.com/RespiraWorks/Ventilator/issues/57) for more information.
     * Another open questions is manufacturing of the venturis - currently the goal is to design a venturi that can be
       injection molded.
-    * For more informatni about the venturi design, see [here](../manufacturing/pneumatics/venturi).
+    * For more informatni about the venturi design, see [here](../manufacturing/internals/venturi).
 
 * **Patient Pressure sensors**
     * Needs to be reliable, handle many cycles, and meet the required ranges and accuracies of the requirements

@@ -17,7 +17,7 @@ To deploy it as intended for the ventilator you will need:
 * Card reader USB
 
 A more complete list of hardware components is on the
-[Electrical system assembly page](../../manufacturing/electrical).
+[Electrical system assembly page](../../manufacturing/internals/display_panel/electronics).
 
 ### SSH access to *RPi*
 

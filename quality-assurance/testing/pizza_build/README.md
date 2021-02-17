@@ -19,7 +19,8 @@ It can also come in various configurations, depending on your testing needs:
 
 ## Essentials
 
-Firstly, you will need a full [Electrical assembly](../../../manufacturing/electrical), which contains the computing components.
+Firstly, you will need a full [Electronics assembly](../../../manufacturing/internals/display_panel/electronics),
+which contains the computing components.
 
 We are using 3/4" ID tube as the default standard (and adapters where needed, like to the blower and the pinch valves).
 This easily can have 19mm ID tubing substituted in metric manufacturing settings (3/4" = 19.05mm).
@@ -76,10 +77,10 @@ BEFORE purchasing any parts.**
 
 The following are essential sub-assemblies that you'll need no matter what additional/optional "toppings" you chose to have.
 
-* 1x [Blower assembly](../../../manufacturing/pneumatics/blower) - the main driver of pressure in the pneumatic circuit
-* 2-3x [Venturi flow sensors](../../../manufacturing/pneumatics/venturi) and corresponding tubing, to provide the controller feedback
-* 2x [Pinch valves](../../../manufacturing/pneumatics/pinch_valve) - a proportional pinch valve to control the airflow constriction with precision
-* optional [Air filter assemblies](../../../manufacturing/filter_panel) - for the safety of patient and health workers. Constricts air flow
+* 1x [Blower assembly](../../../manufacturing/internals/blower) - the main driver of pressure in the pneumatic circuit
+* 2-3x [Venturi flow sensors](../../../manufacturing/internals/venturi) and corresponding tubing, to provide the controller feedback
+* 2x [Pinch valves](../../../manufacturing/internals/pinch_valve) - a proportional pinch valve to control the airflow constriction with precision
+* optional [Air filter assemblies](../../../manufacturing/internals/filter_panel) - for the safety of patient and health workers. Constricts air flow
   to some extent and thus will affect the ventilator performance
 
 ## Assembly Instructions
@@ -167,7 +168,7 @@ circuit board:
 ![](images/stepper_connection3.jpg)
 
 Additional details for how to attach stepper drivers to PCB can be found in the
-[pcb section](../../../manufacturing/electrical/stepper_drivers) of the repository.
+[pcb section](../../../manufacturing/internals/display_panel/electronics/stepper_drivers) of the repository.
 
 ### Raspberry Pi
 

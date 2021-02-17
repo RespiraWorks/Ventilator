@@ -58,12 +58,9 @@ BEFORE purchasing any parts.**
 |**A5** | 4        | McMaster-Carr | 96439A710                | 6.04 / 5    | [C][a5mcmc]  | M6 self-clinching / press-fit nut |
 |**A6** | 12       | McMaster-Carr | 96439A650                | 3.89 / 10   | [C][a6mcmc]  | M4 self-clinching / press-fit nut |
 |**A7** | 4        | McMaster-Carr | 9541K82                  | 8.34 / 10   | [C][a7mcmc]  | M6 threaded-stud bumper, used as feet |
-|**A8** | 4        | McMaster-Carr | 92095A193                | 8.95 / 50   | [C][a8mcmc]  | M4 x 14mm screws, hex drive |
-|**A9** | 12       | McMaster-Carr | 92095A188                | 10.04 / 100 | [C][a9mcmc]  | M4 x 6mm screws, hex drive |
+|**A8** | 12       | McMaster-Carr | 92095A188                | 10.04 / 100 | [C][a8mcmc]  | M4 screws, 6mm: main bracket and closure fastening |
 
-**#TODO: locknuts and washers for main tray**
-
-**#TODO: How much sheet metal?**
+>**#TODO: How much sheet metal?**
 
 [a1rw]:   #custom-parts
 [a2rw]:   #custom-parts
@@ -72,16 +69,20 @@ BEFORE purchasing any parts.**
 [a5mcmc]: https://www.mcmaster.com/96439A710/
 [a6mcmc]: https://www.mcmaster.com/96439A650/
 [a7mcmc]: https://www.mcmaster.com/9541K82/
-[a8mcmc]: https://www.mcmaster.com/92095A193/
-[a9mcmc]: https://www.mcmaster.com/92095A188/
+[a8mcmc]: https://www.mcmaster.com/92095A188/
 
 
 ## Assembly
+
+**Note: Please see general advice in the [manufacturing methods guide](../methods).**
 
 | Assembly | Source |
 |:---------|:-------|
 | Equipment bracket assembly | [.iam](equipment_bracket.iam)  |
 | Enclosure assembly         | [.iam](enclosure_assembly.iam) |
+
+**Hazard:** sheet metal edges may be sharp and you could hurt yourself while working with these components.
+It is highly advise that you deburr, file and/or send all edges before you do anything else.
 
 The main panel is folded from a single sheet and fastened together using stainless steel blind rivets. There
 are rubber bumper feet on the bottom of the enclosure that are threaded into M6 press-fit nuts. The rubber bumpers

@@ -1,0 +1,42 @@
+name: Docs
+
+on:
+  #push:
+  #  branches-ignore:
+  #    - '**'
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-20.04
+
+    steps:
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'
+      - name: Requirements
+        run: sudo apt-get install graphviz
+          && sudo apt-get install doxygen
+          && pip3 install sphinx-rtd-theme
+          && pip3 install breathe
+          && pip3 install sphinx-sitemap
+      - name: Checkout repo
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+      - name: Build docs
+        run: cd docs
+          && make html
+          && cd _build/html
+          && touch .nojekyll
+      - name: Deploy to Github Pages
+        uses: JamesIves/github-pages-deploy-action@3.7.1
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: gh-pages # The branch the action should deploy to.
+          FOLDER: docs/_build/html # The folder the action should deploy.

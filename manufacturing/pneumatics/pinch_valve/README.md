@@ -91,46 +91,50 @@ BEFORE purchasing any parts.**
 
 [ppg]: ../../purchasing_guidelines.md
 
-| Item  | Quantity | Manufacturer  | Part #              | Price (USD)  | Sources[*][ppg]      | Notes |
-| ----- |---------:| ------------- | ------------------- | ------------:|:--------------------:| ----- |
-|**A1** |        1 | RespiraWorks  | stepper_base        |              | [Rw][a1rw]              | BASE - 3D printed |
-|**A2** |        1 | RespiraWorks  | stepper_rotor       |              | [Rw][a2rw]              | ROTOR - 3D printed |
-|**A3** |        1 | STEPPERONLINE | 17HS19-2004S2       | 11.59        | [T][a3step] [Z][a3amzn] | Stepper motor. Make sure to get version with the full-cut D-shaft. |
-|**A4** |        3 | McMaster-Carr | 91294A128           | 4.82 / 100   | [C][a4mcmc]             | M3 screws, 8mm, flat head: mounting stepper to base |
-|**A5** |        1 | McMaster-Carr | 92095A218           | 7.64 / 25    | [C][a5mcmc]             | M5 screws, 30mm: axle for bearing |
-|**A6** |        3 | FastEddy      | TFE4262             | 12.50 / 10   | [F][a6fast] [C][a6mcmc] | 5x16x5 Metal shielded bearings |
-|**A7** |        4 | McMaster-Carr | 92095A478           | 11.29 / 100  | [C][a7mcmc]             | M4 screws, 18mm: base mounting to main assembly |
-|**A8** | 4        | McMaster-Carr | 93625A150           | 6.04 / 100   | [C][a8mcmc]             | M4 lock nuts |
-|**A9** | 8        | McMaster-Carr | 93475A230           | 1.86 / 100   | [C][a9mcmc]             | M4 washers, 9mm OD |
-|**A10**| 6in/15cm | McMaster-Carr | 5894K38             | 12.30 / 2 ft | [C][a10mcmc]            | PVC Tubing, 3/8" ID, 5/8" OD, continuous-flex soft Tygon |
+| Item  | Quantity | Manufacturer  | Part #        | Price (USD)  | Sources[*][ppg]         | Notes |
+| ----- |---------:| ------------- | ------------- | ------------:|:-----------------------:| ----- |
+|**A1** |        1 | RespiraWorks  | stepper_base  |              | [Rw][a1rw]              | BASE - 3D printed |
+|**A2** |        1 | RespiraWorks  | stepper_rotor |              | [Rw][a2rw]              | ROTOR - 3D printed |
+|**A3** |        1 | STEPPERONLINE | 17HS19-2004S2 | 11.59        | [T][a3step] [Z][a3amzn] | Stepper motor. Make sure to get version with the full-cut D-shaft. |
+|**A4** |        3 | McMaster-Carr | 91294A128     | 4.82 / 100   | [C][a4mcmc]             | M3 screws, 8mm, flat head: mounting stepper to base |
+|**A5** |        1 | McMaster-Carr | 92095A218     | 7.64 / 25    | [C][a5mcmc]             | M5 screws, 30mm: axle for bearing |
+|**A6** |        3 | FastEddy      | TFE4262       | 12.50 / 10   | [F][a6fast] [C][a6mcmc] | 5x16x5 Metal shielded bearings |
+|**A7** |        4 | McMaster-Carr | 92095A478     | 11.29 / 100  | [C][a7mcmc]             | M4 screws, 18mm: base mounting to main assembly |
+|**A8** | 4        | McMaster-Carr | 93625A150     | 6.04 / 100   | [C][a8mcmc]             | M4 lock nuts |
+|**A9** | 8        | McMaster-Carr | 93475A230     | 1.86 / 100   | [C][a9mcmc]             | M4 washers, 9mm OD |
+|**A10**| 6in/15cm | McMaster-Carr | 5894K38       | 12.30 / 2 ft | [C][a10mcmc]            | PVC Tubing, 3/8" ID, 5/8" OD, continuous-flex soft Tygon |
+|**A11**| 2        | McMaster-Carr | 9579K67       |  12.63 / 20  | [C][a11mcmc]            | Herbie clip E, 12-13.8mm: for clamping 5/8"OD tubing |
 
-[a1rw]:   #Custom-parts
-[a2rw]:   #Custom-parts
-[a3step]: https://www.omc-stepperonline.com/nema-17-stepper-motor/nema-17-bipolar-59ncm-84oz-in-2a-42x48mm-4-wires-w-1m-cable-and-connector-full-d-cut-shaft.html
-[a3amzn]: https://www.amazon.com/dp/B07Z1J8JWH
-[a4mcmc]: https://www.mcmaster.com/91294A128
-[a5mcmc]: https://www.mcmaster.com/92095A218
-[a6fast]: https://www.fasteddybearings.com/5x16x5-metal-shielded-bearing-625-zz-10-units/
-[a6mcmc]: https://www.mcmaster.com/6153K15/
-[a7mcmc]: https://www.mcmaster.com/92095A478/
+[a1rw]:    #Custom-parts
+[a2rw]:    #Custom-parts
+[a3step]:  https://www.omc-stepperonline.com/nema-17-stepper-motor/nema-17-bipolar-59ncm-84oz-in-2a-42x48mm-4-wires-w-1m-cable-and-connector-full-d-cut-shaft.html
+[a3amzn]:  https://www.amazon.com/dp/B07Z1J8JWH
+[a4mcmc]:  https://www.mcmaster.com/91294A128
+[a5mcmc]:  https://www.mcmaster.com/92095A218
+[a6fast]:  https://www.fasteddybearings.com/5x16x5-metal-shielded-bearing-625-zz-10-units/
+[a6mcmc]:  https://www.mcmaster.com/6153K15/
+[a7mcmc]:  https://www.mcmaster.com/92095A478/
 [a8mcmc]:  https://www.mcmaster.com/93625A150/
-[a9mcmc]: https://www.mcmaster.com/93475A230/
+[a9mcmc]:  https://www.mcmaster.com/93475A230/
 [a10mcmc]: https://www.mcmaster.com/5894K38
+[a11mcmc]: https://www.mcmaster.com/9579K67
 
 ## Tools
 
 | Item | Quantity | Manufacturer  | Part #     | Price (USD) | Sources[*][ppg]  | Notes |
 | ---- |---------:| ------------- | ----------- | ----------:|:----------------:| ----- |
-| a1   |        1 | McMaster-Carr | 26475A38    |       9.55 | [Z][a1mcmc]      | M5x0.8mm taper chamfer tap, for bearing axle  |
+|**B1**|        1 | McMaster-Carr | 26475A38    |       9.55 | [Z][b1mcmc]      | M5x0.8mm taper chamfer tap, for bearing axle  |
 
-[a1mcmc]: https://www.mcmaster.com/26475A38
+[b1mcmc]: https://www.mcmaster.com/26475A38
 
-## Prototype fabrication
+## Assembly
+
+**Note: Please see general advice in the [manufacturing methods guide](../../methods).**
 
 ![Components](images/components.jpg)
 
-You’ll need a vice to press on the rotors to the stepper motor shafts.  You may also need a tap ([Item a3](#tools)) to
-chase the threads in the rotor ([Item 10](#parts)) for the bolt ([Item 2](#parts)) holding the bearings. On some
+You’ll need a vice to press on the rotors to the stepper motor shafts.  You may also need a tap `[B1]` to
+chase the threads in the rotor `[A2]` for the bolt `[A5]` holding the bearings. On some
 machines they way print too tight and you may crack the rotor trying to just muscle in the bolt without chasing the
 threads first.  Prop tip: only chase a portion of the threads for the bolt that holds on the bearings, leaving a bit
 to act as a lock nut.

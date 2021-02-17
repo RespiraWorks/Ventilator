@@ -2,6 +2,8 @@
 
 ## Design rationale
 
+> **TODO:** Short description of the type of oxygen sensor this fundamentally is.
+
 The need for this manifold was outlined in [#780](https://github.com/RespiraWorks/Ventilator/issues/780).
 
 Since at this point in our pneumatic circuit air and oxygen have been mixed, the expected diameter of tubing is 3/4".
@@ -27,17 +29,34 @@ Notes on modeling threads have been published in our
 
 | CAD rendering | Drawings |  3d Printed   |
 |:---------------------:|:--------------------:|:-------:|
-|![](oxygen_relief_manifold_rendering.jpg) |![](oxygen_relief_manifold.png) |![](oxygen_relief_manifold_printed.jpg)|
+|![](images/oxygen_relief_manifold_rendering.jpg) |![](images/oxygen_relief_manifold.png) |![](images/oxygen_relief_manifold_printed.jpg)|
 |[Source: Inventor IPT](oxygen_relief_manifold.ipt)|[Drawing PDF](oxygen_relief_manifold.pdf)|[STL File for 3d printing](oxygen_relief_manifold.stl)|
 
-|  Sub-assembly CAD     |  Assembled   |
-|:---------------------:|:--------------------:|
-|![](oxygen_relief_assembly_rendering.jpg) | ![](oxygen_relief_assembly_printed.jpg) |
-|[Source: Inventor IAM](oxygen_relief_assembly.iam)| |
+### Parts
+
+**Note: If you are a member of the RespiraWorks team, review the [part purchasing guidelines][ppg]
+BEFORE purchasing any parts.**
+
+[ppg]: ../../purchasing_guidelines.md
+
+| Item  | Quantity | Manufacturer   | Part #              | Price (USD)  | Sources[*][ppg]| Notes |
+| ----- |---------:| -------------- | ------------------- | ------------:|:--------------:| ----- |
+|**A1** | 1        | RespiraWorks   | manifold            |              | [Rw][a1rw]     | Custom manifold |
+|**A2** | 1        | Cables&Sensors | G0-040              | 76.00        | [Cs][a2cns]    | Oxygen sensor |
+|**A3** | 1        | Generant       | VRVI-250B-V-0.8     | 54.00        | [Gn][a3gene]   | Overpressure relief valve |
+
+[a1rw]:   #design-implementation
+[a2cns]:  https://www.cablesandsensors.com/products/compatible-o2-cell-for-hamilton-medical-396008
+[a3gene]: https://www.generant.com/product/vent-relief-valve/
 
 ## Manufacturing
 
 **Note: Please also see general advice in the [manufacturing methods guide](../../methods).**
+
+|  Sub-assembly CAD     |  Assembled   |
+|:---------------------:|:--------------------:|
+|![](images/oxygen_relief_assembly_rendering.jpg) | ![](images/oxygen_relief_assembly_printed.jpg) |
+|[Source: Inventor IAM](oxygen_relief_assembly.iam)| |
 
 3d printing has been successful using Siraya Fast.
 

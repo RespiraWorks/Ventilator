@@ -121,4 +121,10 @@ When the PCB was originally designed, the ability to add a stepper driver was es
 case* we wanted to try something that required a stepper motor.
 
 To use stepper motors, you must add stepper driver boards as described in
-[this guide](../../manufacturing/electrical/stepper_drivers).
+[this guide](../../manufacturing/display_panel/electrical/stepper_drivers).
+
+## System integration
+
+The PCB and its daughter-boards are part of the
+[electronics sub-assembly](../../manufacturing/display_panel/electrical).
+

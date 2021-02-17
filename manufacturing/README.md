@@ -74,14 +74,15 @@ better cover in the (somewhat obsolete) "pizza build" [guide](../quality-assuran
 Some aspects of the production packaged design are detailed in the first section of the (somewhat obsolete)
 [assembly video](https://youtu.be/2hdV5CWcLb4).
 
-### India build
+## Living prototypes
 
-Preliminary enclosed build was produced by our partners, Foundry-M in Visakhapatnam, India.
+There are currently at least 3 prototypes being worked on in various locations around the world:
 
-|     |     |
-|:---:|:---:|
-|![](images/India_build_yellow.jpeg) | ![](images/India_build_open_back.jpeg)  |
-
+|     |     |     |
+|:---:|:---:|:---:|
+| Germantown Maryland  | [![](images/assembled_smaller.jpg)](images/assembled_full.jpg) | [![](internals/images/open_back_smaller.jpg)](internals/images/open_back_smaller.jpg) |
+| Sunnyvale California | [![](images/California_front_smaller.jpg)](images/California_front.jpg) | [![](images/California_back_smaller.jpg)](images/California_back.jpg) |
+| Visakhapatnam India  | [![](images/India_full_smaller.jpg)](images/India_full.jpg) | [![](images/India_back_smaller.jpg)](images/India_back.jpg) |
 
 ### Test equipment
 

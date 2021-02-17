@@ -2,8 +2,7 @@
 
 |  |  |
 :------------------:|:-----------------:|
-| [![](images/rendering_smaller.jpg)](images/rendering_full.jpg)  | ![](images/pneumatic_assembly.jpg)
-|
+| [![](images/rendering_smaller.jpg)](images/rendering_full.jpg)  | [![](images/open_back_smaller.jpg)](images/open_back.jpg) |
 
 ## Parts
 
@@ -68,6 +67,12 @@ BEFORE purchasing any parts.**
 
 [Pneumatics assembly model](internals.iam)
 
+>**TODO:** drawings?
+
+|  |  |
+:------------------:|:-----------------:|
+| [![](images/top_no_display_smaller.jpg)](images/top_no_display.jpg) | [![](images/botton_no_display_smaller.jpg)](images/botton_no_display.jpg) |
+
 The rough order/hierarchy of assembly is as follows:
 
 * Equipment bracket -- from the [enclosure assembly](../enclosure)
@@ -94,4 +99,4 @@ The rough order/hierarchy of assembly is as follows:
 
 >**TODO:** do renderings of sub-systems and intermediate steps
 
->**TODO:** point out components in photo
+>**TODO:** point out components in photos

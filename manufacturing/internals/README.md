@@ -40,7 +40,7 @@ BEFORE purchasing any parts.**
 
 [a1rw]:    ../enclosure
 [a2rw]:    tray
-[a3rw]:    ../filter_panel
+[a3rw]:    filter_panel
 [a4rw]:    blower
 [a5rw]:    air_check_valve
 [a6rw]:    pinch_valve
@@ -56,7 +56,7 @@ BEFORE purchasing any parts.**
 [a16mcmc]: https://www.mcmaster.com/5463K648
 [a17amzn]: https://www.amazon.com/gp/product/B01LZ5ZK53
 [a18mcmc]: https://www.mcmaster.com/9579K73
-[a19rw]:    ../display_panel
+[a19rw]:   display_panel
 [a20mcmc]: https://www.mcmaster.com/5894K34
 [a21mcmc]: https://www.mcmaster.com/9579K64
 [a22amzn]: https://www.amazon.com/gp/product/B01F4BJ7PI
@@ -66,7 +66,7 @@ BEFORE purchasing any parts.**
 
 **Note: Please see general advice in the [manufacturing methods guide](../methods).**
 
-[Pneumatics assembly model](pneumatics.iam)
+[Pneumatics assembly model](internals.iam)
 
 ### Full Assembly
 

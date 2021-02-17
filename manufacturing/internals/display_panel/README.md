@@ -60,8 +60,7 @@ The only custom part in this assembly is the custom cut display acrylic.
 **Note: If you are a member of the RespiraWorks team, review the [part purchasing guidelines][ppg]
 BEFORE purchasing any parts.**
 
-[ppg]: ../purchasing_guidelines.md
-[pneu]: ../pneumatics
+[ppg]: ../../purchasing_guidelines.md
 
 | Item  | Quantity | Manufacturer  | Part #                   | Price (USD)  | Sources[*][ppg]| Notes |
 | ----- |---------:| ------------- | ------------------------ | ------------:|:--------------:|:------|
@@ -83,7 +82,7 @@ BEFORE purchasing any parts.**
 
 [a1mcmc]:  https://www.mcmaster.com/8560K357/
 [a2rw]:    #custom-parts
-[a3rw]:    electrical
+[a3rw]:    electronics
 [a4mcmc]:  https://www.mcmaster.com/7768K22/
 [a5mcmc]:  https://www.mcmaster.com/50785K273/
 [a6mcmc]:  https://www.mcmaster.com/5121K451
@@ -104,7 +103,7 @@ BEFORE purchasing any parts.**
 
 **#TODO: Drawings**
 
-**Note: Please also see general advice in the [manufacturing methods guide](../methods).**
+**Note: Please also see general advice in the [manufacturing methods guide](../../methods).**
 
 * You should first install the heat-set inserts, while the acrylic panel is flat and no electronics or fitting are in
   the way of your and your soldering iron.
@@ -112,7 +111,7 @@ BEFORE purchasing any parts.**
 * Mount the touch-screen to the acrylic using M2 bolts and nuts. Use washers on both sides.
 
 * The next logical step is probably the electronics stack, which is explained in detail on the
-  [electrical assembly](electrical) page.
+  [electronics assembly](electronics) page.
 
 * Install the brass through-fitting `[A5]` with the lock-nut on the outside of of the panel.
 

@@ -17,7 +17,7 @@ provenance of documentation.
 
 **#TODO** Add content
 
-[View fan tests](../manufacturing/pneumatics/blower/characterization-tests)
+[View fan tests](../manufacturing/internals/blower/characterization-tests)
 
 * **PIP/PEEP/Timing Tests**
 
@@ -65,7 +65,7 @@ provenance of documentation.
 
     4. When there is a change in flow rate, how long does it take for the sensor to settle?
 
-    [View Venturi tests](../manufacturing/pneumatics/venturi/characterization-tests/06072020/README.md)
+    [View Venturi tests](../manufacturing/internals/venturi/characterization-tests/06072020/README.md)
 
 * **Pressure sensor characterization**
 

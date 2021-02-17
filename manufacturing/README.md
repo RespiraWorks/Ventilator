@@ -36,7 +36,7 @@ If you intend to make any physical components yourself, please become familiar w
 
 | Full assembly rendering    |  Internals   |
 |:---:|:---:|
-| [![](images/rendering_smaller.jpg)](images/rendering_full.jpg) | [![](pneumatics/images/rendering_smaller.jpg)](pneumatics/images/rendering_full.jpg) |
+| [![](images/rendering_smaller.jpg)](images/rendering_full.jpg) | [![](internals/images/rendering_smaller.jpg)](internals/images/rendering_full.jpg) |
 
 
 Ventilator full assembly CAD model: [.iam](ventilator_assembly.iam)
@@ -50,17 +50,17 @@ sub-assemblies that do not contain custom components are not listed in this tree
 pages for the various sub-assemblies.
 
 * [Enclosure](enclosure) - rigid frame and enclosure components
-* [Display panel](display_panel) - support for touchscreen and computing components
-  * [Electrical assembly](display_panel/electrical) - encompasses the electrical and computing components
-* [Filter panel](filter_panel) - Mechanical support for air filter assemblies
-  * [Air filter holders](filter_panel/filter_holder) - custom housings for air filters, to keep patient safe and system clean
-* [**Pneumatic assembly**](pneumatics) - full pneumatic assembly, which includes some instances of the following:
-  * [Blower](pneumatics/blower) - this provides pressurized air
-  * [Venturi flow sensors](pneumatics/venturi) - in-house design of affordable flow sensors
-  * [Pinch valves](pneumatics/pinch_valve) - in-house design of affordable valve for inhale and exhale control
-  * [Oxygen mixer](pneumatics/mixer) - for mixing air and oxygen before delivery to patient
-  * [Manifold](pneumatics/manifold) - for oxygen sensor and overpressure relief valve
-  * [Tubing reducer](pneumatics/reducer_3-4_1-4) for change in tubing diameter in oxygen supply
+* [**Internals assembly**](internals) - full internals assembly, which includes some instances of the following:
+  * [Display panel](internals/display_panel) - support for touchscreen and computing components
+    * [Electrical assembly](internals/display_panel/electronics) - encompasses the electrical and computing components
+  * [Filter panel](internals/filter_panel) - Mechanical support for air filter assemblies
+    * [Air filter holders](internals/filter_panel/filter_holder) - custom housings for air filters, to keep patient safe and system clean
+  * [Blower](internals/blower) - this provides pressurized air
+  * [Venturi flow sensors](internals/venturi) - in-house design of affordable flow sensors
+  * [Pinch valves](internals/pinch_valve) - in-house design of affordable valve for inhale and exhale control
+  * [Oxygen mixer](internals/mixer) - for mixing air and oxygen before delivery to patient
+  * [Manifold](internals/manifold) - for oxygen sensor and overpressure relief valve
+  * [Tubing reducer](internals/reducer_3-4_1-4) for change in tubing diameter in oxygen supply
 * [Wiring guide](wiring) - custom wiring harnesses and connectors
 * [Peripherals](peripherals.md) - indispensable components that are strictly outside of the assembly itself
 

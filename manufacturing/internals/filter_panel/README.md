@@ -36,7 +36,7 @@ The plate may be produced using a laser cutter or with common woodworking tools.
 **Note: If you are a member of the RespiraWorks team, review the [part purchasing guidelines][ppg]
 BEFORE purchasing any parts.**
 
-[ppg]: ../purchasing_guidelines.md
+[ppg]: ../../purchasing_guidelines.md
 
 | Item | Quantity | Manufacturer  | Part #                         | Price (USD) | Sources[*][ppg]| Notes |
 | ---- |---------:| ------------- | ------------------------------ | ------------:|:--------------:|:------|
@@ -68,7 +68,7 @@ BEFORE purchasing any parts.**
 |:------|:-------|
 | Filter panel assembly | [.iam](filter_panel_assembly.iam) |
 
-**Note: Please also see general advice in the [manufacturing methods guide](../methods).**
+**Note: Please also see general advice in the [manufacturing methods guide](../../methods).**
 
 * Install heat set inserts into the corner holes for mounting to main equipment bracket.
 

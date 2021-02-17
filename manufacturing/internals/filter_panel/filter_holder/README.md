@@ -94,7 +94,7 @@ There are notes on 3d printing in the [manufacturing methods guide][mmg].
 **Note: If you are a member of the RespiraWorks team, review the [part purchasing guidelines][ppg]
 BEFORE purchasing any parts.**
 
-[ppg]: ../../purchasing_guidelines.md
+[ppg]: ../../../purchasing_guidelines.md
 
 **Note:** The below quantities are for building a complete set of 4 filter housings needed for one ventilator assembly.
 
@@ -123,27 +123,27 @@ BEFORE purchasing any parts.**
 
 ## Assembly
 
-**Note: Please also see general advice in the [manufacturing methods guide](../../methods).**
+**Note: Please also see general advice in the [manufacturing methods guide](../../../methods).**
 
 - 3D print the parts and tools called out in the [Parts list](#parts).
 
 - Install heat set inserts into the filter housings.
   **#TODO: add picture of installed**
 
-- Remove the filters (**A4**) from the housings that they arrive in from the manufacturer.
+- Remove the filters `[A4]` from the housings that they arrive in from the manufacturer.
 
 |                            |                             |
 |:--------------------------:|:---------------------------:|
 |![](images/roomba1.jpg) | ![](images/roomba2.jpg) |
 
 
-- Cut the inner edge of the gasket in the gasket material using the inside cut jig (**A9**).
+- Cut the inner edge of the gasket in the gasket material using the inside cut jig `[A9]`.
 
 |                            |                             |
 |:--------------------------:|:---------------------------:|
 |![](images/MakeGasket2.jpg) | ![](images/MakeGasket3.jpg) |
 
-- Place the outer cut jig (**A10**) into the hole you just made.
+- Place the outer cut jig `[A10]` into the hole you just made.
 
 ![](images/MakeGasket4.jpg)
 

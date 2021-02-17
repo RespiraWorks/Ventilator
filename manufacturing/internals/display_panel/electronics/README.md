@@ -9,7 +9,7 @@ This build constitutes the electrical, computing and digital user interface comp
 **Note: If you are a member of the RespiraWorks team, review the [part purchasing guidelines][ppg]
 BEFORE purchasing any parts.**
 
-[ppg]: ../../purchasing_guidelines.md
+[ppg]: ../../../purchasing_guidelines.md
 
 | Item  | Quantity | Manufacturer  | Part Number        | Price (USD) | Sources[*][ppg]         | Notes |
 | ----  |---------:| --------------| ------------------ | -----------:|:-----------------------:| ----- |
@@ -58,17 +58,19 @@ BEFORE purchasing any parts.**
 **Note:** If you are feeling stingy, don't get the touchscreen `[A10]`. You can connect the RasPi to any monitor and
 use a mouse and keyboard to control it.
 
-## Assembly Instructions
+## Assembly
+
+**Note: Please see general advice in the [manufacturing methods guide](../../../methods).**
 
 ### Custom wiring
 
 The ventilator assembly requires some custom wiring. Please use materials and instructions on the
-[wiring page](../../wiring) to prepare those custom components first.
+[wiring page](../../../wiring) to prepare those custom components first.
 
 ### Main circuit board (PCB)
 
 Design and manufacturing files for the main board can be found on the
-[PCB Rev1 page](../../../pcb/rev1_export).
+[PCB Rev1 page](../../../../pcb/rev1_export).
 
 Revision 1 of the custom circuit board (PCB) requires some modification to work with the current prototype.
 Please follow instructions on that page to make the necessary modifications.
@@ -112,7 +114,7 @@ single ventilator contains two pinch valves, each must come with its own driver 
 soldered appropriately.
 
 It is advisable that you first manufacture the 2 pigtails of appropriate length as described on the
-[wiring page](../../wiring).
+[wiring page](../../../wiring).
 
 Stepper board modification and mounting to Nucleo is documented [here](stepper_drivers).
 
@@ -130,9 +132,9 @@ Prior to installing it on the PCB, you should:
   using a microSD adapter `[B1]`
 * install memory card into the RaspberryPi
 * give it a keyboard and mouse `[B3]` or
-* alternatively, you can configure it for remote ssh control as described on our [GUI page](../../../software/gui).
+* alternatively, you can configure it for remote ssh control as described on our [GUI page](../../../../software/gui).
 
-Unless you are doing a [Pizza build](../../../quality-assurance/testing/pizza_build), you will **NOT** want to install
+Unless you are doing a [Pizza build](../../../../quality-assurance/testing/pizza_build), you will **NOT** want to install
 the Raspberry Pi onto the PCB quite yet. You will first want to mount the PCB onto the touch-screen, as described on the
 [display panel sub-assembly](..) page.
 

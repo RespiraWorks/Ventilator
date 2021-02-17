@@ -1,4 +1,4 @@
-/* Copyright 2020, RespiraWorks
+/* Copyright 2020-2021, RespiraWorks
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -71,6 +71,7 @@ extern "C" void _init() { Hal.EarlyInit(); }
 // the watchdog timer kills us.
 extern "C" void abort() {
   while (true) {
+    ; // noop
   };
 }
 
@@ -90,7 +91,7 @@ void HalApi::EarlyInit() {
   SysCtrl_Reg *sysCtl = SYSCTL_BASE;
   sysCtl->cpac = 0x00F00000;
 
-  // Reset caches and set latency for 80MHz opperation
+  // Reset caches and set latency for 80MHz operation
   // See chapter 3 of [RM] for details on the embedded flash module
   EnableClock(FLASH_BASE);
   FlashReg *flash = FLASH_BASE;
@@ -116,7 +117,7 @@ void HalApi::EarlyInit() {
   // The PLL can generate several clocks with somewhat
   // less then descriptive names in the [RM].
   // These clocks are:
-  //   P clock - Used for the SAI peripherial.  Not used here
+  //   P clock - Used for the SAI peripheral.  Not used here
   //   Q clock - 48MHz output clock used for USB.  Not used here.
   //   R clock - This is the main system clock.  We care about this one.
   //
@@ -170,7 +171,7 @@ void HalApi::init() {
 
 // Reset the processor
 [[noreturn]] void HalApi::reset_device() {
-  // Note that the system control registers are a standard ARM peripherial
+  // Note that the system control registers are a standard ARM peripheral
   // they are documented in the [PM] rather than the [RM].
   // The register we use to reset the system is called the
   // "Application interrupt and reset control register (AIRCR)"
@@ -179,6 +180,7 @@ void HalApi::init() {
 
   // We promised we wouldn't return, so...
   while (true) {
+    ; // noop
   }
 }
 
@@ -189,7 +191,7 @@ void HalApi::init() {
  *
  * Please refer to the PCB schematic as the ultimate source of which
  * pin is used for which function.  A less definitive, but perhaps
- * easier to read version is availabe in [PCBsp]
+ * easier to read version is available in [PCBsp]
  *
  * ID inputs.  These can be used to identify the PCB revision
  * we're running on.
@@ -269,9 +271,9 @@ void HalApi::InitSysTimer() {
   // Just set the timer up to count every microsecond.
   TimerRegs *tmr = TIMER6_BASE;
 
-  // The reload register gives the numer of clock ticks (100ns in our case) -1
-  // until the clock wraps back to zero and generates an interrupt
-  // This setting will cause an interrupt every 10,000 clocks or 1 millisecond
+  // The reload register gives the number of clock ticks (100ns in our case)
+  // -1 until the clock wraps back to zero and generates an interrupt. This
+  // setting will cause an interrupt every 10,000 clocks or 1 millisecond
   tmr->reload = 9999;
   tmr->prescale = (CPU_FREQ_MHZ / 10 - 1);
   tmr->event = 1;
@@ -412,7 +414,7 @@ void HalApi::InitPwmOut() {
   // I'm just picking a reasonable number.  This can be refined later
   //
   // The selection of PWM frequency is a trade off between latency and
-  // resolution.  Higher frequencies give lower latency and lower resoution.
+  // resolution.  Higher frequencies give lower latency and lower resolution.
   //
   // Latency is the time between setting the value and it taking effect,
   // this is essentially the PWM period (1/frequency).  For example, a
@@ -464,7 +466,8 @@ void HalApi::analogWrite(PwmPin pin, float duty) {
     __builtin_unreachable();
   }();
 
-  tmr->compare[chan] = static_cast<REG>(static_cast<float>(tmr->reload) * duty);
+  tmr->compare[chan] =
+      static_cast<uint32_t>(static_cast<float>(tmr->reload) * duty);
 }
 
 /******************************************************************
@@ -503,11 +506,11 @@ public:
 
     // See if we received a new byte.
     if (reg->status.s.rxne) {
-      // Add the byte to rxDat.  If the buffer is full, we'll drop it -- what
-      // else can we do?
+      // Add the byte to rxDat.  If the buffer is full, we'll drop it --
+      // what else can we do?
       //
-      // TODO: Perhaps log a warning here so we have an idea of whether this
-      // buffer is hitting capacity frequently.
+      // TODO: Perhaps log a warning here so we have an idea of whether
+      // this buffer is hitting capacity frequently.
       (void)rxDat.Put(static_cast<uint8_t>(reg->rxDat));
     }
 
@@ -591,7 +594,7 @@ extern UART_DMA dmaUART;
 //
 // Please refer to the PCB schematic as the ultimate source of which
 // pin is used for which function.  A less definitive, but perhaps
-// easier to read version is availabe at [PCBsp].
+// easier to read version is available at [PCBsp].
 //
 // These pins are connected to UART3
 // The UART is described in [RM] chapter 38
@@ -722,8 +725,8 @@ uint32_t HalApi::crc32_get() {
   //
   // TODO(jlebar): I think the nops likely are not necessary. The chip should
   // stall the processor if the data isn't available.  Moreover if it *is*
-  // necessary, asm volatile may not be enough of a memory barrier; we may need
-  // to say that these instructions also clobber "memory".
+  // necessary, asm volatile may not be enough of a memory barrier; we may
+  // need to say that these instructions also clobber "memory".
   asm volatile("nop");
   asm volatile("nop");
   asm volatile("nop");
@@ -737,7 +740,7 @@ void HalApi::crc32_reset() {
   crc->ctrl = 1;
 }
 
-uint32_t HalApi::crc32(uint8_t *data, uint32_t length) {
+uint32_t HalApi::crc32(const uint8_t *data, uint32_t length) {
   crc32_reset();
   while (length--) {
     crc32_accumulate(*data++);
@@ -745,16 +748,23 @@ uint32_t HalApi::crc32(uint8_t *data, uint32_t length) {
   return crc32_get();
 }
 
-// Enable clocks to a specific peripherial.
-// On the STM32 the clocks going to various peripherials on the chip
+// Fault handlers
+[[noreturn]] static void fault() {
+  while (true) {
+    ; // noop
+  }
+}
+
+// Enable clocks to a specific peripheral.
+// On the STM32 the clocks going to various peripherals on the chip
 // are individually selectable and for the most part disabled on startup.
-// Clocks to the specific peripherials need to be enabled through the
-// RCC (Reset and Clock Controller) module before the peripherial can be
+// Clocks to the specific peripherals need to be enabled through the
+// RCC (Reset and Clock Controller) module before the peripheral can be
 // used.
-// Pass in the base address of the peripherial to enable its clock
-void HalApi::EnableClock(void *ptr) {
+// Pass in the base address of the peripheral to enable its clock
+void HalApi::EnableClock(volatile void *ptr) {
   static struct {
-    void *base;
+    volatile void *base;
     int ndx;
     int bit;
   } rccInfo[] = {
@@ -767,7 +777,7 @@ void HalApi::EnableClock(void *ptr) {
       {I2C1_BASE, 4, 21},
       // The following entries are probably correct, but have
       // not been tested yet.  When adding support for one of
-      // these peripherials just comment out the line.  And
+      // these peripherals just comment out the line.  And
       // test of course.
       //      {CRC_BASE, 0, 12},
       //      {TIMER3_BASE, 4, 1},
@@ -781,8 +791,8 @@ void HalApi::EnableClock(void *ptr) {
       //      {TIMER16_BASE, 6, 17},
   };
 
-  // I don't include all the peripherials here, just the ones that we currently
-  // use or seem likely to be used in the future.  To add more peripherials,
+  // I don't include all the peripherals here, just the ones that we currently
+  // use or seem likely to be used in the future.  To add more peripherals,
   // just look up the appropriate bit in [RM] chapter 6.
   int ndx = -1;
   int bit = 0;
@@ -794,17 +804,16 @@ void HalApi::EnableClock(void *ptr) {
     }
   }
 
-  // If the input address wasn't found then its definitly
+  // If the input address wasn't found then its definitely
   // a bug.  I'll just loop forever here causing the code
   // to crash.  That should make it easier to find the
   // bug during development.
   if (ndx < 0) {
     Hal.disableInterrupts();
-    while (true) {
-    }
+    fault();
   }
 
-  // Enable the clock of the requested peripherial
+  // Enable the clock of the requested peripheral
   RCC_Regs *rcc = RCC_BASE;
   rcc->periphClkEna[ndx] |= (1 << bit);
 }
@@ -816,12 +825,6 @@ static void StepperISR() { StepMotor::DMA_ISR(); }
  * pointers to the various interrupt functions.  It is stored at the
  * very start of the flash memory.
  *****************************************************************/
-
-// Fault handlers
-static void fault() {
-  while (true) {
-  }
-}
 
 static void NMI() { fault(); }
 static void FaultISR() { fault(); }
@@ -840,7 +843,7 @@ __attribute__((section(".isr_vector"))) void (*const vectors[101])() = {
 
     // The second ISR entry is the reset vector which is an
     // assembly language routine that does some basic memory
-    // initilization and then calls main().
+    // initialization and then calls main().
     // Note that the LSB of the reset vector needs to be set
     // (hence the +1 below).  This tells the ARM that this is
     // thumb code.  The cortex m4 processor only supports
@@ -970,7 +973,7 @@ void HalApi::EnableInterrupt(InterruptVector vec, IntPriority pri) {
 
   // The STM32 processor implements bits 4-7 of the NVIM priority register.
   int p = static_cast<int>(pri);
-  nvic->priority[id] = static_cast<BREG>(p << 4);
+  nvic->priority[id] = static_cast<uint8_t>(p << 4);
 }
 
 #endif

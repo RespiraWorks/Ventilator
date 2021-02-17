@@ -1,4 +1,4 @@
-/* Copyright 2020, RespiraWorks
+/* Copyright 2020-2021, RespiraWorks
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ limitations under the License.
 // a pinch valve would, which is why it's used for that purpose.
 //
 // The PSOL we're using is made by SMC pneumatics and is model number
-// PVQ31-6G-40-01.  You can find it described in the series catelog
+// PVQ31-6G-40-01.  You can find it described in the series catalog
 // available here: https://www.smcpneumatics.com/pdfs/PVQ.pdf
 //
 // On our board the solenoid output is connected to pin PA11 which
@@ -54,9 +54,8 @@ void HalApi::InitPSOL() {
   EnableClock(TIMER1_BASE);
 
   // Connect PA11 to timer 1
-  // The STM32 datasheet has a table (table 17) which shows
-  // which functions can be connected to each pin.  For
-  // PA11 we select function 1 to connect it to timer 1.
+  // [DS] table 17 shows which functions can be connected to each pin.
+  // For PA11 we select function 1 to connect it to timer 1.
   GPIO_PinAltFunc(GPIO_A_BASE, 11, 1);
 
   TimerRegs *tmr = TIMER1_BASE;
@@ -78,8 +77,7 @@ void HalApi::InitPSOL() {
   tmr->ccEnable = 0x1000;
 
   // For timer 1 we need to disable the main output enable
-  // (MOE) feature by setting bit 15 of the deadtime register.
-  // See section 26.3.16 of the reference manual.
+  // (MOE) feature by setting bit 15 of the deadtime register. [RM] 26.3.16
   tmr->deadTime = 0x8000;
 
   // Start with 0% duty cycle

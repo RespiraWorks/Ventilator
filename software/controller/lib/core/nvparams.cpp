@@ -30,7 +30,17 @@ limitations under the License.
 #include "vars.h"
 #include <string.h>
 
+static DebugUInt32
+    dbg_reinit("nvparams_reinit",
+               "Set to 1 to request a reinit of NV params on next boot.", 0);
+
+static DebugUInt32 dbg_serial("serial_number",
+                              "Serial number of the ventilator, in EEPROM", 0);
+
+static DebugUInt32 dbg_nvparams("nvparams_address", "Address of nv_params", 0);
+
 namespace NVParams {
+
 // Size of the parameter block including the header
 static constexpr uint32_t size{sizeof(Structure)};
 
@@ -43,20 +53,10 @@ static uint32_t CRC(Structure *param) {
 // Checks whether a param is valid (through its checksum)
 static bool IsValid(Structure *param) { return param->crc == CRC(param); };
 
-} // namespace NVParams
-
-static DebugUInt32
-    dbg_reinit("nvparams_reinit",
-               "Set to 1 to request a reinit of NV params on next boot.", 0);
-static DebugUInt32 dbg_serial("serial_number",
-                              "Serial number of the ventilator, in EEPROM", 0);
-
-static DebugUInt32 dbg_nvparams("nvparams_address", "Address of nv_params", 0);
-
 // One time init of non-volatile parameter area.
 // This must not be done when a watchdog is enabled, as it blocks
 // execution while it reads through the I2C EEPROM.
-void NVParams::Handler::Init(I2Ceeprom *eeprom) {
+void Handler::Init(I2Ceeprom *eeprom) {
 #ifndef TEST_MODE // this leads to conversion error when compiling on native
   dbg_nvparams.Set(reinterpret_cast<uint32_t>(&nv_param_));
 #endif
@@ -120,7 +120,7 @@ void NVParams::Handler::Init(I2Ceeprom *eeprom) {
   Set(offsetof(Structure, power_cycles), &counter, 4);
 }
 
-bool NVParams::Handler::Set(uint16_t offset, void *value, uint8_t len) {
+bool Handler::Set(uint16_t offset, void *value, uint8_t len) {
   // Make sure the passed pointer is pointing to somewhere
   // in the structure and isn't in the reserved first 6 bytes
   if ((offset < 6) || ((offset + len) > size))
@@ -158,7 +158,7 @@ bool NVParams::Handler::Set(uint16_t offset, void *value, uint8_t len) {
   return true;
 }
 
-bool NVParams::Handler::Get(uint16_t offset, void *value, uint8_t len) {
+bool Handler::Get(uint16_t offset, void *value, uint8_t len) {
 #ifndef TEST_MODE // in test mode I need to be able to access any byte
   // Make sure the passed pointer is pointing to somewhere
   // in the structure and isn't in the reserved first 6 bytes
@@ -170,7 +170,7 @@ bool NVParams::Handler::Get(uint16_t offset, void *value, uint8_t len) {
 }
 
 // call this function in order to write variables to nv_params
-void NVParams::Handler::Update(const Time now, VentParams *params) {
+void Handler::Update(const Time now, VentParams *params) {
   // We only update cumulated service every so often
   if (now >= last_update_ + kUpdateInterval) {
     uint32_t cumulated = nv_param_.cumulated_service +
@@ -210,8 +210,8 @@ void NVParams::Handler::Update(const Time now, VentParams *params) {
 
 // This method must not be called when a watchdog is looking as it blocks
 // the execution while it reads the EEPROM.
-bool NVParams::Handler::ReadFullParams(Address address, Structure *param,
-                                       I2Ceeprom *eeprom) {
+bool Handler::ReadFullParams(Address address, Structure *param,
+                             I2Ceeprom *eeprom) {
   bool read_finished{false};
   eeprom->ReadBytes(static_cast<uint16_t>(address), size, param,
                     &read_finished);
@@ -229,9 +229,11 @@ bool NVParams::Handler::ReadFullParams(Address address, Structure *param,
   return true;
 }
 
-void NVParams::Handler::WriteFullParams(Address address) {
+void Handler::WriteFullParams(Address address) {
   eeprom_->WriteBytes(static_cast<uint16_t>(address), size, &nv_param_,
                       nullptr);
   // for a write, we don't really need to wait until the request is processed:
   // the I2C queue should ensure nothing is lost.
 }
+
+} // namespace NVParams

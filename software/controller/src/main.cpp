@@ -94,7 +94,7 @@ static void high_priority_task(void *arg) {
       controller_state.pressure_setpoint.cmH2O();
 
   // Sample any trace variables that are enabled
-  trace.MaybeSample();
+  debug.SampleTraceVars();
 
   // Pet the watchdog
   Hal.watchdog_handler();

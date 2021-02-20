@@ -27,3 +27,4 @@ Table of Contents
 
    system/index
    software/index
+   contributing/contributing

@@ -1,14 +1,18 @@
-# RespiraWorks Contributor License Agreement
+.. _CLA_text:
+
+RespiraWorks Individual Contributor License Agreement
+=====================================================
 
 Thank you for your interest in contributing to RespiraWorks ("We" or "Us").
 
-This contributor agreement ("Agreement") documents the rights granted by contributors to Us. To make this document effective, please sign it and send it to Us by electronic submission, following the instructions at https://cla-assistant.io/. This is a legally binding document, so please read it carefully before agreeing to it. The Agreement may cover more than one software project managed by Us.
+This contributor agreement ("Agreement") documents the rights granted by contributors to Us. To make this document effective, please sign it and send it to Us by electronic submission, following the instructions at :ref:`contributing`. This is a legally binding document, so please read it carefully before agreeing to it. The Agreement may cover more than one software project managed by Us.
 
-## 1. Definitions
+1. Definitions
+______________
 
 "You" means the individual who Submits a Contribution to Us.
 
-"Contribution" means any work of authorship that is Submitted by You to Us in which You own or assert ownership of the Copyright. If You do not own the Copyright in the entire work of authorship, please follow the instructions in https://cla-assistant.io/.
+"Contribution" means any work of authorship that is Submitted by You to Us in which You own or assert ownership of the Copyright. If You do not own the Copyright in the entire work of authorship, please follow the instructions in :ref:`contributing`.
 
 "Copyright" means all rights protecting works of authorship owned or controlled by You, including copyright, moral and neighboring rights, as appropriate, for the full term of their existence including any extensions by You.
 
@@ -22,7 +26,8 @@ This contributor agreement ("Agreement") documents the rights granted by contrib
 
 "Media" means any portion of a Contribution which is not software.
 
-## 2. Grant of Rights
+2. Grant of Rights
+__________________
 
 2.1 Copyright License
 
@@ -46,7 +51,8 @@ In addition, We may use the following licenses for Media in the Contribution: Cr
 
 2.6 Reservation of Rights. Any rights not expressly licensed under this section are expressly reserved by You.
 
-## 3. Agreement
+3. Agreement
+____________
 
 You confirm that:
 
@@ -54,19 +60,22 @@ You confirm that:
 
 (b) You own the Copyright and patent claims covering the Contribution which are required to grant the rights under Section 2.
 
-(c) The grant of rights under Section 2 does not violate any grant of rights which You have made to third parties, including Your employer. If You are an employee, You have had Your employer approve this Agreement or sign the Entity version of this document. If You are less than eighteen years old, please have Your parents or guardian sign the Agreement.
+(c) The grant of rights under Section 2 does not violate any grant of rights which You have made to third parties, including Your employer. If You are an employee whose employment agreement asserts intellectual property rights over your contributions, You have had Your employer approve this Agreement or sign the Entity version of this document. If You are less than eighteen years old, please have Your parents or guardian sign the Agreement.
 
 (d) You have followed the instructions in https://cla-assistant.io/, if You do not own the Copyright in the entire work of authorship Submitted.
 
-## 4. Disclaimer
+4. Disclaimer
+_____________
 
 EXCEPT FOR THE EXPRESS WARRANTIES IN SECTION 3, THE CONTRIBUTION IS PROVIDED "AS IS". MORE PARTICULARLY, ALL EXPRESS OR IMPLIED WARRANTIES INCLUDING, WITHOUT LIMITATION, ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE EXPRESSLY DISCLAIMED BY YOU TO US. TO THE EXTENT THAT ANY SUCH WARRANTIES CANNOT BE DISCLAIMED, SUCH WARRANTY IS LIMITED IN DURATION TO THE MINIMUM PERIOD PERMITTED BY LAW.
 
-## 5. Consequential Damage Waiver
+5. Consequential Damage Waiver
+______________________________
 
 TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, IN NO EVENT WILL YOU BE LIABLE FOR ANY LOSS OF PROFITS, LOSS OF ANTICIPATED SAVINGS, LOSS OF DATA, INDIRECT, SPECIAL, INCIDENTAL, CONSEQUENTIAL AND EXEMPLARY DAMAGES ARISING OUT OF THIS AGREEMENT REGARDLESS OF THE LEGAL OR EQUITABLE THEORY (CONTRACT, TORT OR OTHERWISE) UPON WHICH THE CLAIM IS BASED.
 
-## 6. Miscellaneous
+6. Miscellaneous
+________________
 
 6.1 This Agreement will be governed by and construed in accordance with the laws of United States excluding its conflicts of law provisions. Under certain circumstances, the governing law in this section might be superseded by the United Nations Convention on Contracts for the International Sale of Goods ("UN Convention") and the parties intend to avoid the application of the UN Convention to this Agreement and, thus, exclude the application of the UN Convention in its entirety to this Agreement.
 

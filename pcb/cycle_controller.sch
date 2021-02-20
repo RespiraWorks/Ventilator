@@ -3,10 +3,10 @@ EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 7 34
+Sheet 7 37
 Title "Cycle Controller"
 Date ""
-Rev "2.0"
+Rev "A"
 Comp "RespiraWorks"
 Comment1 ""
 Comment2 ""
@@ -295,20 +295,20 @@ Text Label 4400 2900 2    50   ~ 0
 BOOT0
 Text Notes 3950 3150 0    50   ~ 0
 Boots from main\nFlash memory\nby default
-Text HLabel 6700 2900 2    50   Input ~ 0
-TMS
+Text HLabel 6700 2900 2    50   BiDi ~ 0
+SWDIO-TMS
 Wire Wire Line
 	6400 2900 6700 2900
 Text HLabel 6700 3000 2    50   Input ~ 0
-TCK
+SWCLK-TCK
 Wire Wire Line
 	6400 3000 6700 3000
 Text HLabel 6700 3100 2    50   Input ~ 0
 TDI
 Wire Wire Line
 	6400 3100 6700 3100
-Text HLabel 6700 3600 2    50   Input ~ 0
-TDO
+Text HLabel 6700 3600 2    50   BiDi ~ 0
+SWO-TDO
 Wire Wire Line
 	6700 3600 6400 3600
 Wire Wire Line
@@ -521,10 +521,6 @@ Wire Wire Line
 	4850 3800 5100 3800
 Wire Wire Line
 	6400 3700 6700 3700
-Text HLabel 4850 4300 0    50   Input ~ 0
-SWO
-Wire Wire Line
-	5100 4300 4850 4300
 $Comp
 L Switch:SW_Push SW?
 U 1 1 5FF60966
@@ -1343,7 +1339,7 @@ Text HLabel 6700 2400 2    50   BiDi ~ 0
 PA8
 Text HLabel 6700 1900 2    50   BiDi ~ 0
 PA3
-Text HLabel 7200 1800 2    50   BiDi ~ 0
+Text HLabel 7500 1800 2    50   BiDi ~ 0
 PA2
 Text HLabel 6700 1700 2    50   BiDi ~ 0
 PA1
@@ -1408,21 +1404,16 @@ PB13
 Text HLabel 6700 4800 2    50   BiDi ~ 0
 PB15
 Wire Wire Line
-	6400 1800 7150 1800
-Wire Wire Line
 	6400 1700 6700 1700
 Wire Wire Line
-	7150 1800 7150 2900
-Connection ~ 7150 1800
-Wire Wire Line
-	7150 1800 7200 1800
+	7450 1800 7450 2900
 Wire Wire Line
 	7150 3300 7150 3400
 Connection ~ 7150 3400
 Wire Wire Line
 	7150 3400 7200 3400
 Wire Wire Line
-	7150 2900 8650 2900
+	7450 2900 8650 2900
 Wire Wire Line
 	7150 3300 8650 3300
 Wire Wire Line
@@ -1560,4 +1551,10 @@ Text Label 10050 6150 0    50   ~ 0
 PA2
 Text Label 10050 6250 0    50   ~ 0
 PB1
+NoConn ~ 5100 4300
+Wire Wire Line
+	7500 1800 7450 1800
+Wire Wire Line
+	6400 1800 7450 1800
+Connection ~ 7450 1800
 $EndSCHEMATC

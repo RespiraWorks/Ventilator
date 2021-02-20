@@ -3,10 +3,10 @@ EELAYER 30 0
 EELAYER END
 $Descr B 17000 11000
 encoding utf-8
-Sheet 10 30
+Sheet 10 37
 Title "Alarms and Safety"
 Date ""
-Rev "2.0"
+Rev "A"
 Comp "RespiraWorks"
 Comment1 ""
 Comment2 ""
@@ -475,7 +475,7 @@ Connection ~ 4750 3800
 Wire Wire Line
 	4750 3800 5300 3800
 Text HLabel 5300 3800 2    50   Output ~ 0
-nOn_+5V
+nOn-5V
 Text Notes 5200 4050 0    50   ~ 0
 Signal to CPLD,\nlow when +5V is present
 $Comp
@@ -612,7 +612,7 @@ F 3 "" H 2350 2150 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Text HLabel 2700 2300 2    50   Output ~ 0
-nRST_FPGA
+nRST-FPGA
 Wire Wire Line
 	2650 2300 2650 2400
 Wire Wire Line

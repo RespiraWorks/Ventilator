@@ -3,10 +3,10 @@ EELAYER 30 0
 EELAYER END
 $Descr B 17000 11000
 encoding utf-8
-Sheet 2 30
+Sheet 2 37
 Title "Power Supplies"
 Date ""
-Rev "2.0"
+Rev "A"
 Comp "RespiraWorks"
 Comment1 ""
 Comment2 ""
@@ -29,8 +29,6 @@ F1 "power_3.3V_LDO.sch" 50
 F2 "In" I L 14400 5250 50 
 F3 "Out" O R 15350 5250 50 
 $EndSheet
-Text Notes 750  1250 0    118  ~ 24
-Power entry/battery stuff here etc. etc.
 $Sheet
 S 11750 2400 900  300 
 U 5FE27F70

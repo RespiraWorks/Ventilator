@@ -1,13 +1,12 @@
 EESchema Schematic File Version 4
-LIBS:ui_computer-cache
-EELAYER 26 0
+EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 1 1
+Sheet 8 37
 Title "UI Computer"
 Date ""
-Rev "2.0"
+Rev "A"
 Comp "RespiraWorks"
 Comment1 ""
 Comment2 ""
@@ -373,9 +372,7 @@ Wire Wire Line
 	6450 4100 7000 4100
 Wire Wire Line
 	6450 4200 7000 4200
-Text HLabel 7050 2300 2    50   BiDi ~ 0
-5V_GUI
-Text Label 6800 2300 0    50   ~ 0
+Text HLabel 7050 2300 2    50   Input ~ 0
 5V
 Wire Wire Line
 	7900 2000 7900 2100

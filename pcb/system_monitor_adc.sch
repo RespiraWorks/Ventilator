@@ -3,11 +3,11 @@ EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 1 1
-Title ""
+Sheet 31 37
+Title "System Monitor ADC"
 Date ""
-Rev ""
-Comp ""
+Rev "A"
+Comp "RespiraWorks"
 Comment1 ""
 Comment2 ""
 Comment3 ""
@@ -43,11 +43,9 @@ Wire Wire Line
 Wire Wire Line
 	7500 1400 7700 1400
 Text HLabel 9150 1400 2    50   Input ~ 0
-Vcc_3V3
-Text Label 7500 1400 0    50   ~ 0
-Vcc_3V3
+3V3
 Text Label 6200 3750 0    50   ~ 0
-Vcc_3V3
+3V3
 Wire Wire Line
 	3850 3500 3650 3500
 Wire Wire Line
@@ -90,6 +88,7 @@ AR Path="/5FCD4EEA/5FFE3E0A" Ref="C?"  Part="1"
 AR Path="/5FFDC330/5FFE3E0A" Ref="C?"  Part="1" 
 AR Path="/600A8E88/5FFE3E0A" Ref="C?"  Part="1" 
 AR Path="/600BE696/5FFE3E0A" Ref="C?"  Part="1" 
+AR Path="/603267F9/5FFE3E0A" Ref="C?"  Part="1" 
 F 0 "C?" H 3150 3700 50  0000 C CNN
 F 1 "100nF 100V X7R" H 3400 3800 50  0000 C CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 3088 3750 50  0001 C CNN
@@ -122,6 +121,7 @@ AR Path="/5FCD4EEA/5FFE4201" Ref="C?"  Part="1"
 AR Path="/5FFDC330/5FFE4201" Ref="C?"  Part="1" 
 AR Path="/600A8E88/5FFE4201" Ref="C?"  Part="1" 
 AR Path="/600BE696/5FFE4201" Ref="C?"  Part="1" 
+AR Path="/603267F9/5FFE4201" Ref="C?"  Part="1" 
 F 0 "C?" H 5000 3700 50  0000 C CNN
 F 1 "100nF 100V X7R" H 5250 3800 50  0000 C CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 4938 3750 50  0001 C CNN
@@ -164,6 +164,7 @@ AR Path="/5FCD4D85/5FFE655B" Ref="R?"  Part="1"
 AR Path="/5FFDC330/5FFE655B" Ref="R?"  Part="1" 
 AR Path="/600A8E88/5FFE655B" Ref="R?"  Part="1" 
 AR Path="/600BE696/5FFE655B" Ref="R?"  Part="1" 
+AR Path="/603267F9/5FFE655B" Ref="R?"  Part="1" 
 F 0 "R?" H 5950 4500 50  0000 L CNN
 F 1 "10K 1%" H 5750 4600 50  0000 L CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 6030 4550 50  0001 C CNN
@@ -181,6 +182,7 @@ AR Path="/5FCD4D85/5FFE6561" Ref="R?"  Part="1"
 AR Path="/5FFDC330/5FFE6561" Ref="R?"  Part="1" 
 AR Path="/600A8E88/5FFE6561" Ref="R?"  Part="1" 
 AR Path="/600BE696/5FFE6561" Ref="R?"  Part="1" 
+AR Path="/603267F9/5FFE6561" Ref="R?"  Part="1" 
 F 0 "R?" H 6400 3850 50  0000 L CNN
 F 1 "DNP" H 6350 3950 50  0000 L CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 6480 3900 50  0001 C CNN
@@ -198,6 +200,7 @@ AR Path="/5FCD4D85/5FFE656A" Ref="#PWR?"  Part="1"
 AR Path="/5FFDC330/5FFE656A" Ref="#PWR?"  Part="1" 
 AR Path="/600A8E88/5FFE656A" Ref="#PWR?"  Part="1" 
 AR Path="/600BE696/5FFE656A" Ref="#PWR?"  Part="1" 
+AR Path="/603267F9/5FFE656A" Ref="#PWR?"  Part="1" 
 F 0 "#PWR?" H 6100 4450 50  0001 C CNN
 F 1 "GND" H 6105 4527 50  0000 C CNN
 F 2 "" H 6100 4700 50  0001 C CNN
@@ -215,6 +218,7 @@ AR Path="/5FCD4D85/5FFE6570" Ref="#PWR?"  Part="1"
 AR Path="/5FFDC330/5FFE6570" Ref="#PWR?"  Part="1" 
 AR Path="/600A8E88/5FFE6570" Ref="#PWR?"  Part="1" 
 AR Path="/600BE696/5FFE6570" Ref="#PWR?"  Part="1" 
+AR Path="/603267F9/5FFE6570" Ref="#PWR?"  Part="1" 
 F 0 "#PWR?" H 6550 4450 50  0001 C CNN
 F 1 "GND" H 6555 4527 50  0000 C CNN
 F 2 "" H 6550 4700 50  0001 C CNN
@@ -232,6 +236,7 @@ AR Path="/5FCD4D85/5FFE733F" Ref="R?"  Part="1"
 AR Path="/5FFDC330/5FFE733F" Ref="R?"  Part="1" 
 AR Path="/600A8E88/5FFE733F" Ref="R?"  Part="1" 
 AR Path="/600BE696/5FFE733F" Ref="R?"  Part="1" 
+AR Path="/603267F9/5FFE733F" Ref="R?"  Part="1" 
 F 0 "R?" H 6400 4500 50  0000 L CNN
 F 1 "10K 1%" H 6200 4600 50  0000 L CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 6480 4550 50  0001 C CNN
@@ -261,6 +266,7 @@ AR Path="/5FCD4D85/5FFE8713" Ref="R?"  Part="1"
 AR Path="/5FFDC330/5FFE8713" Ref="R?"  Part="1" 
 AR Path="/600A8E88/5FFE8713" Ref="R?"  Part="1" 
 AR Path="/600BE696/5FFE8713" Ref="R?"  Part="1" 
+AR Path="/603267F9/5FFE8713" Ref="R?"  Part="1" 
 F 0 "R?" H 5950 3850 50  0000 L CNN
 F 1 "DNP" H 5900 3950 50  0000 L CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 6030 3900 50  0001 C CNN
@@ -281,7 +287,7 @@ Connection ~ 6550 4250
 Wire Wire Line
 	6550 3750 6100 3750
 Text HLabel 2700 3500 0    50   Input ~ 0
-Vcc_5V
+5V
 $Comp
 L Device:C C?
 U 1 1 5FFF0376
@@ -304,6 +310,7 @@ AR Path="/5FCD4EEA/5FFF0376" Ref="C?"  Part="1"
 AR Path="/5FFDC330/5FFF0376" Ref="C?"  Part="1" 
 AR Path="/600A8E88/5FFF0376" Ref="C?"  Part="1" 
 AR Path="/600BE696/5FFF0376" Ref="C?"  Part="1" 
+AR Path="/603267F9/5FFF0376" Ref="C?"  Part="1" 
 F 0 "C?" H 7800 1500 50  0000 C CNN
 F 1 "100nF 100V X7R" H 8050 1600 50  0000 C CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 7738 1550 50  0001 C CNN
@@ -350,6 +357,7 @@ AR Path="/5FCD4D85/5FFF7298" Ref="R?"  Part="1"
 AR Path="/5FFDC330/5FFF7298" Ref="R?"  Part="1" 
 AR Path="/600A8E88/5FFF7298" Ref="R?"  Part="1" 
 AR Path="/600BE696/5FFF7298" Ref="R?"  Part="1" 
+AR Path="/603267F9/5FFF7298" Ref="R?"  Part="1" 
 F 0 "R?" H 8350 2900 50  0000 L CNN
 F 1 "10K 1%" H 8150 3000 50  0000 L CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 8430 2950 50  0001 C CNN
@@ -386,6 +394,7 @@ AR Path="/5FCD4EEA/5FFF86CD" Ref="C?"  Part="1"
 AR Path="/5FFDC330/5FFF86CD" Ref="C?"  Part="1" 
 AR Path="/600A8E88/5FFF86CD" Ref="C?"  Part="1" 
 AR Path="/600BE696/5FFF86CD" Ref="C?"  Part="1" 
+AR Path="/603267F9/5FFF86CD" Ref="C?"  Part="1" 
 F 0 "C?" H 8650 1500 50  0000 C CNN
 F 1 "1uF 16V X5R" H 8900 1600 50  0000 C CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 8588 1550 50  0001 C CNN
@@ -449,6 +458,7 @@ AR Path="/5FCD4D85/600AAE9A" Ref="R?"  Part="1"
 AR Path="/5FFDC330/600AAE9A" Ref="R?"  Part="1" 
 AR Path="/600A8E88/600AAE9A" Ref="R?"  Part="1" 
 AR Path="/600BE696/600AAE9A" Ref="R?"  Part="1" 
+AR Path="/603267F9/600AAE9A" Ref="R?"  Part="1" 
 F 0 "R?" H 4850 3150 50  0000 L CNN
 F 1 "0" H 4900 3250 50  0000 L CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 4980 3200 50  0001 C CNN
@@ -464,5 +474,5 @@ Wire Wire Line
 Wire Wire Line
 	5050 3050 4650 3050
 Text Label 4650 3050 0    50   ~ 0
-Vcc_3V3
+3V3
 $EndSCHEMATC

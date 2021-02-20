@@ -2,7 +2,7 @@
 
 This build constitutes the electrical, computing and digital user interface components.
 
-**#TODO:** add pictures
+> **TODO:** add pictures
 
 ## Parts
 
@@ -78,13 +78,13 @@ Please follow instructions on that page to make the necessary modifications.
 If you are building an enclosed ventilator prototype, you may stop following the PCB instructions right before
 installation of the Raspberry Pi. Follow the sequence of steps below instead.
 
-**#TODO:** does errata explain how to do the bodge wire?
+> **TODO:** does errata explain how to do the bodge wire?
 
 ### Cycle controller
 
 The Nucleo dev board serves as the main cycle controller processor and is to be installed onto the PCB.
 
-**#TODO:** move relevant parts of PCB doc and/or illustrate
+> **TODO:** move relevant parts of PCB doc and/or illustrate
 
 ### Interim board
 
@@ -102,7 +102,7 @@ The card goes directly onto the Nucleo, **before** the stepper drivers.
 
 You will probably also want to connect the oxygen sensor wire to this board before stacking the stepper drivers.
 
-**#TODO:** pictures
+> **TODO:** pictures
 
 ### Stepper drivers
 
@@ -144,7 +144,7 @@ The touch screen needs two connections:
 * RaspberryPi's `USB` to touchscreen's `5V+Touch` microUSB, using `[A11]`
 * RaspberryPi's `microHDMI` to touchscreen's `HDMI IN`, using `[A12]` and `[A13]`
 
-**#TODO:** pictures
+> **TODO:** pictures
 
 ### Final wiring
 

@@ -150,7 +150,7 @@ Integration into the electrical/controls system is covered in [wiring page](../.
 
 ## Price estimate
 
-**#TODO:** out of date (used old BOMs), need to update this
+> **TODO:** out of date (used old BOMs), need to update this
 
 **Basic assembly:**
 

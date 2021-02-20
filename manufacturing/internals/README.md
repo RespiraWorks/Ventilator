@@ -35,7 +35,7 @@ BEFORE purchasing any parts.**
 |**A20**| ~1m      | McMaster-Carr  | 5894K34               | 12.15 / 5ft  | [C][a20mcmc]   | 1/4"ID 3/8"OD Tygon tubing, for oxygen line tubing |
 |**A21**| 6        | McMaster-Carr  | 9579K64               | 9.90 / 20    | [C][a21mcmc]   | Herbie clip BB (9.2-10.3mm) for clamping 3/8"OD, oxygen line tubing |
 |**A22**| ~1m      | uxcell         | a16031400ux0163       | 6.49 / 16ft  | [Z][a22amzn]   | 2.5 mm tubing for connecting venturis to pressure sensors |
-|**A23**| 1        | McMaster-Carr  | 5463K4                | 7.39 / 10    | [C][a23mcmc]   | sensing tube 3/23" t-junction, for teeing off to patient pressure sensor |
+|**A23**| 1        | McMaster-Carr  | 2974K392              | 8.16 / 10    | [C][a23mcmc]   | sensing tube 3/23" y-junction, for teeing off to patient pressure sensor |
 |**A24**| -        | RespiraWorks   | wiring_harnesses      |              | [Rw][a24rw]    | Various wiring harnesses, as described on the linked page |
 |**A25**| 3        | GTSE           | GTSE-10025BLU-USSL    | 4.49 / 100   | [Z][a25amzn]   | Zip ties, for securing sensor tubing and wiring harnesses |
 
@@ -61,7 +61,7 @@ BEFORE purchasing any parts.**
 [a20mcmc]: https://www.mcmaster.com/5894K34
 [a21mcmc]: https://www.mcmaster.com/9579K64
 [a22amzn]: https://www.amazon.com/gp/product/B01F4BJ7PI
-[a23mcmc]: https://www.mcmaster.com/5463K44
+[a23mcmc]: https://www.mcmaster.com/2974K392
 [a24rw]:   ../wiring
 [a25amzn]: https://www.amazon.com/GTSE-Small-Strength-Nylon-Cable/dp/B086H4TR5Y
 

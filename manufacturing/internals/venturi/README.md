@@ -214,7 +214,7 @@ You can use
 [this short spreadsheet](https://docs.google.com/spreadsheets/d/1G9Kb-ImlluK8MOx-ce2rlHUBnTOtAFQvKjjs1bEhlpM/edit#gid=963553579)
 to return the transfer function.
 
-**#TODO:** make spreadsheet contents visible here
+> **TODO:** make spreadsheet contents visible here
 
 ### Pressure Sensor
 
@@ -229,7 +229,7 @@ Adjust values in the spreadsheet above accordingly to see how it will perform in
 
 ### Pressure Loss curve
 
-**TODO:** add flow loss curve
+> **TODO:** add flow loss curve
 
 ### Flow Rate
 
@@ -238,7 +238,7 @@ The response curve is shown below over a varying flow signal. Note there is no c
 
 ![flow curve](images/pneumotachograph_compare.png)
 
-**TODO:** add flow accuracy curve and get improved correlation.
+> **TODO:** add flow accuracy curve and get improved correlation.
 
 ### Characterization tests
 

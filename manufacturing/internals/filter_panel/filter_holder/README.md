@@ -128,7 +128,8 @@ BEFORE purchasing any parts.**
 - 3D print the parts and tools called out in the [Parts list](#parts).
 
 - Install heat set inserts into the filter housings.
-  **#TODO: add picture of installed**
+
+> **TODO: add picture of installed**
 
 - Remove the filters `[A4]` from the housings that they arrive in from the manufacturer.
 

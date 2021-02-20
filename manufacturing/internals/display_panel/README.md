@@ -99,7 +99,7 @@ BEFORE purchasing any parts.**
 | Display panel assembly    | [.iam](display_panel_assembly.iam) |
 | Touch-screen sub-assembly with PCB stack | [.iam](display_and_PCB_stack_assembly.iam)       |
 
-**#TODO: Drawings**
+> **TODO: Drawings**
 
 **Note: Please also see general advice in the [manufacturing methods guide](../../methods).**
 

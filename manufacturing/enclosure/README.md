@@ -94,4 +94,4 @@ The internal equipment bracket is folded from a single sheet. The bracket is des
 Acrylic sheets are either fastened to or hung from the bracket to allow for design adjustments while utilizing the same
 bracket.
 
-**#TODO : Add photos of only the assembled enclosure**
+> **TODO:** Add photos of only the assembled enclosure

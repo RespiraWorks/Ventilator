@@ -59,18 +59,27 @@ BEFORE purchasing any parts.**
 |**A6** | 12       | McMaster-Carr | 96439A650                | 3.89 / 10   | [C][a6mcmc]  | M4 self-clinching / press-fit nut |
 |**A7** | 4        | McMaster-Carr | 9541K82                  | 8.34 / 10   | [C][a7mcmc]  | M6 threaded-stud bumper, used as feet |
 |**A8** | 12       | McMaster-Carr | 92095A188                | 10.04 / 100 | [C][a8mcmc]  | M4 screws, 6mm: main bracket and closure fastening |
+|**A9** | 1        | Noiseblocker  | B0083A0BIA               | 21.86       | [Z][a9amzn]  | Cooling fan, 80mm |
+|**A10**| 1        | IMSurQltyPrise| 80mm-black-4             | 11.99 / 4   | [Z][a10amzn] | Cooling fan filter/guard, 80mm |
+|**A11**| 4        | McMaster-Carr | 97763A429                | 11.33 / 10  | [C][a11mcmc] | M4 screw, 35mm |
+|**A12**| 4        | McMaster-Carr | 93625A150                | 6.04 / 100  | [C][a12mcmc] | M4 lock nuts |
+|**A13**| 4        | McMaster-Carr | 93475A230                | 1.86 / 100  | [C][a13mcmc] | M4 washers, 9mm OD |
 
 >**#TODO: How much sheet metal?**
 
-[a1rw]:   #custom-parts
-[a2rw]:   #custom-parts
-[a3rw]:   #custom-parts
-[a4mcmc]: https://www.mcmaster.com/97525A415/
-[a5mcmc]: https://www.mcmaster.com/96439A710/
-[a6mcmc]: https://www.mcmaster.com/96439A650/
-[a7mcmc]: https://www.mcmaster.com/9541K82/
-[a8mcmc]: https://www.mcmaster.com/92095A188/
-
+[a1rw]:    #custom-parts
+[a2rw]:    #custom-parts
+[a3rw]:    #custom-parts
+[a4mcmc]:  https://www.mcmaster.com/97525A415/
+[a5mcmc]:  https://www.mcmaster.com/96439A710/
+[a6mcmc]:  https://www.mcmaster.com/96439A650/
+[a7mcmc]:  https://www.mcmaster.com/9541K82/
+[a8mcmc]:  https://www.mcmaster.com/92095A188/
+[a9amzn]:  https://www.amazon.com/Noiseblocker-NB-BlackSilentPro-PC-P-Ultra-Silent/dp/B0083A0BIA
+[a10amzn]: https://www.amazon.com/Computer-Filter-Grills-Aluminum-Stainelss/dp/B07LG41F1K
+[a11mcmc]: https://www.mcmaster.com/97763A429/
+[a12mcmc]:  https://www.mcmaster.com/93625A150/
+[a13mcmc]:  https://www.mcmaster.com/93475A230/
 
 ## Assembly
 
@@ -95,3 +104,5 @@ Acrylic sheets are either fastened to or hung from the bracket to allow for desi
 bracket.
 
 > **TODO:** Add photos of only the assembled enclosure
+
+> **TODO:** Explain cooling fan mounting

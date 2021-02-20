@@ -1,10 +1,13 @@
 # Equipment tray
 
+> **TODO:** Make this look good, add pictures, DXF, etc..
+
+## Design rationale
+
 The internal equipment bracket is folded from a single sheet. The bracket is designed to be simple and lightweight.
 Acrylic sheets are either fastened to or hung from the bracket to allow for design adjustments while utilizing the same
 bracket.
 
-> **TODO:** Make this look good, add pictures, DXF, etc..
 
 ## Custom parts
 

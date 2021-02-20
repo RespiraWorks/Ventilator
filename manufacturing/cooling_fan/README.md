@@ -4,7 +4,21 @@
 
 ## Design rationale
 
-> **TODO:** content...
+Computing electronics and stepper motors generate heat. This heat may accumulate in a closed space. Excess heat
+can negatively impact the performance of computer processors and may also pose a fire hazard. A cooling fan
+is required to drive hot air out of the enclosure.
+
+**WARNING:** This sub-assembly is current **not functional**.
+
+The first version of the mainboard did not have any provisions for powering and controlling a cooling fan.
+Thus, installing one in the current design is simply a proof of concept for the mechanical/manufacturing
+design.
+
+Some questions yet to be systematically addressed:
+* noise levels
+* component lifetime
+* air outflow vent
+* airflow across the most heat-prone components
 
 ## Parts
 
@@ -35,4 +49,6 @@ BEFORE purchasing any parts.**
 |:---------|:-------|
 | Cooling fan assembly | [.iam](cooling_fan.iam) |
 
-> **TODO:** Explain cooling fan mounting
+Currently, the fan must be mounted after the internal assembly is already in the enclosure. Because of the
+shape of the enclosure, it has been found that the equipment tray must be inserted at an angle. If the cooling
+fan were already in place in the enclosure, it would probably interfere with this installation step.

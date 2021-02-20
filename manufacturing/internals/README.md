@@ -13,7 +13,7 @@ BEFORE purchasing any parts.**
 
 | Item  | Quantity | Manufacturer   | Part #                | Price (USD)  | Sources[*][ppg]| Notes |
 | ----- |---------:| -------------- | --------------------- | ------------:|:--------------:| ----- |
-|**A1** | (1)      | RespiraWorks   | equipment_bracket     |              | [Rw][a1rw]     | Metal bracket holding the internal assembly together **from enclosure assemebly** |
+|**A1** | 1        | RespiraWorks   | equipment_bracket     |              | [Rw][a1rw]     | Metal bracket holding the internal assembly together **from enclosure assemebly** |
 |**A2** | 1        | RespiraWorks   | pneumatics_tray       |              | [Rw][a2rw]     | Acrylic tray upon which most of the pneumatics are mounted |
 |**A3** | 1        | RespiraWorks   | filter_panel          |              | [Rw][a3rw]     | Lower front panel assembly with air filters |
 |**A4** | 1        | RespiraWorks   | blower_assembly       |              | [Rw][a4rw]     | Blower sub-assembly |
@@ -39,7 +39,9 @@ BEFORE purchasing any parts.**
 |**A24**| -        | RespiraWorks   | wiring_harnesses      |              | [Rw][a24rw]    | Various wiring harnesses, as described on the linked page |
 |**A25**| 3        | GTSE           | GTSE-10025BLU-USSL    | 4.49 / 100   | [Z][a25amzn]   | Zip ties, for securing sensor tubing and wiring harnesses |
 
-[a1rw]:    ../enclosure
+> **TODO** there can be only one tray
+
+[a1rw]:    tray
 [a2rw]:    tray
 [a3rw]:    filter_panel
 [a4rw]:    blower
@@ -79,8 +81,7 @@ BEFORE purchasing any parts.**
 
 The rough order/hierarchy of internals assembly is as follows:
 
-* Equipment bracket -- from the [enclosure assembly](../enclosure)
-* [Pneumatics tray](tray) - for mounting the main pneumatics assembly
+* [Equipment tray](tray) - rigid structure for mounting the internals assembly `[A1]` and `[A2]`
 * [Filter panel](filter_panel) - mechanical support for air filter assemblies
     * [Air filter holders](filter_panel/filter_holder) - custom housings for air filters
 * [Blower](blower) - this provides pressurized air

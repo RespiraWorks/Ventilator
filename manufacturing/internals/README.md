@@ -25,7 +25,7 @@ BEFORE purchasing any parts.**
 |**A10**| 1        | RespiraWorks   | venturi_air_influx    |              | [Rw][a10rw]    | Venturi flow sensor, air influx variant |
 |**A11**| 1        | RespiraWorks   | venturi_oxygen_influx |              | [Rw][a11rw]    | Venturi flow sensor, oxygen influx variant |
 |**A12**| 1        | RespiraWorks   | venturi_exhale        |              | [Rw][a12rw]    | Venturi flow sensor, exhale variant |
-|**A13**| 1        | RespiraWorks   | oxgen_mixer           |              | [Rw][a13rw]    | Oxygen mixing chamber |
+|**A13**| 1        | RespiraWorks   | oxygen_mixer          |              | [Rw][a13rw]    | Oxygen mixing chamber |
 |**A14**| 1        | RespiraWorks   | reducer_3-4_1-4       |              | [Rw][a14rw]    | 1/4"ID x 3/4"ID reducer |
 |**A15**| 5        | McMaster-Carr  | 53415K153             | 13.16 / 10   | [C][a15mcmc]   | 3/4"ID barbed elbow |
 |**A16**| 1        | McMaster-Carr  | 5463K648              | 8.40 / 10    | [C][a16mcmc]   | 3/4"ID x 3/8"ID barbed reducer |
@@ -36,6 +36,8 @@ BEFORE purchasing any parts.**
 |**A21**| 6        | McMaster-Carr  | 9579K64               | 9.90 / 20    | [C][a21mcmc]   | Herbie clip BB (9.2-10.3mm) for clamping 3/8"OD, oxygen line tubing |
 |**A22**| ~1m      | uxcell         | a16031400ux0163       | 6.49 / 16ft  | [Z][a22amzn]   | 2.5 mm tubing for connecting venturis to pressure sensors |
 |**A23**| 1        | McMaster-Carr  | 5463K4                | 7.39 / 10    | [C][a23mcmc]   | sensing tube 3/23" t-junction, for teeing off to patient pressure sensor |
+|**A24**| -        | RespiraWorks   | wiring_harnesses      |              | [Rw][a24rw]    | Various wiring harnesses, as described on the linked page |
+|**A25**| 3        | GTSE           | GTSE-10025BLU-USSL    | 4.49 / 100   | [Z][a25amzn]   | Zip ties, for securing sensor tubing and wiring harnesses |
 
 [a1rw]:    ../enclosure
 [a2rw]:    tray
@@ -60,6 +62,8 @@ BEFORE purchasing any parts.**
 [a21mcmc]: https://www.mcmaster.com/9579K64
 [a22amzn]: https://www.amazon.com/gp/product/B01F4BJ7PI
 [a23mcmc]: https://www.mcmaster.com/5463K44
+[a24rw]:   ../wiring
+[a25amzn]: https://www.amazon.com/GTSE-Small-Strength-Nylon-Cable/dp/B086H4TR5Y
 
 ## Assembly
 
@@ -73,7 +77,7 @@ BEFORE purchasing any parts.**
 :------------------:|:-----------------:|
 | [![](images/top_no_display_smaller.jpg)](images/top_no_display.jpg) | [![](images/botton_no_display_smaller.jpg)](images/botton_no_display.jpg) |
 
-The rough order/hierarchy of assembly is as follows:
+The rough order/hierarchy of internals assembly is as follows:
 
 * Equipment bracket -- from the [enclosure assembly](../enclosure)
 * [Pneumatics tray](tray) - for mounting the main pneumatics assembly
@@ -94,6 +98,8 @@ The rough order/hierarchy of assembly is as follows:
     * [Electronics assembly](display_panel/electronics) - encompasses the electrical and computing components
 * Oxygen line tubing `[A20]` and clamps `[21]`
 * Sensor tubing `[A22-23]`, connecting venturis to pressure sensors on mainboard
+* Connect all [wiring](../wiring) `[A24]`, except main power
+* Secure sensor tubing and wiring with zip ties `[A25]`
 
 >**TODO:** document sensor tube connections
 

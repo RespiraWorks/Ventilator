@@ -4,6 +4,10 @@
 :------------------:|:-----------------:|
 | ![](images/enclosure_rendering.jpg)  | ![](images/enclosure_exploded.jpg)  |
 
+## Design rationale
+
+> **TODO:** Content..
+
 ## Custom parts
 
 The ventilator enclosure is made up a folded, 1.52mm thick, stainless steel sheet.

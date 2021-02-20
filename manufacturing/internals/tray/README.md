@@ -4,10 +4,19 @@
 
 ## Design rationale
 
-The internal equipment bracket is folded from a single sheet. The bracket is designed to be simple and lightweight.
+The equipment tray is meant to provide support to all the functional components of the ventilator. It must fit snugly
+into fasten robustly to the enclosure assembly.
+
+The equipment bracket is folded from a single sheet. The bracket is designed to be simple and lightweight.
 Acrylic sheets are either fastened to or hung from the bracket to allow for design adjustments while utilizing the same
 bracket.
 
+The acrylic pneumatics tray provides a continuous and easily modifiable surface for mounting pneumatics equipment. This
+is optimal for prototype development, because the acrylic sheet can be easily and cheaply replaced or modified on the
+spot with new holes or cut-outs for alternate components being tested.
+
+In addition to supporting the main pneumatics tray, the equipment bracket also supports the display and filter panels
+on the front face of the ventilator. Those are detailed in other assembly pages.
 
 ## Custom parts
 

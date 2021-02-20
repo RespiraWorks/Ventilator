@@ -1,5 +1,11 @@
 # Closure panel
 
+> **TODO:** Make this look good, add pictures, etc..
+
+## Design rationale
+
+> **TODO:** Content..
+
 ## Custom parts
 
 The closure panel is made out of a folded, 1.52mm thick, stainless steel sheet.

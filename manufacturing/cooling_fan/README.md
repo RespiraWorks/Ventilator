@@ -1,4 +1,4 @@
-# Enclosure
+# Cooling fan
 
 > **TODO:** Make this look good, add pictures, etc..
 

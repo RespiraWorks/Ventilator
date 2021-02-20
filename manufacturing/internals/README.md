@@ -4,6 +4,10 @@
 :------------------:|:-----------------:|
 | [![](images/rendering_smaller.jpg)](images/rendering_full.jpg)  | [![](images/open_back_smaller.jpg)](images/open_back.jpg) |
 
+## Design rationale
+
+> **TODO:** Content..
+
 ## Parts
 
 **Note: If you are a member of the RespiraWorks team, review the [part purchasing guidelines][ppg]

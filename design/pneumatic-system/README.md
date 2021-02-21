@@ -4,9 +4,31 @@
 
 **TODO:** Cross-link to manufacturing and other docs
 
-The figure below displays the pneumatic layout of the system.
+## Physical Block Diagram
+
+The figure below displays the physical pneumatic layout of the system.
 
 ![](images/pneumatic_diagram.png)
+
+## Control Block Diagram
+
+### Rev 0.3 (Current)
+- The current pneumatic control system (Ventilator Rev 0.3) is based on a single closed-loop pressure control around the patient pressure sensor, commanded by a state machine, with blower pinch valve, exhale pinch valve, and oxygen PSOL as actuators.
+- Overall structure is OxygenLoop(PressureLoop(Actuator)).
+- A flow sensor observes the combined air and oxygen flow to the patient and provides an estimation of the tidal volume.
+- A slow outer loop controls the oxygen mix based on the O2 sensor.
+
+![](images/flow_control_diagram_current.png)
+
+### Rev 0.4 (Proposed)
+- The proposed control starting with Ventilator Rev 0.4 adds a separate flow sensor for air and oxygen input.  Overall structure is Pressure Loop -> Flow Command -> Actuator. Flow becomes controlled instead of merely observed.
+- Overall structure is OxygenLoop(PressureLoop(FlowLoop(Actuator))).
+- Air and oxygen limbs will each have their own closed-loop flow controller, with the blower pinch valve and oxygen PSOL as actuators.
+- The flow commands to these inner loops, as well as to the exhale pinch valve, come from an outer loop pressure controller which is closed around the patient pressure sensor.
+- The pressure command to this outer loop comes from the state machine.
+- FiO2 is controlled by a slow, outer-most control loop that changes the ratio of mixing between air and oxygen flow commands, and is closed around the oxygen sensor.
+
+![](images/flow_control_diagram_proposed.png)
 
 ## Overview
 

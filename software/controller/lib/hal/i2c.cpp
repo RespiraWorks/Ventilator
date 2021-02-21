@@ -68,6 +68,8 @@ void I2C1_ER_ISR() { i2c1.I2CErrorHandler(); };
 void DMA2_CH6_ISR() { i2c1.DMAIntHandler(DMA_Chan::C6); };
 
 void DMA2_CH7_ISR() { i2c1.DMAIntHandler(DMA_Chan::C7); };
+#else
+I2C::Channel i2c1;
 #endif // BARE_STM32
 
 bool I2C::Channel::SendRequest(const Request &request) {

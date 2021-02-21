@@ -12,6 +12,8 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+#include "hal.h"
+
 #if defined(BARE_STM32)
 
 // This file implements the interface to the Proportional Solenoid
@@ -30,7 +32,6 @@ limitations under the License.
 // can be driven by timer 1 channel 4.  We'll use that timer channel
 // to control the solenoid
 
-#include "hal.h"
 #include "hal_stm32.h"
 #include "vars.h"
 #include <algorithm>
@@ -112,4 +113,6 @@ void HalApi::PSOL_Value(float val) {
   tmr->compare[3] = static_cast<int>(duty);
 }
 
+#else
+void HalApi::PSOL_Value(float val) {}
 #endif

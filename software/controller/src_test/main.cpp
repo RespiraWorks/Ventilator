@@ -1,6 +1,5 @@
 #include "debug.h"
 #include "hal.h"
-#include "hal_stm32.h"
 #include "uart_dma.h"
 #include <string.h>
 

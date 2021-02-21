@@ -271,6 +271,8 @@ private:
 
 #ifdef BARE_STM32
 extern I2C::STM32Channel i2c1;
+#else
+extern I2C::Channel i2c1;
 #endif
 
 #endif // I2C_H

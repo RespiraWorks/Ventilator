@@ -90,7 +90,7 @@ The rough order/hierarchy of internals assembly is as follows:
     * [Air filter holders](filter_panel/filter_holder) - custom housings for air filters
 * [Blower](blower) - this provides pressurized air
 * [Air check valve](air_check_valve) - prevents concentrated oxygen back-flow
-* [Pinch valves](pinch_valve) - air influx and exhale control valves
+* 2x [Pinch valves](pinch_valve) - air influx and exhale control valves
 * [Oxygen regulator](regulator) - oxygen pressure regulator sub-assembly
 * [Proportional solenoid](PSOL) - oxygen control valve
 * Main tubing, sensors and manifolds:

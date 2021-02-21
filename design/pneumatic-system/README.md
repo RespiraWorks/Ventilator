@@ -468,4 +468,4 @@ These include:
     to aid in FiO2 control and make the system more robust to failure of
     the oxygen sensor.
 -   Adding redundant pressure differential sensors to make it easier to
-    detect a sensor failure.
+    detect a sensor failure. 

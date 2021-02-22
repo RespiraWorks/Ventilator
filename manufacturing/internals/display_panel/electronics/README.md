@@ -30,8 +30,6 @@ BEFORE purchasing any parts.**
 |**A15**| 4        | McMaster-Carr | 93475A196          | 1.58 / 100  | [C][a15mcmc]            | M2.5 washer, 6mm OD |
 |**A16**| 4        | McMaster-Carr | 92095A458          | 4.97 / 100  | [C][a16mcmc]            | M2.5 screw, 6mm |
 
->**TODO:** add miniUSB cable for embedded deployment
-
 >**TODO:** where do standoffs go?
 
 [a1rw]:    ../../../../pcb/rev1_export

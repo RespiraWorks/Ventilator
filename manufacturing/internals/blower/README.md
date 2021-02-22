@@ -87,6 +87,8 @@ There are notes on manufacturing gaskets in the [manufacturing methods guide][mm
 
 ### Acrylic plates
 
+> **TODO: Update drawings**
+
 You will have to cut the following mounting and holding plates from an acrylic sheet `[A4]`.
 
 |     | Driver mounting plate (C5) | Blower holding plate (C6) | Tubing adapter holding plate (C7) |

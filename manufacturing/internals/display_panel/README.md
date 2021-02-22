@@ -16,7 +16,7 @@ Related issues are being tracked here:
 
 ### Oxygen inlet
 
-Brass fittings are resistant to corrosion and can resist high pressures.
+Brass fittings are resistant to corrosion and high pressures.
 
 However:
 * connector may not be compatible for oxygen supply systems
@@ -26,6 +26,8 @@ However:
 These changes are likely forthcoming in future iterations of our design.
 
 ## Custom Parts
+
+> **TODO: Drawings**
 
 | Download Type | Link   |
 |:--------------|:-------|

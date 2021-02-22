@@ -11,13 +11,11 @@ and two without. The filter housings are installed on a clear acrylic sheet. In 
 available and/or required in particular markets or settings, this assembly can be easily redesigned and
 swapped out without significantly altering the rest of the ventilator design.
 
-The acrylic sheet is to be mounted to the main equipment bracket using heat inserts and screws.
-An explanation for the choice of heat-set inserts is given
-[here](../display_panel/README.md#bracket-mounts)
-
 ## Custom parts
 
 This is the design for the custom cut acrylic plate for the filter housings.
+
+> **TODO: Drawing rather than rendering?**
 
 | Acrylic plate rendering |
 :------------------:|
@@ -65,6 +63,8 @@ BEFORE purchasing any parts.**
 | Part  | Source |
 |:------|:-------|
 | Filter panel assembly | [.iam](filter_panel_assembly.iam) |
+
+> **TODO: Drawings**
 
 **Note: Please also see general advice in the [manufacturing methods guide](../../methods).**
 

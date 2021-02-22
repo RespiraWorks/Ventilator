@@ -56,7 +56,7 @@ arranged in a special way, or some mix thereof. Off-the-shelf CAD models all res
 directory with some categorization. If a component requires custom manufacturing, you can safely assume that the
 necessary files will be in its own directory.
 
-This is a on a best effort basis, so some hardware may reside with CAD assemblie of a scope higher or lower from where
+This is a on a best effort basis, so some hardware may reside with CAD assemblies of a scope higher or lower from where
 they are listed in the parts tables. You should always consult both CAD and verbal documentation before attempting to
 build anything. It is highly advised that you have your parts and measure them to confirm expected dimensions match,
 as models may be imprecise.

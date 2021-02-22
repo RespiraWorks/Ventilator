@@ -76,6 +76,8 @@ These files should not be printed with FDM. Instead, a leak-tight method like SL
 
 **Note: Please also see general advice in the [manufacturing methods guide](../../methods).**
 
+> **TODO: Drawings**
+
 |     | Stepper base (Item 9)      | Stepper rotor (Item 10)     |
 |----:|:--------------------------:|:---------------------------:|
 | Rendering | ![](images/rendered_base.jpg) | ![](images/rendered_rotor.jpg) |
@@ -130,6 +132,8 @@ BEFORE purchasing any parts.**
 ## Assembly
 
 **Note: Please see general advice in the [manufacturing methods guide](../../methods).**
+
+> **TODO: Drawings**
 
 ![Components](images/components.jpg)
 

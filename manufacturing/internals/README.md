@@ -96,7 +96,7 @@ BEFORE purchasing any parts.**
 
 The rough order/hierarchy of internals assembly is as follows:
 
-* Assembly the [equipment tray](tray) which will hold everything else (`[A1]` and `[A2]`)
+* Assemble the [equipment tray](tray) which will hold everything else (`[A1]` and `[A2]`)
 * Install the [filter panel](filter_panel) to the equipment bracket
 * Install the [blower assembly](blower) onto the pneumatics tray
 * Attach the [air check valve](air_check_valve) to the blower assembly

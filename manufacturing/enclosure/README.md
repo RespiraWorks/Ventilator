@@ -4,6 +4,8 @@
 :------------------:|:-----------------:|
 | ![](images/enclosure_rendering.jpg)  | ![](images/enclosure_exploded.jpg)  |
 
+> **TODO: Make new renderings**
+
 ## Design rationale
 
 > **TODO:** Content..
@@ -17,6 +19,8 @@ The ventilator enclosure is made up a folded, 1.52mm thick, stainless steel shee
 | Main enclosure | [.ipt](enclosure.ipt)         | **TODO** |
 
 ### Fabrication Drawings
+
+> **TODO: Make new drawings**
 
 Enclosure fabrication drawings.
 
@@ -52,6 +56,8 @@ BEFORE purchasing any parts.**
 
 **Note: Please see general advice in the [manufacturing methods guide](../methods).**
 
+> **TODO: Drawings and renderings**
+
 | Assembly | Source |
 |:---------|:-------|
 | Enclosure assembly         | [.iam](enclosure_assembly.iam) |
@@ -59,5 +65,3 @@ BEFORE purchasing any parts.**
 The main panel is folded from a single sheet and fastened together using stainless steel blind rivets. There
 are rubber bumper feet on the bottom of the enclosure that are threaded into M6 press-fit nuts. The rubber bumpers
 can be removed to allow the enclosure to be mounted to a medical cart.
-
-> **TODO:** Add photos of only the assembled enclosure

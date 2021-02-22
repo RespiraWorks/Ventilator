@@ -1,4 +1,4 @@
-# Electrical system assembly
+# Electronics assembly
 
 This build constitutes the electrical, computing and digital user interface components.
 
@@ -13,8 +13,8 @@ BEFORE purchasing any parts.**
 
 | Item  | Quantity | Manufacturer  | Part Number        | Price (USD) | Sources[*][ppg]         | Notes |
 | ----  |---------:| --------------| ------------------ | -----------:|:-----------------------:| ----- |
-|**A1** | 1        | RespiraWorks  | PCB                |             | [Rw][a1rw]              | RespiraWorks custom PCB |
-|**A2** | (1)      | RespiraWorks  | PCB_interim_board  |             | [Rw][a2rw]              | RespiraWorks Rev1 interim board **OPTIONAL** |
+|**A1** | 1        | RespiraWorks  | [PCB][a1rw]        |             | Rw                      | Custom main board |
+|**A2** | (1)      | RespiraWorks  | [interim_board][a2rw] |          | Rw                      | Rev1 interim board **OPTIONAL** |
 |**A3** | (1)      | Duracell      | 2016 3V            | 1.67        | [Z][a3amzn]             | CR2016 battery, for interim board **OPTIONAL** |
 |**A4** | 1        | ST Micro      | NUCLEO-L452-RE     | 14.43       | [M][a4mous] [R][a4rs]   | STM32 Nucleo dev board, **DO NOT get the -P** version |
 |**A5** | 2        | Digikey       | X-NUCLEO-IHM03A1   | 10.64       | [K][a5key] [M][a5mous]  | Stepper driver board |
@@ -22,19 +22,19 @@ BEFORE purchasing any parts.**
 |**A7** | 1        | Raspberry Pi  | RPI4-MODBP-2GB     | 53.23       | [M][a7mous]             | Raspberry Pi 4 |
 |**A8** | 1        | Pastall       | PT2019120501       | 9.99 / 40   | [Z][a8amzn]             | Heat sink for Rpi |
 |**A9** | 1        | SanDisk       | SDSQXAF-032G-GN6MA | 10.73       | [Z][a9amzn]             | UHS-1 Class 10 micro SD, memory for Raspberry Pi |
-|**A10**| 1        | UPerfect      | -                  | 49.00       | [A][a10ali]             | 7" capacitive touchscreen with speakers |
+|**A10**| 1        | Eviciv        | DS702              | 49.00       | [A][a10ali] [Z][a10amzn]| 7" capacitive touchscreen with speakers |
 |**A11**| 1        | UGREEN        | B0773N757H         | 6.99        | [Z][a11amzn]            | USB-A to micro-USB cable, 1.5ft |
-|**A12**| 1        | Seadream      | 26121600           | 7.00        | [Z][a12amzn]            | microHDMI adapter |
-|**A13**| 1        | C2G           | 56781              | 7.99        | [Z][a13amzn]            | HDMI cable, 1ft |
-|**A14**| 4        | McMaster-Carr | 92095A458          | 4.97 / 100  | [C][a14mcmc]            | M2.5 screw, 6mm |
-|**A15**| 4        | DigiKey       | 732-10395-ND       | 48.40/100   | [K][a15key]             | M2.5 standoff, 9mm tall |
-|**A16**| 4        | DigiKey       | 732-10435-ND       | 50.82/100   | [K][a16key]             | M2.5 standoff, 20mm tall |
+|**A12**| 1        | CERRXIAN      | B01N5PHSJE         | 6.95        | [Z][a12amzn]            | USB-A to mini-USB cable, 9", right angle |
+|**A13**| 4        | DigiKey       | 732-10395-ND       | 48.40 / 100 | [K][a13key]             | M2.5 standoff, 9mm |
+|**A14**| 4        | DigiKey       | 732-10435-ND       | 50.82 / 100 | [K][a14key]             | M2.5 standoff, 20mm |
+|**A15**| 4        | McMaster-Carr | 93475A196          | 1.58 / 100  | [C][a15mcmc]            | M2.5 washer, 6mm OD |
+|**A16**| 4        | McMaster-Carr | 92095A458          | 4.97 / 100  | [C][a16mcmc]            | M2.5 screw, 6mm |
 
 >**TODO:** add miniUSB cable for embedded deployment
 
 >**TODO:** where do standoffs go?
 
-[a1rw]:    ../../../../pcb
+[a1rw]:    ../../../../pcb/rev1_export
 [a2rw]:    https://github.com/inceptionev/VentilatorRev1InterimDaughtercard
 [a3amzn]:  https://www.amazon.com/Duracell-Lithium-Battery-lasting-battery/dp/B00006JPGV
 [a4mous]:  https://www.mouser.com/ProductDetail/STMicroelectronics/NUCLEO-L452RE?qs=sGAEpiMZZMtw0nEwywcFgEEYp888DlnM1Y5kGes2rJIHvcJjT1ZDkw%3D%3D
@@ -47,16 +47,13 @@ BEFORE purchasing any parts.**
 [a8amzn]:  https://www.amazon.com/Raspberry-Heatsink-Conductive-Adhesive-Aluminum/dp/B082RKKQ2D
 [a9amzn]:  https://www.amazon.com/dp/B06XWMQ81P
 [a10ali]:  https://www.aliexpress.com/item/4000747984746.html
+[a10amzn]: https://www.amazon.com/Eviciv-Portable-Monitor-Display-1024X600/dp/B07L6WT77H
 [a11amzn]: https://www.amazon.com/UGREEN-Braided-Charger-Charging-Controller/dp/B01MTXZ3U8
-[a12amzn]: https://www.amazon.com/Seadream-Degree-Down-toward-Adapter-Connector/dp/B01EQC345A/
-[a13amzn]: https://www.amazon.com/C2G-56781-Ethernet-Devices-Chromebooks/dp/B00J4LAKQA
-[a14mcmc]: https://www.mcmaster.com/92095A458/
-[a15key]:  https://www.digikey.com/en/products/detail/w-rth-elektronik/971090151/6174614
-[a16key]:  https://www.digikey.com/en/products/detail/würth-elektronik/971200151/6174654
-
-
-**Note:** If you are feeling stingy, don't get the touchscreen `[A10]`. You can connect the RasPi to any monitor and
-use a mouse and keyboard to control it.
+[a12amzn]: https://www.amazon.com/CERRXIAN-9Inch-Cable-Charge-2-Pack/dp/B01N5PHSJE
+[a13key]:  https://www.digikey.com/en/products/detail/w-rth-elektronik/971090151/6174614
+[a14key]:  https://www.digikey.com/en/products/detail/würth-elektronik/971200151/6174654
+[a15mcmc]: https://www.mcmaster.com/93475A196/
+[a16mcmc]: https://www.mcmaster.com/92095A458/
 
 ## Assembly
 

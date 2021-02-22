@@ -66,14 +66,14 @@ BEFORE purchasing any parts.**
 | ----- |---------:| ------------- | ------------------------ | ------------:|:--------------:|:------|
 |**A1** | ~550cm²  | McMaster-Carr | 8560K357                 | 150 / m²     | [C][a1mcmc]    | 1/4" (6.35mm) thick clear acrylic sheet, to make `[A2]` below |
 |**A2** | 1        | RespiraWorks  | upper_acrylic_face_panel |              | [Rw][a2rw]     | Upper acrylic face panel, cut from acrylic `[A1]` |
-|**A3** | 2        | RespiraWorks  | electrical_assembly      |              | [Rw][a3rw]     |  |
+|**A3** | 2        | RespiraWorks  | electronics_assembly     |              | [Rw][a3rw]     | Most electrical and computing components |
 |**A4** | 1        | McMaster-Carr | 7768K22                  | 11.62        | [C][a4mcmc]    | brass threaded check valve |
 |**A5** | 1        | McMaster-Carr | 50785K273                | 8.23         | [C][a5mcmc]    | through-wall straight connector, 1/4NPT female |
 |**A6** | 1        | McMaster-Carr | 5121K451                 | 5.78 / 10    | [C][a6mcmc]    | 1/4 NPT x 1/4" ID barbed adapter |
-|**A7** | 4        | McMaster-Carr | 93625A101                | 7.70 / 10    | [C][a7mcmc]    | M2 lock nut |
-|**A8** | 8        | McMaster-Carr | 93475A195                | 1.06 / 100   | [C][a8mcmc]    | M2 washer, 5mm OD |
-|**A9** | 8        | McMaster-Carr | 91116A240                | 2.40 / 100   | [C][a9mcmc]    | M2 washer, 7mm OD |
-|**A10**| 4        | McMaster-Carr | 92095A455                | 7.44 / 25    | [C][a10mcmc]   | M2 screw, 12mm |
+|**A7** | 4        | McMaster-Carr | 93625A102                | 10.79 / 100  | [C][a7mcmc]    | M2.5 locknut |
+|**A8** | 4        | McMaster-Carr | 98689A111                | 2.57 / 100   | [C][a8mcmc]    | M2.5 washer, 5mm OD |
+|**A9** | 4        | McMaster-Carr | 91116A110                | 3.23 / 100   | [C][a9mcmc]    | M2.5 washer, 8mm OD |
+|**A10**| 4        | McMaster-Carr | 92095A504                | 8.60 / 5     | [C][a10mcmc]   | M2.5 screw, 14mm |
 |**A11**| 4        | McMaster-Carr | 94180A351                | 15.47 / 100  | [C][a11mcmc]   | Heat-set inserts for M4 screws |
 |**A12**| 4        | McMaster-Carr | 93475A230                | 1.86 / 100   | [C][a12mcmc]   | M4 washer, 9mm OD |
 |**A13**| 4        | McMaster-Carr | 92095A189                | 8.89 / 100   | [C][a13mcmc]   | M4 screw, 8mm |
@@ -84,10 +84,10 @@ BEFORE purchasing any parts.**
 [a4mcmc]:  https://www.mcmaster.com/7768K22/
 [a5mcmc]:  https://www.mcmaster.com/50785K273/
 [a6mcmc]:  https://www.mcmaster.com/5121K451
-[a7mcmc]: https://www.mcmaster.com/93625A101/
-[a8mcmc]: https://www.mcmaster.com/93475A195/
-[a9mcmc]: https://www.mcmaster.com/91116A240/
-[a10mcmc]: https://www.mcmaster.com/92095A455/
+[a7mcmc]:  https://www.mcmaster.com/93625A102/
+[a8mcmc]:  https://www.mcmaster.com/98689A111/
+[a9mcmc]:  https://www.mcmaster.com/91116A110/
+[a10mcmc]: https://www.mcmaster.com/92095A504/
 [a11mcmc]: https://www.mcmaster.com/94180A351/
 [a12mcmc]: https://www.mcmaster.com/93475A230/
 [a13mcmc]: https://www.mcmaster.com/92095A189/

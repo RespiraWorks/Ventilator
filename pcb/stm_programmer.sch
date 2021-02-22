@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 9 37
+Sheet 37 37
 Title "STM Programmer for Cycle Controller"
 Date ""
 Rev "A"
@@ -292,14 +292,14 @@ Wire Wire Line
 $Comp
 L Connector:USB_B_Micro J?
 U 1 1 5FF1A7AE
-P 1250 2500
+P 1150 2500
 AR Path="/5FF1A7AE" Ref="J?"  Part="1" 
 AR Path="/5FCD4D85/5FF1A7AE" Ref="J?"  Part="1" 
-F 0 "J?" H 800 2600 50  0000 C CNN
-F 1 "USB B micro" H 750 2500 50  0000 C CNN
-F 2 "" H 1400 2450 50  0001 C CNN
-F 3 "~" H 1400 2450 50  0001 C CNN
-	1    1250 2500
+F 0 "J?" H 1050 2950 50  0000 C CNN
+F 1 "USB B micro" H 1150 2850 50  0000 C CNN
+F 2 "" H 1300 2450 50  0001 C CNN
+F 3 "~" H 1300 2450 50  0001 C CNN
+	1    1150 2500
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -316,8 +316,6 @@ F 3 "" H 1150 2900 50  0001 C CNN
 	1    1150 2900
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	1150 2900 1250 2900
 Connection ~ 1150 2900
 $Comp
 L Device:R R?
@@ -333,8 +331,6 @@ F 3 "~" H 1600 2850 50  0001 C CNN
 	1    1600 2850
 	-1   0    0    1   
 $EndComp
-Wire Wire Line
-	1600 2700 1550 2700
 $Comp
 L power:GND #PWR?
 U 1 1 5FF25BD1
@@ -379,8 +375,6 @@ F 3 "~" H 1950 2600 50  0001 C CNN
 $EndComp
 Wire Wire Line
 	1800 2500 1750 2500
-Wire Wire Line
-	1550 2600 1800 2600
 Text Label 2550 2600 2    50   ~ 0
 USB_D-
 Text Label 2550 2500 2    50   ~ 0
@@ -414,14 +408,12 @@ $EndComp
 Wire Wire Line
 	1750 2050 1750 2500
 Connection ~ 1750 2500
-Wire Wire Line
-	1750 2500 1550 2500
 $Comp
 L Device:Q_NPN_BCE Q?
 U 1 1 5FF31A97
 P 1850 1550
-F 0 "Q?" H 2041 1596 50  0000 L CNN
-F 1 "MMBT2222A" H 2041 1505 50  0000 L CNN
+F 0 "Q?" H 1700 1700 50  0000 L CNN
+F 1 "MMBT2222A" H 1450 1800 50  0000 L CNN
 F 2 "RespiraWorks_Std:SOT-23" H 2050 1650 50  0001 C CNN
 F 3 "~" H 1850 1550 50  0001 C CNN
 	1    1850 1550
@@ -430,46 +422,46 @@ $EndComp
 $Comp
 L Device:R R?
 U 1 1 5FF3BDCF
-P 2300 1400
+P 2350 1400
 AR Path="/5FCD4B8E/5FCD4BC5/5FF3BDCF" Ref="R?"  Part="1" 
 AR Path="/5FCD4B8E/5FE27F70/5FF3BDCF" Ref="R?"  Part="1" 
 AR Path="/5FCD4D85/5FF3BDCF" Ref="R?"  Part="1" 
-F 0 "R?" H 2150 1350 50  0000 L CNN
-F 1 "10K 1%" H 1950 1450 50  0000 L CNN
-F 2 "RespiraWorks_Std:R_0603_1608Metric" V 2230 1400 50  0001 C CNN
-F 3 "~" H 2300 1400 50  0001 C CNN
-	1    2300 1400
+F 0 "R?" H 2200 1350 50  0000 L CNN
+F 1 "10K 1%" H 2000 1450 50  0000 L CNN
+F 2 "RespiraWorks_Std:R_0603_1608Metric" V 2280 1400 50  0001 C CNN
+F 3 "~" H 2350 1400 50  0001 C CNN
+	1    2350 1400
 	-1   0    0    1   
 $EndComp
 $Comp
 L Device:R R?
 U 1 1 5FF3C26A
-P 2300 1700
+P 2350 1700
 AR Path="/5FCD4B8E/5FCD4BC5/5FF3C26A" Ref="R?"  Part="1" 
 AR Path="/5FCD4B8E/5FE27F70/5FF3C26A" Ref="R?"  Part="1" 
 AR Path="/5FCD4D85/5FF3C26A" Ref="R?"  Part="1" 
-F 0 "R?" H 2150 1650 50  0000 L CNN
-F 1 "36K 1%" H 1950 1750 50  0000 L CNN
-F 2 "RespiraWorks_Std:R_0603_1608Metric" V 2230 1700 50  0001 C CNN
-F 3 "~" H 2300 1700 50  0001 C CNN
-	1    2300 1700
+F 0 "R?" H 2200 1650 50  0000 L CNN
+F 1 "36K 1%" H 2000 1750 50  0000 L CNN
+F 2 "RespiraWorks_Std:R_0603_1608Metric" V 2280 1700 50  0001 C CNN
+F 3 "~" H 2350 1700 50  0001 C CNN
+	1    2350 1700
 	-1   0    0    1   
 $EndComp
 Wire Wire Line
-	2050 1550 2300 1550
-Connection ~ 2300 1550
+	2050 1550 2350 1550
+Connection ~ 2350 1550
 $Comp
 L power:GND #PWR?
 U 1 1 5FF3DB70
-P 2300 1850
+P 2350 1850
 AR Path="/5FCD4B8E/5FCD4BC5/5FF3DB70" Ref="#PWR?"  Part="1" 
 AR Path="/5FCD4B8E/5FE27F70/5FF3DB70" Ref="#PWR?"  Part="1" 
 AR Path="/5FCD4D85/5FF3DB70" Ref="#PWR?"  Part="1" 
-F 0 "#PWR?" H 2300 1600 50  0001 C CNN
-F 1 "GND" H 2305 1677 50  0000 C CNN
-F 2 "" H 2300 1850 50  0001 C CNN
-F 3 "" H 2300 1850 50  0001 C CNN
-	1    2300 1850
+F 0 "#PWR?" H 2350 1600 50  0001 C CNN
+F 1 "GND" H 2355 1677 50  0000 C CNN
+F 2 "" H 2350 1850 50  0001 C CNN
+F 3 "" H 2350 1850 50  0001 C CNN
+	1    2350 1850
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -487,7 +479,7 @@ F 3 "~" H 2950 1550 50  0001 C CNN
 	0    1    1    0   
 $EndComp
 Wire Wire Line
-	2800 1550 2300 1550
+	2800 1550 2350 1550
 Text Label 3650 1550 2    50   ~ 0
 nRenum_USB
 Wire Wire Line
@@ -837,30 +829,6 @@ F 3 "" H 5450 5800 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L RespiraWorks:+5V_USB #PWR?
-U 1 1 5FFFC08C
-P 1550 2250
-F 0 "#PWR?" H 1550 2250 50  0001 C CNN
-F 1 "+5V_USB" H 1535 2423 50  0000 C CNN
-F 2 "" H 1550 2250 50  0001 C CNN
-F 3 "" H 1550 2250 50  0001 C CNN
-	1    1550 2250
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	1550 2250 1550 2300
-$Comp
-L RespiraWorks:+5V_USB #PWR?
-U 1 1 5FFFF9F0
-P 2300 1250
-F 0 "#PWR?" H 2300 1250 50  0001 C CNN
-F 1 "+5V_USB" H 2285 1423 50  0000 C CNN
-F 2 "" H 2300 1250 50  0001 C CNN
-F 3 "" H 2300 1250 50  0001 C CNN
-	1    2300 1250
-	1    0    0    -1  
-$EndComp
-$Comp
 L RespiraWorks:+3.3V_Ctrl #PWR?
 U 1 1 6000178D
 P 1750 1350
@@ -940,11 +908,11 @@ F 3 "" H 9350 2650 50  0001 C CNN
 $EndComp
 Text HLabel 2600 5100 0    50   Output ~ 0
 CC_SWCLK
-Text HLabel 2450 5700 0    50   Output ~ 0
+Text HLabel 2450 5700 0    50   BiDi ~ 0
 CC_SWDIO
 Text HLabel 2450 5800 0    50   Output ~ 0
 CC_nRST
-Text HLabel 2450 5900 0    50   Output ~ 0
+Text HLabel 2450 5900 0    50   BiDi ~ 0
 CC_SWO
 Wire Wire Line
 	2450 5700 2500 5700
@@ -1200,4 +1168,23 @@ Wire Wire Line
 	8450 3850 9050 3850
 Wire Wire Line
 	8450 2550 9000 2550
+Text HLabel 2450 1000 2    50   Output ~ 0
+5V-USB
+Wire Wire Line
+	1450 1000 2350 1000
+Wire Wire Line
+	1450 1000 1450 2300
+Wire Wire Line
+	2350 1250 2350 1000
+Connection ~ 2350 1000
+Wire Wire Line
+	2350 1000 2450 1000
+Wire Wire Line
+	1450 2500 1750 2500
+Wire Wire Line
+	1450 2600 1800 2600
+Wire Wire Line
+	1450 2700 1600 2700
+Wire Wire Line
+	1150 2900 1050 2900
 $EndSCHEMATC

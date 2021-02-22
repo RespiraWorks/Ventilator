@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 33 37
+Sheet 32 37
 Title "Battery Charger / Power Source Switching"
 Date ""
 Rev "A"

@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 32 37
+Sheet 31 37
 Title "Power Entry / Battery Controller"
 Date ""
 Rev "A"
@@ -45,7 +45,7 @@ $EndSheet
 $Sheet
 S 8400 3200 700  450 
 U 60567D6E
-F0 "Sheet60567D6D" 50
+F0 "12V System Buck Converter" 50
 F1 "power_vsys.sch" 50
 F2 "VIN" I L 8400 3300 50 
 F3 "12VOUT" O R 9100 3300 50 

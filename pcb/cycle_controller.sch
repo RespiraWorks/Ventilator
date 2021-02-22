@@ -322,7 +322,7 @@ L Device:Crystal Y?
 U 1 1 5FEE2B95
 P 2850 2950
 F 0 "Y?" V 2804 3081 50  0000 L CNN
-F 1 "8MHz" V 2895 3081 50  0000 L CNN
+F 1 "8 MHz" V 2895 3081 50  0000 L CNN
 F 2 "RespiraWorks_Std:Crystal_SMD_HC49-SD" H 2850 2950 50  0001 C CNN
 F 3 "~" H 2850 2950 50  0001 C CNN
 F 4 "DNP" V 2850 2950 50  0000 C CNN "DNP"
@@ -783,7 +783,7 @@ NoConn ~ 2050 6500
 NoConn ~ 2050 6600
 NoConn ~ 2050 7000
 Text Label 1750 7100 2    50   ~ 0
-USD-Detect
+uSD-Detect
 Wire Wire Line
 	1050 7100 2050 7100
 Wire Wire Line
@@ -858,7 +858,7 @@ Wire Wire Line
 	5600 5350 5500 5350
 Connection ~ 5600 5350
 Text Label 4350 4000 0    50   ~ 0
-USD-Detect
+uSD-Detect
 Wire Notes Line
 	9350 2000 9350 6500
 NoConn ~ 10500 3200
@@ -935,33 +935,27 @@ Wire Wire Line
 Wire Wire Line
 	1550 6900 2050 6900
 Text Label 1550 6900 0    50   ~ 0
-USD-SCLK
+SPI-SCLK
 Wire Wire Line
 	1550 6800 2050 6800
 Text Label 1550 6800 0    50   ~ 0
-USD-MOSI
+SPI-MOSI
 Wire Wire Line
 	1550 6700 2050 6700
 Text Label 1550 6700 0    50   ~ 0
-USD-CS
+uSD-nCS
 Wire Wire Line
 	1550 6400 2050 6400
 Text Label 1550 6400 0    50   ~ 0
-USD-MISO
+SPI-MISO
 Wire Wire Line
-	6400 2000 6850 2000
-Text Label 6850 2000 2    50   ~ 0
-USD-CS
+	6400 2000 7150 2000
+Text Label 7150 2000 2    50   ~ 0
+uSD-nCS
 Wire Wire Line
-	6400 2100 6850 2100
-Text Label 6850 2100 2    50   ~ 0
-USD-SCLK
-Text Label 6850 2200 2    50   ~ 0
-USD-MISO
-Text Label 6850 2300 2    50   ~ 0
-USD-MOSI
+	6400 2100 6700 2100
 Wire Wire Line
-	6400 2200 6850 2200
+	6400 2200 6700 2200
 Text Label 10050 4800 0    50   ~ 0
 USD-SCLK
 Wire Wire Line
@@ -1249,7 +1243,7 @@ $EndComp
 Wire Wire Line
 	9900 3400 10500 3400
 Wire Wire Line
-	6400 2300 6850 2300
+	6400 2300 6700 2300
 Wire Wire Line
 	10050 5200 10500 5200
 Text Label 10050 4700 0    50   ~ 0
@@ -1557,4 +1551,10 @@ Wire Wire Line
 Wire Wire Line
 	6400 1800 7450 1800
 Connection ~ 7450 1800
+Text HLabel 6700 2100 2    50   Output ~ 0
+SPI-SCLK
+Text HLabel 6700 2200 2    50   Input ~ 0
+SPI-MISO
+Text HLabel 6700 2300 2    50   Output ~ 0
+SPI-MOSI
 $EndSCHEMATC

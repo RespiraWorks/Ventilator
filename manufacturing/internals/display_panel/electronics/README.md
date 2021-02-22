@@ -2,7 +2,7 @@
 
 This build constitutes the electrical, computing and digital user interface components.
 
-> **TODO:** add pictures
+> **TODO:** add renderings
 
 ## Parts
 
@@ -22,15 +22,11 @@ BEFORE purchasing any parts.**
 |**A7** | 1        | Raspberry Pi  | RPI4-MODBP-2GB     | 53.23       | [M][a7mous]             | Raspberry Pi 4 |
 |**A8** | 1        | Pastall       | PT2019120501       | 9.99 / 40   | [Z][a8amzn]             | Heat sink for Rpi |
 |**A9** | 1        | SanDisk       | SDSQXAF-032G-GN6MA | 10.73       | [Z][a9amzn]             | UHS-1 Class 10 micro SD, memory for Raspberry Pi |
-|**A10**| 1        | Eviciv        | DS702              | 49.00       | [A][a10ali] [Z][a10amzn]| 7" capacitive touchscreen with speakers |
-|**A11**| 1        | UGREEN        | B0773N757H         | 6.99        | [Z][a11amzn]            | USB-A to micro-USB cable, 1.5ft |
-|**A12**| 1        | CERRXIAN      | B01N5PHSJE         | 6.95        | [Z][a12amzn]            | USB-A to mini-USB cable, 9", right angle |
-|**A13**| 4        | DigiKey       | 732-10395-ND       | 48.40 / 100 | [K][a13key]             | M2.5 standoff, 9mm |
-|**A14**| 4        | DigiKey       | 732-10435-ND       | 50.82 / 100 | [K][a14key]             | M2.5 standoff, 20mm |
-|**A15**| 4        | McMaster-Carr | 93475A196          | 1.58 / 100  | [C][a15mcmc]            | M2.5 washer, 6mm OD |
-|**A16**| 4        | McMaster-Carr | 92095A458          | 4.97 / 100  | [C][a16mcmc]            | M2.5 screw, 6mm |
-
->**TODO:** where do standoffs go?
+|**A10**| 1        | UGREEN        | B0773N757H         | 6.99        | [Z][a10amzn]            | USB-A to micro-USB cable, 1.5ft |
+|**A11**| 1        | CERRXIAN      | B01N5PHSJE         | 6.95        | [Z][a11amzn]            | USB-A to mini-USB cable, 9", right angle |
+|**A12**| 4        | DigiKey       | 732-10435-ND       | 50.82 / 100 | [K][a12key]             | M2.5 standoff, 20mm |
+|**A13**| 4        | McMaster-Carr | 93475A196          | 1.58 / 100  | [C][a13mcmc]            | M2.5 washer, 6mm OD |
+|**A14**| 4        | McMaster-Carr | 92095A458          | 4.97 / 100  | [C][a14mcmc]            | M2.5 screw, 6mm |
 
 [a1rw]:    ../../../../pcb/rev1_export
 [a2rw]:    https://github.com/inceptionev/VentilatorRev1InterimDaughtercard
@@ -44,14 +40,11 @@ BEFORE purchasing any parts.**
 [a7mous]:  https://www.mouser.com/ProductDetail/Raspberry-Pi/RPI4-MODBP-2GB-BULK?qs=%2Fha2pyFaduiq9oc0d1uK569Mu3%252BsSMVa9bhYkyZbjQ1oNl8pHrdrS2f8pDbixKgb
 [a8amzn]:  https://www.amazon.com/Raspberry-Heatsink-Conductive-Adhesive-Aluminum/dp/B082RKKQ2D
 [a9amzn]:  https://www.amazon.com/dp/B06XWMQ81P
-[a10ali]:  https://www.aliexpress.com/item/4000747984746.html
-[a10amzn]: https://www.amazon.com/Eviciv-Portable-Monitor-Display-1024X600/dp/B07L6WT77H
-[a11amzn]: https://www.amazon.com/UGREEN-Braided-Charger-Charging-Controller/dp/B01MTXZ3U8
-[a12amzn]: https://www.amazon.com/CERRXIAN-9Inch-Cable-Charge-2-Pack/dp/B01N5PHSJE
-[a13key]:  https://www.digikey.com/en/products/detail/w-rth-elektronik/971090151/6174614
-[a14key]:  https://www.digikey.com/en/products/detail/würth-elektronik/971200151/6174654
-[a15mcmc]: https://www.mcmaster.com/93475A196/
-[a16mcmc]: https://www.mcmaster.com/92095A458/
+[a10amzn]: https://www.amazon.com/UGREEN-Braided-Charger-Charging-Controller/dp/B01MTXZ3U8
+[a11amzn]: https://www.amazon.com/CERRXIAN-9Inch-Cable-Charge-2-Pack/dp/B01N5PHSJE
+[a12key]:  https://www.digikey.com/en/products/detail/würth-elektronik/971200151/6174654
+[a13mcmc]: https://www.mcmaster.com/93475A196/
+[a14mcmc]: https://www.mcmaster.com/92095A458/
 
 ## Assembly
 
@@ -95,8 +88,6 @@ You will need to install a battery `[A3]`.
 
 The card goes directly onto the Nucleo, **before** the stepper drivers.
 
-You will probably also want to connect the oxygen sensor wire to this board before stacking the stepper drivers.
-
 > **TODO:** pictures
 
 ### Stepper drivers
@@ -113,9 +104,20 @@ It is advisable that you first manufacture the 2 pigtails of appropriate length 
 
 Stepper board modification and mounting to Nucleo is documented [here](stepper_drivers).
 
-Now you can connect the steppers to their driver pigtails as follows:
-* top - inhale
-* bottom - exhale
+Remember to label the pigtails "top" and "bottom" depending on which stepper driver they are connected to.
+
+### Mounting the PCB stack
+
+Now that the stack is mostly assembled, you should mount it to the back of the touch-screen on the
+display panel assembly.
+
+Firstly, plug the microUSB cable `[A10]` into the touchscreen's `5V+Touch`. This may be harder to reach later on.
+
+To mount the PCB, use 20mm stand-offs `[A12]`, but place some washers `[A13]` to protect the PCB from mechanical damage.
+
+The whole stack should now look like this:
+
+![](images/pcb_no_pi.jpg)
 
 ### Raspberry Pi
 
@@ -124,34 +126,23 @@ The Raspberry Pi serves as the user interface computer for the ventilator.
 Prior to installing it on the PCB, you should:
 * install a heat sink `[A8]` on the processor
 * load the memory card `[A9]` with the standard [RaspberryPi OS](https://www.raspberrypi.org/software/),
-  using a microSD adapter `[B1]`
+  using a microSD adapter (listed in [peripherals](../../../peripherals.md))
 * install memory card into the RaspberryPi
-* give it a keyboard and mouse `[B3]` or
-* alternatively, you can configure it for remote ssh control as described on our [GUI page](../../../../software/gui).
+* give it a keyboard and mouse (also listed in [peripherals](../../../peripherals.md)) or
+* alternatively, you can configure it for remote ssh control as described on the [GUI page](../../../../software/gui).
 
-Unless you are doing a [Pizza build](../../../../quality-assurance/testing/pizza_build), you will **NOT** want to install
-the Raspberry Pi onto the PCB quite yet. You will first want to mount the PCB onto the touch-screen, as described on the
-[display panel sub-assembly](..) page.
+| Heat sinks | SD card |
+|:-------------------------:|:-------------------------:|
+| ![](images/pi1.jpg) | ![](images/pi2.jpg) |
 
-### Touch screen
-
-The touch screen needs two connections:
-* RaspberryPi's `USB` to touchscreen's `5V+Touch` microUSB, using `[A11]`
-* RaspberryPi's `microHDMI` to touchscreen's `HDMI IN`, using `[A12]` and `[A13]`
-
-> **TODO:** pictures
+Now you can mount the Rasberry Pi onto the 20mm stand-offs on the PCB and secure them using the 6mm screws `[A14]`.
 
 ### Final wiring
 
-By this point you should have completed all the mechanical and pneumatic sub-assemblies of the ventilator.
+Now you can make the final connections:
+* RaspberryPi's `USB` to touchscreen's `5V+Touch` microUSB, using `[A10]`
+* RaspberryPi's `microHDMI` to touchscreen's ribbon cable
+* Use the miniUSB cable `[A11]` to connect the Nucleo to the Raspberry Pi
 
-* connect blower power wires to CPB
-* connect blower control wires
-  * to the interim board, if you have one
-  * else, to the PCB
-* connect proportional solenoid to PCB
-* connect oxygen sensor to interim board
-* connect stepper motors to the stepper driver pigtails as follows:
-  * top - inhale
-  * bottom - exhale
-* connect power supply cable to PCB
+It should now look like this:
+![](../images/everything.jpg)

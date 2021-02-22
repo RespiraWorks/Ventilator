@@ -120,7 +120,31 @@ If you are a member of the team and intend to build your own prototype, please r
 
 Ventilator full assembly CAD model: [.iam](ventilator_assembly.iam)
 
-> **TODO:** Fill this out
+>**TODO:** drawings?
+
+### Pre-fabrication
+
+A number of custom components may have to be pre-fabricated by contractor:
+
+* Main board / PCB and daughter board (in [electronics assembly](internals/display_panel/electronics))
+* Sheet metal components: [equipment bracket](internals/tray), [enclosure](enclosure) and [closure panel](closure_panel)
+* Acrylic components: [pneumatics tray](internals/tray), [display panel](internals/display_panel) and
+  [filter panel](internals/filter_panel).
+
+There are also various 3d printed components throughout the sub-assemblies. They will not be listed here explicitly.
+Familiarize yourself with the entire hierarchy of assemblies before proceeding.
+
+### Order of assembly:
+
+* Prepare all custom wiring components `[A1]`
+* Complete the internals assembly with all its sub-assemblies `[A2]`
+* Insert internals assembly into enclosure `[A3]` and fasten it to the sides with 6x M4 screws `[A6]`
+* Install cooling fan `[A4]` (optional)
+* Attach main power harness to the PCB and install the closure panel `[A5]` using the remaining screws `[A6]`
+* Attach power cables and/or human input devices listed in [peripherals page](peripherals.md)
+
+Once the assembly is complete, you may proceed to the [software](../software) section of the repository
+and learn how to get its brain working.
 
 ## Additional notes
 
@@ -136,7 +160,7 @@ There are currently at least 3 prototypes being worked on in various locations a
 
 |     |     |     |
 |:---:|:---:|:---:|
-| Germantown Maryland  | [![](images/assembled_smaller.jpg)](images/assembled_full.jpg) | [![](internals/images/open_back_smaller.jpg)](internals/images/open_back_smaller.jpg) |
+| Germantown Maryland  | [![](images/assembled_smaller.jpg)](images/assembled_full.jpg) | [![](internals/images/top_smaller.jpg)](internals/images/top_smaller.jpg) |
 | Sunnyvale California | [![](images/California_front_smaller.jpg)](images/California_front.jpg) | [![](images/California_back_smaller.jpg)](images/California_back.jpg) |
 | Visakhapatnam India  | [![](images/India_full_smaller.jpg)](images/India_full.jpg) | [![](images/India_back_smaller.jpg)](images/India_back.jpg) |
 

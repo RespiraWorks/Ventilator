@@ -1,6 +1,9 @@
 # Closure panel
 
-> **TODO:** Make this look good, add pictures, etc..
+| Rendering | Assembled |
+|:-------------------------:|:-------------------------:|
+| ![](images/rendering.jpg) | ![](images/assembled.jpg) |
+
 
 ## Design rationale
 
@@ -57,4 +60,8 @@ BEFORE purchasing any parts.**
 |:---------|:-------|
 | Closure assembly         | [.iam](closure_assembly.iam) |
 
-The rear closure panel is folded from a single sheet of stainless steel.
+The main power wire harness `[A2]` terminates with a female 4-pin DIN connector. This connector must be mounted to the
+closure panel. Use M2.5 screws `[A3]` and locknuts `[A4]`. Orient the DIN socket with the locking pin facing up.
+
+The main power harness also has a grounding loop that should be used to ground the entire ventilator enclosure.
+Us the M4 hardware to secure it at the nearby hole.

@@ -8,6 +8,17 @@
 
 > **TODO:** Content..
 
+### Acrylic panels
+
+For serviceability, ventilator internals should be completely removable from the enclosure as a single assembly.
+It was necessary to secure front acrylic panels (display panel and filter panel) to the main equipment bracket,
+while also allowing it to lay flush with the front face of the enclosure. Heat-set inserts allow the panels to be
+mounted securely without obstruction.
+
+The sizing for the mounting holes was based on [this](https://www.pemnet.com/fastening_products/pdf/sidata.pdf) catalog
+for heat set inserts. For M4 nuts (page 6, metric table, row 6), length code 1 (5.72 mm) is small enough to fit in the
+6.35mm-thick acrylic. The corresponding outer diameter for insertion i.e. acrylic mounting diameter is 5.94 mm.
+
 ## Parts
 
 **Note: If you are a member of the RespiraWorks team, review the [part purchasing guidelines][ppg]
@@ -79,34 +90,50 @@ BEFORE purchasing any parts.**
 
 >**TODO:** drawings?
 
-|  |  |
+| Top | Bottom |
 :------------------:|:-----------------:|
-| [![](images/top_no_display_smaller.jpg)](images/top_no_display.jpg) | [![](images/botton_no_display_smaller.jpg)](images/botton_no_display.jpg) |
+| [![](images/top_smaller.jpg)](images/top.jpg) | [![](images/bottom_smaller.jpg)](images/bottom.jpg) |
 
 The rough order/hierarchy of internals assembly is as follows:
 
-* [Equipment tray](tray) - rigid structure for mounting the internals assembly `[A1]` and `[A2]`
-* [Filter panel](filter_panel) - mechanical support for air filter assemblies
-    * [Air filter holders](filter_panel/filter_holder) - custom housings for air filters
-* [Blower](blower) - this provides pressurized air
-* [Air check valve](air_check_valve) - prevents concentrated oxygen back-flow
-* 2x [Pinch valves](pinch_valve) - air influx and exhale control valves
-* [Oxygen regulator](regulator) - oxygen pressure regulator sub-assembly
-* [Proportional solenoid](PSOL) - oxygen control valve
-* Main tubing, sensors and manifolds:
+* Assembly the [equipment tray](tray) which will hold everything else (`[A1]` and `[A2]`)
+* Install the [filter panel](filter_panel) to the equipment bracket
+* Install the [blower assembly](blower) onto the pneumatics tray
+* Attach the [air check valve](air_check_valve) to the blower assembly
+* Install 2x [Pinch valves](pinch_valve), for air influx and exhale control
+  * remember to label the pinch valve wiring "inhale" and "exhale" appropriately
+* Install the [oxygen regulator assembly](regulator)
+* Install the [proportional solenoid](PSOL) valve for oxygen control
+* Install the main tubing, sensors and manifolds:
     * [Manifold](manifold) - for oxygen sensor and overpressure relief valve
     * [Oxygen mixer](mixer) - for mixing air and oxygen before delivery to patient
     * [Venturi flow sensors](venturi) - in-house design of affordable flow sensors
     * Various tubing adapters `[14-16]`
     * 3/4 tubing `[17]` and clamps `[18]`
-* [Display panel](display_panel) - touchscreen, electronics and oxygen input
-    * [Electronics assembly](display_panel/electronics) - encompasses the electrical and computing components
-* Oxygen line tubing `[A20]` and clamps `[21]`
-* Sensor tubing `[A22-23]`, connecting venturis to pressure sensors on mainboard
-* Connect all [wiring](../wiring) `[A24]`, except main power
-* Secure sensor tubing and wiring with zip ties `[A25]`
+* Install the [display panel](display_panel)
+* Install oxygen line tubing `[A20]` and clamps `[21]`
+
+### Sensor tubing
+
+Sensor tubing `[A22-23]` connects venturis to pressure sensors on the main board.
 
 >**TODO:** document sensor tube connections
+
+### Final wiring
+
+By this point you should have completed all the mechanical and pneumatic sub-assemblies of the ventilator.
+
+You can now connect all the wiring (except main power):
+* connect blower power wires to CPB
+* connect blower control wires
+  * to the interim board, if you have one
+  * else, to the PCB
+* connect proportional solenoid to PCB
+* connect oxygen sensor to interim board
+* connect the pinch valves to their driver pigtails as follows:
+  * top - inhale
+  * bottom - exhale
+* Secure sensor tubing and wiring with zip ties `[A25]`
 
 >**TODO:** do renderings of sub-systems and intermediate steps
 

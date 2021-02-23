@@ -95,8 +95,8 @@ BEFORE purchasing any parts.**
 
 | Item  | Quantity | Manufacturer  | Part #        | Price (USD)  | Sources[*][ppg]         | Notes |
 | ----- |---------:| ------------- | ------------- | ------------:|:-----------------------:| ----- |
-|**A1** |        1 | RespiraWorks  | stepper_base  |              | [Rw][a1rw]              | BASE - 3D printed |
-|**A2** |        1 | RespiraWorks  | stepper_rotor |              | [Rw][a2rw]              | ROTOR - 3D printed |
+|**A1** |        1 | RespiraWorks  | [Stepper base][a1rw]  |              | Rw              | BASE - 3D printed |
+|**A2** |        1 | RespiraWorks  | [Stepper rotor][a2rw] |              | Rw              | ROTOR - 3D printed |
 |**A3** |        1 | STEPPERONLINE | 17HS19-2004S2 | 11.59        | [T][a3step] [Z][a3amzn] | Stepper motor. Make sure to get version with the full-cut D-shaft. |
 |**A4** |        3 | McMaster-Carr | 91294A128     | 4.82 / 100   | [C][a4mcmc]             | M3 screws, 8mm, flat head: mounting stepper to base |
 |**A5** |        1 | McMaster-Carr | 92095A218     | 7.64 / 25    | [C][a5mcmc]             | M5 screws, 30mm: axle for bearing |

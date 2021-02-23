@@ -14,6 +14,7 @@ BEFORE buying any parts.**
 [ppg]: ../purchasing_guidelines.md
 
 Below you will find advice on the following:
+* [Sheet metal](#sheet-metal)
 * [3d Printing](#3d-printing)
 * [Gaskets](#gaskets)
 * [Heat set inserts](#heat-set-inserts)
@@ -21,6 +22,11 @@ Below you will find advice on the following:
 * [Flexible tubing](#flexible-tubing)
 * [Tapered thread connectors](#tapered-threads)
 * [Screwdrivers and hand taps](#screwdrivers)
+
+## Sheet metal
+
+**Hazard:** sheet metal edges may be sharp and you could hurt yourself while working with these components.
+It is highly advise that you deburr, file and/or send all edges before you do any work with sheet metal parts.
 
 ## 3d Printing
 

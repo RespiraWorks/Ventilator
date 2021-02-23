@@ -19,7 +19,7 @@ Any standard PCB fabrication and assembly vendor will be able to manufacture the
 
 [Manufacturing Package](20200424v2-RespiraWorks-Ventilator-Rev1.0-RC2-PKG-TURNKEY.zip)
 
-**TODO:** identify the remaining files.
+> **TODO:** identify the remaining files.
 
 ## Requesting hardware for development
 

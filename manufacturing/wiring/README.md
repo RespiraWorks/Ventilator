@@ -1,7 +1,17 @@
-# Wiring
+# Wiring assemblies
 
 The following page describes the custom wiring components required in the electrical assembly. Manufacturing
 these components will require soldering and crimping.
+
+For a single ventilator unit, the following custom wiring assemblies are needed:
+* Main power
+* Blower power
+* Blower signal/control
+* Oxygen sensor
+* Stepper motor pigtails (x2)
+* Proportional solenoid
+
+It is probably a good idea to manufacture and test these before proceeding with the rest of the mechanical assembly.
 
 ## Parts
 
@@ -30,6 +40,9 @@ BEFORE purchasing any parts.**
 |**A17**| (1)      | Chenbo        | WJ-Z01                |        11.98 | [Z][a17amzn]         | 2.54mm connector kit, **alternative for A10 and A11** |
 |**A18**| 2        | Molex         | 22013037              |      0.20/ea | [K][a18key]          | KK-series 3-pin sockets connector housing (oxygen sensor) |
 |**A19**| 4        | Molex         | 08550102              |      0.21/ea | [K][a19key]          | crimp sockets for the above |
+|**A20**|        - | uxcell        | a11110900ux0059       | 7.89 / 6m    | [Z][a20amzn]         | Shrink tubing, black, 3mm diameter |
+|**A21**|        - | uxcell        | A17032300ux0991       | 8.99 / 6m    | [Z][a21amzn]         | Shrink tubing, black, 4mm diameter |
+|**A22**|        - | XHF           | B07WC9BGRT            | 11.99        | [Z][a22amzn]         | Shrink tubing, red, assorted diameters |
 
 [a1key]:   https://www.digikey.com/short/z44f8d
 [a2key]:   https://www.digikey.com/short/z44f8f
@@ -51,14 +64,15 @@ BEFORE purchasing any parts.**
 [a17amzn]: https://www.amazon.com/CHENBO-Connector-Housing-Assortment-Terminal/dp/B077X8XV2J
 [a18key]:  https://www.digikey.com/en/products/detail/molex/0022013037/26433
 [a19key]:  https://www.digikey.com/en/products/detail/molex/0008550102/172056
-
-**#TODO:** Add shrink tubing
+[a20amzn]: https://www.amazon.com/uxcell-Polyolefin-Insulation-Shrink-Tubing/dp/B008DFW8JA
+[a21amzn]: https://www.amazon.com/uxcell-4mm-Shrink-Sleeve-Tubing/dp/B071VGQH97
+[a22amzn]: https://www.amazon.com/XHF-140-PCS-Red-Wear-Resistant/dp/B07WC9BGRT
 
 ## Tools
 
 | Item | Manufacturer | Part number         | Price($) | Sources[*][ppg] | Notes |
 | ---- | ------------ | ------------------- | --------:|-----------------| ----- |
-| B1   | Preciva      | PR-3254 (PR102001)  |    39.99 | [Z][b1amzn]     | Crimping tool for HX and HV connectors + connector kit |
+| B1   | Preciva      | PR-3254 (PR102001)  |    39.99 | [Z][b1amzn]     | Crimping tool (with connector kit) |
 | B2   | NovelLife    | TS100               |    74.99 | [Z][b2amzn]     | 65W Soldering iron kit |
 | B3   | Chandler     | HG603D              |    24.92 | [Z][b3amzn]     | Heat gun, for shrink tubing |
 | B4   | Kester       | KE1107-ND           |    58.98 | [K][b4key]      | Solder |
@@ -76,39 +90,44 @@ BEFORE purchasing any parts.**
 
 ## Assembly
 
+**Note: Please see general advice in the [manufacturing methods guide](../methods).**
+
 As much as possible we should try to keep the cables one-to-one
 (for example the wiring of the PCB to blower driver cables are all pin 1 to pin 1,
 pin 2 to pin 2, etc. with the same connector style on both ends.
 
 ### Main power
 
-**#TODO: how to? what is the DIN pinout? @inceptionev**
+> **TODO:** how to? what is the DIN pinout? @inceptionev
+
+You will need all the tools listed.
 
 Using:
-* DIN female `A9`
-* 22AWG wire (length?) `A12`
-* 3x VH crimps `A5`
-* VH 3-pin housing `A7`
+* DIN female `[A9]`
+* 22AWG wire (length?) `[A12]`
+* 3x VH crimps `[A5]`
+* VH 3-pin housing `[A7]`
+* Shrink tubing `[A20-22]`
 
 ### Blower wiring
 
 The power and signal cables that come included with the blower will be too short to reach the PCB, so new ones
-must be manufactured using crimping tool `B1`:
+must be manufactured of about 40-50cm length using crimping tool `[B1]` and  heat gun `[B3]`:
 
 * power cable:
   - 16AWG 60cm `[A12]`
   - 4x VH crimps `[A5]`
   - 2x VH 2-pin housings `[A6]`
+  - Shrink tubing `[A21]`
 * control cable:
   - 26AWG 60cm `[A14]`
   - 12x XH crimps `[A1]`
   - 2x XH 6-pin housings `[A4]`
+  - Shrink tubing `[A21]`
 
 Please follow the old cables included with blower as examples.
 
-**#TODO:** Some sort of shrink tubing should also be used
-
-**#TODO:** pictures
+> **TODO:** pictures
 
 ### Stepper wiring
 
@@ -129,17 +148,18 @@ The same can be done for the stepper motors belonging to each pinch valve assemb
 |:--------:|:--------:|
 | ![](images/pigtails.jpg) | ![](images/stepper_labels.jpg) |
 
-**#TODO: power wires in case of 2 boards**
+> **TODO:** power wires for joining 2 boards?
 
 ### Proportional solenoid valve
 
 To connect the solenoid to the PCB, you will need to crimp a 2-pin XH connector to the wires:
 - 2x XH crimps `[A1]`
 - XH 6-pin housings `[A2]`
+- Shrink tubing `[A20]`
 
-**#TODO: polarity does not matter? @inceptionev**
+> **TODO:** polarity does not matter? @inceptionev
 
-**#TODO:** pictures
+> **TODO:** pictures
 
 ### Oxygen sensor
 
@@ -151,11 +171,12 @@ To connect the solenoid to the PCB, you will need to crimp a 2-pin XH connector 
 - Strip the ends of the wires
 - Using the crimper `[B1]` in position 1, crimp 4x contacts `[A19]` onto the ends of the wires.
 - A proper crimp should crimp the insulation in the lower half and the wire in the upper half of the crimp portion of the contact.
+- Sheathe the length of the wires in 3mm shrink tubing `[A20]` before inserting the ends into housing.
 - Insert the wires into the connector housings `[A18]`, according to the drawing, until they click.  Pin 1 is marked by a tiny '1' molded into the connector housing.
 - Do a gentle pull test to make sure that the contacts are properly crimped and seated.
 
-**#TODO:** pictures
+> **TODO:** pictures
 
 ## Pricing totals
 
-**#TODO:** do this when finalized
+> **TODO:** do this when finalized

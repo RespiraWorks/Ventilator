@@ -26,7 +26,7 @@ The following are Altium files for various aspects of the circuit design.
 * OutJob - automated job for creating manufacturing package
 * Net - netlist, logical electrical connections
 
-**TODO:** identify each file individually.
+> **TODO:** identify each file individually.
 
 
 ## Current issues

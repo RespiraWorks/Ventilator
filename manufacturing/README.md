@@ -35,21 +35,53 @@ property of the respective manufacturer. These models come with no guarantees an
 
 ## Contributing
 
-If you are a member of the team and intend to build your own prototype, please read the
-[purchasing guidelines](purchasing_guidelines.md) first.
-
 If you are a pneumatics or mechanical engineer and intend to contribute to our design, please read
 our [wiki](https://github.com/RespiraWorks/Ventilator/wiki), by which we mean **all of it**.
 
 If you intend to make any physical components yourself, please become familiar with the
 [manufacturing methods guide](methods). And please help maintain it.
 
-## General considerations
+## Design principles
+
+### Logical structure
+
+The following pages and CAD models are structured according to the sub-assembly hierarchy that should be followed
+in building the ventilator. In general, each subassembly CAD model resides in its own directory and should be
+accompanied by a README file, any renderings, drawings or photos of the physical implementation, exported
+files for 3d printing or whatever other manufacturing process. The readme file is there to explain the design rationale
+and any non-trivial manufacturing or quality control steps necessary to produce the part.
+
+There are directories for each custom-designed component or custom assembly involving off-the-shelf components
+arranged in a special way, or some mix thereof. Off-the-shelf CAD models all reside in the [third_party](third_party)
+directory with some categorization. If a component requires custom manufacturing, you can safely assume that the
+necessary files will be in its own directory.
+
+This is a on a best effort basis, so some hardware may reside with CAD assemblies of a scope higher or lower from where
+they are listed in the parts tables. You should always consult both CAD and verbal documentation before attempting to
+build anything. It is highly advised that you have your parts and measure them to confirm expected dimensions match,
+as models may be imprecise.
+
+### Metal frame and enclosure
+
+The current version of the ventilator assembly is meant to demonstrate its packaging in "production" housing. Based
+on lessons learned from previous iterations, the ventilator uses a detachable internal assembly, to which all pneumatic
+components can be mounted and connected. This allows for 360 degree accessibility to components during initial
+assembly. When complete, this internal assembly is bolted into the enclosure, and the enclosure is screwed shut. The
+top-rear positioning of the removable enclosure lid provides access to components that will need routine maintenance.
+
+We chose a sheet metal construction because:
+* it is cheap and quick - sheet metal is cheap to fabricate. Unlike plastic parts, it doesn't require any expensive
+  molds. This is great for prototyping stages and should also be an accessible manufacture process in many countries.
+* strength and durability - stainless steel and other highly durable materials can be used. The frame and enclosure
+  should be rigid and withstand mechanical stresses. The simple two-piece enclosure should prove to be quite rugged.
+* staged assembly - we wanted the ability to assemble all internals outside the enclosure. The design is built around
+  a strong bracket upon which all pneumatics and electrical equipment is installed. This makes assembly and maintenance
+  easier. Also useful when prototyping and making design modifications.
 
 ### Choice of hardware
 
 * **metric** - preference has been given to metric hardware. Metric standard hardware is available worldwide, including
-  countries that prefer imperial standard.
+  countries that prefer imperial standard, but generally not vice versa.
 * **hex drive** - screws with hex drive interface have been chosen. Phillips drive screws are prone to cam-out. Torx
   and other interfaces may be too exotic and supply chains may be limited in some parts of the world. Hex drive is
   practical and ubiquitous enough.
@@ -59,34 +91,60 @@ If you intend to make any physical components yourself, please become familiar w
 * **predominantly M4** - where possible, we are standardizing to M4 mounting components. This is to minimize the variety
   of components to keep in inventory.
 
-## Assembly
+## Parts
+
+If you are a member of the team and intend to build your own prototype, please read the
+[purchasing guidelines](purchasing_guidelines.md) first.
+
+[ppg]: purchasing_guidelines.md
+
+| Item  | Quantity | Manufacturer  | Part #                   | Price (USD) | Sources[*][ppg]| Notes |
+| ----- |---------:| ------------- | ------------------------ | -----------:|:--------------:|:------|
+|**A1** | -        | RespiraWorks  | wiring_harnesses         |             | [Rw][a1rw]     | Wiring harnesses: have these ready to be integrated into below assemblies |
+|**A2** | 1        | RespiraWorks  | internals                |             | [Rw][a2rw]     | Internals assembly - includes most pneumatics, electrical and computing components |
+|**A3** | 1        | RespiraWorks  | enclosure                |             | [Rw][a3rw]     | Metal enclosure that contains and protects the ventilator internals |
+|**A4** | 1        | RespiraWorks  | cooling_fan_assembly     |             | [Rw][a4rw]     | For removing heat generated by electrical equipment |
+|**A5** | 1        | RespiraWorks  | closure_panel            |             | [Rw][a5rw]     | Completes the enclosure and provides power input interface |
+|**A6** | 12       | McMaster-Carr | 92095A188                | 10.04 / 100 | [C][a6mcmc]    | M4 screws, 6mm: main bracket and closure fastening |
+|**A7** | 1        | RespiraWorks  | peripherals              |             | [Rw][a7rw]     | Indispensable components that are strictly outside of the assembly itself |
+
+[a1rw]:   wiring
+[a2rw]:   internals
+[a3rw]:   enclosure
+[a4rw]:   cooling_fan
+[a5rw]:   closure_panel
+[a6mcmc]: https://www.mcmaster.com/92095A188/
+[a7rw]:   peripherals.md
+
+## General assembly
 
 Ventilator full assembly CAD model: [.iam](ventilator_assembly.iam)
 
->*Include GA/Sectional Here*
+>**TODO:** drawings?
 
-The following is a general outline of the sub-assemblies comprising a full ventilator build. Some smaller
-sub-assemblies that do not contain custom components are not listed in this tree, but are linked and explained in the
-pages for the various sub-assemblies.
+### Pre-fabrication
 
-* [Wiring](wiring) - custom wiring harnesses and connectors
-* [Enclosure](enclosure) - rigid frame and enclosure components
-* [**Internals**](internals) - full internals assembly, which includes some instances of the following:
-  * [Pneumatics tray](internals/tray) - for mounting the main pneumatics assembly
-  * [Filter panel](internals/filter_panel) - mechanical support for air filter assemblies
-    * [Air filter holders](internals/filter_panel/filter_holder) - custom housings for air filters
-  * [Blower](internals/blower) - this provides pressurized air
-  * [Air check valve](internals/air_check_valve) - prevents concentrated oxygen back-flow
-  * [Pinch valves](internals/pinch_valve) - air influx and exhale control valves
-  * [Oxygen regulator](internals/regulator) - oxygen pressure regulator sub-assembly
-  * [Proportional solenoid](internals/PSOL) - oxygen control valve
-  * [Manifold](internals/manifold) - for oxygen sensor and overpressure relief valve
-  * [Oxygen mixer](internals/mixer) - for mixing air and oxygen before delivery to patient
-  * [Venturi flow sensors](internals/venturi) - in-house design of affordable flow sensors
-  * [Display panel](internals/display_panel) - touchscreen, electronics and oxygen input
-    * [Electronics assembly](internals/display_panel/electronics) - encompasses the electrical and computing components
-  * Various tubing, manifolds and adapters
-* [Peripherals](peripherals.md) - indispensable components that are strictly outside of the assembly itself
+A number of custom components may have to be pre-fabricated by contract manufacturer:
+
+* Main board / PCB and daughter board (in [electronics assembly](internals/display_panel/electronics))
+* Sheet metal components: [equipment bracket](internals/tray), [enclosure](enclosure) and [closure panel](closure_panel)
+* Acrylic components: [pneumatics tray](internals/tray), [display panel](internals/display_panel) and
+  [filter panel](internals/filter_panel).
+
+There are also various 3d printed components throughout the sub-assemblies. They will not be listed here explicitly.
+Familiarize yourself with the entire hierarchy of assemblies and print what is needed ahead of time.
+
+### Order of assembly:
+
+* Prepare all custom wiring components `[A1]`
+* Complete the internals assembly with all its sub-assemblies `[A2]`
+* Insert internals assembly into enclosure `[A3]` and fasten it to the sides with 6x M4 screws `[A6]`
+* Install cooling fan `[A4]` (optional)
+* Attach main power harness to the PCB and install the closure panel `[A5]` using the remaining screws `[A6]`
+* Attach power cables and/or human input devices listed in [peripherals page](peripherals.md)
+
+Once the assembly is complete, you may proceed to the [software](../software) section of the repository
+and learn how to get its brain working.
 
 ## Additional notes
 
@@ -102,7 +160,7 @@ There are currently at least 3 prototypes being worked on in various locations a
 
 |     |     |     |
 |:---:|:---:|:---:|
-| Germantown Maryland  | [![](images/assembled_smaller.jpg)](images/assembled_full.jpg) | [![](internals/images/open_back_smaller.jpg)](internals/images/open_back_smaller.jpg) |
+| Germantown Maryland  | [![](images/assembled_smaller.jpg)](images/assembled_full.jpg) | [![](internals/images/top_smaller.jpg)](internals/images/top_smaller.jpg) |
 | Sunnyvale California | [![](images/California_front_smaller.jpg)](images/California_front.jpg) | [![](images/California_back_smaller.jpg)](images/California_back.jpg) |
 | Visakhapatnam India  | [![](images/India_full_smaller.jpg)](images/India_full.jpg) | [![](images/India_back_smaller.jpg)](images/India_back.jpg) |
 

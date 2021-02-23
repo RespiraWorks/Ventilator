@@ -27,6 +27,8 @@ There are some nuances to modeling threads correctly for 3d printing so that no 
 Notes on modeling threads have been published in our
 [mechanical engineering wiki page](https://github.com/RespiraWorks/Ventilator/wiki/Mechanical-engineering-notes).
 
+> **TODO: Update drawings**
+
 | CAD rendering | Drawings |  3d Printed   |
 |:---------------------:|:--------------------:|:-------:|
 |![](images/oxygen_relief_manifold_rendering.jpg) |![](images/oxygen_relief_manifold.png) |![](images/oxygen_relief_manifold_printed.jpg)|

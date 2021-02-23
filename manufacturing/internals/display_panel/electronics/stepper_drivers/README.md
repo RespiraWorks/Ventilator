@@ -51,7 +51,7 @@ PCB setup:
 
 For X-NUCLEO-IHM02A1, you only have to connect the second stepper motor.
 
-**#TODO: which connector is which, how should they be labeled? @inceptionev**
+> **TODO:** which connector is which, how should they be labeled? @inceptionev
 
 ## Integration notes
 

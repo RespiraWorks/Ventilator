@@ -76,6 +76,8 @@ These files should not be printed with FDM. Instead, a leak-tight method like SL
 
 **Note: Please also see general advice in the [manufacturing methods guide](../../methods).**
 
+> **TODO: Drawings**
+
 |     | Stepper base (Item 9)      | Stepper rotor (Item 10)     |
 |----:|:--------------------------:|:---------------------------:|
 | Rendering | ![](images/rendered_base.jpg) | ![](images/rendered_rotor.jpg) |
@@ -103,7 +105,7 @@ BEFORE purchasing any parts.**
 |**A8** | 4        | McMaster-Carr | 93625A150     | 6.04 / 100   | [C][a8mcmc]             | M4 lock nuts |
 |**A9** | 8        | McMaster-Carr | 93475A230     | 1.86 / 100   | [C][a9mcmc]             | M4 washers, 9mm OD |
 |**A10**| 6in/15cm | McMaster-Carr | 5894K38       | 12.30 / 2 ft | [C][a10mcmc]            | PVC Tubing, 3/8" ID, 5/8" OD, continuous-flex soft Tygon |
-|**A11**| 2        | McMaster-Carr | 9579K67       |  12.63 / 20  | [C][a11mcmc]            | Herbie clip E, 12-13.8mm: for clamping 5/8"OD tubing |
+|**A11**| 2        | McMaster-Carr | 9579K67       |  12.63 / 20  | [C][a11mcmc]            | Herbie clip E (12-13.8mm) for clamping 5/8"OD tubing |
 
 [a1rw]:    #Custom-parts
 [a2rw]:    #Custom-parts
@@ -130,6 +132,8 @@ BEFORE purchasing any parts.**
 ## Assembly
 
 **Note: Please see general advice in the [manufacturing methods guide](../../methods).**
+
+> **TODO: Drawings**
 
 ![Components](images/components.jpg)
 

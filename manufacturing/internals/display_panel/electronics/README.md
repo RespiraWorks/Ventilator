@@ -24,7 +24,7 @@ BEFORE purchasing any parts.**
 |**A9** | 1        | SanDisk       | SDSQXAF-032G-GN6MA | 10.73       | [Z][a9amzn]             | UHS-1 Class 10 micro SD, memory for Raspberry Pi |
 |**A10**| 1        | UGREEN        | B0773N757H         | 6.99        | [Z][a10amzn]            | USB-A to micro-USB cable, 1.5ft |
 |**A11**| 1        | CERRXIAN      | B01N5PHSJE         | 6.95        | [Z][a11amzn]            | USB-A to mini-USB cable, 9", right angle |
-|**A12**| 4        | DigiKey       | 732-10435-ND       | 50.82 / 100 | [K][a12key]             | M2.5 standoff, 20mm |
+|**A12**| 4        | DigiKey       | M2117-2545-AL      | 1.09        | [K][a12key]             | M2.5 standoff, 22mm |
 |**A13**| 4        | McMaster-Carr | 93475A196          | 1.58 / 100  | [C][a13mcmc]            | M2.5 washer, 6mm OD |
 |**A14**| 4        | McMaster-Carr | 92095A458          | 4.97 / 100  | [C][a14mcmc]            | M2.5 screw, 6mm |
 
@@ -42,7 +42,7 @@ BEFORE purchasing any parts.**
 [a9amzn]:  https://www.amazon.com/dp/B06XWMQ81P
 [a10amzn]: https://www.amazon.com/UGREEN-Braided-Charger-Charging-Controller/dp/B01MTXZ3U8
 [a11amzn]: https://www.amazon.com/CERRXIAN-9Inch-Cable-Charge-2-Pack/dp/B01N5PHSJE
-[a12key]:  https://www.digikey.com/en/products/detail/würth-elektronik/971200151/6174654
+[a12key]:  https://www.digikey.com/en/products/detail/raf-electronic-hardware/M2117-2545-AL/9836050
 [a13mcmc]: https://www.mcmaster.com/93475A196/
 [a14mcmc]: https://www.mcmaster.com/92095A458/
 
@@ -113,11 +113,13 @@ display panel assembly.
 
 Firstly, plug the microUSB cable `[A10]` into the touchscreen's `5V+Touch`. This may be harder to reach later on.
 
-To mount the PCB, use 20mm stand-offs `[A12]`, but place some washers `[A13]` to protect the PCB from mechanical damage.
+To mount the PCB, use 22mm stand-offs `[A12]`, but place some washers `[A13]` to protect the PCB from mechanical damage.
 
 The whole stack should now look like this:
 
 ![](images/pcb_no_pi.jpg)
+
+**NOTE:** The CAD model uses 20mm standoffs, because exact models were not freely available.
 
 ### Raspberry Pi
 

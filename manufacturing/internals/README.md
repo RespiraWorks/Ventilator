@@ -124,7 +124,7 @@ Sensor tubing `[A22-23]` connects venturis to pressure sensors on the main board
 By this point you should have completed all the mechanical and pneumatic sub-assemblies of the ventilator.
 
 You can now connect all the wiring (except main power):
-* connect blower power wires to CPB
+* connect blower power wires to PCB
 * connect blower control wires
   * to the interim board, if you have one
   * else, to the PCB

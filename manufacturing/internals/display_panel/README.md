@@ -57,7 +57,7 @@ BEFORE purchasing any parts.**
 |**A11**| 4        | McMaster-Carr | 94180A351                | 15.47 / 100  | [C][a11mcmc]   | Heat-set inserts for M4 screws |
 |**A12**| 4        | McMaster-Carr | 93475A230                | 1.86 / 100   | [C][a12mcmc]   | M4 washer, 9mm OD |
 |**A13**| 4        | McMaster-Carr | 92095A189                | 8.89 / 100   | [C][a13mcmc]   | M4 screw, 8mm |
-|**A14**| 4        | DigiKey       | 732-10395-ND             | 48.40 / 100  | [K][a14key]    | M2.5 standoff, 9mm |
+|**A14**| 4        | DigiKey       | 732-10395-ND             | 0.59         | [K][a14key]    | M2.5 standoff, 9mm |
 |**A15**| 1        | RespiraWorks  | electronics_assembly     |              | [Rw][a15rw]    | Most electrical and computing components |
 
 [a1mcmc]:  https://www.mcmaster.com/8560K357/

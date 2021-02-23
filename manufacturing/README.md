@@ -124,7 +124,7 @@ Ventilator full assembly CAD model: [.iam](ventilator_assembly.iam)
 
 ### Pre-fabrication
 
-A number of custom components may have to be pre-fabricated by contractor:
+A number of custom components may have to be pre-fabricated by contract manufacturer:
 
 * Main board / PCB and daughter board (in [electronics assembly](internals/display_panel/electronics))
 * Sheet metal components: [equipment bracket](internals/tray), [enclosure](enclosure) and [closure panel](closure_panel)
@@ -132,7 +132,7 @@ A number of custom components may have to be pre-fabricated by contractor:
   [filter panel](internals/filter_panel).
 
 There are also various 3d printed components throughout the sub-assemblies. They will not be listed here explicitly.
-Familiarize yourself with the entire hierarchy of assemblies before proceeding.
+Familiarize yourself with the entire hierarchy of assemblies and print what is needed ahead of time.
 
 ### Order of assembly:
 

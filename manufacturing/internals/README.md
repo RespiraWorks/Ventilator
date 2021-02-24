@@ -147,7 +147,9 @@ You can now connect all the wiring (except main power):
 * connect the pinch valves to their driver pigtails as follows:
   * top - inhale
   * bottom - exhale
-* Secure sensor tubing and wiring with zip ties `[A24]`
+* Secure wiring with zip ties `[A24]`
+* Secure sensor tubing with zip ties `[A24]`, but do so lightly. Don't tighten them to the point where the
+  air flow is restricted in the tubes or where the wires can't move at all.
 
 >**TODO:** do renderings of sub-systems and intermediate steps
 

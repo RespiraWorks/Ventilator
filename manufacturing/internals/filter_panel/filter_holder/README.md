@@ -91,8 +91,6 @@ The following STL files have been exported for 3d printing:
 
 Quantities identified above assume a full set of 4 filter assemblies for a single ventilator.
 
-There are notes on 3d printing in the [manufacturing methods guide][mmg].
-
 ![](images/printed_set.jpg)
 
 ## Parts
@@ -149,17 +147,13 @@ BEFORE purchasing any parts.**
 
 ### Filter gaskets
 
-- Cut the inner edge of the gasket in the gasket material using the inside cut jig `[A9]`.
 
-|                            |                             |
+| Cut the inner edge of the gasket in the gasket material using the inside cut jig `[A9]` | Place the outer cut jig `[A10]` into the hole you just made |
 |:--------------------------:|:---------------------------:|
-|![](images/MakeGasket2.jpg) | ![](images/MakeGasket3.jpg) |
+|![](images/MakeGasket2.jpg) | ![](images/MakeGasket4.jpg) |
 
-- Place the outer cut jig `[A10]` into the hole you just made.
 
-![](images/MakeGasket4.jpg)
-
-- Cut the outer edge of the gasket.
+Cut the outer edge of the gasket.
 
 |                            |                             |
 |:--------------------------:|:---------------------------:|

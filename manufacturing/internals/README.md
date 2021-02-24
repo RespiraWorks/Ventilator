@@ -123,8 +123,10 @@ Use the following principles to guide this process:
   * the lower port (closer to board) is for downstream
 
 Connect the tubing as follows
-* both upstream and downstream ports from the `air influx venturi` to the differential pressure sensor labeled `INHALE FLOW` on the PCB
-* both upstream and downstream ports from the `oxygen influx venturi` to the differential pressure sensor on the daughter-card
+* upstream port on the `air influx venturi` to upper port on the `INHALE FLOW` sensor on the PCB
+* downstream port on the `air influx venturi` to lower port on the `INHALE FLOW` sensor on the PCB
+* upstream port on the `oxygen influx venturi` to upper port on the pressure sensor on the daughter-card
+* downstream port on the `oxygen influx venturi` to lower port on the pressure sensor on the daughter-card
 * downstream port on the `exhale venturi` to lower port on the `EXHALE FLOW` sensor on the PCB
 * upstream port on the `exhale venturi` to wye splitter `[A22]`
 * wye splitter `[A22]` to the upper port on the `EXHALE FLOW` sensor on the PCB

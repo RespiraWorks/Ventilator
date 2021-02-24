@@ -14,7 +14,7 @@ BEFORE purchasing any parts.**
 | Item  | Quantity | Manufacturer  | Part Number        | Price (USD) | Sources[*][ppg]         | Notes |
 | ----  |---------:| --------------| ------------------ | -----------:|:-----------------------:| ----- |
 |**A1** | 1        | RespiraWorks  | [PCB][a1rw]        |             | Rw                      | Custom main board |
-|**A2** | (1)      | RespiraWorks  | [interim_board][a2rw] |          | Rw                      | Rev1 interim board **OPTIONAL** |
+|**A2** | (1)      | RespiraWorks  | [Interim board][a2rw] |          | Rw                      | Rev1 interim board **OPTIONAL** |
 |**A3** | (1)      | Duracell      | 2016 3V            | 1.67        | [Z][a3amzn]             | CR2016 battery, for interim board **OPTIONAL** |
 |**A4** | 1        | ST Micro      | NUCLEO-L452-RE     | 14.43       | [M][a4mous] [R][a4rs]   | STM32 Nucleo dev board, **DO NOT get the -P** version |
 |**A5** | 2        | Digikey       | X-NUCLEO-IHM03A1   | 10.64       | [K][a5key] [M][a5mous]  | Stepper driver board |

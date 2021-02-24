@@ -65,6 +65,8 @@ Most recent changes also include thickening of the walls to make the 3d prints l
 
 ### Source files
 
+> TODO: drawings - printed parts and gasket only
+
 The custom design and assembly have been carried out in Autodesk Inventor, and the following "source" files are provided:
 
 * [Filter assembly.iam](filter_assembly.iam) - Inventor assembly file for a single filter holder
@@ -73,8 +75,12 @@ The custom design and assembly have been carried out in Autodesk Inventor, and t
 * [Filter gasket.ipt](filter_gasket.ipt) - Inventor part file for filter gasket design
 * [Filter stand-in.ipt](filter_stand-in.ipt) - Stand-in for the actual HEPA filter.
 
+> TODO: Move filter stand-in to third party dir
+
 Previous versions of these parts were designed in OnShape, and the history of those previous iterations can be found
 [here](https://cad.onshape.com/documents/3fe0c1f79c482144c267173d/w/2ad1c08071a25185f9c78c68/e/c3b817c7fd516ff612068657).
+
+> TODO: Make CAD for gasket jig
 
 ### 3d printing
 
@@ -84,8 +90,6 @@ The following STL files have been exported for 3d printing:
 * [Filter cover - air vent.stl](exports/filter_cover_air_vent.stl) - should need 2 of these
 
 Quantities identified above assume a full set of 4 filter assemblies for a single ventilator.
-
-There are notes on 3d printing in the [manufacturing methods guide][mmg].
 
 ![](images/printed_set.jpg)
 
@@ -98,30 +102,33 @@ BEFORE purchasing any parts.**
 
 **Note:** The below quantities are for building a complete set of 4 filter housings needed for one ventilator assembly.
 
-| Item  | Quantity  | Manufacturer  | Part #                              | Price (USD)         | Sources[*][ppg]| Notes |
-| ----- |----------:| ------------- | ----------------------------------- | -------------------:|:----------:|:------|
-|**A1** | 4         | RespiraWorks  | Filter housing                      | 1 (material)        | [Rw][a1rw]  | 3D printed from STL in link |
-|**A2** | 2         | RespiraWorks  | Filter cover with patient connector | 1 (material)        | [Rw][a2rw]  | 3D printed from STL in link |
-|**A3** | 2         | RespiraWorks  | Filter cover with vent              | 1 (material)        | [Rw][a3rw]  | 3D printed from STL in link |
-|**A4** | 4         | Amyehouse     | 20160819-1a                         | 8 / 6pk             | [Z][a4amzn] | Roomba 700-compatible HEPA filters |
-|**A5** | ~16 sq in | McMaster-Carr | 8785K82                             | 22.22/ 12x12" sheet | [C][a5mcmc] | Gasket material, cut with jigs(**A9+A10**) to make **A6** |
-|**A6** | 8         | RespiraWorks  | filter_gasket                       | 0.10 (material)     | Rw          | Filter gaskets, made from **A5**, using jigs **A9+A10** |
-|**A7** | 8         | McMaster-Carr | 96016A556                           | 5.50 / 10           | [C][a7mcmc] | M3 thumbscrews |
-|**A8** | 8         | McMaster-Carr | 94180A333                           | 16.69 / 100         | [C][a8mcmc] | Heat-set inserts for m3 screws |
-|**A9** | 1         | RespiraWorks  | Filter inside cut jig               | 1 (material)        | [Rw][b1rw]  | 3D printed from STL in link |
-|**A10**| 1         | RespiraWorks  | Filter outside cut jig              | 1 (material)        | [Rw][b2rw]  | 3D printed from STL in link |
+| Item  | Quantity  | Manufacturer  | Part #                                 | Price (USD)         | Sources[*][ppg]| Notes |
+| ----- |----------:| ------------- | -------------------------------------- | -------------------:|:-----------:|:------|
+|**A1** | 4         | RespiraWorks  | [Filter housing][a1rw]                 | 1.00                | Rw          | 3D printed from STL in link |
+|**A2** | 2         | RespiraWorks  | [Filter cover w/ tubing adapter][a2rw] | 1.00                | Rw          | 3D printed from STL in link |
+|**A3** | 2         | RespiraWorks  | [Filter cover w/ outlet vent][a3rw]    | 1.00                | Rw          | 3D printed from STL in link |
+|**A4** | 4         | Amyehouse     | 20160819-1a                            | 8.00 / 6            | [Z][a4amzn] | Roomba 700-compatible HEPA filters |
+|**A5** | ~16 sq in | McMaster-Carr | 8785K82                                | 22.22/ 12x12" sheet | [C][a5mcmc] | Gasket material, cut with jigs(**A9+A10**) to make **A6** |
+|**A6** | 8         | RespiraWorks  | [Filter gaskets][a6rw]                 | 0.10                | Rw          | Filter gaskets, made from **A5**, using jigs **A9+A10** |
+|**A7** | 8         | McMaster-Carr | 96016A556                              | 5.50 / 10           | [C][a7mcmc] | M3 thumbscrews |
+|**A8** | 8         | McMaster-Carr | 94180A333                              | 16.69 / 100         | [C][a8mcmc] | Heat-set inserts for m3 screws |
+|**A9** | (1)       | RespiraWorks  | [Filter inside cut jig][a9rw]          | *tool*              | Rw          | 3D printed from STL in link |
+|**A10**| (1)       | RespiraWorks  | [Filter outside cut jig][a10rw]        | *tool*              | Rw          | 3D printed from STL in link |
 
 [a1rw]:   exports/filter_housing.stl
 [a2rw]:   exports/filter_cover_patient_connector.stl
 [a3rw]:   exports/filter_cover_air_vent.stl
 [a4amzn]: https://www.amazon.com/gp/product/B01KNZCW8E
 [a5mcmc]: https://www.mcmaster.com/8785K82/
+[a6rw]:   #filter-gaskets
 [a7mcmc]: https://www.mcmaster.com/96016A556/
 [a8mcmc]: https://www.mcmaster.com/94180A333/
 [a9rw]:   exports/filter-gasket-jig-inside.stl
 [a10rw]:  exports/filter-gasket-jig-outside.stl
 
 ## Assembly
+
+> TODO: Drawings
 
 **Note: Please also see general advice in the [manufacturing methods guide](../../../methods).**
 
@@ -138,17 +145,15 @@ BEFORE purchasing any parts.**
 |![](images/roomba1.jpg) | ![](images/roomba2.jpg) |
 
 
-- Cut the inner edge of the gasket in the gasket material using the inside cut jig `[A9]`.
+### Filter gaskets
 
-|                            |                             |
+
+| Cut the inner edge of the gasket in the gasket material using the inside cut jig `[A9]` | Place the outer cut jig `[A10]` into the hole you just made |
 |:--------------------------:|:---------------------------:|
-|![](images/MakeGasket2.jpg) | ![](images/MakeGasket3.jpg) |
+|![](images/MakeGasket2.jpg) | ![](images/MakeGasket4.jpg) |
 
-- Place the outer cut jig `[A10]` into the hole you just made.
 
-![](images/MakeGasket4.jpg)
-
-- Cut the outer edge of the gasket.
+Cut the outer edge of the gasket.
 
 |                            |                             |
 |:--------------------------:|:---------------------------:|

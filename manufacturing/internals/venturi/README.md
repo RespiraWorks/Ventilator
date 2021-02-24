@@ -126,11 +126,11 @@ BEFORE purchasing any parts.**
 
 | Item | Quantity | Manufacturer  | Part #          | Price (USD)  | Sources[*][ppg] | Notes |
 | ---- |---------:| ------------- | --------------- | ------------:|:---------------:| ----- |
-|**A1**| 1        | RespiraWorks  |                 | ~1           | [Rw][1rw]       | 3D-printed venturi body |
-|**A2**| 2        | McMaster-Carr | 5463K3          | 3.93 / 10    | [C][2mcmc]      | Barbed fitting 3/32" UNF, nipple for sensor tubing |
+|**A1**| 1        | RespiraWorks  | [Venturi body][a1rw]    | ~1.00        | Rw       | 3D-printed venturi body |
+|**A2**| 2        | McMaster-Carr | 5463K3          | 3.93 / 10    | [C][a2mcmc]      | Barbed fitting 3/32" UNF, nipple for sensor tubing |
 
-[1rw]:   #files
-[2mcmc]: https://www.mcmaster.com/5463K33
+[a1rw]:   #files
+[a2mcmc]: https://www.mcmaster.com/5463K33
 
 ## Tools
 
@@ -140,8 +140,8 @@ These may or may not be useful.
 | ---- | ------------- | --------------- | -----------:|:---------------:| ----- |
 |**B1**| McMaster-Carr | 2636A251        | 6.76        | [C][b1mcmc]     | 10-32 UNF bottoming tap for threading nipple ports |
 |**B2**| McMaster-Carr | 2636A251        | 6.76        | [C][b2mcmc]     | 10-32 UNF tapered tap for threading nipple ports |
-|**B3**| uxcell        | a19032000ux0738 | 6.89        | [Z][b3amzn]     | 5.5 reamer for ensuring venturi diameter |
-|**B4**| DeWalt        | DWA1205         | 2.58        | [Z][b4amzn]     | 5/64" drill bit, should optimally be 2mm |
+|**B3**| uxcell        | a19032000ux0738 | 6.89        | [Z][b3amzn]     | 5.5 reamer for ensuring venturi diameter, **optional** |
+|**B4**| DeWalt        | DWA1205         | 2.58        | [Z][b4amzn]     | 5/64" drill bit, should optimally be 2mm, **optional** |
 
 [b1mcmc]: https://www.mcmaster.com/26955A86/
 [b2mcmc]: https://www.mcmaster.com/2636A251

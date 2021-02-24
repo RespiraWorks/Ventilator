@@ -111,9 +111,25 @@ The rough order/hierarchy of internals assembly is as follows:
 
 ### Sensor tubing
 
-Sensor tubing `[A21-22]` connects venturis to pressure sensors on the main board.
+Sensor tubing `[A21-22]` connects the venturis to pressure sensors in the electronics assembly.
 
->**TODO:** document sensor tube connections
+The tubes you will use will vary in length. Use your own discretion.
+
+Use the following principles to guide this process:
+* The venturis have arrows embossed on the sides indicating flow direction. You can thus determine which of the two
+  sensor ports is "upstream" vs. which one is "downstream".
+* The differential sensors on the PCB (or daughter-card) have 2 ports each:
+  * the upper port (further from board) is for upstream
+  * the lower port (closer to board) is for downstream
+
+Connect the tubing as follows
+* both upstream and downstream ports from the `air influx venturi` to the differential pressure sensor labeled `INHALE FLOW` on the PCB
+* both upstream and downstream ports from the `oxygen influx venturi` to the differential pressure sensor on the daughter-card
+* downstream port on the `exhale venturi` to lower port on the `EXHALE FLOW` sensor on the PCB
+* upstream port on the `exhale venturi` to wye splitter `[A22]`
+* wye splitter `[A22]` to the upper port on the `EXHALE FLOW` sensor on the PCB
+* wye splitter `[A22]` to the upper port on the `PATIENT PRESSURE` sensor on the PCB
+* the lower port on the `PATIENT PRESSURE` sensor remains open to atmosphere
 
 ### Final wiring
 

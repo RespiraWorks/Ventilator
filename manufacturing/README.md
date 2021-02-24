@@ -149,7 +149,7 @@ and learn how to get its brain working.
 ## Additional notes
 
 While this page is not comprehensive yet, some aspects of connecting sensor tubing and electronics may still be
-better cover in the (somewhat obsolete) "pizza build" [guide](../quality-assurance/testing/pizza_build).
+better covered in the (somewhat obsolete) "pizza build" [guide](../quality-assurance/testing/pizza_build).
 
 Some aspects of the production packaged design are detailed in the first section of the (somewhat obsolete)
 [assembly video](https://youtu.be/2hdV5CWcLb4).

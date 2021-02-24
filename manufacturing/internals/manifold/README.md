@@ -18,6 +18,11 @@ The oxygen sensor has M16-1.0 threads for interfacing with a pneumatic system.
 The manifold also requires an elbow to route the pneumatic circuit to the underside of the equipment tray, where
 it will follow towards the patient tubing interface.
 
+**Fire hazard:** The current design has the overpressure relief valve venting into the ventilator enclosure.
+In case of an overpressure event with concentrated oxygen, this might pose a fire hazard. Do not test this
+version of the system with oxygen. Future versions of the design will address this issue by redirecting overflow
+out of the ventilator enclosure.
+
 ## Design implementation
 
 The part was designed in Autodesk Inventor, along with assembly to geometrically test interface fit
@@ -41,11 +46,11 @@ BEFORE purchasing any parts.**
 
 [ppg]: ../../purchasing_guidelines.md
 
-| Item  | Quantity | Manufacturer   | Part #              | Price (USD)  | Sources[*][ppg]| Notes |
-| ----- |---------:| -------------- | ------------------- | ------------:|:--------------:| ----- |
-|**A1** | 1        | RespiraWorks   | manifold            |              | [Rw][a1rw]     | Custom manifold |
-|**A2** | 1        | Cables&Sensors | G0-040              | 76.00        | [Cs][a2cns]    | Oxygen sensor |
-|**A3** | 1        | Generant       | VRVI-250B-V-0.8     | 54.00        | [Gn][a3gene]   | Overpressure relief valve |
+| Item  | Quantity | Manufacturer   | Part #                  | Price (USD)  | Sources[*][ppg]| Notes |
+| ----- |---------:| -------------- | ----------------------- | ------------:|:--------------:| ----- |
+|**A1** | 1        | RespiraWorks   | [Custom manifold][a1rw] |              | Rw             | Custom manifold |
+|**A2** | 1        | Cables&Sensors | G0-040                  | 76.00        | [Cs][a2cns]    | Oxygen sensor |
+|**A3** | 1        | Generant       | VRVI-250B-V-0.8         | 54.00        | [Gn][a3gene]   | Overpressure relief valve |
 
 [a1rw]:   #design-implementation
 [a2cns]:  https://www.cablesandsensors.com/products/compatible-o2-cell-for-hamilton-medical-396008

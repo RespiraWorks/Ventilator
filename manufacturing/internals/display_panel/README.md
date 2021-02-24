@@ -45,7 +45,7 @@ BEFORE purchasing any parts.**
 | Item  | Quantity | Manufacturer  | Part #                   | Price (USD)  | Sources[*][ppg]| Notes |
 | ----- |---------:| ------------- | ------------------------ | ------------:|:--------------:|:------|
 |**A1** | ~550cm²  | McMaster-Carr | 8560K357                 | 150 / m²     | [C][a1mcmc]    | 1/4" (6.35mm) thick clear acrylic sheet, to make `[A2]` below |
-|**A2** | 1        | RespiraWorks  | upper_acrylic_face_panel |              | [Rw][a2rw]     | Upper acrylic face panel, cut from acrylic `[A1]` |
+|**A2** | 1        | RespiraWorks  | [Display panel acrylic][a2rw] |         | Rw             | Upper acrylic face panel, cut from acrylic `[A1]` |
 |**A3** | 1        | McMaster-Carr | 7768K22                  | 11.62        | [C][a3mcmc]    | brass threaded check valve |
 |**A4** | 1        | McMaster-Carr | 50785K273                | 8.23         | [C][a4mcmc]    | through-wall straight connector, 1/4NPT female |
 |**A5** | 1        | McMaster-Carr | 5121K451                 | 5.78 / 10    | [C][a5mcmc]    | 1/4 NPT x 1/4" ID barbed adapter |
@@ -58,7 +58,7 @@ BEFORE purchasing any parts.**
 |**A12**| 4        | McMaster-Carr | 93475A230                | 1.86 / 100   | [C][a12mcmc]   | M4 washer, 9mm OD |
 |**A13**| 4        | McMaster-Carr | 92095A189                | 8.89 / 100   | [C][a13mcmc]   | M4 screw, 8mm |
 |**A14**| 4        | DigiKey       | 732-10395-ND             | 0.59         | [K][a14key]    | M2.5 standoff, 9mm |
-|**A15**| 1        | RespiraWorks  | electronics_assembly     |              | [Rw][a15rw]    | Most electrical and computing components |
+|**A15**| 1        | RespiraWorks  | [Electronics assembly][a15rw] |         | Rw             | Most electrical and computing components |
 
 [a1mcmc]:  https://www.mcmaster.com/8560K357/
 [a2rw]:    #custom-parts

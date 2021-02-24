@@ -38,7 +38,7 @@ BEFORE purchasing any parts.**
 
 | Item  | Quantity | Manufacturer  | Part #                   | Price (USD) | Sources[*][ppg]| Notes |
 | ----- |---------:| ------------- | ------------------------ | -----------:|:--------------:|:------|
-|**A1** | 1        | RespiraWorks  | ventilator_enclosure     |             | [Rw][a1rw]     | Ventilator enclosure, bent sheet metal |
+|**A1** | 1        | RespiraWorks  | [Enclosure panel][a1rw]  |             | Rw             | Ventilator enclosure, bent sheet metal |
 |**A2** | 10       | McMaster-Carr | 97525A415                | 8.87 / 100  | [C][a2mcmc]    | 1/8" blind rivets (can also be 3mm) |
 |**A3** | 6        | McMaster-Carr | 96439A650                | 3.89 / 10   | [C][a3mcmc]    | M4 self-clinching / press-fit nut |
 |**A4** | 4        | McMaster-Carr | 96439A710                | 6.04 / 5    | [C][a4mcmc]    | M6 self-clinching / press-fit nut |

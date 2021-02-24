@@ -26,25 +26,25 @@ BEFORE purchasing any parts.**
 
 [ppg]: ../../purchasing_guidelines.md
 
-| Item  | Quantity | Manufacturer  | Part #                       | Price (USD)      | Sources[*][ppg] | Notes |
-| ----- |---------:| ------------- | ---------------------------- | ----------------:|:---------------:|-------|
-|**A1** | 1        |               | WS7040-12-X200N              | 65.00            | [A][a1ali]      | 12v blower and driver. Make sure to choose with driver when ordering. |
-|**A2** | (1)      |               | WS1208                       | 24.00            | [W][a2won]      | **optional** blower driver, in case blower above did not come with driver. |
-|**A3** | 1        | RespiraWorks  | tubing_adapter               | 1 (material)     | [Rw][a3rw]      | 3D printed from data in link |
-|**A4** | ~200cm²  | McMaster-Carr | 8560K357                     | 55 / 3716cm²     | [C][a4mcmc]     | 1/4" (6.35mm) thick clear acrylic sheet, to make **A3-C5** below |
-|**A5** | 1        | RespiraWorks  | driver_mounting_plate        | ~1.1 (material)  | [Rw][a5rw]      | Driver mounting plate cut from acrylic (**A2**) using drawing in link, uses ~75 cm² |
-|**A6** | 1        | RespiraWorks  | blower_holding_plate         | ~0.9 (material)  | [Rw][a6rw]      | Blower holding plate cut from acrylic (**A2**) using drawing in link, uses ~60 cm² |
-|**A7** | 1        | RespiraWorks  | tubing_adapter_holding_plate | ~0.9 (material)  | [Rw][a7rw]      | Tubing adapter holding plate cut from acrylic (**A2**) using drawing in link, uses ~60 cm² |
-|**A8** | ~80cm²   | McMaster-Carr | 1370N13-1370N131             | 6.75 / 232cm²    | [C][a8mcmc]     | 1/16" durometer 30 neoprene gasket material, to make items **A7** and **A8** below |
-|**A9** | 1        | RespiraWorks  | blower_gasket                | ~1.2 (material)  | [B][a9rw]       | Blower gasket cut from (**A6**) using drawing in link, uses ~40 cm² |
-|**A10**| 1        | RespiraWorks  | tubing_adapter_gasket        | ~1.2 (material)  | [B][a10rw]      | Tubing adapter Gasket cut from (**A6**) using drawing in link, uses ~40 cm² |
-|**A11**| 4        | McMaster-Carr | 93625A150                    | 6.04 / 100       | [C][a11mcmc]    | M4 lock nuts |
-|**A12**| 12       | McMaster-Carr | 93475A230                    | 1.86 / 100       | [C][a12mcmc]    | M4 washers |
-|**A13**| 4        | McMaster-Carr | 92095A168                    | 9.55 / 50        | [C][a13mcmc]    | M3 x 14mm button head screws, for blower driver |
-|**A14**| 4        | McMaster-Carr | 91290A574                    | 15.45 / 10       | [C][a14mcmc]    | M4 x 85mm socket head screws |
-|**A15**| 4        | McMaster-Carr | 99072A203                    | 1.21             | [C][a15mcmc]    | 10mm nylon spacers |
-|**A16**| 4        | McMaster-Carr | 91828A231                    | 6.45 / 100       | [C][a16mcmc]    | M4 nuts (non locking) |
-|**A17**| 4        | McMaster-Carr | 93625A100                    | 5.31 / 100       | [C][a17mcmc]    | M3 lock nuts |
+| Item  | Quantity | Manufacturer  | Part #                               | Price (USD)      | Sources[*][ppg] | Notes |
+| ----- |---------:| ------------- | ------------------------------------ | ----------------:|:---------------:|-------|
+|**A1** | 1        |               | WS7040-12-X200N                      | 65.00            | [A][a1ali]      | 12v blower and driver. Make sure to choose with driver when ordering. |
+|**A2** | (1)      |               | WS1208                               | 24.00            | [W][a2won]      | **optional** blower driver, in case blower above did not come with driver. |
+|**A3** | 1        | RespiraWorks  | [Tubing adapter][a3rw]               | ~1.00            | Rw              | 3D printed from data in link |
+|**A4** | ~200cm²  | McMaster-Carr | 8560K357                             | 55 / 3716cm²     | [C][a4mcmc]     | 1/4" (6.35mm) thick clear acrylic sheet, to make **A5-7** below |
+|**A5** | 1        | RespiraWorks  | [Driver mounting plate][a5rw]        | ~1.10            | Rw              | Driver mounting plate cut from acrylic (**A4**) using drawing in link, uses ~75 cm² |
+|**A6** | 1        | RespiraWorks  | [Blower holding plate][a6rw]         | ~0.90            | Rw              | Blower holding plate cut from acrylic (**A4**) using drawing in link, uses ~60 cm² |
+|**A7** | 1        | RespiraWorks  | [Tubing adapter holding plate][a7rw] | ~0.90            | Rw              | Tubing adapter holding plate cut from acrylic (**A4**) using drawing in link, uses ~60 cm² |
+|**A8** | ~80cm²   | McMaster-Carr | 1370N13-1370N131                     | 6.75 / 232cm²    | [C][a8mcmc]     | 1/16" durometer 30 neoprene gasket material, to make items **A9** and **A10** below |
+|**A9** | 1        | RespiraWorks  | [Blower gasket][a9rw]                | ~1.20            | Rw              | Blower gasket cut from (**A8**) using drawing in link, uses ~40 cm² |
+|**A10**| 1        | RespiraWorks  | [Tubing adapter gasket][a10rw]       | ~1.20            | Rw              | Tubing adapter Gasket cut from (**A8**) using drawing in link, uses ~40 cm² |
+|**A11**| 4        | McMaster-Carr | 93625A150                            | 6.04 / 100       | [C][a11mcmc]    | M4 lock nuts |
+|**A12**| 12       | McMaster-Carr | 93475A230                            | 1.86 / 100       | [C][a12mcmc]    | M4 washers, 9mm OD |
+|**A13**| 4        | McMaster-Carr | 92095A168                            | 9.55 / 50        | [C][a13mcmc]    | M3 x 14mm button head screws, for blower driver |
+|**A14**| 4        | McMaster-Carr | 91290A574                            | 15.45 / 10       | [C][a14mcmc]    | M4 x 85mm socket head screws |
+|**A15**| 4        | McMaster-Carr | 99072A203                            | 1.21             | [C][a15mcmc]    | 10mm nylon spacers |
+|**A16**| 4        | McMaster-Carr | 91828A231                            | 6.45 / 100       | [C][a16mcmc]    | M4 nuts (non locking) |
+|**A17**| 4        | McMaster-Carr | 93625A100                            | 5.31 / 100       | [C][a17mcmc]    | M3 lock nuts |
 
 [a1ali]:  https://www.aliexpress.com/item/32980201709.html
 [a2won]:  https://wonsmart-motor.en.made-in-china.com/product/hsjxFewOppVg/China-Air-Pump12V-Brushless-Motor-12V-Blower-Fan-Driver.html
@@ -77,9 +77,7 @@ BEFORE purchasing any parts.**
 
 ### Gaskets
 
-There are notes on manufacturing gaskets in the [manufacturing methods guide][mmg].
-
-|     | Blower gasket (C9)         | Tubing adapter gasket (C10) |
+|     | Blower gasket `[A9]`         | Tubing adapter gasket `[A10]` |
 |----:|:--------------------------:|:---------------------------:|
 | PNG | ![](exports/blower_gasket.png) | ![](exports/tubing_adapter_gasket.png) |
 | DXF |[blower_gasket.dxf](exports/blower_gasket.dxf)|[tubing_adapter_gasket.dxf](exports/tubing_adapter_gasket.dxf)|
@@ -91,7 +89,7 @@ There are notes on manufacturing gaskets in the [manufacturing methods guide][mm
 
 You will have to cut the following mounting and holding plates from an acrylic sheet `[A4]`.
 
-|     | Driver mounting plate (C5) | Blower holding plate (C6) | Tubing adapter holding plate (C7) |
+|     | Driver mounting plate `[A5]` | Blower holding plate `[A6]` | Tubing adapter holding plate `[A7]` |
 |:-----:|:--------------------------:|:-------------------------:|:---------------------------------:|
 |  |![](exports/driver_mounting_plate.jpg)|![](exports/blower_holding_plate.jpg)|![](exports/tubing_adapter_holding_plate.jpg)|
 | Drawings |[Driver Mounting Plate](exports/driver_mounting_plate.pdf)|[Blower Holding Plate](exports/blower_holding_plate.pdf)|[Tubing Adapter Holding Plate](exports/tubing_adapter_holding_plate.pdf)|
@@ -142,13 +140,6 @@ You will likely need some sort of small clamps for this step, to ensure that com
 |                            |                             |
 |:--------------------------:|:---------------------------:|
 |![](images/tubing_adapter_holding_plate.jpg) | ![](images/integrated.jpg) |
-
-## System integration
-
-Integration into the pneumatic system is covered in either [pizza build](../../../quality-assurance/testing/pizza_build) or
-[enclosed build pneumatics](..) pages, depending on which version you are building.
-
-Integration into the electrical/controls system is covered in [wiring page](../../wiring).
 
 ## Price estimate
 

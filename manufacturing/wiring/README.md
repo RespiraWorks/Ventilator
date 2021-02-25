@@ -22,11 +22,11 @@ BEFORE purchasing any parts.**
 
 | Item  | Quantity | Manufacturer  | Part #                | Price (USD)  | Sources[*][ppg]      | Notes |
 | ----- |---------:| ------------- | --------------------- | ------------:|:--------------------:| ----- |
-|**A1** | 20       | JST           | SXH-001T-P0.6         |         0.10 | [K][a1key]           | XH crimps, for sensor & actuator connections |
+|**A1** | 20       | JST           | SXH-001T-P0.6         |         0.10 | [K][a1key]           | XH crimp contacts, for sensor & actuator connections |
 |**A2** | 1        | JST           | XHP-2                 |         0.10 | [K][a2key]           | XH 2-pin housings, for solenoid |
 |**A3** | 1        | JST           | XHP-3                 |         0.10 | [K][a3key]           | XH 3-pin housings, for oxygen sensor |
 |**A4** | 1        | JST           | XHP-6                 |         0.12 | [K][a4key]           | XH 6-pin housings, for blower control |
-|**A5** | 7        | JST           | SVH-21T-P1.1          |         0.11 | [K][a5key] [R][a5rs] | VH crimps, for main power, for blower power |
+|**A5** | 7        | JST           | SVH-21T-P1.1          |         0.11 | [K][a5key] [R][a5rs] | VH crimp contacts, for main power, for blower power |
 |**A6** | 2        | TE            | 1-1123722-2           |         0.18 | [K][a6key] [R][a6rs] | VH housing 2 pin, for blower power |
 |**A7** | 1        | JST           | VHR-3N                |         0.14 | [K][a7key]           | VH housing 3 pin, for main power |
 |**A9** | 1        | Kycon         | KPJX-PM-4S            |         2.89 | [K][a9key]           | 4 pin DIN female, main power connector |
@@ -84,9 +84,11 @@ BEFORE purchasing any parts.**
 
 **Crimper Tips:**
 
-* Position 1 on the crimper will crimp JST XH contacts and Molex KK contacts
-* Position 2 on the crimper will crimp VH contacts.  However, with certain gauges of wire, this crimper may bend the contact into a shrimp-like shape.  If this happens, bend the contact back straight (it should be pretty obvious as it blocks insertion)
-* It comes with a lot of XH contacts, but not any VH contacts.
+* Position 1 on the crimper will crimp JST XH contacts `[A1]` and Molex KK contacts `[A19]` 
+* Position 2 on the crimper will crimp VH contacts `[A5]`.  However, with certain gauges of wire, this crimper may bend the contact into a shrimp-like shape.  If this happens, bend the contact back straight (it should be pretty obvious as it blocks insertion)
+* Position 3 on the crimper will crimp 2.54mm (aka Dupont) sockets and pins `[A10]`.
+* A proper crimp should crimp the insulation in the lower half and the wire in the upper half of the crimp portion of the contact.
+* The crimper kit `[B1]` comes with a lot of XH contacts, but not any VH contacts.
 
 ## Assembly
 
@@ -103,7 +105,7 @@ You will need all the tools listed.
 * Using:
   * DIN female receptacle `[A9]`
   * 16AWG wire 65mm each in black and red `[A12]`
-  * 2x VH crimps `[A5]`
+  * 2x VH crimp contacts `[A5]`
   * VH 3-pin housing `[A7]`
   * Shrink tubing `[A20-22]`
 
@@ -128,7 +130,7 @@ must be manufactured of about 50cm length using crimping tool `[B1]` and  heat g
 
 * Blower Power Cable:
   - 16AWG 50cm in each of black and red `[A12]`
-  - 4x VH crimps `[A5]`
+  - 4x VH crimp contacts `[A5]`
   - 2x VH 2-pin housings `[A6]`
   - Shrink tubing `[A21]`
 
@@ -146,7 +148,7 @@ must be manufactured of about 50cm length using crimping tool `[B1]` and  heat g
 
 * Blower Control Cable:
   - 26AWG 50cm in each of red, black, and gray `[A14]`
-  - 6x XH crimps `[A1]`
+  - 6x XH crimp contacts `[A1]`
   - 2x XH 6-pin housings `[A4]`
   - Shrink tubing `[A21]`
 
@@ -169,7 +171,7 @@ can be produced for this purpose:
 
 Recipe for one pigtail:
 * 22AWG 15cm `[A13]`
-* 4x male 2.54mm pins `[A10]`
+* 4x male 2.54mm crimp pins `[A10]`
 * 2.54mm 4-pin housing `[A11]`
 
 On the other end, each wire should be stripped about 5mm and solder applied to bind the threads.
@@ -186,7 +188,7 @@ The same can be done for the stepper motors belonging to each pinch valve assemb
 ### Proportional solenoid valve
 
 - To connect the solenoid to the PCB, you will need to crimp a 2-pin XH connector to the wires:
-  - 2x XH crimps `[A1]`
+  - 2x XH crimp contacts `[A1]`
   - XH 6-pin housings `[A2]`
   - Shrink tubing `[A20]`
 
@@ -202,19 +204,26 @@ The same can be done for the stepper motors belonging to each pinch valve assemb
 |:--------:|:--------:|
 | ![Blower Control Cable](images/psol_cable.jpg) | [![Blower Control Cable Drawing](images/psol_cable_drawing_image.jpg)](drawings/20210224_psol_cable_drawing.pdf) |
 
-### Oxygen sensor
+### Oxygen Sensor Cable
+
+This cable connects the Oxygen Sensor to the Interim Board in the PCB stack.
+
+- Oxygen Sensor Cable:
+  - 26AWG 40cm in each of green and white `[A14]`
+  - 4x KK series crimp contacts `[A19]`
+  - 2x KK series 3-pin housings `[A18]`
+  - Shrink tubing `[A21]`
+
+- Instructions:
+  - Strip the ends of the wires
+  - Using the crimper `[B1]` in position 1, crimp 4x contacts `[A19]` onto the ends of the wires.
+  - Sheathe the length of the wires in 3mm shrink tubing `[A20]` before inserting the ends into housing.
+  - Insert the wires into the connector housings `[A18]`, according to the drawing, until they click.  Pin 1 is marked by a tiny '1' molded into the connector housing.
+  - Do a gentle pull test to make sure that the contacts are properly crimped and seated.
 
 | Cable Image | Cable Drawing (PDF)  |
 |:--------:|:--------:|
 | ![Oxygen Sensor Cable](images/oxygen_sensor_cable.jpg) | [![Oxygen Sensor Cable Drawing](images/oxygen_sensor_cable_drawing_image.jpg)](drawings/20210209_oxygen_sensor_cable_drawing.pdf) |
-
-- Measure out two 40cm lengths of 26AWG wire, in green and white `[A14]`
-- Strip the ends of the wires
-- Using the crimper `[B1]` in position 1, crimp 4x contacts `[A19]` onto the ends of the wires.
-- A proper crimp should crimp the insulation in the lower half and the wire in the upper half of the crimp portion of the contact.
-- Sheathe the length of the wires in 3mm shrink tubing `[A20]` before inserting the ends into housing.
-- Insert the wires into the connector housings `[A18]`, according to the drawing, until they click.  Pin 1 is marked by a tiny '1' molded into the connector housing.
-- Do a gentle pull test to make sure that the contacts are properly crimped and seated.
 
 > **TODO:** pictures
 

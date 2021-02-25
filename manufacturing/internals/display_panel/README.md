@@ -39,7 +39,7 @@ These changes are likely forthcoming in future iterations of our design.
 
 **Custom PCBs**
 
-see **[Electronics Assembly](electronics_assembly)** for turnkey manufaturing files and full details.
+see **[Electronics Assembly](electronics)** for turnkey manufaturing files and full details.
 
 ## Parts
 

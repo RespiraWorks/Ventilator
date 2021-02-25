@@ -6,8 +6,6 @@
 
 ## Design rationale
 
-> **TODO:** Content..
->
 The internals of the ventilator comprise the main active components of the machine.  To ease assembly and maintainance, they are split into three panels which are designed to be assembled or serviced outside of the enclosure, and then secured into the enclosure as a unit.  The three panels are:
  - **Pneumatics Panel**, described on this page, which hosts the main pneumatic workings of the ventilator: blower, oxygen regulator, control valves, and sensors.
  - **[Display Panel](display_panel)**, which hosts the main electrical workings of the ventilator: touchscreen, controller PCB, and device interfaces.

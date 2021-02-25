@@ -6,9 +6,11 @@
 
 ## Design rationale
 
-The display panel accommodates the LCD touchscreen display and the oxygen inlet port. The base is a clear acrylic
+The display panel accommodates the LCD touchscreen display, the oxygen inlet port, and the main control electronics of the ventilator. The base is a clear acrylic
 that also allows one to view the ventilator internals. While in the prototyping stage, it might be of advantage
 in observing mechanical problems and also adds an aesthetic touch.
+
+Note that the acrylic panel and circuit boards are custom components and will need to be fabricated by a contract manufacturer before the display panel is assembled.
 
 Related issues are being tracked here:
 [#653](https://github.com/RespiraWorks/Ventilator/issues/653)
@@ -34,6 +36,10 @@ These changes are likely forthcoming in future iterations of our design.
 | Source: Inventor part file | [.ipt](display_panel_acrylic_plate.ipt) |
 | Drawing                    | [.idw](display_panel_acrylic_plate.idw) [.pdf](display_panel_acrylic_plate.pdf) |
 | Export for laser cutting   | [.dxf](display_panel_acrylic_plate.dxf) |
+
+**Custom PCBs**
+
+see **[Electronics Assembly](electronics_assembly)** for turnkey manufaturing files and full details.
 
 ## Parts
 

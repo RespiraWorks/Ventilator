@@ -84,7 +84,7 @@ BEFORE purchasing any parts.**
 
 **Crimper Tips:**
 
-* Position 1 on the crimper will crimp JST XH contacts `[A1]` and Molex KK contacts `[A19]` 
+* Position 1 on the crimper will crimp JST XH contacts `[A1]` and Molex KK contacts `[A19]`
 * Position 2 on the crimper will crimp VH contacts `[A5]`.  However, with certain gauges of wire, this crimper may bend the contact into a shrimp-like shape.  If this happens, bend the contact back straight (it should be pretty obvious as it blocks insertion)
 * Position 3 on the crimper will crimp 2.54mm (aka Dupont) sockets and pins `[A10]`.
 * A proper crimp should crimp the insulation in the lower half and the wire in the upper half of the crimp portion of the contact.

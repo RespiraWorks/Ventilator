@@ -45,6 +45,7 @@ If you are a RespiraWorks contributor, request dev hardware by making an entry
   connected loads like the PSOL.  Remove C33 and C34.
 
 ## Rev 1.0 PCB Quick Start Guide
+* If you are building a complete enclosed ventilator, follow the instructions on [display_panel](../../manufacturing/internals/display_panel/README.md).
 * If you have SN 01, 02, 03, or 05, make sure you check the errata above before you proceed or you may damage the Rpi.
 * If you intend to use the stepper motor-based pinch valves, you will need to solder some wires to power the stepper
   driver as it takes a power input for the motor that is separate  from the logic power it gets from the Nucleo below.

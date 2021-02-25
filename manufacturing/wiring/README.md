@@ -96,38 +96,45 @@ As much as possible we should try to keep the cables one-to-one
 (for example the wiring of the PCB to blower driver cables are all pin 1 to pin 1,
 pin 2 to pin 2, etc. with the same connector style on both ends.
 
-### Main power
-
-> **TODO:** how to? what is the DIN pinout? @inceptionev
+### Main power input
 
 You will need all the tools listed.
 
 Using:
-* DIN female `[A9]`
-* 22AWG wire (length?) `[A12]`
-* 3x VH crimps `[A5]`
+* DIN female receptacle `[A9]`
+* 16AWG wire 60mm each in black and red `[A12]`
+* 2x VH crimps `[A5]`
 * VH 3-pin housing `[A7]`
 * Shrink tubing `[A20-22]`
+
+| Cable Image | Cable Drawing (PDF)  |
+|:--------:|:--------:|
+| ![Main Power Input Cable](images/main_power_cable.jpg) | [![Main Power Input Cable Drawing](images/main_power_cable_drawing_image.jpg)](drawings/20210224_main_power_cable_drawing.pdf) |
 
 ### Blower wiring
 
 The power and signal cables that come included with the blower will be too short to reach the PCB, so new ones
-must be manufactured of about 40-50cm length using crimping tool `[B1]` and  heat gun `[B3]`:
+must be manufactured of about 60cm length using crimping tool `[B1]` and  heat gun `[B3]`:
 
-* power cable:
-  - 16AWG 60cm `[A12]`
+* Blower Power Cable:
+  - 16AWG 50cm in each of black and red `[A12]`
   - 4x VH crimps `[A5]`
   - 2x VH 2-pin housings `[A6]`
   - Shrink tubing `[A21]`
-* control cable:
-  - 26AWG 60cm `[A14]`
-  - 12x XH crimps `[A1]`
+
+| Cable Image | Cable Drawing (PDF)  |
+|:--------:|:--------:|
+| ![Blower Power Cable](images/blower_power_cable.jpg) | [![Blower Power Cable Drawing](images/blower_power_cable_drawing_image.jpg)](drawings/20210224_blower_power_cable_drawing.pdf) |
+
+* Blower Control Cable:
+  - 26AWG 50cm in each of   `[A14]`
+  - 6x XH crimps `[A1]`
   - 2x XH 6-pin housings `[A4]`
   - Shrink tubing `[A21]`
 
-Please follow the old cables included with blower as examples.
-
-> **TODO:** pictures
+| Cable Image | Cable Drawing (PDF)  |
+|:--------:|:--------:|
+| ![Blower Control Cable](images/blower_control_cable.jpg) | [![Blower Control Cable Drawing](images/blower_control_cable_drawing_image.jpg)](drawings/20210224_blower_control_cable_drawing.pdf) |
 
 ### Stepper wiring
 
@@ -157,9 +164,7 @@ To connect the solenoid to the PCB, you will need to crimp a 2-pin XH connector 
 - XH 6-pin housings `[A2]`
 - Shrink tubing `[A20]`
 
-> **TODO:** polarity does not matter? @inceptionev
-
-> **TODO:** pictures
+Note that the polarity of these connections does not matter.
 
 ### Oxygen sensor
 

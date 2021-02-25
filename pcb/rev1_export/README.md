@@ -26,6 +26,8 @@ This package includes everything required to fabricate and assemble the Rev 1.0 
 
 **[Schematic](20200424v2-RespiraWorks-Ventilator-Rev1.0-RC2-DWG-SCH.PDF)**
 
+**[Electrical Hardware Requirements and PCB Interface Control Document](https://docs.google.com/spreadsheets/d/1JOSQKxkQxXJ6MCMDI9PwUQ6kiuGdujR4D6EJN9u2LWg/edit?usp=sharing)**
+
 **[3D STEP file](20200424v2-RespiraWorks-Ventilator-Rev1.0-RC2-3D-STEP.step)**
 
 **[Complete Altium Design Project Files](20200424v2-RespiraWorks-Ventilator-Rev1.0-RC2-PKG-DESIGN.zip)**

@@ -67,6 +67,8 @@ The ventilator assembly requires some custom wiring. Please use materials and in
 
 - Please read the errata on the page linked above and follow the instructions to make the necessary modifications, then proceed.
 
+![](images/pcb_assembly_level1.jpg)
+
 ### Cycle controller
 
 - The Nucleo dev board serves as the main real-time cycle controller and is to be installed onto the PCB.
@@ -74,6 +76,10 @@ The ventilator assembly requires some custom wiring. Please use materials and in
 - Plug the Nucleo into the PCB, observing the silkscreen (white outline on the board) for correct orientation.
 
 - Move the JP5 jumper on the Nucleo board to the E5V position. This tells the board to expect external power from the PCB and allows the controller to be programmed in-situ.
+
+| Cycle Controller | Setting JP5 |
+|:-------------------------:|:-------------------------:|
+| ![](images/pcb_assembly_level2.jpg) | ![](images/nucleo_jp5.jpg) |
 
 ### Interim board
 
@@ -85,6 +91,8 @@ The interim board `[A2]` is optional and not an official part of Ventilator v0.3
 - Design and manufacturing files can be found in this [separate repository](https://github.com/inceptionev/VentilatorRev1InterimDaughtercard).
 
 - Insert the interim controller into the sockets on the top of the Cycle Controller.  The pins will only allow one orientation of the board, so be mindful of the pin arrangement and the orientation will be correct.  Add the CR2016 battery `[A3]` for the RTC.
+
+![](images/pcb_assembly_level3.jpg)
 
 ### Stepper drivers
 
@@ -100,6 +108,8 @@ The interim board `[A2]` is optional and not an official part of Ventilator v0.3
 - Remember to label the pigtails "top" and "bottom" depending on which stepper driver they are connected to.
 
 - When completed, the stack will look like this:
+
+![](images/pcb_assembly_level4and5.jpg)
 
 ### Mounting the PCB stack
 

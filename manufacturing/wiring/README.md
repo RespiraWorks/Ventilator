@@ -102,7 +102,7 @@ You will need all the tools listed.
 
 * Using:
   * DIN female receptacle `[A9]`
-  * 16AWG wire 60mm each in black and red `[A12]`
+  * 16AWG wire 65mm each in black and red `[A12]`
   * 2x VH crimps `[A5]`
   * VH 3-pin housing `[A7]`
   * Shrink tubing `[A20-22]`
@@ -124,7 +124,7 @@ You will need all the tools listed.
 ### Blower wiring
 
 The power and signal cables that come included with the blower will be too short to reach the PCB, so new ones
-must be manufactured of about 60cm length using crimping tool `[B1]` and  heat gun `[B3]`:
+must be manufactured of about 50cm length using crimping tool `[B1]` and  heat gun `[B3]`:
 
 * Blower Power Cable:
   - 16AWG 50cm in each of black and red `[A12]`

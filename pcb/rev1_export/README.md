@@ -13,7 +13,9 @@ The complete turn-key manufacturing files for Rev 1.0 are provided here. This pa
 drill data, fabrication and assembly drawings, Bill of Materials, and machine-assembly centroid (pick-and-place) files.
 Any standard PCB fabrication and assembly vendor will be able to manufacture these boards using the provided files.
 
-**[Turnkey Manufacturing Package](20200424v2-RespiraWorks-Ventilator-Rev1.0-RC2-PKG-TURNKEY.zip)** This package includes everything required to fabricate and assemble the Rev 1.0 PCB:
+**[Turnkey Manufacturing Package](20200424v2-RespiraWorks-Ventilator-Rev1.0-RC2-PKG-TURNKEY.zip)**
+
+This package includes everything required to fabricate and assemble the Rev 1.0 PCB:
 - Gerber Files
 - NC Drill File
 - BOM (Bill of Materials)

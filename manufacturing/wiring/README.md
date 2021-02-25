@@ -185,12 +185,22 @@ The same can be done for the stepper motors belonging to each pinch valve assemb
 
 ### Proportional solenoid valve
 
-To connect the solenoid to the PCB, you will need to crimp a 2-pin XH connector to the wires:
-- 2x XH crimps `[A1]`
-- XH 6-pin housings `[A2]`
-- Shrink tubing `[A20]`
+- To connect the solenoid to the PCB, you will need to crimp a 2-pin XH connector to the wires:
+  - 2x XH crimps `[A1]`
+  - XH 6-pin housings `[A2]`
+  - Shrink tubing `[A20]`
 
-Note that the polarity of these connections does not matter.
+- Instructions:
+  - Note that the polarity of these connections does not matter.
+  - Slide a few extra lenghts of heat shrink tubing onto the solenoid wires for cable management before you proceed.
+  - Crimp the XH contacts onto the other end of the wires.
+  - Push the contacts into the housings per the drawing until they click.
+  - Do a gentle pull test to confirm proper seating of the contact.
+  - Shrink the remaining pieces of heat shink to make the cable more manageable.
+
+| Cable Image | Cable Drawing (PDF)  |
+|:--------:|:--------:|
+| ![Blower Control Cable](images/psol_cable.jpg) | [![Blower Control Cable Drawing](images/psol_cable_drawing_image.jpg)](drawings/20210224_psol_cable_drawing.pdf) |
 
 ### Oxygen sensor
 

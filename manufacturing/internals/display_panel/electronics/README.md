@@ -81,9 +81,9 @@ The ventilator assembly requires some custom wiring. Please use materials and in
 |:-------------------------:|:-------------------------:|
 | ![](images/pcb_assembly_level2.jpg) | ![](images/nucleo_jp5.jpg) |
 
-### Interim board
+### Interim board (optional)
 
-The interim board `[A2]` is optional and not an official part of Ventilator v0.3.  However, you might want to install it into this next position in the stack if you intend to test any of the following functionality.  If you are not running any such experiments, skip this step and stack the next board directy on top of the Cycle Controller.
+The interim board `[A2]` is optional and not an official part of Ventilator v0.3.  However, you might want to install it into this next position in the stack if you intend to test any of the following functionality.  These features will be included on the next revision of the PCB.  If you are not running any such experiments, skip this step and stack the next board directy on top of the Cycle Controller.
 * oxygen control
 * EEPROM nonvolatile memory
 * real-time clock

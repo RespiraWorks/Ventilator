@@ -55,7 +55,7 @@ If you are a RespiraWorks contributor, request dev hardware by making an entry
   conflict on the nucleo
 * [#745](https://github.com/RespiraWorks/Ventilator/issues/745): Blower command is 5V but nucleo outputs 3.3V.  All
   boards are currently shipping with a level translator fitted which addresses this problem, however the blower will
-  turn on full blast briefly at reset.  See ticket for rework instructions: ([#740](https://github.com/RespiraWorks/Ventilator/issues/740) - to be fixed in
+  turn on full blast briefly at reset.  See ticket [#745](https://github.com/RespiraWorks/Ventilator/issues/745) for rework instructions. ([#740](https://github.com/RespiraWorks/Ventilator/issues/740) - to be fixed in
   next rev)
 * [#736](https://github.com/RespiraWorks/Ventilator/issues/736) I2C sensor connectors labeled A, C, B, D. Should be A,
   B, C, D :facepalm:  To be clear, what this means is, the I2C multiplexer assignments, as labeled on the board in Rev

@@ -202,7 +202,7 @@ The same can be done for the stepper motors belonging to each pinch valve assemb
 
 | Cable Image | Cable Drawing (PDF)  |
 |:--------:|:--------:|
-| ![Blower Control Cable](images/psol_cable.jpg) | [![Blower Control Cable Drawing](images/psol_cable_drawing_image.jpg)](drawings/20210224_psol_cable_drawing.pdf) |
+| ![Proportional Solenoid Cable](images/psol_cable.jpg) | [![Proportional Solenoid Cable Drawing](images/psol_cable_drawing_image.jpg)](drawings/20210224_psol_cable_drawing.pdf) |
 
 ### Oxygen Sensor Cable
 

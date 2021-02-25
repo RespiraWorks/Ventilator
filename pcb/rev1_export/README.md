@@ -64,7 +64,7 @@ If you are a RespiraWorks contributor, request dev hardware by making an entry
   prevent proper operation.  The Miller effect is only present at startup and doesn't cause a problem with permanently
   connected loads like the PSOL.  Remove C33 and C34.
 
-## Rev 1.0 PCB Quick Start Guide
+## Rev 1.0 PCB Quick Start Guide for Electrical Developers
 * If you are building a complete enclosed ventilator, follow the instructions on [display_panel](../../manufacturing/internals/display_panel/README.md).
 * If you have SN 01, 02, 03, or 05, make sure you check the errata above before you proceed or you may damage the Rpi.
 * If you intend to use the stepper motor-based pinch valves, you will need to solder some wires to power the stepper

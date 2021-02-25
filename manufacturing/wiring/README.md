@@ -123,6 +123,10 @@ You will need all the tools listed.
 |:--------:|:--------:|
 | ![Main Power Input Cable](images/main_power_cable.jpg) | [![Main Power Input Cable Drawing](images/main_power_cable_drawing_image.jpg)](drawings/20210224_main_power_cable_drawing.pdf) |
 
+| Process Image 1 | Process Image 2  | Process Image 3 |
+|:--------:|:--------:|:--------:|
+| ![Process Image 1](images/main_power_cable_process1.jpg) | ![Process Image 2](images/main_power_cable_process2.jpg) | ![Process Image 1](images/main_power_cable_process3.jpg) |
+
 ### Blower wiring
 
 The power and signal cables that come included with the blower will be too short to reach the PCB, so new ones

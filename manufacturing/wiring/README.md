@@ -107,21 +107,34 @@ Using:
 * VH 3-pin housing `[A7]`
 * Shrink tubing `[A20-22]`
 
+| Cable Image | Cable Drawing (PDF)  |
+|:--------:|:--------:|
+| ![Main Power Input Cable](images/main_power_cable.jpg) | [![Main Power Input Cable Drawing](images/main_power_cable_drawing_image.jpg)](drawings/20210224_main_power_cable_drawing.pdf) |
+
 ### Blower wiring
 
 The power and signal cables that come included with the blower will be too short to reach the PCB, so new ones
 must be manufactured of about 60cm length using crimping tool `[B1]` and  heat gun `[B3]`:
 
-* power cable:
+* Blower Power Cable:
   - 16AWG 50cm in each of black and red `[A12]`
   - 4x VH crimps `[A5]`
   - 2x VH 2-pin housings `[A6]`
   - Shrink tubing `[A21]`
-* control cable:
+
+| Cable Image | Cable Drawing (PDF)  |
+|:--------:|:--------:|
+| ![Blower Power Cable](images/blower_power_cable.jpg) | [![Blower Power Cable Drawing](images/blower_power_cable_drawing_image.jpg)](drawings/20210224_blower_power_cable_drawing.pdf) |
+
+* Blower Control Cable:
   - 26AWG 50cm in each of   `[A14]`
   - 6x XH crimps `[A1]`
   - 2x XH 6-pin housings `[A4]`
   - Shrink tubing `[A21]`
+
+| Cable Image | Cable Drawing (PDF)  |
+|:--------:|:--------:|
+| ![Blower Control Cable](images/blower_control_cable.jpg) | [![Blower Control Cable Drawing](images/blower_control_cable_drawing_image.jpg)](drawings/20210224_blower_control_cable_drawing.pdf) |
 
 ### Stepper wiring
 

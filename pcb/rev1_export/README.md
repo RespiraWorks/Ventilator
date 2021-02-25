@@ -13,31 +13,28 @@ The complete turn-key manufacturing files for Rev 1.0 are provided here. This pa
 drill data, fabrication and assembly drawings, Bill of Materials, and machine-assembly centroid (pick-and-place) files.
 Any standard PCB fabrication and assembly vendor will be able to manufacture these boards using the provided files.
 
-[Turnkey Manufacturing Package](20200424v2-RespiraWorks-Ventilator-Rev1.0-RC2-PKG-TURNKEY.zip)
-- This package includes everything required to fabricate and assemble the Rev 1.0 PCB:
-  - Gerber Files
-  - NC Drill File
-  - BOM (Bill of Materials)
-  - OPL Substitution BOM for SeeedFusion PCB vendor
-  - Pick and Place File
-  - Assembly and Fab Drawings
-  - IPC Testpoint File
+**[Turnkey Manufacturing Package](20200424v2-RespiraWorks-Ventilator-Rev1.0-RC2-PKG-TURNKEY.zip)** This package includes everything required to fabricate and assemble the Rev 1.0 PCB:
+- Gerber Files
+- NC Drill File
+- BOM (Bill of Materials)
+- OPL Substitution BOM for SeeedFusion PCB vendor
+- Pick and Place File
+- Assembly and Fab Drawings
+- IPC Testpoint File
 
-[Schematic](20200424v2-RespiraWorks-Ventilator-Rev1.0-RC2-DWG-SCH.PDF)
+**[Schematic](20200424v2-RespiraWorks-Ventilator-Rev1.0-RC2-DWG-SCH.PDF)**
 
-[3D STEP file](20200424v2-RespiraWorks-Ventilator-Rev1.0-RC2-3D-STEP.step)
+**[3D STEP file](20200424v2-RespiraWorks-Ventilator-Rev1.0-RC2-3D-STEP.step)**
 
-[Complete Altium Design Project Files](20200424v2-RespiraWorks-Ventilator-Rev1.0-RC2-PKG-DESIGN.zip)
+**[Complete Altium Design Project Files](20200424v2-RespiraWorks-Ventilator-Rev1.0-RC2-PKG-DESIGN.zip)**
 
-[Fabrication Drawing](20200424v2-RespiraWorks-Ventilator-Rev1.0-RC2-DWG-FAB.PDF)
+**[Fabrication Drawing](20200424v2-RespiraWorks-Ventilator-Rev1.0-RC2-DWG-FAB.PDF)**
 
-[Assembly Drawing](20200424v2-RespiraWorks-Ventilator-Rev1.0-RC2-DWG-ASSY.PDF)
+**[Assembly Drawing](20200424v2-RespiraWorks-Ventilator-Rev1.0-RC2-DWG-ASSY.PDF)**
 
-[Bill of Materials](20200424v2-RespiraWorks-Ventilator-Rev1.0-RC2-ASSY-BOM.xls)
+**[Bill of Materials](20200424v2-RespiraWorks-Ventilator-Rev1.0-RC2-ASSY-BOM.xls)**
 
-[Simplified STEP file without STM32 or Rpi](20200424v2-RespiraWorks-Ventilator-Rev1.0-RC2-3D-STEP-NO-PI-NO-STM.step)
-
-
+**[Simplified STEP file without STM32 or Rpi](20200424v2-RespiraWorks-Ventilator-Rev1.0-RC2-3D-STEP-NO-PI-NO-STM.step)**
 
 
 ## Requesting hardware for development

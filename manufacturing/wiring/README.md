@@ -100,12 +100,22 @@ pin 2 to pin 2, etc. with the same connector style on both ends.
 
 You will need all the tools listed.
 
-Using:
-* DIN female receptacle `[A9]`
-* 16AWG wire 60mm each in black and red `[A12]`
-* 2x VH crimps `[A5]`
-* VH 3-pin housing `[A7]`
-* Shrink tubing `[A20-22]`
+* Using:
+  * DIN female receptacle `[A9]`
+  * 16AWG wire 60mm each in black and red `[A12]`
+  * 2x VH crimps `[A5]`
+  * VH 3-pin housing `[A7]`
+  * Shrink tubing `[A20-22]`
+
+- Instructions:
+  - Cut two 5cm lengths from each of the wire colors.
+  - Solder the 5cm lengths to the 4-pin Power DIN connector per the drawing below. It will be easier if you use a hot iron (>370C) and you pre-tin both the wires ends and the connector solder cups.
+  - Apply heat shrink to the 4 exposed connections.
+  - Solder the two black wires to the remaining length of the black wire, and do the same with the red.  Apply heat shrink to the junction.
+  - Slide on a few extra lenghts of heat shrink tubing for cable management before you proceed.
+  - Crimp the VH contacts onto the ends of the red and black wire, then push them into the housings according to the drawing until they click.
+  - Do a gentle pull test to confirm proper seating of the contact.
+  - Shrink the remaining pieces of heat shink to make the cable more manageable.
 
 | Cable Image | Cable Drawing (PDF)  |
 |:--------:|:--------:|
@@ -122,15 +132,31 @@ must be manufactured of about 60cm length using crimping tool `[B1]` and  heat g
   - 2x VH 2-pin housings `[A6]`
   - Shrink tubing `[A21]`
 
+- Instructions:
+  - Crimp the VH contacts onto one end of each of the wires.
+  - Slide on a few extra lenghts of heat shrink tubing for cable management before you proceed.
+  - Crimp the VH contacts onto the other end of the wires.
+  - Push the contacts into the housings per the drawing until they click.
+  - Do a gentle pull test to confirm proper seating of the contact.
+  - Shrink the remaining pieces of heat shink to make the cable more manageable.
+
 | Cable Image | Cable Drawing (PDF)  |
 |:--------:|:--------:|
 | ![Blower Power Cable](images/blower_power_cable.jpg) | [![Blower Power Cable Drawing](images/blower_power_cable_drawing_image.jpg)](drawings/20210224_blower_power_cable_drawing.pdf) |
 
 * Blower Control Cable:
-  - 26AWG 50cm in each of   `[A14]`
+  - 26AWG 50cm in each of red, black, and gray `[A14]`
   - 6x XH crimps `[A1]`
   - 2x XH 6-pin housings `[A4]`
   - Shrink tubing `[A21]`
+
+- Instructions:
+  - Crimp the XH contacts onto one end of each of the wires.
+  - Slide on a few extra lenghts of heat shrink tubing for cable management before you proceed.
+  - Crimp the XH contacts onto the other end of the wires.
+  - Push the contacts into the housings per the drawing until they click.
+  - Do a gentle pull test to confirm proper seating of the contact.
+  - Shrink the remaining pieces of heat shink to make the cable more manageable.
 
 | Cable Image | Cable Drawing (PDF)  |
 |:--------:|:--------:|

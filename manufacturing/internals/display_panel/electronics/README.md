@@ -59,7 +59,7 @@ The ventilator assembly requires some custom wiring. Please use materials and in
 
 ### Mainboard (PCB)
 
-- The mainboard provides the electrtical control of the ventilator.  It is a custom-designed part that is most commonly fabricated by a PCB contract manufacturer.  It uses standard PCB manufacturing processes that can be handled by a wide range of vendors.
+- The mainboard provides the electrical control of the ventilator.  It is a custom-designed part that is most commonly fabricated by a PCB contract manufacturer.  It uses standard PCB manufacturing processes that can be handled by a wide range of vendors.
 
 - Design and manufacturing files for the main board can be found on the [PCB Rev1 page](../../../../pcb/rev1_export).
 
@@ -90,7 +90,7 @@ The interim board `[A2]` is optional and not an official part of Ventilator v0.3
 
 - Design and manufacturing files can be found in this [separate repository](https://github.com/inceptionev/VentilatorRev1InterimDaughtercard).
 
-- Insert the interim controller into the sockets on the top of the Cycle Controller.  The pins will only allow one orientation of the board, so be mindful of the pin arrangement and the orientation will be correct.  Add the CR2016 battery `[A3]` for the RTC.
+- Insert the interim controller into the sockets on the top of the Cycle Controller.  The pins will only allow one orientation of the board, so be mindful of the pin arrangement and the orientation will be correct.  Add the CR2016 battery `[A3]` for the Real-Time Clock (RTC).
 
 ![](images/pcb_assembly_level3.jpg)
 

@@ -13,13 +13,33 @@ The complete turn-key manufacturing files for Rev 1.0 are provided here. This pa
 drill data, fabrication and assembly drawings, Bill of Materials, and machine-assembly centroid (pick-and-place) files.
 Any standard PCB fabrication and assembly vendor will be able to manufacture these boards using the provided files.
 
-[Schematic](20200424v2-RespiraWorks-Ventilator-Rev1.0-RC2-DWG-SCH.PDF)
+**[Turnkey Manufacturing Package](20200424v2-RespiraWorks-Ventilator-Rev1.0-RC2-PKG-TURNKEY.zip)**
 
-[3D STEP file](20200424v2-RespiraWorks-Ventilator-Rev1.0-RC2-3D-STEP.step)
+This package includes everything required to fabricate and assemble the Rev 1.0 PCB:
+- Gerber Files
+- NC Drill File
+- BOM (Bill of Materials)
+- OPL Substitution BOM for SeeedFusion PCB vendor
+- Pick and Place File
+- Assembly and Fab Drawings
+- IPC Testpoint File
 
-[Manufacturing Package](20200424v2-RespiraWorks-Ventilator-Rev1.0-RC2-PKG-TURNKEY.zip)
+**[Schematic](20200424v2-RespiraWorks-Ventilator-Rev1.0-RC2-DWG-SCH.PDF)**
 
-> **TODO:** identify the remaining files.
+**[Electrical Hardware Requirements and PCB Interface Control Document](https://docs.google.com/spreadsheets/d/1JOSQKxkQxXJ6MCMDI9PwUQ6kiuGdujR4D6EJN9u2LWg/edit?usp=sharing)**
+
+**[3D STEP file](20200424v2-RespiraWorks-Ventilator-Rev1.0-RC2-3D-STEP.step)**
+
+**[Complete Altium Design Project Files](20200424v2-RespiraWorks-Ventilator-Rev1.0-RC2-PKG-DESIGN.zip)**
+
+**[Fabrication Drawing](20200424v2-RespiraWorks-Ventilator-Rev1.0-RC2-DWG-FAB.PDF)**
+
+**[Assembly Drawing](20200424v2-RespiraWorks-Ventilator-Rev1.0-RC2-DWG-ASSY.PDF)**
+
+**[Bill of Materials](20200424v2-RespiraWorks-Ventilator-Rev1.0-RC2-ASSY-BOM.xls)**
+
+**[Simplified STEP file without STM32 or Rpi](20200424v2-RespiraWorks-Ventilator-Rev1.0-RC2-3D-STEP-NO-PI-NO-STM.step)**
+
 
 ## Requesting hardware for development
 
@@ -35,7 +55,7 @@ If you are a RespiraWorks contributor, request dev hardware by making an entry
   conflict on the nucleo
 * [#745](https://github.com/RespiraWorks/Ventilator/issues/745): Blower command is 5V but nucleo outputs 3.3V.  All
   boards are currently shipping with a level translator fitted which addresses this problem, however the blower will
-  turn on full blast briefly at reset ([#740](https://github.com/RespiraWorks/Ventilator/issues/740) - to be fixed in
+  turn on full blast briefly at reset.  See ticket [#745](https://github.com/RespiraWorks/Ventilator/issues/745) for rework instructions. ([#740](https://github.com/RespiraWorks/Ventilator/issues/740) - to be fixed in
   next rev)
 * [#736](https://github.com/RespiraWorks/Ventilator/issues/736) I2C sensor connectors labeled A, C, B, D. Should be A,
   B, C, D :facepalm:  To be clear, what this means is, the I2C multiplexer assignments, as labeled on the board in Rev
@@ -44,7 +64,8 @@ If you are a RespiraWorks contributor, request dev hardware by making an entry
   prevent proper operation.  The Miller effect is only present at startup and doesn't cause a problem with permanently
   connected loads like the PSOL.  Remove C33 and C34.
 
-## Rev 1.0 PCB Quick Start Guide
+## Rev 1.0 PCB Quick Start Guide for Electrical Developers
+* If you are building a complete enclosed ventilator, follow the instructions on [display_panel](../../manufacturing/internals/display_panel/README.md).
 * If you have SN 01, 02, 03, or 05, make sure you check the errata above before you proceed or you may damage the Rpi.
 * If you intend to use the stepper motor-based pinch valves, you will need to solder some wires to power the stepper
   driver as it takes a power input for the motor that is separate  from the logic power it gets from the Nucleo below.

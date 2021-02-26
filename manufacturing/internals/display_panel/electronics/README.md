@@ -2,6 +2,8 @@
 
 This build constitutes the electrical, computing and digital user interface components.
 
+Note that Mainbaord (required) and Interim Board (optional) are custom components and will need to be fabricated by a contract manufacturer before proceeding.
+
 > **TODO:** add renderings
 
 ## Parts
@@ -13,7 +15,7 @@ BEFORE purchasing any parts.**
 
 | Item  | Quantity | Manufacturer  | Part Number        | Price (USD) | Sources[*][ppg]         | Notes |
 | ----  |---------:| --------------| ------------------ | -----------:|:-----------------------:| ----- |
-|**A1** | 1        | RespiraWorks  | [PCB][a1rw]        |             | Rw                      | Custom main board |
+|**A1** | 1        | RespiraWorks  | [Mainboard][a1rw]        |             | Rw                      | Custom main board |
 |**A2** | (1)      | RespiraWorks  | [Interim board][a2rw] |          | Rw                      | Rev1 interim board **OPTIONAL** |
 |**A3** | (1)      | Duracell      | 2016 3V            | 1.67        | [Z][a3amzn]             | CR2016 battery, for interim board **OPTIONAL** |
 |**A4** | 1        | ST Micro      | NUCLEO-L452-RE     | 14.43       | [M][a4mous] [R][a4rs]   | STM32 Nucleo dev board, **DO NOT get the -P** version |
@@ -55,67 +57,72 @@ BEFORE purchasing any parts.**
 The ventilator assembly requires some custom wiring. Please use materials and instructions on the
 [wiring page](../../../wiring) to prepare those custom components first.
 
-### Main circuit board (PCB)
+### Mainboard (PCB)
 
-Design and manufacturing files for the main board can be found on the
-[PCB Rev1 page](../../../../pcb/rev1_export).
+- The mainboard provides the electrical control of the ventilator.  It is a custom-designed part that is most commonly fabricated by a PCB contract manufacturer.  It uses standard PCB manufacturing processes that can be handled by a wide range of vendors.
 
-Revision 1 of the custom circuit board (PCB) requires some modification to work with the current prototype.
-Please follow instructions on that page to make the necessary modifications.
+- Design and manufacturing files for the main board can be found on the [PCB Rev1 page](../../../../pcb/rev1_export).
 
-If you are building an enclosed ventilator prototype, you may stop following the PCB instructions right before
-installation of the Raspberry Pi. Follow the sequence of steps below instead.
+- Revision 1 of the custom circuit board (PCB) requires some modification to work with the current prototype.
 
-> **TODO:** does errata explain how to do the bodge wire?
+- Please read the errata on the page linked above and follow the instructions to make the necessary modifications, then proceed.
+
+![](images/pcb_assembly_level1.jpg)
 
 ### Cycle controller
 
-The Nucleo dev board serves as the main cycle controller processor and is to be installed onto the PCB.
+- The Nucleo dev board serves as the main real-time cycle controller and is to be installed onto the PCB.
 
-> **TODO:** move relevant parts of PCB doc and/or illustrate
+- Plug the Nucleo into the PCB, observing the silkscreen (white outline on the board) for correct orientation.
 
-### Interim board
+- Move the JP5 jumper on the Nucleo board to the E5V position. This tells the board to expect external power from the PCB and allows the controller to be programmed in-situ.
 
-You might want to install an interim board `[A2]` if you intend to test any of the following functionality:
+| Cycle Controller | Setting JP5 |
+|:-------------------------:|:-------------------------:|
+| ![](images/pcb_assembly_level2.jpg) | ![](images/nucleo_jp5.jpg) |
+
+### Interim board (optional)
+
+The interim board `[A2]` is optional and not an official part of Ventilator v0.3.  However, you might want to install it into this next position in the stack if you intend to test any of the following functionality.  These features will be included on the next revision of the PCB.  If you are not running any such experiments, skip this step and stack the next board directy on top of the Cycle Controller.
 * oxygen control
 * EEPROM nonvolatile memory
 * real-time clock
 
-Design and manufacturing files can be found in this
-[separate repository](https://github.com/inceptionev/VentilatorRev1InterimDaughtercard).
+- Design and manufacturing files can be found in this [separate repository](https://github.com/inceptionev/VentilatorRev1InterimDaughtercard).
 
-You will need to install a battery `[A3]`.
+- Insert the interim controller into the sockets on the top of the Cycle Controller.  The pins will only allow one orientation of the board, so be mindful of the pin arrangement and the orientation will be correct.  Add the CR2016 battery `[A3]` for the Real-Time Clock (RTC).
 
-The card goes directly onto the Nucleo, **before** the stepper drivers.
-
-> **TODO:** pictures
+![](images/pcb_assembly_level3.jpg)
 
 ### Stepper drivers
 
-Pinch valves require either 2 stepper driver boards `[A5]` or a single 2-axis board `[A6]`.
+- Pinch valves require either 2 stepper driver boards `[A5]` or a single 2-axis board `[A6]`.
 
-Each pinch valve must also include some additional wiring and a driver board for controlling the stepper motor. A
-pigtail with male dupont connectors must be manufactured for interfacing to the driver board. Furthermore, since a
-single ventilator contains two pinch valves, each must come with its own driver board configured with 0-ohm resistors
-soldered appropriately.
+- Each pinch valve must also include some additional wiring and a driver board for controlling the stepper motor.  Each stepper driver must have resistors soldered appropriately to allow them to be controlled independently.
 
-It is advisable that you first manufacture the 2 pigtails of appropriate length as described on the
+- It is advisable that you first manufacture the 2 pigtails of appropriate length as described on the
 [wiring page](../../../wiring).
 
-Stepper board modification and mounting to Nucleo is documented [here](stepper_drivers).
+- Stepper board resistor modification and mounting to Nucleo is documented [here](stepper_drivers).
 
-Remember to label the pigtails "top" and "bottom" depending on which stepper driver they are connected to.
+- Remember to label the pigtails "top" and "bottom" depending on which stepper driver they are connected to.
+
+- When completed, the stack will look like this:
+
+![](images/pcb_assembly_level4and5.jpg)
 
 ### Mounting the PCB stack
 
-Now that the stack is mostly assembled, you should mount it to the back of the touch-screen on the
-display panel assembly.
+- Now that the stack is mostly assembled, you should mount it to the back of the touch-screen on the
+display panel assembly, which will already have 9mm standoffs installed to accept the PCB stack.
 
-Firstly, plug the microUSB cable `[A10]` into the touchscreen's `5V+Touch`. This may be harder to reach later on.
+- Firstly, plug the microUSB cable `[A10]` into the touchscreen's `5V+Touch`. This may be harder to reach later on.
 
-To mount the PCB, use 22mm stand-offs `[A12]`, but place some washers `[A13]` to protect the PCB from mechanical damage.
+- To mount the PCB stack, align the 4 holes in the left-hand side of the mainboard with the standoffs in the display panel.
 
-The whole stack should now look like this:
+- Attach the mainboard to the display by screwing the 22mm stand-offs `[A12]` into the matching display standoffs, using 4x washers `[A13]` to protect the PCB from mechanical damage.
+
+- The whole stack should now look like this:
 
 ![](images/pcb_no_pi.jpg)
 
@@ -127,10 +134,13 @@ The Raspberry Pi serves as the user interface computer for the ventilator.
 
 Prior to installing it on the PCB, you should:
 * install a heat sink `[A8]` on the processor
-* load the memory card `[A9]` with the standard [RaspberryPi OS](https://www.raspberrypi.org/software/),
-  using a microSD adapter (listed in [peripherals](../../../peripherals.md))
+
+* load the memory card `[A9]` with the standard [RaspberryPi OS](https://www.raspberrypi.org/software/), using a microSD adapter (listed in [peripherals](../../../peripherals.md))
+
 * install memory card into the RaspberryPi
+
 * give it a keyboard and mouse (also listed in [peripherals](../../../peripherals.md)) or
+
 * alternatively, you can configure it for remote ssh control as described on the [GUI page](../../../../software/gui).
 
 | Heat sinks | SD card |
@@ -142,9 +152,12 @@ Now you can mount the Rasberry Pi onto the 20mm stand-offs on the PCB and secure
 ### Final wiring
 
 Now you can make the final connections:
+
 * RaspberryPi's `USB` to touchscreen's `5V+Touch` microUSB, using `[A10]`
+
 * RaspberryPi's `microHDMI` to touchscreen's ribbon cable
+
 * Use the miniUSB cable `[A11]` to connect the Nucleo to the Raspberry Pi
 
-It should now look like this:
+* It should now look like this:
 ![](../images/everything.jpg)

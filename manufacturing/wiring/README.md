@@ -4,12 +4,12 @@ The following page describes the custom wiring components required in the electr
 these components will require soldering and crimping.
 
 For a single ventilator unit, the following custom wiring assemblies are needed:
-* Main power
-* Blower power
-* Blower signal/control
-* Oxygen sensor
-* Stepper motor pigtails (x2)
-* Proportional solenoid
+* [Main power](#main-power-input)
+* [Blower power](#blower-power)
+* [Blower signal/control](#blower-control-cable)
+* [Stepper motor pigtails (x2)](#stepper-wiring)
+* [Proportional solenoid](#proportional-solenoid-valve)
+* [Oxygen sensor](#oxygen-sensor-cable)
 
 It is probably a good idea to manufacture and test these before proceeding with the rest of the mechanical assembly.
 
@@ -43,6 +43,7 @@ BEFORE purchasing any parts.**
 |**A20**|        - | uxcell        | a11110900ux0059       | 7.89 / 6m    | [Z][a20amzn]         | Shrink tubing, black, 3mm diameter |
 |**A21**|        - | uxcell        | A17032300ux0991       | 8.99 / 6m    | [Z][a21amzn]         | Shrink tubing, black, 4mm diameter |
 |**A22**|        - | XHF           | B07WC9BGRT            | 11.99        | [Z][a22amzn]         | Shrink tubing, red, assorted diameters |
+|**A23**| 1        |Phoenix Contact| 3240078               | 0.15         | [K][a23key]          | M4 ring terminal, 14-18AWG |
 
 [a1key]:   https://www.digikey.com/short/z44f8d
 [a2key]:   https://www.digikey.com/short/z44f8f
@@ -67,6 +68,7 @@ BEFORE purchasing any parts.**
 [a20amzn]: https://www.amazon.com/uxcell-Polyolefin-Insulation-Shrink-Tubing/dp/B008DFW8JA
 [a21amzn]: https://www.amazon.com/uxcell-4mm-Shrink-Sleeve-Tubing/dp/B071VGQH97
 [a22amzn]: https://www.amazon.com/XHF-140-PCS-Red-Wear-Resistant/dp/B07WC9BGRT
+[a23key]:  https://www.digikey.com/en/products/detail/phoenix-contact/3240078/4458695
 
 ## Tools
 
@@ -108,31 +110,39 @@ You will need all the tools listed.
   * 2x VH crimp contacts `[A5]`
   * VH 3-pin housing `[A7]`
   * Shrink tubing `[A20-22]`
+  * 16AWG wire green, 30 cm `[A12]`
+  * M4 ring terminal `[A23]`
 
 - Instructions:
   - Cut two 5cm lengths from each of the wire colors.
   - Solder the 5cm lengths to the 4-pin Power DIN connector per the drawing below. It will be easier if you use a hot iron (>370C) and you pre-tin both the wires ends and the connector solder cups.
   - Apply heat shrink to the 4 exposed connections.
   - Solder the two black wires to the remaining length of the black wire, and do the same with the red.  Apply heat shrink to the junction.
-  - Slide on a few extra lenghts of heat shrink tubing for cable management before you proceed.
+  - Slide on a few extra lengths of heat shrink tubing for cable management before you proceed.
   - Crimp the VH contacts onto the ends of the red and black wire, then push them into the housings according to the drawing until they click.
   - Do a gentle pull test to confirm proper seating of the contact.
   - Shrink the remaining pieces of heat shink to make the cable more manageable.
 
+- Enclosure grounding terminal (process image 4):
+  - solder two 10cm lengths of green wire to the sides of the DIN connector (which can remain exposed)
+  - solder the two pieces of green wire together and to the remaining 10 cm length
+  - apply some shrink tubing to where the three wires meet
+  - crimp the ring terminal to the end of the wire
+
 | Cable Image | Cable Drawing (PDF)  |
 |:--------:|:--------:|
-| ![Main Power Input Cable](images/main_power_cable.jpg) | [![Main Power Input Cable Drawing](images/main_power_cable_drawing_image.jpg)](drawings/20210224_main_power_cable_drawing.pdf) |
+| ![Main Power Input Cable](images/main_power_cable.jpg) | [![Main Power Input Cable Drawing](images/main_power_cable_drawing_image.jpg)](drawings/20210226_main_power_cable_drawing.pdf) |
 
-| Process Image 1 | Process Image 2  | Process Image 3 |
-|:--------:|:--------:|:--------:|
-| ![Process Image 1](images/main_power_cable_process1.jpg) | ![Process Image 2](images/main_power_cable_process2.jpg) | ![Process Image 1](images/main_power_cable_process3.jpg) |
+| Process Image 1 | Process Image 2  | Process Image 3 | Process Image 4 |
+|:--------:|:--------:|:--------:|:--------:|
+| ![Process Image 1](images/main_power_cable_process1.jpg) | ![Process Image 2](images/main_power_cable_process2.jpg) | ![Process Image 1](images/main_power_cable_process3.jpg) |  ![Process Image 1](images/main_power_cable_process4.jpg) |
 
-### Blower wiring
+### Blower power
 
-The power and signal cables that come included with the blower will be too short to reach the PCB, so new ones
-must be manufactured of about 50cm length using crimping tool `[B1]` and  heat gun `[B3]`:
+The power cable that comes included with the blower will be too short to reach the PCB,
+so a new one must be manufactured.
 
-* Blower Power Cable:
+* Using:
   - 16AWG 50cm in each of black and red `[A12]`
   - 4x VH crimp contacts `[A5]`
   - 2x VH 2-pin housings `[A6]`
@@ -150,7 +160,12 @@ must be manufactured of about 50cm length using crimping tool `[B1]` and  heat g
 |:--------:|:--------:|
 | ![Blower Power Cable](images/blower_power_cable.jpg) | [![Blower Power Cable Drawing](images/blower_power_cable_drawing_image.jpg)](drawings/20210224_blower_power_cable_drawing.pdf) |
 
-* Blower Control Cable:
+### Blower control cable
+
+The signal cable that comes included with the blower will be too short to reach the PCB,
+so a new one must be manufactured.
+
+* Using:
   - 26AWG 50cm in each of red, black, and gray `[A14]`
   - 6x XH crimp contacts `[A1]`
   - 2x XH 6-pin housings `[A4]`
@@ -191,7 +206,9 @@ The same can be done for the stepper motors belonging to each pinch valve assemb
 
 ### Proportional solenoid valve
 
-- To connect the solenoid to the PCB, you will need to crimp a 2-pin XH connector to the wires:
+To connect the solenoid to the PCB, you will need to crimp a 2-pin XH connector to the wires.
+
+- Using:
   - 2x XH crimp contacts `[A1]`
   - XH 6-pin housings `[A2]`
   - Shrink tubing `[A20]`
@@ -212,7 +229,7 @@ The same can be done for the stepper motors belonging to each pinch valve assemb
 
 This cable connects the Oxygen Sensor to the Interim Board in the PCB stack.
 
-- Oxygen Sensor Cable:
+- Using:
   - 26AWG 40cm in each of green and white `[A14]`
   - 4x KK series crimp contacts `[A19]`
   - 2x KK series 3-pin housings `[A18]`
@@ -228,8 +245,6 @@ This cable connects the Oxygen Sensor to the Interim Board in the PCB stack.
 | Cable Image | Cable Drawing (PDF)  |
 |:--------:|:--------:|
 | ![Oxygen Sensor Cable](images/oxygen_sensor_cable.jpg) | [![Oxygen Sensor Cable Drawing](images/oxygen_sensor_cable_drawing_image.jpg)](drawings/20210209_oxygen_sensor_cable_drawing.pdf) |
-
-> **TODO:** pictures
 
 ## Pricing totals
 

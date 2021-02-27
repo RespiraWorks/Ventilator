@@ -959,8 +959,6 @@ USD-SCLK
 Wire Wire Line
 	6400 2500 6700 2500
 Wire Wire Line
-	6400 3400 7150 3400
-Wire Wire Line
 	6400 3500 6700 3500
 Wire Wire Line
 	6400 4100 6700 4100
@@ -1027,14 +1025,7 @@ Wire Wire Line
 	4150 5450 4250 5450
 Connection ~ 4150 5450
 Wire Wire Line
-	4800 4450 4950 4450
-Wire Wire Line
-	4950 4450 4950 4500
-Wire Wire Line
-	4950 4500 5100 4500
-Wire Wire Line
 	4350 4000 5100 4000
-NoConn ~ 5100 4400
 $Comp
 L power:GNDA #PWR?
 U 1 1 606ED0BF
@@ -1097,28 +1088,6 @@ F 1 "Arduino Connector" H 10300 2050 50  0000 L CNN
 F 2 "RespiraWorks_Std:PinSocket_1x08_P2.54mm_Vertical" H 10700 2550 50  0001 C CNN
 F 3 "~" H 10700 2550 50  0001 C CNN
 	1    10700 2550
-	1    0    0    -1  
-$EndComp
-$Comp
-L Connector_Generic:Conn_01x03 J?
-U 1 1 600F2B33
-P 8850 2900
-F 0 "J?" H 8800 3200 50  0000 L CNN
-F 1 "Optical end stop 1" H 8500 3100 50  0000 L CNN
-F 2 "RespiraWorks_Std:Molex_Micro-Fit_3.0_43650-0315_1x03_P3.00mm_Vertical" H 8850 2900 50  0001 C CNN
-F 3 "~" H 8850 2900 50  0001 C CNN
-	1    8850 2900
-	1    0    0    -1  
-$EndComp
-$Comp
-L Connector_Generic:Conn_01x03 J?
-U 1 1 600F2BC2
-P 8850 3300
-F 0 "J?" H 8800 3000 50  0000 L CNN
-F 1 "Optical end stop 2" H 8450 2900 50  0000 L CNN
-F 2 "RespiraWorks_Std:Molex_Micro-Fit_3.0_43650-0315_1x03_P3.00mm_Vertical" H 8850 3300 50  0001 C CNN
-F 3 "~" H 8850 3300 50  0001 C CNN
-	1    8850 3300
 	1    0    0    -1  
 $EndComp
 NoConn ~ 10500 2250
@@ -1188,39 +1157,6 @@ Wire Wire Line
 Connection ~ 10050 2350
 Wire Wire Line
 	10050 2350 10050 2250
-$Comp
-L power:+5V #PWR?
-U 1 1 6020E488
-P 8350 2750
-F 0 "#PWR?" H 8350 2600 50  0001 C CNN
-F 1 "+5V" H 8365 2923 50  0000 C CNN
-F 2 "" H 8350 2750 50  0001 C CNN
-F 3 "" H 8350 2750 50  0001 C CNN
-	1    8350 2750
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	8650 3200 8350 3200
-Wire Wire Line
-	8650 2800 8350 2800
-$Comp
-L power:GND #PWR?
-U 1 1 60226FFE
-P 8500 3400
-F 0 "#PWR?" H 8500 3150 50  0001 C CNN
-F 1 "GND" H 8505 3227 50  0000 C CNN
-F 2 "" H 8500 3400 50  0001 C CNN
-F 3 "" H 8500 3400 50  0001 C CNN
-	1    8500 3400
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	8650 3000 8500 3000
-Wire Wire Line
-	8500 3000 8500 3400
-Wire Wire Line
-	8650 3400 8500 3400
-Connection ~ 8500 3400
 Wire Wire Line
 	7350 850  7500 850 
 Connection ~ 7500 850 
@@ -1278,11 +1214,6 @@ Wire Wire Line
 	9550 850  9750 850 
 Wire Wire Line
 	3150 6100 3550 6100
-Wire Wire Line
-	8350 2750 8350 2800
-Connection ~ 8350 2800
-Wire Wire Line
-	8350 2800 8350 3200
 Text Notes 9300 1950 0    79   ~ 0
 Arduino headers for expansion
 Text HLabel 4850 3300 0    50   BiDi ~ 0
@@ -1303,7 +1234,7 @@ Text HLabel 4850 4100 0    50   BiDi ~ 0
 PC8
 Text HLabel 4850 4200 0    50   BiDi ~ 0
 PC9
-Text HLabel 4800 4450 0    50   BiDi ~ 0
+Text HLabel 4850 4500 0    50   BiDi ~ 0
 PC12
 Text HLabel 6700 4700 2    50   BiDi ~ 0
 PB14
@@ -1315,7 +1246,7 @@ Text HLabel 6700 3700 2    50   BiDi ~ 0
 PB4
 Text HLabel 6700 3500 2    50   BiDi ~ 0
 PB2
-Text HLabel 7200 3400 2    50   BiDi ~ 0
+Text HLabel 6700 3400 2    50   BiDi ~ 0
 PB1
 Text HLabel 6700 3300 2    50   BiDi ~ 0
 PB0
@@ -1331,7 +1262,7 @@ Text HLabel 6700 2400 2    50   BiDi ~ 0
 PA8
 Text HLabel 6700 1900 2    50   BiDi ~ 0
 PA3
-Text HLabel 7500 1800 2    50   BiDi ~ 0
+Text HLabel 6700 1800 2    50   BiDi ~ 0
 PA2
 Text HLabel 6700 1700 2    50   BiDi ~ 0
 PA1
@@ -1397,17 +1328,6 @@ Text HLabel 6700 4800 2    50   BiDi ~ 0
 PB15
 Wire Wire Line
 	6400 1700 6700 1700
-Wire Wire Line
-	7450 1800 7450 2900
-Wire Wire Line
-	7150 3300 7150 3400
-Connection ~ 7150 3400
-Wire Wire Line
-	7150 3400 7200 3400
-Wire Wire Line
-	7450 2900 8650 2900
-Wire Wire Line
-	7150 3300 8650 3300
 Wire Wire Line
 	6400 4300 6700 4300
 Wire Wire Line
@@ -1543,12 +1463,6 @@ Text Label 10050 6150 0    50   ~ 0
 PA2
 Text Label 10050 6250 0    50   ~ 0
 PB1
-NoConn ~ 5100 4300
-Wire Wire Line
-	7500 1800 7450 1800
-Wire Wire Line
-	6400 1800 7450 1800
-Connection ~ 7450 1800
 Text HLabel 6700 2100 2    50   Output ~ 0
 SPI-SCLK
 Text HLabel 6700 2200 2    50   Input ~ 0
@@ -1653,4 +1567,166 @@ Wire Wire Line
 	4100 7100 5200 7100
 Wire Wire Line
 	5200 7100 5200 6800
+Wire Wire Line
+	6400 1800 6700 1800
+Wire Wire Line
+	6700 3400 6400 3400
+Wire Wire Line
+	4850 4500 5100 4500
+$Comp
+L Connector_Generic:Conn_01x03 J?
+U 1 1 604A44BD
+P 1100 1000
+F 0 "J?" H 1050 1300 50  0000 L CNN
+F 1 "Optical end stop 1" H 750 1200 50  0000 L CNN
+F 2 "RespiraWorks_Std:Molex_Micro-Fit_3.0_43650-0315_1x03_P3.00mm_Vertical" H 1100 1000 50  0001 C CNN
+F 3 "~" H 1100 1000 50  0001 C CNN
+	1    1100 1000
+	-1   0    0    -1  
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x03 J?
+U 1 1 604A44C3
+P 1100 1600
+F 0 "J?" H 1050 1300 50  0000 L CNN
+F 1 "Optical end stop 2" H 700 1200 50  0000 L CNN
+F 2 "RespiraWorks_Std:Molex_Micro-Fit_3.0_43650-0315_1x03_P3.00mm_Vertical" H 1100 1600 50  0001 C CNN
+F 3 "~" H 1100 1600 50  0001 C CNN
+	1    1100 1600
+	-1   0    0    -1  
+$EndComp
+$Comp
+L power:+5V #PWR?
+U 1 1 604A44C9
+P 1600 850
+F 0 "#PWR?" H 1600 700 50  0001 C CNN
+F 1 "+5V" H 1615 1023 50  0000 C CNN
+F 2 "" H 1600 850 50  0001 C CNN
+F 3 "" H 1600 850 50  0001 C CNN
+	1    1600 850 
+	-1   0    0    -1  
+$EndComp
+Wire Wire Line
+	1300 1500 1600 1500
+Wire Wire Line
+	1300 900  1600 900 
+$Comp
+L power:GND #PWR?
+U 1 1 604A44D1
+P 1450 1700
+F 0 "#PWR?" H 1450 1450 50  0001 C CNN
+F 1 "GND" H 1455 1527 50  0000 C CNN
+F 2 "" H 1450 1700 50  0001 C CNN
+F 3 "" H 1450 1700 50  0001 C CNN
+	1    1450 1700
+	-1   0    0    -1  
+$EndComp
+Wire Wire Line
+	1300 1100 1450 1100
+Wire Wire Line
+	1300 1700 1450 1700
+Connection ~ 1450 1700
+Wire Wire Line
+	1600 850  1600 900 
+Wire Wire Line
+	3000 1600 2150 1600
+$Comp
+L Device:R R?
+U 1 1 604BABA2
+P 1900 1000
+F 0 "R?" V 1800 950 50  0000 C CNN
+F 1 "0" V 1800 1100 50  0000 C CNN
+F 2 "RespiraWorks_std:R_0603_1608Metric" V 1830 1000 50  0001 C CNN
+F 3 "~" H 1900 1000 50  0001 C CNN
+	1    1900 1000
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	1750 1000 1600 1000
+$Comp
+L Device:R R?
+U 1 1 604BB5FA
+P 1900 1600
+F 0 "R?" V 1800 1550 50  0000 C CNN
+F 1 "0" V 1800 1700 50  0000 C CNN
+F 2 "RespiraWorks_std:R_0603_1608Metric" V 1830 1600 50  0001 C CNN
+F 3 "~" H 1900 1600 50  0001 C CNN
+	1    1900 1600
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	1750 1600 1300 1600
+$Comp
+L Device:C C?
+U 1 1 604C1B1C
+P 2150 1750
+F 0 "C?" H 1950 1750 50  0000 L CNN
+F 1 "TBD" H 1900 1850 50  0000 L CNN
+F 2 "RespiraWorks_std:C_0603_1608Metric" H 2188 1600 50  0001 C CNN
+F 3 "~" H 2150 1750 50  0001 C CNN
+F 4 "DNP" H 1950 1950 50  0000 C CNN "DNP"
+	1    2150 1750
+	-1   0    0    1   
+$EndComp
+Connection ~ 2150 1600
+Wire Wire Line
+	2150 1600 2050 1600
+$Comp
+L Device:C C?
+U 1 1 604C7BF1
+P 2150 1150
+F 0 "C?" H 1950 1150 50  0000 L CNN
+F 1 "TBD" H 1900 1250 50  0000 L CNN
+F 2 "RespiraWorks_std:C_0603_1608Metric" H 2188 1000 50  0001 C CNN
+F 3 "~" H 2150 1150 50  0001 C CNN
+F 4 "DNP" H 1950 1350 50  0000 C CNN "DNP"
+	1    2150 1150
+	-1   0    0    1   
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 604C8205
+P 2150 1900
+F 0 "#PWR?" H 2150 1650 50  0001 C CNN
+F 1 "GND" H 2155 1727 50  0000 C CNN
+F 2 "" H 2150 1900 50  0001 C CNN
+F 3 "" H 2150 1900 50  0001 C CNN
+	1    2150 1900
+	-1   0    0    -1  
+$EndComp
+Wire Wire Line
+	2050 1000 2150 1000
+Connection ~ 2150 1000
+Wire Wire Line
+	1450 1100 1450 1700
+Wire Wire Line
+	1600 1000 1600 1500
+Connection ~ 1600 1000
+Wire Wire Line
+	1600 1000 1300 1000
+$Comp
+L power:GND #PWR?
+U 1 1 605037AB
+P 2150 1300
+F 0 "#PWR?" H 2150 1050 50  0001 C CNN
+F 1 "GND" H 2155 1127 50  0000 C CNN
+F 2 "" H 2150 1300 50  0001 C CNN
+F 3 "" H 2150 1300 50  0001 C CNN
+	1    2150 1300
+	-1   0    0    -1  
+$EndComp
+Wire Wire Line
+	2150 1000 3000 1000
+Text Label 3000 1000 2    50   ~ 0
+Stepper-Lim-Sw1
+Text Label 3000 1600 2    50   ~ 0
+Stepper-Lim-Sw2
+Text Label 4300 4300 0    50   ~ 0
+Stepper-Lim-Sw1
+Wire Wire Line
+	4300 4400 5100 4400
+Wire Wire Line
+	4300 4300 5100 4300
+Text Label 4300 4400 0    50   ~ 0
+Stepper-Lim-Sw2
 $EndSCHEMATC

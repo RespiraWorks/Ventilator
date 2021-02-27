@@ -462,7 +462,7 @@ UART-RTS-STM-CTS-RPi
 Wire Wire Line
 	7800 2100 8700 2100
 Wire Wire Line
-	8700 2000 7700 2000
+	8700 2000 8100 2000
 Wire Wire Line
 	7700 2000 7700 1950
 Text Label 7050 1950 0    50   ~ 0
@@ -2748,4 +2748,42 @@ F 3 "" H 13050 4500 50  0001 C CNN
 $EndComp
 Wire Wire Line
 	13050 4500 13400 4500
+$Comp
+L Connector:TestPoint TP?
+U 1 1 6059BD56
+P 8100 1850
+AR Path="/5FCD50A5/6059BD56" Ref="TP?"  Part="1" 
+AR Path="/6052CC9F/6059BD56" Ref="TP?"  Part="1" 
+AR Path="/6059BD56" Ref="TP?"  Part="1" 
+AR Path="/5FCD4D18/6059BD56" Ref="TP?"  Part="1" 
+AR Path="/5FCD4B8E/6059BD56" Ref="TP?"  Part="1" 
+F 0 "TP?" H 8100 2050 50  0000 C CNN
+F 1 "TP" V 8150 1900 50  0001 C CNN
+F 2 "" H 8300 1850 50  0001 C CNN
+F 3 "~" H 8300 1850 50  0001 C CNN
+	1    8100 1850
+	1    0    0    -1  
+$EndComp
+Connection ~ 8100 2000
+Wire Wire Line
+	8100 2000 7700 2000
+$Comp
+L Connector:TestPoint TP?
+U 1 1 6059E643
+P 7800 2100
+AR Path="/5FCD50A5/6059E643" Ref="TP?"  Part="1" 
+AR Path="/6052CC9F/6059E643" Ref="TP?"  Part="1" 
+AR Path="/6059E643" Ref="TP?"  Part="1" 
+AR Path="/5FCD4D18/6059E643" Ref="TP?"  Part="1" 
+AR Path="/5FCD4B8E/6059E643" Ref="TP?"  Part="1" 
+F 0 "TP?" H 7950 2200 50  0000 C CNN
+F 1 "TP" V 7850 2150 50  0001 C CNN
+F 2 "" H 8000 2100 50  0001 C CNN
+F 3 "~" H 8000 2100 50  0001 C CNN
+	1    7800 2100
+	-1   0    0    1   
+$EndComp
+Connection ~ 7800 2100
+Wire Wire Line
+	8100 1850 8100 2000
 $EndSCHEMATC

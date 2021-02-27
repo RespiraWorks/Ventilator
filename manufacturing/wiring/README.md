@@ -43,7 +43,7 @@ BEFORE purchasing any parts.**
 |**A20**|        - | uxcell        | a11110900ux0059       | 7.89 / 6m    | [Z][a20amzn]         | Shrink tubing, black, 3mm diameter |
 |**A21**|        - | uxcell        | A17032300ux0991       | 8.99 / 6m    | [Z][a21amzn]         | Shrink tubing, black, 4mm diameter |
 |**A22**|        - | XHF           | B07WC9BGRT            | 11.99        | [Z][a22amzn]         | Shrink tubing, red, assorted diameters |
-|**A23**| (1)      | Phoenix Contact | 3240078             | 0.15         | [Z][a23key]          | M4 ring terminal, 14-18AWG |
+|**A23**| 1        |Phoenix Contact| 3240078               | 0.15         | [K][a23key]          | M4 ring terminal, 14-18AWG |
 
 [a1key]:   https://www.digikey.com/short/z44f8d
 [a2key]:   https://www.digikey.com/short/z44f8f

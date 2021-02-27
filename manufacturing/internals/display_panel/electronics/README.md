@@ -13,22 +13,25 @@ BEFORE purchasing any parts.**
 
 [ppg]: ../../../purchasing_guidelines.md
 
-| Item  | Quantity | Manufacturer  | Part Number        | Price (USD) | Sources[*][ppg]         | Notes |
-| ----  |---------:| --------------| ------------------ | -----------:|:-----------------------:| ----- |
-|**A1** | 1        | RespiraWorks  | [Mainboard][a1rw]        |             | Rw                      | Custom main board |
-|**A2** | (1)      | RespiraWorks  | [Interim board][a2rw] |          | Rw                      | Rev1 interim board **OPTIONAL** |
-|**A3** | (1)      | Duracell      | 2016 3V            | 1.67        | [Z][a3amzn]             | CR2016 battery, for interim board **OPTIONAL** |
-|**A4** | 1        | ST Micro      | NUCLEO-L452-RE     | 14.43       | [M][a4mous] [R][a4rs]   | STM32 Nucleo dev board, **DO NOT get the -P** version |
-|**A5** | 2        | Digikey       | X-NUCLEO-IHM03A1   | 10.64       | [K][a5key] [M][a5mous]  | Stepper driver board |
-|**A6** | (1)      | ST            | X-NUCLEO-IHM02A1   | 15.00       | [S][a6st] [R][a6rs]     | Two-axis stepper driver board, **Alternative to 2x`[A5]`**  |
-|**A7** | 1        | Raspberry Pi  | RPI4-MODBP-2GB     | 53.23       | [M][a7mous]             | Raspberry Pi 4 |
-|**A8** | 1        | Pastall       | PT2019120501       | 9.99 / 40   | [Z][a8amzn]             | Heat sink for Rpi |
-|**A9** | 1        | SanDisk       | SDSQXAF-032G-GN6MA | 10.73       | [Z][a9amzn]             | UHS-1 Class 10 micro SD, memory for Raspberry Pi |
-|**A10**| 1        | UGREEN        | B0773N757H         | 6.99        | [Z][a10amzn]            | USB-A to micro-USB cable, 1.5ft |
-|**A11**| 1        | CERRXIAN      | B01N5PHSJE         | 6.95        | [Z][a11amzn]            | USB-A to mini-USB cable, 9", right angle |
-|**A12**| 4        | DigiKey       | M2117-2545-AL      | 1.09        | [K][a12key]             | M2.5 standoff, 22mm |
-|**A13**| 4        | McMaster-Carr | 93475A196          | 1.58 / 100  | [C][a13mcmc]            | M2.5 washer, 6mm OD |
-|**A14**| 4        | McMaster-Carr | 92095A458          | 4.97 / 100  | [C][a14mcmc]            | M2.5 screw, 6mm |
+| Item  | Quantity | Manufacturer  | Part Number            | Price (USD) | Sources[*][ppg]        | Notes |
+| ----  |---------:| --------------| ---------------------- | -----------:|:----------------------:| ----- |
+|**A1** | 1        | RespiraWorks  | [Mainboard][a1rw]      | 300.00      | Rw                     | Custom main board |
+|**A2** | (1)      | RespiraWorks  |[Interim board][a2rw]   | 87.00       | Rw                     | Rev1 interim board **OPTIONAL** |
+|**A3** | (1)      | Duracell      | 2016 3V                | 1.67        | [Z][a3amzn]            | CR2016 battery, for interim board **OPTIONAL** |
+|**A4** | 1        | ST Micro      | NUCLEO-L452-RE         | 14.43       | [M][a4mous] [R][a4rs]  | STM32 Nucleo dev board, **DO NOT get the -P** version |
+|**A5** | 2        | Digikey       | X-NUCLEO-IHM03A1       | 10.64       | [K][a5key] [M][a5mous] | Stepper driver board |
+|**A6** | (1)      | ST            | X-NUCLEO-IHM02A1       | 15.00       | [S][a6st] [R][a6rs]    | Two-axis stepper driver board, **Alternative to 2x`[A5]`**  |
+|**A7** | 1        | Raspberry Pi  | RPI4-MODBP-2GB         | 53.23       | [M][a7mous]            | Raspberry Pi 4 |
+|**A8** | 1        | Pastall       | PT2019120501           | 0.25        | [Z][a8amzn]            | Heat sink for Rpi |
+|**A9** | 1        | SanDisk       | SDSQXAF-032G-GN6MA     | 10.73       | [Z][a9amzn]            | UHS-1 Class 10 micro SD, memory for Raspberry Pi |
+|**A10**| 1        | UGREEN        | B0773N757H             | 6.99        | [Z][a10amzn]           | USB-A to micro-USB cable, 1.5ft |
+|**A11**| 1        | CERRXIAN      | B01N5PHSJE             | 6.95        | [Z][a11amzn]           | USB-A to mini-USB cable, 9", right angle |
+|**A12**| 4        | DigiKey       | M2117-2545-AL          | 1.09        | [K][a12key]            | M2.5 standoff, 22mm |
+|**A13**| 4        | McMaster-Carr | 93475A196              | 0.02        | [C][a13mcmc]           | M2.5 washer, 6mm OD |
+|**A14**| 4        | McMaster-Carr | 92095A458              | 0.05        | [C][a14mcmc]           | M2.5 screw, 6mm |
+|**A15**| 2        | RespiraWorks  |[Stepper pigtail][a15rw]| 3.00        | Rw                     | Stepper driver pigtail |
+
+**Total assembly price:** USD 513.17
 
 [a1rw]:    ../../../../pcb/rev1_export
 [a2rw]:    https://github.com/inceptionev/VentilatorRev1InterimDaughtercard
@@ -47,15 +50,11 @@ BEFORE purchasing any parts.**
 [a12key]:  https://www.digikey.com/en/products/detail/raf-electronic-hardware/M2117-2545-AL/9836050
 [a13mcmc]: https://www.mcmaster.com/93475A196/
 [a14mcmc]: https://www.mcmaster.com/92095A458/
+[a15rw]:   ../../../wiring/README.md#stepper-wiring
 
 ## Assembly
 
 **Note: Please see general advice in the [manufacturing methods guide](../../../methods).**
-
-### Custom wiring
-
-The ventilator assembly requires some custom wiring. Please use materials and instructions on the
-[wiring page](../../../wiring) to prepare those custom components first.
 
 ### Mainboard (PCB)
 
@@ -98,10 +97,11 @@ The interim board `[A2]` is optional and not an official part of Ventilator v0.3
 
 - Pinch valves require either 2 stepper driver boards `[A5]` or a single 2-axis board `[A6]`.
 
-- Each pinch valve must also include some additional wiring and a driver board for controlling the stepper motor.  Each stepper driver must have resistors soldered appropriately to allow them to be controlled independently.
+- Each pinch valve must also include some additional wiring and a driver board for controlling the stepper motor.
+  Each stepper driver must have resistors soldered appropriately to allow them to be controlled independently.
 
-- It is advisable that you first manufacture the 2 pigtails of appropriate length as described on the
-[wiring page](../../../wiring).
+- Before you begin, you should first manufacture the 2 pigtails of appropriate length as described on the
+  [wiring page](../../../wiring).
 
 - Stepper board resistor modification and mounting to Nucleo is documented [here](stepper_drivers).
 

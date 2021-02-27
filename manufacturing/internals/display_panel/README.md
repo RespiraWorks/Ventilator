@@ -48,23 +48,25 @@ BEFORE purchasing any parts.**
 
 [ppg]: ../../purchasing_guidelines.md
 
-| Item  | Quantity | Manufacturer  | Part #                   | Price (USD)  | Sources[*][ppg]| Notes |
-| ----- |---------:| ------------- | ------------------------ | ------------:|:--------------:|:------|
-|**A1** | ~550cm²  | McMaster-Carr | 8560K357                 | 150 / m²     | [C][a1mcmc]    | 1/4" (6.35mm) thick clear acrylic sheet, to make `[A2]` below |
-|**A2** | 1        | RespiraWorks  | [Display panel acrylic][a2rw] |         | Rw             | Upper acrylic face panel, cut from acrylic `[A1]` |
-|**A3** | 1        | McMaster-Carr | 7768K22                  | 11.62        | [C][a3mcmc]    | brass threaded check valve |
-|**A4** | 1        | McMaster-Carr | 50785K273                | 8.23         | [C][a4mcmc]    | through-wall straight connector, 1/4NPT female |
-|**A5** | 1        | McMaster-Carr | 5121K451                 | 5.78 / 10    | [C][a5mcmc]    | 1/4 NPT x 1/4" ID barbed adapter |
-|**A6** | 1        | Eviciv        | DS702                    | 49.00        | [A][a6ali] [Z][a6amzn]| 7" capacitive touchscreen with speakers |
-|**A7** | 4        | McMaster-Carr | 93625A102                | 10.79 / 100  | [C][a7mcmc]    | M2.5 locknut |
-|**A8** | 4        | McMaster-Carr | 98689A111                | 2.57 / 100   | [C][a8mcmc]    | M2.5 washer, 5mm OD |
-|**A9** | 4        | McMaster-Carr | 91116A110                | 3.23 / 100   | [C][a9mcmc]    | M2.5 washer, 8mm OD |
-|**A10**| 4        | McMaster-Carr | 92095A504                | 8.60 / 5     | [C][a10mcmc]   | M2.5 screw, 14mm |
-|**A11**| 4        | McMaster-Carr | 94180A351                | 15.47 / 100  | [C][a11mcmc]   | Heat-set inserts for M4 screws |
-|**A12**| 4        | McMaster-Carr | 93475A230                | 1.86 / 100   | [C][a12mcmc]   | M4 washer, 9mm OD |
-|**A13**| 4        | McMaster-Carr | 92095A189                | 8.89 / 100   | [C][a13mcmc]   | M4 screw, 8mm |
-|**A14**| 4        | DigiKey       | 732-10395-ND             | 0.59         | [K][a14key]    | M2.5 standoff, 9mm |
-|**A15**| 1        | RespiraWorks  | [Electronics assembly][a15rw] |         | Rw             | Most electrical and computing components |
+| Item  | Quantity | Manufacturer  | Part #                       | Price (USD) | Sources[*][ppg]| Notes |
+| ----- |---------:| ------------- | ---------------------------- | -----------:|:--------------:|:------|
+|**A1** |(~550cm²) | McMaster-Carr | 8560K357                     | 150 / m²    | [C][a1mcmc]    | 1/4" (6.35mm) thick clear acrylic sheet, to make `[A2]` below |
+|**A2** | 1        | RespiraWorks  | [Display panel acrylic][a2rw]| 8.25        | Rw             | Upper acrylic face panel, cut from acrylic `[A1]` |
+|**A3** | 1        | McMaster-Carr | 7768K22                      | 11.62       | [C][a3mcmc]    | brass threaded check valve |
+|**A4** | 1        | McMaster-Carr | 50785K273                    | 8.23        | [C][a4mcmc]    | through-wall straight connector, 1/4NPT female |
+|**A5** | 1        | McMaster-Carr | 5121K451                     | 0.58        | [C][a5mcmc]    | 1/4 NPT x 1/4" ID barbed adapter |
+|**A6** | 1        | Eviciv        | DS702                        | 49.00       | [A][a6ali] [Z][a6amzn]| 7" capacitive touchscreen with speakers |
+|**A7** | 4        | McMaster-Carr | 93625A102                    | 0.11        | [C][a7mcmc]    | M2.5 locknut |
+|**A8** | 4        | McMaster-Carr | 98689A111                    | 0.03        | [C][a8mcmc]    | M2.5 washer, 5mm OD |
+|**A9** | 4        | McMaster-Carr | 91116A110                    | 0.03        | [C][a9mcmc]    | M2.5 washer, 8mm OD |
+|**A10**| 4        | McMaster-Carr | 92095A504                    | 1.72        | [C][a10mcmc]   | M2.5 screw, 14mm |
+|**A11**| 4        | McMaster-Carr | 94180A351                    | 0.15        | [C][a11mcmc]   | Heat-set inserts for M4 screws |
+|**A12**| 4        | McMaster-Carr | 93475A230                    | 0.02        | [C][a12mcmc]   | M4 washer, 9mm OD |
+|**A13**| 4        | McMaster-Carr | 92095A189                    | 0.09        | [C][a13mcmc]   | M4 screw, 8mm |
+|**A14**| 4        | DigiKey       | 732-10395-ND                 | 0.59        | [K][a14key]    | M2.5 standoff, 9mm |
+|**A15**| 1        | RespiraWorks  |[Electronics assembly][a15rw] | 513.17      | Rw             | Most electrical and computing components |
+
+**Total assembly price:** USD 601.81
 
 [a1mcmc]:  https://www.mcmaster.com/8560K357/
 [a2rw]:    #custom-parts

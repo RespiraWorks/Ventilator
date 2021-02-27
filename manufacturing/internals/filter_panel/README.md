@@ -37,16 +37,18 @@ BEFORE purchasing any parts.**
 [ppg]: ../../purchasing_guidelines.md
 
 | Item | Quantity | Manufacturer  | Part #                                | Price (USD) | Sources[*][ppg]| Notes |
-| ---- |---------:| ------------- | ------------------------------------- | ------------:|:--------------:|:------|
-|**A1**| ~250cm²  | McMaster-Carr | 8560K357                              | 150 / m²     | [C][a1mcmc]    | 1/4" (6.35mm) thick clear acrylic sheet, to make `[A2]` below |
-|**A2**| 1        | RespiraWorks  | [Filter panel acrylic][a2rw]          |              | Rw             | Lower acrylic face panel, cut from acrylic `[A1]`  |
-|**A3**| 2        | RespiraWorks  | [Filter holder: tubing adapter][a3rw] |              | Rw             | Filter housing assembly, variant with patient tubing adapter |
-|**A4**| 2        | RespiraWorks  | [Filter holder: outlet vent][a4rw]    |              | Rw             | Filter housing assembly, variant with outlet vent |
-|**A5**| 4        | McMaster-Carr | 94180A351                             | 15.47 / 100  | [C][a5mcmc]    | Heat-set inserts for m4 screws |
-|**A6**| 16       | McMaster-Carr | 93625A150                             | 6.04 / 100   | [C][a6mcmc]    | M4 lock nut |
-|**A7**| 20       | McMaster-Carr | 93475A230                             | 1.86 / 100   | [C][a7mcmc]    | M4 washer, 9mm OD |
-|**A8**| 16       | McMaster-Carr | 92095A193                             | 8.95 / 100   | [C][a8mcmc]    | M4 screw, 14mm |
-|**A9**| 4        | McMaster-Carr | 92095A189                             | 8.89 / 100   | [C][a9mcmc]    | M4 screw, 8mm |
+| ---- |---------:| ------------- | ------------------------------------- | -----------:|:--------------:|:------|
+|**A1**|(~250cm²) | McMaster-Carr | 8560K357                              | 150 / m²    | [C][a1mcmc]    | 1/4" (6.35mm) thick clear acrylic sheet, to make `[A2]` below |
+|**A2**| 1        | RespiraWorks  | [Filter panel acrylic][a2rw]          | 3.75        | Rw             | Lower acrylic face panel, cut from acrylic `[A1]`  |
+|**A3**| 2        | RespiraWorks  | [Filter holder: tubing adapter][a3rw] | 4.97        | Rw             | Filter housing assembly, variant with patient tubing adapter |
+|**A4**| 2        | RespiraWorks  | [Filter holder: outlet vent][a4rw]    | 4.97        | Rw             | Filter housing assembly, variant with outlet vent |
+|**A5**| 4        | McMaster-Carr | 94180A351                             | 0.15        | [C][a5mcmc]    | Heat-set inserts for m4 screws |
+|**A6**| 16       | McMaster-Carr | 93625A150                             | 0.06        | [C][a6mcmc]    | M4 lock nut |
+|**A7**| 20       | McMaster-Carr | 93475A230                             | 0.02        | [C][a7mcmc]    | M4 washer, 9mm OD |
+|**A8**| 16       | McMaster-Carr | 92095A193                             | 0.09        | [C][a8mcmc]    | M4 screw, 14mm |
+|**A9**| 4        | McMaster-Carr | 92095A189                             | 0.09        | [C][a9mcmc]    | M4 screw, 8mm |
+
+**Total assembly price:** USD 27.39
 
 [a1mcmc]:  https://www.mcmaster.com/8560K357/
 [a2rw]: #custom-parts

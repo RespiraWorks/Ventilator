@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 22 37
+Sheet 21 38
 Title "Oxygen and Temperature Sensors"
 Date ""
 Rev "A"
@@ -53,19 +53,6 @@ F1 "sensors_temp_ntc.sch" 50
 F2 "Out" O R 2550 4050 50 
 F3 "Vcc" I R 2550 3900 50 
 $EndSheet
-$Comp
-L RespiraWorks:+3.3V_Sns #PWR?
-U 1 1 60107496
-P 3000 1100
-AR Path="/5FCD4EEA/600F5EF3/60107496" Ref="#PWR?"  Part="1" 
-AR Path="/5FCD4EEA/60107496" Ref="#PWR?"  Part="1" 
-F 0 "#PWR?" H 3000 1100 50  0001 C CNN
-F 1 "+3.3V_Sns" H 2985 1273 50  0000 C CNN
-F 2 "" H 3000 1100 50  0001 C CNN
-F 3 "" H 3000 1100 50  0001 C CNN
-	1    3000 1100
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
 	2550 1100 3000 1100
 Wire Wire Line
@@ -88,19 +75,6 @@ Stepper1_Temp
 Wire Wire Line
 	3750 1250 3450 1250
 Connection ~ 3450 1250
-$Comp
-L RespiraWorks:+3.3V_Sns #PWR?
-U 1 1 6011C562
-P 3000 1800
-AR Path="/5FCD4EEA/600F5EF3/6011C562" Ref="#PWR?"  Part="1" 
-AR Path="/5FCD4EEA/6011C562" Ref="#PWR?"  Part="1" 
-F 0 "#PWR?" H 3000 1800 50  0001 C CNN
-F 1 "+3.3V_Sns" H 2985 1973 50  0000 C CNN
-F 2 "" H 3000 1800 50  0001 C CNN
-F 3 "" H 3000 1800 50  0001 C CNN
-	1    3000 1800
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
 	2550 1800 3000 1800
 Wire Wire Line
@@ -123,19 +97,6 @@ Stepper2_Temp
 Wire Wire Line
 	3750 1950 3450 1950
 Connection ~ 3450 1950
-$Comp
-L RespiraWorks:+3.3V_Sns #PWR?
-U 1 1 6011C9C4
-P 3000 2500
-AR Path="/5FCD4EEA/600F5EF3/6011C9C4" Ref="#PWR?"  Part="1" 
-AR Path="/5FCD4EEA/6011C9C4" Ref="#PWR?"  Part="1" 
-F 0 "#PWR?" H 3000 2500 50  0001 C CNN
-F 1 "+3.3V_Sns" H 2985 2673 50  0000 C CNN
-F 2 "" H 3000 2500 50  0001 C CNN
-F 3 "" H 3000 2500 50  0001 C CNN
-	1    3000 2500
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
 	2550 2500 3000 2500
 Wire Wire Line
@@ -158,19 +119,6 @@ Blower_Temp
 Wire Wire Line
 	3750 2650 3450 2650
 Connection ~ 3450 2650
-$Comp
-L RespiraWorks:+3.3V_Sns #PWR?
-U 1 1 6011CE53
-P 3000 3200
-AR Path="/5FCD4EEA/600F5EF3/6011CE53" Ref="#PWR?"  Part="1" 
-AR Path="/5FCD4EEA/6011CE53" Ref="#PWR?"  Part="1" 
-F 0 "#PWR?" H 3000 3200 50  0001 C CNN
-F 1 "+3.3V_Sns" H 2985 3373 50  0000 C CNN
-F 2 "" H 3000 3200 50  0001 C CNN
-F 3 "" H 3000 3200 50  0001 C CNN
-	1    3000 3200
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
 	2550 3200 3000 3200
 Wire Wire Line
@@ -193,19 +141,6 @@ Batt_Temp
 Wire Wire Line
 	3750 3350 3450 3350
 Connection ~ 3450 3350
-$Comp
-L RespiraWorks:+3.3V_Sns #PWR?
-U 1 1 6011D298
-P 3000 3900
-AR Path="/5FCD4EEA/600F5EF3/6011D298" Ref="#PWR?"  Part="1" 
-AR Path="/5FCD4EEA/6011D298" Ref="#PWR?"  Part="1" 
-F 0 "#PWR?" H 3000 3900 50  0001 C CNN
-F 1 "+3.3V_Sns" H 2985 4073 50  0000 C CNN
-F 2 "" H 3000 3900 50  0001 C CNN
-F 3 "" H 3000 3900 50  0001 C CNN
-	1    3000 3900
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
 	2550 3900 3000 3900
 Wire Wire Line
@@ -228,8 +163,8 @@ Spare_Temp
 Wire Wire Line
 	3750 4050 3450 4050
 Connection ~ 3450 4050
-Text HLabel 7250 5950 2    50   Output ~ 0
-Oxy_Level
+Text HLabel 7700 5950 2    50   Output ~ 0
+Oxygen_Level
 $Comp
 L RespiraWorks:INA333AIDGKR U?
 U 1 1 60132AA0
@@ -557,7 +492,7 @@ Wire Wire Line
 	6450 5950 6750 5950
 Connection ~ 6750 5950
 Wire Wire Line
-	6750 5950 7250 5950
+	6750 5950 7450 5950
 Text Notes 6700 5850 0    50   ~ 0
 LPF fc = 106 Hz
 Text Notes 4100 5650 0    50   ~ 0
@@ -660,33 +595,6 @@ Wire Notes Line
 	5650 6200 5650 6800
 NoConn ~ 1700 5850
 $Comp
-L RespiraWorks:+3.3V_Sns #PWR?
-U 1 1 60148A3F
-P 5400 5100
-AR Path="/5FCD4EEA/600F5EF3/60148A3F" Ref="#PWR?"  Part="1" 
-AR Path="/5FCD4EEA/60148A3F" Ref="#PWR?"  Part="1" 
-F 0 "#PWR?" H 5400 5100 50  0001 C CNN
-F 1 "+3.3V_Sns" H 5385 5273 50  0000 C CNN
-F 2 "" H 5400 5100 50  0001 C CNN
-F 3 "" H 5400 5100 50  0001 C CNN
-	1    5400 5100
-	1    0    0    -1  
-$EndComp
-Connection ~ 5400 5100
-$Comp
-L RespiraWorks:+3.3V_Sns #PWR?
-U 1 1 60148D99
-P 2700 5450
-AR Path="/5FCD4EEA/600F5EF3/60148D99" Ref="#PWR?"  Part="1" 
-AR Path="/5FCD4EEA/60148D99" Ref="#PWR?"  Part="1" 
-F 0 "#PWR?" H 2700 5450 50  0001 C CNN
-F 1 "+3.3V_Sns" H 2685 5623 50  0000 C CNN
-F 2 "" H 2700 5450 50  0001 C CNN
-F 3 "" H 2700 5450 50  0001 C CNN
-	1    2700 5450
-	1    0    0    -1  
-$EndComp
-$Comp
 L Device:R R?
 U 1 1 601505E1
 P 3700 6200
@@ -777,7 +685,6 @@ Wire Wire Line
 Connection ~ 2700 5750
 Wire Wire Line
 	2700 5450 3000 5450
-Connection ~ 2700 5450
 $Comp
 L Device:R R?
 U 1 1 6015D0A5
@@ -830,4 +737,53 @@ Wire Wire Line
 Connection ~ 2200 6200
 Wire Wire Line
 	2200 6200 3000 6200
+Text HLabel 5250 850  2    50   Input ~ 0
+3V3
+Wire Wire Line
+	3000 1100 3000 850 
+Wire Wire Line
+	3000 850  5250 850 
+Wire Wire Line
+	2700 5450 2700 5300
+Wire Wire Line
+	2700 5300 2350 5300
+Connection ~ 2700 5450
+Text Label 2350 5300 0    50   ~ 0
+3V3
+Wire Wire Line
+	5400 5100 5050 5100
+Text Label 5050 5100 0    50   ~ 0
+3V3
+Connection ~ 5400 5100
+Wire Wire Line
+	3000 3900 3000 3200
+Connection ~ 3000 1100
+Connection ~ 3000 1800
+Wire Wire Line
+	3000 1800 3000 1100
+Connection ~ 3000 2500
+Wire Wire Line
+	3000 2500 3000 1800
+Connection ~ 3000 3200
+Wire Wire Line
+	3000 3200 3000 2500
+$Comp
+L Connector:TestPoint TP?
+U 1 1 60F7C3BE
+P 7450 5950
+AR Path="/5FCD50A5/60F7C3BE" Ref="TP?"  Part="1" 
+AR Path="/6052CC9F/60F7C3BE" Ref="TP?"  Part="1" 
+AR Path="/60F7C3BE" Ref="TP?"  Part="1" 
+AR Path="/5FCD4D18/60F7C3BE" Ref="TP?"  Part="1" 
+AR Path="/5FCD4B8E/60F7C3BE" Ref="TP?"  Part="1" 
+F 0 "TP?" H 7450 6150 50  0000 C CNN
+F 1 "TP" V 7500 6000 50  0001 C CNN
+F 2 "" H 7650 5950 50  0001 C CNN
+F 3 "~" H 7650 5950 50  0001 C CNN
+	1    7450 5950
+	1    0    0    -1  
+$EndComp
+Connection ~ 7450 5950
+Wire Wire Line
+	7450 5950 7700 5950
 $EndSCHEMATC

@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr B 17000 11000
 encoding utf-8
-Sheet 9 37
+Sheet 9 38
 Title "Alarms and Safety"
 Date ""
 Rev "A"
@@ -855,7 +855,7 @@ Wire Wire Line
 Wire Wire Line
 	6400 2100 6400 1750
 Wire Wire Line
-	6400 1750 4650 1750
+	6400 1750 5150 1750
 Wire Wire Line
 	7750 2100 8400 2100
 Wire Wire Line
@@ -951,7 +951,7 @@ F 5 "RK73H2BTTD1004F" H 10700 2100 50  0001 C CNN "Part Number"
 	0    -1   -1   0   
 $EndComp
 Wire Wire Line
-	10850 2100 11250 2100
+	10850 2100 11000 2100
 $Comp
 L power:GND #PWR?
 U 1 1 603943A9
@@ -1193,9 +1193,9 @@ F 3 "" H 13650 1600 50  0001 C CNN
 	1    13650 1600
 	1    0    0    -1  
 $EndComp
-Text HLabel 12750 2300 0    50   Input ~ 0
+Text HLabel 12650 2300 0    50   Input ~ 0
 Buzzer_CC
-Text HLabel 14850 2300 0    50   Input ~ 0
+Text HLabel 14750 2300 0    50   Input ~ 0
 Buzzer_GUI
 Wire Wire Line
 	10500 2100 10550 2100
@@ -1660,20 +1660,20 @@ Wire Wire Line
 $Comp
 L Device:R R?
 U 1 1 60926823
-P 14700 6850
+P 14600 6850
 AR Path="/60926823" Ref="R?"  Part="1" 
 AR Path="/5E8AFE9D/60926823" Ref="R?"  Part="1" 
 AR Path="/5E8A4ABF/60926823" Ref="R?"  Part="1" 
 AR Path="/5E8E1F08/60926823" Ref="R?"  Part="1" 
 AR Path="/5FCD4DF5/60926823" Ref="R?"  Part="1" 
 AR Path="/5FCD4B8E/60926823" Ref="R?"  Part="1" 
-F 0 "R?" V 14900 6900 50  0000 C CNN
-F 1 "10K 1%" V 14800 6850 50  0000 C CNN
-F 2 "RespiraWorks_Std:R_0603_1608Metric" V 14630 6850 50  0001 C CNN
-F 3 "~" H 14700 6850 50  0001 C CNN
-F 4 "" H 14700 6850 50  0001 C CNN "Manufacturer"
-F 5 "" H 14700 6850 50  0001 C CNN "Part Number"
-	1    14700 6850
+F 0 "R?" V 14800 6900 50  0000 C CNN
+F 1 "10K 1%" V 14700 6850 50  0000 C CNN
+F 2 "RespiraWorks_Std:R_0603_1608Metric" V 14530 6850 50  0001 C CNN
+F 3 "~" H 14600 6850 50  0001 C CNN
+F 4 "" H 14600 6850 50  0001 C CNN "Manufacturer"
+F 5 "" H 14600 6850 50  0001 C CNN "Part Number"
+	1    14600 6850
 	0    -1   -1   0   
 $EndComp
 Connection ~ 13950 6850
@@ -1795,17 +1795,17 @@ Wire Wire Line
 	10500 7550 10200 7550
 Connection ~ 10200 7550
 Wire Wire Line
-	13950 6850 14550 6850
+	13950 6850 14450 6850
 Text HLabel 15150 6850 2    50   Output ~ 0
 Low-Alarm-Bat-Logic
 Text Notes 8750 8300 0    50   ~ 0
 Low battery threshold 5.1V\n(semi-arbitrary)\n\nThreshold ~~= 2.495V * ((Rlow||Rhyst)+Rhigh)/(Rlow||Rhyst)
 Text Notes 11550 8650 0    50   ~ 0
 ~~38-75 mV hysteresis (on REF pin)\n\nHysteresis = (+BATT - 2.495V)/Rhyst*(Rhigh || Rlow)\n(only valid @ trip point when TL431's REF pin = 2.495V;\nlarger hysteresis when REF voltage is lower because battery\nvoltage is << threshold voltage)
-Text Notes 13850 6550 0    50   ~ 0
-Limits current to FPGA and/or CC and/or RPi\ninput (150µA max.), clamped to 3.3V by internal ESD diodes
+Text Notes 13300 6550 0    50   ~ 0
+Limits current to FPGA and/or CC and/or RPi\ninput (150µA max.), clamped to 3.3V by ext. Schottkys
 Wire Wire Line
-	14850 6850 15150 6850
+	14750 6850 15150 6850
 Text Notes 9050 7350 0    50   ~ 0
 ~~25µA battery load
 $Comp
@@ -1824,7 +1824,7 @@ $EndComp
 Text Notes 11550 7500 0    50   ~ 0
 1 mA min. required cathode current when on,\n1 µA max. cathode current drawn when off
 Wire Wire Line
-	10500 7250 11250 7250
+	10500 7250 11200 7250
 Text Notes 9900 7600 0    50   ~ 0
 Rlow
 Text Notes 9900 7000 0    50   ~ 0
@@ -1903,12 +1903,12 @@ Connection ~ 13350 6850
 Wire Wire Line
 	13350 6850 13500 6850
 Wire Wire Line
-	11900 8050 11250 8050
+	11900 8050 11200 8050
 Wire Wire Line
-	11250 8050 11250 7250
-Connection ~ 11250 7250
+	11200 8050 11200 7250
+Connection ~ 11200 7250
 Wire Wire Line
-	11250 7250 11300 7250
+	11200 7250 11250 7250
 Wire Wire Line
 	13500 6950 13500 6850
 $Comp
@@ -1974,7 +1974,7 @@ Wire Wire Line
 Wire Wire Line
 	13950 6850 13950 7150
 Wire Wire Line
-	13500 6850 13950 6850
+	13500 6850 13750 6850
 Text Label 8400 6900 0    50   ~ 0
 Alarm_Batt
 Wire Wire Line
@@ -2096,4 +2096,261 @@ Wire Wire Line
 	6850 7450 6850 7650
 NoConn ~ 6950 7550
 NoConn ~ 6950 7350
+Text Notes 14500 7300 0    50   ~ 0
+Alternate output for indicator LED, etc.
+$Comp
+L RespiraWorks_Std:Speaker_diode S?
+U 1 1 610C7825
+P 14550 3400
+F 0 "S?" H 14700 3500 50  0000 L CNN
+F 1 "CT-1205H-SMT" H 14600 3600 50  0000 L CNN
+F 2 "RespiraWorks:CT-1205H-SMT-TR" H 14550 3200 50  0001 C CNN
+F 3 "~" H 14540 3350 50  0001 C CNN
+	1    14550 3400
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 610C782B
+P 14500 4100
+AR Path="/610C782B" Ref="#PWR?"  Part="1" 
+AR Path="/5E8AFE9D/610C782B" Ref="#PWR?"  Part="1" 
+AR Path="/5E8FBD97/610C782B" Ref="#PWR?"  Part="1" 
+AR Path="/5E8E0754/610C782B" Ref="#PWR?"  Part="1" 
+AR Path="/5E8DFCAD/610C782B" Ref="#PWR?"  Part="1" 
+AR Path="/5E8DEDC0/610C782B" Ref="#PWR?"  Part="1" 
+AR Path="/5E8C8865/610C782B" Ref="#PWR?"  Part="1" 
+AR Path="/5E8E1F08/610C782B" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4DF5/610C782B" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 14500 3850 50  0001 C CNN
+F 1 "GND" H 14505 3927 50  0000 C CNN
+F 2 "" H 14500 4100 50  0001 C CNN
+F 3 "" H 14500 4100 50  0001 C CNN
+	1    14500 4100
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 610C7833
+P 13750 3900
+AR Path="/610C7833" Ref="R?"  Part="1" 
+AR Path="/5E8AFE9D/610C7833" Ref="R?"  Part="1" 
+AR Path="/5E8C8865/610C7833" Ref="R?"  Part="1" 
+AR Path="/5E8E1F08/610C7833" Ref="R?"  Part="1" 
+AR Path="/5FCD4DF5/610C7833" Ref="R?"  Part="1" 
+F 0 "R?" V 13650 3950 50  0000 C CNN
+F 1 "1K 1%" V 13850 3900 50  0000 C CNN
+F 2 "RespiraWorks_Std:R_0603_1608Metric" V 13680 3900 50  0001 C CNN
+F 3 "~" H 13750 3900 50  0001 C CNN
+F 4 "KOA Speer" H 13750 3900 50  0001 C CNN "Manufacturer"
+F 5 "RK73H2BTTD1004F" H 13750 3900 50  0001 C CNN "Part Number"
+	1    13750 3900
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Device:Q_NPN_BCE Q?
+U 1 1 610C7839
+P 14400 3900
+F 0 "Q?" H 14591 3946 50  0000 L CNN
+F 1 "MMBT3904" H 14591 3855 50  0000 L CNN
+F 2 "RespiraWorks_Std:SOT-23" H 14600 4000 50  0001 C CNN
+F 3 "~" H 14400 3900 50  0001 C CNN
+	1    14400 3900
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 610C7841
+P 14200 4050
+AR Path="/610C7841" Ref="R?"  Part="1" 
+AR Path="/5E8AFE9D/610C7841" Ref="R?"  Part="1" 
+AR Path="/5E8C8865/610C7841" Ref="R?"  Part="1" 
+AR Path="/5E8E1F08/610C7841" Ref="R?"  Part="1" 
+AR Path="/5FCD4DF5/610C7841" Ref="R?"  Part="1" 
+F 0 "R?" H 14000 4100 50  0000 C CNN
+F 1 "1K 1%" H 14000 4000 50  0000 C CNN
+F 2 "RespiraWorks_Std:R_0603_1608Metric" V 14130 4050 50  0001 C CNN
+F 3 "~" H 14200 4050 50  0001 C CNN
+F 4 "KOA Speer" H 14200 4050 50  0001 C CNN "Manufacturer"
+F 5 "RK73H2BTTD1004F" H 14200 4050 50  0001 C CNN "Part Number"
+	1    14200 4050
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 610C7847
+P 14200 4200
+AR Path="/610C7847" Ref="#PWR?"  Part="1" 
+AR Path="/5E8AFE9D/610C7847" Ref="#PWR?"  Part="1" 
+AR Path="/5E8FBD97/610C7847" Ref="#PWR?"  Part="1" 
+AR Path="/5E8E0754/610C7847" Ref="#PWR?"  Part="1" 
+AR Path="/5E8DFCAD/610C7847" Ref="#PWR?"  Part="1" 
+AR Path="/5E8DEDC0/610C7847" Ref="#PWR?"  Part="1" 
+AR Path="/5E8C8865/610C7847" Ref="#PWR?"  Part="1" 
+AR Path="/5E8E1F08/610C7847" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4DF5/610C7847" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 14200 3950 50  0001 C CNN
+F 1 "GND" H 14205 4027 50  0000 C CNN
+F 2 "" H 14200 4200 50  0001 C CNN
+F 3 "" H 14200 4200 50  0001 C CNN
+	1    14200 4200
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	13900 3900 14200 3900
+Connection ~ 14200 3900
+Text HLabel 13500 3900 0    50   Input ~ 0
+Buzzer_FPGA
+$Comp
+L power:+5V #PWR?
+U 1 1 610CA729
+P 14500 3200
+F 0 "#PWR?" H 14500 3050 50  0001 C CNN
+F 1 "+5V" H 14515 3373 50  0000 C CNN
+F 2 "" H 14500 3200 50  0001 C CNN
+F 3 "" H 14500 3200 50  0001 C CNN
+	1    14500 3200
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector:TestPoint TP?
+U 1 1 60DD0241
+P 11000 2100
+AR Path="/5FCD50A5/60DD0241" Ref="TP?"  Part="1" 
+AR Path="/6052CC9F/60DD0241" Ref="TP?"  Part="1" 
+AR Path="/60DD0241" Ref="TP?"  Part="1" 
+AR Path="/5FCD4D18/60DD0241" Ref="TP?"  Part="1" 
+AR Path="/5FCD4DF5/60DD0241" Ref="TP?"  Part="1" 
+F 0 "TP?" H 11000 2300 50  0000 C CNN
+F 1 "TP" V 11050 2150 50  0001 C CNN
+F 2 "" H 11200 2100 50  0001 C CNN
+F 3 "~" H 11200 2100 50  0001 C CNN
+	1    11000 2100
+	1    0    0    -1  
+$EndComp
+Connection ~ 11000 2100
+Wire Wire Line
+	11000 2100 11250 2100
+$Comp
+L Connector:TestPoint TP?
+U 1 1 60DD5049
+P 12700 2300
+AR Path="/5FCD50A5/60DD5049" Ref="TP?"  Part="1" 
+AR Path="/6052CC9F/60DD5049" Ref="TP?"  Part="1" 
+AR Path="/60DD5049" Ref="TP?"  Part="1" 
+AR Path="/5FCD4D18/60DD5049" Ref="TP?"  Part="1" 
+AR Path="/5FCD4DF5/60DD5049" Ref="TP?"  Part="1" 
+F 0 "TP?" H 12700 2500 50  0000 C CNN
+F 1 "TP" V 12750 2350 50  0001 C CNN
+F 2 "" H 12900 2300 50  0001 C CNN
+F 3 "~" H 12900 2300 50  0001 C CNN
+	1    12700 2300
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	12650 2300 12700 2300
+Connection ~ 12700 2300
+$Comp
+L Connector:TestPoint TP?
+U 1 1 60DDC110
+P 14800 2300
+AR Path="/5FCD50A5/60DDC110" Ref="TP?"  Part="1" 
+AR Path="/6052CC9F/60DDC110" Ref="TP?"  Part="1" 
+AR Path="/60DDC110" Ref="TP?"  Part="1" 
+AR Path="/5FCD4D18/60DDC110" Ref="TP?"  Part="1" 
+AR Path="/5FCD4DF5/60DDC110" Ref="TP?"  Part="1" 
+F 0 "TP?" H 14800 2500 50  0000 C CNN
+F 1 "TP" V 14850 2350 50  0001 C CNN
+F 2 "" H 15000 2300 50  0001 C CNN
+F 3 "~" H 15000 2300 50  0001 C CNN
+	1    14800 2300
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	14750 2300 14800 2300
+Connection ~ 14800 2300
+$Comp
+L Connector:TestPoint TP?
+U 1 1 60DE12E2
+P 13550 3900
+AR Path="/5FCD50A5/60DE12E2" Ref="TP?"  Part="1" 
+AR Path="/6052CC9F/60DE12E2" Ref="TP?"  Part="1" 
+AR Path="/60DE12E2" Ref="TP?"  Part="1" 
+AR Path="/5FCD4D18/60DE12E2" Ref="TP?"  Part="1" 
+AR Path="/5FCD4DF5/60DE12E2" Ref="TP?"  Part="1" 
+F 0 "TP?" H 13550 4100 50  0000 C CNN
+F 1 "TP" V 13600 3950 50  0001 C CNN
+F 2 "" H 13750 3900 50  0001 C CNN
+F 3 "~" H 13750 3900 50  0001 C CNN
+	1    13550 3900
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	13500 3900 13550 3900
+Connection ~ 13550 3900
+Wire Wire Line
+	13600 3900 13550 3900
+Wire Wire Line
+	12750 2300 12700 2300
+Wire Wire Line
+	14850 2300 14800 2300
+$Comp
+L Connector:TestPoint TP?
+U 1 1 60E108C8
+P 5150 1750
+AR Path="/5FCD50A5/60E108C8" Ref="TP?"  Part="1" 
+AR Path="/6052CC9F/60E108C8" Ref="TP?"  Part="1" 
+AR Path="/60E108C8" Ref="TP?"  Part="1" 
+AR Path="/5FCD4D18/60E108C8" Ref="TP?"  Part="1" 
+AR Path="/5FCD4DF5/60E108C8" Ref="TP?"  Part="1" 
+F 0 "TP?" H 5150 1950 50  0000 C CNN
+F 1 "TP" V 5200 1800 50  0001 C CNN
+F 2 "" H 5350 1750 50  0001 C CNN
+F 3 "~" H 5350 1750 50  0001 C CNN
+	1    5150 1750
+	1    0    0    -1  
+$EndComp
+Connection ~ 5150 1750
+Wire Wire Line
+	5150 1750 4650 1750
+$Comp
+L Connector:TestPoint TP?
+U 1 1 60E22D40
+P 11250 7200
+AR Path="/5FCD50A5/60E22D40" Ref="TP?"  Part="1" 
+AR Path="/6052CC9F/60E22D40" Ref="TP?"  Part="1" 
+AR Path="/60E22D40" Ref="TP?"  Part="1" 
+AR Path="/5FCD4D18/60E22D40" Ref="TP?"  Part="1" 
+AR Path="/5FCD4DF5/60E22D40" Ref="TP?"  Part="1" 
+F 0 "TP?" H 11250 7400 50  0000 C CNN
+F 1 "TP" V 11300 7250 50  0001 C CNN
+F 2 "" H 11450 7200 50  0001 C CNN
+F 3 "~" H 11450 7200 50  0001 C CNN
+	1    11250 7200
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	11250 7200 11250 7250
+Connection ~ 11250 7250
+Wire Wire Line
+	11250 7250 11300 7250
+$Comp
+L Connector:TestPoint TP?
+U 1 1 60E2D6C0
+P 13750 6850
+AR Path="/5FCD50A5/60E2D6C0" Ref="TP?"  Part="1" 
+AR Path="/6052CC9F/60E2D6C0" Ref="TP?"  Part="1" 
+AR Path="/60E2D6C0" Ref="TP?"  Part="1" 
+AR Path="/5FCD4D18/60E2D6C0" Ref="TP?"  Part="1" 
+AR Path="/5FCD4DF5/60E2D6C0" Ref="TP?"  Part="1" 
+F 0 "TP?" H 13750 7050 50  0000 C CNN
+F 1 "TP" V 13800 6900 50  0001 C CNN
+F 2 "" H 13950 6850 50  0001 C CNN
+F 3 "~" H 13950 6850 50  0001 C CNN
+	1    13750 6850
+	1    0    0    -1  
+$EndComp
+Connection ~ 13750 6850
+Wire Wire Line
+	13750 6850 13950 6850
 $EndSCHEMATC

@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 7 37
+Sheet 7 38
 Title "Cycle Controller"
 Date ""
 Rev "A"
@@ -192,27 +192,27 @@ Connection ~ 5700 5350
 $Comp
 L power:GNDA #PWR?
 U 1 1 5FED43B1
-P 6750 5600
-F 0 "#PWR?" H 6750 5350 50  0001 C CNN
-F 1 "GNDA" H 6755 5427 50  0000 C CNN
-F 2 "" H 6750 5600 50  0001 C CNN
-F 3 "" H 6750 5600 50  0001 C CNN
-	1    6750 5600
+P 6550 5600
+F 0 "#PWR?" H 6550 5350 50  0001 C CNN
+F 1 "GNDA" H 6555 5427 50  0000 C CNN
+F 2 "" H 6550 5600 50  0001 C CNN
+F 3 "" H 6550 5600 50  0001 C CNN
+	1    6550 5600
 	1    0    0    -1  
 $EndComp
 $Comp
 L power:GND #PWR?
 U 1 1 5FED43F4
-P 6150 5600
-F 0 "#PWR?" H 6150 5350 50  0001 C CNN
-F 1 "GND" H 6155 5427 50  0000 C CNN
-F 2 "" H 6150 5600 50  0001 C CNN
-F 3 "" H 6150 5600 50  0001 C CNN
-	1    6150 5600
+P 6350 5600
+F 0 "#PWR?" H 6350 5350 50  0001 C CNN
+F 1 "GND" H 6355 5427 50  0000 C CNN
+F 2 "" H 6350 5600 50  0001 C CNN
+F 3 "" H 6350 5600 50  0001 C CNN
+	1    6350 5600
 	1    0    0    -1  
 $EndComp
 $Comp
-L Device:Jumper JP?
+L Device:Net-Tie_2 JP?
 U 1 1 5FED4432
 P 6450 5600
 F 0 "JP?" H 6450 5800 50  0000 C CNN
@@ -303,8 +303,6 @@ Text HLabel 6700 3000 2    50   Input ~ 0
 SWCLK-TCK
 Wire Wire Line
 	6400 3000 6700 3000
-Text HLabel 6700 3100 2    50   Input ~ 0
-TDI
 Wire Wire Line
 	6400 3100 6700 3100
 Text HLabel 6700 3600 2    50   BiDi ~ 0
@@ -416,7 +414,7 @@ Wire Wire Line
 	2300 2700 2300 3250
 Connection ~ 2300 3250
 Wire Wire Line
-	3250 2700 5100 2700
+	3250 2700 3550 2700
 Wire Wire Line
 	3550 2800 5100 2800
 $Comp
@@ -1557,4 +1555,102 @@ Text HLabel 6700 2200 2    50   Input ~ 0
 SPI-MISO
 Text HLabel 6700 2300 2    50   Output ~ 0
 SPI-MOSI
+Text HLabel 6700 3100 2    50   BiDi ~ 0
+PA15-TDI
+Text HLabel 3500 2600 0    50   BiDi ~ 0
+PH0
+Text HLabel 3500 2800 0    50   BiDi ~ 0
+PH1
+Wire Wire Line
+	3500 2600 3550 2600
+Wire Wire Line
+	3550 2600 3550 2700
+Connection ~ 3550 2700
+Wire Wire Line
+	3550 2700 5100 2700
+Wire Wire Line
+	3500 2800 3550 2800
+Connection ~ 3550 2800
+$Comp
+L Connector:TestPoint TP?
+U 1 1 60D43B3D
+P 4600 6800
+AR Path="/5FCD50A5/60D43B3D" Ref="TP?"  Part="1" 
+AR Path="/6052CC9F/60D43B3D" Ref="TP?"  Part="1" 
+AR Path="/60D43B3D" Ref="TP?"  Part="1" 
+AR Path="/5FCD4D18/60D43B3D" Ref="TP?"  Part="1" 
+F 0 "TP?" H 4600 7000 50  0000 C CNN
+F 1 "TP" V 4650 6850 50  0001 C CNN
+F 2 "" H 4800 6800 50  0001 C CNN
+F 3 "~" H 4800 6800 50  0001 C CNN
+	1    4600 6800
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector:TestPoint TP?
+U 1 1 60D53337
+P 4800 6800
+AR Path="/5FCD50A5/60D53337" Ref="TP?"  Part="1" 
+AR Path="/6052CC9F/60D53337" Ref="TP?"  Part="1" 
+AR Path="/60D53337" Ref="TP?"  Part="1" 
+AR Path="/5FCD4D18/60D53337" Ref="TP?"  Part="1" 
+F 0 "TP?" H 4800 7000 50  0000 C CNN
+F 1 "TP" V 4850 6850 50  0001 C CNN
+F 2 "" H 5000 6800 50  0001 C CNN
+F 3 "~" H 5000 6800 50  0001 C CNN
+	1    4800 6800
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector:TestPoint TP?
+U 1 1 60D53971
+P 5000 6800
+AR Path="/5FCD50A5/60D53971" Ref="TP?"  Part="1" 
+AR Path="/6052CC9F/60D53971" Ref="TP?"  Part="1" 
+AR Path="/60D53971" Ref="TP?"  Part="1" 
+AR Path="/5FCD4D18/60D53971" Ref="TP?"  Part="1" 
+F 0 "TP?" H 5000 7000 50  0000 C CNN
+F 1 "TP" V 5050 6850 50  0001 C CNN
+F 2 "" H 5200 6800 50  0001 C CNN
+F 3 "~" H 5200 6800 50  0001 C CNN
+	1    5000 6800
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector:TestPoint TP?
+U 1 1 60D5400C
+P 5200 6800
+AR Path="/5FCD50A5/60D5400C" Ref="TP?"  Part="1" 
+AR Path="/6052CC9F/60D5400C" Ref="TP?"  Part="1" 
+AR Path="/60D5400C" Ref="TP?"  Part="1" 
+AR Path="/5FCD4D18/60D5400C" Ref="TP?"  Part="1" 
+F 0 "TP?" H 5200 7000 50  0000 C CNN
+F 1 "TP" V 5250 6850 50  0001 C CNN
+F 2 "" H 5400 6800 50  0001 C CNN
+F 3 "~" H 5400 6800 50  0001 C CNN
+	1    5200 6800
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4100 6800 4600 6800
+Text Label 4100 6800 0    50   ~ 0
+SPI-MISO
+Text Label 4100 6900 0    50   ~ 0
+SPI-MOSI
+Wire Wire Line
+	4800 6900 4800 6800
+Wire Wire Line
+	4100 6900 4800 6900
+Text Label 4100 7000 0    50   ~ 0
+SPI-SCLK
+Wire Wire Line
+	5000 7000 5000 6800
+Wire Wire Line
+	4100 7000 5000 7000
+Text Label 4100 7100 0    50   ~ 0
+uSD-nCS
+Wire Wire Line
+	4100 7100 5200 7100
+Wire Wire Line
+	5200 7100 5200 6800
 $EndSCHEMATC

@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 31 37
+Sheet 31 38
 Title "Power Entry / Battery Controller"
 Date ""
 Rev "A"
@@ -224,7 +224,7 @@ Wire Wire Line
 Wire Wire Line
 	7350 5050 7350 5200
 Wire Wire Line
-	7350 3400 7350 4650
+	7350 3400 7350 4350
 Text Label 4750 3700 0    50   ~ 0
 SCL
 Text Label 4750 3800 0    50   ~ 0
@@ -313,7 +313,7 @@ F 3 "" H 3900 3600 50  0001 C CNN
 $EndComp
 Connection ~ 3900 3300
 Wire Wire Line
-	3900 3300 5150 3300
+	3900 3300 4300 3300
 Wire Wire Line
 	1750 3300 2550 3300
 Wire Wire Line
@@ -364,4 +364,248 @@ Wire Wire Line
 	8650 4950 9700 4950
 Text Notes 2100 3900 0    50   ~ 0
 SMBJ20AQ: 32.4V max clamping @ 18.5A
+$Comp
+L Device:R R?
+U 1 1 60E0E216
+P 6200 5650
+AR Path="/601A64F8/60E0E216" Ref="R?"  Part="1" 
+AR Path="/601A64F8/60567144/60E0E216" Ref="R?"  Part="1" 
+AR Path="/6023BF6A/60567144/60E0E216" Ref="R?"  Part="1" 
+AR Path="/5FCD4B8E/603C510C/60567144/60E0E216" Ref="R?"  Part="1" 
+AR Path="/6041384A/60567144/60E0E216" Ref="R?"  Part="1" 
+AR Path="/6041384A/60E0E216" Ref="R?"  Part="1" 
+F 0 "R?" H 6270 5696 50  0000 L CNN
+F 1 "442k" H 6270 5605 50  0000 L CNN
+F 2 "RespiraWorks_Std:R_0603_1608Metric" V 6130 5650 50  0001 C CNN
+F 3 "~" H 6200 5650 50  0001 C CNN
+	1    6200 5650
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 60E0E21C
+P 6200 6000
+AR Path="/601A64F8/60E0E21C" Ref="R?"  Part="1" 
+AR Path="/601A64F8/60567144/60E0E21C" Ref="R?"  Part="1" 
+AR Path="/6023BF6A/60567144/60E0E21C" Ref="R?"  Part="1" 
+AR Path="/5FCD4B8E/603C510C/60567144/60E0E21C" Ref="R?"  Part="1" 
+AR Path="/6041384A/60567144/60E0E21C" Ref="R?"  Part="1" 
+AR Path="/6041384A/60E0E21C" Ref="R?"  Part="1" 
+F 0 "R?" H 6270 6046 50  0000 L CNN
+F 1 "39k" H 6270 5955 50  0000 L CNN
+F 2 "RespiraWorks_Std:R_0603_1608Metric" V 6130 6000 50  0001 C CNN
+F 3 "~" H 6200 6000 50  0001 C CNN
+	1    6200 6000
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6200 5800 6200 5850
+$Comp
+L power:GND #PWR?
+U 1 1 60E0E223
+P 6200 6450
+AR Path="/601A64F8/60E0E223" Ref="#PWR?"  Part="1" 
+AR Path="/601A64F8/60567144/60E0E223" Ref="#PWR?"  Part="1" 
+AR Path="/6023BF6A/60567144/60E0E223" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4B8E/603C510C/60567144/60E0E223" Ref="#PWR?"  Part="1" 
+AR Path="/6041384A/60567144/60E0E223" Ref="#PWR?"  Part="1" 
+AR Path="/6041384A/60E0E223" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 6200 6200 50  0001 C CNN
+F 1 "GND" H 6205 6277 50  0000 C CNN
+F 2 "" H 6200 6450 50  0001 C CNN
+F 3 "" H 6200 6450 50  0001 C CNN
+	1    6200 6450
+	1    0    0    -1  
+$EndComp
+Connection ~ 6200 5800
+Wire Wire Line
+	6200 5500 6200 4350
+Wire Wire Line
+	6200 4350 7350 4350
+Connection ~ 7350 4350
+Wire Wire Line
+	7350 4350 7350 4650
+$Comp
+L Device:R R?
+U 1 1 60E1EDE3
+P 6200 6300
+AR Path="/601A64F8/60E1EDE3" Ref="R?"  Part="1" 
+AR Path="/601A64F8/60567144/60E1EDE3" Ref="R?"  Part="1" 
+AR Path="/6023BF6A/60567144/60E1EDE3" Ref="R?"  Part="1" 
+AR Path="/5FCD4B8E/603C510C/60567144/60E1EDE3" Ref="R?"  Part="1" 
+AR Path="/6041384A/60567144/60E1EDE3" Ref="R?"  Part="1" 
+AR Path="/6041384A/60E1EDE3" Ref="R?"  Part="1" 
+F 0 "R?" H 6270 6346 50  0000 L CNN
+F 1 "39k" H 6270 6255 50  0000 L CNN
+F 2 "RespiraWorks_Std:R_0603_1608Metric" V 6130 6300 50  0001 C CNN
+F 3 "~" H 6200 6300 50  0001 C CNN
+	1    6200 6300
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 60E28A37
+P 6650 6100
+AR Path="/601A64F8/60E28A37" Ref="#PWR?"  Part="1" 
+AR Path="/601A64F8/60567144/60E28A37" Ref="#PWR?"  Part="1" 
+AR Path="/6023BF6A/60567144/60E28A37" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4B8E/603C510C/60567144/60E28A37" Ref="#PWR?"  Part="1" 
+AR Path="/6041384A/60567144/60E28A37" Ref="#PWR?"  Part="1" 
+AR Path="/6041384A/60E28A37" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 6650 5850 50  0001 C CNN
+F 1 "GND" H 6655 5927 50  0000 C CNN
+F 2 "" H 6650 6100 50  0001 C CNN
+F 3 "" H 6650 6100 50  0001 C CNN
+	1    6650 6100
+	1    0    0    -1  
+$EndComp
+Text HLabel 7800 5800 2    50   Output ~ 0
+VBat-Sense
+$Comp
+L Device:R R?
+U 1 1 60E304BA
+P 3450 5650
+AR Path="/601A64F8/60E304BA" Ref="R?"  Part="1" 
+AR Path="/601A64F8/60567144/60E304BA" Ref="R?"  Part="1" 
+AR Path="/6023BF6A/60567144/60E304BA" Ref="R?"  Part="1" 
+AR Path="/5FCD4B8E/603C510C/60567144/60E304BA" Ref="R?"  Part="1" 
+AR Path="/6041384A/60567144/60E304BA" Ref="R?"  Part="1" 
+AR Path="/6041384A/60E304BA" Ref="R?"  Part="1" 
+F 0 "R?" H 3520 5696 50  0000 L CNN
+F 1 "442k" H 3520 5605 50  0000 L CNN
+F 2 "RespiraWorks_Std:R_0603_1608Metric" V 3380 5650 50  0001 C CNN
+F 3 "~" H 3450 5650 50  0001 C CNN
+	1    3450 5650
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 60E304C0
+P 3450 6000
+AR Path="/601A64F8/60E304C0" Ref="R?"  Part="1" 
+AR Path="/601A64F8/60567144/60E304C0" Ref="R?"  Part="1" 
+AR Path="/6023BF6A/60567144/60E304C0" Ref="R?"  Part="1" 
+AR Path="/5FCD4B8E/603C510C/60567144/60E304C0" Ref="R?"  Part="1" 
+AR Path="/6041384A/60567144/60E304C0" Ref="R?"  Part="1" 
+AR Path="/6041384A/60E304C0" Ref="R?"  Part="1" 
+F 0 "R?" H 3520 6046 50  0000 L CNN
+F 1 "39k" H 3520 5955 50  0000 L CNN
+F 2 "RespiraWorks_Std:R_0603_1608Metric" V 3380 6000 50  0001 C CNN
+F 3 "~" H 3450 6000 50  0001 C CNN
+	1    3450 6000
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3450 5800 3450 5850
+$Comp
+L power:GND #PWR?
+U 1 1 60E304C7
+P 3450 6450
+AR Path="/601A64F8/60E304C7" Ref="#PWR?"  Part="1" 
+AR Path="/601A64F8/60567144/60E304C7" Ref="#PWR?"  Part="1" 
+AR Path="/6023BF6A/60567144/60E304C7" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4B8E/603C510C/60567144/60E304C7" Ref="#PWR?"  Part="1" 
+AR Path="/6041384A/60567144/60E304C7" Ref="#PWR?"  Part="1" 
+AR Path="/6041384A/60E304C7" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 3450 6200 50  0001 C CNN
+F 1 "GND" H 3455 6277 50  0000 C CNN
+F 2 "" H 3450 6450 50  0001 C CNN
+F 3 "" H 3450 6450 50  0001 C CNN
+	1    3450 6450
+	1    0    0    -1  
+$EndComp
+Connection ~ 3450 5800
+Wire Wire Line
+	3450 5500 3450 4350
+$Comp
+L Device:R R?
+U 1 1 60E304D0
+P 3450 6300
+AR Path="/601A64F8/60E304D0" Ref="R?"  Part="1" 
+AR Path="/601A64F8/60567144/60E304D0" Ref="R?"  Part="1" 
+AR Path="/6023BF6A/60567144/60E304D0" Ref="R?"  Part="1" 
+AR Path="/5FCD4B8E/603C510C/60567144/60E304D0" Ref="R?"  Part="1" 
+AR Path="/6041384A/60567144/60E304D0" Ref="R?"  Part="1" 
+AR Path="/6041384A/60E304D0" Ref="R?"  Part="1" 
+F 0 "R?" H 3520 6346 50  0000 L CNN
+F 1 "39k" H 3520 6255 50  0000 L CNN
+F 2 "RespiraWorks_Std:R_0603_1608Metric" V 3380 6300 50  0001 C CNN
+F 3 "~" H 3450 6300 50  0001 C CNN
+	1    3450 6300
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 60E304DE
+P 3900 6100
+AR Path="/601A64F8/60E304DE" Ref="#PWR?"  Part="1" 
+AR Path="/601A64F8/60567144/60E304DE" Ref="#PWR?"  Part="1" 
+AR Path="/6023BF6A/60567144/60E304DE" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4B8E/603C510C/60567144/60E304DE" Ref="#PWR?"  Part="1" 
+AR Path="/6041384A/60567144/60E304DE" Ref="#PWR?"  Part="1" 
+AR Path="/6041384A/60E304DE" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 3900 5850 50  0001 C CNN
+F 1 "GND" H 3905 5927 50  0000 C CNN
+F 2 "" H 3900 6100 50  0001 C CNN
+F 3 "" H 3900 6100 50  0001 C CNN
+	1    3900 6100
+	1    0    0    -1  
+$EndComp
+Text Notes 4300 6400 0    50   ~ 0
+Scaling of 0.15x:\n22Vin = 3.3Vout\n18Vin = 2.7Vout\n13Vin = 1.95Vout\n11Vin = 1.65Vout\n\n240 Hz LPF
+Text HLabel 5100 5800 2    50   Output ~ 0
+Vin-Sense
+Wire Wire Line
+	3450 4350 4300 4350
+Wire Wire Line
+	4300 4350 4300 3300
+Connection ~ 4300 3300
+Wire Wire Line
+	4300 3300 5150 3300
+$Comp
+L Device:C C?
+U 1 1 60E3B234
+P 3900 5950
+AR Path="/601A64F8/60E3B234" Ref="C?"  Part="1" 
+AR Path="/601A64F8/60567144/60E3B234" Ref="C?"  Part="1" 
+AR Path="/6023BF6A/60567144/60E3B234" Ref="C?"  Part="1" 
+AR Path="/5FCD4B8E/603C510C/60567144/60E3B234" Ref="C?"  Part="1" 
+AR Path="/6041384A/60567144/60E3B234" Ref="C?"  Part="1" 
+AR Path="/6041384A/60E3B234" Ref="C?"  Part="1" 
+F 0 "C?" H 3650 5950 50  0000 L CNN
+F 1 "10nF" H 3650 5850 50  0000 L CNN
+F 2 "RespiraWorks_Std:C_0603_1608Metric" H 3938 5800 50  0001 C CNN
+F 3 "~" H 3900 5950 50  0001 C CNN
+	1    3900 5950
+	-1   0    0    -1  
+$EndComp
+Wire Wire Line
+	3450 5800 3900 5800
+Connection ~ 3900 5800
+Wire Wire Line
+	3900 5800 5100 5800
+Wire Wire Line
+	6200 5800 6650 5800
+$Comp
+L Device:C C?
+U 1 1 60E3DD19
+P 6650 5950
+AR Path="/601A64F8/60E3DD19" Ref="C?"  Part="1" 
+AR Path="/601A64F8/60567144/60E3DD19" Ref="C?"  Part="1" 
+AR Path="/6023BF6A/60567144/60E3DD19" Ref="C?"  Part="1" 
+AR Path="/5FCD4B8E/603C510C/60567144/60E3DD19" Ref="C?"  Part="1" 
+AR Path="/6041384A/60567144/60E3DD19" Ref="C?"  Part="1" 
+AR Path="/6041384A/60E3DD19" Ref="C?"  Part="1" 
+F 0 "C?" H 6400 5950 50  0000 L CNN
+F 1 "10nF" H 6400 5850 50  0000 L CNN
+F 2 "RespiraWorks_Std:C_0603_1608Metric" H 6688 5800 50  0001 C CNN
+F 3 "~" H 6650 5950 50  0001 C CNN
+	1    6650 5950
+	-1   0    0    -1  
+$EndComp
+Connection ~ 6650 5800
+Wire Wire Line
+	6650 5800 7800 5800
+Text Notes 7100 6400 0    50   ~ 0
+Scaling of 0.15x:\n22Vin = 3.3Vout\n18Vin = 2.7Vout\n13Vin = 1.95Vout\n11Vin = 1.65Vout\n\n240 Hz LPF
 $EndSCHEMATC

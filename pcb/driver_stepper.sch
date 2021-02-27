@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A3 16535 11693
 encoding utf-8
-Sheet 36 37
+Sheet 28 38
 Title "Stepper Motor Driver"
 Date ""
 Rev "A"
@@ -509,7 +509,7 @@ Wire Wire Line
 	3550 6850 3300 6850
 Wire Wire Line
 	3300 6750 3550 6750
-Text HLabel 1750 7200 0    50   Input ~ 0
+Text HLabel 1650 7200 0    50   Input ~ 0
 ADC-In
 $Comp
 L RespiraWorks:+12V_Step1 #PWR?
@@ -611,7 +611,7 @@ Wire Wire Line
 Text HLabel 2500 7300 0    50   Input ~ 0
 SDI
 Wire Wire Line
-	3550 7250 2800 7250
+	3550 7250 2900 7250
 Wire Wire Line
 	2800 7250 2800 7300
 Text HLabel 7850 7450 2    50   Output ~ 0
@@ -650,7 +650,7 @@ $EndComp
 Wire Wire Line
 	2150 8300 1800 8300
 Wire Wire Line
-	2150 8300 3100 8300
+	2150 8300 2700 8300
 Connection ~ 2150 8300
 $Comp
 L Device:C C?
@@ -666,7 +666,7 @@ F 3 "~" H 3500 8050 50  0001 C CNN
 	-1   0    0    1   
 $EndComp
 Text HLabel 3450 7800 0    50   Input ~ 0
-nSTBY
+nReset
 Wire Wire Line
 	3550 7800 3500 7800
 $Comp
@@ -895,7 +895,7 @@ $EndComp
 Wire Wire Line
 	9200 7700 9300 7700
 Wire Wire Line
-	7350 7700 8550 7700
+	7350 7700 8200 7700
 Wire Wire Line
 	9100 8600 9300 8600
 Wire Wire Line
@@ -1029,10 +1029,10 @@ F 3 "" H 9000 6150 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	7600 3900 10800 3900
+	7600 3900 8450 3900
 Connection ~ 7600 3900
 Wire Wire Line
-	7600 5100 9650 5100
+	7600 5100 8450 5100
 Connection ~ 7600 5100
 Connection ~ 7600 5550
 $Comp
@@ -1054,9 +1054,9 @@ F 7 "25V" H 4350 1400 50  0001 C CNN "Voltage Rating"
 $EndComp
 Connection ~ 4350 1250
 Wire Wire Line
-	8050 8600 8550 8600
+	8050 8600 8200 8600
 Wire Wire Line
-	2500 7750 3000 7750
+	2500 7750 2600 7750
 Wire Wire Line
 	2500 7300 2800 7300
 Wire Wire Line
@@ -1274,7 +1274,7 @@ F 4 "10V" V 4250 3300 50  0001 C CNN "Voltage"
 	0    1    1    0   
 $EndComp
 Wire Wire Line
-	7350 7450 7850 7450
+	7350 7450 7550 7450
 Text HLabel 2450 2500 0    50   Input ~ 0
 3.3V
 Wire Wire Line
@@ -1341,12 +1341,12 @@ $EndComp
 Wire Wire Line
 	7350 6850 7850 6850
 Wire Wire Line
-	7600 5550 9000 5550
+	7600 5550 8450 5550
 Connection ~ 9000 5550
 Connection ~ 10200 4400
 Connection ~ 9650 5100
 Wire Wire Line
-	7600 4400 10200 4400
+	7600 4400 8450 4400
 Connection ~ 7600 4400
 Connection ~ 10800 3900
 Connection ~ 3300 2500
@@ -1697,4 +1697,206 @@ Text Label 10650 5300 0    50   ~ 0
 Out-B1
 Text Label 10650 6050 0    50   ~ 0
 Out-B2
+$Comp
+L Connector:TestPoint TP?
+U 1 1 6106D249
+P 7550 7450
+AR Path="/5FCD50A5/6106D249" Ref="TP?"  Part="1" 
+AR Path="/6052CC9F/6106D249" Ref="TP?"  Part="1" 
+AR Path="/6106D249" Ref="TP?"  Part="1" 
+F 0 "TP?" H 7550 7650 50  0000 C CNN
+F 1 "TP" V 7600 7500 50  0001 C CNN
+F 2 "" H 7750 7450 50  0001 C CNN
+F 3 "~" H 7750 7450 50  0001 C CNN
+	1    7550 7450
+	1    0    0    -1  
+$EndComp
+Connection ~ 7550 7450
+Wire Wire Line
+	7550 7450 7850 7450
+$Comp
+L Connector:TestPoint TP?
+U 1 1 6107A76C
+P 8200 7700
+AR Path="/5FCD50A5/6107A76C" Ref="TP?"  Part="1" 
+AR Path="/6052CC9F/6107A76C" Ref="TP?"  Part="1" 
+AR Path="/6107A76C" Ref="TP?"  Part="1" 
+F 0 "TP?" H 8200 7900 50  0000 C CNN
+F 1 "TP" V 8250 7750 50  0001 C CNN
+F 2 "" H 8400 7700 50  0001 C CNN
+F 3 "~" H 8400 7700 50  0001 C CNN
+	1    8200 7700
+	1    0    0    -1  
+$EndComp
+Connection ~ 8200 7700
+Wire Wire Line
+	8200 7700 8550 7700
+$Comp
+L Connector:TestPoint TP?
+U 1 1 6107C102
+P 8200 8600
+AR Path="/5FCD50A5/6107C102" Ref="TP?"  Part="1" 
+AR Path="/6052CC9F/6107C102" Ref="TP?"  Part="1" 
+AR Path="/6107C102" Ref="TP?"  Part="1" 
+F 0 "TP?" H 8200 8800 50  0000 C CNN
+F 1 "TP" V 8250 8650 50  0001 C CNN
+F 2 "" H 8400 8600 50  0001 C CNN
+F 3 "~" H 8400 8600 50  0001 C CNN
+	1    8200 8600
+	1    0    0    -1  
+$EndComp
+Connection ~ 8200 8600
+Wire Wire Line
+	8200 8600 8550 8600
+$Comp
+L Connector:TestPoint TP?
+U 1 1 6107CA2E
+P 2700 8300
+AR Path="/5FCD50A5/6107CA2E" Ref="TP?"  Part="1" 
+AR Path="/6052CC9F/6107CA2E" Ref="TP?"  Part="1" 
+AR Path="/6107CA2E" Ref="TP?"  Part="1" 
+F 0 "TP?" H 2700 8500 50  0000 C CNN
+F 1 "TP" V 2750 8350 50  0001 C CNN
+F 2 "" H 2900 8300 50  0001 C CNN
+F 3 "~" H 2900 8300 50  0001 C CNN
+	1    2700 8300
+	1    0    0    -1  
+$EndComp
+Connection ~ 2700 8300
+Wire Wire Line
+	2700 8300 3100 8300
+$Comp
+L Connector:TestPoint TP?
+U 1 1 6107E8B9
+P 2600 7750
+AR Path="/5FCD50A5/6107E8B9" Ref="TP?"  Part="1" 
+AR Path="/6052CC9F/6107E8B9" Ref="TP?"  Part="1" 
+AR Path="/6107E8B9" Ref="TP?"  Part="1" 
+F 0 "TP?" H 2600 7950 50  0000 C CNN
+F 1 "TP" V 2650 7800 50  0001 C CNN
+F 2 "" H 2800 7750 50  0001 C CNN
+F 3 "~" H 2800 7750 50  0001 C CNN
+	1    2600 7750
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector:TestPoint TP?
+U 1 1 61085CDB
+P 2900 7250
+AR Path="/5FCD50A5/61085CDB" Ref="TP?"  Part="1" 
+AR Path="/6052CC9F/61085CDB" Ref="TP?"  Part="1" 
+AR Path="/61085CDB" Ref="TP?"  Part="1" 
+F 0 "TP?" H 2900 7450 50  0000 C CNN
+F 1 "TP" V 2950 7300 50  0001 C CNN
+F 2 "" H 3100 7250 50  0001 C CNN
+F 3 "~" H 3100 7250 50  0001 C CNN
+	1    2900 7250
+	1    0    0    -1  
+$EndComp
+Connection ~ 2900 7250
+Wire Wire Line
+	2900 7250 2800 7250
+Connection ~ 2600 7750
+Wire Wire Line
+	2600 7750 3000 7750
+$Comp
+L Connector:TestPoint TP?
+U 1 1 61088623
+P 2900 7450
+AR Path="/5FCD50A5/61088623" Ref="TP?"  Part="1" 
+AR Path="/6052CC9F/61088623" Ref="TP?"  Part="1" 
+AR Path="/61088623" Ref="TP?"  Part="1" 
+F 0 "TP?" H 2900 7650 50  0000 C CNN
+F 1 "TP" V 2950 7500 50  0001 C CNN
+F 2 "" H 3100 7450 50  0001 C CNN
+F 3 "~" H 3100 7450 50  0001 C CNN
+	1    2900 7450
+	-1   0    0    1   
+$EndComp
+Connection ~ 2900 7450
+$Comp
+L Connector:TestPoint TP?
+U 1 1 61088F12
+P 1750 7200
+AR Path="/5FCD50A5/61088F12" Ref="TP?"  Part="1" 
+AR Path="/6052CC9F/61088F12" Ref="TP?"  Part="1" 
+AR Path="/61088F12" Ref="TP?"  Part="1" 
+F 0 "TP?" H 1750 7400 50  0000 C CNN
+F 1 "TP" V 1800 7250 50  0001 C CNN
+F 2 "" H 1950 7200 50  0001 C CNN
+F 3 "~" H 1950 7200 50  0001 C CNN
+	1    1750 7200
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	1650 7200 1750 7200
+Connection ~ 1750 7200
+$Comp
+L Connector:TestPoint TP?
+U 1 1 610AE764
+P 8450 3900
+AR Path="/5FCD50A5/610AE764" Ref="TP?"  Part="1" 
+AR Path="/6052CC9F/610AE764" Ref="TP?"  Part="1" 
+AR Path="/610AE764" Ref="TP?"  Part="1" 
+F 0 "TP?" H 8450 4100 50  0000 C CNN
+F 1 "TP" V 8500 3950 50  0001 C CNN
+F 2 "" H 8650 3900 50  0001 C CNN
+F 3 "~" H 8650 3900 50  0001 C CNN
+	1    8450 3900
+	1    0    0    -1  
+$EndComp
+Connection ~ 8450 3900
+Wire Wire Line
+	8450 3900 10800 3900
+$Comp
+L Connector:TestPoint TP?
+U 1 1 610AF6FB
+P 8450 4400
+AR Path="/5FCD50A5/610AF6FB" Ref="TP?"  Part="1" 
+AR Path="/6052CC9F/610AF6FB" Ref="TP?"  Part="1" 
+AR Path="/610AF6FB" Ref="TP?"  Part="1" 
+F 0 "TP?" H 8450 4600 50  0000 C CNN
+F 1 "TP" V 8500 4450 50  0001 C CNN
+F 2 "" H 8650 4400 50  0001 C CNN
+F 3 "~" H 8650 4400 50  0001 C CNN
+	1    8450 4400
+	1    0    0    -1  
+$EndComp
+Connection ~ 8450 4400
+Wire Wire Line
+	8450 4400 10200 4400
+$Comp
+L Connector:TestPoint TP?
+U 1 1 610B0201
+P 8450 5100
+AR Path="/5FCD50A5/610B0201" Ref="TP?"  Part="1" 
+AR Path="/6052CC9F/610B0201" Ref="TP?"  Part="1" 
+AR Path="/610B0201" Ref="TP?"  Part="1" 
+F 0 "TP?" H 8450 5300 50  0000 C CNN
+F 1 "TP" V 8500 5150 50  0001 C CNN
+F 2 "" H 8650 5100 50  0001 C CNN
+F 3 "~" H 8650 5100 50  0001 C CNN
+	1    8450 5100
+	1    0    0    -1  
+$EndComp
+Connection ~ 8450 5100
+Wire Wire Line
+	8450 5100 9650 5100
+$Comp
+L Connector:TestPoint TP?
+U 1 1 610B0D28
+P 8450 5550
+AR Path="/5FCD50A5/610B0D28" Ref="TP?"  Part="1" 
+AR Path="/6052CC9F/610B0D28" Ref="TP?"  Part="1" 
+AR Path="/610B0D28" Ref="TP?"  Part="1" 
+F 0 "TP?" H 8450 5750 50  0000 C CNN
+F 1 "TP" V 8500 5600 50  0001 C CNN
+F 2 "" H 8650 5550 50  0001 C CNN
+F 3 "~" H 8650 5550 50  0001 C CNN
+	1    8450 5550
+	1    0    0    -1  
+$EndComp
+Connection ~ 8450 5550
+Wire Wire Line
+	8450 5550 9000 5550
 $EndSCHEMATC

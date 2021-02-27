@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr B 17000 11000
 encoding utf-8
-Sheet 29 37
+Sheet 29 38
 Title "Add'l aux. functions"
 Date ""
 Rev "A"
@@ -1190,43 +1190,16 @@ Wire Wire Line
 Text Notes 8500 5350 0    79   ~ 0
 I2C expander
 Text HLabel 6500 6750 0    50   Output ~ 0
-nInt_Aux_I2C
-Wire Wire Line
-	6500 6750 7450 6750
-$Comp
-L Device:R R?
-U 1 1 602DF4D1
-P 7450 6150
-AR Path="/602DF4D1" Ref="R?"  Part="1" 
-AR Path="/5E8AFE9D/602DF4D1" Ref="R?"  Part="1" 
-AR Path="/5E8A4ABF/602DF4D1" Ref="R?"  Part="1" 
-AR Path="/5E8E1F08/602DF4D1" Ref="R?"  Part="1" 
-AR Path="/5FCD4DF5/602DF4D1" Ref="R?"  Part="1" 
-AR Path="/5FCD4B8E/602DF4D1" Ref="R?"  Part="1" 
-AR Path="/6017BD7E/602DF4D1" Ref="R?"  Part="1" 
-F 0 "R?" V 7250 6150 50  0000 C CNN
-F 1 "4.7K 1%" V 7350 6150 50  0000 C CNN
-F 2 "RespiraWorks_Std:R_0603_1608Metric" V 7380 6150 50  0001 C CNN
-F 3 "~" H 7450 6150 50  0001 C CNN
-F 4 "" H 7450 6150 50  0001 C CNN "Manufacturer"
-F 5 "" H 7450 6150 50  0001 C CNN "Part Number"
-	1    7450 6150
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	7450 6300 7450 6750
-Connection ~ 7450 6750
-Wire Wire Line
-	7450 6750 8400 6750
+Aux-I2C-Switch-nINT
 $Comp
 L RespiraWorks:+3.3V_Ctrl #PWR?
 U 1 1 602E4F93
-P 7450 5850
-F 0 "#PWR?" H 7450 5850 50  0001 C CNN
-F 1 "+3.3V_Ctrl" H 7435 6023 50  0000 C CNN
-F 2 "" H 7450 5850 50  0001 C CNN
-F 3 "" H 7450 5850 50  0001 C CNN
-	1    7450 5850
+P 7150 5850
+F 0 "#PWR?" H 7150 5850 50  0001 C CNN
+F 1 "+3.3V_Ctrl" H 7135 6023 50  0000 C CNN
+F 2 "" H 7150 5850 50  0001 C CNN
+F 3 "" H 7150 5850 50  0001 C CNN
+	1    7150 5850
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -1249,8 +1222,6 @@ F 5 "" H 7150 6150 50  0001 C CNN "Part Number"
 	1    7150 6150
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	7450 6000 7450 5850
 $Comp
 L Device:R R?
 U 1 1 602F3718
@@ -1275,12 +1246,9 @@ Wire Wire Line
 	6850 6000 6850 5850
 Wire Wire Line
 	6850 5850 7150 5850
-Connection ~ 7450 5850
 Wire Wire Line
 	7150 6000 7150 5850
 Connection ~ 7150 5850
-Wire Wire Line
-	7150 5850 7450 5850
 Wire Wire Line
 	7150 6300 7150 6650
 Connection ~ 7150 6650
@@ -1730,4 +1698,6 @@ Wire Wire Line
 	5650 2550 6050 2550
 Wire Wire Line
 	1600 5550 1750 5550
+Wire Wire Line
+	6500 6750 8400 6750
 $EndSCHEMATC

@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 35 37
+Sheet 27 38
 Title "Proportional Solenoid Driver"
 Date ""
 Rev "A"
@@ -282,7 +282,7 @@ Ctrl
 Wire Wire Line
 	1100 2350 1350 2350
 Wire Wire Line
-	3950 2700 4800 2700
+	3950 2700 4550 2700
 $Comp
 L RespiraWorks:Q_NMOS_SSSGDDDD Q?
 U 1 1 5FE5C4FB
@@ -509,10 +509,6 @@ F 3 "~" H 6250 4800 50  0001 C CNN
 	1    6250 4800
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	6050 4500 6050 4800
-Wire Wire Line
-	6050 4900 6050 5300
 $Comp
 L power:GND #PWR?
 U 1 1 5FEC573F
@@ -598,8 +594,6 @@ SMBJ20AQ: 32.4V max clamping @ 18.5A
 Wire Wire Line
 	5200 2350 5200 2100
 Wire Wire Line
-	5200 2100 1350 2100
-Wire Wire Line
 	1350 2100 1350 2350
 Wire Wire Line
 	4950 2550 5200 2550
@@ -666,4 +660,82 @@ F 3 "" H 6700 6050 50  0001 C CNN
 	1    6700 6050
 	1    0    0    -1  
 $EndComp
+$Comp
+L Connector:TestPoint TP?
+U 1 1 60E3288F
+P 1350 2100
+AR Path="/5FCD50A5/60E3288F" Ref="TP?"  Part="1" 
+AR Path="/6052CC9F/60E3288F" Ref="TP?"  Part="1" 
+AR Path="/60E3288F" Ref="TP?"  Part="1" 
+AR Path="/5FCD4D18/60E3288F" Ref="TP?"  Part="1" 
+AR Path="/5FCD4DF5/60E3288F" Ref="TP?"  Part="1" 
+AR Path="/5FCD5082/60E3288F" Ref="TP?"  Part="1" 
+F 0 "TP?" H 1350 2300 50  0000 C CNN
+F 1 "TP" V 1400 2150 50  0001 C CNN
+F 2 "" H 1550 2100 50  0001 C CNN
+F 3 "~" H 1550 2100 50  0001 C CNN
+	1    1350 2100
+	1    0    0    -1  
+$EndComp
+Connection ~ 1350 2100
+Wire Wire Line
+	1350 2100 5200 2100
+$Comp
+L Connector:TestPoint TP?
+U 1 1 60E35192
+P 4550 2500
+AR Path="/5FCD50A5/60E35192" Ref="TP?"  Part="1" 
+AR Path="/6052CC9F/60E35192" Ref="TP?"  Part="1" 
+AR Path="/60E35192" Ref="TP?"  Part="1" 
+AR Path="/5FCD4D18/60E35192" Ref="TP?"  Part="1" 
+AR Path="/5FCD4DF5/60E35192" Ref="TP?"  Part="1" 
+AR Path="/5FCD5082/60E35192" Ref="TP?"  Part="1" 
+F 0 "TP?" H 4550 2700 50  0000 C CNN
+F 1 "TP" V 4600 2550 50  0001 C CNN
+F 2 "" H 4750 2500 50  0001 C CNN
+F 3 "~" H 4750 2500 50  0001 C CNN
+	1    4550 2500
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4550 2500 4550 2700
+Connection ~ 4550 2700
+Wire Wire Line
+	4550 2700 4800 2700
+Wire Wire Line
+	6050 4500 6050 4600
+Wire Wire Line
+	6050 4900 6050 5200
+$Comp
+L Connector:TestPoint_Flag TP?
+U 1 1 60E47052
+P 6100 4600
+F 0 "TP?" H 6360 4648 50  0000 L CNN
+F 1 "TestPoint_Flag" H 6360 4603 50  0001 L CNN
+F 2 "RespiraWorks_Std:TestPoint_Keystone_5019_Minature" H 6300 4600 50  0001 C CNN
+F 3 "~" H 6300 4600 50  0001 C CNN
+	1    6100 4600
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6100 4600 6050 4600
+Connection ~ 6050 4600
+Wire Wire Line
+	6050 4600 6050 4800
+$Comp
+L Connector:TestPoint_Flag TP?
+U 1 1 60E488AC
+P 6100 5200
+F 0 "TP?" H 6360 5248 50  0000 L CNN
+F 1 "TestPoint_Flag" H 6360 5203 50  0001 L CNN
+F 2 "RespiraWorks_Std:TestPoint_Keystone_5019_Minature" H 6300 5200 50  0001 C CNN
+F 3 "~" H 6300 5200 50  0001 C CNN
+	1    6100 5200
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6100 5200 6050 5200
+Connection ~ 6050 5200
+Wire Wire Line
+	6050 5200 6050 5300
 $EndSCHEMATC

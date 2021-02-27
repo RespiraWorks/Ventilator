@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 5 37
+Sheet 3 38
 Title "5V Buck Converter"
 Date ""
 Rev "A"
@@ -589,8 +589,6 @@ Connection ~ 7400 3150
 Text Notes 9200 2450 0    50   ~ 0
 28.7uF @ 5V\nESR = 2-10 mΩ, 10 kHz-7 Mhz\n(Adds zero ≥500 kHz)
 Wire Wire Line
-	9700 2800 10350 2800
-Wire Wire Line
 	7100 3400 9700 3400
 Connection ~ 8750 2800
 Connection ~ 8200 2800
@@ -699,4 +697,28 @@ Text Notes 9800 3150 0    50   ~ 0
 Rhigh
 Text Notes 9800 3500 0    50   ~ 0
 Rlow
+Text HLabel 3850 3100 0    50   Input ~ 0
+nEnable
+Wire Wire Line
+	3850 3100 4000 3100
+Wire Wire Line
+	9700 2800 10050 2800
+$Comp
+L Connector:TestPoint_Flag TP?
+U 1 1 60F57642
+P 10050 2750
+AR Path="/5FCD5082/60F57642" Ref="TP?"  Part="1" 
+AR Path="/60F57642" Ref="TP?"  Part="1" 
+F 0 "TP?" H 10310 2798 50  0000 L CNN
+F 1 "TestPoint_Flag" H 10310 2753 50  0001 L CNN
+F 2 "RespiraWorks_Std:TestPoint_Keystone_5019_Minature" H 10250 2750 50  0001 C CNN
+F 3 "~" H 10250 2750 50  0001 C CNN
+	1    10050 2750
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	10050 2750 10050 2800
+Connection ~ 10050 2800
+Wire Wire Line
+	10050 2800 10350 2800
 $EndSCHEMATC

@@ -110,8 +110,8 @@ You will need all the tools listed.
   * 2x VH crimp contacts `[A5]`
   * VH 3-pin housing `[A7]`
   * Shrink tubing `[A20-22]`
-  * 16AWG wire green, 30 cm `[A12]` (not in drawing)
-  * M4 ring terminal `[A23]` (not in drawing)
+  * 16AWG wire green, 30 cm `[A12]`
+  * M4 ring terminal `[A23]`
 
 - Instructions:
   - Cut two 5cm lengths from each of the wire colors.
@@ -131,7 +131,7 @@ You will need all the tools listed.
 
 | Cable Image | Cable Drawing (PDF)  |
 |:--------:|:--------:|
-| ![Main Power Input Cable](images/main_power_cable.jpg) | [![Main Power Input Cable Drawing](images/main_power_cable_drawing_image.jpg)](drawings/20210224_main_power_cable_drawing.pdf) |
+| ![Main Power Input Cable](images/main_power_cable.jpg) | [![Main Power Input Cable Drawing](images/main_power_cable_drawing_image.jpg)](drawings/20210226_main_power_cable_drawing.pdf) |
 
 | Process Image 1 | Process Image 2  | Process Image 3 | Process Image 4 |
 |:--------:|:--------:|:--------:|:--------:|
@@ -206,7 +206,9 @@ The same can be done for the stepper motors belonging to each pinch valve assemb
 
 ### Proportional solenoid valve
 
-- To connect the solenoid to the PCB, you will need to crimp a 2-pin XH connector to the wires:
+To connect the solenoid to the PCB, you will need to crimp a 2-pin XH connector to the wires.
+
+- Using:
   - 2x XH crimp contacts `[A1]`
   - XH 6-pin housings `[A2]`
   - Shrink tubing `[A20]`
@@ -227,7 +229,7 @@ The same can be done for the stepper motors belonging to each pinch valve assemb
 
 This cable connects the Oxygen Sensor to the Interim Board in the PCB stack.
 
-- Oxygen Sensor Cable:
+- Using:
   - 26AWG 40cm in each of green and white `[A14]`
   - 4x KK series crimp contacts `[A19]`
   - 2x KK series 3-pin housings `[A18]`

@@ -19,6 +19,8 @@ BEFORE purchasing any parts.**
 |**A4**| (1)      | Monoprice     | 3896               | 0.83        | [Z][a4amzn] [O][a4mono] | USB-A to miniUSB-B cable, for programming the nucleo |
 |**A5**| (1)      | VicTsing      | IC192305US         | 23.99       | [Z][a5amzn]             | Wireless keyboard and mouse, for setting up Rpi, **OPTIONAL** |
 
+**Essentials (A1+A2):** USD 72.98
+
 [a1key]:  https://www.digikey.com/en/products/detail/mean-well-usa-inc/GSM160A12-R7B/7703457
 [a2amzn]: https://www.amazon.com/Cablelera-North-American-Hospital-ZWACPCAY-10/dp/B00GP6CB5A
 [a3amzn]: https://www.amazon.com/Anker-Portable-Reader-RS-MMC-Micro/dp/B006T9B6R2

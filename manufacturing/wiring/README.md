@@ -15,7 +15,7 @@ It is probably a good idea to manufacture and test these before proceeding with 
 
 Total price estimate: USD 24.00
 
-Stand-alone items (not in other assemblies): USD ???
+Stand-alone items (not in other assemblies): USD 9.39
 
 ## Parts
 

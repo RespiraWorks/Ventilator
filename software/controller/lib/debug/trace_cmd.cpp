@@ -47,7 +47,7 @@ ErrorCode TraceHandler::Process(Context *context) {
 ErrorCode TraceHandler::ReadTraceBuffer(Context *context) {
   // See how many active trace variables there are
   // This gives us our sample size;
-  uint32_t var_count = trace_->GetNumActiveVars();
+  size_t var_count = trace_->GetNumActiveVars();
 
   // If there aren't any active variables, I'm done
   if (!var_count) {
@@ -57,8 +57,8 @@ ErrorCode TraceHandler::ReadTraceBuffer(Context *context) {
 
   // See how many samples I can return
   // First, find out how many I could based on the max value
-  uint32_t max_samples = context->max_response_length /
-                         static_cast<uint32_t>(var_count * sizeof(uint32_t));
+  size_t max_samples = context->max_response_length /
+                       static_cast<size_t>(var_count * sizeof(uint32_t));
 
   // If there's not enough room for even one sample, return an error.
   // That really shouldn't happen
@@ -67,20 +67,20 @@ ErrorCode TraceHandler::ReadTraceBuffer(Context *context) {
   }
 
   // Find the total number of samples in the buffer
-  uint32_t samples_count = trace_->GetNumSamples();
+  size_t samples_count = trace_->GetNumSamples();
   if (samples_count > max_samples) {
     samples_count = max_samples;
   }
 
   std::array<uint32_t, kMaxTraceVars> record;
-  for (uint32_t sample = 0; sample < samples_count; sample++) {
+  for (size_t sample = 0; sample < samples_count; sample++) {
     // This shouldn't fail since I've already confirmed
     // the number of elements in the buffer.  If it does
     // fail it's a bug.
     if (!trace_->GetNextTraceRecord(&record, &var_count)) {
       break;
     }
-    for (uint32_t variable = 0; variable < var_count; variable++) {
+    for (size_t variable = 0; variable < var_count; variable++) {
       u32_to_u8(record[variable], context->response);
       context->response += sizeof(uint32_t);
     }

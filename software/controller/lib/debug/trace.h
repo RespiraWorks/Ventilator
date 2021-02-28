@@ -75,9 +75,11 @@ public:
     trace_buffer_.Flush();
   }
 
-  int GetNumSamples() { return trace_buffer_.FullCount() / GetNumActiveVars(); }
+  size_t GetNumSamples() {
+    return trace_buffer_.FullCount() / GetNumActiveVars();
+  }
 
-  int GetNumActiveVars() {
+  size_t GetNumActiveVars() {
     return static_cast<int>(
         std::count_if(traced_vars_.begin(), traced_vars_.end(),
                       [](const DebugVarBase *var) { return (var); }));
@@ -105,7 +107,7 @@ public:
   // This will equal GetNumActiveVars() but is easier to use for testing.
   [[nodiscard]] bool
   GetNextTraceRecord(std::array<uint32_t, kMaxTraceVars> *record,
-                     uint32_t *count) {
+                     size_t *count) {
     // Grab one sample with interrupts disabled.
     // There's a chance the trace is still running, so we could get interrupted
     // by the high priority thread that adds to the buffer.
@@ -155,6 +157,8 @@ private:
 
   std::array<DebugVarBase *, kMaxTraceVars> traced_vars_ = {nullptr};
 
+  // This circular buffer is as big as we consider reasonable, to give a good
+  // tracing capability: 40% of the RAM available on our STM32
   CircularBuffer<uint32_t, 0x4000> trace_buffer_;
 };
 

@@ -77,13 +77,6 @@ ErrorCode VarHandler::GetVarInfo(Context *context) {
   size_t format_length = strlen(var->GetFormat());
   size_t help_length = strlen(var->GetHelp());
 
-  if (name_length > 255)
-    name_length = 255;
-  if (format_length > 255)
-    format_length = 255;
-  if (help_length > 255)
-    help_length = 255;
-
   // Fail if the strings are too large to fit.
   if (context->max_response_length <
       8 + name_length + format_length + help_length)

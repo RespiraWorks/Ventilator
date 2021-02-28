@@ -22,7 +22,6 @@ limitations under the License.
  */
 
 #include "pid.h"
-#include "types.h"
 #include "gtest/gtest.h"
 
 // The PWM is a 0-255 integer, which means we can accept error of 1 in output

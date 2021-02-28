@@ -13,121 +13,19 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-/*
- * The debug serial port interface implements a very simple binary command
- * structure.  Commands are sent using the following format:
- *
- *   <cmd> <data> <crc> <term>
- *
- * <cmd> is a single byte command code.
- *
- * <data> is zero or more bytes of command data.  The meaning of the data
- * is dependent on the command code.
- *
- * <crc> is a 16-bit CRC on the command and data bytes sent LSB first
- *
- * The response to a command has a similar structure:
- *   <err> <data> <crc> <term>
- *
- * <err> is an error code (0 for success)
- *
- * <data> is any data returned from the command.  If there's an error
- * there is never any data
- *
- * <term> is a special character value indicating the end of a command.
- *
- * Two special char values are used:
- * - kEndTransfer (0xF2), aka term - Signifies the end of a command.
- * - kEscape  (0xF1) - used to send a special character as data.
- *
- * The escape byte causes the serial processor to treat the next byte as
- * data no matter what its value is.  It's used when the data being sent
- * has a special value.
- *
- */
-
-#include "debug.h"
-#include "commands.h"
+#include "interface.h"
+#include "binary_utils.h"
 #include "hal.h"
 #include "sprintf.h"
 #include <stdarg.h>
 #include <string.h>
 
-// Create a trace buffer that the Debug Handler uses to handle the trace
-// command.
-Debug::Trace trace;
-
-// These variables are used to control the trace function
-static FnDebugVar varTraceCtrl(
-    VarType::UINT32, "trace_ctrl", "Used to start/stop the trace function",
-    "0x%08x", [] { return static_cast<uint32_t>(trace.GetStatus()); },
-    [](uint32_t value) {
-      if (value == 1)
-        trace.Start();
-      else
-        trace.Stop();
-    });
-
-static FnDebugVar varTracePeriod(
-    VarType::UINT32, "trace_period",
-    "Period that data will be captured.  Loop cycle units", "%u",
-    [] { return trace.GetPeriod(); },
-    [](uint32_t value) { trace.SetPeriod(value); });
-
-static FnDebugVar varTraceSamp(
-    VarType::UINT32, "trace_samples", "Number of trace samples saved so far",
-    "%u", [] { return trace.GetNumSamples(); },
-    [](uint32_t value) { /*ignored*/ });
-
-static FnDebugVar vartrace_var1(
-    VarType::INT32, "trace_var1", "Variable to be saved to the trace buffer",
-    "%d", [] { return trace.GetTracedVarId<0>(); },
-    [](int32_t value) { trace.SetTracedVarId<0>(value); });
-static FnDebugVar vartrace_var2(
-    VarType::INT32, "trace_var2", "Variable to be saved to the trace buffer",
-    "%d", [] { return trace.GetTracedVarId<1>(); },
-    [](int32_t value) { trace.SetTracedVarId<1>(value); });
-static FnDebugVar vartrace_var3(
-    VarType::INT32, "trace_var3", "Variable to be saved to the trace buffer",
-    "%d", [] { return trace.GetTracedVarId<2>(); },
-    [](int32_t value) { trace.SetTracedVarId<2>(value); });
-static FnDebugVar vartrace_var4(
-    VarType::INT32, "trace_var4", "Variable to be saved to the trace buffer",
-    "%d", [] { return trace.GetTracedVarId<3>(); },
-    [](int32_t value) { trace.SetTracedVarId<3>(value); });
-
-// Create a handler for each of the known commands that the Debug Handler can
-// link to.  This is a bit tedious but I can't find a simpler way.
-Debug::Command::ModeHandler mode_command;
-Debug::Command::PeekHandler peek_command;
-Debug::Command::PokeHandler poke_command;
-Debug::Command::ConsoleHandler console_command;
-Debug::Command::VarHandler var_command;
-Debug::Command::TraceHandler trace_command(&trace);
-
-// Create the global debug handler
-Debug::SerialHandler debug;
-
 namespace Debug {
-
-SerialHandler::SerialHandler() {
-  // TODO - This is annoying. Could we make the Command Handler automatically
-  // add themselves to this registry?
-  registry_[static_cast<uint8_t>(Command::Code::kMode)] = &mode_command;
-  registry_[static_cast<uint8_t>(Command::Code::kPeek)] = &peek_command;
-  registry_[static_cast<uint8_t>(Command::Code::kPoke)] = &poke_command;
-  registry_[static_cast<uint8_t>(Command::Code::kConsole)] = &console_command;
-  registry_[static_cast<uint8_t>(Command::Code::kVariable)] = &var_command;
-  registry_[static_cast<uint8_t>(Command::Code::kTrace)] = &trace_command;
-
-  trace_ = &trace;
-}
-
 // This function is called from the main low priority background loop.
 // Its a simple state machine that waits for a new command to be received
 // over the debug serial port.  Process the command when one is received
 // and sends the response back.
-bool SerialHandler::Poll() {
+bool Interface::Poll() {
   switch (state_) {
   // Waiting for a new command to be received.
   // I continue to process bytes until there are no more available,
@@ -141,7 +39,7 @@ bool SerialHandler::Poll() {
 
   // Process the current command
   case State::kProcessing:
-    ProcessCmd();
+    ProcessCommand();
     request_size_ = 0;
     return false;
 
@@ -158,7 +56,7 @@ bool SerialHandler::Poll() {
 // which can be queried by the interface program.
 //
 // Returns the number of bytes actually written to the print buffer
-size_t SerialHandler::Print(const char *formatting_str, ...) {
+size_t Interface::Print(const char *formatting_str, ...) {
   char local_buffer[300];
 
   // Note that this uses a local sprintf implementation because
@@ -182,7 +80,7 @@ size_t SerialHandler::Print(const char *formatting_str, ...) {
 // Read the next byte from the debug serial port.
 // Returns false if there were no more bytes available.
 // Also returns false if a full command has been received.
-bool SerialHandler::ReadNextByte() {
+bool Interface::ReadNextByte() {
   // Get the next byte from the debug serial port if there is one.
   char next_char;
   if (Hal.debugRead(&next_char, 1) < 1)
@@ -222,7 +120,7 @@ bool SerialHandler::ReadNextByte() {
 // Send the next byte of my response to the last command.
 // Returns false if no more data will fit in the output buffer,
 // or if the entire response has been sent.
-bool SerialHandler::SendNextByte() {
+bool Interface::SendNextByte() {
 
   // To simplify things below, I require at least 3 bytes
   // in the output buffer to continue
@@ -259,7 +157,7 @@ bool SerialHandler::SendNextByte() {
 }
 
 // Process the received command
-void SerialHandler::ProcessCmd() {
+void Interface::ProcessCommand() {
   // The total number of bytes received (not including the termination byte)
   // is the value of request_size_, which should be at least 3 (8 bits command
   // code + 16 bits checksum). If its not, I just ignore the command and jump to
@@ -301,31 +199,25 @@ void SerialHandler::ProcessCmd() {
     return;
   }
 
-  response_[0] = static_cast<uint8_t>(ErrorCode::kNone);
+  SendResponse(ErrorCode::kNone, context.response_length);
+}
+
+void Interface::SendResponse(ErrorCode error, uint32_t response_length) {
+  response_[0] = static_cast<uint8_t>(error);
 
   // Calculate the CRC on the data and error code returned
   // and append this to the end of the response
-  crc = ComputeCRC(response_, context.response_length + 1);
-  u16_to_u8(crc, &response_[context.response_length + 1]);
-
+  uint16_t crc = ComputeCRC(response_, response_length + 1);
+  u16_to_u8(crc, &response_[response_length + 1]);
   state_ = State::kResponding;
   response_bytes_sent_ = 0;
   // The size of the response that will be sent includes the error code (1 byte)
   // and checksum (2 bytes).
-  response_size_ = context.response_length + 3;
-}
-
-void SerialHandler::SendError(ErrorCode error) {
-  response_[0] = static_cast<uint8_t>(error);
-  uint16_t crc = ComputeCRC(response_, 1);
-  u16_to_u8(crc, &response_[1]);
-  state_ = State::kResponding;
-  response_bytes_sent_ = 0;
-  response_size_ = 3;
+  response_size_ = response_length + 3;
 }
 
 // 16-bit CRC calculation for debug commands and responses
-uint16_t SerialHandler::ComputeCRC(const uint8_t *buffer, size_t length) {
+uint16_t Interface::ComputeCRC(const uint8_t *buffer, size_t length) {
   const uint16_t CRC16POLY = 0xA001;
   static bool init = false;
   static uint16_t crc_table[256];

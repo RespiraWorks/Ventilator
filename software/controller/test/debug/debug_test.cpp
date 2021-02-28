@@ -13,7 +13,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include "debug.h"
+#include "binary_utils.h"
+#include "interface.h"
 #include "vars.h"
 #include "gmock/gmock-matchers.h"
 #include "gmock/gmock.h"
@@ -58,15 +59,14 @@ std::vector<uint8_t> Unescape(const std::vector<uint8_t> &data) {
 // unescaped.
 // Returns the unframed command response payload, i.e. unescaped,
 // without the error code and crc.
-std::vector<uint8_t> ProcessCmd(SerialHandler *serial,
-                                std::vector<uint8_t> req) {
+std::vector<uint8_t> ProcessCmd(Interface *serial, std::vector<uint8_t> req) {
   std::vector<uint8_t> full_req;
   full_req.reserve(/*ESC*/ 1 + req.size() + /*CRC*/ 2 + /*TERM*/ 1);
   full_req.push_back(static_cast<uint8_t>(SpecialChar::kEscape));
   for (uint8_t ch : Escape(req)) {
     full_req.push_back(ch);
   }
-  uint16_t crc = SerialHandler::ComputeCRC(req.data(), req.size());
+  uint16_t crc = Interface::ComputeCRC(req.data(), req.size());
   uint8_t crc_bytes[2];
   u16_to_u8(crc, &crc_bytes[0]);
   full_req.push_back(crc_bytes[0]);
@@ -94,8 +94,7 @@ std::vector<uint8_t> ProcessCmd(SerialHandler *serial,
 
   // Verify error code and CRC
   EXPECT_EQ(static_cast<uint8_t>(ErrorCode::kNone), resp[0]);
-  uint16_t expected_crc =
-      SerialHandler::ComputeCRC(resp.data(), resp.size() - 2);
+  uint16_t expected_crc = Interface::ComputeCRC(resp.data(), resp.size() - 2);
   u16_to_u8(expected_crc, &crc_bytes[0]);
   uint16_t actual_crc = u8_to_u16(resp.data() + resp.size() - 2);
   EXPECT_EQ(expected_crc, actual_crc);
@@ -109,13 +108,13 @@ std::vector<uint8_t> ProcessCmd(SerialHandler *serial,
 }
 
 TEST(Debug, Mode) {
-  SerialHandler serial;
+  Interface serial;
   std::vector<uint8_t> req = {static_cast<uint8_t>(Command::Code::kMode)};
   std::vector<uint8_t> resp = ProcessCmd(&serial, req);
   EXPECT_THAT(resp, testing::ElementsAre(static_cast<uint8_t>(0)));
 }
 
-uint32_t GetVarViaCmd(SerialHandler *serial, uint16_t id) {
+uint32_t GetVarViaCmd(Interface *serial, uint16_t id) {
   uint8_t vid[2];
   u16_to_u8(id, &vid[0]);
 
@@ -135,7 +134,7 @@ TEST(Debug, GetVar) {
   uint32_t bar = 0xC0DEBABE;
   DebugVar var_bar("bar", &bar);
 
-  SerialHandler serial;
+  Interface serial;
   // Run a bunch of times with different expected results
   // to exercise buffer management.
   for (int i = 0; i < 100; ++i, ++foo, ++bar) {

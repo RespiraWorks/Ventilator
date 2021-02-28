@@ -53,7 +53,7 @@ TEST(Trace, MaybeSampleTwoVars) {
   }
 
   std::array<uint32_t, 4> record = {0};
-  uint32_t count;
+  size_t count;
 
   // Extract a few records
   for (int j = 0; j < 9; j += 3, --expected_num_samples) {

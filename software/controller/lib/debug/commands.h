@@ -16,8 +16,9 @@ limitations under the License.
 #ifndef COMMAND_H
 #define COMMAND_H
 
-#include "debug.h"
+#include "binary_utils.h"
 #include "hal.h"
+#include "interface.h"
 #include <string.h>
 
 namespace Debug::Command {
@@ -92,21 +93,24 @@ public:
     // Some registers can't handle byte accesses, so rather then just
     // use a simple memcpy here I will do 32-bit or 16-bit accesses
     // as long as both the address and count are aligned to 32 or 16 bits.
-    if (!(address & 3) && !(count & 3)) {
-      uint32_t *ptr = reinterpret_cast<uint32_t *>(address);
-
-      for (int byte_number = 0; byte_number < count / 4; byte_number++) {
-        uint32_t value = *ptr++;
-        u32_to_u8(value, &context->response[4 * byte_number]);
-      }
-    } else if (!(address & 1) && !(count & 1)) {
+    if ((address & 1) || (count & 1)) {
+      // no 16-bit alignment is possible
+      memcpy(context->response, reinterpret_cast<void *>(address), count);
+    } else if ((address & 3) || (count & 3)) {
+      // aligned to 16 bits but not 32
       uint16_t *ptr = reinterpret_cast<uint16_t *>(address);
       for (int byte_number = 0; byte_number < count / 2; byte_number++) {
         uint16_t value = *ptr++;
         u16_to_u8(value, &context->response[2 * byte_number]);
       }
     } else {
-      memcpy(context->response, reinterpret_cast<void *>(address), count);
+      // aligned to 32 bits
+      uint32_t *ptr = reinterpret_cast<uint32_t *>(address);
+
+      for (int byte_number = 0; byte_number < count / 4; byte_number++) {
+        uint32_t value = *ptr++;
+        u32_to_u8(value, &context->response[4 * byte_number]);
+      }
     }
 
     context->response_length = count;
@@ -133,25 +137,29 @@ public:
 
     uint32_t count = context->request_length - 4;
 
-    // If both the address and count are multiples of 4, I write
-    // 32-bit values.  This is useful when poking into registers
-    // that need to be written as longs.
-    if (!(address & 3) && !(count & 3)) {
-      uint32_t *ptr = reinterpret_cast<uint32_t *>(address);
-      count /= 4;
-      for (int byte_number = 0; byte_number < count; byte_number++)
-        *ptr++ = u8_to_u32(&context->request[4 + byte_number * 4]);
-    }
-    // Same idea for multiples of 2
-    else if (!(address & 1) && !(count & 1)) {
+    // Some registers can't handle byte accesses, so rather then just
+    // use a simple memcpy here I will do 32-bit or 16-bit accesses
+    // as long as both the address and count are aligned to 32 or 16 bits.
+    if ((address & 1) || (count & 1)) {
+      // no 16-bit alignment is possible
+      uint8_t *ptr = reinterpret_cast<uint8_t *>(address);
+      for (int byte_number = 0; byte_number < count; byte_number++) {
+        *ptr++ = context->request[4 + byte_number];
+      }
+    } else if ((address & 3) || (count & 3)) {
+      // 16-bit alignment is possible but not 32 bits
       uint16_t *ptr = reinterpret_cast<uint16_t *>(address);
       count /= 2;
-      for (int byte_number = 0; byte_number < count; byte_number++)
+      for (int byte_number = 0; byte_number < count; byte_number++) {
         *ptr++ = u8_to_u16(&context->request[4 + byte_number * 2]);
+      }
     } else {
-      uint8_t *ptr = reinterpret_cast<uint8_t *>(address);
-      for (int byte_number = 0; byte_number < count; byte_number++)
-        *ptr++ = context->request[4 + byte_number];
+      // aligned to 32 bits
+      uint32_t *ptr = reinterpret_cast<uint32_t *>(address);
+      count /= 4;
+      for (int byte_number = 0; byte_number < count; byte_number++) {
+        *ptr++ = u8_to_u32(&context->request[4 + byte_number * 4]);
+      }
     }
 
     context->response_length = 0;

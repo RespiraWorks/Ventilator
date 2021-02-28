@@ -59,8 +59,8 @@ VAR_INT32 = 1
 VAR_UINT32 = 2
 VAR_FLOAT = 3
 
-# Can trace this many variables at once.  Keep this in sync with TRACE_VAR_CT
-# in the controller.
+# Can trace this many variables at once.  Keep this in sync with
+# kMaxTraceVars in the controller.
 TRACE_VAR_CT = 4
 
 # If true, the raw bytes of the serial data will be printed.

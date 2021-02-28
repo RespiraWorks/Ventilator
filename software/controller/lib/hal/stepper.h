@@ -171,7 +171,7 @@ class StepMotor {
   static int total_motors_;
 
 public:
-  StepMotor();
+  StepMotor() = default;
 
   // Called from HAL at startup
   static void OneTimeInit();

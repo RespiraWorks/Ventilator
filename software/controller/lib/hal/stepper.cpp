@@ -13,19 +13,21 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#if defined(BARE_STM32)
-
 #include "stepper.h"
 #include "hal.h"
+
+StepMotor StepMotor::motor_[StepMotor::kMaxMotors];
+int StepMotor::total_motors_;
+
+#if defined(BARE_STM32)
+
 #include "hal_stm32.h"
 #include <cmath>
 #include <cstring>
 
 // Static data members
-StepMotor StepMotor::motor_[StepMotor::kMaxMotors];
 uint8_t StepMotor::dma_buff_[StepMotor::kMaxMotors];
 StepCommState StepMotor::coms_state_ = StepCommState::IDLE;
-int StepMotor::total_motors_;
 
 // This array holds the length of each parameter in units of
 // bytes, rounded up to the nearest byte.  This info is based
@@ -84,8 +86,6 @@ static const int ustep_per_step_ = 128;
 // These functions raise and lower the chip select pin
 inline void CS_High() { GPIO_SetPin(GPIO_B_BASE, 6); }
 inline void CS_Low() { GPIO_ClrPin(GPIO_B_BASE, 6); }
-
-StepMotor::StepMotor() = default;
 
 StepMtrErr StepMotor::SetParam(StepMtrParam param, uint32_t value) {
   uint8_t p = static_cast<uint8_t>(param);
@@ -930,4 +930,20 @@ void StepMotor::ProbeChips() {
     total_motors_ = 0;
 }
 
+#else
+StepMtrErr StepMotor::HardDisable() { return StepMtrErr::OK; }
+
+StepMtrErr StepMotor::SetAmpAll(float amp) { return StepMtrErr::OK; }
+
+StepMtrErr StepMotor::SetMaxSpeed(float dps) { return StepMtrErr::OK; }
+
+StepMtrErr StepMotor::SetAccel(float acc) { return StepMtrErr::OK; }
+
+StepMtrErr StepMotor::MoveRel(float deg) { return StepMtrErr::OK; }
+
+StepMtrErr StepMotor::ClearPosition() { return StepMtrErr::OK; }
+
+StepMtrErr StepMotor::GotoPos(float deg) { return StepMtrErr::OK; }
+
+StepMtrErr StepMotor::HardStop() { return StepMtrErr::OK; }
 #endif

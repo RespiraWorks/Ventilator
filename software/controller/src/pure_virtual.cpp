@@ -27,4 +27,6 @@ limitations under the License.
 // header in the putative library from each file with a pure virtual function.
 // We'd probably also need to remove the dependency on hal, so this could be
 // used from libraries that don't link with hal.
+#ifdef BARE_STM32
 extern "C" void __cxa_pure_virtual() { Hal.reset_device(); }
+#endif

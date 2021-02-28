@@ -98,7 +98,4 @@ private:
 
 } // namespace Debug
 
-// Global debug interface, required for console command only
-extern Debug::Interface debug;
-
 #endif // INTERFACE_H

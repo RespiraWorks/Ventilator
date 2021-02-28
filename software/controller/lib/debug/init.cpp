@@ -67,9 +67,6 @@ Debug::Command::PokeHandler poke_command;
 Debug::Command::VarHandler var_command;
 Debug::Command::TraceHandler trace_command(&trace);
 
-// Create the global debug handler
-Debug::Interface debug;
-
 namespace Debug {
 
 Interface::Interface() {

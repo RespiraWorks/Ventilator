@@ -13,8 +13,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include "gtest/gtest.h"
 #include "stepper.h"
+#include "gtest/gtest.h"
 
 // Not really tests, just silencing code coverage warning for native build
 TEST(Stepper, TestStubs) {

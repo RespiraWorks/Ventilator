@@ -14,7 +14,7 @@ limitations under the License.
 */
 
 #include "gtest/gtest.h"
-#include <hal.h>
+#include "hal.h"
 
 // Not really a test, just silencing code coverage warning for native build
 TEST(PSol, TestStubs) { PSOL_Value(0.0); }

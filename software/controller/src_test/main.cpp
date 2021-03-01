@@ -1,5 +1,5 @@
-#include "debug.h"
 #include "hal.h"
+#include "interface.h"
 #include "uart_dma.h"
 #include <string.h>
 

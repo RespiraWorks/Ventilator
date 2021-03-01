@@ -16,9 +16,9 @@ limitations under the License.
 #include "actuators.h"
 #include "comms.h"
 #include "controller.h"
-#include "debug.h"
 #include "eeprom.h"
 #include "hal.h"
+#include "interface.h"
 #include "network_protocol.pb.h"
 #include "nvparams.h"
 #include "sensors.h"
@@ -94,7 +94,7 @@ static void high_priority_task(void *arg) {
       controller_state.pressure_setpoint.cmH2O();
 
   // Sample any trace variables that are enabled
-  trace.MaybeSample();
+  debug.SampleTraceVars();
 
   // Pet the watchdog
   Hal.watchdog_handler();

@@ -21,6 +21,8 @@ limitations under the License.
 #include <limits>
 #include <stdint.h>
 
+using namespace Debug;
+
 TEST(Trace, MaybeSampleTwoVars) {
   uint32_t i = 0;
   FnDebugVar var_x(
@@ -32,7 +34,7 @@ TEST(Trace, MaybeSampleTwoVars) {
 
   Trace trace;
   trace.SetPeriod(3); // Trace every 3 cycles.
-  trace.SetFlags(1);  // Enable tracing
+  trace.Start();      // Enable tracing
   trace.SetTracedVarId<1>(var_x.GetId());
   trace.SetTracedVarId<3>(var_y.GetId());
 
@@ -51,7 +53,7 @@ TEST(Trace, MaybeSampleTwoVars) {
   }
 
   std::array<uint32_t, 4> record = {0};
-  int count;
+  size_t count;
 
   // Extract a few records
   for (int j = 0; j < 9; j += 3, --expected_num_samples) {
@@ -87,7 +89,7 @@ TEST(Trace, TracesEveryCycleByDefault) {
   uint32_t x = 42;
   DebugVar var_x("x", &x);
   trace.SetTracedVarId<0>(var_x.GetId());
-  trace.SetFlags(1);
+  trace.Start();
   // Do not set period
 
   trace.MaybeSample();
@@ -101,29 +103,29 @@ TEST(Trace, BufferFull) {
   DebugVar var_x("x", &x);
   Trace trace;
   trace.SetTracedVarId<0>(var_x.GetId());
-  trace.SetFlags(1);
+  trace.Start();
 
   // Buffer capacity from trace.h header file. Update if necessary.
   int expected_capacity = 0x4000;
   for (int i = 0; i < expected_capacity; ++i) {
-    EXPECT_EQ(uint32_t{1}, trace.GetFlags());
+    EXPECT_TRUE(trace.GetStatus());
     trace.MaybeSample();
     EXPECT_EQ(i + 1, trace.GetNumSamples());
   }
 
   trace.MaybeSample();
-  EXPECT_EQ(uint32_t{0}, trace.GetFlags());
+  EXPECT_FALSE(trace.GetStatus());
   EXPECT_EQ(expected_capacity, trace.GetNumSamples());
 
   // Flags should be 0 by now, so this has no effect.
   trace.MaybeSample();
   trace.MaybeSample();
   trace.MaybeSample();
-  EXPECT_EQ(uint32_t{0}, trace.GetFlags());
+  EXPECT_FALSE(trace.GetStatus());
   EXPECT_EQ(expected_capacity, trace.GetNumSamples());
 
   // Re-enable tracing: that should flush the trace.
-  trace.SetFlags(1);
+  trace.Start();
   trace.MaybeSample();
   trace.MaybeSample();
   trace.MaybeSample();
@@ -136,7 +138,7 @@ TEST(Trace, FlushOnSetVar) {
   DebugVar var_y("y", &y);
   Trace trace;
   trace.SetTracedVarId<0>(var_x.GetId());
-  trace.SetFlags(1);
+  trace.Start();
 
   trace.MaybeSample();
   trace.MaybeSample();

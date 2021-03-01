@@ -72,7 +72,9 @@ void DMA2_CH7_ISR() { i2c1.DMAIntHandler(DMA_Chan::C7); };
 I2C::Channel i2c1;
 #endif // BARE_STM32
 
-bool I2C::Channel::SendRequest(const Request &request) {
+namespace I2C {
+
+bool Channel::SendRequest(const Request &request) {
   *(request.processed) = false;
   // We need to ensure thread safety as this function might be
   // called from a timer interrupt as well as the main loop.
@@ -118,8 +120,7 @@ bool I2C::Channel::SendRequest(const Request &request) {
   return true;
 }
 
-bool I2C::Channel::CopyDataToWriteBuffer(const void *data,
-                                         const uint16_t size) {
+bool Channel::CopyDataToWriteBuffer(const void *data, const uint16_t size) {
   // This protected function is only called from an already thread safe
   // function, but leaning on the safe side here, I am disabling interrupts
   // for this one anyway, in case someone changes the design of the I²C class.
@@ -147,7 +148,7 @@ bool I2C::Channel::CopyDataToWriteBuffer(const void *data,
   return true;
 }
 
-void I2C::Channel::StartTransfer() {
+void Channel::StartTransfer() {
   transfer_in_progress_ = true;
   // In DMA mode, a single request can lead to several transfers, when it is
   // longer than 255 bytes. Therefore we need to check whether this call is a
@@ -175,7 +176,7 @@ void I2C::Channel::StartTransfer() {
 
 // Method called by interrupt handler when dma is disabled. This method
 // transfers data to/from the tx/rx registers from/to *request.data
-void I2C::Channel::TransferByte() {
+void Channel::TransferByte() {
   if (remaining_size_ == 0) {
     // this shouldn't happen, but just to be safe, we stop here.
     return;
@@ -192,7 +193,7 @@ void I2C::Channel::TransferByte() {
   };
 }
 
-void I2C::Channel::EndTransfer() {
+void Channel::EndTransfer() {
   // Ensure thread safety
   BlockInterrupts block;
   *last_request_.processed = true;
@@ -209,7 +210,7 @@ void I2C::Channel::EndTransfer() {
   transfer_in_progress_ = false;
 }
 
-void I2C::Channel::I2CEventHandler() {
+void Channel::I2CEventHandler() {
   if (!transfer_in_progress_) {
     return;
   }
@@ -251,7 +252,7 @@ void I2C::Channel::I2CEventHandler() {
   }
 }
 
-void I2C::Channel::I2CErrorHandler() {
+void Channel::I2CErrorHandler() {
   // I²C error --> clear all error flags (except those that are SMBus only)
   ClearErrors();
   // and restart the request up to error_retry_ times
@@ -266,7 +267,7 @@ void I2C::Channel::I2CErrorHandler() {
 }
 
 #if defined(BARE_STM32)
-void I2C::STM32Channel::Init(I2C_Regs *i2c, DMA_Regs *dma, Speed speed) {
+void STM32Channel::Init(I2C_Regs *i2c, DMA_Regs *dma, Speed speed) {
   i2c_ = i2c;
 
   // Disable I²C peripheral
@@ -298,7 +299,7 @@ void I2C::STM32Channel::Init(I2C_Regs *i2c, DMA_Regs *dma, Speed speed) {
   }
 }
 
-void I2C::STM32Channel::SetupI2CTransfer() {
+void STM32Channel::SetupI2CTransfer() {
   // set transfer-specific registers per [RM] p1149 to 1158
   i2c_->ctrl2.slave_addr_7b = last_request_.slave_address & 0x7f;
   i2c_->ctrl2.transfer_dir = static_cast<bool>(last_request_.direction);
@@ -313,7 +314,7 @@ void I2C::STM32Channel::SetupI2CTransfer() {
 }
 
 // Write the remaining size to the appropriate register with reload logic
-void I2C::STM32Channel::WriteTransferSize() {
+void STM32Channel::WriteTransferSize() {
   if (remaining_size_ <= 255) {
     i2c_->ctrl2.n_bytes = static_cast<uint8_t>(remaining_size_);
     i2c_->ctrl2.reload = 0;
@@ -335,7 +336,7 @@ void I2C::STM32Channel::WriteTransferSize() {
 }
 
 // DMA functions are only meaningful in BARE_STM32
-void I2C::STM32Channel::SetupDMAChannels(DMA_Regs *dma) {
+void STM32Channel::SetupDMAChannels(DMA_Regs *dma) {
   // DMA mapping for I²C (see [RM] p299)
   static struct {
     volatile void *dma;
@@ -396,7 +397,7 @@ void I2C::STM32Channel::ConfigureDMAChannel(
   }
 }
 
-void I2C::STM32Channel::SetupDMATransfer() {
+void STM32Channel::SetupDMATransfer() {
   if (!dma_enable_) {
     return;
   }
@@ -430,7 +431,7 @@ void I2C::STM32Channel::SetupDMATransfer() {
   channel->config.enable = 1;
 }
 
-void I2C::STM32Channel::DMAIntHandler(DMA_Chan chan) {
+void STM32Channel::DMAIntHandler(DMA_Chan chan) {
   if (!dma_enable_ || !transfer_in_progress_)
     return;
   dma_->channel[static_cast<uint8_t>(chan)].config.enable = 0;
@@ -459,3 +460,5 @@ void I2C::STM32Channel::DMAIntHandler(DMA_Chan chan) {
   StartTransfer();
 }
 #endif // BARE_STM32
+
+} // namespace I2C

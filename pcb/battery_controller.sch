@@ -70,7 +70,7 @@ F 1 "BAT-PWR MegaFit 2x1" H 10000 5150 50  0000 R CNN
 F 2 "RespiraWorks_Std:Molex_Mega-Fit_76829-0102_2x01_P5.70mm_Vertical" H 9900 4950 50  0001 C CNN
 F 3 "~" H 9900 4950 50  0001 C CNN
 F 4 "Molex" H 9900 4950 50  0001 C CNN "Manufacturer"
-F 5 "768290102" H 9800 5250 50  0000 C CNN "Manufacturer P/N"
+F 5 "768290102" H 9900 4950 50  0001 C CNN "Manufacturer PN"
 	1    9900 4950
 	1    0    0    1   
 $EndComp
@@ -330,7 +330,7 @@ F 1 "POWER-ENTRY MegaFit 2x2" H 2150 2850 50  0000 R CNN
 F 2 "RespiraWorks_Std:Molex_Mega-Fit_76829-0104_2x02_P5.70mm_Vertical" H 1550 3300 50  0001 C CNN
 F 3 "~" H 1550 3300 50  0001 C CNN
 F 4 "Molex" H 1550 3300 50  0001 C CNN "Manufacturer"
-F 5 "768290104" H 1800 2950 50  0000 R CNN "Manufacturer P/N"
+F 5 "768290104" H 1550 2950 50  0001 C CNN "Manufacturer PN"
 	1    1550 3300
 	-1   0    0    1   
 $EndComp

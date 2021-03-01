@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 27 38
+Sheet 35 38
 Title "Proportional Solenoid Driver"
 Date ""
 Rev "A"
@@ -134,10 +134,10 @@ AR Path="/5E8E0754/5FD6C66B" Ref="R?"  Part="1"
 AR Path="/5FCD5082/5FD6C66B" Ref="R?"  Part="1" 
 AR Path="/6042B5C5/5FD6C66B" Ref="R?"  Part="1" 
 F 0 "R?" H 5250 3400 50  0000 C CNN
-F 1 "2.4K 1%" H 5150 3500 50  0000 C CNN
+F 1 "2.4k" H 5150 3500 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 5330 3450 50  0001 C CNN
 F 3 "~" H 5400 3450 50  0001 C CNN
-F 4 "KOA Speer" H 5400 3450 50  0001 C CNN "Manufacturer"
+F 4 "" H 5400 3450 50  0001 C CNN "Manufacturer"
 F 5 "RK73H2BTTD2401F" H 5400 3450 50  0001 C CNN "Part Number"
 	1    5400 3450
 	-1   0    0    1   
@@ -180,7 +180,7 @@ AR Path="/5E8E0754/5FD6C67B" Ref="R?"  Part="1"
 AR Path="/5FCD5082/5FD6C67B" Ref="R?"  Part="1" 
 AR Path="/6042B5C5/5FD6C67B" Ref="R?"  Part="1" 
 F 0 "R?" H 4800 3200 50  0000 C CNN
-F 1 "1.5K 1%" H 4700 3300 50  0000 C CNN
+F 1 "1.5k" H 4700 3300 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 4880 3300 50  0001 C CNN
 F 3 "~" H 4950 3300 50  0001 C CNN
 F 4 "KOA Speer" H 4950 3300 50  0001 C CNN "Manufacturer"
@@ -225,7 +225,7 @@ AR Path="/5E8E0754/5FD6C68A" Ref="R?"  Part="1"
 AR Path="/5FCD5082/5FD6C68A" Ref="R?"  Part="1" 
 AR Path="/6042B5C5/5FD6C68A" Ref="R?"  Part="1" 
 F 0 "R?" V 3700 2700 50  0000 C CNN
-F 1 "10K 1%" V 3900 2700 50  0000 C CNN
+F 1 "10k" V 3900 2700 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 3730 2700 50  0001 C CNN
 F 3 "~" H 3800 2700 50  0001 C CNN
 F 4 "KOA Speer" H 3800 2700 50  0001 C CNN "Manufacturer"
@@ -254,7 +254,7 @@ AR Path="/5E8E0754/5FD6C69E" Ref="R?"  Part="1"
 AR Path="/5FCD5082/5FD6C69E" Ref="R?"  Part="1" 
 AR Path="/6042B5C5/5FD6C69E" Ref="R?"  Part="1" 
 F 0 "R?" V 2150 2750 50  0000 C CNN
-F 1 "10K 1%" V 2350 2750 50  0000 C CNN
+F 1 "10k" V 2350 2750 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 2180 2750 50  0001 C CNN
 F 3 "~" H 2250 2750 50  0001 C CNN
 F 4 "KOA Speer" H 2250 2750 50  0001 C CNN "Manufacturer"
@@ -314,7 +314,7 @@ AR Path="/5FCD5082/5FE5E599" Ref="R?"  Part="1"
 AR Path="/6042B5C5/5FE5E599" Ref="R?"  Part="1" 
 F 0 "R?" H 7100 3800 50  0000 C CNN
 F 1 "0" H 7100 3700 50  0000 C CNN
-F 2 "RespiraWorks_Std:R_0603_1608Metric" V 6880 3750 50  0001 C CNN
+F 2 "RespiraWorks_std:R_0603_1608Metric" V 6880 3750 50  0001 C CNN
 F 3 "~" H 6950 3750 50  0001 C CNN
 F 4 "DNP" H 7150 3600 50  0000 C CNN "DNP"
 	1    6950 3750
@@ -384,7 +384,7 @@ AR Path="/5FCD5082/5FE6B7CB" Ref="R?"  Part="1"
 AR Path="/6042B5C5/5FE6B7CB" Ref="R?"  Part="1" 
 F 0 "R?" H 6800 5900 50  0000 C CNN
 F 1 "0" H 6800 5800 50  0000 C CNN
-F 2 "RespiraWorks_Std:R_0603_1608Metric" V 6630 5850 50  0001 C CNN
+F 2 "RespiraWorks_std:R_0603_1608Metric" V 6630 5850 50  0001 C CNN
 F 3 "~" H 6700 5850 50  0001 C CNN
 F 4 "" H 6850 5700 50  0001 C CNN "DNP"
 	1    6700 5850
@@ -432,7 +432,7 @@ AR Path="/5E8E0754/5FE9C28A" Ref="R?"  Part="1"
 AR Path="/5FCD5082/5FE9C28A" Ref="R?"  Part="1" 
 AR Path="/6042B5C5/5FE9C28A" Ref="R?"  Part="1" 
 F 0 "R?" H 5050 6000 50  0000 C CNN
-F 1 "10K 1%" H 4950 5900 50  0000 C CNN
+F 1 "10k" H 4950 5900 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 5130 6000 50  0001 C CNN
 F 3 "~" H 5200 6000 50  0001 C CNN
 F 4 "KOA Speer" H 5200 6000 50  0001 C CNN "Manufacturer"
@@ -477,10 +477,10 @@ AR Path="/5E8E0754/5FE9E66C" Ref="R?"  Part="1"
 AR Path="/5FCD5082/5FE9E66C" Ref="R?"  Part="1" 
 AR Path="/6042B5C5/5FE9E66C" Ref="R?"  Part="1" 
 F 0 "R?" V 4550 5850 50  0000 C CNN
-F 1 "1K 1%" V 4650 5850 50  0000 C CNN
+F 1 "1k" V 4650 5850 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 4680 5850 50  0001 C CNN
 F 3 "~" H 4750 5850 50  0001 C CNN
-F 4 "KOA Speer" H 4750 5850 50  0001 C CNN "Manufacturer"
+F 4 "" H 4750 5850 50  0001 C CNN "Manufacturer"
 F 5 "RK73H2BTTD1002F" H 4750 5850 50  0001 C CNN "Part Number"
 F 6 "DNP" V 4750 5850 50  0000 C CNN "DNP"
 	1    4750 5850
@@ -538,7 +538,7 @@ P 6600 2100
 AR Path="/5FCD5082/5FEC9792" Ref="C?"  Part="1" 
 AR Path="/6042B5C5/5FEC9792" Ref="C?"  Part="1" 
 F 0 "C?" H 6715 2146 50  0000 L CNN
-F 1 "10uF 100V X7S" H 6715 2055 50  0000 L CNN
+F 1 "10uF" H 6715 2055 50  0000 L CNN
 F 2 "RespiraWorks_Std:C_1210_3225Metric" H 6638 1950 50  0001 C CNN
 F 3 "~" H 6600 2100 50  0001 C CNN
 F 4 "Murata" H 6600 2100 50  0001 C CNN "Manufacturer"
@@ -670,6 +670,7 @@ AR Path="/60E3288F" Ref="TP?"  Part="1"
 AR Path="/5FCD4D18/60E3288F" Ref="TP?"  Part="1" 
 AR Path="/5FCD4DF5/60E3288F" Ref="TP?"  Part="1" 
 AR Path="/5FCD5082/60E3288F" Ref="TP?"  Part="1" 
+AR Path="/6042B5C5/60E3288F" Ref="TP?"  Part="1" 
 F 0 "TP?" H 1350 2300 50  0000 C CNN
 F 1 "TP" V 1400 2150 50  0001 C CNN
 F 2 "" H 1550 2100 50  0001 C CNN
@@ -690,6 +691,7 @@ AR Path="/60E35192" Ref="TP?"  Part="1"
 AR Path="/5FCD4D18/60E35192" Ref="TP?"  Part="1" 
 AR Path="/5FCD4DF5/60E35192" Ref="TP?"  Part="1" 
 AR Path="/5FCD5082/60E35192" Ref="TP?"  Part="1" 
+AR Path="/6042B5C5/60E35192" Ref="TP?"  Part="1" 
 F 0 "TP?" H 4550 2700 50  0000 C CNN
 F 1 "TP" V 4600 2550 50  0001 C CNN
 F 2 "" H 4750 2500 50  0001 C CNN
@@ -710,6 +712,8 @@ $Comp
 L Connector:TestPoint_Flag TP?
 U 1 1 60E47052
 P 6100 4600
+AR Path="/5FCD5082/60E47052" Ref="TP?"  Part="1" 
+AR Path="/6042B5C5/60E47052" Ref="TP?"  Part="1" 
 F 0 "TP?" H 6360 4648 50  0000 L CNN
 F 1 "TestPoint_Flag" H 6360 4603 50  0001 L CNN
 F 2 "RespiraWorks_Std:TestPoint_Keystone_5019_Minature" H 6300 4600 50  0001 C CNN
@@ -726,6 +730,8 @@ $Comp
 L Connector:TestPoint_Flag TP?
 U 1 1 60E488AC
 P 6100 5200
+AR Path="/5FCD5082/60E488AC" Ref="TP?"  Part="1" 
+AR Path="/6042B5C5/60E488AC" Ref="TP?"  Part="1" 
 F 0 "TP?" H 6360 5248 50  0000 L CNN
 F 1 "TestPoint_Flag" H 6360 5203 50  0001 L CNN
 F 2 "RespiraWorks_Std:TestPoint_Keystone_5019_Minature" H 6300 5200 50  0001 C CNN

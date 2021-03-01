@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 16 38
+Sheet 19 38
 Title "Pressure Sensor Daughterboard Connections, Analog"
 Date ""
 Rev "A"
@@ -51,7 +51,7 @@ AR Path="/5FCD4E9D/6007E2BB/6008936D" Ref="J?"  Part="1"
 AR Path="/5FCD4E9D/600CF516/6008936D" Ref="J?"  Part="1" 
 AR Path="/5FCD4E9D/600D74A6/6008936D" Ref="J?"  Part="1" 
 F 0 "J?" H 5918 3667 50  0000 C CNN
-F 1 "0.1\" male header" H 5918 3576 50  0000 C CNN
+F 1 "Pressure sensor daughterboard" H 5918 3576 50  0000 C CNN
 F 2 "RespiraWorks_Std:PinHeader_1x04_P2.54mm_Vertical_SMD_Pin1Left" H 6000 3350 50  0001 C CNN
 F 3 "~" H 6000 3350 50  0001 C CNN
 	1    6000 3350
@@ -145,7 +145,7 @@ AR Path="/5FCD4E9D/6007E2BB/600869E9" Ref="J?"  Part="1"
 AR Path="/5FCD4E9D/600CF516/600869E9" Ref="J?"  Part="1" 
 AR Path="/5FCD4E9D/600D74A6/600869E9" Ref="J?"  Part="1" 
 F 0 "J?" H 3980 3392 50  0000 L CNN
-F 1 "0.1\" male header" H 3980 3301 50  0000 L CNN
+F 1 "Pressure sensor daughterboard" H 3980 3301 50  0000 L CNN
 F 2 "RespiraWorks_Std:PinHeader_1x04_P2.54mm_Vertical_SMD_Pin1Left" H 3900 3350 50  0001 C CNN
 F 3 "~" H 3900 3350 50  0001 C CNN
 	1    3900 3350

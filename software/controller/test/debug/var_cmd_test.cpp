@@ -13,14 +13,16 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include "var_cmd.h"
+#include "commands.h"
 #include "vars.h"
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
 #include <array>
 #include <stdint.h>
 
-TEST(VarCmd, GetVar) {
+namespace Debug::Command {
+
+TEST(VarHandler, GetVar) {
   uint32_t value = 0xDEADBEEF;
   DebugVar var("name", &value, "help", "fmt");
 
@@ -33,21 +35,21 @@ TEST(VarCmd, GetVar) {
       uint8_t{0}    // Placeholder
   };
   std::array<uint8_t, 4> resp;
-  CmdContext context = {.req = req.data(),
-                        .req_len = std::size(req),
-                        .resp = resp.data(),
-                        .max_resp_len = std::size(resp),
-                        .resp_len = 0};
+  Context context = {.request = req.data(),
+                     .request_length = std::size(req),
+                     .response = resp.data(),
+                     .max_response_length = std::size(resp),
+                     .response_length = 0};
 
-  EXPECT_EQ(DbgErrCode::OK, VarCmd().HandleCmd(&context));
-  EXPECT_EQ(4, context.resp_len);
+  EXPECT_EQ(ErrorCode::kNone, VarHandler().Process(&context));
+  EXPECT_EQ(4, context.response_length);
 
   std::array<uint8_t, 4> expected_result;
   u32_to_u8(value, expected_result.data());
   EXPECT_EQ(resp, expected_result);
 }
 
-TEST(VarCmd, SetVar) {
+TEST(VarHandler, SetVar) {
   uint32_t value = 0xDEADBEEF;
   DebugVar var("name", &value, "help", "fmt");
 
@@ -65,14 +67,15 @@ TEST(VarCmd, SetVar) {
   };
 
   std::array<uint8_t, 0> resp;
-  CmdContext context = {.req = req.data(),
-                        .req_len = std::size(req),
-                        .resp = resp.data(),
-                        .max_resp_len = std::size(resp),
-                        .resp_len = 0};
+  Context context = {.request = req.data(),
+                     .request_length = std::size(req),
+                     .response = resp.data(),
+                     .max_response_length = std::size(resp),
+                     .response_length = 0};
 
-  EXPECT_EQ(DbgErrCode::OK, VarCmd().HandleCmd(&context));
-  EXPECT_EQ(0, context.resp_len);
+  EXPECT_EQ(ErrorCode::kNone, VarHandler().Process(&context));
+  EXPECT_EQ(0, context.response_length);
 
   EXPECT_EQ(new_value, value);
 }
+} // namespace Debug::Command

@@ -13,7 +13,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include "debug.h"
+#include "binary_utils.h"
+#include "interface.h"
 #include "vars.h"
 #include "gmock/gmock-matchers.h"
 #include "gmock/gmock.h"
@@ -22,13 +23,14 @@ limitations under the License.
 #include <stdint.h>
 #include <vector>
 
-namespace {
+namespace Debug {
+
 std::vector<uint8_t> Escape(const std::vector<uint8_t> &data) {
   std::vector<uint8_t> res;
   for (uint8_t ch : data) {
-    if ((ch == static_cast<uint8_t>(DbgSpecial::TERM)) ||
-        (ch == static_cast<uint8_t>(DbgSpecial::ESC))) {
-      res.push_back(static_cast<char>(DbgSpecial::ESC));
+    if ((ch == static_cast<uint8_t>(SpecialChar::kEndTransfer)) ||
+        (ch == static_cast<uint8_t>(SpecialChar::kEscape))) {
+      res.push_back(static_cast<char>(SpecialChar::kEscape));
     }
     res.push_back(ch);
   }
@@ -44,7 +46,7 @@ std::vector<uint8_t> Unescape(const std::vector<uint8_t> &data) {
       escape_next_byte = false;
       continue;
     }
-    if (ch == static_cast<uint8_t>(DbgSpecial::ESC)) {
+    if (ch == static_cast<uint8_t>(SpecialChar::kEscape)) {
       escape_next_byte = true;
       continue;
     }
@@ -57,19 +59,19 @@ std::vector<uint8_t> Unescape(const std::vector<uint8_t> &data) {
 // unescaped.
 // Returns the unframed command response payload, i.e. unescaped,
 // without the error code and crc.
-std::vector<uint8_t> ProcessCmd(DebugSerial *serial, std::vector<uint8_t> req) {
+std::vector<uint8_t> ProcessCmd(Interface *serial, std::vector<uint8_t> req) {
   std::vector<uint8_t> full_req;
   full_req.reserve(/*ESC*/ 1 + req.size() + /*CRC*/ 2 + /*TERM*/ 1);
-  full_req.push_back(static_cast<uint8_t>(DbgSpecial::ESC));
+  full_req.push_back(static_cast<uint8_t>(SpecialChar::kEscape));
   for (uint8_t ch : Escape(req)) {
     full_req.push_back(ch);
   }
-  uint16_t crc = DebugSerial::CalcCRC(req.data(), req.size());
+  uint16_t crc = Interface::ComputeCRC(req.data(), req.size());
   uint8_t crc_bytes[2];
   u16_to_u8(crc, &crc_bytes[0]);
   full_req.push_back(crc_bytes[0]);
   full_req.push_back(crc_bytes[1]);
-  full_req.push_back(static_cast<uint8_t>(DbgSpecial::TERM));
+  full_req.push_back(static_cast<uint8_t>(SpecialChar::kEndTransfer));
 
   Hal.test_debugPutIncomingData(reinterpret_cast<const char *>(full_req.data()),
                                 static_cast<uint16_t>(full_req.size()));
@@ -87,12 +89,12 @@ std::vector<uint8_t> ProcessCmd(DebugSerial *serial, std::vector<uint8_t> req) {
   // Unescape response
   std::vector<uint8_t> resp = Unescape(escaped_resp);
   EXPECT_GE(resp.size(), size_t{3} /* err code + crc */);
-  EXPECT_EQ(static_cast<uint8_t>(DbgSpecial::TERM), resp.back());
+  EXPECT_EQ(static_cast<uint8_t>(SpecialChar::kEndTransfer), resp.back());
   resp.pop_back();
 
   // Verify error code and CRC
-  EXPECT_EQ(static_cast<uint8_t>(DbgErrCode::OK), resp[0]);
-  uint16_t expected_crc = DebugSerial::CalcCRC(resp.data(), resp.size() - 2);
+  EXPECT_EQ(static_cast<uint8_t>(ErrorCode::kNone), resp[0]);
+  uint16_t expected_crc = Interface::ComputeCRC(resp.data(), resp.size() - 2);
   u16_to_u8(expected_crc, &crc_bytes[0]);
   uint16_t actual_crc = u8_to_u16(resp.data() + resp.size() - 2);
   EXPECT_EQ(expected_crc, actual_crc);
@@ -106,20 +108,20 @@ std::vector<uint8_t> ProcessCmd(DebugSerial *serial, std::vector<uint8_t> req) {
 }
 
 TEST(Debug, Mode) {
-  DebugSerial serial;
-  std::vector<uint8_t> req = {static_cast<uint8_t>(DbgCmdCode::MODE)};
+  Interface serial;
+  std::vector<uint8_t> req = {static_cast<uint8_t>(Command::Code::kMode)};
   std::vector<uint8_t> resp = ProcessCmd(&serial, req);
   EXPECT_THAT(resp, testing::ElementsAre(static_cast<uint8_t>(0)));
 }
 
-uint32_t GetVarViaCmd(DebugSerial *serial, uint16_t id) {
+uint32_t GetVarViaCmd(Interface *serial, uint16_t id) {
   uint8_t vid[2];
   u16_to_u8(id, &vid[0]);
 
   std::vector<uint8_t> req = {
-      static_cast<uint8_t>(DbgCmdCode::VAR), // Cmd code
-      uint8_t{1},                            // GET
-      vid[0], vid[1],                        // var id
+      static_cast<uint8_t>(Command::Code::kVariable), // Cmd code
+      uint8_t{1},                                     // GET
+      vid[0], vid[1],                                 // var id
   };
 
   std::vector<uint8_t> resp = ProcessCmd(serial, req);
@@ -132,7 +134,7 @@ TEST(Debug, GetVar) {
   uint32_t bar = 0xC0DEBABE;
   DebugVar var_bar("bar", &bar);
 
-  DebugSerial serial;
+  Interface serial;
   // Run a bunch of times with different expected results
   // to exercise buffer management.
   for (int i = 0; i < 100; ++i, ++foo, ++bar) {
@@ -140,4 +142,4 @@ TEST(Debug, GetVar) {
     EXPECT_EQ(bar, GetVarViaCmd(&serial, var_bar.GetId()));
   }
 }
-} // namespace
+} // namespace Debug

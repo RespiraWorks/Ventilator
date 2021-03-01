@@ -46,9 +46,9 @@
 //      TBD - which python script to run?
 //
 
-#include "debug.h"
 #include "eeprom.h"
 #include "hal.h"
+#include "interface.h"
 #include "vars.h"
 
 static DebugUInt32 dbg_addr_before("eeprom_before",

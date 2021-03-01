@@ -1,4 +1,4 @@
-/* Copyright 2020, RespiraWorks
+/* Copyright 2020-2021, RespiraWorks
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,12 +17,13 @@ limitations under the License.
 #define TRACE_H_
 
 #include "circular_buffer.h"
-#include "debug.h"
 #include "vars.h"
 #include <optional>
 #include <stdint.h>
 
-#define TRACE_VAR_CT 4
+namespace Debug {
+
+static constexpr uint32_t kMaxTraceVars{4};
 
 /*
  * Implements a data trace facility.
@@ -39,54 +40,53 @@ class Trace {
 public:
   // Gets/sets the trace flags. At the moment, flags can only be 0 (disabled) or
   // 1 (enabled).
-  uint32_t GetFlags() const { return flags_; }
+  bool GetStatus() const { return running_; }
 
-  void SetFlags(uint32_t flags) {
-    bool was_enabled = flags_ & 1;
-    bool will_enable = flags & 1;
-    if (will_enable && !was_enabled) {
+  void Start() {
+    if (!running_) {
       trace_buffer_.Flush();
     }
-    flags_ = flags;
+    running_ = true;
   }
+
+  void Stop() { running_ = false; }
 
   uint32_t GetPeriod() const { return period_; }
   void SetPeriod(uint32_t period) { period_ = period; }
 
   void MaybeSample() {
-    if (!(flags_ & 1))
+    if (!running_)
       return;
 
-    if (count_ == 0) {
+    if (cycles_count_ == 0) {
       if (!SampleAllVars()) {
         // Trace buffer is full, stop tracing.
-        SetFlags(0);
+        Stop();
       }
     }
 
-    ++count_;
-    if (count_ >= period_)
-      count_ = 0;
+    ++cycles_count_;
+    if (cycles_count_ >= period_)
+      cycles_count_ = 0;
   }
 
   void Flush() {
-    flags_ = 0;
+    running_ = false;
     trace_buffer_.Flush();
   }
 
-  int GetNumSamples() { return trace_buffer_.FullCount() / GetNumActiveVars(); }
+  size_t GetNumSamples() {
+    return trace_buffer_.FullCount() / GetNumActiveVars();
+  }
 
-  int GetNumActiveVars() {
-    int res = 0;
-    for (auto *var : traced_vars_) {
-      if (var)
-        res++;
-    }
-    return res;
+  size_t GetNumActiveVars() {
+    return static_cast<int>(
+        std::count_if(traced_vars_.begin(), traced_vars_.end(),
+                      [](const DebugVarBase *var) { return (var); }));
   }
 
   template <int index> void SetTracedVarId(int32_t id) {
-    static_assert(index >= 0 && index < TRACE_VAR_CT);
+    static_assert(index >= 0 && index < kMaxTraceVars);
     traced_vars_[index] = DebugVar::FindVar(static_cast<uint16_t>(id));
     // The layout of the trace buffer is just a bunch of uint32_t's one per
     // each variable of each sample cycle. In order to be able to interpret
@@ -96,7 +96,7 @@ public:
   }
 
   template <int index> int32_t GetTracedVarId() {
-    static_assert(index >= 0 && index < TRACE_VAR_CT);
+    static_assert(index >= 0 && index < kMaxTraceVars);
     return traced_vars_[index] ? traced_vars_[index]->GetId() : -1;
   }
 
@@ -106,7 +106,8 @@ public:
   // Sets *count to the number of elements actually set in *record.
   // This will equal GetNumActiveVars() but is easier to use for testing.
   [[nodiscard]] bool
-  GetNextTraceRecord(std::array<uint32_t, TRACE_VAR_CT> *record, int *count) {
+  GetNextTraceRecord(std::array<uint32_t, kMaxTraceVars> *record,
+                     size_t *count) {
     // Grab one sample with interrupts disabled.
     // There's a chance the trace is still running, so we could get interrupted
     // by the high priority thread that adds to the buffer.
@@ -128,15 +129,13 @@ private:
   // This function is called at the end of the high priority loop function.
   // It captures any enabled data variables to the trace buffer.
   bool SampleAllVars() {
-    // If there are no enabled trace variables, or
-    // if there isn't enough space in the buffer for
-    // a full sample, then signal to stop the trace
+    // If there are no enabled trace variables, or if there isn't enough space
+    // in the buffer for a full sample, then signal to stop the trace.
     if (trace_buffer_.FreeCount() < GetNumActiveVars()) {
       return false;
     }
 
-    // Sample each enabled varible and store the
-    // result to the buffer
+    // Sample each enabled variable and store the result to the buffer.
     for (auto *var : traced_vars_) {
       if (!var)
         continue;
@@ -147,21 +146,22 @@ private:
     return true;
   }
 
-  // A bit-mapped parameter which is used to start/stop the trace and read its
-  // status. Right now only bit 0 is in use.  Set this to start capturing data
-  // to the trace buffer.  It will auto-clear when the buffer is full
-  uint32_t flags_ = 0;
+  // Set this to start capturing data to the trace buffer.
+  // It will auto-clear when the buffer is full, or when stopped.
+  bool running_{false};
   // The trace period gives the period of the trace data capture
   // in units of loop cycles.
-  uint32_t period_ = 0;
-  // Number of loop cycles elapsed since tracing was last enabled.
-  uint32_t count_ = 0;
+  uint32_t period_{1};
+  // Number of loop cycles elapsed since last sample was captured.
+  uint32_t cycles_count_{0};
 
-  std::array<DebugVarBase *, TRACE_VAR_CT> traced_vars_ = {nullptr};
+  std::array<DebugVarBase *, kMaxTraceVars> traced_vars_ = {nullptr};
 
+  // This circular buffer is as big as we consider reasonable, to give a good
+  // tracing capability: 40% of the RAM available on our STM32
   CircularBuffer<uint32_t, 0x4000> trace_buffer_;
 };
 
-extern Trace trace;
+} // namespace Debug
 
 #endif // TRACE_H_

@@ -1,4 +1,4 @@
-/* Copyright 2020, RespiraWorks
+/* Copyright 2020-2021, RespiraWorks
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -13,19 +13,21 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include "var_cmd.h"
+#include "commands.h"
 #include "vars.h"
 #include <stdint.h>
 #include <string.h>
 
-DbgErrCode VarCmd::HandleCmd(CmdContext *context) {
+namespace Debug::Command {
+
+ErrorCode VarHandler::Process(Context *context) {
 
   // The first byte of data is always required, this
   // gives the sub-command.
-  if (context->req_len < 1)
-    return DbgErrCode::MISSING_DATA;
+  if (context->request_length < 1)
+    return ErrorCode::kMissingData;
 
-  switch (context->req[0]) {
+  switch (context->request[0]) {
 
   // Return info about one of the variables.
   case 0:
@@ -38,7 +40,7 @@ DbgErrCode VarCmd::HandleCmd(CmdContext *context) {
     return SetVar(context);
 
   default:
-    return DbgErrCode::RANGE;
+    return ErrorCode::kInvalidData;
   }
 }
 
@@ -48,17 +50,17 @@ DbgErrCode VarCmd::HandleCmd(CmdContext *context) {
 // system starting with 0.  The Python code can read them
 // all out until it gets an error code indicating that the
 // passed ID is invalid.
-DbgErrCode VarCmd::GetVarInfo(CmdContext *context) {
+ErrorCode VarHandler::GetVarInfo(Context *context) {
 
   // We expect a 16-bit ID to be passed
-  if (context->req_len < 3)
-    return DbgErrCode::MISSING_DATA;
+  if (context->request_length < 3)
+    return ErrorCode::kMissingData;
 
-  uint16_t vid = u8_to_u16(&context->req[1]);
+  uint16_t var_id = u8_to_u16(&context->request[1]);
 
-  const auto *var = DebugVar::FindVar(vid);
+  const auto *var = DebugVar::FindVar(var_id);
   if (!var)
-    return DbgErrCode::BAD_VARID;
+    return ErrorCode::kUnknownVariable;
 
   // The info I return consists of the following:
   // <type> - 1 byte variable type code
@@ -71,80 +73,75 @@ DbgErrCode VarCmd::GetVarInfo(CmdContext *context) {
   // <fmt>  - variable length format string
   // <help> - variable length format string
   // The strings are not null terminated.
-  int nLen = static_cast<int>(strlen(var->GetName()));
-  int fLen = static_cast<int>(strlen(var->GetFormat()));
-  int hLen = static_cast<int>(strlen(var->GetHelp()));
-
-  if (nLen > 255)
-    nLen = 255;
-  if (fLen > 255)
-    fLen = 255;
-  if (hLen > 255)
-    hLen = 255;
+  size_t name_length = strlen(var->GetName());
+  size_t format_length = strlen(var->GetFormat());
+  size_t help_length = strlen(var->GetHelp());
 
   // Fail if the strings are too large to fit.
-  if (context->max_resp_len < 8 + nLen + fLen + hLen)
-    return DbgErrCode::NO_MEMORY;
+  if (context->max_response_length <
+      8 + name_length + format_length + help_length)
+    return ErrorCode::kNoMemory;
 
-  int n = 0;
-  context->resp[n++] = static_cast<uint8_t>(var->GetType());
-  context->resp[n++] = 0;
-  context->resp[n++] = 0;
-  context->resp[n++] = 0;
-  context->resp[n++] = static_cast<uint8_t>(nLen);
-  context->resp[n++] = static_cast<uint8_t>(fLen);
-  context->resp[n++] = static_cast<uint8_t>(hLen);
-  context->resp[n++] = 0;
-  memcpy(&context->resp[n], var->GetName(), nLen);
-  n += nLen;
+  uint32_t count = 0;
+  context->response[count++] = static_cast<uint8_t>(var->GetType());
+  context->response[count++] = 0;
+  context->response[count++] = 0;
+  context->response[count++] = 0;
+  context->response[count++] = static_cast<uint8_t>(name_length);
+  context->response[count++] = static_cast<uint8_t>(format_length);
+  context->response[count++] = static_cast<uint8_t>(help_length);
+  context->response[count++] = 0;
+  memcpy(&context->response[count], var->GetName(), name_length);
+  count += static_cast<uint32_t>(name_length);
 
-  memcpy(&context->resp[n], var->GetFormat(), fLen);
-  n += fLen;
+  memcpy(&context->response[count], var->GetFormat(), format_length);
+  count += static_cast<uint32_t>(format_length);
 
-  memcpy(&context->resp[n], var->GetHelp(), hLen);
-  n += hLen;
-  context->resp_len = n;
-  return DbgErrCode::OK;
+  memcpy(&context->response[count], var->GetHelp(), help_length);
+  count += static_cast<uint32_t>(help_length);
+
+  context->response_length = count;
+  return ErrorCode::kNone;
 }
 
-DbgErrCode VarCmd::GetVar(CmdContext *context) {
+ErrorCode VarHandler::GetVar(Context *context) {
   // We expect a 16-bit ID to be passed
-  if (context->req_len < 3)
-    return DbgErrCode::MISSING_DATA;
+  if (context->request_length < 3)
+    return ErrorCode::kMissingData;
 
-  uint16_t vid = u8_to_u16(&context->req[1]);
+  uint16_t var_id = u8_to_u16(&context->request[1]);
 
-  auto *var = DebugVar::FindVar(vid);
+  auto *var = DebugVar::FindVar(var_id);
   if (!var)
-    return DbgErrCode::BAD_VARID;
+    return ErrorCode::kUnknownVariable;
 
-  if (context->max_resp_len < 4)
-    return DbgErrCode::NO_MEMORY;
+  if (context->max_response_length < 4)
+    return ErrorCode::kNoMemory;
 
-  u32_to_u8(var->GetValue(), context->resp);
-  context->resp_len = 4;
-  return DbgErrCode::OK;
+  u32_to_u8(var->GetValue(), context->response);
+  context->response_length = 4;
+  return ErrorCode::kNone;
 }
 
-DbgErrCode VarCmd::SetVar(CmdContext *context) {
+ErrorCode VarHandler::SetVar(Context *context) {
   // We expect a 16-bit ID to be passed
-  if (context->req_len < 3)
-    return DbgErrCode::MISSING_DATA;
+  if (context->request_length < 3)
+    return ErrorCode::kMissingData;
 
-  uint16_t vid = u8_to_u16(&context->req[1]);
+  uint16_t var_id = u8_to_u16(&context->request[1]);
 
-  auto *var = DebugVar::FindVar(vid);
+  auto *var = DebugVar::FindVar(var_id);
   if (!var)
-    return DbgErrCode::BAD_VARID;
+    return ErrorCode::kUnknownVariable;
 
-  int ct = context->req_len - 3;
+  uint32_t count = context->request_length - 3;
 
-  if (ct < 4)
-    return DbgErrCode::MISSING_DATA;
+  if (count < 4)
+    return ErrorCode::kMissingData;
 
-  var->SetValue(u8_to_u32(context->req + 3));
-  context->resp_len = 0;
-  return DbgErrCode::OK;
+  var->SetValue(u8_to_u32(context->request + 3));
+  context->response_length = 0;
+  return ErrorCode::kNone;
 }
 
-VarCmd varCmd;
+} // namespace Debug::Command

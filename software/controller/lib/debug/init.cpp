@@ -64,12 +64,8 @@ static FnDebugVar vartrace_var4(
 Debug::Command::ModeHandler mode_command;
 Debug::Command::PeekHandler peek_command;
 Debug::Command::PokeHandler poke_command;
-Debug::Command::ConsoleHandler console_command;
 Debug::Command::VarHandler var_command;
 Debug::Command::TraceHandler trace_command(&trace);
-
-// Create the global debug handler
-Debug::Interface debug;
 
 namespace Debug {
 
@@ -79,7 +75,6 @@ Interface::Interface() {
   registry_[static_cast<uint8_t>(Command::Code::kMode)] = &mode_command;
   registry_[static_cast<uint8_t>(Command::Code::kPeek)] = &peek_command;
   registry_[static_cast<uint8_t>(Command::Code::kPoke)] = &poke_command;
-  registry_[static_cast<uint8_t>(Command::Code::kConsole)] = &console_command;
   registry_[static_cast<uint8_t>(Command::Code::kVariable)] = &var_command;
   registry_[static_cast<uint8_t>(Command::Code::kTrace)] = &trace_command;
 

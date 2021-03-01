@@ -19,7 +19,6 @@ limitations under the License.
 #include "binary_utils.h"
 #include "hal.h"
 #include "interface.h"
-#include <string.h>
 
 namespace Debug::Command {
 
@@ -37,32 +36,6 @@ public:
   ErrorCode Process(Context *context) override {
     context->response_length = 1;
     context->response[0] = 0;
-    return ErrorCode::kNone;
-  }
-};
-
-// Console command.
-// This allows the contents of the print buffer data to be read.
-// The print buffer is where strings go when you call debug.Print
-class ConsoleHandler : public Handler {
-public:
-  ConsoleHandler() = default;
-
-  ErrorCode Process(Context *context) override {
-    // No data needs to be passed in to this command.
-
-    // Read bytes from the print buffer until I hit my
-    // max or the buffer is empty.
-
-    uint32_t count;
-    for (count = 0; count < context->max_response_length; count++) {
-      std::optional<uint8_t> next_char = debug.GetNextCharFromBuffer();
-      if (next_char == std::nullopt)
-        break;
-      context->response[count] = *next_char;
-    }
-
-    context->response_length = count;
     return ErrorCode::kNone;
   }
 };

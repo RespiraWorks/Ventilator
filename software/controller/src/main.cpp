@@ -51,6 +51,7 @@ static ControllerStatus controller_status;
 static Sensors sensors;
 static NVParams::Handler nv_params;
 static I2Ceeprom eeprom = I2Ceeprom(0x50, 64, 32768, &i2c1);
+static Debug::Interface debug;
 
 static SensorsProto AsSensorsProto(const SensorReadings &r,
                                    const ControllerState &c) {

@@ -352,57 +352,6 @@ ex: poke [type] <addr> <data>
             data = [int(x, 0) for x in param[1:]]
         Poke(addr, data, ptype)
 
-    def do_console(self, line):
-        """Switch from command mode to a simple console display which
-continuously reads debug print statements from the controller and displays the
-data received to the screen.
-
-When firmware in the controller calls the debug.Print() function it formats a
-string which is written to a circular buffer.  When this program is running in
-console mode it constantly reads this data and displays it.
-
-Enter <ctrl>C to exit this mode
-
-A couple optional parameters can be passed as arguments to this command:
-
---flush
-  Flush the print buffer on the controller before we start displaying the data,
-  removing any old data that had previously been added to the print buffer.
-
---dest <filename>
-  Save received data to this file.
-"""
-        parser = CmdArgumentParser(prog="console")
-        parser.add_argument(
-            "--flush",
-            action="store_true",
-            help="flush print buffer on device before displaying data",
-        )
-        parser.add_argument(
-            "--dest", help="write output to this file", default=os.devnull
-        )
-        args = parser.parse_args(line.split())
-
-        if args.flush:
-            while len(SendCmd(OP_PBREAD)) > 0:
-                pass
-
-        with open(args.dest, "w") as fp:
-            try:
-                while True:
-                    dat = SendCmd(OP_PBREAD)
-                    if len(dat) < 1:
-                        continue
-
-                    s = "".join(chr(x) for x in dat)
-                    sys.stdout.write(s)
-                    sys.stdout.flush()
-                    fp.write(s)
-            except KeyboardInterrupt:
-                print()
-                ReSync()
-                pass
-
     def do_EOF(self, line):
         return True
 

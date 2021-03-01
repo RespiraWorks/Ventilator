@@ -61,13 +61,6 @@ public:
   // which is useful for testing.
   bool Poll();
 
-  // Printf style function to print data to a virtual console.
-  size_t Print(const char *formatting_str, ...);
-
-  // Read a byte from the print buffer.  Only intended to be called from the
-  // command that returns print buffer data.
-  std::optional<uint8_t> GetNextCharFromBuffer() { return print_buffer_.Get(); }
-
   static uint16_t ComputeCRC(const uint8_t *buffer, size_t length);
 
   void SampleTraceVars() { trace_->MaybeSample(); }
@@ -95,9 +88,6 @@ private:
   // enabled through the trace command)
   Trace *trace_;
 
-  // Print buffer for console mode (populated when Print method is called)
-  CircularBuffer<uint8_t, 2000> print_buffer_;
-
   bool ReadNextByte();
   void ProcessCommand();
   bool SendNextByte();
@@ -107,8 +97,5 @@ private:
 };
 
 } // namespace Debug
-
-// Global debug interface, required for console command only
-extern Debug::Interface debug;
 
 #endif // INTERFACE_H

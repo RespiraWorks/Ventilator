@@ -16,9 +16,6 @@ limitations under the License.
 #include "interface.h"
 #include "binary_utils.h"
 #include "hal.h"
-#include "sprintf.h"
-#include <stdarg.h>
-#include <string.h>
 
 namespace Debug {
 // This function is called from the main low priority background loop.
@@ -50,31 +47,6 @@ bool Interface::Poll() {
     return true;
   }
   return false;
-}
-
-// Format a debug string printf sytle and save it to a local buffer
-// which can be queried by the interface program.
-//
-// Returns the number of bytes actually written to the print buffer
-size_t Interface::Print(const char *formatting_str, ...) {
-  char local_buffer[300];
-
-  // Note that this uses a local sprintf implementation because
-  // the one from the standard libraries will potentially dynamically
-  // allocate memory.
-  va_list values;
-  va_start(values, formatting_str);
-  size_t length =
-      RWvsnprintf(local_buffer, sizeof(local_buffer), formatting_str, values);
-  va_end(values);
-
-  // Write as much as will fit to my print buffer.
-  for (size_t count = 0; count < length; count++) {
-    if (!print_buffer_.Put(local_buffer[count]))
-      return count;
-  }
-
-  return length;
 }
 
 // Read the next byte from the debug serial port.

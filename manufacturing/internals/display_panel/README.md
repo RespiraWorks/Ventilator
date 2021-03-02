@@ -81,7 +81,7 @@ BEFORE purchasing any parts.**
 
 | Download Type | Link   |
 |:--------------|:-------|
-| Source: Inventor part file | [.ipt](display_panel_acrylic_plate.ipt) |
+| Inventor part file | [.ipt](display_panel_acrylic_plate.ipt) |
 | Drawing                    | [.pdf](display_panel_acrylic_plate.pdf) |
 | Export for laser cutting   | [.dxf](display_panel_acrylic_plate.dxf) |
 
@@ -92,12 +92,15 @@ See **[Electronics Assembly](electronics)** for turnkey manufaturing files and f
 ---------
 ## Assembly
 
+![](images/display_panel_assembly.jpg)
+
 | Part  | Source |
 |:------|:-------|
 | Display panel assembly    | [.iam](display_panel_assembly.iam) |
-| Touch-screen sub-assembly with PCB stack | [.iam](display_and_PCB_stack_assembly.iam)       |
+|Display Panel Assembly Drawing| [.pdf](display_panel_assembly.iam) |
+| Touch-screen sub-assembly with PCB stack | [.iam](display_and_PCB_stack_assembly.iam)  |
 
-> **TODO: Drawings**
+
 
 **Note: Please also see general advice in the [manufacturing methods guide](../../methods).**
 

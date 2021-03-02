@@ -5,28 +5,11 @@
 | ![](images/enclosure_rendering.jpg)  | ![](images/enclosure_exploded.jpg)  |
 
 > **TODO: Make new renderings**
-
+---
 ## Design rationale
 
 > **TODO:** Content..
-
-## Custom parts
-
-The ventilator enclosure is made up a folded, 1.52mm thick, stainless steel sheet.
-
-| Part  | Source | Export |
-|:------|:-------|---|
-| Main enclosure | [.ipt](enclosure.ipt)         | **TODO** |
-
-### Fabrication Drawings
-
-Enclosure fabrication drawings.
-
-|             |     |  |
-:------------------:|:-----------------:|:---:|
-| ![](images/fab_drawing_1.png) | ![](images/fab_drawing_2.png) | ![](images/fab_drawing_3.png) |
-| ![](images/fab_drawing_4.png) | ![](images/fab_drawing_5.png) |
-
+----
 ## Parts
 
 **Note: If you are a member of the RespiraWorks team, review the [part purchasing guidelines][ppg]
@@ -44,6 +27,25 @@ BEFORE purchasing any parts.**
 
 **Total assembly price:** USD 430.90
 
+----
+## Custom parts
+
+
+
+### Fabrication Drawings
+
+![](images/fab_drawing_2.png)
+![](images/fab_drawing_3.png)
+![](images/fab_drawing_4.png)
+![](images/fab_drawing_5.png)
+
+The ventilator enclosure is made up a folded, 1.52mm thick, stainless steel sheet.
+
+| File Type  | Link |
+|:------|:-------|
+| Enclosure Fabrication CAD | [.ipt](enclosure.ipt) |
+| Enclosure Fabrication Drawing | [.pdf](enclosure.pdf)|
+
 >**#TODO: How much sheet metal?**
 
 [a1rw]:    #custom-parts
@@ -52,15 +54,17 @@ BEFORE purchasing any parts.**
 [a4mcmc]:  https://www.mcmaster.com/96439A710/
 [a5mcmc]:  https://www.mcmaster.com/9541K82/
 
+----
 ## Assembly
 
 **Note: Please see general advice in the [manufacturing methods guide](../methods).**
 
-> **TODO: Drawings and renderings**
+![](images/fab_drawing_1.png)
 
 | Assembly | Source |
 |:---------|:-------|
-| Enclosure assembly         | [.iam](enclosure_assembly.iam) |
+| Enclosure Assembly Drawing| [.iam](enclosure_assembly.iam) |
+| Enclosure Assembly CAD | [.pdf](enclosure.pdf) |
 
 The main panel is folded from a single sheet and fastened together using stainless steel blind rivets. There
 are rubber bumper feet on the bottom of the enclosure that are threaded into M6 press-fit nuts. The rubber bumpers

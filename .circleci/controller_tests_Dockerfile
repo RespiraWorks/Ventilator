@@ -11,8 +11,8 @@ RUN apt-get update && \
 WORKDIR /root/Ventilator
 COPY . ./
 CMD /bin/bash \
-    software/controller/test.sh --no-checks && \
-    software/controller/controller_coverage.sh && \
+    software/controller/controller.sh --test --no-checks && \
+    software/controller/coverage.sh && \
     cd software/controller && \
     curl https://codecov.io/bash > codecov_uploader.sh && \
     chmod +x codecov_uploader.sh && \

@@ -26,9 +26,13 @@ The part of the code specific to the controller resides here.
 
 **Files:**
 * [platfomio.ini](platformio.ini) - the equivalent of a "make file" which governs how platformio builds targets
-* [controller_coverage.sh](controller_coverage.sh) - script for generating unit test code coverage reports
-* [test.sh](test.sh) - script for running all unit tests
-* [upload.sh](upload.sh) - uploads firmware to ventilator controller
+* [coverage.sh](coverage.sh) - script for generating unit test code coverage reports
+* [controller.sh](controller.sh) - general utility script for:
+  * building controller firmware
+  * running unit tests
+  * running static checks
+  * uploading/deploying firmware
+  * self documented if you run it without parameters...
 
 ## Development toolchain
 
@@ -55,7 +59,8 @@ You'll need to install [Atom](https://atom.io/),
 and [Python](https://www.python.org/downloads/windows/).
 (Note: you may be asked to install Python 2.7, but PlatformIO works with Python 3.5+ as well, ostensibly.)
 
-You also need to install the package `libtinfo5` on Linux. Clang-tidy needs this package to run its checks, but platformio will just say all checks have passed without giving an error if it's missing.
+You also need to install the package `libtinfo5` on Linux. Clang-tidy needs this package to run its checks,
+but platformio will just say all checks have passed without giving an error if it's missing.
 
 ## Building and testing
 
@@ -81,8 +86,8 @@ $ rm -rf .pio/
 ## Running on the controller
 
 To run this you will need at a Nucleo dev board and/or some version of the PCB.
-For various builds of the physical system, please refer to the `system-design`
-folder in this repository.
+For various builds of the physical system, please refer to the [manufacturing](../../manufacturing)
+section in this repository.
 
 Plug in the STM32 to your machine, then ask platformio to list all devices connected.
 You should see a USB serial port corresponding to your device.
@@ -102,8 +107,39 @@ Now you can build and upload to the device.
 $ pio run -t upload
 ```
 
-A more convenient way to run is to use the [upload.sh](upload.sh) script. If you have multiple Nucleos that you
+A more convenient way to run is to use the `./controller.sh --run`. If you have multiple Nucleos that you
 want to deploy to, you should consult the [platformio configuration guide](platformio).
+
+### USB permission problems
+
+If `pio device list` did not show the Nucleo as, for example, when attempting to deploy directly from the Raspberry Pi,
+you may have to give yourself rw permission on the USB device.
+
+Find the device ID with `lsusb`. Let us assume in this case, that it shows
+`Bus 001 Device 004: ID 0483:374b STMicroelectronics ST-LINK/V2.1`.
+
+Add a udev rule for that device that mounts it with 666 permission. For example, create a file
+`/etc/udev/rules.d/99-openocd.rules` with the following line:
+
+```
+ATTRS{idVendor}=="0483", ATTRS{idProduct}=="374b", MODE="666"
+```
+
+After that, either you unplug and re-plug the USB for STM32 or you restart the pi, you should see something like this:
+
+```
+pi@raspberrypi:~ $ pio device list
+/dev/ttyACM0
+------------
+Hardware ID: USB VID:PID=0483:374B SER=0663FF303435554157115746 LOCATION=1-1.4:1.2
+Description: STM32 STLink - ST-Link VCP Ctrl
+/dev/ttyAMA0
+------------
+Hardware ID: fe201000.serial
+Description: ttyAMA0
+```
+
+### Other udev problems
 
 If you get the following error, it means platformio was unable to find a connected device.
 

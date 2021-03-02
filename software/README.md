@@ -2,6 +2,10 @@
 
 This directory contains the source code for the ventilator software, test code, sample data and debug utilities.
 
+**DISCLAIMER: You should not use this on any living beings - as a ventilator, or in any other way.
+These are utilities for bench with mechanical lung simulators only.
+It is also assumed that you are familiar with the software architecture and generally know what you are doing.**
+
 ## Contents
 
 * [design](design) - documents on software architecture and requirements
@@ -11,4 +15,10 @@ This directory contains the source code for the ventilator software, test code, 
 * [sample-data](sample-data) - sample data for offline testing and recorded performance test data
 * [utils](utils) - scripts for debugging controller and mocking communications interface
 
-To contribute, please first read the [onboarding page](https://github.com/RespiraWorks/Ventilator/wiki).
+## Quick start
+
+If a proper enclosed unit is built as described under [manufacturing](../manufacturing),
+it should be possible to deploy all GUI and controller software directly via the Raspberry pi that is integrated
+into the ventilator unit.
+
+Scripts for doing so are available under [utils/rpi_config](utils/rpi_config).

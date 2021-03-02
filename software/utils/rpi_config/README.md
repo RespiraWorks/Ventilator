@@ -23,7 +23,7 @@ Now, open up a browser, and come back to this page.
 Just copy and paste this dangerous script into the console:
 
 ```
-bash <(wget -qO- https://raw.githubusercontent.com/RespiraWorks/Ventilator/issue_1028_general_deployment_scripts/software/utils/rpi_config/bootstrap.sh)
+bash <(wget -qO- https://raw.githubusercontent.com/RespiraWorks/Ventilator/master/software/utils/rpi_config/bootstrap.sh)
 ```
 
 Follow the onscreen directions.

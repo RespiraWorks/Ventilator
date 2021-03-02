@@ -53,7 +53,6 @@ echo 'ATTRS{idVendor}=="0483", ATTRS{idProduct}=="374b", MODE="666"' | sudo tee 
 ### Clone repository and go in
 git clone https://github.com/RespiraWorks/Ventilator.git
 cd Ventilator
-git checkout issue_1028_general_deployment_scripts
 
 ### no screensaver
 ### guake on startup

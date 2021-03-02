@@ -3,8 +3,9 @@
 The following scripts and configurations are here to help alleviate the frustration of having to perform the many
 arcane incantations to get a prototype running with software.
 
-**DISCLAIMER: It goes without saying that you should not use this on any living beings - as an actual ventilator, or in
-any other way. These are utilities for bench with mechanical lung simulators only.**
+**DISCLAIMER: You should not use this on any living beings - as a ventilator, or in any other way.
+These are utilities for bench with mechanical lung simulators only.
+It is also assumed that you are familiar with the software architecture and generally know what you are doing.**
 
 The following assumes that you have a working hardware prototype with all necessary electronics, correctly wired for
 power and communication. See the [manufacturing](../../../manufacturing) section for details.

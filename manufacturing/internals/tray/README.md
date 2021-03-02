@@ -59,7 +59,7 @@ BEFORE purchasing any parts.**
 
 |             |     |  |
 :------------------:|:-----------------:|:---:|
-| ![](images/fab_drawing_1.JPG) | ![](images/fab_drawing_2.jpg) | ![](images/fab_drawing_3.jpg) |
+| ![](images/fab_drawing_1.jpg) | ![](images/fab_drawing_2.jpg) | ![](images/fab_drawing_3.jpg) |
 
 | File Type | Link|
 |:------|:-------|

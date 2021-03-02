@@ -41,11 +41,17 @@ Sub-assembly steps will differ depending on which proportional solenoid is used.
 Follow this section only if you are using the Uflow IBV19M `[A3]` solenoid.
 
 You will need to create two M3 holes in opposite corners of the aluminium manifold as pictured:
-![](images/uflow_tapped.jpg)
 
-You will first want to drill 2.5mm holes about 5mm deep. Do so with the PSOL secured in a drill press at 90 degrees,
-and with depth stop set precisely so as not to bore a hole into the pneumatics channel thus creating a leak.  If you do
-not have a 2.5mm drill bit, the closest SAE bits are 3/32" or 7/64".
+| Marked | Tapped |
+|:-------------------------:|:-------------------------:|
+| ![](images/uflow_tapping_1.jpg) | ![](images/uflow_tapping_2.jpg) |
+
+You will first want to drill 2.5mm holes about 5mm deep. Mark out the positions with a scribe and punch holes to help
+guide the drill.
+
+Drill with the PSOL secured in a drill press at 90 degrees, and with depth stop set precisely so as not to bore a hole
+into the pneumatics channel thus creating a leak. If you do not have a 2.5mm drill bit, the closest SAE bits are
+3/32" or 7/64".
 
 Next you will have to tap M3x0.5 threads into those holes. Do so slowly, by hand. You can probably use the bottoming
 tap from a kit like [this](https://www.amazon.com/uxcell-Metric-Straight-Flutes-Bottoming/dp/B00VGEG5GM). However, for
@@ -66,4 +72,4 @@ Mounts to acrylic with 2x:
 
 PSOL sub-assembly CAD: [.iam](PSOL.iam)
 
->**TODO: make subassembly of Uflow PSOL and add more details**
+>**TODO: make CAD subassembly of Uflow PSOL and add more details**

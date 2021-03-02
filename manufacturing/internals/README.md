@@ -31,30 +31,32 @@ BEFORE purchasing any parts.**
 
 | Item  | Quantity | Manufacturer   | Part #                               | Price (USD)  | Sources[*][ppg]| Notes |
 | ----- |---------:| -------------- | ------------------------------------ | ------------:|:--------------:| ----- |
-|**A1** | 1        | RespiraWorks   | [Equipment tray][a1rw]               |              | Rw             | Metal+acrylic tray holding the internal assembly together  |
-|**A2** | 1        | RespiraWorks   | [Filter panel][a2rw]                 |              | Rw             | Lower front panel assembly with air filters |
-|**A3** | 1        | RespiraWorks   | [Blower assembly][a3rw]              |              | Rw             | Blower sub-assembly |
-|**A4** | 1        | RespiraWorks   | [Air check valve][a4rw]              |              | Rw             | Air check valve sub-assembly |
-|**A5** | 2        | RespiraWorks   | [Pinch valves][a5rw]                 |              | Rw             | Proportional pinch valve sub-assemblies with tubing |
-|**A6** | 1        | RespiraWorks   | [Regulator assembly][a6rw]           |              | Rw             | Oxygen pressure regulator assembly |
-|**A7** | 1        | RespiraWorks   | [Proportional solenoid][a7rw]        |              | Rw             | Proportional solenoid oxygen control valve assembly |
-|**A8** | 1        | RespiraWorks   | [Oxygen/overpressure manifold][a8rw] |              | Rw             | Oxygen sensor and overpressure relief valve manifold |
-|**A9**| 1        | RespiraWorks   | [Venturi: air influx][a9rw]           |              | Rw             | Venturi flow sensor, air influx variant |
-|**A10**| 1        | RespiraWorks   | [Venturi: oxygen influx][a10rw]      |              | Rw             | Venturi flow sensor, oxygen influx variant |
-|**A11**| 1        | RespiraWorks   | [Venturi: exhale][a11rw]             |              | Rw             | Venturi flow sensor, exhale variant |
-|**A12**| 1        | RespiraWorks   | [Oxygen mixer][a12rw]                |              | Rw             | Oxygen mixing chamber |
-|**A13**| 1        | RespiraWorks   | [Reducer 3/4"x1/4"][a13rw]           |              | Rw             | 1/4"ID x 3/4"ID reducer |
-|**A14**| 5        | McMaster-Carr  | 53415K153                            | 13.16 / 10   | [C][a14mcmc]   | 3/4"ID barbed elbow |
-|**A15**| 1        | McMaster-Carr  | 5463K648                             | 8.40 / 10    | [C][a15mcmc]   | 3/4"ID x 3/8"ID barbed reducer |
-|**A16**| ~1m      | OCSParts       | 117062-5                             | 22.99 / 5ft  | [Z][a16amzn]   | Soft 3/4"ID 1"OD tubing, for main line tubing |
-|**A17**| 24       | McMaster-Carr  | 9579K73                              | 12.24 / 20   | [C][a17mcmc]   | Herbie clip K (22.2-24.9mm) for clamping 1"OD, main tubing |
-|**A18**| 1        | RespiraWorks   | [Display panel][a18rw]               |              | Rw             | Display panel and electronics assembly |
-|**A19**| ~1m      | McMaster-Carr  | 5894K34                              | 12.15 / 5ft  | [C][a19mcmc]   | 1/4"ID 3/8"OD Tygon tubing, for oxygen line tubing |
-|**A20**| 6        | McMaster-Carr  | 9579K64                              | 9.90 / 20    | [C][a20mcmc]   | Herbie clip BB (9.2-10.3mm) for clamping 3/8"OD, oxygen line tubing |
-|**A21**| ~1m      | uxcell         | a16031400ux0163                      | 6.49 / 16ft  | [Z][a21amzn]   | 2.5 mm tubing for connecting venturis to pressure sensors |
-|**A22**| 1        | McMaster-Carr  | 2974K392                             | 8.16 / 10    | [C][a22mcmc]   | sensing tube 3/23" y-junction, for teeing off to patient pressure sensor |
-|**A23**| -        | RespiraWorks   | [Wiring harnesses][a23rw]            |              | Rw             | Various wiring harnesses, as described on the linked page |
-|**A24**| 3        | GTSE           | GTSE-10025BLU-USSL                   | 4.49 / 100   | [Z][a24amzn]   | Zip ties, for securing sensor tubing and wiring harnesses |
+|**A1** | 1        | RespiraWorks   | [Equipment tray][a1rw]               | 172.13       | Rw             | Metal+acrylic tray holding the internal assembly together  |
+|**A2** | 1        | RespiraWorks   | [Filter panel][a2rw]                 | 27.39        | Rw             | Lower front panel assembly with air filters |
+|**A3** | 1        | RespiraWorks   | [Blower assembly][a3rw]              | 84.02        | Rw             | Blower sub-assembly |
+|**A4** | 1        | RespiraWorks   | [Air check valve][a4rw]              | 21.25        | Rw             | Air check valve sub-assembly |
+|**A5** | 2        | RespiraWorks   | [Pinch valves][a5rw]                 | 22.93        | Rw             | Proportional pinch valve sub-assemblies with tubing |
+|**A6** | 1        | RespiraWorks   | [Regulator assembly][a6rw]           | 79.12        | Rw             | Oxygen pressure regulator assembly |
+|**A7** | 1        | RespiraWorks   | [Proportional solenoid][a7rw]        | 97.44        | Rw             | Proportional solenoid oxygen control valve assembly |
+|**A8** | 1        | RespiraWorks   | [Oxygen/overpressure manifold][a8rw] | 131.00       | Rw             | Oxygen sensor and overpressure relief valve manifold |
+|**A9** | 1        | RespiraWorks   | [Venturi: air influx][a9rw]          | 2.00         | Rw             | Venturi flow sensor, air influx variant |
+|**A10**| 1        | RespiraWorks   | [Venturi: oxygen influx][a10rw]      | 2.00         | Rw             | Venturi flow sensor, oxygen influx variant |
+|**A11**| 1        | RespiraWorks   | [Venturi: exhale][a11rw]             | 2.00         | Rw             | Venturi flow sensor, exhale variant |
+|**A12**| 1        | RespiraWorks   | [Oxygen mixer][a12rw]                | 1.00         | Rw             | Oxygen mixing chamber |
+|**A13**| 1        | RespiraWorks   | [Reducer 3/4"x1/4"][a13rw]           | 1.00         | Rw             | 1/4"ID x 3/4"ID reducer |
+|**A14**| 5        | McMaster-Carr  | 53415K153                            | 1.32         | [C][a14mcmc]   | 3/4"ID barbed elbow |
+|**A15**| 1        | McMaster-Carr  | 5463K648                             | 0.84         | [C][a15mcmc]   | 3/4"ID x 3/8"ID barbed reducer |
+|**A16**| ~1m      | OCSParts       | 117062-5                             | 15.09 / m    | [Z][a16amzn]   | Soft 3/4"ID 1"OD tubing, for main line tubing |
+|**A17**| 24       | McMaster-Carr  | 9579K73                              | 0.61         | [C][a17mcmc]   | Herbie clip K (22.2-24.9mm) for clamping 1"OD, main tubing |
+|**A18**| 1        | RespiraWorks   | [Display panel][a18rw]               | 601.81       | Rw             | Display panel and electronics assembly |
+|**A19**| ~1m      | McMaster-Carr  | 5894K34                              | 7.97 / m     | [C][a19mcmc]   | 1/4"ID 3/8"OD Tygon tubing, for oxygen line tubing |
+|**A20**| 6        | McMaster-Carr  | 9579K64                              | 0.50         | [C][a20mcmc]   | Herbie clip BB (9.2-10.3mm) for clamping 3/8"OD, oxygen line tubing |
+|**A21**| ~1m      | uxcell         | a16031400ux0163                      | 1.33 / m     | [Z][a21amzn]   | 2.5 mm tubing for connecting venturis to pressure sensors |
+|**A22**| 1        | McMaster-Carr  | 2974K392                             | 0.82         | [C][a22mcmc]   | sensing tube 3/23" y-junction, for teeing off to patient pressure sensor |
+|**A23**| 1        | RespiraWorks   | [Wiring harnesses][a23rw]            | 9.39         | Rw             | Various wiring assemblies |
+|**A24**| 3        | GTSE           | GTSE-10025BLU-USSL                   | 0.04         | [Z][a24amzn]   | Zip ties, for securing sensor tubing and wiring harnesses |
+
+**Total assembly price:** USD 1327.82
 
 [a1rw]:    tray
 [a2rw]:    filter_panel

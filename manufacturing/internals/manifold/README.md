@@ -48,9 +48,11 @@ BEFORE purchasing any parts.**
 
 | Item  | Quantity | Manufacturer   | Part #                  | Price (USD)  | Sources[*][ppg]| Notes |
 | ----- |---------:| -------------- | ----------------------- | ------------:|:--------------:| ----- |
-|**A1** | 1        | RespiraWorks   | [Custom manifold][a1rw] |              | Rw             | Custom manifold |
+|**A1** | 1        | RespiraWorks   | [Custom manifold][a1rw] | 1.00         | Rw             | Custom manifold |
 |**A2** | 1        | Cables&Sensors | G0-040                  | 76.00        | [Cs][a2cns]    | Oxygen sensor |
 |**A3** | 1        | Generant       | VRVI-250B-V-0.8         | 54.00        | [Gn][a3gene]   | Overpressure relief valve |
+
+**Total assembly price:** USD 131.00
 
 [a1rw]:   #design-implementation
 [a2cns]:  https://www.cablesandsensors.com/products/compatible-o2-cell-for-hamilton-medical-396008

@@ -126,16 +126,52 @@ Use the following principles to guide this process:
 * The differential sensors on the PCB (or daughter-card) have 2 ports each:
   * the upper port (further from board) is for upstream
   * the lower port (closer to board) is for downstream
+* YELLOW indicates the tube in question 
+* BLACK indicates the tubes that have been previously installed in steps beforehand
 
 Connect the tubing as follows
 * upstream port on the `air influx venturi` to upper port on the `INHALE FLOW` sensor on the PCB
+
+<img src="images/rendering_upstream_air_influx_sensor_tube_install.jpg" width="600">
+
 * downstream port on the `air influx venturi` to lower port on the `INHALE FLOW` sensor on the PCB
+
+<img src="images/rendering_downstream_air_influx_sensor_tube_install.jpg" width="600">
+
 * upstream port on the `oxygen influx venturi` to upper port on the pressure sensor on the daughter-card
+
+<img src="images/rendering_upstream_oxygen_influx_sensor_tube_install.jpg" width="600"> 
+
+<img src="images/rendering_upstream_oxygen_influx_sensor_tube_install_2.jpg" width="600">
+
 * downstream port on the `oxygen influx venturi` to lower port on the pressure sensor on the daughter-card
+
+<img src="images/rendering_downstream_oxygen_influx_sensor_tube_install - Copy.jpg" width="490">
+
+<img src="images/rendering_downstream_oxygen_influx_sensor_tube_install_2.jpg" width="448">
+
 * downstream port on the `exhale venturi` to lower port on the `EXHALE FLOW` sensor on the PCB
+
+<img src="images/rendering_downstream_outflow_sensor_tube_install.jpg" width="600">
+
 * upstream port on the `exhale venturi` to wye splitter `[A22]`
-* wye splitter `[A22]` to the upper port on the `EXHALE FLOW` sensor on the PCB
+
+<img src="images/rendering_upstream_outflow_sensor_tube_install.jpg" width="500">
+
+<img src="images/rendering_y_connector_install.jpg" width="472">
+
+<img src="images/rendering_y_connector_install_2.jpg" width="500">
+
 * wye splitter `[A22]` to the upper port on the `PATIENT PRESSURE` sensor on the PCB
+
+<img src="images/rendering_patient_pressure_sensor_tube_install.jpg" width="600">
+
+* wye splitter `[A22]` to the upper port on the `EXHALE FLOW` sensor on the PCB
+
+<img src="images/rendering_upstream_outflow_sensor_tube_2_install.jpg" width="600">
+
+<img src="images/rendering_upstream_outflow_sensor_tube_2_install_2.jpg" width="600">
+
 * the lower port on the `PATIENT PRESSURE` sensor remains open to atmosphere
 
 ### Final wiring

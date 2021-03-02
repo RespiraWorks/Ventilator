@@ -160,4 +160,4 @@ Now you can make the final connections:
 * Use the miniUSB cable `[A11]` to connect the Nucleo to the Raspberry Pi
 
 * It should now look like this:
-![](../images/everything.jpg)
+![](images/rendering_electronics_3.jpg)

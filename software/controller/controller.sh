@@ -124,7 +124,7 @@ if [ "$1" == "--test" ]; then
   INTEGRATION_TEST_H=psol_test.h pio run -e integration-test
 
   # Make sure controller builds for target platform.
-  pio run -e stm32
+  pio run
 
   if [ "$2" != "--no-checks" ]; then
     # Code style / bug-prone pattern checks (eg. clang-tidy)

@@ -33,11 +33,10 @@ if [ $PLATFORM != "Linux" ]; then
   exit 1
 fi
 
-sudo apt-get update
-sudo apt-get -y upgrade
 sudo apt-get --yes install guake git-lfs
 
-### sudo apt-get --yes --allow-downgrades, --allow-remove-essential --allow-change-held-packages install guake git-lfs
+### this is for controller debug interface
+pip3 install matplotlib pillow
 
 ### enable serial interface but not console
 sudo raspi-config nonint do_serial 2

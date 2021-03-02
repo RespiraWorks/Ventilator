@@ -4,27 +4,11 @@
 |:-------------------------:|:-------------------------:|
 | ![](images/rendering.jpg) | ![](images/assembled.jpg) |
 
-
+-----
 ## Design rationale
 
 > **TODO:** Content..
-
-## Custom parts
-
-The closure panel is made out of a folded, 1.52mm thick, stainless steel sheet.
-
-| Part  | Source | Export |
-|:------|:-------|---|
-| Closure panel  | [.ipt](closure_panel.ipt)     | **TODO** |
-
-### Fabrication Drawings
-
->**#TODO: Make new drawings**
-
-Closure panel fabrication drawings.
-
- ![](images/fab_drawing_6.png)
-
+-----
 ## Parts
 
 **Note: If you are a member of the RespiraWorks team, review the [part purchasing guidelines][ppg]
@@ -51,16 +35,33 @@ BEFORE purchasing any parts.**
 [a5mcmc]: https://www.mcmaster.com/92095A189/
 [a6mcmc]: https://www.mcmaster.com/93475A230/
 [a7mcmc]: https://www.mcmaster.com/93625A150/
+------
+## Custom parts
 
->**#TODO: How much sheet metal?**
 
+### Closure Panel Fabrication
+The closure panel is made out of a folded, 1.52mm thick, stainless steel sheet.
+
+
+ ![](images/fab_drawing_7.png)
+
+| Part  | Link |
+|:------|:-------|
+| Closure Panel Fabrication PDF | [.pdf](closure_assembly.pdf)|
+| Closure Panel Fabrication CAD | [.iam](closure_panel.ipt)|
+
+-----
 ## Assembly
+
+ ![](images/fab_drawing_6.png)
 
 **Note: Please see general advice in the [manufacturing methods guide](../methods).**
 
 | Assembly | Source |
 |:---------|:-------|
-| Closure assembly         | [.iam](closure_assembly.iam) |
+| Closure Panel Assembly PDF | [.pdf](closure_assembly.pdf)|
+| Closure Panel Assembly CAD | [.iam](closure_assembly.iam)|
+
 
 The main power wire harness `[A2]` terminates with a female 4-pin DIN connector. This connector must be mounted to the
 closure panel. Use M2.5 screws `[A3]` and locknuts `[A4]`. Orient the DIN socket with the locking pin facing up.

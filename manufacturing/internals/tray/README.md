@@ -18,24 +18,14 @@ spot with new holes or cut-outs for alternate components being tested.
 In addition to supporting the main pneumatics tray, the equipment bracket also supports the display and filter panels
 on the front face of the ventilator. Those are detailed in other assembly pages.
 
-## Custom parts
+----
+## Assembly
 
-| Part  | Source | Export |
-|:------|:-------|---|
-| Equipment bracket | [.ipt](equipment_bracket.ipt) | **TODO** |
-| Pneumatics tray   | [.ipt](pneumatics_tray.ipt)     | **TODO** |
+**Note: Please see general advice in the [manufacturing methods guide](../../methods).**
 
-### Fabrication Drawings
+> **TODO:** Add subassembly file
 
->**TODO: Make new drawings**
->
-Fabrication drawings.
-
-|             |     |  |
-:------------------:|:-----------------:|:---:|
-| ![](images/fab_drawing_7.png) | ![](images/fab_drawing_8.png) | ![](images/fab_drawing_9.png) |
-
-
+----
 ## Parts
 
 **Note: If you are a member of the RespiraWorks team, review the [part purchasing guidelines][ppg]
@@ -62,11 +52,27 @@ BEFORE purchasing any parts.**
 [a5mcmc]: https://www.mcmaster.com/92095A193/
 [a6mcmc]: https://www.mcmaster.com/93625A150/
 [a7mcmc]: https://www.mcmaster.com/93475A230/
+----
+## Custom Parts
+
+### Equipment Bracket Fabrication
+
+|             |     |  |
+:------------------:|:-----------------:|:---:|
+| ![](images/fab_drawing_7.png) | ![](images/fab_drawing_8.png) | ![](images/fab_drawing_9.png) |
+
+| File Type | Link|
+|:------|:-------|
+| Engineering Drawings | [.ipt](equipment_bracket.pdf)|
+| Equipment Bracket Assembly CAD   | [.ipt](equipment_bracket.iam)|
+| Equipment Bracket Fabrication CAD   | [.ipt](equipment_bracket.ipt)|
 
 >**TODO: How much sheet metal?**
 
-## Assembly
+### Pneumatics Tray
+![](images/pneumatics_tray.png)
 
-**Note: Please see general advice in the [manufacturing methods guide](../../methods).**
-
-> **TODO:** Add subassembly file
+| File Type | Link|
+|:------|:-------|
+| Engineering Drawing | [.ipt](pneumatics_tray.pdf)|
+| Pneumatics Tray CAD  | [.ipt](pneumatics_tray.ipt)|

@@ -14,10 +14,12 @@ BEFORE purchasing any parts.**
 | Item  | Quantity | Manufacturer   | Part #              | Price (USD)  | Sources[*][ppg]| Notes |
 | ----- |---------:| -------------- | ------------------- | ------------:|:--------------:| ----- |
 |**A1** | 1        | McMaster-Carr  | 5492K13             | 12.88        | [C][a1mcmc]    | Plastic threaded check valve, 1/2NPT |
-|**A2** | ~50 mm   | McMaster-Carr  | 5234K57             | 21.50 / 5ft  | [C][a2mcmc]    | Soft latex tubing, 5/8" ID, 7/8" OD, for blower |
-|**A3** | 1        | McMaster-Carr  | 5372K128            | 4.89 / 10    | [C][a3mcmc]    | Barbed tube fitting, 5/8"ID x 1/2NPT |
+|**A2** | ~5 cm    | McMaster-Carr  | 5234K57             | 14.11 / m    | [C][a2mcmc]    | Soft latex tubing, 5/8" ID, 7/8" OD, for blower |
+|**A3** | 1        | McMaster-Carr  | 5372K128            | 0.49         | [C][a3mcmc]    | Barbed tube fitting, 5/8"ID x 1/2NPT |
 |**A4** | 1        | McMaster-Carr  | 53055K434           | 5.95         | [C][a4mcmc]    | Barbed tube fitting, 3/8"ID x 1/2NPT |
-|**A5** | 2        | McMaster-Carr  | 9579K72             | 12.21 / 20   | [C][a5mcmc]    | Herbie clip J (20.3-23mm) for clamping 7/8"OD, blower tubing |
+|**A5** | 2        | McMaster-Carr  | 9579K72             | 0.61         | [C][a5mcmc]    | Herbie clip J (20.3-23mm) for clamping 7/8"OD, blower tubing |
+
+**Total assembly price:** USD 21.25
 
 [a1mcmc]: https://www.mcmaster.com/5492K13/
 [a2mcmc]: https://www.mcmaster.com/5234K57

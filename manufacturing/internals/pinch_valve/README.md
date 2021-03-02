@@ -93,19 +93,21 @@ BEFORE purchasing any parts.**
 
 [ppg]: ../../purchasing_guidelines.md
 
-| Item  | Quantity | Manufacturer  | Part #        | Price (USD)  | Sources[*][ppg]         | Notes |
-| ----- |---------:| ------------- | ------------- | ------------:|:-----------------------:| ----- |
-|**A1** |        1 | RespiraWorks  | [Stepper base][a1rw]  |              | Rw              | BASE - 3D printed |
-|**A2** |        1 | RespiraWorks  | [Stepper rotor][a2rw] |              | Rw              | ROTOR - 3D printed |
-|**A3** |        1 | STEPPERONLINE | 17HS19-2004S2 | 11.59        | [T][a3step] [Z][a3amzn] | Stepper motor. Make sure to get version with the full-cut D-shaft. |
-|**A4** |        3 | McMaster-Carr | 91294A128     | 4.82 / 100   | [C][a4mcmc]             | M3 screws, 8mm, flat head: mounting stepper to base |
-|**A5** |        1 | McMaster-Carr | 92095A218     | 7.64 / 25    | [C][a5mcmc]             | M5 screws, 30mm: axle for bearing |
-|**A6** |        3 | FastEddy      | TFE4262       | 12.50 / 10   | [F][a6fast] [C][a6mcmc] | 5x16x5 Metal shielded bearings |
-|**A7** |        4 | McMaster-Carr | 92095A478     | 11.29 / 100  | [C][a7mcmc]             | M4 screws, 18mm: base mounting to main assembly |
-|**A8** | 4        | McMaster-Carr | 93625A150     | 6.04 / 100   | [C][a8mcmc]             | M4 lock nuts |
-|**A9** | 8        | McMaster-Carr | 93475A230     | 1.86 / 100   | [C][a9mcmc]             | M4 washers, 9mm OD |
-|**A10**| 6in/15cm | McMaster-Carr | 5894K38       | 12.30 / 2 ft | [C][a10mcmc]            | PVC Tubing, 3/8" ID, 5/8" OD, continuous-flex soft Tygon |
-|**A11**| 2        | McMaster-Carr | 9579K67       |  12.63 / 20  | [C][a11mcmc]            | Herbie clip E (12-13.8mm) for clamping 5/8"OD tubing |
+| Item  | Quantity | Manufacturer  | Part #                | Price (USD)  | Sources[*][ppg]         | Notes |
+| ----- |---------:| ------------- | --------------------- | ------------:|:-----------------------:| ----- |
+|**A1** | 1        | RespiraWorks  | [Stepper base][a1rw]  | 1.0          | Rw                      | BASE - 3D printed |
+|**A2** | 1        | RespiraWorks  | [Stepper rotor][a2rw] | 1.0          | Rw                      | ROTOR - 3D printed |
+|**A3** | 1        | STEPPERONLINE | 17HS19-2004S2         | 11.59        | [T][a3step] [Z][a3amzn] | Stepper motor. Make sure to get version with the full-cut D-shaft. |
+|**A4** | 3        | McMaster-Carr | 91294A128             | 0.05         | [C][a4mcmc]             | M3 screws, 8mm, flat head: mounting stepper to base |
+|**A5** | 1        | McMaster-Carr | 92095A218             | 0.31         | [C][a5mcmc]             | M5 screws, 30mm: axle for bearing |
+|**A6** | 3        | FastEddy      | TFE4262               | 1.25         | [F][a6fast] [C][a6mcmc] | 5x16x5 Metal shielded bearings |
+|**A7** | 4        | McMaster-Carr | 92095A478             | 0.11         | [C][a7mcmc]             | M4 screws, 18mm: base mounting to main assembly |
+|**A8** | 4        | McMaster-Carr | 93625A150             | 0.06         | [C][a8mcmc]             | M4 lock nuts |
+|**A9** | 8        | McMaster-Carr | 93475A230             | 0.02         | [C][a9mcmc]             | M4 washers, 9mm OD |
+|**A10**| 15cm     | McMaster-Carr | 5894K38               | 20.18 / m    | [C][a10mcmc]            | PVC Tubing, 3/8" ID, 5/8" OD, continuous-flex soft Tygon |
+|**A11**| 2        | McMaster-Carr | 9579K67               | 0.63         | [C][a11mcmc]            | Herbie clip E (12-13.8mm) for clamping 5/8"OD tubing |
+
+**Total assembly price:** USD 22.93
 
 [a1rw]:    #Custom-parts
 [a2rw]:    #Custom-parts

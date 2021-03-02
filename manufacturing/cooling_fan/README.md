@@ -32,10 +32,12 @@ BEFORE purchasing any parts.**
 | Item  | Quantity | Manufacturer  | Part #                   | Price (USD) | Sources[*][ppg]| Notes |
 | ----- |---------:| ------------- | ------------------------ | -----------:|:----------:|:------|
 |**A1** | 1        | Noiseblocker  | B0083A0BIA               | 21.86       | [Z][a1amzn] | Cooling fan + guard, 80mm |
-|**A2** | 1        | IMSurQltyPrise| 80mm-black-4             | 11.99 / 4   | [Z][a2amzn] | Cooling fan filter, 80mm |
-|**A3** | 4        | McMaster-Carr | 97763A429                | 11.33 / 10  | [C][a3mcmc] | M4 screw, 35mm |
-|**A4** | 4        | McMaster-Carr | 93625A150                | 6.04 / 100  | [C][a4mcmc] | M4 lock nuts |
-|**A5** | 4        | McMaster-Carr | 93475A230                | 1.86 / 100  | [C][a5mcmc] | M4 washers, 9mm OD |
+|**A2** | 1        | IMSurQltyPrise| 80mm-black-4             | 2.99        | [Z][a2amzn] | Cooling fan filter, 80mm |
+|**A3** | 4        | McMaster-Carr | 97763A429                | 1.13        | [C][a3mcmc] | M4 screw, 35mm |
+|**A4** | 4        | McMaster-Carr | 93625A150                | 0.06        | [C][a4mcmc] | M4 lock nuts |
+|**A5** | 4        | McMaster-Carr | 93475A230                | 0.02        | [C][a5mcmc] | M4 washers, 9mm OD |
+
+**Total assembly price:** USD 29.69
 
 [a1amzn]: https://www.amazon.com/Noiseblocker-NB-BlackSilentPro-PC-P-Ultra-Silent/dp/B0083A0BIA
 [a2amzn]: https://www.amazon.com/Computer-Filter-Grills-Aluminum-Stainelss/dp/B07LG41F1K

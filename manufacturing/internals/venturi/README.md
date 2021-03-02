@@ -124,10 +124,12 @@ BEFORE purchasing any parts.**
 
 [ppg]: ../../purchasing_guidelines.md
 
-| Item | Quantity | Manufacturer  | Part #          | Price (USD)  | Sources[*][ppg] | Notes |
-| ---- |---------:| ------------- | --------------- | ------------:|:---------------:| ----- |
-|**A1**| 1        | RespiraWorks  | [Venturi body][a1rw]    | ~1.00        | Rw       | 3D-printed venturi body |
-|**A2**| 2        | McMaster-Carr | 5463K3          | 3.93 / 10    | [C][a2mcmc]      | Barbed fitting 3/32" UNF, nipple for sensor tubing |
+| Item | Quantity | Manufacturer  | Part #               | Price (USD) | Sources[*][ppg] | Notes |
+| ---- |---------:| ------------- | -------------------- | -----------:|:---------------:| ----- |
+|**A1**| 1        | RespiraWorks  | [Venturi body][a1rw] | ~1.00       | Rw              | 3D-printed venturi body |
+|**A2**| 2        | McMaster-Carr | 5463K3               | 0.39        | [C][a2mcmc]     | Barbed fitting 3/32" UNF, nipple for sensor tubing |
+
+**Total assembly price:** USD 1.78
 
 [a1rw]:   #files
 [a2mcmc]: https://www.mcmaster.com/5463K33

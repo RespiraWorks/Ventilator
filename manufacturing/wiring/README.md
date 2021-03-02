@@ -13,6 +13,10 @@ For a single ventilator unit, the following custom wiring assemblies are needed:
 
 It is probably a good idea to manufacture and test these before proceeding with the rest of the mechanical assembly.
 
+Total price estimate: USD 24.00
+
+Stand-alone items (not in other assemblies): USD 9.39
+
 ## Parts
 
 **Note: If you are a member of the RespiraWorks team, review the [part purchasing guidelines][ppg]
@@ -32,17 +36,17 @@ BEFORE purchasing any parts.**
 |**A9** | 1        | Kycon         | KPJX-PM-4S            |         2.89 | [K][a9key]           | 4 pin DIN female, main power connector |
 |**A10**| 8        |TE Connectivity| 102107-3              |         0.47 | [K][a10key]          | 2.54mm male pin, for stepper interface |
 |**A11**| 2        |TE Connectivity| 87499-7               |         0.73 | [K][a11key]          | 2.54mm 4-pin housing, for stepper interface |
-|**A12**|        - | Remington     | 16UL1007STRKIT        |  29.70 / 45m | [Z][a12amzn]         | 16 AWG wire, for power cables |
-|**A13**|        - | Remington     | 22UL1015STRKIT10COLOR |  37.75 / 75m | [Z][a13amzn]         | 22 AWG wire, for signal/control cables |
-|**A14**|        - | Remington     | 26UL1007STRKIT10COLOR |  31.60 / 75m | [Z][a14amzn]         | 26 AWG wire, for signal/control cables |
+|**A12**| ~2.5 m   | Remington     | 16UL1007STRKIT        |  0.66 / m    | [Z][a12amzn]         | 16 AWG wire, for power cables |
+|**A13**| ~1.5 m   | Remington     | 22UL1015STRKIT10COLOR |  0.50 / m    | [Z][a13amzn]         | 22 AWG wire, for signal/control cables |
+|**A14**| ~4 m     | Remington     | 26UL1007STRKIT10COLOR |  0.42 / m    | [Z][a14amzn]         | 26 AWG wire, for signal/control cables |
 |**A15**| (1)      | WGCD          | 4330589508            |         8.99 | [Z][a15amzn]         | XH connector kit for 2/3/4/5 pins, **alternative for A1-3** |
 |**A16**| (1)      | CQRobot       | CQRJST254-BGB         |         9.99 | [Z][a16amzn]         | XH connector kit for 6/7/8 pins, **alternative for A1 and A4** |
 |**A17**| (1)      | Chenbo        | WJ-Z01                |        11.98 | [Z][a17amzn]         | 2.54mm connector kit, **alternative for A10 and A11** |
-|**A18**| 2        | Molex         | 22013037              |      0.20/ea | [K][a18key]          | KK-series 3-pin sockets connector housing (oxygen sensor) |
-|**A19**| 4        | Molex         | 08550102              |      0.21/ea | [K][a19key]          | crimp sockets for the above |
-|**A20**|        - | uxcell        | a11110900ux0059       | 7.89 / 6m    | [Z][a20amzn]         | Shrink tubing, black, 3mm diameter |
-|**A21**|        - | uxcell        | A17032300ux0991       | 8.99 / 6m    | [Z][a21amzn]         | Shrink tubing, black, 4mm diameter |
-|**A22**|        - | XHF           | B07WC9BGRT            | 11.99        | [Z][a22amzn]         | Shrink tubing, red, assorted diameters |
+|**A18**| 2        | Molex         | 22013037              |         0.20 | [K][a18key]          | KK-series 3-pin sockets connector housing (oxygen sensor) |
+|**A19**| 4        | Molex         | 08550102              |         0.21 | [K][a19key]          | crimp sockets for the above |
+|**A20**| ~1 m     | uxcell        | a11110900ux0059       | 1.32 / m     | [Z][a20amzn]         | Shrink tubing, black, 3mm diameter |
+|**A21**| ~2 m     | uxcell        | A17032300ux0991       | 1.50 / m     | [Z][a21amzn]         | Shrink tubing, black, 4mm diameter |
+|**A22**| ~0.5 m   | XHF           | B07WC9BGRT            | 0.95 / m     | [Z][a22amzn]         | Shrink tubing, red, assorted diameters |
 |**A23**| 1        |Phoenix Contact| 3240078               | 0.15         | [K][a23key]          | M4 ring terminal, 14-18AWG |
 
 [a1key]:   https://www.digikey.com/short/z44f8d
@@ -121,13 +125,15 @@ You will need all the tools listed.
   - Slide on a few extra lengths of heat shrink tubing for cable management before you proceed.
   - Crimp the VH contacts onto the ends of the red and black wire, then push them into the housings according to the drawing until they click.
   - Do a gentle pull test to confirm proper seating of the contact.
-  - Shrink the remaining pieces of heat shink to make the cable more manageable.
+  - Shrink the remaining pieces of heat shrink to make the cable more manageable.
 
 - Enclosure grounding terminal (process image 4):
   - solder two 10cm lengths of green wire to the sides of the DIN connector (which can remain exposed)
   - solder the two pieces of green wire together and to the remaining 10 cm length
   - apply some shrink tubing to where the three wires meet
   - crimp the ring terminal to the end of the wire
+
+- Total price: USD 8.61
 
 | Cable Image | Cable Drawing (PDF)  |
 |:--------:|:--------:|
@@ -150,11 +156,13 @@ so a new one must be manufactured.
 
 - Instructions:
   - Crimp the VH contacts onto one end of each of the wires.
-  - Slide on a few extra lenghts of heat shrink tubing for cable management before you proceed.
+  - Slide on a few extra lengths of heat shrink tubing for cable management before you proceed.
   - Crimp the VH contacts onto the other end of the wires.
   - Push the contacts into the housings per the drawing until they click.
   - Do a gentle pull test to confirm proper seating of the contact.
-  - Shrink the remaining pieces of heat shink to make the cable more manageable.
+  - Shrink the remaining pieces of heat shrink to make the cable more manageable.
+
+- Total price: USD 2.87
 
 | Cable Image | Cable Drawing (PDF)  |
 |:--------:|:--------:|
@@ -166,18 +174,20 @@ The signal cable that comes included with the blower will be too short to reach 
 so a new one must be manufactured.
 
 * Using:
-  - 26AWG 50cm in each of red, black, and gray `[A14]`
-  - 6x XH crimp contacts `[A1]`
+  - 26AWG 50cm each of 6 different colors `[A14]`
+  - 12x XH crimp contacts `[A1]`
   - 2x XH 6-pin housings `[A4]`
   - Shrink tubing `[A21]`
 
 - Instructions:
   - Crimp the XH contacts onto one end of each of the wires.
-  - Slide on a few extra lenghts of heat shrink tubing for cable management before you proceed.
+  - Slide on a few extra lengths of heat shrink tubing for cable management before you proceed.
   - Crimp the XH contacts onto the other end of the wires.
   - Push the contacts into the housings per the drawing until they click.
   - Do a gentle pull test to confirm proper seating of the contact.
-  - Shrink the remaining pieces of heat shink to make the cable more manageable.
+  - Shrink the remaining pieces of heat shrink to make the cable more manageable.
+
+- Total price: USD 3.45
 
 | Cable Image | Cable Drawing (PDF)  |
 |:--------:|:--------:|
@@ -189,7 +199,7 @@ To power and control the pinch valves, they will need to be wired to the stepper
 can be produced for this purpose:
 
 Recipe for one pigtail:
-* 22AWG 15cm `[A13]`
+* 4x 22AWG 15cm `[A13]`
 * 4x male 2.54mm crimp pins `[A10]`
 * 2.54mm 4-pin housing `[A11]`
 
@@ -198,11 +208,13 @@ On the other end, each wire should be stripped about 5mm and solder applied to b
 It is advisable to label these pigtails to identify which stepper driver they shall be wired up to.
 The same can be done for the stepper motors belonging to each pinch valve assembly.
 
+Single pigtail price: USD 3.00
+
 | Pigtails | Stepper wires  |
 |:--------:|:--------:|
 | ![](images/pigtails.jpg) | ![](images/stepper_labels.jpg) |
 
-> **TODO:** power wires for joining 2 boards?
+You will also need 2x small (about 5cm) 16AWG wires for connecting the two stepper boards together for power.
 
 ### Proportional solenoid valve
 
@@ -210,16 +222,18 @@ To connect the solenoid to the PCB, you will need to crimp a 2-pin XH connector 
 
 - Using:
   - 2x XH crimp contacts `[A1]`
-  - XH 6-pin housings `[A2]`
+  - XH 2-pin housings `[A2]`
   - Shrink tubing `[A20]`
 
 - Instructions:
   - Note that the polarity of these connections does not matter.
-  - Slide a few extra lenghts of heat shrink tubing onto the solenoid wires for cable management before you proceed.
+  - Slide a few extra lengths of heat shrink tubing onto the solenoid wires for cable management before you proceed.
   - Crimp the XH contacts onto the other end of the wires.
   - Push the contacts into the housings per the drawing until they click.
   - Do a gentle pull test to confirm proper seating of the contact.
-  - Shrink the remaining pieces of heat shink to make the cable more manageable.
+  - Shrink the remaining pieces of heat shrink to make the cable more manageable.
+
+- Total price: USD 0.96
 
 | Cable Image | Cable Drawing (PDF)  |
 |:--------:|:--------:|
@@ -233,7 +247,7 @@ This cable connects the Oxygen Sensor to the Interim Board in the PCB stack.
   - 26AWG 40cm in each of green and white `[A14]`
   - 4x KK series crimp contacts `[A19]`
   - 2x KK series 3-pin housings `[A18]`
-  - Shrink tubing `[A21]`
+  - Shrink tubing `[A20]`
 
 - Instructions:
   - Strip the ends of the wires
@@ -242,10 +256,8 @@ This cable connects the Oxygen Sensor to the Interim Board in the PCB stack.
   - Insert the wires into the connector housings `[A18]`, according to the drawing, until they click.  Pin 1 is marked by a tiny '1' molded into the connector housing.
   - Do a gentle pull test to make sure that the contacts are properly crimped and seated.
 
+- Total price: USD 2.11
+
 | Cable Image | Cable Drawing (PDF)  |
 |:--------:|:--------:|
 | ![Oxygen Sensor Cable](images/oxygen_sensor_cable.jpg) | [![Oxygen Sensor Cable Drawing](images/oxygen_sensor_cable_drawing_image.jpg)](drawings/20210209_oxygen_sensor_cable_drawing.pdf) |
-
-## Pricing totals
-
-> **TODO:** do this when finalized

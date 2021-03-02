@@ -102,18 +102,20 @@ BEFORE purchasing any parts.**
 
 **Note:** The below quantities are for building a complete set of 4 filter housings needed for one ventilator assembly.
 
-| Item  | Quantity  | Manufacturer  | Part #                                 | Price (USD)         | Sources[*][ppg]| Notes |
-| ----- |----------:| ------------- | -------------------------------------- | -------------------:|:-----------:|:------|
-|**A1** | 4         | RespiraWorks  | [Filter housing][a1rw]                 | 1.00                | Rw          | 3D printed from STL in link |
-|**A2** | 2         | RespiraWorks  | [Filter cover w/ tubing adapter][a2rw] | 1.00                | Rw          | 3D printed from STL in link |
-|**A3** | 2         | RespiraWorks  | [Filter cover w/ outlet vent][a3rw]    | 1.00                | Rw          | 3D printed from STL in link |
-|**A4** | 4         | Amyehouse     | 20160819-1a                            | 8.00 / 6            | [Z][a4amzn] | Roomba 700-compatible HEPA filters |
-|**A5** | ~16 sq in | McMaster-Carr | 8785K82                                | 22.22/ 12x12" sheet | [C][a5mcmc] | Gasket material, cut with jigs(**A9+A10**) to make **A6** |
-|**A6** | 8         | RespiraWorks  | [Filter gaskets][a6rw]                 | 0.10                | Rw          | Filter gaskets, made from **A5**, using jigs **A9+A10** |
-|**A7** | 8         | McMaster-Carr | 96016A556                              | 5.50 / 10           | [C][a7mcmc] | M3 thumbscrews |
-|**A8** | 8         | McMaster-Carr | 94180A333                              | 16.69 / 100         | [C][a8mcmc] | Heat-set inserts for m3 screws |
-|**A9** | (1)       | RespiraWorks  | [Filter inside cut jig][a9rw]          | *tool*              | Rw          | 3D printed from STL in link |
-|**A10**| (1)       | RespiraWorks  | [Filter outside cut jig][a10rw]        | *tool*              | Rw          | 3D printed from STL in link |
+| Item  | Quantity  | Manufacturer  | Part #                                 | Price (USD) | Sources[*][ppg]| Notes |
+| ----- |----------:| ------------- | -------------------------------------- | -----------:|:-----------:|:------|
+|**A1** | 4         | RespiraWorks  | [Filter housing][a1rw]                 | 1.00        | Rw          | 3D printed from STL in link |
+|**A2** | 2         | RespiraWorks  | [Filter cover w/ tubing adapter][a2rw] | 1.00        | Rw          | 3D printed from STL in link |
+|**A3** | 2         | RespiraWorks  | [Filter cover w/ outlet vent][a3rw]    | 1.00        | Rw          | 3D printed from STL in link |
+|**A4** | 4         | Amyehouse     | 20160819-1a                            | 1.33        | [Z][a4amzn] | Roomba 700-compatible HEPA filters |
+|**A5** | (~100 cm²)| McMaster-Carr | 8785K82                                | 240 / m²    | [C][a5mcmc] | Gasket material, cut with jigs(**A9+A10**) to make **A6** |
+|**A6** | 8         | RespiraWorks  | [Filter gaskets][a6rw]                 | 0.10        | Rw          | Filter gaskets, made from **A5**, using jigs **A9+A10** |
+|**A7** | 8         | McMaster-Carr | 96016A556                              | 0.55        | [C][a7mcmc] | M3 thumbscrews |
+|**A8** | 8         | McMaster-Carr | 94180A333                              | 0.17        | [C][a8mcmc] | Heat-set inserts for m3 screws |
+|**A9** | (1)       | RespiraWorks  | [Filter inside cut jig][a9rw]          | *tool*      | Rw          | 3D printed from STL in link |
+|**A10**| (1)       | RespiraWorks  | [Filter outside cut jig][a10rw]        | *tool*      | Rw          | 3D printed from STL in link |
+
+**Single filter holder assembly price:** USD 4.97
 
 [a1rw]:   exports/filter_housing.stl
 [a2rw]:   exports/filter_cover_patient_connector.stl

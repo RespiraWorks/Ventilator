@@ -43,15 +43,17 @@ BEFORE purchasing any parts.**
 
 [ppg]: ../../purchasing_guidelines.md
 
-| Item  | Quantity | Manufacturer   | Part #                | Price (USD)  | Sources[*][ppg]| Notes |
-| ----- |---------:| -------------- | --------------------- | ------------:|:--------------:| ----- |
-|**A1** | 1        | RespiraWorks   | [Equipment bracket][a1rw] |              | Rw         | Ventilator equipment bracket, bent sheet metal |
-|**A2** | 6        | McMaster-Carr  | 96439A650             | 3.89 / 10    | [C][a2mcmc]    | M4 self-clinching / press-fit nut |
-|**A3** | ~1300cm² | McMaster-Carr  | 8560K357              | 150 / m²     | [C][a3mcmc]    | 1/4" (6.35mm) thick clear acrylic sheet, to make `[A4]` below |
-|**A4** | 1        | RespiraWorks   | [Pneumatics tray][a4rw] |              | Rw     | Custom cut acrylic panel, cut from acrylic `[A3]` |
-|**A5** | 4        | McMaster-Carr  | 92095A193             | 8.95 / 50    | [C][a5mcmc]    | M4 screw, 14mm: tray fasteners |
-|**A6** | 4        | McMaster-Carr  | 93625A150             | 6.04 / 100   | [C][a6mcmc]    | M4 locknut |
-|**A7** | 4        | McMaster-Carr  | 93475A230             | 1.86 / 100   | [C][a7mcmc]    | M4 washers, 9mm OD |
+| Item  | Quantity | Manufacturer   | Part #                    | Price (USD) | Sources[*][ppg]| Notes |
+| ----- |---------:| -------------- | ------------------------- | -----------:|:--------------:| ----- |
+|**A1** | 1        | RespiraWorks   | [Equipment bracket][a1rw] | 149.25      | Rw             | Ventilator equipment bracket, bent sheet metal |
+|**A2** | 6        | McMaster-Carr  | 96439A650                 | 0.39        | [C][a2mcmc]    | M4 self-clinching / press-fit nut |
+|**A3** |(~1300cm²)| McMaster-Carr  | 8560K357                  | 150 / m²    | [C][a3mcmc]    | 1/4" (6.35mm) thick clear acrylic sheet, to make `[A4]` below |
+|**A4** | 1        | RespiraWorks   | [Pneumatics tray][a4rw]   | 19.5        | Rw             | Custom cut acrylic panel, cut from acrylic `[A3]` |
+|**A5** | 4        | McMaster-Carr  | 92095A193                 | 0.18        | [C][a5mcmc]    | M4 screw, 14mm: tray fasteners |
+|**A6** | 4        | McMaster-Carr  | 93625A150                 | 0.06        | [C][a6mcmc]    | M4 locknut |
+|**A7** | 4        | McMaster-Carr  | 93475A230                 | 0.02        | [C][a7mcmc]    | M4 washers, 9mm OD |
+
+**Total assembly price:** USD 172.13
 
 [a1rw]:    #custom-parts
 [a2mcmc]:  https://www.mcmaster.com/96439A650/

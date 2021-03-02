@@ -16,8 +16,8 @@ The script provides its own help on syntax.
 
 The script is also used by integration test tools, so it is a good idea to configure it correctly.
 
-The script is further abstracted by the [../upload.sh](../upload.sh) script, which will deploy the default release
-firmware to the controller with simplified syntax.
+The script is further abstracted by the [../controller.sh](../controller.sh) utility, which will deploy the default
+release firmware to the controller with simplified syntax.
 
 ## Modifying STLink script
 

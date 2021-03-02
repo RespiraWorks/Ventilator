@@ -1,25 +1,14 @@
-# Testing utilities
+# Utilities
 
-**#TODO: document other utilities**
+## Raspberry pi deployment scripts
 
-## General considerations
+If a proper enclosed unit is built as described under [manufacturing](../../manufacturing),
+it should be possible to deploy all GUI and controller software directly via the Raspberry pi that is integrated
+into the ventilator unit.
 
-For some of these communication tests, it is possible to set
-```c++
-#define NO_GUI_DEV_MODE
-```
-in `main.cpp` so that serial data is sent over the same USB cable that is
-used to program the nucleo.
+Scripts for doing so are available under [rpi_config](rpi_config).
 
-Otherwise, a more "honest" test would be to check communication on the
-actual serial pins of the Nucleo. To do so, you can use a serial dongle such as
-[this](https://www.amazon.com/gp/product/B00QT7LQ88),
-or, for a more scalable setup, [this](https://www.amazon.com/dp/B07XF2SLQ1).
-
-
-## Utilities
-
-### controller_debug
+## controller_debug
 
 [controller_debug.py](controller_debug.py)
 
@@ -30,13 +19,13 @@ There is a [brief tutorial](controller_debug.md) on how to use it.
 
 This interface is the basis for automated performance tests, such as [run_covent_tests.py](run_covent_tests.py).
 
-### decoder
+## decoder
 
 [decoder.py](decoder.py)
 
 This is a decoder of serial packets sent from controller to GUI.
 
-### DMA UART test
+## DMA UART test
 
 [dma_uart_test.py](dma_uart_test.py)
 
@@ -56,7 +45,7 @@ Then you can run:
 python dma_uart_test.py
 ```
 
-### Regenerating python proto bindings
+## Regenerating python proto bindings
 
 *The Python proto bindings really ought to live in common/, next to the .proto
 file and the generated C++ code.*

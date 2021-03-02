@@ -103,6 +103,15 @@ Two webcams are connected to server and each may be streamed to Youtube.
 
 Instructions for how to use them are [here](webcam).
 
+### Serial communications testing
+
+AS more "honest" test would be to check communication on the
+actual serial pins of the Nucleo. To do so, you can use a serial dongle such as
+[this](https://www.amazon.com/gp/product/B00QT7LQ88),
+or, for a more scalable setup, [this](https://www.amazon.com/dp/B07XF2SLQ1).
+
+These are available at "the farm" upon request but no tests have been attempted thus far.
+
 ## Computing
 
 There is a networked desktop PC connected to all test hardware via USB that will coordinate all integration tests. The

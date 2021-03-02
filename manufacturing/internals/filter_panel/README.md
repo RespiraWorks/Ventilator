@@ -11,23 +11,7 @@ and two without. The filter housings are installed on a clear acrylic sheet. In 
 available and/or required in particular markets or settings, this assembly can be easily redesigned and
 swapped out without significantly altering the rest of the ventilator design.
 
-## Custom parts
 
-This is the design for the custom cut acrylic plate for the filter housings.
-
-> **TODO: Drawing rather than rendering?**
-
-| Acrylic plate rendering |
-:------------------:|
-| ![](images/filter_panel_acrylic_plate_rendering.jpg)  |
-
-| Download Type | Link   |
-|:--------------|:-------|
-| Source: Inventor part file | [.ipt](filter_panel_acrylic_plate.ipt) |
-| Drawing                    | [.idw](filter_panel_acrylic_plate.idw) [.pdf](filter_panel_acrylic_plate.pdf)|
-| Export for laser cutting   | [.dxf](filter_panel_acrylic_plate.dxf) |
-
-The plate may be produced using a laser cutter or with common woodworking tools.
 
 ## Parts
 
@@ -60,13 +44,37 @@ BEFORE purchasing any parts.**
 [a8mcmc]: https://www.mcmaster.com/92095A193/
 [a9mcmc]: https://www.mcmaster.com/92095A189/
 
-## Assembly
+## Custom parts
+
+This is the design for the custom cut acrylic plate for the filter housings.
+
+
+
+| Acrylic plate |
+:------------------|
+|![.iam](images/filter_panel_acrylic.jpg)|
+
+| Download Type | Link   |
+|:--------------|:-------|
+| Source: Inventor part file | [.ipt](filter_panel_acrylic_plate.ipt) |
+| Drawing                    | [.idw](filter_panel_acrylic_plate.idw) [.pdf](filter_panel_acrylic_plate.pdf)|
+| Export for laser cutting   | [.dxf](filter_panel_acrylic_plate.dxf) |
+
+The plate may be produced using a laser cutter or with common woodworking tools.
+
+
+## Filter Panel Assembly
+
+| |
+:------------------|
+![.iam](images/filter_panel_assembly_dwg.jpg)|
 
 | Part  | Source |
 |:------|:-------|
-| Filter panel assembly | [.iam](filter_panel_assembly.iam) |
+|Assembly CAD|[.iam](images/filter_panel_assembly_dwg.jpg)|
+|Engineering Drawing|[.pdf](images/filter_panel_assembly_dwg.jpg)|
 
-> **TODO: Drawings**
+
 
 **Note: Please also see general advice in the [manufacturing methods guide](../../methods).**
 

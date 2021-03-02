@@ -20,8 +20,6 @@ The ventilator enclosure is made up a folded, 1.52mm thick, stainless steel shee
 
 ### Fabrication Drawings
 
-> **TODO: Make new drawings**
-
 Enclosure fabrication drawings.
 
 |             |     |  |

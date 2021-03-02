@@ -27,19 +27,7 @@ However:
 
 These changes are likely forthcoming in future iterations of our design.
 
-## Custom Parts
-
-> **TODO: Drawings**
-
-| Download Type | Link   |
-|:--------------|:-------|
-| Source: Inventor part file | [.ipt](display_panel_acrylic_plate.ipt) |
-| Drawing                    | [.idw](display_panel_acrylic_plate.idw) [.pdf](display_panel_acrylic_plate.pdf) |
-| Export for laser cutting   | [.dxf](display_panel_acrylic_plate.dxf) |
-
-**Custom PCBs**
-
-see **[Electronics Assembly](electronics)** for turnkey manufaturing files and full details.
+----
 
 ## Parts
 
@@ -85,6 +73,23 @@ BEFORE purchasing any parts.**
 [a14key]:  https://www.digikey.com/en/products/detail/w-rth-elektronik/971090151/6174614
 [a15rw]:   electronics
 
+------
+## Custom Parts
+
+### Display Panel Acrylic Plate
+![](images/display_panel_acrylic_plate.jpg)
+
+| Download Type | Link   |
+|:--------------|:-------|
+| Source: Inventor part file | [.ipt](display_panel_acrylic_plate.ipt) |
+| Drawing                    | [.pdf](display_panel_acrylic_plate.pdf) |
+| Export for laser cutting   | [.dxf](display_panel_acrylic_plate.dxf) |
+
+### Custom PCBs
+
+See **[Electronics Assembly](electronics)** for turnkey manufaturing files and full details.
+
+---------
 ## Assembly
 
 | Part  | Source |

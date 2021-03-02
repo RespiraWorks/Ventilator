@@ -79,8 +79,8 @@ public:
     return trace_buffer_.FullCount() / GetNumActiveVars();
   }
 
-  size_t GetNumActiveVars() {
-    return static_cast<int>(
+  uint32_t GetNumActiveVars() {
+    return static_cast<uint32_t>(
         std::count_if(traced_vars_.begin(), traced_vars_.end(),
                       [](const DebugVarBase *var) { return (var); }));
   }

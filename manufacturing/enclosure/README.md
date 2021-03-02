@@ -34,10 +34,10 @@ BEFORE purchasing any parts.**
 
 ### Fabrication Drawings
 
-![](images/fab_drawing_2.png)
-![](images/fab_drawing_3.png)
-![](images/fab_drawing_4.png)
-![](images/fab_drawing_5.png)
+|  |   |
+|---|---|
+|![](images/fab_drawing_2.jpg) |![](images/fab_drawing_3.jpg)|
+|![](images/fab_drawing_4.jpg) |![](images/fab_drawing_5.jpg) |
 
 The ventilator enclosure is made up a folded, 1.52mm thick, stainless steel sheet.
 
@@ -59,12 +59,12 @@ The ventilator enclosure is made up a folded, 1.52mm thick, stainless steel shee
 
 **Note: Please see general advice in the [manufacturing methods guide](../methods).**
 
-![](images/fab_drawing_1.png)
+![](images/fab_drawing_1.jpg)
 
 | Assembly | Source |
 |:---------|:-------|
-| Enclosure Assembly Drawing| [.iam](enclosure_assembly.iam) |
-| Enclosure Assembly CAD | [.pdf](enclosure.pdf) |
+| Enclosure Assembly CAD| [.iam](enclosure_assembly.iam) |
+| Enclosure Assembly Drawing| [.pdf](enclosure.pdf) |
 
 The main panel is folded from a single sheet and fastened together using stainless steel blind rivets. There
 are rubber bumper feet on the bottom of the enclosure that are threaded into M6 press-fit nuts. The rubber bumpers

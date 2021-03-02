@@ -59,20 +59,20 @@ BEFORE purchasing any parts.**
 
 |             |     |  |
 :------------------:|:-----------------:|:---:|
-| ![](images/fab_drawing_7.png) | ![](images/fab_drawing_8.png) | ![](images/fab_drawing_9.png) |
+| ![](images/fab_drawing_1.JPG) | ![](images/fab_drawing_2.jpg) | ![](images/fab_drawing_3.jpg) |
 
 | File Type | Link|
 |:------|:-------|
-| Engineering Drawings | [.ipt](equipment_bracket.pdf)|
-| Equipment Bracket Assembly CAD   | [.ipt](equipment_bracket.iam)|
+| Engineering Drawings | [.pdf](equipment_bracket.pdf)|
+| Equipment Bracket Assembly CAD   | [.iam](equipment_bracket.iam)|
 | Equipment Bracket Fabrication CAD   | [.ipt](equipment_bracket.ipt)|
 
 >**TODO: How much sheet metal?**
 
 ### Pneumatics Tray
-![](images/pneumatics_tray.png)
+![](images/pneumatics_tray.jpg)
 
 | File Type | Link|
 |:------|:-------|
-| Engineering Drawing | [.ipt](pneumatics_tray.pdf)|
+| Engineering Drawing | [.pdf](pneumatics_tray.pdf)|
 | Pneumatics Tray CAD  | [.ipt](pneumatics_tray.ipt)|

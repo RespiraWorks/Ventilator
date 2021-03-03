@@ -63,20 +63,14 @@ This is the design for the custom cut acrylic plate for the filter housings.
 The plate may be produced using a laser cutter or with common woodworking tools.
 
 
-## Filter Panel Assembly
-
-| |
-:------------------|
-![.iam](images/filter_panel_assembly_dwg.jpg)|
-
-| Part  | Source |
-|:------|:-------|
-|Assembly CAD|[.iam](images/filter_panel_assembly_dwg.jpg)|
-|Engineering Drawing|[.pdf](images/filter_panel_assembly_dwg.jpg)|
-
-
+## Assembly
 
 **Note: Please also see general advice in the [manufacturing methods guide](../../methods).**
+
+
+
+
+
 
 * Install heat set inserts into the corner holes for mounting to main equipment bracket.
 
@@ -86,6 +80,11 @@ The plate may be produced using a laser cutter or with common woodworking tools.
 |:--------------------------:|
 |![](images/panel1.jpg) |
 
-|                            |
-|:--------------------------:|
-|![](images/panel2.jpg) |
+| |
+:------------------|
+![.iam](images/filter_panel_assembly_dwg.jpg)|
+
+| Part  | Source |
+|:------|:-------|
+|Assembly CAD|[.iam](images/filter_panel_assembly_dwg.jpg)|
+|Engineering Drawing|[.pdf](images/filter_panel_assembly_dwg.jpg)|

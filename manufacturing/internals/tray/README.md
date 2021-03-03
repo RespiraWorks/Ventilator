@@ -18,14 +18,6 @@ spot with new holes or cut-outs for alternate components being tested.
 In addition to supporting the main pneumatics tray, the equipment bracket also supports the display and filter panels
 on the front face of the ventilator. Those are detailed in other assembly pages.
 
-----
-## Assembly
-
-**Note: Please see general advice in the [manufacturing methods guide](../../methods).**
-
-> **TODO:** Add subassembly file
-
-----
 ## Parts
 
 **Note: If you are a member of the RespiraWorks team, review the [part purchasing guidelines][ppg]
@@ -52,7 +44,7 @@ BEFORE purchasing any parts.**
 [a5mcmc]: https://www.mcmaster.com/92095A193/
 [a6mcmc]: https://www.mcmaster.com/93625A150/
 [a7mcmc]: https://www.mcmaster.com/93475A230/
-----
+
 ## Custom Parts
 
 ### Equipment Bracket Fabrication
@@ -76,3 +68,9 @@ BEFORE purchasing any parts.**
 |:------|:-------|
 | Engineering Drawing | [.pdf](pneumatics_tray.pdf)|
 | Pneumatics Tray CAD  | [.ipt](pneumatics_tray.ipt)|
+
+## Assembly
+
+**Note: Please see general advice in the [manufacturing methods guide](../../methods).**
+
+> **TODO:** Add subassembly file

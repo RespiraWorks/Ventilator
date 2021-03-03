@@ -5,11 +5,11 @@
 | ![](images/enclosure_rendering.jpg)  | ![](images/enclosure_exploded.jpg)  |
 
 > **TODO: Make new renderings**
----
+
 ## Design rationale
 
 > **TODO:** Content..
-----
+
 ## Parts
 
 **Note: If you are a member of the RespiraWorks team, review the [part purchasing guidelines][ppg]
@@ -27,7 +27,9 @@ BEFORE purchasing any parts.**
 
 **Total assembly price:** USD 430.90
 
-----
+>**#TODO: How much sheet metal?**
+
+
 ## Custom parts
 
 
@@ -46,7 +48,6 @@ The ventilator enclosure is made up a folded, 1.52mm thick, stainless steel shee
 | Enclosure Fabrication CAD | [.ipt](enclosure.ipt) |
 | Enclosure Fabrication Drawing | [.pdf](enclosure.pdf)|
 
->**#TODO: How much sheet metal?**
 
 [a1rw]:    #custom-parts
 [a2mcmc]:  https://www.mcmaster.com/97525A415/
@@ -54,7 +55,7 @@ The ventilator enclosure is made up a folded, 1.52mm thick, stainless steel shee
 [a4mcmc]:  https://www.mcmaster.com/96439A710/
 [a5mcmc]:  https://www.mcmaster.com/9541K82/
 
-----
+
 ## Assembly
 
 **Note: Please see general advice in the [manufacturing methods guide](../methods).**

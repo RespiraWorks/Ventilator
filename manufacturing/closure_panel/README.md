@@ -4,11 +4,11 @@
 |:-------------------------:|:-------------------------:|
 | ![](images/rendering.jpg) | ![](images/assembled.jpg) |
 
------
+
 ## Design rationale
 
 > **TODO:** Content..
------
+
 ## Parts
 
 **Note: If you are a member of the RespiraWorks team, review the [part purchasing guidelines][ppg]
@@ -35,7 +35,7 @@ BEFORE purchasing any parts.**
 [a5mcmc]: https://www.mcmaster.com/92095A189/
 [a6mcmc]: https://www.mcmaster.com/93475A230/
 [a7mcmc]: https://www.mcmaster.com/93625A150/
-------
+
 ## Custom parts
 
 
@@ -43,17 +43,17 @@ BEFORE purchasing any parts.**
 The closure panel is made out of a folded, 1.52mm thick, stainless steel sheet.
 
 
- ![](images/fab_drawing_2.jpg)
+ [![](images/fab_drawing_2.jpg)](closure_assembly.pdf)
 
 | Part  | Link |
 |:------|:-------|
 | Closure Panel Fabrication PDF | [.pdf](closure_assembly.pdf)|
 | Closure Panel Fabrication CAD | [.iam](closure_panel.ipt)|
 
------
+
 ## Assembly
 
- ![](images/fab_drawing_1.jpg)
+ [![](images/fab_drawing_1.jpg)](closure_assembly.pdf)
 
 **Note: Please see general advice in the [manufacturing methods guide](../methods).**
 

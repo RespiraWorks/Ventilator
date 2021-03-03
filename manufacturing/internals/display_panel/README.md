@@ -27,7 +27,7 @@ However:
 
 These changes are likely forthcoming in future iterations of our design.
 
-----
+
 
 ## Parts
 
@@ -73,11 +73,11 @@ BEFORE purchasing any parts.**
 [a14key]:  https://www.digikey.com/en/products/detail/w-rth-elektronik/971090151/6174614
 [a15rw]:   electronics
 
-------
+
 ## Custom Parts
 
 ### Display Panel Acrylic Plate
-![](images/display_panel_acrylic_plate.jpg)
+[![](images/display_panel_acrylic_plate.jpg)](display_panel_acrylic_plate.pdf)
 
 | Download Type | Link   |
 |:--------------|:-------|
@@ -89,10 +89,10 @@ BEFORE purchasing any parts.**
 
 See **[Electronics Assembly](electronics)** for turnkey manufaturing files and full details.
 
----------
+
 ## Assembly
 
-![](images/display_panel_assembly.jpg)
+[![](images/display_panel_assembly.jpg)](display_panel_assembly.pdf)
 
 | Part  | Source |
 |:------|:-------|

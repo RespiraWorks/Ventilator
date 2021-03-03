@@ -42,8 +42,10 @@ BEFORE purchasing any parts.**
 ### Closure Panel Fabrication
 The closure panel is made out of a folded, 1.52mm thick, stainless steel sheet.
 
+|  | |
+|:------|:-------|
+|[![](images/fab_drawing_1.jpg)](closure_assembly.pdf)|[![](images/fab_drawing_2.jpg)](closure_assembly.pdf)|
 
- [![](images/fab_drawing_2.jpg)](closure_assembly.pdf)
 
 | Part  | Link |
 |:------|:-------|
@@ -53,7 +55,7 @@ The closure panel is made out of a folded, 1.52mm thick, stainless steel sheet.
 
 ## Assembly
 
- [![](images/fab_drawing_1.jpg)](closure_assembly.pdf)
+
 
 **Note: Please see general advice in the [manufacturing methods guide](../methods).**
 

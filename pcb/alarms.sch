@@ -33,7 +33,6 @@ F 1 "10nF" H 7550 3050 50  0000 C CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 7788 2800 50  0001 C CNN
 F 3 "~" H 7750 2950 50  0001 C CNN
 F 4 "Murata" H 7750 2950 50  0001 C CNN "Manufacturer"
-F 5 "GRM1885C1H103JA01D" H 7750 2950 50  0001 C CNN "Part Number"
 	1    7750 2950
 	-1   0    0    1   
 $EndComp
@@ -55,7 +54,6 @@ F 1 "100nF" H 7050 1400 50  0000 C CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 6938 1450 50  0001 C CNN
 F 3 "~" H 6900 1600 50  0001 C CNN
 F 4 "" H 6900 1600 50  0001 C CNN "Manufacturer"
-F 5 "" H 6900 1600 50  0001 C CNN "Part Number"
 	1    6900 1600
 	-1   0    0    1   
 $EndComp
@@ -93,7 +91,7 @@ F 1 "2.0V" V 1350 2050 50  0000 L CNN
 F 2 "RespiraWorks_Std:D_SOD-123" H 1350 2350 50  0001 C CNN
 F 3 "~" H 1350 2350 50  0001 C CNN
 F 4 "ON Semiconductor" H 1350 2350 50  0001 C CNN "Manufacturer"
-F 5 "MMSZ4679T1G" H 1350 2350 50  0001 C CNN "Part Number"
+F 5 "MMSZ4679T1G" H 1350 2350 50  0001 C CNN "Manufacturer PN"
 	1    1350 2350
 	0    1    1    0   
 $EndComp
@@ -103,10 +101,10 @@ U 1 1 5FDE7881
 P 1700 2850
 F 0 "Q?" H 1500 2550 50  0000 L CNN
 F 1 "MMBT3904" H 1300 2450 50  0000 L CNN
-F 2 "Ventilator:SOT-23" H 1900 2775 50  0001 L CIN
+F 2 "RespiraWorks_Std:SOT-23" H 1900 2775 50  0001 L CIN
 F 3 "https://www.fairchildsemi.com/datasheets/2N/2N3904.pdf" H 1700 2850 50  0001 L CNN
 F 4 "Diodes Inc." H 1700 2850 50  0001 C CNN "Manufacturer"
-F 5 "MMBT3904-7-F" H 1700 2850 50  0001 C CNN "Part Number"
+F 5 "MMBT3904-7-F" H 1700 2850 50  0001 C CNN "Manufacturer PN"
 	1    1700 2850
 	1    0    0    -1  
 $EndComp
@@ -124,7 +122,6 @@ F 1 "10k" H 1450 2500 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 1430 2700 50  0001 C CNN
 F 3 "~" H 1500 2700 50  0001 C CNN
 F 4 "" H 1500 2700 50  0001 C CNN "Manufacturer"
-F 5 "" H 1500 2700 50  0001 C CNN "Part Number"
 	1    1500 2700
 	-1   0    0    1   
 $EndComp
@@ -160,7 +157,6 @@ F 1 "10k" H 1600 2750 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 1280 2700 50  0001 C CNN
 F 3 "~" H 1350 2700 50  0001 C CNN
 F 4 "" H 1350 2700 50  0001 C CNN "Manufacturer"
-F 5 "" H 1350 2700 50  0001 C CNN "Part Number"
 	1    1350 2700
 	-1   0    0    1   
 $EndComp
@@ -193,7 +189,6 @@ F 1 "10k" H 1650 1500 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 1730 1450 50  0001 C CNN
 F 3 "~" H 1800 1450 50  0001 C CNN
 F 4 "" H 1800 1450 50  0001 C CNN "Manufacturer"
-F 5 "" H 1800 1450 50  0001 C CNN "Part Number"
 	1    1800 1450
 	-1   0    0    1   
 $EndComp
@@ -238,7 +233,6 @@ F 1 "100k" H 4400 2850 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 4580 2800 50  0001 C CNN
 F 3 "~" H 4650 2800 50  0001 C CNN
 F 4 "KOA Speer" H 4650 2800 50  0001 C CNN "Manufacturer"
-F 5 "RK73H2BTTD1003F" H 4650 2800 50  0001 C CNN "Part Number"
 	1    4650 2800
 	-1   0    0    1   
 $EndComp
@@ -284,7 +278,7 @@ F 1 "3.3V" V 3650 3450 50  0000 L CNN
 F 2 "RespiraWorks_Std:D_SOD-123" H 3650 3350 50  0001 C CNN
 F 3 "~" H 3650 3350 50  0001 C CNN
 F 4 "ON Semiconductor" H 3650 3350 50  0001 C CNN "Manufacturer"
-F 5 "MMSZ4684T1G" H 3650 3350 50  0001 C CNN "Part Number"
+F 5 "MMSZ4684T1G" H 3650 3350 50  0001 C CNN "Manufacturer PN"
 	1    3650 3350
 	0    1    1    0   
 $EndComp
@@ -294,10 +288,9 @@ U 1 1 5FDE7A43
 P 4000 4000
 F 0 "Q?" H 4200 4000 50  0000 L CNN
 F 1 "MMBT3904" H 4200 3900 50  0000 L CNN
-F 2 "Ventilator:SOT-23" H 4200 3925 50  0001 L CIN
+F 2 "RespiraWorks_Std:SOT-23" H 4200 3925 50  0001 L CIN
 F 3 "https://www.fairchildsemi.com/datasheets/2N/2N3904.pdf" H 4000 4000 50  0001 L CNN
 F 4 "Diodes Inc." H 4000 4000 50  0001 C CNN "Manufacturer"
-F 5 "MMBT3904-7-F" H 4000 4000 50  0001 C CNN "Part Number"
 	1    4000 4000
 	1    0    0    -1  
 $EndComp
@@ -315,7 +308,6 @@ F 1 "10k" H 3750 3650 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 3730 3850 50  0001 C CNN
 F 3 "~" H 3800 3850 50  0001 C CNN
 F 4 "" H 3800 3850 50  0001 C CNN "Manufacturer"
-F 5 "" H 3800 3850 50  0001 C CNN "Part Number"
 	1    3800 3850
 	-1   0    0    1   
 $EndComp
@@ -349,7 +341,6 @@ F 1 "10k" H 3900 3900 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 3580 3850 50  0001 C CNN
 F 3 "~" H 3650 3850 50  0001 C CNN
 F 4 "" H 3650 3850 50  0001 C CNN "Manufacturer"
-F 5 "" H 3650 3850 50  0001 C CNN "Part Number"
 	1    3650 3850
 	-1   0    0    1   
 $EndComp
@@ -420,7 +411,6 @@ F 1 "10k" H 3950 1400 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 4030 1350 50  0001 C CNN
 F 3 "~" H 4100 1350 50  0001 C CNN
 F 4 "" H 4100 1350 50  0001 C CNN "Manufacturer"
-F 5 "" H 4100 1350 50  0001 C CNN "Part Number"
 	1    4100 1350
 	-1   0    0    1   
 $EndComp
@@ -442,7 +432,6 @@ F 1 "100nF" V 4150 2850 50  0000 C CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 4338 2550 50  0001 C CNN
 F 3 "~" H 4300 2700 50  0001 C CNN
 F 4 "" H 4300 2700 50  0001 C CNN "Manufacturer"
-F 5 "" H 4300 2700 50  0001 C CNN "Part Number"
 	1    4300 2700
 	-1   0    0    1   
 $EndComp
@@ -499,8 +488,7 @@ F 0 "R?" H 5900 2150 50  0000 C CNN
 F 1 "100k" H 5850 2250 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 5980 2200 50  0001 C CNN
 F 3 "~" H 6050 2200 50  0001 C CNN
-F 4 "KOA Speer" H 6050 2200 50  0001 C CNN "Manufacturer"
-F 5 "RK73H2BTTD1004F" H 6050 2200 50  0001 C CNN "Part Number"
+F 4 "" H 6050 2200 50  0001 C CNN "Manufacturer"
 	1    6050 2200
 	-1   0    0    1   
 $EndComp
@@ -518,7 +506,6 @@ F 1 "442k" H 5850 2550 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 5980 2500 50  0001 C CNN
 F 3 "~" H 6050 2500 50  0001 C CNN
 F 4 "" H 6050 2500 50  0001 C CNN "Manufacturer"
-F 5 "RK73H2BTTD1004F" H 6050 2500 50  0001 C CNN "Part Number"
 	1    6050 2500
 	-1   0    0    1   
 $EndComp
@@ -540,7 +527,6 @@ F 1 "1uF" H 5850 3100 50  0000 C CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 6088 2900 50  0001 C CNN
 F 3 "~" H 6050 3050 50  0001 C CNN
 F 4 "AVX" H 6050 3050 50  0001 C CNN "Manufacturer"
-F 5 "06035C104JAT2A" H 6050 3050 50  0001 C CNN "Part Number"
 	1    6050 3050
 	-1   0    0    1   
 $EndComp
@@ -641,7 +627,7 @@ F 1 "10nF" H 10300 3050 50  0000 C CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 10538 2800 50  0001 C CNN
 F 3 "~" H 10500 2950 50  0001 C CNN
 F 4 "Murata" H 10500 2950 50  0001 C CNN "Manufacturer"
-F 5 "GRM1885C1H103JA01D" H 10500 2950 50  0001 C CNN "Part Number"
+F 5 "GRM1885C1H103JA01D" H 10500 2950 50  0001 C CNN "Manufacturer PN"
 	1    10500 2950
 	-1   0    0    1   
 $EndComp
@@ -663,7 +649,6 @@ F 1 "100nF" H 9850 1400 50  0000 C CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 9688 1450 50  0001 C CNN
 F 3 "~" H 9650 1600 50  0001 C CNN
 F 4 "" H 9650 1600 50  0001 C CNN "Manufacturer"
-F 5 "" H 9650 1600 50  0001 C CNN "Part Number"
 	1    9650 1600
 	-1   0    0    1   
 $EndComp
@@ -714,7 +699,6 @@ F 1 "52.3k" H 8600 2250 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 8730 2200 50  0001 C CNN
 F 3 "~" H 8800 2200 50  0001 C CNN
 F 4 "" H 8800 2200 50  0001 C CNN "Manufacturer"
-F 5 "RK73H2BTTD1004F" H 8800 2200 50  0001 C CNN "Part Number"
 	1    8800 2200
 	-1   0    0    1   
 $EndComp
@@ -732,7 +716,6 @@ F 1 "249k" H 8600 2550 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 8730 2500 50  0001 C CNN
 F 3 "~" H 8800 2500 50  0001 C CNN
 F 4 "KOA Speer" H 8800 2500 50  0001 C CNN "Manufacturer"
-F 5 "RK73H2BTTD1004F" H 8800 2500 50  0001 C CNN "Part Number"
 	1    8800 2500
 	-1   0    0    1   
 $EndComp
@@ -754,7 +737,6 @@ F 1 "10nF" H 8550 3100 50  0000 C CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 8838 2900 50  0001 C CNN
 F 3 "~" H 8800 3050 50  0001 C CNN
 F 4 "AVX" H 8800 3050 50  0001 C CNN "Manufacturer"
-F 5 "06035C104JAT2A" H 8800 3050 50  0001 C CNN "Part Number"
 	1    8800 3050
 	-1   0    0    1   
 $EndComp
@@ -944,7 +926,6 @@ F 1 "1k" V 10800 2100 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 10630 2100 50  0001 C CNN
 F 3 "~" H 10700 2100 50  0001 C CNN
 F 4 "" H 10700 2100 50  0001 C CNN "Manufacturer"
-F 5 "RK73H2BTTD1004F" H 10700 2100 50  0001 C CNN "Part Number"
 	1    10700 2100
 	0    -1   -1   0   
 $EndComp
@@ -1004,7 +985,6 @@ F 1 "1k" V 13000 2300 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 12830 2300 50  0001 C CNN
 F 3 "~" H 12900 2300 50  0001 C CNN
 F 4 "" H 12900 2300 50  0001 C CNN "Manufacturer"
-F 5 "RK73H2BTTD1004F" H 12900 2300 50  0001 C CNN "Part Number"
 	1    12900 2300
 	0    -1   -1   0   
 $EndComp
@@ -1022,7 +1002,6 @@ F 1 "1k" V 15100 2300 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 14930 2300 50  0001 C CNN
 F 3 "~" H 15000 2300 50  0001 C CNN
 F 4 "" H 15000 2300 50  0001 C CNN "Manufacturer"
-F 5 "RK73H2BTTD1004F" H 15000 2300 50  0001 C CNN "Part Number"
 	1    15000 2300
 	0    -1   -1   0   
 $EndComp
@@ -1040,7 +1019,6 @@ F 1 "1k" H 11050 2200 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 11180 2250 50  0001 C CNN
 F 3 "~" H 11250 2250 50  0001 C CNN
 F 4 "" H 11250 2250 50  0001 C CNN "Manufacturer"
-F 5 "RK73H2BTTD1004F" H 11250 2250 50  0001 C CNN "Part Number"
 	1    11250 2250
 	1    0    0    -1  
 $EndComp
@@ -1090,7 +1068,6 @@ F 1 "1k" H 13150 2400 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 13280 2450 50  0001 C CNN
 F 3 "~" H 13350 2450 50  0001 C CNN
 F 4 "" H 13350 2450 50  0001 C CNN "Manufacturer"
-F 5 "RK73H2BTTD1004F" H 13350 2450 50  0001 C CNN "Part Number"
 	1    13350 2450
 	1    0    0    -1  
 $EndComp
@@ -1139,7 +1116,6 @@ F 1 "1k" H 15250 2400 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 15380 2450 50  0001 C CNN
 F 3 "~" H 15450 2450 50  0001 C CNN
 F 4 "" H 15450 2450 50  0001 C CNN "Manufacturer"
-F 5 "RK73H2BTTD1004F" H 15450 2450 50  0001 C CNN "Part Number"
 	1    15450 2450
 	1    0    0    -1  
 $EndComp
@@ -1331,43 +1307,9 @@ F 3 "" H 3650 7250 50  0001 C CNN
 	1    3650 7250
 	1    0    0    -1  
 $EndComp
-$Comp
-L Device:CP1 C?
-U 1 1 60926762
-P 4400 7500
-AR Path="/60926762" Ref="C?"  Part="1" 
-AR Path="/5E8E1F08/60926762" Ref="C?"  Part="1" 
-AR Path="/5FCD4DF5/60926762" Ref="C?"  Part="1" 
-AR Path="/5FCD4B8E/60926762" Ref="C?"  Part="1" 
-F 0 "C?" H 4050 7450 50  0000 L CNN
-F 1 "100uF 50V AlPoly" V 4250 7050 50  0000 L CNN
-F 2 "Capacitor_SMD:CP_Elec_10x10.5" H 4400 7500 50  0001 C CNN
-F 3 "~" H 4400 7500 50  0001 C CNN
-F 4 "Panasonic" H 4400 7500 50  0001 C CNN "Manufacturer"
-F 5 "EEH-ZC1H101P" H 4400 7500 50  0001 C CNN "Part Number"
-	1    4400 7500
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
 	4400 7350 4400 7250
 Connection ~ 4400 7250
-$Comp
-L power:GND #PWR?
-U 1 1 6092676A
-P 4400 7650
-AR Path="/6092676A" Ref="#PWR?"  Part="1" 
-AR Path="/5E8AFE9D/6092676A" Ref="#PWR?"  Part="1" 
-AR Path="/5E8A4ABF/6092676A" Ref="#PWR?"  Part="1" 
-AR Path="/5E8E1F08/6092676A" Ref="#PWR?"  Part="1" 
-AR Path="/5FCD4DF5/6092676A" Ref="#PWR?"  Part="1" 
-AR Path="/5FCD4B8E/6092676A" Ref="#PWR?"  Part="1" 
-F 0 "#PWR?" H 4400 7400 50  0001 C CNN
-F 1 "GND" H 4405 7477 50  0000 C CNN
-F 2 "" H 4400 7650 50  0001 C CNN
-F 3 "" H 4400 7650 50  0001 C CNN
-	1    4400 7650
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
 	4150 7250 4400 7250
 Text Notes 3650 6300 0    79   ~ 16
@@ -1387,7 +1329,7 @@ F 1 "3.3V" V 3700 8250 50  0000 L CNN
 F 2 "RespiraWorks_Std:D_SOD-123" H 3650 8150 50  0001 C CNN
 F 3 "~" H 3650 8150 50  0001 C CNN
 F 4 "ON Semiconductor" H 3650 8150 50  0001 C CNN "Manufacturer"
-F 5 "MMSZ4684T1G" H 3650 8150 50  0001 C CNN "Part Number"
+F 5 "MMSZ4684T1G" H 3650 8150 50  0001 C CNN "Manufacturer PN"
 	1    3650 8150
 	0    1    1    0   
 $EndComp
@@ -1399,10 +1341,9 @@ AR Path="/5FCD4DF5/60926782" Ref="Q?"  Part="1"
 AR Path="/5FCD4B8E/60926782" Ref="Q?"  Part="1" 
 F 0 "Q?" H 4000 8350 50  0000 L CNN
 F 1 "MMBT3904" H 3800 8250 50  0000 L CNN
-F 2 "Ventilator:SOT-23" H 4400 8575 50  0001 L CIN
+F 2 "RespiraWorks_Std:SOT-23" H 4400 8575 50  0001 L CIN
 F 3 "https://www.fairchildsemi.com/datasheets/2N/2N3904.pdf" H 4200 8650 50  0001 L CNN
 F 4 "Diodes Inc." H 4200 8650 50  0001 C CNN "Manufacturer"
-F 5 "MMBT3904-7-F" H 4200 8650 50  0001 C CNN "Part Number"
 	1    4200 8650
 	1    0    0    -1  
 $EndComp
@@ -1421,7 +1362,6 @@ F 1 "10k" H 3700 8800 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 3730 8500 50  0001 C CNN
 F 3 "~" H 3800 8500 50  0001 C CNN
 F 4 "" H 3800 8500 50  0001 C CNN "Manufacturer"
-F 5 "" H 3800 8500 50  0001 C CNN "Part Number"
 	1    3800 8500
 	-1   0    0    1   
 $EndComp
@@ -1459,7 +1399,6 @@ F 1 "10k" H 3900 8550 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 3580 8500 50  0001 C CNN
 F 3 "~" H 3650 8500 50  0001 C CNN
 F 4 "" H 3650 8500 50  0001 C CNN "Manufacturer"
-F 5 "" H 3650 8500 50  0001 C CNN "Part Number"
 	1    3650 8500
 	-1   0    0    1   
 $EndComp
@@ -1488,18 +1427,16 @@ P 5050 7350
 AR Path="/5FCD4DF5/609267AA" Ref="Q?"  Part="1" 
 AR Path="/5FCD4B8E/609267AA" Ref="Q?"  Part="1" 
 F 0 "Q?" V 5378 7350 50  0000 C CNN
-F 1 "MMBT3906" V 5287 7350 50  0000 C CNN
-F 2 "Ventilator:SOT-23" H 5250 7275 50  0001 L CIN
+F 1 "MMBT2907A" V 5287 7350 50  0000 C CNN
+F 2 "RespiraWorks_Std:SOT-23" H 5250 7275 50  0001 L CIN
 F 3 "https://www.fairchildsemi.com/datasheets/2N/2N3906.pdf" H 5050 7350 50  0001 L CNN
 F 4 "Nexperia" H 5050 7350 50  0001 C CNN "Manufacturer"
-F 5 "MMBT3906,215" H 5050 7350 50  0001 C CNN "Part Number"
+F 5 "" H 5050 7350 50  0001 C CNN "Manufacturer PN"
 	1    5050 7350
 	0    -1   -1   0   
 $EndComp
 Wire Wire Line
 	5250 7250 5300 7250
-Wire Wire Line
-	5550 7250 5750 7250
 $Comp
 L Transistor_BJT:MMBT3904 Q?
 U 1 1 609267B4
@@ -1508,10 +1445,9 @@ AR Path="/5FCD4DF5/609267B4" Ref="Q?"  Part="1"
 AR Path="/5FCD4B8E/609267B4" Ref="Q?"  Part="1" 
 F 0 "Q?" H 5350 8400 50  0000 L CNN
 F 1 "MMBT3904" H 5250 8300 50  0000 L CNN
-F 2 "Ventilator:SOT-23" H 5350 8375 50  0001 L CIN
+F 2 "RespiraWorks_Std:SOT-23" H 5350 8375 50  0001 L CIN
 F 3 "https://www.fairchildsemi.com/datasheets/2N/2N3904.pdf" H 5150 8450 50  0001 L CNN
 F 4 "Diodes Inc." H 5150 8450 50  0001 C CNN "Manufacturer"
-F 5 "MMBT3904-7-F" H 5150 8450 50  0001 C CNN "Part Number"
 	1    5150 8450
 	-1   0    0    -1  
 $EndComp
@@ -1526,11 +1462,10 @@ AR Path="/5E8E1F08/609267BC" Ref="R?"  Part="1"
 AR Path="/5FCD4DF5/609267BC" Ref="R?"  Part="1" 
 AR Path="/5FCD4B8E/609267BC" Ref="R?"  Part="1" 
 F 0 "R?" H 4900 7650 50  0000 C CNN
-F 1 "2.4k" H 4800 7750 50  0000 C CNN
+F 1 "2k" H 4900 7750 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 4980 7700 50  0001 C CNN
 F 3 "~" H 5050 7700 50  0001 C CNN
 F 4 "" H 5050 7700 50  0001 C CNN "Manufacturer"
-F 5 "RK73H2BTTD2401F" H 5050 7700 50  0001 C CNN "Part Number"
 	1    5050 7700
 	-1   0    0    1   
 $EndComp
@@ -1552,20 +1487,19 @@ $EndComp
 $Comp
 L Device:R R?
 U 1 1 609267CA
-P 5550 8050
+P 6250 8050
 AR Path="/609267CA" Ref="R?"  Part="1" 
 AR Path="/5E8AFE9D/609267CA" Ref="R?"  Part="1" 
 AR Path="/5E8C8865/609267CA" Ref="R?"  Part="1" 
 AR Path="/5E8E1F08/609267CA" Ref="R?"  Part="1" 
 AR Path="/5FCD4DF5/609267CA" Ref="R?"  Part="1" 
 AR Path="/5FCD4B8E/609267CA" Ref="R?"  Part="1" 
-F 0 "R?" H 5400 8000 50  0000 C CNN
-F 1 "10k" H 5300 8100 50  0000 C CNN
-F 2 "RespiraWorks_Std:R_0603_1608Metric" V 5480 8050 50  0001 C CNN
-F 3 "~" H 5550 8050 50  0001 C CNN
-F 4 "" H 5550 8050 50  0001 C CNN "Manufacturer"
-F 5 "" H 5550 8050 50  0001 C CNN "Part Number"
-	1    5550 8050
+F 0 "R?" H 6100 8000 50  0000 C CNN
+F 1 "10k" H 6100 8100 50  0000 C CNN
+F 2 "RespiraWorks_Std:R_0603_1608Metric" V 6180 8050 50  0001 C CNN
+F 3 "~" H 6250 8050 50  0001 C CNN
+F 4 "" H 6250 8050 50  0001 C CNN "Manufacturer"
+	1    6250 8050
 	-1   0    0    1   
 $EndComp
 Wire Wire Line
@@ -1576,20 +1510,16 @@ Text Notes 3650 6500 0    50   ~ 0
 PNP circuit disables alarm battery output when +5V is present,\neven though battery voltage is higher than 5V
 Text Notes 2800 8000 0    50   ~ 0
 Threshold ~~3.5-4.2V
-Text Notes 5600 7900 0    50   ~ 0
+Text Notes 6300 8250 0    50   ~ 0
 ~~0.6 mA battery load
 Wire Wire Line
-	6050 7250 6850 7250
+	6700 7250 6850 7250
 Connection ~ 5050 8250
 Wire Wire Line
-	5550 8200 5550 8450
+	6250 8200 6250 8450
 Wire Wire Line
-	5550 8450 5350 8450
-Wire Wire Line
-	5550 8900 5550 8450
-Wire Wire Line
-	4600 8900 5550 8900
-Connection ~ 5550 8450
+	6250 8900 6250 8450
+Connection ~ 6250 8450
 $Comp
 L Device:R R?
 U 1 1 609267E8
@@ -1605,13 +1535,10 @@ F 1 "10k" H 5100 7200 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 5230 7400 50  0001 C CNN
 F 3 "~" H 5300 7400 50  0001 C CNN
 F 4 "" H 5300 7400 50  0001 C CNN "Manufacturer"
-F 5 "" H 5300 7400 50  0001 C CNN "Part Number"
 	1    5300 7400
 	-1   0    0    1   
 $EndComp
 Connection ~ 5300 7250
-Wire Wire Line
-	5300 7250 5550 7250
 Wire Wire Line
 	5300 7550 5050 7550
 Connection ~ 5050 7550
@@ -1630,7 +1557,6 @@ F 1 "1M" V 4350 8550 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 4330 8250 50  0001 C CNN
 F 3 "~" H 4400 8250 50  0001 C CNN
 F 4 "KOA Speer" H 4400 8250 50  0001 C CNN "Manufacturer"
-F 5 "RK73H2BTTD1004F" H 4400 8250 50  0001 C CNN "Part Number"
 	1    4400 8250
 	0    1    1    0   
 $EndComp
@@ -1648,9 +1574,8 @@ Wire Wire Line
 Connection ~ 4000 8650
 Text Notes 4050 8150 0    50   ~ 0
 Optional hysteresis
-Connection ~ 5550 7250
 Wire Wire Line
-	5550 7250 5550 7900
+	6250 7250 6250 7900
 Wire Wire Line
 	5050 7850 5050 8250
 Wire Wire Line
@@ -1670,7 +1595,6 @@ F 1 "10k" V 14700 6850 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 14530 6850 50  0001 C CNN
 F 3 "~" H 14600 6850 50  0001 C CNN
 F 4 "" H 14600 6850 50  0001 C CNN "Manufacturer"
-F 5 "" H 14600 6850 50  0001 C CNN "Part Number"
 	1    14600 6850
 	0    -1   -1   0   
 $EndComp
@@ -1705,7 +1629,6 @@ F 1 "680" H 11200 6500 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 11330 6450 50  0001 C CNN
 F 3 "~" H 11400 6450 50  0001 C CNN
 F 4 "" H 11400 6450 50  0001 C CNN "Manufacturer"
-F 5 "" H 11400 6450 50  0001 C CNN "Part Number"
 	1    11400 6450
 	-1   0    0    1   
 $EndComp
@@ -1726,7 +1649,6 @@ F 1 "100k" H 9950 7050 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 10130 7100 50  0001 C CNN
 F 3 "~" H 10200 7100 50  0001 C CNN
 F 4 "" H 10200 7100 50  0001 C CNN "Manufacturer"
-F 5 "" H 10200 7100 50  0001 C CNN "Part Number"
 	1    10200 7100
 	1    0    0    -1  
 $EndComp
@@ -1745,7 +1667,6 @@ F 1 "100k" H 9950 7350 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 10130 7400 50  0001 C CNN
 F 3 "~" H 10200 7400 50  0001 C CNN
 F 4 "" H 10200 7400 50  0001 C CNN "Manufacturer"
-F 5 "" H 10200 7400 50  0001 C CNN "Part Number"
 	1    10200 7400
 	1    0    0    -1  
 $EndComp
@@ -1784,7 +1705,6 @@ F 1 "10nF" H 10150 7500 50  0000 C CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 10538 7250 50  0001 C CNN
 F 3 "~" H 10500 7400 50  0001 C CNN
 F 4 "" H 10500 7400 50  0001 C CNN "Manufacturer"
-F 5 "" H 10500 7400 50  0001 C CNN "Part Number"
 	1    10500 7400
 	-1   0    0    1   
 $EndComp
@@ -1844,7 +1764,6 @@ F 1 "10k" V 12150 6600 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 11980 6600 50  0001 C CNN
 F 3 "~" H 12050 6600 50  0001 C CNN
 F 4 "" H 12050 6600 50  0001 C CNN "Manufacturer"
-F 5 "" H 12050 6600 50  0001 C CNN "Part Number"
 	1    12050 6600
 	0    -1   -1   0   
 $EndComp
@@ -1857,11 +1776,10 @@ P 12400 6600
 AR Path="/5FCD4DF5/609268A3" Ref="Q?"  Part="1" 
 AR Path="/5FCD4B8E/609268A3" Ref="Q?"  Part="1" 
 F 0 "Q?" V 12728 6600 50  0000 C CNN
-F 1 "MMBT3906" V 12637 6600 50  0000 C CNN
-F 2 "Ventilator:SOT-23" H 12600 6525 50  0001 L CIN
+F 1 "MMBT2907A" V 12637 6600 50  0000 C CNN
+F 2 "RespiraWorks_Std:SOT-23" H 12600 6525 50  0001 L CIN
 F 3 "https://www.fairchildsemi.com/datasheets/2N/2N3906.pdf" H 12400 6600 50  0001 L CNN
 F 4 "Nexperia" H 12400 6600 50  0001 C CNN "Manufacturer"
-F 5 "MMBT3906,215" H 12400 6600 50  0001 C CNN "Part Number"
 	1    12400 6600
 	1    0    0    1   
 $EndComp
@@ -1887,7 +1805,6 @@ F 1 "1M" V 11850 8000 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 11980 8050 50  0001 C CNN
 F 3 "~" H 12050 8050 50  0001 C CNN
 F 4 "" H 12050 8050 50  0001 C CNN "Manufacturer"
-F 5 "" H 12050 8050 50  0001 C CNN "Part Number"
 	1    12050 8050
 	0    1    1    0   
 $EndComp
@@ -1924,7 +1841,6 @@ F 1 "10k" H 13250 7050 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 13430 7100 50  0001 C CNN
 F 3 "~" H 13500 7100 50  0001 C CNN
 F 4 "" H 13500 7100 50  0001 C CNN "Manufacturer"
-F 5 "" H 13500 7100 50  0001 C CNN "Part Number"
 	1    13500 7100
 	-1   0    0    -1  
 $EndComp
@@ -1960,7 +1876,6 @@ F 1 "1M" V 12250 8000 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 12380 8050 50  0001 C CNN
 F 3 "~" H 12450 8050 50  0001 C CNN
 F 4 "" H 12450 8050 50  0001 C CNN "Manufacturer"
-F 5 "" H 12450 8050 50  0001 C CNN "Part Number"
 	1    12450 8050
 	0    1    1    0   
 $EndComp
@@ -2034,7 +1949,7 @@ Wire Wire Line
 $Comp
 L Device:D_ALT D?
 U 1 1 60C4ADB6
-P 5900 7250
+P 6550 7250
 AR Path="/5E8FBD97/60C4ADB6" Ref="D?"  Part="1" 
 AR Path="/5E8DEDC0/60C4ADB6" Ref="D?"  Part="1" 
 AR Path="/5E8DFCAD/60C4ADB6" Ref="D?"  Part="1" 
@@ -2042,13 +1957,12 @@ AR Path="/5E8E0754/60C4ADB6" Ref="D?"  Part="1"
 AR Path="/5E8E1F08/60C4ADB6" Ref="D?"  Part="1" 
 AR Path="/60C4ADB6" Ref="D?"  Part="1" 
 AR Path="/5FCD4DF5/60C4ADB6" Ref="D?"  Part="1" 
-F 0 "D?" H 5850 7450 50  0000 L CNN
-F 1 "1N4448W" H 5750 7350 50  0000 L CNN
-F 2 "RespiraWorks_Std:D_SOD-123" H 5900 7250 50  0001 C CNN
-F 3 "~" H 5900 7250 50  0001 C CNN
-F 4 "" H 5900 7250 50  0001 C CNN "Manufacturer"
-F 5 "" H 5900 7250 50  0001 C CNN "Part Number"
-	1    5900 7250
+F 0 "D?" H 6500 7450 50  0000 L CNN
+F 1 "1N4448W" H 6400 7350 50  0000 L CNN
+F 2 "RespiraWorks_Std:D_SOD-123" H 6550 7250 50  0001 C CNN
+F 3 "~" H 6550 7250 50  0001 C CNN
+F 4 "" H 6550 7250 50  0001 C CNN "Manufacturer"
+	1    6550 7250
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -2067,7 +1981,6 @@ F 1 "1N4448W" H 3850 7150 50  0000 L CNN
 F 2 "RespiraWorks_Std:D_SOD-123" H 4000 7250 50  0001 C CNN
 F 3 "~" H 4000 7250 50  0001 C CNN
 F 4 "" H 4000 7250 50  0001 C CNN "Manufacturer"
-F 5 "" H 4000 7250 50  0001 C CNN "Part Number"
 	1    4000 7250
 	-1   0    0    1   
 $EndComp
@@ -2141,7 +2054,6 @@ F 1 "1k" V 13850 3900 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 13680 3900 50  0001 C CNN
 F 3 "~" H 13750 3900 50  0001 C CNN
 F 4 "" H 13750 3900 50  0001 C CNN "Manufacturer"
-F 5 "RK73H2BTTD1004F" H 13750 3900 50  0001 C CNN "Part Number"
 	1    13750 3900
 	0    -1   -1   0   
 $EndComp
@@ -2170,7 +2082,6 @@ F 1 "1k" H 14000 4000 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 14130 4050 50  0001 C CNN
 F 3 "~" H 14200 4050 50  0001 C CNN
 F 4 "" H 14200 4050 50  0001 C CNN "Manufacturer"
-F 5 "RK73H2BTTD1004F" H 14200 4050 50  0001 C CNN "Part Number"
 	1    14200 4050
 	1    0    0    -1  
 $EndComp
@@ -2221,7 +2132,7 @@ AR Path="/5FCD4D18/60DD0241" Ref="TP?"  Part="1"
 AR Path="/5FCD4DF5/60DD0241" Ref="TP?"  Part="1" 
 F 0 "TP?" H 11000 2300 50  0000 C CNN
 F 1 "TP" V 11050 2150 50  0001 C CNN
-F 2 "" H 11200 2100 50  0001 C CNN
+F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 11200 2100 50  0001 C CNN
 F 3 "~" H 11200 2100 50  0001 C CNN
 	1    11000 2100
 	1    0    0    -1  
@@ -2240,7 +2151,7 @@ AR Path="/5FCD4D18/60DD5049" Ref="TP?"  Part="1"
 AR Path="/5FCD4DF5/60DD5049" Ref="TP?"  Part="1" 
 F 0 "TP?" H 12700 2500 50  0000 C CNN
 F 1 "TP" V 12750 2350 50  0001 C CNN
-F 2 "" H 12900 2300 50  0001 C CNN
+F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 12900 2300 50  0001 C CNN
 F 3 "~" H 12900 2300 50  0001 C CNN
 	1    12700 2300
 	1    0    0    -1  
@@ -2259,7 +2170,7 @@ AR Path="/5FCD4D18/60DDC110" Ref="TP?"  Part="1"
 AR Path="/5FCD4DF5/60DDC110" Ref="TP?"  Part="1" 
 F 0 "TP?" H 14800 2500 50  0000 C CNN
 F 1 "TP" V 14850 2350 50  0001 C CNN
-F 2 "" H 15000 2300 50  0001 C CNN
+F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 15000 2300 50  0001 C CNN
 F 3 "~" H 15000 2300 50  0001 C CNN
 	1    14800 2300
 	1    0    0    -1  
@@ -2278,7 +2189,7 @@ AR Path="/5FCD4D18/60DE12E2" Ref="TP?"  Part="1"
 AR Path="/5FCD4DF5/60DE12E2" Ref="TP?"  Part="1" 
 F 0 "TP?" H 13550 4100 50  0000 C CNN
 F 1 "TP" V 13600 3950 50  0001 C CNN
-F 2 "" H 13750 3900 50  0001 C CNN
+F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 13750 3900 50  0001 C CNN
 F 3 "~" H 13750 3900 50  0001 C CNN
 	1    13550 3900
 	1    0    0    -1  
@@ -2303,7 +2214,7 @@ AR Path="/5FCD4D18/60E108C8" Ref="TP?"  Part="1"
 AR Path="/5FCD4DF5/60E108C8" Ref="TP?"  Part="1" 
 F 0 "TP?" H 5150 1950 50  0000 C CNN
 F 1 "TP" V 5200 1800 50  0001 C CNN
-F 2 "" H 5350 1750 50  0001 C CNN
+F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 5350 1750 50  0001 C CNN
 F 3 "~" H 5350 1750 50  0001 C CNN
 	1    5150 1750
 	1    0    0    -1  
@@ -2322,7 +2233,7 @@ AR Path="/5FCD4D18/60E22D40" Ref="TP?"  Part="1"
 AR Path="/5FCD4DF5/60E22D40" Ref="TP?"  Part="1" 
 F 0 "TP?" H 11250 7400 50  0000 C CNN
 F 1 "TP" V 11300 7250 50  0001 C CNN
-F 2 "" H 11450 7200 50  0001 C CNN
+F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 11450 7200 50  0001 C CNN
 F 3 "~" H 11450 7200 50  0001 C CNN
 	1    11250 7200
 	1    0    0    -1  
@@ -2343,7 +2254,7 @@ AR Path="/5FCD4D18/60E2D6C0" Ref="TP?"  Part="1"
 AR Path="/5FCD4DF5/60E2D6C0" Ref="TP?"  Part="1" 
 F 0 "TP?" H 13750 7050 50  0000 C CNN
 F 1 "TP" V 13800 6900 50  0001 C CNN
-F 2 "" H 13950 6850 50  0001 C CNN
+F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 13950 6850 50  0001 C CNN
 F 3 "~" H 13950 6850 50  0001 C CNN
 	1    13750 6850
 	1    0    0    -1  
@@ -2351,4 +2262,54 @@ $EndComp
 Connection ~ 13750 6850
 Wire Wire Line
 	13750 6850 13950 6850
+$Comp
+L Device:CP C?
+U 1 1 6053A452
+P 4400 7500
+AR Path="/601A64F8/6053A452" Ref="C?"  Part="1" 
+AR Path="/601A64F8/60567144/6053A452" Ref="C?"  Part="1" 
+AR Path="/6023BF6A/60567144/6053A452" Ref="C?"  Part="1" 
+AR Path="/6023BF6A/6053A452" Ref="C?"  Part="1" 
+AR Path="/5FCD4B8E/603C510C/6053A452" Ref="C?"  Part="1" 
+AR Path="/6041384A/6053A452" Ref="C?"  Part="1" 
+AR Path="/5FCD4DF5/6053A452" Ref="C?"  Part="1" 
+F 0 "C?" H 4550 7500 50  0000 L CNN
+F 1 "33uF" H 4550 7400 50  0000 L CNN
+F 2 "RespiraWorks_Std:CP_Elec_6.3x7.7" H 4438 7350 50  0001 C CNN
+F 3 "https://industrial.panasonic.com/cdbs/www-data/pdf/RDE0000/ABA0000C1181.pdf" H 4400 7500 50  0001 C CNN
+F 4 "50V" H 4550 7300 50  0000 L CNN "Voltage"
+F 5 "Panasonic" H 4400 7500 50  0001 C CNN "Manufacturer"
+F 6 "EEE-FK1H330XP" H 4400 7500 50  0001 C CNN "Manufacturer PN"
+F 7 "Aluminum" H 4400 7500 50  0001 C CNN "Dielectric"
+	1    4400 7500
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 6053A458
+P 4400 7650
+AR Path="/601A64F8/6053A458" Ref="#PWR?"  Part="1" 
+AR Path="/601A64F8/60567144/6053A458" Ref="#PWR?"  Part="1" 
+AR Path="/6023BF6A/6053A458" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4B8E/603C510C/6053A458" Ref="#PWR?"  Part="1" 
+AR Path="/6041384A/6053A458" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4DF5/6053A458" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 4400 7400 50  0001 C CNN
+F 1 "GND" H 4405 7477 50  0000 C CNN
+F 2 "" H 4400 7650 50  0001 C CNN
+F 3 "" H 4400 7650 50  0001 C CNN
+	1    4400 7650
+	1    0    0    -1  
+$EndComp
+Text Notes 5100 8100 0    50   ~ 0
+2mA Ib, can\nsupport ~~200 mA\nload on +5V_Batt
+Connection ~ 6250 7250
+Wire Wire Line
+	6250 7250 6400 7250
+Wire Wire Line
+	5300 7250 6250 7250
+Wire Wire Line
+	4600 8900 6250 8900
+Wire Wire Line
+	5350 8450 6250 8450
 $EndSCHEMATC

@@ -43,7 +43,6 @@ F 1 "10nF 100V NP0" H 4200 2750 50  0000 C CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 4588 2500 50  0001 C CNN
 F 3 "~" H 4550 2650 50  0001 C CNN
 F 4 "Murata" H 4550 2650 50  0001 C CNN "Manufacturer"
-F 5 "GRM1885C1H103JA01D" H 4550 2650 50  0001 C CNN "Part Number"
 	1    4550 2650
 	-1   0    0    1   
 $EndComp
@@ -298,7 +297,6 @@ F 1 "2.4K 1%" V 5050 3600 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 5080 3600 50  0001 C CNN
 F 3 "~" H 5150 3600 50  0001 C CNN
 F 4 "KOA Speer" H 5150 3600 50  0001 C CNN "Manufacturer"
-F 5 "RK73H2BTTD1004F" H 5150 3600 50  0001 C CNN "Part Number"
 	1    5150 3600
 	0    1    1    0   
 $EndComp
@@ -323,7 +321,6 @@ F 1 "4.7K 1%" H 5300 3850 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 5480 3750 50  0001 C CNN
 F 3 "~" H 5550 3750 50  0001 C CNN
 F 4 "KOA Speer" H 5550 3750 50  0001 C CNN "Manufacturer"
-F 5 "RK73H2BTTD1004F" H 5550 3750 50  0001 C CNN "Part Number"
 	1    5550 3750
 	-1   0    0    1   
 $EndComp

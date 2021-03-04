@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 22 38
+Sheet 25 38
 Title "NTC Temperature Sensor Input"
 Date ""
 Rev "A"
@@ -59,33 +59,6 @@ $EndComp
 Text Notes 1000 3300 0    50   ~ 0
 PT100 RTD
 $Comp
-L Device:C C?
-U 1 1 60117C61
-P 5600 3450
-AR Path="/5FCD4B8E/5FCD4BC5/60117C61" Ref="C?"  Part="1" 
-AR Path="/5FCD4B8E/5FE27F70/60117C61" Ref="C?"  Part="1" 
-AR Path="/5FCD4B8E/5FCD4BF6/60117C61" Ref="C?"  Part="1" 
-AR Path="/5FCD4B8E/606EF10F/60117C61" Ref="C?"  Part="1" 
-AR Path="/5FCD4E9D/60117C61" Ref="C?"  Part="1" 
-AR Path="/5FCD4E9D/6007E2BB/60117C61" Ref="C?"  Part="1" 
-AR Path="/5FCD4E9D/60073FCF/60117C61" Ref="C?"  Part="1" 
-AR Path="/5FCD4E9D/600630A6/60117C61" Ref="C?"  Part="1" 
-AR Path="/5FCD4E9D/6007AC3B/60117C61" Ref="C?"  Part="1" 
-AR Path="/5FCD4E9D/6007DA64/60117C61" Ref="C?"  Part="1" 
-AR Path="/5FCD4E9D/6007BD34/60117C61" Ref="C?"  Part="1" 
-AR Path="/5FCD4EEA/600F5EF3/60117C61" Ref="C?"  Part="1" 
-AR Path="/5FCD4EEA/600F71F1/60117C61" Ref="C?"  Part="1" 
-AR Path="/5FCD4EEA/600F723B/60117C61" Ref="C?"  Part="1" 
-AR Path="/5FCD4EEA/600F7154/60117C61" Ref="C?"  Part="1" 
-AR Path="/5FCD4EEA/600F719E/60117C61" Ref="C?"  Part="1" 
-F 0 "C?" H 5900 3450 50  0000 L CNN
-F 1 "4.7uF" H 5700 3550 50  0000 L CNN
-F 2 "RespiraWorks_Std:C_0603_1608Metric" H 5638 3300 50  0001 C CNN
-F 3 "~" H 5600 3450 50  0001 C CNN
-	1    5600 3450
-	1    0    0    1   
-$EndComp
-$Comp
 L power:GND #PWR?
 U 1 1 60117C67
 P 5600 3850
@@ -112,11 +85,8 @@ F 3 "" H 5600 3850 50  0001 C CNN
 	1    5600 3850
 	-1   0    0    -1  
 $EndComp
-Wire Wire Line
-	5600 3300 6100 3300
 Text Notes 5200 4600 0    50   ~ 0
-LPF varies with temp\n(60hz at 150C, 3hz at 25C, 5hz at 0C)\nOK because of large margin between ADC \nsampling rate and desired sensor bandwidth
-Connection ~ 5600 3300
+LPF varies with temp\n(30hz at 150C, 1.5hz at 25C, 2.5hz at 0C)\nOK because of large margin between ADC \nsampling rate and desired sensor bandwidth
 Text Notes 6800 3500 0    50   ~ 0
 for 10k NTC B=3380K:\n@150C: R = 350       Vout = 3.12V   Sensitivity: 2mV/degC\n@100C: R = 1022     Vout = 2.94V   Sensitivity: 6mV/degC\n@25C:  R = 10000   Vout = 1.63V   Sensitivity: 30mV/degC\n@0C:    R = 28255   Vout = 0.86V   Sensitivity: 29mV/degC\n\nTemp (C) = B / ( ln( Vcc*10k/Vout/Rlim - (10k+220)/Rlim )  ) + 273.15\nWhere Rlim = R0*exp(-B/T0) and T0 is in kelvin.
 Text Notes 3250 2300 0    50   ~ 0
@@ -145,7 +115,6 @@ F 1 "220 0.1%" H 4000 2800 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 4230 2700 50  0001 C CNN
 F 3 "~" H 4300 2700 50  0001 C CNN
 F 4 "" H 4300 2700 50  0001 C CNN "Manufacturer"
-F 5 "RK73H2BTTD1004F" H 4300 2700 50  0001 C CNN "Part Number"
 	1    4300 2700
 	-1   0    0    1   
 $EndComp
@@ -171,7 +140,6 @@ F 1 "10k 0.1%" H 4000 3700 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 4230 3600 50  0001 C CNN
 F 3 "~" H 4300 3600 50  0001 C CNN
 F 4 "" H 4300 3600 50  0001 C CNN "Manufacturer"
-F 5 "RK73H2BTTD1004F" H 4300 3600 50  0001 C CNN "Part Number"
 	1    4300 3600
 	-1   0    0    1   
 $EndComp
@@ -187,8 +155,6 @@ Text Notes 3500 2700 0    50   ~ 0
 Short current limit
 Wire Wire Line
 	4300 3750 4300 3850
-Wire Wire Line
-	4300 3300 5600 3300
 Connection ~ 4300 3300
 Wire Wire Line
 	5600 3600 5600 3850
@@ -249,4 +215,34 @@ Wire Wire Line
 	2000 3900 1800 3900
 Wire Wire Line
 	1800 3900 1800 4050
+$Comp
+L Device:C C?
+U 1 1 6071F4E4
+P 5600 3450
+AR Path="/601A64F8/6071F4E4" Ref="C?"  Part="1" 
+AR Path="/601A64F8/60567144/6071F4E4" Ref="C?"  Part="1" 
+AR Path="/6023BF6A/60567144/6071F4E4" Ref="C?"  Part="1" 
+AR Path="/5FCD4B8E/603C510C/60567144/6071F4E4" Ref="C?"  Part="1" 
+AR Path="/6041384A/60567144/6071F4E4" Ref="C?"  Part="1" 
+AR Path="/5FCD4EEA/600F71F1/6071F4E4" Ref="C?"  Part="1" 
+AR Path="/5FCD4EEA/600F5EF3/6071F4E4" Ref="C?"  Part="1" 
+AR Path="/5FCD4EEA/600F7154/6071F4E4" Ref="C?"  Part="1" 
+AR Path="/5FCD4EEA/600F719E/6071F4E4" Ref="C?"  Part="1" 
+AR Path="/5FCD4EEA/600F723B/6071F4E4" Ref="C?"  Part="1" 
+F 0 "C?" H 5650 3350 50  0000 L CNN
+F 1 "10uF" H 5650 3250 50  0000 L CNN
+F 2 "RespiraWorks_Std:C_1210_3225Metric" H 5638 3300 50  0001 C CNN
+F 3 "~" H 5600 3450 50  0001 C CNN
+F 4 "100V" H 5650 3150 50  0000 L CNN "Voltage"
+F 5 "X7S" H 5600 3450 50  0001 C CNN "Dielectric"
+F 6 "Murata" H 5600 3450 50  0001 C CNN "Manufacturer"
+F 7 "GRM32EC72A106KE05L" H 5600 3450 50  0001 C CNN "Manufacturer PN"
+	1    5600 3450
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4300 3300 5600 3300
+Connection ~ 5600 3300
+Wire Wire Line
+	5600 3300 6100 3300
 $EndSCHEMATC

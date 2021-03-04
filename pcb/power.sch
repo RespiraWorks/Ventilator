@@ -69,10 +69,9 @@ AR Path="/5FCD4DF5/5FFBEFBD" Ref="R?"  Part="1"
 AR Path="/5FCD4B8E/5FFBEFBD" Ref="R?"  Part="1" 
 F 0 "R?" V 6650 3250 50  0000 C CNN
 F 1 "0" V 6450 3250 50  0000 C CNN
-F 2 "RespiraWorks_std:R_0603_1608Metric" V 6480 3250 50  0001 C CNN
+F 2 "RespiraWorks_Std:R_0603_1608Metric" V 6480 3250 50  0001 C CNN
 F 3 "~" H 6550 3250 50  0001 C CNN
 F 4 "" H 6550 3250 50  0001 C CNN "Manufacturer"
-F 5 "" H 6550 3250 50  0001 C CNN "Part Number"
 	1    6550 3250
 	0    -1   -1   0   
 $EndComp
@@ -80,42 +79,8 @@ Wire Wire Line
 	6400 3250 5850 3250
 Wire Wire Line
 	5850 3250 5850 2750
-$Comp
-L Device:CP1 C?
-U 1 1 5FFC8F5E
-P 7000 3500
-AR Path="/5FFC8F5E" Ref="C?"  Part="1" 
-AR Path="/5E8E1F08/5FFC8F5E" Ref="C?"  Part="1" 
-AR Path="/5FCD4DF5/5FFC8F5E" Ref="C?"  Part="1" 
-AR Path="/5FCD4B8E/5FFC8F5E" Ref="C?"  Part="1" 
-F 0 "C?" H 6650 3450 50  0000 L CNN
-F 1 "100uF 50V AlPoly" V 6850 3050 50  0000 L CNN
-F 2 "Capacitor_SMD:CP_Elec_10x10.5" H 7000 3500 50  0001 C CNN
-F 3 "~" H 7000 3500 50  0001 C CNN
-F 4 "Panasonic" H 7000 3500 50  0001 C CNN "Manufacturer"
-F 5 "EEH-ZC1H101P" H 7000 3500 50  0001 C CNN "Part Number"
-	1    7000 3500
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
 	7000 3350 7000 3250
-$Comp
-L power:GND #PWR?
-U 1 1 5FFC8F65
-P 7000 3650
-AR Path="/5FFC8F65" Ref="#PWR?"  Part="1" 
-AR Path="/5E8AFE9D/5FFC8F65" Ref="#PWR?"  Part="1" 
-AR Path="/5E8A4ABF/5FFC8F65" Ref="#PWR?"  Part="1" 
-AR Path="/5E8E1F08/5FFC8F65" Ref="#PWR?"  Part="1" 
-AR Path="/5FCD4DF5/5FFC8F65" Ref="#PWR?"  Part="1" 
-AR Path="/5FCD4B8E/5FFC8F65" Ref="#PWR?"  Part="1" 
-F 0 "#PWR?" H 7000 3400 50  0001 C CNN
-F 1 "GND" H 7005 3477 50  0000 C CNN
-F 2 "" H 7000 3650 50  0001 C CNN
-F 3 "" H 7000 3650 50  0001 C CNN
-	1    7000 3650
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
 	6700 3250 7000 3250
 Text Notes 6000 3550 0    50   ~ 0
@@ -129,8 +94,6 @@ Text Notes 4850 4300 2    50   ~ 0
 Diode-ORing for +3.3V Ctrl, so that\nthe CC can be powered from the\nSTM programmer's USB connection alone,\nfor programming and firmware debug
 Text Notes 6500 2200 0    79   ~ 16
 3.3V Power Supplies
-Wire Wire Line
-	5100 4600 5300 4600
 Text HLabel 2050 1600 0    50   Input ~ 0
 Vin
 Wire Wire Line
@@ -165,20 +128,6 @@ Wire Wire Line
 	3600 2450 3750 2450
 Connection ~ 5850 2750
 $Comp
-L Diode:BAT54C D?
-U 1 1 60C2A702
-P 4900 4600
-AR Path="/5FCD4B8E/603C510C/60567144/60C2A702" Ref="D?"  Part="1" 
-AR Path="/6041384A/60567144/60C2A702" Ref="D?"  Part="1" 
-AR Path="/5FCD4B8E/60C2A702" Ref="D?"  Part="1" 
-F 0 "D?" V 4854 4688 50  0000 L CNN
-F 1 "BAT54C" V 4945 4688 50  0000 L CNN
-F 2 "RespiraWorks_Std:SOT-23" H 4975 4725 50  0001 L CNN
-F 3 "http://www.diodes.com/_files/datasheets/ds11005.pdf" H 4820 4600 50  0001 C CNN
-	1    4900 4600
-	0    -1   1    0   
-$EndComp
-$Comp
 L Device:C C?
 U 1 1 60DA4614
 P 3200 5800
@@ -204,7 +153,6 @@ F 1 "100nF" H 3400 5900 50  0000 C CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 3238 5650 50  0001 C CNN
 F 3 "~" H 3200 5800 50  0001 C CNN
 F 4 "" H 3200 5800 50  0001 C CNN "Manufacturer"
-F 5 "" H 3200 5800 50  0001 C CNN "Part Number"
 	1    3200 5800
 	1    0    0    1   
 $EndComp
@@ -276,7 +224,6 @@ F 1 "100nF" H 2900 5900 50  0000 C CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 2738 5650 50  0001 C CNN
 F 3 "~" H 2700 5800 50  0001 C CNN
 F 4 "" H 2700 5800 50  0001 C CNN "Manufacturer"
-F 5 "" H 2700 5800 50  0001 C CNN "Part Number"
 	1    2700 5800
 	-1   0    0    1   
 $EndComp
@@ -454,7 +401,6 @@ Wire Wire Line
 Connection ~ 3700 4900
 Wire Wire Line
 	4200 4900 4900 4900
-Connection ~ 4900 4900
 Text Notes 4700 5700 0    50   ~ 0
 Optional: prevents diode leakage current\nfrom going lifting source/flowing\nbackwards through MOSFET body diode
 Wire Wire Line
@@ -521,7 +467,6 @@ F 1 "1k" V 1650 2100 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 1480 2100 50  0001 C CNN
 F 3 "~" H 1550 2100 50  0001 C CNN
 F 4 "" H 1550 2100 50  0001 C CNN "Manufacturer"
-F 5 "RK73H2BTTD1004F" H 1550 2100 50  0001 C CNN "Part Number"
 	1    1550 2100
 	0    -1   -1   0   
 $EndComp
@@ -546,7 +491,6 @@ F 1 "1k" H 1200 2300 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 1280 2350 50  0001 C CNN
 F 3 "~" H 1350 2350 50  0001 C CNN
 F 4 "" H 1350 2350 50  0001 C CNN "Manufacturer"
-F 5 "RK73H2BTTD1004F" H 1350 2350 50  0001 C CNN "Part Number"
 	1    1350 2350
 	1    0    0    -1  
 $EndComp
@@ -587,7 +531,7 @@ AR Path="/5FCD4D18/60F4757C" Ref="TP?"  Part="1"
 AR Path="/5FCD4B8E/60F4757C" Ref="TP?"  Part="1" 
 F 0 "TP?" H 1250 2300 50  0000 C CNN
 F 1 "TP" V 1300 2150 50  0001 C CNN
-F 2 "" H 1450 2100 50  0001 C CNN
+F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 1450 2100 50  0001 C CNN
 F 3 "~" H 1450 2100 50  0001 C CNN
 	1    1250 2100
 	1    0    0    -1  
@@ -644,7 +588,7 @@ AR Path="/5FCD4D18/60F6B7E0" Ref="TP?"  Part="1"
 AR Path="/5FCD4B8E/60F6B7E0" Ref="TP?"  Part="1" 
 F 0 "TP?" V 4000 5800 50  0000 C CNN
 F 1 "TP" V 4050 5600 50  0001 C CNN
-F 2 "" H 4200 5550 50  0001 C CNN
+F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 4200 5550 50  0001 C CNN
 F 3 "~" H 4200 5550 50  0001 C CNN
 	1    4000 5550
 	0    1    1    0   
@@ -652,4 +596,73 @@ $EndComp
 Connection ~ 4000 5550
 Wire Wire Line
 	4000 5550 4000 5300
+$Comp
+L Device:CP C?
+U 1 1 60527971
+P 7000 3500
+AR Path="/601A64F8/60527971" Ref="C?"  Part="1" 
+AR Path="/601A64F8/60567144/60527971" Ref="C?"  Part="1" 
+AR Path="/6023BF6A/60567144/60527971" Ref="C?"  Part="1" 
+AR Path="/6023BF6A/60527971" Ref="C?"  Part="1" 
+AR Path="/5FCD4B8E/603C510C/60527971" Ref="C?"  Part="1" 
+AR Path="/6041384A/60527971" Ref="C?"  Part="1" 
+AR Path="/5FCD4B8E/60527971" Ref="C?"  Part="1" 
+F 0 "C?" H 7150 3500 50  0000 L CNN
+F 1 "33uF" H 7150 3400 50  0000 L CNN
+F 2 "RespiraWorks_Std:CP_Elec_6.3x7.7" H 7038 3350 50  0001 C CNN
+F 3 "https://industrial.panasonic.com/cdbs/www-data/pdf/RDE0000/ABA0000C1181.pdf" H 7000 3500 50  0001 C CNN
+F 4 "50V" H 7150 3300 50  0000 L CNN "Voltage"
+F 5 "Panasonic" H 7000 3500 50  0001 C CNN "Manufacturer"
+F 6 "EEE-FK1H330XP" H 7000 3500 50  0001 C CNN "Manufacturer PN"
+F 7 "Aluminum" H 7000 3500 50  0001 C CNN "Dielectric"
+	1    7000 3500
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 60527977
+P 7000 3650
+AR Path="/601A64F8/60527977" Ref="#PWR?"  Part="1" 
+AR Path="/601A64F8/60567144/60527977" Ref="#PWR?"  Part="1" 
+AR Path="/6023BF6A/60527977" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4B8E/603C510C/60527977" Ref="#PWR?"  Part="1" 
+AR Path="/6041384A/60527977" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4B8E/60527977" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 7000 3400 50  0001 C CNN
+F 1 "GND" H 7005 3477 50  0000 C CNN
+F 2 "" H 7000 3650 50  0001 C CNN
+F 3 "" H 7000 3650 50  0001 C CNN
+	1    7000 3650
+	1    0    0    -1  
+$EndComp
+$Comp
+L Diode:BAT54J D?
+U 1 1 60750DC7
+P 4900 4750
+AR Path="/6041384A/60567D6E/60750DC7" Ref="D?"  Part="1" 
+AR Path="/5FCD4B8E/60750DC7" Ref="D?"  Part="1" 
+F 0 "D?" H 4900 4850 50  0000 C CNN
+F 1 "BAT54J" V 4900 4550 50  0000 C CNN
+F 2 "RespiraWorks_Std:D_SOD-323F" H 4900 4575 50  0001 C CNN
+F 3 "https://assets.nexperia.com/documents/data-sheet/BAT54J.pdf" H 4900 4750 50  0001 C CNN
+	1    4900 4750
+	0    1    1    0   
+$EndComp
+Connection ~ 4900 4900
+$Comp
+L Diode:BAT54J D?
+U 1 1 6075362F
+P 4900 4450
+AR Path="/6041384A/60567D6E/6075362F" Ref="D?"  Part="1" 
+AR Path="/5FCD4B8E/6075362F" Ref="D?"  Part="1" 
+F 0 "D?" H 4900 4550 50  0000 C CNN
+F 1 "BAT54J" V 4900 4250 50  0000 C CNN
+F 2 "RespiraWorks_Std:D_SOD-323F" H 4900 4275 50  0001 C CNN
+F 3 "https://assets.nexperia.com/documents/data-sheet/BAT54J.pdf" H 4900 4450 50  0001 C CNN
+	1    4900 4450
+	0    1    -1   0   
+$EndComp
+Wire Wire Line
+	4900 4600 5300 4600
+Connection ~ 4900 4600
 $EndSCHEMATC

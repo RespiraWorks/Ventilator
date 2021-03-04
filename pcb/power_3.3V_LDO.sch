@@ -98,7 +98,6 @@ F 1 "1uF" H 6350 3400 50  0000 L CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 6688 3600 50  0001 C CNN
 F 3 "~" H 6650 3750 50  0001 C CNN
 F 4 "AVX" H 6650 3750 50  0001 C CNN "Manufacturer"
-F 5 "06035C104JAT2A" H 6650 3750 50  0001 C CNN "Part Number"
 	1    6650 3750
 	-1   0    0    1   
 $EndComp
@@ -130,7 +129,6 @@ F 1 "1uF" H 4050 3400 50  0000 L CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 4388 3600 50  0001 C CNN
 F 3 "~" H 4350 3750 50  0001 C CNN
 F 4 "AVX" H 4350 3750 50  0001 C CNN "Manufacturer"
-F 5 "06035C104JAT2A" H 4350 3750 50  0001 C CNN "Part Number"
 	1    4350 3750
 	-1   0    0    1   
 $EndComp

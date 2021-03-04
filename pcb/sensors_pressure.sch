@@ -327,7 +327,6 @@ F 1 "100nF" H 3200 5400 50  0000 C CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 2888 5350 50  0001 C CNN
 F 3 "~" H 2850 5500 50  0001 C CNN
 F 4 "" H 2850 5500 50  0001 C CNN "Manufacturer"
-F 5 "" H 2850 5500 50  0001 C CNN "Part Number"
 	1    2850 5500
 	-1   0    0    1   
 $EndComp
@@ -383,7 +382,6 @@ F 1 "100nF" H 3650 5400 50  0000 C CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 3338 5350 50  0001 C CNN
 F 3 "~" H 3300 5500 50  0001 C CNN
 F 4 "" H 3300 5500 50  0001 C CNN "Manufacturer"
-F 5 "" H 3300 5500 50  0001 C CNN "Part Number"
 	1    3300 5500
 	1    0    0    1   
 $EndComp
@@ -498,10 +496,9 @@ AR Path="/5FCD4EEA/600F723B/5FFD3FCC" Ref="R?"  Part="1"
 AR Path="/5FCD4EEA/5FFD3FCC" Ref="R?"  Part="1" 
 F 0 "R?" V 3950 6200 50  0000 C CNN
 F 1 "0" V 3950 5850 50  0000 C CNN
-F 2 "RespiraWorks_std:R_0603_1608Metric" V 3930 6000 50  0001 C CNN
+F 2 "RespiraWorks_Std:R_0603_1608Metric" V 3930 6000 50  0001 C CNN
 F 3 "~" H 4000 6000 50  0001 C CNN
 F 4 "KOA Speer" H 4000 6000 50  0001 C CNN "Manufacturer"
-F 5 "RK73H2BTTD1004F" H 4000 6000 50  0001 C CNN "Part Number"
 	1    4000 6000
 	0    1    1    0   
 $EndComp
@@ -546,10 +543,9 @@ AR Path="/5FCD4EEA/600F723B/5FFDB565" Ref="R?"  Part="1"
 AR Path="/5FCD4EEA/5FFDB565" Ref="R?"  Part="1" 
 F 0 "R?" V 4350 6400 50  0000 C CNN
 F 1 "0" V 4350 6050 50  0000 C CNN
-F 2 "RespiraWorks_std:R_0603_1608Metric" V 4330 6200 50  0001 C CNN
+F 2 "RespiraWorks_Std:R_0603_1608Metric" V 4330 6200 50  0001 C CNN
 F 3 "~" H 4400 6200 50  0001 C CNN
 F 4 "KOA Speer" H 4400 6200 50  0001 C CNN "Manufacturer"
-F 5 "RK73H2BTTD1004F" H 4400 6200 50  0001 C CNN "Part Number"
 	1    4400 6200
 	0    1    1    0   
 $EndComp
@@ -572,7 +568,7 @@ AR Path="/6017BD7E/5FFEAB06" Ref="JP?"  Part="1"
 AR Path="/5FCD4E9D/5FFEAB06" Ref="JP?"  Part="1" 
 F 0 "JP?" V 3750 6525 50  0000 L CNN
 F 1 "Jumper_NC_Small" V 3795 6524 50  0001 L CNN
-F 2 "" H 3750 6450 50  0001 C CNN
+F 2 "RespiraWorks_Std:SolderJumper-2_P1.3mm_Bridged_RoundedPad1.0x1.5mm" H 3750 6450 50  0001 C CNN
 F 3 "~" H 3750 6450 50  0001 C CNN
 	1    3750 6450
 	0    1    1    0   

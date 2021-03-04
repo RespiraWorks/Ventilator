@@ -292,6 +292,7 @@ F 3 "https://industrial.panasonic.com/cdbs/www-data/pdf/RDE0000/ABA0000C1181.pdf
 F 4 "50V" H 4050 3250 50  0000 L CNN "Voltage"
 F 5 "Panasonic" H 3900 3450 50  0001 C CNN "Manufacturer"
 F 6 "EEE-FK1H330XP" H 3900 3450 50  0001 C CNN "Manufacturer PN"
+F 7 "Aluminum" H 3900 3450 50  0001 C CNN "Dielectric"
 	1    3900 3450
 	1    0    0    -1  
 $EndComp
@@ -350,9 +351,12 @@ AR Path="/5FCD4B8E/603C510C/603046C0" Ref="C?"  Part="1"
 AR Path="/6041384A/603046C0" Ref="C?"  Part="1" 
 F 0 "C?" H 8750 4900 50  0000 L CNN
 F 1 "10uF" H 8750 4800 50  0000 L CNN
-F 2 "RespiraWorks_Std:C_0805_2012Metric" H 8688 4650 50  0001 C CNN
+F 2 "RespiraWorks_Std:C_1210_3225Metric" H 8688 4650 50  0001 C CNN
 F 3 "~" H 8650 4800 50  0001 C CNN
-F 4 "25V" H 8750 4700 50  0000 L CNN "Voltage"
+F 4 "100V" H 8750 4700 50  0000 L CNN "Voltage"
+F 5 "X7S" H 8650 4800 50  0001 C CNN "Dielectric"
+F 6 "Murata" H 8650 4800 50  0001 C CNN "Manufacturer"
+F 7 "GRM32EC72A106KE05L" H 8650 4800 50  0001 C CNN "Manufacturer PN"
 	1    8650 4800
 	1    0    0    -1  
 $EndComp

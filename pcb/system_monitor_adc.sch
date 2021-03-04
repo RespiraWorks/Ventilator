@@ -97,8 +97,7 @@ F 1 "100nF" H 3400 3800 50  0000 C CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 3088 3750 50  0001 C CNN
 F 3 "~" H 3050 3900 50  0001 C CNN
 F 4 "" H 3050 3900 50  0001 C CNN "Manufacturer"
-F 5 "" H 3050 3900 50  0001 C CNN "Part Number"
-F 6 "DNP" H 3350 3700 50  0000 C CNN "DNP"
+F 5 "DNP" H 3350 3700 50  0000 C CNN "DNP"
 	1    3050 3900
 	1    0    0    1   
 $EndComp
@@ -131,8 +130,7 @@ F 1 "100nF" H 5250 3800 50  0000 C CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 4938 3750 50  0001 C CNN
 F 3 "~" H 4900 3900 50  0001 C CNN
 F 4 "" H 4900 3900 50  0001 C CNN "Manufacturer"
-F 5 "" H 4900 3900 50  0001 C CNN "Part Number"
-F 6 "DNP" H 5200 3700 50  0000 C CNN "DNP"
+F 5 "DNP" H 5200 3700 50  0000 C CNN "DNP"
 	1    4900 3900
 	1    0    0    1   
 $EndComp
@@ -329,7 +327,6 @@ F 1 "100nF" H 8050 1600 50  0000 C CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 7738 1550 50  0001 C CNN
 F 3 "~" H 7700 1700 50  0001 C CNN
 F 4 "" H 7700 1700 50  0001 C CNN "Manufacturer"
-F 5 "" H 7700 1700 50  0001 C CNN "Part Number"
 	1    7700 1700
 	1    0    0    1   
 $EndComp
@@ -393,7 +390,6 @@ F 1 "1uF" H 8900 1600 50  0000 C CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 8588 1550 50  0001 C CNN
 F 3 "~" H 8550 1700 50  0001 C CNN
 F 4 "" H 8550 1700 50  0001 C CNN "Manufacturer"
-F 5 "" H 8550 1700 50  0001 C CNN "Part Number"
 	1    8550 1700
 	1    0    0    1   
 $EndComp
@@ -459,7 +455,7 @@ AR Path="/603267F9/600AAE9A" Ref="R?"  Part="1"
 AR Path="/60EBB32E/600AAE9A" Ref="R?"  Part="1" 
 F 0 "R?" H 4850 3150 50  0000 L CNN
 F 1 "0" H 4900 3250 50  0000 L CNN
-F 2 "RespiraWorks_std:R_0603_1608Metric" V 4980 3200 50  0001 C CNN
+F 2 "RespiraWorks_Std:R_0603_1608Metric" V 4980 3200 50  0001 C CNN
 F 3 "~" H 5050 3200 50  0001 C CNN
 	1    5050 3200
 	-1   0    0    1   

@@ -259,7 +259,7 @@ F8 "nReset" I L 4400 3750 50
 F9 "nBusy-Sync" O L 4400 3850 50 
 F10 "nFlag" O L 4400 3950 50 
 F11 "12V" I L 4400 3050 50 
-F12 "3.3V" I L 4400 3150 50 
+F12 "3V3" I L 4400 3150 50 
 $EndSheet
 $Sheet
 S 13400 3950 1050 650 
@@ -434,7 +434,7 @@ F8 "nReset" I L 4400 5250 50
 F9 "nBusy-Sync" O L 4400 5350 50 
 F10 "nFlag" O L 4400 5450 50 
 F11 "12V" I L 4400 4550 50 
-F12 "3.3V" I L 4400 4650 50 
+F12 "3V3" I L 4400 4650 50 
 $EndSheet
 $Comp
 L RespiraWorks:+3.3V_Ctrl #PWR?
@@ -654,7 +654,7 @@ AR Path="/6052CC9F/60791348" Ref="TP?"  Part="1"
 AR Path="/60791348" Ref="TP?"  Part="1" 
 F 0 "TP?" V 3250 9700 50  0000 C CNN
 F 1 "TP" V 3300 9500 50  0001 C CNN
-F 2 "" H 3450 9450 50  0001 C CNN
+F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 3450 9450 50  0001 C CNN
 F 3 "~" H 3450 9450 50  0001 C CNN
 	1    3250 9450
 	0    1    1    0   
@@ -668,7 +668,7 @@ AR Path="/6052CC9F/60794E5D" Ref="TP?"  Part="1"
 AR Path="/60794E5D" Ref="TP?"  Part="1" 
 F 0 "TP?" V 3250 9800 50  0000 C CNN
 F 1 "TP" V 3300 9600 50  0001 C CNN
-F 2 "" H 3450 9550 50  0001 C CNN
+F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 3450 9550 50  0001 C CNN
 F 3 "~" H 3450 9550 50  0001 C CNN
 	1    3250 9550
 	0    1    1    0   
@@ -682,7 +682,7 @@ AR Path="/6052CC9F/60795041" Ref="TP?"  Part="1"
 AR Path="/60795041" Ref="TP?"  Part="1" 
 F 0 "TP?" V 3250 9500 50  0000 C CNN
 F 1 "TP" V 3300 9300 50  0001 C CNN
-F 2 "" H 3450 9250 50  0001 C CNN
+F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 3450 9250 50  0001 C CNN
 F 3 "~" H 3450 9250 50  0001 C CNN
 	1    3250 9250
 	0    1    1    0   
@@ -833,7 +833,7 @@ AR Path="/6052CC9F/60AA3F6D" Ref="TP?"  Part="1"
 AR Path="/60AA3F6D" Ref="TP?"  Part="1" 
 F 0 "TP?" V 4400 5200 50  0000 C CNN
 F 1 "TP" V 4450 4950 50  0001 C CNN
-F 2 "" H 4600 4900 50  0001 C CNN
+F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 4600 4900 50  0001 C CNN
 F 3 "~" H 4600 4900 50  0001 C CNN
 	1    4400 4900
 	0    -1   -1   0   
@@ -847,7 +847,7 @@ AR Path="/6052CC9F/60AA4ACF" Ref="TP?"  Part="1"
 AR Path="/60AA4ACF" Ref="TP?"  Part="1" 
 F 0 "TP?" V 4400 3700 50  0000 C CNN
 F 1 "TP" V 4450 3450 50  0001 C CNN
-F 2 "" H 4600 3400 50  0001 C CNN
+F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 4600 3400 50  0001 C CNN
 F 3 "~" H 4600 3400 50  0001 C CNN
 	1    4400 3400
 	0    -1   -1   0   
@@ -1007,7 +1007,7 @@ AR Path="/6052CC9F/60CB2805" Ref="TP?"  Part="1"
 AR Path="/60CB2805" Ref="TP?"  Part="1" 
 F 0 "TP?" V 11750 1600 50  0000 C CNN
 F 1 "TP" V 11800 1350 50  0001 C CNN
-F 2 "" H 11950 1300 50  0001 C CNN
+F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 11950 1300 50  0001 C CNN
 F 3 "~" H 11950 1300 50  0001 C CNN
 	1    11750 1300
 	0    -1   -1   0   
@@ -1021,7 +1021,7 @@ AR Path="/6052CC9F/60CB3297" Ref="TP?"  Part="1"
 AR Path="/60CB3297" Ref="TP?"  Part="1" 
 F 0 "TP?" V 14300 1700 50  0000 C CNN
 F 1 "TP" V 14350 1450 50  0001 C CNN
-F 2 "" H 14500 1400 50  0001 C CNN
+F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 14500 1400 50  0001 C CNN
 F 3 "~" H 14500 1400 50  0001 C CNN
 	1    14300 1400
 	0    -1   -1   0   
@@ -1385,33 +1385,11 @@ AR Path="/6052CC9F/6103A837" Ref="TP?"  Part="1"
 AR Path="/6103A837" Ref="TP?"  Part="1" 
 F 0 "TP?" V 12800 2550 50  0000 C CNN
 F 1 "TP" V 12850 2350 50  0001 C CNN
-F 2 "" H 13000 2300 50  0001 C CNN
+F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 13000 2300 50  0001 C CNN
 F 3 "~" H 13000 2300 50  0001 C CNN
 	1    12800 2300
 	0    1    1    0   
 $EndComp
-$Comp
-L Diode:BAT54C D?
-U 1 1 610873EC
-P 14100 2200
-AR Path="/5FCD4B8E/603C510C/60567144/610873EC" Ref="D?"  Part="1" 
-AR Path="/6041384A/60567144/610873EC" Ref="D?"  Part="1" 
-AR Path="/5FCD4DF5/610873EC" Ref="D?"  Part="1" 
-AR Path="/610873EC" Ref="D?"  Part="1" 
-F 0 "D?" H 14350 2000 50  0000 L CNN
-F 1 "BAT54C" H 14350 2100 50  0000 L CNN
-F 2 "RespiraWorks_Std:SOT-23" H 14175 2325 50  0001 L CNN
-F 3 "http://www.diodes.com/_files/datasheets/ds11005.pdf" H 14020 2200 50  0001 C CNN
-	1    14100 2200
-	1    0    0    1   
-$EndComp
-Wire Wire Line
-	13800 2200 13800 2400
-Wire Wire Line
-	14400 2200 14400 2400
-Connection ~ 14400 2400
-Wire Wire Line
-	14400 2400 15150 2400
 $Comp
 L RespiraWorks:+3.3V_Ctrl #PWR?
 U 1 1 610BA80A
@@ -1425,7 +1403,6 @@ F 3 "" H 14100 2000 50  0001 C CNN
 	1    14100 2000
 	-1   0    0    -1  
 $EndComp
-Connection ~ 13800 2400
 Wire Wire Line
 	10700 2300 10700 2400
 Wire Wire Line
@@ -1518,7 +1495,6 @@ F 1 "1k" V 2650 6100 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 2480 6100 50  0001 C CNN
 F 3 "~" H 2550 6100 50  0001 C CNN
 F 4 "" H 2550 6100 50  0001 C CNN "Manufacturer"
-F 5 "RK73H2BTTD1004F" H 2550 6100 50  0001 C CNN "Part Number"
 	1    2550 6100
 	0    -1   -1   0   
 $EndComp
@@ -1536,7 +1512,6 @@ F 1 "1k" V 3850 6100 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 3680 6100 50  0001 C CNN
 F 3 "~" H 3750 6100 50  0001 C CNN
 F 4 "" H 3750 6100 50  0001 C CNN "Manufacturer"
-F 5 "RK73H2BTTD1004F" H 3750 6100 50  0001 C CNN "Part Number"
 	1    3750 6100
 	0    -1   -1   0   
 $EndComp
@@ -1569,8 +1544,6 @@ Text Label 1750 1350 0    50   ~ 0
 Low-Alarm-Bat
 Wire Wire Line
 	1750 1350 2500 1350
-Wire Wire Line
-	12800 2400 13800 2400
 Wire Wire Line
 	9750 2000 11100 2000
 Wire Wire Line
@@ -1699,7 +1672,6 @@ F 1 "4.7k" V 7250 3650 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 7280 3650 50  0001 C CNN
 F 3 "~" H 7350 3650 50  0001 C CNN
 F 4 "" H 7350 3650 50  0001 C CNN "Manufacturer"
-F 5 "" H 7350 3650 50  0001 C CNN "Part Number"
 	1    7350 3650
 	1    0    0    -1  
 $EndComp
@@ -1712,8 +1684,6 @@ Text Label 10300 2500 2    50   ~ 0
 Stepper-nCS
 Wire Wire Line
 	10300 2500 9750 2500
-Wire Wire Line
-	13800 2400 14400 2400
 Wire Wire Line
 	10700 2300 11300 2300
 Text Label 10600 1300 2    50   ~ 0
@@ -1794,7 +1764,7 @@ AR Path="/6052CC9F/60A17A42" Ref="TP?"  Part="1"
 AR Path="/60A17A42" Ref="TP?"  Part="1" 
 F 0 "TP?" V 4250 1350 50  0000 C CNN
 F 1 "TP" V 4300 1150 50  0001 C CNN
-F 2 "" H 4450 1100 50  0001 C CNN
+F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 4450 1100 50  0001 C CNN
 F 3 "~" H 4450 1100 50  0001 C CNN
 	1    4250 1100
 	0    1    1    0   
@@ -1808,7 +1778,7 @@ AR Path="/6052CC9F/60A1C052" Ref="TP?"  Part="1"
 AR Path="/60A1C052" Ref="TP?"  Part="1" 
 F 0 "TP?" V 4250 1450 50  0000 C CNN
 F 1 "TP" V 4300 1250 50  0001 C CNN
-F 2 "" H 4450 1200 50  0001 C CNN
+F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 4450 1200 50  0001 C CNN
 F 3 "~" H 4450 1200 50  0001 C CNN
 	1    4250 1200
 	0    1    1    0   
@@ -1822,7 +1792,7 @@ AR Path="/6052CC9F/60A1C211" Ref="TP?"  Part="1"
 AR Path="/60A1C211" Ref="TP?"  Part="1" 
 F 0 "TP?" V 4250 1550 50  0000 C CNN
 F 1 "TP" V 4300 1350 50  0001 C CNN
-F 2 "" H 4450 1300 50  0001 C CNN
+F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 4450 1300 50  0001 C CNN
 F 3 "~" H 4450 1300 50  0001 C CNN
 	1    4250 1300
 	0    1    1    0   
@@ -1836,7 +1806,7 @@ AR Path="/6052CC9F/60A1C4A2" Ref="TP?"  Part="1"
 AR Path="/60A1C4A2" Ref="TP?"  Part="1" 
 F 0 "TP?" V 4250 1650 50  0000 C CNN
 F 1 "TP" V 4300 1450 50  0001 C CNN
-F 2 "" H 4450 1400 50  0001 C CNN
+F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 4450 1400 50  0001 C CNN
 F 3 "~" H 4450 1400 50  0001 C CNN
 	1    4250 1400
 	0    1    1    0   
@@ -1850,7 +1820,7 @@ AR Path="/6052CC9F/60A1C72F" Ref="TP?"  Part="1"
 AR Path="/60A1C72F" Ref="TP?"  Part="1" 
 F 0 "TP?" V 4250 2050 50  0000 C CNN
 F 1 "TP" V 4300 1850 50  0001 C CNN
-F 2 "" H 4450 1800 50  0001 C CNN
+F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 4450 1800 50  0001 C CNN
 F 3 "~" H 4450 1800 50  0001 C CNN
 	1    4250 1800
 	0    1    1    0   
@@ -1864,7 +1834,7 @@ AR Path="/6052CC9F/60A1CA88" Ref="TP?"  Part="1"
 AR Path="/60A1CA88" Ref="TP?"  Part="1" 
 F 0 "TP?" V 4250 2350 50  0000 C CNN
 F 1 "TP" V 4300 2150 50  0001 C CNN
-F 2 "" H 4450 2100 50  0001 C CNN
+F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 4450 2100 50  0001 C CNN
 F 3 "~" H 4450 2100 50  0001 C CNN
 	1    4250 2100
 	0    1    1    0   
@@ -1878,7 +1848,7 @@ AR Path="/6052CC9F/60A1CEF8" Ref="TP?"  Part="1"
 AR Path="/60A1CEF8" Ref="TP?"  Part="1" 
 F 0 "TP?" V 4250 2450 50  0000 C CNN
 F 1 "TP" V 4300 2250 50  0001 C CNN
-F 2 "" H 4450 2200 50  0001 C CNN
+F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 4450 2200 50  0001 C CNN
 F 3 "~" H 4450 2200 50  0001 C CNN
 	1    4250 2200
 	0    1    1    0   
@@ -1892,7 +1862,7 @@ AR Path="/6052CC9F/60A1D160" Ref="TP?"  Part="1"
 AR Path="/60A1D160" Ref="TP?"  Part="1" 
 F 0 "TP?" V 2500 1800 50  0000 C CNN
 F 1 "TP" V 2550 1600 50  0001 C CNN
-F 2 "" H 2700 1550 50  0001 C CNN
+F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 2700 1550 50  0001 C CNN
 F 3 "~" H 2700 1550 50  0001 C CNN
 	1    2500 1550
 	0    -1   -1   0   
@@ -1906,7 +1876,7 @@ AR Path="/6052CC9F/60A1DCF0" Ref="TP?"  Part="1"
 AR Path="/60A1DCF0" Ref="TP?"  Part="1" 
 F 0 "TP?" V 2500 1900 50  0000 C CNN
 F 1 "TP" V 2550 1700 50  0001 C CNN
-F 2 "" H 2700 1650 50  0001 C CNN
+F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 2700 1650 50  0001 C CNN
 F 3 "~" H 2700 1650 50  0001 C CNN
 	1    2500 1650
 	0    -1   -1   0   
@@ -1920,7 +1890,7 @@ AR Path="/6052CC9F/60A1DF20" Ref="TP?"  Part="1"
 AR Path="/60A1DF20" Ref="TP?"  Part="1" 
 F 0 "TP?" V 2500 2000 50  0000 C CNN
 F 1 "TP" V 2550 1800 50  0001 C CNN
-F 2 "" H 2700 1750 50  0001 C CNN
+F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 2700 1750 50  0001 C CNN
 F 3 "~" H 2700 1750 50  0001 C CNN
 	1    2500 1750
 	0    -1   -1   0   
@@ -1934,7 +1904,7 @@ AR Path="/6052CC9F/60A1E2E3" Ref="TP?"  Part="1"
 AR Path="/60A1E2E3" Ref="TP?"  Part="1" 
 F 0 "TP?" V 2500 2100 50  0000 C CNN
 F 1 "TP" V 2550 1900 50  0001 C CNN
-F 2 "" H 2700 1850 50  0001 C CNN
+F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 2700 1850 50  0001 C CNN
 F 3 "~" H 2700 1850 50  0001 C CNN
 	1    2500 1850
 	0    -1   -1   0   
@@ -1948,7 +1918,7 @@ AR Path="/6052CC9F/60A1E5FD" Ref="TP?"  Part="1"
 AR Path="/60A1E5FD" Ref="TP?"  Part="1" 
 F 0 "TP?" V 2500 2200 50  0000 C CNN
 F 1 "TP" V 2550 2000 50  0001 C CNN
-F 2 "" H 2700 1950 50  0001 C CNN
+F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 2700 1950 50  0001 C CNN
 F 3 "~" H 2700 1950 50  0001 C CNN
 	1    2500 1950
 	0    -1   -1   0   
@@ -1962,7 +1932,7 @@ AR Path="/6052CC9F/60A1E947" Ref="TP?"  Part="1"
 AR Path="/60A1E947" Ref="TP?"  Part="1" 
 F 0 "TP?" V 2500 2300 50  0000 C CNN
 F 1 "TP" V 2550 2100 50  0001 C CNN
-F 2 "" H 2700 2050 50  0001 C CNN
+F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 2700 2050 50  0001 C CNN
 F 3 "~" H 2700 2050 50  0001 C CNN
 	1    2500 2050
 	0    -1   -1   0   
@@ -1976,7 +1946,7 @@ AR Path="/6052CC9F/60A1EB66" Ref="TP?"  Part="1"
 AR Path="/60A1EB66" Ref="TP?"  Part="1" 
 F 0 "TP?" V 2500 2400 50  0000 C CNN
 F 1 "TP" V 2550 2200 50  0001 C CNN
-F 2 "" H 2700 2150 50  0001 C CNN
+F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 2700 2150 50  0001 C CNN
 F 3 "~" H 2700 2150 50  0001 C CNN
 	1    2500 2150
 	0    -1   -1   0   
@@ -1990,7 +1960,7 @@ AR Path="/6052CC9F/60A1EFEC" Ref="TP?"  Part="1"
 AR Path="/60A1EFEC" Ref="TP?"  Part="1" 
 F 0 "TP?" V 11000 9100 50  0000 C CNN
 F 1 "TP" V 11050 8900 50  0001 C CNN
-F 2 "" H 11200 8850 50  0001 C CNN
+F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 11200 8850 50  0001 C CNN
 F 3 "~" H 11200 8850 50  0001 C CNN
 	1    11000 8850
 	0    1    1    0   
@@ -2004,7 +1974,7 @@ AR Path="/6052CC9F/60A2ACA6" Ref="TP?"  Part="1"
 AR Path="/60A2ACA6" Ref="TP?"  Part="1" 
 F 0 "TP?" V 11000 9200 50  0000 C CNN
 F 1 "TP" V 11050 9000 50  0001 C CNN
-F 2 "" H 11200 8950 50  0001 C CNN
+F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 11200 8950 50  0001 C CNN
 F 3 "~" H 11200 8950 50  0001 C CNN
 	1    11000 8950
 	0    1    1    0   
@@ -2018,7 +1988,7 @@ AR Path="/6052CC9F/60A2AE16" Ref="TP?"  Part="1"
 AR Path="/60A2AE16" Ref="TP?"  Part="1" 
 F 0 "TP?" V 11000 9300 50  0000 C CNN
 F 1 "TP" V 11050 9100 50  0001 C CNN
-F 2 "" H 11200 9050 50  0001 C CNN
+F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 11200 9050 50  0001 C CNN
 F 3 "~" H 11200 9050 50  0001 C CNN
 	1    11000 9050
 	0    1    1    0   
@@ -2032,7 +2002,7 @@ AR Path="/6052CC9F/60A2B06D" Ref="TP?"  Part="1"
 AR Path="/60A2B06D" Ref="TP?"  Part="1" 
 F 0 "TP?" V 9750 6200 50  0000 C CNN
 F 1 "TP" V 9800 6000 50  0001 C CNN
-F 2 "" H 9950 5950 50  0001 C CNN
+F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 9950 5950 50  0001 C CNN
 F 3 "~" H 9950 5950 50  0001 C CNN
 	1    9750 5950
 	0    -1   -1   0   
@@ -2046,7 +2016,7 @@ AR Path="/6052CC9F/60A2CB9E" Ref="TP?"  Part="1"
 AR Path="/60A2CB9E" Ref="TP?"  Part="1" 
 F 0 "TP?" V 9750 6300 50  0000 C CNN
 F 1 "TP" V 9800 6100 50  0001 C CNN
-F 2 "" H 9950 6050 50  0001 C CNN
+F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 9950 6050 50  0001 C CNN
 F 3 "~" H 9950 6050 50  0001 C CNN
 	1    9750 6050
 	0    -1   -1   0   
@@ -2060,7 +2030,7 @@ AR Path="/6052CC9F/60A2CE08" Ref="TP?"  Part="1"
 AR Path="/60A2CE08" Ref="TP?"  Part="1" 
 F 0 "TP?" V 9750 6400 50  0000 C CNN
 F 1 "TP" V 9800 6200 50  0001 C CNN
-F 2 "" H 9950 6150 50  0001 C CNN
+F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 9950 6150 50  0001 C CNN
 F 3 "~" H 9950 6150 50  0001 C CNN
 	1    9750 6150
 	0    -1   -1   0   
@@ -2074,7 +2044,7 @@ AR Path="/6052CC9F/60A2D0A2" Ref="TP?"  Part="1"
 AR Path="/60A2D0A2" Ref="TP?"  Part="1" 
 F 0 "TP?" V 9750 6500 50  0000 C CNN
 F 1 "TP" V 9800 6300 50  0001 C CNN
-F 2 "" H 9950 6250 50  0001 C CNN
+F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 9950 6250 50  0001 C CNN
 F 3 "~" H 9950 6250 50  0001 C CNN
 	1    9750 6250
 	0    -1   -1   0   
@@ -2088,7 +2058,7 @@ AR Path="/6052CC9F/60A2D371" Ref="TP?"  Part="1"
 AR Path="/60A2D371" Ref="TP?"  Part="1" 
 F 0 "TP?" V 9750 6600 50  0000 C CNN
 F 1 "TP" V 9800 6400 50  0001 C CNN
-F 2 "" H 9950 6350 50  0001 C CNN
+F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 9950 6350 50  0001 C CNN
 F 3 "~" H 9950 6350 50  0001 C CNN
 	1    9750 6350
 	0    -1   -1   0   
@@ -2102,7 +2072,7 @@ AR Path="/6052CC9F/60A2D632" Ref="TP?"  Part="1"
 AR Path="/60A2D632" Ref="TP?"  Part="1" 
 F 0 "TP?" V 9750 6700 50  0000 C CNN
 F 1 "TP" V 9800 6500 50  0001 C CNN
-F 2 "" H 9950 6450 50  0001 C CNN
+F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 9950 6450 50  0001 C CNN
 F 3 "~" H 9950 6450 50  0001 C CNN
 	1    9750 6450
 	0    -1   -1   0   
@@ -2116,7 +2086,7 @@ AR Path="/6052CC9F/60A2D911" Ref="TP?"  Part="1"
 AR Path="/60A2D911" Ref="TP?"  Part="1" 
 F 0 "TP?" V 9750 6800 50  0000 C CNN
 F 1 "TP" V 9800 6600 50  0001 C CNN
-F 2 "" H 9950 6550 50  0001 C CNN
+F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 9950 6550 50  0001 C CNN
 F 3 "~" H 9950 6550 50  0001 C CNN
 	1    9750 6550
 	0    -1   -1   0   
@@ -2130,7 +2100,7 @@ AR Path="/6052CC9F/60A2DC00" Ref="TP?"  Part="1"
 AR Path="/60A2DC00" Ref="TP?"  Part="1" 
 F 0 "TP?" V 9750 6900 50  0000 C CNN
 F 1 "TP" V 9800 6700 50  0001 C CNN
-F 2 "" H 9950 6650 50  0001 C CNN
+F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 9950 6650 50  0001 C CNN
 F 3 "~" H 9950 6650 50  0001 C CNN
 	1    9750 6650
 	0    -1   -1   0   
@@ -2144,7 +2114,7 @@ AR Path="/6052CC9F/60A2E63C" Ref="TP?"  Part="1"
 AR Path="/60A2E63C" Ref="TP?"  Part="1" 
 F 0 "TP?" V 9750 7000 50  0000 C CNN
 F 1 "TP" V 9800 6800 50  0001 C CNN
-F 2 "" H 9950 6750 50  0001 C CNN
+F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 9950 6750 50  0001 C CNN
 F 3 "~" H 9950 6750 50  0001 C CNN
 	1    9750 6750
 	0    -1   -1   0   
@@ -2158,7 +2128,7 @@ AR Path="/6052CC9F/60A2E883" Ref="TP?"  Part="1"
 AR Path="/60A2E883" Ref="TP?"  Part="1" 
 F 0 "TP?" V 9750 7100 50  0000 C CNN
 F 1 "TP" V 9800 6900 50  0001 C CNN
-F 2 "" H 9950 6850 50  0001 C CNN
+F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 9950 6850 50  0001 C CNN
 F 3 "~" H 9950 6850 50  0001 C CNN
 	1    9750 6850
 	0    -1   -1   0   
@@ -2212,7 +2182,7 @@ AR Path="/6052CC9F/60D1BAED" Ref="TP?"  Part="1"
 AR Path="/60D1BAED" Ref="TP?"  Part="1" 
 F 0 "TP?" V 9100 6100 50  0000 C CNN
 F 1 "TP" V 9150 5900 50  0001 C CNN
-F 2 "" H 9300 5850 50  0001 C CNN
+F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 9300 5850 50  0001 C CNN
 F 3 "~" H 9300 5850 50  0001 C CNN
 	1    9100 5850
 	0    1    1    0   
@@ -2623,7 +2593,7 @@ AR Path="/60F26022" Ref="TP?"  Part="1"
 AR Path="/5FCD4D18/60F26022" Ref="TP?"  Part="1" 
 F 0 "TP?" V 10300 2050 50  0000 C CNN
 F 1 "TP" V 10350 1850 50  0001 C CNN
-F 2 "" H 10500 1800 50  0001 C CNN
+F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 10500 1800 50  0001 C CNN
 F 3 "~" H 10500 1800 50  0001 C CNN
 	1    10300 1800
 	0    1    1    0   
@@ -2638,7 +2608,7 @@ AR Path="/60F389F6" Ref="TP?"  Part="1"
 AR Path="/5FCD4D18/60F389F6" Ref="TP?"  Part="1" 
 F 0 "TP?" V 10300 2150 50  0000 C CNN
 F 1 "TP" V 10350 1950 50  0001 C CNN
-F 2 "" H 10500 1900 50  0001 C CNN
+F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 10500 1900 50  0001 C CNN
 F 3 "~" H 10500 1900 50  0001 C CNN
 	1    10300 1900
 	0    1    1    0   
@@ -2654,7 +2624,7 @@ AR Path="/5FCD4D18/60F8526B" Ref="TP?"  Part="1"
 AR Path="/5FCD4B8E/60F8526B" Ref="TP?"  Part="1" 
 F 0 "TP?" H 15250 6950 50  0000 C CNN
 F 1 "TP" V 15300 6800 50  0001 C CNN
-F 2 "" H 15450 6750 50  0001 C CNN
+F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 15450 6750 50  0001 C CNN
 F 3 "~" H 15450 6750 50  0001 C CNN
 	1    15250 6750
 	1    0    0    -1  
@@ -2682,7 +2652,7 @@ AR Path="/5FCD4D18/60FAE764" Ref="TP?"  Part="1"
 AR Path="/5FCD4B8E/60FAE764" Ref="TP?"  Part="1" 
 F 0 "TP?" H 15450 6950 50  0000 C CNN
 F 1 "TP" V 15500 6800 50  0001 C CNN
-F 2 "" H 15650 6750 50  0001 C CNN
+F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 15650 6750 50  0001 C CNN
 F 3 "~" H 15650 6750 50  0001 C CNN
 	1    15450 6750
 	1    0    0    -1  
@@ -2702,7 +2672,7 @@ AR Path="/5FCD4D18/60FC22AD" Ref="TP?"  Part="1"
 AR Path="/5FCD4B8E/60FC22AD" Ref="TP?"  Part="1" 
 F 0 "TP?" H 15650 6950 50  0000 C CNN
 F 1 "TP" V 15700 6800 50  0001 C CNN
-F 2 "" H 15850 6750 50  0001 C CNN
+F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 15850 6750 50  0001 C CNN
 F 3 "~" H 15850 6750 50  0001 C CNN
 	1    15650 6750
 	1    0    0    -1  
@@ -2722,7 +2692,7 @@ AR Path="/5FCD4D18/60FD625A" Ref="TP?"  Part="1"
 AR Path="/5FCD4B8E/60FD625A" Ref="TP?"  Part="1" 
 F 0 "TP?" H 15850 6950 50  0000 C CNN
 F 1 "TP" V 15900 6800 50  0001 C CNN
-F 2 "" H 16050 6750 50  0001 C CNN
+F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 16050 6750 50  0001 C CNN
 F 3 "~" H 16050 6750 50  0001 C CNN
 	1    15850 6750
 	1    0    0    -1  
@@ -2759,7 +2729,7 @@ AR Path="/5FCD4D18/6059BD56" Ref="TP?"  Part="1"
 AR Path="/5FCD4B8E/6059BD56" Ref="TP?"  Part="1" 
 F 0 "TP?" H 8100 2050 50  0000 C CNN
 F 1 "TP" V 8150 1900 50  0001 C CNN
-F 2 "" H 8300 1850 50  0001 C CNN
+F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 8300 1850 50  0001 C CNN
 F 3 "~" H 8300 1850 50  0001 C CNN
 	1    8100 1850
 	1    0    0    -1  
@@ -2778,7 +2748,7 @@ AR Path="/5FCD4D18/6059E643" Ref="TP?"  Part="1"
 AR Path="/5FCD4B8E/6059E643" Ref="TP?"  Part="1" 
 F 0 "TP?" H 7950 2200 50  0000 C CNN
 F 1 "TP" V 7850 2150 50  0001 C CNN
-F 2 "" H 8000 2100 50  0001 C CNN
+F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 8000 2100 50  0001 C CNN
 F 3 "~" H 8000 2100 50  0001 C CNN
 	1    7800 2100
 	-1   0    0    1   
@@ -2815,7 +2785,6 @@ F 1 "4.7k" V 8800 4400 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 8830 4400 50  0001 C CNN
 F 3 "~" H 8900 4400 50  0001 C CNN
 F 4 "" H 8900 4400 50  0001 C CNN "Manufacturer"
-F 5 "" H 8900 4400 50  0001 C CNN "Part Number"
 	1    8900 4400
 	1    0    0    -1  
 $EndComp
@@ -2835,7 +2804,6 @@ F 1 "4.7k" V 9150 4400 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 9180 4400 50  0001 C CNN
 F 3 "~" H 9250 4400 50  0001 C CNN
 F 4 "" H 9250 4400 50  0001 C CNN "Manufacturer"
-F 5 "" H 9250 4400 50  0001 C CNN "Part Number"
 	1    9250 4400
 	1    0    0    -1  
 $EndComp
@@ -2858,4 +2826,24 @@ Text Label 8450 4700 0    50   ~ 0
 CC-SDA
 Text Label 8450 4850 0    50   ~ 0
 CC-SCL
+$Comp
+L Diode:BAT54J D?
+U 1 1 6072681D
+P 14100 2250
+AR Path="/6041384A/60567D6E/6072681D" Ref="D?"  Part="1" 
+AR Path="/6072681D" Ref="D?"  Part="1" 
+F 0 "D?" H 14100 2350 50  0000 C CNN
+F 1 "BAT54J" V 14100 2050 50  0000 C CNN
+F 2 "RespiraWorks_Std:D_SOD-323F" H 14100 2075 50  0001 C CNN
+F 3 "https://assets.nexperia.com/documents/data-sheet/BAT54J.pdf" H 14100 2250 50  0001 C CNN
+	1    14100 2250
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	14100 2100 14100 2000
+Wire Wire Line
+	12800 2400 14100 2400
+Connection ~ 14100 2400
+Wire Wire Line
+	14100 2400 15150 2400
 $EndSCHEMATC

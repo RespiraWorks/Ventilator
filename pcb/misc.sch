@@ -46,7 +46,6 @@ F 1 "10k" H 6850 2500 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 6980 2550 50  0001 C CNN
 F 3 "~" H 7050 2550 50  0001 C CNN
 F 4 "" H 7050 2550 50  0001 C CNN "Manufacturer"
-F 5 "" H 7050 2550 50  0001 C CNN "Part Number"
 	1    7050 2550
 	-1   0    0    -1  
 $EndComp
@@ -131,7 +130,6 @@ F 1 "100nF" H 7250 1950 50  0000 C CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 6938 1700 50  0001 C CNN
 F 3 "~" H 6900 1850 50  0001 C CNN
 F 4 "" H 6900 1850 50  0001 C CNN "Manufacturer"
-F 5 "" H 6900 1850 50  0001 C CNN "Part Number"
 	1    6900 1850
 	1    0    0    1   
 $EndComp
@@ -221,7 +219,6 @@ F 1 "100nF" H 3500 4450 50  0000 C CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 3188 4400 50  0001 C CNN
 F 3 "~" H 3150 4550 50  0001 C CNN
 F 4 "" H 3150 4550 50  0001 C CNN "Manufacturer"
-F 5 "" H 3150 4550 50  0001 C CNN "Part Number"
 	1    3150 4550
 	-1   0    0    1   
 $EndComp
@@ -356,7 +353,6 @@ F 1 "100nF" H 8900 5850 50  0000 C CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 8588 5800 50  0001 C CNN
 F 3 "~" H 8550 5950 50  0001 C CNN
 F 4 "" H 8550 5950 50  0001 C CNN "Manufacturer"
-F 5 "" H 8550 5950 50  0001 C CNN "Part Number"
 	1    8550 5950
 	-1   0    0    1   
 $EndComp
@@ -483,7 +479,6 @@ F 1 "4.7k" V 9400 6150 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 9430 6150 50  0001 C CNN
 F 3 "~" H 9500 6150 50  0001 C CNN
 F 4 "" H 9500 6150 50  0001 C CNN "Manufacturer"
-F 5 "" H 9500 6150 50  0001 C CNN "Part Number"
 	1    9500 6150
 	1    0    0    -1  
 $EndComp
@@ -503,7 +498,6 @@ F 1 "4.7k" V 9700 6150 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 9730 6150 50  0001 C CNN
 F 3 "~" H 9800 6150 50  0001 C CNN
 F 4 "" H 9800 6150 50  0001 C CNN "Manufacturer"
-F 5 "" H 9800 6150 50  0001 C CNN "Part Number"
 	1    9800 6150
 	1    0    0    -1  
 $EndComp
@@ -523,7 +517,6 @@ F 1 "4.7k" V 10000 6150 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 10030 6150 50  0001 C CNN
 F 3 "~" H 10100 6150 50  0001 C CNN
 F 4 "" H 10100 6150 50  0001 C CNN "Manufacturer"
-F 5 "" H 10100 6150 50  0001 C CNN "Part Number"
 	1    10100 6150
 	1    0    0    -1  
 $EndComp
@@ -543,7 +536,6 @@ F 1 "4.7k" V 10300 6150 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 10330 6150 50  0001 C CNN
 F 3 "~" H 10400 6150 50  0001 C CNN
 F 4 "" H 10400 6150 50  0001 C CNN "Manufacturer"
-F 5 "" H 10400 6150 50  0001 C CNN "Part Number"
 	1    10400 6150
 	1    0    0    -1  
 $EndComp
@@ -563,7 +555,6 @@ F 1 "4.7k" V 10600 6150 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 10630 6150 50  0001 C CNN
 F 3 "~" H 10700 6150 50  0001 C CNN
 F 4 "" H 10700 6150 50  0001 C CNN "Manufacturer"
-F 5 "" H 10700 6150 50  0001 C CNN "Part Number"
 	1    10700 6150
 	1    0    0    -1  
 $EndComp
@@ -583,7 +574,6 @@ F 1 "4.7k" V 10900 6150 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 10930 6150 50  0001 C CNN
 F 3 "~" H 11000 6150 50  0001 C CNN
 F 4 "" H 11000 6150 50  0001 C CNN "Manufacturer"
-F 5 "" H 11000 6150 50  0001 C CNN "Part Number"
 	1    11000 6150
 	1    0    0    -1  
 $EndComp
@@ -603,7 +593,6 @@ F 1 "4.7k" V 11200 6150 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 11230 6150 50  0001 C CNN
 F 3 "~" H 11300 6150 50  0001 C CNN
 F 4 "" H 11300 6150 50  0001 C CNN "Manufacturer"
-F 5 "" H 11300 6150 50  0001 C CNN "Part Number"
 	1    11300 6150
 	1    0    0    -1  
 $EndComp
@@ -623,7 +612,6 @@ F 1 "4.7k" V 11500 6150 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 11530 6150 50  0001 C CNN
 F 3 "~" H 11600 6150 50  0001 C CNN
 F 4 "" H 11600 6150 50  0001 C CNN "Manufacturer"
-F 5 "" H 11600 6150 50  0001 C CNN "Part Number"
 	1    11600 6150
 	1    0    0    -1  
 $EndComp
@@ -643,7 +631,6 @@ F 1 "4.7k" V 11800 6150 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 11830 6150 50  0001 C CNN
 F 3 "~" H 11900 6150 50  0001 C CNN
 F 4 "" H 11900 6150 50  0001 C CNN "Manufacturer"
-F 5 "" H 11900 6150 50  0001 C CNN "Part Number"
 	1    11900 6150
 	1    0    0    -1  
 $EndComp
@@ -663,7 +650,6 @@ F 1 "4.7k" V 12100 6150 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 12130 6150 50  0001 C CNN
 F 3 "~" H 12200 6150 50  0001 C CNN
 F 4 "" H 12200 6150 50  0001 C CNN "Manufacturer"
-F 5 "" H 12200 6150 50  0001 C CNN "Part Number"
 	1    12200 6150
 	1    0    0    -1  
 $EndComp
@@ -683,7 +669,6 @@ F 1 "4.7k" V 12400 6150 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 12430 6150 50  0001 C CNN
 F 3 "~" H 12500 6150 50  0001 C CNN
 F 4 "" H 12500 6150 50  0001 C CNN "Manufacturer"
-F 5 "" H 12500 6150 50  0001 C CNN "Part Number"
 	1    12500 6150
 	1    0    0    -1  
 $EndComp
@@ -703,7 +688,6 @@ F 1 "4.7k" V 12700 6150 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 12730 6150 50  0001 C CNN
 F 3 "~" H 12800 6150 50  0001 C CNN
 F 4 "" H 12800 6150 50  0001 C CNN "Manufacturer"
-F 5 "" H 12800 6150 50  0001 C CNN "Part Number"
 	1    12800 6150
 	1    0    0    -1  
 $EndComp
@@ -976,10 +960,9 @@ AR Path="/5FCD4B8E/60238244" Ref="R?"  Part="1"
 AR Path="/6017BD7E/60238244" Ref="R?"  Part="1" 
 F 0 "R?" V 13350 7000 50  0000 C CNN
 F 1 "0" V 13350 6700 50  0000 C CNN
-F 2 "RespiraWorks_std:R_0603_1608Metric" V 13330 6850 50  0001 C CNN
+F 2 "RespiraWorks_Std:R_0603_1608Metric" V 13330 6850 50  0001 C CNN
 F 3 "~" H 13400 6850 50  0001 C CNN
 F 4 "" H 13400 6850 50  0001 C CNN "Manufacturer"
-F 5 "" H 13400 6850 50  0001 C CNN "Part Number"
 	1    13400 6850
 	0    1    1    0   
 $EndComp
@@ -998,10 +981,9 @@ AR Path="/5FCD4B8E/6023C92C" Ref="R?"  Part="1"
 AR Path="/6017BD7E/6023C92C" Ref="R?"  Part="1" 
 F 0 "R?" V 13350 7600 50  0000 C CNN
 F 1 "0" V 13350 7300 50  0000 C CNN
-F 2 "RespiraWorks_std:R_0603_1608Metric" V 13330 7450 50  0001 C CNN
+F 2 "RespiraWorks_Std:R_0603_1608Metric" V 13330 7450 50  0001 C CNN
 F 3 "~" H 13400 7450 50  0001 C CNN
 F 4 "" H 13400 7450 50  0001 C CNN "Manufacturer"
-F 5 "" H 13400 7450 50  0001 C CNN "Part Number"
 	1    13400 7450
 	0    1    1    0   
 $EndComp
@@ -1020,10 +1002,9 @@ AR Path="/5FCD4B8E/6023F264" Ref="R?"  Part="1"
 AR Path="/6017BD7E/6023F264" Ref="R?"  Part="1" 
 F 0 "R?" V 13350 8200 50  0000 C CNN
 F 1 "0" V 13350 7900 50  0000 C CNN
-F 2 "RespiraWorks_std:R_0603_1608Metric" V 13330 8050 50  0001 C CNN
+F 2 "RespiraWorks_Std:R_0603_1608Metric" V 13330 8050 50  0001 C CNN
 F 3 "~" H 13400 8050 50  0001 C CNN
 F 4 "" H 13400 8050 50  0001 C CNN "Manufacturer"
-F 5 "" H 13400 8050 50  0001 C CNN "Part Number"
 	1    13400 8050
 	0    1    1    0   
 $EndComp
@@ -1042,10 +1023,9 @@ AR Path="/5FCD4B8E/602414A0" Ref="R?"  Part="1"
 AR Path="/6017BD7E/602414A0" Ref="R?"  Part="1" 
 F 0 "R?" V 13350 8800 50  0000 C CNN
 F 1 "0" V 13350 8500 50  0000 C CNN
-F 2 "RespiraWorks_std:R_0603_1608Metric" V 13330 8650 50  0001 C CNN
+F 2 "RespiraWorks_Std:R_0603_1608Metric" V 13330 8650 50  0001 C CNN
 F 3 "~" H 13400 8650 50  0001 C CNN
 F 4 "" H 13400 8650 50  0001 C CNN "Manufacturer"
-F 5 "" H 13400 8650 50  0001 C CNN "Part Number"
 	1    13400 8650
 	0    1    1    0   
 $EndComp
@@ -1218,7 +1198,6 @@ F 1 "4.7k" V 7050 6150 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 7080 6150 50  0001 C CNN
 F 3 "~" H 7150 6150 50  0001 C CNN
 F 4 "" H 7150 6150 50  0001 C CNN "Manufacturer"
-F 5 "" H 7150 6150 50  0001 C CNN "Part Number"
 	1    7150 6150
 	1    0    0    -1  
 $EndComp
@@ -1238,7 +1217,6 @@ F 1 "4.7k" V 6750 6150 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 6780 6150 50  0001 C CNN
 F 3 "~" H 6850 6150 50  0001 C CNN
 F 4 "" H 6850 6150 50  0001 C CNN "Manufacturer"
-F 5 "" H 6850 6150 50  0001 C CNN "Part Number"
 	1    6850 6150
 	1    0    0    -1  
 $EndComp
@@ -1271,7 +1249,7 @@ U 1 1 6033F675
 P 7150 1350
 F 0 "JP?" H 7100 1450 50  0000 L CNN
 F 1 "Jumper_NC_Small" V 7195 1424 50  0001 L CNN
-F 2 "" H 7150 1350 50  0001 C CNN
+F 2 "RespiraWorks_Std:SolderJumper-2_P1.3mm_Bridged_RoundedPad1.0x1.5mm" H 7150 1350 50  0001 C CNN
 F 3 "~" H 7150 1350 50  0001 C CNN
 	1    7150 1350
 	1    0    0    -1  
@@ -1286,7 +1264,7 @@ U 1 1 603508F0
 P 7600 1350
 F 0 "JP?" H 7600 1443 50  0000 C CNN
 F 1 "Jumper_NO_Small" H 7600 1444 50  0001 C CNN
-F 2 "" H 7600 1350 50  0001 C CNN
+F 2 "RespiraWorks_Std:SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm" H 7600 1350 50  0001 C CNN
 F 3 "~" H 7600 1350 50  0001 C CNN
 	1    7600 1350
 	1    0    0    -1  
@@ -1306,10 +1284,9 @@ AR Path="/5FCD4B8E/60376E01" Ref="Q?"  Part="1"
 AR Path="/6017BD7E/60376E01" Ref="Q?"  Part="1" 
 F 0 "Q?" H 8450 3750 50  0000 L CNN
 F 1 "MMBT3904" H 8400 3650 50  0000 L CNN
-F 2 "Ventilator:SOT-23" H 8400 3675 50  0001 L CIN
+F 2 "RespiraWorks_Std:SOT-23" H 8400 3675 50  0001 L CIN
 F 3 "https://www.fairchildsemi.com/datasheets/2N/2N3904.pdf" H 8200 3750 50  0001 L CNN
 F 4 "Diodes Inc." H 8200 3750 50  0001 C CNN "Manufacturer"
-F 5 "MMBT3904-7-F" H 8200 3750 50  0001 C CNN "Part Number"
 	1    8200 3750
 	1    0    0    -1  
 $EndComp
@@ -1329,7 +1306,6 @@ F 1 "1k" H 7500 3850 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 7630 3900 50  0001 C CNN
 F 3 "~" H 7700 3900 50  0001 C CNN
 F 4 "" H 7700 3900 50  0001 C CNN "Manufacturer"
-F 5 "" H 7700 3900 50  0001 C CNN "Part Number"
 	1    7700 3900
 	-1   0    0    -1  
 $EndComp
@@ -1367,7 +1343,6 @@ F 1 "1k" V 7550 3750 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 7380 3750 50  0001 C CNN
 F 3 "~" H 7450 3750 50  0001 C CNN
 F 4 "" H 7450 3750 50  0001 C CNN "Manufacturer"
-F 5 "" H 7450 3750 50  0001 C CNN "Part Number"
 	1    7450 3750
 	0    1    -1   0   
 $EndComp
@@ -1413,10 +1388,9 @@ AR Path="/5FCD4B8E/60411487" Ref="R?"  Part="1"
 AR Path="/6017BD7E/60411487" Ref="R?"  Part="1" 
 F 0 "R?" V 7850 2350 50  0000 C CNN
 F 1 "0" V 7750 2350 50  0000 C CNN
-F 2 "RespiraWorks_std:R_0603_1608Metric" V 7580 2350 50  0001 C CNN
+F 2 "RespiraWorks_Std:R_0603_1608Metric" V 7580 2350 50  0001 C CNN
 F 3 "~" H 7650 2350 50  0001 C CNN
 F 4 "" H 7650 2350 50  0001 C CNN "Manufacturer"
-F 5 "" H 7650 2350 50  0001 C CNN "Part Number"
 	1    7650 2350
 	0    1    -1   0   
 $EndComp
@@ -1447,8 +1421,7 @@ F 1 "DNP" H 7700 2650 50  0000 C CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 7938 2400 50  0001 C CNN
 F 3 "~" H 7900 2550 50  0001 C CNN
 F 4 "" H 7900 2550 50  0001 C CNN "Manufacturer"
-F 5 "" H 7900 2550 50  0001 C CNN "Part Number"
-F 6 "DNP" H 7900 2550 50  0001 C CNN "DNP"
+F 5 "DNP" H 7900 2550 50  0001 C CNN "DNP"
 	1    7900 2550
 	1    0    0    1   
 $EndComp
@@ -1556,7 +1529,6 @@ F 1 "100nF" H 6150 1600 50  0000 C CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 5838 1350 50  0001 C CNN
 F 3 "~" H 5800 1500 50  0001 C CNN
 F 4 "" H 5800 1500 50  0001 C CNN "Manufacturer"
-F 5 "" H 5800 1500 50  0001 C CNN "Part Number"
 	1    5800 1500
 	-1   0    0    1   
 $EndComp
@@ -1619,7 +1591,6 @@ F 1 "10k" H 5050 2450 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 5180 2500 50  0001 C CNN
 F 3 "~" H 5250 2500 50  0001 C CNN
 F 4 "" H 5250 2500 50  0001 C CNN "Manufacturer"
-F 5 "" H 5250 2500 50  0001 C CNN "Part Number"
 	1    5250 2500
 	-1   0    0    -1  
 $EndComp
@@ -1690,7 +1661,7 @@ U 1 1 605272F8
 P 5950 2450
 F 0 "JP?" H 5700 2500 50  0000 L CNN
 F 1 "Jumper_NC_Small" V 5995 2524 50  0001 L CNN
-F 2 "" H 5950 2450 50  0001 C CNN
+F 2 "RespiraWorks_Std:SolderJumper-2_P1.3mm_Bridged_RoundedPad1.0x1.5mm" H 5950 2450 50  0001 C CNN
 F 3 "~" H 5950 2450 50  0001 C CNN
 	1    5950 2450
 	1    0    0    -1  

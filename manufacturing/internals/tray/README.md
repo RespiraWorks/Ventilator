@@ -1,6 +1,6 @@
 # Equipment tray
 
-> **TODO:** Make this look good, add pictures, DXF, etc..
+> **TODO:** Add pictures
 
 ## Design rationale
 
@@ -37,6 +37,8 @@ BEFORE purchasing any parts.**
 
 **Total assembly price:** USD 172.13
 
+>**TODO: How much sheet metal?**
+
 [a1rw]:    #custom-parts
 [a2mcmc]:  https://www.mcmaster.com/96439A650/
 [a3mcmc]:  https://www.mcmaster.com/8560K357/
@@ -47,30 +49,29 @@ BEFORE purchasing any parts.**
 
 ## Custom Parts
 
+### Pneumatics Tray
+[![](images/pneumatics_tray.jpg)](exports/pneumatics_tray.pdf)
+
+| Download type | Link   |
+|:--------------|:-------|
+| Fabrication drawing      | [.idw](pneumatics_tray.idw) [.pdf](exports/pneumatics_tray.pdf) |
+| Export for laser cutting | [.dxf](exports/pneumatics_tray.dxf) |
+| Source: part CAD model   | [.ipt](pneumatics_tray.ipt) |
+
 ### Equipment Bracket Fabrication
 
 |             |     |  |
 :------------------:|:-----------------:|:---:|
-| ![](images/fab_drawing_1.jpg) | ![](images/fab_drawing_2.jpg) | ![](images/fab_drawing_3.jpg) |
+| [![](images/fab_drawing_1.jpg)](exports/equipment_bracket.pdf) | [![](images/fab_drawing_2.jpg)](exports/equipment_bracket.pdf) | [![](images/fab_drawing_3.jpg)](exports/equipment_bracket.pdf) |
 
-| File Type | Link|
-|:------|:-------|
-| Engineering Drawings | [.pdf](equipment_bracket.pdf)|
-| Equipment Bracket Assembly CAD   | [.iam](equipment_bracket.iam)|
-| Equipment Bracket Fabrication CAD   | [.ipt](equipment_bracket.ipt)|
-
->**TODO: How much sheet metal?**
-
-### Pneumatics Tray
-![](images/pneumatics_tray.jpg)
-
-| File Type | Link|
-|:------|:-------|
-| Engineering Drawing | [.pdf](pneumatics_tray.pdf)|
-| Pneumatics Tray CAD  | [.ipt](pneumatics_tray.ipt)|
+| Download type | Link   |
+|:--------------|:-------|
+| Engineering drawing           | [.idw](equipment_bracket.idw) [.pdf](exports/equipment_bracket.pdf) |
+| Source: sheet metal CAD model | [.ipt](equipment_bracket.ipt) |
+| Source: assembly CAD model    | [.iam](equipment_bracket.iam) |
 
 ## Assembly
 
 **Note: Please see general advice in the [manufacturing methods guide](../../methods).**
 
-> **TODO:** Add subassembly file
+> **TODO:** Explain

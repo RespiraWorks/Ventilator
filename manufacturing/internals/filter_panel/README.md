@@ -46,19 +46,19 @@ BEFORE purchasing any parts.**
 
 ## Custom parts
 
+### Filter panel acrylic plate
+
 This is the design for the custom cut acrylic plate for the filter housings.
 
+|                       |                       |
+|-----------------------|-----------------------|
+| [![](images/filter_panel_acrylic.jpg)](exports/filter_panel_acrylic_plate.pdf) | ![.iam](images/filter_panel_acrylic_rendering.jpg) |
 
-
-| Acrylic plate |
-:------------------|
-|![.iam](images/filter_panel_acrylic.jpg)|
-
-| Download Type | Link   |
+| Download type | Link   |
 |:--------------|:-------|
-| Source: Inventor part file | [.ipt](filter_panel_acrylic_plate.ipt) |
-| Drawing                    | [.idw](filter_panel_acrylic_plate.idw) [.pdf](filter_panel_acrylic_plate.pdf)|
-| Export for laser cutting   | [.dxf](filter_panel_acrylic_plate.dxf) |
+| Engineering drawing      | [.idw](filter_panel_acrylic_plate.idw) [.pdf](exports/filter_panel_acrylic_plate.pdf)|
+| Export for laser cutting | [.dxf](exports/filter_panel_acrylic_plate.dxf) |
+| Source: part CAD model   | [.ipt](filter_panel_acrylic_plate.ipt) |
 
 The plate may be produced using a laser cutter or with common woodworking tools.
 
@@ -67,24 +67,15 @@ The plate may be produced using a laser cutter or with common woodworking tools.
 
 **Note: Please also see general advice in the [manufacturing methods guide](../../methods).**
 
-
-
-
-
-
 * Install heat set inserts into the corner holes for mounting to main equipment bracket.
 
 * Disassemble the individual holders and integrate the housings with the acrylic panel using M4 hardware.
 
-|                            |
-|:--------------------------:|
-|![](images/panel1.jpg) |
+|                       |                       |
+|-----------------------|-----------------------|
+| [![](images/filter_panel_assembly.jpg)](exports/filter_panel_assembly.pdf) | ![](images/panel1.jpg) |
 
-| |
-:------------------|
-![.iam](images/filter_panel_assembly_dwg.jpg)|
-
-| Part  | Source |
-|:------|:-------|
-|Assembly CAD|[.iam](images/filter_panel_assembly_dwg.jpg)|
-|Engineering Drawing|[.pdf](images/filter_panel_assembly_dwg.jpg)|
+| Download type | Link   |
+|:--------------|:-------|
+|Engineering Drawing        | [.idw](filter_panel_assembly.idw) [.pdf](exports/filter_panel_assembly.pdf) |
+|Source: assembly CAD model | [.iam](filter_panel_assembly.iam) |

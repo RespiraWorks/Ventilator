@@ -77,30 +77,28 @@ BEFORE purchasing any parts.**
 ## Custom Parts
 
 ### Display Panel Acrylic Plate
-[![](images/display_panel_acrylic_plate.jpg)](display_panel_acrylic_plate.pdf)
+
+[![](images/display_panel_acrylic_plate.jpg)](exports/display_panel_acrylic_plate.pdf)
 
 | Download Type | Link   |
 |:--------------|:-------|
-| Inventor part file | [.ipt](display_panel_acrylic_plate.ipt) |
-| Drawing                    | [.pdf](display_panel_acrylic_plate.pdf) |
-| Export for laser cutting   | [.dxf](display_panel_acrylic_plate.dxf) |
+| Engineering drawing      | [.idw](display_panel_acrylic_plate.idw) [.pdf](exports/display_panel_acrylic_plate.pdf) |
+| Export for laser cutting | [.dxf](exports/display_panel_acrylic_plate.dxf) |
+| Source: part CAD model   | [.ipt](display_panel_acrylic_plate.ipt) |
 
 ### Custom PCBs
 
-See **[Electronics Assembly](electronics)** for turnkey manufaturing files and full details.
-
+See the **[electronics assembly](electronics)** page for turnkey manufacturing files and full details.
 
 ## Assembly
 
-[![](images/display_panel_assembly.jpg)](display_panel_assembly.pdf)
+[![](images/display_panel_assembly.jpg)](exports/display_panel_assembly.pdf)
 
-| Part  | Source |
-|:------|:-------|
-| Display panel assembly    | [.iam](display_panel_assembly.iam) |
-|Display Panel Assembly Drawing| [.pdf](display_panel_assembly.iam) |
-| Touch-screen sub-assembly with PCB stack | [.iam](display_and_PCB_stack_assembly.iam)  |
-
-
+| Download type | Link   |
+|:--------------|:-------|
+| Engineering drawing                  | [.idw](display_panel_assembly.idw) [.pdf](exports/display_panel_assembly.pdf) |
+| Source: display panel assembly model | [.iam](display_panel_assembly.iam) |
+| Source: electronics assembly model   | [.iam](display_and_PCB_stack_assembly.iam) |
 
 **Note: Please also see general advice in the [manufacturing methods guide](../../methods).**
 

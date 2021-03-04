@@ -15,10 +15,16 @@ This document is meant to be read and agreed-upon by the project owners and by s
 Requirements
 ------------
 
-.. _RW-SW-002:
+.. item:: RW-SW-0002
+   :fulfills: RW-SYS-0003 RW-SYS-0005
 
-RW-SW-002
-----------
 GUI allows user to adjust PEEP from 0-20 cmH2O with increments of 1
 
-Parents: :ref:`RW-SYS-003`, :ref:`RW-SYS-005`
+Traceability Matrix
+===================
+.. item-matrix:: System Requirements to SRS
+   :target: RW-SYS-
+   :source: RW-SW-
+   :sourcetitle: Software Requirements
+   :targettitle: System Requirements
+   :type: fulfills

@@ -4,7 +4,7 @@
 :------------------:|:-----------------:|
 | ![](images/enclosure_rendering.jpg)  | ![](images/enclosure_exploded.jpg)  |
 
-> **TODO: Make new renderings**
+> **TODO:** renderings update
 
 ## Design rationale
 

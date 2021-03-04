@@ -1,6 +1,6 @@
 # Electronics assembly
 
-> **TODO:** add renderings
+> **TODO:** renderings
 
 This build constitutes the electrical, computing and digital user interface components.
 

@@ -1,6 +1,8 @@
 # Equipment tray
 
-> **TODO:** Add pictures
+| Front | Top |
+:------------------:|:-----------------:|
+| ![](images/rendering_front.jpg)  | ![](images/rendering_back.jpg)  |
 
 ## Design rationale
 
@@ -49,19 +51,10 @@ BEFORE purchasing any parts.**
 
 ## Custom Parts
 
-### Pneumatics Tray
-[![](images/pneumatics_tray.jpg)](exports/pneumatics_tray.pdf)
+### Equipment Bracket
 
-| Download type | Link   |
-|:--------------|:-------|
-| Fabrication drawing      | [.idw](pneumatics_tray.idw) [.pdf](exports/pneumatics_tray.pdf) |
-| Export for laser cutting | [.dxf](exports/pneumatics_tray.dxf) |
-| Source: part CAD model   | [.ipt](pneumatics_tray.ipt) |
-
-### Equipment Bracket Fabrication
-
-|             |     |  |
-:------------------:|:-----------------:|:---:|
+|   |   |   |
+|---|---|---|
 | [![](images/fab_drawing_1.jpg)](exports/equipment_bracket.pdf) | [![](images/fab_drawing_2.jpg)](exports/equipment_bracket.pdf) | [![](images/fab_drawing_3.jpg)](exports/equipment_bracket.pdf) |
 
 | Download type | Link   |
@@ -70,8 +63,25 @@ BEFORE purchasing any parts.**
 | Source: sheet metal CAD model | [.ipt](equipment_bracket.ipt) |
 | Source: assembly CAD model    | [.iam](equipment_bracket.iam) |
 
+The equipment bracket is made out of a folded, 1.52mm thick, stainless steel sheet.
+
+M4 self-clinching nuts `[A2]` nuts must be driven into the 6 locations on the sides. 
+
+### Pneumatics Tray
+
+|   |   |   |
+|---|---|---|
+| [![](images/pneumatics_tray.jpg)](exports/pneumatics_tray.pdf) | ![](images/rendering_acrylic.jpg) |
+
+| Download type | Link   |
+|:--------------|:-------|
+| Fabrication drawing      | [.idw](pneumatics_tray.idw) [.pdf](exports/pneumatics_tray.pdf) |
+| Export for laser cutting | [.dxf](exports/pneumatics_tray.dxf) |
+| Source: part CAD model   | [.ipt](pneumatics_tray.ipt) |
+
+
 ## Assembly
 
 **Note: Please see general advice in the [manufacturing methods guide](../../methods).**
 
-> **TODO:** Explain
+Attach the pneumatics tray `[A4]` to the equipment bracket `[A1]` using M4 hardware `[A5-7]`. 

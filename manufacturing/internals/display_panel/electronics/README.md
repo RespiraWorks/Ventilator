@@ -1,10 +1,11 @@
 # Electronics assembly
 
+> **TODO:** add renderings
+
 This build constitutes the electrical, computing and digital user interface components.
 
-Note that Mainbaord (required) and Interim Board (optional) are custom components and will need to be fabricated by a contract manufacturer before proceeding.
-
-> **TODO:** add renderings
+**Note:** that Main board (required) and Interim Board (optional) are custom components and will need to be fabricated
+by a contract manufacturer before proceeding.
 
 ## Parts
 
@@ -160,4 +161,4 @@ Now you can make the final connections:
 * Use the miniUSB cable `[A11]` to connect the Nucleo to the Raspberry Pi
 
 * It should now look like this:
-![](images/rendering_electronics_3.jpg)
+![](../images/everything.jpg)

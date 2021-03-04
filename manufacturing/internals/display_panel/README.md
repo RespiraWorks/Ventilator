@@ -27,19 +27,7 @@ However:
 
 These changes are likely forthcoming in future iterations of our design.
 
-## Custom Parts
 
-> **TODO: Drawings**
-
-| Download Type | Link   |
-|:--------------|:-------|
-| Source: Inventor part file | [.ipt](display_panel_acrylic_plate.ipt) |
-| Drawing                    | [.idw](display_panel_acrylic_plate.idw) [.pdf](display_panel_acrylic_plate.pdf) |
-| Export for laser cutting   | [.dxf](display_panel_acrylic_plate.dxf) |
-
-**Custom PCBs**
-
-see **[Electronics Assembly](electronics)** for turnkey manufaturing files and full details.
 
 ## Parts
 
@@ -85,14 +73,32 @@ BEFORE purchasing any parts.**
 [a14key]:  https://www.digikey.com/en/products/detail/w-rth-elektronik/971090151/6174614
 [a15rw]:   electronics
 
+
+## Custom Parts
+
+### Display Panel Acrylic Plate
+
+[![](images/display_panel_acrylic_plate.jpg)](exports/display_panel_acrylic_plate.pdf)
+
+| Download Type | Link   |
+|:--------------|:-------|
+| Engineering drawing      | [.idw](display_panel_acrylic_plate.idw) [.pdf](exports/display_panel_acrylic_plate.pdf) |
+| Export for laser cutting | [.dxf](exports/display_panel_acrylic_plate.dxf) |
+| Source: part CAD model   | [.ipt](display_panel_acrylic_plate.ipt) |
+
+### Custom PCBs
+
+See the **[electronics assembly](electronics)** page for turnkey manufacturing files and full details.
+
 ## Assembly
 
-| Part  | Source |
-|:------|:-------|
-| Display panel assembly    | [.iam](display_panel_assembly.iam) |
-| Touch-screen sub-assembly with PCB stack | [.iam](display_and_PCB_stack_assembly.iam)       |
+[![](images/display_panel_assembly.jpg)](exports/display_panel_assembly.pdf)
 
-> **TODO: Drawings**
+| Download type | Link   |
+|:--------------|:-------|
+| Engineering drawing                  | [.idw](display_panel_assembly.idw) [.pdf](exports/display_panel_assembly.pdf) |
+| Source: display panel assembly model | [.iam](display_panel_assembly.iam) |
+| Source: electronics assembly model   | [.iam](display_and_PCB_stack_assembly.iam) |
 
 **Note: Please also see general advice in the [manufacturing methods guide](../../methods).**
 

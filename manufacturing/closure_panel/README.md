@@ -9,22 +9,6 @@
 
 > **TODO:** Content..
 
-## Custom parts
-
-The closure panel is made out of a folded, 1.52mm thick, stainless steel sheet.
-
-| Part  | Source | Export |
-|:------|:-------|---|
-| Closure panel  | [.ipt](closure_panel.ipt)     | **TODO** |
-
-### Fabrication Drawings
-
->**#TODO: Make new drawings**
-
-Closure panel fabrication drawings.
-
- ![](images/fab_drawing_6.png)
-
 ## Parts
 
 **Note: If you are a member of the RespiraWorks team, review the [part purchasing guidelines][ppg]
@@ -44,6 +28,8 @@ BEFORE purchasing any parts.**
 
 **Total assembly price:** USD 119.01
 
+>**#TODO: How much sheet metal?**
+
 [a1rw]:    #custom-parts
 [a2rw]:    ../wiring/README.md#main-power-input
 [a3mcmc]:  https://www.mcmaster.com/92095A461/
@@ -52,15 +38,30 @@ BEFORE purchasing any parts.**
 [a6mcmc]: https://www.mcmaster.com/93475A230/
 [a7mcmc]: https://www.mcmaster.com/93625A150/
 
->**#TODO: How much sheet metal?**
+## Custom parts
+
+### Closure Panel Fabrication
+The closure panel is made out of a folded, 1.52mm thick, stainless steel sheet.
+
+| | |
+|:------|:-------|
+|[![](images/fab_drawing_1.jpg)](closure_assembly.pdf)|[![](images/fab_drawing_2.jpg)](closure_assembly.pdf)|
+
+
+| Download type | Link   |
+|:--------------|:-------|
+| Fabrication drawing    | [.idw](closure_assembly.idw) [.pdf](closure_assembly.pdf) |
+| Source: part CAD model | [.ipt](closure_panel.ipt) |
 
 ## Assembly
 
 **Note: Please see general advice in the [manufacturing methods guide](../methods).**
 
-| Assembly | Source |
-|:---------|:-------|
-| Closure assembly         | [.iam](closure_assembly.iam) |
+| Download type | Link   |
+|:--------------|:-------|
+| Engineering drawing        | [.idw](closure_assembly.idw) [.pdf](closure_assembly.pdf) |
+| Source: assembly CAD model | [.iam](closure_assembly.iam) |
+
 
 The main power wire harness `[A2]` terminates with a female 4-pin DIN connector. This connector must be mounted to the
 closure panel. Use M2.5 screws `[A3]` and locknuts `[A4]`. Orient the DIN socket with the locking pin facing up.

@@ -10,25 +10,6 @@
 
 > **TODO:** Content..
 
-## Custom parts
-
-The ventilator enclosure is made up a folded, 1.52mm thick, stainless steel sheet.
-
-| Part  | Source | Export |
-|:------|:-------|---|
-| Main enclosure | [.ipt](enclosure.ipt)         | **TODO** |
-
-### Fabrication Drawings
-
-> **TODO: Make new drawings**
-
-Enclosure fabrication drawings.
-
-|             |     |  |
-:------------------:|:-----------------:|:---:|
-| ![](images/fab_drawing_1.png) | ![](images/fab_drawing_2.png) | ![](images/fab_drawing_3.png) |
-| ![](images/fab_drawing_4.png) | ![](images/fab_drawing_5.png) |
-
 ## Parts
 
 **Note: If you are a member of the RespiraWorks team, review the [part purchasing guidelines][ppg]
@@ -54,15 +35,32 @@ BEFORE purchasing any parts.**
 [a4mcmc]:  https://www.mcmaster.com/96439A710/
 [a5mcmc]:  https://www.mcmaster.com/9541K82/
 
+## Custom parts
+
+### Fabrication Drawings
+
+|  |   |
+|---|---|
+| [![](images/fab_drawing_2.jpg)](enclosure.pdf) | [![](images/fab_drawing_3.jpg)](enclosure.pdf) |
+| [![](images/fab_drawing_4.jpg)](enclosure.pdf) | [![](images/fab_drawing_5.jpg)](enclosure.pdf) |
+
+The ventilator enclosure is made up a folded, 1.52mm thick, stainless steel sheet.
+
+| Download type | Link   |
+|:--------------|:-------|
+| Fabrication Drawing    | [.idw](enclosure.idw) [.pdf](enclosure.pdf) |
+| Source: part CAD model | [.ipt](enclosure.ipt) |
+
 ## Assembly
 
 **Note: Please see general advice in the [manufacturing methods guide](../methods).**
 
-> **TODO: Drawings and renderings**
+[![](images/fab_drawing_1.jpg)](enclosure.pdf)
 
-| Assembly | Source |
-|:---------|:-------|
-| Enclosure assembly         | [.iam](enclosure_assembly.iam) |
+| Download type | Link   |
+|:--------------|:-------|
+| Engineering drawing        | [.idw](enclosure.idw) [.pdf](enclosure.pdf) |
+| Source: assembly CAD model | [.iam](enclosure_assembly.iam) |
 
 The main panel is folded from a single sheet and fastened together using stainless steel blind rivets. There
 are rubber bumper feet on the bottom of the enclosure that are threaded into M6 press-fit nuts. The rubber bumpers

@@ -1,6 +1,6 @@
 # Equipment tray
 
-> **TODO:** Make this look good, add pictures, DXF, etc..
+> **TODO:** Add pictures
 
 ## Design rationale
 
@@ -17,24 +17,6 @@ spot with new holes or cut-outs for alternate components being tested.
 
 In addition to supporting the main pneumatics tray, the equipment bracket also supports the display and filter panels
 on the front face of the ventilator. Those are detailed in other assembly pages.
-
-## Custom parts
-
-| Part  | Source | Export |
-|:------|:-------|---|
-| Equipment bracket | [.ipt](equipment_bracket.ipt) | **TODO** |
-| Pneumatics tray   | [.ipt](pneumatics_tray.ipt)     | **TODO** |
-
-### Fabrication Drawings
-
->**TODO: Make new drawings**
->
-Fabrication drawings.
-
-|             |     |  |
-:------------------:|:-----------------:|:---:|
-| ![](images/fab_drawing_7.png) | ![](images/fab_drawing_8.png) | ![](images/fab_drawing_9.png) |
-
 
 ## Parts
 
@@ -55,6 +37,8 @@ BEFORE purchasing any parts.**
 
 **Total assembly price:** USD 172.13
 
+>**TODO: How much sheet metal?**
+
 [a1rw]:    #custom-parts
 [a2mcmc]:  https://www.mcmaster.com/96439A650/
 [a3mcmc]:  https://www.mcmaster.com/8560K357/
@@ -63,10 +47,31 @@ BEFORE purchasing any parts.**
 [a6mcmc]: https://www.mcmaster.com/93625A150/
 [a7mcmc]: https://www.mcmaster.com/93475A230/
 
->**TODO: How much sheet metal?**
+## Custom Parts
+
+### Pneumatics Tray
+[![](images/pneumatics_tray.jpg)](exports/pneumatics_tray.pdf)
+
+| Download type | Link   |
+|:--------------|:-------|
+| Fabrication drawing      | [.idw](pneumatics_tray.idw) [.pdf](exports/pneumatics_tray.pdf) |
+| Export for laser cutting | [.dxf](exports/pneumatics_tray.dxf) |
+| Source: part CAD model   | [.ipt](pneumatics_tray.ipt) |
+
+### Equipment Bracket Fabrication
+
+|             |     |  |
+:------------------:|:-----------------:|:---:|
+| [![](images/fab_drawing_1.jpg)](exports/equipment_bracket.pdf) | [![](images/fab_drawing_2.jpg)](exports/equipment_bracket.pdf) | [![](images/fab_drawing_3.jpg)](exports/equipment_bracket.pdf) |
+
+| Download type | Link   |
+|:--------------|:-------|
+| Engineering drawing           | [.idw](equipment_bracket.idw) [.pdf](exports/equipment_bracket.pdf) |
+| Source: sheet metal CAD model | [.ipt](equipment_bracket.ipt) |
+| Source: assembly CAD model    | [.iam](equipment_bracket.iam) |
 
 ## Assembly
 
 **Note: Please see general advice in the [manufacturing methods guide](../../methods).**
 
-> **TODO:** Add subassembly file
+> **TODO:** Explain

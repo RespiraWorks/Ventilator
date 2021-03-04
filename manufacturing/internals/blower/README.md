@@ -87,13 +87,11 @@ BEFORE purchasing any parts.**
 
 ### Acrylic plates
 
-> **TODO: Update drawings**
-
 You will have to cut the following mounting and holding plates from an acrylic sheet `[A4]`.
 
 |     | Driver mounting plate `[A5]` | Blower holding plate `[A6]` | Tubing adapter holding plate `[A7]` |
 |:-----:|:--------------------------:|:-------------------------:|:---------------------------------:|
-|  |![](exports/driver_mounting_plate.jpg)|![](exports/blower_holding_plate.jpg)|![](exports/tubing_adapter_holding_plate.jpg)|
+|  |[![](exports/driver_mounting_plate.jpg)](exports/driver_mounting_plate.pdf)|[![](exports/blower_holding_plate.jpg)](exports/blower_holding_plate.pdf)|[![](exports/tubing_adapter_holding_plate.jpg)](exports/tubing_adapter_holding_plate.pdf)|
 | Drawings |[Driver Mounting Plate](exports/driver_mounting_plate.pdf)|[Blower Holding Plate](exports/blower_holding_plate.pdf)|[Tubing Adapter Holding Plate](exports/tubing_adapter_holding_plate.pdf)|
 | DXF |[driver_mounting_plate.dxf](exports/driver_mounting_plate.dxf)|[blower_holding_plate.dxf](exports/blower_holding_plate.dxf)|[tubing_adapter_holding_plate.dxf](exports/tubing_adapter_holding_plate.dxf)|
 | Inventor | [driver_mounting_plate.ipt](driver_mounting_plate.ipt)|[blower_holding_plate.ipt](blower_holding_plate.ipt)| [tubing adapter_holding_plate.ipt](tubing_adapter_holding_plate.ipt)|

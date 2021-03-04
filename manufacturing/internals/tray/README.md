@@ -65,7 +65,7 @@ BEFORE purchasing any parts.**
 
 The equipment bracket is made out of a folded, 1.52mm thick, stainless steel sheet.
 
-M4 self-clinching nuts `[A2]` nuts must be driven into the 6 locations on the sides. 
+M4 self-clinching nuts `[A2]` nuts must be driven into the 6 locations on the sides.
 
 ### Pneumatics Tray
 
@@ -84,4 +84,4 @@ M4 self-clinching nuts `[A2]` nuts must be driven into the 6 locations on the si
 
 **Note: Please see general advice in the [manufacturing methods guide](../../methods).**
 
-Attach the pneumatics tray `[A4]` to the equipment bracket `[A1]` using M4 hardware `[A5-7]`. 
+Attach the pneumatics tray `[A4]` to the equipment bracket `[A1]` using M4 hardware `[A5-7]`.

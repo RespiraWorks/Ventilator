@@ -2,7 +2,7 @@
 
 |  |  |
 :------------------:|:-----------------:|
-| [![](images/rendering_smaller.jpg)](images/rendering_full.jpg)  | [![](images/open_back_smaller.jpg)](images/open_back.jpg) |
+| [![](images/rendering_smaller.jpg)](images/rendering_full.jpg)  | [![](images/top_smaller.jpg)](images/top.jpg) |
 
 ## Design rationale
 
@@ -89,30 +89,34 @@ BEFORE purchasing any parts.**
 
 [Pneumatics assembly model](internals.iam)
 
->**TODO:** drawings?
-
-| Top | Bottom |
-:------------------:|:-----------------:|
-| [![](images/top_smaller.jpg)](images/top.jpg) | [![](images/bottom_smaller.jpg)](images/bottom.jpg) |
-
 The rough order/hierarchy of internals assembly is as follows:
 
-* Assemble the [equipment tray](tray) which will hold everything else
-* Install the [filter panel](filter_panel) to the equipment bracket
-* Install the [blower assembly](blower) onto the pneumatics tray
-* Attach the [air check valve](air_check_valve) to the blower assembly
-* Install 2x [Pinch valves](pinch_valve), for air influx and exhale control
-  * remember to label the pinch valve wiring "inhale" and "exhale" appropriately
-* Install the [oxygen regulator assembly](regulator)
-* Install the [proportional solenoid](PSOL) valve for oxygen control
-* Install the main tubing, sensors and manifolds:
+1. Assemble the [equipment tray](tray) which will hold everything else
+2. Install the [filter panel](filter_panel) to the equipment bracket
+3. Install the [blower assembly](blower) onto the pneumatics tray
+4. Attach the [air check valve](air_check_valve) to the blower assembly
+5. Install 2x [Pinch valves](pinch_valve), for air influx and exhale control
+    * remember to label the pinch valve wiring "inhale" and "exhale" appropriately
+6. Install the [oxygen regulator assembly](regulator)
+7. Install the [proportional solenoid](PSOL) valve for oxygen control
+
+| Step 1                    | Steps 2-7                 |
+|:-------------------------:|:-------------------------:|
+| ![](images/process_1.jpg) | ![](images/process_2.jpg) |
+
+8. Install the main tubing, sensors and manifolds:
     * [Manifold](manifold) - for oxygen sensor and overpressure relief valve
     * [Oxygen mixer](mixer) - for mixing air and oxygen before delivery to patient
     * [Venturi flow sensors](venturi) - in-house design of affordable flow sensors
     * Various tubing adapters `[13-15]`
     * 3/4 tubing `[16]` and clamps `[17]`
-* Install the [display panel](display_panel)
-* Install oxygen line tubing `[A19]` and clamps `[20]`
+9. Install the [display panel](display_panel)
+10. Install oxygen line tubing `[A19]` and clamps `[20]`
+
+| Step 8                    | Steps 9-10 (except clamps) |
+|:-------------------------:|:--------------------------:|
+| ![](images/process_3.jpg) | ![](images/process_4.jpg)  |
+
 
 ### Sensor tubing
 
@@ -126,53 +130,22 @@ Use the following principles to guide this process:
 * The differential sensors on the PCB (or daughter-card) have 2 ports each:
   * the upper port (further from board) is for upstream
   * the lower port (closer to board) is for downstream
-* YELLOW indicates the tube in question 
-* BLACK indicates the tubes that have been previously installed in steps beforehand
 
 Connect the tubing as follows
 * upstream port on the `air influx venturi` to upper port on the `INHALE FLOW` sensor on the PCB
-
-<img src="images/rendering_upstream_air_influx_sensor_tube_install.jpg" width="600">
-
 * downstream port on the `air influx venturi` to lower port on the `INHALE FLOW` sensor on the PCB
-
-<img src="images/rendering_downstream_air_influx_sensor_tube_install.jpg" width="600">
-
 * upstream port on the `oxygen influx venturi` to upper port on the pressure sensor on the daughter-card
-
-<img src="images/rendering_upstream_oxygen_influx_sensor_tube_install.jpg" width="600"> 
-
-<img src="images/rendering_upstream_oxygen_influx_sensor_tube_install_2.jpg" width="600">
-
 * downstream port on the `oxygen influx venturi` to lower port on the pressure sensor on the daughter-card
-
-<img src="images/rendering_downstream_oxygen_influx_sensor_tube_install - Copy.jpg" width="490">
-
-<img src="images/rendering_downstream_oxygen_influx_sensor_tube_install_2.jpg" width="448">
-
 * downstream port on the `exhale venturi` to lower port on the `EXHALE FLOW` sensor on the PCB
-
-<img src="images/rendering_downstream_outflow_sensor_tube_install.jpg" width="600">
-
 * upstream port on the `exhale venturi` to wye splitter `[A22]`
-
-<img src="images/rendering_upstream_outflow_sensor_tube_install.jpg" width="500">
-
-<img src="images/rendering_y_connector_install.jpg" width="472">
-
-<img src="images/rendering_y_connector_install_2.jpg" width="500">
-
 * wye splitter `[A22]` to the upper port on the `PATIENT PRESSURE` sensor on the PCB
-
-<img src="images/rendering_patient_pressure_sensor_tube_install.jpg" width="600">
-
 * wye splitter `[A22]` to the upper port on the `EXHALE FLOW` sensor on the PCB
-
-<img src="images/rendering_upstream_outflow_sensor_tube_2_install.jpg" width="600">
-
-<img src="images/rendering_upstream_outflow_sensor_tube_2_install_2.jpg" width="600">
-
 * the lower port on the `PATIENT PRESSURE` sensor remains open to atmosphere
+
+| Air influx                     | Oxygen influx                  | Outflow and patient pressure   |
+|:------------------------------:|:------------------------------:|:------------------------------:|
+| ![](images/sensor_tubes_1.jpg) | ![](images/sensor_tubes_2.jpg) | ![](images/sensor_tubes_3.jpg) |
+
 
 ### Final wiring
 
@@ -192,6 +165,6 @@ You can now connect all the wiring (except main power):
 * Secure sensor tubing with zip ties `[A24]`, but do so lightly. Don't tighten them to the point where the
   air flow is restricted in the tubes or where the wires can't move at all.
 
-> **TODO:** renderings of sub-systems and intermediate steps
-
->**TODO:** point out components in photos
+| Top view          | Bottom view       |
+:------------------:|:-----------------:|
+| [![](images/top_smaller.jpg)](images/top.jpg) | [![](images/bottom_smaller.jpg)](images/bottom.jpg) |

@@ -20,7 +20,7 @@ working to rapidly design a low-cost and [open-source](open_source.md) ventilato
 global supply chain. Our objective is to provide the know-how and technology to enable others to manufacture these
 systems and put them in the hands of those who need them most.
 
-| Rendering of upcoming build  | Assembled v0.3 prototype |
+| Most recent rendering  | Assembled v0.3 prototype |
 |:---:|:---:|
 | [![](manufacturing/images/rendering_smaller.jpg)](manufacturing/images/rendering_full.jpg) | [![](manufacturing/images/assembled_smaller.jpg)](manufacturing/images/assembled_full.jpg) |
 

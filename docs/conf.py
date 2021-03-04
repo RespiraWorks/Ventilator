@@ -17,6 +17,7 @@ from sphinx.builders.html import StandaloneHTMLBuilder
 import subprocess, os
 import mlx.traceability
 
+from collections import OrderedDict
 
 # Doxygen
 subprocess.call("doxygen", shell=True)

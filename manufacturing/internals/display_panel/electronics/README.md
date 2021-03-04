@@ -1,10 +1,12 @@
 # Electronics assembly
 
-> **TODO:** renderings
+|   |   |
+|---|---|
+| ![](images/rendering_2.jpg) | ![](images/rendering_1.jpg) |
 
 This build constitutes the electrical, computing and digital user interface components.
 
-**Note:** that Main board (required) and Interim Board (optional) are custom components and will need to be fabricated
+**Note:** The Main board (required) and Interim Board (optional) are custom components and will need to be fabricated
 by a contract manufacturer before proceeding.
 
 ## Parts

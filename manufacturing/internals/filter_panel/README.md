@@ -11,23 +11,7 @@ and two without. The filter housings are installed on a clear acrylic sheet. In 
 available and/or required in particular markets or settings, this assembly can be easily redesigned and
 swapped out without significantly altering the rest of the ventilator design.
 
-## Custom parts
 
-This is the design for the custom cut acrylic plate for the filter housings.
-
-> **TODO: Drawing rather than rendering?**
-
-| Acrylic plate rendering |
-:------------------:|
-| ![](images/filter_panel_acrylic_plate_rendering.jpg)  |
-
-| Download Type | Link   |
-|:--------------|:-------|
-| Source: Inventor part file | [.ipt](filter_panel_acrylic_plate.ipt) |
-| Drawing                    | [.idw](filter_panel_acrylic_plate.idw) [.pdf](filter_panel_acrylic_plate.pdf)|
-| Export for laser cutting   | [.dxf](filter_panel_acrylic_plate.dxf) |
-
-The plate may be produced using a laser cutter or with common woodworking tools.
 
 ## Parts
 
@@ -60,13 +44,26 @@ BEFORE purchasing any parts.**
 [a8mcmc]: https://www.mcmaster.com/92095A193/
 [a9mcmc]: https://www.mcmaster.com/92095A189/
 
+## Custom parts
+
+### Filter panel acrylic plate
+
+This is the design for the custom cut acrylic plate for the filter housings.
+
+|                       |                       |
+|-----------------------|-----------------------|
+| [![](images/filter_panel_acrylic.jpg)](exports/filter_panel_acrylic_plate.pdf) | ![.iam](images/filter_panel_acrylic_rendering.jpg) |
+
+| Download type | Link   |
+|:--------------|:-------|
+| Engineering drawing      | [.idw](filter_panel_acrylic_plate.idw) [.pdf](exports/filter_panel_acrylic_plate.pdf)|
+| Export for laser cutting | [.dxf](exports/filter_panel_acrylic_plate.dxf) |
+| Source: part CAD model   | [.ipt](filter_panel_acrylic_plate.ipt) |
+
+The plate may be produced using a laser cutter or with common woodworking tools.
+
+
 ## Assembly
-
-| Part  | Source |
-|:------|:-------|
-| Filter panel assembly | [.iam](filter_panel_assembly.iam) |
-
-> **TODO: Drawings**
 
 **Note: Please also see general advice in the [manufacturing methods guide](../../methods).**
 
@@ -74,10 +71,11 @@ BEFORE purchasing any parts.**
 
 * Disassemble the individual holders and integrate the housings with the acrylic panel using M4 hardware.
 
-|                            |
-|:--------------------------:|
-|![](images/panel1.jpg) |
+|                       |                       |
+|-----------------------|-----------------------|
+| [![](images/filter_panel_assembly.jpg)](exports/filter_panel_assembly.pdf) | ![](images/panel1.jpg) |
 
-|                            |
-|:--------------------------:|
-|![](images/panel2.jpg) |
+| Download type | Link   |
+|:--------------|:-------|
+|Engineering Drawing        | [.idw](filter_panel_assembly.idw) [.pdf](exports/filter_panel_assembly.pdf) |
+|Source: assembly CAD model | [.iam](filter_panel_assembly.iam) |

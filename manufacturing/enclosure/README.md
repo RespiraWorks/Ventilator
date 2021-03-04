@@ -1,10 +1,8 @@
 # Enclosure
 
-| Rendering | Exploded View |
+| Front | Back |
 :------------------:|:-----------------:|
-| ![](images/enclosure_rendering.jpg)  | ![](images/enclosure_exploded.jpg)  |
-
-> **TODO:** renderings update
+| ![](images/rendering_front.jpg)  | ![](images/rendering_back.jpg)  |
 
 ## Design rationale
 

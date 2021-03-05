@@ -608,7 +608,7 @@ U 1 1 603D30AF
 P 8700 4250
 F 0 "J?" H 8900 4100 50  0000 R CNN
 F 1 "BAT-BALANCE JST XH 5-pin" H 9900 4200 50  0000 R CNN
-F 2 "" H 8700 4250 50  0001 C CNN
+F 2 "RespiraWorks_Std:JST_XH_B5B-XH-A_1x05_P2.50mm_Vertical" H 8700 4250 50  0001 C CNN
 F 3 "https://www.jst-mfg.com/product/pdf/eng/eXH.pdf" H 8700 4250 50  0001 C CNN
 F 4 "JST" H 8700 4250 50  0001 C CNN "Manufacturer"
 F 5 "B5B-XH-A(LF)(SN)" H 9550 4300 50  0000 R CNN "Manufacturer PN"

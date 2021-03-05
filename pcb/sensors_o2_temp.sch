@@ -164,7 +164,7 @@ Wire Wire Line
 	3750 4050 3450 4050
 Connection ~ 3450 4050
 Text HLabel 7700 5950 2    50   Output ~ 0
-Oxygen_Level
+Oxygen_FiO2
 $Comp
 L RespiraWorks:INA333AIDGKR U?
 U 1 1 60132AA0
@@ -514,7 +514,7 @@ AR Path="/5FCD4EEA/600F71F1/60132B22" Ref="R?"  Part="1"
 AR Path="/5FCD4EEA/600F723B/60132B22" Ref="R?"  Part="1" 
 AR Path="/5FCD4EEA/60132B22" Ref="R?"  Part="1" 
 F 0 "R?" H 5950 6150 50  0000 C CNN
-F 1 "DNP" H 6000 6250 50  0000 C CNN
+F 1 "10k" H 6000 6250 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 5780 6200 50  0001 C CNN
 F 3 "~" H 5850 6200 50  0001 C CNN
 F 4 "KOA Speer" H 5850 6200 50  0001 C CNN "Manufacturer"

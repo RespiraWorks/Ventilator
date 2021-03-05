@@ -24,9 +24,8 @@ F4 "3V3-Sns" O R 6450 9200 50
 F5 "5V-Sns" O R 6450 9850 50 
 F6 "5V-GUI" O R 6450 9750 50 
 F7 "5V-Ctrl" O R 6450 9650 50 
-F8 "5V-USB-nEn" I L 5050 9450 50 
-F9 "5V-USB" I L 5050 9350 50 
-F10 "UI-Power-Off" I L 5050 9700 50 
+F8 "5V-USB" I L 5050 9350 50 
+F9 "UI-Power-Off" I L 5050 9700 50 
 $EndSheet
 $Sheet
 S 8700 1050 1050 2600
@@ -230,7 +229,7 @@ F3 "Stepper2_Temp" O R 3050 7800 50
 F4 "Blower_Temp" O R 3050 7900 50 
 F5 "Batt_Temp" O R 3050 8000 50 
 F6 "Spare_Temp" O R 3050 8100 50 
-F7 "Oxygen_Level" O R 3050 8200 50 
+F7 "Oxygen_FiO2" O R 3050 8200 50 
 F8 "3V3" I L 2100 7700 50 
 $EndSheet
 $Sheet
@@ -348,17 +347,6 @@ Wire Wire Line
 	4200 7300 4200 7450
 Wire Wire Line
 	4200 7450 4250 7450
-$Comp
-L RespiraWorks:+5V_RPi #PWR?
-U 1 1 604285BD
-P 2300 1100
-F 0 "#PWR?" H 2300 1100 50  0001 C CNN
-F 1 "+5V_RPi" H 2285 1273 50  0000 C CNN
-F 2 "" H 2300 1100 50  0001 C CNN
-F 3 "" H 2300 1100 50  0001 C CNN
-	1    2300 1100
-	-1   0    0    -1  
-$EndComp
 Wire Wire Line
 	2300 1100 2500 1100
 Wire Wire Line
@@ -384,10 +372,10 @@ Wire Wire Line
 	11300 2400 10800 2400
 Text Label 10800 2400 0    50   ~ 0
 GUI-Buzzer
-Text Label 1950 2250 0    50   ~ 0
+Text Label 5000 2300 2    50   ~ 0
 GUI-Buzzer
 Wire Wire Line
-	1950 2250 2500 2250
+	5000 2300 4250 2300
 Wire Wire Line
 	9750 1800 10300 1800
 Wire Wire Line
@@ -451,14 +439,14 @@ F 3 "" H 3850 4650 50  0001 C CNN
 $EndComp
 Wire Wire Line
 	4400 4650 3850 4650
-Text Label 5250 2500 2    50   ~ 0
+Text Label 5600 2500 2    50   ~ 0
 UART-Tx-RPi-Rx-STM
-Text Label 5250 2600 2    50   ~ 0
+Text Label 5600 2600 2    50   ~ 0
 UART-Rx-RPi-Tx-STM
-Text Label 5250 2400 2    50   ~ 0
-UART-CTS-STM-RTS-RPi
-Text Label 5250 2300 2    50   ~ 0
-UART-RTS-STM-CTS-RPi
+Text Label 1400 1450 0    50   ~ 0
+UART-RTS-RPi-CTS-STM
+Text Label 1400 1350 0    50   ~ 0
+UART-CTS-RPi-RTS-STM
 Wire Wire Line
 	7800 2100 8700 2100
 Wire Wire Line
@@ -478,15 +466,11 @@ Wire Wire Line
 Text Label 8200 1900 0    50   ~ 0
 Inh-Flow
 Wire Wire Line
-	6900 2600 8700 2600
+	7650 2600 8700 2600
 Wire Wire Line
-	4250 2300 6600 2300
+	6600 2600 6600 2300
 Wire Wire Line
-	6600 2300 6900 2600
-Wire Wire Line
-	6600 2600 6900 2300
-Wire Wire Line
-	6900 2300 8700 2300
+	6600 2300 8700 2300
 Wire Wire Line
 	4250 2600 6600 2600
 Text Label 10900 4250 0    50   ~ 0
@@ -582,9 +566,9 @@ Wire Wire Line
 Wire Wire Line
 	3050 8200 3650 8200
 Text Label 3650 8200 2    50   ~ 0
-Oxygen-Level
+Oxygen-FiO2
 Text Label 10450 2650 2    50   ~ 0
-Oxygen-Level
+Oxygen-FiO2
 Wire Wire Line
 	9750 2650 10450 2650
 Text Label 10200 2750 0    50   ~ 0
@@ -610,17 +594,13 @@ Wire Wire Line
 Wire Wire Line
 	9750 2950 13100 2950
 Wire Wire Line
-	7000 2400 8700 2400
+	6700 2400 8700 2400
 Wire Wire Line
-	4250 2500 6900 2500
+	4250 2500 6700 2500
 Wire Wire Line
-	7000 2500 8700 2500
+	7650 2500 8700 2500
 Wire Wire Line
-	6900 2500 7000 2400
-Wire Wire Line
-	7000 2500 6900 2400
-Wire Wire Line
-	4250 2400 6900 2400
+	6700 2500 6700 2400
 Wire Wire Line
 	5250 3150 5550 3150
 Wire Wire Line
@@ -944,34 +924,12 @@ Wire Wire Line
 	7400 9700 7400 9850
 Wire Wire Line
 	7400 9850 6450 9850
-Text Label 5250 1350 0    50   ~ 0
-5V-USB-nEn
-Text Label 4450 9450 0    50   ~ 0
-5V-USB-nEn
-Wire Wire Line
-	4450 9450 5050 9450
-$Sheet
-S 5900 1050 1100 1000
-U 5FCD4D85
-F0 "STM Programmer for cycle controller" 50
-F1 "stm_programmer.sch" 50
-F2 "CC_SWCLK" O R 7000 1150 50 
-F3 "CC_SWDIO" B R 7000 1250 50 
-F4 "CC_SWO" B R 7000 1350 50 
-F5 "UART_Tx" O R 7000 1850 50 
-F6 "UART_Rx" I R 7000 1950 50 
-F7 "CC_nRST" O R 7000 1450 50 
-F8 "USB_Pwr_nEn" O L 5900 1350 50 
-F9 "5V-USB" O L 5900 1250 50 
-$EndSheet
 Wire Wire Line
 	7000 1950 7700 1950
 Wire Wire Line
 	7000 1850 7800 1850
 Wire Wire Line
 	7800 1850 7800 2100
-Wire Wire Line
-	5250 1350 5900 1350
 $Comp
 L RespiraWorks:+5V_USB #PWR?
 U 1 1 60BF948F
@@ -1289,7 +1247,7 @@ Oxygen-Flow
 Text Label 6550 6100 0    50   ~ 0
 Inh-Flow
 Text Label 6550 6200 0    50   ~ 0
-Oxygen-Level
+Oxygen-FiO2
 Text Label 6550 6300 0    50   ~ 0
 Patient-Pressure
 Text Label 6400 6400 0    50   ~ 0
@@ -1540,10 +1498,10 @@ Wire Wire Line
 	2100 7700 1900 7700
 Wire Wire Line
 	1900 7700 1900 7650
-Text Label 1750 1350 0    50   ~ 0
+Text Label 1750 1550 0    50   ~ 0
 Low-Alarm-Bat
 Wire Wire Line
-	1750 1350 2500 1350
+	1750 1550 2500 1550
 Wire Wire Line
 	9750 2000 11100 2000
 Wire Wire Line
@@ -1588,10 +1546,10 @@ Wire Wire Line
 	8700 2700 7650 2700
 Text Label 7650 2700 0    50   ~ 0
 Bat-Alert
-Text Label 1750 1450 0    50   ~ 0
+Text Label 1750 1650 0    50   ~ 0
 Bat-Alert
 Wire Wire Line
-	1750 1450 2500 1450
+	1750 1650 2500 1650
 Wire Wire Line
 	9750 1700 10300 1700
 Text Label 10300 1700 2    50   ~ 0
@@ -1856,29 +1814,15 @@ $EndComp
 $Comp
 L Connector:TestPoint TP?
 U 1 1 60A1D160
-P 2500 1550
+P 2500 2250
 AR Path="/5FCD50A5/60A1D160" Ref="TP?"  Part="1" 
 AR Path="/6052CC9F/60A1D160" Ref="TP?"  Part="1" 
 AR Path="/60A1D160" Ref="TP?"  Part="1" 
-F 0 "TP?" V 2500 1800 50  0000 C CNN
-F 1 "TP" V 2550 1600 50  0001 C CNN
-F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 2700 1550 50  0001 C CNN
-F 3 "~" H 2700 1550 50  0001 C CNN
-	1    2500 1550
-	0    -1   -1   0   
-$EndComp
-$Comp
-L Connector:TestPoint TP?
-U 1 1 60A1DCF0
-P 2500 1650
-AR Path="/5FCD50A5/60A1DCF0" Ref="TP?"  Part="1" 
-AR Path="/6052CC9F/60A1DCF0" Ref="TP?"  Part="1" 
-AR Path="/60A1DCF0" Ref="TP?"  Part="1" 
-F 0 "TP?" V 2500 1900 50  0000 C CNN
-F 1 "TP" V 2550 1700 50  0001 C CNN
-F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 2700 1650 50  0001 C CNN
-F 3 "~" H 2700 1650 50  0001 C CNN
-	1    2500 1650
+F 0 "TP?" V 2500 2500 50  0000 C CNN
+F 1 "TP" V 2550 2300 50  0001 C CNN
+F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 2700 2250 50  0001 C CNN
+F 3 "~" H 2700 2250 50  0001 C CNN
+	1    2500 2250
 	0    -1   -1   0   
 $EndComp
 $Comp
@@ -2846,4 +2790,52 @@ Wire Wire Line
 Connection ~ 14100 2400
 Wire Wire Line
 	14100 2400 15150 2400
+$Comp
+L RespiraWorks:+5V_GUI #PWR?
+U 1 1 60431361
+P 2300 1100
+F 0 "#PWR?" H 2300 1100 50  0001 C CNN
+F 1 "+5V_GUI" H 2285 1273 50  0000 C CNN
+F 2 "" H 2300 1100 50  0001 C CNN
+F 3 "" H 2300 1100 50  0001 C CNN
+	1    2300 1100
+	1    0    0    -1  
+$EndComp
+Text Label 7650 2500 0    50   ~ 0
+UART-RTS-RPi-CTS-STM
+Text Label 7650 2600 0    50   ~ 0
+UART-CTS-RPi-RTS-STM
+$Comp
+L Connector:TestPoint TP?
+U 1 1 6058513B
+P 4250 2400
+AR Path="/5FCD50A5/6058513B" Ref="TP?"  Part="1" 
+AR Path="/6052CC9F/6058513B" Ref="TP?"  Part="1" 
+AR Path="/6058513B" Ref="TP?"  Part="1" 
+F 0 "TP?" V 4250 2650 50  0000 C CNN
+F 1 "TP" V 4300 2450 50  0001 C CNN
+F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 4450 2400 50  0001 C CNN
+F 3 "~" H 4450 2400 50  0001 C CNN
+	1    4250 2400
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	1400 1350 2500 1350
+Wire Wire Line
+	2500 1450 1400 1450
+$Sheet
+S 5900 1050 1100 1000
+U 5FCD4D85
+F0 "STM Programmer for cycle controller" 50
+F1 "stm_programmer.sch" 50
+F2 "CC_SWCLK" O R 7000 1150 50 
+F3 "CC_SWDIO" B R 7000 1250 50 
+F4 "CC_SWO" B R 7000 1350 50 
+F5 "UART_Tx" O R 7000 1850 50 
+F6 "UART_Rx" I R 7000 1950 50 
+F7 "CC_nRST" O R 7000 1450 50 
+F8 "USB_Pwr_nEn" O L 5900 1350 50 
+F9 "5V-USB" O L 5900 1250 50 
+$EndSheet
+NoConn ~ 5900 1350
 $EndSCHEMATC

@@ -1743,7 +1743,7 @@ U 1 1 60565F40
 P 5800 3200
 F 0 "U?" H 5800 -1100 50  0000 C CNN
 F 1 "STM32L496VGT" H 5800 -1200 50  0000 C CNN
-F 2 "Package_QFP:LQFP-100_14x14mm_P0.5mm" H 6550 -900 50  0001 R CNN
+F 2 "RespiraWorks_Std:LQFP-100_14x14mm_P0.5mm" H 6550 -900 50  0001 R CNN
 F 3 "http://www.st.com/st-web-https://www.st.com/resource/en/datasheet/stm32l496vg.pdf" H 5800 3200 50  0001 C CNN
 	1    5800 3200
 	1    0    0    -1  

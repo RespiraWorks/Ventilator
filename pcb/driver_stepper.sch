@@ -16,14 +16,14 @@ $EndDescr
 $Comp
 L RespiraWorks:+12V_Step1 #PWR?
 U 1 1 5FF913C6
-P 4950 1250
+P 6450 1250
 AR Path="/5FCD50A5/5FF913C6" Ref="#PWR?"  Part="1" 
 AR Path="/6052CC9F/5FF913C6" Ref="#PWR?"  Part="1" 
-F 0 "#PWR?" H 4950 1250 50  0001 C CNN
-F 1 "+12V_Step1" H 4935 1423 50  0000 C CNN
-F 2 "" H 4950 1250 50  0001 C CNN
-F 3 "" H 4950 1250 50  0001 C CNN
-	1    4950 1250
+F 0 "#PWR?" H 6450 1250 50  0001 C CNN
+F 1 "+12V_Step1" H 6435 1423 50  0000 C CNN
+F 2 "" H 6450 1250 50  0001 C CNN
+F 3 "" H 6450 1250 50  0001 C CNN
+	1    6450 1250
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -101,27 +101,27 @@ $EndComp
 $Comp
 L power:GND #PWR?
 U 1 1 5FF917FF
-P 4350 1550
+P 5850 1550
 AR Path="/5FCD50A5/5FF917FF" Ref="#PWR?"  Part="1" 
 AR Path="/6052CC9F/5FF917FF" Ref="#PWR?"  Part="1" 
-F 0 "#PWR?" H 4350 1300 50  0001 C CNN
-F 1 "GND" H 4355 1377 50  0000 C CNN
-F 2 "" H 4350 1550 50  0001 C CNN
-F 3 "" H 4350 1550 50  0001 C CNN
-	1    4350 1550
+F 0 "#PWR?" H 5850 1300 50  0001 C CNN
+F 1 "GND" H 5855 1377 50  0000 C CNN
+F 2 "" H 5850 1550 50  0001 C CNN
+F 3 "" H 5850 1550 50  0001 C CNN
+	1    5850 1550
 	1    0    0    -1  
 $EndComp
 $Comp
 L power:GND #PWR?
 U 1 1 5FF91818
-P 4700 1550
+P 6200 1550
 AR Path="/5FCD50A5/5FF91818" Ref="#PWR?"  Part="1" 
 AR Path="/6052CC9F/5FF91818" Ref="#PWR?"  Part="1" 
-F 0 "#PWR?" H 4700 1300 50  0001 C CNN
-F 1 "GND" H 4705 1377 50  0000 C CNN
-F 2 "" H 4700 1550 50  0001 C CNN
-F 3 "" H 4700 1550 50  0001 C CNN
-	1    4700 1550
+F 0 "#PWR?" H 6200 1300 50  0001 C CNN
+F 1 "GND" H 6205 1377 50  0000 C CNN
+F 2 "" H 6200 1550 50  0001 C CNN
+F 3 "" H 6200 1550 50  0001 C CNN
+	1    6200 1550
 	1    0    0    -1  
 $EndComp
 Text Notes 2700 1900 0    50   ~ 0
@@ -129,145 +129,16 @@ One 220 near each VS region in layout
 $Comp
 L RespiraWorks:+12V_Step1 #PWR?
 U 1 1 5FF9225C
-P 13900 3100
+P 14600 3450
 AR Path="/5FCD50A5/5FF9225C" Ref="#PWR?"  Part="1" 
 AR Path="/6052CC9F/5FF9225C" Ref="#PWR?"  Part="1" 
-F 0 "#PWR?" H 13900 3100 50  0001 C CNN
-F 1 "+12V_Step1" H 13885 3273 50  0000 C CNN
-F 2 "" H 13900 3100 50  0001 C CNN
-F 3 "" H 13900 3100 50  0001 C CNN
-	1    13900 3100
+F 0 "#PWR?" H 14600 3450 50  0001 C CNN
+F 1 "+12V_Step1" H 14585 3623 50  0000 C CNN
+F 2 "" H 14600 3450 50  0001 C CNN
+F 3 "" H 14600 3450 50  0001 C CNN
+	1    14600 3450
 	1    0    0    -1  
 $EndComp
-$Comp
-L Device:R R?
-U 1 1 5FFAE20F
-P 2300 5450
-AR Path="/5FCD50A5/5FFAE20F" Ref="R?"  Part="1" 
-AR Path="/6052CC9F/5FFAE20F" Ref="R?"  Part="1" 
-F 0 "R?" H 2370 5496 50  0000 L CNN
-F 1 "0.1, 0.4W+" H 2370 5405 50  0000 L CNN
-F 2 "RespiraWorks_Std:R_2512_6332Metric" V 2230 5450 50  0001 C CNN
-F 3 "~" H 2300 5450 50  0001 C CNN
-F 4 "Stackpole" H 2300 5450 50  0001 C CNN "Manufacturer"
-F 5 "CSRN2512FTR100" H 2300 5450 50  0001 C CNN "Manufacturer PN"
-	1    2300 5450
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	3550 5250 2300 5250
-Wire Wire Line
-	2300 5250 2300 5300
-Wire Wire Line
-	3550 5050 2300 5050
-Wire Wire Line
-	2300 5050 2300 5250
-Connection ~ 2300 5250
-Wire Wire Line
-	3550 4950 2300 4950
-Wire Wire Line
-	2300 4950 2300 5050
-Connection ~ 2300 5050
-Wire Wire Line
-	3550 4850 2300 4850
-Wire Wire Line
-	2300 4850 2300 4950
-Connection ~ 2300 4950
-Wire Wire Line
-	3550 4750 2300 4750
-Wire Wire Line
-	2300 4750 2300 4850
-Connection ~ 2300 4850
-Wire Wire Line
-	3550 4600 2300 4600
-Wire Wire Line
-	2300 4600 2300 4750
-Connection ~ 2300 4750
-Wire Wire Line
-	3550 4500 2300 4500
-Wire Wire Line
-	2300 4500 2300 4600
-Connection ~ 2300 4600
-Wire Wire Line
-	3550 4400 2300 4400
-Wire Wire Line
-	2300 4400 2300 4500
-Connection ~ 2300 4500
-Wire Wire Line
-	3550 4300 2300 4300
-Wire Wire Line
-	2300 4300 2300 4400
-Connection ~ 2300 4400
-$Comp
-L power:GND #PWR?
-U 1 1 5FFC8918
-P 2300 5600
-AR Path="/5FCD50A5/5FFC8918" Ref="#PWR?"  Part="1" 
-AR Path="/6052CC9F/5FFC8918" Ref="#PWR?"  Part="1" 
-F 0 "#PWR?" H 2300 5350 50  0001 C CNN
-F 1 "GND" H 2305 5427 50  0000 C CNN
-F 2 "" H 2300 5600 50  0001 C CNN
-F 3 "" H 2300 5600 50  0001 C CNN
-	1    2300 5600
-	1    0    0    -1  
-$EndComp
-$Comp
-L power:GND #PWR?
-U 1 1 5FFC89E3
-P 2600 6900
-AR Path="/5FCD50A5/5FFC89E3" Ref="#PWR?"  Part="1" 
-AR Path="/6052CC9F/5FFC89E3" Ref="#PWR?"  Part="1" 
-F 0 "#PWR?" H 2600 6650 50  0001 C CNN
-F 1 "GND" H 2605 6727 50  0000 C CNN
-F 2 "" H 2600 6900 50  0001 C CNN
-F 3 "" H 2600 6900 50  0001 C CNN
-	1    2600 6900
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	3550 6500 2600 6500
-Wire Wire Line
-	2600 6500 2600 6600
-Wire Wire Line
-	3550 6300 2600 6300
-Wire Wire Line
-	2600 6300 2600 6500
-Connection ~ 2600 6500
-Wire Wire Line
-	3550 6200 2600 6200
-Wire Wire Line
-	2600 6200 2600 6300
-Connection ~ 2600 6300
-Wire Wire Line
-	2600 6100 2600 6200
-Connection ~ 2600 6200
-Wire Wire Line
-	2600 6100 3550 6100
-Wire Wire Line
-	3550 6000 2600 6000
-Wire Wire Line
-	2600 6000 2600 6100
-Connection ~ 2600 6100
-Wire Wire Line
-	3550 5850 2600 5850
-Wire Wire Line
-	2600 5850 2600 6000
-Connection ~ 2600 6000
-Wire Wire Line
-	3550 5750 2600 5750
-Connection ~ 2600 5850
-Wire Wire Line
-	3550 5650 2600 5650
-Connection ~ 2600 5750
-Wire Wire Line
-	2600 5750 2600 5850
-Wire Wire Line
-	3550 5550 2600 5550
-Wire Wire Line
-	2600 5550 2600 5650
-Connection ~ 2600 5650
-Wire Wire Line
-	2600 5650 2600 5750
 $Comp
 L power:GND #PWR?
 U 1 1 6001326E
@@ -302,66 +173,6 @@ Wire Wire Line
 Connection ~ 5600 8350
 $Comp
 L RespiraWorks:+12V_Step1 #PWR?
-U 1 1 600310B7
-P 5900 2950
-AR Path="/5FCD50A5/600310B7" Ref="#PWR?"  Part="1" 
-AR Path="/6052CC9F/600310B7" Ref="#PWR?"  Part="1" 
-F 0 "#PWR?" H 5900 2950 50  0001 C CNN
-F 1 "+12V_Step1" H 5885 3123 50  0000 C CNN
-F 2 "" H 5900 2950 50  0001 C CNN
-F 3 "" H 5900 2950 50  0001 C CNN
-	1    5900 2950
-	1    0    0    -1  
-$EndComp
-$Comp
-L Device:C C?
-U 1 1 600361CF
-P 5750 3300
-AR Path="/5FCD50A5/600361CF" Ref="C?"  Part="1" 
-AR Path="/6052CC9F/600361CF" Ref="C?"  Part="1" 
-F 0 "C?" V 5500 3200 50  0000 L CNN
-F 1 "100nF" V 5600 3150 50  0000 L CNN
-F 2 "RespiraWorks_Std:C_0603_1608Metric" H 5788 3150 50  0001 C CNN
-F 3 "~" H 5750 3300 50  0001 C CNN
-F 4 "50V" V 5750 3300 50  0001 C CNN "Voltage"
-F 5 "X7R" H 5750 3300 50  0001 C CNN "Dielectric"
-F 6 "Kemet" H 5750 3300 50  0001 C CNN "Manufacturer"
-F 7 "C0603C104K5RACTU" H 5750 3300 50  0001 C CNN "Manufacturer PN"
-	1    5750 3300
-	0    1    1    0   
-$EndComp
-$Comp
-L power:GND #PWR?
-U 1 1 60036333
-P 5600 3300
-AR Path="/5FCD50A5/60036333" Ref="#PWR?"  Part="1" 
-AR Path="/6052CC9F/60036333" Ref="#PWR?"  Part="1" 
-F 0 "#PWR?" H 5600 3050 50  0001 C CNN
-F 1 "GND" H 5605 3127 50  0000 C CNN
-F 2 "" H 5600 3300 50  0001 C CNN
-F 3 "" H 5600 3300 50  0001 C CNN
-	1    5600 3300
-	1    0    0    -1  
-$EndComp
-$Comp
-L Device:C C?
-U 1 1 603D61E4
-P 8100 6450
-AR Path="/5FCD50A5/603D61E4" Ref="C?"  Part="1" 
-AR Path="/6052CC9F/603D61E4" Ref="C?"  Part="1" 
-F 0 "C?" H 8150 6550 50  0000 L CNN
-F 1 "470nF" H 8150 6350 50  0000 L CNN
-F 2 "RespiraWorks_Std:C_0805_2012Metric" H 8138 6300 50  0001 C CNN
-F 3 "~" H 8100 6450 50  0001 C CNN
-F 4 "50V" H 8100 6450 50  0001 C CNN "Voltage"
-F 5 "X7R" H 8100 6450 50  0001 C CNN "Dielectric"
-F 6 "Kemet" H 8100 6450 50  0001 C CNN "Manufacturer"
-F 7 "C0805C474K5RACTU" H 8100 6450 50  0001 C CNN "Manufacturer PN"
-	1    8100 6450
-	1    0    0    -1  
-$EndComp
-$Comp
-L RespiraWorks:+12V_Step1 #PWR?
 U 1 1 603D623E
 P 8100 6050
 AR Path="/5FCD50A5/603D623E" Ref="#PWR?"  Part="1" 
@@ -381,46 +192,16 @@ Wire Wire Line
 	8100 6300 8100 6250
 Connection ~ 8100 6250
 $Comp
-L Device:C C?
-U 1 1 6041AE63
-P 7500 6550
-AR Path="/5FCD50A5/6041AE63" Ref="C?"  Part="1" 
-AR Path="/6052CC9F/6041AE63" Ref="C?"  Part="1" 
-F 0 "C?" V 7250 6500 50  0000 L CNN
-F 1 "47nF" V 7350 6450 50  0000 L CNN
-F 2 "RespiraWorks_Std:C_0603_1608Metric" H 7538 6400 50  0001 C CNN
-F 3 "~" H 7500 6550 50  0001 C CNN
-F 4 "X7R" H 7500 6550 50  0001 C CNN "Dielectric"
-F 5 "Kemet" H 7500 6550 50  0001 C CNN "Manufacturer"
-F 6 "C0603C473K5RACTU" H 7500 6550 50  0001 C CNN "Manufacturer PN"
-F 7 "50V" H 7500 6550 50  0001 C CNN "Voltage"
-	1    7500 6550
-	0    1    1    0   
-$EndComp
-$Comp
-L power:GND #PWR?
-U 1 1 6042D7D6
-P 6100 3300
-AR Path="/5FCD50A5/6042D7D6" Ref="#PWR?"  Part="1" 
-AR Path="/6052CC9F/6042D7D6" Ref="#PWR?"  Part="1" 
-F 0 "#PWR?" H 6100 3050 50  0001 C CNN
-F 1 "GND" H 6105 3127 50  0000 C CNN
-F 2 "" H 6100 3300 50  0001 C CNN
-F 3 "" H 6100 3300 50  0001 C CNN
-	1    6100 3300
-	1    0    0    -1  
-$EndComp
-$Comp
 L power:GND #PWR?
 U 1 1 604579EC
-P 4100 3300
+P 4600 3300
 AR Path="/5FCD50A5/604579EC" Ref="#PWR?"  Part="1" 
 AR Path="/6052CC9F/604579EC" Ref="#PWR?"  Part="1" 
-F 0 "#PWR?" H 4100 3050 50  0001 C CNN
-F 1 "GND" H 4105 3127 50  0000 C CNN
-F 2 "" H 4100 3300 50  0001 C CNN
-F 3 "" H 4100 3300 50  0001 C CNN
-	1    4100 3300
+F 0 "#PWR?" H 4600 3050 50  0001 C CNN
+F 1 "GND" H 4605 3127 50  0000 C CNN
+F 2 "" H 4600 3300 50  0001 C CNN
+F 3 "" H 4600 3300 50  0001 C CNN
+	1    4600 3300
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -480,21 +261,6 @@ F 6 "Kemet" H 5200 3300 50  0001 C CNN "Manufacturer"
 F 7 "C0603C104K5RACTU" H 5200 3300 50  0001 C CNN "Manufacturer PN"
 	1    5200 3300
 	0    -1   -1   0   
-$EndComp
-$Comp
-L RespiraWorks:powerSTEP01 U?
-U 1 1 6049D3EE
-P 5500 5600
-AR Path="/5FCD50A5/6049D3EE" Ref="U?"  Part="1" 
-AR Path="/6052CC9F/6049D3EE" Ref="U?"  Part="1" 
-F 0 "U?" H 3850 7500 60  0000 C CNN
-F 1 "powerSTEP01" H 5500 5550 60  0000 C CNN
-F 2 "RespiraWorks:POWERSTEP01" H 6800 5840 60  0001 C CNN
-F 3 "https://www.st.com/content/ccc/resource/technical/document/datasheet/3f/48/e2/37/6b/ac/4c/f5/DM00090983.pdf/files/DM00090983.pdf/jcr:content/translations/en.DM00090983.pdf" H 6250 6550 60  0001 C CNN
-F 4 "STMicroelectronics" H 5500 5600 50  0001 C CNN "Manufacturer"
-F 5 "POWERSTEP01" H 5500 5600 50  0001 C CNN "Manufacturer PN"
-	1    5500 5600
-	1    0    0    -1  
 $EndComp
 Wire Wire Line
 	3550 6850 3300 6850
@@ -689,65 +455,25 @@ Wire Wire Line
 Wire Wire Line
 	7600 3900 7600 4000
 Wire Wire Line
-	7350 4200 7600 4200
-Wire Wire Line
-	7600 4200 7600 4100
-Wire Wire Line
-	7350 4100 7600 4100
-Connection ~ 7600 4100
-Wire Wire Line
 	7350 4000 7600 4000
-Connection ~ 7600 4000
 Wire Wire Line
 	7350 4400 7600 4400
 Wire Wire Line
 	7600 4400 7600 4500
 Wire Wire Line
-	7350 4700 7600 4700
-Wire Wire Line
-	7600 4700 7600 4600
-Wire Wire Line
-	7350 4600 7600 4600
-Connection ~ 7600 4600
-Wire Wire Line
 	7350 4500 7600 4500
-Connection ~ 7600 4500
 Wire Wire Line
 	7350 5100 7600 5100
 Wire Wire Line
 	7600 5100 7600 5200
 Wire Wire Line
-	7350 5400 7600 5400
-Wire Wire Line
-	7600 5400 7600 5300
-Wire Wire Line
-	7350 5300 7600 5300
-Connection ~ 7600 5300
-Wire Wire Line
 	7350 5200 7600 5200
-Connection ~ 7600 5200
 Wire Wire Line
 	7350 5550 7600 5550
 Wire Wire Line
 	7600 5550 7600 5650
 Wire Wire Line
-	7350 5850 7600 5850
-Wire Wire Line
-	7600 5850 7600 5750
-Wire Wire Line
-	7350 5750 7600 5750
-Connection ~ 7600 5750
-Wire Wire Line
 	7350 5650 7600 5650
-Connection ~ 7600 5650
-Wire Wire Line
-	7600 4000 7600 4100
-Wire Wire Line
-	7600 4500 7600 4600
-Wire Wire Line
-	7600 5200 7600 5300
-Wire Wire Line
-	7600 5650 7600 5750
 $Comp
 L Device:R R?
 U 1 1 6084D0B2
@@ -839,51 +565,6 @@ F 5 "LTST-C170KSKT" H 8950 8600 50  0001 C CNN "Manufacturer PN"
 $EndComp
 Text Notes 1900 8300 2    39   ~ 0
 D9
-$Comp
-L Device:C C?
-U 1 1 601449F4
-P 4750 3300
-AR Path="/5FCD50A5/601449F4" Ref="C?"  Part="1" 
-AR Path="/6052CC9F/601449F4" Ref="C?"  Part="1" 
-F 0 "C?" V 5000 3300 50  0000 L CNN
-F 1 "220nF" V 4900 3200 50  0000 L CNN
-F 2 "RespiraWorks_Std:C_0805_2012Metric" H 4788 3150 50  0001 C CNN
-F 3 "~" H 4750 3300 50  0001 C CNN
-F 4 "100V" H 4750 3300 50  0001 C CNN "Voltage"
-F 5 "X7R" H 4750 3300 50  0001 C CNN "Dielectric"
-F 6 "Kemet" H 4750 3300 50  0001 C CNN "Manufacturer"
-F 7 "C0805C224K1RACTU" H 4750 3300 50  0001 C CNN "Manufacturer PN"
-	1    4750 3300
-	0    -1   -1   0   
-$EndComp
-$Comp
-L power:GND #PWR?
-U 1 1 6014533F
-P 4600 3300
-AR Path="/5FCD50A5/6014533F" Ref="#PWR?"  Part="1" 
-AR Path="/6052CC9F/6014533F" Ref="#PWR?"  Part="1" 
-F 0 "#PWR?" H 4600 3050 50  0001 C CNN
-F 1 "GND" H 4605 3127 50  0000 C CNN
-F 2 "" H 4600 3300 50  0001 C CNN
-F 3 "" H 4600 3300 50  0001 C CNN
-	1    4600 3300
-	1    0    0    -1  
-$EndComp
-$Comp
-L Device:R R?
-U 1 1 600CB04C
-P 2600 6750
-AR Path="/5FCD50A5/600CB04C" Ref="R?"  Part="1" 
-AR Path="/6052CC9F/600CB04C" Ref="R?"  Part="1" 
-F 0 "R?" H 2670 6796 50  0000 L CNN
-F 1 "0.1, 0.4W+" H 2650 6900 50  0000 L CNN
-F 2 "RespiraWorks_Std:R_2512_6332Metric" V 2530 6750 50  0001 C CNN
-F 3 "~" H 2600 6750 50  0001 C CNN
-F 4 "Stackpole" H 2600 6750 50  0001 C CNN "Manufacturer"
-F 5 "CSRN2512FTR100" H 2600 6750 50  0001 C CNN "Manufacturer PN"
-	1    2600 6750
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
 	9200 7700 9300 7700
 Wire Wire Line
@@ -1032,21 +713,21 @@ Connection ~ 7600 5550
 $Comp
 L Device:CP1 C?
 U 1 1 600D68EA
-P 4350 1400
+P 5850 1400
 AR Path="/5FCD50A5/600D68EA" Ref="C?"  Part="1" 
 AR Path="/6052CC9F/600D68EA" Ref="C?"  Part="1" 
-F 0 "C?" H 4465 1438 50  0000 L CNN
-F 1 "68uF" H 4400 1300 50  0000 L CNN
-F 2 "RespiraWorks_Std:CP_Elec_8x10" H 4350 1400 50  0001 C CNN
-F 3 "https://content.kemet.com/datasheets/KEM_T2009_T495.pdf" H 4350 1400 50  0001 C CNN
-F 4 "Nichicon" H 4350 1400 50  0001 C CNN "Manufacturer"
-F 5 "UUD1H680MNL1GS" H 4350 1400 50  0001 C CNN "Manufacturer PN"
-F 6 "Aluminum" H 4350 1400 50  0001 C CNN "Dielectric"
-F 7 "50V" H 4500 1200 50  0000 C CNN "Voltage"
-	1    4350 1400
+F 0 "C?" H 5965 1438 50  0000 L CNN
+F 1 "68uF" H 5900 1300 50  0000 L CNN
+F 2 "RespiraWorks_Std:CP_Elec_8x10" H 5850 1400 50  0001 C CNN
+F 3 "https://content.kemet.com/datasheets/KEM_T2009_T495.pdf" H 5850 1400 50  0001 C CNN
+F 4 "Nichicon" H 5850 1400 50  0001 C CNN "Manufacturer"
+F 5 "UUD1H680MNL1GS" H 5850 1400 50  0001 C CNN "Manufacturer PN"
+F 6 "Aluminum" H 5850 1400 50  0001 C CNN "Dielectric"
+F 7 "50V" H 6000 1200 50  0000 C CNN "Voltage"
+	1    5850 1400
 	1    0    0    -1  
 $EndComp
-Connection ~ 4350 1250
+Connection ~ 5850 1250
 Wire Wire Line
 	8050 8600 8200 8600
 Wire Wire Line
@@ -1175,31 +856,28 @@ F 7 "C0805C224K1RACTU" H 4000 1400 50  0001 C CNN "Manufacturer PN"
 	1    4000 1400
 	1    0    0    -1  
 $EndComp
-Connection ~ 4000 1250
 Wire Wire Line
-	4000 1250 4350 1250
-Wire Wire Line
-	4350 1250 4700 1250
+	5850 1250 6200 1250
 $Comp
 L Device:CP1 C?
 U 1 1 601B6693
-P 4700 1400
+P 6200 1400
 AR Path="/5FCD50A5/601B6693" Ref="C?"  Part="1" 
 AR Path="/6052CC9F/601B6693" Ref="C?"  Part="1" 
-F 0 "C?" H 4815 1438 50  0000 L CNN
-F 1 "68uF" H 4750 1300 50  0000 L CNN
-F 2 "RespiraWorks_Std:CP_Elec_8x10" H 4700 1400 50  0001 C CNN
-F 3 "https://content.kemet.com/datasheets/KEM_T2009_T495.pdf" H 4700 1400 50  0001 C CNN
-F 4 "Nichicon" H 4700 1400 50  0001 C CNN "Manufacturer"
-F 5 "UUD1H680MNL1GS" H 4700 1400 50  0001 C CNN "Manufacturer PN"
-F 6 "Aluminum" H 4700 1400 50  0001 C CNN "Dielectric"
-F 7 "50V" H 4850 1200 50  0000 C CNN "Voltage"
-	1    4700 1400
+F 0 "C?" H 6315 1438 50  0000 L CNN
+F 1 "68uF" H 6250 1300 50  0000 L CNN
+F 2 "RespiraWorks_Std:CP_Elec_8x10" H 6200 1400 50  0001 C CNN
+F 3 "https://content.kemet.com/datasheets/KEM_T2009_T495.pdf" H 6200 1400 50  0001 C CNN
+F 4 "Nichicon" H 6200 1400 50  0001 C CNN "Manufacturer"
+F 5 "UUD1H680MNL1GS" H 6200 1400 50  0001 C CNN "Manufacturer PN"
+F 6 "Aluminum" H 6200 1400 50  0001 C CNN "Dielectric"
+F 7 "50V" H 6350 1200 50  0000 C CNN "Voltage"
+	1    6200 1400
 	1    0    0    -1  
 $EndComp
-Connection ~ 4700 1250
+Connection ~ 6200 1250
 Wire Wire Line
-	4700 1250 4950 1250
+	6200 1250 6450 1250
 $Comp
 L Connector:TestPoint TP?
 U 1 1 601D7DF2
@@ -1243,55 +921,28 @@ F 3 "" H 5050 3300 50  0001 C CNN
 $EndComp
 $Comp
 L Device:C C?
-U 1 1 603E4A50
-P 6250 3300
-AR Path="/5FCD50A5/603E4A50" Ref="C?"  Part="1" 
-AR Path="/6052CC9F/603E4A50" Ref="C?"  Part="1" 
-F 0 "C?" V 6000 3250 50  0000 L CNN
-F 1 "470nF" V 6100 3150 50  0000 L CNN
-F 2 "RespiraWorks_Std:C_0805_2012Metric" H 6288 3150 50  0001 C CNN
-F 3 "~" H 6250 3300 50  0001 C CNN
-F 4 "50V" H 6250 3300 50  0001 C CNN "Voltage"
-F 5 "X7R" H 6250 3300 50  0001 C CNN "Dielectric"
-F 6 "Kemet" H 6250 3300 50  0001 C CNN "Manufacturer"
-F 7 "C0805C474K5RACTU" H 6250 3300 50  0001 C CNN "Manufacturer PN"
-	1    6250 3300
-	0    1    1    0   
-$EndComp
-$Comp
-L Device:C C?
 U 1 1 603E54EA
-P 4250 3300
+P 4750 3300
 AR Path="/5FCD50A5/603E54EA" Ref="C?"  Part="1" 
 AR Path="/6052CC9F/603E54EA" Ref="C?"  Part="1" 
-F 0 "C?" V 4000 3200 50  0000 L CNN
-F 1 "100nF" V 4100 3150 50  0000 L CNN
-F 2 "RespiraWorks_Std:C_0603_1608Metric" H 4288 3150 50  0001 C CNN
-F 3 "~" H 4250 3300 50  0001 C CNN
-F 4 "50V" V 4250 3300 50  0001 C CNN "Voltage"
-F 5 "X7R" H 4250 3300 50  0001 C CNN "Dielectric"
-F 6 "Kemet" H 4250 3300 50  0001 C CNN "Manufacturer"
-F 7 "C0603C104K5RACTU" H 4250 3300 50  0001 C CNN "Manufacturer PN"
-	1    4250 3300
+F 0 "C?" V 4500 3200 50  0000 L CNN
+F 1 "100nF" V 4600 3150 50  0000 L CNN
+F 2 "RespiraWorks_Std:C_0603_1608Metric" H 4788 3150 50  0001 C CNN
+F 3 "~" H 4750 3300 50  0001 C CNN
+F 4 "50V" V 4750 3300 50  0001 C CNN "Voltage"
+F 5 "X7R" H 4750 3300 50  0001 C CNN "Dielectric"
+F 6 "Kemet" H 4750 3300 50  0001 C CNN "Manufacturer"
+F 7 "C0603C104K5RACTU" H 4750 3300 50  0001 C CNN "Manufacturer PN"
+	1    4750 3300
 	0    1    1    0   
 $EndComp
 Wire Wire Line
 	7350 7450 7550 7450
 Text HLabel 2450 2500 0    50   Input ~ 0
 3V3
-Wire Wire Line
-	6400 2500 5400 2500
-Connection ~ 5400 2500
-Wire Wire Line
-	4400 2500 4900 2500
-Connection ~ 4400 2500
-Wire Wire Line
-	3300 2500 4400 2500
 Connection ~ 4900 2500
 Wire Wire Line
 	4900 2500 5400 2500
-Wire Wire Line
-	6400 2500 6400 2600
 Wire Wire Line
 	2150 8000 1950 8000
 Text Label 1950 8000 0    50   ~ 0
@@ -1314,21 +965,6 @@ Wire Wire Line
 	8600 8850 8550 8850
 Wire Wire Line
 	8550 8600 8550 8850
-$Comp
-L RespiraWorks:powerSTEP01 U?
-U 2 1 60690995
-P 13450 5250
-AR Path="/5FCD50A5/60690995" Ref="U?"  Part="2" 
-AR Path="/6052CC9F/60690995" Ref="U?"  Part="2" 
-F 0 "U?" H 13450 7400 60  0000 C CNN
-F 1 "powerSTEP01" H 13450 7300 60  0000 C CNN
-F 2 "RespiraWorks:POWERSTEP01" H 14750 5490 60  0001 C CNN
-F 3 "https://www.st.com/content/ccc/resource/technical/document/datasheet/3f/48/e2/37/6b/ac/4c/f5/DM00090983.pdf/files/DM00090983.pdf/jcr:content/translations/en.DM00090983.pdf" H 14200 6200 60  0001 C CNN
-F 4 "STMicroelectronics" H 13450 5250 50  0001 C CNN "Manufacturer"
-F 5 "POWERSTEP01" H 13450 5250 50  0001 C CNN "Manufacturer PN"
-	2    13450 5250
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
 	7600 5550 8450 5550
 Connection ~ 9000 5550
@@ -1339,11 +975,6 @@ Wire Wire Line
 Connection ~ 7600 4400
 Connection ~ 10800 3900
 Connection ~ 3300 2500
-Connection ~ 4400 3300
-Wire Wire Line
-	4400 3300 4400 3500
-Wire Wire Line
-	4400 2500 4400 3300
 Connection ~ 4900 3300
 Wire Wire Line
 	4900 3300 4900 3500
@@ -1356,16 +987,6 @@ Wire Wire Line
 Connection ~ 5400 3300
 Wire Wire Line
 	5400 3300 5400 3500
-Connection ~ 5900 3300
-Wire Wire Line
-	5900 3300 5900 3500
-Wire Wire Line
-	5900 2950 5900 3300
-Connection ~ 6400 3300
-Wire Wire Line
-	6400 3300 6400 3500
-Wire Wire Line
-	6400 2900 6400 3300
 Text Label 3100 7100 0    50   ~ 0
 Switch
 $Comp
@@ -1491,7 +1112,7 @@ Wire Wire Line
 	1650 10100 2250 10100
 Connection ~ 2250 10100
 Text Notes 2450 10500 0    50   ~ 0
-EMI filter; datasheet-recommended orientation\nfast-on slow-off for switch\n(internal pull-up on Switch = 80K typical)
+EMI filter; datasheet-recommended orientation\nfast-on slow-off for switch\n(internal pull-up on Switch = 85K typical)
 Text Label 2700 9700 0    50   ~ 0
 3V3
 Wire Wire Line
@@ -1504,140 +1125,6 @@ Text Notes 1600 9450 0    50   ~ 0
 Space for optional fuse
 Text Notes 2250 1000 0    50   ~ 0
 Space for optional fuse
-Wire Wire Line
-	13900 3100 13900 3350
-Connection ~ 13900 3350
-Wire Wire Line
-	13900 3350 13900 3450
-Connection ~ 13900 3450
-Wire Wire Line
-	13900 3450 13900 3550
-Connection ~ 13900 3550
-Wire Wire Line
-	13900 3550 13900 3650
-Connection ~ 13900 3650
-Wire Wire Line
-	13900 3650 13900 3750
-Connection ~ 13900 3750
-Wire Wire Line
-	13900 3750 13900 3850
-Connection ~ 13900 3850
-Wire Wire Line
-	13900 3850 13900 3950
-Connection ~ 13900 3950
-Wire Wire Line
-	13900 3950 13900 4050
-Connection ~ 13900 4050
-Wire Wire Line
-	13900 4050 13900 4150
-Connection ~ 13900 4150
-Wire Wire Line
-	13900 4150 13900 4250
-Connection ~ 13900 4250
-Wire Wire Line
-	13900 4250 13900 4350
-Connection ~ 13900 4350
-Wire Wire Line
-	13900 4350 13900 4450
-Connection ~ 13900 4450
-Wire Wire Line
-	13900 4450 13900 4550
-Connection ~ 13900 4550
-Wire Wire Line
-	13900 4550 13900 4650
-Connection ~ 13900 4650
-Wire Wire Line
-	13900 4650 13900 4750
-Connection ~ 13900 4750
-Wire Wire Line
-	13900 4750 13900 4850
-Connection ~ 13900 4850
-Wire Wire Line
-	13900 4850 13900 4950
-Connection ~ 13900 4950
-Wire Wire Line
-	13900 4950 13900 5050
-Connection ~ 13900 5050
-Wire Wire Line
-	13900 5050 13900 5150
-Connection ~ 13900 5150
-Wire Wire Line
-	13900 5150 13900 5250
-Connection ~ 13900 5250
-Wire Wire Line
-	13900 5250 13900 5350
-Connection ~ 13900 5350
-Wire Wire Line
-	13900 5350 13900 5450
-Connection ~ 13900 5450
-Wire Wire Line
-	13900 5450 13900 5550
-Connection ~ 13900 5550
-Wire Wire Line
-	13900 5550 13900 5650
-Connection ~ 13900 5650
-Wire Wire Line
-	13900 5650 13900 5750
-Connection ~ 13900 5750
-Wire Wire Line
-	13900 5750 13900 5850
-Connection ~ 13900 5850
-Wire Wire Line
-	13900 5850 13900 5950
-Connection ~ 13900 5950
-Wire Wire Line
-	13900 5950 13900 6050
-Connection ~ 13900 6050
-Wire Wire Line
-	13900 6050 13900 6150
-Connection ~ 13900 6150
-Wire Wire Line
-	13900 6150 13900 6250
-Connection ~ 13900 6250
-Wire Wire Line
-	13900 6250 13900 6350
-Connection ~ 13900 6350
-Wire Wire Line
-	13900 6350 13900 6450
-Connection ~ 13900 6450
-Wire Wire Line
-	13900 6450 13900 6550
-Connection ~ 13900 6550
-Wire Wire Line
-	13900 6550 13900 6650
-Connection ~ 13900 6650
-Wire Wire Line
-	13900 6650 13900 6750
-Connection ~ 13900 6750
-Wire Wire Line
-	13900 6750 13900 6850
-Connection ~ 13900 6850
-Wire Wire Line
-	13900 6850 13900 6950
-Connection ~ 13900 6950
-Wire Wire Line
-	13900 6950 13900 7050
-Connection ~ 13900 7050
-Wire Wire Line
-	13900 7050 13900 7150
-Connection ~ 13900 7150
-Wire Wire Line
-	13900 7150 13900 7250
-Connection ~ 13900 7250
-Wire Wire Line
-	13900 7250 13900 7350
-Connection ~ 13900 7350
-Wire Wire Line
-	13900 7350 13900 7450
-Connection ~ 13900 7450
-Wire Wire Line
-	13900 7450 13900 7550
-Connection ~ 13900 7550
-Wire Wire Line
-	13900 7550 13900 7650
-Connection ~ 13900 7650
-Wire Wire Line
-	13900 7650 13900 7850
 $Comp
 L RespiraWorks_Std:Conn_01x04 J?
 U 1 1 602ECFB3
@@ -1905,37 +1392,7 @@ F 7 "GRM32EC72A106KE05L" H 2550 2650 50  0001 C CNN "Manufacturer PN"
 	1    2550 2650
 	1    0    0    -1  
 $EndComp
-$Comp
-L Device:C C?
-U 1 1 604C5EF1
-P 2800 2650
-AR Path="/601A64F8/604C5EF1" Ref="C?"  Part="1" 
-AR Path="/601A64F8/60567144/604C5EF1" Ref="C?"  Part="1" 
-AR Path="/601A64F8/60567D6E/604C5EF1" Ref="C?"  Part="1" 
-AR Path="/6023BF6A/60567D6E/604C5EF1" Ref="C?"  Part="1" 
-AR Path="/6041384A/60567D6E/604C5EF1" Ref="C?"  Part="1" 
-AR Path="/5FCD4B8E/5FCD4BC5/604C5EF1" Ref="C?"  Part="1" 
-AR Path="/5FCD4B8E/5FE27F70/604C5EF1" Ref="C?"  Part="1" 
-AR Path="/5FCD4D18/604C5EF1" Ref="C?"  Part="1" 
-AR Path="/5FCD50A5/604C5EF1" Ref="C?"  Part="1" 
-AR Path="/6052CC9F/604C5EF1" Ref="C?"  Part="1" 
-F 0 "C?" H 2750 2850 50  0000 L CNN
-F 1 "10uF" H 2700 2450 50  0000 L CNN
-F 2 "RespiraWorks_Std:C_1210_3225Metric" H 2838 2500 50  0001 C CNN
-F 3 "~" H 2800 2650 50  0001 C CNN
-F 4 "100V" H 2700 2350 50  0000 L CNN "Voltage"
-F 5 "X7S" H 2800 2650 50  0001 C CNN "Dielectric"
-F 6 "Murata" H 2800 2650 50  0001 C CNN "Manufacturer"
-F 7 "GRM32EC72A106KE05L" H 2800 2650 50  0001 C CNN "Manufacturer PN"
-	1    2800 2650
-	1    0    0    -1  
-$EndComp
-Connection ~ 2800 2500
-Wire Wire Line
-	2800 2500 3300 2500
 Connection ~ 2550 2500
-Wire Wire Line
-	2550 2500 2800 2500
 $Comp
 L power:GND #PWR?
 U 1 1 604D303B
@@ -1949,9 +1406,6 @@ F 3 "" H 2550 2800 50  0001 C CNN
 	1    2550 2800
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	2550 2800 2800 2800
-Connection ~ 2550 2800
 Text Label 9100 7400 0    50   ~ 0
 3V3
 Text Label 9100 8250 0    50   ~ 0
@@ -2000,23 +1454,237 @@ Wire Wire Line
 Wire Wire Line
 	7650 6550 7850 6550
 Connection ~ 7850 6550
-$Comp
-L Diode:BAT54J D?
-U 1 1 6078E2CF
-P 6400 2750
-AR Path="/6041384A/60567D6E/6078E2CF" Ref="D?"  Part="1" 
-AR Path="/6041384A/60567144/6078E2CF" Ref="D?"  Part="1" 
-AR Path="/5FCD50A5/6078E2CF" Ref="D?"  Part="1" 
-AR Path="/6052CC9F/6078E2CF" Ref="D?"  Part="1" 
-F 0 "D?" V 6500 2900 50  0000 C CNN
-F 1 "BAT54J" V 6400 2950 50  0000 C CNN
-F 2 "RespiraWorks_Std:D_SOD-323F" H 6400 2575 50  0001 C CNN
-F 3 "https://assets.nexperia.com/documents/data-sheet/BAT54J.pdf" H 6400 2750 50  0001 C CNN
-F 4 "Nexperia" H 6400 2750 50  0001 C CNN "Manufacturer"
-F 5 "BAT54J,115" H 6400 2750 50  0001 C CNN "Manufacturer PN"
-	1    6400 2750
-	0    1    -1   0   
-$EndComp
 Wire Wire Line
 	1650 7200 1850 7200
+$Comp
+L RespiraWorks:L6470PD U?
+U 1 1 607C6D08
+P 5500 5600
+AR Path="/6052CC9F/607C6D08" Ref="U?"  Part="1" 
+AR Path="/5FCD50A5/607C6D08" Ref="U?"  Part="1" 
+F 0 "U?" H 6400 7500 60  0000 C CNN
+F 1 "L6470PD" H 5500 5550 60  0000 C CNN
+F 2 "RespiraWorks:ST_POWERSO36_ThermalVias" H 5550 5750 60  0001 C CNN
+F 3 "https://www.st.com/content/ccc/resource/technical/document/datasheet/3f/48/e2/37/6b/ac/4c/f5/DM00090983.pdf/files/DM00090983.pdf/jcr:content/translations/en.DM00090983.pdf" H 12700 1150 60  0001 C CNN
+F 4 "STMicroelectronics" H 5450 5950 50  0001 C CNN "Manufacturer"
+F 5 "L6470PD" H 5450 5850 50  0001 C CNN "Manufacturer PN"
+	1    5500 5600
+	1    0    0    -1  
+$EndComp
+$Comp
+L RespiraWorks:L6470PD U?
+U 2 1 607D30CE
+P 14150 5650
+AR Path="/6052CC9F/607D30CE" Ref="U?"  Part="2" 
+AR Path="/5FCD50A5/607D30CE" Ref="U?"  Part="2" 
+F 0 "U?" H 14308 7807 60  0000 C CNN
+F 1 "L6470PD" H 14308 7701 60  0000 C CNN
+F 2 "RespiraWorks:ST_POWERSO36_ThermalVias" H 14200 5800 60  0001 C CNN
+F 3 "https://www.st.com/content/ccc/resource/technical/document/datasheet/3f/48/e2/37/6b/ac/4c/f5/DM00090983.pdf/files/DM00090983.pdf/jcr:content/translations/en.DM00090983.pdf" H 21350 1200 60  0001 C CNN
+F 4 "STMicroelectronics" H 14100 6000 50  0001 C CNN "Manufacturer"
+F 5 "L6470PD" H 14100 5900 50  0001 C CNN "Manufacturer PN"
+	2    14150 5650
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	14600 3450 14600 3750
+Wire Wire Line
+	14600 3750 14600 3850
+Connection ~ 14600 3750
+Connection ~ 14600 3850
+Wire Wire Line
+	14600 3850 14600 3950
+Connection ~ 14600 3950
+Wire Wire Line
+	14600 3950 14600 4050
+Connection ~ 14600 4050
+Wire Wire Line
+	14600 4050 14600 4150
+Connection ~ 14600 4150
+Wire Wire Line
+	14600 4150 14600 4250
+Connection ~ 14600 4250
+Wire Wire Line
+	14600 4250 14600 4350
+Connection ~ 14600 4350
+Wire Wire Line
+	14600 4350 14600 4450
+Wire Wire Line
+	3300 2500 4900 2500
+Wire Wire Line
+	5700 8350 5800 8350
+Wire Wire Line
+	5800 8350 5800 8250
+Connection ~ 5700 8350
+$Comp
+L Device:C C?
+U 1 1 608A588C
+P 4350 1400
+AR Path="/5FCD50A5/608A588C" Ref="C?"  Part="1" 
+AR Path="/6052CC9F/608A588C" Ref="C?"  Part="1" 
+F 0 "C?" H 4400 1500 50  0000 L CNN
+F 1 "220nF" H 4400 1300 50  0000 L CNN
+F 2 "RespiraWorks_Std:C_0805_2012Metric" H 4388 1250 50  0001 C CNN
+F 3 "~" H 4350 1400 50  0001 C CNN
+F 4 "100V" H 4350 1400 50  0001 C CNN "Voltage"
+F 5 "X7R" H 4350 1400 50  0001 C CNN "Dielectric"
+F 6 "Kemet" H 4350 1400 50  0001 C CNN "Manufacturer"
+F 7 "C0805C224K1RACTU" H 4350 1400 50  0001 C CNN "Manufacturer PN"
+	1    4350 1400
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 608A5892
+P 4350 1550
+AR Path="/5FCD50A5/608A5892" Ref="#PWR?"  Part="1" 
+AR Path="/6052CC9F/608A5892" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 4350 1300 50  0001 C CNN
+F 1 "GND" H 4355 1377 50  0000 C CNN
+F 2 "" H 4350 1550 50  0001 C CNN
+F 3 "" H 4350 1550 50  0001 C CNN
+	1    4350 1550
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 608A5898
+P 4700 1550
+AR Path="/5FCD50A5/608A5898" Ref="#PWR?"  Part="1" 
+AR Path="/6052CC9F/608A5898" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 4700 1300 50  0001 C CNN
+F 1 "GND" H 4705 1377 50  0000 C CNN
+F 2 "" H 4700 1550 50  0001 C CNN
+F 3 "" H 4700 1550 50  0001 C CNN
+	1    4700 1550
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 608A589E
+P 5050 1550
+AR Path="/5FCD50A5/608A589E" Ref="#PWR?"  Part="1" 
+AR Path="/6052CC9F/608A589E" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 5050 1300 50  0001 C CNN
+F 1 "GND" H 5055 1377 50  0000 C CNN
+F 2 "" H 5050 1550 50  0001 C CNN
+F 3 "" H 5050 1550 50  0001 C CNN
+	1    5050 1550
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 608A58A4
+P 5400 1550
+AR Path="/5FCD50A5/608A58A4" Ref="#PWR?"  Part="1" 
+AR Path="/6052CC9F/608A58A4" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 5400 1300 50  0001 C CNN
+F 1 "GND" H 5405 1377 50  0000 C CNN
+F 2 "" H 5400 1550 50  0001 C CNN
+F 3 "" H 5400 1550 50  0001 C CNN
+	1    5400 1550
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C C?
+U 1 1 608A58AE
+P 4700 1400
+AR Path="/5FCD50A5/608A58AE" Ref="C?"  Part="1" 
+AR Path="/6052CC9F/608A58AE" Ref="C?"  Part="1" 
+F 0 "C?" H 4750 1500 50  0000 L CNN
+F 1 "220nF" H 4750 1300 50  0000 L CNN
+F 2 "RespiraWorks_Std:C_0805_2012Metric" H 4738 1250 50  0001 C CNN
+F 3 "~" H 4700 1400 50  0001 C CNN
+F 4 "100V" H 4700 1400 50  0001 C CNN "Voltage"
+F 5 "X7R" H 4700 1400 50  0001 C CNN "Dielectric"
+F 6 "Kemet" H 4700 1400 50  0001 C CNN "Manufacturer"
+F 7 "C0805C224K1RACTU" H 4700 1400 50  0001 C CNN "Manufacturer PN"
+	1    4700 1400
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C C?
+U 1 1 608A58B8
+P 5050 1400
+AR Path="/5FCD50A5/608A58B8" Ref="C?"  Part="1" 
+AR Path="/6052CC9F/608A58B8" Ref="C?"  Part="1" 
+F 0 "C?" H 5100 1500 50  0000 L CNN
+F 1 "220nF" H 5100 1300 50  0000 L CNN
+F 2 "RespiraWorks_Std:C_0805_2012Metric" H 5088 1250 50  0001 C CNN
+F 3 "~" H 5050 1400 50  0001 C CNN
+F 4 "100V" H 5050 1400 50  0001 C CNN "Voltage"
+F 5 "X7R" H 5050 1400 50  0001 C CNN "Dielectric"
+F 6 "Kemet" H 5050 1400 50  0001 C CNN "Manufacturer"
+F 7 "C0805C224K1RACTU" H 5050 1400 50  0001 C CNN "Manufacturer PN"
+	1    5050 1400
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C C?
+U 1 1 608A58C2
+P 5400 1400
+AR Path="/5FCD50A5/608A58C2" Ref="C?"  Part="1" 
+AR Path="/6052CC9F/608A58C2" Ref="C?"  Part="1" 
+F 0 "C?" H 5450 1500 50  0000 L CNN
+F 1 "220nF" H 5450 1300 50  0000 L CNN
+F 2 "RespiraWorks_Std:C_0805_2012Metric" H 5438 1250 50  0001 C CNN
+F 3 "~" H 5400 1400 50  0001 C CNN
+F 4 "100V" H 5400 1400 50  0001 C CNN "Voltage"
+F 5 "X7R" H 5400 1400 50  0001 C CNN "Dielectric"
+F 6 "Kemet" H 5400 1400 50  0001 C CNN "Manufacturer"
+F 7 "C0805C224K1RACTU" H 5400 1400 50  0001 C CNN "Manufacturer PN"
+	1    5400 1400
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4000 1250 4350 1250
+Connection ~ 4000 1250
+Connection ~ 4350 1250
+Wire Wire Line
+	4350 1250 4700 1250
+Connection ~ 4700 1250
+Wire Wire Line
+	4700 1250 5050 1250
+Connection ~ 5050 1250
+Wire Wire Line
+	5050 1250 5400 1250
+Connection ~ 5400 1250
+Wire Wire Line
+	5400 1250 5850 1250
+Wire Wire Line
+	2550 2500 3300 2500
+$Comp
+L Device:C C?
+U 1 1 608EFFDD
+P 8100 6450
+AR Path="/5FCD50A5/608EFFDD" Ref="C?"  Part="1" 
+AR Path="/6052CC9F/608EFFDD" Ref="C?"  Part="1" 
+F 0 "C?" H 8150 6550 50  0000 L CNN
+F 1 "220nF" H 8150 6350 50  0000 L CNN
+F 2 "RespiraWorks_Std:C_0805_2012Metric" H 8138 6300 50  0001 C CNN
+F 3 "~" H 8100 6450 50  0001 C CNN
+F 4 "100V" H 8100 6450 50  0001 C CNN "Voltage"
+F 5 "X7R" H 8100 6450 50  0001 C CNN "Dielectric"
+F 6 "Kemet" H 8100 6450 50  0001 C CNN "Manufacturer"
+F 7 "C0805C224K1RACTU" H 8100 6450 50  0001 C CNN "Manufacturer PN"
+	1    8100 6450
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C C?
+U 1 1 608FB6E7
+P 7500 6550
+AR Path="/5FCD4B8E/5FCD4BC5/608FB6E7" Ref="C?"  Part="1" 
+AR Path="/5FCD4B8E/5FE27F70/608FB6E7" Ref="C?"  Part="1" 
+F 0 "C?" V 7750 6550 50  0000 L CNN
+F 1 "10nF" V 7650 6450 50  0000 L CNN
+F 2 "RespiraWorks_Std:C_0603_1608Metric" H 7538 6400 50  0001 C CNN
+F 3 "~" H 7500 6550 50  0001 C CNN
+F 4 "NP0" H 7500 6550 50  0001 C CNN "Dielectric"
+F 5 "Murata" H 7500 6550 50  0001 C CNN "Manufacturer"
+F 6 "GRM1885C1H103JA01D" H 7500 6550 50  0001 C CNN "Manufacturer PN"
+F 7 "50V" H 7500 6550 50  0001 C CNN "Voltage"
+	1    7500 6550
+	0    -1   -1   0   
+$EndComp
 $EndSCHEMATC

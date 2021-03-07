@@ -813,6 +813,8 @@ $Comp
 L RespiraWorks_Std:Polyfuse_2A_0ZCF0200AF2C F?
 U 1 1 607AA6BC
 P 6050 4250
+AR Path="/6042B5C5/607AA6BC" Ref="F?"  Part="1" 
+AR Path="/5FCD5082/607AA6BC" Ref="F?"  Part="1" 
 F 0 "F?" H 6118 4387 50  0000 L CNN
 F 1 "2A" H 6118 4341 50  0001 L CNN
 F 2 "RespiraWorks:Fuse_2920_Bel_fuse" H 6100 4050 50  0001 L CNN

@@ -1548,7 +1548,7 @@ AR Path="/6052CC9F/60D43B3D" Ref="TP?"  Part="1"
 AR Path="/60D43B3D" Ref="TP?"  Part="1" 
 AR Path="/5FCD4D18/60D43B3D" Ref="TP?"  Part="1" 
 F 0 "TP?" H 4250 7450 50  0000 C CNN
-F 1 "TP" V 4300 7300 50  0001 C CNN
+F 1 "SPI-MISO" V 4300 7300 50  0001 C CNN
 F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 4450 7250 50  0001 C CNN
 F 3 "~" H 4450 7250 50  0001 C CNN
 	1    4250 7250
@@ -1563,7 +1563,7 @@ AR Path="/6052CC9F/60D53337" Ref="TP?"  Part="1"
 AR Path="/60D53337" Ref="TP?"  Part="1" 
 AR Path="/5FCD4D18/60D53337" Ref="TP?"  Part="1" 
 F 0 "TP?" H 4450 7450 50  0000 C CNN
-F 1 "TP" V 4500 7300 50  0001 C CNN
+F 1 "SPI-MOSI" V 4500 7300 50  0001 C CNN
 F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 4650 7250 50  0001 C CNN
 F 3 "~" H 4650 7250 50  0001 C CNN
 	1    4450 7250
@@ -1578,7 +1578,7 @@ AR Path="/6052CC9F/60D53971" Ref="TP?"  Part="1"
 AR Path="/60D53971" Ref="TP?"  Part="1" 
 AR Path="/5FCD4D18/60D53971" Ref="TP?"  Part="1" 
 F 0 "TP?" H 4650 7450 50  0000 C CNN
-F 1 "TP" V 4700 7300 50  0001 C CNN
+F 1 "SPI-SCLK" V 4700 7300 50  0001 C CNN
 F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 4850 7250 50  0001 C CNN
 F 3 "~" H 4850 7250 50  0001 C CNN
 	1    4650 7250
@@ -1593,7 +1593,7 @@ AR Path="/6052CC9F/60D5400C" Ref="TP?"  Part="1"
 AR Path="/60D5400C" Ref="TP?"  Part="1" 
 AR Path="/5FCD4D18/60D5400C" Ref="TP?"  Part="1" 
 F 0 "TP?" H 4850 7450 50  0000 C CNN
-F 1 "TP" V 4900 7300 50  0001 C CNN
+F 1 "uSD-nCS" V 4900 7300 50  0001 C CNN
 F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 5050 7250 50  0001 C CNN
 F 3 "~" H 5050 7250 50  0001 C CNN
 	1    4850 7250
@@ -1813,20 +1813,6 @@ $EndComp
 Connection ~ 3100 6100
 Wire Wire Line
 	3100 6100 3300 6100
-$Comp
-L RespiraWorks:STM32L496VGT U?
-U 1 1 60565F40
-P 5800 3200
-F 0 "U?" H 5800 -1100 50  0000 C CNN
-F 1 "STM32L496VGT" H 5800 -1200 50  0000 C CNN
-F 2 "RespiraWorks_Std:LQFP-100_14x14mm_P0.5mm" H 6550 -900 50  0001 R CNN
-F 3 "http://www.st.com/st-web-https://www.st.com/resource/en/datasheet/stm32l496vg.pdf" H 5800 3200 50  0001 C CNN
-F 4 "STMicroelectronics" H 5800 3200 50  0001 C CNN "Manufacturer"
-F 5 "STM32L496VGT6" H 5800 3200 50  0001 C CNN "Manufacturer PN"
-F 6 "Either ...VGT6 or ...VGT3 can be used" H 5800 3200 50  0001 C CNN "Sourcing Notes"
-	1    5800 3200
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
 	6000 750  5900 750 
 Connection ~ 5900 750 
@@ -1918,10 +1904,6 @@ Wire Wire Line
 Wire Wire Line
 	5500 7200 5600 7200
 Connection ~ 5600 7200
-NoConn ~ 6400 5000
-NoConn ~ 6400 5100
-NoConn ~ 6400 5200
-NoConn ~ 6400 5300
 NoConn ~ 6400 5400
 NoConn ~ 6400 5500
 NoConn ~ 6400 5600
@@ -1943,10 +1925,140 @@ NoConn ~ 5100 6000
 NoConn ~ 5100 5900
 NoConn ~ 5100 5800
 NoConn ~ 5100 5700
-NoConn ~ 5100 5600
-NoConn ~ 5100 5500
-NoConn ~ 5100 5400
-NoConn ~ 5100 5300
 NoConn ~ 5100 5100
 NoConn ~ 5100 5000
+$Comp
+L Connector:TestPoint TP?
+U 1 1 6098EDD0
+P 6400 5000
+AR Path="/5FCD50A5/6098EDD0" Ref="TP?"  Part="1" 
+AR Path="/6052CC9F/6098EDD0" Ref="TP?"  Part="1" 
+AR Path="/6098EDD0" Ref="TP?"  Part="1" 
+AR Path="/5FCD4D18/6098EDD0" Ref="TP?"  Part="1" 
+F 0 "TP?" V 6400 5250 50  0000 C CNN
+F 1 "PE0" V 6450 5050 50  0001 C CNN
+F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 6600 5000 50  0001 C CNN
+F 3 "~" H 6600 5000 50  0001 C CNN
+	1    6400 5000
+	0    1    1    0   
+$EndComp
+$Comp
+L Connector:TestPoint TP?
+U 1 1 60993E18
+P 6400 5100
+AR Path="/5FCD50A5/60993E18" Ref="TP?"  Part="1" 
+AR Path="/6052CC9F/60993E18" Ref="TP?"  Part="1" 
+AR Path="/60993E18" Ref="TP?"  Part="1" 
+AR Path="/5FCD4D18/60993E18" Ref="TP?"  Part="1" 
+F 0 "TP?" V 6400 5350 50  0000 C CNN
+F 1 "PE1" V 6450 5150 50  0001 C CNN
+F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 6600 5100 50  0001 C CNN
+F 3 "~" H 6600 5100 50  0001 C CNN
+	1    6400 5100
+	0    1    1    0   
+$EndComp
+$Comp
+L Connector:TestPoint TP?
+U 1 1 609942B7
+P 6400 5200
+AR Path="/5FCD50A5/609942B7" Ref="TP?"  Part="1" 
+AR Path="/6052CC9F/609942B7" Ref="TP?"  Part="1" 
+AR Path="/609942B7" Ref="TP?"  Part="1" 
+AR Path="/5FCD4D18/609942B7" Ref="TP?"  Part="1" 
+F 0 "TP?" V 6400 5450 50  0000 C CNN
+F 1 "PE2" V 6450 5250 50  0001 C CNN
+F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 6600 5200 50  0001 C CNN
+F 3 "~" H 6600 5200 50  0001 C CNN
+	1    6400 5200
+	0    1    1    0   
+$EndComp
+$Comp
+L Connector:TestPoint TP?
+U 1 1 6099470B
+P 6400 5300
+AR Path="/5FCD50A5/6099470B" Ref="TP?"  Part="1" 
+AR Path="/6052CC9F/6099470B" Ref="TP?"  Part="1" 
+AR Path="/6099470B" Ref="TP?"  Part="1" 
+AR Path="/5FCD4D18/6099470B" Ref="TP?"  Part="1" 
+F 0 "TP?" V 6400 5550 50  0000 C CNN
+F 1 "PE3" V 6450 5350 50  0001 C CNN
+F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 6600 5300 50  0001 C CNN
+F 3 "~" H 6600 5300 50  0001 C CNN
+	1    6400 5300
+	0    1    1    0   
+$EndComp
+$Comp
+L RespiraWorks:STM32L496VGT U?
+U 1 1 60565F40
+P 5800 3200
+F 0 "U?" H 5800 -1100 50  0000 C CNN
+F 1 "STM32L496VGT" H 5800 -1200 50  0000 C CNN
+F 2 "RespiraWorks_Std:LQFP-100_14x14mm_P0.5mm" H 6550 -900 50  0001 R CNN
+F 3 "http://www.st.com/st-web-https://www.st.com/resource/en/datasheet/stm32l496vg.pdf" H 5800 3200 50  0001 C CNN
+F 4 "STMicroelectronics" H 5800 3200 50  0001 C CNN "Manufacturer"
+F 5 "STM32L496VGT6" H 5800 3200 50  0001 C CNN "Manufacturer PN"
+F 6 "Either ...VGT6 or ...VGT3 can be used" H 5800 3200 50  0001 C CNN "Sourcing Notes"
+	1    5800 3200
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector:TestPoint TP?
+U 1 1 60995F5D
+P 5100 5300
+AR Path="/5FCD50A5/60995F5D" Ref="TP?"  Part="1" 
+AR Path="/6052CC9F/60995F5D" Ref="TP?"  Part="1" 
+AR Path="/60995F5D" Ref="TP?"  Part="1" 
+AR Path="/5FCD4D18/60995F5D" Ref="TP?"  Part="1" 
+F 0 "TP?" V 5100 5550 50  0000 C CNN
+F 1 "PD3" V 5150 5350 50  0001 C CNN
+F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 5300 5300 50  0001 C CNN
+F 3 "~" H 5300 5300 50  0001 C CNN
+	1    5100 5300
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Connector:TestPoint TP?
+U 1 1 60996952
+P 5100 5400
+AR Path="/5FCD50A5/60996952" Ref="TP?"  Part="1" 
+AR Path="/6052CC9F/60996952" Ref="TP?"  Part="1" 
+AR Path="/60996952" Ref="TP?"  Part="1" 
+AR Path="/5FCD4D18/60996952" Ref="TP?"  Part="1" 
+F 0 "TP?" V 5100 5650 50  0000 C CNN
+F 1 "PD4" V 5150 5450 50  0001 C CNN
+F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 5300 5400 50  0001 C CNN
+F 3 "~" H 5300 5400 50  0001 C CNN
+	1    5100 5400
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Connector:TestPoint TP?
+U 1 1 60996E2E
+P 5100 5500
+AR Path="/5FCD50A5/60996E2E" Ref="TP?"  Part="1" 
+AR Path="/6052CC9F/60996E2E" Ref="TP?"  Part="1" 
+AR Path="/60996E2E" Ref="TP?"  Part="1" 
+AR Path="/5FCD4D18/60996E2E" Ref="TP?"  Part="1" 
+F 0 "TP?" V 5100 5750 50  0000 C CNN
+F 1 "PD5" V 5150 5550 50  0001 C CNN
+F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 5300 5500 50  0001 C CNN
+F 3 "~" H 5300 5500 50  0001 C CNN
+	1    5100 5500
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Connector:TestPoint TP?
+U 1 1 60997344
+P 5100 5600
+AR Path="/5FCD50A5/60997344" Ref="TP?"  Part="1" 
+AR Path="/6052CC9F/60997344" Ref="TP?"  Part="1" 
+AR Path="/60997344" Ref="TP?"  Part="1" 
+AR Path="/5FCD4D18/60997344" Ref="TP?"  Part="1" 
+F 0 "TP?" V 5100 5850 50  0000 C CNN
+F 1 "PD6" V 5150 5650 50  0001 C CNN
+F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 5300 5600 50  0001 C CNN
+F 3 "~" H 5300 5600 50  0001 C CNN
+	1    5100 5600
+	0    -1   -1   0   
+$EndComp
 $EndSCHEMATC

@@ -235,7 +235,7 @@ $EndSheet
 $Sheet
 S 14300 950  900  550 
 U 5FCD5082
-F0 "Heater Driver" 50
+F0 "PSol Driver, Spare" 50
 F1 "driver_solenoid.sch" 50
 F2 "CS" O L 14300 1400 50 
 F3 "nFault" O L 14300 1300 50 
@@ -460,7 +460,7 @@ UART-Rx-STM-Tx-STLink
 Wire Wire Line
 	8700 1800 8200 1800
 Text Label 8200 1800 0    50   ~ 0
-Heater-Ctrl
+PSol2-Ctrl
 Wire Wire Line
 	8700 1900 8200 1900
 Text Label 8200 1900 0    50   ~ 0
@@ -494,7 +494,7 @@ Wire Wire Line
 Wire Wire Line
 	14300 1050 13700 1050
 Text Label 13700 1050 0    50   ~ 0
-Heater-Ctrl
+PSol2-Ctrl
 Wire Wire Line
 	13100 3450 12650 3450
 Wire Wire Line
@@ -504,7 +504,7 @@ CC-SDA
 Text Label 12650 3550 0    50   ~ 0
 CC-SCL
 Text Label 11100 950  0    50   ~ 0
-PSol-Ctrl
+PSol1-Ctrl
 Text Label 10750 3550 2    50   ~ 0
 UART-Tx-STM-Rx-FPGA
 Wire Wire Line
@@ -1015,16 +1015,16 @@ Wire Wire Line
 $Comp
 L RespiraWorks:+VLink #PWR?
 U 1 1 60CCD34B
-P 15350 1050
-F 0 "#PWR?" H 15350 1050 50  0001 C CNN
-F 1 "+VLink" H 15335 1223 50  0000 C CNN
-F 2 "" H 15350 1050 50  0001 C CNN
-F 3 "" H 15350 1050 50  0001 C CNN
-	1    15350 1050
+P 15450 1050
+F 0 "#PWR?" H 15450 1050 50  0001 C CNN
+F 1 "+VLink" H 15435 1223 50  0000 C CNN
+F 2 "" H 15450 1050 50  0001 C CNN
+F 3 "" H 15450 1050 50  0001 C CNN
+	1    15450 1050
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	15200 1050 15350 1050
+	15200 1050 15450 1050
 $Comp
 L RespiraWorks:+3.3V_Ctrl #PWR?
 U 1 1 60CCD352
@@ -1051,9 +1051,9 @@ PMon-ACOK
 Wire Wire Line
 	11750 1200 11200 1200
 Text Label 11200 1200 0    50   ~ 0
-PSol-nFault
+PSol1-nFault
 Text Label 13700 1300 0    50   ~ 0
-Heater-nFault
+PSol2-nFault
 Wire Wire Line
 	13700 1300 14300 1300
 Wire Wire Line
@@ -1547,13 +1547,13 @@ Bat-Alert
 Text Label 800  1650 0    50   ~ 0
 Bat-Alert
 Wire Wire Line
-	9750 1700 10300 1700
-Text Label 10300 1700 2    50   ~ 0
-PSol-nFault
+	9750 1700 10600 1700
+Text Label 10600 1700 2    50   ~ 0
+PSol1-nFault
 Wire Wire Line
 	8700 3550 7650 3550
 Text Label 7650 3550 0    50   ~ 0
-Heater-nFault
+PSol2-nFault
 $Comp
 L RespiraWorks:+3.3V_Ctrl #PWR?
 U 1 1 606A94DD

@@ -121,9 +121,9 @@ Connection ~ 7250 2950
 Text Notes 2550 1250 0    50   ~ 0
 12.5-16.8V IN
 Text HLabel 2750 1350 0    50   Input ~ 0
-VIN
+Vin
 Text HLabel 8700 1350 2    50   Output ~ 0
-12VOUT
+12Vout
 Wire Wire Line
 	8400 1350 8700 1350
 Connection ~ 8400 1350
@@ -526,9 +526,9 @@ Connection ~ 7250 1350
 Wire Wire Line
 	5250 1800 5750 1800
 Text Label 5750 1800 2    50   ~ 0
-LM5141_VCC
+LM5141-VCC
 Text Label 7700 4200 2    50   ~ 0
-LM5141_VCC
+LM5141-VCC
 Wire Wire Line
 	6450 4200 8050 4200
 $Comp
@@ -552,7 +552,7 @@ Wire Wire Line
 Wire Wire Line
 	7750 3600 8100 3600
 Text HLabel 8100 3600 2    50   Input ~ 0
-VLOGIC
+VLogic
 Wire Wire Line
 	7750 3900 8100 3900
 Connection ~ 7750 3900
@@ -601,7 +601,7 @@ Connection ~ 7150 4900
 Wire Wire Line
 	7150 4900 7150 5100
 Text Label 7250 4400 2    50   ~ 0
-LM5141_VDDA
+LM5141-VDDA
 $Comp
 L Device:R R?
 U 1 1 60263CF0
@@ -630,7 +630,7 @@ F 3 "~" H 7150 4800 50  0001 C CNN
 	0    1    1    0   
 $EndComp
 Text Label 6450 4700 0    50   ~ 0
-LM5141_AGND
+LM5141-AGND
 Wire Wire Line
 	6450 4900 7150 4900
 Wire Wire Line
@@ -648,7 +648,7 @@ Wire Wire Line
 Wire Wire Line
 	2150 4200 2150 5400
 Text Label 1200 5400 0    50   ~ 0
-LM5141_AGND
+LM5141-AGND
 Wire Wire Line
 	3150 4600 3150 5400
 Wire Wire Line
@@ -712,7 +712,7 @@ $EndComp
 Wire Wire Line
 	2150 3500 2150 3600
 Text Label 1350 3500 0    50   ~ 0
-LM5141_VDDA
+LM5141-VDDA
 Wire Wire Line
 	2150 3500 1350 3500
 Connection ~ 2150 3900
@@ -1001,7 +1001,7 @@ Wire Wire Line
 Wire Wire Line
 	2700 3100 2300 3100
 Text HLabel 1350 3100 0    50   Input ~ 0
-VSYS_EN
+VSys-En
 $Comp
 L Device:R R?
 U 1 1 602BAB86

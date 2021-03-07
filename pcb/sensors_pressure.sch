@@ -18,40 +18,40 @@ L Connector:TestPoint TP?
 U 1 1 5FFD9664
 P 3250 1400
 F 0 "TP?" H 3308 1518 50  0000 L CNN
-F 1 "Inh_Flow" H 3100 1600 50  0000 L CNN
+F 1 "Inh-Flow" H 3100 1600 50  0000 L CNN
 F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 3450 1400 50  0001 C CNN
 F 3 "~" H 3450 1400 50  0001 C CNN
 	1    3250 1400
 	1    0    0    -1  
 $EndComp
 Text HLabel 3400 1400 2    50   Output ~ 0
-Inh_Flow
+Inh-Flow
 $Comp
 L Connector:TestPoint TP?
 U 1 1 6000A26F
 P 7950 1250
 F 0 "TP?" H 8008 1368 50  0000 L CNN
-F 1 "Mix_Tank_Pressure" H 7800 1450 50  0000 L CNN
+F 1 "Mix-Tank-Pressure" H 7800 1450 50  0000 L CNN
 F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 8150 1250 50  0001 C CNN
 F 3 "~" H 8150 1250 50  0001 C CNN
 	1    7950 1250
 	1    0    0    -1  
 $EndComp
 Text HLabel 8100 1250 2    50   Output ~ 0
-Mix_Tank_Pressure
+Mix-Tank-Pressure
 $Comp
 L Connector:TestPoint TP?
 U 1 1 600210E5
 P 8000 2050
 F 0 "TP?" H 8058 2168 50  0000 L CNN
-F 1 "Patient_Pressure" H 7850 2250 50  0000 L CNN
+F 1 "Patient-Pressure" H 7850 2250 50  0000 L CNN
 F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 8200 2050 50  0001 C CNN
 F 3 "~" H 8200 2050 50  0001 C CNN
 	1    8000 2050
 	1    0    0    -1  
 $EndComp
 Text HLabel 8150 2050 2    50   Output ~ 0
-Patient_Pressure
+Patient-Pressure
 $Sheet
 S 900  1300 1850 450 
 U 600630A6
@@ -128,39 +128,39 @@ Wire Wire Line
 Wire Wire Line
 	3250 2200 3400 2200
 Text HLabel 3400 3800 2    50   Output ~ 0
-Oxy_Pressure
+Oxy-Pressure
 $Comp
 L Connector:TestPoint TP?
 U 1 1 5FFECEF2
 P 3250 3800
 F 0 "TP?" H 3308 3918 50  0000 L CNN
-F 1 "Oxy_Pressure" H 3100 4000 50  0000 L CNN
+F 1 "Oxy-Pressure" H 3100 4000 50  0000 L CNN
 F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 3450 3800 50  0001 C CNN
 F 3 "~" H 3450 3800 50  0001 C CNN
 	1    3250 3800
 	1    0    0    -1  
 $EndComp
 Text HLabel 3400 3000 2    50   Output ~ 0
-Oxy_Flow
+Oxy-Flow
 $Comp
 L Connector:TestPoint TP?
 U 1 1 5FFE3200
 P 3250 3000
 F 0 "TP?" H 3308 3118 50  0000 L CNN
-F 1 "Oxy_Flow" H 3100 3200 50  0000 L CNN
+F 1 "Oxy-Flow" H 3100 3200 50  0000 L CNN
 F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 3450 3000 50  0001 C CNN
 F 3 "~" H 3450 3000 50  0001 C CNN
 	1    3250 3000
 	1    0    0    -1  
 $EndComp
 Text HLabel 3400 2200 2    50   Output ~ 0
-Exh_Flow
+Exh-Flow
 $Comp
 L Connector:TestPoint TP?
 U 1 1 5FFDF3BD
 P 3250 2200
 F 0 "TP?" H 3308 2318 50  0000 L CNN
-F 1 "Exh_Flow" H 3100 2400 50  0000 L CNN
+F 1 "Exh-Flow" H 3100 2400 50  0000 L CNN
 F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 3450 2200 50  0001 C CNN
 F 3 "~" H 3450 2200 50  0001 C CNN
 	1    3250 2200
@@ -618,4 +618,7 @@ Text Notes 3350 7050 0    50   ~ 0
 Ambient pressure/temperature\nI2C addr. 1110 110
 Text Notes 3700 5850 0    50   ~ 0
 Remove 0-ohm resistors\nif using ambient pressure\nsensor on daughterboard
+Wire Wire Line
+	3150 6850 3050 6850
+Connection ~ 3050 6850
 $EndSCHEMATC

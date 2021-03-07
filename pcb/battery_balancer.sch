@@ -540,10 +540,8 @@ Wire Wire Line
 	3250 5250 3250 5550
 Wire Wire Line
 	4850 3750 4000 3750
-Text Label 7650 5050 0    50   ~ 0
-BAT_N
 Text Label 4050 5550 0    50   ~ 0
-BAT_N
+Bat-N
 Connection ~ 3250 5550
 Wire Wire Line
 	3250 5550 3800 5550
@@ -614,19 +612,19 @@ SCL
 Text HLabel 4300 3350 0    50   BiDi ~ 0
 SDA
 Text HLabel 4300 3550 0    50   Output ~ 0
-ALRT
+Alrt
 Text HLabel 1600 1550 0    50   Output ~ 0
-SYS_P
+Sys-P
 Text HLabel 1600 6100 0    50   Output ~ 0
-SYS_N
+Sys-N
 Wire Wire Line
 	8300 3850 8300 4050
 Wire Wire Line
 	8300 4050 8500 4050
 Text HLabel 10050 5050 2    50   Input ~ 0
-BAT_N
+Bat-N
 Text HLabel 10050 1550 2    50   Input ~ 0
-BAT_P
+Bat-P
 Wire Wire Line
 	6100 1850 5800 1850
 Connection ~ 5800 1850
@@ -689,7 +687,7 @@ Wire Wire Line
 	4000 3750 3550 3750
 Connection ~ 4000 3750
 Text Label 7400 3350 2    50   ~ 0
-BAT_N
+Bat-N
 Wire Wire Line
 	4000 4050 4000 4150
 Wire Wire Line
@@ -700,13 +698,13 @@ Connection ~ 3550 4150
 Wire Wire Line
 	3550 4150 2850 4150
 Text Label 2850 4150 0    50   ~ 0
-BAT_N
+Bat-N
 Wire Wire Line
 	2500 2600 2500 2700
 Wire Wire Line
 	2500 2700 2100 2700
 Text Label 2100 2700 0    50   ~ 0
-BAT_N
+Bat-N
 Text Notes 3700 2150 0    50   ~ 0
 Max. recovery charge current =\nVin/(2K+10) = 8.5 mA @ 17 Vin
 Connection ~ 3000 1550

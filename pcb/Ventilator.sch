@@ -116,11 +116,11 @@ S 11300 2200 1500 400
 U 5FCD4DF5
 F0 "Alarms and Power Monitoring" 50
 F1 "alarms.sch" 50
-F2 "Buzzer_CC" I L 11300 2300 50 
-F3 "Buzzer_GUI" I L 11300 2400 50 
+F2 "Buzzer-CC" I L 11300 2300 50 
+F3 "Buzzer-GUI" I L 11300 2400 50 
 F4 "Low-Alarm-Bat" O R 12800 2300 50 
 F5 "Low-Alarm-Bat-Logic" O R 12800 2400 50 
-F6 "Buzzer_FPGA" I L 11300 2500 50 
+F6 "Buzzer-FPGA" I L 11300 2500 50 
 $EndSheet
 $Sheet
 S 11550 3750 650  800 
@@ -210,12 +210,12 @@ S 13100 2650 1000 1000
 U 5FCD4E9D
 F0 "Pressure Sensors" 50
 F1 "sensors_pressure.sch" 50
-F2 "Inh_Flow" O L 13100 3250 50 
-F3 "Mix_Tank_Pressure" O L 13100 2850 50 
-F4 "Patient_Pressure" O L 13100 2750 50 
-F5 "Oxy_Pressure" O L 13100 2950 50 
-F6 "Oxy_Flow" O L 13100 3150 50 
-F7 "Exh_Flow" O L 13100 3050 50 
+F2 "Inh-Flow" O L 13100 3250 50 
+F3 "Mix-Tank-Pressure" O L 13100 2850 50 
+F4 "Patient-Pressure" O L 13100 2750 50 
+F5 "Oxy-Pressure" O L 13100 2950 50 
+F6 "Oxy-Flow" O L 13100 3150 50 
+F7 "Exh-Flow" O L 13100 3050 50 
 F8 "CC-SDA" B L 13100 3450 50 
 F9 "CC-SCL" I L 13100 3550 50 
 $EndSheet
@@ -224,12 +224,12 @@ S 2100 7600 950  700
 U 5FCD4EEA
 F0 "Oxygen and Temperature Sensors" 50
 F1 "sensors_o2_temp.sch" 50
-F2 "Stepper1_Temp" O R 3050 7700 50 
-F3 "Stepper2_Temp" O R 3050 7800 50 
-F4 "Blower_Temp" O R 3050 7900 50 
-F5 "Batt_Temp" O R 3050 8000 50 
-F6 "Spare_Temp" O R 3050 8100 50 
-F7 "Oxygen_FiO2" O R 3050 8200 50 
+F2 "Stepper1-Temp" O R 3050 7700 50 
+F3 "Stepper2-Temp" O R 3050 7800 50 
+F4 "Blower-Temp" O R 3050 7900 50 
+F5 "Batt-Temp" O R 3050 8000 50 
+F6 "Spare-Temp" O R 3050 8100 50 
+F7 "Oxygen-FiO2" O R 3050 8200 50 
 F8 "3V3" I L 2100 7700 50 
 $EndSheet
 $Sheet
@@ -253,7 +253,7 @@ F3 "SDI" I R 5250 3050 50
 F4 "SDO" O R 5250 3150 50 
 F5 "CK" I R 5250 3250 50 
 F6 "nCS" I R 5250 3350 50 
-F7 "STCK" I L 4400 3650 50 
+F7 "StCk" I L 4400 3650 50 
 F8 "nReset" I L 4400 3750 50 
 F9 "nBusy-Sync" O L 4400 3850 50 
 F10 "nFlag" O L 4400 3950 50 
@@ -267,8 +267,8 @@ F0 "Add'l aux functions" 50
 F1 "misc.sch" 50
 F2 "CC-SDA" B L 13400 4050 50 
 F3 "CC-SCL" I L 13400 4150 50 
-F4 "Blower_Speed" I L 13400 4400 50 
-F5 "Blower_Enable" I L 13400 4500 50 
+F4 "Blower-Speed" I L 13400 4400 50 
+F5 "Blower-Enable" I L 13400 4500 50 
 F6 "Aux-I2C-Switch-nINT" O L 13400 4250 50 
 $EndSheet
 $Sheet
@@ -417,7 +417,7 @@ F3 "SDI" I R 5250 4550 50
 F4 "SDO" O R 5250 4650 50 
 F5 "CK" I R 5250 4750 50 
 F6 "nCS" I R 5250 4850 50 
-F7 "STCK" I L 4400 5150 50 
+F7 "StCk" I L 4400 5150 50 
 F8 "nReset" I L 4400 5250 50 
 F9 "nBusy-Sync" O L 4400 5350 50 
 F10 "nFlag" O L 4400 5450 50 
@@ -733,11 +733,11 @@ Wire Wire Line
 Wire Wire Line
 	3500 9050 3500 8650
 Text Label 3650 3650 0    50   ~ 0
-Stepper1-STCK
+Stepper1-StCk
 Wire Wire Line
 	3650 3650 4400 3650
 Text Label 3650 5150 0    50   ~ 0
-Stepper2-STCK
+Stepper2-StCk
 Wire Wire Line
 	3650 5150 4400 5150
 Text Label 3650 3850 0    50   ~ 0
@@ -1665,9 +1665,9 @@ Wire Wire Line
 Wire Wire Line
 	9750 1200 10600 1200
 Text Label 10600 1100 2    50   ~ 0
-Stepper1-STCK
+Stepper1-StCk
 Text Label 10600 1200 2    50   ~ 0
-Stepper2-STCK
+Stepper2-StCk
 Text Label 12000 7950 2    50   ~ 0
 FPGA-Buzzer
 Wire Wire Line
@@ -2550,31 +2550,31 @@ $EndComp
 $Comp
 L Connector:TestPoint TP?
 U 1 1 60F26022
-P 10300 1800
+P 12900 6950
 AR Path="/5FCD50A5/60F26022" Ref="TP?"  Part="1" 
 AR Path="/6052CC9F/60F26022" Ref="TP?"  Part="1" 
 AR Path="/60F26022" Ref="TP?"  Part="1" 
 AR Path="/5FCD4D18/60F26022" Ref="TP?"  Part="1" 
-F 0 "TP?" V 10300 2050 50  0000 C CNN
-F 1 "CC-SCL" V 10350 1850 50  0001 C CNN
-F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 10500 1800 50  0001 C CNN
-F 3 "~" H 10500 1800 50  0001 C CNN
-	1    10300 1800
+F 0 "TP?" V 12900 7200 50  0000 C CNN
+F 1 "CC-SCL" V 12950 7000 50  0001 C CNN
+F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 13100 6950 50  0001 C CNN
+F 3 "~" H 13100 6950 50  0001 C CNN
+	1    12900 6950
 	0    1    1    0   
 $EndComp
 $Comp
 L Connector:TestPoint TP?
 U 1 1 60F389F6
-P 10300 1900
+P 12550 6800
 AR Path="/5FCD50A5/60F389F6" Ref="TP?"  Part="1" 
 AR Path="/6052CC9F/60F389F6" Ref="TP?"  Part="1" 
 AR Path="/60F389F6" Ref="TP?"  Part="1" 
 AR Path="/5FCD4D18/60F389F6" Ref="TP?"  Part="1" 
-F 0 "TP?" V 10300 2150 50  0000 C CNN
-F 1 "CC-SDA" V 10350 1950 50  0001 C CNN
-F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 10500 1900 50  0001 C CNN
-F 3 "~" H 10500 1900 50  0001 C CNN
-	1    10300 1900
+F 0 "TP?" V 12450 6900 50  0000 C CNN
+F 1 "CC-SDA" V 12600 6850 50  0001 C CNN
+F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 12750 6800 50  0001 C CNN
+F 3 "~" H 12750 6800 50  0001 C CNN
+	1    12550 6800
 	0    1    1    0   
 $EndComp
 $Comp
@@ -2680,8 +2680,6 @@ F 3 "" H 13050 4500 50  0001 C CNN
 	1    13050 4500
 	0    -1   -1   0   
 $EndComp
-Wire Wire Line
-	13050 4500 13400 4500
 $Comp
 L Connector:TestPoint TP?
 U 1 1 6059BD56
@@ -2723,20 +2721,20 @@ Wire Wire Line
 $Comp
 L RespiraWorks:+3.3V_Ctrl #PWR?
 U 1 1 6040054E
-P 8900 4150
+P 12550 6250
 AR Path="/6017BD7E/6040054E" Ref="#PWR?"  Part="1" 
 AR Path="/6040054E" Ref="#PWR?"  Part="1" 
-F 0 "#PWR?" H 8900 4150 50  0001 C CNN
-F 1 "+3.3V_Ctrl" H 8885 4323 50  0000 C CNN
-F 2 "" H 8900 4150 50  0001 C CNN
-F 3 "" H 8900 4150 50  0001 C CNN
-	1    8900 4150
+F 0 "#PWR?" H 12550 6250 50  0001 C CNN
+F 1 "+3.3V_Ctrl" H 12535 6423 50  0000 C CNN
+F 2 "" H 12550 6250 50  0001 C CNN
+F 3 "" H 12550 6250 50  0001 C CNN
+	1    12550 6250
 	1    0    0    -1  
 $EndComp
 $Comp
 L Device:R R?
 U 1 1 60400556
-P 8900 4400
+P 12550 6500
 AR Path="/60400556" Ref="R?"  Part="1" 
 AR Path="/5E8AFE9D/60400556" Ref="R?"  Part="1" 
 AR Path="/5E8A4ABF/60400556" Ref="R?"  Part="1" 
@@ -2744,18 +2742,18 @@ AR Path="/5E8E1F08/60400556" Ref="R?"  Part="1"
 AR Path="/5FCD4DF5/60400556" Ref="R?"  Part="1" 
 AR Path="/5FCD4B8E/60400556" Ref="R?"  Part="1" 
 AR Path="/6017BD7E/60400556" Ref="R?"  Part="1" 
-F 0 "R?" V 8700 4400 50  0000 C CNN
-F 1 "4.7k" V 8800 4400 50  0000 C CNN
-F 2 "RespiraWorks_Std:R_0603_1608Metric" V 8830 4400 50  0001 C CNN
-F 3 "~" H 8900 4400 50  0001 C CNN
-F 4 "" H 8900 4400 50  0001 C CNN "Manufacturer"
-	1    8900 4400
+F 0 "R?" V 12350 6500 50  0000 C CNN
+F 1 "4.7k" V 12450 6500 50  0000 C CNN
+F 2 "RespiraWorks_Std:R_0603_1608Metric" V 12480 6500 50  0001 C CNN
+F 3 "~" H 12550 6500 50  0001 C CNN
+F 4 "" H 12550 6500 50  0001 C CNN "Manufacturer"
+	1    12550 6500
 	1    0    0    -1  
 $EndComp
 $Comp
 L Device:R R?
 U 1 1 60413A39
-P 9250 4400
+P 12900 6500
 AR Path="/60413A39" Ref="R?"  Part="1" 
 AR Path="/5E8AFE9D/60413A39" Ref="R?"  Part="1" 
 AR Path="/5E8A4ABF/60413A39" Ref="R?"  Part="1" 
@@ -2763,32 +2761,32 @@ AR Path="/5E8E1F08/60413A39" Ref="R?"  Part="1"
 AR Path="/5FCD4DF5/60413A39" Ref="R?"  Part="1" 
 AR Path="/5FCD4B8E/60413A39" Ref="R?"  Part="1" 
 AR Path="/6017BD7E/60413A39" Ref="R?"  Part="1" 
-F 0 "R?" V 9050 4400 50  0000 C CNN
-F 1 "4.7k" V 9150 4400 50  0000 C CNN
-F 2 "RespiraWorks_Std:R_0603_1608Metric" V 9180 4400 50  0001 C CNN
-F 3 "~" H 9250 4400 50  0001 C CNN
-F 4 "" H 9250 4400 50  0001 C CNN "Manufacturer"
-	1    9250 4400
+F 0 "R?" V 12700 6500 50  0000 C CNN
+F 1 "4.7k" V 12800 6500 50  0000 C CNN
+F 2 "RespiraWorks_Std:R_0603_1608Metric" V 12830 6500 50  0001 C CNN
+F 3 "~" H 12900 6500 50  0001 C CNN
+F 4 "" H 12900 6500 50  0001 C CNN "Manufacturer"
+	1    12900 6500
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	8900 4150 9250 4150
+	12550 6250 12900 6250
 Wire Wire Line
-	9250 4250 9250 4150
+	12900 6350 12900 6250
 Wire Wire Line
-	8900 4150 8900 4250
-Connection ~ 8900 4150
+	12550 6250 12550 6350
+Connection ~ 12550 6250
 Wire Wire Line
-	8900 4550 8900 4700
+	12550 6650 12550 6800
 Wire Wire Line
-	8900 4700 8450 4700
+	12550 6800 12100 6800
 Wire Wire Line
-	9250 4550 9250 4850
+	12900 6650 12900 6950
 Wire Wire Line
-	9250 4850 8450 4850
-Text Label 8450 4700 0    50   ~ 0
+	12900 6950 12100 6950
+Text Label 12100 6800 0    50   ~ 0
 CC-SDA
-Text Label 8450 4850 0    50   ~ 0
+Text Label 12100 6950 0    50   ~ 0
 CC-SCL
 $Comp
 L Diode:BAT54J D?
@@ -2846,13 +2844,13 @@ S 5900 1050 1100 1000
 U 5FCD4D85
 F0 "STM Programmer for cycle controller" 50
 F1 "stm_programmer.sch" 50
-F2 "CC_SWCLK" O R 7000 1150 50 
-F3 "CC_SWDIO" B R 7000 1250 50 
-F4 "CC_SWO" B R 7000 1350 50 
-F5 "UART_Tx" O R 7000 1850 50 
-F6 "UART_Rx" I R 7000 1950 50 
-F7 "CC_nRST" O R 7000 1450 50 
-F8 "USB_Pwr_nEn" O L 5900 1350 50 
+F2 "CC-SWCLK" O R 7000 1150 50 
+F3 "CC-SWDIO" B R 7000 1250 50 
+F4 "CC-SWO" B R 7000 1350 50 
+F5 "UART-Tx" O R 7000 1850 50 
+F6 "UART-Rx" I R 7000 1950 50 
+F7 "CC-nRST" O R 7000 1450 50 
+F8 "USB-Pwr-nEn" O L 5900 1350 50 
 F9 "5V-USB" O L 5900 1250 50 
 $EndSheet
 NoConn ~ 5900 1350
@@ -2967,4 +2965,25 @@ Wire Wire Line
 	2200 1650 2500 1650
 Text Notes 13950 9800 0    79   Italic 0
 Unless noted otherwise:\n- Resistors are 1% tolerance\n- Capacitors < 47 nF are 5% tolerance\n- Capacitors ≥ 47 nF are 10% tolerance
+Text Notes 12100 6000 0    79   ~ 16
+Global I2C pull-ups
+Connection ~ 12900 6950
+Connection ~ 12550 6800
+$Comp
+L Device:Jumper_NC_Small JP?
+U 1 1 6066EECB
+P 13200 4500
+AR Path="/5FCD4D85/6066EECB" Ref="JP?"  Part="1" 
+AR Path="/6066EECB" Ref="JP?"  Part="1" 
+F 0 "JP?" H 13200 4400 50  0000 C CNN
+F 1 "Jumper_NC_Small" H 13200 4621 50  0001 C CNN
+F 2 "RespiraWorks_Std:SolderJumper-2_P1.3mm_Bridged_RoundedPad1.0x1.5mm" H 13200 4500 50  0001 C CNN
+F 3 "~" H 13200 4500 50  0001 C CNN
+	1    13200 4500
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	13100 4500 13050 4500
+Wire Wire Line
+	13300 4500 13400 4500
 $EndSCHEMATC

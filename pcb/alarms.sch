@@ -1209,9 +1209,9 @@ F 3 "" H 13650 1600 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Text HLabel 12650 2300 0    50   Input ~ 0
-Buzzer_CC
+Buzzer-CC
 Text HLabel 14750 2300 0    50   Input ~ 0
-Buzzer_GUI
+Buzzer-GUI
 Wire Wire Line
 	10500 2100 10550 2100
 $Comp
@@ -1939,7 +1939,7 @@ Wire Wire Line
 Wire Wire Line
 	13500 6850 13750 6850
 Text Label 8400 6900 0    50   ~ 0
-Alarm_Batt
+Alarm-Bat
 Wire Wire Line
 	10200 6900 10200 6950
 Text Notes 3900 6900 0    50   Italic 0
@@ -2167,7 +2167,7 @@ Wire Wire Line
 	13900 3900 14200 3900
 Connection ~ 14200 3900
 Text HLabel 13500 3900 0    50   Input ~ 0
-Buzzer_FPGA
+Buzzer-FPGA
 $Comp
 L power:+5V #PWR?
 U 1 1 610CA729
@@ -2271,7 +2271,7 @@ AR Path="/60E108C8" Ref="TP?"  Part="1"
 AR Path="/5FCD4D18/60E108C8" Ref="TP?"  Part="1" 
 AR Path="/5FCD4DF5/60E108C8" Ref="TP?"  Part="1" 
 F 0 "TP?" H 5150 1950 50  0000 C CNN
-F 1 "TP" V 5200 1800 50  0001 C CNN
+F 1 "PD-Alarm" H 5150 2050 50  0000 C CNN
 F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 5350 1750 50  0001 C CNN
 F 3 "~" H 5350 1750 50  0001 C CNN
 	1    5150 1750
@@ -2370,4 +2370,6 @@ Wire Wire Line
 	4600 8900 6250 8900
 Wire Wire Line
 	5350 8450 6250 8450
+Text Label 5450 1750 0    50   ~ 0
+PD-Alarm
 $EndSCHEMATC

@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A3 16535 11693
 encoding utf-8
-Sheet 28 38
+Sheet 36 38
 Title "Stepper Motor Driver"
 Date ""
 Rev "A"
@@ -392,7 +392,7 @@ Wire Wire Line
 Wire Wire Line
 	3100 7650 3100 8300
 Text HLabel 1800 8300 0    50   Input ~ 0
-STCK
+StCk
 $Comp
 L Device:R R?
 U 1 1 605F10A8
@@ -1676,6 +1676,7 @@ U 1 1 608FB6E7
 P 7500 6550
 AR Path="/5FCD4B8E/5FCD4BC5/608FB6E7" Ref="C?"  Part="1" 
 AR Path="/5FCD4B8E/5FE27F70/608FB6E7" Ref="C?"  Part="1" 
+AR Path="/6052CC9F/608FB6E7" Ref="C?"  Part="1" 
 F 0 "C?" V 7750 6550 50  0000 L CNN
 F 1 "10nF" V 7650 6450 50  0000 L CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 7538 6400 50  0001 C CNN

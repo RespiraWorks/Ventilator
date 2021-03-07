@@ -18,7 +18,7 @@ CC-SDA
 Text HLabel 1600 5550 0    50   Input ~ 0
 CC-SCL
 Text HLabel 5200 2350 0    50   Input ~ 0
-Blower_Speed
+Blower-Speed
 $Comp
 L power:+5V #PWR?
 U 1 1 601AC55D
@@ -332,14 +332,10 @@ F 5 "TCA9544APWR" H 8800 7250 50  0001 C CNN "Manufacturer PN"
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	8400 6550 6850 6550
-Wire Wire Line
 	1750 6550 1750 5550
 Connection ~ 1750 5550
 Wire Wire Line
 	1850 5450 1850 6650
-Wire Wire Line
-	1850 6650 7150 6650
 Connection ~ 1850 5450
 $Comp
 L Device:C C?
@@ -1195,74 +1191,6 @@ Text Notes 8500 5350 0    79   ~ 0
 I2C expander
 Text HLabel 6500 6750 0    50   Output ~ 0
 Aux-I2C-Switch-nINT
-$Comp
-L RespiraWorks:+3.3V_Ctrl #PWR?
-U 1 1 602E4F93
-P 7150 5850
-F 0 "#PWR?" H 7150 5850 50  0001 C CNN
-F 1 "+3.3V_Ctrl" H 7135 6023 50  0000 C CNN
-F 2 "" H 7150 5850 50  0001 C CNN
-F 3 "" H 7150 5850 50  0001 C CNN
-	1    7150 5850
-	1    0    0    -1  
-$EndComp
-$Comp
-L Device:R R?
-U 1 1 602E7843
-P 7150 6150
-AR Path="/602E7843" Ref="R?"  Part="1" 
-AR Path="/5E8AFE9D/602E7843" Ref="R?"  Part="1" 
-AR Path="/5E8A4ABF/602E7843" Ref="R?"  Part="1" 
-AR Path="/5E8E1F08/602E7843" Ref="R?"  Part="1" 
-AR Path="/5FCD4DF5/602E7843" Ref="R?"  Part="1" 
-AR Path="/5FCD4B8E/602E7843" Ref="R?"  Part="1" 
-AR Path="/6017BD7E/602E7843" Ref="R?"  Part="1" 
-F 0 "R?" V 6950 6150 50  0000 C CNN
-F 1 "4.7k" V 7050 6150 50  0000 C CNN
-F 2 "RespiraWorks_Std:R_0603_1608Metric" V 7080 6150 50  0001 C CNN
-F 3 "~" H 7150 6150 50  0001 C CNN
-F 4 "" H 7150 6150 50  0001 C CNN "Manufacturer"
-	1    7150 6150
-	1    0    0    -1  
-$EndComp
-$Comp
-L Device:R R?
-U 1 1 602F3718
-P 6850 6150
-AR Path="/602F3718" Ref="R?"  Part="1" 
-AR Path="/5E8AFE9D/602F3718" Ref="R?"  Part="1" 
-AR Path="/5E8A4ABF/602F3718" Ref="R?"  Part="1" 
-AR Path="/5E8E1F08/602F3718" Ref="R?"  Part="1" 
-AR Path="/5FCD4DF5/602F3718" Ref="R?"  Part="1" 
-AR Path="/5FCD4B8E/602F3718" Ref="R?"  Part="1" 
-AR Path="/6017BD7E/602F3718" Ref="R?"  Part="1" 
-F 0 "R?" V 6650 6150 50  0000 C CNN
-F 1 "4.7k" V 6750 6150 50  0000 C CNN
-F 2 "RespiraWorks_Std:R_0603_1608Metric" V 6780 6150 50  0001 C CNN
-F 3 "~" H 6850 6150 50  0001 C CNN
-F 4 "" H 6850 6150 50  0001 C CNN "Manufacturer"
-	1    6850 6150
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	6850 6000 6850 5850
-Wire Wire Line
-	6850 5850 7150 5850
-Wire Wire Line
-	7150 6000 7150 5850
-Connection ~ 7150 5850
-Wire Wire Line
-	7150 6300 7150 6650
-Connection ~ 7150 6650
-Wire Wire Line
-	7150 6650 8400 6650
-Wire Wire Line
-	6850 6300 6850 6550
-Connection ~ 6850 6550
-Wire Wire Line
-	6850 6550 1750 6550
-Text Notes 6500 5550 0    79   ~ 16
-Global I2C pull-ups
 Text Notes 6250 1050 0    79   ~ 0
 Blower PWM control signal level shifter
 Text Notes 3150 4050 0    79   ~ 0
@@ -1298,7 +1226,7 @@ Control output powered\nfrom motor driver's +5V
 Text Notes 9150 2600 0    50   ~ 0
 Blower control\n\n1: +5V in\n2: PWM out/Speed control voltage out\n3: ~Enable~\n4: Gnd
 Text HLabel 7150 3750 0    50   Input ~ 0
-Blower_Enable
+Blower-Enable
 $Comp
 L Transistor_BJT:MMBT3904 Q?
 U 1 1 60376E01
@@ -1702,4 +1630,8 @@ Wire Wire Line
 	1600 5550 1750 5550
 Wire Wire Line
 	6500 6750 8400 6750
+Wire Wire Line
+	1850 6650 8400 6650
+Wire Wire Line
+	1750 6550 8400 6550
 $EndSCHEMATC

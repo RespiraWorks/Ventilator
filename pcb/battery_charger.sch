@@ -527,11 +527,11 @@ F 3 "" H 8000 5650 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Text HLabel 7850 5000 2    50   Output ~ 0
-PSYS
+PSys
 Text HLabel 9100 5250 2    50   Output ~ 0
-IBAT
+IBat
 Text HLabel 9100 4700 2    50   Output ~ 0
-IADPT
+IAdp
 Wire Wire Line
 	7850 5000 7750 5000
 Wire Wire Line
@@ -647,7 +647,7 @@ Wire Wire Line
 Wire Wire Line
 	7150 5500 6850 5500
 Text Label 6950 5500 0    50   ~ 0
-REGN
+RegN
 Wire Wire Line
 	6850 4500 7150 4500
 Connection ~ 7150 4500
@@ -1408,7 +1408,7 @@ Connection ~ 9500 2000
 Wire Wire Line
 	7800 2000 8300 2000
 Text Label 3200 5000 0    50   ~ 0
-REGN
+RegN
 Wire Wire Line
 	5050 5100 5300 5100
 Wire Wire Line
@@ -1416,7 +1416,7 @@ Wire Wire Line
 Wire Wire Line
 	2850 4950 2400 4950
 Text Label 2400 4350 0    50   ~ 0
-PACK_P
+Pack-P
 Text Label 2400 4950 0    50   ~ 0
 Vin-Adp
 Wire Wire Line
@@ -1427,7 +1427,7 @@ Wire Wire Line
 	7800 3200 8850 3200
 Connection ~ 7800 3200
 Text HLabel 8850 3200 2    50   BiDi ~ 0
-PACK_P
+Pack-P
 Wire Wire Line
 	1800 2000 1250 2000
 Connection ~ 1800 2000
@@ -1591,10 +1591,8 @@ F 3 "" H 3600 6650 50  0001 C CNN
 	1    3600 6650
 	-1   0    0    -1  
 $EndComp
-Text Label 8350 3200 0    50   ~ 0
-PACK_P
 Text Label 3350 6050 0    50   ~ 0
-PACK_P
+Pack-P
 Wire Wire Line
 	3600 6050 3350 6050
 Text Notes 1450 6450 0    50   ~ 0

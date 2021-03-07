@@ -64,14 +64,14 @@ P 3450 1250
 AR Path="/5FCD4E9D/6011BCE0" Ref="TP?"  Part="1" 
 AR Path="/5FCD4EEA/6011BCE0" Ref="TP?"  Part="1" 
 F 0 "TP?" H 3508 1368 50  0000 L CNN
-F 1 "Stepper1_Temp" H 3300 1450 50  0000 L CNN
+F 1 "Stepper1-Temp" H 3300 1450 50  0000 L CNN
 F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 3650 1250 50  0001 C CNN
 F 3 "~" H 3650 1250 50  0001 C CNN
 	1    3450 1250
 	1    0    0    -1  
 $EndComp
 Text HLabel 3750 1250 2    50   Output ~ 0
-Stepper1_Temp
+Stepper1-Temp
 Wire Wire Line
 	3750 1250 3450 1250
 Connection ~ 3450 1250
@@ -86,14 +86,14 @@ P 3450 1950
 AR Path="/5FCD4E9D/6011C56A" Ref="TP?"  Part="1" 
 AR Path="/5FCD4EEA/6011C56A" Ref="TP?"  Part="1" 
 F 0 "TP?" H 3508 2068 50  0000 L CNN
-F 1 "Stepper2_Temp" H 3300 2150 50  0000 L CNN
+F 1 "Stepper2-Temp" H 3300 2150 50  0000 L CNN
 F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 3650 1950 50  0001 C CNN
 F 3 "~" H 3650 1950 50  0001 C CNN
 	1    3450 1950
 	1    0    0    -1  
 $EndComp
 Text HLabel 3750 1950 2    50   Output ~ 0
-Stepper2_Temp
+Stepper2-Temp
 Wire Wire Line
 	3750 1950 3450 1950
 Connection ~ 3450 1950
@@ -108,14 +108,14 @@ P 3450 2650
 AR Path="/5FCD4E9D/6011C9CC" Ref="TP?"  Part="1" 
 AR Path="/5FCD4EEA/6011C9CC" Ref="TP?"  Part="1" 
 F 0 "TP?" H 3508 2768 50  0000 L CNN
-F 1 "Blower_Temp" H 3300 2850 50  0000 L CNN
+F 1 "Blower-Temp" H 3300 2850 50  0000 L CNN
 F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 3650 2650 50  0001 C CNN
 F 3 "~" H 3650 2650 50  0001 C CNN
 	1    3450 2650
 	1    0    0    -1  
 $EndComp
 Text HLabel 3750 2650 2    50   Output ~ 0
-Blower_Temp
+Blower-Temp
 Wire Wire Line
 	3750 2650 3450 2650
 Connection ~ 3450 2650
@@ -130,14 +130,14 @@ P 3450 3350
 AR Path="/5FCD4E9D/6011CE5B" Ref="TP?"  Part="1" 
 AR Path="/5FCD4EEA/6011CE5B" Ref="TP?"  Part="1" 
 F 0 "TP?" H 3508 3468 50  0000 L CNN
-F 1 "Batt_Temp" H 3300 3550 50  0000 L CNN
+F 1 "Batt-Temp" H 3300 3550 50  0000 L CNN
 F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 3650 3350 50  0001 C CNN
 F 3 "~" H 3650 3350 50  0001 C CNN
 	1    3450 3350
 	1    0    0    -1  
 $EndComp
 Text HLabel 3750 3350 2    50   Output ~ 0
-Batt_Temp
+Batt-Temp
 Wire Wire Line
 	3750 3350 3450 3350
 Connection ~ 3450 3350
@@ -152,19 +152,19 @@ P 3450 4050
 AR Path="/5FCD4E9D/6011D2A0" Ref="TP?"  Part="1" 
 AR Path="/5FCD4EEA/6011D2A0" Ref="TP?"  Part="1" 
 F 0 "TP?" H 3508 4168 50  0000 L CNN
-F 1 "Spare_Temp" H 3300 4250 50  0000 L CNN
+F 1 "Spare-Temp" H 3300 4250 50  0000 L CNN
 F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 3650 4050 50  0001 C CNN
 F 3 "~" H 3650 4050 50  0001 C CNN
 	1    3450 4050
 	1    0    0    -1  
 $EndComp
 Text HLabel 3750 4050 2    50   Output ~ 0
-Spare_Temp
+Spare-Temp
 Wire Wire Line
 	3750 4050 3450 4050
 Connection ~ 3450 4050
 Text HLabel 7700 5950 2    50   Output ~ 0
-Oxygen_FiO2
+Oxygen-FiO2
 $Comp
 L RespiraWorks:INA333AIDGKR U?
 U 1 1 60132AA0

@@ -179,6 +179,8 @@ F 0 "U?" H 5600 6200 50  0000 L CNN
 F 1 "INA333AIDGKR" H 5550 6100 50  0000 L CNN
 F 2 "RespiraWorks_Std:VSSOP-8_3.0x3.0mm_P0.65mm" H 5400 5950 50  0001 C CNN
 F 3 "" H 5400 5950 50  0001 C CNN
+F 4 "Texas Instruments" H 5400 5950 50  0001 C CNN "Manufacturer"
+F 5 "INA333AIDGKR" H 5400 5950 50  0001 C CNN "Manufacturer PN"
 	1    5400 5950
 	1    0    0    -1  
 $EndComp
@@ -255,7 +257,10 @@ F 0 "C?" H 5750 5050 50  0000 C CNN
 F 1 "100nF" H 6000 5150 50  0000 C CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 5688 5100 50  0001 C CNN
 F 3 "~" H 5650 5250 50  0001 C CNN
-F 4 "" H 5650 5250 50  0001 C CNN "Manufacturer"
+F 4 "Kemet" H 5650 5250 50  0001 C CNN "Manufacturer"
+F 5 "X7R" H 5650 5250 50  0001 C CNN "Dielectric"
+F 6 "C0603C104K5RACTU" H 5650 5250 50  0001 C CNN "Manufacturer PN"
+F 7 "50V" H 5650 5250 50  0001 C CNN "Voltage"
 	1    5650 5250
 	1    0    0    1   
 $EndComp
@@ -400,6 +405,8 @@ F 0 "J?" H 1418 6167 50  0000 C CNN
 F 1 "Oxygen sensor" H 1418 6076 50  0000 C CNN
 F 2 "RespiraWorks_Std:Molex_Micro-Fit_3.0_43650-0315_1x03_P3.00mm_Vertical" H 1500 5850 50  0001 C CNN
 F 3 "~" H 1500 5850 50  0001 C CNN
+F 4 "Molex" H 1500 5850 50  0001 C CNN "Manufacturer"
+F 5 "43650-0315" H 1500 5850 50  0001 C CNN "Manufacturer PN"
 	1    1500 5850
 	-1   0    0    -1  
 $EndComp
@@ -455,7 +462,10 @@ F 0 "C?" H 7050 6100 50  0000 L CNN
 F 1 "1uF" H 6850 6200 50  0000 L CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 6788 5950 50  0001 C CNN
 F 3 "~" H 6750 6100 50  0001 C CNN
-F 4 "AVX" H 6750 6100 50  0001 C CNN "Manufacturer"
+F 4 "Kemet" H 6750 6100 50  0001 C CNN "Manufacturer"
+F 5 "X7R" H 6750 6100 50  0001 C CNN "Dielectric"
+F 6 "C0805C105K5RACTU" H 6750 6100 50  0001 C CNN "Manufacturer PN"
+F 7 "50V" H 6750 6100 50  0001 C CNN "Voltage"
 	1    6750 6100
 	1    0    0    1   
 $EndComp

@@ -30,6 +30,8 @@ F 0 "J?" H 1468 3417 50  0000 C CNN
 F 1 "Temperature sensor" H 1468 3326 50  0000 C CNN
 F 2 "RespiraWorks_Std:Molex_Micro-Fit_3.0_43650-0215_1x02_P3.00mm_Vertical" H 1550 3200 50  0001 C CNN
 F 3 "~" H 1550 3200 50  0001 C CNN
+F 4 "Molex" H 1550 3200 50  0001 C CNN "Manufacturer"
+F 5 "43650-0215" H 1550 3200 50  0001 C CNN "Manufacturer PN"
 	1    1550 3200
 	-1   0    0    -1  
 $EndComp
@@ -114,7 +116,8 @@ F 0 "R?" H 4150 2700 50  0000 C CNN
 F 1 "220 0.1%" H 4000 2800 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 4230 2700 50  0001 C CNN
 F 3 "~" H 4300 2700 50  0001 C CNN
-F 4 "" H 4300 2700 50  0001 C CNN "Manufacturer"
+F 4 "Susumu" H 4300 2700 50  0001 C CNN "Manufacturer"
+F 5 "RG1608P-221-B-T5" H 4300 2700 50  0001 C CNN "Manufacturer PN"
 	1    4300 2700
 	-1   0    0    1   
 $EndComp
@@ -139,7 +142,8 @@ F 0 "R?" H 4150 3600 50  0000 C CNN
 F 1 "10k 0.1%" H 4000 3700 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 4230 3600 50  0001 C CNN
 F 3 "~" H 4300 3600 50  0001 C CNN
-F 4 "" H 4300 3600 50  0001 C CNN "Manufacturer"
+F 4 "Susumu" H 4300 3600 50  0001 C CNN "Manufacturer"
+F 5 "RG1608P-103-B-T5" H 4300 3600 50  0001 C CNN "Manufacturer PN"
 	1    4300 3600
 	-1   0    0    1   
 $EndComp
@@ -171,6 +175,8 @@ F 0 "U?" V 1950 4100 50  0000 L CNN
 F 1 "USBLC6-2SC6" V 2050 4100 50  0000 L CNN
 F 2 "Package_TO_SOT_SMD:SOT-23-6" H 2400 3400 50  0001 C CNN
 F 3 "https://www.st.com/resource/en/datasheet/usblc6-2.pdf" H 2600 4250 50  0001 C CNN
+F 4 "STMicroelectronics" H 2400 3900 50  0001 C CNN "Manufacturer"
+F 5 "USBLC6-2SC6" H 2400 3900 50  0001 C CNN "Manufacturer PN"
 	1    2400 3900
 	0    1    1    0   
 $EndComp

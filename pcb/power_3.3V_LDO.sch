@@ -27,6 +27,8 @@ F 0 "U?" H 5350 4165 50  0000 C CNN
 F 1 "LD39050PU33R" H 5350 4074 50  0000 C CNN
 F 2 "RespiraWorks:DFN-6-1EP_3x3mm_P0.95mm_EP1.75x2.5mm" H 5300 3750 50  0001 C CNN
 F 3 "" H 5300 3750 50  0001 C CNN
+F 4 "STMicroelectronics" H 5300 3750 50  0001 C CNN "Manufacturer"
+F 5 "LD39050PU33R" H 5300 3750 50  0001 C CNN "Manufacturer PN"
 	1    5300 3750
 	1    0    0    -1  
 $EndComp
@@ -97,7 +99,10 @@ F 0 "C?" H 6600 3500 50  0000 L CNN
 F 1 "1uF" H 6350 3400 50  0000 L CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 6688 3600 50  0001 C CNN
 F 3 "~" H 6650 3750 50  0001 C CNN
-F 4 "AVX" H 6650 3750 50  0001 C CNN "Manufacturer"
+F 4 "Kemet" H 6650 3750 50  0001 C CNN "Manufacturer"
+F 5 "X7R" H 6650 3750 50  0001 C CNN "Dielectric"
+F 6 "C0805C105K5RACTU" H 6650 3750 50  0001 C CNN "Manufacturer PN"
+F 7 "50V" H 6650 3750 50  0001 C CNN "Voltage"
 	1    6650 3750
 	-1   0    0    1   
 $EndComp
@@ -128,7 +133,10 @@ F 0 "C?" H 4300 3500 50  0000 L CNN
 F 1 "1uF" H 4050 3400 50  0000 L CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 4388 3600 50  0001 C CNN
 F 3 "~" H 4350 3750 50  0001 C CNN
-F 4 "AVX" H 4350 3750 50  0001 C CNN "Manufacturer"
+F 4 "Kemet" H 4350 3750 50  0001 C CNN "Manufacturer"
+F 5 "X7R" H 4350 3750 50  0001 C CNN "Dielectric"
+F 6 "C0805C105K5RACTU" H 4350 3750 50  0001 C CNN "Manufacturer PN"
+F 7 "50V" H 4350 3750 50  0001 C CNN "Voltage"
 	1    4350 3750
 	-1   0    0    1   
 $EndComp
@@ -173,6 +181,8 @@ F 0 "TP?" H 7300 3700 50  0000 L CNN
 F 1 "TestPoint_Flag" H 7510 3553 50  0001 L CNN
 F 2 "RespiraWorks_Std:TestPoint_Keystone_5019_Minature" H 7450 3550 50  0001 C CNN
 F 3 "~" H 7450 3550 50  0001 C CNN
+F 4 "Keystone" H 7250 3550 50  0001 C CNN "Manufacturer"
+F 5 "5019" H 7250 3550 50  0001 C CNN "Manufacturer PN"
 	1    7250 3550
 	1    0    0    -1  
 $EndComp

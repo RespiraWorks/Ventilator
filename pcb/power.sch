@@ -163,6 +163,8 @@ F 0 "Q?" H 1700 2250 50  0000 L CNN
 F 1 "MMBT3904" H 1550 1900 50  0000 L CNN
 F 2 "RespiraWorks_Std:SOT-23" H 2100 2200 50  0001 C CNN
 F 3 "~" H 1900 2100 50  0001 C CNN
+F 4 "Diodes Inc." H 1900 2100 50  0001 C CNN "Manufacturer"
+F 5 "MMBT3904-7-F" H 1900 2100 50  0001 C CNN "Manufacturer PN"
 	1    1900 2100
 	1    0    0    -1  
 $EndComp
@@ -266,6 +268,8 @@ F 0 "TP?" H 5350 4750 50  0000 L CNN
 F 1 "TestPoint_Flag" H 5560 4603 50  0001 L CNN
 F 2 "RespiraWorks_Std:TestPoint_Keystone_5019_Minature" H 5500 4600 50  0001 C CNN
 F 3 "~" H 5500 4600 50  0001 C CNN
+F 4 "Keystone" H 5300 4600 50  0001 C CNN "Manufacturer"
+F 5 "5019" H 5300 4600 50  0001 C CNN "Manufacturer PN"
 	1    5300 4600
 	1    0    0    -1  
 $EndComp
@@ -283,6 +287,8 @@ F 0 "TP?" H 7150 3350 50  0000 L CNN
 F 1 "TestPoint_Flag" H 7360 3203 50  0001 L CNN
 F 2 "RespiraWorks_Std:TestPoint_Keystone_5019_Minature" H 7300 3200 50  0001 C CNN
 F 3 "~" H 7300 3200 50  0001 C CNN
+F 4 "Keystone" H 7100 3200 50  0001 C CNN "Manufacturer"
+F 5 "5019" H 7100 3200 50  0001 C CNN "Manufacturer PN"
 	1    7100 3200
 	1    0    0    -1  
 $EndComp
@@ -340,6 +346,8 @@ F 0 "D?" H 4900 4850 50  0000 C CNN
 F 1 "BAT54J" V 4900 4550 50  0000 C CNN
 F 2 "RespiraWorks_Std:D_SOD-323F" H 4900 4575 50  0001 C CNN
 F 3 "https://assets.nexperia.com/documents/data-sheet/BAT54J.pdf" H 4900 4750 50  0001 C CNN
+F 4 "Nexperia" H 4900 4750 50  0001 C CNN "Manufacturer"
+F 5 "BAT54J,115" H 4900 4750 50  0001 C CNN "Manufacturer PN"
 	1    4900 4750
 	0    1    1    0   
 $EndComp
@@ -353,6 +361,8 @@ F 0 "D?" H 4900 4550 50  0000 C CNN
 F 1 "BAT54J" V 4900 4250 50  0000 C CNN
 F 2 "RespiraWorks_Std:D_SOD-323F" H 4900 4275 50  0001 C CNN
 F 3 "https://assets.nexperia.com/documents/data-sheet/BAT54J.pdf" H 4900 4450 50  0001 C CNN
+F 4 "Nexperia" H 4900 4450 50  0001 C CNN "Manufacturer"
+F 5 "BAT54J,115" H 4900 4450 50  0001 C CNN "Manufacturer PN"
 	1    4900 4450
 	0    1    -1   0   
 $EndComp

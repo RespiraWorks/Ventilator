@@ -33,6 +33,9 @@ F 1 "10nF" H 7550 3050 50  0000 C CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 7788 2800 50  0001 C CNN
 F 3 "~" H 7750 2950 50  0001 C CNN
 F 4 "Murata" H 7750 2950 50  0001 C CNN "Manufacturer"
+F 5 "NP0" H 7750 2950 50  0001 C CNN "Dielectric"
+F 6 "GRM1885C1H103JA01D" H 7750 2950 50  0001 C CNN "Manufacturer PN"
+F 7 "50V" H 7750 2950 50  0001 C CNN "Voltage"
 	1    7750 2950
 	-1   0    0    1   
 $EndComp
@@ -53,7 +56,10 @@ F 0 "C?" H 6900 1300 50  0000 C CNN
 F 1 "100nF" H 7050 1400 50  0000 C CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 6938 1450 50  0001 C CNN
 F 3 "~" H 6900 1600 50  0001 C CNN
-F 4 "" H 6900 1600 50  0001 C CNN "Manufacturer"
+F 4 "Kemet" H 6900 1600 50  0001 C CNN "Manufacturer"
+F 5 "X7R" H 6900 1600 50  0001 C CNN "Dielectric"
+F 6 "C0603C104K5RACTU" H 6900 1600 50  0001 C CNN "Manufacturer PN"
+F 7 "50V" H 6900 1600 50  0001 C CNN "Voltage"
 	1    6900 1600
 	-1   0    0    1   
 $EndComp
@@ -209,7 +215,8 @@ F 0 "D?" H 4450 1850 50  0000 L CNN
 F 1 "1N4448W" H 4700 1850 50  0000 L CNN
 F 2 "RespiraWorks_Std:D_SOD-123" H 4350 1900 50  0001 C CNN
 F 3 "~" H 4350 1900 50  0001 C CNN
-F 4 "" H 4350 1900 50  0001 C CNN "Manufacturer"
+F 4 "Diodes Inc." H 4350 1900 50  0001 C CNN "Manufacturer"
+F 5 "1N4448W-7-F" H 4350 1900 50  0001 C CNN "Manufacturer PN"
 	1    4350 1900
 	-1   0    0    1   
 $EndComp
@@ -291,6 +298,7 @@ F 1 "MMBT3904" H 4200 3900 50  0000 L CNN
 F 2 "RespiraWorks_Std:SOT-23" H 4200 3925 50  0001 L CIN
 F 3 "https://www.fairchildsemi.com/datasheets/2N/2N3904.pdf" H 4000 4000 50  0001 L CNN
 F 4 "Diodes Inc." H 4000 4000 50  0001 C CNN "Manufacturer"
+F 5 "MMBT3904-7-F" H 4000 4000 50  0001 C CNN "Manufacturer PN"
 	1    4000 4000
 	1    0    0    -1  
 $EndComp
@@ -380,8 +388,9 @@ F 0 "D?" H 4450 2000 50  0000 L CNN
 F 1 "1N4448W" H 4650 2000 50  0000 L CNN
 F 2 "RespiraWorks_Std:D_SOD-123" H 4350 2050 50  0001 C CNN
 F 3 "~" H 4350 2050 50  0001 C CNN
-F 4 "" H 4350 2050 50  0001 C CNN "Manufacturer"
+F 4 "Diodes Inc." H 4350 2050 50  0001 C CNN "Manufacturer"
 F 5 "DNP" H 4350 2150 50  0000 C CNN "DNP"
+F 6 "1N4448W-7-F" H 4350 2050 50  0001 C CNN "Manufacturer PN"
 	1    4350 2050
 	-1   0    0    1   
 $EndComp
@@ -431,7 +440,10 @@ F 0 "C?" V 4050 2750 50  0000 C CNN
 F 1 "100nF" V 4150 2850 50  0000 C CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 4338 2550 50  0001 C CNN
 F 3 "~" H 4300 2700 50  0001 C CNN
-F 4 "" H 4300 2700 50  0001 C CNN "Manufacturer"
+F 4 "Kemet" H 4300 2700 50  0001 C CNN "Manufacturer"
+F 5 "X7R" H 4300 2700 50  0001 C CNN "Dielectric"
+F 6 "C0603C104K5RACTU" H 4300 2700 50  0001 C CNN "Manufacturer PN"
+F 7 "50V" H 4300 2700 50  0001 C CNN "Voltage"
 	1    4300 2700
 	-1   0    0    1   
 $EndComp
@@ -472,6 +484,9 @@ F 0 "U?" H 7400 2750 50  0000 C CNN
 F 1 "TLC555" H 7500 2650 50  0000 C CNN
 F 2 "RespiraWorks_Std:SOIC-8_3.9x4.9mm_P1.27mm" H 8100 1900 50  0001 C CNN
 F 3 "http://www.ti.com/lit/ds/symlink/tlc555.pdf" H 8100 1900 50  0001 C CNN
+F 4 "Texas Instruments" H 7250 2300 50  0001 C CNN "Manufacturer"
+F 5 "TLC555QDR" H 7250 2300 50  0001 C CNN "Manufacturer PN"
+F 6 "...IDR also acceptable" H 7250 2300 50  0001 C CNN "Sourcing Notes"
 	1    7250 2300
 	1    0    0    -1  
 $EndComp
@@ -526,7 +541,10 @@ F 0 "C?" H 5850 3000 50  0000 C CNN
 F 1 "1uF" H 5850 3100 50  0000 C CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 6088 2900 50  0001 C CNN
 F 3 "~" H 6050 3050 50  0001 C CNN
-F 4 "AVX" H 6050 3050 50  0001 C CNN "Manufacturer"
+F 4 "Kemet" H 6050 3050 50  0001 C CNN "Manufacturer"
+F 5 "X7R" H 6050 3050 50  0001 C CNN "Dielectric"
+F 6 "C0805C105K5RACTU" H 6050 3050 50  0001 C CNN "Manufacturer PN"
+F 7 "50V" H 6050 3050 50  0001 C CNN "Voltage"
 	1    6050 3050
 	-1   0    0    1   
 $EndComp
@@ -628,6 +646,8 @@ F 2 "RespiraWorks_Std:C_0603_1608Metric" H 10538 2800 50  0001 C CNN
 F 3 "~" H 10500 2950 50  0001 C CNN
 F 4 "Murata" H 10500 2950 50  0001 C CNN "Manufacturer"
 F 5 "GRM1885C1H103JA01D" H 10500 2950 50  0001 C CNN "Manufacturer PN"
+F 6 "NP0" H 10500 2950 50  0001 C CNN "Dielectric"
+F 7 "50V" H 10500 2950 50  0001 C CNN "Voltage"
 	1    10500 2950
 	-1   0    0    1   
 $EndComp
@@ -648,7 +668,10 @@ F 0 "C?" H 9650 1300 50  0000 C CNN
 F 1 "100nF" H 9850 1400 50  0000 C CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 9688 1450 50  0001 C CNN
 F 3 "~" H 9650 1600 50  0001 C CNN
-F 4 "" H 9650 1600 50  0001 C CNN "Manufacturer"
+F 4 "Kemet" H 9650 1600 50  0001 C CNN "Manufacturer"
+F 5 "X7R" H 9650 1600 50  0001 C CNN "Dielectric"
+F 6 "C0603C104K5RACTU" H 9650 1600 50  0001 C CNN "Manufacturer PN"
+F 7 "50V" H 9650 1600 50  0001 C CNN "Voltage"
 	1    9650 1600
 	-1   0    0    1   
 $EndComp
@@ -682,6 +705,9 @@ F 0 "U?" H 10150 2750 50  0000 C CNN
 F 1 "TLC555" H 10250 2650 50  0000 C CNN
 F 2 "RespiraWorks_Std:SOIC-8_3.9x4.9mm_P1.27mm" H 10850 1900 50  0001 C CNN
 F 3 "http://www.ti.com/lit/ds/symlink/tlc555.pdf" H 10850 1900 50  0001 C CNN
+F 4 "Texas Instruments" H 10000 2300 50  0001 C CNN "Manufacturer"
+F 5 "TLC555QDR" H 10000 2300 50  0001 C CNN "Manufacturer PN"
+F 6 "...IDR also acceptable" H 10000 2300 50  0001 C CNN "Sourcing Notes"
 	1    10000 2300
 	1    0    0    -1  
 $EndComp
@@ -736,7 +762,10 @@ F 0 "C?" H 8600 3000 50  0000 C CNN
 F 1 "10nF" H 8550 3100 50  0000 C CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 8838 2900 50  0001 C CNN
 F 3 "~" H 8800 3050 50  0001 C CNN
-F 4 "AVX" H 8800 3050 50  0001 C CNN "Manufacturer"
+F 4 "Murata" H 8800 3050 50  0001 C CNN "Manufacturer"
+F 5 "NP0" H 8800 3050 50  0001 C CNN "Dielectric"
+F 6 "GRM1885C1H103JA01D" H 8800 3050 50  0001 C CNN "Manufacturer PN"
+F 7 "50V" H 8800 3050 50  0001 C CNN "Voltage"
 	1    8800 3050
 	-1   0    0    1   
 $EndComp
@@ -854,6 +883,8 @@ F 0 "S?" H 11750 1700 50  0000 L CNN
 F 1 "CT-1205H-SMT" H 11650 1800 50  0000 L CNN
 F 2 "RespiraWorks:CT-1205H-SMT-TR" H 11600 1400 50  0001 C CNN
 F 3 "~" H 11590 1550 50  0001 C CNN
+F 4 "CUI" H 11600 1600 50  0001 C CNN "Manufacturer"
+F 5 "CT-1205H-SMT-TR" H 11600 1600 50  0001 C CNN "Manufacturer PN"
 	1    11600 1600
 	1    0    0    -1  
 $EndComp
@@ -865,6 +896,8 @@ F 0 "S?" H 13850 1900 50  0000 L CNN
 F 1 "CT-1205H-SMT" H 13750 2000 50  0000 L CNN
 F 2 "RespiraWorks:CT-1205H-SMT-TR" H 13700 1600 50  0001 C CNN
 F 3 "~" H 13690 1750 50  0001 C CNN
+F 4 "CUI" H 13700 1800 50  0001 C CNN "Manufacturer"
+F 5 "CT-1205H-SMT-TR" H 13700 1800 50  0001 C CNN "Manufacturer PN"
 	1    13700 1800
 	1    0    0    -1  
 $EndComp
@@ -876,6 +909,8 @@ F 0 "S?" H 15950 1900 50  0000 L CNN
 F 1 "CT-1205H-SMT" H 15850 2000 50  0000 L CNN
 F 2 "RespiraWorks:CT-1205H-SMT-TR" H 15800 1600 50  0001 C CNN
 F 3 "~" H 15790 1750 50  0001 C CNN
+F 4 "CUI" H 15800 1800 50  0001 C CNN "Manufacturer"
+F 5 "CT-1205H-SMT-TR" H 15800 1800 50  0001 C CNN "Manufacturer PN"
 	1    15800 1800
 	1    0    0    -1  
 $EndComp
@@ -889,6 +924,8 @@ F 0 "Q?" H 11641 2146 50  0000 L CNN
 F 1 "MMBT3904" H 11641 2055 50  0000 L CNN
 F 2 "RespiraWorks_Std:SOT-23" H 11650 2200 50  0001 C CNN
 F 3 "~" H 11450 2100 50  0001 C CNN
+F 4 "Diodes Inc." H 11450 2100 50  0001 C CNN "Manufacturer"
+F 5 "MMBT3904-7-F" H 11450 2100 50  0001 C CNN "Manufacturer PN"
 	1    11450 2100
 	1    0    0    -1  
 $EndComp
@@ -1051,6 +1088,8 @@ F 0 "Q?" H 13741 2346 50  0000 L CNN
 F 1 "MMBT3904" H 13741 2255 50  0000 L CNN
 F 2 "RespiraWorks_Std:SOT-23" H 13750 2400 50  0001 C CNN
 F 3 "~" H 13550 2300 50  0001 C CNN
+F 4 "Diodes Inc." H 13550 2300 50  0001 C CNN "Manufacturer"
+F 5 "MMBT3904-7-F" H 13550 2300 50  0001 C CNN "Manufacturer PN"
 	1    13550 2300
 	1    0    0    -1  
 $EndComp
@@ -1099,6 +1138,8 @@ F 0 "Q?" H 15841 2346 50  0000 L CNN
 F 1 "MMBT3904" H 15841 2255 50  0000 L CNN
 F 2 "RespiraWorks_Std:SOT-23" H 15850 2400 50  0001 C CNN
 F 3 "~" H 15650 2300 50  0001 C CNN
+F 4 "Diodes Inc." H 15650 2300 50  0001 C CNN "Manufacturer"
+F 5 "MMBT3904-7-F" H 15650 2300 50  0001 C CNN "Manufacturer PN"
 	1    15650 2300
 	1    0    0    -1  
 $EndComp
@@ -1344,6 +1385,7 @@ F 1 "MMBT3904" H 3800 8250 50  0000 L CNN
 F 2 "RespiraWorks_Std:SOT-23" H 4400 8575 50  0001 L CIN
 F 3 "https://www.fairchildsemi.com/datasheets/2N/2N3904.pdf" H 4200 8650 50  0001 L CNN
 F 4 "Diodes Inc." H 4200 8650 50  0001 C CNN "Manufacturer"
+F 5 "MMBT3904-7-F" H 4200 8650 50  0001 C CNN "Manufacturer PN"
 	1    4200 8650
 	1    0    0    -1  
 $EndComp
@@ -1430,8 +1472,8 @@ F 0 "Q?" V 5378 7350 50  0000 C CNN
 F 1 "MMBT2907A" V 5287 7350 50  0000 C CNN
 F 2 "RespiraWorks_Std:SOT-23" H 5250 7275 50  0001 L CIN
 F 3 "https://www.fairchildsemi.com/datasheets/2N/2N3906.pdf" H 5050 7350 50  0001 L CNN
-F 4 "Nexperia" H 5050 7350 50  0001 C CNN "Manufacturer"
-F 5 "" H 5050 7350 50  0001 C CNN "Manufacturer PN"
+F 4 "Diodes Inc." H 5050 7350 50  0001 C CNN "Manufacturer"
+F 5 "MMBT2907A-7-F" H 5050 7350 50  0001 C CNN "Manufacturer PN"
 	1    5050 7350
 	0    -1   -1   0   
 $EndComp
@@ -1448,6 +1490,7 @@ F 1 "MMBT3904" H 5250 8300 50  0000 L CNN
 F 2 "RespiraWorks_Std:SOT-23" H 5350 8375 50  0001 L CIN
 F 3 "https://www.fairchildsemi.com/datasheets/2N/2N3904.pdf" H 5150 8450 50  0001 L CNN
 F 4 "Diodes Inc." H 5150 8450 50  0001 C CNN "Manufacturer"
+F 5 "MMBT3904-7-F" H 5150 8450 50  0001 C CNN "Manufacturer PN"
 	1    5150 8450
 	-1   0    0    -1  
 $EndComp
@@ -1704,7 +1747,10 @@ F 0 "C?" H 10300 7400 50  0000 C CNN
 F 1 "10nF" H 10150 7500 50  0000 C CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 10538 7250 50  0001 C CNN
 F 3 "~" H 10500 7400 50  0001 C CNN
-F 4 "" H 10500 7400 50  0001 C CNN "Manufacturer"
+F 4 "Murata" H 10500 7400 50  0001 C CNN "Manufacturer"
+F 5 "NP0" H 10500 7400 50  0001 C CNN "Dielectric"
+F 6 "GRM1885C1H103JA01D" H 10500 7400 50  0001 C CNN "Manufacturer PN"
+F 7 "50V" H 10500 7400 50  0001 C CNN "Voltage"
 	1    10500 7400
 	-1   0    0    1   
 $EndComp
@@ -1736,6 +1782,9 @@ F 0 "U?" V 11446 7180 50  0000 R CNN
 F 1 "TL431LI" V 11355 7180 50  0000 R CNN
 F 2 "RespiraWorks_Std:SOT-23" H 11400 7100 50  0001 C CIN
 F 3 "" H 11400 7250 50  0001 C CIN
+F 4 "Texas Instruments" H 11400 7250 50  0001 C CNN "Manufacturer"
+F 5 "TL431LIAIDBZR" H 11400 7250 50  0001 C CNN "Manufacturer PN"
+F 6 "...AQDBZR, BIDBZR, or BQDBZR also acceptable" H 11400 7250 50  0001 C CNN "Sourcing Notes"
 	1    11400 7250
 	0    -1   -1   0   
 $EndComp
@@ -1779,7 +1828,8 @@ F 0 "Q?" V 12728 6600 50  0000 C CNN
 F 1 "MMBT2907A" V 12637 6600 50  0000 C CNN
 F 2 "RespiraWorks_Std:SOT-23" H 12600 6525 50  0001 L CIN
 F 3 "https://www.fairchildsemi.com/datasheets/2N/2N3906.pdf" H 12400 6600 50  0001 L CNN
-F 4 "Nexperia" H 12400 6600 50  0001 C CNN "Manufacturer"
+F 4 "Diodes Inc." H 12400 6600 50  0001 C CNN "Manufacturer"
+F 5 "MMBT2907A-7-F" H 12400 6600 50  0001 C CNN "Manufacturer PN"
 	1    12400 6600
 	1    0    0    1   
 $EndComp
@@ -1961,7 +2011,8 @@ F 0 "D?" H 6500 7450 50  0000 L CNN
 F 1 "1N4448W" H 6400 7350 50  0000 L CNN
 F 2 "RespiraWorks_Std:D_SOD-123" H 6550 7250 50  0001 C CNN
 F 3 "~" H 6550 7250 50  0001 C CNN
-F 4 "" H 6550 7250 50  0001 C CNN "Manufacturer"
+F 4 "Diodes Inc." H 6550 7250 50  0001 C CNN "Manufacturer"
+F 5 "1N4448W-7-F" H 6550 7250 50  0001 C CNN "Manufacturer PN"
 	1    6550 7250
 	1    0    0    -1  
 $EndComp
@@ -1980,7 +2031,8 @@ F 0 "D?" H 4000 7050 50  0000 L CNN
 F 1 "1N4448W" H 3850 7150 50  0000 L CNN
 F 2 "RespiraWorks_Std:D_SOD-123" H 4000 7250 50  0001 C CNN
 F 3 "~" H 4000 7250 50  0001 C CNN
-F 4 "" H 4000 7250 50  0001 C CNN "Manufacturer"
+F 4 "Diodes Inc." H 4000 7250 50  0001 C CNN "Manufacturer"
+F 5 "1N4448W-7-F" H 4000 7250 50  0001 C CNN "Manufacturer PN"
 	1    4000 7250
 	-1   0    0    1   
 $EndComp
@@ -1995,6 +2047,8 @@ F 0 "J?" H 7230 7342 50  0000 L CNN
 F 1 "Alarm Battery (4x AA)" H 7230 7251 50  0000 L CNN
 F 2 "RespiraWorks_Std:Molex_Micro-Fit_3.0_43650-0415_1x04_P3.00mm_Vertical" H 7150 7350 50  0001 C CNN
 F 3 "~" H 7150 7350 50  0001 C CNN
+F 4 "Molex" H 7150 7350 50  0001 C CNN "Manufacturer"
+F 5 "43650-0415" H 7150 7350 50  0001 C CNN "Manufacturer PN"
 	1    7150 7350
 	1    0    0    -1  
 $EndComp
@@ -2017,6 +2071,8 @@ F 0 "S?" H 14700 3500 50  0000 L CNN
 F 1 "CT-1205H-SMT" H 14600 3600 50  0000 L CNN
 F 2 "RespiraWorks:CT-1205H-SMT-TR" H 14550 3200 50  0001 C CNN
 F 3 "~" H 14540 3350 50  0001 C CNN
+F 4 "CUI" H 14550 3400 50  0001 C CNN "Manufacturer"
+F 5 "CT-1205H-SMT-TR" H 14550 3400 50  0001 C CNN "Manufacturer PN"
 	1    14550 3400
 	1    0    0    -1  
 $EndComp
@@ -2065,6 +2121,8 @@ F 0 "Q?" H 14591 3946 50  0000 L CNN
 F 1 "MMBT3904" H 14591 3855 50  0000 L CNN
 F 2 "RespiraWorks_Std:SOT-23" H 14600 4000 50  0001 C CNN
 F 3 "~" H 14400 3900 50  0001 C CNN
+F 4 "Diodes Inc." H 14400 3900 50  0001 C CNN "Manufacturer"
+F 5 "MMBT3904-7-F" H 14400 3900 50  0001 C CNN "Manufacturer PN"
 	1    14400 3900
 	1    0    0    -1  
 $EndComp

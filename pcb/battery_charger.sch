@@ -101,6 +101,10 @@ F 0 "C?" H 5365 2196 50  0000 L CNN
 F 1 "47nF" H 5365 2105 50  0000 L CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 5288 2000 50  0001 C CNN
 F 3 "~" H 5250 2150 50  0001 C CNN
+F 4 "X7R" H 5250 2150 50  0001 C CNN "Dielectric"
+F 5 "Kemet" H 5250 2150 50  0001 C CNN "Manufacturer"
+F 6 "C0603C473K5RACTU" H 5250 2150 50  0001 C CNN "Manufacturer PN"
+F 7 "50V" H 5250 2150 50  0001 C CNN "Voltage"
 	1    5250 2150
 	1    0    0    -1  
 $EndComp
@@ -117,6 +121,10 @@ F 0 "C?" H 3515 2846 50  0000 L CNN
 F 1 "100nF" H 3515 2755 50  0000 L CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 3438 2650 50  0001 C CNN
 F 3 "~" H 3400 2800 50  0001 C CNN
+F 4 "X7R" H 3400 2800 50  0001 C CNN "Dielectric"
+F 5 "Kemet" H 3400 2800 50  0001 C CNN "Manufacturer"
+F 6 "C0603C104K5RACTU" H 3400 2800 50  0001 C CNN "Manufacturer PN"
+F 7 "50V" H 3400 2800 50  0001 C CNN "Voltage"
 	1    3400 2800
 	1    0    0    -1  
 $EndComp
@@ -133,6 +141,10 @@ F 0 "C?" H 2800 2800 50  0000 L CNN
 F 1 "100nF" H 2750 2700 50  0000 L CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 3138 2650 50  0001 C CNN
 F 3 "~" H 3100 2800 50  0001 C CNN
+F 4 "X7R" H 3100 2800 50  0001 C CNN "Dielectric"
+F 5 "Kemet" H 3100 2800 50  0001 C CNN "Manufacturer"
+F 6 "C0603C104K5RACTU" H 3100 2800 50  0001 C CNN "Manufacturer PN"
+F 7 "50V" H 3100 2800 50  0001 C CNN "Voltage"
 	1    3100 2800
 	1    0    0    -1  
 $EndComp
@@ -197,6 +209,10 @@ F 0 "C?" H 7265 5946 50  0000 L CNN
 F 1 "1uF" H 7265 5855 50  0000 L CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 7188 5750 50  0001 C CNN
 F 3 "~" H 7150 5900 50  0001 C CNN
+F 4 "X7R" H 7150 5900 50  0001 C CNN "Dielectric"
+F 5 "Kemet" H 7150 5900 50  0001 C CNN "Manufacturer"
+F 6 "C0805C105K5RACTU" H 7150 5900 50  0001 C CNN "Manufacturer PN"
+F 7 "50V" H 7150 5900 50  0001 C CNN "Voltage"
 	1    7150 5900
 	1    0    0    -1  
 $EndComp
@@ -256,6 +272,9 @@ F 1 "100pF" V 4800 2600 50  0000 C CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 4688 2450 50  0001 C CNN
 F 3 "~" H 4650 2600 50  0001 C CNN
 F 4 "50V" V 4900 2550 50  0000 C CNN "Voltage"
+F 5 "NP0" H 4650 2600 50  0001 C CNN "Dielectric"
+F 6 "Kemet" H 4650 2600 50  0001 C CNN "Manufacturer"
+F 7 "C0603C101J5GACTU" H 4650 2600 50  0001 C CNN "Manufacturer PN"
 	1    4650 2600
 	0    1    1    0   
 $EndComp
@@ -283,6 +302,8 @@ F 0 "R?" V 3043 2000 50  0000 C CNN
 F 1 "0.01" V 3134 2000 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_1206_3216Metric" V 3180 2000 50  0001 C CNN
 F 3 "~" H 3250 2000 50  0001 C CNN
+F 4 "Vishay" H 3250 2000 50  0001 C CNN "Manufacturer"
+F 5 "WSL1206R0100FEA" H 3250 2000 50  0001 C CNN "Manufacturer PN"
 	1    3250 2000
 	0    1    1    0   
 $EndComp
@@ -370,6 +391,10 @@ F 0 "C?" H 9065 4896 50  0000 L CNN
 F 1 "100pF" H 9065 4805 50  0000 L CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 8988 4700 50  0001 C CNN
 F 3 "~" H 8950 4850 50  0001 C CNN
+F 4 "NP0" H 8950 4850 50  0001 C CNN "Dielectric"
+F 5 "Kemet" H 8950 4850 50  0001 C CNN "Manufacturer"
+F 6 "C0603C101J5GACTU" H 8950 4850 50  0001 C CNN "Manufacturer PN"
+F 7 "50V" H 8950 4850 50  0001 C CNN "Voltage"
 	1    8950 4850
 	1    0    0    -1  
 $EndComp
@@ -402,6 +427,10 @@ F 0 "C?" H 8615 5446 50  0000 L CNN
 F 1 "100pF" H 8615 5355 50  0000 L CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 8538 5250 50  0001 C CNN
 F 3 "~" H 8500 5400 50  0001 C CNN
+F 4 "NP0" H 8500 5400 50  0001 C CNN "Dielectric"
+F 5 "Kemet" H 8500 5400 50  0001 C CNN "Manufacturer"
+F 6 "C0603C101J5GACTU" H 8500 5400 50  0001 C CNN "Manufacturer PN"
+F 7 "50V" H 8500 5400 50  0001 C CNN "Voltage"
 	1    8500 5400
 	1    0    0    -1  
 $EndComp
@@ -452,6 +481,10 @@ F 0 "C?" H 3515 5496 50  0000 L CNN
 F 1 "10nF" H 3515 5405 50  0000 L CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 3438 5300 50  0001 C CNN
 F 3 "~" H 3400 5450 50  0001 C CNN
+F 4 "NP0" H 3400 5450 50  0001 C CNN "Dielectric"
+F 5 "Murata" H 3400 5450 50  0001 C CNN "Manufacturer"
+F 6 "GRM1885C1H103JA01D" H 3400 5450 50  0001 C CNN "Manufacturer PN"
+F 7 "50V" H 3400 5450 50  0001 C CNN "Voltage"
 	1    3400 5450
 	1    0    0    -1  
 $EndComp
@@ -545,6 +578,10 @@ F 0 "C?" H 3365 2546 50  0000 L CNN
 F 1 "100nF" H 3365 2455 50  0000 L CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 3288 2350 50  0001 C CNN
 F 3 "~" H 3250 2500 50  0001 C CNN
+F 4 "X7R" H 3250 2500 50  0001 C CNN "Dielectric"
+F 5 "Kemet" H 3250 2500 50  0001 C CNN "Manufacturer"
+F 6 "C0603C104K5RACTU" H 3250 2500 50  0001 C CNN "Manufacturer PN"
+F 7 "50V" H 3250 2500 50  0001 C CNN "Voltage"
 	1    3250 2500
 	0    -1   -1   0   
 $EndComp
@@ -636,7 +673,7 @@ F 0 "Q?" V 2500 2100 50  0000 C CNN
 F 1 "CSD18563Q5A" V 2400 2150 50  0000 C CNN
 F 2 "RespiraWorks:VSONP-8-1EP_5x6_P1.27mm" H 2300 2025 50  0001 L CIN
 F 3 "https://www.ti.com/lit/ds/symlink/csd18563q5a.pdf" V 2100 2100 50  0001 L CNN
-F 4 "TI" V 2100 2100 50  0001 C CNN "Manufacturer"
+F 4 "Texas Instruments" V 2100 2100 50  0001 C CNN "Manufacturer"
 F 5 "CSD18563Q5A" V 2100 2100 50  0001 C CNN "Manufacturer PN"
 	1    2100 2100
 	0    -1   -1   0   
@@ -680,6 +717,10 @@ F 0 "C?" H 2200 2050 50  0000 L CNN
 F 1 "47nF" H 2150 1950 50  0000 L CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 2388 2000 50  0001 C CNN
 F 3 "~" H 2350 2150 50  0001 C CNN
+F 4 "X7R" H 2350 2150 50  0001 C CNN "Dielectric"
+F 5 "Kemet" H 2350 2150 50  0001 C CNN "Manufacturer"
+F 6 "C0603C473K5RACTU" H 2350 2150 50  0001 C CNN "Manufacturer PN"
+F 7 "50V" H 2350 2150 50  0001 C CNN "Voltage"
 	1    2350 2150
 	1    0    0    -1  
 $EndComp
@@ -1193,7 +1234,10 @@ F 0 "C?" H 8650 2050 50  0000 L CNN
 F 1 "10nF" H 8650 1950 50  0000 L CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 8638 2000 50  0001 C CNN
 F 3 "~" H 8600 2150 50  0001 C CNN
-F 4 "25V" H 8650 1850 50  0000 L CNN "Voltage"
+F 4 "50V" H 8650 1850 50  0000 L CNN "Voltage"
+F 5 "NP0" H 8600 2150 50  0001 C CNN "Dielectric"
+F 6 "Murata" H 8600 2150 50  0001 C CNN "Manufacturer"
+F 7 "GRM1885C1H103JA01D" H 8600 2150 50  0001 C CNN "Manufacturer PN"
 	1    8600 2150
 	1    0    0    -1  
 $EndComp
@@ -1212,6 +1256,8 @@ F 0 "R?" H 7650 2250 50  0000 C CNN
 F 1 "0.01" H 7600 2350 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_1206_3216Metric" V 7730 2300 50  0001 C CNN
 F 3 "~" H 7800 2300 50  0001 C CNN
+F 4 "Vishay" H 7800 2300 50  0001 C CNN "Manufacturer"
+F 5 "WSL1206R0100FEA" H 7800 2300 50  0001 C CNN "Manufacturer PN"
 	1    7800 2300
 	-1   0    0    1   
 $EndComp
@@ -1228,6 +1274,10 @@ F 0 "C?" H 7350 2300 50  0000 L CNN
 F 1 "100nF" H 7350 2200 50  0000 L CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 7638 2150 50  0001 C CNN
 F 3 "~" H 7600 2300 50  0001 C CNN
+F 4 "X7R" H 7600 2300 50  0001 C CNN "Dielectric"
+F 5 "Kemet" H 7600 2300 50  0001 C CNN "Manufacturer"
+F 6 "C0603C104K5RACTU" H 7600 2300 50  0001 C CNN "Manufacturer PN"
+F 7 "50V" H 7600 2300 50  0001 C CNN "Voltage"
 	1    7600 2300
 	1    0    0    -1  
 $EndComp
@@ -1260,6 +1310,10 @@ F 0 "C?" H 6950 2300 50  0000 L CNN
 F 1 "100nF" H 6950 2200 50  0000 L CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 7238 2150 50  0001 C CNN
 F 3 "~" H 7200 2300 50  0001 C CNN
+F 4 "X7R" H 7200 2300 50  0001 C CNN "Dielectric"
+F 5 "Kemet" H 7200 2300 50  0001 C CNN "Manufacturer"
+F 6 "C0603C104K5RACTU" H 7200 2300 50  0001 C CNN "Manufacturer PN"
+F 7 "50V" H 7200 2300 50  0001 C CNN "Voltage"
 	1    7200 2300
 	1    0    0    -1  
 $EndComp
@@ -1276,6 +1330,10 @@ F 0 "C?" H 6950 2650 50  0000 L CNN
 F 1 "100nF" H 6950 2550 50  0000 L CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 7238 2500 50  0001 C CNN
 F 3 "~" H 7200 2650 50  0001 C CNN
+F 4 "X7R" H 7200 2650 50  0001 C CNN "Dielectric"
+F 5 "Kemet" H 7200 2650 50  0001 C CNN "Manufacturer"
+F 6 "C0603C104K5RACTU" H 7200 2650 50  0001 C CNN "Manufacturer PN"
+F 7 "50V" H 7200 2650 50  0001 C CNN "Voltage"
 	1    7200 2650
 	1    0    0    -1  
 $EndComp
@@ -1447,6 +1505,10 @@ F 0 "C?" H 8115 5296 50  0000 L CNN
 F 1 "100pF" H 8115 5205 50  0000 L CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 8038 5100 50  0001 C CNN
 F 3 "~" H 8000 5250 50  0001 C CNN
+F 4 "NP0" H 8000 5250 50  0001 C CNN "Dielectric"
+F 5 "Kemet" H 8000 5250 50  0001 C CNN "Manufacturer"
+F 6 "C0603C101J5GACTU" H 8000 5250 50  0001 C CNN "Manufacturer PN"
+F 7 "50V" H 8000 5250 50  0001 C CNN "Voltage"
 	1    8000 5250
 	1    0    0    -1  
 $EndComp
@@ -1577,6 +1639,10 @@ F 0 "C?" H 4015 6546 50  0000 L CNN
 F 1 "10nF" H 4015 6455 50  0000 L CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 3938 6350 50  0001 C CNN
 F 3 "~" H 3900 6500 50  0001 C CNN
+F 4 "NP0" H 3900 6500 50  0001 C CNN "Dielectric"
+F 5 "Murata" H 3900 6500 50  0001 C CNN "Manufacturer"
+F 6 "GRM1885C1H103JA01D" H 3900 6500 50  0001 C CNN "Manufacturer PN"
+F 7 "50V" H 3900 6500 50  0001 C CNN "Voltage"
 	1    3900 6500
 	1    0    0    -1  
 $EndComp
@@ -1665,6 +1731,10 @@ F 0 "C?" H 3600 4650 50  0000 L CNN
 F 1 "1uF" H 3600 4550 50  0000 L CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 3888 4500 50  0001 C CNN
 F 3 "~" H 3850 4650 50  0001 C CNN
+F 4 "X7R" H 3850 4650 50  0001 C CNN "Dielectric"
+F 5 "Kemet" H 3850 4650 50  0001 C CNN "Manufacturer"
+F 6 "C0805C105K5RACTU" H 3850 4650 50  0001 C CNN "Manufacturer PN"
+F 7 "50V" H 3850 4650 50  0001 C CNN "Voltage"
 	1    3850 4650
 	1    0    0    -1  
 $EndComp
@@ -1770,7 +1840,7 @@ F 0 "Q?" V 3100 2100 50  0000 C CNN
 F 1 "CSD18563Q5A" V 3000 2150 50  0000 C CNN
 F 2 "RespiraWorks:VSONP-8-1EP_5x6_P1.27mm" H 2900 2025 50  0001 L CIN
 F 3 "https://www.ti.com/lit/ds/symlink/csd18563q5a.pdf" V 2700 2100 50  0001 L CNN
-F 4 "TI" V 2700 2100 50  0001 C CNN "Manufacturer"
+F 4 "Texas Instruments" V 2700 2100 50  0001 C CNN "Manufacturer"
 F 5 "CSD18563Q5A" V 2700 2100 50  0001 C CNN "Manufacturer PN"
 	1    2700 2100
 	0    1    -1   0   
@@ -1794,7 +1864,7 @@ F 0 "Q?" H 4750 2600 50  0000 C CNN
 F 1 "CSD18563Q5A" H 4900 2500 50  0000 C CNN
 F 2 "RespiraWorks:VSONP-8-1EP_5x6_P1.27mm" H 4900 2125 50  0001 L CIN
 F 3 "https://www.ti.com/lit/ds/symlink/csd18563q5a.pdf" V 4700 2200 50  0001 L CNN
-F 4 "TI" V 4700 2200 50  0001 C CNN "Manufacturer"
+F 4 "Texas Instruments" V 4700 2200 50  0001 C CNN "Manufacturer"
 F 5 "CSD18563Q5A" V 4700 2200 50  0001 C CNN "Manufacturer PN"
 	1    4700 2200
 	1    0    0    -1  
@@ -1812,7 +1882,7 @@ F 0 "Q?" V 4750 2100 50  0000 C CNN
 F 1 "CSD18563Q5A" V 4650 2150 50  0000 C CNN
 F 2 "RespiraWorks:VSONP-8-1EP_5x6_P1.27mm" H 4550 2025 50  0001 L CIN
 F 3 "https://www.ti.com/lit/ds/symlink/csd18563q5a.pdf" V 4350 2100 50  0001 L CNN
-F 4 "TI" V 4350 2100 50  0001 C CNN "Manufacturer"
+F 4 "Texas Instruments" V 4350 2100 50  0001 C CNN "Manufacturer"
 F 5 "CSD18563Q5A" V 4350 2100 50  0001 C CNN "Manufacturer PN"
 	1    4350 2100
 	0    -1   -1   0   
@@ -1855,6 +1925,8 @@ F 0 "D?" H 2850 4900 50  0000 C CNN
 F 1 "BAT54J" V 2850 4600 50  0000 C CNN
 F 2 "RespiraWorks_Std:D_SOD-323F" H 2850 4625 50  0001 C CNN
 F 3 "https://assets.nexperia.com/documents/data-sheet/BAT54J.pdf" H 2850 4800 50  0001 C CNN
+F 4 "Nexperia" H 2850 4800 50  0001 C CNN "Manufacturer"
+F 5 "BAT54J,115" H 2850 4800 50  0001 C CNN "Manufacturer PN"
 	1    2850 4800
 	0    1    1    0   
 $EndComp
@@ -1868,6 +1940,8 @@ F 0 "D?" H 2850 4600 50  0000 C CNN
 F 1 "BAT54J" V 2850 4300 50  0000 C CNN
 F 2 "RespiraWorks_Std:D_SOD-323F" H 2850 4325 50  0001 C CNN
 F 3 "https://assets.nexperia.com/documents/data-sheet/BAT54J.pdf" H 2850 4500 50  0001 C CNN
+F 4 "Nexperia" H 2850 4500 50  0001 C CNN "Manufacturer"
+F 5 "BAT54J,115" H 2850 4500 50  0001 C CNN "Manufacturer PN"
 	1    2850 4500
 	0    1    -1   0   
 $EndComp

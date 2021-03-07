@@ -149,7 +149,7 @@ P 2700 3300
 AR Path="/5FCD4B8E/603C510C/603A1854" Ref="F?"  Part="1" 
 AR Path="/6041384A/603A1854" Ref="F?"  Part="1" 
 F 0 "F?" V 2503 3300 50  0000 C CNN
-F 1 "Fuse 10A" V 2594 3300 50  0000 C CNN
+F 1 "10A" V 2594 3300 50  0000 C CNN
 F 2 "RespiraWorks:Fuseholder_Littelfuse_OMNI-BLOK-154" V 2630 3300 50  0001 C CNN
 F 3 "https://www.littelfuse.com/~/media/electronics/datasheets/fuses/littelfuse_fuse_154_154t_154l_154tl_datasheet.pdf.pdf" H 2700 3300 50  0001 C CNN
 F 4 "Littelfuse" V 2700 3300 50  0001 C CNN "Manufacturer"
@@ -254,7 +254,7 @@ P 9400 4850
 AR Path="/5FCD4B8E/603C510C/602914E1" Ref="F?"  Part="1" 
 AR Path="/6041384A/602914E1" Ref="F?"  Part="1" 
 F 0 "F?" V 9100 4850 50  0000 C CNN
-F 1 "Fuse 10A" V 9200 4850 50  0000 C CNN
+F 1 "10A" V 9200 4850 50  0000 C CNN
 F 2 "RespiraWorks:Fuseholder_Littelfuse_OMNI-BLOK-154" V 9330 4850 50  0001 C CNN
 F 3 "https://www.littelfuse.com/~/media/electronics/datasheets/fuses/littelfuse_fuse_154_154t_154l_154tl_datasheet.pdf.pdf" H 9400 4850 50  0001 C CNN
 F 4 "Littelfuse" V 9400 4850 50  0001 C CNN "Manufacturer"
@@ -580,6 +580,10 @@ F 0 "C?" H 3650 5950 50  0000 L CNN
 F 1 "10nF" H 3650 5850 50  0000 L CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 3938 5800 50  0001 C CNN
 F 3 "~" H 3900 5950 50  0001 C CNN
+F 4 "NP0" H 3900 5950 50  0001 C CNN "Dielectric"
+F 5 "Murata" H 3900 5950 50  0001 C CNN "Manufacturer"
+F 6 "GRM1885C1H103JA01D" H 3900 5950 50  0001 C CNN "Manufacturer PN"
+F 7 "50V" H 3900 5950 50  0001 C CNN "Voltage"
 	1    3900 5950
 	-1   0    0    -1  
 $EndComp
@@ -604,6 +608,10 @@ F 0 "C?" H 6400 5950 50  0000 L CNN
 F 1 "10nF" H 6400 5850 50  0000 L CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 6688 5800 50  0001 C CNN
 F 3 "~" H 6650 5950 50  0001 C CNN
+F 4 "NP0" H 6650 5950 50  0001 C CNN "Dielectric"
+F 5 "Murata" H 6650 5950 50  0001 C CNN "Manufacturer"
+F 6 "GRM1885C1H103JA01D" H 6650 5950 50  0001 C CNN "Manufacturer PN"
+F 7 "50V" H 6650 5950 50  0001 C CNN "Voltage"
 	1    6650 5950
 	-1   0    0    -1  
 $EndComp

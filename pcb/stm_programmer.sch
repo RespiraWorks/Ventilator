@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 37 38
+Sheet 38 38
 Title "STM Programmer for Cycle Controller"
 Date ""
 Rev "A"
@@ -21,6 +21,8 @@ F 0 "U?" H 7500 5450 50  0000 C CNN
 F 1 "STM32F103CBT6" H 7600 5350 50  0000 C CNN
 F 2 "RespiraWorks_Std:LQFP-48_7x7mm_P0.5mm" H 7150 2000 50  0001 R CNN
 F 3 "" H 7700 3350 50  0001 C CNN
+F 4 "STMicroelectronics" H 7750 3700 50  0001 C CNN "Manufacturer"
+F 5 "STM32F103CBT6" H 7750 3700 50  0001 C CNN "Manufacturer PN"
 	1    7750 3700
 	1    0    0    -1  
 $EndComp
@@ -35,6 +37,10 @@ F 0 "C?" V 8000 1600 50  0000 L CNN
 F 1 "100nF" V 8100 1550 50  0000 L CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 8288 1450 50  0001 C CNN
 F 3 "~" H 8250 1600 50  0001 C CNN
+F 4 "X7R" H 8250 1600 50  0001 C CNN "Dielectric"
+F 5 "Kemet" H 8250 1600 50  0001 C CNN "Manufacturer"
+F 6 "C0603C104K5RACTU" H 8250 1600 50  0001 C CNN "Manufacturer PN"
+F 7 "50V" H 8250 1600 50  0001 C CNN "Voltage"
 	1    8250 1600
 	-1   0    0    1   
 $EndComp
@@ -63,6 +69,10 @@ F 0 "C?" V 8400 1600 50  0000 L CNN
 F 1 "100nF" V 8500 1550 50  0000 L CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 8688 1450 50  0001 C CNN
 F 3 "~" H 8650 1600 50  0001 C CNN
+F 4 "X7R" H 8650 1600 50  0001 C CNN "Dielectric"
+F 5 "Kemet" H 8650 1600 50  0001 C CNN "Manufacturer"
+F 6 "C0603C104K5RACTU" H 8650 1600 50  0001 C CNN "Manufacturer PN"
+F 7 "50V" H 8650 1600 50  0001 C CNN "Voltage"
 	1    8650 1600
 	-1   0    0    1   
 $EndComp
@@ -91,6 +101,10 @@ F 0 "C?" V 8800 1600 50  0000 L CNN
 F 1 "100nF" V 8900 1550 50  0000 L CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 9088 1450 50  0001 C CNN
 F 3 "~" H 9050 1600 50  0001 C CNN
+F 4 "X7R" H 9050 1600 50  0001 C CNN "Dielectric"
+F 5 "Kemet" H 9050 1600 50  0001 C CNN "Manufacturer"
+F 6 "C0603C104K5RACTU" H 9050 1600 50  0001 C CNN "Manufacturer PN"
+F 7 "50V" H 9050 1600 50  0001 C CNN "Voltage"
 	1    9050 1600
 	-1   0    0    1   
 $EndComp
@@ -119,6 +133,10 @@ F 0 "C?" V 9200 1600 50  0000 L CNN
 F 1 "100nF" V 9300 1550 50  0000 L CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 9488 1450 50  0001 C CNN
 F 3 "~" H 9450 1600 50  0001 C CNN
+F 4 "X7R" H 9450 1600 50  0001 C CNN "Dielectric"
+F 5 "Kemet" H 9450 1600 50  0001 C CNN "Manufacturer"
+F 6 "C0603C104K5RACTU" H 9450 1600 50  0001 C CNN "Manufacturer PN"
+F 7 "50V" H 9450 1600 50  0001 C CNN "Voltage"
 	1    9450 1600
 	-1   0    0    1   
 $EndComp
@@ -182,6 +200,10 @@ F 0 "C?" H 6750 1950 50  0000 L CNN
 F 1 "100nF" H 6700 2050 50  0000 L CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 6588 1850 50  0001 C CNN
 F 3 "~" H 6550 2000 50  0001 C CNN
+F 4 "X7R" H 6550 2000 50  0001 C CNN "Dielectric"
+F 5 "Kemet" H 6550 2000 50  0001 C CNN "Manufacturer"
+F 6 "C0603C104K5RACTU" H 6550 2000 50  0001 C CNN "Manufacturer PN"
+F 7 "50V" H 6550 2000 50  0001 C CNN "Voltage"
 	1    6550 2000
 	-1   0    0    1   
 $EndComp
@@ -297,8 +319,10 @@ AR Path="/5FF1A7AE" Ref="J?"  Part="1"
 AR Path="/5FCD4D85/5FF1A7AE" Ref="J?"  Part="1" 
 F 0 "J?" H 1050 2950 50  0000 C CNN
 F 1 "USB B micro" H 1150 2850 50  0000 C CNN
-F 2 "" H 1300 2450 50  0001 C CNN
+F 2 "RespiraWorks_Std:USB_Mini-B_Wuerth_65100516121_Horizontal" H 1300 2450 50  0001 C CNN
 F 3 "~" H 1300 2450 50  0001 C CNN
+F 4 "Wuerth Elektronik" H 1150 2500 50  0001 C CNN "Manufacturer"
+F 5 "65100516121" H 1150 2500 50  0001 C CNN "Manufacturer PN"
 	1    1150 2500
 	1    0    0    -1  
 $EndComp
@@ -416,6 +440,8 @@ F 0 "Q?" H 1700 1700 50  0000 L CNN
 F 1 "MMBT3904" H 1450 1800 50  0000 L CNN
 F 2 "RespiraWorks_Std:SOT-23" H 2050 1650 50  0001 C CNN
 F 3 "~" H 1850 1550 50  0001 C CNN
+F 4 "Diodes Inc." H 1850 1550 50  0001 C CNN "Manufacturer"
+F 5 "MMBT3904-7-F" H 1850 1550 50  0001 C CNN "Manufacturer PN"
 	1    1850 1550
 	-1   0    0    -1  
 $EndComp
@@ -496,6 +522,8 @@ F 0 "J?" H 1468 5767 50  0000 C CNN
 F 1 "Backup debug in for cycle controller" H 1750 5700 50  0000 C CNN
 F 2 "RespiraWorks_Std:PinHeader_1x06_P2.54mm_Vertical" H 1550 5350 50  0001 C CNN
 F 3 "~" H 1550 5350 50  0001 C CNN
+F 4 "Harwin" H 1550 5350 50  0001 C CNN "Manufacturer"
+F 5 "M20-9980345" H 1550 5350 50  0001 C CNN "Manufacturer PN"
 	1    1550 5350
 	-1   0    0    -1  
 $EndComp
@@ -515,6 +543,9 @@ F 1 "18pF" H 4800 3350 50  0000 L CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 4688 3150 50  0001 C CNN
 F 3 "~" H 4650 3300 50  0001 C CNN
 F 4 "NP0" H 4650 3300 50  0001 C CNN "Dielectric"
+F 5 "Kemet" H 4650 3300 50  0001 C CNN "Manufacturer"
+F 6 "C0603C180J5GACTU" H 4650 3300 50  0001 C CNN "Manufacturer PN"
+F 7 "50V" H 4650 3300 50  0001 C CNN "Voltage"
 	1    4650 3300
 	-1   0    0    1   
 $EndComp
@@ -530,6 +561,9 @@ F 1 "18pF" H 5300 3350 50  0000 L CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 5188 3150 50  0001 C CNN
 F 3 "~" H 5150 3300 50  0001 C CNN
 F 4 "NP0" H 5150 3300 50  0001 C CNN "Dielectric"
+F 5 "Kemet" H 5150 3300 50  0001 C CNN "Manufacturer"
+F 6 "C0603C180J5GACTU" H 5150 3300 50  0001 C CNN "Manufacturer PN"
+F 7 "50V" H 5150 3300 50  0001 C CNN "Voltage"
 	1    5150 3300
 	1    0    0    1   
 $EndComp
@@ -713,6 +747,8 @@ F 0 "J?" H 1468 7167 50  0000 C CNN
 F 1 "Debug in for ST-LINK" H 1468 7076 50  0000 C CNN
 F 2 "RespiraWorks_Std:PinHeader_1x06_P2.54mm_Vertical" H 1550 6750 50  0001 C CNN
 F 3 "~" H 1550 6750 50  0001 C CNN
+F 4 "Harwin" H 1550 6750 50  0001 C CNN "Manufacturer"
+F 5 "M20-9980345" H 1550 6750 50  0001 C CNN "Manufacturer PN"
 	1    1550 6750
 	-1   0    0    -1  
 $EndComp
@@ -765,6 +801,8 @@ F 0 "D?" V 5489 5132 50  0000 R CNN
 F 1 "Red" V 5398 5132 50  0000 R CNN
 F 2 "RespiraWorks_Std:LED_0805_2012Metric" H 5450 5250 50  0001 C CNN
 F 3 "~" H 5450 5250 50  0001 C CNN
+F 4 "Lite-On" H 5450 5250 50  0001 C CNN "Manufacturer"
+F 5 "LTST-C170KRKT" H 5450 5250 50  0001 C CNN "Manufacturer PN"
 	1    5450 5250
 	0    -1   -1   0   
 $EndComp
@@ -776,6 +814,8 @@ F 0 "D?" V 5489 4582 50  0000 R CNN
 F 1 "Green" V 5398 4582 50  0000 R CNN
 F 2 "RespiraWorks_Std:LED_0805_2012Metric" H 5450 4700 50  0001 C CNN
 F 3 "~" H 5450 4700 50  0001 C CNN
+F 4 "Lite-On" H 5450 4700 50  0001 C CNN "Manufacturer"
+F 5 "LTST-C171KGKT" H 5450 4700 50  0001 C CNN "Manufacturer PN"
 	1    5450 4700
 	0    -1   -1   0   
 $EndComp

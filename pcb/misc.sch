@@ -82,6 +82,8 @@ F 0 "J?" H 8668 2667 50  0000 C CNN
 F 1 "Molex Micro-Fit" H 8668 2576 50  0000 C CNN
 F 2 "RespiraWorks_Std:Molex_Micro-Fit_3.0_43650-0415_1x04_P3.00mm_Vertical" H 8750 2350 50  0001 C CNN
 F 3 "~" H 8750 2350 50  0001 C CNN
+F 4 "Molex" H 8750 2350 50  0001 C CNN "Manufacturer"
+F 5 "43650-0415" H 8750 2350 50  0001 C CNN "Manufacturer PN"
 	1    8750 2350
 	1    0    0    -1  
 $EndComp
@@ -129,7 +131,10 @@ F 0 "C?" H 7050 1850 50  0000 C CNN
 F 1 "100nF" H 7250 1950 50  0000 C CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 6938 1700 50  0001 C CNN
 F 3 "~" H 6900 1850 50  0001 C CNN
-F 4 "" H 6900 1850 50  0001 C CNN "Manufacturer"
+F 4 "Kemet" H 6900 1850 50  0001 C CNN "Manufacturer"
+F 5 "X7R" H 6900 1850 50  0001 C CNN "Dielectric"
+F 6 "C0603C104K5RACTU" H 6900 1850 50  0001 C CNN "Manufacturer PN"
+F 7 "50V" H 6900 1850 50  0001 C CNN "Voltage"
 	1    6900 1850
 	1    0    0    1   
 $EndComp
@@ -168,6 +173,9 @@ F 0 "U?" H 3550 5800 50  0000 C CNN
 F 1 "24LC256T-I_MS" H 3800 5700 50  0000 C CNN
 F 2 "RespiraWorks_Std:TSSOP-8_3x3mm_P0.65mm" H 3400 5300 50  0001 C CNN
 F 3 "https://ww1.microchip.com/downloads/en/DeviceDoc/24AA256-24LC256-24FC256-Data-Sheet-20001203W.pdf" H 2250 4500 50  0001 C CNN
+F 4 "Microchip" H 3400 5350 50  0001 C CNN "Manufacturer"
+F 5 "24LC256T-I/MS" H 3400 5350 50  0001 C CNN "Manufacturer PN"
+F 6 "I/SN package (SOIC-8) is more common" H 3400 5350 50  0001 C CNN "Sourcing Notes"
 	1    3400 5350
 	1    0    0    -1  
 $EndComp
@@ -218,7 +226,10 @@ F 0 "C?" H 3250 4350 50  0000 C CNN
 F 1 "100nF" H 3500 4450 50  0000 C CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 3188 4400 50  0001 C CNN
 F 3 "~" H 3150 4550 50  0001 C CNN
-F 4 "" H 3150 4550 50  0001 C CNN "Manufacturer"
+F 4 "Kemet" H 3150 4550 50  0001 C CNN "Manufacturer"
+F 5 "X7R" H 3150 4550 50  0001 C CNN "Dielectric"
+F 6 "C0603C104K5RACTU" H 3150 4550 50  0001 C CNN "Manufacturer PN"
+F 7 "50V" H 3150 4550 50  0001 C CNN "Voltage"
 	1    3150 4550
 	-1   0    0    1   
 $EndComp
@@ -315,6 +326,8 @@ F 0 "U?" H 8950 8200 50  0000 C CNN
 F 1 "TCA9544APWR" H 9150 8100 50  0000 C CNN
 F 2 "RespiraWorks_Std:TSSOP-20_4.4x6.5mm_P0.65mm" H 9800 6350 50  0001 C CNN
 F 3 "" H 8850 7500 50  0001 C CNN
+F 4 "Texas Instruments" H 8800 7250 50  0001 C CNN "Manufacturer"
+F 5 "TCA9544APWR" H 8800 7250 50  0001 C CNN "Manufacturer PN"
 	1    8800 7250
 	1    0    0    -1  
 $EndComp
@@ -352,7 +365,10 @@ F 0 "C?" H 8650 5750 50  0000 C CNN
 F 1 "100nF" H 8900 5850 50  0000 C CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 8588 5800 50  0001 C CNN
 F 3 "~" H 8550 5950 50  0001 C CNN
-F 4 "" H 8550 5950 50  0001 C CNN "Manufacturer"
+F 4 "Kemet" H 8550 5950 50  0001 C CNN "Manufacturer"
+F 5 "X7R" H 8550 5950 50  0001 C CNN "Dielectric"
+F 6 "C0603C104K5RACTU" H 8550 5950 50  0001 C CNN "Manufacturer PN"
+F 7 "50V" H 8550 5950 50  0001 C CNN "Voltage"
 	1    8550 5950
 	-1   0    0    1   
 $EndComp
@@ -699,6 +715,8 @@ F 0 "J?" H 14280 6692 50  0000 L CNN
 F 1 "Molex Micro-Fit" H 14280 6601 50  0000 L CNN
 F 2 "RespiraWorks_Std:Molex_Micro-Fit_3.0_43650-0515_1x05_P3.00mm_Vertical" H 14200 6650 50  0001 C CNN
 F 3 "~" H 14200 6650 50  0001 C CNN
+F 4 "Molex" H 14200 6650 50  0001 C CNN "Manufacturer"
+F 5 "43650-0515" H 14200 6650 50  0001 C CNN "Manufacturer PN"
 	1    14200 6650
 	1    0    0    -1  
 $EndComp
@@ -754,6 +772,8 @@ F 0 "J?" H 14280 7292 50  0000 L CNN
 F 1 "Molex Micro-Fit" H 14280 7201 50  0000 L CNN
 F 2 "RespiraWorks_Std:Molex_Micro-Fit_3.0_43650-0515_1x05_P3.00mm_Vertical" H 14200 7250 50  0001 C CNN
 F 3 "~" H 14200 7250 50  0001 C CNN
+F 4 "Molex" H 14200 7250 50  0001 C CNN "Manufacturer"
+F 5 "43650-0515" H 14200 7250 50  0001 C CNN "Manufacturer PN"
 	1    14200 7250
 	1    0    0    -1  
 $EndComp
@@ -805,6 +825,8 @@ F 0 "J?" H 14280 7892 50  0000 L CNN
 F 1 "Molex Micro-Fit" H 14280 7801 50  0000 L CNN
 F 2 "RespiraWorks_Std:Molex_Micro-Fit_3.0_43650-0515_1x05_P3.00mm_Vertical" H 14200 7850 50  0001 C CNN
 F 3 "~" H 14200 7850 50  0001 C CNN
+F 4 "Molex" H 14200 7850 50  0001 C CNN "Manufacturer"
+F 5 "43650-0515" H 14200 7850 50  0001 C CNN "Manufacturer PN"
 	1    14200 7850
 	1    0    0    -1  
 $EndComp
@@ -856,6 +878,8 @@ F 0 "J?" H 14280 8492 50  0000 L CNN
 F 1 "Molex Micro-Fit" H 14280 8401 50  0000 L CNN
 F 2 "RespiraWorks_Std:Molex_Micro-Fit_3.0_43650-0515_1x05_P3.00mm_Vertical" H 14200 8450 50  0001 C CNN
 F 3 "~" H 14200 8450 50  0001 C CNN
+F 4 "Molex" H 14200 8450 50  0001 C CNN "Manufacturer"
+F 5 "43650-0515" H 14200 8450 50  0001 C CNN "Manufacturer PN"
 	1    14200 8450
 	1    0    0    -1  
 $EndComp
@@ -1287,6 +1311,7 @@ F 1 "MMBT3904" H 8400 3650 50  0000 L CNN
 F 2 "RespiraWorks_Std:SOT-23" H 8400 3675 50  0001 L CIN
 F 3 "https://www.fairchildsemi.com/datasheets/2N/2N3904.pdf" H 8200 3750 50  0001 L CNN
 F 4 "Diodes Inc." H 8200 3750 50  0001 C CNN "Manufacturer"
+F 5 "MMBT3904-7-F" H 8200 3750 50  0001 C CNN "Manufacturer PN"
 	1    8200 3750
 	1    0    0    -1  
 $EndComp
@@ -1475,6 +1500,8 @@ F 0 "U?" H 5900 2150 50  0000 C CNN
 F 1 "SN74LVC2T45DCTR" H 5950 2050 50  0000 C CNN
 F 2 "RespiraWorks:SSOP-8_3.15x2.9mm_P0.65mm" H 6800 1600 50  0001 C CNN
 F 3 "https://www.ti.com/lit/ds/symlink/sn74lvc2t45.pdf?HQS=TI-null-null-digikeymode-df-pf-null-wwe&ts=1605630505243" H 6800 1600 50  0001 C CNN
+F 4 "Texas Instruments" H 6450 2450 50  0001 C CNN "Manufacturer"
+F 5 "SN74LVC2T45DCTR" H 6450 2450 50  0001 C CNN "Manufacturer PN"
 	1    6450 2450
 	1    0    0    -1  
 $EndComp
@@ -1528,7 +1555,10 @@ F 0 "C?" H 5950 1500 50  0000 C CNN
 F 1 "100nF" H 6150 1600 50  0000 C CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 5838 1350 50  0001 C CNN
 F 3 "~" H 5800 1500 50  0001 C CNN
-F 4 "" H 5800 1500 50  0001 C CNN "Manufacturer"
+F 4 "Kemet" H 5800 1500 50  0001 C CNN "Manufacturer"
+F 5 "X7R" H 5800 1500 50  0001 C CNN "Dielectric"
+F 6 "C0603C104K5RACTU" H 5800 1500 50  0001 C CNN "Manufacturer PN"
+F 7 "50V" H 5800 1500 50  0001 C CNN "Voltage"
 	1    5800 1500
 	-1   0    0    1   
 $EndComp

@@ -44,24 +44,6 @@ Text Notes 5150 5100 2    50   ~ 0
 Protects MOSFET in case of supply overvoltage,\nor flyback diode failure
 Text Notes 3150 1950 0    79   ~ 16
 TPS1H100 driver option
-$Comp
-L Device:Fuse F?
-U 1 1 5FD6C63C
-P 6050 4250
-AR Path="/5E8FBD97/5FD6C63C" Ref="F?"  Part="1" 
-AR Path="/5E8DEDC0/5FD6C63C" Ref="F?"  Part="1" 
-AR Path="/5E8DFCAD/5FD6C63C" Ref="F?"  Part="1" 
-AR Path="/5E8E0754/5FD6C63C" Ref="F?"  Part="1" 
-AR Path="/5FCD5082/5FD6C63C" Ref="F?"  Part="1" 
-AR Path="/6042B5C5/5FD6C63C" Ref="F?"  Part="1" 
-F 0 "F?" H 6150 4300 50  0000 L CNN
-F 1 "TBD" H 6150 4200 50  0000 L CNN
-F 2 "RespiraWorks:Fuseholder_Littelfuse_OMNI-BLOK-154" V 5980 4250 50  0001 C CNN
-F 3 "~" H 6050 4250 50  0001 C CNN
-F 4 "" H 6050 4250 50  0001 C CNN "Manufacturer"
-	1    6050 4250
-	1    0    0    -1  
-$EndComp
 Connection ~ 6050 5300
 $Comp
 L RespiraWorks:TPS1H100B U?
@@ -79,7 +61,7 @@ F 1 "TPS1H100A" H 5300 3000 50  0000 L CNN
 F 2 "RespiraWorks_Std:TSSOP-14-1EP_4.4x5mm_P0.65mm" H 6050 2350 50  0001 C CNN
 F 3 "https://www.ti.com/lit/ds/symlink/tps1h100-q1.pdf" H 6050 2350 50  0001 C CNN
 F 4 "Texas Instruments" H 5700 2600 50  0001 C CNN "Manufacturer"
-F 5 "TPS1H100BQPWPRQ1" H 5700 2600 50  0001 C CNN "Manufacturer PN"
+F 5 "TPS1H100AQPWPRQ1" H 5700 2600 50  0001 C CNN "Manufacturer PN"
 	1    5700 2600
 	1    0    0    -1  
 $EndComp
@@ -180,7 +162,7 @@ F 1 "1.5k" H 4800 3300 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 4880 3300 50  0001 C CNN
 F 3 "~" H 4950 3300 50  0001 C CNN
 F 4 "KOA Speer" H 4950 3300 50  0001 C CNN "Manufacturer"
-F 5 "DNP" H 4800 3400 50  0000 C CNN "DNP"
+F 5 "DNP" V 4950 3300 50  0000 C CNN "DNP"
 	1    4950 3300
 	-1   0    0    1   
 $EndComp
@@ -209,7 +191,7 @@ Ics = Iout / 500 +/- 5%\n853 mA = 2.56V\n400 mA = 1.2V\n100 mA = 0.3V
 $Comp
 L Device:R R?
 U 1 1 5FD6C68A
-P 3800 2700
+P 2550 3300
 AR Path="/5FD6C68A" Ref="R?"  Part="1" 
 AR Path="/5E8AFE9D/5FD6C68A" Ref="R?"  Part="1" 
 AR Path="/5E8C8865/5FD6C68A" Ref="R?"  Part="1" 
@@ -219,25 +201,25 @@ AR Path="/5E8DFCAD/5FD6C68A" Ref="R?"  Part="1"
 AR Path="/5E8E0754/5FD6C68A" Ref="R?"  Part="1" 
 AR Path="/5FCD5082/5FD6C68A" Ref="R?"  Part="1" 
 AR Path="/6042B5C5/5FD6C68A" Ref="R?"  Part="1" 
-F 0 "R?" V 3700 2700 50  0000 C CNN
-F 1 "10k" V 3900 2700 50  0000 C CNN
-F 2 "RespiraWorks_Std:R_0603_1608Metric" V 3730 2700 50  0001 C CNN
-F 3 "~" H 3800 2700 50  0001 C CNN
-F 4 "KOA Speer" H 3800 2700 50  0001 C CNN "Manufacturer"
-F 5 "DNP" V 3800 2700 50  0000 C CNN "DNP"
-	1    3800 2700
+F 0 "R?" V 2450 3300 50  0000 C CNN
+F 1 "52.3k" V 2350 3250 50  0000 C CNN
+F 2 "RespiraWorks_Std:R_0603_1608Metric" V 2480 3300 50  0001 C CNN
+F 3 "~" H 2550 3300 50  0001 C CNN
+F 4 "KOA Speer" H 2550 3300 50  0001 C CNN "Manufacturer"
+F 5 "DNP" V 2550 3300 50  0000 C CNN "DNP"
+	1    2550 3300
 	0    -1   -1   0   
 $EndComp
 Wire Wire Line
-	3650 2700 3450 2700
-Text HLabel 3450 2700 0    50   Output ~ 0
+	2400 3300 2150 3300
+Text HLabel 1900 3300 0    50   Output ~ 0
 CS
-Text Notes 3100 2550 0    50   ~ 0
-Fault voltage goes up to 4.9V;\nseries resistor protects ADC input.\nOnly populate if using TPS1H100B
+Text Notes 1750 3200 0    50   ~ 0
+Fault voltage goes up to 4.9V;\ndivider puts this in 3.3V ADC range\nOnly populate if using TPS1H100B
 $Comp
 L Device:R R?
 U 1 1 5FD6C69E
-P 2250 2750
+P 2200 2550
 AR Path="/5FD6C69E" Ref="R?"  Part="1" 
 AR Path="/5E8AFE9D/5FD6C69E" Ref="R?"  Part="1" 
 AR Path="/5E8C8865/5FD6C69E" Ref="R?"  Part="1" 
@@ -247,24 +229,19 @@ AR Path="/5E8DFCAD/5FD6C69E" Ref="R?"  Part="1"
 AR Path="/5E8E0754/5FD6C69E" Ref="R?"  Part="1" 
 AR Path="/5FCD5082/5FD6C69E" Ref="R?"  Part="1" 
 AR Path="/6042B5C5/5FD6C69E" Ref="R?"  Part="1" 
-F 0 "R?" V 2150 2750 50  0000 C CNN
-F 1 "10k" V 2350 2750 50  0000 C CNN
-F 2 "RespiraWorks_Std:R_0603_1608Metric" V 2180 2750 50  0001 C CNN
-F 3 "~" H 2250 2750 50  0001 C CNN
-F 4 "KOA Speer" H 2250 2750 50  0001 C CNN "Manufacturer"
-	1    2250 2750
+F 0 "R?" V 2100 2550 50  0000 C CNN
+F 1 "10k" V 2300 2550 50  0000 C CNN
+F 2 "RespiraWorks_Std:R_0603_1608Metric" V 2130 2550 50  0001 C CNN
+F 3 "~" H 2200 2550 50  0001 C CNN
+F 4 "KOA Speer" H 2200 2550 50  0001 C CNN "Manufacturer"
+	1    2200 2550
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	4800 2900 4800 2700
-Connection ~ 4800 2700
-Text HLabel 2100 2900 0    50   Output ~ 0
+Text HLabel 2050 2700 0    50   Output ~ 0
 nFault
 Wire Wire Line
-	2100 2900 2250 2900
-Connection ~ 2250 2900
-Wire Wire Line
-	4800 2700 4950 2700
+	2050 2700 2200 2700
+Connection ~ 2200 2700
 Wire Wire Line
 	4950 2700 4950 3150
 Connection ~ 4950 2700
@@ -274,8 +251,6 @@ Text HLabel 1100 2350 0    50   Input ~ 0
 Ctrl
 Wire Wire Line
 	1100 2350 1350 2350
-Wire Wire Line
-	3950 2700 4550 2700
 $Comp
 L RespiraWorks:Q_NMOS_SSSGDDDD Q?
 U 1 1 5FE5C4FB
@@ -295,7 +270,7 @@ $EndComp
 $Comp
 L Device:R R?
 U 1 1 5FE5E599
-P 6950 3750
+P 7900 3750
 AR Path="/5FE5E599" Ref="R?"  Part="1" 
 AR Path="/5E8AFE9D/5FE5E599" Ref="R?"  Part="1" 
 AR Path="/5E8C8865/5FE5E599" Ref="R?"  Part="1" 
@@ -305,16 +280,16 @@ AR Path="/5E8DFCAD/5FE5E599" Ref="R?"  Part="1"
 AR Path="/5E8E0754/5FE5E599" Ref="R?"  Part="1" 
 AR Path="/5FCD5082/5FE5E599" Ref="R?"  Part="1" 
 AR Path="/6042B5C5/5FE5E599" Ref="R?"  Part="1" 
-F 0 "R?" H 7100 3800 50  0000 C CNN
-F 1 "0" H 7100 3700 50  0000 C CNN
-F 2 "RespiraWorks_Std:R_0603_1608Metric" V 6880 3750 50  0001 C CNN
-F 3 "~" H 6950 3750 50  0001 C CNN
-F 4 "DNP" H 7150 3600 50  0000 C CNN "DNP"
-	1    6950 3750
+F 0 "R?" H 8050 3800 50  0000 C CNN
+F 1 "0" H 8050 3700 50  0000 C CNN
+F 2 "RespiraWorks_Std:R_1206_3216Metric" V 7830 3750 50  0001 C CNN
+F 3 "~" H 7900 3750 50  0001 C CNN
+F 4 "DNP" V 7900 3750 50  0000 C CNN "DNP"
+	1    7900 3750
 	1    0    0    -1  
 $EndComp
 Connection ~ 6050 4500
-Text Notes 7250 3750 0    50   ~ 0
+Text Notes 7950 3600 0    50   ~ 0
 Populate if using discrete driver
 $Comp
 L power:GND #PWR?
@@ -377,7 +352,7 @@ AR Path="/5FCD5082/5FE6B7CB" Ref="R?"  Part="1"
 AR Path="/6042B5C5/5FE6B7CB" Ref="R?"  Part="1" 
 F 0 "R?" H 6800 5900 50  0000 C CNN
 F 1 "0" H 6800 5800 50  0000 C CNN
-F 2 "RespiraWorks_Std:R_0603_1608Metric" V 6630 5850 50  0001 C CNN
+F 2 "RespiraWorks_Std:R_1206_3216Metric" V 6630 5850 50  0001 C CNN
 F 3 "~" H 6700 5850 50  0001 C CNN
 F 4 "" H 6850 5700 50  0001 C CNN "DNP"
 	1    6700 5850
@@ -402,13 +377,9 @@ Wire Wire Line
 	5300 4500 5300 5000
 Connection ~ 5600 4500
 Wire Wire Line
-	6050 4400 6050 4500
-Wire Wire Line
 	6050 3050 6050 3900
 Connection ~ 6050 3050
 Connection ~ 6050 3900
-Wire Wire Line
-	6050 3900 6050 4100
 Wire Wire Line
 	6050 5300 6050 5450
 $Comp
@@ -497,6 +468,8 @@ F 0 "J?" H 6330 4792 50  0000 L CNN
 F 1 "Solenoid" H 6330 4701 50  0000 L CNN
 F 2 "RespiraWorks_Std:Molex_Micro-Fit_3.0_43650-0200_1x02_P3.00mm_Horizontal" H 6250 4800 50  0001 C CNN
 F 3 "~" H 6250 4800 50  0001 C CNN
+F 4 "Molex" H 6250 4800 50  0001 C CNN "Manufacturer"
+F 5 "43650-0200" H 6250 4800 50  0001 C CNN "Manufacturer PN"
 	1    6250 4800
 	1    0    0    -1  
 $EndComp
@@ -521,7 +494,7 @@ F 3 "" H 6600 2250 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	6050 3900 6950 3900
+	6050 3900 7900 3900
 $Comp
 L Device:C C?
 U 1 1 5FEC9792
@@ -595,32 +568,30 @@ Wire Wire Line
 	6600 1650 7100 1650
 Wire Wire Line
 	7900 1650 7900 3600
-Wire Wire Line
-	7900 3600 6950 3600
 Connection ~ 6600 1650
 Text HLabel 4950 2550 0    50   Input ~ 0
 VLogic
-Text Label 1950 2600 0    50   ~ 0
+Text Label 1900 2400 0    50   ~ 0
 VLogic
 Wire Wire Line
-	1950 2600 2250 2600
+	1900 2400 2200 2400
 $Comp
 L Device:Jumper_NC_Small JP?
 U 1 1 60C96F5E
-P 2600 2900
+P 2550 2700
 AR Path="/5FCD5082/60C96F5E" Ref="JP?"  Part="1" 
 AR Path="/6042B5C5/60C96F5E" Ref="JP?"  Part="1" 
-F 0 "JP?" H 2600 3021 50  0000 C CNN
-F 1 "Jumper_NC_Small" H 2600 3021 50  0001 C CNN
-F 2 "RespiraWorks_Std:SolderJumper-2_P1.3mm_Bridged_RoundedPad1.0x1.5mm" H 2600 2900 50  0001 C CNN
-F 3 "~" H 2600 2900 50  0001 C CNN
-	1    2600 2900
+F 0 "JP?" H 2550 2821 50  0000 C CNN
+F 1 "Jumper_NC_Small" H 2550 2821 50  0001 C CNN
+F 2 "RespiraWorks_Std:SolderJumper-2_P1.3mm_Bridged_RoundedPad1.0x1.5mm" H 2550 2700 50  0001 C CNN
+F 3 "~" H 2550 2700 50  0001 C CNN
+	1    2550 2700
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	2250 2900 2500 2900
+	2200 2700 2450 2700
 Wire Wire Line
-	2700 2900 4800 2900
+	2650 2700 3600 2700
 Wire Wire Line
 	6050 5450 6700 5450
 Wire Wire Line
@@ -689,9 +660,6 @@ F 3 "~" H 4750 2500 50  0001 C CNN
 $EndComp
 Wire Wire Line
 	4550 2500 4550 2700
-Connection ~ 4550 2700
-Wire Wire Line
-	4550 2700 4800 2700
 Wire Wire Line
 	6050 4500 6050 4600
 Wire Wire Line
@@ -706,6 +674,8 @@ F 0 "TP?" H 6360 4648 50  0000 L CNN
 F 1 "TestPoint_Flag" H 6360 4603 50  0001 L CNN
 F 2 "RespiraWorks_Std:TestPoint_Keystone_5019_Minature" H 6300 4600 50  0001 C CNN
 F 3 "~" H 6300 4600 50  0001 C CNN
+F 4 "Keystone" H 6100 4600 50  0001 C CNN "Manufacturer"
+F 5 "5019" H 6100 4600 50  0001 C CNN "Manufacturer PN"
 	1    6100 4600
 	1    0    0    -1  
 $EndComp
@@ -724,6 +694,8 @@ F 0 "TP?" H 6360 5248 50  0000 L CNN
 F 1 "TestPoint_Flag" H 6360 5203 50  0001 L CNN
 F 2 "RespiraWorks_Std:TestPoint_Keystone_5019_Minature" H 6300 5200 50  0001 C CNN
 F 3 "~" H 6300 5200 50  0001 C CNN
+F 4 "Keystone" H 6100 5200 50  0001 C CNN "Manufacturer"
+F 5 "5019" H 6100 5200 50  0001 C CNN "Manufacturer PN"
 	1    6100 5200
 	1    0    0    -1  
 $EndComp
@@ -776,4 +748,79 @@ Wire Wire Line
 Wire Wire Line
 	6050 1650 6600 1650
 Connection ~ 6050 1650
+Connection ~ 4550 2700
+Wire Wire Line
+	4550 2700 4950 2700
+$Comp
+L Device:R R?
+U 1 1 60780754
+P 2150 3450
+AR Path="/60780754" Ref="R?"  Part="1" 
+AR Path="/5E8AFE9D/60780754" Ref="R?"  Part="1" 
+AR Path="/5E8C8865/60780754" Ref="R?"  Part="1" 
+AR Path="/5E8FBD97/60780754" Ref="R?"  Part="1" 
+AR Path="/5E8DEDC0/60780754" Ref="R?"  Part="1" 
+AR Path="/5E8DFCAD/60780754" Ref="R?"  Part="1" 
+AR Path="/5E8E0754/60780754" Ref="R?"  Part="1" 
+AR Path="/5FCD5082/60780754" Ref="R?"  Part="1" 
+AR Path="/6042B5C5/60780754" Ref="R?"  Part="1" 
+F 0 "R?" H 2300 3450 50  0000 C CNN
+F 1 "100k" H 2300 3350 50  0000 C CNN
+F 2 "RespiraWorks_Std:R_0603_1608Metric" V 2080 3450 50  0001 C CNN
+F 3 "~" H 2150 3450 50  0001 C CNN
+F 4 "KOA Speer" H 2150 3450 50  0001 C CNN "Manufacturer"
+F 5 "DNP" V 2150 3450 50  0000 C CNN "DNP"
+	1    2150 3450
+	1    0    0    -1  
+$EndComp
+Connection ~ 2150 3300
+Wire Wire Line
+	2150 3300 1900 3300
+$Comp
+L power:GND #PWR?
+U 1 1 6078641A
+P 2150 3600
+AR Path="/6078641A" Ref="#PWR?"  Part="1" 
+AR Path="/5E8AFE9D/6078641A" Ref="#PWR?"  Part="1" 
+AR Path="/5E8FBD97/6078641A" Ref="#PWR?"  Part="1" 
+AR Path="/5E8E0754/6078641A" Ref="#PWR?"  Part="1" 
+AR Path="/5E8DFCAD/6078641A" Ref="#PWR?"  Part="1" 
+AR Path="/5E8DEDC0/6078641A" Ref="#PWR?"  Part="1" 
+AR Path="/5E8C8865/6078641A" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD5082/6078641A" Ref="#PWR?"  Part="1" 
+AR Path="/6042B5C5/6078641A" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 2150 3350 50  0001 C CNN
+F 1 "GND" H 2155 3427 50  0000 C CNN
+F 2 "" H 2150 3600 50  0001 C CNN
+F 3 "" H 2150 3600 50  0001 C CNN
+	1    2150 3600
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3600 3300 3600 2700
+Wire Wire Line
+	2700 3300 3600 3300
+Connection ~ 3600 2700
+Wire Wire Line
+	3600 2700 4550 2700
+Text Notes 2450 3700 0    50   ~ 0
+Gain of 0.657x
+Wire Wire Line
+	6050 3900 6050 4150
+Wire Wire Line
+	6050 4350 6050 4500
+$Comp
+L RespiraWorks_Std:Polyfuse_2A_0ZCF0200AF2C F?
+U 1 1 607AA6BC
+P 6050 4250
+F 0 "F?" H 6118 4387 50  0000 L CNN
+F 1 "2A" H 6118 4341 50  0001 L CNN
+F 2 "RespiraWorks:Fuse_2920_Bel_fuse" H 6100 4050 50  0001 L CNN
+F 3 "https://belfuse.com/resources/datasheets/circuitprotection/ds-cp-0zcf-series.pdf" H 6050 4250 50  0001 C CNN
+F 4 "Bel-Fuse" H 6118 4296 50  0000 L CNN "Manufacturer"
+F 5 "0ZCF0200AF2C" H 6118 4205 50  0000 L CNN "Manufacturer PN"
+F 6 "2.0A" H 6118 4114 50  0000 L CNN "Hold Current"
+	1    6050 4250
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC

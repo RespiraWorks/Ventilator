@@ -299,6 +299,8 @@ F 0 "U?" H 2922 6321 50  0000 R CNN
 F 1 "BMP280" H 2922 6230 50  0000 R CNN
 F 2 "RespiraWorks:Bosch_BMP280" H 2950 6350 50  0001 C CNN
 F 3 "" H 3250 6350 50  0001 C CNN
+F 4 "Bosch" H 3250 6300 50  0001 C CNN "Manufacturer"
+F 5 "BMP280" H 3250 6300 50  0001 C CNN "Manufacturer PN"
 	1    3250 6300
 	1    0    0    -1  
 $EndComp
@@ -326,7 +328,10 @@ F 0 "C?" H 2950 5300 50  0000 C CNN
 F 1 "100nF" H 3200 5400 50  0000 C CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 2888 5350 50  0001 C CNN
 F 3 "~" H 2850 5500 50  0001 C CNN
-F 4 "" H 2850 5500 50  0001 C CNN "Manufacturer"
+F 4 "Kemet" H 2850 5500 50  0001 C CNN "Manufacturer"
+F 5 "X7R" H 2850 5500 50  0001 C CNN "Dielectric"
+F 6 "C0603C104K5RACTU" H 2850 5500 50  0001 C CNN "Manufacturer PN"
+F 7 "50V" H 2850 5500 50  0001 C CNN "Voltage"
 	1    2850 5500
 	-1   0    0    1   
 $EndComp
@@ -381,7 +386,10 @@ F 0 "C?" H 3400 5300 50  0000 C CNN
 F 1 "100nF" H 3650 5400 50  0000 C CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 3338 5350 50  0001 C CNN
 F 3 "~" H 3300 5500 50  0001 C CNN
-F 4 "" H 3300 5500 50  0001 C CNN "Manufacturer"
+F 4 "Kemet" H 3300 5500 50  0001 C CNN "Manufacturer"
+F 5 "X7R" H 3300 5500 50  0001 C CNN "Dielectric"
+F 6 "C0603C104K5RACTU" H 3300 5500 50  0001 C CNN "Manufacturer PN"
+F 7 "50V" H 3300 5500 50  0001 C CNN "Voltage"
 	1    3300 5500
 	1    0    0    1   
 $EndComp

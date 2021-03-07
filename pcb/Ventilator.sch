@@ -439,13 +439,13 @@ F 3 "" H 3850 4650 50  0001 C CNN
 $EndComp
 Wire Wire Line
 	4400 4650 3850 4650
-Text Label 5600 2500 2    50   ~ 0
+Text Label 6300 2500 2    50   ~ 0
 UART-Tx-RPi-Rx-STM
-Text Label 5600 2600 2    50   ~ 0
+Text Label 6300 2600 2    50   ~ 0
 UART-Rx-RPi-Tx-STM
-Text Label 1400 1450 0    50   ~ 0
+Text Label 800  1450 0    50   ~ 0
 UART-RTS-RPi-CTS-STM
-Text Label 1400 1350 0    50   ~ 0
+Text Label 800  1350 0    50   ~ 0
 UART-CTS-RPi-RTS-STM
 Wire Wire Line
 	7800 2100 8700 2100
@@ -596,7 +596,7 @@ Wire Wire Line
 Wire Wire Line
 	6700 2400 8700 2400
 Wire Wire Line
-	4250 2500 6700 2500
+	4250 2500 4750 2500
 Wire Wire Line
 	7650 2500 8700 2500
 Wire Wire Line
@@ -633,7 +633,7 @@ AR Path="/5FCD50A5/60791348" Ref="TP?"  Part="1"
 AR Path="/6052CC9F/60791348" Ref="TP?"  Part="1" 
 AR Path="/60791348" Ref="TP?"  Part="1" 
 F 0 "TP?" V 3250 9700 50  0000 C CNN
-F 1 "TP" V 3300 9500 50  0001 C CNN
+F 1 "PMon-IBat" V 3300 9500 50  0001 C CNN
 F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 3450 9450 50  0001 C CNN
 F 3 "~" H 3450 9450 50  0001 C CNN
 	1    3250 9450
@@ -647,7 +647,7 @@ AR Path="/5FCD50A5/60794E5D" Ref="TP?"  Part="1"
 AR Path="/6052CC9F/60794E5D" Ref="TP?"  Part="1" 
 AR Path="/60794E5D" Ref="TP?"  Part="1" 
 F 0 "TP?" V 3250 9800 50  0000 C CNN
-F 1 "TP" V 3300 9600 50  0001 C CNN
+F 1 "PMon-IAdp" V 3300 9600 50  0001 C CNN
 F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 3450 9550 50  0001 C CNN
 F 3 "~" H 3450 9550 50  0001 C CNN
 	1    3250 9550
@@ -661,7 +661,7 @@ AR Path="/5FCD50A5/60795041" Ref="TP?"  Part="1"
 AR Path="/6052CC9F/60795041" Ref="TP?"  Part="1" 
 AR Path="/60795041" Ref="TP?"  Part="1" 
 F 0 "TP?" V 3250 9500 50  0000 C CNN
-F 1 "TP" V 3300 9300 50  0001 C CNN
+F 1 "PG-12V" V 3300 9300 50  0001 C CNN
 F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 3450 9250 50  0001 C CNN
 F 3 "~" H 3450 9250 50  0001 C CNN
 	1    3250 9250
@@ -812,7 +812,7 @@ AR Path="/5FCD50A5/60AA3F6D" Ref="TP?"  Part="1"
 AR Path="/6052CC9F/60AA3F6D" Ref="TP?"  Part="1" 
 AR Path="/60AA3F6D" Ref="TP?"  Part="1" 
 F 0 "TP?" V 4400 5200 50  0000 C CNN
-F 1 "TP" V 4450 4950 50  0001 C CNN
+F 1 "Stepper-ADC-In2" V 4450 4950 50  0001 C CNN
 F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 4600 4900 50  0001 C CNN
 F 3 "~" H 4600 4900 50  0001 C CNN
 	1    4400 4900
@@ -826,7 +826,7 @@ AR Path="/5FCD50A5/60AA4ACF" Ref="TP?"  Part="1"
 AR Path="/6052CC9F/60AA4ACF" Ref="TP?"  Part="1" 
 AR Path="/60AA4ACF" Ref="TP?"  Part="1" 
 F 0 "TP?" V 4400 3700 50  0000 C CNN
-F 1 "TP" V 4450 3450 50  0001 C CNN
+F 1 "Stepper-ADC-In1" V 4450 3450 50  0001 C CNN
 F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 4600 3400 50  0001 C CNN
 F 3 "~" H 4600 3400 50  0001 C CNN
 	1    4400 3400
@@ -964,7 +964,7 @@ AR Path="/5FCD50A5/60CB2805" Ref="TP?"  Part="1"
 AR Path="/6052CC9F/60CB2805" Ref="TP?"  Part="1" 
 AR Path="/60CB2805" Ref="TP?"  Part="1" 
 F 0 "TP?" V 11750 1600 50  0000 C CNN
-F 1 "TP" V 11800 1350 50  0001 C CNN
+F 1 "PSol-CS1" V 11800 1350 50  0001 C CNN
 F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 11950 1300 50  0001 C CNN
 F 3 "~" H 11950 1300 50  0001 C CNN
 	1    11750 1300
@@ -978,7 +978,7 @@ AR Path="/5FCD50A5/60CB3297" Ref="TP?"  Part="1"
 AR Path="/6052CC9F/60CB3297" Ref="TP?"  Part="1" 
 AR Path="/60CB3297" Ref="TP?"  Part="1" 
 F 0 "TP?" V 14300 1700 50  0000 C CNN
-F 1 "TP" V 14350 1450 50  0001 C CNN
+F 1 "PSol-CS2" V 14350 1450 50  0001 C CNN
 F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 14500 1400 50  0001 C CNN
 F 3 "~" H 14500 1400 50  0001 C CNN
 	1    14300 1400
@@ -1342,7 +1342,7 @@ AR Path="/5FCD50A5/6103A837" Ref="TP?"  Part="1"
 AR Path="/6052CC9F/6103A837" Ref="TP?"  Part="1" 
 AR Path="/6103A837" Ref="TP?"  Part="1" 
 F 0 "TP?" V 12800 2550 50  0000 C CNN
-F 1 "TP" V 12850 2350 50  0001 C CNN
+F 1 "Low-Alarm-Bat" V 12850 2350 50  0001 C CNN
 F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 13000 2300 50  0001 C CNN
 F 3 "~" H 13000 2300 50  0001 C CNN
 	1    12800 2300
@@ -1397,6 +1397,8 @@ F 0 "Q?" H 2700 6250 50  0000 L CNN
 F 1 "MMBT3904" H 2550 5900 50  0000 L CNN
 F 2 "RespiraWorks_Std:SOT-23" H 3100 6200 50  0001 C CNN
 F 3 "~" H 2900 6100 50  0001 C CNN
+F 4 "Diodes Inc." H 2900 6100 50  0001 C CNN "Manufacturer"
+F 5 "MMBT3904-7-F" H 2900 6100 50  0001 C CNN "Manufacturer PN"
 	1    2900 6100
 	1    0    0    -1  
 $EndComp
@@ -1430,6 +1432,8 @@ F 0 "Q?" H 3250 6250 50  0000 L CNN
 F 1 "MMBT3904" H 3000 5900 50  0000 L CNN
 F 2 "RespiraWorks_Std:SOT-23" H 3600 6200 50  0001 C CNN
 F 3 "~" H 3400 6100 50  0001 C CNN
+F 4 "Diodes Inc." H 3400 6100 50  0001 C CNN "Manufacturer"
+F 5 "MMBT3904-7-F" H 3400 6100 50  0001 C CNN "Manufacturer PN"
 	1    3400 6100
 	-1   0    0    -1  
 $EndComp
@@ -1498,23 +1502,17 @@ Wire Wire Line
 	2100 7700 1900 7700
 Wire Wire Line
 	1900 7700 1900 7650
-Text Label 1750 1550 0    50   ~ 0
+Text Label 800  1550 0    50   ~ 0
 Low-Alarm-Bat
-Wire Wire Line
-	1750 1550 2500 1550
 Wire Wire Line
 	9750 2000 11100 2000
 Wire Wire Line
 	11100 2000 11100 950 
 Wire Wire Line
 	11100 950  11750 950 
-Text Label 5250 1900 2    50   ~ 0
+Text Label 5800 1900 2    50   ~ 0
 UART-Rx-FPGA-Tx-RPi
-Wire Wire Line
-	4250 1900 5250 1900
-Wire Wire Line
-	4250 2000 5250 2000
-Text Label 5250 2000 2    50   ~ 0
+Text Label 5800 2000 2    50   ~ 0
 UART-Tx-FPGA-Rx-RPi
 Text Label 12000 8350 2    50   ~ 0
 UART-Rx-FPGA-Tx-RPi
@@ -1546,10 +1544,8 @@ Wire Wire Line
 	8700 2700 7650 2700
 Text Label 7650 2700 0    50   ~ 0
 Bat-Alert
-Text Label 1750 1650 0    50   ~ 0
+Text Label 800  1650 0    50   ~ 0
 Bat-Alert
-Wire Wire Line
-	1750 1650 2500 1650
 Wire Wire Line
 	9750 1700 10300 1700
 Text Label 10300 1700 2    50   ~ 0
@@ -2125,7 +2121,7 @@ AR Path="/5FCD50A5/60D1BAED" Ref="TP?"  Part="1"
 AR Path="/6052CC9F/60D1BAED" Ref="TP?"  Part="1" 
 AR Path="/60D1BAED" Ref="TP?"  Part="1" 
 F 0 "TP?" V 9100 6100 50  0000 C CNN
-F 1 "TP" V 9150 5900 50  0001 C CNN
+F 1 "FPGA-ADC-nInt" V 9150 5900 50  0001 C CNN
 F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 9300 5850 50  0001 C CNN
 F 3 "~" H 9300 5850 50  0001 C CNN
 	1    9100 5850
@@ -2134,20 +2130,22 @@ $EndComp
 $Comp
 L Connector:TestPoint_Flag TP?
 U 1 1 60E50B1C
-P 14300 8300
+P 14250 7400
 AR Path="/5FCD5082/60E50B1C" Ref="TP?"  Part="1" 
 AR Path="/60E50B1C" Ref="TP?"  Part="1" 
-F 0 "TP?" H 14560 8348 50  0000 L CNN
-F 1 "TestPoint_Flag" H 14560 8303 50  0001 L CNN
-F 2 "RespiraWorks_Std:TestPoint_Keystone_5019_Minature" H 14500 8300 50  0001 C CNN
-F 3 "~" H 14500 8300 50  0001 C CNN
-	1    14300 8300
+F 0 "TP?" H 14510 7448 50  0000 L CNN
+F 1 "TestPoint_Flag" H 14510 7403 50  0001 L CNN
+F 2 "RespiraWorks_Std:TestPoint_Keystone_5019_Minature" H 14450 7400 50  0001 C CNN
+F 3 "~" H 14450 7400 50  0001 C CNN
+F 4 "Keystone" H 14250 7400 50  0001 C CNN "Manufacturer"
+F 5 "5019" H 14250 7400 50  0001 C CNN "Manufacturer PN"
+	1    14250 7400
 	1    0    0    -1  
 $EndComp
 $Comp
 L power:GND #PWR?
 U 1 1 60E65086
-P 14300 8300
+P 14250 7400
 AR Path="/60E65086" Ref="#PWR?"  Part="1" 
 AR Path="/5E8AFE9D/60E65086" Ref="#PWR?"  Part="1" 
 AR Path="/5E8FBD97/60E65086" Ref="#PWR?"  Part="1" 
@@ -2157,30 +2155,32 @@ AR Path="/5E8DEDC0/60E65086" Ref="#PWR?"  Part="1"
 AR Path="/5E8C8865/60E65086" Ref="#PWR?"  Part="1" 
 AR Path="/5E8E1F08/60E65086" Ref="#PWR?"  Part="1" 
 AR Path="/5FCD4DF5/60E65086" Ref="#PWR?"  Part="1" 
-F 0 "#PWR?" H 14300 8050 50  0001 C CNN
-F 1 "GND" H 14305 8127 50  0000 C CNN
-F 2 "" H 14300 8300 50  0001 C CNN
-F 3 "" H 14300 8300 50  0001 C CNN
-	1    14300 8300
+F 0 "#PWR?" H 14250 7150 50  0001 C CNN
+F 1 "GND" H 14255 7227 50  0000 C CNN
+F 2 "" H 14250 7400 50  0001 C CNN
+F 3 "" H 14250 7400 50  0001 C CNN
+	1    14250 7400
 	-1   0    0    -1  
 $EndComp
 $Comp
 L Connector:TestPoint_Flag TP?
 U 1 1 60E66A0F
-P 14900 8300
+P 14850 7400
 AR Path="/5FCD5082/60E66A0F" Ref="TP?"  Part="1" 
 AR Path="/60E66A0F" Ref="TP?"  Part="1" 
-F 0 "TP?" H 15160 8348 50  0000 L CNN
-F 1 "TestPoint_Flag" H 15160 8303 50  0001 L CNN
-F 2 "RespiraWorks_Std:TestPoint_Keystone_5019_Minature" H 15100 8300 50  0001 C CNN
-F 3 "~" H 15100 8300 50  0001 C CNN
-	1    14900 8300
+F 0 "TP?" H 15110 7448 50  0000 L CNN
+F 1 "TestPoint_Flag" H 15110 7403 50  0001 L CNN
+F 2 "RespiraWorks_Std:TestPoint_Keystone_5019_Minature" H 15050 7400 50  0001 C CNN
+F 3 "~" H 15050 7400 50  0001 C CNN
+F 4 "Keystone" H 14850 7400 50  0001 C CNN "Manufacturer"
+F 5 "5019" H 14850 7400 50  0001 C CNN "Manufacturer PN"
+	1    14850 7400
 	1    0    0    -1  
 $EndComp
 $Comp
 L power:GND #PWR?
 U 1 1 60E66A15
-P 14900 8300
+P 14850 7400
 AR Path="/60E66A15" Ref="#PWR?"  Part="1" 
 AR Path="/5E8AFE9D/60E66A15" Ref="#PWR?"  Part="1" 
 AR Path="/5E8FBD97/60E66A15" Ref="#PWR?"  Part="1" 
@@ -2190,30 +2190,32 @@ AR Path="/5E8DEDC0/60E66A15" Ref="#PWR?"  Part="1"
 AR Path="/5E8C8865/60E66A15" Ref="#PWR?"  Part="1" 
 AR Path="/5E8E1F08/60E66A15" Ref="#PWR?"  Part="1" 
 AR Path="/5FCD4DF5/60E66A15" Ref="#PWR?"  Part="1" 
-F 0 "#PWR?" H 14900 8050 50  0001 C CNN
-F 1 "GND" H 14905 8127 50  0000 C CNN
-F 2 "" H 14900 8300 50  0001 C CNN
-F 3 "" H 14900 8300 50  0001 C CNN
-	1    14900 8300
+F 0 "#PWR?" H 14850 7150 50  0001 C CNN
+F 1 "GND" H 14855 7227 50  0000 C CNN
+F 2 "" H 14850 7400 50  0001 C CNN
+F 3 "" H 14850 7400 50  0001 C CNN
+	1    14850 7400
 	-1   0    0    -1  
 $EndComp
 $Comp
 L Connector:TestPoint_Flag TP?
 U 1 1 60E795DF
-P 15500 8300
+P 15450 7400
 AR Path="/5FCD5082/60E795DF" Ref="TP?"  Part="1" 
 AR Path="/60E795DF" Ref="TP?"  Part="1" 
-F 0 "TP?" H 15760 8348 50  0000 L CNN
-F 1 "TestPoint_Flag" H 15760 8303 50  0001 L CNN
-F 2 "RespiraWorks_Std:TestPoint_Keystone_5019_Minature" H 15700 8300 50  0001 C CNN
-F 3 "~" H 15700 8300 50  0001 C CNN
-	1    15500 8300
+F 0 "TP?" H 15710 7448 50  0000 L CNN
+F 1 "TestPoint_Flag" H 15710 7403 50  0001 L CNN
+F 2 "RespiraWorks_Std:TestPoint_Keystone_5019_Minature" H 15650 7400 50  0001 C CNN
+F 3 "~" H 15650 7400 50  0001 C CNN
+F 4 "Keystone" H 15450 7400 50  0001 C CNN "Manufacturer"
+F 5 "5019" H 15450 7400 50  0001 C CNN "Manufacturer PN"
+	1    15450 7400
 	1    0    0    -1  
 $EndComp
 $Comp
 L power:GND #PWR?
 U 1 1 60E795E5
-P 15500 8300
+P 15450 7400
 AR Path="/60E795E5" Ref="#PWR?"  Part="1" 
 AR Path="/5E8AFE9D/60E795E5" Ref="#PWR?"  Part="1" 
 AR Path="/5E8FBD97/60E795E5" Ref="#PWR?"  Part="1" 
@@ -2223,30 +2225,32 @@ AR Path="/5E8DEDC0/60E795E5" Ref="#PWR?"  Part="1"
 AR Path="/5E8C8865/60E795E5" Ref="#PWR?"  Part="1" 
 AR Path="/5E8E1F08/60E795E5" Ref="#PWR?"  Part="1" 
 AR Path="/5FCD4DF5/60E795E5" Ref="#PWR?"  Part="1" 
-F 0 "#PWR?" H 15500 8050 50  0001 C CNN
-F 1 "GND" H 15505 8127 50  0000 C CNN
-F 2 "" H 15500 8300 50  0001 C CNN
-F 3 "" H 15500 8300 50  0001 C CNN
-	1    15500 8300
+F 0 "#PWR?" H 15450 7150 50  0001 C CNN
+F 1 "GND" H 15455 7227 50  0000 C CNN
+F 2 "" H 15450 7400 50  0001 C CNN
+F 3 "" H 15450 7400 50  0001 C CNN
+	1    15450 7400
 	-1   0    0    -1  
 $EndComp
 $Comp
 L Connector:TestPoint_Flag TP?
 U 1 1 60E8C201
-P 14300 8700
+P 14250 7800
 AR Path="/5FCD5082/60E8C201" Ref="TP?"  Part="1" 
 AR Path="/60E8C201" Ref="TP?"  Part="1" 
-F 0 "TP?" H 14560 8748 50  0000 L CNN
-F 1 "TestPoint_Flag" H 14560 8703 50  0001 L CNN
-F 2 "RespiraWorks_Std:TestPoint_Keystone_5019_Minature" H 14500 8700 50  0001 C CNN
-F 3 "~" H 14500 8700 50  0001 C CNN
-	1    14300 8700
+F 0 "TP?" H 14510 7848 50  0000 L CNN
+F 1 "TestPoint_Flag" H 14510 7803 50  0001 L CNN
+F 2 "RespiraWorks_Std:TestPoint_Keystone_5019_Minature" H 14450 7800 50  0001 C CNN
+F 3 "~" H 14450 7800 50  0001 C CNN
+F 4 "Keystone" H 14250 7800 50  0001 C CNN "Manufacturer"
+F 5 "5019" H 14250 7800 50  0001 C CNN "Manufacturer PN"
+	1    14250 7800
 	1    0    0    -1  
 $EndComp
 $Comp
 L power:GND #PWR?
 U 1 1 60E8C207
-P 14300 8700
+P 14250 7800
 AR Path="/60E8C207" Ref="#PWR?"  Part="1" 
 AR Path="/5E8AFE9D/60E8C207" Ref="#PWR?"  Part="1" 
 AR Path="/5E8FBD97/60E8C207" Ref="#PWR?"  Part="1" 
@@ -2256,30 +2260,32 @@ AR Path="/5E8DEDC0/60E8C207" Ref="#PWR?"  Part="1"
 AR Path="/5E8C8865/60E8C207" Ref="#PWR?"  Part="1" 
 AR Path="/5E8E1F08/60E8C207" Ref="#PWR?"  Part="1" 
 AR Path="/5FCD4DF5/60E8C207" Ref="#PWR?"  Part="1" 
-F 0 "#PWR?" H 14300 8450 50  0001 C CNN
-F 1 "GND" H 14305 8527 50  0000 C CNN
-F 2 "" H 14300 8700 50  0001 C CNN
-F 3 "" H 14300 8700 50  0001 C CNN
-	1    14300 8700
+F 0 "#PWR?" H 14250 7550 50  0001 C CNN
+F 1 "GND" H 14255 7627 50  0000 C CNN
+F 2 "" H 14250 7800 50  0001 C CNN
+F 3 "" H 14250 7800 50  0001 C CNN
+	1    14250 7800
 	-1   0    0    -1  
 $EndComp
 $Comp
 L Connector:TestPoint_Flag TP?
 U 1 1 60E9EF91
-P 14900 8700
+P 14850 7800
 AR Path="/5FCD5082/60E9EF91" Ref="TP?"  Part="1" 
 AR Path="/60E9EF91" Ref="TP?"  Part="1" 
-F 0 "TP?" H 15160 8748 50  0000 L CNN
-F 1 "TestPoint_Flag" H 15160 8703 50  0001 L CNN
-F 2 "RespiraWorks_Std:TestPoint_Keystone_5019_Minature" H 15100 8700 50  0001 C CNN
-F 3 "~" H 15100 8700 50  0001 C CNN
-	1    14900 8700
+F 0 "TP?" H 15110 7848 50  0000 L CNN
+F 1 "TestPoint_Flag" H 15110 7803 50  0001 L CNN
+F 2 "RespiraWorks_Std:TestPoint_Keystone_5019_Minature" H 15050 7800 50  0001 C CNN
+F 3 "~" H 15050 7800 50  0001 C CNN
+F 4 "Keystone" H 14850 7800 50  0001 C CNN "Manufacturer"
+F 5 "5019" H 14850 7800 50  0001 C CNN "Manufacturer PN"
+	1    14850 7800
 	1    0    0    -1  
 $EndComp
 $Comp
 L power:GND #PWR?
 U 1 1 60E9EF97
-P 14900 8700
+P 14850 7800
 AR Path="/60E9EF97" Ref="#PWR?"  Part="1" 
 AR Path="/5E8AFE9D/60E9EF97" Ref="#PWR?"  Part="1" 
 AR Path="/5E8FBD97/60E9EF97" Ref="#PWR?"  Part="1" 
@@ -2289,30 +2295,32 @@ AR Path="/5E8DEDC0/60E9EF97" Ref="#PWR?"  Part="1"
 AR Path="/5E8C8865/60E9EF97" Ref="#PWR?"  Part="1" 
 AR Path="/5E8E1F08/60E9EF97" Ref="#PWR?"  Part="1" 
 AR Path="/5FCD4DF5/60E9EF97" Ref="#PWR?"  Part="1" 
-F 0 "#PWR?" H 14900 8450 50  0001 C CNN
-F 1 "GND" H 14905 8527 50  0000 C CNN
-F 2 "" H 14900 8700 50  0001 C CNN
-F 3 "" H 14900 8700 50  0001 C CNN
-	1    14900 8700
+F 0 "#PWR?" H 14850 7550 50  0001 C CNN
+F 1 "GND" H 14855 7627 50  0000 C CNN
+F 2 "" H 14850 7800 50  0001 C CNN
+F 3 "" H 14850 7800 50  0001 C CNN
+	1    14850 7800
 	-1   0    0    -1  
 $EndComp
 $Comp
 L Connector:TestPoint_Flag TP?
 U 1 1 60EB1DFD
-P 15500 8700
+P 15450 7800
 AR Path="/5FCD5082/60EB1DFD" Ref="TP?"  Part="1" 
 AR Path="/60EB1DFD" Ref="TP?"  Part="1" 
-F 0 "TP?" H 15760 8748 50  0000 L CNN
-F 1 "TestPoint_Flag" H 15760 8703 50  0001 L CNN
-F 2 "RespiraWorks_Std:TestPoint_Keystone_5019_Minature" H 15700 8700 50  0001 C CNN
-F 3 "~" H 15700 8700 50  0001 C CNN
-	1    15500 8700
+F 0 "TP?" H 15710 7848 50  0000 L CNN
+F 1 "TestPoint_Flag" H 15710 7803 50  0001 L CNN
+F 2 "RespiraWorks_Std:TestPoint_Keystone_5019_Minature" H 15650 7800 50  0001 C CNN
+F 3 "~" H 15650 7800 50  0001 C CNN
+F 4 "Keystone" H 15450 7800 50  0001 C CNN "Manufacturer"
+F 5 "5019" H 15450 7800 50  0001 C CNN "Manufacturer PN"
+	1    15450 7800
 	1    0    0    -1  
 $EndComp
 $Comp
 L power:GND #PWR?
 U 1 1 60EB1E03
-P 15500 8700
+P 15450 7800
 AR Path="/60EB1E03" Ref="#PWR?"  Part="1" 
 AR Path="/5E8AFE9D/60EB1E03" Ref="#PWR?"  Part="1" 
 AR Path="/5E8FBD97/60EB1E03" Ref="#PWR?"  Part="1" 
@@ -2322,30 +2330,32 @@ AR Path="/5E8DEDC0/60EB1E03" Ref="#PWR?"  Part="1"
 AR Path="/5E8C8865/60EB1E03" Ref="#PWR?"  Part="1" 
 AR Path="/5E8E1F08/60EB1E03" Ref="#PWR?"  Part="1" 
 AR Path="/5FCD4DF5/60EB1E03" Ref="#PWR?"  Part="1" 
-F 0 "#PWR?" H 15500 8450 50  0001 C CNN
-F 1 "GND" H 15505 8527 50  0000 C CNN
-F 2 "" H 15500 8700 50  0001 C CNN
-F 3 "" H 15500 8700 50  0001 C CNN
-	1    15500 8700
+F 0 "#PWR?" H 15450 7550 50  0001 C CNN
+F 1 "GND" H 15455 7627 50  0000 C CNN
+F 2 "" H 15450 7800 50  0001 C CNN
+F 3 "" H 15450 7800 50  0001 C CNN
+	1    15450 7800
 	-1   0    0    -1  
 $EndComp
 $Comp
 L Connector:TestPoint_Flag TP?
 U 1 1 60EC7D7F
-P 14300 7500
+P 14250 6600
 AR Path="/5FCD5082/60EC7D7F" Ref="TP?"  Part="1" 
 AR Path="/60EC7D7F" Ref="TP?"  Part="1" 
-F 0 "TP?" H 14560 7548 50  0000 L CNN
-F 1 "TestPoint_Flag" H 14560 7503 50  0001 L CNN
-F 2 "RespiraWorks_Std:TestPoint_Keystone_5019_Minature" H 14500 7500 50  0001 C CNN
-F 3 "~" H 14500 7500 50  0001 C CNN
-	1    14300 7500
+F 0 "TP?" H 14510 6648 50  0000 L CNN
+F 1 "TestPoint_Flag" H 14510 6603 50  0001 L CNN
+F 2 "RespiraWorks_Std:TestPoint_Keystone_5019_Minature" H 14450 6600 50  0001 C CNN
+F 3 "~" H 14450 6600 50  0001 C CNN
+F 4 "Keystone" H 14250 6600 50  0001 C CNN "Manufacturer"
+F 5 "5019" H 14250 6600 50  0001 C CNN "Manufacturer PN"
+	1    14250 6600
 	1    0    0    -1  
 $EndComp
 $Comp
 L power:GND #PWR?
 U 1 1 60EC7D85
-P 14300 7500
+P 14250 6600
 AR Path="/60EC7D85" Ref="#PWR?"  Part="1" 
 AR Path="/5E8AFE9D/60EC7D85" Ref="#PWR?"  Part="1" 
 AR Path="/5E8FBD97/60EC7D85" Ref="#PWR?"  Part="1" 
@@ -2355,30 +2365,32 @@ AR Path="/5E8DEDC0/60EC7D85" Ref="#PWR?"  Part="1"
 AR Path="/5E8C8865/60EC7D85" Ref="#PWR?"  Part="1" 
 AR Path="/5E8E1F08/60EC7D85" Ref="#PWR?"  Part="1" 
 AR Path="/5FCD4DF5/60EC7D85" Ref="#PWR?"  Part="1" 
-F 0 "#PWR?" H 14300 7250 50  0001 C CNN
-F 1 "GND" H 14305 7327 50  0000 C CNN
-F 2 "" H 14300 7500 50  0001 C CNN
-F 3 "" H 14300 7500 50  0001 C CNN
-	1    14300 7500
+F 0 "#PWR?" H 14250 6350 50  0001 C CNN
+F 1 "GND" H 14255 6427 50  0000 C CNN
+F 2 "" H 14250 6600 50  0001 C CNN
+F 3 "" H 14250 6600 50  0001 C CNN
+	1    14250 6600
 	-1   0    0    -1  
 $EndComp
 $Comp
 L Connector:TestPoint_Flag TP?
 U 1 1 60EC7D8B
-P 14900 7500
+P 14850 6600
 AR Path="/5FCD5082/60EC7D8B" Ref="TP?"  Part="1" 
 AR Path="/60EC7D8B" Ref="TP?"  Part="1" 
-F 0 "TP?" H 15160 7548 50  0000 L CNN
-F 1 "TestPoint_Flag" H 15160 7503 50  0001 L CNN
-F 2 "RespiraWorks_Std:TestPoint_Keystone_5019_Minature" H 15100 7500 50  0001 C CNN
-F 3 "~" H 15100 7500 50  0001 C CNN
-	1    14900 7500
+F 0 "TP?" H 15110 6648 50  0000 L CNN
+F 1 "TestPoint_Flag" H 15110 6603 50  0001 L CNN
+F 2 "RespiraWorks_Std:TestPoint_Keystone_5019_Minature" H 15050 6600 50  0001 C CNN
+F 3 "~" H 15050 6600 50  0001 C CNN
+F 4 "Keystone" H 14850 6600 50  0001 C CNN "Manufacturer"
+F 5 "5019" H 14850 6600 50  0001 C CNN "Manufacturer PN"
+	1    14850 6600
 	1    0    0    -1  
 $EndComp
 $Comp
 L power:GND #PWR?
 U 1 1 60EC7D91
-P 14900 7500
+P 14850 6600
 AR Path="/60EC7D91" Ref="#PWR?"  Part="1" 
 AR Path="/5E8AFE9D/60EC7D91" Ref="#PWR?"  Part="1" 
 AR Path="/5E8FBD97/60EC7D91" Ref="#PWR?"  Part="1" 
@@ -2388,30 +2400,32 @@ AR Path="/5E8DEDC0/60EC7D91" Ref="#PWR?"  Part="1"
 AR Path="/5E8C8865/60EC7D91" Ref="#PWR?"  Part="1" 
 AR Path="/5E8E1F08/60EC7D91" Ref="#PWR?"  Part="1" 
 AR Path="/5FCD4DF5/60EC7D91" Ref="#PWR?"  Part="1" 
-F 0 "#PWR?" H 14900 7250 50  0001 C CNN
-F 1 "GND" H 14905 7327 50  0000 C CNN
-F 2 "" H 14900 7500 50  0001 C CNN
-F 3 "" H 14900 7500 50  0001 C CNN
-	1    14900 7500
+F 0 "#PWR?" H 14850 6350 50  0001 C CNN
+F 1 "GND" H 14855 6427 50  0000 C CNN
+F 2 "" H 14850 6600 50  0001 C CNN
+F 3 "" H 14850 6600 50  0001 C CNN
+	1    14850 6600
 	-1   0    0    -1  
 $EndComp
 $Comp
 L Connector:TestPoint_Flag TP?
 U 1 1 60EC7D97
-P 15500 7500
+P 15450 6600
 AR Path="/5FCD5082/60EC7D97" Ref="TP?"  Part="1" 
 AR Path="/60EC7D97" Ref="TP?"  Part="1" 
-F 0 "TP?" H 15760 7548 50  0000 L CNN
-F 1 "TestPoint_Flag" H 15760 7503 50  0001 L CNN
-F 2 "RespiraWorks_Std:TestPoint_Keystone_5019_Minature" H 15700 7500 50  0001 C CNN
-F 3 "~" H 15700 7500 50  0001 C CNN
-	1    15500 7500
+F 0 "TP?" H 15710 6648 50  0000 L CNN
+F 1 "TestPoint_Flag" H 15710 6603 50  0001 L CNN
+F 2 "RespiraWorks_Std:TestPoint_Keystone_5019_Minature" H 15650 6600 50  0001 C CNN
+F 3 "~" H 15650 6600 50  0001 C CNN
+F 4 "Keystone" H 15450 6600 50  0001 C CNN "Manufacturer"
+F 5 "5019" H 15450 6600 50  0001 C CNN "Manufacturer PN"
+	1    15450 6600
 	1    0    0    -1  
 $EndComp
 $Comp
 L power:GND #PWR?
 U 1 1 60EC7D9D
-P 15500 7500
+P 15450 6600
 AR Path="/60EC7D9D" Ref="#PWR?"  Part="1" 
 AR Path="/5E8AFE9D/60EC7D9D" Ref="#PWR?"  Part="1" 
 AR Path="/5E8FBD97/60EC7D9D" Ref="#PWR?"  Part="1" 
@@ -2421,30 +2435,32 @@ AR Path="/5E8DEDC0/60EC7D9D" Ref="#PWR?"  Part="1"
 AR Path="/5E8C8865/60EC7D9D" Ref="#PWR?"  Part="1" 
 AR Path="/5E8E1F08/60EC7D9D" Ref="#PWR?"  Part="1" 
 AR Path="/5FCD4DF5/60EC7D9D" Ref="#PWR?"  Part="1" 
-F 0 "#PWR?" H 15500 7250 50  0001 C CNN
-F 1 "GND" H 15505 7327 50  0000 C CNN
-F 2 "" H 15500 7500 50  0001 C CNN
-F 3 "" H 15500 7500 50  0001 C CNN
-	1    15500 7500
+F 0 "#PWR?" H 15450 6350 50  0001 C CNN
+F 1 "GND" H 15455 6427 50  0000 C CNN
+F 2 "" H 15450 6600 50  0001 C CNN
+F 3 "" H 15450 6600 50  0001 C CNN
+	1    15450 6600
 	-1   0    0    -1  
 $EndComp
 $Comp
 L Connector:TestPoint_Flag TP?
 U 1 1 60EC7DA3
-P 14300 7900
+P 14250 7000
 AR Path="/5FCD5082/60EC7DA3" Ref="TP?"  Part="1" 
 AR Path="/60EC7DA3" Ref="TP?"  Part="1" 
-F 0 "TP?" H 14560 7948 50  0000 L CNN
-F 1 "TestPoint_Flag" H 14560 7903 50  0001 L CNN
-F 2 "RespiraWorks_Std:TestPoint_Keystone_5019_Minature" H 14500 7900 50  0001 C CNN
-F 3 "~" H 14500 7900 50  0001 C CNN
-	1    14300 7900
+F 0 "TP?" H 14510 7048 50  0000 L CNN
+F 1 "TestPoint_Flag" H 14510 7003 50  0001 L CNN
+F 2 "RespiraWorks_Std:TestPoint_Keystone_5019_Minature" H 14450 7000 50  0001 C CNN
+F 3 "~" H 14450 7000 50  0001 C CNN
+F 4 "Keystone" H 14250 7000 50  0001 C CNN "Manufacturer"
+F 5 "5019" H 14250 7000 50  0001 C CNN "Manufacturer PN"
+	1    14250 7000
 	1    0    0    -1  
 $EndComp
 $Comp
 L power:GND #PWR?
 U 1 1 60EC7DA9
-P 14300 7900
+P 14250 7000
 AR Path="/60EC7DA9" Ref="#PWR?"  Part="1" 
 AR Path="/5E8AFE9D/60EC7DA9" Ref="#PWR?"  Part="1" 
 AR Path="/5E8FBD97/60EC7DA9" Ref="#PWR?"  Part="1" 
@@ -2454,30 +2470,32 @@ AR Path="/5E8DEDC0/60EC7DA9" Ref="#PWR?"  Part="1"
 AR Path="/5E8C8865/60EC7DA9" Ref="#PWR?"  Part="1" 
 AR Path="/5E8E1F08/60EC7DA9" Ref="#PWR?"  Part="1" 
 AR Path="/5FCD4DF5/60EC7DA9" Ref="#PWR?"  Part="1" 
-F 0 "#PWR?" H 14300 7650 50  0001 C CNN
-F 1 "GND" H 14305 7727 50  0000 C CNN
-F 2 "" H 14300 7900 50  0001 C CNN
-F 3 "" H 14300 7900 50  0001 C CNN
-	1    14300 7900
+F 0 "#PWR?" H 14250 6750 50  0001 C CNN
+F 1 "GND" H 14255 6827 50  0000 C CNN
+F 2 "" H 14250 7000 50  0001 C CNN
+F 3 "" H 14250 7000 50  0001 C CNN
+	1    14250 7000
 	-1   0    0    -1  
 $EndComp
 $Comp
 L Connector:TestPoint_Flag TP?
 U 1 1 60EC7DAF
-P 14900 7900
+P 14850 7000
 AR Path="/5FCD5082/60EC7DAF" Ref="TP?"  Part="1" 
 AR Path="/60EC7DAF" Ref="TP?"  Part="1" 
-F 0 "TP?" H 15160 7948 50  0000 L CNN
-F 1 "TestPoint_Flag" H 15160 7903 50  0001 L CNN
-F 2 "RespiraWorks_Std:TestPoint_Keystone_5019_Minature" H 15100 7900 50  0001 C CNN
-F 3 "~" H 15100 7900 50  0001 C CNN
-	1    14900 7900
+F 0 "TP?" H 15110 7048 50  0000 L CNN
+F 1 "TestPoint_Flag" H 15110 7003 50  0001 L CNN
+F 2 "RespiraWorks_Std:TestPoint_Keystone_5019_Minature" H 15050 7000 50  0001 C CNN
+F 3 "~" H 15050 7000 50  0001 C CNN
+F 4 "Keystone" H 14850 7000 50  0001 C CNN "Manufacturer"
+F 5 "5019" H 14850 7000 50  0001 C CNN "Manufacturer PN"
+	1    14850 7000
 	1    0    0    -1  
 $EndComp
 $Comp
 L power:GND #PWR?
 U 1 1 60EC7DB5
-P 14900 7900
+P 14850 7000
 AR Path="/60EC7DB5" Ref="#PWR?"  Part="1" 
 AR Path="/5E8AFE9D/60EC7DB5" Ref="#PWR?"  Part="1" 
 AR Path="/5E8FBD97/60EC7DB5" Ref="#PWR?"  Part="1" 
@@ -2487,30 +2505,32 @@ AR Path="/5E8DEDC0/60EC7DB5" Ref="#PWR?"  Part="1"
 AR Path="/5E8C8865/60EC7DB5" Ref="#PWR?"  Part="1" 
 AR Path="/5E8E1F08/60EC7DB5" Ref="#PWR?"  Part="1" 
 AR Path="/5FCD4DF5/60EC7DB5" Ref="#PWR?"  Part="1" 
-F 0 "#PWR?" H 14900 7650 50  0001 C CNN
-F 1 "GND" H 14905 7727 50  0000 C CNN
-F 2 "" H 14900 7900 50  0001 C CNN
-F 3 "" H 14900 7900 50  0001 C CNN
-	1    14900 7900
+F 0 "#PWR?" H 14850 6750 50  0001 C CNN
+F 1 "GND" H 14855 6827 50  0000 C CNN
+F 2 "" H 14850 7000 50  0001 C CNN
+F 3 "" H 14850 7000 50  0001 C CNN
+	1    14850 7000
 	-1   0    0    -1  
 $EndComp
 $Comp
 L Connector:TestPoint_Flag TP?
 U 1 1 60EC7DBB
-P 15500 7900
+P 15450 7000
 AR Path="/5FCD5082/60EC7DBB" Ref="TP?"  Part="1" 
 AR Path="/60EC7DBB" Ref="TP?"  Part="1" 
-F 0 "TP?" H 15760 7948 50  0000 L CNN
-F 1 "TestPoint_Flag" H 15760 7903 50  0001 L CNN
-F 2 "RespiraWorks_Std:TestPoint_Keystone_5019_Minature" H 15700 7900 50  0001 C CNN
-F 3 "~" H 15700 7900 50  0001 C CNN
-	1    15500 7900
+F 0 "TP?" H 15710 7048 50  0000 L CNN
+F 1 "TestPoint_Flag" H 15710 7003 50  0001 L CNN
+F 2 "RespiraWorks_Std:TestPoint_Keystone_5019_Minature" H 15650 7000 50  0001 C CNN
+F 3 "~" H 15650 7000 50  0001 C CNN
+F 4 "Keystone" H 15450 7000 50  0001 C CNN "Manufacturer"
+F 5 "5019" H 15450 7000 50  0001 C CNN "Manufacturer PN"
+	1    15450 7000
 	1    0    0    -1  
 $EndComp
 $Comp
 L power:GND #PWR?
 U 1 1 60EC7DC1
-P 15500 7900
+P 15450 7000
 AR Path="/60EC7DC1" Ref="#PWR?"  Part="1" 
 AR Path="/5E8AFE9D/60EC7DC1" Ref="#PWR?"  Part="1" 
 AR Path="/5E8FBD97/60EC7DC1" Ref="#PWR?"  Part="1" 
@@ -2520,11 +2540,11 @@ AR Path="/5E8DEDC0/60EC7DC1" Ref="#PWR?"  Part="1"
 AR Path="/5E8C8865/60EC7DC1" Ref="#PWR?"  Part="1" 
 AR Path="/5E8E1F08/60EC7DC1" Ref="#PWR?"  Part="1" 
 AR Path="/5FCD4DF5/60EC7DC1" Ref="#PWR?"  Part="1" 
-F 0 "#PWR?" H 15500 7650 50  0001 C CNN
-F 1 "GND" H 15505 7727 50  0000 C CNN
-F 2 "" H 15500 7900 50  0001 C CNN
-F 3 "" H 15500 7900 50  0001 C CNN
-	1    15500 7900
+F 0 "#PWR?" H 15450 6750 50  0001 C CNN
+F 1 "GND" H 15455 6827 50  0000 C CNN
+F 2 "" H 15450 7000 50  0001 C CNN
+F 3 "" H 15450 7000 50  0001 C CNN
+	1    15450 7000
 	-1   0    0    -1  
 $EndComp
 $Comp
@@ -2536,7 +2556,7 @@ AR Path="/6052CC9F/60F26022" Ref="TP?"  Part="1"
 AR Path="/60F26022" Ref="TP?"  Part="1" 
 AR Path="/5FCD4D18/60F26022" Ref="TP?"  Part="1" 
 F 0 "TP?" V 10300 2050 50  0000 C CNN
-F 1 "TP" V 10350 1850 50  0001 C CNN
+F 1 "CC-SCL" V 10350 1850 50  0001 C CNN
 F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 10500 1800 50  0001 C CNN
 F 3 "~" H 10500 1800 50  0001 C CNN
 	1    10300 1800
@@ -2551,7 +2571,7 @@ AR Path="/6052CC9F/60F389F6" Ref="TP?"  Part="1"
 AR Path="/60F389F6" Ref="TP?"  Part="1" 
 AR Path="/5FCD4D18/60F389F6" Ref="TP?"  Part="1" 
 F 0 "TP?" V 10300 2150 50  0000 C CNN
-F 1 "TP" V 10350 1950 50  0001 C CNN
+F 1 "CC-SDA" V 10350 1950 50  0001 C CNN
 F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 10500 1900 50  0001 C CNN
 F 3 "~" H 10500 1900 50  0001 C CNN
 	1    10300 1900
@@ -2560,91 +2580,91 @@ $EndComp
 $Comp
 L Connector:TestPoint TP?
 U 1 1 60F8526B
-P 15250 6750
+P 15200 5850
 AR Path="/5FCD50A5/60F8526B" Ref="TP?"  Part="1" 
 AR Path="/6052CC9F/60F8526B" Ref="TP?"  Part="1" 
 AR Path="/60F8526B" Ref="TP?"  Part="1" 
 AR Path="/5FCD4D18/60F8526B" Ref="TP?"  Part="1" 
 AR Path="/5FCD4B8E/60F8526B" Ref="TP?"  Part="1" 
-F 0 "TP?" H 15250 6950 50  0000 C CNN
-F 1 "TP" V 15300 6800 50  0001 C CNN
-F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 15450 6750 50  0001 C CNN
-F 3 "~" H 15450 6750 50  0001 C CNN
-	1    15250 6750
+F 0 "TP?" H 15200 6050 50  0000 C CNN
+F 1 "UART-RTS-STM-CTS-RPi" V 15250 5900 50  0001 C CNN
+F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 15400 5850 50  0001 C CNN
+F 3 "~" H 15400 5850 50  0001 C CNN
+	1    15200 5850
 	1    0    0    -1  
 $EndComp
-Text Label 14150 6800 0    50   ~ 0
+Text Label 14100 5900 0    50   ~ 0
 UART-RTS-STM-CTS-RPi
-Text Label 14150 6900 0    50   ~ 0
+Text Label 14100 6000 0    50   ~ 0
 UART-CTS-STM-RTS-RPi
-Text Label 14150 7000 0    50   ~ 0
+Text Label 14100 6100 0    50   ~ 0
 UART-Tx-RPi-Rx-STM
-Text Label 14150 7100 0    50   ~ 0
+Text Label 14100 6200 0    50   ~ 0
 UART-Rx-RPi-Tx-STM
 Wire Wire Line
-	14150 6800 15250 6800
+	14100 5900 15200 5900
 Wire Wire Line
-	15250 6800 15250 6750
+	15200 5900 15200 5850
 $Comp
 L Connector:TestPoint TP?
 U 1 1 60FAE764
-P 15450 6750
+P 15400 5850
 AR Path="/5FCD50A5/60FAE764" Ref="TP?"  Part="1" 
 AR Path="/6052CC9F/60FAE764" Ref="TP?"  Part="1" 
 AR Path="/60FAE764" Ref="TP?"  Part="1" 
 AR Path="/5FCD4D18/60FAE764" Ref="TP?"  Part="1" 
 AR Path="/5FCD4B8E/60FAE764" Ref="TP?"  Part="1" 
-F 0 "TP?" H 15450 6950 50  0000 C CNN
-F 1 "TP" V 15500 6800 50  0001 C CNN
-F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 15650 6750 50  0001 C CNN
-F 3 "~" H 15650 6750 50  0001 C CNN
-	1    15450 6750
+F 0 "TP?" H 15400 6050 50  0000 C CNN
+F 1 "UART-CTS-STM-RTS-RPi" V 15450 5900 50  0001 C CNN
+F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 15600 5850 50  0001 C CNN
+F 3 "~" H 15600 5850 50  0001 C CNN
+	1    15400 5850
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	15450 6750 15450 6900
+	15400 5850 15400 6000
 Wire Wire Line
-	15450 6900 14150 6900
+	15400 6000 14100 6000
 $Comp
 L Connector:TestPoint TP?
 U 1 1 60FC22AD
-P 15650 6750
+P 15600 5850
 AR Path="/5FCD50A5/60FC22AD" Ref="TP?"  Part="1" 
 AR Path="/6052CC9F/60FC22AD" Ref="TP?"  Part="1" 
 AR Path="/60FC22AD" Ref="TP?"  Part="1" 
 AR Path="/5FCD4D18/60FC22AD" Ref="TP?"  Part="1" 
 AR Path="/5FCD4B8E/60FC22AD" Ref="TP?"  Part="1" 
-F 0 "TP?" H 15650 6950 50  0000 C CNN
-F 1 "TP" V 15700 6800 50  0001 C CNN
-F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 15850 6750 50  0001 C CNN
-F 3 "~" H 15850 6750 50  0001 C CNN
-	1    15650 6750
+F 0 "TP?" H 15600 6050 50  0000 C CNN
+F 1 "UART-Tx-RPi-Rx-STM" V 15650 5900 50  0001 C CNN
+F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 15800 5850 50  0001 C CNN
+F 3 "~" H 15800 5850 50  0001 C CNN
+	1    15600 5850
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	15650 6750 15650 7000
+	15600 5850 15600 6100
 Wire Wire Line
-	15650 7000 14150 7000
+	15600 6100 14100 6100
 $Comp
 L Connector:TestPoint TP?
 U 1 1 60FD625A
-P 15850 6750
+P 15800 5850
 AR Path="/5FCD50A5/60FD625A" Ref="TP?"  Part="1" 
 AR Path="/6052CC9F/60FD625A" Ref="TP?"  Part="1" 
 AR Path="/60FD625A" Ref="TP?"  Part="1" 
 AR Path="/5FCD4D18/60FD625A" Ref="TP?"  Part="1" 
 AR Path="/5FCD4B8E/60FD625A" Ref="TP?"  Part="1" 
-F 0 "TP?" H 15850 6950 50  0000 C CNN
-F 1 "TP" V 15900 6800 50  0001 C CNN
-F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 16050 6750 50  0001 C CNN
-F 3 "~" H 16050 6750 50  0001 C CNN
-	1    15850 6750
+F 0 "TP?" H 15800 6050 50  0000 C CNN
+F 1 "UART-Rx-RPi-Tx-STM" V 15850 5900 50  0001 C CNN
+F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 16000 5850 50  0001 C CNN
+F 3 "~" H 16000 5850 50  0001 C CNN
+	1    15800 5850
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	15850 6750 15850 7100
+	15800 5850 15800 6200
 Wire Wire Line
-	15850 7100 14150 7100
+	15800 6200 14100 6200
 Wire Wire Line
 	12300 4400 13400 4400
 $Comp
@@ -2672,7 +2692,7 @@ AR Path="/6059BD56" Ref="TP?"  Part="1"
 AR Path="/5FCD4D18/6059BD56" Ref="TP?"  Part="1" 
 AR Path="/5FCD4B8E/6059BD56" Ref="TP?"  Part="1" 
 F 0 "TP?" H 8100 2050 50  0000 C CNN
-F 1 "TP" V 8150 1900 50  0001 C CNN
+F 1 "UART-Tx-STM-Rx-STLink" V 8150 1900 50  0001 C CNN
 F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 8300 1850 50  0001 C CNN
 F 3 "~" H 8300 1850 50  0001 C CNN
 	1    8100 1850
@@ -2691,7 +2711,7 @@ AR Path="/6059E643" Ref="TP?"  Part="1"
 AR Path="/5FCD4D18/6059E643" Ref="TP?"  Part="1" 
 AR Path="/5FCD4B8E/6059E643" Ref="TP?"  Part="1" 
 F 0 "TP?" H 7950 2200 50  0000 C CNN
-F 1 "TP" V 7850 2150 50  0001 C CNN
+F 1 "UART-Rx-STM-Tx-STLink" V 7850 2150 50  0001 C CNN
 F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 8000 2100 50  0001 C CNN
 F 3 "~" H 8000 2100 50  0001 C CNN
 	1    7800 2100
@@ -2780,6 +2800,8 @@ F 0 "D?" H 14100 2350 50  0000 C CNN
 F 1 "BAT54J" V 14100 2050 50  0000 C CNN
 F 2 "RespiraWorks_Std:D_SOD-323F" H 14100 2075 50  0001 C CNN
 F 3 "https://assets.nexperia.com/documents/data-sheet/BAT54J.pdf" H 14100 2250 50  0001 C CNN
+F 4 "Nexperia" H 14100 2250 50  0001 C CNN "Manufacturer"
+F 5 "BAT54J,115" H 14100 2250 50  0001 C CNN "Manufacturer PN"
 	1    14100 2250
 	0    1    1    0   
 $EndComp
@@ -2819,10 +2841,6 @@ F 3 "~" H 4450 2400 50  0001 C CNN
 	1    4250 2400
 	0    1    1    0   
 $EndComp
-Wire Wire Line
-	1400 1350 2500 1350
-Wire Wire Line
-	2500 1450 1400 1450
 $Sheet
 S 5900 1050 1100 1000
 U 5FCD4D85
@@ -2838,4 +2856,115 @@ F8 "USB_Pwr_nEn" O L 5900 1350 50
 F9 "5V-USB" O L 5900 1250 50 
 $EndSheet
 NoConn ~ 5900 1350
+$Comp
+L Device:R R?
+U 1 1 604B25BE
+P 2050 1450
+AR Path="/604B25BE" Ref="R?"  Part="1" 
+AR Path="/5E8AFE9D/604B25BE" Ref="R?"  Part="1" 
+AR Path="/5E8C8865/604B25BE" Ref="R?"  Part="1" 
+AR Path="/5E8E1F08/604B25BE" Ref="R?"  Part="1" 
+AR Path="/5FCD4DF5/604B25BE" Ref="R?"  Part="1" 
+F 0 "R?" V 2100 1250 50  0000 C CNN
+F 1 "1k" V 2100 1600 50  0000 C CNN
+F 2 "RespiraWorks_Std:R_0603_1608Metric" V 1980 1450 50  0001 C CNN
+F 3 "~" H 2050 1450 50  0001 C CNN
+F 4 "" H 2050 1450 50  0001 C CNN "Manufacturer"
+	1    2050 1450
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	800  1450 1900 1450
+$Comp
+L Device:R R?
+U 1 1 60522AB9
+P 4600 2000
+AR Path="/60522AB9" Ref="R?"  Part="1" 
+AR Path="/5E8AFE9D/60522AB9" Ref="R?"  Part="1" 
+AR Path="/5E8C8865/60522AB9" Ref="R?"  Part="1" 
+AR Path="/5E8E1F08/60522AB9" Ref="R?"  Part="1" 
+AR Path="/5FCD4DF5/60522AB9" Ref="R?"  Part="1" 
+F 0 "R?" V 4650 1850 50  0000 C CNN
+F 1 "1k" V 4650 2200 50  0000 C CNN
+F 2 "RespiraWorks_Std:R_0603_1608Metric" V 4530 2000 50  0001 C CNN
+F 3 "~" H 4600 2000 50  0001 C CNN
+F 4 "" H 4600 2000 50  0001 C CNN "Manufacturer"
+	1    4600 2000
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	800  1550 1900 1550
+Wire Wire Line
+	800  1650 1900 1650
+$Comp
+L Device:R R?
+U 1 1 60576A26
+P 4900 2500
+AR Path="/60576A26" Ref="R?"  Part="1" 
+AR Path="/5E8AFE9D/60576A26" Ref="R?"  Part="1" 
+AR Path="/5E8C8865/60576A26" Ref="R?"  Part="1" 
+AR Path="/5E8E1F08/60576A26" Ref="R?"  Part="1" 
+AR Path="/5FCD4DF5/60576A26" Ref="R?"  Part="1" 
+F 0 "R?" V 4950 2300 50  0000 C CNN
+F 1 "1k" V 4950 2700 50  0000 C CNN
+F 2 "RespiraWorks_Std:R_0603_1608Metric" V 4830 2500 50  0001 C CNN
+F 3 "~" H 4900 2500 50  0001 C CNN
+F 4 "" H 4900 2500 50  0001 C CNN "Manufacturer"
+	1    4900 2500
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	5050 2500 6700 2500
+Wire Wire Line
+	4750 2000 5800 2000
+Wire Wire Line
+	4250 1900 5800 1900
+Wire Wire Line
+	4450 2000 4250 2000
+Text Notes 600  850  0    50   ~ 0
+Series resistors on signals received by UI computer\nprevents problems driving these signals\nif UI computer loses power
+$Comp
+L Device:R R?
+U 1 1 60617B29
+P 2050 1550
+AR Path="/60617B29" Ref="R?"  Part="1" 
+AR Path="/5E8AFE9D/60617B29" Ref="R?"  Part="1" 
+AR Path="/5E8C8865/60617B29" Ref="R?"  Part="1" 
+AR Path="/5E8E1F08/60617B29" Ref="R?"  Part="1" 
+AR Path="/5FCD4DF5/60617B29" Ref="R?"  Part="1" 
+F 0 "R?" V 2100 1350 50  0000 C CNN
+F 1 "1k" V 2100 1700 50  0000 C CNN
+F 2 "RespiraWorks_Std:R_0603_1608Metric" V 1980 1550 50  0001 C CNN
+F 3 "~" H 2050 1550 50  0001 C CNN
+F 4 "" H 2050 1550 50  0001 C CNN "Manufacturer"
+	1    2050 1550
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 60617E0A
+P 2050 1650
+AR Path="/60617E0A" Ref="R?"  Part="1" 
+AR Path="/5E8AFE9D/60617E0A" Ref="R?"  Part="1" 
+AR Path="/5E8C8865/60617E0A" Ref="R?"  Part="1" 
+AR Path="/5E8E1F08/60617E0A" Ref="R?"  Part="1" 
+AR Path="/5FCD4DF5/60617E0A" Ref="R?"  Part="1" 
+F 0 "R?" V 2100 1450 50  0000 C CNN
+F 1 "1k" V 2100 1800 50  0000 C CNN
+F 2 "RespiraWorks_Std:R_0603_1608Metric" V 1980 1650 50  0001 C CNN
+F 3 "~" H 2050 1650 50  0001 C CNN
+F 4 "" H 2050 1650 50  0001 C CNN "Manufacturer"
+	1    2050 1650
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	2200 1450 2500 1450
+Wire Wire Line
+	800  1350 2500 1350
+Wire Wire Line
+	2200 1550 2500 1550
+Wire Wire Line
+	2200 1650 2500 1650
+Text Notes 13950 9800 0    79   Italic 0
+Unless noted otherwise:\n- Resistors are 1% tolerance\n- Capacitors < 47 nF are 5% tolerance\n- Capacitors ≥ 47 nF are 10% tolerance
 $EndSCHEMATC

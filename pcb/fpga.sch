@@ -18,9 +18,12 @@ L Connector_Generic:Conn_02x20_Odd_Even J?
 U 1 1 600DFDA5
 P 7550 2750
 F 0 "J?" H 7600 3867 50  0000 C CNN
-F 1 "Mates J5 on BEMicro MAX10" H 7750 1300 50  0000 C CNN
+F 1 "Mates J5 on BeMicro MAX10" H 7750 1300 50  0000 C CNN
 F 2 "RespiraWorks_Std:PinSocket_2x20_P2.54mm_Vertical" H 7550 2750 50  0001 C CNN
 F 3 "~" H 7550 2750 50  0001 C CNN
+F 4 "Samtec" H 7550 2750 50  0001 C CNN "Manufacturer"
+F 5 "ESW-120-33-G-D" H 7550 2750 50  0001 C CNN "Manufacturer PN"
+F 6 "Alt. ESQ-120-23-T-D" H 7550 2750 50  0001 C CNN "Sourcing Notes"
 	1    7550 2750
 	1    0    0    -1  
 $EndComp
@@ -180,6 +183,9 @@ F 0 "J?" H 3950 3817 50  0000 C CNN
 F 1 "Mates J4 on BeMicro MAX10" H 4000 1300 50  0000 C CNN
 F 2 "RespiraWorks_Std:PinSocket_2x20_P2.54mm_Vertical" H 3900 2700 50  0001 C CNN
 F 3 "~" H 3900 2700 50  0001 C CNN
+F 4 "Samtec" H 3900 2700 50  0001 C CNN "Manufacturer"
+F 5 "ESW-120-33-G-D" H 3900 2700 50  0001 C CNN "Manufacturer PN"
+F 6 "Alt. ESQ-120-23-T-D" H 3900 2700 50  0001 C CNN "Sourcing Notes"
 	1    3900 2700
 	1    0    0    -1  
 $EndComp

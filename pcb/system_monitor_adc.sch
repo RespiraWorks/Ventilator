@@ -23,6 +23,8 @@ F 0 "U?" H 7600 4050 50  0000 C CNN
 F 1 "ADC128D818" H 7800 3950 50  0000 C CNN
 F 2 "RespiraWorks_Std:TSSOP-16_4.4x5mm_P0.65mm" H 7500 3200 50  0001 C CIN
 F 3 "http://www.ti.com/lit/ds/symlink/adc128d818.pdf" H 7500 3200 50  0001 C CNN
+F 4 "Texas Instruments" H 7500 3200 50  0001 C CNN "Manufacturer"
+F 5 "ADC128D818CIMTX/NOPB" H 7500 3200 50  0001 C CNN "Manufacturer PN"
 	1    7500 3200
 	1    0    0    -1  
 $EndComp
@@ -96,8 +98,11 @@ F 0 "C?" H 3150 3700 50  0000 C CNN
 F 1 "100nF" H 3400 3800 50  0000 C CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 3088 3750 50  0001 C CNN
 F 3 "~" H 3050 3900 50  0001 C CNN
-F 4 "" H 3050 3900 50  0001 C CNN "Manufacturer"
+F 4 "Kemet" H 3050 3900 50  0001 C CNN "Manufacturer"
 F 5 "DNP" H 3350 3700 50  0000 C CNN "DNP"
+F 6 "X7R" H 3050 3900 50  0001 C CNN "Dielectric"
+F 7 "C0603C104K5RACTU" H 3050 3900 50  0001 C CNN "Manufacturer PN"
+F 8 "50V" H 3050 3900 50  0001 C CNN "Voltage"
 	1    3050 3900
 	1    0    0    1   
 $EndComp
@@ -129,8 +134,11 @@ F 0 "C?" H 5000 3700 50  0000 C CNN
 F 1 "100nF" H 5250 3800 50  0000 C CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 4938 3750 50  0001 C CNN
 F 3 "~" H 4900 3900 50  0001 C CNN
-F 4 "" H 4900 3900 50  0001 C CNN "Manufacturer"
+F 4 "Kemet" H 4900 3900 50  0001 C CNN "Manufacturer"
 F 5 "DNP" H 5200 3700 50  0000 C CNN "DNP"
+F 6 "X7R" H 4900 3900 50  0001 C CNN "Dielectric"
+F 7 "C0603C104K5RACTU" H 4900 3900 50  0001 C CNN "Manufacturer PN"
+F 8 "50V" H 4900 3900 50  0001 C CNN "Voltage"
 	1    4900 3900
 	1    0    0    1   
 $EndComp
@@ -322,11 +330,14 @@ AR Path="/600A8E88/5FFF0376" Ref="C?"  Part="1"
 AR Path="/600BE696/5FFF0376" Ref="C?"  Part="1" 
 AR Path="/603267F9/5FFF0376" Ref="C?"  Part="1" 
 AR Path="/60EBB32E/5FFF0376" Ref="C?"  Part="1" 
-F 0 "C?" H 7800 1500 50  0000 C CNN
-F 1 "100nF" H 8050 1600 50  0000 C CNN
+F 0 "C?" H 7800 1600 50  0000 C CNN
+F 1 "100nF" H 7950 1700 50  0000 C CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 7738 1550 50  0001 C CNN
 F 3 "~" H 7700 1700 50  0001 C CNN
-F 4 "" H 7700 1700 50  0001 C CNN "Manufacturer"
+F 4 "Kemet" H 7700 1700 50  0001 C CNN "Manufacturer"
+F 5 "X7R" H 7700 1700 50  0001 C CNN "Dielectric"
+F 6 "C0603C104K5RACTU" H 7700 1700 50  0001 C CNN "Manufacturer PN"
+F 7 "50V" H 7700 1700 50  0001 C CNN "Voltage"
 	1    7700 1700
 	1    0    0    1   
 $EndComp
@@ -385,11 +396,14 @@ AR Path="/600A8E88/5FFF86CD" Ref="C?"  Part="1"
 AR Path="/600BE696/5FFF86CD" Ref="C?"  Part="1" 
 AR Path="/603267F9/5FFF86CD" Ref="C?"  Part="1" 
 AR Path="/60EBB32E/5FFF86CD" Ref="C?"  Part="1" 
-F 0 "C?" H 8650 1500 50  0000 C CNN
-F 1 "1uF" H 8900 1600 50  0000 C CNN
+F 0 "C?" H 8650 1600 50  0000 C CNN
+F 1 "1uF" H 8750 1700 50  0000 C CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 8588 1550 50  0001 C CNN
 F 3 "~" H 8550 1700 50  0001 C CNN
-F 4 "" H 8550 1700 50  0001 C CNN "Manufacturer"
+F 4 "Kemet" H 8550 1700 50  0001 C CNN "Manufacturer"
+F 5 "X7R" H 8550 1700 50  0001 C CNN "Dielectric"
+F 6 "C0805C105K5RACTU" H 8550 1700 50  0001 C CNN "Manufacturer PN"
+F 7 "50V" H 8550 1700 50  0001 C CNN "Voltage"
 	1    8550 1700
 	1    0    0    1   
 $EndComp
@@ -438,6 +452,8 @@ F 1 "LM4120-IM5X-3.3" H 4150 3876 50  0000 C CNN
 F 2 "Package_TO_SOT_SMD:SOT-23-5" H 4200 3350 50  0001 L CIN
 F 3 "http://www.ti.com/lit/ds/symlink/lm4128.pdf" V 4150 3700 50  0001 C CIN
 F 4 "DNP" H 4350 3950 50  0000 C CNN "DNP"
+F 5 "Texas Instruments" H 4150 3600 50  0001 C CNN "Manufacturer"
+F 6 "LM4120IM5X-3.3/NOPB" H 4150 3600 50  0001 C CNN "Manufacturer PN"
 	1    4150 3600
 	1    0    0    -1  
 $EndComp

@@ -18,9 +18,11 @@ L RespiraWorks:ESQ-120-44-L-D J?
 U 1 1 5FDAF122
 P 5700 3350
 F 0 "J?" H 5725 4625 50  0000 C CNN
-F 1 "ESQ-120-44-L-D" H 5725 4534 50  0000 C CNN
+F 1 "Raspberry Pi" H 5725 4534 50  0000 C CNN
 F 2 "RespiraWorks_Std:PinHeader_2x20_P2.54mm_Vertical" H 5100 4450 50  0001 C CNN
 F 3 "" H 5100 4450 50  0001 C CNN
+F 4 "Samtec" H 5700 3350 50  0001 C CNN "Manufacturer"
+F 5 "ESQ-120-44-L-D" H 5700 3350 50  0001 C CNN "Manufacturer PN"
 	1    5700 3350
 	1    0    0    -1  
 $EndComp
@@ -321,7 +323,10 @@ F 0 "C?" H 8015 1896 50  0000 L CNN
 F 1 "100nF" H 8015 1805 50  0000 L CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 7938 1700 50  0001 C CNN
 F 3 "~" H 7900 1850 50  0001 C CNN
-F 4 "10V" H 7900 1850 50  0001 C CNN "Voltage Rating"
+F 4 "X7R" H 7900 1850 50  0001 C CNN "Dielectric"
+F 5 "Kemet" H 7900 1850 50  0001 C CNN "Manufacturer"
+F 6 "C0603C104K5RACTU" H 7900 1850 50  0001 C CNN "Manufacturer PN"
+F 7 "50V" H 7900 1850 50  0001 C CNN "Voltage"
 	1    7900 1850
 	1    0    0    -1  
 $EndComp
@@ -333,7 +338,10 @@ F 0 "C?" H 8465 1896 50  0000 L CNN
 F 1 "1uF" H 8465 1805 50  0000 L CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 8388 1700 50  0001 C CNN
 F 3 "~" H 8350 1850 50  0001 C CNN
-F 4 "10V" H 8350 1850 50  0001 C CNN "Voltage Rating"
+F 4 "X7R" H 8350 1850 50  0001 C CNN "Dielectric"
+F 5 "Kemet" H 8350 1850 50  0001 C CNN "Manufacturer"
+F 6 "C0805C105K5RACTU" H 8350 1850 50  0001 C CNN "Manufacturer PN"
+F 7 "50V" H 8350 1850 50  0001 C CNN "Voltage"
 	1    8350 1850
 	1    0    0    -1  
 $EndComp
@@ -409,8 +417,10 @@ U 1 1 60436098
 P 9850 3550
 F 0 "J?" H 9930 3542 50  0000 L CNN
 F 1 "Touchscreen power" H 9930 3451 50  0000 L CNN
-F 2 "" H 9850 3550 50  0001 C CNN
+F 2 "RespiraWorks_Std:Molex_Micro-Fit_3.0_43650-0200_1x02_P3.00mm_Horizontal" H 9850 3550 50  0001 C CNN
 F 3 "~" H 9850 3550 50  0001 C CNN
+F 4 "Molex" H 9850 3550 50  0001 C CNN "Manufacturer"
+F 5 "43650-0200" H 9850 3550 50  0001 C CNN "Manufacturer PN"
 	1    9850 3550
 	1    0    0    -1  
 $EndComp

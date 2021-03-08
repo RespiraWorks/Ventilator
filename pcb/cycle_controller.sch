@@ -240,7 +240,7 @@ F 7 "50V" H 4700 1750 50  0001 C CNN "Voltage"
 	1    0    0    -1  
 $EndComp
 $Comp
-L Switch:SW_Push SW?
+L RespiraWorks_Std:SW_Push SW?
 U 1 1 5FED4D7F
 P 4100 1800
 F 0 "SW?" V 4054 1948 50  0000 L CNN
@@ -542,7 +542,7 @@ Wire Wire Line
 Wire Wire Line
 	6400 3700 6700 3700
 $Comp
-L Switch:SW_Push SW?
+L RespiraWorks_Std:SW_Push SW?
 U 1 1 5FF60966
 P 2200 4550
 F 0 "SW?" V 2154 4698 50  0000 L CNN

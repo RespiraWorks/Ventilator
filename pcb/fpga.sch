@@ -164,6 +164,7 @@ F 0 "R?" H 3520 1646 50  0000 L CNN
 F 1 "4.7k" H 3520 1555 50  0000 L CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 3380 1600 50  0001 C CNN
 F 3 "~" H 3450 1600 50  0001 C CNN
+F 4 "DNP" V 3450 1600 50  0000 C CNN "DNP"
 	1    3450 1600
 	1    0    0    -1  
 $EndComp
@@ -197,6 +198,7 @@ F 0 "R?" H 4420 1646 50  0000 L CNN
 F 1 "4.7k" H 4420 1555 50  0000 L CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 4280 1600 50  0001 C CNN
 F 3 "~" H 4350 1600 50  0001 C CNN
+F 4 "DNP" V 4350 1600 50  0000 C CNN "DNP"
 	1    4350 1600
 	1    0    0    -1  
 $EndComp
@@ -489,4 +491,6 @@ Wire Wire Line
 	7200 1200 7200 2350
 Text Notes 6200 1050 0    50   ~ 0
 Place for optional fuse
+Text Notes 3350 1650 2    50   ~ 0
+BeMicro MAX10 board has\nonboard I2C pull-ups
 $EndSCHEMATC

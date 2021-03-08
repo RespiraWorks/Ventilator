@@ -157,7 +157,7 @@ Connection ~ 4300 3300
 Wire Wire Line
 	5600 3600 5600 3850
 $Comp
-L Power_Protection:USBLC6-2SC6 U?
+L RespiraWorks_Std:USBLC6-2SC6 U?
 U 1 1 5FFD5C58
 P 2400 3600
 AR Path="/5FCD4EEA/600F5EF3/5FFD5C58" Ref="U?"  Part="1" 

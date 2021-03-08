@@ -414,15 +414,15 @@ Wire Wire Line
 $Comp
 L RespiraWorks_Std:Conn_01x02 J?
 U 1 1 60436098
-P 9850 3550
-F 0 "J?" H 9930 3542 50  0000 L CNN
-F 1 "Touchscreen power" H 9930 3451 50  0000 L CNN
-F 2 "RespiraWorks_Std:Molex_Micro-Fit_3.0_43650-0200_1x02_P3.00mm_Horizontal" H 9850 3550 50  0001 C CNN
-F 3 "~" H 9850 3550 50  0001 C CNN
-F 4 "Molex" H 9850 3550 50  0001 C CNN "Manufacturer"
-F 5 "43650-0200" H 9850 3550 50  0001 C CNN "Manufacturer PN"
-	1    9850 3550
-	1    0    0    -1  
+P 9850 3650
+F 0 "J?" H 9930 3642 50  0000 L CNN
+F 1 "Touchscreen power" H 9930 3551 50  0000 L CNN
+F 2 "RespiraWorks_Std:Molex_Micro-Fit_3.0_43650-0200_1x02_P3.00mm_Horizontal" H 9850 3650 50  0001 C CNN
+F 3 "~" H 9850 3650 50  0001 C CNN
+F 4 "Molex" H 9850 3650 50  0001 C CNN "Manufacturer"
+F 5 "43650-0200" H 9850 3650 50  0001 C CNN "Manufacturer PN"
+	1    9850 3650
+	1    0    0    1   
 $EndComp
 Wire Wire Line
 	9650 3550 9200 3550

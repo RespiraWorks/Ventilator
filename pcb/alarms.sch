@@ -102,7 +102,7 @@ F 5 "MMSZ4679T1G" H 1350 2350 50  0001 C CNN "Manufacturer PN"
 	0    1    1    0   
 $EndComp
 $Comp
-L Transistor_BJT:MMBT3904 Q?
+L Device:Q_NPN_BCE Q?
 U 1 1 5FDE7881
 P 1700 2850
 F 0 "Q?" H 1500 2550 50  0000 L CNN
@@ -290,7 +290,7 @@ F 5 "MMSZ4684T1G" H 3650 3350 50  0001 C CNN "Manufacturer PN"
 	0    1    1    0   
 $EndComp
 $Comp
-L Transistor_BJT:MMBT3904 Q?
+L Device:Q_NPN_BCE Q?
 U 1 1 5FDE7A43
 P 4000 4000
 F 0 "Q?" H 4200 4000 50  0000 L CNN
@@ -1375,7 +1375,7 @@ F 5 "MMSZ4684T1G" H 3650 8150 50  0001 C CNN "Manufacturer PN"
 	0    1    1    0   
 $EndComp
 $Comp
-L Transistor_BJT:MMBT3904 Q?
+L Device:Q_NPN_BCE Q?
 U 1 1 60926782
 P 4200 8650
 AR Path="/5FCD4DF5/60926782" Ref="Q?"  Part="1" 
@@ -1463,7 +1463,7 @@ $EndComp
 Wire Wire Line
 	3650 7250 3650 8000
 $Comp
-L Transistor_BJT:MMBT3906 Q?
+L Device:Q_PNP_BCE Q?
 U 1 1 609267AA
 P 5050 7350
 AR Path="/5FCD4DF5/609267AA" Ref="Q?"  Part="1" 
@@ -1480,7 +1480,7 @@ $EndComp
 Wire Wire Line
 	5250 7250 5300 7250
 $Comp
-L Transistor_BJT:MMBT3904 Q?
+L Device:Q_NPN_BCE Q?
 U 1 1 609267B4
 P 5150 8450
 AR Path="/5FCD4DF5/609267B4" Ref="Q?"  Part="1" 
@@ -1819,7 +1819,7 @@ $EndComp
 Wire Wire Line
 	11400 6600 11900 6600
 $Comp
-L Transistor_BJT:MMBT3906 Q?
+L Device:Q_PNP_BCE Q?
 U 1 1 609268A3
 P 12400 6600
 AR Path="/5FCD4DF5/609268A3" Ref="Q?"  Part="1" 

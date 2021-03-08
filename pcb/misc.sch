@@ -1228,7 +1228,7 @@ Blower control\n\n1: +5V in\n2: PWM out/Speed control voltage out\n3: ~Enable~\n
 Text HLabel 7150 3750 0    50   Input ~ 0
 Blower-Enable
 $Comp
-L Transistor_BJT:MMBT3904 Q?
+L Device:Q_NPN_BCE Q?
 U 1 1 60376E01
 P 8200 3750
 AR Path="/5FCD4DF5/60376E01" Ref="Q?"  Part="1" 

@@ -1914,7 +1914,7 @@ Connection ~ 8500 5250
 Text Notes 6950 5400 0    50   ~ 0
 5.4V nominal
 $Comp
-L Diode:BAT54J D?
+L Device:D_Schottky D?
 U 1 1 60756F63
 P 2850 4800
 AR Path="/6041384A/60567D6E/60756F63" Ref="D?"  Part="1" 
@@ -1929,7 +1929,7 @@ F 5 "BAT54J,115" H 2850 4800 50  0001 C CNN "Manufacturer PN"
 	0    1    1    0   
 $EndComp
 $Comp
-L Diode:BAT54J D?
+L Device:D_Schottky D?
 U 1 1 6075D700
 P 2850 4500
 AR Path="/6041384A/60567D6E/6075D700" Ref="D?"  Part="1" 

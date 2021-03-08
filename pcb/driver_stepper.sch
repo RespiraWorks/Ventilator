@@ -1413,7 +1413,7 @@ Text Label 9100 8250 0    50   ~ 0
 Text Label 8350 8250 0    50   ~ 0
 3V3
 $Comp
-L Diode:BAT54J D?
+L Device:D_Schottky D?
 U 1 1 60767EBA
 P 7850 6700
 AR Path="/6041384A/60567D6E/60767EBA" Ref="D?"  Part="1" 
@@ -1430,7 +1430,7 @@ F 5 "BAT54J,115" H 7850 6700 50  0001 C CNN "Manufacturer PN"
 	0    1    -1   0   
 $EndComp
 $Comp
-L Diode:BAT54J D?
+L Device:D_Schottky D?
 U 1 1 60774FB7
 P 7850 6400
 AR Path="/6041384A/60567D6E/60774FB7" Ref="D?"  Part="1" 
@@ -1677,6 +1677,7 @@ P 7500 6550
 AR Path="/5FCD4B8E/5FCD4BC5/608FB6E7" Ref="C?"  Part="1" 
 AR Path="/5FCD4B8E/5FE27F70/608FB6E7" Ref="C?"  Part="1" 
 AR Path="/6052CC9F/608FB6E7" Ref="C?"  Part="1" 
+AR Path="/5FCD50A5/608FB6E7" Ref="C?"  Part="1" 
 F 0 "C?" V 7750 6550 50  0000 L CNN
 F 1 "10nF" V 7650 6450 50  0000 L CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 7538 6400 50  0001 C CNN

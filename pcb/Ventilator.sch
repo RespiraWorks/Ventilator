@@ -2789,12 +2789,12 @@ CC-SDA
 Text Label 12100 6950 0    50   ~ 0
 CC-SCL
 $Comp
-L Diode:BAT54J D?
+L Device:D_Schottky D?
 U 1 1 6072681D
 P 14100 2250
 AR Path="/6041384A/60567D6E/6072681D" Ref="D?"  Part="1" 
 AR Path="/6072681D" Ref="D?"  Part="1" 
-F 0 "D?" H 14100 2350 50  0000 C CNN
+F 0 "D?" V 14100 2400 50  0000 C CNN
 F 1 "BAT54J" V 14100 2050 50  0000 C CNN
 F 2 "RespiraWorks_Std:D_SOD-323F" H 14100 2075 50  0001 C CNN
 F 3 "https://assets.nexperia.com/documents/data-sheet/BAT54J.pdf" H 14100 2250 50  0001 C CNN

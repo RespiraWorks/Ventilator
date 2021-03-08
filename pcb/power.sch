@@ -337,7 +337,7 @@ F 3 "" H 7000 3650 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Diode:BAT54J D?
+L Device:D_Schottky D?
 U 1 1 60750DC7
 P 4900 4750
 AR Path="/6041384A/60567D6E/60750DC7" Ref="D?"  Part="1" 
@@ -352,7 +352,7 @@ F 5 "BAT54J,115" H 4900 4750 50  0001 C CNN "Manufacturer PN"
 	0    1    1    0   
 $EndComp
 $Comp
-L Diode:BAT54J D?
+L Device:D_Schottky D?
 U 1 1 6075362F
 P 4900 4450
 AR Path="/6041384A/60567D6E/6075362F" Ref="D?"  Part="1" 

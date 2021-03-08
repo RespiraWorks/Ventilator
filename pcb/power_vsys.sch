@@ -866,7 +866,7 @@ Wire Wire Line
 Wire Wire Line
 	6450 4400 7450 4400
 $Comp
-L Diode:BAT54J D?
+L Device:D_Schottky D?
 U 1 1 6028E91B
 P 5100 1800
 F 0 "D?" H 5100 1900 50  0000 C CNN

@@ -999,9 +999,9 @@ Wire Wire Line
 Wire Wire Line
 	3750 3500 5000 3500
 Wire Wire Line
-	2700 3100 2300 3100
+	2700 3100 2500 3100
 Text HLabel 1350 3100 0    50   Input ~ 0
-VSys-En
+VSys-Power-Off
 $Comp
 L Device:R R?
 U 1 1 602BAB86
@@ -1131,4 +1131,39 @@ Text Notes 7350 2450 0    50   ~ 0
 = 90.9k,\nto reduce BOM
 Text Notes 7400 3100 0    50   ~ 0
 Regulates @ FB = 1.2V;\nNom. 12.1V out
+$Comp
+L Device:R R?
+U 1 1 6058DDDE
+P 2500 3250
+AR Path="/601A64F8/6058DDDE" Ref="R?"  Part="1" 
+AR Path="/601A64F8/60567144/6058DDDE" Ref="R?"  Part="1" 
+AR Path="/601A64F8/60567D6E/6058DDDE" Ref="R?"  Part="1" 
+AR Path="/6023BF6A/60567D6E/6058DDDE" Ref="R?"  Part="1" 
+AR Path="/6041384A/60567D6E/6058DDDE" Ref="R?"  Part="1" 
+F 0 "R?" H 2350 3300 50  0000 L CNN
+F 1 "10k" H 2300 3200 50  0000 L CNN
+F 2 "RespiraWorks_Std:R_0603_1608Metric" V 2430 3250 50  0001 C CNN
+F 3 "~" H 2500 3250 50  0001 C CNN
+	1    2500 3250
+	-1   0    0    1   
+$EndComp
+Connection ~ 2500 3100
+Wire Wire Line
+	2500 3100 2300 3100
+$Comp
+L power:GND #PWR?
+U 1 1 6058E3DA
+P 2500 3400
+AR Path="/601A64F8/6058E3DA" Ref="#PWR?"  Part="1" 
+AR Path="/601A64F8/60567144/6058E3DA" Ref="#PWR?"  Part="1" 
+AR Path="/601A64F8/60567D6E/6058E3DA" Ref="#PWR?"  Part="1" 
+AR Path="/6023BF6A/60567D6E/6058E3DA" Ref="#PWR?"  Part="1" 
+AR Path="/6041384A/60567D6E/6058E3DA" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 2500 3150 50  0001 C CNN
+F 1 "GND" H 2505 3227 50  0000 C CNN
+F 2 "" H 2500 3400 50  0001 C CNN
+F 3 "" H 2500 3400 50  0001 C CNN
+	1    2500 3400
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC

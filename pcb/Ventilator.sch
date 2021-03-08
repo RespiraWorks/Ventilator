@@ -314,6 +314,7 @@ F11 "Bat-Alert" O R 3250 9750 50
 F12 "Switched-VLink" O R 3250 9050 50 
 F13 "VBat-Sense" O R 3250 10000 50 
 F14 "Vin-Sense" O R 3250 10100 50 
+F15 "VSys-Power-Off" I L 1450 9700 50 
 $EndSheet
 $Comp
 L RespiraWorks:+3.3V_Ctrl #PWR?
@@ -1893,20 +1894,6 @@ F 3 "~" H 2700 2150 50  0001 C CNN
 $EndComp
 $Comp
 L Connector:TestPoint TP?
-U 1 1 60A1EFEC
-P 11000 8850
-AR Path="/5FCD50A5/60A1EFEC" Ref="TP?"  Part="1" 
-AR Path="/6052CC9F/60A1EFEC" Ref="TP?"  Part="1" 
-AR Path="/60A1EFEC" Ref="TP?"  Part="1" 
-F 0 "TP?" V 11000 9100 50  0000 C CNN
-F 1 "TP" V 11050 8900 50  0001 C CNN
-F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 11200 8850 50  0001 C CNN
-F 3 "~" H 11200 8850 50  0001 C CNN
-	1    11000 8850
-	0    1    1    0   
-$EndComp
-$Comp
-L Connector:TestPoint TP?
 U 1 1 60A2ACA6
 P 11000 8950
 AR Path="/5FCD50A5/60A2ACA6" Ref="TP?"  Part="1" 
@@ -2986,4 +2973,12 @@ Wire Wire Line
 	13100 4500 13050 4500
 Wire Wire Line
 	13300 4500 13400 4500
+Wire Wire Line
+	1450 9700 650  9700
+Text Label 650  9700 0    50   ~ 0
+VSys-Power-Off
+Text Label 12000 8850 2    50   ~ 0
+VSys-Power-Off
+Wire Wire Line
+	11000 8850 12000 8850
 $EndSCHEMATC

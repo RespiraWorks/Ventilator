@@ -43,7 +43,7 @@ F7 "SDA" B L 7550 4850 50
 F8 "Alrt" O L 7550 4950 50 
 $EndSheet
 $Sheet
-S 8400 3200 700  450 
+S 8400 3200 700  500 
 U 60567D6E
 F0 "12V System Buck Converter" 50
 F1 "power_vsys.sch" 50
@@ -51,6 +51,7 @@ F2 "Vin" I L 8400 3300 50
 F3 "12Vout" O R 9100 3300 50 
 F4 "VLogic" I L 8400 3450 50 
 F5 "PG" O R 9100 3450 50 
+F6 "VSys-Power-Off" I L 8400 3600 50 
 $EndSheet
 Text Label 8950 4950 0    50   ~ 0
 Bat-N
@@ -620,4 +621,10 @@ Wire Wire Line
 	6650 5800 7800 5800
 Text Notes 7100 6400 0    50   ~ 0
 Scaling of 0.15x:\n22Vin = 3.3Vout\n18Vin = 2.7Vout\n13Vin = 1.95Vout\n11Vin = 1.65Vout\n\n240 Hz LPF
+Text Notes 9800 3350 0    50   ~ 0
+12V @ 7A
+Text HLabel 8300 3600 0    50   Input ~ 0
+VSys-Power-Off
+Wire Wire Line
+	8300 3600 8400 3600
 $EndSCHEMATC

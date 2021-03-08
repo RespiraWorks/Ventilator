@@ -661,7 +661,7 @@ Wire Wire Line
 	1800 2000 1900 2000
 Connection ~ 3100 2650
 $Comp
-L RespiraWorks_Std:CSD17304Q3 Q?
+L Device:Q_NMOS_SGD Q?
 U 1 1 60580FC0
 P 2100 2100
 AR Path="/601A64F8/60580FC0" Ref="Q?"  Part="1" 
@@ -1826,7 +1826,7 @@ F 7 "GRM32EC72A106KE05L" H 3650 2150 50  0001 C CNN "Manufacturer PN"
 	1    0    0    -1  
 $EndComp
 $Comp
-L RespiraWorks_Std:CSD17304Q3 Q?
+L Device:Q_NMOS_SGD Q?
 U 1 1 60321C9D
 P 2700 2100
 AR Path="/601A64F8/60321C9D" Ref="Q?"  Part="1" 
@@ -1850,7 +1850,7 @@ Wire Wire Line
 	4800 2000 5000 2000
 Connection ~ 4800 2000
 $Comp
-L RespiraWorks_Std:CSD17304Q3 Q?
+L Device:Q_NMOS_SGD Q?
 U 1 1 60337344
 P 4700 2200
 AR Path="/601A64F8/60337344" Ref="Q?"  Part="1" 
@@ -1868,7 +1868,7 @@ F 5 "CSD18563Q5A" V 4700 2200 50  0001 C CNN "Manufacturer PN"
 	1    0    0    -1  
 $EndComp
 $Comp
-L RespiraWorks_Std:CSD17304Q3 Q?
+L Device:Q_NMOS_SGD Q?
 U 1 1 6032FCBA
 P 4350 2100
 AR Path="/601A64F8/6032FCBA" Ref="Q?"  Part="1" 
@@ -1896,7 +1896,7 @@ AR Path="/5FCD4B8E/603C510C/60567144/605810DE" Ref="Q?"  Part="1"
 AR Path="/6041384A/60567144/605810DE" Ref="Q?"  Part="1" 
 F 0 "Q?" V 7850 2700 50  0000 L CNN
 F 1 "DMP3013SFV-7" V 7950 2550 50  0000 L CNN
-F 2 "Package_SON:Diodes_PowerDI3333-8" H 8300 2850 50  0001 C CNN
+F 2 "RespiraWorks_Std:Diodes_PowerDI3333-8" H 8300 2850 50  0001 C CNN
 F 3 "https://www.diodes.com/assets/Datasheets/DMP3013SFV.pdf" H 7700 3000 50  0001 C CNN
 F 4 "Diodes Inc." V 7800 3000 50  0001 C CNN "Manufacturer"
 F 5 "DMP3013SFV-7" V 7800 3000 50  0001 C CNN "Manufacturer PN"

@@ -55,7 +55,6 @@ F 1 "3K 0.1%" H 3850 3550 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 4030 3450 50  0001 C CNN
 F 3 "~" H 4100 3450 50  0001 C CNN
 F 4 "KOA Speer" H 4100 3450 50  0001 C CNN "Manufacturer"
-F 5 "RK73H2BTTD1004F" H 4100 3450 50  0001 C CNN "Part Number"
 	1    4100 3450
 	-1   0    0    1   
 $EndComp
@@ -105,7 +104,6 @@ F 1 "100nF 100V X7R" H 5700 2600 50  0000 C CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 5388 2550 50  0001 C CNN
 F 3 "~" H 5350 2700 50  0001 C CNN
 F 4 "" H 5350 2700 50  0001 C CNN "Manufacturer"
-F 5 "" H 5350 2700 50  0001 C CNN "Part Number"
 	1    5350 2700
 	1    0    0    1   
 $EndComp
@@ -174,7 +172,6 @@ F 1 "2.7K 0.1%" H 3050 3600 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 3280 3500 50  0001 C CNN
 F 3 "~" H 3350 3500 50  0001 C CNN
 F 4 "KOA Speer" H 3350 3500 50  0001 C CNN "Manufacturer"
-F 5 "RK73H2BTTD1004F" H 3350 3500 50  0001 C CNN "Part Number"
 	1    3350 3500
 	-1   0    0    1   
 $EndComp
@@ -200,7 +197,6 @@ F 1 "82 0.1%" H 3100 3900 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 3280 3800 50  0001 C CNN
 F 3 "~" H 3350 3800 50  0001 C CNN
 F 4 "KOA Speer" H 3350 3800 50  0001 C CNN "Manufacturer"
-F 5 "RK73H2BTTD1004F" H 3350 3800 50  0001 C CNN "Part Number"
 	1    3350 3800
 	-1   0    0    1   
 $EndComp
@@ -261,7 +257,6 @@ F 1 "2.7K 0.1%" H 2500 2800 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 2730 2700 50  0001 C CNN
 F 3 "~" H 2800 2700 50  0001 C CNN
 F 4 "KOA Speer" H 2800 2700 50  0001 C CNN "Manufacturer"
-F 5 "RK73H2BTTD1004F" H 2800 2700 50  0001 C CNN "Part Number"
 	1    2800 2700
 	-1   0    0    1   
 $EndComp
@@ -340,7 +335,6 @@ F 1 "1.5K 1%" V 6100 3350 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 5930 3400 50  0001 C CNN
 F 3 "~" H 6000 3400 50  0001 C CNN
 F 4 "KOA Speer" H 6000 3400 50  0001 C CNN "Manufacturer"
-F 5 "RK73H2BTTD1004F" H 6000 3400 50  0001 C CNN "Part Number"
 	1    6000 3400
 	0    -1   -1   0   
 $EndComp
@@ -433,7 +427,6 @@ F 1 "DNP" H 5700 3700 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 5480 3650 50  0001 C CNN
 F 3 "~" H 5550 3650 50  0001 C CNN
 F 4 "KOA Speer" H 5550 3650 50  0001 C CNN "Manufacturer"
-F 5 "RK73H2BTTD1004F" H 5550 3650 50  0001 C CNN "Part Number"
 	1    5550 3650
 	1    0    0    -1  
 $EndComp
@@ -491,7 +484,6 @@ F 1 "10K 1%" V 3200 3200 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 3030 3200 50  0001 C CNN
 F 3 "~" H 3100 3200 50  0001 C CNN
 F 4 "KOA Speer" H 3100 3200 50  0001 C CNN "Manufacturer"
-F 5 "RK73H2BTTD1004F" H 3100 3200 50  0001 C CNN "Part Number"
 	1    3100 3200
 	0    -1   -1   0   
 $EndComp

@@ -40,3 +40,10 @@ controller_coverage
 # KiCAD backups
 *.sch-bak
 *.kicad_pcb-bak
+*.bak
+# KiCAD temp/unneeded cache files
+_autosave-*
+*.000
+fp-info-cache
+# (project symbol cache library not needed as all symbols kept in RespiraWorks libraries)
+*-cache.lib

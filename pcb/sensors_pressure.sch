@@ -3,10 +3,10 @@ EELAYER 30 0
 EELAYER END
 $Descr A 11000 8500
 encoding utf-8
-Sheet 13 30
+Sheet 12 38
 Title "Pressure Sensors"
 Date ""
-Rev "2.0"
+Rev "A"
 Comp "RespiraWorks"
 Comment1 ""
 Comment2 ""
@@ -18,40 +18,40 @@ L Connector:TestPoint TP?
 U 1 1 5FFD9664
 P 3250 1400
 F 0 "TP?" H 3308 1518 50  0000 L CNN
-F 1 "Inh_Flow" H 3100 1600 50  0000 L CNN
+F 1 "Inh-Flow" H 3100 1600 50  0000 L CNN
 F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 3450 1400 50  0001 C CNN
 F 3 "~" H 3450 1400 50  0001 C CNN
 	1    3250 1400
 	1    0    0    -1  
 $EndComp
 Text HLabel 3400 1400 2    50   Output ~ 0
-Inh_Flow
+Inh-Flow
 $Comp
 L Connector:TestPoint TP?
 U 1 1 6000A26F
 P 7950 1250
 F 0 "TP?" H 8008 1368 50  0000 L CNN
-F 1 "Mix_Tank_Pressure" H 7800 1450 50  0000 L CNN
+F 1 "Mix-Tank-Pressure" H 7800 1450 50  0000 L CNN
 F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 8150 1250 50  0001 C CNN
 F 3 "~" H 8150 1250 50  0001 C CNN
 	1    7950 1250
 	1    0    0    -1  
 $EndComp
 Text HLabel 8100 1250 2    50   Output ~ 0
-Mix_Tank_Pressure
+Mix-Tank-Pressure
 $Comp
 L Connector:TestPoint TP?
 U 1 1 600210E5
 P 8000 2050
 F 0 "TP?" H 8058 2168 50  0000 L CNN
-F 1 "Patient_Pressure" H 7850 2250 50  0000 L CNN
+F 1 "Patient-Pressure" H 7850 2250 50  0000 L CNN
 F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 8200 2050 50  0001 C CNN
 F 3 "~" H 8200 2050 50  0001 C CNN
 	1    8000 2050
 	1    0    0    -1  
 $EndComp
 Text HLabel 8150 2050 2    50   Output ~ 0
-Patient_Pressure
+Patient-Pressure
 $Sheet
 S 900  1300 1850 450 
 U 600630A6
@@ -128,39 +128,39 @@ Wire Wire Line
 Wire Wire Line
 	3250 2200 3400 2200
 Text HLabel 3400 3800 2    50   Output ~ 0
-Oxy_Pressure
+Oxy-Pressure
 $Comp
 L Connector:TestPoint TP?
 U 1 1 5FFECEF2
 P 3250 3800
 F 0 "TP?" H 3308 3918 50  0000 L CNN
-F 1 "Oxy_Pressure" H 3100 4000 50  0000 L CNN
+F 1 "Oxy-Pressure" H 3100 4000 50  0000 L CNN
 F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 3450 3800 50  0001 C CNN
 F 3 "~" H 3450 3800 50  0001 C CNN
 	1    3250 3800
 	1    0    0    -1  
 $EndComp
 Text HLabel 3400 3000 2    50   Output ~ 0
-Oxy_Flow
+Oxy-Flow
 $Comp
 L Connector:TestPoint TP?
 U 1 1 5FFE3200
 P 3250 3000
 F 0 "TP?" H 3308 3118 50  0000 L CNN
-F 1 "Oxy_Flow" H 3100 3200 50  0000 L CNN
+F 1 "Oxy-Flow" H 3100 3200 50  0000 L CNN
 F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 3450 3000 50  0001 C CNN
 F 3 "~" H 3450 3000 50  0001 C CNN
 	1    3250 3000
 	1    0    0    -1  
 $EndComp
 Text HLabel 3400 2200 2    50   Output ~ 0
-Exh_Flow
+Exh-Flow
 $Comp
 L Connector:TestPoint TP?
 U 1 1 5FFDF3BD
 P 3250 2200
 F 0 "TP?" H 3308 2318 50  0000 L CNN
-F 1 "Exh_Flow" H 3100 2400 50  0000 L CNN
+F 1 "Exh-Flow" H 3100 2400 50  0000 L CNN
 F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 3450 2200 50  0001 C CNN
 F 3 "~" H 3450 2200 50  0001 C CNN
 	1    3250 2200
@@ -299,6 +299,8 @@ F 0 "U?" H 2922 6321 50  0000 R CNN
 F 1 "BMP280" H 2922 6230 50  0000 R CNN
 F 2 "RespiraWorks:Bosch_BMP280" H 2950 6350 50  0001 C CNN
 F 3 "" H 3250 6350 50  0001 C CNN
+F 4 "Bosch" H 3250 6300 50  0001 C CNN "Manufacturer"
+F 5 "BMP280" H 3250 6300 50  0001 C CNN "Manufacturer PN"
 	1    3250 6300
 	1    0    0    -1  
 $EndComp
@@ -323,11 +325,13 @@ AR Path="/5FCD4EEA/600F723B/5FFC765F" Ref="C?"  Part="1"
 AR Path="/5FCD4EEA/5FFC765F" Ref="C?"  Part="1" 
 AR Path="/5FCD4E9D/5FFC765F" Ref="C?"  Part="1" 
 F 0 "C?" H 2950 5300 50  0000 C CNN
-F 1 "100nF 100V X7R" H 3200 5400 50  0000 C CNN
+F 1 "100nF" H 3200 5400 50  0000 C CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 2888 5350 50  0001 C CNN
 F 3 "~" H 2850 5500 50  0001 C CNN
-F 4 "" H 2850 5500 50  0001 C CNN "Manufacturer"
-F 5 "" H 2850 5500 50  0001 C CNN "Part Number"
+F 4 "Kemet" H 2850 5500 50  0001 C CNN "Manufacturer"
+F 5 "X7R" H 2850 5500 50  0001 C CNN "Dielectric"
+F 6 "C0603C104K5RACTU" H 2850 5500 50  0001 C CNN "Manufacturer PN"
+F 7 "50V" H 2850 5500 50  0001 C CNN "Voltage"
 	1    2850 5500
 	-1   0    0    1   
 $EndComp
@@ -379,11 +383,13 @@ AR Path="/5FCD4EEA/600F723B/5FFC8736" Ref="C?"  Part="1"
 AR Path="/5FCD4EEA/5FFC8736" Ref="C?"  Part="1" 
 AR Path="/5FCD4E9D/5FFC8736" Ref="C?"  Part="1" 
 F 0 "C?" H 3400 5300 50  0000 C CNN
-F 1 "100nF 100V X7R" H 3650 5400 50  0000 C CNN
+F 1 "100nF" H 3650 5400 50  0000 C CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 3338 5350 50  0001 C CNN
 F 3 "~" H 3300 5500 50  0001 C CNN
-F 4 "" H 3300 5500 50  0001 C CNN "Manufacturer"
-F 5 "" H 3300 5500 50  0001 C CNN "Part Number"
+F 4 "Kemet" H 3300 5500 50  0001 C CNN "Manufacturer"
+F 5 "X7R" H 3300 5500 50  0001 C CNN "Dielectric"
+F 6 "C0603C104K5RACTU" H 3300 5500 50  0001 C CNN "Manufacturer PN"
+F 7 "50V" H 3300 5500 50  0001 C CNN "Voltage"
 	1    3300 5500
 	1    0    0    1   
 $EndComp
@@ -501,7 +507,6 @@ F 1 "0" V 3950 5850 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 3930 6000 50  0001 C CNN
 F 3 "~" H 4000 6000 50  0001 C CNN
 F 4 "KOA Speer" H 4000 6000 50  0001 C CNN "Manufacturer"
-F 5 "RK73H2BTTD1004F" H 4000 6000 50  0001 C CNN "Part Number"
 	1    4000 6000
 	0    1    1    0   
 $EndComp
@@ -549,7 +554,6 @@ F 1 "0" V 4350 6050 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 4330 6200 50  0001 C CNN
 F 3 "~" H 4400 6200 50  0001 C CNN
 F 4 "KOA Speer" H 4400 6200 50  0001 C CNN "Manufacturer"
-F 5 "RK73H2BTTD1004F" H 4400 6200 50  0001 C CNN "Part Number"
 	1    4400 6200
 	0    1    1    0   
 $EndComp
@@ -572,7 +576,7 @@ AR Path="/6017BD7E/5FFEAB06" Ref="JP?"  Part="1"
 AR Path="/5FCD4E9D/5FFEAB06" Ref="JP?"  Part="1" 
 F 0 "JP?" V 3750 6525 50  0000 L CNN
 F 1 "Jumper_NC_Small" V 3795 6524 50  0001 L CNN
-F 2 "" H 3750 6450 50  0001 C CNN
+F 2 "RespiraWorks_Std:SolderJumper-2_P1.3mm_Bridged_RoundedPad1.0x1.5mm" H 3750 6450 50  0001 C CNN
 F 3 "~" H 3750 6450 50  0001 C CNN
 	1    3750 6450
 	0    1    1    0   
@@ -614,4 +618,7 @@ Text Notes 3350 7050 0    50   ~ 0
 Ambient pressure/temperature\nI2C addr. 1110 110
 Text Notes 3700 5850 0    50   ~ 0
 Remove 0-ohm resistors\nif using ambient pressure\nsensor on daughterboard
+Wire Wire Line
+	3150 6850 3050 6850
+Connection ~ 3050 6850
 $EndSCHEMATC

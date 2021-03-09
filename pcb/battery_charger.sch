@@ -660,24 +660,6 @@ Wire Wire Line
 Wire Wire Line
 	1800 2000 1900 2000
 Connection ~ 3100 2650
-$Comp
-L Device:Q_NMOS_SGD Q?
-U 1 1 60580FC0
-P 2100 2100
-AR Path="/601A64F8/60580FC0" Ref="Q?"  Part="1" 
-AR Path="/601A64F8/60567144/60580FC0" Ref="Q?"  Part="1" 
-AR Path="/6023BF6A/60567144/60580FC0" Ref="Q?"  Part="1" 
-AR Path="/5FCD4B8E/603C510C/60567144/60580FC0" Ref="Q?"  Part="1" 
-AR Path="/6041384A/60567144/60580FC0" Ref="Q?"  Part="1" 
-F 0 "Q?" V 2650 2100 50  0000 C CNN
-F 1 "BSC065N06LS5ATMA1" V 2550 2100 50  0000 C CNN
-F 2 "RespiraWorks:VSONP-8-1EP_5x6_P1.27mm" H 2300 2025 50  0001 L CIN
-F 3 "https://www.infineon.com/dgdl/Infineon-BSC065N06LS5-DS-v02_00-EN.pdf?fileId=5546d4625c54d85b015cc5a9ad087b39" V 2100 2100 50  0001 L CNN
-F 4 "Infineon" V 2100 2100 50  0001 C CNN "Manufacturer"
-F 5 "BSC065N06LS5ATMA1" V 2100 2100 50  0001 C CNN "Manufacturer PN"
-	1    2100 2100
-	0    -1   -1   0   
-$EndComp
 Wire Wire Line
 	2300 2000 2350 2000
 Wire Wire Line
@@ -1826,7 +1808,7 @@ F 7 "GRM32EC72A106KE05L" H 3650 2150 50  0001 C CNN "Manufacturer PN"
 	1    0    0    -1  
 $EndComp
 $Comp
-L Device:Q_NMOS_SGD Q?
+L RespiraWorks_Std:Q_NMOS_SGD Q?
 U 1 1 60321C9D
 P 2700 2100
 AR Path="/601A64F8/60321C9D" Ref="Q?"  Part="1" 
@@ -1850,7 +1832,7 @@ Wire Wire Line
 	4800 2000 5000 2000
 Connection ~ 4800 2000
 $Comp
-L Device:Q_NMOS_SGD Q?
+L RespiraWorks_Std:Q_NMOS_SGD Q?
 U 1 1 60337344
 P 4700 2200
 AR Path="/601A64F8/60337344" Ref="Q?"  Part="1" 
@@ -1868,25 +1850,7 @@ F 5 "BSC065N06LS5ATMA1" V 4700 2200 50  0001 C CNN "Manufacturer PN"
 	1    0    0    -1  
 $EndComp
 $Comp
-L Device:Q_NMOS_SGD Q?
-U 1 1 6032FCBA
-P 4350 2100
-AR Path="/601A64F8/6032FCBA" Ref="Q?"  Part="1" 
-AR Path="/601A64F8/60567144/6032FCBA" Ref="Q?"  Part="1" 
-AR Path="/6023BF6A/60567144/6032FCBA" Ref="Q?"  Part="1" 
-AR Path="/5FCD4B8E/603C510C/60567144/6032FCBA" Ref="Q?"  Part="1" 
-AR Path="/6041384A/60567144/6032FCBA" Ref="Q?"  Part="1" 
-F 0 "Q?" V 4800 2100 50  0000 C CNN
-F 1 "BSC065N06LS5ATMA1" V 4700 2150 50  0000 C CNN
-F 2 "RespiraWorks:VSONP-8-1EP_5x6_P1.27mm" H 4550 2025 50  0001 L CIN
-F 3 "https://www.infineon.com/dgdl/Infineon-BSC065N06LS5-DS-v02_00-EN.pdf?fileId=5546d4625c54d85b015cc5a9ad087b39" V 4350 2100 50  0001 L CNN
-F 4 "Infineon" V 4350 2100 50  0001 C CNN "Manufacturer"
-F 5 "BSC065N06LS5ATMA1" V 4350 2100 50  0001 C CNN "Manufacturer PN"
-	1    4350 2100
-	0    -1   -1   0   
-$EndComp
-$Comp
-L Device:Q_PMOS_SGD Q?
+L RespiraWorks_Std:Q_PMOS_SGD Q?
 U 1 1 605810DE
 P 7700 3000
 AR Path="/601A64F8/605810DE" Ref="Q?"  Part="1" 
@@ -1946,4 +1910,40 @@ $EndComp
 Wire Wire Line
 	2850 4650 3050 4650
 Connection ~ 2850 4650
+$Comp
+L RespiraWorks_Std:Q_NMOS_SGD Q?
+U 1 1 60580FC0
+P 2100 2100
+AR Path="/601A64F8/60580FC0" Ref="Q?"  Part="1" 
+AR Path="/601A64F8/60567144/60580FC0" Ref="Q?"  Part="1" 
+AR Path="/6023BF6A/60567144/60580FC0" Ref="Q?"  Part="1" 
+AR Path="/5FCD4B8E/603C510C/60567144/60580FC0" Ref="Q?"  Part="1" 
+AR Path="/6041384A/60567144/60580FC0" Ref="Q?"  Part="1" 
+F 0 "Q?" V 2650 2100 50  0000 C CNN
+F 1 "BSC065N06LS5ATMA1" V 2550 2100 50  0000 C CNN
+F 2 "RespiraWorks:VSONP-8-1EP_5x6_P1.27mm" H 2300 2025 50  0001 L CIN
+F 3 "https://www.infineon.com/dgdl/Infineon-BSC065N06LS5-DS-v02_00-EN.pdf?fileId=5546d4625c54d85b015cc5a9ad087b39" V 2100 2100 50  0001 L CNN
+F 4 "Infineon" V 2100 2100 50  0001 C CNN "Manufacturer"
+F 5 "BSC065N06LS5ATMA1" V 2100 2100 50  0001 C CNN "Manufacturer PN"
+	1    2100 2100
+	0    -1   -1   0   
+$EndComp
+$Comp
+L RespiraWorks_Std:Q_NMOS_SGD Q?
+U 1 1 6032FCBA
+P 4350 2100
+AR Path="/601A64F8/6032FCBA" Ref="Q?"  Part="1" 
+AR Path="/601A64F8/60567144/6032FCBA" Ref="Q?"  Part="1" 
+AR Path="/6023BF6A/60567144/6032FCBA" Ref="Q?"  Part="1" 
+AR Path="/5FCD4B8E/603C510C/60567144/6032FCBA" Ref="Q?"  Part="1" 
+AR Path="/6041384A/60567144/6032FCBA" Ref="Q?"  Part="1" 
+F 0 "Q?" V 4800 2100 50  0000 C CNN
+F 1 "BSC065N06LS5ATMA1" V 4700 2150 50  0000 C CNN
+F 2 "RespiraWorks:VSONP-8-1EP_5x6_P1.27mm" H 4550 2025 50  0001 L CIN
+F 3 "https://www.infineon.com/dgdl/Infineon-BSC065N06LS5-DS-v02_00-EN.pdf?fileId=5546d4625c54d85b015cc5a9ad087b39" V 4350 2100 50  0001 L CNN
+F 4 "Infineon" V 4350 2100 50  0001 C CNN "Manufacturer"
+F 5 "BSC065N06LS5ATMA1" V 4350 2100 50  0001 C CNN "Manufacturer PN"
+	1    4350 2100
+	0    -1   -1   0   
+$EndComp
 $EndSCHEMATC

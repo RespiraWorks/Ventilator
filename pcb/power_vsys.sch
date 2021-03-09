@@ -408,7 +408,7 @@ Wire Wire Line
 	5900 1350 6600 1350
 Connection ~ 4950 1350
 $Comp
-L RespiraWorks_Std:CSD17304Q3 Q?
+L RespiraWorks_Std:Q_NMOS_SGD Q?
 U 1 1 601DFE01
 P 4400 1550
 AR Path="/601A64F8/601DFE01" Ref="Q?"  Part="1" 
@@ -416,12 +416,12 @@ AR Path="/601A64F8/60567144/601DFE01" Ref="Q?"  Part="1"
 AR Path="/601A64F8/60567D6E/601DFE01" Ref="Q?"  Part="1" 
 AR Path="/6023BF6A/60567D6E/601DFE01" Ref="Q?"  Part="1" 
 AR Path="/6041384A/60567D6E/601DFE01" Ref="Q?"  Part="1" 
-F 0 "Q?" H 4450 1950 50  0000 L CNN
-F 1 "CSD17304Q3" H 4300 1850 50  0000 L CNN
-F 2 "RespiraWorks_Std:VSON-8_3.3x3.3mm_P0.65mm_NexFET" H 4600 1475 50  0001 L CIN
-F 3 "https://www.ti.com/lit/ds/symlink/csd17304q3.pdf?ts=1608773956037" V 4400 1550 50  0001 L CNN
-F 4 "Texas Instruments" H 4400 1550 50  0001 C CNN "Manufacturer"
-F 5 "CSD17304Q3" H 4400 1550 50  0001 C CNN "Manufacturer PN"
+F 0 "Q?" H 4550 1950 50  0000 L CNN
+F 1 "BSZ019N03LSATMA1" H 4300 1850 50  0000 L CNN
+F 2 "RespiraWorks:VSON-8-SGD_3.3x3.3mm_P0.65mm_NexFET" H 4600 1475 50  0001 L CIN
+F 3 "https://www.infineon.com/dgdl/BSZ019N03LS_Rev+2.1.pdf?folderId=db3a304326dfb1300126fb3bec803f1a&fileId=db3a304326dfb1300126fb7ddf173f4e" V 4400 1550 50  0001 L CNN
+F 4 "Infineon" H 4400 1550 50  0001 C CNN "Manufacturer"
+F 5 "BSZ019N03LSATMA1" H 4400 1550 50  0001 C CNN "Manufacturer PN"
 	1    4400 1550
 	1    0    0    -1  
 $EndComp
@@ -472,7 +472,7 @@ F 3 "" H 4500 1850 50  0001 C CNN
 $EndComp
 Connection ~ 4700 1350
 $Comp
-L RespiraWorks_Std:CSD17304Q3 Q?
+L RespiraWorks_Std:Q_NMOS_SGD Q?
 U 1 1 601DFDDC
 P 4050 1450
 AR Path="/601A64F8/601DFDDC" Ref="Q?"  Part="1" 
@@ -480,12 +480,12 @@ AR Path="/601A64F8/60567144/601DFDDC" Ref="Q?"  Part="1"
 AR Path="/601A64F8/60567D6E/601DFDDC" Ref="Q?"  Part="1" 
 AR Path="/6023BF6A/60567D6E/601DFDDC" Ref="Q?"  Part="1" 
 AR Path="/6041384A/60567D6E/601DFDDC" Ref="Q?"  Part="1" 
-F 0 "Q?" V 4450 1450 50  0000 C CNN
-F 1 "CSD17304Q3" V 4350 1500 50  0000 C CNN
-F 2 "RespiraWorks_Std:VSON-8_3.3x3.3mm_P0.65mm_NexFET" H 4250 1375 50  0001 L CIN
-F 3 "https://www.ti.com/lit/ds/symlink/csd17304q3.pdf?ts=1608773956037" V 4050 1450 50  0001 L CNN
-F 4 "Texas Instruments" H 4050 1450 50  0001 C CNN "Manufacturer"
-F 5 "CSD17304Q3" H 4050 1450 50  0001 C CNN "Manufacturer PN"
+F 0 "Q?" V 4500 1450 50  0000 C CNN
+F 1 "BSZ019N03LSATMA1" V 4400 1450 50  0000 C CNN
+F 2 "RespiraWorks:VSON-8-SGD_3.3x3.3mm_P0.65mm_NexFET" H 4250 1375 50  0001 L CIN
+F 3 "https://www.infineon.com/dgdl/BSZ019N03LS_Rev+2.1.pdf?folderId=db3a304326dfb1300126fb3bec803f1a&fileId=db3a304326dfb1300126fb7ddf173f4e" V 4050 1450 50  0001 L CNN
+F 4 "Infineon" H 4050 1450 50  0001 C CNN "Manufacturer"
+F 5 "BSZ019N03LSATMA1" H 4050 1450 50  0001 C CNN "Manufacturer PN"
 	1    4050 1450
 	0    -1   -1   0   
 $EndComp

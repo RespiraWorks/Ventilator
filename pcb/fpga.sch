@@ -3,10 +3,10 @@ EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 12 30
+Sheet 11 38
 Title "Safety FPGA"
 Date ""
-Rev "2.0"
+Rev "A"
 Comp "RespiraWorks"
 Comment1 ""
 Comment2 ""
@@ -18,9 +18,12 @@ L Connector_Generic:Conn_02x20_Odd_Even J?
 U 1 1 600DFDA5
 P 7550 2750
 F 0 "J?" H 7600 3867 50  0000 C CNN
-F 1 "Mates J5 on BEMicro MAX10" H 7750 1300 50  0000 C CNN
+F 1 "Mates J5 on BeMicro MAX10" H 7750 1300 50  0000 C CNN
 F 2 "RespiraWorks_Std:PinSocket_2x20_P2.54mm_Vertical" H 7550 2750 50  0001 C CNN
 F 3 "~" H 7550 2750 50  0001 C CNN
+F 4 "Samtec" H 7550 2750 50  0001 C CNN "Manufacturer"
+F 5 "ESW-120-33-G-D" H 7550 2750 50  0001 C CNN "Manufacturer PN"
+F 6 "Alt. ESQ-120-23-T-D" H 7550 2750 50  0001 C CNN "Sourcing Notes"
 	1    7550 2750
 	1    0    0    -1  
 $EndComp
@@ -158,9 +161,10 @@ L Device:R R?
 U 1 1 600E5183
 P 3450 1600
 F 0 "R?" H 3520 1646 50  0000 L CNN
-F 1 "4.7K" H 3520 1555 50  0000 L CNN
-F 2 "Respiraworks_Std:R_0603_1608Metric" V 3380 1600 50  0001 C CNN
+F 1 "4.7k" H 3520 1555 50  0000 L CNN
+F 2 "RespiraWorks_Std:R_0603_1608Metric" V 3380 1600 50  0001 C CNN
 F 3 "~" H 3450 1600 50  0001 C CNN
+F 4 "DNP" V 3450 1600 50  0000 C CNN "DNP"
 	1    3450 1600
 	1    0    0    -1  
 $EndComp
@@ -180,6 +184,9 @@ F 0 "J?" H 3950 3817 50  0000 C CNN
 F 1 "Mates J4 on BeMicro MAX10" H 4000 1300 50  0000 C CNN
 F 2 "RespiraWorks_Std:PinSocket_2x20_P2.54mm_Vertical" H 3900 2700 50  0001 C CNN
 F 3 "~" H 3900 2700 50  0001 C CNN
+F 4 "Samtec" H 3900 2700 50  0001 C CNN "Manufacturer"
+F 5 "ESW-120-33-G-D" H 3900 2700 50  0001 C CNN "Manufacturer PN"
+F 6 "Alt. ESQ-120-23-T-D" H 3900 2700 50  0001 C CNN "Sourcing Notes"
 	1    3900 2700
 	1    0    0    -1  
 $EndComp
@@ -188,9 +195,10 @@ L Device:R R?
 U 1 1 600E5200
 P 4350 1600
 F 0 "R?" H 4420 1646 50  0000 L CNN
-F 1 "4.7K" H 4420 1555 50  0000 L CNN
-F 2 "Respiraworks_Std:R_0603_1608Metric" V 4280 1600 50  0001 C CNN
+F 1 "4.7k" H 4420 1555 50  0000 L CNN
+F 2 "RespiraWorks_Std:R_0603_1608Metric" V 4280 1600 50  0001 C CNN
 F 3 "~" H 4350 1600 50  0001 C CNN
+F 4 "DNP" V 4350 1600 50  0000 C CNN "DNP"
 	1    4350 1600
 	1    0    0    -1  
 $EndComp
@@ -483,4 +491,6 @@ Wire Wire Line
 	7200 1200 7200 2350
 Text Notes 6200 1050 0    50   ~ 0
 Place for optional fuse
+Text Notes 3350 1650 2    50   ~ 0
+BeMicro MAX10 board has\nonboard I2C pull-ups
 $EndSCHEMATC

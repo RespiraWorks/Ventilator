@@ -1,13 +1,12 @@
 EESchema Schematic File Version 4
-LIBS:ui_computer-cache
-EELAYER 26 0
+EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 1 1
+Sheet 8 38
 Title "UI Computer"
 Date ""
-Rev "2.0"
+Rev "A"
 Comp "RespiraWorks"
 Comment1 ""
 Comment2 ""
@@ -19,9 +18,11 @@ L RespiraWorks:ESQ-120-44-L-D J?
 U 1 1 5FDAF122
 P 5700 3350
 F 0 "J?" H 5725 4625 50  0000 C CNN
-F 1 "ESQ-120-44-L-D" H 5725 4534 50  0000 C CNN
+F 1 "Raspberry Pi" H 5725 4534 50  0000 C CNN
 F 2 "RespiraWorks_Std:PinHeader_2x20_P2.54mm_Vertical" H 5100 4450 50  0001 C CNN
 F 3 "" H 5100 4450 50  0001 C CNN
+F 4 "Samtec" H 5700 3350 50  0001 C CNN "Manufacturer"
+F 5 "ESQ-120-44-L-D" H 5700 3350 50  0001 C CNN "Manufacturer PN"
 	1    5700 3350
 	1    0    0    -1  
 $EndComp
@@ -92,8 +93,8 @@ L Device:R R?
 U 1 1 5FDB08DB
 P 3800 4350
 F 0 "R?" H 3650 4400 50  0000 L CNN
-F 1 "10K" H 3600 4300 50  0000 L CNN
-F 2 "RespiraWorks_std:R_0603_1608Metric" V 3730 4350 50  0001 C CNN
+F 1 "0" H 3650 4300 50  0000 L CNN
+F 2 "RespiraWorks_Std:R_0603_1608Metric" V 3730 4350 50  0001 C CNN
 F 3 "~" H 3800 4350 50  0001 C CNN
 	1    3800 4350
 	1    0    0    -1  
@@ -134,8 +135,8 @@ L Device:R R?
 U 1 1 5FE66293
 P 3800 3850
 F 0 "R?" H 3650 3900 50  0000 L CNN
-F 1 "1K" H 3600 3800 50  0000 L CNN
-F 2 "RespiraWorks_std:R_0603_1608Metric" V 3730 3850 50  0001 C CNN
+F 1 "0" H 3650 3800 50  0000 L CNN
+F 2 "RespiraWorks_Std:R_0603_1608Metric" V 3730 3850 50  0001 C CNN
 F 3 "~" H 3800 3850 50  0001 C CNN
 F 4 "DNP" H 3550 3850 50  0000 C CNN "DNP"
 	1    3800 3850
@@ -204,10 +205,10 @@ L Device:R R?
 U 1 1 5FE6BCEC
 P 7950 3000
 F 0 "R?" H 8050 3050 50  0000 L CNN
-F 1 "1K" H 8050 2950 50  0000 L CNN
-F 2 "RespiraWorks_std:R_0603_1608Metric" V 7880 3000 50  0001 C CNN
+F 1 "0" H 8050 2950 50  0000 L CNN
+F 2 "RespiraWorks_Std:R_0603_1608Metric" V 7880 3000 50  0001 C CNN
 F 3 "~" H 7950 3000 50  0001 C CNN
-F 4 "DNP" H 7800 3000 50  0000 C CNN "DNP"
+F 4 "" H 7800 3000 50  0001 C CNN "DNP"
 	1    7950 3000
 	1    0    0    -1  
 $EndComp
@@ -215,10 +216,11 @@ $Comp
 L Device:R R?
 U 1 1 5FE6BE04
 P 7950 3600
-F 0 "R?" H 7800 3650 50  0000 L CNN
-F 1 "10K" H 7750 3550 50  0000 L CNN
-F 2 "RespiraWorks_std:R_0603_1608Metric" V 7880 3600 50  0001 C CNN
+F 0 "R?" H 8050 3650 50  0000 L CNN
+F 1 "0" H 8050 3550 50  0000 L CNN
+F 2 "RespiraWorks_Std:R_0603_1608Metric" V 7880 3600 50  0001 C CNN
 F 3 "~" H 7950 3600 50  0001 C CNN
+F 4 "DNP" H 8100 3450 50  0000 C CNN "DNP"
 	1    7950 3600
 	1    0    0    -1  
 $EndComp
@@ -318,10 +320,13 @@ L Device:C C?
 U 1 1 6015F360
 P 7900 1850
 F 0 "C?" H 8015 1896 50  0000 L CNN
-F 1 "0.1uF" H 8015 1805 50  0000 L CNN
+F 1 "100nF" H 8015 1805 50  0000 L CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 7938 1700 50  0001 C CNN
 F 3 "~" H 7900 1850 50  0001 C CNN
-F 4 "10V" H 7900 1850 50  0001 C CNN "Voltage Rating"
+F 4 "X7R" H 7900 1850 50  0001 C CNN "Dielectric"
+F 5 "Kemet" H 7900 1850 50  0001 C CNN "Manufacturer"
+F 6 "C0603C104K5RACTU" H 7900 1850 50  0001 C CNN "Manufacturer PN"
+F 7 "50V" H 7900 1850 50  0001 C CNN "Voltage"
 	1    7900 1850
 	1    0    0    -1  
 $EndComp
@@ -333,7 +338,10 @@ F 0 "C?" H 8465 1896 50  0000 L CNN
 F 1 "1uF" H 8465 1805 50  0000 L CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 8388 1700 50  0001 C CNN
 F 3 "~" H 8350 1850 50  0001 C CNN
-F 4 "10V" H 8350 1850 50  0001 C CNN "Voltage Rating"
+F 4 "X7R" H 8350 1850 50  0001 C CNN "Dielectric"
+F 5 "Kemet" H 8350 1850 50  0001 C CNN "Manufacturer"
+F 6 "C0805C105K5RACTU" H 8350 1850 50  0001 C CNN "Manufacturer PN"
+F 7 "50V" H 8350 1850 50  0001 C CNN "Voltage"
 	1    8350 1850
 	1    0    0    -1  
 $EndComp
@@ -373,9 +381,7 @@ Wire Wire Line
 	6450 4100 7000 4100
 Wire Wire Line
 	6450 4200 7000 4200
-Text HLabel 7050 2300 2    50   BiDi ~ 0
-5V_GUI
-Text Label 6800 2300 0    50   ~ 0
+Text HLabel 7050 2300 2    50   Input ~ 0
 5V
 Wire Wire Line
 	7900 2000 7900 2100
@@ -405,4 +411,32 @@ $EndComp
 Connection ~ 8150 2100
 Wire Wire Line
 	8150 2100 8350 2100
+$Comp
+L RespiraWorks_Std:Conn_01x02 J?
+U 1 1 60436098
+P 9850 3650
+F 0 "J?" H 9930 3642 50  0000 L CNN
+F 1 "Touchscreen power" H 9930 3551 50  0000 L CNN
+F 2 "RespiraWorks_Std:Molex_Micro-Fit_3.0_43650-0200_1x02_P3.00mm_Horizontal" H 9850 3650 50  0001 C CNN
+F 3 "~" H 9850 3650 50  0001 C CNN
+F 4 "Molex" H 9850 3650 50  0001 C CNN "Manufacturer"
+F 5 "43650-0200" H 9850 3650 50  0001 C CNN "Manufacturer PN"
+	1    9850 3650
+	1    0    0    1   
+$EndComp
+Wire Wire Line
+	9650 3550 9200 3550
+Text Label 9200 3550 0    50   ~ 0
+5V
+$Comp
+L power:GND #PWR?
+U 1 1 60439316
+P 9650 3650
+F 0 "#PWR?" H 9650 3400 50  0001 C CNN
+F 1 "GND" H 9655 3477 50  0000 C CNN
+F 2 "" H 9650 3650 50  0001 C CNN
+F 3 "" H 9650 3650 50  0001 C CNN
+	1    9650 3650
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC

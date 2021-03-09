@@ -32,4 +32,3 @@ Somewhat related are the [Electrical design](https://github.com/RespiraWorks/Ven
 
 If you are a RespiraWorks contributor, request dev hardware by making an entry
 [here](https://docs.google.com/spreadsheets/d/1rf-cOTlQL_LnzrZq-64n7_R_pFyFMdCAxsPC65YqKUg/edit?usp=sharing)
- 

@@ -669,12 +669,12 @@ AR Path="/601A64F8/60567144/60580FC0" Ref="Q?"  Part="1"
 AR Path="/6023BF6A/60567144/60580FC0" Ref="Q?"  Part="1" 
 AR Path="/5FCD4B8E/603C510C/60567144/60580FC0" Ref="Q?"  Part="1" 
 AR Path="/6041384A/60567144/60580FC0" Ref="Q?"  Part="1" 
-F 0 "Q?" V 2500 2100 50  0000 C CNN
-F 1 "CSD18563Q5A" V 2400 2150 50  0000 C CNN
+F 0 "Q?" V 2650 2100 50  0000 C CNN
+F 1 "BSC065N06LS5ATMA1" V 2550 2100 50  0000 C CNN
 F 2 "RespiraWorks:VSONP-8-1EP_5x6_P1.27mm" H 2300 2025 50  0001 L CIN
-F 3 "https://www.ti.com/lit/ds/symlink/csd18563q5a.pdf" V 2100 2100 50  0001 L CNN
-F 4 "Texas Instruments" V 2100 2100 50  0001 C CNN "Manufacturer"
-F 5 "CSD18563Q5A" V 2100 2100 50  0001 C CNN "Manufacturer PN"
+F 3 "https://www.infineon.com/dgdl/Infineon-BSC065N06LS5-DS-v02_00-EN.pdf?fileId=5546d4625c54d85b015cc5a9ad087b39" V 2100 2100 50  0001 L CNN
+F 4 "Infineon" V 2100 2100 50  0001 C CNN "Manufacturer"
+F 5 "BSC065N06LS5ATMA1" V 2100 2100 50  0001 C CNN "Manufacturer PN"
 	1    2100 2100
 	0    -1   -1   0   
 $EndComp
@@ -1835,11 +1835,11 @@ AR Path="/6023BF6A/60567144/60321C9D" Ref="Q?"  Part="1"
 AR Path="/5FCD4B8E/603C510C/60567144/60321C9D" Ref="Q?"  Part="1" 
 AR Path="/6041384A/60567144/60321C9D" Ref="Q?"  Part="1" 
 F 0 "Q?" V 3100 2100 50  0000 C CNN
-F 1 "CSD18563Q5A" V 3000 2150 50  0000 C CNN
+F 1 "BSC065N06LS5ATMA1" V 3000 2150 50  0000 C CNN
 F 2 "RespiraWorks:VSONP-8-1EP_5x6_P1.27mm" H 2900 2025 50  0001 L CIN
-F 3 "https://www.ti.com/lit/ds/symlink/csd18563q5a.pdf" V 2700 2100 50  0001 L CNN
-F 4 "Texas Instruments" V 2700 2100 50  0001 C CNN "Manufacturer"
-F 5 "CSD18563Q5A" V 2700 2100 50  0001 C CNN "Manufacturer PN"
+F 3 "https://www.infineon.com/dgdl/Infineon-BSC065N06LS5-DS-v02_00-EN.pdf?fileId=5546d4625c54d85b015cc5a9ad087b39" V 2700 2100 50  0001 L CNN
+F 4 "Infineon" V 2700 2100 50  0001 C CNN "Manufacturer"
+F 5 "BSC065N06LS5ATMA1" V 2700 2100 50  0001 C CNN "Manufacturer PN"
 	1    2700 2100
 	0    1    -1   0   
 $EndComp
@@ -1858,12 +1858,12 @@ AR Path="/601A64F8/60567144/60337344" Ref="Q?"  Part="1"
 AR Path="/6023BF6A/60567144/60337344" Ref="Q?"  Part="1" 
 AR Path="/5FCD4B8E/603C510C/60567144/60337344" Ref="Q?"  Part="1" 
 AR Path="/6041384A/60567144/60337344" Ref="Q?"  Part="1" 
-F 0 "Q?" H 4750 2600 50  0000 C CNN
-F 1 "CSD18563Q5A" H 4900 2500 50  0000 C CNN
+F 0 "Q?" H 4800 2600 50  0000 C CNN
+F 1 "BSC065N06LS5ATMA1" H 4900 2500 50  0000 C CNN
 F 2 "RespiraWorks:VSONP-8-1EP_5x6_P1.27mm" H 4900 2125 50  0001 L CIN
-F 3 "https://www.ti.com/lit/ds/symlink/csd18563q5a.pdf" V 4700 2200 50  0001 L CNN
-F 4 "Texas Instruments" V 4700 2200 50  0001 C CNN "Manufacturer"
-F 5 "CSD18563Q5A" V 4700 2200 50  0001 C CNN "Manufacturer PN"
+F 3 "https://www.infineon.com/dgdl/Infineon-BSC065N06LS5-DS-v02_00-EN.pdf?fileId=5546d4625c54d85b015cc5a9ad087b39" V 4700 2200 50  0001 L CNN
+F 4 "Infineon" V 4700 2200 50  0001 C CNN "Manufacturer"
+F 5 "BSC065N06LS5ATMA1" V 4700 2200 50  0001 C CNN "Manufacturer PN"
 	1    4700 2200
 	1    0    0    -1  
 $EndComp
@@ -1876,31 +1876,31 @@ AR Path="/601A64F8/60567144/6032FCBA" Ref="Q?"  Part="1"
 AR Path="/6023BF6A/60567144/6032FCBA" Ref="Q?"  Part="1" 
 AR Path="/5FCD4B8E/603C510C/60567144/6032FCBA" Ref="Q?"  Part="1" 
 AR Path="/6041384A/60567144/6032FCBA" Ref="Q?"  Part="1" 
-F 0 "Q?" V 4750 2100 50  0000 C CNN
-F 1 "CSD18563Q5A" V 4650 2150 50  0000 C CNN
+F 0 "Q?" V 4800 2100 50  0000 C CNN
+F 1 "BSC065N06LS5ATMA1" V 4700 2150 50  0000 C CNN
 F 2 "RespiraWorks:VSONP-8-1EP_5x6_P1.27mm" H 4550 2025 50  0001 L CIN
-F 3 "https://www.ti.com/lit/ds/symlink/csd18563q5a.pdf" V 4350 2100 50  0001 L CNN
-F 4 "Texas Instruments" V 4350 2100 50  0001 C CNN "Manufacturer"
-F 5 "CSD18563Q5A" V 4350 2100 50  0001 C CNN "Manufacturer PN"
+F 3 "https://www.infineon.com/dgdl/Infineon-BSC065N06LS5-DS-v02_00-EN.pdf?fileId=5546d4625c54d85b015cc5a9ad087b39" V 4350 2100 50  0001 L CNN
+F 4 "Infineon" V 4350 2100 50  0001 C CNN "Manufacturer"
+F 5 "BSC065N06LS5ATMA1" V 4350 2100 50  0001 C CNN "Manufacturer PN"
 	1    4350 2100
 	0    -1   -1   0   
 $EndComp
 $Comp
-L RespiraWorks_Std:DMP3013SFV-7 Q?
+L Device:Q_PMOS_SGD Q?
 U 1 1 605810DE
-P 7800 3000
+P 7700 3000
 AR Path="/601A64F8/605810DE" Ref="Q?"  Part="1" 
 AR Path="/601A64F8/60567144/605810DE" Ref="Q?"  Part="1" 
 AR Path="/6023BF6A/60567144/605810DE" Ref="Q?"  Part="1" 
 AR Path="/5FCD4B8E/603C510C/60567144/605810DE" Ref="Q?"  Part="1" 
 AR Path="/6041384A/60567144/605810DE" Ref="Q?"  Part="1" 
-F 0 "Q?" V 7850 2700 50  0000 L CNN
-F 1 "DMP3013SFV-7" V 7950 2550 50  0000 L CNN
-F 2 "RespiraWorks_Std:Diodes_PowerDI3333-8" H 8300 2850 50  0001 C CNN
-F 3 "https://www.diodes.com/assets/Datasheets/DMP3013SFV.pdf" H 7700 3000 50  0001 C CNN
-F 4 "Diodes Inc." V 7800 3000 50  0001 C CNN "Manufacturer"
-F 5 "DMP3013SFV-7" V 7800 3000 50  0001 C CNN "Manufacturer PN"
-	1    7800 3000
+F 0 "Q?" H 7950 2950 50  0000 L CNN
+F 1 "SI7145DP-T1-GE3" H 7950 3050 50  0000 L CNN
+F 2 "RespiraWorks:VSONP-8-1EP_5x6_P1.27mm" H 8200 2850 50  0001 C CNN
+F 3 "https://www.vishay.com/docs/64814/si7145dp.pdf" H 7600 3000 50  0001 C CNN
+F 4 "Vishay Siliconix" V 7700 3000 50  0001 C CNN "Manufacturer"
+F 5 "SI7145DP-T1-GE3" V 7700 3000 50  0001 C CNN "Manufacturer PN"
+	1    7700 3000
 	1    0    0    1   
 $EndComp
 NoConn ~ 6850 5300

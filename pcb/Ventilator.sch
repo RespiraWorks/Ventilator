@@ -2981,4 +2981,59 @@ Text Label 12000 8850 2    50   ~ 0
 VSys-Power-Off
 Wire Wire Line
 	11000 8850 12000 8850
+$Comp
+L Mechanical:MountingHole_Pad H10
+U 1 1 605BCF14
+P 14250 8250
+F 0 "H10" V 14204 8400 50  0000 L CNN
+F 1 "MountingHole_Pad" V 14295 8400 50  0000 L CNN
+F 2 "MountingHole:MountingHole_4.5mm_Pad" H 14250 8250 50  0001 C CNN
+F 3 "~" H 14250 8250 50  0001 C CNN
+	1    14250 8250
+	0    1    1    0   
+$EndComp
+$Comp
+L Mechanical:MountingHole_Pad H11
+U 1 1 605BEAC4
+P 14250 8450
+F 0 "H11" V 14204 8600 50  0000 L CNN
+F 1 "MountingHole_Pad" V 14295 8600 50  0000 L CNN
+F 2 "MountingHole:MountingHole_4.5mm_Pad" H 14250 8450 50  0001 C CNN
+F 3 "~" H 14250 8450 50  0001 C CNN
+	1    14250 8450
+	0    1    1    0   
+$EndComp
+$Comp
+L Mechanical:MountingHole_Pad H12
+U 1 1 605D4181
+P 14250 8650
+F 0 "H12" V 14204 8800 50  0000 L CNN
+F 1 "MountingHole_Pad" V 14295 8800 50  0000 L CNN
+F 2 "MountingHole:MountingHole_4.5mm_Pad" H 14250 8650 50  0001 C CNN
+F 3 "~" H 14250 8650 50  0001 C CNN
+	1    14250 8650
+	0    1    1    0   
+$EndComp
+$Comp
+L Mechanical:MountingHole_Pad H13
+U 1 1 605E98BF
+P 14250 8850
+F 0 "H13" V 14204 9000 50  0000 L CNN
+F 1 "MountingHole_Pad" V 14295 9000 50  0000 L CNN
+F 2 "MountingHole:MountingHole_4.5mm_Pad" H 14250 8850 50  0001 C CNN
+F 3 "~" H 14250 8850 50  0001 C CNN
+	1    14250 8850
+	0    1    1    0   
+$EndComp
+$Comp
+L Mechanical:MountingHole_Pad H14
+U 1 1 605FF87F
+P 14250 9050
+F 0 "H14" V 14204 9200 50  0000 L CNN
+F 1 "MountingHole_Pad" V 14295 9200 50  0000 L CNN
+F 2 "MountingHole:MountingHole_4.5mm_Pad" H 14250 9050 50  0001 C CNN
+F 3 "~" H 14250 9050 50  0001 C CNN
+	1    14250 9050
+	0    1    1    0   
+$EndComp
 $EndSCHEMATC

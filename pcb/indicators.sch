@@ -65,7 +65,7 @@ U 1 1 600DAE2F
 P 5100 2650
 F 0 "J11" H 5179 2642 50  0000 L CNN
 F 1 "Cable to indicator board" H 5179 2551 50  0000 L CNN
-F 2 "RespiraWorks_Std:Molex_Micro-Fit_3.0_43650-1015_1x10_P3.00mm_Vertical" H 5100 2650 50  0001 C CNN
+F 2 "RespiraWorks_Std:Molex_Micro-Fit_3.0_43650-0815_1x08_P3.00mm_Vertical" H 5100 2650 50  0001 C CNN
 F 3 "~" H 5100 2650 50  0001 C CNN
 F 4 "Molex" H 5100 2650 50  0001 C CNN "Manufacturer"
 F 5 "43650-0815" H 5100 2650 50  0001 C CNN "Manufacturer PN"

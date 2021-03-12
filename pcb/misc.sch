@@ -1426,7 +1426,7 @@ U 1 1 6045598A
 P 6450 2450
 F 0 "U19" H 5900 2150 50  0000 C CNN
 F 1 "SN74LVC2T45DCTR" H 5950 2050 50  0000 C CNN
-F 2 "RespiraWorks:SSOP-8_3.15x2.9mm_P0.65mm" H 6800 1600 50  0001 C CNN
+F 2 "RespiraWorks_Std:SSOP-8_2.95x2.8mm_P0.65mm" H 6800 1600 50  0001 C CNN
 F 3 "https://www.ti.com/lit/ds/symlink/sn74lvc2t45.pdf?HQS=TI-null-null-digikeymode-df-pf-null-wwe&ts=1605630505243" H 6800 1600 50  0001 C CNN
 F 4 "Texas Instruments" H 6450 2450 50  0001 C CNN "Manufacturer"
 F 5 "SN74LVC2T45DCTR" H 6450 2450 50  0001 C CNN "Manufacturer PN"

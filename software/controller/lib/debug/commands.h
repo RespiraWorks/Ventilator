@@ -56,7 +56,7 @@ public:
     if (context->request_length < 6)
       return ErrorCode::kMissingData;
 
-    uint32_t address = u8_to_u32(&context->request[0]);
+    size_t address = address_msw_ + u8_to_u32(&context->request[0]);
     uint32_t count = u8_to_u16(&context->request[4]);
 
     // Limit the number of output bytes based on buffer size
@@ -79,7 +79,6 @@ public:
     } else {
       // aligned to 32 bits
       uint32_t *ptr = reinterpret_cast<uint32_t *>(address);
-
       for (int byte_number = 0; byte_number < count / 4; byte_number++) {
         uint32_t value = *ptr++;
         u32_to_u8(value, &context->response[4 * byte_number]);
@@ -89,6 +88,13 @@ public:
     context->response_length = count;
     return ErrorCode::kNone;
   }
+
+  // When testing on native, I need a way to feed 64 bits address to the handler
+  void SetAddressMSW(size_t address) { address_msw_ = address; }
+
+protected:
+  // Member that is used to handle 64 bits address when testing on native
+  size_t address_msw_{0};
 };
 
 // Poke command.
@@ -96,7 +102,7 @@ public:
 // The data passed to the command consists of a 32-bit starting address and one
 // or more data bytes to be written to consecutive addresses starting at the
 // given address
-class PokeHandler : public Handler {
+class PokeHandler : public PeekHandler {
 public:
   PokeHandler() = default;
   ErrorCode Process(Context *context) override {
@@ -106,8 +112,7 @@ public:
     if (context->request_length < 5)
       return ErrorCode::kMissingData;
 
-    uint32_t address = u8_to_u32(&context->request[0]);
-
+    size_t address = address_msw_ + u8_to_u32(&context->request[0]);
     uint32_t count = context->request_length - 4;
 
     // Some registers can't handle byte accesses, so rather then just

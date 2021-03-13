@@ -1754,7 +1754,7 @@ Low-Alarm-Bat-Logic
 Text Notes 8750 8300 0    50   ~ 0
 Low battery threshold 5.1V\n(semi-arbitrary)\n\nThreshold ~~= 2.495V * ((Rlow||Rhyst)+Rhigh)/(Rlow||Rhyst)
 Text Notes 11550 8650 0    50   ~ 0
-~~38-75 mV hysteresis (on REF pin)\n\nHysteresis = (+BATT - 2.495V)/Rhyst*(Rhigh || Rlow)\n(only valid @ trip point when TL431's REF pin = 2.495V;\nlarger hysteresis when REF voltage is lower because battery\nvoltage is << threshold voltage)
+~~38-75 mV hysteresis (on REF pin)\n\nHysteresis = (+5V_Batt - 2.495V)/Rhyst*(Rhigh || Rlow)\n(only valid @ trip point when TL431's REF pin = 2.495V;\nlarger hysteresis when REF voltage is lower because battery\nvoltage is << threshold voltage)
 Text Notes 13300 6550 0    50   ~ 0
 Limits current to FPGA and/or CC and/or RPi\ninput (150µA max.), clamped to 3.3V by ext. Schottkys
 Wire Wire Line
@@ -2366,8 +2366,8 @@ L power:+BATT #PWR?
 U 1 1 60522B65
 P 8800 2050
 AR Path="/5FCD4B8E/60522B65" Ref="#PWR?"  Part="1" 
-AR Path="/5FCD4DF5/60522B65" Ref="#PWR?"  Part="1" 
-F 0 "#PWR?" H 8800 2050 50  0001 C CNN
+AR Path="/5FCD4DF5/60522B65" Ref="#PWR0152"  Part="1" 
+F 0 "#PWR0152" H 8800 2050 50  0001 C CNN
 F 1 "+5V_Batt" H 8785 2223 50  0000 C CNN
 F 2 "" H 8800 2050 50  0001 C CNN
 F 3 "" H 8800 2050 50  0001 C CNN

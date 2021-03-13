@@ -59,6 +59,9 @@ static FnDebugVar vartrace_var4(
     "%d", [] { return trace.GetTracedVarId<3>(); },
     [](int32_t value) { trace.SetTracedVarId<3>(value); });
 
+// Create the I2Ceeprom referenced ty eeprom Handler
+I2Ceeprom eeprom = I2Ceeprom(0x50, 64, 32768, &i2c1);
+
 // Create a handler for each of the known commands that the Debug Handler can
 // link to.  This is a bit tedious but I can't find a simpler way.
 Debug::Command::ModeHandler mode_command;
@@ -66,6 +69,7 @@ Debug::Command::PeekHandler peek_command;
 Debug::Command::PokeHandler poke_command;
 Debug::Command::VarHandler var_command;
 Debug::Command::TraceHandler trace_command(&trace);
+Debug::Command::EepromHandler eeprom_command(&eeprom);
 
 namespace Debug {
 
@@ -77,6 +81,8 @@ Interface::Interface() {
   registry_[static_cast<uint8_t>(Command::Code::kPoke)] = &poke_command;
   registry_[static_cast<uint8_t>(Command::Code::kVariable)] = &var_command;
   registry_[static_cast<uint8_t>(Command::Code::kTrace)] = &trace_command;
+  registry_[static_cast<uint8_t>(Command::Code::kEepromAccess)] =
+      &eeprom_command;
 
   trace_ = &trace;
 }

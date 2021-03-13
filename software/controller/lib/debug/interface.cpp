@@ -40,6 +40,17 @@ bool Interface::Poll() {
     request_size_ = 0;
     return false;
 
+  // Wait for command to be processed
+  case State::kAwaitingResponse:
+    if (command_processed_) {
+      SendResponse(ErrorCode::kNone, response_length_);
+      state_ = State::kResponding;
+    } else if (Hal.now() > command_start_time_ + milliseconds(100)) {
+      SendError(ErrorCode::kTimeout);
+      state_ = State::kResponding;
+    }
+    return false;
+
   // Send my response
   case State::kResponding:
     while (SendNextByte()) {
@@ -155,6 +166,7 @@ void Interface::ProcessCommand() {
     return;
   }
 
+  command_processed_ = false;
   // The length that we pass in to the command handler doesn't
   // include the command code or CRC.  The max size is also reduced
   // by 3 to make sure we can add the error code and CRC.
@@ -164,8 +176,17 @@ void Interface::ProcessCommand() {
       .response = &response_[1],
       .max_response_length = sizeof(response_) - 3,
       .response_length = 0,
+      .processed = &command_processed_,
   };
   ErrorCode error = cmd_handler->Process(&context);
+
+  if (error == ErrorCode::kWait) {
+    state_ = State::kAwaitingResponse;
+    command_start_time_ = Hal.now();
+    response_length_ = context.response_length;
+    return;
+  }
+
   if (error != ErrorCode::kNone) {
     SendError(error);
     return;

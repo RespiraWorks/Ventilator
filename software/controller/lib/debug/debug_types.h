@@ -21,7 +21,7 @@ limitations under the License.
 namespace Debug {
 
 // States for the internal state machine
-enum class State { kWait, kProcessing, kResponding };
+enum class State { kWait, kProcessing, kAwaitingResponse, kResponding };
 
 // The binary serial interface uses two special characters
 // These values are pretty arbitrary.
@@ -37,17 +37,20 @@ enum class ErrorCode : uint8_t {
   kInternalError = 0x05,   // Some type of internal error (aka bug)
   kUnknownVariable = 0x06, // The requested variable ID is invalid
   kInvalidData = 0x07,     // data is out of range
+  kWait = 0x08,            // awaiting peripheral response
+  kTimeout = 0x09,         // peripheral timeout
 };
 
 namespace Command {
 
 enum class Code : uint8_t {
-  kMode = 0x00,     // Return the current firmware mode
-  kPeek = 0x01,     // Peek into RAM
-  kPoke = 0x02,     // Poke values into RAM
-  kConsole = 0x03,  // Read strings from the print buffer
-  kVariable = 0x04, // Variable access
-  kTrace = 0x05,    // Data trace commands
+  kMode = 0x00,         // Return the current firmware mode
+  kPeek = 0x01,         // Peek into RAM
+  kPoke = 0x02,         // Poke values into RAM
+  kConsole = 0x03,      // Read strings from the print buffer - deprecated
+  kVariable = 0x04,     // Variable access
+  kTrace = 0x05,        // Data trace commands
+  kEepromAccess = 0x06, // Read/Write in I2C EEPROM
 };
 
 // Structure that represents a command's parameters
@@ -60,6 +63,8 @@ struct Context {
                                       // can use (enforces response limits)
   uint32_t response_length; // (actual) length of the response once the
                             // command is processed
+  bool *processed; // pointer to a boolean that informs the interface handler
+                   // that a command is processed (some commands take time)
 };
 
 // Each debug command is represented by an instance of this virtual class

@@ -81,6 +81,12 @@ private:
   uint32_t response_size_{0};
   uint32_t response_bytes_sent_{0};
 
+  // Some commands take time to be fully processed, we record their start time
+  // and status
+  Time command_start_time_{microsSinceStartup(0)};
+  bool command_processed_{true};
+  uint32_t response_length_{0};
+
   // List of registered command handlers
   Command::Handler *registry_[32] = {nullptr};
 

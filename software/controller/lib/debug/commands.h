@@ -17,6 +17,7 @@ limitations under the License.
 #define COMMAND_H
 
 #include "binary_utils.h"
+#include "eeprom.h"
 #include "hal.h"
 #include "interface.h"
 
@@ -198,6 +199,28 @@ public:
   ErrorCode GetVar(Context *context);
 
   ErrorCode SetVar(Context *context);
+};
+
+// Eeprom command.
+// Allows us to read/write raw values in I2C EEPROM.
+// The first byte of data passed to the command gives a sub-command:
+// which defines what the command does and the structure of it's data.
+//
+// Sub-commands:
+//  0, followed by a 16 bits address and a 16 bits length :
+//      Used to read length data bytes at given address in EEPROM
+//
+//  1, followed by a 16 bits address and some data bytes :
+//      Used to write given data at given address
+
+class EepromHandler : public Handler {
+public:
+  explicit EepromHandler(I2Ceeprom *eeprom) : eeprom_(eeprom){};
+  ErrorCode Process(Context *context) override;
+
+private:
+  static constexpr uint16_t kMaxWriteLength{1000};
+  I2Ceeprom *eeprom_;
 };
 
 } // namespace Debug::Command

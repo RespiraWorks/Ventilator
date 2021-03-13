@@ -102,7 +102,7 @@ F 5 "MMSZ4679T1G" H 1350 2350 50  0001 C CNN "Manufacturer PN"
 	0    1    1    0   
 $EndComp
 $Comp
-L Device:Q_NPN_BCE Q4
+L Device:Q_NPN_BEC Q4
 U 1 1 5FDE7881
 P 1700 2850
 F 0 "Q4" H 1500 2550 50  0000 L CNN
@@ -290,7 +290,7 @@ F 5 "MMSZ4684T1G" H 3650 3350 50  0001 C CNN "Manufacturer PN"
 	0    1    1    0   
 $EndComp
 $Comp
-L Device:Q_NPN_BCE Q5
+L Device:Q_NPN_BEC Q5
 U 1 1 5FDE7A43
 P 4000 4000
 F 0 "Q5" H 4200 4000 50  0000 L CNN
@@ -791,17 +791,6 @@ F 3 "" H 8800 3200 50  0001 C CNN
 $EndComp
 Wire Wire Line
 	8800 2900 8800 2800
-$Comp
-L power:+BATT #PWR0152
-U 1 1 6029C2E8
-P 8800 2050
-F 0 "#PWR0152" H 8800 1900 50  0001 C CNN
-F 1 "+BATT" H 8815 2223 50  0000 C CNN
-F 2 "" H 8800 2050 50  0001 C CNN
-F 3 "" H 8800 2050 50  0001 C CNN
-	1    8800 2050
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
 	9500 2350 8800 2350
 Connection ~ 8800 2350
@@ -917,7 +906,7 @@ $EndComp
 Text Notes 14300 1300 0    50   ~ 0
 All 2.4 kHz, 88 dbA @ 5V
 $Comp
-L Device:Q_NPN_BCE Q9
+L Device:Q_NPN_BEC Q9
 U 1 1 603718DE
 P 11450 2100
 F 0 "Q9" H 11641 2146 50  0000 L CNN
@@ -1081,7 +1070,7 @@ F 3 "" H 11250 2400 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Device:Q_NPN_BCE Q11
+L Device:Q_NPN_BEC Q11
 U 1 1 603C1C9F
 P 13550 2300
 F 0 "Q11" H 13741 2346 50  0000 L CNN
@@ -1131,7 +1120,7 @@ F 3 "" H 13350 2600 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Device:Q_NPN_BCE Q13
+L Device:Q_NPN_BEC Q13
 U 1 1 603C6786
 P 15650 2300
 F 0 "Q13" H 15841 2346 50  0000 L CNN
@@ -1375,7 +1364,7 @@ F 5 "MMSZ4684T1G" H 3650 8150 50  0001 C CNN "Manufacturer PN"
 	0    1    1    0   
 $EndComp
 $Comp
-L Device:Q_NPN_BCE Q6
+L Device:Q_NPN_BEC Q6
 U 1 1 60926782
 P 4200 8650
 AR Path="/5FCD4DF5/60926782" Ref="Q6"  Part="1" 
@@ -1463,7 +1452,7 @@ $EndComp
 Wire Wire Line
 	3650 7250 3650 8000
 $Comp
-L Device:Q_PNP_BCE Q7
+L Device:Q_PNP_BEC Q7
 U 1 1 609267AA
 P 5050 7350
 AR Path="/5FCD4DF5/609267AA" Ref="Q7"  Part="1" 
@@ -1480,7 +1469,7 @@ $EndComp
 Wire Wire Line
 	5250 7250 5300 7250
 $Comp
-L Device:Q_NPN_BCE Q8
+L Device:Q_NPN_BEC Q8
 U 1 1 609267B4
 P 5150 8450
 AR Path="/5FCD4DF5/609267B4" Ref="Q8"  Part="1" 
@@ -1819,7 +1808,7 @@ $EndComp
 Wire Wire Line
 	11400 6600 11900 6600
 $Comp
-L Device:Q_PNP_BCE Q10
+L Device:Q_PNP_BEC Q10
 U 1 1 609268A3
 P 12400 6600
 AR Path="/5FCD4DF5/609268A3" Ref="Q10"  Part="1" 
@@ -2114,7 +2103,7 @@ F 4 "" H 13750 3900 50  0001 C CNN "Manufacturer"
 	0    -1   -1   0   
 $EndComp
 $Comp
-L Device:Q_NPN_BCE Q12
+L Device:Q_NPN_BEC Q12
 U 1 1 610C7839
 P 14400 3900
 F 0 "Q12" H 14591 3946 50  0000 L CNN
@@ -2372,4 +2361,17 @@ Wire Wire Line
 	5350 8450 6250 8450
 Text Label 5450 1750 0    50   ~ 0
 PD-Alarm
+$Comp
+L power:+BATT #PWR?
+U 1 1 60522B65
+P 8800 2050
+AR Path="/5FCD4B8E/60522B65" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4DF5/60522B65" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 8800 2050 50  0001 C CNN
+F 1 "+5V_Batt" H 8785 2223 50  0000 C CNN
+F 2 "" H 8800 2050 50  0001 C CNN
+F 3 "" H 8800 2050 50  0001 C CNN
+	1    8800 2050
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC

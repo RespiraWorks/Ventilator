@@ -153,7 +153,7 @@ F 3 "" H 2000 2300 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Device:Q_NPN_BCE Q?
+L Device:Q_NPN_BEC Q?
 U 1 1 60983EF2
 P 1900 2100
 AR Path="/5FCD4DF5/60983EF2" Ref="Q?"  Part="1" 

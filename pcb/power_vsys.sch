@@ -936,7 +936,7 @@ Cycle-by-cycle current limit: 75mA -> 12.5A
 Wire Wire Line
 	3750 3500 3750 2500
 $Comp
-L Device:Q_NPN_BCE Q23
+L Device:Q_NPN_BEC Q23
 U 1 1 602A3DA2
 P 2900 3100
 F 0 "Q23" H 3091 3146 50  0000 L CNN

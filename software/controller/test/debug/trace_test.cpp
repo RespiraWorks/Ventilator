@@ -1,4 +1,4 @@
-/* Copyright 2020, RespiraWorks
+/* Copyright 2020-2021, RespiraWorks
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@ limitations under the License.
 
 #include "trace.h"
 #include "gmock/gmock-matchers.h"
-#include "gmock/gmock.h"
 #include "gtest/gtest.h"
 #include <iostream>
 #include <limits>

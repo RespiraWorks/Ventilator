@@ -19,7 +19,7 @@ U 1 1 5FDAF122
 P 5700 3350
 F 0 "J8" H 5725 4625 50  0000 C CNN
 F 1 "Raspberry Pi" H 5725 4534 50  0000 C CNN
-F 2 "RespiraWorks_Std:PinHeader_2x20_P2.54mm_Vertical" H 5100 4450 50  0001 C CNN
+F 2 "RespiraWorks_Std:PinSocket_2x20_P2.54mm_Vertical" H 5100 4450 50  0001 C CNN
 F 3 "" H 5100 4450 50  0001 C CNN
 F 4 "Samtec" H 5700 3350 50  0001 C CNN "Manufacturer"
 F 5 "ESQ-120-44-L-D" H 5700 3350 50  0001 C CNN "Manufacturer PN"

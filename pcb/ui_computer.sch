@@ -417,10 +417,10 @@ U 1 1 60436098
 P 9850 3650
 F 0 "J9" H 9930 3642 50  0000 L CNN
 F 1 "Touchscreen power" H 9930 3551 50  0000 L CNN
-F 2 "RespiraWorks_Std:Molex_Micro-Fit_3.0_43650-0200_1x02_P3.00mm_Horizontal" H 9850 3650 50  0001 C CNN
+F 2 "RespiraWorks_Std:Molex_Micro-Fit_3.0_43045-0212_2x01_P3.00mm_Vertical" H 9850 3650 50  0001 C CNN
 F 3 "~" H 9850 3650 50  0001 C CNN
 F 4 "Molex" H 9850 3650 50  0001 C CNN "Manufacturer"
-F 5 "43650-0200" H 9850 3650 50  0001 C CNN "Manufacturer PN"
+F 5 "43045-0212" H 9850 3650 50  0001 C CNN "Manufacturer PN"
 	1    9850 3650
 	1    0    0    1   
 $EndComp

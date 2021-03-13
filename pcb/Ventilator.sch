@@ -764,17 +764,6 @@ F 3 "" H 3500 8650 50  0001 C CNN
 	1    3500 8650
 	1    0    0    -1  
 $EndComp
-$Comp
-L RespiraWorks:+VLink #PWR013
-U 1 1 60A89F3E
-P 4200 4550
-F 0 "#PWR013" H 4200 4550 50  0001 C CNN
-F 1 "+VLink" H 4185 4723 50  0000 C CNN
-F 2 "" H 4200 4550 50  0001 C CNN
-F 3 "" H 4200 4550 50  0001 C CNN
-	1    4200 4550
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
 	4200 4550 4400 4550
 $Comp
@@ -792,17 +781,6 @@ F 3 "" H 3850 3150 50  0001 C CNN
 $EndComp
 Wire Wire Line
 	4400 3150 3850 3150
-$Comp
-L RespiraWorks:+VLink #PWR012
-U 1 1 60A9D64C
-P 4200 3050
-F 0 "#PWR012" H 4200 3050 50  0001 C CNN
-F 1 "+VLink" H 4185 3223 50  0000 C CNN
-F 2 "" H 4200 3050 50  0001 C CNN
-F 3 "" H 4200 3050 50  0001 C CNN
-	1    4200 3050
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
 	4200 3050 4400 3050
 $Comp
@@ -2984,56 +2962,167 @@ Wire Wire Line
 $Comp
 L Mechanical:MountingHole_Pad H10
 U 1 1 605BCF14
-P 14250 8250
-F 0 "H10" V 14204 8400 50  0000 L CNN
-F 1 "MountingHole_Pad" V 14295 8400 50  0000 L CNN
-F 2 "MountingHole:MountingHole_4.5mm_Pad" H 14250 8250 50  0001 C CNN
-F 3 "~" H 14250 8250 50  0001 C CNN
-	1    14250 8250
+P 13850 8250
+F 0 "H10" V 13804 8400 50  0000 L CNN
+F 1 "MountingHole_Pad" V 13895 8400 50  0000 L CNN
+F 2 "MountingHole:MountingHole_4.5mm_Pad" H 13850 8250 50  0001 C CNN
+F 3 "~" H 13850 8250 50  0001 C CNN
+	1    13850 8250
 	0    1    1    0   
 $EndComp
 $Comp
 L Mechanical:MountingHole_Pad H11
 U 1 1 605BEAC4
-P 14250 8450
-F 0 "H11" V 14204 8600 50  0000 L CNN
-F 1 "MountingHole_Pad" V 14295 8600 50  0000 L CNN
-F 2 "MountingHole:MountingHole_4.5mm_Pad" H 14250 8450 50  0001 C CNN
-F 3 "~" H 14250 8450 50  0001 C CNN
-	1    14250 8450
+P 13850 8450
+F 0 "H11" V 13804 8600 50  0000 L CNN
+F 1 "MountingHole_Pad" V 13895 8600 50  0000 L CNN
+F 2 "MountingHole:MountingHole_4.5mm_Pad" H 13850 8450 50  0001 C CNN
+F 3 "~" H 13850 8450 50  0001 C CNN
+	1    13850 8450
 	0    1    1    0   
 $EndComp
 $Comp
 L Mechanical:MountingHole_Pad H12
 U 1 1 605D4181
-P 14250 8650
-F 0 "H12" V 14204 8800 50  0000 L CNN
-F 1 "MountingHole_Pad" V 14295 8800 50  0000 L CNN
-F 2 "MountingHole:MountingHole_4.5mm_Pad" H 14250 8650 50  0001 C CNN
-F 3 "~" H 14250 8650 50  0001 C CNN
-	1    14250 8650
+P 13850 8650
+F 0 "H12" V 13804 8800 50  0000 L CNN
+F 1 "MountingHole_Pad" V 13895 8800 50  0000 L CNN
+F 2 "MountingHole:MountingHole_4.5mm_Pad" H 13850 8650 50  0001 C CNN
+F 3 "~" H 13850 8650 50  0001 C CNN
+	1    13850 8650
 	0    1    1    0   
 $EndComp
 $Comp
 L Mechanical:MountingHole_Pad H13
 U 1 1 605E98BF
-P 14250 8850
-F 0 "H13" V 14204 9000 50  0000 L CNN
-F 1 "MountingHole_Pad" V 14295 9000 50  0000 L CNN
-F 2 "MountingHole:MountingHole_4.5mm_Pad" H 14250 8850 50  0001 C CNN
-F 3 "~" H 14250 8850 50  0001 C CNN
-	1    14250 8850
+P 13850 8850
+F 0 "H13" V 13804 9000 50  0000 L CNN
+F 1 "MountingHole_Pad" V 13895 9000 50  0000 L CNN
+F 2 "MountingHole:MountingHole_4.5mm_Pad" H 13850 8850 50  0001 C CNN
+F 3 "~" H 13850 8850 50  0001 C CNN
+	1    13850 8850
 	0    1    1    0   
 $EndComp
 $Comp
 L Mechanical:MountingHole_Pad H14
 U 1 1 605FF87F
-P 14250 9050
-F 0 "H14" V 14204 9200 50  0000 L CNN
-F 1 "MountingHole_Pad" V 14295 9200 50  0000 L CNN
-F 2 "MountingHole:MountingHole_4.5mm_Pad" H 14250 9050 50  0001 C CNN
-F 3 "~" H 14250 9050 50  0001 C CNN
-	1    14250 9050
+P 13850 9050
+F 0 "H14" V 13804 9200 50  0000 L CNN
+F 1 "MountingHole_Pad" V 13895 9200 50  0000 L CNN
+F 2 "MountingHole:MountingHole_4.5mm_Pad" H 13850 9050 50  0001 C CNN
+F 3 "~" H 13850 9050 50  0001 C CNN
+	1    13850 9050
 	0    1    1    0   
 $EndComp
+$Comp
+L RespiraWorks:+12V #PWR012
+U 1 1 604F1812
+P 4200 3050
+F 0 "#PWR012" H 4200 3050 50  0001 C CNN
+F 1 "+12V" H 4185 3223 50  0000 C CNN
+F 2 "" H 4200 3050 50  0001 C CNN
+F 3 "" H 4200 3050 50  0001 C CNN
+	1    4200 3050
+	1    0    0    -1  
+$EndComp
+$Comp
+L RespiraWorks:+12V #PWR013
+U 1 1 6051E50E
+P 4200 4550
+F 0 "#PWR013" H 4200 4550 50  0001 C CNN
+F 1 "+12V" H 4185 4723 50  0000 C CNN
+F 2 "" H 4200 4550 50  0001 C CNN
+F 3 "" H 4200 4550 50  0001 C CNN
+	1    4200 4550
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C C?
+U 1 1 6054F266
+P 15150 8650
+AR Path="/5FCD4D18/6054F266" Ref="C?"  Part="1" 
+AR Path="/6054F266" Ref="C186"  Part="1" 
+F 0 "C186" H 14900 8650 50  0000 L CNN
+F 1 "1uF" H 14900 8550 50  0000 L CNN
+F 2 "RespiraWorks_Std:C_0603_1608Metric" H 15188 8500 50  0001 C CNN
+F 3 "~" H 15150 8650 50  0001 C CNN
+F 4 "X7R" H 15150 8650 50  0001 C CNN "Dielectric"
+F 5 "Kemet" H 15150 8650 50  0001 C CNN "Manufacturer"
+F 6 "C0805C105K5RACTU" H 15150 8650 50  0001 C CNN "Manufacturer PN"
+F 7 "50V" H 15150 8650 50  0001 C CNN "Voltage"
+	1    15150 8650
+	1    0    0    -1  
+$EndComp
+$Comp
+L RespiraWorks:+12V #PWR0443
+U 1 1 60565E7E
+P 15150 8500
+F 0 "#PWR0443" H 15150 8500 50  0001 C CNN
+F 1 "+12V" H 15135 8673 50  0000 C CNN
+F 2 "" H 15150 8500 50  0001 C CNN
+F 3 "" H 15150 8500 50  0001 C CNN
+	1    15150 8500
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR0444
+U 1 1 6057C13D
+P 15150 8800
+AR Path="/6057C13D" Ref="#PWR0444"  Part="1" 
+AR Path="/5E8AFE9D/6057C13D" Ref="#PWR?"  Part="1" 
+AR Path="/5E8FBD97/6057C13D" Ref="#PWR?"  Part="1" 
+AR Path="/5E8E0754/6057C13D" Ref="#PWR?"  Part="1" 
+AR Path="/5E8DFCAD/6057C13D" Ref="#PWR?"  Part="1" 
+AR Path="/5E8DEDC0/6057C13D" Ref="#PWR?"  Part="1" 
+AR Path="/5E8C8865/6057C13D" Ref="#PWR?"  Part="1" 
+AR Path="/5E8E1F08/6057C13D" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4DF5/6057C13D" Ref="#PWR?"  Part="1" 
+F 0 "#PWR0444" H 15150 8550 50  0001 C CNN
+F 1 "GND" H 15155 8627 50  0000 C CNN
+F 2 "" H 15150 8800 50  0001 C CNN
+F 3 "" H 15150 8800 50  0001 C CNN
+	1    15150 8800
+	-1   0    0    -1  
+$EndComp
+$Comp
+L RespiraWorks_Std:Polyfuse_Small F5
+U 1 1 605AD786
+P 15650 8500
+F 0 "F5" V 15355 8500 50  0000 C CNN
+F 1 "1.1A 16V" V 15450 8500 50  0000 C CNN
+F 2 "RespiraWorks_Std:Fuse_1812_4532Metric_Castellated" H 15700 8300 50  0001 L CNN
+F 3 "https://www.belfuse.com/resources/datasheets/circuitprotection/ds-cp-0zcg-series.pdf" H 15650 8500 50  0001 C CNN
+F 4 "Bel-Fuse" V 15650 8500 50  0001 C CNN "Manufacturer"
+F 5 "0ZCG0110AF2C" V 15537 8500 50  0000 C CNN "Manufacturer PN"
+	1    15650 8500
+	0    1    1    0   
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x02 J?
+U 1 1 6060C5E5
+P 16050 8700
+AR Path="/5FCD5082/6060C5E5" Ref="J?"  Part="1" 
+AR Path="/6042B5C5/6060C5E5" Ref="J?"  Part="1" 
+AR Path="/6060C5E5" Ref="J53"  Part="1" 
+F 0 "J53" H 16130 8692 50  0000 L CNN
+F 1 "Fan" H 16130 8601 50  0000 L CNN
+F 2 "RespiraWorks_Std:Molex_Micro-Fit_3.0_43650-0215_1x02_P3.00mm_Vertical" H 16050 8700 50  0001 C CNN
+F 3 "~" H 16050 8700 50  0001 C CNN
+F 4 "Molex" H 16050 8700 50  0001 C CNN "Manufacturer"
+F 5 "43650-0215" H 16050 8700 50  0001 C CNN "Manufacturer PN"
+	1    16050 8700
+	1    0    0    1   
+$EndComp
+Wire Wire Line
+	15850 8600 15850 8500
+Wire Wire Line
+	15850 8500 15750 8500
+Wire Wire Line
+	15850 8700 15850 8800
+Wire Wire Line
+	15150 8500 15550 8500
+Connection ~ 15150 8500
+Wire Wire Line
+	15150 8800 15850 8800
+Connection ~ 15150 8800
 $EndSCHEMATC

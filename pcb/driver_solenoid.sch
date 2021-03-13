@@ -466,10 +466,10 @@ AR Path="/5FCD5082/5FEAE4F9" Ref="J36"  Part="1"
 AR Path="/6042B5C5/5FEAE4F9" Ref="J47"  Part="1" 
 F 0 "J47" H 6330 4792 50  0000 L CNN
 F 1 "Solenoid" H 6330 4701 50  0000 L CNN
-F 2 "RespiraWorks_Std:Molex_Micro-Fit_3.0_43650-0200_1x02_P3.00mm_Horizontal" H 6250 4800 50  0001 C CNN
+F 2 "RespiraWorks_Std:Molex_Micro-Fit_3.0_43650-0215_1x02_P3.00mm_Vertical" H 6250 4800 50  0001 C CNN
 F 3 "~" H 6250 4800 50  0001 C CNN
 F 4 "Molex" H 6250 4800 50  0001 C CNN "Manufacturer"
-F 5 "43650-0200" H 6250 4800 50  0001 C CNN "Manufacturer PN"
+F 5 "43650-0215" H 6250 4800 50  0001 C CNN "Manufacturer PN"
 	1    6250 4800
 	1    0    0    -1  
 $EndComp

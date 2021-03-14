@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 30 38
+Sheet 37 38
 Title "System Monitor ADC"
 Date ""
 Rev "A"

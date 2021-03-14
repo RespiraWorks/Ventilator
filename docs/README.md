@@ -27,7 +27,21 @@ apt-get install make doxygen graphviz
 
 Install Sphinx and the necessary extensions:
 ```shell
-pip install sphinx sphinx-rtd-theme breathe sphinx_sitemap
+pip install sphinx sphinx-rtd-theme breathe sphinx_sitemap mlx.traceability
 ```
 
 Then, to generate the docs, just run `make html`. The generated output can be viewed by opening the file `docs/_build/html/index.html`
+
+## Traceability
+
+We use a [traceability plugin for Sphinx](https://melexis.github.io/sphinx-traceability-extension/index.html) to generate requirement and test traceability reports.
+
+A traceable item is defined using the `.. :item:: <id>` keyword.
+
+By defining a traceability relationship in the target (ex. derived requirement
+`:fulfills: <parent requirement id>`), and bidirectional link is created between
+ the target and source `:item:`s. Traceability matrices and charts can be
+ generated based on these linkages.
+
+Over time, we can add additional attributes to the traceable items to trace data
+ such as verification method, status, etc...

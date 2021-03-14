@@ -751,4 +751,50 @@ F 5 "BSZ019N03LSATMA1" H 5800 1650 50  0001 C CNN "Manufacturer PN"
 	1    5800 1650
 	0    -1   -1   0   
 $EndComp
+$Comp
+L RespiraWorks_Std:Heatsink_Pad HS?
+U 1 1 6064C468
+P 6550 900
+AR Path="/6041384A/60567144/6064C468" Ref="HS?"  Part="1" 
+AR Path="/6041384A/60567757/6064C468" Ref="HS5"  Part="1" 
+F 0 "HS5" H 6500 1100 50  0000 L CNN
+F 1 "Heatsink_Pad" H 6691 848 50  0001 L CNN
+F 2 "RespiraWorks:Heatsink_Aavid_573100D00010G_HandSolder" H 6562 850 50  0001 C CNN
+F 3 "~" H 6562 850 50  0001 C CNN
+F 4 "Aavid Thermalloy" H 7000 1050 50  0000 C CNN "Manufacturer"
+F 5 "573100D00010G" H 7000 950 50  0000 C CNN "Part Number"
+	1    6550 900 
+	1    0    0    -1  
+$EndComp
+Text Notes 6450 600  0    50   ~ 0
+Optional heatsinks for Q21, Q22
+Wire Wire Line
+	6550 1000 6550 1050
+Wire Wire Line
+	6550 1050 6200 1050
+Text Label 5500 1550 0    50   ~ 0
+VMid
+Text Label 6200 1050 0    50   ~ 0
+VMid
+$Comp
+L RespiraWorks_Std:Heatsink_Pad HS?
+U 1 1 606522B6
+P 7550 900
+AR Path="/6041384A/60567144/606522B6" Ref="HS?"  Part="1" 
+AR Path="/6041384A/60567757/606522B6" Ref="HS6"  Part="1" 
+F 0 "HS6" H 7500 1100 50  0000 L CNN
+F 1 "Heatsink_Pad" H 7691 848 50  0001 L CNN
+F 2 "RespiraWorks:Heatsink_Aavid_573100D00010G_HandSolder" H 7562 850 50  0001 C CNN
+F 3 "~" H 7562 850 50  0001 C CNN
+F 4 "Aavid Thermalloy" H 8000 1050 50  0000 C CNN "Manufacturer"
+F 5 "573100D00010G" H 8000 950 50  0000 C CNN "Part Number"
+	1    7550 900 
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	7550 1000 7550 1050
+Wire Wire Line
+	7550 1050 7200 1050
+Text Label 7200 1050 0    50   ~ 0
+VMid
 $EndSCHEMATC

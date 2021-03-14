@@ -783,34 +783,6 @@ Wire Wire Line
 	4400 3150 3850 3150
 Wire Wire Line
 	4200 3050 4400 3050
-$Comp
-L Connector:TestPoint TP?
-U 1 1 60AA3F6D
-P 4400 4900
-AR Path="/5FCD50A5/60AA3F6D" Ref="TP?"  Part="1" 
-AR Path="/6052CC9F/60AA3F6D" Ref="TP?"  Part="1" 
-AR Path="/60AA3F6D" Ref="TP19"  Part="1" 
-F 0 "TP19" V 4400 5200 50  0000 C CNN
-F 1 "Stepper-ADC-In2" V 4450 4950 50  0001 C CNN
-F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 4600 4900 50  0001 C CNN
-F 3 "~" H 4600 4900 50  0001 C CNN
-	1    4400 4900
-	0    -1   -1   0   
-$EndComp
-$Comp
-L Connector:TestPoint TP?
-U 1 1 60AA4ACF
-P 4400 3400
-AR Path="/5FCD50A5/60AA4ACF" Ref="TP?"  Part="1" 
-AR Path="/6052CC9F/60AA4ACF" Ref="TP?"  Part="1" 
-AR Path="/60AA4ACF" Ref="TP18"  Part="1" 
-F 0 "TP18" V 4400 3700 50  0000 C CNN
-F 1 "Stepper-ADC-In1" V 4450 3450 50  0001 C CNN
-F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 4600 3400 50  0001 C CNN
-F 3 "~" H 4600 3400 50  0001 C CNN
-	1    4400 3400
-	0    -1   -1   0   
-$EndComp
 Wire Wire Line
 	3800 8200 3800 9350
 Wire Wire Line
@@ -3125,4 +3097,6 @@ Connection ~ 15150 8500
 Wire Wire Line
 	15150 8800 15850 8800
 Connection ~ 15150 8800
+NoConn ~ 4400 4900
+NoConn ~ 4400 3400
 $EndSCHEMATC

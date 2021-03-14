@@ -2061,4 +2061,15 @@ F 3 "~" H 5300 5600 50  0001 C CNN
 	1    5100 5600
 	0    -1   -1   0   
 $EndComp
+$Comp
+L RespiraWorks:ShieldConnectors U31
+U 1 1 6051D63E
+P 8400 6200
+F 0 "U31" H 8628 6246 50  0000 L CNN
+F 1 "ShieldConnectors" H 8628 6155 50  0000 L CNN
+F 2 "RespiraWorks:stm32shield" H 8400 6200 50  0001 C CNN
+F 3 "" H 8400 6200 50  0001 C CNN
+	1    8400 6200
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC

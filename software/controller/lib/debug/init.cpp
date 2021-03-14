@@ -69,7 +69,12 @@ Debug::Command::PeekHandler peek_command;
 Debug::Command::PokeHandler poke_command;
 Debug::Command::VarHandler var_command;
 Debug::Command::TraceHandler trace_command(&trace);
+#ifndef TEST_MODE
 Debug::Command::EepromHandler eeprom_command(&eeprom);
+#else
+static TestEeprom eeprom_test(0x50, 64, 4096);
+Debug::Command::EepromHandler eeprom_command(&eeprom_test);
+#endif
 
 namespace Debug {
 

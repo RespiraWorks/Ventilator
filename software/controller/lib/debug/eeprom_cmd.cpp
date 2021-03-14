@@ -31,27 +31,39 @@ ErrorCode EepromHandler::Process(Context *context) {
     if (context->request_length < 5)
       return ErrorCode::kMissingData;
     uint16_t length = u8_to_u16(&context->request[3]);
-    if (length > context->max_response_length) {
-      length = static_cast<uint16_t>(context->max_response_length);
-    }
+    if (length > context->max_response_length)
+      return ErrorCode::kNoMemory;
 
-    eeprom_->ReadBytes(address, length, context->response, context->processed);
-    context->response_length = length;
+    if (eeprom_->ReadBytes(address, length, context->response,
+                           context->processed)) {
+      // only set response_length if the read has been successfully sent
+      context->response_length = length;
+    }
     return ErrorCode::kWait;
 
   } else if (context->request[0] == 1) {
+    // at least one byte of data is given after the address
+    if (context->request_length < 4)
+      return ErrorCode::kMissingData;
+
     // length of data to be written is the length of the request minus
     // the subcommand and address bytes
     uint16_t length = static_cast<uint16_t>(context->request_length - 3);
+
+    if (length > kMaxWriteLength)
+      return ErrorCode::kNoMemory;
 
     // copy request data in our own array to allow eeprom to reinterpret_cast
     // the pointer we pass it (as pointers to const cannot be cast)
     uint8_t request[kMaxWriteLength] = {0};
     memcpy(&request[0], &(context->request[3]), length);
-
-    eeprom_->WriteBytes(address, length, &request, context->processed);
     context->response_length = 0;
-    return ErrorCode::kNone;
+    if (eeprom_->WriteBytes(address, length, &request, context->processed)) {
+      return ErrorCode::kNone;
+    } else {
+      // could not send write request for some reason
+      return ErrorCode::kInternalError;
+    }
 
   } else {
     return ErrorCode::kInvalidData;

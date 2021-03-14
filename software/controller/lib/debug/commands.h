@@ -219,7 +219,7 @@ public:
   ErrorCode Process(Context *context) override;
 
 private:
-  static constexpr uint16_t kMaxWriteLength{1000};
+  static constexpr uint16_t kMaxWriteLength{1024};
   I2Ceeprom *eeprom_;
 };
 

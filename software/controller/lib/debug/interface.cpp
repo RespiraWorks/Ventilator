@@ -44,10 +44,8 @@ bool Interface::Poll() {
   case State::kAwaitingResponse:
     if (command_processed_) {
       SendResponse(ErrorCode::kNone, response_length_);
-      state_ = State::kResponding;
     } else if (Hal.now() > command_start_time_ + milliseconds(100)) {
       SendError(ErrorCode::kTimeout);
-      state_ = State::kResponding;
     }
     return false;
 

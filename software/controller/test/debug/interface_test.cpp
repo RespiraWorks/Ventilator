@@ -78,7 +78,8 @@ std::vector<uint8_t> ProcessCmd(Interface *serial, std::vector<uint8_t> req,
   Hal.test_debugPutIncomingData(reinterpret_cast<const char *>(full_req.data()),
                                 static_cast<uint16_t>(full_req.size()));
   for (int i = 0; i < 100 && !serial->Poll(); ++i) {
-    // Wait for command to complete
+    // Wait for command to complete, advance sim time to allow timeout
+    Hal.delay(milliseconds(10));
   }
 
   std::vector<uint8_t> escaped_resp(500);
@@ -146,6 +147,31 @@ TEST(Interface, GetVar) {
     EXPECT_EQ(foo, GetVarViaCmd(&serial, var_foo.GetId()));
     EXPECT_EQ(bar, GetVarViaCmd(&serial, var_bar.GetId()));
   }
+}
+
+TEST(Interface, AwaitingResponseState) {
+  Interface serial;
+  // EEPROM read command needs time to be processed
+  std::vector<uint8_t> req = {
+      static_cast<uint8_t>(Command::Code::kEepromAccess),
+      0, // Read subcommand
+      0, // address LSB
+      0, // address MSB
+      1, // length LSB
+      0, // length MSB
+  };
+
+  // The helper function quietly passes through the AwaitingResponse state since
+  // the test EEPROM sets processed to true immediately if the address is valid.
+  std::vector<uint8_t> resp = ProcessCmd(&serial, req, ErrorCode::kNone);
+  EXPECT_EQ(resp.size(), 1);
+
+  // Requesting outside of memory leads to a timeout (test eeprom never sets
+  // processed to true)
+  req[3] = 0xFF;
+  req[4] = 0xFF;
+  resp = ProcessCmd(&serial, req, ErrorCode::kTimeout);
+  EXPECT_EQ(resp.size(), 0);
 }
 
 TEST(Interface, Errors) {

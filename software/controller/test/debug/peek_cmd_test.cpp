@@ -54,10 +54,7 @@ TEST(PeekHandler, valid_peek) {
       EXPECT_EQ(
           peek_context.response_length,
           std::min(peek_length, static_cast<uint16_t>(std::size(response))));
-      for (size_t offset = 0;
-           offset <
-           std::min(peek_length, static_cast<uint16_t>(std::size(response)));
-           ++offset) {
+      for (size_t offset = 0; offset < peek_context.response_length; ++offset) {
         EXPECT_EQ(response[offset], memory[byte_number + offset]);
       }
     }

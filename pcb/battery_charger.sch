@@ -1402,8 +1402,6 @@ Wire Wire Line
 Connection ~ 7800 3200
 Text HLabel 8850 3200 2    50   BiDi ~ 0
 Pack-P
-Text HLabel 1150 2000 0    50   Input ~ 0
-VIn-Adp
 $Comp
 L Device:R R?
 U 1 1 60332888
@@ -2030,4 +2028,6 @@ Wire Wire Line
 	7650 3800 7300 3800
 Text Label 7300 3800 0    50   ~ 0
 Pack-P
+Text HLabel 1150 2000 0    50   Input ~ 0
+Vin-Adp
 $EndSCHEMATC

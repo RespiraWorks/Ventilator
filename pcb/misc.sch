@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr B 17000 11000
 encoding utf-8
-Sheet 29 38
+Sheet 38 38
 Title "Add'l aux. functions"
 Date ""
 Rev "A"
@@ -1634,4 +1634,111 @@ Wire Wire Line
 	1850 6650 8400 6650
 Wire Wire Line
 	1750 6550 8400 6550
+$Comp
+L Connector_Generic:Conn_01x02 J?
+U 1 1 60538B04
+P 15250 2050
+AR Path="/601A64F8/60538B04" Ref="J?"  Part="1" 
+AR Path="/601A64F8/60567144/60538B04" Ref="J?"  Part="1" 
+AR Path="/6023BF6A/60538B04" Ref="J?"  Part="1" 
+AR Path="/5FCD4B8E/603C510C/60538B04" Ref="J?"  Part="1" 
+AR Path="/6041384A/60538B04" Ref="J?"  Part="1" 
+AR Path="/6017BD7E/60538B04" Ref="J54"  Part="1" 
+F 0 "J54" H 15350 2150 50  0000 R CNN
+F 1 "BLOWER-PWR MegaFit 2x1" H 15450 2250 50  0000 R CNN
+F 2 "RespiraWorks_Std:Molex_Mega-Fit_76829-0102_2x01_P5.70mm_Vertical" H 15250 2050 50  0001 C CNN
+F 3 "~" H 15250 2050 50  0001 C CNN
+F 4 "Molex" H 15250 2050 50  0001 C CNN "Manufacturer"
+F 5 "768290102" H 15250 2050 50  0001 C CNN "Manufacturer PN"
+	1    15250 2050
+	1    0    0    1   
+$EndComp
+$Comp
+L Device:CP C?
+U 1 1 6054EDEA
+P 14050 2100
+AR Path="/601A64F8/6054EDEA" Ref="C?"  Part="1" 
+AR Path="/601A64F8/60567144/6054EDEA" Ref="C?"  Part="1" 
+AR Path="/6023BF6A/60567144/6054EDEA" Ref="C?"  Part="1" 
+AR Path="/6023BF6A/6054EDEA" Ref="C?"  Part="1" 
+AR Path="/5FCD4B8E/603C510C/60567144/6054EDEA" Ref="C?"  Part="1" 
+AR Path="/6041384A/60567144/6054EDEA" Ref="C?"  Part="1" 
+AR Path="/6017BD7E/6054EDEA" Ref="C74"  Part="1" 
+F 0 "C74" H 14100 2000 50  0000 L CNN
+F 1 "33uF" H 14100 1900 50  0000 L CNN
+F 2 "RespiraWorks_Std:CP_Elec_6.3x7.7" H 14088 1950 50  0001 C CNN
+F 3 "https://industrial.panasonic.com/cdbs/www-data/pdf/RDE0000/ABA0000C1181.pdf" H 14050 2100 50  0001 C CNN
+F 4 "50V" H 14100 1800 50  0000 L CNN "Voltage"
+F 5 "Panasonic" H 14050 2100 50  0001 C CNN "Manufacturer"
+F 6 "EEE-FK1H330XP" H 14050 2100 50  0001 C CNN "Manufacturer PN"
+F 7 "Aluminum" H 14050 2100 50  0001 C CNN "Dielectric"
+	1    14050 2100
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:CP C?
+U 1 1 6055BA37
+P 13650 2100
+AR Path="/601A64F8/6055BA37" Ref="C?"  Part="1" 
+AR Path="/601A64F8/60567144/6055BA37" Ref="C?"  Part="1" 
+AR Path="/6023BF6A/60567144/6055BA37" Ref="C?"  Part="1" 
+AR Path="/6023BF6A/6055BA37" Ref="C?"  Part="1" 
+AR Path="/5FCD4B8E/603C510C/60567144/6055BA37" Ref="C?"  Part="1" 
+AR Path="/6041384A/60567144/6055BA37" Ref="C?"  Part="1" 
+AR Path="/6017BD7E/6055BA37" Ref="C71"  Part="1" 
+F 0 "C71" H 13700 2000 50  0000 L CNN
+F 1 "33uF" H 13700 1900 50  0000 L CNN
+F 2 "RespiraWorks_Std:CP_Elec_6.3x7.7" H 13688 1950 50  0001 C CNN
+F 3 "https://industrial.panasonic.com/cdbs/www-data/pdf/RDE0000/ABA0000C1181.pdf" H 13650 2100 50  0001 C CNN
+F 4 "50V" H 13700 1800 50  0000 L CNN "Voltage"
+F 5 "Panasonic" H 13650 2100 50  0001 C CNN "Manufacturer"
+F 6 "EEE-FK1H330XP" H 13650 2100 50  0001 C CNN "Manufacturer PN"
+F 7 "Aluminum" H 13650 2100 50  0001 C CNN "Dielectric"
+	1    13650 2100
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	15050 2050 14350 2050
+Wire Wire Line
+	14350 2050 14350 2500
+Wire Wire Line
+	14350 2500 14050 2500
+Wire Wire Line
+	13650 2500 13650 2250
+Wire Wire Line
+	13650 2500 13650 2600
+Connection ~ 13650 2500
+Wire Wire Line
+	13650 1950 14050 1950
+Connection ~ 14050 1950
+Wire Wire Line
+	14050 1950 15050 1950
+$Comp
+L power:GND #PWR?
+U 1 1 60580A03
+P 13650 2600
+AR Path="/60580A03" Ref="#PWR?"  Part="1" 
+AR Path="/5E8AFE9D/60580A03" Ref="#PWR?"  Part="1" 
+AR Path="/5E8A4ABF/60580A03" Ref="#PWR?"  Part="1" 
+AR Path="/5E8E1F08/60580A03" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4DF5/60580A03" Ref="#PWR?"  Part="1" 
+AR Path="/5FCD4B8E/60580A03" Ref="#PWR?"  Part="1" 
+AR Path="/6017BD7E/60580A03" Ref="#PWR0269"  Part="1" 
+F 0 "#PWR0269" H 13650 2350 50  0001 C CNN
+F 1 "GND" H 13655 2427 50  0000 C CNN
+F 2 "" H 13650 2600 50  0001 C CNN
+F 3 "" H 13650 2600 50  0001 C CNN
+	1    13650 2600
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	13650 1950 13300 1950
+Connection ~ 13650 1950
+Text HLabel 13300 1950 0    50   Input ~ 0
+Blower-12V
+Wire Wire Line
+	14050 2250 14050 2500
+Connection ~ 14050 2500
+Wire Wire Line
+	14050 2500 13650 2500
 $EndSCHEMATC

@@ -261,17 +261,6 @@ F11 "12V" I L 4400 3050 50
 F12 "3V3" I L 4400 3150 50 
 $EndSheet
 $Sheet
-S 13400 3950 1050 650 
-U 6017BD7E
-F0 "Add'l aux functions" 50
-F1 "misc.sch" 50
-F2 "CC-SDA" B L 13400 4050 50 
-F3 "CC-SCL" I L 13400 4150 50 
-F4 "Blower-Speed" I L 13400 4400 50 
-F5 "Blower-Enable" I L 13400 4500 50 
-F6 "Aux-I2C-Switch-nINT" O L 13400 4250 50 
-$EndSheet
-$Sheet
 S 4250 7400 850  1100
 U 603267F9
 F0 "System Monitor ADC" 50
@@ -3099,4 +3088,29 @@ Wire Wire Line
 Connection ~ 15150 8800
 NoConn ~ 4400 4900
 NoConn ~ 4400 3400
+$Sheet
+S 13400 3950 1300 650 
+U 6017BD7E
+F0 "Add'l aux functions" 50
+F1 "misc.sch" 50
+F2 "CC-SDA" B L 13400 4050 50 
+F3 "CC-SCL" I L 13400 4150 50 
+F4 "Blower-Speed" I L 13400 4400 50 
+F5 "Blower-Enable" I L 13400 4500 50 
+F6 "Aux-I2C-Switch-nINT" O L 13400 4250 50 
+F7 "Blower-12V" I R 14700 4050 50 
+$EndSheet
+Wire Wire Line
+	14700 4050 14900 4050
+$Comp
+L RespiraWorks:+12V #PWR0265
+U 1 1 605B6EFB
+P 14900 4050
+F 0 "#PWR0265" H 14900 4050 50  0001 C CNN
+F 1 "+12V" H 14885 4223 50  0000 C CNN
+F 2 "" H 14900 4050 50  0001 C CNN
+F 3 "" H 14900 4050 50  0001 C CNN
+	1    14900 4050
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC

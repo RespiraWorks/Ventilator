@@ -493,4 +493,15 @@ Text Notes 6200 1050 0    50   ~ 0
 Place for optional fuse
 Text Notes 3350 1650 2    50   ~ 0
 BeMicro MAX10 board has\nonboard I2C pull-ups
+$Comp
+L RespiraWorks:FPGAOutline H15
+U 1 1 60548A57
+P 5500 4650
+F 0 "H15" H 5728 4696 50  0000 L CNN
+F 1 "FPGAOutline" H 5728 4605 50  0000 L CNN
+F 2 "RespiraWorks:BEMICRO-MAX10" H 5500 4650 50  0001 C CNN
+F 3 "" H 5500 4650 50  0001 C CNN
+	1    5500 4650
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC

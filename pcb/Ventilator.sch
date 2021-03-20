@@ -1180,19 +1180,19 @@ F 4 "" H 7750 6600 50  0001 C CNN "DNP"
 	1    7600 6600
 	0    1    -1   0   
 $EndComp
-Text Label 6550 5900 0    50   ~ 0
-Exh-Flow
 Text Label 6550 6000 0    50   ~ 0
-Oxygen-Flow
+Exh-Flow
 Text Label 6550 6100 0    50   ~ 0
+Oxygen-Flow
+Text Label 6550 5900 0    50   ~ 0
 Inh-Flow
-Text Label 6550 6200 0    50   ~ 0
+Text Label 6550 6500 0    50   ~ 0
 Oxygen-FiO2
-Text Label 6550 6300 0    50   ~ 0
+Text Label 6550 6200 0    50   ~ 0
 Patient-Pressure
 Text Label 6400 6400 0    50   ~ 0
 Mixing-Tank-Pressure
-Text Label 6550 6500 0    50   ~ 0
+Text Label 6550 6300 0    50   ~ 0
 Oxygen-Pressure
 Text Label 6550 6600 0    50   ~ 0
 Vin-Sense

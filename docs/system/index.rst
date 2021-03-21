@@ -4,6 +4,7 @@ System Documentation
 ====================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
+   covent_19
    system_requirements

@@ -1275,20 +1275,6 @@ Connection ~ 3000 3750
 Text Label 15150 2400 2    50   ~ 0
 Low-Alarm-Bat
 $Comp
-L Connector:TestPoint TP?
-U 1 1 6103A837
-P 12800 2300
-AR Path="/5FCD50A5/6103A837" Ref="TP?"  Part="1" 
-AR Path="/6052CC9F/6103A837" Ref="TP?"  Part="1" 
-AR Path="/6103A837" Ref="TP37"  Part="1" 
-F 0 "TP37" V 12800 2550 50  0000 C CNN
-F 1 "Low-Alarm-Bat" V 12850 2350 50  0001 C CNN
-F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 13000 2300 50  0001 C CNN
-F 3 "~" H 13000 2300 50  0001 C CNN
-	1    12800 2300
-	0    1    1    0   
-$EndComp
-$Comp
 L RespiraWorks:+3.3V_Ctrl #PWR?
 U 1 1 610BA80A
 P 14100 2000
@@ -3113,4 +3099,5 @@ F 3 "" H 14900 4050 50  0001 C CNN
 	1    14900 4050
 	1    0    0    -1  
 $EndComp
+NoConn ~ 12800 2300
 $EndSCHEMATC

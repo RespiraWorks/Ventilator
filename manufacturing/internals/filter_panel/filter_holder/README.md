@@ -50,7 +50,7 @@ single-barb adapter for 3/4" tubing internal to the ventilator pneumatic assembl
 platform matching the dimensions of the filter gasket. The walls of the cavity should hug the filter with no about
 0.5mm of extra space on the sides.
 
-Holes for panel mounting are made for M4 screws, with 0.1mm tolerance, spaced 52.5mm apart horizontally and 23mm vertically.
+Holes for panel mounting are made for M4 screws.
 
 Holes for heat-set inserts are 5.5mm in diameter, adapters for the M3 inserts in the BOM below, and are spaced 51mm apart.
 

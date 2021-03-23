@@ -19,8 +19,10 @@ while also allowing it to lay flush with the front face of the enclosure. Heat-s
 mounted securely without obstruction.
 
 The sizing for the mounting holes was based on [this](https://www.pemnet.com/fastening_products/pdf/sidata.pdf) catalog
-for heat set inserts. For M4 nuts (page 6, metric table, row 6), length code 1 (5.72 mm) is small enough to fit in the
+for heat set inserts. For M4 nuts (page 5, metric table, row 6), length code 1 (5.72 mm) is small enough to fit in the
 6.35mm-thick acrylic. The corresponding outer diameter for insertion i.e. acrylic mounting diameter is 5.94 mm.
+
+> TODO: do same rationale explanation for filter housings
 
 ## Parts
 

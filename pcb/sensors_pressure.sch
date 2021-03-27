@@ -18,14 +18,14 @@ L Connector:TestPoint TP86
 U 1 1 5FFD9664
 P 3250 1400
 F 0 "TP86" H 3308 1518 50  0000 L CNN
-F 1 "Inh-Flow" H 3100 1600 50  0000 L CNN
+F 1 "Inf-Flow" H 3100 1600 50  0000 L CNN
 F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 3450 1400 50  0001 C CNN
 F 3 "~" H 3450 1400 50  0001 C CNN
 	1    3250 1400
 	1    0    0    -1  
 $EndComp
 Text HLabel 3400 1400 2    50   Output ~ 0
-Inh-Flow
+Inf-Flow
 $Comp
 L Connector:TestPoint TP90
 U 1 1 6000A26F
@@ -55,7 +55,7 @@ Patient-Pressure
 $Sheet
 S 900  1300 1850 450 
 U 600630A6
-F0 "Pressure sensor daughterboard (Inh_Flow)" 50
+F0 "Pressure sensor daughterboard (Inf_Flow)" 50
 F1 "sensors_pressure_daughterboard.sch" 50
 F2 "Vout" O R 2750 1400 50 
 F3 "SDA" B R 2750 1550 50 

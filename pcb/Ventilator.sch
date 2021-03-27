@@ -210,7 +210,7 @@ S 13100 2650 1000 1000
 U 5FCD4E9D
 F0 "Pressure Sensors" 50
 F1 "sensors_pressure.sch" 50
-F2 "Inh-Flow" O L 13100 3250 50 
+F2 "Inf-Flow" O L 13100 3250 50 
 F3 "Mix-Tank-Pressure" O L 13100 2850 50 
 F4 "Patient-Pressure" O L 13100 2750 50 
 F5 "Oxy-Pressure" O L 13100 2950 50 
@@ -454,7 +454,7 @@ PSol2-Ctrl
 Wire Wire Line
 	8700 1900 8200 1900
 Text Label 8200 1900 0    50   ~ 0
-Inh-Flow
+Inf-Flow
 Wire Wire Line
 	7650 2600 8700 2600
 Wire Wire Line
@@ -574,7 +574,7 @@ Oxygen-Flow
 Wire Wire Line
 	13100 3250 12600 3250
 Text Label 12600 3250 0    50   ~ 0
-Inh-Flow
+Inf-Flow
 Wire Wire Line
 	9750 3050 13100 3050
 Wire Wire Line
@@ -1185,7 +1185,7 @@ Exh-Flow
 Text Label 6550 6100 0    50   ~ 0
 Oxygen-Flow
 Text Label 6550 5900 0    50   ~ 0
-Inh-Flow
+Inf-Flow
 Text Label 6550 6500 0    50   ~ 0
 Oxygen-FiO2
 Text Label 6550 6200 0    50   ~ 0

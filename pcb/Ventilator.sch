@@ -1191,7 +1191,7 @@ Oxygen-FiO2
 Text Label 6550 6200 0    50   ~ 0
 Patient-Pressure
 Text Label 6400 6400 0    50   ~ 0
-Mixing-Tank-Pressure
+Mix-Tank-Pressure
 Text Label 6550 6300 0    50   ~ 0
 Oxygen-Pressure
 Text Label 6550 6600 0    50   ~ 0

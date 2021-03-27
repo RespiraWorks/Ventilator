@@ -239,7 +239,7 @@ F 0 "R63" H 4500 2750 50  0000 C CNN
 F 1 "100k" H 4400 2850 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 4580 2800 50  0001 C CNN
 F 3 "~" H 4650 2800 50  0001 C CNN
-F 4 "KOA Speer" H 4650 2800 50  0001 C CNN "Manufacturer"
+F 4 "" H 4650 2800 50  0001 C CNN "Manufacturer"
 	1    4650 2800
 	-1   0    0    1   
 $EndComp
@@ -741,7 +741,7 @@ F 0 "R70" H 8650 2450 50  0000 C CNN
 F 1 "249k" H 8600 2550 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 8730 2500 50  0001 C CNN
 F 3 "~" H 8800 2500 50  0001 C CNN
-F 4 "KOA Speer" H 8800 2500 50  0001 C CNN "Manufacturer"
+F 4 "" H 8800 2500 50  0001 C CNN "Manufacturer"
 	1    8800 2500
 	-1   0    0    1   
 $EndComp
@@ -1588,7 +1588,7 @@ F 0 "R62" V 4350 7950 50  0000 C CNN
 F 1 "1M" V 4350 8550 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 4330 8250 50  0001 C CNN
 F 3 "~" H 4400 8250 50  0001 C CNN
-F 4 "KOA Speer" H 4400 8250 50  0001 C CNN "Manufacturer"
+F 4 "" H 4400 8250 50  0001 C CNN "Manufacturer"
 	1    4400 8250
 	0    1    1    0   
 $EndComp

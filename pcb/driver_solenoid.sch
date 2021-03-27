@@ -113,7 +113,7 @@ AR Path="/5E8E0754/5FD6C66B" Ref="R?"  Part="1"
 AR Path="/5FCD5082/5FD6C66B" Ref="R118"  Part="1" 
 AR Path="/6042B5C5/5FD6C66B" Ref="R222"  Part="1" 
 F 0 "R222" H 5250 3400 50  0000 C CNN
-F 1 "2k" H 5250 3500 50  0000 C CNN
+F 1 "4.02k" H 5250 3500 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 5330 3450 50  0001 C CNN
 F 3 "~" H 5400 3450 50  0001 C CNN
 F 4 "" H 5400 3450 50  0001 C CNN "Manufacturer"
@@ -142,8 +142,8 @@ F 3 "" H 5400 3600 50  0001 C CNN
 	1    5400 3600
 	1    0    0    -1  
 $EndComp
-Text Notes 5650 4300 2    50   ~ 0
-CL voltage threshold = 1.23V\nCL current = Iout/2000 +/- 20%\n\n2K = 1.23A nom. limit, 0.98 - 1.48A range\n2.4K = 1.03A nom. limit, 0.82 - 1.23A range
+Text Notes 5600 4350 2    50   ~ 0
+CL voltage threshold = 1.23V\nCL current = Iout/2000 +/- 20%\n\n2K = 1.23A nom. limit, 0.98 - 1.48A range\n2.4K = 1.03A nom. limit, 0.82 - 1.23A range\n4.02K = 0.61A nom. limit, 0.49 - 0.73A range
 $Comp
 L Device:R R?
 U 1 1 5FD6C67B
@@ -161,7 +161,7 @@ F 0 "R220" H 4800 3200 50  0000 C CNN
 F 1 "1.5k" H 4800 3300 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 4880 3300 50  0001 C CNN
 F 3 "~" H 4950 3300 50  0001 C CNN
-F 4 "KOA Speer" H 4950 3300 50  0001 C CNN "Manufacturer"
+F 4 "" H 4950 3300 50  0001 C CNN "Manufacturer"
 F 5 "DNP" V 4950 3300 50  0000 C CNN "DNP"
 	1    4950 3300
 	-1   0    0    1   
@@ -205,7 +205,7 @@ F 0 "R218" V 2450 3300 50  0000 C CNN
 F 1 "52.3k" V 2350 3250 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 2480 3300 50  0001 C CNN
 F 3 "~" H 2550 3300 50  0001 C CNN
-F 4 "KOA Speer" H 2550 3300 50  0001 C CNN "Manufacturer"
+F 4 "" H 2550 3300 50  0001 C CNN "Manufacturer"
 F 5 "DNP" V 2550 3300 50  0000 C CNN "DNP"
 	1    2550 3300
 	0    -1   -1   0   
@@ -233,7 +233,7 @@ F 0 "R217" V 2100 2550 50  0000 C CNN
 F 1 "10k" V 2300 2550 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 2130 2550 50  0001 C CNN
 F 3 "~" H 2200 2550 50  0001 C CNN
-F 4 "KOA Speer" H 2200 2550 50  0001 C CNN "Manufacturer"
+F 4 "" H 2200 2550 50  0001 C CNN "Manufacturer"
 	1    2200 2550
 	1    0    0    -1  
 $EndComp
@@ -399,7 +399,7 @@ F 0 "R221" H 5000 6000 50  0000 C CNN
 F 1 "10k" H 5000 5900 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 5130 6000 50  0001 C CNN
 F 3 "~" H 5200 6000 50  0001 C CNN
-F 4 "KOA Speer" H 5200 6000 50  0001 C CNN "Manufacturer"
+F 4 "" H 5200 6000 50  0001 C CNN "Manufacturer"
 F 5 "DNP" H 5000 5800 50  0000 C CNN "DNP"
 	1    5200 6000
 	1    0    0    -1  
@@ -768,7 +768,7 @@ F 0 "R216" H 2300 3450 50  0000 C CNN
 F 1 "100k" H 2300 3350 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 2080 3450 50  0001 C CNN
 F 3 "~" H 2150 3450 50  0001 C CNN
-F 4 "KOA Speer" H 2150 3450 50  0001 C CNN "Manufacturer"
+F 4 "" H 2150 3450 50  0001 C CNN "Manufacturer"
 F 5 "DNP" V 2150 3450 50  0000 C CNN "DNP"
 	1    2150 3450
 	1    0    0    -1  

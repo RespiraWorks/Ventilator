@@ -2484,9 +2484,7 @@ F 3 "~" H 15400 5850 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Text Label 14100 5900 0    50   ~ 0
-UART-RTS-STM-CTS-RPi
-Text Label 14100 6000 0    50   ~ 0
-UART-CTS-STM-RTS-RPi
+UART-CTS-RPi-RTS-STM
 Text Label 14100 6100 0    50   ~ 0
 UART-Tx-RPi-Rx-STM
 Text Label 14100 6200 0    50   ~ 0
@@ -2713,8 +2711,6 @@ F 3 "" H 2300 1100 50  0001 C CNN
 $EndComp
 Text Label 7650 2500 0    50   ~ 0
 UART-RTS-RPi-CTS-STM
-Text Label 7650 2600 0    50   ~ 0
-UART-CTS-RPi-RTS-STM
 $Comp
 L Connector:TestPoint TP?
 U 1 1 6058513B
@@ -3100,4 +3096,8 @@ F 3 "" H 15450 1050 50  0001 C CNN
 	1    15450 1050
 	1    0    0    -1  
 $EndComp
+Text Label 7650 2600 0    50   ~ 0
+UART-CTS-RPi-RTS-STM
+Text Label 14100 6000 0    50   ~ 0
+UART-RTS-RPi-CTS-STM
 $EndSCHEMATC

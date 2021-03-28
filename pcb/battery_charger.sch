@@ -22,7 +22,7 @@ SCL
 Text HLabel 4600 4900 0    50   BiDi ~ 0
 SDA
 Text Notes 4600 1550 0    50   ~ 0
-Design notes:\n- 6.3A max current, 17-20V input, approx 120W\n- Inductor selection: Isat 9.1A, 3.3uH\n- Wurth 7443330330 or Bourns SRP1038A-3R3M (OPL alt: MWSA1004-3R3MT)\n- Voltage will range from 12V to 16.8V for 4s Li-Ion battery\n- 11.5 to 13.0V for SLA (lead acid)\n- N-CH FET (30V, 3.3x3.3mm): CSD17304Q3 (OPL) or BSZ050N03LSGATMA1 (OPL)\n- P-CH FET (20V, 3.3x3.3mm): CSD25402Q3A (OPL) or CSD25404Q3T (OPL)\n- N-CH FET (60V, 5x6mm): CSD18563Q5A\n- P-CH FET (30V, 3.3x3.3mm): DMP3013SFV-7\n
+Design notes:\n- 8.3A max input current, 17-20V input, approx 140W\n- Inductor selection: Isat 12A, 3.3uH\n- Wurth 7443330330 or Bourns SRP1038A-3R3M (OPL alt: MWSA1004-3R3MT)\n- Voltage will range from 12V to 16.8V for 4s Li-Ion battery\n- 11.5 to 13.0V for SLA (lead acid)\n- N-CH FET (30V, 3.3x3.3mm): CSD17304Q3 (OPL) or BSZ050N03LSGATMA1 (OPL)\n- P-CH FET (20V, 3.3x3.3mm): CSD25402Q3A (OPL) or CSD25404Q3T (OPL)\n- N-CH FET (60V, 5x6mm): CSD18563Q5A\n- P-CH FET (30V, 3.3x3.3mm): DMP3013SFV-7\n
 $Comp
 L RespiraWorks_Std:SRP1038A-3R3M L?
 U 1 1 60580E76
@@ -34,7 +34,7 @@ AR Path="/5FCD4B8E/603C510C/60567144/60580E76" Ref="L?"  Part="1"
 AR Path="/6041384A/60567144/60580E76" Ref="L3"  Part="1" 
 F 0 "L3" H 6050 2190 50  0000 C CNN
 F 1 "SRP1038A-3R3M" H 6050 2099 50  0000 C CNN
-F 2 "RespiraWorks:L_Bourns-SRP1038" V 6050 2000 50  0001 C CNN
+F 2 "RespiraWorks:L_Bourns_SRP1038" V 6050 2000 50  0001 C CNN
 F 3 "https://www.bourns.com/docs/Product-Datasheets/SRP1038A.pdf" V 6050 2000 50  0001 C CNN
 F 4 "Bourns" H 6050 2000 50  0001 C CNN "Manufacturer"
 F 5 "SRP1038A-3R3M" H 6050 2000 50  0001 C CNN "Manufacturer PN"
@@ -299,11 +299,11 @@ AR Path="/6023BF6A/60567144/60580EEA" Ref="R?"  Part="1"
 AR Path="/5FCD4B8E/603C510C/60567144/60580EEA" Ref="R?"  Part="1" 
 AR Path="/6041384A/60567144/60580EEA" Ref="R173"  Part="1" 
 F 0 "R173" V 3043 2000 50  0000 C CNN
-F 1 "0.01" V 3134 2000 50  0000 C CNN
-F 2 "RespiraWorks_Std:R_1206_3216Metric" V 3180 2000 50  0001 C CNN
+F 1 "0.005" V 3134 2000 50  0000 C CNN
+F 2 "RespiraWorks_Std:R_2512_6332Metric" V 3180 2000 50  0001 C CNN
 F 3 "~" H 3250 2000 50  0001 C CNN
-F 4 "Vishay" H 3250 2000 50  0001 C CNN "Manufacturer"
-F 5 "WSL1206R0100FEA" H 3250 2000 50  0001 C CNN "Manufacturer PN"
+F 4 "Rohm" H 3250 2000 50  0001 C CNN "Manufacturer"
+F 5 "PMR100HZPFU5L00" H 3250 2000 50  0001 C CNN "Manufacturer PN"
 	1    3250 2000
 	0    1    1    0   
 $EndComp
@@ -316,7 +316,7 @@ AR Path="/601A64F8/60567144/60580EF0" Ref="R?"  Part="1"
 AR Path="/6023BF6A/60567144/60580EF0" Ref="R?"  Part="1" 
 AR Path="/5FCD4B8E/603C510C/60567144/60580EF0" Ref="R?"  Part="1" 
 AR Path="/6041384A/60567144/60580EF0" Ref="R182"  Part="1" 
-F 0 "R182" V 4850 4850 50  0000 L CNN
+F 0 "R182" V 4850 4750 50  0000 L CNN
 F 1 "10k" V 4850 5250 50  0000 L CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 4830 5100 50  0001 C CNN
 F 3 "~" H 4900 5100 50  0001 C CNN
@@ -376,8 +376,8 @@ F 3 "" H 1200 4550 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Connection ~ 1200 4200
-Text Notes 1800 5400 0    50   ~ 0
-V_ilim = 20*IPDM*Rac\nV_ilim = 1.29V -> 6.45A\nNote this is adapter current
+Text Notes 1750 5450 0    50   ~ 0
+V_ilim = 20*IPDM*Rac\nV_ilim = 867mV -> 8.67A\nNote this is adapter current
 $Comp
 L Device:C C?
 U 1 1 60580F19
@@ -558,7 +558,7 @@ AR Path="/5FCD4B8E/603C510C/60567144/60580F88" Ref="U?"  Part="1"
 AR Path="/6041384A/60567144/60580F88" Ref="U23"  Part="1" 
 F 0 "U23" H 6075 5847 50  0000 C CNN
 F 1 "BQ24773" H 6075 5756 50  0000 C CNN
-F 2 "Package_DFN_QFN:QFN-28-1EP_4x4mm_P0.4mm_EP2.6x2.6mm_ThermalVias" H 6100 1700 50  0001 C CNN
+F 2 "RespiraWorks_Std:QFN-28-1EP_4x4mm_P0.4mm_EP2.6x2.6mm_ThermalVias" H 6100 1700 50  0001 C CNN
 F 3 "https://www.ti.com/lit/ds/symlink/bq24773.pdf" H 8750 5050 50  0001 C CNN
 F 4 "Texas Instruments" H 6075 5665 50  0000 C CNN "Manufacturer"
 F 5 "BQ24773RUYR" H 6075 5574 50  0000 C CNN "Manufacturer PN"
@@ -1227,11 +1227,11 @@ AR Path="/6023BF6A/60567144/605810E5" Ref="R?"  Part="1"
 AR Path="/5FCD4B8E/603C510C/60567144/605810E5" Ref="R?"  Part="1" 
 AR Path="/6041384A/60567144/605810E5" Ref="R188"  Part="1" 
 F 0 "R188" H 7650 2250 50  0000 C CNN
-F 1 "0.01" H 7600 2350 50  0000 C CNN
-F 2 "RespiraWorks_Std:R_1206_3216Metric" V 7730 2300 50  0001 C CNN
+F 1 "0.005" H 7600 2350 50  0000 C CNN
+F 2 "RespiraWorks_Std:R_2512_6332Metric" V 7730 2300 50  0001 C CNN
 F 3 "~" H 7800 2300 50  0001 C CNN
-F 4 "Vishay" H 7800 2300 50  0001 C CNN "Manufacturer"
-F 5 "WSL1206R0100FEA" H 7800 2300 50  0001 C CNN "Manufacturer PN"
+F 4 "Rohm" H 7800 2300 50  0001 C CNN "Manufacturer"
+F 5 "PMR100HZPFU5L00" H 7800 2300 50  0001 C CNN "Manufacturer PN"
 	1    7800 2300
 	-1   0    0    1   
 $EndComp
@@ -1264,7 +1264,7 @@ AR Path="/601A64F8/60567144/605810F1" Ref="R?"  Part="1"
 AR Path="/6023BF6A/60567144/605810F1" Ref="R?"  Part="1" 
 AR Path="/5FCD4B8E/603C510C/60567144/605810F1" Ref="R?"  Part="1" 
 AR Path="/6041384A/60567144/605810F1" Ref="R186"  Part="1" 
-F 0 "R186" V 7250 3200 50  0000 L CNN
+F 0 "R186" V 7300 2900 50  0000 L CNN
 F 1 "0" V 7250 2750 50  0000 L CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 7130 3000 50  0001 C CNN
 F 3 "~" H 7200 3000 50  0001 C CNN
@@ -1412,7 +1412,7 @@ AR Path="/6023BF6A/60567144/60332888" Ref="R?"  Part="1"
 AR Path="/5FCD4B8E/603C510C/60567144/60332888" Ref="R?"  Part="1" 
 AR Path="/6041384A/60567144/60332888" Ref="R171"  Part="1" 
 F 0 "R171" H 2900 5200 50  0000 L CNN
-F 1 "316k" H 2900 5100 50  0000 L CNN
+F 1 "52.3k" H 2850 5100 50  0000 L CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 3080 5150 50  0001 C CNN
 F 3 "~" H 3150 5150 50  0001 C CNN
 	1    3150 5150
@@ -1428,7 +1428,7 @@ AR Path="/6023BF6A/60567144/6033CD9E" Ref="R?"  Part="1"
 AR Path="/5FCD4B8E/603C510C/60567144/6033CD9E" Ref="R?"  Part="1" 
 AR Path="/6041384A/60567144/6033CD9E" Ref="R172"  Part="1" 
 F 0 "R172" H 2900 5500 50  0000 L CNN
-F 1 "100k" H 2900 5400 50  0000 L CNN
+F 1 "10k" H 2900 5400 50  0000 L CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 3080 5450 50  0001 C CNN
 F 3 "~" H 3150 5450 50  0001 C CNN
 	1    3150 5450
@@ -1490,8 +1490,8 @@ AR Path="/601A64F8/60567144/6035E290" Ref="R?"  Part="1"
 AR Path="/6023BF6A/60567144/6035E290" Ref="R?"  Part="1" 
 AR Path="/5FCD4B8E/603C510C/60567144/6035E290" Ref="R?"  Part="1" 
 AR Path="/6041384A/60567144/6035E290" Ref="R184"  Part="1" 
-F 0 "R184" V 5050 6100 50  0000 L CNN
-F 1 "0" V 5050 5650 50  0000 L CNN
+F 0 "R184" V 5100 5800 50  0000 L CNN
+F 1 "0" V 4900 5850 50  0000 L CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 4930 5900 50  0001 C CNN
 F 3 "~" H 5000 5900 50  0001 C CNN
 	1    5000 5900
@@ -1630,8 +1630,8 @@ F 3 "" H 3900 6650 50  0001 C CNN
 	-1   0    0    -1  
 $EndComp
 Connection ~ 3900 6350
-Text Notes 7500 6150 0    50   ~ 0
-PMON default is 1uA/W\nIBAT and IADT are voltage outputs\n
+Text Notes 7500 6200 0    50   ~ 0
+PMON default is 1uA/W (with 10mΩ ACP/N resistor)\n-> 0.5uA/W (with 5mΩ ACP/N resistor)\nIBAT and IADT are voltage outputs\n
 $Comp
 L Device:R R?
 U 1 1 602004C3
@@ -1694,7 +1694,7 @@ AR Path="/601A64F8/60567144/6025D734" Ref="C?"  Part="1"
 AR Path="/6023BF6A/60567144/6025D734" Ref="C?"  Part="1" 
 AR Path="/5FCD4B8E/603C510C/60567144/6025D734" Ref="C?"  Part="1" 
 AR Path="/6041384A/60567144/6025D734" Ref="C105"  Part="1" 
-F 0 "C105" H 3600 4650 50  0000 L CNN
+F 0 "C105" H 3550 4650 50  0000 L CNN
 F 1 "1uF" H 3600 4550 50  0000 L CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 3888 4500 50  0001 C CNN
 F 3 "~" H 3850 4650 50  0001 C CNN
@@ -1858,9 +1858,9 @@ NoConn ~ 6850 5300
 Text Notes 900  4950 0    50   ~ 0
 Vin-Adp used when >13V\n(ACDET pin > 2.4V)
 Text Notes 9450 4800 0    50   ~ 0
-0.4 or 0.8V/A from Vin_Adp\n(with 10mΩ ACP/N resistor)
+0.2 or 0.4V/A from Vin_Adp\n(with 5mΩ ACP/N resistor)
 Text Notes 9400 5300 0    50   ~ 0
-0.2V/A charging, 0.8 or 1.6V/A discharging\n(with 10mΩ ACP/N resistor)
+0.1V/A charging, 0.4 or 0.8V/A discharging\n(with 5mΩ ACP/N resistor)
 Connection ~ 8500 5250
 Text Notes 6950 5400 0    50   ~ 0
 5.4V nominal
@@ -2030,4 +2030,6 @@ Text Label 7300 3800 0    50   ~ 0
 Pack-P
 Text HLabel 1150 2000 0    50   Input ~ 0
 Vin-Adp
+Text Notes 8250 950  0    50   Italic 0
+NOTE:\nbq24773 documentation assumes 10mΩ current sense\nresistors; set for half the intended current to obtain\ncorrect current setpoints with the 5mΩ current sense resistors
 $EndSCHEMATC

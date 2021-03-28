@@ -911,11 +911,11 @@ AR Path="/601A64F8/60567D6E/60286B7B" Ref="R?"  Part="1"
 AR Path="/6023BF6A/60567D6E/60286B7B" Ref="R?"  Part="1" 
 AR Path="/6041384A/60567D6E/60286B7B" Ref="R211"  Part="1" 
 F 0 "R211" V 6550 1300 50  0000 L CNN
-F 1 "0.006" V 6650 1250 50  0000 L CNN
-F 2 "RespiraWorks_Std:R_1206_3216Metric" V 6680 1350 50  0001 C CNN
+F 1 "0.005" V 6650 1250 50  0000 L CNN
+F 2 "RespiraWorks_Std:R_2512_6332Metric" V 6680 1350 50  0001 C CNN
 F 3 "https://www.te.com/commerce/DocumentDelivery/DDEController?Action=srchrtrv&DocNm=1773449-3&DocType=DS&DocLang=English" H 6750 1350 50  0001 C CNN
-F 4 "TE Connectivity" V 6750 1350 50  0001 C CNN "Manufacturer"
-F 5 "TLR2B10DR006FTDG" V 6750 1350 50  0001 C CNN "Manufacturer PN"
+F 4 "Rohm" V 6750 1350 50  0001 C CNN "Manufacturer"
+F 5 "PMR100HZPFU5L00" V 6750 1350 50  0001 C CNN "Manufacturer PN"
 	1    6750 1350
 	0    1    1    0   
 $EndComp
@@ -932,7 +932,7 @@ Wire Wire Line
 Connection ~ 6900 1650
 Connection ~ 6900 1350
 Text Notes 6100 1050 0    50   ~ 0
-Cycle-by-cycle current limit: 75mA -> 12.5A
+Cycle-by-cycle current limit: 75mV -> 15A
 Wire Wire Line
 	3750 3500 3750 2500
 $Comp

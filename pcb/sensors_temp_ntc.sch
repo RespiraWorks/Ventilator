@@ -167,7 +167,7 @@ AR Path="/5FCD4EEA/600F719E/5FFD5C58" Ref="U13"  Part="1"
 AR Path="/5FCD4EEA/600F71F1/5FFD5C58" Ref="U14"  Part="1" 
 F 0 "U15" V 1800 3700 50  0000 L CNN
 F 1 "USBLC6-2SC6" V 1900 3550 50  0000 L CNN
-F 2 "Package_TO_SOT_SMD:SOT-23-6" H 2400 3100 50  0001 C CNN
+F 2 "RespiraWorks_Std:SOT-23-6" H 2400 3100 50  0001 C CNN
 F 3 "https://www.st.com/resource/en/datasheet/usblc6-2.pdf" H 2600 3950 50  0001 C CNN
 F 4 "STMicroelectronics" H 2400 3600 50  0001 C CNN "Manufacturer"
 F 5 "USBLC6-2SC6" H 2400 3600 50  0001 C CNN "Manufacturer PN"

@@ -66,7 +66,7 @@ decide to buy or build anything, do so at your own risk.**
 
 ## Repository Structure
 
-* [**System Requirements**](requirements) -
+* [**System Requirements**](https://respiraworks.github.io/Ventilator/system/system_requirements.html) -
   describes the requirement architecture, hierarchy, and process. Links to the releases of our system requirements,
   hardware specifications, and software requirements
 * [**System Design**](design) -

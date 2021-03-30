@@ -29,6 +29,7 @@ F 2 "RespiraWorks:DFN-6-1EP_3x3mm_P0.95mm_EP1.75x2.5mm" H 5300 3750 50  0001 C C
 F 3 "" H 5300 3750 50  0001 C CNN
 F 4 "STMicroelectronics" H 5300 3750 50  0001 C CNN "Manufacturer"
 F 5 "LD39050PU33R" H 5300 3750 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 5300 3750 50  0001 C CNN "DNP"
 	1    5300 3750
 	1    0    0    -1  
 $EndComp
@@ -60,6 +61,7 @@ F 0 "TP65" H 5842 3920 50  0000 R CNN
 F 1 "~Power Good" H 5842 4018 50  0000 R CNN
 F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 6100 3900 50  0001 C CNN
 F 3 "~" H 6100 3900 50  0001 C CNN
+F 4 " " H 5900 3900 50  0001 C CNN "DNP"
 	1    5900 3900
 	-1   0    0    1   
 $EndComp
@@ -78,6 +80,7 @@ F 0 "JP5" V 4750 3850 50  0000 C CNN
 F 1 "Jumper_NC_Small" H 4750 3821 50  0001 C CNN
 F 2 "RespiraWorks_Std:SolderJumper-2_P1.3mm_Bridged_RoundedPad1.0x1.5mm" H 4750 3700 50  0001 C CNN
 F 3 "~" H 4750 3700 50  0001 C CNN
+F 4 " " H 4750 3700 50  0001 C CNN "DNP"
 	1    4750 3700
 	0    -1   -1   0   
 $EndComp
@@ -103,6 +106,7 @@ F 4 "Kemet" H 6650 3750 50  0001 C CNN "Manufacturer"
 F 5 "X7R" H 6650 3750 50  0001 C CNN "Dielectric"
 F 6 "C0805C105K5RACTU" H 6650 3750 50  0001 C CNN "Manufacturer PN"
 F 7 "50V" H 6650 3750 50  0001 C CNN "Voltage"
+F 8 " " H 6650 3750 50  0001 C CNN "DNP"
 	1    6650 3750
 	-1   0    0    1   
 $EndComp
@@ -137,6 +141,7 @@ F 4 "Kemet" H 4350 3750 50  0001 C CNN "Manufacturer"
 F 5 "X7R" H 4350 3750 50  0001 C CNN "Dielectric"
 F 6 "C0805C105K5RACTU" H 4350 3750 50  0001 C CNN "Manufacturer PN"
 F 7 "50V" H 4350 3750 50  0001 C CNN "Voltage"
+F 8 " " H 4350 3750 50  0001 C CNN "DNP"
 	1    4350 3750
 	-1   0    0    1   
 $EndComp
@@ -183,6 +188,7 @@ F 2 "RespiraWorks_Std:TestPoint_Keystone_5019_Minature" H 7450 3550 50  0001 C C
 F 3 "~" H 7450 3550 50  0001 C CNN
 F 4 "Keystone" H 7250 3550 50  0001 C CNN "Manufacturer"
 F 5 "5019" H 7250 3550 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 7250 3550 50  0001 C CNN "DNP"
 	1    7250 3550
 	1    0    0    -1  
 $EndComp

@@ -23,6 +23,7 @@ F 2 "RespiraWorks_Std:PinSocket_2x20_P2.54mm_Vertical" H 5100 4450 50  0001 C CN
 F 3 "" H 5100 4450 50  0001 C CNN
 F 4 "Samtec" H 5700 3350 50  0001 C CNN "Manufacturer"
 F 5 "ESQ-120-44-L-D" H 5700 3350 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 5700 3350 50  0001 C CNN "DNP"
 	1    5700 3350
 	1    0    0    -1  
 $EndComp
@@ -96,6 +97,9 @@ F 0 "R51" H 3650 4400 50  0000 L CNN
 F 1 "0" H 3650 4300 50  0000 L CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 3730 4350 50  0001 C CNN
 F 3 "~" H 3800 4350 50  0001 C CNN
+F 4 "Yageo" H 3800 4350 50  0001 C CNN "Manufacturer"
+F 5 "RC0603JR-070RL" H 3800 4350 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 3800 4350 50  0001 C CNN "DNP"
 	1    3800 4350
 	1    0    0    -1  
 $EndComp
@@ -139,6 +143,8 @@ F 1 "0" H 3650 3800 50  0000 L CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 3730 3850 50  0001 C CNN
 F 3 "~" H 3800 3850 50  0001 C CNN
 F 4 "DNP" H 3550 3850 50  0000 C CNN "DNP"
+F 5 "Yageo" H 3800 3850 50  0001 C CNN "Manufacturer"
+F 6 "RC0603JR-070RL" H 3800 3850 50  0001 C CNN "Manufacturer PN"
 	1    3800 3850
 	1    0    0    -1  
 $EndComp
@@ -208,7 +214,9 @@ F 0 "R52" H 8050 3050 50  0000 L CNN
 F 1 "0" H 8050 2950 50  0000 L CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 7880 3000 50  0001 C CNN
 F 3 "~" H 7950 3000 50  0001 C CNN
-F 4 "" H 7800 3000 50  0001 C CNN "DNP"
+F 4 " " H 7800 3000 50  0001 C CNN "DNP"
+F 5 "Yageo" H 7950 3000 50  0001 C CNN "Manufacturer"
+F 6 "RC0603JR-070RL" H 7950 3000 50  0001 C CNN "Manufacturer PN"
 	1    7950 3000
 	1    0    0    -1  
 $EndComp
@@ -221,6 +229,8 @@ F 1 "0" H 8050 3550 50  0000 L CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 7880 3600 50  0001 C CNN
 F 3 "~" H 7950 3600 50  0001 C CNN
 F 4 "DNP" H 8100 3450 50  0000 C CNN "DNP"
+F 5 "Yageo" H 7950 3600 50  0001 C CNN "Manufacturer"
+F 6 "RC0603JR-070RL" H 7950 3600 50  0001 C CNN "Manufacturer PN"
 	1    7950 3600
 	1    0    0    -1  
 $EndComp
@@ -265,6 +275,7 @@ F 0 "H1" H 5700 6300 50  0001 C CNN
 F 1 "RaspberryPi" H 5800 6250 50  0001 C CNN
 F 2 "RespiraWorks:RaspberryPi" H 5700 5600 50  0001 C CNN
 F 3 "~" H 5700 5600 50  0001 C CNN
+F 4 " " H 5700 5600 50  0001 C CNN "DNP"
 	1    5700 5600
 	1    0    0    -1  
 $EndComp
@@ -327,6 +338,7 @@ F 4 "X7R" H 7900 1850 50  0001 C CNN "Dielectric"
 F 5 "Kemet" H 7900 1850 50  0001 C CNN "Manufacturer"
 F 6 "C0603C104K5RACTU" H 7900 1850 50  0001 C CNN "Manufacturer PN"
 F 7 "50V" H 7900 1850 50  0001 C CNN "Voltage"
+F 8 " " H 7900 1850 50  0001 C CNN "DNP"
 	1    7900 1850
 	1    0    0    -1  
 $EndComp
@@ -342,6 +354,7 @@ F 4 "X7R" H 8350 1850 50  0001 C CNN "Dielectric"
 F 5 "Kemet" H 8350 1850 50  0001 C CNN "Manufacturer"
 F 6 "C0805C105K5RACTU" H 8350 1850 50  0001 C CNN "Manufacturer PN"
 F 7 "50V" H 8350 1850 50  0001 C CNN "Voltage"
+F 8 " " H 8350 1850 50  0001 C CNN "DNP"
 	1    8350 1850
 	1    0    0    -1  
 $EndComp
@@ -421,6 +434,7 @@ F 2 "RespiraWorks_Std:Molex_Micro-Fit_3.0_43045-0212_2x01_P3.00mm_Vertical" H 98
 F 3 "~" H 9850 3650 50  0001 C CNN
 F 4 "Molex" H 9850 3650 50  0001 C CNN "Manufacturer"
 F 5 "43045-0212" H 9850 3650 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 9850 3650 50  0001 C CNN "DNP"
 	1    9850 3650
 	1    0    0    1   
 $EndComp

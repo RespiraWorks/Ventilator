@@ -72,6 +72,7 @@ F 2 "RespiraWorks_Std:Molex_Mega-Fit_76829-0102_2x01_P5.70mm_Vertical" H 9900 49
 F 3 "~" H 9900 4950 50  0001 C CNN
 F 4 "Molex" H 9900 4950 50  0001 C CNN "Manufacturer"
 F 5 "768290102" H 9900 4950 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 9900 4950 50  0001 C CNN "DNP"
 	1    9900 4950
 	1    0    0    1   
 $EndComp
@@ -106,6 +107,7 @@ F 2 "RespiraWorks_Std:D_SMC" H 3100 3450 50  0001 C CNN
 F 3 "https://www.diodes.com/assets/Datasheets/ds40740.pdf" H 3100 3450 50  0001 C CNN
 F 4 "Diodes Inc." V 3100 3450 50  0001 C CNN "Manufacturer"
 F 5 "SMBJ20AQ-13-F" V 3250 3800 50  0000 C CNN "Manufacturer PN"
+F 6 " " H 3100 3450 50  0001 C CNN "DNP"
 	1    3100 3450
 	0    1    1    0   
 $EndComp
@@ -155,6 +157,7 @@ F 2 "RespiraWorks:Fuseholder_Littelfuse_OMNI-BLOK-154" V 2630 3300 50  0001 C CN
 F 3 "https://www.littelfuse.com/~/media/electronics/datasheets/fuses/littelfuse_fuse_154_154t_154l_154tl_datasheet.pdf.pdf" H 2700 3300 50  0001 C CNN
 F 4 "Littelfuse" V 2700 3300 50  0001 C CNN "Manufacturer"
 F 5 "0154010.DR" V 2800 3300 50  0000 C CNN "Manufacturer PN"
+F 6 " " H 2700 3300 50  0001 C CNN "DNP"
 	1    2700 3300
 	0    1    1    0   
 $EndComp
@@ -260,6 +263,7 @@ F 2 "RespiraWorks:Fuseholder_Littelfuse_OMNI-BLOK-154" V 9330 4850 50  0001 C CN
 F 3 "https://www.littelfuse.com/~/media/electronics/datasheets/fuses/littelfuse_fuse_154_154t_154l_154tl_datasheet.pdf.pdf" H 9400 4850 50  0001 C CNN
 F 4 "Littelfuse" V 9400 4850 50  0001 C CNN "Manufacturer"
 F 5 "0154010.DR" V 9300 4850 50  0000 C CNN "Manufacturer PN"
+F 6 " " H 9400 4850 50  0001 C CNN "DNP"
 	1    9400 4850
 	0    1    1    0   
 $EndComp
@@ -294,6 +298,7 @@ F 4 "50V" H 4050 3250 50  0000 L CNN "Voltage"
 F 5 "Panasonic" H 3900 3450 50  0001 C CNN "Manufacturer"
 F 6 "EEE-FK1H330XP" H 3900 3450 50  0001 C CNN "Manufacturer PN"
 F 7 "Aluminum" H 3900 3450 50  0001 C CNN "Dielectric"
+F 8 " " H 3900 3450 50  0001 C CNN "DNP"
 	1    3900 3450
 	1    0    0    -1  
 $EndComp
@@ -333,6 +338,7 @@ F 2 "RespiraWorks_Std:Molex_Mega-Fit_76829-0104_2x02_P5.70mm_Vertical" H 1550 33
 F 3 "~" H 1550 3300 50  0001 C CNN
 F 4 "Molex" H 1550 3300 50  0001 C CNN "Manufacturer"
 F 5 "768290104" H 1550 2950 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 1550 3300 50  0001 C CNN "DNP"
 	1    1550 3300
 	-1   0    0    1   
 $EndComp
@@ -358,6 +364,7 @@ F 4 "100V" H 8750 4700 50  0000 L CNN "Voltage"
 F 5 "X7S" H 8650 4800 50  0001 C CNN "Dielectric"
 F 6 "Murata" H 8650 4800 50  0001 C CNN "Manufacturer"
 F 7 "GRM32EC72A106KE05L" H 8650 4800 50  0001 C CNN "Manufacturer PN"
+F 8 " " H 8650 4800 50  0001 C CNN "DNP"
 	1    8650 4800
 	1    0    0    -1  
 $EndComp
@@ -383,6 +390,9 @@ F 0 "R166" H 6270 5696 50  0000 L CNN
 F 1 "442k" H 6270 5605 50  0000 L CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 6130 5650 50  0001 C CNN
 F 3 "~" H 6200 5650 50  0001 C CNN
+F 4 "Yageo" H 6200 5650 50  0001 C CNN "Manufacturer"
+F 5 "RC0603FR-07442KL" H 6200 5650 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 6200 5650 50  0001 C CNN "DNP"
 	1    6200 5650
 	1    0    0    -1  
 $EndComp
@@ -400,6 +410,9 @@ F 0 "R167" H 6270 6046 50  0000 L CNN
 F 1 "39k" H 6270 5955 50  0000 L CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 6130 6000 50  0001 C CNN
 F 3 "~" H 6200 6000 50  0001 C CNN
+F 4 "Yageo" H 6200 6000 50  0001 C CNN "Manufacturer"
+F 5 "RC0603FR-0739KL" H 6200 6000 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 6200 6000 50  0001 C CNN "DNP"
 	1    6200 6000
 	1    0    0    -1  
 $EndComp
@@ -444,6 +457,9 @@ F 0 "R168" H 6270 6346 50  0000 L CNN
 F 1 "39k" H 6270 6255 50  0000 L CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 6130 6300 50  0001 C CNN
 F 3 "~" H 6200 6300 50  0001 C CNN
+F 4 "Yageo" H 6200 6300 50  0001 C CNN "Manufacturer"
+F 5 "RC0603FR-0739KL" H 6200 6300 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 6200 6300 50  0001 C CNN "DNP"
 	1    6200 6300
 	1    0    0    -1  
 $EndComp
@@ -480,6 +496,9 @@ F 0 "R163" H 3520 5696 50  0000 L CNN
 F 1 "442k" H 3520 5605 50  0000 L CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 3380 5650 50  0001 C CNN
 F 3 "~" H 3450 5650 50  0001 C CNN
+F 4 "Yageo" H 3450 5650 50  0001 C CNN "Manufacturer"
+F 5 "RC0603FR-07442KL" H 3450 5650 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 3450 5650 50  0001 C CNN "DNP"
 	1    3450 5650
 	1    0    0    -1  
 $EndComp
@@ -497,6 +516,9 @@ F 0 "R164" H 3520 6046 50  0000 L CNN
 F 1 "39k" H 3520 5955 50  0000 L CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 3380 6000 50  0001 C CNN
 F 3 "~" H 3450 6000 50  0001 C CNN
+F 4 "Yageo" H 3450 6000 50  0001 C CNN "Manufacturer"
+F 5 "RC0603FR-0739KL" H 3450 6000 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 3450 6000 50  0001 C CNN "DNP"
 	1    3450 6000
 	1    0    0    -1  
 $EndComp
@@ -536,6 +558,9 @@ F 0 "R165" H 3520 6346 50  0000 L CNN
 F 1 "39k" H 3520 6255 50  0000 L CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 3380 6300 50  0001 C CNN
 F 3 "~" H 3450 6300 50  0001 C CNN
+F 4 "Yageo" H 3450 6300 50  0001 C CNN "Manufacturer"
+F 5 "RC0603FR-0739KL" H 3450 6300 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 3450 6300 50  0001 C CNN "DNP"
 	1    3450 6300
 	1    0    0    -1  
 $EndComp
@@ -585,6 +610,7 @@ F 4 "NP0" H 3900 5950 50  0001 C CNN "Dielectric"
 F 5 "Murata" H 3900 5950 50  0001 C CNN "Manufacturer"
 F 6 "GRM1885C1H103JA01D" H 3900 5950 50  0001 C CNN "Manufacturer PN"
 F 7 "50V" H 3900 5950 50  0001 C CNN "Voltage"
+F 8 " " H 3900 5950 50  0001 C CNN "DNP"
 	1    3900 5950
 	-1   0    0    -1  
 $EndComp
@@ -613,6 +639,7 @@ F 4 "NP0" H 6650 5950 50  0001 C CNN "Dielectric"
 F 5 "Murata" H 6650 5950 50  0001 C CNN "Manufacturer"
 F 6 "GRM1885C1H103JA01D" H 6650 5950 50  0001 C CNN "Manufacturer PN"
 F 7 "50V" H 6650 5950 50  0001 C CNN "Voltage"
+F 8 " " H 6650 5950 50  0001 C CNN "DNP"
 	1    6650 5950
 	-1   0    0    -1  
 $EndComp

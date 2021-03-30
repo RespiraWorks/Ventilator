@@ -23,6 +23,7 @@ F 2 "RespiraWorks_Std:LQFP-48_7x7mm_P0.5mm" H 7150 2000 50  0001 R CNN
 F 3 "" H 7700 3350 50  0001 C CNN
 F 4 "STMicroelectronics" H 7750 3700 50  0001 C CNN "Manufacturer"
 F 5 "STM32F103CBT6" H 7750 3700 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 7750 3700 50  0001 C CNN "DNP"
 	1    7750 3700
 	1    0    0    -1  
 $EndComp
@@ -41,6 +42,7 @@ F 4 "X7R" H 8250 1600 50  0001 C CNN "Dielectric"
 F 5 "Kemet" H 8250 1600 50  0001 C CNN "Manufacturer"
 F 6 "C0603C104K5RACTU" H 8250 1600 50  0001 C CNN "Manufacturer PN"
 F 7 "50V" H 8250 1600 50  0001 C CNN "Voltage"
+F 8 " " H 8250 1600 50  0001 C CNN "DNP"
 	1    8250 1600
 	-1   0    0    1   
 $EndComp
@@ -73,6 +75,7 @@ F 4 "X7R" H 8650 1600 50  0001 C CNN "Dielectric"
 F 5 "Kemet" H 8650 1600 50  0001 C CNN "Manufacturer"
 F 6 "C0603C104K5RACTU" H 8650 1600 50  0001 C CNN "Manufacturer PN"
 F 7 "50V" H 8650 1600 50  0001 C CNN "Voltage"
+F 8 " " H 8650 1600 50  0001 C CNN "DNP"
 	1    8650 1600
 	-1   0    0    1   
 $EndComp
@@ -105,6 +108,7 @@ F 4 "X7R" H 9050 1600 50  0001 C CNN "Dielectric"
 F 5 "Kemet" H 9050 1600 50  0001 C CNN "Manufacturer"
 F 6 "C0603C104K5RACTU" H 9050 1600 50  0001 C CNN "Manufacturer PN"
 F 7 "50V" H 9050 1600 50  0001 C CNN "Voltage"
+F 8 " " H 9050 1600 50  0001 C CNN "DNP"
 	1    9050 1600
 	-1   0    0    1   
 $EndComp
@@ -137,6 +141,7 @@ F 4 "X7R" H 9450 1600 50  0001 C CNN "Dielectric"
 F 5 "Kemet" H 9450 1600 50  0001 C CNN "Manufacturer"
 F 6 "C0603C104K5RACTU" H 9450 1600 50  0001 C CNN "Manufacturer PN"
 F 7 "50V" H 9450 1600 50  0001 C CNN "Voltage"
+F 8 " " H 9450 1600 50  0001 C CNN "DNP"
 	1    9450 1600
 	-1   0    0    1   
 $EndComp
@@ -204,6 +209,7 @@ F 4 "X7R" H 6550 2000 50  0001 C CNN "Dielectric"
 F 5 "Kemet" H 6550 2000 50  0001 C CNN "Manufacturer"
 F 6 "C0603C104K5RACTU" H 6550 2000 50  0001 C CNN "Manufacturer PN"
 F 7 "50V" H 6550 2000 50  0001 C CNN "Voltage"
+F 8 " " H 6550 2000 50  0001 C CNN "DNP"
 	1    6550 2000
 	-1   0    0    1   
 $EndComp
@@ -232,6 +238,9 @@ F 0 "R258" H 6300 1750 50  0000 L CNN
 F 1 "100k" H 6100 1650 50  0000 L CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 6480 1700 50  0001 C CNN
 F 3 "~" H 6550 1700 50  0001 C CNN
+F 4 "Yageo" H 6550 1700 50  0001 C CNN "Manufacturer"
+F 5 "RC0603FR-07100KL" H 6550 1700 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 6550 1700 50  0001 C CNN "DNP"
 	1    6550 1700
 	1    0    0    -1  
 $EndComp
@@ -274,6 +283,9 @@ F 0 "R260" H 8850 3900 50  0000 L CNN
 F 1 "100" H 8900 3800 50  0000 L CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 9080 3800 50  0001 C CNN
 F 3 "~" H 9150 3800 50  0001 C CNN
+F 4 "Yageo" H 9150 3800 50  0001 C CNN "Manufacturer"
+F 5 "RC0603FR-07100RL" H 9150 3800 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 9150 3800 50  0001 C CNN "DNP"
 	1    9150 3800
 	-1   0    0    -1  
 $EndComp
@@ -290,6 +302,9 @@ F 0 "R257" V 6200 2600 50  0000 L CNN
 F 1 "100k" V 6300 2500 50  0000 L CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 6330 2650 50  0001 C CNN
 F 3 "~" H 6400 2650 50  0001 C CNN
+F 4 "Yageo" H 6400 2650 50  0001 C CNN "Manufacturer"
+F 5 "RC0603FR-07100KL" H 6400 2650 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 6400 2650 50  0001 C CNN "DNP"
 	1    6400 2650
 	0    1    1    0   
 $EndComp
@@ -323,6 +338,7 @@ F 2 "RespiraWorks_Std:USB_Micro-B_Molex-105017-0001" H 1300 2450 50  0001 C CNN
 F 3 "~" H 1300 2450 50  0001 C CNN
 F 4 "Wuerth Elektronik" H 1150 2500 50  0001 C CNN "Manufacturer"
 F 5 "65100516121" H 1150 2500 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 1150 2500 50  0001 C CNN "DNP"
 	1    1150 2500
 	1    0    0    -1  
 $EndComp
@@ -352,6 +368,9 @@ F 0 "R246" H 1350 2800 50  0000 L CNN
 F 1 "100k" H 1350 2900 50  0000 L CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 1530 2850 50  0001 C CNN
 F 3 "~" H 1600 2850 50  0001 C CNN
+F 4 "Yageo" H 1600 2850 50  0001 C CNN "Manufacturer"
+F 5 "RC0603FR-07100KL" H 1600 2850 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 1600 2850 50  0001 C CNN "DNP"
 	1    1600 2850
 	-1   0    0    1   
 $EndComp
@@ -380,6 +399,9 @@ F 0 "R248" V 1750 2450 50  0000 L CNN
 F 1 "0" V 1850 2450 50  0000 L CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 1880 2500 50  0001 C CNN
 F 3 "~" H 1950 2500 50  0001 C CNN
+F 4 "Yageo" H 1950 2500 50  0001 C CNN "Manufacturer"
+F 5 "RC0603JR-070RL" H 1950 2500 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 1950 2500 50  0001 C CNN "DNP"
 	1    1950 2500
 	0    1    1    0   
 $EndComp
@@ -394,6 +416,9 @@ F 0 "R249" V 1750 2400 50  0000 L CNN
 F 1 "0" V 1850 2550 50  0000 L CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 1880 2600 50  0001 C CNN
 F 3 "~" H 1950 2600 50  0001 C CNN
+F 4 "Yageo" H 1950 2600 50  0001 C CNN "Manufacturer"
+F 5 "RC0603JR-070RL" H 1950 2600 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 1950 2600 50  0001 C CNN "DNP"
 	1    1950 2600
 	0    -1   -1   0   
 $EndComp
@@ -426,6 +451,9 @@ F 0 "R247" H 1500 1850 50  0000 L CNN
 F 1 "1.5k" H 1500 1950 50  0000 L CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 1680 1900 50  0001 C CNN
 F 3 "~" H 1750 1900 50  0001 C CNN
+F 4 "Yageo" H 1750 1900 50  0001 C CNN "Manufacturer"
+F 5 "RC0603FR-071K5L" H 1750 1900 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 1750 1900 50  0001 C CNN "DNP"
 	1    1750 1900
 	-1   0    0    1   
 $EndComp
@@ -442,6 +470,7 @@ F 2 "RespiraWorks_Std:SOT-23" H 2050 1650 50  0001 C CNN
 F 3 "~" H 1850 1550 50  0001 C CNN
 F 4 "Diodes Inc." H 1850 1550 50  0001 C CNN "Manufacturer"
 F 5 "MMBT3904-7-F" H 1850 1550 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 1850 1550 50  0001 C CNN "DNP"
 	1    1850 1550
 	-1   0    0    -1  
 $EndComp
@@ -456,6 +485,9 @@ F 0 "R250" H 2100 1350 50  0000 L CNN
 F 1 "10k" H 2150 1450 50  0000 L CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 2280 1400 50  0001 C CNN
 F 3 "~" H 2350 1400 50  0001 C CNN
+F 4 "Yageo" H 2350 1400 50  0001 C CNN "Manufacturer"
+F 5 "RC0603FR-0710KL" H 2350 1400 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 2350 1400 50  0001 C CNN "DNP"
 	1    2350 1400
 	-1   0    0    1   
 $EndComp
@@ -470,6 +502,9 @@ F 0 "R251" H 2100 1650 50  0000 L CNN
 F 1 "39k" H 2150 1750 50  0000 L CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 2280 1700 50  0001 C CNN
 F 3 "~" H 2350 1700 50  0001 C CNN
+F 4 "Yageo" H 2350 1700 50  0001 C CNN "Manufacturer"
+F 5 "RC0603FR-0739KL" H 2350 1700 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 2350 1700 50  0001 C CNN "DNP"
 	1    2350 1700
 	-1   0    0    1   
 $EndComp
@@ -501,6 +536,9 @@ F 0 "R252" V 2750 1450 50  0000 L CNN
 F 1 "100" V 2850 1450 50  0000 L CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 2880 1550 50  0001 C CNN
 F 3 "~" H 2950 1550 50  0001 C CNN
+F 4 "Yageo" H 2950 1550 50  0001 C CNN "Manufacturer"
+F 5 "RC0603FR-07100RL" H 2950 1550 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 2950 1550 50  0001 C CNN "DNP"
 	1    2950 1550
 	0    1    1    0   
 $EndComp
@@ -547,6 +585,7 @@ F 4 "NP0" H 4650 3300 50  0001 C CNN "Dielectric"
 F 5 "Kemet" H 4650 3300 50  0001 C CNN "Manufacturer"
 F 6 "C0603C180J5GACTU" H 4650 3300 50  0001 C CNN "Manufacturer PN"
 F 7 "50V" H 4650 3300 50  0001 C CNN "Voltage"
+F 8 " " H 4650 3300 50  0001 C CNN "DNP"
 	1    4650 3300
 	-1   0    0    1   
 $EndComp
@@ -565,6 +604,7 @@ F 4 "NP0" H 5150 3300 50  0001 C CNN "Dielectric"
 F 5 "Kemet" H 5150 3300 50  0001 C CNN "Manufacturer"
 F 6 "C0603C180J5GACTU" H 5150 3300 50  0001 C CNN "Manufacturer PN"
 F 7 "50V" H 5150 3300 50  0001 C CNN "Voltage"
+F 8 " " H 5150 3300 50  0001 C CNN "DNP"
 	1    5150 3300
 	1    0    0    1   
 $EndComp
@@ -606,6 +646,7 @@ F 2 "RespiraWorks_Std:Crystal_SMD_HC49-SD" H 4900 3150 50  0001 C CNN
 F 3 "~" H 4900 3150 50  0001 C CNN
 F 4 "Abracon" H 4900 3150 50  0001 C CNN "Manufacturer"
 F 5 "ABLS-8.000MHZ-B4-T" H 4900 3150 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 4900 3150 50  0001 C CNN "DNP"
 	1    4900 3150
 	1    0    0    -1  
 $EndComp
@@ -637,6 +678,7 @@ F 0 "JP14" H 2950 5300 50  0000 C CNN
 F 1 "Jumper_NC_Small" H 2800 5371 50  0001 C CNN
 F 2 "RespiraWorks_Std:SolderJumper-2_P1.3mm_Bridged_RoundedPad1.0x1.5mm" H 2800 5250 50  0001 C CNN
 F 3 "~" H 2800 5250 50  0001 C CNN
+F 4 " " H 2800 5250 50  0001 C CNN "DNP"
 	1    2800 5250
 	1    0    0    -1  
 $EndComp
@@ -652,6 +694,7 @@ F 0 "JP17" H 2950 5700 50  0000 C CNN
 F 1 "Jumper_NC_Small" H 2800 5771 50  0001 C CNN
 F 2 "RespiraWorks_Std:SolderJumper-2_P1.3mm_Bridged_RoundedPad1.0x1.5mm" H 2800 5650 50  0001 C CNN
 F 3 "~" H 2800 5650 50  0001 C CNN
+F 4 " " H 2800 5650 50  0001 C CNN "DNP"
 	1    2800 5650
 	1    0    0    -1  
 $EndComp
@@ -663,6 +706,7 @@ F 0 "JP15" H 2950 5500 50  0000 C CNN
 F 1 "Jumper_NC_Small" H 2800 5571 50  0001 C CNN
 F 2 "RespiraWorks_Std:SolderJumper-2_P1.3mm_Bridged_RoundedPad1.0x1.5mm" H 2800 5450 50  0001 C CNN
 F 3 "~" H 2800 5450 50  0001 C CNN
+F 4 " " H 2800 5450 50  0001 C CNN "DNP"
 	1    2800 5450
 	1    0    0    -1  
 $EndComp
@@ -674,6 +718,7 @@ F 0 "JP16" H 2950 5600 50  0000 C CNN
 F 1 "Jumper_NC_Small" H 2800 5671 50  0001 C CNN
 F 2 "RespiraWorks_Std:SolderJumper-2_P1.3mm_Bridged_RoundedPad1.0x1.5mm" H 2800 5550 50  0001 C CNN
 F 3 "~" H 2800 5550 50  0001 C CNN
+F 4 " " H 2800 5550 50  0001 C CNN "DNP"
 	1    2800 5550
 	1    0    0    -1  
 $EndComp
@@ -750,6 +795,7 @@ F 2 "RespiraWorks_Std:PinHeader_1x06_P2.54mm_Vertical" H 1550 6750 50  0001 C CN
 F 3 "~" H 1550 6750 50  0001 C CNN
 F 4 "Harwin" H 1550 6750 50  0001 C CNN "Manufacturer"
 F 5 "M20-9980345" H 1550 6750 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 1550 6750 50  0001 C CNN "DNP"
 	1    1550 6750
 	-1   0    0    -1  
 $EndComp
@@ -804,6 +850,7 @@ F 2 "RespiraWorks_Std:LED_0805_2012Metric" H 5450 5250 50  0001 C CNN
 F 3 "~" H 5450 5250 50  0001 C CNN
 F 4 "Lite-On" H 5450 5250 50  0001 C CNN "Manufacturer"
 F 5 "LTST-C170KRKT" H 5450 5250 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 5450 5250 50  0001 C CNN "DNP"
 	1    5450 5250
 	0    -1   -1   0   
 $EndComp
@@ -817,6 +864,7 @@ F 2 "RespiraWorks_Std:LED_0805_2012Metric" H 5450 4700 50  0001 C CNN
 F 3 "~" H 5450 4700 50  0001 C CNN
 F 4 "Lite-On" H 5450 4700 50  0001 C CNN "Manufacturer"
 F 5 "LTST-C171KGKT" H 5450 4700 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 5450 4700 50  0001 C CNN "DNP"
 	1    5450 4700
 	0    -1   -1   0   
 $EndComp
@@ -840,6 +888,9 @@ F 0 "R255" H 5200 4500 50  0000 L CNN
 F 1 "1k" H 5300 4400 50  0000 L CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 5380 4400 50  0001 C CNN
 F 3 "~" H 5450 4400 50  0001 C CNN
+F 4 "Yageo" H 5450 4400 50  0001 C CNN "Manufacturer"
+F 5 "RC0603FR-071KL" H 5450 4400 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 5450 4400 50  0001 C CNN "DNP"
 	1    5450 4400
 	-1   0    0    -1  
 $EndComp
@@ -854,6 +905,9 @@ F 0 "R256" H 5200 5750 50  0000 L CNN
 F 1 "1k" H 5300 5650 50  0000 L CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 5380 5650 50  0001 C CNN
 F 3 "~" H 5450 5650 50  0001 C CNN
+F 4 "Yageo" H 5450 5650 50  0001 C CNN "Manufacturer"
+F 5 "RC0603FR-071KL" H 5450 5650 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 5450 5650 50  0001 C CNN "DNP"
 	1    5450 5650
 	-1   0    0    -1  
 $EndComp
@@ -1025,6 +1079,9 @@ F 0 "R253" V 4400 1800 50  0000 L CNN
 F 1 "4.7k" V 4500 1800 50  0000 L CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 4530 1850 50  0001 C CNN
 F 3 "~" H 4600 1850 50  0001 C CNN
+F 4 "Yageo" H 4600 1850 50  0001 C CNN "Manufacturer"
+F 5 "RC0603FR-074K7L" H 4600 1850 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 4600 1850 50  0001 C CNN "DNP"
 	1    4600 1850
 	0    1    1    0   
 $EndComp
@@ -1039,6 +1096,9 @@ F 0 "R254" H 4550 2000 50  0000 L CNN
 F 1 "4.7k" H 4600 2100 50  0000 L CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 4780 2000 50  0001 C CNN
 F 3 "~" H 4850 2000 50  0001 C CNN
+F 4 "Yageo" H 4850 2000 50  0001 C CNN "Manufacturer"
+F 5 "RC0603FR-074K7L" H 4850 2000 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 4850 2000 50  0001 C CNN "DNP"
 	1    4850 2000
 	-1   0    0    1   
 $EndComp
@@ -1074,6 +1134,9 @@ F 0 "R261" H 8900 4750 50  0000 L CNN
 F 1 "10k" H 8950 4850 50  0000 L CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 9080 4800 50  0001 C CNN
 F 3 "~" H 9150 4800 50  0001 C CNN
+F 4 "Yageo" H 9150 4800 50  0001 C CNN "Manufacturer"
+F 5 "RC0603FR-0710KL" H 9150 4800 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 9150 4800 50  0001 C CNN "DNP"
 	1    9150 4800
 	-1   0    0    1   
 $EndComp
@@ -1167,6 +1230,7 @@ F 0 "JP19" V 9350 3100 50  0000 C CNN
 F 1 "Jumper_NC_Small" H 9350 3071 50  0001 C CNN
 F 2 "RespiraWorks_Std:SolderJumper-2_P1.3mm_Bridged_RoundedPad1.0x1.5mm" H 9350 2950 50  0001 C CNN
 F 3 "~" H 9350 2950 50  0001 C CNN
+F 4 " " H 9350 2950 50  0001 C CNN "DNP"
 	1    9350 2950
 	0    1    1    0   
 $EndComp
@@ -1178,6 +1242,7 @@ F 0 "JP18" V 9350 2900 50  0000 C CNN
 F 1 "Jumper_NO_Small" H 9350 2871 50  0001 C CNN
 F 2 "RespiraWorks_Std:SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm" H 9350 2750 50  0001 C CNN
 F 3 "~" H 9350 2750 50  0001 C CNN
+F 4 " " H 9350 2750 50  0001 C CNN "DNP"
 	1    9350 2750
 	0    1    1    0   
 $EndComp

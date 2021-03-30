@@ -56,6 +56,7 @@ F 2 "RespiraWorks_Std:PinHeader_1x04_P2.54mm_Vertical_SMD_Pin1Right" H 6000 3350
 F 3 "~" H 6000 3350 50  0001 C CNN
 F 4 "Molex" H 6000 3350 50  0001 C CNN "Manufacturer"
 F 5 "87898-0424" H 6000 3350 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 6000 3350 50  0001 C CNN "DNP"
 	1    6000 3350
 	-1   0    0    -1  
 $EndComp
@@ -98,6 +99,7 @@ F 0 "H9" H 4900 4200 50  0000 L CNN
 F 1 "Pressure_sensor_daughterboard" H 4950 4225 50  0001 C CNN
 F 2 "RespiraWorks:Pressure_sensor_daughterboard" H 4950 3650 50  0001 C CNN
 F 3 "~" H 4950 3650 50  0001 C CNN
+F 4 " " H 4950 3650 50  0001 C CNN "DNP"
 	1    4950 3650
 	1    0    0    -1  
 $EndComp
@@ -152,6 +154,7 @@ F 2 "RespiraWorks_Std:PinHeader_1x04_P2.54mm_Vertical_SMD_Pin1Right" H 3450 3350
 F 3 "~" H 3450 3350 50  0001 C CNN
 F 4 "Molex" H 3450 3350 50  0001 C CNN "Manufacturer"
 F 5 "87898-0424" H 3450 3350 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 3450 3350 50  0001 C CNN "DNP"
 	1    3450 3350
 	1    0    0    -1  
 $EndComp

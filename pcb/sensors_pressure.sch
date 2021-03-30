@@ -21,6 +21,7 @@ F 0 "TP86" H 3308 1518 50  0000 L CNN
 F 1 "Inf-Flow" H 3100 1600 50  0000 L CNN
 F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 3450 1400 50  0001 C CNN
 F 3 "~" H 3450 1400 50  0001 C CNN
+F 4 " " H 3250 1400 50  0001 C CNN "DNP"
 	1    3250 1400
 	1    0    0    -1  
 $EndComp
@@ -34,6 +35,7 @@ F 0 "TP90" H 8008 1368 50  0000 L CNN
 F 1 "Mix-Tank-Pressure" H 7800 1450 50  0000 L CNN
 F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 8150 1250 50  0001 C CNN
 F 3 "~" H 8150 1250 50  0001 C CNN
+F 4 " " H 7950 1250 50  0001 C CNN "DNP"
 	1    7950 1250
 	1    0    0    -1  
 $EndComp
@@ -47,6 +49,7 @@ F 0 "TP91" H 8058 2168 50  0000 L CNN
 F 1 "Patient-Pressure" H 7850 2250 50  0000 L CNN
 F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 8200 2050 50  0001 C CNN
 F 3 "~" H 8200 2050 50  0001 C CNN
+F 4 " " H 8000 2050 50  0001 C CNN "DNP"
 	1    8000 2050
 	1    0    0    -1  
 $EndComp
@@ -137,6 +140,7 @@ F 0 "TP89" H 3308 3918 50  0000 L CNN
 F 1 "Oxy-Pressure" H 3100 4000 50  0000 L CNN
 F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 3450 3800 50  0001 C CNN
 F 3 "~" H 3450 3800 50  0001 C CNN
+F 4 " " H 3250 3800 50  0001 C CNN "DNP"
 	1    3250 3800
 	1    0    0    -1  
 $EndComp
@@ -150,6 +154,7 @@ F 0 "TP88" H 3308 3118 50  0000 L CNN
 F 1 "Oxy-Flow" H 3100 3200 50  0000 L CNN
 F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 3450 3000 50  0001 C CNN
 F 3 "~" H 3450 3000 50  0001 C CNN
+F 4 " " H 3250 3000 50  0001 C CNN "DNP"
 	1    3250 3000
 	1    0    0    -1  
 $EndComp
@@ -163,6 +168,7 @@ F 0 "TP87" H 3308 2318 50  0000 L CNN
 F 1 "Exh-Flow" H 3100 2400 50  0000 L CNN
 F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 3450 2200 50  0001 C CNN
 F 3 "~" H 3450 2200 50  0001 C CNN
+F 4 " " H 3250 2200 50  0001 C CNN "DNP"
 	1    3250 2200
 	1    0    0    -1  
 $EndComp
@@ -301,6 +307,7 @@ F 2 "RespiraWorks:Bosch_BMP280" H 2950 6350 50  0001 C CNN
 F 3 "" H 3250 6350 50  0001 C CNN
 F 4 "Bosch" H 3250 6300 50  0001 C CNN "Manufacturer"
 F 5 "BMP280" H 3250 6300 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 3250 6300 50  0001 C CNN "DNP"
 	1    3250 6300
 	1    0    0    -1  
 $EndComp
@@ -332,6 +339,7 @@ F 4 "Kemet" H 2850 5500 50  0001 C CNN "Manufacturer"
 F 5 "X7R" H 2850 5500 50  0001 C CNN "Dielectric"
 F 6 "C0603C104K5RACTU" H 2850 5500 50  0001 C CNN "Manufacturer PN"
 F 7 "50V" H 2850 5500 50  0001 C CNN "Voltage"
+F 8 " " H 2850 5500 50  0001 C CNN "DNP"
 	1    2850 5500
 	-1   0    0    1   
 $EndComp
@@ -390,6 +398,7 @@ F 4 "Kemet" H 3300 5500 50  0001 C CNN "Manufacturer"
 F 5 "X7R" H 3300 5500 50  0001 C CNN "Dielectric"
 F 6 "C0603C104K5RACTU" H 3300 5500 50  0001 C CNN "Manufacturer PN"
 F 7 "50V" H 3300 5500 50  0001 C CNN "Voltage"
+F 8 " " H 3300 5500 50  0001 C CNN "DNP"
 	1    3300 5500
 	1    0    0    1   
 $EndComp
@@ -506,7 +515,9 @@ F 0 "R90" V 3950 6200 50  0000 C CNN
 F 1 "0" V 3950 5850 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 3930 6000 50  0001 C CNN
 F 3 "~" H 4000 6000 50  0001 C CNN
-F 4 "KOA Speer" H 4000 6000 50  0001 C CNN "Manufacturer"
+F 4 "Yageo" H 4000 6000 50  0001 C CNN "Manufacturer"
+F 5 "RC0603JR-070RL" H 4000 6000 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 4000 6000 50  0001 C CNN "DNP"
 	1    4000 6000
 	0    1    1    0   
 $EndComp
@@ -553,7 +564,9 @@ F 0 "R91" V 4350 6400 50  0000 C CNN
 F 1 "0" V 4350 6050 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 4330 6200 50  0001 C CNN
 F 3 "~" H 4400 6200 50  0001 C CNN
-F 4 "KOA Speer" H 4400 6200 50  0001 C CNN "Manufacturer"
+F 4 "Yageo" H 4400 6200 50  0001 C CNN "Manufacturer"
+F 5 "RC0603JR-070RL" H 4400 6200 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 4400 6200 50  0001 C CNN "DNP"
 	1    4400 6200
 	0    1    1    0   
 $EndComp
@@ -578,6 +591,7 @@ F 0 "JP8" V 3750 6525 50  0000 L CNN
 F 1 "Jumper_NC_Small" V 3795 6524 50  0001 L CNN
 F 2 "RespiraWorks_Std:SolderJumper-2_P1.3mm_Bridged_RoundedPad1.0x1.5mm" H 3750 6450 50  0001 C CNN
 F 3 "~" H 3750 6450 50  0001 C CNN
+F 4 " " H 3750 6450 50  0001 C CNN "DNP"
 	1    3750 6450
 	0    1    1    0   
 $EndComp

@@ -29,6 +29,7 @@ F 2 "RespiraWorks_Std:D_SMA" H 5600 4850 50  0001 C CNN
 F 3 "~" H 5600 4850 50  0001 C CNN
 F 4 "Vishay" H 5600 4850 50  0001 C CNN "Manufacturer"
 F 5 "ES2G-E3/52T" H 5600 4850 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 5600 4850 50  0001 C CNN "DNP"
 	1    5600 4850
 	0    1    1    0   
 $EndComp
@@ -62,6 +63,7 @@ F 2 "RespiraWorks_Std:TSSOP-14-1EP_4.4x5mm_P0.65mm" H 6050 2350 50  0001 C CNN
 F 3 "https://www.ti.com/lit/ds/symlink/tps1h100-q1.pdf" H 6050 2350 50  0001 C CNN
 F 4 "Texas Instruments" H 5700 2600 50  0001 C CNN "Manufacturer"
 F 5 "TPS1H100AQPWPRQ1" H 5700 2600 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 5700 2600 50  0001 C CNN "DNP"
 	1    5700 2600
 	1    0    0    -1  
 $EndComp
@@ -116,7 +118,9 @@ F 0 "R222" H 5250 3400 50  0000 C CNN
 F 1 "4.02k" H 5250 3500 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 5330 3450 50  0001 C CNN
 F 3 "~" H 5400 3450 50  0001 C CNN
-F 4 "" H 5400 3450 50  0001 C CNN "Manufacturer"
+F 4 "Yageo" H 5400 3450 50  0001 C CNN "Manufacturer"
+F 5 "RC0603FR-074K02L" H 5400 3450 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 5400 3450 50  0001 C CNN "DNP"
 	1    5400 3450
 	-1   0    0    1   
 $EndComp
@@ -161,8 +165,9 @@ F 0 "R220" H 4800 3200 50  0000 C CNN
 F 1 "1.5k" H 4800 3300 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 4880 3300 50  0001 C CNN
 F 3 "~" H 4950 3300 50  0001 C CNN
-F 4 "" H 4950 3300 50  0001 C CNN "Manufacturer"
+F 4 "Yageo" H 4950 3300 50  0001 C CNN "Manufacturer"
 F 5 "DNP" V 4950 3300 50  0000 C CNN "DNP"
+F 6 "RC0603FR-071K5L" H 4950 3300 50  0001 C CNN "Manufacturer PN"
 	1    4950 3300
 	-1   0    0    1   
 $EndComp
@@ -205,8 +210,9 @@ F 0 "R218" V 2450 3300 50  0000 C CNN
 F 1 "52.3k" V 2350 3250 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 2480 3300 50  0001 C CNN
 F 3 "~" H 2550 3300 50  0001 C CNN
-F 4 "" H 2550 3300 50  0001 C CNN "Manufacturer"
+F 4 "Yageo" H 2550 3300 50  0001 C CNN "Manufacturer"
 F 5 "DNP" V 2550 3300 50  0000 C CNN "DNP"
+F 6 "RC0603FR-0752K3L" H 2550 3300 50  0001 C CNN "Manufacturer PN"
 	1    2550 3300
 	0    -1   -1   0   
 $EndComp
@@ -233,7 +239,9 @@ F 0 "R217" V 2100 2550 50  0000 C CNN
 F 1 "10k" V 2300 2550 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 2130 2550 50  0001 C CNN
 F 3 "~" H 2200 2550 50  0001 C CNN
-F 4 "" H 2200 2550 50  0001 C CNN "Manufacturer"
+F 4 "Yageo" H 2200 2550 50  0001 C CNN "Manufacturer"
+F 5 "RC0603FR-0710KL" H 2200 2550 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 2200 2550 50  0001 C CNN "DNP"
 	1    2200 2550
 	1    0    0    -1  
 $EndComp
@@ -285,6 +293,8 @@ F 1 "0" H 8050 3700 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_1206_3216Metric" V 7830 3750 50  0001 C CNN
 F 3 "~" H 7900 3750 50  0001 C CNN
 F 4 "DNP" V 7900 3750 50  0000 C CNN "DNP"
+F 5 "Yageo" H 7900 3750 50  0001 C CNN "Manufacturer"
+F 6 "RC1206JR-070RL" H 7900 3750 50  0001 C CNN "Manufacturer PN"
 	1    7900 3750
 	1    0    0    -1  
 $EndComp
@@ -354,7 +364,9 @@ F 0 "R223" H 6850 5900 50  0000 C CNN
 F 1 "0" H 6800 5800 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_1206_3216Metric" V 6630 5850 50  0001 C CNN
 F 3 "~" H 6700 5850 50  0001 C CNN
-F 4 "" H 6850 5700 50  0001 C CNN "DNP"
+F 4 " " H 6850 5700 50  0001 C CNN "DNP"
+F 5 "Yageo" H 6700 5850 50  0001 C CNN "Manufacturer"
+F 6 "RC1206JR-070RL" H 6700 5850 50  0001 C CNN "Manufacturer PN"
 	1    6700 5850
 	1    0    0    -1  
 $EndComp
@@ -399,8 +411,9 @@ F 0 "R221" H 5000 6000 50  0000 C CNN
 F 1 "10k" H 5000 5900 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 5130 6000 50  0001 C CNN
 F 3 "~" H 5200 6000 50  0001 C CNN
-F 4 "" H 5200 6000 50  0001 C CNN "Manufacturer"
+F 4 "Yageo" H 5200 6000 50  0001 C CNN "Manufacturer"
 F 5 "DNP" H 5000 5800 50  0000 C CNN "DNP"
+F 6 "RC0603FR-0710KL" H 5200 6000 50  0001 C CNN "Manufacturer PN"
 	1    5200 6000
 	1    0    0    -1  
 $EndComp
@@ -443,8 +456,9 @@ F 0 "R219" V 4550 5850 50  0000 C CNN
 F 1 "1k" V 4650 5850 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 4680 5850 50  0001 C CNN
 F 3 "~" H 4750 5850 50  0001 C CNN
-F 4 "" H 4750 5850 50  0001 C CNN "Manufacturer"
+F 4 "Yageo" H 4750 5850 50  0001 C CNN "Manufacturer"
 F 5 "DNP" V 4750 5850 50  0000 C CNN "DNP"
+F 6 "RC0603FR-071KL" H 4750 5850 50  0001 C CNN "Manufacturer PN"
 	1    4750 5850
 	0    1    1    0   
 $EndComp
@@ -470,6 +484,7 @@ F 2 "RespiraWorks_Std:Molex_Micro-Fit_3.0_43650-0215_1x02_P3.00mm_Vertical" H 62
 F 3 "~" H 6250 4800 50  0001 C CNN
 F 4 "Molex" H 6250 4800 50  0001 C CNN "Manufacturer"
 F 5 "43650-0215" H 6250 4800 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 6250 4800 50  0001 C CNN "DNP"
 	1    6250 4800
 	1    0    0    -1  
 $EndComp
@@ -509,6 +524,7 @@ F 4 "Murata" H 6600 2100 50  0001 C CNN "Manufacturer"
 F 5 "X7S" H 6600 2100 50  0001 C CNN "Dielectric"
 F 6 "100V" H 6800 1950 50  0000 C CNN "Voltage"
 F 7 "GRM32EC72A106KE05L" H 6600 2100 50  0001 C CNN "Manufacturer PN"
+F 8 " " H 6600 2100 50  0001 C CNN "DNP"
 	1    6600 2100
 	1    0    0    -1  
 $EndComp
@@ -549,6 +565,7 @@ F 2 "RespiraWorks_Std:D_SMC" H 5300 5150 50  0001 C CNN
 F 3 "https://www.diodes.com/assets/Datasheets/ds40740.pdf" H 5300 5150 50  0001 C CNN
 F 4 "Diodes Inc." V 5300 5150 50  0001 C CNN "Manufacturer"
 F 5 "SMBJ20AQ-13-F" V 5000 4750 50  0000 C CNN "Manufacturer PN"
+F 6 " " H 5300 5150 50  0001 C CNN "DNP"
 	1    5300 5150
 	0    1    1    0   
 $EndComp
@@ -585,6 +602,7 @@ F 0 "JP13" H 2550 2821 50  0000 C CNN
 F 1 "Jumper_NC_Small" H 2550 2821 50  0001 C CNN
 F 2 "RespiraWorks_Std:SolderJumper-2_P1.3mm_Bridged_RoundedPad1.0x1.5mm" H 2550 2700 50  0001 C CNN
 F 3 "~" H 2550 2700 50  0001 C CNN
+F 4 " " H 2550 2700 50  0001 C CNN "DNP"
 	1    2550 2700
 	1    0    0    -1  
 $EndComp
@@ -634,6 +652,7 @@ F 0 "TP115" H 1350 2300 50  0000 C CNN
 F 1 "TP" V 1400 2150 50  0001 C CNN
 F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 1550 2100 50  0001 C CNN
 F 3 "~" H 1550 2100 50  0001 C CNN
+F 4 " " H 1350 2100 50  0001 C CNN "DNP"
 	1    1350 2100
 	1    0    0    -1  
 $EndComp
@@ -655,6 +674,7 @@ F 0 "TP116" H 4550 2700 50  0000 C CNN
 F 1 "TP" V 4600 2550 50  0001 C CNN
 F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 4750 2500 50  0001 C CNN
 F 3 "~" H 4750 2500 50  0001 C CNN
+F 4 " " H 4550 2500 50  0001 C CNN "DNP"
 	1    4550 2500
 	1    0    0    -1  
 $EndComp
@@ -676,6 +696,7 @@ F 2 "RespiraWorks_Std:TestPoint_Keystone_5019_Minature" H 6300 4600 50  0001 C C
 F 3 "~" H 6300 4600 50  0001 C CNN
 F 4 "Keystone" H 6100 4600 50  0001 C CNN "Manufacturer"
 F 5 "5019" H 6100 4600 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 6100 4600 50  0001 C CNN "DNP"
 	1    6100 4600
 	1    0    0    -1  
 $EndComp
@@ -696,6 +717,7 @@ F 2 "RespiraWorks_Std:TestPoint_Keystone_5019_Minature" H 6300 5200 50  0001 C C
 F 3 "~" H 6300 5200 50  0001 C CNN
 F 4 "Keystone" H 6100 5200 50  0001 C CNN "Manufacturer"
 F 5 "5019" H 6100 5200 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 6100 5200 50  0001 C CNN "DNP"
 	1    6100 5200
 	1    0    0    -1  
 $EndComp
@@ -735,6 +757,7 @@ F 4 "Nichicon" H 7100 1800 50  0001 C CNN "Manufacturer"
 F 5 "UUD1H680MNL1GS" H 7100 1800 50  0001 C CNN "Manufacturer PN"
 F 6 "Aluminum" H 7100 1800 50  0001 C CNN "Dielectric"
 F 7 "50V" H 7250 1600 50  0000 C CNN "Voltage"
+F 8 " " H 7100 1800 50  0001 C CNN "DNP"
 	1    7100 1800
 	1    0    0    -1  
 $EndComp
@@ -768,8 +791,9 @@ F 0 "R216" H 2300 3450 50  0000 C CNN
 F 1 "100k" H 2300 3350 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 2080 3450 50  0001 C CNN
 F 3 "~" H 2150 3450 50  0001 C CNN
-F 4 "" H 2150 3450 50  0001 C CNN "Manufacturer"
+F 4 "Yageo" H 2150 3450 50  0001 C CNN "Manufacturer"
 F 5 "DNP" V 2150 3450 50  0000 C CNN "DNP"
+F 6 "RC0603FR-07100KL" H 2150 3450 50  0001 C CNN "Manufacturer PN"
 	1    2150 3450
 	1    0    0    -1  
 $EndComp
@@ -822,6 +846,7 @@ F 3 "https://belfuse.com/resources/datasheets/circuitprotection/ds-cp-0zcf-serie
 F 4 "Bel-Fuse" H 6118 4296 50  0000 L CNN "Manufacturer"
 F 5 "0ZCF0200AF2C" H 6118 4205 50  0000 L CNN "Manufacturer PN"
 F 6 "2.0A" H 6118 4114 50  0000 L CNN "Hold Current"
+F 7 " " H 6050 4250 50  0001 C CNN "DNP"
 	1    6050 4250
 	1    0    0    -1  
 $EndComp

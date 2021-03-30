@@ -32,6 +32,7 @@ F 2 "RespiraWorks_Std:Molex_Micro-Fit_3.0_43650-0215_1x02_P3.00mm_Vertical" H 15
 F 3 "~" H 1550 3200 50  0001 C CNN
 F 4 "Molex" H 1550 3200 50  0001 C CNN "Manufacturer"
 F 5 "43650-0215" H 1550 3200 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 1550 3200 50  0001 C CNN "DNP"
 	1    1550 3200
 	-1   0    0    -1  
 $EndComp
@@ -116,6 +117,7 @@ F 2 "RespiraWorks_Std:R_0603_1608Metric" V 4230 2700 50  0001 C CNN
 F 3 "~" H 4300 2700 50  0001 C CNN
 F 4 "Susumu" H 4300 2700 50  0001 C CNN "Manufacturer"
 F 5 "RG1608P-221-B-T5" H 4300 2700 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 4300 2700 50  0001 C CNN "DNP"
 	1    4300 2700
 	-1   0    0    1   
 $EndComp
@@ -142,6 +144,7 @@ F 2 "RespiraWorks_Std:R_0603_1608Metric" V 4230 3600 50  0001 C CNN
 F 3 "~" H 4300 3600 50  0001 C CNN
 F 4 "Susumu" H 4300 3600 50  0001 C CNN "Manufacturer"
 F 5 "RG1608P-103-B-T5" H 4300 3600 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 4300 3600 50  0001 C CNN "DNP"
 	1    4300 3600
 	-1   0    0    1   
 $EndComp
@@ -171,6 +174,7 @@ F 2 "RespiraWorks_Std:SOT-23-6" H 2400 3100 50  0001 C CNN
 F 3 "https://www.st.com/resource/en/datasheet/usblc6-2.pdf" H 2600 3950 50  0001 C CNN
 F 4 "STMicroelectronics" H 2400 3600 50  0001 C CNN "Manufacturer"
 F 5 "USBLC6-2SC6" H 2400 3600 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 2400 3600 50  0001 C CNN "DNP"
 	1    2400 3600
 	0    1    1    0   
 $EndComp
@@ -227,6 +231,7 @@ F 4 "100V" H 5650 3150 50  0000 L CNN "Voltage"
 F 5 "X7S" H 5600 3450 50  0001 C CNN "Dielectric"
 F 6 "Murata" H 5600 3450 50  0001 C CNN "Manufacturer"
 F 7 "GRM32EC72A106KE05L" H 5600 3450 50  0001 C CNN "Manufacturer PN"
+F 8 " " H 5600 3450 50  0001 C CNN "DNP"
 	1    5600 3450
 	1    0    0    -1  
 $EndComp

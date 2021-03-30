@@ -67,6 +67,7 @@ F 0 "TP92" H 3508 1368 50  0000 L CNN
 F 1 "Stepper1-Temp" H 3300 1450 50  0000 L CNN
 F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 3650 1250 50  0001 C CNN
 F 3 "~" H 3650 1250 50  0001 C CNN
+F 4 " " H 3450 1250 50  0001 C CNN "DNP"
 	1    3450 1250
 	1    0    0    -1  
 $EndComp
@@ -89,6 +90,7 @@ F 0 "TP93" H 3508 2068 50  0000 L CNN
 F 1 "Stepper2-Temp" H 3300 2150 50  0000 L CNN
 F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 3650 1950 50  0001 C CNN
 F 3 "~" H 3650 1950 50  0001 C CNN
+F 4 " " H 3450 1950 50  0001 C CNN "DNP"
 	1    3450 1950
 	1    0    0    -1  
 $EndComp
@@ -111,6 +113,7 @@ F 0 "TP94" H 3508 2768 50  0000 L CNN
 F 1 "Blower-Temp" H 3300 2850 50  0000 L CNN
 F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 3650 2650 50  0001 C CNN
 F 3 "~" H 3650 2650 50  0001 C CNN
+F 4 " " H 3450 2650 50  0001 C CNN "DNP"
 	1    3450 2650
 	1    0    0    -1  
 $EndComp
@@ -133,6 +136,7 @@ F 0 "TP95" H 3508 3468 50  0000 L CNN
 F 1 "Batt-Temp" H 3300 3550 50  0000 L CNN
 F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 3650 3350 50  0001 C CNN
 F 3 "~" H 3650 3350 50  0001 C CNN
+F 4 " " H 3450 3350 50  0001 C CNN "DNP"
 	1    3450 3350
 	1    0    0    -1  
 $EndComp
@@ -155,6 +159,7 @@ F 0 "TP96" H 3508 4168 50  0000 L CNN
 F 1 "Spare-Temp" H 3300 4250 50  0000 L CNN
 F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 3650 4050 50  0001 C CNN
 F 3 "~" H 3650 4050 50  0001 C CNN
+F 4 " " H 3450 4050 50  0001 C CNN "DNP"
 	1    3450 4050
 	1    0    0    -1  
 $EndComp
@@ -181,6 +186,7 @@ F 2 "RespiraWorks_Std:VSSOP-8_3.0x3.0mm_P0.65mm" H 5400 5950 50  0001 C CNN
 F 3 "" H 5400 5950 50  0001 C CNN
 F 4 "Texas Instruments" H 5400 5950 50  0001 C CNN "Manufacturer"
 F 5 "INA333AIDGKR" H 5400 5950 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 5400 5950 50  0001 C CNN "DNP"
 	1    5400 5950
 	1    0    0    -1  
 $EndComp
@@ -206,7 +212,9 @@ F 0 "R99" H 4250 6000 50  0000 C CNN
 F 1 "2k" H 4250 6100 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 4330 6000 50  0001 C CNN
 F 3 "~" H 4400 6000 50  0001 C CNN
-F 4 "" H 4400 6000 50  0001 C CNN "Manufacturer"
+F 4 "Yageo" H 4400 6000 50  0001 C CNN "Manufacturer"
+F 5 "RC0603FR-072KL" H 4400 6000 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 4400 6000 50  0001 C CNN "DNP"
 	1    4400 6000
 	-1   0    0    1   
 $EndComp
@@ -261,6 +269,7 @@ F 4 "Kemet" H 5650 5250 50  0001 C CNN "Manufacturer"
 F 5 "X7R" H 5650 5250 50  0001 C CNN "Dielectric"
 F 6 "C0603C104K5RACTU" H 5650 5250 50  0001 C CNN "Manufacturer PN"
 F 7 "50V" H 5650 5250 50  0001 C CNN "Voltage"
+F 8 " " H 5650 5250 50  0001 C CNN "DNP"
 	1    5650 5250
 	1    0    0    1   
 $EndComp
@@ -329,7 +338,9 @@ F 0 "R95" H 2850 6050 50  0000 C CNN
 F 1 "10k" H 2800 6150 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 2930 6050 50  0001 C CNN
 F 3 "~" H 3000 6050 50  0001 C CNN
-F 4 "" H 3000 6050 50  0001 C CNN "Manufacturer"
+F 4 "Yageo" H 3000 6050 50  0001 C CNN "Manufacturer"
+F 5 "RC0603FR-0710KL" H 3000 6050 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 3000 6050 50  0001 C CNN "DNP"
 	1    3000 6050
 	-1   0    0    1   
 $EndComp
@@ -355,7 +366,9 @@ F 0 "R96" H 2850 6350 50  0000 C CNN
 F 1 "10k" H 2800 6450 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 2930 6350 50  0001 C CNN
 F 3 "~" H 3000 6350 50  0001 C CNN
-F 4 "" H 3000 6350 50  0001 C CNN "Manufacturer"
+F 4 "Yageo" H 3000 6350 50  0001 C CNN "Manufacturer"
+F 5 "RC0603FR-0710KL" H 3000 6350 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 3000 6350 50  0001 C CNN "DNP"
 	1    3000 6350
 	-1   0    0    1   
 $EndComp
@@ -407,6 +420,7 @@ F 2 "RespiraWorks_Std:Molex_Micro-Fit_3.0_43650-0315_1x03_P3.00mm_Vertical" H 15
 F 3 "~" H 1500 5850 50  0001 C CNN
 F 4 "Molex" H 1500 5850 50  0001 C CNN "Manufacturer"
 F 5 "43650-0315" H 1500 5850 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 1500 5850 50  0001 C CNN "DNP"
 	1    1500 5850
 	-1   0    0    -1  
 $EndComp
@@ -434,7 +448,9 @@ F 0 "R101" V 6500 5950 50  0000 C CNN
 F 1 "1.5k" V 6400 5900 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 6230 5950 50  0001 C CNN
 F 3 "~" H 6300 5950 50  0001 C CNN
-F 4 "" H 6300 5950 50  0001 C CNN "Manufacturer"
+F 4 "Yageo" H 6300 5950 50  0001 C CNN "Manufacturer"
+F 5 "RC0603FR-071K5L" H 6300 5950 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 6300 5950 50  0001 C CNN "DNP"
 	1    6300 5950
 	0    -1   -1   0   
 $EndComp
@@ -466,6 +482,7 @@ F 4 "Kemet" H 6750 6100 50  0001 C CNN "Manufacturer"
 F 5 "X7R" H 6750 6100 50  0001 C CNN "Dielectric"
 F 6 "C0805C105K5RACTU" H 6750 6100 50  0001 C CNN "Manufacturer PN"
 F 7 "50V" H 6750 6100 50  0001 C CNN "Voltage"
+F 8 " " H 6750 6100 50  0001 C CNN "DNP"
 	1    6750 6100
 	1    0    0    1   
 $EndComp
@@ -527,8 +544,9 @@ F 0 "R100" H 6000 6150 50  0000 C CNN
 F 1 "10k" H 6000 6250 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 5780 6200 50  0001 C CNN
 F 3 "~" H 5850 6200 50  0001 C CNN
-F 4 "" H 5850 6200 50  0001 C CNN "Manufacturer"
+F 4 "Yageo" H 5850 6200 50  0001 C CNN "Manufacturer"
 F 5 "DNP" H 6000 6050 50  0000 C CNN "DNP"
+F 6 "RC0603FR-0710KL" H 5850 6200 50  0001 C CNN "Manufacturer PN"
 	1    5850 6200
 	1    0    0    -1  
 $EndComp
@@ -584,7 +602,9 @@ F 0 "R97" V 3900 5800 50  0000 C CNN
 F 1 "10k" V 3800 5750 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 3630 5750 50  0001 C CNN
 F 3 "~" H 3700 5750 50  0001 C CNN
-F 4 "" H 3700 5750 50  0001 C CNN "Manufacturer"
+F 4 "Yageo" H 3700 5750 50  0001 C CNN "Manufacturer"
+F 5 "RC0603FR-0710KL" H 3700 5750 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 3700 5750 50  0001 C CNN "DNP"
 	1    3700 5750
 	0    -1   -1   0   
 $EndComp
@@ -621,7 +641,9 @@ F 0 "R98" V 3900 6250 50  0000 C CNN
 F 1 "10k" V 3800 6200 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 3630 6200 50  0001 C CNN
 F 3 "~" H 3700 6200 50  0001 C CNN
-F 4 "" H 3700 6200 50  0001 C CNN "Manufacturer"
+F 4 "Yageo" H 3700 6200 50  0001 C CNN "Manufacturer"
+F 5 "RC0603FR-0710KL" H 3700 6200 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 3700 6200 50  0001 C CNN "DNP"
 	1    3700 6200
 	0    -1   -1   0   
 $EndComp
@@ -652,7 +674,9 @@ F 0 "R93" H 2500 5550 50  0000 C CNN
 F 1 "10k" H 2500 5650 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 2630 5600 50  0001 C CNN
 F 3 "~" H 2700 5600 50  0001 C CNN
-F 4 "" H 2700 5600 50  0001 C CNN "Manufacturer"
+F 4 "Yageo" H 2700 5600 50  0001 C CNN "Manufacturer"
+F 5 "RC0603FR-0710KL" H 2700 5600 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 2700 5600 50  0001 C CNN "DNP"
 	1    2700 5600
 	1    0    0    1   
 $EndComp
@@ -678,7 +702,9 @@ F 0 "R92" H 2000 5850 50  0000 C CNN
 F 1 "10k" H 2000 5950 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 2130 5900 50  0001 C CNN
 F 3 "~" H 2200 5900 50  0001 C CNN
-F 4 "" H 2200 5900 50  0001 C CNN "Manufacturer"
+F 4 "Yageo" H 2200 5900 50  0001 C CNN "Manufacturer"
+F 5 "RC0603FR-0710KL" H 2200 5900 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 2200 5900 50  0001 C CNN "DNP"
 	1    2200 5900
 	1    0    0    1   
 $EndComp
@@ -709,7 +735,9 @@ F 0 "R94" H 2500 5850 50  0000 C CNN
 F 1 "10k" H 2500 5950 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 2630 5900 50  0001 C CNN
 F 3 "~" H 2700 5900 50  0001 C CNN
-F 4 "" H 2700 5900 50  0001 C CNN "Manufacturer"
+F 4 "Yageo" H 2700 5900 50  0001 C CNN "Manufacturer"
+F 5 "RC0603FR-0710KL" H 2700 5900 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 2700 5900 50  0001 C CNN "DNP"
 	1    2700 5900
 	1    0    0    1   
 $EndComp
@@ -782,6 +810,7 @@ F 0 "TP97" H 7450 6150 50  0000 C CNN
 F 1 "TP" V 7500 6000 50  0001 C CNN
 F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 7650 5950 50  0001 C CNN
 F 3 "~" H 7650 5950 50  0001 C CNN
+F 4 " " H 7450 5950 50  0001 C CNN "DNP"
 	1    7450 5950
 	1    0    0    -1  
 $EndComp

@@ -25,6 +25,7 @@ F 2 "RespiraWorks_Std:TSSOP-16_4.4x5mm_P0.65mm" H 7500 3200 50  0001 C CIN
 F 3 "http://www.ti.com/lit/ds/symlink/adc128d818.pdf" H 7500 3200 50  0001 C CNN
 F 4 "Texas Instruments" H 7500 3200 50  0001 C CNN "Manufacturer"
 F 5 "ADC128D818CIMTX/NOPB" H 7500 3200 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 7500 3200 50  0001 C CNN "DNP"
 	1    7500 3200
 	1    0    0    -1  
 $EndComp
@@ -180,6 +181,9 @@ F 0 "R243" H 5850 4500 50  0000 L CNN
 F 1 "10k" H 5900 4600 50  0000 L CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 6030 4550 50  0001 C CNN
 F 3 "~" H 6100 4550 50  0001 C CNN
+F 4 "Yageo" H 6100 4550 50  0001 C CNN "Manufacturer"
+F 5 "RC0603FR-0710KL" H 6100 4550 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 6100 4550 50  0001 C CNN "DNP"
 	1    6100 4550
 	-1   0    0    1   
 $EndComp
@@ -257,6 +261,9 @@ F 0 "R245" H 6300 4500 50  0000 L CNN
 F 1 "10k" H 6350 4600 50  0000 L CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 6480 4550 50  0001 C CNN
 F 3 "~" H 6550 4550 50  0001 C CNN
+F 4 "Yageo" H 6550 4550 50  0001 C CNN "Manufacturer"
+F 5 "RC0603FR-0710KL" H 6550 4550 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 6550 4550 50  0001 C CNN "DNP"
 	1    6550 4550
 	-1   0    0    1   
 $EndComp
@@ -338,6 +345,7 @@ F 4 "Kemet" H 7700 1700 50  0001 C CNN "Manufacturer"
 F 5 "X7R" H 7700 1700 50  0001 C CNN "Dielectric"
 F 6 "C0603C104K5RACTU" H 7700 1700 50  0001 C CNN "Manufacturer PN"
 F 7 "50V" H 7700 1700 50  0001 C CNN "Voltage"
+F 8 " " H 7700 1700 50  0001 C CNN "DNP"
 	1    7700 1700
 	1    0    0    1   
 $EndComp
@@ -404,6 +412,7 @@ F 4 "Kemet" H 8550 1700 50  0001 C CNN "Manufacturer"
 F 5 "X7R" H 8550 1700 50  0001 C CNN "Dielectric"
 F 6 "C0805C105K5RACTU" H 8550 1700 50  0001 C CNN "Manufacturer PN"
 F 7 "50V" H 8550 1700 50  0001 C CNN "Voltage"
+F 8 " " H 8550 1700 50  0001 C CNN "DNP"
 	1    8550 1700
 	1    0    0    1   
 $EndComp
@@ -474,6 +483,9 @@ F 0 "R241" H 4800 3150 50  0000 L CNN
 F 1 "0" H 4900 3250 50  0000 L CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 4980 3200 50  0001 C CNN
 F 3 "~" H 5050 3200 50  0001 C CNN
+F 4 "Yageo" H 5050 3200 50  0001 C CNN "Manufacturer"
+F 5 "RC0603JR-070RL" H 5050 3200 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 5050 3200 50  0001 C CNN "DNP"
 	1    5050 3200
 	-1   0    0    1   
 $EndComp

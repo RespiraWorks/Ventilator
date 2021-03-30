@@ -39,6 +39,9 @@ F 0 "R210" V 4600 2850 50  0000 L CNN
 F 1 "10" V 4800 2900 50  0000 L CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 4630 2950 50  0001 C CNN
 F 3 "~" H 4700 2950 50  0001 C CNN
+F 4 "Yageo" H 4700 2950 50  0001 C CNN "Manufacturer"
+F 5 "RC0603FR-0710RL" H 4700 2950 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 4700 2950 50  0001 C CNN "DNP"
 	1    4700 2950
 	0    1    1    0   
 $EndComp
@@ -80,6 +83,9 @@ F 0 "R212" H 6950 2700 50  0000 L CNN
 F 1 "100k" H 6950 2600 50  0000 L CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 7180 2650 50  0001 C CNN
 F 3 "~" H 7250 2650 50  0001 C CNN
+F 4 "Yageo" H 7250 2650 50  0001 C CNN "Manufacturer"
+F 5 "RC0603FR-07100KL" H 7250 2650 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 7250 2650 50  0001 C CNN "DNP"
 	1    7250 2650
 	1    0    0    -1  
 $EndComp
@@ -96,6 +102,9 @@ F 0 "R213" H 6950 3150 50  0000 L CNN
 F 1 "10k" H 6950 3050 50  0000 L CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 7180 3100 50  0001 C CNN
 F 3 "~" H 7250 3100 50  0001 C CNN
+F 4 "Yageo" H 7250 3100 50  0001 C CNN "Manufacturer"
+F 5 "RC0603FR-0710KL" H 7250 3100 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 7250 3100 50  0001 C CNN "DNP"
 	1    7250 3100
 	1    0    0    -1  
 $EndComp
@@ -155,6 +164,7 @@ F 4 "100V" H 8450 1200 50  0000 L CNN "Voltage"
 F 5 "X7S" H 8400 1500 50  0001 C CNN "Dielectric"
 F 6 "Murata" H 8400 1500 50  0001 C CNN "Manufacturer"
 F 7 "GRM32EC72A106KE05L" H 8400 1500 50  0001 C CNN "Manufacturer PN"
+F 8 " " H 8400 1500 50  0001 C CNN "DNP"
 	1    8400 1500
 	1    0    0    -1  
 $EndComp
@@ -193,6 +203,7 @@ F 4 "100V" H 8150 1200 50  0000 L CNN "Voltage"
 F 5 "X7S" H 8100 1500 50  0001 C CNN "Dielectric"
 F 6 "Murata" H 8100 1500 50  0001 C CNN "Manufacturer"
 F 7 "GRM32EC72A106KE05L" H 8100 1500 50  0001 C CNN "Manufacturer PN"
+F 8 " " H 8100 1500 50  0001 C CNN "DNP"
 	1    8100 1500
 	1    0    0    -1  
 $EndComp
@@ -231,6 +242,7 @@ F 4 "100V" H 7850 1200 50  0000 L CNN "Voltage"
 F 5 "X7S" H 7800 1500 50  0001 C CNN "Dielectric"
 F 6 "Murata" H 7800 1500 50  0001 C CNN "Manufacturer"
 F 7 "GRM32EC72A106KE05L" H 7800 1500 50  0001 C CNN "Manufacturer PN"
+F 8 " " H 7800 1500 50  0001 C CNN "DNP"
 	1    7800 1500
 	1    0    0    -1  
 $EndComp
@@ -269,6 +281,7 @@ F 4 "100V" H 7550 1200 50  0000 L CNN "Voltage"
 F 5 "X7S" H 7500 1500 50  0001 C CNN "Dielectric"
 F 6 "Murata" H 7500 1500 50  0001 C CNN "Manufacturer"
 F 7 "GRM32EC72A106KE05L" H 7500 1500 50  0001 C CNN "Manufacturer PN"
+F 8 " " H 7500 1500 50  0001 C CNN "DNP"
 	1    7500 1500
 	1    0    0    -1  
 $EndComp
@@ -319,6 +332,7 @@ F 4 "NP0" H 6750 1650 50  0001 C CNN "Dielectric"
 F 5 "Kemet" H 6750 1650 50  0001 C CNN "Manufacturer"
 F 6 "C0603C101J5GACTU" H 6750 1650 50  0001 C CNN "Manufacturer PN"
 F 7 "50V" H 6750 1650 50  0001 C CNN "Voltage"
+F 8 " " H 6750 1650 50  0001 C CNN "DNP"
 	1    6750 1650
 	0    -1   -1   0   
 $EndComp
@@ -342,6 +356,7 @@ F 4 "100V" H 3500 1200 50  0000 L CNN "Voltage"
 F 5 "X7S" H 3450 1500 50  0001 C CNN "Dielectric"
 F 6 "Murata" H 3450 1500 50  0001 C CNN "Manufacturer"
 F 7 "GRM32EC72A106KE05L" H 3450 1500 50  0001 C CNN "Manufacturer PN"
+F 8 " " H 3450 1500 50  0001 C CNN "DNP"
 	1    3450 1500
 	1    0    0    -1  
 $EndComp
@@ -383,6 +398,7 @@ F 4 "100V" H 3200 1200 50  0000 L CNN "Voltage"
 F 5 "X7S" H 3150 1500 50  0001 C CNN "Dielectric"
 F 6 "Murata" H 3150 1500 50  0001 C CNN "Manufacturer"
 F 7 "GRM32EC72A106KE05L" H 3150 1500 50  0001 C CNN "Manufacturer PN"
+F 8 " " H 3150 1500 50  0001 C CNN "DNP"
 	1    3150 1500
 	1    0    0    -1  
 $EndComp
@@ -422,6 +438,7 @@ F 2 "RespiraWorks:VSON-8-SGD_3.3x3.3mm_P0.65mm_NexFET" H 4600 1475 50  0001 L CI
 F 3 "https://www.infineon.com/dgdl/BSZ019N03LS_Rev+2.1.pdf?folderId=db3a304326dfb1300126fb3bec803f1a&fileId=db3a304326dfb1300126fb7ddf173f4e" V 4400 1550 50  0001 L CNN
 F 4 "Infineon" H 4400 1550 50  0001 C CNN "Manufacturer"
 F 5 "BSZ019N03LSATMA1" H 4400 1550 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 4400 1550 50  0001 C CNN "DNP"
 	1    4400 1550
 	1    0    0    -1  
 $EndComp
@@ -449,6 +466,7 @@ F 4 "X7R" H 4950 1500 50  0001 C CNN "Dielectric"
 F 5 "Kemet" H 4950 1500 50  0001 C CNN "Manufacturer"
 F 6 "C0603C104K5RACTU" H 4950 1500 50  0001 C CNN "Manufacturer PN"
 F 7 "50V" H 4950 1500 50  0001 C CNN "Voltage"
+F 8 " " H 4950 1500 50  0001 C CNN "DNP"
 	1    4950 1500
 	1    0    0    -1  
 $EndComp
@@ -486,6 +504,7 @@ F 2 "RespiraWorks:VSON-8-SGD_3.3x3.3mm_P0.65mm_NexFET" H 4250 1375 50  0001 L CI
 F 3 "https://www.infineon.com/dgdl/BSZ019N03LS_Rev+2.1.pdf?folderId=db3a304326dfb1300126fb3bec803f1a&fileId=db3a304326dfb1300126fb7ddf173f4e" V 4050 1450 50  0001 L CNN
 F 4 "Infineon" H 4050 1450 50  0001 C CNN "Manufacturer"
 F 5 "BSZ019N03LSATMA1" H 4050 1450 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 4050 1450 50  0001 C CNN "DNP"
 	1    4050 1450
 	0    -1   -1   0   
 $EndComp
@@ -506,6 +525,7 @@ F 2 "RespiraWorks:L_TDK_SPM12565VT" V 5750 1350 50  0001 C CNN
 F 3 "https://product.tdk.com/info/en/catalog/datasheets/inductor_automotive_power_spm12565vt-d_en.pdf" V 5750 1350 50  0001 C CNN
 F 4 "TDK" H 5750 1350 50  0001 C CNN "Manufacturer"
 F 5 "SPM12565VT-6R8M-D" H 5800 1450 50  0000 C CNN "Manufacturer PN"
+F 6 " " H 5750 1350 50  0001 C CNN "DNP"
 	1    5750 1350
 	1    0    0    -1  
 $EndComp
@@ -519,6 +539,7 @@ F 2 "RespiraWorks_Std:VQFN-24-1EP_4x4mm_P0.5mm_EP2.45x2.45mm_ThermalVias" H 5650
 F 3 "https://www.ti.com/lit/ds/symlink/lm5141-q1.pdf" H 8450 4600 50  0001 C CNN
 F 4 "Texas Instruments" H 5750 3750 50  0000 C CNN "Manufacturer"
 F 5 "LM5141RGER" H 5750 3650 50  0000 C CNN "Manufacturer PN"
+F 6 " " H 5750 3550 50  0001 C CNN "DNP"
 	1    5750 3550
 	1    0    0    -1  
 $EndComp
@@ -544,6 +565,9 @@ F 0 "R215" H 7450 3800 50  0000 L CNN
 F 1 "10k" H 7450 3700 50  0000 L CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 7680 3750 50  0001 C CNN
 F 3 "~" H 7750 3750 50  0001 C CNN
+F 4 "Yageo" H 7750 3750 50  0001 C CNN "Manufacturer"
+F 5 "RC0603FR-0710KL" H 7750 3750 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 7750 3750 50  0001 C CNN "DNP"
 	1    7750 3750
 	1    0    0    -1  
 $EndComp
@@ -575,6 +599,7 @@ F 4 "X7R" H 7450 4550 50  0001 C CNN "Dielectric"
 F 5 "Kemet" H 7450 4550 50  0001 C CNN "Manufacturer"
 F 6 "C0603C104K5RACTU" H 7450 4550 50  0001 C CNN "Manufacturer PN"
 F 7 "50V" H 7450 4550 50  0001 C CNN "Voltage"
+F 8 " " H 7450 4550 50  0001 C CNN "DNP"
 	1    7450 4550
 	1    0    0    -1  
 $EndComp
@@ -615,6 +640,9 @@ F 0 "R208" H 4700 5350 50  0000 L CNN
 F 1 "52.3k" H 4700 5250 50  0000 L CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 4530 5250 50  0001 C CNN
 F 3 "~" H 4600 5250 50  0001 C CNN
+F 4 "Yageo" H 4600 5250 50  0001 C CNN "Manufacturer"
+F 5 "RC0603FR-0752K3L" H 4600 5250 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 4600 5250 50  0001 C CNN "DNP"
 	1    4600 5250
 	1    0    0    -1  
 $EndComp
@@ -626,6 +654,7 @@ F 0 "NT1" V 7150 4900 50  0000 C CNN
 F 1 "Net-Tie_2" H 7100 4850 50  0001 C CNN
 F 2 "RespiraWorks_Std:NetTie-2_SMD_Pad0.5mm" H 7150 4800 50  0001 C CNN
 F 3 "~" H 7150 4800 50  0001 C CNN
+F 4 " " H 7150 4800 50  0001 C CNN "DNP"
 	1    7150 4800
 	0    1    1    0   
 $EndComp
@@ -670,6 +699,7 @@ F 4 "X7R" H 3150 4450 50  0001 C CNN "Dielectric"
 F 5 "Kemet" H 3150 4450 50  0001 C CNN "Manufacturer"
 F 6 "C0603C104K5RACTU" H 3150 4450 50  0001 C CNN "Manufacturer PN"
 F 7 "50V" H 3150 4450 50  0001 C CNN "Voltage"
+F 8 " " H 3150 4450 50  0001 C CNN "DNP"
 	1    3150 4450
 	-1   0    0    1   
 $EndComp
@@ -686,6 +716,9 @@ F 0 "R206" H 2300 4850 50  0000 L CNN
 F 1 "6.49k" H 2300 4750 50  0000 L CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 2480 4950 50  0001 C CNN
 F 3 "~" H 2550 4950 50  0001 C CNN
+F 4 "Yageo" H 2550 4950 50  0001 C CNN "Manufacturer"
+F 5 "RC0603FR-076K49L" H 2550 4950 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 2550 4950 50  0001 C CNN "DNP"
 	1    2550 4950
 	1    0    0    -1  
 $EndComp
@@ -706,6 +739,7 @@ F 4 "NP0" H 2800 4850 50  0001 C CNN "Dielectric"
 F 5 "Kemet" H 2800 4850 50  0001 C CNN "Manufacturer"
 F 6 "C0603C101J5GACTU" H 2800 4850 50  0001 C CNN "Manufacturer PN"
 F 7 "50V" H 2800 4850 50  0001 C CNN "Voltage"
+F 8 " " H 2800 4850 50  0001 C CNN "DNP"
 	1    2800 4850
 	1    0    0    -1  
 $EndComp
@@ -729,6 +763,9 @@ F 0 "R204" H 1850 4100 50  0000 L CNN
 F 1 "10k" H 1850 4000 50  0000 L CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 2080 4050 50  0001 C CNN
 F 3 "~" H 2150 4050 50  0001 C CNN
+F 4 "Yageo" H 2150 4050 50  0001 C CNN "Manufacturer"
+F 5 "RC0603FR-0710KL" H 2150 4050 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 2150 4050 50  0001 C CNN "DNP"
 	1    2150 4050
 	1    0    0    -1  
 $EndComp
@@ -746,6 +783,8 @@ F 1 "10k" H 1850 3750 50  0000 L CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 2080 3750 50  0001 C CNN
 F 3 "~" H 2150 3750 50  0001 C CNN
 F 4 "DNP" H 1950 3650 50  0000 C CNN "DNP"
+F 5 "Yageo" H 2150 3750 50  0001 C CNN "Manufacturer"
+F 6 "RC0603FR-0710KL" H 2150 3750 50  0001 C CNN "Manufacturer PN"
 	1    2150 3750
 	1    0    0    -1  
 $EndComp
@@ -766,6 +805,7 @@ F 4 "NP0" H 2550 4650 50  0001 C CNN "Dielectric"
 F 5 "Kemet" H 2550 4650 50  0001 C CNN "Manufacturer"
 F 6 "C0603C272J5GACTU" H 2550 4650 50  0001 C CNN "Manufacturer PN"
 F 7 "50V" H 2550 4650 50  0001 C CNN "Voltage"
+F 8 " " H 2550 4650 50  0001 C CNN "DNP"
 	1    2550 4650
 	1    0    0    -1  
 $EndComp
@@ -807,6 +847,7 @@ F 4 "X7R" H 3600 4650 50  0001 C CNN "Dielectric"
 F 5 "Kemet" H 3600 4650 50  0001 C CNN "Manufacturer"
 F 6 "C0805C224K1RACTU" H 3600 4650 50  0001 C CNN "Manufacturer PN"
 F 7 "100V" H 3600 4650 50  0001 C CNN "Voltage"
+F 8 " " H 3600 4650 50  0001 C CNN "DNP"
 	1    3600 4650
 	-1   0    0    1   
 $EndComp
@@ -843,6 +884,7 @@ F 4 "X7R" H 4200 5050 50  0001 C CNN "Dielectric"
 F 5 "Kemet" H 4200 5050 50  0001 C CNN "Manufacturer"
 F 6 "C0805C224K1RACTU" H 4200 5050 50  0001 C CNN "Manufacturer PN"
 F 7 "100V" H 4200 5050 50  0001 C CNN "Voltage"
+F 8 " " H 4200 5050 50  0001 C CNN "DNP"
 	1    4200 5050
 	-1   0    0    1   
 $EndComp
@@ -875,6 +917,7 @@ F 2 "RespiraWorks_Std:D_SOD-323F" H 5100 1625 50  0001 C CNN
 F 3 "https://assets.nexperia.com/documents/data-sheet/BAT54J.pdf" H 5100 1800 50  0001 C CNN
 F 4 "Nexperia" H 5100 1800 50  0001 C CNN "Manufacturer"
 F 5 "BAT54J,115" H 5100 1800 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 5100 1800 50  0001 C CNN "DNP"
 	1    5100 1800
 	1    0    0    -1  
 $EndComp
@@ -896,6 +939,9 @@ F 0 "R209" V 4600 2450 50  0000 L CNN
 F 1 "10" V 4800 2500 50  0000 L CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 4630 2550 50  0001 C CNN
 F 3 "~" H 4700 2550 50  0001 C CNN
+F 4 "Yageo" H 4700 2550 50  0001 C CNN "Manufacturer"
+F 5 "RC0603FR-0710RL" H 4700 2550 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 4700 2550 50  0001 C CNN "DNP"
 	1    4700 2550
 	0    1    1    0   
 $EndComp
@@ -916,6 +962,7 @@ F 2 "RespiraWorks_Std:R_2512_6332Metric" V 6680 1350 50  0001 C CNN
 F 3 "https://www.te.com/commerce/DocumentDelivery/DDEController?Action=srchrtrv&DocNm=1773449-3&DocType=DS&DocLang=English" H 6750 1350 50  0001 C CNN
 F 4 "Rohm" V 6750 1350 50  0001 C CNN "Manufacturer"
 F 5 "PMR100HZPFU5L00" V 6750 1350 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 6750 1350 50  0001 C CNN "DNP"
 	1    6750 1350
 	0    1    1    0   
 $EndComp
@@ -945,6 +992,7 @@ F 2 "RespiraWorks_Std:SOT-23" H 3100 3025 50  0001 L CIN
 F 3 "https://www.onsemi.com/pub/Collateral/2N3903-D.PDF" H 2900 3100 50  0001 L CNN
 F 4 "Diodes Inc." H 2900 3100 50  0001 C CNN "Manufacturer"
 F 5 "MMBT3904-7-F" H 2900 3100 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 2900 3100 50  0001 C CNN "DNP"
 	1    2900 3100
 	1    0    0    -1  
 $EndComp
@@ -977,6 +1025,9 @@ F 0 "R207" H 2700 2700 50  0000 L CNN
 F 1 "10k" H 2700 2600 50  0000 L CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 2930 2650 50  0001 C CNN
 F 3 "~" H 3000 2650 50  0001 C CNN
+F 4 "Yageo" H 3000 2650 50  0001 C CNN "Manufacturer"
+F 5 "RC0603FR-0710KL" H 3000 2650 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 3000 2650 50  0001 C CNN "DNP"
 	1    3000 2650
 	1    0    0    -1  
 $EndComp
@@ -1015,6 +1066,9 @@ F 0 "R202" V 1950 3050 50  0000 L CNN
 F 1 "10k" V 2050 3050 50  0000 L CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 2080 3100 50  0001 C CNN
 F 3 "~" H 2150 3100 50  0001 C CNN
+F 4 "Yageo" H 2150 3100 50  0001 C CNN "Manufacturer"
+F 5 "RC0603FR-0710KL" H 2150 3100 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 2150 3100 50  0001 C CNN "DNP"
 	1    2150 3100
 	0    1    1    0   
 $EndComp
@@ -1047,6 +1101,7 @@ F 4 "Kemet" H 8050 4350 50  0001 C CNN "Manufacturer"
 F 5 "X7R" H 8050 4350 50  0001 C CNN "Dielectric"
 F 6 "C0805C105K5RACTU" H 8050 4350 50  0001 C CNN "Manufacturer PN"
 F 7 "50V" H 8050 4350 50  0001 C CNN "Voltage"
+F 8 " " H 8050 4350 50  0001 C CNN "DNP"
 	1    8050 4350
 	-1   0    0    1   
 $EndComp
@@ -1079,6 +1134,7 @@ F 4 "Kemet" H 8450 4350 50  0001 C CNN "Manufacturer"
 F 5 "X7R" H 8450 4350 50  0001 C CNN "Dielectric"
 F 6 "C0805C105K5RACTU" H 8450 4350 50  0001 C CNN "Manufacturer PN"
 F 7 "50V" H 8450 4350 50  0001 C CNN "Voltage"
+F 8 " " H 8450 4350 50  0001 C CNN "DNP"
 	1    8450 4350
 	-1   0    0    1   
 $EndComp
@@ -1112,6 +1168,9 @@ F 0 "R214" H 7200 2700 50  0000 L CNN
 F 1 "1M" H 7250 2600 50  0000 L CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 7380 2650 50  0001 C CNN
 F 3 "~" H 7450 2650 50  0001 C CNN
+F 4 "Yageo" H 7450 2650 50  0001 C CNN "Manufacturer"
+F 5 "RC0603FR-071ML" H 7450 2650 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 7450 2650 50  0001 C CNN "DNP"
 	1    7450 2650
 	-1   0    0    -1  
 $EndComp
@@ -1144,6 +1203,9 @@ F 0 "R205" H 2250 3300 50  0000 L CNN
 F 1 "10k" H 2300 3200 50  0000 L CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 2430 3250 50  0001 C CNN
 F 3 "~" H 2500 3250 50  0001 C CNN
+F 4 "Yageo" H 2500 3250 50  0001 C CNN "Manufacturer"
+F 5 "RC0603FR-0710KL" H 2500 3250 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 2500 3250 50  0001 C CNN "DNP"
 	1    2500 3250
 	-1   0    0    1   
 $EndComp
@@ -1177,7 +1239,8 @@ F 1 "Heatsink_Pad" H 1441 948 50  0001 L CNN
 F 2 "RespiraWorks:Heatsink_Aavid_573100D00010G_HandSolder" H 1312 950 50  0001 C CNN
 F 3 "~" H 1312 950 50  0001 C CNN
 F 4 "Aavid Thermalloy" H 1750 1150 50  0000 C CNN "Manufacturer"
-F 5 "573100D00010G" H 1750 1050 50  0000 C CNN "Part Number"
+F 5 "573100D00010G" H 1750 1050 50  0000 C CNN "Manufacturer PN"
+F 6 " " H 1300 1000 50  0001 C CNN "DNP"
 	1    1300 1000
 	1    0    0    -1  
 $EndComp

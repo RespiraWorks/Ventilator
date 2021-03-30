@@ -29,7 +29,7 @@ bool Interface::Poll() {
   // or a full command has been received.  Either way, the
   // ReadNextByte function will return false when its time
   // to move on.
-  case State::kWait:
+  case State::kAwaitingCommand:
     while (ReadNextByte()) {
     }
     return false;
@@ -132,7 +132,7 @@ bool Interface::SendNextByte() {
   char end_transfer = static_cast<char>(SpecialChar::kEndTransfer);
   (void)Hal.debugWrite(&end_transfer, 1);
 
-  state_ = State::kWait;
+  state_ = State::kAwaitingCommand;
   response_bytes_sent_ = 0;
   return false;
 }
@@ -147,7 +147,7 @@ void Interface::ProcessCommand() {
   // communication if necessary
   if (request_size_ < 3) {
     request_size_ = 0;
-    state_ = State::kWait;
+    state_ = State::kAwaitingCommand;
     return;
   }
 
@@ -178,19 +178,14 @@ void Interface::ProcessCommand() {
   };
   ErrorCode error = cmd_handler->Process(&context);
 
-  if (error == ErrorCode::kWait) {
-    state_ = State::kAwaitingResponse;
-    command_start_time_ = Hal.now();
-    response_length_ = context.response_length;
-    return;
-  }
-
   if (error != ErrorCode::kNone) {
     SendError(error);
     return;
   }
 
-  SendResponse(ErrorCode::kNone, context.response_length);
+  state_ = State::kAwaitingResponse;
+  command_start_time_ = Hal.now();
+  response_length_ = context.response_length;
 }
 
 void Interface::SendResponse(ErrorCode error, uint32_t response_length) {

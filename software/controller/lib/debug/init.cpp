@@ -59,7 +59,7 @@ static FnDebugVar vartrace_var4(
     "%d", [] { return trace.GetTracedVarId<3>(); },
     [](int32_t value) { trace.SetTracedVarId<3>(value); });
 
-// Create the I2Ceeprom referenced ty eeprom Handler
+// Create the I2Ceeprom referenced by eeprom Handler
 I2Ceeprom eeprom = I2Ceeprom(0x50, 64, 32768, &i2c1);
 
 // Create a handler for each of the known commands that the Debug Handler can

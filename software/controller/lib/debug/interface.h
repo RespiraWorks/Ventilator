@@ -66,9 +66,9 @@ public:
   void SampleTraceVars() { trace_->MaybeSample(); }
 
 private:
-  State state_{State::kWait};
+  State state_{State::kAwaitingCommand};
 
-  // Buffer into which request data is written in kWait state
+  // Buffer into which request data is written in kAwaitingCommand state
   uint8_t request_[500] = {0};
   uint32_t request_size_{0};
   // Remember when we receive an escape char (in case the call happens in

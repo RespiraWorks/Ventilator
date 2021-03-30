@@ -30,13 +30,13 @@ ErrorCode VarHandler::Process(Context *context) {
   switch (context->request[0]) {
 
   // Return info about one of the variables.
-  case 0:
+  case static_cast<uint8_t>(Subcommand::kVarInfo):
     return GetVarInfo(context);
 
-  case 1:
+  case static_cast<uint8_t>(Subcommand::kGetVar):
     return GetVar(context);
 
-  case 2:
+  case static_cast<uint8_t>(Subcommand::kSetVar):
     return SetVar(context);
 
   default:
@@ -101,6 +101,7 @@ ErrorCode VarHandler::GetVarInfo(Context *context) {
   count += static_cast<uint32_t>(help_length);
 
   context->response_length = count;
+  *(context->processed) = true;
   return ErrorCode::kNone;
 }
 
@@ -120,6 +121,7 @@ ErrorCode VarHandler::GetVar(Context *context) {
 
   u32_to_u8(var->GetValue(), context->response);
   context->response_length = 4;
+  *(context->processed) = true;
   return ErrorCode::kNone;
 }
 
@@ -141,6 +143,7 @@ ErrorCode VarHandler::SetVar(Context *context) {
 
   var->SetValue(u8_to_u32(context->request + 3));
   context->response_length = 0;
+  *(context->processed) = true;
   return ErrorCode::kNone;
 }
 

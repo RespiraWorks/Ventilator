@@ -33,7 +33,8 @@ TEST(EepromHandler, ValidRead) {
 
   for (uint16_t read_length = 1; read_length <= kMaxRequestSize;
        ++read_length) {
-    std::array<uint8_t, 6> read_command = {0, 0, 0, 0, 0};
+    std::array<uint8_t, 6> read_command = {
+        static_cast<uint8_t>(Subcommand::kEepromRead)};
     // set command length
     u16_to_u8(read_length, &read_command[3]);
     for (uint16_t offset = 0; offset < kMemorySize + 1 - read_length;
@@ -50,7 +51,7 @@ TEST(EepromHandler, ValidRead) {
           .response_length = 0,
           .processed = &processed,
       };
-      EXPECT_EQ(ErrorCode::kWait, eeprom_handler.Process(&read_context));
+      EXPECT_EQ(ErrorCode::kNone, eeprom_handler.Process(&read_context));
       EXPECT_EQ(read_context.response_length, read_length);
       EXPECT_TRUE(processed);
 
@@ -72,7 +73,8 @@ TEST(EepromHandler, ValidWrite) {
 
   for (uint16_t write_length = 1; write_length <= kMaxWriteSize;
        ++write_length) {
-    std::array<uint8_t, kMaxWriteSize + 3> write_command = {1};
+    std::array<uint8_t, kMaxWriteSize + 3> write_command = {
+        static_cast<uint8_t>(Subcommand::kEepromWrite)};
     for (uint16_t offset = 0; offset < kMemorySize + 1 - write_length;
          ++offset) {
       // set command address

@@ -21,7 +21,12 @@ limitations under the License.
 namespace Debug {
 
 // States for the internal state machine
-enum class State { kWait, kProcessing, kAwaitingResponse, kResponding };
+enum class State {
+  kAwaitingCommand,
+  kProcessing,
+  kAwaitingResponse,
+  kResponding
+};
 
 // The binary serial interface uses two special characters
 // These values are pretty arbitrary.
@@ -37,8 +42,7 @@ enum class ErrorCode : uint8_t {
   kInternalError = 0x05,   // Some type of internal error (aka bug)
   kUnknownVariable = 0x06, // The requested variable ID is invalid
   kInvalidData = 0x07,     // data is out of range
-  kWait = 0x08,            // awaiting peripheral response
-  kTimeout = 0x09,         // peripheral timeout
+  kTimeout = 0x08,         // response timeout
 };
 
 namespace Command {
@@ -64,7 +68,8 @@ struct Context {
   uint32_t response_length; // (actual) length of the response once the
                             // command is processed
   bool *processed; // pointer to a boolean that informs the interface handler
-                   // that a command is processed (some commands take time)
+                   // that a command's response is available (some commands take
+                   // time)
 };
 
 // Each debug command is represented by an instance of this virtual class
@@ -77,6 +82,16 @@ public:
   [[nodiscard]] virtual ErrorCode Process(Context *context) {
     return ErrorCode::kUnknownCommand;
   }
+};
+
+enum class Subcommand {
+  kFlushTrace = 0x00,    // disable and flush the trace
+  kDownloadTrace = 0x01, // download the trace buffer
+  kVarInfo = 0x00,       // get variable info (name, type, help string)
+  kGetVar = 0x01,        // get variable value
+  kSetVar = 0x02,        // set variable value
+  kEepromRead = 0x00,    // read value in EEPROM
+  kEepromWrite = 0x01,   // write value in EEPROM
 };
 
 } // namespace Command

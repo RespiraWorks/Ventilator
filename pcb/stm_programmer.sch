@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 38 38
+Sheet 37 38
 Title "STM Programmer for Cycle Controller"
 Date ""
 Rev "A"
@@ -319,7 +319,7 @@ AR Path="/5FF1A7AE" Ref="J?"  Part="1"
 AR Path="/5FCD4D85/5FF1A7AE" Ref="J50"  Part="1" 
 F 0 "J50" H 1050 2950 50  0000 C CNN
 F 1 "USB B micro" H 1150 2850 50  0000 C CNN
-F 2 "RespiraWorks_Std:USB_Mini-B_Wuerth_65100516121_Horizontal" H 1300 2450 50  0001 C CNN
+F 2 "RespiraWorks_Std:USB_Micro-B_Molex-105017-0001" H 1300 2450 50  0001 C CNN
 F 3 "~" H 1300 2450 50  0001 C CNN
 F 4 "Wuerth Elektronik" H 1150 2500 50  0001 C CNN "Manufacturer"
 F 5 "65100516121" H 1150 2500 50  0001 C CNN "Manufacturer PN"

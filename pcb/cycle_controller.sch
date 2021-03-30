@@ -1631,27 +1631,27 @@ $Comp
 L Connector_Generic:Conn_01x03 J1
 U 1 1 604A44BD
 P 1100 1000
-F 0 "J1" H 1050 1300 50  0000 L CNN
-F 1 "Optical end stop 1" H 750 1200 50  0000 L CNN
+F 0 "J1" H 1100 700 50  0000 L CNN
+F 1 "Optical end stop 1" H 800 800 50  0000 L CNN
 F 2 "RespiraWorks_Std:Molex_Micro-Fit_3.0_43650-0315_1x03_P3.00mm_Vertical" H 1100 1000 50  0001 C CNN
 F 3 "~" H 1100 1000 50  0001 C CNN
 F 4 "Molex" H 1100 1000 50  0001 C CNN "Manufacturer"
 F 5 "43650-0315" H 1100 1000 50  0001 C CNN "Manufacturer PN"
 	1    1100 1000
-	-1   0    0    -1  
+	-1   0    0    1   
 $EndComp
 $Comp
 L Connector_Generic:Conn_01x03 J2
 U 1 1 604A44C3
 P 1100 1600
-F 0 "J2" H 1050 1300 50  0000 L CNN
-F 1 "Optical end stop 2" H 700 1200 50  0000 L CNN
+F 0 "J2" H 1100 1300 50  0000 L CNN
+F 1 "Optical end stop 2" H 800 1400 50  0000 L CNN
 F 2 "RespiraWorks_Std:Molex_Micro-Fit_3.0_43650-0315_1x03_P3.00mm_Vertical" H 1100 1600 50  0001 C CNN
 F 3 "~" H 1100 1600 50  0001 C CNN
 F 4 "Molex" H 1100 1600 50  0001 C CNN "Manufacturer"
 F 5 "43650-0315" H 1100 1600 50  0001 C CNN "Manufacturer PN"
 	1    1100 1600
-	-1   0    0    -1  
+	-1   0    0    1   
 $EndComp
 $Comp
 L power:+5V #PWR085
@@ -1699,8 +1699,6 @@ F 3 "~" H 1900 1000 50  0001 C CNN
 	1    1900 1000
 	0    1    1    0   
 $EndComp
-Wire Wire Line
-	1750 1000 1600 1000
 $Comp
 L Device:R R40
 U 1 1 604BB5FA
@@ -1757,11 +1755,6 @@ Wire Wire Line
 Connection ~ 2150 1000
 Wire Wire Line
 	1450 1100 1450 1700
-Wire Wire Line
-	1600 1000 1600 1500
-Connection ~ 1600 1000
-Wire Wire Line
-	1600 1000 1300 1000
 $Comp
 L power:GND #PWR086
 U 1 1 605037AB
@@ -2072,4 +2065,9 @@ F 3 "" H 8400 6200 50  0001 C CNN
 	1    8400 6200
 	1    0    0    -1  
 $EndComp
+Wire Wire Line
+	1300 1000 1750 1000
+Wire Wire Line
+	1600 1500 1600 900 
+Connection ~ 1600 900 
 $EndSCHEMATC

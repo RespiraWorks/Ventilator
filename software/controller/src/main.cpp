@@ -14,6 +14,7 @@ limitations under the License.
 */
 
 #include "actuators.h"
+#include "commands.h"
 #include "comms.h"
 #include "controller.h"
 #include "eeprom.h"
@@ -51,7 +52,66 @@ static ControllerStatus controller_status;
 static Sensors sensors;
 static NVParams::Handler nv_params;
 static I2Ceeprom eeprom = I2Ceeprom(0x50, 64, 32768, &i2c1);
-static Debug::Interface debug;
+
+// Global variables for the debug interface
+static Debug::Trace trace;
+// These variables are used to control the trace function
+// TODO: add subcommands to manipulate the trace and replace those debugvars
+static FnDebugVar varTraceCtrl(
+    VarType::UINT32, "trace_ctrl", "Used to start/stop the trace function",
+    "0x%08x", [] { return static_cast<uint32_t>(trace.GetStatus()); },
+    [](uint32_t value) {
+      if (value == 1)
+        trace.Start();
+      else
+        trace.Stop();
+    });
+
+static FnDebugVar varTracePeriod(
+    VarType::UINT32, "trace_period",
+    "Period that data will be captured.  Loop cycle units", "%u",
+    [] { return trace.GetPeriod(); },
+    [](uint32_t value) { trace.SetPeriod(value); });
+
+static FnDebugVar varTraceSamp(
+    VarType::UINT32, "trace_samples", "Number of trace samples saved so far",
+    "%u", [] { return static_cast<uint32_t>(trace.GetNumSamples()); },
+    [](uint32_t value) { /*ignored*/ });
+
+static FnDebugVar vartrace_var1(
+    VarType::INT32, "trace_var1", "Variable to be saved to the trace buffer",
+    "%d", [] { return trace.GetTracedVarId<0>(); },
+    [](int32_t value) { trace.SetTracedVarId<0>(value); });
+static FnDebugVar vartrace_var2(
+    VarType::INT32, "trace_var2", "Variable to be saved to the trace buffer",
+    "%d", [] { return trace.GetTracedVarId<1>(); },
+    [](int32_t value) { trace.SetTracedVarId<1>(value); });
+static FnDebugVar vartrace_var3(
+    VarType::INT32, "trace_var3", "Variable to be saved to the trace buffer",
+    "%d", [] { return trace.GetTracedVarId<2>(); },
+    [](int32_t value) { trace.SetTracedVarId<2>(value); });
+static FnDebugVar vartrace_var4(
+    VarType::INT32, "trace_var4", "Variable to be saved to the trace buffer",
+    "%d", [] { return trace.GetTracedVarId<3>(); },
+    [](int32_t value) { trace.SetTracedVarId<3>(value); });
+
+// Create a handler for each of the known commands that the Debug Handler can
+// link to.  This is a bit tedious but I can't find a simpler way.
+static Debug::Command::ModeHandler mode_command;
+static Debug::Command::PeekHandler peek_command;
+static Debug::Command::PokeHandler poke_command;
+static Debug::Command::VarHandler var_command;
+static Debug::Command::TraceHandler trace_command(&trace);
+static Debug::Command::EepromHandler eeprom_command(&eeprom);
+
+static Debug::Interface debug(&trace, 12, Debug::Command::Code::kMode,
+                              &mode_command, Debug::Command::Code::kPeek,
+                              &peek_command, Debug::Command::Code::kPoke,
+                              &poke_command, Debug::Command::Code::kVariable,
+                              &var_command, Debug::Command::Code::kTrace,
+                              &trace_command,
+                              Debug::Command::Code::kEepromAccess,
+                              &eeprom_command);
 
 static SensorsProto AsSensorsProto(const SensorReadings &r,
                                    const ControllerState &c) {

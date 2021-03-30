@@ -19,6 +19,7 @@ limitations under the License.
 #include "circular_buffer.h"
 #include "debug_types.h"
 #include "trace.h"
+#include <cstdarg>
 #include <optional>
 
 namespace Debug {
@@ -54,7 +55,7 @@ namespace Debug {
 // has a special value.
 class Interface {
 public:
-  Interface();
+  explicit Interface(Trace *trace, int count, ...);
 
   // This function is called from the main loop to handle debug commands.
   // Returns true if this call has finished sending the response for a command,

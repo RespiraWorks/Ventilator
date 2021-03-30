@@ -18,6 +18,23 @@ limitations under the License.
 #include "hal.h"
 
 namespace Debug {
+// Initialize interface handler with variable list of
+// Command::Code, Command::Handler pairs and a trace
+Interface::Interface(Trace *trace, int count, ...) {
+  trace_ = trace;
+
+  // Add the provided handlers to the registry, unless an odd number of
+  // arguments have been provided
+  va_list valist;
+  va_start(valist, count);
+  for (int i = 0; i < count / 2; ++i) {
+    Command::Code code = va_arg(valist, Command::Code);
+    Command::Handler *handler = va_arg(valist, Command::Handler *);
+    registry_[static_cast<uint8_t>(code)] = handler;
+  }
+  va_end(valist); // clean memory reserved for valist
+}
+
 // This function is called from the main low priority background loop.
 // Its a simple state machine that waits for a new command to be received
 // over the debug serial port.  Process the command when one is received

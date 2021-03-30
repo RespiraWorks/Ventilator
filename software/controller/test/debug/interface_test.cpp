@@ -14,6 +14,7 @@ limitations under the License.
 */
 
 #include "binary_utils.h"
+#include "commands.h"
 #include "interface.h"
 #include "vars.h"
 #include "gmock/gmock-matchers.h"
@@ -114,7 +115,10 @@ std::vector<uint8_t> ProcessCmd(Interface *serial, std::vector<uint8_t> req,
 }
 
 TEST(Interface, Mode) {
-  Interface serial;
+  Trace trace;
+  Command::ModeHandler mode_command;
+  Interface serial(&trace, 2, Command::Code::kMode, &mode_command);
+
   std::vector<uint8_t> req = {static_cast<uint8_t>(Command::Code::kMode)};
   std::vector<uint8_t> resp = ProcessCmd(&serial, req);
   EXPECT_THAT(resp, testing::ElementsAre(static_cast<uint8_t>(0)));
@@ -140,7 +144,9 @@ TEST(Interface, GetVar) {
   uint32_t bar = 0xC0DEBABE;
   DebugVar var_bar("bar", &bar);
 
-  Interface serial;
+  Trace trace;
+  Command::VarHandler var_command;
+  Interface serial(&trace, 2, Command::Code::kVariable, &var_command);
   // Run a bunch of times with different expected results
   // to exercise buffer management.
   for (int i = 0; i < 100; ++i, ++foo, ++bar) {
@@ -150,13 +156,16 @@ TEST(Interface, GetVar) {
 }
 
 TEST(Interface, AwaitingResponseState) {
-  Interface serial;
+  Trace trace;
+  TestEeprom eeprom_test(0x50, 64, 4096);
+  Command::EepromHandler eeprom_command(&eeprom_test);
+  Interface serial(&trace, 2, Command::Code::kEepromAccess, &eeprom_command);
   // EEPROM read command needs time to be processed
   std::vector<uint8_t> req = {
       static_cast<uint8_t>(Command::Code::kEepromAccess),
       0, // Read subcommand
-      0, // address LSB
-      0, // address MSB
+      0, // address Least Significant Byte
+      0, // address Most Significant Byte
       1, // length LSB
       0, // length MSB
   };
@@ -175,7 +184,21 @@ TEST(Interface, AwaitingResponseState) {
 }
 
 TEST(Interface, Errors) {
-  Interface serial;
+  Trace trace;
+  TestEeprom eeprom_test(0x50, 64, 4096);
+  Command::ModeHandler mode_command;
+  Command::PeekHandler peek_command;
+  Command::PokeHandler poke_command;
+  Command::VarHandler var_command;
+  Command::TraceHandler trace_command(&trace);
+  Command::EepromHandler eeprom_command(&eeprom_test);
+
+  Debug::Interface serial(
+      &trace, 12, Debug::Command::Code::kMode, &mode_command,
+      Debug::Command::Code::kPeek, &peek_command, Debug::Command::Code::kPoke,
+      &poke_command, Debug::Command::Code::kVariable, &var_command,
+      Debug::Command::Code::kTrace, &trace_command,
+      Debug::Command::Code::kEepromAccess, &eeprom_command);
   // Unknown command - If we ever develop new commands, make sure the command
   // code is too big.
   std::vector<uint8_t> req = {25};

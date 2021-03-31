@@ -47,17 +47,19 @@ TEST(VarHandler, GetVarInfo) {
   uint8_t id[2];
   u16_to_u8(var.GetId(), id);
   std::array req = {
-      uint8_t{0},   // GetVarInfo
-      id[0], id[1], // Var id
+      static_cast<uint8_t>(Subcommand::kVarInfo), id[0], id[1], // Var id
   };
   std::array<uint8_t, 50> response;
+  bool processed{false};
   Context context = {.request = req.data(),
                      .request_length = std::size(req),
                      .response = response.data(),
                      .max_response_length = std::size(response),
-                     .response_length = 0};
+                     .response_length = 0,
+                     .processed = &processed};
 
   EXPECT_EQ(ErrorCode::kNone, VarHandler().Process(&context));
+  EXPECT_TRUE(processed);
   for (size_t i = 0; i < expected.size(); ++i) {
     EXPECT_EQ(context.response[i], expected[i]);
   }
@@ -71,17 +73,19 @@ TEST(VarHandler, GetVar) {
   uint8_t id[2];
   u16_to_u8(var.GetId(), id);
   std::array req = {
-      uint8_t{1},   // GET
-      id[0], id[1], // Var id
+      static_cast<uint8_t>(Subcommand::kGetVar), id[0], id[1], // Var id
   };
   std::array<uint8_t, 4> response;
+  bool processed{false};
   Context context = {.request = req.data(),
                      .request_length = std::size(req),
                      .response = response.data(),
                      .max_response_length = std::size(response),
-                     .response_length = 0};
+                     .response_length = 0,
+                     .processed = &processed};
 
   EXPECT_EQ(ErrorCode::kNone, VarHandler().Process(&context));
+  EXPECT_TRUE(processed);
   EXPECT_EQ(4, context.response_length);
 
   std::array<uint8_t, 4> expected_result;
@@ -101,19 +105,26 @@ TEST(VarHandler, SetVar) {
   uint8_t id[2];
   u16_to_u8(var.GetId(), id);
   std::array req = {
-      uint8_t{2},                                            // SET
-      id[0],        id[1],                                   // Var id
-      new_bytes[0], new_bytes[1], new_bytes[2], new_bytes[3] // Value
+      static_cast<uint8_t>(Subcommand::kSetVar),
+      id[0],
+      id[1], // Var id
+      new_bytes[0],
+      new_bytes[1],
+      new_bytes[2],
+      new_bytes[3] // Value
   };
 
   std::array<uint8_t, 0> response;
+  bool processed{false};
   Context context = {.request = req.data(),
                      .request_length = std::size(req),
                      .response = response.data(),
                      .max_response_length = std::size(response),
-                     .response_length = 0};
+                     .response_length = 0,
+                     .processed = &processed};
 
   EXPECT_EQ(ErrorCode::kNone, VarHandler().Process(&context));
+  EXPECT_TRUE(processed);
   EXPECT_EQ(0, context.response_length);
 
   EXPECT_EQ(new_value, value);
@@ -142,12 +153,15 @@ TEST(VarHandler, Errors) {
   for (auto &[request, error] : requests) {
     // response size 3 to provoke No Memory error once all other checks are OK
     std::array<uint8_t, 3> response;
+    bool processed{false};
     Context context = {.request = request.data(),
                        .request_length = static_cast<uint32_t>(request.size()),
                        .response = response.data(),
                        .max_response_length = response.size(),
-                       .response_length = 0};
+                       .response_length = 0,
+                       .processed = &processed};
     EXPECT_EQ(error, VarHandler().Process(&context));
+    EXPECT_FALSE(processed);
     EXPECT_EQ(context.response_length, 0);
   }
 }

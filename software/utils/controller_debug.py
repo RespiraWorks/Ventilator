@@ -34,13 +34,14 @@ except ImportError:
     # readline package isn't available on Windows.
     pass
 
-# Command codes.  See debug.h in the controller debug library
+# Command codes.  See debug_types.h in the controller debug library
 OP_MODE = 0x00
 OP_PEEK = 0x01
 OP_POKE = 0x02
 OP_PBREAD = 0x03
 OP_VAR = 0x04
 OP_TRACE = 0x05
+OP_EEPROM = 0x06
 
 # Some commands take a sub-command as their first byte of data
 SUBCMD_VAR_INFO = 0
@@ -49,6 +50,9 @@ SUBCMD_VAR_SET = 2
 
 SUBCMD_TRACE_FLUSH = 0
 SUBCMD_TRACE_GETDATA = 1
+
+SUBCMD_EEPROM_READ = 0
+SUBCMD_EEPROM_WRITE = 1
 
 # Special characters used to frame commands
 ESC = 0xF1
@@ -577,6 +581,42 @@ trace_samples
 
         else:
             print("Unknown trace sub-command %s" % cl[0])
+            return
+
+    def do_eeprom(self, line):
+        """The `eeprom` command allows you to read/write to the controller's
+non-volatile memory.
+
+A sub-command must be passed as an option:
+
+eeprom read <address> <length>
+  Reads length bytes in the EEPROM starting at given address.
+
+eeprom write <address> <data>
+  Writes data (provided as a series of bytes) to the EEPROM.
+"""
+        cl = shlex.split(line)
+        if len(cl) < 1:
+            print("Error, please specify the operation to perform.")
+            return
+        if cl[0] == "read":
+            if len(cl) < 3:
+                print("Error, please provide address and length.")
+                return
+            address = Split16(int(cl[1], 0))
+            length = Split16(int(cl[2], 0))
+            dat = SendCmd(OP_EEPROM, [SUBCMD_EEPROM_READ] + address + length)
+            s = FmtPeek(dat, "+XXXX", int(cl[1], 0))
+            print(s)
+        elif cl[0] == "write":
+            if len(cl) < 3:
+                print("Error, please provide address and at least 1 byte of data.")
+                return
+            address = Split16(int(cl[1], 0))
+            data = list(map(int, cl[2:]))
+            SendCmd(OP_EEPROM, [SUBCMD_EEPROM_WRITE] + address + data)
+        else:
+            print("Error: Unknown subcommand %s" % cl[0])
             return
 
     # Read info about all the supported variables and load

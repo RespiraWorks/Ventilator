@@ -44,13 +44,16 @@ TEST(PokeHandler, valid_poke) {
       u32_to_u8(address & 0x00000000FFFFFFFF, poke_command.data());
 
       std::array<uint8_t, 1> response;
+      bool processed{false};
       Context poke_context = {.request = poke_command.data(),
                               .request_length =
                                   static_cast<uint32_t>(poke_length + 4),
                               .response = response.data(),
                               .max_response_length = std::size(response),
-                              .response_length = 0};
+                              .response_length = 0,
+                              .processed = &processed};
       EXPECT_EQ(ErrorCode::kNone, poke_handler.Process(&poke_context));
+      EXPECT_TRUE(processed);
       EXPECT_EQ(poke_context.response_length, 0);
       for (size_t offset = 0; offset < poke_length; ++offset) {
         EXPECT_EQ(poke_command[offset + 4], memory[byte_number + offset]);
@@ -62,12 +65,14 @@ TEST(PokeHandler, valid_poke) {
 TEST(PokeHandler, errors) {
   std::array<uint8_t, 4> poke_command = {0, 0, 0, 0};
   std::array<uint8_t, 40> response;
-
+  bool processed{false};
   Context poke_context = {.request = poke_command.data(),
                           .request_length = std::size(poke_command),
                           .response = response.data(),
                           .max_response_length = std::size(response),
-                          .response_length = 0};
+                          .response_length = 0,
+                          .processed = &processed};
   EXPECT_EQ(ErrorCode::kMissingData, PokeHandler().Process(&poke_context));
+  EXPECT_FALSE(processed);
 }
 } // namespace Debug::Command

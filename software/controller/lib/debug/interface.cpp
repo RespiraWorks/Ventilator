@@ -18,6 +18,23 @@ limitations under the License.
 #include "hal.h"
 
 namespace Debug {
+// Initialize interface handler with variable list of
+// Command::Code, Command::Handler pairs and a trace
+Interface::Interface(Trace *trace, int count, ...) {
+  trace_ = trace;
+
+  // Add the provided handlers to the registry, unless an odd number of
+  // arguments have been provided
+  va_list valist;
+  va_start(valist, count);
+  for (int i = 0; i < count / 2; ++i) {
+    Command::Code code = va_arg(valist, Command::Code);
+    Command::Handler *handler = va_arg(valist, Command::Handler *);
+    registry_[static_cast<uint8_t>(code)] = handler;
+  }
+  va_end(valist); // clean memory reserved for valist
+}
+
 // This function is called from the main low priority background loop.
 // Its a simple state machine that waits for a new command to be received
 // over the debug serial port.  Process the command when one is received
@@ -29,7 +46,7 @@ bool Interface::Poll() {
   // or a full command has been received.  Either way, the
   // ReadNextByte function will return false when its time
   // to move on.
-  case State::kWait:
+  case State::kAwaitingCommand:
     while (ReadNextByte()) {
     }
     return false;
@@ -38,6 +55,15 @@ bool Interface::Poll() {
   case State::kProcessing:
     ProcessCommand();
     request_size_ = 0;
+    return false;
+
+  // Wait for command to be processed
+  case State::kAwaitingResponse:
+    if (command_processed_) {
+      SendResponse(ErrorCode::kNone, response_length_);
+    } else if (Hal.now() > command_start_time_ + milliseconds(100)) {
+      SendError(ErrorCode::kTimeout);
+    }
     return false;
 
   // Send my response
@@ -123,7 +149,7 @@ bool Interface::SendNextByte() {
   char end_transfer = static_cast<char>(SpecialChar::kEndTransfer);
   (void)Hal.debugWrite(&end_transfer, 1);
 
-  state_ = State::kWait;
+  state_ = State::kAwaitingCommand;
   response_bytes_sent_ = 0;
   return false;
 }
@@ -138,7 +164,7 @@ void Interface::ProcessCommand() {
   // communication if necessary
   if (request_size_ < 3) {
     request_size_ = 0;
-    state_ = State::kWait;
+    state_ = State::kAwaitingCommand;
     return;
   }
 
@@ -155,6 +181,7 @@ void Interface::ProcessCommand() {
     return;
   }
 
+  command_processed_ = false;
   // The length that we pass in to the command handler doesn't
   // include the command code or CRC.  The max size is also reduced
   // by 3 to make sure we can add the error code and CRC.
@@ -164,14 +191,18 @@ void Interface::ProcessCommand() {
       .response = &response_[1],
       .max_response_length = sizeof(response_) - 3,
       .response_length = 0,
+      .processed = &command_processed_,
   };
   ErrorCode error = cmd_handler->Process(&context);
+
   if (error != ErrorCode::kNone) {
     SendError(error);
     return;
   }
 
-  SendResponse(ErrorCode::kNone, context.response_length);
+  state_ = State::kAwaitingResponse;
+  command_start_time_ = Hal.now();
+  response_length_ = context.response_length;
 }
 
 void Interface::SendResponse(ErrorCode error, uint32_t response_length) {

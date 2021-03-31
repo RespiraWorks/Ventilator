@@ -60,14 +60,17 @@ TEST(TraceHandler, Flush) {
   EXPECT_EQ(trace.GetNumSamples(), 1);
   EXPECT_TRUE(trace.GetStatus());
 
-  std::array flush_command = {uint8_t(0)};
+  std::array flush_command = {static_cast<uint8_t>(Subcommand::kFlushTrace)};
   std::array<uint8_t, kResponseSize> response;
+  bool processed{false};
   Context flush_context = {.request = flush_command.data(),
                            .request_length = std::size(flush_command),
                            .response = response.data(),
                            .max_response_length = std::size(response),
-                           .response_length = 0};
+                           .response_length = 0,
+                           .processed = &processed};
   EXPECT_EQ(ErrorCode::kNone, trace_handler.Process(&flush_context));
+  EXPECT_TRUE(processed);
   EXPECT_FALSE(trace.GetStatus());
 
   // Actual flush happens on the next start
@@ -92,14 +95,17 @@ TEST(TraceHandler, Read) {
   TraceHandler trace_handler = TraceHandler(&trace);
 
   // read with no vars ==> nothing to report
-  std::array read_command = {uint8_t(1)};
+  std::array read_command = {static_cast<uint8_t>(Subcommand::kDownloadTrace)};
   std::array<uint8_t, kResponseSize> response;
+  bool processed{false};
   Context read_context = {.request = read_command.data(),
                           .request_length = std::size(read_command),
                           .response = response.data(),
                           .max_response_length = kResponseSize,
-                          .response_length = 0};
+                          .response_length = 0,
+                          .processed = &processed};
   EXPECT_EQ(ErrorCode::kNone, trace_handler.Process(&read_context));
+  EXPECT_TRUE(processed);
   EXPECT_EQ(read_context.response_length, 0);
 
   trace.SetTracedVarId<1>(var_x.GetId());
@@ -168,6 +174,7 @@ TEST(TraceHandler, Errors) {
       {{1}, ErrorCode::kNoMemory},
   };
   std::array<uint8_t, kResponseSize> response;
+  bool processed{false};
   for (auto &[request, error] : requests) {
     Context context = {.request = request.data(),
                        .request_length = static_cast<uint32_t>(request.size()),
@@ -176,8 +183,10 @@ TEST(TraceHandler, Errors) {
                            static_cast<uint32_t>(sample_size - 1),
                        // To provoke the No Memory error once all other
                        // checks have passed
-                       .response_length = 0};
+                       .response_length = 0,
+                       .processed = &processed};
     EXPECT_EQ(error, trace_handler.Process(&context));
+    EXPECT_FALSE(processed);
     EXPECT_EQ(context.response_length, 0);
   }
 }

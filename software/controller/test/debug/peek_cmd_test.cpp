@@ -45,19 +45,19 @@ TEST(PeekHandler, valid_peek) {
       // size limit when peek length is kResponseSize
       std::array<uint8_t, kResponseSize - 1> response;
 
+      bool processed{false};
       Context peek_context = {.request = peek_command.data(),
                               .request_length = std::size(peek_command),
                               .response = response.data(),
                               .max_response_length = std::size(response),
-                              .response_length = 0};
+                              .response_length = 0,
+                              .processed = &processed};
       EXPECT_EQ(ErrorCode::kNone, peek_handler.Process(&peek_context));
+      EXPECT_TRUE(processed);
       EXPECT_EQ(
           peek_context.response_length,
           std::min(peek_length, static_cast<uint16_t>(std::size(response))));
-      for (size_t offset = 0;
-           offset <
-           std::min(peek_length, static_cast<uint16_t>(std::size(response)));
-           ++offset) {
+      for (size_t offset = 0; offset < peek_context.response_length; ++offset) {
         EXPECT_EQ(response[offset], memory[byte_number + offset]);
       }
     }
@@ -68,12 +68,15 @@ TEST(PeekHandler, errors) {
   std::array<uint8_t, 5> peek_command = {0, 0, 0, 0, 0};
   std::array<uint8_t, 40> response;
 
+  bool processed{false};
   Context peek_context = {.request = peek_command.data(),
                           .request_length = std::size(peek_command),
                           .response = response.data(),
                           .max_response_length = std::size(response),
-                          .response_length = 0};
+                          .response_length = 0,
+                          .processed = &processed};
   EXPECT_EQ(ErrorCode::kMissingData, PeekHandler().Process(&peek_context));
+  EXPECT_FALSE(processed);
 }
 
 } // namespace Debug::Command

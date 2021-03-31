@@ -21,6 +21,7 @@ On the controller side, the debug library consists of:
     - `poke`: command that allows writing to a specific address on the STM32
     - `var`: set of commands (`get_var_info`, `get`, `set`) that allows manipulating the `DebugVar` instances
     - `trace`: set of commands (`flush`, `read`) that allows manipulating the `Trace` buffer
+    - `eeprom`: set of commands (`read`, `write`) that allows read/write access to the I2C EEPROM
 - an `interface` handler that:
     - parses data that arrives from the debugger (through the debug serial port)
     - once a full command has been received, checks its integrity (16 bits CRC) and feeds it to the proper `CommandHandler`

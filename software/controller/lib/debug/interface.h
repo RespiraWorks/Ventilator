@@ -19,6 +19,7 @@ limitations under the License.
 #include "circular_buffer.h"
 #include "debug_types.h"
 #include "trace.h"
+#include <cstdarg>
 #include <optional>
 
 namespace Debug {
@@ -54,7 +55,7 @@ namespace Debug {
 // has a special value.
 class Interface {
 public:
-  Interface();
+  explicit Interface(Trace *trace, int count, ...);
 
   // This function is called from the main loop to handle debug commands.
   // Returns true if this call has finished sending the response for a command,
@@ -66,9 +67,9 @@ public:
   void SampleTraceVars() { trace_->MaybeSample(); }
 
 private:
-  State state_{State::kWait};
+  State state_{State::kAwaitingCommand};
 
-  // Buffer into which request data is written in kWait state
+  // Buffer into which request data is written in kAwaitingCommand state
   uint8_t request_[500] = {0};
   uint32_t request_size_{0};
   // Remember when we receive an escape char (in case the call happens in
@@ -80,6 +81,12 @@ private:
   uint8_t response_[500] = {0};
   uint32_t response_size_{0};
   uint32_t response_bytes_sent_{0};
+
+  // Some commands take time to be fully processed, we record their start time
+  // and status
+  Time command_start_time_{microsSinceStartup(0)};
+  bool command_processed_{true};
+  uint32_t response_length_{0};
 
   // List of registered command handlers
   Command::Handler *registry_[32] = {nullptr};

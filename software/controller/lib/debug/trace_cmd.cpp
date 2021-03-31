@@ -27,16 +27,17 @@ ErrorCode TraceHandler::Process(Context *context) {
 
   switch (context->request[0]) {
 
-  // Sub-command 0 is used to flush the trace buffer
+  // Sub-command kFlushTrace is used to flush the trace buffer
   // It also disables the trace
-  case 0: {
+  case static_cast<uint8_t>(Subcommand::kFlushTrace): {
     trace_->Stop();
     context->response_length = 0;
+    *(context->processed) = true;
     return ErrorCode::kNone;
   }
 
-  // Sub-command 1 is used to read data from the buffer
-  case 1:
+  // Sub-command kDownloadTrace is used to read data from the buffer
+  case static_cast<uint8_t>(Subcommand::kDownloadTrace):
     return ReadTraceBuffer(context);
 
   default:
@@ -52,6 +53,7 @@ ErrorCode TraceHandler::ReadTraceBuffer(Context *context) {
   // If there aren't any active variables, I'm done
   if (!var_count) {
     context->response_length = 0;
+    *(context->processed) = true;
     return ErrorCode::kNone;
   }
 
@@ -88,6 +90,7 @@ ErrorCode TraceHandler::ReadTraceBuffer(Context *context) {
 
   context->response_length =
       static_cast<uint32_t>(samples_count * var_count * sizeof(uint32_t));
+  *(context->processed) = true;
   return ErrorCode::kNone;
 }
 

@@ -17,6 +17,7 @@ limitations under the License.
 #define COMMAND_H
 
 #include "binary_utils.h"
+#include "eeprom.h"
 #include "hal.h"
 #include "interface.h"
 
@@ -36,8 +37,23 @@ public:
   ErrorCode Process(Context *context) override {
     context->response_length = 1;
     context->response[0] = 0;
+    *(context->processed) = true;
     return ErrorCode::kNone;
   }
+};
+
+// When testing peek and poke on native, I need a way to feed 64 bits address
+// to the handler.
+// This superclass allows us to set the Most Significant Word (32 bits) of a 64
+// bits address, which is then appended to the command-provided address of
+// either peek or poke command.
+class MemoryHandler : public Handler {
+public:
+  MemoryHandler() = default;
+  void SetAddressMSW(size_t address) { address_msw_ = address; }
+
+protected:
+  size_t address_msw_{0};
 };
 
 // Peek command.
@@ -45,104 +61,20 @@ public:
 //
 // The data passed to the command consists of a 32-bit starting address and
 // a 16-bit byte count.
-class PeekHandler : public Handler {
+class PeekHandler : public MemoryHandler {
 public:
   PeekHandler() = default;
-  ErrorCode Process(Context *context) override {
-    // The data passed to this command consists of a 4 byte address
-    // and a two byte count of how many bytes to return
-    // Length should be exactly 6, but if more data is passed
-    // I'll just ignore it.
-    if (context->request_length < 6)
-      return ErrorCode::kMissingData;
-
-    size_t address = address_msw_ + u8_to_u32(&context->request[0]);
-    uint32_t count = u8_to_u16(&context->request[4]);
-
-    // Limit the number of output bytes based on buffer size
-    if (count > context->max_response_length)
-      count = context->max_response_length;
-
-    // Some registers can't handle byte accesses, so rather then just
-    // use a simple memcpy here I will do 32-bit or 16-bit accesses
-    // as long as both the address and count are aligned to 32 or 16 bits.
-    if ((address & 1) || (count & 1)) {
-      // no 16-bit alignment is possible
-      memcpy(context->response, reinterpret_cast<void *>(address), count);
-    } else if ((address & 3) || (count & 3)) {
-      // aligned to 16 bits but not 32
-      uint16_t *ptr = reinterpret_cast<uint16_t *>(address);
-      for (int byte_number = 0; byte_number < count / 2; byte_number++) {
-        uint16_t value = *ptr++;
-        u16_to_u8(value, &context->response[2 * byte_number]);
-      }
-    } else {
-      // aligned to 32 bits
-      uint32_t *ptr = reinterpret_cast<uint32_t *>(address);
-      for (int byte_number = 0; byte_number < count / 4; byte_number++) {
-        uint32_t value = *ptr++;
-        u32_to_u8(value, &context->response[4 * byte_number]);
-      }
-    }
-
-    context->response_length = count;
-    return ErrorCode::kNone;
-  }
-
-  // When testing on native, I need a way to feed 64 bits address to the handler
-  void SetAddressMSW(size_t address) { address_msw_ = address; }
-
-protected:
-  // Member that is used to handle 64 bits address when testing on native
-  size_t address_msw_{0};
+  ErrorCode Process(Context *context) override;
 };
-
 // Poke command.
 // Allows us to write raw values in memory.  Use with caution!
 // The data passed to the command consists of a 32-bit starting address and one
 // or more data bytes to be written to consecutive addresses starting at the
 // given address
-class PokeHandler : public PeekHandler {
+class PokeHandler : public MemoryHandler {
 public:
   PokeHandler() = default;
-  ErrorCode Process(Context *context) override {
-
-    // Total command length must be at least 5.  That's
-    // four for the address and at least one data byte.
-    if (context->request_length < 5)
-      return ErrorCode::kMissingData;
-
-    size_t address = address_msw_ + u8_to_u32(&context->request[0]);
-    uint32_t count = context->request_length - 4;
-
-    // Some registers can't handle byte accesses, so rather then just
-    // use a simple memcpy here I will do 32-bit or 16-bit accesses
-    // as long as both the address and count are aligned to 32 or 16 bits.
-    if ((address & 1) || (count & 1)) {
-      // no 16-bit alignment is possible
-      uint8_t *ptr = reinterpret_cast<uint8_t *>(address);
-      for (int byte_number = 0; byte_number < count; byte_number++) {
-        *ptr++ = context->request[4 + byte_number];
-      }
-    } else if ((address & 3) || (count & 3)) {
-      // 16-bit alignment is possible but not 32 bits
-      uint16_t *ptr = reinterpret_cast<uint16_t *>(address);
-      count /= 2;
-      for (int byte_number = 0; byte_number < count; byte_number++) {
-        *ptr++ = u8_to_u16(&context->request[4 + byte_number * 2]);
-      }
-    } else {
-      // aligned to 32 bits
-      uint32_t *ptr = reinterpret_cast<uint32_t *>(address);
-      count /= 4;
-      for (int byte_number = 0; byte_number < count; byte_number++) {
-        *ptr++ = u8_to_u32(&context->request[4 + byte_number * 4]);
-      }
-    }
-
-    context->response_length = 0;
-    return ErrorCode::kNone;
-  }
+  ErrorCode Process(Context *context) override;
 };
 
 // Trace command
@@ -150,44 +82,44 @@ public:
 //
 // Data passed to the command is a single byte which defines what the command
 // does:
-//  0 - Used to disable the trace and flush the trace buffer
-//  1 - Used to read data from the buffer
+//  kFlushTrace - Used to disable the trace and flush the trace buffer
+//  kDownloadTrace - Used to read data from the buffer
 class TraceHandler : public Handler {
 public:
   explicit TraceHandler(Trace *trace) : trace_(trace){};
-
   ErrorCode Process(Context *context) override;
-  ErrorCode ReadTraceBuffer(Context *context);
 
 private:
+  ErrorCode ReadTraceBuffer(Context *context);
   Trace *trace_{nullptr};
 };
 
 // Command handler for variable access
 //
 // The first byte of data passed to the command gives a sub-command
-// which defines what the command does and the structure of it's data.
+// which defines what the command does and the structure of its data.
 //
 // Sub-commands:
-//  0 - Used to read info about a variable.  The debug interface calls
-//      this repeatedly on startup to enumerate the variables currently
-//      supported by the code.  This way new debug variables can be added
-//      on the fly without modifying the Python code to match.
+//  kVarInfo - Used to read info about a variable.  The debug interface calls
+//             this repeatedly on startup to enumerate the variables currently
+//             supported by the code.  This way new debug variables can be added
+//             on the fly without modifying the Python code to match.
 //
-//      Input data to this command is a 16-bit variable ID (assigned
-//      dynamically as variables are created).  The output is info about
-//      the variable.  See the code below for details of the output format
+//             Input data to this command is a 16-bit variable ID (assigned
+//             dynamically as variables are created).  The output is info about
+//             the variable.
+//             See the code below for details of the output format
 //
-//  1 - Read the variables value.
+//  kGetVar - Read the variables value.
 //
-//  2 - Set the variables value.
+//  kSetVar - Set the variables value.
 //
 class VarHandler : public Handler {
 public:
   VarHandler() = default;
-
   ErrorCode Process(Context *context) override;
 
+private:
   // Return info about one of the variables. The 16-bit variable ID is passed
   // in.  These IDs are automatically assigned as variables are registered in
   // the system starting with 0.
@@ -198,6 +130,30 @@ public:
   ErrorCode GetVar(Context *context);
 
   ErrorCode SetVar(Context *context);
+};
+
+// Eeprom command.
+// Allows us to read/write raw values in I2C EEPROM.
+// The first byte of data passed to the command gives a sub-command
+// which defines what the command does and the structure of its data.
+//
+// Sub-commands:
+//  kEepromRead, followed by a 16 bits address and a 16 bits length :
+//                Used to read length data bytes at given address in EEPROM
+//
+//  kEepromWrite, followed by a 16 bits address and some data bytes :
+//                Used to write given data at given address
+class EepromHandler : public Handler {
+public:
+  explicit EepromHandler(I2Ceeprom *eeprom) : eeprom_(eeprom){};
+  ErrorCode Process(Context *context) override;
+
+private:
+  ErrorCode Read(uint16_t address, Context *context);
+  ErrorCode Write(uint16_t address, Context *context);
+
+  static constexpr uint16_t kMaxWriteLength{1024};
+  I2Ceeprom *eeprom_;
 };
 
 } // namespace Debug::Command

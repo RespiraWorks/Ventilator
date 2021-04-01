@@ -84,6 +84,16 @@ public:
 // does:
 //  kFlushTrace - Used to disable the trace and flush the trace buffer
 //  kDownloadTrace - Used to read data from the buffer
+//  kStartTrace - Used to start recording in the trace buffer
+//  kGetTraceVar followed by var index (1 byte) - Used to get trace variables ID
+//  kSetTraceVar followed by var index (1 byte) and variable ID (2 bytes) - Used
+//    to set traced variable id
+//  kGetTracePeriod - Used to get the trace period
+//  kSetTracePeriod followed by desired trace period (4 bytes) - Used to set the
+//    trace period
+//  kCountTraceSamples - Used to get the number of samples
+//    currently in the trace buffer
+
 class TraceHandler : public Handler {
 public:
   explicit TraceHandler(Trace *trace) : trace_(trace){};

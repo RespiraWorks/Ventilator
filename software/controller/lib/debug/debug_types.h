@@ -90,7 +90,7 @@ enum class Subcommand {
   kStartTrace = 0x02,        // start tracing data
   kGetTraceVar = 0x03,       // get traced variable id
   kSetTraceVar = 0x04,       // set traced variable id
-  kGetTracePeriod = 0x05,    // set trace period
+  kGetTracePeriod = 0x05,    // get trace period
   kSetTracePeriod = 0x06,    // set trace period
   kCountTraceSamples = 0x07, // get number of samples in the trace buffer
   kVarInfo = 0x00,           // get variable info (name, type, help string)

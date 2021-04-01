@@ -4,7 +4,7 @@ EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
 Sheet 1 1
-Title "Pressure Sensor Daughterboard: MPXV5004DP"
+Title "Pressure Sensor Daughterboard: MPX5700AP/GP"
 Date ""
 Rev "1.0"
 Comp "RespiraWorks"
@@ -14,16 +14,16 @@ Comment3 ""
 Comment4 ""
 $EndDescr
 $Comp
-L RespiraWorks:MPXV5004DP U1
+L RespiraWorks:MPX5700AP,GP U1
 U 1 1 5FFA0C0F
 P 3550 3600
 F 0 "U1" H 3222 3621 50  0000 R CNN
-F 1 "MPXV5004DP" H 3222 3530 50  0000 R CNN
-F 2 "RespiraWorks:NXP_MPXV5004DP" H 3550 3750 50  0001 C CNN
+F 1 "MPX5700AP/GP" H 3222 3530 50  0000 R CNN
+F 2 "RespiraWorks:NXP_MPX5700AP,GP_Vertical" H 3550 3750 50  0001 C CNN
 F 3 "" H 3550 3650 50  0001 C CNN
 F 4 "NXP" H 3550 3600 50  0001 C CNN "Manufacturer"
-F 5 "MPXV5004DP" H 3550 3600 50  0001 C CNN "Manufacturer PN"
-F 6 "SMT, hand-solder" H 3550 3600 50  0001 C CNN "Type"
+F 5 "MPX5700AP" H 3550 3600 50  0001 C CNN "Manufacturer PN"
+F 6 "Through-hole" H 3550 3600 50  0001 C CNN "Type"
 	1    3550 3600
 	1    0    0    -1  
 $EndComp

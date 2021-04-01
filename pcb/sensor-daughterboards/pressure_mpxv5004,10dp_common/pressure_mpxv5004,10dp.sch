@@ -4,7 +4,7 @@ EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
 Sheet 1 1
-Title "Pressure Sensor Daughterboard: MPXV5004DP"
+Title "Pressure Sensor Daughterboard: MPXV5004DP/5010DP"
 Date ""
 Rev "1.0"
 Comp "RespiraWorks"
@@ -23,7 +23,7 @@ F 2 "RespiraWorks:NXP_MPXV5004DP" H 3550 3750 50  0001 C CNN
 F 3 "" H 3550 3650 50  0001 C CNN
 F 4 "NXP" H 3550 3600 50  0001 C CNN "Manufacturer"
 F 5 "MPXV5004DP" H 3550 3600 50  0001 C CNN "Manufacturer PN"
-F 6 "SMT, hand-solder" H 3550 3600 50  0001 C CNN "Type"
+F 6 "SMT" H 3550 3600 50  0001 C CNN "Type"
 	1    3550 3600
 	1    0    0    -1  
 $EndComp
@@ -432,4 +432,6 @@ F 3 "~" H 8750 2000 50  0001 C CNN
 $EndComp
 Text Notes 8650 7050 0    79   Italic 0
 Unless noted otherwise:\n- Resistors are 1% tolerance\n- Capacitors < 47 nF are 5% tolerance\n- Capacitors ≥ 47 nF are 10% tolerance
+Text Notes 2700 4650 0    50   ~ 0
+MPXV5010DP is pin-compatible replacement\nfor different parameters
 $EndSCHEMATC

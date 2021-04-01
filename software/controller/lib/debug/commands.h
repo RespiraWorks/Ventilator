@@ -91,6 +91,8 @@ public:
 
 private:
   ErrorCode ReadTraceBuffer(Context *context);
+  ErrorCode SetTraceVar(Context *context);
+  ErrorCode GetTraceVar(Context *context);
   Trace *trace_{nullptr};
 };
 

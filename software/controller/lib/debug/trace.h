@@ -95,8 +95,24 @@ public:
     trace_buffer_.Flush();
   }
 
+  bool SetTracedVarId(uint8_t index, uint16_t id) {
+    if (index >= kMaxTraceVars) {
+      return false;
+    }
+    traced_vars_[index] = DebugVar::FindVar(id);
+    trace_buffer_.Flush();
+    return true;
+  }
+
   template <int index> int32_t GetTracedVarId() {
     static_assert(index >= 0 && index < kMaxTraceVars);
+    return traced_vars_[index] ? traced_vars_[index]->GetId() : -1;
+  }
+
+  int16_t GetTracedVarId(uint8_t index) {
+    if (index >= kMaxTraceVars) {
+      return -1;
+    }
     return traced_vars_[index] ? traced_vars_[index]->GetId() : -1;
   }
 

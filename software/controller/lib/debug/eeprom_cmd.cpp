@@ -27,10 +27,10 @@ ErrorCode EepromHandler::Process(Context *context) {
 
   // Process subcommand
   switch (context->request[0]) {
-  case static_cast<uint8_t>(Subcommand::kEepromRead):
+  case static_cast<uint8_t>(Subcommand::kRead):
     return Read(address, context);
 
-  case static_cast<uint8_t>(Subcommand::kEepromWrite):
+  case static_cast<uint8_t>(Subcommand::kWrite):
     return Write(address, context);
 
   default:

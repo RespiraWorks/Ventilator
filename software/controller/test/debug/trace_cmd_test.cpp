@@ -60,7 +60,8 @@ TEST(TraceHandler, Flush) {
   EXPECT_EQ(trace.GetNumSamples(), 1);
   EXPECT_TRUE(trace.GetStatus());
 
-  std::array flush_command = {static_cast<uint8_t>(Subcommand::kFlushTrace)};
+  std::array flush_command = {
+      static_cast<uint8_t>(TraceHandler::Subcommand::kFlush)};
   std::array<uint8_t, kResponseSize> response;
   bool processed{false};
   Context flush_context = {.request = flush_command.data(),
@@ -87,7 +88,7 @@ TEST(TraceHandler, Read) {
       VarType::UINT32, "x", "", "", [&] { return i; },
       [&](uint32_t value) { (void)value; });
   FnDebugVar var_y(
-      VarType::UINT32, "x", "", "", [&] { return i * 10; },
+      VarType::UINT32, "y", "", "", [&] { return i * 10; },
       [&](uint32_t value) { (void)value; });
 
   // define trace and trace handler
@@ -95,7 +96,8 @@ TEST(TraceHandler, Read) {
   TraceHandler trace_handler = TraceHandler(&trace);
 
   // read with no vars ==> nothing to report
-  std::array read_command = {static_cast<uint8_t>(Subcommand::kDownloadTrace)};
+  std::array read_command = {
+      static_cast<uint8_t>(TraceHandler::Subcommand::kDownload)};
   std::array<uint8_t, kResponseSize> response;
   bool processed{false};
   Context read_context = {.request = read_command.data(),
@@ -112,7 +114,8 @@ TEST(TraceHandler, Read) {
   trace.SetTracedVarId<3>(var_y.GetId());
 
   // start the trace (using debug command)
-  std::array start_command = {static_cast<uint8_t>(Subcommand::kStartTrace)};
+  std::array start_command = {
+      static_cast<uint8_t>(TraceHandler::Subcommand::kStart)};
   processed = false;
   Context start_context = {.request = start_command.data(),
                            .request_length = std::size(start_command),
@@ -139,7 +142,7 @@ TEST(TraceHandler, Read) {
 
   // Take advantage of having a full buffer to test CountSamples command
   std::array num_samples_command = {
-      static_cast<uint8_t>(Subcommand::kCountTraceSamples)};
+      static_cast<uint8_t>(TraceHandler::Subcommand::kCountSamples)};
   processed = false;
   Context num_samples_context = {.request = num_samples_command.data(),
                                  .request_length =
@@ -178,13 +181,8 @@ TEST(TraceHandler, Read) {
 
 TEST(TraceHandler, SettersAndGetters) {
   // define debug variables
-  uint32_t i = 0;
-  FnDebugVar var_x(
-      VarType::UINT32, "x", "", "", [&] { return i; },
-      [&](uint32_t value) { (void)value; });
-  FnDebugVar var_y(
-      VarType::UINT32, "x", "", "", [&] { return i * 10; },
-      [&](uint32_t value) { (void)value; });
+  DebugUInt32 var_x("x");
+  DebugUInt32 var_y("y");
 
   // define trace and trace handler
   Trace trace;
@@ -192,7 +190,7 @@ TEST(TraceHandler, SettersAndGetters) {
 
   // Set trace var ID for var 1
   std::array<uint8_t, 4> set_var1_command = {
-      static_cast<uint8_t>(Subcommand::kSetTraceVar), 1, 0, 0};
+      static_cast<uint8_t>(TraceHandler::Subcommand::kSetVarId), 1, 0, 0};
   u16_to_u8(var_y.GetId(), &set_var1_command[2]);
   std::array<uint8_t, kResponseSize> response;
   bool processed{false};
@@ -210,7 +208,7 @@ TEST(TraceHandler, SettersAndGetters) {
 
   // Get trace var ID for var 1
   std::array<uint8_t, 2> get_var1_command = {
-      static_cast<uint8_t>(Subcommand::kGetTraceVar), 1};
+      static_cast<uint8_t>(TraceHandler::Subcommand::kGetVarId), 1};
   processed = false;
   Context get_var1_context = {.request = get_var1_command.data(),
                               .request_length = std::size(get_var1_command),
@@ -226,7 +224,7 @@ TEST(TraceHandler, SettersAndGetters) {
 
   // Get trace var ID for var 2 (un-associated)
   std::array<uint8_t, 2> get_var2_command = {
-      static_cast<uint8_t>(Subcommand::kGetTraceVar), 2};
+      static_cast<uint8_t>(TraceHandler::Subcommand::kGetVarId), 2};
   processed = false;
   Context get_var2_context = {.request = get_var2_command.data(),
                               .request_length = std::size(get_var2_command),
@@ -242,7 +240,7 @@ TEST(TraceHandler, SettersAndGetters) {
 
   // Get trace var ID for var kMaxTraceVars (out of bounds)
   std::array<uint8_t, 2> get_var_max_command = {
-      static_cast<uint8_t>(Subcommand::kGetTraceVar),
+      static_cast<uint8_t>(TraceHandler::Subcommand::kGetVarId),
       static_cast<uint8_t>(kMaxTraceVars)};
   processed = false;
   Context get_var_max_context = {.request = get_var_max_command.data(),
@@ -259,7 +257,7 @@ TEST(TraceHandler, SettersAndGetters) {
 
   // Set trace period
   std::array<uint8_t, 5> set_period_command = {
-      static_cast<uint8_t>(Subcommand::kSetTracePeriod)};
+      static_cast<uint8_t>(TraceHandler::Subcommand::kSetPeriod)};
   u32_to_u8(2, &set_period_command[1]);
   processed = false;
   Context set_period_context = {.request = set_period_command.data(),
@@ -276,7 +274,7 @@ TEST(TraceHandler, SettersAndGetters) {
 
   // Get trace period
   std::array get_period_command = {
-      static_cast<uint8_t>(Subcommand::kGetTracePeriod)};
+      static_cast<uint8_t>(TraceHandler::Subcommand::kGetPeriod)};
   processed = false;
   Context get_period_context = {.request = get_period_command.data(),
                                 .request_length = std::size(get_period_command),
@@ -293,13 +291,8 @@ TEST(TraceHandler, SettersAndGetters) {
 
 TEST(TraceHandler, Errors) {
   // define some debug variables
-  uint32_t i = 0;
-  FnDebugVar var_x(
-      VarType::UINT32, "x", "", "", [&] { return i; },
-      [&](uint32_t value) { (void)value; });
-  FnDebugVar var_y(
-      VarType::UINT32, "x", "", "", [&] { return i * 10; },
-      [&](uint32_t value) { (void)value; });
+  DebugUInt32 var_x("x");
+  DebugUInt32 var_y("y");
 
   // define trace and trace handler
   Trace trace;
@@ -312,21 +305,22 @@ TEST(TraceHandler, Errors) {
   std::vector<std::tuple<std::vector<uint8_t>, ErrorCode>> requests = {
       {{}, ErrorCode::kMissingData},  // Missing subcommand
       {{8}, ErrorCode::kInvalidData}, // Invalid subcommand
-      {{static_cast<uint8_t>(Subcommand::kDownloadTrace)},
+      {{static_cast<uint8_t>(TraceHandler::Subcommand::kDownload)},
        ErrorCode::kNoMemory},
-      {{static_cast<uint8_t>(Subcommand::kSetTraceVar), 1, 1},
+      {{static_cast<uint8_t>(TraceHandler::Subcommand::kSetVarId), 1, 1},
        ErrorCode::kMissingData},
-      {{static_cast<uint8_t>(Subcommand::kSetTraceVar), kMaxTraceVars, 1, 0},
+      {{static_cast<uint8_t>(TraceHandler::Subcommand::kSetVarId),
+        kMaxTraceVars, 1, 0},
        ErrorCode::kInvalidData},
-      {{static_cast<uint8_t>(Subcommand::kGetTraceVar)},
+      {{static_cast<uint8_t>(TraceHandler::Subcommand::kGetVarId)},
        ErrorCode::kMissingData},
-      {{static_cast<uint8_t>(Subcommand::kGetTraceVar), 1},
+      {{static_cast<uint8_t>(TraceHandler::Subcommand::kGetVarId), 1},
        ErrorCode::kNoMemory},
-      {{static_cast<uint8_t>(Subcommand::kSetTracePeriod), 1, 1, 1},
+      {{static_cast<uint8_t>(TraceHandler::Subcommand::kSetPeriod), 1, 1, 1},
        ErrorCode::kMissingData},
-      {{static_cast<uint8_t>(Subcommand::kGetTracePeriod)},
+      {{static_cast<uint8_t>(TraceHandler::Subcommand::kGetPeriod)},
        ErrorCode::kNoMemory},
-      {{static_cast<uint8_t>(Subcommand::kCountTraceSamples)},
+      {{static_cast<uint8_t>(TraceHandler::Subcommand::kCountSamples)},
        ErrorCode::kNoMemory},
   };
   std::array<uint8_t, kResponseSize> response;

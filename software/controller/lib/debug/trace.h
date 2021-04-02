@@ -42,36 +42,17 @@ public:
   // 1 (enabled).
   bool GetStatus() const { return running_; }
 
-  void Start() {
-    if (!running_) {
-      trace_buffer_.Flush();
-    }
-    running_ = true;
-  }
+  void Start();
 
   void Stop() { running_ = false; }
 
   uint32_t GetPeriod() const { return period_; }
   void SetPeriod(uint32_t period) { period_ = period; }
 
-  void MaybeSample() {
-    if (!running_)
-      return;
-
-    if (cycles_count_ == 0) {
-      if (!SampleAllVars()) {
-        // Trace buffer is full, stop tracing.
-        Stop();
-      }
-    }
-
-    ++cycles_count_;
-    if (cycles_count_ >= period_)
-      cycles_count_ = 0;
-  }
+  void MaybeSample();
 
   void Flush() {
-    running_ = false;
+    Stop();
     trace_buffer_.Flush();
   }
 
@@ -95,26 +76,13 @@ public:
     trace_buffer_.Flush();
   }
 
-  bool SetTracedVarId(uint8_t index, uint16_t id) {
-    if (index >= kMaxTraceVars) {
-      return false;
-    }
-    traced_vars_[index] = DebugVar::FindVar(id);
-    trace_buffer_.Flush();
-    return true;
-  }
-
   template <int index> int32_t GetTracedVarId() {
     static_assert(index >= 0 && index < kMaxTraceVars);
     return traced_vars_[index] ? traced_vars_[index]->GetId() : -1;
   }
 
-  int16_t GetTracedVarId(uint8_t index) {
-    if (index >= kMaxTraceVars) {
-      return -1;
-    }
-    return traced_vars_[index] ? traced_vars_[index]->GetId() : -1;
-  }
+  bool SetTracedVarId(uint8_t index, uint16_t id);
+  int16_t GetTracedVarId(uint8_t index);
 
   // Grabs the next sample of all traced variables from the trace buffer.
   // Returns false if the buffer has less data than the number of traced
@@ -123,44 +91,12 @@ public:
   // This will equal GetNumActiveVars() but is easier to use for testing.
   [[nodiscard]] bool
   GetNextTraceRecord(std::array<uint32_t, kMaxTraceVars> *record,
-                     size_t *count) {
-    // Grab one sample with interrupts disabled.
-    // There's a chance the trace is still running, so we could get interrupted
-    // by the high priority thread that adds to the buffer.
-    // I want to make sure I read a full sample without being interrupted.
-    *count = 0;
-    BlockInterrupts block;
-    for (auto *var : traced_vars_) {
-      if (!var)
-        continue;
-      std::optional<uint32_t> dat = trace_buffer_.Get();
-      if (!dat)
-        return false;
-      (*record)[(*count)++] = *dat;
-    }
-    return true;
-  }
+                     size_t *count);
 
 private:
   // This function is called at the end of the high priority loop function.
   // It captures any enabled data variables to the trace buffer.
-  bool SampleAllVars() {
-    // If there are no enabled trace variables, or if there isn't enough space
-    // in the buffer for a full sample, then signal to stop the trace.
-    if (trace_buffer_.FreeCount() < GetNumActiveVars()) {
-      return false;
-    }
-
-    // Sample each enabled variable and store the result to the buffer.
-    for (auto *var : traced_vars_) {
-      if (!var)
-        continue;
-      // Can't fail as we've already checked for sufficient space above.
-      (void)trace_buffer_.Put(var->GetValue());
-    }
-
-    return true;
-  }
+  bool SampleAllVars();
 
   // Set this to start capturing data to the trace buffer.
   // It will auto-clear when the buffer is full, or when stopped.

@@ -30,13 +30,13 @@ ErrorCode VarHandler::Process(Context *context) {
   switch (context->request[0]) {
 
   // Return info about one of the variables.
-  case static_cast<uint8_t>(Subcommand::kVarInfo):
+  case static_cast<uint8_t>(Subcommand::kGetInfo):
     return GetVarInfo(context);
 
-  case static_cast<uint8_t>(Subcommand::kGetVar):
+  case static_cast<uint8_t>(Subcommand::kGet):
     return GetVar(context);
 
-  case static_cast<uint8_t>(Subcommand::kSetVar):
+  case static_cast<uint8_t>(Subcommand::kSet):
     return SetVar(context);
 
   default:

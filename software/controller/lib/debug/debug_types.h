@@ -84,22 +84,6 @@ public:
   }
 };
 
-enum class Subcommand {
-  kFlushTrace = 0x00,        // disable and flush the trace buffer
-  kDownloadTrace = 0x01,     // download the trace buffer
-  kStartTrace = 0x02,        // start tracing data
-  kGetTraceVar = 0x03,       // get traced variable id
-  kSetTraceVar = 0x04,       // set traced variable id
-  kGetTracePeriod = 0x05,    // get trace period
-  kSetTracePeriod = 0x06,    // set trace period
-  kCountTraceSamples = 0x07, // get number of samples in the trace buffer
-  kVarInfo = 0x00,           // get variable info (name, type, help string)
-  kGetVar = 0x01,            // get variable value
-  kSetVar = 0x02,            // set variable value
-  kEepromRead = 0x00,        // read value in EEPROM
-  kEepromWrite = 0x01,       // write value in EEPROM
-};
-
 } // namespace Command
 
 } // namespace Debug

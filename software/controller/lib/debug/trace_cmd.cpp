@@ -25,11 +25,12 @@ ErrorCode TraceHandler::Process(Context *context) {
   if (context->request_length < 1)
     return ErrorCode::kMissingData;
 
-  switch (context->request[0]) {
+  Subcommand subcommand{context->request[0]};
 
+  switch (subcommand) {
   // Sub-command kFlushTrace is used to flush the trace buffer
   // It also disables the trace
-  case static_cast<uint8_t>(Subcommand::kFlush): {
+  case Subcommand::kFlush: {
     trace_->Stop();
     context->response_length = 0;
     *(context->processed) = true;
@@ -37,22 +38,22 @@ ErrorCode TraceHandler::Process(Context *context) {
   }
 
   // Sub-command kDownloadTrace is used to read data from the buffer
-  case static_cast<uint8_t>(Subcommand::kDownload):
+  case Subcommand::kDownload:
     return ReadTraceBuffer(context);
 
-  case static_cast<uint8_t>(Subcommand::kStart):
+  case Subcommand::kStart:
     trace_->Start();
     context->response_length = 0;
     *(context->processed) = true;
     return ErrorCode::kNone;
 
-  case static_cast<uint8_t>(Subcommand::kGetVarId):
+  case Subcommand::kGetVarId:
     return GetTraceVar(context);
 
-  case static_cast<uint8_t>(Subcommand::kSetVarId):
+  case Subcommand::kSetVarId:
     return SetTraceVar(context);
 
-  case static_cast<uint8_t>(Subcommand::kGetPeriod):
+  case Subcommand::kGetPeriod:
     // response (trace period) is 32 bits (4 bytes) long
     if (context->max_response_length < 4)
       return ErrorCode::kNoMemory;
@@ -61,7 +62,7 @@ ErrorCode TraceHandler::Process(Context *context) {
     *(context->processed) = true;
     return ErrorCode::kNone;
 
-  case static_cast<uint8_t>(Subcommand::kSetPeriod):
+  case Subcommand::kSetPeriod:
     // trace period is a 32 bits int, meaning the request (including subcommand)
     // is 5 bytes long
     if (context->request_length < 5)
@@ -71,7 +72,7 @@ ErrorCode TraceHandler::Process(Context *context) {
     *(context->processed) = true;
     return ErrorCode::kNone;
 
-  case static_cast<uint8_t>(Subcommand::kCountSamples):
+  case Subcommand::kCountSamples:
     // response (num samples) is 4 bytes long, make sure I have enough room
     if (context->max_response_length < 4)
       return ErrorCode::kNoMemory;

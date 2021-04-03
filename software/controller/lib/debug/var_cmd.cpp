@@ -27,16 +27,17 @@ ErrorCode VarHandler::Process(Context *context) {
   if (context->request_length < 1)
     return ErrorCode::kMissingData;
 
-  switch (context->request[0]) {
+  Subcommand subcommand{context->request[0]};
 
+  switch (subcommand) {
   // Return info about one of the variables.
-  case static_cast<uint8_t>(Subcommand::kGetInfo):
+  case Subcommand::kGetInfo:
     return GetVarInfo(context);
 
-  case static_cast<uint8_t>(Subcommand::kGet):
+  case Subcommand::kGet:
     return GetVar(context);
 
-  case static_cast<uint8_t>(Subcommand::kSet):
+  case Subcommand::kSet:
     return SetVar(context);
 
   default:

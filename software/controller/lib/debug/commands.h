@@ -99,7 +99,7 @@ public:
   explicit TraceHandler(Trace *trace) : trace_(trace){};
   ErrorCode Process(Context *context) override;
 
-  enum class Subcommand {
+  enum class Subcommand : uint8_t {
     kFlush = 0x00,    // disable and flush the trace buffer
     kDownload = 0x01, // download data from the trace buffer
     kStart = 0x02,    // start tracing data
@@ -142,7 +142,7 @@ public:
   VarHandler() = default;
   ErrorCode Process(Context *context) override;
 
-  enum class Subcommand {
+  enum class Subcommand : uint8_t {
     kGetInfo = 0x00, // get variable info (name, type, help string)
     kGet = 0x01,     // get variable value
     kSet = 0x02,     // set variable value
@@ -177,7 +177,7 @@ public:
   explicit EepromHandler(I2Ceeprom *eeprom) : eeprom_(eeprom){};
   ErrorCode Process(Context *context) override;
 
-  enum class Subcommand {
+  enum class Subcommand : uint8_t {
     kRead = 0x00,
     kWrite = 0x01,
   };

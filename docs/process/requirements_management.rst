@@ -106,11 +106,14 @@ different parameters) are incomplete. There is a catch-all of 10%
 Legacy Requirements Management
 ==============================
 
-# Using Valispace
+Using Valispace
+---------------
 
 This page should be a collection of best practices and tips on using Valispace in the context of our project.
 
-## How to get access
+How to get access
+^^^^^^^^^^^^^^^^^
+
 Go to `#requirements` slack channel and look at the pinned messages.
 
 `RespiraWorks Valispace account <https://covent-19.valispace.com/specifications/requirements>`_

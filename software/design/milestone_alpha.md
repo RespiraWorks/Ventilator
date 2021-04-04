@@ -46,7 +46,7 @@ This is a narrative description of how we expect the alpha test to go.  We will 
 
 # Excluded
 
-The alpha milestone is part of the project's overall [requirements](../../requirements). Anything mentioned there but not here, is excluded from alpha.
+The alpha milestone is part of the project's overall [requirements](https://respiraworks.github.io/Ventilator/software/SRS.html). Anything mentioned there but not here, is excluded from alpha.
 
 If you have further questions, ask on [#alpha-reqs](https://app.slack.com/client/T0102KRCH5M/C012H3G1GQ5/thread/C0100SF3N5T-1587858521.093800).
 

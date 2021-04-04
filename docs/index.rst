@@ -28,4 +28,5 @@ Table of Contents
    system/index
    hardware/index
    software/index
+   process/index
    contributing/contributing

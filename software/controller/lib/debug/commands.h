@@ -82,15 +82,38 @@ public:
 //
 // Data passed to the command is a single byte which defines what the command
 // does:
-//  kFlushTrace - Used to disable the trace and flush the trace buffer
-//  kDownloadTrace - Used to read data from the buffer
+//  kFlush - Used to disable the trace and flush the trace buffer
+//  kDownload - Used to read data from the buffer
+//  kStart - Used to start recording in the trace buffer
+//  kGetVarId followed by var index (1 byte) - Used to get trace variables ID
+//  kSetVarId followed by var index (1 byte) and variable ID (2 bytes) - Used to
+//    set traced variable id
+//  kGetPeriod - Used to get the trace period
+//  kSetPeriod followed by desired trace period (4 bytes) - Used to set the
+//    trace period
+//  kCountSamples - Used to get the number of samples currently in the trace
+//    buffer
+
 class TraceHandler : public Handler {
 public:
   explicit TraceHandler(Trace *trace) : trace_(trace){};
   ErrorCode Process(Context *context) override;
 
+  enum class Subcommand : uint8_t {
+    kFlush = 0x00,    // disable and flush the trace buffer
+    kDownload = 0x01, // download data from the trace buffer
+    kStart = 0x02,    // start tracing data
+    kGetVarId = 0x03, // get traced variable id
+    kSetVarId = 0x04, // set traced variable id
+    kGetPeriod = 0x05,
+    kSetPeriod = 0x06,
+    kCountSamples = 0x07, // get number of samples in the trace buffer
+  };
+
 private:
   ErrorCode ReadTraceBuffer(Context *context);
+  ErrorCode SetTraceVar(Context *context);
+  ErrorCode GetTraceVar(Context *context);
   Trace *trace_{nullptr};
 };
 
@@ -100,7 +123,7 @@ private:
 // which defines what the command does and the structure of its data.
 //
 // Sub-commands:
-//  kVarInfo - Used to read info about a variable.  The debug interface calls
+//  kGetInfo - Used to read info about a variable.  The debug interface calls
 //             this repeatedly on startup to enumerate the variables currently
 //             supported by the code.  This way new debug variables can be added
 //             on the fly without modifying the Python code to match.
@@ -110,14 +133,20 @@ private:
 //             the variable.
 //             See the code below for details of the output format
 //
-//  kGetVar - Read the variables value.
+//  kGet - Read the variables value.
 //
-//  kSetVar - Set the variables value.
+//  kSet - Set the variables value.
 //
 class VarHandler : public Handler {
 public:
   VarHandler() = default;
   ErrorCode Process(Context *context) override;
+
+  enum class Subcommand : uint8_t {
+    kGetInfo = 0x00, // get variable info (name, type, help string)
+    kGet = 0x01,     // get variable value
+    kSet = 0x02,     // set variable value
+  };
 
 private:
   // Return info about one of the variables. The 16-bit variable ID is passed
@@ -138,15 +167,20 @@ private:
 // which defines what the command does and the structure of its data.
 //
 // Sub-commands:
-//  kEepromRead, followed by a 16 bits address and a 16 bits length :
-//                Used to read length data bytes at given address in EEPROM
+//  kRead, followed by a 16 bits address and a 16 bits length :
+//          Used to read length data bytes at given address in EEPROM
 //
-//  kEepromWrite, followed by a 16 bits address and some data bytes :
-//                Used to write given data at given address
+//  kWrite, followed by a 16 bits address and some data bytes :
+//          Used to write given data at given address
 class EepromHandler : public Handler {
 public:
   explicit EepromHandler(I2Ceeprom *eeprom) : eeprom_(eeprom){};
   ErrorCode Process(Context *context) override;
+
+  enum class Subcommand : uint8_t {
+    kRead = 0x00,
+    kWrite = 0x01,
+  };
 
 private:
   ErrorCode Read(uint16_t address, Context *context);

@@ -18,12 +18,6 @@ def main():
     print()
 
     print("Reading minimal flow value from sensor...")
-    SetVar("trace_var1", "flow_inhale")
-    SetVar("trace_var2", "none")
-    SetVar("trace_var3", "none")
-    SetVar("trace_var4", "none")
-    SetVar("trace_ctrl", 0)
-    SetVar("trace_period", 1)
     zero = GetTraceMean()
     print(zero)
 
@@ -71,10 +65,14 @@ def main():
 
 
 def GetTraceMean(samps=300):
-    SetVar("trace_ctrl", 0)
-    SetVar("trace_ctrl", 1)
-    while int(GetVar("trace_samples")) < samps:
-        pass
+    run("trace flush")
+    run("trace start flow_inhale")
+
+    dat = SendCmd(OP_TRACE, [SUBCMD_TRACE_GET_NUM_SAMPLES])
+    ct = Build32(dat)[0]
+    while ct < samps:
+        dat = SendCmd(OP_TRACE, [SUBCMD_TRACE_GET_NUM_SAMPLES])
+        ct = Build32(dat)[0]
 
     dat = TraceDownload()
     return mean(dat[1])

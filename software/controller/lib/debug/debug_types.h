@@ -84,16 +84,6 @@ public:
   }
 };
 
-enum class Subcommand {
-  kFlushTrace = 0x00,    // disable and flush the trace
-  kDownloadTrace = 0x01, // download the trace buffer
-  kVarInfo = 0x00,       // get variable info (name, type, help string)
-  kGetVar = 0x01,        // get variable value
-  kSetVar = 0x02,        // set variable value
-  kEepromRead = 0x00,    // read value in EEPROM
-  kEepromWrite = 0x01,   // write value in EEPROM
-};
-
 } // namespace Command
 
 } // namespace Debug

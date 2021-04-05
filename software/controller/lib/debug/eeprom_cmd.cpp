@@ -25,12 +25,14 @@ ErrorCode EepromHandler::Process(Context *context) {
   // Whatever the subcommand, bytes 1 and 2 are the address
   uint16_t address = u8_to_u16(&context->request[1]);
 
+  Subcommand subcommand{context->request[0]};
+
   // Process subcommand
-  switch (context->request[0]) {
-  case static_cast<uint8_t>(Subcommand::kEepromRead):
+  switch (subcommand) {
+  case Subcommand::kRead:
     return Read(address, context);
 
-  case static_cast<uint8_t>(Subcommand::kEepromWrite):
+  case Subcommand::kWrite:
     return Write(address, context);
 
   default:

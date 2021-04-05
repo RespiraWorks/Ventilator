@@ -47,7 +47,8 @@ TEST(VarHandler, GetVarInfo) {
   uint8_t id[2];
   u16_to_u8(var.GetId(), id);
   std::array req = {
-      static_cast<uint8_t>(Subcommand::kVarInfo), id[0], id[1], // Var id
+      static_cast<uint8_t>(VarHandler::Subcommand::kGetInfo), id[0],
+      id[1], // Var id
   };
   std::array<uint8_t, 50> response;
   bool processed{false};
@@ -73,7 +74,8 @@ TEST(VarHandler, GetVar) {
   uint8_t id[2];
   u16_to_u8(var.GetId(), id);
   std::array req = {
-      static_cast<uint8_t>(Subcommand::kGetVar), id[0], id[1], // Var id
+      static_cast<uint8_t>(VarHandler::Subcommand::kGet), id[0],
+      id[1], // Var id
   };
   std::array<uint8_t, 4> response;
   bool processed{false};
@@ -105,7 +107,7 @@ TEST(VarHandler, SetVar) {
   uint8_t id[2];
   u16_to_u8(var.GetId(), id);
   std::array req = {
-      static_cast<uint8_t>(Subcommand::kSetVar),
+      static_cast<uint8_t>(VarHandler::Subcommand::kSet),
       id[0],
       id[1], // Var id
       new_bytes[0],

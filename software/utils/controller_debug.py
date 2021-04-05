@@ -50,6 +50,12 @@ SUBCMD_VAR_SET = 2
 
 SUBCMD_TRACE_FLUSH = 0
 SUBCMD_TRACE_GETDATA = 1
+SUBCMD_TRACE_START = 2
+SUBCMD_TRACE_GET_VARID = 3
+SUBCMD_TRACE_SET_VARID = 4
+SUBCMD_TRACE_GET_PERIOD = 5
+SUBCMD_TRACE_SET_PERIOD = 6
+SUBCMD_TRACE_GET_NUM_SAMPLES = 7
 
 SUBCMD_EEPROM_READ = 0
 SUBCMD_EEPROM_WRITE = 1
@@ -478,11 +484,10 @@ trace start [--period p] [var1 ... ]
   Starts collecting trace data.
 
   You can specify the names of up to TRACE_VAR_CT debug variables to trace.  If
-  you don't specify any, we use the values in trace_var1, ....
+  you don't specify any, we use the last known values.
 
   --period controls the sample period in units of one trip through the
-  controller's high-priority loop.  If you don't specify a period, we use
-  whatever is in the trace_period debug variable.
+  controller's high-priority loop.  If you don't specify a period, we use 1.
 
 trace graph [--dest=<filename>] [--title=<title>] [--nointeractive]
             [--scale=<field>/scale --scale=<field>*scale]
@@ -505,23 +510,12 @@ trace download [--separator=<str>] [--dest=<filename>]
   option is given, then the specified string will separate each column of data.
   The default separator is a few spaces.
 
-The tracing API also exposes the following debug vars, controlled via the
-standard `get` and `set` commands.  You probably don't need to touch these.
+trace current
+  This returns the current state of the trace:
+    - traced variables
+    - trace period
+    - number of samples in the trace buffer
 
-trace_var1, ..., trace_var{TRACE_VAR_CT}
-  Names of the variables to trace.  Can be set explicitly, or via `trace
-  start`.
-
-trace_period
-  Interval between two samples in the trace.  A value of N means we sample once
-  every N times through the controller's high priority loop.
-
-trace_ctrl
-  This variable is used to start the trace.  Just set it to 1 to start.
-  It will be cleared when the trace buffer is full.
-
-trace_samples
-  This variable gives the number of samples stored in the buffer currently.
 """
         cl = shlex.split(line)
         if len(cl) < 1:
@@ -542,18 +536,22 @@ trace_samples
                 print(f"Can't trace more than {TRACE_VAR_CT} variables at once.")
                 return
             if args.period:
-                SetVar("trace_period", args.period)
+                period = Split32(args.period)
+                SendCmd(OP_TRACE, [SUBCMD_TRACE_SET_PERIOD] + period)
+            else:
+                SendCmd(OP_TRACE, [SUBCMD_TRACE_SET_PERIOD] + Split32(1))
             if args.var:
                 # Unset existing trace vars, so we only get what was asked for.
-                var = args.var + [""] * (TRACE_VAR_CT - len(args.var))
-                for (i, var) in enumerate(var):
-                    SetVar(f"trace_var{i + 1}", var)
+                var_names = args.var + [""] * (TRACE_VAR_CT - len(args.var))
+                for (i, var_name) in enumerate(var_names):
+                    var_id = -1
+                    if var_name in varDict:
+                        var_id = varDict[var_name].id
+                    var = Split16(var_id)
+                    SendCmd(OP_TRACE, [SUBCMD_TRACE_SET_VARID, i] + var)
 
             SendCmd(OP_TRACE, [SUBCMD_TRACE_FLUSH])
-
-            # The transition from 0 to 1 resets and starts the trace
-            SetVar("trace_ctrl", 0)
-            SetVar("trace_ctrl", 1)
+            SendCmd(OP_TRACE, [SUBCMD_TRACE_START])
 
         elif cl[0] == "download":
             parser = CmdArgumentParser(prog="trace download")
@@ -578,6 +576,17 @@ trace_samples
 
         elif cl[0] == "graph":
             TraceGraph(cl[1:])
+
+        elif cl[0] == "current":
+            print("Traced variables:")
+            for var in TraceActiveVars():
+                print(" - %s" % var.name)
+            dat = SendCmd(OP_TRACE, [SUBCMD_TRACE_GET_PERIOD])
+            period = Build32(dat)[0]
+            print("Trace period: %i" % period)
+            dat = SendCmd(OP_TRACE, [SUBCMD_TRACE_GET_NUM_SAMPLES])
+            samples = Build32(dat)[0]
+            print("Samples in buffer: %i" % samples)
 
         else:
             print("Unknown trace sub-command %s" % cl[0])
@@ -706,14 +715,6 @@ def GetVar(name, raw=False, fmt=None):
     if fmt == None:
         fmt = V.fmt
 
-    # I'll convert trace variable values to variable names
-    if name.startswith("trace_var"):
-        if val < 0:
-            return "none"
-        tv = FindVarByID(val)
-        if tv != None:
-            return tv.name
-
     return fmt % val
 
 
@@ -722,14 +723,6 @@ def SetVar(name, value):
         raise Error("Unknown variable %s" % name)
 
     V = varDict[name]
-
-    # If this is a trace variable, the passed value
-    # should be a variable name
-    if name.startswith("trace_var"):
-        if value == "" or value == "none":
-            value = "-1"
-        elif value in varDict:
-            value = "%d" % varDict[value].id
 
     if V.type == VAR_INT32:
         if not isinstance(value, int):
@@ -751,14 +744,12 @@ def SetVar(name, value):
 def TraceActiveVars():
     """Return a list of active trace variables"""
     ret = []
-    for i in range(10):
-        name = "trace_var%d" % (i + 1)
-        if not name in varDict:
-            break
-        vid = GetVar(name, raw=True)
-        V = FindVarByID(vid)
-        if V:
-            ret.append(V)
+    for i in range(TRACE_VAR_CT):
+        dat = SendCmd(OP_TRACE, [SUBCMD_TRACE_GET_VARID, i])
+        var_id = Build16(dat)[0]
+        var = FindVarByID(var_id)
+        if var:
+            ret.append(var)
     return ret
 
 
@@ -774,7 +765,9 @@ def TraceDownload():
     if len(traceVars) < 1:
         return None
 
-    ct = GetVar("trace_samples", raw=True) * len(traceVars)
+    # get samples count
+    dat = SendCmd(OP_TRACE, [SUBCMD_TRACE_GET_NUM_SAMPLES])
+    ct = Build32(dat)[0] * len(traceVars)
 
     data = []
     while len(data) < 4 * ct:
@@ -801,7 +794,9 @@ def TraceDownload():
         for i, val in enumerate(sample):
             ret[i].append(traceVars[i].ConvertInt(val))
 
-    per = GetVar("trace_period", raw=True)
+    # get trace period
+    dat = SendCmd(OP_TRACE, [SUBCMD_TRACE_GET_PERIOD])
+    per = Build32(dat)[0]
     if per < 1:
         per = 1
 

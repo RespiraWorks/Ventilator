@@ -59,14 +59,25 @@ To exit console mode, enter control-C
 **poke**
 These commands allow memory locations to be read (peek) or written (poke).  They are primarily useful when developing hardware drivers as part of the HAL and should generally be used with caution.
 
+**eeprom**
+This command allows the user to `read` and `write` in non-volatile memory.
+To read the user provides the data's address and number of bytes to read:
+```
+eeprom read 4096 52
+```
+To write the user provides the data's address and the bytes to write:
+```
+eeprom write 128 255 255 255 255 255 255 255
+```
+
 **trace**
 One of the most useful features of the debug utilities is the trace buffer.  The trace buffer is a large block of RAM into which debug variables can be saved periodically.  That data can then be download using the trace command and either saved to a file or displayed graphically.
 
-To use the trace, several debug variables must be set to configure it.
-- trace_var1 … trace_var4.  These four variables define what will be saved to the trace buffer.  The value you set them to is the name of another debug variable that you wish to save.  Up to 4 debug variables can be stored in the trace at any time using these four variables.
-- trace_period.  This sets the period (in units of loop cycles) at which the debug variables will be stored to the trace buffer.  Setting trace_period to 1 will cause the data to be stored every cycle.  Setting it to 2 will cause the data to be stored every other cycle, etc.
-- trace_ctrl.  This is used to start and stop the trace feature.  Setting this variable to 1 starts the collection of trace data.  Setting it to 0 stops the collection of trace data.  If the trace buffer fills up, then this will be automatically set to 0 by the controller software.
-- trace_samples.  This variable can be read to see how many samples of trace data have been collected.
+To start the trace, one needs to provide a list of traced vars and (optionnaly) a trace period:
+```
+trace start [--period <period>] <var_name1 ... var_name4>
+```
+where period is given in loop cycles
 
 Once the trace is set up and started, the collected data can be graphed using the command:
 ```
@@ -78,9 +89,7 @@ trace download <filename>
 ```
 For example, to capture patient pressure every loop cycle, the following commands would be used:
 ```
-set trace_var1 pressure
-set trace_period 1
-set trace_ctrl 1
+trace start pressure
 ```
 pause for a few seconds while the data is captured, then
 ```

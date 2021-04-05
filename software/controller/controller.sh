@@ -122,6 +122,7 @@ if [ "$1" == "--test" ]; then
   INTEGRATION_TEST_H=stepper_test.h TEST_PARAM_1=0 TEST_PARAM_2=90.0f pio run -e integration-test
   INTEGRATION_TEST_H=pinch_valve_test.h TEST_PARAM_1=0 pio run -e integration-test
   INTEGRATION_TEST_H=psol_test.h pio run -e integration-test
+  INTEGRATION_TEST_H=eeprom_test.h pio run -e integration-test
 
   # Make sure controller builds for target platform.
   pio run

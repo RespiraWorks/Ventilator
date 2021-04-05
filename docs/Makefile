@@ -3,7 +3,10 @@
 
 # You can set these variables from the command line, and also
 # from the environment for the first two.
-SPHINXOPTS    ?=
+# The -E build option disables incremental builds. This is required so that
+#   traceability can generate backlinks when a new trace relationship is created.
+#   See: https://melexis.github.io/sphinx-traceability-extension/usage.html#required-sphinx-options
+SPHINXOPTS    ?= -E
 SPHINXBUILD   ?= sphinx-build
 SOURCEDIR     = .
 BUILDDIR      = _build

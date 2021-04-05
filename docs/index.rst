@@ -7,7 +7,7 @@ Welcome to RespiraWorks Ventilator's documentation!
 ===================================================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: Contents:
 
 
@@ -26,5 +26,7 @@ Table of Contents
    :maxdepth: 2
 
    system/index
+   hardware/index
    software/index
+   process/index
    contributing/contributing

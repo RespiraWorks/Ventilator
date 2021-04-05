@@ -12,7 +12,7 @@ The UI requirements below come from several sources:
   conversation with a respiratory therapist
 
 The list below is incomplete and possibly wrong in some ways.
-Please consult Valispace and the main [Requirements page](../../requirements).
+Please consult SRS [Requirements page](https://respiraworks.github.io/Ventilator/software/SRS.html).
 However, Valispace also does not have complete information at the time of writing. Proceed with caution.
 
 ## Self-test mode

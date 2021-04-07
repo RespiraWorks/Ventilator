@@ -663,7 +663,8 @@ StepMtrErr StepMotor::SendCmd(uint8_t *cmd, uint32_t len) {
   StepCommState state;
   {
     BlockInterrupts block;
-    cmd_ptr_ = cmd;
+    last_cmd_ = *cmd;
+    cmd_ptr_ = &last_cmd_;
     cmd_remain_ = len;
     state = coms_state_;
   }

@@ -314,7 +314,7 @@ private:
   volatile int cmd_remain_{0};
   bool save_response_{false};
   // member for the command currently being sent that we can safely point to
-  uint8_t last_cmd_{0};
+  uint8_t last_cmd_[4] = {0};
 
   // Number of full steps/rev
   // Defaults to the standard value for most steppers

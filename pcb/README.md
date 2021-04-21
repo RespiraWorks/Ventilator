@@ -22,10 +22,10 @@ The latest revision of the PCB is Rev A, designed to be used in the top-level de
 
 The main design is in this folder and the project file is here: [Ventilator Mainboard Rev A](Ventilator.pro)
 
-The manufacturing packages can all be found here [Ventilator Mainboard Rev A Manufacturing Files](/manufacturing)
+The manufacturing packages can all be found here [Ventilator Mainboard Rev A Manufacturing Files](manufacturing/)
 
 This revision integrates many of the modules and daughtercards in PCB Rev 1.0 into a single PCB, while breaking out the sensors to daughtercards to make it better adaptable to sensors available in other markets.  It adds some important new features:
- - Moved CycleController from STM32L452 to STM32L496 microcontroller for greater memory and storage.
+ - Moved CycleController from STM32L452 to STM32L496 microcontroller for more I/O pins, memory, and storage.
  - Added an independent FPGA-based supervisor.
  - Higher power capability now up to 120W.
  - Self-powered power loss alarm.

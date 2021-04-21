@@ -46,7 +46,7 @@
 //      TBD - which python script to run?
 //
 
-#include "eeprom.h"
+#include "commands.h"
 #include "hal.h"
 #include "interface.h"
 #include "vars.h"
@@ -65,6 +65,26 @@ static constexpr uint16_t length{TEST_PARAM_3};
 
 // declaration of EEPROM
 static I2Ceeprom eeprom = I2Ceeprom(0x50, 64, 32768, &i2c1);
+
+// Global variables for the debug interface
+static Debug::Trace trace;
+// Create a handler for each of the known commands that the Debug Handler can
+// link to.  This is a bit tedious but I can't find a simpler way.
+static Debug::Command::ModeHandler mode_command;
+static Debug::Command::PeekHandler peek_command;
+static Debug::Command::PokeHandler poke_command;
+static Debug::Command::VarHandler var_command;
+static Debug::Command::TraceHandler trace_command(&trace);
+static Debug::Command::EepromHandler eeprom_command(&eeprom);
+
+static Debug::Interface debug(&trace, 12, Debug::Command::Code::kMode,
+                              &mode_command, Debug::Command::Code::kPeek,
+                              &peek_command, Debug::Command::Code::kPoke,
+                              &poke_command, Debug::Command::Code::kVariable,
+                              &var_command, Debug::Command::Code::kTrace,
+                              &trace_command,
+                              Debug::Command::Code::kEepromAccess,
+                              &eeprom_command);
 
 void run_test() {
   Hal.init();

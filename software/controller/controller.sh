@@ -143,7 +143,7 @@ if [ "$1" == "--test" ]; then
     # STM32 - clangtidy [TODO(a-vinod) cppcheck]
     # Native - cppcheck & clangtidy
 
-    pio check -e stm32 --fail-on-defect=high
+    pio check -e stm32 --fail-on-defect=high --skip-packages
     pio check -e native --fail-on-defect=high
   else
     echo "Skipping static checks."

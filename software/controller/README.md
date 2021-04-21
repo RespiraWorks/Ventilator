@@ -64,10 +64,10 @@ but platformio will just say all checks have passed without giving an error if i
 
 ## Building and testing
 
-After installing platformio, you should be able to build and test as follows.
+After installing platformio, you should be able to build and test as follows:
 
 ```
-$ ./test.sh
+$ ./controller.sh --test
 # This will run a few commands, such as "platformio run" and
 # "platformio test -e native".
 ```
@@ -81,6 +81,12 @@ e.g. if things don't build for you in `master`, try:
 
 ```
 $ rm -rf .pio/
+```
+
+If you encounter an error such as `Error: Unknown development platform 'native'`, try running
+
+```
+$ platformio platform install native
 ```
 
 ## Running on the controller

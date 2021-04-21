@@ -22,7 +22,8 @@ The latest revision of the PCB is Rev A, designed to be used in the top-level de
 
 The main design is in this folder and the project file is here: [Ventilator Mainboard Rev A](Ventilator.pro)
 
-The complete turnkey manufacturing packages is here: [Ventilator Mainboard Rev A Manufacturing Files](manufacturing/20210401-Ventilator-RevA-PKG-TURNKEY.zip)
+The complete turnkey manufacturing package is here: [Ventilator Mainboard Rev A Turnkey FAB/ASSY Package](manufacturing/20210401-Ventilator-RevA-PKG-TURNKEY.zip)
+And the individual manufacturing files are here: [Ventilator Mainboard Rev A Manufacturing Files](manufacturing/)
 
 This revision integrates many of the modules and daughtercards in PCB Rev 1.0 into a single PCB, while breaking out the sensors to daughtercards to make it better adaptable to sensors available in other markets.  It adds some important new features:
  - Moved CycleController from STM32L452 to STM32L496 microcontroller for more I/O pins, memory, and storage.

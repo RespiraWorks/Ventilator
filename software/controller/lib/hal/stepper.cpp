@@ -663,7 +663,8 @@ StepMtrErr StepMotor::SendCmd(uint8_t *cmd, uint32_t len) {
   StepCommState state;
   {
     BlockInterrupts block;
-    cmd_ptr_ = cmd;
+    memcpy(&last_cmd_[0], cmd, len);
+    cmd_ptr_ = &last_cmd_[0];
     cmd_remain_ = len;
     state = coms_state_;
   }
@@ -676,6 +677,12 @@ StepMtrErr StepMotor::SendCmd(uint8_t *cmd, uint32_t len) {
   // When it does, it will set the pointer to NULL
   while (cmd_ptr_) {
   }
+
+  // The ISR replaces the command with the response, I need to copy the
+  // response so the caller can use it.
+  memcpy(cmd, &last_cmd_[0], len);
+  // TODO: have a dedicated place to place the stepper response so the ISR
+  // doesn't reuse the location of the command to put the response.
 
   return StepMtrErr::OK;
 }

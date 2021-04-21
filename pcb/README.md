@@ -4,15 +4,15 @@ This directory contains files for the Ventilator mainboard design.
 
 ![](VentilatorPCB-RevA-Angled-Render.png)
 
+The RespiraWorks Ventilator Mainboard PCB is a custom component that integrates the Cycle Controller, UI Computer,
+sensors, actuator drives, power supplies, filtering, and protection components.
+
 Due to the coupled nature of the controls, electrical, and mechanical components and their design the RespiraWorks
 ventilator contains a custom fabricated printed circuit board (PCB) to connect the microcontroller, interface processor,
 and sensor interfaces. The use of a custom PCB greatly reduces the chance for electrical assembly and fabrication errors
 and is far more amenable to a quality fabrication process than hand-soldered components. We do not intend for this
 component to be hand-assembled, and engineering turnkey fabrication instructions have been generated as part of the
 submission; no assembly instructions are provided here.
-
-The RespiraWorks Ventilator Mainboard PCB is a custom component that integrates the Cycle Controller, UI Computer,
-sensors, actuator drives, power supplies, filtering, and protection components.
 
 The original Rev 1 PCB was done in Alitum.  As of Rev A, this project has moved to KiCad for better accessibility.
 

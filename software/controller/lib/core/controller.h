@@ -12,8 +12,8 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-#ifndef CONTROLLER_H_
-#define CONTROLLER_H_
+#ifndef CONTROLLER_H
+#define CONTROLLER_H
 
 #include "actuators.h"
 #include "blower_fsm.h"
@@ -97,12 +97,12 @@ private:
   BlowerFsm fsm_;
   PID blower_valve_pid_ =
       PID(dbg_blower_valve_kp.Get(), dbg_blower_valve_computed_ki.Get(),
-          dbg_blower_valve_kd.Get(), ProportionalTerm::ON_ERROR,
-          DifferentialTerm::ON_MEASUREMENT, /*output_min=*/0.f,
+          dbg_blower_valve_kd.Get(), ProportionalTerm::kOnError,
+          DifferentialTerm::kOnMeasurement, /*output_min=*/0.f,
           /*output_max=*/1.0f);
   PID psol_pid_ =
       PID(dbg_psol_kp.Get(), dbg_psol_ki.Get(), dbg_psol_kd.Get(),
-          ProportionalTerm::ON_ERROR, DifferentialTerm::ON_MEASUREMENT,
+          ProportionalTerm::kOnError, DifferentialTerm::kOnMeasurement,
           /*output_min=*/0.f, /*output_max=*/1.0f);
 
   // These objects accumulate flow to calculate volume.
@@ -121,4 +121,4 @@ private:
   bool ventilator_was_on_{false};
 };
 
-#endif // CONTROLLER_H_
+#endif // CONTROLLER_H

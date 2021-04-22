@@ -24,27 +24,27 @@ limitations under the License.
 // function if you want to checksum one "logical message" which isn't in a
 // single buffer.
 //
-//   uint16_t state = checksum_fletcher16(data0, data0_len);
-//   state = checksum_fletcher16(data1, data1_len, state);
-//   uint16_t result = checksum_fletcher16(data2, data2_len, state);
+//   uint16_t state = ChecksumFletcher16(data0, data0_len);
+//   state = ChecksumFletcher16(data1, data1_len, state);
+//   uint16_t result = ChecksumFletcher16(data2, data2_len, state);
 //
-uint16_t checksum_fletcher16(const char *data, uint8_t count,
-                             uint16_t state = 0);
+uint16_t ChecksumFletcher16(const char *data, uint8_t count,
+                            uint16_t state = 0);
 
 // The polynomial 0x741B8CD7 has Hamming distance 6 up to 16360 bits
 // and Hamming distance 4 up to 114663 bits.
 //[Philip Koopman, 32-Bit Cyclic Redundancy Codes for Internet Applications
 // 2002.] https://users.ece.cmu.edu/~koopman/crc/
-constexpr uint32_t CRC32_POLYNOMIAL = 0x741B8CD7;
+constexpr uint32_t kCrc32Polynomial = 0x741B8CD7;
 
-uint32_t soft_crc32(const uint8_t *data, uint32_t count);
+uint32_t SoftCRC32(const uint8_t *data, uint32_t count);
 
 // Computes check bytes for a fletcher16 checksum.
 //
-// Given a packet p and checksum(p) == c, check_bytes_fletcher16(c) returns two
+// Given a packet p and checksum(p) == c, CheckBytesFletcher16(c) returns two
 // bytes [b1 b2] such that checksum(p | b1 | b2) == 0, where `|` represents
 // concatenation.
-inline uint16_t check_bytes_fletcher16(uint16_t checksum) {
+inline uint16_t CheckBytesFletcher16(uint16_t checksum) {
   uint8_t f0 = static_cast<uint8_t>(checksum & 0xff);
   uint8_t f1 = static_cast<uint8_t>((checksum >> 8) & 0xff);
   uint8_t c0 = static_cast<uint8_t>(0xff - ((f0 + f1) % 0xff));
@@ -56,8 +56,8 @@ inline uint16_t check_bytes_fletcher16(uint16_t checksum) {
 //
 // When creating packets, we append "check bytes" so that the whole packet
 // (including the check bytes) has a checksum of 0.
-inline bool checksum_check(const char *packet, uint8_t packet_len) {
-  return checksum_fletcher16(packet, packet_len) == 0;
+inline bool ChecksumCheck(const char *packet, uint8_t packet_len) {
+  return ChecksumFletcher16(packet, packet_len) == 0;
 }
 
 #endif // CHECKSUM_H

@@ -63,7 +63,7 @@ static void CompareParams(int16_t address, const Structure &ref,
 
 uint32_t ParamsCRC(Structure *params) {
   uint8_t *ptr = reinterpret_cast<uint8_t *>(params);
-  return soft_crc32(ptr + 4, sizeof(Structure) - 4);
+  return SoftCRC32(ptr + 4, sizeof(Structure) - 4);
 }
 
 class NVparamsTest : public ::testing::Test {
@@ -177,7 +177,7 @@ TEST_F(NVparamsTest, Update) {
   };
   ref_params.crc = ParamsCRC(&ref_params);
 
-  _nv_params.NVparamsUpdate(last_settings, &ref_params.last_settings);
+  _nv_params.NV_PARAMS_UPDATE(last_settings, &ref_params.last_settings);
 
   SCOPED_TRACE("nv_param_ check after MACRO");
   CompareParams(-1, ref_params, _nv_params, _eeprom);
@@ -209,7 +209,7 @@ TEST_F(NVparamsTest, GetAndReadMacro) {
 
   VentParams settings = VentParams_init_zero;
   // get last_settings through macro and check first and last members
-  _nv_params.NVparamsRead(last_settings, &settings);
+  _nv_params.NV_PARAMS_READ(last_settings, &settings);
   EXPECT_EQ(settings.mode, VentMode::VentMode_PRESSURE_ASSIST);
   EXPECT_EQ(settings.fio2, 0.21f);
 }

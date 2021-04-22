@@ -76,15 +76,15 @@ std::vector<uint8_t> ProcessCmd(Interface *serial, std::vector<uint8_t> req,
   full_req.push_back(crc_bytes[1]);
   full_req.push_back(static_cast<uint8_t>(SpecialChar::kEndTransfer));
 
-  Hal.test_debugPutIncomingData(reinterpret_cast<const char *>(full_req.data()),
-                                static_cast<uint16_t>(full_req.size()));
+  hal.TESTDebugPutIncomingData(reinterpret_cast<const char *>(full_req.data()),
+                               static_cast<uint16_t>(full_req.size()));
   for (int i = 0; i < 100 && !serial->Poll(); ++i) {
     // Wait for command to complete, advance sim time to allow timeout
-    Hal.delay(milliseconds(10));
+    hal.Delay(milliseconds(10));
   }
 
   std::vector<uint8_t> escaped_resp(500);
-  uint16_t resp_len = Hal.test_debugGetOutgoingData(
+  uint16_t resp_len = hal.TESTDebugGetOutgoingData(
       reinterpret_cast<char *>(escaped_resp.data()),
       static_cast<uint16_t>(escaped_resp.size()));
   escaped_resp.erase(escaped_resp.begin() + resp_len, escaped_resp.end());
@@ -222,14 +222,14 @@ TEST(Interface, Errors) {
   // Command too short - we can't use the helper function for this as it adds
   // all the necessary data
   req = {1, 0, static_cast<uint8_t>(SpecialChar::kEndTransfer)};
-  Hal.test_debugPutIncomingData(reinterpret_cast<const char *>(req.data()),
-                                static_cast<uint16_t>(req.size()));
+  hal.TESTDebugPutIncomingData(reinterpret_cast<const char *>(req.data()),
+                               static_cast<uint16_t>(req.size()));
   for (int i = 0; i < 5 && !serial.Poll(); ++i) {
     // Wait for command to complete
   }
   // In that case, we actually expect no response
   uint16_t resp_len =
-      Hal.test_debugGetOutgoingData(reinterpret_cast<char *>(resp.data()), 10);
+      hal.TESTDebugGetOutgoingData(reinterpret_cast<char *>(resp.data()), 10);
   EXPECT_EQ(resp_len, 0);
 }
 } // namespace Debug

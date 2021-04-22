@@ -2,4 +2,4 @@
 
 #include INTEGRATION_TEST_H
 
-int main() { run_test(); }
+int main() { RunTest(); }

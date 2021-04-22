@@ -13,20 +13,20 @@
 #include "pinch_valve.h"
 
 // test parameters
-static constexpr int motor_index{TEST_PARAM_1};
-static constexpr int64_t delay_ms{1000};
+static constexpr int kMotorIndex{TEST_PARAM_1};
+static constexpr Duration kDelay{milliseconds(1000)};
 
-void run_test() {
-  Hal.init();
-  PinchValve pinch_valve(motor_index);
+void RunTest() {
+  hal.Init();
+  PinchValve pinch_valve(kMotorIndex);
   pinch_valve.Home();
 
   bool valve_open{false};
   while (true) {
     pinch_valve.SetOutput(valve_open ? 1.0f : 0.0f);
-    Hal.delay(milliseconds(delay_ms));
+    hal.Delay(kDelay);
 
-    Hal.watchdog_handler();
+    hal.WatchdogHandler();
 
     valve_open = !valve_open;
   }

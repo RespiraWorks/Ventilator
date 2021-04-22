@@ -54,10 +54,13 @@ limitations under the License.
 //
 //   Pressure         kPa(float)
 //   Pressure         cmH2O(float)
+//   Pressure         atm(float)
 //   Length           meters(float)
 //   Length           millimeters(float)
 //   VolumetricFlow   cubic_m_per_sec(float)
 //   VolumetricFlow   ml_per_min(float)
+//   VolumetricFlow   liters_per_sec(float)
+//   VolumetricFlow   ml_per_sec(float)
 //   Volume           cubic_m(float)
 //   Volume           ml(float)
 //   Voltage          volts(float)
@@ -65,6 +68,7 @@ limitations under the License.
 //   Duration         milliseconds(int64_t)
 //   Duration         milliseconds(float)
 //   Duration         microseconds(int64_t)
+//   Duration         minutes(float)
 //   Time             microsSinceStartup(int64_t)
 //
 // Values support addition and subtraction.  The laws for Duration and Time are
@@ -80,7 +84,7 @@ limitations under the License.
 //
 // [1] https://en.wikipedia.org/wiki/Physical_quantity
 
-namespace units_detail {
+namespace UnitsDetail {
 
 // Represents a value of some physical quantity Q, e.g. length, pressure, time.
 //
@@ -172,7 +176,7 @@ protected:
   using Scalar<Q, ValTy>::Scalar;
 };
 
-} // namespace units_detail
+} // namespace UnitsDetail
 
 // Represents pressure, e.g. air pressure.
 //
@@ -184,15 +188,15 @@ protected:
 //  - atm (atmospheres)
 //
 // Native unit (implementation detail): kPa
-class Pressure : public units_detail::ArithScalar<Pressure, float> {
+class Pressure : public UnitsDetail::ArithScalar<Pressure, float> {
 public:
   [[nodiscard]] constexpr float kPa() const { return val_; }
-  [[nodiscard]] constexpr float cmH2O() const { return val_ * kKPaToCmH2O; }
+  [[nodiscard]] constexpr float cmH2O() const { return val_ * kKPacmH2O; }
   [[nodiscard]] constexpr float atm() const { return val_ / kAtmToKPa; }
 
 private:
   // https://www.google.com/search?q=kpa+to+cmh2o
-  static constexpr float kKPaToCmH2O{10.1972f};
+  static constexpr float kKPacmH2O{10.1972f};
   // https://www.google.com/search?q=atm+to+kPa
   static constexpr float kAtmToKPa{101.325f};
 
@@ -200,12 +204,12 @@ private:
   constexpr friend Pressure cmH2O(float cm_h2o);
   constexpr friend Pressure atm(float atm);
 
-  using units_detail::ArithScalar<Pressure, float>::ArithScalar;
+  using UnitsDetail::ArithScalar<Pressure, float>::ArithScalar;
 };
 
 constexpr Pressure kPa(float kpa) { return Pressure(kpa); }
 constexpr Pressure cmH2O(float cm_h2o) {
-  return Pressure(cm_h2o / Pressure::kKPaToCmH2O);
+  return Pressure(cm_h2o / Pressure::kKPacmH2O);
 }
 constexpr Pressure atm(float atm) {
   return Pressure(atm * Pressure::kAtmToKPa);
@@ -220,7 +224,7 @@ constexpr Pressure atm(float atm) {
 //   - millimeters
 //
 // Native unit (implementation detail): meters
-class Length : public units_detail::ArithScalar<Length, float> {
+class Length : public UnitsDetail::ArithScalar<Length, float> {
 public:
   [[nodiscard]] constexpr float meters() const { return val_; }
   [[nodiscard]] constexpr float millimeters() const { return val_ * 1000; }
@@ -229,7 +233,7 @@ private:
   constexpr friend Length meters(float meters);
   constexpr friend Length millimeters(float mm);
 
-  using units_detail::ArithScalar<Length, float>::ArithScalar;
+  using UnitsDetail::ArithScalar<Length, float>::ArithScalar;
 };
 
 constexpr Length meters(float meters) { return Length(meters); }
@@ -250,7 +254,7 @@ constexpr Length millimeters(float mm) { return Length(mm / 1000); }
 //
 // Dividing a Volume by a Duration (see below) gives you a VolumetricFlow.
 // Multiplying a VolumetricFlow by a Duration (see below) gives you a Volume.
-class VolumetricFlow : public units_detail::ArithScalar<VolumetricFlow, float> {
+class VolumetricFlow : public UnitsDetail::ArithScalar<VolumetricFlow, float> {
 public:
   [[nodiscard]] constexpr float cubic_m_per_sec() const { return val_; }
   [[nodiscard]] constexpr float ml_per_min() const {
@@ -265,9 +269,9 @@ private:
   constexpr friend VolumetricFlow cubic_m_per_sec(float m3ps);
   constexpr friend VolumetricFlow ml_per_min(float ml_per_min);
   constexpr friend VolumetricFlow liters_per_sec(float lps);
-  constexpr friend VolumetricFlow ml_per_sec(float mmps);
+  constexpr friend VolumetricFlow ml_per_sec(float mlps);
 
-  using units_detail::ArithScalar<VolumetricFlow, float>::ArithScalar;
+  using UnitsDetail::ArithScalar<VolumetricFlow, float>::ArithScalar;
 };
 
 constexpr VolumetricFlow cubic_m_per_sec(float m3ps) {
@@ -279,8 +283,8 @@ constexpr VolumetricFlow ml_per_min(float ml_per_min) {
 constexpr VolumetricFlow liters_per_sec(float lps) {
   return VolumetricFlow(lps / (1000.0f));
 }
-constexpr VolumetricFlow ml_per_sec(float mmps) {
-  return VolumetricFlow(mmps / (1.0e6f));
+constexpr VolumetricFlow ml_per_sec(float mlps) {
+  return VolumetricFlow(mlps / (1.0e6f));
 }
 
 // Represents volume.
@@ -296,7 +300,7 @@ constexpr VolumetricFlow ml_per_sec(float mmps) {
 //
 // Multiplying a VolumetricFlow by a Duration (see below) gives you a Volume.
 // Dividing a Volume by a Duration gives you a VolumetricFlow.
-class Volume : public units_detail::ArithScalar<Volume, float> {
+class Volume : public UnitsDetail::ArithScalar<Volume, float> {
 public:
   [[nodiscard]] constexpr float cubic_m() const { return val_; }
   [[nodiscard]] constexpr float ml() const { return val_ * 1000.0f * 1000.0f; }
@@ -305,7 +309,7 @@ private:
   constexpr friend Volume cubic_m(float m3);
   constexpr friend Volume ml(float ml);
 
-  using units_detail::ArithScalar<Volume, float>::ArithScalar;
+  using UnitsDetail::ArithScalar<Volume, float>::ArithScalar;
 };
 
 constexpr Volume cubic_m(float m3) { return Volume(m3); }
@@ -316,14 +320,14 @@ constexpr Volume ml(float ml) { return Volume(ml / (1000.0f * 1000.0f)); }
 // Precision: float.
 //
 // Units: Volts
-class Voltage : public units_detail::ArithScalar<Voltage, float> {
+class Voltage : public UnitsDetail::ArithScalar<Voltage, float> {
 public:
   [[nodiscard]] constexpr float volts() const { return val_; }
 
 private:
   constexpr friend Voltage volts(float v);
 
-  using units_detail::ArithScalar<Voltage, float>::ArithScalar;
+  using UnitsDetail::ArithScalar<Voltage, float>::ArithScalar;
 };
 
 constexpr Voltage volts(float v) { return Voltage(v); }
@@ -370,7 +374,7 @@ class Time;
 // This is unfortunate, but the alternative (not offering a
 // milliseconds(int64_t) factory) is worse, because converting an int64
 // milliseconds to float may lose useful precision.
-class Duration : public units_detail::ArithScalar<Duration, int64_t> {
+class Duration : public UnitsDetail::ArithScalar<Duration, int64_t> {
 public:
   [[nodiscard]] constexpr int64_t microseconds() const { return val_; }
   [[nodiscard]] constexpr float milliseconds() const {
@@ -389,7 +393,7 @@ public:
 private:
   constexpr friend Duration microseconds(int64_t micros);
 
-  using units_detail::ArithScalar<Duration, int64_t>::ArithScalar;
+  using UnitsDetail::ArithScalar<Duration, int64_t>::ArithScalar;
 };
 
 constexpr Duration microseconds(int64_t micros) { return Duration(micros); }
@@ -420,7 +424,7 @@ constexpr Duration minutes(float mins) { return seconds(mins * 60); }
 //  - microseconds
 //
 // Native unit (implementation detail): uint64_t microseconds
-class Time : public units_detail::Scalar<Time, uint64_t> {
+class Time : public UnitsDetail::Scalar<Time, uint64_t> {
 public:
   [[nodiscard]] uint64_t microsSinceStartup() const { return val_; }
 
@@ -434,7 +438,7 @@ public:
 private:
   constexpr friend Time microsSinceStartup(uint64_t micros);
 
-  using units_detail::Scalar<Time, uint64_t>::Scalar;
+  using UnitsDetail::Scalar<Time, uint64_t>::Scalar;
 };
 
 constexpr Time microsSinceStartup(uint64_t micros) { return Time(micros); }

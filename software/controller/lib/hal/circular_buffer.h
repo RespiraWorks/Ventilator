@@ -13,8 +13,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#ifndef CIRCULAR_BUFFER_H_
-#define CIRCULAR_BUFFER_H_
+#ifndef CIRCULAR_BUFFER_H
+#define CIRCULAR_BUFFER_H
 
 #include "hal.h"
 #include <optional>

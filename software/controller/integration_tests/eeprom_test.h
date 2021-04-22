@@ -59,9 +59,9 @@ static DebugUInt32 dbg_addr_after("eeprom_after",
 static DebugUInt32 dbg_test_result("result", "result of the test", 0);
 
 // test parameters
-static constexpr uint16_t address{TEST_PARAM_1};
-static constexpr uint8_t data{TEST_PARAM_2};
-static constexpr uint16_t length{TEST_PARAM_3};
+static constexpr uint16_t kAddress{TEST_PARAM_1};
+static constexpr uint8_t kData{TEST_PARAM_2};
+static constexpr uint16_t kLength{TEST_PARAM_3};
 
 // declaration of EEPROM
 static I2Ceeprom eeprom = I2Ceeprom(0x50, 64, 32768, &i2c1);
@@ -86,23 +86,23 @@ static Debug::Interface debug(&trace, 12, Debug::Command::Code::kMode,
                               Debug::Command::Code::kEepromAccess,
                               &eeprom_command);
 
-void run_test() {
-  Hal.init();
-  uint8_t eeprom_before[length];
-  uint8_t write_data[length];
-  uint8_t eeprom_after[length];
+void RunTest() {
+  hal.Init();
+  uint8_t eeprom_before[kLength];
+  uint8_t write_data[kLength];
+  uint8_t eeprom_after[kLength];
   bool second_read_finished{false};
 
-  for (int i = 0; i < length; ++i) {
-    write_data[i] = data;
+  for (int i = 0; i < kLength; ++i) {
+    write_data[i] = kData;
   }
 
-  Hal.BuzzerOn(0.1f);
-  eeprom.ReadBytes(address, length, &eeprom_before, nullptr);
+  hal.BuzzerOn(0.1f);
+  eeprom.ReadBytes(kAddress, kLength, &eeprom_before, nullptr);
 
-  eeprom.WriteBytes(address, length, &write_data, nullptr);
+  eeprom.WriteBytes(kAddress, kLength, &write_data, nullptr);
 
-  eeprom.ReadBytes(address, length, &eeprom_after, &second_read_finished);
+  eeprom.ReadBytes(kAddress, kLength, &eeprom_after, &second_read_finished);
 
   dbg_addr_before.Set(reinterpret_cast<uint32_t>(&eeprom_before));
   dbg_write_data.Set(reinterpret_cast<uint32_t>(&write_data));
@@ -112,11 +112,11 @@ void run_test() {
   // (through DMA and/or hardware interrupts), with a 500 ms timeout: our I2C
   // bus is 400 kb/s, each of these operations should take less than 100 ms,
   // unless they are too big for our design anyway.
-  while (!second_read_finished && Hal.now() < microsSinceStartup(500000)) {
+  while (!second_read_finished && hal.Now() < microsSinceStartup(500000)) {
   };
 
   bool failed = false;
-  for (int i = 0; i < length; i++) {
+  for (int i = 0; i < kLength; i++) {
     if (eeprom_after[i] != write_data[i]) {
       failed = true;
       break;
@@ -128,15 +128,15 @@ void run_test() {
   // Put the memory back in its initial state (note that if the initial read
   // failed, or the write method is broken, this will also fail and the eeprom
   // will end up in an undefined state).
-  eeprom.WriteBytes(address, length, &eeprom_before, nullptr);
+  eeprom.WriteBytes(kAddress, kLength, &eeprom_before, nullptr);
 
   // loop here to allow the above write to be processed, the buzzer to be
   // stopped after some time, and to process debug interface commands.
   while (true) {
 
     // stop the buzzer after 1 second if the test is a success
-    if (!failed && Hal.now() > microsSinceStartup(1000000)) {
-      Hal.BuzzerOff();
+    if (!failed && hal.Now() > microsSinceStartup(1000000)) {
+      hal.BuzzerOff();
     }
 
     debug.Poll();

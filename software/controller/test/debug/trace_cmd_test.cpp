@@ -41,10 +41,10 @@ TEST(TraceHandler, Flush) {
   // define some debug variables
   uint32_t i = 0;
   FnDebugVar var_x(
-      VarType::UINT32, "x", "", "", [&] { return i; },
+      VarType::kUInt32, "x", "", "", [&] { return i; },
       [&](uint32_t value) { (void)value; });
   FnDebugVar var_y(
-      VarType::UINT32, "x", "", "", [&] { return i * 10; },
+      VarType::kUInt32, "x", "", "", [&] { return i * 10; },
       [&](uint32_t value) { (void)value; });
 
   // define trace and trace handler
@@ -85,10 +85,10 @@ TEST(TraceHandler, Read) {
   // define some debug variables
   uint32_t i = 0;
   FnDebugVar var_x(
-      VarType::UINT32, "x", "", "", [&] { return i; },
+      VarType::kUInt32, "x", "", "", [&] { return i; },
       [&](uint32_t value) { (void)value; });
   FnDebugVar var_y(
-      VarType::UINT32, "y", "", "", [&] { return i * 10; },
+      VarType::kUInt32, "y", "", "", [&] { return i * 10; },
       [&](uint32_t value) { (void)value; });
 
   // define trace and trace handler

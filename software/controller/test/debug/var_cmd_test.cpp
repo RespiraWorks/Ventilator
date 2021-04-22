@@ -29,7 +29,7 @@ TEST(VarHandler, GetVarInfo) {
   DebugVar var(name, &value, help, format);
 
   // expected result is hand-built from format given in var_cmd.cpp
-  std::vector<uint8_t> expected = {static_cast<uint8_t>(VarType::UINT32),
+  std::vector<uint8_t> expected = {static_cast<uint8_t>(VarType::kUInt32),
                                    0,
                                    0,
                                    0,

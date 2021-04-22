@@ -13,8 +13,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#ifndef TRACE_H_
-#define TRACE_H_
+#ifndef TRACE_H
+#define TRACE_H
 
 #include "circular_buffer.h"
 #include "vars.h"
@@ -116,4 +116,4 @@ private:
 
 } // namespace Debug
 
-#endif // TRACE_H_
+#endif // TRACE_H

@@ -61,7 +61,7 @@ bool Interface::Poll() {
   case State::kAwaitingResponse:
     if (command_processed_) {
       SendResponse(ErrorCode::kNone, response_length_);
-    } else if (Hal.now() > command_start_time_ + milliseconds(100)) {
+    } else if (hal.Now() > command_start_time_ + milliseconds(100)) {
       SendError(ErrorCode::kTimeout);
     }
     return false;
@@ -81,7 +81,7 @@ bool Interface::Poll() {
 bool Interface::ReadNextByte() {
   // Get the next byte from the debug serial port if there is one.
   char next_char;
-  if (Hal.debugRead(&next_char, 1) < 1)
+  if (hal.DebugRead(&next_char, 1) < 1)
     return false;
 
   uint8_t byte = static_cast<uint8_t>(next_char);
@@ -122,7 +122,7 @@ bool Interface::SendNextByte() {
 
   // To simplify things below, I require at least 3 bytes
   // in the output buffer to continue
-  if (Hal.debugBytesAvailableForWrite() < 3)
+  if (hal.DebugBytesAvailableForWrite() < 3)
     return false;
 
   // See what the next character to send is.
@@ -134,9 +134,9 @@ bool Interface::SendNextByte() {
     char escaped_char[2];
     escaped_char[0] = static_cast<char>(SpecialChar::kEscape);
     escaped_char[1] = next_char;
-    (void)Hal.debugWrite(escaped_char, 2);
+    (void)hal.DebugWrite(escaped_char, 2);
   } else {
-    (void)Hal.debugWrite(&next_char, 1);
+    (void)hal.DebugWrite(&next_char, 1);
   }
 
   // If there's more response to send, return true
@@ -147,7 +147,7 @@ bool Interface::SendNextByte() {
   // termination character and start waiting on the next
   // command.
   char end_transfer = static_cast<char>(SpecialChar::kEndTransfer);
-  (void)Hal.debugWrite(&end_transfer, 1);
+  (void)hal.DebugWrite(&end_transfer, 1);
 
   state_ = State::kAwaitingCommand;
   response_bytes_sent_ = 0;
@@ -201,7 +201,7 @@ void Interface::ProcessCommand() {
   }
 
   state_ = State::kAwaitingResponse;
-  command_start_time_ = Hal.now();
+  command_start_time_ = hal.Now();
   response_length_ = context.response_length;
 }
 
@@ -221,14 +221,14 @@ void Interface::SendResponse(ErrorCode error, uint32_t response_length) {
 
 // 16-bit CRC calculation for debug commands and responses
 uint16_t Interface::ComputeCRC(const uint8_t *buffer, size_t length) {
-  const uint16_t CRC16POLY = 0xA001;
-  static bool init = false;
-  static uint16_t crc_table[256];
+  static constexpr uint16_t kCRC16POLY = 0xA001;
+  static bool kInit = false;
+  static uint16_t kCrcTable[256];
 
   // The first time this is called I'll build a table
   // to speed up CRC handling
-  if (!init) {
-    init = true;
+  if (!kInit) {
+    kInit = true;
     for (uint16_t byte = 0; byte < 256; byte++) {
       uint16_t crc = byte;
 
@@ -236,17 +236,17 @@ uint16_t Interface::ComputeCRC(const uint8_t *buffer, size_t length) {
         bool lsb = (crc & 1) == 1;
         crc = static_cast<uint16_t>(crc >> 1);
         if (lsb)
-          crc ^= CRC16POLY;
+          crc ^= kCRC16POLY;
       }
 
-      crc_table[byte] = crc;
+      kCrcTable[byte] = crc;
     }
   }
 
   uint16_t crc = 0;
 
   for (uint32_t byte_number = 0; byte_number < length; byte_number++) {
-    uint16_t local_crc = crc_table[0xFF & (buffer[byte_number] ^ crc)];
+    uint16_t local_crc = kCrcTable[0xFF & (buffer[byte_number] ^ crc)];
 
     crc = static_cast<uint16_t>(local_crc ^ (crc >> 8));
   }

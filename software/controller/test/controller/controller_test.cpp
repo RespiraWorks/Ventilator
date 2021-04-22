@@ -140,7 +140,7 @@ void actuatorsTestSequence(const std::vector<ActuatorsTest> &seq) {
   constexpr float kValveStateTolerance{.001f};
 
   // Reset time to test's start time.
-  Hal.delay(seq.front().time - Hal.now());
+  hal.Delay(seq.front().time - hal.Now());
 
   Controller controller;
   VentParams last_params = VentParams_init_zero;
@@ -157,15 +157,15 @@ void actuatorsTestSequence(const std::vector<ActuatorsTest> &seq) {
 
     SCOPED_TRACE("time = " + actuators_test.time.microsSinceStartup() / 1000);
     // Move time forward to t in steps of Controller::GetLoopPeriod().
-    while (Hal.now() < actuators_test.time) {
-      Hal.delay(Controller::GetLoopPeriod());
-      (void)controller.Run(Hal.now(), last_params, last_readings);
+    while (hal.Now() < actuators_test.time) {
+      hal.Delay(Controller::GetLoopPeriod());
+      (void)controller.Run(hal.Now(), last_params, last_readings);
     }
     EXPECT_EQ(actuators_test.time.microsSinceStartup(),
-              Hal.now().microsSinceStartup());
+              hal.Now().microsSinceStartup());
 
     auto [act_state, unused_status] = controller.Run(
-        Hal.now(), actuators_test.params, actuators_test.readings);
+        hal.Now(), actuators_test.params, actuators_test.readings);
     (void)unused_status;
 
     EXPECT_FLOAT_EQ(act_state.blower_power,

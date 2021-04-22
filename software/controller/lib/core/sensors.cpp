@@ -88,11 +88,11 @@ void Sensors::Calibrate() {
   // It seems that we'll need to save calibration readings to non-volatile
   // memory and provide operators with a way to shut off the device's blowers,
   // open any necessary valves, and recalibrate.
-  Hal.delay(milliseconds(20));
+  hal.Delay(milliseconds(20));
 
   for (Sensor s : {Sensor::kPatientPressure, Sensor::kInflowPressureDiff,
                    Sensor::kOutflowPressureDiff, Sensor::kFIO2}) {
-    sensors_zero_vals_[static_cast<int>(s)] = Hal.analogRead(PinFor(s));
+    sensors_zero_vals_[static_cast<int>(s)] = hal.AnalogRead(PinFor(s));
   }
 }
 
@@ -108,7 +108,7 @@ Pressure Sensors::ReadPressureSensor(Sensor s) const {
   // our ADC.  Therefore, if we multiply the received voltage by 5/3.3, we get
   // a pressure in kPa.
   static const float kPressureSensorGain{5.f / 3.3f};
-  return kPa(kPressureSensorGain * (Hal.analogRead(PinFor(s)) -
+  return kPa(kPressureSensorGain * (hal.AnalogRead(PinFor(s)) -
                                     sensors_zero_vals_[static_cast<int>(s)])
                                        .volts());
 }
@@ -133,7 +133,7 @@ float Sensors::ReadOxygenSensor(Pressure p_ambient) const {
   static const float kOxygenSensorGain{0.060f};
 
   // TODO: raise alarm if fio2 is out of expected (0,1) range
-  return (Hal.analogRead(PinFor(Sensor::kFIO2)) -
+  return (hal.AnalogRead(PinFor(Sensor::kFIO2)) -
           sensors_zero_vals_[static_cast<int>(Sensor::kFIO2)])
                  .volts() /
              (kAmplifierGain * kOxygenSensorGain) / p_ambient.atm() +
@@ -148,13 +148,13 @@ VolumetricFlow Sensors::PressureDeltaToFlow(Pressure delta) {
     return static_cast<float>(M_PI) / 4.0f * pow2(diameter.meters());
   };
 
-  float portArea = diameter_to_area_m2(kVenturiPortDiameter);
-  float chokeArea = diameter_to_area_m2(kVenturiChokeDiameter);
+  float port_area = diameter_to_area_m2(kVenturiPortDiameter);
+  float choke_area = diameter_to_area_m2(kVenturiChokeDiameter);
   return cubic_m_per_sec(
       kVenturiCorrection *
       std::copysign(std::sqrt(std::abs(delta.kPa()) * 1000.0f), delta.kPa()) *
-      std::sqrt(2 / kDensityOfAirKgPerCubicMeter) * portArea * chokeArea /
-      std::sqrt(pow2(portArea) - pow2(chokeArea)));
+      std::sqrt(2 / kDensityOfAirKgPerCubicMeter) * port_area * choke_area /
+      std::sqrt(pow2(port_area) - pow2(choke_area)));
 }
 
 SensorReadings Sensors::GetReadings() const {

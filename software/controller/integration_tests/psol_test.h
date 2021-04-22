@@ -11,31 +11,31 @@
 #include "hal.h"
 
 // test parameters
-static constexpr int64_t delay_ms{10};
-static constexpr float psol_min{TEST_PARAM_1};
-static constexpr float psol_max{TEST_PARAM_2};
-static constexpr float initial_step{TEST_PARAM_3};
+static constexpr Duration kDelay{milliseconds(10)};
+static constexpr float kPSolMin{TEST_PARAM_1};
+static constexpr float kPSolMax{TEST_PARAM_2};
+static constexpr float kInitialStep{TEST_PARAM_3};
 
-void run_test() {
-  Hal.init();
+void RunTest() {
+  hal.Init();
 
-  float psol_position = psol_min;
-  float step = initial_step;
+  float psol_position = kPSolMin;
+  float step = kInitialStep;
 
   while (true) {
-    Hal.PSOL_Value(psol_position);
-    Hal.delay(milliseconds(delay_ms));
+    hal.PSolValue(psol_position);
+    hal.Delay(kDelay);
 
-    Hal.watchdog_handler();
+    hal.WatchdogHandler();
 
     psol_position += step;
-    if (psol_position >= psol_max) {
+    if (psol_position >= kPSolMax) {
       // switch to ramp-down state
-      psol_position = psol_max;
+      psol_position = kPSolMax;
       step = -step;
-    } else if (psol_position <= psol_min) {
+    } else if (psol_position <= kPSolMin) {
       // switch to ramp-up state
-      psol_position = psol_min;
+      psol_position = kPSolMin;
       step = -step;
     }
   }

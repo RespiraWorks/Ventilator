@@ -186,23 +186,23 @@ public:
   // the channel using DMA if possible. If DMA_Reg is invalid (or that DMA
   // cannot be linked to this I²C), dma is disabled and all transfers are
   // handled in software.
-  void Init(I2C_Regs *i2c, DMA_Regs *dma, Speed speed);
+  void Init(I2CReg *i2c, DmaReg *dma, Speed speed);
   // Interrupt handlers for DMA, which only makes sense on the STM32
-  void DMAIntHandler(DMA_Chan chan);
+  void DMAIntHandler(DmaChannel chan);
 
 private:
-  I2C_Regs *i2c_{nullptr};
-  DMA_Regs *dma_{nullptr};
-  volatile DMA_Regs::ChannelRegs *rx_channel_{nullptr};
-  volatile DMA_Regs::ChannelRegs *tx_channel_{nullptr};
+  I2CReg *i2c_{nullptr};
+  DmaReg *dma_{nullptr};
+  volatile DmaReg::ChannelRegs *rx_channel_{nullptr};
+  volatile DmaReg::ChannelRegs *tx_channel_{nullptr};
 
   void SetupI2CTransfer() override; // configure a transfer
   void ReceiveByte() override {
-    *next_data_ = static_cast<uint8_t>(i2c_->rxData);
+    *next_data_ = static_cast<uint8_t>(i2c_->rx_data);
   };
-  void SendByte() override { i2c_->txData = *next_data_; };
+  void SendByte() override { i2c_->tx_data = *next_data_; };
   void WriteTransferSize() override;
-  void StopTransfer() override { i2c_->ctrl2.stop = 1; };
+  void StopTransfer() override { i2c_->control2.stop = 1; };
 
   // Override interrupt getters:
   bool NextByteNeeded() const override {
@@ -214,11 +214,11 @@ private:
   };
   bool NackDetected() const override { return i2c_->status.nack; };
   // Override Interrupt clear
-  void ClearNack() override { i2c_->intClr = 0x10; }
-  void ClearErrors() override { i2c_->intClr = 0x720; }
+  void ClearNack() override { i2c_->interrupt_clear = 0x10; }
+  void ClearErrors() override { i2c_->interrupt_clear = 0x720; }
 
-  void SetupDMAChannels(DMA_Regs *dma);
-  void ConfigureDMAChannel(volatile DMA_Regs::ChannelRegs *channel,
+  void SetupDMAChannels(DmaReg *dma);
+  void ConfigureDMAChannel(volatile DmaReg::ChannelRegs *channel,
                            ExchangeDirection direction);
   void SetupDMATransfer();
 };
@@ -228,10 +228,10 @@ class TestChannel : public Channel {
 public:
   TestChannel() = default;
   // in test mode, setters and getters for faked sent/received data
-  std::optional<uint8_t> TEST_GetSentData() { return sent_buffer_.Get(); };
-  bool TEST_QueueReceiveData(uint8_t data) { return rx_buffer_.Put(data); };
+  std::optional<uint8_t> TESTGetSentData() { return sent_buffer_.Get(); };
+  bool TESTQueueReceiveData(uint8_t data) { return rx_buffer_.Put(data); };
   // setter to simulate Nack received
-  void TEST_SimulateNack() { nack_ = true; };
+  void TESTSimulateNack() { nack_ = true; };
 
 private:
   // in test mode, fake sending and receiving data through circular
@@ -245,8 +245,8 @@ private:
 
   // mock the sending and receiving of bytes from internal buffers
   void SendByte() override {
-    bool OK = sent_buffer_.Put(*next_data_);
-    if (OK)
+    bool ok = sent_buffer_.Put(*next_data_);
+    if (ok)
       return;
   };
   void ReceiveByte() override {

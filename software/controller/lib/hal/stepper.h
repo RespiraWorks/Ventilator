@@ -44,8 +44,8 @@ limitations under the License.
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#ifndef STEPPER_H_
-#define STEPPER_H_
+#ifndef STEPPER_H
+#define STEPPER_H
 
 #include <stdint.h>
 
@@ -53,78 +53,80 @@ limitations under the License.
 // Not included here are set/get parameter which include
 // the parameter ID value as part of the code.
 enum class StepMtrCmd : uint8_t {
-  NOP = 0,             // Used when there's no other command to send
-  RUN_NEG = 0x50,      // Run negative at constant speed.
-  RUN_POS = 0x51,      // Run positive at constant speed.
-  STEP_CLK_NEG = 0x58, // Switch to step clock mode moving in negative direction
-  STEP_CLK_POS = 0x59, // Switch to step clock mode moving in positive direction
-  MOVE_NEG = 0x40,     // Move - steps, steps is given as a parameter
-  MOVE_POS = 0x41,     // Move + steps, steps is given as a parameter
-  GOTO = 0x60,         // Go to an absolute position using shortest path
-  GOTO_NEG = 0x68,     // Go to an absolute position in negative direction
-  GOTO_POS = 0x69,     // Go to an absolute position in positive direction
-  HOME = 0x70,         // Same as GOTO 0
-  RESET_POS = 0xD8,    // Set absolute position register to 0
-  RESET_DEVICE = 0xC0, // Reset the stepper chip
-  SOFT_STOP = 0xB0,    // Perform a soft stop
-  HARD_STOP = 0xB8,    // Perform a hard stop
-  SOFT_DISABLE = 0xA0, // Soft stop, then disable
-  HARD_DISABLE = 0xA8, // Hard stop, then disable
-  GET_STATUS = 0xD0,   // Read the 16-bit status word
+  kNop = 0,            // Used when there's no other command to send
+  kRunNegative = 0x50, // Run negative at constant speed.
+  kRunPositive = 0x51, // Run positive at constant speed.
+  kStepClockNegative =
+      0x58, // Switch to step clock mode moving in negative direction
+  kStepClockPositive =
+      0x59, // Switch to step clock mode moving in positive direction
+  kMoveNegative = 0x40,  // Move - steps, steps is given as a parameter
+  kMovePositive = 0x41,  // Move + steps, steps is given as a parameter
+  kGoTo = 0x60,          // Go to an absolute position using shortest path
+  kGoToNegative = 0x68,  // Go to an absolute position in negative direction
+  kGoToPositive = 0x69,  // Go to an absolute position in positive direction
+  kHome = 0x70,          // Same as kGoTo 0
+  kResetPosition = 0xD8, // Set absolute position register to 0
+  kResetDevice = 0xC0,   // Reset the stepper chip
+  kSoftStop = 0xB0,      // Perform a soft stop
+  kHardStop = 0xB8,      // Perform a hard stop
+  kSoftDisable = 0xA0,   // Soft stop, then disable
+  kHardDisable = 0xA8,   // Hard stop, then disable
+  kGetStatus = 0xD0,     // Read the 16-bit status word
 };
 
 enum class StepMtrParam : uint8_t {
-  ABS_POS = 0x01,           // Absolute position
-  ELE_POS = 0x02,           // Electrical position
-  MARK_POS = 0x03,          // Mark position
-  SPEED = 0x04,             // Current speed
-  ACCEL = 0x05,             // Acceleration
-  DECEL = 0x06,             // Deceleration
-  MAX_SPEED = 0x07,         // Maximum allowed speed
-  MIN_SPEED = 0x08,         // Minimum allowed speed
-  KVAL_HOLD = 0x09,         //
-  KVAL_RUN = 0x0A,          //
-  KVAL_ACCEL = 0x0B,        //
-  KVAL_DECEL = 0x0C,        //
-  INT_SPEED = 0x0D,         //
-  START_SLOPE = 0x0E,       //
-  FINAL_SLOPE_ACCEL = 0x0F, //
-  FINAL_SLOPE_DECEL = 0x10, //
-  THERMAL_COMP = 0x11,      //
-  ADC_OUT = 0x12,           //
-  OVER_CRNT_THRESH = 0x13,  //
-  STALL_THRESH = 0x14,      //
-  FULL_STEP_SPEED = 0x15,   // Speed at which to switch to full step mode
-  STEP_MODE = 0x16,         //
-  ALARM_ENA = 0x17,         //
-  GATE_CFG1 = 0x18,         //
-  GATE_CFG2 = 0x19,         //
-  CONFIG = 0x1A,            //
-  STATUS = 0x1B,            //
+  kAbsolutePosition = 0x01,         // Absolute position
+  kElectricalPosition = 0x02,       // Electrical position
+  kMarkPosition = 0x03,             // Mark position
+  kSpeed = 0x04,                    // Current speed
+  kAcceleration = 0x05,             // Acceleration
+  kDeceleration = 0x06,             // Deceleration
+  kMaxSpeed = 0x07,                 // Maximum allowed speed
+  kMinSpeed = 0x08,                 // Minimum allowed speed
+  kKValueHold = 0x09,               //
+  kKValueRun = 0x0A,                //
+  kKValueAccelerate = 0x0B,         //
+  kKValueDecelerate = 0x0C,         //
+  kIntersectSpeed = 0x0D,           //
+  kStartSlope = 0x0E,               //
+  kFinalSlopeAcceleration = 0x0F,   //
+  kFinalSlopeDeceleration = 0x10,   //
+  kThermalCompensation = 0x11,      //
+  kAdcOutput = 0x12,                //
+  kOverrideCurrentThreshold = 0x13, //
+  kStallThreshold = 0x14,           //
+  kFullStepSpeed = 0x15, // Speed at which to switch to full step mode
+  kStepMode = 0x16,      //
+  kAlarmEnable = 0x17,   //
+  kGateConfig1 = 0x18,   //
+  kGateConfig2 = 0x19,   //
+  kConfig = 0x1A,        //
+  kStatus = 0x1B,        //
 };
 
 // Error codes returned by my functions
 enum class StepMtrErr {
-  OK,
-  BAD_PARAM,     // The parameter ID is invalid
-  BAD_VALUE,     // Illegal value passed
-  WOULD_BLOCK,   // Call would block, can't be called from within ISR
-  QUEUE_FULL,    // Can't add command to queue, not enough space
-  INVALID_STATE, // Invalid state for command.
+  kOk,
+  kBadParam,     // The parameter ID is invalid
+  kBadValue,     // Illegal value passed
+  kWouldBlock,   // Call would block, can't be called from within ISR
+  kQueueFull,    // Can't add command to queue, not enough space
+  kInvalidState, // Invalid state for command.
 };
 
 // States for the stepper motor communication interface
 enum class StepCommState {
-  IDLE,        // Not currently communicating
-  SEND_QUEUED, // Sending data that was queued up by control loop
-  SEND_SYNC,   // Sending data that the background thread is waiting on.
+  kIdle,       // Not currently communicating
+  kSendQueued, // Sending data that was queued up by control loop
+  kSendSync,   // Sending data that the background thread is waiting on.
 };
 
 enum class StepMoveStatus {
-  STOPPED,
-  ACCELERATING,
-  DECELERATING,
-  CONSTANT_SPEED,
+  kStopped,
+  kAccelerating,
+  kDecelerating,
+  kConstantSpeed,
 };
 
 // Detailed status about the stepper driver chip.
@@ -156,7 +158,7 @@ struct StepperStatus {
   bool command_error{false};
 
   // Specifics of the move status
-  StepMoveStatus move_status{StepMoveStatus::STOPPED};
+  StepMoveStatus move_status{StepMoveStatus::kStopped};
 };
 
 // Represents one of the stepper motors in the system
@@ -341,7 +343,7 @@ private:
 public:
   // Interrupt service routine.
   // This has to be public, but don't call it.
-  static void DMA_ISR();
+  static void DmaISR();
 
   // This function should only be called by the HAL
   // at the end of the high priority loop timer ISR

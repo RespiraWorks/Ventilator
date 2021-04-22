@@ -23,8 +23,8 @@ limitations under the License.
 // When running in test mode, HalApi is pedantically a fake, not a mock.  All
 // that means is that the methods have "fake" implementations, trying to
 // loosely mimic the hardware in some defined way.  For example, instead of
-// telling the actual amount of time since boot, millis() stays constant, and
-// doesn't advance unless you call delay().
+// telling the actual amount of time since boot, Now() stays constant, and
+// doesn't advance unless you call Delay().
 //
 // It would be possible to mock some methods in HAL if we needed to.  A mock is
 // a method whose behavior can be controlled by the test itself; it might do
@@ -64,18 +64,18 @@ limitations under the License.
 // ---------------------------------------------------------------
 
 // Mode of a digital pin.
-// Usage: PinMode::INPUT etc.
+// Usage: PinMode::kInput etc.
 enum class PinMode {
-  // Test code relies on INPUT being the first enumeration (to get the
-  // behavior that INPUT pins are the default).
-  INPUT,
-  OUTPUT,
-  INPUT_PULLUP
+  // Test code relies on kInput being the first enumeration (to get the
+  // behavior that kInput pins are the default).
+  kInput,
+  kOutput,
+  kInputPullup
 };
 
 // Voltage level of a digital pin.
-// Usage: VoltageLevel::HIGH, LOW
-enum class VoltageLevel { HIGH, LOW };
+// Usage: VoltageLevel::kHigh, kLow
+enum class VoltageLevel { kHigh, kLow };
 
 enum class AnalogPin {
   // MPXV5004DP pressure sensors:
@@ -92,24 +92,24 @@ enum class AnalogPin {
 // Pulse-width modulated outputs from the controller.  These can be set to
 // values in [0-255].
 //
-// Pins default to INPUT, so if you add a new pin here, be sure to update
-// HalApi::init() and set it to OUTPUT!
+// Pins default to kInput, so if you add a new pin here, be sure to update
+// HalApi::Init() and set it to kOutput!
 enum class PwmPin {
   // Controls the fan speed.
-  BLOWER,
+  kBlower,
 };
 
-// Binary pins set by the controller -- these are booleans, HIGH or LOW.
+// Binary pins set by the controller -- these are booleans, kHigh or kLow.
 //
 // PWM pins can of course be HIGH or LOW too, but we separate out purely on/off
 // pins from PWM pins for reasons of "strong typing".
 //
-// Pins default to INPUT, so if you add a new pin here, be sure to update
-// HalApi::init() and set it to OUTPUT!
+// Pins default to kInput, so if you add a new pin here, be sure to update
+// HalApi::Init() and set it to kOutput!
 enum class BinaryPin {
-  LED_RED,
-  LED_YELLOW,
-  LED_GREEN,
+  kRedLED,
+  kYellowLED,
+  kGreenLED,
 };
 
 // Interrupts on the STM32 are prioritized.  This allows
@@ -122,9 +122,9 @@ enum class BinaryPin {
 // priority of -1, so they can always interrupt any other
 // priority level.
 enum class IntPriority {
-  CRITICAL = 2, // Very important interrupt
-  STANDARD = 5, // Normal hardware interrupts
-  LOW = 8,      // Less important.  Hardware interrupts can interrupt this
+  kCritical = 2, // Very important interrupt
+  kStandard = 5, // Normal hardware interrupts
+  kLow = 8,      // Less important.  Hardware interrupts can interrupt this
 };
 
 enum class InterruptVector;
@@ -147,41 +147,41 @@ private:
 
 // Singleton class which implements a hardware abstraction layer.
 //
-// Access this via the `Hal` global variable, e.g. `Hal.millis()`.
+// Access this via the `hal` global variable, e.g. `hal.millis()`.
 //
 // TODO: Make Hal a namespace rather than a class.  Then this header won't need
 // any ifdefs for different platforms, and all of the "global variables" can
 // move into the hal_foo.cpp files.
 class HalApi {
 public:
-  void init();
+  void Init();
 
   // Amount of time that has passed since the board started running the
   // program.
   //
-  // Faked when testing.  Time doesn't advance unless you call delay().
-  Time now();
+  // Faked when testing.  Time doesn't advance unless you call Delay().
+  Time Now();
 
   // Sleeps for some number of milliseconds.
   //
   // Faked when testing.  Does not sleep, but does advance the time returned
   // by millis().
-  void delay(Duration d);
+  void Delay(Duration d);
 
-  // Caveat for people new to Arduino: analogRead and analogWrite are
+  // Caveat for people new to Arduino: AnalogRead and AnalogWrite are
   // completely separate from each other and do not even refer to the same
-  // pins. analogRead() reads the value of an analog input pin. analogWrite()
+  // pins. AnalogRead() reads the value of an analog input pin. AnalogWrite()
   // writes to a PWM pin - some of the digital pins are PWM pins.
 
   // Reads from analog sensor using an analog-to-digital converter.
   //
   // Returns a voltage.  On STM32 this can range from 0 to 3.3V.
   //
-  // In test mode, will return the last value set via test_setAnalogPin.
-  Voltage analogRead(AnalogPin pin);
+  // In test mode, will return the last value set via TESTSetAnalogPin.
+  Voltage AnalogRead(AnalogPin pin);
 
 #ifdef TEST_MODE
-  void test_setAnalogPin(AnalogPin pin, Voltage value);
+  void TESTSetAnalogPin(AnalogPin pin, Voltage value);
 #endif
 
   // Causes `pin` to output a square wave with the given duty cycle (range
@@ -189,45 +189,45 @@ public:
   //
   // Perhaps a better name would be "pwmWrite", but we also want to be
   // somewhat consistent with the Arduino API that people are familiar with.
-  void analogWrite(PwmPin pin, float duty);
+  void AnalogWrite(PwmPin pin, float duty);
 
   // Sets `pin` to high or low.
-  void digitalWrite(BinaryPin pin, VoltageLevel value);
+  void DigitalWrite(BinaryPin pin, VoltageLevel value);
 
   // Receives bytes from the GUI controller along the serial bus.
   //
-  // Arduino's SerialIO will block if len > serialBytesAvailableForRead(), but
+  // Arduino's SerialIO will block if len > SerialBytesAvailableForRead(), but
   // this function will never block. Instead it returns the number of bytes
   // read.  It's up to you to check how many bytes were actually read and
   // handle "short reads" where we read fewer bytes than were requested.
   //
   // TODO(jlebar): Change the serial* functions to use uint32_t once we've
   // dropped support for Arduino.
-  [[nodiscard]] uint16_t serialRead(char *buf, uint16_t len);
+  [[nodiscard]] uint16_t SerialRead(char *buf, uint16_t len);
 
   // Number of bytes we can read without blocking.
-  uint16_t serialBytesAvailableForRead();
+  uint16_t SerialBytesAvailableForRead();
 
   // Sends bytes to the GUI controller along the serial bus.
   //
-  // Arduino's SerialIO will block if len > serialBytesAvailableForWrite(),
+  // Arduino's SerialIO will block if len > SerialBytesAvailableForWrite(),
   // but this function will never block.  Instead, it returns the number of
   // bytes written.  number of bytes written.  It's up to you to check how
   // many bytes were actually written and handle "short writes" where we wrote
   // less than the whole buffer.
-  [[nodiscard]] uint16_t serialWrite(const char *buf, uint16_t len);
-  [[nodiscard]] uint16_t serialWrite(uint8_t data) {
-    return serialWrite(reinterpret_cast<const char *>(&data), 1);
+  [[nodiscard]] uint16_t SerialWrite(const char *buf, uint16_t len);
+  [[nodiscard]] uint16_t SerialWrite(uint8_t data) {
+    return SerialWrite(reinterpret_cast<const char *>(&data), 1);
   }
 
   // Number of bytes we can write without blocking.
-  uint16_t serialBytesAvailableForWrite();
+  uint16_t SerialBytesAvailableForWrite();
 
   // Serial port used for debugging
-  [[nodiscard]] uint16_t debugWrite(const char *buf, uint16_t len);
-  [[nodiscard]] uint16_t debugRead(char *buf, uint16_t len);
-  uint16_t debugBytesAvailableForWrite();
-  uint16_t debugBytesAvailableForRead();
+  [[nodiscard]] uint16_t DebugWrite(const char *buf, uint16_t len);
+  [[nodiscard]] uint16_t DebugRead(char *buf, uint16_t len);
+  uint16_t DebugBytesAvailableForWrite();
+  uint16_t DebugBytesAvailableForRead();
 
   // Buzzer used for alarms.  These functions turn the buzzer on/off.
   void BuzzerOn(float volume = 1.0f);
@@ -235,7 +235,7 @@ public:
 
   // PSOL (Proportional Solenoid) support
   void InitPSOL();
-  void PSOL_Value(float val);
+  void PSolValue(float val);
 
   // Erase a page of flash given the starting address of that page.
   bool FlashErasePage(uint32_t address);
@@ -253,20 +253,20 @@ public:
 
 #ifndef TEST_MODE
   // Translates to a numeric pin that can be passed to the Arduino API.
-  uint8_t rawPin(PwmPin pin);
-  uint8_t rawPin(AnalogPin pin);
-  uint8_t rawPin(BinaryPin pin);
+  uint8_t RawPin(PwmPin pin);
+  uint8_t RawPin(AnalogPin pin);
+  uint8_t RawPin(BinaryPin pin);
 
   // Perform some early chip initialization before static constructors are run
   void EarlyInit();
 
 #else
-  // Reads up to `len` bytes of data "sent" via serialWrite.  Returns the
+  // Reads up to `len` bytes of data "sent" via SerialWrite.  Returns the
   // total number of bytes read.
   //
   // TODO: Once we have explicit message framing, this should simply read one
   // message.
-  uint16_t test_serialGetOutgoingData(char *data, uint16_t len);
+  uint16_t TESTSerialGetOutgoingData(char *data, uint16_t len);
 
   // Simulates receiving serial data from the GUI controller.  Makes these
   // bytes available to be read by serialReadByte().
@@ -274,41 +274,41 @@ public:
   // Large buffers sent this way will be split into smaller buffers, to
   // simulate the fact that the Arduino has a small rx buffer.
   //
-  // Furthermore, serialRead() will not read across a
-  // test_serialPutIncomingData() boundary.  This allows you to test short
+  // Furthermore, SerialRead() will not read across a
+  // TESTSerialPutIncomingData() boundary.  This allows you to test short
   // reads.  For example, if you did
   //
   //   char buf1[8];
   //   char buf2[4];
-  //   Hal.test_serialPutIncomingData(buf1, 8);
-  //   Hal.test_serialPutIncomingData(buf2, 4);
+  //   hal.TESTSerialPutIncomingData(buf1, 8);
+  //   hal.TESTSerialPutIncomingData(buf2, 4);
   //
   // then the you'd have the following execution
   //
   //   char buf[16];
-  //   Hal.serialBytesAvailableForRead() == 8
-  //   Hal.serialRead(buf, 16) == 8
-  //   Hal.serialBytesAvailableForRead() == 4
-  //   Hal.serialRead(buf, 16) == 4
-  //   Hal.serialBytesAvailableForRead() == 0
+  //   hal.SerialBytesAvailableForRead() == 8
+  //   hal.SerialRead(buf, 16) == 8
+  //   hal.SerialBytesAvailableForRead() == 4
+  //   hal.SerialRead(buf, 16) == 4
+  //   hal.SerialBytesAvailableForRead() == 0
   //
-  void test_serialPutIncomingData(const char *data, uint16_t len);
+  void TESTSerialPutIncomingData(const char *data, uint16_t len);
 
   // Same as above, but for the debug serial port.
-  uint16_t test_debugGetOutgoingData(char *data, uint16_t len);
-  void test_debugPutIncomingData(const char *data, uint16_t len);
+  uint16_t TESTDebugGetOutgoingData(char *data, uint16_t len);
+  void TESTDebugPutIncomingData(const char *data, uint16_t len);
 #endif
 
   // Performs the device soft-reset
-  [[noreturn]] void reset_device();
+  [[noreturn]] void ResetDevice();
 
   // Start the loop timer
-  void startLoopTimer(const Duration &period, void (*callback)(void *),
+  void StartLoopTimer(const Duration &period, void (*callback)(void *),
                       void *arg);
 
   // Pets the watchdog, this makes the watchdog not reset the
   // system for configured amount of time
-  void watchdog_handler();
+  void WatchdogHandler();
 
   // Interrupt enable/disable functions.
   //
@@ -317,36 +317,36 @@ public:
   // NOTE: Interrupts should only be disabled for short periods of time and
   // only for very good reasons.  Leaving interrupts disabled for long can
   // cause loss of serial data and other bad effects.
-  void disableInterrupts();
-  void enableInterrupts();
+  void DisableInterrupts();
+  void EnableInterrupts();
 
   // Returns true if interrupts are currently enabled.
   //
   // Where possible, prefer using the BlockInterrupts RAII class.
-  bool interruptsEnabled() const;
+  bool InterruptsEnabled() const;
 
   // Return true if we are currently executing in an interrupt handler
   bool InInterruptHandler();
 
   // Calculate CRC32 for data buffer
-  uint32_t crc32(const uint8_t *data, uint32_t length);
+  uint32_t CRC32(const uint8_t *data, uint32_t length);
 
 private:
-  // Initializes watchdog, sets appropriate pins to OUTPUT, etc.  Called by
-  // HalApi::init
-  void watchdog_init();
+  // Initializes watchdog, sets appropriate pins to kOutput, etc.  Called by
+  // HalApi::Init
+  void WatchdogInit();
 
 #ifdef BARE_STM32
   // Initializes CRC32 peripheral
-  void crc32_init();
+  void CRC32Init();
   // Reset the hardware peripheral in STM32
-  void crc32_reset();
+  void CRC32Reset();
   // Accumulate CRC32 in STM32 hardware
-  void crc32_accumulate(uint8_t d);
+  void CRC32Accumulate(uint8_t d);
   // Get CRC32 accumulated in STM32 hardware
-  uint32_t crc32_get();
+  uint32_t CRC32Get();
 
-  void InitGPIO();
+  void InitGpio();
   void InitADC();
   void InitI2C();
   void InitSysTimer();
@@ -359,14 +359,14 @@ private:
 
 #endif
 
-  void setDigitalPinMode(PwmPin pin, PinMode mode);
-  void setDigitalPinMode(BinaryPin pin, PinMode mode);
+  void SetDigitalPinMode(PwmPin pin, PinMode mode);
+  void SetDigitalPinMode(BinaryPin pin, PinMode mode);
 
 #ifdef TEST_MODE
   Time time_ = microsSinceStartup(0);
-  bool interruptsEnabled_ = true;
+  bool interrupts_enabled_ = true;
 
-  // The default pin mode on Arduino is INPUT, which happens to be the first
+  // The default pin mode on Arduino is kInput, which happens to be the first
   // enumerator in PinMode and so the default in these maps!
   //
   // Source: https://www.arduino.cc/en/Tutorial/DigitalPins
@@ -383,7 +383,7 @@ private:
 #endif
 };
 
-extern HalApi Hal;
+extern HalApi hal;
 
 // RAII class that disables interrupts.  For example:
 //
@@ -396,9 +396,9 @@ extern HalApi Hal;
 // interrupts are already disabled.
 class [[nodiscard]] BlockInterrupts {
 public:
-  BlockInterrupts() : active_(Hal.interruptsEnabled()) {
+  BlockInterrupts() : active_(hal.InterruptsEnabled()) {
     if (active_) {
-      Hal.disableInterrupts();
+      hal.DisableInterrupts();
     }
   }
 
@@ -411,7 +411,7 @@ public:
 
   ~BlockInterrupts() {
     if (active_) {
-      Hal.enableInterrupts();
+      hal.EnableInterrupts();
     }
   }
 
@@ -421,11 +421,11 @@ private:
 
 #if defined(BARE_STM32)
 
-inline void HalApi::disableInterrupts() {
+inline void HalApi::DisableInterrupts() {
   asm volatile("cpsid i" ::: "memory");
 }
-inline void HalApi::enableInterrupts() { asm volatile("cpsie i" ::: "memory"); }
-inline bool HalApi::interruptsEnabled() const {
+inline void HalApi::EnableInterrupts() { asm volatile("cpsie i" ::: "memory"); }
+inline bool HalApi::InterruptsEnabled() const {
   int ret;
   asm volatile("mrs %[output], primask" : [output] "=r"(ret));
   return ret == 0;
@@ -438,92 +438,92 @@ inline bool HalApi::InInterruptHandler() {
 }
 
 #else
-inline void HalApi::init() {}
-inline void HalApi::watchdog_handler() {}
+inline void HalApi::Init() {}
+inline void HalApi::WatchdogHandler() {}
 
-inline Time HalApi::now() { return time_; }
-inline void HalApi::delay(Duration d) { time_ = time_ + d; }
-inline Voltage HalApi::analogRead(AnalogPin pin) {
+inline Time HalApi::Now() { return time_; }
+inline void HalApi::Delay(Duration d) { time_ = time_ + d; }
+inline Voltage HalApi::AnalogRead(AnalogPin pin) {
   return analog_pin_values_.at(pin);
 }
-inline void HalApi::test_setAnalogPin(AnalogPin pin, Voltage value) {
+inline void HalApi::TESTSetAnalogPin(AnalogPin pin, Voltage value) {
   analog_pin_values_[pin] = value;
 }
-inline void HalApi::setDigitalPinMode(PwmPin pin, PinMode mode) {
+inline void HalApi::SetDigitalPinMode(PwmPin pin, PinMode mode) {
   pwm_pin_modes_[pin] = mode;
 }
-inline void HalApi::setDigitalPinMode(BinaryPin pin, PinMode mode) {
+inline void HalApi::SetDigitalPinMode(BinaryPin pin, PinMode mode) {
   binary_pin_modes_[pin] = mode;
 }
-inline void HalApi::digitalWrite(BinaryPin pin, VoltageLevel value) {
-  if (binary_pin_modes_[pin] != PinMode::OUTPUT) {
+inline void HalApi::DigitalWrite(BinaryPin pin, VoltageLevel value) {
+  if (binary_pin_modes_[pin] != PinMode::kOutput) {
     assert(false && "Can only write to an OUTPUT pin");
   }
   binary_pin_values_[pin] = value;
 }
-inline void HalApi::analogWrite(PwmPin pin, float duty) {
-  if (pwm_pin_modes_[pin] != PinMode::OUTPUT) {
+inline void HalApi::AnalogWrite(PwmPin pin, float duty) {
+  if (pwm_pin_modes_[pin] != PinMode::kOutput) {
     assert(false && "Can only write to an OUTPUT pin");
   }
   pwm_pin_values_[pin] = duty;
 }
 
-inline uint16_t HalApi::serialRead(char *buf, uint16_t len) {
+inline uint16_t HalApi::SerialRead(char *buf, uint16_t len) {
   return serial_port_.Read(buf, len);
 }
-inline uint16_t HalApi::serialBytesAvailableForRead() {
+inline uint16_t HalApi::SerialBytesAvailableForRead() {
   return serial_port_.BytesAvailableForRead();
 }
-inline uint16_t HalApi::serialWrite(const char *buf, uint16_t len) {
+inline uint16_t HalApi::SerialWrite(const char *buf, uint16_t len) {
   return serial_port_.Write(buf, len);
 }
-inline uint16_t HalApi::serialBytesAvailableForWrite() {
+inline uint16_t HalApi::SerialBytesAvailableForWrite() {
   return serial_port_.BytesAvailableForWrite();
 }
-inline uint16_t HalApi::test_serialGetOutgoingData(char *data, uint16_t len) {
+inline uint16_t HalApi::TESTSerialGetOutgoingData(char *data, uint16_t len) {
   return serial_port_.GetOutgoingData(data, len);
 }
-inline void HalApi::test_serialPutIncomingData(const char *data, uint16_t len) {
+inline void HalApi::TESTSerialPutIncomingData(const char *data, uint16_t len) {
   serial_port_.PutIncomingData(data, len);
 }
 
-inline uint16_t HalApi::debugRead(char *buf, uint16_t len) {
+inline uint16_t HalApi::DebugRead(char *buf, uint16_t len) {
   return debug_serial_port_.Read(buf, len);
 }
-inline uint16_t HalApi::debugBytesAvailableForRead() {
+inline uint16_t HalApi::DebugBytesAvailableForRead() {
   return debug_serial_port_.BytesAvailableForRead();
 }
-inline uint16_t HalApi::debugWrite(const char *buf, uint16_t len) {
+inline uint16_t HalApi::DebugWrite(const char *buf, uint16_t len) {
   return debug_serial_port_.Write(buf, len);
 }
-inline uint16_t HalApi::debugBytesAvailableForWrite() {
+inline uint16_t HalApi::DebugBytesAvailableForWrite() {
   return debug_serial_port_.BytesAvailableForWrite();
 }
-inline uint16_t HalApi::test_debugGetOutgoingData(char *data, uint16_t len) {
+inline uint16_t HalApi::TESTDebugGetOutgoingData(char *data, uint16_t len) {
   return debug_serial_port_.GetOutgoingData(data, len);
 }
-inline void HalApi::test_debugPutIncomingData(const char *data, uint16_t len) {
+inline void HalApi::TESTDebugPutIncomingData(const char *data, uint16_t len) {
   debug_serial_port_.PutIncomingData(data, len);
 }
 
-inline void HalApi::disableInterrupts() { interruptsEnabled_ = false; }
-inline void HalApi::enableInterrupts() { interruptsEnabled_ = true; }
-inline bool HalApi::interruptsEnabled() const { return interruptsEnabled_; }
+inline void HalApi::DisableInterrupts() { interrupts_enabled_ = false; }
+inline void HalApi::EnableInterrupts() { interrupts_enabled_ = true; }
+inline bool HalApi::InterruptsEnabled() const { return interrupts_enabled_; }
 inline bool HalApi::InInterruptHandler() { return false; }
 
-inline uint32_t HalApi::crc32(const uint8_t *data, uint32_t length) {
-  return soft_crc32(data, length);
+inline uint32_t HalApi::CRC32(const uint8_t *data, uint32_t length) {
+  return SoftCRC32(data, length);
 }
 
 inline uint16_t TestSerialPort::Read(char *buf, uint16_t len) {
   if (incoming_data_.empty()) {
     return 0;
   }
-  auto &readBuf = incoming_data_.front();
-  uint16_t n = std::min(len, static_cast<uint16_t>(readBuf.size()));
-  memcpy(buf, readBuf.data(), n);
-  readBuf.erase(readBuf.begin(), readBuf.begin() + n);
-  if (readBuf.empty()) {
+  auto &read_buffer = incoming_data_.front();
+  uint16_t n = std::min(len, static_cast<uint16_t>(read_buffer.size()));
+  memcpy(buf, read_buffer.data(), n);
+  read_buffer.erase(read_buffer.begin(), read_buffer.begin() + n);
+  if (read_buffer.empty()) {
     incoming_data_.pop_front();
   }
   return n;
@@ -550,22 +550,22 @@ inline uint16_t TestSerialPort::GetOutgoingData(char *data, uint16_t len) {
   return n;
 }
 inline void TestSerialPort::PutIncomingData(const char *data, uint16_t len) {
-  constexpr uint16_t MAX_MSG_SIZE = 64;
-  while (len > MAX_MSG_SIZE) {
-    incoming_data_.push_back(std::vector<char>(data, data + MAX_MSG_SIZE));
-    data += MAX_MSG_SIZE;
-    len = static_cast<uint16_t>(len - MAX_MSG_SIZE);
+  constexpr uint16_t max_message_size = 64;
+  while (len > max_message_size) {
+    incoming_data_.push_back(std::vector<char>(data, data + max_message_size));
+    data += max_message_size;
+    len = static_cast<uint16_t>(len - max_message_size);
   }
   incoming_data_.push_back(std::vector<char>(data, data + len));
 }
 
-inline void HalApi::startLoopTimer(const Duration &period,
+inline void HalApi::StartLoopTimer(const Duration &period,
                                    void (*callback)(void *), void *arg) {}
 
 inline void BuzzerOn(float volume) {}
 inline void BuzzerOff() {}
 inline void InitPSOL() {}
-inline void PSOL_Value(float val) {}
+inline void PSolValue(float val) {}
 inline bool HalApi::FlashErasePage(uint32_t address) { return true; }
 inline bool HalApi::FlashWrite(uint32_t addr, void *data, size_t ct) {
   return true;

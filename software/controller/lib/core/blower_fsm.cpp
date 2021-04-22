@@ -93,14 +93,14 @@ BlowerSystemState
 PressureControlFsm::DesiredState(Time now, const BlowerFsmInputs &inputs) {
   if (now < inspire_end_) {
     // Go from expire_pressure_ to inspire_pressure_ over a duration of
-    // RISE_TIME.  Then for the rest of the inspire time, hold at
+    // kRiseTime.  Then for the rest of the inspire time, hold at
     // inspire_pressure_.
-    static_assert(RISE_TIME > milliseconds(0));
-    float rise_frac = std::min(1.f, (now - start_time_) / RISE_TIME);
+    static_assert(kRiseTime > milliseconds(0));
+    float rise_frac = std::min(1.f, (now - start_time_) / kRiseTime);
     return {
         .pressure_setpoint = expire_pressure_ +
                              (inspire_pressure_ - expire_pressure_) * rise_frac,
-        .flow_direction = FlowDirection::INSPIRATORY,
+        .flow_direction = FlowDirection::kInspiratory,
         .pip = inspire_pressure_,
         .peep = expire_pressure_,
         .is_end_of_breath = false,
@@ -108,7 +108,7 @@ PressureControlFsm::DesiredState(Time now, const BlowerFsmInputs &inputs) {
   } else { // expiratory part of the cycle
     return {
         .pressure_setpoint = expire_pressure_,
-        .flow_direction = FlowDirection::EXPIRATORY,
+        .flow_direction = FlowDirection::kExpiratory,
         .pip = inspire_pressure_,
         .peep = expire_pressure_,
         .is_end_of_breath = (now >= expire_end_),
@@ -129,14 +129,14 @@ BlowerSystemState
 PressureAssistFsm::DesiredState(Time now, const BlowerFsmInputs &inputs) {
   if (now < inspire_end_) {
     // Go from expire_pressure_ to inspire_pressure_ over a duration of
-    // RISE_TIME.  Then for the rest of the inspire time, hold at
+    // kRiseTime.  Then for the rest of the inspire time, hold at
     // inspire_pressure_.
-    static_assert(RISE_TIME > milliseconds(0));
-    float rise_frac = std::min(1.f, (now - start_time_) / RISE_TIME);
+    static_assert(kRiseTime > milliseconds(0));
+    float rise_frac = std::min(1.f, (now - start_time_) / kRiseTime);
     return {
         .pressure_setpoint = expire_pressure_ +
                              (inspire_pressure_ - expire_pressure_) * rise_frac,
-        .flow_direction = FlowDirection::INSPIRATORY,
+        .flow_direction = FlowDirection::kInspiratory,
         .pip = inspire_pressure_,
         .peep = expire_pressure_,
         .is_end_of_breath = false,
@@ -144,7 +144,7 @@ PressureAssistFsm::DesiredState(Time now, const BlowerFsmInputs &inputs) {
   } else { // expiratory part of the cycle
     return {
         .pressure_setpoint = expire_pressure_,
-        .flow_direction = FlowDirection::EXPIRATORY,
+        .flow_direction = FlowDirection::kExpiratory,
         .pip = inspire_pressure_,
         .peep = expire_pressure_,
         .is_end_of_breath =

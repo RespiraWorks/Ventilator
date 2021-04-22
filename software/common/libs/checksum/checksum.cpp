@@ -16,8 +16,8 @@ limitations under the License.
 #include "checksum.h"
 #include <stdint.h>
 
-uint16_t checksum_fletcher16(const char *data, uint8_t count,
-                             uint16_t state /*=0*/) {
+uint16_t ChecksumFletcher16(const char *data, uint8_t count,
+                            uint16_t state /*=0*/) {
   uint8_t s1 = static_cast<uint8_t>(state & 0xff);
   uint8_t s2 = static_cast<uint8_t>((state >> 8) & 0xff);
   for (uint8_t index = 0; index < count; ++index) {
@@ -34,8 +34,8 @@ uint16_t checksum_fletcher16(const char *data, uint8_t count,
 // 2002.] https://users.ece.cmu.edu/~koopman/crc/
 // Table generated using
 // http://www.sunshine2k.de/coding/javascript/crc/crc_js.html
-uint32_t crc32_single(uint32_t crc, uint8_t data) {
-  static const uint32_t crcTable[16] = {
+uint32_t CRC32Single(uint32_t crc, uint8_t data) {
+  static constexpr uint32_t kCRCTable[16] = {
       // Nibble lookup table for 0x741B8CD7 polynomial
       0x00000000, 0x741B8CD7, 0xE83719AE, 0x9C2C9579, 0xA475BF8B, 0xD06E335C,
       0x4C42A625, 0x38592AF2, 0x3CF0F3C1, 0x48EB7F16, 0xD4C7EA6F, 0xA0DC66B8,
@@ -46,27 +46,27 @@ uint32_t crc32_single(uint32_t crc, uint8_t data) {
   // Process 32-bits, 4 at a time, or 8 rounds
 
   crc = (crc << 4) ^
-        crcTable[crc >> 28]; // Assumes 32-bit reg, masking index to 4-bits
+        kCRCTable[crc >> 28]; // Assumes 32-bit reg, masking index to 4-bits
   crc =
-      (crc << 4) ^ crcTable[crc >> 28]; //  0x04C11DB7 Polynomial used in STM32
-  crc = (crc << 4) ^ crcTable[crc >> 28];
-  crc = (crc << 4) ^ crcTable[crc >> 28];
-  crc = (crc << 4) ^ crcTable[crc >> 28];
-  crc = (crc << 4) ^ crcTable[crc >> 28];
-  crc = (crc << 4) ^ crcTable[crc >> 28];
-  crc = (crc << 4) ^ crcTable[crc >> 28];
+      (crc << 4) ^ kCRCTable[crc >> 28]; //  0x04C11DB7 Polynomial used in STM32
+  crc = (crc << 4) ^ kCRCTable[crc >> 28];
+  crc = (crc << 4) ^ kCRCTable[crc >> 28];
+  crc = (crc << 4) ^ kCRCTable[crc >> 28];
+  crc = (crc << 4) ^ kCRCTable[crc >> 28];
+  crc = (crc << 4) ^ kCRCTable[crc >> 28];
+  crc = (crc << 4) ^ kCRCTable[crc >> 28];
 
   return crc;
 }
 
-uint32_t soft_crc32(const uint8_t *data, uint32_t count) {
+uint32_t SoftCRC32(const uint8_t *data, uint32_t count) {
   if (0 == count) {
     return 0;
   }
 
   uint32_t crc = 0xFFFFFFFF;
   while (count--) {
-    crc = crc32_single(crc, *data++);
+    crc = CRC32Single(crc, *data++);
   }
   return crc;
 }

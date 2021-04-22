@@ -13,7 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-// This module is responsible for passing the actuator commands to Hal to
+// This module is responsible for passing the actuator commands to hal to
 // generate the actual electrical signals.
 
 #ifndef ACTUATORS_H
@@ -41,7 +41,7 @@ struct ActuatorsState {
 };
 
 // Causes passed state to be applied to the actuators
-void actuators_execute(const ActuatorsState &desired_state);
+void ActuatorsExecute(const ActuatorsState &desired_state);
 
 // Returns true if the actuators are ready for action or false
 // if they aren't (for example pinch valves are homing).

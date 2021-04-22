@@ -11,31 +11,31 @@
 #include "hal.h"
 
 // test parameters
-static constexpr int64_t delay_ms{10};
-static constexpr float fan_min{TEST_PARAM_1};
-static constexpr float fan_max{TEST_PARAM_2};
-static constexpr float initial_step{0.002f};
+static constexpr Duration kDelay{milliseconds(10)};
+static constexpr float kFanMin{TEST_PARAM_1};
+static constexpr float kFanMax{TEST_PARAM_2};
+static constexpr float kInitialStep{0.002f};
 
-void run_test() {
-  Hal.init();
+void RunTest() {
+  hal.Init();
 
-  float fan_power = fan_min;
-  float step = initial_step;
+  float fan_power = kFanMin;
+  float step = kInitialStep;
 
   while (true) {
-    Hal.analogWrite(PwmPin::BLOWER, fan_power);
-    Hal.delay(milliseconds(delay_ms));
+    hal.AnalogWrite(PwmPin::kBlower, fan_power);
+    hal.Delay(kDelay);
 
-    Hal.watchdog_handler();
+    hal.WatchdogHandler();
 
     fan_power += step;
-    if (fan_power >= fan_max) {
+    if (fan_power >= kFanMax) {
       // switch to ramp-down state
-      fan_power = fan_max;
+      fan_power = kFanMax;
       step = -step;
-    } else if (fan_power <= fan_min) {
+    } else if (fan_power <= kFanMin) {
       // switch to ramp-up state
-      fan_power = fan_min;
+      fan_power = kFanMin;
       step = -step;
     }
   }

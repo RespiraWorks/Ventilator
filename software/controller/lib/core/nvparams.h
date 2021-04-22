@@ -13,8 +13,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#ifndef NVPARAM_H_
-#define NVPARAM_H_
+#ifndef NVPARAM_H
+#define NVPARAM_H
 
 #include "eeprom.h"
 #include "network_protocol.pb.h"
@@ -91,11 +91,11 @@ private:
 // structure given its name.
 // Because these are macros, they cannot be part of the NVParams namespace, but
 // should still only be used as member functions of the Handler class.
-#define NVparamsUpdate(member, value)                                          \
+#define NV_PARAMS_UPDATE(member, value)                                        \
   Set(static_cast<uint16_t>(offsetof(Structure, member)), value,               \
       (sizeof(((Structure *)0)->member)))
-#define NVparamsRead(member, value)                                            \
+#define NV_PARAMS_READ(member, value)                                          \
   Get(static_cast<uint16_t>(offsetof(Structure, member)), value,               \
       (sizeof(((Structure *)0)->member)))
 
-#endif // NVPARAM_H_
+#endif // NVPARAM_H

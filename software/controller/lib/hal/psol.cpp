@@ -50,19 +50,19 @@ void HalApi::InitPSOL() {
   // I'm using a 20kHz PWM frequency to drive the solenoid
   // This is somewhat arbitrary, but is high enough to ensure
   // that there won't be any audible noise from the switching
-  const int pwmFreq = 5000;
+  static constexpr int kPwmFreq = 5000;
 
-  EnableClock(TIMER1_BASE);
+  EnableClock(kTimer1Base);
 
   // Connect PA11 to timer 1
   // [DS] table 17 shows which functions can be connected to each pin.
   // For PA11 we select function 1 to connect it to timer 1.
-  GPIO_PinAltFunc(GPIO_A_BASE, 11, 1);
+  GpioPinAltFunc(kGpioABase, 11, 1);
 
-  TimerRegs *tmr = TIMER1_BASE;
+  TimerReg *tmr = kTimer1Base;
 
   // Set the frequency
-  tmr->reload = (CPU_FREQ / pwmFreq) - 1;
+  tmr->auto_reload = (CPU_FREQ / kPwmFreq) - 1;
 
   // Configure channel 4 in PWM output mode 1
   // with preload enabled.  The preload means that
@@ -70,32 +70,31 @@ void HalApi::InitPSOL() {
   // register and copied to the active register
   // at the start of the next cycle.
   //
-  // TODO - the ccMode and ccEnable registers of the timer
-  // should really be converted to bit flags for better
-  // readability
-  tmr->ccMode[1] = 0x6800;
+  // TODO - the capture_compare_mode and capture_compare_enable registers of
+  // the timer should really be converted to bit flags for better readability
+  tmr->capture_compare_mode[1] = 0x6800;
 
-  tmr->ccEnable = 0x1000;
+  tmr->capture_compare_enable = 0x1000;
 
   // For timer 1 we need to disable the main output enable
   // (MOE) feature by setting bit 15 of the deadtime register. [RM] 26.3.16
-  tmr->deadTime = 0x8000;
+  tmr->dead_time = 0x8000;
 
   // Start with 0% duty cycle
-  tmr->compare[3] = 0;
+  tmr->capture_compare[3] = 0;
 
   // Load the shadow registers
   tmr->event = 1;
 
   // Start the counter
-  tmr->ctrl1.s.arpe = 1;
-  tmr->ctrl1.s.cen = 1;
+  tmr->control_reg1.bitfield.auto_reload_preload = 1;
+  tmr->control_reg1.bitfield.counter_enable = 1;
 }
 
 // Set the PSOL output level to a value from 0 (fully closed)
 // to 1 (fully open)
-void HalApi::PSOL_Value(float val) {
-  TimerRegs *tmr = TIMER1_BASE;
+void HalApi::PSolValue(float val) {
+  TimerReg *tmr = kTimer1Base;
 
   val = std::clamp(val, 0.0f, 1.0f);
 
@@ -109,10 +108,10 @@ void HalApi::PSOL_Value(float val) {
     float closed_pwm = dbg_psol_pwm_closed.Get();
     scaled = closed_pwm + val * (open_pwm - closed_pwm);
   }
-  float duty = scaled * static_cast<float>(tmr->reload);
-  tmr->compare[3] = static_cast<int>(duty);
+  float duty = scaled * static_cast<float>(tmr->auto_reload);
+  tmr->capture_compare[3] = static_cast<int>(duty);
 }
 
 #else
-void HalApi::PSOL_Value(float val) {}
+void HalApi::PSolValue(float val) {}
 #endif

@@ -47,7 +47,7 @@ void checkArithmeticOperators(T (*unit)(NumTy), NumTy (T::*get)() const) {
   // x / y is defined only for Ts backed by floats (in practice, everything
   // other than Duration).
   constexpr bool is_fp_based =
-      std::is_base_of_v<units_detail::ArithScalar<T, float>, T>;
+      std::is_base_of_v<UnitsDetail::ArithScalar<T, float>, T>;
 
   // Make t const to check that these operators work with const operands.
   const T t = unit(2.1f);

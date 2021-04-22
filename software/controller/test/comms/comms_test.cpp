@@ -9,7 +9,7 @@
 
 TEST(CommTests, SendControllerStatus) {
   // Initialize a large ControllerStatus so as to force multiple calls to
-  // comms_handler to send it.
+  // CommsHandler to send it.
   ControllerStatus s = ControllerStatus_init_zero;
   s.uptime_ms = 42;
   s.active_params.mode = VentMode_PRESSURE_CONTROL;
@@ -22,14 +22,14 @@ TEST(CommTests, SendControllerStatus) {
   s.sensor_readings.volume_ml = 800;
   s.sensor_readings.flow_ml_per_min = 1000;
 
-  // Run comms_handler until it stops sending data.  10 iterations should be
+  // Run CommsHandler until it stops sending data.  10 iterations should be
   // more than enough.
   for (int i = 0; i < 10; i++) {
     GuiStatus gui_status_ignored = GuiStatus_init_zero;
-    comms_handler(s, &gui_status_ignored);
+    CommsHandler(s, &gui_status_ignored);
   }
   char tx_buffer[ControllerStatus_size];
-  uint16_t len = Hal.test_serialGetOutgoingData(tx_buffer, sizeof(tx_buffer));
+  uint16_t len = hal.TESTSerialGetOutgoingData(tx_buffer, sizeof(tx_buffer));
   ASSERT_GT(len, 0);
   pb_istream_t stream =
       pb_istream_from_buffer(reinterpret_cast<unsigned char *>(tx_buffer), len);
@@ -59,20 +59,20 @@ TEST(CommTests, CommandRx) {
       reinterpret_cast<unsigned char *>(rx_buffer), sizeof(rx_buffer));
   pb_encode(&stream, GuiStatus_fields, &s);
   EXPECT_GT(stream.bytes_written, 0u);
-  Hal.test_serialPutIncomingData(rx_buffer,
-                                 static_cast<uint16_t>(stream.bytes_written));
-  EXPECT_GT(Hal.serialBytesAvailableForRead(), 0);
+  hal.TESTSerialPutIncomingData(rx_buffer,
+                                static_cast<uint16_t>(stream.bytes_written));
+  EXPECT_GT(hal.SerialBytesAvailableForRead(), 0);
 
   ControllerStatus controller_status_ignored = ControllerStatus_init_zero;
   GuiStatus received = GuiStatus_init_zero;
 
-  // Run comms_handler until it updates GuiStatus.  10 iterations should be
+  // Run CommsHandler until it updates GuiStatus.  10 iterations should be
   // more than enough to read the whole thing.
   for (int i = 0; i < 10; i++) {
-    comms_handler(controller_status_ignored, &received);
+    CommsHandler(controller_status_ignored, &received);
     // We use a timeout for framing packets, so we have to advance the time,
     // otherwise we'll never think the packet is complete!
-    Hal.delay(milliseconds(1));
+    hal.Delay(milliseconds(1));
   }
   EXPECT_EQ(s.uptime_ms, received.uptime_ms);
   EXPECT_EQ(s.desired_params.mode, received.desired_params.mode);

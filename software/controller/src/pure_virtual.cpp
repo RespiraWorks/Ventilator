@@ -28,5 +28,7 @@ limitations under the License.
 // We'd probably also need to remove the dependency on hal, so this could be
 // used from libraries that don't link with hal.
 #ifdef BARE_STM32
-extern "C" void __cxa_pure_virtual() { Hal.reset_device(); }
+// We don't control this function's name, silence the style check
+// NOLINTNEXTLINE(readability-identifier-naming)
+extern "C" void __cxa_pure_virtual() { hal.ResetDevice(); }
 #endif

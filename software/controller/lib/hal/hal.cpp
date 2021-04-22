@@ -1,3 +1,3 @@
 #include "hal.h"
 
-HalApi Hal;
+HalApi hal;

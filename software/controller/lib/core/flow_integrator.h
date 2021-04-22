@@ -73,7 +73,7 @@ private:
   //    observe is equal to true flow plus an error, and that error changes
   //    slowly relative to how quickly we can read the sensor.
   //
-  // flow_correction_ handles this low-frequency error.  It's common to see
+  // flow_correction handles this low-frequency error.  It's common to see
   // this error change by as much as 15ml/s between breaths.
   VolumetricFlow flow_correction_ = cubic_m_per_sec(0);
   // Time of last call to NoteExpectedVolume.

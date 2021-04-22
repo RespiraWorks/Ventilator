@@ -21,14 +21,14 @@ limitations under the License.
 
 // This module periodically sends messages to the GUI device and receives
 // messages from the GUI.  The only way it communicates with other modules is
-// by modifying the gui_status pointer in comms_handler.
+// by modifying the gui_status pointer in CommsHandler.
 
-void comms_init();
+void CommsInit();
 
 // `controller_status` should be the controller's current status.  It's sent
 // periodically to the GUI.  When we receive a message from the GUI, we update
 // gui_status accordingly.
-void comms_handler(const ControllerStatus &controller_status,
-                   GuiStatus *gui_status);
+void CommsHandler(const ControllerStatus &controller_status,
+                  GuiStatus *gui_status);
 
 #endif // COMMS_H

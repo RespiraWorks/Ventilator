@@ -17,8 +17,8 @@ limitations under the License.
 // https://ww1.microchip.com/downloads/en/DeviceDoc/24AA256-24LC256-24FC256-Data-Sheet-20001203W.pdf
 // The EEPROM we have on the board is at address 0x50 (see [PCBsp])
 
-#ifndef EEPROM_H_
-#define EEPROM_H_
+#ifndef EEPROM_H
+#define EEPROM_H
 
 #include "i2c.h"
 #include <stdint.h>
@@ -72,4 +72,4 @@ private:
   bool ReceiveBytes(const I2C::Request &request) override;
 };
 
-#endif // EEPROM_H_
+#endif // EEPROM_H

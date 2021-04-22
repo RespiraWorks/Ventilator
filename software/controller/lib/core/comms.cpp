@@ -30,25 +30,23 @@ static std::optional<Time> last_tx;
 // always at the beginning of the buffer.
 static uint8_t rx_buffer[GuiStatus_size];
 static uint16_t rx_idx = 0;
-static Time last_rx = Hal.now();
+static Time last_rx = hal.Now();
 static bool rx_in_progress = false;
 
 // We currently lack proper message framing, so we use a timeout to determine
 // when the GUI is done sending us its message.
-static constexpr Duration RX_TIMEOUT = milliseconds(1);
+static constexpr Duration kRxTimeout = milliseconds(1);
 
 // We send a ControllerStatus every TX_INTERVAL_MS.
 
 // In Alpha build we use synchronized communication initiated by GUI cycle
 // controller. Since both ControllerStatus and GuiStatus take roughly 300+
 // bytes, we need at least 1/115200.*10*300=26ms to transmit.
-static constexpr Duration TX_INTERVAL = milliseconds(30);
+static constexpr Duration kTxInterval = milliseconds(30);
 
-void comms_init() {}
+void CommsInit() {}
 
-static bool is_time_to_process_packet() {
-  return Hal.now() - last_rx > RX_TIMEOUT;
-}
+static bool IsTimeToProcessPacket() { return hal.Now() - last_rx > kRxTimeout; }
 
 // NOTE this is work in progress.
 // Proper framing incomming. Afproto will be used to encode data to form that
@@ -59,8 +57,8 @@ static bool is_time_to_process_packet() {
 // TODO add CRC to whole packet
 
 // TODO run this via DMA to free up resources for control loops
-static void process_tx(const ControllerStatus &controller_status) {
-  auto bytes_avail = Hal.serialBytesAvailableForWrite();
+static void ProcessTx(const ControllerStatus &controller_status) {
+  auto bytes_avail = hal.SerialBytesAvailableForWrite();
   if (bytes_avail == 0) {
     return;
   }
@@ -70,7 +68,7 @@ static void process_tx(const ControllerStatus &controller_status) {
   //  - we can transmit at least one byte now, and
   //  - it's been a while since we last transmitted.
   if (tx_bytes_remaining == 0 &&
-      (last_tx == std::nullopt || Hal.now() - *last_tx > TX_INTERVAL)) {
+      (last_tx == std::nullopt || hal.Now() - *last_tx > kTxInterval)) {
     // Serialize current status into output buffer.
     //
     // TODO: Frame the message bytes.
@@ -82,7 +80,7 @@ static void process_tx(const ControllerStatus &controller_status) {
     }
     tx_idx = 0;
     tx_bytes_remaining = static_cast<uint16_t>(stream.bytes_written);
-    last_tx = Hal.now();
+    last_tx = hal.Now();
   }
 
   // TODO: Alarm if we haven't been able to send a status in a certain amount
@@ -90,10 +88,10 @@ static void process_tx(const ControllerStatus &controller_status) {
 
   // Send bytes over the wire if any are in our buffer.
   if (tx_bytes_remaining > 0) {
-    // TODO(jlebar): Change serialWrite to take a uint8* instead of a char*, so
+    // TODO(jlebar): Change SerialWrite to take a uint8* instead of a char*, so
     // it matches nanopb.
     uint16_t bytes_written =
-        Hal.serialWrite(reinterpret_cast<char *>(tx_buffer) + tx_idx,
+        hal.SerialWrite(reinterpret_cast<char *>(tx_buffer) + tx_idx,
                         std::min(bytes_avail, tx_bytes_remaining));
     // TODO: How paranoid should we be about this underflowing?  Perhaps we
     // should reset the device if this or other invariants are violated?
@@ -103,24 +101,24 @@ static void process_tx(const ControllerStatus &controller_status) {
   }
 }
 
-static void process_rx(GuiStatus *gui_status) {
-  while (Hal.serialBytesAvailableForRead() > 0) {
+static void ProcessRx(GuiStatus *gui_status) {
+  while (hal.SerialBytesAvailableForRead() > 0) {
     rx_in_progress = true;
     char b;
-    uint16_t bytes_read = Hal.serialRead(&b, 1);
+    uint16_t bytes_read = hal.SerialRead(&b, 1);
     if (bytes_read == 1) {
       rx_buffer[rx_idx++] = (uint8_t)b;
       if (rx_idx >= sizeof(rx_buffer)) {
         rx_idx = 0;
         break;
       }
-      last_rx = Hal.now();
+      last_rx = hal.Now();
     }
   }
 
   // TODO do away with timeout-based reception once we have framing in place,
   // but it will work for Alpha build for now
-  if (rx_in_progress && is_time_to_process_packet()) {
+  if (rx_in_progress && IsTimeToProcessPacket()) {
     pb_istream_t stream = pb_istream_from_buffer(rx_buffer, rx_idx);
     GuiStatus new_gui_status = GuiStatus_init_zero;
     if (pb_decode(&stream, GuiStatus_fields, &new_gui_status)) {
@@ -133,8 +131,8 @@ static void process_rx(GuiStatus *gui_status) {
   }
 }
 
-void comms_handler(const ControllerStatus &controller_status,
-                   GuiStatus *gui_status) {
-  process_tx(controller_status);
-  process_rx(gui_status);
+void CommsHandler(const ControllerStatus &controller_status,
+                  GuiStatus *gui_status) {
+  ProcessTx(controller_status);
+  ProcessRx(gui_status);
 }

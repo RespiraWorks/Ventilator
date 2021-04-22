@@ -68,8 +68,8 @@ struct Context {
   uint32_t response_length; // (actual) length of the response once the
                             // command is processed
   bool *processed; // pointer to a boolean that informs the interface handler
-                   // that a command's response is available (some commands take
-                   // time)
+                   // that a command's response is available (some commands
+                   // take time)
 };
 
 // Each debug command is represented by an instance of this virtual class

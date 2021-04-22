@@ -42,7 +42,7 @@ TEST(I2C, RequestQueue) {
   }
 
   // Process the first request and check that this is done properly
-  i2c.TEST_QueueReceiveData(10);
+  i2c.TESTQueueReceiveData(10);
   i2c.I2CEventHandler();
   ASSERT_TRUE(processed[0]);
   ASSERT_FALSE(processed[1]);
@@ -62,7 +62,7 @@ TEST(I2C, RequestQueue) {
 
   // Process all requests in the queue and check they are processed in order
   for (int req = 1; req < kQueueLength + 2; ++req) {
-    i2c.TEST_QueueReceiveData(static_cast<uint8_t>(req + 10));
+    i2c.TESTQueueReceiveData(static_cast<uint8_t>(req + 10));
     i2c.I2CEventHandler();
     ASSERT_TRUE(processed[req]);
     ASSERT_FALSE(processed[req + 1]);
@@ -111,7 +111,7 @@ TEST(I2C, WriteBuffer) {
   // previous request (freeing is only done when a request is processed)
   for (int byte = 0; byte < kWriteBufferLength - buffer_head + 1; ++byte) {
     i2c.I2CEventHandler();
-    std::optional<uint8_t> data = i2c.TEST_GetSentData();
+    std::optional<uint8_t> data = i2c.TESTGetSentData();
     ASSERT_TRUE(data != std::nullopt);
     ASSERT_EQ(data, byte % 256);
   }
@@ -120,7 +120,7 @@ TEST(I2C, WriteBuffer) {
   // Free up to 256 bytes (one transfer, but not the full request), repeat
   for (int byte = kWriteBufferLength - buffer_head + 1; byte < 256; ++byte) {
     i2c.I2CEventHandler();
-    std::optional<uint8_t> data = i2c.TEST_GetSentData();
+    std::optional<uint8_t> data = i2c.TESTGetSentData();
     ASSERT_TRUE(data != std::nullopt);
     ASSERT_EQ(data, byte % 256);
   }
@@ -129,7 +129,7 @@ TEST(I2C, WriteBuffer) {
   // Finish processing the first request and this time it should work
   for (int byte = 256; byte < kRequestLength; ++byte) {
     i2c.I2CEventHandler();
-    std::optional<uint8_t> data = i2c.TEST_GetSentData();
+    std::optional<uint8_t> data = i2c.TESTGetSentData();
     ASSERT_TRUE(data != std::nullopt);
     ASSERT_EQ(data, byte % 256);
   }
@@ -145,7 +145,7 @@ TEST(I2C, WriteBuffer) {
   for (int req = 1; req < kNumReq; ++req) {
     for (int byte = 0; byte < kRequestLength; ++byte) {
       i2c.I2CEventHandler();
-      std::optional<uint8_t> data = i2c.TEST_GetSentData();
+      std::optional<uint8_t> data = i2c.TESTGetSentData();
       ASSERT_TRUE(data != std::nullopt);
       ASSERT_EQ(data, (byte + req) % 256);
     }
@@ -162,7 +162,7 @@ TEST(I2C, WriteBuffer) {
   // process the first -> frees the first write_array.size bytes of the buffer
   for (int byte = 0; byte < write_array.size; ++byte) {
     i2c.I2CEventHandler();
-    std::optional<uint8_t> data = i2c.TEST_GetSentData();
+    std::optional<uint8_t> data = i2c.TESTGetSentData();
     ASSERT_TRUE(data != std::nullopt);
     ASSERT_EQ(data, (byte + kNumReq) % 256);
   }
@@ -222,28 +222,28 @@ TEST(I2C, RetryOnError) {
 
   // Process the first transfer (255 bytes) + a few bytes of the next one
   for (int byte = 0; byte < 265; ++byte) {
-    i2c.TEST_QueueReceiveData(static_cast<uint8_t>(byte % 256));
+    i2c.TESTQueueReceiveData(static_cast<uint8_t>(byte % 256));
     i2c.I2CEventHandler();
     ASSERT_EQ(read_data[byte], byte % 256);
   }
 
   // Simulate a bus error and check the request is restarted from its first byte
   i2c.I2CErrorHandler();
-  i2c.TEST_QueueReceiveData(static_cast<uint8_t>(45));
+  i2c.TESTQueueReceiveData(static_cast<uint8_t>(45));
   i2c.I2CEventHandler();
   ASSERT_EQ(read_data[0], 45);
 
   // Simulate another kMaxRetries - 1 bus errors to the same effect
   for (int error = 1; error < kMaxRetries - 1; ++error) {
     i2c.I2CErrorHandler();
-    i2c.TEST_QueueReceiveData(static_cast<uint8_t>(error + 45));
+    i2c.TESTQueueReceiveData(static_cast<uint8_t>(error + 45));
     i2c.I2CEventHandler();
     ASSERT_EQ(read_data[0], error + 45);
   }
 
   // Simulate a NACK, and check this has the same effect except it doesn't check
   // the retry count
-  i2c.TEST_SimulateNack();
+  i2c.TESTSimulateNack();
   i2c.I2CEventHandler();
   i2c.I2CEventHandler();
   ASSERT_EQ(read_data[0], kMaxRetries - 2 + 45);
@@ -251,7 +251,7 @@ TEST(I2C, RetryOnError) {
   // this point... if I simulate another error, it will just start the next
   // request, which is not really satisfactory.
   i2c.I2CErrorHandler();
-  i2c.TEST_QueueReceiveData(20);
+  i2c.TESTQueueReceiveData(20);
   i2c.I2CEventHandler();
   ASSERT_EQ(read_data[0], kMaxRetries - 2 + 45);
   ASSERT_FALSE(processed);

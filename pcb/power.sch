@@ -71,7 +71,9 @@ F 0 "R22" V 6650 3250 50  0000 C CNN
 F 1 "0" V 6450 3250 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 6480 3250 50  0001 C CNN
 F 3 "~" H 6550 3250 50  0001 C CNN
-F 4 "" H 6550 3250 50  0001 C CNN "Manufacturer"
+F 4 "Yageo" H 6550 3250 50  0001 C CNN "Manufacturer"
+F 5 "RC0603JR-070RL" H 6550 3250 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 6550 3250 50  0001 C CNN "DNP"
 	1    6550 3250
 	0    -1   -1   0   
 $EndComp
@@ -153,7 +155,7 @@ F 3 "" H 2000 2300 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Device:Q_NPN_BCE Q?
+L Device:Q_NPN_BEC Q?
 U 1 1 60983EF2
 P 1900 2100
 AR Path="/5FCD4DF5/60983EF2" Ref="Q?"  Part="1" 
@@ -165,6 +167,7 @@ F 2 "RespiraWorks_Std:SOT-23" H 2100 2200 50  0001 C CNN
 F 3 "~" H 1900 2100 50  0001 C CNN
 F 4 "Diodes Inc." H 1900 2100 50  0001 C CNN "Manufacturer"
 F 5 "MMBT3904-7-F" H 1900 2100 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 1900 2100 50  0001 C CNN "DNP"
 	1    1900 2100
 	1    0    0    -1  
 $EndComp
@@ -182,7 +185,9 @@ F 0 "R21" V 1450 2150 50  0000 C CNN
 F 1 "1k" V 1650 2100 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 1480 2100 50  0001 C CNN
 F 3 "~" H 1550 2100 50  0001 C CNN
-F 4 "" H 1550 2100 50  0001 C CNN "Manufacturer"
+F 4 "Yageo" H 1550 2100 50  0001 C CNN "Manufacturer"
+F 5 "RC0603FR-071KL" H 1550 2100 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 1550 2100 50  0001 C CNN "DNP"
 	1    1550 2100
 	0    -1   -1   0   
 $EndComp
@@ -206,7 +211,9 @@ F 0 "R20" H 1200 2400 50  0000 C CNN
 F 1 "1k" H 1200 2300 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 1280 2350 50  0001 C CNN
 F 3 "~" H 1350 2350 50  0001 C CNN
-F 4 "" H 1350 2350 50  0001 C CNN "Manufacturer"
+F 4 "Yageo" H 1350 2350 50  0001 C CNN "Manufacturer"
+F 5 "RC0603FR-071KL" H 1350 2350 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 1350 2350 50  0001 C CNN "DNP"
 	1    1350 2350
 	1    0    0    -1  
 $EndComp
@@ -249,6 +256,7 @@ F 0 "TP56" H 1250 2300 50  0000 C CNN
 F 1 "TP" V 1300 2150 50  0001 C CNN
 F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 1450 2100 50  0001 C CNN
 F 3 "~" H 1450 2100 50  0001 C CNN
+F 4 " " H 1250 2100 50  0001 C CNN "DNP"
 	1    1250 2100
 	1    0    0    -1  
 $EndComp
@@ -270,6 +278,7 @@ F 2 "RespiraWorks_Std:TestPoint_Keystone_5019_Minature" H 5500 4600 50  0001 C C
 F 3 "~" H 5500 4600 50  0001 C CNN
 F 4 "Keystone" H 5300 4600 50  0001 C CNN "Manufacturer"
 F 5 "5019" H 5300 4600 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 5300 4600 50  0001 C CNN "DNP"
 	1    5300 4600
 	1    0    0    -1  
 $EndComp
@@ -289,6 +298,7 @@ F 2 "RespiraWorks_Std:TestPoint_Keystone_5019_Minature" H 7300 3200 50  0001 C C
 F 3 "~" H 7300 3200 50  0001 C CNN
 F 4 "Keystone" H 7100 3200 50  0001 C CNN "Manufacturer"
 F 5 "5019" H 7100 3200 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 7100 3200 50  0001 C CNN "DNP"
 	1    7100 3200
 	1    0    0    -1  
 $EndComp
@@ -316,6 +326,7 @@ F 4 "50V" H 7150 3300 50  0000 L CNN "Voltage"
 F 5 "Panasonic" H 7000 3500 50  0001 C CNN "Manufacturer"
 F 6 "EEE-FK1H330XP" H 7000 3500 50  0001 C CNN "Manufacturer PN"
 F 7 "Aluminum" H 7000 3500 50  0001 C CNN "Dielectric"
+F 8 " " H 7000 3500 50  0001 C CNN "DNP"
 	1    7000 3500
 	1    0    0    -1  
 $EndComp
@@ -348,6 +359,7 @@ F 2 "RespiraWorks_Std:D_SOD-323F" H 4900 4575 50  0001 C CNN
 F 3 "https://assets.nexperia.com/documents/data-sheet/BAT54J.pdf" H 4900 4750 50  0001 C CNN
 F 4 "Nexperia" H 4900 4750 50  0001 C CNN "Manufacturer"
 F 5 "BAT54J,115" H 4900 4750 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 4900 4750 50  0001 C CNN "DNP"
 	1    4900 4750
 	0    1    1    0   
 $EndComp
@@ -363,6 +375,7 @@ F 2 "RespiraWorks_Std:D_SOD-323F" H 4900 4275 50  0001 C CNN
 F 3 "https://assets.nexperia.com/documents/data-sheet/BAT54J.pdf" H 4900 4450 50  0001 C CNN
 F 4 "Nexperia" H 4900 4450 50  0001 C CNN "Manufacturer"
 F 5 "BAT54J,115" H 4900 4450 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 4900 4450 50  0001 C CNN "DNP"
 	1    4900 4450
 	0    1    -1   0   
 $EndComp

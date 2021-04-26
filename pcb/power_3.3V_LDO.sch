@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 6 38
+Sheet 4 38
 Title "3.3V LDO Regulator"
 Date ""
 Rev "A"
@@ -29,6 +29,7 @@ F 2 "RespiraWorks:DFN-6-1EP_3x3mm_P0.95mm_EP1.75x2.5mm" H 5300 3750 50  0001 C C
 F 3 "" H 5300 3750 50  0001 C CNN
 F 4 "STMicroelectronics" H 5300 3750 50  0001 C CNN "Manufacturer"
 F 5 "LD39050PU33R" H 5300 3750 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 5300 3750 50  0001 C CNN "DNP"
 	1    5300 3750
 	1    0    0    -1  
 $EndComp
@@ -60,6 +61,7 @@ F 0 "TP65" H 5842 3920 50  0000 R CNN
 F 1 "~Power Good" H 5842 4018 50  0000 R CNN
 F 2 "RespiraWorks_Std:TestPoint_Pad_2.0x2.0mm" H 6100 3900 50  0001 C CNN
 F 3 "~" H 6100 3900 50  0001 C CNN
+F 4 " " H 5900 3900 50  0001 C CNN "DNP"
 	1    5900 3900
 	-1   0    0    1   
 $EndComp
@@ -74,10 +76,11 @@ P 4750 3700
 AR Path="/5FCD4D85/606C7AE0" Ref="JP?"  Part="1" 
 AR Path="/5FCD4B8E/5FCD4BF6/606C7AE0" Ref="JP4"  Part="1" 
 AR Path="/5FCD4B8E/606EF10F/606C7AE0" Ref="JP5"  Part="1" 
-F 0 "JP5" V 4750 3900 50  0000 C CNN
+F 0 "JP5" V 4750 3850 50  0000 C CNN
 F 1 "Jumper_NC_Small" H 4750 3821 50  0001 C CNN
 F 2 "RespiraWorks_Std:SolderJumper-2_P1.3mm_Bridged_RoundedPad1.0x1.5mm" H 4750 3700 50  0001 C CNN
 F 3 "~" H 4750 3700 50  0001 C CNN
+F 4 " " H 4750 3700 50  0001 C CNN "DNP"
 	1    4750 3700
 	0    -1   -1   0   
 $EndComp
@@ -96,13 +99,14 @@ AR Path="/5FCD4B8E/5FE27F70/606CDB4D" Ref="C?"  Part="1"
 AR Path="/5FCD4B8E/5FCD4BF6/606CDB4D" Ref="C13"  Part="1" 
 AR Path="/5FCD4B8E/606EF10F/606CDB4D" Ref="C25"  Part="1" 
 F 0 "C25" H 6600 3500 50  0000 L CNN
-F 1 "1uF" H 6350 3400 50  0000 L CNN
+F 1 "1uF" H 6600 3400 50  0000 L CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 6688 3600 50  0001 C CNN
 F 3 "~" H 6650 3750 50  0001 C CNN
 F 4 "Kemet" H 6650 3750 50  0001 C CNN "Manufacturer"
 F 5 "X7R" H 6650 3750 50  0001 C CNN "Dielectric"
 F 6 "C0805C105K5RACTU" H 6650 3750 50  0001 C CNN "Manufacturer PN"
 F 7 "50V" H 6650 3750 50  0001 C CNN "Voltage"
+F 8 " " H 6650 3750 50  0001 C CNN "DNP"
 	1    6650 3750
 	-1   0    0    1   
 $EndComp
@@ -130,13 +134,14 @@ AR Path="/5FCD4B8E/5FE27F70/606CE401" Ref="C?"  Part="1"
 AR Path="/5FCD4B8E/5FCD4BF6/606CE401" Ref="C12"  Part="1" 
 AR Path="/5FCD4B8E/606EF10F/606CE401" Ref="C24"  Part="1" 
 F 0 "C24" H 4300 3500 50  0000 L CNN
-F 1 "1uF" H 4050 3400 50  0000 L CNN
+F 1 "1uF" H 4300 3400 50  0000 L CNN
 F 2 "RespiraWorks_Std:C_0603_1608Metric" H 4388 3600 50  0001 C CNN
 F 3 "~" H 4350 3750 50  0001 C CNN
 F 4 "Kemet" H 4350 3750 50  0001 C CNN "Manufacturer"
 F 5 "X7R" H 4350 3750 50  0001 C CNN "Dielectric"
 F 6 "C0805C105K5RACTU" H 4350 3750 50  0001 C CNN "Manufacturer PN"
 F 7 "50V" H 4350 3750 50  0001 C CNN "Voltage"
+F 8 " " H 4350 3750 50  0001 C CNN "DNP"
 	1    4350 3750
 	-1   0    0    1   
 $EndComp
@@ -183,6 +188,7 @@ F 2 "RespiraWorks_Std:TestPoint_Keystone_5019_Minature" H 7450 3550 50  0001 C C
 F 3 "~" H 7450 3550 50  0001 C CNN
 F 4 "Keystone" H 7250 3550 50  0001 C CNN "Manufacturer"
 F 5 "5019" H 7250 3550 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 7250 3550 50  0001 C CNN "DNP"
 	1    7250 3550
 	1    0    0    -1  
 $EndComp

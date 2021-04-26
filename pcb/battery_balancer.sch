@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 33 38
+Sheet 32 38
 Title "Battery Balancer"
 Date ""
 Rev "A"
@@ -24,6 +24,7 @@ F 3 "https://datasheets.maximintegrated.com/en/ds/MAX17320.pdf" H 8300 4850 50  
 F 4 "Maxim IC" H 5600 3800 50  0000 C CNN "Manufacturer"
 F 5 "MAX17320G22+" H 5600 3700 50  0000 C CNN "Manufacturer PN"
 F 6 "Alt. MAX17320G20+" H 5600 3800 50  0001 C CNN "Sourcing Notes"
+F 7 " " H 5600 3800 50  0001 C CNN "DNP"
 	1    5600 3800
 	1    0    0    -1  
 $EndComp
@@ -37,11 +38,12 @@ AR Path="/601A64F8/60567757/603D71EF" Ref="R?"  Part="1"
 AR Path="/6023BF6A/60567757/603D71EF" Ref="R?"  Part="1" 
 AR Path="/6041384A/60567757/603D71EF" Ref="R194"  Part="1" 
 F 0 "R194" H 6900 5250 50  0000 C CNN
-F 1 "0.01" H 6950 5150 50  0000 C CNN
-F 2 "RespiraWorks_Std:R_1206_3216Metric" V 6680 5200 50  0001 C CNN
+F 1 "0.005" H 6950 5150 50  0000 C CNN
+F 2 "RespiraWorks_Std:R_2512_6332Metric" V 6680 5200 50  0001 C CNN
 F 3 "~" H 6750 5200 50  0001 C CNN
-F 4 "Vishay" H 6750 5200 50  0001 C CNN "Manufacturer"
-F 5 "WSL1206R0100FEA" H 6750 5200 50  0001 C CNN "Manufacturer PN"
+F 4 "Rohm" H 6750 5200 50  0001 C CNN "Manufacturer"
+F 5 "PMR100HZPFU5L00" H 6750 5200 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 6750 5200 50  0001 C CNN "DNP"
 	1    6750 5200
 	1    0    0    -1  
 $EndComp
@@ -60,6 +62,9 @@ F 0 "R199" V 7350 4750 50  0000 C CNN
 F 1 "49.9" V 7250 4750 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_1206_3216Metric" V 7080 4750 50  0001 C CNN
 F 3 "~" H 7150 4750 50  0001 C CNN
+F 4 "Yageo" H 7150 4750 50  0001 C CNN "Manufacturer"
+F 5 "RC1206FR-0749R9L" H 7150 4750 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 7150 4750 50  0001 C CNN "DNP"
 	1    7150 4750
 	0    -1   -1   0   
 $EndComp
@@ -80,6 +85,7 @@ F 4 "NP0" H 6600 4600 50  0001 C CNN "Dielectric"
 F 5 "Murata" H 6600 4600 50  0001 C CNN "Manufacturer"
 F 6 "GRM1885C1H103JA01D" H 6600 4600 50  0001 C CNN "Manufacturer PN"
 F 7 "50V" H 6600 4600 50  0001 C CNN "Voltage"
+F 8 " " H 6600 4600 50  0001 C CNN "DNP"
 	1    6600 4600
 	1    0    0    -1  
 $EndComp
@@ -100,6 +106,7 @@ F 4 "NP0" H 6500 4300 50  0001 C CNN "Dielectric"
 F 5 "Murata" H 6500 4300 50  0001 C CNN "Manufacturer"
 F 6 "GRM1885C1H103JA01D" H 6500 4300 50  0001 C CNN "Manufacturer PN"
 F 7 "50V" H 6500 4300 50  0001 C CNN "Voltage"
+F 8 " " H 6500 4300 50  0001 C CNN "DNP"
 	1    6500 4300
 	1    0    0    -1  
 $EndComp
@@ -120,6 +127,7 @@ F 4 "NP0" H 6600 4000 50  0001 C CNN "Dielectric"
 F 5 "Murata" H 6600 4000 50  0001 C CNN "Manufacturer"
 F 6 "GRM1885C1H103JA01D" H 6600 4000 50  0001 C CNN "Manufacturer PN"
 F 7 "50V" H 6600 4000 50  0001 C CNN "Voltage"
+F 8 " " H 6600 4000 50  0001 C CNN "DNP"
 	1    6600 4000
 	1    0    0    -1  
 $EndComp
@@ -136,6 +144,9 @@ F 0 "R198" V 7350 4450 50  0000 C CNN
 F 1 "49.9" V 7250 4450 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_1206_3216Metric" V 7080 4450 50  0001 C CNN
 F 3 "~" H 7150 4450 50  0001 C CNN
+F 4 "Yageo" H 7150 4450 50  0001 C CNN "Manufacturer"
+F 5 "RC1206FR-0749R9L" H 7150 4450 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 7150 4450 50  0001 C CNN "DNP"
 	1    7150 4450
 	0    -1   -1   0   
 $EndComp
@@ -152,6 +163,9 @@ F 0 "R196" V 7350 3850 50  0000 C CNN
 F 1 "49.9" V 7250 3850 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_1206_3216Metric" V 7080 3850 50  0001 C CNN
 F 3 "~" H 7150 3850 50  0001 C CNN
+F 4 "Yageo" H 7150 3850 50  0001 C CNN "Manufacturer"
+F 5 "RC1206FR-0749R9L" H 7150 3850 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 7150 3850 50  0001 C CNN "DNP"
 	1    7150 3850
 	0    -1   -1   0   
 $EndComp
@@ -187,6 +201,9 @@ F 0 "R197" V 7350 4150 50  0000 C CNN
 F 1 "49.9" V 7250 4150 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_1206_3216Metric" V 7080 4150 50  0001 C CNN
 F 3 "~" H 7150 4150 50  0001 C CNN
+F 4 "Yageo" H 7150 4150 50  0001 C CNN "Manufacturer"
+F 5 "RC1206FR-0749R9L" H 7150 4150 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 7150 4150 50  0001 C CNN "DNP"
 	1    7150 4150
 	0    -1   -1   0   
 $EndComp
@@ -203,6 +220,9 @@ F 0 "R201" H 10100 3450 50  0000 C CNN
 F 1 "10" H 10100 3350 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 9880 3400 50  0001 C CNN
 F 3 "~" H 9950 3400 50  0001 C CNN
+F 4 "Yageo" H 9950 3400 50  0001 C CNN "Manufacturer"
+F 5 "RC0603FR-0710RL" H 9950 3400 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 9950 3400 50  0001 C CNN "DNP"
 	1    9950 3400
 	1    0    0    -1  
 $EndComp
@@ -217,8 +237,6 @@ Wire Wire Line
 	7300 3850 8300 3850
 Wire Wire Line
 	6600 4750 6500 4750
-Wire Wire Line
-	6750 5350 6750 5450
 Wire Wire Line
 	6750 6100 1600 6100
 Connection ~ 6750 5350
@@ -242,6 +260,7 @@ F 4 "X7R" H 6250 1850 50  0001 C CNN "Dielectric"
 F 5 "Kemet" H 6250 1850 50  0001 C CNN "Manufacturer"
 F 6 "C0603C104K5RACTU" H 6250 1850 50  0001 C CNN "Manufacturer PN"
 F 7 "50V" H 6250 1850 50  0001 C CNN "Voltage"
+F 8 " " H 6250 1850 50  0001 C CNN "DNP"
 	1    6250 1850
 	0    1    1    0   
 $EndComp
@@ -260,6 +279,7 @@ F 2 "RespiraWorks:VSON-8-SGD_3.3x3.3mm_P0.65mm_NexFET" H 5500 1575 50  0001 L CI
 F 3 "https://www.infineon.com/dgdl/BSZ019N03LS_Rev+2.1.pdf?folderId=db3a304326dfb1300126fb3bec803f1a&fileId=db3a304326dfb1300126fb7ddf173f4e" V 5300 1650 50  0001 L CNN
 F 4 "Infineon" H 5300 1650 50  0001 C CNN "Manufacturer"
 F 5 "BSZ019N03LSATMA1" H 5300 1650 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 5300 1650 50  0001 C CNN "DNP"
 	1    5300 1650
 	0    1    -1   0   
 $EndComp
@@ -280,6 +300,7 @@ F 4 "X7R" H 9950 3700 50  0001 C CNN "Dielectric"
 F 5 "Kemet" H 9950 3700 50  0001 C CNN "Manufacturer"
 F 6 "C0603C104K5RACTU" H 9950 3700 50  0001 C CNN "Manufacturer PN"
 F 7 "50V" H 9950 3700 50  0001 C CNN "Voltage"
+F 8 " " H 9950 3700 50  0001 C CNN "DNP"
 	1    9950 3700
 	1    0    0    -1  
 $EndComp
@@ -300,6 +321,7 @@ F 4 "NP0" H 6500 4900 50  0001 C CNN "Dielectric"
 F 5 "Murata" H 6500 4900 50  0001 C CNN "Manufacturer"
 F 6 "GRM1885C1H103JA01D" H 6500 4900 50  0001 C CNN "Manufacturer PN"
 F 7 "50V" H 6500 4900 50  0001 C CNN "Voltage"
+F 8 " " H 6500 4900 50  0001 C CNN "DNP"
 	1    6500 4900
 	1    0    0    -1  
 $EndComp
@@ -333,6 +355,7 @@ F 4 "X7R" H 6500 3400 50  0001 C CNN "Dielectric"
 F 5 "50V" H 6500 3400 50  0001 C CNN "Voltage"
 F 6 "Kemet" H 6500 3400 50  0001 C CNN "Manufacturer"
 F 7 "C0805C474K5RACTU" H 6500 3400 50  0001 C CNN "Manufacturer PN"
+F 8 " " H 6500 3400 50  0001 C CNN "DNP"
 	1    6500 3400
 	1    0    0    -1  
 $EndComp
@@ -351,6 +374,9 @@ F 0 "R195" H 7200 3050 50  0000 C CNN
 F 1 "1k" H 7200 2950 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 6980 3000 50  0001 C CNN
 F 3 "~" H 7050 3000 50  0001 C CNN
+F 4 "Yageo" H 7050 3000 50  0001 C CNN "Manufacturer"
+F 5 "RC0603FR-071KL" H 7050 3000 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 7050 3000 50  0001 C CNN "DNP"
 	1    7050 3000
 	1    0    0    -1  
 $EndComp
@@ -363,10 +389,13 @@ AR Path="/601A64F8/60567144/603F83DA" Ref="R?"  Part="1"
 AR Path="/601A64F8/60567757/603F83DA" Ref="R?"  Part="1" 
 AR Path="/6023BF6A/60567757/603F83DA" Ref="R?"  Part="1" 
 AR Path="/6041384A/60567757/603F83DA" Ref="R189"  Part="1" 
-F 0 "R189" H 3100 2150 50  0000 C CNN
+F 0 "R189" H 3150 2150 50  0000 C CNN
 F 1 "1k" H 3100 2050 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 2930 2100 50  0001 C CNN
 F 3 "~" H 3000 2100 50  0001 C CNN
+F 4 "Yageo" H 3000 2100 50  0001 C CNN "Manufacturer"
+F 5 "RC0603FR-071KL" H 3000 2100 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 3000 2100 50  0001 C CNN "DNP"
 	1    3000 2100
 	1    0    0    -1  
 $EndComp
@@ -381,10 +410,13 @@ AR Path="/601A64F8/60567144/603FE142" Ref="R?"  Part="1"
 AR Path="/601A64F8/60567757/603FE142" Ref="R?"  Part="1" 
 AR Path="/6023BF6A/60567757/603FE142" Ref="R?"  Part="1" 
 AR Path="/6041384A/60567757/603FE142" Ref="R190"  Part="1" 
-F 0 "R190" H 3300 2050 50  0000 C CNN
+F 0 "R190" H 3250 2050 50  0000 C CNN
 F 1 "2k" H 3300 2150 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_1206_3216Metric" V 3330 2100 50  0001 C CNN
 F 3 "~" H 3400 2100 50  0001 C CNN
+F 4 "Yageo" H 3400 2100 50  0001 C CNN "Manufacturer"
+F 5 "RC1206FR-072KL" H 3400 2100 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 3400 2100 50  0001 C CNN "DNP"
 	1    3400 2100
 	-1   0    0    1   
 $EndComp
@@ -416,6 +448,7 @@ F 4 "X7R" H 3250 5100 50  0001 C CNN "Dielectric"
 F 5 "50V" H 3250 5100 50  0001 C CNN "Voltage"
 F 6 "Kemet" H 3250 5100 50  0001 C CNN "Manufacturer"
 F 7 "C0805C474K5RACTU" H 3250 5100 50  0001 C CNN "Manufacturer PN"
+F 8 " " H 3250 5100 50  0001 C CNN "DNP"
 	1    3250 5100
 	1    0    0    -1  
 $EndComp
@@ -436,6 +469,7 @@ F 4 "X7R" H 4000 3900 50  0001 C CNN "Dielectric"
 F 5 "50V" H 4000 3900 50  0001 C CNN "Voltage"
 F 6 "Kemet" H 4000 3900 50  0001 C CNN "Manufacturer"
 F 7 "C0805C474K5RACTU" H 4000 3900 50  0001 C CNN "Manufacturer PN"
+F 8 " " H 4000 3900 50  0001 C CNN "DNP"
 	1    4000 3900
 	1    0    0    -1  
 $EndComp
@@ -456,6 +490,7 @@ F 4 "X7R" H 3800 5100 50  0001 C CNN "Dielectric"
 F 5 "50V" H 3800 5100 50  0001 C CNN "Voltage"
 F 6 "Kemet" H 3800 5100 50  0001 C CNN "Manufacturer"
 F 7 "C0805C474K5RACTU" H 3800 5100 50  0001 C CNN "Manufacturer PN"
+F 8 " " H 3800 5100 50  0001 C CNN "DNP"
 	1    3800 5100
 	1    0    0    -1  
 $EndComp
@@ -474,6 +509,9 @@ F 0 "R193" H 5950 2050 50  0000 C CNN
 F 1 "100" H 5950 1950 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 5730 2000 50  0001 C CNN
 F 3 "~" H 5800 2000 50  0001 C CNN
+F 4 "Yageo" H 5800 2000 50  0001 C CNN "Manufacturer"
+F 5 "RC0603FR-07100RL" H 5800 2000 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 5800 2000 50  0001 C CNN "DNP"
 	1    5800 2000
 	1    0    0    -1  
 $EndComp
@@ -490,6 +528,9 @@ F 0 "R192" H 5450 2050 50  0000 C CNN
 F 1 "100" H 5450 1950 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 5230 2000 50  0001 C CNN
 F 3 "~" H 5300 2000 50  0001 C CNN
+F 4 "Yageo" H 5300 2000 50  0001 C CNN "Manufacturer"
+F 5 "RC0603FR-07100RL" H 5300 2000 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 5300 2000 50  0001 C CNN "DNP"
 	1    5300 2000
 	1    0    0    -1  
 $EndComp
@@ -538,6 +579,9 @@ F 0 "TH1" H 2947 4896 50  0000 L CNN
 F 1 "10k" H 2947 4805 50  0000 L CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" H 2850 4900 50  0001 C CNN
 F 3 "~" H 2850 4900 50  0001 C CNN
+F 4 "Yageo" H 2850 4850 50  0001 C CNN "Manufacturer"
+F 5 "RC0603FR-0710KL" H 2850 4850 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 2850 4850 50  0001 C CNN "DNP"
 	1    2850 4850
 	1    0    0    -1  
 $EndComp
@@ -575,6 +619,7 @@ F 4 "NP0" H 2500 2450 50  0001 C CNN "Dielectric"
 F 5 "Murata" H 2500 2450 50  0001 C CNN "Manufacturer"
 F 6 "GRM1885C1H103JA01D" H 2500 2450 50  0001 C CNN "Manufacturer PN"
 F 7 "50V" H 2500 2450 50  0001 C CNN "Voltage"
+F 8 " " H 2500 2450 50  0001 C CNN "DNP"
 	1    2500 2450
 	1    0    0    -1  
 $EndComp
@@ -625,8 +670,6 @@ Wire Wire Line
 Wire Wire Line
 	6300 5050 6500 5050
 Wire Wire Line
-	6750 5050 7200 5050
-Wire Wire Line
 	6400 1550 9950 1550
 Wire Wire Line
 	6300 4750 6500 4750
@@ -643,6 +686,7 @@ F 2 "RespiraWorks_Std:JST_XH_B5B-XH-A_1x05_P2.50mm_Vertical" H 8700 4250 50  000
 F 3 "https://www.jst-mfg.com/product/pdf/eng/eXH.pdf" H 8700 4250 50  0001 C CNN
 F 4 "JST" H 8700 4250 50  0001 C CNN "Manufacturer"
 F 5 "B5B-XH-A(LF)(SN)" H 9550 4300 50  0000 R CNN "Manufacturer PN"
+F 6 " " H 8700 4250 50  0001 C CNN "DNP"
 	1    8700 4250
 	1    0    0    1   
 $EndComp
@@ -662,6 +706,9 @@ F 0 "R191" H 3700 3950 50  0000 C CNN
 F 1 "10k" H 3700 3850 50  0000 C CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 3480 3900 50  0001 C CNN
 F 3 "~" H 3550 3900 50  0001 C CNN
+F 4 "Yageo" H 3550 3900 50  0001 C CNN "Manufacturer"
+F 5 "RC0603FR-0710KL" H 3550 3900 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 3550 3900 50  0001 C CNN "DNP"
 	1    3550 3900
 	1    0    0    -1  
 $EndComp
@@ -706,34 +753,6 @@ Text Notes 6850 5900 0    50   ~ 0
 Text Notes 4650 5850 0    50   ~ 0
 I2C address: 0b01100110 and 0b0001110
 $Comp
-L Device:R R?
-U 1 1 60552A00
-P 7200 5200
-AR Path="/601A64F8/60552A00" Ref="R?"  Part="1" 
-AR Path="/601A64F8/60567144/60552A00" Ref="R?"  Part="1" 
-AR Path="/601A64F8/60567757/60552A00" Ref="R?"  Part="1" 
-AR Path="/6023BF6A/60567757/60552A00" Ref="R?"  Part="1" 
-AR Path="/6041384A/60567757/60552A00" Ref="R200"  Part="1" 
-F 0 "R200" H 7350 5250 50  0000 C CNN
-F 1 "0.01" H 7400 5150 50  0000 C CNN
-F 2 "RespiraWorks_Std:R_1206_3216Metric" V 7130 5200 50  0001 C CNN
-F 3 "~" H 7200 5200 50  0001 C CNN
-F 4 "Vishay" H 7200 5200 50  0001 C CNN "Manufacturer"
-F 5 "WSL1206R0100FEA" H 7200 5200 50  0001 C CNN "Manufacturer PN"
-	1    7200 5200
-	1    0    0    -1  
-$EndComp
-Connection ~ 7200 5050
-Wire Wire Line
-	7200 5050 9950 5050
-Wire Wire Line
-	6750 5450 7200 5450
-Wire Wire Line
-	7200 5450 7200 5350
-Connection ~ 6750 5450
-Wire Wire Line
-	6750 5450 6750 6100
-$Comp
 L RespiraWorks_Std:Q_NMOS_SGD Q?
 U 1 1 603E4945
 P 5800 1650
@@ -748,7 +767,60 @@ F 2 "RespiraWorks:VSON-8-SGD_3.3x3.3mm_P0.65mm_NexFET" H 6000 1575 50  0001 L CI
 F 3 "https://www.infineon.com/dgdl/BSZ019N03LS_Rev+2.1.pdf?folderId=db3a304326dfb1300126fb3bec803f1a&fileId=db3a304326dfb1300126fb7ddf173f4e" V 5800 1650 50  0001 L CNN
 F 4 "Infineon" H 5800 1650 50  0001 C CNN "Manufacturer"
 F 5 "BSZ019N03LSATMA1" H 5800 1650 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 5800 1650 50  0001 C CNN "DNP"
 	1    5800 1650
 	0    -1   -1   0   
 $EndComp
+$Comp
+L RespiraWorks_Std:Heatsink_Pad HS?
+U 1 1 6064C468
+P 6550 900
+AR Path="/6041384A/60567144/6064C468" Ref="HS?"  Part="1" 
+AR Path="/6041384A/60567757/6064C468" Ref="HS5"  Part="1" 
+F 0 "HS5" H 6500 1100 50  0000 L CNN
+F 1 "Heatsink_Pad" H 6691 848 50  0001 L CNN
+F 2 "RespiraWorks:Heatsink_Aavid_573100D00010G_HandSolder" H 6562 850 50  0001 C CNN
+F 3 "~" H 6562 850 50  0001 C CNN
+F 4 "Aavid Thermalloy" H 7000 1050 50  0000 C CNN "Manufacturer"
+F 5 "573100D00010G" H 7000 950 50  0000 C CNN "Manufacturer PN"
+F 6 " " H 6550 900 50  0001 C CNN "DNP"
+	1    6550 900 
+	1    0    0    -1  
+$EndComp
+Text Notes 6450 600  0    50   ~ 0
+Optional heatsinks for Q21, Q22
+Wire Wire Line
+	6550 1000 6550 1050
+Wire Wire Line
+	6550 1050 6200 1050
+Text Label 5500 1550 0    50   ~ 0
+VMid
+Text Label 6200 1050 0    50   ~ 0
+VMid
+$Comp
+L RespiraWorks_Std:Heatsink_Pad HS?
+U 1 1 606522B6
+P 7550 900
+AR Path="/6041384A/60567144/606522B6" Ref="HS?"  Part="1" 
+AR Path="/6041384A/60567757/606522B6" Ref="HS6"  Part="1" 
+F 0 "HS6" H 7500 1100 50  0000 L CNN
+F 1 "Heatsink_Pad" H 7691 848 50  0001 L CNN
+F 2 "RespiraWorks:Heatsink_Aavid_573100D00010G_HandSolder" H 7562 850 50  0001 C CNN
+F 3 "~" H 7562 850 50  0001 C CNN
+F 4 "Aavid Thermalloy" H 8000 1050 50  0000 C CNN "Manufacturer"
+F 5 "573100D00010G" H 8000 950 50  0000 C CNN "Manufacturer PN"
+F 6 " " H 7550 900 50  0001 C CNN "DNP"
+	1    7550 900 
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	7550 1000 7550 1050
+Wire Wire Line
+	7550 1050 7200 1050
+Text Label 7200 1050 0    50   ~ 0
+VMid
+Wire Wire Line
+	6750 5050 9950 5050
+Wire Wire Line
+	6750 5350 6750 6100
 $EndSCHEMATC

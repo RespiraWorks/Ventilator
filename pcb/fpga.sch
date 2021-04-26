@@ -24,6 +24,7 @@ F 3 "~" H 7550 2750 50  0001 C CNN
 F 4 "Samtec" H 7550 2750 50  0001 C CNN "Manufacturer"
 F 5 "ESW-120-33-G-D" H 7550 2750 50  0001 C CNN "Manufacturer PN"
 F 6 "Alt. ESQ-120-23-T-D" H 7550 2750 50  0001 C CNN "Sourcing Notes"
+F 7 " " H 7550 2750 50  0001 C CNN "DNP"
 	1    7550 2750
 	1    0    0    -1  
 $EndComp
@@ -165,6 +166,8 @@ F 1 "4.7k" H 3520 1555 50  0000 L CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 3380 1600 50  0001 C CNN
 F 3 "~" H 3450 1600 50  0001 C CNN
 F 4 "DNP" V 3450 1600 50  0000 C CNN "DNP"
+F 5 "Yageo" H 3450 1600 50  0001 C CNN "Manufacturer"
+F 6 "RC0603FR-074K7L" H 3450 1600 50  0001 C CNN "Manufacturer PN"
 	1    3450 1600
 	1    0    0    -1  
 $EndComp
@@ -187,6 +190,7 @@ F 3 "~" H 3900 2700 50  0001 C CNN
 F 4 "Samtec" H 3900 2700 50  0001 C CNN "Manufacturer"
 F 5 "ESW-120-33-G-D" H 3900 2700 50  0001 C CNN "Manufacturer PN"
 F 6 "Alt. ESQ-120-23-T-D" H 3900 2700 50  0001 C CNN "Sourcing Notes"
+F 7 " " H 3900 2700 50  0001 C CNN "DNP"
 	1    3900 2700
 	1    0    0    -1  
 $EndComp
@@ -199,6 +203,8 @@ F 1 "4.7k" H 4420 1555 50  0000 L CNN
 F 2 "RespiraWorks_Std:R_0603_1608Metric" V 4280 1600 50  0001 C CNN
 F 3 "~" H 4350 1600 50  0001 C CNN
 F 4 "DNP" V 4350 1600 50  0000 C CNN "DNP"
+F 5 "Yageo" H 4350 1600 50  0001 C CNN "Manufacturer"
+F 6 "RC0603FR-074K7L" H 4350 1600 50  0001 C CNN "Manufacturer PN"
 	1    4350 1600
 	1    0    0    -1  
 $EndComp
@@ -480,6 +486,9 @@ F 0 "R89" V 6500 1150 50  0000 L CNN
 F 1 "0" V 6700 1150 50  0000 L CNN
 F 2 "RespiraWorks_Std:R_1206_3216Metric" V 6530 1200 50  0001 C CNN
 F 3 "~" H 6600 1200 50  0001 C CNN
+F 4 "Yageo" H 6600 1200 50  0001 C CNN "Manufacturer"
+F 5 "RC1206JR-070RL" H 6600 1200 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 6600 1200 50  0001 C CNN "DNP"
 	1    6600 1200
 	0    1    1    0   
 $EndComp
@@ -493,4 +502,16 @@ Text Notes 6200 1050 0    50   ~ 0
 Place for optional fuse
 Text Notes 3350 1650 2    50   ~ 0
 BeMicro MAX10 board has\nonboard I2C pull-ups
+$Comp
+L RespiraWorks:FPGAOutline H15
+U 1 1 60548A57
+P 5500 4650
+F 0 "H15" H 5728 4696 50  0000 L CNN
+F 1 "FPGAOutline" H 5728 4605 50  0000 L CNN
+F 2 "RespiraWorks:BEMICRO-MAX10" H 5500 4650 50  0001 C CNN
+F 3 "" H 5500 4650 50  0001 C CNN
+F 4 " " H 5500 4650 50  0001 C CNN "DNP"
+	1    5500 4650
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC

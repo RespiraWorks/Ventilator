@@ -69,6 +69,7 @@ F 2 "RespiraWorks_Std:Molex_Micro-Fit_3.0_43650-0815_1x08_P3.00mm_Vertical" H 51
 F 3 "~" H 5100 2650 50  0001 C CNN
 F 4 "Molex" H 5100 2650 50  0001 C CNN "Manufacturer"
 F 5 "43650-0815" H 5100 2650 50  0001 C CNN "Manufacturer PN"
+F 6 " " H 5100 2650 50  0001 C CNN "DNP"
 	1    5100 2650
 	1    0    0    -1  
 $EndComp

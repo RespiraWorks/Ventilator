@@ -70,13 +70,13 @@ static SensorReadings update_readings(Duration dt, Pressure patient_pressure,
                                       Pressure inflow_pressure,
                                       Pressure outflow_pressure, Pressure p_amb,
                                       float fio2, Sensors *sensors) {
-  hal.TESTSetAnalogPin(AnalogPin::kPatientPressure,
+  hal.TESTSetAnalogPin(AnalogPin::PatientPressure,
                        MPXV5004_PressureToVoltage(patient_pressure));
-  hal.TESTSetAnalogPin(AnalogPin::kInflowPressureDiff,
+  hal.TESTSetAnalogPin(AnalogPin::InflowPressureDiff,
                        MPXV5004_PressureToVoltage(inflow_pressure));
-  hal.TESTSetAnalogPin(AnalogPin::kOutflowPressureDiff,
+  hal.TESTSetAnalogPin(AnalogPin::OutflowPressureDiff,
                        MPXV5004_PressureToVoltage(outflow_pressure));
-  hal.TESTSetAnalogPin(AnalogPin::kFIO2, FIO2ToVoltage(fio2, p_amb));
+  hal.TESTSetAnalogPin(AnalogPin::FIO2, FIO2ToVoltage(fio2, p_amb));
   hal.Delay(dt);
   return sensors->GetReadings();
 }
@@ -94,11 +94,11 @@ TEST(SensorTests, FullScalePressureReading) {
 
   // First set the simulated analog signals to an ambient 0 kPa corresponding
   // voltage during calibration
-  hal.TESTSetAnalogPin(AnalogPin::kPatientPressure, voltage_at_0kPa);
-  hal.TESTSetAnalogPin(AnalogPin::kInflowPressureDiff, voltage_at_0kPa);
-  hal.TESTSetAnalogPin(AnalogPin::kOutflowPressureDiff, voltage_at_0kPa);
+  hal.TESTSetAnalogPin(AnalogPin::PatientPressure, voltage_at_0kPa);
+  hal.TESTSetAnalogPin(AnalogPin::InflowPressureDiff, voltage_at_0kPa);
+  hal.TESTSetAnalogPin(AnalogPin::OutflowPressureDiff, voltage_at_0kPa);
   // Set fio2 signal to allow calibration
-  hal.TESTSetAnalogPin(AnalogPin::kFIO2, FIO2ToVoltage(0.21f, atm(1.0f)));
+  hal.TESTSetAnalogPin(AnalogPin::FIO2, FIO2ToVoltage(0.21f, atm(1.0f)));
 
   Sensors sensors;
   sensors.Calibrate();
@@ -107,7 +107,7 @@ TEST(SensorTests, FullScalePressureReading) {
   // versus what the original pressure waveform was
   for (auto p : pressures) {
     SCOPED_TRACE("Pressure " + std::to_string(p.kPa()));
-    hal.TESTSetAnalogPin(AnalogPin::kPatientPressure,
+    hal.TESTSetAnalogPin(AnalogPin::PatientPressure,
                          MPXV5004_PressureToVoltage(p));
     EXPECT_PRESSURE_NEAR(sensors.GetReadings().patient_pressure, p);
   }
@@ -115,12 +115,12 @@ TEST(SensorTests, FullScalePressureReading) {
 
 TEST(SensorTests, FiO2Reading) {
   // calibrate O2 sensor at 21% fio2, 1atm
-  hal.TESTSetAnalogPin(AnalogPin::kFIO2, FIO2ToVoltage(0.21f, atm(1.0f)));
+  hal.TESTSetAnalogPin(AnalogPin::FIO2, FIO2ToVoltage(0.21f, atm(1.0f)));
   // Set the other sensors to reasonable values to allow calibration
   Voltage voltage_at_0kPa = MPXV5004_PressureToVoltage(kPa(0));
-  hal.TESTSetAnalogPin(AnalogPin::kPatientPressure, voltage_at_0kPa);
-  hal.TESTSetAnalogPin(AnalogPin::kInflowPressureDiff, voltage_at_0kPa);
-  hal.TESTSetAnalogPin(AnalogPin::kOutflowPressureDiff, voltage_at_0kPa);
+  hal.TESTSetAnalogPin(AnalogPin::PatientPressure, voltage_at_0kPa);
+  hal.TESTSetAnalogPin(AnalogPin::InflowPressureDiff, voltage_at_0kPa);
+  hal.TESTSetAnalogPin(AnalogPin::OutflowPressureDiff, voltage_at_0kPa);
 
   Sensors sensors;
   sensors.Calibrate();
@@ -131,7 +131,7 @@ TEST(SensorTests, FiO2Reading) {
   // sweep all fio2 settings and 1 atm pressure
   for (auto fio2 : fio2_settings) {
     SCOPED_TRACE("fio2 " + std::to_string(fio2));
-    hal.TESTSetAnalogPin(AnalogPin::kFIO2, FIO2ToVoltage(fio2, atm(1.0f)));
+    hal.TESTSetAnalogPin(AnalogPin::FIO2, FIO2ToVoltage(fio2, atm(1.0f)));
     EXPECT_NEAR(sensors.GetReadings().fio2, fio2, kComparisonToleranceFIO2);
   }
   // TODO: check the effect of ambient pressure once the system has a way to
@@ -166,11 +166,11 @@ TEST(SensorTests, TotalFlowCalculation) {
   // First set the simulated analog signals to an ambient 0 kPa corresponding
   // voltage during calibration
   Voltage voltage_at_0kPa = MPXV5004_PressureToVoltage(kPa(0)); //[V]
-  hal.TESTSetAnalogPin(AnalogPin::kPatientPressure, voltage_at_0kPa);
-  hal.TESTSetAnalogPin(AnalogPin::kInflowPressureDiff, voltage_at_0kPa);
-  hal.TESTSetAnalogPin(AnalogPin::kOutflowPressureDiff, voltage_at_0kPa);
+  hal.TESTSetAnalogPin(AnalogPin::PatientPressure, voltage_at_0kPa);
+  hal.TESTSetAnalogPin(AnalogPin::InflowPressureDiff, voltage_at_0kPa);
+  hal.TESTSetAnalogPin(AnalogPin::OutflowPressureDiff, voltage_at_0kPa);
   // Set fio2 signal to allow calibration
-  hal.TESTSetAnalogPin(AnalogPin::kFIO2, FIO2ToVoltage(0.21f, atm(1.0f)));
+  hal.TESTSetAnalogPin(AnalogPin::FIO2, FIO2ToVoltage(0.21f, atm(1.0f)));
 
   Sensors sensors;
   sensors.Calibrate();
@@ -190,16 +190,16 @@ TEST(SensorTests, Calibration) {
   // First set the simulated analog signals to randomly chosen signals
   // corresponding to conditions during calibration
   Pressure init_pressure = kPa(0.23f);
-  hal.TESTSetAnalogPin(AnalogPin::kPatientPressure,
+  hal.TESTSetAnalogPin(AnalogPin::PatientPressure,
                        MPXV5004_PressureToVoltage(init_pressure));
   Pressure init_inflow_delta = kPa(0.15f);
-  hal.TESTSetAnalogPin(AnalogPin::kInflowPressureDiff,
+  hal.TESTSetAnalogPin(AnalogPin::InflowPressureDiff,
                        MPXV5004_PressureToVoltage(init_inflow_delta));
   Pressure init_outflow_delta = kPa(-0.13f);
-  hal.TESTSetAnalogPin(AnalogPin::kOutflowPressureDiff,
+  hal.TESTSetAnalogPin(AnalogPin::OutflowPressureDiff,
                        MPXV5004_PressureToVoltage(init_outflow_delta));
   float init_fio2 = 0.15f;
-  hal.TESTSetAnalogPin(AnalogPin::kFIO2, FIO2ToVoltage(init_fio2, atm(1.0f)));
+  hal.TESTSetAnalogPin(AnalogPin::FIO2, FIO2ToVoltage(init_fio2, atm(1.0f)));
 
   Sensors sensors;
   sensors.Calibrate();

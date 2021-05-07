@@ -84,7 +84,7 @@ void PinchValve::Disable() {
   if (!mtr)
     return;
 
-  home_state_ = PinchValveHomeState::kDisabled;
+  home_state_ = PinchValveHomeState::Disabled;
   mtr->HardDisable();
 }
 
@@ -102,90 +102,90 @@ void PinchValve::Home() {
 
   switch (home_state_) {
 
-  case PinchValveHomeState::kDisabled:
-    home_state_ = PinchValveHomeState::kLowerAmp;
+  case PinchValveHomeState::Disabled:
+    home_state_ = PinchValveHomeState::LowerAmp;
     // fall through
 
   // Limit motor power during homing.
-  case PinchValveHomeState::kLowerAmp:
+  case PinchValveHomeState::LowerAmp:
     err = mtr->SetAmpAll(kHomeAmp);
-    if (err == StepMtrErr::kOk)
-      home_state_ = PinchValveHomeState::kSetHomeSpeed;
+    if (err == StepMtrErr::Ok)
+      home_state_ = PinchValveHomeState::SetHomeSpeed;
     break;
 
   // Set the move speed/accel to be used during homing
-  case PinchValveHomeState::kSetHomeSpeed:
+  case PinchValveHomeState::SetHomeSpeed:
     err = mtr->SetMaxSpeed(kHomeVel);
-    if (err == StepMtrErr::kOk)
+    if (err == StepMtrErr::Ok)
       err = mtr->SetAccel(kHomeAccel);
-    if (err == StepMtrErr::kOk)
-      home_state_ = PinchValveHomeState::kMoveToStop;
+    if (err == StepMtrErr::Ok)
+      home_state_ = PinchValveHomeState::MoveToStop;
     break;
 
   // Start a relative move into the hard stop
-  case PinchValveHomeState::kMoveToStop:
+  case PinchValveHomeState::MoveToStop:
     move_start_time_ = hal.Now();
     err = mtr->MoveRel(kHomeDist);
-    if (err == StepMtrErr::kOk)
-      home_state_ = PinchValveHomeState::kWaitMoveStop;
+    if (err == StepMtrErr::Ok)
+      home_state_ = PinchValveHomeState::WaitMoveStop;
     break;
 
   // Wait for the move to hard stop to end
-  case PinchValveHomeState::kWaitMoveStop: {
+  case PinchValveHomeState::WaitMoveStop: {
     Duration dt = hal.Now() - move_start_time_;
     if (dt.seconds() >= 3.0f)
-      home_state_ = PinchValveHomeState::kSetNormalAmp;
+      home_state_ = PinchValveHomeState::SetNormalAmp;
     break;
   }
 
   // Switch to normal power setting
-  case PinchValveHomeState::kSetNormalAmp:
+  case PinchValveHomeState::SetNormalAmp:
     err = mtr->SetAmpAll(kMoveAmp);
-    if (err == StepMtrErr::kOk)
-      home_state_ = PinchValveHomeState::kMoveOffset;
+    if (err == StepMtrErr::Ok)
+      home_state_ = PinchValveHomeState::MoveOffset;
     break;
 
   // Make a relative move away from the hard stop.
   // This should cause us to end up with the bearings
   // just touching the tube, but not squeezing it.
-  case PinchValveHomeState::kMoveOffset:
+  case PinchValveHomeState::MoveOffset:
     move_start_time_ = hal.Now();
     err = mtr->MoveRel(-kHomeOffset);
-    if (err == StepMtrErr::kOk)
-      home_state_ = PinchValveHomeState::kWaitMoveOffset;
+    if (err == StepMtrErr::Ok)
+      home_state_ = PinchValveHomeState::WaitMoveOffset;
     break;
 
-  case PinchValveHomeState::kWaitMoveOffset: {
+  case PinchValveHomeState::WaitMoveOffset: {
     Duration dt = hal.Now() - move_start_time_;
     if (dt.seconds() >= 2.0f)
-      home_state_ = PinchValveHomeState::kZeroPos;
+      home_state_ = PinchValveHomeState::ZeroPos;
     break;
   }
 
   // Set the current position to zero
-  case PinchValveHomeState::kZeroPos:
+  case PinchValveHomeState::ZeroPos:
     err = mtr->ClearPosition();
-    if (err == StepMtrErr::kOk)
-      home_state_ = PinchValveHomeState::kSetNormalSpeed;
+    if (err == StepMtrErr::Ok)
+      home_state_ = PinchValveHomeState::SetNormalSpeed;
     break;
 
   // Switch to normal move speed/accel
-  case PinchValveHomeState::kSetNormalSpeed:
+  case PinchValveHomeState::SetNormalSpeed:
 
     err = mtr->SetMaxSpeed(kMoveVel);
-    if (err == StepMtrErr::kOk)
+    if (err == StepMtrErr::Ok)
       err = mtr->SetAccel(kMoveAccel);
-    if (err == StepMtrErr::kOk)
-      home_state_ = PinchValveHomeState::kHomed;
+    if (err == StepMtrErr::Ok)
+      home_state_ = PinchValveHomeState::Homed;
 
-  case PinchValveHomeState::kHomed:
+  case PinchValveHomeState::Homed:
     break;
   }
 }
 
 void PinchValve::SetOutput(float value) {
 
-  if (home_state_ != PinchValveHomeState::kHomed) {
+  if (home_state_ != PinchValveHomeState::Homed) {
     Home();
     return;
   }

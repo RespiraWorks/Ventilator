@@ -219,13 +219,13 @@ void HalApi::InitGpio() {
   EnableClock(kGpioHBase);
 
   // Configure PCB ID pins as inputs.
-  GpioPinMode(kGpioBBase, 1, GPIOPinMode::kInput);
-  GpioPinMode(kGpioABase, 12, GPIOPinMode::kInput);
+  GpioPinMode(kGpioBBase, 1, GPIOPinMode::Input);
+  GpioPinMode(kGpioABase, 12, GPIOPinMode::Input);
 
   // Configure LED pins as outputs
-  GpioPinMode(kGpioCBase, 13, GPIOPinMode::kOutput);
-  GpioPinMode(kGpioCBase, 14, GPIOPinMode::kOutput);
-  GpioPinMode(kGpioCBase, 15, GPIOPinMode::kOutput);
+  GpioPinMode(kGpioCBase, 13, GPIOPinMode::Output);
+  GpioPinMode(kGpioCBase, 14, GPIOPinMode::Output);
+  GpioPinMode(kGpioCBase, 15, GPIOPinMode::Output);
 
   // Turn all three LEDs off initially
   GpioClrPin(kGpioCBase, 13);
@@ -237,11 +237,11 @@ void HalApi::InitGpio() {
 void HalApi::DigitalWrite(BinaryPin pin, VoltageLevel value) {
   auto [base, bit] = [&]() -> std::pair<GpioReg *, int> {
     switch (pin) {
-    case BinaryPin::kRedLED:
+    case BinaryPin::RedLED:
       return {kGpioCBase, 13};
-    case BinaryPin::kYellowLED:
+    case BinaryPin::YellowLED:
       return {kGpioCBase, 14};
-    case BinaryPin::kGreenLED:
+    case BinaryPin::GreenLED:
       return {kGpioCBase, 15};
     }
     // All cases covered above (and GCC checks this).
@@ -249,11 +249,11 @@ void HalApi::DigitalWrite(BinaryPin pin, VoltageLevel value) {
   }();
 
   switch (value) {
-  case VoltageLevel::kHigh:
+  case VoltageLevel::High:
     GpioSetPin(base, bit);
     break;
 
-  case VoltageLevel::kLow:
+  case VoltageLevel::Low:
     GpioClrPin(base, bit);
     break;
   }
@@ -287,7 +287,7 @@ void HalApi::InitSysTimer() {
   tmr->control_reg1.bitfield.counter_enable = 1;
   tmr->interrupts_enable = 1;
 
-  EnableInterrupt(InterruptVector::kTimer6, IntPriority::kStandard);
+  EnableInterrupt(InterruptVector::Timer6, IntPriority::Standard);
 }
 
 static void Timer6ISR() {
@@ -368,7 +368,7 @@ void HalApi::StartLoopTimer(const Duration &period, void (*callback)(void *),
   // for normal hardware interrupts.  This means that other
   // interrupts can be serviced while controller functions
   // are running.
-  EnableInterrupt(InterruptVector::kTimer15, IntPriority::kLow);
+  EnableInterrupt(InterruptVector::Timer15, IntPriority::Low);
 }
 
 static float latency, max_latency, loop_time;
@@ -463,7 +463,7 @@ void HalApi::InitPwmOut() {
 void HalApi::AnalogWrite(PwmPin pin, float duty) {
   auto [tmr, chan] = [&]() -> std::pair<TimerReg *, int> {
     switch (pin) {
-    case PwmPin::kBlower:
+    case PwmPin::Blower:
       return {kTimer2Base, 1};
     }
     // All cases covered above (and GCC checks this).
@@ -626,10 +626,10 @@ void HalApi::InitUARTs() {
 #endif
   debug_uart.Init(115200);
 
-  EnableInterrupt(InterruptVector::kDma1Channel2, IntPriority::kStandard);
-  EnableInterrupt(InterruptVector::kDma1Channel3, IntPriority::kStandard);
-  EnableInterrupt(InterruptVector::kUART2, IntPriority::kStandard);
-  EnableInterrupt(InterruptVector::kUART3, IntPriority::kStandard);
+  EnableInterrupt(InterruptVector::Dma1Channel2, IntPriority::Standard);
+  EnableInterrupt(InterruptVector::Dma1Channel3, IntPriority::Standard);
+  EnableInterrupt(InterruptVector::Uart2, IntPriority::Standard);
+  EnableInterrupt(InterruptVector::Uart3, IntPriority::Standard);
 }
 
 static void Uart2ISR() { debug_uart.ISR(); }

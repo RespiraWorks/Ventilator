@@ -43,7 +43,7 @@ TEST(BlowerFsmTest, InitiallyOff) {
   VentParams p = VentParams_init_zero;
   BlowerSystemState s = fsm.DesiredState(hal.Now(), p, inputs_zero);
   EXPECT_TRUE(s.pressure_setpoint == std::nullopt);
-  EXPECT_EQ(s.flow_direction, FlowDirection::kExpiratory);
+  EXPECT_EQ(s.flow_direction, FlowDirection::Expiratory);
 }
 
 TEST(BlowerFsmTest, StaysOff) {
@@ -52,7 +52,7 @@ TEST(BlowerFsmTest, StaysOff) {
   hal.Delay(milliseconds(1000));
   BlowerSystemState s = fsm.DesiredState(hal.Now(), p, inputs_zero);
   EXPECT_TRUE(s.pressure_setpoint == std::nullopt);
-  EXPECT_EQ(s.flow_direction, FlowDirection::kExpiratory);
+  EXPECT_EQ(s.flow_direction, FlowDirection::Expiratory);
 }
 
 TEST(BlowerFsmTest, OffFsmDesiredPipPeep) {
@@ -170,76 +170,76 @@ TEST(BlowerFsmTest, PressureControl) {
        .params = params,
        .inputs = inputs_zero,
        .expected_state = {.pressure_setpoint = cmH2O(10),
-                          .flow_direction = FlowDirection::kInspiratory}},
+                          .flow_direction = FlowDirection::Inspiratory}},
       {.time = microsSinceStartup(1 * rise_time_us / 5),
        .params = params,
        .inputs = inputs_zero,
        .expected_state = {.pressure_setpoint = cmH2O(12),
-                          .flow_direction = FlowDirection::kInspiratory}},
+                          .flow_direction = FlowDirection::Inspiratory}},
       {.time = microsSinceStartup(2 * rise_time_us / 5),
        .params = params,
        .inputs = inputs_zero,
        .expected_state = {.pressure_setpoint = cmH2O(14),
-                          .flow_direction = FlowDirection::kInspiratory}},
+                          .flow_direction = FlowDirection::Inspiratory}},
       {.time = microsSinceStartup(3 * rise_time_us / 5),
        .params = params,
        .inputs = inputs_zero,
        .expected_state = {.pressure_setpoint = cmH2O(16),
-                          .flow_direction = FlowDirection::kInspiratory}},
+                          .flow_direction = FlowDirection::Inspiratory}},
       {.time = microsSinceStartup(4 * rise_time_us / 5),
        .params = params,
        .inputs = inputs_zero,
        .expected_state = {.pressure_setpoint = cmH2O(18),
-                          .flow_direction = FlowDirection::kInspiratory}},
+                          .flow_direction = FlowDirection::Inspiratory}},
       {.time = microsSinceStartup(5 * rise_time_us / 5),
        .params = params,
        .inputs = inputs_zero,
        .expected_state = {.pressure_setpoint = cmH2O(20),
-                          .flow_direction = FlowDirection::kInspiratory}},
+                          .flow_direction = FlowDirection::Inspiratory}},
       // Plateau at PIP
       {.time = microsSinceStartup(1E6),
        .params = params,
        .inputs = inputs_zero,
        .expected_state = {.pressure_setpoint = cmH2O(20),
-                          .flow_direction = FlowDirection::kInspiratory}},
+                          .flow_direction = FlowDirection::Inspiratory}},
       {.time = microsSinceStartup(199E4),
        .params = params,
        .inputs = inputs_zero,
        .expected_state = {.pressure_setpoint = cmH2O(20),
-                          .flow_direction = FlowDirection::kInspiratory}},
+                          .flow_direction = FlowDirection::Inspiratory}},
       // end of inhale ==> back to PEEP
       {.time = microsSinceStartup(201E4),
        .params = params,
        .inputs = inputs_zero,
        .expected_state = {.pressure_setpoint = cmH2O(10),
-                          .flow_direction = FlowDirection::kExpiratory}},
+                          .flow_direction = FlowDirection::Expiratory}},
       {.time = microsSinceStartup(299E4),
        .params = params,
        .inputs = inputs_zero,
        .expected_state = {.pressure_setpoint = cmH2O(10),
-                          .flow_direction = FlowDirection::kExpiratory}},
+                          .flow_direction = FlowDirection::Expiratory}},
       // Start of next breath
       {.time = microsSinceStartup(300E4),
        .params = params,
        .inputs = inputs_zero,
        .expected_state = {.pressure_setpoint = cmH2O(10),
-                          .flow_direction = FlowDirection::kInspiratory}},
+                          .flow_direction = FlowDirection::Inspiratory}},
       {.time = microsSinceStartup(300E4 + rise_time_us / 2),
        .params = params,
        .inputs = inputs_zero,
        .expected_state = {.pressure_setpoint = cmH2O(15),
-                          .flow_direction = FlowDirection::kInspiratory}},
+                          .flow_direction = FlowDirection::Inspiratory}},
       {.time = microsSinceStartup(300E4 + rise_time_us),
        .params = params,
        .inputs = inputs_zero,
        .expected_state = {.pressure_setpoint = cmH2O(20),
-                          .flow_direction = FlowDirection::kInspiratory}},
+                          .flow_direction = FlowDirection::Inspiratory}},
   });
 }
 
 struct FlowTraceResults {
   // Time relative to start of breath when flow direction switched from
-  // kInspiratory to kExpiratory.
+  // Inspiratory to Expiratory.
   std::optional<Duration> expire_start_time;
 
   // Time relative to start of breath when FSM indicated it was done.
@@ -274,14 +274,14 @@ RunFlowTrace(const VolumetricFlow *trace, size_t n, const VentParams &params,
     BlowerSystemState desired_state =
         fsm.DesiredState(hal.Now(), {.patient_volume = ml(0), .net_flow = f});
     FlowDirection dir = desired_state.flow_direction;
-    if (dir == FlowDirection::kExpiratory && !results.expire_start_time) {
+    if (dir == FlowDirection::Expiratory && !results.expire_start_time) {
       results.expire_start_time = hal.Now() - start;
     }
 
     if (results.expire_start_time == std::nullopt) {
-      EXPECT_EQ(FlowDirection::kInspiratory, dir);
+      EXPECT_EQ(FlowDirection::Inspiratory, dir);
     } else {
-      EXPECT_EQ(FlowDirection::kExpiratory, dir);
+      EXPECT_EQ(FlowDirection::Expiratory, dir);
     }
 
     if (check_it != setpoint_checks.end()) {

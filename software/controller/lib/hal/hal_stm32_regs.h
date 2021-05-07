@@ -505,17 +505,17 @@ inline FlashReg *const kFlashBase = reinterpret_cast<FlashReg *>(0x40022000);
 
 // [RM] 11.4.4 DMA channels (pg 302)
 enum class DmaChannel {
-  kChan1 = 0,
-  kChan2 = 1,
-  kChan3 = 2,
-  kChan4 = 3,
-  kChan5 = 4,
-  kChan6 = 5,
-  kChan7 = 6,
+  Chan1 = 0,
+  Chan2 = 1,
+  Chan3 = 2,
+  Chan4 = 3,
+  Chan5 = 4,
+  Chan6 = 5,
+  Chan7 = 6,
 };
 
-enum class DmaChannelDir { kPeripheralToMemory = 0, kMemoryToPeripheral = 1 };
-enum class DmaTransferSize { kByte = 0, kHalfWord = 1, kWord = 2 };
+enum class DmaChannelDir { PeripheralToMemory = 0, MemoryToPeripheral = 1 };
+enum class DmaTransferSize { Byte = 0, HalfWord = 1, Word = 2 };
 
 struct DmaStruct {
   union {
@@ -645,10 +645,10 @@ inline void DmaSelectChannel(DmaReg *dma, DmaChannel chan, int selection) {
 }
 
 enum class DmaInterrupt {
-  kGlobal = 1,
-  kTransferComplete = 2,
-  kHalfTransfer = 4,
-  kTransferError = 8
+  Global = 1,
+  TransferComplete = 2,
+  HalfTransfer = 4,
+  TransferError = 8
 };
 
 // Detect a DMA Interrupt

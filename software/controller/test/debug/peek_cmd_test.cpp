@@ -52,7 +52,7 @@ TEST(PeekHandler, valid_peek) {
                               .max_response_length = std::size(response),
                               .response_length = 0,
                               .processed = &processed};
-      EXPECT_EQ(ErrorCode::kNone, peek_handler.Process(&peek_context));
+      EXPECT_EQ(ErrorCode::None, peek_handler.Process(&peek_context));
       EXPECT_TRUE(processed);
       EXPECT_EQ(
           peek_context.response_length,
@@ -75,7 +75,7 @@ TEST(PeekHandler, errors) {
                           .max_response_length = std::size(response),
                           .response_length = 0,
                           .processed = &processed};
-  EXPECT_EQ(ErrorCode::kMissingData, PeekHandler().Process(&peek_context));
+  EXPECT_EQ(ErrorCode::MissingData, PeekHandler().Process(&peek_context));
   EXPECT_FALSE(processed);
 }
 

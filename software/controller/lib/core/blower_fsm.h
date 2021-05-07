@@ -51,8 +51,8 @@ limitations under the License.
 // https://respiraworks.slack.com/archives/CV4MTUJHF/p1588001011133500
 
 enum class FlowDirection {
-  kInspiratory,
-  kExpiratory,
+  Inspiratory,
+  Expiratory,
 };
 
 // Sensor readings etc that are used by BlowerFsm to do e.g. breath detection.
@@ -120,7 +120,7 @@ public:
         //
         // Same applies to the is_end_of_breath flag: it doesn't really pertain
         // to the off state but hardcode it to false by convention.
-        .flow_direction = FlowDirection::kExpiratory,
+        .flow_direction = FlowDirection::Expiratory,
         .pip = cmH2O(0.0f),
         .peep = cmH2O(0.0f),
         .is_end_of_breath = false,

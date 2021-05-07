@@ -38,18 +38,18 @@ Reference abbreviations [RM], [DS], etc are defined in hal/README.md.
 // The values here are the offsets into the interrupt table.
 // These can be found in [RM] chapter 12 (NVIC)
 enum class InterruptVector {
-  kDma1Channel2 = 0x70,
-  kDma1Channel3 = 0x074,
-  kTimer15 = 0xA0,
-  kI2c1Event = 0xBC,
-  kI2c1Error = 0xC0,
-  kSpi1 = 0xCC,
-  kUART2 = 0x0D8,
-  kUART3 = 0x0DC,
-  kTimer6 = 0x118,
-  kDma2Channel3 = 0x128,
-  kDma2Channel6 = 0x150,
-  kDma2Channel7 = 0x157,
+  Dma1Channel2 = 0x70,
+  Dma1Channel3 = 0x074,
+  Timer15 = 0xA0,
+  I2c1Event = 0xBC,
+  I2c1Error = 0xC0,
+  Spi1 = 0xCC,
+  Uart2 = 0x0D8,
+  Uart3 = 0x0DC,
+  Timer6 = 0x118,
+  Dma2Channel3 = 0x128,
+  Dma2Channel6 = 0x150,
+  Dma2Channel7 = 0x157,
 };
 
 // Handy functions for controlling GPIO
@@ -57,10 +57,10 @@ enum class InterruptVector {
 // Each pin has a 2-bit mode value that can be set using this function.
 // Pin 0 mode is in bits 0-1, pin 1 in 2-3, etc.  ([RM] 8.4.1)
 enum class GPIOPinMode {
-  kInput = 0,
-  kOutput = 1,
-  kAlternateFunction = 2,
-  kAnalog = 3,
+  Input = 0,
+  Output = 1,
+  AlternateFunction = 2,
+  Analog = 3,
 };
 
 inline void GpioPinMode(GpioReg *gpio, int pin, GPIOPinMode mode) {
@@ -69,17 +69,17 @@ inline void GpioPinMode(GpioReg *gpio, int pin, GPIOPinMode mode) {
 }
 
 // Value for GPIO{A,B,...E,H}_OTYPER ([RM] 8.4.2)
-enum class GPIOOutType { kPushPull = 0, kOpenDrain = 1 };
+enum class GPIOOutType { PushPull = 0, OpenDrain = 1 };
 
 inline void GpioOutType(GpioReg *gpio, int pin, GPIOOutType output_type) {
-  if (output_type == GPIOOutType::kOpenDrain)
+  if (output_type == GPIOOutType::OpenDrain)
     gpio->output_type |= 1 << pin;
   else
     gpio->output_type &= ~(1 << pin);
 }
 
 // Output pin speeds are set using two consecutive bits / pin.
-enum class GPIOOutSpeed { kSlow = 0, kMedium = 1, kFast = 2, kSmoking = 3 };
+enum class GPIOOutSpeed { Slow = 0, Medium = 1, Fast = 2, Smoking = 3 };
 inline void GpioOutSpeed(GpioReg *gpio, int pin, GPIOOutSpeed speed) {
   int s = static_cast<int>(speed);
   gpio->output_speed &= ~(0b11 << (2 * pin));
@@ -90,7 +90,7 @@ inline void GpioOutSpeed(GpioReg *gpio, int pin, GPIOOutSpeed speed) {
 // See Table 17 and 18 [DS] for alternate functions
 // See [RM] 8.4.9 and 8.4.10 for GPIO alternate function selection
 inline void GpioPinAltFunc(GpioReg *gpio, int pin, int func) {
-  GpioPinMode(gpio, pin, GPIOPinMode::kAlternateFunction);
+  GpioPinMode(gpio, pin, GPIOPinMode::AlternateFunction);
 
   int x = (pin < 8) ? 0 : 1;
   gpio->alternate_function[x] |= (func << ((pin & 0b111) * 4));

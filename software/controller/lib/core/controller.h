@@ -97,12 +97,12 @@ private:
   BlowerFsm fsm_;
   PID blower_valve_pid_ =
       PID(dbg_blower_valve_kp.Get(), dbg_blower_valve_computed_ki.Get(),
-          dbg_blower_valve_kd.Get(), ProportionalTerm::kOnError,
-          DifferentialTerm::kOnMeasurement, /*output_min=*/0.f,
+          dbg_blower_valve_kd.Get(), ProportionalTerm::OnError,
+          DifferentialTerm::OnMeasurement, /*output_min=*/0.f,
           /*output_max=*/1.0f);
   PID psol_pid_ =
       PID(dbg_psol_kp.Get(), dbg_psol_ki.Get(), dbg_psol_kd.Get(),
-          ProportionalTerm::kOnError, DifferentialTerm::kOnMeasurement,
+          ProportionalTerm::OnError, DifferentialTerm::OnMeasurement,
           /*output_min=*/0.f, /*output_max=*/1.0f);
 
   // These objects accumulate flow to calculate volume.

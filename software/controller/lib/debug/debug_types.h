@@ -21,40 +21,35 @@ limitations under the License.
 namespace Debug {
 
 // States for the internal state machine
-enum class State {
-  kAwaitingCommand,
-  kProcessing,
-  kAwaitingResponse,
-  kResponding
-};
+enum class State { AwaitingCommand, Processing, AwaitingResponse, Responding };
 
 // The binary serial interface uses two special characters
 // These values are pretty arbitrary.
 // See debug.cpp for a detailed description of how this works
-enum class SpecialChar : uint8_t { kEscape = 0xf1, kEndTransfer = 0xf2 };
+enum class SpecialChar : uint8_t { Escape = 0xf1, EndTransfer = 0xf2 };
 
 enum class ErrorCode : uint8_t {
-  kNone = 0x00,            // No error (=success)
-  kCrcError = 0x01,        // CRC error on command
-  kUnknownCommand = 0x02,  // Unknown command code received
-  kMissingData = 0x03,     // Not enough data passed with command
-  kNoMemory = 0x04,        // Insufficient memory
-  kInternalError = 0x05,   // Some type of internal error (aka bug)
-  kUnknownVariable = 0x06, // The requested variable ID is invalid
-  kInvalidData = 0x07,     // data is out of range
-  kTimeout = 0x08,         // response timeout
+  None = 0x00,            // No error (=success)
+  CrcError = 0x01,        // CRC error on command
+  UnknownCommand = 0x02,  // Unknown command code received
+  MissingData = 0x03,     // Not enough data passed with command
+  NoMemory = 0x04,        // Insufficient memory
+  InternalError = 0x05,   // Some type of internal error (aka bug)
+  UnknownVariable = 0x06, // The requested variable ID is invalid
+  InvalidData = 0x07,     // data is out of range
+  Timeout = 0x08,         // response timeout
 };
 
 namespace Command {
 
 enum class Code : uint8_t {
-  kMode = 0x00,         // Return the current firmware mode
-  kPeek = 0x01,         // Peek into RAM
-  kPoke = 0x02,         // Poke values into RAM
-  kConsole = 0x03,      // Read strings from the print buffer - deprecated
-  kVariable = 0x04,     // Variable access
-  kTrace = 0x05,        // Data trace commands
-  kEepromAccess = 0x06, // Read/Write in I2C EEPROM
+  Mode = 0x00,         // Return the current firmware mode
+  Peek = 0x01,         // Peek into RAM
+  Poke = 0x02,         // Poke values into RAM
+  Console = 0x03,      // Read strings from the print buffer - deprecated
+  Variable = 0x04,     // Variable access
+  Trace = 0x05,        // Data trace commands
+  EepromAccess = 0x06, // Read/Write in I2C EEPROM
 };
 
 // Structure that represents a command's parameters
@@ -80,7 +75,7 @@ public:
   // Returns an error code.  For any non-zero error, the values returned in
   // response_length and response will be ignored.
   [[nodiscard]] virtual ErrorCode Process(Context *context) {
-    return ErrorCode::kUnknownCommand;
+    return ErrorCode::UnknownCommand;
   }
 };
 

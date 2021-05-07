@@ -38,7 +38,7 @@ public:
     context->response_length = 1;
     context->response[0] = 0;
     *(context->processed) = true;
-    return ErrorCode::kNone;
+    return ErrorCode::None;
   }
 };
 
@@ -82,16 +82,16 @@ public:
 //
 // Data passed to the command is a single byte which defines what the command
 // does:
-//  kFlush - Used to disable the trace and flush the trace buffer
-//  kDownload - Used to read data from the buffer
-//  kStart - Used to start recording in the trace buffer
-//  kGetVarId followed by var index (1 byte) - Used to get trace variables ID
-//  kSetVarId followed by var index (1 byte) and variable ID (2 bytes) - Used to
+//  Flush - Used to disable the trace and flush the trace buffer
+//  Download - Used to read data from the buffer
+//  Start - Used to start recording in the trace buffer
+//  GetVarId followed by var index (1 byte) - Used to get trace variables ID
+//  SetVarId followed by var index (1 byte) and variable ID (2 bytes) - Used to
 //    set traced variable id
-//  kGetPeriod - Used to get the trace period
-//  kSetPeriod followed by desired trace period (4 bytes) - Used to set the
+//  GetPeriod - Used to get the trace period
+//  SetPeriod followed by desired trace period (4 bytes) - Used to set the
 //    trace period
-//  kCountSamples - Used to get the number of samples currently in the trace
+//  CountSamples - Used to get the number of samples currently in the trace
 //    buffer
 
 class TraceHandler : public Handler {
@@ -100,14 +100,14 @@ public:
   ErrorCode Process(Context *context) override;
 
   enum class Subcommand : uint8_t {
-    kFlush = 0x00,    // disable and flush the trace buffer
-    kDownload = 0x01, // download data from the trace buffer
-    kStart = 0x02,    // start tracing data
-    kGetVarId = 0x03, // get traced variable id
-    kSetVarId = 0x04, // set traced variable id
-    kGetPeriod = 0x05,
-    kSetPeriod = 0x06,
-    kCountSamples = 0x07, // get number of samples in the trace buffer
+    Flush = 0x00,    // disable and flush the trace buffer
+    Download = 0x01, // download data from the trace buffer
+    Start = 0x02,    // start tracing data
+    GetVarId = 0x03, // get traced variable id
+    SetVarId = 0x04, // set traced variable id
+    GetPeriod = 0x05,
+    SetPeriod = 0x06,
+    CountSamples = 0x07, // get number of samples in the trace buffer
   };
 
 private:
@@ -123,7 +123,7 @@ private:
 // which defines what the command does and the structure of its data.
 //
 // Sub-commands:
-//  kGetInfo - Used to read info about a variable.  The debug interface calls
+//  GetInfo - Used to read info about a variable.  The debug interface calls
 //             this repeatedly on startup to enumerate the variables currently
 //             supported by the code.  This way new debug variables can be added
 //             on the fly without modifying the Python code to match.
@@ -133,9 +133,9 @@ private:
 //             the variable.
 //             See the code below for details of the output format
 //
-//  kGet - Read the variables value.
+//  Get - Read the variables value.
 //
-//  kSet - Set the variables value.
+//  Set - Set the variables value.
 //
 class VarHandler : public Handler {
 public:
@@ -143,9 +143,9 @@ public:
   ErrorCode Process(Context *context) override;
 
   enum class Subcommand : uint8_t {
-    kGetInfo = 0x00, // get variable info (name, type, help string)
-    kGet = 0x01,     // get variable value
-    kSet = 0x02,     // set variable value
+    GetInfo = 0x00, // get variable info (name, type, help string)
+    Get = 0x01,     // get variable value
+    Set = 0x02,     // set variable value
   };
 
 private:
@@ -167,10 +167,10 @@ private:
 // which defines what the command does and the structure of its data.
 //
 // Sub-commands:
-//  kRead, followed by a 16 bits address and a 16 bits length :
+//  Read, followed by a 16 bits address and a 16 bits length :
 //          Used to read length data bytes at given address in EEPROM
 //
-//  kWrite, followed by a 16 bits address and some data bytes :
+//  Write, followed by a 16 bits address and some data bytes :
 //          Used to write given data at given address
 class EepromHandler : public Handler {
 public:
@@ -178,8 +178,8 @@ public:
   ErrorCode Process(Context *context) override;
 
   enum class Subcommand : uint8_t {
-    kRead = 0x00,
-    kWrite = 0x01,
+    Read = 0x00,
+    Write = 0x01,
   };
 
 private:

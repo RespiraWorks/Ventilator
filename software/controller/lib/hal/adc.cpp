@@ -125,11 +125,11 @@ void HalApi::InitADC() {
   EnableClock(kAdcBase);
 
   // Configure the 4 pins used as analog inputs
-  GpioPinMode(kGpioABase, 0, GPIOPinMode::kAnalog);
-  GpioPinMode(kGpioABase, 1, GPIOPinMode::kAnalog);
-  GpioPinMode(kGpioABase, 4, GPIOPinMode::kAnalog);
-  GpioPinMode(kGpioBBase, 0, GPIOPinMode::kAnalog);
-  GpioPinMode(kGpioCBase, 1, GPIOPinMode::kAnalog);
+  GpioPinMode(kGpioABase, 0, GPIOPinMode::Analog);
+  GpioPinMode(kGpioABase, 1, GPIOPinMode::Analog);
+  GpioPinMode(kGpioABase, 4, GPIOPinMode::Analog);
+  GpioPinMode(kGpioBBase, 0, GPIOPinMode::Analog);
+  GpioPinMode(kGpioCBase, 1, GPIOPinMode::Analog);
 
   // Perform a power-up and calibration sequence on
   // the A/D converter
@@ -196,7 +196,7 @@ void HalApi::InitADC() {
   // I use DMA1 channel 1 to copy my A/D readings into my buffer ([RM] 11.4.4)
   EnableClock(kDma1Base);
   DmaReg *dma = kDma1Base;
-  int c1 = static_cast<int>(DmaChannel::kChan1);
+  int c1 = static_cast<int>(DmaChannel::Chan1);
 
   dma->channel[c1].peripheral_address = &adc->adc[0].data;
   dma->channel[c1].memory_address = adc_buff;
@@ -207,7 +207,7 @@ void HalApi::InitADC() {
   dma->channel[c1].config.half_tx_interrupt = 0;
   dma->channel[c1].config.tx_error_interrupt = 0;
   dma->channel[c1].config.direction =
-      static_cast<uint32_t>(DmaChannelDir::kPeripheralToMemory);
+      static_cast<uint32_t>(DmaChannelDir::PeripheralToMemory);
   dma->channel[c1].config.circular = 1;
   dma->channel[c1].config.peripheral_increment = 0;
   dma->channel[c1].config.memory_increment = 1;
@@ -224,13 +224,13 @@ void HalApi::InitADC() {
 Voltage HalApi::AnalogRead(AnalogPin pin) {
   int offset = [&] {
     switch (pin) {
-    case AnalogPin::kPatientPressure:
+    case AnalogPin::PatientPressure:
       return 0;
-    case AnalogPin::kInflowPressureDiff:
+    case AnalogPin::InflowPressureDiff:
       return 1;
-    case AnalogPin::kOutflowPressureDiff:
+    case AnalogPin::OutflowPressureDiff:
       return 2;
-    case AnalogPin::kFIO2:
+    case AnalogPin::FIO2:
       return 3;
     }
     // All cases covered above (and GCC checks this).

@@ -22,7 +22,7 @@ ErrorCode PeekHandler::Process(Context *context) {
   // Length should be exactly 6, but if more data is passed
   // I'll just ignore it.
   if (context->request_length < 6)
-    return ErrorCode::kMissingData;
+    return ErrorCode::MissingData;
 
   size_t address = address_msw_ + u8_to_u32(&context->request[0]);
   uint32_t count = u8_to_u16(&context->request[4]);
@@ -55,7 +55,7 @@ ErrorCode PeekHandler::Process(Context *context) {
 
   context->response_length = count;
   *(context->processed) = true;
-  return ErrorCode::kNone;
+  return ErrorCode::None;
 }
 
 } // namespace Debug::Command

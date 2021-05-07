@@ -19,11 +19,11 @@ limitations under the License.
 #include "hal_stm32_regs.h"
 
 enum class RxError {
-  kRxUnknownError,
-  kRxOverflow,
-  kRxFramingError,
-  kRxTimeout,
-  kRxDmaError
+  RxUnknownError,
+  RxOverflow,
+  RxFramingError,
+  RxTimeout,
+  RxDmaError
 };
 
 // An interface that gets called back by the driver on rx, tx complete

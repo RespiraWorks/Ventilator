@@ -77,14 +77,12 @@ static Debug::Command::VarHandler var_command;
 static Debug::Command::TraceHandler trace_command(&trace);
 static Debug::Command::EepromHandler eeprom_command(&eeprom);
 
-static Debug::Interface debug(&trace, 12, Debug::Command::Code::kMode,
-                              &mode_command, Debug::Command::Code::kPeek,
-                              &peek_command, Debug::Command::Code::kPoke,
-                              &poke_command, Debug::Command::Code::kVariable,
-                              &var_command, Debug::Command::Code::kTrace,
-                              &trace_command,
-                              Debug::Command::Code::kEepromAccess,
-                              &eeprom_command);
+static Debug::Interface
+    debug(&trace, 12, Debug::Command::Code::Mode, &mode_command,
+          Debug::Command::Code::Peek, &peek_command, Debug::Command::Code::Poke,
+          &poke_command, Debug::Command::Code::Variable, &var_command,
+          Debug::Command::Code::Trace, &trace_command,
+          Debug::Command::Code::EepromAccess, &eeprom_command);
 
 void RunTest() {
   hal.Init();

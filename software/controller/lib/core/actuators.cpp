@@ -26,7 +26,7 @@ static PinchValve exhale_pinch(1);
 
 void ActuatorsExecute(const ActuatorsState &desired_state) {
   // set blower PWM
-  hal.AnalogWrite(PwmPin::kBlower, desired_state.blower_power);
+  hal.AnalogWrite(PwmPin::Blower, desired_state.blower_power);
 
   // Set the blower pinch valve position
   if (desired_state.blower_valve)

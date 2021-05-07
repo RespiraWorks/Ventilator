@@ -37,20 +37,20 @@ float PID::Compute(Time now, float input, float setpoint) {
 
   output_sum_ += (ki_ * error * delta_t);
 
-  if (p_term_ == ProportionalTerm::kOnMeasurement) {
+  if (p_term_ == ProportionalTerm::OnMeasurement) {
     output_sum_ -= kp_ * delta_input;
   }
 
   output_sum_ = std::clamp(output_sum_, out_min_, out_max_);
 
   float res = output_sum_;
-  if (p_term_ == ProportionalTerm::kOnError) {
+  if (p_term_ == ProportionalTerm::OnError) {
     res += kp_ * error;
   }
   // delta_t may be 0 (e.g. on the first call to Compute()), in which case we
   // simply skip using the derivative term.
   if (delta_t > 0) {
-    if (d_term_ == DifferentialTerm::kOnMeasurement) {
+    if (d_term_ == DifferentialTerm::OnMeasurement) {
       res -= kd_ * delta_input / delta_t;
     } else {
       res += kd_ * (error - last_error_) / delta_t;

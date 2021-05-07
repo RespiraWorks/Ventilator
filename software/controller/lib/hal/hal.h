@@ -64,52 +64,52 @@ limitations under the License.
 // ---------------------------------------------------------------
 
 // Mode of a digital pin.
-// Usage: PinMode::kInput etc.
+// Usage: PinMode::Input etc.
 enum class PinMode {
-  // Test code relies on kInput being the first enumeration (to get the
-  // behavior that kInput pins are the default).
-  kInput,
-  kOutput,
-  kInputPullup
+  // Test code relies on Input being the first enumeration (to get the
+  // behavior that Input pins are the default).
+  Input,
+  Output,
+  InputPullup
 };
 
 // Voltage level of a digital pin.
-// Usage: VoltageLevel::kHigh, kLow
-enum class VoltageLevel { kHigh, kLow };
+// Usage: VoltageLevel::High, Low
+enum class VoltageLevel { High, Low };
 
 enum class AnalogPin {
   // MPXV5004DP pressure sensors:
   // - PATIENT_PRESSURE reads an absolute pressure value at the patient.
   // - {INFLOW,OUTFLOW}_PRESSURE_DIFF, read a differential across a venturi.
   //   They let us measure volumetric flow into and out of the patient.
-  kPatientPressure,
-  kInflowPressureDiff,
-  kOutflowPressureDiff,
+  PatientPressure,
+  InflowPressureDiff,
+  OutflowPressureDiff,
   // Teledyne R24-compatible Electrochemical Cell Oxygen Sensor
-  kFIO2,
+  FIO2,
 };
 
 // Pulse-width modulated outputs from the controller.  These can be set to
 // values in [0-255].
 //
-// Pins default to kInput, so if you add a new pin here, be sure to update
-// HalApi::Init() and set it to kOutput!
+// Pins default to Input, so if you add a new pin here, be sure to update
+// HalApi::Init() and set it to Output!
 enum class PwmPin {
   // Controls the fan speed.
-  kBlower,
+  Blower,
 };
 
-// Binary pins set by the controller -- these are booleans, kHigh or kLow.
+// Binary pins set by the controller -- these are booleans, High or Low.
 //
 // PWM pins can of course be HIGH or LOW too, but we separate out purely on/off
 // pins from PWM pins for reasons of "strong typing".
 //
-// Pins default to kInput, so if you add a new pin here, be sure to update
-// HalApi::Init() and set it to kOutput!
+// Pins default to Input, so if you add a new pin here, be sure to update
+// HalApi::Init() and set it to Output!
 enum class BinaryPin {
-  kRedLED,
-  kYellowLED,
-  kGreenLED,
+  RedLED,
+  YellowLED,
+  GreenLED,
 };
 
 // Interrupts on the STM32 are prioritized.  This allows
@@ -122,9 +122,9 @@ enum class BinaryPin {
 // priority of -1, so they can always interrupt any other
 // priority level.
 enum class IntPriority {
-  kCritical = 2, // Very important interrupt
-  kStandard = 5, // Normal hardware interrupts
-  kLow = 8,      // Less important.  Hardware interrupts can interrupt this
+  Critical = 2, // Very important interrupt
+  Standard = 5, // Normal hardware interrupts
+  Low = 8,      // Less important.  Hardware interrupts can interrupt this
 };
 
 enum class InterruptVector;
@@ -332,7 +332,7 @@ public:
   uint32_t CRC32(const uint8_t *data, uint32_t length);
 
 private:
-  // Initializes watchdog, sets appropriate pins to kOutput, etc.  Called by
+  // Initializes watchdog, sets appropriate pins to Output, etc.  Called by
   // HalApi::Init
   void WatchdogInit();
 
@@ -366,7 +366,7 @@ private:
   Time time_ = microsSinceStartup(0);
   bool interrupts_enabled_ = true;
 
-  // The default pin mode on Arduino is kInput, which happens to be the first
+  // The default pin mode on Arduino is Input, which happens to be the first
   // enumerator in PinMode and so the default in these maps!
   //
   // Source: https://www.arduino.cc/en/Tutorial/DigitalPins
@@ -456,13 +456,13 @@ inline void HalApi::SetDigitalPinMode(BinaryPin pin, PinMode mode) {
   binary_pin_modes_[pin] = mode;
 }
 inline void HalApi::DigitalWrite(BinaryPin pin, VoltageLevel value) {
-  if (binary_pin_modes_[pin] != PinMode::kOutput) {
+  if (binary_pin_modes_[pin] != PinMode::Output) {
     assert(false && "Can only write to an OUTPUT pin");
   }
   binary_pin_values_[pin] = value;
 }
 inline void HalApi::AnalogWrite(PwmPin pin, float duty) {
-  if (pwm_pin_modes_[pin] != PinMode::kOutput) {
+  if (pwm_pin_modes_[pin] != PinMode::Output) {
     assert(false && "Can only write to an OUTPUT pin");
   }
   pwm_pin_values_[pin] = duty;

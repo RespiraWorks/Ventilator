@@ -21,9 +21,9 @@ limitations under the License.
 
 // Defines the type of variable
 enum class VarType {
-  kInt32 = 1,
-  kUInt32 = 2,
-  kFloat = 3,
+  Int32 = 1,
+  UInt32 = 2,
+  Float = 3,
 };
 
 // This class represents a variable that you can read/write using the
@@ -99,17 +99,17 @@ public:
   // @param data Pointer to an actual variable in C++ code that this will access
   DebugVar(const char *name, int32_t *data, const char *help = "",
            const char *fmt = "%d")
-      : DebugVar(VarType::kInt32, name, data, help, fmt) {}
+      : DebugVar(VarType::Int32, name, data, help, fmt) {}
 
   // Like above, but unsigned
   DebugVar(const char *name, uint32_t *data, const char *help = "",
            const char *fmt = "%u")
-      : DebugVar(VarType::kUInt32, name, data, help, fmt) {}
+      : DebugVar(VarType::UInt32, name, data, help, fmt) {}
 
   // Like above, but float
   DebugVar(const char *name, float *data, const char *help = "",
            const char *fmt = "%.3f")
-      : DebugVar(VarType::kFloat, name, data, help, fmt) {}
+      : DebugVar(VarType::Float, name, data, help, fmt) {}
 
   // Gets the current value of the variable as an uint32_t.
   uint32_t GetValue() override {

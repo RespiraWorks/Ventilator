@@ -29,15 +29,15 @@ namespace I2C {
 
 // Speed values correspond to the timing register value from [RM] table 182
 enum class Speed {
-  kSlow = 0x3042C3C7,     // 10 kb/s
-  kStandard = 0x30420F13, // 100 kb/s
-  kFast = 0x10320309,     // 400 kb/s
-  kFastPlus = 0x00200204, // 1 Mb/s
+  Slow = 0x3042C3C7,     // 10 kb/s
+  Standard = 0x30420F13, // 100 kb/s
+  Fast = 0x10320309,     // 400 kb/s
+  FastPlus = 0x00200204, // 1 Mb/s
 };
 
 enum class ExchangeDirection {
-  kWrite = 0,
-  kRead = 1,
+  Write = 0,
+  Read = 1,
 };
 
 // Structure that represents an I²C request. It is up to the caller to
@@ -48,7 +48,7 @@ struct Request {
   uint8_t slave_address{0}; // for now we only support 7 bits addresses
                             // and NOT 10 bits addresses (I²C bus is one
                             // or the other)
-  ExchangeDirection direction{ExchangeDirection::kRead};
+  ExchangeDirection direction{ExchangeDirection::Read};
   uint16_t size{1};         // size (in bytes) of the data to be sent or
                             // received - limited to 16 bits because of DMA
                             // limitation

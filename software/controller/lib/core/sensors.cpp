@@ -54,14 +54,14 @@ static_assert(kVenturiChokeDiameter > meters(0));
 
 AnalogPin Sensors::PinFor(Sensor s) {
   switch (s) {
-  case Sensor::kPatientPressure:
-    return AnalogPin::kPatientPressure;
-  case Sensor::kInflowPressureDiff:
-    return AnalogPin::kInflowPressureDiff;
-  case Sensor::kOutflowPressureDiff:
-    return AnalogPin::kOutflowPressureDiff;
-  case Sensor::kFIO2:
-    return AnalogPin::kFIO2;
+  case Sensor::PatientPressure:
+    return AnalogPin::PatientPressure;
+  case Sensor::InflowPressureDiff:
+    return AnalogPin::InflowPressureDiff;
+  case Sensor::OutflowPressureDiff:
+    return AnalogPin::OutflowPressureDiff;
+  case Sensor::FIO2:
+    return AnalogPin::FIO2;
   }
   // Switch above covers all cases.
   __builtin_unreachable();
@@ -90,8 +90,8 @@ void Sensors::Calibrate() {
   // open any necessary valves, and recalibrate.
   hal.Delay(milliseconds(20));
 
-  for (Sensor s : {Sensor::kPatientPressure, Sensor::kInflowPressureDiff,
-                   Sensor::kOutflowPressureDiff, Sensor::kFIO2}) {
+  for (Sensor s : {Sensor::PatientPressure, Sensor::InflowPressureDiff,
+                   Sensor::OutflowPressureDiff, Sensor::FIO2}) {
     sensors_zero_vals_[static_cast<int>(s)] = hal.AnalogRead(PinFor(s));
   }
 }
@@ -133,8 +133,8 @@ float Sensors::ReadOxygenSensor(Pressure p_ambient) const {
   static const float kOxygenSensorGain{0.060f};
 
   // TODO: raise alarm if fio2 is out of expected (0,1) range
-  return (hal.AnalogRead(PinFor(Sensor::kFIO2)) -
-          sensors_zero_vals_[static_cast<int>(Sensor::kFIO2)])
+  return (hal.AnalogRead(PinFor(Sensor::FIO2)) -
+          sensors_zero_vals_[static_cast<int>(Sensor::FIO2)])
                  .volts() /
              (kAmplifierGain * kOxygenSensorGain) / p_ambient.atm() +
          kO2ConcentrationInAir;
@@ -158,11 +158,11 @@ VolumetricFlow Sensors::PressureDeltaToFlow(Pressure delta) {
 }
 
 SensorReadings Sensors::GetReadings() const {
-  auto patient_pressure = ReadPressureSensor(Sensor::kPatientPressure);
+  auto patient_pressure = ReadPressureSensor(Sensor::PatientPressure);
   // Flow rate is inhalation flow minus exhalation flow. Positive value is flow
   // into lungs, and negative is flow out of lungs.
-  auto inflow_delta = ReadPressureSensor(Sensor::kInflowPressureDiff);
-  auto outflow_delta = ReadPressureSensor(Sensor::kOutflowPressureDiff);
+  auto inflow_delta = ReadPressureSensor(Sensor::InflowPressureDiff);
+  auto outflow_delta = ReadPressureSensor(Sensor::OutflowPressureDiff);
   // Fraction of Inspired Oxygen assuming ambient pressure of 101.3 kPa
   // TODO: measure ambient pressure from an additional sensor and/or estimate
   // from user input (from altitude?)

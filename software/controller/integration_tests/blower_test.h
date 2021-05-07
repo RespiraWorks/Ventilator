@@ -23,7 +23,7 @@ void RunTest() {
   float step = kInitialStep;
 
   while (true) {
-    hal.AnalogWrite(PwmPin::kBlower, fan_power);
+    hal.AnalogWrite(PwmPin::Blower, fan_power);
     hal.Delay(kDelay);
 
     hal.WatchdogHandler();

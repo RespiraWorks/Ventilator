@@ -27,7 +27,7 @@ int StepMotor::total_motors_;
 
 // Static data members
 uint8_t StepMotor::dma_buff_[StepMotor::kMaxMotors];
-StepCommState StepMotor::coms_state_ = StepCommState::kIdle;
+StepCommState StepMotor::coms_state_ = StepCommState::Idle;
 
 // This array holds the length of each parameter in units of
 // bytes, rounded up to the nearest byte.  This info is based
@@ -42,11 +42,11 @@ uint8_t StepMotor::param_len_[32] = {
     2, // 0x06 - Deceleration (12 bits)
     2, // 0x07 - Maximum speed (10 bits)
     2, // 0x08 - Minimum speed (12 bits)
-    1, // 0x09 - kKValueHold Holding K VAL (8 bits)
-    1, // 0x0A - kKValueRun Constant speed K VAL (8 bits)
+    1, // 0x09 - KValueHold Holding K VAL (8 bits)
+    1, // 0x0A - KValueRun Constant speed K VAL (8 bits)
     1, // 0x0B - KVAL_ACC Acceleration starting K VAL (8 bits)
     1, // 0x0C - KVAL_DEC Deceleration starting K VAL (8 bits)
-    2, // 0x0D - kIntersectSpeed Intersect speed (14 bits)
+    2, // 0x0D - IntersectSpeed Intersect speed (14 bits)
     1, // 0x0E - ST_SLP Start slope (8 bits)
     1, // 0x0F - FN_SLP_ACC Acceleration final slope (8 bits)
     1, // 0x10 - FN_SLP_DEC Deceleration final slope (8 bits)
@@ -90,11 +90,11 @@ inline void CSLow() { GpioClrPin(kGpioBBase, 6); }
 StepMtrErr StepMotor::SetParam(StepMtrParam param, uint32_t value) {
   uint8_t p = static_cast<uint8_t>(param);
   if (p > sizeof(param_len_))
-    return StepMtrErr::kBadParam;
+    return StepMtrErr::BadParam;
 
   int len = param_len_[p];
   if (!len || (len > 3))
-    return StepMtrErr::kBadParam;
+    return StepMtrErr::BadParam;
 
   uint8_t cmd_buff[4];
   cmd_buff[0] = p; // The op-code for a set is just the parameter number
@@ -112,16 +112,16 @@ StepMtrErr StepMotor::SetParam(StepMtrParam param, uint32_t value) {
 StepMtrErr StepMotor::GetParam(StepMtrParam param, uint32_t *value) {
   uint8_t p = static_cast<uint8_t>(param);
   if (p > sizeof(param_len_))
-    return StepMtrErr::kBadParam;
+    return StepMtrErr::BadParam;
 
   int len = param_len_[p];
   if (!len || (len > 3))
-    return StepMtrErr::kBadParam;
+    return StepMtrErr::BadParam;
 
   // It's not legal to call this from the control loop because it
   // has to block.  Return an error if we're in an interrupt handler
   if (hal.InInterruptHandler())
-    return StepMtrErr::kWouldBlock;
+    return StepMtrErr::WouldBlock;
 
   uint8_t cmd_buff[4];
 
@@ -132,7 +132,7 @@ StepMtrErr StepMotor::GetParam(StepMtrParam param, uint32_t *value) {
   cmd_buff[3] = 0;
 
   StepMtrErr err = SendCmd(cmd_buff, len + 1);
-  if (err != StepMtrErr::kOk)
+  if (err != StepMtrErr::Ok)
     return err;
 
   // At this point, the response from the stepper driver
@@ -190,8 +190,8 @@ void HalApi::StepperMotorInit() {
   // part inadvertently
   CSHigh();
   GpioSetPin(kGpioABase, 9);
-  GpioPinMode(kGpioBBase, 6, GPIOPinMode::kOutput);
-  GpioPinMode(kGpioABase, 9, GPIOPinMode::kOutput);
+  GpioPinMode(kGpioBBase, 6, GPIOPinMode::Output);
+  GpioPinMode(kGpioABase, 9, GPIOPinMode::Output);
 
   // Assign the three SPI pins to the SPI peripheral
   GpioPinAltFunc(kGpioABase, 5, 5);
@@ -199,8 +199,8 @@ void HalApi::StepperMotorInit() {
   GpioPinAltFunc(kGpioABase, 7, 5);
 
   // Set the output pins to use the highest speed setting
-  GpioOutSpeed(kGpioABase, 5, GPIOOutSpeed::kSmoking);
-  GpioOutSpeed(kGpioABase, 7, GPIOOutSpeed::kSmoking);
+  GpioOutSpeed(kGpioABase, 5, GPIOOutSpeed::Smoking);
+  GpioOutSpeed(kGpioABase, 7, GPIOOutSpeed::Smoking);
 
   // Configure my SPI port to talk to the stepper
   SpiReg *const spi = kSpi1Base;
@@ -226,13 +226,13 @@ void HalApi::StepperMotorInit() {
 
   // DMA2 channels 3 and 4 can be used to handle rx and tx interrupts from
   // SPI1 respectively.
-  DmaSelectChannel(kDma2Base, DmaChannel::kChan3, 4);
-  DmaSelectChannel(kDma2Base, DmaChannel::kChan4, 4);
+  DmaSelectChannel(kDma2Base, DmaChannel::Chan3, 4);
+  DmaSelectChannel(kDma2Base, DmaChannel::Chan4, 4);
 
   // The two DMA channels move data to/from the SPI data register.
   DmaReg *dma = kDma2Base;
-  int c3 = static_cast<int>(DmaChannel::kChan3);
-  int c4 = static_cast<int>(DmaChannel::kChan4);
+  int c3 = static_cast<int>(DmaChannel::Chan3);
+  int c4 = static_cast<int>(DmaChannel::Chan4);
   dma->channel[c3].peripheral_address = &spi->data;
   dma->channel[c4].peripheral_address = &spi->data;
 
@@ -242,7 +242,7 @@ void HalApi::StepperMotorInit() {
   dma->channel[c3].config.half_tx_interrupt = 0;
   dma->channel[c3].config.tx_error_interrupt = 0;
   dma->channel[c3].config.direction =
-      static_cast<uint32_t>(DmaChannelDir::kPeripheralToMemory);
+      static_cast<uint32_t>(DmaChannelDir::PeripheralToMemory);
   dma->channel[c3].config.circular = 0;
   dma->channel[c3].config.peripheral_increment = 0;
   dma->channel[c3].config.memory_increment = 1;
@@ -256,7 +256,7 @@ void HalApi::StepperMotorInit() {
   dma->channel[c4].config.half_tx_interrupt = 0;
   dma->channel[c4].config.tx_error_interrupt = 0;
   dma->channel[c4].config.direction =
-      static_cast<uint32_t>(DmaChannelDir::kMemoryToPeripheral);
+      static_cast<uint32_t>(DmaChannelDir::MemoryToPeripheral);
   dma->channel[c4].config.circular = 0;
   dma->channel[c4].config.peripheral_increment = 0;
   dma->channel[c4].config.memory_increment = 1;
@@ -265,7 +265,7 @@ void HalApi::StepperMotorInit() {
   dma->channel[c4].config.priority = 0;
   dma->channel[c4].config.mem2mem = 0;
 
-  hal.EnableInterrupt(InterruptVector::kDma2Channel3, IntPriority::kStandard);
+  hal.EnableInterrupt(InterruptVector::Dma2Channel3, IntPriority::Standard);
 
   StepMotor::OneTimeInit();
 }
@@ -291,7 +291,7 @@ void StepMotor::OneTimeInit() {
 
     // Get the first gate config register of the powerSTEP01.
     // This is actually the config register on the L6470
-    mtr->GetParam(StepMtrParam::kGateConfig1, &val);
+    mtr->GetParam(StepMtrParam::GateConfig1, &val);
 
     // If this is at the default config register value for
     // the L6470 then I don't need to do any more configuration
@@ -302,18 +302,18 @@ void StepMotor::OneTimeInit() {
 
     // Configure the two gate config registers to reasonable values
     //
-    // kGateConfig1 xxxxxxxxxxxxxxxx
+    // GateConfig1 xxxxxxxxxxxxxxxx
     //           ...........\\\\\ - time at constant current 3750ns (0x1D)
     //           ........\\\------- Gate current 96mA (7)
     //           .....\\\---------- Turn off boost time 1uS (7)
     //           ....\------------- Watch dog enable (1)
     //           \\\\-------------- reserved
-    mtr->SetParam(StepMtrParam::kGateConfig1, 0x0FFD);
+    mtr->SetParam(StepMtrParam::GateConfig1, 0x0FFD);
 
-    // kGateConfig2 xxxxxxxx
+    // GateConfig2 xxxxxxxx
     //           ...\\\\\---------- Dead time 1000ns (7)
     //           \\\--------------- Blanking time 1000ns (7)
-    mtr->SetParam(StepMtrParam::kGateConfig2, 0xF7);
+    mtr->SetParam(StepMtrParam::GateConfig2, 0xF7);
   }
 }
 
@@ -339,7 +339,7 @@ float StepMotor::RegVelToDps(int32_t val, float cnv) const {
 // Note that this value is always positive
 StepMtrErr StepMotor::GetCurrentSpeed(float *ret) {
   uint32_t val;
-  StepMtrErr err = GetParam(StepMtrParam::kSpeed, &val);
+  StepMtrErr err = GetParam(StepMtrParam::Speed, &val);
   *ret = RegVelToDps(val, kVelCurrentSpeedReg);
   return err;
 }
@@ -349,19 +349,19 @@ StepMtrErr StepMotor::GetCurrentSpeed(float *ret) {
 // NOTE - The motor must be disabled to set this
 StepMtrErr StepMotor::SetMaxSpeed(float dps) {
   if (dps < 0)
-    return StepMtrErr::kBadValue;
+    return StepMtrErr::BadValue;
 
   uint32_t speed = static_cast<uint32_t>(DpsToVelReg(dps, kVelMaxSpeedReg));
   if (speed > 0x3ff)
     speed = 0x3ff;
 
-  return SetParam(StepMtrParam::kMaxSpeed, speed);
+  return SetParam(StepMtrParam::MaxSpeed, speed);
 }
 
 // Get the motor's max speed setting in deg/sec
 StepMtrErr StepMotor::GetMaxSpeed(float *ret) {
   uint32_t val;
-  StepMtrErr err = GetParam(StepMtrParam::kMaxSpeed, &val);
+  StepMtrErr err = GetParam(StepMtrParam::MaxSpeed, &val);
   *ret = RegVelToDps(val, kVelMaxSpeedReg);
   return err;
 }
@@ -378,19 +378,19 @@ StepMtrErr StepMotor::GetMaxSpeed(float *ret) {
 // NOTE - The motor must be disabled to set this
 StepMtrErr StepMotor::SetMinSpeed(float dps) {
   if (dps < 0)
-    return StepMtrErr::kBadValue;
+    return StepMtrErr::BadValue;
 
   uint32_t speed = static_cast<uint32_t>(DpsToVelReg(dps, kVelMinSpeedReg));
   if (speed > 0xfff)
     speed = 0xfff;
 
-  return SetParam(StepMtrParam::kMinSpeed, speed);
+  return SetParam(StepMtrParam::MinSpeed, speed);
 }
 
 // Get the motor's min speed setting in deg/sec
 StepMtrErr StepMotor::GetMinSpeed(float *ret) {
   uint32_t val;
-  StepMtrErr err = GetParam(StepMtrParam::kMinSpeed, &val);
+  StepMtrErr err = GetParam(StepMtrParam::MinSpeed, &val);
   *ret = RegVelToDps(val, kVelMinSpeedReg);
   return err;
 }
@@ -402,7 +402,7 @@ StepMtrErr StepMotor::SetAccel(float acc) {
 
   static constexpr float kScaler = (kTickTime * kTickTime * 1099511627776.f);
   if (acc < 0)
-    return StepMtrErr::kBadValue;
+    return StepMtrErr::BadValue;
 
   // Convert from deg/sec/sec to steps/sec/sec
   acc *= static_cast<float>(steps_per_rev_) / 360.0f;
@@ -412,11 +412,11 @@ StepMtrErr StepMotor::SetAccel(float acc) {
   if (val > 0x0fff)
     val = 0xfff;
 
-  StepMtrErr err = SetParam(StepMtrParam::kAcceleration, val);
-  if (err != StepMtrErr::kOk)
+  StepMtrErr err = SetParam(StepMtrParam::Acceleration, val);
+  if (err != StepMtrErr::Ok)
     return err;
 
-  return SetParam(StepMtrParam::kDeceleration, val);
+  return SetParam(StepMtrParam::Deceleration, val);
 }
 
 // Set the amplitude of the voltage output used to drive the motor.
@@ -448,36 +448,36 @@ StepMtrErr StepMotor::SetKval(StepMtrParam param, float amp) {
     amp += 0.15f;
 
   if ((amp < 0) || (amp > 1))
-    return StepMtrErr::kBadValue;
+    return StepMtrErr::BadValue;
 
   // The stepper chip uses a value of 0 to 255
   return SetParam(param, static_cast<uint32_t>(amp * 255));
 }
 
 StepMtrErr StepMotor::SetAmpHold(float amp) {
-  return SetKval(StepMtrParam::kKValueHold, amp);
+  return SetKval(StepMtrParam::KValueHold, amp);
 }
 StepMtrErr StepMotor::SetAmpRun(float amp) {
-  return SetKval(StepMtrParam::kKValueRun, amp);
+  return SetKval(StepMtrParam::KValueRun, amp);
 }
 StepMtrErr StepMotor::SetAmpAccel(float amp) {
-  return SetKval(StepMtrParam::kKValueAccelerate, amp);
+  return SetKval(StepMtrParam::KValueAccelerate, amp);
 }
 StepMtrErr StepMotor::SetAmpDecel(float amp) {
-  return SetKval(StepMtrParam::kKValueDecelerate, amp);
+  return SetKval(StepMtrParam::KValueDecelerate, amp);
 }
 
 StepMtrErr StepMotor::SetAmpAll(float amp) {
   StepMtrErr err = SetAmpHold(amp);
-  if (err != StepMtrErr::kOk)
+  if (err != StepMtrErr::Ok)
     return err;
 
   err = SetAmpRun(amp);
-  if (err != StepMtrErr::kOk)
+  if (err != StepMtrErr::Ok)
     return err;
 
   err = SetAmpAccel(amp);
-  if (err != StepMtrErr::kOk)
+  if (err != StepMtrErr::Ok)
     return err;
 
   return SetAmpDecel(amp);
@@ -502,9 +502,9 @@ StepMtrErr StepMotor::RunAtVelocity(float vel) {
 
   uint8_t cmd[4];
   if (neg)
-    cmd[0] = static_cast<uint8_t>(StepMtrCmd::kRunNegative);
+    cmd[0] = static_cast<uint8_t>(StepMtrCmd::RunNegative);
   else
-    cmd[0] = static_cast<uint8_t>(StepMtrCmd::kRunPositive);
+    cmd[0] = static_cast<uint8_t>(StepMtrCmd::RunPositive);
 
   cmd[1] = static_cast<uint8_t>(s >> 16);
   cmd[2] = static_cast<uint8_t>(s >> 8);
@@ -516,7 +516,7 @@ StepMtrErr StepMotor::RunAtVelocity(float vel) {
 // This can also be used to enable the motor without
 // causing any motion
 StepMtrErr StepMotor::SoftStop() {
-  uint8_t cmd = static_cast<uint8_t>(StepMtrCmd::kSoftStop);
+  uint8_t cmd = static_cast<uint8_t>(StepMtrCmd::SoftStop);
   return SendCmd(&cmd, 1);
 }
 
@@ -524,31 +524,31 @@ StepMtrErr StepMotor::SoftStop() {
 // This can also be used to enable the motor without
 // causing any motion
 StepMtrErr StepMotor::HardStop() {
-  uint8_t cmd = static_cast<uint8_t>(StepMtrCmd::kHardStop);
+  uint8_t cmd = static_cast<uint8_t>(StepMtrCmd::HardStop);
   return SendCmd(&cmd, 1);
 }
 
 // Decelerate to zero velocity and disable
 StepMtrErr StepMotor::SoftDisable() {
-  uint8_t cmd = static_cast<uint8_t>(StepMtrCmd::kSoftDisable);
+  uint8_t cmd = static_cast<uint8_t>(StepMtrCmd::SoftDisable);
   return SendCmd(&cmd, 1);
 }
 
 // Immediately disable the motor
 StepMtrErr StepMotor::HardDisable() {
-  uint8_t cmd = static_cast<uint8_t>(StepMtrCmd::kHardDisable);
+  uint8_t cmd = static_cast<uint8_t>(StepMtrCmd::HardDisable);
   return SendCmd(&cmd, 1);
 }
 
 // Reset the motor position to zero
 StepMtrErr StepMotor::ClearPosition() {
-  uint8_t cmd = static_cast<uint8_t>(StepMtrCmd::kResetPosition);
+  uint8_t cmd = static_cast<uint8_t>(StepMtrCmd::ResetPosition);
   return SendCmd(&cmd, 1);
 }
 
 // Reset the stepper chip
 StepMtrErr StepMotor::Reset() {
-  uint8_t cmd = static_cast<uint8_t>(StepMtrCmd::kResetDevice);
+  uint8_t cmd = static_cast<uint8_t>(StepMtrCmd::ResetDevice);
   return SendCmd(&cmd, 1);
 }
 
@@ -557,12 +557,12 @@ StepMtrErr StepMotor::GetStatus(StepperStatus *stat) {
   // It's not legal to call this from the control loop because it
   // has to block.  Return an error if we're in an interrupt handler
   if (hal.InInterruptHandler())
-    return StepMtrErr::kWouldBlock;
+    return StepMtrErr::WouldBlock;
 
-  uint8_t cmd[] = {static_cast<uint8_t>(StepMtrCmd::kGetStatus), 0, 0};
+  uint8_t cmd[] = {static_cast<uint8_t>(StepMtrCmd::GetStatus), 0, 0};
 
   StepMtrErr err = SendCmd(cmd, 3);
-  if (err != StepMtrErr::kOk)
+  if (err != StepMtrErr::Ok)
     return err;
 
   stat->enabled = (cmd[2] & 0x01) == 0;
@@ -575,16 +575,16 @@ StepMtrErr StepMotor::GetStatus(StepperStatus *stat) {
 
   switch (cmd[2] & 0x60) {
   case 0x00:
-    stat->move_status = StepMoveStatus::kStopped;
+    stat->move_status = StepMoveStatus::Stopped;
     break;
   case 0x20:
-    stat->move_status = StepMoveStatus::kAccelerating;
+    stat->move_status = StepMoveStatus::Accelerating;
     break;
   case 0x40:
-    stat->move_status = StepMoveStatus::kDecelerating;
+    stat->move_status = StepMoveStatus::Decelerating;
     break;
   case 0x60:
-    stat->move_status = StepMoveStatus::kConstantSpeed;
+    stat->move_status = StepMoveStatus::ConstantSpeed;
     break;
   }
 
@@ -605,7 +605,7 @@ StepMtrErr StepMotor::GotoPos(float deg) {
   int32_t ustep = DegToUstep(deg);
 
   uint8_t cmd[4];
-  cmd[0] = static_cast<uint8_t>(StepMtrCmd::kGoTo);
+  cmd[0] = static_cast<uint8_t>(StepMtrCmd::GoTo);
   cmd[1] = static_cast<uint8_t>(ustep >> 16);
   cmd[2] = static_cast<uint8_t>(ustep >> 8);
   cmd[3] = static_cast<uint8_t>(ustep);
@@ -619,13 +619,13 @@ StepMtrErr StepMotor::MoveRel(float deg) {
   uint8_t cmd[4];
 
   if (dist < 0) {
-    cmd[0] = static_cast<uint8_t>(StepMtrCmd::kMoveNegative);
+    cmd[0] = static_cast<uint8_t>(StepMtrCmd::MoveNegative);
     dist *= -1;
   } else
-    cmd[0] = static_cast<uint8_t>(StepMtrCmd::kMovePositive);
+    cmd[0] = static_cast<uint8_t>(StepMtrCmd::MovePositive);
 
   if (dist > 0x003FFFFF)
-    return StepMtrErr::kBadValue;
+    return StepMtrErr::BadValue;
 
   cmd[1] = static_cast<uint8_t>(dist >> 16);
   cmd[2] = static_cast<uint8_t>(dist >> 8);
@@ -669,7 +669,7 @@ StepMtrErr StepMotor::SendCmd(uint8_t *cmd, uint32_t len) {
   }
 
   // If the communications interface is idle, start it.
-  if (state == StepCommState::kIdle)
+  if (state == StepCommState::Idle)
     UpdateComState();
 
   // Wait for the ISR to finish sending the command.
@@ -683,7 +683,7 @@ StepMtrErr StepMotor::SendCmd(uint8_t *cmd, uint32_t len) {
   // TODO: have a dedicated place to place the stepper response so the ISR
   // doesn't reuse the location of the command to put the response.
 
-  return StepMtrErr::kOk;
+  return StepMtrErr::Ok;
 }
 
 // Enqueue the command and return immediately.  This is called
@@ -696,16 +696,16 @@ StepMtrErr StepMotor::EnqueueCmd(uint8_t *cmd, uint32_t len) {
 
   // It's illegal to call this if we're currently pulling data
   // from the queues.
-  if (coms_state_ == StepCommState::kSendQueued)
-    return StepMtrErr::kInvalidState;
+  if (coms_state_ == StepCommState::SendQueued)
+    return StepMtrErr::InvalidState;
 
   if (queue_count_ + len > sizeof(queue_))
-    return StepMtrErr::kQueueFull;
+    return StepMtrErr::QueueFull;
 
   memcpy(&queue_[queue_count_], cmd, len);
   queue_count_ += len;
 
-  return StepMtrErr::kOk;
+  return StepMtrErr::Ok;
 }
 
 // Update the communications state machine.
@@ -733,8 +733,8 @@ void StepMotor::UpdateComState() {
   // through to the next case.  I always look
   // for queued data first.
   //////////////////////////////////////////////
-  case StepCommState::kIdle:
-    coms_state_ = StepCommState::kSendQueued;
+  case StepCommState::Idle:
+    coms_state_ = StepCommState::SendQueued;
     // fall through
 
   //////////////////////////////////////////////
@@ -743,11 +743,11 @@ void StepMotor::UpdateComState() {
   // Note that I just ignore any response from
   // the motor drivers when sending data from the queues
   //////////////////////////////////////////////
-  case StepCommState::kSendQueued:
+  case StepCommState::SendQueued:
 
     // For each motor, grab the next byte from the queue
     // and add it to my DMA buffer.  For any empty queue
-    // I just add a kNop command
+    // I just add a Nop command
     for (int i = 0; i < total_motors_; i++) {
 
       // This really should already be false
@@ -761,7 +761,7 @@ void StepMotor::UpdateComState() {
       else {
         motor_[i].queue_ndx_ = 0;
         motor_[i].queue_count_ = 0;
-        dma_buff_[i] = static_cast<uint8_t>(StepMtrCmd::kNop);
+        dma_buff_[i] = static_cast<uint8_t>(StepMtrCmd::Nop);
       }
     }
 
@@ -770,7 +770,7 @@ void StepMotor::UpdateComState() {
     if (data_to_send)
       break;
 
-    coms_state_ = StepCommState::kSendSync;
+    coms_state_ = StepCommState::SendSync;
     // fall through
 
   //////////////////////////////////////////////
@@ -778,7 +778,7 @@ void StepMotor::UpdateComState() {
   // In this state I also save the response from the
   // motor driver chips.
   //////////////////////////////////////////////
-  case StepCommState::kSendSync:
+  case StepCommState::SendSync:
 
     for (int i = 0; i < total_motors_; i++) {
 
@@ -792,21 +792,21 @@ void StepMotor::UpdateComState() {
       }
 
       // If this motor has an active command to send,
-      // grab the next byte, otherwise send a kNop
+      // grab the next byte, otherwise send a Nop
       if (motor_[i].cmd_ptr_) {
         data_to_send = true;
         motor_[i].save_response_ = true;
         dma_buff_[i] = *motor_[i].cmd_ptr_;
       } else {
         motor_[i].save_response_ = false;
-        dma_buff_[i] = static_cast<uint8_t>(StepMtrCmd::kNop);
+        dma_buff_[i] = static_cast<uint8_t>(StepMtrCmd::Nop);
       }
     }
 
     // If I didn't find anything to send, then set our
     // state to idle and return, I'm done.
     if (!data_to_send) {
-      coms_state_ = StepCommState::kIdle;
+      coms_state_ = StepCommState::Idle;
       return;
     }
   }
@@ -816,8 +816,8 @@ void StepMotor::UpdateComState() {
   // of motor driver chips.  Set up my DMA to
   // send it out.
   //////////////////////////////////////////////
-  int c3 = static_cast<int>(DmaChannel::kChan3);
-  int c4 = static_cast<int>(DmaChannel::kChan4);
+  int c3 = static_cast<int>(DmaChannel::Chan3);
+  int c4 = static_cast<int>(DmaChannel::Chan4);
 
   DmaReg *dma = kDma2Base;
   dma->channel[c3].config.enable = 0;
@@ -841,7 +841,7 @@ void StepMotor::DmaISR() {
   CSHigh();
 
   // Clear the DMA interrupt
-  DmaClearInt(kDma2Base, DmaChannel::kChan3, DmaInterrupt::kGlobal);
+  DmaClearInt(kDma2Base, DmaChannel::Chan3, DmaInterrupt::Global);
 
   UpdateComState();
 }
@@ -850,15 +850,15 @@ void StepMotor::DmaISR() {
 // priority loop timer ISR.  If the comm state machine
 // is idle it starts a new transmission
 void StepMotor::StartQueuedCommands() {
-  if (coms_state_ == StepCommState::kIdle)
+  if (coms_state_ == StepCommState::Idle)
     UpdateComState();
 }
 
 // This is used to send a command to the stepper chips during
 // startup.
 void StepMotor::SendInitCmd(uint8_t *buff, int len) {
-  int c3 = static_cast<int>(DmaChannel::kChan3);
-  int c4 = static_cast<int>(DmaChannel::kChan4);
+  int c3 = static_cast<int>(DmaChannel::Chan3);
+  int c4 = static_cast<int>(DmaChannel::Chan4);
 
   DmaReg *dma = kDma2Base;
   dma->channel[c3].config.enable = 0;
@@ -885,7 +885,7 @@ void StepMotor::SendInitCmd(uint8_t *buff, int len) {
 
   // Clear the interrupt flag so I won't get an interrupt
   // as soon as I re-enable them
-  DmaClearInt(kDma2Base, DmaChannel::kChan3, DmaInterrupt::kGlobal);
+  DmaClearInt(kDma2Base, DmaChannel::Chan3, DmaInterrupt::Global);
 
   // Raise the chip select line and wait 1 microsecond.
   // The minimum time the CS needs to be high is just under
@@ -910,13 +910,13 @@ void StepMotor::ProbeChips() {
   // This will flush any data being sent by chips that were in
   // the middle of a command when the controller was restarted.
   for (int i = 0; i < 5; i++) {
-    memset(probe_buff, static_cast<uint8_t>(StepMtrCmd::kNop),
+    memset(probe_buff, static_cast<uint8_t>(StepMtrCmd::Nop),
            sizeof(probe_buff));
     SendInitCmd(probe_buff, sizeof(probe_buff));
   }
 
   // Now send a reset to all the chips on the bus.
-  memset(probe_buff, static_cast<uint8_t>(StepMtrCmd::kResetDevice),
+  memset(probe_buff, static_cast<uint8_t>(StepMtrCmd::ResetDevice),
          sizeof(probe_buff));
   SendInitCmd(probe_buff, sizeof(probe_buff));
 
@@ -937,19 +937,19 @@ void StepMotor::ProbeChips() {
 }
 
 #else
-StepMtrErr StepMotor::HardDisable() { return StepMtrErr::kOk; }
+StepMtrErr StepMotor::HardDisable() { return StepMtrErr::Ok; }
 
-StepMtrErr StepMotor::SetAmpAll(float amp) { return StepMtrErr::kOk; }
+StepMtrErr StepMotor::SetAmpAll(float amp) { return StepMtrErr::Ok; }
 
-StepMtrErr StepMotor::SetMaxSpeed(float dps) { return StepMtrErr::kOk; }
+StepMtrErr StepMotor::SetMaxSpeed(float dps) { return StepMtrErr::Ok; }
 
-StepMtrErr StepMotor::SetAccel(float acc) { return StepMtrErr::kOk; }
+StepMtrErr StepMotor::SetAccel(float acc) { return StepMtrErr::Ok; }
 
-StepMtrErr StepMotor::MoveRel(float deg) { return StepMtrErr::kOk; }
+StepMtrErr StepMotor::MoveRel(float deg) { return StepMtrErr::Ok; }
 
-StepMtrErr StepMotor::ClearPosition() { return StepMtrErr::kOk; }
+StepMtrErr StepMotor::ClearPosition() { return StepMtrErr::Ok; }
 
-StepMtrErr StepMotor::GotoPos(float deg) { return StepMtrErr::kOk; }
+StepMtrErr StepMotor::GotoPos(float deg) { return StepMtrErr::Ok; }
 
-StepMtrErr StepMotor::HardStop() { return StepMtrErr::kOk; }
+StepMtrErr StepMotor::HardStop() { return StepMtrErr::Ok; }
 #endif

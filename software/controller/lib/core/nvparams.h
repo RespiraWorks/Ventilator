@@ -52,8 +52,8 @@ struct Structure {
 static_assert(sizeof(Structure) <= 4096);
 
 enum class Address {
-  kFlip = 0,
-  kFlop = 4096,
+  Flip = 0,
+  Flop = 4096,
 };
 
 // Class that encapsulates NVParams. We need the Structure to be
@@ -71,7 +71,7 @@ public:
 private:
   Structure nv_param_;
   // Address of valid parameter block - defaulted to Flip
-  Address nvparam_addr_{Address::kFlip};
+  Address nvparam_addr_{Address::Flip};
   Time last_update_{microsSinceStartup(0)};
   I2Ceeprom *eeprom_{nullptr};
   // Update cumulated service interval

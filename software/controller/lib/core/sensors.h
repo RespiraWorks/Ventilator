@@ -79,10 +79,10 @@ public:
 
 private:
   enum class Sensor {
-    kPatientPressure,
-    kInflowPressureDiff,
-    kOutflowPressureDiff,
-    kFIO2,
+    PatientPressure,
+    InflowPressureDiff,
+    OutflowPressureDiff,
+    FIO2,
   };
   // Keep this in sync with the Sensor enum!
   constexpr static int kNumSensors{4};

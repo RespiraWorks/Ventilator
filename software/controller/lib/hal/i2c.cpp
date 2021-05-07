@@ -40,23 +40,23 @@ void HalApi::InitI2C() {
   // Set Pin Function to I²C (see [DS] Table 17)
   GpioPinAltFunc(kGpioBBase, 8, 4);
   GpioPinAltFunc(kGpioBBase, 9, 4);
-  // Set output speed to kFast
-  GpioOutSpeed(kGpioBBase, 8, GPIOOutSpeed::kFast);
-  GpioOutSpeed(kGpioBBase, 9, GPIOOutSpeed::kFast);
+  // Set output speed to Fast
+  GpioOutSpeed(kGpioBBase, 8, GPIOOutSpeed::Fast);
+  GpioOutSpeed(kGpioBBase, 9, GPIOOutSpeed::Fast);
   // Set open drain mode
-  GpioOutType(kGpioBBase, 8, GPIOOutType::kOpenDrain);
-  GpioOutType(kGpioBBase, 9, GPIOOutType::kOpenDrain);
+  GpioOutType(kGpioBBase, 8, GPIOOutType::OpenDrain);
+  GpioOutType(kGpioBBase, 9, GPIOOutType::OpenDrain);
   // Set Pull Up resistors
   GpioPullUp(kGpioBBase, 8);
   GpioPullUp(kGpioBBase, 9);
 
-  EnableInterrupt(InterruptVector::kI2c1Event, IntPriority::kLow);
-  EnableInterrupt(InterruptVector::kI2c1Error, IntPriority::kLow);
-  EnableInterrupt(InterruptVector::kDma2Channel6, IntPriority::kLow);
-  EnableInterrupt(InterruptVector::kDma2Channel7, IntPriority::kLow);
+  EnableInterrupt(InterruptVector::I2c1Event, IntPriority::Low);
+  EnableInterrupt(InterruptVector::I2c1Error, IntPriority::Low);
+  EnableInterrupt(InterruptVector::Dma2Channel6, IntPriority::Low);
+  EnableInterrupt(InterruptVector::Dma2Channel7, IntPriority::Low);
 
   // init i2c1
-  i2c1.Init(kI2C1Base, kDma2Base, I2C::Speed::kFast);
+  i2c1.Init(kI2C1Base, kDma2Base, I2C::Speed::Fast);
 }
 
 // Those interrupt service routines are specific to our configuration, unlike
@@ -65,9 +65,9 @@ void I2c1EventISR() { i2c1.I2CEventHandler(); };
 
 void I2c1ErrorISR() { i2c1.I2CErrorHandler(); };
 
-void DMA2Channel6ISR() { i2c1.DMAIntHandler(DmaChannel::kChan6); };
+void DMA2Channel6ISR() { i2c1.DMAIntHandler(DmaChannel::Chan6); };
 
-void DMA2Channel7ISR() { i2c1.DMAIntHandler(DmaChannel::kChan7); };
+void DMA2Channel7ISR() { i2c1.DMAIntHandler(DmaChannel::Chan7); };
 #else
 I2C::Channel i2c1;
 #endif // BARE_STM32
@@ -95,7 +95,7 @@ bool Channel::SendRequest(const Request &request) {
   }
 
   // In case of a write request, copy data to our write buffer
-  if (request.direction == ExchangeDirection::kWrite) {
+  if (request.direction == ExchangeDirection::Write) {
     if (!CopyDataToWriteBuffer(request.data, request.size)) {
       return false;
     }
@@ -181,7 +181,7 @@ void Channel::TransferByte() {
     // this shouldn't happen, but just to be safe, we stop here.
     return;
   }
-  if (last_request_.direction == ExchangeDirection::kRead) {
+  if (last_request_.direction == ExchangeDirection::Read) {
     ReceiveByte();
   } else {
     SendByte();
@@ -197,7 +197,7 @@ void Channel::EndTransfer() {
   // Ensure thread safety
   BlockInterrupts block;
   *last_request_.processed = true;
-  if (last_request_.direction == ExchangeDirection::kWrite) {
+  if (last_request_.direction == ExchangeDirection::Write) {
     // free the part of the write buffer that was dedicated to this request
     write_buffer_start_ += last_request_.size;
     if (write_buffer_start_ >= wrapping_index_) {
@@ -346,11 +346,11 @@ void STM32Channel::SetupDMAChannels(DmaReg *dma) {
     DmaChannel rx_channel_id;
     uint8_t request_number;
   } kDmaMap[] = {
-      {kDma1Base, kI2C1Base, DmaChannel::kChan6, DmaChannel::kChan7, 3},
-      {kDma1Base, kI2C2Base, DmaChannel::kChan4, DmaChannel::kChan5, 3},
-      {kDma1Base, kI2C3Base, DmaChannel::kChan2, DmaChannel::kChan3, 3},
-      {kDma2Base, kI2C1Base, DmaChannel::kChan7, DmaChannel::kChan6, 5},
-      {kDma2Base, kI2C4Base, DmaChannel::kChan2, DmaChannel::kChan1, 0},
+      {kDma1Base, kI2C1Base, DmaChannel::Chan6, DmaChannel::Chan7, 3},
+      {kDma1Base, kI2C2Base, DmaChannel::Chan4, DmaChannel::Chan5, 3},
+      {kDma1Base, kI2C3Base, DmaChannel::Chan2, DmaChannel::Chan3, 3},
+      {kDma2Base, kI2C1Base, DmaChannel::Chan7, DmaChannel::Chan6, 5},
+      {kDma2Base, kI2C4Base, DmaChannel::Chan2, DmaChannel::Chan1, 0},
   };
 
   for (auto &map : kDmaMap) {
@@ -364,8 +364,8 @@ void STM32Channel::SetupDMAChannels(DmaReg *dma) {
       DmaSelectChannel(dma, map.tx_channel_id, map.request_number);
 
       // configure both DMA channels to handle I²C transfers
-      ConfigureDMAChannel(rx_channel_, ExchangeDirection::kRead);
-      ConfigureDMAChannel(tx_channel_, ExchangeDirection::kWrite);
+      ConfigureDMAChannel(rx_channel_, ExchangeDirection::Read);
+      ConfigureDMAChannel(tx_channel_, ExchangeDirection::Write);
 
       dma_enable_ = true;
       i2c_->control_reg1.dma_rx = 1;
@@ -382,19 +382,18 @@ void I2C::STM32Channel::ConfigureDMAChannel(
   channel->config.half_tx_interrupt = 0;     // no half-transfer interrupt
   channel->config.tx_complete_interrupt = 1; // interrupt on DMA complete
   channel->config.mem2mem = 0;               // memory-to-memory mode disabled
-  channel->config.memory_size = static_cast<uint8_t>(DmaTransferSize::kByte);
-  channel->config.peripheral_size =
-      static_cast<uint8_t>(DmaTransferSize::kByte);
+  channel->config.memory_size = static_cast<uint8_t>(DmaTransferSize::Byte);
+  channel->config.peripheral_size = static_cast<uint8_t>(DmaTransferSize::Byte);
   channel->config.memory_increment = 1;     // increment dest address
   channel->config.peripheral_increment = 0; // don't increment source address
   channel->config.circular = 0;
-  if (direction == ExchangeDirection::kRead) {
+  if (direction == ExchangeDirection::Read) {
     channel->config.direction =
-        static_cast<uint8_t>(DmaChannelDir::kPeripheralToMemory);
+        static_cast<uint8_t>(DmaChannelDir::PeripheralToMemory);
     channel->peripheral_address = &(i2c_->rx_data);
   } else {
     channel->config.direction =
-        static_cast<uint8_t>(DmaChannelDir::kMemoryToPeripheral);
+        static_cast<uint8_t>(DmaChannelDir::MemoryToPeripheral);
     channel->peripheral_address = &(i2c_->tx_data);
   }
 }
@@ -409,7 +408,7 @@ void STM32Channel::SetupDMATransfer() {
   tx_channel_->config.enable = 0;
 
   volatile DmaReg::ChannelRegs *channel{nullptr};
-  if (last_request_.direction == ExchangeDirection::kRead) {
+  if (last_request_.direction == ExchangeDirection::Read) {
     channel = rx_channel_;
   } else {
     channel = tx_channel_;
@@ -437,7 +436,7 @@ void STM32Channel::DMAIntHandler(DmaChannel chan) {
   if (!dma_enable_ || !transfer_in_progress_)
     return;
   dma_->channel[static_cast<uint8_t>(chan)].config.enable = 0;
-  if (DmaIntStatus(dma_, chan, DmaInterrupt::kTransferComplete)) {
+  if (DmaIntStatus(dma_, chan, DmaInterrupt::TransferComplete)) {
     if (remaining_size_ > 255) {
       // decrement remaining size by 255 (the size of the DMA transfer)
       remaining_size_ = static_cast<uint16_t>(remaining_size_ - 255);
@@ -446,7 +445,7 @@ void STM32Channel::DMAIntHandler(DmaChannel chan) {
       remaining_size_ = 0;
       EndTransfer();
     }
-  } else if (DmaIntStatus(dma_, chan, DmaInterrupt::kTransferError)) {
+  } else if (DmaIntStatus(dma_, chan, DmaInterrupt::TransferError)) {
     // we are dealing with an error --> reset transfer (up to kMaxRetries
     // times)
     if (--error_retry_ > 0) {
@@ -458,7 +457,7 @@ void STM32Channel::DMAIntHandler(DmaChannel chan) {
     }
   }
   // clear all interrupts and (re-)start the current or next transfer
-  DmaClearInt(dma_, chan, DmaInterrupt::kGlobal);
+  DmaClearInt(dma_, chan, DmaInterrupt::Global);
   StartTransfer();
 }
 #endif // BARE_STM32

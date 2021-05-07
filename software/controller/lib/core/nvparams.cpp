@@ -65,28 +65,28 @@ void Handler::Init(I2Ceeprom *eeprom) {
     linked_to_eeprom_ = true;
   }
   // Read flip side
-  if (ReadFullParams(Address::kFlip, &nv_param_, eeprom_)) {
-    nvparam_addr_ = Address::kFlip;
+  if (ReadFullParams(Address::Flip, &nv_param_, eeprom_)) {
+    nvparam_addr_ = Address::Flip;
     // check its validity
     if (IsValid(&nv_param_)) {
       // Still read the flop in case they are both valid (which normally
       // shouldn't happen but could if power is lost at just the right
       // time when writing).
       Structure flop;
-      ReadFullParams(Address::kFlop, &flop, eeprom_);
+      ReadFullParams(Address::Flop, &flop, eeprom_);
       // check its validity
       if (IsValid(&flop)) {
         // Check the counter and keep flop if it is the most recent one
         if (flop.count > nv_param_.count ||
             (flop.count == 0 && nv_param_.count == 0xFF)) {
           nv_param_ = flop;
-          nvparam_addr_ = Address::kFlop;
+          nvparam_addr_ = Address::Flop;
         }
       }
     } else { // flip is invalid ==> check the flop
-      ReadFullParams(Address::kFlop, &nv_param_, eeprom_);
+      ReadFullParams(Address::Flop, &nv_param_, eeprom_);
       if (IsValid(&nv_param_)) {
-        nvparam_addr_ = Address::kFlop;
+        nvparam_addr_ = Address::Flop;
       } else {
         // none of the flip/flop is valid
         // TODO: this should only happen during the very first use of a
@@ -107,8 +107,8 @@ void Handler::Init(I2Ceeprom *eeprom) {
     nv_param_ = Structure();
     nv_param_.crc = CRC(&nv_param_);
     if (linked_to_eeprom_) {
-      WriteFullParams(Address::kFlip);
-      WriteFullParams(Address::kFlop);
+      WriteFullParams(Address::Flip);
+      WriteFullParams(Address::Flop);
     }
   }
   // set write access dbg_vars = nv_params to prevent the first pass in
@@ -134,9 +134,9 @@ bool Handler::Set(uint16_t offset, void *value, uint8_t len) {
 
   if (linked_to_eeprom_) {
     // Update the contents in eeprom (with flip/flop logic)
-    uint16_t new_address{static_cast<uint16_t>(Address::kFlip)};
-    if (nvparam_addr_ == Address::kFlip) {
-      new_address = static_cast<uint16_t>(Address::kFlop);
+    uint16_t new_address{static_cast<uint16_t>(Address::Flip)};
+    if (nvparam_addr_ == Address::Flip) {
+      new_address = static_cast<uint16_t>(Address::Flop);
     }
     // write the changed data and both crc+counter to the new side
     eeprom_->WriteBytes(static_cast<uint16_t>(new_address + offset), len, value,
@@ -149,10 +149,10 @@ bool Handler::Set(uint16_t offset, void *value, uint8_t len) {
         static_cast<uint16_t>(static_cast<uint16_t>(nvparam_addr_) + offset),
         len, value, nullptr);
     // point nvparam_address to the newly-written side
-    if (nvparam_addr_ == Address::kFlip) {
-      nvparam_addr_ = Address::kFlop;
+    if (nvparam_addr_ == Address::Flip) {
+      nvparam_addr_ = Address::Flop;
     } else {
-      nvparam_addr_ = Address::kFlip;
+      nvparam_addr_ = Address::Flip;
     }
   }
   return true;

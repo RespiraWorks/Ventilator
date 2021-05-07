@@ -20,17 +20,17 @@ limitations under the License.
 #include "units.h"
 
 enum class PinchValveHomeState {
-  kDisabled,
-  kLowerAmp,
-  kSetHomeSpeed,
-  kMoveToStop,
-  kWaitMoveStop,
-  kSetNormalAmp,
-  kMoveOffset,
-  kWaitMoveOffset,
-  kZeroPos,
-  kSetNormalSpeed,
-  kHomed
+  Disabled,
+  LowerAmp,
+  SetHomeSpeed,
+  MoveToStop,
+  WaitMoveStop,
+  SetNormalAmp,
+  MoveOffset,
+  WaitMoveOffset,
+  ZeroPos,
+  SetNormalSpeed,
+  Homed
 };
 
 // The PinchValve represents a single stepper driven pinch
@@ -72,7 +72,7 @@ public:
   void Disable();
 
   // Return true if the pinch valve is ready for action
-  bool IsReady() { return home_state_ == PinchValveHomeState::kHomed; }
+  bool IsReady() { return home_state_ == PinchValveHomeState::Homed; }
 
 private:
   Time move_start_time_;
@@ -81,7 +81,7 @@ private:
 
   float last_command_{-1.0f};
 
-  PinchValveHomeState home_state_{PinchValveHomeState::kDisabled};
+  PinchValveHomeState home_state_{PinchValveHomeState::Disabled};
 };
 
 #endif

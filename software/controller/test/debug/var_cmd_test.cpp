@@ -29,7 +29,7 @@ TEST(VarHandler, GetVarInfo) {
   DebugVar var(name, &value, help, format);
 
   // expected result is hand-built from format given in var_cmd.cpp
-  std::vector<uint8_t> expected = {static_cast<uint8_t>(VarType::kUInt32),
+  std::vector<uint8_t> expected = {static_cast<uint8_t>(VarType::UInt32),
                                    0,
                                    0,
                                    0,
@@ -47,7 +47,7 @@ TEST(VarHandler, GetVarInfo) {
   uint8_t id[2];
   u16_to_u8(var.GetId(), id);
   std::array req = {
-      static_cast<uint8_t>(VarHandler::Subcommand::kGetInfo), id[0],
+      static_cast<uint8_t>(VarHandler::Subcommand::GetInfo), id[0],
       id[1], // Var id
   };
   std::array<uint8_t, 50> response;
@@ -59,7 +59,7 @@ TEST(VarHandler, GetVarInfo) {
                      .response_length = 0,
                      .processed = &processed};
 
-  EXPECT_EQ(ErrorCode::kNone, VarHandler().Process(&context));
+  EXPECT_EQ(ErrorCode::None, VarHandler().Process(&context));
   EXPECT_TRUE(processed);
   for (size_t i = 0; i < expected.size(); ++i) {
     EXPECT_EQ(context.response[i], expected[i]);
@@ -74,7 +74,7 @@ TEST(VarHandler, GetVar) {
   uint8_t id[2];
   u16_to_u8(var.GetId(), id);
   std::array req = {
-      static_cast<uint8_t>(VarHandler::Subcommand::kGet), id[0],
+      static_cast<uint8_t>(VarHandler::Subcommand::Get), id[0],
       id[1], // Var id
   };
   std::array<uint8_t, 4> response;
@@ -86,7 +86,7 @@ TEST(VarHandler, GetVar) {
                      .response_length = 0,
                      .processed = &processed};
 
-  EXPECT_EQ(ErrorCode::kNone, VarHandler().Process(&context));
+  EXPECT_EQ(ErrorCode::None, VarHandler().Process(&context));
   EXPECT_TRUE(processed);
   EXPECT_EQ(4, context.response_length);
 
@@ -107,7 +107,7 @@ TEST(VarHandler, SetVar) {
   uint8_t id[2];
   u16_to_u8(var.GetId(), id);
   std::array req = {
-      static_cast<uint8_t>(VarHandler::Subcommand::kSet),
+      static_cast<uint8_t>(VarHandler::Subcommand::Set),
       id[0],
       id[1], // Var id
       new_bytes[0],
@@ -125,7 +125,7 @@ TEST(VarHandler, SetVar) {
                      .response_length = 0,
                      .processed = &processed};
 
-  EXPECT_EQ(ErrorCode::kNone, VarHandler().Process(&context));
+  EXPECT_EQ(ErrorCode::None, VarHandler().Process(&context));
   EXPECT_TRUE(processed);
   EXPECT_EQ(0, context.response_length);
 
@@ -139,17 +139,17 @@ TEST(VarHandler, Errors) {
   u16_to_u8(var.GetId(), id);
 
   std::vector<std::tuple<std::vector<uint8_t>, ErrorCode>> requests = {
-      {{}, ErrorCode::kMissingData},  // Missing subcommand
-      {{3}, ErrorCode::kInvalidData}, // Invalid subcommand
-      {{0, 0xFF, 0xFF}, ErrorCode::kUnknownVariable},
-      {{1, 0xFF, 0xFF}, ErrorCode::kUnknownVariable},
-      {{2, 0xFF, 0xFF}, ErrorCode::kUnknownVariable},
-      {{0, 1}, ErrorCode::kMissingData},
-      {{1, 1}, ErrorCode::kMissingData},
-      {{2, 1}, ErrorCode::kMissingData},
-      {{0, id[0], id[1]}, ErrorCode::kNoMemory},
-      {{1, id[0], id[1]}, ErrorCode::kNoMemory},
-      {{2, id[0], id[1], 0xCA, 0xFE, 0x00}, ErrorCode::kMissingData},
+      {{}, ErrorCode::MissingData},  // Missing subcommand
+      {{3}, ErrorCode::InvalidData}, // Invalid subcommand
+      {{0, 0xFF, 0xFF}, ErrorCode::UnknownVariable},
+      {{1, 0xFF, 0xFF}, ErrorCode::UnknownVariable},
+      {{2, 0xFF, 0xFF}, ErrorCode::UnknownVariable},
+      {{0, 1}, ErrorCode::MissingData},
+      {{1, 1}, ErrorCode::MissingData},
+      {{2, 1}, ErrorCode::MissingData},
+      {{0, id[0], id[1]}, ErrorCode::NoMemory},
+      {{1, id[0], id[1]}, ErrorCode::NoMemory},
+      {{2, id[0], id[1], 0xCA, 0xFE, 0x00}, ErrorCode::MissingData},
   };
 
   for (auto &[request, error] : requests) {

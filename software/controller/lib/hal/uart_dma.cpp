@@ -74,9 +74,9 @@ void UartDma::Init(int baud) {
   dma->channel[rx_channel_].config.mem2mem =
       0; // memory-to-memory mode disabled
   dma->channel[rx_channel_].config.memory_size =
-      static_cast<uint32_t>(DmaTransferSize::kByte);
+      static_cast<uint32_t>(DmaTransferSize::Byte);
   dma->channel[rx_channel_].config.peripheral_size =
-      static_cast<uint32_t>(DmaTransferSize::kByte);
+      static_cast<uint32_t>(DmaTransferSize::Byte);
   dma->channel[rx_channel_].config.memory_increment =
       1; // increment destination (memory)
   dma->channel[rx_channel_].config.peripheral_increment =
@@ -84,7 +84,7 @@ void UartDma::Init(int baud) {
                                                  // (peripheral) address
   dma->channel[rx_channel_].config.circular = 0; // not circular
   dma->channel[rx_channel_].config.direction =
-      static_cast<uint32_t>(DmaChannelDir::kPeripheralToMemory);
+      static_cast<uint32_t>(DmaChannelDir::PeripheralToMemory);
 
   dma->channel[tx_channel_].config.priority = 0b11;        // high priority
   dma->channel[tx_channel_].config.tx_error_interrupt = 1; // interrupt on error
@@ -96,9 +96,9 @@ void UartDma::Init(int baud) {
   dma->channel[tx_channel_].config.mem2mem =
       0; // memory-to-memory mode disabled
   dma->channel[tx_channel_].config.memory_size =
-      static_cast<uint32_t>(DmaTransferSize::kByte);
+      static_cast<uint32_t>(DmaTransferSize::Byte);
   dma->channel[tx_channel_].config.peripheral_size =
-      static_cast<uint32_t>(DmaTransferSize::kByte);
+      static_cast<uint32_t>(DmaTransferSize::Byte);
   dma->channel[tx_channel_].config.memory_increment =
       1; // increment source (memory) address
   dma->channel[tx_channel_].config.peripheral_increment =
@@ -106,7 +106,7 @@ void UartDma::Init(int baud) {
                                                  // (peripheral) address
   dma->channel[tx_channel_].config.circular = 0; // not circular
   dma->channel[tx_channel_].config.direction =
-      static_cast<uint32_t>(DmaChannelDir::kMemoryToPeripheral);
+      static_cast<uint32_t>(DmaChannelDir::MemoryToPeripheral);
 }
 
 // Sets up an interrupt on matching char incoming form UART3
@@ -233,15 +233,15 @@ static bool GetRxError() {
 
 void UartDma::UartISR() {
   if (GetRxError()) {
-    RxError e = RxError::kRxUnknownError;
+    RxError e = RxError::RxUnknownError;
     if (RxTimeout()) {
-      e = RxError::kRxTimeout;
+      e = RxError::RxTimeout;
     }
     if (uart->status.bitfield.overrun_error) {
-      e = RxError::kRxOverflow;
+      e = RxError::RxOverflow;
     }
     if (uart->status.bitfield.framing_error) {
-      e = RxError::kRxFramingError;
+      e = RxError::RxFramingError;
     }
 
     uart->request.bitfield.flush_rx =
@@ -279,7 +279,7 @@ void UartDma::DmaTxISR() {
 void UartDma::DmaRxISR() {
   if (dma->interrupt_status.teif3) {
     StopRX();
-    rx_listener_->OnRxError(RxError_t::kRxDmaError);
+    rx_listener_->OnRxError(RxError_t::RxDmaError);
   } else {
     StopRX();
     rx_listener_->onRxComplete();

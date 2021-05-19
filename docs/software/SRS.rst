@@ -33,7 +33,7 @@ Numeric algorithms within the software must not lose stability over 2 weeks
 
 Software algorithms must be runnable in faster than real time to allow stress testing of long-term continuous operation
 
-.. item:: RW-SW-18
+.. item:: RW-SW-41
    :fulfills: RW-SYS-50
 
 Software (both controller and Pi) should be power-efficient enough to continuously work from battery for 1 hour
@@ -47,27 +47,27 @@ Controller must be able to detect patient inspiration
 Alarms
 ^^^^^^
 
-.. item:: RW-SW-1
+.. item:: RW-SW-45
    :fulfills:
 
 GUI must have an alarm that triggers when the input air line is blocked (leading to low pressure), with severity HIGH
 
-.. item:: RW-SW-2
+.. item:: RW-SW-58
    :fulfills:
 
 GUI must have an alarm that triggers when the input O2 line is blocked (leading to low pressure), with severity HIGH
 
-.. item:: RW-SW-3
+.. item:: RW-SW-60
    :fulfills: RW-SYS-9
 
 Device and GUI must have an alarm for inspiratory pressure dropping below -4cm H2O
 
-.. item:: RW-SW-3
+.. item:: RW-SW-21
    :fulfills:
 
 GUI must have an alarm that triggers when the input O2 line pressure is too high, with severity HIGH
 
-.. item:: RW-SW-4
+.. item:: RW-SW-61
    :fulfills:
 
 Controller shall trigger an alarm in case GUI is unresponsive for 1/2 of the apnea time
@@ -77,7 +77,7 @@ Controller shall trigger an alarm in case GUI is unresponsive for 1/2 of the apn
 
 GUI displays an overpressure alarm
 
-.. item:: RW-SW-5
+.. item:: RW-SW-36
    :fulfills:
 
 GUI shall trigger an alarm in case controller is unresponsive for 1/2 of the apnea time
@@ -87,37 +87,37 @@ GUI shall trigger an alarm in case controller is unresponsive for 1/2 of the apn
 
 Controller must implement an overpressure alarm firing above 60 cmH2O
 
-.. item:: RW-SW-6
+.. item:: RW-SW-37
    :fulfills: RW-SYS-113
 
 GUI can compute a "LOW VTI" alarm that becomes active if the VTI for the current breath is above threshold
 
-.. item:: RW-SW-7
+.. item:: RW-SW-79
    :fulfills:
 
 The LOW VTI alarm is of medium priority
 
-.. item:: RW-SW-8
+.. item:: RW-SW-38
    :fulfills:
 
 GUI has a control for setting the threshold for the LOW VTI alarm
 
-.. item:: RW-SW-10
+.. item:: RW-SW-40
    :fulfills:
 
 The control for setting the threshold for LOW VTI alarm allows setting values between X and Y (TODO what values)
 
-.. item:: RW-SW-11
+.. item:: RW-SW-163
    :fulfills: RW-SYS-113
 
 GUI can compute a "HIGH VTI" alarm that becomes active if the VTI for the current breath is above threshold
 
-.. item:: RW-SW-12
+.. item:: RW-SW-164
    :fulfills:
 
 The HIGH VTI alarm is of medium priority
 
-.. item:: RW-SW-13
+.. item:: RW-SW-165
    :fulfills: RW-SYS-113
 
 GUI can compute VTI for each breath
@@ -541,22 +541,22 @@ Self-test shall include validation of blower response: commanded speed vs. press
 
 Self-test shall include validation of the pinch valves pressure response at a fixed blower speed
 
-.. item:: RW-SW-4
+.. item:: RW-SW-159
    :fulfills: RW-SYS-131
 
 Self-test shall include validation that all the audible alarm devices work. Eg could test that, given voltage there's current, or could ask the user to confirm that it's audible
 
-.. item:: RW-SW-5
+.. item:: RW-SW-160
    :fulfills: RW-SYS-131
 
 Self-test shall include validation that all visual alarms work (asking user to confirm that the alarm works)
 
-.. item:: RW-SW-6
+.. item:: RW-SW-161
    :fulfills: RW-SYS-131
 
 Self-test shall include validation of flow sensor accuracy (set blower to certain speed, air lines open, nothing connected to the output etc. -> gives expected flow)
 
-.. item:: RW-SW-7
+.. item:: RW-SW-166
    :fulfills: RW-SYS-131
 
 Self-test shall include validation of pressure sensor accuracy
@@ -580,7 +580,7 @@ Controller's pre-test mode must include the following checks: ...
 GUI
 ^^^
 
-.. item:: RW-SW-2
+.. item:: RW-SW-162
    :fulfills: RW-SYS-5
 
 GUI allows user to adjust PEEP from 0-20 cmH2O with increments of 1

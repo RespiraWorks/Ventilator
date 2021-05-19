@@ -556,7 +556,7 @@ Self-test shall include validation that all visual alarms work (asking user to c
 
 Self-test shall include validation of flow sensor accuracy (set blower to certain speed, air lines open, nothing connected to the output etc. -> gives expected flow)
 
-.. item:: RW-SW-162
+.. item:: RW-SW-166
    :fulfills: RW-SYS-131
 
 Self-test shall include validation of pressure sensor accuracy

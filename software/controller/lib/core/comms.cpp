@@ -35,18 +35,18 @@ static bool rx_in_progress = false;
 
 // We currently lack proper message framing, so we use a timeout to determine
 // when the GUI is done sending us its message.
-static constexpr Duration kRxTimeout = milliseconds(1);
+static constexpr Duration RxTimeout = milliseconds(1);
 
 // We send a ControllerStatus every TX_INTERVAL_MS.
 
 // In Alpha build we use synchronized communication initiated by GUI cycle
 // controller. Since both ControllerStatus and GuiStatus take roughly 300+
 // bytes, we need at least 1/115200.*10*300=26ms to transmit.
-static constexpr Duration kTxInterval = milliseconds(30);
+static constexpr Duration TxInterval = milliseconds(30);
 
 void CommsInit() {}
 
-static bool IsTimeToProcessPacket() { return hal.Now() - last_rx > kRxTimeout; }
+static bool IsTimeToProcessPacket() { return hal.Now() - last_rx > RxTimeout; }
 
 // NOTE this is work in progress.
 // Proper framing incomming. Afproto will be used to encode data to form that
@@ -68,7 +68,7 @@ static void ProcessTx(const ControllerStatus &controller_status) {
   //  - we can transmit at least one byte now, and
   //  - it's been a while since we last transmitted.
   if (tx_bytes_remaining == 0 &&
-      (last_tx == std::nullopt || hal.Now() - *last_tx > kTxInterval)) {
+      (last_tx == std::nullopt || hal.Now() - *last_tx > TxInterval)) {
     // Serialize current status into output buffer.
     //
     // TODO: Frame the message bytes.

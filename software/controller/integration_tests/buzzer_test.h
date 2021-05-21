@@ -11,16 +11,16 @@
 #include "hal.h"
 
 // test parameters
-static constexpr Duration kDelay{milliseconds(1000)};
-static constexpr float kMinVolume{TEST_PARAM_1};
-static constexpr float kMaxVolume{TEST_PARAM_2};
-static constexpr float kInitialStep{0.1f};
+static constexpr Duration Delay{milliseconds(1000)};
+static constexpr float MinVolume{TEST_PARAM_1};
+static constexpr float MaxVolume{TEST_PARAM_2};
+static constexpr float InitialStep{0.1f};
 
 void RunTest() {
   hal.Init();
 
-  float volume = kMinVolume;
-  float step = kInitialStep;
+  float volume = MinVolume;
+  float step = InitialStep;
 
   bool buzzer_on{false};
 
@@ -31,18 +31,18 @@ void RunTest() {
       hal.BuzzerOff();
     }
 
-    hal.Delay(kDelay);
+    hal.Delay(Delay);
 
     buzzer_on = !buzzer_on;
     if (buzzer_on) {
       volume += step;
-      if (volume >= kMaxVolume) {
+      if (volume >= MaxVolume) {
         // switch to ramp-down state
-        volume = kMaxVolume;
+        volume = MaxVolume;
         step = -step;
-      } else if (volume <= kMinVolume) {
+      } else if (volume <= MinVolume) {
         // switch to ramp-up state
-        volume = kMinVolume;
+        volume = MinVolume;
         step = -step;
       }
     }

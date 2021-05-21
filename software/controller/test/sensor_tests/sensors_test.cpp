@@ -32,16 +32,16 @@ limitations under the License.
 #include <string>
 
 // Maximum allowable delta between calculated sensor readings and the input.
-static const Pressure kComparisonTolerancePressure{kPa(0.005f)};
-static const VolumetricFlow kComparisonToleranceFlow{ml_per_sec(50)};
-static const float kComparisonToleranceFIO2{0.001f};
+static const Pressure ComparisonTolerancePressure{kPa(0.005f)};
+static const VolumetricFlow ComparisonToleranceFlow{ml_per_sec(50)};
+static const float ComparisonToleranceFIO2{0.001f};
 
 #define EXPECT_PRESSURE_NEAR(a, b)                                             \
-  EXPECT_NEAR((a).kPa(), (b).kPa(), kComparisonTolerancePressure.kPa())
+  EXPECT_NEAR((a).kPa(), (b).kPa(), ComparisonTolerancePressure.kPa())
 
 #define EXPECT_FLOW_NEAR(a, b)                                                 \
   EXPECT_NEAR((a).ml_per_sec(), (b).ml_per_sec(),                              \
-              kComparisonToleranceFlow.ml_per_sec())
+              ComparisonToleranceFlow.ml_per_sec())
 
 //@TODO: Finish writing more specific unit tests for this module
 
@@ -132,7 +132,7 @@ TEST(SensorTests, FiO2Reading) {
   for (auto fio2 : fio2_settings) {
     SCOPED_TRACE("fio2 " + std::to_string(fio2));
     hal.TESTSetAnalogPin(AnalogPin::FIO2, FIO2ToVoltage(fio2, atm(1.0f)));
-    EXPECT_NEAR(sensors.GetReadings().fio2, fio2, kComparisonToleranceFIO2);
+    EXPECT_NEAR(sensors.GetReadings().fio2, fio2, ComparisonToleranceFIO2);
   }
   // TODO: check the effect of ambient pressure once the system has a way to
   // know
@@ -211,7 +211,7 @@ TEST(SensorTests, Calibration) {
   EXPECT_PRESSURE_NEAR(readings.patient_pressure, kPa(0.0f));
   EXPECT_FLOW_NEAR(readings.inflow, ml_per_sec(0.0f));
   EXPECT_FLOW_NEAR(readings.outflow, ml_per_sec(0.0f));
-  EXPECT_NEAR(readings.fio2, 0.21f, kComparisonToleranceFIO2);
+  EXPECT_NEAR(readings.fio2, 0.21f, ComparisonToleranceFIO2);
 
   // set measured signals to 0 and expect -1*init values (plus 0.21 for fio2)
   readings = update_readings(/*dt=*/seconds(0), /*patient_pressure=*/kPa(0),
@@ -226,7 +226,7 @@ TEST(SensorTests, Calibration) {
                    -1 * Sensors::PressureDeltaToFlow(init_inflow_delta));
   EXPECT_FLOW_NEAR(readings.outflow,
                    -1 * Sensors::PressureDeltaToFlow(init_outflow_delta));
-  EXPECT_NEAR(readings.fio2, 0.21f - init_fio2, kComparisonToleranceFIO2);
+  EXPECT_NEAR(readings.fio2, 0.21f - init_fio2, ComparisonToleranceFIO2);
 
   // set measured signals to some random values + init values and expect init
   // value to be removed from the readings (once again, except for fio2, which
@@ -241,5 +241,5 @@ TEST(SensorTests, Calibration) {
   EXPECT_PRESSURE_NEAR(readings.patient_pressure, kPa(-0.5f));
   EXPECT_FLOW_NEAR(readings.inflow, Sensors::PressureDeltaToFlow(kPa(1.1f)));
   EXPECT_FLOW_NEAR(readings.outflow, Sensors::PressureDeltaToFlow(kPa(0.01f)));
-  EXPECT_NEAR(readings.fio2, 0.25f + 0.21f, kComparisonToleranceFIO2);
+  EXPECT_NEAR(readings.fio2, 0.25f + 0.21f, ComparisonToleranceFIO2);
 }

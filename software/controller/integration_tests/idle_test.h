@@ -12,12 +12,12 @@
 #include "hal.h"
 
 // test parameters
-static constexpr Duration kDelay{milliseconds(10)};
+static constexpr Duration Delay{milliseconds(10)};
 
 void RunTest() {
   hal.Init();
 
   while (true) {
-    hal.Delay(kDelay);
+    hal.Delay(Delay);
   }
 }

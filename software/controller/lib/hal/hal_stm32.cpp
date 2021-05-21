@@ -92,13 +92,13 @@ void HalApi::EarlyInit() {
   // generating a hard fault.
   // The system control registers are documented in [PM] chapter 4.
   // Details on enabling the FPU are in section 4.6.6.
-  SysControlReg *sys_ctl = kSysControlBase;
+  SysControlReg *sys_ctl = SysControlBase;
   sys_ctl->coproc_access_control = 0x00F00000;
 
   // Reset caches and set latency for 80MHz operation
   // See chapter 3 of [RM] for details on the embedded flash module
-  EnableClock(kFlashBase);
-  FlashReg *flash = kFlashBase;
+  EnableClock(FlashBase);
+  FlashReg *flash = FlashBase;
 
   // Set four wait states (required to run at 80MHz)
   flash->access.latency = 4;
@@ -138,7 +138,7 @@ void HalApi::EarlyInit() {
   // See [RM] chapter 6
   int n = 40;
   int m = 1;
-  RccReg *rcc = kRccBase;
+  RccReg *rcc = RccBase;
   rcc->pll_config = 0x01000001 | (n << 8) | ((m - 1) << 4);
 
   // Turn on the PLL
@@ -179,7 +179,7 @@ void HalApi::Init() {
   // they are documented in the [PM] rather than the [RM].
   // The register we use to reset the system is called the
   // "Application interrupt and reset control register (AIRCR)"
-  SysControlReg *sys_ctl = kSysControlBase;
+  SysControlReg *sys_ctl = SysControlBase;
   sys_ctl->app_interrupt = 0x05FA0004;
 
   // We promised we wouldn't return, so...
@@ -211,26 +211,26 @@ void HalApi::InitGpio() {
   // See [RM] chapter 8 for details on GPIO
 
   // Enable all the GPIO clocks
-  EnableClock(kGpioABase);
-  EnableClock(kGpioBBase);
-  EnableClock(kGpioCBase);
-  EnableClock(kGpioDBase);
-  EnableClock(kGpioEBase);
-  EnableClock(kGpioHBase);
+  EnableClock(GpioABase);
+  EnableClock(GpioBBase);
+  EnableClock(GpioCBase);
+  EnableClock(GpioDBase);
+  EnableClock(GpioEBase);
+  EnableClock(GpioHBase);
 
   // Configure PCB ID pins as inputs.
-  GpioPinMode(kGpioBBase, 1, GPIOPinMode::Input);
-  GpioPinMode(kGpioABase, 12, GPIOPinMode::Input);
+  GpioPinMode(GpioBBase, 1, GPIOPinMode::Input);
+  GpioPinMode(GpioABase, 12, GPIOPinMode::Input);
 
   // Configure LED pins as outputs
-  GpioPinMode(kGpioCBase, 13, GPIOPinMode::Output);
-  GpioPinMode(kGpioCBase, 14, GPIOPinMode::Output);
-  GpioPinMode(kGpioCBase, 15, GPIOPinMode::Output);
+  GpioPinMode(GpioCBase, 13, GPIOPinMode::Output);
+  GpioPinMode(GpioCBase, 14, GPIOPinMode::Output);
+  GpioPinMode(GpioCBase, 15, GPIOPinMode::Output);
 
   // Turn all three LEDs off initially
-  GpioClrPin(kGpioCBase, 13);
-  GpioClrPin(kGpioCBase, 14);
-  GpioClrPin(kGpioCBase, 15);
+  GpioClrPin(GpioCBase, 13);
+  GpioClrPin(GpioCBase, 14);
+  GpioClrPin(GpioCBase, 15);
 }
 
 // Set or clear the specified digital output
@@ -238,11 +238,11 @@ void HalApi::DigitalWrite(BinaryPin pin, VoltageLevel value) {
   auto [base, bit] = [&]() -> std::pair<GpioReg *, int> {
     switch (pin) {
     case BinaryPin::RedLED:
-      return {kGpioCBase, 13};
+      return {GpioCBase, 13};
     case BinaryPin::YellowLED:
-      return {kGpioCBase, 14};
+      return {GpioCBase, 14};
     case BinaryPin::GreenLED:
-      return {kGpioCBase, 15};
+      return {GpioCBase, 15};
     }
     // All cases covered above (and GCC checks this).
     __builtin_unreachable();
@@ -270,10 +270,10 @@ void HalApi::DigitalWrite(BinaryPin pin, VoltageLevel value) {
  *****************************************************************/
 void HalApi::InitSysTimer() {
   // Enable the clock to the timer
-  EnableClock(kTimer6Base);
+  EnableClock(Timer6Base);
 
   // Just set the timer up to count every microsecond.
-  TimerReg *tmr = kTimer6Base;
+  TimerReg *tmr = Timer6Base;
 
   // The reload register gives the number of clock ticks (100ns in our case)
   // -1 until the clock wraps back to zero and generates an interrupt. This
@@ -291,7 +291,7 @@ void HalApi::InitSysTimer() {
 }
 
 static void Timer6ISR() {
-  kTimer6Base->status = 0;
+  Timer6Base->status = 0;
   ms_count++;
 }
 
@@ -312,7 +312,7 @@ Time HalApi::Now() {
   //
   // Since the counter is actively running, we need to read both the counter
   // value and UIFCOPY atomically.
-  uint32_t counter = kTimer6Base->counter;
+  uint32_t counter = Timer6Base->counter;
   int64_t micros = (counter & 0xffff) / 10;
   bool interrupt_pending = counter >> 31;
 
@@ -352,10 +352,10 @@ void HalApi::StartLoopTimer(const Duration &period, void (*callback)(void *),
   }
 
   // Enable the clock to the timer
-  EnableClock(kTimer15Base);
+  EnableClock(Timer15Base);
 
   // Just set the timer up to count every microsecond.
-  TimerReg *tmr = kTimer15Base;
+  TimerReg *tmr = Timer15Base;
   tmr->auto_reload = reload - 1;
   tmr->prescaler = prescale - 1;
   tmr->event = 1;
@@ -380,8 +380,8 @@ static DebugVar d3("loop_time", &loop_time, "Duration of loop function, usec",
                    "%.2f");
 
 static void Timer15ISR() {
-  uint32_t start = kTimer15Base->counter;
-  kTimer15Base->status = 0;
+  uint32_t start = Timer15Base->counter;
+  Timer15Base->status = 0;
 
   // Keep track of loop latency in uSec
   // Also max latency since it was last zeroed
@@ -392,7 +392,7 @@ static void Timer15ISR() {
   // Call the function
   controller_callback(controller_arg);
 
-  uint32_t end = kTimer15Base->counter;
+  uint32_t end = Timer15Base->counter;
   loop_time = static_cast<float>(end - start) * (1.0f / CPU_FREQ_MHZ);
 
   // Start sending any queued commands to the stepper motor
@@ -427,17 +427,17 @@ void HalApi::InitPwmOut() {
   // Resultion is based on the ratio of the clock frequency (80MHz) to the
   // PWM frequency.  For example, a 20kHz PWM would have a resolution of one
   // part in 4000 (80000000/20000) or about 12 bits.
-  static constexpr int kPwmFreqHz = 20000;
+  static constexpr int PwmFreqHz = 20000;
 
-  EnableClock(kTimer2Base);
+  EnableClock(Timer2Base);
 
   // Connect PB3 to timer 2
-  GpioPinAltFunc(kGpioBBase, 3, 1);
+  GpioPinAltFunc(GpioBBase, 3, 1);
 
-  TimerReg *tmr = kTimer2Base;
+  TimerReg *tmr = Timer2Base;
 
   // Set the frequency
-  tmr->auto_reload = (CPU_FREQ / kPwmFreqHz) - 1;
+  tmr->auto_reload = (CPU_FREQ / PwmFreqHz) - 1;
 
   // Configure channel 2 in PWM output mode 1
   // with preload enabled.  The preload means that
@@ -464,7 +464,7 @@ void HalApi::AnalogWrite(PwmPin pin, float duty) {
   auto [tmr, chan] = [&]() -> std::pair<TimerReg *, int> {
     switch (pin) {
     case PwmPin::Blower:
-      return {kTimer2Base, 1};
+      return {Timer2Base, 1};
     }
     // All cases covered above (and GCC checks this).
     __builtin_unreachable();
@@ -580,8 +580,8 @@ public:
   uint16_t TxFree() { return static_cast<uint16_t>(tx_data_.FreeCount()); }
 };
 
-static UART rpi_uart(kUart3Base);
-static UART debug_uart(kUart2Base);
+static UART rpi_uart(Uart3Base);
+static UART debug_uart(Uart2Base);
 #ifdef UART_VIA_DMA
 extern UartDma dma_uart;
 #endif
@@ -606,18 +606,18 @@ extern UartDma dma_uart;
 void HalApi::InitUARTs() {
   // NOTE - The UART functionality hasn't been tested due to lack of hardware!
   //        Need to do that as soon as the boards are available.
-  EnableClock(kUart2Base);
-  EnableClock(kUart3Base);
+  EnableClock(Uart2Base);
+  EnableClock(Uart3Base);
 #ifdef UART_VIA_DMA
-  EnableClock(kDma1Base);
+  EnableClock(Dma1Base);
 #endif
-  GpioPinAltFunc(kGpioABase, 2, 7);
-  GpioPinAltFunc(kGpioABase, 3, 7);
+  GpioPinAltFunc(GpioABase, 2, 7);
+  GpioPinAltFunc(GpioABase, 3, 7);
 
-  GpioPinAltFunc(kGpioBBase, 10, 7);
-  GpioPinAltFunc(kGpioBBase, 11, 7);
-  GpioPinAltFunc(kGpioBBase, 13, 7);
-  GpioPinAltFunc(kGpioBBase, 14, 7);
+  GpioPinAltFunc(GpioBBase, 10, 7);
+  GpioPinAltFunc(GpioBBase, 11, 7);
+  GpioPinAltFunc(GpioBBase, 13, 7);
+  GpioPinAltFunc(GpioBBase, 14, 7);
 
 #ifdef UART_VIA_DMA
   dma_uart.Init(115200);
@@ -670,7 +670,7 @@ uint16_t HalApi::DebugBytesAvailableForWrite() { return debug_uart.TxFree(); }
  * rather then let it hang indefinitely.
  *****************************************************************/
 void HalApi::WatchdogInit() {
-  WatchdogReg *wdog = kWatchdogBase;
+  WatchdogReg *wdog = WatchdogBase;
 
   // Enable the watchdog timer by writing the appropriate value to its key
   // register
@@ -701,25 +701,25 @@ void HalApi::WatchdogInit() {
 
 // Pet the watchdog so it doesn't bite us.
 void HalApi::WatchdogHandler() {
-  WatchdogReg *wdog = kWatchdogBase;
+  WatchdogReg *wdog = WatchdogBase;
   wdog->key = 0xAAAA;
 }
 
 void HalApi::CRC32Init() {
-  RccReg *rcc = kRccBase;
+  RccReg *rcc = RccBase;
   // Enable clock to CRC32
   rcc->peripheral_clock_enable[0] |= (1 << 12);
   // Pull CRC32 peripheral out of reset if it ever was
   rcc->peripheral_reset[0] &= ~(1 << 12);
 
-  CrcReg *crc = kCrcBase;
+  CrcReg *crc = CrcBase;
   crc->init = 0xFFFFFFFF;
-  crc->polynomial = kCrc32Polynomial;
+  crc->polynomial = Crc32Polynomial;
   crc->control = 1;
 }
 
 void HalApi::CRC32Accumulate(uint8_t d) {
-  CrcReg *crc = kCrcBase;
+  CrcReg *crc = CrcBase;
   crc->data = static_cast<uint32_t>(d);
 }
 
@@ -736,12 +736,12 @@ uint32_t HalApi::CRC32Get() {
   asm volatile("nop");
   asm volatile("nop");
   asm volatile("nop");
-  CrcReg *crc = kCrcBase;
+  CrcReg *crc = CrcBase;
   return crc->data;
 }
 
 void HalApi::CRC32Reset() {
-  CrcReg *crc = kCrcBase;
+  CrcReg *crc = CrcBase;
   crc->control = 1;
 }
 
@@ -772,28 +772,28 @@ void HalApi::EnableClock(volatile void *ptr) {
     volatile void *base_reg;
     int index;
     int bit_set;
-  } kRccInfo[] = {
-      {kDma1Base, 0, 0},    {kDma2Base, 0, 1},   {kFlashBase, 0, 8},
-      {kGpioABase, 1, 0},   {kGpioBBase, 1, 1},  {kGpioCBase, 1, 2},
-      {kGpioDBase, 1, 3},   {kGpioEBase, 1, 4},  {kGpioHBase, 1, 7},
-      {kAdcBase, 1, 13},    {kTimer2Base, 4, 0}, {kTimer3Base, 4, 1},
-      {kTimer6Base, 4, 4},  {kUart2Base, 4, 17}, {kUart3Base, 4, 18},
-      {kTimer1Base, 6, 11}, {kSpi1Base, 6, 12},  {kTimer15Base, 6, 16},
-      {kI2C1Base, 4, 21},
+  } RccInfo[] = {
+      {Dma1Base, 0, 0},    {Dma2Base, 0, 1},   {FlashBase, 0, 8},
+      {GpioABase, 1, 0},   {GpioBBase, 1, 1},  {GpioCBase, 1, 2},
+      {GpioDBase, 1, 3},   {GpioEBase, 1, 4},  {GpioHBase, 1, 7},
+      {AdcBase, 1, 13},    {Timer2Base, 4, 0}, {Timer3Base, 4, 1},
+      {Timer6Base, 4, 4},  {Uart2Base, 4, 17}, {Uart3Base, 4, 18},
+      {Timer1Base, 6, 11}, {Spi1Base, 6, 12},  {Timer15Base, 6, 16},
+      {I2C1Base, 4, 21},
       // The following entries are probably correct, but have
       // not been tested yet.  When adding support for one of
       // these peripherals just comment out the line.  And
       // test of course.
-      //      {kCrcBase, 0, 12},
-      //      {kTimer3Base, 4, 1},
-      //      {kSpi2Base, 4, 14},
-      //      {kSpi3Base, 4, 15},
-      //      {kUart4Base, 4, 19},
-      //      {kI2C2Base, 4, 22},
-      //      {kI2C3Base, 4, 23},
-      //      {kI2C4Base, 5, 1},
-      //      {kUart1Base, 6, 14},
-      //      {kTimer16Base, 6, 17},
+      //      {CrcBase, 0, 12},
+      //      {Timer3Base, 4, 1},
+      //      {Spi2Base, 4, 14},
+      //      {Spi3Base, 4, 15},
+      //      {Uart4Base, 4, 19},
+      //      {I2C2Base, 4, 22},
+      //      {I2C3Base, 4, 23},
+      //      {I2C4Base, 5, 1},
+      //      {Uart1Base, 6, 14},
+      //      {Timer16Base, 6, 17},
   };
 
   // I don't include all the peripherals here, just the ones that we currently
@@ -801,7 +801,7 @@ void HalApi::EnableClock(volatile void *ptr) {
   // just look up the appropriate bit in [RM] chapter 6.
   int ndx = -1;
   int bit = 0;
-  for (auto &info : kRccInfo) {
+  for (auto &info : RccInfo) {
     if (ptr == info.base_reg) {
       ndx = info.index;
       bit = info.bit_set;
@@ -819,7 +819,7 @@ void HalApi::EnableClock(volatile void *ptr) {
   }
 
   // Enable the clock of the requested peripheral
-  RccReg *rcc = kRccBase;
+  RccReg *rcc = RccBase;
   rcc->peripheral_clock_enable[ndx] |= (1 << bit);
 }
 
@@ -842,7 +842,7 @@ static void BadISR() { Fault(); }
 // NOLINTNEXTLINE(readability-identifier-naming)
 extern "C" void Reset_Handler();
 __attribute__((used))
-__attribute__((section(".isr_vector"))) void (*const kVectors[101])() = {
+__attribute__((section(".isr_vector"))) void (*const Vectors[101])() = {
     // The first entry of the ISR holds the initial value of the
     // stack pointer.  The ARM processor initializes the stack
     // pointer based on this address.
@@ -970,7 +970,7 @@ __attribute__((section(".isr_vector"))) void (*const kVectors[101])() = {
 // Enable an interrupt with a specified priority (0 to 15)
 // See [RM] chapter 12 for more information on the NVIC.
 void HalApi::EnableInterrupt(InterruptVector vec, IntPriority pri) {
-  InterruptControlReg *nvic = kNvicBase;
+  InterruptControlReg *nvic = NvicBase;
 
   int addr = static_cast<int>(vec);
 

@@ -23,7 +23,7 @@ limitations under the License.
 #include "i2c.h"
 #include <stdint.h>
 
-static constexpr uint32_t kMaxMemorySize{65535};
+static constexpr uint32_t MaxMemorySize{65535};
 
 // This class defines an I²C addressable EEPROM.
 class I2Ceeprom {
@@ -67,7 +67,7 @@ public:
 
 private:
   uint32_t address_pointer_{0};
-  uint8_t memory_[kMaxMemorySize];
+  uint8_t memory_[MaxMemorySize];
   bool SendBytes(const I2C::Request &request) override;
   bool ReceiveBytes(const I2C::Request &request) override;
 };

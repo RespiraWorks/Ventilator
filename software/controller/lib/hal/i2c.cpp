@@ -31,24 +31,24 @@ I2C::STM32Channel i2c1;
 // Reference abbreviations ([RM], [PCB], etc) are defined in hal/README.md
 void HalApi::InitI2C() {
   // Enable I2C1 and DMA2 peripheral clocks (we use DMA2 to send/receive data)
-  EnableClock(kI2C1Base);
-  EnableClock(kDma2Base);
+  EnableClock(I2C1Base);
+  EnableClock(Dma2Base);
 
   // The following pins are used as i2c1 bus on the rev-1 PCB (see [PCB]):
   // - PB8 (I2C1 - DATA)
   // - PB9 (I2C1 - CLOCK)
   // Set Pin Function to I²C (see [DS] Table 17)
-  GpioPinAltFunc(kGpioBBase, 8, 4);
-  GpioPinAltFunc(kGpioBBase, 9, 4);
+  GpioPinAltFunc(GpioBBase, 8, 4);
+  GpioPinAltFunc(GpioBBase, 9, 4);
   // Set output speed to Fast
-  GpioOutSpeed(kGpioBBase, 8, GPIOOutSpeed::Fast);
-  GpioOutSpeed(kGpioBBase, 9, GPIOOutSpeed::Fast);
+  GpioOutSpeed(GpioBBase, 8, GPIOOutSpeed::Fast);
+  GpioOutSpeed(GpioBBase, 9, GPIOOutSpeed::Fast);
   // Set open drain mode
-  GpioOutType(kGpioBBase, 8, GPIOOutType::OpenDrain);
-  GpioOutType(kGpioBBase, 9, GPIOOutType::OpenDrain);
+  GpioOutType(GpioBBase, 8, GPIOOutType::OpenDrain);
+  GpioOutType(GpioBBase, 9, GPIOOutType::OpenDrain);
   // Set Pull Up resistors
-  GpioPullUp(kGpioBBase, 8);
-  GpioPullUp(kGpioBBase, 9);
+  GpioPullUp(GpioBBase, 8);
+  GpioPullUp(GpioBBase, 9);
 
   EnableInterrupt(InterruptVector::I2c1Event, IntPriority::Low);
   EnableInterrupt(InterruptVector::I2c1Error, IntPriority::Low);
@@ -56,7 +56,7 @@ void HalApi::InitI2C() {
   EnableInterrupt(InterruptVector::Dma2Channel7, IntPriority::Low);
 
   // init i2c1
-  i2c1.Init(kI2C1Base, kDma2Base, I2C::Speed::Fast);
+  i2c1.Init(I2C1Base, Dma2Base, I2C::Speed::Fast);
 }
 
 // Those interrupt service routines are specific to our configuration, unlike
@@ -108,7 +108,7 @@ bool Channel::SendRequest(const Request &request) {
   }
   // increment ind_queue_, which is the index at which the next request will
   // be put in the queue, with wrapping around the queue.
-  if (++ind_queue_ >= kQueueLength) {
+  if (++ind_queue_ >= QueueLength) {
     ind_queue_ = 0;
   }
 
@@ -128,7 +128,7 @@ bool Channel::CopyDataToWriteBuffer(const void *data, const uint16_t size) {
 
   // Check if the empty space at the end of the buffer is big enough to
   // store all of the data
-  if (write_buffer_index_ + size > kWriteBufferSize) {
+  if (write_buffer_index_ + size > WriteBufferSize) {
     // It isn't ==> Check if the empty space at the beginning of the buffer
     // is big enough to store all of the data instead
     if (size >= write_buffer_start_) {
@@ -168,7 +168,7 @@ void Channel::StartTransfer() {
     last_request_ = queue_[*index];
     next_data_ = reinterpret_cast<uint8_t *>(last_request_.data);
     remaining_size_ = last_request_.size;
-    error_retry_ = kMaxRetries;
+    error_retry_ = MaxRetries;
   }
 
   SetupI2CTransfer();
@@ -345,15 +345,15 @@ void STM32Channel::SetupDMAChannels(DmaReg *dma) {
     DmaChannel tx_channel_id;
     DmaChannel rx_channel_id;
     uint8_t request_number;
-  } kDmaMap[] = {
-      {kDma1Base, kI2C1Base, DmaChannel::Chan6, DmaChannel::Chan7, 3},
-      {kDma1Base, kI2C2Base, DmaChannel::Chan4, DmaChannel::Chan5, 3},
-      {kDma1Base, kI2C3Base, DmaChannel::Chan2, DmaChannel::Chan3, 3},
-      {kDma2Base, kI2C1Base, DmaChannel::Chan7, DmaChannel::Chan6, 5},
-      {kDma2Base, kI2C4Base, DmaChannel::Chan2, DmaChannel::Chan1, 0},
+  } DmaMap[] = {
+      {Dma1Base, I2C1Base, DmaChannel::Chan6, DmaChannel::Chan7, 3},
+      {Dma1Base, I2C2Base, DmaChannel::Chan4, DmaChannel::Chan5, 3},
+      {Dma1Base, I2C3Base, DmaChannel::Chan2, DmaChannel::Chan3, 3},
+      {Dma2Base, I2C1Base, DmaChannel::Chan7, DmaChannel::Chan6, 5},
+      {Dma2Base, I2C4Base, DmaChannel::Chan2, DmaChannel::Chan1, 0},
   };
 
-  for (auto &map : kDmaMap) {
+  for (auto &map : DmaMap) {
     if (dma == map.dma_base && i2c_ == map.i2c_base) {
       dma_ = dma;
       tx_channel_ = &dma_->channel[static_cast<uint8_t>(map.tx_channel_id)];
@@ -446,7 +446,7 @@ void STM32Channel::DMAIntHandler(DmaChannel chan) {
       EndTransfer();
     }
   } else if (DmaIntStatus(dma_, chan, DmaInterrupt::TransferError)) {
-    // we are dealing with an error --> reset transfer (up to kMaxRetries
+    // we are dealing with an error --> reset transfer (up to MaxRetries
     // times)
     if (--error_retry_ > 0) {
       next_data_ = reinterpret_cast<uint8_t *>(last_request_.data);

@@ -287,13 +287,13 @@ void UartDma::DmaRxISR() {
 }
 
 void DMA1Channel2ISR() {
-  DmaReg *dma = kDma1Base;
+  DmaReg *dma = Dma1Base;
   dma_uart.DmaTxISR();
   dma->interrupt_clear.gif2 = 1; // clear all channel 3 flags
 }
 
 void DMA1Channel3ISR() {
-  DmaReg *dma = kDma1Base;
+  DmaReg *dma = Dma1Base;
   dma_uart.DmaRxISR();
   dma->interrupt_clear.gif3 = 1; // clear all channel 2 flags
 }

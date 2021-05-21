@@ -51,7 +51,7 @@ struct RccStruct {
   uint32_t independent_clock_config2;
 };
 typedef volatile RccStruct RccReg;
-inline RccReg *const kRccBase = reinterpret_cast<RccReg *>(0x40021000);
+inline RccReg *const RccBase = reinterpret_cast<RccReg *>(0x40021000);
 
 // [PM] 4.4 System control block (SCB) (pg 221)
 struct SysControlStruct {
@@ -81,7 +81,7 @@ struct SysControlStruct {
                                   // register
 };
 typedef volatile SysControlStruct SysControlReg;
-inline SysControlReg *const kSysControlBase =
+inline SysControlReg *const SysControlBase =
     reinterpret_cast<SysControlReg *>(0xE000E000);
 
 // [PM] 4.3 Nested vectored interrupt controller (NVIC) (pg 208)
@@ -94,7 +94,7 @@ struct InterruptControlStruct {
   uint8_t priority[1024];
 };
 typedef volatile InterruptControlStruct InterruptControlReg;
-inline InterruptControlReg *const kNvicBase =
+inline InterruptControlReg *const NvicBase =
     reinterpret_cast<InterruptControlReg *>(0xE000E100);
 
 // [RM] 38.8 USART Registers (pg 1238)
@@ -261,10 +261,10 @@ struct UartStruct {
   uint32_t tx_data;
 };
 typedef volatile UartStruct UartReg;
-inline UartReg *const kUart1Base = reinterpret_cast<UartReg *>(0x40013800);
-inline UartReg *const kUart2Base = reinterpret_cast<UartReg *>(0x40004400);
-inline UartReg *const kUart3Base = reinterpret_cast<UartReg *>(0x40004800);
-inline UartReg *const kUart4Base = reinterpret_cast<UartReg *>(0x40004C00);
+inline UartReg *const Uart1Base = reinterpret_cast<UartReg *>(0x40013800);
+inline UartReg *const Uart2Base = reinterpret_cast<UartReg *>(0x40004400);
+inline UartReg *const Uart3Base = reinterpret_cast<UartReg *>(0x40004800);
+inline UartReg *const Uart4Base = reinterpret_cast<UartReg *>(0x40004C00);
 
 // [RM] 16.6 ADC Registers (for each ADC) (pg 450)
 struct AdcStruct {
@@ -389,7 +389,7 @@ struct AdcStruct {
   uint32_t common_data;
 };
 typedef volatile AdcStruct AdcReg;
-inline AdcReg *const kAdcBase = reinterpret_cast<AdcReg *>(0X50040000);
+inline AdcReg *const AdcBase = reinterpret_cast<AdcReg *>(0X50040000);
 
 // Timer Register
 // NOTE: Offset values and applicable registers depend on timer used
@@ -439,16 +439,16 @@ struct TimerStruct {
 typedef volatile TimerStruct TimerReg;
 
 // [RM] 26 Advanced-control Timers (TIM1) (pg 718)
-inline TimerReg *const kTimer1Base = reinterpret_cast<TimerReg *>(0x40012C00);
+inline TimerReg *const Timer1Base = reinterpret_cast<TimerReg *>(0x40012C00);
 // [RM] 27 General-purpose Timers (TIM2/TIM3) (pg 817)
-inline TimerReg *const kTimer2Base = reinterpret_cast<TimerReg *>(0x40000000);
-inline TimerReg *const kTimer3Base = reinterpret_cast<TimerReg *>(0x40000400);
+inline TimerReg *const Timer2Base = reinterpret_cast<TimerReg *>(0x40000000);
+inline TimerReg *const Timer3Base = reinterpret_cast<TimerReg *>(0x40000400);
 // [RM] 29 Basic Timers (TIM6/TIM7) (pg 968)
-inline TimerReg *const kTimer6Base = reinterpret_cast<TimerReg *>(0x40001000);
-inline TimerReg *const kTimer7Base = reinterpret_cast<TimerReg *>(0x40001400);
+inline TimerReg *const Timer6Base = reinterpret_cast<TimerReg *>(0x40001000);
+inline TimerReg *const Timer7Base = reinterpret_cast<TimerReg *>(0x40001400);
 // [RM] 28 General-purpose Timers (TIM15/TIM16) (pg 887)
-inline TimerReg *const kTimer15Base = reinterpret_cast<TimerReg *>(0x40014000);
-inline TimerReg *const kTimer16Base = reinterpret_cast<TimerReg *>(0x40014400);
+inline TimerReg *const Timer15Base = reinterpret_cast<TimerReg *>(0x40014000);
+inline TimerReg *const Timer16Base = reinterpret_cast<TimerReg *>(0x40014400);
 
 // [RM] 3.7 Flash Registers (pg 100)
 struct FlashStruct {
@@ -501,7 +501,7 @@ struct FlashStruct {
   uint32_t wrp_area_b;
 };
 typedef volatile FlashStruct FlashReg;
-inline FlashReg *const kFlashBase = reinterpret_cast<FlashReg *>(0x40022000);
+inline FlashReg *const FlashBase = reinterpret_cast<FlashReg *>(0x40022000);
 
 // [RM] 11.4.4 DMA channels (pg 302)
 enum class DmaChannel {
@@ -625,8 +625,8 @@ struct DmaStruct {
   } channel_select; // Channel Selection Register [RM] 11.6.7 (pg 317)
 };
 typedef volatile DmaStruct DmaReg;
-inline DmaReg *const kDma1Base = reinterpret_cast<DmaReg *>(0x40020000);
-inline DmaReg *const kDma2Base = reinterpret_cast<DmaReg *>(0x40020400);
+inline DmaReg *const Dma1Base = reinterpret_cast<DmaReg *>(0x40020000);
+inline DmaReg *const Dma2Base = reinterpret_cast<DmaReg *>(0x40020400);
 
 /* Select the source for a DMA channel:
   @param dma        Address of DMA registers
@@ -708,9 +708,9 @@ struct SpiStruct {
   uint32_t tx_crc;
 };
 typedef volatile SpiStruct SpiReg;
-inline SpiReg *const kSpi1Base = reinterpret_cast<SpiReg *>(0x40013000);
-inline SpiReg *const kSpi2Base = reinterpret_cast<SpiReg *>(0x40003800);
-inline SpiReg *const kSpi3Base = reinterpret_cast<SpiReg *>(0x40003C00);
+inline SpiReg *const Spi1Base = reinterpret_cast<SpiReg *>(0x40013000);
+inline SpiReg *const Spi2Base = reinterpret_cast<SpiReg *>(0x40003800);
+inline SpiReg *const Spi3Base = reinterpret_cast<SpiReg *>(0x40003C00);
 
 // [RM] 37.7 I2C Registers
 struct I2CStruct {
@@ -812,10 +812,10 @@ struct I2CStruct {
   uint32_t tx_data;            // Transmit data register [RM] 37.7.11
 };
 typedef volatile I2CStruct I2CReg;
-inline I2CReg *const kI2C1Base = reinterpret_cast<I2CReg *>(0x40005400);
-inline I2CReg *const kI2C2Base = reinterpret_cast<I2CReg *>(0x40005800);
-inline I2CReg *const kI2C3Base = reinterpret_cast<I2CReg *>(0x40005c00);
-inline I2CReg *const kI2C4Base = reinterpret_cast<I2CReg *>(0x40008400);
+inline I2CReg *const I2C1Base = reinterpret_cast<I2CReg *>(0x40005400);
+inline I2CReg *const I2C2Base = reinterpret_cast<I2CReg *>(0x40005800);
+inline I2CReg *const I2C3Base = reinterpret_cast<I2CReg *>(0x40005c00);
+inline I2CReg *const I2C4Base = reinterpret_cast<I2CReg *>(0x40008400);
 
 // Watchdog timer
 // [RM] 32.4 Watchdog Registers (pg 1016)
@@ -827,7 +827,7 @@ struct WatchdogStruct {
   uint32_t window;    // Window register [RM] 32.4.5
 };
 typedef volatile WatchdogStruct WatchdogReg;
-inline WatchdogReg *const kWatchdogBase =
+inline WatchdogReg *const WatchdogBase =
     reinterpret_cast<WatchdogReg *>(0x40003000);
 
 // CRC calculation unit
@@ -841,7 +841,7 @@ struct CrcStruct {
   uint32_t polynomial; // CRC polynomial [RM] 14.4.5
 };
 typedef volatile CrcStruct CrcReg;
-inline CrcReg *const kCrcBase = reinterpret_cast<CrcReg *>(0x40023000);
+inline CrcReg *const CrcBase = reinterpret_cast<CrcReg *>(0x40023000);
 
 // General Purpose I/O
 // [RM] 8.4 GPIO Registers (pg 267)
@@ -860,11 +860,11 @@ struct GpioStruct {
   uint32_t reset;                 // Reset register [RM] 8.4.11
 };
 typedef volatile GpioStruct GpioReg;
-inline GpioReg *const kGpioABase = reinterpret_cast<GpioReg *>(0x48000000);
-inline GpioReg *const kGpioBBase = reinterpret_cast<GpioReg *>(0x48000400);
-inline GpioReg *const kGpioCBase = reinterpret_cast<GpioReg *>(0x48000800);
-inline GpioReg *const kGpioDBase = reinterpret_cast<GpioReg *>(0x48000C00);
-inline GpioReg *const kGpioEBase = reinterpret_cast<GpioReg *>(0x48001000);
-inline GpioReg *const kGpioHBase = reinterpret_cast<GpioReg *>(0x48001C00);
+inline GpioReg *const GpioABase = reinterpret_cast<GpioReg *>(0x48000000);
+inline GpioReg *const GpioBBase = reinterpret_cast<GpioReg *>(0x48000400);
+inline GpioReg *const GpioCBase = reinterpret_cast<GpioReg *>(0x48000800);
+inline GpioReg *const GpioDBase = reinterpret_cast<GpioReg *>(0x48000C00);
+inline GpioReg *const GpioEBase = reinterpret_cast<GpioReg *>(0x48001000);
+inline GpioReg *const GpioHBase = reinterpret_cast<GpioReg *>(0x48001C00);
 
 #endif

@@ -166,7 +166,7 @@ class StepMotor {
 
   // This constant gives the maximum number of motors we
   // can support with this driver.
-  static constexpr int kMaxMotors{4};
+  static constexpr int MaxMotors{4};
 
   // Number of motor driver chips present in the system.
   // This is automatically detected at startup.
@@ -297,8 +297,8 @@ public:
   StepMtrErr GetParam(StepMtrParam param, uint32_t *value);
 
 private:
-  static StepMotor motor_[kMaxMotors];
-  static uint8_t dma_buff_[kMaxMotors];
+  static StepMotor motor_[MaxMotors];
+  static uint8_t dma_buff_[MaxMotors];
   static uint8_t param_len_[32];
   static StepCommState coms_state_;
 

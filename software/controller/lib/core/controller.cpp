@@ -17,7 +17,7 @@ limitations under the License.
 
 #include <math.h>
 
-static constexpr Duration kLoopPeriod = milliseconds(10);
+static constexpr Duration LoopPeriod = milliseconds(10);
 
 static DebugFloat dbg_forced_blower_power(
     "forced_blower_power",
@@ -43,7 +43,7 @@ static DebugFloat dbg_forced_psol_pos(
 
 // Unchanging outputs - read from external debug program, never modified here.
 static DebugUInt32 dbg_per("loop_period", "Loop period, read-only (usec)",
-                           static_cast<uint32_t>(kLoopPeriod.microseconds()));
+                           static_cast<uint32_t>(LoopPeriod.microseconds()));
 
 // Outputs - read from external debug program, modified here.
 static DebugFloat dbg_sp("pc_setpoint", "Pressure control setpoint (cmH2O)");
@@ -60,7 +60,7 @@ static DebugFloat dbg_flow_correction("flow_correction",
 static DebugUInt32 dbg_breath_id("breath_id",
                                  "ID of the current breath, read-only", 0);
 
-/*static*/ Duration Controller::GetLoopPeriod() { return kLoopPeriod; }
+/*static*/ Duration Controller::GetLoopPeriod() { return LoopPeriod; }
 
 std::pair<ActuatorsState, ControllerState>
 Controller::Run(Time now, const VentParams &params,

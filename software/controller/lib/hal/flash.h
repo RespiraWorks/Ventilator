@@ -21,8 +21,8 @@ limitations under the License.
 #include <cstdint>
 
 // Flash memory location & size info
-inline constexpr uint32_t kFlashStartAddr{0x08000000};
-inline constexpr size_t kFlashSize{32 * 1024};
-inline constexpr size_t kFlashPageSize{2 * 1024};
+inline constexpr uint32_t FlashStartAddr{0x08000000};
+inline constexpr size_t FlashSize{32 * 1024};
+inline constexpr size_t FlashPageSize{2 * 1024};
 
 #endif

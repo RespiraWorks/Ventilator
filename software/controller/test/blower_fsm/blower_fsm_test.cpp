@@ -30,7 +30,7 @@ constexpr BlowerFsmInputs inputs_zero = {
     .net_flow = ml_per_sec(0),
 };
 
-constexpr int64_t rise_time_us = kRiseTime.microseconds();
+constexpr int64_t rise_time_us = RiseTime.microseconds();
 static_assert(rise_time_us % 1000 == 0,
               "blower fsm tests assume rise time is a whole number of ms.");
 static_assert(rise_time_us % 5 == 0,

@@ -42,12 +42,12 @@ static DebugUInt32 dbg_nvparams("nvparams_address", "Address of nv_params", 0);
 namespace NVParams {
 
 // Size of the parameter block including the header
-static constexpr uint32_t kSize{sizeof(Structure)};
+static constexpr uint32_t Size{sizeof(Structure)};
 
 // Calculate the CRC of the params at this address
 static uint32_t CRC(Structure *param) {
   uint8_t *ptr = reinterpret_cast<uint8_t *>(param);
-  return SoftCRC32(ptr + sizeof(uint32_t), kSize - sizeof(uint32_t));
+  return SoftCRC32(ptr + sizeof(uint32_t), Size - sizeof(uint32_t));
 }
 
 // Checks whether a param is valid (through its checksum)
@@ -123,7 +123,7 @@ void Handler::Init(I2Ceeprom *eeprom) {
 bool Handler::Set(uint16_t offset, void *value, uint8_t len) {
   // Make sure the passed pointer is pointing to somewhere
   // in the structure and isn't in the reserved first 6 bytes
-  if ((offset < 6) || ((offset + len) > kSize))
+  if ((offset < 6) || ((offset + len) > Size))
     return false;
 
   // Update the contents in nv_params
@@ -162,7 +162,7 @@ bool Handler::Get(uint16_t offset, void *value, uint8_t len) {
 #ifndef TEST_MODE // in test mode I need to be able to access any byte
   // Make sure the passed pointer is pointing to somewhere
   // in the structure and isn't in the reserved first 6 bytes
-  if ((offset < 6) || ((offset + len) > kSize))
+  if ((offset < 6) || ((offset + len) > Size))
     return false;
 #endif
   memcpy(value, reinterpret_cast<uint8_t *>(&nv_param_) + offset, len);
@@ -172,7 +172,7 @@ bool Handler::Get(uint16_t offset, void *value, uint8_t len) {
 // call this function in order to write variables to nv_params
 void Handler::Update(const Time now, VentParams *params) {
   // We only update cumulated service every so often
-  if (now >= last_update_ + kUpdateInterval) {
+  if (now >= last_update_ + UpdateInterval) {
     uint32_t cumulated = nv_param_.cumulated_service +
                          static_cast<uint32_t>((now - last_update_).seconds());
     Set(offsetof(Structure, cumulated_service), &cumulated, 4);
@@ -213,7 +213,7 @@ void Handler::Update(const Time now, VentParams *params) {
 bool Handler::ReadFullParams(Address address, Structure *param,
                              I2Ceeprom *eeprom) {
   bool read_finished{false};
-  eeprom->ReadBytes(static_cast<uint16_t>(address), kSize, param,
+  eeprom->ReadBytes(static_cast<uint16_t>(address), Size, param,
                     &read_finished);
   Time start_time = hal.Now();
   // Wait until the read is performed, or at most 500 ms: reading 4kB should
@@ -230,7 +230,7 @@ bool Handler::ReadFullParams(Address address, Structure *param,
 }
 
 void Handler::WriteFullParams(Address address) {
-  eeprom_->WriteBytes(static_cast<uint16_t>(address), kSize, &nv_param_,
+  eeprom_->WriteBytes(static_cast<uint16_t>(address), Size, &nv_param_,
                       nullptr);
   // for a write, we don't really need to wait until the request is processed:
   // the I2C queue should ensure nothing is lost.

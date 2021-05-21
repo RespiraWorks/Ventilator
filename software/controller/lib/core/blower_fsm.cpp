@@ -93,10 +93,10 @@ BlowerSystemState
 PressureControlFsm::DesiredState(Time now, const BlowerFsmInputs &inputs) {
   if (now < inspire_end_) {
     // Go from expire_pressure_ to inspire_pressure_ over a duration of
-    // kRiseTime.  Then for the rest of the inspire time, hold at
+    // RiseTime.  Then for the rest of the inspire time, hold at
     // inspire_pressure_.
-    static_assert(kRiseTime > milliseconds(0));
-    float rise_frac = std::min(1.f, (now - start_time_) / kRiseTime);
+    static_assert(RiseTime > milliseconds(0));
+    float rise_frac = std::min(1.f, (now - start_time_) / RiseTime);
     return {
         .pressure_setpoint = expire_pressure_ +
                              (inspire_pressure_ - expire_pressure_) * rise_frac,
@@ -129,10 +129,10 @@ BlowerSystemState
 PressureAssistFsm::DesiredState(Time now, const BlowerFsmInputs &inputs) {
   if (now < inspire_end_) {
     // Go from expire_pressure_ to inspire_pressure_ over a duration of
-    // kRiseTime.  Then for the rest of the inspire time, hold at
+    // RiseTime.  Then for the rest of the inspire time, hold at
     // inspire_pressure_.
-    static_assert(kRiseTime > milliseconds(0));
-    float rise_frac = std::min(1.f, (now - start_time_) / kRiseTime);
+    static_assert(RiseTime > milliseconds(0));
+    float rise_frac = std::min(1.f, (now - start_time_) / RiseTime);
     return {
         .pressure_setpoint = expire_pressure_ +
                              (inspire_pressure_ - expire_pressure_) * rise_frac,

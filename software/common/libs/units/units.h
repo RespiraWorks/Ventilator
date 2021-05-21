@@ -191,14 +191,14 @@ protected:
 class Pressure : public UnitsDetail::ArithScalar<Pressure, float> {
 public:
   [[nodiscard]] constexpr float kPa() const { return val_; }
-  [[nodiscard]] constexpr float cmH2O() const { return val_ * kKPacmH2O; }
-  [[nodiscard]] constexpr float atm() const { return val_ / kAtmToKPa; }
+  [[nodiscard]] constexpr float cmH2O() const { return val_ * KPaToCmH2O; }
+  [[nodiscard]] constexpr float atm() const { return val_ / AtmToKPa; }
 
 private:
   // https://www.google.com/search?q=kpa+to+cmh2o
-  static constexpr float kKPacmH2O{10.1972f};
+  static constexpr float KPaToCmH2O{10.1972f};
   // https://www.google.com/search?q=atm+to+kPa
-  static constexpr float kAtmToKPa{101.325f};
+  static constexpr float AtmToKPa{101.325f};
 
   constexpr friend Pressure kPa(float kpa);
   constexpr friend Pressure cmH2O(float cm_h2o);
@@ -209,11 +209,9 @@ private:
 
 constexpr Pressure kPa(float kpa) { return Pressure(kpa); }
 constexpr Pressure cmH2O(float cm_h2o) {
-  return Pressure(cm_h2o / Pressure::kKPacmH2O);
+  return Pressure(cm_h2o / Pressure::KPaToCmH2O);
 }
-constexpr Pressure atm(float atm) {
-  return Pressure(atm * Pressure::kAtmToKPa);
-}
+constexpr Pressure atm(float atm) { return Pressure(atm * Pressure::AtmToKPa); }
 
 // Represents a length.
 //

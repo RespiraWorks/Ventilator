@@ -221,14 +221,14 @@ void Interface::SendResponse(ErrorCode error, uint32_t response_length) {
 
 // 16-bit CRC calculation for debug commands and responses
 uint16_t Interface::ComputeCRC(const uint8_t *buffer, size_t length) {
-  static constexpr uint16_t kCRC16POLY = 0xA001;
-  static bool kInit = false;
-  static uint16_t kCrcTable[256];
+  static constexpr uint16_t CRC16POLY = 0xA001;
+  static bool Init = false;
+  static uint16_t CrcTable[256];
 
   // The first time this is called I'll build a table
   // to speed up CRC handling
-  if (!kInit) {
-    kInit = true;
+  if (!Init) {
+    Init = true;
     for (uint16_t byte = 0; byte < 256; byte++) {
       uint16_t crc = byte;
 
@@ -236,17 +236,17 @@ uint16_t Interface::ComputeCRC(const uint8_t *buffer, size_t length) {
         bool lsb = (crc & 1) == 1;
         crc = static_cast<uint16_t>(crc >> 1);
         if (lsb)
-          crc ^= kCRC16POLY;
+          crc ^= CRC16POLY;
       }
 
-      kCrcTable[byte] = crc;
+      CrcTable[byte] = crc;
     }
   }
 
   uint16_t crc = 0;
 
   for (uint32_t byte_number = 0; byte_number < length; byte_number++) {
-    uint16_t local_crc = kCrcTable[0xFF & (buffer[byte_number] ^ crc)];
+    uint16_t local_crc = CrcTable[0xFF & (buffer[byte_number] ^ crc)];
 
     crc = static_cast<uint16_t>(local_crc ^ (crc >> 8));
   }

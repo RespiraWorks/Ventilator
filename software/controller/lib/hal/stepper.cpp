@@ -16,7 +16,7 @@ limitations under the License.
 #include "stepper.h"
 #include "hal.h"
 
-StepMotor StepMotor::motor_[StepMotor::kMaxMotors];
+StepMotor StepMotor::motor_[StepMotor::MaxMotors];
 int StepMotor::total_motors_;
 
 #if defined(BARE_STM32)
@@ -26,7 +26,7 @@ int StepMotor::total_motors_;
 #include <cstring>
 
 // Static data members
-uint8_t StepMotor::dma_buff_[StepMotor::kMaxMotors];
+uint8_t StepMotor::dma_buff_[StepMotor::MaxMotors];
 StepCommState StepMotor::coms_state_ = StepCommState::Idle;
 
 // This array holds the length of each parameter in units of
@@ -71,21 +71,21 @@ uint8_t StepMotor::param_len_[32] = {
 // to the weird values used by the stepper driver chip.
 // Note that different registers use different conversion
 // factors.  See the chip data sheet for details.
-static constexpr float kTickTime = 250e-9f;
-static constexpr float kVelCurrentSpeedReg = kTickTime * (1 << 28);
-static constexpr float kVelMaxSpeedReg = kTickTime * (1 << 18);
-static constexpr float kVelMinSpeedReg = kTickTime * (1 << 24);
-static constexpr float kVelFSSpeedReg = kTickTime * (1 << 18);
-static constexpr float kVelIntSpeedReg = kTickTime * (1 << 26);
+static constexpr float TickTime = 250e-9f;
+static constexpr float VelCurrentSpeedReg = TickTime * (1 << 28);
+static constexpr float VelMaxSpeedReg = TickTime * (1 << 18);
+static constexpr float VelMinSpeedReg = TickTime * (1 << 24);
+static constexpr float VelFSSpeedReg = TickTime * (1 << 18);
+static constexpr float VelIntSpeedReg = TickTime * (1 << 26);
 
 // The number of microsteps / full step.
 // For now this is a constant, we're just using the
 // default value of the chip.
-static constexpr int kMicrostepPerStep = 128;
+static constexpr int MicrostepPerStep = 128;
 
 // These functions raise and lower the chip select pin
-inline void CSHigh() { GpioSetPin(kGpioBBase, 6); }
-inline void CSLow() { GpioClrPin(kGpioBBase, 6); }
+inline void CSHigh() { GpioSetPin(GpioBBase, 6); }
+inline void CSLow() { GpioClrPin(GpioBBase, 6); }
 
 StepMtrErr StepMotor::SetParam(StepMtrParam param, uint32_t value) {
   uint8_t p = static_cast<uint8_t>(param);
@@ -166,8 +166,8 @@ StepMtrErr StepMotor::GetParam(StepMtrParam param, uint32_t *value) {
  * we have 3 steppers.
  *****************************************************************/
 void HalApi::StepperMotorInit() {
-  EnableClock(kSpi1Base);
-  EnableClock(kDma2Base);
+  EnableClock(Spi1Base);
+  EnableClock(Dma2Base);
 
   // The following pins are used to talk to the stepper
   // drivers:
@@ -189,21 +189,21 @@ void HalApi::StepperMotorInit() {
   // I just want it to be high so I don't reset the
   // part inadvertently
   CSHigh();
-  GpioSetPin(kGpioABase, 9);
-  GpioPinMode(kGpioBBase, 6, GPIOPinMode::Output);
-  GpioPinMode(kGpioABase, 9, GPIOPinMode::Output);
+  GpioSetPin(GpioABase, 9);
+  GpioPinMode(GpioBBase, 6, GPIOPinMode::Output);
+  GpioPinMode(GpioABase, 9, GPIOPinMode::Output);
 
   // Assign the three SPI pins to the SPI peripheral
-  GpioPinAltFunc(kGpioABase, 5, 5);
-  GpioPinAltFunc(kGpioABase, 6, 5);
-  GpioPinAltFunc(kGpioABase, 7, 5);
+  GpioPinAltFunc(GpioABase, 5, 5);
+  GpioPinAltFunc(GpioABase, 6, 5);
+  GpioPinAltFunc(GpioABase, 7, 5);
 
   // Set the output pins to use the highest speed setting
-  GpioOutSpeed(kGpioABase, 5, GPIOOutSpeed::Smoking);
-  GpioOutSpeed(kGpioABase, 7, GPIOOutSpeed::Smoking);
+  GpioOutSpeed(GpioABase, 5, GPIOOutSpeed::Smoking);
+  GpioOutSpeed(GpioABase, 7, GPIOOutSpeed::Smoking);
 
   // Configure my SPI port to talk to the stepper
-  SpiReg *const spi = kSpi1Base;
+  SpiReg *const spi = Spi1Base;
 
   // Configure the SPI to work in 8-bit data mode
   // Enable RXNE interrupts
@@ -226,11 +226,11 @@ void HalApi::StepperMotorInit() {
 
   // DMA2 channels 3 and 4 can be used to handle rx and tx interrupts from
   // SPI1 respectively.
-  DmaSelectChannel(kDma2Base, DmaChannel::Chan3, 4);
-  DmaSelectChannel(kDma2Base, DmaChannel::Chan4, 4);
+  DmaSelectChannel(Dma2Base, DmaChannel::Chan3, 4);
+  DmaSelectChannel(Dma2Base, DmaChannel::Chan4, 4);
 
   // The two DMA channels move data to/from the SPI data register.
-  DmaReg *dma = kDma2Base;
+  DmaReg *dma = Dma2Base;
   int c3 = static_cast<int>(DmaChannel::Chan3);
   int c4 = static_cast<int>(DmaChannel::Chan4);
   dma->channel[c3].peripheral_address = &spi->data;
@@ -340,7 +340,7 @@ float StepMotor::RegVelToDps(int32_t val, float cnv) const {
 StepMtrErr StepMotor::GetCurrentSpeed(float *ret) {
   uint32_t val;
   StepMtrErr err = GetParam(StepMtrParam::Speed, &val);
-  *ret = RegVelToDps(val, kVelCurrentSpeedReg);
+  *ret = RegVelToDps(val, VelCurrentSpeedReg);
   return err;
 }
 
@@ -351,7 +351,7 @@ StepMtrErr StepMotor::SetMaxSpeed(float dps) {
   if (dps < 0)
     return StepMtrErr::BadValue;
 
-  uint32_t speed = static_cast<uint32_t>(DpsToVelReg(dps, kVelMaxSpeedReg));
+  uint32_t speed = static_cast<uint32_t>(DpsToVelReg(dps, VelMaxSpeedReg));
   if (speed > 0x3ff)
     speed = 0x3ff;
 
@@ -362,7 +362,7 @@ StepMtrErr StepMotor::SetMaxSpeed(float dps) {
 StepMtrErr StepMotor::GetMaxSpeed(float *ret) {
   uint32_t val;
   StepMtrErr err = GetParam(StepMtrParam::MaxSpeed, &val);
-  *ret = RegVelToDps(val, kVelMaxSpeedReg);
+  *ret = RegVelToDps(val, VelMaxSpeedReg);
   return err;
 }
 
@@ -380,7 +380,7 @@ StepMtrErr StepMotor::SetMinSpeed(float dps) {
   if (dps < 0)
     return StepMtrErr::BadValue;
 
-  uint32_t speed = static_cast<uint32_t>(DpsToVelReg(dps, kVelMinSpeedReg));
+  uint32_t speed = static_cast<uint32_t>(DpsToVelReg(dps, VelMinSpeedReg));
   if (speed > 0xfff)
     speed = 0xfff;
 
@@ -391,7 +391,7 @@ StepMtrErr StepMotor::SetMinSpeed(float dps) {
 StepMtrErr StepMotor::GetMinSpeed(float *ret) {
   uint32_t val;
   StepMtrErr err = GetParam(StepMtrParam::MinSpeed, &val);
-  *ret = RegVelToDps(val, kVelMinSpeedReg);
+  *ret = RegVelToDps(val, VelMinSpeedReg);
   return err;
 }
 
@@ -400,7 +400,7 @@ StepMtrErr StepMotor::GetMinSpeed(float *ret) {
 // NOTE - The motor must be disabled to set this
 StepMtrErr StepMotor::SetAccel(float acc) {
 
-  static constexpr float kScaler = (kTickTime * kTickTime * 1099511627776.f);
+  static constexpr float Scaler = (TickTime * TickTime * 1099511627776.f);
   if (acc < 0)
     return StepMtrErr::BadValue;
 
@@ -408,7 +408,7 @@ StepMtrErr StepMotor::SetAccel(float acc) {
   acc *= static_cast<float>(steps_per_rev_) / 360.0f;
 
   // Convert to the proper units for the driver chip
-  uint32_t val = static_cast<uint32_t>(acc * kScaler);
+  uint32_t val = static_cast<uint32_t>(acc * Scaler);
   if (val > 0x0fff)
     val = 0xfff;
 
@@ -492,7 +492,7 @@ StepMtrErr StepMotor::RunAtVelocity(float vel) {
 
   // Convert the speed from deg/sec to the weird units
   // used by the stepper chip
-  float speed = DpsToVelReg(vel, kVelCurrentSpeedReg);
+  float speed = DpsToVelReg(vel, VelCurrentSpeedReg);
 
   // The speed value is a 20 bit unsigned integer passed
   // as part of the command.
@@ -592,7 +592,7 @@ StepMtrErr StepMotor::GetStatus(StepperStatus *stat) {
 }
 
 int32_t StepMotor::DegToUstep(float deg) const {
-  uint32_t ustep_per_rev = kMicrostepPerStep * steps_per_rev_;
+  uint32_t ustep_per_rev = MicrostepPerStep * steps_per_rev_;
 
   float steps = static_cast<float>(ustep_per_rev) * deg / 360.0f;
   return static_cast<int32_t>(steps);
@@ -819,7 +819,7 @@ void StepMotor::UpdateComState() {
   int c3 = static_cast<int>(DmaChannel::Chan3);
   int c4 = static_cast<int>(DmaChannel::Chan4);
 
-  DmaReg *dma = kDma2Base;
+  DmaReg *dma = Dma2Base;
   dma->channel[c3].config.enable = 0;
   dma->channel[c4].config.enable = 0;
 
@@ -841,7 +841,7 @@ void StepMotor::DmaISR() {
   CSHigh();
 
   // Clear the DMA interrupt
-  DmaClearInt(kDma2Base, DmaChannel::Chan3, DmaInterrupt::Global);
+  DmaClearInt(Dma2Base, DmaChannel::Chan3, DmaInterrupt::Global);
 
   UpdateComState();
 }
@@ -860,7 +860,7 @@ void StepMotor::SendInitCmd(uint8_t *buff, int len) {
   int c3 = static_cast<int>(DmaChannel::Chan3);
   int c4 = static_cast<int>(DmaChannel::Chan4);
 
-  DmaReg *dma = kDma2Base;
+  DmaReg *dma = Dma2Base;
   dma->channel[c3].config.enable = 0;
   dma->channel[c4].config.enable = 0;
 
@@ -885,7 +885,7 @@ void StepMotor::SendInitCmd(uint8_t *buff, int len) {
 
   // Clear the interrupt flag so I won't get an interrupt
   // as soon as I re-enable them
-  DmaClearInt(kDma2Base, DmaChannel::Chan3, DmaInterrupt::Global);
+  DmaClearInt(Dma2Base, DmaChannel::Chan3, DmaInterrupt::Global);
 
   // Raise the chip select line and wait 1 microsecond.
   // The minimum time the CS needs to be high is just under
@@ -904,7 +904,7 @@ void StepMotor::ProbeChips() {
   // I use a buffer a bit larger than the max number of motors
   // to try to continue to work even if there are a few more
   // driver chips than I support on the bus.
-  uint8_t probe_buff[kMaxMotors + 4];
+  uint8_t probe_buff[MaxMotors + 4];
 
   // First, send NO OP commands to all the chips a few times.
   // This will flush any data being sent by chips that were in

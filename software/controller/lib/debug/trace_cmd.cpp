@@ -116,7 +116,7 @@ ErrorCode TraceHandler::ReadTraceBuffer(Context *context) {
     samples_count = max_samples;
   }
 
-  std::array<uint32_t, kMaxTraceVars> record;
+  std::array<uint32_t, MaxTraceVars> record;
   for (size_t sample = 0; sample < samples_count; sample++) {
     // This shouldn't fail since I've already confirmed
     // the number of elements in the buffer.  If it does

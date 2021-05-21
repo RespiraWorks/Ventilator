@@ -186,7 +186,7 @@ private:
   ErrorCode Read(uint16_t address, Context *context);
   ErrorCode Write(uint16_t address, Context *context);
 
-  static constexpr uint16_t kMaxWriteLength{1024};
+  static constexpr uint16_t MaxWriteLength{1024};
   I2Ceeprom *eeprom_;
 };
 

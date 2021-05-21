@@ -53,16 +53,10 @@ CheckOptions:
     value:           CamelCase
   - key:             readability-identifier-naming.GlobalConstantCase
     value:           CamelCase
-  - key:             readability-identifier-naming.GlobalConstantPrefix
-    value:           k
   - key:             readability-identifier-naming.StaticConstantCase
     value:           CamelCase
-  - key:             readability-identifier-naming.StaticConstantPrefix
-    value:           k
   - key:             readability-identifier-naming.StaticVariableCase
     value:           CamelCase
-  - key:             readability-identifier-naming.StaticVariablePrefix
-    value:           k
   - key:             readability-identifier-naming.MemberCase
     value:           lower_case
 # We only require the "_" suffix for private and protected members in order to
@@ -88,8 +82,7 @@ CheckOptions:
     value:           UPPER_CASE
   - key:             readability-identifier-naming.IgnoreMainLikeFunctions
     value:           1
-# TODO: add function naming rules (CamelCase?).
-# Because we want to be able to use a different convention (snake_case) for accessors
-# and some globals (mostly in commons/ folder), this is not enforced for now.
-# We could add a //NOLINTNEXTLINE() to all of those, but this seems overkill (especially for accessors).
+# TODO: add function naming rules (snake_case?).
+# Because we want to be able to use acronyms, we don't want to enforce this
+# We could add a //NOLINTNEXTLINE() to all of those, but this seems overkill.
 ...

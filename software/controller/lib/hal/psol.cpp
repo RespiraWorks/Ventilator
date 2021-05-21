@@ -50,19 +50,19 @@ void HalApi::InitPSOL() {
   // I'm using a 20kHz PWM frequency to drive the solenoid
   // This is somewhat arbitrary, but is high enough to ensure
   // that there won't be any audible noise from the switching
-  static constexpr int kPwmFreq = 5000;
+  static constexpr int PwmFreq = 5000;
 
-  EnableClock(kTimer1Base);
+  EnableClock(Timer1Base);
 
   // Connect PA11 to timer 1
   // [DS] table 17 shows which functions can be connected to each pin.
   // For PA11 we select function 1 to connect it to timer 1.
-  GpioPinAltFunc(kGpioABase, 11, 1);
+  GpioPinAltFunc(GpioABase, 11, 1);
 
-  TimerReg *tmr = kTimer1Base;
+  TimerReg *tmr = Timer1Base;
 
   // Set the frequency
-  tmr->auto_reload = (CPU_FREQ / kPwmFreq) - 1;
+  tmr->auto_reload = (CPU_FREQ / PwmFreq) - 1;
 
   // Configure channel 4 in PWM output mode 1
   // with preload enabled.  The preload means that
@@ -94,7 +94,7 @@ void HalApi::InitPSOL() {
 // Set the PSOL output level to a value from 0 (fully closed)
 // to 1 (fully open)
 void HalApi::PSolValue(float val) {
-  TimerReg *tmr = kTimer1Base;
+  TimerReg *tmr = Timer1Base;
 
   val = std::clamp(val, 0.0f, 1.0f);
 

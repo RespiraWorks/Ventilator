@@ -241,7 +241,7 @@ TEST(TraceHandler, SettersAndGetters) {
   // Get trace var ID for var kMaxTraceVars (out of bounds)
   std::array<uint8_t, 2> get_var_max_command = {
       static_cast<uint8_t>(TraceHandler::Subcommand::GetVarId),
-      static_cast<uint8_t>(kMaxTraceVars)};
+      static_cast<uint8_t>(MaxTraceVars)};
   processed = false;
   Context get_var_max_context = {.request = get_var_max_command.data(),
                                  .request_length =
@@ -309,7 +309,7 @@ TEST(TraceHandler, Errors) {
        ErrorCode::NoMemory},
       {{static_cast<uint8_t>(TraceHandler::Subcommand::SetVarId), 1, 1},
        ErrorCode::MissingData},
-      {{static_cast<uint8_t>(TraceHandler::Subcommand::SetVarId), kMaxTraceVars,
+      {{static_cast<uint8_t>(TraceHandler::Subcommand::SetVarId), MaxTraceVars,
         1, 0},
        ErrorCode::InvalidData},
       {{static_cast<uint8_t>(TraceHandler::Subcommand::GetVarId)},

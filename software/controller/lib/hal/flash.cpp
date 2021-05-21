@@ -24,8 +24,8 @@ limitations under the License.
  * [RM] 3.3.7
  */
 static bool ValidFlashParameters(uint32_t addr, size_t ct) {
-  return (addr >= kFlashStartAddr) and
-         (addr + ct <= kFlashStartAddr + kFlashSize) and !(ct & 7) and
+  return (addr >= FlashStartAddr) and
+         (addr + ct <= FlashStartAddr + FlashSize) and !(ct & 7) and
          !(addr & 7);
 }
 
@@ -59,17 +59,17 @@ static inline void LockFlash(FlashReg *reg) { reg->control.flash_lock = 1; }
  * Returns true on success or false on failure
  */
 bool HalApi::FlashErasePage(uint32_t addr) {
-  if (!ValidFlashParameters(addr, kFlashPageSize))
+  if (!ValidFlashParameters(addr, FlashPageSize))
     return false;
 
   // Clear all the status bits
-  FlashReg *reg = kFlashBase;
+  FlashReg *reg = FlashBase;
   reg->status = 0x0000C3FB;
 
   UnlockFlash(reg);
 
   // Find the page number
-  uint8_t n = static_cast<uint8_t>((addr - kFlashStartAddr) / kFlashPageSize);
+  uint8_t n = static_cast<uint8_t>((addr - FlashStartAddr) / FlashPageSize);
 
   reg->control.page = n;
   reg->control.page_erase = 1;
@@ -90,7 +90,7 @@ bool HalApi::FlashWrite(uint32_t addr, void *data, size_t ct) {
 
   if (!ValidFlashParameters(addr, ct))
     return false;
-  FlashReg *reg = kFlashBase;
+  FlashReg *reg = FlashBase;
 
   // Clear all the status bits
   reg->status = 0x0000C3FB;

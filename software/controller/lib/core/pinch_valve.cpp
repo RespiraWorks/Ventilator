@@ -27,41 +27,41 @@ limitations under the License.
 // be able to come up with a good set of values here that
 // won't need further modification.
 
-// kMoveDir should be set to either 1 or -1 depending on the
+// MoveDir should be set to either 1 or -1 depending on the
 // desired direction of motion of the pinch valve.
-static constexpr float kMoveDir = -1.0f;
+static constexpr float MoveDir = -1.0f;
 
 // Amplitude of the power level used for homing.
 // 0.1 is 10% of maximum.  There's no need for high
 // power when homing, we're intentionally driving the
 // motor against a hard stop.
-static constexpr float kHomeAmp = 0.1f;
+static constexpr float HomeAmp = 0.1f;
 
 // Velocity (deg/sec), acceleration (deg/sec/sec)
 // and distance (deg) to move during the home
-static constexpr float kHomeVel = 60.0f;
-static constexpr float kHomeAccel = kHomeVel / 0.1f;
-static constexpr float kHomeDist = 90.0f * kMoveDir;
+static constexpr float HomeVel = 60.0f;
+static constexpr float HomeAccel = HomeVel / 0.1f;
+static constexpr float HomeDist = 90.0f * MoveDir;
 
 // Amount we can move away from the homing end stop before
 // we start to touch the tube (deg)
-static constexpr float kHomeOffset = 30.0f * kMoveDir;
+static constexpr float HomeOffset = 30.0f * MoveDir;
 
 // This is the distance (deg) from the zero position until
 // the tube is completely shut.
-static constexpr float kMaxMove = 50.0f * kMoveDir;
+static constexpr float MaxMove = 50.0f * MoveDir;
 
 // Amplitude of power level for normal operation.
 // Don't go crazy here, you can easily overheat the
 // motor driver chips and stepper motors.
-static constexpr float kMoveAmp = 0.25f;
+static constexpr float MoveAmp = 0.25f;
 
 // Speed/accel for normal moves.  We want the motor
 // to be quick because the PID loop output will be
 // small move and ideally we want it to finish before
 // the next loop cycle
-static constexpr float kMoveVel = 2000.0f;
-static constexpr float kMoveAccel = kMoveVel / 0.05f;
+static constexpr float MoveVel = 2000.0f;
+static constexpr float MoveAccel = MoveVel / 0.05f;
 
 // This table is used to roughly linearize the pinch valve
 // output.  It was built by adjusting the pinch valve and
@@ -71,9 +71,9 @@ static constexpr float kMoveAccel = kMoveVel / 0.05f;
 // the setting for 0 flow rate (normally 0) and the last entry
 // should be the setting for 100% flow rate.  The minimum
 // length of the table is 2 entries.
-static constexpr float kFlowTable[] = {0.0000f, 0.0410f, 0.0689f, 0.0987f,
-                                       0.1275f, 0.1590f, 0.1932f, 0.2359f,
-                                       0.2940f, 0.3988f, 1.0000f};
+static constexpr float FlowTable[] = {0.0000f, 0.0410f, 0.0689f, 0.0987f,
+                                      0.1275f, 0.1590f, 0.1932f, 0.2359f,
+                                      0.2940f, 0.3988f, 1.0000f};
 
 PinchValve::PinchValve(int motor_index) { motor_index_ = motor_index; }
 
@@ -108,16 +108,16 @@ void PinchValve::Home() {
 
   // Limit motor power during homing.
   case PinchValveHomeState::LowerAmp:
-    err = mtr->SetAmpAll(kHomeAmp);
+    err = mtr->SetAmpAll(HomeAmp);
     if (err == StepMtrErr::Ok)
       home_state_ = PinchValveHomeState::SetHomeSpeed;
     break;
 
   // Set the move speed/accel to be used during homing
   case PinchValveHomeState::SetHomeSpeed:
-    err = mtr->SetMaxSpeed(kHomeVel);
+    err = mtr->SetMaxSpeed(HomeVel);
     if (err == StepMtrErr::Ok)
-      err = mtr->SetAccel(kHomeAccel);
+      err = mtr->SetAccel(HomeAccel);
     if (err == StepMtrErr::Ok)
       home_state_ = PinchValveHomeState::MoveToStop;
     break;
@@ -125,7 +125,7 @@ void PinchValve::Home() {
   // Start a relative move into the hard stop
   case PinchValveHomeState::MoveToStop:
     move_start_time_ = hal.Now();
-    err = mtr->MoveRel(kHomeDist);
+    err = mtr->MoveRel(HomeDist);
     if (err == StepMtrErr::Ok)
       home_state_ = PinchValveHomeState::WaitMoveStop;
     break;
@@ -140,7 +140,7 @@ void PinchValve::Home() {
 
   // Switch to normal power setting
   case PinchValveHomeState::SetNormalAmp:
-    err = mtr->SetAmpAll(kMoveAmp);
+    err = mtr->SetAmpAll(MoveAmp);
     if (err == StepMtrErr::Ok)
       home_state_ = PinchValveHomeState::MoveOffset;
     break;
@@ -150,7 +150,7 @@ void PinchValve::Home() {
   // just touching the tube, but not squeezing it.
   case PinchValveHomeState::MoveOffset:
     move_start_time_ = hal.Now();
-    err = mtr->MoveRel(-kHomeOffset);
+    err = mtr->MoveRel(-HomeOffset);
     if (err == StepMtrErr::Ok)
       home_state_ = PinchValveHomeState::WaitMoveOffset;
     break;
@@ -172,9 +172,9 @@ void PinchValve::Home() {
   // Switch to normal move speed/accel
   case PinchValveHomeState::SetNormalSpeed:
 
-    err = mtr->SetMaxSpeed(kMoveVel);
+    err = mtr->SetMaxSpeed(MoveVel);
     if (err == StepMtrErr::Ok)
-      err = mtr->SetAccel(kMoveAccel);
+      err = mtr->SetAccel(MoveAccel);
     if (err == StepMtrErr::Ok)
       home_state_ = PinchValveHomeState::Homed;
 
@@ -197,7 +197,7 @@ void PinchValve::SetOutput(float value) {
   value = std::clamp(value, 0.0f, 1.0f);
 
   // Number of intervals defined by the table.
-  float tbl_len = std::size(kFlowTable) - 1;
+  float tbl_len = std::size(FlowTable) - 1;
 
   // Convert the input value based on a table
   // used to linearize the pinch valve output
@@ -205,15 +205,15 @@ void PinchValve::SetOutput(float value) {
   float f = value * tbl_len - static_cast<float>(n);
 
   if (n == static_cast<int>(tbl_len))
-    value = kFlowTable[n];
+    value = FlowTable[n];
   else
-    value = kFlowTable[n] + f * (kFlowTable[n + 1] - kFlowTable[n]);
+    value = FlowTable[n] + f * (FlowTable[n + 1] - FlowTable[n]);
 
   // Convert the value to an absolute position in deg
   // The motor's zero position is at the home offset
   // which corresponds to fully open (i.e. 100% flow)
-  // The valve is closed at a position of -kMaxMove;
-  float pos = (value - 1.0f) * kMaxMove;
+  // The valve is closed at a position of -MaxMove;
+  float pos = (value - 1.0f) * MaxMove;
 
   // Once you put a move in motion you can't change the destination position
   // until the move ends. That means that if the servo loop commands a

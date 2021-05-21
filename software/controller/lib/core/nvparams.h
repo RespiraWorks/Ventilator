@@ -75,7 +75,7 @@ private:
   Time last_update_{microsSinceStartup(0)};
   I2Ceeprom *eeprom_{nullptr};
   // Update cumulated service interval
-  static constexpr Duration kUpdateInterval{seconds(60)};
+  static constexpr Duration UpdateInterval{seconds(60)};
   bool linked_to_eeprom_{false}; // in case of EEPROM failure at startup,
                                  // we can spare ourselves the need to write
                                  // data to the eeprom, even if we will still

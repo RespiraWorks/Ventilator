@@ -59,9 +59,9 @@ static DebugUInt32 dbg_addr_after("eeprom_after",
 static DebugUInt32 dbg_test_result("result", "result of the test", 0);
 
 // test parameters
-static constexpr uint16_t kAddress{TEST_PARAM_1};
-static constexpr uint8_t kData{TEST_PARAM_2};
-static constexpr uint16_t kLength{TEST_PARAM_3};
+static constexpr uint16_t Address{TEST_PARAM_1};
+static constexpr uint8_t Data{TEST_PARAM_2};
+static constexpr uint16_t Length{TEST_PARAM_3};
 
 // declaration of EEPROM
 static I2Ceeprom eeprom = I2Ceeprom(0x50, 64, 32768, &i2c1);
@@ -86,21 +86,21 @@ static Debug::Interface
 
 void RunTest() {
   hal.Init();
-  uint8_t eeprom_before[kLength];
-  uint8_t write_data[kLength];
-  uint8_t eeprom_after[kLength];
+  uint8_t eeprom_before[Length];
+  uint8_t write_data[Length];
+  uint8_t eeprom_after[Length];
   bool second_read_finished{false};
 
-  for (int i = 0; i < kLength; ++i) {
-    write_data[i] = kData;
+  for (int i = 0; i < Length; ++i) {
+    write_data[i] = Data;
   }
 
   hal.BuzzerOn(0.1f);
-  eeprom.ReadBytes(kAddress, kLength, &eeprom_before, nullptr);
+  eeprom.ReadBytes(Address, Length, &eeprom_before, nullptr);
 
-  eeprom.WriteBytes(kAddress, kLength, &write_data, nullptr);
+  eeprom.WriteBytes(Address, Length, &write_data, nullptr);
 
-  eeprom.ReadBytes(kAddress, kLength, &eeprom_after, &second_read_finished);
+  eeprom.ReadBytes(Address, Length, &eeprom_after, &second_read_finished);
 
   dbg_addr_before.Set(reinterpret_cast<uint32_t>(&eeprom_before));
   dbg_write_data.Set(reinterpret_cast<uint32_t>(&write_data));
@@ -114,7 +114,7 @@ void RunTest() {
   };
 
   bool failed = false;
-  for (int i = 0; i < kLength; i++) {
+  for (int i = 0; i < Length; i++) {
     if (eeprom_after[i] != write_data[i]) {
       failed = true;
       break;
@@ -126,7 +126,7 @@ void RunTest() {
   // Put the memory back in its initial state (note that if the initial read
   // failed, or the write method is broken, this will also fail and the eeprom
   // will end up in an undefined state).
-  eeprom.WriteBytes(kAddress, kLength, &eeprom_before, nullptr);
+  eeprom.WriteBytes(Address, Length, &eeprom_before, nullptr);
 
   // loop here to allow the above write to be processed, the buzzer to be
   // stopped after some time, and to process debug interface commands.

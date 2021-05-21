@@ -20,7 +20,7 @@ public:
   }
   void OnCharacterMatch() override { debugPrint("@"); }
   void OnRxError(RxError e) override {
-    if (kRxTimeout == e) {
+    if (RxTimeout == e) {
       debugPrint("T");
     } else {
       debugPrint("#");
@@ -32,10 +32,10 @@ public:
 DummyRxListener rxlistener;
 DummyTxListener txlistener;
 
-DMACtrl dma_controller(kDma1Base);
-constexpr uint8_t kTxCh = 1;
-constexpr uint8_t kRxCh = 2;
-UartDma dma_uart(kUart3Base, kDma1Base, kTxCh, kRxCh, &rxlistener, &txlistener,
+DMACtrl dma_controller(Dma1Base);
+constexpr uint8_t TxCh = 1;
+constexpr uint8_t RxCh = 2;
+UartDma dma_uart(kUart3Base, Dma1Base, TxCh, RxCh, &rxlistener, &txlistener,
                  '.');
 
 int main() {

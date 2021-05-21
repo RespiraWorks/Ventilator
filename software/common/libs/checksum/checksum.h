@@ -35,7 +35,7 @@ uint16_t ChecksumFletcher16(const char *data, uint8_t count,
 // and Hamming distance 4 up to 114663 bits.
 //[Philip Koopman, 32-Bit Cyclic Redundancy Codes for Internet Applications
 // 2002.] https://users.ece.cmu.edu/~koopman/crc/
-constexpr uint32_t kCrc32Polynomial = 0x741B8CD7;
+constexpr uint32_t Crc32Polynomial = 0x741B8CD7;
 
 uint32_t SoftCRC32(const uint8_t *data, uint32_t count);
 

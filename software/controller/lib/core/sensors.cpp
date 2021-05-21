@@ -36,7 +36,7 @@ static DebugFloat dbg_flow_uncorrected("flow_uncorrected",
 // altitude - need mechanism to adjust based on delivery? Constant involving
 // density of air. Density assumed at 15 deg. Celsius and 1 atm of pressure.
 // Sourced from https://en.wikipedia.org/wiki/Density_of_air
-static const float kDensityOfAirKgPerCubicMeter{1.225f}; // kg/m^3
+static const float DensityOfAirKgPerCubicMeter{1.225f}; // kg/m^3
 
 // Diameters and correction coefficient relating to 3/4in Venturi, see
 // https://bit.ly/2ARuReg.
@@ -45,12 +45,12 @@ static const float kDensityOfAirKgPerCubicMeter{1.225f}; // kg/m^3
 // roughly 10^4 and machined (rather than cast) surfaces. Data fit is in good
 // agreement based on comparison to Fleisch pneumotachograph; see
 // https://github.com/RespiraWorks/Ventilator/pull/476
-constexpr static Length kVenturiPortDiameter{millimeters(15.05f)};
-constexpr static Length kVenturiChokeDiameter{millimeters(5.5f)};
-constexpr static float kVenturiCorrection{0.97f};
+constexpr static Length VenturiPortDiameter{millimeters(15.05f)};
+constexpr static Length VenturiChokeDiameter{millimeters(5.5f)};
+constexpr static float VenturiCorrection{0.97f};
 
-static_assert(kVenturiPortDiameter > kVenturiChokeDiameter);
-static_assert(kVenturiChokeDiameter > meters(0));
+static_assert(VenturiPortDiameter > VenturiChokeDiameter);
+static_assert(VenturiChokeDiameter > meters(0));
 
 AnalogPin Sensors::PinFor(Sensor s) {
   switch (s) {
@@ -107,10 +107,10 @@ Pressure Sensors::ReadPressureSensor(Sensor s) const {
   // The pressure sensor is scaled to 0-3.3V, which is the range captured by
   // our ADC.  Therefore, if we multiply the received voltage by 5/3.3, we get
   // a pressure in kPa.
-  static const float kPressureSensorGain{5.f / 3.3f};
-  return kPa(kPressureSensorGain * (hal.AnalogRead(PinFor(s)) -
-                                    sensors_zero_vals_[static_cast<int>(s)])
-                                       .volts());
+  static const float PressureSensorGain{5.f / 3.3f};
+  return kPa(PressureSensorGain * (hal.AnalogRead(PinFor(s)) -
+                                   sensors_zero_vals_[static_cast<int>(s)])
+                                      .volts());
 }
 
 // Reads an oxygen sensor, returning the concentration of oxygen [0 ; 1.0]
@@ -127,17 +127,17 @@ float Sensors::ReadOxygenSensor(Pressure p_ambient) const {
 
   // Standard air O2 concentration. This assumes that calibration occured with
   // pure air, meaning the system has been filled with air only.
-  static const float kO2ConcentrationInAir{0.21f};
+  static const float O2ConcentrationInAir{0.21f};
 
-  static const float kAmplifierGain{50.0f};
-  static const float kOxygenSensorGain{0.060f};
+  static const float AmplifierGain{50.0f};
+  static const float OxygenSensorGain{0.060f};
 
   // TODO: raise alarm if fio2 is out of expected (0,1) range
   return (hal.AnalogRead(PinFor(Sensor::FIO2)) -
           sensors_zero_vals_[static_cast<int>(Sensor::FIO2)])
                  .volts() /
-             (kAmplifierGain * kOxygenSensorGain) / p_ambient.atm() +
-         kO2ConcentrationInAir;
+             (AmplifierGain * OxygenSensorGain) / p_ambient.atm() +
+         O2ConcentrationInAir;
 }
 
 VolumetricFlow Sensors::PressureDeltaToFlow(Pressure delta) {
@@ -148,12 +148,12 @@ VolumetricFlow Sensors::PressureDeltaToFlow(Pressure delta) {
     return static_cast<float>(M_PI) / 4.0f * pow2(diameter.meters());
   };
 
-  float port_area = diameter_to_area_m2(kVenturiPortDiameter);
-  float choke_area = diameter_to_area_m2(kVenturiChokeDiameter);
+  float port_area = diameter_to_area_m2(VenturiPortDiameter);
+  float choke_area = diameter_to_area_m2(VenturiChokeDiameter);
   return cubic_m_per_sec(
-      kVenturiCorrection *
+      VenturiCorrection *
       std::copysign(std::sqrt(std::abs(delta.kPa()) * 1000.0f), delta.kPa()) *
-      std::sqrt(2 / kDensityOfAirKgPerCubicMeter) * port_area * choke_area /
+      std::sqrt(2 / DensityOfAirKgPerCubicMeter) * port_area * choke_area /
       std::sqrt(pow2(port_area) - pow2(choke_area)));
 }
 

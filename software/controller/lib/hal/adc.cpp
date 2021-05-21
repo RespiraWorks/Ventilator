@@ -70,44 +70,44 @@ Reference abbreviations ([RM], [PCB], etc) are defined in hal/README.md
 */
 
 // How long a period (in seconds) we want to average the A/D readings.
-static constexpr float kSampleHistoryTimeSec = 0.001f;
+static constexpr float SampleHistoryTimeSec = 0.001f;
 
 // Total number of A/D inputs we're sampling
-static constexpr int kAdcChannels = 4;
+static constexpr int AdcChannels = 4;
 
 // This constant controls how many times we have the A/D sample each input
 // and sum them before moving on to the next input.  The constant is set
 // as a log base 2, so a value of 3 for example would mean sample 8 times
 // (2^3 == 8).  Legal values range from 0 to 8.
-static constexpr int kOversampleLog2 = 4;
-static constexpr int kOversampleCount = 1 << kOversampleLog2;
+static constexpr int OversampleLog2 = 4;
+static constexpr int OversampleCount = 1 << OversampleLog2;
 
 // [RM] 16.4.30: Oversampler (pg 425)
 // This calculated constant gives the maximum A/D reading based on the
 // number of samples.
-static constexpr int kMaxAdcReading =
-    (kOversampleLog2 >= 4) ? 65536 : (1 << (12 + kOversampleLog2));
+static constexpr int MaxAdcReading =
+    (OversampleLog2 >= 4) ? 65536 : (1 << (12 + OversampleLog2));
 
 // Set sample time ([RM] 16.4.12). I'm using 92.5 A/D clocks to sample.
 // A/D sample time in CPU clock cycles.  Fixed for now
 // This is the time we give the analog input to charge the A/D sampling cap.
-static constexpr int kAdcSampleTime = 92;
+static constexpr int AdcSampleTime = 92;
 
 // Time of an A/D conversion in CPU clock cycles.  This is the sample time + 13
-static constexpr int kAdcConversionTime = kAdcSampleTime + 13;
+static constexpr int AdcConversionTime = AdcSampleTime + 13;
 
 // Calculate how long our history buffer needs to be based on the above.
-static constexpr int kAdcSampleHistory =
-    static_cast<int>(kSampleHistoryTimeSec * CPU_FREQ / kAdcConversionTime /
-                     kOversampleCount / kAdcChannels);
+static constexpr int AdcSampleHistory =
+    static_cast<int>(SampleHistoryTimeSec * CPU_FREQ / AdcConversionTime /
+                     OversampleCount / AdcChannels);
 
 // This scaler converts the sum of the A/D readings (a total of
-// kAdcSampleHistory) into a voltage.  The A/D is scaled so a value of 0
-// corresponds to 0 volts, and kMaxAdcReading corresponds to 3.3V
-static constexpr float kAdcScaler = 3.3f / (kMaxAdcReading * kAdcSampleHistory);
+// AdcSampleHistory) into a voltage.  The A/D is scaled so a value of 0
+// corresponds to 0 volts, and MaxAdcReading corresponds to 3.3V
+static constexpr float AdcScaler = 3.3f / (MaxAdcReading * AdcSampleHistory);
 
 // This buffer will hold the readings from the A/D
-static volatile uint16_t adc_buff[kAdcSampleHistory * kAdcChannels];
+static volatile uint16_t adc_buff[AdcSampleHistory * AdcChannels];
 
 // NOTE - we need the sample history to be small for two reasons:
 // - We sum to a 32-bit floating point number and will lose precision
@@ -117,23 +117,23 @@ static volatile uint16_t adc_buff[kAdcSampleHistory * kAdcChannels];
 //
 // If you get hit with this assertion you may need to rethink the
 // way this function works.
-static_assert(kAdcSampleHistory < 100);
+static_assert(AdcSampleHistory < 100);
 
 void HalApi::InitADC() {
 
   // Enable the clock to the A/D converter
-  EnableClock(kAdcBase);
+  EnableClock(AdcBase);
 
   // Configure the 4 pins used as analog inputs
-  GpioPinMode(kGpioABase, 0, GPIOPinMode::Analog);
-  GpioPinMode(kGpioABase, 1, GPIOPinMode::Analog);
-  GpioPinMode(kGpioABase, 4, GPIOPinMode::Analog);
-  GpioPinMode(kGpioBBase, 0, GPIOPinMode::Analog);
-  GpioPinMode(kGpioCBase, 1, GPIOPinMode::Analog);
+  GpioPinMode(GpioABase, 0, GPIOPinMode::Analog);
+  GpioPinMode(GpioABase, 1, GPIOPinMode::Analog);
+  GpioPinMode(GpioABase, 4, GPIOPinMode::Analog);
+  GpioPinMode(GpioBBase, 0, GPIOPinMode::Analog);
+  GpioPinMode(GpioCBase, 1, GPIOPinMode::Analog);
 
   // Perform a power-up and calibration sequence on
   // the A/D converter
-  AdcReg *adc = kAdcBase;
+  AdcReg *adc = AdcBase;
 
   // Exit deep power down mode and turn on the
   // internal voltage regulator.
@@ -169,16 +169,16 @@ void HalApi::InitADC() {
   adc->adc[0].configuration1.continuous_conversion = 1;
 
   adc->adc[0].configuration2.regular_oversampling =
-      (kOversampleLog2 > 0) ? 1 : 0;
+      (OversampleLog2 > 0) ? 1 : 0;
 
   adc->adc[0].configuration2.oversampling_ratio =
-      (kOversampleLog2 > 0) ? kOversampleLog2 - 1 : 0;
+      (OversampleLog2 > 0) ? OversampleLog2 - 1 : 0;
 
   adc->adc[0].configuration2.oversampling_shift =
-      (kOversampleLog2 < 4) ? 0 : (kOversampleLog2 - 4);
+      (OversampleLog2 < 4) ? 0 : (OversampleLog2 - 4);
 
   // Set sample times ([RM] 16.4.12). I'm using 92.5 A/D clocks to sample.
-  static_assert(kAdcSampleTime == 92);
+  static_assert(AdcSampleTime == 92);
   adc->adc[0].sample_times.ch5 = 5;
   adc->adc[0].sample_times.ch6 = 5;
   adc->adc[0].sample_times.ch9 = 5;
@@ -186,7 +186,7 @@ void HalApi::InitADC() {
   adc->adc[0].sample_times.ch2 = 5;
 
   // Set conversion sequence length:
-  adc->adc[0].sequence.length = kAdcChannels - 1;
+  adc->adc[0].sequence.length = AdcChannels - 1;
 
   adc->adc[0].sequence.sequence1 = 6;
   adc->adc[0].sequence.sequence2 = 9;
@@ -194,13 +194,13 @@ void HalApi::InitADC() {
   adc->adc[0].sequence.sequence4 = 2;
 
   // I use DMA1 channel 1 to copy my A/D readings into my buffer ([RM] 11.4.4)
-  EnableClock(kDma1Base);
-  DmaReg *dma = kDma1Base;
+  EnableClock(Dma1Base);
+  DmaReg *dma = Dma1Base;
   int c1 = static_cast<int>(DmaChannel::Chan1);
 
   dma->channel[c1].peripheral_address = &adc->adc[0].data;
   dma->channel[c1].memory_address = adc_buff;
-  dma->channel[c1].count = kAdcSampleHistory * kAdcChannels;
+  dma->channel[c1].count = AdcSampleHistory * AdcChannels;
 
   dma->channel[c1].config.enable = 0;
   dma->channel[c1].config.tx_complete_interrupt = 0;
@@ -242,10 +242,10 @@ Voltage HalApi::AnalogRead(AnalogPin pin) {
   // background, but that shouldn't cause any problems because memory
   // accesses for 16-bit values are atomic.
   float sum = 0;
-  for (int i = 0; i < kAdcSampleHistory; i++)
-    sum += adc_buff[i * kAdcChannels + offset];
+  for (int i = 0; i < AdcSampleHistory; i++)
+    sum += adc_buff[i * AdcChannels + offset];
 
-  return volts(sum * kAdcScaler);
+  return volts(sum * AdcScaler);
 }
 
 #endif

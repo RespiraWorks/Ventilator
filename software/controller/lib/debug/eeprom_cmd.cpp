@@ -65,12 +65,12 @@ ErrorCode EepromHandler::Write(const uint16_t address, Context *context) {
   // the subcommand and address bytes
   uint16_t length = static_cast<uint16_t>(context->request_length - 3);
 
-  if (length > kMaxWriteLength)
+  if (length > MaxWriteLength)
     return ErrorCode::NoMemory;
 
   // copy request data in our own array to allow eeprom to reinterpret_cast
   // the pointer we pass it (as pointers to const cannot be cast)
-  uint8_t request[kMaxWriteLength] = {0};
+  uint8_t request[MaxWriteLength] = {0};
   memcpy(&request[0], &(context->request[3]), length);
   context->response_length = 0;
   if (eeprom_->WriteBytes(address, length, &request, context->processed)) {

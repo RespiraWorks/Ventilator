@@ -97,18 +97,18 @@ public:
 protected:
   // We queue of a few requests. The number of requests is arbitrary but
   // should be enough for all intents and purposes.
-  static constexpr uint8_t kQueueLength{80};
+  static constexpr uint8_t QueueLength{80};
 
   // We copy the write data into a buffer to make sure nothing can be lost
   // due to the scope of the caller's variable. This is the buffer size.
-  static constexpr uint32_t kWriteBufferSize{4096};
+  static constexpr uint32_t WriteBufferSize{4096};
 
   // Max retry-after-error allowed for a single request.
-  static constexpr int8_t kMaxRetries{5};
+  static constexpr int8_t MaxRetries{5};
 
-  // retry countdown - set to kMaxRetries when starting a request
+  // retry countdown - set to MaxRetries when starting a request
   // If it hits zero, we abort the request.
-  int8_t error_retry_{kMaxRetries};
+  int8_t error_retry_{MaxRetries};
 
   bool dma_enable_{false};
 
@@ -155,8 +155,8 @@ protected:
   // buffer of indexes to know the queue state and let the tested template
   // worry about buffer management but we also use our own Request table
   // (to which the circular buffer elements lead)
-  CircularBuffer<uint8_t, kQueueLength> buffer_;
-  Request queue_[kQueueLength];
+  CircularBuffer<uint8_t, QueueLength> buffer_;
+  Request queue_[QueueLength];
   uint8_t ind_queue_{0};
 
   // Write buffer: the caller may send a write request with the address of
@@ -171,10 +171,10 @@ protected:
   // which
   //    means we lose the ability to retry a request after an I²C (or DMA)
   //    error.
-  uint8_t write_buffer_[kWriteBufferSize];
+  uint8_t write_buffer_[WriteBufferSize];
   uint32_t write_buffer_index_{0};
   uint32_t write_buffer_start_{0};
-  uint32_t wrapping_index_{kWriteBufferSize};
+  uint32_t wrapping_index_{WriteBufferSize};
   bool CopyDataToWriteBuffer(const void *data, uint16_t size);
 };
 
@@ -236,10 +236,10 @@ public:
 private:
   // in test mode, fake sending and receiving data through circular
   // buffers.
-  CircularBuffer<uint8_t, kWriteBufferSize> sent_buffer_;
+  CircularBuffer<uint8_t, WriteBufferSize> sent_buffer_;
   // note it is up to the tester to put data in the rx_buffer before
   // calling I2CEventHandler during a read request
-  CircularBuffer<uint8_t, kWriteBufferSize> rx_buffer_;
+  CircularBuffer<uint8_t, WriteBufferSize> rx_buffer_;
   // fake a NACK condition on next handler call
   bool nack_{false};
 

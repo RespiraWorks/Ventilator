@@ -27,4 +27,7 @@ limitations under the License.
 // header in the putative library from each file with a pure virtual function.
 // We'd probably also need to remove the dependency on hal, so this could be
 // used from libraries that don't link with hal.
-extern "C" void __cxa_pure_virtual() { Hal.reset_device(); }
+
+// We don't control this function's name, silence the style check
+// NOLINTNEXTLINE(readability-identifier-naming)
+extern "C" void __cxa_pure_virtual() { hal.ResetDevice(); }

@@ -13,8 +13,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#ifndef TRACE_H_
-#define TRACE_H_
+#ifndef TRACE_H
+#define TRACE_H
 
 #include "circular_buffer.h"
 #include "vars.h"
@@ -23,7 +23,7 @@ limitations under the License.
 
 namespace Debug {
 
-static constexpr uint32_t kMaxTraceVars{4};
+static constexpr uint32_t MaxTraceVars{4};
 
 /*
  * Implements a data trace facility.
@@ -67,7 +67,7 @@ public:
   }
 
   template <int index> void SetTracedVarId(int32_t id) {
-    static_assert(index >= 0 && index < kMaxTraceVars);
+    static_assert(index >= 0 && index < MaxTraceVars);
     traced_vars_[index] = DebugVar::FindVar(static_cast<uint16_t>(id));
     // The layout of the trace buffer is just a bunch of uint32_t's one per
     // each variable of each sample cycle. In order to be able to interpret
@@ -77,7 +77,7 @@ public:
   }
 
   template <int index> int32_t GetTracedVarId() {
-    static_assert(index >= 0 && index < kMaxTraceVars);
+    static_assert(index >= 0 && index < MaxTraceVars);
     return traced_vars_[index] ? traced_vars_[index]->GetId() : -1;
   }
 
@@ -90,8 +90,7 @@ public:
   // Sets *count to the number of elements actually set in *record.
   // This will equal GetNumActiveVars() but is easier to use for testing.
   [[nodiscard]] bool
-  GetNextTraceRecord(std::array<uint32_t, kMaxTraceVars> *record,
-                     size_t *count);
+  GetNextTraceRecord(std::array<uint32_t, MaxTraceVars> *record, size_t *count);
 
 private:
   // This function is called at the end of the high priority loop function.
@@ -107,7 +106,7 @@ private:
   // Number of loop cycles elapsed since last sample was captured.
   uint32_t cycles_count_{0};
 
-  std::array<DebugVarBase *, kMaxTraceVars> traced_vars_ = {nullptr};
+  std::array<DebugVarBase *, MaxTraceVars> traced_vars_ = {nullptr};
 
   // This circular buffer is as big as we consider reasonable, to give a good
   // tracing capability: 40% of the RAM available on our STM32
@@ -116,4 +115,4 @@ private:
 
 } // namespace Debug
 
-#endif // TRACE_H_
+#endif // TRACE_H

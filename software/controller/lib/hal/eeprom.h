@@ -17,13 +17,13 @@ limitations under the License.
 // https://ww1.microchip.com/downloads/en/DeviceDoc/24AA256-24LC256-24FC256-Data-Sheet-20001203W.pdf
 // The EEPROM we have on the board is at address 0x50 (see [PCBsp])
 
-#ifndef EEPROM_H_
-#define EEPROM_H_
+#ifndef EEPROM_H
+#define EEPROM_H
 
 #include "i2c.h"
 #include <stdint.h>
 
-static constexpr uint32_t kMaxMemorySize{65535};
+static constexpr uint32_t MaxMemorySize{65535};
 
 // This class defines an I²C addressable EEPROM.
 class I2Ceeprom {
@@ -67,9 +67,9 @@ public:
 
 private:
   uint32_t address_pointer_{0};
-  uint8_t memory_[kMaxMemorySize];
+  uint8_t memory_[MaxMemorySize];
   bool SendBytes(const I2C::Request &request) override;
   bool ReceiveBytes(const I2C::Request &request) override;
 };
 
-#endif // EEPROM_H_
+#endif // EEPROM_H

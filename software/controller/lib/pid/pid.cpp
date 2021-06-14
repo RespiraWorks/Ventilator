@@ -29,31 +29,31 @@ float PID::Compute(Time now, float input, float setpoint) {
   }
 
   // Compute time between now and last sample.
-  float dt = (now - last_update_time_).seconds();
+  float delta_t = (now - last_update_time_).seconds();
 
   // Compute all the working error variables
   float error = setpoint - input;
-  float dInput = input - last_input_;
+  float delta_input = input - last_input_;
 
-  output_sum_ += (ki_ * error * dt);
+  output_sum_ += (ki_ * error * delta_t);
 
-  if (p_term_ == ProportionalTerm::ON_MEASUREMENT) {
-    output_sum_ -= kp_ * dInput;
+  if (p_term_ == ProportionalTerm::OnMeasurement) {
+    output_sum_ -= kp_ * delta_input;
   }
 
   output_sum_ = std::clamp(output_sum_, out_min_, out_max_);
 
   float res = output_sum_;
-  if (p_term_ == ProportionalTerm::ON_ERROR) {
+  if (p_term_ == ProportionalTerm::OnError) {
     res += kp_ * error;
   }
-  // dt may be 0 (e.g. on the first call to Compute()), in which case we simply
-  // skip using the derivative term.
-  if (dt > 0) {
-    if (d_term_ == DifferentialTerm::ON_MEASUREMENT) {
-      res -= kd_ * dInput / dt;
+  // delta_t may be 0 (e.g. on the first call to Compute()), in which case we
+  // simply skip using the derivative term.
+  if (delta_t > 0) {
+    if (d_term_ == DifferentialTerm::OnMeasurement) {
+      res -= kd_ * delta_input / delta_t;
     } else {
-      res += kd_ * (error - last_error_) / dt;
+      res += kd_ * (error - last_error_) / delta_t;
     }
   }
 

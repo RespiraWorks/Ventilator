@@ -29,15 +29,15 @@ namespace I2C {
 
 // Speed values correspond to the timing register value from [RM] table 182
 enum class Speed {
-  kSlow = 0x3042C3C7,     // 10 kb/s
-  kStandard = 0x30420F13, // 100 kb/s
-  kFast = 0x10320309,     // 400 kb/s
-  kFastPlus = 0x00200204, // 1 Mb/s
+  Slow = 0x3042C3C7,     // 10 kb/s
+  Standard = 0x30420F13, // 100 kb/s
+  Fast = 0x10320309,     // 400 kb/s
+  FastPlus = 0x00200204, // 1 Mb/s
 };
 
 enum class ExchangeDirection {
-  kWrite = 0,
-  kRead = 1,
+  Write = 0,
+  Read = 1,
 };
 
 // Structure that represents an I²C request. It is up to the caller to
@@ -48,7 +48,7 @@ struct Request {
   uint8_t slave_address{0}; // for now we only support 7 bits addresses
                             // and NOT 10 bits addresses (I²C bus is one
                             // or the other)
-  ExchangeDirection direction{ExchangeDirection::kRead};
+  ExchangeDirection direction{ExchangeDirection::Read};
   uint16_t size{1};         // size (in bytes) of the data to be sent or
                             // received - limited to 16 bits because of DMA
                             // limitation
@@ -97,18 +97,18 @@ public:
 protected:
   // We queue of a few requests. The number of requests is arbitrary but
   // should be enough for all intents and purposes.
-  static constexpr uint8_t kQueueLength{80};
+  static constexpr uint8_t QueueLength{80};
 
   // We copy the write data into a buffer to make sure nothing can be lost
   // due to the scope of the caller's variable. This is the buffer size.
-  static constexpr uint32_t kWriteBufferSize{4096};
+  static constexpr uint32_t WriteBufferSize{4096};
 
   // Max retry-after-error allowed for a single request.
-  static constexpr int8_t kMaxRetries{5};
+  static constexpr int8_t MaxRetries{5};
 
-  // retry countdown - set to kMaxRetries when starting a request
+  // retry countdown - set to MaxRetries when starting a request
   // If it hits zero, we abort the request.
-  int8_t error_retry_{kMaxRetries};
+  int8_t error_retry_{MaxRetries};
 
   bool dma_enable_{false};
 
@@ -155,8 +155,8 @@ protected:
   // buffer of indexes to know the queue state and let the tested template
   // worry about buffer management but we also use our own Request table
   // (to which the circular buffer elements lead)
-  CircularBuffer<uint8_t, kQueueLength> buffer_;
-  Request queue_[kQueueLength];
+  CircularBuffer<uint8_t, QueueLength> buffer_;
+  Request queue_[QueueLength];
   uint8_t ind_queue_{0};
 
   // Write buffer: the caller may send a write request with the address of
@@ -171,10 +171,10 @@ protected:
   // which
   //    means we lose the ability to retry a request after an I²C (or DMA)
   //    error.
-  uint8_t write_buffer_[kWriteBufferSize];
+  uint8_t write_buffer_[WriteBufferSize];
   uint32_t write_buffer_index_{0};
   uint32_t write_buffer_start_{0};
-  uint32_t wrapping_index_{kWriteBufferSize};
+  uint32_t wrapping_index_{WriteBufferSize};
   bool CopyDataToWriteBuffer(const void *data, uint16_t size);
 };
 
@@ -186,23 +186,23 @@ public:
   // the channel using DMA if possible. If DMA_Reg is invalid (or that DMA
   // cannot be linked to this I²C), dma is disabled and all transfers are
   // handled in software.
-  void Init(I2C_Regs *i2c, DMA_Regs *dma, Speed speed);
+  void Init(I2CReg *i2c, DmaReg *dma, Speed speed);
   // Interrupt handlers for DMA, which only makes sense on the STM32
-  void DMAIntHandler(DMA_Chan chan);
+  void DMAIntHandler(DmaChannel chan);
 
 private:
-  I2C_Regs *i2c_{nullptr};
-  DMA_Regs *dma_{nullptr};
-  volatile DMA_Regs::ChannelRegs *rx_channel_{nullptr};
-  volatile DMA_Regs::ChannelRegs *tx_channel_{nullptr};
+  I2CReg *i2c_{nullptr};
+  DmaReg *dma_{nullptr};
+  volatile DmaReg::ChannelRegs *rx_channel_{nullptr};
+  volatile DmaReg::ChannelRegs *tx_channel_{nullptr};
 
   void SetupI2CTransfer() override; // configure a transfer
   void ReceiveByte() override {
-    *next_data_ = static_cast<uint8_t>(i2c_->rxData);
+    *next_data_ = static_cast<uint8_t>(i2c_->rx_data);
   };
-  void SendByte() override { i2c_->txData = *next_data_; };
+  void SendByte() override { i2c_->tx_data = *next_data_; };
   void WriteTransferSize() override;
-  void StopTransfer() override { i2c_->ctrl2.stop = 1; };
+  void StopTransfer() override { i2c_->control2.stop = 1; };
 
   // Override interrupt getters:
   bool NextByteNeeded() const override {
@@ -214,11 +214,11 @@ private:
   };
   bool NackDetected() const override { return i2c_->status.nack; };
   // Override Interrupt clear
-  void ClearNack() override { i2c_->intClr = 0x10; }
-  void ClearErrors() override { i2c_->intClr = 0x720; }
+  void ClearNack() override { i2c_->interrupt_clear = 0x10; }
+  void ClearErrors() override { i2c_->interrupt_clear = 0x720; }
 
-  void SetupDMAChannels(DMA_Regs *dma);
-  void ConfigureDMAChannel(volatile DMA_Regs::ChannelRegs *channel,
+  void SetupDMAChannels(DmaReg *dma);
+  void ConfigureDMAChannel(volatile DmaReg::ChannelRegs *channel,
                            ExchangeDirection direction);
   void SetupDMATransfer();
 };
@@ -228,25 +228,25 @@ class TestChannel : public Channel {
 public:
   TestChannel() = default;
   // in test mode, setters and getters for faked sent/received data
-  std::optional<uint8_t> TEST_GetSentData() { return sent_buffer_.Get(); };
-  bool TEST_QueueReceiveData(uint8_t data) { return rx_buffer_.Put(data); };
+  std::optional<uint8_t> TESTGetSentData() { return sent_buffer_.Get(); };
+  bool TESTQueueReceiveData(uint8_t data) { return rx_buffer_.Put(data); };
   // setter to simulate Nack received
-  void TEST_SimulateNack() { nack_ = true; };
+  void TESTSimulateNack() { nack_ = true; };
 
 private:
   // in test mode, fake sending and receiving data through circular
   // buffers.
-  CircularBuffer<uint8_t, kWriteBufferSize> sent_buffer_;
+  CircularBuffer<uint8_t, WriteBufferSize> sent_buffer_;
   // note it is up to the tester to put data in the rx_buffer before
   // calling I2CEventHandler during a read request
-  CircularBuffer<uint8_t, kWriteBufferSize> rx_buffer_;
+  CircularBuffer<uint8_t, WriteBufferSize> rx_buffer_;
   // fake a NACK condition on next handler call
   bool nack_{false};
 
   // mock the sending and receiving of bytes from internal buffers
   void SendByte() override {
-    bool OK = sent_buffer_.Put(*next_data_);
-    if (OK)
+    bool ok = sent_buffer_.Put(*next_data_);
+    if (ok)
       return;
   };
   void ReceiveByte() override {

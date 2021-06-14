@@ -13,8 +13,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#ifndef NVPARAM_H_
-#define NVPARAM_H_
+#ifndef NVPARAM_H
+#define NVPARAM_H
 
 #include "eeprom.h"
 #include "network_protocol.pb.h"
@@ -52,8 +52,8 @@ struct Structure {
 static_assert(sizeof(Structure) <= 4096);
 
 enum class Address {
-  kFlip = 0,
-  kFlop = 4096,
+  Flip = 0,
+  Flop = 4096,
 };
 
 // Class that encapsulates NVParams. We need the Structure to be
@@ -71,11 +71,11 @@ public:
 private:
   Structure nv_param_;
   // Address of valid parameter block - defaulted to Flip
-  Address nvparam_addr_{Address::kFlip};
+  Address nvparam_addr_{Address::Flip};
   Time last_update_{microsSinceStartup(0)};
   I2Ceeprom *eeprom_{nullptr};
   // Update cumulated service interval
-  static constexpr Duration kUpdateInterval{seconds(60)};
+  static constexpr Duration UpdateInterval{seconds(60)};
   bool linked_to_eeprom_{false}; // in case of EEPROM failure at startup,
                                  // we can spare ourselves the need to write
                                  // data to the eeprom, even if we will still
@@ -91,11 +91,11 @@ private:
 // structure given its name.
 // Because these are macros, they cannot be part of the NVParams namespace, but
 // should still only be used as member functions of the Handler class.
-#define NVparamsUpdate(member, value)                                          \
+#define NV_PARAMS_UPDATE(member, value)                                        \
   Set(static_cast<uint16_t>(offsetof(Structure, member)), value,               \
       (sizeof(((Structure *)0)->member)))
-#define NVparamsRead(member, value)                                            \
+#define NV_PARAMS_READ(member, value)                                          \
   Get(static_cast<uint16_t>(offsetof(Structure, member)), value,               \
       (sizeof(((Structure *)0)->member)))
 
-#endif // NVPARAM_H_
+#endif // NVPARAM_H

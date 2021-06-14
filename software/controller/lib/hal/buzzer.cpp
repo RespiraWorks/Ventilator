@@ -31,20 +31,20 @@ limitations under the License.
 #include <algorithm>
 
 void HalApi::InitBuzzer() {
-  const int buzzerFreqHz = 2400;
+  static constexpr int BuzzerFreqHz = 2400;
 
-  EnableClock(TIMER3_BASE);
+  EnableClock(Timer3Base);
 
   // Connect PB4 to timer 3
   // The STM32 datasheet has a table (table 17) which shows
   // which functions can be connected to each pin.  For
   // PB4 we select function 2 to connect it to timer 3.
-  GPIO_PinAltFunc(GPIO_B_BASE, 4, 2);
+  GpioPinAltFunc(GpioBBase, 4, 2);
 
-  TimerRegs *tmr = TIMER3_BASE;
+  TimerReg *tmr = Timer3Base;
 
   // Set the frequency
-  tmr->reload = (CPU_FREQ / buzzerFreqHz) - 1;
+  tmr->auto_reload = (CPU_FREQ / BuzzerFreqHz) - 1;
 
   // Configure channel 1 in PWM output mode 1
   // with preload enabled.  The preload means that
@@ -52,38 +52,37 @@ void HalApi::InitBuzzer() {
   // register and copied to the active register
   // at the start of the next cycle.
   //
-  // TODO - the ccMode and ccEnable registers of the timer
-  // should really be converted to bit flags for better
-  // readability
-  tmr->ccMode[0] = 0x0068;
+  // TODO - the capture_compare_mode and capture_compare_enable registers of
+  // the timer should really be converted to bit flags for better readability
+  tmr->capture_compare_mode[0] = 0x0068;
 
-  tmr->ccEnable = 0x01;
+  tmr->capture_compare_enable = 0x01;
 
   // Start with 0% duty cycle
-  tmr->compare[0] = 0;
+  tmr->capture_compare[0] = 0;
 
   // Load the shadow registers
   tmr->event = 1;
 
   // Start the counter
-  tmr->ctrl1.s.arpe = 1;
-  tmr->ctrl1.s.cen = 1;
+  tmr->control_reg1.bitfield.auto_reload_preload = 1;
+  tmr->control_reg1.bitfield.counter_enable = 1;
 }
 
 void HalApi::BuzzerOff() {
-  TimerRegs *tmr = TIMER3_BASE;
-  tmr->compare[0] = 0;
+  TimerReg *tmr = Timer3Base;
+  tmr->capture_compare[0] = 0;
 }
 
 // Set the buzzer on with the specified volume (0 to 1)
 void HalApi::BuzzerOn(float volume) {
-  TimerRegs *tmr = TIMER3_BASE;
+  TimerReg *tmr = Timer3Base;
 
   volume = std::clamp(volume, 0.0f, 1.0f);
 
   // We get maximum volume at about 80% duty cycle
-  float duty = volume * 0.8f * static_cast<float>(tmr->reload);
-  tmr->compare[0] = static_cast<int>(duty);
+  float duty = volume * 0.8f * static_cast<float>(tmr->auto_reload);
+  tmr->capture_compare[0] = static_cast<int>(duty);
 }
 
 #endif

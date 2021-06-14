@@ -28,7 +28,7 @@ public:
       current_peep_ = pressure;
 
       recent_breath_starts_.push_back(now);
-      if (recent_breath_starts_.size() > kMaxRecentBreathStarts) {
+      if (recent_breath_starts_.size() > MaxRecentBreathStarts) {
         recent_breath_starts_.pop_front();
       }
       return;
@@ -44,7 +44,7 @@ public:
   std::optional<float> pip() const { return latest_pip_; }
   std::optional<float> peep() const { return latest_peep_; }
   std::optional<float> rr() const {
-    if (recent_breath_starts_.size() < kMinRecentBreathStarts) {
+    if (recent_breath_starts_.size() < MinRecentBreathStarts) {
       return std::nullopt;
     }
     SteadyInstant newest = recent_breath_starts_.back();
@@ -66,8 +66,8 @@ private:
 
   uint64_t latest_breath_id_ = 0;
 
-  static constexpr int kMinRecentBreathStarts = 3;
-  static constexpr int kMaxRecentBreathStarts = 5;
+  static constexpr int MinRecentBreathStarts = 3;
+  static constexpr int MaxRecentBreathStarts = 5;
   std::deque<SteadyInstant> recent_breath_starts_;
 };
 

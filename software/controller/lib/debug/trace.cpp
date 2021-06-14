@@ -43,7 +43,7 @@ void Trace::MaybeSample() {
 }
 
 bool Trace::SetTracedVarId(uint8_t index, uint16_t id) {
-  if (index >= kMaxTraceVars) {
+  if (index >= MaxTraceVars) {
     return false;
   }
   traced_vars_[index] = DebugVar::FindVar(id);
@@ -54,14 +54,14 @@ bool Trace::SetTracedVarId(uint8_t index, uint16_t id) {
 }
 
 int16_t Trace::GetTracedVarId(uint8_t index) {
-  if (index >= kMaxTraceVars) {
+  if (index >= MaxTraceVars) {
     return -1;
   }
   return traced_vars_[index] ? traced_vars_[index]->GetId() : -1;
 }
 
 [[nodiscard]] bool
-Trace::GetNextTraceRecord(std::array<uint32_t, kMaxTraceVars> *record,
+Trace::GetNextTraceRecord(std::array<uint32_t, MaxTraceVars> *record,
                           size_t *count) {
   // Grab one sample with interrupts disabled.
   // There's a chance the trace is still running, so we could get interrupted

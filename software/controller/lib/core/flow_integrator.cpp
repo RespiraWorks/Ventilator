@@ -16,8 +16,8 @@ limitations under the License.
 #include "flow_integrator.h"
 #include "vars.h"
 
-// TODO: VOLUME_INTEGRAL_INTERVAL was not chosen carefully.
-static constexpr Duration VOLUME_INTEGRAL_INTERVAL = milliseconds(5);
+// TODO: VolumeIntegrationInterval was not chosen carefully.
+static constexpr Duration VolumeIntegrationInterval = milliseconds(5);
 
 FlowIntegrator::FlowIntegrator() = default;
 
@@ -35,7 +35,7 @@ void FlowIntegrator::AddFlow(Time now, VolumetricFlow uncorrected_flow) {
   }
 
   Duration time_since_last_note = now - *last_flow_measurement_time_;
-  if (time_since_last_note >= VOLUME_INTEGRAL_INTERVAL) {
+  if (time_since_last_note >= VolumeIntegrationInterval) {
     volume_ += time_since_last_note * (last_flow_ + flow) / 2.0f;
     last_flow_measurement_time_ = now;
     last_flow_ = flow;

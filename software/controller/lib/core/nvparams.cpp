@@ -42,12 +42,12 @@ static DebugUInt32 dbg_nvparams("nvparams_address", "Address of nv_params", 0);
 namespace NVParams {
 
 // Size of the parameter block including the header
-static constexpr uint32_t size{sizeof(Structure)};
+static constexpr uint32_t Size{sizeof(Structure)};
 
 // Calculate the CRC of the params at this address
 static uint32_t CRC(Structure *param) {
   uint8_t *ptr = reinterpret_cast<uint8_t *>(param);
-  return soft_crc32(ptr + sizeof(uint32_t), size - sizeof(uint32_t));
+  return SoftCRC32(ptr + sizeof(uint32_t), Size - sizeof(uint32_t));
 }
 
 // Checks whether a param is valid (through its checksum)
@@ -65,28 +65,28 @@ void Handler::Init(I2Ceeprom *eeprom) {
     linked_to_eeprom_ = true;
   }
   // Read flip side
-  if (ReadFullParams(Address::kFlip, &nv_param_, eeprom_)) {
-    nvparam_addr_ = Address::kFlip;
+  if (ReadFullParams(Address::Flip, &nv_param_, eeprom_)) {
+    nvparam_addr_ = Address::Flip;
     // check its validity
     if (IsValid(&nv_param_)) {
       // Still read the flop in case they are both valid (which normally
       // shouldn't happen but could if power is lost at just the right
       // time when writing).
-      Structure Flop;
-      ReadFullParams(Address::kFlop, &Flop, eeprom_);
+      Structure flop;
+      ReadFullParams(Address::Flop, &flop, eeprom_);
       // check its validity
-      if (IsValid(&Flop)) {
-        // Check the counter and keep Flop if it is the most recent one
-        if (Flop.count > nv_param_.count ||
-            (Flop.count == 0 && nv_param_.count == 0xFF)) {
-          nv_param_ = Flop;
-          nvparam_addr_ = Address::kFlop;
+      if (IsValid(&flop)) {
+        // Check the counter and keep flop if it is the most recent one
+        if (flop.count > nv_param_.count ||
+            (flop.count == 0 && nv_param_.count == 0xFF)) {
+          nv_param_ = flop;
+          nvparam_addr_ = Address::Flop;
         }
       }
     } else { // flip is invalid ==> check the flop
-      ReadFullParams(Address::kFlop, &nv_param_, eeprom_);
+      ReadFullParams(Address::Flop, &nv_param_, eeprom_);
       if (IsValid(&nv_param_)) {
-        nvparam_addr_ = Address::kFlop;
+        nvparam_addr_ = Address::Flop;
       } else {
         // none of the flip/flop is valid
         // TODO: this should only happen during the very first use of a
@@ -107,8 +107,8 @@ void Handler::Init(I2Ceeprom *eeprom) {
     nv_param_ = Structure();
     nv_param_.crc = CRC(&nv_param_);
     if (linked_to_eeprom_) {
-      WriteFullParams(Address::kFlip);
-      WriteFullParams(Address::kFlop);
+      WriteFullParams(Address::Flip);
+      WriteFullParams(Address::Flop);
     }
   }
   // set write access dbg_vars = nv_params to prevent the first pass in
@@ -123,7 +123,7 @@ void Handler::Init(I2Ceeprom *eeprom) {
 bool Handler::Set(uint16_t offset, void *value, uint8_t len) {
   // Make sure the passed pointer is pointing to somewhere
   // in the structure and isn't in the reserved first 6 bytes
-  if ((offset < 6) || ((offset + len) > size))
+  if ((offset < 6) || ((offset + len) > Size))
     return false;
 
   // Update the contents in nv_params
@@ -134,9 +134,9 @@ bool Handler::Set(uint16_t offset, void *value, uint8_t len) {
 
   if (linked_to_eeprom_) {
     // Update the contents in eeprom (with flip/flop logic)
-    uint16_t new_address{static_cast<uint16_t>(Address::kFlip)};
-    if (nvparam_addr_ == Address::kFlip) {
-      new_address = static_cast<uint16_t>(Address::kFlop);
+    uint16_t new_address{static_cast<uint16_t>(Address::Flip)};
+    if (nvparam_addr_ == Address::Flip) {
+      new_address = static_cast<uint16_t>(Address::Flop);
     }
     // write the changed data and both crc+counter to the new side
     eeprom_->WriteBytes(static_cast<uint16_t>(new_address + offset), len, value,
@@ -149,10 +149,10 @@ bool Handler::Set(uint16_t offset, void *value, uint8_t len) {
         static_cast<uint16_t>(static_cast<uint16_t>(nvparam_addr_) + offset),
         len, value, nullptr);
     // point nvparam_address to the newly-written side
-    if (nvparam_addr_ == Address::kFlip) {
-      nvparam_addr_ = Address::kFlop;
+    if (nvparam_addr_ == Address::Flip) {
+      nvparam_addr_ = Address::Flop;
     } else {
-      nvparam_addr_ = Address::kFlip;
+      nvparam_addr_ = Address::Flip;
     }
   }
   return true;
@@ -162,7 +162,7 @@ bool Handler::Get(uint16_t offset, void *value, uint8_t len) {
 #ifndef TEST_MODE // in test mode I need to be able to access any byte
   // Make sure the passed pointer is pointing to somewhere
   // in the structure and isn't in the reserved first 6 bytes
-  if ((offset < 6) || ((offset + len) > size))
+  if ((offset < 6) || ((offset + len) > Size))
     return false;
 #endif
   memcpy(value, reinterpret_cast<uint8_t *>(&nv_param_) + offset, len);
@@ -172,7 +172,7 @@ bool Handler::Get(uint16_t offset, void *value, uint8_t len) {
 // call this function in order to write variables to nv_params
 void Handler::Update(const Time now, VentParams *params) {
   // We only update cumulated service every so often
-  if (now >= last_update_ + kUpdateInterval) {
+  if (now >= last_update_ + UpdateInterval) {
     uint32_t cumulated = nv_param_.cumulated_service +
                          static_cast<uint32_t>((now - last_update_).seconds());
     Set(offsetof(Structure, cumulated_service), &cumulated, 4);
@@ -213,15 +213,15 @@ void Handler::Update(const Time now, VentParams *params) {
 bool Handler::ReadFullParams(Address address, Structure *param,
                              I2Ceeprom *eeprom) {
   bool read_finished{false};
-  eeprom->ReadBytes(static_cast<uint16_t>(address), size, param,
+  eeprom->ReadBytes(static_cast<uint16_t>(address), Size, param,
                     &read_finished);
-  Time start_time = Hal.now();
+  Time start_time = hal.Now();
   // Wait until the read is performed, or at most 500 ms: reading 4kB should
   // take under 100 ms if the 400 kHz I²C bus is used at 100% capacity.
   // If this takes longer, it most likely means our EEPROM is irresponsive (or
   // absent...).
   while (!read_finished) {
-    if (Hal.now() > start_time + milliseconds(500)) {
+    if (hal.Now() > start_time + milliseconds(500)) {
       // maybe we should have an alarm in case our EEPROM is irresponsive?
       return false;
     }
@@ -230,7 +230,7 @@ bool Handler::ReadFullParams(Address address, Structure *param,
 }
 
 void Handler::WriteFullParams(Address address) {
-  eeprom_->WriteBytes(static_cast<uint16_t>(address), size, &nv_param_,
+  eeprom_->WriteBytes(static_cast<uint16_t>(address), Size, &nv_param_,
                       nullptr);
   // for a write, we don't really need to wait until the request is processed:
   // the I2C queue should ensure nothing is lost.

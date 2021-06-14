@@ -34,7 +34,7 @@ bool I2Ceeprom::ReadBytes(uint16_t offset, uint16_t length, void *data,
   bool discarded = false;
   I2C::Request pointer_set = {
       .slave_address = address_,
-      .direction = I2C::ExchangeDirection::kWrite,
+      .direction = I2C::ExchangeDirection::Write,
       .size = 2,
       .data = &offset_address[0],
       .processed = &discarded,
@@ -42,7 +42,7 @@ bool I2Ceeprom::ReadBytes(uint16_t offset, uint16_t length, void *data,
 
   I2C::Request read_request = {
       .slave_address = address_,
-      .direction = I2C::ExchangeDirection::kRead,
+      .direction = I2C::ExchangeDirection::Read,
       .size = length,
       .data = data,
       .processed = processed,
@@ -86,7 +86,7 @@ bool I2Ceeprom::WriteBytes(uint16_t offset, uint16_t length, void *data,
 
     I2C::Request request = {
         .slave_address = address_,
-        .direction = I2C::ExchangeDirection::kWrite,
+        .direction = I2C::ExchangeDirection::Write,
         .size = static_cast<uint8_t>(request_length + 2),
         .data = &write_data[0],
         .processed = processed,

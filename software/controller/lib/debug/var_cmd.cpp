@@ -25,23 +25,23 @@ ErrorCode VarHandler::Process(Context *context) {
   // The first byte of data is always required, this
   // gives the sub-command.
   if (context->request_length < 1)
-    return ErrorCode::kMissingData;
+    return ErrorCode::MissingData;
 
   Subcommand subcommand{context->request[0]};
 
   switch (subcommand) {
   // Return info about one of the variables.
-  case Subcommand::kGetInfo:
+  case Subcommand::GetInfo:
     return GetVarInfo(context);
 
-  case Subcommand::kGet:
+  case Subcommand::Get:
     return GetVar(context);
 
-  case Subcommand::kSet:
+  case Subcommand::Set:
     return SetVar(context);
 
   default:
-    return ErrorCode::kInvalidData;
+    return ErrorCode::InvalidData;
   }
 }
 
@@ -55,13 +55,13 @@ ErrorCode VarHandler::GetVarInfo(Context *context) {
 
   // We expect a 16-bit ID to be passed
   if (context->request_length < 3)
-    return ErrorCode::kMissingData;
+    return ErrorCode::MissingData;
 
   uint16_t var_id = u8_to_u16(&context->request[1]);
 
   const auto *var = DebugVar::FindVar(var_id);
   if (!var)
-    return ErrorCode::kUnknownVariable;
+    return ErrorCode::UnknownVariable;
 
   // The info I return consists of the following:
   // <type> - 1 byte variable type code
@@ -81,7 +81,7 @@ ErrorCode VarHandler::GetVarInfo(Context *context) {
   // Fail if the strings are too large to fit.
   if (context->max_response_length <
       8 + name_length + format_length + help_length)
-    return ErrorCode::kNoMemory;
+    return ErrorCode::NoMemory;
 
   uint32_t count = 0;
   context->response[count++] = static_cast<uint8_t>(var->GetType());
@@ -103,49 +103,49 @@ ErrorCode VarHandler::GetVarInfo(Context *context) {
 
   context->response_length = count;
   *(context->processed) = true;
-  return ErrorCode::kNone;
+  return ErrorCode::None;
 }
 
 ErrorCode VarHandler::GetVar(Context *context) {
   // We expect a 16-bit ID to be passed
   if (context->request_length < 3)
-    return ErrorCode::kMissingData;
+    return ErrorCode::MissingData;
 
   uint16_t var_id = u8_to_u16(&context->request[1]);
 
   auto *var = DebugVar::FindVar(var_id);
   if (!var)
-    return ErrorCode::kUnknownVariable;
+    return ErrorCode::UnknownVariable;
 
   if (context->max_response_length < 4)
-    return ErrorCode::kNoMemory;
+    return ErrorCode::NoMemory;
 
   u32_to_u8(var->GetValue(), context->response);
   context->response_length = 4;
   *(context->processed) = true;
-  return ErrorCode::kNone;
+  return ErrorCode::None;
 }
 
 ErrorCode VarHandler::SetVar(Context *context) {
   // We expect a 16-bit ID to be passed
   if (context->request_length < 3)
-    return ErrorCode::kMissingData;
+    return ErrorCode::MissingData;
 
   uint16_t var_id = u8_to_u16(&context->request[1]);
 
   auto *var = DebugVar::FindVar(var_id);
   if (!var)
-    return ErrorCode::kUnknownVariable;
+    return ErrorCode::UnknownVariable;
 
   uint32_t count = context->request_length - 3;
 
   if (count < 4)
-    return ErrorCode::kMissingData;
+    return ErrorCode::MissingData;
 
   var->SetValue(u8_to_u32(context->request + 3));
   context->response_length = 0;
   *(context->processed) = true;
-  return ErrorCode::kNone;
+  return ErrorCode::None;
 }
 
 } // namespace Debug::Command

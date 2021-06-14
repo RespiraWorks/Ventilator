@@ -23,15 +23,15 @@ static constexpr uint32_t kMemSize{8192};
 
 // Helper function to compare params in memory (in RAM if address is negative)
 static void CompareParams(int16_t address, const Structure &ref,
-                          NVParams::Handler &_nv_params, TestEeprom &_eeprom) {
+                          NVParams::Handler &nv_params_, TestEeprom &eeprom_) {
 
   // Reminder to update this function when Structure changes size.
   static_assert(sizeof(Structure) == 52);
   Structure read;
   if (address < 0) {
-    _nv_params.Get(0, &read, sizeof(Structure));
+    nv_params_.Get(0, &read, sizeof(Structure));
   } else {
-    _eeprom.ReadBytes(static_cast<uint16_t>(address), sizeof(Structure), &read,
+    eeprom_.ReadBytes(static_cast<uint16_t>(address), sizeof(Structure), &read,
                       nullptr);
   }
 
@@ -63,18 +63,18 @@ static void CompareParams(int16_t address, const Structure &ref,
 
 uint32_t ParamsCRC(Structure *params) {
   uint8_t *ptr = reinterpret_cast<uint8_t *>(params);
-  return soft_crc32(ptr + 4, sizeof(Structure) - 4);
+  return SoftCRC32(ptr + 4, sizeof(Structure) - 4);
 }
 
 class NVparamsTest : public ::testing::Test {
 public:
-  NVparamsTest() : _eeprom(0x50, 64, kMemSize) {
+  NVparamsTest() : eeprom_(0x50, 64, kMemSize) {
     // Simulated EEPROM is initialized with FF, representative of a new chip
-    _nv_params.Init(&_eeprom);
+    nv_params_.Init(&eeprom_);
   }
 
-  NVParams::Handler _nv_params;
-  TestEeprom _eeprom; // = TestEeprom(0x50, 64, kMemSize)
+  NVParams::Handler nv_params_;
+  TestEeprom eeprom_; // = TestEeprom(0x50, 64, kMemSize)
 };
 
 TEST_F(NVparamsTest, FirstInitEver) {
@@ -88,29 +88,29 @@ TEST_F(NVparamsTest, FirstInitEver) {
   // This should equate the flip param because Set was called while current
   // params are in flip, so power cycles are updated but not crc and counter.
   SCOPED_TRACE("Flip side check");
-  CompareParams(static_cast<uint16_t>(Address::kFlip), ref_params, _nv_params,
-                _eeprom);
+  CompareParams(static_cast<uint16_t>(Address::Flip), ref_params, nv_params_,
+                eeprom_);
 
   // Increment count, then compute crc, this should get us in the state of
   // flop and current params
   ref_params.count++;
   ref_params.crc = ParamsCRC(&ref_params);
   SCOPED_TRACE("Flop side check");
-  CompareParams(static_cast<uint16_t>(Address::kFlop), ref_params, _nv_params,
-                _eeprom);
+  CompareParams(static_cast<uint16_t>(Address::Flop), ref_params, nv_params_,
+                eeprom_);
 
   SCOPED_TRACE("nv_param_ check");
-  CompareParams(-1, ref_params, _nv_params, _eeprom);
+  CompareParams(-1, ref_params, nv_params_, eeprom_);
 }
 
 TEST_F(NVparamsTest, Update) {
   Structure ref_params;
-  _nv_params.Get(0, &ref_params, sizeof(Structure));
+  nv_params_.Get(0, &ref_params, sizeof(Structure));
   ref_params.last_settings.mode = VentMode::VentMode_PRESSURE_CONTROL;
 
-  // Update _nv_params with new time and check that the write affected the flip
+  // Update nv_params_ with new time and check that the write affected the flip
   // and flop sides with different crc
-  _nv_params.Update(microsSinceStartup(60E6 + 1), &ref_params.last_settings);
+  nv_params_.Update(microsSinceStartup(60E6 + 1), &ref_params.last_settings);
 
   ref_params.count++;
   ref_params.cumulated_service = 60;
@@ -121,11 +121,11 @@ TEST_F(NVparamsTest, Update) {
   ref_params.last_settings.mode = VentMode::VentMode_PRESSURE_CONTROL;
 
   Structure read_params;
-  _eeprom.ReadBytes(static_cast<uint16_t>(Address::kFlip), sizeof(Structure),
+  eeprom_.ReadBytes(static_cast<uint16_t>(Address::Flip), sizeof(Structure),
                     &read_params, nullptr);
   SCOPED_TRACE("Flip side check after Update");
-  CompareParams(static_cast<uint16_t>(Address::kFlip), ref_params, _nv_params,
-                _eeprom);
+  CompareParams(static_cast<uint16_t>(Address::Flip), ref_params, nv_params_,
+                eeprom_);
   // Keep flip params for reuse later on
   Structure flip_params = ref_params;
 
@@ -134,34 +134,34 @@ TEST_F(NVparamsTest, Update) {
   ref_params.crc = ParamsCRC(&ref_params);
 
   SCOPED_TRACE("Flop side check after Update");
-  CompareParams(static_cast<uint16_t>(Address::kFlop), ref_params, _nv_params,
-                _eeprom);
+  CompareParams(static_cast<uint16_t>(Address::Flop), ref_params, nv_params_,
+                eeprom_);
 
   SCOPED_TRACE("nv_param_ check after Update");
-  CompareParams(-1, ref_params, _nv_params, _eeprom);
+  CompareParams(-1, ref_params, nv_params_, eeprom_);
 
   // Call to update with nothing to change changes nothing
-  _nv_params.Update(microsSinceStartup(119E6), &ref_params.last_settings);
+  nv_params_.Update(microsSinceStartup(119E6), &ref_params.last_settings);
   SCOPED_TRACE("Flip side check after Update");
-  CompareParams(static_cast<uint16_t>(Address::kFlip), flip_params, _nv_params,
-                _eeprom);
+  CompareParams(static_cast<uint16_t>(Address::Flip), flip_params, nv_params_,
+                eeprom_);
 
   SCOPED_TRACE("Flop side check after useless Update");
-  CompareParams(static_cast<uint16_t>(Address::kFlop), ref_params, _nv_params,
-                _eeprom);
+  CompareParams(static_cast<uint16_t>(Address::Flop), ref_params, nv_params_,
+                eeprom_);
 
   SCOPED_TRACE("nv_param_ check after useless Update");
-  CompareParams(-1, ref_params, _nv_params, _eeprom);
+  CompareParams(-1, ref_params, nv_params_, eeprom_);
 
   // Set vent serial number and check resulting params
   ref_params.count++;
   ref_params.vent_serial_number = 789;
   ref_params.crc = ParamsCRC(&ref_params);
 
-  _nv_params.Set(8, &ref_params.vent_serial_number, 4);
+  nv_params_.Set(8, &ref_params.vent_serial_number, 4);
 
   SCOPED_TRACE("nv_param_ check after Set");
-  CompareParams(-1, ref_params, _nv_params, _eeprom);
+  CompareParams(-1, ref_params, nv_params_, eeprom_);
 
   // Set last_settings using macro and check resulting params
   ref_params.count++;
@@ -177,12 +177,12 @@ TEST_F(NVparamsTest, Update) {
   };
   ref_params.crc = ParamsCRC(&ref_params);
 
-  _nv_params.NVparamsUpdate(last_settings, &ref_params.last_settings);
+  nv_params_.NV_PARAMS_UPDATE(last_settings, &ref_params.last_settings);
 
   SCOPED_TRACE("nv_param_ check after MACRO");
-  CompareParams(-1, ref_params, _nv_params, _eeprom);
+  CompareParams(-1, ref_params, nv_params_, eeprom_);
 
-  ASSERT_FALSE(_nv_params.Set(4, &ref_params.count + 1, 1));
+  ASSERT_FALSE(nv_params_.Set(4, &ref_params.count + 1, 1));
 }
 
 TEST_F(NVparamsTest, GetAndReadMacro) {
@@ -200,16 +200,16 @@ TEST_F(NVparamsTest, GetAndReadMacro) {
   };
   ref_params.crc = ParamsCRC(&ref_params);
 
-  _nv_params.NVparamsUpdate(last_settings, &ref_params.last_settings);
+  nv_params_.NV_PARAMS_UPDATE(last_settings, &ref_params.last_settings);
 
   uint32_t var_32b{0};
   // power_cycles should be equal to 1 after previous test
-  _nv_params.Get(12, &var_32b, 4);
+  nv_params_.Get(12, &var_32b, 4);
   EXPECT_EQ(var_32b, 1);
 
   VentParams settings = VentParams_init_zero;
   // get last_settings through macro and check first and last members
-  _nv_params.NVparamsRead(last_settings, &settings);
+  nv_params_.NV_PARAMS_READ(last_settings, &settings);
   EXPECT_EQ(settings.mode, VentMode::VentMode_PRESSURE_ASSIST);
   EXPECT_EQ(settings.fio2, 0.21f);
 }
@@ -238,7 +238,7 @@ TEST_F(NVparamsTest, InitValidFlip) {
           },
   };
   flip_params.crc = ParamsCRC(&flip_params);
-  _eeprom.WriteBytes(static_cast<uint16_t>(Address::kFlip), sizeof(Structure),
+  eeprom_.WriteBytes(static_cast<uint16_t>(Address::Flip), sizeof(Structure),
                      &flip_params, nullptr);
 
   Structure flop_params = {
@@ -263,10 +263,10 @@ TEST_F(NVparamsTest, InitValidFlip) {
           },
   };
   // leave crc = 0 to make them invalid
-  _eeprom.WriteBytes(static_cast<uint16_t>(Address::kFlop), sizeof(Structure),
+  eeprom_.WriteBytes(static_cast<uint16_t>(Address::Flop), sizeof(Structure),
                      &flop_params, nullptr);
 
-  _nv_params.Init(&_eeprom);
+  nv_params_.Init(&eeprom_);
   // update count, power cycles and crc: this is done by the init function and
   // written to flop side, while only power cycle is written to the flip side
   Structure valid_params = flip_params;
@@ -275,33 +275,33 @@ TEST_F(NVparamsTest, InitValidFlip) {
   valid_params.crc = ParamsCRC(&valid_params);
 
   SCOPED_TRACE("nv_param_ check after Init");
-  CompareParams(-1, valid_params, _nv_params, _eeprom);
+  CompareParams(-1, valid_params, nv_params_, eeprom_);
 
   SCOPED_TRACE("Flip check after Init");
   flip_params.power_cycles = valid_params.power_cycles;
-  CompareParams(static_cast<uint16_t>(Address::kFlip), flip_params, _nv_params,
-                _eeprom);
+  CompareParams(static_cast<uint16_t>(Address::Flip), flip_params, nv_params_,
+                eeprom_);
 
   SCOPED_TRACE("Flop check after Init");
   flop_params.count = valid_params.count;
   flop_params.power_cycles = valid_params.power_cycles;
   flop_params.crc = valid_params.crc;
-  CompareParams(static_cast<uint16_t>(Address::kFlop), flop_params, _nv_params,
-                _eeprom);
+  CompareParams(static_cast<uint16_t>(Address::Flop), flop_params, nv_params_,
+                eeprom_);
 
-  // update _nv_params with new settings and check that the write affects the
+  // update nv_params_ with new settings and check that the write affects the
   // flip side, so the flip side is now identical to what is in RAM
   valid_params.last_settings = flop_params.last_settings;
-  _nv_params.Update(microsSinceStartup(0), &valid_params.last_settings);
+  nv_params_.Update(microsSinceStartup(0), &valid_params.last_settings);
   valid_params.count++;
   valid_params.crc = ParamsCRC(&valid_params);
 
   SCOPED_TRACE("nv_param_ check after Update");
-  CompareParams(-1, valid_params, _nv_params, _eeprom);
+  CompareParams(-1, valid_params, nv_params_, eeprom_);
 
   SCOPED_TRACE("Flip check after Update");
-  CompareParams(static_cast<uint16_t>(Address::kFlip), valid_params, _nv_params,
-                _eeprom);
+  CompareParams(static_cast<uint16_t>(Address::Flip), valid_params, nv_params_,
+                eeprom_);
 }
 
 TEST_F(NVparamsTest, InitValidFlop) {
@@ -328,7 +328,7 @@ TEST_F(NVparamsTest, InitValidFlop) {
           },
   };
   // leave crc = 0 to render them invalid
-  _eeprom.WriteBytes(static_cast<uint16_t>(Address::kFlip), sizeof(Structure),
+  eeprom_.WriteBytes(static_cast<uint16_t>(Address::Flip), sizeof(Structure),
                      &flip_params, nullptr);
 
   Structure flop_params = {
@@ -353,10 +353,10 @@ TEST_F(NVparamsTest, InitValidFlop) {
           },
   };
   flop_params.crc = ParamsCRC(&flop_params);
-  _eeprom.WriteBytes(static_cast<uint16_t>(Address::kFlop), sizeof(Structure),
+  eeprom_.WriteBytes(static_cast<uint16_t>(Address::Flop), sizeof(Structure),
                      &flop_params, nullptr);
 
-  _nv_params.Init(&_eeprom);
+  nv_params_.Init(&eeprom_);
   // update count, power cycles and crc: this is done by the init function and
   // written to flip side
   Structure valid_params = flop_params;
@@ -365,33 +365,33 @@ TEST_F(NVparamsTest, InitValidFlop) {
   valid_params.crc = ParamsCRC(&valid_params);
 
   SCOPED_TRACE("nv_param_ check after Init");
-  CompareParams(-1, valid_params, _nv_params, _eeprom);
+  CompareParams(-1, valid_params, nv_params_, eeprom_);
 
   SCOPED_TRACE("Flip check after Init");
   flip_params.count = valid_params.count;
   flip_params.power_cycles = valid_params.power_cycles;
   flip_params.crc = valid_params.crc;
-  CompareParams(static_cast<uint16_t>(Address::kFlip), flip_params, _nv_params,
-                _eeprom);
+  CompareParams(static_cast<uint16_t>(Address::Flip), flip_params, nv_params_,
+                eeprom_);
 
   SCOPED_TRACE("Flop check after Init");
   flop_params.power_cycles = valid_params.power_cycles;
-  CompareParams(static_cast<uint16_t>(Address::kFlop), flop_params, _nv_params,
-                _eeprom);
+  CompareParams(static_cast<uint16_t>(Address::Flop), flop_params, nv_params_,
+                eeprom_);
 
-  // update _nv_params with new settings and check that the write affects the
+  // update nv_params_ with new settings and check that the write affects the
   // flop side
   valid_params.last_settings = flip_params.last_settings;
-  _nv_params.Update(microsSinceStartup(0), &valid_params.last_settings);
+  nv_params_.Update(microsSinceStartup(0), &valid_params.last_settings);
   valid_params.count++;
   valid_params.crc = ParamsCRC(&valid_params);
 
   SCOPED_TRACE("nv_param_ check after Update");
-  CompareParams(-1, valid_params, _nv_params, _eeprom);
+  CompareParams(-1, valid_params, nv_params_, eeprom_);
 
   SCOPED_TRACE("Flop check after Update");
-  CompareParams(static_cast<uint16_t>(Address::kFlop), valid_params, _nv_params,
-                _eeprom);
+  CompareParams(static_cast<uint16_t>(Address::Flop), valid_params, nv_params_,
+                eeprom_);
 }
 
 TEST_F(NVparamsTest, InitBothValid) {
@@ -418,7 +418,7 @@ TEST_F(NVparamsTest, InitBothValid) {
           },
   };
   flip_params.crc = ParamsCRC(&flip_params);
-  _eeprom.WriteBytes(static_cast<uint16_t>(Address::kFlip), sizeof(Structure),
+  eeprom_.WriteBytes(static_cast<uint16_t>(Address::Flip), sizeof(Structure),
                      &flip_params, nullptr);
 
   Structure flop_params = {
@@ -443,10 +443,10 @@ TEST_F(NVparamsTest, InitBothValid) {
           },
   };
   flop_params.crc = ParamsCRC(&flop_params);
-  _eeprom.WriteBytes(static_cast<uint16_t>(Address::kFlop), sizeof(Structure),
+  eeprom_.WriteBytes(static_cast<uint16_t>(Address::Flop), sizeof(Structure),
                      &flop_params, nullptr);
 
-  _nv_params.Init(&_eeprom);
+  nv_params_.Init(&eeprom_);
   // Should result in using flop params since count is higher.
   // Update count, power cycles and crc: this is done by the init function and
   // written to flip side
@@ -456,7 +456,7 @@ TEST_F(NVparamsTest, InitBothValid) {
   valid_params.crc = ParamsCRC(&valid_params);
 
   SCOPED_TRACE("nv_param_ check after Init");
-  CompareParams(-1, valid_params, _nv_params, _eeprom);
+  CompareParams(-1, valid_params, nv_params_, eeprom_);
 
   // update those values in flip_params, the rest was kept in its previous
   // state
@@ -464,12 +464,12 @@ TEST_F(NVparamsTest, InitBothValid) {
   flip_params.power_cycles = valid_params.power_cycles;
   flip_params.crc = valid_params.crc;
   SCOPED_TRACE("Flip check after Init");
-  CompareParams(static_cast<uint16_t>(Address::kFlip), flip_params, _nv_params,
-                _eeprom);
+  CompareParams(static_cast<uint16_t>(Address::Flip), flip_params, nv_params_,
+                eeprom_);
 
   // only update power_cycles in flop params
   flop_params.power_cycles = valid_params.power_cycles;
   SCOPED_TRACE("Flop check after Init");
-  CompareParams(static_cast<uint16_t>(Address::kFlop), flop_params, _nv_params,
-                _eeprom);
+  CompareParams(static_cast<uint16_t>(Address::Flop), flop_params, nv_params_,
+                eeprom_);
 }

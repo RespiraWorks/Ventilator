@@ -10,36 +10,36 @@
 #include "gtest/gtest.h"
 
 TEST(Checksum, KnownValues) {
-  EXPECT_EQ(0, checksum_fletcher16(NULL, 0));
-  EXPECT_EQ(0, checksum_fletcher16("", 0));
-  EXPECT_EQ(24929, checksum_fletcher16("a", 1));
-  EXPECT_EQ(51440, checksum_fletcher16("abcde", 5));
-  EXPECT_EQ(8279, checksum_fletcher16("abcdef", 6));
-  EXPECT_EQ(1575, checksum_fletcher16("abcdefgh", 8));
-  EXPECT_EQ(0xfefe, checksum_fletcher16("\xff\xfe", 2));
+  EXPECT_EQ(0, ChecksumFletcher16(NULL, 0));
+  EXPECT_EQ(0, ChecksumFletcher16("", 0));
+  EXPECT_EQ(24929, ChecksumFletcher16("a", 1));
+  EXPECT_EQ(51440, ChecksumFletcher16("abcde", 5));
+  EXPECT_EQ(8279, ChecksumFletcher16("abcdef", 6));
+  EXPECT_EQ(1575, ChecksumFletcher16("abcdefgh", 8));
+  EXPECT_EQ(0xfefe, ChecksumFletcher16("\xff\xfe", 2));
 }
 
 TEST(Checksum32, KnownValues) {
-  EXPECT_EQ((uint32_t)0, soft_crc32(NULL, 0));
-  EXPECT_EQ((uint32_t)0, soft_crc32(reinterpret_cast<const uint8_t *>(""), 0));
+  EXPECT_EQ((uint32_t)0, SoftCRC32(NULL, 0));
+  EXPECT_EQ((uint32_t)0, SoftCRC32(reinterpret_cast<const uint8_t *>(""), 0));
   EXPECT_EQ((uint32_t)0xC808931C,
-            soft_crc32(reinterpret_cast<const uint8_t *>("a"), 1));
+            SoftCRC32(reinterpret_cast<const uint8_t *>("a"), 1));
   EXPECT_EQ((uint32_t)0x47A393F8,
-            soft_crc32(reinterpret_cast<const uint8_t *>("abcde"), 5));
+            SoftCRC32(reinterpret_cast<const uint8_t *>("abcde"), 5));
   EXPECT_EQ((uint32_t)0x9DBDD91C,
-            soft_crc32(reinterpret_cast<const uint8_t *>("abcdef"), 6));
+            SoftCRC32(reinterpret_cast<const uint8_t *>("abcdef"), 6));
   EXPECT_EQ((uint32_t)0x321FBEF4,
-            soft_crc32(reinterpret_cast<const uint8_t *>("abcdefgh"), 8));
+            SoftCRC32(reinterpret_cast<const uint8_t *>("abcdefgh"), 8));
 }
 
 TEST(Checksum, CheckBytes) {
-  uint16_t csum = checksum_fletcher16("abcde", 5);
+  uint16_t csum = ChecksumFletcher16("abcde", 5);
 
-  uint16_t checkBytes = check_bytes_fletcher16(csum);
+  uint16_t checkBytes = CheckBytesFletcher16(csum);
   char c0 = static_cast<char>(checkBytes >> 8);
   char c1 = static_cast<char>(checkBytes & 0xff);
-  csum = checksum_fletcher16(&c0, 1, csum);
-  csum = checksum_fletcher16(&c1, 1, csum);
+  csum = ChecksumFletcher16(&c0, 1, csum);
+  csum = ChecksumFletcher16(&c1, 1, csum);
   EXPECT_EQ(csum, 0);
 }
 
@@ -60,7 +60,7 @@ TEST(Checksum, BitFlips) {
   int32_t singleBitFlipCollisions = 0;
   std::map<uint16_t, uint32_t> collisions;
   for (int32_t i = 0; i < numTests; ++i) {
-    uint16_t checksum = checksum_fletcher16(data, sizeof(data));
+    uint16_t checksum = ChecksumFletcher16(data, sizeof(data));
     collisions[checksum]++;
     if (checksum == lastChecksum) {
       singleBitFlipCollisions++;
@@ -107,7 +107,7 @@ TEST(Checksum32, BitFlips) {
   int32_t singleBitFlipCollisions = 0;
   std::map<int32_t, int32_t> collisions;
   for (int32_t i = 0; i < numTests; ++i) {
-    uint32_t checksum = soft_crc32(data, sizeof(data));
+    uint32_t checksum = SoftCRC32(data, sizeof(data));
     collisions[checksum]++;
     if (checksum == lastChecksum) {
       singleBitFlipCollisions++;

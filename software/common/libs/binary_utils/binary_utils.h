@@ -20,17 +20,17 @@ limitations under the License.
 // Some simple data conversion functions.
 // These assume little endian byte format
 inline uint16_t u8_to_u16(const uint8_t *dat) {
-  uint16_t L = dat[0];
-  uint16_t H = dat[1];
-  return static_cast<uint16_t>(L | (H << 8));
+  uint16_t l = dat[0];
+  uint16_t h = dat[1];
+  return static_cast<uint16_t>(l | (h << 8));
 }
 
 inline uint32_t u8_to_u32(const uint8_t *dat) {
-  uint32_t A = dat[0];
-  uint32_t B = dat[1];
-  uint32_t C = dat[2];
-  uint32_t D = dat[3];
-  return static_cast<uint32_t>(A | (B << 8) | (C << 16) | (D << 24));
+  uint32_t a = dat[0];
+  uint32_t b = dat[1];
+  uint32_t c = dat[2];
+  uint32_t d = dat[3];
+  return static_cast<uint32_t>(a | (b << 8) | (c << 16) | (d << 24));
 }
 
 inline void u16_to_u8(uint16_t val, uint8_t *buff) {

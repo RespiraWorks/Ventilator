@@ -12,12 +12,12 @@
 #include "hal.h"
 
 // test parameters
-static constexpr int64_t delay_ms{10};
+static constexpr Duration Delay{milliseconds(10)};
 
-void run_test() {
-  Hal.init();
+void RunTest() {
+  hal.Init();
 
   while (true) {
-    Hal.delay(milliseconds(delay_ms));
+    hal.Delay(Delay);
   }
 }

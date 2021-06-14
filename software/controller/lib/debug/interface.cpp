@@ -46,28 +46,28 @@ bool Interface::Poll() {
   // or a full command has been received.  Either way, the
   // ReadNextByte function will return false when its time
   // to move on.
-  case State::kAwaitingCommand:
+  case State::AwaitingCommand:
     while (ReadNextByte()) {
     }
     return false;
 
   // Process the current command
-  case State::kProcessing:
+  case State::Processing:
     ProcessCommand();
     request_size_ = 0;
     return false;
 
   // Wait for command to be processed
-  case State::kAwaitingResponse:
+  case State::AwaitingResponse:
     if (command_processed_) {
-      SendResponse(ErrorCode::kNone, response_length_);
-    } else if (Hal.now() > command_start_time_ + milliseconds(100)) {
-      SendError(ErrorCode::kTimeout);
+      SendResponse(ErrorCode::None, response_length_);
+    } else if (hal.Now() > command_start_time_ + milliseconds(100)) {
+      SendError(ErrorCode::Timeout);
     }
     return false;
 
   // Send my response
-  case State::kResponding:
+  case State::Responding:
     while (SendNextByte()) {
     }
     return true;
@@ -81,7 +81,7 @@ bool Interface::Poll() {
 bool Interface::ReadNextByte() {
   // Get the next byte from the debug serial port if there is one.
   char next_char;
-  if (Hal.debugRead(&next_char, 1) < 1)
+  if (hal.DebugRead(&next_char, 1) < 1)
     return false;
 
   uint8_t byte = static_cast<uint8_t>(next_char);
@@ -98,14 +98,14 @@ bool Interface::ReadNextByte() {
 
   // If this is an escape character, don't save it just keep track
   // of the fact that we saw it.
-  if (byte == static_cast<uint8_t>(SpecialChar::kEscape)) {
+  if (byte == static_cast<uint8_t>(SpecialChar::Escape)) {
     escape_next_byte_ = true;
     return true;
   }
 
   // If this is an termination character, then change our state and return false
-  if (byte == static_cast<uint8_t>(SpecialChar::kEndTransfer)) {
-    state_ = State::kProcessing;
+  if (byte == static_cast<uint8_t>(SpecialChar::EndTransfer)) {
+    state_ = State::Processing;
     return false;
   }
 
@@ -122,21 +122,21 @@ bool Interface::SendNextByte() {
 
   // To simplify things below, I require at least 3 bytes
   // in the output buffer to continue
-  if (Hal.debugBytesAvailableForWrite() < 3)
+  if (hal.DebugBytesAvailableForWrite() < 3)
     return false;
 
   // See what the next character to send is.
   char next_char = response_[response_bytes_sent_++];
 
   // If its a special character, I need to escape it.
-  if ((next_char == static_cast<char>(SpecialChar::kEndTransfer)) ||
-      (next_char == static_cast<char>(SpecialChar::kEscape))) {
+  if ((next_char == static_cast<char>(SpecialChar::EndTransfer)) ||
+      (next_char == static_cast<char>(SpecialChar::Escape))) {
     char escaped_char[2];
-    escaped_char[0] = static_cast<char>(SpecialChar::kEscape);
+    escaped_char[0] = static_cast<char>(SpecialChar::Escape);
     escaped_char[1] = next_char;
-    (void)Hal.debugWrite(escaped_char, 2);
+    (void)hal.DebugWrite(escaped_char, 2);
   } else {
-    (void)Hal.debugWrite(&next_char, 1);
+    (void)hal.DebugWrite(&next_char, 1);
   }
 
   // If there's more response to send, return true
@@ -146,10 +146,10 @@ bool Interface::SendNextByte() {
   // If that was the last byte in my response, send the
   // termination character and start waiting on the next
   // command.
-  char end_transfer = static_cast<char>(SpecialChar::kEndTransfer);
-  (void)Hal.debugWrite(&end_transfer, 1);
+  char end_transfer = static_cast<char>(SpecialChar::EndTransfer);
+  (void)hal.DebugWrite(&end_transfer, 1);
 
-  state_ = State::kAwaitingCommand;
+  state_ = State::AwaitingCommand;
   response_bytes_sent_ = 0;
   return false;
 }
@@ -160,24 +160,24 @@ void Interface::ProcessCommand() {
   // is the value of request_size_, which should be at least 3 (8 bits command
   // code + 16 bits checksum). If its not, I just ignore the command and jump to
   // waiting for the next one.
-  // This means we can send kEndTransfer characters to synchronize
+  // This means we can send EndTransfer characters to synchronize
   // communication if necessary
   if (request_size_ < 3) {
     request_size_ = 0;
-    state_ = State::kAwaitingCommand;
+    state_ = State::AwaitingCommand;
     return;
   }
 
   uint16_t crc = ComputeCRC(request_, request_size_ - 2);
 
   if (crc != u8_to_u16(&request_[request_size_ - 2])) {
-    SendError(ErrorCode::kCrcError);
+    SendError(ErrorCode::CrcError);
     return;
   }
 
   Command::Handler *cmd_handler = registry_[request_[0]];
   if (!cmd_handler) {
-    SendError(ErrorCode::kUnknownCommand);
+    SendError(ErrorCode::UnknownCommand);
     return;
   }
 
@@ -195,13 +195,13 @@ void Interface::ProcessCommand() {
   };
   ErrorCode error = cmd_handler->Process(&context);
 
-  if (error != ErrorCode::kNone) {
+  if (error != ErrorCode::None) {
     SendError(error);
     return;
   }
 
-  state_ = State::kAwaitingResponse;
-  command_start_time_ = Hal.now();
+  state_ = State::AwaitingResponse;
+  command_start_time_ = hal.Now();
   response_length_ = context.response_length;
 }
 
@@ -212,7 +212,7 @@ void Interface::SendResponse(ErrorCode error, uint32_t response_length) {
   // and append this to the end of the response
   uint16_t crc = ComputeCRC(response_, response_length + 1);
   u16_to_u8(crc, &response_[response_length + 1]);
-  state_ = State::kResponding;
+  state_ = State::Responding;
   response_bytes_sent_ = 0;
   // The size of the response that will be sent includes the error code (1 byte)
   // and checksum (2 bytes).
@@ -221,14 +221,14 @@ void Interface::SendResponse(ErrorCode error, uint32_t response_length) {
 
 // 16-bit CRC calculation for debug commands and responses
 uint16_t Interface::ComputeCRC(const uint8_t *buffer, size_t length) {
-  const uint16_t CRC16POLY = 0xA001;
-  static bool init = false;
-  static uint16_t crc_table[256];
+  static constexpr uint16_t CRC16POLY = 0xA001;
+  static bool Init = false;
+  static uint16_t CrcTable[256];
 
   // The first time this is called I'll build a table
   // to speed up CRC handling
-  if (!init) {
-    init = true;
+  if (!Init) {
+    Init = true;
     for (uint16_t byte = 0; byte < 256; byte++) {
       uint16_t crc = byte;
 
@@ -239,14 +239,14 @@ uint16_t Interface::ComputeCRC(const uint8_t *buffer, size_t length) {
           crc ^= CRC16POLY;
       }
 
-      crc_table[byte] = crc;
+      CrcTable[byte] = crc;
     }
   }
 
   uint16_t crc = 0;
 
   for (uint32_t byte_number = 0; byte_number < length; byte_number++) {
-    uint16_t local_crc = crc_table[0xFF & (buffer[byte_number] ^ crc)];
+    uint16_t local_crc = CrcTable[0xFF & (buffer[byte_number] ^ crc)];
 
     crc = static_cast<uint16_t>(local_crc ^ (crc >> 8));
   }

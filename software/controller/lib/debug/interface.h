@@ -47,8 +47,8 @@ namespace Debug {
 // <term> is a special character value indicating the end of a command.
 //
 // Two special char values are used (see debug_types.h) :
-// - kEndTransfer (0xF2), aka term - Signifies the end of a command.
-// - kEscape  (0xF1) - used to send a special character as data.
+// - EndTransfer (0xF2), aka term - Signifies the end of a command.
+// - Escape  (0xF1) - used to send a special character as data.
 //
 // The escape byte causes the serial processor to treat the next byte as
 // data no matter what its value is.  It's used when the data being sent
@@ -67,9 +67,9 @@ public:
   void SampleTraceVars() { trace_->MaybeSample(); }
 
 private:
-  State state_{State::kAwaitingCommand};
+  State state_{State::AwaitingCommand};
 
-  // Buffer into which request data is written in kAwaitingCommand state
+  // Buffer into which request data is written in AwaitingCommand state
   uint8_t request_[500] = {0};
   uint32_t request_size_{0};
   // Remember when we receive an escape char (in case the call happens in
@@ -77,7 +77,7 @@ private:
   bool escape_next_byte_{false};
 
   // Buffer into which the command handler writes its response and which is then
-  // sent in kResponding state.
+  // sent in Responding state.
   uint8_t response_[500] = {0};
   uint32_t response_size_{0};
   uint32_t response_bytes_sent_{0};

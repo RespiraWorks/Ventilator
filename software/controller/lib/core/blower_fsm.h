@@ -51,8 +51,8 @@ limitations under the License.
 // https://respiraworks.slack.com/archives/CV4MTUJHF/p1588001011133500
 
 enum class FlowDirection {
-  INSPIRATORY,
-  EXPIRATORY,
+  Inspiratory,
+  Expiratory,
 };
 
 // Sensor readings etc that are used by BlowerFsm to do e.g. breath detection.
@@ -90,7 +90,7 @@ struct BlowerSystemState {
 
 // Transition from PEEP to PIP pressure over this length of time.  Citation:
 // https://respiraworks.slack.com/archives/C011CJQV4Q7/p1591763842312500?thread_ts=1591759016.310200&cid=C011CJQV4Q7
-inline constexpr Duration RISE_TIME = milliseconds(100);
+inline constexpr Duration RiseTime = milliseconds(100);
 
 // A "breath finite state machine" where the blower is always off.
 //
@@ -120,7 +120,7 @@ public:
         //
         // Same applies to the is_end_of_breath flag: it doesn't really pertain
         // to the off state but hardcode it to false by convention.
-        .flow_direction = FlowDirection::EXPIRATORY,
+        .flow_direction = FlowDirection::Expiratory,
         .pip = cmH2O(0.0f),
         .peep = cmH2O(0.0f),
         .is_end_of_breath = false,

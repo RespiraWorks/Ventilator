@@ -64,14 +64,12 @@ static Debug::Command::VarHandler var_command;
 static Debug::Command::TraceHandler trace_command(&trace);
 static Debug::Command::EepromHandler eeprom_command(&eeprom);
 
-static Debug::Interface debug(&trace, 12, Debug::Command::Code::kMode,
-                              &mode_command, Debug::Command::Code::kPeek,
-                              &peek_command, Debug::Command::Code::kPoke,
-                              &poke_command, Debug::Command::Code::kVariable,
-                              &var_command, Debug::Command::Code::kTrace,
-                              &trace_command,
-                              Debug::Command::Code::kEepromAccess,
-                              &eeprom_command);
+static Debug::Interface
+    debug(&trace, 12, Debug::Command::Code::Mode, &mode_command,
+          Debug::Command::Code::Peek, &peek_command, Debug::Command::Code::Poke,
+          &poke_command, Debug::Command::Code::Variable, &var_command,
+          Debug::Command::Code::Trace, &trace_command,
+          Debug::Command::Code::EepromAccess, &eeprom_command);
 
 static SensorsProto AsSensorsProto(const SensorReadings &r,
                                    const ControllerState &c) {
@@ -92,20 +90,20 @@ static SensorsProto AsSensorsProto(const SensorReadings &r,
 //
 // NOTE - its important that anything being called from this function executes
 // quickly.  No busy waiting here.
-static void high_priority_task(void *arg) {
+static void HighPriorityTask(void *arg) {
 
   // Read the sensors
   SensorReadings sensor_readings = sensors.GetReadings();
 
   // Run our PID loop
   auto [actuators_state, controller_state] = controller.Run(
-      Hal.now(), controller_status.active_params, sensor_readings);
+      hal.Now(), controller_status.active_params, sensor_readings);
 
   // TODO update pb library to replace fan_power in ControllerStatus with
   // actuators_state, and remove pressure_setpoint_cm_h2o from ControllerStatus
 
   // Update the outputs from the PID
-  actuators_execute(actuators_state);
+  ActuatorsExecute(actuators_state);
 
   // Update controller_status.  This is periodically sent back to the GUI.
   controller_status.sensor_readings =
@@ -118,13 +116,13 @@ static void high_priority_task(void *arg) {
   debug.SampleTraceVars();
 
   // Pet the watchdog
-  Hal.watchdog_handler();
+  hal.WatchdogHandler();
 }
 
 // This function is the lower priority background loop which runs continuously
 // after some basic system init.  Pretty much everything not time critical
 // should go here.
-static void background_loop() {
+static void BackgroundLoop() {
   // Sleep for a few seconds.  In the current iteration of the PCB, the fan
   // briefly turns on when the device starts up.  If we don't wait for the fan
   // to spin down, the sensors will miscalibrate.  This is a hardware issue
@@ -133,16 +131,16 @@ static void background_loop() {
   //
   // Take this opportunity while we're sleeping to home the pinch valves.  This
   // way we're guaranteed that they're ready before we start ventilating.
-  Time sleepStart = Hal.now();
-  while (!AreActuatorsReady() || Hal.now() - sleepStart < seconds(10)) {
-    actuators_execute({
+  Time sleep_start = hal.Now();
+  while (!AreActuatorsReady() || hal.Now() - sleep_start < seconds(10)) {
+    ActuatorsExecute({
         .fio2_valve = 0,
         .blower_power = 0,
         .blower_valve = 1,
         .exhale_valve = 1,
     });
-    Hal.delay(milliseconds(10));
-    Hal.watchdog_handler();
+    hal.Delay(milliseconds(10));
+    hal.WatchdogHandler();
     debug.Poll();
   }
 
@@ -159,10 +157,10 @@ static void background_loop() {
 
   // After all initialization is done, ask the HAL
   // to start our high priority thread.
-  Hal.startLoopTimer(Controller::GetLoopPeriod(), high_priority_task, nullptr);
+  hal.StartLoopTimer(Controller::GetLoopPeriod(), HighPriorityTask, nullptr);
 
   while (true) {
-    controller_status.uptime_ms = Hal.now().microsSinceStartup() / 1000;
+    controller_status.uptime_ms = hal.Now().microsSinceStartup() / 1000;
 
     // Copy the current controller status with interrupts
     // disabled to ensure that the data we send to the
@@ -173,7 +171,7 @@ static void background_loop() {
       local_controller_status = controller_status;
     }
 
-    comms_handler(local_controller_status, &gui_status);
+    CommsHandler(local_controller_status, &gui_status);
 
     // Override received gui_status from the RPi with values from DebugVars iff
     // the gui_mode DebugVar has a legal value.
@@ -199,19 +197,19 @@ static void background_loop() {
     debug.Poll();
 
     // Update nv_params
-    nv_params.Update(Hal.now(), &gui_status.desired_params);
+    nv_params.Update(hal.Now(), &gui_status.desired_params);
   }
 }
 
 int main() {
-  // Initialize Hal first because it initializes the watchdog. See comment on
-  // HalApi::init().
-  Hal.init();
+  // Initialize hal first because it initializes the watchdog. See comment on
+  // HalApi::Init().
+  hal.Init();
 
   // Locate our non-volatile parameter block in flash
   nv_params.Init(&eeprom);
 
-  comms_init();
+  CommsInit();
 
-  background_loop();
+  BackgroundLoop();
 }

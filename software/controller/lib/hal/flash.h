@@ -14,15 +14,15 @@ limitations under the License.
 
 */
 
-#ifndef FLASH_H_
-#define FLASH_H_
+#ifndef FLASH_H
+#define FLASH_H
 
 #include <cstddef>
 #include <cstdint>
 
 // Flash memory location & size info
-inline constexpr uint32_t flash_start_addr{0x08000000};
-inline constexpr size_t flash_size{32 * 1024};
-inline constexpr size_t flash_page_size{2 * 1024};
+inline constexpr uint32_t FlashStartAddr{0x08000000};
+inline constexpr size_t FlashSize{32 * 1024};
+inline constexpr size_t FlashPageSize{2 * 1024};
 
 #endif

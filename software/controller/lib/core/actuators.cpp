@@ -24,9 +24,9 @@ static PinchValve exhale_pinch(1);
 // Called once at system startup to initialize any
 // actuators that need it
 
-void actuators_execute(const ActuatorsState &desired_state) {
+void ActuatorsExecute(const ActuatorsState &desired_state) {
   // set blower PWM
-  Hal.analogWrite(PwmPin::BLOWER, desired_state.blower_power);
+  hal.AnalogWrite(PwmPin::Blower, desired_state.blower_power);
 
   // Set the blower pinch valve position
   if (desired_state.blower_valve)
@@ -40,7 +40,7 @@ void actuators_execute(const ActuatorsState &desired_state) {
   else
     exhale_pinch.Disable();
 
-  Hal.PSOL_Value(desired_state.fio2_valve);
+  hal.PSolValue(desired_state.fio2_valve);
 }
 
 // Return true if all actuators are enabled and ready for action

@@ -21,7 +21,7 @@ ErrorCode PokeHandler::Process(Context *context) {
   // Total command length must be at least 5.  That's
   // four for the address and at least one data byte.
   if (context->request_length < 5)
-    return ErrorCode::kMissingData;
+    return ErrorCode::MissingData;
 
   size_t address = address_msw_ + u8_to_u32(&context->request[0]);
   uint32_t count = context->request_length - 4;
@@ -53,7 +53,7 @@ ErrorCode PokeHandler::Process(Context *context) {
 
   context->response_length = 0;
   *(context->processed) = true;
-  return ErrorCode::kNone;
+  return ErrorCode::None;
 }
 
 } // namespace Debug::Command

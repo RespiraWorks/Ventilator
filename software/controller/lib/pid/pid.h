@@ -22,13 +22,13 @@ limitations under the License.
 #include "units.h"
 
 enum class ProportionalTerm {
-  ON_ERROR,
-  ON_MEASUREMENT,
+  OnError,
+  OnMeasurement,
 };
 
 enum class DifferentialTerm {
-  ON_ERROR,
-  ON_MEASUREMENT,
+  OnError,
+  OnMeasurement,
 };
 
 class PID {

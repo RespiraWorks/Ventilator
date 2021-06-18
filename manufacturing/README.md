@@ -10,7 +10,7 @@ components and fully assembled units.
 
 ## DISCLAIMERS
 
-**This is an incomplete, as yet untested design that is not yet intended to be used on patients.**
+**This is an incomplete, as yet untested design that is not intended to be used on patients.**
 
 **The repository contains live documents. All documentation here is on a "best effort" but no guarantee basis.
 Information is incomplete. Pictures, renderings, parts lists and fabrication instructions may contradict each other.
@@ -32,6 +32,8 @@ collaboration space.
 fittings and screws. These have been provided by various suppliers on their websites and may be intellectual
 property of the respective manufacturer. These models come with no guarantees and do **NOT** fall under the
 [Apache license](../LICENSE) which generally applies the rest of our project.
+
+We are currently in the process of designing our v0.4 prototype, plans whereof are captured in some of our outstanding [Milestones](https://github.com/RespiraWorks/Ventilator/milestones). The `master` branch of this repository includes bleeding edge changes. Browse at your own peril. For the latest stable and tested (but also likely obsolete) version of the design see the [Releases](https://github.com/RespiraWorks/Ventilator/releases) page.
 
 ## Contributing
 

@@ -14,7 +14,7 @@ and is far more amenable to a quality fabrication process than hand-soldered com
 component to be hand-assembled, and engineering turnkey fabrication instructions have been generated as part of the
 submission; no assembly instructions are provided here.
 
-The original Rev 1 PCB was done in Alitum.  As of Rev A, this project has moved to KiCad for better accessibility.
+The original Rev 1 PCB was done in Altium.  As of Rev A, this project has moved to KiCad for better accessibility.
 
 ## Rev A
 

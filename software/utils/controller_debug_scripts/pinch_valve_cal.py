@@ -8,11 +8,12 @@
 # commented out unless you are trying to run this test on the
 # already calibrated pinch valve to see if you get linear results.
 
+import time
 
 def main():
     print("Shutting off fan and homing pinch valve")
-    SetVar("blower_power", 0.75)
-    SetVar("blower_valve", 0)
+    interface.SetVar("forced_blower_power", 0.75)
+    interface.SetVar("forced_blower_valve_pos", 0)
 
     input("Hit enter when ready to continue")
     print()
@@ -22,7 +23,7 @@ def main():
     print(zero)
 
     print("Taking a reading fully open")
-    SetVar("blower_valve", 1)
+    interface.SetVar("forced_blower_valve_pos", 1)
     time.sleep(0.3)
     full = GetTraceMean()
     print(full)
@@ -44,7 +45,7 @@ def main():
 
         while valve >= vinc:
             valve -= vinc
-            SetVar("blower_valve", valve)
+            interface.SetVar("forced_blower_valve_pos", valve)
             time.sleep(0.2)
             m = GetTraceMean()
 
@@ -58,23 +59,23 @@ def main():
                 break
             prev = m
     results.insert(0, 0)
-    SetVar("blower_power", 0)
+    interface.SetVar("forced_blower_power", 0)
 
     for i in range(len(results)):
         print("%.4f" % results[i])
 
 
 def GetTraceMean(samps=300):
-    run("trace flush")
-    run("trace start flow_inhale")
+    interpreter.do_trace("flush")
+    interpreter.do_trace("start flow_inhale")
 
-    dat = SendCmd(OP_TRACE, [SUBCMD_TRACE_GET_NUM_SAMPLES])
-    ct = Build32(dat)[0]
+    dat = interface.SendCmd(controller_low.OP_TRACE, [controller_low.SUBCMD_TRACE_GET_NUM_SAMPLES])
+    ct = controller_types.Build32(dat)[0]
     while ct < samps:
-        dat = SendCmd(OP_TRACE, [SUBCMD_TRACE_GET_NUM_SAMPLES])
-        ct = Build32(dat)[0]
+        dat = interface.SendCmd(controller_low.OP_TRACE, [controller_low.SUBCMD_TRACE_GET_NUM_SAMPLES])
+        ct = controller_types.Build32(dat)[0]
 
-    dat = TraceDownload()
+    dat = interface.TraceDownload()
     return mean(dat[1])
 
 

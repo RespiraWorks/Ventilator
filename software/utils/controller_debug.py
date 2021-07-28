@@ -8,34 +8,24 @@
 #
 # For a list of available commands, enter 'help'
 
+import controller_low
+import controller_types
 from datetime import datetime
-from typing import List, Dict, Union
+from typing import List
 import argparse
 import cmd
-import dataclasses
 import glob
 import json
-import math
 import matplotlib.pyplot as plt
 import os
-import serial
 import shlex
-import struct
 import subprocess
 import sys
 import textwrap
-import threading
-import time
 import traceback
 
-try:
-    import readline
-except ImportError:
-    # readline package isn't available on Windows.
-    pass
 
-
-class Colors():
+class Colors:
     ENDC = '\033[m'
     GRAY = '\033[90m'
     RED = '\033[91m'
@@ -46,55 +36,6 @@ class Colors():
     YELLOW = '\033[96m'
     WHITE = '\033[97m'
 
-# Command codes.  See debug_types.h in the controller debug library
-OP_MODE = 0x00
-OP_PEEK = 0x01
-OP_POKE = 0x02
-OP_PBREAD = 0x03
-OP_VAR = 0x04
-OP_TRACE = 0x05
-OP_EEPROM = 0x06
-
-# Some commands take a sub-command as their first byte of data
-SUBCMD_VAR_INFO = 0
-SUBCMD_VAR_GET = 1
-SUBCMD_VAR_SET = 2
-
-SUBCMD_TRACE_FLUSH = 0
-SUBCMD_TRACE_GETDATA = 1
-SUBCMD_TRACE_START = 2
-SUBCMD_TRACE_GET_VARID = 3
-SUBCMD_TRACE_SET_VARID = 4
-SUBCMD_TRACE_GET_PERIOD = 5
-SUBCMD_TRACE_SET_PERIOD = 6
-SUBCMD_TRACE_GET_NUM_SAMPLES = 7
-
-SUBCMD_EEPROM_READ = 0
-SUBCMD_EEPROM_WRITE = 1
-
-# Special characters used to frame commands
-ESC = 0xF1
-TERM = 0xF2
-
-# Variable types (see vars.h)
-VAR_INT32 = 1
-VAR_UINT32 = 2
-VAR_FLOAT = 3
-
-# Can trace this many variables at once.  Keep this in sync with
-# kMaxTraceVars in the controller.
-TRACE_VAR_CT = 4
-
-# If true, the raw bytes of the serial data will be printed.
-# This is handy for debugging the low level serial interface
-# It can be toggled with the 'debug' command
-showSerial = False
-
-# Copied from network_protocol.proto.
-# TODO: Import the proto instead!
-VentMode_OFF = 0
-VentMode_PRESSURE_CONTROL = 1
-VentMode_PRESSURE_ASSIST = 2
 
 class Error(Exception):
     def __init__(self, value):
@@ -102,6 +43,7 @@ class Error(Exception):
 
     def __str__(self):
         return str(self.value)
+
 
 class ArgparseShowHelpError(Exception):
     """Exception raised when CmdArgumentParser encounters --help.
@@ -137,11 +79,11 @@ class CmdLine(cmd.Cmd):
     def __init__(self):
         super().__init__()
         self.scriptsDir = "controller_debug_scripts/"
-        self.GetVarInfo()
+        interface.GetVarInfo()
 
     def UpdatePrompt(self, mode=None):
         if mode == None:
-            mode = SendCmd(OP_MODE)[0]
+            mode = interface.SendCmd(controller_low.OP_MODE)[0]
         if mode == 1:
             self.prompt = Colors.ORANGE + "BOOT] " + Colors.ENDC
         else:
@@ -149,8 +91,8 @@ class CmdLine(cmd.Cmd):
 
     def CmdLoop(self):
         self.UpdatePrompt()
-        ReSync()
-        self.GetVarInfo()
+        interface.ReSync()
+        interface.GetVarInfo()
         while True:
             try:
                 return cmd.Cmd.cmdloop(self)
@@ -162,9 +104,9 @@ class CmdLine(cmd.Cmd):
                 traceback.print_exc()
 
     def emptyline(self):
-        ReSync()
+        interface.ReSync()
         self.UpdatePrompt()
-        self.GetVarInfo()
+        interface.GetVarInfo()
 
     def do_debug(self, line):
         """Sets display of low level serial data on/off.
@@ -174,12 +116,11 @@ class CmdLine(cmd.Cmd):
           debug on
           debug off
         """
-        global showSerial
         line = line.strip().lower()
         if line == "on":
-            showSerial = True
+            interface.showSerial = True
         elif line == "off":
-            showSerial = False
+            interface.showSerial = False
         else:
             print("Unknown command; pass 'on' or 'off'.")
 
@@ -262,7 +203,7 @@ ex: peek <addr> <ct> <fmt> <file>
         if len(param) > 1:
             ct = int(param[1], 0)
         addr = int(param[0], 0)
-        Peek(addr, ct, fmt, fname)
+        interface.Peek(addr, ct, fmt, fname)
 
     def do_poke(self, line):
         """Write data to a memory address
@@ -292,7 +233,7 @@ ex: poke [type] <addr> <data>
             data = [float(x) for x in param[1:]]
         else:
             data = [int(x, 0) for x in param[1:]]
-        Poke(addr, data, ptype)
+        interface.Poke(addr, data, ptype)
 
     def do_EOF(self, line):
         return True
@@ -311,13 +252,13 @@ ex: poke [type] <addr> <data>
         else:
             fmt = None
 
-        print(GetVar(cl[0], fmt=fmt))
+        print(interface.GetVar(cl[0], fmt=fmt))
 
     def complete_get(self, text, line, begidx, endidx):
         var = text
 
         out = []
-        for i in varDict.keys():
+        for i in interface.varDict.keys():
             if i.startswith(var):
                 out.append(i)
 
@@ -326,21 +267,21 @@ ex: poke [type] <addr> <data>
     def help_get(self):
         print("Read the value of a debug variable and display it\n")
         print("Variables currently defined:")
-        for k in varDict.keys():
-            print("   %-10s - %s" % (k, varDict[k].help))
+        for k in interface.varDict.keys():
+            print("   %-10s - %s" % (k, interface.varDict[k].help))
 
     def do_set(self, line):
         cl = line.split()
         if len(cl) < 2:
             print("Please give the variable name and value")
             return
-        SetVar(cl[0], cl[1])
+        interface.SetVar(cl[0], cl[1])
 
     def complete_set(self, text, line, begidx, endidx):
         var = text
 
         out = []
-        for i in varDict.keys():
+        for i in interface.varDict.keys():
             if i.startswith(var):
                 out.append(i)
 
@@ -353,8 +294,8 @@ ex: poke [type] <addr> <data>
         print("current state of that C++ location and modify it.\n")
         print("This command allows you to modify such a debug variable\n")
         print("Variables currently defined:")
-        for k in varDict.keys():
-            print("   %-10s - %s" % (k, varDict[k].help))
+        for k in interface.varDict.keys():
+            print("   %-10s - %s" % (k, interface.varDict[k].help))
 
     def do_trace(self, line):
         """The `trace` command controls/reads the controller's trace buffer.
@@ -412,7 +353,7 @@ trace current
             return
 
         if cl[0] == "flush":
-            SendCmd(OP_TRACE, [SUBCMD_TRACE_FLUSH])
+            interface.SendCmd(controller_low.OP_TRACE, [controller_low.SUBCMD_TRACE_FLUSH])
 
         elif cl[0] == "start":
             parser = CmdArgumentParser("trace start")
@@ -420,26 +361,26 @@ trace current
             parser.add_argument("var", nargs="*")
             args = parser.parse_args(cl[1:])
 
-            if len(args.var) > TRACE_VAR_CT:
-                print(f"Can't trace more than {TRACE_VAR_CT} variables at once.")
+            if len(args.var) > controller_low.TRACE_VAR_CT:
+                print(f"Can't trace more than {controller_low.TRACE_VAR_CT} variables at once.")
                 return
             if args.period:
-                period = Split32(args.period)
-                SendCmd(OP_TRACE, [SUBCMD_TRACE_SET_PERIOD] + period)
+                period = controller_types.Split32(args.period)
+                interface.SendCmd(controller_low.OP_TRACE, [controller_low.SUBCMD_TRACE_SET_PERIOD] + period)
             else:
-                SendCmd(OP_TRACE, [SUBCMD_TRACE_SET_PERIOD] + Split32(1))
+                interface.SendCmd(controller_low.OP_TRACE, [controller_low.SUBCMD_TRACE_SET_PERIOD] + controller_types.Split32(1))
             if args.var:
                 # Unset existing trace vars, so we only get what was asked for.
-                var_names = args.var + [""] * (TRACE_VAR_CT - len(args.var))
+                var_names = args.var + [""] * (controller_low.TRACE_VAR_CT - len(args.var))
                 for (i, var_name) in enumerate(var_names):
                     var_id = -1
-                    if var_name in varDict:
-                        var_id = varDict[var_name].id
-                    var = Split16(var_id)
-                    SendCmd(OP_TRACE, [SUBCMD_TRACE_SET_VARID, i] + var)
+                    if var_name in interface.varDict:
+                        var_id = interface.varDict[var_name].id
+                    var = controller_types.Split16(var_id)
+                    interface.SendCmd(controller_low.OP_TRACE, [controller_low.SUBCMD_TRACE_SET_VARID, i] + var)
 
-            SendCmd(OP_TRACE, [SUBCMD_TRACE_FLUSH])
-            SendCmd(OP_TRACE, [SUBCMD_TRACE_START])
+            interface.SendCmd(controller_low.OP_TRACE, [controller_low.SUBCMD_TRACE_FLUSH])
+            interface.SendCmd(controller_low.OP_TRACE, [controller_low.SUBCMD_TRACE_START])
 
         elif cl[0] == "download":
             parser = CmdArgumentParser(prog="trace download")
@@ -454,12 +395,12 @@ trace current
             )
             args = parser.parse_args(cl[1:])
 
-            tv = TraceActiveVars()
+            tv = interface.TraceActiveVars()
             if len(tv) < 1:
                 print("No active trace variables")
                 return
 
-            dat = TraceDownload()
+            dat = interface.TraceDownload()
             TraceSaveDat(dat, fname=args.dest, separator=args.separator)
 
         elif cl[0] == "graph":
@@ -467,13 +408,13 @@ trace current
 
         elif cl[0] == "current":
             print("Traced variables:")
-            for var in TraceActiveVars():
+            for var in interface.TraceActiveVars():
                 print(" - %s" % var.name)
-            dat = SendCmd(OP_TRACE, [SUBCMD_TRACE_GET_PERIOD])
-            period = Build32(dat)[0]
+            dat = interface.SendCmd(controller_low.OP_TRACE, [controller_low.SUBCMD_TRACE_GET_PERIOD])
+            period = controller_types.Build32(dat)[0]
             print("Trace period: %i" % period)
-            dat = SendCmd(OP_TRACE, [SUBCMD_TRACE_GET_NUM_SAMPLES])
-            samples = Build32(dat)[0]
+            dat = interface.SendCmd(controller_low.OP_TRACE, [controller_low.SUBCMD_TRACE_GET_NUM_SAMPLES])
+            samples = controller_types.Build32(dat)[0]
             print("Samples in buffer: %i" % samples)
 
         else:
@@ -500,202 +441,21 @@ eeprom write <address> <data>
             if len(cl) < 3:
                 print("Error, please provide address and length.")
                 return
-            address = Split16(int(cl[1], 0))
-            length = Split16(int(cl[2], 0))
-            dat = SendCmd(OP_EEPROM, [SUBCMD_EEPROM_READ] + address + length)
-            s = FmtPeek(dat, "+XXXX", int(cl[1], 0))
+            address = controller_types.Split16(int(cl[1], 0))
+            length = controller_types.Split16(int(cl[2], 0))
+            dat = interface.SendCmd(controller_low.OP_EEPROM, [controller_low.SUBCMD_EEPROM_READ] + address + length)
+            s = controller_types.FmtPeek(dat, "+XXXX", int(cl[1], 0))
             print(s)
         elif cl[0] == "write":
             if len(cl) < 3:
                 print("Error, please provide address and at least 1 byte of data.")
                 return
-            address = Split16(int(cl[1], 0))
+            address = controller_types.Split16(int(cl[1], 0))
             data = list(map(int, cl[2:]))
-            SendCmd(OP_EEPROM, [SUBCMD_EEPROM_WRITE] + address + data)
+            interface.SendCmd(controller_low.OP_EEPROM, [controller_low.SUBCMD_EEPROM_WRITE] + address + data)
         else:
             print("Error: Unknown subcommand %s" % cl[0])
             return
-
-    # Read info about all the supported variables and load
-    # them in a map
-    def GetVarInfo(self):
-        varDict.clear()
-        try:
-            for vid in range(256):
-                dat = SendCmd(OP_VAR, [SUBCMD_VAR_INFO] + Split16(vid))
-                V = VarInfo(vid, dat)
-                varDict[V.name] = V
-        except Error as e:
-            pass
-
-
-varDict = {}
-
-
-class VarInfo:
-
-    # Initialize the variable info from the data returned
-    # by the controller.  Set var.cpp in the controller for
-    # details on this formatting
-    def __init__(self, id, dat):
-        self.id = id
-
-        if len(dat) < 8:
-            raise Error("Invalid VarInfo data returned")
-
-        self.type = dat[0]
-        nameLen = dat[4]
-        fmtLen = dat[5]
-        helpLen = dat[6]
-
-        if len(dat) < 8 + nameLen + fmtLen + helpLen:
-            raise Error("Invalid VarInfo data returned")
-
-        n = 8
-        self.name = "".join([chr(x) for x in dat[n : n + nameLen]])
-        n += nameLen
-        self.fmt = "".join([chr(x) for x in dat[n : n + fmtLen]])
-        n += fmtLen
-        self.help = "".join([chr(x) for x in dat[n : n + helpLen]])
-
-    # Convert an unsigned 32-bit value into the correct type for
-    # this variable
-    def ConvertInt(self, d):
-        if self.type == VAR_FLOAT:
-            return I2F(d)
-        if self.type == VAR_INT32:
-            if d & 0x80000000:
-                return d - (1 << 32)
-            return d
-        return d
-
-
-def FindVarByID(vid):
-    for name in varDict:
-        if varDict[name].id == vid:
-            return varDict[name]
-    return None
-
-
-def GetVar(name, raw=False, fmt=None):
-    if not name in varDict:
-        raise Error("Unknown variable %s" % name)
-
-    V = varDict[name]
-    dat = SendCmd(OP_VAR, [SUBCMD_VAR_GET] + Split16(V.id))
-
-    if V.type == VAR_INT32:
-        val = Build32(dat, signed=True)[0]
-
-    elif V.type == VAR_UINT32:
-        val = Build32(dat)[0]
-
-    elif V.type == VAR_FLOAT:
-        val = BuildFlt(dat)[0]
-
-    else:
-        raise Error("Sorry, I don't know how to handle that variable type yet")
-
-    if raw:
-        return val
-
-    # If a format wasn't passed, use the default for this var
-    if fmt == None:
-        fmt = V.fmt
-
-    return fmt % val
-
-
-def SetVar(name, value):
-    if not name in varDict:
-        raise Error("Unknown variable %s" % name)
-
-    V = varDict[name]
-
-    if V.type == VAR_INT32:
-        if not isinstance(value, int):
-            value = int(value, 0)
-        dat = Split32(value)
-
-    elif V.type == VAR_UINT32:
-        if not isinstance(value, int):
-            value = int(value, 0)
-        dat = Split32(value)
-
-    elif V.type == VAR_FLOAT:
-        dat = SplitFlt(float(value))
-
-    SendCmd(OP_VAR, [SUBCMD_VAR_SET] + Split16(V.id) + dat)
-    return
-
-
-def TraceActiveVars():
-    """Return a list of active trace variables"""
-    ret = []
-    for i in range(TRACE_VAR_CT):
-        dat = SendCmd(OP_TRACE, [SUBCMD_TRACE_GET_VARID, i])
-        var_id = Build16(dat)[0]
-        var = FindVarByID(var_id)
-        if var:
-            ret.append(var)
-    return ret
-
-
-def TraceDownload():
-    """Fetches a trace from the controller.
-
-    Returns a list of N+1 lists where N is the number of active trace variables.
-    The first list gives the time in seconds of each sample relative to the
-    start of the trace, and the remaining N lists each holds the trace data
-    for one variable.
-    """
-    traceVars = TraceActiveVars()
-    if len(traceVars) < 1:
-        return None
-
-    # get samples count
-    dat = SendCmd(OP_TRACE, [SUBCMD_TRACE_GET_NUM_SAMPLES])
-    ct = Build32(dat)[0] * len(traceVars)
-
-    data = []
-    while len(data) < 4 * ct:
-        dat = SendCmd(OP_TRACE, [SUBCMD_TRACE_GETDATA])
-        if len(dat) < 1:
-            break
-        data += dat
-
-    # Convert the bytes into an array of unsigned 32-bit values
-    data = Build32(data)
-
-    # The data comes as a list of of samples, where each sample contains
-    # len(traceVars) uint32s: [a1, b1, c1, a2, b2, c2, ...].  Parse this into
-    # sublists [[a1', a2', ...], [b1', b2', ...], [c1', c2', ...]], where each
-    # of the variables is converted to the correct type.
-    nvars = len(traceVars)
-    ret = [[] for _ in range(nvars)]
-
-    # The `zip` expression groups data into sublists of nvars elems.  See the
-    # "grouper" recipe:
-    # https://docs.python.org/3/library/itertools.html#itertools-recipes
-    iters = [iter(data)] * nvars
-    for sample in zip(*iters):
-        for i, val in enumerate(sample):
-            ret[i].append(traceVars[i].ConvertInt(val))
-
-    # get trace period
-    dat = SendCmd(OP_TRACE, [SUBCMD_TRACE_GET_PERIOD])
-    per = Build32(dat)[0]
-    if per < 1:
-        per = 1
-
-    # Scale this by the loop period which is an integer in microseconds.
-    # I multiply by 1e-6 (i.e. 1/1,000,000) to convert it to seconds.
-    per *= GetVar("loop_period", raw=True) * 1e-6
-
-    time = [x * per for x in range(len(ret[0]))]
-    ret.insert(0, time)
-
-    return ret
 
 
 def GitRevInfo():
@@ -770,14 +530,14 @@ def TraceGraph(raw_args: List[str]):
     (base, _) = os.path.splitext(args.dest)
     graph_img_filename = base + ".png"
 
-    traceVars = TraceActiveVars()
+    traceVars = interface.TraceActiveVars()
     unrecognized_scale_vars = set(scalings.keys()) - set(v.name for v in traceVars)
     if unrecognized_scale_vars:
         raise Error(
             f"Can't scale by vars that aren't being traced: {unrecognized_scale_vars}"
         )
 
-    dat = TraceDownload()
+    dat = interface.TraceDownload()
     TraceSaveDat(dat, args.dest, title=args.title)
 
     timestamps_sec = dat[0]
@@ -819,7 +579,7 @@ def TraceGraph(raw_args: List[str]):
 
 
 def TraceSaveDat(dat, fname, separator=" ", title=""):
-    tv = TraceActiveVars()
+    tv = interface.TraceActiveVars()
 
     with open(fname, "w") as fp:
         fp.write(textwrap.indent(TraceMetadataStr(title), "# "))
@@ -835,439 +595,6 @@ def TraceSaveDat(dat, fname, separator=" ", title=""):
             for j in range(len(tv)):
                 line.append(tv[j].fmt % dat[j + 1][i])
             fp.write(separator.join(line) + "\n")
-
-
-def FmtPeek(dat, fmt="+XXXX", addr=0):
-
-    fmtInfo = {
-        "+": ("0x%08x: ", 0, lambda dat: addr),
-        "x": ("0x%04x ", 2, GrabU16),
-        "i": ("%5d ", 2, GrabI16),
-        "u": ("%5u ", 2, GrabU16),
-        "X": ("0x%08x ", 4, GrabU32),
-        "I": ("%9d ", 4, GrabI32),
-        "U": ("%9u ", 4, GrabU32),
-        "n": ("\n", 0, lambda dat: None),
-        "f": ("%8.4f ", 4, GrabFlt),
-        "e": ("%12.4e ", 4, GrabFlt),
-        "c": ("%s", 1, lambda dat: chr(GrabU8(dat))),
-        "b": ("0x%02x ", 1, GrabU8),
-    }
-
-    ret = ""
-    ndx = -1
-    while len(dat) > 0:
-        ndx += 1
-        if ndx == len(fmt):
-            ret += "\n"
-            ndx = 0
-
-        ch = fmt[ndx]
-
-        if ch in fmtInfo:
-            (fmtString, byteCt, func) = fmtInfo[ch]
-            val = func(dat)
-
-            if val == None:
-                ret += fmtString
-            else:
-                ret += fmtString % val
-            addr += byteCt
-        else:
-            ret += ch
-
-    return ret
-
-
-def DecodeAddr(addr, fw=None):
-
-    if isinstance(addr, int):
-        return addr
-
-    return int(addr, 0)
-
-
-def Peek(addr, ct=1, fmt="+XXXX", fname=None, raw=False):
-    addr = DecodeAddr(addr)
-    if addr == None:
-        print("Unknown symbol")
-        return
-
-    out = []
-
-    A = addr
-
-    while ct:
-        n = min(ct, 256)
-        dat = SendCmd(OP_PEEK, Split32(A) + Split16(n))
-        out += dat
-        ct -= len(dat)
-        A += len(dat)
-
-    if raw:
-        return out
-
-    s = FmtPeek(out, fmt, addr)
-    if fname == None:
-        print(s)
-    else:
-        fp = open(fname, "w")
-        fp.write(s)
-        fp.write("\n")
-        fp.close()
-
-
-def Peek16(addr, ct=None, le=True, signed=False):
-    addr = DecodeAddr(addr)
-    if addr == None:
-        print("Unknown symbol")
-        return
-
-    if ct == None:
-        ct = 1
-    out = Peek(addr, 2 * ct, raw=True)
-    return Build16(out, le, signed)
-
-
-def Peek32(addr, ct=None, le=True, signed=False):
-    addr = DecodeAddr(addr)
-    if addr == None:
-        print("Unknown symbol")
-        return
-
-    if ct == None:
-        ct = 1
-    out = Peek(addr, 4 * ct, raw=True)
-    return Build32(out, le, signed)
-
-
-def Peekf(addr, ct=None):
-    dat = Peekl(addr, ct, le=True, signed=False)
-    if ct == None:
-        return Util.I2F(dat)
-    ret = []
-    for d in dat:
-        ret.append(Util.I2F(d))
-    return ret
-
-
-def Poke(addr, dat, ptype):
-    addr = DecodeAddr(addr)
-    if addr == None:
-        print("Unknown symbol")
-        return
-    if isinstance(dat, int):
-        dat = [dat]
-
-    if ptype == "long":
-        dat = Split32(dat)
-    if ptype == "short":
-        dat = Split16(dat)
-    if ptype == "float":
-        dat = [F2I(x) for x in dat]
-        dat = Split32(dat)
-
-    SendCmd(OP_POKE, Split32(addr) + dat)
-
-
-def Poke32(addr, dat):
-    Poke(addr, dat, "long")
-
-
-def Poke16(addr, dat):
-    Poke(addr, dat, "short")
-
-
-# This adds the escape characters to the serial data stream
-# to implement the framing used by that format.
-# See debug.cpp in the controller code for details
-def EscCmd(buff):
-    ret = []
-    for i in buff:
-        if i == ESC or i == TERM:
-            ret.append(ESC)
-        ret.append(i)
-    ret.append(TERM)
-    return ret
-
-
-# Wait for a response from the controller to the last command
-# The binary format uses two special characters to frame a
-# command or response.  This function removes those characters
-# before returning.
-# See debug.cpp in the controller source for more detail on
-# command framing.
-def GetResp():
-    dat = []
-    esc = False
-    DbgPrint("Getting resp: ", end="")
-    while True:
-        x = ser.read(1)
-        if len(x) < 1:
-            DbgPrint("timeout")
-            return dat
-        x = ord(x)
-        DbgPrint("0x%02x" % x, end=" ")
-
-        if esc:
-            esc = False
-            dat.append(x)
-            continue
-
-        if x == ESC:
-            esc = True
-            continue
-
-        if x == TERM:
-            DbgPrint()
-            return dat
-        dat.append(x)
-
-
-# This formats a binary command and sends it to the system.
-# It then waits for and returns a response.
-#
-#  op - The command code to send.  See the list at the top
-#       of the file.
-
-#  data - Zero or more bytes of data to be sent with the command
-
-#  timeout - How long (seconds) to wait for the response.  If
-#            not specified then a reasonable system default is used
-
-
-# This lock is used to make the command interface thread safe.
-# The main debug program doesn't currently use threads, but scripts
-# run from it may and those scripts use these same functions to
-# send commands
-cmdLock = threading.Lock()
-
-
-def DbgPrint(*args, **kwargs):
-    if showSerial:
-        print(*args, **kwargs)
-
-
-def SendCmd(op, data=[], timeout=None):
-    buff = [op] + data
-
-    crc = CRC16().calc(buff)
-    buff += Split16(crc)
-
-    S = "CMD: "
-    for b in buff:
-        S += "0x%02x " % b
-    DbgPrint(S)
-
-    buff = EscCmd(buff)
-    S = "ESC: "
-    for b in buff:
-        S += "0x%02x " % b
-    DbgPrint(S)
-
-    with cmdLock:
-        ser.write(bytearray(buff))
-        if timeout != None:
-            DbgPrint("Setting timeout to %.1f" % timeout)
-            oldto = ser.timeout
-            ser.timeout = timeout
-
-        rsp = GetResp()
-        if timeout != None:
-            ser.timeout = oldto
-
-        if len(rsp) < 3:
-            raise Error("Invalid response, too short")
-
-        crc = CRC16().calc(rsp[:-2])
-        rcrc = Build16(rsp[-2:])[0]
-        if crc != rcrc:
-            raise Error(
-                "CRC error on response, calculated 0x%04x received 0x%04x" % (crc, rcrc)
-            )
-
-        if rsp[0]:
-            raise Error("Error %d (0x%02x)" % (rsp[0], rsp[0]))
-            return []
-        return rsp[1:-2]
-
-
-def ReSync():
-    with cmdLock:
-        cmd = [TERM, TERM]
-        ser.write(bytearray(cmd))
-        time.sleep(0.1)
-        ser.reset_input_buffer()
-
-
-def I2F(ival):
-    s = struct.pack("I", ival & 0xFFFFFFFF)
-    return struct.unpack("f", s)[0]
-
-
-def F2I(fval):
-    s = struct.pack("f", fval)
-    return struct.unpack("I", s)[0]
-
-
-# Takes as input a list of integer values and
-# splits them into a list of bytes which is returned.
-#
-# val - The input list of ints
-# len - Length (in bytes) of the input ints.
-# le  - Little endian format if true
-def SplitInt(val, len=4, le=True):
-    ret = []
-
-    if isinstance(val, list):
-        for v in val:
-            ret += SplitInt(v, len, le)
-    else:
-        for i in range(len):
-            ret.append(int(val & 0x00FF))
-            val >>= 8
-
-        if not le:
-            ret = ret[::-1]
-    return ret
-
-
-# Splits a list of 16-bit ints into a list of bytes
-def Split16(x, le=True):
-    if isinstance(x, int):
-        x = [x]
-    return SplitInt(x, 2, le)
-
-
-# Splits a list of 32-bit ints into a list of bytes
-def Split32(x, le=True):
-    if isinstance(x, int):
-        x = [x]
-    return SplitInt(x, 4, le)
-
-
-# Splits a list of 32-bit floats into a list of bytes
-def SplitFlt(x):
-    if isinstance(x, float):
-        x = [x]
-    return Split32([F2I(i) for i in x])
-
-
-# Utility function to convert bytes to ints
-#   bytes - Array of byte values to convert
-#          All input bytes will be compined into one integer
-#   signed - If true, the output will be signed
-#   le - If true, use little endian format
-def MakeInt(bytes, signed=True, le=True):
-    if not le:
-        bytes = bytes[::-1]
-    val = 0
-    shift = 0
-    for b in bytes:
-        val |= b << shift
-        shift += 8
-
-    if signed and bytes[-1] & 0x80:
-        return val - (1 << shift)
-    return val
-
-
-# Convert a list of bytes into a list of 32-bit integers
-def Build32(dat, le=True, signed=False):
-    ret = []
-    for i in range(int(len(dat) / 4)):
-        ret.append(MakeInt(dat[(4 * i) : (4 * i + 4)], signed=signed, le=le))
-    return ret
-
-
-# Convert a list of bytes into a list of 16-bit integers
-def Build16(dat, le=True, signed=False):
-    ret = []
-    for i in range(int(len(dat) / 2)):
-        ret.append(MakeInt(dat[(2 * i) : (2 * i + 2)], signed=signed, le=le))
-    return ret
-
-
-# Convert a list of bytes into a list of 32-bit floats integers
-def BuildFlt(dat):
-    tmp = Build32(dat, le=True, signed=False)
-    return [I2F(x) for x in tmp]
-
-
-# Utility function which removes the first ct elements from a list and returns them
-def GrabElems(dat, ct):
-    if len(dat) < ct:
-        dat.extend((ct - len(dat)) * [0])
-    ret = dat[:ct]
-    del dat[0:ct]
-    return ret
-
-
-# These functions all pull the first bytes of the input list and convert
-# them into another type before returning them.
-def GrabI8(dat, le=True):
-    return MakeInt(GrabElems(dat, 1), signed=True, le=le)
-
-
-def GrabU8(dat, le=True):
-    return MakeInt(GrabElems(dat, 1), signed=False, le=le)
-
-
-def GrabI16(dat, le=True):
-    return MakeInt(GrabElems(dat, 2), signed=True, le=le)
-
-
-def GrabU16(dat, le=True):
-    return MakeInt(GrabElems(dat, 2), signed=False, le=le)
-
-
-def GrabI32(dat, le=True):
-    return MakeInt(GrabElems(dat, 4), signed=True, le=le)
-
-
-def GrabU32(dat, le=True):
-    return MakeInt(GrabElems(dat, 4), signed=False, le=le)
-
-
-def GrabI64(dat, le=True):
-    return MakeInt(GrabElems(dat, 8), signed=True, le=le)
-
-
-def GrabU64(dat, le=True):
-    return MakeInt(GrabElems(dat, 8), signed=False, le=le)
-
-
-def GrabFlt(dat, le=True):
-    return I2F(GrabU32(dat, le=le))
-
-
-def MakeCrcTable(poly):
-    tbl = []
-    for i in range(256):
-        crc = i
-        for j in range(8):
-            lsbSet = crc & 1
-            crc >>= 1
-            if lsbSet:
-                crc ^= poly
-        tbl.append(crc)
-    return tbl
-
-
-class CRC16:
-    """Simple utility class for calculating CRC values."""
-
-    tbl = MakeCrcTable(0xA001)
-
-    def __init__(self):
-        self.init = 0
-
-    def calc(self, dat, init=0):
-        crc = init ^ self.init
-        for d in dat:
-            a = 0x00FF & (d ^ crc)
-            crc = CRC16.tbl[a] ^ (crc >> 8)
-        return crc ^ self.init
 
 
 def DetectSerialPort():
@@ -1319,19 +646,19 @@ do it once upfront.""",
         print(args.port)
         sys.exit(0)
 
-    global ser
-    ser = serial.Serial(port=args.port, baudrate=115200)
-    ser.timeout = 0.8
+    global interface
+    interface = controller_low.ControllerDebugInterface(port=args.port)
 
-    cmdline = CmdLine()
+    global interpreter
+    interpreter = CmdLine()
 
     if args.command:
         # Set matplotlib to noninteractive mode.  This causes show() to block,
         # so if you do `controller_debug.py -c "trace graph"` the program won't
         # exit until you close the displayed graph.
         plt.ioff()
-        cmdline.onecmd(args.command)
+        interpreter.onecmd(args.command)
     else:
         # Turn on interactive mode for matplotlib, so show() doesn't block.
         plt.ion()
-        cmdline.CmdLoop()
+        interpreter.CmdLoop()

@@ -24,7 +24,7 @@ def main():
             print("Bad DMA number, should be 1 or 2")
             return
 
-    reg = Peek32(base, 43)
+    reg = interface.Peek32(base, 43)
 
     sel = reg[42]
     print("0x%08x Int Status: 0x%08x" % (base, reg[0]))

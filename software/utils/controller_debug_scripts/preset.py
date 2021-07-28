@@ -1,3 +1,11 @@
+import dataclasses
+from typing import Dict, Union
+
+# Copied from network_protocol.proto.
+# TODO: Import the proto instead!
+VentMode_OFF = 0
+VentMode_PRESSURE_CONTROL = 1
+VentMode_PRESSURE_ASSIST = 2
 
 @dataclasses.dataclass
 class Preset:
@@ -130,7 +138,7 @@ def main():
     print(textwrap.indent(preset.LongDesc(), "    "))
 
     for var, val in preset.vars.items():
-        SetVar(var, val)
+        interface.SetVar(var, val)
 
     print(f"\nPreset {preset.name} successfully applied!")
 

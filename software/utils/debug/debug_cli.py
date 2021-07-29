@@ -8,7 +8,7 @@
 #
 # For a list of available commands, enter 'help'
 
-import controller_low
+import debug
 from datetime import datetime
 from typing import List
 import argparse
@@ -77,21 +77,21 @@ class CmdArgumentParser(argparse.ArgumentParser):
 class CmdLine(cmd.Cmd):
     def __init__(self):
         super().__init__()
-        self.scriptsDir = "controller_debug_scripts/"
-        interface.GetVarInfo()
+        self.scripts_directory = "scripts/"
+        interface.update_variable_info()
 
-    def UpdatePrompt(self, mode=None):
-        if mode == None:
+    def update_prompt(self, mode=None):
+        if mode is None:
             mode = interface.mode_get()
         if mode == 1:
             self.prompt = Colors.ORANGE + "BOOT] " + Colors.ENDC
         else:
             self.prompt = Colors.GREEN + "] " + Colors.ENDC
 
-    def CmdLoop(self):
-        self.UpdatePrompt()
-        interface.ReSync()
-        interface.GetVarInfo()
+    def cli_loop(self):
+        self.update_prompt()
+        interface.resynchronize()
+        interface.update_variable_info()
         while True:
             try:
                 return cmd.Cmd.cmdloop(self)
@@ -103,9 +103,9 @@ class CmdLine(cmd.Cmd):
                 traceback.print_exc()
 
     def emptyline(self):
-        interface.ReSync()
-        self.UpdatePrompt()
-        interface.GetVarInfo()
+        interface.resynchronize()
+        self.update_prompt()
+        interface.update_variable_info()
 
     def do_debug(self, line):
         """Sets display of low level serial data on/off.
@@ -129,7 +129,7 @@ class CmdLine(cmd.Cmd):
 Run an external Python script which can send commands, set variables, etc.
 
 If no explicit path is given then the current directory and a sub-directory
-named {self.scriptsDir} will be searched for the python script.
+named {self.scripts_directory} will be searched for the python script.
         """
         )
 
@@ -137,8 +137,8 @@ named {self.scriptsDir} will be searched for the python script.
         p = shlex.split(line)
         if os.path.exists(p[0]):
             fname = p[0]
-        elif os.path.exists(self.scriptsDir + p[0]):
-            fname = self.scriptsDir + p[0]
+        elif os.path.exists(self.scripts_directory + p[0]):
+            fname = self.scripts_directory + p[0]
         else:
             print("Unknown file " + p[0])
             return
@@ -149,8 +149,8 @@ named {self.scriptsDir} will be searched for the python script.
 
     def complete_run(self, text, line, begidx, endidx):
         return glob.glob(text + "*.py") + [
-            x[len(self.scriptsDir) :]
-            for x in glob.glob(self.scriptsDir + text + "*.py")
+            x[len(self.scripts_directory):]
+            for x in glob.glob(self.scripts_directory + text + "*.py")
         ]
 
     def do_exec(self, line):
@@ -202,7 +202,7 @@ ex: peek <addr> <ct> <fmt> <file>
         if len(param) > 1:
             ct = int(param[1], 0)
         addr = int(param[0], 0)
-        interface.Peek(addr, ct, fmt, fname)
+        interface.peek(addr, ct, fmt, fname)
 
     def do_poke(self, line):
         """Write data to a memory address
@@ -232,7 +232,7 @@ ex: poke [type] <addr> <data>
             data = [float(x) for x in param[1:]]
         else:
             data = [int(x, 0) for x in param[1:]]
-        interface.Poke(addr, data, ptype)
+        interface.poke(addr, data, ptype)
 
     def do_EOF(self, line):
         return True
@@ -251,7 +251,7 @@ ex: poke [type] <addr> <data>
         else:
             fmt = None
 
-        print(interface.GetVar(cl[0], fmt=fmt))
+        print(interface.get_variable(cl[0], fmt=fmt))
 
     def complete_get(self, text, line, begidx, endidx):
         return interface.variables_starting_with(text);
@@ -265,7 +265,7 @@ ex: poke [type] <addr> <data>
         if len(cl) < 2:
             print("Please give the variable name and value")
             return
-        interface.SetVar(cl[0], cl[1])
+        interface.set_variable(cl[0], cl[1])
 
     def complete_set(self, text, line, begidx, endidx):
         return interface.variables_starting_with(text);
@@ -368,20 +368,20 @@ trace current
             )
             args = parser.parse_args(cl[1:])
 
-            tv = interface.TraceActiveVars()
+            tv = interface.trace_active_variables_list()
             if len(tv) < 1:
                 print("No active trace variables")
                 return
 
-            dat = interface.TraceDownload()
-            TraceSaveDat(dat, fname=args.dest, separator=args.separator)
+            dat = interface.trace_download()
+            trace_save_data(dat, fname=args.dest, separator=args.separator)
 
         elif cl[0] == "graph":
-            TraceGraph(cl[1:])
+            trace_graph(cl[1:])
 
         elif cl[0] == "current":
             print("Traced variables:")
-            for var in interface.TraceActiveVars():
+            for var in interface.trace_active_variables_list():
                 print(" - %s" % var.name)
             print("Trace period: %i" % interface.trace_period_get())
             print("Samples in buffer: %i" % interface.trace_status())
@@ -421,7 +421,7 @@ eeprom write <address> <data>
             return
 
 
-def GitRevInfo():
+def git_rev_info():
     """Returns a description of the current repository."""
     try:
         rev = (
@@ -435,7 +435,7 @@ def GitRevInfo():
         return "(unknown)"
 
 
-def TraceMetadataStr(title=""):
+def trace_metadata_string(title=""):
     """Gets a human-readable metadata string for a trace we just captured."""
     if not title:
         title = ""
@@ -445,11 +445,11 @@ def TraceMetadataStr(title=""):
         ret += "\n"
 
     ret += f"Captured {datetime.now()} by {os.environ.get('USER', 'unknown user')}\n"
-    ret += f"Built at revision {GitRevInfo()}\n"
+    ret += f"Built at revision {git_rev_info()}\n"
     return ret
 
 
-def TraceGraph(raw_args: List[str]):
+def trace_graph(raw_args: List[str]):
     parser = CmdArgumentParser("trace graph")
     parser.add_argument(
         "--dest",
@@ -493,24 +493,24 @@ def TraceGraph(raw_args: List[str]):
     (base, _) = os.path.splitext(args.dest)
     graph_img_filename = base + ".png"
 
-    traceVars = interface.TraceActiveVars()
-    unrecognized_scale_vars = set(scalings.keys()) - set(v.name for v in traceVars)
+    trace_vars = interface.trace_active_variables_list()
+    unrecognized_scale_vars = set(scalings.keys()) - set(v.name for v in trace_vars)
     if unrecognized_scale_vars:
         raise Error(
             f"Can't scale by vars that aren't being traced: {unrecognized_scale_vars}"
         )
 
-    dat = interface.TraceDownload()
-    TraceSaveDat(dat, args.dest, title=args.title)
+    dat = interface.trace_download()
+    trace_save_data(dat, args.dest, title=args.title)
 
     timestamps_sec = dat[0]
     dat = dat[1:]
     plt.figure()
     for i, d in enumerate(dat):
-        var = traceVars[i]
+        var = trace_vars[i]
 
         scale_kind, scale = scalings.get(var.name, (None, None))
-        label = var.help
+        label = var.print_help
         if scale_kind:
             label += f", scaled {scale_kind} {scale}"
 
@@ -532,7 +532,7 @@ def TraceGraph(raw_args: List[str]):
     if args.title:
         plt.title(args.title)
 
-    fig_md = {"Description": TraceMetadataStr(args.title)}
+    fig_md = {"Description": trace_metadata_string(args.title)}
     if args.title:
         fig_md["Title"] = args.title
     plt.savefig(graph_img_filename, format="png", metadata=fig_md)
@@ -541,11 +541,11 @@ def TraceGraph(raw_args: List[str]):
         plt.show()
 
 
-def TraceSaveDat(dat, fname, separator=" ", title=""):
-    tv = interface.TraceActiveVars()
+def trace_save_data(dat, fname, separator=" ", title=""):
+    tv = interface.trace_active_variables_list()
 
     with open(fname, "w") as fp:
-        fp.write(textwrap.indent(TraceMetadataStr(title), "# "))
+        fp.write(textwrap.indent(trace_metadata_string(title), "# "))
 
         line = ["time(sec)"]
         for v in tv:
@@ -560,7 +560,7 @@ def TraceSaveDat(dat, fname, separator=" ", title=""):
             fp.write(separator.join(line) + "\n")
 
 
-def DetectSerialPort():
+def detect_serial_port():
     j = json.loads(
         subprocess.check_output(["platformio", "device", "list", "--json-output"])
     )
@@ -581,17 +581,17 @@ def DetectSerialPort():
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
+    terminal_parser = argparse.ArgumentParser()
+    terminal_parser.add_argument(
         "--port",
         type=str,
         help="Serial port device is connected to, e.g. /dev/ttyACM0.  If "
         "unspecified, we try to auto-detect the port.",
     )
-    parser.add_argument(
+    terminal_parser.add_argument(
         "--command", "-c", type=str, help="Run the given command and exit."
     )
-    parser.add_argument(
+    terminal_parser.add_argument(
         "--detect-port-and-quit",
         action="store_true",
         help="""Detect the port that the device is connected to and then
@@ -600,28 +600,28 @@ times.  Port detection is the slowest part of startup, so this option lets you
 do it once upfront.""",
     )
 
-    args = parser.parse_args()
+    terminal_args = terminal_parser.parse_args()
 
-    if not args.port:
-        args.port = DetectSerialPort()
+    if not terminal_args.port:
+        terminal_args.port = detect_serial_port()
 
-    if args.detect_port_and_quit:
-        print(args.port)
+    if terminal_args.detect_port_and_quit:
+        print(terminal_args.port)
         sys.exit(0)
 
     global interface
-    interface = controller_low.ControllerDebugInterface(port=args.port)
+    interface = debug.ControllerDebugInterface(port=terminal_args.port)
 
     global interpreter
     interpreter = CmdLine()
 
-    if args.command:
+    if terminal_args.command:
         # Set matplotlib to noninteractive mode.  This causes show() to block,
         # so if you do `controller_debug.py -c "trace graph"` the program won't
         # exit until you close the displayed graph.
         plt.ioff()
-        interpreter.onecmd(args.command)
+        interpreter.onecmd(terminal_args.command)
     else:
         # Turn on interactive mode for matplotlib, so show() doesn't block.
         plt.ion()
-        interpreter.CmdLoop()
+        interpreter.cli_loop()

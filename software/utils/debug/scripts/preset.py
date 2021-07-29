@@ -15,10 +15,10 @@ class Preset:
     desc: str
     vars: Dict[str, Union[int, float]]
 
-    def ShortDesc(self):
+    def short_description(self):
         return f"{self.name} - {self.vars}"
 
-    def LongDesc(self):
+    def long_description(self):
         return (
                 self.desc
                 + "\n"
@@ -26,7 +26,7 @@ class Preset:
         )
 
 
-def CoventPCPreset(
+def pressure_control_preset(
         test_num,
         intended_tv,
         lung_compliance,
@@ -74,17 +74,18 @@ Intended TV: {intended_tv} ml
 
 # DebugVar presets recognized by the `preset` command.
 PRESETS = [
-    CoventPCPreset(1, 500, 50, 5, 20, 1, 10, 30, 5),
-    CoventPCPreset(2, 500, 50, 20, 12, 1, 15, 90, 10),
-    CoventPCPreset(3, 500, 20, 5, 20, 1, 25, 90, 5),
-    CoventPCPreset(4, 500, 20, 20, 20, 1, 25, 30, 10),
-    CoventPCPreset(5, 300, 20, 20, 20, 1, 15, 30, 5),
-    CoventPCPreset(6, 300, 20, 50, 12, 1, 25, 90, 10),
-    CoventPCPreset(7, 300, 10, 50, 20, 1, 30, 90, 5),
-    CoventPCPreset(8, 200, 10, 10, 20, 1, 25, 30, 10),
+    pressure_control_preset(1, 500, 50, 5, 20, 1, 10, 30, 5),
+    pressure_control_preset(2, 500, 50, 20, 12, 1, 15, 90, 10),
+    pressure_control_preset(3, 500, 20, 5, 20, 1, 25, 90, 5),
+    pressure_control_preset(4, 500, 20, 20, 20, 1, 25, 30, 10),
+    pressure_control_preset(5, 300, 20, 20, 20, 1, 15, 30, 5),
+    pressure_control_preset(6, 300, 20, 50, 12, 1, 25, 90, 10),
+    pressure_control_preset(7, 300, 10, 50, 20, 1, 30, 90, 5),
+    pressure_control_preset(8, 200, 10, 10, 20, 1, 25, 30, 10),
 ]
 
-def help():
+
+def print_help():
     print(
         """\
 Apply a preset list of settings, all at once.
@@ -98,7 +99,7 @@ Available PRESETs:
 """
     )
     for p in PRESETS:
-        print(f"  - {p.ShortDesc()}")
+        print(f"  - {p.short_description()}")
 
 
 def main():
@@ -106,7 +107,7 @@ def main():
     presets_manifest = "Available PRESETs:\n"
 
     for p in PRESETS:
-        presets_manifest += "  " + p.ShortDesc() + "\n"
+        presets_manifest += "  " + p.short_description() + "\n"
 
     parser = CmdArgumentParser("preset.py",
                                formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -135,10 +136,10 @@ def main():
 
     preset = candidates[0]
     print(f"Applying preset {preset.name}:\n")
-    print(textwrap.indent(preset.LongDesc(), "    "))
+    print(textwrap.indent(preset.long_description(), "    "))
 
     for var, val in preset.vars.items():
-        interface.SetVar(var, val)
+        interface.set_variable(var, val)
 
     print(f"\nPreset {preset.name} successfully applied!")
 

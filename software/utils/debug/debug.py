@@ -11,7 +11,7 @@
 import serial
 import threading
 import time
-import controller_types
+import debug_types
 
 # TODO: Import constants from proto instead!
 
@@ -40,7 +40,6 @@ SUBCMD_TRACE_GET_NUM_SAMPLES = 7
 
 SUBCMD_EEPROM_READ = 0
 SUBCMD_EEPROM_WRITE = 1
-
 
 # Variable types (see vars.h)
 VAR_INT32 = 1
@@ -72,25 +71,25 @@ class VarInfo:
             raise Error("Invalid VarInfo data returned")
 
         self.type = dat[0]
-        nameLen = dat[4]
-        fmtLen = dat[5]
-        helpLen = dat[6]
+        name_length = dat[4]
+        fmt_length = dat[5]
+        help_length = dat[6]
 
-        if len(dat) < 8 + nameLen + fmtLen + helpLen:
+        if len(dat) < 8 + name_length + fmt_length + help_length:
             raise Error("Invalid VarInfo data returned")
 
         n = 8
-        self.name = "".join([chr(x) for x in dat[n : n + nameLen]])
-        n += nameLen
-        self.fmt = "".join([chr(x) for x in dat[n : n + fmtLen]])
-        n += fmtLen
-        self.help = "".join([chr(x) for x in dat[n : n + helpLen]])
+        self.name = "".join([chr(x) for x in dat[n: n + name_length]])
+        n += name_length
+        self.fmt = "".join([chr(x) for x in dat[n: n + fmt_length]])
+        n += fmt_length
+        self.help = "".join([chr(x) for x in dat[n: n + help_length]])
 
     # Convert an unsigned 32-bit value into the correct type for
     # this variable
-    def ConvertInt(self, d):
+    def convert_int(self, d):
         if self.type == VAR_FLOAT:
-            return controller_types.I2F(d)
+            return debug_types.i_to_f(d)
         if self.type == VAR_INT32:
             if d & 0x80000000:
                 return d - (1 << 32)
@@ -99,7 +98,6 @@ class VarInfo:
 
 
 class ControllerDebugInterface:
-
     # If true, the raw bytes of the serial data will be printed.
     # This is handy for debugging the low level serial interface
     # It can be toggled with the 'debug' command
@@ -121,37 +119,37 @@ class ControllerDebugInterface:
 
     # Read info about all the supported variables and load
     # them in a map
-    def GetVarInfo(self):
+    def update_variable_info(self):
         self.varDict.clear()
         try:
             for vid in range(256):
-                dat = self.SendCmd(OP_VAR, [SUBCMD_VAR_INFO] + controller_types.Split16(vid))
+                dat = self.send_command(OP_VAR, [SUBCMD_VAR_INFO] + debug_types.int16s_to_bytes(vid))
                 V = VarInfo(vid, dat)
                 self.varDict[V.name] = V
         except Error as e:
             pass
 
-    def FindVarByID(self, vid):
+    def get_variable_metadata(self, vid):
         for name in self.varDict:
             if self.varDict[name].id == vid:
                 return self.varDict[name]
         return None
 
-    def GetVar(self, name, raw=False, fmt=None):
-        if not name in self.varDict:
+    def get_variable(self, name, raw=False, fmt=None):
+        if not (name in self.varDict):
             raise Error("Unknown variable %s" % name)
 
         V = self.varDict[name]
-        dat = self.SendCmd(OP_VAR, [SUBCMD_VAR_GET] + controller_types.Split16(V.id))
+        dat = self.send_command(OP_VAR, [SUBCMD_VAR_GET] + debug_types.int16s_to_bytes(V.id))
 
         if V.type == VAR_INT32:
-            val = controller_types.Build32(dat, signed=True)[0]
+            val = debug_types.bytes_to_int32s(dat, signed=True)[0]
 
         elif V.type == VAR_UINT32:
-            val = controller_types.Build32(dat)[0]
+            val = debug_types.bytes_to_int32s(dat)[0]
 
         elif V.type == VAR_FLOAT:
-            val = controller_types.BuildFlt(dat)[0]
+            val = debug_types.bytes_to_float32s(dat)[0]
 
         else:
             raise Error("Sorry, I don't know how to handle that variable type yet")
@@ -160,13 +158,13 @@ class ControllerDebugInterface:
             return val
 
         # If a format wasn't passed, use the default for this var
-        if fmt == None:
+        if fmt is None:
             fmt = V.fmt
 
         return fmt % val
 
-    def SetVar(self, name, value):
-        if not name in self.varDict:
+    def set_variable(self, name, value):
+        if not (name in self.varDict):
             raise Error("Unknown variable %s" % name)
 
         V = self.varDict[name]
@@ -174,31 +172,34 @@ class ControllerDebugInterface:
         if V.type == VAR_INT32:
             if not isinstance(value, int):
                 value = int(value, 0)
-            dat = controller_types.Split32(value)
+            dat = debug_types.int32s_to_bytes(value)
 
         elif V.type == VAR_UINT32:
             if not isinstance(value, int):
                 value = int(value, 0)
-            dat = controller_types.Split32(value)
+            dat = debug_types.int32s_to_bytes(value)
 
         elif V.type == VAR_FLOAT:
-            dat = controller_types.SplitFlt(float(value))
+            dat = debug_types.float32s_to_bytes(float(value))
 
-        self.SendCmd(OP_VAR, [SUBCMD_VAR_SET] + controller_types.Split16(V.id) + dat)
+        else:
+            raise Error("Sorry, I don't know how to handle that variable type yet")
+
+        self.send_command(OP_VAR, [SUBCMD_VAR_SET] + debug_types.int16s_to_bytes(V.id) + dat)
         return
 
-    def TraceActiveVars(self):
+    def trace_active_variables_list(self):
         """Return a list of active trace variables"""
         ret = []
         for i in range(TRACE_VAR_CT):
-            dat = self.SendCmd(OP_TRACE, [SUBCMD_TRACE_GET_VARID, i])
-            var_id = controller_types.Build16(dat)[0]
-            var = self.FindVarByID(var_id)
+            dat = self.send_command(OP_TRACE, [SUBCMD_TRACE_GET_VARID, i])
+            var_id = debug_types.bytes_to_int16s(dat)[0]
+            var = self.get_variable_metadata(var_id)
             if var:
                 ret.append(var)
         return ret
 
-    def TraceDownload(self):
+    def trace_download(self):
         """Fetches a trace from the controller.
 
         Returns a list of N+1 lists where N is the number of active trace variables.
@@ -206,68 +207,67 @@ class ControllerDebugInterface:
         start of the trace, and the remaining N lists each holds the trace data
         for one variable.
         """
-        traceVars = self.TraceActiveVars()
-        if len(traceVars) < 1:
+        trace_vars = self.trace_active_variables_list()
+        if len(trace_vars) < 1:
             return None
 
         # get samples count
-        dat = self.SendCmd(OP_TRACE, [SUBCMD_TRACE_GET_NUM_SAMPLES])
-        ct = controller_types.Build32(dat)[0] * len(traceVars)
+        dat = self.send_command(OP_TRACE, [SUBCMD_TRACE_GET_NUM_SAMPLES])
+        ct = debug_types.bytes_to_int32s(dat)[0] * len(trace_vars)
 
         data = []
         while len(data) < 4 * ct:
-            dat = self.SendCmd(OP_TRACE, [SUBCMD_TRACE_GETDATA])
+            dat = self.send_command(OP_TRACE, [SUBCMD_TRACE_GETDATA])
             if len(dat) < 1:
                 break
             data += dat
 
         # Convert the bytes into an array of unsigned 32-bit values
-        data = controller_types.Build32(data)
+        data = debug_types.bytes_to_int32s(data)
 
         # The data comes as a list of of samples, where each sample contains
-        # len(traceVars) uint32s: [a1, b1, c1, a2, b2, c2, ...].  Parse this into
+        # len(trace_vars) uint32s: [a1, b1, c1, a2, b2, c2, ...].  Parse this into
         # sublists [[a1', a2', ...], [b1', b2', ...], [c1', c2', ...]], where each
         # of the variables is converted to the correct type.
-        nvars = len(traceVars)
-        ret = [[] for _ in range(nvars)]
+        var_count = len(trace_vars)
+        ret = [[] for _ in range(var_count)]
 
-        # The `zip` expression groups data into sublists of nvars elems.  See the
+        # The `zip` expression groups data into sublists of var_count elems.  See the
         # "grouper" recipe:
         # https://docs.python.org/3/library/itertools.html#itertools-recipes
-        iters = [iter(data)] * nvars
+        iters = [iter(data)] * var_count
         for sample in zip(*iters):
             for i, val in enumerate(sample):
-                ret[i].append(traceVars[i].ConvertInt(val))
+                ret[i].append(trace_vars[i].ConvertInt(val))
 
         # get trace period
-        dat = self.SendCmd(OP_TRACE, [SUBCMD_TRACE_GET_PERIOD])
-        per = controller_types.Build32(dat)[0]
+        dat = self.send_command(OP_TRACE, [SUBCMD_TRACE_GET_PERIOD])
+        per = debug_types.bytes_to_int32s(dat)[0]
         if per < 1:
             per = 1
 
         # Scale this by the loop period which is an integer in microseconds.
         # I multiply by 1e-6 (i.e. 1/1,000,000) to convert it to seconds.
-        per *= self.GetVar("loop_period", raw=True) * 1e-6
+        per *= self.get_variable("loop_period", raw=True) * 1e-6
 
         time = [x * per for x in range(len(ret[0]))]
         ret.insert(0, time)
 
         return ret
 
-
-    def Peek(self, addr, ct=1, fmt="+XXXX", fname=None, raw=False):
-        addr = controller_types.DecodeAddr(addr)
-        if addr == None:
+    def peek(self, address, ct=1, fmt="+XXXX", fname=None, raw=False):
+        address = debug_types.decode_address(address)
+        if address is None:
             print("Unknown symbol")
             return
 
         out = []
 
-        A = addr
+        A = address
 
         while ct:
             n = min(ct, 256)
-            dat = self.SendCmd(OP_PEEK, controller_types.Split32(A) + controller_types.Split16(n))
+            dat = self.send_command(OP_PEEK, debug_types.int32s_to_bytes(A) + debug_types.int16s_to_bytes(n))
             out += dat
             ct -= len(dat)
             A += len(dat)
@@ -275,8 +275,8 @@ class ControllerDebugInterface:
         if raw:
             return out
 
-        s = controller_types.FmtPeek(out, fmt, addr)
-        if fname == None:
+        s = debug_types.format_peek(out, fmt, address)
+        if fname is None:
             print(s)
         else:
             fp = open(fname, "w")
@@ -284,52 +284,51 @@ class ControllerDebugInterface:
             fp.write("\n")
             fp.close()
 
-    def Peek16(self, addr, ct=None, le=True, signed=False):
-        addr = controller_types.DecodeAddr(addr)
-        if addr == None:
+    def peek16(self, address, ct=None, le=True, signed=False):
+        address = debug_types.decode_address(address)
+        if address is None:
             print("Unknown symbol")
             return
 
-        if ct == None:
+        if ct is None:
             ct = 1
-        out = self.Peek(addr, 2 * ct, raw=True)
-        return controller_types.Build16(out, le, signed)
+        out = self.peek(address, 2 * ct, raw=True)
+        return debug_types.bytes_to_int16s(out, le, signed)
 
-    def Peek32(self, addr, ct=None, le=True, signed=False):
-        addr = controller_types.DecodeAddr(addr)
-        if addr == None:
+    def peek32(self, address, ct=None, le=True, signed=False):
+        address = debug_types.decode_address(address)
+        if address is None:
             print("Unknown symbol")
             return
 
-        if ct == None:
+        if ct is None:
             ct = 1
-        out = self.Peek(addr, 4 * ct, raw=True)
-        return controller_types.Build32(out, le, signed)
+        out = self.peek(address, 4 * ct, raw=True)
+        return debug_types.bytes_to_int32s(out, le, signed)
 
-
-    def Poke(self, addr, dat, ptype):
-        addr = controller_types.DecodeAddr(addr)
-        if addr == None:
+    def poke(self, address, dat, ptype):
+        address = debug_types.decode_address(address)
+        if address is None:
             print("Unknown symbol")
             return
         if isinstance(dat, int):
             dat = [dat]
 
         if ptype == "long":
-            dat = controller_types.Split32(dat)
+            dat = debug_types.int32s_to_bytes(dat)
         if ptype == "short":
-            dat = controller_types.Split16(dat)
+            dat = debug_types.int16s_to_bytes(dat)
         if ptype == "float":
-            dat = [controller_types.F2I(x) for x in dat]
-            dat = controller_types.Split32(dat)
+            dat = [debug_types.f_to_i(x) for x in dat]
+            dat = debug_types.int32s_to_bytes(dat)
 
-        self.SendCmd(OP_POKE, controller_types.Split32(addr) + dat)
+        self.send_command(OP_POKE, debug_types.int32s_to_bytes(address) + dat)
 
-    def Poke32(self, addr, dat):
-        self.Poke(addr, dat, "long")
+    def poke32(self, address, dat):
+        self.poke(address, dat, "long")
 
-    def Poke16(self, addr, dat):
-        self.Poke(addr, dat, "short")
+    def poke16(self, address, dat):
+        self.poke(address, dat, "short")
 
     # Wait for a response from the controller to the last command
     # The binary format uses two special characters to frame a
@@ -337,34 +336,33 @@ class ControllerDebugInterface:
     # before returning.
     # See debug.cpp in the controller source for more detail on
     # command framing.
-    def GetResp(self):
+    def get_response(self):
         dat = []
         esc = False
-        self.DbgPrint("Getting resp: ", end="")
+        self.debug_print("Getting resp: ", end="")
         while True:
             x = self.ser.read(1)
             if len(x) < 1:
-                self.DbgPrint("timeout")
+                self.debug_print("timeout")
                 return dat
             x = ord(x)
-            self.DbgPrint("0x%02x" % x, end=" ")
+            self.debug_print("0x%02x" % x, end=" ")
 
             if esc:
                 esc = False
                 dat.append(x)
                 continue
 
-            if x == controller_types.ESC:
+            if x == debug_types.ESC:
                 esc = True
                 continue
 
-            if x == controller_types.TERM:
-                self.DbgPrint()
+            if x == debug_types.TERM:
+                self.debug_print()
                 return dat
             dat.append(x)
 
-
-    def DbgPrint(self, *args, **kwargs):
+    def debug_print(self, *args, **kwargs):
         if self.showSerial:
             print(*args, **kwargs)
 
@@ -378,39 +376,39 @@ class ControllerDebugInterface:
 
     #  timeout - How long (seconds) to wait for the response.  If
     #            not specified then a reasonable system default is used
-    def SendCmd(self, op, data=[], timeout=None):
+    def send_command(self, op, data=[], timeout=None):
         buff = [op] + data
 
-        crc = controller_types.CRC16().calc(buff)
-        buff += controller_types.Split16(crc)
+        crc = debug_types.CRC16().calc(buff)
+        buff += debug_types.int16s_to_bytes(crc)
 
         S = "CMD: "
         for b in buff:
             S += "0x%02x " % b
-        self.DbgPrint(S)
+        self.debug_print(S)
 
-        buff = controller_types.EscCmd(buff)
+        buff = debug_types.frame_command(buff)
         S = "ESC: "
         for b in buff:
             S += "0x%02x " % b
-        self.DbgPrint(S)
+        self.debug_print(S)
 
         with self.cmdLock:
             self.ser.write(bytearray(buff))
-            if timeout != None:
-                self.DbgPrint("Setting timeout to %.1f" % timeout)
+            if timeout is not None:
+                self.debug_print("Setting timeout to %.1f" % timeout)
                 oldto = self.ser.timeout
                 self.ser.timeout = timeout
 
-            rsp = self.GetResp()
-            if timeout != None:
+            rsp = self.get_response()
+            if timeout is not None:
                 self.ser.timeout = oldto
 
             if len(rsp) < 3:
                 raise Error("Invalid response, too short")
 
-            crc = controller_types.CRC16().calc(rsp[:-2])
-            rcrc = controller_types.Build16(rsp[-2:])[0]
+            crc = debug_types.CRC16().calc(rsp[:-2])
+            rcrc = debug_types.bytes_to_int16s(rsp[-2:])[0]
             if crc != rcrc:
                 raise Error(
                     "CRC error on response, calculated 0x%04x received 0x%04x" % (crc, rcrc)
@@ -420,22 +418,22 @@ class ControllerDebugInterface:
                 raise Error("Error %d (0x%02x)" % (rsp[0], rsp[0]))
             return rsp[1:-2]
 
-    def ReSync(self):
+    def resynchronize(self):
         with self.cmdLock:
-            cmd = [controller_types.TERM, controller_types.TERM]
+            cmd = [debug_types.TERM, debug_types.TERM]
             self.ser.write(bytearray(cmd))
             time.sleep(0.1)
             self.ser.reset_input_buffer()
 
     def trace_flush(self):
-        self.SendCmd(OP_TRACE, [SUBCMD_TRACE_FLUSH])
+        self.send_command(OP_TRACE, [SUBCMD_TRACE_FLUSH])
 
     def trace_period_set(self, period):
-        self.SendCmd(OP_TRACE, [SUBCMD_TRACE_SET_PERIOD] + controller_types.Split32(period))
+        self.send_command(OP_TRACE, [SUBCMD_TRACE_SET_PERIOD] + debug_types.int32s_to_bytes(period))
 
     def trace_period_get(self):
-        dat = self.SendCmd(OP_TRACE, [SUBCMD_TRACE_GET_PERIOD])
-        return controller_types.Build32(dat)[0]
+        dat = self.send_command(OP_TRACE, [SUBCMD_TRACE_GET_PERIOD])
+        return debug_types.bytes_to_int32s(dat)[0]
 
     def trace_select(self, var_names):
         if len(var_names) > TRACE_VAR_CT:
@@ -445,30 +443,30 @@ class ControllerDebugInterface:
             var_id = -1
             if var_name in self.varDict:
                 var_id = self.varDict[var_name].id
-            var = controller_types.Split16(var_id)
-            self.SendCmd(OP_TRACE, [SUBCMD_TRACE_SET_VARID, i] + var)
-        self.SendCmd(OP_TRACE, [SUBCMD_TRACE_FLUSH])
+            var = debug_types.int16s_to_bytes(var_id)
+            self.send_command(OP_TRACE, [SUBCMD_TRACE_SET_VARID, i] + var)
+        self.send_command(OP_TRACE, [SUBCMD_TRACE_FLUSH])
 
     def trace_start(self):
-        self.SendCmd(OP_TRACE, [SUBCMD_TRACE_START])
+        self.send_command(OP_TRACE, [SUBCMD_TRACE_START])
 
     def trace_status(self):
-        dat = self.SendCmd(OP_TRACE, [SUBCMD_TRACE_GET_NUM_SAMPLES])
-        return controller_types.Build32(dat)[0]
+        dat = self.send_command(OP_TRACE, [SUBCMD_TRACE_GET_NUM_SAMPLES])
+        return debug_types.bytes_to_int32s(dat)[0]
 
     def eeprom_read(self, address, length):
-        dat = self.SendCmd(OP_EEPROM, [SUBCMD_EEPROM_READ]
-                           + controller_types.Split16(int(address, 0))
-                           + controller_types.Split16(int(length, 0)))
-        return controller_types.FmtPeek(dat, "+XXXX", int(address, 0))
+        dat = self.send_command(OP_EEPROM, [SUBCMD_EEPROM_READ]
+                                + debug_types.int16s_to_bytes(int(address, 0))
+                                + debug_types.int16s_to_bytes(int(length, 0)))
+        return debug_types.format_peek(dat, "+XXXX", int(address, 0))
 
     def eeprom_write(self, address, data):
-        self.SendCmd(OP_EEPROM, [SUBCMD_EEPROM_WRITE] + controller_types.Split16(int(address, 0)) + data)
+        self.send_command(OP_EEPROM, [SUBCMD_EEPROM_WRITE] + debug_types.int16s_to_bytes(int(address, 0)) + data)
 
     def variable_list(self):
         ret = "Variables currently defined:\n"
         for k in self.varDict.keys():
-            ret += "   %-10s - %s" % (k, self.varDict[k].help) + "\n"
+            ret += "   %-10s - %s" % (k, self.varDict[k].print_help) + "\n"
         return ret
 
     def variables_starting_with(self, text):
@@ -479,4 +477,4 @@ class ControllerDebugInterface:
         return out
 
     def mode_get(self):
-        return self.SendCmd(OP_MODE)[0]
+        return self.send_command(OP_MODE)[0]

@@ -9,7 +9,6 @@
 # For a list of available commands, enter 'help'
 
 import controller_low
-import controller_types
 from datetime import datetime
 from typing import List
 import argparse
@@ -83,7 +82,7 @@ class CmdLine(cmd.Cmd):
 
     def UpdatePrompt(self, mode=None):
         if mode == None:
-            mode = interface.SendCmd(controller_low.OP_MODE)[0]
+            mode = interface.mode_get()
         if mode == 1:
             self.prompt = Colors.ORANGE + "BOOT] " + Colors.ENDC
         else:
@@ -112,9 +111,9 @@ class CmdLine(cmd.Cmd):
         """Sets display of low level serial data on/off.
 
         Usage:
-
           debug on
           debug off
+
         """
         line = line.strip().lower()
         if line == "on":
@@ -255,20 +254,11 @@ ex: poke [type] <addr> <data>
         print(interface.GetVar(cl[0], fmt=fmt))
 
     def complete_get(self, text, line, begidx, endidx):
-        var = text
-
-        out = []
-        for i in interface.varDict.keys():
-            if i.startswith(var):
-                out.append(i)
-
-        return out
+        return interface.variables_starting_with(text);
 
     def help_get(self):
         print("Read the value of a debug variable and display it\n")
-        print("Variables currently defined:")
-        for k in interface.varDict.keys():
-            print("   %-10s - %s" % (k, interface.varDict[k].help))
+        print(interface.variable_list())
 
     def do_set(self, line):
         cl = line.split()
@@ -278,14 +268,7 @@ ex: poke [type] <addr> <data>
         interface.SetVar(cl[0], cl[1])
 
     def complete_set(self, text, line, begidx, endidx):
-        var = text
-
-        out = []
-        for i in interface.varDict.keys():
-            if i.startswith(var):
-                out.append(i)
-
-        return out
+        return interface.variables_starting_with(text);
 
     def help_set(self):
         print("You can very easily add debug variables to the C++ code.")
@@ -293,9 +276,7 @@ ex: poke [type] <addr> <data>
         print("access.  Then using the get/set commands you can read the")
         print("current state of that C++ location and modify it.\n")
         print("This command allows you to modify such a debug variable\n")
-        print("Variables currently defined:")
-        for k in interface.varDict.keys():
-            print("   %-10s - %s" % (k, interface.varDict[k].help))
+        print(interface.variable_list())
 
     def do_trace(self, line):
         """The `trace` command controls/reads the controller's trace buffer.
@@ -361,10 +342,6 @@ trace current
             parser.add_argument("var", nargs="*")
             args = parser.parse_args(cl[1:])
 
-            if len(args.var) > controller_low.TRACE_VAR_CT:
-                print(f"Can't trace more than {controller_low.TRACE_VAR_CT} variables at once.")
-                return
-
             #TODO: check validity of all variables
 
             if args.period:
@@ -373,9 +350,7 @@ trace current
                 interface.trace_period_set(1)
 
             if args.var:
-                # Unset existing trace vars, so we only get what was asked for.
-                var_names = args.var + [""] * (controller_low.TRACE_VAR_CT - len(args.var))
-                interface.trace_select(var_names)
+                interface.trace_select(args.var)
 
             interface.trace_flush()
             interface.trace_start()

@@ -418,7 +418,6 @@ class ControllerDebugInterface:
 
             if rsp[0]:
                 raise Error("Error %d (0x%02x)" % (rsp[0], rsp[0]))
-                return []
             return rsp[1:-2]
 
     def ReSync(self):
@@ -439,6 +438,9 @@ class ControllerDebugInterface:
         return controller_types.Build32(dat)[0]
 
     def trace_select(self, var_names):
+        if len(var_names) > TRACE_VAR_CT:
+            raise Error(f"Can't trace more than {TRACE_VAR_CT} variables at once.")
+        var_names += [""] * (TRACE_VAR_CT - len(var_names))
         for (i, var_name) in enumerate(var_names):
             var_id = -1
             if var_name in self.varDict:
@@ -462,3 +464,19 @@ class ControllerDebugInterface:
 
     def eeprom_write(self, address, data):
         self.SendCmd(OP_EEPROM, [SUBCMD_EEPROM_WRITE] + controller_types.Split16(int(address, 0)) + data)
+
+    def variable_list(self):
+        ret = "Variables currently defined:\n"
+        for k in self.varDict.keys():
+            ret += "   %-10s - %s" % (k, self.varDict[k].help) + "\n"
+        return ret
+
+    def variables_starting_with(self, text):
+        out = []
+        for i in self.varDict.keys():
+            if i.startswith(text):
+                out.append(i)
+        return out
+
+    def mode_get(self):
+        return self.SendCmd(OP_MODE)[0]

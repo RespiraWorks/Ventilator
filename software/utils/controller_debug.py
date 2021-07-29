@@ -353,7 +353,7 @@ trace current
             return
 
         if cl[0] == "flush":
-            interface.SendCmd(controller_low.OP_TRACE, [controller_low.SUBCMD_TRACE_FLUSH])
+            interface.trace_start()
 
         elif cl[0] == "start":
             parser = CmdArgumentParser("trace start")
@@ -364,23 +364,21 @@ trace current
             if len(args.var) > controller_low.TRACE_VAR_CT:
                 print(f"Can't trace more than {controller_low.TRACE_VAR_CT} variables at once.")
                 return
+
+            #TODO: check validity of all variables
+
             if args.period:
-                period = controller_types.Split32(args.period)
-                interface.SendCmd(controller_low.OP_TRACE, [controller_low.SUBCMD_TRACE_SET_PERIOD] + period)
+                interface.trace_period_set(args.period)
             else:
-                interface.SendCmd(controller_low.OP_TRACE, [controller_low.SUBCMD_TRACE_SET_PERIOD] + controller_types.Split32(1))
+                interface.trace_period_set(1)
+
             if args.var:
                 # Unset existing trace vars, so we only get what was asked for.
                 var_names = args.var + [""] * (controller_low.TRACE_VAR_CT - len(args.var))
-                for (i, var_name) in enumerate(var_names):
-                    var_id = -1
-                    if var_name in interface.varDict:
-                        var_id = interface.varDict[var_name].id
-                    var = controller_types.Split16(var_id)
-                    interface.SendCmd(controller_low.OP_TRACE, [controller_low.SUBCMD_TRACE_SET_VARID, i] + var)
+                interface.trace_select(var_names)
 
-            interface.SendCmd(controller_low.OP_TRACE, [controller_low.SUBCMD_TRACE_FLUSH])
-            interface.SendCmd(controller_low.OP_TRACE, [controller_low.SUBCMD_TRACE_START])
+            interface.trace_flush()
+            interface.trace_start()
 
         elif cl[0] == "download":
             parser = CmdArgumentParser(prog="trace download")
@@ -410,12 +408,8 @@ trace current
             print("Traced variables:")
             for var in interface.TraceActiveVars():
                 print(" - %s" % var.name)
-            dat = interface.SendCmd(controller_low.OP_TRACE, [controller_low.SUBCMD_TRACE_GET_PERIOD])
-            period = controller_types.Build32(dat)[0]
-            print("Trace period: %i" % period)
-            dat = interface.SendCmd(controller_low.OP_TRACE, [controller_low.SUBCMD_TRACE_GET_NUM_SAMPLES])
-            samples = controller_types.Build32(dat)[0]
-            print("Samples in buffer: %i" % samples)
+            print("Trace period: %i" % interface.trace_period_get())
+            print("Samples in buffer: %i" % interface.trace_status())
 
         else:
             print("Unknown trace sub-command %s" % cl[0])
@@ -441,18 +435,12 @@ eeprom write <address> <data>
             if len(cl) < 3:
                 print("Error, please provide address and length.")
                 return
-            address = controller_types.Split16(int(cl[1], 0))
-            length = controller_types.Split16(int(cl[2], 0))
-            dat = interface.SendCmd(controller_low.OP_EEPROM, [controller_low.SUBCMD_EEPROM_READ] + address + length)
-            s = controller_types.FmtPeek(dat, "+XXXX", int(cl[1], 0))
-            print(s)
+            print(interface.eeprom_read(cl[1], cl[2]))
         elif cl[0] == "write":
             if len(cl) < 3:
                 print("Error, please provide address and at least 1 byte of data.")
                 return
-            address = controller_types.Split16(int(cl[1], 0))
-            data = list(map(int, cl[2:]))
-            interface.SendCmd(controller_low.OP_EEPROM, [controller_low.SUBCMD_EEPROM_WRITE] + address + data)
+            interface.eeprom_write(cl[1], list(map(int, cl[2:])))
         else:
             print("Error: Unknown subcommand %s" % cl[0])
             return

@@ -13,7 +13,7 @@ import threading
 import time
 import controller_types
 
-# TODO: Import the proto instead!
+# TODO: Import constants from proto instead!
 
 # Command codes.  See debug_types.h in the controller debug library
 OP_MODE = 0x00
@@ -427,3 +427,38 @@ class ControllerDebugInterface:
             self.ser.write(bytearray(cmd))
             time.sleep(0.1)
             self.ser.reset_input_buffer()
+
+    def trace_flush(self):
+        self.SendCmd(OP_TRACE, [SUBCMD_TRACE_FLUSH])
+
+    def trace_period_set(self, period):
+        self.SendCmd(OP_TRACE, [SUBCMD_TRACE_SET_PERIOD] + controller_types.Split32(period))
+
+    def trace_period_get(self):
+        dat = self.SendCmd(OP_TRACE, [SUBCMD_TRACE_GET_PERIOD])
+        return controller_types.Build32(dat)[0]
+
+    def trace_select(self, var_names):
+        for (i, var_name) in enumerate(var_names):
+            var_id = -1
+            if var_name in self.varDict:
+                var_id = self.varDict[var_name].id
+            var = controller_types.Split16(var_id)
+            self.SendCmd(OP_TRACE, [SUBCMD_TRACE_SET_VARID, i] + var)
+        self.SendCmd(OP_TRACE, [SUBCMD_TRACE_FLUSH])
+
+    def trace_start(self):
+        self.SendCmd(OP_TRACE, [SUBCMD_TRACE_START])
+
+    def trace_status(self):
+        dat = self.SendCmd(OP_TRACE, [SUBCMD_TRACE_GET_NUM_SAMPLES])
+        return controller_types.Build32(dat)[0]
+
+    def eeprom_read(self, address, length):
+        dat = self.SendCmd(OP_EEPROM, [SUBCMD_EEPROM_READ]
+                           + controller_types.Split16(int(address, 0))
+                           + controller_types.Split16(int(length, 0)))
+        return controller_types.FmtPeek(dat, "+XXXX", int(address, 0))
+
+    def eeprom_write(self, address, data):
+        self.SendCmd(OP_EEPROM, [SUBCMD_EEPROM_WRITE] + controller_types.Split16(int(address, 0)) + data)

@@ -1,0 +1,22 @@
+id       ,lung_compliance,lung_resistance,gui_bpm,gui_ie_ratio,gui_peep,gui_fio2,gui_tv,gui_mode,description
+iso_vc_1 ,50             ,5              ,20     ,0.5         ,5       ,30      ,500   ,mode_vc ,ISO 80601 volume control test scenario 201.104.1
+iso_vc_2 ,50             ,20             ,12     ,0.25        ,10      ,90      ,500   ,mode_vc ,ISO 80601 volume control test scenario 201.104.2
+iso_vc_3 ,20             ,5              ,20     ,0.5         ,5       ,90      ,500   ,mode_vc ,ISO 80601 volume control test scenario 201.104.3
+iso_vc_4 ,20             ,20             ,20     ,0.5         ,10      ,30      ,500   ,mode_vc ,ISO 80601 volume control test scenario 201.104.4
+iso_vc_5 ,20             ,20             ,20     ,0.5         ,5       ,30      ,300   ,mode_vc ,ISO 80601 volume control test scenario 201.104.5
+iso_vc_6 ,20             ,50             ,12     ,0.25        ,10      ,90      ,300   ,mode_vc ,ISO 80601 volume control test scenario 201.104.6
+iso_vc_7 ,10             ,50             ,20     ,0.5         ,10      ,30      ,300   ,mode_vc ,ISO 80601 volume control test scenario 201.104.7
+iso_vc_8 ,10             ,10             ,20     ,0.5         ,5       ,90      ,200   ,mode_vc ,ISO 80601 volume control test scenario 201.104.8
+iso_vc_9 ,3              ,10             ,30     ,0.429       ,5       ,30      ,50    ,mode_vc ,ISO 80601 volume control test scenario 201.104.9
+iso_vc_10,3              ,20             ,30     ,0.429       ,10      ,30      ,50    ,mode_vc ,ISO 80601 volume control test scenario 201.104.10
+iso_vc_11,3              ,50             ,20     ,0.25        ,5       ,60      ,50    ,mode_vc ,ISO 80601 volume control test scenario 201.104.11
+iso_vc_12,3              ,20             ,30     ,0.429       ,5       ,30      ,30    ,mode_vc ,ISO 80601 volume control test scenario 201.104.12
+iso_vc_13,3              ,50             ,20     ,0.25        ,10      ,90      ,30    ,mode_vc ,ISO 80601 volume control test scenario 201.104.13
+iso_vc_14,1              ,20             ,30     ,0.429       ,5       ,90      ,30    ,mode_vc ,ISO 80601 volume control test scenario 201.104.14
+iso_vc_15,1              ,100            ,30     ,0.429       ,10      ,30      ,30    ,mode_vc ,ISO 80601 volume control test scenario 201.104.15
+iso_vc_16,1              ,200            ,50     ,0.5         ,5       ,30      ,20    ,mode_vc ,ISO 80601 volume control test scenario 201.104.16
+iso_vc_17,1              ,200            ,50     ,0.5         ,10      ,60      ,15    ,mode_vc ,ISO 80601 volume control test scenario 201.104.17
+iso_vc_18,1              ,50             ,60     ,0.667       ,5       ,60      ,10    ,mode_vc ,ISO 80601 volume control test scenario 201.104.18
+iso_vc_19,0.5            ,50             ,60     ,0.667       ,10      ,60      ,5     ,mode_vc ,ISO 80601 volume control test scenario 201.104.19
+iso_vc_20,0.5            ,200            ,30     ,0.25        ,5       ,30      ,5     ,mode_vc ,ISO 80601 volume control test scenario 201.104.20
+iso_vc_21,0.5            ,200            ,60     ,0.667       ,10      ,30      ,5     ,mode_vc ,ISO 80601 volume control test scenario 201.104.21

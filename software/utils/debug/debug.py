@@ -376,7 +376,9 @@ class ControllerDebugInterface:
 
     #  timeout - How long (seconds) to wait for the response.  If
     #            not specified then a reasonable system default is used
-    def send_command(self, op, data=[], timeout=None):
+    def send_command(self, op, data=None, timeout=None):
+        if data is None:
+            data = []
         buff = [op] + data
 
         crc = debug_types.CRC16().calc(buff)
@@ -466,7 +468,7 @@ class ControllerDebugInterface:
     def variable_list(self):
         ret = "Variables currently defined:\n"
         for k in self.varDict.keys():
-            ret += "   %-10s - %s" % (k, self.varDict[k].print_help) + "\n"
+            ret += " {:25} - {}\n".format(k, self.varDict[k].help)
         return ret
 
     def variables_starting_with(self, text):

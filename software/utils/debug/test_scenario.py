@@ -4,6 +4,7 @@ import pandas  # pip install pandas
 from typing import Dict, Union
 import argparse
 
+# todo can we also have units and/or uncertainties defined for some variables
 
 class TestScenario:
     """A named list of debug variables and values."""
@@ -55,6 +56,7 @@ def from_csv(file_name, settable_variables):
         for k in intersect:
             ts.manual_variables.pop(k)
         ret[ts.name] = ts
+    # todo more checks, such as no duplicate labeled columns
     return ret
 
 

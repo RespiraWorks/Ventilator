@@ -97,6 +97,7 @@ class ControllerDebugInterface:
                 data = self.send_command(OP_VAR, [SUBCMD_VAR_INFO] + debug_types.int16s_to_bytes(vid))
                 variable = var_info.VarInfo(vid, data)
                 self.variables[variable.name] = variable
+        # todo maybe not wait for an exception to terminate this loop?
         except error.Error as e:
             pass
 
@@ -113,7 +114,7 @@ class ControllerDebugInterface:
                 out.append(i)
         return out
 
-    def variable_info(self, vid):
+    def variable_by_id(self, vid):
         for name in self.variables:
             if self.variables[name].name == vid:
                 return self.variables[name]
@@ -124,12 +125,7 @@ class ControllerDebugInterface:
             raise error.Error("Unknown variable %s" % name)
 
         variable = self.variables[name]
-        self.debug_print(f"setting variable name=[{variable.name}]  type=[{variable.type}] fmt=[{variable.fmt}] help=[{variable.help}]")
-
-        name_ints = debug_types.string_to_ints(variable.name)
-        self.debug_print(f"name as ints=[{name_ints}] size=[{len(name_ints)}]")
-        data = self.send_command(OP_VAR, [SUBCMD_VAR_GET]
-                                 + debug_types.int16s_to_bytes(name_ints))
+        data = self.send_command(OP_VAR, [SUBCMD_VAR_GET] + debug_types.int16s_to_bytes(variable.id))
         value = variable.from_bytes(data)
 
         if raw:
@@ -148,7 +144,7 @@ class ControllerDebugInterface:
         variable = self.variables[name]
         data = variable.to_bytes(value)
 
-        self.send_command(OP_VAR, [SUBCMD_VAR_SET] + debug_types.int16s_to_bytes(variable.name) + data)
+        self.send_command(OP_VAR, [SUBCMD_VAR_SET] + debug_types.int16s_to_bytes(variable.id) + data)
         return
 
     def tests_import_csv(self, file_name):
@@ -169,7 +165,9 @@ class ControllerDebugInterface:
         if name not in self.scenarios.keys():
             raise error.Error(f"No such test scenario: {name}")
         scenario = self.scenarios[name]
+        print(f"Applying test scenario: {scenario.short_description()}")
         for var, val in scenario.settable_variables.items():
+            print(f"  {var:25} = {val}")
             if var == "gui_mode":
                 if val == "mode_pc":
                     self.variable_set(var, 1)
@@ -294,7 +292,7 @@ class ControllerDebugInterface:
         for i in range(TRACE_VAR_CT):
             data = self.send_command(OP_TRACE, [SUBCMD_TRACE_GET_VARID, i])
             var_id = debug_types.bytes_to_int16s(data)[0]
-            var = self.variable_info(var_id)
+            var = self.variable_by_id(var_id)
             if var:
                 ret.append(var)
         return ret

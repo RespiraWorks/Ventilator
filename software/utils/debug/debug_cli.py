@@ -22,26 +22,8 @@ import subprocess
 import sys
 import textwrap
 import traceback
-
-
-class Colors:
-    ENDC = '\033[m'
-    GRAY = '\033[90m'
-    RED = '\033[91m'
-    GREEN = '\033[92m'
-    ORANGE = '\033[93m'
-    BLUE = '\033[94m'
-    PURPLE = '\033[95m'
-    YELLOW = '\033[96m'
-    WHITE = '\033[97m'
-
-
-class Error(Exception):
-    def __init__(self, value):
-        self.value = value
-
-    def __str__(self):
-        return str(self.value)
+import colors
+import error
 
 
 class ArgparseShowHelpError(Exception):
@@ -63,7 +45,7 @@ class CmdArgumentParser(argparse.ArgumentParser):
 
     def exit(self, status=0, message=None):
         if status:
-            raise Error(f"Encountered a parse error: {message}")
+            raise error.Error(f"Encountered a parse error: {message}")
         else:
             raise ArgparseShowHelpError()
 
@@ -84,9 +66,9 @@ class CmdLine(cmd.Cmd):
         if mode is None:
             mode = interface.mode_get()
         if mode == 1:
-            self.prompt = Colors.ORANGE + "BOOT] " + Colors.ENDC
+            self.prompt = colors.Colors.ORANGE + "BOOT] " + colors.Colors.ENDC
         else:
-            self.prompt = Colors.GREEN + "] " + Colors.ENDC
+            self.prompt = colors.Colors.GREEN + "] " + colors.Colors.ENDC
 
     def cli_loop(self):
         self.update_prompt()
@@ -97,7 +79,7 @@ class CmdLine(cmd.Cmd):
                 return cmd.Cmd.cmdloop(self)
             except ArgparseShowHelpError:
                 pass
-            except Error as e:
+            except error.Error as e:
                 print(e)
             except:
                 traceback.print_exc()
@@ -488,7 +470,7 @@ def trace_graph(raw_args: List[str]):
             var, n = s.split("*")
             scalings[var] = ("*", float(n))
         else:
-            raise Error(f"Invalid scaling parameter {s}")
+            raise error.Error(f"Invalid scaling parameter {s}")
 
     (base, _) = os.path.splitext(args.dest)
     graph_img_filename = base + ".png"
@@ -496,7 +478,7 @@ def trace_graph(raw_args: List[str]):
     trace_vars = interface.trace_active_variables_list()
     unrecognized_scale_vars = set(scalings.keys()) - set(v.name for v in trace_vars)
     if unrecognized_scale_vars:
-        raise Error(
+        raise error.Error(
             f"Can't scale by vars that aren't being traced: {unrecognized_scale_vars}"
         )
 
@@ -566,12 +548,12 @@ def detect_serial_port():
     )
     ports = [d["port"] for d in j if "STM32" in d.get("description", "")]
     if not ports:
-        raise Error(
+        raise error.Error(
             "Could not auto-detect serial port; platformio device list did not "
             "yield any STM32 devices.  Choose port explicitly with --port."
         )
     if len(ports) > 1:
-        raise Error(
+        raise error.Error(
             "Could not auto-detect serial port; platformio device list "
             f"yielded multiple STM32 devices: {', '.join(ports)}.  "
             "Choose port explicitly with --port."
@@ -580,7 +562,11 @@ def detect_serial_port():
     return ports[0]
 
 
-if __name__ == "__main__":
+interface: debug.ControllerDebugInterface
+interpreter: CmdLine
+
+
+def main():
     terminal_parser = argparse.ArgumentParser()
     terminal_parser.add_argument(
         "--port",
@@ -625,3 +611,7 @@ do it once upfront.""",
         # Turn on interactive mode for matplotlib, so show() doesn't block.
         plt.ion()
         interpreter.cli_loop()
+
+
+if __name__ == "__main__":
+    main()

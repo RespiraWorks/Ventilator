@@ -1,4 +1,5 @@
 import debug_types
+import error
 
 # TODO: Import constants from proto instead!
 
@@ -6,14 +7,6 @@ import debug_types
 VAR_INT32 = 1
 VAR_UINT32 = 2
 VAR_FLOAT = 3
-
-
-class Error(Exception):
-    def __init__(self, value):
-        self.value = value
-
-    def __str__(self):
-        return str(self.value)
 
 
 class VarInfo:
@@ -25,7 +18,7 @@ class VarInfo:
         self.id = id
 
         if len(dat) < 8:
-            raise Error("Invalid VarInfo data returned")
+            raise error.Error("Invalid VarInfo data returned")
 
         self.type = dat[0]
         name_length = dat[4]
@@ -33,7 +26,7 @@ class VarInfo:
         help_length = dat[6]
 
         if len(dat) < 8 + name_length + fmt_length + help_length:
-            raise Error("Invalid VarInfo data returned")
+            raise error.Error("Invalid VarInfo data returned")
 
         n = 8
         self.name = "".join([chr(x) for x in dat[n: n + name_length]])
@@ -61,7 +54,7 @@ class VarInfo:
         elif self.type == VAR_FLOAT:
             return debug_types.bytes_to_float32s(data)[0]
         else:
-            raise Error(f"Sorry, I don't know how to handle variable type {self.type}")
+            raise error.Error(f"Sorry, I don't know how to handle variable type {self.type}")
 
     def to_bytes(self, value):
         if self.type == VAR_INT32:
@@ -75,4 +68,4 @@ class VarInfo:
         elif self.type == VAR_FLOAT:
             return debug_types.float32s_to_bytes(float(value))
         else:
-            raise Error(f"Sorry, I don't know how to handle variable type {self.type}")
+            raise error.Error(f"Sorry, I don't know how to handle variable type {self.type}")

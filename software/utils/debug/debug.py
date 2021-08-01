@@ -13,6 +13,7 @@ import threading
 import time
 import debug_types
 import var_info
+import error
 
 # TODO: Import constants from proto instead!
 
@@ -47,14 +48,6 @@ SUBCMD_EEPROM_WRITE = 1
 TRACE_VAR_CT = 4
 
 
-class Error(Exception):
-    def __init__(self, value):
-        self.value = value
-
-    def __str__(self):
-        return str(self.value)
-
-
 class ControllerDebugInterface:
     # If true, the raw bytes of the serial data will be printed.
     # This is handy for debugging the low level serial interface
@@ -84,7 +77,7 @@ class ControllerDebugInterface:
                 data = self.send_command(OP_VAR, [SUBCMD_VAR_INFO] + debug_types.int16s_to_bytes(vid))
                 variable = var_info.VarInfo(vid, data)
                 self.variables[variable.name] = variable
-        except Error as e:
+        except error.Error as e:
             pass
 
     def get_variable_metadata(self, vid):
@@ -95,7 +88,7 @@ class ControllerDebugInterface:
 
     def get_variable(self, name, raw=False, fmt=None):
         if not (name in self.variables):
-            raise Error("Unknown variable %s" % name)
+            raise error.Error("Unknown variable %s" % name)
 
         variable = self.variables[name]
         data = self.send_command(OP_VAR, [SUBCMD_VAR_GET] + debug_types.int16s_to_bytes(variable.id))
@@ -112,7 +105,7 @@ class ControllerDebugInterface:
 
     def set_variable(self, name, value):
         if not (name in self.variables):
-            raise Error("Unknown variable %s" % name)
+            raise error.Error("Unknown variable %s" % name)
 
         variable = self.variables[name]
         data = variable.to_bytes(value)
@@ -339,17 +332,17 @@ class ControllerDebugInterface:
                 self.ser.timeout = old_timeout
 
             if len(rsp) < 3:
-                raise Error("Invalid response, too short")
+                raise error.Error("Invalid response, too short")
 
             crc = debug_types.CRC16().calc(rsp[:-2])
             rcrc = debug_types.bytes_to_int16s(rsp[-2:])[0]
             if crc != rcrc:
-                raise Error(
+                raise error.Error(
                     "CRC error on response, calculated 0x%04x received 0x%04x" % (crc, rcrc)
                 )
 
             if rsp[0]:
-                raise Error("Error %d (0x%02x)" % (rsp[0], rsp[0]))
+                raise error.Error("Error %d (0x%02x)" % (rsp[0], rsp[0]))
             return rsp[1:-2]
 
     def resynchronize(self):
@@ -371,7 +364,7 @@ class ControllerDebugInterface:
 
     def trace_select(self, var_names):
         if len(var_names) > TRACE_VAR_CT:
-            raise Error(f"Can't trace more than {TRACE_VAR_CT} variables at once.")
+            raise error.Error(f"Can't trace more than {TRACE_VAR_CT} variables at once.")
         var_names += [""] * (TRACE_VAR_CT - len(var_names))
         for (i, var_name) in enumerate(var_names):
             var_id = -1

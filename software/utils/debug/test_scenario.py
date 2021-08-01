@@ -1,27 +1,29 @@
 #!/usr/bin/env python3
 
 import pandas  # pip install pandas
-import dataclasses
 from typing import Dict, Union
 import argparse
 
 
-@dataclasses.dataclass
 class TestScenario:
     """A named list of debug variables and values."""
 
-    id:          str
+    name:        str
     description: str
-    variables:   Dict[str, Union[int, float, str]]
+    manual_variables: Dict[str, Union[int, float, str]] = {}
+    settable_variables: Dict[str, Union[int, float, str]] = {}
 
     def short_description(self):
-        return f"{self.id:15} \"{self.description}\""
+        return f"{self.name:15} \"{self.description}\""
 
-    def long_description(self):
-        return (
-                self.short_description() + "\n"
-                + "\n".join(f"  - {var:25} = {val}" for var, val in self.variables.items())
-        )
+    def long_description(self, list_settable=True):
+        ret = self.short_description()
+        ret += "\n  Manual variables\n"
+        ret += "\n".join(f"    {var:25} = {val}" for var, val in self.manual_variables.items())
+        if list_settable:
+            ret += "\n  Settable variables\n"
+            ret += "\n".join(f"    {var:25} = {val}" for var, val in self.settable_variables.items())
+        return ret
 
 
 def trim_all_columns(df):
@@ -32,7 +34,7 @@ def trim_all_columns(df):
     return df.applymap(trim_strings)
 
 
-def from_csv(file_name):
+def from_csv(file_name, settable_variables):
     df = pandas.read_csv(file_name)
     df.columns = df.columns.str.replace(' ', '')
     df = trim_all_columns(df)
@@ -44,11 +46,15 @@ def from_csv(file_name):
             raise Exception(f"Row does not contain id:\n{row}")
         if "description" not in row:
             raise Exception(f"Row does not contain description:\n{row}")
-        ts = TestScenario(row["id"], row["description"], row)
-        ts.variables.pop("id")
-        ts.variables.pop("description")
-        ret[ts.id] = ts
-
+        ts = TestScenario()
+        ts.manual_variables = row
+        ts.name = ts.manual_variables.pop("id")
+        ts.description = ts.manual_variables.pop("description")
+        intersect = set(ts.manual_variables.keys()).intersection(settable_variables)
+        ts.settable_variables = {k: ts.manual_variables[k] for k in intersect}
+        for k in intersect:
+            ts.manual_variables.pop(k)
+        ret[ts.name] = ts
     return ret
 
 

@@ -60,20 +60,24 @@ class CmdLine(cmd.Cmd):
     def __init__(self):
         super().__init__()
         self.scripts_directory = "scripts/"
-        interface.update_variable_info()
 
     def update_prompt(self, mode=None):
-        if mode is None:
-            mode = interface.mode_get()
-        if mode == 1:
-            self.prompt = colors.Colors.ORANGE + "BOOT] " + colors.Colors.ENDC
+        if not interface.connected():
+            self.prompt = colors.Colors.RED + "OFFLINE] " + colors.Colors.ENDC
         else:
-            self.prompt = colors.Colors.GREEN + "] " + colors.Colors.ENDC
+            if mode is None:
+                mode = interface.mode_get()
+            if mode == 1:
+                self.prompt = colors.Colors.ORANGE + "BOOT] " + colors.Colors.ENDC
+            else:
+                self.prompt = colors.Colors.GREEN + "] " + colors.Colors.ENDC
 
     def cli_loop(self):
+        if interface.connected():
+            interface.resynchronize()
+            interface.variables_update_info()
         self.update_prompt()
-        interface.resynchronize()
-        interface.update_variable_info()
+
         while True:
             try:
                 return cmd.Cmd.cmdloop(self)
@@ -87,7 +91,7 @@ class CmdLine(cmd.Cmd):
     def emptyline(self):
         interface.resynchronize()
         self.update_prompt()
-        interface.update_variable_info()
+        interface.variables_update_info()
 
     def do_debug(self, line):
         """Sets display of low level serial data on/off.
@@ -134,6 +138,28 @@ named {self.scripts_directory} will be searched for the python script.
             x[len(self.scripts_directory):]
             for x in glob.glob(self.scripts_directory + text + "*.py")
         ]
+
+    def do_test(self, line):
+        params = shlex.split(line)
+        if len(params) < 1:
+            print(colors.Colors.RED + "Not enough args for `test`\n" + colors.Colors.ENDC)
+            return
+
+        if params[0] == "load":
+            if len(params) < 2:
+                print(colors.Colors.RED + "Not enough args for `test load`\n" + colors.Colors.ENDC)
+                return
+            interface.tests_import_csv(params[1])
+        elif params[0] == "list":
+            interface.tests_list(bool(len(params) > 1
+                                      and (params[1] == "-v" or params[1] == "--verbose")))
+        elif params[0] == "run":
+            if len(params) < 2:
+                print(colors.Colors.RED + "Not enough args for `test run`\n" + colors.Colors.ENDC)
+                return
+            interface.test_run(params[1])
+        else:
+            print("Invalid test args: {}", params)
 
     def do_exec(self, line):
         """exec()'s a string.  Good luck!"""
@@ -233,21 +259,21 @@ ex: poke [type] <addr> <data>
         else:
             fmt = None
 
-        print(interface.get_variable(cl[0], fmt=fmt))
+        print(interface.variable_get(cl[0], fmt=fmt))
 
     def complete_get(self, text, line, begidx, endidx):
         return interface.variables_starting_with(text);
 
     def help_get(self):
         print("Read the value of a debug variable and display it\n")
-        print(interface.variable_list())
+        print(interface.variables_list())
 
     def do_set(self, line):
         cl = line.split()
         if len(cl) < 2:
             print("Please give the variable name and value")
             return
-        interface.set_variable(cl[0], cl[1])
+        interface.variable_set(cl[0], cl[1])
 
     def complete_set(self, text, line, begidx, endidx):
         return interface.variables_starting_with(text);
@@ -258,7 +284,7 @@ ex: poke [type] <addr> <data>
         print("access.  Then using the get/set commands you can read the")
         print("current state of that C++ location and modify it.\n")
         print("This command allows you to modify such a debug variable\n")
-        print(interface.variable_list())
+        print(interface.variables_list())
 
     def do_trace(self, line):
         """The `trace` command controls/reads the controller's trace buffer.
@@ -577,6 +603,8 @@ def main():
     terminal_parser.add_argument(
         "--command", "-c", type=str, help="Run the given command and exit."
     )
+    terminal_parser.add_argument("--offline", "-o", default=False, action='store_true',
+                                 help="Run interpreter without connecting to device")
     terminal_parser.add_argument(
         "--detect-port-and-quit",
         action="store_true",
@@ -588,7 +616,9 @@ do it once upfront.""",
 
     terminal_args = terminal_parser.parse_args()
 
-    if not terminal_args.port:
+    if terminal_args.offline:
+        print("Starting in offline mode")
+    elif not terminal_args.port:
         terminal_args.port = detect_serial_port()
 
     if terminal_args.detect_port_and_quit:

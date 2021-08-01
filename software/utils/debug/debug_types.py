@@ -110,6 +110,11 @@ def ints_to_bytes(int_list, size=4, le=True):
     return ret
 
 
+# Splits a string into a list of bytes
+def string_to_ints(x):
+    return [ord(c) for c in x]
+
+
 # Splits a list of 16-bit ints into a list of bytes
 def int16s_to_bytes(x, le=True):
     if isinstance(x, int):

@@ -14,6 +14,7 @@ import time
 import debug_types
 import var_info
 import error
+import test_scenario
 
 # TODO: Import constants from proto instead!
 
@@ -58,6 +59,8 @@ class ControllerDebugInterface:
 
     variables = {}
 
+    scenarios = {}
+
     # This lock is used to make the command interface thread safe.
     # The main debug program doesn't currently use threads, but scripts
     # run from it may and those scripts use these same functions to
@@ -68,9 +71,26 @@ class ControllerDebugInterface:
         self.ser = serial.Serial(port=port, baudrate=115200)
         self.ser.timeout = 0.8
 
+    def connected(self):
+        return self.ser.isOpen()
+
+    def debug_print(self, *args, **kwargs):
+        if self.showSerial:
+            print(*args, **kwargs)
+
+    def mode_get(self):
+        return self.send_command(OP_MODE)[0]
+
+    def resynchronize(self):
+        with self.cmdLock:
+            cmd = [debug_types.TERM, debug_types.TERM]
+            self.ser.write(bytearray(cmd))
+            time.sleep(0.1)
+            self.ser.reset_input_buffer()
+
     # Read info about all the supported variables and load
     # them in a map
-    def update_variable_info(self):
+    def variables_update_info(self):
         self.variables.clear()
         try:
             for vid in range(256):
@@ -80,18 +100,36 @@ class ControllerDebugInterface:
         except error.Error as e:
             pass
 
-    def get_variable_metadata(self, vid):
+    def variables_list(self):
+        ret = "Variables currently defined:\n"
+        for k in self.variables.keys():
+            ret += " {:25} - {}\n".format(k, self.variables[k].help)
+        return ret
+
+    def variables_starting_with(self, text):
+        out = []
+        for i in self.variables.keys():
+            if i.startswith(text):
+                out.append(i)
+        return out
+
+    def variable_info(self, vid):
         for name in self.variables:
-            if self.variables[name].id == vid:
+            if self.variables[name].name == vid:
                 return self.variables[name]
         return None
 
-    def get_variable(self, name, raw=False, fmt=None):
+    def variable_get(self, name, raw=False, fmt=None):
         if not (name in self.variables):
             raise error.Error("Unknown variable %s" % name)
 
         variable = self.variables[name]
-        data = self.send_command(OP_VAR, [SUBCMD_VAR_GET] + debug_types.int16s_to_bytes(variable.id))
+        self.debug_print(f"setting variable name=[{variable.name}]  type=[{variable.type}] fmt=[{variable.fmt}] help=[{variable.help}]")
+
+        name_ints = debug_types.string_to_ints(variable.name)
+        self.debug_print(f"name as ints=[{name_ints}] size=[{len(name_ints)}]")
+        data = self.send_command(OP_VAR, [SUBCMD_VAR_GET]
+                                 + debug_types.int16s_to_bytes(name_ints))
         value = variable.from_bytes(data)
 
         if raw:
@@ -103,82 +141,47 @@ class ControllerDebugInterface:
 
         return fmt % value
 
-    def set_variable(self, name, value):
+    def variable_set(self, name, value):
         if not (name in self.variables):
             raise error.Error("Unknown variable %s" % name)
 
         variable = self.variables[name]
         data = variable.to_bytes(value)
 
-        self.send_command(OP_VAR, [SUBCMD_VAR_SET] + debug_types.int16s_to_bytes(variable.id) + data)
+        self.send_command(OP_VAR, [SUBCMD_VAR_SET] + debug_types.int16s_to_bytes(variable.name) + data)
         return
 
-    def trace_active_variables_list(self):
-        """Return a list of active trace variables"""
-        ret = []
-        for i in range(TRACE_VAR_CT):
-            data = self.send_command(OP_TRACE, [SUBCMD_TRACE_GET_VARID, i])
-            var_id = debug_types.bytes_to_int16s(data)[0]
-            var = self.get_variable_metadata(var_id)
-            if var:
-                ret.append(var)
-        return ret
+    def tests_import_csv(self, file_name):
+        imported_scenarios = test_scenario.from_csv(file_name, self.variables.keys())
+        if bool(set(imported_scenarios.keys()) & set(self.scenarios.keys())):
+            raise error.Error("Cannot import test scenarios, id's clash with already loaded ones")
+        print("Imported {} new test scenarios".format(len(imported_scenarios.keys())))
+        self.scenarios = {**self.scenarios, **imported_scenarios}
 
-    def trace_download(self):
-        """Fetches a trace from the controller.
+    def tests_list(self, verbose=False):
+        for key in self.scenarios:
+            if verbose:
+                print(self.scenarios[key].long_description())
+            else:
+                print(self.scenarios[key].short_description())
 
-        Returns a list of N+1 lists where N is the number of active trace variables.
-        The first list gives the time in seconds of each sample relative to the
-        start of the trace, and the remaining N lists each holds the trace data
-        for one variable.
-        """
-        trace_vars = self.trace_active_variables_list()
-        if len(trace_vars) < 1:
-            return None
-
-        # get samples count
-        dat = self.send_command(OP_TRACE, [SUBCMD_TRACE_GET_NUM_SAMPLES])
-        ct = debug_types.bytes_to_int32s(dat)[0] * len(trace_vars)
-
-        data = []
-        while len(data) < 4 * ct:
-            dat = self.send_command(OP_TRACE, [SUBCMD_TRACE_GETDATA])
-            if len(dat) < 1:
-                break
-            data += dat
-
-        # Convert the bytes into an array of unsigned 32-bit values
-        data = debug_types.bytes_to_int32s(data)
-
-        # The data comes as a list of of samples, where each sample contains
-        # len(trace_vars) uint32s: [a1, b1, c1, a2, b2, c2, ...].  Parse this into
-        # sublists [[a1', a2', ...], [b1', b2', ...], [c1', c2', ...]], where each
-        # of the variables is converted to the correct type.
-        var_count = len(trace_vars)
-        ret = [[] for _ in range(var_count)]
-
-        # The `zip` expression groups data into sublists of var_count elems.  See the
-        # "grouper" recipe:
-        # https://docs.python.org/3/library/itertools.html#itertools-recipes
-        iters = [iter(data)] * var_count
-        for sample in zip(*iters):
-            for i, val in enumerate(sample):
-                ret[i].append(trace_vars[i].convert_int(val))
-
-        # get trace period
-        dat = self.send_command(OP_TRACE, [SUBCMD_TRACE_GET_PERIOD])
-        per = debug_types.bytes_to_int32s(dat)[0]
-        if per < 1:
-            per = 1
-
-        # Scale this by the loop period which is an integer in microseconds.
-        # I multiply by 1e-6 (i.e. 1/1,000,000) to convert it to seconds.
-        per *= self.get_variable("loop_period", raw=True) * 1e-6
-
-        timestamp = [x * per for x in range(len(ret[0]))]
-        ret.insert(0, timestamp)
-
-        return ret
+    def test_run(self, name):
+        if name not in self.scenarios.keys():
+            raise error.Error(f"No such test scenario: {name}")
+        scenario = self.scenarios[name]
+        for var, val in scenario.settable_variables.items():
+            if var == "gui_mode":
+                if val == "mode_pc":
+                    self.variable_set(var, 1)
+                elif val == "mode_pa":
+                    self.variable_set(var, 2)
+                else:
+                    print(f"WARNING: Do not know how to set gui_mode={val}")
+            else:
+                try:
+                    self.variable_set(var, val)
+                except:
+                    print(f"WARNING: failed to set {var}={val}({type(val)})")
 
     def peek(self, address, ct=1, fmt="+XXXX", fname=None, raw=False):
         address = debug_types.decode_address(address)
@@ -192,7 +195,8 @@ class ControllerDebugInterface:
 
         while ct:
             n = min(ct, 256)
-            data = self.send_command(OP_PEEK, debug_types.int32s_to_bytes(address_iterator) + debug_types.int16s_to_bytes(n))
+            data = self.send_command(OP_PEEK, debug_types.int32s_to_bytes(address_iterator)
+                                     + debug_types.int16s_to_bytes(n))
             out += data
             ct -= len(data)
             address_iterator += len(data)
@@ -255,6 +259,111 @@ class ControllerDebugInterface:
     def poke16(self, address, dat):
         self.poke(address, dat, "short")
 
+    def trace_flush(self):
+        self.send_command(OP_TRACE, [SUBCMD_TRACE_FLUSH])
+
+    def trace_period_set(self, period):
+        self.send_command(OP_TRACE, [SUBCMD_TRACE_SET_PERIOD] + debug_types.int32s_to_bytes(period))
+
+    def trace_period_get(self):
+        dat = self.send_command(OP_TRACE, [SUBCMD_TRACE_GET_PERIOD])
+        return debug_types.bytes_to_int32s(dat)[0]
+
+    def trace_select(self, var_names):
+        if len(var_names) > TRACE_VAR_CT:
+            raise error.Error(f"Can't trace more than {TRACE_VAR_CT} variables at once.")
+        var_names += [""] * (TRACE_VAR_CT - len(var_names))
+        for (i, var_name) in enumerate(var_names):
+            var_id = -1
+            if var_name in self.variables:
+                var_id = self.variables[var_name].name
+            var = debug_types.int16s_to_bytes(var_id)
+            self.send_command(OP_TRACE, [SUBCMD_TRACE_SET_VARID, i] + var)
+        self.send_command(OP_TRACE, [SUBCMD_TRACE_FLUSH])
+
+    def trace_start(self):
+        self.send_command(OP_TRACE, [SUBCMD_TRACE_START])
+
+    def trace_status(self):
+        dat = self.send_command(OP_TRACE, [SUBCMD_TRACE_GET_NUM_SAMPLES])
+        return debug_types.bytes_to_int32s(dat)[0]
+
+    def trace_active_variables_list(self):
+        """Return a list of active trace variables"""
+        ret = []
+        for i in range(TRACE_VAR_CT):
+            data = self.send_command(OP_TRACE, [SUBCMD_TRACE_GET_VARID, i])
+            var_id = debug_types.bytes_to_int16s(data)[0]
+            var = self.variable_info(var_id)
+            if var:
+                ret.append(var)
+        return ret
+
+    def trace_download(self):
+        """Fetches a trace from the controller.
+
+        Returns a list of N+1 lists where N is the number of active trace variables.
+        The first list gives the time in seconds of each sample relative to the
+        start of the trace, and the remaining N lists each holds the trace data
+        for one variable.
+        """
+        trace_vars = self.trace_active_variables_list()
+        if len(trace_vars) < 1:
+            return None
+
+        # get samples count
+        dat = self.send_command(OP_TRACE, [SUBCMD_TRACE_GET_NUM_SAMPLES])
+        ct = debug_types.bytes_to_int32s(dat)[0] * len(trace_vars)
+
+        data = []
+        while len(data) < 4 * ct:
+            dat = self.send_command(OP_TRACE, [SUBCMD_TRACE_GETDATA])
+            if len(dat) < 1:
+                break
+            data += dat
+
+        # Convert the bytes into an array of unsigned 32-bit values
+        data = debug_types.bytes_to_int32s(data)
+
+        # The data comes as a list of of samples, where each sample contains
+        # len(trace_vars) uint32s: [a1, b1, c1, a2, b2, c2, ...].  Parse this into
+        # sublists [[a1', a2', ...], [b1', b2', ...], [c1', c2', ...]], where each
+        # of the variables is converted to the correct type.
+        var_count = len(trace_vars)
+        ret = [[] for _ in range(var_count)]
+
+        # The `zip` expression groups data into sublists of var_count elems.  See the
+        # "grouper" recipe:
+        # https://docs.python.org/3/library/itertools.html#itertools-recipes
+        iters = [iter(data)] * var_count
+        for sample in zip(*iters):
+            for i, val in enumerate(sample):
+                ret[i].append(trace_vars[i].convert_int(val))
+
+        # get trace period
+        dat = self.send_command(OP_TRACE, [SUBCMD_TRACE_GET_PERIOD])
+        per = debug_types.bytes_to_int32s(dat)[0]
+        if per < 1:
+            per = 1
+
+        # Scale this by the loop period which is an integer in microseconds.
+        # I multiply by 1e-6 (i.e. 1/1,000,000) to convert it to seconds.
+        per *= self.variable_get("loop_period", raw=True) * 1e-6
+
+        timestamp = [x * per for x in range(len(ret[0]))]
+        ret.insert(0, timestamp)
+
+        return ret
+
+    def eeprom_read(self, address, length):
+        dat = self.send_command(OP_EEPROM, [SUBCMD_EEPROM_READ]
+                                + debug_types.int16s_to_bytes(int(address, 0))
+                                + debug_types.int16s_to_bytes(int(length, 0)))
+        return debug_types.format_peek(dat, "+XXXX", int(address, 0))
+
+    def eeprom_write(self, address, data):
+        self.send_command(OP_EEPROM, [SUBCMD_EEPROM_WRITE] + debug_types.int16s_to_bytes(int(address, 0)) + data)
+
     # Wait for a response from the controller to the last command
     # The binary format uses two special characters to frame a
     # command or response.  This function removes those characters
@@ -287,10 +396,6 @@ class ControllerDebugInterface:
                 return dat
             dat.append(x)
 
-    def debug_print(self, *args, **kwargs):
-        if self.showSerial:
-            print(*args, **kwargs)
-
     # This formats a binary command and sends it to the system.
     # It then waits for and returns a response.
     #
@@ -320,6 +425,9 @@ class ControllerDebugInterface:
             debug_string += "0x%02x " % b
         self.debug_print(debug_string)
 
+        if not self.ser.isOpen():
+            return
+
         with self.cmdLock:
             self.ser.write(bytearray(buff))
             if timeout is not None:
@@ -344,64 +452,3 @@ class ControllerDebugInterface:
             if rsp[0]:
                 raise error.Error("Error %d (0x%02x)" % (rsp[0], rsp[0]))
             return rsp[1:-2]
-
-    def resynchronize(self):
-        with self.cmdLock:
-            cmd = [debug_types.TERM, debug_types.TERM]
-            self.ser.write(bytearray(cmd))
-            time.sleep(0.1)
-            self.ser.reset_input_buffer()
-
-    def trace_flush(self):
-        self.send_command(OP_TRACE, [SUBCMD_TRACE_FLUSH])
-
-    def trace_period_set(self, period):
-        self.send_command(OP_TRACE, [SUBCMD_TRACE_SET_PERIOD] + debug_types.int32s_to_bytes(period))
-
-    def trace_period_get(self):
-        dat = self.send_command(OP_TRACE, [SUBCMD_TRACE_GET_PERIOD])
-        return debug_types.bytes_to_int32s(dat)[0]
-
-    def trace_select(self, var_names):
-        if len(var_names) > TRACE_VAR_CT:
-            raise error.Error(f"Can't trace more than {TRACE_VAR_CT} variables at once.")
-        var_names += [""] * (TRACE_VAR_CT - len(var_names))
-        for (i, var_name) in enumerate(var_names):
-            var_id = -1
-            if var_name in self.variables:
-                var_id = self.variables[var_name].id
-            var = debug_types.int16s_to_bytes(var_id)
-            self.send_command(OP_TRACE, [SUBCMD_TRACE_SET_VARID, i] + var)
-        self.send_command(OP_TRACE, [SUBCMD_TRACE_FLUSH])
-
-    def trace_start(self):
-        self.send_command(OP_TRACE, [SUBCMD_TRACE_START])
-
-    def trace_status(self):
-        dat = self.send_command(OP_TRACE, [SUBCMD_TRACE_GET_NUM_SAMPLES])
-        return debug_types.bytes_to_int32s(dat)[0]
-
-    def eeprom_read(self, address, length):
-        dat = self.send_command(OP_EEPROM, [SUBCMD_EEPROM_READ]
-                                + debug_types.int16s_to_bytes(int(address, 0))
-                                + debug_types.int16s_to_bytes(int(length, 0)))
-        return debug_types.format_peek(dat, "+XXXX", int(address, 0))
-
-    def eeprom_write(self, address, data):
-        self.send_command(OP_EEPROM, [SUBCMD_EEPROM_WRITE] + debug_types.int16s_to_bytes(int(address, 0)) + data)
-
-    def variable_list(self):
-        ret = "Variables currently defined:\n"
-        for k in self.variables.keys():
-            ret += " {:25} - {}\n".format(k, self.variables[k].help)
-        return ret
-
-    def variables_starting_with(self, text):
-        out = []
-        for i in self.variables.keys():
-            if i.startswith(text):
-                out.append(i)
-        return out
-
-    def mode_get(self):
-        return self.send_command(OP_MODE)[0]

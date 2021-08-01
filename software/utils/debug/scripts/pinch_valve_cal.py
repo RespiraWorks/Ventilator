@@ -12,8 +12,8 @@ import time
 
 def main():
     print("Shutting off fan and homing pinch valve")
-    interface.set_variable("forced_blower_power", 0.75)
-    interface.set_variable("forced_blower_valve_pos", 0)
+    interface.variable_set("forced_blower_power", 0.75)
+    interface.variable_set("forced_blower_valve_pos", 0)
 
     input("Hit enter when ready to continue")
     print()
@@ -23,7 +23,7 @@ def main():
     print(zero)
 
     print("Taking a reading fully open")
-    interface.set_variable("forced_blower_valve_pos", 1)
+    interface.variable_set("forced_blower_valve_pos", 1)
     time.sleep(0.3)
     full = get_trace_mean()
     print(full)
@@ -45,7 +45,7 @@ def main():
 
         while valve >= vinc:
             valve -= vinc
-            interface.set_variable("forced_blower_valve_pos", valve)
+            interface.variable_set("forced_blower_valve_pos", valve)
             time.sleep(0.2)
             m = get_trace_mean()
 
@@ -59,7 +59,7 @@ def main():
                 break
             prev = m
     results.insert(0, 0)
-    interface.set_variable("forced_blower_power", 0)
+    interface.variable_set("forced_blower_power", 0)
 
     for i in range(len(results)):
         print("%.4f" % results[i])

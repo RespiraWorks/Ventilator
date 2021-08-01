@@ -139,7 +139,7 @@ def main():
     print(textwrap.indent(preset.long_description(), "    "))
 
     for var, val in preset.vars.items():
-        interface.set_variable(var, val)
+        interface.variable_set(var, val)
 
     print(f"\nPreset {preset.name} successfully applied!")
 

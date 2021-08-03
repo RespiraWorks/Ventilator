@@ -157,7 +157,7 @@ named {self.scripts_directory} will be searched for the python script.
             if len(params) < 2:
                 print(colors.Colors.RED + "Not enough args for `test run`\n" + colors.Colors.ENDC)
                 return
-            interface.test_run(params[1])
+            interface.test_apply(params[1])
         else:
             print("Invalid test args: {}", params)
 

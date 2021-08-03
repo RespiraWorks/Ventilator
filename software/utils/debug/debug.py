@@ -161,7 +161,7 @@ class ControllerDebugInterface:
             else:
                 print(self.scenarios[key].short_description())
 
-    def test_run(self, name):
+    def test_apply(self, name):
         if name not in self.scenarios.keys():
             raise error.Error(f"No such test scenario: {name}")
         scenario = self.scenarios[name]
@@ -169,6 +169,7 @@ class ControllerDebugInterface:
         for var, val in scenario.settable_variables.items():
             print(f"  {var:25} = {val}")
             if var == "gui_mode":
+                # todo replace these with enums, preferably from proto
                 if val == "mode_pc":
                     self.variable_set(var, 1)
                 elif val == "mode_pa":

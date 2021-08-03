@@ -1,30 +1,59 @@
 #!/usr/bin/env python3
-
+import json
+from typing import Dict
 import pandas  # pip install pandas
-from typing import Dict, Union
+import copy
 import argparse
 
 # todo can we also have units and/or uncertainties defined for some variables
 
+
 class TestScenario:
     """A named list of debug variables and values."""
 
-    name:        str
-    description: str
-    manual_variables: Dict[str, Union[int, float, str]] = {}
-    settable_variables: Dict[str, Union[int, float, str]] = {}
+    name:        str = None
+    description: str = None
+    manual_variables: Dict = {}
+    settable_variables: Dict = {}
 
     def short_description(self):
         return f"{self.name:15} \"{self.description}\""
 
     def long_description(self, list_settable=True):
         ret = self.short_description()
-        ret += "\n  Manual variables\n"
-        ret += "\n".join(f"    {var:25} = {val}" for var, val in self.manual_variables.items())
-        if list_settable:
+        if len(self.manual_variables):
+            ret += "\n  Manual variables\n"
+            ret += "\n".join(f"    {var:25} = {val}" for var, val in self.manual_variables.items())
+        if list_settable and len(self.settable_variables):
             ret += "\n  Settable variables\n"
             ret += "\n".join(f"    {var:25} = {val}" for var, val in self.settable_variables.items())
         return ret
+
+    def as_dict(self):
+        return {'name': self.name, 'description': self.description,
+                'manual_variables': self.manual_variables,
+                'settable_variables': self.settable_variables}
+
+    def __iter__(self):
+        yield 'name', self.name
+        yield 'description', self.description
+        yield 'manual_variables', self.manual_variables
+        yield 'settable_variables', self.settable_variables
+
+
+def as_test_scenario(data):
+    ts = TestScenario()
+    ts.name = data.get('name', None)
+    ts.description = data.get('description', None)
+    ts.manual_variables = data.get('manual_variables', None)
+    ts.settable_variables = data.get('settable_variables', None)
+    return ts
+
+    # def to_json(self):
+    #     return json.dumps(self.manual_variables)
+    #
+    # def toJSON(self):
+    #     return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)
 
 
 def trim_all_columns(df):
@@ -42,20 +71,26 @@ def from_csv(file_name, settable_variables):
 
     ret = {}
     for index, row in df.iterrows():
-        # print(row)
+        print(row)
         if "id" not in row:
             raise Exception(f"Row does not contain id:\n{row}")
         if "description" not in row:
             raise Exception(f"Row does not contain description:\n{row}")
         ts = TestScenario()
-        ts.manual_variables = row
-        ts.name = ts.manual_variables.pop("id")
-        ts.description = ts.manual_variables.pop("description")
-        intersect = set(ts.manual_variables.keys()).intersection(settable_variables)
-        ts.settable_variables = {k: ts.manual_variables[k] for k in intersect}
-        for k in intersect:
-            ts.manual_variables.pop(k)
+        row_copy = copy.deepcopy(row)
+        ts.name = row_copy.pop("id")
+        ts.description = row_copy.pop("description")
+        for k in row_copy.keys():
+            if k in settable_variables:
+                ts.settable_variables[k] = copy.deepcopy(eval(repr(row_copy[k])))
+            else:
+                ts.manual_variables[k] = copy.deepcopy(eval(repr(row_copy[k])))
+        # intersect = set(ts.manual_variables.keys()).intersection(settable_variables)
+        # ts.settable_variables = {k: ts.manual_variables[k] for k in intersect}
+        # for k in intersect:
+        #     ts.manual_variables.pop(k)
         ret[ts.name] = ts
+        print(ret[ts.name].long_description())
     # todo more checks, such as no duplicate labeled columns
     return ret
 
@@ -65,6 +100,8 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("file", type=str,
                         help="csv file from which to load test scenario configuration")
+    # parser.add_argument("out_file", type=str,
+    #                     help="json file for saving")
 
     args = parser.parse_args()
 
@@ -72,10 +109,29 @@ def main():
         print(f"No file name provided {args.preset}")
         return
 
-    scenarios = from_csv(args.file)
+    scenarios = from_csv(args.file, {"gui_mode", "gui_pip", "gui_peep",
+                                     "gui_bpm", "gui_ie_ratio", "gui_fio2"})
 
     for key in scenarios:
-        print(scenarios[key].short_description())
+        print(scenarios[key].long_description())
+
+    # jsonpickle.set_encoder_options('simplejson', compactly=False, indent=4)
+
+    # for key in scenarios:
+    #     j = json.dumps(dict(scenarios[key]))
+    #     print(j)
+    #     jj = json.loads(j)
+    #     print(jj)
+    #     ts = as_test_scenario(jj)
+    #     print(ts.long_description())
+
+        # for key in scenarios:
+    #     print(scenarios[key].toJSON())
+
+    # if args.out_file:
+    #     with open(args.out_file, 'w') as json_file:
+    #         for key in scenarios:
+    #             json.dump(scenarios[key].to_json(), json_file)
 
 
 if __name__ == "__main__":

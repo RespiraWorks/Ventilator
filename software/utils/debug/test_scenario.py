@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 import json
-from typing import Dict
+from typing import Dict, List
 import pandas  # pip install pandas
-import csv
 import copy
 import argparse
 
@@ -14,8 +13,12 @@ class TestScenario:
 
     name:        str = None
     description: str = None
-    manual_variables: Dict = {}
-    settable_variables: Dict = {}
+    manual_variables: Dict
+    settable_variables: Dict
+
+    def __init__(self):
+        self.manual_variables = {}
+        self.settable_variables = {}
 
     def short_description(self):
         return f"{self.name:15} \"{self.description}\""
@@ -41,14 +44,14 @@ class TestScenario:
         yield 'manual_variables', self.manual_variables
         yield 'settable_variables', self.settable_variables
 
-
-def as_test_scenario(data):
-    ts = TestScenario()
-    ts.name = data.get('name', None)
-    ts.description = data.get('description', None)
-    ts.manual_variables = data.get('manual_variables', None)
-    ts.settable_variables = data.get('settable_variables', None)
-    return ts
+    @staticmethod
+    def from_dict(data):
+        ts = TestScenario()
+        ts.name = data.get('name', None)
+        ts.description = data.get('description', None)
+        ts.manual_variables = data.get('manual_variables', None)
+        ts.settable_variables = data.get('settable_variables', None)
+        return ts
 
     # def to_json(self):
     #     return json.dumps(self.manual_variables)
@@ -71,50 +74,24 @@ def from_csv(file_name, settable_variables):
     df = trim_all_columns(df)
 
     ret = {}
-
-    # with open(file_name, mode='r') as csv_file:
-    #     csv_reader = csv.DictReader(csv_file)
-    #     line_count = 0
-    #     for row in csv_reader:
-    #         print(f"row: {row}")
-    #         if line_count == 0:
-    #             continue
-    #         else:
-    #             if "id" not in row:
-    #                 raise Exception(f"Row does not contain id:\n{row}")
-    #             if "description" not in row:
-    #                 raise Exception(f"Row does not contain description:\n{row}")
-    #             ts = TestScenario()
-    #             row_copy = copy.deepcopy(row)
-    #             ts.name = row_copy.pop("id")
-    #             ts.description = row_copy.pop("description")
-    #             for k in row_copy.keys():
-    #                 if k in settable_variables:
-    #                     ts.settable_variables[k] = copy.deepcopy(eval(repr(row_copy[k])))
-    #                 else:
-    #                     ts.manual_variables[k] = copy.deepcopy(eval(repr(row_copy[k])))
-    #             ret[ts.name] = ts
-    #             print(ret[ts.name].long_description())
-    #         line_count += 1
-
-    for i in range(len(df.index)):
-        if i > 1:
+    for index, row in df.iterrows():
+        if index > 1:
             break
-        print(f"{i}: {df.iloc[i]}")
-        name = df["id"][i]
-        ret[name] = TestScenario()
-        ret[name].name = name
-        ret[name].description = df["description"][i]
-        for k in df.columns:
+        # print(row)
+        if "id" not in row:
+            raise Exception(f"Row does not contain id:\n{row}")
+        if "description" not in row:
+            raise Exception(f"Row does not contain description:\n{row}")
+        ts = TestScenario()
+        row_copy = copy.deepcopy(row)
+        ts.name = row_copy.pop("id")
+        ts.description = row_copy.pop("description")
+        for k in row_copy.keys():
             if k in settable_variables:
-                ret[name].settable_variables[k] = copy.deepcopy(eval(repr(df[k][i])))
+                ts.settable_variables[k] = row_copy[k]
             else:
-                ret[name].manual_variables[k] = copy.deepcopy(eval(repr(df[k][i])))
-        # intersect = set(ts.manual_variables.keys()).intersection(settable_variables)
-        # ts.settable_variables = {k: ts.manual_variables[k] for k in intersect}
-        # for k in intersect:
-        #     ts.manual_variables.pop(k)
-        print(ret[name].long_description())
+                ts.manual_variables[k] = row_copy[k]
+        ret[ts.name] = ts
     # todo more checks, such as no duplicate labeled columns
     return ret
 
@@ -124,8 +101,8 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("file", type=str,
                         help="csv file from which to load test scenario configuration")
-    # parser.add_argument("out_file", type=str,
-    #                     help="json file for saving")
+    parser.add_argument("out_file", type=str,
+                        help="json file for saving")
 
     args = parser.parse_args()
 
@@ -137,27 +114,22 @@ def main():
                                      "gui_bpm", "gui_ie_ratio", "gui_fio2"})
 
     for key in scenarios:
-        print(scenarios[key].long_description())
-        print(id(scenarios[key].manual_variables))
-        print(id(scenarios[key].settable_variables))
+        print(scenarios[key].short_description())
 
     # jsonpickle.set_encoder_options('simplejson', compactly=False, indent=4)
 
-    # for key in scenarios:
-    #     j = json.dumps(dict(scenarios[key]))
-    #     print(j)
-    #     jj = json.loads(j)
-    #     print(jj)
-    #     ts = as_test_scenario(jj)
-    #     print(ts.long_description())
+    for key in scenarios:
+        j = json.dumps(dict(scenarios[key]))
+        print(j)
+        ts = TestScenario.from_dict(json.loads(j))
+        print(ts.long_description())
 
-        # for key in scenarios:
-    #     print(scenarios[key].toJSON())
-
-    # if args.out_file:
-    #     with open(args.out_file, 'w') as json_file:
-    #         for key in scenarios:
-    #             json.dump(scenarios[key].to_json(), json_file)
+    if args.out_file:
+        tsl = []
+        for key in scenarios:
+            tsl.append(dict(scenarios[key]))
+        with open(args.out_file, 'w') as json_file:
+            json.dump(tsl, json_file)
 
 
 if __name__ == "__main__":

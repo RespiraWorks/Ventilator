@@ -202,6 +202,53 @@ class ControllerDebugInterface:
         print(f"Applying test scenario: {scenario.short_description()}")
         self.variables_set(scenario.ventilator_settings)
 
+    def test_run(self, name):
+        if name not in self.scenarios.keys():
+            raise error.Error(f"No such test scenario: {name}")
+        scenario = self.scenarios[name]
+
+        # Ensure the ventilator fan is on, and disconnect the fan from the system
+        # so it's not inflating the test lung.  Edwin's request is that the fan
+        # doesn't have to spin up during these tests.
+        self.variable_set("forced_exhale_valve_pos", 1)
+        self.variable_set("forced_blower_valve_pos", 0)
+        self.variable_set("forced_blower_power", 1)
+        self.variable_set("gui_mode", 0)
+
+        # Give the user a chance to adjust the test lung.
+        print(f"\nExecuting test scenario:\n {scenario.long_description(True)}")
+        input("\nAdjust manual settings per above, then press enter.\n")
+
+        # Apply all vent settings
+        self.variables_set(scenario.ventilator_settings)
+
+        # Unforce parameters we set above so they can be controlled by the
+        # controller.  Note that we unforce the blower power *after* setting the
+        # gui_mode because if we unforced it while we were still in mode 0
+        # (i.e. "ventilator off"), the fan would momentarily spin down.
+        self.variable_set("forced_exhale_valve_pos", -1)
+        self.variable_set("forced_blower_valve_pos", -1)
+        self.variable_set("forced_blower_power", -1)
+        time.sleep(scenario.capture_ignore_secs)
+
+        print("\nStarting data capture\n")
+        # todo parametrize this
+        # self.trace_period_set(1)
+        self.trace_select(["pc_setpoint","pressure","volume","net_flow"])
+
+        time.sleep(scenario.capture_duration_secs)
+
+        # self.trace_flush()
+        # self.trace_start()
+
+        print("\nFinished data capture\n")
+        # data = self.trace_download()
+
+        #time.sleep(scenario.capture_ignore_secs)
+        self.variable_set("gui_mode", 0)
+
+        # print("Results:\n{}".format(data))
+
     def peek(self, address, ct=1, fmt="+XXXX", fname=None, raw=False):
         address = debug_types.decode_address(address)
         if address is None:
@@ -295,10 +342,9 @@ class ControllerDebugInterface:
         for (i, var_name) in enumerate(var_names):
             var_id = -1
             if var_name in self.variables:
-                var_id = self.variables[var_name].name
+                var_id = self.variables[var_name].id
             var = debug_types.int16s_to_bytes(var_id)
             self.send_command(OP_TRACE, [SUBCMD_TRACE_SET_VARID, i] + var)
-        self.send_command(OP_TRACE, [SUBCMD_TRACE_FLUSH])
 
     def trace_start(self):
         self.send_command(OP_TRACE, [SUBCMD_TRACE_START])
@@ -314,7 +360,7 @@ class ControllerDebugInterface:
             data = self.send_command(OP_TRACE, [SUBCMD_TRACE_GET_VARID, i])
             var_id = debug_types.bytes_to_int16s(data)[0]
             var = self.variable_by_id(var_id)
-            if var:
+            if var is not None:
                 ret.append(var)
         return ret
 

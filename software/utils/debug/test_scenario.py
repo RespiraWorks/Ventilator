@@ -6,6 +6,7 @@ import pandas  # pip install pandas
 import copy
 import argparse
 from pathlib import Path
+import colors
 
 
 def trim_all_columns(df):
@@ -38,13 +39,15 @@ class TestScenario:
     def short_description(self):
         return f"{self.name:15} \"{self.description}\""
 
-    def long_description(self, manual_only=False):
+    def long_description(self, highlight_manual=False):
         ret = self.short_description()
         if len(self.manual_settings):
+            if highlight_manual:
+                ret +=  colors.Colors.ORANGE
             ret += "\n  Manual settings\n"
             ret += "\n".join(f"    {var:25} = {val}" for var, val in self.manual_settings.items())
-        if manual_only:
-            return ret
+            if highlight_manual:
+                ret += colors.Colors.ENDC
         if len(self.ventilator_settings):
             ret += "\n  Ventilator settings\n"
             ret += "\n".join(f"    {var:25} = {val}" for var, val in self.ventilator_settings.items())

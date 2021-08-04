@@ -62,6 +62,10 @@ class CmdLine(cmd.Cmd):
         self.scripts_directory = "scripts/"
         self.test_definitions_dir = "test_scenarios/"
 
+    def autoload(self):
+        for x in glob.glob(self.test_definitions_dir + "*.json"):
+            interface.tests_import(x)
+
     def update_prompt(self, mode=None):
         if not interface.connected():
             self.prompt = colors.Colors.RED + "OFFLINE] " + colors.Colors.ENDC
@@ -74,6 +78,7 @@ class CmdLine(cmd.Cmd):
                 self.prompt = colors.Colors.GREEN + "] " + colors.Colors.ENDC
 
     def cli_loop(self):
+        self.autoload()
         if interface.connected():
             interface.resynchronize()
             interface.variables_update_info()
@@ -157,11 +162,18 @@ named {self.scripts_directory} will be searched for the python script.
         elif params[0] == "list":
             interface.tests_list(bool(len(params) > 1
                                       and (params[1] == "-v" or params[1] == "--verbose")))
+        elif params[0] == "apply":
+            if len(params) < 2:
+                print(colors.Colors.RED + "Not enough args for `test apply`\n" + colors.Colors.ENDC)
+                return
+            interface.test_apply(params[1])
         elif params[0] == "run":
             if len(params) < 2:
                 print(colors.Colors.RED + "Not enough args for `test run`\n" + colors.Colors.ENDC)
                 return
-            interface.test_apply(params[1])
+            interface.test_run(params[1])
+        elif params[0] == "clear":
+            interface.scenarios.clear()
         else:
             print("Invalid test args: {}", params)
 

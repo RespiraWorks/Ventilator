@@ -2,6 +2,7 @@
 import json
 from typing import Dict
 import pandas  # pip install pandas
+import csv
 import copy
 import argparse
 
@@ -70,27 +71,50 @@ def from_csv(file_name, settable_variables):
     df = trim_all_columns(df)
 
     ret = {}
-    for index, row in df.iterrows():
-        print(row)
-        if "id" not in row:
-            raise Exception(f"Row does not contain id:\n{row}")
-        if "description" not in row:
-            raise Exception(f"Row does not contain description:\n{row}")
-        ts = TestScenario()
-        row_copy = copy.deepcopy(row)
-        ts.name = row_copy.pop("id")
-        ts.description = row_copy.pop("description")
-        for k in row_copy.keys():
+
+    # with open(file_name, mode='r') as csv_file:
+    #     csv_reader = csv.DictReader(csv_file)
+    #     line_count = 0
+    #     for row in csv_reader:
+    #         print(f"row: {row}")
+    #         if line_count == 0:
+    #             continue
+    #         else:
+    #             if "id" not in row:
+    #                 raise Exception(f"Row does not contain id:\n{row}")
+    #             if "description" not in row:
+    #                 raise Exception(f"Row does not contain description:\n{row}")
+    #             ts = TestScenario()
+    #             row_copy = copy.deepcopy(row)
+    #             ts.name = row_copy.pop("id")
+    #             ts.description = row_copy.pop("description")
+    #             for k in row_copy.keys():
+    #                 if k in settable_variables:
+    #                     ts.settable_variables[k] = copy.deepcopy(eval(repr(row_copy[k])))
+    #                 else:
+    #                     ts.manual_variables[k] = copy.deepcopy(eval(repr(row_copy[k])))
+    #             ret[ts.name] = ts
+    #             print(ret[ts.name].long_description())
+    #         line_count += 1
+
+    for i in range(len(df.index)):
+        if i > 1:
+            break
+        print(f"{i}: {df.iloc[i]}")
+        name = df["id"][i]
+        ret[name] = TestScenario()
+        ret[name].name = name
+        ret[name].description = df["description"][i]
+        for k in df.columns:
             if k in settable_variables:
-                ts.settable_variables[k] = copy.deepcopy(eval(repr(row_copy[k])))
+                ret[name].settable_variables[k] = copy.deepcopy(eval(repr(df[k][i])))
             else:
-                ts.manual_variables[k] = copy.deepcopy(eval(repr(row_copy[k])))
+                ret[name].manual_variables[k] = copy.deepcopy(eval(repr(df[k][i])))
         # intersect = set(ts.manual_variables.keys()).intersection(settable_variables)
         # ts.settable_variables = {k: ts.manual_variables[k] for k in intersect}
         # for k in intersect:
         #     ts.manual_variables.pop(k)
-        ret[ts.name] = ts
-        print(ret[ts.name].long_description())
+        print(ret[name].long_description())
     # todo more checks, such as no duplicate labeled columns
     return ret
 
@@ -114,6 +138,8 @@ def main():
 
     for key in scenarios:
         print(scenarios[key].long_description())
+        print(id(scenarios[key].manual_variables))
+        print(id(scenarios[key].settable_variables))
 
     # jsonpickle.set_encoder_options('simplejson', compactly=False, indent=4)
 

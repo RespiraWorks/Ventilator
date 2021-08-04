@@ -15,6 +15,8 @@ import debug_types
 import var_info
 import error
 import test_scenario
+from pathlib import Path
+
 
 # TODO: Import constants from proto instead!
 
@@ -120,6 +122,29 @@ class ControllerDebugInterface:
                 return self.variables[name]
         return None
 
+    def variables_set(self, pairs):
+        for var, val in pairs.items():
+            print(f"  applying {var:25} = {val}")
+            if var == "gui_mode":
+                # todo replace these with enums, preferably from proto
+                if val == "pressure_control":
+                    self.variable_set(var, 1)
+                elif val == "pressure_assist":
+                    self.variable_set(var, 2)
+                else:
+                    print(f"WARNING: Do not know how to set gui_mode={val}")
+            else:
+                try:
+                    self.variable_set(var, val)
+                except:
+                    print(f"WARNING: failed to set {var}={val}({type(val)})")
+
+    def variables_get_all(self):
+        ret = {}
+        for name in self.variables:
+            ret[name] = self.variable_get(name)
+        return ret
+
     def variable_get(self, name, raw=False, fmt=None):
         if not (name in self.variables):
             raise error.Error("Unknown variable %s" % name)
@@ -147,11 +172,20 @@ class ControllerDebugInterface:
         self.send_command(OP_VAR, [SUBCMD_VAR_SET] + debug_types.int16s_to_bytes(variable.id) + data)
         return
 
-    def tests_import_csv(self, file_name):
-        imported_scenarios = test_scenario.from_csv(file_name, self.variables.keys())
+    def tests_import(self, file_name):
+        in_file = Path(file_name)
+        if not in_file.is_file():
+            raise error.Error(f"Input file does not exist {file_name}")
+        elif in_file.suffix == ".csv":
+            imported_scenarios = test_scenario.TestScenario.from_csv(in_file, self.variables.keys())
+        elif in_file.suffix == ".json":
+            imported_scenarios = test_scenario.TestScenario.from_json(in_file)
+        else:
+            raise error.Error(f"Unknown file format `{in_file.suffix}`")
         if bool(set(imported_scenarios.keys()) & set(self.scenarios.keys())):
             raise error.Error("Cannot import test scenarios, id's clash with already loaded ones")
-        print("Imported {} new test scenarios".format(len(imported_scenarios.keys())))
+        print("Imported {} new test scenarios from {}".format(len(imported_scenarios.keys()),
+                                                              file_name))
         self.scenarios = {**self.scenarios, **imported_scenarios}
 
     def tests_list(self, verbose=False):
@@ -166,21 +200,7 @@ class ControllerDebugInterface:
             raise error.Error(f"No such test scenario: {name}")
         scenario = self.scenarios[name]
         print(f"Applying test scenario: {scenario.short_description()}")
-        for var, val in scenario.ventilator_settings.items():
-            print(f"  {var:25} = {val}")
-            if var == "gui_mode":
-                # todo replace these with enums, preferably from proto
-                if val == "mode_pc":
-                    self.variable_set(var, 1)
-                elif val == "mode_pa":
-                    self.variable_set(var, 2)
-                else:
-                    print(f"WARNING: Do not know how to set gui_mode={val}")
-            else:
-                try:
-                    self.variable_set(var, val)
-                except:
-                    print(f"WARNING: failed to set {var}={val}({type(val)})")
+        self.variables_set(scenario.ventilator_settings)
 
     def peek(self, address, ct=1, fmt="+XXXX", fname=None, raw=False):
         address = debug_types.decode_address(address)

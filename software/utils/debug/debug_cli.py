@@ -60,6 +60,7 @@ class CmdLine(cmd.Cmd):
     def __init__(self):
         super().__init__()
         self.scripts_directory = "scripts/"
+        self.test_definitions_dir = "test_scenarios/"
 
     def update_prompt(self, mode=None):
         if not interface.connected():
@@ -149,7 +150,10 @@ named {self.scripts_directory} will be searched for the python script.
             if len(params) < 2:
                 print(colors.Colors.RED + "Not enough args for `test load`\n" + colors.Colors.ENDC)
                 return
-            interface.tests_import_csv(params[1])
+            interface.tests_import(params[1])
+        elif params[0] == "autoload":
+            for x in glob.glob(self.test_definitions_dir + "*.json"):
+                interface.tests_import(x)
         elif params[0] == "list":
             interface.tests_list(bool(len(params) > 1
                                       and (params[1] == "-v" or params[1] == "--verbose")))
@@ -254,6 +258,12 @@ ex: poke [type] <addr> <data>
             print("Please give the variable name to read")
             return
 
+        if cl[0] == "all":
+            all_vars = interface.variables_get_all()
+            for name, val in all_vars.items():
+                print(f"{name:25} = {val}")
+            return
+
         if len(cl) > 1:
             fmt = cl[1]
         else:
@@ -262,7 +272,7 @@ ex: poke [type] <addr> <data>
         print(interface.variable_get(cl[0], fmt=fmt))
 
     def complete_get(self, text, line, begidx, endidx):
-        return interface.variables_starting_with(text);
+        return interface.variables_starting_with(text)
 
     def help_get(self):
         print("Read the value of a debug variable and display it\n")

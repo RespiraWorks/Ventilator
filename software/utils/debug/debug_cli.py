@@ -350,7 +350,7 @@ trace current
             parser.add_argument("var", nargs="*")
             args = parser.parse_args(cl[1:])
 
-            #TODO: check validity of all variables
+            # TODO: check validity of all variables
 
             if args.period:
                 interface.trace_period_set(args.period)
@@ -434,8 +434,8 @@ def git_rev_info():
     try:
         rev = (
             subprocess.check_output(["git", "rev-parse", "--short", "HEAD"])
-            .decode("utf-8")
-            .strip()
+                .decode("utf-8")
+                .strip()
         )
         is_dirty = len(subprocess.check_output(["git", "status", "-s"])) > 0
         return f"{rev} ({'dirty' if is_dirty else 'clean'})"
@@ -464,8 +464,8 @@ def trace_graph(raw_args: List[str]):
         default="last_graph.dat",
         metavar="FILE",
         help="Filename to save trace data to.  The rendered graph will be "
-        "saved to this destination with the extension (if present) replaced "
-        "by '.png'.",
+             "saved to this destination with the extension (if present) replaced "
+             "by '.png'.",
     )
     parser.add_argument(
         "--title", default=None, metavar="TITLE", help="Graph title",
@@ -482,7 +482,7 @@ def trace_graph(raw_args: List[str]):
         action="append",
         metavar="FIELD / SCLAE or FIELD * SCALE",
         help="Scale a var by the given amount, e.g. "
-        "--scale=volume/100 or --scale=pressure*10",
+             "--scale=volume/100 or --scale=pressure*10",
     )
 
     args = parser.parse_args(raw_args)
@@ -594,25 +594,18 @@ interpreter: CmdLine
 
 def main():
     terminal_parser = argparse.ArgumentParser()
-    terminal_parser.add_argument(
-        "--port",
-        type=str,
-        help="Serial port device is connected to, e.g. /dev/ttyACM0.  If "
-        "unspecified, we try to auto-detect the port.",
-    )
-    terminal_parser.add_argument(
-        "--command", "-c", type=str, help="Run the given command and exit."
-    )
+    terminal_parser.add_argument("--port", type=str,
+                                 help="Serial port device is connected to, e.g. /dev/ttyACM0."
+                                      " If unspecified, we try to auto-detect the port.")
+    terminal_parser.add_argument("--command", "-c", type=str,
+                                 help="Run the given command and exit.")
     terminal_parser.add_argument("--offline", "-o", default=False, action='store_true',
                                  help="Run interpreter without connecting to device")
-    terminal_parser.add_argument(
-        "--detect-port-and-quit",
-        action="store_true",
-        help="""Detect the port that the device is connected to and then
+    terminal_parser.add_argument("--detect-port-and-quit", action="store_true",
+                                 help="""Detect the port that the device is connected to and then
 immediately exit.  This is useful for scripts that invoke this program multiple
 times.  Port detection is the slowest part of startup, so this option lets you
-do it once upfront.""",
-    )
+do it once upfront.""")
 
     terminal_args = terminal_parser.parse_args()
 

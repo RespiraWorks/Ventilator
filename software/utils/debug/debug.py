@@ -166,7 +166,7 @@ class ControllerDebugInterface:
             raise error.Error(f"No such test scenario: {name}")
         scenario = self.scenarios[name]
         print(f"Applying test scenario: {scenario.short_description()}")
-        for var, val in scenario.settable_variables.items():
+        for var, val in scenario.ventilator_settings.items():
             print(f"  {var:25} = {val}")
             if var == "gui_mode":
                 # todo replace these with enums, preferably from proto

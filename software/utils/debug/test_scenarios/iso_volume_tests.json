@@ -1,0 +1,401 @@
+[
+    {
+        "name": "iso_vc_1",
+        "description": "ISO 80601 volume control test scenario 201.104.1",
+        "manual_settings": {
+            "lung_compliance": 50.0,
+            "lung_resistance": 5
+        },
+        "ventilator_settings": {
+            "gui_bpm": 20,
+            "gui_ie_ratio": 0.5,
+            "gui_peep": 5,
+            "gui_fio2": 30,
+            "gui_tv": 500,
+            "gui_mode": "volume_control"
+        },
+        "capture_duration_secs": 25,
+        "capture_ignore_secs": 2,
+        "test_criteria": {}
+    },
+    {
+        "name": "iso_vc_2",
+        "description": "ISO 80601 volume control test scenario 201.104.2",
+        "manual_settings": {
+            "lung_compliance": 50.0,
+            "lung_resistance": 20
+        },
+        "ventilator_settings": {
+            "gui_bpm": 12,
+            "gui_ie_ratio": 0.25,
+            "gui_peep": 10,
+            "gui_fio2": 90,
+            "gui_tv": 500,
+            "gui_mode": "volume_control"
+        },
+        "capture_duration_secs": 25,
+        "capture_ignore_secs": 2,
+        "test_criteria": {}
+    },
+    {
+        "name": "iso_vc_3",
+        "description": "ISO 80601 volume control test scenario 201.104.3",
+        "manual_settings": {
+            "lung_compliance": 20.0,
+            "lung_resistance": 5
+        },
+        "ventilator_settings": {
+            "gui_bpm": 20,
+            "gui_ie_ratio": 0.5,
+            "gui_peep": 5,
+            "gui_fio2": 90,
+            "gui_tv": 500,
+            "gui_mode": "volume_control"
+        },
+        "capture_duration_secs": 25,
+        "capture_ignore_secs": 2,
+        "test_criteria": {}
+    },
+    {
+        "name": "iso_vc_4",
+        "description": "ISO 80601 volume control test scenario 201.104.4",
+        "manual_settings": {
+            "lung_compliance": 20.0,
+            "lung_resistance": 20
+        },
+        "ventilator_settings": {
+            "gui_bpm": 20,
+            "gui_ie_ratio": 0.5,
+            "gui_peep": 10,
+            "gui_fio2": 30,
+            "gui_tv": 500,
+            "gui_mode": "volume_control"
+        },
+        "capture_duration_secs": 25,
+        "capture_ignore_secs": 2,
+        "test_criteria": {}
+    },
+    {
+        "name": "iso_vc_5",
+        "description": "ISO 80601 volume control test scenario 201.104.5",
+        "manual_settings": {
+            "lung_compliance": 20.0,
+            "lung_resistance": 20
+        },
+        "ventilator_settings": {
+            "gui_bpm": 20,
+            "gui_ie_ratio": 0.5,
+            "gui_peep": 5,
+            "gui_fio2": 30,
+            "gui_tv": 300,
+            "gui_mode": "volume_control"
+        },
+        "capture_duration_secs": 25,
+        "capture_ignore_secs": 2,
+        "test_criteria": {}
+    },
+    {
+        "name": "iso_vc_6",
+        "description": "ISO 80601 volume control test scenario 201.104.6",
+        "manual_settings": {
+            "lung_compliance": 20.0,
+            "lung_resistance": 50
+        },
+        "ventilator_settings": {
+            "gui_bpm": 12,
+            "gui_ie_ratio": 0.25,
+            "gui_peep": 10,
+            "gui_fio2": 90,
+            "gui_tv": 300,
+            "gui_mode": "volume_control"
+        },
+        "capture_duration_secs": 25,
+        "capture_ignore_secs": 2,
+        "test_criteria": {}
+    },
+    {
+        "name": "iso_vc_7",
+        "description": "ISO 80601 volume control test scenario 201.104.7",
+        "manual_settings": {
+            "lung_compliance": 10.0,
+            "lung_resistance": 50
+        },
+        "ventilator_settings": {
+            "gui_bpm": 20,
+            "gui_ie_ratio": 0.5,
+            "gui_peep": 10,
+            "gui_fio2": 30,
+            "gui_tv": 300,
+            "gui_mode": "volume_control"
+        },
+        "capture_duration_secs": 25,
+        "capture_ignore_secs": 2,
+        "test_criteria": {}
+    },
+    {
+        "name": "iso_vc_8",
+        "description": "ISO 80601 volume control test scenario 201.104.8",
+        "manual_settings": {
+            "lung_compliance": 10.0,
+            "lung_resistance": 10
+        },
+        "ventilator_settings": {
+            "gui_bpm": 20,
+            "gui_ie_ratio": 0.5,
+            "gui_peep": 5,
+            "gui_fio2": 90,
+            "gui_tv": 200,
+            "gui_mode": "volume_control"
+        },
+        "capture_duration_secs": 25,
+        "capture_ignore_secs": 2,
+        "test_criteria": {}
+    },
+    {
+        "name": "iso_vc_9",
+        "description": "ISO 80601 volume control test scenario 201.104.9",
+        "manual_settings": {
+            "lung_compliance": 3.0,
+            "lung_resistance": 10
+        },
+        "ventilator_settings": {
+            "gui_bpm": 30,
+            "gui_ie_ratio": 0.429,
+            "gui_peep": 5,
+            "gui_fio2": 30,
+            "gui_tv": 50,
+            "gui_mode": "volume_control"
+        },
+        "capture_duration_secs": 25,
+        "capture_ignore_secs": 2,
+        "test_criteria": {}
+    },
+    {
+        "name": "iso_vc_10",
+        "description": "ISO 80601 volume control test scenario 201.104.10",
+        "manual_settings": {
+            "lung_compliance": 3.0,
+            "lung_resistance": 20
+        },
+        "ventilator_settings": {
+            "gui_bpm": 30,
+            "gui_ie_ratio": 0.429,
+            "gui_peep": 10,
+            "gui_fio2": 30,
+            "gui_tv": 50,
+            "gui_mode": "volume_control"
+        },
+        "capture_duration_secs": 25,
+        "capture_ignore_secs": 2,
+        "test_criteria": {}
+    },
+    {
+        "name": "iso_vc_11",
+        "description": "ISO 80601 volume control test scenario 201.104.11",
+        "manual_settings": {
+            "lung_compliance": 3.0,
+            "lung_resistance": 50
+        },
+        "ventilator_settings": {
+            "gui_bpm": 20,
+            "gui_ie_ratio": 0.25,
+            "gui_peep": 5,
+            "gui_fio2": 60,
+            "gui_tv": 50,
+            "gui_mode": "volume_control"
+        },
+        "capture_duration_secs": 25,
+        "capture_ignore_secs": 2,
+        "test_criteria": {}
+    },
+    {
+        "name": "iso_vc_12",
+        "description": "ISO 80601 volume control test scenario 201.104.12",
+        "manual_settings": {
+            "lung_compliance": 3.0,
+            "lung_resistance": 20
+        },
+        "ventilator_settings": {
+            "gui_bpm": 30,
+            "gui_ie_ratio": 0.429,
+            "gui_peep": 5,
+            "gui_fio2": 30,
+            "gui_tv": 30,
+            "gui_mode": "volume_control"
+        },
+        "capture_duration_secs": 25,
+        "capture_ignore_secs": 2,
+        "test_criteria": {}
+    },
+    {
+        "name": "iso_vc_13",
+        "description": "ISO 80601 volume control test scenario 201.104.13",
+        "manual_settings": {
+            "lung_compliance": 3.0,
+            "lung_resistance": 50
+        },
+        "ventilator_settings": {
+            "gui_bpm": 20,
+            "gui_ie_ratio": 0.25,
+            "gui_peep": 10,
+            "gui_fio2": 90,
+            "gui_tv": 30,
+            "gui_mode": "volume_control"
+        },
+        "capture_duration_secs": 25,
+        "capture_ignore_secs": 2,
+        "test_criteria": {}
+    },
+    {
+        "name": "iso_vc_14",
+        "description": "ISO 80601 volume control test scenario 201.104.14",
+        "manual_settings": {
+            "lung_compliance": 1.0,
+            "lung_resistance": 20
+        },
+        "ventilator_settings": {
+            "gui_bpm": 30,
+            "gui_ie_ratio": 0.429,
+            "gui_peep": 5,
+            "gui_fio2": 90,
+            "gui_tv": 30,
+            "gui_mode": "volume_control"
+        },
+        "capture_duration_secs": 25,
+        "capture_ignore_secs": 2,
+        "test_criteria": {}
+    },
+    {
+        "name": "iso_vc_15",
+        "description": "ISO 80601 volume control test scenario 201.104.15",
+        "manual_settings": {
+            "lung_compliance": 1.0,
+            "lung_resistance": 100
+        },
+        "ventilator_settings": {
+            "gui_bpm": 30,
+            "gui_ie_ratio": 0.429,
+            "gui_peep": 10,
+            "gui_fio2": 30,
+            "gui_tv": 30,
+            "gui_mode": "volume_control"
+        },
+        "capture_duration_secs": 25,
+        "capture_ignore_secs": 2,
+        "test_criteria": {}
+    },
+    {
+        "name": "iso_vc_16",
+        "description": "ISO 80601 volume control test scenario 201.104.16",
+        "manual_settings": {
+            "lung_compliance": 1.0,
+            "lung_resistance": 200
+        },
+        "ventilator_settings": {
+            "gui_bpm": 50,
+            "gui_ie_ratio": 0.5,
+            "gui_peep": 5,
+            "gui_fio2": 30,
+            "gui_tv": 20,
+            "gui_mode": "volume_control"
+        },
+        "capture_duration_secs": 25,
+        "capture_ignore_secs": 2,
+        "test_criteria": {}
+    },
+    {
+        "name": "iso_vc_17",
+        "description": "ISO 80601 volume control test scenario 201.104.17",
+        "manual_settings": {
+            "lung_compliance": 1.0,
+            "lung_resistance": 200
+        },
+        "ventilator_settings": {
+            "gui_bpm": 50,
+            "gui_ie_ratio": 0.5,
+            "gui_peep": 10,
+            "gui_fio2": 60,
+            "gui_tv": 15,
+            "gui_mode": "volume_control"
+        },
+        "capture_duration_secs": 25,
+        "capture_ignore_secs": 2,
+        "test_criteria": {}
+    },
+    {
+        "name": "iso_vc_18",
+        "description": "ISO 80601 volume control test scenario 201.104.18",
+        "manual_settings": {
+            "lung_compliance": 1.0,
+            "lung_resistance": 50
+        },
+        "ventilator_settings": {
+            "gui_bpm": 60,
+            "gui_ie_ratio": 0.667,
+            "gui_peep": 5,
+            "gui_fio2": 60,
+            "gui_tv": 10,
+            "gui_mode": "volume_control"
+        },
+        "capture_duration_secs": 25,
+        "capture_ignore_secs": 2,
+        "test_criteria": {}
+    },
+    {
+        "name": "iso_vc_19",
+        "description": "ISO 80601 volume control test scenario 201.104.19",
+        "manual_settings": {
+            "lung_compliance": 0.5,
+            "lung_resistance": 50
+        },
+        "ventilator_settings": {
+            "gui_bpm": 60,
+            "gui_ie_ratio": 0.667,
+            "gui_peep": 10,
+            "gui_fio2": 60,
+            "gui_tv": 5,
+            "gui_mode": "volume_control"
+        },
+        "capture_duration_secs": 25,
+        "capture_ignore_secs": 2,
+        "test_criteria": {}
+    },
+    {
+        "name": "iso_vc_20",
+        "description": "ISO 80601 volume control test scenario 201.104.20",
+        "manual_settings": {
+            "lung_compliance": 0.5,
+            "lung_resistance": 200
+        },
+        "ventilator_settings": {
+            "gui_bpm": 30,
+            "gui_ie_ratio": 0.25,
+            "gui_peep": 5,
+            "gui_fio2": 30,
+            "gui_tv": 5,
+            "gui_mode": "volume_control"
+        },
+        "capture_duration_secs": 25,
+        "capture_ignore_secs": 2,
+        "test_criteria": {}
+    },
+    {
+        "name": "iso_vc_21",
+        "description": "ISO 80601 volume control test scenario 201.104.21",
+        "manual_settings": {
+            "lung_compliance": 0.5,
+            "lung_resistance": 200
+        },
+        "ventilator_settings": {
+            "gui_bpm": 60,
+            "gui_ie_ratio": 0.667,
+            "gui_peep": 10,
+            "gui_fio2": 30,
+            "gui_tv": 5,
+            "gui_mode": "volume_control"
+        },
+        "capture_duration_secs": 25,
+        "capture_ignore_secs": 2,
+        "test_criteria": {}
+    }
+]

@@ -15,6 +15,7 @@ import debug_types
 import var_info
 import error
 import test_scenario
+import test_data
 from pathlib import Path
 
 
@@ -122,6 +123,25 @@ class ControllerDebugInterface:
                 return self.variables[name]
         return None
 
+    def variables_force_open(self):
+        # Ensure the ventilator fan is on, and disconnect the fan from the system
+        # so it's not inflating the test lung.  Edwin's request is that the fan
+        # doesn't have to spin up during these tests.
+        self.variable_set("forced_exhale_valve_pos", 1)
+        self.variable_set("forced_blower_valve_pos", 0)
+        self.variable_set("forced_blower_power", 1)
+        # todo force o2 psol open or closed?
+
+    def variables_force_off(self):
+        # Unforce parameters we so they can be controlled by the
+        # controller.  Note that you should unforce the blower power *after* setting the
+        # gui_mode because if we unforced it while we were still in mode 0
+        # (i.e. "ventilator off"), the fan would momentarily spin down.
+        self.variable_set("forced_exhale_valve_pos", -1)
+        self.variable_set("forced_blower_valve_pos", -1)
+        self.variable_set("forced_blower_power", -1)
+        # todo unforce o2 psol?
+
     def variables_set(self, pairs):
         for var, val in pairs.items():
             print(f"  applying {var:25} = {val}")
@@ -205,50 +225,49 @@ class ControllerDebugInterface:
     def test_run(self, name):
         if name not in self.scenarios.keys():
             raise error.Error(f"No such test scenario: {name}")
-        scenario = self.scenarios[name]
 
-        # Ensure the ventilator fan is on, and disconnect the fan from the system
-        # so it's not inflating the test lung.  Edwin's request is that the fan
-        # doesn't have to spin up during these tests.
-        self.variable_set("forced_exhale_valve_pos", 1)
-        self.variable_set("forced_blower_valve_pos", 0)
-        self.variable_set("forced_blower_power", 1)
+        test = test_data.TestData(self.scenarios[name])
+
+        # todo: confirm continue if git dirty?
+
+        self.variables_force_open()
         self.variable_set("gui_mode", 0)
 
         # Give the user a chance to adjust the test lung.
-        print(f"\nExecuting test scenario:\n {scenario.long_description(True)}")
+        print(f"\nExecuting test scenario:\n {test.scenario.long_description(True)}")
 
-        if len(scenario.manual_settings):
+        if len(test.scenario.manual_settings):
             input("\nAdjust manual settings per above, then press enter.\n")
 
         # Apply all vent settings
         print("\n")
-        self.variables_set(scenario.ventilator_settings)
+        self.variables_set(test.scenario.ventilator_settings)
 
-        # Unforce parameters we set above so they can be controlled by the
-        # controller.  Note that we unforce the blower power *after* setting the
-        # gui_mode because if we unforced it while we were still in mode 0
-        # (i.e. "ventilator off"), the fan would momentarily spin down.
-        self.variable_set("forced_exhale_valve_pos", -1)
-        self.variable_set("forced_blower_valve_pos", -1)
-        self.variable_set("forced_blower_power", -1)
+        self.variables_force_off()
+        # todo parametrize these
         self.trace_set_period(1)
         self.trace_select(["pc_setpoint", "pressure", "volume", "net_flow"])
-        time.sleep(scenario.capture_ignore_secs)
+        time.sleep(test.scenario.capture_ignore_secs)
 
-        print(f"\nStarting data capture for {scenario.capture_duration_secs}")
-        # todo parametrize these
+        print(f"\nStarting data capture for {test.scenario.capture_duration_secs}")
         self.trace_flush()
         self.trace_start()
-        time.sleep(scenario.capture_duration_secs)
+        time.sleep(test.scenario.capture_duration_secs)
 
-        print("\nFinished data capture")
+        print("\nRetrieving data and halting ventilation")
+
+        # get data and halt ventilation
+        test.traces = self.trace_download()
+        # todo should not be needed if included in scenario
+        trace_variables = self.trace_active_variables_list()
+        self.variable_set("gui_mode", 0)
+        self.trace_stop()
+
+        test.ventilator_settings = self.variables_get_all()
 
         print("\nResults:")
-        print(self.trace_print_data())
+        print(test)
 
-        #time.sleep(scenario.capture_ignore_secs)
-        self.variable_set("gui_mode", 0)
 
     def peek(self, address, ct=1, fmt="+XXXX", fname=None, raw=False):
         address = debug_types.decode_address(address)
@@ -359,6 +378,10 @@ class ControllerDebugInterface:
     def trace_start(self):
         self.send_command(OP_TRACE, [SUBCMD_TRACE_START])
 
+    def trace_stop(self):
+        self.trace_select([])
+        self.trace_flush()
+
     def trace_num_samples(self):
         dat = self.send_command(OP_TRACE, [SUBCMD_TRACE_GET_NUM_SAMPLES])
         return debug_types.bytes_to_int32s(dat)[0]
@@ -423,9 +446,9 @@ class ControllerDebugInterface:
 
         return ret
 
-    def trace_print_data(self, separator=" ", line_separator="\n"):
-        trace_data = self.trace_download()
-        trace_variables = self.trace_active_variables_list()
+    @staticmethod
+    def trace_print_data(trace_data, trace_variables,
+                         separator=" ", line_separator="\n"):
 
         line = ["{:>15}".format("time(sec)")]
         for v in trace_variables:

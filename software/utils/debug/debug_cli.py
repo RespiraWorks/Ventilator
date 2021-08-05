@@ -385,6 +385,9 @@ trace status
             interface.trace_flush()
             interface.trace_start()
 
+        elif cl[0] == "stop":
+            interface.trace_stop()
+
         elif cl[0] == "download":
             parser = CmdArgumentParser(prog="trace download")
             parser.add_argument("--separator", type=str, default="  ",
@@ -393,7 +396,10 @@ trace status
                                 help="filename to save the trace to")
             args = parser.parse_args(cl[1:])
 
-            printed_trace_data = interface.trace_print_data(separator=args.separator)
+            traces = interface.trace_download()
+            variables = interface.trace_active_variables_list()
+
+            printed_trace_data = interface.trace_print_data(traces, variables, separator=args.separator)
 
             if args.dest:
                 trace_save_data(printed_trace_data, fname=args.dest)
@@ -569,6 +575,7 @@ def trace_save_data(printed_trace_data, fname, title=""):
     with open(fname, "w") as fp:
         fp.write(textwrap.indent(trace_metadata_string(title), "# "))
         fp.write(printed_trace_data)
+
 
 def detect_serial_port():
     j = json.loads(

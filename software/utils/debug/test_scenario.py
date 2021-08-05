@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
-import json
-from typing import Dict, List
+from typing import Dict
 import pandas  # pip install pandas
+import json
 import copy
 import argparse
 from pathlib import Path
@@ -28,6 +28,8 @@ class TestScenario:
     test_criteria:       Dict
     capture_duration_secs: int
     capture_ignore_secs:   int
+    # todo: trace period
+    # todo: trace variable names
 
     def __init__(self):
         self.manual_settings = {}

@@ -141,19 +141,25 @@ named {self.scripts_directory} will be searched for the python script.
 
     def complete_run(self, text, line, begidx, endidx):
         return glob.glob(text + "*.py") + [
-            x[len(self.scripts_directory):]
+            x[len(self.scripts_directory) :]
             for x in glob.glob(self.scripts_directory + text + "*.py")
         ]
 
     def do_test(self, line):
         params = shlex.split(line)
         if len(params) < 1:
-            print(colors.Colors.RED + "Not enough args for `test`\n" + colors.Colors.ENDC)
+            print(
+                colors.Colors.RED + "Not enough args for `test`\n" + colors.Colors.ENDC
+            )
             return
 
         if params[0] == "load":
             if len(params) < 2:
-                print(colors.Colors.RED + "Not enough args for `test load`\n" + colors.Colors.ENDC)
+                print(
+                    colors.Colors.RED
+                    + "Not enough args for `test load`\n"
+                    + colors.Colors.ENDC
+                )
                 return
             interface.tests_import(params[1])
         elif params[0] == "autoload":
@@ -162,24 +168,44 @@ named {self.scripts_directory} will be searched for the python script.
         elif params[0] == "clear":
             interface.scenarios.clear()
         elif params[0] == "list":
-            verbose = len(params) > 1 and (params[1] == "-v" or params[1] == "--verbose")
+            verbose = len(params) > 1 and (
+                params[1] == "-v" or params[1] == "--verbose"
+            )
             interface.tests_list(verbose)
         elif params[0] == "show":
             if len(params) < 2:
-                print(colors.Colors.RED + "Not enough args for `test show`\n" + colors.Colors.ENDC)
+                print(
+                    colors.Colors.RED
+                    + "Not enough args for `test show`\n"
+                    + colors.Colors.ENDC
+                )
             if params[1] not in interface.scenarios.keys():
-                print(colors.Colors.RED + f"Test `{params[1]}` does not exist\n" + colors.Colors.ENDC)
+                print(
+                    colors.Colors.RED
+                    + f"Test `{params[1]}` does not exist\n"
+                    + colors.Colors.ENDC
+                )
             print(interface.scenarios[params[1]].long_description())
         elif params[0] == "apply":
             if len(params) < 2:
-                print(colors.Colors.RED + "Not enough args for `test apply`\n" + colors.Colors.ENDC)
+                print(
+                    colors.Colors.RED
+                    + "Not enough args for `test apply`\n"
+                    + colors.Colors.ENDC
+                )
                 return
             interface.test_apply(params[1])
         elif params[0] == "run":
             if len(params) < 2:
-                print(colors.Colors.RED + "Not enough args for `test run`\n" + colors.Colors.ENDC)
+                print(
+                    colors.Colors.RED
+                    + "Not enough args for `test run`\n"
+                    + colors.Colors.ENDC
+                )
                 return
-            no_save = len(params) > 2 and (params[2] == "--no_save" or params[2] == "-n")
+            no_save = len(params) > 2 and (
+                params[2] == "--no_save" or params[2] == "-n"
+            )
             interface.test_run(params[1], not no_save)
         else:
             print("Invalid test args: {}", params)
@@ -305,7 +331,7 @@ ex: poke [type] <addr> <data>
         interface.variable_set(cl[0], cl[1])
 
     def complete_set(self, text, line, begidx, endidx):
-        return interface.variables_starting_with(text);
+        return interface.variables_starting_with(text)
 
     def help_set(self):
         print("You can very easily add debug variables to the C++ code.")
@@ -337,11 +363,13 @@ trace start [--period p] [var1 ... ]
   controller's high-priority loop.  If you don't specify a period, we use 1.
 
 trace graph [--dest=<filename>] [--title=<title>] [--nointeractive]
-            [--scale=<field>/scale --scale=<field>*scale]
+            [--scale=<field>/scale --scale=<field>*scale] [--separator=<str>]
   Downloads the data and displays it graphically.
 
   The plain-text graph data and the rendered figure are saved to your local
   machine as last_graph.dat/png; --dest configures this.
+  The dat file uses a few spaces to separate each data, or str provided through
+  the --separator=<str> option.
 
   --scale lets you multiply or divide a field by a given scaling factor.  This
   makes it feasible to fit values with different magnitudes on the same Y axis.
@@ -397,16 +425,20 @@ trace status
 
         elif cl[0] == "download":
             parser = CmdArgumentParser(prog="trace download")
-            parser.add_argument("--separator", type=str, default="  ",
-                                help="field separator in file")
-            parser.add_argument("--dest",  type=str,
-                                help="filename to save the trace to")
+            parser.add_argument(
+                "--separator", type=str, default="  ", help="field separator in file"
+            )
+            parser.add_argument(
+                "--dest", type=str, help="filename to save the trace to"
+            )
             args = parser.parse_args(cl[1:])
 
             traces = interface.trace_download()
             variables = interface.trace_active_variables_list()
 
-            printed_trace_data = interface.trace_print_data(traces, variables, separator=args.separator)
+            printed_trace_data = interface.trace_print_data(
+                traces, variables, separator=args.separator
+            )
 
             if args.dest:
                 trace_save_data(printed_trace_data, fname=args.dest)
@@ -463,8 +495,8 @@ def git_rev_info():
     try:
         rev = (
             subprocess.check_output(["git", "rev-parse", "--short", "HEAD"])
-                .decode("utf-8")
-                .strip()
+            .decode("utf-8")
+            .strip()
         )
         is_dirty = len(subprocess.check_output(["git", "status", "-s"])) > 0
         return f"{rev} ({'dirty' if is_dirty else 'clean'})"
@@ -490,11 +522,11 @@ def trace_graph(raw_args: List[str]):
     parser = CmdArgumentParser("trace graph")
     parser.add_argument(
         "--dest",
-        default="last_graph.dat",
+        default="last_graph",
         metavar="FILE",
         help="Filename to save trace data to.  The rendered graph will be "
-             "saved to this destination with the extension (if present) replaced "
-             "by '.png'.",
+        "saved to this destination with the extension (if present) replaced "
+        "by '.png'.",
     )
     parser.add_argument(
         "--title", default=None, metavar="TITLE", help="Graph title",
@@ -509,9 +541,12 @@ def trace_graph(raw_args: List[str]):
         "--scale",
         default=[],
         action="append",
-        metavar="FIELD / SCLAE or FIELD * SCALE",
+        metavar="FIELD / SCALE or FIELD * SCALE",
         help="Scale a var by the given amount, e.g. "
-             "--scale=volume/100 or --scale=pressure*10",
+        "--scale=volume/100 or --scale=pressure*10",
+    )
+    parser.add_argument(
+        "--separator", type=str, default="  ", help="field separator in csv file"
     )
 
     args = parser.parse_args(raw_args)
@@ -538,7 +573,10 @@ def trace_graph(raw_args: List[str]):
         )
 
     dat = interface.trace_download()
-    trace_save_data(dat, args.dest, title=args.title)
+    printed_trace_data = interface.trace_print_data(
+        dat, trace_vars, separator=args.separator
+    )
+    trace_save_data(printed_trace_data, args.dest + ".dat", title=args.title)
 
     timestamps_sec = dat[0]
     dat = dat[1:]
@@ -576,6 +614,8 @@ def trace_graph(raw_args: List[str]):
 
     if not args.nointeractive:
         plt.show()
+    else:
+        plt.close()
 
 
 def trace_save_data(printed_trace_data, fname, title=""):
@@ -610,18 +650,30 @@ interpreter: CmdLine
 
 def main():
     terminal_parser = argparse.ArgumentParser()
-    terminal_parser.add_argument("--port", type=str,
-                                 help="Serial port device is connected to, e.g. /dev/ttyACM0."
-                                      " If unspecified, we try to auto-detect the port.")
-    terminal_parser.add_argument("--command", "-c", type=str,
-                                 help="Run the given command and exit.")
-    terminal_parser.add_argument("--offline", "-o", default=False, action='store_true',
-                                 help="Run interpreter without connecting to device")
-    terminal_parser.add_argument("--detect-port-and-quit", action="store_true",
-                                 help="""Detect the port that the device is connected to and then
+    terminal_parser.add_argument(
+        "--port",
+        type=str,
+        help="Serial port device is connected to, e.g. /dev/ttyACM0."
+        " If unspecified, we try to auto-detect the port.",
+    )
+    terminal_parser.add_argument(
+        "--command", "-c", type=str, help="Run the given command and exit."
+    )
+    terminal_parser.add_argument(
+        "--offline",
+        "-o",
+        default=False,
+        action="store_true",
+        help="Run interpreter without connecting to device",
+    )
+    terminal_parser.add_argument(
+        "--detect-port-and-quit",
+        action="store_true",
+        help="""Detect the port that the device is connected to and then
 immediately exit.  This is useful for scripts that invoke this program multiple
 times.  Port detection is the slowest part of startup, so this option lets you
-do it once upfront.""")
+do it once upfront.""",
+    )
 
     terminal_args = terminal_parser.parse_args()
 

@@ -16,6 +16,13 @@
         },
         "capture_duration_secs": 25,
         "capture_ignore_secs": 2,
+        "trace_period": 1,
+        "trace_variable_names": [
+            "pc_setpoint",
+            "pressure",
+            "volume",
+            "net_flow"
+        ],
         "test_criteria": {}
     },
     {
@@ -35,6 +42,13 @@
         },
         "capture_duration_secs": 25,
         "capture_ignore_secs": 2,
+        "trace_period": 1,
+        "trace_variable_names": [
+            "pc_setpoint",
+            "pressure",
+            "volume",
+            "net_flow"
+        ],
         "test_criteria": {}
     },
     {
@@ -54,6 +68,13 @@
         },
         "capture_duration_secs": 25,
         "capture_ignore_secs": 2,
+        "trace_period": 1,
+        "trace_variable_names": [
+            "pc_setpoint",
+            "pressure",
+            "volume",
+            "net_flow"
+        ],
         "test_criteria": {}
     },
     {
@@ -73,6 +94,13 @@
         },
         "capture_duration_secs": 25,
         "capture_ignore_secs": 2,
+        "trace_period": 1,
+        "trace_variable_names": [
+            "pc_setpoint",
+            "pressure",
+            "volume",
+            "net_flow"
+        ],
         "test_criteria": {}
     },
     {
@@ -92,6 +120,13 @@
         },
         "capture_duration_secs": 25,
         "capture_ignore_secs": 2,
+        "trace_period": 1,
+        "trace_variable_names": [
+            "pc_setpoint",
+            "pressure",
+            "volume",
+            "net_flow"
+        ],
         "test_criteria": {}
     },
     {
@@ -111,6 +146,13 @@
         },
         "capture_duration_secs": 25,
         "capture_ignore_secs": 2,
+        "trace_period": 1,
+        "trace_variable_names": [
+            "pc_setpoint",
+            "pressure",
+            "volume",
+            "net_flow"
+        ],
         "test_criteria": {}
     },
     {
@@ -130,6 +172,13 @@
         },
         "capture_duration_secs": 25,
         "capture_ignore_secs": 2,
+        "trace_period": 1,
+        "trace_variable_names": [
+            "pc_setpoint",
+            "pressure",
+            "volume",
+            "net_flow"
+        ],
         "test_criteria": {}
     },
     {
@@ -149,6 +198,13 @@
         },
         "capture_duration_secs": 25,
         "capture_ignore_secs": 2,
+        "trace_period": 1,
+        "trace_variable_names": [
+            "pc_setpoint",
+            "pressure",
+            "volume",
+            "net_flow"
+        ],
         "test_criteria": {}
     },
     {
@@ -168,6 +224,13 @@
         },
         "capture_duration_secs": 25,
         "capture_ignore_secs": 2,
+        "trace_period": 1,
+        "trace_variable_names": [
+            "pc_setpoint",
+            "pressure",
+            "volume",
+            "net_flow"
+        ],
         "test_criteria": {}
     },
     {
@@ -187,6 +250,13 @@
         },
         "capture_duration_secs": 25,
         "capture_ignore_secs": 2,
+        "trace_period": 1,
+        "trace_variable_names": [
+            "pc_setpoint",
+            "pressure",
+            "volume",
+            "net_flow"
+        ],
         "test_criteria": {}
     },
     {
@@ -206,6 +276,13 @@
         },
         "capture_duration_secs": 25,
         "capture_ignore_secs": 2,
+        "trace_period": 1,
+        "trace_variable_names": [
+            "pc_setpoint",
+            "pressure",
+            "volume",
+            "net_flow"
+        ],
         "test_criteria": {}
     },
     {
@@ -225,6 +302,13 @@
         },
         "capture_duration_secs": 25,
         "capture_ignore_secs": 2,
+        "trace_period": 1,
+        "trace_variable_names": [
+            "pc_setpoint",
+            "pressure",
+            "volume",
+            "net_flow"
+        ],
         "test_criteria": {}
     },
     {
@@ -244,6 +328,13 @@
         },
         "capture_duration_secs": 25,
         "capture_ignore_secs": 2,
+        "trace_period": 1,
+        "trace_variable_names": [
+            "pc_setpoint",
+            "pressure",
+            "volume",
+            "net_flow"
+        ],
         "test_criteria": {}
     },
     {
@@ -263,6 +354,13 @@
         },
         "capture_duration_secs": 25,
         "capture_ignore_secs": 2,
+        "trace_period": 1,
+        "trace_variable_names": [
+            "pc_setpoint",
+            "pressure",
+            "volume",
+            "net_flow"
+        ],
         "test_criteria": {}
     },
     {
@@ -282,6 +380,13 @@
         },
         "capture_duration_secs": 25,
         "capture_ignore_secs": 2,
+        "trace_period": 1,
+        "trace_variable_names": [
+            "pc_setpoint",
+            "pressure",
+            "volume",
+            "net_flow"
+        ],
         "test_criteria": {}
     },
     {
@@ -301,6 +406,13 @@
         },
         "capture_duration_secs": 25,
         "capture_ignore_secs": 2,
+        "trace_period": 1,
+        "trace_variable_names": [
+            "pc_setpoint",
+            "pressure",
+            "volume",
+            "net_flow"
+        ],
         "test_criteria": {}
     },
     {
@@ -320,6 +432,13 @@
         },
         "capture_duration_secs": 25,
         "capture_ignore_secs": 2,
+        "trace_period": 1,
+        "trace_variable_names": [
+            "pc_setpoint",
+            "pressure",
+            "volume",
+            "net_flow"
+        ],
         "test_criteria": {}
     },
     {
@@ -339,6 +458,13 @@
         },
         "capture_duration_secs": 25,
         "capture_ignore_secs": 2,
+        "trace_period": 1,
+        "trace_variable_names": [
+            "pc_setpoint",
+            "pressure",
+            "volume",
+            "net_flow"
+        ],
         "test_criteria": {}
     },
     {
@@ -358,6 +484,13 @@
         },
         "capture_duration_secs": 25,
         "capture_ignore_secs": 2,
+        "trace_period": 1,
+        "trace_variable_names": [
+            "pc_setpoint",
+            "pressure",
+            "volume",
+            "net_flow"
+        ],
         "test_criteria": {}
     },
     {
@@ -377,6 +510,13 @@
         },
         "capture_duration_secs": 25,
         "capture_ignore_secs": 2,
+        "trace_period": 1,
+        "trace_variable_names": [
+            "pc_setpoint",
+            "pressure",
+            "volume",
+            "net_flow"
+        ],
         "test_criteria": {}
     },
     {
@@ -396,6 +536,13 @@
         },
         "capture_duration_secs": 25,
         "capture_ignore_secs": 2,
+        "trace_period": 1,
+        "trace_variable_names": [
+            "pc_setpoint",
+            "pressure",
+            "volume",
+            "net_flow"
+        ],
         "test_criteria": {}
     }
 ]

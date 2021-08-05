@@ -50,6 +50,21 @@ class TestData:
             ret += f"Test data contains [{cols}][{rows}] data points"
         return ret
 
+    def print_trace(self, separator=" ", line_separator="\n"):
+        line = ["{:>15}".format("time(sec)")]
+        for v in self.scenario.trace_variable_names:
+            line.append(f"{v:>15}")
+        ret = separator.join(line) + line_separator
+
+        for i in range(len(self.traces[0])):
+            # First column is time in seconds
+            line = [f"{self.traces[0][i]:>15.3f}"]
+            for j in range(len(self.scenario.trace_variable_names)):
+                line.append("{:>15.3f}".format(self.traces[j + 1][i]))
+            ret += separator.join(line) + line_separator
+
+        return ret
+
     def as_dict(self):
         return {'platform_uname': self.platform_uname}
 

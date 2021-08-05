@@ -13,6 +13,13 @@
         },
         "capture_duration_secs": 2,
         "capture_ignore_secs": 5,
+        "trace_period": 1,
+        "trace_variable_names": [
+            "pc_setpoint",
+            "pressure",
+            "volume",
+            "net_flow"
+        ],
         "test_criteria": {}
     }
 ]

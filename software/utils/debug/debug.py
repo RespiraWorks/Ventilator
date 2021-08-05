@@ -244,9 +244,8 @@ class ControllerDebugInterface:
         self.variables_set(test.scenario.ventilator_settings)
 
         self.variables_force_off()
-        # todo parametrize these
-        self.trace_set_period(1)
-        self.trace_select(["pc_setpoint", "pressure", "volume", "net_flow"])
+        self.trace_set_period(test.scenario.trace_period)
+        self.trace_select(test.scenario.trace_variable_names)
         time.sleep(test.scenario.capture_ignore_secs)
 
         print(f"\nStarting data capture for {test.scenario.capture_duration_secs}")
@@ -258,8 +257,6 @@ class ControllerDebugInterface:
 
         # get data and halt ventilation
         test.traces = self.trace_download()
-        # todo should not be needed if included in scenario
-        trace_variables = self.trace_active_variables_list()
         self.variable_set("gui_mode", 0)
         self.trace_stop()
 
@@ -267,6 +264,7 @@ class ControllerDebugInterface:
 
         print("\nResults:")
         print(test)
+        print(test.print_trace())
 
 
     def peek(self, address, ct=1, fmt="+XXXX", fname=None, raw=False):

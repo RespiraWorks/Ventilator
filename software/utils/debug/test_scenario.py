@@ -28,8 +28,8 @@ class TestScenario:
     test_criteria:       Dict
     capture_duration_secs: int
     capture_ignore_secs:   int
-    # todo: trace period
-    # todo: trace variable names
+    trace_period: int
+    trace_variable_names: [str]
 
     def __init__(self):
         self.manual_settings = {}
@@ -37,6 +37,8 @@ class TestScenario:
         self.test_criteria = {}
         self.capture_duration_secs = 25
         self.capture_ignore_secs = 2
+        self.trace_period = 1
+        self.trace_variable_names = ["pc_setpoint", "pressure", "volume", "net_flow"]
 
     def short_description(self):
         return f"{self.name:15} \"{self.description}\""
@@ -53,8 +55,10 @@ class TestScenario:
         if len(self.ventilator_settings):
             ret += "\n  Ventilator settings\n"
             ret += "\n".join(f"    {var:25} = {val}" for var, val in self.ventilator_settings.items())
-        ret += f"\n  Capture duration (secs): {self.capture_duration_secs:3}"
-        ret += f"\n  Capture ignore (secs):   {self.capture_ignore_secs:3}"
+        ret += f"\n  Capture duration (secs)    = {self.capture_duration_secs:3}"
+        ret += f"\n  Capture ignore (secs)      = {self.capture_ignore_secs:3}"
+        ret += f"\n  Trace period (loop cycles) = {self.trace_period:3}"
+        ret += f"\n  Trace variables:  {self.trace_variable_names}"
         if len(self.test_criteria):
             ret += "\n  Test criteria\n"
             ret += "\n".join(f"    {var:25} = {val}" for var, val in self.test_criteria.items())
@@ -66,6 +70,8 @@ class TestScenario:
                 'ventilator_settings': self.ventilator_settings,
                 'capture_duration_secs': self.capture_duration_secs,
                 'capture_ignore_secs': self.capture_ignore_secs,
+                'trace_period': self.trace_period,
+                'trace_variable_names': self.trace_variable_names,
                 'test_criteria': self.test_criteria}
 
     @staticmethod
@@ -78,6 +84,8 @@ class TestScenario:
         ts.test_criteria = data.get('test_criteria', None)
         ts.capture_duration_secs = data.get('capture_duration_secs', None)
         ts.capture_ignore_secs = data.get('capture_ignore_secs', None)
+        ts.trace_period = data.get('trace_period', None)
+        ts.trace_variable_names = data.get('trace_variable_names', None)
         return ts
 
     @staticmethod

@@ -16,8 +16,15 @@
         },
         "capture_duration_secs": 25,
         "capture_ignore_secs": 2,
+        "trace_period": 1,
+        "trace_variable_names": [
+            "pc_setpoint",
+            "pressure",
+            "volume",
+            "net_flow"
+        ],
         "test_criteria": {
-            "test_tv": 500
+            "expected_tv": 500
         }
     },
     {
@@ -37,8 +44,15 @@
         },
         "capture_duration_secs": 25,
         "capture_ignore_secs": 2,
+        "trace_period": 1,
+        "trace_variable_names": [
+            "pc_setpoint",
+            "pressure",
+            "volume",
+            "net_flow"
+        ],
         "test_criteria": {
-            "test_tv": 500
+            "expected_tv": 500
         }
     },
     {
@@ -58,8 +72,15 @@
         },
         "capture_duration_secs": 25,
         "capture_ignore_secs": 2,
+        "trace_period": 1,
+        "trace_variable_names": [
+            "pc_setpoint",
+            "pressure",
+            "volume",
+            "net_flow"
+        ],
         "test_criteria": {
-            "test_tv": 500
+            "expected_tv": 500
         }
     },
     {
@@ -79,8 +100,15 @@
         },
         "capture_duration_secs": 25,
         "capture_ignore_secs": 2,
+        "trace_period": 1,
+        "trace_variable_names": [
+            "pc_setpoint",
+            "pressure",
+            "volume",
+            "net_flow"
+        ],
         "test_criteria": {
-            "test_tv": 500
+            "expected_tv": 500
         }
     },
     {
@@ -100,8 +128,15 @@
         },
         "capture_duration_secs": 25,
         "capture_ignore_secs": 2,
+        "trace_period": 1,
+        "trace_variable_names": [
+            "pc_setpoint",
+            "pressure",
+            "volume",
+            "net_flow"
+        ],
         "test_criteria": {
-            "test_tv": 300
+            "expected_tv": 300
         }
     },
     {
@@ -121,8 +156,15 @@
         },
         "capture_duration_secs": 25,
         "capture_ignore_secs": 2,
+        "trace_period": 1,
+        "trace_variable_names": [
+            "pc_setpoint",
+            "pressure",
+            "volume",
+            "net_flow"
+        ],
         "test_criteria": {
-            "test_tv": 300
+            "expected_tv": 300
         }
     },
     {
@@ -142,8 +184,15 @@
         },
         "capture_duration_secs": 25,
         "capture_ignore_secs": 2,
+        "trace_period": 1,
+        "trace_variable_names": [
+            "pc_setpoint",
+            "pressure",
+            "volume",
+            "net_flow"
+        ],
         "test_criteria": {
-            "test_tv": 300
+            "expected_tv": 300
         }
     },
     {
@@ -163,8 +212,15 @@
         },
         "capture_duration_secs": 25,
         "capture_ignore_secs": 2,
+        "trace_period": 1,
+        "trace_variable_names": [
+            "pc_setpoint",
+            "pressure",
+            "volume",
+            "net_flow"
+        ],
         "test_criteria": {
-            "test_tv": 200
+            "expected_tv": 200
         }
     },
     {
@@ -184,8 +240,15 @@
         },
         "capture_duration_secs": 25,
         "capture_ignore_secs": 2,
+        "trace_period": 1,
+        "trace_variable_names": [
+            "pc_setpoint",
+            "pressure",
+            "volume",
+            "net_flow"
+        ],
         "test_criteria": {
-            "test_tv": 50
+            "expected_tv": 50
         }
     },
     {
@@ -205,8 +268,15 @@
         },
         "capture_duration_secs": 25,
         "capture_ignore_secs": 2,
+        "trace_period": 1,
+        "trace_variable_names": [
+            "pc_setpoint",
+            "pressure",
+            "volume",
+            "net_flow"
+        ],
         "test_criteria": {
-            "test_tv": 50
+            "expected_tv": 50
         }
     },
     {
@@ -226,8 +296,15 @@
         },
         "capture_duration_secs": 25,
         "capture_ignore_secs": 2,
+        "trace_period": 1,
+        "trace_variable_names": [
+            "pc_setpoint",
+            "pressure",
+            "volume",
+            "net_flow"
+        ],
         "test_criteria": {
-            "test_tv": 50
+            "expected_tv": 50
         }
     },
     {
@@ -247,8 +324,15 @@
         },
         "capture_duration_secs": 25,
         "capture_ignore_secs": 2,
+        "trace_period": 1,
+        "trace_variable_names": [
+            "pc_setpoint",
+            "pressure",
+            "volume",
+            "net_flow"
+        ],
         "test_criteria": {
-            "test_tv": 30
+            "expected_tv": 30
         }
     },
     {
@@ -268,8 +352,15 @@
         },
         "capture_duration_secs": 25,
         "capture_ignore_secs": 2,
+        "trace_period": 1,
+        "trace_variable_names": [
+            "pc_setpoint",
+            "pressure",
+            "volume",
+            "net_flow"
+        ],
         "test_criteria": {
-            "test_tv": 30
+            "expected_tv": 30
         }
     },
     {
@@ -289,8 +380,15 @@
         },
         "capture_duration_secs": 25,
         "capture_ignore_secs": 2,
+        "trace_period": 1,
+        "trace_variable_names": [
+            "pc_setpoint",
+            "pressure",
+            "volume",
+            "net_flow"
+        ],
         "test_criteria": {
-            "test_tv": 30
+            "expected_tv": 30
         }
     },
     {
@@ -310,8 +408,15 @@
         },
         "capture_duration_secs": 25,
         "capture_ignore_secs": 2,
+        "trace_period": 1,
+        "trace_variable_names": [
+            "pc_setpoint",
+            "pressure",
+            "volume",
+            "net_flow"
+        ],
         "test_criteria": {
-            "test_tv": 30
+            "expected_tv": 30
         }
     },
     {
@@ -331,8 +436,15 @@
         },
         "capture_duration_secs": 25,
         "capture_ignore_secs": 2,
+        "trace_period": 1,
+        "trace_variable_names": [
+            "pc_setpoint",
+            "pressure",
+            "volume",
+            "net_flow"
+        ],
         "test_criteria": {
-            "test_tv": 20
+            "expected_tv": 20
         }
     },
     {
@@ -352,8 +464,15 @@
         },
         "capture_duration_secs": 25,
         "capture_ignore_secs": 2,
+        "trace_period": 1,
+        "trace_variable_names": [
+            "pc_setpoint",
+            "pressure",
+            "volume",
+            "net_flow"
+        ],
         "test_criteria": {
-            "test_tv": 15
+            "expected_tv": 15
         }
     },
     {
@@ -373,8 +492,15 @@
         },
         "capture_duration_secs": 25,
         "capture_ignore_secs": 2,
+        "trace_period": 1,
+        "trace_variable_names": [
+            "pc_setpoint",
+            "pressure",
+            "volume",
+            "net_flow"
+        ],
         "test_criteria": {
-            "test_tv": 10
+            "expected_tv": 10
         }
     },
     {
@@ -394,8 +520,15 @@
         },
         "capture_duration_secs": 25,
         "capture_ignore_secs": 2,
+        "trace_period": 1,
+        "trace_variable_names": [
+            "pc_setpoint",
+            "pressure",
+            "volume",
+            "net_flow"
+        ],
         "test_criteria": {
-            "test_tv": 5
+            "expected_tv": 5
         }
     },
     {
@@ -415,8 +548,15 @@
         },
         "capture_duration_secs": 25,
         "capture_ignore_secs": 2,
+        "trace_period": 1,
+        "trace_variable_names": [
+            "pc_setpoint",
+            "pressure",
+            "volume",
+            "net_flow"
+        ],
         "test_criteria": {
-            "test_tv": 5
+            "expected_tv": 5
         }
     },
     {
@@ -436,8 +576,15 @@
         },
         "capture_duration_secs": 25,
         "capture_ignore_secs": 2,
+        "trace_period": 1,
+        "trace_variable_names": [
+            "pc_setpoint",
+            "pressure",
+            "volume",
+            "net_flow"
+        ],
         "test_criteria": {
-            "test_tv": 5
+            "expected_tv": 5
         }
     }
 ]

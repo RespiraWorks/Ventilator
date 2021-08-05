@@ -44,23 +44,26 @@ class TestScenario:
         return f"{self.name:15} \"{self.description}\""
 
     def long_description(self, highlight_manual=False):
-        ret = self.short_description()
+        ret = colors.Colors.BLUE + f"[[{self.name}]]\n" + colors.Colors.ENDC
+        ret += f"  \"{self.description}\""
         if len(self.manual_settings):
             if highlight_manual:
-                ret +=  colors.Colors.ORANGE
-            ret += "\n  Manual settings\n"
+                ret += colors.Colors.ORANGE
+            ret += "\n  Manual settings:\n"
             ret += "\n".join(f"    {var:25} = {val}" for var, val in self.manual_settings.items())
             if highlight_manual:
                 ret += colors.Colors.ENDC
         if len(self.ventilator_settings):
-            ret += "\n  Ventilator settings\n"
+            ret += "\n  Ventilator settings:\n"
             ret += "\n".join(f"    {var:25} = {val}" for var, val in self.ventilator_settings.items())
-        ret += f"\n  Capture duration (secs)    = {self.capture_duration_secs:3}"
-        ret += f"\n  Capture ignore (secs)      = {self.capture_ignore_secs:3}"
-        ret += f"\n  Trace period (loop cycles) = {self.trace_period:3}"
-        ret += f"\n  Trace variables:  {self.trace_variable_names}"
+        ret += f"\n  Capture duration (secs)     = {self.capture_duration_secs:3}"
+        ret += f"\n  Capture ignore (secs)       = {self.capture_ignore_secs:3}"
+        ret += f"\n  Trace period (loop cycles)  = {self.trace_period:3}"
+        ret += f"\n  Trace variables:"
+        for trace_name in self.trace_variable_names:
+            ret += f"\n     {trace_name}"
         if len(self.test_criteria):
-            ret += "\n  Test criteria\n"
+            ret += "\n  Test criteria:\n"
             ret += "\n".join(f"    {var:25} = {val}" for var, val in self.test_criteria.items())
         return ret
 

@@ -17,7 +17,8 @@ import error
 import test_scenario
 import test_data
 from pathlib import Path
-
+import json
+import colors
 
 # TODO: Import constants from proto instead!
 
@@ -222,13 +223,20 @@ class ControllerDebugInterface:
         print(f"Applying test scenario: {scenario.short_description()}")
         self.variables_set(scenario.ventilator_settings)
 
-    def test_run(self, name):
+    def test_run(self, name, save_file=True):
         if name not in self.scenarios.keys():
             raise error.Error(f"No such test scenario: {name}")
 
         test = test_data.TestData(self.scenarios[name])
 
-        # todo: confirm continue if git dirty?
+        if (test.git_dirty):
+            print(colors.Colors.RED +
+                  "There are unstaged or uncommitted changes to the code. Saving this data "
+                  "with reference to most recent commit might be misleading."
+                  + colors.Colors.ENDC)
+            value = input("Are you sure you want to continue with this test run? ")
+            if value != "y" and value != "Y":
+                return
 
         self.variables_force_open()
         self.variable_set("gui_mode", 0)
@@ -248,7 +256,7 @@ class ControllerDebugInterface:
         self.trace_select(test.scenario.trace_variable_names)
         time.sleep(test.scenario.capture_ignore_secs)
 
-        print(f"\nStarting data capture for {test.scenario.capture_duration_secs}")
+        print(f"\nStarting data capture for {test.scenario.capture_duration_secs} seconds")
         self.trace_flush()
         self.trace_start()
         time.sleep(test.scenario.capture_duration_secs)
@@ -264,8 +272,12 @@ class ControllerDebugInterface:
 
         print("\nResults:")
         print(test)
-        print(test.print_trace())
 
+        if save_file:
+            file_name = test.unique_name() + ".json"
+            print(f"Saving as {file_name}")
+            with open(file_name, 'w') as json_file:
+                json.dump(test.as_dict(), json_file, indent=4)
 
     def peek(self, address, ct=1, fmt="+XXXX", fname=None, raw=False):
         address = debug_types.decode_address(address)

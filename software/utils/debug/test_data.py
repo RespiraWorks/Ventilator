@@ -7,6 +7,7 @@ from datetime import datetime
 import json
 import platform
 import git
+import colors
 
 
 class TestData:
@@ -33,11 +34,18 @@ class TestData:
         self.tester_email = repo.config_reader().get_value("user", "email")
         self.scenario = test_scenario
 
+    def unique_name(self):
+        return self.start_time_utc.strftime("%Y-%m-%d-%H-%M-%S") +\
+               "_" + self.tester_email.partition("@")[0] +\
+               "_" + self.scenario.name
+
     def __str__(self):
-        ret = "Start time (UTC): {}\n".format(self.start_time_utc.strftime("%Y-%m-%d %H:%M:%S"))
-        ret += "Machine info: {}\n".format(self.platform_uname)
-        ret += "Tester: {}({})\n".format(self.tester_name, self.tester_email)
-        ret += "Git sha: {}{}\n".format(self.git_sha, " (dirty)" if self.git_dirty else "")
+        ret =  "Start time (UTC): {}\n".format(self.start_time_utc.strftime("%Y-%m-%d %H:%M:%S"))
+        ret += "Machine info:     {}\n".format(self.platform_uname)
+        ret += "Tester:           {} ({})\n".format(self.tester_name, self.tester_email)
+        dirty_string = colors.Colors.RED + " (DIRTY)" + colors.Colors.ENDC
+        ret += "Git sha:          {}{}\n".format(self.git_sha,
+                                                 dirty_string if self.git_dirty else "")
         ret += "TEST SCENARIO:\n"\
                + self.scenario.long_description()
         if self.ventilator_settings:
@@ -66,7 +74,17 @@ class TestData:
         return ret
 
     def as_dict(self):
-        return {'platform_uname': self.platform_uname}
+        return {'start_time_utc': self.start_time_utc.isoformat(),
+                'platform_uname': self.platform_uname,
+                'tester_name': self.tester_name,
+                'tester_email': self.tester_email,
+                'git_sha': self.git_sha,
+                'git_dirty': self.git_dirty,
+                'scenario': self.scenario.as_dict(),
+                'ventilator_settings': self.ventilator_settings,
+                'traces': self.traces}
+
+
 
     @staticmethod
     def from_dict(data):

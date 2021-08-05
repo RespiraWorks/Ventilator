@@ -159,9 +159,17 @@ named {self.scripts_directory} will be searched for the python script.
         elif params[0] == "autoload":
             for x in glob.glob(self.test_definitions_dir + "*.json"):
                 interface.tests_import(x)
+        elif params[0] == "clear":
+            interface.scenarios.clear()
         elif params[0] == "list":
-            interface.tests_list(bool(len(params) > 1
-                                      and (params[1] == "-v" or params[1] == "--verbose")))
+            verbose = len(params) > 1 and (params[1] == "-v" or params[1] == "--verbose")
+            interface.tests_list(verbose)
+        elif params[0] == "show":
+            if len(params) < 2:
+                print(colors.Colors.RED + "Not enough args for `test show`\n" + colors.Colors.ENDC)
+            if params[1] not in interface.scenarios.keys():
+                print(colors.Colors.RED + f"Test `{params[1]}` does not exist\n" + colors.Colors.ENDC)
+            print(interface.scenarios[params[1]].long_description())
         elif params[0] == "apply":
             if len(params) < 2:
                 print(colors.Colors.RED + "Not enough args for `test apply`\n" + colors.Colors.ENDC)
@@ -171,9 +179,8 @@ named {self.scripts_directory} will be searched for the python script.
             if len(params) < 2:
                 print(colors.Colors.RED + "Not enough args for `test run`\n" + colors.Colors.ENDC)
                 return
-            interface.test_run(params[1])
-        elif params[0] == "clear":
-            interface.scenarios.clear()
+            no_save = len(params) > 2 and (params[2] == "--no_save" or params[2] == "-n")
+            interface.test_run(params[1], not no_save)
         else:
             print("Invalid test args: {}", params)
 

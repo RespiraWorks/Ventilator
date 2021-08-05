@@ -346,11 +346,11 @@ trace graph [--dest=<filename>] [--title=<title>] [--nointeractive]
 
 trace download [--separator=<str>] [--dest=<filename>]
   This will download the data and save it to a file with the given name.  If no
-  file name is given, then trace.dat will be used If the --separator=<str>
+  file name is given, trace will be printed to terminal If the --separator=<str>
   option is given, then the specified string will separate each column of data.
   The default separator is a few spaces.
 
-trace current
+trace status
   This returns the current state of the trace:
     - traced variables
     - trace period
@@ -375,9 +375,9 @@ trace current
             # TODO: check validity of all variables
 
             if args.period:
-                interface.trace_period_set(args.period)
+                interface.trace_set_period(args.period)
             else:
-                interface.trace_period_set(1)
+                interface.trace_set_period(1)
 
             if args.var:
                 interface.trace_select(args.var)
@@ -387,37 +387,31 @@ trace current
 
         elif cl[0] == "download":
             parser = CmdArgumentParser(prog="trace download")
-            parser.add_argument(
-                "--separator", type=str, default="  ", help="field separator in file"
-            )
-            parser.add_argument(
-                "--dest",
-                type=str,
-                default="trace.dat",
-                help="filename to save the trace to",
-            )
+            parser.add_argument("--separator", type=str, default="  ",
+                                help="field separator in file")
+            parser.add_argument("--dest",  type=str,
+                                help="filename to save the trace to")
             args = parser.parse_args(cl[1:])
 
-            tv = interface.trace_active_variables_list()
-            if len(tv) < 1:
-                print("No active trace variables")
-                return
+            printed_trace_data = interface.trace_print_data(separator=args.separator)
 
-            dat = interface.trace_download()
-            trace_save_data(dat, fname=args.dest, separator=args.separator)
+            if args.dest:
+                trace_save_data(printed_trace_data, fname=args.dest)
+            else:
+                print(printed_trace_data)
 
         elif cl[0] == "graph":
             trace_graph(cl[1:])
 
-        elif cl[0] == "current":
+        elif cl[0] == "status":
             print("Traced variables:")
             for var in interface.trace_active_variables_list():
-                print(" - %s" % var.name)
-            print("Trace period: %i" % interface.trace_period_get())
-            print("Samples in buffer: %i" % interface.trace_status())
+                print(f" - {var.name}")
+            print(f"Trace period: {interface.trace_get_period_us()} \u03BCs")
+            print(f"Samples in buffer: {interface.trace_num_samples()}")
 
         else:
-            print("Unknown trace sub-command %s" % cl[0])
+            print(f"Unknown trace sub-command {cl[0]}")
             return
 
     def do_eeprom(self, line):
@@ -540,7 +534,7 @@ def trace_graph(raw_args: List[str]):
         var = trace_vars[i]
 
         scale_kind, scale = scalings.get(var.name, (None, None))
-        label = var.print_help
+        label = var.name
         if scale_kind:
             label += f", scaled {scale_kind} {scale}"
 
@@ -571,24 +565,10 @@ def trace_graph(raw_args: List[str]):
         plt.show()
 
 
-def trace_save_data(dat, fname, separator=" ", title=""):
-    tv = interface.trace_active_variables_list()
-
+def trace_save_data(printed_trace_data, fname, title=""):
     with open(fname, "w") as fp:
         fp.write(textwrap.indent(trace_metadata_string(title), "# "))
-
-        line = ["time(sec)"]
-        for v in tv:
-            line.append(v.name)
-        fp.write(separator.join(line) + "\n")
-
-        for i in range(len(dat[0])):
-            # First column is time in seconds
-            line = ["%.3f" % dat[0][i]]
-            for j in range(len(tv)):
-                line.append(tv[j].fmt % dat[j + 1][i])
-            fp.write(separator.join(line) + "\n")
-
+        fp.write(printed_trace_data)
 
 def detect_serial_port():
     j = json.loads(

@@ -1,0 +1,18 @@
+[
+    {
+        "name": "dummy",
+        "description": "Short pressure control test to gather a couple seconds of data",
+        "manual_settings": {},
+        "ventilator_settings": {
+            "gui_bpm": 20,
+            "gui_ie_ratio": 0.5,
+            "gui_pip": 25,
+            "gui_peep": 5,
+            "gui_fio2": 30,
+            "gui_mode": "pressure_control"
+        },
+        "capture_duration_secs": 2,
+        "capture_ignore_secs": 5,
+        "test_criteria": {}
+    }
+]

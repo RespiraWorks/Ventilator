@@ -118,7 +118,7 @@ class ControllerDebugInterface:
 
     def variable_by_id(self, vid):
         for name in self.variables:
-            if self.variables[name].name == vid:
+            if self.variables[name].id == vid:
                 return self.variables[name]
         return None
 
@@ -217,9 +217,12 @@ class ControllerDebugInterface:
 
         # Give the user a chance to adjust the test lung.
         print(f"\nExecuting test scenario:\n {scenario.long_description(True)}")
-        input("\nAdjust manual settings per above, then press enter.\n")
+
+        if len(scenario.manual_settings):
+            input("\nAdjust manual settings per above, then press enter.\n")
 
         # Apply all vent settings
+        print("\n")
         self.variables_set(scenario.ventilator_settings)
 
         # Unforce parameters we set above so they can be controlled by the
@@ -229,25 +232,23 @@ class ControllerDebugInterface:
         self.variable_set("forced_exhale_valve_pos", -1)
         self.variable_set("forced_blower_valve_pos", -1)
         self.variable_set("forced_blower_power", -1)
+        self.trace_set_period(1)
+        self.trace_select(["pc_setpoint", "pressure", "volume", "net_flow"])
         time.sleep(scenario.capture_ignore_secs)
 
-        print("\nStarting data capture\n")
-        # todo parametrize this
-        # self.trace_period_set(1)
-        self.trace_select(["pc_setpoint","pressure","volume","net_flow"])
-
+        print(f"\nStarting data capture for {scenario.capture_duration_secs}")
+        # todo parametrize these
+        self.trace_flush()
+        self.trace_start()
         time.sleep(scenario.capture_duration_secs)
 
-        # self.trace_flush()
-        # self.trace_start()
+        print("\nFinished data capture")
 
-        print("\nFinished data capture\n")
-        # data = self.trace_download()
+        print("\nResults:")
+        print(self.trace_print_data())
 
         #time.sleep(scenario.capture_ignore_secs)
         self.variable_set("gui_mode", 0)
-
-        # print("Results:\n{}".format(data))
 
     def peek(self, address, ct=1, fmt="+XXXX", fname=None, raw=False):
         address = debug_types.decode_address(address)
@@ -328,12 +329,21 @@ class ControllerDebugInterface:
     def trace_flush(self):
         self.send_command(OP_TRACE, [SUBCMD_TRACE_FLUSH])
 
-    def trace_period_set(self, period):
+    def trace_set_period(self, period):
         self.send_command(OP_TRACE, [SUBCMD_TRACE_SET_PERIOD] + debug_types.int32s_to_bytes(period))
 
-    def trace_period_get(self):
+    def trace_get_period(self):
         dat = self.send_command(OP_TRACE, [SUBCMD_TRACE_GET_PERIOD])
         return debug_types.bytes_to_int32s(dat)[0]
+
+    def trace_get_period_us(self):
+        # get trace period as number of loops
+        period = self.trace_get_period()
+        if period < 1:
+            period = 1
+
+        # Scale this by the loop period which is an integer in microseconds.
+        return period * self.variable_get("loop_period", raw=True)
 
     def trace_select(self, var_names):
         if len(var_names) > TRACE_VAR_CT:
@@ -349,7 +359,7 @@ class ControllerDebugInterface:
     def trace_start(self):
         self.send_command(OP_TRACE, [SUBCMD_TRACE_START])
 
-    def trace_status(self):
+    def trace_num_samples(self):
         dat = self.send_command(OP_TRACE, [SUBCMD_TRACE_GET_NUM_SAMPLES])
         return debug_types.bytes_to_int32s(dat)[0]
 
@@ -374,18 +384,19 @@ class ControllerDebugInterface:
         """
         trace_vars = self.trace_active_variables_list()
         if len(trace_vars) < 1:
+            print("No active traces to download")
             return None
+        var_count = len(trace_vars)
 
         # get samples count
-        dat = self.send_command(OP_TRACE, [SUBCMD_TRACE_GET_NUM_SAMPLES])
-        ct = debug_types.bytes_to_int32s(dat)[0] * len(trace_vars)
+        total_num_samples = self.trace_num_samples() * var_count
 
         data = []
-        while len(data) < 4 * ct:
-            dat = self.send_command(OP_TRACE, [SUBCMD_TRACE_GETDATA])
-            if len(dat) < 1:
+        while len(data) < 4 * total_num_samples:
+            byte = self.send_command(OP_TRACE, [SUBCMD_TRACE_GETDATA])
+            if len(byte) < 1:
                 break
-            data += dat
+            data += byte
 
         # Convert the bytes into an array of unsigned 32-bit values
         data = debug_types.bytes_to_int32s(data)
@@ -394,7 +405,6 @@ class ControllerDebugInterface:
         # len(trace_vars) uint32s: [a1, b1, c1, a2, b2, c2, ...].  Parse this into
         # sublists [[a1', a2', ...], [b1', b2', ...], [c1', c2', ...]], where each
         # of the variables is converted to the correct type.
-        var_count = len(trace_vars)
         ret = [[] for _ in range(var_count)]
 
         # The `zip` expression groups data into sublists of var_count elems.  See the
@@ -405,26 +415,38 @@ class ControllerDebugInterface:
             for i, val in enumerate(sample):
                 ret[i].append(trace_vars[i].convert_int(val))
 
-        # get trace period
-        dat = self.send_command(OP_TRACE, [SUBCMD_TRACE_GET_PERIOD])
-        per = debug_types.bytes_to_int32s(dat)[0]
-        if per < 1:
-            per = 1
+        # get trace period, multiply by 1e-6 (i.e. 1/1,000,000) to convert it to seconds.
+        period = self.trace_get_period_us() * 1e-6
 
-        # Scale this by the loop period which is an integer in microseconds.
-        # I multiply by 1e-6 (i.e. 1/1,000,000) to convert it to seconds.
-        per *= self.variable_get("loop_period", raw=True) * 1e-6
-
-        timestamp = [x * per for x in range(len(ret[0]))]
+        timestamp = [x * period for x in range(len(ret[0]))]
         ret.insert(0, timestamp)
 
         return ret
 
+    def trace_print_data(self, separator=" ", line_separator="\n"):
+        trace_data = self.trace_download()
+        trace_variables = self.trace_active_variables_list()
+
+        line = ["{:>15}".format("time(sec)")]
+        for v in trace_variables:
+            line.append("{:>15}".format(v.name))
+
+        ret = separator.join(line) + line_separator
+
+        for i in range(len(trace_data[0])):
+            # First column is time in seconds
+            line = [f"{trace_data[0][i]:>15.3f}"]
+            for j in range(len(trace_variables)):
+                line.append("{:>15}".format(trace_variables[j].fmt % trace_data[j + 1][i]))
+            ret += separator.join(line) + line_separator
+
+        return ret
+
     def eeprom_read(self, address, length):
-        dat = self.send_command(OP_EEPROM, [SUBCMD_EEPROM_READ]
+        data = self.send_command(OP_EEPROM, [SUBCMD_EEPROM_READ]
                                 + debug_types.int16s_to_bytes(int(address, 0))
                                 + debug_types.int16s_to_bytes(int(length, 0)))
-        return debug_types.format_peek(dat, "+XXXX", int(address, 0))
+        return debug_types.format_peek(data, "+XXXX", int(address, 0))
 
     def eeprom_write(self, address, data):
         self.send_command(OP_EEPROM, [SUBCMD_EEPROM_WRITE] + debug_types.int16s_to_bytes(int(address, 0)) + data)

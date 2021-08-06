@@ -423,27 +423,15 @@ trace status
         elif cl[0] == "stop":
             interface.trace_stop()
 
+        # todo trace dump for simple printing
         elif cl[0] == "download":
             parser = CmdArgumentParser(prog="trace download")
-            parser.add_argument(
-                "--separator", type=str, default="  ", help="field separator in file"
-            )
             parser.add_argument(
                 "--dest", type=str, help="filename to save the trace to"
             )
             args = parser.parse_args(cl[1:])
 
-            traces = interface.trace_download()
-            variables = interface.trace_active_variables_list()
-
-            printed_trace_data = interface.trace_print_data(
-                traces, variables, separator=args.separator
-            )
-
-            if args.dest:
-                trace_save_data(printed_trace_data, fname=args.dest)
-            else:
-                print(printed_trace_data)
+            interface.trace_save()
 
         elif cl[0] == "graph":
             trace_graph(cl[1:])

@@ -98,7 +98,9 @@ class ControllerDebugInterface:
         self.variables.clear()
         try:
             for vid in range(256):
-                data = self.send_command(OP_VAR, [SUBCMD_VAR_INFO] + debug_types.int16s_to_bytes(vid))
+                data = self.send_command(
+                    OP_VAR, [SUBCMD_VAR_INFO] + debug_types.int16s_to_bytes(vid)
+                )
                 variable = var_info.VarInfo(vid, data)
                 self.variables[variable.name] = variable
         # todo maybe not wait for an exception to terminate this loop?
@@ -171,7 +173,9 @@ class ControllerDebugInterface:
             raise error.Error("Unknown variable %s" % name)
 
         variable = self.variables[name]
-        data = self.send_command(OP_VAR, [SUBCMD_VAR_GET] + debug_types.int16s_to_bytes(variable.id))
+        data = self.send_command(
+            OP_VAR, [SUBCMD_VAR_GET] + debug_types.int16s_to_bytes(variable.id)
+        )
         value = variable.from_bytes(data)
 
         if raw:
@@ -190,7 +194,9 @@ class ControllerDebugInterface:
         variable = self.variables[name]
         data = variable.to_bytes(value)
 
-        self.send_command(OP_VAR, [SUBCMD_VAR_SET] + debug_types.int16s_to_bytes(variable.id) + data)
+        self.send_command(
+            OP_VAR, [SUBCMD_VAR_SET] + debug_types.int16s_to_bytes(variable.id) + data
+        )
         return
 
     def tests_import(self, file_name):
@@ -198,15 +204,22 @@ class ControllerDebugInterface:
         if not in_file.is_file():
             raise error.Error(f"Input file does not exist {file_name}")
         elif in_file.suffix == ".csv":
-            imported_scenarios = test_scenario.TestScenario.from_csv(in_file, self.variables.keys())
+            imported_scenarios = test_scenario.TestScenario.from_csv(
+                in_file, self.variables.keys()
+            )
         elif in_file.suffix == ".json":
             imported_scenarios = test_scenario.TestScenario.from_json(in_file)
         else:
             raise error.Error(f"Unknown file format `{in_file.suffix}`")
         if bool(set(imported_scenarios.keys()) & set(self.scenarios.keys())):
-            raise error.Error("Cannot import test scenarios, id's clash with already loaded ones")
-        print("Imported {} new test scenarios from {}".format(len(imported_scenarios.keys()),
-                                                              file_name))
+            raise error.Error(
+                "Cannot import test scenarios, id's clash with already loaded ones"
+            )
+        print(
+            "Imported {} new test scenarios from {}".format(
+                len(imported_scenarios.keys()), file_name
+            )
+        )
         self.scenarios = {**self.scenarios, **imported_scenarios}
 
     def tests_list(self, verbose=False):
@@ -229,11 +242,13 @@ class ControllerDebugInterface:
 
         test = test_data.TestData(self.scenarios[name])
 
-        if (test.git_dirty):
-            print(colors.Colors.RED +
-                  "There are unstaged or uncommitted changes to the code. Saving this data "
-                  "with reference to most recent commit might be misleading."
-                  + colors.Colors.ENDC)
+        if test.git_dirty:
+            print(
+                colors.Colors.RED
+                + "There are unstaged or uncommitted changes to the code. Saving this data "
+                "with reference to most recent commit might be misleading."
+                + colors.Colors.ENDC
+            )
             value = input("Are you sure you want to continue with this test run? ")
             if value != "y" and value != "Y":
                 return
@@ -256,7 +271,9 @@ class ControllerDebugInterface:
         self.trace_select(test.scenario.trace_variable_names)
         time.sleep(test.scenario.capture_ignore_secs)
 
-        print(f"\nStarting data capture for {test.scenario.capture_duration_secs} seconds")
+        print(
+            f"\nStarting data capture for {test.scenario.capture_duration_secs} seconds"
+        )
         self.trace_flush()
         self.trace_start()
         time.sleep(test.scenario.capture_duration_secs)
@@ -276,8 +293,27 @@ class ControllerDebugInterface:
         if save_file:
             file_name = test.unique_name() + ".json"
             print(f"Saving as {file_name}")
-            with open(file_name, 'w') as json_file:
+            with open(file_name, "w") as json_file:
                 json.dump(test.as_dict(), json_file, indent=4)
+
+    def trace_save(self):
+        test = test_data.TestData(test_scenario.TestScenario())
+        test.traces = self.trace_download()
+        test.scenario.name = "manual_trace"
+        test.scenario.description = ""
+        test.scenario.trace_period = self.trace_get_period()
+        test.scenario.trace_variable_names = [
+            x.name for x in self.trace_active_variables_list()
+        ]
+        test.ventilator_settings = self.variables_get_all()
+
+        print("\nResults:")
+        print(test)
+
+        file_name = test.unique_name() + ".json"
+        print(f"Saving as {file_name}")
+        with open(file_name, "w") as json_file:
+            json.dump(test.as_dict(), json_file, indent=4)
 
     def peek(self, address, ct=1, fmt="+XXXX", fname=None, raw=False):
         address = debug_types.decode_address(address)
@@ -291,8 +327,11 @@ class ControllerDebugInterface:
 
         while ct:
             n = min(ct, 256)
-            data = self.send_command(OP_PEEK, debug_types.int32s_to_bytes(address_iterator)
-                                     + debug_types.int16s_to_bytes(n))
+            data = self.send_command(
+                OP_PEEK,
+                debug_types.int32s_to_bytes(address_iterator)
+                + debug_types.int16s_to_bytes(n),
+            )
             out += data
             ct -= len(data)
             address_iterator += len(data)
@@ -359,7 +398,9 @@ class ControllerDebugInterface:
         self.send_command(OP_TRACE, [SUBCMD_TRACE_FLUSH])
 
     def trace_set_period(self, period):
-        self.send_command(OP_TRACE, [SUBCMD_TRACE_SET_PERIOD] + debug_types.int32s_to_bytes(period))
+        self.send_command(
+            OP_TRACE, [SUBCMD_TRACE_SET_PERIOD] + debug_types.int32s_to_bytes(period)
+        )
 
     def trace_get_period(self):
         dat = self.send_command(OP_TRACE, [SUBCMD_TRACE_GET_PERIOD])
@@ -376,7 +417,9 @@ class ControllerDebugInterface:
 
     def trace_select(self, var_names):
         if len(var_names) > TRACE_VAR_CT:
-            raise error.Error(f"Can't trace more than {TRACE_VAR_CT} variables at once.")
+            raise error.Error(
+                f"Can't trace more than {TRACE_VAR_CT} variables at once."
+            )
         var_names += [""] * (TRACE_VAR_CT - len(var_names))
         for (i, var_name) in enumerate(var_names):
             var_id = -1
@@ -449,6 +492,7 @@ class ControllerDebugInterface:
                 ret[i].append(trace_vars[i].convert_int(val))
 
         # get trace period, multiply by 1e-6 (i.e. 1/1,000,000) to convert it to seconds.
+
         period = self.trace_get_period_us() * 1e-6
 
         timestamp = [x * period for x in range(len(ret[0]))]
@@ -456,33 +500,20 @@ class ControllerDebugInterface:
 
         return ret
 
-    @staticmethod
-    def trace_print_data(trace_data, trace_variables,
-                         separator=" ", line_separator="\n"):
-
-        line = ["{:>15}".format("time(sec)")]
-        for v in trace_variables:
-            line.append("{:>15}".format(v.name))
-
-        ret = separator.join(line) + line_separator
-
-        for i in range(len(trace_data[0])):
-            # First column is time in seconds
-            line = [f"{trace_data[0][i]:>15.3f}"]
-            for j in range(len(trace_variables)):
-                line.append("{:>15}".format(trace_variables[j].fmt % trace_data[j + 1][i]))
-            ret += separator.join(line) + line_separator
-
-        return ret
-
     def eeprom_read(self, address, length):
-        data = self.send_command(OP_EEPROM, [SUBCMD_EEPROM_READ]
-                                + debug_types.int16s_to_bytes(int(address, 0))
-                                + debug_types.int16s_to_bytes(int(length, 0)))
+        data = self.send_command(
+            OP_EEPROM,
+            [SUBCMD_EEPROM_READ]
+            + debug_types.int16s_to_bytes(int(address, 0))
+            + debug_types.int16s_to_bytes(int(length, 0)),
+        )
         return debug_types.format_peek(data, "+XXXX", int(address, 0))
 
     def eeprom_write(self, address, data):
-        self.send_command(OP_EEPROM, [SUBCMD_EEPROM_WRITE] + debug_types.int16s_to_bytes(int(address, 0)) + data)
+        self.send_command(
+            OP_EEPROM,
+            [SUBCMD_EEPROM_WRITE] + debug_types.int16s_to_bytes(int(address, 0)) + data,
+        )
 
     # Wait for a response from the controller to the last command
     # The binary format uses two special characters to frame a
@@ -566,7 +597,8 @@ class ControllerDebugInterface:
             rcrc = debug_types.bytes_to_int16s(rsp[-2:])[0]
             if crc != rcrc:
                 raise error.Error(
-                    "CRC error on response, calculated 0x%04x received 0x%04x" % (crc, rcrc)
+                    "CRC error on response, calculated 0x%04x received 0x%04x"
+                    % (crc, rcrc)
                 )
 
             if rsp[0]:

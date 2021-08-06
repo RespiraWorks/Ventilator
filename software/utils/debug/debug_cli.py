@@ -68,14 +68,14 @@ class CmdLine(cmd.Cmd):
 
     def update_prompt(self, mode=None):
         if not interface.connected():
-            self.prompt = colors.Colors.RED + "OFFLINE] " + colors.Colors.ENDC
+            self.prompt = colors.red("OFFLINE] ")
         else:
             if mode is None:
                 mode = interface.mode_get()
             if mode == 1:
-                self.prompt = colors.Colors.ORANGE + "BOOT] " + colors.Colors.ENDC
+                self.prompt = colors.orange("BOOT] ")
             else:
-                self.prompt = colors.Colors.GREEN + "] " + colors.Colors.ENDC
+                self.prompt = colors.green("] ")
 
     def cli_loop(self):
         self.autoload()
@@ -148,65 +148,49 @@ named {self.scripts_directory} will be searched for the python script.
     def do_test(self, line):
         params = shlex.split(line)
         if len(params) < 1:
-            print(
-                colors.Colors.RED + "Not enough args for `test`\n" + colors.Colors.ENDC
-            )
+            print(colors.red("Not enough args for `test`\n"))
             return
+        subcommand = params[0]
 
-        if params[0] == "load":
+        if subcommand == "load":
             if len(params) < 2:
-                print(
-                    colors.Colors.RED
-                    + "Not enough args for `test load`\n"
-                    + colors.Colors.ENDC
-                )
+                print(colors.red("Not enough args for `test load`\n"))
                 return
             interface.tests_import(params[1])
-        elif params[0] == "autoload":
+        elif subcommand == "autoload":
             for x in glob.glob(self.test_definitions_dir + "*.json"):
                 interface.tests_import(x)
-        elif params[0] == "clear":
+        elif subcommand == "clear":
             interface.scenarios.clear()
-        elif params[0] == "list":
+        elif subcommand == "list":
             verbose = len(params) > 1 and (
                 params[1] == "-v" or params[1] == "--verbose"
             )
             interface.tests_list(verbose)
-        elif params[0] == "show":
+        elif subcommand == "show":
             if len(params) < 2:
-                print(
-                    colors.Colors.RED
-                    + "Not enough args for `test show`\n"
-                    + colors.Colors.ENDC
-                )
+                print(colors.red("Not enough args for `test show`\n"))
             if params[1] not in interface.scenarios.keys():
-                print(
-                    colors.Colors.RED
-                    + f"Test `{params[1]}` does not exist\n"
-                    + colors.Colors.ENDC
-                )
+                print(colors.red(f"Test `{params[1]}` does not exist\n"))
             print(interface.scenarios[params[1]].long_description())
-        elif params[0] == "apply":
+        elif subcommand == "apply":
             if len(params) < 2:
-                print(
-                    colors.Colors.RED
-                    + "Not enough args for `test apply`\n"
-                    + colors.Colors.ENDC
-                )
+                print(colors.red("Not enough args for `test apply`\n"))
                 return
             interface.test_apply(params[1])
-        elif params[0] == "run":
+        elif subcommand == "run":
             if len(params) < 2:
-                print(
-                    colors.Colors.RED
-                    + "Not enough args for `test run`\n"
-                    + colors.Colors.ENDC
-                )
+                print(colors.red("Not enough args for `test run`\n"))
                 return
             no_save = len(params) > 2 and (
                 params[2] == "--no_save" or params[2] == "-n"
             )
             interface.test_run(params[1], not no_save)
+        elif subcommand == "read":
+            if len(params) < 2:
+                print(colors.red("Not enough args for `test read`\n"))
+                return
+
         else:
             print("Invalid test args: {}", params)
 

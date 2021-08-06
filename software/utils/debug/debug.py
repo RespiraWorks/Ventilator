@@ -244,10 +244,10 @@ class ControllerDebugInterface:
 
         if test.git_dirty:
             print(
-                colors.Colors.RED
-                + "There are unstaged or uncommitted changes to the code. Saving this data "
-                "with reference to most recent commit might be misleading."
-                + colors.Colors.ENDC
+                colors.red(
+                    "There are unstaged or uncommitted changes to the code. Saving this"
+                    " data with reference to most recent commit might be misleading."
+                )
             )
             value = input("Are you sure you want to continue with this test run? ")
             if value != "y" and value != "Y":

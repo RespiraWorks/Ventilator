@@ -4,6 +4,7 @@ import datetime
 from test_scenario import TestScenario
 from typing import Dict, List
 from datetime import datetime
+import dateutil.parser
 import json
 import platform
 import git
@@ -35,19 +36,25 @@ class TestData:
         self.scenario = test_scenario
 
     def unique_name(self):
-        return self.start_time_utc.strftime("%Y-%m-%d-%H-%M-%S") +\
-               "_" + self.tester_email.partition("@")[0] +\
-               "_" + self.scenario.name
+        return (
+            self.start_time_utc.strftime("%Y-%m-%d-%H-%M-%S")
+            + "_"
+            + self.tester_email.partition("@")[0]
+            + "_"
+            + self.scenario.name
+        )
 
     def __str__(self):
-        ret =  "Start time (UTC): {}\n".format(self.start_time_utc.strftime("%Y-%m-%d %H:%M:%S"))
-        ret += "Machine info:     {}\n".format(self.platform_uname)
-        ret += "Tester:           {} ({})\n".format(self.tester_name, self.tester_email)
-        dirty_string = colors.Colors.RED + " (DIRTY)" + colors.Colors.ENDC
-        ret += "Git sha:          {}{}\n".format(self.git_sha,
-                                                 dirty_string if self.git_dirty else "")
-        ret += "TEST SCENARIO:\n"\
-               + self.scenario.long_description()
+        ret = "Start time (UTC): {}\n".format(
+            self.start_time_utc.strftime("%Y-%m-%d %H:%M:%S")
+        )
+        ret += f"Machine info:     {self.platform_uname}\n"
+        ret += f"Tester:           {self.tester_name} ({self.tester_email})\n"
+        dirty_string = colors.red(" (DIRTY)")
+        ret += "Git sha:          {}{}\n".format(
+            self.git_sha, dirty_string if self.git_dirty else ""
+        )
+        ret += "TEST SCENARIO:\n" + self.scenario.long_description()
         if self.ventilator_settings:
             ret += "\nVentilator settings:\n"
             for name, val in self.ventilator_settings.items():
@@ -74,37 +81,32 @@ class TestData:
         return ret
 
     def as_dict(self):
-        return {'start_time_utc': self.start_time_utc.isoformat(),
-                'platform_uname': self.platform_uname,
-                'tester_name': self.tester_name,
-                'tester_email': self.tester_email,
-                'git_sha': self.git_sha,
-                'git_dirty': self.git_dirty,
-                'scenario': self.scenario.as_dict(),
-                'ventilator_settings': self.ventilator_settings,
-                'traces': self.traces}
-
-
+        return {
+            "start_time_utc": self.start_time_utc.isoformat(),
+            "platform_uname": self.platform_uname,
+            "tester_name": self.tester_name,
+            "tester_email": self.tester_email,
+            "git_sha": self.git_sha,
+            "git_dirty": self.git_dirty,
+            "scenario": self.scenario.as_dict(),
+            "ventilator_settings": self.ventilator_settings,
+            "traces": self.traces,
+        }
 
     @staticmethod
     def from_dict(data):
-        ts = TestScenario()
-        ts.name = data.get('name', None)
-        ts.description = data.get('description', None)
-        ts.manual_settings = data.get('manual_settings', None)
-        ts.ventilator_settings = data.get('ventilator_settings', None)
-        ts.test_criteria = data.get('test_criteria', None)
-        ts.capture_duration_secs = data.get('capture_duration_secs', None)
-        ts.capture_ignore_secs = data.get('capture_ignore_secs', None)
-        return ts
+        td = TestData(TestScenario.from_dict(data["scenario"]))
+        td.start_time_utc = dateutil.parser.isoparse(data["start_time_utc"])
+        td.platform_uname = data["platform_uname"]
+        td.tester_name = data["tester_name"]
+        td.tester_email = data["tester_email"]
+        td.git_sha = data["git_sha"]
+        td.git_dirty = data["git_dirty"]
+        td.ventilator_settings = data["ventilator_settings"]
+        td.traces = data["traces"]
+        return td
 
     @staticmethod
     def from_json(file_name):
-        ret = {}
-        with open(file_name, 'r') as json_file:
-            j = json.load(json_file)
-            for tsd in j:
-                ts = TestScenario.from_dict(tsd)
-                ret[ts.name] = ts
-        return ret
-
+        with open(file_name, "r") as json_file:
+            return TestData.from_dict(json.load(json_file))

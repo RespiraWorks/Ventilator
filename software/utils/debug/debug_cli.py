@@ -24,6 +24,7 @@ import textwrap
 import traceback
 import colors
 import error
+import test_data
 
 
 class ArgparseShowHelpError(Exception):
@@ -154,7 +155,7 @@ named {self.scripts_directory} will be searched for the python script.
 
         if subcommand == "load":
             if len(params) < 2:
-                print(colors.red("Not enough args for `test load`\n"))
+                print(colors.red("File name not provided for `test load`\n"))
                 return
             interface.tests_import(params[1])
         elif subcommand == "autoload":
@@ -169,28 +170,39 @@ named {self.scripts_directory} will be searched for the python script.
             interface.tests_list(verbose)
         elif subcommand == "show":
             if len(params) < 2:
-                print(colors.red("Not enough args for `test show`\n"))
+                print(colors.red("Test name not provided for `test show`\n"))
             if params[1] not in interface.scenarios.keys():
                 print(colors.red(f"Test `{params[1]}` does not exist\n"))
             print(interface.scenarios[params[1]].long_description())
         elif subcommand == "apply":
             if len(params) < 2:
-                print(colors.red("Not enough args for `test apply`\n"))
+                print(colors.red("Test name not provided for `test apply`\n"))
                 return
+            if params[1] not in interface.scenarios.keys():
+                print(colors.red(f"Test `{params[1]}` does not exist\n"))
             interface.test_apply(params[1])
         elif subcommand == "run":
             if len(params) < 2:
-                print(colors.red("Not enough args for `test run`\n"))
+                print(colors.red("Test name not provided for `test run`\n"))
                 return
+            if params[1] not in interface.scenarios.keys():
+                print(colors.red(f"Test `{params[1]}` does not exist\n"))
             no_save = len(params) > 2 and (
                 params[2] == "--no_save" or params[2] == "-n"
             )
             interface.test_run(params[1], not no_save)
         elif subcommand == "read":
             if len(params) < 2:
-                print(colors.red("Not enough args for `test read`\n"))
+                print(colors.red("File name not provided for `test read`\n"))
                 return
-
+            td = test_data.TestData.from_json(params[1])
+            print(td)
+        elif subcommand == "plot":
+            if len(params) < 2:
+                print(colors.red("File name not provided for `test plot`\n"))
+                return
+            td = test_data.TestData.from_json(params[1])
+            test_plot(td, params[2:])
         else:
             print("Invalid test args: {}", params)
 
@@ -417,9 +429,6 @@ trace status
 
             interface.trace_save()
 
-        elif cl[0] == "graph":
-            trace_graph(cl[1:])
-
         elif cl[0] == "status":
             print("Traced variables:")
             for var in interface.trace_active_variables_list():
@@ -462,49 +471,10 @@ eeprom write <address> <data>
             return
 
 
-def git_rev_info():
-    """Returns a description of the current repository."""
-    try:
-        rev = (
-            subprocess.check_output(["git", "rev-parse", "--short", "HEAD"])
-            .decode("utf-8")
-            .strip()
-        )
-        is_dirty = len(subprocess.check_output(["git", "status", "-s"])) > 0
-        return f"{rev} ({'dirty' if is_dirty else 'clean'})"
-    except subprocess.CalledProcessError:
-        return "(unknown)"
-
-
-def trace_metadata_string(title=""):
-    """Gets a human-readable metadata string for a trace we just captured."""
-    if not title:
-        title = ""
-
-    ret = title
-    if ret and not ret.endswith("\n"):
-        ret += "\n"
-
-    ret += f"Captured {datetime.now()} by {os.environ.get('USER', 'unknown user')}\n"
-    ret += f"Built at revision {git_rev_info()}\n"
-    return ret
-
-
-def trace_graph(raw_args: List[str]):
-    parser = CmdArgumentParser("trace graph")
+def test_plot(data: test_data.TestData, raw_args: List[str]):
+    parser = CmdArgumentParser("test plot")
     parser.add_argument(
-        "--dest",
-        default="last_graph",
-        metavar="FILE",
-        help="Filename to save trace data to.  The rendered graph will be "
-        "saved to this destination with the extension (if present) replaced "
-        "by '.png'.",
-    )
-    parser.add_argument(
-        "--title", default=None, metavar="TITLE", help="Graph title",
-    )
-    parser.add_argument(
-        "--nointeractive",
+        "--noninteractive",
         default=False,
         action="store_true",
         help="Don't show the graph interactively.  Useful for scripts.",
@@ -516,9 +486,6 @@ def trace_graph(raw_args: List[str]):
         metavar="FIELD / SCALE or FIELD * SCALE",
         help="Scale a var by the given amount, e.g. "
         "--scale=volume/100 or --scale=pressure*10",
-    )
-    parser.add_argument(
-        "--separator", type=str, default="  ", help="field separator in csv file"
     )
 
     args = parser.parse_args(raw_args)
@@ -534,30 +501,24 @@ def trace_graph(raw_args: List[str]):
         else:
             raise error.Error(f"Invalid scaling parameter {s}")
 
-    (base, _) = os.path.splitext(args.dest)
-    graph_img_filename = base + ".png"
+    graph_img_filename = data.unique_name() + ".png"
 
-    trace_vars = interface.trace_active_variables_list()
-    unrecognized_scale_vars = set(scalings.keys()) - set(v.name for v in trace_vars)
+    unrecognized_scale_vars = set(scalings.keys()) - set(
+        data.scenario.trace_variable_names
+    )
     if unrecognized_scale_vars:
         raise error.Error(
             f"Can't scale by vars that aren't being traced: {unrecognized_scale_vars}"
         )
 
-    dat = interface.trace_download()
-    printed_trace_data = interface.trace_print_data(
-        dat, trace_vars, separator=args.separator
-    )
-    trace_save_data(printed_trace_data, args.dest + ".dat", title=args.title)
-
-    timestamps_sec = dat[0]
-    dat = dat[1:]
+    timestamps_sec = data.traces[0]
+    dat = data.traces[1:]
     plt.figure()
     for i, d in enumerate(dat):
-        var = trace_vars[i]
+        var = data.scenario.trace_variable_names[i]
 
-        scale_kind, scale = scalings.get(var.name, (None, None))
-        label = var.name
+        scale_kind, scale = scalings.get(var, (None, None))
+        label = var
         if scale_kind:
             label += f", scaled {scale_kind} {scale}"
 
@@ -576,24 +537,17 @@ def trace_graph(raw_args: List[str]):
     plt.xlabel("Seconds")
     plt.grid()
     plt.legend()
-    if args.title:
-        plt.title(args.title)
+    plt.title(data.unique_name())
 
-    fig_md = {"Description": trace_metadata_string(args.title)}
-    if args.title:
-        fig_md["Title"] = args.title
-    plt.savefig(graph_img_filename, format="png", metadata=fig_md)
+    # todo: save always?
+    plt.savefig(
+        graph_img_filename, format="png", metadata={"Title": data.unique_name()}
+    )
 
-    if not args.nointeractive:
+    if not args.noninteractive:
         plt.show()
     else:
         plt.close()
-
-
-def trace_save_data(printed_trace_data, fname, title=""):
-    with open(fname, "w") as fp:
-        fp.write(textwrap.indent(trace_metadata_string(title), "# "))
-        fp.write(printed_trace_data)
 
 
 def detect_serial_port():

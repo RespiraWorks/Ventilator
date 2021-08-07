@@ -23,7 +23,6 @@ __license__ = """
 
 """
 
-
 import debug
 from typing import List
 import argparse
@@ -161,6 +160,35 @@ named {self.scripts_directory} will be searched for the python script.
         ]
 
     def do_test(self, line):
+        """This command is for working with structured test scenarios and saved test data.
+
+A test scenario defines independent variables in question, whether they be ventilator settings
+or manual settings applicable to external test equipment. It may also specify test criteria
+which can be confirmed by human examination or other scripts. A scenario also defines which
+variables to capture, how often to sample them and length of test run.
+
+Running a test scenario will capture traced variables as well as a snapshot of all ventilator
+variables and other available metadata concerning the testing environment.
+
+The unique test identifier (as well as the file name) is defined as
+    <UTC date-time>_<tester>_<scenario_name>
+
+load <file>                   - loads test scenarios from specified .csv or .json <file>
+autoload                      - loads all test scenarios found in `test_scenarios` subdirectory
+clear                         - clears all test scenarios loaded in this session
+list [--verbose/-v]           - lists all test scenarios loaded in this session
+show <scenario>               - prints out the full definition of named <scenario>
+apply <scenario>              - applies all ventilator settings for named <scenario>
+run <scenario>                - runs named <scenario> and saves data to .json
+read <file> [--verbose/-v]    - reads test data from <file> and prints it out, including full
+                                trace data if [--verbose/-v] os marked
+plot <file> [--nointeractive] [--scale=<field>/scale --scale=<field>*scale] - reads test data
+    from <file> and visualizes it in a plot, saving it to .png file with same name
+        <--noninteractive> prevents displaying plot, only saves to file
+        <--scale> lets you multiply or divide a field by a given scaling factor.  This  makes
+                  it feasible to fit values with different magnitudes on the same Y axis, e.g.
+                  --scale=volume/100 or --scale=pressure*10
+        """
         params = shlex.split(line)
         if len(params) < 1:
             print(colors.red("Not enough args for `test`\n"))
@@ -201,10 +229,7 @@ named {self.scripts_directory} will be searched for the python script.
                 return
             if params[1] not in interface.scenarios.keys():
                 print(colors.red(f"Test `{params[1]}` does not exist\n"))
-            no_save = len(params) > 2 and (
-                params[2] == "--no_save" or params[2] == "-n"
-            )
-            interface.test_run(params[1], not no_save)
+            interface.test_run(params[1])
         elif subcommand == "read":
             if len(params) < 2:
                 print(colors.red("File name not provided for `test read`\n"))
@@ -330,7 +355,10 @@ ex: poke [type] <addr> <data>
         return interface.variables_starting_with(text)
 
     def help_get(self):
-        print("Read the value of a debug variable and display it\n")
+        print("Read the value of a ventilator debug variable and display it.")
+        print(
+            "In addition to those listed below 'get all' will retrieve all variables.\n"
+        )
         print(interface.variables_list())
 
     def do_set(self, line):
@@ -344,11 +372,7 @@ ex: poke [type] <addr> <data>
         return interface.variables_starting_with(text)
 
     def help_set(self):
-        print("You can very easily add debug variables to the C++ code.")
-        print("You give these variables names and a pointer to a value to")
-        print("access.  Then using the get/set commands you can read the")
-        print("current state of that C++ location and modify it.\n")
-        print("This command allows you to modify such a debug variable\n")
+        print("Sets one of the ventilator debug variables listed below:\n")
         print(interface.variables_list())
 
     def do_trace(self, line):
@@ -358,10 +382,11 @@ Tracing lets you sample debug variables in real time.  Their values are saved
 to a large internal memory buffer in the device, which you can then download
 and/or display as a graph.
 
-A sub-command must be passed as an option:
+For meaningful performance testing, it is recommended that you use the higher
+level `test` interface for a more structured experiment control experience. See
+`help test`.
 
-trace flush
-  Stops the trace if one was on-going and flushes the trace buffer
+A sub-command must be passed as an option:
 
 trace start [--period p] [var1 ... ]
   Starts collecting trace data.
@@ -372,34 +397,22 @@ trace start [--period p] [var1 ... ]
   --period controls the sample period in units of one trip through the
   controller's high-priority loop.  If you don't specify a period, we use 1.
 
-trace graph [--dest=<filename>] [--title=<title>] [--nointeractive]
-            [--scale=<field>/scale --scale=<field>*scale] [--separator=<str>]
-  Downloads the data and displays it graphically.
+trace flush
+  Flushes the trace buffer. If trace is ongoing, buffer will be filled with new data.
 
-  The plain-text graph data and the rendered figure are saved to your local
-  machine as last_graph.dat/png; --dest configures this.
-  The dat file uses a few spaces to separate each data, or str provided through
-  the --separator=<str> option.
-
-  --scale lets you multiply or divide a field by a given scaling factor.  This
-  makes it feasible to fit values with different magnitudes on the same Y axis.
-
-  You can add a title to the rendered graph with --title.
-
-  By default the figure is also shown interactively.  --nointeractive
-  configures this.
-
-trace download [--separator=<str>] [--dest=<filename>]
-  This will download the data and save it to a file with the given name.  If no
-  file name is given, trace will be printed to terminal If the --separator=<str>
-  option is given, then the specified string will separate each column of data.
-  The default separator is a few spaces.
+trace stop
+  Stops trace
 
 trace status
-  This returns the current state of the trace:
+  Returns the current state of the trace:
     - traced variables
     - trace period
     - number of samples in the trace buffer
+
+trace save
+  Downloads trace data and saves it as an "unplanned test". File will be named as
+  <date-time>_<user>_manual_trace.jpg with a blank test scenario definition.
+  See more about tests and test scenarios with `help test`.
 
 """
         cl = shlex.split(line)
@@ -434,13 +447,7 @@ trace status
             interface.trace_stop()
 
         # todo trace dump for simple printing
-        elif cl[0] == "download":
-            parser = CmdArgumentParser(prog="trace download")
-            parser.add_argument(
-                "--dest", type=str, help="filename to save the trace to"
-            )
-            args = parser.parse_args(cl[1:])
-
+        elif cl[0] == "save":
             interface.trace_save()
 
         elif cl[0] == "status":

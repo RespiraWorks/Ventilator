@@ -20,7 +20,6 @@ __license__ = """
 
 """
 
-
 import serial
 import threading
 import time
@@ -249,7 +248,7 @@ class ControllerDebugInterface:
         print(f"Applying test scenario: {scenario.short_description()}")
         self.variables_set(scenario.ventilator_settings)
 
-    def test_run(self, name, save_file=True):
+    def test_run(self, name):
         if name not in self.scenarios.keys():
             raise error.Error(f"No such test scenario: {name}")
 
@@ -299,20 +298,13 @@ class ControllerDebugInterface:
         self.trace_stop()
 
         test.ventilator_settings = self.variables_get_all()
+        test.save_json(print_self=True)
+        return test.unique_name()
 
-        print("\nResults:")
-        print(test)
-
-        if save_file:
-            file_name = test.unique_name() + ".json"
-            print(f"Saving as {file_name}")
-            with open(file_name, "w") as json_file:
-                json.dump(test.as_dict(), json_file, indent=4)
-
-    def trace_save(self):
+    def trace_save(self, scenario_name="manual_trace"):
         test = test_data.TestData(test_scenario.TestScenario())
         test.traces = self.trace_download()
-        test.scenario.name = "manual_trace"
+        test.scenario.name = scenario_name
         test.scenario.description = ""
         test.scenario.trace_period = self.trace_get_period()
         test.scenario.trace_variable_names = [
@@ -320,13 +312,8 @@ class ControllerDebugInterface:
         ]
         test.ventilator_settings = self.variables_get_all()
 
-        print("\nResults:")
-        print(test)
-
-        file_name = test.unique_name() + ".json"
-        print(f"Saving as {file_name}")
-        with open(file_name, "w") as json_file:
-            json.dump(test.as_dict(), json_file, indent=4)
+        test.save_json(print_self=True)
+        return test.unique_name()
 
     def peek(self, address, ct=1, fmt="+XXXX", fname=None, raw=False):
         address = debug_types.decode_address(address)

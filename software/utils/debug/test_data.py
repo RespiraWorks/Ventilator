@@ -113,6 +113,17 @@ class TestData:
             "traces": self.traces,
         }
 
+    def save_json(self, print_self=False):
+        if print_self:
+            print("\nResults:")
+            print(self)
+
+        file_name = self.unique_name() + ".json"
+        if print_self:
+            print(f"Saving as {file_name}")
+        with open(file_name, "w") as json_file:
+            json.dump(self.as_dict(), json_file, indent=4)
+
     @staticmethod
     def from_dict(data):
         td = TestData(TestScenario.from_dict(data["scenario"]))

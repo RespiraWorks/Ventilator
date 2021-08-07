@@ -1,3 +1,25 @@
+# Debug variable info abstraction for ventilator debug interface
+
+__copyright__ = "Copyright 2021 RespiraWorks"
+
+__license__ = """
+
+    Copyright 2021 RespiraWorks
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+"""
+
 import debug_types
 import error
 
@@ -29,11 +51,11 @@ class VarInfo:
             raise error.Error("Invalid VarInfo data returned")
 
         n = 8
-        self.name = "".join([chr(x) for x in dat[n: n + name_length]])
+        self.name = "".join([chr(x) for x in dat[n : n + name_length]])
         n += name_length
-        self.fmt = "".join([chr(x) for x in dat[n: n + fmt_length]])
+        self.fmt = "".join([chr(x) for x in dat[n : n + fmt_length]])
         n += fmt_length
-        self.help = "".join([chr(x) for x in dat[n: n + help_length]])
+        self.help = "".join([chr(x) for x in dat[n : n + help_length]])
 
     # Convert an unsigned 32-bit value into the correct type for
     # this variable
@@ -54,7 +76,9 @@ class VarInfo:
         elif self.type == VAR_FLOAT:
             return debug_types.bytes_to_float32s(data)[0]
         else:
-            raise error.Error(f"Sorry, I don't know how to handle variable type {self.type}")
+            raise error.Error(
+                f"Sorry, I don't know how to handle variable type {self.type}"
+            )
 
     def to_bytes(self, value):
         if self.type == VAR_INT32:
@@ -68,4 +92,6 @@ class VarInfo:
         elif self.type == VAR_FLOAT:
             return debug_types.float32s_to_bytes(float(value))
         else:
-            raise error.Error(f"Sorry, I don't know how to handle variable type {self.type}")
+            raise error.Error(
+                f"Sorry, I don't know how to handle variable type {self.type}"
+            )

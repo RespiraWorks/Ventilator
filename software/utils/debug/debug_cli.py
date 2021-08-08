@@ -323,7 +323,7 @@ test read <file> [--verbose/-v] [--plot/-p]
                 if args2.verbose:
                     print(test.print_trace())
                 if args2.plot:
-                    test.plot(save=False, show=True)
+                    test.plot(save=True, show=True)
 
         else:
             print("Invalid test args: {}", params)

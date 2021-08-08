@@ -40,6 +40,9 @@ ErrorCode VarHandler::Process(Context *context) {
   case Subcommand::Set:
     return SetVar(context);
 
+  case Subcommand::GetCount:
+    return GetVarCount(context);
+
   default:
     return ErrorCode::InvalidData;
   }
@@ -65,33 +68,36 @@ ErrorCode VarHandler::GetVarInfo(Context *context) {
 
   // The info I return consists of the following:
   // <type> - 1 byte variable type code
-  // <reserved> - 3 reserved bytes for things we think of later
+  // <access> - 1 byte gives the possible access to that variable (read only?)
+  // <reserved> - 2 reserved bytes for things we think of later
   // <name len> - 1 byte gives length of variable name string
   // <fmt len>  - 1 byte gives length of formation string
   // <help len> - 1 byte gives length of help string
-  // <reserved> - 1 reserved byte
+  // <unit len> - 1 byte gives length of unit string
   // <name> - variable length name string
   // <fmt>  - variable length format string
-  // <help> - variable length format string
+  // <help> - variable length help string
+  // <unit> - variable length unit string
   // The strings are not null terminated.
   size_t name_length = strlen(var->GetName());
   size_t format_length = strlen(var->GetFormat());
   size_t help_length = strlen(var->GetHelp());
+  size_t unit_length = strlen(var->GetUnit());
 
   // Fail if the strings are too large to fit.
   if (context->max_response_length <
-      8 + name_length + format_length + help_length)
+      8 + name_length + format_length + help_length + unit_length)
     return ErrorCode::NoMemory;
 
   uint32_t count = 0;
   context->response[count++] = static_cast<uint8_t>(var->GetType());
-  context->response[count++] = 0;
+  context->response[count++] = static_cast<uint8_t>(var->GetAccess());
   context->response[count++] = 0;
   context->response[count++] = 0;
   context->response[count++] = static_cast<uint8_t>(name_length);
   context->response[count++] = static_cast<uint8_t>(format_length);
   context->response[count++] = static_cast<uint8_t>(help_length);
-  context->response[count++] = 0;
+  context->response[count++] = static_cast<uint8_t>(unit_length);
   memcpy(&context->response[count], var->GetName(), name_length);
   count += static_cast<uint32_t>(name_length);
 
@@ -100,6 +106,9 @@ ErrorCode VarHandler::GetVarInfo(Context *context) {
 
   memcpy(&context->response[count], var->GetHelp(), help_length);
   count += static_cast<uint32_t>(help_length);
+
+  memcpy(&context->response[count], var->GetUnit(), unit_length);
+  count += static_cast<uint32_t>(unit_length);
 
   context->response_length = count;
   *(context->processed) = true;
@@ -142,8 +151,20 @@ ErrorCode VarHandler::SetVar(Context *context) {
   if (count < 4)
     return ErrorCode::MissingData;
 
-  var->SetValue(u8_to_u32(context->request + 3));
+  if (!var->SetValue(u8_to_u32(context->request + 3)))
+    return ErrorCode::InternalError;
+
   context->response_length = 0;
+  *(context->processed) = true;
+  return ErrorCode::None;
+}
+
+ErrorCode VarHandler::GetVarCount(Context *context) {
+  if (context->max_response_length < 4)
+    return ErrorCode::NoMemory;
+
+  u32_to_u8(DebugVarBase::GetVarCount(), context->response);
+  context->response_length = 4;
   *(context->processed) = true;
   return ErrorCode::None;
 }

@@ -27,16 +27,15 @@ import debug
 import argparse
 import cmd
 import glob
-import json
 import matplotlib.pyplot as plt
 import os
 import shlex
-import subprocess
 import sys
 import traceback
 import colors
 import error
 import test_data
+import serial_detect
 
 
 class ArgparseShowHelpError(Exception):
@@ -88,7 +87,7 @@ class CmdLine(cmd.Cmd):
             if mode == 1:
                 self.prompt = colors.orange("BOOT] ")
             else:
-                self.prompt = colors.green("] ")
+                self.prompt = colors.green(f"{interface.ser.port}] ")
 
     def cli_loop(self):
         self.autoload()
@@ -106,11 +105,11 @@ class CmdLine(cmd.Cmd):
                 print(e)
             except:
                 traceback.print_exc()
+            self.update_prompt()
 
     def emptyline(self):
         interface.resynchronize()
         self.update_prompt()
-        interface.variables_update_info()
 
     def do_debug(self, line):
         """Sets display of low level serial data on/off.
@@ -127,6 +126,28 @@ class CmdLine(cmd.Cmd):
             interface.showSerial = False
         else:
             print("Unknown command; pass 'on' or 'off'.")
+
+    def do_connect(self, line):
+        params = shlex.split(line)
+        if len(params) < 1:
+            print(colors.red("Not enough args for `connect`\n"))
+            return
+        subcommand = params[0]
+
+        if subcommand == "list":
+            serial_detect.print_detected_ports()
+
+        elif subcommand == "auto":
+            interface.connect(auto_select_port())
+            interface.resynchronize()
+            interface.variables_update_info()
+            self.update_prompt()
+
+        else:
+            interface.connect(params[0])
+            interface.resynchronize()
+            interface.variables_update_info()
+            self.update_prompt()
 
     def help_run(self):
         print(
@@ -541,23 +562,21 @@ eeprom write <address> <data>
             return
 
 
-def detect_serial_port():
-    j = json.loads(
-        subprocess.check_output(["platformio", "device", "list", "--json-output"])
-    )
-    ports = [d["port"] for d in j if "STM32" in d.get("description", "")]
+def auto_select_port():
+    ports = serial_detect.detect_stm32_ports()
     if not ports:
-        raise error.Error(
+        colors.red(
             "Could not auto-detect serial port; platformio device list did not "
-            "yield any STM32 devices.  Choose port explicitly with --port."
+            "yield any STM32 devices."
         )
+        return None
     if len(ports) > 1:
-        raise error.Error(
+        colors.red(
             "Could not auto-detect serial port; platformio device list "
             f"yielded multiple STM32 devices: {', '.join(ports)}.  "
             "Choose port explicitly with --port."
         )
-    print(f"Detected device connected to {ports[0]}", file=sys.stderr)
+        return None
     return ports[0]
 
 
@@ -584,27 +603,19 @@ def main():
         action="store_true",
         help="Run interpreter without connecting to device",
     )
-    terminal_parser.add_argument(
-        "--detect-only",
-        action="store_true",
-        help="Detect the port that the device is connected to and then immediately exit."
-        "This is useful for scripts that invoke this program multiple times.  Port detection is"
-        "the slowest part of startup, so this option lets you do it once upfront.",
-    )
 
     terminal_args = terminal_parser.parse_args()
 
     if terminal_args.offline:
         print("Starting in offline mode")
     elif not terminal_args.port:
-        terminal_args.port = detect_serial_port()
-
-    if terminal_args.detect_only:
-        print(terminal_args.port)
-        sys.exit(0)
+        terminal_args.port = auto_select_port()
 
     global interface
-    interface = debug.ControllerDebugInterface(port=terminal_args.port)
+    interface = debug.ControllerDebugInterface()
+
+    if terminal_args.port:
+        interface.connect(terminal_args.port)
 
     global interpreter
     interpreter = CmdLine()

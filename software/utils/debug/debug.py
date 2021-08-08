@@ -82,9 +82,10 @@ class ControllerDebugInterface:
     # send commands
     cmdLock = threading.Lock()
 
-    def __init__(self, port):
+    def connect(self, port):
         self.ser = serial.Serial(port=port, baudrate=115200)
         self.ser.timeout = 0.8
+        print(f"Debug interface connected to device at {port}")
 
     def connected(self):
         return self.ser.isOpen()
@@ -98,10 +99,13 @@ class ControllerDebugInterface:
 
     def resynchronize(self):
         with self.cmdLock:
-            cmd = [debug_types.TERM, debug_types.TERM]
-            self.ser.write(bytearray(cmd))
-            time.sleep(0.1)
-            self.ser.reset_input_buffer()
+            try:
+                cmd = [debug_types.TERM, debug_types.TERM]
+                self.ser.write(bytearray(cmd))
+                time.sleep(0.1)
+                self.ser.reset_input_buffer()
+            except serial.serialutil.SerialException:
+                self.ser.close()
 
     # Read info about all the supported variables and load
     # them in a map
@@ -112,6 +116,8 @@ class ControllerDebugInterface:
                 data = self.send_command(
                     OP_VAR, [SUBCMD_VAR_INFO] + debug_types.int16s_to_bytes(vid)
                 )
+                if data is None:
+                    break
                 variable = var_info.VarInfo(vid, data)
                 self.variables[variable.name] = variable
         # todo maybe not wait for an exception to terminate this loop?
@@ -572,27 +578,30 @@ class ControllerDebugInterface:
             return
 
         with self.cmdLock:
-            self.ser.write(bytearray(buff))
-            if timeout is not None:
-                self.debug_print("Setting timeout to %.1f" % timeout)
-                old_timeout = self.ser.timeout
-                self.ser.timeout = timeout
+            try:
+                self.ser.write(bytearray(buff))
+                if timeout is not None:
+                    self.debug_print("Setting timeout to %.1f" % timeout)
+                    old_timeout = self.ser.timeout
+                    self.ser.timeout = timeout
 
-            rsp = self.get_response()
-            if timeout is not None:
-                self.ser.timeout = old_timeout
+                rsp = self.get_response()
+                if timeout is not None:
+                    self.ser.timeout = old_timeout
 
-            if len(rsp) < 3:
-                raise error.Error("Invalid response, too short")
+                if len(rsp) < 3:
+                    raise error.Error("Invalid response, too short")
 
-            crc = debug_types.CRC16().calc(rsp[:-2])
-            rcrc = debug_types.bytes_to_int16s(rsp[-2:])[0]
-            if crc != rcrc:
-                raise error.Error(
-                    "CRC error on response, calculated 0x%04x received 0x%04x"
-                    % (crc, rcrc)
-                )
+                crc = debug_types.CRC16().calc(rsp[:-2])
+                rcrc = debug_types.bytes_to_int16s(rsp[-2:])[0]
+                if crc != rcrc:
+                    raise error.Error(
+                        "CRC error on response, calculated 0x%04x received 0x%04x"
+                        % (crc, rcrc)
+                    )
 
-            if rsp[0]:
-                raise error.Error("Error %d (0x%02x)" % (rsp[0], rsp[0]))
-            return rsp[1:-2]
+                if rsp[0]:
+                    raise error.Error("Error %d (0x%02x)" % (rsp[0], rsp[0]))
+                return rsp[1:-2]
+            except serial.serialutil.SerialException:
+                self.ser.close()

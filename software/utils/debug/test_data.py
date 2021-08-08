@@ -24,6 +24,7 @@ import datetime
 from test_scenario import TestScenario
 from typing import Dict, List
 from datetime import datetime
+import matplotlib.pyplot as plt
 import dateutil.parser
 import json
 import platform
@@ -32,7 +33,7 @@ import colors
 
 
 class TestData:
-    """Test data"""
+    """Abstraction for test data, including metadata and test scenario setup"""
 
     start_time_utc: datetime = None
     platform_uname = None
@@ -123,6 +124,33 @@ class TestData:
             print(f"Saving as {file_name}")
         with open(file_name, "w") as json_file:
             json.dump(self.as_dict(), json_file, indent=4)
+
+    def plot(self, save, show):
+        title = self.unique_name()
+
+        timestamps_sec = self.traces[0]
+        dat = self.traces[1:]
+        plt.figure()
+        for i, d in enumerate(dat):
+            var = self.scenario.trace_variable_names[i]
+            label = var
+            plt.plot(timestamps_sec, d, label=label)
+
+        # Draw a black gridline at y=0 to highlight the x-axis.
+        plt.axhline(linewidth=1, color="black")
+
+        plt.xlabel("Seconds")
+        plt.grid()
+        plt.legend()
+        plt.title(title)
+
+        if save:
+            plt.savefig(title + ".png", format="png", metadata={"Title": title})
+
+        if show:
+            plt.show()
+        else:
+            plt.close()
 
     @staticmethod
     def from_dict(data):

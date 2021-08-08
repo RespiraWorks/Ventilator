@@ -29,7 +29,6 @@ import error
 import test_scenario
 import test_data
 from pathlib import Path
-import json
 import colors
 
 # TODO: Import constants from proto instead!
@@ -195,7 +194,7 @@ class ControllerDebugInterface:
 
         # If a format wasn't passed, use the default for this var
         if fmt is None:
-            fmt = variable.fmt
+            fmt = variable.format
 
         return fmt % value
 
@@ -267,39 +266,34 @@ class ControllerDebugInterface:
 
         self.variables_force_open()
         self.variable_set("gui_mode", 0)
-
-        # Give the user a chance to adjust the test lung.
         print(f"\nExecuting test scenario:\n {test.scenario.long_description(True)}")
 
+        # Give the user a chance to adjust the test lung.
         if len(test.scenario.manual_settings):
             input("\nAdjust manual settings per above, then press enter.\n")
 
         # Apply all vent settings
         print("\n")
         self.variables_set(test.scenario.ventilator_settings)
-
         self.variables_force_off()
-        self.trace_set_period(test.scenario.trace_period)
-        self.trace_select(test.scenario.trace_variable_names)
         time.sleep(test.scenario.capture_ignore_secs)
 
         print(
             f"\nStarting data capture for {test.scenario.capture_duration_secs} seconds"
         )
         self.trace_flush()
+        self.trace_set_period(test.scenario.trace_period)
+        self.trace_select(test.scenario.trace_variable_names)
         self.trace_start()
         time.sleep(test.scenario.capture_duration_secs)
 
         print("\nRetrieving data and halting ventilation")
-
         # get data and halt ventilation
         test.traces = self.trace_download()
         self.variable_set("gui_mode", 0)
         self.trace_stop()
-
         test.ventilator_settings = self.variables_get_all()
-        test.save_json(print_self=True)
-        return test.unique_name()
+        return test
 
     def trace_save(self, scenario_name="manual_trace"):
         test = test_data.TestData(test_scenario.TestScenario())
@@ -311,9 +305,7 @@ class ControllerDebugInterface:
             x.name for x in self.trace_active_variables_list()
         ]
         test.ventilator_settings = self.variables_get_all()
-
-        test.save_json(print_self=True)
-        return test.unique_name()
+        return test
 
     def peek(self, address, ct=1, fmt="+XXXX", fname=None, raw=False):
         address = debug_types.decode_address(address)

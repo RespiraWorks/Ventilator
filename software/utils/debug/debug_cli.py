@@ -24,7 +24,6 @@ __license__ = """
 """
 
 import debug
-from typing import List
 import argparse
 import cmd
 import glob
@@ -140,18 +139,18 @@ named {self.scripts_directory} will be searched for the python script.
         )
 
     def do_run(self, line):
-        p = shlex.split(line)
-        if os.path.exists(p[0]):
-            fname = p[0]
-        elif os.path.exists(self.scripts_directory + p[0]):
-            fname = self.scripts_directory + p[0]
+        params = shlex.split(line)
+        if os.path.exists(params[0]):
+            file_name = params[0]
+        elif os.path.exists(self.scripts_directory + params[0]):
+            file_name = self.scripts_directory + params[0]
         else:
-            print("Unknown file " + p[0])
+            print("Unknown file " + params[0])
             return
         gbl = globals().copy()
         gbl["cmdline"] = line
         gbl["parser"] = self
-        exec(open(fname).read(), gbl)
+        exec(open(file_name).read(), gbl)
 
     def complete_run(self, text, line, begidx, endidx):
         return glob.glob(text + "*.py") + [
@@ -173,21 +172,33 @@ variables and other available metadata concerning the testing environment.
 The unique test identifier (as well as the file name) is defined as
     <UTC date-time>_<tester>_<scenario_name>
 
-load <file>                   - loads test scenarios from specified .csv or .json <file>
-autoload                      - loads all test scenarios found in `test_scenarios` subdirectory
-clear                         - clears all test scenarios loaded in this session
-list [--verbose/-v]           - lists all test scenarios loaded in this session
-show <scenario>               - prints out the full definition of named <scenario>
-apply <scenario>              - applies all ventilator settings for named <scenario>
-run <scenario>                - runs named <scenario> and saves data to .json
-read <file> [--verbose/-v]    - reads test data from <file> and prints it out, including full
-                                trace data if [--verbose/-v] os marked
-plot <file> [--nointeractive] [--scale=<field>/scale --scale=<field>*scale] - reads test data
-    from <file> and visualizes it in a plot, saving it to .png file with same name
-        <--noninteractive> prevents displaying plot, only saves to file
-        <--scale> lets you multiply or divide a field by a given scaling factor.  This  makes
-                  it feasible to fit values with different magnitudes on the same Y axis, e.g.
-                  --scale=volume/100 or --scale=pressure*10
+test load <file>
+  loads test scenarios from specified .csv or .json <file>
+
+test autoload
+  loads all test scenarios found in `test_scenarios` subdirectory
+
+test clear
+  clears all test scenarios loaded in this session
+
+test list [--verbose/-v]
+  lists all test scenarios loaded in this session
+
+test show <scenario>
+  prints out the full definition of named <scenario>
+
+test apply <scenario>
+  applies all ventilator settings for named <scenario>
+
+test run <scenario> [--verbose/-v] [--plot/-p]
+  runs named <scenario> and saves data to .json
+    --verbose/-v  will also print out full trace data in columns
+    --plot/-p will also plot traces and save plots as .png
+
+test read <file> [--verbose/-v] [--plot/-p]
+  reads test data from <file> and prints it out,
+    --verbose/-v  will also print out full trace data in columns
+    --plot/-p will also plot traces and save plots as .png
         """
         params = shlex.split(line)
         if len(params) < 1:
@@ -200,22 +211,27 @@ plot <file> [--nointeractive] [--scale=<field>/scale --scale=<field>*scale] - re
                 print(colors.red("File name not provided for `test load`\n"))
                 return
             interface.tests_import(params[1])
+
         elif subcommand == "autoload":
             for x in glob.glob(self.test_definitions_dir + "*.json"):
                 interface.tests_import(x)
+
         elif subcommand == "clear":
             interface.scenarios.clear()
+
         elif subcommand == "list":
             verbose = len(params) > 1 and (
                 params[1] == "-v" or params[1] == "--verbose"
             )
             interface.tests_list(verbose)
+
         elif subcommand == "show":
             if len(params) < 2:
                 print(colors.red("Test name not provided for `test show`\n"))
             if params[1] not in interface.scenarios.keys():
                 print(colors.red(f"Test `{params[1]}` does not exist\n"))
             print(interface.scenarios[params[1]].long_description())
+
         elif subcommand == "apply":
             if len(params) < 2:
                 print(colors.red("Test name not provided for `test apply`\n"))
@@ -223,25 +239,45 @@ plot <file> [--nointeractive] [--scale=<field>/scale --scale=<field>*scale] - re
             if params[1] not in interface.scenarios.keys():
                 print(colors.red(f"Test `{params[1]}` does not exist\n"))
             interface.test_apply(params[1])
+
         elif subcommand == "run":
             if len(params) < 2:
                 print(colors.red("Test name not provided for `test run`\n"))
                 return
             if params[1] not in interface.scenarios.keys():
                 print(colors.red(f"Test `{params[1]}` does not exist\n"))
-            interface.test_run(params[1])
+            test = interface.test_run(params[1])
+            test.save_json(print_self=True)
+            if len(params) > 2:
+                parser = CmdArgumentParser("test")
+                parser.add_argument(
+                    "--verbose", "-v", default=False, action="store_true"
+                )
+                parser.add_argument("--plot", "-p", default=False, action="store_true")
+                args2 = parser.parse_args(params[2:])
+                if args2.verbose:
+                    print(test.print_trace())
+                if args2.plot:
+                    test.plot(save=True, show=True)
+
         elif subcommand == "read":
             if len(params) < 2:
                 print(colors.red("File name not provided for `test read`\n"))
                 return
-            td = test_data.TestData.from_json(params[1])
-            print(td)
-        elif subcommand == "plot":
-            if len(params) < 2:
-                print(colors.red("File name not provided for `test plot`\n"))
-                return
-            td = test_data.TestData.from_json(params[1])
-            test_plot(td, params[2:])
+            test = test_data.TestData.from_json(params[1])
+            print(test)
+            if len(params) > 2:
+                parser = CmdArgumentParser("test")
+                parser.add_argument(
+                    "--verbose", "-v", default=False, action="store_true"
+                )
+                parser.add_argument("--plot", "-p", default=False, action="store_true")
+                args2 = parser.parse_args(params[2:])
+                if args2.verbose:
+                    print(test.print_trace())
+                if args2.plot:
+                    test.plot(save=False, show=True)
+
         else:
             print("Invalid test args: {}", params)
 
@@ -252,12 +288,12 @@ plot <file> [--nointeractive] [--scale=<field>/scale --scale=<field>*scale] - re
     def do_peek(self, line):
         """Peek at a memory location.
 
-ex: peek <addr> <ct> <fmt> <file>
+ex: peek <address> <ct> <fmt> <file>
 
-   addr - the starting address passed as an integer value
-   ct   - Number of bytes to read (default 1)
-   fmt  - An optional formatting string.
-   file - An optional file to save the data to
+   address - the starting address passed as an integer value
+   ct      - Number of bytes to read (default 1)
+   fmt     - An optional formatting string.
+   file    - An optional file to save the data to
 
    The formatting string determines how the data is interpreted and displayed.
    Its a string made up of the following characters:
@@ -286,45 +322,45 @@ ex: peek <addr> <ct> <fmt> <file>
             return
         ct = 1
         fmt = "+XXXX"
-        fname = None
+        file_name = None
         if len(param) > 3:
-            fname = param[3]
+            file_name = param[3]
         if len(param) > 2:
             fmt = param[2]
         if len(param) > 1:
             ct = int(param[1], 0)
-        addr = int(param[0], 0)
-        interface.peek(addr, ct, fmt, fname)
+        address = int(param[0], 0)
+        interface.peek(address, ct, fmt, file_name)
 
     def do_poke(self, line):
         """Write data to a memory address
 
-ex: poke [type] <addr> <data>
+ex: poke [type] <address> <data>
 
-   type - Optional type, can be byte, short, long or float
-          determines how the data will be interpreted.
+   type    - Optional type, can be byte, short, long or float
+             determines how the data will be interpreted.
 
-   addr - Address at which to write data
+   address - Address at which to write data
 
-   data - One or more data items to write.
+   data    - One or more data items to write.
 """
         param = shlex.split(line)
         if len(param) < 2:
             print("Please pass the address and at least one value to write")
             return
 
-        ptype = "byte"
+        poke_type = "byte"
         if param[0] in ["long", "short", "float"]:
-            ptype = param[0]
+            poke_type = param[0]
             param = param[1:]
 
-        addr = param[0]
+        address = param[0]
 
-        if ptype == "float":
+        if poke_type == "float":
             data = [float(x) for x in param[1:]]
         else:
             data = [int(x, 0) for x in param[1:]]
-        interface.poke(addr, data, ptype)
+        interface.poke(address, data, poke_type)
 
     def do_EOF(self, line):
         return True
@@ -409,11 +445,12 @@ trace status
     - trace period
     - number of samples in the trace buffer
 
-trace save
+trace save [--verbose/-v] [--plot/-p]
   Downloads trace data and saves it as an "unplanned test". File will be named as
-  <date-time>_<user>_manual_trace.jpg with a blank test scenario definition.
+  <date-time>_<user>_manual_trace.json with a blank test scenario definition.
   See more about tests and test scenarios with `help test`.
-
+    --verbose/-v  will also print out full trace data
+    --plot/-p will also plot traces and save as .png
 """
         cl = shlex.split(line)
         if len(cl) < 1:
@@ -422,7 +459,7 @@ trace save
             return
 
         if cl[0] == "flush":
-            interface.trace_start()
+            interface.trace_flush()
 
         elif cl[0] == "start":
             parser = CmdArgumentParser("trace start")
@@ -446,9 +483,21 @@ trace save
         elif cl[0] == "stop":
             interface.trace_stop()
 
-        # todo trace dump for simple printing
         elif cl[0] == "save":
-            interface.trace_save()
+            test = interface.trace_save()
+            test.save_json(print_self=True)
+
+            if len(cl) > 1:
+                parser = CmdArgumentParser("test")
+                parser.add_argument(
+                    "--verbose", "-v", default=False, action="store_true"
+                )
+                parser.add_argument("--plot", "-p", default=False, action="store_true")
+                args2 = parser.parse_args(cl[1:])
+                if args2.verbose:
+                    print(test.print_trace())
+                if args2.plot:
+                    test.plot(save=True, show=True)
 
         elif cl[0] == "status":
             print("Traced variables:")
@@ -492,85 +541,6 @@ eeprom write <address> <data>
             return
 
 
-def test_plot(data: test_data.TestData, raw_args: List[str]):
-    parser = CmdArgumentParser("test plot")
-    parser.add_argument(
-        "--noninteractive",
-        default=False,
-        action="store_true",
-        help="Don't show the graph interactively.  Useful for scripts.",
-    )
-    parser.add_argument(
-        "--scale",
-        default=[],
-        action="append",
-        metavar="FIELD / SCALE or FIELD * SCALE",
-        help="Scale a var by the given amount, e.g. "
-        "--scale=volume/100 or --scale=pressure*10",
-    )
-
-    args = parser.parse_args(raw_args)
-
-    scalings = {}
-    for s in args.scale:
-        if "/" in s:
-            var, n = (x.strip() for x in s.split("/"))
-            scalings[var] = ("/", float(n))
-        elif "*" in s:
-            var, n = s.split("*")
-            scalings[var] = ("*", float(n))
-        else:
-            raise error.Error(f"Invalid scaling parameter {s}")
-
-    graph_img_filename = data.unique_name() + ".png"
-
-    unrecognized_scale_vars = set(scalings.keys()) - set(
-        data.scenario.trace_variable_names
-    )
-    if unrecognized_scale_vars:
-        raise error.Error(
-            f"Can't scale by vars that aren't being traced: {unrecognized_scale_vars}"
-        )
-
-    timestamps_sec = data.traces[0]
-    dat = data.traces[1:]
-    plt.figure()
-    for i, d in enumerate(dat):
-        var = data.scenario.trace_variable_names[i]
-
-        scale_kind, scale = scalings.get(var, (None, None))
-        label = var
-        if scale_kind:
-            label += f", scaled {scale_kind} {scale}"
-
-        if scale_kind == "*":
-            multiplier = scale
-        elif scale_kind == "/":
-            multiplier = 1 / scale
-        else:
-            multiplier = 1
-
-        plt.plot(timestamps_sec, [v * multiplier for v in d], label=label)
-
-    # Draw a black gridline at y=0 to highlight the x-axis.
-    plt.axhline(linewidth=1, color="black")
-
-    plt.xlabel("Seconds")
-    plt.grid()
-    plt.legend()
-    plt.title(data.unique_name())
-
-    # todo: save always?
-    plt.savefig(
-        graph_img_filename, format="png", metadata={"Title": data.unique_name()}
-    )
-
-    if not args.noninteractive:
-        plt.show()
-    else:
-        plt.close()
-
-
 def detect_serial_port():
     j = json.loads(
         subprocess.check_output(["platformio", "device", "list", "--json-output"])
@@ -599,6 +569,7 @@ def main():
     terminal_parser = argparse.ArgumentParser()
     terminal_parser.add_argument(
         "--port",
+        "-p",
         type=str,
         help="Serial port device is connected to, e.g. /dev/ttyACM0."
         " If unspecified, we try to auto-detect the port.",
@@ -614,12 +585,11 @@ def main():
         help="Run interpreter without connecting to device",
     )
     terminal_parser.add_argument(
-        "--detect-port-and-quit",
+        "--detect-only",
         action="store_true",
-        help="""Detect the port that the device is connected to and then
-immediately exit.  This is useful for scripts that invoke this program multiple
-times.  Port detection is the slowest part of startup, so this option lets you
-do it once upfront.""",
+        help="Detect the port that the device is connected to and then immediately exit."
+        "This is useful for scripts that invoke this program multiple times.  Port detection is"
+        "the slowest part of startup, so this option lets you do it once upfront.",
     )
 
     terminal_args = terminal_parser.parse_args()
@@ -629,7 +599,7 @@ do it once upfront.""",
     elif not terminal_args.port:
         terminal_args.port = detect_serial_port()
 
-    if terminal_args.detect_port_and_quit:
+    if terminal_args.detect_only:
         print(terminal_args.port)
         sys.exit(0)
 

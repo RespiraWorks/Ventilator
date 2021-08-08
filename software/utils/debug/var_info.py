@@ -32,41 +32,48 @@ VAR_FLOAT = 3
 
 
 class VarInfo:
+    """Abstraction for debug variable metadata, utilities for automatic type conversion"""
+
+    id: int
+    type: int
+    name: str
+    format: str
+    help: str
 
     # Initialize the variable info from the data returned
     # by the controller.  Set var.cpp in the controller for
     # details on this formatting
-    def __init__(self, id, dat):
+    def __init__(self, id, data):
         self.id = id
 
-        if len(dat) < 8:
+        if len(data) < 8:
             raise error.Error("Invalid VarInfo data returned")
 
-        self.type = dat[0]
-        name_length = dat[4]
-        fmt_length = dat[5]
-        help_length = dat[6]
+        self.type = data[0]
+        name_length = data[4]
+        fmt_length = data[5]
+        help_length = data[6]
 
-        if len(dat) < 8 + name_length + fmt_length + help_length:
+        if len(data) < 8 + name_length + fmt_length + help_length:
             raise error.Error("Invalid VarInfo data returned")
 
         n = 8
-        self.name = "".join([chr(x) for x in dat[n : n + name_length]])
+        self.name = "".join([chr(x) for x in data[n : n + name_length]])
         n += name_length
-        self.fmt = "".join([chr(x) for x in dat[n : n + fmt_length]])
+        self.format = "".join([chr(x) for x in data[n : n + fmt_length]])
         n += fmt_length
-        self.help = "".join([chr(x) for x in dat[n : n + help_length]])
+        self.help = "".join([chr(x) for x in data[n : n + help_length]])
 
     # Convert an unsigned 32-bit value into the correct type for
     # this variable
-    def convert_int(self, d):
+    def convert_int(self, data):
         if self.type == VAR_FLOAT:
-            return debug_types.i_to_f(d)
+            return debug_types.i_to_f(data)
         if self.type == VAR_INT32:
-            if d & 0x80000000:
-                return d - (1 << 32)
-            return d
-        return d
+            if data & 0x80000000:
+                return data - (1 << 32)
+            return data
+        return data
 
     def from_bytes(self, data):
         if self.type == VAR_INT32:

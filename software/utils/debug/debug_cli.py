@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Ventilator debug interface: simple command line interface
+# Ventilator debug self.interface: simple command line self.interface
 # For a list of available commands, enter 'help'
 
 __copyright__ = "Copyright 2021 RespiraWorks"
@@ -27,15 +27,14 @@ import debug
 import argparse
 import cmd
 import glob
-import matplotlib.pyplot as plt
 import os
 import shlex
-import sys
 import traceback
 import colors
 import error
 import test_data
 import serial_detect
+import matplotlib.pyplot as plt
 
 
 class ArgparseShowHelpError(Exception):
@@ -62,38 +61,48 @@ class CmdArgumentParser(argparse.ArgumentParser):
             raise ArgparseShowHelpError()
 
 
-# This class creates a simple command line interface using the standard
+# This class creates a simple command line self.interface using the standard
 # Python cmd module.
 #
 # Member functions named do_something will implement a command called
 # 'something'.  See the Python documentation for the cmd module for
 # more details.
 class CmdLine(cmd.Cmd):
-    def __init__(self):
+
+    interface: debug.ControllerDebugInterface
+    scripts_directory: str
+    test_definitions_dir: str
+
+    def __init__(self, port):
         super().__init__()
         self.scripts_directory = "scripts/"
         self.test_definitions_dir = "test_scenarios/"
+        self.interface = debug.ControllerDebugInterface()
+        if not port:
+            port = auto_select_port()
+        if port:
+            self.interface.connect(port)
 
     def autoload(self):
         for x in glob.glob(self.test_definitions_dir + "*.json"):
-            interface.tests_import(x)
+            self.interface.tests_import(x)
 
     def update_prompt(self, mode=None):
-        if not interface.connected():
+        if not self.interface.connected():
             self.prompt = colors.red("OFFLINE] ")
         else:
             if mode is None:
-                mode = interface.mode_get()
+                mode = self.interface.mode_get()
             if mode == 1:
                 self.prompt = colors.orange("BOOT] ")
             else:
-                self.prompt = colors.green(f"{interface.ser.port}] ")
+                self.prompt = colors.green(f"{self.interface.serial_port.port}] ")
 
     def cli_loop(self):
         self.autoload()
-        if interface.connected():
-            interface.resynchronize()
-            interface.variables_update_info()
+        if self.interface.connected():
+            self.interface.resynchronize()
+            self.interface.variables_update_info()
         self.update_prompt()
 
         while True:
@@ -108,7 +117,7 @@ class CmdLine(cmd.Cmd):
             self.update_prompt()
 
     def emptyline(self):
-        interface.resynchronize()
+        self.interface.resynchronize()
         self.update_prompt()
 
     def do_debug(self, line):
@@ -121,13 +130,30 @@ class CmdLine(cmd.Cmd):
         """
         line = line.strip().lower()
         if line == "on":
-            interface.showSerial = True
+            self.interface.print_raw = True
         elif line == "off":
-            interface.showSerial = False
+            self.interface.print_raw = False
         else:
             print("Unknown command; pass 'on' or 'off'.")
 
     def do_connect(self, line):
+        """This command manages the connection of the debug interface to the ventilator controller
+
+If ventilator USB cable is unplugged, the CLI prompt should update to reflect this on the next loop
+(blank line or failed command). You may also start the debugger without a plugged in device.
+Use one of the following commands to reconnect.
+
+connect list
+  searches and lists available STM32 devices on the serial bus
+
+connect auto
+  attempt to connect to a plugged in controller automatically
+
+connect <port>
+  connect to controller on a specific port
+
+        """
+
         params = shlex.split(line)
         if len(params) < 1:
             print(colors.red("Not enough args for `connect`\n"))
@@ -138,15 +164,15 @@ class CmdLine(cmd.Cmd):
             serial_detect.print_detected_ports()
 
         elif subcommand == "auto":
-            interface.connect(auto_select_port())
-            interface.resynchronize()
-            interface.variables_update_info()
+            self.interface.connect(auto_select_port())
+            self.interface.resynchronize()
+            self.interface.variables_update_info()
             self.update_prompt()
 
         else:
-            interface.connect(params[0])
-            interface.resynchronize()
-            interface.variables_update_info()
+            self.interface.connect(params[0])
+            self.interface.resynchronize()
+            self.interface.variables_update_info()
             self.update_prompt()
 
     def help_run(self):
@@ -231,43 +257,43 @@ test read <file> [--verbose/-v] [--plot/-p]
             if len(params) < 2:
                 print(colors.red("File name not provided for `test load`\n"))
                 return
-            interface.tests_import(params[1])
+            self.interface.tests_import(params[1])
 
         elif subcommand == "autoload":
             for x in glob.glob(self.test_definitions_dir + "*.json"):
-                interface.tests_import(x)
+                self.interface.tests_import(x)
 
         elif subcommand == "clear":
-            interface.scenarios.clear()
+            self.interface.scenarios.clear()
 
         elif subcommand == "list":
             verbose = len(params) > 1 and (
                 params[1] == "-v" or params[1] == "--verbose"
             )
-            interface.tests_list(verbose)
+            self.interface.tests_list(verbose)
 
         elif subcommand == "show":
             if len(params) < 2:
                 print(colors.red("Test name not provided for `test show`\n"))
-            if params[1] not in interface.scenarios.keys():
+            if params[1] not in self.interface.scenarios.keys():
                 print(colors.red(f"Test `{params[1]}` does not exist\n"))
-            print(interface.scenarios[params[1]].long_description())
+            print(self.interface.scenarios[params[1]].long_description())
 
         elif subcommand == "apply":
             if len(params) < 2:
                 print(colors.red("Test name not provided for `test apply`\n"))
                 return
-            if params[1] not in interface.scenarios.keys():
+            if params[1] not in self.interface.scenarios.keys():
                 print(colors.red(f"Test `{params[1]}` does not exist\n"))
-            interface.test_apply(params[1])
+            self.interface.test_apply(params[1])
 
         elif subcommand == "run":
             if len(params) < 2:
                 print(colors.red("Test name not provided for `test run`\n"))
                 return
-            if params[1] not in interface.scenarios.keys():
+            if params[1] not in self.interface.scenarios.keys():
                 print(colors.red(f"Test `{params[1]}` does not exist\n"))
-            test = interface.test_run(params[1])
+            test = self.interface.test_run(params[1])
             test.save_json(print_self=True)
             if len(params) > 2:
                 parser = CmdArgumentParser("test")
@@ -351,7 +377,7 @@ ex: peek <address> <ct> <fmt> <file>
         if len(param) > 1:
             ct = int(param[1], 0)
         address = int(param[0], 0)
-        interface.peek(address, ct, fmt, file_name)
+        self.interface.peek(address, ct, fmt, file_name)
 
     def do_poke(self, line):
         """Write data to a memory address
@@ -381,7 +407,7 @@ ex: poke [type] <address> <data>
             data = [float(x) for x in param[1:]]
         else:
             data = [int(x, 0) for x in param[1:]]
-        interface.poke(address, data, poke_type)
+        self.interface.poke(address, data, poke_type)
 
     def do_EOF(self, line):
         return True
@@ -396,7 +422,7 @@ ex: poke [type] <address> <data>
             return
 
         if cl[0] == "all":
-            all_vars = interface.variables_get_all()
+            all_vars = self.interface.variables_get_all()
             for name, val in all_vars.items():
                 print(f"{name:25} = {val}")
             return
@@ -406,31 +432,31 @@ ex: poke [type] <address> <data>
         else:
             fmt = None
 
-        print(interface.variable_get(cl[0], fmt=fmt))
+        print(self.interface.variable_get(cl[0], fmt=fmt))
 
     def complete_get(self, text, line, begidx, endidx):
-        return interface.variables_starting_with(text)
+        return self.interface.variables_starting_with(text)
 
     def help_get(self):
         print("Read the value of a ventilator debug variable and display it.")
         print(
             "In addition to those listed below 'get all' will retrieve all variables.\n"
         )
-        print(interface.variables_list())
+        print(self.interface.variables_list())
 
     def do_set(self, line):
         cl = line.split()
         if len(cl) < 2:
             print("Please give the variable name and value")
             return
-        interface.variable_set(cl[0], cl[1])
+        self.interface.variable_set(cl[0], cl[1])
 
     def complete_set(self, text, line, begidx, endidx):
-        return interface.variables_starting_with(text)
+        return self.interface.variables_starting_with(text)
 
     def help_set(self):
         print("Sets one of the ventilator debug variables listed below:\n")
-        print(interface.variables_list())
+        print(self.interface.variables_list())
 
     def do_trace(self, line):
         """The `trace` command controls/reads the controller's trace buffer.
@@ -440,7 +466,7 @@ to a large internal memory buffer in the device, which you can then download
 and/or display as a graph.
 
 For meaningful performance testing, it is recommended that you use the higher
-level `test` interface for a more structured experiment control experience. See
+level `test` self.interface for a more structured experiment control experience. See
 `help test`.
 
 A sub-command must be passed as an option:
@@ -480,7 +506,7 @@ trace save [--verbose/-v] [--plot/-p]
             return
 
         if cl[0] == "flush":
-            interface.trace_flush()
+            self.interface.trace_flush()
 
         elif cl[0] == "start":
             parser = CmdArgumentParser("trace start")
@@ -491,21 +517,21 @@ trace save [--verbose/-v] [--plot/-p]
             # TODO: check validity of all variables
 
             if args.period:
-                interface.trace_set_period(args.period)
+                self.interface.trace_set_period(args.period)
             else:
-                interface.trace_set_period(1)
+                self.interface.trace_set_period(1)
 
             if args.var:
-                interface.trace_select(args.var)
+                self.interface.trace_select(args.var)
 
-            interface.trace_flush()
-            interface.trace_start()
+            self.interface.trace_flush()
+            self.interface.trace_start()
 
         elif cl[0] == "stop":
-            interface.trace_stop()
+            self.interface.trace_stop()
 
         elif cl[0] == "save":
-            test = interface.trace_save()
+            test = self.interface.trace_save()
             test.save_json(print_self=True)
 
             if len(cl) > 1:
@@ -522,10 +548,10 @@ trace save [--verbose/-v] [--plot/-p]
 
         elif cl[0] == "status":
             print("Traced variables:")
-            for var in interface.trace_active_variables_list():
+            for var in self.interface.trace_active_variables_list():
                 print(f" - {var.name}")
-            print(f"Trace period: {interface.trace_get_period_us()} \u03BCs")
-            print(f"Samples in buffer: {interface.trace_num_samples()}")
+            print(f"Trace period: {self.interface.trace_get_period_us()} \u03BCs")
+            print(f"Samples in buffer: {self.interface.trace_num_samples()}")
 
         else:
             print(f"Unknown trace sub-command {cl[0]}")
@@ -551,12 +577,12 @@ eeprom write <address> <data>
             if len(cl) < 3:
                 print("Error, please provide address and length.")
                 return
-            print(interface.eeprom_read(cl[1], cl[2]))
+            print(self.interface.eeprom_read(cl[1], cl[2]))
         elif cl[0] == "write":
             if len(cl) < 3:
                 print("Error, please provide address and at least 1 byte of data.")
                 return
-            interface.eeprom_write(cl[1], list(map(int, cl[2:])))
+            self.interface.eeprom_write(cl[1], list(map(int, cl[2:])))
         else:
             print("Error: Unknown subcommand %s" % cl[0])
             return
@@ -580,10 +606,6 @@ def auto_select_port():
     return ports[0]
 
 
-interface: debug.ControllerDebugInterface
-interpreter: CmdLine
-
-
 def main():
     terminal_parser = argparse.ArgumentParser()
     terminal_parser.add_argument(
@@ -596,29 +618,10 @@ def main():
     terminal_parser.add_argument(
         "--command", "-c", type=str, help="Run the given command and exit."
     )
-    terminal_parser.add_argument(
-        "--offline",
-        "-o",
-        default=False,
-        action="store_true",
-        help="Run interpreter without connecting to device",
-    )
 
     terminal_args = terminal_parser.parse_args()
 
-    if terminal_args.offline:
-        print("Starting in offline mode")
-    elif not terminal_args.port:
-        terminal_args.port = auto_select_port()
-
-    global interface
-    interface = debug.ControllerDebugInterface()
-
-    if terminal_args.port:
-        interface.connect(terminal_args.port)
-
-    global interpreter
-    interpreter = CmdLine()
+    interpreter = CmdLine(terminal_args.port)
 
     if terminal_args.command:
         # Set matplotlib to noninteractive mode.  This causes show() to block,

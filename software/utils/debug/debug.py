@@ -68,11 +68,11 @@ class ControllerDebugInterface:
     # If true, the raw bytes of the serial data will be printed.
     # This is handy for debugging the low level serial interface
     # It can be toggled with the 'debug' command
-    showSerial = False
+    print_raw = False
 
-    ser = serial.Serial()
+    serial_port = serial.Serial()
 
-    variables = {}
+    variable_metadata = {}
 
     scenarios = {}
 
@@ -80,37 +80,37 @@ class ControllerDebugInterface:
     # The main debug program doesn't currently use threads, but scripts
     # run from it may and those scripts use these same functions to
     # send commands
-    cmdLock = threading.Lock()
+    command_lock = threading.Lock()
 
     def connect(self, port):
-        self.ser = serial.Serial(port=port, baudrate=115200)
-        self.ser.timeout = 0.8
+        self.serial_port = serial.Serial(port=port, baudrate=115200)
+        self.serial_port.timeout = 0.8
         print(f"Debug interface connected to device at {port}")
 
     def connected(self):
-        return self.ser.isOpen()
+        return self.serial_port.isOpen()
 
     def debug_print(self, *args, **kwargs):
-        if self.showSerial:
+        if self.print_raw:
             print(*args, **kwargs)
 
     def mode_get(self):
         return self.send_command(OP_MODE)[0]
 
     def resynchronize(self):
-        with self.cmdLock:
+        with self.command_lock:
             try:
                 cmd = [debug_types.TERM, debug_types.TERM]
-                self.ser.write(bytearray(cmd))
+                self.serial_port.write(bytearray(cmd))
                 time.sleep(0.1)
-                self.ser.reset_input_buffer()
+                self.serial_port.reset_input_buffer()
             except serial.serialutil.SerialException:
-                self.ser.close()
+                self.serial_port.close()
 
     # Read info about all the supported variables and load
     # them in a map
     def variables_update_info(self):
-        self.variables.clear()
+        self.variable_metadata.clear()
         try:
             for vid in range(256):
                 data = self.send_command(
@@ -119,28 +119,28 @@ class ControllerDebugInterface:
                 if data is None:
                     break
                 variable = var_info.VarInfo(vid, data)
-                self.variables[variable.name] = variable
+                self.variable_metadata[variable.name] = variable
         # todo maybe not wait for an exception to terminate this loop?
         except error.Error as e:
             pass
 
     def variables_list(self):
         ret = "Variables currently defined:\n"
-        for k in self.variables.keys():
-            ret += " {:25} - {}\n".format(k, self.variables[k].help)
+        for k in self.variable_metadata.keys():
+            ret += " {:25} - {}\n".format(k, self.variable_metadata[k].help)
         return ret
 
     def variables_starting_with(self, text):
         out = []
-        for i in self.variables.keys():
+        for i in self.variable_metadata.keys():
             if i.startswith(text):
                 out.append(i)
         return out
 
     def variable_by_id(self, vid):
-        for name in self.variables:
-            if self.variables[name].id == vid:
-                return self.variables[name]
+        for name in self.variable_metadata:
+            if self.variable_metadata[name].id == vid:
+                return self.variable_metadata[name]
         return None
 
     def variables_force_open(self):
@@ -181,15 +181,15 @@ class ControllerDebugInterface:
 
     def variables_get_all(self):
         ret = {}
-        for name in self.variables:
+        for name in self.variable_metadata:
             ret[name] = self.variable_get(name)
         return ret
 
     def variable_get(self, name, raw=False, fmt=None):
-        if not (name in self.variables):
+        if not (name in self.variable_metadata):
             raise error.Error("Unknown variable %s" % name)
 
-        variable = self.variables[name]
+        variable = self.variable_metadata[name]
         data = self.send_command(
             OP_VAR, [SUBCMD_VAR_GET] + debug_types.int16s_to_bytes(variable.id)
         )
@@ -205,10 +205,10 @@ class ControllerDebugInterface:
         return fmt % value
 
     def variable_set(self, name, value):
-        if not (name in self.variables):
+        if not (name in self.variable_metadata):
             raise error.Error("Unknown variable %s" % name)
 
-        variable = self.variables[name]
+        variable = self.variable_metadata[name]
         data = variable.to_bytes(value)
 
         self.send_command(
@@ -222,7 +222,7 @@ class ControllerDebugInterface:
             raise error.Error(f"Input file does not exist {file_name}")
         elif in_file.suffix == ".csv":
             imported_scenarios = test_scenario.TestScenario.from_csv(
-                in_file, self.variables.keys()
+                in_file, self.variable_metadata.keys()
             )
         elif in_file.suffix == ".json":
             imported_scenarios = test_scenario.TestScenario.from_json(in_file)
@@ -421,8 +421,8 @@ class ControllerDebugInterface:
         var_names += [""] * (TRACE_VAR_CT - len(var_names))
         for (i, var_name) in enumerate(var_names):
             var_id = -1
-            if var_name in self.variables:
-                var_id = self.variables[var_name].id
+            if var_name in self.variable_metadata:
+                var_id = self.variable_metadata[var_name].id
             var = debug_types.int16s_to_bytes(var_id)
             self.send_command(OP_TRACE, [SUBCMD_TRACE_SET_VARID, i] + var)
 
@@ -524,7 +524,7 @@ class ControllerDebugInterface:
         esc = False
         self.debug_print("Getting resp: ", end="")
         while True:
-            x = self.ser.read(1)
+            x = self.serial_port.read(1)
             if len(x) < 1:
                 self.debug_print("timeout")
                 return dat
@@ -574,20 +574,20 @@ class ControllerDebugInterface:
             debug_string += "0x%02x " % b
         self.debug_print(debug_string)
 
-        if not self.ser.isOpen():
+        if not self.serial_port.isOpen():
             return
 
-        with self.cmdLock:
+        with self.command_lock:
             try:
-                self.ser.write(bytearray(buff))
+                self.serial_port.write(bytearray(buff))
                 if timeout is not None:
                     self.debug_print("Setting timeout to %.1f" % timeout)
-                    old_timeout = self.ser.timeout
-                    self.ser.timeout = timeout
+                    old_timeout = self.serial_port.timeout
+                    self.serial_port.timeout = timeout
 
                 rsp = self.get_response()
                 if timeout is not None:
-                    self.ser.timeout = old_timeout
+                    self.serial_port.timeout = old_timeout
 
                 if len(rsp) < 3:
                     raise error.Error("Invalid response, too short")
@@ -604,4 +604,4 @@ class ControllerDebugInterface:
                     raise error.Error("Error %d (0x%02x)" % (rsp[0], rsp[0]))
                 return rsp[1:-2]
             except serial.serialutil.SerialException:
-                self.ser.close()
+                self.serial_port.close()

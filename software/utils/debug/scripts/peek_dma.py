@@ -42,19 +42,19 @@ def peek_dma(interface: ControllerDebugInterface, line: str = ""):
     reg = interface.peek32(base, 43)
 
     sel = reg[42]
-    print("0x%08x Int Status: 0x%08x" % (base, reg[0]))
-    print("0x%08x Int clear:  0x%08x" % (base + 4, reg[1]))
-    print("0x%08x Chan sel:   0x%08x" % (base + 4 * 42, sel))
+    print("0x{:08x} Int Status: 0x{:08x}".format(base, reg[0]))
+    print("0x{:08x} Int clear:  0x{:08x}".format(base + 4, reg[1]))
+    print("0x{:08x} Chan sel:   0x{:08x}".format(base + 4 * 42, sel))
     print()
 
     print("                         config      count       pAddr       mAddr     csel")
     for i in range(7):
         n = 5 * i + 2
-        S = "0x%08x Channel %d:  " % (base + 4 * n, i + 1)
+        S = "0x{:08x} Channel {}:  ".format(base + 4 * n, i + 1)
 
         for j in range(4):
-            S += "0x%08x  " % reg[n + j]
+            S += "0x{:08x}  ".format(reg[n + j])
 
-        S += "%d" % ((sel >> 4 * i) & 0xF)
+        S += f"{(sel >> 4 * i) & 0xF}"
 
         print(S)

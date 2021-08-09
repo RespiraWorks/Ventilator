@@ -148,7 +148,7 @@ class ControllerDebugInterface:
         # so it's not inflating the test lung.  Edwin's request is that the fan
         # doesn't have to spin up during these tests.
         self.variable_set("forced_exhale_valve_pos", 1)
-        self.variable_set("forced_blower_valve_pos", 0)
+        self.variable_set("forced_blower_valve_pos", 1)
         self.variable_set("forced_blower_power", 1)
         # todo force o2 psol open or closed?
 

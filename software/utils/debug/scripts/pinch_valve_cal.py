@@ -9,8 +9,14 @@
 # already calibrated pinch valve to see if you get linear results.
 
 import time
+import sys
 
-def main():
+sys.path.append("..")
+
+from controller_debug import ControllerDebugInterface
+
+
+def pinch_valve_cal(interface: ControllerDebugInterface, cmdline: str = ""):
     print("Shutting off fan and homing pinch valve")
     interface.variable_set("forced_blower_power", 0.75)
     interface.variable_set("forced_blower_valve_pos", 0)
@@ -19,13 +25,13 @@ def main():
     print()
 
     print("Reading minimal flow value from sensor...")
-    zero = get_trace_mean()
+    zero = get_trace_mean(interface)
     print(zero)
 
     print("Taking a reading fully open")
     interface.variable_set("forced_blower_valve_pos", 1)
     time.sleep(0.3)
-    full = get_trace_mean()
+    full = get_trace_mean(interface)
     print(full)
 
     results = [1]
@@ -47,7 +53,7 @@ def main():
             valve -= vinc
             interface.variable_set("forced_blower_valve_pos", valve)
             time.sleep(0.2)
-            m = get_trace_mean()
+            m = get_trace_mean(interface)
 
             print("Valve at %.2f, flow %.1f" % (valve, m))
             if m <= target:
@@ -65,22 +71,14 @@ def main():
         print("%.4f" % results[i])
 
 
-def get_trace_mean(samps=300):
-    interpreter.do_trace("flush")
-    interpreter.do_trace("start flow_inhale")
-
-    dat = interface.send_command(controller_low.OP_TRACE, [controller_low.SUBCMD_TRACE_GET_NUM_SAMPLES])
-    ct = controller_types.bytes_to_int32s(dat)[0]
-    while ct < samps:
-        dat = interface.send_command(controller_low.OP_TRACE, [controller_low.SUBCMD_TRACE_GET_NUM_SAMPLES])
-        ct = controller_types.bytes_to_int32s(dat)[0]
+def get_trace_mean(interface: ControllerDebugInterface, samps=300):
+    interface.trace_flush()
+    interface.trace_select(["flow_inhale"])
+    interface.trace_start()
 
     dat = interface.trace_download()
-    return mean(dat[1])
+    return mean(dat[1][0:samps])
 
 
 def mean(dat):
     return sum(dat) / len(dat)
-
-
-main()

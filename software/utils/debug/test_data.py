@@ -29,7 +29,7 @@ import dateutil.parser
 import json
 import platform
 import git
-import colors
+from lib.colors import red
 
 
 class TestData:
@@ -71,7 +71,7 @@ class TestData:
         )
         ret += f"Machine info:     {self.platform_uname}\n"
         ret += f"Tester:           {self.tester_name} ({self.tester_email})\n"
-        dirty_string = colors.red(" (DIRTY)")
+        dirty_string = red(" (DIRTY)")
         ret += "Git sha:          {}{}\n".format(
             self.git_sha, dirty_string if self.git_dirty else ""
         )

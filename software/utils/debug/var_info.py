@@ -21,7 +21,7 @@ __license__ = """
 """
 
 import debug_types
-import error
+from lib.error import Error
 
 # TODO: Import constants from proto instead!
 
@@ -47,7 +47,7 @@ class VarInfo:
         self.id = id
 
         if len(data) < 8:
-            raise error.Error("Invalid VarInfo data returned")
+            raise Error("Invalid VarInfo data returned")
 
         self.type = data[0]
         name_length = data[4]
@@ -55,7 +55,7 @@ class VarInfo:
         help_length = data[6]
 
         if len(data) < 8 + name_length + fmt_length + help_length:
-            raise error.Error("Invalid VarInfo data returned")
+            raise Error("Invalid VarInfo data returned")
 
         n = 8
         self.name = "".join([chr(x) for x in data[n : n + name_length]])
@@ -83,9 +83,7 @@ class VarInfo:
         elif self.type == VAR_FLOAT:
             return debug_types.bytes_to_float32s(data)[0]
         else:
-            raise error.Error(
-                f"Sorry, I don't know how to handle variable type {self.type}"
-            )
+            raise Error(f"Sorry, I don't know how to handle variable type {self.type}")
 
     def to_bytes(self, value):
         if self.type == VAR_INT32:
@@ -99,6 +97,4 @@ class VarInfo:
         elif self.type == VAR_FLOAT:
             return debug_types.float32s_to_bytes(float(value))
         else:
-            raise error.Error(
-                f"Sorry, I don't know how to handle variable type {self.type}"
-            )
+            raise Error(f"Sorry, I don't know how to handle variable type {self.type}")

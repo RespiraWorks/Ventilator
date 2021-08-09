@@ -25,11 +25,11 @@ import threading
 import time
 import debug_types
 import var_info
-import error
+from lib.error import Error
 import test_scenario
 import test_data
 from pathlib import Path
-import colors
+from lib.colors import red
 
 # TODO: Import constants from proto instead!
 
@@ -121,7 +121,7 @@ class ControllerDebugInterface:
                 variable = var_info.VarInfo(vid, data)
                 self.variable_metadata[variable.name] = variable
         # todo maybe not wait for an exception to terminate this loop?
-        except error.Error as e:
+        except Error as e:
             pass
 
     def variables_list(self):
@@ -187,7 +187,7 @@ class ControllerDebugInterface:
 
     def variable_get(self, name, raw=False, fmt=None):
         if not (name in self.variable_metadata):
-            raise error.Error("Unknown variable %s" % name)
+            raise Error("Unknown variable %s" % name)
 
         variable = self.variable_metadata[name]
         data = self.send_command(
@@ -206,7 +206,7 @@ class ControllerDebugInterface:
 
     def variable_set(self, name, value):
         if not (name in self.variable_metadata):
-            raise error.Error("Unknown variable %s" % name)
+            raise Error("Unknown variable %s" % name)
 
         variable = self.variable_metadata[name]
         data = variable.to_bytes(value)
@@ -219,7 +219,7 @@ class ControllerDebugInterface:
     def tests_import(self, file_name):
         in_file = Path(file_name)
         if not in_file.is_file():
-            raise error.Error(f"Input file does not exist {file_name}")
+            raise Error(f"Input file does not exist {file_name}")
         elif in_file.suffix == ".csv":
             imported_scenarios = test_scenario.TestScenario.from_csv(
                 in_file, self.variable_metadata.keys()
@@ -227,9 +227,9 @@ class ControllerDebugInterface:
         elif in_file.suffix == ".json":
             imported_scenarios = test_scenario.TestScenario.from_json(in_file)
         else:
-            raise error.Error(f"Unknown file format `{in_file.suffix}`")
+            raise Error(f"Unknown file format `{in_file.suffix}`")
         if bool(set(imported_scenarios.keys()) & set(self.scenarios.keys())):
-            raise error.Error(
+            raise Error(
                 "Cannot import test scenarios, id's clash with already loaded ones"
             )
         print(
@@ -248,20 +248,20 @@ class ControllerDebugInterface:
 
     def test_apply(self, name):
         if name not in self.scenarios.keys():
-            raise error.Error(f"No such test scenario: {name}")
+            raise Error(f"No such test scenario: {name}")
         scenario = self.scenarios[name]
         print(f"Applying test scenario: {scenario.short_description()}")
         self.variables_set(scenario.ventilator_settings)
 
     def test_run(self, name):
         if name not in self.scenarios.keys():
-            raise error.Error(f"No such test scenario: {name}")
+            raise Error(f"No such test scenario: {name}")
 
         test = test_data.TestData(self.scenarios[name])
 
         if test.git_dirty:
             print(
-                colors.red(
+                red(
                     "There are unstaged or uncommitted changes to the code. Saving this"
                     " data with reference to most recent commit might be misleading."
                 )
@@ -415,9 +415,7 @@ class ControllerDebugInterface:
 
     def trace_select(self, var_names):
         if len(var_names) > TRACE_VAR_CT:
-            raise error.Error(
-                f"Can't trace more than {TRACE_VAR_CT} variables at once."
-            )
+            raise Error(f"Can't trace more than {TRACE_VAR_CT} variables at once.")
         var_names += [""] * (TRACE_VAR_CT - len(var_names))
         for (i, var_name) in enumerate(var_names):
             var_id = -1
@@ -590,18 +588,18 @@ class ControllerDebugInterface:
                     self.serial_port.timeout = old_timeout
 
                 if len(rsp) < 3:
-                    raise error.Error("Invalid response, too short")
+                    raise Error("Invalid response, too short")
 
                 crc = debug_types.CRC16().calc(rsp[:-2])
                 rcrc = debug_types.bytes_to_int16s(rsp[-2:])[0]
                 if crc != rcrc:
-                    raise error.Error(
+                    raise Error(
                         "CRC error on response, calculated 0x%04x received 0x%04x"
                         % (crc, rcrc)
                     )
 
                 if rsp[0]:
-                    raise error.Error("Error %d (0x%02x)" % (rsp[0], rsp[0]))
+                    raise Error("Error %d (0x%02x)" % (rsp[0], rsp[0]))
                 return rsp[1:-2]
             except serial.serialutil.SerialException:
                 self.serial_port.close()

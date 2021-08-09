@@ -23,18 +23,18 @@ __license__ = """
 
 """
 
-import debug
 import argparse
 import cmd
 import glob
 import os
 import shlex
 import traceback
-import colors
-import error
-import test_data
-import serial_detect
+from lib.colors import red, green, orange
+from lib.error import Error
+from lib.serial_detect import detect_stm32_ports, print_detected_ports
+from controller_debug import ControllerDebugInterface
 import matplotlib.pyplot as plt
+import test_data
 
 
 class ArgparseShowHelpError(Exception):
@@ -56,7 +56,7 @@ class CmdArgumentParser(argparse.ArgumentParser):
 
     def exit(self, status=0, message=None):
         if status:
-            raise error.Error(f"Encountered a parse error: {message}")
+            raise Error(f"Encountered a parse error: {message}")
         else:
             raise ArgparseShowHelpError()
 
@@ -69,34 +69,34 @@ class CmdArgumentParser(argparse.ArgumentParser):
 # more details.
 class CmdLine(cmd.Cmd):
 
-    interface: debug.ControllerDebugInterface
+    interface: ControllerDebugInterface
     scripts_directory: str
-    test_definitions_dir: str
+    test_scenarios_dir: str
 
     def __init__(self, port):
         super().__init__()
-        self.scripts_directory = "scripts/"
-        self.test_definitions_dir = "test_scenarios/"
-        self.interface = debug.ControllerDebugInterface()
+        self.scripts_directory = "scripts"
+        self.test_scenarios_dir = "test_scenarios"
+        self.interface = ControllerDebugInterface()
         if not port:
             port = auto_select_port()
         if port:
             self.interface.connect(port)
 
     def autoload(self):
-        for x in glob.glob(self.test_definitions_dir + "*.json"):
+        for x in glob.glob(self.test_scenarios_dir + "/*.json"):
             self.interface.tests_import(x)
 
     def update_prompt(self, mode=None):
         if not self.interface.connected():
-            self.prompt = colors.red("OFFLINE] ")
+            self.prompt = red("OFFLINE] ")
         else:
             if mode is None:
                 mode = self.interface.mode_get()
             if mode == 1:
-                self.prompt = colors.orange("BOOT] ")
+                self.prompt = orange("BOOT] ")
             else:
-                self.prompt = colors.green(f"{self.interface.serial_port.port}] ")
+                self.prompt = green(f"{self.interface.serial_port.port}] ")
 
     def cli_loop(self):
         self.autoload()
@@ -110,7 +110,7 @@ class CmdLine(cmd.Cmd):
                 return cmd.Cmd.cmdloop(self)
             except ArgparseShowHelpError:
                 pass
-            except error.Error as e:
+            except Error as e:
                 print(e)
             except:
                 traceback.print_exc()
@@ -156,12 +156,12 @@ connect <port>
 
         params = shlex.split(line)
         if len(params) < 1:
-            print(colors.red("Not enough args for `connect`\n"))
+            print(red("Not enough args for `connect`\n"))
             return
         subcommand = params[0]
 
         if subcommand == "list":
-            serial_detect.print_detected_ports()
+            print_detected_ports()
 
         elif subcommand == "auto":
             self.interface.connect(auto_select_port())
@@ -187,22 +187,28 @@ named {self.scripts_directory} will be searched for the python script.
 
     def do_run(self, line):
         params = shlex.split(line)
-        if os.path.exists(params[0]):
-            file_name = params[0]
-        elif os.path.exists(self.scripts_directory + params[0]):
-            file_name = self.scripts_directory + params[0]
-        else:
-            print("Unknown file " + params[0])
+
+        if len(params) < 1:
+            red("Must specify script name for `run` command")
             return
-        gbl = globals().copy()
-        gbl["cmdline"] = line
-        gbl["parser"] = self
-        exec(open(file_name).read(), gbl)
+
+        if not os.path.exists(self.scripts_directory + "/" + params[0] + ".py"):
+            print("Unknown script " + params[0])
+            return
+
+        import_command = f"import {self.scripts_directory}.{params[0]}"
+        exec(import_command)
+
+        passed_params = ""
+        if len(params) > 1:
+            passed_params = ', "' + " ".join(params[1:]) + '"'
+        run_command = f"{self.scripts_directory}.{params[0]}.{params[0]}(self.interface{passed_params})"
+        exec(run_command)
 
     def complete_run(self, text, line, begidx, endidx):
-        return glob.glob(text + "*.py") + [
-            x[len(self.scripts_directory) :]
-            for x in glob.glob(self.scripts_directory + text + "*.py")
+        return [
+            x[len(self.scripts_directory) + 1 : len(x) - 3]
+            for x in glob.glob(self.scripts_directory + "/" + text + "*.py")
         ]
 
     def do_test(self, line):
@@ -249,18 +255,18 @@ test read <file> [--verbose/-v] [--plot/-p]
         """
         params = shlex.split(line)
         if len(params) < 1:
-            print(colors.red("Not enough args for `test`\n"))
+            print(red("Not enough args for `test`\n"))
             return
         subcommand = params[0]
 
         if subcommand == "load":
             if len(params) < 2:
-                print(colors.red("File name not provided for `test load`\n"))
+                print(red("File name not provided for `test load`\n"))
                 return
             self.interface.tests_import(params[1])
 
         elif subcommand == "autoload":
-            for x in glob.glob(self.test_definitions_dir + "*.json"):
+            for x in glob.glob(self.test_scenarios_dir + "/*.json"):
                 self.interface.tests_import(x)
 
         elif subcommand == "clear":
@@ -274,25 +280,25 @@ test read <file> [--verbose/-v] [--plot/-p]
 
         elif subcommand == "show":
             if len(params) < 2:
-                print(colors.red("Test name not provided for `test show`\n"))
+                print(red("Test name not provided for `test show`\n"))
             if params[1] not in self.interface.scenarios.keys():
-                print(colors.red(f"Test `{params[1]}` does not exist\n"))
+                print(red(f"Test `{params[1]}` does not exist\n"))
             print(self.interface.scenarios[params[1]].long_description())
 
         elif subcommand == "apply":
             if len(params) < 2:
-                print(colors.red("Test name not provided for `test apply`\n"))
+                print(red("Test name not provided for `test apply`\n"))
                 return
             if params[1] not in self.interface.scenarios.keys():
-                print(colors.red(f"Test `{params[1]}` does not exist\n"))
+                print(red(f"Test `{params[1]}` does not exist\n"))
             self.interface.test_apply(params[1])
 
         elif subcommand == "run":
             if len(params) < 2:
-                print(colors.red("Test name not provided for `test run`\n"))
+                print(red("Test name not provided for `test run`\n"))
                 return
             if params[1] not in self.interface.scenarios.keys():
-                print(colors.red(f"Test `{params[1]}` does not exist\n"))
+                print(red(f"Test `{params[1]}` does not exist\n"))
             test = self.interface.test_run(params[1])
             test.save_json(print_self=True)
             if len(params) > 2:
@@ -309,7 +315,7 @@ test read <file> [--verbose/-v] [--plot/-p]
 
         elif subcommand == "read":
             if len(params) < 2:
-                print(colors.red("File name not provided for `test read`\n"))
+                print(red("File name not provided for `test read`\n"))
                 return
             test = test_data.TestData.from_json(params[1])
             print(test)
@@ -589,15 +595,15 @@ eeprom write <address> <data>
 
 
 def auto_select_port():
-    ports = serial_detect.detect_stm32_ports()
+    ports = detect_stm32_ports()
     if not ports:
-        colors.red(
+        red(
             "Could not auto-detect serial port; platformio device list did not "
             "yield any STM32 devices."
         )
         return None
     if len(ports) > 1:
-        colors.red(
+        red(
             "Could not auto-detect serial port; platformio device list "
             f"yielded multiple STM32 devices: {', '.join(ports)}.  "
             "Choose port explicitly with --port."

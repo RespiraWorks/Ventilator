@@ -7,22 +7,37 @@
 # which is either 1 or 2 to look at DMA1_BASE or DMA2_BASE.
 # If not supplied it shows you DMA1
 
+import sys
 
-def main():
-    DMA1_BASE = 0x40020000
-    DMA2_BASE = 0x40020400
+sys.path.append("..")
+
+from controller_debug import ControllerDebugInterface
+
+DMA1_BASE = 0x40020000
+DMA2_BASE = 0x40020400
+
+
+def peek_dma(interface: ControllerDebugInterface, line: str = ""):
+
+    cl = line.split()
+    if len(cl) < 1:
+        print("No DMA number provided, should be 1 or 2")
+        return
+
+    if cl[0] == "help":
+        print("Display current values of DMA registers")
+        print("  Syntax: run peek_dma <num>")
+        print("     <num> - DMA register 1 or 2")
+        return
+
     base = DMA1_BASE
-
-    cl = cmdline.split()
-    if len(cl) > 1:
-        dma = int(cl[1])
-        if dma == 1:
-            base = DMA1_BASE
-        elif dma == 2:
-            base = DMA2_BASE
-        else:
-            print("Bad DMA number, should be 1 or 2")
-            return
+    if cl[0] == "1":
+        base = DMA1_BASE
+    elif cl[0] == "2":
+        base = DMA2_BASE
+    else:
+        print("Bad DMA number, should be 1 or 2")
+        return
 
     reg = interface.peek32(base, 43)
 
@@ -43,6 +58,3 @@ def main():
         S += "%d" % ((sel >> 4 * i) & 0xF)
 
         print(S)
-
-
-main()

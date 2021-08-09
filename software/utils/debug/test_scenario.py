@@ -26,7 +26,7 @@ import json
 import copy
 import argparse
 from pathlib import Path
-import colors
+from lib.colors import Color, blue
 
 
 def trim_all_columns(df):
@@ -64,17 +64,17 @@ class TestScenario:
         return f'{self.name:15} "{self.description}"'
 
     def long_description(self, highlight_manual=False):
-        ret = colors.blue(f"[[{self.name}]]\n")
+        ret = blue(f"[[{self.name}]]\n")
         ret += f'  "{self.description}"'
         if len(self.manual_settings):
             if highlight_manual:
-                ret += colors.Color.ORANGE
+                ret += Color.ORANGE
             ret += "\n  Manual settings:\n"
             ret += "\n".join(
                 f"    {var:25} = {val}" for var, val in self.manual_settings.items()
             )
             if highlight_manual:
-                ret += colors.Color.ENDC
+                ret += Color.ENDC
         if len(self.ventilator_settings):
             ret += "\n  Ventilator settings:\n"
             ret += "\n".join(

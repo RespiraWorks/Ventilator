@@ -14,8 +14,8 @@
             "gui_tv": 500,
             "gui_mode": "volume_control"
         },
-        "capture_duration_secs": 25,
-        "capture_ignore_secs": 2,
+        "capture_duration_secs": 30,
+        "capture_ignore_secs": 10,
         "trace_period": 1,
         "trace_variable_names": [
             "pc_setpoint",
@@ -40,8 +40,8 @@
             "gui_tv": 500,
             "gui_mode": "volume_control"
         },
-        "capture_duration_secs": 25,
-        "capture_ignore_secs": 2,
+        "capture_duration_secs": 30,
+        "capture_ignore_secs": 10,
         "trace_period": 1,
         "trace_variable_names": [
             "pc_setpoint",
@@ -66,8 +66,8 @@
             "gui_tv": 500,
             "gui_mode": "volume_control"
         },
-        "capture_duration_secs": 25,
-        "capture_ignore_secs": 2,
+        "capture_duration_secs": 30,
+        "capture_ignore_secs": 10,
         "trace_period": 1,
         "trace_variable_names": [
             "pc_setpoint",
@@ -92,8 +92,8 @@
             "gui_tv": 500,
             "gui_mode": "volume_control"
         },
-        "capture_duration_secs": 25,
-        "capture_ignore_secs": 2,
+        "capture_duration_secs": 30,
+        "capture_ignore_secs": 10,
         "trace_period": 1,
         "trace_variable_names": [
             "pc_setpoint",
@@ -118,8 +118,8 @@
             "gui_tv": 300,
             "gui_mode": "volume_control"
         },
-        "capture_duration_secs": 25,
-        "capture_ignore_secs": 2,
+        "capture_duration_secs": 30,
+        "capture_ignore_secs": 10,
         "trace_period": 1,
         "trace_variable_names": [
             "pc_setpoint",
@@ -144,8 +144,8 @@
             "gui_tv": 300,
             "gui_mode": "volume_control"
         },
-        "capture_duration_secs": 25,
-        "capture_ignore_secs": 2,
+        "capture_duration_secs": 30,
+        "capture_ignore_secs": 10,
         "trace_period": 1,
         "trace_variable_names": [
             "pc_setpoint",
@@ -170,8 +170,8 @@
             "gui_tv": 300,
             "gui_mode": "volume_control"
         },
-        "capture_duration_secs": 25,
-        "capture_ignore_secs": 2,
+        "capture_duration_secs": 30,
+        "capture_ignore_secs": 10,
         "trace_period": 1,
         "trace_variable_names": [
             "pc_setpoint",
@@ -196,8 +196,8 @@
             "gui_tv": 200,
             "gui_mode": "volume_control"
         },
-        "capture_duration_secs": 25,
-        "capture_ignore_secs": 2,
+        "capture_duration_secs": 30,
+        "capture_ignore_secs": 10,
         "trace_period": 1,
         "trace_variable_names": [
             "pc_setpoint",
@@ -222,8 +222,8 @@
             "gui_tv": 50,
             "gui_mode": "volume_control"
         },
-        "capture_duration_secs": 25,
-        "capture_ignore_secs": 2,
+        "capture_duration_secs": 30,
+        "capture_ignore_secs": 10,
         "trace_period": 1,
         "trace_variable_names": [
             "pc_setpoint",
@@ -248,8 +248,8 @@
             "gui_tv": 50,
             "gui_mode": "volume_control"
         },
-        "capture_duration_secs": 25,
-        "capture_ignore_secs": 2,
+        "capture_duration_secs": 30,
+        "capture_ignore_secs": 10,
         "trace_period": 1,
         "trace_variable_names": [
             "pc_setpoint",
@@ -274,8 +274,8 @@
             "gui_tv": 50,
             "gui_mode": "volume_control"
         },
-        "capture_duration_secs": 25,
-        "capture_ignore_secs": 2,
+        "capture_duration_secs": 30,
+        "capture_ignore_secs": 10,
         "trace_period": 1,
         "trace_variable_names": [
             "pc_setpoint",
@@ -300,8 +300,8 @@
             "gui_tv": 30,
             "gui_mode": "volume_control"
         },
-        "capture_duration_secs": 25,
-        "capture_ignore_secs": 2,
+        "capture_duration_secs": 30,
+        "capture_ignore_secs": 10,
         "trace_period": 1,
         "trace_variable_names": [
             "pc_setpoint",
@@ -326,8 +326,8 @@
             "gui_tv": 30,
             "gui_mode": "volume_control"
         },
-        "capture_duration_secs": 25,
-        "capture_ignore_secs": 2,
+        "capture_duration_secs": 30,
+        "capture_ignore_secs": 10,
         "trace_period": 1,
         "trace_variable_names": [
             "pc_setpoint",
@@ -352,8 +352,8 @@
             "gui_tv": 30,
             "gui_mode": "volume_control"
         },
-        "capture_duration_secs": 25,
-        "capture_ignore_secs": 2,
+        "capture_duration_secs": 30,
+        "capture_ignore_secs": 10,
         "trace_period": 1,
         "trace_variable_names": [
             "pc_setpoint",
@@ -378,8 +378,8 @@
             "gui_tv": 30,
             "gui_mode": "volume_control"
         },
-        "capture_duration_secs": 25,
-        "capture_ignore_secs": 2,
+        "capture_duration_secs": 30,
+        "capture_ignore_secs": 10,
         "trace_period": 1,
         "trace_variable_names": [
             "pc_setpoint",
@@ -404,8 +404,8 @@
             "gui_tv": 20,
             "gui_mode": "volume_control"
         },
-        "capture_duration_secs": 25,
-        "capture_ignore_secs": 2,
+        "capture_duration_secs": 30,
+        "capture_ignore_secs": 10,
         "trace_period": 1,
         "trace_variable_names": [
             "pc_setpoint",
@@ -430,8 +430,8 @@
             "gui_tv": 15,
             "gui_mode": "volume_control"
         },
-        "capture_duration_secs": 25,
-        "capture_ignore_secs": 2,
+        "capture_duration_secs": 30,
+        "capture_ignore_secs": 10,
         "trace_period": 1,
         "trace_variable_names": [
             "pc_setpoint",
@@ -456,8 +456,8 @@
             "gui_tv": 10,
             "gui_mode": "volume_control"
         },
-        "capture_duration_secs": 25,
-        "capture_ignore_secs": 2,
+        "capture_duration_secs": 30,
+        "capture_ignore_secs": 10,
         "trace_period": 1,
         "trace_variable_names": [
             "pc_setpoint",
@@ -482,8 +482,8 @@
             "gui_tv": 5,
             "gui_mode": "volume_control"
         },
-        "capture_duration_secs": 25,
-        "capture_ignore_secs": 2,
+        "capture_duration_secs": 30,
+        "capture_ignore_secs": 10,
         "trace_period": 1,
         "trace_variable_names": [
             "pc_setpoint",
@@ -508,8 +508,8 @@
             "gui_tv": 5,
             "gui_mode": "volume_control"
         },
-        "capture_duration_secs": 25,
-        "capture_ignore_secs": 2,
+        "capture_duration_secs": 30,
+        "capture_ignore_secs": 10,
         "trace_period": 1,
         "trace_variable_names": [
             "pc_setpoint",
@@ -534,8 +534,8 @@
             "gui_tv": 5,
             "gui_mode": "volume_control"
         },
-        "capture_duration_secs": 25,
-        "capture_ignore_secs": 2,
+        "capture_duration_secs": 30,
+        "capture_ignore_secs": 10,
         "trace_period": 1,
         "trace_variable_names": [
             "pc_setpoint",

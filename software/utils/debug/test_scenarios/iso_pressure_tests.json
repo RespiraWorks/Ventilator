@@ -14,8 +14,8 @@
             "gui_fio2": 30,
             "gui_mode": "pressure_control"
         },
-        "capture_duration_secs": 25,
-        "capture_ignore_secs": 2,
+        "capture_duration_secs": 30,
+        "capture_ignore_secs": 10,
         "trace_period": 1,
         "trace_variable_names": [
             "pc_setpoint",
@@ -42,8 +42,8 @@
             "gui_fio2": 90,
             "gui_mode": "pressure_control"
         },
-        "capture_duration_secs": 25,
-        "capture_ignore_secs": 2,
+        "capture_duration_secs": 30,
+        "capture_ignore_secs": 10,
         "trace_period": 1,
         "trace_variable_names": [
             "pc_setpoint",
@@ -70,8 +70,8 @@
             "gui_fio2": 90,
             "gui_mode": "pressure_control"
         },
-        "capture_duration_secs": 25,
-        "capture_ignore_secs": 2,
+        "capture_duration_secs": 30,
+        "capture_ignore_secs": 10,
         "trace_period": 1,
         "trace_variable_names": [
             "pc_setpoint",
@@ -98,8 +98,8 @@
             "gui_fio2": 30,
             "gui_mode": "pressure_control"
         },
-        "capture_duration_secs": 25,
-        "capture_ignore_secs": 2,
+        "capture_duration_secs": 30,
+        "capture_ignore_secs": 10,
         "trace_period": 1,
         "trace_variable_names": [
             "pc_setpoint",
@@ -126,8 +126,8 @@
             "gui_fio2": 30,
             "gui_mode": "pressure_control"
         },
-        "capture_duration_secs": 25,
-        "capture_ignore_secs": 2,
+        "capture_duration_secs": 30,
+        "capture_ignore_secs": 10,
         "trace_period": 1,
         "trace_variable_names": [
             "pc_setpoint",
@@ -154,8 +154,8 @@
             "gui_fio2": 90,
             "gui_mode": "pressure_control"
         },
-        "capture_duration_secs": 25,
-        "capture_ignore_secs": 2,
+        "capture_duration_secs": 30,
+        "capture_ignore_secs": 10,
         "trace_period": 1,
         "trace_variable_names": [
             "pc_setpoint",
@@ -182,8 +182,8 @@
             "gui_fio2": 90,
             "gui_mode": "pressure_control"
         },
-        "capture_duration_secs": 25,
-        "capture_ignore_secs": 2,
+        "capture_duration_secs": 30,
+        "capture_ignore_secs": 10,
         "trace_period": 1,
         "trace_variable_names": [
             "pc_setpoint",
@@ -210,8 +210,8 @@
             "gui_fio2": 30,
             "gui_mode": "pressure_control"
         },
-        "capture_duration_secs": 25,
-        "capture_ignore_secs": 2,
+        "capture_duration_secs": 30,
+        "capture_ignore_secs": 10,
         "trace_period": 1,
         "trace_variable_names": [
             "pc_setpoint",
@@ -238,8 +238,8 @@
             "gui_fio2": 30,
             "gui_mode": "pressure_control"
         },
-        "capture_duration_secs": 25,
-        "capture_ignore_secs": 2,
+        "capture_duration_secs": 30,
+        "capture_ignore_secs": 10,
         "trace_period": 1,
         "trace_variable_names": [
             "pc_setpoint",
@@ -266,8 +266,8 @@
             "gui_fio2": 30,
             "gui_mode": "pressure_control"
         },
-        "capture_duration_secs": 25,
-        "capture_ignore_secs": 2,
+        "capture_duration_secs": 30,
+        "capture_ignore_secs": 10,
         "trace_period": 1,
         "trace_variable_names": [
             "pc_setpoint",
@@ -294,8 +294,8 @@
             "gui_fio2": 60,
             "gui_mode": "pressure_control"
         },
-        "capture_duration_secs": 25,
-        "capture_ignore_secs": 2,
+        "capture_duration_secs": 30,
+        "capture_ignore_secs": 10,
         "trace_period": 1,
         "trace_variable_names": [
             "pc_setpoint",
@@ -322,8 +322,8 @@
             "gui_fio2": 30,
             "gui_mode": "pressure_control"
         },
-        "capture_duration_secs": 25,
-        "capture_ignore_secs": 2,
+        "capture_duration_secs": 30,
+        "capture_ignore_secs": 10,
         "trace_period": 1,
         "trace_variable_names": [
             "pc_setpoint",
@@ -350,8 +350,8 @@
             "gui_fio2": 90,
             "gui_mode": "pressure_control"
         },
-        "capture_duration_secs": 25,
-        "capture_ignore_secs": 2,
+        "capture_duration_secs": 30,
+        "capture_ignore_secs": 10,
         "trace_period": 1,
         "trace_variable_names": [
             "pc_setpoint",
@@ -378,8 +378,8 @@
             "gui_fio2": 90,
             "gui_mode": "pressure_control"
         },
-        "capture_duration_secs": 25,
-        "capture_ignore_secs": 2,
+        "capture_duration_secs": 30,
+        "capture_ignore_secs": 10,
         "trace_period": 1,
         "trace_variable_names": [
             "pc_setpoint",
@@ -406,8 +406,8 @@
             "gui_fio2": 30,
             "gui_mode": "pressure_control"
         },
-        "capture_duration_secs": 25,
-        "capture_ignore_secs": 2,
+        "capture_duration_secs": 30,
+        "capture_ignore_secs": 10,
         "trace_period": 1,
         "trace_variable_names": [
             "pc_setpoint",
@@ -434,8 +434,8 @@
             "gui_fio2": 30,
             "gui_mode": "pressure_control"
         },
-        "capture_duration_secs": 25,
-        "capture_ignore_secs": 2,
+        "capture_duration_secs": 30,
+        "capture_ignore_secs": 10,
         "trace_period": 1,
         "trace_variable_names": [
             "pc_setpoint",
@@ -462,8 +462,8 @@
             "gui_fio2": 60,
             "gui_mode": "pressure_control"
         },
-        "capture_duration_secs": 25,
-        "capture_ignore_secs": 2,
+        "capture_duration_secs": 30,
+        "capture_ignore_secs": 10,
         "trace_period": 1,
         "trace_variable_names": [
             "pc_setpoint",
@@ -490,8 +490,8 @@
             "gui_fio2": 60,
             "gui_mode": "pressure_control"
         },
-        "capture_duration_secs": 25,
-        "capture_ignore_secs": 2,
+        "capture_duration_secs": 30,
+        "capture_ignore_secs": 10,
         "trace_period": 1,
         "trace_variable_names": [
             "pc_setpoint",
@@ -518,8 +518,8 @@
             "gui_fio2": 60,
             "gui_mode": "pressure_control"
         },
-        "capture_duration_secs": 25,
-        "capture_ignore_secs": 2,
+        "capture_duration_secs": 30,
+        "capture_ignore_secs": 10,
         "trace_period": 1,
         "trace_variable_names": [
             "pc_setpoint",
@@ -546,8 +546,8 @@
             "gui_fio2": 30,
             "gui_mode": "pressure_control"
         },
-        "capture_duration_secs": 25,
-        "capture_ignore_secs": 2,
+        "capture_duration_secs": 30,
+        "capture_ignore_secs": 10,
         "trace_period": 1,
         "trace_variable_names": [
             "pc_setpoint",
@@ -574,8 +574,8 @@
             "gui_fio2": 30,
             "gui_mode": "pressure_control"
         },
-        "capture_duration_secs": 25,
-        "capture_ignore_secs": 2,
+        "capture_duration_secs": 30,
+        "capture_ignore_secs": 10,
         "trace_period": 1,
         "trace_variable_names": [
             "pc_setpoint",

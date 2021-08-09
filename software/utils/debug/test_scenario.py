@@ -55,8 +55,8 @@ class TestScenario:
         self.manual_settings = {}
         self.ventilator_settings = {}
         self.test_criteria = {}
-        self.capture_duration_secs = 25
-        self.capture_ignore_secs = 2
+        self.capture_duration_secs = 30
+        self.capture_ignore_secs = 10
         self.trace_period = 1
         self.trace_variable_names = ["pc_setpoint", "pressure", "volume", "net_flow"]
 

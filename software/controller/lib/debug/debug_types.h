@@ -16,6 +16,7 @@ limitations under the License.
 #ifndef DEBUG_TYPES_H
 #define DEBUG_TYPES_H
 
+#include "debug_protocol.pb.h"
 #include <stdint.h>
 
 namespace Debug {
@@ -28,6 +29,7 @@ enum class State { AwaitingCommand, Processing, AwaitingResponse, Responding };
 // See debug.cpp for a detailed description of how this works
 enum class SpecialChar : uint8_t { Escape = 0xf1, EndTransfer = 0xf2 };
 
+<<<<<<< HEAD
 enum class ErrorCode : uint8_t {
   None = 0x00,            // No error (=success)
   CrcError = 0x01,        // CRC error on command
@@ -40,17 +42,9 @@ enum class ErrorCode : uint8_t {
   Timeout = 0x08,         // Response timeout
 };
 
+=======
+>>>>>>> 127c01ef... C++ proto implementation
 namespace Command {
-
-enum class Code : uint8_t {
-  Mode = 0x00,         // Return the current firmware mode
-  Peek = 0x01,         // Peek into RAM
-  Poke = 0x02,         // Poke values into RAM
-  Console = 0x03,      // Read strings from the print buffer - deprecated
-  Variable = 0x04,     // Variable access
-  Trace = 0x05,        // Data trace commands
-  EepromAccess = 0x06, // Read/Write in I2C EEPROM
-};
 
 // Structure that represents a command's parameters
 struct Context {
@@ -74,8 +68,8 @@ public:
 
   // Returns an error code.  For any non-zero error, the values returned in
   // response_length and response will be ignored.
-  [[nodiscard]] virtual ErrorCode Process(Context *context) {
-    return ErrorCode::UnknownCommand;
+  [[nodiscard]] virtual debug_protocol_Error_Code Process(Context *context) {
+    return debug_protocol_Error_Code_UnknownCommand;
   }
 };
 

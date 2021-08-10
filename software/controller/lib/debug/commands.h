@@ -34,11 +34,11 @@ namespace Debug::Command {
 class ModeHandler : public Handler {
 public:
   ModeHandler() = default;
-  ErrorCode Process(Context *context) override {
+  debug_protocol_Error_Code Process(Context *context) override {
     context->response_length = 1;
     context->response[0] = 0;
     *(context->processed) = true;
-    return ErrorCode::None;
+    return debug_protocol_Error_Code_None;
   }
 };
 
@@ -64,7 +64,7 @@ protected:
 class PeekHandler : public MemoryHandler {
 public:
   PeekHandler() = default;
-  ErrorCode Process(Context *context) override;
+  debug_protocol_Error_Code Process(Context *context) override;
 };
 // Poke command.
 // Allows us to write raw values in memory.  Use with caution!
@@ -74,7 +74,7 @@ public:
 class PokeHandler : public MemoryHandler {
 public:
   PokeHandler() = default;
-  ErrorCode Process(Context *context) override;
+  debug_protocol_Error_Code Process(Context *context) override;
 };
 
 // Trace command
@@ -97,23 +97,12 @@ public:
 class TraceHandler : public Handler {
 public:
   explicit TraceHandler(Trace *trace) : trace_(trace){};
-  ErrorCode Process(Context *context) override;
-
-  enum class Subcommand : uint8_t {
-    Flush = 0x00,    // disable and flush the trace buffer
-    Download = 0x01, // download data from the trace buffer
-    Start = 0x02,    // start tracing data
-    GetVarId = 0x03, // get traced variable id
-    SetVarId = 0x04, // set traced variable id
-    GetPeriod = 0x05,
-    SetPeriod = 0x06,
-    CountSamples = 0x07, // get number of samples in the trace buffer
-  };
+  debug_protocol_Error_Code Process(Context *context) override;
 
 private:
-  ErrorCode ReadTraceBuffer(Context *context);
-  ErrorCode SetTraceVar(Context *context);
-  ErrorCode GetTraceVar(Context *context);
+  debug_protocol_Error_Code ReadTraceBuffer(Context *context);
+  debug_protocol_Error_Code SetTraceVar(Context *context);
+  debug_protocol_Error_Code GetTraceVar(Context *context);
   Trace *trace_{nullptr};
 };
 
@@ -142,6 +131,7 @@ private:
 class VarHandler : public Handler {
 public:
   VarHandler() = default;
+<<<<<<< HEAD
   ErrorCode Process(Context *context) override;
 
   enum class Subcommand : uint8_t {
@@ -150,6 +140,9 @@ public:
     Set = 0x02,      // set variable value
     GetCount = 0x03, // get count of active vars
   };
+=======
+  debug_protocol_Error_Code Process(Context *context) override;
+>>>>>>> 127c01ef... C++ proto implementation
 
 private:
   // Return info about one of the variables. The 16-bit variable ID is passed
@@ -157,13 +150,17 @@ private:
   // the system starting with 0.
   // The Python code can read them all out until it gets an error code
   // indicating that the passed ID is invalid.
-  ErrorCode GetVarInfo(Context *context);
+  debug_protocol_Error_Code GetVarInfo(Context *context);
 
-  ErrorCode GetVar(Context *context);
+  debug_protocol_Error_Code GetVar(Context *context);
 
+<<<<<<< HEAD
   ErrorCode SetVar(Context *context);
 
   ErrorCode GetVarCount(Context *context);
+=======
+  debug_protocol_Error_Code SetVar(Context *context);
+>>>>>>> 127c01ef... C++ proto implementation
 };
 
 // Eeprom command.
@@ -180,7 +177,7 @@ private:
 class EepromHandler : public Handler {
 public:
   explicit EepromHandler(I2Ceeprom *eeprom) : eeprom_(eeprom){};
-  ErrorCode Process(Context *context) override;
+  debug_protocol_Error_Code Process(Context *context) override;
 
   enum class Subcommand : uint8_t {
     Read = 0x00,
@@ -188,8 +185,8 @@ public:
   };
 
 private:
-  ErrorCode Read(uint16_t address, Context *context);
-  ErrorCode Write(uint16_t address, Context *context);
+  debug_protocol_Error_Code Read(uint16_t address, Context *context);
+  debug_protocol_Error_Code Write(uint16_t address, Context *context);
 
   static constexpr uint16_t MaxWriteLength{1024};
   I2Ceeprom *eeprom_;

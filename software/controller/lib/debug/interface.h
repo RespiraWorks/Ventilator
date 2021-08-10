@@ -99,8 +99,8 @@ private:
   void ProcessCommand();
   bool SendNextByte();
 
-  void SendResponse(ErrorCode error, uint32_t response_length);
-  void SendError(ErrorCode error) { SendResponse(error, 0); }
+  void SendResponse(debug_protocol_Error_Code error, uint32_t response_length);
+  void SendError(debug_protocol_Error_Code error) { SendResponse(error, 0); }
 };
 
 } // namespace Debug

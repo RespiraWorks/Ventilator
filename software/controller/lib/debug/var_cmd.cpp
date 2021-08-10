@@ -20,31 +20,32 @@ limitations under the License.
 
 namespace Debug::Command {
 
-ErrorCode VarHandler::Process(Context *context) {
+debug_protocol_Error_Code VarHandler::Process(Context *context) {
 
   // The first byte of data is always required, this
   // gives the sub-command.
   if (context->request_length < 1)
-    return ErrorCode::MissingData;
+    return debug_protocol_Error_Code_MissingData;
 
-  Subcommand subcommand{context->request[0]};
+  debug_protocol_VariableAccess_Subcommand subcommand{
+      debug_protocol_VariableAccess_Subcommand(context->request[0])};
 
   switch (subcommand) {
   // Return info about one of the variables.
-  case Subcommand::GetInfo:
+  case debug_protocol_VariableAccess_Subcommand_GetInfo:
     return GetVarInfo(context);
 
-  case Subcommand::Get:
+  case debug_protocol_VariableAccess_Subcommand_Get:
     return GetVar(context);
 
-  case Subcommand::Set:
+  case debug_protocol_VariableAccess_Subcommand_Set:
     return SetVar(context);
 
   case Subcommand::GetCount:
     return GetVarCount(context);
 
   default:
-    return ErrorCode::InvalidData;
+    return debug_protocol_Error_Code_InvalidData;
   }
 }
 
@@ -54,17 +55,17 @@ ErrorCode VarHandler::Process(Context *context) {
 // system starting with 0.  The Python code can read them
 // all out until it gets an error code indicating that the
 // passed ID is invalid.
-ErrorCode VarHandler::GetVarInfo(Context *context) {
+debug_protocol_Error_Code VarHandler::GetVarInfo(Context *context) {
 
   // We expect a 16-bit ID to be passed
   if (context->request_length < 3)
-    return ErrorCode::MissingData;
+    return debug_protocol_Error_Code_MissingData;
 
   uint16_t var_id = u8_to_u16(&context->request[1]);
 
   const auto *var = DebugVar::FindVar(var_id);
   if (!var)
-    return ErrorCode::UnknownVariable;
+    return debug_protocol_Error_Code_UnknownVariable;
 
   // The info I return consists of the following:
   // <type> - 1 byte variable type code
@@ -86,8 +87,13 @@ ErrorCode VarHandler::GetVarInfo(Context *context) {
 
   // Fail if the strings are too large to fit.
   if (context->max_response_length <
+<<<<<<< HEAD
       8 + name_length + format_length + help_length + unit_length)
     return ErrorCode::NoMemory;
+=======
+      8 + name_length + format_length + help_length)
+    return debug_protocol_Error_Code_NoMemory;
+>>>>>>> 127c01ef... C++ proto implementation
 
   uint32_t count = 0;
   context->response[count++] = static_cast<uint8_t>(var->GetType());
@@ -112,44 +118,44 @@ ErrorCode VarHandler::GetVarInfo(Context *context) {
 
   context->response_length = count;
   *(context->processed) = true;
-  return ErrorCode::None;
+  return debug_protocol_Error_Code_None;
 }
 
-ErrorCode VarHandler::GetVar(Context *context) {
+debug_protocol_Error_Code VarHandler::GetVar(Context *context) {
   // We expect a 16-bit ID to be passed
   if (context->request_length < 3)
-    return ErrorCode::MissingData;
+    return debug_protocol_Error_Code_MissingData;
 
   uint16_t var_id = u8_to_u16(&context->request[1]);
 
   auto *var = DebugVar::FindVar(var_id);
   if (!var)
-    return ErrorCode::UnknownVariable;
+    return debug_protocol_Error_Code_UnknownVariable;
 
   if (context->max_response_length < 4)
-    return ErrorCode::NoMemory;
+    return debug_protocol_Error_Code_NoMemory;
 
   u32_to_u8(var->GetValue(), context->response);
   context->response_length = 4;
   *(context->processed) = true;
-  return ErrorCode::None;
+  return debug_protocol_Error_Code_None;
 }
 
-ErrorCode VarHandler::SetVar(Context *context) {
+debug_protocol_Error_Code VarHandler::SetVar(Context *context) {
   // We expect a 16-bit ID to be passed
   if (context->request_length < 3)
-    return ErrorCode::MissingData;
+    return debug_protocol_Error_Code_MissingData;
 
   uint16_t var_id = u8_to_u16(&context->request[1]);
 
   auto *var = DebugVar::FindVar(var_id);
   if (!var)
-    return ErrorCode::UnknownVariable;
+    return debug_protocol_Error_Code_UnknownVariable;
 
   uint32_t count = context->request_length - 3;
 
   if (count < 4)
-    return ErrorCode::MissingData;
+    return debug_protocol_Error_Code_MissingData;
 
   if (!var->WriteAllowed())
     return ErrorCode::InternalError;
@@ -157,7 +163,7 @@ ErrorCode VarHandler::SetVar(Context *context) {
   var->SetValue(u8_to_u32(context->request + 3));
   context->response_length = 0;
   *(context->processed) = true;
-  return ErrorCode::None;
+  return debug_protocol_Error_Code_None;
 }
 
 ErrorCode VarHandler::GetVarCount(Context *context) {

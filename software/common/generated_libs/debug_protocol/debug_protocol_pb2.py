@@ -15,18 +15,18 @@ _sym_db = _symbol_database.Default()
 
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='debug_protocol.proto',
-  package='',
+  package='debug_protocol',
   syntax='proto2',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x14\x64\x65\x62ug_protocol.proto\"g\n\x07\x43ommand\"\\\n\x04\x43ode\x12\x08\n\x04Mode\x10\x00\x12\x08\n\x04Peek\x10\x01\x12\x08\n\x04Poke\x10\x02\x12\x0b\n\x07\x43onsole\x10\x03\x12\x0c\n\x08Variable\x10\x04\x12\t\n\x05Trace\x10\x05\x12\x10\n\x0c\x45\x65promAccess\x10\x06\"\xa1\x01\n\x05\x45rror\"\x97\x01\n\x04\x43ode\x12\x08\n\x04None\x10\x00\x12\x0c\n\x08\x43rcError\x10\x01\x12\x12\n\x0eUnknownCommand\x10\x02\x12\x0f\n\x0bMissingData\x10\x03\x12\x0c\n\x08NoMemory\x10\x04\x12\x11\n\rInternalError\x10\x05\x12\x13\n\x0fUnknownVariable\x10\x06\x12\x0f\n\x0bInvalidData\x10\x07\x12\x0b\n\x07Timeout\x10\x08\"\x85\x01\n\x05Trace\"|\n\nSubcommand\x12\t\n\x05\x46lush\x10\x00\x12\x0c\n\x08\x44ownload\x10\x01\x12\t\n\x05Start\x10\x02\x12\x0c\n\x08GetVarId\x10\x03\x12\x0c\n\x08SetVarId\x10\x04\x12\r\n\tGetPeriod\x10\x05\x12\r\n\tSetPeriod\x10\x06\x12\x10\n\x0c\x43ountSamples\x10\x07\"=\n\x0eVariableAccess\"+\n\nSubcommand\x12\x0b\n\x07GetInfo\x10\x00\x12\x07\n\x03Get\x10\x01\x12\x07\n\x03Set\x10\x02\"2\n\rEepromCommand\"!\n\nSubcommand\x12\x08\n\x04Read\x10\x00\x12\t\n\x05Write\x10\x01'
+  serialized_pb=b'\n\x14\x64\x65\x62ug_protocol.proto\x12\x0e\x64\x65\x62ug_protocol\"g\n\x07\x43ommand\"\\\n\x04\x43ode\x12\x08\n\x04Mode\x10\x00\x12\x08\n\x04Peek\x10\x01\x12\x08\n\x04Poke\x10\x02\x12\x0b\n\x07\x43onsole\x10\x03\x12\x0c\n\x08Variable\x10\x04\x12\t\n\x05Trace\x10\x05\x12\x10\n\x0c\x45\x65promAccess\x10\x06\"\xa1\x01\n\x05\x45rror\"\x97\x01\n\x04\x43ode\x12\x08\n\x04None\x10\x00\x12\x0c\n\x08\x43rcError\x10\x01\x12\x12\n\x0eUnknownCommand\x10\x02\x12\x0f\n\x0bMissingData\x10\x03\x12\x0c\n\x08NoMemory\x10\x04\x12\x11\n\rInternalError\x10\x05\x12\x13\n\x0fUnknownVariable\x10\x06\x12\x0f\n\x0bInvalidData\x10\x07\x12\x0b\n\x07Timeout\x10\x08\"\x85\x01\n\x05Trace\"|\n\nSubcommand\x12\t\n\x05\x46lush\x10\x00\x12\x0c\n\x08\x44ownload\x10\x01\x12\t\n\x05Start\x10\x02\x12\x0c\n\x08GetVarId\x10\x03\x12\x0c\n\x08SetVarId\x10\x04\x12\r\n\tGetPeriod\x10\x05\x12\r\n\tSetPeriod\x10\x06\x12\x10\n\x0c\x43ountSamples\x10\x07\"=\n\x0eVariableAccess\"+\n\nSubcommand\x12\x0b\n\x07GetInfo\x10\x00\x12\x07\n\x03Get\x10\x01\x12\x07\n\x03Set\x10\x02\"2\n\rEepromCommand\"!\n\nSubcommand\x12\x08\n\x04Read\x10\x00\x12\t\n\x05Write\x10\x01'
 )
 
 
 
 _COMMAND_CODE = _descriptor.EnumDescriptor(
   name='Code',
-  full_name='Command.Code',
+  full_name='debug_protocol.Command.Code',
   filename=None,
   file=DESCRIPTOR,
   create_key=_descriptor._internal_create_key,
@@ -69,14 +69,14 @@ _COMMAND_CODE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=35,
-  serialized_end=127,
+  serialized_start=51,
+  serialized_end=143,
 )
 _sym_db.RegisterEnumDescriptor(_COMMAND_CODE)
 
 _ERROR_CODE = _descriptor.EnumDescriptor(
   name='Code',
-  full_name='Error.Code',
+  full_name='debug_protocol.Error.Code',
   filename=None,
   file=DESCRIPTOR,
   create_key=_descriptor._internal_create_key,
@@ -129,14 +129,14 @@ _ERROR_CODE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=140,
-  serialized_end=291,
+  serialized_start=156,
+  serialized_end=307,
 )
 _sym_db.RegisterEnumDescriptor(_ERROR_CODE)
 
 _TRACE_SUBCOMMAND = _descriptor.EnumDescriptor(
   name='Subcommand',
-  full_name='Trace.Subcommand',
+  full_name='debug_protocol.Trace.Subcommand',
   filename=None,
   file=DESCRIPTOR,
   create_key=_descriptor._internal_create_key,
@@ -184,14 +184,14 @@ _TRACE_SUBCOMMAND = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=303,
-  serialized_end=427,
+  serialized_start=319,
+  serialized_end=443,
 )
 _sym_db.RegisterEnumDescriptor(_TRACE_SUBCOMMAND)
 
 _VARIABLEACCESS_SUBCOMMAND = _descriptor.EnumDescriptor(
   name='Subcommand',
-  full_name='VariableAccess.Subcommand',
+  full_name='debug_protocol.VariableAccess.Subcommand',
   filename=None,
   file=DESCRIPTOR,
   create_key=_descriptor._internal_create_key,
@@ -214,14 +214,14 @@ _VARIABLEACCESS_SUBCOMMAND = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=447,
-  serialized_end=490,
+  serialized_start=463,
+  serialized_end=506,
 )
 _sym_db.RegisterEnumDescriptor(_VARIABLEACCESS_SUBCOMMAND)
 
 _EEPROMCOMMAND_SUBCOMMAND = _descriptor.EnumDescriptor(
   name='Subcommand',
-  full_name='EepromCommand.Subcommand',
+  full_name='debug_protocol.EepromCommand.Subcommand',
   filename=None,
   file=DESCRIPTOR,
   create_key=_descriptor._internal_create_key,
@@ -239,15 +239,15 @@ _EEPROMCOMMAND_SUBCOMMAND = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=509,
-  serialized_end=542,
+  serialized_start=525,
+  serialized_end=558,
 )
 _sym_db.RegisterEnumDescriptor(_EEPROMCOMMAND_SUBCOMMAND)
 
 
 _COMMAND = _descriptor.Descriptor(
   name='Command',
-  full_name='Command',
+  full_name='debug_protocol.Command',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
@@ -266,14 +266,14 @@ _COMMAND = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=24,
-  serialized_end=127,
+  serialized_start=40,
+  serialized_end=143,
 )
 
 
 _ERROR = _descriptor.Descriptor(
   name='Error',
-  full_name='Error',
+  full_name='debug_protocol.Error',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
@@ -292,14 +292,14 @@ _ERROR = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=130,
-  serialized_end=291,
+  serialized_start=146,
+  serialized_end=307,
 )
 
 
 _TRACE = _descriptor.Descriptor(
   name='Trace',
-  full_name='Trace',
+  full_name='debug_protocol.Trace',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
@@ -318,14 +318,14 @@ _TRACE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=294,
-  serialized_end=427,
+  serialized_start=310,
+  serialized_end=443,
 )
 
 
 _VARIABLEACCESS = _descriptor.Descriptor(
   name='VariableAccess',
-  full_name='VariableAccess',
+  full_name='debug_protocol.VariableAccess',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
@@ -344,14 +344,14 @@ _VARIABLEACCESS = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=429,
-  serialized_end=490,
+  serialized_start=445,
+  serialized_end=506,
 )
 
 
 _EEPROMCOMMAND = _descriptor.Descriptor(
   name='EepromCommand',
-  full_name='EepromCommand',
+  full_name='debug_protocol.EepromCommand',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
@@ -370,8 +370,8 @@ _EEPROMCOMMAND = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=492,
-  serialized_end=542,
+  serialized_start=508,
+  serialized_end=558,
 )
 
 _COMMAND_CODE.containing_type = _COMMAND
@@ -389,35 +389,35 @@ _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 Command = _reflection.GeneratedProtocolMessageType('Command', (_message.Message,), {
   'DESCRIPTOR' : _COMMAND,
   '__module__' : 'debug_protocol_pb2'
-  # @@protoc_insertion_point(class_scope:Command)
+  # @@protoc_insertion_point(class_scope:debug_protocol.Command)
   })
 _sym_db.RegisterMessage(Command)
 
 Error = _reflection.GeneratedProtocolMessageType('Error', (_message.Message,), {
   'DESCRIPTOR' : _ERROR,
   '__module__' : 'debug_protocol_pb2'
-  # @@protoc_insertion_point(class_scope:Error)
+  # @@protoc_insertion_point(class_scope:debug_protocol.Error)
   })
 _sym_db.RegisterMessage(Error)
 
 Trace = _reflection.GeneratedProtocolMessageType('Trace', (_message.Message,), {
   'DESCRIPTOR' : _TRACE,
   '__module__' : 'debug_protocol_pb2'
-  # @@protoc_insertion_point(class_scope:Trace)
+  # @@protoc_insertion_point(class_scope:debug_protocol.Trace)
   })
 _sym_db.RegisterMessage(Trace)
 
 VariableAccess = _reflection.GeneratedProtocolMessageType('VariableAccess', (_message.Message,), {
   'DESCRIPTOR' : _VARIABLEACCESS,
   '__module__' : 'debug_protocol_pb2'
-  # @@protoc_insertion_point(class_scope:VariableAccess)
+  # @@protoc_insertion_point(class_scope:debug_protocol.VariableAccess)
   })
 _sym_db.RegisterMessage(VariableAccess)
 
 EepromCommand = _reflection.GeneratedProtocolMessageType('EepromCommand', (_message.Message,), {
   'DESCRIPTOR' : _EEPROMCOMMAND,
   '__module__' : 'debug_protocol_pb2'
-  # @@protoc_insertion_point(class_scope:EepromCommand)
+  # @@protoc_insertion_point(class_scope:debug_protocol.EepromCommand)
   })
 _sym_db.RegisterMessage(EepromCommand)
 

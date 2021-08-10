@@ -28,7 +28,10 @@ Interface::Interface(Trace *trace, int count, ...) {
   va_list valist;
   va_start(valist, count);
   for (int i = 0; i < count / 2; ++i) {
-    Command::Code code = va_arg(valist, Command::Code);
+    // TODO (a-vinod): va_arg auto-promotes enums (not enum class's)
+    // to int. There should be a less hacky way to handle this type casting.
+    debug_protocol_Command_Code code =
+        debug_protocol_Command_Code(va_arg(valist, int));
     Command::Handler *handler = va_arg(valist, Command::Handler *);
     registry_[static_cast<uint8_t>(code)] = handler;
   }
@@ -60,9 +63,9 @@ bool Interface::Poll() {
   // Wait for command to be processed
   case State::AwaitingResponse:
     if (command_processed_) {
-      SendResponse(ErrorCode::None, response_length_);
+      SendResponse(debug_protocol_Error_Code_None, response_length_);
     } else if (hal.Now() > command_start_time_ + milliseconds(100)) {
-      SendError(ErrorCode::Timeout);
+      SendError(debug_protocol_Error_Code_Timeout);
     }
     return false;
 
@@ -171,13 +174,13 @@ void Interface::ProcessCommand() {
   uint16_t crc = ComputeCRC(request_, request_size_ - 2);
 
   if (crc != u8_to_u16(&request_[request_size_ - 2])) {
-    SendError(ErrorCode::CrcError);
+    SendError(debug_protocol_Error_Code_CrcError);
     return;
   }
 
   Command::Handler *cmd_handler = registry_[request_[0]];
   if (!cmd_handler) {
-    SendError(ErrorCode::UnknownCommand);
+    SendError(debug_protocol_Error_Code_UnknownCommand);
     return;
   }
 
@@ -193,9 +196,9 @@ void Interface::ProcessCommand() {
       .response_length = 0,
       .processed = &command_processed_,
   };
-  ErrorCode error = cmd_handler->Process(&context);
+  debug_protocol_Error_Code error = cmd_handler->Process(&context);
 
-  if (error != ErrorCode::None) {
+  if (error != debug_protocol_Error_Code_None) {
     SendError(error);
     return;
   }
@@ -205,7 +208,8 @@ void Interface::ProcessCommand() {
   response_length_ = context.response_length;
 }
 
-void Interface::SendResponse(ErrorCode error, uint32_t response_length) {
+void Interface::SendResponse(debug_protocol_Error_Code error,
+                             uint32_t response_length) {
   response_[0] = static_cast<uint8_t>(error);
 
   // Calculate the CRC on the data and error code returned

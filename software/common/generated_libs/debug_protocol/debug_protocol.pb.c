@@ -6,19 +6,19 @@
 #error Regenerate this file with the current version of nanopb generator.
 #endif
 
-PB_BIND(Command, Command, AUTO)
+PB_BIND(debug_protocol_Command, debug_protocol_Command, AUTO)
 
 
-PB_BIND(Error, Error, AUTO)
+PB_BIND(debug_protocol_Error, debug_protocol_Error, AUTO)
 
 
-PB_BIND(Trace, Trace, AUTO)
+PB_BIND(debug_protocol_Trace, debug_protocol_Trace, AUTO)
 
 
-PB_BIND(VariableAccess, VariableAccess, AUTO)
+PB_BIND(debug_protocol_VariableAccess, debug_protocol_VariableAccess, AUTO)
 
 
-PB_BIND(EepromCommand, EepromCommand, AUTO)
+PB_BIND(debug_protocol_EepromCommand, debug_protocol_EepromCommand, AUTO)
 
 
 

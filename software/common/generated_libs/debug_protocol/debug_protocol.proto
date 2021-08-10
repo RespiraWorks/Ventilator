@@ -1,60 +1,74 @@
-// Generating the C and Python code
-// protoc --plugin=protoc-gen-nanopb=nanopb/generator/protoc-gen-nanopb \
-//        --nanopb_out=. \
-//        --python_out=. debug_protocol.proto
-
 syntax = "proto2";
 
+package debug_protocol;
+
+// # Overview
+//
+// This file defines the messages sent between the ventilator's microcontroller
+// and the host computer debugging it via the python debugging interface.
+//
+// # Regenerating the C and Python code
+// $ protoc --plugin=protoc-gen-nanopb=nanopb/generator/protoc-gen-nanopb \
+//      --nanopb_out=. \
+//      --python_out=. debug_protocol.proto
+
+// Command codes sent from the python debugging interface to
+// the microcontroller's debugging interface
 message Command {
-    enum Code {
-        Mode = 0x00;         // Return the current firmware mode
-        Peek = 0x01;         // Peek into RAM
-        Poke = 0x02;         // Poke values into RAM
-        Console = 0x03;      // Read strings from the print buffer - deprecated
-        Variable = 0x04;     // Variable access
-        Trace = 0x05;        // Data trace commands
-        EepromAccess = 0x06; // Read/Write in I2C EEPROM
-    }
+  enum Code {
+    Mode = 0x00;         // Return the current firmware mode
+    Peek = 0x01;         // Peek into RAM
+    Poke = 0x02;         // Poke values into RAM
+    Console = 0x03;      // Read strings from the print buffer - deprecated
+    Variable = 0x04;     // Variable access
+    Trace = 0x05;        // Data trace commands
+    EepromAccess = 0x06; // Read/Write in I2C EEPROM
+  }
 }
 
+// Error codes sent from the microcontroller debugging interface
+// back to the python debugging interface
 message Error {
-    enum Code {
-        None = 0x00;            // No error (=success)
-        CrcError = 0x01;        // CRC error on command
-        UnknownCommand = 0x02;  // Unknown command code received
-        MissingData = 0x03;     // Not enough data passed with command
-        NoMemory = 0x04;        // Insufficient memory
-        InternalError = 0x05;   // Some type of internal error (aka bug)
-        UnknownVariable = 0x06; // The requested variable ID is invalid
-        InvalidData = 0x07;     // data is out of range
-        Timeout = 0x08;         // response timeout
-    }
+  enum Code {
+    None = 0x00;            // No error (=success)
+    CrcError = 0x01;        // CRC error on command
+    UnknownCommand = 0x02;  // Unknown command code received
+    MissingData = 0x03;     // Not enough data passed with command
+    NoMemory = 0x04;        // Insufficient memory
+    InternalError = 0x05;   // Some type of internal error (aka bug)
+    UnknownVariable = 0x06; // The requested variable ID is invalid
+    InvalidData = 0x07;     // data is out of range
+    Timeout = 0x08;         // response timeout
+  }
 }
 
+// Trace subcommands sent from the host to the microcontroller
 message Trace {
-    enum Subcommand {
-        Flush = 0x00;        // disable and flush the trace buffer
-        Download = 0x01;     // download data from the trace buffer
-        Start = 0x02;        // start tracing data
-        GetVarId = 0x03;     // get traced variable id
-        SetVarId = 0x04;     // set traced variable id
-        GetPeriod = 0x05;
-        SetPeriod = 0x06;
-        CountSamples = 0x07; // get number of samples in the trace buffer
-    }
+  enum Subcommand {
+    Flush = 0x00;    // disable and flush the trace buffer
+    Download = 0x01; // download data from the trace buffer
+    Start = 0x02;    // start tracing data
+    GetVarId = 0x03; // get traced variable id
+    SetVarId = 0x04; // set traced variable id
+    GetPeriod = 0x05;
+    SetPeriod = 0x06;
+    CountSamples = 0x07; // get number of samples in the trace buffer
+  }
 }
 
+// Variable access subcommands sent from the host to the microcontroller
 message VariableAccess {
-    enum Subcommand {
-        GetInfo = 0x00; // get variable info (name, type, help string)
-        Get = 0x01;     // get variable value
-        Set = 0x02;     // set variable value
-    }
+  enum Subcommand {
+    GetInfo = 0x00; // get variable info (name, type, help string)
+    Get = 0x01;     // get variable value
+    Set = 0x02;     // set variable value
+  }
 }
 
+// EEPROM commands sent from the host to the microcontroller
 message EepromCommand {
-    enum Subcommand {
-        Read = 0x00;
-        Write = 0x01;
-    }
+  enum Subcommand {
+    Read = 0x00;
+    Write = 0x01;
+  }
 }

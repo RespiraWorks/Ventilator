@@ -16,13 +16,13 @@ limitations under the License.
 
 namespace Debug::Command {
 
-ErrorCode PeekHandler::Process(Context *context) {
+debug_protocol_Error_Code PeekHandler::Process(Context *context) {
   // The data passed to this command consists of a 4 byte address
   // and a two byte count of how many bytes to return
   // Length should be exactly 6, but if more data is passed
   // I'll just ignore it.
   if (context->request_length < 6)
-    return ErrorCode::MissingData;
+    return debug_protocol_Error_Code_MissingData;
 
   size_t address = address_msw_ + u8_to_u32(&context->request[0]);
   uint32_t count = u8_to_u16(&context->request[4]);
@@ -55,7 +55,7 @@ ErrorCode PeekHandler::Process(Context *context) {
 
   context->response_length = count;
   *(context->processed) = true;
-  return ErrorCode::None;
+  return debug_protocol_Error_Code_None;
 }
 
 } // namespace Debug::Command

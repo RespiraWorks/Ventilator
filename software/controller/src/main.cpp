@@ -17,6 +17,7 @@ limitations under the License.
 #include "commands.h"
 #include "comms.h"
 #include "controller.h"
+#include "debug_protocol.pb.h"
 #include "eeprom.h"
 #include "hal.h"
 #include "interface.h"
@@ -67,11 +68,12 @@ static Debug::Command::TraceHandler trace_command(&trace);
 static Debug::Command::EepromHandler eeprom_command(&eeprom);
 
 static Debug::Interface
-    debug(&trace, 12, Debug::Command::Code::Mode, &mode_command,
-          Debug::Command::Code::Peek, &peek_command, Debug::Command::Code::Poke,
-          &poke_command, Debug::Command::Code::Variable, &var_command,
-          Debug::Command::Code::Trace, &trace_command,
-          Debug::Command::Code::EepromAccess, &eeprom_command);
+    debug(&trace, 12, debug_protocol_Command_Code_Mode, &mode_command,
+          debug_protocol_Command_Code_Peek, &peek_command,
+          debug_protocol_Command_Code_Poke, &poke_command,
+          debug_protocol_Command_Code_Variable, &var_command,
+          debug_protocol_Command_Code_Trace, &trace_command,
+          debug_protocol_Command_Code_EepromAccess, &eeprom_command);
 
 static SensorsProto AsSensorsProto(const SensorReadings &r,
                                    const ControllerState &c) {

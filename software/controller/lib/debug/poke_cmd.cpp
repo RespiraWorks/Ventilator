@@ -16,12 +16,12 @@ limitations under the License.
 
 namespace Debug::Command {
 
-ErrorCode PokeHandler::Process(Context *context) {
+debug_protocol_Error_Code PokeHandler::Process(Context *context) {
 
   // Total command length must be at least 5.  That's
   // four for the address and at least one data byte.
   if (context->request_length < 5)
-    return ErrorCode::MissingData;
+    return debug_protocol_Error_Code_MissingData;
 
   size_t address = address_msw_ + u8_to_u32(&context->request[0]);
   uint32_t count = context->request_length - 4;
@@ -53,7 +53,7 @@ ErrorCode PokeHandler::Process(Context *context) {
 
   context->response_length = 0;
   *(context->processed) = true;
-  return ErrorCode::None;
+  return debug_protocol_Error_Code_None;
 }
 
 } // namespace Debug::Command

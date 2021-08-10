@@ -51,7 +51,8 @@ TEST(EepromHandler, ValidRead) {
           .response_length = 0,
           .processed = &processed,
       };
-      EXPECT_EQ(debug, eeprom_handler.Process(&read_context));
+      EXPECT_EQ(debug_protocol_Error_Code_None,
+                eeprom_handler.Process(&read_context));
       EXPECT_EQ(read_context.response_length, read_length);
       EXPECT_TRUE(processed);
 

@@ -2,7 +2,7 @@
 # to display the current values of the DMA registers.
 #
 # From the debug console you would enter:
-#   run peek_dma.py [which]
+#   run peek_dma [which]
 #
 # which is either 1 or 2 to look at DMA1_BASE or DMA2_BASE.
 # If not supplied it shows you DMA1

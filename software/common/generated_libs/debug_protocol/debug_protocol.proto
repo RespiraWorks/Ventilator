@@ -1,3 +1,8 @@
+// Generating the C and Python code
+// protoc --plugin=protoc-gen-nanopb=nanopb/generator/protoc-gen-nanopb \
+//        --nanopb_out=. \
+//        --python_out=. debug_protocol.proto
+
 syntax = "proto2";
 
 message Command {

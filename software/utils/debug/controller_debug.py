@@ -153,7 +153,7 @@ class ControllerDebugInterface:
         # todo force o2 psol open or closed?
 
     def variables_force_off(self):
-        # Unforce parameters we so they can be controlled by the
+        # Unforce parameters so they can be controlled by the
         # controller.  Note that you should unforce the blower power *after* setting the
         # gui_mode because if we unforced it while we were still in mode 0
         # (i.e. "ventilator off"), the fan would momentarily spin down.

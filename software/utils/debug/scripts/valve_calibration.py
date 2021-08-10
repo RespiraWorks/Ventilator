@@ -84,7 +84,7 @@ def valve_calibration(interface: ControllerDebugInterface, cmdline: str = ""):
     for i in range(9):
         percent = (9 - i) * 0.1
 
-        target_flow = (full_flow - zero_flow) * percent + zero_flow
+        target_flow = zero_flow + percent * (full_flow - zero_flow)
 
         print(
             f"Looking for a valve setting for {percent:.1%} flow - target `{flow_variable}`={target_flow:.1f}"

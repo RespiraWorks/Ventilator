@@ -106,7 +106,7 @@ To run the test and display acquired data in plots, do
 test run iso_pc_1 --plot
 ```
 
-Each time you run a test scenario, all prescribed variables will be applied. You will also be given the opportunity to adjust manual(physically manipulable) settings. All available metadata about the state of the ventilator at the time of this experiment will be saved along with the acquired data.
+Each time you run a test scenario, all prescribed variables will be applied. You will also be given the opportunity to adjust manual (physically manipulable) settings. All available metadata about the state of the ventilator at the time of this experiment will be saved along with the acquired data.
 
 To retrieve save data and view it, you may type:
 ```

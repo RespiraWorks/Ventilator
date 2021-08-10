@@ -50,7 +50,8 @@ TEST(VarHandler, GetVarInfo) {
   uint8_t id[2];
   u16_to_u8(var.GetId(), id);
   std::array req = {
-      static_cast<uint8_t>(VarHandler::Subcommand::GetInfo), id[0],
+      static_cast<uint8_t>(debug_protocol_VariableAccess_Subcommand_GetInfo),
+      id[0],
       id[1], // Var id
   };
   std::array<uint8_t, 50> response;
@@ -62,7 +63,7 @@ TEST(VarHandler, GetVarInfo) {
                      .response_length = 0,
                      .processed = &processed};
 
-  EXPECT_EQ(ErrorCode::None, VarHandler().Process(&context));
+  EXPECT_EQ(debug_protocol_Error_Code_None, VarHandler().Process(&context));
   EXPECT_TRUE(processed);
   for (size_t i = 0; i < expected.size(); ++i) {
     EXPECT_EQ(context.response[i], expected[i]);
@@ -77,7 +78,7 @@ TEST(VarHandler, GetVar) {
   uint8_t id[2];
   u16_to_u8(var.GetId(), id);
   std::array req = {
-      static_cast<uint8_t>(VarHandler::Subcommand::Get), id[0],
+      static_cast<uint8_t>(debug_protocol_VariableAccess_Subcommand_Get), id[0],
       id[1], // Var id
   };
   std::array<uint8_t, 4> response;
@@ -89,7 +90,7 @@ TEST(VarHandler, GetVar) {
                      .response_length = 0,
                      .processed = &processed};
 
-  EXPECT_EQ(ErrorCode::None, VarHandler().Process(&context));
+  EXPECT_EQ(debug_protocol_Error_Code_None, VarHandler().Process(&context));
   EXPECT_TRUE(processed);
   EXPECT_EQ(4, context.response_length);
 
@@ -110,7 +111,7 @@ TEST(VarHandler, SetVar) {
   uint8_t id[2];
   u16_to_u8(var.GetId(), id);
   std::array req = {
-      static_cast<uint8_t>(VarHandler::Subcommand::Set),
+      static_cast<uint8_t>(debug_protocol_VariableAccess_Subcommand_Set),
       id[0],
       id[1], // Var id
       new_bytes[0],
@@ -128,7 +129,7 @@ TEST(VarHandler, SetVar) {
                      .response_length = 0,
                      .processed = &processed};
 
-  EXPECT_EQ(ErrorCode::None, VarHandler().Process(&context));
+  EXPECT_EQ(debug_protocol_Error_Code_None, VarHandler().Process(&context));
   EXPECT_TRUE(processed);
   EXPECT_EQ(0, context.response_length);
 

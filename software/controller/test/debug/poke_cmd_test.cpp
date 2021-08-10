@@ -52,7 +52,8 @@ TEST(PokeHandler, valid_poke) {
                               .max_response_length = std::size(response),
                               .response_length = 0,
                               .processed = &processed};
-      EXPECT_EQ(ErrorCode::None, poke_handler.Process(&poke_context));
+      EXPECT_EQ(debug_protocol_Error_Code_None,
+                poke_handler.Process(&poke_context));
       EXPECT_TRUE(processed);
       EXPECT_EQ(poke_context.response_length, 0);
       for (size_t offset = 0; offset < poke_length; ++offset) {
@@ -72,7 +73,8 @@ TEST(PokeHandler, errors) {
                           .max_response_length = std::size(response),
                           .response_length = 0,
                           .processed = &processed};
-  EXPECT_EQ(ErrorCode::MissingData, PokeHandler().Process(&poke_context));
+  EXPECT_EQ(debug_protocol_Error_Code_MissingData,
+            PokeHandler().Process(&poke_context));
   EXPECT_FALSE(processed);
 }
 } // namespace Debug::Command

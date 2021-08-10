@@ -61,7 +61,7 @@ class CmdArgumentParser(argparse.ArgumentParser):
             raise ArgparseShowHelpError()
 
 
-# This class creates a simple command line self.interface using the standard
+# This class creates a simple command line interface using the standard
 # Python cmd module.
 #
 # Member functions named do_something will implement a command called

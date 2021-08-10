@@ -179,11 +179,6 @@ public:
   explicit EepromHandler(I2Ceeprom *eeprom) : eeprom_(eeprom){};
   debug_protocol_Error_Code Process(Context *context) override;
 
-  enum class Subcommand : uint8_t {
-    Read = 0x00,
-    Write = 0x01,
-  };
-
 private:
   debug_protocol_Error_Code Read(uint16_t address, Context *context);
   debug_protocol_Error_Code Write(uint16_t address, Context *context);

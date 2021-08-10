@@ -34,7 +34,7 @@ TEST(EepromHandler, ValidRead) {
   for (uint16_t read_length = 1; read_length <= kMaxRequestSize;
        ++read_length) {
     std::array<uint8_t, 6> read_command = {
-        static_cast<uint8_t>(EepromHandler::Subcommand::Read)};
+        static_cast<uint8_t>(debug_protocol_EepromCommand_Subcommand_Read)};
     // set command length
     u16_to_u8(read_length, &read_command[3]);
     for (uint16_t offset = 0; offset < kMemorySize + 1 - read_length;
@@ -51,7 +51,7 @@ TEST(EepromHandler, ValidRead) {
           .response_length = 0,
           .processed = &processed,
       };
-      EXPECT_EQ(ErrorCode::None, eeprom_handler.Process(&read_context));
+      EXPECT_EQ(debug, eeprom_handler.Process(&read_context));
       EXPECT_EQ(read_context.response_length, read_length);
       EXPECT_TRUE(processed);
 
@@ -74,7 +74,7 @@ TEST(EepromHandler, ValidWrite) {
   for (uint16_t write_length = 1; write_length <= kMaxWriteSize;
        ++write_length) {
     std::array<uint8_t, kMaxWriteSize + 3> write_command = {
-        static_cast<uint8_t>(EepromHandler::Subcommand::Write)};
+        static_cast<uint8_t>(debug_protocol_EepromCommand_Subcommand_Write)};
     for (uint16_t offset = 0; offset < kMemorySize + 1 - write_length;
          ++offset) {
       // set command address
@@ -94,7 +94,8 @@ TEST(EepromHandler, ValidWrite) {
           .response_length = 0,
           .processed = &processed,
       };
-      EXPECT_EQ(ErrorCode::None, eeprom_handler.Process(&write_context));
+      EXPECT_EQ(debug_protocol_Error_Code_None,
+                eeprom_handler.Process(&write_context));
       EXPECT_EQ(write_context.response_length, 0);
       EXPECT_TRUE(processed);
 
@@ -118,13 +119,17 @@ TEST(EepromHandler, Errors) {
   long_write[0] = 1;
 
   std::vector<std::tuple<std::vector<uint8_t>, ErrorCode>> requests = {
-      {{}, ErrorCode::MissingData},           // Missing subcommand
-      {{0, 0, 0, 4, 0}, ErrorCode::NoMemory}, // length > max response length
-      {{0, 0, 0, 0}, ErrorCode::MissingData}, // Read missing length
-      {{1, 0, 0}, ErrorCode::MissingData},    // Write missing data
-      {{1, 0xFF, 0xFF, 0}, ErrorCode::InternalError}, // Write outside eeprom
-      {long_write, ErrorCode::NoMemory},   // Write more than 1024 bytes
-      {{2, 0, 0}, ErrorCode::InvalidData}, // Invalid subcommand
+      {{}, debug_protocol_Error_Code_MissingData}, // Missing subcommand
+      {{0, 0, 0, 4, 0},
+       debug_protocol_Error_Code_NoMemory}, // length > max response length
+      {{0, 0, 0, 0},
+       debug_protocol_Error_Code_MissingData},            // Read missing length
+      {{1, 0, 0}, debug_protocol_Error_Code_MissingData}, // Write missing data
+      {{1, 0xFF, 0xFF, 0},
+       debug_protocol_Error_Code_InternalError}, // Write outside eeprom
+      {long_write,
+       debug_protocol_Error_Code_NoMemory}, // Write more than 1024 bytes
+      {{2, 0, 0}, debug_protocol_Error_Code_InvalidData}, // Invalid subcommand
   };
 
   for (auto &[request, error] : requests) {

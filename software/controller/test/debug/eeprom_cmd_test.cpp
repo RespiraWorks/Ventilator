@@ -118,19 +118,22 @@ TEST(EepromHandler, Errors) {
   long_write.resize(1028, 0);
   long_write[0] = 1;
 
-  std::vector<std::tuple<std::vector<uint8_t>, ErrorCode>> requests = {
-      {{}, debug_protocol_Error_Code_MissingData}, // Missing subcommand
-      {{0, 0, 0, 4, 0},
-       debug_protocol_Error_Code_NoMemory}, // length > max response length
-      {{0, 0, 0, 0},
-       debug_protocol_Error_Code_MissingData},            // Read missing length
-      {{1, 0, 0}, debug_protocol_Error_Code_MissingData}, // Write missing data
-      {{1, 0xFF, 0xFF, 0},
-       debug_protocol_Error_Code_InternalError}, // Write outside eeprom
-      {long_write,
-       debug_protocol_Error_Code_NoMemory}, // Write more than 1024 bytes
-      {{2, 0, 0}, debug_protocol_Error_Code_InvalidData}, // Invalid subcommand
-  };
+  std::vector<std::tuple<std::vector<uint8_t>, debug_protocol_Error_Code>>
+      requests = {
+          {{}, debug_protocol_Error_Code_MissingData}, // Missing subcommand
+          {{0, 0, 0, 4, 0},
+           debug_protocol_Error_Code_NoMemory}, // length > max response length
+          {{0, 0, 0, 0},
+           debug_protocol_Error_Code_MissingData}, // Read missing length
+          {{1, 0, 0},
+           debug_protocol_Error_Code_MissingData}, // Write missing data
+          {{1, 0xFF, 0xFF, 0},
+           debug_protocol_Error_Code_InternalError}, // Write outside eeprom
+          {long_write,
+           debug_protocol_Error_Code_NoMemory}, // Write more than 1024 bytes
+          {{2, 0, 0},
+           debug_protocol_Error_Code_InvalidData}, // Invalid subcommand
+      };
 
   for (auto &[request, error] : requests) {
     // response size 3 to provoke No Memory error once all other checks are OK

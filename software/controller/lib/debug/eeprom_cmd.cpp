@@ -25,14 +25,15 @@ debug_protocol_Error_Code EepromHandler::Process(Context *context) {
   // Whatever the subcommand, bytes 1 and 2 are the address
   uint16_t address = u8_to_u16(&context->request[1]);
 
-  Subcommand subcommand{context->request[0]};
+  debug_protocol_EepromCommand_Subcommand subcommand{
+      debug_protocol_EepromCommand_Subcommand(context->request[0])};
 
   // Process subcommand
   switch (subcommand) {
-  case Subcommand::Read:
+  case debug_protocol_EepromCommand_Subcommand_Read:
     return Read(address, context);
 
-  case Subcommand::Write:
+  case debug_protocol_EepromCommand_Subcommand_Write:
     return Write(address, context);
 
   default:

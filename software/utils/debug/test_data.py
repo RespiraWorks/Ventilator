@@ -130,14 +130,14 @@ class TestData:
 
         timestamps_sec = self.traces[0]
         dat = self.traces[1:]
-        figure, axes = plt.subplots(len(dat), sharex=True)
+        figure, axes = plt.subplots(len(dat), sharex=True, squeeze=False)
         for i, d in enumerate(dat):
             var = self.scenario.trace_variable_names[i]
-            axes[i].plot(timestamps_sec, d, color="C{}".format(i))
-            axes[i].set_title(var)
-            axes[i].set_ylabel(var)  # todo should be units
-            axes[i].grid()
-            axes[i].axhline(linewidth=1, color="black")
+            axes[i][0].plot(timestamps_sec, d, color="C{}".format(i))
+            axes[i][0].set_title(var)
+            axes[i][0].set_ylabel(var)  # todo should be units
+            axes[i][0].grid()
+            axes[i][0].axhline(linewidth=1, color="black")
             # Draw a black gridline at y=0 to highlight the x-axis.
 
         plt.xlabel("Seconds")

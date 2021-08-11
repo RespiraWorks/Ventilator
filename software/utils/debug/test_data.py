@@ -30,6 +30,7 @@ import json
 import platform
 import git
 from lib.colors import red
+from pathlib import Path
 
 
 class TestData:
@@ -114,23 +115,23 @@ class TestData:
             "traces": self.traces,
         }
 
-    def save_json(self, print_self=False):
+    def save_json(self, parent_path: str, print_self=False):
         if print_self:
             print("\nResults:")
             print(self)
 
-        file_name = self.unique_name() + ".json"
+        file_name = Path(parent_path) / (self.unique_name() + ".json")
         if print_self:
             print(f"Saving as {file_name}")
         with open(file_name, "w") as json_file:
             json.dump(self.as_dict(), json_file, indent=4)
 
-    def save_csv(self):
-        file_name = self.unique_name() + ".csv"
+    def save_csv(self, parent_path: str):
+        file_name = Path(parent_path) / (self.unique_name() + ".csv")
         with open(file_name, "w") as csv_file:
             csv_file.write(self.print_trace(separator=", "))
 
-    def plot(self, save, show):
+    def plot(self, parent_path: str, save: bool, show: bool):
         title = self.unique_name()
 
         timestamps_sec = self.traces[0]
@@ -151,9 +152,8 @@ class TestData:
         figure.set_figwidth(16)
 
         if save:
-            plt.savefig(
-                title + ".png", format="png", metadata={"Title": title}, dpi=100
-            )
+            file_name = Path(parent_path) / (title + ".png")
+            plt.savefig(file_name, format="png", metadata={"Title": title}, dpi=100)
 
         if show:
             plt.show()

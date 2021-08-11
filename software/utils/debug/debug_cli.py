@@ -35,6 +35,7 @@ from lib.serial_detect import detect_stm32_ports, print_detected_ports
 from controller_debug import ControllerDebugInterface, MODE_BOOT
 import matplotlib.pyplot as plt
 import test_data
+from pathlib import Path
 
 
 class ArgparseShowHelpError(Exception):
@@ -72,11 +73,13 @@ class CmdLine(cmd.Cmd):
     interface: ControllerDebugInterface
     scripts_directory: str
     test_scenarios_dir: str
+    test_data_dir: str
 
     def __init__(self, port):
         super().__init__()
         self.scripts_directory = "scripts"
         self.test_scenarios_dir = "test_scenarios"
+        self.test_data_dir = "../../../test_data"
         self.interface = ControllerDebugInterface()
         if not port:
             port = auto_select_port()
@@ -311,7 +314,7 @@ test read <file> [--verbose/-v] [--plot/-p] [--csv/-c]
             if params[1] not in self.interface.scenarios.keys():
                 print(red(f"Test `{params[1]}` does not exist\n"))
             test = self.interface.test_run(params[1])
-            test.save_json(print_self=True)
+            test.save_json(self.test_data_dir, print_self=True)
             if len(params) > 2:
                 parser = CmdArgumentParser("test")
                 parser.add_argument(
@@ -323,15 +326,16 @@ test read <file> [--verbose/-v] [--plot/-p] [--csv/-c]
                 if args2.verbose:
                     print(test.print_trace())
                 if args2.plot:
-                    test.plot(save=True, show=True)
+                    test.plot(self.test_data_dir, save=True, show=True)
                 if args2.csv:
-                    test.save_csv()
+                    test.save_csv(self.test_data_dir)
 
         elif subcommand == "read":
             if len(params) < 2:
                 print(red("File name not provided for `test read`\n"))
                 return
-            test = test_data.TestData.from_json(params[1])
+            file_name = Path(self.test_data_dir) / (params[1] + ".json")
+            test = test_data.TestData.from_json(file_name)
             print(test)
             if len(params) > 2:
                 parser = CmdArgumentParser("test")
@@ -344,9 +348,9 @@ test read <file> [--verbose/-v] [--plot/-p] [--csv/-c]
                 if args2.verbose:
                     print(test.print_trace())
                 if args2.plot:
-                    test.plot(save=True, show=True)
+                    test.plot(self.test_data_dir, save=True, show=True)
                 if args2.csv:
-                    test.save_csv()
+                    test.save_csv(self.test_data_dir)
 
         else:
             print("Invalid test args: {}", params)
@@ -556,7 +560,7 @@ trace save [--verbose/-v] [--plot/-p] [--csv/-c]
 
         elif cl[0] == "save":
             test = self.interface.trace_save()
-            test.save_json(print_self=True)
+            test.save_json(self.test_data_dir, print_self=True)
 
             if len(cl) > 1:
                 parser = CmdArgumentParser("test")
@@ -569,9 +573,9 @@ trace save [--verbose/-v] [--plot/-p] [--csv/-c]
                 if args2.verbose:
                     print(test.print_trace())
                 if args2.plot:
-                    test.plot(save=True, show=True)
+                    test.plot(self.test_data_dir, save=True, show=True)
                 if args2.csv:
-                    test.save_csv()
+                    test.save_csv(self.test_data_dir)
 
         elif cl[0] == "status":
             print("Traced variables:")
@@ -649,6 +653,8 @@ def main():
     terminal_args = terminal_parser.parse_args()
 
     interpreter = CmdLine(terminal_args.port)
+    path = Path(interpreter.test_data_dir)
+    path.mkdir(parents=True, exist_ok=True)
 
     if terminal_args.command:
         # Set matplotlib to noninteractive mode.  This causes show() to block,

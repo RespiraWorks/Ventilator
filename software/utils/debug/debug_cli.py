@@ -252,15 +252,17 @@ test show <scenario>
 test apply <scenario>
   applies all ventilator settings for named <scenario>
 
-test run <scenario> [--verbose/-v] [--plot/-p]
+test run <scenario> [--verbose/-v] [--plot/-p] [--csv/-c]
   runs named <scenario> and saves data to .json
-    --verbose/-v  will also print out full trace data in columns
-    --plot/-p will also plot traces and save plots as .png
+    --verbose/-v  - also print out full trace data in columns
+    --plot/-p     - also plot traces and save plots as .png
+    --csv/-c      - also save traces as .csv
 
-test read <file> [--verbose/-v] [--plot/-p]
+test read <file> [--verbose/-v] [--plot/-p] [--csv/-c]
   reads test data from <file> and prints it out,
-    --verbose/-v  will also print out full trace data in columns
-    --plot/-p will also plot traces and save plots as .png
+    --verbose/-v  - also print out full trace data in columns
+    --plot/-p     - also plot traces and save plots as .png
+    --csv/-c      - also save traces as .csv
         """
         params = shlex.split(line)
         if len(params) < 1:
@@ -316,11 +318,14 @@ test read <file> [--verbose/-v] [--plot/-p]
                     "--verbose", "-v", default=False, action="store_true"
                 )
                 parser.add_argument("--plot", "-p", default=False, action="store_true")
+                parser.add_argument("--csv", "-c", default=False, action="store_true")
                 args2 = parser.parse_args(params[2:])
                 if args2.verbose:
                     print(test.print_trace())
                 if args2.plot:
                     test.plot(save=True, show=True)
+                if args2.csv:
+                    test.save_csv()
 
         elif subcommand == "read":
             if len(params) < 2:
@@ -334,11 +339,14 @@ test read <file> [--verbose/-v] [--plot/-p]
                     "--verbose", "-v", default=False, action="store_true"
                 )
                 parser.add_argument("--plot", "-p", default=False, action="store_true")
+                parser.add_argument("--csv", "-c", default=False, action="store_true")
                 args2 = parser.parse_args(params[2:])
                 if args2.verbose:
                     print(test.print_trace())
                 if args2.plot:
                     test.plot(save=True, show=True)
+                if args2.csv:
+                    test.save_csv()
 
         else:
             print("Invalid test args: {}", params)
@@ -507,12 +515,13 @@ trace status
     - trace period
     - number of samples in the trace buffer
 
-trace save [--verbose/-v] [--plot/-p]
+trace save [--verbose/-v] [--plot/-p] [--csv/-c]
   Downloads trace data and saves it as an "unplanned test". File will be named as
   <date-time>_<user>_manual_trace.json with a blank test scenario definition.
   See more about tests and test scenarios with `help test`.
-    --verbose/-v  will also print out full trace data
-    --plot/-p will also plot traces and save as .png
+    --verbose/-v  - also print out full trace data
+    --plot/-p     - also plot traces and save as .png
+    --csv/-c      - also save traces as .csv
 """
         cl = shlex.split(line)
         if len(cl) < 1:
@@ -555,11 +564,14 @@ trace save [--verbose/-v] [--plot/-p]
                     "--verbose", "-v", default=False, action="store_true"
                 )
                 parser.add_argument("--plot", "-p", default=False, action="store_true")
+                parser.add_argument("--csv", "-c", default=False, action="store_true")
                 args2 = parser.parse_args(cl[1:])
                 if args2.verbose:
                     print(test.print_trace())
                 if args2.plot:
                     test.plot(save=True, show=True)
+                if args2.csv:
+                    test.save_csv()
 
         elif cl[0] == "status":
             print("Traced variables:")

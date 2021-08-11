@@ -125,6 +125,11 @@ class TestData:
         with open(file_name, "w") as json_file:
             json.dump(self.as_dict(), json_file, indent=4)
 
+    def save_csv(self):
+        file_name = self.unique_name() + ".csv"
+        with open(file_name, "w") as csv_file:
+            csv_file.write(self.print_trace(separator=", "))
+
     def plot(self, save, show):
         title = self.unique_name()
 

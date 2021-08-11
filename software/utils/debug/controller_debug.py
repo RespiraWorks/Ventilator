@@ -312,8 +312,15 @@ class ControllerDebugInterface:
     def trace_save(self, scenario_name="manual_trace"):
         test = test_data.TestData(test_scenario.TestScenario())
         test.traces = self.trace_download()
+        time_series = test.traces[0]
+        test.scenario.capture_duration_secs = (
+            time_series[len(time_series) - 1] - time_series[0]
+        )
         test.scenario.name = scenario_name
-        test.scenario.description = ""
+        test.scenario.description = (
+            "Manually triggered trace -- undefined test scenario"
+        )
+        test.scenario.capture_ignore_secs = 0
         test.scenario.trace_period = self.trace_get_period()
         test.scenario.trace_variable_names = [
             x.name for x in self.trace_active_variables_list()

@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 # Test scenario abstraction for ventilator debug interface
 
 __copyright__ = "Copyright 2021 RespiraWorks"
@@ -55,10 +57,6 @@ class TestScenario:
         self.manual_settings = {}
         self.ventilator_settings = {}
         self.test_criteria = {}
-        self.capture_duration_secs = 30
-        self.capture_ignore_secs = 10
-        self.trace_period = 1
-        self.trace_variable_names = ["pc_setpoint", "pressure", "volume", "net_flow"]
 
     def short_description(self):
         return f'{self.name:15} "{self.description}"'
@@ -136,6 +134,11 @@ class TestScenario:
             row_copy = copy.deepcopy(row)
             ts.name = row_copy.pop("id")
             ts.description = row_copy.pop("description")
+            ts.capture_duration_secs = 30
+            ts.capture_ignore_secs = 10
+            ts.trace_period = 1
+            ts.trace_variable_names = ["pc_setpoint", "pressure", "volume", "net_flow"]
+
             for k in row_copy.keys():
                 if k in ventilator_settings:
                     ts.ventilator_settings[k] = row_copy[k]

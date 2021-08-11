@@ -31,33 +31,20 @@ import test_data
 from pathlib import Path
 from lib.colors import red
 
-# TODO: Import constants from proto instead!
+# Import protobuffer using relative paths
+import sys, os
 
-# Command codes.  See debug_types.h in the controller debug library
-OP_MODE = 0x00
-OP_PEEK = 0x01
-OP_POKE = 0x02
-OP_PBREAD = 0x03
-OP_VAR = 0x04
-OP_TRACE = 0x05
-OP_EEPROM = 0x06
-
-# Some commands take a sub-command as their first byte of data
-SUBCMD_VAR_INFO = 0
-SUBCMD_VAR_GET = 1
-SUBCMD_VAR_SET = 2
-
-SUBCMD_TRACE_FLUSH = 0
-SUBCMD_TRACE_GETDATA = 1
-SUBCMD_TRACE_START = 2
-SUBCMD_TRACE_GET_VARID = 3
-SUBCMD_TRACE_SET_VARID = 4
-SUBCMD_TRACE_GET_PERIOD = 5
-SUBCMD_TRACE_SET_PERIOD = 6
-SUBCMD_TRACE_GET_NUM_SAMPLES = 7
-
-SUBCMD_EEPROM_READ = 0
-SUBCMD_EEPROM_WRITE = 1
+sys.path.append(
+    os.path.join(
+        os.path.dirname(__file__),
+        "..",
+        "..",
+        "common",
+        "generated_libs",
+        "debug_protocol",
+    )
+)
+import debug_protocol_pb2
 
 # Can trace this many variables at once.  Keep this in sync with
 # kMaxTraceVars in the controller.
@@ -98,7 +85,7 @@ class ControllerDebugInterface:
             print(*args, **kwargs)
 
     def mode_get(self):
-        return self.send_command(OP_MODE)[0]
+        return self.send_command(debug_protocol_pb2.Command.Code.Mode)[0]
 
     def resynchronize(self):
         with self.command_lock:
@@ -121,7 +108,9 @@ class ControllerDebugInterface:
         try:
             for vid in range(256):
                 data = self.send_command(
-                    OP_VAR, [SUBCMD_VAR_INFO] + debug_types.int16s_to_bytes(vid)
+                    debug_protocol_pb2.Command.Code.Variable,
+                    [debug_protocol_pb2.VariableAccess.Subcommand.GetInfo]
+                    + debug_types.int16s_to_bytes(vid),
                 )
                 if data is None:
                     break
@@ -198,7 +187,9 @@ class ControllerDebugInterface:
 
         variable = self.variable_metadata[name]
         data = self.send_command(
-            OP_VAR, [SUBCMD_VAR_GET] + debug_types.int16s_to_bytes(variable.id)
+            debug_protocol_pb2.Command.Code.Variable,
+            [debug_protocol_pb2.VariableAccess.Subcommand.GetInfo]
+            + debug_types.int16s_to_bytes(variable.id),
         )
         value = variable.from_bytes(data)
 
@@ -219,7 +210,10 @@ class ControllerDebugInterface:
         data = variable.to_bytes(value)
 
         self.send_command(
-            OP_VAR, [SUBCMD_VAR_SET] + debug_types.int16s_to_bytes(variable.id) + data
+            debug_protocol_pb2.Command.Code.Variable,
+            [debug_protocol_pb2.VariableAccess.Subcommand.Set]
+            + debug_types.int16s_to_bytes(variable.id)
+            + data,
         )
         return
 
@@ -341,7 +335,7 @@ class ControllerDebugInterface:
         while ct:
             n = min(ct, 256)
             data = self.send_command(
-                OP_PEEK,
+                debug_protocol_pb2.Command.Code.Peek,
                 debug_types.int32s_to_bytes(address_iterator)
                 + debug_types.int16s_to_bytes(n),
             )
@@ -399,7 +393,10 @@ class ControllerDebugInterface:
             dat = [debug_types.f_to_i(x) for x in dat]
             dat = debug_types.int32s_to_bytes(dat)
 
-        self.send_command(OP_POKE, debug_types.int32s_to_bytes(address) + dat)
+        self.send_command(
+            debug_protocol_pb2.Command.Code.Poke,
+            debug_types.int32s_to_bytes(address) + dat,
+        )
 
     def poke32(self, address, dat):
         self.poke(address, dat, "long")
@@ -408,15 +405,23 @@ class ControllerDebugInterface:
         self.poke(address, dat, "short")
 
     def trace_flush(self):
-        self.send_command(OP_TRACE, [SUBCMD_TRACE_FLUSH])
+        self.send_command(
+            debug_protocol_pb2.Command.Code.Trace,
+            [debug_protocol_pb2.Trace.Subcommand.Flush],
+        )
 
     def trace_set_period(self, period):
         self.send_command(
-            OP_TRACE, [SUBCMD_TRACE_SET_PERIOD] + debug_types.int32s_to_bytes(period)
+            debug_protocol_pb2.Command.Code.Trace,
+            [debug_protocol_pb2.Trace.Subcommand.SetPeriod]
+            + debug_types.int32s_to_bytes(period),
         )
 
     def trace_get_period(self):
-        dat = self.send_command(OP_TRACE, [SUBCMD_TRACE_GET_PERIOD])
+        dat = self.send_command(
+            debug_protocol_pb2.Command.Code.Trace,
+            [debug_protocol_pb2.Trace.Subcommand.GetPeriod],
+        )
         return debug_types.bytes_to_int32s(dat)[0]
 
     def trace_get_period_us(self):
@@ -440,24 +445,36 @@ class ControllerDebugInterface:
             if var_name in self.variable_metadata:
                 var_id = self.variable_metadata[var_name].id
             var = debug_types.int16s_to_bytes(var_id)
-            self.send_command(OP_TRACE, [SUBCMD_TRACE_SET_VARID, i] + var)
+            self.send_command(
+                debug_protocol_pb2.Command.Code.Trace,
+                [debug_protocol_pb2.Trace.Subcommand.SetVarId, i] + var,
+            )
 
     def trace_start(self):
-        self.send_command(OP_TRACE, [SUBCMD_TRACE_START])
+        self.send_command(
+            debug_protocol_pb2.Command.Code.Trace,
+            [debug_protocol_pb2.Trace.Subcommand.Start],
+        )
 
     def trace_stop(self):
         self.trace_select([])
         self.trace_flush()
 
     def trace_num_samples(self):
-        dat = self.send_command(OP_TRACE, [SUBCMD_TRACE_GET_NUM_SAMPLES])
+        dat = self.send_command(
+            debug_protocol_pb2.Command.Code.Trace,
+            [debug_protocol_pb2.Trace.Subcommand.CountSamples],
+        )
         return debug_types.bytes_to_int32s(dat)[0]
 
     def trace_active_variables_list(self):
         """Return a list of active trace variables"""
         ret = []
         for i in range(TRACE_VAR_CT):
-            data = self.send_command(OP_TRACE, [SUBCMD_TRACE_GET_VARID, i])
+            data = self.send_command(
+                debug_protocol_pb2.Command.Code.Trace,
+                [debug_protocol_pb2.Trace.Subcommand.GetVarId, i],
+            )
             var_id = debug_types.bytes_to_int16s(data)[0]
             var = self.variable_by_id(var_id)
             if var is not None:
@@ -516,8 +533,8 @@ class ControllerDebugInterface:
 
     def eeprom_read(self, address, length):
         data = self.send_command(
-            OP_EEPROM,
-            [SUBCMD_EEPROM_READ]
+            debug_protocol_pb2.Command.Code.EepromAccess,
+            [debug_protocol_pb2.EepromCommand.Subcommand.Read]
             + debug_types.int16s_to_bytes(int(address, 0))
             + debug_types.int16s_to_bytes(int(length, 0)),
         )
@@ -525,8 +542,10 @@ class ControllerDebugInterface:
 
     def eeprom_write(self, address, data):
         self.send_command(
-            OP_EEPROM,
-            [SUBCMD_EEPROM_WRITE] + debug_types.int16s_to_bytes(int(address, 0)) + data,
+            debug_protocol_pb2.Command.Code.EepromAccess,
+            [debug_protocol_pb2.EepromCommand.Subcommand.Write]
+            + debug_types.int16s_to_bytes(int(address, 0))
+            + data,
         )
 
     # Wait for a response from the controller to the last command

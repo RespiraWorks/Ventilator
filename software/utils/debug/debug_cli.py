@@ -29,10 +29,10 @@ import glob
 import os
 import shlex
 import traceback
-from lib.colors import red, green, orange
+from lib.colors import red, green, orange, purple
 from lib.error import Error
 from lib.serial_detect import detect_stm32_ports, print_detected_ports
-from controller_debug import ControllerDebugInterface
+from controller_debug import ControllerDebugInterface, MODE_BOOT
 import matplotlib.pyplot as plt
 import test_data
 
@@ -87,16 +87,25 @@ class CmdLine(cmd.Cmd):
         for x in glob.glob(self.test_scenarios_dir + "/*.json"):
             self.interface.tests_import(x)
 
-    def update_prompt(self, mode=None):
+    def update_prompt(self):
         if not self.interface.connected():
-            self.prompt = red("OFFLINE] ")
+            self.prompt = purple("OFFLINE] ")
+            return
+
+        self.prompt = purple("ERROR] ")
+        try:
+            mode = self.interface.mode_get()
+        except Error as e:
+            print(red(str(e)))
+            return
+        except:
+            traceback.print_exc()
+            return
+
+        if mode == MODE_BOOT:
+            self.prompt = orange(f"{self.interface.serial_port.port}:boot] ")
         else:
-            if mode is None:
-                mode = self.interface.mode_get()
-            if mode == 1:
-                self.prompt = orange("BOOT] ")
-            else:
-                self.prompt = green(f"{self.interface.serial_port.port}] ")
+            self.prompt = green(f"{self.interface.serial_port.port}] ")
 
     def cli_loop(self):
         self.autoload()
@@ -111,7 +120,7 @@ class CmdLine(cmd.Cmd):
             except ArgparseShowHelpError:
                 pass
             except Error as e:
-                print(e)
+                print(red(str(e)))
             except:
                 traceback.print_exc()
             self.update_prompt()
@@ -438,7 +447,7 @@ ex: poke [type] <address> <data>
         else:
             fmt = None
 
-        print(self.interface.variable_get(cl[0], fmt=fmt))
+        print(cl[0] + " = " + self.interface.variable_get(cl[0], fmt=fmt))
 
     def complete_get(self, text, line, begidx, endidx):
         return self.interface.variables_starting_with(text)

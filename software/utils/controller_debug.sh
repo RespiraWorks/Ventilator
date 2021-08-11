@@ -7,6 +7,8 @@ set -e
 set -o pipefail
 
 # This script should work no matter where you call it from.
-cd "$(dirname "$0")"
+pushd "$(dirname "$0")"/debug
 
-debug/debug_cli.py
+./debug_cli.py
+
+popd

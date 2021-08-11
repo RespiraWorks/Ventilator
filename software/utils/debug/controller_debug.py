@@ -63,6 +63,9 @@ SUBCMD_EEPROM_WRITE = 1
 # kMaxTraceVars in the controller.
 TRACE_VAR_CT = 4
 
+MODE_NORMAL = 0
+MODE_BOOT = 1
+
 
 class ControllerDebugInterface:
     # If true, the raw bytes of the serial data will be printed.
@@ -106,6 +109,10 @@ class ControllerDebugInterface:
                 self.serial_port.reset_input_buffer()
             except serial.serialutil.SerialException:
                 self.serial_port.close()
+                self.variable_metadata.clear()
+                raise Error(
+                    "Could not resynchronize. Serial Exception encountered. Closing port."
+                )
 
     # Read info about all the supported variables and load
     # them in a map
@@ -237,6 +244,7 @@ class ControllerDebugInterface:
                 len(imported_scenarios.keys()), file_name
             )
         )
+        # this just appends one dictionary to the other, weird syntax
         self.scenarios = {**self.scenarios, **imported_scenarios}
 
     def tests_list(self, verbose=False):
@@ -416,6 +424,9 @@ class ControllerDebugInterface:
     def trace_select(self, var_names):
         if len(var_names) > TRACE_VAR_CT:
             raise Error(f"Can't trace more than {TRACE_VAR_CT} variables at once.")
+        for name in var_names:
+            if name not in self.variable_metadata.keys():
+                raise Error(f"Cannot select trace. Variable `{name}` does not exist.")
         var_names += [""] * (TRACE_VAR_CT - len(var_names))
         for (i, var_name) in enumerate(var_names):
             var_id = -1
@@ -456,15 +467,15 @@ class ControllerDebugInterface:
         """
         trace_vars = self.trace_active_variables_list()
         if len(trace_vars) < 1:
-            print("No active traces to download")
-            return None
+            raise Error("No active traces to download")
         var_count = len(trace_vars)
 
         # get samples count
         total_num_samples = self.trace_num_samples() * var_count
+        bytes_per_int32 = 4
 
         data = []
-        while len(data) < 4 * total_num_samples:
+        while len(data) < bytes_per_int32 * total_num_samples:
             byte = self.send_command(OP_TRACE, [SUBCMD_TRACE_GETDATA])
             if len(byte) < 1:
                 break
@@ -518,20 +529,28 @@ class ControllerDebugInterface:
     # See debug.cpp in the controller source for more detail on
     # command framing.
     def get_response(self):
-        dat = []
+        data = []
         esc = False
-        self.debug_print("Getting resp: ", end="")
+        self.debug_print("Getting response: ", end="")
         while True:
-            x = self.serial_port.read(1)
+            try:
+                x = self.serial_port.read(1)
+            except serial.serialutil.SerialException:
+                self.serial_port.close()
+                self.variable_metadata.clear()
+                raise Error(
+                    "Could not read response. Serial Exception encountered. Closing port."
+                )
+
             if len(x) < 1:
                 self.debug_print("timeout")
-                return dat
+                return data
             x = ord(x)
-            self.debug_print("0x%02x" % x, end=" ")
+            self.debug_print(f"0x{x:02x}", end=" ")
 
             if esc:
                 esc = False
-                dat.append(x)
+                data.append(x)
                 continue
 
             if x == debug_types.ESC:
@@ -540,8 +559,8 @@ class ControllerDebugInterface:
 
             if x == debug_types.TERM:
                 self.debug_print()
-                return dat
-            dat.append(x)
+                return data
+            data.append(x)
 
     # This formats a binary command and sends it to the system.
     # It then waits for and returns a response.
@@ -554,52 +573,50 @@ class ControllerDebugInterface:
     #  timeout - How long (seconds) to wait for the response.  If
     #            not specified then a reasonable system default is used
     def send_command(self, op, data=None, timeout=None):
+
+        if not self.serial_port.isOpen():
+            raise Error("Cannot send command. Serial port not open.")
+
         if data is None:
             data = []
         buff = [op] + data
 
-        crc = debug_types.CRC16().calc(buff)
-        buff += debug_types.int16s_to_bytes(crc)
-
-        debug_string = "CMD: "
-        for b in buff:
-            debug_string += "0x%02x " % b
-        self.debug_print(debug_string)
-
+        buff += debug_types.int16s_to_bytes(debug_types.CRC16().calc(buff))
         buff = debug_types.frame_command(buff)
-        debug_string = "ESC: "
-        for b in buff:
-            debug_string += "0x%02x " % b
-        self.debug_print(debug_string)
 
-        if not self.serial_port.isOpen():
-            return
+        debug_string = "Sending command: " + "".join([f"0x{b:02x} " for b in buff])
+        self.debug_print(debug_string)
 
         with self.command_lock:
             try:
                 self.serial_port.write(bytearray(buff))
-                if timeout is not None:
-                    self.debug_print("Setting timeout to %.1f" % timeout)
-                    old_timeout = self.serial_port.timeout
-                    self.serial_port.timeout = timeout
-
-                rsp = self.get_response()
-                if timeout is not None:
-                    self.serial_port.timeout = old_timeout
-
-                if len(rsp) < 3:
-                    raise Error("Invalid response, too short")
-
-                crc = debug_types.CRC16().calc(rsp[:-2])
-                rcrc = debug_types.bytes_to_int16s(rsp[-2:])[0]
-                if crc != rcrc:
-                    raise Error(
-                        "CRC error on response, calculated 0x%04x received 0x%04x"
-                        % (crc, rcrc)
-                    )
-
-                if rsp[0]:
-                    raise Error("Error %d (0x%02x)" % (rsp[0], rsp[0]))
-                return rsp[1:-2]
             except serial.serialutil.SerialException:
                 self.serial_port.close()
+                self.variable_metadata.clear()
+                raise Error(
+                    "Could not send command. Serial Exception encountered. Closing port."
+                )
+
+            if timeout is not None:
+                self.debug_print(f"Setting timeout to {timeout:.1f}")
+                old_timeout = self.serial_port.timeout
+                self.serial_port.timeout = timeout
+
+            response = self.get_response()
+            if timeout is not None:
+                self.serial_port.timeout = old_timeout
+
+            if len(response) < 3:
+                raise Error("Invalid response, too short")
+
+            crc = debug_types.CRC16().calc(response[:-2])
+            rcrc = debug_types.bytes_to_int16s(response[-2:])[0]
+            if crc != rcrc:
+                raise Error(
+                    f"CRC error on response, calculated 0x{crc:04x} received 0x{rcrc:04x}"
+                )
+
+            if response[0]:
+                raise Error(f"Error {response[0]:d} (0x{response[0]:02x})")
+
+            return response[1:-2]

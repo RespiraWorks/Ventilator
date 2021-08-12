@@ -50,8 +50,7 @@ TEST(VarHandler, GetVarInfo) {
   uint8_t id[2];
   u16_to_u8(var.GetId(), id);
   std::array req = {
-      static_cast<uint8_t>(debug_protocol_VariableAccess_Subcommand_GetInfo),
-      id[0],
+      static_cast<uint8_t>(VariableAccess_Subcommand_GetInfo), id[0],
       id[1], // Var id
   };
   std::array<uint8_t, 50> response;
@@ -63,7 +62,7 @@ TEST(VarHandler, GetVarInfo) {
                      .response_length = 0,
                      .processed = &processed};
 
-  EXPECT_EQ(debug_protocol_Error_Code_None, VarHandler().Process(&context));
+  EXPECT_EQ(Error_Code_None, VarHandler().Process(&context));
   EXPECT_TRUE(processed);
   for (size_t i = 0; i < expected.size(); ++i) {
     EXPECT_EQ(context.response[i], expected[i]);
@@ -78,7 +77,7 @@ TEST(VarHandler, GetVar) {
   uint8_t id[2];
   u16_to_u8(var.GetId(), id);
   std::array req = {
-      static_cast<uint8_t>(debug_protocol_VariableAccess_Subcommand_Get), id[0],
+      static_cast<uint8_t>(VariableAccess_Subcommand_Get), id[0],
       id[1], // Var id
   };
   std::array<uint8_t, 4> response;
@@ -90,7 +89,7 @@ TEST(VarHandler, GetVar) {
                      .response_length = 0,
                      .processed = &processed};
 
-  EXPECT_EQ(debug_protocol_Error_Code_None, VarHandler().Process(&context));
+  EXPECT_EQ(Error_Code_None, VarHandler().Process(&context));
   EXPECT_TRUE(processed);
   EXPECT_EQ(4, context.response_length);
 
@@ -111,7 +110,7 @@ TEST(VarHandler, SetVar) {
   uint8_t id[2];
   u16_to_u8(var.GetId(), id);
   std::array req = {
-      static_cast<uint8_t>(debug_protocol_VariableAccess_Subcommand_Set),
+      static_cast<uint8_t>(VariableAccess_Subcommand_Set),
       id[0],
       id[1], // Var id
       new_bytes[0],
@@ -129,7 +128,7 @@ TEST(VarHandler, SetVar) {
                      .response_length = 0,
                      .processed = &processed};
 
-  EXPECT_EQ(debug_protocol_Error_Code_None, VarHandler().Process(&context));
+  EXPECT_EQ(Error_Code_None, VarHandler().Process(&context));
   EXPECT_TRUE(processed);
   EXPECT_EQ(0, context.response_length);
 
@@ -165,6 +164,7 @@ TEST(VarHandler, Errors) {
   DebugUInt32 var("name", "help", VarAccess::ReadWrite, value);
   uint8_t id[2];
   u16_to_u8(var.GetId(), id);
+<<<<<<< HEAD
   DebugUInt32 var_readonly("name", "help", VarAccess::ReadOnly, value);
   uint8_t id_readonly[2];
   u16_to_u8(var_readonly.GetId(), id_readonly);
@@ -184,6 +184,21 @@ TEST(VarHandler, Errors) {
       {{2, id[0], id[1], 0xCA, 0xFE, 0x00}, ErrorCode::MissingData},
       {{2, id_readonly[0], id_readonly[1], 0xCA, 0xFE, 0x00, 0x00},
        ErrorCode::InternalError},
+=======
+
+  std::vector<std::tuple<std::vector<uint8_t>, Error_Code>> requests = {
+      {{}, Error_Code_MissingData},  // Missing subcommand
+      {{3}, Error_Code_InvalidData}, // Invalid subcommand
+      {{0, 0xFF, 0xFF}, Error_Code_UnknownVariable},
+      {{1, 0xFF, 0xFF}, Error_Code_UnknownVariable},
+      {{2, 0xFF, 0xFF}, Error_Code_UnknownVariable},
+      {{0, 1}, Error_Code_MissingData},
+      {{1, 1}, Error_Code_MissingData},
+      {{2, 1}, Error_Code_MissingData},
+      {{0, id[0], id[1]}, Error_Code_NoMemory},
+      {{1, id[0], id[1]}, Error_Code_NoMemory},
+      {{2, id[0], id[1], 0xCA, 0xFE, 0x00}, Error_Code_MissingData},
+>>>>>>> 0ee43d0e... Concise protobuf constant names
   };
 
   for (auto &[request, error] : requests) {

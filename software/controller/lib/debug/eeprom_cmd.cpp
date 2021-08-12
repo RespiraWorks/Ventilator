@@ -16,60 +16,58 @@ limitations under the License.
 
 namespace Debug::Command {
 
-debug_protocol_Error_Code EepromHandler::Process(Context *context) {
+Error_Code EepromHandler::Process(Context *context) {
 
   // We have at least subcommand and address (3 bytes)
   if (context->request_length < 3)
-    return debug_protocol_Error_Code_MissingData;
+    return Error_Code_MissingData;
 
   // Whatever the subcommand, bytes 1 and 2 are the address
   uint16_t address = u8_to_u16(&context->request[1]);
 
-  debug_protocol_EepromCommand_Subcommand subcommand{
-      debug_protocol_EepromCommand_Subcommand(context->request[0])};
+  EepromCommand_Subcommand subcommand{
+      EepromCommand_Subcommand(context->request[0])};
 
   // Process subcommand
   switch (subcommand) {
-  case debug_protocol_EepromCommand_Subcommand_Read:
+  case EepromCommand_Subcommand_Read:
     return Read(address, context);
 
-  case debug_protocol_EepromCommand_Subcommand_Write:
+  case EepromCommand_Subcommand_Write:
     return Write(address, context);
 
   default:
-    return debug_protocol_Error_Code_InvalidData;
+    return Error_Code_InvalidData;
   }
 }
 
-debug_protocol_Error_Code EepromHandler::Read(const uint16_t address,
-                                              Context *context) {
+Error_Code EepromHandler::Read(const uint16_t address, Context *context) {
   // Read command requires length (bytes 3 and 4)
   if (context->request_length < 5)
-    return debug_protocol_Error_Code_MissingData;
+    return Error_Code_MissingData;
   uint16_t length = u8_to_u16(&context->request[3]);
   if (length > context->max_response_length)
-    return debug_protocol_Error_Code_NoMemory;
+    return Error_Code_NoMemory;
 
   if (eeprom_->ReadBytes(address, length, context->response,
                          context->processed)) {
     // only set response_length if the read has been successfully sent
     context->response_length = length;
   }
-  return debug_protocol_Error_Code_None;
+  return Error_Code_None;
 }
 
-debug_protocol_Error_Code EepromHandler::Write(const uint16_t address,
-                                               Context *context) {
+Error_Code EepromHandler::Write(const uint16_t address, Context *context) {
   // at least one byte of data is given after the address
   if (context->request_length < 4)
-    return debug_protocol_Error_Code_MissingData;
+    return Error_Code_MissingData;
 
   // length of data to be written is the length of the request minus
   // the subcommand and address bytes
   uint16_t length = static_cast<uint16_t>(context->request_length - 3);
 
   if (length > MaxWriteLength)
-    return debug_protocol_Error_Code_NoMemory;
+    return Error_Code_NoMemory;
 
   // copy request data in our own array to allow eeprom to reinterpret_cast
   // the pointer we pass it (as pointers to const cannot be cast)
@@ -77,10 +75,10 @@ debug_protocol_Error_Code EepromHandler::Write(const uint16_t address,
   memcpy(&request[0], &(context->request[3]), length);
   context->response_length = 0;
   if (eeprom_->WriteBytes(address, length, &request, context->processed)) {
-    return debug_protocol_Error_Code_None;
+    return Error_Code_None;
   } else {
     // could not send write request for some reason
-    return debug_protocol_Error_Code_InternalError;
+    return Error_Code_InternalError;
   }
 }
 

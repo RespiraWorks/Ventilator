@@ -18,77 +18,76 @@ limitations under the License.
 
 namespace Debug::Command {
 
-debug_protocol_Error_Code TraceHandler::Process(Context *context) {
+Error_Code TraceHandler::Process(Context *context) {
 
   // The first byte of data is always required, this
   // gives the sub-command.
   if (context->request_length < 1)
-    return debug_protocol_Error_Code_MissingData;
+    return Error_Code_MissingData;
 
-  debug_protocol_Trace_Subcommand subcommand{
-      debug_protocol_Trace_Subcommand(context->request[0])};
+  Trace_Subcommand subcommand{Trace_Subcommand(context->request[0])};
 
   switch (subcommand) {
   // Sub-command FlushTrace is used to flush the trace buffer
   // It also disables the trace
-  case debug_protocol_Trace_Subcommand_Flush: {
+  case Trace_Subcommand_Flush: {
     trace_->Flush();
     context->response_length = 0;
     *(context->processed) = true;
-    return debug_protocol_Error_Code_None;
+    return Error_Code_None;
   }
 
   // Sub-command DownloadTrace is used to read data from the buffer
-  case debug_protocol_Trace_Subcommand_Download:
+  case Trace_Subcommand_Download:
     return ReadTraceBuffer(context);
 
-  case debug_protocol_Trace_Subcommand_Start:
+  case Trace_Subcommand_Start:
     trace_->Start();
     context->response_length = 0;
     *(context->processed) = true;
-    return debug_protocol_Error_Code_None;
+    return Error_Code_None;
 
-  case debug_protocol_Trace_Subcommand_GetVarId:
+  case Trace_Subcommand_GetVarId:
     return GetTraceVar(context);
 
-  case debug_protocol_Trace_Subcommand_SetVarId:
+  case Trace_Subcommand_SetVarId:
     return SetTraceVar(context);
 
-  case debug_protocol_Trace_Subcommand_GetPeriod:
+  case Trace_Subcommand_GetPeriod:
     // response (trace period) is 32 bits (4 bytes) long
     if (context->max_response_length < 4)
-      return debug_protocol_Error_Code_NoMemory;
+      return Error_Code_NoMemory;
     u32_to_u8(trace_->GetPeriod(), context->response);
     context->response_length = 4;
     *(context->processed) = true;
-    return debug_protocol_Error_Code_None;
+    return Error_Code_None;
 
-  case debug_protocol_Trace_Subcommand_SetPeriod:
+  case Trace_Subcommand_SetPeriod:
     // trace period is a 32 bits int, meaning the request (including subcommand)
     // is 5 bytes long
     if (context->request_length < 5)
-      return debug_protocol_Error_Code_MissingData;
+      return Error_Code_MissingData;
     trace_->SetPeriod(u8_to_u32(&(context->request[1])));
     context->response_length = 0;
     *(context->processed) = true;
-    return debug_protocol_Error_Code_None;
+    return Error_Code_None;
 
-  case debug_protocol_Trace_Subcommand_CountSamples:
+  case Trace_Subcommand_CountSamples:
     // response (num samples) is 4 bytes long, make sure I have enough room
     if (context->max_response_length < 4)
-      return debug_protocol_Error_Code_NoMemory;
+      return Error_Code_NoMemory;
     u32_to_u8(static_cast<uint32_t>(trace_->GetNumSamples()),
               context->response);
     context->response_length = 4;
     *(context->processed) = true;
-    return debug_protocol_Error_Code_None;
+    return Error_Code_None;
 
   default:
-    return debug_protocol_Error_Code_InvalidData;
+    return Error_Code_InvalidData;
   }
 }
 
-debug_protocol_Error_Code TraceHandler::ReadTraceBuffer(Context *context) {
+Error_Code TraceHandler::ReadTraceBuffer(Context *context) {
   // See how many active trace variables there are
   // This gives us our sample size;
   size_t var_count = trace_->GetNumActiveVars();
@@ -97,7 +96,7 @@ debug_protocol_Error_Code TraceHandler::ReadTraceBuffer(Context *context) {
   if (!var_count) {
     context->response_length = 0;
     *(context->processed) = true;
-    return debug_protocol_Error_Code_None;
+    return Error_Code_None;
   }
 
   // See how many samples I can return
@@ -108,7 +107,7 @@ debug_protocol_Error_Code TraceHandler::ReadTraceBuffer(Context *context) {
   // If there's not enough room for even one sample, return an error.
   // That really shouldn't happen
   if (max_samples == 0) {
-    return debug_protocol_Error_Code_NoMemory;
+    return Error_Code_NoMemory;
   }
 
   // Find the total number of samples in the buffer
@@ -134,41 +133,41 @@ debug_protocol_Error_Code TraceHandler::ReadTraceBuffer(Context *context) {
   context->response_length =
       static_cast<uint32_t>(samples_count * var_count * sizeof(uint32_t));
   *(context->processed) = true;
-  return debug_protocol_Error_Code_None;
+  return Error_Code_None;
 }
 
-debug_protocol_Error_Code TraceHandler::SetTraceVar(Context *context) {
+Error_Code TraceHandler::SetTraceVar(Context *context) {
   // 3 extra bytes are required to provide variable index and variable ID
   if (context->request_length < 4)
-    return debug_protocol_Error_Code_MissingData;
+    return Error_Code_MissingData;
   // extract index and var_id from request
   uint8_t index = context->request[1];
   uint16_t var_id = u8_to_u16(&context->request[2]);
   if (!trace_->SetTracedVarId(index, var_id)) {
-    return debug_protocol_Error_Code_InvalidData;
+    return Error_Code_InvalidData;
   }
   // no response is required, only the error code
   context->response_length = 0;
   *(context->processed) = true;
-  return debug_protocol_Error_Code_None;
+  return Error_Code_None;
 }
 
-debug_protocol_Error_Code TraceHandler::GetTraceVar(Context *context) {
+Error_Code TraceHandler::GetTraceVar(Context *context) {
   // 1 extra byte is required to provide variable index
   if (context->request_length < 2)
-    return debug_protocol_Error_Code_MissingData;
+    return Error_Code_MissingData;
 
   uint8_t index = context->request[1];
 
   // response (var ID) is 16 bits (2 bytes) long
   if (context->max_response_length < 2)
-    return debug_protocol_Error_Code_NoMemory;
+    return Error_Code_NoMemory;
   context->response_length = 2;
 
   u16_to_u8(static_cast<uint16_t>(trace_->GetTracedVarId(index)),
             context->response);
   *(context->processed) = true;
-  return debug_protocol_Error_Code_None;
+  return Error_Code_None;
 }
 
 } // namespace Debug::Command

@@ -1,7 +1,5 @@
 syntax = "proto2";
 
-package debug_protocol;
-
 // # Overview
 //
 // This file defines the messages sent between the ventilator's microcontroller

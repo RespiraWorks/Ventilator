@@ -67,13 +67,12 @@ static Debug::Command::VarHandler var_command;
 static Debug::Command::TraceHandler trace_command(&trace);
 static Debug::Command::EepromHandler eeprom_command(&eeprom);
 
-static Debug::Interface
-    debug(&trace, 12, debug_protocol_Command_Code_Mode, &mode_command,
-          debug_protocol_Command_Code_Peek, &peek_command,
-          debug_protocol_Command_Code_Poke, &poke_command,
-          debug_protocol_Command_Code_Variable, &var_command,
-          debug_protocol_Command_Code_Trace, &trace_command,
-          debug_protocol_Command_Code_EepromAccess, &eeprom_command);
+static Debug::Interface debug(&trace, 12, Command_Code_Mode, &mode_command,
+                              Command_Code_Peek, &peek_command,
+                              Command_Code_Poke, &poke_command,
+                              Command_Code_Variable, &var_command,
+                              Command_Code_Trace, &trace_command,
+                              Command_Code_EepromAccess, &eeprom_command);
 
 static SensorsProto AsSensorsProto(const SensorReadings &r,
                                    const ControllerState &c) {

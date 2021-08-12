@@ -68,8 +68,8 @@ public:
 
   // Returns an error code.  For any non-zero error, the values returned in
   // response_length and response will be ignored.
-  [[nodiscard]] virtual debug_protocol_Error_Code Process(Context *context) {
-    return debug_protocol_Error_Code_UnknownCommand;
+  [[nodiscard]] virtual Error_Code Process(Context *context) {
+    return Error_Code_UnknownCommand;
   }
 };
 

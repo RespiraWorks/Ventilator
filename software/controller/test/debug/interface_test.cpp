@@ -59,10 +59,9 @@ std::vector<uint8_t> Unescape(const std::vector<uint8_t> &data) {
 // unescaped.
 // Returns the unframed command response payload, i.e. unescaped,
 // without the error code and crc.
-std::vector<uint8_t> ProcessCmd(
-    Interface *serial, std::vector<uint8_t> req,
-    debug_protocol_Error_Code expected_error = debug_protocol_Error_Code_None,
-    uint16_t crc_offset = 0) {
+std::vector<uint8_t> ProcessCmd(Interface *serial, std::vector<uint8_t> req,
+                                Error_Code expected_error = Error_Code_None,
+                                uint16_t crc_offset = 0) {
   std::vector<uint8_t> full_req;
   full_req.reserve(/*ESC*/ 1 + req.size() + /*CRC*/ 2 + /*TERM*/ 1);
   full_req.push_back(static_cast<uint8_t>(SpecialChar::Escape));
@@ -118,10 +117,9 @@ std::vector<uint8_t> ProcessCmd(
 TEST(Interface, Mode) {
   Trace trace;
   Command::ModeHandler mode_command;
-  Interface serial(&trace, 2, debug_protocol_Command_Code_Mode, &mode_command);
+  Interface serial(&trace, 2, Command_Code_Mode, &mode_command);
 
-  std::vector<uint8_t> req = {
-      static_cast<uint8_t>(debug_protocol_Command_Code_Mode)};
+  std::vector<uint8_t> req = {static_cast<uint8_t>(Command_Code_Mode)};
   std::vector<uint8_t> resp = ProcessCmd(&serial, req);
   EXPECT_THAT(resp, testing::ElementsAre(static_cast<uint8_t>(0)));
 }
@@ -131,9 +129,9 @@ uint32_t GetVarViaCmd(Interface *serial, uint16_t id) {
   u16_to_u8(id, &vid[0]);
 
   std::vector<uint8_t> req = {
-      static_cast<uint8_t>(debug_protocol_Command_Code_Variable), // Cmd code
-      uint8_t{1},                                                 // GET
-      vid[0], vid[1],                                             // var id
+      static_cast<uint8_t>(Command_Code_Variable), // Cmd code
+      uint8_t{1},                                  // GET
+      vid[0], vid[1],                              // var id
   };
 
   std::vector<uint8_t> resp = ProcessCmd(serial, req);
@@ -148,8 +146,7 @@ TEST(Interface, GetVar) {
 
   Trace trace;
   Command::VarHandler var_command;
-  Interface serial(&trace, 2, debug_protocol_Command_Code_Variable,
-                   &var_command);
+  Interface serial(&trace, 2, Command_Code_Variable, &var_command);
   // Run a bunch of times with different expected results
   // to exercise buffer management.
   for (int i = 0; i < 100; ++i, ++foo, ++bar) {
@@ -162,11 +159,10 @@ TEST(Interface, AwaitingResponseState) {
   Trace trace;
   TestEeprom eeprom_test(0x50, 64, 4096);
   Command::EepromHandler eeprom_command(&eeprom_test);
-  Interface serial(&trace, 2, debug_protocol_Command_Code_EepromAccess,
-                   &eeprom_command);
+  Interface serial(&trace, 2, Command_Code_EepromAccess, &eeprom_command);
   // EEPROM read command needs time to be processed
   std::vector<uint8_t> req = {
-      static_cast<uint8_t>(debug_protocol_Command_Code_EepromAccess),
+      static_cast<uint8_t>(Command_Code_EepromAccess),
       0, // Read subcommand
       0, // address Least Significant Byte
       0, // address Most Significant Byte
@@ -176,15 +172,14 @@ TEST(Interface, AwaitingResponseState) {
 
   // The helper function quietly passes through the AwaitingResponse state since
   // the test EEPROM sets processed to true immediately if the address is valid.
-  std::vector<uint8_t> resp =
-      ProcessCmd(&serial, req, debug_protocol_Error_Code_None);
+  std::vector<uint8_t> resp = ProcessCmd(&serial, req, Error_Code_None);
   EXPECT_EQ(resp.size(), 1);
 
   // Requesting outside of memory leads to a timeout (test eeprom never sets
   // processed to true)
   req[3] = 0xFF;
   req[4] = 0xFF;
-  resp = ProcessCmd(&serial, req, debug_protocol_Error_Code_Timeout);
+  resp = ProcessCmd(&serial, req, Error_Code_Timeout);
   EXPECT_EQ(resp.size(), 0);
 }
 
@@ -198,31 +193,29 @@ TEST(Interface, Errors) {
   Command::TraceHandler trace_command(&trace);
   Command::EepromHandler eeprom_command(&eeprom_test);
 
-  Debug::Interface serial(
-      &trace, 12, debug_protocol_Command_Code_Mode, &mode_command,
-      debug_protocol_Command_Code_Peek, &peek_command,
-      debug_protocol_Command_Code_Poke, &poke_command,
-      debug_protocol_Command_Code_Variable, &var_command,
-      debug_protocol_Command_Code_Trace, &trace_command,
-      debug_protocol_Command_Code_EepromAccess, &eeprom_command);
+  Debug::Interface serial(&trace, 12, Command_Code_Mode, &mode_command,
+                          Command_Code_Peek, &peek_command, Command_Code_Poke,
+                          &poke_command, Command_Code_Variable, &var_command,
+                          Command_Code_Trace, &trace_command,
+                          Command_Code_EepromAccess, &eeprom_command);
   // Unknown command - If we ever develop new commands, make sure the command
   // code is too big.
   std::vector<uint8_t> req = {25};
   std::vector<uint8_t> resp =
-      ProcessCmd(&serial, req, debug_protocol_Error_Code_UnknownCommand);
+      ProcessCmd(&serial, req, Error_Code_UnknownCommand);
   EXPECT_EQ(resp.size(), 0);
 
   // CRC Error
   req = {25};
-  resp = ProcessCmd(&serial, req, debug_protocol_Error_Code_CrcError, 1);
+  resp = ProcessCmd(&serial, req, Error_Code_CrcError, 1);
   EXPECT_EQ(resp.size(), 0);
 
   // Error returned by Command Handler
   req = {
-      static_cast<uint8_t>(debug_protocol_Command_Code_Variable), // Cmd code
-      1, 0xFF, 0xFF, // GET and var id
+      static_cast<uint8_t>(Command_Code_Variable), // Cmd code
+      1, 0xFF, 0xFF,                               // GET and var id
   };
-  resp = ProcessCmd(&serial, req, debug_protocol_Error_Code_UnknownVariable);
+  resp = ProcessCmd(&serial, req, Error_Code_UnknownVariable);
   EXPECT_EQ(resp.size(), 0);
 
   // Command too short - we can't use the helper function for this as it adds

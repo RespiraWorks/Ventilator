@@ -34,11 +34,11 @@ namespace Debug::Command {
 class ModeHandler : public Handler {
 public:
   ModeHandler() = default;
-  debug_protocol_Error_Code Process(Context *context) override {
+  Error_Code Process(Context *context) override {
     context->response_length = 1;
     context->response[0] = 0;
     *(context->processed) = true;
-    return debug_protocol_Error_Code_None;
+    return Error_Code_None;
   }
 };
 
@@ -64,7 +64,7 @@ protected:
 class PeekHandler : public MemoryHandler {
 public:
   PeekHandler() = default;
-  debug_protocol_Error_Code Process(Context *context) override;
+  Error_Code Process(Context *context) override;
 };
 // Poke command.
 // Allows us to write raw values in memory.  Use with caution!
@@ -74,7 +74,7 @@ public:
 class PokeHandler : public MemoryHandler {
 public:
   PokeHandler() = default;
-  debug_protocol_Error_Code Process(Context *context) override;
+  Error_Code Process(Context *context) override;
 };
 
 // Trace command
@@ -97,12 +97,12 @@ public:
 class TraceHandler : public Handler {
 public:
   explicit TraceHandler(Trace *trace) : trace_(trace){};
-  debug_protocol_Error_Code Process(Context *context) override;
+  Error_Code Process(Context *context) override;
 
 private:
-  debug_protocol_Error_Code ReadTraceBuffer(Context *context);
-  debug_protocol_Error_Code SetTraceVar(Context *context);
-  debug_protocol_Error_Code GetTraceVar(Context *context);
+  Error_Code ReadTraceBuffer(Context *context);
+  Error_Code SetTraceVar(Context *context);
+  Error_Code GetTraceVar(Context *context);
   Trace *trace_{nullptr};
 };
 
@@ -132,6 +132,7 @@ class VarHandler : public Handler {
 public:
   VarHandler() = default;
 <<<<<<< HEAD
+<<<<<<< HEAD
   ErrorCode Process(Context *context) override;
 
   enum class Subcommand : uint8_t {
@@ -143,6 +144,9 @@ public:
 =======
   debug_protocol_Error_Code Process(Context *context) override;
 >>>>>>> 127c01ef... C++ proto implementation
+=======
+  Error_Code Process(Context *context) override;
+>>>>>>> 0ee43d0e... Concise protobuf constant names
 
 private:
   // Return info about one of the variables. The 16-bit variable ID is passed
@@ -150,17 +154,11 @@ private:
   // the system starting with 0.
   // The Python code can read them all out until it gets an error code
   // indicating that the passed ID is invalid.
-  debug_protocol_Error_Code GetVarInfo(Context *context);
+  Error_Code GetVarInfo(Context *context);
 
-  debug_protocol_Error_Code GetVar(Context *context);
-
-<<<<<<< HEAD
-  ErrorCode SetVar(Context *context);
-
-  ErrorCode GetVarCount(Context *context);
-=======
+  Error_Code GetVar(Context *context);
+  
   debug_protocol_Error_Code SetVar(Context *context);
->>>>>>> 127c01ef... C++ proto implementation
 };
 
 // Eeprom command.
@@ -177,11 +175,11 @@ private:
 class EepromHandler : public Handler {
 public:
   explicit EepromHandler(I2Ceeprom *eeprom) : eeprom_(eeprom){};
-  debug_protocol_Error_Code Process(Context *context) override;
+  Error_Code Process(Context *context) override;
 
 private:
-  debug_protocol_Error_Code Read(uint16_t address, Context *context);
-  debug_protocol_Error_Code Write(uint16_t address, Context *context);
+  Error_Code Read(uint16_t address, Context *context);
+  Error_Code Write(uint16_t address, Context *context);
 
   static constexpr uint16_t MaxWriteLength{1024};
   I2Ceeprom *eeprom_;

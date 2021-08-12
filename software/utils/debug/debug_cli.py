@@ -72,14 +72,14 @@ class CmdLine(cmd.Cmd):
 
     interface: ControllerDebugInterface
     scripts_directory: str
-    test_scenarios_dir: str
-    test_data_dir: str
+    test_scenarios_dir: Path
+    test_data_dir: Path
 
     def __init__(self, port):
         super().__init__()
         self.scripts_directory = "scripts"
-        self.test_scenarios_dir = "test_scenarios"
-        self.test_data_dir = "../../../test_data"
+        self.test_scenarios_dir = Path("test_scenarios").absolute().resolve()
+        self.test_data_dir = Path("../../../test_data").absolute().resolve()
         self.interface = ControllerDebugInterface()
         if not port:
             port = auto_select_port()
@@ -87,7 +87,7 @@ class CmdLine(cmd.Cmd):
             self.interface.connect(port)
 
     def autoload(self):
-        for x in glob.glob(self.test_scenarios_dir + "/*.json"):
+        for x in glob.glob(str(self.test_scenarios_dir / "*.json")):
             self.interface.tests_import(x)
 
     def update_prompt(self):
@@ -277,10 +277,11 @@ test read <file> [--verbose/-v] [--plot/-p] [--csv/-c]
             if len(params) < 2:
                 print(red("File name not provided for `test load`\n"))
                 return
-            self.interface.tests_import(params[1])
+            file_name = self.test_scenarios_dir / params[1]
+            self.interface.tests_import(str(file_name))
 
         elif subcommand == "autoload":
-            for x in glob.glob(self.test_scenarios_dir + "/*.json"):
+            for x in glob.glob(str(self.test_scenarios_dir / "*.json")):
                 self.interface.tests_import(x)
 
         elif subcommand == "clear":
@@ -314,7 +315,7 @@ test read <file> [--verbose/-v] [--plot/-p] [--csv/-c]
             if params[1] not in self.interface.scenarios.keys():
                 print(red(f"Test `{params[1]}` does not exist\n"))
             test = self.interface.test_run(params[1])
-            test.save_json(self.test_data_dir, print_self=True)
+            test.save_json(str(self.test_data_dir), print_self=True)
             if len(params) > 2:
                 parser = CmdArgumentParser("test")
                 parser.add_argument(
@@ -326,16 +327,16 @@ test read <file> [--verbose/-v] [--plot/-p] [--csv/-c]
                 if args2.verbose:
                     print(test.print_trace())
                 if args2.plot:
-                    test.plot(self.test_data_dir, save=True, show=True)
+                    test.plot(str(self.test_data_dir), save=True, show=True)
                 if args2.csv:
-                    test.save_csv(self.test_data_dir)
+                    test.save_csv(str(self.test_data_dir))
 
         elif subcommand == "read":
             if len(params) < 2:
                 print(red("File name not provided for `test read`\n"))
                 return
-            file_name = Path(self.test_data_dir) / (params[1] + ".json")
-            test = test_data.TestData.from_json(file_name)
+            file_name = self.test_data_dir / (params[1] + ".json")
+            test = test_data.TestData.from_json(str(file_name))
             print(test)
             if len(params) > 2:
                 parser = CmdArgumentParser("test")
@@ -348,12 +349,49 @@ test read <file> [--verbose/-v] [--plot/-p] [--csv/-c]
                 if args2.verbose:
                     print(test.print_trace())
                 if args2.plot:
-                    test.plot(self.test_data_dir, save=True, show=True)
+                    test.plot(str(self.test_data_dir), save=True, show=True)
                 if args2.csv:
-                    test.save_csv(self.test_data_dir)
+                    test.save_csv(str(self.test_data_dir))
 
         else:
             print("Invalid test args: {}", params)
+
+    def complete_test(self, text, line, begidx, endidx):
+        sub_commands = [
+            "load",
+            "autoload",
+            "clear",
+            "list",
+            "show",
+            "apply",
+            "run",
+            "read",
+        ]
+        tokens = shlex.split(line)
+        if len(tokens) == 3 and tokens[1] == "read":
+            dir_length = len(str(self.test_data_dir)) + 1
+            wildcard_path = self.test_data_dir / (text + "*.json")
+            return [x[dir_length : len(x) - 5] for x in glob.glob(str(wildcard_path))]
+        elif len(tokens) == 3 and tokens[1] == "load":
+            dir_length = len(str(self.test_scenarios_dir)) + 1
+            wildcard_path = self.test_scenarios_dir / (text + "*")
+            return [x[dir_length : len(x)] for x in glob.glob(str(wildcard_path))]
+        elif len(tokens) == 3 and (
+            tokens[1] == "run" or tokens[1] == "apply" or tokens[1] == "show"
+        ):
+            return [x for x in self.interface.scenarios.keys() if x.startswith(text)]
+        if len(tokens) == 2 and tokens[1] == "read":
+            dir_length = len(str(self.test_data_dir)) + 1
+            wildcard_path = self.test_data_dir / "*.json"
+            return [x[dir_length : len(x) - 5] for x in glob.glob(str(wildcard_path))]
+        elif len(tokens) == 2 and tokens[1] == "load":
+            dir_length = len(str(self.test_scenarios_dir)) + 1
+            wildcard_path = self.test_scenarios_dir / "*"
+            return [x[dir_length : len(x)] for x in glob.glob(str(wildcard_path))]
+        elif len(tokens) == 2 and any(s.startswith(text) for s in sub_commands):
+            return [s for s in sub_commands if s.startswith(text)]
+        elif len(tokens) == 1:
+            return sub_commands
 
     def do_exec(self, line):
         """exec()'s a string.  Good luck!"""
@@ -587,6 +625,18 @@ trace save [--verbose/-v] [--plot/-p] [--csv/-c]
         else:
             print(f"Unknown trace sub-command {cl[0]}")
             return
+
+    def complete_trace(self, text, line, begidx, endidx):
+        sub_commands = ["start", "flush", "stop", "status", "save"]
+        tokens = shlex.split(line)
+        if len(tokens) > 2 and tokens[1] == "start":
+            return self.interface.variables_starting_with(text)
+        elif len(tokens) == 2 and tokens[1] == "start":
+            return self.interface.variables_starting_with("")
+        elif len(tokens) == 2 and any(s.startswith(text) for s in sub_commands):
+            return [s for s in sub_commands if s.startswith(text)]
+        elif len(tokens) == 1:
+            return sub_commands
 
     def do_eeprom(self, line):
         """The `eeprom` command allows you to read/write to the controller's

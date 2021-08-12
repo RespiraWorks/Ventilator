@@ -137,15 +137,18 @@ private:
 //
 //  Set - Set the variables value.
 //
+//  GetCount - Used to know how many debug variables are currently active
+//
 class VarHandler : public Handler {
 public:
   VarHandler() = default;
   ErrorCode Process(Context *context) override;
 
   enum class Subcommand : uint8_t {
-    GetInfo = 0x00, // get variable info (name, type, help string)
-    Get = 0x01,     // get variable value
-    Set = 0x02,     // set variable value
+    GetInfo = 0x00,  // get variable info (name, type, help string)
+    Get = 0x01,      // get variable value
+    Set = 0x02,      // set variable value
+    GetCount = 0x03, // get count of active vars
   };
 
 private:
@@ -159,6 +162,8 @@ private:
   ErrorCode GetVar(Context *context);
 
   ErrorCode SetVar(Context *context);
+
+  ErrorCode GetVarCount(Context *context);
 };
 
 // Eeprom command.

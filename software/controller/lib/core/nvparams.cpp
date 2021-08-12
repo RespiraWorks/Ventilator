@@ -32,12 +32,13 @@ limitations under the License.
 
 static DebugUInt32
     dbg_reinit("nvparams_reinit",
-               "Set to 1 to request a reinit of NV params on next boot.", 0);
+               "Set to 1 to request a reinit of NV params on next boot.");
 
 static DebugUInt32 dbg_serial("serial_number",
-                              "Serial number of the ventilator, in EEPROM", 0);
+                              "Serial number of the ventilator, in EEPROM");
 
-static DebugUInt32 dbg_nvparams("nvparams_address", "Address of nv_params", 0);
+static DebugUInt32 dbg_nvparams("nvparams_address", "Address of nv_params",
+                                VarAccess::ReadOnly);
 
 namespace NVParams {
 

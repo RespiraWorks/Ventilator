@@ -31,7 +31,7 @@ ErrorCode TraceHandler::Process(Context *context) {
   // Sub-command FlushTrace is used to flush the trace buffer
   // It also disables the trace
   case Subcommand::Flush: {
-    trace_->Stop();
+    trace_->Flush();
     context->response_length = 0;
     *(context->processed) = true;
     return ErrorCode::None;

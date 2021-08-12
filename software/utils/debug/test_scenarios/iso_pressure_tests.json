@@ -1,0 +1,590 @@
+[
+    {
+        "name": "iso_pc_1",
+        "description": "ISO 80601 pressure control test scenario 201.105.1",
+        "manual_settings": {
+            "lung_compliance": 50.0,
+            "lung_resistance": 5
+        },
+        "ventilator_settings": {
+            "gui_bpm": 20,
+            "gui_ie_ratio": 0.5,
+            "gui_pip": 15,
+            "gui_peep": 5,
+            "gui_fio2": 30,
+            "gui_mode": "pressure_control"
+        },
+        "capture_duration_secs": 30,
+        "capture_ignore_secs": 10,
+        "trace_period": 1,
+        "trace_variable_names": [
+            "pc_setpoint",
+            "pressure",
+            "volume",
+            "net_flow"
+        ],
+        "test_criteria": {
+            "expected_tv": 500
+        }
+    },
+    {
+        "name": "iso_pc_2",
+        "description": "ISO 80601 pressure control test scenario 201.105.2",
+        "manual_settings": {
+            "lung_compliance": 50.0,
+            "lung_resistance": 20
+        },
+        "ventilator_settings": {
+            "gui_bpm": 12,
+            "gui_ie_ratio": 0.25,
+            "gui_pip": 25,
+            "gui_peep": 10,
+            "gui_fio2": 90,
+            "gui_mode": "pressure_control"
+        },
+        "capture_duration_secs": 30,
+        "capture_ignore_secs": 10,
+        "trace_period": 1,
+        "trace_variable_names": [
+            "pc_setpoint",
+            "pressure",
+            "volume",
+            "net_flow"
+        ],
+        "test_criteria": {
+            "expected_tv": 500
+        }
+    },
+    {
+        "name": "iso_pc_3",
+        "description": "ISO 80601 pressure control test scenario 201.105.3",
+        "manual_settings": {
+            "lung_compliance": 20.0,
+            "lung_resistance": 5
+        },
+        "ventilator_settings": {
+            "gui_bpm": 20,
+            "gui_ie_ratio": 0.5,
+            "gui_pip": 30,
+            "gui_peep": 5,
+            "gui_fio2": 90,
+            "gui_mode": "pressure_control"
+        },
+        "capture_duration_secs": 30,
+        "capture_ignore_secs": 10,
+        "trace_period": 1,
+        "trace_variable_names": [
+            "pc_setpoint",
+            "pressure",
+            "volume",
+            "net_flow"
+        ],
+        "test_criteria": {
+            "expected_tv": 500
+        }
+    },
+    {
+        "name": "iso_pc_4",
+        "description": "ISO 80601 pressure control test scenario 201.105.4",
+        "manual_settings": {
+            "lung_compliance": 20.0,
+            "lung_resistance": 20
+        },
+        "ventilator_settings": {
+            "gui_bpm": 20,
+            "gui_ie_ratio": 0.5,
+            "gui_pip": 35,
+            "gui_peep": 10,
+            "gui_fio2": 30,
+            "gui_mode": "pressure_control"
+        },
+        "capture_duration_secs": 30,
+        "capture_ignore_secs": 10,
+        "trace_period": 1,
+        "trace_variable_names": [
+            "pc_setpoint",
+            "pressure",
+            "volume",
+            "net_flow"
+        ],
+        "test_criteria": {
+            "expected_tv": 500
+        }
+    },
+    {
+        "name": "iso_pc_5",
+        "description": "ISO 80601 pressure control test scenario 201.105.5",
+        "manual_settings": {
+            "lung_compliance": 20.0,
+            "lung_resistance": 20
+        },
+        "ventilator_settings": {
+            "gui_bpm": 20,
+            "gui_ie_ratio": 0.5,
+            "gui_pip": 20,
+            "gui_peep": 5,
+            "gui_fio2": 30,
+            "gui_mode": "pressure_control"
+        },
+        "capture_duration_secs": 30,
+        "capture_ignore_secs": 10,
+        "trace_period": 1,
+        "trace_variable_names": [
+            "pc_setpoint",
+            "pressure",
+            "volume",
+            "net_flow"
+        ],
+        "test_criteria": {
+            "expected_tv": 300
+        }
+    },
+    {
+        "name": "iso_pc_6",
+        "description": "ISO 80601 pressure control test scenario 201.105.6",
+        "manual_settings": {
+            "lung_compliance": 20.0,
+            "lung_resistance": 50
+        },
+        "ventilator_settings": {
+            "gui_bpm": 12,
+            "gui_ie_ratio": 0.25,
+            "gui_pip": 35,
+            "gui_peep": 10,
+            "gui_fio2": 90,
+            "gui_mode": "pressure_control"
+        },
+        "capture_duration_secs": 30,
+        "capture_ignore_secs": 10,
+        "trace_period": 1,
+        "trace_variable_names": [
+            "pc_setpoint",
+            "pressure",
+            "volume",
+            "net_flow"
+        ],
+        "test_criteria": {
+            "expected_tv": 300
+        }
+    },
+    {
+        "name": "iso_pc_7",
+        "description": "ISO 80601 pressure control test scenario 201.105.7",
+        "manual_settings": {
+            "lung_compliance": 10.0,
+            "lung_resistance": 50
+        },
+        "ventilator_settings": {
+            "gui_bpm": 20,
+            "gui_ie_ratio": 0.5,
+            "gui_pip": 35,
+            "gui_peep": 5,
+            "gui_fio2": 90,
+            "gui_mode": "pressure_control"
+        },
+        "capture_duration_secs": 30,
+        "capture_ignore_secs": 10,
+        "trace_period": 1,
+        "trace_variable_names": [
+            "pc_setpoint",
+            "pressure",
+            "volume",
+            "net_flow"
+        ],
+        "test_criteria": {
+            "expected_tv": 300
+        }
+    },
+    {
+        "name": "iso_pc_8",
+        "description": "ISO 80601 pressure control test scenario 201.105.8",
+        "manual_settings": {
+            "lung_compliance": 10.0,
+            "lung_resistance": 10
+        },
+        "ventilator_settings": {
+            "gui_bpm": 20,
+            "gui_ie_ratio": 0.5,
+            "gui_pip": 35,
+            "gui_peep": 10,
+            "gui_fio2": 30,
+            "gui_mode": "pressure_control"
+        },
+        "capture_duration_secs": 30,
+        "capture_ignore_secs": 10,
+        "trace_period": 1,
+        "trace_variable_names": [
+            "pc_setpoint",
+            "pressure",
+            "volume",
+            "net_flow"
+        ],
+        "test_criteria": {
+            "expected_tv": 200
+        }
+    },
+    {
+        "name": "iso_pc_9",
+        "description": "ISO 80601 pressure control test scenario 201.105.9",
+        "manual_settings": {
+            "lung_compliance": 3.0,
+            "lung_resistance": 10
+        },
+        "ventilator_settings": {
+            "gui_bpm": 30,
+            "gui_ie_ratio": 0.429,
+            "gui_pip": 20,
+            "gui_peep": 5,
+            "gui_fio2": 30,
+            "gui_mode": "pressure_control"
+        },
+        "capture_duration_secs": 30,
+        "capture_ignore_secs": 10,
+        "trace_period": 1,
+        "trace_variable_names": [
+            "pc_setpoint",
+            "pressure",
+            "volume",
+            "net_flow"
+        ],
+        "test_criteria": {
+            "expected_tv": 50
+        }
+    },
+    {
+        "name": "iso_pc_10",
+        "description": "ISO 80601 pressure control test scenario 201.105.10",
+        "manual_settings": {
+            "lung_compliance": 3.0,
+            "lung_resistance": 20
+        },
+        "ventilator_settings": {
+            "gui_bpm": 30,
+            "gui_ie_ratio": 0.429,
+            "gui_pip": 25,
+            "gui_peep": 10,
+            "gui_fio2": 30,
+            "gui_mode": "pressure_control"
+        },
+        "capture_duration_secs": 30,
+        "capture_ignore_secs": 10,
+        "trace_period": 1,
+        "trace_variable_names": [
+            "pc_setpoint",
+            "pressure",
+            "volume",
+            "net_flow"
+        ],
+        "test_criteria": {
+            "expected_tv": 50
+        }
+    },
+    {
+        "name": "iso_pc_11",
+        "description": "ISO 80601 pressure control test scenario 201.105.11",
+        "manual_settings": {
+            "lung_compliance": 3.0,
+            "lung_resistance": 50
+        },
+        "ventilator_settings": {
+            "gui_bpm": 20,
+            "gui_ie_ratio": 0.25,
+            "gui_pip": 30,
+            "gui_peep": 5,
+            "gui_fio2": 60,
+            "gui_mode": "pressure_control"
+        },
+        "capture_duration_secs": 30,
+        "capture_ignore_secs": 10,
+        "trace_period": 1,
+        "trace_variable_names": [
+            "pc_setpoint",
+            "pressure",
+            "volume",
+            "net_flow"
+        ],
+        "test_criteria": {
+            "expected_tv": 50
+        }
+    },
+    {
+        "name": "iso_pc_12",
+        "description": "ISO 80601 pressure control test scenario 201.105.12",
+        "manual_settings": {
+            "lung_compliance": 3.0,
+            "lung_resistance": 20
+        },
+        "ventilator_settings": {
+            "gui_bpm": 30,
+            "gui_ie_ratio": 0.429,
+            "gui_pip": 15,
+            "gui_peep": 5,
+            "gui_fio2": 30,
+            "gui_mode": "pressure_control"
+        },
+        "capture_duration_secs": 30,
+        "capture_ignore_secs": 10,
+        "trace_period": 1,
+        "trace_variable_names": [
+            "pc_setpoint",
+            "pressure",
+            "volume",
+            "net_flow"
+        ],
+        "test_criteria": {
+            "expected_tv": 30
+        }
+    },
+    {
+        "name": "iso_pc_13",
+        "description": "ISO 80601 pressure control test scenario 201.105.13",
+        "manual_settings": {
+            "lung_compliance": 3.0,
+            "lung_resistance": 50
+        },
+        "ventilator_settings": {
+            "gui_bpm": 20,
+            "gui_ie_ratio": 0.25,
+            "gui_pip": 25,
+            "gui_peep": 10,
+            "gui_fio2": 90,
+            "gui_mode": "pressure_control"
+        },
+        "capture_duration_secs": 30,
+        "capture_ignore_secs": 10,
+        "trace_period": 1,
+        "trace_variable_names": [
+            "pc_setpoint",
+            "pressure",
+            "volume",
+            "net_flow"
+        ],
+        "test_criteria": {
+            "expected_tv": 30
+        }
+    },
+    {
+        "name": "iso_pc_14",
+        "description": "ISO 80601 pressure control test scenario 201.105.14",
+        "manual_settings": {
+            "lung_compliance": 1.0,
+            "lung_resistance": 20
+        },
+        "ventilator_settings": {
+            "gui_bpm": 30,
+            "gui_ie_ratio": 0.429,
+            "gui_pip": 35,
+            "gui_peep": 5,
+            "gui_fio2": 90,
+            "gui_mode": "pressure_control"
+        },
+        "capture_duration_secs": 30,
+        "capture_ignore_secs": 10,
+        "trace_period": 1,
+        "trace_variable_names": [
+            "pc_setpoint",
+            "pressure",
+            "volume",
+            "net_flow"
+        ],
+        "test_criteria": {
+            "expected_tv": 30
+        }
+    },
+    {
+        "name": "iso_pc_15",
+        "description": "ISO 80601 pressure control test scenario 201.105.15",
+        "manual_settings": {
+            "lung_compliance": 1.0,
+            "lung_resistance": 100
+        },
+        "ventilator_settings": {
+            "gui_bpm": 30,
+            "gui_ie_ratio": 0.429,
+            "gui_pip": 40,
+            "gui_peep": 10,
+            "gui_fio2": 30,
+            "gui_mode": "pressure_control"
+        },
+        "capture_duration_secs": 30,
+        "capture_ignore_secs": 10,
+        "trace_period": 1,
+        "trace_variable_names": [
+            "pc_setpoint",
+            "pressure",
+            "volume",
+            "net_flow"
+        ],
+        "test_criteria": {
+            "expected_tv": 30
+        }
+    },
+    {
+        "name": "iso_pc_16",
+        "description": "ISO 80601 pressure control test scenario 201.105.16",
+        "manual_settings": {
+            "lung_compliance": 1.0,
+            "lung_resistance": 200
+        },
+        "ventilator_settings": {
+            "gui_bpm": 50,
+            "gui_ie_ratio": 0.5,
+            "gui_pip": 25,
+            "gui_peep": 5,
+            "gui_fio2": 30,
+            "gui_mode": "pressure_control"
+        },
+        "capture_duration_secs": 30,
+        "capture_ignore_secs": 10,
+        "trace_period": 1,
+        "trace_variable_names": [
+            "pc_setpoint",
+            "pressure",
+            "volume",
+            "net_flow"
+        ],
+        "test_criteria": {
+            "expected_tv": 20
+        }
+    },
+    {
+        "name": "iso_pc_17",
+        "description": "ISO 80601 pressure control test scenario 201.105.17",
+        "manual_settings": {
+            "lung_compliance": 1.0,
+            "lung_resistance": 200
+        },
+        "ventilator_settings": {
+            "gui_bpm": 50,
+            "gui_ie_ratio": 0.5,
+            "gui_pip": 25,
+            "gui_peep": 10,
+            "gui_fio2": 60,
+            "gui_mode": "pressure_control"
+        },
+        "capture_duration_secs": 30,
+        "capture_ignore_secs": 10,
+        "trace_period": 1,
+        "trace_variable_names": [
+            "pc_setpoint",
+            "pressure",
+            "volume",
+            "net_flow"
+        ],
+        "test_criteria": {
+            "expected_tv": 15
+        }
+    },
+    {
+        "name": "iso_pc_18",
+        "description": "ISO 80601 pressure control test scenario 201.105.18",
+        "manual_settings": {
+            "lung_compliance": 1.0,
+            "lung_resistance": 50
+        },
+        "ventilator_settings": {
+            "gui_bpm": 60,
+            "gui_ie_ratio": 0.667,
+            "gui_pip": 15,
+            "gui_peep": 5,
+            "gui_fio2": 60,
+            "gui_mode": "pressure_control"
+        },
+        "capture_duration_secs": 30,
+        "capture_ignore_secs": 10,
+        "trace_period": 1,
+        "trace_variable_names": [
+            "pc_setpoint",
+            "pressure",
+            "volume",
+            "net_flow"
+        ],
+        "test_criteria": {
+            "expected_tv": 10
+        }
+    },
+    {
+        "name": "iso_pc_19",
+        "description": "ISO 80601 pressure control test scenario 201.105.19",
+        "manual_settings": {
+            "lung_compliance": 0.5,
+            "lung_resistance": 50
+        },
+        "ventilator_settings": {
+            "gui_bpm": 60,
+            "gui_ie_ratio": 0.667,
+            "gui_pip": 25,
+            "gui_peep": 10,
+            "gui_fio2": 60,
+            "gui_mode": "pressure_control"
+        },
+        "capture_duration_secs": 30,
+        "capture_ignore_secs": 10,
+        "trace_period": 1,
+        "trace_variable_names": [
+            "pc_setpoint",
+            "pressure",
+            "volume",
+            "net_flow"
+        ],
+        "test_criteria": {
+            "expected_tv": 5
+        }
+    },
+    {
+        "name": "iso_pc_20",
+        "description": "ISO 80601 pressure control test scenario 201.105.20",
+        "manual_settings": {
+            "lung_compliance": 0.5,
+            "lung_resistance": 50
+        },
+        "ventilator_settings": {
+            "gui_bpm": 30,
+            "gui_ie_ratio": 0.25,
+            "gui_pip": 15,
+            "gui_peep": 5,
+            "gui_fio2": 30,
+            "gui_mode": "pressure_control"
+        },
+        "capture_duration_secs": 30,
+        "capture_ignore_secs": 10,
+        "trace_period": 1,
+        "trace_variable_names": [
+            "pc_setpoint",
+            "pressure",
+            "volume",
+            "net_flow"
+        ],
+        "test_criteria": {
+            "expected_tv": 5
+        }
+    },
+    {
+        "name": "iso_pc_21",
+        "description": "ISO 80601 pressure control test scenario 201.105.21",
+        "manual_settings": {
+            "lung_compliance": 0.5,
+            "lung_resistance": 200
+        },
+        "ventilator_settings": {
+            "gui_bpm": 60,
+            "gui_ie_ratio": 0.667,
+            "gui_pip": 25,
+            "gui_peep": 10,
+            "gui_fio2": 30,
+            "gui_mode": "pressure_control"
+        },
+        "capture_duration_secs": 30,
+        "capture_ignore_secs": 10,
+        "trace_period": 1,
+        "trace_variable_names": [
+            "pc_setpoint",
+            "pressure",
+            "volume",
+            "net_flow"
+        ],
+        "test_criteria": {
+            "expected_tv": 5
+        }
+    }
+]

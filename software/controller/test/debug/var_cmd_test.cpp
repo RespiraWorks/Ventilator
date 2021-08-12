@@ -27,7 +27,7 @@ TEST(VarHandler, GetVarInfo) {
   const char *help = "help string";
   const char *format = "format";
   const char *unit = "unit";
-  DebugVar var(name, &value, help, format, unit, VarAccess::ReadOnly);
+  DebugVar var(name, &value, help, VarAccess::ReadOnly, format, unit);
 
   // expected result is hand-built from format given in var_cmd.cpp
   std::vector<uint8_t> expected = {static_cast<uint8_t>(VarType::UInt32),
@@ -71,7 +71,7 @@ TEST(VarHandler, GetVarInfo) {
 
 TEST(VarHandler, GetVar) {
   uint32_t value = 0xDEADBEEF;
-  DebugVar var("name", &value, "help", "fmt");
+  DebugVar var("name", &value, "help", VarAccess::ReadWrite);
 
   // Test that a GET command obtains the variable's value.
   uint8_t id[2];
@@ -100,7 +100,7 @@ TEST(VarHandler, GetVar) {
 
 TEST(VarHandler, SetVar) {
   uint32_t value = 0xDEADBEEF;
-  DebugVar var("name", &value, "help", "fmt");
+  DebugVar var("name", &value, "help", VarAccess::ReadWrite);
 
   uint32_t new_value = 0xCAFEBABE;
   std::array<uint8_t, 4> new_bytes;
@@ -137,7 +137,7 @@ TEST(VarHandler, SetVar) {
 
 TEST(VarHandler, GetVarCount) {
   uint32_t value = 0xDEADBEEF;
-  DebugVar dummy("name", &value, "help", "fmt");
+  DebugVar dummy("name", &value);
 
   // Test that GetVarCount command obtains the number of defined variables
   std::array req = {static_cast<uint8_t>(VarHandler::Subcommand::GetCount)};
@@ -161,11 +161,10 @@ TEST(VarHandler, GetVarCount) {
 
 TEST(VarHandler, Errors) {
   uint32_t value = 0xDEADBEEF;
-  DebugUInt32 var("name", "help", value);
+  DebugUInt32 var("name", "help", VarAccess::ReadWrite, value);
   uint8_t id[2];
   u16_to_u8(var.GetId(), id);
-  DebugUInt32 var_readonly("name", "help", value, "format", "unit",
-                           VarAccess::ReadOnly);
+  DebugUInt32 var_readonly("name", "help", VarAccess::ReadOnly, value);
   uint8_t id_readonly[2];
   u16_to_u8(var_readonly.GetId(), id_readonly);
 

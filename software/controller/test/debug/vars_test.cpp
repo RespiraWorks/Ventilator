@@ -20,13 +20,13 @@ limitations under the License.
 
 TEST(DebugVar, DebugVarInt32) {
   int32_t value = 5;
-  DebugVar var("var", &value, "help", "fmt", "unit");
+  DebugVar var("var", &value, "help", VarAccess::ReadOnly, "fmt", "unit");
   EXPECT_EQ("var", var.GetName());
   EXPECT_EQ("help", var.GetHelp());
   EXPECT_EQ(VarType::Int32, var.GetType());
   EXPECT_EQ("fmt", var.GetFormat());
   EXPECT_EQ("unit", var.GetUnit());
-  EXPECT_EQ(VarAccess::ReadWrite, var.GetAccess());
+  EXPECT_EQ(VarAccess::ReadOnly, var.GetAccess());
   EXPECT_EQ(&var, DebugVar::FindVar(var.GetId()));
 
   EXPECT_EQ(uint32_t{5}, var.GetValue());
@@ -45,28 +45,7 @@ TEST(DebugVar, DebugVarInt32) {
   EXPECT_EQ("", var_default.GetHelp());
   EXPECT_EQ("%d", var_default.GetFormat());
   EXPECT_EQ("", var_default.GetUnit());
-}
-
-TEST(DebugVar, ReadOnlyDebugVar) {
-  int32_t value = 5;
-  // Attempting to SetValue (or Set) read only variables yields false and leave
-  // value unchanged
-  DebugVar var("var", &value, "help", "fmt", "unit", VarAccess::ReadOnly);
-  EXPECT_FALSE(var.SetValue(8));
-  EXPECT_EQ(value, var.GetValue());
-
-  DebugInt32 int32("var", "help", value, "fmt", "unit", VarAccess::ReadOnly);
-  EXPECT_FALSE(int32.Set(-8));
-  EXPECT_EQ(value, int32.GetValue());
-
-  DebugUInt32 uint32("var", "help", static_cast<uint32_t>(value), "fmt", "unit",
-                     VarAccess::ReadOnly);
-  EXPECT_FALSE(uint32.Set(8));
-  EXPECT_EQ(value, uint32.GetValue());
-
-  DebugFloat floatvar("var", "help", 5.0f, "fmt", "unit", VarAccess::ReadOnly);
-  EXPECT_FALSE(floatvar.Set(-8.0f));
-  EXPECT_EQ(5.0f, floatvar.Get());
+  EXPECT_EQ(VarAccess::ReadWrite, var_default.GetAccess());
 }
 
 TEST(DebugVar, DebugVarUint32Defaults) {

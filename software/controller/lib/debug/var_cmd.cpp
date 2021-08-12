@@ -151,9 +151,10 @@ ErrorCode VarHandler::SetVar(Context *context) {
   if (count < 4)
     return ErrorCode::MissingData;
 
-  if (!var->SetValue(u8_to_u32(context->request + 3)))
+  if (!var->WriteAllowed())
     return ErrorCode::InternalError;
 
+  var->SetValue(u8_to_u32(context->request + 3));
   context->response_length = 0;
   *(context->processed) = true;
   return ErrorCode::None;

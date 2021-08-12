@@ -4,10 +4,10 @@ This library adds a simple serial interface primarily intended to be used
 for system debugging.  This entire library can be compiled out of the
 production system. **#TODO** How?
 
-The interface can be accessed via a python script located at
-[software/utils/controller_debug.py](../../../utils/controller_debug.py)
+The interface can be accessed via a script located at
+[software/utils/controller_debug.sh](../../../utils/controller_debug.sh)
 
-There is also a [brief tutorial](../../../utils/controller_debug.md) on how to use it.
+There is also a [brief tutorial](../../../utils/debug) on how to use it.
 
 ## Controller side architecture
 [![Debug Interface Architecture diagram](images/architecture.png)](https://docs.google.com/drawings/d/18oN96yqyU3Ky_Kb82zGym1iXULxy9IW3KtIfMk-IDdI/edit?usp=sharing)

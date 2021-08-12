@@ -36,7 +36,7 @@ fi
 sudo apt-get --yes install guake git-lfs
 
 ### this is for controller debug interface
-pip3 install matplotlib pillow
+pip3 install matplotlib pillow pandas gitpython
 
 ### enable serial interface but not console
 sudo raspi-config nonint do_serial 2

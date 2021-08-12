@@ -10,14 +10,14 @@ Scripts for doing so are available under [rpi_config](rpi_config).
 
 ## controller_debug
 
-[controller_debug.py](controller_debug.py)
+[controller_debug.sh](controller_debug.sh)
 
-This Python script can be used to interface with the controller via the virtual serial
-port that is created when the USB cable to the Nucleo board is plugged in.
+This is a convenience link to the controller debug interface.
 
-There is a [brief tutorial](controller_debug.md) on how to use it.
+This Python script can be used to interface with the controller via the virtual serial port that is created when you plug a USB cable into the controller's debug port. The command line interface allows you to examine and directly manipulate a number of low level variables, as well as run calibration routines and automated performance tests.
 
-This interface is the basis for automated performance tests, such as [run_covent_tests.py](run_covent_tests.py).
+There is a brief tutorial on how to use it right next to the python code in the
+[/debug](debug) subdirectory.
 
 ## decoder
 

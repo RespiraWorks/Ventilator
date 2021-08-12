@@ -47,3 +47,6 @@ _autosave-*
 fp-info-cache
 # (project symbol cache library not needed as all symbols kept in RespiraWorks libraries)
 *-cache.lib
+
+#performance test data
+test_data/

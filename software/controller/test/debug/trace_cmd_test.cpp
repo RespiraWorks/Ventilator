@@ -73,9 +73,6 @@ TEST(TraceHandler, Flush) {
   EXPECT_EQ(ErrorCode::None, trace_handler.Process(&flush_context));
   EXPECT_TRUE(processed);
   EXPECT_FALSE(trace.GetStatus());
-
-  // Actual flush happens on the next start
-  trace.Start();
   EXPECT_EQ(trace.GetNumSamples(), 0);
 }
 

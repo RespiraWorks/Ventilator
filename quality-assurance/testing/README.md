@@ -122,4 +122,4 @@ scenarios. As of writing, we have used the tool for automating the collection of
 We plan to expand its use to more automated tests and apply it as part of the shared hardware-in-the-loop testing
 infrastructure described above.
 
-More information about the debug interface is available [here](../../software/utils/controller_debug.md).
+More information about the debug interface is available [here](../../software/utils/debug).

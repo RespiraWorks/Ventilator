@@ -76,7 +76,7 @@ class CmdLine(cmd.Cmd):
     test_data_dir: Path
 
     def __init__(self, port):
-        super().__init__()
+        super(CmdLine, self).__init__()
         self.scripts_directory = "scripts"
         self.test_scenarios_dir = Path("test_scenarios").absolute().resolve()
         self.test_data_dir = Path("../../../test_data").absolute().resolve()
@@ -85,6 +85,15 @@ class CmdLine(cmd.Cmd):
             port = auto_select_port()
         if port:
             self.interface.connect(port)
+
+        # We must do this so that autocomplete will work with dash `-` in filenames
+        try:
+            import readline
+
+            delims = readline.get_completer_delims()
+            readline.set_completer_delims(delims.replace("-", ""))
+        except ImportError:
+            pass
 
     def autoload(self):
         for x in glob.glob(str(self.test_scenarios_dir / "*.json")):
@@ -356,6 +365,16 @@ test read <file> [--verbose/-v] [--plot/-p] [--csv/-c]
         else:
             print("Invalid test args: {}", params)
 
+    def get_dataset_names(self, text=""):
+        dir_length = len(str(self.test_data_dir)) + 1
+        wildcard_path = self.test_data_dir / (text + "*.json")
+        return [x[dir_length : len(x) - 5] for x in glob.glob(str(wildcard_path))]
+
+    def get_scenario_file_names(self, text=""):
+        dir_length = len(str(self.test_scenarios_dir)) + 1
+        wildcard_path = self.test_scenarios_dir / (text + "*")
+        return [x[dir_length : len(x)] for x in glob.glob(str(wildcard_path))]
+
     def complete_test(self, text, line, begidx, endidx):
         sub_commands = [
             "load",
@@ -367,27 +386,25 @@ test read <file> [--verbose/-v] [--plot/-p] [--csv/-c]
             "run",
             "read",
         ]
-        tokens = shlex.split(line)
+        tokens = line.split()
         if len(tokens) == 3 and tokens[1] == "read":
-            dir_length = len(str(self.test_data_dir)) + 1
-            wildcard_path = self.test_data_dir / (text + "*.json")
-            return [x[dir_length : len(x) - 5] for x in glob.glob(str(wildcard_path))]
+            return self.get_dataset_names(text)
         elif len(tokens) == 3 and tokens[1] == "load":
-            dir_length = len(str(self.test_scenarios_dir)) + 1
-            wildcard_path = self.test_scenarios_dir / (text + "*")
-            return [x[dir_length : len(x)] for x in glob.glob(str(wildcard_path))]
-        elif len(tokens) == 3 and (
-            tokens[1] == "run" or tokens[1] == "apply" or tokens[1] == "show"
-        ):
+            return self.get_scenario_file_names(text)
+        elif len(tokens) == 3 and tokens[1] in ["run", "apply", "show"]:
             return [x for x in self.interface.scenarios.keys() if x.startswith(text)]
-        if len(tokens) == 2 and tokens[1] == "read":
-            dir_length = len(str(self.test_data_dir)) + 1
-            wildcard_path = self.test_data_dir / "*.json"
-            return [x[dir_length : len(x) - 5] for x in glob.glob(str(wildcard_path))]
-        elif len(tokens) == 2 and tokens[1] == "load":
-            dir_length = len(str(self.test_scenarios_dir)) + 1
-            wildcard_path = self.test_scenarios_dir / "*"
-            return [x[dir_length : len(x)] for x in glob.glob(str(wildcard_path))]
+        elif len(tokens) == 2 and text == "read":
+            return ["read "]
+        elif len(tokens) == 2 and tokens[1] == "read" and text == "":
+            return self.get_dataset_names("")
+        elif len(tokens) == 2 and text == "load":
+            return ["load "]
+        elif len(tokens) == 2 and tokens[1] == "load" and text == "":
+            return self.get_scenario_file_names("")
+        elif len(tokens) == 2 and text in ["run", "apply", "show"]:
+            return [text + " "]
+        elif len(tokens) == 2 and text == "" and tokens[1] in ["run", "apply", "show"]:
+            return [x for x in self.interface.scenarios.keys()]
         elif len(tokens) == 2 and any(s.startswith(text) for s in sub_commands):
             return [s for s in sub_commands if s.startswith(text)]
         elif len(tokens) == 1:
@@ -631,7 +648,9 @@ trace save [--verbose/-v] [--plot/-p] [--csv/-c]
         tokens = shlex.split(line)
         if len(tokens) > 2 and tokens[1] == "start":
             return self.interface.variables_starting_with(text)
-        elif len(tokens) == 2 and tokens[1] == "start":
+        elif len(tokens) == 2 and text == "start":
+            return ["start "]
+        elif len(tokens) == 2 and text == "" and tokens[1] == "start":
             return self.interface.variables_starting_with("")
         elif len(tokens) == 2 and any(s.startswith(text) for s in sub_commands):
             return [s for s in sub_commands if s.startswith(text)]

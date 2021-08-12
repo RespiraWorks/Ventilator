@@ -61,7 +61,7 @@ class TestData:
         return (
             self.start_time_utc.strftime("%Y-%m-%d-%H-%M-%S")
             + "_"
-            + self.tester_email.partition("@")[0]
+            + self.tester_name.split()[0].lower()
             + "_"
             + self.scenario.name
         )

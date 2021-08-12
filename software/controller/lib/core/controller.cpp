@@ -23,42 +23,47 @@ static DebugFloat dbg_forced_blower_power(
     "forced_blower_power",
     "Force the blower fan to a particular power [0,1].  Specify a value "
     "outside this range to let the controller control it.",
-    -1.f);
+    VarAccess::ReadWrite, -1.f);
 static DebugFloat dbg_forced_exhale_valve_pos(
     "forced_exhale_valve_pos",
     "Force the exhale valve to a particular position [0,1].  Specify a value "
     "outside this range to let the controller control it.",
-    -1.f);
+    VarAccess::ReadWrite, -1.f);
 static DebugFloat dbg_forced_blower_valve_pos(
     "forced_blower_valve_pos",
     "Force the blower valve to a particular position [0,1].  Specify a value "
     "outside this range to let the controller control it.",
-    -1.f);
+    VarAccess::ReadWrite, -1.f);
 static DebugFloat dbg_forced_psol_pos(
     "forced_psol_pos",
     "Force the O2 psol to a particular position [0,1].  (Note that psol.cpp "
     "scales this further; see psol_pwm_closed and psol_pwm_open.)  Specify a "
     "value outside this range to let the controller control the psol.",
-    -1.f);
+    VarAccess::ReadWrite, -1.f);
 
 // Unchanging outputs - read from external debug program, never modified here.
-static DebugUInt32 dbg_per("loop_period", "Loop period, read-only (usec)",
-                           static_cast<uint32_t>(LoopPeriod.microseconds()));
+static DebugUInt32 dbg_per("loop_period", "Loop period", VarAccess::ReadOnly,
+                           static_cast<uint32_t>(LoopPeriod.microseconds()),
+                           "usec");
 
 // Outputs - read from external debug program, modified here.
-static DebugFloat dbg_sp("pc_setpoint", "Pressure control setpoint (cmH2O)");
-static DebugFloat dbg_net_flow("net_flow", "Net flow rate, cc/sec");
-static DebugFloat dbg_volume("volume", "Patient volume, ml");
-static DebugFloat
-    dbg_net_flow_uncorrected("net_flow_uncorrected",
-                             "Net flow rate w/o correction, cc/sec");
+static DebugFloat dbg_sp("pc_setpoint", "Pressure control setpoint",
+                         VarAccess::ReadOnly, 0.0f, "cmH2O");
+static DebugFloat dbg_net_flow("net_flow", "Net flow rate", VarAccess::ReadOnly,
+                               0.0f, "ml/sec");
+static DebugFloat dbg_volume("volume", "Patient volume", VarAccess::ReadOnly,
+                             0.0f, "ml");
+static DebugFloat dbg_net_flow_uncorrected("net_flow_uncorrected",
+                                           "Net flow rate w/o correction",
+                                           VarAccess::ReadOnly, 0.0f, "ml/sec");
 static DebugFloat dbg_volume_uncorrected("uncorrected_volume",
-                                         "Patient volume w/o correction, ml");
-static DebugFloat dbg_flow_correction("flow_correction",
-                                      "Correction to flow, cc/sec");
+                                         "Patient volume w/o correction",
+                                         VarAccess::ReadOnly, 0.0f, "ml");
+static DebugFloat dbg_flow_correction("flow_correction", "Correction to flow",
+                                      VarAccess::ReadOnly, 0.0f, "ml/sec");
 
-static DebugUInt32 dbg_breath_id("breath_id",
-                                 "ID of the current breath, read-only", 0);
+static DebugUInt32 dbg_breath_id("breath_id", "ID of the current breath",
+                                 VarAccess::ReadOnly);
 
 /*static*/ Duration Controller::GetLoopPeriod() { return LoopPeriod; }
 

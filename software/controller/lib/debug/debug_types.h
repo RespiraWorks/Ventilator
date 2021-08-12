@@ -36,8 +36,8 @@ enum class ErrorCode : uint8_t {
   NoMemory = 0x04,        // Insufficient memory
   InternalError = 0x05,   // Some type of internal error (aka bug)
   UnknownVariable = 0x06, // The requested variable ID is invalid
-  InvalidData = 0x07,     // data is out of range
-  Timeout = 0x08,         // response timeout
+  InvalidData = 0x07,     // Data is out of range
+  Timeout = 0x08,         // Response timeout
 };
 
 namespace Command {

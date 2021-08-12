@@ -52,11 +52,15 @@
 #include "vars.h"
 
 static DebugUInt32 dbg_addr_before("eeprom_before",
-                                   "address of eeprom contents at startup", 0);
-static DebugUInt32 dbg_write_data("write_data", "address of write data", 0);
+                                   "address of eeprom contents at startup",
+                                   VarAccess::ReadOnly);
+static DebugUInt32 dbg_write_data("write_data", "address of write data",
+                                  VarAccess::ReadOnly);
 static DebugUInt32 dbg_addr_after("eeprom_after",
-                                  "address of eeprom contents after write", 0);
-static DebugUInt32 dbg_test_result("result", "result of the test", 0);
+                                  "address of eeprom contents after write",
+                                  VarAccess::ReadOnly);
+static DebugUInt32 dbg_test_result("result", "result of the test",
+                                   VarAccess::ReadOnly);
 
 // test parameters
 static constexpr uint16_t Address{TEST_PARAM_1};

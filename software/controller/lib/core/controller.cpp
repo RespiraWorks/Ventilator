@@ -19,6 +19,36 @@ limitations under the License.
 
 static constexpr Duration LoopPeriod = milliseconds(10);
 
+// Controller gains, as inputs - set from external debug program, read but never
+// modified by controller.
+static DebugFloat dbg_blower_valve_ki("blower_valve_ki",
+                                      "Integral gain for blower valve PID",
+                                      VarAccess::ReadWrite, -1.0f);
+static DebugFloat dbg_blower_valve_kp("blower_valve_kp",
+                                      "Proportional gain for blower valve PID",
+                                      VarAccess::ReadWrite, 0.04f);
+static DebugFloat dbg_blower_valve_kd("blower_valve_kd",
+                                      "Derivative gain for blower valve PID");
+
+// TODO: These need to be tuned.
+static DebugFloat dbg_psol_kp("psol_kp", "Proportional gain for O2 psol PID",
+                              VarAccess::ReadWrite, 0.04f);
+static DebugFloat dbg_psol_ki("psol_ki", "Integral gain for O2 psol PID",
+                              VarAccess::ReadWrite, 20.0f);
+static DebugFloat dbg_psol_kd("psol_kd", "Derivative gain for O2 psol PID",
+                              VarAccess::ReadWrite, 0);
+
+// TODO: If we had a notion of read-only DebugVars, we could call this
+// blower_valve_ki, which would be kind of nice?  Alternatively, if we had a
+// notion of DebugVars that a user had set/pinned to a certain value, we could
+// use this as a read/write param -- read it, and write it unless the user set
+// it, in which case, use that value.
+static DebugFloat
+    dbg_blower_valve_computed_ki("blower_valve_computed_ki",
+                                 "Integral gain for blower valve PID. "
+                                 "This value is gain-scheduled.",
+                                 VarAccess::ReadOnly, 10.0f);
+
 static DebugFloat dbg_forced_blower_power(
     "forced_blower_power",
     "Force the blower fan to a particular power [0,1].  Specify a value "

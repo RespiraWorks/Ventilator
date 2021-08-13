@@ -46,6 +46,7 @@ OP_EEPROM = 0x06
 SUBCMD_VAR_INFO = 0
 SUBCMD_VAR_GET = 1
 SUBCMD_VAR_SET = 2
+SUBCMD_VAR_GET_COUNT = 3
 
 SUBCMD_TRACE_FLUSH = 0
 SUBCMD_TRACE_GETDATA = 1
@@ -65,6 +66,19 @@ TRACE_VAR_CT = 4
 
 MODE_NORMAL = 0
 MODE_BOOT = 1
+
+ERROR_NONE = 0
+ERROR_CODES = [
+    "None",
+    "CRC error on command",
+    "Unknown command code received",
+    "Not enough data passed with command",
+    "Insufficient memory",
+    "Some type of internal error (aka bug)",
+    "The requested variable ID is invalid",
+    "Data is out of range",
+    "Response timeout",
+]
 
 
 class ControllerDebugInterface:
@@ -126,22 +140,39 @@ class ControllerDebugInterface:
                 if data is None:
                     break
                 variable = var_info.VarInfo(vid, data)
+                print(f"retrieved: {variable.verbose()}")
                 self.variable_metadata[variable.name] = variable
         # todo maybe not wait for an exception to terminate this loop?
         except Error as e:
             pass
 
+    def variables_update_info2(self):
+        self.variable_metadata.clear()
+        data = self.send_command(OP_VAR, [SUBCMD_VAR_GET_COUNT])
+        var_count = debug_types.bytes_to_int32s(data)[0]
+        print(f"var_count = {var_count}")
+        for vid in range(var_count):
+            data = self.send_command(
+                OP_VAR, [SUBCMD_VAR_INFO] + debug_types.int16s_to_bytes(vid)
+            )
+            if data is None:
+                break
+            variable = var_info.VarInfo(vid, data)
+            self.variable_metadata[variable.name] = variable
+
     def variables_list(self):
         ret = "Variables currently defined:\n"
-        for k in self.variable_metadata.keys():
-            ret += " {:25} - {}\n".format(k, self.variable_metadata[k].help)
+        for k in sorted(self.variable_metadata.keys()):
+            ret += f" {self.variable_metadata[k].verbose()}\n"
         return ret
 
-    def variables_starting_with(self, text):
+    def variables_find(self, starting_with, access_filter=None):
         out = []
-        for i in self.variable_metadata.keys():
-            if i.startswith(text):
-                out.append(i)
+        for name, metadata in self.variable_metadata.items():
+            if access_filter is not None and metadata.write_access != access_filter:
+                continue
+            if name.startswith(starting_with):
+                out.append(name)
         return out
 
     def variable_by_id(self, vid):
@@ -188,13 +219,13 @@ class ControllerDebugInterface:
 
     def variables_get_all(self):
         ret = {}
-        for name in self.variable_metadata:
+        for name in sorted(self.variable_metadata.keys()):
             ret[name] = self.variable_get(name)
         return ret
 
     def variable_get(self, name, raw=False, fmt=None):
         if not (name in self.variable_metadata):
-            raise Error("Unknown variable %s" % name)
+            raise Error(f"Cannot get unknown variable {name}")
 
         variable = self.variable_metadata[name]
         data = self.send_command(
@@ -213,7 +244,7 @@ class ControllerDebugInterface:
 
     def variable_set(self, name, value):
         if not (name in self.variable_metadata):
-            raise Error("Unknown variable %s" % name)
+            raise Error(f"Cannot set unknown variable {name}")
 
         variable = self.variable_metadata[name]
         data = variable.to_bytes(value)
@@ -623,7 +654,14 @@ class ControllerDebugInterface:
                     f"CRC error on response, calculated 0x{crc:04x} received 0x{rcrc:04x}"
                 )
 
-            if response[0]:
-                raise Error(f"Error {response[0]:d} (0x{response[0]:02x})")
+            if response[0] != ERROR_NONE:
+                if response[0] < len(ERROR_CODES):
+                    raise Error(
+                        f'Error received from controller: "{ERROR_CODES[response[0]]}"'
+                    )
+                else:
+                    raise Error(
+                        f"Unknown error received from controller: {response[0]:d} (0x{response[0]:02x})"
+                    )
 
             return response[1:-2]

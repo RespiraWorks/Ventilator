@@ -506,7 +506,8 @@ ex: poke [type] <address> <data>
         if cl[0] == "all":
             all_vars = self.interface.variables_get_all()
             for name, val in all_vars.items():
-                print(f"{name:25} = {val}")
+                variable_md = self.interface.variable_metadata[name]
+                print(variable_md.print_value(val))
             return
 
         if len(cl) > 1:
@@ -514,17 +515,22 @@ ex: poke [type] <address> <data>
         else:
             fmt = None
 
-        print(cl[0] + " = " + self.interface.variable_get(cl[0], fmt=fmt))
+        variable_md = self.interface.variable_metadata[cl[0]]
+        val = self.interface.variable_get(cl[0], fmt=fmt)
+        print(variable_md.print_value(val))
 
     def complete_get(self, text, line, begidx, endidx):
-        return self.interface.variables_starting_with(text)
+        return self.interface.variables_find(text)
 
     def help_get(self):
         print("Read the value of a ventilator debug variable and display it.")
         print(
             "In addition to those listed below 'get all' will retrieve all variables.\n"
         )
-        print(self.interface.variables_list())
+
+        print("Variables currently defined:")
+        for k in sorted(self.interface.variable_metadata.keys()):
+            print(f" {self.interface.variable_metadata[k].verbose()}")
 
     def do_set(self, line):
         cl = line.split()
@@ -534,11 +540,16 @@ ex: poke [type] <address> <data>
         self.interface.variable_set(cl[0], cl[1])
 
     def complete_set(self, text, line, begidx, endidx):
-        return self.interface.variables_starting_with(text)
+        return self.interface.variables_find(text, access_filter=1)
 
     def help_set(self):
         print("Sets one of the ventilator debug variables listed below:\n")
-        print(self.interface.variables_list())
+        for k in sorted(
+            self.interface.variables_find(starting_with="", access_filter=1)
+        ):
+            print(
+                f" {self.interface.variable_metadata[k].verbose(show_access=False, show_format=False)}"
+            )
 
     def do_trace(self, line):
         """The `trace` command controls/reads the controller's trace buffer.
@@ -647,11 +658,11 @@ trace save [--verbose/-v] [--plot/-p] [--csv/-c]
         sub_commands = ["start", "flush", "stop", "status", "save"]
         tokens = shlex.split(line)
         if len(tokens) > 2 and tokens[1] == "start":
-            return self.interface.variables_starting_with(text)
+            return self.interface.variables_find(text)
         elif len(tokens) == 2 and text == "start":
             return ["start "]
         elif len(tokens) == 2 and text == "" and tokens[1] == "start":
-            return self.interface.variables_starting_with("")
+            return self.interface.variables_find("")
         elif len(tokens) == 2 and any(s.startswith(text) for s in sub_commands):
             return [s for s in sub_commands if s.startswith(text)]
         elif len(tokens) == 1:

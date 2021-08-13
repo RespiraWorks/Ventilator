@@ -132,32 +132,19 @@ class ControllerDebugInterface:
     # them in a map
     def variables_update_info(self):
         self.variable_metadata.clear()
-        try:
-            for vid in range(256):
-                data = self.send_command(
-                    OP_VAR, [SUBCMD_VAR_INFO] + debug_types.int16s_to_bytes(vid)
-                )
-                if data is None:
-                    break
-                variable = var_info.VarInfo(vid, data)
-                print(f"retrieved: {variable.verbose()}")
-                self.variable_metadata[variable.name] = variable
-        # todo maybe not wait for an exception to terminate this loop?
-        except Error as e:
-            pass
-
-    def variables_update_info2(self):
-        self.variable_metadata.clear()
         data = self.send_command(OP_VAR, [SUBCMD_VAR_GET_COUNT])
         var_count = debug_types.bytes_to_int32s(data)[0]
-        print(f"var_count = {var_count}")
         for vid in range(var_count):
             data = self.send_command(
                 OP_VAR, [SUBCMD_VAR_INFO] + debug_types.int16s_to_bytes(vid)
             )
             if data is None:
-                break
+                print(f"bad variable info retrieved for vid={vid}")
             variable = var_info.VarInfo(vid, data)
+            if variable.name in self.variable_metadata.keys():
+                print(f"variable name clash")
+                print(f" retrieved: {variable.verbose()}")
+                print(f" existing:  {self.variable_metadata[variable.name].verbose()}")
             self.variable_metadata[variable.name] = variable
 
     def variables_list(self):
@@ -217,9 +204,11 @@ class ControllerDebugInterface:
                 except:
                     print(f"WARNING: failed to set {var}={val}({type(val)})")
 
-    def variables_get_all(self):
+    def variables_get_all(self, access_filter=None):
         ret = {}
-        for name in sorted(self.variable_metadata.keys()):
+        for name, metadata in self.variable_metadata.items():
+            if access_filter is not None and metadata.write_access != access_filter:
+                continue
             ret[name] = self.variable_get(name)
         return ret
 

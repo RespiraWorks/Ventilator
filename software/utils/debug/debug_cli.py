@@ -505,9 +505,21 @@ ex: poke [type] <address> <data>
 
         if cl[0] == "all":
             all_vars = self.interface.variables_get_all()
-            for name, val in all_vars.items():
+            for name in sorted(all_vars.keys()):
                 variable_md = self.interface.variable_metadata[name]
-                print(variable_md.print_value(val))
+                print(variable_md.print_value(all_vars[name]))
+            return
+        if cl[0] == "set":
+            all_vars = self.interface.variables_get_all(access_filter=1)
+            for name in sorted(all_vars.keys()):
+                variable_md = self.interface.variable_metadata[name]
+                print(variable_md.print_value(all_vars[name], show_access=False))
+            return
+        if cl[0] == "read":
+            all_vars = self.interface.variables_get_all(access_filter=0)
+            for name in sorted(all_vars.keys()):
+                variable_md = self.interface.variable_metadata[name]
+                print(variable_md.print_value(all_vars[name], show_access=False))
             return
 
         if len(cl) > 1:
@@ -524,11 +536,11 @@ ex: poke [type] <address> <data>
 
     def help_get(self):
         print("Read the value of a ventilator debug variable and display it.")
-        print(
-            "In addition to those listed below 'get all' will retrieve all variables.\n"
-        )
-
-        print("Variables currently defined:")
+        print("  get all    -  retrieves all variables")
+        print("  get set    -  retrieves all settings (writable variables)")
+        print("  get read   -  retrieves all read-only variables")
+        print("  get <var>  -  retrieves a specific variable")
+        print("Available variables:")
         for k in sorted(self.interface.variable_metadata.keys()):
             print(f" {self.interface.variable_metadata[k].verbose()}")
 
@@ -543,7 +555,7 @@ ex: poke [type] <address> <data>
         return self.interface.variables_find(text, access_filter=1)
 
     def help_set(self):
-        print("Sets one of the ventilator debug variables listed below:\n")
+        print("Sets one of the ventilator debug variables listed below:")
         for k in sorted(
             self.interface.variables_find(starting_with="", access_filter=1)
         ):

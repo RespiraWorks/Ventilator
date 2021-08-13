@@ -326,7 +326,9 @@ class ControllerDebugInterface:
         test.traces = self.trace_download()
         self.variable_set("gui_mode", 0)
         self.trace_stop()
-        test.ventilator_settings = self.variables_get_all()
+        test.ventilator_settings = self.variables_get_all(
+            access_filter=var_info.VAR_ACCESS_WRITE
+        )
         return test
 
     def trace_save(self, scenario_name="manual_trace"):
@@ -345,7 +347,9 @@ class ControllerDebugInterface:
         test.scenario.trace_variable_names = [
             x.name for x in self.trace_active_variables_list()
         ]
-        test.ventilator_settings = self.variables_get_all()
+        test.ventilator_settings = self.variables_get_all(
+            access_filter=var_info.VAR_ACCESS_WRITE
+        )
         return test
 
     def peek(self, address, ct=1, fmt="+XXXX", fname=None, raw=False):

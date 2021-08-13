@@ -325,6 +325,9 @@ test read <file> [--verbose/-v] [--plot/-p] [--csv/-c]
             if params[1] not in self.interface.scenarios.keys():
                 print(red(f"Test `{params[1]}` does not exist\n"))
             test = self.interface.test_run(params[1])
+            if test is None:
+                print("Aborted")
+                return
             test.save_json(str(self.test_data_dir), print_self=True)
             if len(params) > 2:
                 parser = CmdArgumentParser("test")

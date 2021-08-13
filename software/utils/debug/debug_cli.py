@@ -33,6 +33,7 @@ from lib.colors import red, green, orange, purple
 from lib.error import Error
 from lib.serial_detect import detect_stm32_ports, print_detected_ports
 from controller_debug import ControllerDebugInterface, MODE_BOOT
+from var_info import VAR_ACCESS_READ_ONLY, VAR_ACCESS_WRITE
 import matplotlib.pyplot as plt
 import test_data
 from pathlib import Path
@@ -510,13 +511,15 @@ ex: poke [type] <address> <data>
                 print(variable_md.print_value(all_vars[name]))
             return
         if cl[0] == "set":
-            all_vars = self.interface.variables_get_all(access_filter=1)
+            all_vars = self.interface.variables_get_all(access_filter=VAR_ACCESS_WRITE)
             for name in sorted(all_vars.keys()):
                 variable_md = self.interface.variable_metadata[name]
                 print(variable_md.print_value(all_vars[name], show_access=False))
             return
         if cl[0] == "read":
-            all_vars = self.interface.variables_get_all(access_filter=0)
+            all_vars = self.interface.variables_get_all(
+                access_filter=VAR_ACCESS_READ_ONLY
+            )
             for name in sorted(all_vars.keys()):
                 variable_md = self.interface.variable_metadata[name]
                 print(variable_md.print_value(all_vars[name], show_access=False))
@@ -532,6 +535,7 @@ ex: poke [type] <address> <data>
         print(variable_md.print_value(val))
 
     def complete_get(self, text, line, begidx, endidx):
+        # TODO: add "all" "set" and "read"
         return self.interface.variables_find(text)
 
     def help_get(self):
@@ -552,12 +556,14 @@ ex: poke [type] <address> <data>
         self.interface.variable_set(cl[0], cl[1])
 
     def complete_set(self, text, line, begidx, endidx):
-        return self.interface.variables_find(text, access_filter=1)
+        return self.interface.variables_find(text, access_filter=VAR_ACCESS_WRITE)
 
     def help_set(self):
         print("Sets one of the ventilator debug variables listed below:")
         for k in sorted(
-            self.interface.variables_find(starting_with="", access_filter=1)
+            self.interface.variables_find(
+                starting_with="", access_filter=VAR_ACCESS_WRITE
+            )
         ):
             print(
                 f" {self.interface.variable_metadata[k].verbose(show_access=False, show_format=False)}"
@@ -670,11 +676,13 @@ trace save [--verbose/-v] [--plot/-p] [--csv/-c]
         sub_commands = ["start", "flush", "stop", "status", "save"]
         tokens = shlex.split(line)
         if len(tokens) > 2 and tokens[1] == "start":
-            return self.interface.variables_find(text)
+            return self.interface.variables_find(
+                text, access_filter=VAR_ACCESS_READ_ONLY
+            )
         elif len(tokens) == 2 and text == "start":
             return ["start "]
         elif len(tokens) == 2 and text == "" and tokens[1] == "start":
-            return self.interface.variables_find("")
+            return self.interface.variables_find("", access_filter=VAR_ACCESS_READ_ONLY)
         elif len(tokens) == 2 and any(s.startswith(text) for s in sub_commands):
             return [s for s in sub_commands if s.startswith(text)]
         elif len(tokens) == 1:

@@ -95,6 +95,17 @@ static DebugFloat dbg_flow_correction("flow_correction", "Correction to flow",
 static DebugUInt32 dbg_breath_id("breath_id", "ID of the current breath",
                                  VarAccess::ReadOnly);
 
+Controller::Controller() {
+  blower_valve_pid_ =
+      PID(dbg_blower_valve_kp.Get(), dbg_blower_valve_computed_ki.Get(),
+          dbg_blower_valve_kd.Get(), ProportionalTerm::OnError,
+          DifferentialTerm::OnMeasurement, /*output_min=*/0.f,
+          /*output_max=*/1.0f);
+  psol_pid_ = PID(dbg_psol_kp.Get(), dbg_psol_ki.Get(), dbg_psol_kd.Get(),
+                  ProportionalTerm::OnError, DifferentialTerm::OnMeasurement,
+                  /*output_min=*/0.f, /*output_max=*/1.0f);
+}
+
 /*static*/ Duration Controller::GetLoopPeriod() { return LoopPeriod; }
 
 std::pair<ActuatorsState, ControllerState>

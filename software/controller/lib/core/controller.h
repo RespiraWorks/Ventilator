@@ -56,7 +56,7 @@ class Controller {
 public:
   static Duration GetLoopPeriod();
 
-  Controller() = default;
+  Controller();
 
   std::pair<ActuatorsState, ControllerState>
   Run(Time now, const VentParams &params,
@@ -65,15 +65,8 @@ public:
 private:
   uint64_t breath_id_{0};
   BlowerFsm fsm_;
-  PID blower_valve_pid_ =
-      PID(dbg_blower_valve_kp.Get(), dbg_blower_valve_computed_ki.Get(),
-          dbg_blower_valve_kd.Get(), ProportionalTerm::OnError,
-          DifferentialTerm::OnMeasurement, /*output_min=*/0.f,
-          /*output_max=*/1.0f);
-  PID psol_pid_ =
-      PID(dbg_psol_kp.Get(), dbg_psol_ki.Get(), dbg_psol_kd.Get(),
-          ProportionalTerm::OnError, DifferentialTerm::OnMeasurement,
-          /*output_min=*/0.f, /*output_max=*/1.0f);
+  PID blower_valve_pid_;
+  PID psol_pid_;
 
   // These objects accumulate flow to calculate volume.
   //

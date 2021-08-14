@@ -133,20 +133,20 @@ public:
   // Gets the current value of the variable as an uint32_t.
   uint32_t GetValue() override {
     uint32_t res;
-    std::memcpy(&res, addr_, 4);
+    std::memcpy(&res, address_, 4);
     return res;
   }
 
   // Sets the current value of the variable as an uint32_t.
-  void SetValue(uint32_t value) override { std::memcpy(addr_, &value, 4); }
+  void SetValue(uint32_t value) override { std::memcpy(address_, &value, 4); }
 
 private:
-  void *addr_;
+  void *address_;
 
   DebugVar(VarType type, const char *name, void *data, const char *help,
            VarAccess access = VarAccess::ReadWrite, const char *fmt = "",
            const char *unit = "")
-      : DebugVarBase(type, name, help, access, fmt, unit), addr_(data) {}
+      : DebugVarBase(type, name, help, access, fmt, unit), address_(data) {}
 };
 
 class DebugInt32 : public DebugVar {

@@ -22,15 +22,22 @@ Arduino Nano and the MPXV5004GP and MPXV7002DP pressure sensors.
 #include "vars.h"
 #include <cmath>
 
-static DebugFloat dbg_dp_inhale("dp_inhale", "Inhale diff pressure, cmH2O");
-static DebugFloat dbg_dp_exhale("dp_exhale", "Exhale diff pressure, cmH2O");
-static DebugFloat dbg_pressure("pressure", "Patient pressure, cmH2O");
-static DebugFloat dbg_flow_inhale("flow_inhale", "Inhale flow rate, cc/sec");
-static DebugFloat dbg_flow_exhale("flow_exhale", "Exhale flow rate, cc/sec");
-static DebugFloat dbg_fio2("fio2", "Fraction of inspired oxygen, [0.0 - 1.0]");
+static DebugFloat dbg_dp_inhale("dp_inhale", "Inhale diff pressure",
+                                VarAccess::ReadOnly, 0.0f, "cmH2O");
+static DebugFloat dbg_dp_exhale("dp_exhale", "Exhale diff pressure",
+                                VarAccess::ReadOnly, 0.0f, "cmH2O");
+static DebugFloat dbg_pressure("pressure", "Patient pressure",
+                               VarAccess::ReadOnly, 0.0f, "cmH2O");
+static DebugFloat dbg_flow_inhale("flow_inhale", "Inhale flow rate",
+                                  VarAccess::ReadOnly, 0.0f, "mL/s");
+static DebugFloat dbg_flow_exhale("flow_exhale", "Exhale flow rate",
+                                  VarAccess::ReadOnly, 0.0f, "mL/s");
+static DebugFloat dbg_fio2("fio2", "Fraction of inspired oxygen",
+                           VarAccess::ReadOnly, 0.0f, "ratio");
 // Flow correction happens as part of volume computation, in the Controller.
 static DebugFloat dbg_flow_uncorrected("flow_uncorrected",
-                                       "Uncorrected net flow rate, cc/sec");
+                                       "Uncorrected net flow rate",
+                                       VarAccess::ReadOnly, 0.0f, "mL/s");
 
 //@TODO: Potential Caution: Density of air slightly varies over temperature and
 // altitude - need mechanism to adjust based on delivery? Constant involving

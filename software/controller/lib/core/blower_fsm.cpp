@@ -25,7 +25,7 @@ limitations under the License.
 // TODO: This should be configurable from the GUI.
 static DebugFloat dbg_pa_flow_trigger("pa_flow_trigger",
                                       "pressure assist flow trigger",
-                                      VarAccess::ReadWrite, 200, "ml/s");
+                                      VarAccess::ReadWrite, 200, "mL/s");
 
 // TODO: Is 250ms right?  Or can it be a fixed value at all; should it depend
 // on the RR or something?
@@ -57,10 +57,10 @@ static DebugFloat dbg_slow_flow_avg_alpha(
 
 static DebugFloat dbg_fast_flow_avg("fast_flow_avg",
                                     "fast-updating flow average",
-                                    VarAccess::ReadOnly);
+                                    VarAccess::ReadOnly, 0.0f, "mL/s");
 static DebugFloat dbg_slow_flow_avg("slow_flow_avg",
                                     "slow-updating flow average",
-                                    VarAccess::ReadOnly);
+                                    VarAccess::ReadOnly, 0.0f, "mL/s");
 
 // Given t = secs_per_breath and r = I:E ratio, calculate inspiration and
 // expiration durations (I and E).

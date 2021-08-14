@@ -37,17 +37,18 @@ static DebugUInt32
              "-1), this and all of the other gui_foo DebugVars are ignored, "
              "and instead the controller takes orders from the GUI itself.",
              VarAccess::ReadWrite, std::numeric_limits<uint32_t>::max());
-static DebugUInt32 gui_bpm("gui_bpm", "Breaths/min for GUI-free testing",
-                           VarAccess::ReadWrite, 15);
-static DebugUInt32 gui_peep("gui_peep", "PEEP (cm/h2O) for GUI-free testing",
-                            VarAccess::ReadWrite, 5);
-static DebugUInt32 gui_pip("gui_pip", "PIP (cm/h2O) for GUI-free testing",
-                           VarAccess::ReadWrite, 15);
-static DebugFloat gui_ie_ratio("gui_ie_ratio", "I/E ratio for GUI-free testing",
-                               VarAccess::ReadWrite, 0.66f);
+static DebugUInt32 gui_bpm("gui_bpm", "Target breath rate for GUI-free testing",
+                           VarAccess::ReadWrite, 15, "breaths/min");
+static DebugUInt32 gui_peep("gui_peep", "Target PEEP for GUI-free testing",
+                            VarAccess::ReadWrite, 5, "cmH2O");
+static DebugUInt32 gui_pip("gui_pip", "Target PIP for GUI-free testing",
+                           VarAccess::ReadWrite, 15, "cmH2O");
+static DebugFloat gui_ie_ratio("gui_ie_ratio",
+                               "Target I:E ratio for GUI-free testing",
+                               VarAccess::ReadWrite, 0.66f, "ratio");
 static DebugFloat
-    gui_fio2("gui_fio2", "Percent oxygen (range [21,100]) for GUI-free testing",
-             VarAccess::ReadWrite, 21);
+    gui_fio2("gui_fio2", "Target percent oxygen [21, 100] for GUI-free testing",
+             VarAccess::ReadWrite, 21, "%");
 
 static Controller controller;
 static ControllerStatus controller_status;

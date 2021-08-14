@@ -166,11 +166,21 @@ class TestData:
 
         timestamps_sec = self.traces[0].data
         dat = self.traces[1:]
-        figure, axes = plt.subplots(len(dat), sharex=True, squeeze=False)
-        for i, d in enumerate(dat):
-            axes[i][0].plot(timestamps_sec, d.data, color="C{}".format(i))
-            axes[i][0].set_title(d.variable_name)
-            axes[i][0].set_ylabel(d.variable_units)
+
+        unique_units = set([x.variable_units for x in dat])
+
+        figure, axes = plt.subplots(len(unique_units), sharex=True, squeeze=False)
+        c = 0
+        for i, units in enumerate(unique_units):
+            relevant_data = [x for x in dat if x.variable_units == units]
+            for d in relevant_data:
+                axes[i][0].plot(
+                    timestamps_sec, d.data, color="C{}".format(c), label=d.variable_name
+                )
+                c += 1
+
+            axes[i][0].legend(loc="upper right")
+            axes[i][0].set_ylabel(units)
             axes[i][0].grid()
             axes[i][0].axhline(linewidth=1, color="black")
             # Draw a black gridline at y=0 to highlight the x-axis.

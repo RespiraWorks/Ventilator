@@ -139,12 +139,14 @@ class ControllerDebugInterface:
                 OP_VAR, [SUBCMD_VAR_INFO] + debug_types.int16s_to_bytes(vid)
             )
             if data is None:
-                print(f"bad variable info retrieved for vid={vid}")
+                raise Error(f"bad variable info retrieved for vid={vid}")
             variable = var_info.VarInfo(vid, data)
             if variable.name in self.variable_metadata.keys():
-                print(f"variable name clash")
-                print(f" retrieved: {variable.verbose()}")
-                print(f" existing:  {self.variable_metadata[variable.name].verbose()}")
+                raise Error(
+                    f"variable name clash  \n"
+                    f" retrieved: {variable.verbose()}\n"
+                    f" existing:  {self.variable_metadata[variable.name].verbose()}"
+                )
             self.variable_metadata[variable.name] = variable
 
     def variables_list(self):
@@ -342,14 +344,13 @@ class ControllerDebugInterface:
         return test
 
     def peek(self, address, ct=1, fmt="+XXXX", fname=None, raw=False):
-        address = debug_types.decode_address(address)
-        if address is None:
-            print("Unknown symbol")
-            return
+        decoded_address = debug_types.decode_address(address)
+        if decoded_address is None:
+            raise Error(f"Could not successfully decode address: {address}")
 
         out = []
 
-        address_iterator = address
+        address_iterator = decoded_address
 
         while ct:
             n = min(ct, 256)
@@ -365,7 +366,7 @@ class ControllerDebugInterface:
         if raw:
             return out
 
-        s = debug_types.format_peek(out, fmt, address)
+        s = debug_types.format_peek(out, fmt, decoded_address)
         if fname is None:
             print(s)
         else:
@@ -375,32 +376,30 @@ class ControllerDebugInterface:
             fp.close()
 
     def peek16(self, address, ct=None, le=True, signed=False):
-        address = debug_types.decode_address(address)
-        if address is None:
-            print("Unknown symbol")
-            return
+        decoded_address = debug_types.decode_address(address)
+        if decoded_address is None:
+            raise Error(f"Could not successfully decode address: {address}")
 
         if ct is None:
             ct = 1
-        out = self.peek(address, 2 * ct, raw=True)
+        out = self.peek(decoded_address, 2 * ct, raw=True)
         return debug_types.bytes_to_int16s(out, le, signed)
 
     def peek32(self, address, ct=None, le=True, signed=False):
-        address = debug_types.decode_address(address)
-        if address is None:
-            print("Unknown symbol")
-            return
+        decoded_address = debug_types.decode_address(address)
+        if decoded_address is None:
+            raise Error(f"Could not successfully decode address: {address}")
 
         if ct is None:
             ct = 1
-        out = self.peek(address, 4 * ct, raw=True)
+        out = self.peek(decoded_address, 4 * ct, raw=True)
         return debug_types.bytes_to_int32s(out, le, signed)
 
     def poke(self, address, dat, ptype):
-        address = debug_types.decode_address(address)
-        if address is None:
-            print("Unknown symbol")
-            return
+        decoded_address = debug_types.decode_address(address)
+        if decoded_address is None:
+            raise Error(f"Could not successfully decode address: {address}")
+
         if isinstance(dat, int):
             dat = [dat]
 
@@ -412,7 +411,7 @@ class ControllerDebugInterface:
             dat = [debug_types.f_to_i(x) for x in dat]
             dat = debug_types.int32s_to_bytes(dat)
 
-        self.send_command(OP_POKE, debug_types.int32s_to_bytes(address) + dat)
+        self.send_command(OP_POKE, debug_types.int32s_to_bytes(decoded_address) + dat)
 
     def poke32(self, address, dat):
         self.poke(address, dat, "long")

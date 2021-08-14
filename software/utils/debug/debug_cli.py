@@ -118,7 +118,11 @@ class CmdLine(cmd.Cmd):
         if mode == MODE_BOOT:
             self.prompt = orange(f"{self.interface.serial_port.port}:boot] ")
         else:
-            self.prompt = green(f"{self.interface.serial_port.port}] ")
+            sn = self.interface.variable_get("serial_number", raw=True)
+            if sn > 0:
+                self.prompt = green(f"sn-{sn}] ")
+            else:
+                self.prompt = green(f"{self.interface.serial_port.port}] ")
 
     def cli_loop(self):
         self.autoload()

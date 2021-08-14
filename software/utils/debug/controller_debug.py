@@ -35,9 +35,6 @@ from lib.colors import red
 # kMaxTraceVars in the controller.
 TRACE_VAR_CT = 4
 
-MODE_NORMAL = 0
-MODE_BOOT = 1
-
 
 class ControllerDebugInterface:
     # If true, the raw bytes of the serial data will be printed.

@@ -30,7 +30,7 @@ VAR_INT32 = 1
 VAR_UINT32 = 2
 VAR_FLOAT = 3
 
-VAR_TYPE_REPR = ["?", "i", "u", "f"]
+VAR_TYPE_REPRESENTATION = ["?", "i", "u", "f"]
 
 VAR_ACCESS_READ_ONLY = 0
 VAR_ACCESS_WRITE = 1
@@ -85,8 +85,8 @@ class VarInfo:
 
     def verbose(self, show_access=True, show_format=True):
         type_str = "?"
-        if self.type < len(VAR_TYPE_REPR):
-            type_str = VAR_TYPE_REPR[self.type]
+        if self.type < len(VAR_TYPE_REPRESENTATION):
+            type_str = VAR_TYPE_REPRESENTATION[self.type]
         ret = f"[{self.id:>02}{type_str}] "
         if show_access:
             ret += "w+ " if self.write_access else "w- "

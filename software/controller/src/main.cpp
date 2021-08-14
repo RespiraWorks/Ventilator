@@ -33,10 +33,11 @@ limitations under the License.
 static DebugUInt32
     gui_mode("gui_mode",
              "Mode the controller should run in; see VentMode enum in "
-             "network_protocol.proto.  If this is out of range (e.g. set to "
-             "-1), this and all of the other gui_foo DebugVars are ignored, "
+             "network_protocol.proto. "
+             "If this is out of range, this and all of the other gui_foo "
+             "DebugVars are ignored, "
              "and instead the controller takes orders from the GUI itself.",
-             VarAccess::ReadWrite, std::numeric_limits<uint32_t>::max());
+             VarAccess::ReadWrite, _VentMode_MAX + 1, "", "%s");
 static DebugUInt32 gui_bpm("gui_bpm", "Target breath rate for GUI-free testing",
                            VarAccess::ReadWrite, 15, "breaths/min");
 static DebugUInt32 gui_peep("gui_peep", "Target PEEP for GUI-free testing",

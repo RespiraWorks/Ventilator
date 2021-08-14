@@ -29,7 +29,7 @@ import glob
 import os
 import shlex
 import traceback
-from lib.colors import red, green, orange, purple
+from lib.colors import *
 from lib.error import Error
 from lib.serial_detect import detect_stm32_ports, print_detected_ports
 from controller_debug import ControllerDebugInterface, MODE_BOOT
@@ -509,23 +509,35 @@ ex: poke [type] <address> <data>
 
         if cl[0] == "all":
             all_vars = self.interface.variables_get_all()
-            for name in sorted(all_vars.keys()):
+            for count, name in enumerate(sorted(all_vars.keys())):
                 variable_md = self.interface.variable_metadata[name]
-                print(variable_md.print_value(all_vars[name]))
+                text = variable_md.print_value(all_vars[name])
+                if (count % 2) == 0:
+                    print(white(text))
+                else:
+                    print(dark_orange(text))
             return
         if cl[0] == "set":
             all_vars = self.interface.variables_get_all(access_filter=VAR_ACCESS_WRITE)
-            for name in sorted(all_vars.keys()):
+            for count, name in enumerate(sorted(all_vars.keys())):
                 variable_md = self.interface.variable_metadata[name]
-                print(variable_md.print_value(all_vars[name], show_access=False))
+                text = variable_md.print_value(all_vars[name], show_access=False)
+                if (count % 2) == 0:
+                    print(white(text))
+                else:
+                    print(dark_orange(text))
             return
         if cl[0] == "read":
             all_vars = self.interface.variables_get_all(
                 access_filter=VAR_ACCESS_READ_ONLY
             )
-            for name in sorted(all_vars.keys()):
+            for count, name in enumerate(sorted(all_vars.keys())):
                 variable_md = self.interface.variable_metadata[name]
-                print(variable_md.print_value(all_vars[name], show_access=False))
+                text = variable_md.print_value(all_vars[name], show_access=False)
+                if (count % 2) == 0:
+                    print(white(text))
+                else:
+                    print(dark_orange(text))
             return
 
         if len(cl) > 1:

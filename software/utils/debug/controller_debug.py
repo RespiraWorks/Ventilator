@@ -189,20 +189,7 @@ class ControllerDebugInterface:
 
     def variables_set(self, pairs):
         for var, val in pairs.items():
-            print(f"  applying {var:25} = {val}")
-            if var == "gui_mode":
-                # todo replace these with enums, preferably from proto
-                if val == "pressure_control":
-                    self.variable_set(var, 1)
-                elif val == "pressure_assist":
-                    self.variable_set(var, 2)
-                else:
-                    print(f"WARNING: Do not know how to set gui_mode={val}")
-            else:
-                try:
-                    self.variable_set(var, val)
-                except:
-                    print(f"WARNING: failed to set {var}={val}({type(val)})")
+            self.variable_set(var, val, verbose=True)
 
     def variables_get_all(self, access_filter=None):
         ret = {}
@@ -231,17 +218,19 @@ class ControllerDebugInterface:
 
         return fmt % value
 
-    def variable_set(self, name, value):
+    def variable_set(self, name, value, verbose=False):
         if not (name in self.variable_metadata):
             raise Error(f"Cannot set unknown variable {name}")
 
         variable = self.variable_metadata[name]
-        data = variable.to_bytes(value)
+        if verbose:
+            text = variable.print_value(value, show_access=False)
+            print(f"  applying {text}")
 
+        data = variable.to_bytes(value)
         self.send_command(
             OP_VAR, [SUBCMD_VAR_SET] + debug_types.int16s_to_bytes(variable.id) + data
         )
-        return
 
     def tests_import(self, file_name):
         in_file = Path(file_name)

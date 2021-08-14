@@ -30,8 +30,18 @@ VAR_INT32 = 1
 VAR_UINT32 = 2
 VAR_FLOAT = 3
 
+VAR_TYPE_REPR = ["?", "i", "u", "f"]
+
 VAR_ACCESS_READ_ONLY = 0
 VAR_ACCESS_WRITE = 1
+
+VAR_VENT_MODE = [
+    "off",
+    "pressure_control",
+    "pressure_assist",
+    "high_flow_nasal_cannula",
+    "invalid",
+]
 
 
 class VarInfo:
@@ -74,8 +84,10 @@ class VarInfo:
         self.units = "".join([chr(x) for x in data[n : n + units_length]])
 
     def verbose(self, show_access=True, show_format=True):
-        ret = f"[{self.id:>02}] "
-        write = ""
+        type_str = "?"
+        if self.type < len(VAR_TYPE_REPR):
+            type_str = VAR_TYPE_REPR[self.type]
+        ret = f"[{self.id:>02}{type_str}] "
         if show_access:
             ret += "w+ " if self.write_access else "w- "
         ret += f"{self.name:25} {self.units:>13} "
@@ -89,7 +101,7 @@ class VarInfo:
         write = ""
         if show_access:
             write = "w+ " if self.write_access else "w- "
-        return f"{write}{self.name:25} = {value:>15} {self.units}"
+        return f"{write}{self.name:25} = {value:>20} {self.units}"
 
     # Convert an unsigned 32-bit value into the correct type for
     # this variable
@@ -103,7 +115,13 @@ class VarInfo:
         return data
 
     def from_bytes(self, data):
-        if self.type == VAR_INT32:
+        if self.name == "gui_mode":
+            value = debug_types.bytes_to_int32s(data)[0]
+            if value < len(VAR_VENT_MODE):
+                return VAR_VENT_MODE[value]
+            else:
+                raise Error(f"Do not know how to interpret gui_mode={value}")
+        elif self.type == VAR_INT32:
             return debug_types.bytes_to_int32s(data, signed=True)[0]
         elif self.type == VAR_UINT32:
             return debug_types.bytes_to_int32s(data)[0]
@@ -113,7 +131,12 @@ class VarInfo:
             raise Error(f"Sorry, I don't know how to handle variable type {self.type}")
 
     def to_bytes(self, value):
-        if self.type == VAR_INT32:
+        if self.name == "gui_mode":
+            if value not in VAR_VENT_MODE:
+                raise Error(f"Do not know how to encode gui_mode={value}")
+            idx = VAR_VENT_MODE.index(value)
+            return debug_types.int32s_to_bytes(idx)
+        elif self.type == VAR_INT32:
             if not isinstance(value, int):
                 value = int(value, 0)
             return debug_types.int32s_to_bytes(value)

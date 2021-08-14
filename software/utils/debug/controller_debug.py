@@ -31,21 +31,6 @@ import test_data
 from pathlib import Path
 from lib.colors import red
 
-# Import protobuffer using relative paths
-import sys, os
-
-sys.path.append(
-    os.path.join(
-        os.path.dirname(__file__),
-        "..",
-        "..",
-        "common",
-        "generated_libs",
-        "debug_protocol",
-    )
-)
-import debug_protocol_pb2
-
 # Can trace this many variables at once.  Keep this in sync with
 # kMaxTraceVars in the controller.
 TRACE_VAR_CT = 4

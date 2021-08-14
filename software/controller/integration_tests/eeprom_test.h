@@ -53,14 +53,14 @@
 
 static DebugUInt32 dbg_addr_before("eeprom_before",
                                    "address of eeprom contents at startup",
-                                   VarAccess::ReadOnly);
+                                   Var_Access_ReadOnly);
 static DebugUInt32 dbg_write_data("write_data", "address of write data",
-                                  VarAccess::ReadOnly);
+                                  Var_Access_ReadOnly);
 static DebugUInt32 dbg_addr_after("eeprom_after",
                                   "address of eeprom contents after write",
-                                  VarAccess::ReadOnly);
+                                  Var_Access_ReadOnly);
 static DebugUInt32 dbg_test_result("result", "result of the test",
-                                   VarAccess::ReadOnly);
+                                   Var_Access_ReadOnly);
 
 // test parameters
 static constexpr uint16_t Address{TEST_PARAM_1};

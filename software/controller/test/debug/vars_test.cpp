@@ -20,13 +20,13 @@ limitations under the License.
 
 TEST(DebugVar, DebugVarInt32) {
   int32_t value = 5;
-  DebugVar var("var", &value, "help", VarAccess::ReadOnly, "fmt", "unit");
+  DebugVar var("var", &value, "help", Var_Access_ReadOnly, "fmt", "unit");
   EXPECT_EQ("var", var.GetName());
   EXPECT_EQ("help", var.GetHelp());
   EXPECT_EQ(VarType::Int32, var.GetType());
   EXPECT_EQ("fmt", var.GetFormat());
   EXPECT_EQ("unit", var.GetUnit());
-  EXPECT_EQ(VarAccess::ReadOnly, var.GetAccess());
+  EXPECT_EQ(Var_Access_ReadOnly, var.GetAccess());
   EXPECT_EQ(&var, DebugVar::FindVar(var.GetId()));
 
   EXPECT_EQ(uint32_t{5}, var.GetValue());
@@ -45,7 +45,7 @@ TEST(DebugVar, DebugVarInt32) {
   EXPECT_EQ("", var_default.GetHelp());
   EXPECT_EQ("%d", var_default.GetFormat());
   EXPECT_EQ("", var_default.GetUnit());
-  EXPECT_EQ(VarAccess::ReadWrite, var_default.GetAccess());
+  EXPECT_EQ(Var_Access_ReadWrite, var_default.GetAccess());
 }
 
 TEST(DebugVar, DebugVarUint32Defaults) {

@@ -23,12 +23,20 @@ __license__ = """
 import debug_types
 from lib.error import Error
 
-# TODO: Import constants from proto instead!
+# Import protobuffer using relative paths
+import sys, os
 
-# Variable types (see vars.h)
-VAR_INT32 = 1
-VAR_UINT32 = 2
-VAR_FLOAT = 3
+sys.path.append(
+    os.path.join(
+        os.path.dirname(__file__),
+        "..",
+        "..",
+        "common",
+        "generated_libs",
+        "debug_protocol",
+    )
+)
+import debug_protocol_pb2
 
 
 class VarInfo:
@@ -67,34 +75,34 @@ class VarInfo:
     # Convert an unsigned 32-bit value into the correct type for
     # this variable
     def convert_int(self, data):
-        if self.type == VAR_FLOAT:
+        if self.type == debug_protocol_pb2.Var.Type.Float:
             return debug_types.i_to_f(data)
-        if self.type == VAR_INT32:
+        if self.type == debug_protocol_pb2.Var.Type.Int32:
             if data & 0x80000000:
                 return data - (1 << 32)
             return data
         return data
 
     def from_bytes(self, data):
-        if self.type == VAR_INT32:
+        if self.type == debug_protocol_pb2.Var.Type.Int32:
             return debug_types.bytes_to_int32s(data, signed=True)[0]
-        elif self.type == VAR_UINT32:
+        elif self.type == debug_protocol_pb2.Var.Type.UInt32:
             return debug_types.bytes_to_int32s(data)[0]
-        elif self.type == VAR_FLOAT:
+        elif self.type == debug_protocol_pb2.Var.Type.Float:
             return debug_types.bytes_to_float32s(data)[0]
         else:
             raise Error(f"Sorry, I don't know how to handle variable type {self.type}")
 
     def to_bytes(self, value):
-        if self.type == VAR_INT32:
+        if self.type == debug_protocol_pb2.Var.Type.Int32:
             if not isinstance(value, int):
                 value = int(value, 0)
             return debug_types.int32s_to_bytes(value)
-        elif self.type == VAR_UINT32:
+        elif self.type == debug_protocol_pb2.Var.Type.UInt32:
             if not isinstance(value, int):
                 value = int(value, 0)
             return debug_types.int32s_to_bytes(value)
-        elif self.type == VAR_FLOAT:
+        elif self.type == debug_protocol_pb2.Var.Type.Float:
             return debug_types.float32s_to_bytes(float(value))
         else:
             raise Error(f"Sorry, I don't know how to handle variable type {self.type}")

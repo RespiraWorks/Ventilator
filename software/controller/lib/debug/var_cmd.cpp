@@ -41,7 +41,7 @@ Error_Code VarHandler::Process(Context *context) {
   case VariableAccess_Subcommand_Set:
     return SetVar(context);
 
-  case Subcommand::GetCount:
+  case VariableAccess_Subcommand_GetCount:
     return GetVarCount(context);
 
   default:
@@ -87,17 +87,8 @@ Error_Code VarHandler::GetVarInfo(Context *context) {
 
   // Fail if the strings are too large to fit.
   if (context->max_response_length <
-<<<<<<< HEAD
       8 + name_length + format_length + help_length + unit_length)
-    return ErrorCode::NoMemory;
-=======
-      8 + name_length + format_length + help_length)
-<<<<<<< HEAD
-    return debug_protocol_Error_Code_NoMemory;
->>>>>>> 127c01ef... C++ proto implementation
-=======
     return Error_Code_NoMemory;
->>>>>>> 0ee43d0e... Concise protobuf constant names
 
   uint32_t count = 0;
   context->response[count++] = static_cast<uint8_t>(var->GetType());
@@ -162,7 +153,7 @@ Error_Code VarHandler::SetVar(Context *context) {
     return Error_Code_MissingData;
 
   if (!var->WriteAllowed())
-    return ErrorCode::InternalError;
+    return Error_Code_InternalError;
 
   var->SetValue(u8_to_u32(context->request + 3));
   context->response_length = 0;
@@ -170,14 +161,14 @@ Error_Code VarHandler::SetVar(Context *context) {
   return Error_Code_None;
 }
 
-ErrorCode VarHandler::GetVarCount(Context *context) {
+Error_Code VarHandler::GetVarCount(Context *context) {
   if (context->max_response_length < 4)
-    return ErrorCode::NoMemory;
+    return Error_Code_NoMemory;
 
   u32_to_u8(DebugVarBase::GetVarCount(), context->response);
   context->response_length = 4;
   *(context->processed) = true;
-  return ErrorCode::None;
+  return Error_Code_None;
 }
 
 } // namespace Debug::Command

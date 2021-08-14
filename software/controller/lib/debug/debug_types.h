@@ -29,21 +29,6 @@ enum class State { AwaitingCommand, Processing, AwaitingResponse, Responding };
 // See debug.cpp for a detailed description of how this works
 enum class SpecialChar : uint8_t { Escape = 0xf1, EndTransfer = 0xf2 };
 
-<<<<<<< HEAD
-enum class ErrorCode : uint8_t {
-  None = 0x00,            // No error (=success)
-  CrcError = 0x01,        // CRC error on command
-  UnknownCommand = 0x02,  // Unknown command code received
-  MissingData = 0x03,     // Not enough data passed with command
-  NoMemory = 0x04,        // Insufficient memory
-  InternalError = 0x05,   // Some type of internal error (aka bug)
-  UnknownVariable = 0x06, // The requested variable ID is invalid
-  InvalidData = 0x07,     // Data is out of range
-  Timeout = 0x08,         // Response timeout
-};
-
-=======
->>>>>>> 127c01ef... C++ proto implementation
 namespace Command {
 
 // Structure that represents a command's parameters

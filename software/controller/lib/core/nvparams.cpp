@@ -38,7 +38,7 @@ static DebugUInt32 dbg_serial("serial_number",
                               "Serial number of the ventilator, in EEPROM");
 
 static DebugUInt32 dbg_nvparams("nvparams_address", "Address of nv_params",
-                                VarAccess::ReadOnly);
+                                Var_Access_ReadOnly);
 
 namespace NVParams {
 

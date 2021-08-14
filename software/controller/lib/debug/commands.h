@@ -131,22 +131,7 @@ private:
 class VarHandler : public Handler {
 public:
   VarHandler() = default;
-<<<<<<< HEAD
-<<<<<<< HEAD
-  ErrorCode Process(Context *context) override;
-
-  enum class Subcommand : uint8_t {
-    GetInfo = 0x00,  // get variable info (name, type, help string)
-    Get = 0x01,      // get variable value
-    Set = 0x02,      // set variable value
-    GetCount = 0x03, // get count of active vars
-  };
-=======
-  debug_protocol_Error_Code Process(Context *context) override;
->>>>>>> 127c01ef... C++ proto implementation
-=======
   Error_Code Process(Context *context) override;
->>>>>>> 0ee43d0e... Concise protobuf constant names
 
 private:
   // Return info about one of the variables. The 16-bit variable ID is passed
@@ -157,8 +142,10 @@ private:
   Error_Code GetVarInfo(Context *context);
 
   Error_Code GetVar(Context *context);
-  
-  debug_protocol_Error_Code SetVar(Context *context);
+
+  Error_Code SetVar(Context *context);
+
+  Error_Code GetVarCount(Context *context);
 };
 
 // Eeprom command.

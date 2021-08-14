@@ -27,11 +27,11 @@ TEST(VarHandler, GetVarInfo) {
   const char *help = "help string";
   const char *format = "format";
   const char *unit = "unit";
-  DebugVar var(name, &value, help, VarAccess::ReadOnly, format, unit);
+  DebugVar var(name, &value, help, Var_Access_ReadOnly, format, unit);
 
   // expected result is hand-built from format given in var_cmd.cpp
   std::vector<uint8_t> expected = {static_cast<uint8_t>(VarType::UInt32),
-                                   static_cast<uint8_t>(VarAccess::ReadOnly),
+                                   static_cast<uint8_t>(Var_Access_ReadOnly),
                                    0,
                                    0,
                                    static_cast<uint8_t>(strlen(name)),
@@ -71,7 +71,7 @@ TEST(VarHandler, GetVarInfo) {
 
 TEST(VarHandler, GetVar) {
   uint32_t value = 0xDEADBEEF;
-  DebugVar var("name", &value, "help", VarAccess::ReadWrite);
+  DebugVar var("name", &value, "help", Var_Access_ReadWrite);
 
   // Test that a GET command obtains the variable's value.
   uint8_t id[2];
@@ -100,7 +100,7 @@ TEST(VarHandler, GetVar) {
 
 TEST(VarHandler, SetVar) {
   uint32_t value = 0xDEADBEEF;
-  DebugVar var("name", &value, "help", VarAccess::ReadWrite);
+  DebugVar var("name", &value, "help", Var_Access_ReadWrite);
 
   uint32_t new_value = 0xCAFEBABE;
   std::array<uint8_t, 4> new_bytes;
@@ -161,29 +161,29 @@ TEST(VarHandler, GetVarCount) {
 
 TEST(VarHandler, Errors) {
   uint32_t value = 0xDEADBEEF;
-  DebugUInt32 var("name", "help", VarAccess::ReadWrite, value);
+  DebugUInt32 var("name", "help", Var_Access_ReadWrite, value);
   uint8_t id[2];
   u16_to_u8(var.GetId(), id);
 <<<<<<< HEAD
-  DebugUInt32 var_readonly("name", "help", VarAccess::ReadOnly, value);
+  DebugUInt32 var_readonly("name", "help", Var_Access_ReadOnly, value);
   uint8_t id_readonly[2];
   u16_to_u8(var_readonly.GetId(), id_readonly);
 
   std::vector<std::tuple<std::vector<uint8_t>, ErrorCode>> requests = {
-      {{}, ErrorCode::MissingData},  // Missing subcommand
-      {{4}, ErrorCode::InvalidData}, // Invalid subcommand
-      {{0, 0xFF, 0xFF}, ErrorCode::UnknownVariable},
-      {{1, 0xFF, 0xFF}, ErrorCode::UnknownVariable},
-      {{2, 0xFF, 0xFF}, ErrorCode::UnknownVariable},
-      {{0, 1}, ErrorCode::MissingData},
-      {{1, 1}, ErrorCode::MissingData},
-      {{2, 1}, ErrorCode::MissingData},
-      {{0, id[0], id[1]}, ErrorCode::NoMemory},
-      {{1, id[0], id[1]}, ErrorCode::NoMemory},
-      {{3}, ErrorCode::NoMemory},
-      {{2, id[0], id[1], 0xCA, 0xFE, 0x00}, ErrorCode::MissingData},
-      {{2, id_readonly[0], id_readonly[1], 0xCA, 0xFE, 0x00, 0x00},
-       ErrorCode::InternalError},
+    {{}, ErrorCode::MissingData},  // Missing subcommand
+    {{4}, ErrorCode::InvalidData}, // Invalid subcommand
+    {{0, 0xFF, 0xFF}, ErrorCode::UnknownVariable},
+    {{1, 0xFF, 0xFF}, ErrorCode::UnknownVariable},
+    {{2, 0xFF, 0xFF}, ErrorCode::UnknownVariable},
+    {{0, 1}, ErrorCode::MissingData},
+    {{1, 1}, ErrorCode::MissingData},
+    {{2, 1}, ErrorCode::MissingData},
+    {{0, id[0], id[1]}, ErrorCode::NoMemory},
+    {{1, id[0], id[1]}, ErrorCode::NoMemory},
+    {{3}, ErrorCode::NoMemory},
+    {{2, id[0], id[1], 0xCA, 0xFE, 0x00}, ErrorCode::MissingData},
+    {{2, id_readonly[0], id_readonly[1], 0xCA, 0xFE, 0x00, 0x00},
+     ErrorCode::InternalError},
 =======
 
   std::vector<std::tuple<std::vector<uint8_t>, Error_Code>> requests = {

@@ -37,18 +37,18 @@ static DebugUInt32
              "network_protocol.proto.  If this is out of range (e.g. set to "
              "-1), this and all of the other gui_foo DebugVars are ignored, "
              "and instead the controller takes orders from the GUI itself.",
-             VarAccess::ReadWrite, std::numeric_limits<uint32_t>::max());
+             Var_Access_ReadWrite, std::numeric_limits<uint32_t>::max());
 static DebugUInt32 gui_bpm("gui_bpm", "Breaths/min for GUI-free testing",
-                           VarAccess::ReadWrite, 15);
+                           Var_Access_ReadWrite, 15);
 static DebugUInt32 gui_peep("gui_peep", "PEEP (cm/h2O) for GUI-free testing",
-                            VarAccess::ReadWrite, 5);
+                            Var_Access_ReadWrite, 5);
 static DebugUInt32 gui_pip("gui_pip", "PIP (cm/h2O) for GUI-free testing",
-                           VarAccess::ReadWrite, 15);
+                           Var_Access_ReadWrite, 15);
 static DebugFloat gui_ie_ratio("gui_ie_ratio", "I/E ratio for GUI-free testing",
-                               VarAccess::ReadWrite, 0.66f);
+                               Var_Access_ReadWrite, 0.66f);
 static DebugFloat
     gui_fio2("gui_fio2", "Percent oxygen (range [21,100]) for GUI-free testing",
-             VarAccess::ReadWrite, 21);
+             Var_Access_ReadWrite, 21);
 
 static Controller controller;
 static ControllerStatus controller_status;

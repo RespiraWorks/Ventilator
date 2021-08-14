@@ -84,3 +84,10 @@ message Var {
     ReadWrite = 1;
   }
 }
+
+message ControllerDebug {
+  enum Mode {
+    Normal = 0;
+    Boot = 1;
+  }
+}

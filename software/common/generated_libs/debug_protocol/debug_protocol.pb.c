@@ -21,6 +21,11 @@ PB_BIND(VariableAccess, VariableAccess, AUTO)
 PB_BIND(EepromCommand, EepromCommand, AUTO)
 
 
+PB_BIND(Var, Var, AUTO)
+
+
+
+
 
 
 

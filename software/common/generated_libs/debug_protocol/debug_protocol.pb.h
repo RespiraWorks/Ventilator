@@ -46,13 +46,25 @@ typedef enum _Trace_Subcommand {
 typedef enum _VariableAccess_Subcommand { 
     VariableAccess_Subcommand_GetInfo = 0, 
     VariableAccess_Subcommand_Get = 1, 
-    VariableAccess_Subcommand_Set = 2 
+    VariableAccess_Subcommand_Set = 2, 
+    VariableAccess_Subcommand_GetCount = 3 
 } VariableAccess_Subcommand;
 
 typedef enum _EepromCommand_Subcommand { 
     EepromCommand_Subcommand_Read = 0, 
     EepromCommand_Subcommand_Write = 1 
 } EepromCommand_Subcommand;
+
+typedef enum _Var_Type { 
+    Var_Type_Int32 = 1, 
+    Var_Type_UInt32 = 2, 
+    Var_Type_Float = 3 
+} Var_Type;
+
+typedef enum _Var_Access { 
+    Var_Access_ReadOnly = 0, 
+    Var_Access_ReadWrite = 1 
+} Var_Access;
 
 /* Struct definitions */
 /* Command codes sent from the python debugging interface to
@@ -77,6 +89,10 @@ typedef struct _Trace {
     char dummy_field;
 } Trace;
 
+typedef struct _Var { 
+    char dummy_field;
+} Var;
+
 /* Variable access subcommands sent from the host to the microcontroller */
 typedef struct _VariableAccess { 
     char dummy_field;
@@ -97,12 +113,20 @@ typedef struct _VariableAccess {
 #define _Trace_Subcommand_ARRAYSIZE ((Trace_Subcommand)(Trace_Subcommand_CountSamples+1))
 
 #define _VariableAccess_Subcommand_MIN VariableAccess_Subcommand_GetInfo
-#define _VariableAccess_Subcommand_MAX VariableAccess_Subcommand_Set
-#define _VariableAccess_Subcommand_ARRAYSIZE ((VariableAccess_Subcommand)(VariableAccess_Subcommand_Set+1))
+#define _VariableAccess_Subcommand_MAX VariableAccess_Subcommand_GetCount
+#define _VariableAccess_Subcommand_ARRAYSIZE ((VariableAccess_Subcommand)(VariableAccess_Subcommand_GetCount+1))
 
 #define _EepromCommand_Subcommand_MIN EepromCommand_Subcommand_Read
 #define _EepromCommand_Subcommand_MAX EepromCommand_Subcommand_Write
 #define _EepromCommand_Subcommand_ARRAYSIZE ((EepromCommand_Subcommand)(EepromCommand_Subcommand_Write+1))
+
+#define _Var_Type_MIN Var_Type_Int32
+#define _Var_Type_MAX Var_Type_Float
+#define _Var_Type_ARRAYSIZE ((Var_Type)(Var_Type_Float+1))
+
+#define _Var_Access_MIN Var_Access_ReadOnly
+#define _Var_Access_MAX Var_Access_ReadWrite
+#define _Var_Access_ARRAYSIZE ((Var_Access)(Var_Access_ReadWrite+1))
 
 
 #ifdef __cplusplus
@@ -115,11 +139,13 @@ extern "C" {
 #define Trace_init_default                       {0}
 #define VariableAccess_init_default              {0}
 #define EepromCommand_init_default               {0}
+#define Var_init_default                         {0}
 #define Command_init_zero                        {0}
 #define Error_init_zero                          {0}
 #define Trace_init_zero                          {0}
 #define VariableAccess_init_zero                 {0}
 #define EepromCommand_init_zero                  {0}
+#define Var_init_zero                            {0}
 
 /* Field tags (for use in manual encoding/decoding) */
 
@@ -149,11 +175,17 @@ extern "C" {
 #define EepromCommand_CALLBACK NULL
 #define EepromCommand_DEFAULT NULL
 
+#define Var_FIELDLIST(X, a) \
+
+#define Var_CALLBACK NULL
+#define Var_DEFAULT NULL
+
 extern const pb_msgdesc_t Command_msg;
 extern const pb_msgdesc_t Error_msg;
 extern const pb_msgdesc_t Trace_msg;
 extern const pb_msgdesc_t VariableAccess_msg;
 extern const pb_msgdesc_t EepromCommand_msg;
+extern const pb_msgdesc_t Var_msg;
 
 /* Defines for backwards compatibility with code written before nanopb-0.4.0 */
 #define Command_fields &Command_msg
@@ -161,12 +193,14 @@ extern const pb_msgdesc_t EepromCommand_msg;
 #define Trace_fields &Trace_msg
 #define VariableAccess_fields &VariableAccess_msg
 #define EepromCommand_fields &EepromCommand_msg
+#define Var_fields &Var_msg
 
 /* Maximum encoded size of messages (where known) */
 #define Command_size                             0
 #define EepromCommand_size                       0
 #define Error_size                               0
 #define Trace_size                               0
+#define Var_size                                 0
 #define VariableAccess_size                      0
 
 #ifdef __cplusplus

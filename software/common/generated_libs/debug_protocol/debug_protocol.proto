@@ -57,9 +57,10 @@ message Trace {
 // Variable access subcommands sent from the host to the microcontroller
 message VariableAccess {
   enum Subcommand {
-    GetInfo = 0x00; // get variable info (name, type, help string)
-    Get = 0x01;     // get variable value
-    Set = 0x02;     // set variable value
+    GetInfo = 0x00;  // get variable info (name, type, help string)
+    Get = 0x01;      // get variable value
+    Set = 0x02;      // set variable value
+    GetCount = 0x03; // get count of active vars
   }
 }
 
@@ -68,5 +69,18 @@ message EepromCommand {
   enum Subcommand {
     Read = 0x00;
     Write = 0x01;
+  }
+}
+
+message Var {
+  enum Type {
+    Int32 = 1;
+    UInt32 = 2;
+    Float = 3;
+  }
+
+  enum Access {
+    ReadOnly = 0;
+    ReadWrite = 1;
   }
 }

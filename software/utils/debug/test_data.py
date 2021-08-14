@@ -41,6 +41,7 @@ class Trace:
     def __init__(self, name, units):
         self.variable_name = name
         self.variable_units = units
+        self.data = []
 
     def as_dict(self):
         return {
@@ -84,6 +85,7 @@ class TestData:
         self.tester_name = repo.config_reader().get_value("user", "name")
         self.tester_email = repo.config_reader().get_value("user", "email")
         self.scenario = test_scenario
+        self.traces = []
 
     def unique_name(self):
         return (
@@ -109,23 +111,23 @@ class TestData:
             ret += "\nVentilator settings:\n"
             for name, val in sorted(self.ventilator_settings.items()):
                 ret += f"  {name:25} = {val}\n"
-        if self.traces:
-            cols = len(self.traces)
-            rows = len(self.traces[0])
-            ret += f"Test data contains [{cols}][{rows}] data points"
+        if len(self.traces):
+            ret += f"Test data contains [{len(self.traces)}] traces"
+            for t in self.traces:
+                ret += f"\n  {t.variable_name} ({t.variable_units}) = [{len(t.data)}]"
         return ret
 
     def print_traces(self, separator=" ", line_separator="\n"):
-        line = ["{:>15}".format("time(sec)")]
-        for v in self.scenario.trace_variable_names:
-            line.append(f"{v:>15}")
+        line = []
+        for t in self.traces:
+            ll = f"{t.variable_name} ({t.variable_units})"
+            line.append(f"{ll:>25}")
         ret = separator.join(line) + line_separator
 
-        for i in range(len(self.traces[0])):
-            # First column is time in seconds
-            line = [f"{self.traces[0][i]:>15.3f}"]
-            for j in range(len(self.scenario.trace_variable_names)):
-                line.append("{:>15.3f}".format(self.traces[j + 1][i]))
+        for i in range(len(self.traces[0].data)):
+            line = []
+            for j in range(len(self.traces)):
+                line.append("{:>25.3f}".format(self.traces[j].data[i]))
             ret += separator.join(line) + line_separator
 
         return ret
@@ -140,7 +142,7 @@ class TestData:
             "git_dirty": self.git_dirty,
             "scenario": self.scenario.as_dict(),
             "ventilator_settings": self.ventilator_settings,
-            "traces": self.traces,
+            "traces": [t.as_dict() for t in self.traces],
         }
 
     def save_json(self, parent_path: str, print_self=False):
@@ -162,14 +164,13 @@ class TestData:
     def plot(self, parent_path: str, save: bool, show: bool):
         title = self.unique_name()
 
-        timestamps_sec = self.traces[0]
+        timestamps_sec = self.traces[0].data
         dat = self.traces[1:]
         figure, axes = plt.subplots(len(dat), sharex=True, squeeze=False)
         for i, d in enumerate(dat):
-            var = self.scenario.trace_variable_names[i]
-            axes[i][0].plot(timestamps_sec, d, color="C{}".format(i))
-            axes[i][0].set_title(var)
-            axes[i][0].set_ylabel(var)  # todo should be units
+            axes[i][0].plot(timestamps_sec, d.data, color="C{}".format(i))
+            axes[i][0].set_title(d.variable_name)
+            axes[i][0].set_ylabel(d.variable_units)
             axes[i][0].grid()
             axes[i][0].axhline(linewidth=1, color="black")
             # Draw a black gridline at y=0 to highlight the x-axis.
@@ -198,7 +199,8 @@ class TestData:
         td.git_sha = data["git_sha"]
         td.git_dirty = data["git_dirty"]
         td.ventilator_settings = data["ventilator_settings"]
-        td.traces = data["traces"]
+        for t in data["traces"]:
+            td.traces.append(Trace.from_dict(t))
         return td
 
     @staticmethod

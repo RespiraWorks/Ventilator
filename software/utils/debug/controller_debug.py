@@ -27,7 +27,7 @@ import debug_types
 import var_info
 from lib.error import Error
 import test_scenario
-import test_data
+from test_data import *
 from pathlib import Path
 from lib.colors import red
 
@@ -274,7 +274,7 @@ class ControllerDebugInterface:
         if name not in self.scenarios.keys():
             raise Error(f"No such test scenario: {name}")
 
-        test = test_data.TestData(self.scenarios[name])
+        test = TestData(self.scenarios[name])
 
         if test.git_dirty:
             print(
@@ -321,7 +321,7 @@ class ControllerDebugInterface:
         return test
 
     def trace_save(self, scenario_name="manual_trace"):
-        test = test_data.TestData(test_scenario.TestScenario())
+        test = TestData(test_scenario.TestScenario())
         test.traces = self.trace_download()
         time_series = test.traces[0]
         test.scenario.capture_duration_secs = (
@@ -491,7 +491,8 @@ class ControllerDebugInterface:
         var_count = len(trace_vars)
 
         # get samples count
-        total_num_samples = self.trace_num_samples() * var_count
+        num_samples = self.trace_num_samples()
+        total_num_samples = num_samples * var_count
         bytes_per_int32 = 4
 
         data = []
@@ -508,7 +509,9 @@ class ControllerDebugInterface:
         # len(trace_vars) uint32s: [a1, b1, c1, a2, b2, c2, ...].  Parse this into
         # sublists [[a1', a2', ...], [b1', b2', ...], [c1', c2', ...]], where each
         # of the variables is converted to the correct type.
-        ret = [[] for _ in range(var_count)]
+        ret = [Trace("time", "s")]
+        for v in trace_vars:
+            ret.append(Trace(v.name, v.units))
 
         # The `zip` expression groups data into sublists of var_count elems.  See the
         # "grouper" recipe:
@@ -516,14 +519,16 @@ class ControllerDebugInterface:
         iters = [iter(data)] * var_count
         for sample in zip(*iters):
             for i, val in enumerate(sample):
-                ret[i].append(trace_vars[i].convert_int(val))
+                ret[i + 1].data.append(trace_vars[i].convert_int(val))
+
+        # this may be higher than the initially reported number because the buffer
+        # may have filled with more while retrieving
+        actual_number_of_samples = len(ret[1].data)
 
         # get trace period, multiply by 1e-6 (i.e. 1/1,000,000) to convert it to seconds.
-
+        # todo: record actual clock ticks in controller instead of assuming?
         period = self.trace_get_period_us() * 1e-6
-
-        timestamp = [x * period for x in range(len(ret[0]))]
-        ret.insert(0, timestamp)
+        ret[0].data = [x * period for x in range(actual_number_of_samples)]
 
         return ret
 

@@ -180,7 +180,7 @@ class ControllerDebugInterface:
     def variables_force_off(self):
         # Unforce parameters so they can be controlled by the
         # controller.  Note that you should unforce the blower power *after* setting the
-        # gui_mode because if we unforced it while we were still in mode 0
+        # forced_mode because if we unforced it while we were still in mode 0
         # (i.e. "ventilator off"), the fan would momentarily spin down.
         self.variable_set("forced_exhale_valve_pos", -1)
         self.variable_set("forced_blower_valve_pos", -1)
@@ -288,7 +288,7 @@ class ControllerDebugInterface:
                 return
 
         self.variables_force_open()
-        self.variable_set("gui_mode", 0)
+        self.variable_set("forced_mode", 0)
         print(f"\nExecuting test scenario:\n {test.scenario.long_description(True)}")
 
         # Give the user a chance to adjust the test lung.
@@ -313,7 +313,7 @@ class ControllerDebugInterface:
         print("\nRetrieving data and halting ventilation")
         # get data and halt ventilation
         test.traces = self.trace_download()
-        self.variable_set("gui_mode", 0)
+        self.variable_set("forced_mode", 0)
         self.trace_stop()
         test.ventilator_settings = self.variables_get_all(
             access_filter=var_info.VAR_ACCESS_WRITE

@@ -550,8 +550,9 @@ ex: poke [type] <address> <data>
         print(variable_md.print_value(val))
 
     def complete_get(self, text, line, begidx, endidx):
-        # TODO: add "all" "set" and "read"
-        return self.interface.variables_find(text)
+        return self.interface.variables_find(text) + [
+            x for x in ["all", "set", "read"] if x.startswith(text)
+        ]
 
     def help_get(self):
         print("Read the value of a ventilator debug variable and display it.")

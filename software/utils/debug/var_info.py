@@ -115,12 +115,12 @@ class VarInfo:
         return data
 
     def from_bytes(self, data):
-        if self.name == "gui_mode":
+        if self.name == "forced_mode":
             value = debug_types.bytes_to_int32s(data)[0]
             if value < len(VAR_VENT_MODE):
                 return VAR_VENT_MODE[value]
             else:
-                raise Error(f"Do not know how to interpret gui_mode={value}")
+                raise Error(f"Do not know how to interpret forced_mode={value}")
         elif self.type == VAR_INT32:
             return debug_types.bytes_to_int32s(data, signed=True)[0]
         elif self.type == VAR_UINT32:
@@ -131,9 +131,9 @@ class VarInfo:
             raise Error(f"Sorry, I don't know how to handle variable type {self.type}")
 
     def to_bytes(self, value):
-        if self.name == "gui_mode":
+        if self.name == "forced_mode":
             if value not in VAR_VENT_MODE:
-                raise Error(f"Do not know how to encode gui_mode={value}")
+                raise Error(f"Do not know how to encode forced_mode={value}")
             idx = VAR_VENT_MODE.index(value)
             return debug_types.int32s_to_bytes(idx)
         elif self.type == VAR_INT32:

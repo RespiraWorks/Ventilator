@@ -21,10 +21,7 @@ __license__ = """
 """
 
 import struct
-
-# Special characters used to frame commands
-ESC = 0xF1
-TERM = 0xF2
+import debug_protocol_pb2 as debug_proto
 
 
 def format_peek(data, fmt="+XXXX", address=0):
@@ -83,10 +80,13 @@ def decode_address(address, fw=None):
 def frame_command(buff):
     ret = []
     for i in buff:
-        if i == ESC or i == TERM:
-            ret.append(ESC)
+        if (
+            i == debug_proto.Cmd.SpecialChar.Esc
+            or i == debug_proto.Cmd.SpecialChar.Term
+        ):
+            ret.append(debug_proto.Cmd.SpecialChar.Esc)
         ret.append(i)
-    ret.append(TERM)
+    ret.append(debug_proto.Cmd.SpecialChar.Term)
     return ret
 
 

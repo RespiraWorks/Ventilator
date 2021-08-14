@@ -117,9 +117,9 @@ std::vector<uint8_t> ProcessCmd(Interface *serial, std::vector<uint8_t> req,
 TEST(Interface, Mode) {
   Trace trace;
   Command::ModeHandler mode_command;
-  Interface serial(&trace, 2, Command_Code_Mode, &mode_command);
+  Interface serial(&trace, 2, Cmd_Code_Mode, &mode_command);
 
-  std::vector<uint8_t> req = {static_cast<uint8_t>(Command_Code_Mode)};
+  std::vector<uint8_t> req = {static_cast<uint8_t>(Cmd_Code_Mode)};
   std::vector<uint8_t> resp = ProcessCmd(&serial, req);
   EXPECT_THAT(resp, testing::ElementsAre(static_cast<uint8_t>(0)));
 }
@@ -129,9 +129,9 @@ uint32_t GetVarViaCmd(Interface *serial, uint16_t id) {
   u16_to_u8(id, &vid[0]);
 
   std::vector<uint8_t> req = {
-      static_cast<uint8_t>(Command_Code_Variable), // Cmd code
-      uint8_t{1},                                  // GET
-      vid[0], vid[1],                              // var id
+      static_cast<uint8_t>(Cmd_Code_Variable), // Cmd code
+      uint8_t{1},                              // GET
+      vid[0], vid[1],                          // var id
   };
 
   std::vector<uint8_t> resp = ProcessCmd(serial, req);
@@ -146,7 +146,7 @@ TEST(Interface, GetVar) {
 
   Trace trace;
   Command::VarHandler var_command;
-  Interface serial(&trace, 2, Command_Code_Variable, &var_command);
+  Interface serial(&trace, 2, Cmd_Code_Variable, &var_command);
   // Run a bunch of times with different expected results
   // to exercise buffer management.
   for (int i = 0; i < 100; ++i, ++foo, ++bar) {
@@ -159,10 +159,10 @@ TEST(Interface, AwaitingResponseState) {
   Trace trace;
   TestEeprom eeprom_test(0x50, 64, 4096);
   Command::EepromHandler eeprom_command(&eeprom_test);
-  Interface serial(&trace, 2, Command_Code_EepromAccess, &eeprom_command);
+  Interface serial(&trace, 2, Cmd_Code_EepromAccess, &eeprom_command);
   // EEPROM read command needs time to be processed
   std::vector<uint8_t> req = {
-      static_cast<uint8_t>(Command_Code_EepromAccess),
+      static_cast<uint8_t>(Cmd_Code_EepromAccess),
       0, // Read subcommand
       0, // address Least Significant Byte
       0, // address Most Significant Byte
@@ -193,11 +193,10 @@ TEST(Interface, Errors) {
   Command::TraceHandler trace_command(&trace);
   Command::EepromHandler eeprom_command(&eeprom_test);
 
-  Debug::Interface serial(&trace, 12, Command_Code_Mode, &mode_command,
-                          Command_Code_Peek, &peek_command, Command_Code_Poke,
-                          &poke_command, Command_Code_Variable, &var_command,
-                          Command_Code_Trace, &trace_command,
-                          Command_Code_EepromAccess, &eeprom_command);
+  Debug::Interface serial(
+      &trace, 12, Cmd_Code_Mode, &mode_command, Cmd_Code_Peek, &peek_command,
+      Cmd_Code_Poke, &poke_command, Cmd_Code_Variable, &var_command,
+      Cmd_Code_Trace, &trace_command, Cmd_Code_EepromAccess, &eeprom_command);
   // Unknown command - If we ever develop new commands, make sure the command
   // code is too big.
   std::vector<uint8_t> req = {25};
@@ -212,8 +211,8 @@ TEST(Interface, Errors) {
 
   // Error returned by Command Handler
   req = {
-      static_cast<uint8_t>(Command_Code_Variable), // Cmd code
-      1, 0xFF, 0xFF,                               // GET and var id
+      static_cast<uint8_t>(Cmd_Code_Variable), // Cmd code
+      1, 0xFF, 0xFF,                           // GET and var id
   };
   resp = ProcessCmd(&serial, req, Error_Code_UnknownVariable);
   EXPECT_EQ(resp.size(), 0);

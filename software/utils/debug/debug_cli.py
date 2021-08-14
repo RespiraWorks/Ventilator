@@ -32,10 +32,11 @@ import traceback
 from lib.colors import red, green, orange, purple
 from lib.error import Error
 from lib.serial_detect import detect_stm32_ports, print_detected_ports
-from controller_debug import ControllerDebugInterface, MODE_BOOT
+from controller_debug import ControllerDebugInterface
 import matplotlib.pyplot as plt
 import test_data
 from pathlib import Path
+import debug_protocol_pb2 as debug_proto
 
 
 class ArgparseShowHelpError(Exception):
@@ -114,7 +115,7 @@ class CmdLine(cmd.Cmd):
             traceback.print_exc()
             return
 
-        if mode == MODE_BOOT:
+        if mode == debug_proto.ControllerDbg.Mode.Boot:
             self.prompt = orange(f"{self.interface.serial_port.port}:boot] ")
         else:
             self.prompt = green(f"{self.interface.serial_port.port}] ")

@@ -27,21 +27,20 @@ Error_Code VarHandler::Process(Context *context) {
   if (context->request_length < 1)
     return Error_Code_MissingData;
 
-  VariableAccess_Subcommand subcommand{
-      VariableAccess_Subcommand(context->request[0])};
+  VarAccess_Subcmd subcommand{VarAccess_Subcmd(context->request[0])};
 
   switch (subcommand) {
   // Return info about one of the variables.
-  case VariableAccess_Subcommand_GetInfo:
+  case VarAccess_Subcmd_GetInfo:
     return GetVarInfo(context);
 
-  case VariableAccess_Subcommand_Get:
+  case VarAccess_Subcmd_Get:
     return GetVar(context);
 
-  case VariableAccess_Subcommand_Set:
+  case VarAccess_Subcmd_Set:
     return SetVar(context);
 
-  case VariableAccess_Subcommand_GetCount:
+  case VarAccess_Subcmd_GetCount:
     return GetVarCount(context);
 
   default:

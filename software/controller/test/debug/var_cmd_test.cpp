@@ -30,7 +30,7 @@ TEST(VarHandler, GetVarInfo) {
   DebugVar var(name, &value, help, Var_Access_ReadOnly, format, unit);
 
   // expected result is hand-built from format given in var_cmd.cpp
-  std::vector<uint8_t> expected = {static_cast<uint8_t>(VarType::UInt32),
+  std::vector<uint8_t> expected = {static_cast<uint8_t>(Var_Type_UInt32),
                                    static_cast<uint8_t>(Var_Access_ReadOnly),
                                    0,
                                    0,
@@ -50,7 +50,7 @@ TEST(VarHandler, GetVarInfo) {
   uint8_t id[2];
   u16_to_u8(var.GetId(), id);
   std::array req = {
-      static_cast<uint8_t>(VariableAccess_Subcommand_GetInfo), id[0],
+      static_cast<uint8_t>(VarAccess_Subcmd_GetInfo), id[0],
       id[1], // Var id
   };
   std::array<uint8_t, 50> response;
@@ -77,7 +77,7 @@ TEST(VarHandler, GetVar) {
   uint8_t id[2];
   u16_to_u8(var.GetId(), id);
   std::array req = {
-      static_cast<uint8_t>(VariableAccess_Subcommand_Get), id[0],
+      static_cast<uint8_t>(VarAccess_Subcmd_Get), id[0],
       id[1], // Var id
   };
   std::array<uint8_t, 4> response;
@@ -110,7 +110,7 @@ TEST(VarHandler, SetVar) {
   uint8_t id[2];
   u16_to_u8(var.GetId(), id);
   std::array req = {
-      static_cast<uint8_t>(VariableAccess_Subcommand_Set),
+      static_cast<uint8_t>(VarAccess_Subcmd_Set),
       id[0],
       id[1], // Var id
       new_bytes[0],
@@ -140,7 +140,7 @@ TEST(VarHandler, GetVarCount) {
   DebugVar dummy("name", &value);
 
   // Test that GetVarCount command obtains the number of defined variables
-  std::array req = {static_cast<uint8_t>(VarHandler::Subcommand::GetCount)};
+  std::array req = {static_cast<uint8_t>(VarAccess_Subcmd_GetCount)};
   std::array<uint8_t, 4> response;
   bool processed{false};
   Context context = {.request = req.data(),
@@ -150,7 +150,7 @@ TEST(VarHandler, GetVarCount) {
                      .response_length = 0,
                      .processed = &processed};
 
-  EXPECT_EQ(ErrorCode::None, VarHandler().Process(&context));
+  EXPECT_EQ(Error_Code_None, VarHandler().Process(&context));
   EXPECT_TRUE(processed);
   EXPECT_EQ(4, context.response_length);
 
@@ -164,31 +164,13 @@ TEST(VarHandler, Errors) {
   DebugUInt32 var("name", "help", Var_Access_ReadWrite, value);
   uint8_t id[2];
   u16_to_u8(var.GetId(), id);
-<<<<<<< HEAD
   DebugUInt32 var_readonly("name", "help", Var_Access_ReadOnly, value);
   uint8_t id_readonly[2];
   u16_to_u8(var_readonly.GetId(), id_readonly);
 
-  std::vector<std::tuple<std::vector<uint8_t>, ErrorCode>> requests = {
-    {{}, ErrorCode::MissingData},  // Missing subcommand
-    {{4}, ErrorCode::InvalidData}, // Invalid subcommand
-    {{0, 0xFF, 0xFF}, ErrorCode::UnknownVariable},
-    {{1, 0xFF, 0xFF}, ErrorCode::UnknownVariable},
-    {{2, 0xFF, 0xFF}, ErrorCode::UnknownVariable},
-    {{0, 1}, ErrorCode::MissingData},
-    {{1, 1}, ErrorCode::MissingData},
-    {{2, 1}, ErrorCode::MissingData},
-    {{0, id[0], id[1]}, ErrorCode::NoMemory},
-    {{1, id[0], id[1]}, ErrorCode::NoMemory},
-    {{3}, ErrorCode::NoMemory},
-    {{2, id[0], id[1], 0xCA, 0xFE, 0x00}, ErrorCode::MissingData},
-    {{2, id_readonly[0], id_readonly[1], 0xCA, 0xFE, 0x00, 0x00},
-     ErrorCode::InternalError},
-=======
-
   std::vector<std::tuple<std::vector<uint8_t>, Error_Code>> requests = {
       {{}, Error_Code_MissingData},  // Missing subcommand
-      {{3}, Error_Code_InvalidData}, // Invalid subcommand
+      {{4}, Error_Code_InvalidData}, // Invalid subcommand
       {{0, 0xFF, 0xFF}, Error_Code_UnknownVariable},
       {{1, 0xFF, 0xFF}, Error_Code_UnknownVariable},
       {{2, 0xFF, 0xFF}, Error_Code_UnknownVariable},
@@ -197,8 +179,10 @@ TEST(VarHandler, Errors) {
       {{2, 1}, Error_Code_MissingData},
       {{0, id[0], id[1]}, Error_Code_NoMemory},
       {{1, id[0], id[1]}, Error_Code_NoMemory},
+      {{3}, Error_Code_NoMemory},
       {{2, id[0], id[1], 0xCA, 0xFE, 0x00}, Error_Code_MissingData},
->>>>>>> 0ee43d0e... Concise protobuf constant names
+      {{2, id_readonly[0], id_readonly[1], 0xCA, 0xFE, 0x00, 0x00},
+       Error_Code_InternalError},
   };
 
   for (auto &[request, error] : requests) {

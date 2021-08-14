@@ -23,7 +23,7 @@ TEST(DebugVar, DebugVarInt32) {
   DebugVar var("var", &value, "help", Var_Access_ReadOnly, "fmt", "unit");
   EXPECT_EQ("var", var.GetName());
   EXPECT_EQ("help", var.GetHelp());
-  EXPECT_EQ(VarType::Int32, var.GetType());
+  EXPECT_EQ(Var_Type_Int32, var.GetType());
   EXPECT_EQ("fmt", var.GetFormat());
   EXPECT_EQ("unit", var.GetUnit());
   EXPECT_EQ(Var_Access_ReadOnly, var.GetAccess());
@@ -55,7 +55,7 @@ TEST(DebugVar, DebugVarUint32Defaults) {
   EXPECT_EQ(uint32_t{5}, var.GetValue());
   EXPECT_EQ("", var.GetHelp());
   EXPECT_EQ("%u", var.GetFormat());
-  EXPECT_EQ(VarType::UInt32, var.GetType());
+  EXPECT_EQ(Var_Type_UInt32, var.GetType());
   EXPECT_EQ("", var.GetUnit());
 }
 
@@ -66,7 +66,7 @@ TEST(DebugVar, DebugVarFloatDefaults) {
 
   EXPECT_EQ("", var.GetHelp());
   EXPECT_EQ("%.3f", var.GetFormat());
-  EXPECT_EQ(VarType::Float, var.GetType());
+  EXPECT_EQ(Var_Type_Float, var.GetType());
   EXPECT_EQ("", var.GetUnit());
 
   // Rountrip through uint32 should not change value.

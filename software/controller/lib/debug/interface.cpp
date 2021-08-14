@@ -30,7 +30,7 @@ Interface::Interface(Trace *trace, int count, ...) {
   for (int i = 0; i < count / 2; ++i) {
     // TODO (a-vinod): va_arg auto-promotes enums (not enum class's)
     // to int. There should be a less hacky way to handle this type casting.
-    Command_Code code = Command_Code(va_arg(valist, int));
+    Cmd_Code code = Cmd_Code(va_arg(valist, int));
     Command::Handler *handler = va_arg(valist, Command::Handler *);
     registry_[static_cast<uint8_t>(code)] = handler;
   }

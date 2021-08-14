@@ -24,16 +24,13 @@ import serial
 import threading
 import time
 import debug_types
+import debug_protocol_pb2 as debug_proto
 import var_info
 from lib.error import Error
 import test_scenario
 import test_data
 from pathlib import Path
 from lib.colors import red
-
-# Can trace this many variables at once.  Keep this in sync with
-# kMaxTraceVars in the controller.
-TRACE_VAR_CT = 4
 
 
 class ControllerDebugInterface:
@@ -67,12 +64,15 @@ class ControllerDebugInterface:
             print(*args, **kwargs)
 
     def mode_get(self):
-        return self.send_command(debug_protocol_pb2.Command.Code.Mode)[0]
+        return self.send_command(debug_proto.Cmd.Code.Mode)[0]
 
     def resynchronize(self):
         with self.command_lock:
             try:
-                cmd = [debug_types.TERM, debug_types.TERM]
+                cmd = [
+                    debug_proto.Cmd.SpecialChar.Term,
+                    debug_proto.Cmd.SpecialChar.Term,
+                ]
                 self.serial_port.write(bytearray(cmd))
                 time.sleep(0.1)
                 self.serial_port.reset_input_buffer()
@@ -90,8 +90,8 @@ class ControllerDebugInterface:
         try:
             for vid in range(256):
                 data = self.send_command(
-                    debug_protocol_pb2.Command.Code.Variable,
-                    [debug_protocol_pb2.VariableAccess.Subcommand.GetInfo]
+                    debug_proto.Cmd.Code.Variable,
+                    [debug_proto.VarAccess.Subcmd.GetInfo]
                     + debug_types.int16s_to_bytes(vid),
                 )
                 if data is None:
@@ -169,8 +169,8 @@ class ControllerDebugInterface:
 
         variable = self.variable_metadata[name]
         data = self.send_command(
-            debug_protocol_pb2.Command.Code.Variable,
-            [debug_protocol_pb2.VariableAccess.Subcommand.GetInfo]
+            debug_proto.Cmd.Code.Variable,
+            [debug_proto.VarAccess.Subcmd.GetInfo]
             + debug_types.int16s_to_bytes(variable.id),
         )
         value = variable.from_bytes(data)
@@ -192,8 +192,8 @@ class ControllerDebugInterface:
         data = variable.to_bytes(value)
 
         self.send_command(
-            debug_protocol_pb2.Command.Code.Variable,
-            [debug_protocol_pb2.VariableAccess.Subcommand.Set]
+            debug_proto.Cmd.Code.Variable,
+            [debug_proto.VarAccess.Subcmd.Set]
             + debug_types.int16s_to_bytes(variable.id)
             + data,
         )
@@ -317,7 +317,7 @@ class ControllerDebugInterface:
         while ct:
             n = min(ct, 256)
             data = self.send_command(
-                debug_protocol_pb2.Command.Code.Peek,
+                debug_proto.Cmd.Code.Peek,
                 debug_types.int32s_to_bytes(address_iterator)
                 + debug_types.int16s_to_bytes(n),
             )
@@ -376,8 +376,7 @@ class ControllerDebugInterface:
             dat = debug_types.int32s_to_bytes(dat)
 
         self.send_command(
-            debug_protocol_pb2.Command.Code.Poke,
-            debug_types.int32s_to_bytes(address) + dat,
+            debug_proto.Cmd.Code.Poke, debug_types.int32s_to_bytes(address) + dat,
         )
 
     def poke32(self, address, dat):
@@ -388,21 +387,19 @@ class ControllerDebugInterface:
 
     def trace_flush(self):
         self.send_command(
-            debug_protocol_pb2.Command.Code.Trace,
-            [debug_protocol_pb2.Trace.Subcommand.Flush],
+            debug_proto.Cmd.Code.Trace, [debug_proto.TraceCmd.Subcmd.Flush],
         )
 
     def trace_set_period(self, period):
         self.send_command(
-            debug_protocol_pb2.Command.Code.Trace,
-            [debug_protocol_pb2.Trace.Subcommand.SetPeriod]
+            debug_proto.Cmd.Code.Trace,
+            [debug_proto.TraceCmd.Subcmd.SetPeriod]
             + debug_types.int32s_to_bytes(period),
         )
 
     def trace_get_period(self):
         dat = self.send_command(
-            debug_protocol_pb2.Command.Code.Trace,
-            [debug_protocol_pb2.Trace.Subcommand.GetPeriod],
+            debug_proto.Cmd.Code.Trace, [debug_proto.TraceCmd.Subcmd.GetPeriod],
         )
         return debug_types.bytes_to_int32s(dat)[0]
 
@@ -416,26 +413,27 @@ class ControllerDebugInterface:
         return period * self.variable_get("loop_period", raw=True)
 
     def trace_select(self, var_names):
-        if len(var_names) > TRACE_VAR_CT:
-            raise Error(f"Can't trace more than {TRACE_VAR_CT} variables at once.")
+        if len(var_names) > debug_proto.TraceCmd.MaxTraceVars:
+            raise Error(
+                f"Can't trace more than {debug_proto.TraceCmd.MaxTraceVars} variables at once."
+            )
         for name in var_names:
             if name not in self.variable_metadata.keys():
                 raise Error(f"Cannot select trace. Variable `{name}` does not exist.")
-        var_names += [""] * (TRACE_VAR_CT - len(var_names))
+        var_names += [""] * (debug_proto.TraceCmd.MaxTraceVars - len(var_names))
         for (i, var_name) in enumerate(var_names):
             var_id = -1
             if var_name in self.variable_metadata:
                 var_id = self.variable_metadata[var_name].id
             var = debug_types.int16s_to_bytes(var_id)
             self.send_command(
-                debug_protocol_pb2.Command.Code.Trace,
-                [debug_protocol_pb2.Trace.Subcommand.SetVarId, i] + var,
+                debug_proto.Cmd.Code.Trace,
+                [debug_proto.TraceCmd.Subcmd.SetVarId, i] + var,
             )
 
     def trace_start(self):
         self.send_command(
-            debug_protocol_pb2.Command.Code.Trace,
-            [debug_protocol_pb2.Trace.Subcommand.Start],
+            debug_proto.Cmd.Code.Trace, [debug_proto.TraceCmd.Subcmd.Start],
         )
 
     def trace_stop(self):
@@ -444,18 +442,16 @@ class ControllerDebugInterface:
 
     def trace_num_samples(self):
         dat = self.send_command(
-            debug_protocol_pb2.Command.Code.Trace,
-            [debug_protocol_pb2.Trace.Subcommand.CountSamples],
+            debug_proto.Cmd.Code.Trace, [debug_proto.TraceCmd.Subcmd.CountSamples],
         )
         return debug_types.bytes_to_int32s(dat)[0]
 
     def trace_active_variables_list(self):
         """Return a list of active trace variables"""
         ret = []
-        for i in range(TRACE_VAR_CT):
+        for i in range(debug_proto.TraceCmd.MaxTraceVars):
             data = self.send_command(
-                debug_protocol_pb2.Command.Code.Trace,
-                [debug_protocol_pb2.Trace.Subcommand.GetVarId, i],
+                debug_proto.Cmd.Code.Trace, [debug_proto.TraceCmd.Subcmd.GetVarId, i],
             )
             var_id = debug_types.bytes_to_int16s(data)[0]
             var = self.variable_by_id(var_id)
@@ -482,7 +478,9 @@ class ControllerDebugInterface:
 
         data = []
         while len(data) < bytes_per_int32 * total_num_samples:
-            byte = self.send_command(OP_TRACE, [SUBCMD_TRACE_GETDATA])
+            byte = self.send_command(
+                debug_proto.Cmd.Code.Trace, [debug_proto.TraceCmd.Subcmd.Download]
+            )
             if len(byte) < 1:
                 break
             data += byte
@@ -515,8 +513,8 @@ class ControllerDebugInterface:
 
     def eeprom_read(self, address, length):
         data = self.send_command(
-            debug_protocol_pb2.Command.Code.EepromAccess,
-            [debug_protocol_pb2.EepromCommand.Subcommand.Read]
+            debug_proto.Cmd.Code.EepromAccess,
+            [debug_proto.EepromCmd.Subcmd.Read]
             + debug_types.int16s_to_bytes(int(address, 0))
             + debug_types.int16s_to_bytes(int(length, 0)),
         )
@@ -524,8 +522,8 @@ class ControllerDebugInterface:
 
     def eeprom_write(self, address, data):
         self.send_command(
-            debug_protocol_pb2.Command.Code.EepromAccess,
-            [debug_protocol_pb2.EepromCommand.Subcommand.Write]
+            debug_proto.Cmd.Code.EepromAccess,
+            [debug_proto.EepromCmd.Subcmd.Write]
             + debug_types.int16s_to_bytes(int(address, 0))
             + data,
         )
@@ -561,11 +559,11 @@ class ControllerDebugInterface:
                 data.append(x)
                 continue
 
-            if x == debug_types.ESC:
+            if x == debug_proto.Cmd.SpecialChar.Esc:
                 esc = True
                 continue
 
-            if x == debug_types.TERM:
+            if x == debug_proto.Cmd.SpecialChar.Term:
                 self.debug_print()
                 return data
             data.append(x)

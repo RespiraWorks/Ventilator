@@ -8,11 +8,12 @@ syntax = "proto2";
 // # Regenerating the C and Python code
 // $ protoc --plugin=protoc-gen-nanopb=nanopb/generator/protoc-gen-nanopb \
 //      --nanopb_out=. \
-//      --python_out=. debug_protocol.proto
+//      --python_out=../../../utils/debug/
+//      debug_protocol.proto
 
 // Command codes sent from the python debugging interface to
 // the microcontroller's debugging interface
-message Command {
+message Cmd {
   enum Code {
     Mode = 0x00;         // Return the current firmware mode
     Peek = 0x01;         // Peek into RAM
@@ -21,6 +22,18 @@ message Command {
     Variable = 0x04;     // Variable access
     Trace = 0x05;        // Data trace commands
     EepromAccess = 0x06; // Read/Write in I2C EEPROM
+  }
+
+  // Special characters used to frame commands
+  enum SpecialChar {
+    Esc = 0xF1;
+    Term = 0xF2;
+  }
+
+  // DMA Bases
+  enum Base {
+    DMA1 = 0x40020000;
+    DMA2 = 0x40020400;
   }
 }
 
@@ -41,8 +54,9 @@ message Error {
 }
 
 // Trace subcommands sent from the host to the microcontroller
-message Trace {
-  enum Subcommand {
+message TraceCmd {
+  optional uint32 MaxTraceVars = 1 [ default = 4 ];
+  enum Subcmd {
     Flush = 0x00;    // disable and flush the trace buffer
     Download = 0x01; // download data from the trace buffer
     Start = 0x02;    // start tracing data
@@ -55,8 +69,8 @@ message Trace {
 }
 
 // Variable access subcommands sent from the host to the microcontroller
-message VariableAccess {
-  enum Subcommand {
+message VarAccess {
+  enum Subcmd {
     GetInfo = 0x00;  // get variable info (name, type, help string)
     Get = 0x01;      // get variable value
     Set = 0x02;      // set variable value
@@ -65,8 +79,8 @@ message VariableAccess {
 }
 
 // EEPROM commands sent from the host to the microcontroller
-message EepromCommand {
-  enum Subcommand {
+message EepromCmd {
+  enum Subcmd {
     Read = 0x00;
     Write = 0x01;
   }
@@ -85,7 +99,7 @@ message Var {
   }
 }
 
-message ControllerDebug {
+message ControllerDbg {
   enum Mode {
     Normal = 0;
     Boot = 1;

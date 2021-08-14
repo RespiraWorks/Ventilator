@@ -25,12 +25,12 @@ Error_Code TraceHandler::Process(Context *context) {
   if (context->request_length < 1)
     return Error_Code_MissingData;
 
-  Trace_Subcommand subcommand{Trace_Subcommand(context->request[0])};
+  TraceCmd_Subcmd subcommand{TraceCmd_Subcmd(context->request[0])};
 
   switch (subcommand) {
   // Sub-command FlushTrace is used to flush the trace buffer
   // It also disables the trace
-  case Trace_Subcommand_Flush: {
+  case TraceCmd_Subcmd_Flush: {
     trace_->Flush();
     context->response_length = 0;
     *(context->processed) = true;
@@ -38,22 +38,22 @@ Error_Code TraceHandler::Process(Context *context) {
   }
 
   // Sub-command DownloadTrace is used to read data from the buffer
-  case Trace_Subcommand_Download:
+  case TraceCmd_Subcmd_Download:
     return ReadTraceBuffer(context);
 
-  case Trace_Subcommand_Start:
+  case TraceCmd_Subcmd_Start:
     trace_->Start();
     context->response_length = 0;
     *(context->processed) = true;
     return Error_Code_None;
 
-  case Trace_Subcommand_GetVarId:
+  case TraceCmd_Subcmd_GetVarId:
     return GetTraceVar(context);
 
-  case Trace_Subcommand_SetVarId:
+  case TraceCmd_Subcmd_SetVarId:
     return SetTraceVar(context);
 
-  case Trace_Subcommand_GetPeriod:
+  case TraceCmd_Subcmd_GetPeriod:
     // response (trace period) is 32 bits (4 bytes) long
     if (context->max_response_length < 4)
       return Error_Code_NoMemory;
@@ -62,7 +62,7 @@ Error_Code TraceHandler::Process(Context *context) {
     *(context->processed) = true;
     return Error_Code_None;
 
-  case Trace_Subcommand_SetPeriod:
+  case TraceCmd_Subcmd_SetPeriod:
     // trace period is a 32 bits int, meaning the request (including subcommand)
     // is 5 bytes long
     if (context->request_length < 5)
@@ -72,7 +72,7 @@ Error_Code TraceHandler::Process(Context *context) {
     *(context->processed) = true;
     return Error_Code_None;
 
-  case Trace_Subcommand_CountSamples:
+  case TraceCmd_Subcmd_CountSamples:
     // response (num samples) is 4 bytes long, make sure I have enough room
     if (context->max_response_length < 4)
       return Error_Code_NoMemory;

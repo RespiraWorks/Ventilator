@@ -10,15 +10,25 @@
 #endif
 
 /* Enum definitions */
-typedef enum _Command_Code { 
-    Command_Code_Mode = 0, 
-    Command_Code_Peek = 1, 
-    Command_Code_Poke = 2, 
-    Command_Code_Console = 3, 
-    Command_Code_Variable = 4, 
-    Command_Code_Trace = 5, 
-    Command_Code_EepromAccess = 6 
-} Command_Code;
+typedef enum _Cmd_Code { 
+    Cmd_Code_Mode = 0, 
+    Cmd_Code_Peek = 1, 
+    Cmd_Code_Poke = 2, 
+    Cmd_Code_Console = 3, 
+    Cmd_Code_Variable = 4, 
+    Cmd_Code_Trace = 5, 
+    Cmd_Code_EepromAccess = 6 
+} Cmd_Code;
+
+typedef enum _Cmd_SpecialChar { 
+    Cmd_SpecialChar_Esc = 241, 
+    Cmd_SpecialChar_Term = 242 
+} Cmd_SpecialChar;
+
+typedef enum _Cmd_Base { 
+    Cmd_Base_DMA1 = 1073872896, 
+    Cmd_Base_DMA2 = 1073873920 
+} Cmd_Base;
 
 typedef enum _Error_Code { 
     Error_Code_None = 0, 
@@ -32,28 +42,28 @@ typedef enum _Error_Code {
     Error_Code_Timeout = 8 
 } Error_Code;
 
-typedef enum _Trace_Subcommand { 
-    Trace_Subcommand_Flush = 0, 
-    Trace_Subcommand_Download = 1, 
-    Trace_Subcommand_Start = 2, 
-    Trace_Subcommand_GetVarId = 3, 
-    Trace_Subcommand_SetVarId = 4, 
-    Trace_Subcommand_GetPeriod = 5, 
-    Trace_Subcommand_SetPeriod = 6, 
-    Trace_Subcommand_CountSamples = 7 
-} Trace_Subcommand;
+typedef enum _TraceCmd_Subcmd { 
+    TraceCmd_Subcmd_Flush = 0, 
+    TraceCmd_Subcmd_Download = 1, 
+    TraceCmd_Subcmd_Start = 2, 
+    TraceCmd_Subcmd_GetVarId = 3, 
+    TraceCmd_Subcmd_SetVarId = 4, 
+    TraceCmd_Subcmd_GetPeriod = 5, 
+    TraceCmd_Subcmd_SetPeriod = 6, 
+    TraceCmd_Subcmd_CountSamples = 7 
+} TraceCmd_Subcmd;
 
-typedef enum _VariableAccess_Subcommand { 
-    VariableAccess_Subcommand_GetInfo = 0, 
-    VariableAccess_Subcommand_Get = 1, 
-    VariableAccess_Subcommand_Set = 2, 
-    VariableAccess_Subcommand_GetCount = 3 
-} VariableAccess_Subcommand;
+typedef enum _VarAccess_Subcmd { 
+    VarAccess_Subcmd_GetInfo = 0, 
+    VarAccess_Subcmd_Get = 1, 
+    VarAccess_Subcmd_Set = 2, 
+    VarAccess_Subcmd_GetCount = 3 
+} VarAccess_Subcmd;
 
-typedef enum _EepromCommand_Subcommand { 
-    EepromCommand_Subcommand_Read = 0, 
-    EepromCommand_Subcommand_Write = 1 
-} EepromCommand_Subcommand;
+typedef enum _EepromCmd_Subcmd { 
+    EepromCmd_Subcmd_Read = 0, 
+    EepromCmd_Subcmd_Write = 1 
+} EepromCmd_Subcmd;
 
 typedef enum _Var_Type { 
     Var_Type_Int32 = 1, 
@@ -66,17 +76,26 @@ typedef enum _Var_Access {
     Var_Access_ReadWrite = 1 
 } Var_Access;
 
+typedef enum _ControllerDbg_Mode { 
+    ControllerDbg_Mode_Normal = 0, 
+    ControllerDbg_Mode_Boot = 1 
+} ControllerDbg_Mode;
+
 /* Struct definitions */
 /* Command codes sent from the python debugging interface to
  the microcontroller's debugging interface */
-typedef struct _Command { 
+typedef struct _Cmd { 
     char dummy_field;
-} Command;
+} Cmd;
+
+typedef struct _ControllerDbg { 
+    char dummy_field;
+} ControllerDbg;
 
 /* EEPROM commands sent from the host to the microcontroller */
-typedef struct _EepromCommand { 
+typedef struct _EepromCmd { 
     char dummy_field;
-} EepromCommand;
+} EepromCmd;
 
 /* Error codes sent from the microcontroller debugging interface
  back to the python debugging interface */
@@ -84,41 +103,50 @@ typedef struct _Error {
     char dummy_field;
 } Error;
 
-/* Trace subcommands sent from the host to the microcontroller */
-typedef struct _Trace { 
-    char dummy_field;
-} Trace;
-
 typedef struct _Var { 
     char dummy_field;
 } Var;
 
 /* Variable access subcommands sent from the host to the microcontroller */
-typedef struct _VariableAccess { 
+typedef struct _VarAccess { 
     char dummy_field;
-} VariableAccess;
+} VarAccess;
+
+/* Trace subcommands sent from the host to the microcontroller */
+typedef struct _TraceCmd { 
+    bool has_MaxTraceVars;
+    uint32_t MaxTraceVars; 
+} TraceCmd;
 
 
 /* Helper constants for enums */
-#define _Command_Code_MIN Command_Code_Mode
-#define _Command_Code_MAX Command_Code_EepromAccess
-#define _Command_Code_ARRAYSIZE ((Command_Code)(Command_Code_EepromAccess+1))
+#define _Cmd_Code_MIN Cmd_Code_Mode
+#define _Cmd_Code_MAX Cmd_Code_EepromAccess
+#define _Cmd_Code_ARRAYSIZE ((Cmd_Code)(Cmd_Code_EepromAccess+1))
+
+#define _Cmd_SpecialChar_MIN Cmd_SpecialChar_Esc
+#define _Cmd_SpecialChar_MAX Cmd_SpecialChar_Term
+#define _Cmd_SpecialChar_ARRAYSIZE ((Cmd_SpecialChar)(Cmd_SpecialChar_Term+1))
+
+#define _Cmd_Base_MIN Cmd_Base_DMA1
+#define _Cmd_Base_MAX Cmd_Base_DMA2
+#define _Cmd_Base_ARRAYSIZE ((Cmd_Base)(Cmd_Base_DMA2+1))
 
 #define _Error_Code_MIN Error_Code_None
 #define _Error_Code_MAX Error_Code_Timeout
 #define _Error_Code_ARRAYSIZE ((Error_Code)(Error_Code_Timeout+1))
 
-#define _Trace_Subcommand_MIN Trace_Subcommand_Flush
-#define _Trace_Subcommand_MAX Trace_Subcommand_CountSamples
-#define _Trace_Subcommand_ARRAYSIZE ((Trace_Subcommand)(Trace_Subcommand_CountSamples+1))
+#define _TraceCmd_Subcmd_MIN TraceCmd_Subcmd_Flush
+#define _TraceCmd_Subcmd_MAX TraceCmd_Subcmd_CountSamples
+#define _TraceCmd_Subcmd_ARRAYSIZE ((TraceCmd_Subcmd)(TraceCmd_Subcmd_CountSamples+1))
 
-#define _VariableAccess_Subcommand_MIN VariableAccess_Subcommand_GetInfo
-#define _VariableAccess_Subcommand_MAX VariableAccess_Subcommand_GetCount
-#define _VariableAccess_Subcommand_ARRAYSIZE ((VariableAccess_Subcommand)(VariableAccess_Subcommand_GetCount+1))
+#define _VarAccess_Subcmd_MIN VarAccess_Subcmd_GetInfo
+#define _VarAccess_Subcmd_MAX VarAccess_Subcmd_GetCount
+#define _VarAccess_Subcmd_ARRAYSIZE ((VarAccess_Subcmd)(VarAccess_Subcmd_GetCount+1))
 
-#define _EepromCommand_Subcommand_MIN EepromCommand_Subcommand_Read
-#define _EepromCommand_Subcommand_MAX EepromCommand_Subcommand_Write
-#define _EepromCommand_Subcommand_ARRAYSIZE ((EepromCommand_Subcommand)(EepromCommand_Subcommand_Write+1))
+#define _EepromCmd_Subcmd_MIN EepromCmd_Subcmd_Read
+#define _EepromCmd_Subcmd_MAX EepromCmd_Subcmd_Write
+#define _EepromCmd_Subcmd_ARRAYSIZE ((EepromCmd_Subcmd)(EepromCmd_Subcmd_Write+1))
 
 #define _Var_Type_MIN Var_Type_Int32
 #define _Var_Type_MAX Var_Type_Float
@@ -128,80 +156,95 @@ typedef struct _VariableAccess {
 #define _Var_Access_MAX Var_Access_ReadWrite
 #define _Var_Access_ARRAYSIZE ((Var_Access)(Var_Access_ReadWrite+1))
 
+#define _ControllerDbg_Mode_MIN ControllerDbg_Mode_Normal
+#define _ControllerDbg_Mode_MAX ControllerDbg_Mode_Boot
+#define _ControllerDbg_Mode_ARRAYSIZE ((ControllerDbg_Mode)(ControllerDbg_Mode_Boot+1))
+
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 /* Initializer values for message structs */
-#define Command_init_default                     {0}
+#define Cmd_init_default                         {0}
 #define Error_init_default                       {0}
-#define Trace_init_default                       {0}
-#define VariableAccess_init_default              {0}
-#define EepromCommand_init_default               {0}
+#define TraceCmd_init_default                    {false, 4u}
+#define VarAccess_init_default                   {0}
+#define EepromCmd_init_default                   {0}
 #define Var_init_default                         {0}
-#define Command_init_zero                        {0}
+#define ControllerDbg_init_default               {0}
+#define Cmd_init_zero                            {0}
 #define Error_init_zero                          {0}
-#define Trace_init_zero                          {0}
-#define VariableAccess_init_zero                 {0}
-#define EepromCommand_init_zero                  {0}
+#define TraceCmd_init_zero                       {false, 0}
+#define VarAccess_init_zero                      {0}
+#define EepromCmd_init_zero                      {0}
 #define Var_init_zero                            {0}
+#define ControllerDbg_init_zero                  {0}
 
 /* Field tags (for use in manual encoding/decoding) */
+#define TraceCmd_MaxTraceVars_tag                1
 
 /* Struct field encoding specification for nanopb */
-#define Command_FIELDLIST(X, a) \
+#define Cmd_FIELDLIST(X, a) \
 
-#define Command_CALLBACK NULL
-#define Command_DEFAULT NULL
+#define Cmd_CALLBACK NULL
+#define Cmd_DEFAULT NULL
 
 #define Error_FIELDLIST(X, a) \
 
 #define Error_CALLBACK NULL
 #define Error_DEFAULT NULL
 
-#define Trace_FIELDLIST(X, a) \
+#define TraceCmd_FIELDLIST(X, a) \
+X(a, STATIC,   OPTIONAL, UINT32,   MaxTraceVars,      1)
+#define TraceCmd_CALLBACK NULL
+#define TraceCmd_DEFAULT (const pb_byte_t*)"\x08\x04\x00"
 
-#define Trace_CALLBACK NULL
-#define Trace_DEFAULT NULL
+#define VarAccess_FIELDLIST(X, a) \
 
-#define VariableAccess_FIELDLIST(X, a) \
+#define VarAccess_CALLBACK NULL
+#define VarAccess_DEFAULT NULL
 
-#define VariableAccess_CALLBACK NULL
-#define VariableAccess_DEFAULT NULL
+#define EepromCmd_FIELDLIST(X, a) \
 
-#define EepromCommand_FIELDLIST(X, a) \
-
-#define EepromCommand_CALLBACK NULL
-#define EepromCommand_DEFAULT NULL
+#define EepromCmd_CALLBACK NULL
+#define EepromCmd_DEFAULT NULL
 
 #define Var_FIELDLIST(X, a) \
 
 #define Var_CALLBACK NULL
 #define Var_DEFAULT NULL
 
-extern const pb_msgdesc_t Command_msg;
+#define ControllerDbg_FIELDLIST(X, a) \
+
+#define ControllerDbg_CALLBACK NULL
+#define ControllerDbg_DEFAULT NULL
+
+extern const pb_msgdesc_t Cmd_msg;
 extern const pb_msgdesc_t Error_msg;
-extern const pb_msgdesc_t Trace_msg;
-extern const pb_msgdesc_t VariableAccess_msg;
-extern const pb_msgdesc_t EepromCommand_msg;
+extern const pb_msgdesc_t TraceCmd_msg;
+extern const pb_msgdesc_t VarAccess_msg;
+extern const pb_msgdesc_t EepromCmd_msg;
 extern const pb_msgdesc_t Var_msg;
+extern const pb_msgdesc_t ControllerDbg_msg;
 
 /* Defines for backwards compatibility with code written before nanopb-0.4.0 */
-#define Command_fields &Command_msg
+#define Cmd_fields &Cmd_msg
 #define Error_fields &Error_msg
-#define Trace_fields &Trace_msg
-#define VariableAccess_fields &VariableAccess_msg
-#define EepromCommand_fields &EepromCommand_msg
+#define TraceCmd_fields &TraceCmd_msg
+#define VarAccess_fields &VarAccess_msg
+#define EepromCmd_fields &EepromCmd_msg
 #define Var_fields &Var_msg
+#define ControllerDbg_fields &ControllerDbg_msg
 
 /* Maximum encoded size of messages (where known) */
-#define Command_size                             0
-#define EepromCommand_size                       0
+#define Cmd_size                                 0
+#define ControllerDbg_size                       0
+#define EepromCmd_size                           0
 #define Error_size                               0
-#define Trace_size                               0
+#define TraceCmd_size                            6
+#define VarAccess_size                           0
 #define Var_size                                 0
-#define VariableAccess_size                      0
 
 #ifdef __cplusplus
 } /* extern "C" */

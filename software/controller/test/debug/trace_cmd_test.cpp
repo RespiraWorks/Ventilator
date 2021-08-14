@@ -41,10 +41,10 @@ TEST(TraceHandler, Flush) {
   // define some debug variables
   uint32_t i = 0;
   FnDebugVar var_x(
-      VarType::UInt32, "x", "", [&] { return i; },
+      Var_Type_UInt32, "x", "", [&] { return i; },
       [&](uint32_t value) { (void)value; });
   FnDebugVar var_y(
-      VarType::UInt32, "x", "", [&] { return i * 10; },
+      Var_Type_UInt32, "x", "", [&] { return i * 10; },
       [&](uint32_t value) { (void)value; });
 
   // define trace and trace handler
@@ -60,7 +60,7 @@ TEST(TraceHandler, Flush) {
   EXPECT_EQ(trace.GetNumSamples(), 1);
   EXPECT_TRUE(trace.GetStatus());
 
-  std::array flush_command = {static_cast<uint8_t>(Trace_Subcommand_Flush)};
+  std::array flush_command = {static_cast<uint8_t>(TraceCmd_Subcmd_Flush)};
   std::array<uint8_t, kResponseSize> response;
   bool processed{false};
   Context flush_context = {.request = flush_command.data(),
@@ -81,10 +81,10 @@ TEST(TraceHandler, Read) {
   // define some debug variables
   uint32_t i = 0;
   FnDebugVar var_x(
-      VarType::UInt32, "x", "", [&] { return i; },
+      Var_Type_UInt32, "x", "", [&] { return i; },
       [&](uint32_t value) { (void)value; });
   FnDebugVar var_y(
-      VarType::UInt32, "y", "", [&] { return i * 10; },
+      Var_Type_UInt32, "y", "", [&] { return i * 10; },
       [&](uint32_t value) { (void)value; });
 
   // define trace and trace handler
@@ -92,7 +92,7 @@ TEST(TraceHandler, Read) {
   TraceHandler trace_handler = TraceHandler(&trace);
 
   // read with no vars ==> nothing to report
-  std::array read_command = {static_cast<uint8_t>(Trace_Subcommand_Download)};
+  std::array read_command = {static_cast<uint8_t>(TraceCmd_Subcmd_Download)};
   std::array<uint8_t, kResponseSize> response;
   bool processed{false};
   Context read_context = {.request = read_command.data(),
@@ -109,7 +109,7 @@ TEST(TraceHandler, Read) {
   trace.SetTracedVarId<3>(var_y.GetId());
 
   // start the trace (using debug command)
-  std::array start_command = {static_cast<uint8_t>(Trace_Subcommand_Start)};
+  std::array start_command = {static_cast<uint8_t>(TraceCmd_Subcmd_Start)};
   processed = false;
   Context start_context = {.request = start_command.data(),
                            .request_length = std::size(start_command),
@@ -136,7 +136,7 @@ TEST(TraceHandler, Read) {
 
   // Take advantage of having a full buffer to test CountSamples command
   std::array num_samples_command = {
-      static_cast<uint8_t>(Trace_Subcommand_CountSamples)};
+      static_cast<uint8_t>(TraceCmd_Subcmd_CountSamples)};
   processed = false;
   Context num_samples_context = {.request = num_samples_command.data(),
                                  .request_length =
@@ -184,7 +184,7 @@ TEST(TraceHandler, SettersAndGetters) {
 
   // Set trace var ID for var 1
   std::array<uint8_t, 4> set_var1_command = {
-      static_cast<uint8_t>(Trace_Subcommand_SetVarId), 1, 0, 0};
+      static_cast<uint8_t>(TraceCmd_Subcmd_SetVarId), 1, 0, 0};
   u16_to_u8(var_y.GetId(), &set_var1_command[2]);
   std::array<uint8_t, kResponseSize> response;
   bool processed{false};
@@ -202,7 +202,7 @@ TEST(TraceHandler, SettersAndGetters) {
 
   // Get trace var ID for var 1
   std::array<uint8_t, 2> get_var1_command = {
-      static_cast<uint8_t>(Trace_Subcommand_GetVarId), 1};
+      static_cast<uint8_t>(TraceCmd_Subcmd_GetVarId), 1};
   processed = false;
   Context get_var1_context = {.request = get_var1_command.data(),
                               .request_length = std::size(get_var1_command),
@@ -218,7 +218,7 @@ TEST(TraceHandler, SettersAndGetters) {
 
   // Get trace var ID for var 2 (un-associated)
   std::array<uint8_t, 2> get_var2_command = {
-      static_cast<uint8_t>(Trace_Subcommand_GetVarId), 2};
+      static_cast<uint8_t>(TraceCmd_Subcmd_GetVarId), 2};
   processed = false;
   Context get_var2_context = {.request = get_var2_command.data(),
                               .request_length = std::size(get_var2_command),
@@ -234,7 +234,7 @@ TEST(TraceHandler, SettersAndGetters) {
 
   // Get trace var ID for var kMaxTraceVars (out of bounds)
   std::array<uint8_t, 2> get_var_max_command = {
-      static_cast<uint8_t>(Trace_Subcommand_GetVarId),
+      static_cast<uint8_t>(TraceCmd_Subcmd_GetVarId),
       static_cast<uint8_t>(MaxTraceVars)};
   processed = false;
   Context get_var_max_context = {.request = get_var_max_command.data(),
@@ -251,7 +251,7 @@ TEST(TraceHandler, SettersAndGetters) {
 
   // Set trace period
   std::array<uint8_t, 5> set_period_command = {
-      static_cast<uint8_t>(Trace_Subcommand_SetPeriod)};
+      static_cast<uint8_t>(TraceCmd_Subcmd_SetPeriod)};
   u32_to_u8(2, &set_period_command[1]);
   processed = false;
   Context set_period_context = {.request = set_period_command.data(),
@@ -268,7 +268,7 @@ TEST(TraceHandler, SettersAndGetters) {
 
   // Get trace period
   std::array get_period_command = {
-      static_cast<uint8_t>(Trace_Subcommand_GetPeriod)};
+      static_cast<uint8_t>(TraceCmd_Subcmd_GetPeriod)};
   processed = false;
   Context get_period_context = {.request = get_period_command.data(),
                                 .request_length = std::size(get_period_command),
@@ -299,19 +299,19 @@ TEST(TraceHandler, Errors) {
   std::vector<std::tuple<std::vector<uint8_t>, Error_Code>> requests = {
       {{}, Error_Code_MissingData},  // Missing subcommand
       {{8}, Error_Code_InvalidData}, // Invalid subcommand
-      {{static_cast<uint8_t>(Trace_Subcommand_Download)}, Error_Code_NoMemory},
-      {{static_cast<uint8_t>(Trace_Subcommand_SetVarId), 1, 1},
+      {{static_cast<uint8_t>(TraceCmd_Subcmd_Download)}, Error_Code_NoMemory},
+      {{static_cast<uint8_t>(TraceCmd_Subcmd_SetVarId), 1, 1},
        Error_Code_MissingData},
-      {{static_cast<uint8_t>(Trace_Subcommand_SetVarId), MaxTraceVars, 1, 0},
+      {{static_cast<uint8_t>(TraceCmd_Subcmd_SetVarId), MaxTraceVars, 1, 0},
        Error_Code_InvalidData},
-      {{static_cast<uint8_t>(Trace_Subcommand_GetVarId)},
+      {{static_cast<uint8_t>(TraceCmd_Subcmd_GetVarId)},
        Error_Code_MissingData},
-      {{static_cast<uint8_t>(Trace_Subcommand_GetVarId), 1},
+      {{static_cast<uint8_t>(TraceCmd_Subcmd_GetVarId), 1},
        Error_Code_NoMemory},
-      {{static_cast<uint8_t>(Trace_Subcommand_SetPeriod), 1, 1, 1},
+      {{static_cast<uint8_t>(TraceCmd_Subcmd_SetPeriod), 1, 1, 1},
        Error_Code_MissingData},
-      {{static_cast<uint8_t>(Trace_Subcommand_GetPeriod)}, Error_Code_NoMemory},
-      {{static_cast<uint8_t>(Trace_Subcommand_CountSamples)},
+      {{static_cast<uint8_t>(TraceCmd_Subcmd_GetPeriod)}, Error_Code_NoMemory},
+      {{static_cast<uint8_t>(TraceCmd_Subcmd_CountSamples)},
        Error_Code_NoMemory},
   };
   std::array<uint8_t, kResponseSize> response;

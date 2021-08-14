@@ -25,10 +25,10 @@ using namespace Debug;
 TEST(Trace, MaybeSampleTwoVars) {
   uint32_t i = 0;
   FnDebugVar var_x(
-      VarType::UInt32, "x", "", [&] { return i; },
+      Var_Type_UInt32, "x", "", [&] { return i; },
       [&](uint32_t value) { (void)value; });
   FnDebugVar var_y(
-      VarType::UInt32, "y", "", [&] { return 10 * i; },
+      Var_Type_UInt32, "y", "", [&] { return 10 * i; },
       [&](uint32_t value) { (void)value; });
 
   Trace trace;

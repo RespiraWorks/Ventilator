@@ -338,7 +338,7 @@ test read <file> [--verbose/-v] [--plot/-p] [--csv/-c]
                 parser.add_argument("--csv", "-c", default=False, action="store_true")
                 args2 = parser.parse_args(params[2:])
                 if args2.verbose:
-                    print(test.print_trace())
+                    print(test.print_traces())
                 if args2.plot:
                     test.plot(str(self.test_data_dir), save=True, show=True)
                 if args2.csv:
@@ -360,7 +360,7 @@ test read <file> [--verbose/-v] [--plot/-p] [--csv/-c]
                 parser.add_argument("--csv", "-c", default=False, action="store_true")
                 args2 = parser.parse_args(params[2:])
                 if args2.verbose:
-                    print(test.print_trace())
+                    print(test.print_traces())
                 if args2.plot:
                     test.plot(str(self.test_data_dir), save=True, show=True)
                 if args2.csv:
@@ -507,8 +507,16 @@ ex: poke [type] <address> <data>
             print("Please give the variable name to read")
             return
 
+        raw = False
+        fmt = None
+        if len(cl) > 1:
+            if cl[1] == "--raw":
+                raw = True
+            else:
+                fmt = cl[1]
+
         if cl[0] == "all":
-            all_vars = self.interface.variables_get_all()
+            all_vars = self.interface.variables_get_all(raw=raw)
             for count, name in enumerate(sorted(all_vars.keys())):
                 variable_md = self.interface.variable_metadata[name]
                 text = variable_md.print_value(all_vars[name])
@@ -518,7 +526,9 @@ ex: poke [type] <address> <data>
                     print(dark_orange(text))
             return
         if cl[0] == "set":
-            all_vars = self.interface.variables_get_all(access_filter=VAR_ACCESS_WRITE)
+            all_vars = self.interface.variables_get_all(
+                access_filter=VAR_ACCESS_WRITE, raw=raw
+            )
             for count, name in enumerate(sorted(all_vars.keys())):
                 variable_md = self.interface.variable_metadata[name]
                 text = variable_md.print_value(all_vars[name], show_access=False)
@@ -529,7 +539,7 @@ ex: poke [type] <address> <data>
             return
         if cl[0] == "read":
             all_vars = self.interface.variables_get_all(
-                access_filter=VAR_ACCESS_READ_ONLY
+                access_filter=VAR_ACCESS_READ_ONLY, raw=raw
             )
             for count, name in enumerate(sorted(all_vars.keys())):
                 variable_md = self.interface.variable_metadata[name]
@@ -540,13 +550,8 @@ ex: poke [type] <address> <data>
                     print(dark_orange(text))
             return
 
-        if len(cl) > 1:
-            fmt = cl[1]
-        else:
-            fmt = None
-
         variable_md = self.interface.variable_metadata[cl[0]]
-        val = self.interface.variable_get(cl[0], fmt=fmt)
+        val = self.interface.variable_get(cl[0], raw=raw, fmt=fmt)
         print(variable_md.print_value(val))
 
     def complete_get(self, text, line, begidx, endidx):
@@ -556,10 +561,14 @@ ex: poke [type] <address> <data>
 
     def help_get(self):
         print("Read the value of a ventilator debug variable and display it.")
-        print("  get all    -  retrieves all variables")
-        print("  get set    -  retrieves all settings (writable variables)")
-        print("  get read   -  retrieves all read-only variables")
-        print("  get <var>  -  retrieves a specific variable")
+        print("  get all [--raw]          -  retrieves all variables")
+        print(
+            "  get set [--raw]          -  retrieves all settings (writable variables)"
+        )
+        print("  get read [--raw]         -  retrieves all read-only variables")
+        print(
+            "  get <var> [fmt] [--raw]  -  retrieves a specific variable, optionally with format or raw"
+        )
         print("Available variables:")
         for k in sorted(self.interface.variable_metadata.keys()):
             print(f" {self.interface.variable_metadata[k].verbose()}")
@@ -671,7 +680,7 @@ trace save [--verbose/-v] [--plot/-p] [--csv/-c]
                 parser.add_argument("--csv", "-c", default=False, action="store_true")
                 args2 = parser.parse_args(cl[1:])
                 if args2.verbose:
-                    print(test.print_trace())
+                    print(test.print_traces())
                 if args2.plot:
                     test.plot(self.test_data_dir, save=True, show=True)
                 if args2.csv:

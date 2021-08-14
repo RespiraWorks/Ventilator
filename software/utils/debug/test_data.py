@@ -33,6 +33,34 @@ from lib.colors import red
 from pathlib import Path
 
 
+class Trace:
+    variable_name: str
+    variable_units: str
+    data: List
+
+    def __init__(self, name, units):
+        self.variable_name = name
+        self.variable_units = units
+
+    def as_dict(self):
+        return {
+            "variable_name": self.variable_name,
+            "variable_units": self.variable_units,
+            "data": self.data,
+        }
+
+    @staticmethod
+    def from_dict(data):
+        name = data["variable_name"]
+        units = data["variable_units"]
+        ret = Trace(name, units)
+        ret.data = data["data"]
+        return ret
+
+    def plot(self, subplt):
+        return
+
+
 class TestData:
     """Abstraction for test data, including metadata and test scenario setup"""
 
@@ -72,14 +100,14 @@ class TestData:
         )
         ret += f"Machine info:     {self.platform_uname}\n"
         ret += f"Tester:           {self.tester_name} ({self.tester_email})\n"
-        dirty_string = red(" (DIRTY)")
-        ret += "Git sha:          {}{}\n".format(
-            self.git_sha, dirty_string if self.git_dirty else ""
-        )
+        ret += f"Git sha:          {self.git_sha}"
+        if self.git_dirty:
+            ret += red(" (DIRTY)")
+        ret += "\n"
         ret += "TEST SCENARIO:\n" + self.scenario.long_description()
         if self.ventilator_settings:
             ret += "\nVentilator settings:\n"
-            for name, val in self.ventilator_settings.items():
+            for name, val in sorted(self.ventilator_settings.items()):
                 ret += f"  {name:25} = {val}\n"
         if self.traces:
             cols = len(self.traces)
@@ -87,7 +115,7 @@ class TestData:
             ret += f"Test data contains [{cols}][{rows}] data points"
         return ret
 
-    def print_trace(self, separator=" ", line_separator="\n"):
+    def print_traces(self, separator=" ", line_separator="\n"):
         line = ["{:>15}".format("time(sec)")]
         for v in self.scenario.trace_variable_names:
             line.append(f"{v:>15}")
@@ -129,7 +157,7 @@ class TestData:
     def save_csv(self, parent_path: str):
         file_name = Path(parent_path) / (self.unique_name() + ".csv")
         with open(file_name, "w") as csv_file:
-            csv_file.write(self.print_trace(separator=", "))
+            csv_file.write(self.print_traces(separator=", "))
 
     def plot(self, parent_path: str, save: bool, show: bool):
         title = self.unique_name()

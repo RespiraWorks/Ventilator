@@ -101,7 +101,7 @@ class VarInfo:
         write = ""
         if show_access:
             write = "w+ " if self.write_access else "w- "
-        return f"{write}{self.name:25} = {value:>20} {self.units}"
+        return f"{write}{self.name:25} = {value:>25} {self.units}"
 
     # Convert an unsigned 32-bit value into the correct type for
     # this variable

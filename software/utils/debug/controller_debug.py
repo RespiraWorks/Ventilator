@@ -191,12 +191,12 @@ class ControllerDebugInterface:
         for var, val in pairs.items():
             self.variable_set(var, val, verbose=True)
 
-    def variables_get_all(self, access_filter=None):
+    def variables_get_all(self, access_filter=None, raw=False):
         ret = {}
         for name, metadata in self.variable_metadata.items():
             if access_filter is not None and metadata.write_access != access_filter:
                 continue
-            ret[name] = self.variable_get(name)
+            ret[name] = self.variable_get(name, raw=raw)
         return ret
 
     def variable_get(self, name, raw=False, fmt=None):
@@ -288,7 +288,7 @@ class ControllerDebugInterface:
                 return
 
         self.variables_force_open()
-        self.variable_set("forced_mode", 0)
+        self.variable_set("forced_mode", "off")
         print(f"\nExecuting test scenario:\n {test.scenario.long_description(True)}")
 
         # Give the user a chance to adjust the test lung.
@@ -313,11 +313,11 @@ class ControllerDebugInterface:
         print("\nRetrieving data and halting ventilation")
         # get data and halt ventilation
         test.traces = self.trace_download()
-        self.variable_set("forced_mode", 0)
-        self.trace_stop()
         test.ventilator_settings = self.variables_get_all(
-            access_filter=var_info.VAR_ACCESS_WRITE
+            access_filter=var_info.VAR_ACCESS_WRITE, raw=True
         )
+        self.variable_set("forced_mode", "off")
+        self.trace_stop()
         return test
 
     def trace_save(self, scenario_name="manual_trace"):
@@ -337,7 +337,7 @@ class ControllerDebugInterface:
             x.name for x in self.trace_active_variables_list()
         ]
         test.ventilator_settings = self.variables_get_all(
-            access_filter=var_info.VAR_ACCESS_WRITE
+            access_filter=var_info.VAR_ACCESS_WRITE, raw=True
         )
         return test
 

@@ -19,7 +19,7 @@ limitations under the License.
 #include "serial_listeners.h"
 
 class DMACtrl {
- public:
+public:
   explicit DMACtrl(DmaReg *const dma) : dma_(dma) {}
   void init() {
     // UART3 reception happens on DMA1 channel 3
@@ -27,8 +27,9 @@ class DMACtrl {
     // UART3 transmission happens on DMA1 channel 2
     dma_->channel_select.c2s = 0b0010;
   }
- private:
-  DmaReg *const dma_ {nullptr};
+
+private:
+  DmaReg *const dma_{nullptr};
 };
 
 class UartDma {
@@ -37,9 +38,9 @@ public:
   UartDma() {}
 #endif
   UartDma(UartReg *const uart, DmaReg *const dma, uint8_t tx_channel,
-           uint8_t rx_channel, char matchChar)
-           : uart_(uart), dma_(dma), tx_channel_(tx_channel)
-           , rx_channel_(rx_channel), match_char_(matchChar) {}
+          uint8_t rx_channel, char matchChar)
+      : uart_(uart), dma_(dma), tx_channel_(tx_channel),
+        rx_channel_(rx_channel), match_char_(matchChar) {}
 
   void Init(uint32_t baud);
   // Returns true if DMA TX is in progress
@@ -47,8 +48,7 @@ public:
   // Returns true if DMA RX is in progress
   bool RxInProgress() const;
 
-  [[nodiscard]] bool StartTX(uint8_t *buf, uint32_t length,
-                             TxListener *txl);
+  [[nodiscard]] bool StartTX(uint8_t *buf, uint32_t length, TxListener *txl);
 
   uint32_t GetRxBytesLeft();
 
@@ -69,14 +69,14 @@ private:
     uint32_t bits : 24;
   } uint24_t;
 
-  UartReg *const uart_ {nullptr};
-  DmaReg *const dma_ {nullptr};
+  UartReg *const uart_{nullptr};
+  DmaReg *const dma_{nullptr};
   uint8_t tx_channel_;
   uint8_t rx_channel_;
-  RxListener *rx_listener_ {nullptr};
-  TxListener *tx_listener_ {nullptr};
+  RxListener *rx_listener_{nullptr};
+  TxListener *tx_listener_{nullptr};
   uint32_t baud_;
   char match_char_;
-  bool tx_in_progress_ {false};
-  bool rx_in_progress_ {false};
+  bool tx_in_progress_{false};
+  bool rx_in_progress_{false};
 };

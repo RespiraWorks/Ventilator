@@ -1,0 +1,5 @@
+pyserial
+protobuf
+pandas
+matplotlib
+gitpython

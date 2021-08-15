@@ -29,10 +29,11 @@ import glob
 import os
 import shlex
 import traceback
-from lib.colors import red, green, orange, purple
+from lib.colors import *
 from lib.error import Error
 from lib.serial_detect import detect_stm32_ports, print_detected_ports
 from controller_debug import ControllerDebugInterface, MODE_BOOT
+from var_info import VAR_ACCESS_READ_ONLY, VAR_ACCESS_WRITE
 import matplotlib.pyplot as plt
 import test_data
 from pathlib import Path
@@ -117,7 +118,11 @@ class CmdLine(cmd.Cmd):
         if mode == MODE_BOOT:
             self.prompt = orange(f"{self.interface.serial_port.port}:boot] ")
         else:
-            self.prompt = green(f"{self.interface.serial_port.port}] ")
+            sn = self.interface.variable_get("serial_number", raw=True)
+            if sn > 0:
+                self.prompt = green(f"sn-{sn}] ")
+            else:
+                self.prompt = green(f"{self.interface.serial_port.port}] ")
 
     def cli_loop(self):
         self.autoload()
@@ -324,6 +329,9 @@ test read <file> [--verbose/-v] [--plot/-p] [--csv/-c]
             if params[1] not in self.interface.scenarios.keys():
                 print(red(f"Test `{params[1]}` does not exist\n"))
             test = self.interface.test_run(params[1])
+            if test is None:
+                print("Aborted")
+                return
             test.save_json(str(self.test_data_dir), print_self=True)
             if len(params) > 2:
                 parser = CmdArgumentParser("test")
@@ -334,7 +342,7 @@ test read <file> [--verbose/-v] [--plot/-p] [--csv/-c]
                 parser.add_argument("--csv", "-c", default=False, action="store_true")
                 args2 = parser.parse_args(params[2:])
                 if args2.verbose:
-                    print(test.print_trace())
+                    print(test.print_traces())
                 if args2.plot:
                     test.plot(str(self.test_data_dir), save=True, show=True)
                 if args2.csv:
@@ -356,7 +364,7 @@ test read <file> [--verbose/-v] [--plot/-p] [--csv/-c]
                 parser.add_argument("--csv", "-c", default=False, action="store_true")
                 args2 = parser.parse_args(params[2:])
                 if args2.verbose:
-                    print(test.print_trace())
+                    print(test.print_traces())
                 if args2.plot:
                     test.plot(str(self.test_data_dir), save=True, show=True)
                 if args2.csv:
@@ -503,28 +511,71 @@ ex: poke [type] <address> <data>
             print("Please give the variable name to read")
             return
 
+        raw = False
+        fmt = None
+        if len(cl) > 1:
+            if cl[1] == "--raw":
+                raw = True
+            else:
+                fmt = cl[1]
+
         if cl[0] == "all":
-            all_vars = self.interface.variables_get_all()
-            for name, val in all_vars.items():
-                print(f"{name:25} = {val}")
+            all_vars = self.interface.variables_get_all(raw=raw)
+            for count, name in enumerate(sorted(all_vars.keys())):
+                variable_md = self.interface.variable_metadata[name]
+                text = variable_md.print_value(all_vars[name])
+                if (count % 2) == 0:
+                    print(white(text))
+                else:
+                    print(dark_orange(text))
+            return
+        if cl[0] == "set":
+            all_vars = self.interface.variables_get_all(
+                access_filter=VAR_ACCESS_WRITE, raw=raw
+            )
+            for count, name in enumerate(sorted(all_vars.keys())):
+                variable_md = self.interface.variable_metadata[name]
+                text = variable_md.print_value(all_vars[name], show_access=False)
+                if (count % 2) == 0:
+                    print(white(text))
+                else:
+                    print(dark_orange(text))
+            return
+        if cl[0] == "read":
+            all_vars = self.interface.variables_get_all(
+                access_filter=VAR_ACCESS_READ_ONLY, raw=raw
+            )
+            for count, name in enumerate(sorted(all_vars.keys())):
+                variable_md = self.interface.variable_metadata[name]
+                text = variable_md.print_value(all_vars[name], show_access=False)
+                if (count % 2) == 0:
+                    print(white(text))
+                else:
+                    print(dark_orange(text))
             return
 
-        if len(cl) > 1:
-            fmt = cl[1]
-        else:
-            fmt = None
-
-        print(cl[0] + " = " + self.interface.variable_get(cl[0], fmt=fmt))
+        variable_md = self.interface.variable_metadata[cl[0]]
+        val = self.interface.variable_get(cl[0], raw=raw, fmt=fmt)
+        print(variable_md.print_value(val))
 
     def complete_get(self, text, line, begidx, endidx):
-        return self.interface.variables_starting_with(text)
+        return self.interface.variables_find(text) + [
+            x for x in ["all", "set", "read"] if x.startswith(text)
+        ]
 
     def help_get(self):
         print("Read the value of a ventilator debug variable and display it.")
+        print("  get all [--raw]          -  retrieves all variables")
         print(
-            "In addition to those listed below 'get all' will retrieve all variables.\n"
+            "  get set [--raw]          -  retrieves all settings (writable variables)"
         )
-        print(self.interface.variables_list())
+        print("  get read [--raw]         -  retrieves all read-only variables")
+        print(
+            "  get <var> [fmt] [--raw]  -  retrieves a specific variable, optionally with format or raw"
+        )
+        print("Available variables:")
+        for k in sorted(self.interface.variable_metadata.keys()):
+            print(f" {self.interface.variable_metadata[k].verbose()}")
 
     def do_set(self, line):
         cl = line.split()
@@ -534,11 +585,18 @@ ex: poke [type] <address> <data>
         self.interface.variable_set(cl[0], cl[1])
 
     def complete_set(self, text, line, begidx, endidx):
-        return self.interface.variables_starting_with(text)
+        return self.interface.variables_find(text, access_filter=VAR_ACCESS_WRITE)
 
     def help_set(self):
-        print("Sets one of the ventilator debug variables listed below:\n")
-        print(self.interface.variables_list())
+        print("Sets one of the ventilator debug variables listed below:")
+        for k in sorted(
+            self.interface.variables_find(
+                starting_with="", access_filter=VAR_ACCESS_WRITE
+            )
+        ):
+            print(
+                f" {self.interface.variable_metadata[k].verbose(show_access=False, show_format=False)}"
+            )
 
     def do_trace(self, line):
         """The `trace` command controls/reads the controller's trace buffer.
@@ -626,7 +684,7 @@ trace save [--verbose/-v] [--plot/-p] [--csv/-c]
                 parser.add_argument("--csv", "-c", default=False, action="store_true")
                 args2 = parser.parse_args(cl[1:])
                 if args2.verbose:
-                    print(test.print_trace())
+                    print(test.print_traces())
                 if args2.plot:
                     test.plot(self.test_data_dir, save=True, show=True)
                 if args2.csv:
@@ -647,11 +705,13 @@ trace save [--verbose/-v] [--plot/-p] [--csv/-c]
         sub_commands = ["start", "flush", "stop", "status", "save"]
         tokens = shlex.split(line)
         if len(tokens) > 2 and tokens[1] == "start":
-            return self.interface.variables_starting_with(text)
+            return self.interface.variables_find(
+                text, access_filter=VAR_ACCESS_READ_ONLY
+            )
         elif len(tokens) == 2 and text == "start":
             return ["start "]
         elif len(tokens) == 2 and text == "" and tokens[1] == "start":
-            return self.interface.variables_starting_with("")
+            return self.interface.variables_find("", access_filter=VAR_ACCESS_READ_ONLY)
         elif len(tokens) == 2 and any(s.startswith(text) for s in sub_commands):
             return [s for s in sub_commands if s.startswith(text)]
         elif len(tokens) == 1:

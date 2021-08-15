@@ -7,12 +7,12 @@
             "lung_resistance": 5
         },
         "ventilator_settings": {
-            "gui_bpm": 20,
-            "gui_ie_ratio": 0.5,
-            "gui_peep": 5,
-            "gui_fio2": 30,
+            "forced_breath_rate": 20,
+            "forced_ie_ratio": 0.5,
+            "forced_peep": 5,
+            "forced_fio2": 30,
             "gui_tv": 500,
-            "gui_mode": "volume_control"
+            "forced_mode": "volume_control"
         },
         "capture_duration_secs": 30,
         "capture_ignore_secs": 10,
@@ -33,12 +33,12 @@
             "lung_resistance": 20
         },
         "ventilator_settings": {
-            "gui_bpm": 12,
-            "gui_ie_ratio": 0.25,
-            "gui_peep": 10,
-            "gui_fio2": 90,
+            "forced_breath_rate": 12,
+            "forced_ie_ratio": 0.25,
+            "forced_peep": 10,
+            "forced_fio2": 90,
             "gui_tv": 500,
-            "gui_mode": "volume_control"
+            "forced_mode": "volume_control"
         },
         "capture_duration_secs": 30,
         "capture_ignore_secs": 10,
@@ -59,12 +59,12 @@
             "lung_resistance": 5
         },
         "ventilator_settings": {
-            "gui_bpm": 20,
-            "gui_ie_ratio": 0.5,
-            "gui_peep": 5,
-            "gui_fio2": 90,
+            "forced_breath_rate": 20,
+            "forced_ie_ratio": 0.5,
+            "forced_peep": 5,
+            "forced_fio2": 90,
             "gui_tv": 500,
-            "gui_mode": "volume_control"
+            "forced_mode": "volume_control"
         },
         "capture_duration_secs": 30,
         "capture_ignore_secs": 10,
@@ -85,12 +85,12 @@
             "lung_resistance": 20
         },
         "ventilator_settings": {
-            "gui_bpm": 20,
-            "gui_ie_ratio": 0.5,
-            "gui_peep": 10,
-            "gui_fio2": 30,
+            "forced_breath_rate": 20,
+            "forced_ie_ratio": 0.5,
+            "forced_peep": 10,
+            "forced_fio2": 30,
             "gui_tv": 500,
-            "gui_mode": "volume_control"
+            "forced_mode": "volume_control"
         },
         "capture_duration_secs": 30,
         "capture_ignore_secs": 10,
@@ -111,12 +111,12 @@
             "lung_resistance": 20
         },
         "ventilator_settings": {
-            "gui_bpm": 20,
-            "gui_ie_ratio": 0.5,
-            "gui_peep": 5,
-            "gui_fio2": 30,
+            "forced_breath_rate": 20,
+            "forced_ie_ratio": 0.5,
+            "forced_peep": 5,
+            "forced_fio2": 30,
             "gui_tv": 300,
-            "gui_mode": "volume_control"
+            "forced_mode": "volume_control"
         },
         "capture_duration_secs": 30,
         "capture_ignore_secs": 10,
@@ -137,12 +137,12 @@
             "lung_resistance": 50
         },
         "ventilator_settings": {
-            "gui_bpm": 12,
-            "gui_ie_ratio": 0.25,
-            "gui_peep": 10,
-            "gui_fio2": 90,
+            "forced_breath_rate": 12,
+            "forced_ie_ratio": 0.25,
+            "forced_peep": 10,
+            "forced_fio2": 90,
             "gui_tv": 300,
-            "gui_mode": "volume_control"
+            "forced_mode": "volume_control"
         },
         "capture_duration_secs": 30,
         "capture_ignore_secs": 10,
@@ -163,12 +163,12 @@
             "lung_resistance": 50
         },
         "ventilator_settings": {
-            "gui_bpm": 20,
-            "gui_ie_ratio": 0.5,
-            "gui_peep": 10,
-            "gui_fio2": 30,
+            "forced_breath_rate": 20,
+            "forced_ie_ratio": 0.5,
+            "forced_peep": 10,
+            "forced_fio2": 30,
             "gui_tv": 300,
-            "gui_mode": "volume_control"
+            "forced_mode": "volume_control"
         },
         "capture_duration_secs": 30,
         "capture_ignore_secs": 10,
@@ -189,12 +189,12 @@
             "lung_resistance": 10
         },
         "ventilator_settings": {
-            "gui_bpm": 20,
-            "gui_ie_ratio": 0.5,
-            "gui_peep": 5,
-            "gui_fio2": 90,
+            "forced_breath_rate": 20,
+            "forced_ie_ratio": 0.5,
+            "forced_peep": 5,
+            "forced_fio2": 90,
             "gui_tv": 200,
-            "gui_mode": "volume_control"
+            "forced_mode": "volume_control"
         },
         "capture_duration_secs": 30,
         "capture_ignore_secs": 10,
@@ -215,12 +215,12 @@
             "lung_resistance": 10
         },
         "ventilator_settings": {
-            "gui_bpm": 30,
-            "gui_ie_ratio": 0.429,
-            "gui_peep": 5,
-            "gui_fio2": 30,
+            "forced_breath_rate": 30,
+            "forced_ie_ratio": 0.429,
+            "forced_peep": 5,
+            "forced_fio2": 30,
             "gui_tv": 50,
-            "gui_mode": "volume_control"
+            "forced_mode": "volume_control"
         },
         "capture_duration_secs": 30,
         "capture_ignore_secs": 10,
@@ -241,12 +241,12 @@
             "lung_resistance": 20
         },
         "ventilator_settings": {
-            "gui_bpm": 30,
-            "gui_ie_ratio": 0.429,
-            "gui_peep": 10,
-            "gui_fio2": 30,
+            "forced_breath_rate": 30,
+            "forced_ie_ratio": 0.429,
+            "forced_peep": 10,
+            "forced_fio2": 30,
             "gui_tv": 50,
-            "gui_mode": "volume_control"
+            "forced_mode": "volume_control"
         },
         "capture_duration_secs": 30,
         "capture_ignore_secs": 10,
@@ -267,12 +267,12 @@
             "lung_resistance": 50
         },
         "ventilator_settings": {
-            "gui_bpm": 20,
-            "gui_ie_ratio": 0.25,
-            "gui_peep": 5,
-            "gui_fio2": 60,
+            "forced_breath_rate": 20,
+            "forced_ie_ratio": 0.25,
+            "forced_peep": 5,
+            "forced_fio2": 60,
             "gui_tv": 50,
-            "gui_mode": "volume_control"
+            "forced_mode": "volume_control"
         },
         "capture_duration_secs": 30,
         "capture_ignore_secs": 10,
@@ -293,12 +293,12 @@
             "lung_resistance": 20
         },
         "ventilator_settings": {
-            "gui_bpm": 30,
-            "gui_ie_ratio": 0.429,
-            "gui_peep": 5,
-            "gui_fio2": 30,
+            "forced_breath_rate": 30,
+            "forced_ie_ratio": 0.429,
+            "forced_peep": 5,
+            "forced_fio2": 30,
             "gui_tv": 30,
-            "gui_mode": "volume_control"
+            "forced_mode": "volume_control"
         },
         "capture_duration_secs": 30,
         "capture_ignore_secs": 10,
@@ -319,12 +319,12 @@
             "lung_resistance": 50
         },
         "ventilator_settings": {
-            "gui_bpm": 20,
-            "gui_ie_ratio": 0.25,
-            "gui_peep": 10,
-            "gui_fio2": 90,
+            "forced_breath_rate": 20,
+            "forced_ie_ratio": 0.25,
+            "forced_peep": 10,
+            "forced_fio2": 90,
             "gui_tv": 30,
-            "gui_mode": "volume_control"
+            "forced_mode": "volume_control"
         },
         "capture_duration_secs": 30,
         "capture_ignore_secs": 10,
@@ -345,12 +345,12 @@
             "lung_resistance": 20
         },
         "ventilator_settings": {
-            "gui_bpm": 30,
-            "gui_ie_ratio": 0.429,
-            "gui_peep": 5,
-            "gui_fio2": 90,
+            "forced_breath_rate": 30,
+            "forced_ie_ratio": 0.429,
+            "forced_peep": 5,
+            "forced_fio2": 90,
             "gui_tv": 30,
-            "gui_mode": "volume_control"
+            "forced_mode": "volume_control"
         },
         "capture_duration_secs": 30,
         "capture_ignore_secs": 10,
@@ -371,12 +371,12 @@
             "lung_resistance": 100
         },
         "ventilator_settings": {
-            "gui_bpm": 30,
-            "gui_ie_ratio": 0.429,
-            "gui_peep": 10,
-            "gui_fio2": 30,
+            "forced_breath_rate": 30,
+            "forced_ie_ratio": 0.429,
+            "forced_peep": 10,
+            "forced_fio2": 30,
             "gui_tv": 30,
-            "gui_mode": "volume_control"
+            "forced_mode": "volume_control"
         },
         "capture_duration_secs": 30,
         "capture_ignore_secs": 10,
@@ -397,12 +397,12 @@
             "lung_resistance": 200
         },
         "ventilator_settings": {
-            "gui_bpm": 50,
-            "gui_ie_ratio": 0.5,
-            "gui_peep": 5,
-            "gui_fio2": 30,
+            "forced_breath_rate": 50,
+            "forced_ie_ratio": 0.5,
+            "forced_peep": 5,
+            "forced_fio2": 30,
             "gui_tv": 20,
-            "gui_mode": "volume_control"
+            "forced_mode": "volume_control"
         },
         "capture_duration_secs": 30,
         "capture_ignore_secs": 10,
@@ -423,12 +423,12 @@
             "lung_resistance": 200
         },
         "ventilator_settings": {
-            "gui_bpm": 50,
-            "gui_ie_ratio": 0.5,
-            "gui_peep": 10,
-            "gui_fio2": 60,
+            "forced_breath_rate": 50,
+            "forced_ie_ratio": 0.5,
+            "forced_peep": 10,
+            "forced_fio2": 60,
             "gui_tv": 15,
-            "gui_mode": "volume_control"
+            "forced_mode": "volume_control"
         },
         "capture_duration_secs": 30,
         "capture_ignore_secs": 10,
@@ -449,12 +449,12 @@
             "lung_resistance": 50
         },
         "ventilator_settings": {
-            "gui_bpm": 60,
-            "gui_ie_ratio": 0.667,
-            "gui_peep": 5,
-            "gui_fio2": 60,
+            "forced_breath_rate": 60,
+            "forced_ie_ratio": 0.667,
+            "forced_peep": 5,
+            "forced_fio2": 60,
             "gui_tv": 10,
-            "gui_mode": "volume_control"
+            "forced_mode": "volume_control"
         },
         "capture_duration_secs": 30,
         "capture_ignore_secs": 10,
@@ -475,12 +475,12 @@
             "lung_resistance": 50
         },
         "ventilator_settings": {
-            "gui_bpm": 60,
-            "gui_ie_ratio": 0.667,
-            "gui_peep": 10,
-            "gui_fio2": 60,
+            "forced_breath_rate": 60,
+            "forced_ie_ratio": 0.667,
+            "forced_peep": 10,
+            "forced_fio2": 60,
             "gui_tv": 5,
-            "gui_mode": "volume_control"
+            "forced_mode": "volume_control"
         },
         "capture_duration_secs": 30,
         "capture_ignore_secs": 10,
@@ -501,12 +501,12 @@
             "lung_resistance": 200
         },
         "ventilator_settings": {
-            "gui_bpm": 30,
-            "gui_ie_ratio": 0.25,
-            "gui_peep": 5,
-            "gui_fio2": 30,
+            "forced_breath_rate": 30,
+            "forced_ie_ratio": 0.25,
+            "forced_peep": 5,
+            "forced_fio2": 30,
             "gui_tv": 5,
-            "gui_mode": "volume_control"
+            "forced_mode": "volume_control"
         },
         "capture_duration_secs": 30,
         "capture_ignore_secs": 10,
@@ -527,12 +527,12 @@
             "lung_resistance": 200
         },
         "ventilator_settings": {
-            "gui_bpm": 60,
-            "gui_ie_ratio": 0.667,
-            "gui_peep": 10,
-            "gui_fio2": 30,
+            "forced_breath_rate": 60,
+            "forced_ie_ratio": 0.667,
+            "forced_peep": 10,
+            "forced_fio2": 30,
             "gui_tv": 5,
-            "gui_mode": "volume_control"
+            "forced_mode": "volume_control"
         },
         "capture_duration_secs": 30,
         "capture_ignore_secs": 10,

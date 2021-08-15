@@ -30,13 +30,28 @@ VAR_INT32 = 1
 VAR_UINT32 = 2
 VAR_FLOAT = 3
 
+VAR_TYPE_REPRESENTATION = ["?", "i", "u", "f"]
+
+VAR_ACCESS_READ_ONLY = 0
+VAR_ACCESS_WRITE = 1
+
+VAR_VENT_MODE = [
+    "off",
+    "pressure_control",
+    "pressure_assist",
+    "high_flow_nasal_cannula",
+    "invalid",
+]
+
 
 class VarInfo:
     """Abstraction for debug variable metadata, utilities for automatic type conversion"""
 
     id: int
     type: int
+    write_access: bool
     name: str
+    units: str = ""
     format: str
     help: str
 
@@ -47,15 +62,17 @@ class VarInfo:
         self.id = id
 
         if len(data) < 8:
-            raise Error("Invalid VarInfo data returned")
+            raise Error("Invalid VarInfo data returned: bad header length")
 
         self.type = data[0]
+        self.write_access = data[1] == VAR_ACCESS_WRITE
         name_length = data[4]
         fmt_length = data[5]
         help_length = data[6]
+        units_length = data[7]
 
-        if len(data) < 8 + name_length + fmt_length + help_length:
-            raise Error("Invalid VarInfo data returned")
+        if len(data) < 8 + name_length + fmt_length + help_length + units_length:
+            raise Error("Invalid VarInfo data returned: bad total length")
 
         n = 8
         self.name = "".join([chr(x) for x in data[n : n + name_length]])
@@ -63,6 +80,28 @@ class VarInfo:
         self.format = "".join([chr(x) for x in data[n : n + fmt_length]])
         n += fmt_length
         self.help = "".join([chr(x) for x in data[n : n + help_length]])
+        n += help_length
+        self.units = "".join([chr(x) for x in data[n : n + units_length]])
+
+    def verbose(self, show_access=True, show_format=True):
+        type_str = "?"
+        if self.type < len(VAR_TYPE_REPRESENTATION):
+            type_str = VAR_TYPE_REPRESENTATION[self.type]
+        ret = f"[{self.id:>02}{type_str}] "
+        if show_access:
+            ret += "w+ " if self.write_access else "w- "
+        ret += f"{self.name:25} {self.units:>13} "
+        if show_format:
+            format_string = "[" + self.format + "]"
+            ret += f"{format_string:>8} "
+        ret += f" {self.help}"
+        return ret
+
+    def print_value(self, value, show_access=True):
+        write = ""
+        if show_access:
+            write = "w+ " if self.write_access else "w- "
+        return f"{write}{self.name:25} = {value:>25} {self.units}"
 
     # Convert an unsigned 32-bit value into the correct type for
     # this variable
@@ -76,7 +115,13 @@ class VarInfo:
         return data
 
     def from_bytes(self, data):
-        if self.type == VAR_INT32:
+        if self.name == "forced_mode":
+            value = debug_types.bytes_to_int32s(data)[0]
+            if value < len(VAR_VENT_MODE):
+                return VAR_VENT_MODE[value]
+            else:
+                raise Error(f"Do not know how to interpret forced_mode={value}")
+        elif self.type == VAR_INT32:
             return debug_types.bytes_to_int32s(data, signed=True)[0]
         elif self.type == VAR_UINT32:
             return debug_types.bytes_to_int32s(data)[0]
@@ -86,7 +131,12 @@ class VarInfo:
             raise Error(f"Sorry, I don't know how to handle variable type {self.type}")
 
     def to_bytes(self, value):
-        if self.type == VAR_INT32:
+        if self.name == "forced_mode":
+            if value not in VAR_VENT_MODE:
+                raise Error(f"Do not know how to encode forced_mode={value}")
+            idx = VAR_VENT_MODE.index(value)
+            return debug_types.int32s_to_bytes(idx)
+        elif self.type == VAR_INT32:
             if not isinstance(value, int):
                 value = int(value, 0)
             return debug_types.int32s_to_bytes(value)

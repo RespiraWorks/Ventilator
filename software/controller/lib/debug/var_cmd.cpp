@@ -82,7 +82,7 @@ ErrorCode VarHandler::GetVarInfo(Context *context) {
   size_t name_length = strlen(var->GetName());
   size_t format_length = strlen(var->GetFormat());
   size_t help_length = strlen(var->GetHelp());
-  size_t unit_length = strlen(var->GetUnit());
+  size_t unit_length = strlen(var->GetUnits());
 
   // Fail if the strings are too large to fit.
   if (context->max_response_length <
@@ -107,7 +107,7 @@ ErrorCode VarHandler::GetVarInfo(Context *context) {
   memcpy(&context->response[count], var->GetHelp(), help_length);
   count += static_cast<uint32_t>(help_length);
 
-  memcpy(&context->response[count], var->GetUnit(), unit_length);
+  memcpy(&context->response[count], var->GetUnits(), unit_length);
   count += static_cast<uint32_t>(unit_length);
 
   context->response_length = count;

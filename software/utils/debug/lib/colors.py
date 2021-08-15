@@ -23,6 +23,14 @@ __license__ = """
 
 class Color:
     ENDC = "\033[m"
+    BLACK = "\033[30m"
+    DARK_RED = "\033[31m"
+    DARK_GREEN = "\033[32m"
+    DARK_ORANGE = "\033[33m"
+    DARK_BLUE = "\033[34m"
+    DARK_PURPLE = "\033[35m"
+    DARK_YELLOW = "\033[36m"
+    LIGHT_GRAY = "\033[37m"
     GRAY = "\033[90m"
     RED = "\033[91m"
     GREEN = "\033[92m"
@@ -31,6 +39,10 @@ class Color:
     PURPLE = "\033[95m"
     YELLOW = "\033[96m"
     WHITE = "\033[97m"
+
+
+def dark_orange(text):
+    return Color.DARK_ORANGE + text + Color.ENDC
 
 
 def gray(text):

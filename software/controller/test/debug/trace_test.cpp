@@ -25,11 +25,11 @@ using namespace Debug;
 TEST(Trace, MaybeSampleTwoVars) {
   uint32_t i = 0;
   FnDebugVar var_x(
-      VarType::UInt32, "x", "", [&] { return i; },
-      [&](uint32_t value) { (void)value; });
+      VarType::UInt32, "x", VarAccess::ReadOnly, "units", [&] { return i; },
+      [&](uint32_t value) { (void)value; }, "");
   FnDebugVar var_y(
-      VarType::UInt32, "y", "", [&] { return 10 * i; },
-      [&](uint32_t value) { (void)value; });
+      VarType::UInt32, "y", VarAccess::ReadOnly, "units",
+      [&] { return 10 * i; }, [&](uint32_t value) { (void)value; }, "");
 
   Trace trace;
   trace.SetPeriod(3); // Trace every 3 cycles.
@@ -86,7 +86,7 @@ TEST(Trace, MaybeSampleTwoVars) {
 TEST(Trace, TracesEveryCycleByDefault) {
   Trace trace;
   uint32_t x = 42;
-  DebugVar var_x("x", &x);
+  DebugVar var_x("x", VarAccess::ReadOnly, &x, "units");
   trace.SetTracedVarId<0>(var_x.GetId());
   trace.Start();
   // Do not set period
@@ -99,7 +99,7 @@ TEST(Trace, TracesEveryCycleByDefault) {
 
 TEST(Trace, BufferFull) {
   uint32_t x = 42;
-  DebugVar var_x("x", &x);
+  DebugVar var_x("x", VarAccess::ReadOnly, &x, "units");
   Trace trace;
   trace.SetTracedVarId<0>(var_x.GetId());
   trace.Start();
@@ -133,8 +133,8 @@ TEST(Trace, BufferFull) {
 
 TEST(Trace, FlushOnSetVar) {
   uint32_t x = 42, y = 37;
-  DebugVar var_x("x", &x);
-  DebugVar var_y("y", &y);
+  DebugVar var_x("x", VarAccess::ReadOnly, &x, "units");
+  DebugVar var_y("y", VarAccess::ReadOnly, &y, "units");
   Trace trace;
   trace.SetTracedVarId<0>(var_x.GetId());
   trace.Start();

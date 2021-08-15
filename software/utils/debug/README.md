@@ -11,8 +11,6 @@ To use this debug tool you will need to have Python 3.x installed on your develo
 - pandas. For  loading test scenarios
 - gitpython.  For git-aware test metadata
 
-**TODO:** have script install dependencies
-
 The debug tool was developed and tested using Linux, but it should be possible to use it with other operating systems. The command line interface will allow you to discover available commands using `help`. Some commands provide an "autocomplete" feature you can access with `TAB`. To get help on a specific command, enter help _command name_.  For example, to get a description of the `get` command:
 ```
 /dev/ttyACM0] help get
@@ -26,7 +24,9 @@ The tool can also run in offline mode. Serial ports can be searched and connecti
 
 - `connect list` - will detect STM controllers connected to machine and print them out
 - `connect auto` - will detect a controller and connect to it, if there is one
-- `connect <port>` - will connect to specific port. Might have to do this manually if there is more than one available
+- `connect <port>` - will connect to specific port. Might have to do this manually if there is more than one available.
+
+Once connected, the prompt should display the hardware unit's serial number. If there is no assigned serial number, the prompt will display the serial port name.
 
 ## Commands
 

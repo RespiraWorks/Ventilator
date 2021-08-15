@@ -30,24 +30,28 @@ limitations under the License.
 // By default, the controller receives settings (on/off, pip, rr, etc.) from
 // the GUI.  But you can also command the controller by setting the gui_foo
 // DebugVars below.
+static DebugUInt32 forced_mode(
+    "forced_mode", VarAccess::ReadWrite, _VentMode_MAX + 1, "",
+    "Overrides ventilation mode as commanded by GUI; see VentMode enum in "
+    "network_protocol.proto. If out of range, this and all of the other "
+    "gui_foo "
+    "DebugVars are ignored.",
+    "%s");
+static DebugUInt32 forced_breath_rate(
+    "forced_breath_rate", VarAccess::ReadWrite, 15, "breaths/min",
+    "Target breath rate; overrides GUI setting when forced_mode is valid");
 static DebugUInt32
-    gui_mode("gui_mode",
-             "Mode the controller should run in; see VentMode enum in "
-             "network_protocol.proto.  If this is out of range (e.g. set to "
-             "-1), this and all of the other gui_foo DebugVars are ignored, "
-             "and instead the controller takes orders from the GUI itself.",
-             VarAccess::ReadWrite, std::numeric_limits<uint32_t>::max());
-static DebugUInt32 gui_bpm("gui_bpm", "Breaths/min for GUI-free testing",
-                           VarAccess::ReadWrite, 15);
-static DebugUInt32 gui_peep("gui_peep", "PEEP (cm/h2O) for GUI-free testing",
-                            VarAccess::ReadWrite, 5);
-static DebugUInt32 gui_pip("gui_pip", "PIP (cm/h2O) for GUI-free testing",
-                           VarAccess::ReadWrite, 15);
-static DebugFloat gui_ie_ratio("gui_ie_ratio", "I/E ratio for GUI-free testing",
-                               VarAccess::ReadWrite, 0.66f);
-static DebugFloat
-    gui_fio2("gui_fio2", "Percent oxygen (range [21,100]) for GUI-free testing",
-             VarAccess::ReadWrite, 21);
+    forced_peep("forced_peep", VarAccess::ReadWrite, 5, "cmH2O",
+                "Target PEEP; overrides GUI setting when forced_mode is valid");
+static DebugUInt32
+    forced_pip("forced_pip", VarAccess::ReadWrite, 15, "cmH2O",
+               "Target PIP; overrides GUI setting when forced_mode is valid");
+static DebugFloat forced_ie_ratio(
+    "forced_ie_ratio", VarAccess::ReadWrite, 0.66f, "ratio",
+    "Target I:E ratio; overrides GUI setting when forced_mode is valid");
+static DebugFloat forced_fio2("forced_fio2", VarAccess::ReadWrite, 21, "%",
+                              "Target percent oxygen [21, 100]; overrides GUI "
+                              "setting when forced_mode is valid");
 
 static Controller controller;
 static ControllerStatus controller_status;
@@ -176,15 +180,16 @@ static void BackgroundLoop() {
     CommsHandler(local_controller_status, &gui_status);
 
     // Override received gui_status from the RPi with values from DebugVars iff
-    // the gui_mode DebugVar has a legal value.
-    if (uint32_t m = gui_mode.Get(); m >= _VentMode_MIN && m <= _VentMode_MAX) {
+    // the forced_mode DebugVar has a legal value.
+    if (uint32_t m = forced_mode.Get();
+        m >= _VentMode_MIN && m <= _VentMode_MAX) {
       auto &p = gui_status.desired_params;
       p.mode = static_cast<VentMode>(m);
-      p.breaths_per_min = gui_bpm.Get();
-      p.peep_cm_h2o = gui_peep.Get();
-      p.pip_cm_h2o = gui_pip.Get();
-      p.inspiratory_expiratory_ratio = gui_ie_ratio.Get();
-      p.fio2 = gui_fio2.Get() / 100.f;
+      p.breaths_per_min = forced_breath_rate.Get();
+      p.peep_cm_h2o = forced_peep.Get();
+      p.pip_cm_h2o = forced_pip.Get();
+      p.inspiratory_expiratory_ratio = forced_ie_ratio.Get();
+      p.fio2 = forced_fio2.Get() / 100.f;
     }
 
     // Copy the gui_status data into our controller status

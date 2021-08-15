@@ -33,6 +33,35 @@ from lib.colors import red
 from pathlib import Path
 
 
+class Trace:
+    variable_name: str
+    variable_units: str
+    data: List
+
+    def __init__(self, name, units):
+        self.variable_name = name
+        self.variable_units = units
+        self.data = []
+
+    def as_dict(self):
+        return {
+            "variable_name": self.variable_name,
+            "variable_units": self.variable_units,
+            "data": self.data,
+        }
+
+    @staticmethod
+    def from_dict(data):
+        name = data["variable_name"]
+        units = data["variable_units"]
+        ret = Trace(name, units)
+        ret.data = data["data"]
+        return ret
+
+    def plot(self, subplt):
+        return
+
+
 class TestData:
     """Abstraction for test data, including metadata and test scenario setup"""
 
@@ -56,6 +85,7 @@ class TestData:
         self.tester_name = repo.config_reader().get_value("user", "name")
         self.tester_email = repo.config_reader().get_value("user", "email")
         self.scenario = test_scenario
+        self.traces = []
 
     def unique_name(self):
         return (
@@ -72,32 +102,32 @@ class TestData:
         )
         ret += f"Machine info:     {self.platform_uname}\n"
         ret += f"Tester:           {self.tester_name} ({self.tester_email})\n"
-        dirty_string = red(" (DIRTY)")
-        ret += "Git sha:          {}{}\n".format(
-            self.git_sha, dirty_string if self.git_dirty else ""
-        )
+        ret += f"Git sha:          {self.git_sha}"
+        if self.git_dirty:
+            ret += red(" (DIRTY)")
+        ret += "\n"
         ret += "TEST SCENARIO:\n" + self.scenario.long_description()
         if self.ventilator_settings:
             ret += "\nVentilator settings:\n"
-            for name, val in self.ventilator_settings.items():
+            for name, val in sorted(self.ventilator_settings.items()):
                 ret += f"  {name:25} = {val}\n"
-        if self.traces:
-            cols = len(self.traces)
-            rows = len(self.traces[0])
-            ret += f"Test data contains [{cols}][{rows}] data points"
+        if len(self.traces):
+            ret += f"Test data contains [{len(self.traces)}] traces"
+            for t in self.traces:
+                ret += f"\n  {t.variable_name} ({t.variable_units}) = [{len(t.data)}]"
         return ret
 
-    def print_trace(self, separator=" ", line_separator="\n"):
-        line = ["{:>15}".format("time(sec)")]
-        for v in self.scenario.trace_variable_names:
-            line.append(f"{v:>15}")
+    def print_traces(self, separator=" ", line_separator="\n"):
+        line = []
+        for t in self.traces:
+            ll = f"{t.variable_name} ({t.variable_units})"
+            line.append(f"{ll:>25}")
         ret = separator.join(line) + line_separator
 
-        for i in range(len(self.traces[0])):
-            # First column is time in seconds
-            line = [f"{self.traces[0][i]:>15.3f}"]
-            for j in range(len(self.scenario.trace_variable_names)):
-                line.append("{:>15.3f}".format(self.traces[j + 1][i]))
+        for i in range(len(self.traces[0].data)):
+            line = []
+            for j in range(len(self.traces)):
+                line.append("{:>25.3f}".format(self.traces[j].data[i]))
             ret += separator.join(line) + line_separator
 
         return ret
@@ -112,7 +142,7 @@ class TestData:
             "git_dirty": self.git_dirty,
             "scenario": self.scenario.as_dict(),
             "ventilator_settings": self.ventilator_settings,
-            "traces": self.traces,
+            "traces": [t.as_dict() for t in self.traces],
         }
 
     def save_json(self, parent_path: str, print_self=False):
@@ -129,19 +159,28 @@ class TestData:
     def save_csv(self, parent_path: str):
         file_name = Path(parent_path) / (self.unique_name() + ".csv")
         with open(file_name, "w") as csv_file:
-            csv_file.write(self.print_trace(separator=", "))
+            csv_file.write(self.print_traces(separator=", "))
 
     def plot(self, parent_path: str, save: bool, show: bool):
         title = self.unique_name()
 
-        timestamps_sec = self.traces[0]
+        timestamps_sec = self.traces[0].data
         dat = self.traces[1:]
-        figure, axes = plt.subplots(len(dat), sharex=True, squeeze=False)
-        for i, d in enumerate(dat):
-            var = self.scenario.trace_variable_names[i]
-            axes[i][0].plot(timestamps_sec, d, color="C{}".format(i))
-            axes[i][0].set_title(var)
-            axes[i][0].set_ylabel(var)  # todo should be units
+
+        unique_units = set([x.variable_units for x in dat])
+
+        figure, axes = plt.subplots(len(unique_units), sharex=True, squeeze=False)
+        c = 0
+        for i, units in enumerate(unique_units):
+            relevant_data = [x for x in dat if x.variable_units == units]
+            for d in relevant_data:
+                axes[i][0].plot(
+                    timestamps_sec, d.data, color="C{}".format(c), label=d.variable_name
+                )
+                c += 1
+
+            axes[i][0].legend(loc="upper right")
+            axes[i][0].set_ylabel(units)
             axes[i][0].grid()
             axes[i][0].axhline(linewidth=1, color="black")
             # Draw a black gridline at y=0 to highlight the x-axis.
@@ -170,7 +209,8 @@ class TestData:
         td.git_sha = data["git_sha"]
         td.git_dirty = data["git_dirty"]
         td.ventilator_settings = data["ventilator_settings"]
-        td.traces = data["traces"]
+        for t in data["traces"]:
+            td.traces.append(Trace.from_dict(t))
         return td
 
     @staticmethod

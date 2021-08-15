@@ -140,9 +140,9 @@ uint32_t GetVarViaCmd(Interface *serial, uint16_t id) {
 
 TEST(Interface, GetVar) {
   uint32_t foo = 0xDEADBEEF;
-  DebugVar var_foo("foo", &foo);
+  DebugVar var_foo("foo", VarAccess::ReadOnly, &foo, "unit");
   uint32_t bar = 0xC0DEBABE;
-  DebugVar var_bar("bar", &bar);
+  DebugVar var_bar("bar", VarAccess::ReadOnly, &bar, "unit");
 
   Trace trace;
   Command::VarHandler var_command;

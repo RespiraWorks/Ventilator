@@ -27,7 +27,7 @@ import debug_types
 import var_info
 from lib.error import Error
 import test_scenario
-import test_data
+from test_data import *
 from pathlib import Path
 from lib.colors import red
 
@@ -46,6 +46,7 @@ OP_EEPROM = 0x06
 SUBCMD_VAR_INFO = 0
 SUBCMD_VAR_GET = 1
 SUBCMD_VAR_SET = 2
+SUBCMD_VAR_GET_COUNT = 3
 
 SUBCMD_TRACE_FLUSH = 0
 SUBCMD_TRACE_GETDATA = 1
@@ -65,6 +66,19 @@ TRACE_VAR_CT = 4
 
 MODE_NORMAL = 0
 MODE_BOOT = 1
+
+ERROR_NONE = 0
+ERROR_CODES = [
+    "None",
+    "CRC error on command",
+    "Unknown command code received",
+    "Not enough data passed with command",
+    "Insufficient memory",
+    "Some type of internal error (aka bug)",
+    "The requested variable ID is invalid",
+    "Data is out of range",
+    "Response timeout",
+]
 
 
 class ControllerDebugInterface:
@@ -118,30 +132,36 @@ class ControllerDebugInterface:
     # them in a map
     def variables_update_info(self):
         self.variable_metadata.clear()
-        try:
-            for vid in range(256):
-                data = self.send_command(
-                    OP_VAR, [SUBCMD_VAR_INFO] + debug_types.int16s_to_bytes(vid)
+        data = self.send_command(OP_VAR, [SUBCMD_VAR_GET_COUNT])
+        var_count = debug_types.bytes_to_int32s(data)[0]
+        for vid in range(var_count):
+            data = self.send_command(
+                OP_VAR, [SUBCMD_VAR_INFO] + debug_types.int16s_to_bytes(vid)
+            )
+            if data is None:
+                raise Error(f"bad variable info retrieved for vid={vid}")
+            variable = var_info.VarInfo(vid, data)
+            if variable.name in self.variable_metadata.keys():
+                raise Error(
+                    f"variable name clash  \n"
+                    f" retrieved: {variable.verbose()}\n"
+                    f" existing:  {self.variable_metadata[variable.name].verbose()}"
                 )
-                if data is None:
-                    break
-                variable = var_info.VarInfo(vid, data)
-                self.variable_metadata[variable.name] = variable
-        # todo maybe not wait for an exception to terminate this loop?
-        except Error as e:
-            pass
+            self.variable_metadata[variable.name] = variable
 
     def variables_list(self):
         ret = "Variables currently defined:\n"
-        for k in self.variable_metadata.keys():
-            ret += " {:25} - {}\n".format(k, self.variable_metadata[k].help)
+        for k in sorted(self.variable_metadata.keys()):
+            ret += f" {self.variable_metadata[k].verbose()}\n"
         return ret
 
-    def variables_starting_with(self, text):
+    def variables_find(self, starting_with, access_filter=None):
         out = []
-        for i in self.variable_metadata.keys():
-            if i.startswith(text):
-                out.append(i)
+        for name, metadata in self.variable_metadata.items():
+            if access_filter is not None and metadata.write_access != access_filter:
+                continue
+            if name.startswith(starting_with):
+                out.append(name)
         return out
 
     def variable_by_id(self, vid):
@@ -162,7 +182,7 @@ class ControllerDebugInterface:
     def variables_force_off(self):
         # Unforce parameters so they can be controlled by the
         # controller.  Note that you should unforce the blower power *after* setting the
-        # gui_mode because if we unforced it while we were still in mode 0
+        # forced_mode because if we unforced it while we were still in mode 0
         # (i.e. "ventilator off"), the fan would momentarily spin down.
         self.variable_set("forced_exhale_valve_pos", -1)
         self.variable_set("forced_blower_valve_pos", -1)
@@ -171,30 +191,19 @@ class ControllerDebugInterface:
 
     def variables_set(self, pairs):
         for var, val in pairs.items():
-            print(f"  applying {var:25} = {val}")
-            if var == "gui_mode":
-                # todo replace these with enums, preferably from proto
-                if val == "pressure_control":
-                    self.variable_set(var, 1)
-                elif val == "pressure_assist":
-                    self.variable_set(var, 2)
-                else:
-                    print(f"WARNING: Do not know how to set gui_mode={val}")
-            else:
-                try:
-                    self.variable_set(var, val)
-                except:
-                    print(f"WARNING: failed to set {var}={val}({type(val)})")
+            self.variable_set(var, val, verbose=True)
 
-    def variables_get_all(self):
+    def variables_get_all(self, access_filter=None, raw=False):
         ret = {}
-        for name in self.variable_metadata:
-            ret[name] = self.variable_get(name)
+        for name, metadata in self.variable_metadata.items():
+            if access_filter is not None and metadata.write_access != access_filter:
+                continue
+            ret[name] = self.variable_get(name, raw=raw)
         return ret
 
     def variable_get(self, name, raw=False, fmt=None):
         if not (name in self.variable_metadata):
-            raise Error("Unknown variable %s" % name)
+            raise Error(f"Cannot get unknown variable {name}")
 
         variable = self.variable_metadata[name]
         data = self.send_command(
@@ -211,17 +220,19 @@ class ControllerDebugInterface:
 
         return fmt % value
 
-    def variable_set(self, name, value):
+    def variable_set(self, name, value, verbose=False):
         if not (name in self.variable_metadata):
-            raise Error("Unknown variable %s" % name)
+            raise Error(f"Cannot set unknown variable {name}")
 
         variable = self.variable_metadata[name]
-        data = variable.to_bytes(value)
+        if verbose:
+            text = variable.print_value(value, show_access=False)
+            print(f"  applying {text}")
 
+        data = variable.to_bytes(value)
         self.send_command(
             OP_VAR, [SUBCMD_VAR_SET] + debug_types.int16s_to_bytes(variable.id) + data
         )
-        return
 
     def tests_import(self, file_name):
         in_file = Path(file_name)
@@ -265,7 +276,7 @@ class ControllerDebugInterface:
         if name not in self.scenarios.keys():
             raise Error(f"No such test scenario: {name}")
 
-        test = test_data.TestData(self.scenarios[name])
+        test = TestData(self.scenarios[name])
 
         if test.git_dirty:
             print(
@@ -279,7 +290,7 @@ class ControllerDebugInterface:
                 return
 
         self.variables_force_open()
-        self.variable_set("gui_mode", 0)
+        self.variable_set("forced_mode", "off")
         print(f"\nExecuting test scenario:\n {test.scenario.long_description(True)}")
 
         # Give the user a chance to adjust the test lung.
@@ -304,13 +315,15 @@ class ControllerDebugInterface:
         print("\nRetrieving data and halting ventilation")
         # get data and halt ventilation
         test.traces = self.trace_download()
-        self.variable_set("gui_mode", 0)
+        test.ventilator_settings = self.variables_get_all(
+            access_filter=var_info.VAR_ACCESS_WRITE, raw=True
+        )
+        self.variable_set("forced_mode", "off")
         self.trace_stop()
-        test.ventilator_settings = self.variables_get_all()
         return test
 
     def trace_save(self, scenario_name="manual_trace"):
-        test = test_data.TestData(test_scenario.TestScenario())
+        test = TestData(test_scenario.TestScenario())
         test.traces = self.trace_download()
         time_series = test.traces[0]
         test.scenario.capture_duration_secs = (
@@ -325,18 +338,19 @@ class ControllerDebugInterface:
         test.scenario.trace_variable_names = [
             x.name for x in self.trace_active_variables_list()
         ]
-        test.ventilator_settings = self.variables_get_all()
+        test.ventilator_settings = self.variables_get_all(
+            access_filter=var_info.VAR_ACCESS_WRITE, raw=True
+        )
         return test
 
     def peek(self, address, ct=1, fmt="+XXXX", fname=None, raw=False):
-        address = debug_types.decode_address(address)
-        if address is None:
-            print("Unknown symbol")
-            return
+        decoded_address = debug_types.decode_address(address)
+        if decoded_address is None:
+            raise Error(f"Could not successfully decode address: {address}")
 
         out = []
 
-        address_iterator = address
+        address_iterator = decoded_address
 
         while ct:
             n = min(ct, 256)
@@ -352,7 +366,7 @@ class ControllerDebugInterface:
         if raw:
             return out
 
-        s = debug_types.format_peek(out, fmt, address)
+        s = debug_types.format_peek(out, fmt, decoded_address)
         if fname is None:
             print(s)
         else:
@@ -362,32 +376,30 @@ class ControllerDebugInterface:
             fp.close()
 
     def peek16(self, address, ct=None, le=True, signed=False):
-        address = debug_types.decode_address(address)
-        if address is None:
-            print("Unknown symbol")
-            return
+        decoded_address = debug_types.decode_address(address)
+        if decoded_address is None:
+            raise Error(f"Could not successfully decode address: {address}")
 
         if ct is None:
             ct = 1
-        out = self.peek(address, 2 * ct, raw=True)
+        out = self.peek(decoded_address, 2 * ct, raw=True)
         return debug_types.bytes_to_int16s(out, le, signed)
 
     def peek32(self, address, ct=None, le=True, signed=False):
-        address = debug_types.decode_address(address)
-        if address is None:
-            print("Unknown symbol")
-            return
+        decoded_address = debug_types.decode_address(address)
+        if decoded_address is None:
+            raise Error(f"Could not successfully decode address: {address}")
 
         if ct is None:
             ct = 1
-        out = self.peek(address, 4 * ct, raw=True)
+        out = self.peek(decoded_address, 4 * ct, raw=True)
         return debug_types.bytes_to_int32s(out, le, signed)
 
     def poke(self, address, dat, ptype):
-        address = debug_types.decode_address(address)
-        if address is None:
-            print("Unknown symbol")
-            return
+        decoded_address = debug_types.decode_address(address)
+        if decoded_address is None:
+            raise Error(f"Could not successfully decode address: {address}")
+
         if isinstance(dat, int):
             dat = [dat]
 
@@ -399,7 +411,7 @@ class ControllerDebugInterface:
             dat = [debug_types.f_to_i(x) for x in dat]
             dat = debug_types.int32s_to_bytes(dat)
 
-        self.send_command(OP_POKE, debug_types.int32s_to_bytes(address) + dat)
+        self.send_command(OP_POKE, debug_types.int32s_to_bytes(decoded_address) + dat)
 
     def poke32(self, address, dat):
         self.poke(address, dat, "long")
@@ -478,7 +490,8 @@ class ControllerDebugInterface:
         var_count = len(trace_vars)
 
         # get samples count
-        total_num_samples = self.trace_num_samples() * var_count
+        num_samples = self.trace_num_samples()
+        total_num_samples = num_samples * var_count
         bytes_per_int32 = 4
 
         data = []
@@ -495,7 +508,9 @@ class ControllerDebugInterface:
         # len(trace_vars) uint32s: [a1, b1, c1, a2, b2, c2, ...].  Parse this into
         # sublists [[a1', a2', ...], [b1', b2', ...], [c1', c2', ...]], where each
         # of the variables is converted to the correct type.
-        ret = [[] for _ in range(var_count)]
+        ret = [Trace("time", "s")]
+        for v in trace_vars:
+            ret.append(Trace(v.name, v.units))
 
         # The `zip` expression groups data into sublists of var_count elems.  See the
         # "grouper" recipe:
@@ -503,14 +518,16 @@ class ControllerDebugInterface:
         iters = [iter(data)] * var_count
         for sample in zip(*iters):
             for i, val in enumerate(sample):
-                ret[i].append(trace_vars[i].convert_int(val))
+                ret[i + 1].data.append(trace_vars[i].convert_int(val))
+
+        # this may be higher than the initially reported number because the buffer
+        # may have filled with more while retrieving
+        actual_number_of_samples = len(ret[1].data)
 
         # get trace period, multiply by 1e-6 (i.e. 1/1,000,000) to convert it to seconds.
-
+        # todo: record actual clock ticks in controller instead of assuming?
         period = self.trace_get_period_us() * 1e-6
-
-        timestamp = [x * period for x in range(len(ret[0]))]
-        ret.insert(0, timestamp)
+        ret[0].data = [x * period for x in range(actual_number_of_samples)]
 
         return ret
 
@@ -623,7 +640,14 @@ class ControllerDebugInterface:
                     f"CRC error on response, calculated 0x{crc:04x} received 0x{rcrc:04x}"
                 )
 
-            if response[0]:
-                raise Error(f"Error {response[0]:d} (0x{response[0]:02x})")
+            if response[0] != ERROR_NONE:
+                if response[0] < len(ERROR_CODES):
+                    raise Error(
+                        f'Error received from controller: "{ERROR_CODES[response[0]]}"'
+                    )
+                else:
+                    raise Error(
+                        f"Unknown error received from controller: {response[0]:d} (0x{response[0]:02x})"
+                    )
 
             return response[1:-2]

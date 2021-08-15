@@ -20,12 +20,12 @@ limitations under the License.
 
 TEST(DebugVar, DebugVarInt32) {
   int32_t value = 5;
-  DebugVar var("var", &value, "help", VarAccess::ReadOnly, "fmt", "unit");
+  DebugVar var("var", VarAccess::ReadOnly, &value, "unit", "help", "fmt");
   EXPECT_EQ("var", var.GetName());
   EXPECT_EQ("help", var.GetHelp());
   EXPECT_EQ(VarType::Int32, var.GetType());
   EXPECT_EQ("fmt", var.GetFormat());
-  EXPECT_EQ("unit", var.GetUnit());
+  EXPECT_EQ("unit", var.GetUnits());
   EXPECT_EQ(VarAccess::ReadOnly, var.GetAccess());
   EXPECT_EQ(&var, DebugVar::FindVar(var.GetId()));
 
@@ -41,33 +41,29 @@ TEST(DebugVar, DebugVarInt32) {
   EXPECT_EQ(static_cast<int32_t>(max), value);
 
   // All default arguments
-  DebugVar var_default("var", &value);
+  DebugVar var_default("var", VarAccess::ReadWrite, &value, "unit");
   EXPECT_EQ("", var_default.GetHelp());
   EXPECT_EQ("%d", var_default.GetFormat());
-  EXPECT_EQ("", var_default.GetUnit());
-  EXPECT_EQ(VarAccess::ReadWrite, var_default.GetAccess());
 }
 
 TEST(DebugVar, DebugVarUint32Defaults) {
   uint32_t value = 5;
   // All default arguments
-  DebugVar var("var", &value);
+  DebugVar var("var", VarAccess::ReadWrite, &value, "unit");
   EXPECT_EQ(uint32_t{5}, var.GetValue());
   EXPECT_EQ("", var.GetHelp());
   EXPECT_EQ("%u", var.GetFormat());
   EXPECT_EQ(VarType::UInt32, var.GetType());
-  EXPECT_EQ("", var.GetUnit());
 }
 
 TEST(DebugVar, DebugVarFloatDefaults) {
   float value = 5.0f;
   // All default arguments
-  DebugVar var("var", &value);
+  DebugVar var("var", VarAccess::ReadWrite, &value, "unit");
 
   EXPECT_EQ("", var.GetHelp());
   EXPECT_EQ("%.3f", var.GetFormat());
   EXPECT_EQ(VarType::Float, var.GetType());
-  EXPECT_EQ("", var.GetUnit());
 
   // Rountrip through uint32 should not change value.
   uint32_t uint_value = var.GetValue();
@@ -79,12 +75,12 @@ TEST(DebugVar, DebugVarFloatDefaults) {
 TEST(DebugVar, Registration) {
   uint32_t num_vars = DebugVarBase::GetVarCount();
   int32_t int_value = 5;
-  DebugVar var1("var1", &int_value);
+  DebugVar var1("var1", VarAccess::ReadWrite, &int_value, "unit");
 
   EXPECT_EQ(DebugVarBase::GetVarCount(), num_vars + 1);
 
   float float_value = 7;
-  DebugVar var2("var2", &float_value);
+  DebugVar var2("var2", VarAccess::ReadWrite, &float_value, "unit");
 
   EXPECT_EQ(DebugVarBase::GetVarCount(), num_vars + 2);
 

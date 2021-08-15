@@ -31,14 +31,14 @@ limitations under the License.
 #include <string.h>
 
 static DebugUInt32
-    dbg_reinit("nvparams_reinit",
+    dbg_reinit("nvparams_reinit", VarAccess::ReadWrite, 0, "",
                "Set to 1 to request a reinit of NV params on next boot.");
 
-static DebugUInt32 dbg_serial("serial_number",
+static DebugUInt32 dbg_serial("serial_number", VarAccess::ReadWrite, 0, "",
                               "Serial number of the ventilator, in EEPROM");
 
-static DebugUInt32 dbg_nvparams("nvparams_address", "Address of nv_params",
-                                VarAccess::ReadOnly);
+static DebugUInt32 dbg_nvparams("nvparams_address", VarAccess::ReadOnly, 0, "",
+                                "Address of nv_params");
 
 namespace NVParams {
 

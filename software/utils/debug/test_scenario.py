@@ -197,12 +197,12 @@ def main():
         scenarios = TestScenario.from_csv(
             in_file,
             {
-                "gui_mode",
-                "gui_pip",
-                "gui_peep",
-                "gui_bpm",
-                "gui_ie_ratio",
-                "gui_fio2",
+                "forced_mode",
+                "forced_pip",
+                "forced_peep",
+                "forced_breath_rate",
+                "forced_ie_ratio",
+                "forced_fio2",
                 "gui_tv",
             },
         )

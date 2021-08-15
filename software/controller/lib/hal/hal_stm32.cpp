@@ -776,7 +776,8 @@ static void StepperISR() { StepMotor::DmaISR(); }
  * very start of the flash memory.
  *****************************************************************/
 
-// TODO: removed calls to Fault(); should we be calling something else? @martukas
+// TODO: removed calls to Fault(); should we be calling something else?
+// @martukas
 static void NMI() {}
 static void FaultISR() {}
 static void MPUFaultISR() {}

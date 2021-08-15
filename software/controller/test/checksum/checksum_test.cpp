@@ -9,7 +9,6 @@
 #include "checksum.h"
 #include "gtest/gtest.h"
 
-
 TEST(Checksum32, KnownValues) {
   EXPECT_EQ((uint32_t)0, soft_crc32(NULL, 0));
   EXPECT_EQ((uint32_t)0, soft_crc32(reinterpret_cast<const uint8_t *>(""), 0));

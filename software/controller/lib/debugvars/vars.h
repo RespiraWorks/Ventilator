@@ -19,7 +19,6 @@ limitations under the License.
 #include <array>
 #include <cstdint>
 #include <cstring>
-#include <cstdint>
 
 // Defines the type of variable
 enum class VarType {

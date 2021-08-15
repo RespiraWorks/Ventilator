@@ -17,6 +17,7 @@ limitations under the License.
 #define VARS_H
 
 #include <array>
+#include <cstdint>
 #include <cstring>
 
 // Defines the type of variable
@@ -48,11 +49,10 @@ public:
   // @param help String that the Python code displays describing the variable.
   // @param fmt printf style format string.  This is a hint to the Python code
   // as to how the variable data should be displayed.
-  DebugVarBase(VarType type, const char *name, const char *help,
-               VarAccess access = VarAccess::ReadWrite, const char *fmt = "",
-               const char *unit = "")
-      : type_(type), name_(name), help_(help), fmt_(fmt), id_(var_count_),
-        unit_(unit), access_(access) {
+  DebugVarBase(VarType type, const char *name, VarAccess access,
+               const char *units, const char *help, const char *fmt = "")
+      : type_(type), name_(name), access_(access), units_(units), help_(help),
+        fmt_(fmt), id_(var_count_) {
     if (var_count_ < static_cast<uint16_t>(std::size(var_list_)))
       var_list_[id_] = this;
     var_count_++;
@@ -71,7 +71,7 @@ public:
   const char *GetName() const { return name_; }
   const char *GetFormat() const { return fmt_; }
   const char *GetHelp() const { return help_; }
-  const char *GetUnit() const { return unit_; }
+  const char *GetUnits() const { return units_; }
   VarType GetType() const { return type_; }
   uint16_t GetId() const { return id_; }
   VarAccess GetAccess() const { return access_; }
@@ -80,11 +80,11 @@ public:
 private:
   const VarType type_;
   const char *const name_;
+  const VarAccess access_;
+  const char *const units_;
   const char *const help_;
   const char *const fmt_;
   const uint16_t id_;
-  const char *const unit_;
-  const VarAccess access_;
 
   // List of all the variables in the system.
   // Increase size as necessary
@@ -95,10 +95,10 @@ private:
 template <typename GetFn, typename SetFn>
 class FnDebugVar : public DebugVarBase {
 public:
-  FnDebugVar(VarType type, const char *name, const char *help, GetFn get_fn,
-             SetFn set_fn, VarAccess access = VarAccess::ReadWrite,
-             const char *fmt = "", const char *unit = "")
-      : DebugVarBase(type, name, help, access, fmt, unit), get_fn_(get_fn),
+  FnDebugVar(VarType type, const char *name, VarAccess access,
+             const char *units, GetFn get_fn, SetFn set_fn, const char *help,
+             const char *fmt = "")
+      : DebugVarBase(type, name, access, units, help, fmt), get_fn_(get_fn),
         set_fn_(set_fn) {}
 
   uint32_t GetValue() override { return get_fn_(); }
@@ -113,22 +113,19 @@ class DebugVar : public DebugVarBase {
 public:
   // 32-bit integer variable.
   // @param data Pointer to an actual variable in C++ code that this will access
-  DebugVar(const char *name, int32_t *data, const char *help = "",
-           VarAccess access = VarAccess::ReadWrite, const char *fmt = "%d",
-           const char *unit = "")
-      : DebugVar(VarType::Int32, name, data, help, access, fmt, unit) {}
+  DebugVar(const char *name, VarAccess access, int32_t *data, const char *units,
+           const char *help = "", const char *fmt = "%d")
+      : DebugVar(VarType::Int32, name, access, data, units, help, fmt) {}
 
   // Like above, but unsigned
-  DebugVar(const char *name, uint32_t *data, const char *help = "",
-           VarAccess access = VarAccess::ReadWrite, const char *fmt = "%u",
-           const char *unit = "")
-      : DebugVar(VarType::UInt32, name, data, help, access, fmt, unit) {}
+  DebugVar(const char *name, VarAccess access, uint32_t *data,
+           const char *units, const char *help = "", const char *fmt = "%u")
+      : DebugVar(VarType::UInt32, name, access, data, units, help, fmt) {}
 
   // Like above, but float
-  DebugVar(const char *name, float *data, const char *help = "",
-           VarAccess access = VarAccess::ReadWrite, const char *fmt = "%.3f",
-           const char *unit = "")
-      : DebugVar(VarType::Float, name, data, help, access, fmt, unit) {}
+  DebugVar(const char *name, VarAccess access, float *data, const char *units,
+           const char *help = "", const char *fmt = "%.3f")
+      : DebugVar(VarType::Float, name, access, data, units, help, fmt) {}
 
   // Gets the current value of the variable as an uint32_t.
   uint32_t GetValue() override {
@@ -143,18 +140,17 @@ public:
 private:
   void *address_;
 
-  DebugVar(VarType type, const char *name, void *data, const char *help,
-           VarAccess access = VarAccess::ReadWrite, const char *fmt = "",
-           const char *unit = "")
-      : DebugVarBase(type, name, help, access, fmt, unit), address_(data) {}
+  DebugVar(VarType type, const char *name, VarAccess access, void *data,
+           const char *units, const char *help, const char *fmt = "")
+      : DebugVarBase(type, name, access, units, help, fmt), address_(data) {}
 };
 
 class DebugInt32 : public DebugVar {
 public:
-  explicit DebugInt32(const char *name, const char *help = "", int32_t init = 0,
-                      VarAccess access = VarAccess::ReadWrite,
-                      const char *unit = "", const char *fmt = "%d")
-      : DebugVar(name, &value_, help, access, fmt, unit), value_(init) {}
+  explicit DebugInt32(const char *name, VarAccess access, int32_t init,
+                      const char *units, const char *help = "",
+                      const char *fmt = "%d")
+      : DebugVar(name, access, &value_, units, help, fmt), value_(init) {}
 
   void Set(int32_t v) { value_ = v; }
   int32_t Get() const { return value_; }
@@ -165,11 +161,10 @@ private:
 
 class DebugUInt32 : public DebugVar {
 public:
-  explicit DebugUInt32(const char *name, const char *help = "",
-                       VarAccess access = VarAccess::ReadWrite,
-                       uint32_t init = 0, const char *unit = "",
+  explicit DebugUInt32(const char *name, VarAccess access, uint32_t init,
+                       const char *units, const char *help = "",
                        const char *fmt = "%u")
-      : DebugVar(name, &value_, help, access, fmt, unit), value_(init) {}
+      : DebugVar(name, access, &value_, units, help, fmt), value_(init) {}
 
   void Set(uint32_t v) { value_ = v; }
   uint32_t Get() const { return value_; }
@@ -180,10 +175,10 @@ private:
 
 class DebugFloat : public DebugVar {
 public:
-  explicit DebugFloat(const char *name, const char *help = "",
-                      VarAccess access = VarAccess::ReadWrite, float init = 0,
-                      const char *unit = "", const char *fmt = "%.3f")
-      : DebugVar(name, &value_, help, access, fmt, unit), value_(init) {}
+  explicit DebugFloat(const char *name, VarAccess access, float init,
+                      const char *units, const char *help = "",
+                      const char *fmt = "%.3f")
+      : DebugVar(name, access, &value_, units, help, fmt), value_(init) {}
 
   void Set(float v) { value_ = v; }
   float Get() const { return value_; }

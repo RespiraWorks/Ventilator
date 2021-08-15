@@ -21,22 +21,23 @@ static constexpr Duration LoopPeriod = milliseconds(10);
 
 // Controller gains, as inputs - set from external debug program, read but never
 // modified by controller.
-static DebugFloat dbg_blower_valve_ki("blower_valve_ki",
-                                      "Integral gain for blower valve PID",
-                                      VarAccess::ReadWrite, -1.0f);
-static DebugFloat dbg_blower_valve_kp("blower_valve_kp",
-                                      "Proportional gain for blower valve PID",
-                                      VarAccess::ReadWrite, 0.04f);
-static DebugFloat dbg_blower_valve_kd("blower_valve_kd",
+static DebugFloat dbg_blower_valve_ki("blower_valve_ki", VarAccess::ReadWrite,
+                                      -1.0f, "",
+                                      "Integral gain for blower valve PID");
+static DebugFloat dbg_blower_valve_kp("blower_valve_kp", VarAccess::ReadWrite,
+                                      0.04f, "",
+                                      "Proportional gain for blower valve PID");
+static DebugFloat dbg_blower_valve_kd("blower_valve_kd", VarAccess::ReadWrite,
+                                      0, "",
                                       "Derivative gain for blower valve PID");
 
 // TODO: These need to be tuned.
-static DebugFloat dbg_psol_kp("psol_kp", "Proportional gain for O2 psol PID",
-                              VarAccess::ReadWrite, 0.04f);
-static DebugFloat dbg_psol_ki("psol_ki", "Integral gain for O2 psol PID",
-                              VarAccess::ReadWrite, 20.0f);
-static DebugFloat dbg_psol_kd("psol_kd", "Derivative gain for O2 psol PID",
-                              VarAccess::ReadWrite, 0);
+static DebugFloat dbg_psol_kp("psol_kp", VarAccess::ReadWrite, 0.04f, "",
+                              "Proportional gain for O2 psol PID");
+static DebugFloat dbg_psol_ki("psol_ki", VarAccess::ReadWrite, 20.0f, "",
+                              "Integral gain for O2 psol PID");
+static DebugFloat dbg_psol_kd("psol_kd", VarAccess::ReadWrite, 0, "",
+                              "Derivative gain for O2 psol PID");
 
 // TODO: If we had a notion of read-only DebugVars, we could call this
 // blower_valve_ki, which would be kind of nice?  Alternatively, if we had a
@@ -45,55 +46,52 @@ static DebugFloat dbg_psol_kd("psol_kd", "Derivative gain for O2 psol PID",
 // it, in which case, use that value.
 static DebugFloat
     dbg_blower_valve_computed_ki("blower_valve_computed_ki",
+                                 VarAccess::ReadOnly, 10.0f, "",
                                  "Integral gain for blower valve PID. "
-                                 "This value is gain-scheduled.",
-                                 VarAccess::ReadOnly, 10.0f);
+                                 "This value is gain-scheduled.");
 
 static DebugFloat dbg_forced_blower_power(
-    "forced_blower_power",
+    "forced_blower_power", VarAccess::ReadWrite, -1.f, "ratio",
     "Force the blower fan to a particular power [0,1].  Specify a value "
-    "outside this range to let the controller control it.",
-    VarAccess::ReadWrite, -1.f, "ratio");
+    "outside this range to let the controller control it.");
 static DebugFloat dbg_forced_exhale_valve_pos(
-    "forced_exhale_valve_pos",
+    "forced_exhale_valve_pos", VarAccess::ReadWrite, -1.f, "ratio",
     "Force the exhale valve to a particular position [0,1].  Specify a value "
-    "outside this range to let the controller control it.",
-    VarAccess::ReadWrite, -1.f, "ratio");
+    "outside this range to let the controller control it.");
 static DebugFloat dbg_forced_blower_valve_pos(
-    "forced_blower_valve_pos",
+    "forced_blower_valve_pos", VarAccess::ReadWrite, -1.f, "ratio",
     "Force the blower valve to a particular position [0,1].  Specify a value "
-    "outside this range to let the controller control it.",
-    VarAccess::ReadWrite, -1.f, "ratio");
+    "outside this range to let the controller control it.");
 static DebugFloat dbg_forced_psol_pos(
-    "forced_psol_pos",
+    "forced_psol_pos", VarAccess::ReadWrite, -1.f, "ratio",
     "Force the O2 psol to a particular position [0,1].  (Note that psol.cpp "
     "scales this further; see psol_pwm_closed and psol_pwm_open.)  Specify a "
-    "value outside this range to let the controller control the psol.",
-    VarAccess::ReadWrite, -1.f, "ratio");
+    "value outside this range to let the controller control the psol.");
 
 // Unchanging outputs - read from external debug program, never modified here.
 static DebugUInt32
-    dbg_loop_period("loop_period", "Loop period", VarAccess::ReadOnly,
-                    static_cast<uint32_t>(LoopPeriod.microseconds()), "\xB5s");
+    dbg_loop_period("loop_period", VarAccess::ReadOnly,
+                    static_cast<uint32_t>(LoopPeriod.microseconds()), "\xB5s",
+                    "Loop period");
 
 // Outputs - read from external debug program, modified here.
-static DebugFloat dbg_pc_setpoint("pc_setpoint", "Pressure control setpoint",
-                                  VarAccess::ReadOnly, 0.0f, "cmH2O");
-static DebugFloat dbg_net_flow("net_flow", "Net flow rate", VarAccess::ReadOnly,
-                               0.0f, "mL/s");
-static DebugFloat dbg_volume("volume", "Patient volume", VarAccess::ReadOnly,
-                             0.0f, "mL");
+static DebugFloat dbg_pc_setpoint("pc_setpoint", VarAccess::ReadOnly, 0.0f,
+                                  "cmH2O", "Pressure control setpoint");
+static DebugFloat dbg_net_flow("net_flow", VarAccess::ReadOnly, 0.0f, "mL/s",
+                               "Net flow rate");
+static DebugFloat dbg_volume("volume", VarAccess::ReadOnly, 0.0f, "mL",
+                             "Patient volume");
 static DebugFloat dbg_net_flow_uncorrected("net_flow_uncorrected",
-                                           "Net flow rate w/o correction",
-                                           VarAccess::ReadOnly, 0.0f, "mL/s");
+                                           VarAccess::ReadOnly, 0.0f, "mL/s",
+                                           "Net flow rate w/o correction");
 static DebugFloat dbg_volume_uncorrected("uncorrected_volume",
-                                         "Patient volume w/o correction",
-                                         VarAccess::ReadOnly, 0.0f, "mL");
-static DebugFloat dbg_flow_correction("flow_correction", "Correction to flow",
-                                      VarAccess::ReadOnly, 0.0f, "mL/s");
+                                         VarAccess::ReadOnly, 0.0f, "mL",
+                                         "Patient volume w/o correction");
+static DebugFloat dbg_flow_correction("flow_correction", VarAccess::ReadOnly,
+                                      0.0f, "mL/s", "Correction to flow");
 
-static DebugUInt32 dbg_breath_id("breath_id", "ID of the current breath",
-                                 VarAccess::ReadOnly);
+static DebugUInt32 dbg_breath_id("breath_id", VarAccess::ReadOnly, 0, "",
+                                 "ID of the current breath");
 
 Controller::Controller()
     : blower_valve_pid_(dbg_blower_valve_kp.Get(),

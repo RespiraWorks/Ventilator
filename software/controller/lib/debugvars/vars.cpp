@@ -14,7 +14,6 @@ limitations under the License.
 */
 
 #include "vars.h"
-#include <string.h>
 
 // static member variables
 DebugVarBase *DebugVarBase::var_list_[100];

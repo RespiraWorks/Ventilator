@@ -1,5 +1,5 @@
-#ifndef UART_DMA_STREAM_H_
-#define UART_DMA_STREAM_H_
+#pragma once
+
 #include "uart_dma.h"
 extern UartDma uart_dma;
 
@@ -107,4 +107,3 @@ private:
     i = 0;
   }
 };
-#endif

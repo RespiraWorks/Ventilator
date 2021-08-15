@@ -1,5 +1,4 @@
-#ifndef FRAMING_STREAMS_H_
-#define FRAMING_STREAMS_H_
+#pragma once
 
 #include "checksum.h"
 #include "framing_spec_chars.h"
@@ -152,5 +151,3 @@ public:
     }
   }
 };
-
-#endif

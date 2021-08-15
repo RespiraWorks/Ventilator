@@ -1,5 +1,4 @@
-#ifndef __FRAMING_H__
-#define __FRAMING_H__
+#pragma once
 
 #include "checksum.h"
 #include "framing_spec_chars.h"
@@ -108,4 +107,3 @@ uint32_t EncodeFrame(const PbType &pb_object, OutputStream &output_stream) {
   r += crc_stream.Put(END_OF_STREAM);
   return r.count_written;
 }
-#endif

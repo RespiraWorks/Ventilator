@@ -56,6 +56,8 @@ void UartDma::DmaTxISR() {
 
 void UartDmaReset() { uart_dma.DmaTxISR(); }
 
+// \todo reintroduce additional settings once they are in buffer definitions
+
 TEST(FramingTests, ControllerStatusCoding) {
   ControllerStatus s = ControllerStatus_init_zero;
   s.uptime_ms = 42;
@@ -64,19 +66,19 @@ TEST(FramingTests, ControllerStatusCoding) {
   s.active_params.breaths_per_min = 15;
   s.active_params.pip_cm_h2o = 1;
   s.active_params.inspiratory_expiratory_ratio = 2;
-//  s.active_params.rise_time_ms = 100;
+  //  s.active_params.rise_time_ms = 100;
   s.active_params.inspiratory_trigger_cm_h2o = 5;
   s.active_params.expiratory_trigger_ml_per_min = 9;
   // Set very large values here because they take up more space in the encoded
   // proto, and our goal is to make it big.
-//  s.active_params.alarm_lo_tidal_volume_ml =
-//      std::numeric_limits<uint32_t>::max();
-//  s.active_params.alarm_hi_tidal_volume_ml =
-//      std::numeric_limits<uint32_t>::max();
-//  s.active_params.alarm_lo_breaths_per_min =
-//      std::numeric_limits<uint32_t>::max();
-//  s.active_params.alarm_hi_breaths_per_min =
-//      std::numeric_limits<uint32_t>::max();
+  //  s.active_params.alarm_lo_tidal_volume_ml =
+  //      std::numeric_limits<uint32_t>::max();
+  //  s.active_params.alarm_hi_tidal_volume_ml =
+  //      std::numeric_limits<uint32_t>::max();
+  //  s.active_params.alarm_lo_breaths_per_min =
+  //      std::numeric_limits<uint32_t>::max();
+  //  s.active_params.alarm_hi_breaths_per_min =
+  //      std::numeric_limits<uint32_t>::max();
   s.sensor_readings.patient_pressure_cm_h2o = 11;
   s.sensor_readings.volume_ml = 800;
   s.sensor_readings.flow_ml_per_min = 1000;
@@ -105,19 +107,19 @@ TEST(FramingTests, GuiStatusCoding) {
   s.desired_params.breaths_per_min = 15;
   s.desired_params.pip_cm_h2o = 1;
   s.desired_params.inspiratory_expiratory_ratio = 2;
-//  s.desired_params.rise_time_ms = 100;
+  //  s.desired_params.rise_time_ms = 100;
   s.desired_params.inspiratory_trigger_cm_h2o = 5;
   s.desired_params.expiratory_trigger_ml_per_min = 9;
   // Set very large values here because they take up more space in the encoded
   // proto, and our goal is to make it big.
-//  s.desired_params.alarm_lo_tidal_volume_ml =
-//      std::numeric_limits<uint32_t>::max();
-//  s.desired_params.alarm_hi_tidal_volume_ml =
-//      std::numeric_limits<uint32_t>::max();
-//  s.desired_params.alarm_lo_breaths_per_min =
-//      std::numeric_limits<uint32_t>::max();
-//  s.desired_params.alarm_hi_breaths_per_min =
-//      std::numeric_limits<uint32_t>::max();
+  //  s.desired_params.alarm_lo_tidal_volume_ml =
+  //      std::numeric_limits<uint32_t>::max();
+  //  s.desired_params.alarm_hi_tidal_volume_ml =
+  //      std::numeric_limits<uint32_t>::max();
+  //  s.desired_params.alarm_lo_breaths_per_min =
+  //      std::numeric_limits<uint32_t>::max();
+  //  s.desired_params.alarm_hi_breaths_per_min =
+  //      std::numeric_limits<uint32_t>::max();
 
   uint32_t encoded_length = EncodeGuiStatusFrame(s, dma_stream);
   printf("Encoded length: %d\n", encoded_length);

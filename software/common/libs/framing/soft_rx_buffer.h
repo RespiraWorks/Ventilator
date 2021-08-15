@@ -1,43 +1,64 @@
+/* Copyright 2020-2021, RespiraWorks
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
 #pragma once
 
+#include <cstdint>
+
 #include "serial_listeners.h"
-#include <stdint.h>
 
-template <int RX_BYTES_MAX> class SoftRxBuffer {
-  uint8_t rx_buf_[RX_BYTES_MAX];
-  uint32_t rx_i_ = 0;
-  RxListener *rx_listener_;
-  uint8_t match_char_ = 0;
+template <int RxBytesMax>
+class SoftRxBuffer {
+ public:
+  explicit SoftRxBuffer(uint8_t match_char) : match_char_(match_char) {}
 
-public:
-  explicit SoftRxBuffer(uint8_t match_char) : match_char_(match_char){};
-  void RestartRX(RxListener *listener) {
-    rx_i_ = 0;
+  void restart_rx(RxListener *listener) {
+    rx_index_ = 0;
     rx_listener_ = listener;
   }
 
-  bool Begin(RxListener *listener) {
-    RestartRX(listener);
+  bool begin(RxListener *listener) {
+    restart_rx(listener);
     return true;
   };
 
-  uint32_t ReceivedLength() { return rx_i_; };
+  uint32_t received_length() { return rx_index_; }
 
-  uint8_t *get() { return rx_buf_; }
+  uint8_t *get() { return rx_buffer_; }
 
-  void PutByte(uint8_t b) {
-    if (rx_i_ < RX_BYTES_MAX) {
-      rx_buf_[rx_i_++] = b;
+  void put_byte(uint8_t b) {
+    if (rx_index_ < RxBytesMax) {
+      rx_buffer_[rx_index_++] = b;
       if (match_char_ == b) {
         if (rx_listener_) {
-          rx_listener_->OnCharacterMatch();
+          rx_listener_->on_character_match();
         }
       }
     }
-    if (rx_i_ >= RX_BYTES_MAX) {
+
+    // \TODO: this never be >? or this could just be an else branch?
+    if (rx_index_ >= RxBytesMax) {
       if (rx_listener_) {
-        rx_listener_->OnRxComplete();
+        rx_listener_->on_rx_complete();
       }
     }
   }
+
+ private:
+  uint8_t rx_buffer_[RxBytesMax];
+  uint32_t rx_index_{0};
+  RxListener *rx_listener_{nullptr};
+  uint8_t match_char_{0};
 };

@@ -1,3 +1,4 @@
+// todo: replace with pragma once
 #ifndef __HAL_TRANSPORT
 #include "network_protocol.pb.h"
 #include "uart_dma.h"
@@ -6,27 +7,26 @@
 // received bytes.
 // We need this class to abstract hardware access from FrameDetector FSM so it
 // can be used in GUI code
-template <int RX_BYTES_MAX> class RxBufferUartDma {
+template <int RxBytesMax> class RxBufferUartDma {
 public:
-  RxBufferUartDma(UART_DMA &uart_dma) : uart_dma_(uart_dma){};
+  explicit RxBufferUartDma(UART_DMA &uart_dma) : uart_dma_(uart_dma){};
 
   // Sets up underlying receive infrastructure and starts the first reception
   [[nodiscard]] bool Begin(RxListener *rxl) {
     uart_dma_.charMatchEnable();
-    return uart_dma_.startRX(rx_buf_, RX_BYTES_MAX, rxl);
+    return uart_dma_.startRX(rx_buf_, RxBytesMax, rxl);
   }
 
   // Restarts the ongoing reception, this means the rx_buf will be written from
   // the beginning
   void RestartRX(RxListener *rxl) {
     uart_dma_.stopRX();
-    [[maybe_unused]] bool started =
-        uart_dma_.startRX(rx_buf_, RX_BYTES_MAX, rxl);
+    [[maybe_unused]] bool started = uart_dma_.startRX(rx_buf_, RxBytesMax, rxl);
   }
 
   // Returns how many bytes were written into rx_buf
   uint32_t ReceivedLength() {
-    return (RX_BYTES_MAX - uart_dma_.getRxBytesLeft());
+    return (RxBytesMax - uart_dma_.getRxBytesLeft());
   }
 
   // Returns the rx_buf
@@ -41,14 +41,14 @@ private:
   // UART_DMA provides receiving to this buffer
   UART_DMA &uart_dma_;
   // Buffer into which the data is received
-  uint8_t rx_buf_[RX_BYTES_MAX];
+  uint8_t rx_buf_[RxBytesMax];
 };
 
 #ifdef TEST_MODE
 extern uint32_t rx_i;
 // Puts a byte to rx_buf
-template <int RX_BYTES_MAX>
-void RxBufferUartDma<RX_BYTES_MAX>::test_PutByte(uint8_t b) {
+template <int RxBytesMax>
+void RxBufferUartDma<RxBytesMax>::test_PutByte(uint8_t b) {
   rx_buf_[rx_i++] = b;
 }
 #endif

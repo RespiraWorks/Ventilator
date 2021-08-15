@@ -23,15 +23,15 @@
  * infrastructure
  *
  * FrameDetector is modeled as a Finite State Machine having states:
- * LOST - FrameDetector is lost in the stream of incoming bytes and will
+ * Lost - FrameDetector is lost in the stream of incoming bytes and will
  * interpret the next MARK byte as an end of the frame.
- * WAIT_FOR_START_MARKER - FrameDetector is synced and is waiting for MARK byte
+ * WaitForStartMarker - FrameDetector is synced and is waiting for MARK byte
  * that will denote the start of the frame
- * RECEIVING_FRAME - FrameDetector is synced and will interpret the next MARK
+ * ReceivingFrame - FrameDetector is synced and will interpret the next MARK
  * byte as an end of the frame and will interpret the bytes in RxBuffer as a
  * frame.
  *
- * OnRxError will cause FrameDetector to transition to the LOST state, frame
+ * OnRxError will cause FrameDetector to transition to the Lost state, frame
  * being received will be ignored.
  * ...MbbbbbbEbbbbMMbbbbbbbM
  *    ^-----------^ this frame will be ignored
@@ -48,48 +48,48 @@
  * denoting if the last received frame was read by the caller.
  * */
 
-template <class RxBuffer, int FRAME_BUF_LEN>
+template <class RxBuffer, int FrameBufferLength>
 class FrameDetector : public RxListener {
 public:
   enum class State {
-    LOST, // Frame detector does not know where it is in the stream of
+    Lost, // Frame detector does not know where it is in the stream of
           // bytes coming into RxBuffer
-    WAIT_FOR_START_MARKER, // Frame detector is waiting for a frame start marker
-    RECEIVING_FRAME        // Frame detector is receiving a frame
+    WaitForStartMarker, // Frame detector is waiting for a frame start marker
+    ReceivingFrame      // Frame detector is receiving a frame
   };
 
-  FrameDetector(RxBuffer &t) : rx_buffer_(t){};
+  explicit FrameDetector(RxBuffer &t) : rx_buffer_(t){};
 
   // Starts frame detector
   [[nodiscard]] bool Begin() {
-    state_ = State::LOST;
+    state_ = State::Lost;
     frame_available_ = false;
     return rx_buffer_.Begin(this);
   }
 
   void OnCharMatchWithData() {
     switch (state_) {
-    case State::LOST:
+    case State::Lost:
       // we have received something more before this marker,
       // we assume, this is the frame end marker, so wait
       // for start
-      state_ = State::WAIT_FOR_START_MARKER;
+      state_ = State::WaitForStartMarker;
       RestartRX();
       break;
-    case State::WAIT_FOR_START_MARKER:
+    case State::WaitForStartMarker:
       // some junk received while waiting for the start marker,
       // but should have been just silence
-      state_ = State::LOST;
+      state_ = State::Lost;
       RestartRX();
       break;
-    case State::RECEIVING_FRAME:
+    case State::ReceivingFrame:
       // yes, we got data, thus we got the frame we can pass further
       ProcessReceivedData();
-      state_ = State::WAIT_FOR_START_MARKER;
+      state_ = State::WaitForStartMarker;
       RestartRX();
       break;
     default:
-      state_ = State::LOST;
+      state_ = State::Lost;
       RestartRX();
       break;
     }
@@ -97,24 +97,24 @@ public:
 
   void OnCharMatchMarkersOnly() {
     switch (state_) {
-    case State::LOST:
+    case State::Lost:
       // We have received just this marker
-      // In this case, we were lucky to get to LOST state in the interframe
+      // In this case, we were lucky to get to Lost state in the interframe
       // silence, assume this marker is the start of the frame
-      state_ = State::RECEIVING_FRAME;
+      state_ = State::ReceivingFrame;
       break;
-    case State::WAIT_FOR_START_MARKER:
+    case State::WaitForStartMarker:
       // we have received the marker we are waiting for
-      state_ = State::RECEIVING_FRAME;
+      state_ = State::ReceivingFrame;
       break;
-    case State::RECEIVING_FRAME:
+    case State::ReceivingFrame:
       // repeated marker char received
       // this means we have received a 0 lenght frame
       // ignore it and continue receiving frame bytes
       RestartRX();
       break;
     default:
-      state_ = State::LOST;
+      state_ = State::Lost;
       RestartRX();
       break;
     }
@@ -141,12 +141,12 @@ public:
   // Callback method called when underlying Rx system experiences an error
   void OnRxError([[maybe_unused]] RxError e) override {
     switch (state_) {
-    case State::LOST:
-    case State::WAIT_FOR_START_MARKER:
+    case State::Lost:
+    case State::WaitForStartMarker:
       // no change
       break;
-    case State::RECEIVING_FRAME:
-      state_ = State::LOST;
+    case State::ReceivingFrame:
+      state_ = State::Lost;
       RestartRX();
       break;
     }
@@ -157,7 +157,7 @@ public:
     // We should never reach the full read of rx buffer.
     // If we get here, this means, there are no marker
     // chars in the stream, so we are lost
-    state_ = State::LOST;
+    state_ = State::Lost;
     RestartRX();
   }
 
@@ -182,9 +182,9 @@ public:
 
 private:
   RxBuffer &rx_buffer_;
-  State state_ = State::LOST;
+  State state_ = State::Lost;
   bool frame_available_ = false;
-  uint8_t frame_buf_[FRAME_BUF_LEN];
+  uint8_t frame_buf_[FrameBufferLength];
   uint32_t frame_buf_length_ = 0;
   uint32_t marker_count_ = 0;
 

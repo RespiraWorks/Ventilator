@@ -4,21 +4,26 @@
 #include "framing_spec_chars.h"
 #include <stdint.h>
 
-constexpr int32_t END_OF_STREAM = -1;
+constexpr int32_t EndOfStream{-1};
 
-enum ResponseFlags {
-  STREAM_SUCCESS = 0,
-  WARNING_BUFFER_FULL = 1,
-  ERROR_BUFFER_FULL = 2,
-  ERROR_STREAM_BROKEN = 4
+enum class ResponseFlags {
+  StreamSuccess = 0,
+  WarningBufferFull = 1,
+  ErrorBufferFull = 2,
+  ErrorStreamBroken = 4
 };
 
 // A response object returned from Stream.Put function
 struct StreamResponse {
+  StreamResponse() = default;
+
+  StreamResponse(uint32_t count, ResponseFlags flag)
+      : count_written(count), flags(static_cast<uint32_t>(flag)) {}
+
   // The amount of bytes written
-  uint32_t count_written = 0;
+  uint32_t count_written{0};
   // Status flags
-  uint32_t flags = 0;
+  uint32_t flags{0};
 
   StreamResponse &operator+=(const StreamResponse &r) {
     this->count_written += r.count_written;
@@ -31,7 +36,7 @@ struct StreamResponse {
 class Stream {
 public:
   // Puts a byte into the stream.
-  // END_OF_STREAM is a special char that designates the end of the stream. We
+  // EndOfStream is a special char that designates the end of the stream. We
   // use this for framing.
   virtual StreamResponse Put(int32_t b) = 0;
 };
@@ -44,99 +49,101 @@ public:
   virtual uint32_t BytesAvailableForWrite() = 0;
 };
 
-#define TO_BYTE(UI) static_cast<uint8_t>(UI & 0x000000FF)
+#define TO_BYTE(UI) static_cast<uint8_t>((UI)&0x000000FF)
 
 // Passes bytes to the child Stream
 // Calculates CRC while passing bytes
-// Emits CRC to the child Stream upon receiving END_OF_STREAM
+// Emits CRC to the child Stream upon receiving EndOfStream
 class CrcStream : public Stream {
-  static constexpr uint32_t CRC_RESET_VALUE = 0xFFFFFFFF;
-  Stream &output;
-  uint32_t crc = CRC_RESET_VALUE;
 
 public:
-  CrcStream(Stream &os) : output(os){};
+  explicit CrcStream(Stream &os) : output_(os){};
 
-  StreamResponse Put(int32_t b) {
-    StreamResponse r = {0, 0};
-    if (END_OF_STREAM == b) {
-      r = EmitCrcAndReset();
-      r += output.Put(END_OF_STREAM);
-      return r;
+  StreamResponse Put(int32_t b) override {
+    StreamResponse ret;
+    if (EndOfStream == b) {
+      ret = EmitCrcAndReset();
+      ret += output_.Put(EndOfStream);
+      return ret;
     } else {
-      crc = crc32_single(crc, static_cast<uint8_t>(b));
-      return output.Put(b);
+      crc_ = crc32_single(crc_, static_cast<uint8_t>(b));
+      return output_.Put(b);
     }
   }
 
 private:
   StreamResponse EmitCrcAndReset() {
-    StreamResponse r;
-    r = output.Put(TO_BYTE(crc >> 24));
-    r += output.Put(TO_BYTE(crc >> 16));
-    r += output.Put(TO_BYTE(crc >> 8));
-    r += output.Put(TO_BYTE(crc));
-    crc = CRC_RESET_VALUE;
-    return r;
+    StreamResponse ret;
+    ret = output_.Put(TO_BYTE(crc_ >> 24));
+    ret += output_.Put(TO_BYTE(crc_ >> 16));
+    ret += output_.Put(TO_BYTE(crc_ >> 8));
+    ret += output_.Put(TO_BYTE(crc_));
+    crc_ = ResetCRC;
+    return ret;
   }
+
+  static constexpr uint32_t ResetCRC = 0xFFFFFFFF;
+  Stream &output_;
+  uint32_t crc_{ResetCRC};
 };
 
 // Adds framing markers and escapes special chars
-// Will emit FRAMING_MARK:
-// * upon receiving END_OF_STREAM
-// * next time Put called after receiving END_OF_STREAM
-// Will emit FRAMING_ESC upon receiving FRAMING_MARK or FRAMING_ESC characters
+// Will emit FramingMark:
+// * upon receiving EndOfStream
+// * next time Put called after receiving EndOfStream
+// Will emit FramingEscape upon receiving FramingMark or FramingEscape
+// characters
 class EscapeStream : public Stream {
-  Stream &output;
-  bool is_frame_done = true;
-
 public:
-  EscapeStream(Stream &os) : output(os){};
+  explicit EscapeStream(Stream &os) : output_(os){};
 
-  StreamResponse Put(int32_t b) {
-    StreamResponse r = {0, 0};
+  StreamResponse Put(int32_t b) override {
+    StreamResponse ret;
     switch (b) {
-    case END_OF_STREAM:
-      r = StartFrameIfDone();
-      r += output.Put(FRAMING_MARK);
-      r += output.Put(b);
+    case EndOfStream:
+      ret = StartFrameIfDone();
+      ret += output_.Put(FramingMark);
+      ret += output_.Put(b);
       FrameDone();
-      return r;
-    case FRAMING_MARK:
-    case FRAMING_ESC:
-      r = StartFrameIfDone();
-      r += output.Put(FRAMING_ESC);
-      r += output.Put(b ^ 0x20);
+      return ret;
+    case FramingMark:
+    case FramingEscape:
+      ret = StartFrameIfDone();
+      ret += output_.Put(FramingEscape);
+      ret += output_.Put(b ^ 0x20);
       FrameStartedMaybe();
-      return r;
+      return ret;
     default:
-      r = StartFrameIfDone();
-      r += output.Put(b);
+      ret = StartFrameIfDone();
+      ret += output_.Put(b);
       FrameStartedMaybe();
-      return r;
+      return ret;
     };
   }
 
 private:
   StreamResponse StartFrameIfDone() {
-    return is_frame_done ? output.Put(FRAMING_MARK)
-                         : (StreamResponse){0, STREAM_SUCCESS};
+    return is_frame_done_ ? output_.Put(FramingMark)
+                          : StreamResponse(0, ResponseFlags::StreamSuccess);
   }
 
   static bool shouldEscape(uint8_t b) {
-    return FRAMING_MARK == b || FRAMING_ESC == b;
+    return FramingMark == b || FramingEscape == b;
   }
 
   void FrameDone() {
-    if (!is_frame_done) {
-      is_frame_done = true;
+    if (!is_frame_done_) {
+      is_frame_done_ = true;
     }
   }
   void FrameStartedMaybe() {
-    if (is_frame_done) {
-      is_frame_done = false;
+    if (is_frame_done_) {
+      is_frame_done_ = false;
     }
   }
+
+  Stream &output_;
+  bool is_frame_done_{true};
 };
 
 // Just returns number of bytes written, designed to be used for evaluation of
@@ -144,10 +151,10 @@ private:
 class CounterStream : public Stream {
 public:
   StreamResponse Put(int32_t b) override {
-    if (END_OF_STREAM == b) {
-      return {0, STREAM_SUCCESS};
+    if (EndOfStream == b) {
+      return StreamResponse(0, ResponseFlags::StreamSuccess);
     } else {
-      return {1, STREAM_SUCCESS};
+      return StreamResponse(1, ResponseFlags::StreamSuccess);
     }
   }
 };

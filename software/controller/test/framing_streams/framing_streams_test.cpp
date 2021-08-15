@@ -10,19 +10,19 @@ class ObserverStream : public Stream {
 
 public:
   StreamResponse Put(int32_t b) {
-    if (END_OF_STREAM == b) {
-      return {0, 0};
+    if (EndOfStream == b) {
+      return {};
     }
 
     if (i < LEN) {
       saved[i++] = b;
-      return {1, 0};
+      return StreamResponse(1, ResponseFlags::StreamSuccess);
     } else {
-      return {0, ERROR_BUFFER_FULL};
+      return StreamResponse(0, ResponseFlags::ErrorBufferFull);
     }
   }
   // Returns number of bytes of encoded frame after processing the given byte.
-  uint32_t EncodedLength(int32_t b) { return END_OF_STREAM == b ? 0 : 1; }
+  uint32_t EncodedLength(int32_t b) { return EndOfStream == b ? 0 : 1; }
   // Returns number of bytes that can be written.
   uint32_t BytesAvailableForWrite() { return LEN - i; }
   int32_t *get_saved() { return saved; }
@@ -30,8 +30,8 @@ public:
 };
 
 TEST(StreamResponse, StreamResponseSum) {
-  StreamResponse r1 = {42, 0};
-  StreamResponse r2 = {52, 0};
+  StreamResponse r1 = StreamResponse(42, ResponseFlags::StreamSuccess);
+  StreamResponse r2 = StreamResponse(52, ResponseFlags::StreamSuccess);
   r2 += r1;
   ASSERT_EQ(r2.count_written, (uint32_t)(42 + 52));
 }
@@ -42,19 +42,19 @@ TEST(FramingStreamsTests, CrcStreamTrivial) {
 
   crc_stream.Put(0);
   ASSERT_EQ(observer.get_index(), (uint32_t)1);
-  ASSERT_EQ(crc_stream.Put(END_OF_STREAM).count_written, (uint32_t)4);
+  ASSERT_EQ(crc_stream.Put(EndOfStream).count_written, (uint32_t)4);
   ASSERT_EQ(observer.get_index(), (uint32_t)5);
 }
 
 TEST(FramingStreamsTests, EscapeStreamTrivial) {
   ObserverStream observer;
   EscapeStream escape_stream(observer);
-  EXPECT_EQ(escape_stream.Put(END_OF_STREAM).count_written, (uint32_t)2);
+  EXPECT_EQ(escape_stream.Put(EndOfStream).count_written, (uint32_t)2);
   EXPECT_EQ(escape_stream.Put(0).count_written, (uint32_t)2);
   EXPECT_EQ(escape_stream.Put(0).count_written, (uint32_t)1);
-  EXPECT_EQ(escape_stream.Put(FRAMING_MARK).count_written, (uint32_t)2);
-  EXPECT_EQ(escape_stream.Put(FRAMING_ESC).count_written, (uint32_t)2);
-  EXPECT_EQ(escape_stream.Put(END_OF_STREAM).count_written, (uint32_t)1);
+  EXPECT_EQ(escape_stream.Put(FramingMark).count_written, (uint32_t)2);
+  EXPECT_EQ(escape_stream.Put(FramingEscape).count_written, (uint32_t)2);
+  EXPECT_EQ(escape_stream.Put(EndOfStream).count_written, (uint32_t)1);
 }
 
 uint8_t tx_buffer[20];
@@ -90,29 +90,29 @@ TEST(FramingStreamsTests, DmaStreamTrivial) {
 
   r = dma_stream.Put(0);
   EXPECT_EQ(r.count_written, (uint32_t)1);
-  EXPECT_EQ(r.flags, STREAM_SUCCESS);
+  EXPECT_EQ(r.flags, static_cast<uint32_t>(ResponseFlags::StreamSuccess));
   EXPECT_EQ(dma_stream.BytesAvailableForWrite(), (uint32_t)3);
   EXPECT_FALSE(is_txing);
 
   r = dma_stream.Put(0);
   EXPECT_EQ(r.count_written, (uint32_t)1);
-  EXPECT_EQ(r.flags, STREAM_SUCCESS);
+  EXPECT_EQ(r.flags, static_cast<uint32_t>(ResponseFlags::StreamSuccess));
   EXPECT_EQ(dma_stream.BytesAvailableForWrite(), (uint32_t)2);
   EXPECT_TRUE(is_txing);
 
   r = dma_stream.Put(0);
   EXPECT_EQ(r.count_written, (uint32_t)1);
-  EXPECT_EQ(r.flags, STREAM_SUCCESS);
+  EXPECT_EQ(r.flags, static_cast<uint32_t>(ResponseFlags::StreamSuccess));
   EXPECT_EQ(dma_stream.BytesAvailableForWrite(), (uint32_t)1);
 
   r = dma_stream.Put(0);
   EXPECT_EQ(r.count_written, (uint32_t)1);
-  EXPECT_EQ(r.flags, WARNING_BUFFER_FULL);
+  EXPECT_EQ(r.flags, static_cast<uint32_t>(ResponseFlags::WarningBufferFull));
   EXPECT_EQ(dma_stream.BytesAvailableForWrite(), (uint32_t)0);
 
   r = dma_stream.Put(0);
   EXPECT_EQ(r.count_written, (uint32_t)0);
-  EXPECT_EQ(r.flags, ERROR_BUFFER_FULL);
+  EXPECT_EQ(r.flags, static_cast<uint32_t>(ResponseFlags::ErrorBufferFull));
 
   uart_dma.DMA_tx_interrupt_handler();
   EXPECT_TRUE(is_txing);
@@ -134,7 +134,7 @@ TEST(FramingStreamsTests, FullStackTrivial) {
   ASSERT_EQ(r.count_written, (uint32_t)2);
   r = crc_stream.Put(0x42);
   ASSERT_EQ(r.count_written, (uint32_t)1);
-  r = crc_stream.Put(END_OF_STREAM);
+  r = crc_stream.Put(EndOfStream);
   // 4 bytes crc and end marker
   ASSERT_EQ(r.count_written, (uint32_t)5);
 }

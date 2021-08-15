@@ -8,7 +8,7 @@
 #include <stdio.h>
 
 TEST(FramingTests, DecodingDestTooSmall) {
-  uint8_t source_buf[] = {FRAMING_MARK, 0, 1, 2, 3, FRAMING_MARK};
+  uint8_t source_buf[] = {FramingMark, 0, 1, 2, 3, FramingMark};
   uint8_t dest_buf[10];
 
   uint32_t frameLength =
@@ -35,8 +35,8 @@ uint32_t tx_length = 0;
 bool is_txing = false;
 TxListener *tx_listener;
 
-bool UartDma::TxInProgress() const { return is_txing; }
-bool UartDma::StartTX(uint8_t *buf, uint32_t length, TxListener *txl) {
+bool UartDma::tx_in_progress() const { return is_txing; }
+bool UartDma::start_tx(uint8_t *buf, uint32_t length, TxListener *txl) {
   memcpy(tx_buffer, buf, length);
   tx_length = length;
   is_txing = true;
@@ -49,12 +49,12 @@ bool UartDma::StartTX(uint8_t *buf, uint32_t length, TxListener *txl) {
   return true;
 };
 
-void UartDma::DmaTxISR() {
+void UartDma::DMA_tx_interrupt_handler() {
   is_txing = false;
-  tx_listener->OnTxComplete();
+  tx_listener->on_tx_complete();
 }
 
-void UartDmaReset() { uart_dma.DmaTxISR(); }
+void UartDmaReset() { uart_dma.DMA_tx_interrupt_handler(); }
 
 // \todo reintroduce additional settings once they are in buffer definitions
 
@@ -90,7 +90,7 @@ TEST(FramingTests, ControllerStatusCoding) {
   ControllerStatus decoded = ControllerStatus_init_zero;
   DecodeResult r =
       DecodeControllerStatusFrame(tx_buffer, encoded_length, &decoded);
-  ASSERT_EQ(r, 0);
+  ASSERT_EQ(r, DecodeResult());
   EXPECT_EQ(s.uptime_ms, decoded.uptime_ms);
   EXPECT_EQ(s.active_params.mode, decoded.active_params.mode);
   EXPECT_EQ(s.active_params.peep_cm_h2o, decoded.active_params.peep_cm_h2o);
@@ -126,7 +126,7 @@ TEST(FramingTests, GuiStatusCoding) {
   ASSERT_GT(encoded_length, (uint32_t)0);
   GuiStatus decoded = GuiStatus_init_zero;
   DecodeResult r = DecodeGuiStatusFrame(tx_buffer, encoded_length, &decoded);
-  ASSERT_EQ(r, 0);
+  ASSERT_EQ(r, DecodeResult());
 
   EXPECT_EQ(s.uptime_ms, decoded.uptime_ms);
   EXPECT_EQ(s.desired_params.mode, decoded.desired_params.mode);

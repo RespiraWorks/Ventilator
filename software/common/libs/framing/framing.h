@@ -9,26 +9,26 @@
 #include <pb_encode.h>
 #include <stdint.h>
 
-uint32_t UnescapeFrame(uint8_t *source, uint32_t sourceLength, uint8_t *dest,
-                       uint32_t destLength) {
+uint32_t UnescapeFrame(uint8_t *source, uint32_t source_length,
+                       uint8_t *destination, uint32_t destination_length) {
   uint32_t i = 0;
-  bool isEsc = false;
-  for (uint32_t j = 0; j < sourceLength; j++) {
+  bool is_escape = false;
+  for (uint32_t j = 0; j < source_length; j++) {
     switch (source[j]) {
-    case FRAMING_MARK:
+    case FramingMark:
       break;
-    case FRAMING_ESC:
-      isEsc = true;
+    case FramingEscape:
+      is_escape = true;
       break;
     default:
-      if (i >= destLength) {
+      if (i >= destination_length) {
         return 0;
       }
-      if (isEsc) {
-        isEsc = false;
-        dest[i++] = source[j] ^ 0x20;
+      if (is_escape) {
+        is_escape = false;
+        destination[i++] = source[j] ^ 0x20;
       } else {
-        dest[i++] = source[j];
+        destination[i++] = source[j];
       }
       break;
     }
@@ -36,29 +36,34 @@ uint32_t UnescapeFrame(uint8_t *source, uint32_t sourceLength, uint8_t *dest,
   return i;
 }
 
-enum DecodeResult { SUCCESS, ERROR_FRAMING, ERROR_CRC, ERROR_PB };
+enum class DecodeResult : uint32_t {
+  Success,
+  ErrorFraming,
+  ErrorCRC,
+  ErrorSerialization
+};
 
 // Decodes the given buffer into a protobuf object
 // Unescapes and checks CRC
 // @returns
-// DecodeResult::SUCCESS on success
-// DecodeResult::ERROR_FRAMING on unescaping error
-// DecodeResult::ERROR_CRC on CRC mismatch
-// DecodeResult::ERROR_PB on nanopb decode error
+// DecodeResult::Success on success
+// DecodeResult::ErrorFraming on unescaping error
+// DecodeResult::ErrorCRC on CRC mismatch
+// DecodeResult::ErrorSerialization on nanopb decode error
 template <typename PbType>
 DecodeResult DecodeFrame(uint8_t *buf, uint32_t len, PbType *pb_object) {
   uint32_t decoded_length = UnescapeFrame(buf, len, buf, len);
   if (0 == decoded_length) {
-    return DecodeResult::ERROR_FRAMING;
+    return DecodeResult::ErrorFraming;
   }
   if (!crc_ok(buf, decoded_length)) {
-    return DecodeResult::ERROR_CRC;
+    return DecodeResult::ErrorCRC;
   }
   pb_istream_t stream = pb_istream_from_buffer(buf, decoded_length - 4);
   if (!pb_decode(&stream, ProtoTraits<PbType>::MsgDesc, pb_object)) {
-    return DecodeResult::ERROR_PB;
+    return DecodeResult::ErrorSerialization;
   }
-  return DecodeResult::SUCCESS;
+  return DecodeResult::Success;
 }
 
 // Emulates the transmission process to count the number of bytes needed for
@@ -68,11 +73,11 @@ static uint32_t EncodedLength(uint8_t *buf, uint32_t len) {
   CounterStream counter_stream;
   EscapeStream esc_stream(counter_stream);
   CrcStream crc_stream(esc_stream);
-  StreamResponse r = {0, STREAM_SUCCESS};
+  StreamResponse r = {0, ResponseFlags::StreamSuccess};
   for (uint32_t i = 0; i < len; i++) {
     r += crc_stream.Put(buf[i]);
   }
-  r += crc_stream.Put(END_OF_STREAM);
+  r += crc_stream.Put(EndOfStream);
   return r.count_written;
 }
 
@@ -100,10 +105,10 @@ uint32_t EncodeFrame(const PbType &pb_object, OutputStream &output_stream) {
     return 0;
   }
 
-  StreamResponse r = {0, 0};
+  StreamResponse ret;
   for (uint32_t i = 0; i < pb_length; i++) {
-    r += crc_stream.Put(pb_buffer[i]);
+    ret += crc_stream.Put(pb_buffer[i]);
   }
-  r += crc_stream.Put(END_OF_STREAM);
-  return r.count_written;
+  ret += crc_stream.Put(EndOfStream);
+  return ret.count_written;
 }

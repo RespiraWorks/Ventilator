@@ -14,11 +14,11 @@ public:
   uint32_t BytesAvailableForWrite() override { return 9001; }
 
   StreamResponse Put(int32_t b) override {
-    if (END_OF_STREAM == b) {
-      return {.count_written = 0, .flags = STREAM_SUCCESS};
+    if (EndOfStream == b) {
+      return {.count_written = 0, .flags = StreamSuccess};
     }
     port_->putChar(static_cast<uint8_t>(b));
-    return {.count_written = 0, .flags = STREAM_SUCCESS};
+    return {.count_written = 0, .flags = StreamSuccess};
   }
 };
 #endif

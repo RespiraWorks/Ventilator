@@ -1,4 +1,4 @@
-/* Copyright 2020-2021, Edwin Chiu
+/* Copyright 2020-2021, RespiraWorks
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -13,8 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#ifndef CHECKSUM_H
-#define CHECKSUM_H
+#pragma once
 
 #include <stdint.h>
 
@@ -45,5 +44,3 @@ uint32_t crc32_single(uint32_t crc, uint8_t data);
 // checks if they match.
 // @returns true if CRC match, false if not match or length < 5
 bool crc_ok(const uint8_t *buf, uint32_t len);
-
-#endif // CHECKSUM_H

@@ -12,8 +12,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-#ifndef HAL_H
-#define HAL_H
+#pragma once
 
 // A hardware abstraction layer that supports faking for tests.
 //
@@ -556,5 +555,3 @@ inline bool HalApi::FlashWrite(uint32_t addr, void *data, size_t ct) {
 }
 
 #endif
-
-#endif // HAL_H

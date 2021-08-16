@@ -705,6 +705,15 @@ void HalApi::WatchdogHandler() {
   wdog->key = 0xAAAA;
 }
 
+// Fault handler
+[[noreturn]] static void Fault() {
+  while (true) {
+    ; // noop
+    /* \todo this function is unused; could be made useful if implementation
+     * made sense? blink lights? scream? do something? */
+  }
+}
+
 // Enable clocks to a specific peripheral.
 // On the STM32 the clocks going to various peripherals on the chip
 // are individually selectable and for the most part disabled on startup.
@@ -760,7 +769,8 @@ void HalApi::EnableClock(volatile void *ptr) {
   // bug during development.
   if (ndx < 0) {
     hal.DisableInterrupts();
-    // Fault(); TODO: remove this complete? @martukas
+    // TODO: could have a call to Fault() for debug purposes, but not in
+    // production
   }
 
   // Enable the clock of the requested peripheral
@@ -776,8 +786,7 @@ static void StepperISR() { StepMotor::DmaISR(); }
  * very start of the flash memory.
  *****************************************************************/
 
-// TODO: removed calls to Fault(); should we be calling something else?
-// @martukas
+// TODO: these could optionally call Fault() but not in production
 static void NMI() {}
 static void FaultISR() {}
 static void MPUFaultISR() {}

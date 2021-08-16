@@ -13,8 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#ifndef NVPARAM_H
-#define NVPARAM_H
+#pragma once
 
 #include "eeprom.h"
 #include "network_protocol.pb.h"
@@ -97,5 +96,3 @@ private:
 #define NV_PARAMS_READ(member, value)                                          \
   Get(static_cast<uint16_t>(offsetof(Structure, member)), value,               \
       (sizeof(((Structure *)0)->member)))
-
-#endif // NVPARAM_H

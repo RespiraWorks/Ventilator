@@ -706,6 +706,8 @@ void HalApi::WatchdogHandler() {
 }
 
 // Fault handler
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-function"
 [[noreturn]] static void Fault() {
   while (true) {
     ; // noop
@@ -713,6 +715,7 @@ void HalApi::WatchdogHandler() {
      * made sense? blink lights? scream? do something? */
   }
 }
+#pragma GCC diagnostic pop
 
 // Enable clocks to a specific peripheral.
 // On the STM32 the clocks going to various peripherals on the chip

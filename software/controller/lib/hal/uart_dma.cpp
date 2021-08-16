@@ -34,77 +34,72 @@ limitations under the License.
 extern UartDma uart_dma;
 
 // Performs UART3 initialization
-void UartDma::Init(uint32_t baud) {
+void UartDma::init(uint32_t baud) {
   baud_ = baud;
   // Set baud rate register
   uart_->baudrate = CPU_FREQ / baud;
 
-  uart_->control3.bitfield.rx_dma = 1;         // set DMAR bit to enable DMA for receiver
-  uart_->control3.bitfield.tx_dma = 1;         // set DMAT bit to enable DMA for transmitter
-  uart_->control3.bitfield.dma_disable_on_rx_error = 1;         // DMA is disabled following a reception error
+  uart_->control3.bitfield.rx_dma = 1;  // set DMAR bit to enable DMA for receiver
+  uart_->control3.bitfield.tx_dma = 1;  // set DMAT bit to enable DMA for transmitter
+  uart_->control3.bitfield.dma_disable_on_rx_error = 1;  // DMA disabled following a reception error
   uart_->control2.bitfield.rx_timeout_enable = 0;        // Disable receive timeout feature
-  uart_->control2.bitfield.addr = match_char_; // set match char
+  uart_->control2.bitfield.addr = match_char_;           // set match char
 
-  uart_->control3.bitfield.error_interrupt = 1; // enable interrupt on error
+  uart_->control3.bitfield.error_interrupt = 1;  // enable interrupt on error
+  uart_->request.bitfield.flush_rx = 1;          // Clear RXNE flag before clearing other flags
 
-  uart_->request.bitfield.flush_rx = 1; // Clear RXNE flag before clearing other flags
-  
   // Clear error flags.
   uart_->interrupt_clear.bitfield.framing_error_clear = 1;
   uart_->interrupt_clear.bitfield.overrun_clear = 1;
   uart_->interrupt_clear.bitfield.rx_timeout_clear = 1;
 
-  uart_->control_reg1.bitfield.tx_enable = 1; // enable transmitter
-  uart_->control_reg1.bitfield.rx_enable = 1; // Enable receiver
-  uart_->control_reg1.bitfield.enable = 1;    // enable uart
+  uart_->control_reg1.bitfield.tx_enable = 1;  // enable transmitter
+  uart_->control_reg1.bitfield.rx_enable = 1;  // Enable receiver
+  uart_->control_reg1.bitfield.enable = 1;     // enable uart
 
   // TODO enable parity checking?
 
-  dma_->channel[rx_channel_].config.priority = 0b11; // high priority
-  dma_->channel[rx_channel_].config.tx_error_interrupt = 1;        // interrupt on error
-  dma_->channel[rx_channel_].config.half_tx_interrupt = 0;        // no half-transfer interrupt
-  dma_->channel[rx_channel_].config.tx_complete_interrupt = 1;        // interrupt on DMA complete
+  auto &rx_dma_config = dma_->channel[rx_channel_].config;
+  rx_dma_config.priority = 0b11;            // high priority
+  rx_dma_config.tx_error_interrupt = 1;     // interrupt on error
+  rx_dma_config.half_tx_interrupt = 0;      // no half-transfer interrupt
+  rx_dma_config.tx_complete_interrupt = 1;  // interrupt on DMA complete
+  rx_dma_config.mem2mem = 0;                // memory-to-memory mode disabled
+  rx_dma_config.memory_size = static_cast<uint32_t>(DmaTransferSize::Byte);
+  rx_dma_config.peripheral_size = static_cast<uint32_t>(DmaTransferSize::Byte);
+  rx_dma_config.memory_increment = 1;      // increment destination (memory)
+  rx_dma_config.peripheral_increment = 0;  // don't increment source (peripheral) address
+  rx_dma_config.circular = 0;              // not circular
+  rx_dma_config.direction = static_cast<uint32_t>(DmaChannelDir::PeripheralToMemory);
 
-  dma_->channel[rx_channel_].config.mem2mem = 0; // memory-to-memory mode disabled
-  dma_->channel[rx_channel_].config.memory_size = static_cast<uint32_t>(DmaTransferSize::Byte);
-  dma_->channel[rx_channel_].config.peripheral_size = static_cast<uint32_t>(DmaTransferSize::Byte);
-  dma_->channel[rx_channel_].config.memory_increment = 1;   // increment destination (memory)
-  dma_->channel[rx_channel_].config.peripheral_increment = 0;   // don't increment source
-                                          // (peripheral) address
-  dma_->channel[rx_channel_].config.circular = 0; // not circular
-  dma_->channel[rx_channel_].config.direction =
-      static_cast<uint32_t>(DmaChannelDir::PeripheralToMemory);
-
-  dma_->channel[tx_channel_].config.priority = 0b11; // high priority
-  dma_->channel[tx_channel_].config.tx_error_interrupt = 1;        // interrupt on error
-  dma_->channel[tx_channel_].config.half_tx_interrupt = 0;        // no half-transfer interrupt
-  dma_->channel[tx_channel_].config.tx_complete_interrupt = 1;        // DMA complete interrupt enabled
-
-  dma_->channel[tx_channel_].config.mem2mem = 0; // memory-to-memory mode disabled
-  dma_->channel[tx_channel_].config.memory_size = static_cast<uint32_t>(DmaTransferSize::Byte);
-  dma_->channel[tx_channel_].config.peripheral_size = static_cast<uint32_t>(DmaTransferSize::Byte);
-  dma_->channel[tx_channel_].config.memory_increment = 1;   // increment source (memory) address
-  dma_->channel[tx_channel_].config.peripheral_increment = 0;   // don't increment dest (peripheral)
-                                          // address
-  dma_->channel[tx_channel_].config.circular = 0; // not circular
-  dma_->channel[tx_channel_].config.direction =
-      static_cast<uint32_t>(DmaChannelDir::MemoryToPeripheral);
+  auto &tx_dma_config = dma_->channel[tx_channel_].config;
+  tx_dma_config.priority = 0b11;            // high priority
+  tx_dma_config.tx_error_interrupt = 1;     // interrupt on error
+  tx_dma_config.half_tx_interrupt = 0;      // no half-transfer interrupt
+  tx_dma_config.tx_complete_interrupt = 1;  // DMA complete interrupt enabled
+  tx_dma_config.mem2mem = 0;                // memory-to-memory mode disabled
+  tx_dma_config.memory_size = static_cast<uint32_t>(DmaTransferSize::Byte);
+  tx_dma_config.peripheral_size = static_cast<uint32_t>(DmaTransferSize::Byte);
+  tx_dma_config.memory_increment = 1;      // increment source (memory) address
+  tx_dma_config.peripheral_increment = 0;  // don't increment dest (peripheral) address
+  tx_dma_config.circular = 0;              // not circular
+  tx_dma_config.direction = static_cast<uint32_t>(DmaChannelDir::MemoryToPeripheral);
 }
 
 // Sets up an interrupt on matching char incoming form UART3
-void UartDma::CharMatchEnable() {
-  uart_->interrupt_clear.bitfield.char_match_clear = 1; // Clear char match flag
-  uart_->control_reg1.bitfield.char_match_interrupt = 1; // Enable character match interrupt
+void UartDma::enable_character_match() {
+  uart_->interrupt_clear.bitfield.char_match_clear = 1;   // Clear char match flag
+  uart_->control_reg1.bitfield.char_match_interrupt = 1;  // Enable character match interrupt
 }
 
 // Returns true if DMA TX is in progress
-bool UartDma::TxInProgress() const {
+bool UartDma::tx_in_progress() const {
   // TODO thread safety
   return tx_in_progress_;
 }
 
 // Returns true if DMA RX is in progress
-bool UartDma::RxInProgress() const {
+bool UartDma::rx_in_progress() const {
   // TODO thread safety
   return rx_in_progress_;
 }
@@ -113,31 +108,27 @@ bool UartDma::RxInProgress() const {
 // Returns false if DMA transmission is in progress, does not
 // interrupt previous transmission.
 // Returns true if no transmission is in progress
-bool UartDma::StartTX(uint8_t *buf, uint32_t length, TxListener *txl) {
-  if (TxInProgress()) {
+bool UartDma::start_tx(uint8_t *buf, uint32_t length, TxListener *txl) {
+  if (tx_in_progress()) {
     return false;
   }
 
   tx_listener_ = txl;
 
-  dma_->channel[tx_channel_].config.enable = 0; // Disable channel before config
-  // data sink
-  dma_->channel[tx_channel_].peripheral_address = &(uart_->tx_data);
-  // data source
-  dma_->channel[tx_channel_].memory_address =
-      const_cast<void *>(reinterpret_cast<const void *>(buf));
-  // data length
-  dma_->channel[tx_channel_].count = length & 0x0000FFFF;
-
-  dma_->channel[tx_channel_].config.enable = 1; // go!
+  auto &tx_dma = dma_->channel[tx_channel_];
+  tx_dma.config.enable = 0;                       // Disable channel before config
+  tx_dma.peripheral_address = &(uart_->tx_data);  // data sink
+  tx_dma.memory_address = const_cast<void *>(reinterpret_cast<const void *>(buf));  // data source
+  tx_dma.count = length & 0x0000FFFF;                                               // data length
+  tx_dma.config.enable = 1;                                                         // go!
 
   tx_in_progress_ = true;
 
   return true;
 }
 
-void UartDma::StopTX() {
-  if (TxInProgress()) {
+void UartDma::stop_tx() {
+  if (tx_in_progress()) {
     // Disable DMA channel
     dma_->channel[tx_channel_].config.enable = 0;
     // TODO thread safety
@@ -146,13 +137,13 @@ void UartDma::StopTX() {
 }
 
 // Sets up reception of exactly [length] chars from UART3 into [buf]
-// [timeout] is the number of baudrate bits for which RX line is
+// [timeout] is the number of baud rate bits for which RX line is
 // allowed to be idle before issuing timeout error.
-// OnCharacterMatch callback will be called if a match_char is seen on the RX
+// on_character_match callback will be called if a match_char is seen on the RX
 // line
-// OnRxComplete callback will be called when the [length] bytes are received.
+// on_rx_complete callback will be called when the [length] bytes are received.
 // DMA and UART is disabled in this case.
-// OnRxError is called if UART or DMA errors occur:
+// on_rx_error is called if UART or DMA errors occur:
 // OVERRUN - if received byte was not read before a new byte is received
 // SERIAL_FRAMING - when a de-synchronization, excessive noise or a break
 // character is detected
@@ -166,53 +157,48 @@ void UartDma::StopTX() {
 // Returns false if reception is in progress, new reception is not setup.
 // Returns true if no reception is in progress and new reception was setup.
 
-bool UartDma::StartRX(uint8_t *buf, uint32_t length, RxListener *rxl) {
+bool UartDma::start_rx(uint8_t *buf, uint32_t length, RxListener *rxl) {
   // UART3 reception happens on DMA1 channel 3
-  if (RxInProgress()) {
+  if (rx_in_progress()) {
     return false;
   }
 
   rx_listener_ = rxl;
 
-  dma_->channel[rx_channel_].config.enable = 0; // don't enable yet
+  auto &rx_dma = dma_->channel[rx_channel_];
 
-  // data source
-  dma_->channel[rx_channel_].peripheral_address = &(uart_->rx_data);
-  // data sink
-  dma_->channel[rx_channel_].memory_address =
-      const_cast<void *>(reinterpret_cast<const void *>(buf));
-  // data length
-  dma_->channel[rx_channel_].count = length;
+  rx_dma.config.enable = 0;  // don't enable yet
 
-  uart_->interrupt_clear.bitfield.rx_timeout_clear = 1; // Clear rx timeout flag
-  uart_->request.bitfield.flush_rx = 1;  // Clear RXNE flag
+  rx_dma.peripheral_address = &(uart_->rx_data);                                    // data source
+  rx_dma.memory_address = const_cast<void *>(reinterpret_cast<const void *>(buf));  // data sink
+  rx_dma.count = length;                                                            // data length
 
-  dma_->channel[rx_channel_].config.enable = 1; // go!
+  uart_->interrupt_clear.bitfield.rx_timeout_clear = 1;  // Clear rx timeout flag
+  uart_->request.bitfield.flush_rx = 1;                  // Clear RXNE flag
+
+  rx_dma.config.enable = 1;  // go!
 
   rx_in_progress_ = true;
 
   return true;
 }
 
-uint32_t UartDma::GetRxBytesLeft() { return dma_->channel[2].count; }
+uint32_t UartDma::rx_bytes_left() { return dma_->channel[2].count; }
 
-void UartDma::StopRX() {
-  if (RxInProgress()) {
-    uart_->control_reg1.bitfield.rx_timeout_interrupt = 0;           // Disable receive timeout interrupt
-    dma_->channel[rx_channel_].config.enable = 0; // Disable DMA channel
+void UartDma::stop_rx() {
+  if (rx_in_progress()) {
+    uart_->control_reg1.bitfield.rx_timeout_interrupt = 0;  // Disable receive timeout interrupt
+    dma_->channel[rx_channel_].config.enable = 0;           // Disable DMA channel
     // TODO thread safety
     rx_in_progress_ = false;
   }
 }
 
-static bool CharacterMatchInterrupt() {
-  return Uart3Base->status.bitfield.char_match != 0;
-}
+static bool character_match_interrupt() { return Uart3Base->status.bitfield.char_match != 0; }
 
-static bool GetRxError() {
-  return
-  Uart3Base->status.bitfield.overrun_error || // overrun error
-  Uart3Base->status.bitfield.framing_error;   // frame error
+static bool rx_error() {
+  return Uart3Base->status.bitfield.overrun_error ||  // overrun error
+         Uart3Base->status.bitfield.framing_error;    // frame error
 
   // TODO(miceuz): Enable these?
   // UART3_BASE->status.s.pe || // parity error
@@ -220,68 +206,69 @@ static bool GetRxError() {
 }
 
 // ISR handler for the UART peripheral.
-// Calls OnRxError and OnCharacterMatch functions of the rxListener as those
-// events are provided by UART peripheral. OnRxComplete is called by DMA ISR
-void UartDma::UartISR() {
-  if (GetRxError()) {
+// Calls on_rx_error and on_character_match functions of the rx_listener_ as
+// those events are provided by UART peripheral. on_rx_complete is called by DMA
+// ISR
+void UartDma::UART_interrupt_handler() {
+  if (rx_error()) {
     RxError e = RxError::Unknown;
     if (uart_->status.bitfield.overrun_error) {
-      e = RxError::Overflow;
+      e = RxError::Overrun;
     }
     if (uart_->status.bitfield.framing_error) {
       e = RxError::SerialFraming;
     }
 
-    uart_->request.bitfield.flush_rx = 1; // Clear RXNE flag before clearing other flags
+    uart_->request.bitfield.flush_rx = 1;  // Clear RXNE flag before clearing other flags
 
     // Clear error flags.
     uart_->interrupt_clear.bitfield.framing_error_clear = 1;
     uart_->interrupt_clear.bitfield.overrun_clear = 1;
     uart_->interrupt_clear.bitfield.rx_timeout_clear = 1;
 
-    StopRx();
+    stop_rx();
     if (rx_listener_) {
-      rx_listener_->OnRxError(e);
+      rx_listener_->on_rx_error(e);
     }
     return;
   }
 
-  if (CharacterMatchInterrupt()) {
-    uart_->request.bitfield.flush_rx = 1; // Clear RXNE flag before clearing other flags
-    uart_->interrupt_clear.bitfield.char_match_clear = 1; // Clear char match flag
+  if (character_match_interrupt()) {
+    uart_->request.bitfield.flush_rx = 1;  // Clear RXNE flag before clearing other flags
+    uart_->interrupt_clear.bitfield.char_match_clear = 1;  // Clear char match flag
 
     if (rx_listener_) {
-      rx_listener_->OnCharacterMatch();
+      rx_listener_->on_character_match();
     }
   }
 }
 
 // ISR handler for the DMA peripheral responsible for transmission.
-// Calls OnTxError and OnTxComplete functions of the tx_listener_
-void UartDma::DmaTxISR() {
-  StopTX();
+// Calls on_tx_error and on_tx_complete functions of the tx_listener_
+void UartDma::DMA_tx_interrupt_handler() {
+  stop_tx();
   if (dma_->interrupt_status.teif2) {
     if (tx_listener_) {
-      tx_listener_->OnTxError();
+      tx_listener_->on_tx_error();
     }
   } else {
     if (tx_listener_) {
-      tx_listener_->OnTxComplete();
+      tx_listener_->on_tx_complete();
     }
   }
 }
 
 // ISR handler for the DMA peripheral responsible for reception.
-// Calls OnRxError and OnRxComplete functions of the rx_listener_
-void UartDma::DmaRxISR() {
-  StopRX();
+// Calls on_rx_error and on_rx_complete functions of the rx_listener_
+void UartDma::DMA_rx_interrupt_handler() {
+  stop_rx();
   if (dma_->interrupt_status.teif3) {
     if (rx_listener_) {
-      rx_listener_->OnRxError(RxError::DMA);
+      rx_listener_->on_rx_error(RxError::DMA);
     }
   } else {
     if (rx_listener_) {
-      rx_listener_->OnRxComplete();
+      rx_listener_->on_rx_complete();
     }
   }
 }
@@ -290,17 +277,17 @@ void UartDma::DmaRxISR() {
 
 void DMA1Channel2ISR() {
   DmaReg *dma = Dma1Base;
-  uart_dma.DmaTxISR();
-  dma->interrupt_clear.gif2 = 1; // clear all channel 3 flags
+  uart_dma.DMA_tx_interrupt_handler();
+  dma->interrupt_clear.gif2 = 1;  // clear all channel 3 flags
 }
 
 void DMA1Channel3ISR() {
   DmaReg *dma = Dma1Base;
-  uart_dma.DmaRxISR();
-  dma->interrupt_clear.gif3 = 1; // clear all channel 2 flags
+  uart_dma.DMA_rx_interrupt_handler();
+  dma->interrupt_clear.gif3 = 1;  // clear all channel 2 flags
 }
 
 // This is the interrupt handler for the UART.
-void Uart3ISR() { uart_dma.UartISR(); }
+void Uart3ISR() { uart_dma.UART_interrupt_handler(); }
 
 #endif

@@ -48,7 +48,7 @@ static constexpr uint32_t Size{sizeof(Structure)};
 // Calculate the CRC of the params at this address
 static uint32_t CRC(Structure *param) {
   uint8_t *ptr = reinterpret_cast<uint8_t *>(param);
-  return SoftCRC32(ptr + sizeof(uint32_t), Size - sizeof(uint32_t));
+  return soft_crc32(ptr + sizeof(uint32_t), Size - sizeof(uint32_t));
 }
 
 // Checks whether a param is valid (through its checksum)

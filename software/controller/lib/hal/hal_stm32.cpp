@@ -168,7 +168,6 @@ void HalApi::Init() {
   InitBuzzer();
   InitPSOL();
   InitI2C();
-  CRC32Init();
   EnableInterrupts();
   StepperMotorInit();
 }
@@ -706,60 +705,17 @@ void HalApi::WatchdogHandler() {
   wdog->key = 0xAAAA;
 }
 
-void HalApi::CRC32Init() {
-  RccReg *rcc = RccBase;
-  // Enable clock to CRC32
-  rcc->peripheral_clock_enable[0] |= (1 << 12);
-  // Pull CRC32 peripheral out of reset if it ever was
-  rcc->peripheral_reset[0] &= ~(1 << 12);
-
-  CrcReg *crc = CrcBase;
-  crc->init = 0xFFFFFFFF;
-  crc->polynomial = Crc32Polynomial;
-  crc->control = 1;
-}
-
-void HalApi::CRC32Accumulate(uint8_t d) {
-  CrcReg *crc = CrcBase;
-  crc->data = static_cast<uint32_t>(d);
-}
-
-uint32_t HalApi::CRC32Get() {
-  // CRC32 peripheral takes 4 clock cycles to produce a result after the last
-  // write to it.  These nops are just in case of some spectacular compiler
-  // optimization that would result in querying too early.
-  //
-  // TODO(jlebar): I think the nops likely are not necessary. The chip should
-  // stall the processor if the data isn't available.  Moreover if it *is*
-  // necessary, asm volatile may not be enough of a memory barrier; we may
-  // need to say that these instructions also clobber "memory".
-  asm volatile("nop");
-  asm volatile("nop");
-  asm volatile("nop");
-  asm volatile("nop");
-  CrcReg *crc = CrcBase;
-  return crc->data;
-}
-
-void HalApi::CRC32Reset() {
-  CrcReg *crc = CrcBase;
-  crc->control = 1;
-}
-
-uint32_t HalApi::CRC32(const uint8_t *data, uint32_t length) {
-  CRC32Reset();
-  while (length--) {
-    CRC32Accumulate(*data++);
-  }
-  return CRC32Get();
-}
-
-// Fault handlers
+// Fault handler
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-function"
 [[noreturn]] static void Fault() {
   while (true) {
     ; // noop
+    /* \todo this function is unused; could be made useful if implementation
+     * made sense? blink lights? scream? do something? */
   }
 }
+#pragma GCC diagnostic pop
 
 // Enable clocks to a specific peripheral.
 // On the STM32 the clocks going to various peripherals on the chip
@@ -816,7 +772,8 @@ void HalApi::EnableClock(volatile void *ptr) {
   // bug during development.
   if (ndx < 0) {
     hal.DisableInterrupts();
-    Fault();
+    // TODO: could have a call to Fault() for debug purposes, but not in
+    // production
   }
 
   // Enable the clock of the requested peripheral
@@ -832,12 +789,13 @@ static void StepperISR() { StepMotor::DmaISR(); }
  * very start of the flash memory.
  *****************************************************************/
 
-static void NMI() { Fault(); }
-static void FaultISR() { Fault(); }
-static void MPUFaultISR() { Fault(); }
-static void BusFaultISR() { Fault(); }
-static void UsageFaultISR() { Fault(); }
-static void BadISR() { Fault(); }
+// TODO: these could optionally call Fault() but not in production
+static void NMI() {}
+static void FaultISR() {}
+static void MPUFaultISR() {}
+static void BusFaultISR() {}
+static void UsageFaultISR() {}
+static void BadISR() {}
 
 // We don't control this function's name, silence the style check
 // NOLINTNEXTLINE(readability-identifier-naming)

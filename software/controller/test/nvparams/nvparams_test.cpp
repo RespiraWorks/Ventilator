@@ -63,7 +63,7 @@ static void CompareParams(int16_t address, const Structure &ref,
 
 uint32_t ParamsCRC(Structure *params) {
   uint8_t *ptr = reinterpret_cast<uint8_t *>(params);
-  return SoftCRC32(ptr + 4, sizeof(Structure) - 4);
+  return soft_crc32(ptr + 4, sizeof(Structure) - 4);
 }
 
 class NVparamsTest : public ::testing::Test {

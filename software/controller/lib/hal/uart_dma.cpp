@@ -261,7 +261,7 @@ void UartDma::UartISR() {
     uart_->interrupt_clear.bitfield.overrun_clear = 1;
     uart_->interrupt_clear.bitfield.rx_timeout_clear = 1;
 
-    StopRx();
+    StopRX();
     if (rx_listener_) {
       rx_listener_->OnRxError(e);
     }

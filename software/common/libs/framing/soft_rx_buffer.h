@@ -46,6 +46,8 @@ public:
         }
       }
     }
+
+    // \TODO: this never be >? or this could just be an else branch?
     if (rx_index_ >= RxBytesMax) {
       if (rx_listener_) {
         rx_listener_->OnRxComplete();

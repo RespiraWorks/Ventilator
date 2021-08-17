@@ -33,19 +33,25 @@ limitations under the License.
  * RxBuffer is responsible for underlying reception and buffering of incoming
  * data. Also RxBuffer provides callbacks described by RxListener interface. In
  * particular:
- * OnCharacterMatch is called when MARK character is received
- * OnRxComplete is called when the requested number of bytes was received
- * OnRxError is called when an error occurs in the underlying reception
- * infrastructure
+ *
+ *   OnCharacterMatch is called when MARK character is received
+ *
+ *   OnRxComplete is called when the requested number of bytes was received
+ *
+ *   OnRxError is called when an error occurs in the underlying reception
+ *          infrastructure
  *
  * FrameDetector is modeled as a Finite State Machine having states:
- * Lost - FrameDetector is lost in the stream of incoming bytes and will
- * interpret the next MARK byte as an end of the frame.
- * WaitForStartMarker - FrameDetector is synced and is waiting for MARK byte
- * that will denote the start of the frame
- * ReceivingFrame - FrameDetector is synced and will interpret the next MARK
- * byte as an end of the frame and will interpret the bytes in RxBuffer as a
- * frame.
+ *
+ *   Lost - FrameDetector is lost in the stream of incoming bytes and will
+ *          interpret the next MARK byte as an end of the frame.
+ *
+ *   WaitForStartMarker - FrameDetector is synced and is waiting for MARK byte
+ *          that will denote the start of the frame
+ *
+ *   ReceivingFrame - FrameDetector is synced and will interpret the next MARK
+ *          byte as an end of the frame and will interpret the bytes in RxBuffer
+ *          as a frame.
  *
  * OnRxError will cause FrameDetector to transition to the Lost state, frame
  * being received will be ignored.
@@ -115,7 +121,7 @@ public:
     switch (state_) {
     case State::Lost:
       // We have received just this marker
-      // In this case, we were lucky to get to Lost state in the interframe
+      // In this case, we were lucky to get to Lost state in the inter-frame
       // silence, assume this marker is the start of the frame
       state_ = State::ReceivingFrame;
       break;
@@ -125,7 +131,7 @@ public:
       break;
     case State::ReceivingFrame:
       // repeated marker char received
-      // this means we have received a 0 lenght frame
+      // this means we have received a 0-length frame
       // ignore it and continue receiving frame bytes
       RestartRX();
       break;

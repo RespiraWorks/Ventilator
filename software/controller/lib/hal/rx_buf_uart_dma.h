@@ -14,14 +14,14 @@ limitations under the License.
 
 */
 
-// todo: replace with pragma once
+// \TODO: replace with pragma once
 #ifndef __HAL_TRANSPORT
 #include "network_protocol.pb.h"
 #include "uart_dma.h"
 
 // RX buffer wrapper that controls restart of reception and provides count of
 // received bytes.
-// We need this class to abstract hardware access from FrameDetector FSM so it
+// We need this class to abstract hardware access from FrameDetector FSM, so it
 // can be used in GUI code
 template <int RxBytesMax> class RxBufferUartDma {
 public:

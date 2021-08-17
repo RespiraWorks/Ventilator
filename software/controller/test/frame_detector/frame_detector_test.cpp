@@ -257,6 +257,14 @@ TEST(FrameDetector, FuzzyErrors) {
 TEST(FrameDetector, FuzzRandomEvents) {
   string valid_frames = "..aa..bb..cc.";
 
+  /* \todo make this exhaustive, rather than random, like:
+int remainder = j;
+for (int i = 0; i < 10; ++i) {
+int r = remainder % 3;
+remainder /= 3;
+switch (r) { ... }
+} */
+
   for (int j = 0; j < pow(3, 10); j++) {
     string noise = "";
     for (int i = 0; i < 10; i++) {
@@ -269,6 +277,8 @@ TEST(FrameDetector, FuzzRandomEvents) {
         noise += "a";
         break;
       case 2:
+        // \todo: does frame detector handle frames differently? If not we just
+        // need "E"?
         noise += "F";
         break;
       default:

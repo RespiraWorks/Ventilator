@@ -14,7 +14,6 @@ limitations under the License.
 */
 
 #include "checksum.h"
-#include <stdint.h>
 
 // The polynomial 0x741B8CD7 has Hamming distance 6 up to 16360 bits
 // and Hamming distance 4 up to 114663 bits.
@@ -22,7 +21,7 @@ limitations under the License.
 // 2002.] https://users.ece.cmu.edu/~koopman/crc/
 // Table generated using
 // http://www.sunshine2k.de/coding/javascript/crc/crc_js.html
-uint32_t CRC32Single(uint32_t crc, uint8_t data) {
+uint32_t crc32_single(uint32_t crc, uint8_t data) {
   static constexpr uint32_t CRCTable[16] = {
       // Nibble lookup table for 0x741B8CD7 polynomial
       0x00000000, 0x741B8CD7, 0xE83719AE, 0x9C2C9579, 0xA475BF8B, 0xD06E335C,
@@ -54,7 +53,7 @@ uint32_t soft_crc32(const uint8_t *data, uint32_t length) {
 
   uint32_t crc = 0xFFFFFFFF;
   while (length--) {
-    crc = CRC32Single(crc, *data++);
+    crc = crc32_single(crc, *data++);
   }
   return crc;
 }

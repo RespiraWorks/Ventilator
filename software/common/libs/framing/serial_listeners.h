@@ -23,18 +23,18 @@ class RxListener {
 public:
   // Called when the ordered number of bytes is transferred from UART to memory
   // over DMA
-  virtual void OnRxComplete() = 0;
+  virtual void on_rx_complete() = 0;
   // Called on specified character reception
-  virtual void OnCharacterMatch() = 0;
+  virtual void on_character_match() = 0;
   // Called on RX errors
-  virtual void OnRxError(RxError) = 0;
+  virtual void on_rx_error(RxError) = 0;
 };
 
 class TxListener {
 public:
   // Called when the ordered number of bytes is transferred from memory to UART
   // over DMA
-  virtual void OnTxComplete() = 0;
+  virtual void on_tx_complete() = 0;
   // Called on TX errors
-  virtual void OnTxError() = 0;
+  virtual void on_tx_error() = 0;
 };

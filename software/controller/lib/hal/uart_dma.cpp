@@ -112,20 +112,20 @@ void UartDma::Init(uint32_t baud) {
 }
 
 // Sets up an interrupt on matching char incoming form UART3
-void UartDma::CharMatchEnable() {
+void UartDma::enable_char_match() {
   uart_->interrupt_clear.bitfield.char_match_clear = 1; // Clear char match flag
   uart_->control_reg1.bitfield.char_match_interrupt =
       1; // Enable character match interrupt
 }
 
 // Returns true if DMA TX is in progress
-bool UartDma::TxInProgress() const {
+bool UartDma::tx_in_progress() const {
   // TODO thread safety
   return tx_in_progress_;
 }
 
 // Returns true if DMA RX is in progress
-bool UartDma::RxInProgress() const {
+bool UartDma::rx_in_progress() const {
   // TODO thread safety
   return rx_in_progress_;
 }
@@ -134,8 +134,8 @@ bool UartDma::RxInProgress() const {
 // Returns false if DMA transmission is in progress, does not
 // interrupt previous transmission.
 // Returns true if no transmission is in progress
-bool UartDma::StartTX(uint8_t *buf, uint32_t length, TxListener *txl) {
-  if (TxInProgress()) {
+bool UartDma::start_tx(uint8_t *buf, uint32_t length, TxListener *txl) {
+  if (tx_in_progress()) {
     return false;
   }
 
@@ -157,8 +157,8 @@ bool UartDma::StartTX(uint8_t *buf, uint32_t length, TxListener *txl) {
   return true;
 }
 
-void UartDma::StopTX() {
-  if (TxInProgress()) {
+void UartDma::stop_tx() {
+  if (tx_in_progress()) {
     // Disable DMA channel
     dma_->channel[tx_channel_].config.enable = 0;
     // TODO thread safety
@@ -169,11 +169,11 @@ void UartDma::StopTX() {
 // Sets up reception of exactly [length] chars from UART3 into [buf]
 // [timeout] is the number of baudrate bits for which RX line is
 // allowed to be idle before issuing timeout error.
-// OnCharacterMatch callback will be called if a match_char is seen on the RX
+// on_character_match callback will be called if a match_char is seen on the RX
 // line
-// OnRxComplete callback will be called when the [length] bytes are received.
+// on_rx_complete callback will be called when the [length] bytes are received.
 // DMA and UART is disabled in this case.
-// OnRxError is called if UART or DMA errors occur:
+// on_rx_error is called if UART or DMA errors occur:
 // OVERRUN - if received byte was not read before a new byte is received
 // SERIAL_FRAMING - when a de-synchronization, excessive noise or a break
 // character is detected
@@ -187,9 +187,9 @@ void UartDma::StopTX() {
 // Returns false if reception is in progress, new reception is not setup.
 // Returns true if no reception is in progress and new reception was setup.
 
-bool UartDma::StartRX(uint8_t *buf, uint32_t length, RxListener *rxl) {
+bool UartDma::start_rx(uint8_t *buf, uint32_t length, RxListener *rxl) {
   // UART3 reception happens on DMA1 channel 3
-  if (RxInProgress()) {
+  if (rx_in_progress()) {
     return false;
   }
 
@@ -215,10 +215,10 @@ bool UartDma::StartRX(uint8_t *buf, uint32_t length, RxListener *rxl) {
   return true;
 }
 
-uint32_t UartDma::GetRxBytesLeft() { return dma_->channel[2].count; }
+uint32_t UartDma::rx_bytes_left() { return dma_->channel[2].count; }
 
-void UartDma::StopRX() {
-  if (RxInProgress()) {
+void UartDma::stop_rx() {
+  if (rx_in_progress()) {
     uart_->control_reg1.bitfield.rx_timeout_interrupt =
         0; // Disable receive timeout interrupt
     dma_->channel[rx_channel_].config.enable = 0; // Disable DMA channel
@@ -241,9 +241,10 @@ static bool GetRxError() {
 }
 
 // ISR handler for the UART peripheral.
-// Calls OnRxError and OnCharacterMatch functions of the rxListener as those
-// events are provided by UART peripheral. OnRxComplete is called by DMA ISR
-void UartDma::UartISR() {
+// Calls on_rx_error and on_character_match functions of the rx_listener_ as
+// those events are provided by UART peripheral. on_rx_complete is called by DMA
+// ISR
+void UartDma::UART_interrupt_handler() {
   if (GetRxError()) {
     RxError e = RxError::Unknown;
     if (uart_->status.bitfield.overrun_error) {
@@ -261,9 +262,9 @@ void UartDma::UartISR() {
     uart_->interrupt_clear.bitfield.overrun_clear = 1;
     uart_->interrupt_clear.bitfield.rx_timeout_clear = 1;
 
-    StopRX();
+    stop_rx();
     if (rx_listener_) {
-      rx_listener_->OnRxError(e);
+      rx_listener_->on_rx_error(e);
     }
     return;
   }
@@ -275,37 +276,37 @@ void UartDma::UartISR() {
         1; // Clear char match flag
 
     if (rx_listener_) {
-      rx_listener_->OnCharacterMatch();
+      rx_listener_->on_character_match();
     }
   }
 }
 
 // ISR handler for the DMA peripheral responsible for transmission.
-// Calls OnTxError and OnTxComplete functions of the tx_listener_
-void UartDma::DmaTxISR() {
-  StopTX();
+// Calls on_tx_error and on_tx_complete functions of the tx_listener_
+void UartDma::DMA_tx_interrupt_handler() {
+  stop_tx();
   if (dma_->interrupt_status.teif2) {
     if (tx_listener_) {
-      tx_listener_->OnTxError();
+      tx_listener_->on_tx_error();
     }
   } else {
     if (tx_listener_) {
-      tx_listener_->OnTxComplete();
+      tx_listener_->on_tx_complete();
     }
   }
 }
 
 // ISR handler for the DMA peripheral responsible for reception.
-// Calls OnRxError and OnRxComplete functions of the rx_listener_
-void UartDma::DmaRxISR() {
-  StopRX();
+// Calls on_rx_error and on_rx_complete functions of the rx_listener_
+void UartDma::DMA_rx_interrupt_handler() {
+  stop_rx();
   if (dma_->interrupt_status.teif3) {
     if (rx_listener_) {
-      rx_listener_->OnRxError(RxError::DMA);
+      rx_listener_->on_rx_error(RxError::DMA);
     }
   } else {
     if (rx_listener_) {
-      rx_listener_->OnRxComplete();
+      rx_listener_->on_rx_complete();
     }
   }
 }
@@ -315,17 +316,17 @@ void UartDma::DmaRxISR() {
 
 void DMA1Channel2ISR() {
   DmaReg *dma = Dma1Base;
-  uart_dma.DmaTxISR();
+  uart_dma.DMA_tx_interrupt_handler();
   dma->interrupt_clear.gif2 = 1; // clear all channel 3 flags
 }
 
 void DMA1Channel3ISR() {
   DmaReg *dma = Dma1Base;
-  uart_dma.DmaRxISR();
+  uart_dma.DMA_rx_interrupt_handler();
   dma->interrupt_clear.gif3 = 1; // clear all channel 2 flags
 }
 
 // This is the interrupt handler for the UART.
-void Uart3ISR() { uart_dma.UartISR(); }
+void Uart3ISR() { uart_dma.UART_interrupt_handler(); }
 
 #endif

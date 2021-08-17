@@ -18,9 +18,9 @@ limitations under the License.
 #include "hal_stm32_regs.h"
 #include "serial_listeners.h"
 
-class DMACtrl {
+class DmaCtrl {
 public:
-  explicit DMACtrl(DmaReg *const dma) : dma_(dma) {}
+  explicit DmaCtrl(DmaReg *const dma) : dma_(dma) {}
   void init() {
     // UART3 reception happens on DMA1 channel 3
     dma_->channel_select.c3s = 0b0010;
@@ -44,24 +44,24 @@ public:
 
   void Init(uint32_t baud);
   // Returns true if DMA TX is in progress
-  bool TxInProgress() const;
+  bool tx_in_progress() const;
   // Returns true if DMA RX is in progress
-  bool RxInProgress() const;
+  bool rx_in_progress() const;
 
-  [[nodiscard]] bool StartTX(uint8_t *buf, uint32_t length, TxListener *txl);
+  [[nodiscard]] bool start_tx(uint8_t *buf, uint32_t length, TxListener *txl);
 
-  uint32_t GetRxBytesLeft();
+  uint32_t rx_bytes_left();
 
-  void StopTX();
+  void stop_tx();
 
-  [[nodiscard]] bool StartRX(uint8_t *buf, uint32_t length, RxListener *rxl);
+  [[nodiscard]] bool start_rx(uint8_t *buf, uint32_t length, RxListener *rxl);
 
-  void StopRX();
-  void CharMatchEnable();
+  void stop_rx();
+  void enable_char_match();
 
-  void UartISR();
-  void DmaRxISR();
-  void DmaTxISR();
+  void UART_interrupt_handler();
+  void DMA_rx_interrupt_handler();
+  void DMA_tx_interrupt_handler();
 
 private:
   typedef struct {

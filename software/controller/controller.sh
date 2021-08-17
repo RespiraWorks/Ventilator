@@ -27,11 +27,14 @@ set -o xtrace
 # This script should work no matter where you call it from.
 cd "$(dirname "$0")"
 
+EXIT_FAILURE=1
+EXIT_SUCCESS=0
+
 # Check if Linux
 PLATFORM="$(uname -s)"
 if [ $PLATFORM != "Linux" ]; then
   echo "Error: This script only supports 'Linux'. You have $PLATFORM."
-  exit 1
+  exit $EXIT_FAILURE
 fi
 
 #########
@@ -103,7 +106,7 @@ run_integration_tests() {
 
 if [ "$1" == "--help" ]; then
   print_help
-  exit 0
+  exit $EXIT_SUCCESS
 fi
 
 ###########
@@ -113,7 +116,7 @@ fi
 if [ "$1" == "--install" ]; then
   if [ "$EUID" -eq 0 ] && [ "$2" != "-f" ]; then
     echo "Please do not run install with root privileges!"
-    exit 1
+    exit $EXIT_SUCCESS
   fi
 
   pushd "$HOME"
@@ -128,7 +131,7 @@ if [ "$1" == "--install" ]; then
 
   echo "Updated udev rules. You might have to restart your machine for changes to become effective."
 
-  exit 0
+  exit $EXIT_SUCCESS
 fi
 
 #########
@@ -137,7 +140,7 @@ fi
 
 if [ "$1" == "--clean" ]; then
   clean_dir .pio
-  exit 0
+  exit $EXIT_SUCCESS
 fi
 
 #########
@@ -146,7 +149,7 @@ fi
 
 if [ "$1" == "--check" ]; then
   run_checks
-  exit 0
+  exit $EXIT_SUCCESS
 fi
 
 ########
@@ -168,7 +171,7 @@ if [ "$1" == "--test" ]; then
     echo "Skipping static checks."
   fi
 
-  exit 0
+  exit $EXIT_SUCCESS
 fi
 
 #######
@@ -179,12 +182,12 @@ if [ "$1" == "--run" ]; then
 
   if [ "$EUID" -eq 0 ] && [ "$2" != "-f" ]; then
     echo "Please do not run the app with root privileges!"
-    exit 1
+    exit $EXIT_FAILURE
   fi
 
   platformio/deploy.sh stm32
 
-  exit 0
+  exit $EXIT_SUCCESS
 fi
 
 }

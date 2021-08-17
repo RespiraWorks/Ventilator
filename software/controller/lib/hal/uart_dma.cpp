@@ -108,7 +108,7 @@ void UartDma::Init(uint32_t baud) {
          // address
   dma_->channel[tx_channel_].config.circular = 0; // not circular
   dma_->channel[tx_channel_].config.direction =
-      static_cast<uint32_t>(DmaChannelDir::PeripheralToMemory);
+      static_cast<uint32_t>(DmaChannelDir::MemoryToPeripheral);
 }
 
 // Sets up an interrupt on matching char incoming form UART3
@@ -247,7 +247,7 @@ void UartDma::UartISR() {
   if (GetRxError()) {
     RxError e = RxError::Unknown;
     if (uart_->status.bitfield.overrun_error) {
-      e = RxError::Overflow;
+      e = RxError::Overrun;
     }
     if (uart_->status.bitfield.framing_error) {
       e = RxError::SerialFraming;

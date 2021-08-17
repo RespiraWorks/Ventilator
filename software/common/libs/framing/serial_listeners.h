@@ -15,7 +15,7 @@ limitations under the License.
 
 #pragma once
 
-enum class RxError { Unknown, Overflow, SerialFraming, DMA };
+enum class RxError { Unknown, Overrun, SerialFraming, DMA };
 
 // An interface that gets called on serial events.
 // NOTE: all callbacks are called from interrupt context!

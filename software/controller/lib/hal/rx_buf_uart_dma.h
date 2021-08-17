@@ -28,21 +28,21 @@ public:
   explicit RxBufferUartDma(UART_DMA &uart_dma) : uart_dma_(uart_dma) {}
 
   // Sets up underlying receive infrastructure and starts the first reception
-  [[nodiscard]] bool Begin(RxListener *rxl) {
+  [[nodiscard]] bool begin(RxListener *rxl) {
     uart_dma_.charMatchEnable();
     return uart_dma_.startRX(rx_buffer_, RxBytesMax, rxl);
   }
 
   // Restarts the ongoing reception, this means the rx_buf will be written from
   // the beginning
-  void RestartRX(RxListener *rxl) {
+  void restart_rx(RxListener *rxl) {
     uart_dma_.stopRX();
     [[maybe_unused]] bool started =
         uart_dma_.startRX(rx_buffer_, RxBytesMax, rxl);
   }
 
   // Returns how many bytes were written into rx_buf
-  uint32_t ReceivedLength() {
+  uint32_t received_length() {
     return (RxBytesMax - uart_dma_.getRxBytesLeft());
   }
 
@@ -51,22 +51,22 @@ public:
 
 #ifdef TEST_MODE
   // Puts a byte to rx_buf
-  void test_PutByte(uint8_t b);
+  void test_put_byte(uint8_t b);
 #endif
 
 private:
   // UART_DMA provides receiving to this buffer
-  UART_DMA &uart_dma_;
+  UartDma &uart_dma_;
   // Buffer into which the data is received
   uint8_t rx_buffer_[RxBytesMax];
 };
 
 #ifdef TEST_MODE
-extern uint32_t rx_i;
+extern uint32_t rx_index;
 // Puts a byte to rx_buf
 template <int RxBytesMax>
-void RxBufferUartDma<RxBytesMax>::test_PutByte(uint8_t b) {
-  rx_buffer_[rx_i++] = b;
+void RxBufferUartDma<RxBytesMax>::test_put_byte(uint8_t b) {
+  rx_buffer[rx_index++] = b;
 }
 #endif
 

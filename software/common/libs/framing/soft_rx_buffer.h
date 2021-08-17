@@ -23,26 +23,26 @@ template <int RxBytesMax> class SoftRxBuffer {
 public:
   explicit SoftRxBuffer(uint8_t match_char) : match_char_(match_char) {}
 
-  void RestartRX(RxListener *listener) {
+  void restart_rx(RxListener *listener) {
     rx_index_ = 0;
     rx_listener_ = listener;
   }
 
-  bool Begin(RxListener *listener) {
-    RestartRX(listener);
+  bool begin(RxListener *listener) {
+    restart_rx(listener);
     return true;
   };
 
-  uint32_t ReceivedLength() { return rx_index_; }
+  uint32_t received_length() { return rx_index_; }
 
   uint8_t *get() { return rx_buffer_; }
 
-  void PutByte(uint8_t b) {
+  void put_byte(uint8_t b) {
     if (rx_index_ < RxBytesMax) {
       rx_buffer_[rx_index_++] = b;
       if (match_char_ == b) {
         if (rx_listener_) {
-          rx_listener_->OnCharacterMatch();
+          rx_listener_->on_character_match();
         }
       }
     }
@@ -50,7 +50,7 @@ public:
     // \TODO: this never be >? or this could just be an else branch?
     if (rx_index_ >= RxBytesMax) {
       if (rx_listener_) {
-        rx_listener_->OnRxComplete();
+        rx_listener_->on_rx_complete();
       }
     }
   }

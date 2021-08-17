@@ -1,3 +1,19 @@
+/* Copyright 2020-2021, RespiraWorks
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+*/
+
 #pragma once
 
 #include "checksum.h"
@@ -5,9 +21,9 @@
 #include "framing_streams.h"
 #include "network_protocol.pb.h"
 #include "proto_traits.h"
+#include <cstdint>
 #include <pb_decode.h>
 #include <pb_encode.h>
-#include <stdint.h>
 
 uint32_t UnescapeFrame(uint8_t *source, uint32_t source_length,
                        uint8_t *destination, uint32_t destination_length) {
@@ -75,9 +91,9 @@ static uint32_t EncodedLength(uint8_t *buf, uint32_t len) {
   CrcStream crc_stream(esc_stream);
   StreamResponse r = {0, ResponseFlags::StreamSuccess};
   for (uint32_t i = 0; i < len; i++) {
-    r += crc_stream.Put(buf[i]);
+    r += crc_stream.put(buf[i]);
   }
-  r += crc_stream.Put(EndOfStream);
+  r += crc_stream.put(EndOfStream);
   return r.count_written;
 }
 
@@ -99,7 +115,7 @@ uint32_t EncodeFrame(const PbType &pb_object, OutputStream &output_stream) {
   CrcStream crc_stream(esc_stream);
 
   if (EncodedLength<PbType>(pb_buffer, pb_length) >
-      output_stream.BytesAvailableForWrite()) {
+      output_stream.bytes_available_for_write()) {
     // We won't be able to fit in the whole frame this time and we don't want
     // any partial writes
     return 0;
@@ -107,8 +123,8 @@ uint32_t EncodeFrame(const PbType &pb_object, OutputStream &output_stream) {
 
   StreamResponse ret;
   for (uint32_t i = 0; i < pb_length; i++) {
-    ret += crc_stream.Put(pb_buffer[i]);
+    ret += crc_stream.put(pb_buffer[i]);
   }
-  ret += crc_stream.Put(EndOfStream);
+  ret += crc_stream.put(EndOfStream);
   return ret.count_written;
 }

@@ -1,3 +1,19 @@
+/* Copyright 2020-2021, RespiraWorks
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+*/
+
 #pragma once
 
 #include "uart_dma.h"
@@ -15,7 +31,7 @@ extern UartDma uart_dma;
 // * ErrorStreamBroken if DMA error interrupt detected
 // * ErrorBufferFull if an attempt was made to write to stream while all
 //   buffers were full
-// * WarningBufferFull if the buffer bacame full after the last char written
+// * WarningBufferFull if the buffer became full after the last char written
 // * StreamSuccess if there is space available in buffers after the char is
 // written
 
@@ -23,14 +39,14 @@ template <int BufferLength>
 class DmaStream : public OutputStream, public TxListener {
 
 public:
-  StreamResponse Put(int32_t b) override {
+  StreamResponse put(int32_t b) override {
     if (tx_error_) {
       tx_error_ = false;
       return {.count_written = 0, .flags = ResponseFlags::ErrorStreamBroken};
     }
     // TODO thread safety
     if (EndOfStream == b) {
-      return {.count_written = 0, .flags = Transmit()};
+      return {.count_written = 0, .flags = transmit()};
     }
 
     if (is_buf_full()) {
@@ -38,14 +54,14 @@ public:
     } else {
       current_buffer_[index_++] = static_cast<uint8_t>(b);
       if (is_buf_full()) {
-        return {.count_written = 1, .flags = Transmit()};
+        return {.count_written = 1, .flags = transmit()};
       } else {
         return {.count_written = 1, .flags = ResponseFlags::StreamSuccess};
       }
     }
   }
 
-  uint32_t BytesAvailableForWrite() override {
+  uint32_t bytes_available_for_write() override {
     // TODO thread safety
     if (uart_dma.tx_in_progress()) {
       return BufferLength - index_;
@@ -60,7 +76,7 @@ public:
       // gets called when there is no more active tx happening
       [[maybe_unused]] bool started =
           uart_dma.start_tx(current_buffer_, index_, this);
-      SwapBuffers();
+      swap_buffers();
       schedule_tx_ = false;
     }
   }
@@ -71,7 +87,7 @@ public:
 
 private:
   // Starts DMA transmission if transmission is not ongoing
-  ResponseFlags Transmit() {
+  ResponseFlags transmit() {
     if (is_buf_full() && uart_dma.tx_in_progress()) {
       schedule_tx_ = true;
       return ResponseFlags::WarningBufferFull;
@@ -85,13 +101,13 @@ private:
     // transmission is not in progress before
     [[maybe_unused]] bool started =
         uart_dma.start_tx(current_buffer_, index_, this);
-    SwapBuffers();
+    swap_buffers();
     return ResponseFlags::StreamSuccess;
   }
 
   bool is_buf_full() { return index_ >= BufferLength; }
 
-  void SwapBuffers() {
+  void swap_buffers() {
     if (buffer1_ == current_buffer_) {
       current_buffer_ = buffer2_;
     } else if (buffer2_ == current_buffer_) {

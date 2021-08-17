@@ -45,9 +45,11 @@ The following options are provided:
   --help        Display this dialog
   --install     Install platformio and configure udev rules for deployment
   --clean       Clean build directories
+  --check       Runs static checks only
   --test        Builds and runs all tests locally
     [--no-checks]     - do not run static checks (yes, it's to annoy you!)
-  --run         Builds and deploys firmware to controller (there can be only one, use deploy script manually for others)
+  --run         Builds and deploys firmware to controller
+                There can be only one connected. Otherwise, use the platformi/deploy.sh script manually.
 EOF
 }
 
@@ -61,6 +63,38 @@ clean_dir() {
     echo "File with this name already exists, not a directory."
     return 1
   fi
+}
+
+run_checks() {
+    # Code style / bug-prone pattern checks (eg. clang-tidy)
+    # WARNING: This might sometimes give different results for different people,
+    # and different results on CI:
+    # See https://community.platformio.org/t/no-version-of-tool-clangtidy-works-on-all-os/13219
+    # Feel free to edit .clang_tidy to blacklist problematic checks.
+
+    # Since this is not for CI but just for devs to see, let's maximize the feedback
+    # Checks should run on both environments successively regardless if the first one fails
+    # It will likely fail for now...
+    set +e
+    set +o pipefail
+
+    # STM32 - clangtidy [TODO(a-vinod) cppcheck]
+    # Native - cppcheck & clangtidy
+
+    pio check -e stm32 --fail-on-defect=high --skip-packages
+    pio check -e native --fail-on-defect=high
+}
+
+run_integration_tests() {
+  # Make sure controller integration tests build for target platform.
+  # TODO(martukas) This will actually have to build an deploy on Jenkins and not here
+  INTEGRATION_TEST_H=idle_test.h pio run -e integration-test
+  INTEGRATION_TEST_H=buzzer_test.h TEST_PARAM_1=0.0f TEST_PARAM_2=1.0f pio run -e integration-test
+  INTEGRATION_TEST_H=blower_test.h TEST_PARAM_1=0.0f TEST_PARAM_2=1.0f pio run -e integration-test
+  INTEGRATION_TEST_H=stepper_test.h TEST_PARAM_1=0 TEST_PARAM_2=90.0f pio run -e integration-test
+  INTEGRATION_TEST_H=pinch_valve_test.h TEST_PARAM_1=0 pio run -e integration-test
+  INTEGRATION_TEST_H=psol_test.h pio run -e integration-test
+  INTEGRATION_TEST_H=eeprom_test.h pio run -e integration-test
 }
 
 ########
@@ -106,6 +140,15 @@ if [ "$1" == "--clean" ]; then
   exit 0
 fi
 
+#########
+# CHECK #
+#########
+
+if [ "$1" == "--check" ]; then
+  run_checks
+  exit 0
+fi
+
 ########
 # TEST #
 ########
@@ -114,37 +157,13 @@ if [ "$1" == "--test" ]; then
   # Controller unit tests on native.
   pio test -e native
 
-  # Make sure controller integration tests build for target platform.
-  # TODO(martukas) This will actually have to be build and tested on Jenkins and not here
-  INTEGRATION_TEST_H=idle_test.h pio run -e integration-test
-  INTEGRATION_TEST_H=buzzer_test.h TEST_PARAM_1=0.0f TEST_PARAM_2=1.0f pio run -e integration-test
-  INTEGRATION_TEST_H=blower_test.h TEST_PARAM_1=0.0f TEST_PARAM_2=1.0f pio run -e integration-test
-  INTEGRATION_TEST_H=stepper_test.h TEST_PARAM_1=0 TEST_PARAM_2=90.0f pio run -e integration-test
-  INTEGRATION_TEST_H=pinch_valve_test.h TEST_PARAM_1=0 pio run -e integration-test
-  INTEGRATION_TEST_H=psol_test.h pio run -e integration-test
-  INTEGRATION_TEST_H=eeprom_test.h pio run -e integration-test
+  run_integration_tests
 
   # Make sure controller builds for target platform.
-  pio run
+  pio run -e stm32
 
   if [ "$2" != "--no-checks" ]; then
-    # Code style / bug-prone pattern checks (eg. clang-tidy)
-    # WARNING: This might sometimes give different results for different people,
-    # and different results on CI:
-    # See https://community.platformio.org/t/no-version-of-tool-clangtidy-works-on-all-os/13219
-    # Feel free to edit .clang_tidy to blacklist problematic checks.
-
-    # Since this is not for CI but just for devs to see, let's maximize the feedback
-    # Checks should run on both environments successively regardless if the first one fails
-    # It will likely fail for now...
-    set +e
-    set +o pipefail
-
-    # STM32 - clangtidy [TODO(a-vinod) cppcheck]
-    # Native - cppcheck & clangtidy
-
-    pio check -e stm32 --fail-on-defect=high --skip-packages
-    pio check -e native --fail-on-defect=high
+    run_checks
   else
     echo "Skipping static checks."
   fi
@@ -167,3 +186,5 @@ if [ "$1" == "--run" ]; then
 
   exit 0
 fi
+
+}

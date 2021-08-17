@@ -14,7 +14,10 @@ limitations under the License.
 */
 
 #include "hal.h"
-#include <assert.h>
+
+#ifdef TEST_MODE
+#include <cassert>
+#endif
 
 // Provide an implementation of __cxa_pure_virtual, which is called when you
 // try to invoke a pure-virtual function.  Without this, the default

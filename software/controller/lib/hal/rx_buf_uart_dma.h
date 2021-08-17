@@ -25,19 +25,20 @@ limitations under the License.
 // can be used in GUI code
 template <int RxBytesMax> class RxBufferUartDma {
 public:
-  explicit RxBufferUartDma(UART_DMA &uart_dma) : uart_dma_(uart_dma){};
+  explicit RxBufferUartDma(UART_DMA &uart_dma) : uart_dma_(uart_dma) {}
 
   // Sets up underlying receive infrastructure and starts the first reception
   [[nodiscard]] bool Begin(RxListener *rxl) {
     uart_dma_.charMatchEnable();
-    return uart_dma_.startRX(rx_buf_, RxBytesMax, rxl);
+    return uart_dma_.startRX(rx_buffer_, RxBytesMax, rxl);
   }
 
   // Restarts the ongoing reception, this means the rx_buf will be written from
   // the beginning
   void RestartRX(RxListener *rxl) {
     uart_dma_.stopRX();
-    [[maybe_unused]] bool started = uart_dma_.startRX(rx_buf_, RxBytesMax, rxl);
+    [[maybe_unused]] bool started =
+        uart_dma_.startRX(rx_buffer_, RxBytesMax, rxl);
   }
 
   // Returns how many bytes were written into rx_buf
@@ -46,7 +47,7 @@ public:
   }
 
   // Returns the rx_buf
-  uint8_t *get() { return rx_buf_; }
+  uint8_t *get() { return rx_buffer_; }
 
 #ifdef TEST_MODE
   // Puts a byte to rx_buf
@@ -57,7 +58,7 @@ private:
   // UART_DMA provides receiving to this buffer
   UART_DMA &uart_dma_;
   // Buffer into which the data is received
-  uint8_t rx_buf_[RxBytesMax];
+  uint8_t rx_buffer_[RxBytesMax];
 };
 
 #ifdef TEST_MODE
@@ -65,7 +66,7 @@ extern uint32_t rx_i;
 // Puts a byte to rx_buf
 template <int RxBytesMax>
 void RxBufferUartDma<RxBytesMax>::test_PutByte(uint8_t b) {
-  rx_buf_[rx_i++] = b;
+  rx_buffer_[rx_i++] = b;
 }
 #endif
 

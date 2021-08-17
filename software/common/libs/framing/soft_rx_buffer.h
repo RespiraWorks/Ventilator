@@ -20,15 +20,11 @@ limitations under the License.
 #include <cstdint>
 
 template <int RxBytesMax> class SoftRxBuffer {
-  uint8_t rx_buf_[RxBytesMax];
-  uint32_t rx_i_ = 0;
-  RxListener *rx_listener_;
-  uint8_t match_char_ = 0;
-
 public:
-  explicit SoftRxBuffer(uint8_t match_char) : match_char_(match_char){};
+  explicit SoftRxBuffer(uint8_t match_char) : match_char_(match_char) {}
+
   void RestartRX(RxListener *listener) {
-    rx_i_ = 0;
+    rx_index_ = 0;
     rx_listener_ = listener;
   }
 
@@ -37,23 +33,29 @@ public:
     return true;
   };
 
-  uint32_t ReceivedLength() { return rx_i_; };
+  uint32_t ReceivedLength() { return rx_index_; }
 
-  uint8_t *get() { return rx_buf_; }
+  uint8_t *get() { return rx_buffer_; }
 
   void PutByte(uint8_t b) {
-    if (rx_i_ < RxBytesMax) {
-      rx_buf_[rx_i_++] = b;
+    if (rx_index_ < RxBytesMax) {
+      rx_buffer_[rx_index_++] = b;
       if (match_char_ == b) {
         if (rx_listener_) {
           rx_listener_->OnCharacterMatch();
         }
       }
     }
-    if (rx_i_ >= RxBytesMax) {
+    if (rx_index_ >= RxBytesMax) {
       if (rx_listener_) {
         rx_listener_->OnRxComplete();
       }
     }
   }
+
+private:
+  uint8_t rx_buffer_[RxBytesMax];
+  uint32_t rx_index_{0};
+  RxListener *rx_listener_{nullptr};
+  uint8_t match_char_{0};
 };

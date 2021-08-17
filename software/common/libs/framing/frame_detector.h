@@ -198,11 +198,11 @@ public:
 
 private:
   RxBuffer &rx_buffer_;
-  State state_ = State::Lost;
-  bool frame_available_ = false;
+  State state_{State::Lost};
+  bool frame_available_{false};
   uint8_t frame_buf_[FrameBufferLength];
-  uint32_t frame_buf_length_ = 0;
-  uint32_t marker_count_ = 0;
+  uint32_t frame_buf_length_{0};
+  uint32_t marker_count_{0};
 
   void RestartRX() {
     marker_count_ = 0;

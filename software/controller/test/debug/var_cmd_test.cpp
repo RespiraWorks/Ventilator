@@ -153,7 +153,7 @@ TEST(VarHandler, GetVarCount) {
   EXPECT_EQ(4, context.response_length);
 
   std::array<uint8_t, 4> expected_result;
-  u32_to_u8(DebugVarBase::GetVarCount(), expected_result.data());
+  u32_to_u8(DebugVarRegistry::singleton().GetVarCount(), expected_result.data());
   EXPECT_EQ(response, expected_result);
 }
 

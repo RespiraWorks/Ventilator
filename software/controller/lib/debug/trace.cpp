@@ -44,7 +44,7 @@ bool Trace::SetTracedVarId(uint8_t index, uint16_t id) {
   if (index >= MaxTraceVars) {
     return false;
   }
-  traced_vars_[index] = DebugVar::FindVar(id);
+  traced_vars_[index] = DebugVarRegistry::singleton().FindVar(id);
   // like in the SetTraceVarId<int index> template, we need to flush the buffer
   // when the set of traced variables change.
   trace_buffer_.Flush();

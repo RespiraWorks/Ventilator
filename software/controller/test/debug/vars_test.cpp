@@ -30,7 +30,7 @@ TEST(DebugVar, DebugVarInt32) {
   EXPECT_EQ("fmt", var.GetFormat());
   EXPECT_EQ("unit", var.GetUnits());
   EXPECT_EQ(VarAccess::ReadOnly, var.GetAccess());
-  EXPECT_EQ(&var, DebugVar::FindVar(var.GetId()));
+  EXPECT_EQ(&var, DebugVarRegistry::singleton().FindVar(var.GetId()));
 
   EXPECT_EQ(uint32_t{5}, var.GetValue());
   var.SetValue(7);
@@ -76,18 +76,18 @@ TEST(DebugVar, DebugVarFloatDefaults) {
 }
 
 TEST(DebugVar, Registration) {
-  uint32_t num_vars = DebugVarBase::GetVarCount();
+  uint32_t num_vars = DebugVarRegistry::singleton().GetVarCount();
   int32_t int_value = 5;
   DebugVar var1("var1", VarAccess::ReadWrite, &int_value, "unit");
 
-  EXPECT_EQ(DebugVarBase::GetVarCount(), num_vars + 1);
+  EXPECT_EQ(DebugVarRegistry::singleton().GetVarCount(), num_vars + 1);
 
   float float_value = 7;
   DebugVar var2("var2", VarAccess::ReadWrite, &float_value, "unit");
 
-  EXPECT_EQ(DebugVarBase::GetVarCount(), num_vars + 2);
+  EXPECT_EQ(DebugVarRegistry::singleton().GetVarCount(), num_vars + 2);
 
-  EXPECT_EQ(&var1, DebugVar::FindVar(var1.GetId()));
-  EXPECT_EQ(&var2, DebugVar::FindVar(var2.GetId()));
-  EXPECT_EQ(nullptr, DebugVar::FindVar(12345));
+  EXPECT_EQ(&var1, DebugVarRegistry::singleton().FindVar(var1.GetId()));
+  EXPECT_EQ(&var2, DebugVarRegistry::singleton().FindVar(var2.GetId()));
+  EXPECT_EQ(nullptr, DebugVarRegistry::singleton().FindVar(12345));
 }

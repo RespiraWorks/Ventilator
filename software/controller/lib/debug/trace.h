@@ -15,8 +15,7 @@ limitations under the License.
 
 #pragma once
 
-#include <stdint.h>
-
+#include <cstdint>
 #include <optional>
 
 #include "circular_buffer.h"
@@ -67,7 +66,7 @@ class Trace {
   template <int index>
   void SetTracedVarId(int32_t id) {
     static_assert(index >= 0 && index < MaxTraceVars);
-    traced_vars_[index] = DebugVar::FindVar(static_cast<uint16_t>(id));
+    traced_vars_[index] = DebugVarRegistry::singleton().FindVar(static_cast<uint16_t>(id));
     // The layout of the trace buffer is just a bunch of uint32_t's one per
     // each variable of each sample cycle. In order to be able to interpret
     // the buffer unambiguously, the set of traced variables must be the same

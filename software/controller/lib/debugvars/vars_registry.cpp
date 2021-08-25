@@ -13,8 +13,18 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include "vars.h"
+#include "vars_base.h"
 
-// static member variables
-DebugVarBase *DebugVarBase::var_list_[100];
-uint16_t DebugVarBase::var_count_ = 0;
+void DebugVarRegistry::RegisterVar(DebugVarBase* var) {
+  if (var_count_ >= static_cast<uint16_t>(std::size(var_list_))) return;
+  var_list_[var_count_] = var;
+  var->id_ = var_count_;
+  var_count_++;
+}
+
+DebugVarBase* DebugVarRegistry::FindVar(uint16_t vid) {
+  if (vid >= std::size(var_list_)) return nullptr;
+  return var_list_[vid];
+}
+
+uint32_t DebugVarRegistry::GetVarCount() { return var_count_; }

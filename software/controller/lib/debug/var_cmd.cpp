@@ -59,7 +59,7 @@ ErrorCode VarHandler::GetVarInfo(Context *context) {
 
   uint16_t var_id = u8_to_u16(&context->request[1]);
 
-  const auto *var = DebugVar::FindVar(var_id);
+  const auto *var = DebugVarRegistry::singleton().FindVar(var_id);
   if (!var) return ErrorCode::UnknownVariable;
 
   // The info I return consists of the following:
@@ -116,7 +116,7 @@ ErrorCode VarHandler::GetVar(Context *context) {
 
   uint16_t var_id = u8_to_u16(&context->request[1]);
 
-  auto *var = DebugVar::FindVar(var_id);
+  auto *var = DebugVarRegistry::singleton().FindVar(var_id);
   if (!var) return ErrorCode::UnknownVariable;
 
   if (context->max_response_length < 4) return ErrorCode::NoMemory;
@@ -133,7 +133,7 @@ ErrorCode VarHandler::SetVar(Context *context) {
 
   uint16_t var_id = u8_to_u16(&context->request[1]);
 
-  auto *var = DebugVar::FindVar(var_id);
+  auto *var = DebugVarRegistry::singleton().FindVar(var_id);
   if (!var) return ErrorCode::UnknownVariable;
 
   uint32_t count = context->request_length - 3;
@@ -151,7 +151,7 @@ ErrorCode VarHandler::SetVar(Context *context) {
 ErrorCode VarHandler::GetVarCount(Context *context) {
   if (context->max_response_length < 4) return ErrorCode::NoMemory;
 
-  u32_to_u8(DebugVarBase::GetVarCount(), context->response);
+  u32_to_u8(DebugVarRegistry::singleton().GetVarCount(), context->response);
   context->response_length = 4;
   *(context->processed) = true;
   return ErrorCode::None;

@@ -15,91 +15,16 @@ limitations under the License.
 
 #pragma once
 
-#include <array>
-#include <cstdint>
-#include <cstring>
-
-// Defines the type of variable
-enum class VarType {
-  Int32 = 1,
-  UInt32 = 2,
-  Float = 3,
-};
-
-// Defines the possible access to variable
-enum class VarAccess {
-  ReadOnly = 0,
-  ReadWrite = 1,
-};
-
-// This class represents a variable that you can read/write using the
-// debug serial port.
-//
-// We give each such variable a name which the debugger command line will
-// use to access it.  We can also link it with a C++ variable whose value
-// it will read or write.
-//
-// The fmt string gives the debug interface a suggestion on the best way
-// to display the variable's data.
-class DebugVarBase {
- public:
-  // @param type Type of the variable
-  // @param name Name of the variable
-  // @param help String that the Python code displays describing the variable.
-  // @param fmt printf style format string.  This is a hint to the Python code
-  // as to how the variable data should be displayed.
-  DebugVarBase(VarType type, const char *name, VarAccess access, const char *units,
-               const char *help, const char *fmt = "")
-      : type_(type),
-        name_(name),
-        access_(access),
-        units_(units),
-        help_(help),
-        fmt_(fmt),
-        id_(var_count_) {
-    if (var_count_ < static_cast<uint16_t>(std::size(var_list_))) var_list_[id_] = this;
-    var_count_++;
-  }
-
-  static DebugVarBase *FindVar(uint16_t vid) {
-    if (vid >= std::size(var_list_)) return nullptr;
-    return var_list_[vid];
-  }
-  static uint32_t GetVarCount() { return var_count_; }
-
-  virtual uint32_t GetValue() = 0;
-  virtual void SetValue(uint32_t value) = 0;
-
-  const char *GetName() const { return name_; }
-  const char *GetFormat() const { return fmt_; }
-  const char *GetHelp() const { return help_; }
-  const char *GetUnits() const { return units_; }
-  VarType GetType() const { return type_; }
-  uint16_t GetId() const { return id_; }
-  VarAccess GetAccess() const { return access_; }
-  bool WriteAllowed() const { return (access_ == VarAccess::ReadWrite); }
-
- private:
-  const VarType type_;
-  const char *const name_;
-  const VarAccess access_;
-  const char *const units_;
-  const char *const help_;
-  const char *const fmt_;
-  const uint16_t id_;
-
-  // List of all the variables in the system.
-  // Increase size as necessary
-  static DebugVarBase *var_list_[100];
-  static uint16_t var_count_;
-};
+#include "vars_base.h"
 
 template <typename GetFn, typename SetFn>
 class FnDebugVar : public DebugVarBase {
  public:
   FnDebugVar(VarType type, const char *name, VarAccess access, const char *units, GetFn get_fn,
              SetFn set_fn, const char *help, const char *fmt = "")
-      : DebugVarBase(type, name, access, units, help, fmt), get_fn_(get_fn), set_fn_(set_fn) {}
+      : DebugVarBase(type, name, access, units, help, fmt), get_fn_(get_fn), set_fn_(set_fn) {
+    DebugVarRegistry::singleton().RegisterVar(this);
+  }
 
   uint32_t GetValue() override { return get_fn_(); }
   void SetValue(uint32_t value) override { set_fn_(value); }
@@ -142,7 +67,9 @@ class DebugVar : public DebugVarBase {
 
   DebugVar(VarType type, const char *name, VarAccess access, void *data, const char *units,
            const char *help, const char *fmt = "")
-      : DebugVarBase(type, name, access, units, help, fmt), address_(data) {}
+      : DebugVarBase(type, name, access, units, help, fmt), address_(data) {
+    DebugVarRegistry::singleton().RegisterVar(this);
+  }
 };
 
 class DebugInt32 : public DebugVar {

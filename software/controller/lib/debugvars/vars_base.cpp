@@ -17,22 +17,29 @@ limitations under the License.
 
 #include <cstring>
 
-// Prepends t into s. Assumes s has enough space allocated for the combined string.
-void prepend(char* s, const char* t) {
-  size_t len = strlen(t);
-  memmove(s + len, s, strlen(s) + 1);
-  memcpy(s, t, len);
-}
-
 DebugVarBase::DebugVarBase(VarType type, const char* name, VarAccess access, const char* units,
                            const char* help, const char* fmt)
-    : type_(type), access_(access), units_(units), help_(help), fmt_(fmt) {
+    : type_(type), access_(access) {
+  // \todo use stricpy instead?
   strcpy(name_, name);
+  strcpy(help_, help);
+  strcpy(units_, units);
+  strcpy(fmt_, fmt);
 }
 
 const char* DebugVarBase::GetName() const { return name_; }
 
-void DebugVarBase::prepend_name(const char* prefix) { prepend(name_, prefix); }
+void DebugVarBase::prepend_name(const char* prefix) {
+  // Assumes name_ has enough space allocated for the combined string.
+  size_t len = strlen(prefix);
+  memmove(name_ + len, name_, strlen(name_) + 1);
+  memcpy(name_, prefix, len);
+}
+
+void DebugVarBase::append_help(const char* text) {
+  // \todo use stricat instead?
+  strcat(help_, text);
+}
 
 const char* DebugVarBase::GetFormat() const { return fmt_; }
 

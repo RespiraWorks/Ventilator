@@ -23,10 +23,12 @@ TEST(DebugVar, DebugVarInt32) {
   EXPECT_STREQ("var", var.GetName());
   var.prepend_name("pre_");
   EXPECT_STREQ("pre_var", var.GetName());
-  EXPECT_EQ("help", var.GetHelp());
+  EXPECT_STREQ("help", var.GetHelp());
+  var.append_help(" so much help");
+  EXPECT_STREQ("help so much help", var.GetHelp());
   EXPECT_EQ(VarType::Int32, var.GetType());
-  EXPECT_EQ("fmt", var.GetFormat());
-  EXPECT_EQ("unit", var.GetUnits());
+  EXPECT_STREQ("fmt", var.GetFormat());
+  EXPECT_STREQ("unit", var.GetUnits());
   EXPECT_EQ(VarAccess::ReadOnly, var.GetAccess());
   EXPECT_EQ(&var, DebugVarRegistry::singleton().FindVar(var.GetId()));
 
@@ -43,8 +45,8 @@ TEST(DebugVar, DebugVarInt32) {
 
   // All default arguments
   DebugVar var_default("var", VarAccess::ReadWrite, &value, "unit");
-  EXPECT_EQ("", var_default.GetHelp());
-  EXPECT_EQ("%d", var_default.GetFormat());
+  EXPECT_STREQ("", var_default.GetHelp());
+  EXPECT_STREQ("%d", var_default.GetFormat());
 }
 
 TEST(DebugVar, DebugVarUint32Defaults) {
@@ -52,8 +54,8 @@ TEST(DebugVar, DebugVarUint32Defaults) {
   // All default arguments
   DebugVar var("var", VarAccess::ReadWrite, &value, "unit");
   EXPECT_EQ(uint32_t{5}, var.GetValue());
-  EXPECT_EQ("", var.GetHelp());
-  EXPECT_EQ("%u", var.GetFormat());
+  EXPECT_STREQ("", var.GetHelp());
+  EXPECT_STREQ("%u", var.GetFormat());
   EXPECT_EQ(VarType::UInt32, var.GetType());
 }
 
@@ -62,8 +64,8 @@ TEST(DebugVar, DebugVarFloatDefaults) {
   // All default arguments
   DebugVar var("var", VarAccess::ReadWrite, &value, "unit");
 
-  EXPECT_EQ("", var.GetHelp());
-  EXPECT_EQ("%.3f", var.GetFormat());
+  EXPECT_STREQ("", var.GetHelp());
+  EXPECT_STREQ("%.3f", var.GetFormat());
   EXPECT_EQ(VarType::Float, var.GetType());
 
   // Rountrip through uint32 should not change value.

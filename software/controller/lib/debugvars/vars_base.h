@@ -59,6 +59,7 @@ class DebugVarBase {
 
   const char *GetName() const;
   void prepend_name(const char *prefix);
+  void append_help(const char *text);
 
   const char *GetFormat() const;
   const char *GetHelp() const;
@@ -70,12 +71,12 @@ class DebugVarBase {
 
  private:
   uint16_t id_{InvalidID};
-  char name_[50];  // should be long enough for most variable names
   const VarType type_;
   const VarAccess access_;
-  const char *const units_;
-  const char *const help_;
-  const char *const fmt_;
+  char name_[50]{0};
+  char units_[20]{0};
+  char help_[300]{0};
+  char fmt_[10]{0};
 
   friend class DebugVarRegistry;
 };

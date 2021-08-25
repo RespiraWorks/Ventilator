@@ -15,6 +15,8 @@ limitations under the License.
 
 #pragma once
 
+#include <cstring>
+
 #include "vars_base.h"
 
 template <typename GetFn, typename SetFn>

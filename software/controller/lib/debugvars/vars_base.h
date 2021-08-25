@@ -15,10 +15,10 @@ limitations under the License.
 
 #pragma once
 
-#include <array>
 #include <cstdint>
-#include <cstring>
 #include <limits>
+
+// \todo use namespace instead of lengthy type/class names
 
 // Defines the type of variable
 enum class VarType {
@@ -52,25 +52,26 @@ class DebugVarBase {
   // @param fmt printf style format string.  This is a hint to the Python code
   // as to how the variable data should be displayed.
   DebugVarBase(VarType type, const char *name, VarAccess access, const char *units,
-               const char *help, const char *fmt = "")
-      : type_(type), name_(name), access_(access), units_(units), help_(help), fmt_(fmt) {}
+               const char *help, const char *fmt = "");
 
   virtual uint32_t GetValue() = 0;
   virtual void SetValue(uint32_t value) = 0;
 
-  const char *GetName() const { return name_; }
-  const char *GetFormat() const { return fmt_; }
-  const char *GetHelp() const { return help_; }
-  const char *GetUnits() const { return units_; }
-  VarType GetType() const { return type_; }
-  uint16_t GetId() const { return id_; }
-  VarAccess GetAccess() const { return access_; }
-  bool WriteAllowed() const { return (access_ == VarAccess::ReadWrite); }
+  const char *GetName() const;
+  void prepend_name(const char *prefix);
+
+  const char *GetFormat() const;
+  const char *GetHelp() const;
+  const char *GetUnits() const;
+  VarType GetType() const;
+  uint16_t GetId() const;
+  VarAccess GetAccess() const;
+  bool WriteAllowed() const;
 
  private:
   uint16_t id_{InvalidID};
+  char name_[50];  // should be long enough for most variable names
   const VarType type_;
-  const char *const name_;
   const VarAccess access_;
   const char *const units_;
   const char *const help_;
@@ -84,9 +85,9 @@ class DebugVarRegistry {
   // this is the only way to access it
   static DebugVarRegistry &singleton() {
     // will privately initialize on first call
-    static DebugVarRegistry singleton_instance;
+    static DebugVarRegistry SingletonInstance;
     // will always return
-    return singleton_instance;
+    return SingletonInstance;
   }
 
   void RegisterVar(DebugVarBase *var);
@@ -100,7 +101,7 @@ class DebugVarRegistry {
   uint16_t var_count_{0};
 
   // singleton assurance, because these are private
-  DebugVarRegistry() {}                        // cannot default initialize
+  DebugVarRegistry() = default;                // cannot default initialize
   DebugVarRegistry(DebugVarRegistry const &);  // cannot copy initialize
   void operator=(DebugVarRegistry const &);    // cannot copy assign
 };

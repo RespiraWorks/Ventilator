@@ -15,16 +15,14 @@ limitations under the License.
 
 #include "vars.h"
 
-#include <stdint.h>
-
-#include <limits>
-
 #include "gtest/gtest.h"
 
 TEST(DebugVar, DebugVarInt32) {
   int32_t value = 5;
   DebugVar var("var", VarAccess::ReadOnly, &value, "unit", "help", "fmt");
-  EXPECT_EQ("var", var.GetName());
+  EXPECT_STREQ("var", var.GetName());
+  var.prepend_name("pre_");
+  EXPECT_STREQ("pre_var", var.GetName());
   EXPECT_EQ("help", var.GetHelp());
   EXPECT_EQ(VarType::Int32, var.GetType());
   EXPECT_EQ("fmt", var.GetFormat());

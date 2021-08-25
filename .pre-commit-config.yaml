@@ -9,7 +9,6 @@ repos:
   - id: clang-format-whole-file
     name: clang-format C++
     types: [c++]
-    verbose: true
   - id: clang-format-whole-file
     name: clang-format C
     types: [c]

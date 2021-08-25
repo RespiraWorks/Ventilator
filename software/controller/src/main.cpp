@@ -13,6 +13,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+#include <limits>
+#include <optional>
+
 #include "actuators.h"
 #include "commands.h"
 #include "comms.h"
@@ -24,28 +27,22 @@ limitations under the License.
 #include "nvparams.h"
 #include "sensors.h"
 #include "trace.h"
-#include <limits>
-#include <optional>
 
 // By default, the controller receives settings (on/off, pip, rr, etc.) from
 // the GUI.  But you can also command the controller by setting the gui_foo
 // DebugVars below.
-  static DebugUInt32 forced_mode(
-    "forced_mode", VarAccess::ReadWrite, _VentMode_MAX + 1, "",
-    "Overrides ventilation mode as commanded by GUI; see VentMode enum in "
-    "network_protocol.proto. If out of range, this and all of the other "
-    "gui_foo "
-    "DebugVars are ignored.",
-    "%s");
+static DebugUInt32 forced_mode("forced_mode", VarAccess::ReadWrite, _VentMode_MAX + 1, "",
+                               "Overrides ventilation mode as commanded by GUI; see VentMode enum "
+                               "in network_protocol.proto. If out of range, this and all of the "
+                               "other gui_foo DebugVars are ignored.",
+                               "%s");
 static DebugUInt32 forced_breath_rate(
     "forced_breath_rate", VarAccess::ReadWrite, 15, "breaths/min",
     "Target breath rate; overrides GUI setting when forced_mode is valid");
-static DebugUInt32
-    forced_peep("forced_peep", VarAccess::ReadWrite, 5, "cmH2O",
-                "Target PEEP; overrides GUI setting when forced_mode is valid");
-static DebugUInt32
-    forced_pip("forced_pip", VarAccess::ReadWrite, 15, "cmH2O",
-               "Target PIP; overrides GUI setting when forced_mode is valid");
+static DebugUInt32 forced_peep("forced_peep", VarAccess::ReadWrite, 5, "cmH2O",
+                               "Target PEEP; overrides GUI setting when forced_mode is valid");
+static DebugUInt32 forced_pip("forced_pip", VarAccess::ReadWrite, 15, "cmH2O",
+                              "Target PIP; overrides GUI setting when forced_mode is valid");
 static DebugFloat forced_ie_ratio(
     "forced_ie_ratio", VarAccess::ReadWrite, 0.66f, "ratio",
     "Target I:E ratio; overrides GUI setting when forced_mode is valid");
@@ -70,15 +67,13 @@ static Debug::Command::VarHandler var_command;
 static Debug::Command::TraceHandler trace_command(&trace);
 static Debug::Command::EepromHandler eeprom_command(&eeprom);
 
-static Debug::Interface
-    debug(&trace, 12, Debug::Command::Code::Mode, &mode_command,
-          Debug::Command::Code::Peek, &peek_command, Debug::Command::Code::Poke,
-          &poke_command, Debug::Command::Code::Variable, &var_command,
-          Debug::Command::Code::Trace, &trace_command,
-          Debug::Command::Code::EepromAccess, &eeprom_command);
+static Debug::Interface debug(&trace, 12, Debug::Command::Code::Mode, &mode_command,
+                              Debug::Command::Code::Peek, &peek_command, Debug::Command::Code::Poke,
+                              &poke_command, Debug::Command::Code::Variable, &var_command,
+                              Debug::Command::Code::Trace, &trace_command,
+                              Debug::Command::Code::EepromAccess, &eeprom_command);
 
-static SensorsProto AsSensorsProto(const SensorReadings &r,
-                                   const ControllerState &c) {
+static SensorsProto AsSensorsProto(const SensorReadings &r, const ControllerState &c) {
   SensorsProto proto = SensorsProto_init_zero;
   proto.patient_pressure_cm_h2o = r.patient_pressure.cmH2O();
   proto.inflow_pressure_diff_cm_h2o = r.inflow_pressure_diff.cmH2O();
@@ -97,13 +92,12 @@ static SensorsProto AsSensorsProto(const SensorReadings &r,
 // NOTE - its important that anything being called from this function executes
 // quickly.  No busy waiting here.
 static void HighPriorityTask(void *arg) {
-
   // Read the sensors
   SensorReadings sensor_readings = sensors.GetReadings();
 
   // Run our PID loop
-  auto [actuators_state, controller_state] = controller.Run(
-      hal.Now(), controller_status.active_params, sensor_readings);
+  auto [actuators_state, controller_state] =
+      controller.Run(hal.Now(), controller_status.active_params, sensor_readings);
 
   // TODO update pb library to replace fan_power in ControllerStatus with
   // actuators_state, and remove pressure_setpoint_cm_h2o from ControllerStatus
@@ -112,11 +106,9 @@ static void HighPriorityTask(void *arg) {
   ActuatorsExecute(actuators_state);
 
   // Update controller_status.  This is periodically sent back to the GUI.
-  controller_status.sensor_readings =
-      AsSensorsProto(sensor_readings, controller_state);
+  controller_status.sensor_readings = AsSensorsProto(sensor_readings, controller_state);
   controller_status.fan_power = actuators_state.blower_power;
-  controller_status.pressure_setpoint_cm_h2o =
-      controller_state.pressure_setpoint.cmH2O();
+  controller_status.pressure_setpoint_cm_h2o = controller_state.pressure_setpoint.cmH2O();
 
   // Sample any trace variables that are enabled
   debug.SampleTraceVars();
@@ -181,8 +173,7 @@ static void BackgroundLoop() {
 
     // Override received gui_status from the RPi with values from DebugVars iff
     // the forced_mode DebugVar has a legal value.
-    if (uint32_t m = forced_mode.Get();
-        m >= _VentMode_MIN && m <= _VentMode_MAX) {
+    if (uint32_t m = forced_mode.Get(); m >= _VentMode_MIN && m <= _VentMode_MAX) {
       auto &p = gui_status.desired_params;
       p.mode = static_cast<VentMode>(m);
       p.breaths_per_min = forced_breath_rate.Get();

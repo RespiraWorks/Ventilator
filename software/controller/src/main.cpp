@@ -30,7 +30,7 @@ limitations under the License.
 // By default, the controller receives settings (on/off, pip, rr, etc.) from
 // the GUI.  But you can also command the controller by setting the gui_foo
 // DebugVars below.
-static DebugUInt32 forced_mode(
+  static DebugUInt32 forced_mode(
     "forced_mode", VarAccess::ReadWrite, _VentMode_MAX + 1, "",
     "Overrides ventilation mode as commanded by GUI; see VentMode enum in "
     "network_protocol.proto. If out of range, this and all of the other "

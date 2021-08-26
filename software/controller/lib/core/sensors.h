@@ -19,8 +19,7 @@ pressure sensors in the ventilator design. It is designed to be used with the
 Arduino Nano and the MPXV5004GP and MPXV7002DP pressure sensors.
 */
 
-#ifndef SENSORS_H
-#define SENSORS_H
+#pragma once
 
 #include "hal.h"
 #include "units.h"
@@ -94,5 +93,3 @@ class Sensors {
   // Calibrated average sensor values in a zero state.
   Voltage sensors_zero_vals_[NumSensors];
 };
-
-#endif  // SENSORS_H

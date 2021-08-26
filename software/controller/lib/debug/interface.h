@@ -13,8 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#ifndef INTERFACE_H
-#define INTERFACE_H
+#pragma once
 
 #include <cstdarg>
 #include <optional>
@@ -105,5 +104,3 @@ class Interface {
 };
 
 }  // namespace Debug
-
-#endif  // INTERFACE_H

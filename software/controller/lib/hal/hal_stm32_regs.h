@@ -13,8 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#ifndef HAL_STM32_REGS_H
-#define HAL_STM32_REGS_H
+#pragma once
 
 #include <stdint.h>
 
@@ -855,5 +854,3 @@ inline GpioReg *const GpioCBase = reinterpret_cast<GpioReg *>(0x48000800);
 inline GpioReg *const GpioDBase = reinterpret_cast<GpioReg *>(0x48000C00);
 inline GpioReg *const GpioEBase = reinterpret_cast<GpioReg *>(0x48001000);
 inline GpioReg *const GpioHBase = reinterpret_cast<GpioReg *>(0x48001C00);
-
-#endif

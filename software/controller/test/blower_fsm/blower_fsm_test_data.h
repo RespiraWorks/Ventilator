@@ -13,8 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#ifndef BLOWER_FSM_PRESSURE_ASSIST_TEST_DATA_H
-#define BLOWER_FSM_PRESSURE_ASSIST_TEST_DATA_H
+#pragma once
 
 #include "units.h"
 
@@ -1057,5 +1056,3 @@ inline const VolumetricFlow FLOW_TRACE_NO_INSPIRATORY_EFFORT[] = {
     ml_per_sec(20.192f),
     ml_per_sec(-17.382f),
 };
-
-#endif  // BLOWER_FSM_PRESSURE_ASSIST_TEST_DATA_H

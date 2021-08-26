@@ -16,8 +16,7 @@ limitations under the License.
 // This module is responsible for passing the actuator commands to hal to
 // generate the actual electrical signals.
 
-#ifndef ACTUATORS_H
-#define ACTUATORS_H
+#pragma once
 
 #include <optional>
 
@@ -47,5 +46,3 @@ void ActuatorsExecute(const ActuatorsState &desired_state);
 // if they aren't (for example pinch valves are homing).
 // The system should be kept in a safe state until this returns true.
 bool AreActuatorsReady();
-
-#endif  // ACTUATORS_H

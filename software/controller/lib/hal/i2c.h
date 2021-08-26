@@ -17,8 +17,7 @@ limitations under the License.
 // See [RM] chapter 37 for details on their inner workings.
 // Our design uses the STM32 as an I²C master
 
-#ifndef I2C_H
-#define I2C_H
+#pragma once
 
 #include "circular_buffer.h"
 #if defined(BARE_STM32)
@@ -268,5 +267,3 @@ extern I2C::STM32Channel i2c1;
 #else
 extern I2C::Channel i2c1;
 #endif
-
-#endif  // I2C_H

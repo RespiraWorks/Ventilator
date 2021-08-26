@@ -13,8 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#ifndef BLOWER_FSM_H
-#define BLOWER_FSM_H
+#pragma once
 
 #include <optional>
 #include <variant>
@@ -187,5 +186,3 @@ class BlowerFsm {
  private:
   std::variant<OffFsm, PressureControlFsm, PressureAssistFsm> fsm_;
 };
-
-#endif  // BLOWER_FSM_H

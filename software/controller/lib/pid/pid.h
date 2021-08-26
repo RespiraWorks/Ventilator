@@ -16,8 +16,7 @@ limitations under the License.
  * Original project hash: 9b4ca0e5b6d7bab9c6ac023e249d6af2446d99bb
  **********************************************************************************************/
 
-#ifndef PID_H
-#define PID_H
+#pragma once
 
 #include "units.h"
 
@@ -79,4 +78,3 @@ class PID {
   float last_input_ = 0;
   float last_error_ = 0;
 };
-#endif  // PID_H

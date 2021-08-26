@@ -20,8 +20,7 @@ STM32L452 processor used on the controller.
 Reference abbreviations [RM], [DS], etc are defined in hal/README.md.
 */
 
-#ifndef HAL_STM32_H
-#define HAL_STM32_H
+#pragma once
 
 #if !defined(BARE_STM32)
 #error \
@@ -119,5 +118,3 @@ inline void GpioPullDn(GpioReg *gpio, int pin) {
   x |= 2 << (2 * pin);
   gpio->pullup_pulldown = x;
 }
-
-#endif

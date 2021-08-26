@@ -13,8 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#ifndef CIRCULAR_BUFFER_H
-#define CIRCULAR_BUFFER_H
+#pragma once
 
 #include <stdint.h>
 
@@ -92,5 +91,3 @@ class CircularBuffer {
     head_ = tail_ = 0;
   }
 };
-
-#endif

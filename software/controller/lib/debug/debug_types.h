@@ -13,8 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#ifndef DEBUG_TYPES_H
-#define DEBUG_TYPES_H
+#pragma once
 
 #include <stdint.h>
 
@@ -80,5 +79,3 @@ class Handler {
 }  // namespace Command
 
 }  // namespace Debug
-
-#endif  // DEBUG_TYPES_H

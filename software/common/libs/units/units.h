@@ -13,8 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#ifndef UNITS_H
-#define UNITS_H
+#pragma once
 
 #include <stdint.h>
 
@@ -441,5 +440,3 @@ constexpr inline Volume operator*(Duration b, VolumetricFlow a) {
 constexpr inline VolumetricFlow operator/(Volume a, Duration b) {
   return ml_per_min(a.ml() / b.minutes());
 }
-
-#endif  // UNITS_H

@@ -13,8 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#ifndef COMMS_H
-#define COMMS_H
+#pragma once
 
 #include <stdint.h>
 
@@ -30,5 +29,3 @@ void CommsInit();
 // periodically to the GUI.  When we receive a message from the GUI, we update
 // gui_status accordingly.
 void CommsHandler(const ControllerStatus &controller_status, GuiStatus *gui_status);
-
-#endif  // COMMS_H

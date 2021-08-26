@@ -85,11 +85,7 @@ std::pair<ActuatorsState, ControllerState> Controller::Run(Time now, const VentP
     // each new breath.
     breath_id_ = static_cast<uint32_t>(now.microsSinceStartup());
   }
-
   dbg_breath_id.Set(breath_id_);
-
-  blower_valve_pid_.update_vars();
-  psol_pid_.update_vars();
 
   ActuatorsState actuators_state;
   if (desired_state.pressure_setpoint == std::nullopt) {

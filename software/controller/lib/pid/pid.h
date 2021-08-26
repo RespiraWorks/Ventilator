@@ -1,8 +1,11 @@
-/* Copyright 2020, RespiraWorks
+/* Copyright 2020-2021, RespiraWorks
+
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
+
     http://www.apache.org/licenses/LICENSE-2.0
+
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -57,18 +60,10 @@ class PID {
 
   void reset();
 
-  void update_vars();
-
  private:
-  float kp_;  // * (P)roportional Tuning Parameter
-  float ki_;  // * (I)ntegral Tuning Parameter
-  float kd_;  // * (D)erivative Tuning Parameter
-
-  // \TODO: maybe just use these, replacing above simple floats? may not need
-  // the update function
-  Debug::Variable::Float dbg_kp_;  // * (P)roportional Tuning Parameter
-  Debug::Variable::Float dbg_ki_;  // * (I)ntegral Tuning Parameter
-  Debug::Variable::Float dbg_kd_;  // * (D)erivative Tuning Parameter
+  Debug::Variable::Float kp_;  // * (P)roportional Tuning Parameter
+  Debug::Variable::Float ki_;  // * (I)ntegral Tuning Parameter
+  Debug::Variable::Float kd_;  // * (D)erivative Tuning Parameter
 
   const TermApplication proportional_term_;
   const TermApplication differential_term_;

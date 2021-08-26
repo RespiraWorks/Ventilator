@@ -32,7 +32,7 @@ inline constexpr float OUTPUT_TOLERANCE = 1;
 inline constexpr const float MAX_OUTPUT = 255;
 inline constexpr const float MIN_OUTPUT = 0;
 
-// Maximum task jitter (assume 5 ms for now, will need adjuting)
+// Maximum task jitter (assume 5 ms for now, will need adjusting)
 inline constexpr Duration max_task_jitter = milliseconds(5);
 
 inline constexpr Time base = microsSinceStartup(10'000'000);

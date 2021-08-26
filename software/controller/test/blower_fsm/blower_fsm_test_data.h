@@ -1058,4 +1058,4 @@ inline const VolumetricFlow FLOW_TRACE_NO_INSPIRATORY_EFFORT[] = {
     ml_per_sec(-17.382f),
 };
 
-#endif // BLOWER_FSM_PRESSURE_ASSIST_TEST_DATA_H
+#endif  // BLOWER_FSM_PRESSURE_ASSIST_TEST_DATA_H

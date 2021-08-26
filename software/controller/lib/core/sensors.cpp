@@ -19,31 +19,31 @@ Arduino Nano and the MPXV5004GP and MPXV7002DP pressure sensors.
 */
 
 #include "sensors.h"
-#include "vars.h"
+
 #include <cmath>
+
+#include "vars.h"
 
 static DebugFloat dbg_dp_inhale("dp_inhale", VarAccess::ReadOnly, 0.0f, "cmH2O",
                                 "Inhale diff pressure");
 static DebugFloat dbg_dp_exhale("dp_exhale", VarAccess::ReadOnly, 0.0f, "cmH2O",
                                 "Exhale diff pressure");
-static DebugFloat dbg_pressure("pressure", VarAccess::ReadOnly, 0.0f, "cmH2O",
-                               "Patient pressure");
-static DebugFloat dbg_flow_inhale("flow_inhale", VarAccess::ReadOnly, 0.0f,
-                                  "mL/s", "Inhale flow rate");
-static DebugFloat dbg_flow_exhale("flow_exhale", VarAccess::ReadOnly, 0.0f,
-                                  "mL/s", "Exhale flow rate");
+static DebugFloat dbg_pressure("pressure", VarAccess::ReadOnly, 0.0f, "cmH2O", "Patient pressure");
+static DebugFloat dbg_flow_inhale("flow_inhale", VarAccess::ReadOnly, 0.0f, "mL/s",
+                                  "Inhale flow rate");
+static DebugFloat dbg_flow_exhale("flow_exhale", VarAccess::ReadOnly, 0.0f, "mL/s",
+                                  "Exhale flow rate");
 static DebugFloat dbg_fio2("fio2", VarAccess::ReadOnly, 0.0f, "ratio",
                            "Fraction of inspired oxygen");
 // Flow correction happens as part of volume computation, in the Controller.
-static DebugFloat dbg_flow_uncorrected("flow_uncorrected", VarAccess::ReadOnly,
-                                       0.0f, "mL/s",
+static DebugFloat dbg_flow_uncorrected("flow_uncorrected", VarAccess::ReadOnly, 0.0f, "mL/s",
                                        "Uncorrected net flow rate");
 
 //@TODO: Potential Caution: Density of air slightly varies over temperature and
 // altitude - need mechanism to adjust based on delivery? Constant involving
 // density of air. Density assumed at 15 deg. Celsius and 1 atm of pressure.
 // Sourced from https://en.wikipedia.org/wiki/Density_of_air
-static const float DensityOfAirKgPerCubicMeter{1.225f}; // kg/m^3
+static const float DensityOfAirKgPerCubicMeter{1.225f};  // kg/m^3
 
 // Diameters and correction coefficient relating to 3/4in Venturi, see
 // https://bit.ly/2ARuReg.
@@ -61,14 +61,14 @@ static_assert(VenturiChokeDiameter > meters(0));
 
 AnalogPin Sensors::PinFor(Sensor s) {
   switch (s) {
-  case Sensor::PatientPressure:
-    return AnalogPin::PatientPressure;
-  case Sensor::InflowPressureDiff:
-    return AnalogPin::InflowPressureDiff;
-  case Sensor::OutflowPressureDiff:
-    return AnalogPin::OutflowPressureDiff;
-  case Sensor::FIO2:
-    return AnalogPin::FIO2;
+    case Sensor::PatientPressure:
+      return AnalogPin::PatientPressure;
+    case Sensor::InflowPressureDiff:
+      return AnalogPin::InflowPressureDiff;
+    case Sensor::OutflowPressureDiff:
+      return AnalogPin::OutflowPressureDiff;
+    case Sensor::FIO2:
+      return AnalogPin::FIO2;
   }
   // Switch above covers all cases.
   __builtin_unreachable();
@@ -97,8 +97,8 @@ void Sensors::Calibrate() {
   // open any necessary valves, and recalibrate.
   hal.Delay(milliseconds(20));
 
-  for (Sensor s : {Sensor::PatientPressure, Sensor::InflowPressureDiff,
-                   Sensor::OutflowPressureDiff, Sensor::FIO2}) {
+  for (Sensor s : {Sensor::PatientPressure, Sensor::InflowPressureDiff, Sensor::OutflowPressureDiff,
+                   Sensor::FIO2}) {
     sensors_zero_vals_[static_cast<int>(s)] = hal.AnalogRead(PinFor(s));
   }
 }
@@ -115,9 +115,8 @@ Pressure Sensors::ReadPressureSensor(Sensor s) const {
   // our ADC.  Therefore, if we multiply the received voltage by 5/3.3, we get
   // a pressure in kPa.
   static const float PressureSensorGain{5.f / 3.3f};
-  return kPa(PressureSensorGain * (hal.AnalogRead(PinFor(s)) -
-                                   sensors_zero_vals_[static_cast<int>(s)])
-                                      .volts());
+  return kPa(PressureSensorGain *
+             (hal.AnalogRead(PinFor(s)) - sensors_zero_vals_[static_cast<int>(s)]).volts());
 }
 
 // Reads an oxygen sensor, returning the concentration of oxygen [0 ; 1.0]
@@ -140,8 +139,7 @@ float Sensors::ReadOxygenSensor(Pressure p_ambient) const {
   static const float OxygenSensorGain{0.060f};
 
   // TODO: raise alarm if fio2 is out of expected (0,1) range
-  return (hal.AnalogRead(PinFor(Sensor::FIO2)) -
-          sensors_zero_vals_[static_cast<int>(Sensor::FIO2)])
+  return (hal.AnalogRead(PinFor(Sensor::FIO2)) - sensors_zero_vals_[static_cast<int>(Sensor::FIO2)])
                  .volts() /
              (AmplifierGain * OxygenSensorGain) / p_ambient.atm() +
          O2ConcentrationInAir;
@@ -157,11 +155,10 @@ VolumetricFlow Sensors::PressureDeltaToFlow(Pressure delta) {
 
   float port_area = diameter_to_area_m2(VenturiPortDiameter);
   float choke_area = diameter_to_area_m2(VenturiChokeDiameter);
-  return cubic_m_per_sec(
-      VenturiCorrection *
-      std::copysign(std::sqrt(std::abs(delta.kPa()) * 1000.0f), delta.kPa()) *
-      std::sqrt(2 / DensityOfAirKgPerCubicMeter) * port_area * choke_area /
-      std::sqrt(pow2(port_area) - pow2(choke_area)));
+  return cubic_m_per_sec(VenturiCorrection *
+                         std::copysign(std::sqrt(std::abs(delta.kPa()) * 1000.0f), delta.kPa()) *
+                         std::sqrt(2 / DensityOfAirKgPerCubicMeter) * port_area * choke_area /
+                         std::sqrt(pow2(port_area) - pow2(choke_area)));
 }
 
 SensorReadings Sensors::GetReadings() const {

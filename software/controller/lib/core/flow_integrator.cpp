@@ -14,6 +14,7 @@ limitations under the License.
 */
 
 #include "flow_integrator.h"
+
 #include "vars.h"
 
 // TODO: VolumeIntegrationInterval was not chosen carefully.
@@ -44,8 +45,7 @@ void FlowIntegrator::AddFlow(Time now, VolumetricFlow uncorrected_flow) {
 
 void FlowIntegrator::NoteExpectedVolume(Volume v) {
   // We need at least one call to AddFlow before we can do anything.
-  if (last_note_time_ == std::nullopt ||
-      last_flow_measurement_time_ == std::nullopt ||
+  if (last_note_time_ == std::nullopt || last_flow_measurement_time_ == std::nullopt ||
       *last_note_time_ >= *last_flow_measurement_time_) {
     return;
   }
@@ -86,8 +86,7 @@ void FlowIntegrator::NoteExpectedVolume(Volume v) {
 
   // Compute the time delta between now (last_flow_measurement_time_) and the
   // last call to NoteExpectedVolume.
-  Duration time_since_last_note =
-      *last_flow_measurement_time_ - *last_note_time_;
+  Duration time_since_last_note = *last_flow_measurement_time_ - *last_note_time_;
 
   // Compute what our volume would have been if we hadn't applied any flow
   // correction during the last call to NoteExpectedVolume.

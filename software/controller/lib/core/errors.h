@@ -19,4 +19,4 @@ limitations under the License.
 #define VC_STATUS_SUCCESS (0)
 #define VC_STATUS_FAILURE (-1)
 
-#endif // ERRORS_H
+#endif  // ERRORS_H

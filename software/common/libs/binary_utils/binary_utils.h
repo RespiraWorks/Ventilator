@@ -45,4 +45,4 @@ inline void u32_to_u8(uint32_t val, uint8_t *buff) {
   buff[3] = static_cast<uint8_t>(val >> 24);
 }
 
-#endif // BINUTILS_H
+#endif  // BINUTILS_H

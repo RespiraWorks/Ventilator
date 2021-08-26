@@ -13,15 +13,18 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+#include "interface.h"
+
+#include <stdint.h>
+
+#include <array>
+#include <vector>
+
 #include "binary_utils.h"
 #include "commands.h"
-#include "interface.h"
-#include "vars.h"
 #include "gmock/gmock-matchers.h"
 #include "gtest/gtest.h"
-#include <array>
-#include <stdint.h>
-#include <vector>
+#include "vars.h"
 
 namespace Debug {
 
@@ -68,8 +71,7 @@ std::vector<uint8_t> ProcessCmd(Interface *serial, std::vector<uint8_t> req,
   for (uint8_t ch : Escape(req)) {
     full_req.push_back(ch);
   }
-  uint16_t crc = static_cast<uint16_t>(
-      Interface::ComputeCRC(req.data(), req.size()) + crc_offset);
+  uint16_t crc = static_cast<uint16_t>(Interface::ComputeCRC(req.data(), req.size()) + crc_offset);
   uint8_t crc_bytes[2];
   u16_to_u8(crc, &crc_bytes[0]);
   full_req.push_back(crc_bytes[0]);
@@ -84,9 +86,8 @@ std::vector<uint8_t> ProcessCmd(Interface *serial, std::vector<uint8_t> req,
   }
 
   std::vector<uint8_t> escaped_resp(500);
-  uint16_t resp_len = hal.TESTDebugGetOutgoingData(
-      reinterpret_cast<char *>(escaped_resp.data()),
-      static_cast<uint16_t>(escaped_resp.size()));
+  uint16_t resp_len = hal.TESTDebugGetOutgoingData(reinterpret_cast<char *>(escaped_resp.data()),
+                                                   static_cast<uint16_t>(escaped_resp.size()));
   escaped_resp.erase(escaped_resp.begin() + resp_len, escaped_resp.end());
   EXPECT_GE(escaped_resp.size(), size_t{3} /* err code + crc */);
 
@@ -129,9 +130,9 @@ uint32_t GetVarViaCmd(Interface *serial, uint16_t id) {
   u16_to_u8(id, &vid[0]);
 
   std::vector<uint8_t> req = {
-      static_cast<uint8_t>(Command::Code::Variable), // Cmd code
-      uint8_t{1},                                    // GET
-      vid[0], vid[1],                                // var id
+      static_cast<uint8_t>(Command::Code::Variable),  // Cmd code
+      uint8_t{1},                                     // GET
+      vid[0], vid[1],                                 // var id
   };
 
   std::vector<uint8_t> resp = ProcessCmd(serial, req);
@@ -163,11 +164,11 @@ TEST(Interface, AwaitingResponseState) {
   // EEPROM read command needs time to be processed
   std::vector<uint8_t> req = {
       static_cast<uint8_t>(Command::Code::EepromAccess),
-      0, // Read subcommand
-      0, // address Least Significant Byte
-      0, // address Most Significant Byte
-      1, // length LSB
-      0, // length MSB
+      0,  // Read subcommand
+      0,  // address Least Significant Byte
+      0,  // address Most Significant Byte
+      1,  // length LSB
+      0,  // length MSB
   };
 
   // The helper function quietly passes through the AwaitingResponse state since
@@ -194,16 +195,14 @@ TEST(Interface, Errors) {
   Command::EepromHandler eeprom_command(&eeprom_test);
 
   Debug::Interface serial(&trace, 12, Debug::Command::Code::Mode, &mode_command,
-                          Debug::Command::Code::Peek, &peek_command,
-                          Debug::Command::Code::Poke, &poke_command,
-                          Debug::Command::Code::Variable, &var_command,
+                          Debug::Command::Code::Peek, &peek_command, Debug::Command::Code::Poke,
+                          &poke_command, Debug::Command::Code::Variable, &var_command,
                           Debug::Command::Code::Trace, &trace_command,
                           Debug::Command::Code::EepromAccess, &eeprom_command);
   // Unknown command - If we ever develop new commands, make sure the command
   // code is too big.
   std::vector<uint8_t> req = {25};
-  std::vector<uint8_t> resp =
-      ProcessCmd(&serial, req, ErrorCode::UnknownCommand);
+  std::vector<uint8_t> resp = ProcessCmd(&serial, req, ErrorCode::UnknownCommand);
   EXPECT_EQ(resp.size(), 0);
 
   // CRC Error
@@ -213,8 +212,8 @@ TEST(Interface, Errors) {
 
   // Error returned by Command Handler
   req = {
-      static_cast<uint8_t>(Command::Code::Variable), // Cmd code
-      1, 0xFF, 0xFF,                                 // GET and var id
+      static_cast<uint8_t>(Command::Code::Variable),  // Cmd code
+      1, 0xFF, 0xFF,                                  // GET and var id
   };
   resp = ProcessCmd(&serial, req, ErrorCode::UnknownVariable);
   EXPECT_EQ(resp.size(), 0);
@@ -228,8 +227,7 @@ TEST(Interface, Errors) {
     // Wait for command to complete
   }
   // In that case, we actually expect no response
-  uint16_t resp_len =
-      hal.TESTDebugGetOutgoingData(reinterpret_cast<char *>(resp.data()), 10);
+  uint16_t resp_len = hal.TESTDebugGetOutgoingData(reinterpret_cast<char *>(resp.data()), 10);
   EXPECT_EQ(resp_len, 0);
 }
-} // namespace Debug
+}  // namespace Debug

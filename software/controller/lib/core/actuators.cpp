@@ -14,6 +14,7 @@ limitations under the License.
 */
 
 #include "actuators.h"
+
 #include "hal.h"
 #include "pinch_valve.h"
 
@@ -44,6 +45,4 @@ void ActuatorsExecute(const ActuatorsState &desired_state) {
 }
 
 // Return true if all actuators are enabled and ready for action
-bool AreActuatorsReady() {
-  return blower_pinch.IsReady() && exhale_pinch.IsReady();
-}
+bool AreActuatorsReady() { return blower_pinch.IsReady() && exhale_pinch.IsReady(); }

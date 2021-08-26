@@ -15,6 +15,7 @@ limitations under the License.
 #if defined(BARE_STM32)
 
 #include "flash.h"
+
 #include "hal.h"
 #include "hal_stm32.h"
 
@@ -24,8 +25,7 @@ limitations under the License.
  * [RM] 3.3.7
  */
 static bool ValidFlashParameters(uint32_t addr, size_t ct) {
-  return (addr >= FlashStartAddr) and
-         (addr + ct <= FlashStartAddr + FlashSize) and !(ct & 7) and
+  return (addr >= FlashStartAddr) and (addr + ct <= FlashStartAddr + FlashSize) and !(ct & 7) and
          !(addr & 7);
 }
 
@@ -59,8 +59,7 @@ static inline void LockFlash(FlashReg *reg) { reg->control.flash_lock = 1; }
  * Returns true on success or false on failure
  */
 bool HalApi::FlashErasePage(uint32_t addr) {
-  if (!ValidFlashParameters(addr, FlashPageSize))
-    return false;
+  if (!ValidFlashParameters(addr, FlashPageSize)) return false;
 
   // Clear all the status bits
   FlashReg *reg = FlashBase;
@@ -87,9 +86,7 @@ bool HalApi::FlashErasePage(uint32_t addr) {
 }
 
 bool HalApi::FlashWrite(uint32_t addr, void *data, size_t ct) {
-
-  if (!ValidFlashParameters(addr, ct))
-    return false;
+  if (!ValidFlashParameters(addr, ct)) return false;
   FlashReg *reg = FlashBase;
 
   // Clear all the status bits
@@ -112,8 +109,7 @@ bool HalApi::FlashWrite(uint32_t addr, void *data, size_t ct) {
     }
 
     // Check for errors
-    if (reg->status & 0x0000C3FA)
-      break;
+    if (reg->status & 0x0000C3FA) break;
 
     // Clear EOP
     reg->status = 0x00000001;

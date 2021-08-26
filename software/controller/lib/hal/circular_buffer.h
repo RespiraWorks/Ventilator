@@ -16,9 +16,11 @@ limitations under the License.
 #ifndef CIRCULAR_BUFFER_H
 #define CIRCULAR_BUFFER_H
 
-#include "hal.h"
-#include <optional>
 #include <stdint.h>
+
+#include <optional>
+
+#include "hal.h"
 
 // This class is a generic circular buffer with fixed size.
 //
@@ -26,25 +28,24 @@ limitations under the License.
 // and the interrupt handlers, so it needs to be thread safe.
 // I'm disabling interrupts during the critical sections to
 // ensure that's the case.
-template <class T, uint N> class CircularBuffer {
+template <class T, uint N>
+class CircularBuffer {
   // Uses an array of size N+1 to hold all N elements of the buffer, as
   // buffer_[head_] is by definition inaccessible.
   // This also makes the template safe against N = 0.
   volatile T buffer_[N + 1];
   volatile int head_{0}, tail_{0};
 
-public:
+ public:
   CircularBuffer() {
-    for (uint i = 0; i <= N; ++i)
-      buffer_[i] = T();
+    for (uint i = 0; i <= N; ++i) buffer_[i] = T();
   }
 
   // Return number of elements available in the buffer to read.
   int FullCount() const {
     BlockInterrupts block;
     int ct = head_ - tail_;
-    if (ct < 0)
-      ct += N + 1;
+    if (ct < 0) ct += N + 1;
     return ct;
   }
 

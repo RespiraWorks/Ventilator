@@ -14,12 +14,12 @@ limitations under the License.
 */
 
 #include "eeprom.h"
-#include "hal.h"
+
 #include <string.h>
 
-bool I2Ceeprom::ReadBytes(uint16_t offset, uint16_t length, void *data,
-                          bool *processed) {
+#include "hal.h"
 
+bool I2Ceeprom::ReadBytes(uint16_t offset, uint16_t length, void *data, bool *processed) {
   if (offset + length > size_) {
     // requesting outside of memory capacity
     return false;
@@ -56,8 +56,7 @@ bool I2Ceeprom::ReadBytes(uint16_t offset, uint16_t length, void *data,
   return ReceiveBytes(read_request);
 };
 
-bool I2Ceeprom::WriteBytes(uint16_t offset, uint16_t length, void *data,
-                           bool *processed) {
+bool I2Ceeprom::WriteBytes(uint16_t offset, uint16_t length, void *data, bool *processed) {
   if (offset + length > size_) {
     // requesting outside of memory capacity
     return false;
@@ -70,8 +69,7 @@ bool I2Ceeprom::WriteBytes(uint16_t offset, uint16_t length, void *data,
 
   while (current_offset < offset + length) {
     // provision request length from current offset to the end of the page
-    uint8_t request_length =
-        static_cast<uint8_t>(page_size_ - (current_offset % page_size_));
+    uint8_t request_length = static_cast<uint8_t>(page_size_ - (current_offset % page_size_));
 
     if (current_offset + request_length > offset + length) {
       // last request, only write the remaining bytes and not a full page
@@ -108,8 +106,7 @@ bool TestEeprom::SendBytes(const I2C::Request &request) {
   for (uint32_t i = 2; i < request.size; ++i) {
     memory_[address_pointer_++] = reinterpret_cast<uint8_t *>(request.data)[i];
   }
-  if (request.processed != nullptr)
-    *(request.processed) = true;
+  if (request.processed != nullptr) *(request.processed) = true;
   return true;
 }
 
@@ -117,7 +114,6 @@ bool TestEeprom::ReceiveBytes(const I2C::Request &request) {
   for (uint32_t i = 0; i < request.size; ++i) {
     reinterpret_cast<uint8_t *>(request.data)[i] = memory_[address_pointer_++];
   }
-  if (request.processed != nullptr)
-    *(request.processed) = true;
+  if (request.processed != nullptr) *(request.processed) = true;
   return true;
 }

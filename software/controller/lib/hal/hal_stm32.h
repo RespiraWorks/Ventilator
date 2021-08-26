@@ -24,12 +24,13 @@ Reference abbreviations [RM], [DS], etc are defined in hal/README.md.
 #define HAL_STM32_H
 
 #if !defined(BARE_STM32)
-#error                                                                         \
+#error \
     "the header stm32.h is part of the HAL for the BARE_STM32 build.  It should only be used as part of that build"
 #endif
 
-#include "hal_stm32_regs.h"
 #include <stdint.h>
+
+#include "hal_stm32_regs.h"
 
 #define CPU_FREQ_MHZ 80
 #define CPU_FREQ (CPU_FREQ_MHZ * 1000000)
@@ -97,19 +98,13 @@ inline void GpioPinAltFunc(GpioReg *gpio, int pin, int func) {
 }
 
 // Set a specific output pin
-inline void GpioSetPin(GpioReg *gpio, int pin) {
-  gpio->set = static_cast<uint16_t>(1 << pin);
-}
+inline void GpioSetPin(GpioReg *gpio, int pin) { gpio->set = static_cast<uint16_t>(1 << pin); }
 
 // Clear a specific output pin
-inline void GpioClrPin(GpioReg *gpio, int pin) {
-  gpio->clear = static_cast<uint16_t>(1 << pin);
-}
+inline void GpioClrPin(GpioReg *gpio, int pin) { gpio->clear = static_cast<uint16_t>(1 << pin); }
 
 // Return the current value of an input pin
-inline int GpioGetPin(GpioReg *gpio, int pin) {
-  return (gpio->input_data & (1 << pin)) ? 1 : 0;
-}
+inline int GpioGetPin(GpioReg *gpio, int pin) { return (gpio->input_data & (1 << pin)) ? 1 : 0; }
 
 // This adds a pull-up resistor to an input pin
 inline void GpioPullUp(GpioReg *gpio, int pin) {

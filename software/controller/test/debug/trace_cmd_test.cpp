@@ -13,23 +13,22 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include "commands.h"
-#include "trace.h"
-#include "gtest/gtest.h"
 #include <array>
+
+#include "commands.h"
+#include "gtest/gtest.h"
+#include "trace.h"
 
 namespace Debug::Command {
 
 static constexpr size_t kResponseSize{100};
 // helper function that checks the buffer output
-void CheckBufferOutput(std::array<uint8_t, kResponseSize> response,
-                       uint32_t response_length, size_t sample_size,
-                       uint32_t initial_value) {
+void CheckBufferOutput(std::array<uint8_t, kResponseSize> response, uint32_t response_length,
+                       size_t sample_size, uint32_t initial_value) {
   for (int i = 0; i < response_length / sample_size; ++i) {
     uint8_t expected_value[sample_size];
     u32_to_u8(static_cast<uint32_t>(i + initial_value), &expected_value[0]);
-    u32_to_u8(static_cast<uint32_t>(10 * (i + initial_value)),
-              &expected_value[4]);
+    u32_to_u8(static_cast<uint32_t>(10 * (i + initial_value)), &expected_value[4]);
     // if you add variables, you'll need to assign expected_value[8] and so on
     for (int j = 0; j < sample_size; ++j) {
       EXPECT_EQ(response[i * sample_size + j], expected_value[j]);
@@ -54,14 +53,13 @@ TEST(TraceHandler, Flush) {
   // activate trace
   trace.SetTracedVarId<1>(var_x.GetId());
   trace.SetTracedVarId<3>(var_y.GetId());
-  trace.Start(); // Enable tracing
+  trace.Start();  // Enable tracing
 
   trace.MaybeSample();
   EXPECT_EQ(trace.GetNumSamples(), 1);
   EXPECT_TRUE(trace.GetStatus());
 
-  std::array flush_command = {
-      static_cast<uint8_t>(TraceHandler::Subcommand::Flush)};
+  std::array flush_command = {static_cast<uint8_t>(TraceHandler::Subcommand::Flush)};
   std::array<uint8_t, kResponseSize> response;
   bool processed{false};
   Context flush_context = {.request = flush_command.data(),
@@ -93,8 +91,7 @@ TEST(TraceHandler, Read) {
   TraceHandler trace_handler = TraceHandler(&trace);
 
   // read with no vars ==> nothing to report
-  std::array read_command = {
-      static_cast<uint8_t>(TraceHandler::Subcommand::Download)};
+  std::array read_command = {static_cast<uint8_t>(TraceHandler::Subcommand::Download)};
   std::array<uint8_t, kResponseSize> response;
   bool processed{false};
   Context read_context = {.request = read_command.data(),
@@ -111,8 +108,7 @@ TEST(TraceHandler, Read) {
   trace.SetTracedVarId<3>(var_y.GetId());
 
   // start the trace (using debug command)
-  std::array start_command = {
-      static_cast<uint8_t>(TraceHandler::Subcommand::Start)};
+  std::array start_command = {static_cast<uint8_t>(TraceHandler::Subcommand::Start)};
   processed = false;
   Context start_context = {.request = start_command.data(),
                            .request_length = std::size(start_command),
@@ -138,12 +134,10 @@ TEST(TraceHandler, Read) {
   }
 
   // Take advantage of having a full buffer to test CountSamples command
-  std::array num_samples_command = {
-      static_cast<uint8_t>(TraceHandler::Subcommand::CountSamples)};
+  std::array num_samples_command = {static_cast<uint8_t>(TraceHandler::Subcommand::CountSamples)};
   processed = false;
   Context num_samples_context = {.request = num_samples_command.data(),
-                                 .request_length =
-                                     std::size(num_samples_command),
+                                 .request_length = std::size(num_samples_command),
                                  .response = response.data(),
                                  .max_response_length = kResponseSize,
                                  .response_length = 0,
@@ -156,8 +150,7 @@ TEST(TraceHandler, Read) {
   // issue a new read command
   EXPECT_EQ(ErrorCode::None, trace_handler.Process(&read_context));
   // we are only returning entire samples
-  EXPECT_EQ(read_context.response_length,
-            kResponseSize - kResponseSize % sample_size);
+  EXPECT_EQ(read_context.response_length, kResponseSize - kResponseSize % sample_size);
   size_t read_samples = read_context.response_length / sample_size;
   // check response
   CheckBufferOutput(response, read_context.response_length, sample_size, 0);
@@ -237,12 +230,10 @@ TEST(TraceHandler, SettersAndGetters) {
 
   // Get trace var ID for var kMaxTraceVars (out of bounds)
   std::array<uint8_t, 2> get_var_max_command = {
-      static_cast<uint8_t>(TraceHandler::Subcommand::GetVarId),
-      static_cast<uint8_t>(MaxTraceVars)};
+      static_cast<uint8_t>(TraceHandler::Subcommand::GetVarId), static_cast<uint8_t>(MaxTraceVars)};
   processed = false;
   Context get_var_max_context = {.request = get_var_max_command.data(),
-                                 .request_length =
-                                     std::size(get_var_max_command),
+                                 .request_length = std::size(get_var_max_command),
                                  .response = response.data(),
                                  .max_response_length = kResponseSize,
                                  .response_length = 0,
@@ -270,8 +261,7 @@ TEST(TraceHandler, SettersAndGetters) {
   EXPECT_EQ(trace.GetPeriod(), u8_to_u32(&set_period_command[1]));
 
   // Get trace period
-  std::array get_period_command = {
-      static_cast<uint8_t>(TraceHandler::Subcommand::GetPeriod)};
+  std::array get_period_command = {static_cast<uint8_t>(TraceHandler::Subcommand::GetPeriod)};
   processed = false;
   Context get_period_context = {.request = get_period_command.data(),
                                 .request_length = std::size(get_period_command),
@@ -300,25 +290,18 @@ TEST(TraceHandler, Errors) {
   trace.Start();
 
   std::vector<std::tuple<std::vector<uint8_t>, ErrorCode>> requests = {
-      {{}, ErrorCode::MissingData},  // Missing subcommand
-      {{8}, ErrorCode::InvalidData}, // Invalid subcommand
-      {{static_cast<uint8_t>(TraceHandler::Subcommand::Download)},
-       ErrorCode::NoMemory},
-      {{static_cast<uint8_t>(TraceHandler::Subcommand::SetVarId), 1, 1},
-       ErrorCode::MissingData},
-      {{static_cast<uint8_t>(TraceHandler::Subcommand::SetVarId), MaxTraceVars,
-        1, 0},
+      {{}, ErrorCode::MissingData},   // Missing subcommand
+      {{8}, ErrorCode::InvalidData},  // Invalid subcommand
+      {{static_cast<uint8_t>(TraceHandler::Subcommand::Download)}, ErrorCode::NoMemory},
+      {{static_cast<uint8_t>(TraceHandler::Subcommand::SetVarId), 1, 1}, ErrorCode::MissingData},
+      {{static_cast<uint8_t>(TraceHandler::Subcommand::SetVarId), MaxTraceVars, 1, 0},
        ErrorCode::InvalidData},
-      {{static_cast<uint8_t>(TraceHandler::Subcommand::GetVarId)},
-       ErrorCode::MissingData},
-      {{static_cast<uint8_t>(TraceHandler::Subcommand::GetVarId), 1},
-       ErrorCode::NoMemory},
+      {{static_cast<uint8_t>(TraceHandler::Subcommand::GetVarId)}, ErrorCode::MissingData},
+      {{static_cast<uint8_t>(TraceHandler::Subcommand::GetVarId), 1}, ErrorCode::NoMemory},
       {{static_cast<uint8_t>(TraceHandler::Subcommand::SetPeriod), 1, 1, 1},
        ErrorCode::MissingData},
-      {{static_cast<uint8_t>(TraceHandler::Subcommand::GetPeriod)},
-       ErrorCode::NoMemory},
-      {{static_cast<uint8_t>(TraceHandler::Subcommand::CountSamples)},
-       ErrorCode::NoMemory},
+      {{static_cast<uint8_t>(TraceHandler::Subcommand::GetPeriod)}, ErrorCode::NoMemory},
+      {{static_cast<uint8_t>(TraceHandler::Subcommand::CountSamples)}, ErrorCode::NoMemory},
   };
   std::array<uint8_t, kResponseSize> response;
   bool processed{false};
@@ -326,9 +309,8 @@ TEST(TraceHandler, Errors) {
     Context context = {.request = request.data(),
                        .request_length = static_cast<uint32_t>(request.size()),
                        .response = response.data(),
-                       .max_response_length =
-                           1, // To provoke the No Memory error once all other
-                              // checks have passed
+                       .max_response_length = 1,  // To provoke the No Memory error once all other
+                                                  // checks have passed
                        .response_length = 0,
                        .processed = &processed};
     EXPECT_EQ(error, trace_handler.Process(&context));
@@ -337,4 +319,4 @@ TEST(TraceHandler, Errors) {
   }
 }
 
-} // namespace Debug::Command
+}  // namespace Debug::Command

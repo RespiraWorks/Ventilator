@@ -17,10 +17,8 @@ limitations under the License.
 namespace Debug::Command {
 
 ErrorCode EepromHandler::Process(Context *context) {
-
   // We have at least subcommand and address (3 bytes)
-  if (context->request_length < 3)
-    return ErrorCode::MissingData;
+  if (context->request_length < 3) return ErrorCode::MissingData;
 
   // Whatever the subcommand, bytes 1 and 2 are the address
   uint16_t address = u8_to_u16(&context->request[1]);
@@ -29,27 +27,24 @@ ErrorCode EepromHandler::Process(Context *context) {
 
   // Process subcommand
   switch (subcommand) {
-  case Subcommand::Read:
-    return Read(address, context);
+    case Subcommand::Read:
+      return Read(address, context);
 
-  case Subcommand::Write:
-    return Write(address, context);
+    case Subcommand::Write:
+      return Write(address, context);
 
-  default:
-    return ErrorCode::InvalidData;
+    default:
+      return ErrorCode::InvalidData;
   }
 }
 
 ErrorCode EepromHandler::Read(const uint16_t address, Context *context) {
   // Read command requires length (bytes 3 and 4)
-  if (context->request_length < 5)
-    return ErrorCode::MissingData;
+  if (context->request_length < 5) return ErrorCode::MissingData;
   uint16_t length = u8_to_u16(&context->request[3]);
-  if (length > context->max_response_length)
-    return ErrorCode::NoMemory;
+  if (length > context->max_response_length) return ErrorCode::NoMemory;
 
-  if (eeprom_->ReadBytes(address, length, context->response,
-                         context->processed)) {
+  if (eeprom_->ReadBytes(address, length, context->response, context->processed)) {
     // only set response_length if the read has been successfully sent
     context->response_length = length;
   }
@@ -58,15 +53,13 @@ ErrorCode EepromHandler::Read(const uint16_t address, Context *context) {
 
 ErrorCode EepromHandler::Write(const uint16_t address, Context *context) {
   // at least one byte of data is given after the address
-  if (context->request_length < 4)
-    return ErrorCode::MissingData;
+  if (context->request_length < 4) return ErrorCode::MissingData;
 
   // length of data to be written is the length of the request minus
   // the subcommand and address bytes
   uint16_t length = static_cast<uint16_t>(context->request_length - 3);
 
-  if (length > MaxWriteLength)
-    return ErrorCode::NoMemory;
+  if (length > MaxWriteLength) return ErrorCode::NoMemory;
 
   // copy request data in our own array to allow eeprom to reinterpret_cast
   // the pointer we pass it (as pointers to const cannot be cast)
@@ -81,4 +74,4 @@ ErrorCode EepromHandler::Write(const uint16_t address, Context *context) {
   }
 }
 
-} // namespace Debug::Command
+}  // namespace Debug::Command

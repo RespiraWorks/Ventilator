@@ -21,8 +21,10 @@ limitations under the License.
 ////////////////////////////////////////////////////////////////////
 
 #include "i2c.h"
-#include "hal.h"
+
 #include <cstring>
+
+#include "hal.h"
 
 #if defined(BARE_STM32)
 #include "hal_stm32.h"
@@ -70,7 +72,7 @@ void DMA2Channel6ISR() { i2c1.DMAIntHandler(DmaChannel::Chan6); };
 void DMA2Channel7ISR() { i2c1.DMAIntHandler(DmaChannel::Chan7); };
 #else
 I2C::Channel i2c1;
-#endif // BARE_STM32
+#endif  // BARE_STM32
 
 namespace I2C {
 
@@ -302,8 +304,7 @@ void STM32Channel::Init(I2CReg *i2c, DmaReg *dma, Speed speed) {
 void STM32Channel::SetupI2CTransfer() {
   // set transfer-specific registers per [RM] p1149 to 1158
   i2c_->control2.slave_addr_7b = last_request_.slave_address & 0x7f;
-  i2c_->control2.transfer_direction =
-      static_cast<bool>(last_request_.direction);
+  i2c_->control2.transfer_direction = static_cast<bool>(last_request_.direction);
 
   if (dma_enable_) {
     SetupDMATransfer();
@@ -375,25 +376,23 @@ void STM32Channel::SetupDMAChannels(DmaReg *dma) {
   }
 }
 
-void I2C::STM32Channel::ConfigureDMAChannel(
-    volatile DmaReg::ChannelRegs *channel, ExchangeDirection direction) {
-  channel->config.priority = 0b01;           // medium priority
-  channel->config.tx_error_interrupt = 1;    // interrupt on error
-  channel->config.half_tx_interrupt = 0;     // no half-transfer interrupt
-  channel->config.tx_complete_interrupt = 1; // interrupt on DMA complete
-  channel->config.mem2mem = 0;               // memory-to-memory mode disabled
+void I2C::STM32Channel::ConfigureDMAChannel(volatile DmaReg::ChannelRegs *channel,
+                                            ExchangeDirection direction) {
+  channel->config.priority = 0b01;            // medium priority
+  channel->config.tx_error_interrupt = 1;     // interrupt on error
+  channel->config.half_tx_interrupt = 0;      // no half-transfer interrupt
+  channel->config.tx_complete_interrupt = 1;  // interrupt on DMA complete
+  channel->config.mem2mem = 0;                // memory-to-memory mode disabled
   channel->config.memory_size = static_cast<uint8_t>(DmaTransferSize::Byte);
   channel->config.peripheral_size = static_cast<uint8_t>(DmaTransferSize::Byte);
-  channel->config.memory_increment = 1;     // increment dest address
-  channel->config.peripheral_increment = 0; // don't increment source address
+  channel->config.memory_increment = 1;      // increment dest address
+  channel->config.peripheral_increment = 0;  // don't increment source address
   channel->config.circular = 0;
   if (direction == ExchangeDirection::Read) {
-    channel->config.direction =
-        static_cast<uint8_t>(DmaChannelDir::PeripheralToMemory);
+    channel->config.direction = static_cast<uint8_t>(DmaChannelDir::PeripheralToMemory);
     channel->peripheral_address = &(i2c_->rx_data);
   } else {
-    channel->config.direction =
-        static_cast<uint8_t>(DmaChannelDir::MemoryToPeripheral);
+    channel->config.direction = static_cast<uint8_t>(DmaChannelDir::MemoryToPeripheral);
     channel->peripheral_address = &(i2c_->tx_data);
   }
 }
@@ -433,8 +432,7 @@ void STM32Channel::SetupDMATransfer() {
 }
 
 void STM32Channel::DMAIntHandler(DmaChannel chan) {
-  if (!dma_enable_ || !transfer_in_progress_)
-    return;
+  if (!dma_enable_ || !transfer_in_progress_) return;
   dma_->channel[static_cast<uint8_t>(chan)].config.enable = 0;
   if (DmaIntStatus(dma_, chan, DmaInterrupt::TransferComplete)) {
     if (remaining_size_ > 255) {
@@ -460,6 +458,6 @@ void STM32Channel::DMAIntHandler(DmaChannel chan) {
   DmaClearInt(dma_, chan, DmaInterrupt::Global);
   StartTransfer();
 }
-#endif // BARE_STM32
+#endif  // BARE_STM32
 
-} // namespace I2C
+}  // namespace I2C

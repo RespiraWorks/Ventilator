@@ -14,11 +14,14 @@ limitations under the License.
 */
 
 #include "trace.h"
-#include "gmock/gmock-matchers.h"
-#include "gtest/gtest.h"
+
+#include <stdint.h>
+
 #include <iostream>
 #include <limits>
-#include <stdint.h>
+
+#include "gmock/gmock-matchers.h"
+#include "gtest/gtest.h"
 
 using namespace Debug;
 
@@ -28,12 +31,12 @@ TEST(Trace, MaybeSampleTwoVars) {
       VarType::UInt32, "x", VarAccess::ReadOnly, "units", [&] { return i; },
       [&](uint32_t value) { (void)value; }, "");
   FnDebugVar var_y(
-      VarType::UInt32, "y", VarAccess::ReadOnly, "units",
-      [&] { return 10 * i; }, [&](uint32_t value) { (void)value; }, "");
+      VarType::UInt32, "y", VarAccess::ReadOnly, "units", [&] { return 10 * i; },
+      [&](uint32_t value) { (void)value; }, "");
 
   Trace trace;
-  trace.SetPeriod(3); // Trace every 3 cycles.
-  trace.Start();      // Enable tracing
+  trace.SetPeriod(3);  // Trace every 3 cycles.
+  trace.Start();       // Enable tracing
   trace.SetTracedVarId<1>(var_x.GetId());
   trace.SetTracedVarId<3>(var_y.GetId());
 
@@ -45,9 +48,8 @@ TEST(Trace, MaybeSampleTwoVars) {
 
   int expected_num_samples = 0;
   for (; i < 9; ++i) {
-    trace.MaybeSample(); // Should sample at i = 0, 3, 6
-    if (i % 3 == 0)
-      ++expected_num_samples;
+    trace.MaybeSample();  // Should sample at i = 0, 3, 6
+    if (i % 3 == 0) ++expected_num_samples;
     EXPECT_EQ(expected_num_samples, trace.GetNumSamples());
   }
 
@@ -65,9 +67,8 @@ TEST(Trace, MaybeSampleTwoVars) {
   // Simulate the high-priority thread running a few times while the trace is
   // being collected.
   for (; i < 15; ++i) {
-    trace.MaybeSample(); // Should sample at i = 9, 12
-    if (i % 3 == 0)
-      ++expected_num_samples;
+    trace.MaybeSample();  // Should sample at i = 9, 12
+    if (i % 3 == 0) ++expected_num_samples;
     EXPECT_EQ(expected_num_samples, trace.GetNumSamples());
   }
 

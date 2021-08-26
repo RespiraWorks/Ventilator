@@ -13,12 +13,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include "network_protocol.pb.h"
 #include "proto_traits.h"
+
 #include "gtest/gtest.h"
+#include "network_protocol.pb.h"
 
 TEST(ProtoTraits, ControllerStatus) {
-  EXPECT_EQ(uint32_t{ControllerStatus_size},
-            ProtoTraits<ControllerStatus>::MaxSize);
+  EXPECT_EQ(uint32_t{ControllerStatus_size}, ProtoTraits<ControllerStatus>::MaxSize);
   EXPECT_EQ(&ControllerStatus_msg, ProtoTraits<ControllerStatus>::MsgDesc);
 }

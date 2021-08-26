@@ -20,18 +20,17 @@ limitations under the License.
 #ifndef EEPROM_H
 #define EEPROM_H
 
-#include "i2c.h"
 #include <stdint.h>
+
+#include "i2c.h"
 
 static constexpr uint32_t MaxMemorySize{65535};
 
 // This class defines an I²C addressable EEPROM.
 class I2Ceeprom {
-public:
-  I2Ceeprom(uint8_t address, uint8_t page_size, uint16_t size,
-            I2C::Channel *channel)
-      : address_(address), size_(size), page_size_(page_size),
-        channel_(channel){};
+ public:
+  I2Ceeprom(uint8_t address, uint8_t page_size, uint16_t size, I2C::Channel *channel)
+      : address_(address), size_(size), page_size_(page_size), channel_(channel){};
 
   // Because of the way I²C works, read/write operations take some time,
   // we use pointers to the place the data has to be put and to a boolean
@@ -39,25 +38,20 @@ public:
   // As for the I2C::Requests, it is up to the caller to ensure length and
   // data are consistent.
   bool ReadBytes(uint16_t offset, uint16_t length, void *data, bool *processed);
-  bool WriteBytes(uint16_t offset, uint16_t length, void *data,
-                  bool *processed);
+  bool WriteBytes(uint16_t offset, uint16_t length, void *data, bool *processed);
 
-protected:
-  uint8_t address_;   // 7 bits I²C address
-  uint16_t size_;     // in bytes
-  uint8_t page_size_; // in bytes
+ protected:
+  uint8_t address_;    // 7 bits I²C address
+  uint16_t size_;      // in bytes
+  uint8_t page_size_;  // in bytes
   // pointer to the I²C channel the EEPROM is wired to
   I2C::Channel *channel_;
-  virtual bool SendBytes(const I2C::Request &request) {
-    return channel_->SendRequest(request);
-  }
-  virtual bool ReceiveBytes(const I2C::Request &request) {
-    return channel_->SendRequest(request);
-  }
+  virtual bool SendBytes(const I2C::Request &request) { return channel_->SendRequest(request); }
+  virtual bool ReceiveBytes(const I2C::Request &request) { return channel_->SendRequest(request); }
 };
 
 class TestEeprom : public I2Ceeprom {
-public:
+ public:
   TestEeprom(uint8_t address, uint8_t page_size, uint16_t size)
       : I2Ceeprom(address, page_size, size, nullptr) {
     for (int i = 0; i < size_; ++i) {
@@ -65,11 +59,11 @@ public:
     };
   }
 
-private:
+ private:
   uint32_t address_pointer_{0};
   uint8_t memory_[MaxMemorySize];
   bool SendBytes(const I2C::Request &request) override;
   bool ReceiveBytes(const I2C::Request &request) override;
 };
 
-#endif // EEPROM_H
+#endif  // EEPROM_H

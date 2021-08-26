@@ -29,10 +29,10 @@ namespace I2C {
 
 // Speed values correspond to the timing register value from [RM] table 182
 enum class Speed {
-  Slow = 0x3042C3C7,     // 10 kb/s
-  Standard = 0x30420F13, // 100 kb/s
-  Fast = 0x10320309,     // 400 kb/s
-  FastPlus = 0x00200204, // 1 Mb/s
+  Slow = 0x3042C3C7,      // 10 kb/s
+  Standard = 0x30420F13,  // 100 kb/s
+  Fast = 0x10320309,      // 400 kb/s
+  FastPlus = 0x00200204,  // 1 Mb/s
 };
 
 enum class ExchangeDirection {
@@ -45,17 +45,17 @@ enum class ExchangeDirection {
 // caller must use a variable with the appropriate scope (ideally a static
 // variable) to ensure the result is put at a safe memory.
 struct Request {
-  uint8_t slave_address{0}; // for now we only support 7 bits addresses
-                            // and NOT 10 bits addresses (I²C bus is one
-                            // or the other)
+  uint8_t slave_address{0};  // for now we only support 7 bits addresses
+                             // and NOT 10 bits addresses (I²C bus is one
+                             // or the other)
   ExchangeDirection direction{ExchangeDirection::Read};
-  uint16_t size{1};         // size (in bytes) of the data to be sent or
-                            // received - limited to 16 bits because of DMA
-                            // limitation
-  void *data{nullptr};      // pointer to the data to be sent or received.
-  bool *processed{nullptr}; // pointer to a boolean that informs the
-                            // caller that his request has been
-                            // processed
+  uint16_t size{1};          // size (in bytes) of the data to be sent or
+                             // received - limited to 16 bits because of DMA
+                             // limitation
+  void *data{nullptr};       // pointer to the data to be sent or received.
+  bool *processed{nullptr};  // pointer to a boolean that informs the
+                             // caller that his request has been
+                             // processed
 };
 
 // Class that represents an I²C channel (we have 4 of those on the STM32)
@@ -79,7 +79,7 @@ struct Request {
 // should come in handy during integration testing, when we want to closely
 // monitor what is sent on the bus.
 class Channel {
-public:
+ public:
   Channel() = default;
   // Method that ultimately sends a request over the I²C channel, note
   // that it may take some time to be processed: if the line is already
@@ -94,7 +94,7 @@ public:
   void I2CEventHandler();
   void I2CErrorHandler();
 
-protected:
+ protected:
   // We queue of a few requests. The number of requests is arbitrary but
   // should be enough for all intents and purposes.
   static constexpr uint8_t QueueLength{80};
@@ -114,14 +114,14 @@ protected:
 
   bool transfer_in_progress_{false};
 
-  void StartTransfer();              // initiate a transfer
-  virtual void SetupI2CTransfer(){}; // configure a transfer
-  void TransferByte(); // transfer a single byte (for non-DMA transfer)
+  void StartTransfer();               // initiate a transfer
+  virtual void SetupI2CTransfer(){};  // configure a transfer
+  void TransferByte();                // transfer a single byte (for non-DMA transfer)
   virtual void ReceiveByte(){};
   virtual void SendByte(){};
   virtual void WriteTransferSize(){};
-  void EndTransfer();            // Clear necessary states
-  virtual void StopTransfer(){}; // send stop condition
+  void EndTransfer();             // Clear necessary states
+  virtual void StopTransfer(){};  // send stop condition
 
   // I²C interrupt getters:
   // Indicates that the hardware has processed the current byte and we can
@@ -180,7 +180,7 @@ protected:
 
 #ifdef BARE_STM32
 class STM32Channel : public Channel {
-public:
+ public:
   STM32Channel() = default;
   // Init I²C channel, setting up registers DMA_Reg and I²C_Reg to enable
   // the channel using DMA if possible. If DMA_Reg is invalid (or that DMA
@@ -190,16 +190,14 @@ public:
   // Interrupt handlers for DMA, which only makes sense on the STM32
   void DMAIntHandler(DmaChannel chan);
 
-private:
+ private:
   I2CReg *i2c_{nullptr};
   DmaReg *dma_{nullptr};
   volatile DmaReg::ChannelRegs *rx_channel_{nullptr};
   volatile DmaReg::ChannelRegs *tx_channel_{nullptr};
 
-  void SetupI2CTransfer() override; // configure a transfer
-  void ReceiveByte() override {
-    *next_data_ = static_cast<uint8_t>(i2c_->rx_data);
-  };
+  void SetupI2CTransfer() override;  // configure a transfer
+  void ReceiveByte() override { *next_data_ = static_cast<uint8_t>(i2c_->rx_data); };
   void SendByte() override { i2c_->tx_data = *next_data_; };
   void WriteTransferSize() override;
   void StopTransfer() override { i2c_->control2.stop = 1; };
@@ -209,23 +207,20 @@ private:
     return i2c_->status.rx_not_empty || i2c_->status.tx_interrupt;
   };
   bool TransferReload() const override { return i2c_->status.transfer_reload; };
-  bool TransferComplete() const override {
-    return i2c_->status.transfer_complete;
-  };
+  bool TransferComplete() const override { return i2c_->status.transfer_complete; };
   bool NackDetected() const override { return i2c_->status.nack; };
   // Override Interrupt clear
   void ClearNack() override { i2c_->interrupt_clear = 0x10; }
   void ClearErrors() override { i2c_->interrupt_clear = 0x720; }
 
   void SetupDMAChannels(DmaReg *dma);
-  void ConfigureDMAChannel(volatile DmaReg::ChannelRegs *channel,
-                           ExchangeDirection direction);
+  void ConfigureDMAChannel(volatile DmaReg::ChannelRegs *channel, ExchangeDirection direction);
   void SetupDMATransfer();
 };
 #endif
 
 class TestChannel : public Channel {
-public:
+ public:
   TestChannel() = default;
   // in test mode, setters and getters for faked sent/received data
   std::optional<uint8_t> TESTGetSentData() { return sent_buffer_.Get(); };
@@ -233,7 +228,7 @@ public:
   // setter to simulate Nack received
   void TESTSimulateNack() { nack_ = true; };
 
-private:
+ private:
   // in test mode, fake sending and receiving data through circular
   // buffers.
   CircularBuffer<uint8_t, WriteBufferSize> sent_buffer_;
@@ -246,8 +241,7 @@ private:
   // mock the sending and receiving of bytes from internal buffers
   void SendByte() override {
     bool ok = sent_buffer_.Put(*next_data_);
-    if (ok)
-      return;
+    if (ok) return;
   };
   void ReceiveByte() override {
     std::optional<uint8_t> data = rx_buffer_.Get();
@@ -267,7 +261,7 @@ private:
   void ClearNack() override { nack_ = false; };
 };
 
-} // namespace I2C
+}  // namespace I2C
 
 #ifdef BARE_STM32
 extern I2C::STM32Channel i2c1;
@@ -275,4 +269,4 @@ extern I2C::STM32Channel i2c1;
 extern I2C::Channel i2c1;
 #endif
 
-#endif // I2C_H
+#endif  // I2C_H

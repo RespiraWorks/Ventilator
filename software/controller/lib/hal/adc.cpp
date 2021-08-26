@@ -85,8 +85,7 @@ static constexpr int OversampleCount = 1 << OversampleLog2;
 // [RM] 16.4.30: Oversampler (pg 425)
 // This calculated constant gives the maximum A/D reading based on the
 // number of samples.
-static constexpr int MaxAdcReading =
-    (OversampleLog2 >= 4) ? 65536 : (1 << (12 + OversampleLog2));
+static constexpr int MaxAdcReading = (OversampleLog2 >= 4) ? 65536 : (1 << (12 + OversampleLog2));
 
 // Set sample time ([RM] 16.4.12). I'm using 92.5 A/D clocks to sample.
 // A/D sample time in CPU clock cycles.  Fixed for now
@@ -97,9 +96,8 @@ static constexpr int AdcSampleTime = 92;
 static constexpr int AdcConversionTime = AdcSampleTime + 13;
 
 // Calculate how long our history buffer needs to be based on the above.
-static constexpr int AdcSampleHistory =
-    static_cast<int>(SampleHistoryTimeSec * CPU_FREQ / AdcConversionTime /
-                     OversampleCount / AdcChannels);
+static constexpr int AdcSampleHistory = static_cast<int>(
+    SampleHistoryTimeSec * CPU_FREQ / AdcConversionTime / OversampleCount / AdcChannels);
 
 // This scaler converts the sum of the A/D readings (a total of
 // AdcSampleHistory) into a voltage.  The A/D is scaled so a value of 0
@@ -120,7 +118,6 @@ static volatile uint16_t adc_buff[AdcSampleHistory * AdcChannels];
 static_assert(AdcSampleHistory < 100);
 
 void HalApi::InitADC() {
-
   // Enable the clock to the A/D converter
   EnableClock(AdcBase);
 
@@ -168,14 +165,11 @@ void HalApi::InitADC() {
   adc->adc[0].configuration1.dma_config = 1;
   adc->adc[0].configuration1.continuous_conversion = 1;
 
-  adc->adc[0].configuration2.regular_oversampling =
-      (OversampleLog2 > 0) ? 1 : 0;
+  adc->adc[0].configuration2.regular_oversampling = (OversampleLog2 > 0) ? 1 : 0;
 
-  adc->adc[0].configuration2.oversampling_ratio =
-      (OversampleLog2 > 0) ? OversampleLog2 - 1 : 0;
+  adc->adc[0].configuration2.oversampling_ratio = (OversampleLog2 > 0) ? OversampleLog2 - 1 : 0;
 
-  adc->adc[0].configuration2.oversampling_shift =
-      (OversampleLog2 < 4) ? 0 : (OversampleLog2 - 4);
+  adc->adc[0].configuration2.oversampling_shift = (OversampleLog2 < 4) ? 0 : (OversampleLog2 - 4);
 
   // Set sample times ([RM] 16.4.12). I'm using 92.5 A/D clocks to sample.
   static_assert(AdcSampleTime == 92);
@@ -206,8 +200,7 @@ void HalApi::InitADC() {
   dma->channel[c1].config.tx_complete_interrupt = 0;
   dma->channel[c1].config.half_tx_interrupt = 0;
   dma->channel[c1].config.tx_error_interrupt = 0;
-  dma->channel[c1].config.direction =
-      static_cast<uint32_t>(DmaChannelDir::PeripheralToMemory);
+  dma->channel[c1].config.direction = static_cast<uint32_t>(DmaChannelDir::PeripheralToMemory);
   dma->channel[c1].config.circular = 1;
   dma->channel[c1].config.peripheral_increment = 0;
   dma->channel[c1].config.memory_increment = 1;
@@ -224,14 +217,14 @@ void HalApi::InitADC() {
 Voltage HalApi::AnalogRead(AnalogPin pin) {
   int offset = [&] {
     switch (pin) {
-    case AnalogPin::PatientPressure:
-      return 0;
-    case AnalogPin::InflowPressureDiff:
-      return 1;
-    case AnalogPin::OutflowPressureDiff:
-      return 2;
-    case AnalogPin::FIO2:
-      return 3;
+      case AnalogPin::PatientPressure:
+        return 0;
+      case AnalogPin::InflowPressureDiff:
+        return 1;
+      case AnalogPin::OutflowPressureDiff:
+        return 2;
+      case AnalogPin::FIO2:
+        return 3;
     }
     // All cases covered above (and GCC checks this).
     __builtin_unreachable();
@@ -242,8 +235,7 @@ Voltage HalApi::AnalogRead(AnalogPin pin) {
   // background, but that shouldn't cause any problems because memory
   // accesses for 16-bit values are atomic.
   float sum = 0;
-  for (int i = 0; i < AdcSampleHistory; i++)
-    sum += adc_buff[i * AdcChannels + offset];
+  for (int i = 0; i < AdcSampleHistory; i++) sum += adc_buff[i * AdcChannels + offset];
 
   return volts(sum * AdcScaler);
 }

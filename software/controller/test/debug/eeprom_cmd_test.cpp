@@ -13,9 +13,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+#include <array>
+
 #include "commands.h"
 #include "gtest/gtest.h"
-#include <array>
 
 namespace Debug::Command {
 
@@ -31,14 +32,11 @@ TEST(EepromHandler, ValidRead) {
     test_eeprom.WriteBytes(byte, static_cast<uint16_t>(1), &value, nullptr);
   }
 
-  for (uint16_t read_length = 1; read_length <= kMaxRequestSize;
-       ++read_length) {
-    std::array<uint8_t, 6> read_command = {
-        static_cast<uint8_t>(EepromHandler::Subcommand::Read)};
+  for (uint16_t read_length = 1; read_length <= kMaxRequestSize; ++read_length) {
+    std::array<uint8_t, 6> read_command = {static_cast<uint8_t>(EepromHandler::Subcommand::Read)};
     // set command length
     u16_to_u8(read_length, &read_command[3]);
-    for (uint16_t offset = 0; offset < kMemorySize + 1 - read_length;
-         ++offset) {
+    for (uint16_t offset = 0; offset < kMemorySize + 1 - read_length; ++offset) {
       // set command address
       u16_to_u8(offset, &read_command[1]);
       std::array<uint8_t, kMaxRequestSize> response;
@@ -71,12 +69,10 @@ TEST(EepromHandler, ValidWrite) {
   TestEeprom test_eeprom(0x50, 64, kMemorySize);
   EepromHandler eeprom_handler(&test_eeprom);
 
-  for (uint16_t write_length = 1; write_length <= kMaxWriteSize;
-       ++write_length) {
+  for (uint16_t write_length = 1; write_length <= kMaxWriteSize; ++write_length) {
     std::array<uint8_t, kMaxWriteSize + 3> write_command = {
         static_cast<uint8_t>(EepromHandler::Subcommand::Write)};
-    for (uint16_t offset = 0; offset < kMemorySize + 1 - write_length;
-         ++offset) {
+    for (uint16_t offset = 0; offset < kMemorySize + 1 - write_length; ++offset) {
       // set command address
       u16_to_u8(offset, &write_command[1]);
       // set command data
@@ -118,21 +114,20 @@ TEST(EepromHandler, Errors) {
   long_write[0] = 1;
 
   std::vector<std::tuple<std::vector<uint8_t>, ErrorCode>> requests = {
-      {{}, ErrorCode::MissingData},           // Missing subcommand
-      {{0, 0, 0, 4, 0}, ErrorCode::NoMemory}, // length > max response length
-      {{0, 0, 0, 0}, ErrorCode::MissingData}, // Read missing length
-      {{1, 0, 0}, ErrorCode::MissingData},    // Write missing data
-      {{1, 0xFF, 0xFF, 0}, ErrorCode::InternalError}, // Write outside eeprom
-      {long_write, ErrorCode::NoMemory},   // Write more than 1024 bytes
-      {{2, 0, 0}, ErrorCode::InvalidData}, // Invalid subcommand
+      {{}, ErrorCode::MissingData},                    // Missing subcommand
+      {{0, 0, 0, 4, 0}, ErrorCode::NoMemory},          // length > max response length
+      {{0, 0, 0, 0}, ErrorCode::MissingData},          // Read missing length
+      {{1, 0, 0}, ErrorCode::MissingData},             // Write missing data
+      {{1, 0xFF, 0xFF, 0}, ErrorCode::InternalError},  // Write outside eeprom
+      {long_write, ErrorCode::NoMemory},               // Write more than 1024 bytes
+      {{2, 0, 0}, ErrorCode::InvalidData},             // Invalid subcommand
   };
 
   for (auto &[request, error] : requests) {
     // response size 3 to provoke No Memory error once all other checks are OK
     std::array<uint8_t, 3> response;
     Context context = {.request = request.data(),
-                       .request_length =
-                           static_cast<uint32_t>(std::size(request)),
+                       .request_length = static_cast<uint32_t>(std::size(request)),
                        .response = response.data(),
                        .max_response_length = response.size(),
                        .response_length = 0};
@@ -141,4 +136,4 @@ TEST(EepromHandler, Errors) {
   }
 }
 
-} // namespace Debug::Command
+}  // namespace Debug::Command

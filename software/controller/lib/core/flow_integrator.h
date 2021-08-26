@@ -13,9 +13,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+#include <optional>
+
 #include "hal.h"
 #include "units.h"
-#include <optional>
 
 // Integrates flow over time to calculate volume.
 //
@@ -23,7 +24,7 @@ limitations under the License.
 // slow-changing error in the flow, based on certain points in time when we
 // know what the volume "should be".
 class FlowIntegrator {
-public:
+ public:
   FlowIntegrator();
 
   // Updates the tidal volume given this flow.
@@ -59,7 +60,7 @@ public:
   // tidal volumes.
   void NoteExpectedVolume(Volume v);
 
-private:
+ private:
   std::optional<Time> last_flow_measurement_time_;
   Volume volume_ = ml(0);
   VolumetricFlow last_flow_ = cubic_m_per_sec(0);

@@ -15,7 +15,7 @@ limitations under the License.
 
 #pragma once
 
-#include <stdint.h>
+#include <cstdint>
 
 #include <type_traits>
 
@@ -49,7 +49,7 @@ limitations under the License.
 //   printf("42 kPa - 10 cm_h20 is %f kPa or %f cm_h2o\n",
 //          diff.kPa(), diff.cmH2O());
 //
-// Observe that we create an instance of Pressure by calling the kPa() bare
+// observe that we create an instance of Pressure by calling the kPa() bare
 // function.  We provide the following bare functions
 //
 //   Pressure         kPa(float)

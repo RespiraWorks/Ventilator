@@ -20,16 +20,17 @@ limitations under the License.
 
 #include <algorithm>
 
-PID::PID(const char* name, const char* help_supplement, float kp, float ki, float kd,
-         ProportionalTerm p_term, DifferentialTerm d_term, float output_min, float output_max)
-    : kp_(kp),
-      ki_(ki),
-      kd_(kd),
-      dbg_kp_("kp", VarAccess::ReadWrite, kp, "", "Proportional gain"),
-      dbg_ki_("ki", VarAccess::ReadWrite, ki, "", "Integral gain"),
-      dbg_kd_("kd", VarAccess::ReadWrite, kd, "", "Derivative gain"),
-      p_term_(p_term),
-      d_term_(d_term),
+PID::PID(const char* name, const char* help_supplement, float initial_kp, float initial_ki,
+         float initial_kd, TermApplication p_term, TermApplication d_term, float output_min,
+         float output_max)
+    : kp_(initial_kp),
+      ki_(initial_ki),
+      kd_(initial_kd),
+      dbg_kp_("initial_kp", VarAccess::ReadWrite, initial_kp, "", "Proportional gain"),
+      dbg_ki_("initial_ki", VarAccess::ReadWrite, initial_ki, "", "Integral gain"),
+      dbg_kd_("initial_kd", VarAccess::ReadWrite, initial_kd, "", "Derivative gain"),
+      proportional_term_(p_term),
+      differential_term_(d_term),
       out_min_(output_min),
       out_max_(output_max) {
   dbg_kp_.prepend_name(name);
@@ -40,13 +41,27 @@ PID::PID(const char* name, const char* help_supplement, float kp, float ki, floa
   dbg_kd_.append_help(help_supplement);
 }
 
+void PID::kp(float new_kp) { kp_ = new_kp; }
+
+void PID::ki(float new_ki) { ki_ = new_ki; }
+
+void PID::kd(float new_kd) { kd_ = new_kd; }
+
+float PID::kp() const { return kp_; }
+
+float PID::ki() const { return ki_; }
+
+float PID::kd() const { return kd_; }
+
+void PID::reset() { initialized_ = false; }
+
 void PID::update_vars() {
-  SetKP(dbg_kp_.Get());
-  SetKI(dbg_ki_.Get());
-  SetKD(dbg_kd_.Get());
+  kp(dbg_kp_.Get());
+  ki(dbg_ki_.Get());
+  kd(dbg_kd_.Get());
 }
 
-float PID::Compute(Time now, float input, float setpoint) {
+float PID::compute(Time now, float input, float setpoint) {
   if (!initialized_) {
     last_input_ = input;
     last_error_ = setpoint - input;
@@ -55,29 +70,29 @@ float PID::Compute(Time now, float input, float setpoint) {
     initialized_ = true;
   }
 
-  // Compute time between now and last sample.
+  // compute time between now and last sample.
   float delta_t = (now - last_update_time_).seconds();
 
-  // Compute all the working error variables
+  // compute all the working error variables
   float error = setpoint - input;
   float delta_input = input - last_input_;
 
   output_sum_ += (ki_ * error * delta_t);
 
-  if (p_term_ == ProportionalTerm::OnMeasurement) {
+  if (proportional_term_ == TermApplication::OnMeasurement) {
     output_sum_ -= kp_ * delta_input;
   }
 
   output_sum_ = std::clamp(output_sum_, out_min_, out_max_);
 
   float res = output_sum_;
-  if (p_term_ == ProportionalTerm::OnError) {
+  if (proportional_term_ == TermApplication::OnError) {
     res += kp_ * error;
   }
-  // delta_t may be 0 (e.g. on the first call to Compute()), in which case we
+  // delta_t may be 0 (e.g. on the first call to compute()), in which case we
   // simply skip using the derivative term.
   if (delta_t > 0) {
-    if (d_term_ == DifferentialTerm::OnMeasurement) {
+    if (differential_term_ == TermApplication::OnMeasurement) {
       res -= kd_ * delta_input / delta_t;
     } else {
       res += kd_ * (error - last_error_) / delta_t;
@@ -91,13 +106,13 @@ float PID::Compute(Time now, float input, float setpoint) {
   return std::clamp(res, out_min_, out_max_);
 }
 
-void PID::Observe(Time now, float input, float setpoint, float actual_output) {
-  // All the observable variables are updated the same way as in Compute();
+void PID::observe(Time now, float input, float setpoint, float actual_output) {
+  // All the observable variables are updated the same way as in compute();
   last_input_ = input;
   last_error_ = setpoint - input;
   last_update_time_ = now;
-  // Reset output_sum_ to actual_output so that the next Compute()
+  // Reset output_sum_ to actual_output so that the next compute()
   // will adjust it only slightly (as if it had been computed by a current
-  // Compute() call), avoiding a spike.
+  // compute() call), avoiding a spike.
   output_sum_ = std::clamp(actual_output, out_min_, out_max_);
 }

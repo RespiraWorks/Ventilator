@@ -63,16 +63,18 @@ class Controller {
                                                  const SensorReadings &sensor_readings);
 
  private:
-  uint64_t breath_id_{0};
+  uint32_t breath_id_{0};
   BlowerFsm fsm_;
 
-  PID blower_valve_pid_{
-      "blower_valve_",    " for blower valve PID",
-      /*kp=*/0.04f,
-      /*ki=*/15.0f,
-      /*kd=*/0.0f,        ProportionalTerm::OnError, DifferentialTerm::OnMeasurement,
-      /*output_min=*/0.f,
-      /*output_max=*/1.0f};
+  PID blower_valve_pid_{"blower_valve_",
+                        " for blower valve PID",
+                        /*kp=*/0.04f,
+                        /*ki=*/10.0f,
+                        /*kd=*/0.0f,
+                        /*p_term=*/PID::TermApplication::OnError,
+                        /*d_term=*/PID::TermApplication::OnMeasurement,
+                        /*output_min=*/0.f,
+                        /*output_max=*/1.0f};
 
   // TODO: These params need to be tuned.
   PID psol_pid_{"psol_",
@@ -80,8 +82,8 @@ class Controller {
                 /*kp=*/0.04f,
                 /*ki=*/20.0f,
                 /*kd=*/0.0f,
-                ProportionalTerm::OnError,
-                DifferentialTerm::OnMeasurement,
+                /*p_term=*/PID::TermApplication::OnError,
+                /*d_term=*/PID::TermApplication::OnMeasurement,
                 /*output_min=*/0.f,
                 /*output_max=*/1.0f};
 

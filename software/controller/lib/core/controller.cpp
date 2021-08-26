@@ -19,11 +19,6 @@ limitations under the License.
 
 static constexpr Duration LoopPeriod = milliseconds(10);
 
-static DebugFloat dbg_blower_valve_computed_ki("blower_valve_computed_ki", VarAccess::ReadOnly,
-                                               10.0f, "",
-                                               "Integral gain for blower valve PID. "
-                                               "This value is gain-scheduled.");
-
 static DebugFloat dbg_forced_blower_power(
     "forced_blower_power", VarAccess::ReadWrite, -1.f, "ratio",
     "Force the blower fan to a particular power [0,1].  Specify a value "
@@ -79,34 +74,13 @@ std::pair<ActuatorsState, ControllerState> Controller::Run(Time now, const VentP
   if (desired_state.is_end_of_breath) {
     // The "correct" volume at the breath boundary is 0.
     flow_integrator_->NoteExpectedVolume(ml(0));
-    breath_id_ = now.microsSinceStartup();
+
+    // Precision loss 64->32 bits ok: we only care about equality of these values, not their
+    // absolute value, and the top 32 bits will change with each new breath.
+    breath_id_ = static_cast<uint32_t>(now.microsSinceStartup());
   }
 
-  // Precision loss 64->32 bits ok: we only care about equality of these values,
-  // not their absolute value, and the top 32 bits will change with each new
-  // breath.
-  // TODO: Maybe we should just make breath id a 32-bit value.
-  dbg_breath_id.Set(static_cast<uint32_t>(breath_id_));
-
-  // Gain scheduling of blower Ki based on PIP and PEEP settings.  Artisanally
-  // hand-tuned by Edwin.
-  //
-  // Note that we use desired_state.pip/peep and not params.pip/peep because
-  // desired_state updates at breath boundaries, whereas params updates
-  // whenever the user clicks the touchscreen.
-
-  //  float blower_ki = 0;
-  //
-  //  if (dbg_blower_valve_ki.Get() < 0) {
-  //    blower_ki = std::clamp(
-  //        (desired_state.pip - desired_state.peep).cmH2O() - 5.0f, 10.0f, 20.0f);
-  //
-  //    dbg_blower_valve_computed_ki.Set(blower_ki);
-  //
-  //  } else {
-  //    blower_ki = dbg_blower_valve_ki.Get();
-  //  }
-  //  blower_valve_pid_.SetKI(blower_ki);
+  dbg_breath_id.Set(breath_id_);
 
   blower_valve_pid_.update_vars();
   psol_pid_.update_vars();
@@ -120,8 +94,8 @@ std::pair<ActuatorsState, ControllerState> Controller::Run(Time now, const VentP
     //
     // If the pinch valves are not yet homed, this will home them and then move
     // them to the desired positions.
-    blower_valve_pid_.Reset();
-    psol_pid_.Reset();
+    blower_valve_pid_.reset();
+    psol_pid_.reset();
 
     actuators_state = {
         .fio2_valve = 0,
@@ -141,10 +115,10 @@ std::pair<ActuatorsState, ControllerState> Controller::Run(Time now, const VentP
     // air or pure oxygen.  For any fio2 < 1, deliver air.
     if (params.fio2 < 1) {
       // Delivering pure air.
-      psol_pid_.Reset();
+      psol_pid_.reset();
 
       // Calculate blower valve command using calculated gains
-      float blower_valve = blower_valve_pid_.Compute(now, sensor_readings.patient_pressure.kPa(),
+      float blower_valve = blower_valve_pid_.compute(now, sensor_readings.patient_pressure.kPa(),
                                                      desired_state.pressure_setpoint->kPa());
 
       actuators_state = {
@@ -158,9 +132,9 @@ std::pair<ActuatorsState, ControllerState> Controller::Run(Time now, const VentP
       };
     } else {
       // Delivering pure oxygen.
-      blower_valve_pid_.Reset();
+      blower_valve_pid_.reset();
 
-      float psol_valve = psol_pid_.Compute(now, sensor_readings.patient_pressure.kPa(),
+      float psol_valve = psol_pid_.compute(now, sensor_readings.patient_pressure.kPa(),
                                            desired_state.pressure_setpoint->kPa());
       actuators_state = {
           // Force psol to stay very slightly open to avoid the discontinuity

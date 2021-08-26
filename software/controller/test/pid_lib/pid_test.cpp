@@ -22,6 +22,7 @@ limitations under the License.
  */
 
 #include "pid.h"
+
 #include "gtest/gtest.h"
 
 // The PWM is a 0-255 integer, which means we can accept error of 1 in output
@@ -38,8 +39,7 @@ inline constexpr Time base = microsSinceStartup(10'000'000);
 inline constexpr Duration sample_period = milliseconds(100);
 Time ticks(int num_ticks) { return base + num_ticks * sample_period; }
 
-#define EXPECT_OUTPUT(expected, actual)                                        \
-  EXPECT_NEAR(expected, actual, OUTPUT_TOLERANCE)
+#define EXPECT_OUTPUT(expected, actual) EXPECT_NEAR(expected, actual, OUTPUT_TOLERANCE)
 
 TEST(PidTest, Proportional) {
   const float Kp = 0.9f;
@@ -47,15 +47,13 @@ TEST(PidTest, Proportional) {
   const float input = setpoint - 10;
 
   // Create PID and run once
-  PID pid(Kp, /*ki=*/0, /*kd=*/0, ProportionalTerm::OnError,
-          DifferentialTerm::OnMeasurement, MIN_OUTPUT, MAX_OUTPUT);
+  PID pid(Kp, /*ki=*/0, /*kd=*/0, ProportionalTerm::OnError, DifferentialTerm::OnMeasurement,
+          MIN_OUTPUT, MAX_OUTPUT);
   int t = 0;
 
   // Ki and Kd = 0 therefore output = Kp*error, nothing more
-  EXPECT_OUTPUT(pid.Compute(ticks(t++), input, setpoint),
-                (setpoint - input) * Kp);
-  EXPECT_OUTPUT(pid.Compute(ticks(t++), input, setpoint),
-                (setpoint - input) * Kp);
+  EXPECT_OUTPUT(pid.Compute(ticks(t++), input, setpoint), (setpoint - input) * Kp);
+  EXPECT_OUTPUT(pid.Compute(ticks(t++), input, setpoint), (setpoint - input) * Kp);
 }
 
 TEST(PidTest, IntegralBasic) {
@@ -63,8 +61,8 @@ TEST(PidTest, IntegralBasic) {
   const float setpoint = 25;
   const float input = setpoint - 10;
 
-  PID pid(/*kp=*/0, Ki, /*kd=*/0, ProportionalTerm::OnError,
-          DifferentialTerm::OnMeasurement, MIN_OUTPUT, MAX_OUTPUT);
+  PID pid(/*kp=*/0, Ki, /*kd=*/0, ProportionalTerm::OnError, DifferentialTerm::OnMeasurement,
+          MIN_OUTPUT, MAX_OUTPUT);
   int t = 0;
 
   // on first call, integral = error * 0, output = 0.
@@ -84,15 +82,14 @@ TEST(PidTest, IntegralSaturationMax) {
   const float setpoint = 25;
   const float input = setpoint - 10;
 
-  PID pid(/*kp=*/0, Ki, /*kd=*/0, ProportionalTerm::OnError,
-          DifferentialTerm::OnMeasurement, MIN_OUTPUT, MAX_OUTPUT);
+  PID pid(/*kp=*/0, Ki, /*kd=*/0, ProportionalTerm::OnError, DifferentialTerm::OnMeasurement,
+          MIN_OUTPUT, MAX_OUTPUT);
   int t = 0;
 
   float output = 0;
   for (int i = 0; i < 1000; ++i) {
     output = pid.Compute(ticks(t++), input, setpoint);
-    if (output >= MAX_OUTPUT)
-      break;
+    if (output >= MAX_OUTPUT) break;
   }
   EXPECT_EQ(output, MAX_OUTPUT);
 
@@ -103,8 +100,7 @@ TEST(PidTest, IntegralSaturationMax) {
   // make setpoint lower than input to de-saturate output
   const float low_setpoint = input - 10;
   EXPECT_OUTPUT(pid.Compute(ticks(t++), input, low_setpoint),
-                MAX_OUTPUT +
-                    (low_setpoint - input) * sample_period.seconds() * Ki);
+                MAX_OUTPUT + (low_setpoint - input) * sample_period.seconds() * Ki);
 }
 
 TEST(PidTest, IntegralSaturationMin) {
@@ -113,15 +109,14 @@ TEST(PidTest, IntegralSaturationMin) {
   const float input = setpoint + 10;
 
   // Create PID and run once
-  PID pid(/*kp=*/0, Ki, /*kd=*/0, ProportionalTerm::OnError,
-          DifferentialTerm::OnMeasurement, MIN_OUTPUT, MAX_OUTPUT);
+  PID pid(/*kp=*/0, Ki, /*kd=*/0, ProportionalTerm::OnError, DifferentialTerm::OnMeasurement,
+          MIN_OUTPUT, MAX_OUTPUT);
   int t = 0;
 
   float output = 0;
   for (int i = 0; i < 1000; ++i) {
     output = pid.Compute(ticks(t++), input, setpoint);
-    if (output <= MIN_OUTPUT)
-      break;
+    if (output <= MIN_OUTPUT) break;
   }
   EXPECT_EQ(output, MIN_OUTPUT);
 
@@ -134,8 +129,7 @@ TEST(PidTest, IntegralSaturationMin) {
   float new_setpoint = input + 10;
 
   EXPECT_OUTPUT(pid.Compute(ticks(t++), input, new_setpoint),
-                MIN_OUTPUT +
-                    (new_setpoint - input) * sample_period.seconds() * Ki);
+                MIN_OUTPUT + (new_setpoint - input) * sample_period.seconds() * Ki);
 }
 
 // In the following tests we transition from (input1, setpoint1) to (input2,
@@ -147,8 +141,8 @@ TEST(PidTest, DerivativeOnMeasure) {
   const float input1 = setpoint1 - 10;
   const float setpoint2 = 17;
   const float input2 = setpoint2 - 13;
-  PID pid(/*kp=*/0, /*ki=*/0, Kd, ProportionalTerm::OnMeasurement,
-          DifferentialTerm::OnMeasurement, MIN_OUTPUT, MAX_OUTPUT);
+  PID pid(/*kp=*/0, /*ki=*/0, Kd, ProportionalTerm::OnMeasurement, DifferentialTerm::OnMeasurement,
+          MIN_OUTPUT, MAX_OUTPUT);
   int t = 0;
 
   // Expect no derivative on first call
@@ -166,15 +160,14 @@ TEST(PidTest, DerivativeOnError) {
   const float input1 = setpoint1 - 10;
   const float setpoint2 = 17;
   const float input2 = setpoint2 - 13;
-  PID pid(/*kp=*/0, /*ki=*/0, Kd, ProportionalTerm::OnMeasurement,
-          DifferentialTerm::OnError, MIN_OUTPUT, MAX_OUTPUT);
+  PID pid(/*kp=*/0, /*ki=*/0, Kd, ProportionalTerm::OnMeasurement, DifferentialTerm::OnError,
+          MIN_OUTPUT, MAX_OUTPUT);
   int t = 0;
 
   // Expect no derivative on first call
   EXPECT_OUTPUT(pid.Compute(ticks(t++), input1, setpoint1), 0);
   EXPECT_OUTPUT(pid.Compute(ticks(t++), input2, setpoint2),
-                Kd * ((setpoint2 - input2) - (setpoint1 - input1)) /
-                    sample_period.seconds());
+                Kd * ((setpoint2 - input2) - (setpoint1 - input1)) / sample_period.seconds());
 }
 
 TEST(PidTest, TaskJitter) {
@@ -184,8 +177,8 @@ TEST(PidTest, TaskJitter) {
   const float Ki = 0.5f;
   const float setpoint = 25;
   const float input = setpoint - 10;
-  PID pid(/*kp=*/0, Ki, /*kd=*/0, ProportionalTerm::OnError,
-          DifferentialTerm::OnMeasurement, MIN_OUTPUT, MAX_OUTPUT);
+  PID pid(/*kp=*/0, Ki, /*kd=*/0, ProportionalTerm::OnError, DifferentialTerm::OnMeasurement,
+          MIN_OUTPUT, MAX_OUTPUT);
   Time now = base;
 
   float integral = (setpoint - input) * sample_period.seconds();
@@ -212,8 +205,8 @@ TEST(PidTest, MissedSample) {
   const float Ki = 0.2f;
   const float setpoint = 25;
   const float input = setpoint - 10;
-  PID pid(/*kp=*/0, Ki, /*kd=*/0, ProportionalTerm::OnError,
-          DifferentialTerm::OnMeasurement, MIN_OUTPUT, MAX_OUTPUT);
+  PID pid(/*kp=*/0, Ki, /*kd=*/0, ProportionalTerm::OnError, DifferentialTerm::OnMeasurement,
+          MIN_OUTPUT, MAX_OUTPUT);
   Time now = base;
 
   float integral = (setpoint - input) * (sample_period.seconds());
@@ -242,8 +235,8 @@ TEST(PidTest, Observe) {
   float Ki = 1;
   float setpoint = 25;
   float input = setpoint - 10;
-  PID pid(/*kp=*/0, Ki, /*kd=*/0, ProportionalTerm::OnError,
-          DifferentialTerm::OnMeasurement, MIN_OUTPUT, MAX_OUTPUT);
+  PID pid(/*kp=*/0, Ki, /*kd=*/0, ProportionalTerm::OnError, DifferentialTerm::OnMeasurement,
+          MIN_OUTPUT, MAX_OUTPUT);
   int t = 0;
 
   // Run PID a few times
@@ -264,14 +257,11 @@ TEST(PidTest, Observe) {
   }
 
   float integral = (setpoint - input) * sample_period.seconds();
-  EXPECT_OUTPUT(pid.Compute(ticks(t++), input, setpoint),
-                128 + 10 + integral * Ki);
+  EXPECT_OUTPUT(pid.Compute(ticks(t++), input, setpoint), 128 + 10 + integral * Ki);
 }
 
 TEST(PidTest, Reset) {
-
-  PID pid(0, 0, 0, ProportionalTerm::OnError, DifferentialTerm::OnError,
-          MIN_OUTPUT, MAX_OUTPUT);
+  PID pid(0, 0, 0, ProportionalTerm::OnError, DifferentialTerm::OnError, MIN_OUTPUT, MAX_OUTPUT);
 
   // Run one cycle to set last error
   int t = 0;
@@ -295,8 +285,7 @@ TEST(PidTest, Reset) {
   // Build up an integral sum
   pid.SetKD(0);
   pid.SetKI(1);
-  for (int i = 0; i < 10; i++)
-    output = pid.Compute(ticks(t++), setpoint - error, setpoint);
+  for (int i = 0; i < 10; i++) output = pid.Compute(ticks(t++), setpoint - error, setpoint);
 
   // With all gains set to zero, running again will not change the output
   // it will still be the output_sum_ value

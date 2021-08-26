@@ -21,27 +21,29 @@ limitations under the License.
  * on an Arduino platform.
  */
 
-#include "flow_integrator.h"
-#include "hal.h"
 #include "sensors.h"
-#include "gtest/gtest.h"
+
 #include <assert.h>
+
 #include <cmath>
 #include <cstdio>
 #include <iostream>
 #include <string>
+
+#include "flow_integrator.h"
+#include "gtest/gtest.h"
+#include "hal.h"
 
 // Maximum allowable delta between calculated sensor readings and the input.
 static const Pressure ComparisonTolerancePressure{kPa(0.005f)};
 static const VolumetricFlow ComparisonToleranceFlow{ml_per_sec(50)};
 static const float ComparisonToleranceFIO2{0.001f};
 
-#define EXPECT_PRESSURE_NEAR(a, b)                                             \
+#define EXPECT_PRESSURE_NEAR(a, b) \
   EXPECT_NEAR((a).kPa(), (b).kPa(), ComparisonTolerancePressure.kPa())
 
-#define EXPECT_FLOW_NEAR(a, b)                                                 \
-  EXPECT_NEAR((a).ml_per_sec(), (b).ml_per_sec(),                              \
-              ComparisonToleranceFlow.ml_per_sec())
+#define EXPECT_FLOW_NEAR(a, b) \
+  EXPECT_NEAR((a).ml_per_sec(), (b).ml_per_sec(), ComparisonToleranceFlow.ml_per_sec())
 
 //@TODO: Finish writing more specific unit tests for this module
 
@@ -67,13 +69,10 @@ static Voltage FIO2ToVoltage(float fio2, Pressure p_amb) {
 // Function that helps change the readings by setting the pressure sensor pins,
 // advancing time and then getting sensors readings
 static SensorReadings update_readings(Duration dt, Pressure patient_pressure,
-                                      Pressure inflow_pressure,
-                                      Pressure outflow_pressure, Pressure p_amb,
-                                      float fio2, Sensors *sensors) {
-  hal.TESTSetAnalogPin(AnalogPin::PatientPressure,
-                       MPXV5004_PressureToVoltage(patient_pressure));
-  hal.TESTSetAnalogPin(AnalogPin::InflowPressureDiff,
-                       MPXV5004_PressureToVoltage(inflow_pressure));
+                                      Pressure inflow_pressure, Pressure outflow_pressure,
+                                      Pressure p_amb, float fio2, Sensors *sensors) {
+  hal.TESTSetAnalogPin(AnalogPin::PatientPressure, MPXV5004_PressureToVoltage(patient_pressure));
+  hal.TESTSetAnalogPin(AnalogPin::InflowPressureDiff, MPXV5004_PressureToVoltage(inflow_pressure));
   hal.TESTSetAnalogPin(AnalogPin::OutflowPressureDiff,
                        MPXV5004_PressureToVoltage(outflow_pressure));
   hal.TESTSetAnalogPin(AnalogPin::FIO2, FIO2ToVoltage(fio2, p_amb));
@@ -84,13 +83,12 @@ static SensorReadings update_readings(Duration dt, Pressure patient_pressure,
 TEST(SensorTests, FullScalePressureReading) {
   // These pressure waveforms start at 0 kPa to simulate the system being in the
   // proper calibration state then they go over the sensor full ranges.
-  std::vector<Pressure> pressures = {kPa(0.0f), kPa(0.5f), kPa(1.0f),
-                                     kPa(1.5f), kPa(2.0f), kPa(2.5f),
-                                     kPa(3.0f), kPa(3.5f), kPa(3.92f)};
+  std::vector<Pressure> pressures = {kPa(0.0f), kPa(0.5f), kPa(1.0f), kPa(1.5f), kPa(2.0f),
+                                     kPa(2.5f), kPa(3.0f), kPa(3.5f), kPa(3.92f)};
 
   // Will pad the rest of the simulated analog signals with ambient pressure
   // readings (0 kPa) voltage equivalents
-  Voltage voltage_at_0kPa = MPXV5004_PressureToVoltage(kPa(0)); //[V]
+  Voltage voltage_at_0kPa = MPXV5004_PressureToVoltage(kPa(0));  //[V]
 
   // First set the simulated analog signals to an ambient 0 kPa corresponding
   // voltage during calibration
@@ -107,8 +105,7 @@ TEST(SensorTests, FullScalePressureReading) {
   // versus what the original pressure waveform was
   for (auto p : pressures) {
     SCOPED_TRACE("Pressure " + std::to_string(p.kPa()));
-    hal.TESTSetAnalogPin(AnalogPin::PatientPressure,
-                         MPXV5004_PressureToVoltage(p));
+    hal.TESTSetAnalogPin(AnalogPin::PatientPressure, MPXV5004_PressureToVoltage(p));
     EXPECT_PRESSURE_NEAR(sensors.GetReadings().patient_pressure, p);
   }
 }
@@ -146,26 +143,22 @@ TEST(SensorTests, FiO2Reading) {
 // Expected values from https://www.wolframalpha.com/input/?i=Venturi+flowmeter
 TEST(SensorTests, TestVolumetricFlowCalculation) {
   EXPECT_FLOW_NEAR(Sensors::PressureDeltaToFlow(kPa(1.0f)), ml_per_sec(939.6f));
-  EXPECT_FLOW_NEAR(Sensors::PressureDeltaToFlow(kPa(-1.0f)),
-                   ml_per_sec(-939.6f));
+  EXPECT_FLOW_NEAR(Sensors::PressureDeltaToFlow(kPa(-1.0f)), ml_per_sec(-939.6f));
   EXPECT_FLOW_NEAR(Sensors::PressureDeltaToFlow(kPa(0.0f)), ml_per_sec(0));
-  EXPECT_FLOW_NEAR(Sensors::PressureDeltaToFlow(kPa(1.0e-7f)),
-                   ml_per_sec(0.2971f));
+  EXPECT_FLOW_NEAR(Sensors::PressureDeltaToFlow(kPa(1.0e-7f)), ml_per_sec(0.2971f));
   EXPECT_FLOW_NEAR(Sensors::PressureDeltaToFlow(kPa(100.0f)), ml_per_sec(9396));
-  EXPECT_FLOW_NEAR(Sensors::PressureDeltaToFlow(kPa(-100.0f)),
-                   ml_per_sec(-9396));
+  EXPECT_FLOW_NEAR(Sensors::PressureDeltaToFlow(kPa(-100.0f)), ml_per_sec(-9396));
 }
 
 TEST(SensorTests, TotalFlowCalculation) {
   // These pressure waveforms start at 0 kPa to simulate the system being in the
   // proper calibration state then they go over the sensor full ranges with
   // less samples than for FullScaleReadings.
-  std::vector<Pressure> pressures = {kPa(0.0f), kPa(0.5f), kPa(1.0f), kPa(2.0f),
-                                     kPa(3.5f)};
+  std::vector<Pressure> pressures = {kPa(0.0f), kPa(0.5f), kPa(1.0f), kPa(2.0f), kPa(3.5f)};
 
   // First set the simulated analog signals to an ambient 0 kPa corresponding
   // voltage during calibration
-  Voltage voltage_at_0kPa = MPXV5004_PressureToVoltage(kPa(0)); //[V]
+  Voltage voltage_at_0kPa = MPXV5004_PressureToVoltage(kPa(0));  //[V]
   hal.TESTSetAnalogPin(AnalogPin::PatientPressure, voltage_at_0kPa);
   hal.TESTSetAnalogPin(AnalogPin::InflowPressureDiff, voltage_at_0kPa);
   hal.TESTSetAnalogPin(AnalogPin::OutflowPressureDiff, voltage_at_0kPa);
@@ -178,8 +171,8 @@ TEST(SensorTests, TotalFlowCalculation) {
   for (auto p_in : pressures) {
     for (auto p_out : pressures) {
       auto readings = update_readings(
-          /*dt=*/seconds(0.0f), /*patient_pressure=*/kPa(0.0f), p_in, p_out,
-          atm(1.0f), /*fio2=*/0.21f, &sensors);
+          /*dt=*/seconds(0.0f), /*patient_pressure=*/kPa(0.0f), p_in, p_out, atm(1.0f),
+          /*fio2=*/0.21f, &sensors);
       EXPECT_FLOW_NEAR(readings.inflow, Sensors::PressureDeltaToFlow(p_in));
       EXPECT_FLOW_NEAR(readings.outflow, Sensors::PressureDeltaToFlow(p_out));
     }
@@ -190,8 +183,7 @@ TEST(SensorTests, Calibration) {
   // First set the simulated analog signals to randomly chosen signals
   // corresponding to conditions during calibration
   Pressure init_pressure = kPa(0.23f);
-  hal.TESTSetAnalogPin(AnalogPin::PatientPressure,
-                       MPXV5004_PressureToVoltage(init_pressure));
+  hal.TESTSetAnalogPin(AnalogPin::PatientPressure, MPXV5004_PressureToVoltage(init_pressure));
   Pressure init_inflow_delta = kPa(0.15f);
   hal.TESTSetAnalogPin(AnalogPin::InflowPressureDiff,
                        MPXV5004_PressureToVoltage(init_inflow_delta));
@@ -220,12 +212,9 @@ TEST(SensorTests, Calibration) {
                              /*ambient pressure=*/atm(1.0f),
                              /*fio2=*/0.0f, &sensors);
 
-  EXPECT_PRESSURE_NEAR(readings.patient_pressure,
-                       cmH2O(-1 * init_pressure.cmH2O()));
-  EXPECT_FLOW_NEAR(readings.inflow,
-                   -1 * Sensors::PressureDeltaToFlow(init_inflow_delta));
-  EXPECT_FLOW_NEAR(readings.outflow,
-                   -1 * Sensors::PressureDeltaToFlow(init_outflow_delta));
+  EXPECT_PRESSURE_NEAR(readings.patient_pressure, cmH2O(-1 * init_pressure.cmH2O()));
+  EXPECT_FLOW_NEAR(readings.inflow, -1 * Sensors::PressureDeltaToFlow(init_inflow_delta));
+  EXPECT_FLOW_NEAR(readings.outflow, -1 * Sensors::PressureDeltaToFlow(init_outflow_delta));
   EXPECT_NEAR(readings.fio2, 0.21f - init_fio2, ComparisonToleranceFIO2);
 
   // set measured signals to some random values + init values and expect init

@@ -32,12 +32,17 @@ enum class DifferentialTerm {
 };
 
 class PID {
-public:
+ public:
   // Constructs the PID using the given parameters.
-  PID(float kp, float ki, float kd, ProportionalTerm p_term,
-      DifferentialTerm d_term, float output_min, float output_max)
-      : kp_(kp), ki_(ki), kd_(kd), p_term_(p_term), d_term_(d_term),
-        out_min_(output_min), out_max_(output_max) {}
+  PID(float kp, float ki, float kd, ProportionalTerm p_term, DifferentialTerm d_term,
+      float output_min, float output_max)
+      : kp_(kp),
+        ki_(ki),
+        kd_(kd),
+        p_term_(p_term),
+        d_term_(d_term),
+        out_min_(output_min),
+        out_max_(output_max) {}
 
   // Performs one step of the PID calculation.
   float Compute(Time now, float input, float setpoint);
@@ -57,10 +62,10 @@ public:
 
   void Reset() { initialized_ = false; }
 
-private:
-  float kp_; // * (P)roportional Tuning Parameter
-  float ki_; // * (I)ntegral Tuning Parameter
-  float kd_; // * (D)erivative Tuning Parameter
+ private:
+  float kp_;  // * (P)roportional Tuning Parameter
+  float ki_;  // * (I)ntegral Tuning Parameter
+  float kd_;  // * (D)erivative Tuning Parameter
 
   const ProportionalTerm p_term_;
   const DifferentialTerm d_term_;
@@ -74,4 +79,4 @@ private:
   float last_input_ = 0;
   float last_error_ = 0;
 };
-#endif // PID_H
+#endif  // PID_H

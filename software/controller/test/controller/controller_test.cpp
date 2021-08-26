@@ -14,8 +14,10 @@ limitations under the License.
 */
 
 #include "controller.h"
-#include "gtest/gtest.h"
+
 #include <cmath>
+
+#include "gtest/gtest.h"
 
 // TODO: There ought to be many more tests in here.
 
@@ -32,8 +34,7 @@ TEST(ControllerTest, ControllerVolumeMatchesFlowIntegrator) {
   VentParams params = VentParams_init_zero;
   params.mode = VentMode::VentMode_PRESSURE_CONTROL;
   params.peep_cm_h2o = 5;
-  params.breaths_per_min =
-      static_cast<uint32_t>(std::round(1.f / breath_duration.minutes()));
+  params.breaths_per_min = static_cast<uint32_t>(std::round(1.f / breath_duration.minutes()));
   params.pip_cm_h2o = 15;
   params.inspiratory_expiratory_ratio = 1;
 
@@ -58,8 +59,7 @@ TEST(ControllerTest, ControllerVolumeMatchesFlowIntegrator) {
                  ", time = " + std::to_string((now - start).seconds()));
 
     // Where are we in this breath, [0, 1]?
-    float breath_pos =
-        static_cast<float>(i % steps_per_breath) / steps_per_breath;
+    float breath_pos = static_cast<float>(i % steps_per_breath) / steps_per_breath;
     Pressure inflow_pressure = cmH2O(0.5f + (breath_pos < 0.5 ? 1.f : 0.f));
     Pressure outflow_pressure = cmH2O(0.4f + (breath_pos >= 0.5 ? 1.f : 0.f));
     readings = {
@@ -76,11 +76,9 @@ TEST(ControllerTest, ControllerVolumeMatchesFlowIntegrator) {
     auto [unused_actuator_state, status] = c.Run(now, params, readings);
     (void)unused_actuator_state;
 
-    EXPECT_FLOAT_EQ(
-        status.net_flow.ml_per_sec(),
-        (uncorrected_flow + flow_integrator.FlowCorrection()).ml_per_sec());
-    EXPECT_FLOAT_EQ(status.patient_volume.ml(),
-                    flow_integrator.GetVolume().ml());
+    EXPECT_FLOAT_EQ(status.net_flow.ml_per_sec(),
+                    (uncorrected_flow + flow_integrator.FlowCorrection()).ml_per_sec());
+    EXPECT_FLOAT_EQ(status.patient_volume.ml(), flow_integrator.GetVolume().ml());
 
     if (breath_pos == 0) {
       flow_integrator.NoteExpectedVolume(ml(0));
@@ -101,8 +99,7 @@ TEST(ControllerTest, BreathId) {
   VentParams params = VentParams_init_zero;
   params.mode = VentMode::VentMode_PRESSURE_CONTROL;
   params.peep_cm_h2o = 5;
-  params.breaths_per_min =
-      static_cast<uint32_t>(std::round(1.f / breath_duration.minutes()));
+  params.breaths_per_min = static_cast<uint32_t>(std::round(1.f / breath_duration.minutes()));
   params.pip_cm_h2o = 15;
   params.inspiratory_expiratory_ratio = 1;
 
@@ -154,29 +151,24 @@ void actuatorsTestSequence(const std::vector<ActuatorsTest> &seq) {
   };
 
   for (const auto &actuators_test : seq) {
-
     SCOPED_TRACE("time = " + actuators_test.time.microsSinceStartup() / 1000);
     // Move time forward to t in steps of Controller::GetLoopPeriod().
     while (hal.Now() < actuators_test.time) {
       hal.Delay(Controller::GetLoopPeriod());
       (void)controller.Run(hal.Now(), last_params, last_readings);
     }
-    EXPECT_EQ(actuators_test.time.microsSinceStartup(),
-              hal.Now().microsSinceStartup());
+    EXPECT_EQ(actuators_test.time.microsSinceStartup(), hal.Now().microsSinceStartup());
 
-    auto [act_state, unused_status] = controller.Run(
-        hal.Now(), actuators_test.params, actuators_test.readings);
+    auto [act_state, unused_status] =
+        controller.Run(hal.Now(), actuators_test.params, actuators_test.readings);
     (void)unused_status;
 
-    EXPECT_FLOAT_EQ(act_state.blower_power,
-                    actuators_test.expected_state.blower_power);
+    EXPECT_FLOAT_EQ(act_state.blower_power, actuators_test.expected_state.blower_power);
     EXPECT_NEAR(act_state.fio2_valve, actuators_test.expected_state.fio2_valve,
                 ValveStateTolerance);
-    EXPECT_NEAR(act_state.blower_valve.value(),
-                actuators_test.expected_state.blower_valve.value(),
+    EXPECT_NEAR(act_state.blower_valve.value(), actuators_test.expected_state.blower_valve.value(),
                 ValveStateTolerance);
-    EXPECT_NEAR(act_state.exhale_valve.value(),
-                actuators_test.expected_state.exhale_valve.value(),
+    EXPECT_NEAR(act_state.exhale_valve.value(), actuators_test.expected_state.exhale_valve.value(),
                 ValveStateTolerance);
     last_params = actuators_test.params;
     last_readings = actuators_test.readings;
@@ -184,7 +176,6 @@ void actuatorsTestSequence(const std::vector<ActuatorsTest> &seq) {
 }
 
 TEST(ControllerTest, ControlLaws) {
-
   // typical expected values
   constexpr float BlowerOn{1.0f};
   constexpr float BlowerOff{0};

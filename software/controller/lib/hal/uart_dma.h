@@ -18,19 +18,13 @@ limitations under the License.
 #define UART_DMA_H
 #include "hal_stm32_regs.h"
 
-enum class RxError {
-  RxUnknownError,
-  RxOverflow,
-  RxFramingError,
-  RxTimeout,
-  RxDmaError
-};
+enum class RxError { RxUnknownError, RxOverflow, RxFramingError, RxTimeout, RxDmaError };
 
 // An interface that gets called back by the driver on rx, tx complete
 // and rx character match events.
 // NOTE: all callbacks are called from interrupt context!
 class UartDmaRxListener {
-public:
+ public:
   // Called on DMA RX complete
   virtual void OnRxComplete() = 0;
   // Called on specified character reception
@@ -40,7 +34,7 @@ public:
 };
 
 class UartDmaTxListener {
-public:
+ public:
   // Called on DMA TX complete
   virtual void OnTxComplete() = 0;
   // Called on TX errors
@@ -48,7 +42,7 @@ public:
 };
 
 class DMACtrl {
-public:
+ public:
   explicit DMACtrl(DmaReg *const dma) : dma_(dma) {}
   void Init() {
     // UART3 reception happens on DMA1 channel 3
@@ -57,17 +51,21 @@ public:
     dma_->channel_select.c2s = 0b0010;
   }
 
-private:
+ private:
   DmaReg *const dma_;
 };
 
 class UartDma {
-public:
-  UartDma(UartReg *const uart, DmaReg *const dma, uint8_t tx_chan,
-          uint8_t rx_chan, UartDmaRxListener *rxl, UartDmaTxListener *txl,
-          char match_char)
-      : uart_(uart), dma_(dma), tx_channel_(tx_chan), rx_channel_(rx_chan),
-        rx_listener_(rxl), tx_listener_(txl), match_char_(match_char) {}
+ public:
+  UartDma(UartReg *const uart, DmaReg *const dma, uint8_t tx_chan, uint8_t rx_chan,
+          UartDmaRxListener *rxl, UartDmaTxListener *txl, char match_char)
+      : uart_(uart),
+        dma_(dma),
+        tx_channel_(tx_chan),
+        rx_channel_(rx_chan),
+        rx_listener_(rxl),
+        tx_listener_(txl),
+        match_char_(match_char) {}
 
   void Init(int baud);
   // Returns true if DMA TX is in progress
@@ -100,7 +98,7 @@ public:
   void DmaRxISR();
   void DmaTxISR();
 
-private:
+ private:
   UartReg *const uart_;
   DmaReg *const dma_;
   uint8_t tx_channel_;

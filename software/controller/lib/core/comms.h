@@ -16,8 +16,9 @@ limitations under the License.
 #ifndef COMMS_H
 #define COMMS_H
 
-#include "network_protocol.pb.h"
 #include <stdint.h>
+
+#include "network_protocol.pb.h"
 
 // This module periodically sends messages to the GUI device and receives
 // messages from the GUI.  The only way it communicates with other modules is
@@ -28,7 +29,6 @@ void CommsInit();
 // `controller_status` should be the controller's current status.  It's sent
 // periodically to the GUI.  When we receive a message from the GUI, we update
 // gui_status accordingly.
-void CommsHandler(const ControllerStatus &controller_status,
-                  GuiStatus *gui_status);
+void CommsHandler(const ControllerStatus &controller_status, GuiStatus *gui_status);
 
-#endif // COMMS_H
+#endif  // COMMS_H

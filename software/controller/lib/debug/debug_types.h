@@ -29,58 +29,56 @@ enum class State { AwaitingCommand, Processing, AwaitingResponse, Responding };
 enum class SpecialChar : uint8_t { Escape = 0xf1, EndTransfer = 0xf2 };
 
 enum class ErrorCode : uint8_t {
-  None = 0x00,            // No error (=success)
-  CrcError = 0x01,        // CRC error on command
-  UnknownCommand = 0x02,  // Unknown command code received
-  MissingData = 0x03,     // Not enough data passed with command
-  NoMemory = 0x04,        // Insufficient memory
-  InternalError = 0x05,   // Some type of internal error (aka bug)
-  UnknownVariable = 0x06, // The requested variable ID is invalid
-  InvalidData = 0x07,     // Data is out of range
-  Timeout = 0x08,         // Response timeout
+  None = 0x00,             // No error (=success)
+  CrcError = 0x01,         // CRC error on command
+  UnknownCommand = 0x02,   // Unknown command code received
+  MissingData = 0x03,      // Not enough data passed with command
+  NoMemory = 0x04,         // Insufficient memory
+  InternalError = 0x05,    // Some type of internal error (aka bug)
+  UnknownVariable = 0x06,  // The requested variable ID is invalid
+  InvalidData = 0x07,      // Data is out of range
+  Timeout = 0x08,          // Response timeout
 };
 
 namespace Command {
 
 enum class Code : uint8_t {
-  Mode = 0x00,         // Return the current firmware mode
-  Peek = 0x01,         // Peek into RAM
-  Poke = 0x02,         // Poke values into RAM
-  Console = 0x03,      // Read strings from the print buffer - deprecated
-  Variable = 0x04,     // Variable access
-  Trace = 0x05,        // Data trace commands
-  EepromAccess = 0x06, // Read/Write in I2C EEPROM
+  Mode = 0x00,          // Return the current firmware mode
+  Peek = 0x01,          // Peek into RAM
+  Poke = 0x02,          // Poke values into RAM
+  Console = 0x03,       // Read strings from the print buffer - deprecated
+  Variable = 0x04,      // Variable access
+  Trace = 0x05,         // Data trace commands
+  EepromAccess = 0x06,  // Read/Write in I2C EEPROM
 };
 
 // Structure that represents a command's parameters
 struct Context {
-  const uint8_t *request;             // pointer to the request (command's data)
-  const uint32_t request_length;      // length of the request
-  uint8_t *response;                  // pointer to the response (that will be
-                                      // written by the command handler)
-  const uint32_t max_response_length; // maximum length the command handler
-                                      // can use (enforces response limits)
-  uint32_t response_length; // (actual) length of the response once the
-                            // command is processed
-  bool *processed; // pointer to a boolean that informs the interface handler
-                   // that a command's response is available (some commands
-                   // take time)
+  const uint8_t *request;              // pointer to the request (command's data)
+  const uint32_t request_length;       // length of the request
+  uint8_t *response;                   // pointer to the response (that will be
+                                       // written by the command handler)
+  const uint32_t max_response_length;  // maximum length the command handler
+                                       // can use (enforces response limits)
+  uint32_t response_length;            // (actual) length of the response once the
+                                       // command is processed
+  bool *processed;                     // pointer to a boolean that informs the interface handler
+                                       // that a command's response is available (some commands
+                                       // take time)
 };
 
 // Each debug command is represented by an instance of this virtual class
 class Handler {
-public:
+ public:
   Handler() = default;
 
   // Returns an error code.  For any non-zero error, the values returned in
   // response_length and response will be ignored.
-  [[nodiscard]] virtual ErrorCode Process(Context *context) {
-    return ErrorCode::UnknownCommand;
-  }
+  [[nodiscard]] virtual ErrorCode Process(Context *context) { return ErrorCode::UnknownCommand; }
 };
 
-} // namespace Command
+}  // namespace Command
 
-} // namespace Debug
+}  // namespace Debug
 
-#endif // DEBUG_TYPES_H
+#endif  // DEBUG_TYPES_H

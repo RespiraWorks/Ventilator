@@ -32,22 +32,21 @@ limitations under the License.
 // can be driven by timer 1 channel 4.  We'll use that timer channel
 // to control the solenoid
 
+#include <algorithm>
+
 #include "hal_stm32.h"
 #include "vars.h"
-#include <algorithm>
 
 // Testing in Edwin's garage, we found that the psol was fully closed at
 // somewhere between 0.75 and 0.80 (i.e. definitely zero at 0.75 and probably
 // zero a bit above that) and fully open at 0.90.
 
 // UFlow IBV19M value
-static DebugFloat dbg_psol_pwm_closed("psol_pwm_closed", VarAccess::ReadWrite,
-                                      0.35f, "ratio",
+static DebugFloat dbg_psol_pwm_closed("psol_pwm_closed", VarAccess::ReadWrite, 0.35f, "ratio",
                                       "PWM power that closes the psol [0,1]");
 
 // UFlow IBV19M value
-static DebugFloat dbg_psol_pwm_open("psol_pwm_open", VarAccess::ReadWrite,
-                                    0.75f, "ratio",
+static DebugFloat dbg_psol_pwm_open("psol_pwm_open", VarAccess::ReadWrite, 0.75f, "ratio",
                                     "PWM power that opens the psol [0,1]");
 
 void HalApi::InitPSOL() {

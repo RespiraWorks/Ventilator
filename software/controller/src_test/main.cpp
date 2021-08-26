@@ -1,7 +1,8 @@
+#include <string.h>
+
 #include "hal.h"
 #include "interface.h"
 #include "uart_dma.h"
-#include <string.h>
 
 char r[20];
 
@@ -13,7 +14,7 @@ class DummyTxListener : public UartDmaTxListener {
 };
 
 class DummyRxListener : public UartDmaRxListener {
-public:
+ public:
   void OnRxComplete() override {
     debugPrint("&");
     debugPrint(r);
@@ -35,8 +36,7 @@ DummyTxListener txlistener;
 DMACtrl dma_controller(Dma1Base);
 constexpr uint8_t TxCh = 1;
 constexpr uint8_t RxCh = 2;
-UartDma dma_uart(kUart3Base, Dma1Base, TxCh, RxCh, &rxlistener, &txlistener,
-                 '.');
+UartDma dma_uart(kUart3Base, Dma1Base, TxCh, RxCh, &rxlistener, &txlistener, '.');
 
 int main() {
   hal.Init();

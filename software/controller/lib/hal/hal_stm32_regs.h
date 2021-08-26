@@ -61,14 +61,14 @@ struct SysControlStruct {
   uint32_t reserved1;
   uint32_t sys_tick[3];
   uint32_t reserved2[57];
-  uint32_t nvic[768]; // 0xE000E100 - NVIC Register [RM] 4.3 (pg 208)
+  uint32_t nvic[768];  // 0xE000E100 - NVIC Register [RM] 4.3 (pg 208)
   uint32_t cpu_id;
   uint32_t int_control;
   uint32_t vector_table;
-  uint32_t app_interrupt; // 0xE000ED0C - Application Interrupt and Reset
-                          // Control Register
+  uint32_t app_interrupt;  // 0xE000ED0C - Application Interrupt and Reset
+                           // Control Register
   uint32_t system_control;
-  uint32_t config_control; // 0xE000ED14 - Configuration and Control Register
+  uint32_t config_control;  // 0xE000ED14 - Configuration and Control Register
   uint32_t system_priority[3];
   uint32_t system_handler_control;
   uint32_t fault_status;
@@ -77,12 +77,11 @@ struct SysControlStruct {
   uint32_t mm_fault_address;
   uint32_t bus_fault_addr;
   uint32_t reserved4[19];
-  uint32_t coproc_access_control; // 0xE000ED88 - Coprocessor access control
-                                  // register
+  uint32_t coproc_access_control;  // 0xE000ED88 - Coprocessor access control
+                                   // register
 };
 typedef volatile SysControlStruct SysControlReg;
-inline SysControlReg *const SysControlBase =
-    reinterpret_cast<SysControlReg *>(0xE000E000);
+inline SysControlReg *const SysControlBase = reinterpret_cast<SysControlReg *>(0xE000E000);
 
 // [PM] 4.3 Nested vectored interrupt controller (NVIC) (pg 208)
 struct InterruptControlStruct {
@@ -94,8 +93,7 @@ struct InterruptControlStruct {
   uint8_t priority[1024];
 };
 typedef volatile InterruptControlStruct InterruptControlReg;
-inline InterruptControlReg *const NvicBase =
-    reinterpret_cast<InterruptControlReg *>(0xE000E100);
+inline InterruptControlReg *const NvicBase = reinterpret_cast<InterruptControlReg *>(0xE000E100);
 
 // [RM] 38.8 USART Registers (pg 1238)
 struct UartStruct {
@@ -117,19 +115,19 @@ struct UartStruct {
       uint32_t mute_mode_enable : 1;
       uint32_t char_match_interrupt : 1;
       uint32_t oversampling_mode : 1;
-      uint32_t driver_deassertion_time : 5; // Driver Enable de-assertion time
-      uint32_t driver_assertion_time : 5;   // Driver Enable assertion time
+      uint32_t driver_deassertion_time : 5;  // Driver Enable de-assertion time
+      uint32_t driver_assertion_time : 5;    // Driver Enable assertion time
       uint32_t rx_timeout_interrupt : 1;
-      uint32_t eob_interrupt : 1; // End of Block interrupt enable
+      uint32_t eob_interrupt : 1;  // End of Block interrupt enable
       uint32_t word_length1 : 1;
       uint32_t reserved : 3;
     } bitfield;
     uint32_t full_reg;
-  } control_reg1; // Control Register 1 (USART_CR1) [RM] 38.8.1 (pg 1238)
+  } control_reg1;  // Control Register 1 (USART_CR1) [RM] 38.8.1 (pg 1238)
   union {
     struct {
       uint32_t reserved2 : 4;
-      uint32_t address_detection_mode : 1; // 7-bit | 4bit Address Detection
+      uint32_t address_detection_mode : 1;  // 7-bit | 4bit Address Detection
       uint32_t break_detection_length : 1;
       uint32_t break_detection_interrput : 1;
       uint32_t reserved1 : 1;
@@ -147,13 +145,13 @@ struct UartStruct {
       uint32_t auto_baudrate_enable : 1;
       uint32_t auto_baudrate_mode : 2;
       uint32_t rx_timeout_enable : 1;
-      uint32_t addr : 8; // used for character detection during normal
-                         // reception.  This bit field can only be written
-                         // when reception is disabled (RE = 0) or the
-                         // USART is disabled (UE=0)
+      uint32_t addr : 8;  // used for character detection during normal
+                          // reception.  This bit field can only be written
+                          // when reception is disabled (RE = 0) or the
+                          // USART is disabled (UE=0)
     } bitfield;
     uint32_t full_reg;
-  } control2; // Control Register 2 (USART_CR2) [RM] 38.8.2 (pg 1241)
+  } control2;  // Control Register 2 (USART_CR2) [RM] 38.8.2 (pg 1241)
   union {
     struct {
       uint32_t error_interrupt : 1;
@@ -167,7 +165,7 @@ struct UartStruct {
       uint32_t rts_enable : 1;
       uint32_t cts_enable : 1;
       uint32_t cts_interrupt : 1;
-      uint32_t onebit : 1; // One sample bit method enable
+      uint32_t onebit : 1;  // One sample bit method enable
       uint32_t overrun_disable : 1;
       uint32_t dma_disable_on_rx_error : 1;
       uint32_t driver_enable_mode : 1;
@@ -181,7 +179,7 @@ struct UartStruct {
       uint32_t reserved : 7;
     } bitfield;
     uint32_t full_reg;
-  } control3; // Control Register 3 [RM] 38.8.3  (pg 1245)
+  } control3;  // Control Register 3 [RM] 38.8.3  (pg 1245)
   uint32_t baudrate;
   uint32_t guard_time;
   union {
@@ -190,7 +188,7 @@ struct UartStruct {
       uint32_t block_length : 8;
     } bitfield;
     uint32_t full_reg;
-  } timeout; // Receiver Timeout Register (USART_RTOR) [RM] 38.8.6 (pg 1251)
+  } timeout;  // Receiver Timeout Register (USART_RTOR) [RM] 38.8.6 (pg 1251)
   union {
     struct {
       uint32_t auto_baudrate : 1;
@@ -201,7 +199,7 @@ struct UartStruct {
       uint32_t reserved : 27;
     } bitfield;
     uint32_t full_reg;
-  } request; // Request Register (USART_QRQ) [RM] 38.8.7 (pg 1252)
+  } request;  // Request Register (USART_QRQ) [RM] 38.8.7 (pg 1252)
   union {
     struct {
       const uint32_t parity_error : 1;
@@ -232,7 +230,7 @@ struct UartStruct {
       const uint32_t reserved3 : 6;
     } bitfield;
     uint32_t full_reg;
-  } status; // [RM] 38.8.8 Interrupt And Status Register (USART_ISR) (pg 1253)
+  } status;  // [RM] 38.8.8 Interrupt And Status Register (USART_ISR) (pg 1253)
   union {
     struct {
       uint32_t parity_error_clear : 1;
@@ -255,8 +253,8 @@ struct UartStruct {
       uint32_t reserved5 : 11;
     } bitfield;
     uint32_t full_reg;
-  } interrupt_clear; // [RM] 38.8.9 Interrupt Flag Clear Register (USART_ICR)
-                     // (pg 1257)
+  } interrupt_clear;  // [RM] 38.8.9 Interrupt Flag Clear Register (USART_ICR)
+                      // (pg 1257)
   uint32_t rx_data;
   uint32_t tx_data;
 };
@@ -295,8 +293,8 @@ struct AdcStruct {
       uint32_t automatic_injected_conversion : 1;
       uint32_t analog_watchdog1_channel : 5;
       uint32_t injected_queue_disable : 1;
-    } configuration1; // 0x0C - [RM] 16.6.4 ADC Configuration Register
-                      // (ADC_CFGR) (pg 458)
+    } configuration1;  // 0x0C - [RM] 16.6.4 ADC Configuration Register
+                       // (ADC_CFGR) (pg 458)
 
     struct {
       uint32_t regular_oversampling : 1;
@@ -306,8 +304,8 @@ struct AdcStruct {
       uint32_t triggered_oversampling : 1;
       uint32_t regular_oversampling_mode : 1;
       uint32_t reserved : 21;
-    } configuration2; // [RM] 16.6.5 ADC configuration register 2 (ADC_CFGR2)
-                      // (pg 462)
+    } configuration2;  // [RM] 16.6.5 ADC configuration register 2 (ADC_CFGR2)
+                       // (pg 462)
 
     struct {
       uint32_t ch0 : 3;
@@ -331,11 +329,11 @@ struct AdcStruct {
       uint32_t ch17 : 3;
       uint32_t ch18 : 3;
       uint32_t reserved2 : 5;
-    } sample_times; // [RM] 16.6.6 ADC Sample Time Register 1 (ADC_SMPR1) (pg
-                    // 464)
+    } sample_times;  // [RM] 16.6.6 ADC Sample Time Register 1 (ADC_SMPR1) (pg
+                     // 464)
 
     uint32_t reserved1;
-    uint32_t watchdogs[3]; // 0x20 - [RM] 16.6.8 ADC Watchdog
+    uint32_t watchdogs[3];  // 0x20 - [RM] 16.6.8 ADC Watchdog
     uint32_t reserved2;
 
     // 4x sequence registers.  These registers are used
@@ -366,7 +364,7 @@ struct AdcStruct {
       uint32_t sequence15 : 6;
       uint32_t sequence16 : 6;
       uint32_t reserved4 : 20;
-    } sequence; // ADC Regular Sequence Register (pg 468)
+    } sequence;  // ADC Regular Sequence Register (pg 468)
 
     uint32_t data;
     uint32_t reserved3[2];
@@ -379,9 +377,9 @@ struct AdcStruct {
     uint32_t watchdoc_config[2];
     uint32_t reserved7[2];
     uint32_t differential_mode;
-    uint32_t calibration; // 0xB4 - Calibration Factors [RM] 16.6.22 (pg 476)
+    uint32_t calibration;  // 0xB4 - Calibration Factors [RM] 16.6.22 (pg 476)
     uint32_t reserved8[18];
-  } adc[2]; // Master ADC1, Slave ADC2
+  } adc[2];  // Master ADC1, Slave ADC2
 
   uint32_t common_status;
   uint32_t reserved9;
@@ -452,18 +450,17 @@ inline TimerReg *const Timer16Base = reinterpret_cast<TimerReg *>(0x40014400);
 
 // [RM] 3.7 Flash Registers (pg 100)
 struct FlashStruct {
-
   // Access control register
   struct {
-    uint32_t latency : 3; // Number of wait states
+    uint32_t latency : 3;  // Number of wait states
     uint32_t reserved1 : 5;
     uint32_t prefecth_enable : 1;
     uint32_t instruction_cache_enable : 1;
     uint32_t data_cache_enable : 1;
-    uint32_t instruction_cache_reset : 1; // Instruction cache reset
-    uint32_t data_cache_reset : 1;        // Data cache reset
-    uint32_t run_powerdown : 1;   // Power-down during run or low power mode
-    uint32_t sleep_powerdown : 1; // Power-down during sleep mode
+    uint32_t instruction_cache_reset : 1;  // Instruction cache reset
+    uint32_t data_cache_reset : 1;         // Data cache reset
+    uint32_t run_powerdown : 1;            // Power-down during run or low power mode
+    uint32_t sleep_powerdown : 1;          // Power-down during sleep mode
     uint32_t reserved2 : 17;
   } access;
 
@@ -520,74 +517,74 @@ enum class DmaTransferSize { Byte = 0, HalfWord = 1, Word = 2 };
 struct DmaStruct {
   union {
     struct {
-      uint32_t gif1 : 1;  // global interrupt flag
-      uint32_t tcif1 : 1; // transfer complete (TC) flag
-      uint32_t htif1 : 1; // half transfer (HT) flag
-      uint32_t teif1 : 1; // transfer error (TE) flag
-      uint32_t gif2 : 1;  // global interrupt flag
-      uint32_t tcif2 : 1; // transfer complete (TC) flag
-      uint32_t htif2 : 1; // half transfer (HT) flag
-      uint32_t teif2 : 1; // transfer error (TE) flag
-      uint32_t gif3 : 1;  // global interrupt flag
-      uint32_t tcif3 : 1; // transfer complete (TC) flag
-      uint32_t htif3 : 1; // half transfer (HT) flag
-      uint32_t teif3 : 1; // transfer error (TE) flag
-      uint32_t gif4 : 1;  // global interrupt flag
-      uint32_t tcif4 : 1; // transfer complete (TC) flag
-      uint32_t htif4 : 1; // half transfer (HT) flag
-      uint32_t teif4 : 1; // transfer error (TE) flag
-      uint32_t gif5 : 1;  // global interrupt flag
-      uint32_t tcif5 : 1; // transfer complete (TC) flag
-      uint32_t htif5 : 1; // half transfer (HT) flag
-      uint32_t teif5 : 1; // transfer error (TE) flag
-      uint32_t gif6 : 1;  // global interrupt flag
-      uint32_t tcif6 : 1; // transfer complete (TC) flag
-      uint32_t htif6 : 1; // half transfer (HT) flag
-      uint32_t teif6 : 1; // transfer error (TE) flag
-      uint32_t gif7 : 1;  // global interrupt flag
-      uint32_t tcif7 : 1; // transfer complete (TC) flag
-      uint32_t htif7 : 1; // half transfer (HT) flag
-      uint32_t teif7 : 1; // transfer error (TE) flag
+      uint32_t gif1 : 1;   // global interrupt flag
+      uint32_t tcif1 : 1;  // transfer complete (TC) flag
+      uint32_t htif1 : 1;  // half transfer (HT) flag
+      uint32_t teif1 : 1;  // transfer error (TE) flag
+      uint32_t gif2 : 1;   // global interrupt flag
+      uint32_t tcif2 : 1;  // transfer complete (TC) flag
+      uint32_t htif2 : 1;  // half transfer (HT) flag
+      uint32_t teif2 : 1;  // transfer error (TE) flag
+      uint32_t gif3 : 1;   // global interrupt flag
+      uint32_t tcif3 : 1;  // transfer complete (TC) flag
+      uint32_t htif3 : 1;  // half transfer (HT) flag
+      uint32_t teif3 : 1;  // transfer error (TE) flag
+      uint32_t gif4 : 1;   // global interrupt flag
+      uint32_t tcif4 : 1;  // transfer complete (TC) flag
+      uint32_t htif4 : 1;  // half transfer (HT) flag
+      uint32_t teif4 : 1;  // transfer error (TE) flag
+      uint32_t gif5 : 1;   // global interrupt flag
+      uint32_t tcif5 : 1;  // transfer complete (TC) flag
+      uint32_t htif5 : 1;  // half transfer (HT) flag
+      uint32_t teif5 : 1;  // transfer error (TE) flag
+      uint32_t gif6 : 1;   // global interrupt flag
+      uint32_t tcif6 : 1;  // transfer complete (TC) flag
+      uint32_t htif6 : 1;  // half transfer (HT) flag
+      uint32_t teif6 : 1;  // transfer error (TE) flag
+      uint32_t gif7 : 1;   // global interrupt flag
+      uint32_t tcif7 : 1;  // transfer complete (TC) flag
+      uint32_t htif7 : 1;  // half transfer (HT) flag
+      uint32_t teif7 : 1;  // transfer error (TE) flag
       uint32_t reserved : 4;
     };
     uint32_t full_reg;
-  } interrupt_status; // Interrupt Status Register (DMA_ISR) [RM] 11.6.1 (pg
-                      // 308)
+  } interrupt_status;  // Interrupt Status Register (DMA_ISR) [RM] 11.6.1 (pg
+                       // 308)
 
   union {
     struct {
-      uint32_t gif1 : 1;  // global interrupt flag
-      uint32_t tcif1 : 1; // transfer complete (TC) flag
-      uint32_t htif1 : 1; // half transfer (HT) flag
-      uint32_t teif1 : 1; // transfer error (TE) flag
-      uint32_t gif2 : 1;  // global interrupt flag
-      uint32_t tcif2 : 1; // transfer complete (TC) flag
-      uint32_t htif2 : 1; // half transfer (HT) flag
-      uint32_t teif2 : 1; // transfer error (TE) flag
-      uint32_t gif3 : 1;  // global interrupt flag
-      uint32_t tcif3 : 1; // transfer complete (TC) flag
-      uint32_t htif3 : 1; // half transfer (HT) flag
-      uint32_t teif3 : 1; // transfer error (TE) flag
-      uint32_t gif4 : 1;  // global interrupt flag
-      uint32_t tcif4 : 1; // transfer complete (TC) flag
-      uint32_t htif4 : 1; // half transfer (HT) flag
-      uint32_t teif4 : 1; // transfer error (TE) flag
-      uint32_t gif5 : 1;  // global interrupt flag
-      uint32_t tcif5 : 1; // transfer complete (TC) flag
-      uint32_t htif5 : 1; // half transfer (HT) flag
-      uint32_t teif5 : 1; // transfer error (TE) flag
-      uint32_t gif6 : 1;  // global interrupt flag
-      uint32_t tcif6 : 1; // transfer complete (TC) flag
-      uint32_t htif6 : 1; // half transfer (HT) flag
-      uint32_t teif6 : 1; // transfer error (TE) flag
-      uint32_t gif7 : 1;  // global interrupt flag
-      uint32_t tcif7 : 1; // transfer complete (TC) flag
-      uint32_t htif7 : 1; // half transfer (HT) flag
-      uint32_t teif7 : 1; // transfer error (TE) flag
+      uint32_t gif1 : 1;   // global interrupt flag
+      uint32_t tcif1 : 1;  // transfer complete (TC) flag
+      uint32_t htif1 : 1;  // half transfer (HT) flag
+      uint32_t teif1 : 1;  // transfer error (TE) flag
+      uint32_t gif2 : 1;   // global interrupt flag
+      uint32_t tcif2 : 1;  // transfer complete (TC) flag
+      uint32_t htif2 : 1;  // half transfer (HT) flag
+      uint32_t teif2 : 1;  // transfer error (TE) flag
+      uint32_t gif3 : 1;   // global interrupt flag
+      uint32_t tcif3 : 1;  // transfer complete (TC) flag
+      uint32_t htif3 : 1;  // half transfer (HT) flag
+      uint32_t teif3 : 1;  // transfer error (TE) flag
+      uint32_t gif4 : 1;   // global interrupt flag
+      uint32_t tcif4 : 1;  // transfer complete (TC) flag
+      uint32_t htif4 : 1;  // half transfer (HT) flag
+      uint32_t teif4 : 1;  // transfer error (TE) flag
+      uint32_t gif5 : 1;   // global interrupt flag
+      uint32_t tcif5 : 1;  // transfer complete (TC) flag
+      uint32_t htif5 : 1;  // half transfer (HT) flag
+      uint32_t teif5 : 1;  // transfer error (TE) flag
+      uint32_t gif6 : 1;   // global interrupt flag
+      uint32_t tcif6 : 1;  // transfer complete (TC) flag
+      uint32_t htif6 : 1;  // half transfer (HT) flag
+      uint32_t teif6 : 1;  // transfer error (TE) flag
+      uint32_t gif7 : 1;   // global interrupt flag
+      uint32_t tcif7 : 1;  // transfer complete (TC) flag
+      uint32_t htif7 : 1;  // half transfer (HT) flag
+      uint32_t teif7 : 1;  // transfer error (TE) flag
       uint32_t reserved : 4;
     };
     uint32_t full_reg;
-  } interrupt_clear; // Interrupt Flag Clear Register [RM] 11.6.2 (pg 311)
+  } interrupt_clear;  // Interrupt Flag Clear Register [RM] 11.6.2 (pg 311)
   struct ChannelRegs {
     struct {
       uint32_t enable : 1;
@@ -622,7 +619,7 @@ struct DmaStruct {
       uint32_t reserved : 4;
     };
     uint32_t full_reg;
-  } channel_select; // Channel Selection Register [RM] 11.6.7 (pg 317)
+  } channel_select;  // Channel Selection Register [RM] 11.6.7 (pg 317)
 };
 typedef volatile DmaStruct DmaReg;
 inline DmaReg *const Dma1Base = reinterpret_cast<DmaReg *>(0x40020000);
@@ -636,7 +633,7 @@ inline DmaReg *const Dma2Base = reinterpret_cast<DmaReg *>(0x40020400);
 inline void DmaSelectChannel(DmaReg *dma, DmaChannel chan, int selection) {
   selection &= 0x0F;
 
-  int x = 4 * static_cast<int>(chan); // 4 bits per channel ([RM] 11.3.2)
+  int x = 4 * static_cast<int>(chan);  // 4 bits per channel ([RM] 11.3.2)
 
   uint32_t val = dma->channel_select.full_reg;
   val &= ~(0xF << x);
@@ -644,26 +641,19 @@ inline void DmaSelectChannel(DmaReg *dma, DmaChannel chan, int selection) {
   dma->channel_select.full_reg = val;
 }
 
-enum class DmaInterrupt {
-  Global = 1,
-  TransferComplete = 2,
-  HalfTransfer = 4,
-  TransferError = 8
-};
+enum class DmaInterrupt { Global = 1, TransferComplete = 2, HalfTransfer = 4, TransferError = 8 };
 
 // Detect a DMA Interrupt
 inline bool DmaIntStatus(DmaReg *dma, DmaChannel chan, DmaInterrupt interrupt) {
-
   uint32_t x = static_cast<uint32_t>(interrupt);
-  x <<= 4 * static_cast<uint8_t>(chan); // 4 events per channel ([RM] 11.6.2)
+  x <<= 4 * static_cast<uint8_t>(chan);  // 4 events per channel ([RM] 11.6.2)
   return (x & dma->interrupt_status.full_reg) > 0;
 }
 
 // Clear a DMA Interrupt
 inline void DmaClearInt(DmaReg *dma, DmaChannel chan, DmaInterrupt interrupt) {
-
   uint32_t x = static_cast<uint32_t>(interrupt);
-  x <<= 4 * static_cast<uint8_t>(chan); // 4 events per channel ([RM] 11.6.2)
+  x <<= 4 * static_cast<uint8_t>(chan);  // 4 events per channel ([RM] 11.6.2)
   dma->interrupt_clear.full_reg = x;
 }
 
@@ -685,7 +675,7 @@ struct SpiStruct {
     uint32_t bidir_output : 1;
     uint32_t bidir_mode : 1;
     uint32_t reserved : 16;
-  } control_reg1; // Control register 1 (SPIx_CR1) [RM] 40.6.1 (pg 1330)
+  } control_reg1;  // Control register 1 (SPIx_CR1) [RM] 40.6.1 (pg 1330)
   struct {
     uint32_t rx_dma : 1;
     uint32_t tx_dma : 1;
@@ -700,7 +690,7 @@ struct SpiStruct {
     uint32_t last_dma_rx : 1;
     uint32_t last_dma_tx : 1;
     uint32_t reserved : 17;
-  } control2; // Control register 2 (SPIx_CR2) [RM] 40.6.2
+  } control2;  // Control register 2 (SPIx_CR2) [RM] 40.6.2
   uint32_t status;
   uint32_t data;
   uint32_t crc_polynomial;
@@ -740,48 +730,48 @@ struct I2CStruct {
       uint32_t reserved2 : 8;
     };
     uint32_t full_reg;
-  } control_reg1; // Control register 1 [RM] 37.7.1
+  } control_reg1;  // Control register 1 [RM] 37.7.1
   union {
     struct {
-      uint32_t slave_addr_lsb : 1;     // lsb of 10 bits slave address
-                                       // (master)
-      uint32_t slave_addr_7b : 7;      // middle 7b bits of slave address
-                                       // (master)
-      uint32_t slave_addr_msb : 2;     // msb of 10 bits slave address
-                                       // (master)
-      uint32_t transfer_direction : 1; // 0 = write, 1 = read (master)
-      uint32_t address_10b : 1;        // Set to enable 10 bits address header
-                                       // (master)
-      uint32_t read_10b_header : 1;    // Clear to send complete read sequence
-                                       // (master)
-      uint32_t start : 1;              // Set to generate START condition
-      uint32_t stop : 1;    // Set to generate STOP after byte transfer
-                            // (master)
-      uint32_t nack : 1;    // Generate NACK after byte reception (slave)
-      uint32_t n_bytes : 8; // Set to the number of bytes to send
-      uint32_t reload : 1;  // Set to allow several consecutive transfers
-      uint32_t autoend : 1; // Set to automatically send stop condition
-      uint32_t packet_error_check_byte : 1; // Set to send SMBus packet error
-                                            // checking byte
+      uint32_t slave_addr_lsb : 1;           // lsb of 10 bits slave address
+                                             // (master)
+      uint32_t slave_addr_7b : 7;            // middle 7b bits of slave address
+                                             // (master)
+      uint32_t slave_addr_msb : 2;           // msb of 10 bits slave address
+                                             // (master)
+      uint32_t transfer_direction : 1;       // 0 = write, 1 = read (master)
+      uint32_t address_10b : 1;              // Set to enable 10 bits address header
+                                             // (master)
+      uint32_t read_10b_header : 1;          // Clear to send complete read sequence
+                                             // (master)
+      uint32_t start : 1;                    // Set to generate START condition
+      uint32_t stop : 1;                     // Set to generate STOP after byte transfer
+                                             // (master)
+      uint32_t nack : 1;                     // Generate NACK after byte reception (slave)
+      uint32_t n_bytes : 8;                  // Set to the number of bytes to send
+      uint32_t reload : 1;                   // Set to allow several consecutive transfers
+      uint32_t autoend : 1;                  // Set to automatically send stop condition
+      uint32_t packet_error_check_byte : 1;  // Set to send SMBus packet error
+                                             // checking byte
       uint32_t reserved : 5;
     };
     uint32_t full_reg;
-  } control2;       // Control register 2 [RM] 37.7.2
-  uint32_t addr[2]; // Own address (1-2) register [RM] 37.7.{3,4} (slave)
+  } control2;        // Control register 2 [RM] 37.7.2
+  uint32_t addr[2];  // Own address (1-2) register [RM] 37.7.{3,4} (slave)
   union {
     struct {
-      uint32_t scl_low : 8;   // Duration of SCL Low state (cycles)
-      uint32_t scl_high : 8;  // Duration of SCL High state (cycles)
-      uint32_t sda_hold : 4;  // Delay between SCL falling edge and SDA
-                              // edge (cycles)
-      uint32_t scl_delay : 4; // Delay between SDA edge and SCL rising
-                              // edge (cycles)
+      uint32_t scl_low : 8;    // Duration of SCL Low state (cycles)
+      uint32_t scl_high : 8;   // Duration of SCL High state (cycles)
+      uint32_t sda_hold : 4;   // Delay between SCL falling edge and SDA
+                               // edge (cycles)
+      uint32_t scl_delay : 4;  // Delay between SDA edge and SCL rising
+                               // edge (cycles)
       uint32_t reserved : 4;
-      uint32_t prescaler : 4; // Prescaler
+      uint32_t prescaler : 4;  // Prescaler
     };
     uint32_t full_reg;
-  } timing;         // Timing register [RM] 37.7.5
-  uint32_t timeout; // Timout register [RM] 37.7.6
+  } timing;          // Timing register [RM] 37.7.5
+  uint32_t timeout;  // Timout register [RM] 37.7.6
   union {
     struct {
       uint32_t tx_empty : 1;
@@ -805,11 +795,11 @@ struct I2CStruct {
       uint32_t reserved : 8;
     };
     uint32_t full_reg;
-  } status;                    // Interrupt & status register [RM] 37.7.7
-  uint32_t interrupt_clear;    // Interrupt clear register [RM] 37.7.8
-  uint32_t packet_error_check; // PEC register [RM] 37.7.9
-  uint32_t rx_data;            // Receive data register [RM] 37.7.10
-  uint32_t tx_data;            // Transmit data register [RM] 37.7.11
+  } status;                     // Interrupt & status register [RM] 37.7.7
+  uint32_t interrupt_clear;     // Interrupt clear register [RM] 37.7.8
+  uint32_t packet_error_check;  // PEC register [RM] 37.7.9
+  uint32_t rx_data;             // Receive data register [RM] 37.7.10
+  uint32_t tx_data;             // Transmit data register [RM] 37.7.11
 };
 typedef volatile I2CStruct I2CReg;
 inline I2CReg *const I2C1Base = reinterpret_cast<I2CReg *>(0x40005400);
@@ -820,25 +810,24 @@ inline I2CReg *const I2C4Base = reinterpret_cast<I2CReg *>(0x40008400);
 // Watchdog timer
 // [RM] 32.4 Watchdog Registers (pg 1016)
 struct WatchdogStruct {
-  uint32_t key;       // Key register [RM] 32.4.1
-  uint32_t prescaler; // Prescale register [RM] 32.4.2
-  uint32_t reload;    // Reload register [RM] 32.4.3
-  uint32_t status;    // Status register [RM] 32.4.4
-  uint32_t window;    // Window register [RM] 32.4.5
+  uint32_t key;        // Key register [RM] 32.4.1
+  uint32_t prescaler;  // Prescale register [RM] 32.4.2
+  uint32_t reload;     // Reload register [RM] 32.4.3
+  uint32_t status;     // Status register [RM] 32.4.4
+  uint32_t window;     // Window register [RM] 32.4.5
 };
 typedef volatile WatchdogStruct WatchdogReg;
-inline WatchdogReg *const WatchdogBase =
-    reinterpret_cast<WatchdogReg *>(0x40003000);
+inline WatchdogReg *const WatchdogBase = reinterpret_cast<WatchdogReg *>(0x40003000);
 
 // CRC calculation unit
 // [RM] 14.4 CRC Registers (pg 341)
 struct CrcStruct {
-  uint32_t data;    // Data register [RM] 14.4.1
-  uint32_t scratch; // Independent data register [RM] 14.4.2
-  uint32_t control; // Control register [RM] 14.4.3
+  uint32_t data;     // Data register [RM] 14.4.1
+  uint32_t scratch;  // Independent data register [RM] 14.4.2
+  uint32_t control;  // Control register [RM] 14.4.3
   uint32_t reserved;
-  uint32_t init;       // Initial CRC value [RM] 14.4.4
-  uint32_t polynomial; // CRC polynomial [RM] 14.4.5
+  uint32_t init;        // Initial CRC value [RM] 14.4.4
+  uint32_t polynomial;  // CRC polynomial [RM] 14.4.5
 };
 typedef volatile CrcStruct CrcReg;
 inline CrcReg *const CrcBase = reinterpret_cast<CrcReg *>(0x40023000);
@@ -846,18 +835,18 @@ inline CrcReg *const CrcBase = reinterpret_cast<CrcReg *>(0x40023000);
 // General Purpose I/O
 // [RM] 8.4 GPIO Registers (pg 267)
 struct GpioStruct {
-  uint32_t mode;                  // Mode register [RM] 8.4.1
-  uint32_t output_type;           // Output type register [RM] 8.4.2
-  uint32_t output_speed;          // Output speed register [RM] 8.4.3
-  uint32_t pullup_pulldown;       // Pull-up/pull-down register [RM] 8.4.4
-  uint32_t input_data;            // Input data register [RM] 8.4.5
-  uint32_t output_data;           // Output data register [RM] 8.4.6
-  uint16_t set;                   // Bit set register [RM] 8.4.7
-  uint16_t clear;                 // Bit reset register [RM] 8.4.7
-  uint32_t flash_lock;            // Configuration lock register [RM] 8.4.8
-  uint32_t alternate_function[2]; // Alternate function low/high register
-                                  // [RM] 8.4.{9,10}
-  uint32_t reset;                 // Reset register [RM] 8.4.11
+  uint32_t mode;                   // Mode register [RM] 8.4.1
+  uint32_t output_type;            // Output type register [RM] 8.4.2
+  uint32_t output_speed;           // Output speed register [RM] 8.4.3
+  uint32_t pullup_pulldown;        // Pull-up/pull-down register [RM] 8.4.4
+  uint32_t input_data;             // Input data register [RM] 8.4.5
+  uint32_t output_data;            // Output data register [RM] 8.4.6
+  uint16_t set;                    // Bit set register [RM] 8.4.7
+  uint16_t clear;                  // Bit reset register [RM] 8.4.7
+  uint32_t flash_lock;             // Configuration lock register [RM] 8.4.8
+  uint32_t alternate_function[2];  // Alternate function low/high register
+                                   // [RM] 8.4.{9,10}
+  uint32_t reset;                  // Reset register [RM] 8.4.11
 };
 typedef volatile GpioStruct GpioReg;
 inline GpioReg *const GpioABase = reinterpret_cast<GpioReg *>(0x48000000);

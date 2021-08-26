@@ -26,9 +26,10 @@ limitations under the License.
 // This pin is tied to timer 3 channel 1, so we can use that timer
 // to generate the square wave needed to power the buzzer.
 
+#include <algorithm>
+
 #include "hal.h"
 #include "hal_stm32.h"
-#include <algorithm>
 
 void HalApi::InitBuzzer() {
   static constexpr int BuzzerFreqHz = 2400;

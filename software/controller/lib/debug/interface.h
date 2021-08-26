@@ -16,11 +16,12 @@ limitations under the License.
 #ifndef INTERFACE_H
 #define INTERFACE_H
 
+#include <cstdarg>
+#include <optional>
+
 #include "circular_buffer.h"
 #include "debug_types.h"
 #include "trace.h"
-#include <cstdarg>
-#include <optional>
 
 namespace Debug {
 
@@ -54,7 +55,7 @@ namespace Debug {
 // data no matter what its value is.  It's used when the data being sent
 // has a special value.
 class Interface {
-public:
+ public:
   explicit Interface(Trace *trace, int count, ...);
 
   // This function is called from the main loop to handle debug commands.
@@ -66,7 +67,7 @@ public:
 
   void SampleTraceVars() { trace_->MaybeSample(); }
 
-private:
+ private:
   State state_{State::AwaitingCommand};
 
   // Buffer into which request data is written in AwaitingCommand state
@@ -103,6 +104,6 @@ private:
   void SendError(ErrorCode error) { SendResponse(error, 0); }
 };
 
-} // namespace Debug
+}  // namespace Debug
 
-#endif // INTERFACE_H
+#endif  // INTERFACE_H

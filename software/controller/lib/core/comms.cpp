@@ -1,11 +1,13 @@
 #include "comms.h"
 
-#include "hal.h"
-#include <algorithm>
-#include <optional>
 #include <pb_common.h>
 #include <pb_decode.h>
 #include <pb_encode.h>
+
+#include <algorithm>
+#include <optional>
+
+#include "hal.h"
 
 // Our outgoing (serialized) ControllerStatus proto is stored in tx_buffer.  We
 // then transmit it a few bytes at a time, as the serial port becomes
@@ -67,8 +69,7 @@ static void ProcessTx(const ControllerStatus &controller_status) {
   //  - we're not currently transmitting,
   //  - we can transmit at least one byte now, and
   //  - it's been a while since we last transmitted.
-  if (tx_bytes_remaining == 0 &&
-      (last_tx == std::nullopt || hal.Now() - *last_tx > TxInterval)) {
+  if (tx_bytes_remaining == 0 && (last_tx == std::nullopt || hal.Now() - *last_tx > TxInterval)) {
     // Serialize current status into output buffer.
     //
     // TODO: Frame the message bytes.
@@ -90,13 +91,11 @@ static void ProcessTx(const ControllerStatus &controller_status) {
   if (tx_bytes_remaining > 0) {
     // TODO(jlebar): Change SerialWrite to take a uint8* instead of a char*, so
     // it matches nanopb.
-    uint16_t bytes_written =
-        hal.SerialWrite(reinterpret_cast<char *>(tx_buffer) + tx_idx,
-                        std::min(bytes_avail, tx_bytes_remaining));
+    uint16_t bytes_written = hal.SerialWrite(reinterpret_cast<char *>(tx_buffer) + tx_idx,
+                                             std::min(bytes_avail, tx_bytes_remaining));
     // TODO: How paranoid should we be about this underflowing?  Perhaps we
     // should reset the device if this or other invariants are violated?
-    tx_bytes_remaining =
-        static_cast<uint16_t>(tx_bytes_remaining - bytes_written);
+    tx_bytes_remaining = static_cast<uint16_t>(tx_bytes_remaining - bytes_written);
     tx_idx = static_cast<uint16_t>(tx_idx + bytes_written);
   }
 }
@@ -131,8 +130,7 @@ static void ProcessRx(GuiStatus *gui_status) {
   }
 }
 
-void CommsHandler(const ControllerStatus &controller_status,
-                  GuiStatus *gui_status) {
+void CommsHandler(const ControllerStatus &controller_status, GuiStatus *gui_status) {
   ProcessTx(controller_status);
   ProcessRx(gui_status);
 }

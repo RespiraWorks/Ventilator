@@ -25,15 +25,18 @@ Abbreviations [RM], [DS], etc are defined in hal/README.md.
 #if defined(BARE_STM32)
 
 #include "hal_stm32.h"
+
+#include <stdarg.h>
+#include <stdio.h>
+
+#include <optional>
+
 #include "checksum.h"
 #include "circular_buffer.h"
 #include "hal.h"
 #include "stepper.h"
 #include "uart_dma.h"
 #include "vars.h"
-#include <optional>
-#include <stdarg.h>
-#include <stdio.h>
 
 #define SYSTEM_STACK_SIZE 2500
 
@@ -75,7 +78,7 @@ extern "C" void _init() { hal.EarlyInit(); }
 // NOLINTNEXTLINE(readability-identifier-naming)
 extern "C" void abort() {
   while (true) {
-    ; // noop
+    ;  // noop
   };
 }
 
@@ -183,7 +186,7 @@ void HalApi::Init() {
 
   // We promised we wouldn't return, so...
   while (true) {
-    ; // noop
+    ;  // noop
   }
 }
 
@@ -236,25 +239,25 @@ void HalApi::InitGpio() {
 void HalApi::DigitalWrite(BinaryPin pin, VoltageLevel value) {
   auto [base, bit] = [&]() -> std::pair<GpioReg *, int> {
     switch (pin) {
-    case BinaryPin::RedLED:
-      return {GpioCBase, 13};
-    case BinaryPin::YellowLED:
-      return {GpioCBase, 14};
-    case BinaryPin::GreenLED:
-      return {GpioCBase, 15};
+      case BinaryPin::RedLED:
+        return {GpioCBase, 13};
+      case BinaryPin::YellowLED:
+        return {GpioCBase, 14};
+      case BinaryPin::GreenLED:
+        return {GpioCBase, 15};
     }
     // All cases covered above (and GCC checks this).
     __builtin_unreachable();
   }();
 
   switch (value) {
-  case VoltageLevel::High:
-    GpioSetPin(base, bit);
-    break;
+    case VoltageLevel::High:
+      GpioSetPin(base, bit);
+      break;
 
-  case VoltageLevel::Low:
-    GpioClrPin(base, bit);
-    break;
+    case VoltageLevel::Low:
+      GpioClrPin(base, bit);
+      break;
   }
 }
 
@@ -315,8 +318,7 @@ Time HalApi::Now() {
   int64_t micros = (counter & 0xffff) / 10;
   bool interrupt_pending = counter >> 31;
 
-  return microsSinceStartup(ms_count * 1000 + micros +
-                            (interrupt_pending ? 1 : 0));
+  return microsSinceStartup(ms_count * 1000 + micros + (interrupt_pending ? 1 : 0));
 }
 
 /******************************************************************
@@ -329,8 +331,7 @@ Time HalApi::Now() {
  *****************************************************************/
 static void (*controller_callback)(void *);
 static void *controller_arg;
-void HalApi::StartLoopTimer(const Duration &period, void (*callback)(void *),
-                            void *arg) {
+void HalApi::StartLoopTimer(const Duration &period, void (*callback)(void *), void *arg) {
   controller_callback = callback;
   controller_arg = arg;
 
@@ -371,13 +372,12 @@ void HalApi::StartLoopTimer(const Duration &period, void (*callback)(void *),
 }
 
 static float latency, max_latency, loop_time;
-static DebugVar dbg_loop_latency("loop_latency", VarAccess::ReadOnly, &latency,
-                                 "\xB5s", "Latency of loop function", "%.2f");
-static DebugVar dbg_max_latency("max_latency", VarAccess::ReadOnly,
-                                &max_latency, "\xB5s",
+static DebugVar dbg_loop_latency("loop_latency", VarAccess::ReadOnly, &latency, "\xB5s",
+                                 "Latency of loop function", "%.2f");
+static DebugVar dbg_max_latency("max_latency", VarAccess::ReadOnly, &max_latency, "\xB5s",
                                 "Maximum latency of loop function", "%.2f");
-static DebugVar dbg_loop_time("loop_time", VarAccess::ReadOnly, &loop_time,
-                              "\xB5s", "Duration of loop function", "%.2f");
+static DebugVar dbg_loop_time("loop_time", VarAccess::ReadOnly, &loop_time, "\xB5s",
+                              "Duration of loop function", "%.2f");
 
 static void Timer15ISR() {
   uint32_t start = Timer15Base->counter;
@@ -386,8 +386,7 @@ static void Timer15ISR() {
   // Keep track of loop latency in uSec
   // Also max latency since it was last zeroed
   latency = static_cast<float>(start) * (1.0f / CPU_FREQ_MHZ);
-  if (latency > max_latency)
-    max_latency = latency;
+  if (latency > max_latency) max_latency = latency;
 
   // Call the function
   controller_callback(controller_arg);
@@ -463,15 +462,14 @@ void HalApi::InitPwmOut() {
 void HalApi::AnalogWrite(PwmPin pin, float duty) {
   auto [tmr, chan] = [&]() -> std::pair<TimerReg *, int> {
     switch (pin) {
-    case PwmPin::Blower:
-      return {Timer2Base, 1};
+      case PwmPin::Blower:
+        return {Timer2Base, 1};
     }
     // All cases covered above (and GCC checks this).
     __builtin_unreachable();
   }();
 
-  tmr->capture_compare[chan] =
-      static_cast<uint32_t>(static_cast<float>(tmr->auto_reload) * duty);
+  tmr->capture_compare[chan] = static_cast<uint32_t>(static_cast<float>(tmr->auto_reload) * duty);
 }
 
 /******************************************************************
@@ -484,17 +482,17 @@ class UART {
   CircularBuffer<uint8_t, 128> tx_data_;
   UartReg *const uart_;
 
-public:
+ public:
   explicit UART(UartReg *const r) : uart_(r) {}
 
   void Init(int baud) {
     // Set baud rate register
     uart_->baudrate = CPU_FREQ / baud;
 
-    uart_->control_reg1.bitfield.rx_interrupt = 1; // enable receive interrupt
-    uart_->control_reg1.bitfield.tx_enable = 1;    // enable transmitter
-    uart_->control_reg1.bitfield.rx_enable = 1;    // enable receiver
-    uart_->control_reg1.bitfield.enable = 1;       // enable uart
+    uart_->control_reg1.bitfield.rx_interrupt = 1;  // enable receive interrupt
+    uart_->control_reg1.bitfield.tx_enable = 1;     // enable transmitter
+    uart_->control_reg1.bitfield.rx_enable = 1;     // enable receiver
+    uart_->control_reg1.bitfield.enable = 1;        // enable uart
   }
 
   // This is the interrupt handler for the UART.
@@ -519,8 +517,7 @@ public:
     }
 
     // Check for transmit data register empty
-    if (uart_->status.bitfield.tx_empty &&
-        uart_->control_reg1.bitfield.tx_interrupt) {
+    if (uart_->status.bitfield.tx_empty && uart_->control_reg1.bitfield.tx_interrupt) {
       std::optional<uint8_t> ch = tx_data_.Get();
 
       // If there's nothing left in the transmit buffer,
@@ -560,8 +557,7 @@ public:
   uint16_t Write(const char *buf, uint16_t len) {
     uint16_t i;
     for (i = 0; i < len; i++) {
-      if (!tx_data_.Put(*buf++))
-        break;
+      if (!tx_data_.Put(*buf++)) break;
     }
 
     // Enable the tx interrupt.  If there was already anything
@@ -638,25 +634,17 @@ static void Uart2ISR() { debug_uart.ISR(); }
 void Uart3ISR() { rpi_uart.ISR(); }
 #endif
 
-uint16_t HalApi::SerialRead(char *buf, uint16_t len) {
-  return rpi_uart.Read(buf, len);
-}
+uint16_t HalApi::SerialRead(char *buf, uint16_t len) { return rpi_uart.Read(buf, len); }
 
 uint16_t HalApi::SerialBytesAvailableForRead() { return rpi_uart.RxFull(); }
 
-uint16_t HalApi::SerialWrite(const char *buf, uint16_t len) {
-  return rpi_uart.Write(buf, len);
-}
+uint16_t HalApi::SerialWrite(const char *buf, uint16_t len) { return rpi_uart.Write(buf, len); }
 
 uint16_t HalApi::SerialBytesAvailableForWrite() { return rpi_uart.TxFree(); }
 
-uint16_t HalApi::DebugWrite(const char *buf, uint16_t len) {
-  return debug_uart.Write(buf, len);
-}
+uint16_t HalApi::DebugWrite(const char *buf, uint16_t len) { return debug_uart.Write(buf, len); }
 
-uint16_t HalApi::DebugRead(char *buf, uint16_t len) {
-  return debug_uart.Read(buf, len);
-}
+uint16_t HalApi::DebugRead(char *buf, uint16_t len) { return debug_uart.Read(buf, len); }
 
 uint16_t HalApi::DebugBytesAvailableForWrite() { return debug_uart.TxFree(); }
 
@@ -710,7 +698,7 @@ void HalApi::WatchdogHandler() {
 #pragma GCC diagnostic ignored "-Wunused-function"
 [[noreturn]] static void Fault() {
   while (true) {
-    ; // noop
+    ;  // noop
     /* \todo this function is unused; could be made useful if implementation
      * made sense? blink lights? scream? do something? */
   }
@@ -730,13 +718,11 @@ void HalApi::EnableClock(volatile void *ptr) {
     int index;
     int bit_set;
   } RccInfo[] = {
-      {Dma1Base, 0, 0},    {Dma2Base, 0, 1},   {FlashBase, 0, 8},
-      {GpioABase, 1, 0},   {GpioBBase, 1, 1},  {GpioCBase, 1, 2},
-      {GpioDBase, 1, 3},   {GpioEBase, 1, 4},  {GpioHBase, 1, 7},
-      {AdcBase, 1, 13},    {Timer2Base, 4, 0}, {Timer3Base, 4, 1},
-      {Timer6Base, 4, 4},  {Uart2Base, 4, 17}, {Uart3Base, 4, 18},
-      {Timer1Base, 6, 11}, {Spi1Base, 6, 12},  {Timer15Base, 6, 16},
-      {I2C1Base, 4, 21},
+      {Dma1Base, 0, 0},   {Dma2Base, 0, 1},     {FlashBase, 0, 8},  {GpioABase, 1, 0},
+      {GpioBBase, 1, 1},  {GpioCBase, 1, 2},    {GpioDBase, 1, 3},  {GpioEBase, 1, 4},
+      {GpioHBase, 1, 7},  {AdcBase, 1, 13},     {Timer2Base, 4, 0}, {Timer3Base, 4, 1},
+      {Timer6Base, 4, 4}, {Uart2Base, 4, 17},   {Uart3Base, 4, 18}, {Timer1Base, 6, 11},
+      {Spi1Base, 6, 12},  {Timer15Base, 6, 16}, {I2C1Base, 4, 21},
       // The following entries are probably correct, but have
       // not been tested yet.  When adding support for one of
       // these peripherals just comment out the line.  And
@@ -800,8 +786,7 @@ static void BadISR() {}
 // We don't control this function's name, silence the style check
 // NOLINTNEXTLINE(readability-identifier-naming)
 extern "C" void Reset_Handler();
-__attribute__((used))
-__attribute__((section(".isr_vector"))) void (*const Vectors[101])() = {
+__attribute__((used)) __attribute__((section(".isr_vector"))) void (*const Vectors[101])() = {
     // The first entry of the ISR holds the initial value of the
     // stack pointer.  The ARM processor initializes the stack
     // pointer based on this address.
@@ -815,115 +800,114 @@ __attribute__((section(".isr_vector"))) void (*const Vectors[101])() = {
     // thumb code.  The cortex m4 processor only supports
     // thumb code, so this will always be set or we'll get
     // a hard fault.
-    reinterpret_cast<void (*)()>(reinterpret_cast<uintptr_t>(Reset_Handler) +
-                                 1),
+    reinterpret_cast<void (*)()>(reinterpret_cast<uintptr_t>(Reset_Handler) + 1),
 
     // The rest of the table is a list of exception and interrupt handlers.
     // [RM] chapter 12 (NVIC) gives a listing of the vector table offsets.
-    NMI,           //   2 - 0x008 The NMI handler
-    FaultISR,      //   3 - 0x00C The hard fault handler
-    MPUFaultISR,   //   4 - 0x010 The MPU fault handler
-    BusFaultISR,   //   5 - 0x014 The bus fault handler
-    UsageFaultISR, //   6 - 0x018 The usage fault handler
-    BadISR,        //   7 - 0x01C Reserved
-    BadISR,        //   8 - 0x020 Reserved
-    BadISR,        //   9 - 0x024 Reserved
-    BadISR,        //  10 - 0x028 Reserved
-    BadISR,        //  11 - 0x02C SVCall handler
-    BadISR,        //  12 - 0x030 Debug monitor handler
-    BadISR,        //  13 - 0x034 Reserved
-    BadISR,        //  14 - 0x038 The PendSV handler
-    BadISR,        //  15 - 0x03C SysTick
-    BadISR,        //  16 - 0x040
-    BadISR,        //  17 - 0x044
-    BadISR,        //  18 - 0x048
-    BadISR,        //  19 - 0x04C
-    BadISR,        //  20 - 0x050
-    BadISR,        //  21 - 0x054
-    BadISR,        //  22 - 0x058
-    BadISR,        //  23 - 0x05C
-    BadISR,        //  24 - 0x060
-    BadISR,        //  25 - 0x064
-    BadISR,        //  26 - 0x068
-    BadISR,        //  27 - 0x06C
+    NMI,            //   2 - 0x008 The NMI handler
+    FaultISR,       //   3 - 0x00C The hard fault handler
+    MPUFaultISR,    //   4 - 0x010 The MPU fault handler
+    BusFaultISR,    //   5 - 0x014 The bus fault handler
+    UsageFaultISR,  //   6 - 0x018 The usage fault handler
+    BadISR,         //   7 - 0x01C Reserved
+    BadISR,         //   8 - 0x020 Reserved
+    BadISR,         //   9 - 0x024 Reserved
+    BadISR,         //  10 - 0x028 Reserved
+    BadISR,         //  11 - 0x02C SVCall handler
+    BadISR,         //  12 - 0x030 Debug monitor handler
+    BadISR,         //  13 - 0x034 Reserved
+    BadISR,         //  14 - 0x038 The PendSV handler
+    BadISR,         //  15 - 0x03C SysTick
+    BadISR,         //  16 - 0x040
+    BadISR,         //  17 - 0x044
+    BadISR,         //  18 - 0x048
+    BadISR,         //  19 - 0x04C
+    BadISR,         //  20 - 0x050
+    BadISR,         //  21 - 0x054
+    BadISR,         //  22 - 0x058
+    BadISR,         //  23 - 0x05C
+    BadISR,         //  24 - 0x060
+    BadISR,         //  25 - 0x064
+    BadISR,         //  26 - 0x068
+    BadISR,         //  27 - 0x06C
 #ifdef UART_VIA_DMA
-    DMA1Channel2ISR, //  28 - 0x070 DMA1 CH2
-    DMA1Channel3ISR, //  29 - 0x074 DMA1 CH3
+    DMA1Channel2ISR,  //  28 - 0x070 DMA1 CH2
+    DMA1Channel3ISR,  //  29 - 0x074 DMA1 CH3
 #else
-    BadISR, //  28 - 0x070
-    BadISR, //  29 - 0x074
+    BadISR,  //  28 - 0x070
+    BadISR,  //  29 - 0x074
 #endif
-    BadISR,          //  30 - 0x078
-    BadISR,          //  31 - 0x07C
-    BadISR,          //  32 - 0x080
-    BadISR,          //  33 - 0x084
-    BadISR,          //  34 - 0x088
-    BadISR,          //  35 - 0x08C
-    BadISR,          //  36 - 0x090
-    BadISR,          //  37 - 0x094
-    BadISR,          //  38 - 0x098
-    BadISR,          //  39 - 0x09C
-    Timer15ISR,      //  40 - 0x0A0
-    BadISR,          //  41 - 0x0A4
-    BadISR,          //  42 - 0x0A8
-    BadISR,          //  43 - 0x0AC
-    BadISR,          //  44 - 0x0B0
-    BadISR,          //  45 - 0x0B4
-    BadISR,          //  46 - 0x0B8
-    I2c1EventISR,    //  47 - 0x0BC I2C1 Events
-    I2c1ErrorISR,    //  48 - 0x0C0 I2C1 Errors
-    BadISR,          //  49 - 0x0C4
-    BadISR,          //  50 - 0x0C8
-    BadISR,          //  51 - 0x0CC
-    BadISR,          //  52 - 0x0D0
-    BadISR,          //  53 - 0x0D4
-    Uart2ISR,        //  54 - 0x0D8
-    Uart3ISR,        //  55 - 0x0DC
-    BadISR,          //  56 - 0x0E0
-    BadISR,          //  57 - 0x0E4
-    BadISR,          //  58 - 0x0E8
-    BadISR,          //  59 - 0x0EC
-    BadISR,          //  60 - 0x0F0
-    BadISR,          //  61 - 0x0F4
-    BadISR,          //  62 - 0x0F8
-    BadISR,          //  63 - 0x0FC
-    BadISR,          //  64 - 0x100
-    BadISR,          //  65 - 0x104
-    BadISR,          //  66 - 0x108
-    BadISR,          //  67 - 0x10C
-    BadISR,          //  68 - 0x110
-    BadISR,          //  69 - 0x114
-    Timer6ISR,       //  70 - 0x118
-    BadISR,          //  71 - 0x11C
-    BadISR,          //  72 - 0x120
-    BadISR,          //  73 - 0x124
-    StepperISR,      //  74 - 0x128
-    BadISR,          //  75 - 0x12C
-    BadISR,          //  76 - 0x130
-    BadISR,          //  77 - 0x134
-    BadISR,          //  78 - 0x138
-    BadISR,          //  79 - 0x13C
-    BadISR,          //  80 - 0x140
-    BadISR,          //  81 - 0x144
-    BadISR,          //  82 - 0x148
-    BadISR,          //  83 - 0x14C
-    DMA2Channel6ISR, //  84 - 0x150
-    DMA2Channel7ISR, //  85 - 0x154
-    BadISR,          //  86 - 0x158
-    BadISR,          //  87 - 0x15C
-    BadISR,          //  88 - 0x160
-    BadISR,          //  89 - 0x164
-    BadISR,          //  90 - 0x168
-    BadISR,          //  91 - 0x16C
-    BadISR,          //  92 - 0x170
-    BadISR,          //  93 - 0x174
-    BadISR,          //  94 - 0x178
-    BadISR,          //  95 - 0x17C
-    BadISR,          //  96 - 0x180
-    BadISR,          //  97 - 0x184
-    BadISR,          //  98 - 0x188
-    BadISR,          //  99 - 0x18C
-    BadISR,          // 100 - 0x190
+    BadISR,           //  30 - 0x078
+    BadISR,           //  31 - 0x07C
+    BadISR,           //  32 - 0x080
+    BadISR,           //  33 - 0x084
+    BadISR,           //  34 - 0x088
+    BadISR,           //  35 - 0x08C
+    BadISR,           //  36 - 0x090
+    BadISR,           //  37 - 0x094
+    BadISR,           //  38 - 0x098
+    BadISR,           //  39 - 0x09C
+    Timer15ISR,       //  40 - 0x0A0
+    BadISR,           //  41 - 0x0A4
+    BadISR,           //  42 - 0x0A8
+    BadISR,           //  43 - 0x0AC
+    BadISR,           //  44 - 0x0B0
+    BadISR,           //  45 - 0x0B4
+    BadISR,           //  46 - 0x0B8
+    I2c1EventISR,     //  47 - 0x0BC I2C1 Events
+    I2c1ErrorISR,     //  48 - 0x0C0 I2C1 Errors
+    BadISR,           //  49 - 0x0C4
+    BadISR,           //  50 - 0x0C8
+    BadISR,           //  51 - 0x0CC
+    BadISR,           //  52 - 0x0D0
+    BadISR,           //  53 - 0x0D4
+    Uart2ISR,         //  54 - 0x0D8
+    Uart3ISR,         //  55 - 0x0DC
+    BadISR,           //  56 - 0x0E0
+    BadISR,           //  57 - 0x0E4
+    BadISR,           //  58 - 0x0E8
+    BadISR,           //  59 - 0x0EC
+    BadISR,           //  60 - 0x0F0
+    BadISR,           //  61 - 0x0F4
+    BadISR,           //  62 - 0x0F8
+    BadISR,           //  63 - 0x0FC
+    BadISR,           //  64 - 0x100
+    BadISR,           //  65 - 0x104
+    BadISR,           //  66 - 0x108
+    BadISR,           //  67 - 0x10C
+    BadISR,           //  68 - 0x110
+    BadISR,           //  69 - 0x114
+    Timer6ISR,        //  70 - 0x118
+    BadISR,           //  71 - 0x11C
+    BadISR,           //  72 - 0x120
+    BadISR,           //  73 - 0x124
+    StepperISR,       //  74 - 0x128
+    BadISR,           //  75 - 0x12C
+    BadISR,           //  76 - 0x130
+    BadISR,           //  77 - 0x134
+    BadISR,           //  78 - 0x138
+    BadISR,           //  79 - 0x13C
+    BadISR,           //  80 - 0x140
+    BadISR,           //  81 - 0x144
+    BadISR,           //  82 - 0x148
+    BadISR,           //  83 - 0x14C
+    DMA2Channel6ISR,  //  84 - 0x150
+    DMA2Channel7ISR,  //  85 - 0x154
+    BadISR,           //  86 - 0x158
+    BadISR,           //  87 - 0x15C
+    BadISR,           //  88 - 0x160
+    BadISR,           //  89 - 0x164
+    BadISR,           //  90 - 0x168
+    BadISR,           //  91 - 0x16C
+    BadISR,           //  92 - 0x170
+    BadISR,           //  93 - 0x174
+    BadISR,           //  94 - 0x178
+    BadISR,           //  95 - 0x17C
+    BadISR,           //  96 - 0x180
+    BadISR,           //  97 - 0x184
+    BadISR,           //  98 - 0x188
+    BadISR,           //  99 - 0x18C
+    BadISR,           // 100 - 0x190
 };
 
 // Enable an interrupt with a specified priority (0 to 15)

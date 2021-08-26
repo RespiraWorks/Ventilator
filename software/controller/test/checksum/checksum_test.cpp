@@ -13,28 +13,25 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include <cstdio>
-#include <cstdlib>
-#include <cstring>
+#include "checksum.h"
+
 #include <stdint.h>
 
 #include <algorithm>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 #include <map>
 
-#include "checksum.h"
 #include "gtest/gtest.h"
 
 TEST(Checksum32, KnownValues) {
   EXPECT_EQ((uint32_t)0, soft_crc32(NULL, 0));
   EXPECT_EQ((uint32_t)0, soft_crc32(reinterpret_cast<const uint8_t *>(""), 0));
-  EXPECT_EQ((uint32_t)0xC808931C,
-            soft_crc32(reinterpret_cast<const uint8_t *>("a"), 1));
-  EXPECT_EQ((uint32_t)0x47A393F8,
-            soft_crc32(reinterpret_cast<const uint8_t *>("abcde"), 5));
-  EXPECT_EQ((uint32_t)0x9DBDD91C,
-            soft_crc32(reinterpret_cast<const uint8_t *>("abcdef"), 6));
-  EXPECT_EQ((uint32_t)0x321FBEF4,
-            soft_crc32(reinterpret_cast<const uint8_t *>("abcdefgh"), 8));
+  EXPECT_EQ((uint32_t)0xC808931C, soft_crc32(reinterpret_cast<const uint8_t *>("a"), 1));
+  EXPECT_EQ((uint32_t)0x47A393F8, soft_crc32(reinterpret_cast<const uint8_t *>("abcde"), 5));
+  EXPECT_EQ((uint32_t)0x9DBDD91C, soft_crc32(reinterpret_cast<const uint8_t *>("abcdef"), 6));
+  EXPECT_EQ((uint32_t)0x321FBEF4, soft_crc32(reinterpret_cast<const uint8_t *>("abcdefgh"), 8));
 }
 
 TEST(Checksum32, BitFlips) {
@@ -63,32 +60,25 @@ TEST(Checksum32, BitFlips) {
     data[bitToFlip / 8] = static_cast<char>(data[bitToFlip / 8] ^ byteMask);
   }
 
-  printf("%d/%d collisions after flipping a single bit.\n",
-         singleBitFlipCollisions, numTests);
-  EXPECT_EQ(0, singleBitFlipCollisions)
-      << "Got at least one collision from one-bit flips; is the "
-         "checksum broken?";
+  printf("%d/%d collisions after flipping a single bit.\n", singleBitFlipCollisions, numTests);
+  EXPECT_EQ(0, singleBitFlipCollisions) << "Got at least one collision from one-bit flips; is the "
+                                           "checksum broken?";
 
   // Find the checksum with the most collisions.  There shouldn't be "too
   // many".
   using MapElem = decltype(*collisions.begin());
-  auto it = std::max_element(
-      collisions.begin(), collisions.end(),
-      [](MapElem a, MapElem b) { return a.second < b.second; });
+  auto it = std::max_element(collisions.begin(), collisions.end(),
+                             [](MapElem a, MapElem b) { return a.second < b.second; });
   int32_t maxCollisionHash = it->first;
   int32_t maxCollisions = it->second;
   double maxCollisionsFrac = 1.0 * maxCollisions / numTests;
-  printf("%d/%d collisions on worst checksum, 0x%4x\n", maxCollisions, numTests,
-         maxCollisionHash);
+  printf("%d/%d collisions on worst checksum, 0x%4x\n", maxCollisions, numTests, maxCollisionHash);
   EXPECT_LE(maxCollisionsFrac, 0.0002)
       << "Too many collisions on worst checksum; is the checksum broken?";
 }
 
 TEST(Checksum32, CrcOkLength) {
-  EXPECT_FALSE(
-      crc_ok(reinterpret_cast<const uint8_t *>("a\xC8\x08\x93\x1C"), 0));
-  EXPECT_FALSE(
-      crc_ok(reinterpret_cast<const uint8_t *>("\xC8\x08\x93\x1C"), 4));
-  EXPECT_TRUE(
-      crc_ok(reinterpret_cast<const uint8_t *>("a\xC8\x08\x93\x1C"), 5));
+  EXPECT_FALSE(crc_ok(reinterpret_cast<const uint8_t *>("a\xC8\x08\x93\x1C"), 0));
+  EXPECT_FALSE(crc_ok(reinterpret_cast<const uint8_t *>("\xC8\x08\x93\x1C"), 4));
+  EXPECT_TRUE(crc_ok(reinterpret_cast<const uint8_t *>("a\xC8\x08\x93\x1C"), 5));
 }

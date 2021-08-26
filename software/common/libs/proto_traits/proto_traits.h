@@ -35,20 +35,22 @@ limitations under the License.
 //     return pb_encode(&stream, ProtoTraits<Proto>::MsgDesc, &proto);
 //   }
 
-template <typename Proto> struct ProtoTraits {
+template <typename Proto>
+struct ProtoTraits {
   // static inline constexpr uint32_t MaxSize = Proto_size;
   // static inline constexpr Proto InitZero = Proto_init_zero;
   // static inline constexpr Proto InitDefault = Proto_init_default;
   // static inline const pb_msgdesc_t *MsgDesc = &Proto_msg;
 };
 
-#define MAKE_TRAITS(T)                                                         \
-  template <> struct ProtoTraits<T> {                                          \
-    using Type = T;                                                            \
-    static inline constexpr uint32_t MaxSize = T##_size;                       \
-    static inline constexpr T InitZero = T##_init_zero;                        \
-    static inline constexpr T InitDefault = T##_init_default;                  \
-    static inline const pb_msgdesc_t *MsgDesc = &T##_msg;                      \
+#define MAKE_TRAITS(T)                                        \
+  template <>                                                 \
+  struct ProtoTraits<T> {                                     \
+    using Type = T;                                           \
+    static inline constexpr uint32_t MaxSize = T##_size;      \
+    static inline constexpr T InitZero = T##_init_zero;       \
+    static inline constexpr T InitDefault = T##_init_default; \
+    static inline const pb_msgdesc_t *MsgDesc = &T##_msg;     \
   }
 
 MAKE_TRAITS(ControllerStatus);
@@ -56,4 +58,4 @@ MAKE_TRAITS(GuiStatus);
 
 #undef MAKE_TRAITS
 
-#endif // PROTO_TRAITS_H
+#endif  // PROTO_TRAITS_H

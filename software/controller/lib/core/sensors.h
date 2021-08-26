@@ -47,7 +47,7 @@ struct SensorReadings {
 // Provides calibrated sensor readings, including tidal volume (TV)
 // integrated from flow.
 class Sensors {
-public:
+ public:
   Sensors();
 
   // Perform some initial sensor calibration.  This function should
@@ -77,7 +77,7 @@ public:
    */
   static VolumetricFlow PressureDeltaToFlow(Pressure delta);
 
-private:
+ private:
   enum class Sensor {
     PatientPressure,
     InflowPressureDiff,
@@ -95,4 +95,4 @@ private:
   Voltage sensors_zero_vals_[NumSensors];
 };
 
-#endif // SENSORS_H
+#endif  // SENSORS_H

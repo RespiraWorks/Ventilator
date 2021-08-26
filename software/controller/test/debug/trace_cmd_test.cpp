@@ -40,11 +40,11 @@ TEST(TraceHandler, Flush) {
   // define some debug variables
   uint32_t i = 0;
   Debug::Variable::FnVar var_x(
-      Debug::Variable::Type::UInt32, "x", Debug::Variable::Access::ReadOnly,
-      "unit", [&] { return i; }, [&](uint32_t value) { (void)value; }, "");
+      Debug::Variable::Type::UInt32, "x", Debug::Variable::Access::ReadOnly, "unit",
+      [&] { return i; }, [&](uint32_t value) { (void)value; }, "");
   Debug::Variable::FnVar var_y(
-      Debug::Variable::Type::UInt32, "x", Debug::Variable::Access::ReadOnly,
-      "unit", [&] { return i * 10; }, [&](uint32_t value) { (void)value; }, "");
+      Debug::Variable::Type::UInt32, "x", Debug::Variable::Access::ReadOnly, "unit",
+      [&] { return i * 10; }, [&](uint32_t value) { (void)value; }, "");
 
   // define trace and trace handler
   Trace trace;
@@ -80,11 +80,11 @@ TEST(TraceHandler, Read) {
   // define some debug variables
   uint32_t i = 0;
   Debug::Variable::FnVar var_x(
-      Debug::Variable::Type::UInt32, "x", Debug::Variable::Access::ReadOnly,
-      "unit", [&] { return i; }, [&](uint32_t value) { (void)value; }, "");
+      Debug::Variable::Type::UInt32, "x", Debug::Variable::Access::ReadOnly, "unit",
+      [&] { return i; }, [&](uint32_t value) { (void)value; }, "");
   Debug::Variable::FnVar var_y(
-      Debug::Variable::Type::UInt32, "y", Debug::Variable::Access::ReadOnly,
-      "unit", [&] { return i * 10; }, [&](uint32_t value) { (void)value; }, "");
+      Debug::Variable::Type::UInt32, "y", Debug::Variable::Access::ReadOnly, "unit",
+      [&] { return i * 10; }, [&](uint32_t value) { (void)value; }, "");
 
   // define trace and trace handler
   Trace trace;
@@ -171,10 +171,8 @@ TEST(TraceHandler, Read) {
 
 TEST(TraceHandler, SettersAndGetters) {
   // define debug variables
-  Debug::Variable::UInt32 var_x("x", Debug::Variable::Access::ReadOnly, 0,
-                                "unit");
-  Debug::Variable::UInt32 var_y("y", Debug::Variable::Access::ReadOnly, 0,
-                                "unit");
+  Debug::Variable::UInt32 var_x("x", Debug::Variable::Access::ReadOnly, 0, "unit");
+  Debug::Variable::UInt32 var_y("y", Debug::Variable::Access::ReadOnly, 0, "unit");
 
   // define trace and trace handler
   Trace trace;
@@ -280,10 +278,8 @@ TEST(TraceHandler, SettersAndGetters) {
 
 TEST(TraceHandler, Errors) {
   // define some debug variables
-  Debug::Variable::UInt32 var_x("x", Debug::Variable::Access::ReadOnly, 0,
-                                "unit");
-  Debug::Variable::UInt32 var_y("y", Debug::Variable::Access::ReadOnly, 0,
-                                "unit");
+  Debug::Variable::UInt32 var_x("x", Debug::Variable::Access::ReadOnly, 0, "unit");
+  Debug::Variable::UInt32 var_y("y", Debug::Variable::Access::ReadOnly, 0, "unit");
 
   // define trace and trace handler
   Trace trace;

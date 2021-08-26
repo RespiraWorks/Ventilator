@@ -32,16 +32,14 @@ limitations under the License.
 #include "hal.h"
 #include "vars.h"
 
-static Debug::Variable::UInt32
-    dbg_reinit("nvparams_reinit", Debug::Variable::Access::ReadWrite, 0, "",
-               "Set to 1 to request a reinit of NV params on next boot.");
+static Debug::Variable::UInt32 dbg_reinit(
+    "nvparams_reinit", Debug::Variable::Access::ReadWrite, 0, "",
+    "Set to 1 to request a reinit of NV params on next boot.");
 
-static Debug::Variable::UInt32
-    dbg_serial("serial_number", Debug::Variable::Access::ReadWrite, 0, "",
-               "Serial number of the ventilator, in EEPROM");
+static Debug::Variable::UInt32 dbg_serial("serial_number", Debug::Variable::Access::ReadWrite, 0,
+                                          "", "Serial number of the ventilator, in EEPROM");
 
-static Debug::Variable::UInt32 dbg_nvparams("nvparams_address",
-                                            Debug::Variable::Access::ReadOnly,
+static Debug::Variable::UInt32 dbg_nvparams("nvparams_address", Debug::Variable::Access::ReadOnly,
                                             0, "", "Address of nv_params");
 
 namespace NVParams {

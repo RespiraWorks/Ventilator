@@ -21,25 +21,25 @@ limitations under the License.
 
 namespace Debug::Variable {
 
-template <typename GetFn, typename SetFn> class FnVar : public Base {
-public:
-  FnVar(Type type, const char *name, Access access, const char *units,
-        GetFn get_fn, SetFn set_fn, const char *help, const char *fmt = "")
-      : Base(type, name, access, units, help, fmt), get_fn_(get_fn),
-        set_fn_(set_fn) {
+template <typename GetFn, typename SetFn>
+class FnVar : public Base {
+ public:
+  FnVar(Type type, const char *name, Access access, const char *units, GetFn get_fn, SetFn set_fn,
+        const char *help, const char *fmt = "")
+      : Base(type, name, access, units, help, fmt), get_fn_(get_fn), set_fn_(set_fn) {
     Registry::singleton().RegisterVar(this);
   }
 
   uint32_t GetValue() override { return get_fn_(); }
   void SetValue(uint32_t value) override { set_fn_(value); }
 
-private:
+ private:
   GetFn get_fn_;
   SetFn set_fn_;
 };
 
 class Primitive32 : public Base {
-public:
+ public:
   // 32-bit integer variable.
   // @param data Pointer to an actual variable in C++ code that this will access
   Primitive32(const char *name, Access access, int32_t *data, const char *units,
@@ -47,8 +47,8 @@ public:
       : Primitive32(Type::Int32, name, access, data, units, help, fmt) {}
 
   // Like above, but unsigned
-  Primitive32(const char *name, Access access, uint32_t *data,
-              const char *units, const char *help = "", const char *fmt = "%u")
+  Primitive32(const char *name, Access access, uint32_t *data, const char *units,
+              const char *help = "", const char *fmt = "%u")
       : Primitive32(Type::UInt32, name, access, data, units, help, fmt) {}
 
   // Like above, but float
@@ -66,46 +66,44 @@ public:
   // Sets the current value of the variable as an uint32_t.
   void SetValue(uint32_t value) override { std::memcpy(address_, &value, 4); }
 
-private:
+ private:
   void *address_;
 
-  Primitive32(Type type, const char *name, Access access, void *data,
-              const char *units, const char *help, const char *fmt = "")
+  Primitive32(Type type, const char *name, Access access, void *data, const char *units,
+              const char *help, const char *fmt = "")
       : Base(type, name, access, units, help, fmt), address_(data) {
     Registry::singleton().RegisterVar(this);
   }
 };
 
 class Int32 : public Primitive32 {
-public:
-  explicit Int32(const char *name, Access access, int32_t init,
-                 const char *units, const char *help = "",
-                 const char *fmt = "%d")
+ public:
+  explicit Int32(const char *name, Access access, int32_t init, const char *units,
+                 const char *help = "", const char *fmt = "%d")
       : Primitive32(name, access, &value_, units, help, fmt), value_(init) {}
 
   void Set(int32_t v) { value_ = v; }
   int32_t Get() const { return value_; }
 
-private:
+ private:
   int32_t value_;
 };
 
 class UInt32 : public Primitive32 {
-public:
-  explicit UInt32(const char *name, Access access, uint32_t init,
-                  const char *units, const char *help = "",
-                  const char *fmt = "%u")
+ public:
+  explicit UInt32(const char *name, Access access, uint32_t init, const char *units,
+                  const char *help = "", const char *fmt = "%u")
       : Primitive32(name, access, &value_, units, help, fmt), value_(init) {}
 
   void Set(uint32_t v) { value_ = v; }
   uint32_t Get() const { return value_; }
 
-private:
+ private:
   uint32_t value_;
 };
 
 class Float : public Primitive32 {
-public:
+ public:
   explicit Float(const char *name, Access access, float init, const char *units,
                  const char *help = "", const char *fmt = "%.3f")
       : Primitive32(name, access, &value_, units, help, fmt), value_(init) {}
@@ -113,8 +111,8 @@ public:
   void Set(float v) { value_ = v; }
   float Get() const { return value_; }
 
-private:
+ private:
   float value_;
 };
 
-} // namespace Debug::Variable
+}  // namespace Debug::Variable

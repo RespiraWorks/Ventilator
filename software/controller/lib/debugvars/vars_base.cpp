@@ -19,8 +19,8 @@ limitations under the License.
 
 namespace Debug::Variable {
 
-Base::Base(Type type, const char *name, Access access, const char *units,
-           const char *help, const char *fmt)
+Base::Base(Type type, const char *name, Access access, const char *units, const char *help,
+           const char *fmt)
     : type_(type), access_(access) {
   // \todo use stricpy instead?
   strcpy(name_, name);
@@ -57,4 +57,4 @@ Access Base::GetAccess() const { return access_; }
 
 bool Base::WriteAllowed() const { return (access_ == Access::ReadWrite); }
 
-} // namespace Debug::Variable
+}  // namespace Debug::Variable

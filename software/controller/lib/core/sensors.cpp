@@ -22,30 +22,24 @@ Arduino Nano and the MPXV5004GP and MPXV7002DP pressure sensors.
 
 #include <cmath>
 
-static Debug::Variable::Float dbg_dp_inhale("dp_inhale",
-                                            Debug::Variable::Access::ReadOnly,
-                                            0.0f, "cmH2O",
-                                            "Inhale diff pressure");
-static Debug::Variable::Float dbg_dp_exhale("dp_exhale",
-                                            Debug::Variable::Access::ReadOnly,
-                                            0.0f, "cmH2O",
-                                            "Exhale diff pressure");
-static Debug::Variable::Float dbg_pressure("pressure",
-                                           Debug::Variable::Access::ReadOnly,
-                                           0.0f, "cmH2O", "Patient pressure");
-static Debug::Variable::Float dbg_flow_inhale("flow_inhale",
-                                              Debug::Variable::Access::ReadOnly,
+#include "vars.h"
+
+static Debug::Variable::Float dbg_dp_inhale("dp_inhale", Debug::Variable::Access::ReadOnly, 0.0f,
+                                            "cmH2O", "Inhale diff pressure");
+static Debug::Variable::Float dbg_dp_exhale("dp_exhale", Debug::Variable::Access::ReadOnly, 0.0f,
+                                            "cmH2O", "Exhale diff pressure");
+static Debug::Variable::Float dbg_pressure("pressure", Debug::Variable::Access::ReadOnly, 0.0f,
+                                           "cmH2O", "Patient pressure");
+static Debug::Variable::Float dbg_flow_inhale("flow_inhale", Debug::Variable::Access::ReadOnly,
                                               0.0f, "mL/s", "Inhale flow rate");
-static Debug::Variable::Float dbg_flow_exhale("flow_exhale",
-                                              Debug::Variable::Access::ReadOnly,
+static Debug::Variable::Float dbg_flow_exhale("flow_exhale", Debug::Variable::Access::ReadOnly,
                                               0.0f, "mL/s", "Exhale flow rate");
-static Debug::Variable::Float dbg_fio2("fio2",
-                                       Debug::Variable::Access::ReadOnly, 0.0f,
-                                       "ratio", "Fraction of inspired oxygen");
+static Debug::Variable::Float dbg_fio2("fio2", Debug::Variable::Access::ReadOnly, 0.0f, "ratio",
+                                       "Fraction of inspired oxygen");
 // Flow correction happens as part of volume computation, in the Controller.
-static Debug::Variable::Float
-    dbg_flow_uncorrected("flow_uncorrected", Debug::Variable::Access::ReadOnly,
-                         0.0f, "mL/s", "Uncorrected net flow rate");
+static Debug::Variable::Float dbg_flow_uncorrected("flow_uncorrected",
+                                                   Debug::Variable::Access::ReadOnly, 0.0f, "mL/s",
+                                                   "Uncorrected net flow rate");
 
 //@TODO: Potential Caution: Density of air slightly varies over temperature and
 // altitude - need mechanism to adjust based on delivery? Constant involving

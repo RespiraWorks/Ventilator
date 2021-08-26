@@ -24,27 +24,26 @@ namespace Debug::Command {
 ErrorCode VarHandler::Process(Context *context) {
   // The first byte of data is always required, this
   // gives the sub-command.
-  if (context->request_length < 1)
-    return ErrorCode::MissingData;
+  if (context->request_length < 1) return ErrorCode::MissingData;
 
   Subcommand subcommand{context->request[0]};
 
   switch (subcommand) {
-  // Return info about one of the variables.
-  case Subcommand::GetInfo:
-    return GetVarInfo(context);
+    // Return info about one of the variables.
+    case Subcommand::GetInfo:
+      return GetVarInfo(context);
 
-  case Subcommand::Get:
-    return GetVar(context);
+    case Subcommand::Get:
+      return GetVar(context);
 
-  case Subcommand::Set:
-    return SetVar(context);
+    case Subcommand::Set:
+      return SetVar(context);
 
-  case Subcommand::GetCount:
-    return GetVarCount(context);
+    case Subcommand::GetCount:
+      return GetVarCount(context);
 
-  default:
-    return ErrorCode::InvalidData;
+    default:
+      return ErrorCode::InvalidData;
   }
 }
 
@@ -56,14 +55,12 @@ ErrorCode VarHandler::Process(Context *context) {
 // passed ID is invalid.
 ErrorCode VarHandler::GetVarInfo(Context *context) {
   // We expect a 16-bit ID to be passed
-  if (context->request_length < 3)
-    return ErrorCode::MissingData;
+  if (context->request_length < 3) return ErrorCode::MissingData;
 
   uint16_t var_id = u8_to_u16(&context->request[1]);
 
   const auto *var = Variable::Registry::singleton().FindVar(var_id);
-  if (!var)
-    return ErrorCode::UnknownVariable;
+  if (!var) return ErrorCode::UnknownVariable;
 
   // The info I return consists of the following:
   // <type> - 1 byte variable type code
@@ -84,8 +81,7 @@ ErrorCode VarHandler::GetVarInfo(Context *context) {
   size_t unit_length = strlen(var->GetUnits());
 
   // Fail if the strings are too large to fit.
-  if (context->max_response_length <
-      8 + name_length + format_length + help_length + unit_length)
+  if (context->max_response_length < 8 + name_length + format_length + help_length + unit_length)
     return ErrorCode::NoMemory;
 
   uint32_t count = 0;
@@ -116,17 +112,14 @@ ErrorCode VarHandler::GetVarInfo(Context *context) {
 
 ErrorCode VarHandler::GetVar(Context *context) {
   // We expect a 16-bit ID to be passed
-  if (context->request_length < 3)
-    return ErrorCode::MissingData;
+  if (context->request_length < 3) return ErrorCode::MissingData;
 
   uint16_t var_id = u8_to_u16(&context->request[1]);
 
   auto *var = Variable::Registry::singleton().FindVar(var_id);
-  if (!var)
-    return ErrorCode::UnknownVariable;
+  if (!var) return ErrorCode::UnknownVariable;
 
-  if (context->max_response_length < 4)
-    return ErrorCode::NoMemory;
+  if (context->max_response_length < 4) return ErrorCode::NoMemory;
 
   u32_to_u8(var->GetValue(), context->response);
   context->response_length = 4;
@@ -136,22 +129,18 @@ ErrorCode VarHandler::GetVar(Context *context) {
 
 ErrorCode VarHandler::SetVar(Context *context) {
   // We expect a 16-bit ID to be passed
-  if (context->request_length < 3)
-    return ErrorCode::MissingData;
+  if (context->request_length < 3) return ErrorCode::MissingData;
 
   uint16_t var_id = u8_to_u16(&context->request[1]);
 
   auto *var = Variable::Registry::singleton().FindVar(var_id);
-  if (!var)
-    return ErrorCode::UnknownVariable;
+  if (!var) return ErrorCode::UnknownVariable;
 
   uint32_t count = context->request_length - 3;
 
-  if (count < 4)
-    return ErrorCode::MissingData;
+  if (count < 4) return ErrorCode::MissingData;
 
-  if (!var->WriteAllowed())
-    return ErrorCode::InternalError;
+  if (!var->WriteAllowed()) return ErrorCode::InternalError;
 
   var->SetValue(u8_to_u32(context->request + 3));
   context->response_length = 0;
@@ -160,8 +149,7 @@ ErrorCode VarHandler::SetVar(Context *context) {
 }
 
 ErrorCode VarHandler::GetVarCount(Context *context) {
-  if (context->max_response_length < 4)
-    return ErrorCode::NoMemory;
+  if (context->max_response_length < 4) return ErrorCode::NoMemory;
 
   u32_to_u8(Variable::Registry::singleton().GetVarCount(), context->response);
   context->response_length = 4;
@@ -169,4 +157,4 @@ ErrorCode VarHandler::GetVarCount(Context *context) {
   return ErrorCode::None;
 }
 
-} // namespace Debug::Command
+}  // namespace Debug::Command

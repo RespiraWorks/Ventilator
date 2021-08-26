@@ -22,16 +22,16 @@ limitations under the License.
 #include "vars.h"
 
 class PID {
-public:
+ public:
   enum class TermApplication {
     OnError,
     OnMeasurement,
   };
 
   // Constructs the PID using the given parameters.
-  PID(const char *name, const char *help_supplement, float initial_kp,
-      float initial_ki, float initial_kd, TermApplication p_term,
-      TermApplication d_term, float output_min, float output_max);
+  PID(const char *name, const char *help_supplement, float initial_kp, float initial_ki,
+      float initial_kd, TermApplication p_term, TermApplication d_term, float output_min,
+      float output_max);
 
   // Performs one step of the PID calculation.
   float compute(Time now, float input, float set_point);
@@ -59,16 +59,16 @@ public:
 
   void update_vars();
 
-private:
-  float kp_; // * (P)roportional Tuning Parameter
-  float ki_; // * (I)ntegral Tuning Parameter
-  float kd_; // * (D)erivative Tuning Parameter
+ private:
+  float kp_;  // * (P)roportional Tuning Parameter
+  float ki_;  // * (I)ntegral Tuning Parameter
+  float kd_;  // * (D)erivative Tuning Parameter
 
   // \TODO: maybe just use these, replacing above simple floats? may not need
   // the update function
-  Debug::Variable::Float dbg_kp_; // * (P)roportional Tuning Parameter
-  Debug::Variable::Float dbg_ki_; // * (I)ntegral Tuning Parameter
-  Debug::Variable::Float dbg_kd_; // * (D)erivative Tuning Parameter
+  Debug::Variable::Float dbg_kp_;  // * (P)roportional Tuning Parameter
+  Debug::Variable::Float dbg_ki_;  // * (I)ntegral Tuning Parameter
+  Debug::Variable::Float dbg_kd_;  // * (D)erivative Tuning Parameter
 
   const TermApplication proportional_term_;
   const TermApplication differential_term_;

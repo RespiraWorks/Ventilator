@@ -42,14 +42,14 @@ limitations under the License.
 // zero a bit above that) and fully open at 0.90.
 
 // UFlow IBV19M value
-static Debug::Variable::Float
-    dbg_psol_pwm_closed("psol_pwm_closed", Debug::Variable::Access::ReadWrite,
-                        0.35f, "ratio", "PWM power that closes the psol [0,1]");
+static Debug::Variable::Float dbg_psol_pwm_closed("psol_pwm_closed",
+                                                  Debug::Variable::Access::ReadWrite, 0.35f,
+                                                  "ratio", "PWM power that closes the psol [0,1]");
 
 // UFlow IBV19M value
-static Debug::Variable::Float
-    dbg_psol_pwm_open("psol_pwm_open", Debug::Variable::Access::ReadWrite,
-                      0.75f, "ratio", "PWM power that opens the psol [0,1]");
+static Debug::Variable::Float dbg_psol_pwm_open("psol_pwm_open", Debug::Variable::Access::ReadWrite,
+                                                0.75f, "ratio",
+                                                "PWM power that opens the psol [0,1]");
 
 void HalApi::InitPSOL() {
   // I'm using a 20kHz PWM frequency to drive the solenoid

@@ -19,8 +19,8 @@ limitations under the License.
 
 TEST(DebugVar, DebugVarInt32) {
   int32_t value = 5;
-  Debug::Variable::Primitive32 var("var", Debug::Variable::Access::ReadOnly,
-                                   &value, "unit", "help", "fmt");
+  Debug::Variable::Primitive32 var("var", Debug::Variable::Access::ReadOnly, &value, "unit", "help",
+                                   "fmt");
   EXPECT_STREQ("var", var.GetName());
   var.prepend_name("pre_");
   EXPECT_STREQ("pre_var", var.GetName());
@@ -45,8 +45,8 @@ TEST(DebugVar, DebugVarInt32) {
   EXPECT_EQ(static_cast<int32_t>(max), value);
 
   // All default arguments
-  Debug::Variable::Primitive32 var_default(
-      "var", Debug::Variable::Access::ReadWrite, &value, "unit");
+  Debug::Variable::Primitive32 var_default("var", Debug::Variable::Access::ReadWrite, &value,
+                                           "unit");
   EXPECT_STREQ("", var_default.GetHelp());
   EXPECT_STREQ("%d", var_default.GetFormat());
 }
@@ -54,8 +54,7 @@ TEST(DebugVar, DebugVarInt32) {
 TEST(DebugVar, DebugVarUint32Defaults) {
   uint32_t value = 5;
   // All default arguments
-  Debug::Variable::Primitive32 var("var", Debug::Variable::Access::ReadWrite,
-                                   &value, "unit");
+  Debug::Variable::Primitive32 var("var", Debug::Variable::Access::ReadWrite, &value, "unit");
   EXPECT_EQ(uint32_t{5}, var.GetValue());
   EXPECT_STREQ("", var.GetHelp());
   EXPECT_STREQ("%u", var.GetFormat());
@@ -65,8 +64,7 @@ TEST(DebugVar, DebugVarUint32Defaults) {
 TEST(DebugVar, DebugVarFloatDefaults) {
   float value = 5.0f;
   // All default arguments
-  Debug::Variable::Primitive32 var("var", Debug::Variable::Access::ReadWrite,
-                                   &value, "unit");
+  Debug::Variable::Primitive32 var("var", Debug::Variable::Access::ReadWrite, &value, "unit");
 
   EXPECT_STREQ("", var.GetHelp());
   EXPECT_STREQ("%.3f", var.GetFormat());
@@ -82,20 +80,17 @@ TEST(DebugVar, DebugVarFloatDefaults) {
 TEST(DebugVar, Registration) {
   uint32_t num_vars = Debug::Variable::Registry::singleton().GetVarCount();
   int32_t int_value = 5;
-  Debug::Variable::Primitive32 var1("var1", Debug::Variable::Access::ReadWrite,
-                                    &int_value, "unit");
+  Debug::Variable::Primitive32 var1("var1", Debug::Variable::Access::ReadWrite, &int_value, "unit");
 
   EXPECT_EQ(Debug::Variable::Registry::singleton().GetVarCount(), num_vars + 1);
 
   float float_value = 7;
-  Debug::Variable::Primitive32 var2("var2", Debug::Variable::Access::ReadWrite,
-                                    &float_value, "unit");
+  Debug::Variable::Primitive32 var2("var2", Debug::Variable::Access::ReadWrite, &float_value,
+                                    "unit");
 
   EXPECT_EQ(Debug::Variable::Registry::singleton().GetVarCount(), num_vars + 2);
 
-  EXPECT_EQ(&var1,
-            Debug::Variable::Registry::singleton().FindVar(var1.GetId()));
-  EXPECT_EQ(&var2,
-            Debug::Variable::Registry::singleton().FindVar(var2.GetId()));
+  EXPECT_EQ(&var1, Debug::Variable::Registry::singleton().FindVar(var1.GetId()));
+  EXPECT_EQ(&var2, Debug::Variable::Registry::singleton().FindVar(var2.GetId()));
   EXPECT_EQ(nullptr, Debug::Variable::Registry::singleton().FindVar(12345));
 }

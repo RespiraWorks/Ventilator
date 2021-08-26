@@ -45,14 +45,14 @@ static constexpr uint16_t InvalidID{std::numeric_limits<uint16_t>::max()};
 // The fmt string gives the debug interface a suggestion on the best way
 // to display the variable's data.
 class Base {
-public:
+ public:
   // @param type Type of the variable
   // @param name Name of the variable
   // @param help String that the Python code displays describing the variable.
   // @param fmt printf style format string.  This is a hint to the Python code
   // as to how the variable data should be displayed.
-  Base(Type type, const char *name, Access access, const char *units,
-       const char *help, const char *fmt = "");
+  Base(Type type, const char *name, Access access, const char *units, const char *help,
+       const char *fmt = "");
 
   virtual uint32_t GetValue() = 0;
   virtual void SetValue(uint32_t value) = 0;
@@ -69,7 +69,7 @@ public:
   Access GetAccess() const;
   bool WriteAllowed() const;
 
-private:
+ private:
   uint16_t id_{InvalidID};
   const Type type_;
   const Access access_;
@@ -82,7 +82,7 @@ private:
 };
 
 class Registry {
-public:
+ public:
   // this is the only way to access it
   static Registry &singleton() {
     // will privately initialize on first call
@@ -95,16 +95,16 @@ public:
   Base *FindVar(uint16_t vid);
   uint32_t GetVarCount() const;
 
-private:
+ private:
   // List of all the variables in the system.
   // Increase size as necessary
   Base *var_list_[100]{};
   uint16_t var_count_{0};
 
   // singleton assurance, because these are private
-  Registry() = default;             // cannot default initialize
-  Registry(Registry const &);       // cannot copy initialize
-  void operator=(Registry const &); // cannot copy assign
+  Registry() = default;              // cannot default initialize
+  Registry(Registry const &);        // cannot copy initialize
+  void operator=(Registry const &);  // cannot copy assign
 };
 
-} // namespace Debug::Variable
+}  // namespace Debug::Variable

@@ -25,17 +25,16 @@ limitations under the License.
 // These are read but never modified here.
 
 // TODO: This should be configurable from the GUI.
-static Debug::Variable::Float
-    dbg_pa_flow_trigger("pa_flow_trigger", Debug::Variable::Access::ReadWrite,
-                        200, "mL/s", "pressure assist flow trigger");
+static Debug::Variable::Float dbg_pa_flow_trigger("pa_flow_trigger",
+                                                  Debug::Variable::Access::ReadWrite, 200, "mL/s",
+                                                  "pressure assist flow trigger");
 
 // TODO: Is 250ms right?  Or can it be a fixed value at all; should it depend
 // on the RR or something?
-static Debug::Variable::Float
-    dbg_pa_min_expire_ms("pa_min_expire_ms", Debug::Variable::Access::ReadWrite,
-                         250, "ms",
-                         "minimum amount of time after ventilator exits PIP "
-                         "before we're eligible to trigger a breath");
+static Debug::Variable::Float dbg_pa_min_expire_ms(
+    "pa_min_expire_ms", Debug::Variable::Access::ReadWrite, 250, "ms",
+    "minimum amount of time after ventilator exits PIP "
+    "before we're eligible to trigger a breath");
 
 // fast_flow_avg_alpha and slow_flow_avg_alpha were tuned for a control loop
 // that runs at a particular frequency.
@@ -55,12 +54,10 @@ static Debug::Variable::Float dbg_slow_flow_avg_alpha(
     "alpha term in pressure assist mode's slow-updating "
     "exponentially-weighted average of flow");
 
-static Debug::Variable::Float
-    dbg_fast_flow_avg("fast_flow_avg", Debug::Variable::Access::ReadOnly, 0.0f,
-                      "mL/s", "fast-updating flow average");
-static Debug::Variable::Float
-    dbg_slow_flow_avg("slow_flow_avg", Debug::Variable::Access::ReadOnly, 0.0f,
-                      "mL/s", "slow-updating flow average");
+static Debug::Variable::Float dbg_fast_flow_avg("fast_flow_avg", Debug::Variable::Access::ReadOnly,
+                                                0.0f, "mL/s", "fast-updating flow average");
+static Debug::Variable::Float dbg_slow_flow_avg("slow_flow_avg", Debug::Variable::Access::ReadOnly,
+                                                0.0f, "mL/s", "slow-updating flow average");
 
 // Given t = secs_per_breath and r = I:E ratio, calculate inspiration and
 // expiration durations (I and E).

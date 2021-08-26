@@ -51,18 +51,14 @@
 #include "interface.h"
 #include "vars.h"
 
-static Debug::Variable::UInt32
-    dbg_addr_before("eeprom_before", Debug::Variable::Access::ReadOnly, 0, "",
-                    "address of eeprom contents at startup");
-static Debug::Variable::UInt32 dbg_write_data("write_data",
-                                              Debug::Variable::Access::ReadOnly,
-                                              0, "", "address of write data");
-static Debug::Variable::UInt32
-    dbg_addr_after("eeprom_after", Debug::Variable::Access::ReadOnly, 0, "",
-                   "address of eeprom contents after write");
-static Debug::Variable::UInt32
-    dbg_test_result("result", Debug::Variable::Access::ReadOnly, 0, "",
-                    "result of the test");
+static Debug::Variable::UInt32 dbg_addr_before("eeprom_before", Debug::Variable::Access::ReadOnly,
+                                               0, "", "address of eeprom contents at startup");
+static Debug::Variable::UInt32 dbg_write_data("write_data", Debug::Variable::Access::ReadOnly, 0,
+                                              "", "address of write data");
+static Debug::Variable::UInt32 dbg_addr_after("eeprom_after", Debug::Variable::Access::ReadOnly, 0,
+                                              "", "address of eeprom contents after write");
+static Debug::Variable::UInt32 dbg_test_result("result", Debug::Variable::Access::ReadOnly, 0, "",
+                                               "result of the test");
 
 // test parameters
 static constexpr uint16_t Address{TEST_PARAM_1};

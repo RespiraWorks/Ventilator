@@ -20,18 +20,20 @@ limitations under the License.
 
 #include <algorithm>
 
-PID::PID(const char *name, const char *help_supplement, float initial_kp,
-         float initial_ki, float initial_kd, TermApplication p_term,
-         TermApplication d_term, float output_min, float output_max)
-    : kp_(initial_kp), ki_(initial_ki), kd_(initial_kd),
+PID::PID(const char *name, const char *help_supplement, float initial_kp, float initial_ki,
+         float initial_kd, TermApplication p_term, TermApplication d_term, float output_min,
+         float output_max)
+    : kp_(initial_kp),
+      ki_(initial_ki),
+      kd_(initial_kd),
       dbg_kp_("initial_kp", Debug::Variable::Access::ReadWrite, initial_kp, "",
               "Proportional gain"),
-      dbg_ki_("initial_ki", Debug::Variable::Access::ReadWrite, initial_ki, "",
-              "Integral gain"),
-      dbg_kd_("initial_kd", Debug::Variable::Access::ReadWrite, initial_kd, "",
-              "Derivative gain"),
-      proportional_term_(p_term), differential_term_(d_term),
-      out_min_(output_min), out_max_(output_max) {
+      dbg_ki_("initial_ki", Debug::Variable::Access::ReadWrite, initial_ki, "", "Integral gain"),
+      dbg_kd_("initial_kd", Debug::Variable::Access::ReadWrite, initial_kd, "", "Derivative gain"),
+      proportional_term_(p_term),
+      differential_term_(d_term),
+      out_min_(output_min),
+      out_max_(output_max) {
   dbg_kp_.prepend_name(name);
   dbg_kp_.append_help(help_supplement);
   dbg_ki_.prepend_name(name);

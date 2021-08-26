@@ -41,19 +41,19 @@ static Debug::Variable::UInt32 forced_mode(
 static Debug::Variable::UInt32 forced_breath_rate(
     "forced_breath_rate", Debug::Variable::Access::ReadWrite, 15, "breaths/min",
     "Target breath rate; overrides GUI setting when forced_mode is valid");
-static Debug::Variable::UInt32
-    forced_peep("forced_peep", Debug::Variable::Access::ReadWrite, 5, "cmH2O",
-                "Target PEEP; overrides GUI setting when forced_mode is valid");
-static Debug::Variable::UInt32
-    forced_pip("forced_pip", Debug::Variable::Access::ReadWrite, 15, "cmH2O",
-               "Target PIP; overrides GUI setting when forced_mode is valid");
+static Debug::Variable::UInt32 forced_peep(
+    "forced_peep", Debug::Variable::Access::ReadWrite, 5, "cmH2O",
+    "Target PEEP; overrides GUI setting when forced_mode is valid");
+static Debug::Variable::UInt32 forced_pip(
+    "forced_pip", Debug::Variable::Access::ReadWrite, 15, "cmH2O",
+    "Target PIP; overrides GUI setting when forced_mode is valid");
 static Debug::Variable::Float forced_ie_ratio(
     "forced_ie_ratio", Debug::Variable::Access::ReadWrite, 0.66f, "ratio",
     "Target I:E ratio; overrides GUI setting when forced_mode is valid");
-static Debug::Variable::Float
-    forced_fio2("forced_fio2", Debug::Variable::Access::ReadWrite, 21, "%",
-                "Target percent oxygen [21, 100]; overrides GUI "
-                "setting when forced_mode is valid");
+static Debug::Variable::Float forced_fio2("forced_fio2", Debug::Variable::Access::ReadWrite, 21,
+                                          "%",
+                                          "Target percent oxygen [21, 100]; overrides GUI "
+                                          "setting when forced_mode is valid");
 
 static Controller controller;
 static ControllerStatus controller_status;

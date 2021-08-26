@@ -13,8 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#ifndef TRACE_H
-#define TRACE_H
+#pragma once
 
 #include <stdint.h>
 
@@ -114,5 +113,3 @@ class Trace {
 };
 
 }  // namespace Debug
-
-#endif  // TRACE_H

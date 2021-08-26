@@ -13,8 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#ifndef PROTO_TRAITS_H
-#define PROTO_TRAITS_H
+#pragma once
 
 #include "network_protocol.pb.h"
 
@@ -57,5 +56,3 @@ MAKE_TRAITS(ControllerStatus);
 MAKE_TRAITS(GuiStatus);
 
 #undef MAKE_TRAITS
-
-#endif  // PROTO_TRAITS_H

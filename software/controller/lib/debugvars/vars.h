@@ -13,8 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#ifndef VARS_H
-#define VARS_H
+#pragma once
 
 #include <array>
 #include <cstdint>
@@ -184,5 +183,3 @@ class DebugFloat : public DebugVar {
  private:
   float value_;
 };
-
-#endif

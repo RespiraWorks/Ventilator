@@ -13,8 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#ifndef PINCH_VALVE_H
-#define PINCH_VALVE_H
+#pragma once
 
 #include "stepper.h"
 #include "units.h"
@@ -83,5 +82,3 @@ class PinchValve {
 
   PinchValveHomeState home_state_{PinchValveHomeState::Disabled};
 };
-
-#endif

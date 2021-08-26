@@ -13,8 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#ifndef COMMAND_H
-#define COMMAND_H
+#pragma once
 
 #include "binary_utils.h"
 #include "eeprom.h"
@@ -196,5 +195,3 @@ class EepromHandler : public Handler {
 };
 
 }  // namespace Debug::Command
-
-#endif  // COMMAND_H

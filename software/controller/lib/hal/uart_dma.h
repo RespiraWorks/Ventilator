@@ -14,8 +14,7 @@ limitations under the License.
 
 */
 
-#ifndef UART_DMA_H
-#define UART_DMA_H
+#pragma once
 #include "hal_stm32_regs.h"
 
 enum class RxError { RxUnknownError, RxOverflow, RxFramingError, RxTimeout, RxDmaError };
@@ -109,4 +108,3 @@ class UartDma {
   bool tx_in_progress_{false};
   bool rx_in_progress_{false};
 };
-#endif

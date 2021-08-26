@@ -44,8 +44,7 @@ limitations under the License.
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#ifndef STEPPER_H
-#define STEPPER_H
+#pragma once
 
 #include <stdint.h>
 
@@ -344,5 +343,3 @@ class StepMotor {
   // at the end of the high priority loop timer ISR
   static void StartQueuedCommands();
 };
-
-#endif

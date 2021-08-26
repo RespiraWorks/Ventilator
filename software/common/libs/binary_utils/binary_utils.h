@@ -13,8 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#ifndef BINUTILS_H
-#define BINUTILS_H
+#pragma once
 
 #include <stdint.h>
 // Some simple data conversion functions.
@@ -44,5 +43,3 @@ inline void u32_to_u8(uint32_t val, uint8_t *buff) {
   buff[2] = static_cast<uint8_t>(val >> 16);
   buff[3] = static_cast<uint8_t>(val >> 24);
 }
-
-#endif  // BINUTILS_H

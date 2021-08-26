@@ -12,8 +12,8 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-#ifndef CONTROLLER_H
-#define CONTROLLER_H
+
+#pragma once
 
 #include <optional>
 #include <utility>
@@ -83,5 +83,3 @@ class Controller {
   // Off state to On state.
   bool ventilator_was_on_{false};
 };
-
-#endif  // CONTROLLER_H

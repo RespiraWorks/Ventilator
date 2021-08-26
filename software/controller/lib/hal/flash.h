@@ -14,8 +14,7 @@ limitations under the License.
 
 */
 
-#ifndef FLASH_H
-#define FLASH_H
+#pragma once
 
 #include <cstddef>
 #include <cstdint>
@@ -24,5 +23,3 @@ limitations under the License.
 inline constexpr uint32_t FlashStartAddr{0x08000000};
 inline constexpr size_t FlashSize{32 * 1024};
 inline constexpr size_t FlashPageSize{2 * 1024};
-
-#endif

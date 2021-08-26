@@ -1,11 +1,12 @@
 #include "comms.h"
 
-#include "hal.h"
-#include "network_protocol.pb.h"
-#include "gtest/gtest.h"
 #include <pb_common.h>
 #include <pb_decode.h>
 #include <pb_encode.h>
+
+#include "gtest/gtest.h"
+#include "hal.h"
+#include "network_protocol.pb.h"
 
 TEST(CommTests, SendControllerStatus) {
   // Initialize a large ControllerStatus so as to force multiple calls to
@@ -31,8 +32,7 @@ TEST(CommTests, SendControllerStatus) {
   char tx_buffer[ControllerStatus_size];
   uint16_t len = hal.TESTSerialGetOutgoingData(tx_buffer, sizeof(tx_buffer));
   ASSERT_GT(len, 0);
-  pb_istream_t stream =
-      pb_istream_from_buffer(reinterpret_cast<unsigned char *>(tx_buffer), len);
+  pb_istream_t stream = pb_istream_from_buffer(reinterpret_cast<unsigned char *>(tx_buffer), len);
 
   ControllerStatus sent = ControllerStatus_init_zero;
   ASSERT_TRUE(pb_decode(&stream, ControllerStatus_fields, &sent));
@@ -55,12 +55,11 @@ TEST(CommTests, CommandRx) {
   s.desired_params.expiratory_trigger_ml_per_min = 9;
 
   char rx_buffer[GuiStatus_size];
-  pb_ostream_t stream = pb_ostream_from_buffer(
-      reinterpret_cast<unsigned char *>(rx_buffer), sizeof(rx_buffer));
+  pb_ostream_t stream =
+      pb_ostream_from_buffer(reinterpret_cast<unsigned char *>(rx_buffer), sizeof(rx_buffer));
   pb_encode(&stream, GuiStatus_fields, &s);
   EXPECT_GT(stream.bytes_written, 0u);
-  hal.TESTSerialPutIncomingData(rx_buffer,
-                                static_cast<uint16_t>(stream.bytes_written));
+  hal.TESTSerialPutIncomingData(rx_buffer, static_cast<uint16_t>(stream.bytes_written));
   EXPECT_GT(hal.SerialBytesAvailableForRead(), 0);
 
   ControllerStatus controller_status_ignored = ControllerStatus_init_zero;

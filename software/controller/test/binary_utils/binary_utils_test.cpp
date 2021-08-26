@@ -14,6 +14,7 @@ limitations under the License.
 */
 
 #include "binary_utils.h"
+
 #include "gtest/gtest.h"
 
 TEST(Binutils, Conversion_32bits) {
@@ -30,8 +31,7 @@ TEST(Binutils, Conversion_32bits) {
 }
 
 TEST(Binutils, Conversion_16bits) {
-  uint16_t test_values[10] = {0,      0x1234, 0xABCD, 0x7654,
-                              0xFFFF, 0x55AA, 0xFF55, 0xAF05};
+  uint16_t test_values[10] = {0, 0x1234, 0xABCD, 0x7654, 0xFFFF, 0x55AA, 0xFF55, 0xAF05};
   for (auto value : test_values) {
     uint8_t converted[2] = {0};
     u16_to_u8(value, converted);

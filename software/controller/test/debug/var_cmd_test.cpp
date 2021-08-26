@@ -13,11 +13,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include "commands.h"
-#include "vars.h"
-#include "gtest/gtest.h"
-#include <array>
 #include <stdint.h>
+
+#include <array>
+
+#include "commands.h"
+#include "gtest/gtest.h"
+#include "vars.h"
 
 namespace Debug::Command {
 
@@ -38,20 +40,16 @@ TEST(VarHandler, GetVarInfo) {
                                    static_cast<uint8_t>(strlen(format)),
                                    static_cast<uint8_t>(strlen(help)),
                                    static_cast<uint8_t>(strlen(unit))};
-  for (size_t i = 0; i < strlen(name); ++i)
-    expected.push_back(name[i]);
-  for (size_t i = 0; i < strlen(format); ++i)
-    expected.push_back(format[i]);
-  for (size_t i = 0; i < strlen(help); ++i)
-    expected.push_back(help[i]);
-  for (size_t i = 0; i < strlen(unit); ++i)
-    expected.push_back(unit[i]);
+  for (size_t i = 0; i < strlen(name); ++i) expected.push_back(name[i]);
+  for (size_t i = 0; i < strlen(format); ++i) expected.push_back(format[i]);
+  for (size_t i = 0; i < strlen(help); ++i) expected.push_back(help[i]);
+  for (size_t i = 0; i < strlen(unit); ++i) expected.push_back(unit[i]);
 
   uint8_t id[2];
   u16_to_u8(var.GetId(), id);
   std::array req = {
       static_cast<uint8_t>(VarHandler::Subcommand::GetInfo), id[0],
-      id[1], // Var id
+      id[1],  // Var id
   };
   std::array<uint8_t, 50> response;
   bool processed{false};
@@ -78,7 +76,7 @@ TEST(VarHandler, GetVar) {
   u16_to_u8(var.GetId(), id);
   std::array req = {
       static_cast<uint8_t>(VarHandler::Subcommand::Get), id[0],
-      id[1], // Var id
+      id[1],  // Var id
   };
   std::array<uint8_t, 4> response;
   bool processed{false};
@@ -112,11 +110,11 @@ TEST(VarHandler, SetVar) {
   std::array req = {
       static_cast<uint8_t>(VarHandler::Subcommand::Set),
       id[0],
-      id[1], // Var id
+      id[1],  // Var id
       new_bytes[0],
       new_bytes[1],
       new_bytes[2],
-      new_bytes[3] // Value
+      new_bytes[3]  // Value
   };
 
   std::array<uint8_t, 0> response;
@@ -169,8 +167,8 @@ TEST(VarHandler, Errors) {
   u16_to_u8(var_readonly.GetId(), id_readonly);
 
   std::vector<std::tuple<std::vector<uint8_t>, ErrorCode>> requests = {
-      {{}, ErrorCode::MissingData},  // Missing subcommand
-      {{4}, ErrorCode::InvalidData}, // Invalid subcommand
+      {{}, ErrorCode::MissingData},   // Missing subcommand
+      {{4}, ErrorCode::InvalidData},  // Invalid subcommand
       {{0, 0xFF, 0xFF}, ErrorCode::UnknownVariable},
       {{1, 0xFF, 0xFF}, ErrorCode::UnknownVariable},
       {{2, 0xFF, 0xFF}, ErrorCode::UnknownVariable},
@@ -181,8 +179,7 @@ TEST(VarHandler, Errors) {
       {{1, id[0], id[1]}, ErrorCode::NoMemory},
       {{3}, ErrorCode::NoMemory},
       {{2, id[0], id[1], 0xCA, 0xFE, 0x00}, ErrorCode::MissingData},
-      {{2, id_readonly[0], id_readonly[1], 0xCA, 0xFE, 0x00, 0x00},
-       ErrorCode::InternalError},
+      {{2, id_readonly[0], id_readonly[1], 0xCA, 0xFE, 0x00, 0x00}, ErrorCode::InternalError},
   };
 
   for (auto &[request, error] : requests) {
@@ -201,4 +198,4 @@ TEST(VarHandler, Errors) {
   }
 }
 
-} // namespace Debug::Command
+}  // namespace Debug::Command

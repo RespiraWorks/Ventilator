@@ -13,9 +13,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+#include <array>
+
 #include "commands.h"
 #include "gtest/gtest.h"
-#include <array>
 
 namespace Debug::Command {
 
@@ -32,8 +33,7 @@ TEST(PeekHandler, valid_peek) {
     // set command length
     u16_to_u8(peek_length, peek_command.data() + sizeof(uint32_t));
 
-    for (size_t byte_number = 0; byte_number < kMemorySize + 1 - peek_length;
-         ++byte_number) {
+    for (size_t byte_number = 0; byte_number < kMemorySize + 1 - peek_length; ++byte_number) {
       size_t address = reinterpret_cast<size_t>(&memory[byte_number]);
       // feed address MSW to the handler, as we only pass 32bits addresses
       // through the command protocol
@@ -54,9 +54,8 @@ TEST(PeekHandler, valid_peek) {
                               .processed = &processed};
       EXPECT_EQ(ErrorCode::None, peek_handler.Process(&peek_context));
       EXPECT_TRUE(processed);
-      EXPECT_EQ(
-          peek_context.response_length,
-          std::min(peek_length, static_cast<uint16_t>(std::size(response))));
+      EXPECT_EQ(peek_context.response_length,
+                std::min(peek_length, static_cast<uint16_t>(std::size(response))));
       for (size_t offset = 0; offset < peek_context.response_length; ++offset) {
         EXPECT_EQ(response[offset], memory[byte_number + offset]);
       }
@@ -79,4 +78,4 @@ TEST(PeekHandler, errors) {
   EXPECT_FALSE(processed);
 }
 
-} // namespace Debug::Command
+}  // namespace Debug::Command

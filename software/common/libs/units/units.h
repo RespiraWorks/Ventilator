@@ -17,6 +17,7 @@ limitations under the License.
 #define UNITS_H
 
 #include <stdint.h>
+
 #include <type_traits>
 
 // Wrappers for measurements of different physical quantities [1] (length,
@@ -102,8 +103,9 @@ namespace UnitsDetail {
 //   class Length : public Scalar<Length, float> { ... };
 //
 // [1] https://en.wikipedia.org/wiki/Curiously_recurring_template_pattern
-template <class Q, class ValTy> class Scalar {
-public:
+template <class Q, class ValTy>
+class Scalar {
+ public:
   Scalar() : val_(0) {}
 
   constexpr bool operator<(const Scalar &s) const { return val_ < s.val_; }
@@ -113,7 +115,7 @@ public:
   constexpr bool operator>=(const Scalar &s) const { return val_ >= s.val_; }
   constexpr bool operator>(const Scalar &s) const { return val_ > s.val_; }
 
-protected:
+ protected:
   constexpr explicit Scalar(ValTy val) : val_(val) {}
   ValTy val_;
 };
@@ -131,36 +133,25 @@ protected:
 //   floating-point, these operators are not defined.
 //
 // Be aware that dividing by 0 yields Inf and needs to be protected.
-template <class Q, class ValTy> class ArithScalar : public Scalar<Q, ValTy> {
-public:
-  constexpr Q operator+(const ArithScalar &a) const {
-    return Q(this->val_ + a.val_);
-  }
-  Q &operator+=(const ArithScalar &a) {
-    return static_cast<Q &>(*this = *this + a);
-  }
+template <class Q, class ValTy>
+class ArithScalar : public Scalar<Q, ValTy> {
+ public:
+  constexpr Q operator+(const ArithScalar &a) const { return Q(this->val_ + a.val_); }
+  Q &operator+=(const ArithScalar &a) { return static_cast<Q &>(*this = *this + a); }
 
-  constexpr Q operator-(const ArithScalar &a) const {
-    return Q(this->val_ - a.val_);
-  }
-  Q &operator-=(const ArithScalar &a) {
-    return static_cast<Q &>(*this = *this - a);
-  }
+  constexpr Q operator-(const ArithScalar &a) const { return Q(this->val_ - a.val_); }
+  Q &operator-=(const ArithScalar &a) { return static_cast<Q &>(*this = *this - a); }
 
   constexpr Q operator*(const ValTy &a) const { return Q(this->val_ * a); }
-  constexpr friend Q operator*(const ValTy &a, const Q &b) {
-    return Q(b.val_ * a);
-  }
+  constexpr friend Q operator*(const ValTy &a, const Q &b) { return Q(b.val_ * a); }
   Q &operator*=(const ValTy &a) { return static_cast<Q &>(*this = *this * a); }
 
   // Division by a unitless scalar, defined only if ValTy is floating-point.
-  template <typename VT = ValTy,
-            std::enable_if_t<std::is_floating_point_v<VT>, int> = 0>
+  template <typename VT = ValTy, std::enable_if_t<std::is_floating_point_v<VT>, int> = 0>
   constexpr Q operator/(const ValTy &a) const {
     return Q(this->val_ / a);
   }
-  template <typename VT = ValTy,
-            std::enable_if_t<std::is_floating_point_v<VT>, int> = 0>
+  template <typename VT = ValTy, std::enable_if_t<std::is_floating_point_v<VT>, int> = 0>
   Q &operator/=(const ValTy &a) {
     return static_cast<Q &>(*this = *this / a);
   }
@@ -171,12 +162,12 @@ public:
     return static_cast<float>(this->val_) / static_cast<float>(a.val_);
   }
 
-protected:
+ protected:
   // Pull in base class's constructor.
   using Scalar<Q, ValTy>::Scalar;
 };
 
-} // namespace UnitsDetail
+}  // namespace UnitsDetail
 
 // Represents pressure, e.g. air pressure.
 //
@@ -189,12 +180,12 @@ protected:
 //
 // Native unit (implementation detail): kPa
 class Pressure : public UnitsDetail::ArithScalar<Pressure, float> {
-public:
+ public:
   [[nodiscard]] constexpr float kPa() const { return val_; }
   [[nodiscard]] constexpr float cmH2O() const { return val_ * KPaToCmH2O; }
   [[nodiscard]] constexpr float atm() const { return val_ / AtmToKPa; }
 
-private:
+ private:
   // https://www.google.com/search?q=kpa+to+cmh2o
   static constexpr float KPaToCmH2O{10.1972f};
   // https://www.google.com/search?q=atm+to+kPa
@@ -208,9 +199,7 @@ private:
 };
 
 constexpr Pressure kPa(float kpa) { return Pressure(kpa); }
-constexpr Pressure cmH2O(float cm_h2o) {
-  return Pressure(cm_h2o / Pressure::KPaToCmH2O);
-}
+constexpr Pressure cmH2O(float cm_h2o) { return Pressure(cm_h2o / Pressure::KPaToCmH2O); }
 constexpr Pressure atm(float atm) { return Pressure(atm * Pressure::AtmToKPa); }
 
 // Represents a length.
@@ -223,11 +212,11 @@ constexpr Pressure atm(float atm) { return Pressure(atm * Pressure::AtmToKPa); }
 //
 // Native unit (implementation detail): meters
 class Length : public UnitsDetail::ArithScalar<Length, float> {
-public:
+ public:
   [[nodiscard]] constexpr float meters() const { return val_; }
   [[nodiscard]] constexpr float millimeters() const { return val_ * 1000; }
 
-private:
+ private:
   constexpr friend Length meters(float meters);
   constexpr friend Length millimeters(float mm);
 
@@ -253,17 +242,13 @@ constexpr Length millimeters(float mm) { return Length(mm / 1000); }
 // Dividing a Volume by a Duration (see below) gives you a VolumetricFlow.
 // Multiplying a VolumetricFlow by a Duration (see below) gives you a Volume.
 class VolumetricFlow : public UnitsDetail::ArithScalar<VolumetricFlow, float> {
-public:
+ public:
   [[nodiscard]] constexpr float cubic_m_per_sec() const { return val_; }
-  [[nodiscard]] constexpr float ml_per_min() const {
-    return val_ * 1000.0f * 1000.0f * 60.0f;
-  }
-  [[nodiscard]] constexpr float liters_per_sec() const {
-    return val_ * 1000.0f;
-  }
+  [[nodiscard]] constexpr float ml_per_min() const { return val_ * 1000.0f * 1000.0f * 60.0f; }
+  [[nodiscard]] constexpr float liters_per_sec() const { return val_ * 1000.0f; }
   [[nodiscard]] constexpr float ml_per_sec() const { return val_ * 1.0e6f; }
 
-private:
+ private:
   constexpr friend VolumetricFlow cubic_m_per_sec(float m3ps);
   constexpr friend VolumetricFlow ml_per_min(float ml_per_min);
   constexpr friend VolumetricFlow liters_per_sec(float lps);
@@ -272,18 +257,12 @@ private:
   using UnitsDetail::ArithScalar<VolumetricFlow, float>::ArithScalar;
 };
 
-constexpr VolumetricFlow cubic_m_per_sec(float m3ps) {
-  return VolumetricFlow(m3ps);
-}
+constexpr VolumetricFlow cubic_m_per_sec(float m3ps) { return VolumetricFlow(m3ps); }
 constexpr VolumetricFlow ml_per_min(float ml_per_min) {
   return VolumetricFlow(ml_per_min / (1000.0f * 1000.0f * 60.0f));
 }
-constexpr VolumetricFlow liters_per_sec(float lps) {
-  return VolumetricFlow(lps / (1000.0f));
-}
-constexpr VolumetricFlow ml_per_sec(float mlps) {
-  return VolumetricFlow(mlps / (1.0e6f));
-}
+constexpr VolumetricFlow liters_per_sec(float lps) { return VolumetricFlow(lps / (1000.0f)); }
+constexpr VolumetricFlow ml_per_sec(float mlps) { return VolumetricFlow(mlps / (1.0e6f)); }
 
 // Represents volume.
 //
@@ -299,11 +278,11 @@ constexpr VolumetricFlow ml_per_sec(float mlps) {
 // Multiplying a VolumetricFlow by a Duration (see below) gives you a Volume.
 // Dividing a Volume by a Duration gives you a VolumetricFlow.
 class Volume : public UnitsDetail::ArithScalar<Volume, float> {
-public:
+ public:
   [[nodiscard]] constexpr float cubic_m() const { return val_; }
   [[nodiscard]] constexpr float ml() const { return val_ * 1000.0f * 1000.0f; }
 
-private:
+ private:
   constexpr friend Volume cubic_m(float m3);
   constexpr friend Volume ml(float ml);
 
@@ -319,10 +298,10 @@ constexpr Volume ml(float ml) { return Volume(ml / (1000.0f * 1000.0f)); }
 //
 // Units: Volts
 class Voltage : public UnitsDetail::ArithScalar<Voltage, float> {
-public:
+ public:
   [[nodiscard]] constexpr float volts() const { return val_; }
 
-private:
+ private:
   constexpr friend Voltage volts(float v);
 
   using UnitsDetail::ArithScalar<Voltage, float>::ArithScalar;
@@ -373,14 +352,10 @@ class Time;
 // milliseconds(int64_t) factory) is worse, because converting an int64
 // milliseconds to float may lose useful precision.
 class Duration : public UnitsDetail::ArithScalar<Duration, int64_t> {
-public:
+ public:
   [[nodiscard]] constexpr int64_t microseconds() const { return val_; }
-  [[nodiscard]] constexpr float milliseconds() const {
-    return static_cast<float>(val_) / 1000;
-  }
-  [[nodiscard]] constexpr float seconds() const {
-    return milliseconds() / 1000;
-  }
+  [[nodiscard]] constexpr float milliseconds() const { return static_cast<float>(val_) / 1000; }
+  [[nodiscard]] constexpr float seconds() const { return milliseconds() / 1000; }
   [[nodiscard]] constexpr float minutes() const { return seconds() / 60; }
 
   constexpr friend Time operator+(const Time &t, const Duration &dt);
@@ -388,24 +363,24 @@ public:
   constexpr friend Time operator-(const Time &t, const Duration &dt);
   constexpr friend Duration operator-(const Time &a, const Time &b);
 
-private:
+ private:
   constexpr friend Duration microseconds(int64_t micros);
 
   using UnitsDetail::ArithScalar<Duration, int64_t>::ArithScalar;
 };
 
 constexpr Duration microseconds(int64_t micros) { return Duration(micros); }
-constexpr Duration milliseconds(int64_t millis) {
-  return microseconds(millis * 1000);
-}
+constexpr Duration milliseconds(int64_t millis) { return microseconds(millis * 1000); }
 
 // Add a dummy template to make these overloads have lower priority than the
 // int64_t version.  We need a `double` version otherwise passing a double
 // (even just a double constant, like "0.1") will prefer the int64_t version!
-template <int /*dummy*/ = 0> constexpr Duration milliseconds(float millis) {
+template <int /*dummy*/ = 0>
+constexpr Duration milliseconds(float millis) {
   return microseconds(static_cast<int64_t>(millis * 1000));
 }
-template <int /*dummy*/ = 0> constexpr Duration milliseconds(double millis) {
+template <int /*dummy*/ = 0>
+constexpr Duration milliseconds(double millis) {
   return microseconds(static_cast<int64_t>(millis * 1000));
 }
 
@@ -423,7 +398,7 @@ constexpr Duration minutes(float mins) { return seconds(mins * 60); }
 //
 // Native unit (implementation detail): uint64_t microseconds
 class Time : public UnitsDetail::Scalar<Time, uint64_t> {
-public:
+ public:
   [[nodiscard]] uint64_t microsSinceStartup() const { return val_; }
 
   constexpr friend Time operator+(const Time &t, const Duration &dt);
@@ -433,7 +408,7 @@ public:
   Time &operator+=(const Duration &dt) { return *this = *this + dt; }
   Time &operator-=(const Duration &dt) { return *this = *this - dt; }
 
-private:
+ private:
   constexpr friend Time microsSinceStartup(uint64_t micros);
 
   using UnitsDetail::Scalar<Time, uint64_t>::Scalar;
@@ -467,4 +442,4 @@ constexpr inline VolumetricFlow operator/(Volume a, Duration b) {
   return ml_per_min(a.ml() / b.minutes());
 }
 
-#endif // UNITS_H
+#endif  // UNITS_H

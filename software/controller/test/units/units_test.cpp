@@ -14,8 +14,10 @@ limitations under the License.
 */
 
 #include "units.h"
-#include "gtest/gtest.h"
+
 #include <type_traits>
+
+#include "gtest/gtest.h"
 
 template <typename T, typename NumTy>
 void checkRelationalOperators(T (*unit)(NumTy)) {
@@ -46,8 +48,7 @@ template <typename T, typename NumTy>
 void checkArithmeticOperators(T (*unit)(NumTy), NumTy (T::*get)() const) {
   // x / y is defined only for Ts backed by floats (in practice, everything
   // other than Duration).
-  constexpr bool is_fp_based =
-      std::is_base_of_v<UnitsDetail::ArithScalar<T, float>, T>;
+  constexpr bool is_fp_based = std::is_base_of_v<UnitsDetail::ArithScalar<T, float>, T>;
 
   // Make t const to check that these operators work with const operands.
   const T t = unit(2.1f);
@@ -73,7 +74,7 @@ void checkArithmeticOperators(T (*unit)(NumTy), NumTy (T::*get)() const) {
   if constexpr (is_fp_based) {
     u /= -0.5f;
     EXPECT_FLOAT_EQ((u.*get)(), 8.0f);
-    u *= -0.5f; // undo our change.
+    u *= -0.5f;  // undo our change.
     EXPECT_FLOAT_EQ((u.*get)(), -4.0f);
   }
 
@@ -92,7 +93,7 @@ void checkArithmeticOperators(T (*unit)(NumTy), NumTy (T::*get)() const) {
     v = (u /= 2);
     EXPECT_FLOAT_EQ((u.*get)(), -4.0f);
     EXPECT_FLOAT_EQ((v.*get)(), -4.0f);
-    v = (u *= 2); // undo our change.
+    v = (u *= 2);  // undo our change.
   }
 }
 
@@ -152,14 +153,10 @@ TEST(Units, VolumetricFlow) {
   EXPECT_FLOAT_EQ(liters_per_sec(1).ml_per_min(), 1 * (60.0f * 1000));
   EXPECT_FLOAT_EQ(liters_per_sec(1).ml_per_sec(), 1000.0f);
   EXPECT_FLOAT_EQ(liters_per_sec(1).cubic_m_per_sec(), 1 / (1000.0f));
-  EXPECT_FLOAT_EQ((cubic_m_per_sec(1) - cubic_m_per_sec(2)).cubic_m_per_sec(),
-                  -1);
+  EXPECT_FLOAT_EQ((cubic_m_per_sec(1) - cubic_m_per_sec(2)).cubic_m_per_sec(), -1);
   EXPECT_FLOAT_EQ((ml_per_min(1) + ml_per_min(10)).ml_per_min(), 11);
-  EXPECT_FLOAT_EQ(
-      (cubic_m_per_sec(1) - ml_per_min(60.0f * 1000 * 1000)).cubic_m_per_sec(),
-      0);
-  EXPECT_FLOAT_EQ(
-      (cubic_m_per_sec(1) - liters_per_sec(1000.0f)).cubic_m_per_sec(), 0);
+  EXPECT_FLOAT_EQ((cubic_m_per_sec(1) - ml_per_min(60.0f * 1000 * 1000)).cubic_m_per_sec(), 0);
+  EXPECT_FLOAT_EQ((cubic_m_per_sec(1) - liters_per_sec(1000.0f)).cubic_m_per_sec(), 0);
 
   checkRelationalOperators(cubic_m_per_sec);
   checkRelationalOperators(ml_per_min);
@@ -168,8 +165,7 @@ TEST(Units, VolumetricFlow) {
 
   EXPECT_FLOAT_EQ((liters_per_sec(4.0f) * 500.0f).cubic_m_per_sec(), 2.0f);
   EXPECT_FLOAT_EQ((1234.0f * liters_per_sec(2.5f)).cubic_m_per_sec(), 3.085f);
-  EXPECT_FLOAT_EQ((cubic_m_per_sec(6.283f) / 2000.0f).liters_per_sec(),
-                  3.1415f);
+  EXPECT_FLOAT_EQ((cubic_m_per_sec(6.283f) / 2000.0f).liters_per_sec(), 3.1415f);
 
   EXPECT_FLOAT_EQ((cubic_m(3.198f) / seconds(2.6f)).cubic_m_per_sec(), 1.23f);
 }

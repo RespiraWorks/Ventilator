@@ -106,7 +106,7 @@ inline constexpr Duration RiseTime = milliseconds(100);
 //    current state of the fsm.
 //
 class OffFsm {
-public:
+ public:
   OffFsm() = default;
   explicit OffFsm(Time now, const VentParams &) {}
   BlowerSystemState DesiredState(Time now, const BlowerFsmInputs &inputs) {
@@ -130,11 +130,11 @@ public:
 
 // "Breath finite state machine" for pressure control mode.
 class PressureControlFsm {
-public:
+ public:
   explicit PressureControlFsm(Time now, const VentParams &params);
   BlowerSystemState DesiredState(Time now, const BlowerFsmInputs &inputs);
 
-private:
+ private:
   const Pressure inspire_pressure_;
   const Pressure expire_pressure_;
   Time start_time_;
@@ -152,11 +152,11 @@ private:
 // This mode enforces a minimum respiratory rate in case the patient does not
 // initiate a breath quickly enough.
 class PressureAssistFsm {
-public:
+ public:
   explicit PressureAssistFsm(Time now, const VentParams &params);
   BlowerSystemState DesiredState(Time now, const BlowerFsmInputs &inputs);
 
-private:
+ private:
   bool PatientInspiring(Time now, const BlowerFsmInputs &inputs);
 
   const Pressure inspire_pressure_;
@@ -179,14 +179,13 @@ private:
 };
 
 class BlowerFsm {
-public:
+ public:
   // Gets the state that the the blower system should (ideally) deliver right
   // now.
-  BlowerSystemState DesiredState(Time now, const VentParams &params,
-                                 const BlowerFsmInputs &inputs);
+  BlowerSystemState DesiredState(Time now, const VentParams &params, const BlowerFsmInputs &inputs);
 
-private:
+ private:
   std::variant<OffFsm, PressureControlFsm, PressureAssistFsm> fsm_;
 };
 
-#endif // BLOWER_FSM_H
+#endif  // BLOWER_FSM_H

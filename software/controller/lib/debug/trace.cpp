@@ -27,8 +27,7 @@ void Trace::Start() {
 
 // Sample all trace variables every "period" calls
 void Trace::MaybeSample() {
-  if (!running_)
-    return;
+  if (!running_) return;
 
   if (cycles_count_ == 0) {
     if (!SampleAllVars()) {
@@ -38,8 +37,7 @@ void Trace::MaybeSample() {
   }
 
   ++cycles_count_;
-  if (cycles_count_ >= period_)
-    cycles_count_ = 0;
+  if (cycles_count_ >= period_) cycles_count_ = 0;
 }
 
 bool Trace::SetTracedVarId(uint8_t index, uint16_t id) {
@@ -60,9 +58,8 @@ int16_t Trace::GetTracedVarId(uint8_t index) {
   return traced_vars_[index] ? traced_vars_[index]->GetId() : -1;
 }
 
-[[nodiscard]] bool
-Trace::GetNextTraceRecord(std::array<uint32_t, MaxTraceVars> *record,
-                          size_t *count) {
+[[nodiscard]] bool Trace::GetNextTraceRecord(std::array<uint32_t, MaxTraceVars> *record,
+                                             size_t *count) {
   // Grab one sample with interrupts disabled.
   // There's a chance the trace is still running, so we could get interrupted
   // by the high priority thread that adds to the buffer.
@@ -70,11 +67,9 @@ Trace::GetNextTraceRecord(std::array<uint32_t, MaxTraceVars> *record,
   *count = 0;
   BlockInterrupts block;
   for (auto *var : traced_vars_) {
-    if (!var)
-      continue;
+    if (!var) continue;
     std::optional<uint32_t> dat = trace_buffer_.Get();
-    if (!dat)
-      return false;
+    if (!dat) return false;
     (*record)[(*count)++] = *dat;
   }
   return true;
@@ -88,12 +83,11 @@ bool Trace::SampleAllVars() {
   }
   // Sample each enabled variable and store the result to the buffer.
   for (auto *var : traced_vars_) {
-    if (!var)
-      continue;
+    if (!var) continue;
     // Can't fail as we've already checked for sufficient space above.
     (void)trace_buffer_.Put(var->GetValue());
   }
   return true;
 }
 
-} // namespace Debug
+}  // namespace Debug

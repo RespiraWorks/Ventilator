@@ -57,8 +57,7 @@ static DebugUInt32 dbg_write_data("write_data", VarAccess::ReadOnly, 0, "",
                                   "address of write data");
 static DebugUInt32 dbg_addr_after("eeprom_after", VarAccess::ReadOnly, 0, "",
                                   "address of eeprom contents after write");
-static DebugUInt32 dbg_test_result("result", VarAccess::ReadOnly, 0, "",
-                                   "result of the test");
+static DebugUInt32 dbg_test_result("result", VarAccess::ReadOnly, 0, "", "result of the test");
 
 // test parameters
 static constexpr uint16_t Address{TEST_PARAM_1};
@@ -79,12 +78,11 @@ static Debug::Command::VarHandler var_command;
 static Debug::Command::TraceHandler trace_command(&trace);
 static Debug::Command::EepromHandler eeprom_command(&eeprom);
 
-static Debug::Interface
-    debug(&trace, 12, Debug::Command::Code::Mode, &mode_command,
-          Debug::Command::Code::Peek, &peek_command, Debug::Command::Code::Poke,
-          &poke_command, Debug::Command::Code::Variable, &var_command,
-          Debug::Command::Code::Trace, &trace_command,
-          Debug::Command::Code::EepromAccess, &eeprom_command);
+static Debug::Interface debug(&trace, 12, Debug::Command::Code::Mode, &mode_command,
+                              Debug::Command::Code::Peek, &peek_command, Debug::Command::Code::Poke,
+                              &poke_command, Debug::Command::Code::Variable, &var_command,
+                              Debug::Command::Code::Trace, &trace_command,
+                              Debug::Command::Code::EepromAccess, &eeprom_command);
 
 void RunTest() {
   hal.Init();
@@ -133,7 +131,6 @@ void RunTest() {
   // loop here to allow the above write to be processed, the buzzer to be
   // stopped after some time, and to process debug interface commands.
   while (true) {
-
     // stop the buzzer after 1 second if the test is a success
     if (!failed && hal.Now() > microsSinceStartup(1000000)) {
       hal.BuzzerOff();

@@ -15,13 +15,14 @@ limitations under the License.
 
 #include "blower_fsm.h"
 
-#include "blower_fsm_test_data.h"
-#include "controller.h"
-#include "hal.h"
-#include "gmock/gmock-matchers.h"
-#include "gtest/gtest.h"
 #include <optional>
 #include <string>
+
+#include "blower_fsm_test_data.h"
+#include "controller.h"
+#include "gmock/gmock-matchers.h"
+#include "gtest/gtest.h"
+#include "hal.h"
 
 namespace {
 
@@ -33,10 +34,8 @@ constexpr BlowerFsmInputs inputs_zero = {
 constexpr int64_t rise_time_us = RiseTime.microseconds();
 static_assert(rise_time_us % 1000 == 0,
               "blower fsm tests assume rise time is a whole number of ms.");
-static_assert(rise_time_us % 5 == 0,
-              "blower fsm tests assume we can divide rise time ms by 5.");
-static_assert(rise_time_us % 2 == 0,
-              "blower fsm tests assume we can divide rise time ms by 2.");
+static_assert(rise_time_us % 5 == 0, "blower fsm tests assume we can divide rise time ms by 5.");
+static_assert(rise_time_us % 2 == 0, "blower fsm tests assume we can divide rise time ms by 2.");
 
 TEST(BlowerFsmTest, InitiallyOff) {
   BlowerFsm fsm;
@@ -74,7 +73,7 @@ TEST(BlowerFsmTest, DesiredPipPeep) {
     BlowerFsm fsm;
     VentParams p = VentParams_init_zero;
     p.mode = mode;
-    p.breaths_per_min = 20; // 3s/breath
+    p.breaths_per_min = 20;  // 3s/breath
     p.inspiratory_expiratory_ratio = 2;
     p.pip_cm_h2o = 20;
     p.peep_cm_h2o = 10;
@@ -136,19 +135,15 @@ void testSequence(const std::vector<BlowerFsmTest> &seq) {
       hal.Delay(Controller::GetLoopPeriod());
       (void)fsm.DesiredState(hal.Now(), last_params, last_inputs);
     }
-    EXPECT_EQ(blower_fsm_test.time.microsSinceStartup(),
-              hal.Now().microsSinceStartup());
+    EXPECT_EQ(blower_fsm_test.time.microsSinceStartup(), hal.Now().microsSinceStartup());
 
-    BlowerSystemState state = fsm.DesiredState(
-        hal.Now(), blower_fsm_test.params, blower_fsm_test.inputs);
+    BlowerSystemState state =
+        fsm.DesiredState(hal.Now(), blower_fsm_test.params, blower_fsm_test.inputs);
     EXPECT_EQ(state.pressure_setpoint.has_value(),
               blower_fsm_test.expected_state.pressure_setpoint.has_value());
-    EXPECT_FLOAT_EQ(
-        state.pressure_setpoint.value_or(cmH2O(0)).cmH2O(),
-        blower_fsm_test.expected_state.pressure_setpoint.value_or(cmH2O(0))
-            .cmH2O());
-    EXPECT_EQ(state.flow_direction,
-              blower_fsm_test.expected_state.flow_direction);
+    EXPECT_FLOAT_EQ(state.pressure_setpoint.value_or(cmH2O(0)).cmH2O(),
+                    blower_fsm_test.expected_state.pressure_setpoint.value_or(cmH2O(0)).cmH2O());
+    EXPECT_EQ(state.flow_direction, blower_fsm_test.expected_state.flow_direction);
 
     last_params = blower_fsm_test.params;
     last_inputs = blower_fsm_test.inputs;
@@ -252,12 +247,11 @@ struct FlowTraceResults {
 // At every time named in setpoint_checks, check that the setpoint pressure is
 // as specified.
 template <typename FsmTy>
-FlowTraceResults
-RunFlowTrace(const VolumetricFlow *trace, size_t n, const VentParams &params,
-             Duration trace_interval,
-             std::vector<std::tuple</*time ms*/ uint64_t,
-                                    /*setpoint pressure, cmH2O*/ float>>
-                 setpoint_checks) {
+FlowTraceResults RunFlowTrace(const VolumetricFlow *trace, size_t n, const VentParams &params,
+                              Duration trace_interval,
+                              std::vector<std::tuple</*time ms*/ uint64_t,
+                                                     /*setpoint pressure, cmH2O*/ float>>
+                                  setpoint_checks) {
   FsmTy fsm(hal.Now(), params);
 
   Time start = hal.Now();
@@ -304,8 +298,7 @@ RunFlowTrace(const VolumetricFlow *trace, size_t n, const VentParams &params,
     hal.Delay(trace_interval);
   }
 
-  EXPECT_TRUE(check_it == setpoint_checks.end())
-      << "didn't see every expected pressure checkpoint";
+  EXPECT_TRUE(check_it == setpoint_checks.end()) << "didn't see every expected pressure checkpoint";
 
   return results;
 }
@@ -320,13 +313,12 @@ TEST(BlowerFsmTest, PressureAssistFlowTrace1) {
   p.pip_cm_h2o = 20;
 
   FlowTraceResults results = RunFlowTrace<PressureAssistFsm>(
-      FLOW_TRACE_INSPIRATORY_EFFORT, std::size(FLOW_TRACE_INSPIRATORY_EFFORT),
-      p, milliseconds(10),
+      FLOW_TRACE_INSPIRATORY_EFFORT, std::size(FLOW_TRACE_INSPIRATORY_EFFORT), p, milliseconds(10),
       {
-          {0, 10},    // start at PEEP
-          {500, 20},  // rise to PIP
-          {1000, 20}, // end inspire at PIP
-          {1100, 10}, // fall to PEEP
+          {0, 10},     // start at PEEP
+          {500, 20},   // rise to PIP
+          {1000, 20},  // end inspire at PIP
+          {1100, 10},  // fall to PEEP
           {1500, 10},
       });
 
@@ -351,13 +343,13 @@ TEST(BlowerFsmTest, PressureAssistFlowTrace2) {
   p.pip_cm_h2o = 20;
 
   FlowTraceResults results = RunFlowTrace<PressureAssistFsm>(
-      FLOW_TRACE_NO_INSPIRATORY_EFFORT,
-      std::size(FLOW_TRACE_NO_INSPIRATORY_EFFORT), p, milliseconds(10),
+      FLOW_TRACE_NO_INSPIRATORY_EFFORT, std::size(FLOW_TRACE_NO_INSPIRATORY_EFFORT), p,
+      milliseconds(10),
       {
-          {0, 10},    // start at PEEP
-          {500, 20},  // rise to PIP
-          {1000, 20}, // end inspire at PIP
-          {1100, 10}, // fall to PEEP
+          {0, 10},     // start at PEEP
+          {500, 20},   // rise to PIP
+          {1000, 20},  // end inspire at PIP
+          {1100, 10},  // fall to PEEP
           {1500, 10},
           {5000, 10},
       });
@@ -371,4 +363,4 @@ TEST(BlowerFsmTest, PressureAssistFlowTrace2) {
   EXPECT_GE(results.finish_time->milliseconds(), 5000.f);
 }
 
-} // anonymous namespace
+}  // anonymous namespace

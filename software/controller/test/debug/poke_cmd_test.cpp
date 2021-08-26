@@ -13,9 +13,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+#include <array>
+
 #include "commands.h"
 #include "gtest/gtest.h"
-#include <array>
 
 namespace Debug::Command {
 
@@ -34,8 +35,7 @@ TEST(PokeHandler, valid_poke) {
     }
 
     // write this data at all possible positions using poke command
-    for (size_t byte_number = 0; byte_number < kMemorySize + 1 - poke_length;
-         ++byte_number) {
+    for (size_t byte_number = 0; byte_number < kMemorySize + 1 - poke_length; ++byte_number) {
       size_t address = reinterpret_cast<size_t>(&memory[byte_number]);
       // feed address MSW to the handler, as we only pass 32bits addresses
       // through the command protocol
@@ -46,8 +46,7 @@ TEST(PokeHandler, valid_poke) {
       std::array<uint8_t, 1> response;
       bool processed{false};
       Context poke_context = {.request = poke_command.data(),
-                              .request_length =
-                                  static_cast<uint32_t>(poke_length + 4),
+                              .request_length = static_cast<uint32_t>(poke_length + 4),
                               .response = response.data(),
                               .max_response_length = std::size(response),
                               .response_length = 0,
@@ -75,4 +74,4 @@ TEST(PokeHandler, errors) {
   EXPECT_EQ(ErrorCode::MissingData, PokeHandler().Process(&poke_context));
   EXPECT_FALSE(processed);
 }
-} // namespace Debug::Command
+}  // namespace Debug::Command

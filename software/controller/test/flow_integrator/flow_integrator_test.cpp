@@ -14,12 +14,12 @@ limitations under the License.
 */
 
 #include "flow_integrator.h"
+
 #include "gtest/gtest.h"
 
 static const Volume COMPARISON_TOLERANCE_VOLUME = ml(1);
 
-#define EXPECT_VOLUME_NEAR(a, b)                                               \
-  EXPECT_NEAR((a).ml(), (b).ml(), COMPARISON_TOLERANCE_VOLUME.ml())
+#define EXPECT_VOLUME_NEAR(a, b) EXPECT_NEAR((a).ml(), (b).ml(), COMPARISON_TOLERANCE_VOLUME.ml())
 
 static constexpr Time base = microsSinceStartup(10'000'000);
 static constexpr Duration sample_period = milliseconds(10);
@@ -68,8 +68,7 @@ TEST(FlowIntegrator, FlowIntegrator) {
 
     // remove 1l/s flow over 5 ms only when i is a multiple of 5
     int j = i / 5 * 5;
-    EXPECT_VOLUME_NEAR(tidal_volume.GetVolume(),
-                       ml(25.0f - static_cast<float>(j)));
+    EXPECT_VOLUME_NEAR(tidal_volume.GetVolume(), ml(25.0f - static_cast<float>(j)));
   }
 }
 

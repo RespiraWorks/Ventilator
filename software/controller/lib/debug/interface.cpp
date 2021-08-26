@@ -14,6 +14,7 @@ limitations under the License.
 */
 
 #include "interface.h"
+
 #include "binary_utils.h"
 #include "hal.h"
 
@@ -32,7 +33,7 @@ Interface::Interface(Trace *trace, int count, ...) {
     Command::Handler *handler = va_arg(valist, Command::Handler *);
     registry_[static_cast<uint8_t>(code)] = handler;
   }
-  va_end(valist); // clean memory reserved for valist
+  va_end(valist);  // clean memory reserved for valist
 }
 
 // This function is called from the main low priority background loop.
@@ -41,36 +42,36 @@ Interface::Interface(Trace *trace, int count, ...) {
 // and sends the response back.
 bool Interface::Poll() {
   switch (state_) {
-  // Waiting for a new command to be received.
-  // I continue to process bytes until there are no more available,
-  // or a full command has been received.  Either way, the
-  // ReadNextByte function will return false when its time
-  // to move on.
-  case State::AwaitingCommand:
-    while (ReadNextByte()) {
-    }
-    return false;
+    // Waiting for a new command to be received.
+    // I continue to process bytes until there are no more available,
+    // or a full command has been received.  Either way, the
+    // ReadNextByte function will return false when its time
+    // to move on.
+    case State::AwaitingCommand:
+      while (ReadNextByte()) {
+      }
+      return false;
 
-  // Process the current command
-  case State::Processing:
-    ProcessCommand();
-    request_size_ = 0;
-    return false;
+    // Process the current command
+    case State::Processing:
+      ProcessCommand();
+      request_size_ = 0;
+      return false;
 
-  // Wait for command to be processed
-  case State::AwaitingResponse:
-    if (command_processed_) {
-      SendResponse(ErrorCode::None, response_length_);
-    } else if (hal.Now() > command_start_time_ + milliseconds(100)) {
-      SendError(ErrorCode::Timeout);
-    }
-    return false;
+    // Wait for command to be processed
+    case State::AwaitingResponse:
+      if (command_processed_) {
+        SendResponse(ErrorCode::None, response_length_);
+      } else if (hal.Now() > command_start_time_ + milliseconds(100)) {
+        SendError(ErrorCode::Timeout);
+      }
+      return false;
 
-  // Send my response
-  case State::Responding:
-    while (SendNextByte()) {
-    }
-    return true;
+    // Send my response
+    case State::Responding:
+      while (SendNextByte()) {
+      }
+      return true;
   }
   return false;
 }
@@ -81,8 +82,7 @@ bool Interface::Poll() {
 bool Interface::ReadNextByte() {
   // Get the next byte from the debug serial port if there is one.
   char next_char;
-  if (hal.DebugRead(&next_char, 1) < 1)
-    return false;
+  if (hal.DebugRead(&next_char, 1) < 1) return false;
 
   uint8_t byte = static_cast<uint8_t>(next_char);
 
@@ -91,8 +91,7 @@ bool Interface::ReadNextByte() {
   if (escape_next_byte_) {
     escape_next_byte_ = false;
 
-    if (request_size_ < std::size(request_))
-      request_[request_size_++] = byte;
+    if (request_size_ < std::size(request_)) request_[request_size_++] = byte;
     return true;
   }
 
@@ -110,8 +109,7 @@ bool Interface::ReadNextByte() {
   }
 
   // For other characters, just save them if there's space in the buffer
-  if (request_size_ < std::size(request_))
-    request_[request_size_++] = byte;
+  if (request_size_ < std::size(request_)) request_[request_size_++] = byte;
   return true;
 }
 
@@ -119,11 +117,9 @@ bool Interface::ReadNextByte() {
 // Returns false if no more data will fit in the output buffer,
 // or if the entire response has been sent.
 bool Interface::SendNextByte() {
-
   // To simplify things below, I require at least 3 bytes
   // in the output buffer to continue
-  if (hal.DebugBytesAvailableForWrite() < 3)
-    return false;
+  if (hal.DebugBytesAvailableForWrite() < 3) return false;
 
   // See what the next character to send is.
   char next_char = response_[response_bytes_sent_++];
@@ -140,8 +136,7 @@ bool Interface::SendNextByte() {
   }
 
   // If there's more response to send, return true
-  if (response_bytes_sent_ < response_size_)
-    return true;
+  if (response_bytes_sent_ < response_size_) return true;
 
   // If that was the last byte in my response, send the
   // termination character and start waiting on the next
@@ -235,8 +230,7 @@ uint16_t Interface::ComputeCRC(const uint8_t *buffer, size_t length) {
       for (uint8_t bit_number = 0; bit_number < 8; bit_number++) {
         bool lsb = (crc & 1) == 1;
         crc = static_cast<uint16_t>(crc >> 1);
-        if (lsb)
-          crc ^= CRC16POLY;
+        if (lsb) crc ^= CRC16POLY;
       }
 
       CrcTable[byte] = crc;
@@ -253,4 +247,4 @@ uint16_t Interface::ComputeCRC(const uint8_t *buffer, size_t length) {
   return crc;
 }
 
-} // namespace Debug
+}  // namespace Debug

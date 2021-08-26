@@ -14,6 +14,7 @@ limitations under the License.
 */
 
 #include "stepper.h"
+
 #include "gtest/gtest.h"
 
 // Not really tests, just silencing code coverage warning for native build

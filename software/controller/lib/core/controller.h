@@ -15,6 +15,9 @@ limitations under the License.
 #ifndef CONTROLLER_H
 #define CONTROLLER_H
 
+#include <optional>
+#include <utility>
+
 #include "actuators.h"
 #include "blower_fsm.h"
 #include "flow_integrator.h"
@@ -23,8 +26,6 @@ limitations under the License.
 #include "sensors.h"
 #include "units.h"
 #include "vars.h"
-#include <optional>
-#include <utility>
 
 // TODO: This name is too close to the ControllerStatus proto.
 struct ControllerState {
@@ -53,16 +54,15 @@ struct ControllerState {
 // This class is here to allow integration of our controller into Modelica
 // software and run closed-loop tests in a simulated physical environment
 class Controller {
-public:
+ public:
   static Duration GetLoopPeriod();
 
   Controller();
 
-  std::pair<ActuatorsState, ControllerState>
-  Run(Time now, const VentParams &params,
-      const SensorReadings &sensor_readings);
+  std::pair<ActuatorsState, ControllerState> Run(Time now, const VentParams &params,
+                                                 const SensorReadings &sensor_readings);
 
-private:
+ private:
   uint64_t breath_id_{0};
   BlowerFsm fsm_;
   PID blower_valve_pid_;
@@ -84,4 +84,4 @@ private:
   bool ventilator_was_on_{false};
 };
 
-#endif // CONTROLLER_H
+#endif  // CONTROLLER_H

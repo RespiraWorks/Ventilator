@@ -16,10 +16,12 @@ limitations under the License.
 #ifndef TRACE_H
 #define TRACE_H
 
+#include <stdint.h>
+
+#include <optional>
+
 #include "circular_buffer.h"
 #include "vars.h"
-#include <optional>
-#include <stdint.h>
 
 namespace Debug {
 
@@ -37,7 +39,7 @@ static constexpr uint32_t MaxTraceVars{4};
  * could be done using simple printouts over a serial port.
  */
 class Trace {
-public:
+ public:
   // Gets/sets the trace flags. At the moment, flags can only be 0 (disabled) or
   // 1 (enabled).
   bool GetStatus() const { return running_; }
@@ -56,17 +58,15 @@ public:
     trace_buffer_.Flush();
   }
 
-  size_t GetNumSamples() {
-    return trace_buffer_.FullCount() / GetNumActiveVars();
-  }
+  size_t GetNumSamples() { return trace_buffer_.FullCount() / GetNumActiveVars(); }
 
   uint32_t GetNumActiveVars() {
-    return static_cast<uint32_t>(
-        std::count_if(traced_vars_.begin(), traced_vars_.end(),
-                      [](const DebugVarBase *var) { return (var); }));
+    return static_cast<uint32_t>(std::count_if(traced_vars_.begin(), traced_vars_.end(),
+                                               [](const DebugVarBase *var) { return (var); }));
   }
 
-  template <int index> void SetTracedVarId(int32_t id) {
+  template <int index>
+  void SetTracedVarId(int32_t id) {
     static_assert(index >= 0 && index < MaxTraceVars);
     traced_vars_[index] = DebugVar::FindVar(static_cast<uint16_t>(id));
     // The layout of the trace buffer is just a bunch of uint32_t's one per
@@ -76,7 +76,8 @@ public:
     trace_buffer_.Flush();
   }
 
-  template <int index> int32_t GetTracedVarId() {
+  template <int index>
+  int32_t GetTracedVarId() {
     static_assert(index >= 0 && index < MaxTraceVars);
     return traced_vars_[index] ? traced_vars_[index]->GetId() : -1;
   }
@@ -89,10 +90,9 @@ public:
   // variables - this should never happen.
   // Sets *count to the number of elements actually set in *record.
   // This will equal GetNumActiveVars() but is easier to use for testing.
-  [[nodiscard]] bool
-  GetNextTraceRecord(std::array<uint32_t, MaxTraceVars> *record, size_t *count);
+  [[nodiscard]] bool GetNextTraceRecord(std::array<uint32_t, MaxTraceVars> *record, size_t *count);
 
-private:
+ private:
   // This function is called at the end of the high priority loop function.
   // It captures any enabled data variables to the trace buffer.
   bool SampleAllVars();
@@ -113,6 +113,6 @@ private:
   CircularBuffer<uint32_t, 0x4000> trace_buffer_;
 };
 
-} // namespace Debug
+}  // namespace Debug
 
-#endif // TRACE_H
+#endif  // TRACE_H

@@ -46,7 +46,7 @@ enum class PinchValveHomeState {
 // around to get the correct direction of motion
 
 class PinchValve {
-public:
+ public:
   // Create a new pinch valve using the specified
   // stepper motor.
   explicit PinchValve(int motor_index);
@@ -74,7 +74,7 @@ public:
   // Return true if the pinch valve is ready for action
   bool IsReady() { return home_state_ == PinchValveHomeState::Homed; }
 
-private:
+ private:
   Time move_start_time_;
 
   int motor_index_;

@@ -13,10 +13,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include "circular_buffer.h"
-#include "gtest/gtest.h"
 #include <cstdlib>
 #include <optional>
+
+#include "circular_buffer.h"
+#include "gtest/gtest.h"
 
 // Test the buffer counts and rollover
 TEST(CircularBuffer, Counts) {
@@ -64,8 +65,7 @@ TEST(CircularBuffer, DataIO) {
   CircularBuffer<uint8_t, BufferSize> buff;
 
   uint8_t TestSet[BufferSize + 20];
-  for (uint32_t i = 0; i < sizeof(TestSet); i++)
-    TestSet[i] = static_cast<uint8_t>(rand());
+  for (uint32_t i = 0; i < sizeof(TestSet); i++) TestSet[i] = static_cast<uint8_t>(rand());
 
   // Add data to the buffer until failure - multiple failures should not affect
   // our test results: the buffer's content stays unchanged during failure to
@@ -142,8 +142,7 @@ TEST(CircularBuffer, SmallBufferFullTest) {
     // with a different tail location: mod(tail - 1, BufferSize).
     for (int j = 1; j < BufferSize; j++) {
       std::optional<uint8_t> ch = buff.Get();
-      ASSERT_EQ(*ch, static_cast<uint8_t>(
-                         elem - static_cast<uint8_t>(BufferSize + 1 - j)));
+      ASSERT_EQ(*ch, static_cast<uint8_t>(elem - static_cast<uint8_t>(BufferSize + 1 - j)));
       ASSERT_EQ(buff.FullCount(), BufferSize - j);
       ASSERT_EQ(buff.FreeCount(), j);
     }

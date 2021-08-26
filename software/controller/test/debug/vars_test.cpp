@@ -14,9 +14,12 @@ limitations under the License.
 */
 
 #include "vars.h"
-#include "gtest/gtest.h"
-#include <limits>
+
 #include <stdint.h>
+
+#include <limits>
+
+#include "gtest/gtest.h"
 
 TEST(DebugVar, DebugVarInt32) {
   int32_t value = 5;

@@ -48,4 +48,4 @@ void ActuatorsExecute(const ActuatorsState &desired_state);
 // The system should be kept in a safe state until this returns true.
 bool AreActuatorsReady();
 
-#endif // ACTUATORS_H
+#endif  // ACTUATORS_H

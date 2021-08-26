@@ -32,7 +32,7 @@ namespace Debug::Command {
 // Once we start doing things like updating firmware (not through a debugger),
 // we will need a separate boot loader image to ensure graceful recovery.
 class ModeHandler : public Handler {
-public:
+ public:
   ModeHandler() = default;
   ErrorCode Process(Context *context) override {
     context->response_length = 1;
@@ -48,11 +48,11 @@ public:
 // bits address, which is then appended to the command-provided address of
 // either peek or poke command.
 class MemoryHandler : public Handler {
-public:
+ public:
   MemoryHandler() = default;
   void SetAddressMSW(size_t address) { address_msw_ = address; }
 
-protected:
+ protected:
   size_t address_msw_{0};
 };
 
@@ -62,7 +62,7 @@ protected:
 // The data passed to the command consists of a 32-bit starting address and
 // a 16-bit byte count.
 class PeekHandler : public MemoryHandler {
-public:
+ public:
   PeekHandler() = default;
   ErrorCode Process(Context *context) override;
 };
@@ -72,7 +72,7 @@ public:
 // or more data bytes to be written to consecutive addresses starting at the
 // given address
 class PokeHandler : public MemoryHandler {
-public:
+ public:
   PokeHandler() = default;
   ErrorCode Process(Context *context) override;
 };
@@ -95,22 +95,22 @@ public:
 //    buffer
 
 class TraceHandler : public Handler {
-public:
+ public:
   explicit TraceHandler(Trace *trace) : trace_(trace){};
   ErrorCode Process(Context *context) override;
 
   enum class Subcommand : uint8_t {
-    Flush = 0x00,    // disable and flush the trace buffer
-    Download = 0x01, // download data from the trace buffer
-    Start = 0x02,    // start tracing data
-    GetVarId = 0x03, // get traced variable id
-    SetVarId = 0x04, // set traced variable id
+    Flush = 0x00,     // disable and flush the trace buffer
+    Download = 0x01,  // download data from the trace buffer
+    Start = 0x02,     // start tracing data
+    GetVarId = 0x03,  // get traced variable id
+    SetVarId = 0x04,  // set traced variable id
     GetPeriod = 0x05,
     SetPeriod = 0x06,
-    CountSamples = 0x07, // get number of samples in the trace buffer
+    CountSamples = 0x07,  // get number of samples in the trace buffer
   };
 
-private:
+ private:
   ErrorCode ReadTraceBuffer(Context *context);
   ErrorCode SetTraceVar(Context *context);
   ErrorCode GetTraceVar(Context *context);
@@ -140,18 +140,18 @@ private:
 //  GetCount - Used to know how many debug variables are currently active
 //
 class VarHandler : public Handler {
-public:
+ public:
   VarHandler() = default;
   ErrorCode Process(Context *context) override;
 
   enum class Subcommand : uint8_t {
-    GetInfo = 0x00,  // get variable info (name, type, help string)
-    Get = 0x01,      // get variable value
-    Set = 0x02,      // set variable value
-    GetCount = 0x03, // get count of active vars
+    GetInfo = 0x00,   // get variable info (name, type, help string)
+    Get = 0x01,       // get variable value
+    Set = 0x02,       // set variable value
+    GetCount = 0x03,  // get count of active vars
   };
 
-private:
+ private:
   // Return info about one of the variables. The 16-bit variable ID is passed
   // in.  These IDs are automatically assigned as variables are registered in
   // the system starting with 0.
@@ -178,7 +178,7 @@ private:
 //  Write, followed by a 16 bits address and some data bytes :
 //          Used to write given data at given address
 class EepromHandler : public Handler {
-public:
+ public:
   explicit EepromHandler(I2Ceeprom *eeprom) : eeprom_(eeprom){};
   ErrorCode Process(Context *context) override;
 
@@ -187,7 +187,7 @@ public:
     Write = 0x01,
   };
 
-private:
+ private:
   ErrorCode Read(uint16_t address, Context *context);
   ErrorCode Write(uint16_t address, Context *context);
 
@@ -195,6 +195,6 @@ private:
   I2Ceeprom *eeprom_;
 };
 
-} // namespace Debug::Command
+}  // namespace Debug::Command
 
-#endif // COMMAND_H
+#endif  // COMMAND_H

@@ -26,12 +26,10 @@ class FnVar : public Base {
  public:
   FnVar(Type type, const char *name, Access access, const char *units, GetFn get_fn, SetFn set_fn,
         const char *help, const char *fmt = "")
-      : Base(type, name, access, units, help, fmt), get_fn_(get_fn), set_fn_(set_fn) {
-    Registry::singleton().RegisterVar(this);
-  }
+      : Base(type, name, access, units, help, fmt), get_fn_(get_fn), set_fn_(set_fn) {}
 
-  uint32_t GetValue() override { return get_fn_(); }
-  void SetValue(uint32_t value) override { set_fn_(value); }
+  uint32_t get_value() override { return get_fn_(); }
+  void set_value(uint32_t value) override { set_fn_(value); }
 
  private:
   GetFn get_fn_;
@@ -57,23 +55,21 @@ class Primitive32 : public Base {
       : Primitive32(Type::Float, name, access, data, units, help, fmt) {}
 
   // Gets the current value of the variable as an uint32_t.
-  uint32_t GetValue() override {
+  uint32_t get_value() override {
     uint32_t res;
     std::memcpy(&res, address_, 4);
     return res;
   }
 
   // Sets the current value of the variable as an uint32_t.
-  void SetValue(uint32_t value) override { std::memcpy(address_, &value, 4); }
+  void set_value(uint32_t value) override { std::memcpy(address_, &value, 4); }
 
  private:
   void *address_;
 
   Primitive32(Type type, const char *name, Access access, void *data, const char *units,
               const char *help, const char *fmt = "")
-      : Base(type, name, access, units, help, fmt), address_(data) {
-    Registry::singleton().RegisterVar(this);
-  }
+      : Base(type, name, access, units, help, fmt), address_(data) {}
 };
 
 class Int32 : public Primitive32 {
@@ -82,8 +78,8 @@ class Int32 : public Primitive32 {
                  const char *help = "", const char *fmt = "%d")
       : Primitive32(name, access, &value_, units, help, fmt), value_(init) {}
 
-  void Set(int32_t v) { value_ = v; }
-  int32_t Get() const { return value_; }
+  void set(int32_t v) { value_ = v; }
+  int32_t get() const { return value_; }
 
  private:
   int32_t value_;
@@ -95,8 +91,8 @@ class UInt32 : public Primitive32 {
                   const char *help = "", const char *fmt = "%u")
       : Primitive32(name, access, &value_, units, help, fmt), value_(init) {}
 
-  void Set(uint32_t v) { value_ = v; }
-  uint32_t Get() const { return value_; }
+  void set(uint32_t v) { value_ = v; }
+  uint32_t get() const { return value_; }
 
  private:
   uint32_t value_;
@@ -108,8 +104,8 @@ class Float : public Primitive32 {
                  const char *help = "", const char *fmt = "%.3f")
       : Primitive32(name, access, &value_, units, help, fmt), value_(init) {}
 
-  void Set(float v) { value_ = v; }
-  float Get() const { return value_; }
+  void set(float v) { value_ = v; }
+  float get() const { return value_; }
 
  private:
   float value_;

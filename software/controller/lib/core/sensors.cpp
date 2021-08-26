@@ -180,13 +180,13 @@ SensorReadings Sensors::GetReadings() const {
   VolumetricFlow uncorrected_flow = inflow - outflow;
 
   // Set debug variables.
-  dbg_dp_inhale.Set(inflow_delta.cmH2O());
-  dbg_dp_exhale.Set(outflow_delta.cmH2O());
-  dbg_pressure.Set(patient_pressure.cmH2O());
-  dbg_fio2.Set(fio2);
-  dbg_flow_inhale.Set(inflow.ml_per_sec());
-  dbg_flow_exhale.Set(outflow.ml_per_sec());
-  dbg_flow_uncorrected.Set(uncorrected_flow.ml_per_sec());
+  dbg_dp_inhale.set(inflow_delta.cmH2O());
+  dbg_dp_exhale.set(outflow_delta.cmH2O());
+  dbg_pressure.set(patient_pressure.cmH2O());
+  dbg_fio2.set(fio2);
+  dbg_flow_inhale.set(inflow.ml_per_sec());
+  dbg_flow_exhale.set(outflow.ml_per_sec());
+  dbg_flow_uncorrected.set(uncorrected_flow.ml_per_sec());
 
   return {
       .patient_pressure = patient_pressure,

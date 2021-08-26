@@ -47,7 +47,7 @@ TEST(VarHandler, GetVarInfo) {
   for (size_t i = 0; i < strlen(unit); ++i) expected.push_back(unit[i]);
 
   uint8_t id[2];
-  u16_to_u8(var.GetId(), id);
+  u16_to_u8(var.id(), id);
   std::array req = {
       static_cast<uint8_t>(VarHandler::Subcommand::GetInfo), id[0],
       id[1],  // Var id
@@ -75,7 +75,7 @@ TEST(VarHandler, GetVar) {
 
   // Test that a GET command obtains the variable's value.
   uint8_t id[2];
-  u16_to_u8(var.GetId(), id);
+  u16_to_u8(var.id(), id);
   std::array req = {
       static_cast<uint8_t>(VarHandler::Subcommand::Get), id[0],
       id[1],  // Var id
@@ -109,7 +109,7 @@ TEST(VarHandler, SetVar) {
 
   // Test that a SET command changes the variable's value.
   uint8_t id[2];
-  u16_to_u8(var.GetId(), id);
+  u16_to_u8(var.id(), id);
   std::array req = {
       static_cast<uint8_t>(VarHandler::Subcommand::Set),
       id[0],
@@ -156,7 +156,7 @@ TEST(VarHandler, GetVarCount) {
   EXPECT_EQ(4, context.response_length);
 
   std::array<uint8_t, 4> expected_result;
-  u32_to_u8(Debug::Variable::Registry::singleton().GetVarCount(), expected_result.data());
+  u32_to_u8(Debug::Variable::Registry::singleton().count(), expected_result.data());
   EXPECT_EQ(response, expected_result);
 }
 
@@ -164,11 +164,11 @@ TEST(VarHandler, Errors) {
   uint32_t value = 0xDEADBEEF;
   Debug::Variable::UInt32 var("name", Debug::Variable::Access::ReadWrite, value, "units", "help");
   uint8_t id[2];
-  u16_to_u8(var.GetId(), id);
+  u16_to_u8(var.id(), id);
   Debug::Variable::UInt32 var_readonly("name", Debug::Variable::Access::ReadOnly, value, "units",
                                        "help");
   uint8_t id_readonly[2];
-  u16_to_u8(var_readonly.GetId(), id_readonly);
+  u16_to_u8(var_readonly.id(), id_readonly);
 
   std::vector<std::tuple<std::vector<uint8_t>, ErrorCode>> requests = {
       {{}, ErrorCode::MissingData},   // Missing subcommand

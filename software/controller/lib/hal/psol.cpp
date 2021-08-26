@@ -109,8 +109,8 @@ void HalApi::PSolValue(float val) {
   if (val == 0) {
     scaled = 0;
   } else {
-    float open_pwm = dbg_psol_pwm_open.Get();
-    float closed_pwm = dbg_psol_pwm_closed.Get();
+    float open_pwm = dbg_psol_pwm_open.get();
+    float closed_pwm = dbg_psol_pwm_closed.get();
     scaled = closed_pwm + val * (open_pwm - closed_pwm);
   }
   float duty = scaled * static_cast<float>(tmr->auto_reload);

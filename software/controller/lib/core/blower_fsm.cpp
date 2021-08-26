@@ -120,8 +120,8 @@ PressureAssistFsm::PressureAssistFsm(Time now, const VentParams &params)
       start_time_(now),
       inspire_end_(start_time_ + InspireDuration(params)),
       expire_deadline_(inspire_end_ + ExpireDuration(params)) {
-  dbg_slow_flow_avg.Set(0.f);
-  dbg_fast_flow_avg.Set(0.f);
+  dbg_slow_flow_avg.set(0.f);
+  dbg_fast_flow_avg.set(0.f);
 }
 
 BlowerSystemState PressureAssistFsm::DesiredState(Time now, const BlowerFsmInputs &inputs) {
@@ -165,20 +165,20 @@ bool PressureAssistFsm::PatientInspiring(Time now, const BlowerFsmInputs &inputs
   //
   // If the fast average exceeds the slow average by a threshold, we trigger a
   // breath.
-  float slow_alpha = dbg_slow_flow_avg_alpha.Get();
-  float fast_alpha = dbg_fast_flow_avg_alpha.Get();
+  float slow_alpha = dbg_slow_flow_avg_alpha.get();
+  float fast_alpha = dbg_fast_flow_avg_alpha.get();
 
   // TODO: This could be encapsulated in an exponentially-weighted-average
   // class.
   slow_flow_avg_ =
       slow_alpha * inputs.net_flow + (1 - slow_alpha) * slow_flow_avg_.value_or(inputs.net_flow);
-  dbg_slow_flow_avg.Set(slow_flow_avg_->ml_per_sec());
+  dbg_slow_flow_avg.set(slow_flow_avg_->ml_per_sec());
   fast_flow_avg_ =
       fast_alpha * inputs.net_flow + (1 - fast_alpha) * fast_flow_avg_.value_or(inputs.net_flow);
-  dbg_fast_flow_avg.Set(fast_flow_avg_->ml_per_sec());
+  dbg_fast_flow_avg.set(fast_flow_avg_->ml_per_sec());
 
-  return now >= inspire_end_ + milliseconds(dbg_pa_min_expire_ms.Get()) &&
-         *fast_flow_avg_ > *slow_flow_avg_ + ml_per_sec(dbg_pa_flow_trigger.Get());
+  return now >= inspire_end_ + milliseconds(dbg_pa_min_expire_ms.get()) &&
+         *fast_flow_avg_ > *slow_flow_avg_ + ml_per_sec(dbg_pa_flow_trigger.get());
 }
 
 BlowerSystemState BlowerFsm::DesiredState(Time now, const VentParams &params,

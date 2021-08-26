@@ -41,17 +41,17 @@ PID::PID(const char *name, const char *help_supplement, float initial_kp, float 
   kd_.append_help(help_supplement);
 }
 
-void PID::kp(float new_kp) { kp_.Set(new_kp); }
+void PID::kp(float new_kp) { kp_.set(new_kp); }
 
-void PID::ki(float new_ki) { ki_.Set(new_ki); }
+void PID::ki(float new_ki) { ki_.set(new_ki); }
 
-void PID::kd(float new_kd) { kd_.Set(new_kd); }
+void PID::kd(float new_kd) { kd_.set(new_kd); }
 
-float PID::kp() const { return kp_.Get(); }
+float PID::kp() const { return kp_.get(); }
 
-float PID::ki() const { return ki_.Get(); }
+float PID::ki() const { return ki_.get(); }
 
-float PID::kd() const { return kd_.Get(); }
+float PID::kd() const { return kd_.get(); }
 
 void PID::reset() { initialized_ = false; }
 
@@ -71,25 +71,25 @@ float PID::compute(Time now, float input, float set_point) {
   float error = set_point - input;
   float delta_input = input - last_input_;
 
-  output_sum_ += (ki_.Get() * error * delta_t);
+  output_sum_ += (ki_.get() * error * delta_t);
 
   if (proportional_term_ == TermApplication::OnMeasurement) {
-    output_sum_ -= kp_.Get() * delta_input;
+    output_sum_ -= kp_.get() * delta_input;
   }
 
   output_sum_ = std::clamp(output_sum_, out_min_, out_max_);
 
   float res = output_sum_;
   if (proportional_term_ == TermApplication::OnError) {
-    res += kp_.Get() * error;
+    res += kp_.get() * error;
   }
   // delta_t may be 0 (e.g. on the first call to compute()), in which case we
   // simply skip using the derivative term.
   if (delta_t > 0) {
     if (differential_term_ == TermApplication::OnMeasurement) {
-      res -= kd_.Get() * delta_input / delta_t;
+      res -= kd_.get() * delta_input / delta_t;
     } else {
-      res += kd_.Get() * (error - last_error_) / delta_t;
+      res += kd_.get() * (error - last_error_) / delta_t;
     }
   }
 

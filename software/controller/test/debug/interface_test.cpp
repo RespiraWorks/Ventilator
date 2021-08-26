@@ -151,8 +151,8 @@ TEST(Interface, GetVar) {
   // Run a bunch of times with different expected results
   // to exercise buffer management.
   for (int i = 0; i < 100; ++i, ++foo, ++bar) {
-    EXPECT_EQ(foo, GetVarViaCmd(&serial, var_foo.GetId()));
-    EXPECT_EQ(bar, GetVarViaCmd(&serial, var_bar.GetId()));
+    EXPECT_EQ(foo, GetVarViaCmd(&serial, var_foo.id()));
+    EXPECT_EQ(bar, GetVarViaCmd(&serial, var_bar.id()));
   }
 }
 

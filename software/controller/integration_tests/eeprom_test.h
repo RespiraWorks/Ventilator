@@ -103,9 +103,9 @@ void RunTest() {
 
   eeprom.ReadBytes(Address, Length, &eeprom_after, &second_read_finished);
 
-  dbg_addr_before.Set(reinterpret_cast<uint32_t>(&eeprom_before));
-  dbg_write_data.Set(reinterpret_cast<uint32_t>(&write_data));
-  dbg_addr_after.Set(reinterpret_cast<uint32_t>(&eeprom_after));
+  dbg_addr_before.set(reinterpret_cast<uint32_t>(&eeprom_before));
+  dbg_write_data.set(reinterpret_cast<uint32_t>(&write_data));
+  dbg_addr_after.set(reinterpret_cast<uint32_t>(&eeprom_after));
 
   // stall execution to give time for the actual sending of those requests
   // (through DMA and/or hardware interrupts), with a 500 ms timeout: our I2C
@@ -122,7 +122,7 @@ void RunTest() {
     }
   }
 
-  dbg_test_result.Set(!failed);
+  dbg_test_result.set(!failed);
 
   // Put the memory back in its initial state (note that if the initial read
   // failed, or the write method is broken, this will also fail and the eeprom

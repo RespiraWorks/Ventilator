@@ -85,7 +85,7 @@ std::pair<ActuatorsState, ControllerState> Controller::Run(Time now, const VentP
     // each new breath.
     breath_id_ = static_cast<uint32_t>(now.microsSinceStartup());
   }
-  dbg_breath_id.Set(breath_id_);
+  dbg_breath_id.set(breath_id_);
 
   ActuatorsState actuators_state;
   if (desired_state.pressure_setpoint == std::nullopt) {
@@ -162,16 +162,16 @@ std::pair<ActuatorsState, ControllerState> Controller::Run(Time now, const VentP
       .breath_id = breath_id_,
   };
 
-  dbg_pc_setpoint.Set(desired_state.pressure_setpoint.value_or(kPa(0)).cmH2O());
-  dbg_net_flow.Set(controller_state.net_flow.ml_per_sec());
-  dbg_net_flow_uncorrected.Set((sensor_readings.inflow - sensor_readings.outflow).ml_per_sec());
-  dbg_volume.Set(controller_state.patient_volume.ml());
-  dbg_volume_uncorrected.Set(uncorrected_flow_integrator_->GetVolume().ml());
-  dbg_flow_correction.Set(flow_integrator_->FlowCorrection().ml_per_sec());
+  dbg_pc_setpoint.set(desired_state.pressure_setpoint.value_or(kPa(0)).cmH2O());
+  dbg_net_flow.set(controller_state.net_flow.ml_per_sec());
+  dbg_net_flow_uncorrected.set((sensor_readings.inflow - sensor_readings.outflow).ml_per_sec());
+  dbg_volume.set(controller_state.patient_volume.ml());
+  dbg_volume_uncorrected.set(uncorrected_flow_integrator_->GetVolume().ml());
+  dbg_flow_correction.set(flow_integrator_->FlowCorrection().ml_per_sec());
 
   // Handle DebugVars that force the actuators.
   auto set_force = [](const Debug::Variable::Float &var, auto &state) {
-    float v = var.Get();
+    float v = var.get();
     if (v >= 0 && v <= 1) {
       state = v;
     }

@@ -19,18 +19,18 @@ limitations under the License.
 
 namespace Debug::Variable {
 
-void Registry::RegisterVar(Base *var) {
+void Registry::register_variable(Base *var) {
   if (var_count_ >= static_cast<uint16_t>(std::size(var_list_))) return;
   var_list_[var_count_] = var;
   var->id_ = var_count_;
   var_count_++;
 }
 
-Base *Registry::FindVar(uint16_t vid) {
+Base *Registry::find(uint16_t vid) {
   if (vid >= std::size(var_list_)) return nullptr;
   return var_list_[vid];
 }
 
-uint32_t Registry::GetVarCount() const { return var_count_; }
+uint32_t Registry::count() const { return var_count_; }
 
 }  // namespace Debug::Variable

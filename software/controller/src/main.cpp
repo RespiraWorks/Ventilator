@@ -178,14 +178,14 @@ static void BackgroundLoop() {
 
     // Override received gui_status from the RPi with values from DebugVars iff
     // the forced_mode DebugVar has a legal value.
-    if (uint32_t m = forced_mode.Get(); m >= _VentMode_MIN && m <= _VentMode_MAX) {
+    if (uint32_t m = forced_mode.get(); m >= _VentMode_MIN && m <= _VentMode_MAX) {
       auto &p = gui_status.desired_params;
       p.mode = static_cast<VentMode>(m);
-      p.breaths_per_min = forced_breath_rate.Get();
-      p.peep_cm_h2o = forced_peep.Get();
-      p.pip_cm_h2o = forced_pip.Get();
-      p.inspiratory_expiratory_ratio = forced_ie_ratio.Get();
-      p.fio2 = forced_fio2.Get() / 100.f;
+      p.breaths_per_min = forced_breath_rate.get();
+      p.peep_cm_h2o = forced_peep.get();
+      p.pip_cm_h2o = forced_pip.get();
+      p.inspiratory_expiratory_ratio = forced_ie_ratio.get();
+      p.fio2 = forced_fio2.get() / 100.f;
     }
 
     // Copy the gui_status data into our controller status

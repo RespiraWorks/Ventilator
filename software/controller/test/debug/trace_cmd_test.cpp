@@ -51,8 +51,8 @@ TEST(TraceHandler, Flush) {
   TraceHandler trace_handler = TraceHandler(&trace);
 
   // activate trace
-  trace.SetTracedVarId<1>(var_x.GetId());
-  trace.SetTracedVarId<3>(var_y.GetId());
+  trace.SetTracedVarId<1>(var_x.id());
+  trace.SetTracedVarId<3>(var_y.id());
   trace.Start();  // Enable tracing
 
   trace.MaybeSample();
@@ -104,8 +104,8 @@ TEST(TraceHandler, Read) {
   EXPECT_TRUE(processed);
   EXPECT_EQ(read_context.response_length, 0);
 
-  trace.SetTracedVarId<1>(var_x.GetId());
-  trace.SetTracedVarId<3>(var_y.GetId());
+  trace.SetTracedVarId<1>(var_x.id());
+  trace.SetTracedVarId<3>(var_y.id());
 
   // start the trace (using debug command)
   std::array start_command = {static_cast<uint8_t>(TraceHandler::Subcommand::Start)};
@@ -181,7 +181,7 @@ TEST(TraceHandler, SettersAndGetters) {
   // Set trace var ID for var 1
   std::array<uint8_t, 4> set_var1_command = {
       static_cast<uint8_t>(TraceHandler::Subcommand::SetVarId), 1, 0, 0};
-  u16_to_u8(var_y.GetId(), &set_var1_command[2]);
+  u16_to_u8(var_y.id(), &set_var1_command[2]);
   std::array<uint8_t, kResponseSize> response;
   bool processed{false};
   Context set_var1_context = {.request = set_var1_command.data(),
@@ -285,8 +285,8 @@ TEST(TraceHandler, Errors) {
   Trace trace;
   TraceHandler trace_handler = TraceHandler(&trace);
 
-  trace.SetTracedVarId<1>(var_x.GetId());
-  trace.SetTracedVarId<3>(var_y.GetId());
+  trace.SetTracedVarId<1>(var_x.id());
+  trace.SetTracedVarId<3>(var_y.id());
   trace.Start();
 
   std::vector<std::tuple<std::vector<uint8_t>, ErrorCode>> requests = {

@@ -27,9 +27,10 @@ Base::Base(Type type, const char *name, Access access, const char *units, const 
   strcpy(help_, help);
   strcpy(units_, units);
   strcpy(fmt_, fmt);
+  Registry::singleton().register_variable(this);
 }
 
-const char *Base::GetName() const { return name_; }
+const char *Base::name() const { return name_; }
 
 void Base::prepend_name(const char *prefix) {
   // Assumes name_ has enough space allocated for the combined string.
@@ -43,18 +44,18 @@ void Base::append_help(const char *text) {
   strcat(help_, text);
 }
 
-const char *Base::GetFormat() const { return fmt_; }
+const char *Base::format() const { return fmt_; }
 
-const char *Base::GetHelp() const { return help_; }
+const char *Base::help() const { return help_; }
 
-const char *Base::GetUnits() const { return units_; }
+const char *Base::units() const { return units_; }
 
-Type Base::GetType() const { return type_; }
+Type Base::type() const { return type_; }
 
-uint16_t Base::GetId() const { return id_; }
+uint16_t Base::id() const { return id_; }
 
-Access Base::GetAccess() const { return access_; }
+Access Base::access() const { return access_; }
 
-bool Base::WriteAllowed() const { return (access_ == Access::ReadWrite); }
+bool Base::write_allowed() const { return (access_ == Access::ReadWrite); }
 
 }  // namespace Debug::Variable

@@ -372,12 +372,16 @@ void HalApi::StartLoopTimer(const Duration &period, void (*callback)(void *), vo
 }
 
 static float latency, max_latency, loop_time;
-static DebugVar dbg_loop_latency("loop_latency", VarAccess::ReadOnly, &latency, "\xB5s",
-                                 "Latency of loop function", "%.2f");
-static DebugVar dbg_max_latency("max_latency", VarAccess::ReadOnly, &max_latency, "\xB5s",
-                                "Maximum latency of loop function", "%.2f");
-static DebugVar dbg_loop_time("loop_time", VarAccess::ReadOnly, &loop_time, "\xB5s",
-                              "Duration of loop function", "%.2f");
+static Debug::Variable::Primitive32
+    dbg_loop_latency("loop_latency", Debug::Variable::Access::ReadOnly,
+                     &latency, "\xB5s", "Latency of loop function", "%.2f");
+static Debug::Variable::Primitive32
+    dbg_max_latency("max_latency", Debug::Variable::Access::ReadOnly,
+                    &max_latency, "\xB5s", "Maximum latency of loop function",
+                    "%.2f");
+static Debug::Variable::Primitive32
+    dbg_loop_time("loop_time", Debug::Variable::Access::ReadOnly, &loop_time,
+                  "\xB5s", "Duration of loop function", "%.2f");
 
 static void Timer15ISR() {
   uint32_t start = Timer15Base->counter;

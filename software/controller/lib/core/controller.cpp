@@ -19,64 +19,83 @@ limitations under the License.
 
 static constexpr Duration LoopPeriod = milliseconds(10);
 
-static DebugFloat dbg_forced_blower_power(
-    "forced_blower_power", VarAccess::ReadWrite, -1.f, "ratio",
+static Debug::Variable::Float dbg_forced_blower_power(
+    "forced_blower_power", Debug::Variable::Access::ReadWrite, -1.f, "ratio",
     "Force the blower fan to a particular power [0,1].  Specify a value "
     "outside this range to let the controller control it.");
-static DebugFloat dbg_forced_exhale_valve_pos(
-    "forced_exhale_valve_pos", VarAccess::ReadWrite, -1.f, "ratio",
+static Debug::Variable::Float dbg_forced_exhale_valve_pos(
+    "forced_exhale_valve_pos", Debug::Variable::Access::ReadWrite, -1.f,
+    "ratio",
     "Force the exhale valve to a particular position [0,1].  Specify a value "
     "outside this range to let the controller control it.");
-static DebugFloat dbg_forced_blower_valve_pos(
-    "forced_blower_valve_pos", VarAccess::ReadWrite, -1.f, "ratio",
+static Debug::Variable::Float dbg_forced_blower_valve_pos(
+    "forced_blower_valve_pos", Debug::Variable::Access::ReadWrite, -1.f,
+    "ratio",
     "Force the blower valve to a particular position [0,1].  Specify a value "
     "outside this range to let the controller control it.");
-static DebugFloat dbg_forced_psol_pos(
-    "forced_psol_pos", VarAccess::ReadWrite, -1.f, "ratio",
+static Debug::Variable::Float dbg_forced_psol_pos(
+    "forced_psol_pos", Debug::Variable::Access::ReadWrite, -1.f, "ratio",
     "Force the O2 psol to a particular position [0,1].  (Note that psol.cpp "
     "scales this further; see psol_pwm_closed and psol_pwm_open.)  Specify a "
     "value outside this range to let the controller control the psol.");
 
 // Unchanging outputs - read from external debug program, never modified here.
-static DebugUInt32 dbg_loop_period("loop_period", VarAccess::ReadOnly,
-                                   static_cast<uint32_t>(LoopPeriod.microseconds()), "\xB5s",
-                                   "Loop period");
+static Debug::Variable::UInt32
+    dbg_loop_period("loop_period", Debug::Variable::Access::ReadOnly,
+                    static_cast<uint32_t>(LoopPeriod.microseconds()), "\xB5s",
+                    "Loop period");
 
 // Outputs - read from external debug program, modified here.
-static DebugFloat dbg_pc_setpoint("pc_setpoint", VarAccess::ReadOnly, 0.0f, "cmH2O",
-                                  "Pressure control setpoint");
-static DebugFloat dbg_net_flow("net_flow", VarAccess::ReadOnly, 0.0f, "mL/s", "Net flow rate");
-static DebugFloat dbg_volume("volume", VarAccess::ReadOnly, 0.0f, "mL", "Patient volume");
-static DebugFloat dbg_net_flow_uncorrected("net_flow_uncorrected", VarAccess::ReadOnly, 0.0f,
-                                           "mL/s", "Net flow rate w/o correction");
-static DebugFloat dbg_volume_uncorrected("uncorrected_volume", VarAccess::ReadOnly, 0.0f, "mL",
-                                         "Patient volume w/o correction");
-static DebugFloat dbg_flow_correction("flow_correction", VarAccess::ReadOnly, 0.0f, "mL/s",
-                                      "Correction to flow");
+static Debug::Variable::Float dbg_pc_setpoint("pc_setpoint",
+                                              Debug::Variable::Access::ReadOnly,
+                                              0.0f, "cmH2O",
+                                              "Pressure control setpoint");
+static Debug::Variable::Float dbg_net_flow("net_flow",
+                                           Debug::Variable::Access::ReadOnly,
+                                           0.0f, "mL/s", "Net flow rate");
+static Debug::Variable::Float dbg_volume("volume",
+                                         Debug::Variable::Access::ReadOnly,
+                                         0.0f, "mL", "Patient volume");
+static Debug::Variable::Float
+    dbg_net_flow_uncorrected("net_flow_uncorrected",
+                             Debug::Variable::Access::ReadOnly, 0.0f, "mL/s",
+                             "Net flow rate w/o correction");
+static Debug::Variable::Float
+    dbg_volume_uncorrected("uncorrected_volume",
+                           Debug::Variable::Access::ReadOnly, 0.0f, "mL",
+                           "Patient volume w/o correction");
+static Debug::Variable::Float
+    dbg_flow_correction("flow_correction", Debug::Variable::Access::ReadOnly,
+                        0.0f, "mL/s", "Correction to flow");
 
-static DebugUInt32 dbg_breath_id("breath_id", VarAccess::ReadOnly, 0, "",
-                                 "ID of the current breath");
+static Debug::Variable::UInt32 dbg_breath_id("breath_id",
+                                             Debug::Variable::Access::ReadOnly,
+                                             0, "", "ID of the current breath");
 
 /*static*/ Duration Controller::GetLoopPeriod() { return LoopPeriod; }
 
-std::pair<ActuatorsState, ControllerState> Controller::Run(Time now, const VentParams &params,
-                                                           const SensorReadings &sensor_readings) {
-  VolumetricFlow uncorrected_net_flow = sensor_readings.inflow - sensor_readings.outflow;
+std::pair<ActuatorsState, ControllerState>
+Controller::Run(Time now, const VentParams &params,
+                const SensorReadings &sensor_readings) {
+  VolumetricFlow uncorrected_net_flow =
+      sensor_readings.inflow - sensor_readings.outflow;
   flow_integrator_->AddFlow(now, uncorrected_net_flow);
   uncorrected_flow_integrator_->AddFlow(now, uncorrected_net_flow);
 
   Volume patient_volume = flow_integrator_->GetVolume();
-  VolumetricFlow net_flow = uncorrected_net_flow + flow_integrator_->FlowCorrection();
+  VolumetricFlow net_flow =
+      uncorrected_net_flow + flow_integrator_->FlowCorrection();
 
-  BlowerSystemState desired_state =
-      fsm_.DesiredState(now, params, {.patient_volume = patient_volume, .net_flow = net_flow});
+  BlowerSystemState desired_state = fsm_.DesiredState(
+      now, params, {.patient_volume = patient_volume, .net_flow = net_flow});
 
   if (desired_state.is_end_of_breath) {
     // The "correct" volume at the breath boundary is 0.
     flow_integrator_->NoteExpectedVolume(ml(0));
 
-    // Precision loss 64->32 bits ok: we only care about equality of these values, not their
-    // absolute value, and the top 32 bits will change with each new breath.
+    // Precision loss 64->32 bits ok: we only care about equality of these
+    // values, not their absolute value, and the top 32 bits will change with
+    // each new breath.
     breath_id_ = static_cast<uint32_t>(now.microsSinceStartup());
   }
 
@@ -118,8 +137,9 @@ std::pair<ActuatorsState, ControllerState> Controller::Run(Time now, const VentP
       psol_pid_.reset();
 
       // Calculate blower valve command using calculated gains
-      float blower_valve = blower_valve_pid_.compute(now, sensor_readings.patient_pressure.kPa(),
-                                                     desired_state.pressure_setpoint->kPa());
+      float blower_valve =
+          blower_valve_pid_.compute(now, sensor_readings.patient_pressure.kPa(),
+                                    desired_state.pressure_setpoint->kPa());
 
       actuators_state = {
           .fio2_valve = 0,
@@ -134,8 +154,9 @@ std::pair<ActuatorsState, ControllerState> Controller::Run(Time now, const VentP
       // Delivering pure oxygen.
       blower_valve_pid_.reset();
 
-      float psol_valve = psol_pid_.compute(now, sensor_readings.patient_pressure.kPa(),
-                                           desired_state.pressure_setpoint->kPa());
+      float psol_valve =
+          psol_pid_.compute(now, sensor_readings.patient_pressure.kPa(),
+                            desired_state.pressure_setpoint->kPa());
       actuators_state = {
           // Force psol to stay very slightly open to avoid the discontinuity
           // caused by valve hysteresis at very low command.  The exhale valve
@@ -162,13 +183,14 @@ std::pair<ActuatorsState, ControllerState> Controller::Run(Time now, const VentP
 
   dbg_pc_setpoint.Set(desired_state.pressure_setpoint.value_or(kPa(0)).cmH2O());
   dbg_net_flow.Set(controller_state.net_flow.ml_per_sec());
-  dbg_net_flow_uncorrected.Set((sensor_readings.inflow - sensor_readings.outflow).ml_per_sec());
+  dbg_net_flow_uncorrected.Set(
+      (sensor_readings.inflow - sensor_readings.outflow).ml_per_sec());
   dbg_volume.Set(controller_state.patient_volume.ml());
   dbg_volume_uncorrected.Set(uncorrected_flow_integrator_->GetVolume().ml());
   dbg_flow_correction.Set(flow_integrator_->FlowCorrection().ml_per_sec());
 
   // Handle DebugVars that force the actuators.
-  auto set_force = [](const DebugFloat &var, auto &state) {
+  auto set_force = [](const Debug::Variable::Float &var, auto &state) {
     float v = var.Get();
     if (v >= 0 && v <= 1) {
       state = v;

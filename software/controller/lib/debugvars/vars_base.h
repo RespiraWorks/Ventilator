@@ -18,20 +18,22 @@ limitations under the License.
 #include <cstdint>
 #include <limits>
 
-// \todo use namespace instead of lengthy type/class names
+namespace Debug::Variable {
 
 // Defines the type of variable
-enum class VarType {
+enum class Type {
   Int32 = 1,
   UInt32 = 2,
   Float = 3,
 };
 
 // Defines the possible access to variable
-enum class VarAccess {
+enum class Access {
   ReadOnly = 0,
   ReadWrite = 1,
 };
+
+static constexpr uint16_t InvalidID{std::numeric_limits<uint16_t>::max()};
 
 // This class represents a variable that you can read/write using the
 // debug serial port.
@@ -42,17 +44,15 @@ enum class VarAccess {
 //
 // The fmt string gives the debug interface a suggestion on the best way
 // to display the variable's data.
-class DebugVarBase {
- public:
-  static constexpr uint16_t InvalidID{std::numeric_limits<uint16_t>::max()};
-
+class Base {
+public:
   // @param type Type of the variable
   // @param name Name of the variable
   // @param help String that the Python code displays describing the variable.
   // @param fmt printf style format string.  This is a hint to the Python code
   // as to how the variable data should be displayed.
-  DebugVarBase(VarType type, const char *name, VarAccess access, const char *units,
-               const char *help, const char *fmt = "");
+  Base(Type type, const char *name, Access access, const char *units,
+       const char *help, const char *fmt = "");
 
   virtual uint32_t GetValue() = 0;
   virtual void SetValue(uint32_t value) = 0;
@@ -64,45 +64,47 @@ class DebugVarBase {
   const char *GetFormat() const;
   const char *GetHelp() const;
   const char *GetUnits() const;
-  VarType GetType() const;
+  Type GetType() const;
   uint16_t GetId() const;
-  VarAccess GetAccess() const;
+  Access GetAccess() const;
   bool WriteAllowed() const;
 
- private:
+private:
   uint16_t id_{InvalidID};
-  const VarType type_;
-  const VarAccess access_;
+  const Type type_;
+  const Access access_;
   char name_[50]{0};
   char units_[20]{0};
   char help_[300]{0};
   char fmt_[10]{0};
 
-  friend class DebugVarRegistry;
+  friend class Registry;
 };
 
-class DebugVarRegistry {
- public:
+class Registry {
+public:
   // this is the only way to access it
-  static DebugVarRegistry &singleton() {
+  static Registry &singleton() {
     // will privately initialize on first call
-    static DebugVarRegistry SingletonInstance;
+    static Registry SingletonInstance;
     // will always return
     return SingletonInstance;
   }
 
-  void RegisterVar(DebugVarBase *var);
-  DebugVarBase *FindVar(uint16_t vid);
-  uint32_t GetVarCount();
+  void RegisterVar(Base *var);
+  Base *FindVar(uint16_t vid);
+  uint32_t GetVarCount() const;
 
- private:
+private:
   // List of all the variables in the system.
   // Increase size as necessary
-  DebugVarBase *var_list_[100]{};
+  Base *var_list_[100]{};
   uint16_t var_count_{0};
 
   // singleton assurance, because these are private
-  DebugVarRegistry() = default;                // cannot default initialize
-  DebugVarRegistry(DebugVarRegistry const &);  // cannot copy initialize
-  void operator=(DebugVarRegistry const &);    // cannot copy assign
+  Registry() = default;             // cannot default initialize
+  Registry(Registry const &);       // cannot copy initialize
+  void operator=(Registry const &); // cannot copy assign
 };
+
+} // namespace Debug::Variable

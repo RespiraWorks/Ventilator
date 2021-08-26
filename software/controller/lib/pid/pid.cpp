@@ -20,19 +20,18 @@ limitations under the License.
 
 #include <algorithm>
 
-PID::PID(const char* name, const char* help_supplement, float initial_kp, float initial_ki,
-         float initial_kd, TermApplication p_term, TermApplication d_term, float output_min,
-         float output_max)
-    : kp_(initial_kp),
-      ki_(initial_ki),
-      kd_(initial_kd),
-      dbg_kp_("initial_kp", VarAccess::ReadWrite, initial_kp, "", "Proportional gain"),
-      dbg_ki_("initial_ki", VarAccess::ReadWrite, initial_ki, "", "Integral gain"),
-      dbg_kd_("initial_kd", VarAccess::ReadWrite, initial_kd, "", "Derivative gain"),
-      proportional_term_(p_term),
-      differential_term_(d_term),
-      out_min_(output_min),
-      out_max_(output_max) {
+PID::PID(const char *name, const char *help_supplement, float initial_kp,
+         float initial_ki, float initial_kd, TermApplication p_term,
+         TermApplication d_term, float output_min, float output_max)
+    : kp_(initial_kp), ki_(initial_ki), kd_(initial_kd),
+      dbg_kp_("initial_kp", Debug::Variable::Access::ReadWrite, initial_kp, "",
+              "Proportional gain"),
+      dbg_ki_("initial_ki", Debug::Variable::Access::ReadWrite, initial_ki, "",
+              "Integral gain"),
+      dbg_kd_("initial_kd", Debug::Variable::Access::ReadWrite, initial_kd, "",
+              "Derivative gain"),
+      proportional_term_(p_term), differential_term_(d_term),
+      out_min_(output_min), out_max_(output_max) {
   dbg_kp_.prepend_name(name);
   dbg_kp_.append_help(help_supplement);
   dbg_ki_.prepend_name(name);
@@ -61,10 +60,10 @@ void PID::update_vars() {
   kd(dbg_kd_.Get());
 }
 
-float PID::compute(Time now, float input, float setpoint) {
+float PID::compute(Time now, float input, float set_point) {
   if (!initialized_) {
     last_input_ = input;
-    last_error_ = setpoint - input;
+    last_error_ = set_point - input;
     last_update_time_ = now;
     output_sum_ = 0;
     initialized_ = true;
@@ -74,7 +73,7 @@ float PID::compute(Time now, float input, float setpoint) {
   float delta_t = (now - last_update_time_).seconds();
 
   // compute all the working error variables
-  float error = setpoint - input;
+  float error = set_point - input;
   float delta_input = input - last_input_;
 
   output_sum_ += (ki_ * error * delta_t);
@@ -106,10 +105,10 @@ float PID::compute(Time now, float input, float setpoint) {
   return std::clamp(res, out_min_, out_max_);
 }
 
-void PID::observe(Time now, float input, float setpoint, float actual_output) {
+void PID::observe(Time now, float input, float set_point, float actual_output) {
   // All the observable variables are updated the same way as in compute();
   last_input_ = input;
-  last_error_ = setpoint - input;
+  last_error_ = set_point - input;
   last_update_time_ = now;
   // Reset output_sum_ to actual_output so that the next compute()
   // will adjust it only slightly (as if it had been computed by a current

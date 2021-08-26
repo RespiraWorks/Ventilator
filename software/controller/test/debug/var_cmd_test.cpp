@@ -18,8 +18,8 @@ limitations under the License.
 #include <array>
 
 #include "commands.h"
-#include "gtest/gtest.h"
 #include "vars.h"
+#include "gtest/gtest.h"
 
 namespace Debug::Command {
 
@@ -29,27 +29,33 @@ TEST(VarHandler, GetVarInfo) {
   const char *help = "help string";
   const char *format = "format";
   const char *unit = "unit";
-  DebugVar var(name, VarAccess::ReadOnly, &value, unit, help, format);
+  Debug::Variable::Primitive32 var(name, Debug::Variable::Access::ReadOnly,
+                                   &value, unit, help, format);
 
   // expected result is hand-built from format given in var_cmd.cpp
-  std::vector<uint8_t> expected = {static_cast<uint8_t>(VarType::UInt32),
-                                   static_cast<uint8_t>(VarAccess::ReadOnly),
-                                   0,
-                                   0,
-                                   static_cast<uint8_t>(strlen(name)),
-                                   static_cast<uint8_t>(strlen(format)),
-                                   static_cast<uint8_t>(strlen(help)),
-                                   static_cast<uint8_t>(strlen(unit))};
-  for (size_t i = 0; i < strlen(name); ++i) expected.push_back(name[i]);
-  for (size_t i = 0; i < strlen(format); ++i) expected.push_back(format[i]);
-  for (size_t i = 0; i < strlen(help); ++i) expected.push_back(help[i]);
-  for (size_t i = 0; i < strlen(unit); ++i) expected.push_back(unit[i]);
+  std::vector<uint8_t> expected = {
+      static_cast<uint8_t>(Debug::Variable::Type::UInt32),
+      static_cast<uint8_t>(Debug::Variable::Access::ReadOnly),
+      0,
+      0,
+      static_cast<uint8_t>(strlen(name)),
+      static_cast<uint8_t>(strlen(format)),
+      static_cast<uint8_t>(strlen(help)),
+      static_cast<uint8_t>(strlen(unit))};
+  for (size_t i = 0; i < strlen(name); ++i)
+    expected.push_back(name[i]);
+  for (size_t i = 0; i < strlen(format); ++i)
+    expected.push_back(format[i]);
+  for (size_t i = 0; i < strlen(help); ++i)
+    expected.push_back(help[i]);
+  for (size_t i = 0; i < strlen(unit); ++i)
+    expected.push_back(unit[i]);
 
   uint8_t id[2];
   u16_to_u8(var.GetId(), id);
   std::array req = {
       static_cast<uint8_t>(VarHandler::Subcommand::GetInfo), id[0],
-      id[1],  // Var id
+      id[1], // Var id
   };
   std::array<uint8_t, 50> response;
   bool processed{false};
@@ -69,14 +75,15 @@ TEST(VarHandler, GetVarInfo) {
 
 TEST(VarHandler, GetVar) {
   uint32_t value = 0xDEADBEEF;
-  DebugVar var("name", VarAccess::ReadWrite, &value, "units", "help");
+  Debug::Variable::Primitive32 var("name", Debug::Variable::Access::ReadWrite,
+                                   &value, "units", "help");
 
   // Test that a GET command obtains the variable's value.
   uint8_t id[2];
   u16_to_u8(var.GetId(), id);
   std::array req = {
       static_cast<uint8_t>(VarHandler::Subcommand::Get), id[0],
-      id[1],  // Var id
+      id[1], // Var id
   };
   std::array<uint8_t, 4> response;
   bool processed{false};
@@ -98,7 +105,8 @@ TEST(VarHandler, GetVar) {
 
 TEST(VarHandler, SetVar) {
   uint32_t value = 0xDEADBEEF;
-  DebugVar var("name", VarAccess::ReadWrite, &value, "units", "help");
+  Debug::Variable::Primitive32 var("name", Debug::Variable::Access::ReadWrite,
+                                   &value, "units", "help");
 
   uint32_t new_value = 0xCAFEBABE;
   std::array<uint8_t, 4> new_bytes;
@@ -110,11 +118,11 @@ TEST(VarHandler, SetVar) {
   std::array req = {
       static_cast<uint8_t>(VarHandler::Subcommand::Set),
       id[0],
-      id[1],  // Var id
+      id[1], // Var id
       new_bytes[0],
       new_bytes[1],
       new_bytes[2],
-      new_bytes[3]  // Value
+      new_bytes[3] // Value
   };
 
   std::array<uint8_t, 0> response;
@@ -135,7 +143,8 @@ TEST(VarHandler, SetVar) {
 
 TEST(VarHandler, GetVarCount) {
   uint32_t value = 0xDEADBEEF;
-  DebugVar dummy("name", VarAccess::ReadWrite, &value, "units");
+  Debug::Variable::Primitive32 dummy("name", Debug::Variable::Access::ReadWrite,
+                                     &value, "units");
 
   // Test that GetVarCount command obtains the number of defined variables
   std::array req = {static_cast<uint8_t>(VarHandler::Subcommand::GetCount)};
@@ -153,22 +162,25 @@ TEST(VarHandler, GetVarCount) {
   EXPECT_EQ(4, context.response_length);
 
   std::array<uint8_t, 4> expected_result;
-  u32_to_u8(DebugVarRegistry::singleton().GetVarCount(), expected_result.data());
+  u32_to_u8(Debug::Variable::Registry::singleton().GetVarCount(),
+            expected_result.data());
   EXPECT_EQ(response, expected_result);
 }
 
 TEST(VarHandler, Errors) {
   uint32_t value = 0xDEADBEEF;
-  DebugUInt32 var("name", VarAccess::ReadWrite, value, "units", "help");
+  Debug::Variable::UInt32 var("name", Debug::Variable::Access::ReadWrite, value,
+                              "units", "help");
   uint8_t id[2];
   u16_to_u8(var.GetId(), id);
-  DebugUInt32 var_readonly("name", VarAccess::ReadOnly, value, "units", "help");
+  Debug::Variable::UInt32 var_readonly(
+      "name", Debug::Variable::Access::ReadOnly, value, "units", "help");
   uint8_t id_readonly[2];
   u16_to_u8(var_readonly.GetId(), id_readonly);
 
   std::vector<std::tuple<std::vector<uint8_t>, ErrorCode>> requests = {
-      {{}, ErrorCode::MissingData},   // Missing subcommand
-      {{4}, ErrorCode::InvalidData},  // Invalid subcommand
+      {{}, ErrorCode::MissingData},  // Missing subcommand
+      {{4}, ErrorCode::InvalidData}, // Invalid subcommand
       {{0, 0xFF, 0xFF}, ErrorCode::UnknownVariable},
       {{1, 0xFF, 0xFF}, ErrorCode::UnknownVariable},
       {{2, 0xFF, 0xFF}, ErrorCode::UnknownVariable},
@@ -179,7 +191,8 @@ TEST(VarHandler, Errors) {
       {{1, id[0], id[1]}, ErrorCode::NoMemory},
       {{3}, ErrorCode::NoMemory},
       {{2, id[0], id[1], 0xCA, 0xFE, 0x00}, ErrorCode::MissingData},
-      {{2, id_readonly[0], id_readonly[1], 0xCA, 0xFE, 0x00, 0x00}, ErrorCode::InternalError},
+      {{2, id_readonly[0], id_readonly[1], 0xCA, 0xFE, 0x00, 0x00},
+       ErrorCode::InternalError},
   };
 
   for (auto &[request, error] : requests) {
@@ -198,4 +211,4 @@ TEST(VarHandler, Errors) {
   }
 }
 
-}  // namespace Debug::Command
+} // namespace Debug::Command

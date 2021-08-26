@@ -17,8 +17,10 @@ limitations under the License.
 
 #include <cstring>
 
-DebugVarBase::DebugVarBase(VarType type, const char* name, VarAccess access, const char* units,
-                           const char* help, const char* fmt)
+namespace Debug::Variable {
+
+Base::Base(Type type, const char *name, Access access, const char *units,
+           const char *help, const char *fmt)
     : type_(type), access_(access) {
   // \todo use stricpy instead?
   strcpy(name_, name);
@@ -27,30 +29,32 @@ DebugVarBase::DebugVarBase(VarType type, const char* name, VarAccess access, con
   strcpy(fmt_, fmt);
 }
 
-const char* DebugVarBase::GetName() const { return name_; }
+const char *Base::GetName() const { return name_; }
 
-void DebugVarBase::prepend_name(const char* prefix) {
+void Base::prepend_name(const char *prefix) {
   // Assumes name_ has enough space allocated for the combined string.
   size_t len = strlen(prefix);
   memmove(name_ + len, name_, strlen(name_) + 1);
   memcpy(name_, prefix, len);
 }
 
-void DebugVarBase::append_help(const char* text) {
+void Base::append_help(const char *text) {
   // \todo use stricat instead?
   strcat(help_, text);
 }
 
-const char* DebugVarBase::GetFormat() const { return fmt_; }
+const char *Base::GetFormat() const { return fmt_; }
 
-const char* DebugVarBase::GetHelp() const { return help_; }
+const char *Base::GetHelp() const { return help_; }
 
-const char* DebugVarBase::GetUnits() const { return units_; }
+const char *Base::GetUnits() const { return units_; }
 
-VarType DebugVarBase::GetType() const { return type_; }
+Type Base::GetType() const { return type_; }
 
-uint16_t DebugVarBase::GetId() const { return id_; }
+uint16_t Base::GetId() const { return id_; }
 
-VarAccess DebugVarBase::GetAccess() const { return access_; }
+Access Base::GetAccess() const { return access_; }
 
-bool DebugVarBase::WriteAllowed() const { return (access_ == VarAccess::ReadWrite); }
+bool Base::WriteAllowed() const { return (access_ == Access::ReadWrite); }
+
+} // namespace Debug::Variable

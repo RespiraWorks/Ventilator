@@ -20,6 +20,32 @@ limitations under the License.
 
 #include <algorithm>
 
+PID::PID(const char* name, const char* help_supplement, float kp, float ki, float kd,
+         ProportionalTerm p_term, DifferentialTerm d_term, float output_min, float output_max)
+    : kp_(kp),
+      ki_(ki),
+      kd_(kd),
+      dbg_kp_("kp", VarAccess::ReadWrite, kp, "", "Proportional gain"),
+      dbg_ki_("ki", VarAccess::ReadWrite, ki, "", "Integral gain"),
+      dbg_kd_("kd", VarAccess::ReadWrite, kd, "", "Derivative gain"),
+      p_term_(p_term),
+      d_term_(d_term),
+      out_min_(output_min),
+      out_max_(output_max) {
+  dbg_kp_.prepend_name(name);
+  dbg_kp_.append_help(help_supplement);
+  dbg_ki_.prepend_name(name);
+  dbg_ki_.append_help(help_supplement);
+  dbg_kd_.prepend_name(name);
+  dbg_kd_.append_help(help_supplement);
+}
+
+void PID::update_vars() {
+  SetKP(dbg_kp_.Get());
+  SetKI(dbg_ki_.Get());
+  SetKD(dbg_kd_.Get());
+}
+
 float PID::Compute(Time now, float input, float setpoint) {
   if (!initialized_) {
     last_input_ = input;

@@ -19,28 +19,6 @@ limitations under the License.
 
 static constexpr Duration LoopPeriod = milliseconds(10);
 
-// Controller gains, as inputs - set from external debug program, read but never
-// modified by controller.
-static DebugFloat dbg_blower_valve_ki("blower_valve_ki", VarAccess::ReadWrite, -1.0f, "",
-                                      "Integral gain for blower valve PID");
-static DebugFloat dbg_blower_valve_kp("blower_valve_kp", VarAccess::ReadWrite, 0.04f, "",
-                                      "Proportional gain for blower valve PID");
-static DebugFloat dbg_blower_valve_kd("blower_valve_kd", VarAccess::ReadWrite, 0, "",
-                                      "Derivative gain for blower valve PID");
-
-// TODO: These need to be tuned.
-static DebugFloat dbg_psol_kp("psol_kp", VarAccess::ReadWrite, 0.04f, "",
-                              "Proportional gain for O2 psol PID");
-static DebugFloat dbg_psol_ki("psol_ki", VarAccess::ReadWrite, 20.0f, "",
-                              "Integral gain for O2 psol PID");
-static DebugFloat dbg_psol_kd("psol_kd", VarAccess::ReadWrite, 0, "",
-                              "Derivative gain for O2 psol PID");
-
-// TODO: If we had a notion of read-only DebugVars, we could call this
-// blower_valve_ki, which would be kind of nice?  Alternatively, if we had a
-// notion of DebugVars that a user had set/pinned to a certain value, we could
-// use this as a read/write param -- read it, and write it unless the user set
-// it, in which case, use that value.
 static DebugFloat dbg_blower_valve_computed_ki("blower_valve_computed_ki", VarAccess::ReadOnly,
                                                10.0f, "",
                                                "Integral gain for blower valve PID. "
@@ -84,15 +62,6 @@ static DebugFloat dbg_flow_correction("flow_correction", VarAccess::ReadOnly, 0.
 static DebugUInt32 dbg_breath_id("breath_id", VarAccess::ReadOnly, 0, "",
                                  "ID of the current breath");
 
-Controller::Controller()
-    : blower_valve_pid_(dbg_blower_valve_kp.Get(), dbg_blower_valve_computed_ki.Get(),
-                        dbg_blower_valve_kd.Get(), ProportionalTerm::OnError,
-                        DifferentialTerm::OnMeasurement,
-                        /*output_min=*/0.f, /*output_max=*/1.0f),
-      psol_pid_(dbg_psol_kp.Get(), dbg_psol_ki.Get(), dbg_psol_kd.Get(), ProportionalTerm::OnError,
-                DifferentialTerm::OnMeasurement,
-                /*output_min=*/0.f, /*output_max=*/1.0f) {}
-
 /*static*/ Duration Controller::GetLoopPeriod() { return LoopPeriod; }
 
 std::pair<ActuatorsState, ControllerState> Controller::Run(Time now, const VentParams &params,
@@ -126,23 +95,21 @@ std::pair<ActuatorsState, ControllerState> Controller::Run(Time now, const VentP
   // desired_state updates at breath boundaries, whereas params updates
   // whenever the user clicks the touchscreen.
 
-  float blower_ki = 0;
+  //  float blower_ki = 0;
+  //
+  //  if (dbg_blower_valve_ki.Get() < 0) {
+  //    blower_ki = std::clamp(
+  //        (desired_state.pip - desired_state.peep).cmH2O() - 5.0f, 10.0f, 20.0f);
+  //
+  //    dbg_blower_valve_computed_ki.Set(blower_ki);
+  //
+  //  } else {
+  //    blower_ki = dbg_blower_valve_ki.Get();
+  //  }
+  //  blower_valve_pid_.SetKI(blower_ki);
 
-  if (dbg_blower_valve_ki.Get() < 0) {
-    blower_ki = std::clamp((desired_state.pip - desired_state.peep).cmH2O() - 5.0f, 10.0f, 20.0f);
-
-    dbg_blower_valve_computed_ki.Set(blower_ki);
-
-  } else {
-    blower_ki = dbg_blower_valve_ki.Get();
-  }
-
-  blower_valve_pid_.SetKP(dbg_blower_valve_kp.Get());
-  blower_valve_pid_.SetKI(blower_ki);
-  blower_valve_pid_.SetKD(dbg_blower_valve_kd.Get());
-  psol_pid_.SetKP(dbg_psol_kp.Get());
-  psol_pid_.SetKI(dbg_psol_ki.Get());
-  psol_pid_.SetKD(dbg_psol_kd.Get());
+  blower_valve_pid_.update_vars();
+  psol_pid_.update_vars();
 
   ActuatorsState actuators_state;
   if (desired_state.pressure_setpoint == std::nullopt) {

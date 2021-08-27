@@ -20,7 +20,7 @@ limitations under the License.
 
 // RX buffer wrapper that controls restart of reception and provides count of received bytes.
 // We need this class to abstract hardware access from FrameDetector FSM, so it can be used in GUI
-template <int RxBytesMax>
+template <uint32_t RxBytesMax>
 class RxBufferUartDma {
  public:
   explicit RxBufferUartDma(UartDma &uart_dma) : uart_dma_(uart_dma) {}
@@ -31,7 +31,7 @@ class RxBufferUartDma {
     return uart_dma_.start_rx(rx_buffer_, RxBytesMax, rxl);
   }
 
-  // Restarts the ongoing reception, this means the rx_buf will be written from the beginning
+  // Restarts the ongoing reception, this means the rx_buffer_ will be written from the beginning
   void restart_rx(RxListener *rxl) {
     uart_dma_.stop_rx();
     [[maybe_unused]] bool started = uart_dma_.start_rx(rx_buffer_, RxBytesMax, rxl);
@@ -40,11 +40,11 @@ class RxBufferUartDma {
   // Returns how many bytes were written into rx_buf
   uint32_t received_length() { return (RxBytesMax - uart_dma_.rx_bytes_left()); }
 
-  // Returns the rx_buf
+  // Returns the rx_buffer_
   uint8_t *get() { return rx_buffer_; }
 
 #ifdef TEST_MODE
-  // Puts a byte to rx_buf
+  // Puts a byte to rx_buffer_
   void test_put_byte(uint8_t b);
 #endif
 
@@ -52,13 +52,13 @@ class RxBufferUartDma {
   // UartDma provides receiving to this buffer
   UartDma &uart_dma_;
   // Buffer into which the data is received
-  uint8_t rx_buffer_[RxBytesMax];
+  uint8_t rx_buffer_[RxBytesMax] = {0};
 };
 
 #ifdef TEST_MODE
 extern uint32_t rx_index;
-// Puts a byte to rx_buf
-template <int RxBytesMax>
+// Puts a byte to rx_buffer_
+template <uint32_t RxBytesMax>
 void RxBufferUartDma<RxBytesMax>::test_put_byte(uint8_t b) {
   rx_buffer_[rx_index++] = b;
 }

@@ -19,7 +19,7 @@ limitations under the License.
 
 #include "serial_listeners.h"
 
-template <int RxBytesMax>
+template <uint32_t RxBytesMax>
 class SoftRxBuffer {
  public:
   explicit SoftRxBuffer(uint8_t match_char) : match_char_(match_char) {}

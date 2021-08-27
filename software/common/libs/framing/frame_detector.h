@@ -174,7 +174,7 @@ class FrameDetector : public RxListener {
   // If frame_available was returning true before this call, it will return false afterwards
   uint8_t *take_frame() {
     frame_available_ = false;
-    return frame_buf_;
+    return frame_buffer_;
   }
 
   // Returns the length of the last successfully detected frame.
@@ -191,7 +191,7 @@ class FrameDetector : public RxListener {
   RxBuffer &rx_buffer_;
   State state_{State::Lost};
   bool frame_available_{false};
-  uint8_t frame_buf_[FrameBufferLength];
+  uint8_t frame_buffer_[FrameBufferLength] = {0};
   uint32_t frame_buf_length_{0};
   uint32_t marker_count_{0};
 
@@ -207,7 +207,7 @@ class FrameDetector : public RxListener {
     // i.e. the first marker is not saved in RxBuffer; and now here we strip the last marker
     // (which was saved to RxBuffer) by taking the received_length() - 1
     frame_buf_length_ = rx_buffer_.received_length() - marker_count_;
-    memcpy(frame_buf_, rx_buffer_.get() + marker_count_ - 1, frame_buf_length_);
+    memcpy(frame_buffer_, rx_buffer_.get() + marker_count_ - 1, frame_buf_length_);
     frame_available_ = true;
   }
 };

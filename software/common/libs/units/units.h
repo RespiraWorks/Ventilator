@@ -16,7 +16,6 @@ limitations under the License.
 #pragma once
 
 #include <cstdint>
-
 #include <type_traits>
 
 // Wrappers for measurements of different physical quantities [1] (length,

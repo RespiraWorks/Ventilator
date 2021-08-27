@@ -132,7 +132,7 @@ void UartDma::stop_tx() {
     // Disable DMA channel
     dma_->channel[tx_channel_].config.enable = 0;
     // TODO thread safety
-    tx_in_progress_ = 0;
+    tx_in_progress_ = false;
   }
 }
 

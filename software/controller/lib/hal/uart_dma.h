@@ -15,6 +15,7 @@ limitations under the License.
 */
 
 #pragma once
+
 #include "hal_stm32_regs.h"
 #include "serial_listeners.h"
 
@@ -77,7 +78,7 @@ class UartDma {
   RxListener *rx_listener_{nullptr};
   TxListener *tx_listener_{nullptr};
   uint32_t baud_{0};
-  char match_char_;
+  uint8_t match_char_;
   bool tx_in_progress_{false};
   bool rx_in_progress_{false};
 };

@@ -42,12 +42,14 @@ limitations under the License.
 // zero a bit above that) and fully open at 0.90.
 
 // UFlow IBV19M value
-static DebugFloat dbg_psol_pwm_closed("psol_pwm_closed", VarAccess::ReadWrite, 0.35f, "ratio",
-                                      "PWM power that closes the psol [0,1]");
+static Debug::Variable::Float dbg_psol_pwm_closed("psol_pwm_closed",
+                                                  Debug::Variable::Access::ReadWrite, 0.35f,
+                                                  "ratio", "PWM power that closes the psol [0,1]");
 
 // UFlow IBV19M value
-static DebugFloat dbg_psol_pwm_open("psol_pwm_open", VarAccess::ReadWrite, 0.75f, "ratio",
-                                    "PWM power that opens the psol [0,1]");
+static Debug::Variable::Float dbg_psol_pwm_open("psol_pwm_open", Debug::Variable::Access::ReadWrite,
+                                                0.75f, "ratio",
+                                                "PWM power that opens the psol [0,1]");
 
 void HalApi::InitPSOL() {
   // I'm using a 20kHz PWM frequency to drive the solenoid
@@ -107,8 +109,8 @@ void HalApi::PSolValue(float val) {
   if (val == 0) {
     scaled = 0;
   } else {
-    float open_pwm = dbg_psol_pwm_open.Get();
-    float closed_pwm = dbg_psol_pwm_closed.Get();
+    float open_pwm = dbg_psol_pwm_open.get();
+    float closed_pwm = dbg_psol_pwm_closed.get();
     scaled = closed_pwm + val * (open_pwm - closed_pwm);
   }
   float duty = scaled * static_cast<float>(tmr->auto_reload);

@@ -44,7 +44,7 @@ bool Trace::SetTracedVarId(uint8_t index, uint16_t id) {
   if (index >= MaxTraceVars) {
     return false;
   }
-  traced_vars_[index] = DebugVar::FindVar(id);
+  traced_vars_[index] = Variable::Registry::singleton().find(id);
   // like in the SetTraceVarId<int index> template, we need to flush the buffer
   // when the set of traced variables change.
   trace_buffer_.Flush();
@@ -55,7 +55,7 @@ int16_t Trace::GetTracedVarId(uint8_t index) {
   if (index >= MaxTraceVars) {
     return -1;
   }
-  return traced_vars_[index] ? traced_vars_[index]->GetId() : -1;
+  return traced_vars_[index] ? traced_vars_[index]->id() : -1;
 }
 
 [[nodiscard]] bool Trace::GetNextTraceRecord(std::array<uint32_t, MaxTraceVars> *record,
@@ -85,7 +85,7 @@ bool Trace::SampleAllVars() {
   for (auto *var : traced_vars_) {
     if (!var) continue;
     // Can't fail as we've already checked for sufficient space above.
-    (void)trace_buffer_.Put(var->GetValue());
+    (void)trace_buffer_.Put(var->get_value());
   }
   return true;
 }

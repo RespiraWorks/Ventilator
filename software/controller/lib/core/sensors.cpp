@@ -24,20 +24,22 @@ Arduino Nano and the MPXV5004GP and MPXV7002DP pressure sensors.
 
 #include "vars.h"
 
-static DebugFloat dbg_dp_inhale("dp_inhale", VarAccess::ReadOnly, 0.0f, "cmH2O",
-                                "Inhale diff pressure");
-static DebugFloat dbg_dp_exhale("dp_exhale", VarAccess::ReadOnly, 0.0f, "cmH2O",
-                                "Exhale diff pressure");
-static DebugFloat dbg_pressure("pressure", VarAccess::ReadOnly, 0.0f, "cmH2O", "Patient pressure");
-static DebugFloat dbg_flow_inhale("flow_inhale", VarAccess::ReadOnly, 0.0f, "mL/s",
-                                  "Inhale flow rate");
-static DebugFloat dbg_flow_exhale("flow_exhale", VarAccess::ReadOnly, 0.0f, "mL/s",
-                                  "Exhale flow rate");
-static DebugFloat dbg_fio2("fio2", VarAccess::ReadOnly, 0.0f, "ratio",
-                           "Fraction of inspired oxygen");
+static Debug::Variable::Float dbg_dp_inhale("dp_inhale", Debug::Variable::Access::ReadOnly, 0.0f,
+                                            "cmH2O", "Inhale diff pressure");
+static Debug::Variable::Float dbg_dp_exhale("dp_exhale", Debug::Variable::Access::ReadOnly, 0.0f,
+                                            "cmH2O", "Exhale diff pressure");
+static Debug::Variable::Float dbg_pressure("pressure", Debug::Variable::Access::ReadOnly, 0.0f,
+                                           "cmH2O", "Patient pressure");
+static Debug::Variable::Float dbg_flow_inhale("flow_inhale", Debug::Variable::Access::ReadOnly,
+                                              0.0f, "mL/s", "Inhale flow rate");
+static Debug::Variable::Float dbg_flow_exhale("flow_exhale", Debug::Variable::Access::ReadOnly,
+                                              0.0f, "mL/s", "Exhale flow rate");
+static Debug::Variable::Float dbg_fio2("fio2", Debug::Variable::Access::ReadOnly, 0.0f, "ratio",
+                                       "Fraction of inspired oxygen");
 // Flow correction happens as part of volume computation, in the Controller.
-static DebugFloat dbg_flow_uncorrected("flow_uncorrected", VarAccess::ReadOnly, 0.0f, "mL/s",
-                                       "Uncorrected net flow rate");
+static Debug::Variable::Float dbg_flow_uncorrected("flow_uncorrected",
+                                                   Debug::Variable::Access::ReadOnly, 0.0f, "mL/s",
+                                                   "Uncorrected net flow rate");
 
 //@TODO: Potential Caution: Density of air slightly varies over temperature and
 // altitude - need mechanism to adjust based on delivery? Constant involving
@@ -178,13 +180,13 @@ SensorReadings Sensors::GetReadings() const {
   VolumetricFlow uncorrected_flow = inflow - outflow;
 
   // Set debug variables.
-  dbg_dp_inhale.Set(inflow_delta.cmH2O());
-  dbg_dp_exhale.Set(outflow_delta.cmH2O());
-  dbg_pressure.Set(patient_pressure.cmH2O());
-  dbg_fio2.Set(fio2);
-  dbg_flow_inhale.Set(inflow.ml_per_sec());
-  dbg_flow_exhale.Set(outflow.ml_per_sec());
-  dbg_flow_uncorrected.Set(uncorrected_flow.ml_per_sec());
+  dbg_dp_inhale.set(inflow_delta.cmH2O());
+  dbg_dp_exhale.set(outflow_delta.cmH2O());
+  dbg_pressure.set(patient_pressure.cmH2O());
+  dbg_fio2.set(fio2);
+  dbg_flow_inhale.set(inflow.ml_per_sec());
+  dbg_flow_exhale.set(outflow.ml_per_sec());
+  dbg_flow_uncorrected.set(uncorrected_flow.ml_per_sec());
 
   return {
       .patient_pressure = patient_pressure,

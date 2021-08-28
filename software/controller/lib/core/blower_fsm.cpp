@@ -25,14 +25,16 @@ limitations under the License.
 // These are read but never modified here.
 
 // TODO: This should be configurable from the GUI.
-static DebugFloat dbg_pa_flow_trigger("pa_flow_trigger", VarAccess::ReadWrite, 200, "mL/s",
-                                      "pressure assist flow trigger");
+static Debug::Variable::Float dbg_pa_flow_trigger("pa_flow_trigger",
+                                                  Debug::Variable::Access::ReadWrite, 200, "mL/s",
+                                                  "pressure assist flow trigger");
 
 // TODO: Is 250ms right?  Or can it be a fixed value at all; should it depend
 // on the RR or something?
-static DebugFloat dbg_pa_min_expire_ms("pa_min_expire_ms", VarAccess::ReadWrite, 250, "ms",
-                                       "minimum amount of time after ventilator exits PIP "
-                                       "before we're eligible to trigger a breath");
+static Debug::Variable::Float dbg_pa_min_expire_ms(
+    "pa_min_expire_ms", Debug::Variable::Access::ReadWrite, 250, "ms",
+    "minimum amount of time after ventilator exits PIP "
+    "before we're eligible to trigger a breath");
 
 // fast_flow_avg_alpha and slow_flow_avg_alpha were tuned for a control loop
 // that runs at a particular frequency.
@@ -41,21 +43,21 @@ static DebugFloat dbg_pa_min_expire_ms("pa_min_expire_ms", VarAccess::ReadWrite,
 // bigger, placing more weight on newer readings, and similarly if the control
 // loop gets faster, the alpha terms should get smaller.  We've tried to encode
 // this here, although it remains to be seen if it actually works.
-static DebugFloat dbg_fast_flow_avg_alpha("fast_flow_avg_alpha", VarAccess::ReadWrite,
-                                          0.2f * (Controller::GetLoopPeriod() / milliseconds(10)),
-                                          "",
-                                          "alpha term in pressure assist mode's fast-updating "
-                                          "exponentially-weighted average of flow");
-static DebugFloat dbg_slow_flow_avg_alpha("slow_flow_avg_alpha", VarAccess::ReadWrite,
-                                          0.01f * (Controller::GetLoopPeriod() / milliseconds(10)),
-                                          "",
-                                          "alpha term in pressure assist mode's slow-updating "
-                                          "exponentially-weighted average of flow");
+static Debug::Variable::Float dbg_fast_flow_avg_alpha(
+    "fast_flow_avg_alpha", Debug::Variable::Access::ReadWrite,
+    0.2f * (Controller::GetLoopPeriod() / milliseconds(10)), "",
+    "alpha term in pressure assist mode's fast-updating "
+    "exponentially-weighted average of flow");
+static Debug::Variable::Float dbg_slow_flow_avg_alpha(
+    "slow_flow_avg_alpha", Debug::Variable::Access::ReadWrite,
+    0.01f * (Controller::GetLoopPeriod() / milliseconds(10)), "",
+    "alpha term in pressure assist mode's slow-updating "
+    "exponentially-weighted average of flow");
 
-static DebugFloat dbg_fast_flow_avg("fast_flow_avg", VarAccess::ReadOnly, 0.0f, "mL/s",
-                                    "fast-updating flow average");
-static DebugFloat dbg_slow_flow_avg("slow_flow_avg", VarAccess::ReadOnly, 0.0f, "mL/s",
-                                    "slow-updating flow average");
+static Debug::Variable::Float dbg_fast_flow_avg("fast_flow_avg", Debug::Variable::Access::ReadOnly,
+                                                0.0f, "mL/s", "fast-updating flow average");
+static Debug::Variable::Float dbg_slow_flow_avg("slow_flow_avg", Debug::Variable::Access::ReadOnly,
+                                                0.0f, "mL/s", "slow-updating flow average");
 
 // Given t = secs_per_breath and r = I:E ratio, calculate inspiration and
 // expiration durations (I and E).
@@ -118,8 +120,8 @@ PressureAssistFsm::PressureAssistFsm(Time now, const VentParams &params)
       start_time_(now),
       inspire_end_(start_time_ + InspireDuration(params)),
       expire_deadline_(inspire_end_ + ExpireDuration(params)) {
-  dbg_slow_flow_avg.Set(0.f);
-  dbg_fast_flow_avg.Set(0.f);
+  dbg_slow_flow_avg.set(0.f);
+  dbg_fast_flow_avg.set(0.f);
 }
 
 BlowerSystemState PressureAssistFsm::DesiredState(Time now, const BlowerFsmInputs &inputs) {
@@ -163,20 +165,20 @@ bool PressureAssistFsm::PatientInspiring(Time now, const BlowerFsmInputs &inputs
   //
   // If the fast average exceeds the slow average by a threshold, we trigger a
   // breath.
-  float slow_alpha = dbg_slow_flow_avg_alpha.Get();
-  float fast_alpha = dbg_fast_flow_avg_alpha.Get();
+  float slow_alpha = dbg_slow_flow_avg_alpha.get();
+  float fast_alpha = dbg_fast_flow_avg_alpha.get();
 
   // TODO: This could be encapsulated in an exponentially-weighted-average
   // class.
   slow_flow_avg_ =
       slow_alpha * inputs.net_flow + (1 - slow_alpha) * slow_flow_avg_.value_or(inputs.net_flow);
-  dbg_slow_flow_avg.Set(slow_flow_avg_->ml_per_sec());
+  dbg_slow_flow_avg.set(slow_flow_avg_->ml_per_sec());
   fast_flow_avg_ =
       fast_alpha * inputs.net_flow + (1 - fast_alpha) * fast_flow_avg_.value_or(inputs.net_flow);
-  dbg_fast_flow_avg.Set(fast_flow_avg_->ml_per_sec());
+  dbg_fast_flow_avg.set(fast_flow_avg_->ml_per_sec());
 
-  return now >= inspire_end_ + milliseconds(dbg_pa_min_expire_ms.Get()) &&
-         *fast_flow_avg_ > *slow_flow_avg_ + ml_per_sec(dbg_pa_flow_trigger.Get());
+  return now >= inspire_end_ + milliseconds(dbg_pa_min_expire_ms.get()) &&
+         *fast_flow_avg_ > *slow_flow_avg_ + ml_per_sec(dbg_pa_flow_trigger.get());
 }
 
 BlowerSystemState BlowerFsm::DesiredState(Time now, const VentParams &params,

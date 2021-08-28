@@ -15,8 +15,7 @@ limitations under the License.
 
 #pragma once
 
-#include <stdint.h>
-
+#include <cstdint>
 #include <type_traits>
 
 // Wrappers for measurements of different physical quantities [1] (length,

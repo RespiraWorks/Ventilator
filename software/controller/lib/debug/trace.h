@@ -15,8 +15,7 @@ limitations under the License.
 
 #pragma once
 
-#include <stdint.h>
-
+#include <cstdint>
 #include <optional>
 
 #include "circular_buffer.h"
@@ -61,13 +60,13 @@ class Trace {
 
   uint32_t GetNumActiveVars() {
     return static_cast<uint32_t>(std::count_if(traced_vars_.begin(), traced_vars_.end(),
-                                               [](const DebugVarBase *var) { return (var); }));
+                                               [](const Variable::Base *var) { return (var); }));
   }
 
   template <int index>
   void SetTracedVarId(int32_t id) {
     static_assert(index >= 0 && index < MaxTraceVars);
-    traced_vars_[index] = DebugVar::FindVar(static_cast<uint16_t>(id));
+    traced_vars_[index] = Variable::Registry::singleton().find(static_cast<uint16_t>(id));
     // The layout of the trace buffer is just a bunch of uint32_t's one per
     // each variable of each sample cycle. In order to be able to interpret
     // the buffer unambiguously, the set of traced variables must be the same
@@ -78,7 +77,7 @@ class Trace {
   template <int index>
   int32_t GetTracedVarId() {
     static_assert(index >= 0 && index < MaxTraceVars);
-    return traced_vars_[index] ? traced_vars_[index]->GetId() : -1;
+    return traced_vars_[index] ? traced_vars_[index]->id() : -1;
   }
 
   bool SetTracedVarId(uint8_t index, uint16_t id);
@@ -105,7 +104,7 @@ class Trace {
   // Number of loop cycles elapsed since last sample was captured.
   uint32_t cycles_count_{0};
 
-  std::array<DebugVarBase *, MaxTraceVars> traced_vars_ = {nullptr};
+  std::array<Variable::Base *, MaxTraceVars> traced_vars_ = {nullptr};
 
   // This circular buffer is as big as we consider reasonable, to give a good
   // tracing capability: 40% of the RAM available on our STM32

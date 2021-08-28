@@ -69,7 +69,7 @@ TEST(PidTest, Initialization) {
 
 TEST(PidTest, AccessSetViaDebug) {
   auto& registry = Debug::Variable::Registry::singleton();
-  auto count_offset = registry.count();
+  uint16_t count_offset = registry.count();
   PID pid("pid_", " for help", 1.f, 2.f, 3.f,
           /*p_term=*/PID::TermApplication::OnError,
           /*d_term=*/PID::TermApplication::OnMeasurement, MIN_OUTPUT, MAX_OUTPUT);

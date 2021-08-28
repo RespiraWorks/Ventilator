@@ -75,9 +75,9 @@ TEST(PidTest, AccessSetViaDebug) {
           /*d_term=*/PID::TermApplication::OnMeasurement, MIN_OUTPUT, MAX_OUTPUT);
 
   EXPECT_EQ(registry.count(), 3 + count_offset);
-  auto kp = reinterpret_cast<Debug::Variable::Float*>(registry.find(0 + count_offset));
-  auto ki = reinterpret_cast<Debug::Variable::Float*>(registry.find(1 + count_offset));
-  auto kd = reinterpret_cast<Debug::Variable::Float*>(registry.find(2 + count_offset));
+  auto kp = reinterpret_cast<Debug::Variable::Float*>(registry.find(uint16_t(0) + count_offset));
+  auto ki = reinterpret_cast<Debug::Variable::Float*>(registry.find(uint16_t(1) + count_offset));
+  auto kd = reinterpret_cast<Debug::Variable::Float*>(registry.find(uint16_t(2) + count_offset));
 
   kp->set(11.f);
   EXPECT_EQ(pid.kp(), 11.f);

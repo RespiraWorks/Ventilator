@@ -325,7 +325,7 @@ class ControllerDebugInterface:
     def trace_save(self, scenario_name="manual_trace"):
         test = TestData(test_scenario.TestScenario())
         test.traces = self.trace_download()
-        time_series = test.traces[0]
+        time_series = test.traces[0].data
         test.scenario.capture_duration_secs = (
             time_series[len(time_series) - 1] - time_series[0]
         )

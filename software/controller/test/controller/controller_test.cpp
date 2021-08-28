@@ -43,9 +43,11 @@ TEST(ControllerTest, ControllerVolumeMatchesFlowIntegrator) {
   SensorReadings readings = {
       .patient_pressure = kPa(0),
       .air_inflow_pressure_diff = kPa(0),
+      .oxygen_inflow_pressure_diff = kPa(0),
       .outflow_pressure_diff = kPa(0),
       .fio2 = 0.21f,
       .air_inflow = ml_per_min(0),
+      .oxygen_inflow = ml_per_min(0),
       .outflow = ml_per_min(0),
   };
   // need to Run once in order to initialize the volume integrators
@@ -60,17 +62,21 @@ TEST(ControllerTest, ControllerVolumeMatchesFlowIntegrator) {
 
     // Where are we in this breath, [0, 1]?
     float breath_pos = static_cast<float>(i % steps_per_breath) / steps_per_breath;
-    Pressure inflow_pressure = cmH2O(0.5f + (breath_pos < 0.5 ? 1.f : 0.f));
+    Pressure air_inflow_pressure = cmH2O(0.5f + (breath_pos < 0.5 ? 1.f : 0.f));
+    Pressure oxy_inflow_pressure = cmH2O(0.5f + (breath_pos < 0.5 ? 1.f : 0.f));
     Pressure outflow_pressure = cmH2O(0.4f + (breath_pos >= 0.5 ? 1.f : 0.f));
     readings = {
         .patient_pressure = kPa(0),
-        .air_inflow_pressure_diff = inflow_pressure,
+        .air_inflow_pressure_diff = air_inflow_pressure,
+        .oxygen_inflow_pressure_diff = oxy_inflow_pressure,
         .outflow_pressure_diff = outflow_pressure,
         .fio2 = 0.21f,
-        .air_inflow = Sensors::PressureDeltaToFlow(inflow_pressure),
+        .air_inflow = Sensors::PressureDeltaToFlow(air_inflow_pressure),
+        .oxygen_inflow = Sensors::PressureDeltaToFlow(oxy_inflow_pressure),
         .outflow = Sensors::PressureDeltaToFlow(outflow_pressure),
     };
-    VolumetricFlow uncorrected_flow = readings.air_inflow - readings.outflow;
+    VolumetricFlow uncorrected_flow =
+        readings.air_inflow + readings.oxygen_inflow - readings.outflow;
     flow_integrator.AddFlow(now, uncorrected_flow);
 
     auto [unused_actuator_state, status] = c.Run(now, params, readings);
@@ -144,9 +150,11 @@ void actuatorsTestSequence(const std::vector<ActuatorsTest> &seq) {
   SensorReadings last_readings = {
       .patient_pressure = cmH2O(0),
       .air_inflow_pressure_diff = kPa(0),
+      .oxygen_inflow_pressure_diff = kPa(0),
       .outflow_pressure_diff = kPa(0),
       .fio2 = 0,
       .air_inflow = ml_per_min(0),
+      .oxygen_inflow = ml_per_min(0),
       .outflow = ml_per_min(0),
   };
 
@@ -203,9 +211,11 @@ TEST(ControllerTest, ControlLaws) {
   SensorReadings readings_pip = {
       .patient_pressure = cmH2O(static_cast<float>(params.pip_cm_h2o)),
       .air_inflow_pressure_diff = kPa(0),
+      .oxygen_inflow_pressure_diff = kPa(0),
       .outflow_pressure_diff = kPa(0),
       .fio2 = AmbientAir,
       .air_inflow = ml_per_min(0),
+      .oxygen_inflow = ml_per_min(0),
       .outflow = ml_per_min(0),
   };
 
@@ -216,9 +226,11 @@ TEST(ControllerTest, ControlLaws) {
   SensorReadings readings_below_pip = {
       .patient_pressure = VeryLowPressure,
       .air_inflow_pressure_diff = kPa(0),
+      .oxygen_inflow_pressure_diff = kPa(0),
       .outflow_pressure_diff = kPa(0),
       .fio2 = AmbientAir,
       .air_inflow = ml_per_min(0),
+      .oxygen_inflow = ml_per_min(0),
       .outflow = ml_per_min(0),
   };
 

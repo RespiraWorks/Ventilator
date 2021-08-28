@@ -46,6 +46,7 @@ jobs:
           platformio platform install native
       - name: Run build-wrapper
         run: |
+          ls -al
           build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }} /software/controller/controller.sh --test
       - name: Run sonar-scanner
         env:

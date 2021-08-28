@@ -95,6 +95,7 @@ class Base {
  *
  * This is a singleton for keeping track of all debug variables.
  */
+// \todo deregister variables upon destruction
 class Registry {
  public:
   // this is the only way to access it
@@ -115,7 +116,7 @@ class Registry {
 
   /*! \returns number of debug variables registered
    */
-  uint32_t count() const;
+  uint16_t count() const;
 
  private:
   Base *var_list_[MaxVariableCount]{};

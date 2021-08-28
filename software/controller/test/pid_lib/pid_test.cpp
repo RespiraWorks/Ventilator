@@ -41,6 +41,52 @@ Time ticks(int num_ticks) { return base + num_ticks * sample_period; }
 
 #define EXPECT_OUTPUT(expected, actual) EXPECT_NEAR(expected, actual, OUTPUT_TOLERANCE)
 
+TEST(PidTest, Initialization) {
+  PID pid("pid_", " for help", 1.f, 2.f, 3.f,
+          /*p_term=*/PID::TermApplication::OnError,
+          /*d_term=*/PID::TermApplication::OnMeasurement, MIN_OUTPUT, MAX_OUTPUT);
+
+  EXPECT_EQ(pid.kp(), 1.f);
+  EXPECT_EQ(pid.ki(), 2.f);
+  EXPECT_EQ(pid.kd(), 3.f);
+
+  auto& registry = Debug::Variable::Registry::singleton();
+  EXPECT_EQ(registry.count(), 3);
+  auto kp = reinterpret_cast<Debug::Variable::Float*>(registry.find(0));
+  auto ki = reinterpret_cast<Debug::Variable::Float*>(registry.find(1));
+  auto kd = reinterpret_cast<Debug::Variable::Float*>(registry.find(2));
+
+  EXPECT_EQ(kp->get(), 1.f);
+  EXPECT_STREQ(kp->name(), "pid_kp");
+  EXPECT_STREQ(kp->help(), "Proportional gain for help");
+  EXPECT_EQ(ki->get(), 2.f);
+  EXPECT_STREQ(ki->name(), "pid_ki");
+  EXPECT_STREQ(ki->help(), "Integral gain for help");
+  EXPECT_EQ(kd->get(), 3.f);
+  EXPECT_STREQ(kd->name(), "pid_kd");
+  EXPECT_STREQ(kd->help(), "Derivative gain for help");
+}
+
+TEST(PidTest, AccessSetViaDebug) {
+  auto& registry = Debug::Variable::Registry::singleton();
+  auto count_offset = registry.count();
+  PID pid("pid_", " for help", 1.f, 2.f, 3.f,
+          /*p_term=*/PID::TermApplication::OnError,
+          /*d_term=*/PID::TermApplication::OnMeasurement, MIN_OUTPUT, MAX_OUTPUT);
+
+  EXPECT_EQ(registry.count(), 3 + count_offset);
+  auto kp = reinterpret_cast<Debug::Variable::Float*>(registry.find(0 + count_offset));
+  auto ki = reinterpret_cast<Debug::Variable::Float*>(registry.find(1 + count_offset));
+  auto kd = reinterpret_cast<Debug::Variable::Float*>(registry.find(2 + count_offset));
+
+  kp->set(11.f);
+  EXPECT_EQ(pid.kp(), 11.f);
+  ki->set(12.f);
+  EXPECT_EQ(pid.ki(), 12.f);
+  kd->set(13.f);
+  EXPECT_EQ(pid.kd(), 13.f);
+}
+
 TEST(PidTest, Proportional) {
   const float Kp = 0.9f;
   const float setpoint = 25;

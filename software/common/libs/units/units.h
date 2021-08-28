@@ -48,7 +48,7 @@ limitations under the License.
 //   printf("42 kPa - 10 cm_h20 is %f kPa or %f cm_h2o\n",
 //          diff.kPa(), diff.cmH2O());
 //
-// observe that we create an instance of Pressure by calling the kPa() bare
+// Observe that we create an instance of Pressure by calling the kPa() bare
 // function.  We provide the following bare functions
 //
 //   Pressure         kPa(float)

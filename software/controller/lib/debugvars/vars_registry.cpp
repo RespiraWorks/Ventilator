@@ -31,6 +31,6 @@ Base *Registry::find(uint16_t vid) {
   return var_list_[vid];
 }
 
-uint32_t Registry::count() const { return var_count_; }
+uint16_t Registry::count() const { return var_count_; }
 
 }  // namespace Debug::Variable

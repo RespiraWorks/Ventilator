@@ -64,10 +64,10 @@ float PID::compute(Time now, float input, float set_point) {
     initialized_ = true;
   }
 
-  // compute time between now and last sample.
+  // Compute time between now and last sample.
   float delta_t = (now - last_update_time_).seconds();
 
-  // compute all the working error variables
+  // Compute all the working error variables
   float error = set_point - input;
   float delta_input = input - last_input_;
 

@@ -13,9 +13,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include <limits>
-#include <optional>
-
 #include "actuators.h"
 #include "commands.h"
 #include "comms.h"
@@ -33,10 +30,8 @@ limitations under the License.
 // DebugVars below.
 static Debug::Variable::UInt32 forced_mode(
     "forced_mode", Debug::Variable::Access::ReadWrite, _VentMode_MAX + 1, "",
-    "Overrides ventilation mode as commanded by GUI; see VentMode enum in "
-    "network_protocol.proto. If out of range, this and all of the other "
-    "gui_foo "
-    "DebugVars are ignored.",
+    "Overrides ventilation mode as commanded by GUI; see VentMode enum in network_protocol.proto."
+    " If out of range, this and all of the other gui_foo variables are ignored.",
     "%s");
 static Debug::Variable::UInt32 forced_breath_rate(
     "forced_breath_rate", Debug::Variable::Access::ReadWrite, 15, "breaths/min",
@@ -50,10 +45,9 @@ static Debug::Variable::UInt32 forced_pip(
 static Debug::Variable::Float forced_ie_ratio(
     "forced_ie_ratio", Debug::Variable::Access::ReadWrite, 0.66f, "ratio",
     "Target I:E ratio; overrides GUI setting when forced_mode is valid");
-static Debug::Variable::Float forced_fio2("forced_fio2", Debug::Variable::Access::ReadWrite, 21,
-                                          "%",
-                                          "Target percent oxygen [21, 100]; overrides GUI "
-                                          "setting when forced_mode is valid");
+static Debug::Variable::Float forced_fio2(
+    "forced_fio2", Debug::Variable::Access::ReadWrite, 21, "%",
+    "Target percent oxygen [21, 100]; overrides GUI setting when forced_mode is valid");
 
 static Controller controller;
 static ControllerStatus controller_status;
@@ -125,7 +119,7 @@ static void HighPriorityTask(void *arg) {
 // This function is the lower priority background loop which runs continuously
 // after some basic system init.  Pretty much everything not time critical
 // should go here.
-static void BackgroundLoop() {
+[[noreturn]] static void BackgroundLoop() {
   // Sleep for a few seconds.  In the current iteration of the PCB, the fan
   // briefly turns on when the device starts up.  If we don't wait for the fan
   // to spin down, the sensors will miscalibrate.  This is a hardware issue
@@ -151,23 +145,21 @@ static void BackgroundLoop() {
   // This needs to be done before the sensors are used.
   sensors.Calibrate();
 
-  // Current controller status.  Updated when we receive data from the GUI, when
-  // sensors read data, etc.
+  // Current controller status.
+  // Updated when we receive data from the GUI, when sensors read data, etc.
   controller_status = ControllerStatus_init_zero;
 
   // Last-received status from the GUI.
   GuiStatus gui_status = GuiStatus_init_zero;
 
-  // After all initialization is done, ask the HAL
-  // to start our high priority thread.
+  // After all initialization is done, ask the HAL to start our high priority thread.
   hal.StartLoopTimer(Controller::GetLoopPeriod(), HighPriorityTask, nullptr);
 
   while (true) {
     controller_status.uptime_ms = hal.Now().microsSinceStartup() / 1000;
 
-    // Copy the current controller status with interrupts
-    // disabled to ensure that the data we send to the
-    // GUI is self consistent.
+    // Copy the current controller status with interrupts disabled to ensure that the data we
+    // send to the GUI is self-consistent.
     ControllerStatus local_controller_status;
     {
       BlockInterrupts block;
@@ -188,9 +180,8 @@ static void BackgroundLoop() {
       p.fio2 = forced_fio2.get() / 100.f;
     }
 
-    // Copy the gui_status data into our controller status
-    // with interrupts disabled.  This ensures that the data
-    // is copied atomically
+    // Copy the gui_status data into our controller status with interrupts disabled.
+    // This ensures that the data is copied atomically
     {
       BlockInterrupts block;
       controller_status.active_params = gui_status.desired_params;
@@ -205,8 +196,7 @@ static void BackgroundLoop() {
 }
 
 int main() {
-  // Initialize hal first because it initializes the watchdog. See comment on
-  // HalApi::Init().
+  // Initialize hal first because it initializes the watchdog. See comment on HalApi::Init().
   hal.Init();
 
   // Locate our non-volatile parameter block in flash

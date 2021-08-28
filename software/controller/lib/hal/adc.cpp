@@ -219,7 +219,7 @@ Voltage HalApi::AnalogRead(AnalogPin pin) {
     switch (pin) {
       case AnalogPin::PatientPressure:
         return 0;
-      case AnalogPin::InflowPressureDiff:
+      case AnalogPin::AirInflowPressureDiff:
         return 1;
       case AnalogPin::OutflowPressureDiff:
         return 2;

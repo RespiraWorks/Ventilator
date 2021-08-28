@@ -11,12 +11,6 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-
-module contributors: verityRF, jlebar, lee-matthews, Edwin Chiu
-
-The purpose of this module is to allow calibrated readings from the different
-pressure sensors in the ventilator design. It is designed to be used with the
-Arduino Nano and the MPXV5004GP and MPXV7002DP pressure sensors.
 */
 
 #pragma once
@@ -27,7 +21,7 @@ Arduino Nano and the MPXV5004GP and MPXV7002DP pressure sensors.
 struct SensorReadings {
   Pressure patient_pressure;
   // Pressure differences read at the inflow/outflow venturis.
-  Pressure inflow_pressure_diff;
+  Pressure air_inflow_pressure_diff;
   Pressure outflow_pressure_diff;
 
   // fraction of inspired oxygen (fiO2)
@@ -39,7 +33,7 @@ struct SensorReadings {
   // These are "uncorrected" values.  We account for high-frequency noise by
   // e.g. averaging many samples, but we don't account here for low-frequency
   // sensor zero-point drift.
-  VolumetricFlow inflow;
+  VolumetricFlow air_inflow;
   VolumetricFlow outflow;
 };
 
@@ -79,7 +73,7 @@ class Sensors {
  private:
   enum class Sensor {
     PatientPressure,
-    InflowPressureDiff,
+    AirInflowPressureDiff,
     OutflowPressureDiff,
     FIO2,
   };

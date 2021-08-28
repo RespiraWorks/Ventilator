@@ -72,7 +72,8 @@ static SensorReadings update_readings(Duration dt, Pressure patient_pressure,
                                       Pressure inflow_pressure, Pressure outflow_pressure,
                                       Pressure p_amb, float fio2, Sensors *sensors) {
   hal.TESTSetAnalogPin(AnalogPin::PatientPressure, MPXV5004_PressureToVoltage(patient_pressure));
-  hal.TESTSetAnalogPin(AnalogPin::InflowPressureDiff, MPXV5004_PressureToVoltage(inflow_pressure));
+  hal.TESTSetAnalogPin(AnalogPin::AirInflowPressureDiff,
+                       MPXV5004_PressureToVoltage(inflow_pressure));
   hal.TESTSetAnalogPin(AnalogPin::OutflowPressureDiff,
                        MPXV5004_PressureToVoltage(outflow_pressure));
   hal.TESTSetAnalogPin(AnalogPin::FIO2, FIO2ToVoltage(fio2, p_amb));
@@ -93,7 +94,7 @@ TEST(SensorTests, FullScalePressureReading) {
   // First set the simulated analog signals to an ambient 0 kPa corresponding
   // voltage during calibration
   hal.TESTSetAnalogPin(AnalogPin::PatientPressure, voltage_at_0kPa);
-  hal.TESTSetAnalogPin(AnalogPin::InflowPressureDiff, voltage_at_0kPa);
+  hal.TESTSetAnalogPin(AnalogPin::AirInflowPressureDiff, voltage_at_0kPa);
   hal.TESTSetAnalogPin(AnalogPin::OutflowPressureDiff, voltage_at_0kPa);
   // Set fio2 signal to allow calibration
   hal.TESTSetAnalogPin(AnalogPin::FIO2, FIO2ToVoltage(0.21f, atm(1.0f)));
@@ -116,7 +117,7 @@ TEST(SensorTests, FiO2Reading) {
   // Set the other sensors to reasonable values to allow calibration
   Voltage voltage_at_0kPa = MPXV5004_PressureToVoltage(kPa(0));
   hal.TESTSetAnalogPin(AnalogPin::PatientPressure, voltage_at_0kPa);
-  hal.TESTSetAnalogPin(AnalogPin::InflowPressureDiff, voltage_at_0kPa);
+  hal.TESTSetAnalogPin(AnalogPin::AirInflowPressureDiff, voltage_at_0kPa);
   hal.TESTSetAnalogPin(AnalogPin::OutflowPressureDiff, voltage_at_0kPa);
 
   Sensors sensors;
@@ -160,7 +161,7 @@ TEST(SensorTests, TotalFlowCalculation) {
   // voltage during calibration
   Voltage voltage_at_0kPa = MPXV5004_PressureToVoltage(kPa(0));  //[V]
   hal.TESTSetAnalogPin(AnalogPin::PatientPressure, voltage_at_0kPa);
-  hal.TESTSetAnalogPin(AnalogPin::InflowPressureDiff, voltage_at_0kPa);
+  hal.TESTSetAnalogPin(AnalogPin::AirInflowPressureDiff, voltage_at_0kPa);
   hal.TESTSetAnalogPin(AnalogPin::OutflowPressureDiff, voltage_at_0kPa);
   // Set fio2 signal to allow calibration
   hal.TESTSetAnalogPin(AnalogPin::FIO2, FIO2ToVoltage(0.21f, atm(1.0f)));
@@ -173,7 +174,7 @@ TEST(SensorTests, TotalFlowCalculation) {
       auto readings = update_readings(
           /*dt=*/seconds(0.0f), /*patient_pressure=*/kPa(0.0f), p_in, p_out, atm(1.0f),
           /*fio2=*/0.21f, &sensors);
-      EXPECT_FLOW_NEAR(readings.inflow, Sensors::PressureDeltaToFlow(p_in));
+      EXPECT_FLOW_NEAR(readings.air_inflow, Sensors::PressureDeltaToFlow(p_in));
       EXPECT_FLOW_NEAR(readings.outflow, Sensors::PressureDeltaToFlow(p_out));
     }
   }
@@ -185,7 +186,7 @@ TEST(SensorTests, Calibration) {
   Pressure init_pressure = kPa(0.23f);
   hal.TESTSetAnalogPin(AnalogPin::PatientPressure, MPXV5004_PressureToVoltage(init_pressure));
   Pressure init_inflow_delta = kPa(0.15f);
-  hal.TESTSetAnalogPin(AnalogPin::InflowPressureDiff,
+  hal.TESTSetAnalogPin(AnalogPin::AirInflowPressureDiff,
                        MPXV5004_PressureToVoltage(init_inflow_delta));
   Pressure init_outflow_delta = kPa(-0.13f);
   hal.TESTSetAnalogPin(AnalogPin::OutflowPressureDiff,
@@ -201,7 +202,7 @@ TEST(SensorTests, Calibration) {
   SensorReadings readings = sensors.GetReadings();
 
   EXPECT_PRESSURE_NEAR(readings.patient_pressure, kPa(0.0f));
-  EXPECT_FLOW_NEAR(readings.inflow, ml_per_sec(0.0f));
+  EXPECT_FLOW_NEAR(readings.air_inflow, ml_per_sec(0.0f));
   EXPECT_FLOW_NEAR(readings.outflow, ml_per_sec(0.0f));
   EXPECT_NEAR(readings.fio2, 0.21f, ComparisonToleranceFIO2);
 
@@ -213,7 +214,7 @@ TEST(SensorTests, Calibration) {
                              /*fio2=*/0.0f, &sensors);
 
   EXPECT_PRESSURE_NEAR(readings.patient_pressure, cmH2O(-1 * init_pressure.cmH2O()));
-  EXPECT_FLOW_NEAR(readings.inflow, -1 * Sensors::PressureDeltaToFlow(init_inflow_delta));
+  EXPECT_FLOW_NEAR(readings.air_inflow, -1 * Sensors::PressureDeltaToFlow(init_inflow_delta));
   EXPECT_FLOW_NEAR(readings.outflow, -1 * Sensors::PressureDeltaToFlow(init_outflow_delta));
   EXPECT_NEAR(readings.fio2, 0.21f - init_fio2, ComparisonToleranceFIO2);
 
@@ -228,7 +229,7 @@ TEST(SensorTests, Calibration) {
       /*fio2=*/0.25f + init_fio2, &sensors);
 
   EXPECT_PRESSURE_NEAR(readings.patient_pressure, kPa(-0.5f));
-  EXPECT_FLOW_NEAR(readings.inflow, Sensors::PressureDeltaToFlow(kPa(1.1f)));
+  EXPECT_FLOW_NEAR(readings.air_inflow, Sensors::PressureDeltaToFlow(kPa(1.1f)));
   EXPECT_FLOW_NEAR(readings.outflow, Sensors::PressureDeltaToFlow(kPa(0.01f)));
   EXPECT_NEAR(readings.fio2, 0.25f + 0.21f, ComparisonToleranceFIO2);
 }

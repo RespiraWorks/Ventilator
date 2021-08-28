@@ -66,7 +66,7 @@ static Debug::Variable::UInt32 dbg_breath_id("breath_id", Debug::Variable::Acces
 
 std::pair<ActuatorsState, ControllerState> Controller::Run(Time now, const VentParams &params,
                                                            const SensorReadings &sensor_readings) {
-  VolumetricFlow uncorrected_net_flow = sensor_readings.inflow - sensor_readings.outflow;
+  VolumetricFlow uncorrected_net_flow = sensor_readings.air_inflow - sensor_readings.outflow;
   flow_integrator_->AddFlow(now, uncorrected_net_flow);
   uncorrected_flow_integrator_->AddFlow(now, uncorrected_net_flow);
 
@@ -164,7 +164,7 @@ std::pair<ActuatorsState, ControllerState> Controller::Run(Time now, const VentP
 
   dbg_pc_setpoint.set(desired_state.pressure_setpoint.value_or(kPa(0)).cmH2O());
   dbg_net_flow.set(controller_state.net_flow.ml_per_sec());
-  dbg_net_flow_uncorrected.set((sensor_readings.inflow - sensor_readings.outflow).ml_per_sec());
+  dbg_net_flow_uncorrected.set((sensor_readings.air_inflow - sensor_readings.outflow).ml_per_sec());
   dbg_volume.set(controller_state.patient_volume.ml());
   dbg_volume_uncorrected.set(uncorrected_flow_integrator_->GetVolume().ml());
   dbg_flow_correction.set(flow_integrator_->FlowCorrection().ml_per_sec());

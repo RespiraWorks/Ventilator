@@ -65,8 +65,8 @@ AnalogPin Sensors::PinFor(Sensor s) {
   switch (s) {
     case Sensor::PatientPressure:
       return AnalogPin::PatientPressure;
-    case Sensor::InflowPressureDiff:
-      return AnalogPin::InflowPressureDiff;
+    case Sensor::AirInflowPressureDiff:
+      return AnalogPin::AirInflowPressureDiff;
     case Sensor::OutflowPressureDiff:
       return AnalogPin::OutflowPressureDiff;
     case Sensor::FIO2:
@@ -99,8 +99,8 @@ void Sensors::Calibrate() {
   // open any necessary valves, and recalibrate.
   hal.Delay(milliseconds(20));
 
-  for (Sensor s : {Sensor::PatientPressure, Sensor::InflowPressureDiff, Sensor::OutflowPressureDiff,
-                   Sensor::FIO2}) {
+  for (Sensor s : {Sensor::PatientPressure, Sensor::AirInflowPressureDiff,
+                   Sensor::OutflowPressureDiff, Sensor::FIO2}) {
     sensors_zero_vals_[static_cast<int>(s)] = hal.AnalogRead(PinFor(s));
   }
 }
@@ -167,7 +167,7 @@ SensorReadings Sensors::GetReadings() const {
   auto patient_pressure = ReadPressureSensor(Sensor::PatientPressure);
   // Flow rate is inhalation flow minus exhalation flow. Positive value is flow
   // into lungs, and negative is flow out of lungs.
-  auto inflow_delta = ReadPressureSensor(Sensor::InflowPressureDiff);
+  auto air_inflow_delta = ReadPressureSensor(Sensor::AirInflowPressureDiff);
   auto outflow_delta = ReadPressureSensor(Sensor::OutflowPressureDiff);
   // Fraction of Inspired Oxygen assuming ambient pressure of 101.3 kPa
   // TODO: measure ambient pressure from an additional sensor and/or estimate
@@ -175,25 +175,25 @@ SensorReadings Sensors::GetReadings() const {
   Pressure p_ambient = kPa(101.3f);
   auto fio2 = ReadOxygenSensor(p_ambient);
 
-  VolumetricFlow inflow = PressureDeltaToFlow(inflow_delta);
+  VolumetricFlow air_inflow = PressureDeltaToFlow(air_inflow_delta);
   VolumetricFlow outflow = PressureDeltaToFlow(outflow_delta);
-  VolumetricFlow uncorrected_flow = inflow - outflow;
+  VolumetricFlow uncorrected_flow = air_inflow - outflow;
 
   // Set debug variables.
-  dbg_dp_inhale.set(inflow_delta.cmH2O());
+  dbg_dp_inhale.set(air_inflow_delta.cmH2O());
   dbg_dp_exhale.set(outflow_delta.cmH2O());
   dbg_pressure.set(patient_pressure.cmH2O());
   dbg_fio2.set(fio2);
-  dbg_flow_inhale.set(inflow.ml_per_sec());
+  dbg_flow_inhale.set(air_inflow.ml_per_sec());
   dbg_flow_exhale.set(outflow.ml_per_sec());
   dbg_flow_uncorrected.set(uncorrected_flow.ml_per_sec());
 
   return {
       .patient_pressure = patient_pressure,
-      .inflow_pressure_diff = inflow_delta,
+      .air_inflow_pressure_diff = air_inflow_delta,
       .outflow_pressure_diff = outflow_delta,
       .fio2 = fio2,
-      .inflow = inflow,
+      .air_inflow = air_inflow,
       .outflow = outflow,
   };
 }

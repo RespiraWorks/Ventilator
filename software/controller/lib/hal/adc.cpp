@@ -56,13 +56,12 @@ limitations under the License.
 #include "hal_stm32.h"
 
 /*
-Please refer to [PCB] as the ultimate source of which
-pin is used for which function.
+Please refer to [PCB] as the ultimate source of which pin is used for which function.
 
 The following pins are used as analog inputs on the rev-1 PCB:
-- PA0 (ADC1_IN5)  - vin (not currently used)
+- PA0 (ADC1_IN5)  - oxygen influx flow
 - PA1 (ADC1_IN6)  - pressure
-- PA4 (ADC1_IN9)  - inhale flow
+- PA4 (ADC1_IN9)  - air influx flow
 - PB0 (ADC1_IN15) - exhale flow
 - PC3 (ADC1_IN2) - oxygen sensor
 
@@ -73,7 +72,7 @@ Reference abbreviations ([RM], [PCB], etc) are defined in hal/README.md
 static constexpr float SampleHistoryTimeSec = 0.001f;
 
 // Total number of A/D inputs we're sampling
-static constexpr int AdcChannels = 4;
+static constexpr int AdcChannels = 5;
 
 // This constant controls how many times we have the A/D sample each input
 // and sum them before moving on to the next input.  The constant is set
@@ -182,10 +181,11 @@ void HalApi::InitADC() {
   // Set conversion sequence length:
   adc->adc[0].sequence.length = AdcChannels - 1;
 
-  adc->adc[0].sequence.sequence1 = 6;
-  adc->adc[0].sequence.sequence2 = 9;
-  adc->adc[0].sequence.sequence3 = 15;
-  adc->adc[0].sequence.sequence4 = 2;
+  adc->adc[0].sequence.sequence1 = 5;
+  adc->adc[0].sequence.sequence2 = 6;
+  adc->adc[0].sequence.sequence3 = 9;
+  adc->adc[0].sequence.sequence4 = 15;
+  adc->adc[0].sequence.sequence5 = 2;
 
   // I use DMA1 channel 1 to copy my A/D readings into my buffer ([RM] 11.4.4)
   EnableClock(Dma1Base);
@@ -209,6 +209,7 @@ void HalApi::InitADC() {
   dma->channel[c1].config.priority = 0;
   dma->channel[c1].config.enable = 1;
 
+  // \todo what is "4"? why 4? maybe define a constant?
   // Start the A/D converter
   adc->adc[0].control |= 4;
 }
@@ -217,14 +218,16 @@ void HalApi::InitADC() {
 Voltage HalApi::AnalogRead(AnalogPin pin) {
   int offset = [&] {
     switch (pin) {
-      case AnalogPin::PatientPressure:
+      case AnalogPin::OxygenInflowPressureDiff:
         return 0;
-      case AnalogPin::AirInflowPressureDiff:
+      case AnalogPin::PatientPressure:
         return 1;
-      case AnalogPin::OutflowPressureDiff:
+      case AnalogPin::AirInflowPressureDiff:
         return 2;
-      case AnalogPin::FIO2:
+      case AnalogPin::OutflowPressureDiff:
         return 3;
+      case AnalogPin::FIO2:
+        return 4;
     }
     // All cases covered above (and GCC checks this).
     __builtin_unreachable();

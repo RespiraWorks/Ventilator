@@ -85,6 +85,7 @@ enum class AnalogPin {
   // - PATIENT_PRESSURE reads an absolute pressure value at the patient.
   // - {INFLOW,OUTFLOW}_PRESSURE_DIFF, read a differential across a venturi.
   //   They let us measure volumetric flow into and out of the patient.
+  OxygenInflowPressureDiff,
   PatientPressure,
   AirInflowPressureDiff,
   OutflowPressureDiff,

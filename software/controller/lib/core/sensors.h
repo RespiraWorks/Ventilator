@@ -23,6 +23,7 @@ struct SensorReadings {
   Pressure patient_pressure;
   // Pressure differences read at the inflow/outflow venturis.
   Pressure air_inflow_pressure_diff;
+  Pressure oxygen_inflow_pressure_diff;
   Pressure outflow_pressure_diff;
 
   // fraction of inspired oxygen (fiO2)
@@ -35,6 +36,7 @@ struct SensorReadings {
   // e.g. averaging many samples, but we don't account here for low-frequency
   // sensor zero-point drift.
   VolumetricFlow air_inflow;
+  VolumetricFlow oxygen_inflow;
   VolumetricFlow outflow;
 };
 
@@ -73,13 +75,14 @@ class Sensors {
 
  private:
   enum class Sensor {
+    OxygenInflowPressureDiff,
     PatientPressure,
     AirInflowPressureDiff,
     OutflowPressureDiff,
     FIO2,
   };
   // Keep this in sync with the Sensor enum!
-  constexpr static int NumSensors{4};
+  constexpr static int NumSensors{5};
 
   static AnalogPin PinFor(Sensor s);
   Pressure ReadPressureSensor(Sensor s) const;
@@ -89,19 +92,20 @@ class Sensors {
   Voltage sensors_zero_vals_[NumSensors];
 
   mutable Debug::Variable::Float inflow_air_dp_{"inflow_air_dp", Debug::Variable::Access::ReadOnly,
-                                                0.0f, "cmH2O", "Inhale diff pressure"};
+                                                0.0f, "cmH2O", "Air influx differential pressure"};
+  mutable Debug::Variable::Float inflow_oxy_dp_{"inflow_oxygen_dp",
+                                                Debug::Variable::Access::ReadOnly, 0.0f, "cmH2O",
+                                                "Concentrated oxygen influx differential pressure"};
   mutable Debug::Variable::Float outflow_dp_{"outflow_dp", Debug::Variable::Access::ReadOnly, 0.0f,
-                                             "cmH2O", "Exhale diff pressure"};
+                                             "cmH2O", "Exhale differential pressure"};
   mutable Debug::Variable::Float patient_pressure_{"pressure", Debug::Variable::Access::ReadOnly,
                                                    0.0f, "cmH2O", "Patient pressure"};
   mutable Debug::Variable::Float inflow_air_{"inflow_air", Debug::Variable::Access::ReadOnly, 0.0f,
-                                             "mL/s", "Inhale flow rate"};
+                                             "mL/s", "Air influx flow rate"};
+  mutable Debug::Variable::Float inflow_oxy_{"inflow_oxygen", Debug::Variable::Access::ReadOnly,
+                                             0.0f, "mL/s", "Concentrated oxygen influx flow rate"};
   mutable Debug::Variable::Float outflow_{"outflow", Debug::Variable::Access::ReadOnly, 0.0f,
-                                          "mL/s", "Exhale flow rate"};
+                                          "mL/s", "Outflow rate"};
   mutable Debug::Variable::Float fio2_{"fio2", Debug::Variable::Access::ReadOnly, 0.0f, "ratio",
                                        "Fraction of inspired oxygen"};
-  // Flow correction happens as part of volume computation, in the Controller.
-  mutable Debug::Variable::Float net_flow_uncorrected_{"net_flow_uncorrected",
-                                                       Debug::Variable::Access::ReadOnly, 0.0f,
-                                                       "mL/s", "Uncorrected net flow rate"};
 };

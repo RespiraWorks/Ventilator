@@ -141,9 +141,9 @@ uint32_t GetVarViaCmd(Interface *serial, uint16_t id) {
 
 TEST(Interface, GetVar) {
   uint32_t foo = 0xDEADBEEF;
-  DebugVar var_foo("foo", VarAccess::ReadOnly, &foo, "unit");
+  Debug::Variable::Primitive32 var_foo("foo", Debug::Variable::Access::ReadOnly, &foo, "unit");
   uint32_t bar = 0xC0DEBABE;
-  DebugVar var_bar("bar", VarAccess::ReadOnly, &bar, "unit");
+  Debug::Variable::Primitive32 var_bar("bar", Debug::Variable::Access::ReadOnly, &bar, "unit");
 
   Trace trace;
   Command::VarHandler var_command;
@@ -151,8 +151,8 @@ TEST(Interface, GetVar) {
   // Run a bunch of times with different expected results
   // to exercise buffer management.
   for (int i = 0; i < 100; ++i, ++foo, ++bar) {
-    EXPECT_EQ(foo, GetVarViaCmd(&serial, var_foo.GetId()));
-    EXPECT_EQ(bar, GetVarViaCmd(&serial, var_bar.GetId()));
+    EXPECT_EQ(foo, GetVarViaCmd(&serial, var_foo.id()));
+    EXPECT_EQ(bar, GetVarViaCmd(&serial, var_bar.id()));
   }
 }
 

@@ -32,14 +32,15 @@ limitations under the License.
 #include "hal.h"
 #include "vars.h"
 
-static DebugUInt32 dbg_reinit("nvparams_reinit", VarAccess::ReadWrite, 0, "",
-                              "Set to 1 to request a reinit of NV params on next boot.");
+static Debug::Variable::UInt32 dbg_reinit(
+    "nvparams_reinit", Debug::Variable::Access::ReadWrite, 0, "",
+    "Set to 1 to request a reinit of NV params on next boot.");
 
-static DebugUInt32 dbg_serial("serial_number", VarAccess::ReadWrite, 0, "",
-                              "Serial number of the ventilator, in EEPROM");
+static Debug::Variable::UInt32 dbg_serial("serial_number", Debug::Variable::Access::ReadWrite, 0,
+                                          "", "Serial number of the ventilator, in EEPROM");
 
-static DebugUInt32 dbg_nvparams("nvparams_address", VarAccess::ReadOnly, 0, "",
-                                "Address of nv_params");
+static Debug::Variable::UInt32 dbg_nvparams("nvparams_address", Debug::Variable::Access::ReadOnly,
+                                            0, "", "Address of nv_params");
 
 namespace NVParams {
 
@@ -60,7 +61,7 @@ static bool IsValid(Structure *param) { return param->crc == CRC(param); };
 // execution while it reads through the I2C EEPROM.
 void Handler::Init(I2Ceeprom *eeprom) {
 #ifndef TEST_MODE  // this leads to conversion error when compiling on native
-  dbg_nvparams.Set(reinterpret_cast<uint32_t>(&nv_param_));
+  dbg_nvparams.set(reinterpret_cast<uint32_t>(&nv_param_));
 #endif
   if (eeprom != nullptr) {
     eeprom_ = eeprom;
@@ -114,8 +115,8 @@ void Handler::Init(I2Ceeprom *eeprom) {
   }
   // set write access dbg_vars = nv_params to prevent the first pass in
   // handler to reset those to their default values in nv_params
-  dbg_reinit.Set(nv_param_.reinit);
-  dbg_serial.Set(nv_param_.vent_serial_number);
+  dbg_reinit.set(nv_param_.reinit);
+  dbg_serial.set(nv_param_.vent_serial_number);
   // increase power cycles counter in nv_params
   uint32_t counter = nv_param_.power_cycles + 1;
   Set(offsetof(Structure, power_cycles), &counter, 4);
@@ -194,11 +195,11 @@ void Handler::Update(const Time now, VentParams *params) {
   }
 
   // Update from debug variables
-  uint8_t reinit = static_cast<uint8_t>(dbg_reinit.Get());
+  uint8_t reinit = static_cast<uint8_t>(dbg_reinit.get());
   if (reinit != nv_param_.reinit) {
     Set(offsetof(Structure, reinit), &reinit, 1);
   }
-  uint32_t serial = dbg_serial.Get();
+  uint32_t serial = dbg_serial.get();
   if (serial != nv_param_.vent_serial_number) {
     Set(offsetof(Structure, vent_serial_number), &serial, 4);
   }

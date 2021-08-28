@@ -1,8 +1,11 @@
-/* Copyright 2020, RespiraWorks
+/* Copyright 2020-2021, RespiraWorks
+
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
+
     http://www.apache.org/licenses/LICENSE-2.0
+
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,32 +22,22 @@ limitations under the License.
 #pragma once
 
 #include "units.h"
-
-enum class ProportionalTerm {
-  OnError,
-  OnMeasurement,
-};
-
-enum class DifferentialTerm {
-  OnError,
-  OnMeasurement,
-};
+#include "vars.h"
 
 class PID {
  public:
+  enum class TermApplication {
+    OnError,
+    OnMeasurement,
+  };
+
   // Constructs the PID using the given parameters.
-  PID(float kp, float ki, float kd, ProportionalTerm p_term, DifferentialTerm d_term,
-      float output_min, float output_max)
-      : kp_(kp),
-        ki_(ki),
-        kd_(kd),
-        p_term_(p_term),
-        d_term_(d_term),
-        out_min_(output_min),
-        out_max_(output_max) {}
+  PID(const char *name, const char *help_supplement, float initial_kp, float initial_ki,
+      float initial_kd, TermApplication p_term, TermApplication d_term, float output_min,
+      float output_max);
 
   // Performs one step of the PID calculation.
-  float Compute(Time now, float input, float setpoint);
+  float compute(Time now, float input, float set_point);
 
   // Call this instead of Compute in case on this step of the control loop
   // you intend apply different control logic instead of the PID.
@@ -53,28 +46,34 @@ class PID {
   // This is a variation on the "manual" mode:
   // http://brettbeauregard.com/blog/2011/04/improving-the-beginner%e2%80%99s-pid-onoff/
   // http://brettbeauregard.com/blog/2011/04/improving-the-beginner%e2%80%99s-pid-initialization/
-  void Observe(Time now, float input, float setpoint, float actual_output);
+  void observe(Time now, float input, float set_point, float actual_output);
 
-  void SetKP(float kp) { kp_ = kp; }
-  void SetKI(float ki) { ki_ = ki; }
-  void SetKD(float kd) { kd_ = kd; }
+  // Setters
+  void kp(float);
+  void ki(float);
+  void kd(float);
 
-  void Reset() { initialized_ = false; }
+  // Getters
+  float kp() const;
+  float ki() const;
+  float kd() const;
+
+  void reset();
 
  private:
-  float kp_;  // * (P)roportional Tuning Parameter
-  float ki_;  // * (I)ntegral Tuning Parameter
-  float kd_;  // * (D)erivative Tuning Parameter
+  Debug::Variable::Float kp_;  // * (P)roportional Tuning Parameter
+  Debug::Variable::Float ki_;  // * (I)ntegral Tuning Parameter
+  Debug::Variable::Float kd_;  // * (D)erivative Tuning Parameter
 
-  const ProportionalTerm p_term_;
-  const DifferentialTerm d_term_;
+  const TermApplication proportional_term_;
+  const TermApplication differential_term_;
 
   const float out_min_;
   const float out_max_;
 
-  bool initialized_ = false;
-  Time last_update_time_ = microsSinceStartup(0);
-  float output_sum_ = 0;
-  float last_input_ = 0;
-  float last_error_ = 0;
+  bool initialized_{false};
+  Time last_update_time_{microsSinceStartup(0)};
+  float output_sum_{0};
+  float last_input_{0};
+  float last_error_{0};
 };

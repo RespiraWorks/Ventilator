@@ -59,7 +59,7 @@ ErrorCode VarHandler::GetVarInfo(Context *context) {
 
   uint16_t var_id = u8_to_u16(&context->request[1]);
 
-  const auto *var = DebugVar::FindVar(var_id);
+  const auto *var = Variable::Registry::singleton().find(var_id);
   if (!var) return ErrorCode::UnknownVariable;
 
   // The info I return consists of the following:
@@ -75,34 +75,34 @@ ErrorCode VarHandler::GetVarInfo(Context *context) {
   // <help> - variable length help string
   // <unit> - variable length unit string
   // The strings are not null terminated.
-  size_t name_length = strlen(var->GetName());
-  size_t format_length = strlen(var->GetFormat());
-  size_t help_length = strlen(var->GetHelp());
-  size_t unit_length = strlen(var->GetUnits());
+  size_t name_length = strlen(var->name());
+  size_t format_length = strlen(var->format());
+  size_t help_length = strlen(var->help());
+  size_t unit_length = strlen(var->units());
 
   // Fail if the strings are too large to fit.
   if (context->max_response_length < 8 + name_length + format_length + help_length + unit_length)
     return ErrorCode::NoMemory;
 
   uint32_t count = 0;
-  context->response[count++] = static_cast<uint8_t>(var->GetType());
-  context->response[count++] = static_cast<uint8_t>(var->GetAccess());
+  context->response[count++] = static_cast<uint8_t>(var->type());
+  context->response[count++] = static_cast<uint8_t>(var->access());
   context->response[count++] = 0;
   context->response[count++] = 0;
   context->response[count++] = static_cast<uint8_t>(name_length);
   context->response[count++] = static_cast<uint8_t>(format_length);
   context->response[count++] = static_cast<uint8_t>(help_length);
   context->response[count++] = static_cast<uint8_t>(unit_length);
-  memcpy(&context->response[count], var->GetName(), name_length);
+  memcpy(&context->response[count], var->name(), name_length);
   count += static_cast<uint32_t>(name_length);
 
-  memcpy(&context->response[count], var->GetFormat(), format_length);
+  memcpy(&context->response[count], var->format(), format_length);
   count += static_cast<uint32_t>(format_length);
 
-  memcpy(&context->response[count], var->GetHelp(), help_length);
+  memcpy(&context->response[count], var->help(), help_length);
   count += static_cast<uint32_t>(help_length);
 
-  memcpy(&context->response[count], var->GetUnits(), unit_length);
+  memcpy(&context->response[count], var->units(), unit_length);
   count += static_cast<uint32_t>(unit_length);
 
   context->response_length = count;
@@ -116,12 +116,12 @@ ErrorCode VarHandler::GetVar(Context *context) {
 
   uint16_t var_id = u8_to_u16(&context->request[1]);
 
-  auto *var = DebugVar::FindVar(var_id);
+  auto *var = Variable::Registry::singleton().find(var_id);
   if (!var) return ErrorCode::UnknownVariable;
 
   if (context->max_response_length < 4) return ErrorCode::NoMemory;
 
-  u32_to_u8(var->GetValue(), context->response);
+  u32_to_u8(var->get_value(), context->response);
   context->response_length = 4;
   *(context->processed) = true;
   return ErrorCode::None;
@@ -133,16 +133,16 @@ ErrorCode VarHandler::SetVar(Context *context) {
 
   uint16_t var_id = u8_to_u16(&context->request[1]);
 
-  auto *var = DebugVar::FindVar(var_id);
+  auto *var = Variable::Registry::singleton().find(var_id);
   if (!var) return ErrorCode::UnknownVariable;
 
   uint32_t count = context->request_length - 3;
 
   if (count < 4) return ErrorCode::MissingData;
 
-  if (!var->WriteAllowed()) return ErrorCode::InternalError;
+  if (!var->write_allowed()) return ErrorCode::InternalError;
 
-  var->SetValue(u8_to_u32(context->request + 3));
+  var->set_value(u8_to_u32(context->request + 3));
   context->response_length = 0;
   *(context->processed) = true;
   return ErrorCode::None;
@@ -151,7 +151,7 @@ ErrorCode VarHandler::SetVar(Context *context) {
 ErrorCode VarHandler::GetVarCount(Context *context) {
   if (context->max_response_length < 4) return ErrorCode::NoMemory;
 
-  u32_to_u8(DebugVarBase::GetVarCount(), context->response);
+  u32_to_u8(Variable::Registry::singleton().count(), context->response);
   context->response_length = 4;
   *(context->processed) = true;
   return ErrorCode::None;

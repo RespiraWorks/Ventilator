@@ -39,20 +39,20 @@ void CheckBufferOutput(std::array<uint8_t, kResponseSize> response, uint32_t res
 TEST(TraceHandler, Flush) {
   // define some debug variables
   uint32_t i = 0;
-  FnDebugVar var_x(
-      VarType::UInt32, "x", VarAccess::ReadOnly, "unit", [&] { return i; },
-      [&](uint32_t value) { (void)value; }, "");
-  FnDebugVar var_y(
-      VarType::UInt32, "x", VarAccess::ReadOnly, "unit", [&] { return i * 10; },
-      [&](uint32_t value) { (void)value; }, "");
+  Debug::Variable::FnVar var_x(
+      Debug::Variable::Type::UInt32, "x", Debug::Variable::Access::ReadOnly, "unit",
+      [&] { return i; }, [&](uint32_t value) { (void)value; }, "");
+  Debug::Variable::FnVar var_y(
+      Debug::Variable::Type::UInt32, "x", Debug::Variable::Access::ReadOnly, "unit",
+      [&] { return i * 10; }, [&](uint32_t value) { (void)value; }, "");
 
   // define trace and trace handler
   Trace trace;
   TraceHandler trace_handler = TraceHandler(&trace);
 
   // activate trace
-  trace.SetTracedVarId<1>(var_x.GetId());
-  trace.SetTracedVarId<3>(var_y.GetId());
+  trace.SetTracedVarId<1>(var_x.id());
+  trace.SetTracedVarId<3>(var_y.id());
   trace.Start();  // Enable tracing
 
   trace.MaybeSample();
@@ -79,12 +79,12 @@ TEST(TraceHandler, Read) {
 
   // define some debug variables
   uint32_t i = 0;
-  FnDebugVar var_x(
-      VarType::UInt32, "x", VarAccess::ReadOnly, "unit", [&] { return i; },
-      [&](uint32_t value) { (void)value; }, "");
-  FnDebugVar var_y(
-      VarType::UInt32, "y", VarAccess::ReadOnly, "unit", [&] { return i * 10; },
-      [&](uint32_t value) { (void)value; }, "");
+  Debug::Variable::FnVar var_x(
+      Debug::Variable::Type::UInt32, "x", Debug::Variable::Access::ReadOnly, "unit",
+      [&] { return i; }, [&](uint32_t value) { (void)value; }, "");
+  Debug::Variable::FnVar var_y(
+      Debug::Variable::Type::UInt32, "y", Debug::Variable::Access::ReadOnly, "unit",
+      [&] { return i * 10; }, [&](uint32_t value) { (void)value; }, "");
 
   // define trace and trace handler
   Trace trace;
@@ -104,8 +104,8 @@ TEST(TraceHandler, Read) {
   EXPECT_TRUE(processed);
   EXPECT_EQ(read_context.response_length, 0);
 
-  trace.SetTracedVarId<1>(var_x.GetId());
-  trace.SetTracedVarId<3>(var_y.GetId());
+  trace.SetTracedVarId<1>(var_x.id());
+  trace.SetTracedVarId<3>(var_y.id());
 
   // start the trace (using debug command)
   std::array start_command = {static_cast<uint8_t>(TraceHandler::Subcommand::Start)};
@@ -171,8 +171,8 @@ TEST(TraceHandler, Read) {
 
 TEST(TraceHandler, SettersAndGetters) {
   // define debug variables
-  DebugUInt32 var_x("x", VarAccess::ReadOnly, 0, "unit");
-  DebugUInt32 var_y("y", VarAccess::ReadOnly, 0, "unit");
+  Debug::Variable::UInt32 var_x("x", Debug::Variable::Access::ReadOnly, 0, "unit");
+  Debug::Variable::UInt32 var_y("y", Debug::Variable::Access::ReadOnly, 0, "unit");
 
   // define trace and trace handler
   Trace trace;
@@ -181,7 +181,7 @@ TEST(TraceHandler, SettersAndGetters) {
   // Set trace var ID for var 1
   std::array<uint8_t, 4> set_var1_command = {
       static_cast<uint8_t>(TraceHandler::Subcommand::SetVarId), 1, 0, 0};
-  u16_to_u8(var_y.GetId(), &set_var1_command[2]);
+  u16_to_u8(var_y.id(), &set_var1_command[2]);
   std::array<uint8_t, kResponseSize> response;
   bool processed{false};
   Context set_var1_context = {.request = set_var1_command.data(),
@@ -278,15 +278,15 @@ TEST(TraceHandler, SettersAndGetters) {
 
 TEST(TraceHandler, Errors) {
   // define some debug variables
-  DebugUInt32 var_x("x", VarAccess::ReadOnly, 0, "unit");
-  DebugUInt32 var_y("y", VarAccess::ReadOnly, 0, "unit");
+  Debug::Variable::UInt32 var_x("x", Debug::Variable::Access::ReadOnly, 0, "unit");
+  Debug::Variable::UInt32 var_y("y", Debug::Variable::Access::ReadOnly, 0, "unit");
 
   // define trace and trace handler
   Trace trace;
   TraceHandler trace_handler = TraceHandler(&trace);
 
-  trace.SetTracedVarId<1>(var_x.GetId());
-  trace.SetTracedVarId<3>(var_y.GetId());
+  trace.SetTracedVarId<1>(var_x.id());
+  trace.SetTracedVarId<3>(var_y.id());
   trace.Start();
 
   std::vector<std::tuple<std::vector<uint8_t>, ErrorCode>> requests = {

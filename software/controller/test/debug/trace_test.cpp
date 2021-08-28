@@ -27,24 +27,24 @@ using namespace Debug;
 
 TEST(Trace, MaybeSampleTwoVars) {
   uint32_t i = 0;
-  FnDebugVar var_x(
-      VarType::UInt32, "x", VarAccess::ReadOnly, "units", [&] { return i; },
-      [&](uint32_t value) { (void)value; }, "");
-  FnDebugVar var_y(
-      VarType::UInt32, "y", VarAccess::ReadOnly, "units", [&] { return 10 * i; },
-      [&](uint32_t value) { (void)value; }, "");
+  Debug::Variable::FnVar var_x(
+      Debug::Variable::Type::UInt32, "x", Debug::Variable::Access::ReadOnly, "units",
+      [&] { return i; }, [&](uint32_t value) { (void)value; }, "");
+  Debug::Variable::FnVar var_y(
+      Debug::Variable::Type::UInt32, "y", Debug::Variable::Access::ReadOnly, "units",
+      [&] { return 10 * i; }, [&](uint32_t value) { (void)value; }, "");
 
   Trace trace;
   trace.SetPeriod(3);  // Trace every 3 cycles.
   trace.Start();       // Enable tracing
-  trace.SetTracedVarId<1>(var_x.GetId());
-  trace.SetTracedVarId<3>(var_y.GetId());
+  trace.SetTracedVarId<1>(var_x.id());
+  trace.SetTracedVarId<3>(var_y.id());
 
   EXPECT_EQ(2, trace.GetNumActiveVars());
   EXPECT_EQ(-1, trace.GetTracedVarId<0>());
-  EXPECT_EQ(var_x.GetId(), trace.GetTracedVarId<1>());
+  EXPECT_EQ(var_x.id(), trace.GetTracedVarId<1>());
   EXPECT_EQ(-1, trace.GetTracedVarId<2>());
-  EXPECT_EQ(var_y.GetId(), trace.GetTracedVarId<3>());
+  EXPECT_EQ(var_y.id(), trace.GetTracedVarId<3>());
 
   int expected_num_samples = 0;
   for (; i < 9; ++i) {
@@ -87,8 +87,8 @@ TEST(Trace, MaybeSampleTwoVars) {
 TEST(Trace, TracesEveryCycleByDefault) {
   Trace trace;
   uint32_t x = 42;
-  DebugVar var_x("x", VarAccess::ReadOnly, &x, "units");
-  trace.SetTracedVarId<0>(var_x.GetId());
+  Debug::Variable::Primitive32 var_x("x", Debug::Variable::Access::ReadOnly, &x, "units");
+  trace.SetTracedVarId<0>(var_x.id());
   trace.Start();
   // Do not set period
 
@@ -100,9 +100,9 @@ TEST(Trace, TracesEveryCycleByDefault) {
 
 TEST(Trace, BufferFull) {
   uint32_t x = 42;
-  DebugVar var_x("x", VarAccess::ReadOnly, &x, "units");
+  Debug::Variable::Primitive32 var_x("x", Debug::Variable::Access::ReadOnly, &x, "units");
   Trace trace;
-  trace.SetTracedVarId<0>(var_x.GetId());
+  trace.SetTracedVarId<0>(var_x.id());
   trace.Start();
 
   // Buffer capacity from trace.h header file. Update if necessary.
@@ -134,10 +134,10 @@ TEST(Trace, BufferFull) {
 
 TEST(Trace, FlushOnSetVar) {
   uint32_t x = 42, y = 37;
-  DebugVar var_x("x", VarAccess::ReadOnly, &x, "units");
-  DebugVar var_y("y", VarAccess::ReadOnly, &y, "units");
+  Debug::Variable::Primitive32 var_x("x", Debug::Variable::Access::ReadOnly, &x, "units");
+  Debug::Variable::Primitive32 var_y("y", Debug::Variable::Access::ReadOnly, &y, "units");
   Trace trace;
-  trace.SetTracedVarId<0>(var_x.GetId());
+  trace.SetTracedVarId<0>(var_x.id());
   trace.Start();
 
   trace.MaybeSample();
@@ -147,7 +147,7 @@ TEST(Trace, FlushOnSetVar) {
 
   // Adding a new variable should reset the trace because otherwise
   // the interpretation of the circular buffer becomes ambiguous.
-  trace.SetTracedVarId<2>(var_y.GetId());
+  trace.SetTracedVarId<2>(var_y.id());
   EXPECT_EQ(0, trace.GetNumSamples());
 
   trace.MaybeSample();

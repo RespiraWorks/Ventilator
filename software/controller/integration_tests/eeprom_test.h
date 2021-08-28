@@ -51,13 +51,14 @@
 #include "interface.h"
 #include "vars.h"
 
-static DebugUInt32 dbg_addr_before("eeprom_before", VarAccess::ReadOnly, 0, "",
-                                   "address of eeprom contents at startup");
-static DebugUInt32 dbg_write_data("write_data", VarAccess::ReadOnly, 0, "",
-                                  "address of write data");
-static DebugUInt32 dbg_addr_after("eeprom_after", VarAccess::ReadOnly, 0, "",
-                                  "address of eeprom contents after write");
-static DebugUInt32 dbg_test_result("result", VarAccess::ReadOnly, 0, "", "result of the test");
+static Debug::Variable::UInt32 dbg_addr_before("eeprom_before", Debug::Variable::Access::ReadOnly,
+                                               0, "", "address of eeprom contents at startup");
+static Debug::Variable::UInt32 dbg_write_data("write_data", Debug::Variable::Access::ReadOnly, 0,
+                                              "", "address of write data");
+static Debug::Variable::UInt32 dbg_addr_after("eeprom_after", Debug::Variable::Access::ReadOnly, 0,
+                                              "", "address of eeprom contents after write");
+static Debug::Variable::UInt32 dbg_test_result("result", Debug::Variable::Access::ReadOnly, 0, "",
+                                               "result of the test");
 
 // test parameters
 static constexpr uint16_t Address{TEST_PARAM_1};
@@ -102,9 +103,9 @@ void RunTest() {
 
   eeprom.ReadBytes(Address, Length, &eeprom_after, &second_read_finished);
 
-  dbg_addr_before.Set(reinterpret_cast<uint32_t>(&eeprom_before));
-  dbg_write_data.Set(reinterpret_cast<uint32_t>(&write_data));
-  dbg_addr_after.Set(reinterpret_cast<uint32_t>(&eeprom_after));
+  dbg_addr_before.set(reinterpret_cast<uint32_t>(&eeprom_before));
+  dbg_write_data.set(reinterpret_cast<uint32_t>(&write_data));
+  dbg_addr_after.set(reinterpret_cast<uint32_t>(&eeprom_after));
 
   // stall execution to give time for the actual sending of those requests
   // (through DMA and/or hardware interrupts), with a 500 ms timeout: our I2C
@@ -121,7 +122,7 @@ void RunTest() {
     }
   }
 
-  dbg_test_result.Set(!failed);
+  dbg_test_result.set(!failed);
 
   // Put the memory back in its initial state (note that if the initial read
   // failed, or the write method is broken, this will also fail and the eeprom

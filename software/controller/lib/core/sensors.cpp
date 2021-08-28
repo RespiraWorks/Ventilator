@@ -37,18 +37,22 @@ constexpr static float VenturiCorrection{0.97f};
 static_assert(VenturiPortDiameter > VenturiChokeDiameter);
 static_assert(VenturiChokeDiameter > meters(0));
 
-AnalogPin Sensors::PinFor(Sensor s) {
+//////////////////////////////////////////////////////////////////
+//                   SENSOR LOGICAL MAPPINGS                    //
+//   Change these if you route your sensor tubing differently   //
+//////////////////////////////////////////////////////////////////
+AnalogPin PinFor(Sensor s) {
   switch (s) {
     case Sensor::OxygenInflowPressureDiff:
-      return AnalogPin::OxygenInflowPressureDiff;
+      return AnalogPin::U3PatientPressure;
     case Sensor::PatientPressure:
-      return AnalogPin::PatientPressure;
+      return AnalogPin::InterimBoardAnalogPressure;
     case Sensor::AirInflowPressureDiff:
-      return AnalogPin::AirInflowPressureDiff;
+      return AnalogPin::U4InhaleFlow;
     case Sensor::OutflowPressureDiff:
-      return AnalogPin::OutflowPressureDiff;
+      return AnalogPin::U5ExhaleFlow;
     case Sensor::FIO2:
-      return AnalogPin::FIO2;
+      return AnalogPin::InterimBoardOxygenSensor;
   }
   // Switch above covers all cases.
   __builtin_unreachable();

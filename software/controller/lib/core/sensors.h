@@ -19,6 +19,20 @@ limitations under the License.
 #include "units.h"
 #include "vars.h"
 
+// Keep this in sync with the Sensor enum below
+constexpr static int16_t NumSensors{5};
+
+enum class Sensor {
+  PatientPressure,
+  AirInflowPressureDiff,
+  OxygenInflowPressureDiff,
+  OutflowPressureDiff,
+  FIO2,
+};
+
+// Logical mappings: conceptual sensor -> ADC channel
+AnalogPin PinFor(Sensor s);
+
 struct SensorReadings {
   Pressure patient_pressure;
   // Pressure differences read at the inflow/outflow venturis.
@@ -74,38 +88,28 @@ class Sensors {
   static VolumetricFlow PressureDeltaToFlow(Pressure delta);
 
  private:
-  enum class Sensor {
-    OxygenInflowPressureDiff,
-    PatientPressure,
-    AirInflowPressureDiff,
-    OutflowPressureDiff,
-    FIO2,
-  };
-  // Keep this in sync with the Sensor enum!
-  constexpr static int NumSensors{5};
-
-  static AnalogPin PinFor(Sensor s);
   Pressure ReadPressureSensor(Sensor s) const;
   float ReadOxygenSensor(Pressure p_ambient) const;
 
   // Calibrated average sensor values in a zero state.
   Voltage sensors_zero_vals_[NumSensors];
 
-  mutable Debug::Variable::Float inflow_air_dp_{"inflow_air_dp", Debug::Variable::Access::ReadOnly,
-                                                0.0f, "cmH2O", "Air influx differential pressure"};
-  mutable Debug::Variable::Float inflow_oxy_dp_{"inflow_oxygen_dp",
-                                                Debug::Variable::Access::ReadOnly, 0.0f, "cmH2O",
-                                                "Concentrated oxygen influx differential pressure"};
-  mutable Debug::Variable::Float outflow_dp_{"outflow_dp", Debug::Variable::Access::ReadOnly, 0.0f,
-                                             "cmH2O", "Exhale differential pressure"};
-  mutable Debug::Variable::Float patient_pressure_{"pressure", Debug::Variable::Access::ReadOnly,
-                                                   0.0f, "cmH2O", "Patient pressure"};
-  mutable Debug::Variable::Float inflow_air_{"inflow_air", Debug::Variable::Access::ReadOnly, 0.0f,
-                                             "mL/s", "Air influx flow rate"};
-  mutable Debug::Variable::Float inflow_oxy_{"inflow_oxygen", Debug::Variable::Access::ReadOnly,
-                                             0.0f, "mL/s", "Concentrated oxygen influx flow rate"};
-  mutable Debug::Variable::Float outflow_{"outflow", Debug::Variable::Access::ReadOnly, 0.0f,
-                                          "mL/s", "Outflow rate"};
-  mutable Debug::Variable::Float fio2_{"fio2", Debug::Variable::Access::ReadOnly, 0.0f, "ratio",
-                                       "Fraction of inspired oxygen"};
+  using dvFloat = Debug::Variable::Float;
+
+  mutable dvFloat inflow_air_dp_{"inflow_air_dp", Debug::Variable::Access::ReadOnly, 0.0f, "cmH2O",
+                                 "Air influx differential pressure"};
+  mutable dvFloat inflow_oxy_dp_{"inflow_oxygen_dp", Debug::Variable::Access::ReadOnly, 0.0f,
+                                 "cmH2O", "Concentrated oxygen influx differential pressure"};
+  mutable dvFloat outflow_dp_{"outflow_dp", Debug::Variable::Access::ReadOnly, 0.0f, "cmH2O",
+                              "Exhale differential pressure"};
+  mutable dvFloat patient_pressure_{"pressure", Debug::Variable::Access::ReadOnly, 0.0f, "cmH2O",
+                                    "Patient pressure"};
+  mutable dvFloat inflow_air_{"inflow_air", Debug::Variable::Access::ReadOnly, 0.0f, "mL/s",
+                              "Air influx flow rate"};
+  mutable dvFloat inflow_oxy_{"inflow_oxygen", Debug::Variable::Access::ReadOnly, 0.0f, "mL/s",
+                              "Concentrated oxygen influx flow rate"};
+  mutable dvFloat outflow_{"outflow", Debug::Variable::Access::ReadOnly, 0.0f, "mL/s",
+                           "Outflow rate"};
+  mutable dvFloat fio2_{"fio2", Debug::Variable::Access::ReadOnly, 0.0f, "ratio",
+                        "Fraction of inspired oxygen"};
 };

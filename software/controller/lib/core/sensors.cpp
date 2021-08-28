@@ -11,35 +11,11 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-
- module contributors: verityRF, jlebar, lee-matthews, Edwin Chiu
- The purpose of this module is to allow calibrated readings from the different
-pressure sensors in the ventilator design. It is designed to be used with the
-Arduino Nano and the MPXV5004GP and MPXV7002DP pressure sensors.
 */
 
 #include "sensors.h"
 
 #include <cmath>
-
-#include "vars.h"
-
-static Debug::Variable::Float dbg_dp_inhale("dp_inhale", Debug::Variable::Access::ReadOnly, 0.0f,
-                                            "cmH2O", "Inhale diff pressure");
-static Debug::Variable::Float dbg_dp_exhale("dp_exhale", Debug::Variable::Access::ReadOnly, 0.0f,
-                                            "cmH2O", "Exhale diff pressure");
-static Debug::Variable::Float dbg_pressure("pressure", Debug::Variable::Access::ReadOnly, 0.0f,
-                                           "cmH2O", "Patient pressure");
-static Debug::Variable::Float dbg_flow_inhale("flow_inhale", Debug::Variable::Access::ReadOnly,
-                                              0.0f, "mL/s", "Inhale flow rate");
-static Debug::Variable::Float dbg_flow_exhale("flow_exhale", Debug::Variable::Access::ReadOnly,
-                                              0.0f, "mL/s", "Exhale flow rate");
-static Debug::Variable::Float dbg_fio2("fio2", Debug::Variable::Access::ReadOnly, 0.0f, "ratio",
-                                       "Fraction of inspired oxygen");
-// Flow correction happens as part of volume computation, in the Controller.
-static Debug::Variable::Float dbg_flow_uncorrected("flow_uncorrected",
-                                                   Debug::Variable::Access::ReadOnly, 0.0f, "mL/s",
-                                                   "Uncorrected net flow rate");
 
 //@TODO: Potential Caution: Density of air slightly varies over temperature and
 // altitude - need mechanism to adjust based on delivery? Constant involving
@@ -180,13 +156,13 @@ SensorReadings Sensors::GetReadings() const {
   VolumetricFlow uncorrected_flow = air_inflow - outflow;
 
   // Set debug variables.
-  dbg_dp_inhale.set(air_inflow_delta.cmH2O());
-  dbg_dp_exhale.set(outflow_delta.cmH2O());
-  dbg_pressure.set(patient_pressure.cmH2O());
-  dbg_fio2.set(fio2);
-  dbg_flow_inhale.set(air_inflow.ml_per_sec());
-  dbg_flow_exhale.set(outflow.ml_per_sec());
-  dbg_flow_uncorrected.set(uncorrected_flow.ml_per_sec());
+  inflow_air_dp_.set(air_inflow_delta.cmH2O());
+  outflow_dp_.set(outflow_delta.cmH2O());
+  patient_pressure_.set(patient_pressure.cmH2O());
+  fio2_.set(fio2);
+  inflow_air_.set(air_inflow.ml_per_sec());
+  outflow_.set(outflow.ml_per_sec());
+  net_flow_uncorrected_.set(uncorrected_flow.ml_per_sec());
 
   return {
       .patient_pressure = patient_pressure,

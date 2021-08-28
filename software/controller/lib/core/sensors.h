@@ -17,6 +17,7 @@ limitations under the License.
 
 #include "hal.h"
 #include "units.h"
+#include "vars.h"
 
 struct SensorReadings {
   Pressure patient_pressure;
@@ -86,4 +87,21 @@ class Sensors {
 
   // Calibrated average sensor values in a zero state.
   Voltage sensors_zero_vals_[NumSensors];
+
+  mutable Debug::Variable::Float inflow_air_dp_{"inflow_air_dp", Debug::Variable::Access::ReadOnly,
+                                                0.0f, "cmH2O", "Inhale diff pressure"};
+  mutable Debug::Variable::Float outflow_dp_{"outflow_dp", Debug::Variable::Access::ReadOnly, 0.0f,
+                                             "cmH2O", "Exhale diff pressure"};
+  mutable Debug::Variable::Float patient_pressure_{"pressure", Debug::Variable::Access::ReadOnly,
+                                                   0.0f, "cmH2O", "Patient pressure"};
+  mutable Debug::Variable::Float inflow_air_{"inflow_air", Debug::Variable::Access::ReadOnly, 0.0f,
+                                             "mL/s", "Inhale flow rate"};
+  mutable Debug::Variable::Float outflow_{"outflow", Debug::Variable::Access::ReadOnly, 0.0f,
+                                          "mL/s", "Exhale flow rate"};
+  mutable Debug::Variable::Float fio2_{"fio2", Debug::Variable::Access::ReadOnly, 0.0f, "ratio",
+                                       "Fraction of inspired oxygen"};
+  // Flow correction happens as part of volume computation, in the Controller.
+  mutable Debug::Variable::Float net_flow_uncorrected_{"net_flow_uncorrected",
+                                                       Debug::Variable::Access::ReadOnly, 0.0f,
+                                                       "mL/s", "Uncorrected net flow rate"};
 };

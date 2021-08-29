@@ -120,7 +120,7 @@ void HalApi::InitADC() {
   // Enable the clock to the A/D converter
   EnableClock(AdcBase);
 
-  // Configure the 4 pins used as analog inputs
+  // Configure the 5 pins used as analog inputs
   GpioPinMode(GpioABase, 0, GPIOPinMode::Analog);  // PA0 (ADC1_IN5)  interim board: analog pressure
   GpioPinMode(GpioABase, 1, GPIOPinMode::Analog);  // PA1 (ADC1_IN6)  U3 patient pressure
   GpioPinMode(GpioABase, 4, GPIOPinMode::Analog);  // PA4 (ADC1_IN9)  U4 inhale flow

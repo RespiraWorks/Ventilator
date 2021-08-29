@@ -21,6 +21,14 @@ limitations under the License.
 
 // TODO: There ought to be many more tests in here.
 
+// \TODO lots of assumptions here, and sign of too much coupling, should not need this here
+static constexpr float air_density{1.225f};  // kg/m^3
+constexpr static Length venturi_port_diameter{millimeters(15.05f)};
+constexpr static Length venturi_choke_diameter{millimeters(5.5f)};
+constexpr static float venturi_correction{0.97f};
+static VenturiFlowSensor typical_venturi{
+    "", "", nullptr, venturi_port_diameter, venturi_choke_diameter, venturi_correction};
+
 TEST(ControllerTest, ControllerVolumeMatchesFlowIntegrator) {
   constexpr Time start = microsSinceStartup(0);
   constexpr int breaths_to_test = 5;
@@ -42,10 +50,9 @@ TEST(ControllerTest, ControllerVolumeMatchesFlowIntegrator) {
 
   SensorReadings readings = {
       .patient_pressure = kPa(0),
-      .inflow_pressure_diff = kPa(0),
-      .outflow_pressure_diff = kPa(0),
       .fio2 = 0.21f,
-      .inflow = ml_per_min(0),
+      .air_inflow = ml_per_min(0),
+      .oxygen_inflow = ml_per_min(0),
       .outflow = ml_per_min(0),
   };
   // need to Run once in order to initialize the volume integrators
@@ -60,17 +67,20 @@ TEST(ControllerTest, ControllerVolumeMatchesFlowIntegrator) {
 
     // Where are we in this breath, [0, 1]?
     float breath_pos = static_cast<float>(i % steps_per_breath) / steps_per_breath;
-    Pressure inflow_pressure = cmH2O(0.5f + (breath_pos < 0.5 ? 1.f : 0.f));
+    Pressure air_inflow_pressure = cmH2O(0.5f + (breath_pos < 0.5 ? 1.f : 0.f));
+    Pressure oxy_inflow_pressure = cmH2O(0.5f + (breath_pos < 0.5 ? 1.f : 0.f));
     Pressure outflow_pressure = cmH2O(0.4f + (breath_pos >= 0.5 ? 1.f : 0.f));
     readings = {
         .patient_pressure = kPa(0),
-        .inflow_pressure_diff = inflow_pressure,
-        .outflow_pressure_diff = outflow_pressure,
         .fio2 = 0.21f,
-        .inflow = Sensors::PressureDeltaToFlow(inflow_pressure),
-        .outflow = Sensors::PressureDeltaToFlow(outflow_pressure),
+        .air_inflow = typical_venturi.pressure_delta_to_flow(air_inflow_pressure, air_density),
+        .oxygen_inflow = typical_venturi.pressure_delta_to_flow(oxy_inflow_pressure, air_density),
+        .outflow = typical_venturi.pressure_delta_to_flow(outflow_pressure, air_density),
     };
-    VolumetricFlow uncorrected_flow = readings.inflow - readings.outflow;
+    VolumetricFlow uncorrected_flow =
+        readings.air_inflow
+        // + readings.oxygen_inflow \todo add this once it is well tested
+        - readings.outflow;
     flow_integrator.AddFlow(now, uncorrected_flow);
 
     auto [unused_actuator_state, status] = c.Run(now, params, readings);
@@ -143,10 +153,9 @@ void actuatorsTestSequence(const std::vector<ActuatorsTest> &seq) {
   VentParams last_params = VentParams_init_zero;
   SensorReadings last_readings = {
       .patient_pressure = cmH2O(0),
-      .inflow_pressure_diff = kPa(0),
-      .outflow_pressure_diff = kPa(0),
       .fio2 = 0,
-      .inflow = ml_per_min(0),
+      .air_inflow = ml_per_min(0),
+      .oxygen_inflow = ml_per_min(0),
       .outflow = ml_per_min(0),
   };
 
@@ -202,10 +211,9 @@ TEST(ControllerTest, ControlLaws) {
   // almost closed and exhale valve in its max openness state.
   SensorReadings readings_pip = {
       .patient_pressure = cmH2O(static_cast<float>(params.pip_cm_h2o)),
-      .inflow_pressure_diff = kPa(0),
-      .outflow_pressure_diff = kPa(0),
       .fio2 = AmbientAir,
-      .inflow = ml_per_min(0),
+      .air_inflow = ml_per_min(0),
+      .oxygen_inflow = ml_per_min(0),
       .outflow = ml_per_min(0),
   };
 
@@ -215,10 +223,9 @@ TEST(ControllerTest, ControlLaws) {
   // oxygen), whatever the controller gains and desired params are.
   SensorReadings readings_below_pip = {
       .patient_pressure = VeryLowPressure,
-      .inflow_pressure_diff = kPa(0),
-      .outflow_pressure_diff = kPa(0),
       .fio2 = AmbientAir,
-      .inflow = ml_per_min(0),
+      .air_inflow = ml_per_min(0),
+      .oxygen_inflow = ml_per_min(0),
       .outflow = ml_per_min(0),
   };
 

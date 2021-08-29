@@ -16,7 +16,7 @@
         "trace_period": 1,
         "trace_variable_names": [
             "pc_setpoint",
-            "pressure",
+            "patient_pressure_dp",
             "volume",
             "net_flow"
         ],

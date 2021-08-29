@@ -11,66 +11,26 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-
- module contributors: verityRF, jlebar, lee-matthews, Edwin Chiu
- The purpose of this module is to allow calibrated readings from the different
-pressure sensors in the ventilator design. It is designed to be used with the
-Arduino Nano and the MPXV5004GP and MPXV7002DP pressure sensors.
 */
 
 #include "sensors.h"
 
-#include <cmath>
-
-#include "vars.h"
-
-static Debug::Variable::Float dbg_dp_inhale("dp_inhale", Debug::Variable::Access::ReadOnly, 0.0f,
-                                            "cmH2O", "Inhale diff pressure");
-static Debug::Variable::Float dbg_dp_exhale("dp_exhale", Debug::Variable::Access::ReadOnly, 0.0f,
-                                            "cmH2O", "Exhale diff pressure");
-static Debug::Variable::Float dbg_pressure("pressure", Debug::Variable::Access::ReadOnly, 0.0f,
-                                           "cmH2O", "Patient pressure");
-static Debug::Variable::Float dbg_flow_inhale("flow_inhale", Debug::Variable::Access::ReadOnly,
-                                              0.0f, "mL/s", "Inhale flow rate");
-static Debug::Variable::Float dbg_flow_exhale("flow_exhale", Debug::Variable::Access::ReadOnly,
-                                              0.0f, "mL/s", "Exhale flow rate");
-static Debug::Variable::Float dbg_fio2("fio2", Debug::Variable::Access::ReadOnly, 0.0f, "ratio",
-                                       "Fraction of inspired oxygen");
-// Flow correction happens as part of volume computation, in the Controller.
-static Debug::Variable::Float dbg_flow_uncorrected("flow_uncorrected",
-                                                   Debug::Variable::Access::ReadOnly, 0.0f, "mL/s",
-                                                   "Uncorrected net flow rate");
-
-//@TODO: Potential Caution: Density of air slightly varies over temperature and
-// altitude - need mechanism to adjust based on delivery? Constant involving
-// density of air. Density assumed at 15 deg. Celsius and 1 atm of pressure.
-// Sourced from https://en.wikipedia.org/wiki/Density_of_air
-static const float DensityOfAirKgPerCubicMeter{1.225f};  // kg/m^3
-
-// Diameters and correction coefficient relating to 3/4in Venturi, see
-// https://bit.ly/2ARuReg.
-//
-// Correction factor of 0.97 is based on ISO recommendations for Reynolds of
-// roughly 10^4 and machined (rather than cast) surfaces. Data fit is in good
-// agreement based on comparison to Fleisch pneumotachograph; see
-// https://github.com/RespiraWorks/Ventilator/pull/476
-constexpr static Length VenturiPortDiameter{millimeters(15.05f)};
-constexpr static Length VenturiChokeDiameter{millimeters(5.5f)};
-constexpr static float VenturiCorrection{0.97f};
-
-static_assert(VenturiPortDiameter > VenturiChokeDiameter);
-static_assert(VenturiChokeDiameter > meters(0));
-
-AnalogPin Sensors::PinFor(Sensor s) {
+//////////////////////////////////////////////////////////////////
+//                   SENSOR LOGICAL MAPPINGS                    //
+//   Change these if you route your sensor tubing differently   //
+//////////////////////////////////////////////////////////////////
+AnalogPin sensor_pin(Sensor s) {
   switch (s) {
+    case Sensor::OxygenInflowPressureDiff:
+      return AnalogPin::InterimBoardAnalogPressure;
     case Sensor::PatientPressure:
-      return AnalogPin::PatientPressure;
-    case Sensor::InflowPressureDiff:
-      return AnalogPin::InflowPressureDiff;
+      return AnalogPin::U3PatientPressure;
+    case Sensor::AirInflowPressureDiff:
+      return AnalogPin::U4InhaleFlow;
     case Sensor::OutflowPressureDiff:
-      return AnalogPin::OutflowPressureDiff;
+      return AnalogPin::U5ExhaleFlow;
     case Sensor::FIO2:
-      return AnalogPin::FIO2;
+      return AnalogPin::InterimBoardOxygenSensor;
   }
   // Switch above covers all cases.
   __builtin_unreachable();
@@ -80,7 +40,7 @@ Sensors::Sensors() = default;
 
 // NOTE - I can't do this in the constructor now because it gets called before
 // the HAL is set up, so the busy wait never finishes.
-void Sensors::Calibrate() {
+void Sensors::calibrate() {
   // We wait 20ms from power-on-reset for pressure sensors to warm up.
   //
   // TODO: Is 20ms the right amount of time?  We're basing it on the data sheet
@@ -99,101 +59,32 @@ void Sensors::Calibrate() {
   // open any necessary valves, and recalibrate.
   hal.Delay(milliseconds(20));
 
-  for (Sensor s : {Sensor::PatientPressure, Sensor::InflowPressureDiff, Sensor::OutflowPressureDiff,
-                   Sensor::FIO2}) {
-    sensors_zero_vals_[static_cast<int>(s)] = hal.AnalogRead(PinFor(s));
-  }
+  patient_pressure_sensor_.set_zero(hal);
+  air_influx_sensor_dp_.set_zero(hal);
+  oxygen_influx_sensor_dp_.set_zero(hal);
+  outflow_sensor_dp_.set_zero(hal);
+  fio2_sensor_.set_zero(hal);
 }
 
-// Reads a pressure sensor, returning its value in kPa.
-//
-// @TODO: Add alarms if sensor value is out of expected range?
-Pressure Sensors::ReadPressureSensor(Sensor s) const {
-  // The pressure sensors output 1-5V, and each additional 1V of output
-  // corresponds to an additional 1kPa of pressure difference.
-  // https://www.nxp.com/docs/en/data-sheet/MPXV5004G.pdf.
-  //
-  // The pressure sensor is scaled to 0-3.3V, which is the range captured by
-  // our ADC.  Therefore, if we multiply the received voltage by 5/3.3, we get
-  // a pressure in kPa.
-  static const float PressureSensorGain{5.f / 3.3f};
-  return kPa(PressureSensorGain *
-             (hal.AnalogRead(PinFor(s)) - sensors_zero_vals_[static_cast<int>(s)]).volts());
-}
+/// \TODO: Add alarms if sensor value is out of expected range?
 
-// Reads an oxygen sensor, returning the concentration of oxygen [0 ; 1.0]
-//
-// Output scales with partial pressure of O2, so ambient pressure must be
-// compensated to get an accurate FIO2.
-float Sensors::ReadOxygenSensor(Pressure p_ambient) const {
-  // Teledyne R24-compatible Electrochemical Cell Oxygen Sensor
-  // http://www.medicalsolutiontechnology.com/wp-content/uploads/2012/09/GO-04-DATA-SHEET.pdf
-  // Sensitivity of 0.060V/fio2, where fio2 is 0.0 to 1.0, at pressure = 1atm
-  // https://www.apogeeinstruments.com/content/SO-100-200-spec-sheet.pdf:
-  // sensitivity similar to SO-210-SS PCB has an op-amp to gain the output up by
-  // 50V/V This gives about 3.0V full scale.
+SensorReadings Sensors::get_readings() const {
+  //@TODO: Potential Caution: Density of air slightly varies over temperature and
+  // altitude - need mechanism to adjust based on delivery? Constant involving
+  // density of air. Density assumed at 15 deg. Celsius and 1 atm of pressure.
+  // Sourced from https://en.wikipedia.org/wiki/Density_of_air
+  static constexpr float AirDensity{1.225f};  // kg/m^3
 
-  // Standard air O2 concentration. This assumes that calibration occured with
-  // pure air, meaning the system has been filled with air only.
-  static const float O2ConcentrationInAir{0.21f};
-
-  static const float AmplifierGain{50.0f};
-  static const float OxygenSensorGain{0.060f};
-
-  // TODO: raise alarm if fio2 is out of expected (0,1) range
-  return (hal.AnalogRead(PinFor(Sensor::FIO2)) - sensors_zero_vals_[static_cast<int>(Sensor::FIO2)])
-                 .volts() /
-             (AmplifierGain * OxygenSensorGain) / p_ambient.atm() +
-         O2ConcentrationInAir;
-}
-
-VolumetricFlow Sensors::PressureDeltaToFlow(Pressure delta) {
-  auto pow2 = [](float f) { return f * f; };
-
-  // Returns an area in meters squared.
-  auto diameter_to_area_m2 = [&](Length diameter) {
-    return static_cast<float>(M_PI) / 4.0f * pow2(diameter.meters());
-  };
-
-  float port_area = diameter_to_area_m2(VenturiPortDiameter);
-  float choke_area = diameter_to_area_m2(VenturiChokeDiameter);
-  return cubic_m_per_sec(VenturiCorrection *
-                         std::copysign(std::sqrt(std::abs(delta.kPa()) * 1000.0f), delta.kPa()) *
-                         std::sqrt(2 / DensityOfAirKgPerCubicMeter) * port_area * choke_area /
-                         std::sqrt(pow2(port_area) - pow2(choke_area)));
-}
-
-SensorReadings Sensors::GetReadings() const {
-  auto patient_pressure = ReadPressureSensor(Sensor::PatientPressure);
-  // Flow rate is inhalation flow minus exhalation flow. Positive value is flow
-  // into lungs, and negative is flow out of lungs.
-  auto inflow_delta = ReadPressureSensor(Sensor::InflowPressureDiff);
-  auto outflow_delta = ReadPressureSensor(Sensor::OutflowPressureDiff);
-  // Fraction of Inspired Oxygen assuming ambient pressure of 101.3 kPa
-  // TODO: measure ambient pressure from an additional sensor and/or estimate
-  // from user input (from altitude?)
-  Pressure p_ambient = kPa(101.3f);
-  auto fio2 = ReadOxygenSensor(p_ambient);
-
-  VolumetricFlow inflow = PressureDeltaToFlow(inflow_delta);
-  VolumetricFlow outflow = PressureDeltaToFlow(outflow_delta);
-  VolumetricFlow uncorrected_flow = inflow - outflow;
-
-  // Set debug variables.
-  dbg_dp_inhale.set(inflow_delta.cmH2O());
-  dbg_dp_exhale.set(outflow_delta.cmH2O());
-  dbg_pressure.set(patient_pressure.cmH2O());
-  dbg_fio2.set(fio2);
-  dbg_flow_inhale.set(inflow.ml_per_sec());
-  dbg_flow_exhale.set(outflow.ml_per_sec());
-  dbg_flow_uncorrected.set(uncorrected_flow.ml_per_sec());
+  // Assuming ambient pressure of 101.3 kPa
+  // TODO: measure ambient pressure from an additional sensor
+  //  and/or estimate from user input (from altitude?)
+  static constexpr Pressure AmbientPressure = kPa(101.3f);
 
   return {
-      .patient_pressure = patient_pressure,
-      .inflow_pressure_diff = inflow_delta,
-      .outflow_pressure_diff = outflow_delta,
-      .fio2 = fio2,
-      .inflow = inflow,
-      .outflow = outflow,
+      .patient_pressure = patient_pressure_sensor_.read(hal),
+      .fio2 = fio2_sensor_.read(hal, AmbientPressure),
+      .air_inflow = air_influx_sensor_.read(hal, AirDensity),
+      .oxygen_inflow = oxygen_influx_sensor_.read(hal, AirDensity),
+      .outflow = outflow_sensor_.read(hal, AirDensity),
   };
 }

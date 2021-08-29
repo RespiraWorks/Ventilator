@@ -42,9 +42,6 @@ TEST(ControllerTest, ControllerVolumeMatchesFlowIntegrator) {
 
   SensorReadings readings = {
       .patient_pressure = kPa(0),
-      .air_inflow_pressure_diff = kPa(0),
-      .oxygen_inflow_pressure_diff = kPa(0),
-      .outflow_pressure_diff = kPa(0),
       .fio2 = 0.21f,
       .air_inflow = ml_per_min(0),
       .oxygen_inflow = ml_per_min(0),
@@ -67,16 +64,15 @@ TEST(ControllerTest, ControllerVolumeMatchesFlowIntegrator) {
     Pressure outflow_pressure = cmH2O(0.4f + (breath_pos >= 0.5 ? 1.f : 0.f));
     readings = {
         .patient_pressure = kPa(0),
-        .air_inflow_pressure_diff = air_inflow_pressure,
-        .oxygen_inflow_pressure_diff = oxy_inflow_pressure,
-        .outflow_pressure_diff = outflow_pressure,
         .fio2 = 0.21f,
         .air_inflow = Sensors::PressureDeltaToFlow(air_inflow_pressure),
         .oxygen_inflow = Sensors::PressureDeltaToFlow(oxy_inflow_pressure),
         .outflow = Sensors::PressureDeltaToFlow(outflow_pressure),
     };
     VolumetricFlow uncorrected_flow =
-        readings.air_inflow + readings.oxygen_inflow - readings.outflow;
+        readings.air_inflow
+        // + readings.oxygen_inflow \todo add this once it is well tested
+        - readings.outflow;
     flow_integrator.AddFlow(now, uncorrected_flow);
 
     auto [unused_actuator_state, status] = c.Run(now, params, readings);
@@ -149,9 +145,6 @@ void actuatorsTestSequence(const std::vector<ActuatorsTest> &seq) {
   VentParams last_params = VentParams_init_zero;
   SensorReadings last_readings = {
       .patient_pressure = cmH2O(0),
-      .air_inflow_pressure_diff = kPa(0),
-      .oxygen_inflow_pressure_diff = kPa(0),
-      .outflow_pressure_diff = kPa(0),
       .fio2 = 0,
       .air_inflow = ml_per_min(0),
       .oxygen_inflow = ml_per_min(0),
@@ -210,9 +203,6 @@ TEST(ControllerTest, ControlLaws) {
   // almost closed and exhale valve in its max openness state.
   SensorReadings readings_pip = {
       .patient_pressure = cmH2O(static_cast<float>(params.pip_cm_h2o)),
-      .air_inflow_pressure_diff = kPa(0),
-      .oxygen_inflow_pressure_diff = kPa(0),
-      .outflow_pressure_diff = kPa(0),
       .fio2 = AmbientAir,
       .air_inflow = ml_per_min(0),
       .oxygen_inflow = ml_per_min(0),
@@ -225,9 +215,6 @@ TEST(ControllerTest, ControlLaws) {
   // oxygen), whatever the controller gains and desired params are.
   SensorReadings readings_below_pip = {
       .patient_pressure = VeryLowPressure,
-      .air_inflow_pressure_diff = kPa(0),
-      .oxygen_inflow_pressure_diff = kPa(0),
-      .outflow_pressure_diff = kPa(0),
       .fio2 = AmbientAir,
       .air_inflow = ml_per_min(0),
       .oxygen_inflow = ml_per_min(0),

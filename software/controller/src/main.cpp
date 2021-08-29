@@ -75,8 +75,8 @@ static Debug::Interface debug(&trace, 12, Debug::Command::Code::Mode, &mode_comm
 static SensorsProto AsSensorsProto(const SensorReadings &r, const ControllerState &c) {
   SensorsProto proto = SensorsProto_init_zero;
   proto.patient_pressure_cm_h2o = r.patient_pressure.cmH2O();
-  proto.inflow_pressure_diff_cm_h2o = r.air_inflow_pressure_diff.cmH2O();
-  proto.outflow_pressure_diff_cm_h2o = r.outflow_pressure_diff.cmH2O();
+  proto.inflow_pressure_diff_cm_h2o = 0;   // \TODO field unused and obsolete, should change proto
+  proto.outflow_pressure_diff_cm_h2o = 0;  // \TODO field unused and obsolete, should change proto
   proto.flow_ml_per_min = c.net_flow.ml_per_min();
   proto.volume_ml = c.patient_volume.ml();
   proto.breath_id = c.breath_id;

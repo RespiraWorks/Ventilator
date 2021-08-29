@@ -55,9 +55,9 @@ struct ControllerState {
 // software and run closed-loop tests in a simulated physical environment
 class Controller {
  public:
-  static Duration GetLoopPeriod();
-
   Controller() = default;
+
+  static Duration GetLoopPeriod();
 
   std::pair<ActuatorsState, ControllerState> Run(Time now, const VentParams &params,
                                                  const SensorReadings &sensor_readings);
@@ -101,4 +101,46 @@ class Controller {
   // was last called, and allows resetting integrators when transitioning from
   // Off state to On state.
   bool ventilator_was_on_{false};
+
+  // Debug variables
+  using DbgFloat = Debug::Variable::Float;
+  using DbgUint32 = Debug::Variable::UInt32;
+  using DbgAccess = Debug::Variable::Access;
+
+  DbgFloat forced_blower_power_{
+      "forced_blower_power", DbgAccess::ReadWrite, -1.f, "ratio",
+      "Force the blower fan to a particular power [0,1].  Specify a value "
+      "outside this range to let the controller control it."};
+  DbgFloat forced_exhale_valve_pos_{
+      "forced_exhale_valve_pos", DbgAccess::ReadWrite, -1.f, "ratio",
+      "Force the exhale valve to a particular position [0,1].  Specify a value "
+      "outside this range to let the controller control it."};
+  DbgFloat forced_blower_valve_pos_{
+      "forced_blower_valve_pos", DbgAccess::ReadWrite, -1.f, "ratio",
+      "Force the blower valve to a particular position [0,1].  Specify a value "
+      "outside this range to let the controller control it."};
+  DbgFloat forced_psol_pos_{
+      "forced_psol_pos", DbgAccess::ReadWrite, -1.f, "ratio",
+      "Force the O2 psol to a particular position [0,1].  (Note that psol.cpp "
+      "scales this further; see psol_pwm_closed and psol_pwm_open.)  Specify a "
+      "value outside this range to let the controller control the psol."};
+
+  // Unchanging outputs - read from external debug program, never modified here.
+  DbgUint32 dbg_loop_period_{"loop_period", DbgAccess::ReadOnly,
+                             static_cast<uint32_t>(GetLoopPeriod().microseconds()), "\xB5s",
+                             "Loop period"};
+
+  // Outputs - read from external debug program, modified here.
+  DbgFloat dbg_pc_setpoint_{"pc_setpoint", DbgAccess::ReadOnly, 0.0f, "cmH2O",
+                            "Pressure control set-point"};
+  DbgFloat dbg_net_flow_{"net_flow", DbgAccess::ReadOnly, 0.0f, "mL/s", "Net flow rate"};
+  DbgFloat dbg_net_flow_uncorrected_{"net_flow_uncorrected", DbgAccess::ReadOnly, 0.0f, "mL/s",
+                                     "Net flow rate w/o correction"};
+  DbgFloat dbg_flow_correction_{"flow_correction", DbgAccess::ReadOnly, 0.0f, "mL/s",
+                                "Correction to flow"};
+  DbgFloat dbg_volume_{"volume", DbgAccess::ReadOnly, 0.0f, "mL", "Patient volume"};
+  DbgFloat dbg_volume_uncorrected_{"uncorrected_volume", DbgAccess::ReadOnly, 0.0f, "mL",
+                                   "Patient volume w/o correction"};
+
+  DbgUint32 dbg_breath_id_{"breath_id", DbgAccess::ReadOnly, 0, "", "ID of the current breath"};
 };

@@ -81,9 +81,9 @@ void Sensors::Calibrate() {
   // open any necessary valves, and recalibrate.
   hal.Delay(milliseconds(20));
 
-  for (Sensor s : {Sensor::OxygenInflowPressureDiff, Sensor::PatientPressure,
-                   Sensor::AirInflowPressureDiff, Sensor::OutflowPressureDiff, Sensor::FIO2}) {
-    sensors_zero_vals_[static_cast<int>(s)] = hal.AnalogRead(PinFor(s));
+  for (Sensor s : {Sensor::PatientPressure, Sensor::AirInflowPressureDiff,
+                   Sensor::OxygenInflowPressureDiff, Sensor::OutflowPressureDiff, Sensor::FIO2}) {
+    sensors_zero_vals_[static_cast<uint16_t>(s)] = hal.AnalogRead(PinFor(s));
   }
 }
 
@@ -100,7 +100,7 @@ Pressure Sensors::ReadPressureSensor(Sensor s) const {
   // a pressure in kPa.
   static const float PressureSensorGain{5.f / 3.3f};
   return kPa(PressureSensorGain *
-             (hal.AnalogRead(PinFor(s)) - sensors_zero_vals_[static_cast<int>(s)]).volts());
+             (hal.AnalogRead(PinFor(s)) - sensors_zero_vals_[static_cast<uint16_t>(s)]).volts());
 }
 
 // Reads an oxygen sensor, returning the concentration of oxygen [0 ; 1.0]
@@ -174,9 +174,6 @@ SensorReadings Sensors::GetReadings() const {
 
   return {
       .patient_pressure = patient_pressure,
-      .air_inflow_pressure_diff = air_inflow_delta,
-      .oxygen_inflow_pressure_diff = oxygen_inflow_delta,
-      .outflow_pressure_diff = outflow_delta,
       .fio2 = fio2,
       .air_inflow = air_inflow,
       .oxygen_inflow = oxygen_inflow,

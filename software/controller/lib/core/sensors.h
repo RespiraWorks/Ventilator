@@ -81,25 +81,25 @@ class Sensors {
   static_assert(venturi_choke_diameter_ > meters(0));
 
   // Fundamental sensors
-  MPXV5004DP patient_pressure_sensor_{"patient_pressure_", " in patient airway",
+  MPXV5004DP patient_pressure_sensor_{"patient_pressure_", "for patient airway pressure",
                                       PinFor(Sensor::PatientPressure), ADC_voltage_range_};
   TeledyneR24 fio2_sensor_{"fio2", PinFor(Sensor::FIO2), " "};
-  MPXV5004DP air_influx_sensor_dp_{"air_influx_", " for ambient air influx",
+  MPXV5004DP air_influx_sensor_dp_{"air_influx_", "for ambient air influx",
                                    PinFor(Sensor::AirInflowPressureDiff), ADC_voltage_range_};
-  MPXV5004DP oxygen_influx_sensor_dp_{"oxygen_influx_", " for concentrated oxygen influx",
+  MPXV5004DP oxygen_influx_sensor_dp_{"oxygen_influx_", "for concentrated oxygen influx",
                                       PinFor(Sensor::OxygenInflowPressureDiff), ADC_voltage_range_};
   MPXV5004DP outflow_sensor_dp_{"outflow_", " for outflow", PinFor(Sensor::OutflowPressureDiff),
                                 ADC_voltage_range_};
 
   // These require existing DP sensors to link to
-  VenturiFlowSensor air_influx_sensor_{"air_influx_",           " for ambient air influx",
+  VenturiFlowSensor air_influx_sensor_{"air_influx_",           "for ambient air influx",
                                        &air_influx_sensor_dp_,  venturi_port_diameter_,
                                        venturi_choke_diameter_, venturi_correction_};
   VenturiFlowSensor oxygen_influx_sensor_{
-      "oxygen_influx_",       " for concentrated oxygen influx", &oxygen_influx_sensor_dp_,
-      venturi_port_diameter_, venturi_choke_diameter_,           venturi_correction_};
+      "oxygen_influx_",       "for concentrated oxygen influx", &oxygen_influx_sensor_dp_,
+      venturi_port_diameter_, venturi_choke_diameter_,          venturi_correction_};
   VenturiFlowSensor outflow_sensor_{"outflow_",
-                                    " for outflow",
+                                    "for outflow",
                                     &outflow_sensor_dp_,
                                     venturi_port_diameter_,
                                     venturi_choke_diameter_,

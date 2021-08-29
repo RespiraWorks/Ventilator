@@ -137,7 +137,12 @@ class TestScenario:
             ts.capture_duration_secs = 30
             ts.capture_ignore_secs = 10
             ts.trace_period = 1
-            ts.trace_variable_names = ["pc_setpoint", "pressure", "volume", "net_flow"]
+            ts.trace_variable_names = [
+                "pc_setpoint",
+                "patient_pressure_dp",
+                "volume",
+                "net_flow",
+            ]
 
             for k in row_copy.keys():
                 if k in ventilator_settings:

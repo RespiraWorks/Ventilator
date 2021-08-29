@@ -22,9 +22,9 @@ limitations under the License.
 AnalogPin PinFor(Sensor s) {
   switch (s) {
     case Sensor::OxygenInflowPressureDiff:
-      return AnalogPin::U3PatientPressure;
-    case Sensor::PatientPressure:
       return AnalogPin::InterimBoardAnalogPressure;
+    case Sensor::PatientPressure:
+      return AnalogPin::U3PatientPressure;
     case Sensor::AirInflowPressureDiff:
       return AnalogPin::U4InhaleFlow;
     case Sensor::OutflowPressureDiff:

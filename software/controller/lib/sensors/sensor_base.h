@@ -21,7 +21,7 @@ limitations under the License.
 
 class AnalogSensor {
  public:
-  AnalogSensor(const char *name, AnalogPin pin, const char *help_supplement);
+  AnalogSensor(const char *name, const char *help_supplement, AnalogPin pin);
 
   void set_zero(HalApi &hal_api);
 

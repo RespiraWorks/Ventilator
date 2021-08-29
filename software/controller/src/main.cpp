@@ -92,7 +92,7 @@ static SensorsProto AsSensorsProto(const SensorReadings &r, const ControllerStat
 // quickly.  No busy waiting here.
 static void HighPriorityTask(void *arg) {
   // Read the sensors
-  SensorReadings sensor_readings = sensors.GetReadings();
+  SensorReadings sensor_readings = sensors.get_readings();
 
   // Run our PID loop
   auto [actuators_state, controller_state] =
@@ -143,7 +143,7 @@ static void HighPriorityTask(void *arg) {
 
   // Calibrate the sensors.
   // This needs to be done before the sensors are used.
-  sensors.Calibrate();
+  sensors.calibrate();
 
   // Current controller status.
   // Updated when we receive data from the GUI, when sensors read data, etc.

@@ -18,7 +18,7 @@ limitations under the License.
 AnalogPressureSensor::AnalogPressureSensor(const char *name, const char *help_supplement,
                                            AnalogPin pin, float voltage_to_kPa)
     : PressureSensor(name, help_supplement),
-      AnalogSensor(name, pin, help_supplement),
+      AnalogSensor(name, help_supplement, pin),
       voltage_to_kPa_(voltage_to_kPa) {}
 
 Pressure AnalogPressureSensor::read(HalApi &hal_api) const {

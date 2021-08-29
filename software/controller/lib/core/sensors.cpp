@@ -19,7 +19,7 @@ limitations under the License.
 //                   SENSOR LOGICAL MAPPINGS                    //
 //   Change these if you route your sensor tubing differently   //
 //////////////////////////////////////////////////////////////////
-AnalogPin PinFor(Sensor s) {
+AnalogPin sensor_pin(Sensor s) {
   switch (s) {
     case Sensor::OxygenInflowPressureDiff:
       return AnalogPin::InterimBoardAnalogPressure;
@@ -40,7 +40,7 @@ Sensors::Sensors() = default;
 
 // NOTE - I can't do this in the constructor now because it gets called before
 // the HAL is set up, so the busy wait never finishes.
-void Sensors::Calibrate() {
+void Sensors::calibrate() {
   // We wait 20ms from power-on-reset for pressure sensors to warm up.
   //
   // TODO: Is 20ms the right amount of time?  We're basing it on the data sheet
@@ -68,23 +68,23 @@ void Sensors::Calibrate() {
 
 /// \TODO: Add alarms if sensor value is out of expected range?
 
-SensorReadings Sensors::GetReadings() const {
+SensorReadings Sensors::get_readings() const {
   //@TODO: Potential Caution: Density of air slightly varies over temperature and
   // altitude - need mechanism to adjust based on delivery? Constant involving
   // density of air. Density assumed at 15 deg. Celsius and 1 atm of pressure.
   // Sourced from https://en.wikipedia.org/wiki/Density_of_air
-  static constexpr float air_density{1.225f};  // kg/m^3
+  static constexpr float AirDensity{1.225f};  // kg/m^3
 
   // Assuming ambient pressure of 101.3 kPa
   // TODO: measure ambient pressure from an additional sensor
   //  and/or estimate from user input (from altitude?)
-  static constexpr Pressure ambient_pressure = kPa(101.3f);
+  static constexpr Pressure AmbientPressure = kPa(101.3f);
 
   return {
       .patient_pressure = patient_pressure_sensor_.read(hal),
-      .fio2 = fio2_sensor_.read(hal, ambient_pressure),
-      .air_inflow = air_influx_sensor_.read(hal, air_density),
-      .oxygen_inflow = oxygen_influx_sensor_.read(hal, air_density),
-      .outflow = outflow_sensor_.read(hal, air_density),
+      .fio2 = fio2_sensor_.read(hal, AmbientPressure),
+      .air_inflow = air_influx_sensor_.read(hal, AirDensity),
+      .oxygen_inflow = oxygen_influx_sensor_.read(hal, AirDensity),
+      .outflow = outflow_sensor_.read(hal, AirDensity),
   };
 }

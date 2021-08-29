@@ -17,7 +17,7 @@ limitations under the License.
 
 #include <cmath>
 
-AnalogSensor::AnalogSensor(const char *name, AnalogPin pin, const char *help_supplement)
+AnalogSensor::AnalogSensor(const char *name, const char *help_supplement, AnalogPin pin)
     : pin_(pin),
       dbg_zero_("zero", Debug::Variable::Access::ReadOnly, 0.f, "V", "Voltage offset "),
       dbg_voltage_("voltage", Debug::Variable::Access::ReadOnly, 0.f, "V", "Voltage reading ") {

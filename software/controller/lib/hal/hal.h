@@ -31,9 +31,11 @@ limitations under the License.
 // observe whether mocked methods are called.  So far that hasn't been
 // necessary.
 
-#include "units.h"
-#include <algorithm>
 #include <stdint.h>
+
+#include <algorithm>
+
+#include "units.h"
 
 #ifdef TEST_MODE
 
@@ -41,20 +43,22 @@ limitations under the License.
 #error "TEST_MODE intended to be run only on native, but BARE_STM32 is defined"
 #endif
 
-#include "checksum.h"
 #include <assert.h>
+
 #include <cstring>
 #include <deque>
 #include <map>
 #include <vector>
 
-#else // !TEST_MODE
+#include "checksum.h"
+
+#else  // !TEST_MODE
 
 #if !defined(BARE_STM32)
 #error "When running without TEST_MODE, expecting BARE_STM32 to be defined"
 #endif
 
-#endif // TEST_MODE
+#endif  // TEST_MODE
 
 // ---------------------------------------------------------------
 // Strongly typed analogues of some Arduino types.
@@ -76,16 +80,14 @@ enum class PinMode {
 // Usage: VoltageLevel::High, Low
 enum class VoltageLevel { High, Low };
 
+// Location of analog sensors as labeled on the PCB(s). Note that this does not necessarily define
+// their function and further mapping should be done in the higher layers of the software.
 enum class AnalogPin {
-  // MPXV5004DP pressure sensors:
-  // - PATIENT_PRESSURE reads an absolute pressure value at the patient.
-  // - {INFLOW,OUTFLOW}_PRESSURE_DIFF, read a differential across a venturi.
-  //   They let us measure volumetric flow into and out of the patient.
-  PatientPressure,
-  InflowPressureDiff,
-  OutflowPressureDiff,
-  // Teledyne R24-compatible Electrochemical Cell Oxygen Sensor
-  FIO2,
+  InterimBoardAnalogPressure,
+  U3PatientPressure,
+  U4InhaleFlow,
+  U5ExhaleFlow,
+  InterimBoardOxygenSensor,
 };
 
 // Pulse-width modulated outputs from the controller.  These can be set to
@@ -121,16 +123,16 @@ enum class BinaryPin {
 // priority of -1, so they can always interrupt any other
 // priority level.
 enum class IntPriority {
-  Critical = 2, // Very important interrupt
-  Standard = 5, // Normal hardware interrupts
-  Low = 8,      // Less important.  Hardware interrupts can interrupt this
+  Critical = 2,  // Very important interrupt
+  Standard = 5,  // Normal hardware interrupts
+  Low = 8,       // Less important.  Hardware interrupts can interrupt this
 };
 
 enum class InterruptVector;
 
 #ifdef TEST_MODE
 class TestSerialPort {
-public:
+ public:
   [[nodiscard]] uint16_t Write(const char *buf, uint16_t len);
   [[nodiscard]] uint16_t Read(char *buf, uint16_t len);
   uint16_t BytesAvailableForWrite();
@@ -138,11 +140,11 @@ public:
   void PutIncomingData(const char *data, uint16_t len);
   uint16_t GetOutgoingData(char *data, uint16_t len);
 
-private:
+ private:
   std::deque<std::vector<char>> incoming_data_;
   std::vector<char> outgoing_data_;
 };
-#endif // TEST_MODE
+#endif  // TEST_MODE
 
 // Singleton class which implements a hardware abstraction layer.
 //
@@ -152,7 +154,7 @@ private:
 // any ifdefs for different platforms, and all of the "global variables" can
 // move into the hal_foo.cpp files.
 class HalApi {
-public:
+ public:
   void Init();
 
   // Amount of time that has passed since the board started running the
@@ -302,8 +304,7 @@ public:
   [[noreturn]] void ResetDevice();
 
   // Start the loop timer
-  void StartLoopTimer(const Duration &period, void (*callback)(void *),
-                      void *arg);
+  void StartLoopTimer(const Duration &period, void (*callback)(void *), void *arg);
 
   // Pets the watchdog, this makes the watchdog not reset the
   // system for configured amount of time
@@ -327,7 +328,7 @@ public:
   // Return true if we are currently executing in an interrupt handler
   bool InInterruptHandler();
 
-private:
+ private:
   // Initializes watchdog, sets appropriate pins to Output, etc.  Called by
   // HalApi::Init
   void WatchdogInit();
@@ -382,7 +383,7 @@ extern HalApi hal;
 // This class is reentrant, i.e. it's safe to BlockInterrupts even when
 // interrupts are already disabled.
 class [[nodiscard]] BlockInterrupts {
-public:
+ public:
   BlockInterrupts() : active_(hal.InterruptsEnabled()) {
     if (active_) {
       hal.DisableInterrupts();
@@ -402,15 +403,13 @@ public:
     }
   }
 
-private:
+ private:
   bool active_;
 };
 
 #if defined(BARE_STM32)
 
-inline void HalApi::DisableInterrupts() {
-  asm volatile("cpsid i" ::: "memory");
-}
+inline void HalApi::DisableInterrupts() { asm volatile("cpsid i" ::: "memory"); }
 inline void HalApi::EnableInterrupts() { asm volatile("cpsie i" ::: "memory"); }
 inline bool HalApi::InterruptsEnabled() const {
   int ret;
@@ -430,15 +429,11 @@ inline void HalApi::WatchdogHandler() {}
 
 inline Time HalApi::Now() { return time_; }
 inline void HalApi::Delay(Duration d) { time_ = time_ + d; }
-inline Voltage HalApi::AnalogRead(AnalogPin pin) {
-  return analog_pin_values_.at(pin);
-}
+inline Voltage HalApi::AnalogRead(AnalogPin pin) { return analog_pin_values_.at(pin); }
 inline void HalApi::TESTSetAnalogPin(AnalogPin pin, Voltage value) {
   analog_pin_values_[pin] = value;
 }
-inline void HalApi::SetDigitalPinMode(PwmPin pin, PinMode mode) {
-  pwm_pin_modes_[pin] = mode;
-}
+inline void HalApi::SetDigitalPinMode(PwmPin pin, PinMode mode) { pwm_pin_modes_[pin] = mode; }
 inline void HalApi::SetDigitalPinMode(BinaryPin pin, PinMode mode) {
   binary_pin_modes_[pin] = mode;
 }
@@ -455,9 +450,7 @@ inline void HalApi::AnalogWrite(PwmPin pin, float duty) {
   pwm_pin_values_[pin] = duty;
 }
 
-inline uint16_t HalApi::SerialRead(char *buf, uint16_t len) {
-  return serial_port_.Read(buf, len);
-}
+inline uint16_t HalApi::SerialRead(char *buf, uint16_t len) { return serial_port_.Read(buf, len); }
 inline uint16_t HalApi::SerialBytesAvailableForRead() {
   return serial_port_.BytesAvailableForRead();
 }
@@ -512,9 +505,7 @@ inline uint16_t TestSerialPort::Read(char *buf, uint16_t len) {
   return n;
 }
 inline uint16_t TestSerialPort::BytesAvailableForRead() {
-  return incoming_data_.empty()
-             ? 0
-             : static_cast<uint16_t>(incoming_data_.front().size());
+  return incoming_data_.empty() ? 0 : static_cast<uint16_t>(incoming_data_.front().size());
 }
 inline uint16_t TestSerialPort::Write(const char *buf, uint16_t len) {
   uint16_t n = std::min(len, BytesAvailableForWrite());
@@ -542,16 +533,13 @@ inline void TestSerialPort::PutIncomingData(const char *data, uint16_t len) {
   incoming_data_.push_back(std::vector<char>(data, data + len));
 }
 
-inline void HalApi::StartLoopTimer(const Duration &period,
-                                   void (*callback)(void *), void *arg) {}
+inline void HalApi::StartLoopTimer(const Duration &period, void (*callback)(void *), void *arg) {}
 
 inline void BuzzerOn(float volume) {}
 inline void BuzzerOff() {}
 inline void InitPSOL() {}
 inline void PSolValue(float val) {}
 inline bool HalApi::FlashErasePage(uint32_t address) { return true; }
-inline bool HalApi::FlashWrite(uint32_t addr, void *data, size_t ct) {
-  return true;
-}
+inline bool HalApi::FlashWrite(uint32_t addr, void *data, size_t ct) { return true; }
 
 #endif

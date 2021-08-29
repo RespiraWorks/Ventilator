@@ -11,24 +11,30 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-
-module contributors: verityRF, jlebar, lee-matthews, Edwin Chiu
-
-The purpose of this module is to allow calibrated readings from the different
-pressure sensors in the ventilator design. It is designed to be used with the
-Arduino Nano and the MPXV5004GP and MPXV7002DP pressure sensors.
 */
 
 #pragma once
 
-#include "hal.h"
-#include "units.h"
+#include "oxygen.h"
+#include "pressure_sensors.h"
+#include "venturi.h"
+
+// Keep this in sync with the Sensor enum below
+constexpr static uint16_t NumSensors{5};
+
+enum class Sensor {
+  PatientPressure,
+  AirInflowPressureDiff,
+  OxygenInflowPressureDiff,
+  OutflowPressureDiff,
+  FIO2,
+};
+
+// Logical mappings: conceptual sensor -> ADC channel
+AnalogPin sensor_pin(Sensor s);
 
 struct SensorReadings {
   Pressure patient_pressure;
-  // Pressure differences read at the inflow/outflow venturis.
-  Pressure inflow_pressure_diff;
-  Pressure outflow_pressure_diff;
 
   // fraction of inspired oxygen (fiO2)
   float fio2;
@@ -39,7 +45,8 @@ struct SensorReadings {
   // These are "uncorrected" values.  We account for high-frequency noise by
   // e.g. averaging many samples, but we don't account here for low-frequency
   // sensor zero-point drift.
-  VolumetricFlow inflow;
+  VolumetricFlow air_inflow;
+  VolumetricFlow oxygen_inflow;
   VolumetricFlow outflow;
 };
 
@@ -52,44 +59,47 @@ class Sensors {
   // Perform some initial sensor calibration.  This function should
   // be called on system startup before any other sensor functions
   // are called.
-  void Calibrate();
+  void calibrate();
 
   // Read the sensors.
-  SensorReadings GetReadings() const;
-
-  // min/max possible reading from MPXV5004GP pressure sensors
-  // The canonical list of hardware in the device is: https://bit.ly/3aERr69
-  constexpr static Pressure MinPressure{kPa(0.0f)};
-  constexpr static Pressure MaxPressure{kPa(3.92f)};
-
-  /*
-   * @brief Method implements Bernoulli's equation assuming the Venturi Effect.
-   * https://en.wikipedia.org/wiki/Venturi_effect
-   *
-   * Solves for the volumetric flow rate since A1/A2, rho, and differential
-   * pressure are known. Q = sqrt(2/rho) * (A1*A2) * 1/sqrt(A1^2-A2^2) *
-   * sqrt(p1-p2); based on (p1 - p2) = (rho/2) * (v2^2 - v1^2); where A1 > A2
-   *
-   * @return the volumetric flow in [meters^3/s]. Can be negative, indicating
-   * direction of flow, depending on how the differential sensor is attached to
-   * the venturi.
-   */
-  static VolumetricFlow PressureDeltaToFlow(Pressure delta);
+  SensorReadings get_readings() const;
 
  private:
-  enum class Sensor {
-    PatientPressure,
-    InflowPressureDiff,
-    OutflowPressureDiff,
-    FIO2,
-  };
-  // Keep this in sync with the Sensor enum!
-  constexpr static int NumSensors{4};
+  /// \TODO: get this either from IDC constants header or something like that
+  static constexpr float ADCVoltageRange{3.3f};
 
-  static AnalogPin PinFor(Sensor s);
-  Pressure ReadPressureSensor(Sensor s) const;
-  float ReadOxygenSensor(Pressure p_ambient) const;
+  // \TODO: create a physical constants header for custom parts like venturi
+  // Diameters and correction coefficient relating to 3/4in Venturi, see https://bit.ly/2ARuReg.
+  // Correction factor of 0.97 is based on ISO recommendations for Reynolds of roughly 10^4 and
+  // machined (rather than cast) surfaces. Data fit is in good agreement based on comparison to
+  // Fleisch pneumotachograph; see https://github.com/RespiraWorks/Ventilator/pull/476
+  constexpr static Length VenturiPortDiameter{millimeters(15.05f)};
+  constexpr static Length VenturiChokeDiameter{millimeters(5.5f)};
+  constexpr static float VenturiCorrection{0.97f};
 
-  // Calibrated average sensor values in a zero state.
-  Voltage sensors_zero_vals_[NumSensors];
+  static_assert(VenturiPortDiameter > VenturiChokeDiameter);
+  static_assert(VenturiChokeDiameter > meters(0));
+
+  // Fundamental sensors
+  MPXV5004DP patient_pressure_sensor_{"patient_pressure_", "for patient airway pressure",
+                                      sensor_pin(Sensor::PatientPressure), ADCVoltageRange};
+  TeledyneR24 fio2_sensor_{"fio2", "Fraction of oxygen in supplied air", sensor_pin(Sensor::FIO2)};
+  MPXV5004DP air_influx_sensor_dp_{"air_influx_", "for ambient air influx",
+                                   sensor_pin(Sensor::AirInflowPressureDiff), ADCVoltageRange};
+  MPXV5004DP oxygen_influx_sensor_dp_{"oxygen_influx_", "for concentrated oxygen influx",
+                                      sensor_pin(Sensor::OxygenInflowPressureDiff),
+                                      ADCVoltageRange};
+  MPXV5004DP outflow_sensor_dp_{"outflow_", "for outflow", sensor_pin(Sensor::OutflowPressureDiff),
+                                ADCVoltageRange};
+
+  // These require existing DP sensors to link to
+  VenturiFlowSensor air_influx_sensor_{"air_influx_",          "for ambient air influx",
+                                       &air_influx_sensor_dp_, VenturiPortDiameter,
+                                       VenturiChokeDiameter,   VenturiCorrection};
+  VenturiFlowSensor oxygen_influx_sensor_{
+      "oxygen_influx_",          "for concentrated oxygen influx",
+      &oxygen_influx_sensor_dp_, VenturiPortDiameter,
+      VenturiChokeDiameter,      VenturiCorrection};
+  VenturiFlowSensor outflow_sensor_{"outflow_",          "for outflow",        &outflow_sensor_dp_,
+                                    VenturiPortDiameter, VenturiChokeDiameter, VenturiCorrection};
 };

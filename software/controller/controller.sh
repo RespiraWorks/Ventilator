@@ -52,7 +52,7 @@ The following options are provided:
   --test        Builds and runs all tests locally
     [--no-checks]     - do not run static checks (yes, it's to annoy you!)
   --run         Builds and deploys firmware to controller
-                There can be only one connected. Otherwise, use the platformi/deploy.sh script manually.
+                There can be only one connected. Otherwise, use the platformio/deploy.sh script manually.
 EOF
 }
 

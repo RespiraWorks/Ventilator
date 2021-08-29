@@ -130,7 +130,7 @@ class Controller {
                              static_cast<uint32_t>(GetLoopPeriod().microseconds()), "\xB5s",
                              "Loop period"};
 
-  // Outputs - read from external debug program, modified here.
+  // Outputs - read from external debug program, modified by the controller.
   DbgFloat dbg_pc_setpoint_{"pc_setpoint", DbgAccess::ReadOnly, 0.0f, "cmH2O",
                             "Pressure control set-point"};
   DbgFloat dbg_net_flow_{"net_flow", DbgAccess::ReadOnly, 0.0f, "mL/s", "Net flow rate"};

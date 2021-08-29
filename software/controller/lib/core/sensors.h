@@ -15,9 +15,9 @@ limitations under the License.
 
 #pragma once
 
-#include "hal.h"
-#include "units.h"
-#include "vars.h"
+#include "oxygen.h"
+#include "pressure_sensors.h"
+#include "venturi.h"
 
 // Keep this in sync with the Sensor enum below
 constexpr static uint16_t NumSensors{5};
@@ -64,48 +64,44 @@ class Sensors {
   // Read the sensors.
   SensorReadings GetReadings() const;
 
-  // min/max possible reading from MPXV5004GP pressure sensors
-  // The canonical list of hardware in the device is: https://bit.ly/3aERr69
-  constexpr static Pressure MinPressure{kPa(0.0f)};
-  constexpr static Pressure MaxPressure{kPa(3.92f)};
-
-  /*
-   * @brief Method implements Bernoulli's equation assuming the Venturi Effect.
-   * https://en.wikipedia.org/wiki/Venturi_effect
-   *
-   * Solves for the volumetric flow rate since A1/A2, rho, and differential
-   * pressure are known. Q = sqrt(2/rho) * (A1*A2) * 1/sqrt(A1^2-A2^2) *
-   * sqrt(p1-p2); based on (p1 - p2) = (rho/2) * (v2^2 - v1^2); where A1 > A2
-   *
-   * @return the volumetric flow in [meters^3/s]. Can be negative, indicating
-   * direction of flow, depending on how the differential sensor is attached to
-   * the venturi.
-   */
-  static VolumetricFlow PressureDeltaToFlow(Pressure delta);
-
  private:
-  Pressure ReadPressureSensor(Sensor s) const;
-  float ReadOxygenSensor(Pressure p_ambient) const;
+  /// \TODO: get this either from IDC constants header or something like that
+  static constexpr float ADC_voltage_range_{3.3f};
 
-  // Calibrated average sensor values in a zero state.
-  Voltage sensors_zero_vals_[NumSensors];
+  // \TODO: create a physical constants header for custom parts like venturi
+  // Diameters and correction coefficient relating to 3/4in Venturi, see https://bit.ly/2ARuReg.
+  // Correction factor of 0.97 is based on ISO recommendations for Reynolds of roughly 10^4 and
+  // machined (rather than cast) surfaces. Data fit is in good agreement based on comparison to
+  // Fleisch pneumotachograph; see https://github.com/RespiraWorks/Ventilator/pull/476
+  constexpr static Length venturi_port_diameter_{millimeters(15.05f)};
+  constexpr static Length venturi_choke_diameter_{millimeters(5.5f)};
+  constexpr static float venturi_correction_{0.97f};
 
-  using DbgFloat = Debug::Variable::Float;
+  static_assert(venturi_port_diameter_ > venturi_choke_diameter_);
+  static_assert(venturi_choke_diameter_ > meters(0));
 
-  mutable DbgFloat inflow_air_dp_{"inflow_air_dp", Debug::Variable::Access::ReadOnly, 0.0f, "cmH2O",
-                                  "Air influx differential pressure"};
-  mutable DbgFloat inflow_oxy_dp_{"inflow_oxygen_dp", Debug::Variable::Access::ReadOnly, 0.0f,
-                                  "cmH2O", "Concentrated oxygen influx differential pressure"};
-  mutable DbgFloat outflow_dp_{"outflow_dp", Debug::Variable::Access::ReadOnly, 0.0f, "cmH2O",
-                               "Exhale differential pressure"};
-  mutable DbgFloat patient_pressure_{"pressure", Debug::Variable::Access::ReadOnly, 0.0f, "cmH2O",
-                                     "Patient pressure"};
-  mutable DbgFloat inflow_air_{"inflow_air", Debug::Variable::Access::ReadOnly, 0.0f, "mL/s",
-                               "Air influx flow rate"};
-  mutable DbgFloat inflow_oxy_{"inflow_oxygen", Debug::Variable::Access::ReadOnly, 0.0f, "mL/s",
-                               "Concentrated oxygen influx flow rate"};
-  mutable DbgFloat outflow_{"outflow", Debug::Variable::Access::ReadOnly, 0.0f, "mL/s",
-                            "Outflow rate"};
-  mutable DbgFloat fio2_{"fio2", Debug::Variable::Access::ReadOnly, 0.0f, "ratio",
-                         "Fraction of inspired oxygen"};
+  // Fundamental sensors
+  MPXV5004DP patient_pressure_sensor_{"patient_pressure_", " in patient airway",
+                                      PinFor(Sensor::PatientPressure), ADC_voltage_range_};
+  TeledyneR24 fio2_sensor_{"fio2", PinFor(Sensor::FIO2), " "};
+  MPXV5004DP air_influx_sensor_dp_{"air_influx_", " for ambient air influx",
+                                   PinFor(Sensor::AirInflowPressureDiff), ADC_voltage_range_};
+  MPXV5004DP oxygen_influx_sensor_dp_{"oxygen_influx_", " for concentrated oxygen influx",
+                                      PinFor(Sensor::OxygenInflowPressureDiff), ADC_voltage_range_};
+  MPXV5004DP outflow_sensor_dp_{"outflow_", " for outflow", PinFor(Sensor::OutflowPressureDiff),
+                                ADC_voltage_range_};
+
+  // These require existing DP sensors to link to
+  VenturiFlowSensor air_influx_sensor_{"air_influx_",           " for ambient air influx",
+                                       &air_influx_sensor_dp_,  venturi_port_diameter_,
+                                       venturi_choke_diameter_, venturi_correction_};
+  VenturiFlowSensor oxygen_influx_sensor_{
+      "oxygen_influx_",       " for concentrated oxygen influx", &oxygen_influx_sensor_dp_,
+      venturi_port_diameter_, venturi_choke_diameter_,           venturi_correction_};
+  VenturiFlowSensor outflow_sensor_{"outflow_",
+                                    " for outflow",
+                                    &outflow_sensor_dp_,
+                                    venturi_port_diameter_,
+                                    venturi_choke_diameter_,
+                                    venturi_correction_};
 };

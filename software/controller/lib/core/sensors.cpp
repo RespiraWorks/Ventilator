@@ -15,28 +15,6 @@ limitations under the License.
 
 #include "sensors.h"
 
-#include <cmath>
-
-//@TODO: Potential Caution: Density of air slightly varies over temperature and
-// altitude - need mechanism to adjust based on delivery? Constant involving
-// density of air. Density assumed at 15 deg. Celsius and 1 atm of pressure.
-// Sourced from https://en.wikipedia.org/wiki/Density_of_air
-static const float DensityOfAirKgPerCubicMeter{1.225f};  // kg/m^3
-
-// Diameters and correction coefficient relating to 3/4in Venturi, see
-// https://bit.ly/2ARuReg.
-//
-// Correction factor of 0.97 is based on ISO recommendations for Reynolds of
-// roughly 10^4 and machined (rather than cast) surfaces. Data fit is in good
-// agreement based on comparison to Fleisch pneumotachograph; see
-// https://github.com/RespiraWorks/Ventilator/pull/476
-constexpr static Length VenturiPortDiameter{millimeters(15.05f)};
-constexpr static Length VenturiChokeDiameter{millimeters(5.5f)};
-constexpr static float VenturiCorrection{0.97f};
-
-static_assert(VenturiPortDiameter > VenturiChokeDiameter);
-static_assert(VenturiChokeDiameter > meters(0));
-
 //////////////////////////////////////////////////////////////////
 //                   SENSOR LOGICAL MAPPINGS                    //
 //   Change these if you route your sensor tubing differently   //
@@ -81,102 +59,32 @@ void Sensors::Calibrate() {
   // open any necessary valves, and recalibrate.
   hal.Delay(milliseconds(20));
 
-  for (Sensor s : {Sensor::PatientPressure, Sensor::AirInflowPressureDiff,
-                   Sensor::OxygenInflowPressureDiff, Sensor::OutflowPressureDiff, Sensor::FIO2}) {
-    sensors_zero_vals_[static_cast<uint16_t>(s)] = hal.AnalogRead(PinFor(s));
-  }
+  patient_pressure_sensor_.set_zero(hal);
+  air_influx_sensor_dp_.set_zero(hal);
+  oxygen_influx_sensor_dp_.set_zero(hal);
+  outflow_sensor_dp_.set_zero(hal);
+  fio2_sensor_.set_zero(hal);
 }
 
-// Reads a pressure sensor, returning its value in kPa.
-//
-// @TODO: Add alarms if sensor value is out of expected range?
-Pressure Sensors::ReadPressureSensor(Sensor s) const {
-  // The pressure sensors output 1-5V, and each additional 1V of output
-  // corresponds to an additional 1kPa of pressure difference.
-  // https://www.nxp.com/docs/en/data-sheet/MPXV5004G.pdf.
-  //
-  // The pressure sensor is scaled to 0-3.3V, which is the range captured by
-  // our ADC.  Therefore, if we multiply the received voltage by 5/3.3, we get
-  // a pressure in kPa.
-  static const float PressureSensorGain{5.f / 3.3f};
-  return kPa(PressureSensorGain *
-             (hal.AnalogRead(PinFor(s)) - sensors_zero_vals_[static_cast<uint16_t>(s)]).volts());
-}
-
-// Reads an oxygen sensor, returning the concentration of oxygen [0 ; 1.0]
-//
-// Output scales with partial pressure of O2, so ambient pressure must be
-// compensated to get an accurate FIO2.
-float Sensors::ReadOxygenSensor(Pressure p_ambient) const {
-  // Teledyne R24-compatible Electrochemical Cell Oxygen Sensor
-  // http://www.medicalsolutiontechnology.com/wp-content/uploads/2012/09/GO-04-DATA-SHEET.pdf
-  // Sensitivity of 0.060V/fio2, where fio2 is 0.0 to 1.0, at pressure = 1atm
-  // https://www.apogeeinstruments.com/content/SO-100-200-spec-sheet.pdf:
-  // sensitivity similar to SO-210-SS PCB has an op-amp to gain the output up by
-  // 50V/V This gives about 3.0V full scale.
-
-  // Standard air O2 concentration. This assumes that calibration occured with
-  // pure air, meaning the system has been filled with air only.
-  static const float O2ConcentrationInAir{0.21f};
-
-  static const float AmplifierGain{50.0f};
-  static const float OxygenSensorGain{0.060f};
-
-  // TODO: raise alarm if fio2 is out of expected (0,1) range
-  return (hal.AnalogRead(PinFor(Sensor::FIO2)) - sensors_zero_vals_[static_cast<int>(Sensor::FIO2)])
-                 .volts() /
-             (AmplifierGain * OxygenSensorGain) / p_ambient.atm() +
-         O2ConcentrationInAir;
-}
-
-VolumetricFlow Sensors::PressureDeltaToFlow(Pressure delta) {
-  auto pow2 = [](float f) { return f * f; };
-
-  // Returns an area in meters squared.
-  auto diameter_to_area_m2 = [&](Length diameter) {
-    return static_cast<float>(M_PI) / 4.0f * pow2(diameter.meters());
-  };
-
-  float port_area = diameter_to_area_m2(VenturiPortDiameter);
-  float choke_area = diameter_to_area_m2(VenturiChokeDiameter);
-  return cubic_m_per_sec(VenturiCorrection *
-                         std::copysign(std::sqrt(std::abs(delta.kPa()) * 1000.0f), delta.kPa()) *
-                         std::sqrt(2 / DensityOfAirKgPerCubicMeter) * port_area * choke_area /
-                         std::sqrt(pow2(port_area) - pow2(choke_area)));
-}
+/// \TODO: Add alarms if sensor value is out of expected range?
 
 SensorReadings Sensors::GetReadings() const {
-  auto patient_pressure = ReadPressureSensor(Sensor::PatientPressure);
-  // Flow rate is inhalation flow minus exhalation flow. Positive value is flow
-  // into lungs, and negative is flow out of lungs.
-  auto air_inflow_delta = ReadPressureSensor(Sensor::AirInflowPressureDiff);
-  auto oxygen_inflow_delta = ReadPressureSensor(Sensor::OxygenInflowPressureDiff);
-  auto outflow_delta = ReadPressureSensor(Sensor::OutflowPressureDiff);
-  // Fraction of Inspired Oxygen assuming ambient pressure of 101.3 kPa
-  // TODO: measure ambient pressure from an additional sensor and/or estimate
-  // from user input (from altitude?)
-  Pressure p_ambient = kPa(101.3f);
-  auto fio2 = ReadOxygenSensor(p_ambient);
+  //@TODO: Potential Caution: Density of air slightly varies over temperature and
+  // altitude - need mechanism to adjust based on delivery? Constant involving
+  // density of air. Density assumed at 15 deg. Celsius and 1 atm of pressure.
+  // Sourced from https://en.wikipedia.org/wiki/Density_of_air
+  static constexpr float air_density{1.225f};  // kg/m^3
 
-  VolumetricFlow air_inflow = PressureDeltaToFlow(air_inflow_delta);
-  VolumetricFlow oxygen_inflow = PressureDeltaToFlow(oxygen_inflow_delta);
-  VolumetricFlow outflow = PressureDeltaToFlow(outflow_delta);
-
-  // Set debug variables.
-  inflow_air_dp_.set(air_inflow_delta.cmH2O());
-  inflow_oxy_dp_.set(oxygen_inflow_delta.cmH2O());
-  outflow_dp_.set(outflow_delta.cmH2O());
-  patient_pressure_.set(patient_pressure.cmH2O());
-  fio2_.set(fio2);
-  inflow_air_.set(air_inflow.ml_per_sec());
-  inflow_oxy_.set(oxygen_inflow.ml_per_sec());
-  outflow_.set(outflow.ml_per_sec());
+  // Assuming ambient pressure of 101.3 kPa
+  // TODO: measure ambient pressure from an additional sensor
+  //  and/or estimate from user input (from altitude?)
+  static constexpr Pressure ambient_pressure = kPa(101.3f);
 
   return {
-      .patient_pressure = patient_pressure,
-      .fio2 = fio2,
-      .air_inflow = air_inflow,
-      .oxygen_inflow = oxygen_inflow,
-      .outflow = outflow,
+      .patient_pressure = patient_pressure_sensor_.read(hal),
+      .fio2 = fio2_sensor_.read(hal, ambient_pressure),
+      .air_inflow = air_influx_sensor_.read(hal, air_density),
+      .oxygen_inflow = oxygen_influx_sensor_.read(hal, air_density),
+      .outflow = outflow_sensor_.read(hal, air_density),
   };
 }

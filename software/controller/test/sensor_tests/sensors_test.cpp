@@ -39,6 +39,14 @@ static const Pressure ComparisonTolerancePressure{kPa(0.005f)};
 static const VolumetricFlow ComparisonToleranceFlow{ml_per_sec(50)};
 static const float ComparisonToleranceFIO2{0.001f};
 
+// \TODO lots of assumptions here...
+static constexpr float air_density{1.225f};  // kg/m^3
+constexpr static Length venturi_port_diameter{millimeters(15.05f)};
+constexpr static Length venturi_choke_diameter{millimeters(5.5f)};
+constexpr static float venturi_correction{0.97f};
+static VenturiFlowSensor typical_venturi{
+    "", "", nullptr, venturi_port_diameter, venturi_choke_diameter, venturi_correction};
+
 #define EXPECT_PRESSURE_NEAR(a, b) \
   EXPECT_NEAR((a).kPa(), (b).kPa(), ComparisonTolerancePressure.kPa())
 
@@ -148,12 +156,17 @@ TEST(SensorTests, FiO2Reading) {
 //
 // Expected values from https://www.wolframalpha.com/input/?i=Venturi+flowmeter
 TEST(SensorTests, TestVolumetricFlowCalculation) {
-  EXPECT_FLOW_NEAR(Sensors::PressureDeltaToFlow(kPa(1.0f)), ml_per_sec(939.6f));
-  EXPECT_FLOW_NEAR(Sensors::PressureDeltaToFlow(kPa(-1.0f)), ml_per_sec(-939.6f));
-  EXPECT_FLOW_NEAR(Sensors::PressureDeltaToFlow(kPa(0.0f)), ml_per_sec(0));
-  EXPECT_FLOW_NEAR(Sensors::PressureDeltaToFlow(kPa(1.0e-7f)), ml_per_sec(0.2971f));
-  EXPECT_FLOW_NEAR(Sensors::PressureDeltaToFlow(kPa(100.0f)), ml_per_sec(9396));
-  EXPECT_FLOW_NEAR(Sensors::PressureDeltaToFlow(kPa(-100.0f)), ml_per_sec(-9396));
+  EXPECT_FLOW_NEAR(typical_venturi.pressure_delta_to_flow(kPa(1.0f), air_density),
+                   ml_per_sec(939.6f));
+  EXPECT_FLOW_NEAR(typical_venturi.pressure_delta_to_flow(kPa(-1.0f), air_density),
+                   ml_per_sec(-939.6f));
+  EXPECT_FLOW_NEAR(typical_venturi.pressure_delta_to_flow(kPa(0.0f), air_density), ml_per_sec(0));
+  EXPECT_FLOW_NEAR(typical_venturi.pressure_delta_to_flow(kPa(1.0e-7f), air_density),
+                   ml_per_sec(0.2971f));
+  EXPECT_FLOW_NEAR(typical_venturi.pressure_delta_to_flow(kPa(100.0f), air_density),
+                   ml_per_sec(9396));
+  EXPECT_FLOW_NEAR(typical_venturi.pressure_delta_to_flow(kPa(-100.0f), air_density),
+                   ml_per_sec(-9396));
 }
 
 TEST(SensorTests, TotalFlowCalculation) {
@@ -181,9 +194,12 @@ TEST(SensorTests, TotalFlowCalculation) {
         auto readings = update_readings(
             /*dt=*/seconds(0.0f), p_oxy_in, /*patient_pressure=*/kPa(0.0f), p_air_in, p_out,
             atm(1.0f), /*fio2=*/0.21f, &sensors);
-        EXPECT_FLOW_NEAR(readings.air_inflow, Sensors::PressureDeltaToFlow(p_air_in));
-        EXPECT_FLOW_NEAR(readings.oxygen_inflow, Sensors::PressureDeltaToFlow(p_oxy_in));
-        EXPECT_FLOW_NEAR(readings.outflow, Sensors::PressureDeltaToFlow(p_out));
+        EXPECT_FLOW_NEAR(readings.air_inflow,
+                         typical_venturi.pressure_delta_to_flow(p_air_in, air_density));
+        EXPECT_FLOW_NEAR(readings.oxygen_inflow,
+                         typical_venturi.pressure_delta_to_flow(p_oxy_in, air_density));
+        EXPECT_FLOW_NEAR(readings.outflow,
+                         typical_venturi.pressure_delta_to_flow(p_out, air_density));
       }
     }
   }
@@ -229,10 +245,12 @@ TEST(SensorTests, Calibration) {
                              /*fio2=*/0.0f, &sensors);
 
   EXPECT_FLOW_NEAR(readings.oxygen_inflow,
-                   -1 * Sensors::PressureDeltaToFlow(init_oxy_inflow_delta));
+                   -1 * typical_venturi.pressure_delta_to_flow(init_oxy_inflow_delta, air_density));
   EXPECT_PRESSURE_NEAR(readings.patient_pressure, cmH2O(-1 * init_pressure.cmH2O()));
-  EXPECT_FLOW_NEAR(readings.air_inflow, -1 * Sensors::PressureDeltaToFlow(init_air_inflow_delta));
-  EXPECT_FLOW_NEAR(readings.outflow, -1 * Sensors::PressureDeltaToFlow(init_outflow_delta));
+  EXPECT_FLOW_NEAR(readings.air_inflow,
+                   -1 * typical_venturi.pressure_delta_to_flow(init_air_inflow_delta, air_density));
+  EXPECT_FLOW_NEAR(readings.outflow,
+                   -1 * typical_venturi.pressure_delta_to_flow(init_outflow_delta, air_density));
   EXPECT_NEAR(readings.fio2, 0.21f - init_fio2, ComparisonToleranceFIO2);
 
   // set measured signals to some random values + init values and expect init
@@ -247,9 +265,12 @@ TEST(SensorTests, Calibration) {
       /*ambient_pressure=*/atm(1.0f),
       /*fio2=*/0.25f + init_fio2, &sensors);
 
-  EXPECT_FLOW_NEAR(readings.oxygen_inflow, Sensors::PressureDeltaToFlow(kPa(0.6f)));
+  EXPECT_FLOW_NEAR(readings.oxygen_inflow,
+                   typical_venturi.pressure_delta_to_flow(kPa(0.6f), air_density));
   EXPECT_PRESSURE_NEAR(readings.patient_pressure, kPa(-0.5f));
-  EXPECT_FLOW_NEAR(readings.air_inflow, Sensors::PressureDeltaToFlow(kPa(1.1f)));
-  EXPECT_FLOW_NEAR(readings.outflow, Sensors::PressureDeltaToFlow(kPa(0.01f)));
+  EXPECT_FLOW_NEAR(readings.air_inflow,
+                   typical_venturi.pressure_delta_to_flow(kPa(1.1f), air_density));
+  EXPECT_FLOW_NEAR(readings.outflow,
+                   typical_venturi.pressure_delta_to_flow(kPa(0.01f), air_density));
   EXPECT_NEAR(readings.fio2, 0.25f + 0.21f, ComparisonToleranceFIO2);
 }

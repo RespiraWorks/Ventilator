@@ -21,6 +21,14 @@ limitations under the License.
 
 // TODO: There ought to be many more tests in here.
 
+// \TODO lots of assumptions here, and sign of too much coupling, should not need this here
+static constexpr float air_density{1.225f};  // kg/m^3
+constexpr static Length venturi_port_diameter{millimeters(15.05f)};
+constexpr static Length venturi_choke_diameter{millimeters(5.5f)};
+constexpr static float venturi_correction{0.97f};
+static VenturiFlowSensor typical_venturi{
+    "", "", nullptr, venturi_port_diameter, venturi_choke_diameter, venturi_correction};
+
 TEST(ControllerTest, ControllerVolumeMatchesFlowIntegrator) {
   constexpr Time start = microsSinceStartup(0);
   constexpr int breaths_to_test = 5;
@@ -65,9 +73,9 @@ TEST(ControllerTest, ControllerVolumeMatchesFlowIntegrator) {
     readings = {
         .patient_pressure = kPa(0),
         .fio2 = 0.21f,
-        .air_inflow = Sensors::PressureDeltaToFlow(air_inflow_pressure),
-        .oxygen_inflow = Sensors::PressureDeltaToFlow(oxy_inflow_pressure),
-        .outflow = Sensors::PressureDeltaToFlow(outflow_pressure),
+        .air_inflow = typical_venturi.pressure_delta_to_flow(air_inflow_pressure, air_density),
+        .oxygen_inflow = typical_venturi.pressure_delta_to_flow(oxy_inflow_pressure, air_density),
+        .outflow = typical_venturi.pressure_delta_to_flow(outflow_pressure, air_density),
     };
     VolumetricFlow uncorrected_flow =
         readings.air_inflow

@@ -82,8 +82,8 @@ static constexpr int OversampleLog2 = 4;
 static constexpr int OversampleCount = 1 << OversampleLog2;
 
 // [RM] 16.4.30: Oversampler (pg 425)
-// This calculated constant gives the maximum A/D reading based on the
-// number of samples.
+// This calculated constant gives the maximum A/D reading based on the number of samples.
+// \TODO: what is 4?
 static constexpr int MaxAdcReading = (OversampleLog2 >= 4) ? 65536 : (1 << (12 + OversampleLog2));
 
 // Set sample time ([RM] 16.4.12). I'm using 92.5 A/D clocks to sample.
@@ -168,10 +168,12 @@ void HalApi::InitADC() {
 
   adc->adc[0].configuration2.oversampling_ratio = (OversampleLog2 > 0) ? OversampleLog2 - 1 : 0;
 
+  // \TODO: what is 4?
   adc->adc[0].configuration2.oversampling_shift = (OversampleLog2 < 4) ? 0 : (OversampleLog2 - 4);
 
   // Set sample times ([RM] 16.4.12). I'm using 92.5 A/D clocks to sample.
   static_assert(AdcSampleTime == 92);
+  // \todo all of these are = 5 -- should this be a single variable based on something above?
   adc->adc[0].sample_times.ch5 = 5;
   adc->adc[0].sample_times.ch6 = 5;
   adc->adc[0].sample_times.ch9 = 5;
@@ -179,6 +181,7 @@ void HalApi::InitADC() {
   adc->adc[0].sample_times.ch2 = 5;
 
   // Set conversion sequence length:
+  // \TODO: why - 1 ?
   adc->adc[0].sequence.length = AdcChannels - 1;
 
   adc->adc[0].sequence.sequence1 = 5;   // PA0 (ADC1_IN5)  interim board: analog pressure

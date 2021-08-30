@@ -60,7 +60,7 @@ std::pair<ActuatorsState, ControllerState> Controller::Run(Time now, const VentP
     // them to the desired positions.
     blower_valve_pid_.reset();
     psol_pid_.reset();
-	fio2_pid_.reset();
+    fio2_pid_.reset();
 
     actuators_state = {
         .fio2_valve = 0,
@@ -85,7 +85,7 @@ std::pair<ActuatorsState, ControllerState> Controller::Run(Time now, const VentP
       // Calculate blower valve command using calculated gains
       float blower_valve = blower_valve_pid_.compute(now, sensor_readings.patient_pressure.kPa(),
                                                      desired_state.pressure_setpoint->kPa());
-	  float fio2_coupling_value = fio2_pid_.compute(now, sensor_readings.fio2, params.fio2);
+      float fio2_coupling_value = fio2_pid_.compute(now, sensor_readings.fio2, params.fio2);
 
       actuators_state = {
           .fio2_valve = blower_valve * fio2_coupling_value,

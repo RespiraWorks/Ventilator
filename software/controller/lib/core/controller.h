@@ -89,13 +89,13 @@ class Controller {
 
   PID fio2_pid_{"fio2_",
                 " for FIO2 PID",
-      /*kp=*/0.001f,
-      /*ki=*/0.1f,
-      /*kd=*/0.0f,
-      /*p_term=*/PID::TermApplication::OnError,
-      /*d_term=*/PID::TermApplication::OnMeasurement,
-      /*output_min=*/0.f,
-      /*output_max=*/1.0f};
+                /*kp=*/0.001f,
+                /*ki=*/0.1f,
+                /*kd=*/0.0f,
+                /*p_term=*/PID::TermApplication::OnError,
+                /*d_term=*/PID::TermApplication::OnMeasurement,
+                /*output_min=*/0.f,
+                /*output_max=*/1.0f};
 
   // These objects accumulate flow to calculate volume.
   //

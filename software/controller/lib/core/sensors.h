@@ -65,7 +65,7 @@ class Sensors {
   SensorReadings get_readings() const;
 
  private:
-  /// \TODO: get this either from IDC constants header or something like that
+  /// \TODO: get this either from ADC constants header or something like that
   static constexpr float ADCVoltageRange{3.3f};
 
   // \TODO: create a physical constants header for custom parts like venturi
@@ -86,7 +86,7 @@ class Sensors {
   TeledyneR24 fio2_sensor_{"fio2", "Fraction of oxygen in supplied air", sensor_pin(Sensor::FIO2)};
   MPXV5004DP air_influx_sensor_dp_{"air_influx_", "for ambient air influx",
                                    sensor_pin(Sensor::AirInflowPressureDiff), ADCVoltageRange};
-  MPXV5004DP oxygen_influx_sensor_dp_{"oxygen_influx_", "for concentrated oxygen influx",
+  MPXV5010DP oxygen_influx_sensor_dp_{"oxygen_influx_", "for concentrated oxygen influx",
                                       sensor_pin(Sensor::OxygenInflowPressureDiff),
                                       ADCVoltageRange};
   MPXV5004DP outflow_sensor_dp_{"outflow_", "for outflow", sensor_pin(Sensor::OutflowPressureDiff),

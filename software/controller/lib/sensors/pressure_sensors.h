@@ -33,8 +33,16 @@ class MPXV5004DP : public AnalogPressureSensor {
  public:
   MPXV5004DP(const char *name, const char *help_supplement, AnalogPin pin, float voltage_range);
 
-  // min/max possible reading from MPXV5004GP pressure sensors
+  // min/max possible reading from MPXV5004DP pressure sensors
   // \TODO: are we supposed to use these somehow?
   constexpr static Pressure MinPressure{kPa(0.0f)};
   constexpr static Pressure MaxPressure{kPa(3.92f)};
+};
+
+class MPXV5010DP : public AnalogPressureSensor {
+ public:
+  MPXV5010DP(const char *name, const char *help_supplement, AnalogPin pin, float voltage_range);
+  // min/max possible reading from MPXV5010DP pressure sensors
+  constexpr static Pressure MinPressure{kPa(0.0f)};
+  constexpr static Pressure MaxPressure{kPa(10.0f)};
 };

@@ -21,9 +21,9 @@ limitations under the License.
 //////////////////////////////////////////////////////////////////
 AnalogPin sensor_pin(Sensor s) {
   switch (s) {
-    case Sensor::OxygenInflowPressureDiff:
-      return AnalogPin::InterimBoardAnalogPressure;
     case Sensor::PatientPressure:
+      return AnalogPin::InterimBoardAnalogPressure;
+    case Sensor::OxygenInflowPressureDiff:
       return AnalogPin::U3PatientPressure;
     case Sensor::AirInflowPressureDiff:
       return AnalogPin::U4InhaleFlow;

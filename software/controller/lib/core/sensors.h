@@ -81,12 +81,12 @@ class Sensors {
   static_assert(VenturiChokeDiameter > meters(0));
 
   // Fundamental sensors
-  MPXV5004DP patient_pressure_sensor_{"patient_pressure_", "for patient airway pressure",
+  MPXV5010DP patient_pressure_sensor_{"patient_pressure_", "for patient airway pressure",
                                       sensor_pin(Sensor::PatientPressure), ADCVoltageRange};
   TeledyneR24 fio2_sensor_{"fio2", "Fraction of oxygen in supplied air", sensor_pin(Sensor::FIO2)};
   MPXV5004DP air_influx_sensor_dp_{"air_influx_", "for ambient air influx",
                                    sensor_pin(Sensor::AirInflowPressureDiff), ADCVoltageRange};
-  MPXV5010DP oxygen_influx_sensor_dp_{"oxygen_influx_", "for concentrated oxygen influx",
+  MPXV5004DP oxygen_influx_sensor_dp_{"oxygen_influx_", "for concentrated oxygen influx",
                                       sensor_pin(Sensor::OxygenInflowPressureDiff),
                                       ADCVoltageRange};
   MPXV5004DP outflow_sensor_dp_{"outflow_", "for outflow", sensor_pin(Sensor::OutflowPressureDiff),

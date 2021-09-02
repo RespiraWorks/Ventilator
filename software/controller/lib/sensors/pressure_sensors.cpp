@@ -39,7 +39,7 @@ MPXV5004DP::MPXV5004DP(const char *name, const char *help_supplement, AnalogPin 
 
 // Vout = Vss * (0.09 * P + 0.04) between 0 and 5 V :
 // https://www.nxp.com/docs/en/data-sheet/MPX5010.pdf
-// Vss = 5, therefore P = Vout * (1 / 0.45)
+// Vss = 5, therefore P = (Vout - Vzero) * (1 / 0.45)
 //
 // voltage_range is whatever the voltage is scaled to as captured by your ADC.
 // Therefore, if we multiply the received voltage by 5/voltage_range and divide it by 0.45, we get a

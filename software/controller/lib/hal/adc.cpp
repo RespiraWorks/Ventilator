@@ -74,6 +74,10 @@ static constexpr float SampleHistoryTimeSec = 0.001f;
 // Total number of A/D inputs we're sampling
 static constexpr int AdcChannels = 5;
 
+// Resolution of the ADC channels (in bits).
+// We are using the default value (which is also the highest possible one - see [RM] 16.4.22).
+static constexpr int AdcResolution = 12;
+
 // This constant controls how many times we have the A/D sample each input
 // and sum them before moving on to the next input.  The constant is set
 // as a log base 2, so a value of 3 for example would mean sample 8 times
@@ -83,26 +87,52 @@ static constexpr int OversampleCount = 1 << OversampleLog2;
 
 // [RM] 16.4.30: Oversampler (pg 425)
 // This calculated constant gives the maximum A/D reading based on the number of samples.
-// \TODO: what is 4?
-static constexpr int MaxAdcReading = (OversampleLog2 >= 4) ? 65536 : (1 << (12 + OversampleLog2));
+// It is the maximum value reached when summing all samples in a 16 bits (internal) register,
+// considering all samples have maximum value (2 ^ resolution).
+// In other words, it is 2 ^ resolution * Number of samples, maxed out at 2^16
+static constexpr int MaxAdcReading =
+    (OversampleLog2 >= (16 - AdcResolution)) ? 65536 : (1 << (AdcResolution + OversampleLog2));
 
-// Set sample time ([RM] 16.4.12). I'm using 92.5 A/D clocks to sample.
-// A/D sample time in CPU clock cycles.  Fixed for now
-// This is the time we give the analog input to charge the A/D sampling cap.
-enum class ADCSampleTime {
-  s2_5 = 2,
-  s6_5 = 6,
-  s12_5 = 12,
-  s24_5 = 24,
-  s47_5 = 47,
-  s92_5 = 92,
-  s247_5 = 247,
-  s640_5 = 640
+// Set sample time ([RM] 16.4.12).
+enum class ADCSampleTimeReg {
+  s2_5 = 0,    // 2.5 clock cycles
+  s6_5 = 1,    // 6.5 clock cycles
+  s12_5 = 2,   // 12.5 clock cycles
+  s24_5 = 3,   // 24.5 clock cycles
+  s47_5 = 4,   // 47.5 clock cycles
+  s92_5 = 5,   // 92.5 clock cycles
+  s247_5 = 6,  // 247.5 clock cycles
+  s640_5 = 7   // 640.5 clock cycles
 };
-static constexpr ADCSampleTime AdcSampleTime{ADCSampleTime::s92_5};
+// I'm using 92.5 A/D clocks to sample.
+// A/D sample time in CPU clock cycles.  Fixed for now.
+// This is the time we give the analog input to charge the A/D sampling cap.
+static constexpr ADCSampleTimeReg AdcSampleTime{ADCSampleTimeReg::s92_5};
 
-// Time of an A/D conversion in CPU clock cycles.  This is the sample time + 13
-static constexpr int AdcConversionTime{static_cast<uint32_t>(AdcSampleTime) + 13};
+// Time of an A/D conversion in CPU clock cycles (see [RM] 16.4.16):
+// sample time (in clock cycles, rounded up) + 12 (one per bit of resolution).
+static constexpr int AdcConversionTime = [] {
+  switch (AdcSampleTime) {
+    case ADCSampleTimeReg::s2_5:
+      return 3 + AdcResolution;
+    case ADCSampleTimeReg::s6_5:
+      return 7 + AdcResolution;
+    case ADCSampleTimeReg::s12_5:
+      return 13 + AdcResolution;
+    case ADCSampleTimeReg::s24_5:
+      return 25 + AdcResolution;
+    case ADCSampleTimeReg::s47_5:
+      return 48 + AdcResolution;
+    case ADCSampleTimeReg::s92_5:
+      return 93 + AdcResolution;
+    case ADCSampleTimeReg::s247_5:
+      return 248 + AdcResolution;
+    case ADCSampleTimeReg::s640_5:
+      return 640 + AdcResolution;
+  }
+  // All cases covered above (and GCC checks this).
+  __builtin_unreachable();
+}();
 
 // Calculate how long our history buffer needs to be based on the above.
 static constexpr int AdcSampleHistory = static_cast<int>(
@@ -166,6 +196,22 @@ void HalApi::InitADC() {
   adc->adc[0].configuration1.dma_enable = 1;
   adc->adc[0].configuration1.dma_config = 1;
   adc->adc[0].configuration1.continuous_conversion = 1;
+  // note: since we are using default resolution (12 bits), we don't actually need this
+  // values are from [RM] p461 (values for register RES[1:0])
+  adc->adc[0].configuration1.resolution = [&] {
+    switch (AdcResolution) {
+      case 6:
+        return 3;
+      case 8:
+        return 2;
+      case 10:
+        return 1;
+      case 12:
+        return 0;
+      default:
+        return 0;
+    }
+  }();
 
   adc->adc[0].configuration2.regular_oversampling = (OversampleLog2 > 0) ? 1 : 0;
 
@@ -175,33 +221,11 @@ void HalApi::InitADC() {
   adc->adc[0].configuration2.oversampling_shift = (OversampleLog2 < 4) ? 0 : (OversampleLog2 - 4);
 
   // Set sample times ([RM] 16.4.12).
-  auto ADCSampleTimeRegister = [&](ADCSampleTime sample_time) {
-    switch (sample_time) {
-      case ADCSampleTime::s2_5:
-        return 0;
-      case ADCSampleTime::s6_5:
-        return 1;
-      case ADCSampleTime::s12_5:
-        return 2;
-      case ADCSampleTime::s24_5:
-        return 3;
-      case ADCSampleTime::s47_5:
-        return 4;
-      case ADCSampleTime::s92_5:
-        return 5;
-      case ADCSampleTime::s247_5:
-        return 6;
-      case ADCSampleTime::s640_5:
-        return 7;
-    }
-    // All cases covered above (and GCC checks this).
-    __builtin_unreachable();
-  };
-  adc->adc[0].sample_times.ch1 = ADCSampleTimeRegister(AdcSampleTime);
-  adc->adc[0].sample_times.ch6 = ADCSampleTimeRegister(AdcSampleTime);
-  adc->adc[0].sample_times.ch9 = ADCSampleTimeRegister(AdcSampleTime);
-  adc->adc[0].sample_times.ch15 = ADCSampleTimeRegister(AdcSampleTime);
-  adc->adc[0].sample_times.ch2 = ADCSampleTimeRegister(AdcSampleTime);
+  adc->adc[0].sample_times.ch1 = static_cast<uint32_t>(AdcSampleTime);
+  adc->adc[0].sample_times.ch6 = static_cast<uint32_t>(AdcSampleTime);
+  adc->adc[0].sample_times.ch9 = static_cast<uint32_t>(AdcSampleTime);
+  adc->adc[0].sample_times.ch15 = static_cast<uint32_t>(AdcSampleTime);
+  adc->adc[0].sample_times.ch2 = static_cast<uint32_t>(AdcSampleTime);
 
   // Set conversion sequence length (number of used channels - 1, per [RM] p468)
   adc->adc[0].sequence.length = AdcChannels - 1;

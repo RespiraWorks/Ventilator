@@ -59,7 +59,7 @@ limitations under the License.
 Please refer to [PCB] as the ultimate source of which pin is used for which function.
 
 The following pins are used as analog inputs on the rev-1 PCB:
-- PA0 (ADC1_IN5)  interim board: analog pressure
+- PC0 (ADC1_IN1)  interim board: analog pressure
 - PA1 (ADC1_IN6)  U3 patient pressure
 - PA4 (ADC1_IN9)  U4 inhale flow
 - PB0 (ADC1_IN15) U5 exhale flow
@@ -74,6 +74,10 @@ static constexpr float SampleHistoryTimeSec = 0.001f;
 // Total number of A/D inputs we're sampling
 static constexpr int AdcChannels = 5;
 
+// Resolution of the ADC channels (in bits).
+// We are using the default value (which is also the highest possible one - see [RM] 16.4.22).
+static constexpr int AdcResolution = 12;
+
 // This constant controls how many times we have the A/D sample each input
 // and sum them before moving on to the next input.  The constant is set
 // as a log base 2, so a value of 3 for example would mean sample 8 times
@@ -83,16 +87,52 @@ static constexpr int OversampleCount = 1 << OversampleLog2;
 
 // [RM] 16.4.30: Oversampler (pg 425)
 // This calculated constant gives the maximum A/D reading based on the number of samples.
-// \TODO: what is 4?
-static constexpr int MaxAdcReading = (OversampleLog2 >= 4) ? 65536 : (1 << (12 + OversampleLog2));
+// It is the maximum value reached when summing all samples in a 16 bits (internal) register,
+// considering all samples have maximum value (2 ^ resolution).
+// In other words, it is 2 ^ resolution * Number of samples, maxed out at 2^16
+static constexpr int MaxAdcReading =
+    (OversampleLog2 >= (16 - AdcResolution)) ? 65536 : (1 << (AdcResolution + OversampleLog2));
 
-// Set sample time ([RM] 16.4.12). I'm using 92.5 A/D clocks to sample.
-// A/D sample time in CPU clock cycles.  Fixed for now
+// Set sample time ([RM] 16.4.12).
+enum class ADCSampleTimeReg {
+  s2_5 = 0,    // 2.5 clock cycles
+  s6_5 = 1,    // 6.5 clock cycles
+  s12_5 = 2,   // 12.5 clock cycles
+  s24_5 = 3,   // 24.5 clock cycles
+  s47_5 = 4,   // 47.5 clock cycles
+  s92_5 = 5,   // 92.5 clock cycles
+  s247_5 = 6,  // 247.5 clock cycles
+  s640_5 = 7   // 640.5 clock cycles
+};
+// I'm using 92.5 A/D clocks to sample.
+// A/D sample time in CPU clock cycles.  Fixed for now.
 // This is the time we give the analog input to charge the A/D sampling cap.
-static constexpr int AdcSampleTime = 92;
+static constexpr ADCSampleTimeReg AdcSampleTime{ADCSampleTimeReg::s92_5};
 
-// Time of an A/D conversion in CPU clock cycles.  This is the sample time + 13
-static constexpr int AdcConversionTime = AdcSampleTime + 13;
+// Time of an A/D conversion in CPU clock cycles (see [RM] 16.4.16):
+// sample time (in clock cycles, rounded up) + 12 (one per bit of resolution).
+static constexpr int AdcConversionTime = [] {
+  switch (AdcSampleTime) {
+    case ADCSampleTimeReg::s2_5:
+      return 3 + AdcResolution;
+    case ADCSampleTimeReg::s6_5:
+      return 7 + AdcResolution;
+    case ADCSampleTimeReg::s12_5:
+      return 13 + AdcResolution;
+    case ADCSampleTimeReg::s24_5:
+      return 25 + AdcResolution;
+    case ADCSampleTimeReg::s47_5:
+      return 48 + AdcResolution;
+    case ADCSampleTimeReg::s92_5:
+      return 93 + AdcResolution;
+    case ADCSampleTimeReg::s247_5:
+      return 248 + AdcResolution;
+    case ADCSampleTimeReg::s640_5:
+      return 640 + AdcResolution;
+  }
+  // All cases covered above (and GCC checks this).
+  __builtin_unreachable();
+}();
 
 // Calculate how long our history buffer needs to be based on the above.
 static constexpr int AdcSampleHistory = static_cast<int>(
@@ -107,13 +147,10 @@ static constexpr float AdcScaler = 3.3f / (MaxAdcReading * AdcSampleHistory);
 static volatile uint16_t adc_buff[AdcSampleHistory * AdcChannels];
 
 // NOTE - we need the sample history to be small for two reasons:
-// - We sum to a 32-bit floating point number and will lose precision
-//   if we add in too many samples
-// - We want the A/D reading to be fast, so summing up a really large
-//   array might be too slow.
+// - We sum to a 32-bit floating point number and will lose precision if we add in too many samples
+// - We want the A/D reading to be fast, so summing up a really large array might be too slow.
 //
-// If you get hit with this assertion you may need to rethink the
-// way this function works.
+// If you get hit with this assertion you may need to rethink the way this function works.
 static_assert(AdcSampleHistory < 100);
 
 void HalApi::InitADC() {
@@ -121,31 +158,27 @@ void HalApi::InitADC() {
   EnableClock(AdcBase);
 
   // Configure the 5 pins used as analog inputs
-  GpioPinMode(GpioABase, 0, GPIOPinMode::Analog);  // PA0 (ADC1_IN5)  interim board: analog pressure
+  GpioPinMode(GpioCBase, 0, GPIOPinMode::Analog);  // PC0 (ADC1_IN1)  interim board: analog pressure
   GpioPinMode(GpioABase, 1, GPIOPinMode::Analog);  // PA1 (ADC1_IN6)  U3 patient pressure
   GpioPinMode(GpioABase, 4, GPIOPinMode::Analog);  // PA4 (ADC1_IN9)  U4 inhale flow
   GpioPinMode(GpioBBase, 0, GPIOPinMode::Analog);  // PB0 (ADC1_IN15) U5 exhale flow
   GpioPinMode(GpioCBase, 1, GPIOPinMode::Analog);  // PC3 (ADC1_IN2)  interim board: oxygen sensor
 
-  // Perform a power-up and calibration sequence on
-  // the A/D converter
+  // Perform a power-up and calibration sequence on the A/D converter
   AdcReg *adc = AdcBase;
 
-  // Exit deep power down mode and turn on the
-  // internal voltage regulator.
+  // Exit deep power down mode and turn on the internal voltage regulator.
   adc->adc[0].control = 0x10000000;
 
-  // Wait for the startup time ([RM] 16.4.6) specified in the STM32
-  // [DS] for the voltage regulator to become ready.
-  // The time in the [DS] is 20 microseconds ([DS] 6.3.18)
-  // but I'll wait for 30 just to be extra conservative
+  // Wait for the startup time ([RM] 16.4.6) specified in the STM32 [DS] for the voltage regulator
+  // to become ready.  The time in the [DS] is 20 microseconds ([DS] 6.3.18) but I'll wait for 30
+  // just to be extra conservative
   hal.Delay(microseconds(30));
 
   // Calibrate the A/D for single ended channels ([RM] 16.4.8)
   adc->adc[0].control |= 0x80000000;
 
-  // Wait until the CAL bit is cleared meaning
-  // calibration is finished
+  // Wait until the CAL bit is cleared meaning calibration is finished
   while (adc->adc[0].control & 0x80000000) {
   }
 
@@ -163,34 +196,47 @@ void HalApi::InitADC() {
   adc->adc[0].configuration1.dma_enable = 1;
   adc->adc[0].configuration1.dma_config = 1;
   adc->adc[0].configuration1.continuous_conversion = 1;
+  // note: since we are using default resolution (12 bits), we don't actually need this
+  // values are from [RM] p461 (values for register RES[1:0])
+  adc->adc[0].configuration1.resolution = [&] {
+    switch (AdcResolution) {
+      case 6:
+        return 3;
+      case 8:
+        return 2;
+      case 10:
+        return 1;
+      case 12:
+        return 0;
+      default:
+        return 0;
+    }
+  }();
 
   adc->adc[0].configuration2.regular_oversampling = (OversampleLog2 > 0) ? 1 : 0;
 
   adc->adc[0].configuration2.oversampling_ratio = (OversampleLog2 > 0) ? OversampleLog2 - 1 : 0;
 
-  // \TODO: what is 4?
+  // Set oversampling shift if necessary (see [RM] Table 66)
   adc->adc[0].configuration2.oversampling_shift = (OversampleLog2 < 4) ? 0 : (OversampleLog2 - 4);
 
-  // Set sample times ([RM] 16.4.12). I'm using 92.5 A/D clocks to sample.
-  static_assert(AdcSampleTime == 92);
-  // \todo all of these are = 5 -- should this be a single variable based on something above?
-  adc->adc[0].sample_times.ch5 = 5;
-  adc->adc[0].sample_times.ch6 = 5;
-  adc->adc[0].sample_times.ch9 = 5;
-  adc->adc[0].sample_times.ch15 = 5;
-  adc->adc[0].sample_times.ch2 = 5;
+  // Set sample times ([RM] 16.4.12).
+  adc->adc[0].sample_times.ch1 = static_cast<uint32_t>(AdcSampleTime);
+  adc->adc[0].sample_times.ch6 = static_cast<uint32_t>(AdcSampleTime);
+  adc->adc[0].sample_times.ch9 = static_cast<uint32_t>(AdcSampleTime);
+  adc->adc[0].sample_times.ch15 = static_cast<uint32_t>(AdcSampleTime);
+  adc->adc[0].sample_times.ch2 = static_cast<uint32_t>(AdcSampleTime);
 
-  // Set conversion sequence length:
-  // \TODO: why - 1 ?
+  // Set conversion sequence length (number of used channels - 1, per [RM] p468)
   adc->adc[0].sequence.length = AdcChannels - 1;
 
-  adc->adc[0].sequence.sequence1 = 5;   // PA0 (ADC1_IN5)  interim board: analog pressure
+  adc->adc[0].sequence.sequence1 = 1;   // PC0 (ADC1_IN1)  interim board: analog pressure
   adc->adc[0].sequence.sequence2 = 6;   // PA1 (ADC1_IN6)  U3 patient pressure
   adc->adc[0].sequence.sequence3 = 9;   // PA4 (ADC1_IN9)  U4 inhale flow
   adc->adc[0].sequence.sequence4 = 15;  // PB0 (ADC1_IN15) U5 exhale flow
   adc->adc[0].sequence.sequence5 = 2;   // PC3 (ADC1_IN2)  interim board: oxygen sensor
 
-  // I use DMA1 channel 1 to copy my A/D readings into my buffer ([RM] 11.4.4)
+  // I use DMA1 channel 1 to copy A/D readings into the buffer ([RM] 11.4.4)
   EnableClock(Dma1Base);
   DmaReg *dma = Dma1Base;
   int c1 = static_cast<int>(DmaChannel::Chan1);
@@ -212,9 +258,8 @@ void HalApi::InitADC() {
   dma->channel[c1].config.priority = 0;
   dma->channel[c1].config.enable = 1;
 
-  // \todo what is "4"? why 4? maybe define a constant?
-  // Start the A/D converter
-  adc->adc[0].control |= 4;
+  // Start the A/D converter (by setting bit 2 of the control register - per [RM] p457)
+  adc->adc[0].control |= 0x00000004;
 }
 
 // Read the specified analog input.

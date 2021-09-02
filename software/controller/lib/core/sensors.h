@@ -65,7 +65,7 @@ class Sensors {
   SensorReadings get_readings() const;
 
  private:
-  /// \TODO: get this either from IDC constants header or something like that
+  /// \TODO: get this either from ADC constants header or something like that
   static constexpr float ADCVoltageRange{3.3f};
 
   // \TODO: create a physical constants header for custom parts like venturi
@@ -81,7 +81,7 @@ class Sensors {
   static_assert(VenturiChokeDiameter > meters(0));
 
   // Fundamental sensors
-  MPXV5004DP patient_pressure_sensor_{"patient_pressure_", "for patient airway pressure",
+  MPXV5010DP patient_pressure_sensor_{"patient_pressure_", "for patient airway pressure",
                                       sensor_pin(Sensor::PatientPressure), ADCVoltageRange};
   TeledyneR24 fio2_sensor_{"fio2", "Fraction of oxygen in supplied air", sensor_pin(Sensor::FIO2)};
   MPXV5004DP air_influx_sensor_dp_{"air_influx_", "for ambient air influx",

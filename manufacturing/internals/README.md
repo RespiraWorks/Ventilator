@@ -134,13 +134,16 @@ Use the following principles to guide this process:
 Connect the tubing as follows
 * upstream port on the `air influx venturi` to upper port on the `INHALE FLOW` sensor on the PCB
 * downstream port on the `air influx venturi` to lower port on the `INHALE FLOW` sensor on the PCB
-* upstream port on the `oxygen influx venturi` to upper port on the pressure sensor on the daughter-card
-* downstream port on the `oxygen influx venturi` to lower port on the pressure sensor on the daughter-card
 * downstream port on the `exhale venturi` to lower port on the `EXHALE FLOW` sensor on the PCB
 * upstream port on the `exhale venturi` to wye splitter `[A22]`
-* wye splitter `[A22]` to the upper port on the `PATIENT PRESSURE` sensor on the PCB
+* wye splitter `[A22]` to the upper port on the pressure sensor on the daughter-card
 * wye splitter `[A22]` to the upper port on the `EXHALE FLOW` sensor on the PCB
-* the lower port on the `PATIENT PRESSURE` sensor remains open to atmosphere
+* the lower port on the pressure sensor on the daughter-card remains open to atmosphere
+* upstream port on the `oxygen influx venturi` to upper port on the `PATIENT PRESSURE` sensor on the PCB
+* downstream port on the `oxygen influx venturi` to lower port on the `PATIENT PRESSURE` sensor on the PCB
+
+>**TODO:** update drawings with updated tubing (O2 venturi on U3 / patient pressure on the daughter-card)
+> This allows us to take advantage of the higher maximum pressure of the MPXV5010DP sensor on the daughter-card.
 
 | Air influx                     | Oxygen influx                  | Outflow and patient pressure   |
 |:------------------------------:|:------------------------------:|:------------------------------:|

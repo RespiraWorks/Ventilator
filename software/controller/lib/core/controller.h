@@ -66,6 +66,7 @@ class Controller {
   uint32_t breath_id_{0};
   BlowerFsm fsm_;
 
+  // TODO: These params need to be tuned.
   PID blower_valve_pid_{"blower_valve_",
                         " for blower valve PID",
                         /*kp=*/0.04f,
@@ -76,11 +77,20 @@ class Controller {
                         /*output_min=*/0.f,
                         /*output_max=*/1.0f};
 
-  // TODO: These params need to be tuned.
   PID psol_pid_{"psol_",
                 " for O2 psol PID",
                 /*kp=*/0.04f,
                 /*ki=*/20.0f,
+                /*kd=*/0.0f,
+                /*p_term=*/PID::TermApplication::OnError,
+                /*d_term=*/PID::TermApplication::OnMeasurement,
+                /*output_min=*/0.f,
+                /*output_max=*/1.0f};
+
+  PID fio2_pid_{"fio2_",
+                " for FIO2 PID",
+                /*kp=*/0.001f,
+                /*ki=*/0.1f,
                 /*kd=*/0.0f,
                 /*p_term=*/PID::TermApplication::OnError,
                 /*d_term=*/PID::TermApplication::OnMeasurement,
@@ -133,6 +143,10 @@ class Controller {
   // Outputs - read from external debug program, modified by the controller.
   DbgFloat dbg_pc_setpoint_{"pc_setpoint", DbgAccess::ReadOnly, 0.0f, "cmH2O",
                             "Pressure control set-point"};
+  // \todo: need a forced_fio2 variable
+  DbgFloat dbg_fio2_setpoint_{"fio2_setpoint", DbgAccess::ReadOnly, 0.21f, "ratio",
+                              "FiO2 setpoint [0.0, 1.0] as commanded by GUI"};
+
   DbgFloat dbg_net_flow_{"net_flow", DbgAccess::ReadOnly, 0.0f, "mL/s", "Net flow rate"};
   DbgFloat dbg_net_flow_uncorrected_{"net_flow_uncorrected", DbgAccess::ReadOnly, 0.0f, "mL/s",
                                      "Net flow rate w/o correction"};

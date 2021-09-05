@@ -22,7 +22,6 @@ The part of the code specific to the controller resides here.
 * [integration_tests](integration_tests) - code for (semi-)automated hardware-in-the-loop testbeds
 * [platformio](platformio) - build configurations and deployment scripts
 * [src](src) - just the main loop for controller
-* [src_test](src_test) - just the main loop for unit tests
 
 **Files:**
 * [platfomio.ini](platformio.ini) - the equivalent of a "make file" which governs how platformio builds targets

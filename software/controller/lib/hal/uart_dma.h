@@ -66,11 +66,6 @@ class UartDma {
   void DMA_tx_interrupt_handler();
 
  private:
-  typedef struct {
-    uint32_t ignored : 8;
-    uint32_t bits : 24;
-  } uint24_t;
-
   UartReg *const uart_{nullptr};
   DmaReg *const dma_{nullptr};
   uint8_t tx_channel_;

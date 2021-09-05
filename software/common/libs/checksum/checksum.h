@@ -15,13 +15,13 @@ limitations under the License.
 
 #pragma once
 
-#include <stdint.h>
+#include <cstdint>
 
 // The polynomial 0x741B8CD7 has Hamming distance 6 up to 16360 bits
 // and Hamming distance 4 up to 114663 bits.
 //[Philip Koopman, 32-Bit Cyclic Redundancy Codes for Internet Applications
 // 2002.] https://users.ece.cmu.edu/~koopman/crc/
-constexpr uint32_t Crc32Polynomial = 0x741B8CD7;
+constexpr uint32_t Crc32Polynomial{0x741B8CD7};
 
 // Calculates CRC32 of a given byte array.
 // NOTE: each byte separately is passed to CRC calculation, i.e. bytes are not

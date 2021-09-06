@@ -148,14 +148,22 @@ ErrorCode VarHandler::SetVar(Context *context) {
   if (!var) return ErrorCode::UnknownVariable;
 
   uint32_t count = context->request_length - 3;
+  auto size = var->size();
 
-  if (count < var->size()) return ErrorCode::MissingData;
+  if (count < size) return ErrorCode::MissingData;
 
   if (!var->write_allowed()) return ErrorCode::InternalError;
 
-  // \todo generalize for other sizes
-  uint32_t temp_variable_value = u8_to_u32(context->request + 3);
-  var->set_value(&temp_variable_value);
+  uint32_t intermediate_buffer[size / sizeof(uint32_t)];
+  uint32_t *ptr = intermediate_buffer;
+  auto request_ptr = context->request + 3;
+  for (size_t i = 0; i < size / sizeof(uint32_t); i++) {
+    *ptr = u8_to_u32(request_ptr);
+    request_ptr += sizeof(uint32_t);
+    ptr++;
+  }
+
+  var->set_value(intermediate_buffer);
   context->response_length = 0;
   *(context->processed) = true;
   return ErrorCode::None;

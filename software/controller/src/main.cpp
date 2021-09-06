@@ -49,9 +49,6 @@ static Debug::Variable::Float forced_fio2(
     "forced_fio2", Debug::Variable::Access::ReadWrite, 21, "%",
     "Target percent oxygen [21, 100]; overrides GUI setting when forced_mode is valid");
 
-static Debug::Variable::FloatArray<5> fa5("float_array_5", Debug::Variable::Access::ReadOnly, "WTF",
-                                          "Some whacko shit", "[]");
-
 static Controller controller;
 static ControllerStatus controller_status;
 static Sensors sensors;
@@ -123,8 +120,6 @@ static void HighPriorityTask(void *arg) {
 // after some basic system init.  Pretty much everything not time critical
 // should go here.
 [[noreturn]] static void BackgroundLoop() {
-  fa5.data[0] = 1.42f;
-
   // Sleep for a few seconds.  In the current iteration of the PCB, the fan
   // briefly turns on when the device starts up.  If we don't wait for the fan
   // to spin down, the sensors will miscalibrate.  This is a hardware issue

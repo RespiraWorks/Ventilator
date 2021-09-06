@@ -209,30 +209,22 @@ class ControllerDebugInterface:
         data = self.send_command(
             OP_VAR, [SUBCMD_VAR_GET] + debug_types.int16s_to_bytes(variable.id)
         )
-        value = variable.from_bytes(data)
-
-        if raw:
-            return value
-
-        # If a format wasn't passed, use the default for this var
-        if fmt is None:
-            fmt = variable.format
-
-        if fmt == "[]":
-            return ", ".join("{:>.4}".format(k) for k in value)
-
-        return fmt % value
+        return variable.format_value(variable.from_bytes(data), raw, fmt)
 
     def variable_set(self, name, value, verbose=False):
         if not (name in self.variable_metadata):
             raise Error(f"Cannot set unknown variable {name}")
 
         variable = self.variable_metadata[name]
+        # \TODO this will not work for FloatArray
         if verbose:
             text = variable.print_value(value, show_access=False)
             print(f"  applying {text}")
 
         data = variable.to_bytes(value)
+        if self.print_raw:
+            print(f"  data converted as {data}")
+
         self.send_command(
             OP_VAR, [SUBCMD_VAR_SET] + debug_types.int16s_to_bytes(variable.id) + data
         )

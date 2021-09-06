@@ -511,6 +511,7 @@ ex: poke [type] <address> <data>
             print("Please give the variable name to read")
             return
 
+        var_name = cl[0]
         raw = False
         fmt = None
         if len(cl) > 1:
@@ -519,7 +520,7 @@ ex: poke [type] <address> <data>
             else:
                 fmt = cl[1]
 
-        if cl[0] == "all":
+        if var_name == "all":
             all_vars = self.interface.variables_get_all(raw=raw)
             for count, name in enumerate(sorted(all_vars.keys())):
                 variable_md = self.interface.variable_metadata[name]
@@ -529,7 +530,7 @@ ex: poke [type] <address> <data>
                 else:
                     print(dark_orange(text))
             return
-        if cl[0] == "set":
+        elif var_name == "set":
             all_vars = self.interface.variables_get_all(
                 access_filter=VAR_ACCESS_WRITE, raw=raw
             )
@@ -541,7 +542,7 @@ ex: poke [type] <address> <data>
                 else:
                     print(dark_orange(text))
             return
-        if cl[0] == "read":
+        elif var_name == "read":
             all_vars = self.interface.variables_get_all(
                 access_filter=VAR_ACCESS_READ_ONLY, raw=raw
             )
@@ -553,10 +554,10 @@ ex: poke [type] <address> <data>
                 else:
                     print(dark_orange(text))
             return
-
-        variable_md = self.interface.variable_metadata[cl[0]]
-        val = self.interface.variable_get(cl[0], raw=raw, fmt=fmt)
-        print(variable_md.print_value(val))
+        else:
+            variable_md = self.interface.variable_metadata[cl[0]]
+            val = self.interface.variable_get(cl[0], raw=raw, fmt=fmt)
+            print(variable_md.print_value(val))
 
     def complete_get(self, text, line, begidx, endidx):
         return self.interface.variables_find(text) + [
@@ -582,7 +583,7 @@ ex: poke [type] <address> <data>
         if len(cl) < 2:
             print("Please give the variable name and value")
             return
-        self.interface.variable_set(cl[0], cl[1])
+        self.interface.variable_set(cl[0], cl[1:])
 
     def complete_set(self, text, line, begidx, endidx):
         return self.interface.variables_find(text, access_filter=VAR_ACCESS_WRITE)

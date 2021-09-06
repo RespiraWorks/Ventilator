@@ -15,8 +15,7 @@ limitations under the License.
 
 #pragma once
 
-#include <stdint.h>
-
+#include <cstdint>
 #include <optional>
 
 #include "hal.h"
@@ -27,7 +26,7 @@ limitations under the License.
 // and the interrupt handlers, so it needs to be thread safe.
 // I'm disabling interrupts during the critical sections to
 // ensure that's the case.
-template <class T, uint N>
+template <class T, size_t N>
 class CircularBuffer {
   // Uses an array of size N+1 to hold all N elements of the buffer, as
   // buffer_[head_] is by definition inaccessible.
@@ -37,7 +36,7 @@ class CircularBuffer {
 
  public:
   CircularBuffer() {
-    for (uint i = 0; i <= N; ++i) buffer_[i] = T();
+    for (size_t i = 0; i <= N; ++i) buffer_[i] = T();
   }
 
   // Return number of elements available in the buffer to read.

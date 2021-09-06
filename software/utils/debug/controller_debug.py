@@ -448,7 +448,7 @@ class ControllerDebugInterface:
                 raise Error(f"Cannot select trace. Variable `{name}` does not exist.")
         var_names += [""] * (TRACE_VAR_CT - len(var_names))
         for (i, var_name) in enumerate(var_names):
-            var_id = -1
+            var_id = var_info.VAR_INVALID_ID
             if var_name in self.variable_metadata:
                 var_id = self.variable_metadata[var_name].id
             var = debug_types.int16s_to_bytes(var_id)

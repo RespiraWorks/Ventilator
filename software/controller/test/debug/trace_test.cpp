@@ -37,14 +37,14 @@ TEST(Trace, MaybeSampleTwoVars) {
   Trace trace;
   trace.SetPeriod(3);  // Trace every 3 cycles.
   trace.Start();       // Enable tracing
-  trace.SetTracedVarId<1>(var_x.id());
-  trace.SetTracedVarId<3>(var_y.id());
+  trace.SetTracedVarId(1, var_x.id());
+  trace.SetTracedVarId(3, var_y.id());
 
   EXPECT_EQ(2, trace.GetNumActiveVars());
-  EXPECT_EQ(-1, trace.GetTracedVarId<0>());
-  EXPECT_EQ(var_x.id(), trace.GetTracedVarId<1>());
-  EXPECT_EQ(-1, trace.GetTracedVarId<2>());
-  EXPECT_EQ(var_y.id(), trace.GetTracedVarId<3>());
+  EXPECT_EQ(Variable::InvalidID, trace.GetTracedVarId(0));
+  EXPECT_EQ(var_x.id(), trace.GetTracedVarId(1));
+  EXPECT_EQ(Variable::InvalidID, trace.GetTracedVarId(2));
+  EXPECT_EQ(var_y.id(), trace.GetTracedVarId(3));
 
   int expected_num_samples = 0;
   for (; i < 9; ++i) {
@@ -88,7 +88,7 @@ TEST(Trace, TracesEveryCycleByDefault) {
   Trace trace;
   uint32_t x = 42;
   Debug::Variable::Primitive32 var_x("x", Debug::Variable::Access::ReadOnly, &x, "units");
-  trace.SetTracedVarId<0>(var_x.id());
+  trace.SetTracedVarId(0, var_x.id());
   trace.Start();
   // Do not set period
 
@@ -102,7 +102,7 @@ TEST(Trace, BufferFull) {
   uint32_t x = 42;
   Debug::Variable::Primitive32 var_x("x", Debug::Variable::Access::ReadOnly, &x, "units");
   Trace trace;
-  trace.SetTracedVarId<0>(var_x.id());
+  trace.SetTracedVarId(0, var_x.id());
   trace.Start();
 
   // Buffer capacity from trace.h header file. Update if necessary.
@@ -137,7 +137,7 @@ TEST(Trace, FlushOnSetVar) {
   Debug::Variable::Primitive32 var_x("x", Debug::Variable::Access::ReadOnly, &x, "units");
   Debug::Variable::Primitive32 var_y("y", Debug::Variable::Access::ReadOnly, &y, "units");
   Trace trace;
-  trace.SetTracedVarId<0>(var_x.id());
+  trace.SetTracedVarId(0, var_x.id());
   trace.Start();
 
   trace.MaybeSample();
@@ -147,7 +147,7 @@ TEST(Trace, FlushOnSetVar) {
 
   // Adding a new variable should reset the trace because otherwise
   // the interpretation of the circular buffer becomes ambiguous.
-  trace.SetTracedVarId<2>(var_y.id());
+  trace.SetTracedVarId(2, var_y.id());
   EXPECT_EQ(0, trace.GetNumSamples());
 
   trace.MaybeSample();

@@ -23,72 +23,51 @@ limitations under the License.
 
 namespace Debug {
 
-static constexpr uint32_t MaxTraceVars{4};
-
 /*
  * Implements a data trace facility.
  *
- * The data trace is a feature which allows data to be written to a largish
- * RAM buffer in real time and read out by the debug inteface later.  The
- * data can then be graphed or otherwise manipulated.
+ * The data trace is a feature which allows data to be written to a largish RAM buffer in real time
+ * and read out by the debug interface later. The data can then be graphed or otherwise manipulated.
  *
- * This is extremely useful for tuning control systems because it allows
- * data to be captured precisely at high update rates, much higher then
- * could be done using simple printouts over a serial port.
+ * This is extremely useful for tuning control systems because it allows data to be captured
+ * precisely at high update rates, much higher than could be done using simple printouts over a
+ * serial port.
  */
 class Trace {
  public:
-  // Gets/sets the trace flags. At the moment, flags can only be 0 (disabled) or
-  // 1 (enabled).
-  bool GetStatus() const { return running_; }
+  static constexpr uint16_t MaxVars{4};
+
+  // This circular buffer is as big as we consider reasonable, to give a good tracing capability:
+  // 40% of the RAM available on our STM32
+  static constexpr size_t BufferSize{0x4000};
+
+  bool GetStatus() const;
 
   void Start();
 
-  void Stop() { running_ = false; }
+  void Stop();
 
-  uint32_t GetPeriod() const { return period_; }
-  void SetPeriod(uint32_t period) { period_ = period; }
+  uint32_t GetPeriod() const;
+
+  void SetPeriod(uint32_t period);
 
   void MaybeSample();
 
-  void Flush() {
-    Stop();
-    trace_buffer_.Flush();
-  }
+  void Flush();
 
-  size_t GetNumSamples() { return trace_buffer_.FullCount() / GetNumActiveVars(); }
+  size_t GetNumSamples();
 
-  uint32_t GetNumActiveVars() {
-    return static_cast<uint32_t>(std::count_if(traced_vars_.begin(), traced_vars_.end(),
-                                               [](const Variable::Base *var) { return (var); }));
-  }
-
-  template <int index>
-  void SetTracedVarId(int32_t id) {
-    static_assert(index >= 0 && index < MaxTraceVars);
-    traced_vars_[index] = Variable::Registry::singleton().find(static_cast<uint16_t>(id));
-    // The layout of the trace buffer is just a bunch of uint32_t's one per
-    // each variable of each sample cycle. In order to be able to interpret
-    // the buffer unambiguously, the set of traced variables must be the same
-    // throughout the buffer. So, if the set changes, we need to flush.
-    trace_buffer_.Flush();
-  }
-
-  template <int index>
-  int32_t GetTracedVarId() {
-    static_assert(index >= 0 && index < MaxTraceVars);
-    return traced_vars_[index] ? traced_vars_[index]->id() : -1;
-  }
+  uint16_t GetNumActiveVars();
 
   bool SetTracedVarId(uint8_t index, uint16_t id);
-  int16_t GetTracedVarId(uint8_t index);
+  uint16_t GetTracedVarId(uint8_t index);
 
   // Grabs the next sample of all traced variables from the trace buffer.
   // Returns false if the buffer has less data than the number of traced
   // variables - this should never happen.
   // Sets *count to the number of elements actually set in *record.
   // This will equal GetNumActiveVars() but is easier to use for testing.
-  [[nodiscard]] bool GetNextTraceRecord(std::array<uint32_t, MaxTraceVars> *record, size_t *count);
+  [[nodiscard]] bool GetNextTraceRecord(std::array<uint32_t, MaxVars> *record, size_t *count);
 
  private:
   // This function is called at the end of the high priority loop function.
@@ -104,11 +83,9 @@ class Trace {
   // Number of loop cycles elapsed since last sample was captured.
   uint32_t cycles_count_{0};
 
-  std::array<Variable::Base *, MaxTraceVars> traced_vars_ = {nullptr};
+  std::array<Variable::Base *, MaxVars> traced_vars_ = {nullptr};
 
-  // This circular buffer is as big as we consider reasonable, to give a good
-  // tracing capability: 40% of the RAM available on our STM32
-  CircularBuffer<uint32_t, 0x4000> trace_buffer_;
+  CircularBuffer<uint32_t, BufferSize> trace_buffer_;
 };
 
 }  // namespace Debug

@@ -17,6 +17,8 @@ limitations under the License.
 
 namespace Debug {
 
+bool Trace::GetStatus() const { return running_; }
+
 // (Re-)Start the trace
 void Trace::Start() {
   if (!running_) {
@@ -24,6 +26,12 @@ void Trace::Start() {
   }
   running_ = true;
 }
+
+void Trace::Stop() { running_ = false; }
+
+uint32_t Trace::GetPeriod() const { return period_; }
+
+void Trace::SetPeriod(uint32_t period) { period_ = period; }
 
 // Sample all trace variables every "period" calls
 void Trace::MaybeSample() {
@@ -40,8 +48,21 @@ void Trace::MaybeSample() {
   if (cycles_count_ >= period_) cycles_count_ = 0;
 }
 
+void Trace::Flush() {
+  // \todo should it really stop before flushing?
+  Stop();
+  trace_buffer_.Flush();
+}
+
+size_t Trace::GetNumSamples() { return trace_buffer_.FullCount() / GetNumActiveVars(); }
+
+uint16_t Trace::GetNumActiveVars() {
+  return static_cast<uint16_t>(std::count_if(traced_vars_.begin(), traced_vars_.end(),
+                                             [](const Variable::Base *var) { return (var); }));
+}
+
 bool Trace::SetTracedVarId(uint8_t index, uint16_t id) {
-  if (index >= MaxTraceVars) {
+  if (index >= MaxVars) {
     return false;
   }
   traced_vars_[index] = Variable::Registry::singleton().find(id);
@@ -51,15 +72,14 @@ bool Trace::SetTracedVarId(uint8_t index, uint16_t id) {
   return true;
 }
 
-int16_t Trace::GetTracedVarId(uint8_t index) {
-  if (index >= MaxTraceVars) {
-    return -1;
+uint16_t Trace::GetTracedVarId(uint8_t index) {
+  if (index >= MaxVars) {
+    return Variable::InvalidID;
   }
-  return traced_vars_[index] ? traced_vars_[index]->id() : -1;
+  return traced_vars_[index] ? traced_vars_[index]->id() : Variable::InvalidID;
 }
 
-[[nodiscard]] bool Trace::GetNextTraceRecord(std::array<uint32_t, MaxTraceVars> *record,
-                                             size_t *count) {
+[[nodiscard]] bool Trace::GetNextTraceRecord(std::array<uint32_t, MaxVars> *record, size_t *count) {
   // Grab one sample with interrupts disabled.
   // There's a chance the trace is still running, so we could get interrupted
   // by the high priority thread that adds to the buffer.

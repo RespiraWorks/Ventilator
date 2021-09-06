@@ -51,8 +51,8 @@ TEST(TraceHandler, Flush) {
   TraceHandler trace_handler = TraceHandler(&trace);
 
   // activate trace
-  trace.SetTracedVarId<1>(var_x.id());
-  trace.SetTracedVarId<3>(var_y.id());
+  trace.SetTracedVarId(1, var_x.id());
+  trace.SetTracedVarId(3, var_y.id());
   trace.Start();  // Enable tracing
 
   trace.MaybeSample();
@@ -104,8 +104,8 @@ TEST(TraceHandler, Read) {
   EXPECT_TRUE(processed);
   EXPECT_EQ(read_context.response_length, 0);
 
-  trace.SetTracedVarId<1>(var_x.id());
-  trace.SetTracedVarId<3>(var_y.id());
+  trace.SetTracedVarId(1, var_x.id());
+  trace.SetTracedVarId(3, var_y.id());
 
   // start the trace (using debug command)
   std::array start_command = {static_cast<uint8_t>(TraceHandler::Subcommand::Start)};
@@ -194,7 +194,7 @@ TEST(TraceHandler, SettersAndGetters) {
   EXPECT_TRUE(processed);
   EXPECT_EQ(set_var1_context.response_length, 0);
   // check that the trace now points to desired var
-  EXPECT_EQ(u8_to_u16(&set_var1_command[2]), trace.GetTracedVarId<1>());
+  EXPECT_EQ(u8_to_u16(&set_var1_command[2]), trace.GetTracedVarId(1));
 
   // Get trace var ID for var 1
   std::array<uint8_t, 2> get_var1_command = {
@@ -210,7 +210,7 @@ TEST(TraceHandler, SettersAndGetters) {
   EXPECT_TRUE(processed);
   EXPECT_EQ(get_var1_context.response_length, 2);
 
-  EXPECT_EQ(trace.GetTracedVarId<1>(), u8_to_u16(response.data()));
+  EXPECT_EQ(trace.GetTracedVarId(1), u8_to_u16(response.data()));
 
   // Get trace var ID for var 2 (un-associated)
   std::array<uint8_t, 2> get_var2_command = {
@@ -226,11 +226,12 @@ TEST(TraceHandler, SettersAndGetters) {
   EXPECT_TRUE(processed);
   EXPECT_EQ(get_var2_context.response_length, 2);
 
-  EXPECT_EQ(uint16_t(-1), u8_to_u16(response.data()));
+  EXPECT_EQ(Variable::InvalidID, u8_to_u16(response.data()));
 
-  // Get trace var ID for var kMaxTraceVars (out of bounds)
+  // Get trace var ID for var Trace::MaxVars (out of bounds)
   std::array<uint8_t, 2> get_var_max_command = {
-      static_cast<uint8_t>(TraceHandler::Subcommand::GetVarId), static_cast<uint8_t>(MaxTraceVars)};
+      static_cast<uint8_t>(TraceHandler::Subcommand::GetVarId),
+      static_cast<uint8_t>(Trace::MaxVars)};
   processed = false;
   Context get_var_max_context = {.request = get_var_max_command.data(),
                                  .request_length = std::size(get_var_max_command),
@@ -241,7 +242,7 @@ TEST(TraceHandler, SettersAndGetters) {
   EXPECT_EQ(ErrorCode::None, trace_handler.Process(&get_var_max_context));
   EXPECT_TRUE(processed);
   EXPECT_EQ(get_var_max_context.response_length, 2);
-  EXPECT_EQ(uint16_t(-1), u8_to_u16(response.data()));
+  EXPECT_EQ(Variable::InvalidID, u8_to_u16(response.data()));
 
   // Set trace period
   std::array<uint8_t, 5> set_period_command = {
@@ -285,8 +286,8 @@ TEST(TraceHandler, Errors) {
   Trace trace;
   TraceHandler trace_handler = TraceHandler(&trace);
 
-  trace.SetTracedVarId<1>(var_x.id());
-  trace.SetTracedVarId<3>(var_y.id());
+  trace.SetTracedVarId(1, var_x.id());
+  trace.SetTracedVarId(3, var_y.id());
   trace.Start();
 
   std::vector<std::tuple<std::vector<uint8_t>, ErrorCode>> requests = {
@@ -294,7 +295,7 @@ TEST(TraceHandler, Errors) {
       {{8}, ErrorCode::InvalidData},  // Invalid subcommand
       {{static_cast<uint8_t>(TraceHandler::Subcommand::Download)}, ErrorCode::NoMemory},
       {{static_cast<uint8_t>(TraceHandler::Subcommand::SetVarId), 1, 1}, ErrorCode::MissingData},
-      {{static_cast<uint8_t>(TraceHandler::Subcommand::SetVarId), MaxTraceVars, 1, 0},
+      {{static_cast<uint8_t>(TraceHandler::Subcommand::SetVarId), Trace::MaxVars, 1, 0},
        ErrorCode::InvalidData},
       {{static_cast<uint8_t>(TraceHandler::Subcommand::GetVarId)}, ErrorCode::MissingData},
       {{static_cast<uint8_t>(TraceHandler::Subcommand::GetVarId), 1}, ErrorCode::NoMemory},

@@ -40,16 +40,16 @@ class CircularBuffer {
   }
 
   // Return number of elements available in the buffer to read.
-  int FullCount() const {
+  size_t FullCount() const {
     BlockInterrupts block;
-    int ct = head_ - tail_;
+    ssize_t ct = head_ - tail_;
     if (ct < 0) ct += N + 1;
-    return ct;
+    return static_cast<size_t>(ct);
   }
 
   // Return number of free spaces in the buffer where more
   // elements can be written.
-  int FreeCount() const { return N - FullCount(); }
+  size_t FreeCount() const { return N - FullCount(); }
 
   // Get the oldest element from the buffer, popping it from the buffer.
   std::optional<T> Get() {

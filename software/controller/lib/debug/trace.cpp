@@ -62,12 +62,9 @@ uint16_t Trace::GetNumActiveVars() {
 }
 
 bool Trace::SetTracedVarId(uint8_t index, uint16_t id) {
-  if (index >= MaxVars) {
-    return false;
-  }
   auto var_ptr = Variable::Registry::singleton().find(id);
-  if (var_ptr->size() != sizeof(uint32_t)) {
-    return false;
+  if (var_ptr && (var_ptr->size() != sizeof(uint32_t))) {
+    var_ptr = nullptr;
   }
   traced_vars_[index] = var_ptr;
   // like in the SetTraceVarId<int index> template, we need to flush the buffer

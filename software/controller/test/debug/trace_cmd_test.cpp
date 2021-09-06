@@ -39,12 +39,17 @@ void CheckBufferOutput(std::array<uint8_t, kResponseSize> response, uint32_t res
 TEST(TraceHandler, Flush) {
   // define some debug variables
   uint32_t i = 0;
-  Debug::Variable::FnVar var_x(
+  Debug::Variable::FnVar32 var_x(
       Debug::Variable::Type::UInt32, "x", Debug::Variable::Access::ReadOnly, "unit",
-      [&] { return i; }, [&](uint32_t value) { (void)value; }, "");
-  Debug::Variable::FnVar var_y(
+      [&](void *write_buff) { std::memcpy(write_buff, &i, 4); },
+      [&](void *read_buf) { (void)read_buf; }, "");
+  Debug::Variable::FnVar32 var_y(
       Debug::Variable::Type::UInt32, "x", Debug::Variable::Access::ReadOnly, "unit",
-      [&] { return i * 10; }, [&](uint32_t value) { (void)value; }, "");
+      [&](void *write_buff) {
+        auto ii = 10 * i;
+        std::memcpy(write_buff, &ii, 4);
+      },
+      [&](void *read_buf) { (void)read_buf; }, "");
 
   // define trace and trace handler
   Trace trace;
@@ -79,12 +84,17 @@ TEST(TraceHandler, Read) {
 
   // define some debug variables
   uint32_t i = 0;
-  Debug::Variable::FnVar var_x(
+  Debug::Variable::FnVar32 var_x(
       Debug::Variable::Type::UInt32, "x", Debug::Variable::Access::ReadOnly, "unit",
-      [&] { return i; }, [&](uint32_t value) { (void)value; }, "");
-  Debug::Variable::FnVar var_y(
+      [&](void *write_buff) { std::memcpy(write_buff, &i, 4); },
+      [&](void *read_buf) { (void)read_buf; }, "");
+  Debug::Variable::FnVar32 var_y(
       Debug::Variable::Type::UInt32, "y", Debug::Variable::Access::ReadOnly, "unit",
-      [&] { return i * 10; }, [&](uint32_t value) { (void)value; }, "");
+      [&](void *write_buff) {
+        auto ii = 10 * i;
+        std::memcpy(write_buff, &ii, 4);
+      },
+      [&](void *read_buf) { (void)read_buf; }, "");
 
   // define trace and trace handler
   Trace trace;

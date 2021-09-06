@@ -15,6 +15,7 @@ limitations under the License.
 
 #pragma once
 
+#include <cstddef>
 #include <cstdint>
 
 namespace Debug::Variable {
@@ -63,8 +64,9 @@ class Base {
   Base(Type type, const char *name, Access access, const char *units, const char *help,
        const char *fmt = "");
 
-  virtual uint32_t get_value() = 0;
-  virtual void set_value(uint32_t value) = 0;
+  virtual void get_value(void *write_buff) = 0;
+  virtual void set_value(void *read_buf) = 0;
+  virtual size_t size() const = 0;
 
   const char *name() const;
   void prepend_name(const char *prefix);

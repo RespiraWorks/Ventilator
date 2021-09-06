@@ -52,6 +52,7 @@ class VarInfo:
     id: int
     type: int
     write_access: bool
+    size: int
     name: str
     units: str = ""
     format: str
@@ -68,6 +69,7 @@ class VarInfo:
 
         self.type = data[0]
         self.write_access = data[1] == VAR_ACCESS_WRITE
+        self.size = data[2]
         name_length = data[4]
         fmt_length = data[5]
         help_length = data[6]
@@ -89,7 +91,7 @@ class VarInfo:
         type_str = "?"
         if self.type < len(VAR_TYPE_REPRESENTATION):
             type_str = VAR_TYPE_REPRESENTATION[self.type]
-        ret = f"[{self.id:>02}{type_str}] "
+        ret = f"[{self.id:>02}] {self.size:>2}{type_str} "
         if show_access:
             ret += "w+ " if self.write_access else "w- "
         ret += f"{self.name:25} {self.units:>13} "

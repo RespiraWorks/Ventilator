@@ -27,12 +27,17 @@ using namespace Debug;
 
 TEST(Trace, MaybeSampleTwoVars) {
   uint32_t i = 0;
-  Debug::Variable::FnVar var_x(
+  Debug::Variable::FnVar32 var_x(
       Debug::Variable::Type::UInt32, "x", Debug::Variable::Access::ReadOnly, "units",
-      [&] { return i; }, [&](uint32_t value) { (void)value; }, "");
-  Debug::Variable::FnVar var_y(
+      [&](void* write_buff) { std::memcpy(write_buff, &i, 4); },
+      [&](void* read_buf) { (void)read_buf; }, "");
+  Debug::Variable::FnVar32 var_y(
       Debug::Variable::Type::UInt32, "y", Debug::Variable::Access::ReadOnly, "units",
-      [&] { return 10 * i; }, [&](uint32_t value) { (void)value; }, "");
+      [&](void* write_buff) {
+        auto ii = 10 * i;
+        std::memcpy(write_buff, &ii, 4);
+      },
+      [&](void* read_buf) { (void)read_buf; }, "");
 
   Trace trace;
   trace.SetPeriod(3);  // Trace every 3 cycles.

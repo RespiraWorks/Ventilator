@@ -63,9 +63,10 @@ ErrorCode VarHandler::GetVarInfo(Context *context) {
   if (!var) return ErrorCode::UnknownVariable;
 
   // The info I return consists of the following:
-  // <type> - 1 byte variable type code
-  // <access> - 1 byte gives the possible access to that variable (read only?)
-  // <reserved> - 2 reserved bytes for things we think of later
+  // <type>     - 1 byte variable type code
+  // <access>   - 1 byte gives the possible access to that variable (read only?)
+  // <size>     - 1 byte size of datatype in bytes
+  // <reserved> - 1 reserved byte for things we think of later
   // <name len> - 1 byte gives length of variable name string
   // <fmt len>  - 1 byte gives length of formation string
   // <help len> - 1 byte gives length of help string
@@ -87,7 +88,7 @@ ErrorCode VarHandler::GetVarInfo(Context *context) {
   uint32_t count = 0;
   context->response[count++] = static_cast<uint8_t>(var->type());
   context->response[count++] = static_cast<uint8_t>(var->access());
-  context->response[count++] = 0;
+  context->response[count++] = static_cast<uint8_t>(var->size());
   context->response[count++] = 0;
   context->response[count++] = static_cast<uint8_t>(name_length);
   context->response[count++] = static_cast<uint8_t>(format_length);
@@ -119,10 +120,15 @@ ErrorCode VarHandler::GetVar(Context *context) {
   auto *var = Variable::Registry::singleton().find(var_id);
   if (!var) return ErrorCode::UnknownVariable;
 
-  if (context->max_response_length < 4) return ErrorCode::NoMemory;
+  auto size = var->size();
+  if (context->max_response_length < size) return ErrorCode::NoMemory;
 
-  u32_to_u8(var->get_value(), context->response);
-  context->response_length = 4;
+  // \todo generalize for other sizes
+  uint32_t temp_variable_value{0};
+  var->get_value(&temp_variable_value);
+
+  u32_to_u8(temp_variable_value, context->response);
+  context->response_length = static_cast<uint32_t>(var->size());
   *(context->processed) = true;
   return ErrorCode::None;
 }
@@ -138,11 +144,13 @@ ErrorCode VarHandler::SetVar(Context *context) {
 
   uint32_t count = context->request_length - 3;
 
-  if (count < 4) return ErrorCode::MissingData;
+  if (count < var->size()) return ErrorCode::MissingData;
 
   if (!var->write_allowed()) return ErrorCode::InternalError;
 
-  var->set_value(u8_to_u32(context->request + 3));
+  // \todo generalize for other sizes
+  uint32_t temp_variable_value = u8_to_u32(context->request + 3);
+  var->set_value(&temp_variable_value);
   context->response_length = 0;
   *(context->processed) = true;
   return ErrorCode::None;

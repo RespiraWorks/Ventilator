@@ -18,7 +18,8 @@ limitations under the License.
 #include "gtest/gtest.h"
 
 TEST(DebugVar, DebugVarInt32) {
-  int32_t value = 5;
+  int32_t value{5};
+  int32_t other_val{0};
   Debug::Variable::Primitive32 var("var", Debug::Variable::Access::ReadOnly, &value, "unit", "help",
                                    "fmt");
   EXPECT_STREQ("var", var.name());
@@ -33,16 +34,15 @@ TEST(DebugVar, DebugVarInt32) {
   EXPECT_EQ(Debug::Variable::Access::ReadOnly, var.access());
   EXPECT_EQ(&var, Debug::Variable::Registry::singleton().find(var.id()));
 
-  EXPECT_EQ(uint32_t{5}, var.get_value());
-  var.set_value(7);
-  EXPECT_EQ(uint32_t{7}, var.get_value());
+  other_val = 0;
+  var.get_value(&other_val);
+  EXPECT_EQ(int32_t{5}, other_val);
+  other_val = 7;
+  var.set_value(&other_val);
+  other_val = 0;
+  var.get_value(&other_val);
+  EXPECT_EQ(int32_t{7}, other_val);
   EXPECT_EQ(7, value);
-
-  // Test a value outside the range of int32_t.
-  uint32_t max = std::numeric_limits<uint32_t>::max();
-  var.set_value(max);
-  EXPECT_EQ(max, var.get_value());
-  EXPECT_EQ(static_cast<int32_t>(max), value);
 
   // All default arguments
   Debug::Variable::Primitive32 var_default("var", Debug::Variable::Access::ReadWrite, &value,
@@ -52,17 +52,20 @@ TEST(DebugVar, DebugVarInt32) {
 }
 
 TEST(DebugVar, DebugVarUint32Defaults) {
-  uint32_t value = 5;
+  uint32_t value{5};
+  uint32_t other_val{0};
   // All default arguments
   Debug::Variable::Primitive32 var("var", Debug::Variable::Access::ReadWrite, &value, "unit");
-  EXPECT_EQ(uint32_t{5}, var.get_value());
+  other_val = 0;
+  var.get_value(&other_val);
+  EXPECT_EQ(uint32_t{5}, other_val);
   EXPECT_STREQ("", var.help());
   EXPECT_STREQ("%u", var.format());
   EXPECT_EQ(Debug::Variable::Type::UInt32, var.type());
 }
 
 TEST(DebugVar, DebugVarFloatDefaults) {
-  float value = 5.0f;
+  float value{5.0f};
   // All default arguments
   Debug::Variable::Primitive32 var("var", Debug::Variable::Access::ReadWrite, &value, "unit");
 
@@ -71,9 +74,12 @@ TEST(DebugVar, DebugVarFloatDefaults) {
   EXPECT_EQ(Debug::Variable::Type::Float, var.type());
 
   // Rountrip through uint32 should not change value.
-  uint32_t uint_value = var.get_value();
-  var.set_value(uint_value);
-  EXPECT_EQ(uint_value, var.get_value());
+  uint32_t uint_val{0};
+  var.get_value(&uint_val);
+  var.set_value(&uint_val);
+  uint32_t other_val{0};
+  var.get_value(&other_val);
+  EXPECT_EQ(uint_val, other_val);
   EXPECT_EQ(5.0f, value);
 }
 

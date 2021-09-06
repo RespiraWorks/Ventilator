@@ -85,6 +85,7 @@ class Trace {
 
   std::array<Variable::Base *, MaxVars> traced_vars_ = {nullptr};
 
+  uint32_t temp_variable_value_{0};
   CircularBuffer<uint32_t, BufferSize> trace_buffer_;
 };
 

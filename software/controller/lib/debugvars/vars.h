@@ -22,14 +22,15 @@ limitations under the License.
 namespace Debug::Variable {
 
 template <typename GetFn, typename SetFn>
-class FnVar : public Base {
+class FnVar32 : public Base {
  public:
-  FnVar(Type type, const char *name, Access access, const char *units, GetFn get_fn, SetFn set_fn,
-        const char *help, const char *fmt = "")
+  FnVar32(Type type, const char *name, Access access, const char *units, GetFn get_fn, SetFn set_fn,
+          const char *help, const char *fmt = "")
       : Base(type, name, access, units, help, fmt), get_fn_(get_fn), set_fn_(set_fn) {}
 
-  uint32_t get_value() override { return get_fn_(); }
-  void set_value(uint32_t value) override { set_fn_(value); }
+  void get_value(void *write_buff) override { get_fn_(write_buff); }
+  void set_value(void *read_buf) override { set_fn_(read_buf); }
+  size_t size() const override { return sizeof(uint32_t); }
 
  private:
   GetFn get_fn_;
@@ -55,14 +56,12 @@ class Primitive32 : public Base {
       : Primitive32(Type::Float, name, access, data, units, help, fmt) {}
 
   // Gets the current value of the variable as an uint32_t.
-  uint32_t get_value() override {
-    uint32_t res;
-    std::memcpy(&res, address_, 4);
-    return res;
-  }
+  void get_value(void *write_buff) override { std::memcpy(write_buff, address_, size()); }
 
   // Sets the current value of the variable as an uint32_t.
-  void set_value(uint32_t value) override { std::memcpy(address_, &value, 4); }
+  void set_value(void *read_buf) override { std::memcpy(address_, read_buf, size()); }
+
+  size_t size() const override { return 4; }
 
  private:
   void *address_;

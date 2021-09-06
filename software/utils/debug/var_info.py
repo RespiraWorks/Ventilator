@@ -31,8 +31,9 @@ VAR_INVALID_ID = 101
 VAR_INT32 = 1
 VAR_UINT32 = 2
 VAR_FLOAT = 3
+VAR_FLOAT_ARRAY = 4
 
-VAR_TYPE_REPRESENTATION = ["?", "i", "u", "f"]
+VAR_TYPE_REPRESENTATION = ["?", "i", "u", "f", "A"]
 
 VAR_ACCESS_READ_ONLY = 0
 VAR_ACCESS_WRITE = 1
@@ -131,6 +132,8 @@ class VarInfo:
             return debug_types.bytes_to_int32s(data)[0]
         elif self.type == VAR_FLOAT:
             return debug_types.bytes_to_float32s(data)[0]
+        elif self.type == VAR_FLOAT_ARRAY:
+            return debug_types.bytes_to_float32s(data)
         else:
             raise Error(f"Sorry, I don't know how to handle variable type {self.type}")
 

@@ -123,12 +123,17 @@ ErrorCode VarHandler::GetVar(Context *context) {
   auto size = var->size();
   if (context->max_response_length < size) return ErrorCode::NoMemory;
 
-  // \todo generalize for other sizes
-  uint32_t temp_variable_value{0};
-  var->get_value(&temp_variable_value);
+  uint32_t intermediate_buffer[size / sizeof(uint32_t)];
+  var->get_value(intermediate_buffer);
 
-  u32_to_u8(temp_variable_value, context->response);
+  uint32_t *ptr = intermediate_buffer;
+  for (size_t i = 0; i < size / sizeof(uint32_t); i++) {
+    u32_to_u8(*ptr, context->response);
+    context->response += sizeof(uint32_t);
+    ptr++;
+  }
   context->response_length = static_cast<uint32_t>(var->size());
+
   *(context->processed) = true;
   return ErrorCode::None;
 }

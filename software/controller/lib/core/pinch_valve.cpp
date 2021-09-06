@@ -76,7 +76,23 @@ static constexpr float MoveAccel = MoveVel / 0.05f;
 static constexpr float FlowTable[] = {0.0000f, 0.0410f, 0.0689f, 0.0987f, 0.1275f, 0.1590f,
                                       0.1932f, 0.2359f, 0.2940f, 0.3988f, 1.0000f};
 
-PinchValve::PinchValve(int motor_index) { motor_index_ = motor_index; }
+Debug::Variable::FloatArray<11> PinchValve::calibration =
+    Debug::Variable::FloatArray<11>("pinch_valve_cal", Debug::Variable::Access::ReadWrite, "",
+                                    "Pinch valve linearization table", "[]");
+
+PinchValve::PinchValve(int motor_index) : motor_index_(motor_index) {
+  calibration.data[0] = 0.0000f;
+  calibration.data[1] = 0.0410f;
+  calibration.data[2] = 0.0689f;
+  calibration.data[3] = 0.0987f;
+  calibration.data[4] = 0.1275f;
+  calibration.data[5] = 0.1590f;
+  calibration.data[6] = 0.1932f;
+  calibration.data[7] = 0.2359f;
+  calibration.data[8] = 0.2940f;
+  calibration.data[9] = 0.3988f;
+  calibration.data[10] = 1.0000f;
+}
 
 // Disable the pinch valve
 void PinchValve::Disable() {

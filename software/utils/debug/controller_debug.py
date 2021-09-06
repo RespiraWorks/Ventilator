@@ -218,6 +218,9 @@ class ControllerDebugInterface:
         if fmt is None:
             fmt = variable.format
 
+        if fmt == "[]":
+            return ", ".join("{:>.4}".format(k) for k in value)
+
         return fmt % value
 
     def variable_set(self, name, value, verbose=False):

@@ -83,6 +83,25 @@ TEST(DebugVar, DebugVarFloatDefaults) {
   EXPECT_EQ(5.0f, value);
 }
 
+TEST(DebugVar, FloatArray) {
+  Debug::Variable::FloatArray<3> fa3("fa3", Debug::Variable::Access::ReadWrite, "units");
+  EXPECT_EQ(fa3.size(), 4 * 3);
+  fa3.data[0] = 24.0f;
+  fa3.data[1] = 42.0f;
+  fa3.data[2] = 69.0f;
+  std::array<float, 3> compare_to{24.0f, 42.0f, 69.0f};
+
+  EXPECT_EQ(fa3.data, compare_to);
+
+  uint32_t buffer[3 * 4];
+  fa3.get_value(buffer);
+  fa3.data = {0};
+  fa3.set_value(buffer);
+  EXPECT_EQ(fa3.data, compare_to);
+  EXPECT_NE(fa3.data.data(), compare_to.data());
+  EXPECT_NE(reinterpret_cast<void*>(fa3.data.data()), reinterpret_cast<void*>(buffer));
+}
+
 TEST(DebugVar, Registration) {
   uint32_t num_vars = Debug::Variable::Registry::singleton().count();
   int32_t int_value = 5;

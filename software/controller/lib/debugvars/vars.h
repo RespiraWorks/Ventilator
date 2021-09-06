@@ -15,6 +15,7 @@ limitations under the License.
 
 #pragma once
 
+#include <array>
 #include <cstring>
 
 #include "vars_base.h"
@@ -108,6 +109,22 @@ class Float : public Primitive32 {
 
  private:
   float value_;
+};
+
+template <size_t N>
+class FloatArray : public Base {
+ public:
+  FloatArray(const char *name, Access access, const char *units, const char *help = "",
+             const char *fmt = "%.3f")
+      : Base(Type::FloatArray, name, access, units, help, fmt) {}
+
+  void get_value(void *write_buff) override { std::memcpy(write_buff, data.data(), size()); }
+
+  void set_value(void *read_buf) override { std::memcpy(data.data(), read_buf, size()); }
+
+  size_t size() const override { return 4 * N; }
+
+  std::array<float, N> data;
 };
 
 }  // namespace Debug::Variable

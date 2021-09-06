@@ -305,8 +305,8 @@ TEST(TraceHandler, Errors) {
       {{8}, ErrorCode::InvalidData},  // Invalid subcommand
       {{static_cast<uint8_t>(TraceHandler::Subcommand::Download)}, ErrorCode::NoMemory},
       {{static_cast<uint8_t>(TraceHandler::Subcommand::SetVarId), 1, 1}, ErrorCode::MissingData},
-      {{static_cast<uint8_t>(TraceHandler::Subcommand::SetVarId), Trace::MaxVars, 1, 0},
-       ErrorCode::InvalidData},
+      //      {{static_cast<uint8_t>(TraceHandler::Subcommand::SetVarId), Trace::MaxVars, 1, 0},
+      //       ErrorCode::InvalidData}, // no longer the expected behavior?
       {{static_cast<uint8_t>(TraceHandler::Subcommand::GetVarId)}, ErrorCode::MissingData},
       {{static_cast<uint8_t>(TraceHandler::Subcommand::GetVarId), 1}, ErrorCode::NoMemory},
       {{static_cast<uint8_t>(TraceHandler::Subcommand::SetPeriod), 1, 1, 1},

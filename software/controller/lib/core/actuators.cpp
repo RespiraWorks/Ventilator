@@ -19,8 +19,8 @@ limitations under the License.
 #include "pinch_valve.h"
 
 // local data
-static PinchValve blower_pinch(0);
-static PinchValve exhale_pinch(1);
+static PinchValve blower_pinch(0, "blower", " for blower valve");
+static PinchValve exhale_pinch(1, "exhale", " for exhale valve");
 
 // Called once at system startup to initialize any
 // actuators that need it

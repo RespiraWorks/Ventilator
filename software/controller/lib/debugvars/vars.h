@@ -118,6 +118,14 @@ class FloatArray : public Base {
              const char *fmt = "%.3f")
       : Base(Type::FloatArray, name, access, units, help, fmt) {}
 
+  FloatArray(const char *name, Access access, float initial_fill, const char *units,
+             const char *help = "", const char *fmt = "%.3f")
+      : Base(Type::FloatArray, name, access, units, help, fmt), data(initial_fill) {}
+
+  FloatArray(const char *name, Access access, std::array<float, N> initial, const char *units,
+             const char *help = "", const char *fmt = "%.3f")
+      : Base(Type::FloatArray, name, access, units, help, fmt), data(initial) {}
+
   void get_value(void *write_buff) override { std::memcpy(write_buff, data.data(), size()); }
 
   void set_value(void *read_buf) override { std::memcpy(data.data(), read_buf, size()); }

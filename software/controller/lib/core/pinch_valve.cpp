@@ -65,32 +65,14 @@ static constexpr float MoveAmp = 0.25f;
 static constexpr float MoveVel = 2000.0f;
 static constexpr float MoveAccel = MoveVel / 0.05f;
 
-// This table is used to roughly linearize the pinch valve
-// output.  It was built by adjusting the pinch valve and
-// monitoring the flow through the venturi tube.
-// The entries should give pinch valve settings for a list
-// of equally spaced flow rates.  The first entry should be
-// the setting for 0 flow rate (normally 0) and the last entry
-// should be the setting for 100% flow rate.  The minimum
-// length of the table is 2 entries.
-static constexpr float FlowTable[] = {0.0000f, 0.0410f, 0.0689f, 0.0987f, 0.1275f, 0.1590f,
-                                      0.1932f, 0.2359f, 0.2940f, 0.3988f, 1.0000f};
-
-Debug::Variable::FloatArray<11> PinchValve::calibration = Debug::Variable::FloatArray<11>(
-    "pinch_valve_cal", Debug::Variable::Access::ReadWrite, "", "Pinch valve linearization table");
-
-PinchValve::PinchValve(int motor_index) : motor_index_(motor_index) {
-  calibration.data[0] = 0.0000f;
-  calibration.data[1] = 0.0410f;
-  calibration.data[2] = 0.0689f;
-  calibration.data[3] = 0.0987f;
-  calibration.data[4] = 0.1275f;
-  calibration.data[5] = 0.1590f;
-  calibration.data[6] = 0.1932f;
-  calibration.data[7] = 0.2359f;
-  calibration.data[8] = 0.2940f;
-  calibration.data[9] = 0.3988f;
-  calibration.data[10] = 1.0000f;
+PinchValve::PinchValve(int motor_index, const char *name_prepend, const char *help_append)
+    : motor_index_(motor_index),
+      calibration_("_pinch_cal", Debug::Variable::Access::ReadWrite,
+                   {0.0000f, 0.0410f, 0.0689f, 0.0987f, 0.1275f, 0.1590f, 0.1932f, 0.2359f, 0.2940f,
+                    0.3988f, 1.0000f},
+                   "", "Pinch valve flow table") {
+  calibration_.prepend_name(name_prepend);
+  calibration_.append_help(help_append);
 }
 
 // Disable the pinch valve
@@ -195,7 +177,7 @@ void PinchValve::SetOutput(float value) {
   value = std::clamp(value, 0.0f, 1.0f);
 
   // Number of intervals defined by the table.
-  float tbl_len = std::size(FlowTable) - 1;
+  float tbl_len = static_cast<float>(calibration_.data.size() - 1);
 
   // Convert the input value based on a table
   // used to linearize the pinch valve output
@@ -203,9 +185,9 @@ void PinchValve::SetOutput(float value) {
   float f = value * tbl_len - static_cast<float>(n);
 
   if (n == static_cast<int>(tbl_len))
-    value = FlowTable[n];
+    value = calibration_.data[n];
   else
-    value = FlowTable[n] + f * (FlowTable[n + 1] - FlowTable[n]);
+    value = calibration_.data[n] + f * (calibration_.data[n + 1] - calibration_.data[n]);
 
   // Convert the value to an absolute position in deg
   // The motor's zero position is at the home offset

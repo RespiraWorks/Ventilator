@@ -100,6 +100,14 @@ TEST(DebugVar, FloatArray) {
   EXPECT_EQ(fa3.data, compare_to);
   EXPECT_NE(fa3.data.data(), compare_to.data());
   EXPECT_NE(reinterpret_cast<void*>(fa3.data.data()), reinterpret_cast<void*>(buffer));
+
+  Debug::Variable::FloatArray<5> fa5("fa5", Debug::Variable::Access::ReadWrite, 4.0f, "units");
+  EXPECT_EQ(fa5.data[4], 4.0f);
+
+  Debug::Variable::FloatArray<2> fa2("fa2", Debug::Variable::Access::ReadWrite, {1.0f, 2.0f},
+                                     "units");
+  EXPECT_EQ(fa2.data[0], 1.0f);
+  EXPECT_EQ(fa2.data[1], 2.0f);
 }
 
 TEST(DebugVar, Registration) {

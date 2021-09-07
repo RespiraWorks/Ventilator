@@ -120,7 +120,9 @@ class FloatArray : public Base {
 
   FloatArray(const char *name, Access access, float initial_fill, const char *units,
              const char *help = "", const char *fmt = "%.3f")
-      : Base(Type::FloatArray, name, access, units, help, fmt), data(initial_fill) {}
+      : Base(Type::FloatArray, name, access, units, help, fmt) {
+    data.fill(initial_fill);
+  }
 
   FloatArray(const char *name, Access access, std::array<float, N> initial, const char *units,
              const char *help = "", const char *fmt = "%.3f")

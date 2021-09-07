@@ -32,8 +32,9 @@ VAR_INT32 = 1
 VAR_UINT32 = 2
 VAR_FLOAT = 3
 VAR_FLOAT_ARRAY = 4
+VAR_STRING = 5
 
-VAR_TYPE_REPRESENTATION = ["?", "i", "u", "f", "A"]
+VAR_TYPE_REPRESENTATION = ["?", "i", "u", "f", "A", "S"]
 
 VAR_ACCESS_READ_ONLY = 0
 VAR_ACCESS_WRITE = 1
@@ -60,7 +61,10 @@ class VarInfo:
     help: str
 
     def size(self):
-        return int(self.byte_size / 4)
+        if self.type == VAR_STRING:
+            return self.byte_size
+        else:
+            return int(self.byte_size / 4)
 
     # Initialize the variable info from the data returned
     # by the controller.  Set var.cpp in the controller for
@@ -115,6 +119,8 @@ class VarInfo:
 
         if self.type == VAR_FLOAT_ARRAY:
             return "[" + " ".join(fmt % k for k in value) + "]"
+        elif self.type == VAR_STRING:
+            return value
         else:
             return fmt % value
 
@@ -150,6 +156,8 @@ class VarInfo:
             return debug_types.bytes_to_float32s(data)[0]
         elif self.type == VAR_FLOAT_ARRAY:
             return debug_types.bytes_to_float32s(data)
+        elif self.type == VAR_STRING:
+            return str(data)
         else:
             raise Error(f"Sorry, I don't know how to handle variable type {self.type}")
 

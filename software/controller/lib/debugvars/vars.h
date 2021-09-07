@@ -145,4 +145,40 @@ class FloatArray : public Base {
   std::array<float, N> data;
 };
 
+template <size_t N>
+class String : public Base {
+ public:
+  String(const char *name, Access access, const char *help = "", const char *fmt = "%s",
+         const char *units = "")
+      : Base(Type::String, name, access, units, help, fmt) {}
+
+  String(const char *name, Access access, const char *initial, size_t size, const char *help = "",
+         const char *fmt = "%s", const char *units = "")
+      : Base(Type::String, name, access, units, help, fmt) {
+    set(initial, size);
+  }
+
+  void get_value(void *write_buff) override { std::memcpy(write_buff, data.data(), size()); }
+
+  void set_value(void *read_buf) override { std::memcpy(data.data(), read_buf, size()); }
+
+  size_t size() const override { return N; }
+
+  void set(const char *new_value, size_t size) {
+    size = std::min(size, N);
+    std::memcpy(data.data(), new_value, size);
+  }
+
+  const char *get() const { return data.data(); }
+
+  std::array<char, N> data = {0};
+};
+
+// \TODO nasty math because handler assumes 32-bit types with endian conversion
+//       should be able to simplify once the serial protocol is generated
+
+#define DEBUG_STRING(var_name, name, access, static_string, ...)   \
+  Debug::Variable::String<sizeof(static_string) / 4 + 5> var_name( \
+      name, access, static_string, sizeof(static_string), ##__VA_ARGS__)
+
 }  // namespace Debug::Variable

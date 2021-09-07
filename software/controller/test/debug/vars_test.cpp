@@ -109,6 +109,30 @@ TEST(DebugVar, FloatArray) {
   EXPECT_EQ(fa2.data[1], 2.0f);
 }
 
+TEST(DebugVar, String) {
+  String<3> s3("fa3", Access::ReadOnly);
+  EXPECT_EQ(s3.size(), 3);
+  s3.data[0] = 'a';
+  s3.data[1] = 'b';
+  s3.data[2] = 'c';
+  std::array<char, 3> compare_to{'a', 'b', 'c'};
+
+  EXPECT_EQ(s3.data, compare_to);
+
+  char str1[] = "love";
+  char str2[] = "hate";
+  String<5> s4("fa3", Access::ReadOnly, str1, sizeof(str1));
+  EXPECT_STREQ(str1, s4.get());
+
+  s4.set(str2, sizeof(str2));
+  EXPECT_STREQ(str2, s4.get());
+
+  DEBUG_STRING(str_auto, "str_auto", Access::ReadOnly, "auto", "auto help");
+  EXPECT_STREQ("auto", str_auto.get());
+  EXPECT_STREQ("str_auto", str_auto.name());
+  EXPECT_STREQ("auto help", str_auto.help());
+}
+
 TEST(DebugVar, Registration) {
   uint32_t num_vars = Registry::singleton().count();
   int32_t int_value = 5;

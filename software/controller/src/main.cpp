@@ -25,6 +25,10 @@ limitations under the License.
 #include "sensors.h"
 #include "trace.h"
 
+//#include "version.h"
+// static DEBUG_STRING(dbg_version, "version", Debug::Variable::Access::ReadOnly, git_version,
+// "controller version at compile time: git describe --tags");
+
 // By default, the controller receives settings (on/off, pip, rr, etc.) from
 // the GUI.  But you can also command the controller by setting the gui_foo
 // DebugVars below.

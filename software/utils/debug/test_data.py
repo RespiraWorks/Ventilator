@@ -79,9 +79,8 @@ class TestData:
         self.start_time_utc = datetime.utcnow()
         self.platform_uname = platform.uname()
         repo = git.Repo(search_parent_directories=True)
-        self.git_sha = repo.head.object.hexsha
-        self.git_dirty = repo.is_dirty()
-        # todo: uncommitted changes? unpushed changes?
+        self.git_sha = repo.git.describe("--tags")
+        self.git_dirty = repo.is_dirty(untracked_files=True)
         self.tester_name = repo.config_reader().get_value("user", "name")
         self.tester_email = repo.config_reader().get_value("user", "email")
         self.scenario = test_scenario

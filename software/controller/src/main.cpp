@@ -24,10 +24,19 @@ limitations under the License.
 #include "nvparams.h"
 #include "sensors.h"
 #include "trace.h"
+#include "version.h"
 
-//#include "version.h"
-// static DEBUG_STRING(dbg_version, "version", Debug::Variable::Access::ReadOnly, git_version,
-// "controller version at compile time: git describe --tags");
+static DEBUG_STRING(dbg_version, "version", Debug::Variable::Access::ReadOnly, git_version,
+                    "controller version at compile time: git describe --tags");
+static DEBUG_STRING(dbg_git_branch, "git_branch", Debug::Variable::Access::ReadOnly, git_branch,
+                    "controller built from git branch");
+static Debug::Variable::UInt32 dbg_git_dirty(
+    "git_dirty", Debug::Variable::Access::ReadOnly, git_dirty, "bool",
+    "Was code dirty (had uncomitted changes) at time of building?");
+static DEBUG_STRING(dbg_pio_env, "pio_env", Debug::Variable::Access::ReadOnly, pio_env,
+                    "platformio environment used for building");
+static DEBUG_STRING(dbg_build_time, "build_time", Debug::Variable::Access::ReadOnly, build_time,
+                    "UTC timestamp at time of controller build");
 
 // By default, the controller receives settings (on/off, pip, rr, etc.) from
 // the GUI.  But you can also command the controller by setting the gui_foo

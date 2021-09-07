@@ -177,8 +177,8 @@ class String : public Base {
 // \TODO nasty math because handler assumes 32-bit types with endian conversion
 //       should be able to simplify once the serial protocol is generated
 
-#define DEBUG_STRING(var_name, name, access, static_string, ...)   \
-  Debug::Variable::String<sizeof(static_string) / 4 + 5> var_name( \
+#define DEBUG_STRING(var_name, name, access, static_string, ...)         \
+  Debug::Variable::String<(sizeof(static_string) / 4 + 1) * 4> var_name( \
       name, access, static_string, sizeof(static_string), ##__VA_ARGS__)
 
 }  // namespace Debug::Variable

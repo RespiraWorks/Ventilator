@@ -120,7 +120,8 @@ class VarInfo:
         if self.type == VAR_FLOAT_ARRAY:
             return "[" + " ".join(fmt % k for k in value) + "]"
         elif self.type == VAR_STRING:
-            return value
+            # TODO: may not need this once we have generated protocol and no trailing zeros
+            return value.rstrip("\00")
         else:
             return fmt % value
 
@@ -157,7 +158,7 @@ class VarInfo:
         elif self.type == VAR_FLOAT_ARRAY:
             return debug_types.bytes_to_float32s(data)
         elif self.type == VAR_STRING:
-            return str(data)
+            return bytes(data).decode("ascii")
         else:
             raise Error(f"Sorry, I don't know how to handle variable type {self.type}")
 

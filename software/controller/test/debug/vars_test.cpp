@@ -128,6 +128,7 @@ TEST(DebugVar, String) {
   EXPECT_STREQ(str2, s4.get());
 
   DEBUG_STRING(str_auto, "str_auto", Access::ReadOnly, "auto", "auto help");
+  EXPECT_EQ(8, str_auto.size());
   EXPECT_STREQ("auto", str_auto.get());
   EXPECT_STREQ("str_auto", str_auto.name());
   EXPECT_STREQ("auto help", str_auto.help());

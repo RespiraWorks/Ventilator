@@ -19,3 +19,4 @@ static const char git_version[] = GIT_VERSION;
 static const char git_branch[] = GIT_BRANCH;
 static constexpr bool git_dirty{GIT_DIRTY};
 static const char pio_env[] = PIO_ENV;
+static const char build_time[] = BUILD_TIME;

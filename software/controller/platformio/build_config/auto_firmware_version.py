@@ -22,6 +22,7 @@ __license__ = """
 
 
 import git
+from datetime import datetime
 
 Import("env")
 
@@ -32,6 +33,7 @@ def get_firmware_specifier_build_flag():
     git_branch = repo.active_branch.name
     git_dirty = repo.is_dirty(untracked_files=True)
     pio_env = env["PIOENV"].upper()
+    build_time_utc = datetime.utcnow()
     print(f"git_version: {git_version}")
     print(f"pio_branch: {git_branch}")
     print(f"git_dirty: {git_dirty}")
@@ -41,7 +43,8 @@ def get_firmware_specifier_build_flag():
     branch_flag = f'-D GIT_BRANCH=\\"{git_branch}\\"'
     dirty_flag = "-D GIT_DIRTY=" + f"{int(git_dirty)}"
     env_flag = f'-D PIO_ENV=\\"{pio_env}\\"'
-    return version_flag + " " + branch_flag + " " + dirty_flag + " " + env_flag
+    time_flag = f'-D BUILD_TIME=\\"{build_time_utc.strftime("%Y-%m-%d_%H:%M:%S")}\\"'
+    return " ".join([version_flag, branch_flag, dirty_flag, env_flag, time_flag])
 
 
 ret = get_firmware_specifier_build_flag()

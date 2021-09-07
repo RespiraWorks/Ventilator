@@ -21,6 +21,8 @@ limitations under the License.
 #include "gtest/gtest.h"
 #include "vars.h"
 
+// \TODO: more tests for FloatArray type
+
 namespace Debug::Command {
 
 TEST(VarHandler, GetVarInfo) {

@@ -37,7 +37,7 @@ enum class Access {
 
 static constexpr uint16_t MaxVariableCount{100};
 
-static constexpr uint16_t InvalidID{MaxVariableCount + 1};
+static constexpr uint16_t InvalidID{MaxVariableCount};
 
 /*! \class Base vars_base.h "vars_base.h"
  *  \brief Abstract base class for debug variables

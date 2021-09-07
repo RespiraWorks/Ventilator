@@ -583,7 +583,10 @@ ex: poke [type] <address> <data>
         if len(cl) < 2:
             print("Please give the variable name and value")
             return
-        self.interface.variable_set(cl[0], cl[1:])
+        if len(cl) == 2:
+            self.interface.variable_set(cl[0], cl[1])  # single variable
+        else:
+            self.interface.variable_set(cl[0], cl[1:])  # array
 
     def complete_set(self, text, line, begidx, endidx):
         return self.interface.variables_find(text, access_filter=VAR_ACCESS_WRITE)
@@ -666,7 +669,6 @@ trace save [--verbose/-v] [--plot/-p] [--csv/-c]
             if args.var:
                 self.interface.trace_select(args.var)
 
-            self.interface.trace_flush()
             self.interface.trace_start()
 
         elif cl[0] == "stop":

@@ -17,30 +17,30 @@ limitations under the License.
 
 namespace Debug {
 
-bool Trace::GetStatus() const { return running_; }
+bool Trace::running() const { return running_; }
 
-// (Re-)Start the trace
-void Trace::Start() {
+// (Re-)start the trace
+void Trace::start() {
   if (!running_) {
     trace_buffer_.Flush();
   }
   running_ = true;
 }
 
-void Trace::Stop() { running_ = false; }
+void Trace::stop() { running_ = false; }
 
-uint32_t Trace::GetPeriod() const { return period_; }
+uint32_t Trace::period() const { return period_; }
 
-void Trace::SetPeriod(uint32_t period) { period_ = period; }
+void Trace::set_period(uint32_t period) { period_ = period; }
 
 // Sample all trace variables every "period" calls
-void Trace::MaybeSample() {
+void Trace::maybe_sample() {
   if (!running_) return;
 
   if (cycles_count_ == 0) {
-    if (!SampleAllVars()) {
+    if (!sample_all_variables()) {
       // Trace buffer is full, stop tracing.
-      Stop();
+      stop();
     }
   }
 
@@ -48,23 +48,24 @@ void Trace::MaybeSample() {
   if (cycles_count_ >= period_) cycles_count_ = 0;
 }
 
-void Trace::Flush() {
-  // \todo should it really stop before flushing?
-  Stop();
-  trace_buffer_.Flush();
-}
+void Trace::flush() { trace_buffer_.Flush(); }
 
-size_t Trace::GetNumSamples() { return trace_buffer_.FullCount() / GetNumActiveVars(); }
+size_t Trace::sample_count() { return trace_buffer_.FullCount() / active_variable_count(); }
 
-uint16_t Trace::GetNumActiveVars() {
+uint16_t Trace::active_variable_count() {
   return static_cast<uint16_t>(std::count_if(traced_vars_.begin(), traced_vars_.end(),
                                              [](const Variable::Base *var) { return (var); }));
 }
 
-bool Trace::SetTracedVarId(uint8_t index, uint16_t id) {
-  auto var_ptr = Variable::Registry::singleton().find(id);
-  if (var_ptr && (var_ptr->size() != sizeof(uint32_t))) {
-    var_ptr = nullptr;
+bool Trace::set_traced_variable(uint8_t index, uint16_t variable_registry_id) {
+  if (variable_registry_id == Variable::InvalidID) {
+    traced_vars_[index] = nullptr;
+    return true;
+  }
+  auto var_ptr = Variable::Registry::singleton().find(variable_registry_id);
+  if (!var_ptr || (var_ptr->size() != sizeof(uint32_t))) {
+    // variable not found or type is not of correct size
+    return false;
   }
   traced_vars_[index] = var_ptr;
   // like in the SetTraceVarId<int index> template, we need to flush the buffer
@@ -73,14 +74,14 @@ bool Trace::SetTracedVarId(uint8_t index, uint16_t id) {
   return true;
 }
 
-uint16_t Trace::GetTracedVarId(uint8_t index) {
+uint16_t Trace::traced_variable(uint8_t index) {
   if (index >= MaxVars) {
     return Variable::InvalidID;
   }
   return traced_vars_[index] ? traced_vars_[index]->id() : Variable::InvalidID;
 }
 
-[[nodiscard]] bool Trace::GetNextTraceRecord(std::array<uint32_t, MaxVars> *record, size_t *count) {
+[[nodiscard]] bool Trace::get_next_record(std::array<uint32_t, MaxVars> *record, size_t *count) {
   // Grab one sample with interrupts disabled.
   // There's a chance the trace is still running, so we could get interrupted
   // by the high priority thread that adds to the buffer.
@@ -96,10 +97,10 @@ uint16_t Trace::GetTracedVarId(uint8_t index) {
   return true;
 }
 
-bool Trace::SampleAllVars() {
+bool Trace::sample_all_variables() {
   // If there are no enabled trace variables, or if there isn't enough space
   // in the buffer for a full sample, then signal to stop the trace.
-  if (trace_buffer_.FreeCount() < GetNumActiveVars()) {
+  if (trace_buffer_.FreeCount() < active_variable_count()) {
     return false;
   }
   // Sample each enabled variable and store the result to the buffer.

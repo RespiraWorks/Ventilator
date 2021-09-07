@@ -25,7 +25,7 @@ from lib.error import Error
 
 # TODO: Import constants from proto instead!
 
-VAR_INVALID_ID = 101
+VAR_INVALID_ID = 100
 
 # Variable types (see vars.h)
 VAR_INT32 = 1

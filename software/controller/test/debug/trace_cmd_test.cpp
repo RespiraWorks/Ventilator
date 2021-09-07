@@ -56,13 +56,13 @@ TEST(TraceHandler, Flush) {
   TraceHandler trace_handler = TraceHandler(&trace);
 
   // activate trace
-  trace.SetTracedVarId(1, var_x.id());
-  trace.SetTracedVarId(3, var_y.id());
-  trace.Start();  // Enable tracing
+  trace.set_traced_variable(1, var_x.id());
+  trace.set_traced_variable(3, var_y.id());
+  trace.start();  // Enable tracing
 
-  trace.MaybeSample();
-  EXPECT_EQ(trace.GetNumSamples(), 1);
-  EXPECT_TRUE(trace.GetStatus());
+  trace.maybe_sample();
+  EXPECT_EQ(trace.sample_count(), 1);
+  EXPECT_TRUE(trace.running());
 
   std::array flush_command = {static_cast<uint8_t>(TraceHandler::Subcommand::Flush)};
   std::array<uint8_t, kResponseSize> response;
@@ -74,9 +74,25 @@ TEST(TraceHandler, Flush) {
                            .response_length = 0,
                            .processed = &processed};
   EXPECT_EQ(ErrorCode::None, trace_handler.Process(&flush_context));
+  EXPECT_EQ(trace.sample_count(), 0);
   EXPECT_TRUE(processed);
-  EXPECT_FALSE(trace.GetStatus());
-  EXPECT_EQ(trace.GetNumSamples(), 0);
+  EXPECT_TRUE(trace.running());
+  trace.maybe_sample();
+  EXPECT_EQ(trace.sample_count(), 1);
+
+  std::array stop_command = {static_cast<uint8_t>(TraceHandler::Subcommand::Stop)};
+  Context stop_context = {.request = stop_command.data(),
+                          .request_length = std::size(stop_command),
+                          .response = response.data(),
+                          .max_response_length = std::size(response),
+                          .response_length = 0,
+                          .processed = &processed};
+  EXPECT_EQ(ErrorCode::None, trace_handler.Process(&stop_context));
+  EXPECT_EQ(trace.sample_count(), 1);
+  EXPECT_TRUE(processed);
+  EXPECT_FALSE(trace.running());
+  trace.maybe_sample();
+  EXPECT_EQ(trace.sample_count(), 1);
 }
 
 TEST(TraceHandler, Read) {
@@ -114,8 +130,8 @@ TEST(TraceHandler, Read) {
   EXPECT_TRUE(processed);
   EXPECT_EQ(read_context.response_length, 0);
 
-  trace.SetTracedVarId(1, var_x.id());
-  trace.SetTracedVarId(3, var_y.id());
+  trace.set_traced_variable(1, var_x.id());
+  trace.set_traced_variable(3, var_y.id());
 
   // start the trace (using debug command)
   std::array start_command = {static_cast<uint8_t>(TraceHandler::Subcommand::Start)};
@@ -129,7 +145,7 @@ TEST(TraceHandler, Read) {
   EXPECT_EQ(ErrorCode::None, trace_handler.Process(&start_context));
   EXPECT_TRUE(processed);
   EXPECT_EQ(start_context.response_length, 0);
-  EXPECT_EQ(trace.GetStatus(), 1);
+  EXPECT_EQ(trace.running(), 1);
 
   // trace with no samples (tracing active) ==> nothing to report
   EXPECT_EQ(ErrorCode::None, trace_handler.Process(&read_context));
@@ -137,10 +153,10 @@ TEST(TraceHandler, Read) {
 
   // fill the buffer to a bigger size than the max response length
   // note we are sampling 2 variables that are 4 bytes each
-  uint32_t num_vars = trace.GetNumActiveVars();
+  uint32_t num_vars = trace.active_variable_count();
   size_t sample_size = num_vars * sizeof(uint32_t);
   for (i = 0; i < kResponseSize / sample_size + kExtraSamples; ++i) {
-    trace.MaybeSample();
+    trace.maybe_sample();
   }
 
   // Take advantage of having a full buffer to test CountSamples command
@@ -155,7 +171,7 @@ TEST(TraceHandler, Read) {
   EXPECT_EQ(ErrorCode::None, trace_handler.Process(&num_samples_context));
   EXPECT_TRUE(processed);
   EXPECT_EQ(num_samples_context.response_length, 4);
-  EXPECT_EQ(trace.GetNumSamples(), u8_to_u32(response.data()));
+  EXPECT_EQ(trace.sample_count(), u8_to_u32(response.data()));
 
   // issue a new read command
   EXPECT_EQ(ErrorCode::None, trace_handler.Process(&read_context));
@@ -175,8 +191,8 @@ TEST(TraceHandler, Read) {
                     static_cast<uint32_t>(read_samples));
 
   // expect trace to still be running but with no samples in buffer
-  EXPECT_TRUE(trace.GetStatus());
-  EXPECT_EQ(trace.GetNumSamples(), 0);
+  EXPECT_TRUE(trace.running());
+  EXPECT_EQ(trace.sample_count(), 0);
 }
 
 TEST(TraceHandler, SettersAndGetters) {
@@ -204,7 +220,7 @@ TEST(TraceHandler, SettersAndGetters) {
   EXPECT_TRUE(processed);
   EXPECT_EQ(set_var1_context.response_length, 0);
   // check that the trace now points to desired var
-  EXPECT_EQ(u8_to_u16(&set_var1_command[2]), trace.GetTracedVarId(1));
+  EXPECT_EQ(u8_to_u16(&set_var1_command[2]), trace.traced_variable(1));
 
   // Get trace var ID for var 1
   std::array<uint8_t, 2> get_var1_command = {
@@ -220,7 +236,7 @@ TEST(TraceHandler, SettersAndGetters) {
   EXPECT_TRUE(processed);
   EXPECT_EQ(get_var1_context.response_length, 2);
 
-  EXPECT_EQ(trace.GetTracedVarId(1), u8_to_u16(response.data()));
+  EXPECT_EQ(trace.traced_variable(1), u8_to_u16(response.data()));
 
   // Get trace var ID for var 2 (un-associated)
   std::array<uint8_t, 2> get_var2_command = {
@@ -269,7 +285,7 @@ TEST(TraceHandler, SettersAndGetters) {
   EXPECT_TRUE(processed);
   EXPECT_EQ(set_period_context.response_length, 0);
 
-  EXPECT_EQ(trace.GetPeriod(), u8_to_u32(&set_period_command[1]));
+  EXPECT_EQ(trace.period(), u8_to_u32(&set_period_command[1]));
 
   // Get trace period
   std::array get_period_command = {static_cast<uint8_t>(TraceHandler::Subcommand::GetPeriod)};
@@ -284,7 +300,7 @@ TEST(TraceHandler, SettersAndGetters) {
   EXPECT_TRUE(processed);
   EXPECT_EQ(get_period_context.response_length, 4);
 
-  EXPECT_EQ(trace.GetPeriod(), u8_to_u32(get_period_context.response));
+  EXPECT_EQ(trace.period(), u8_to_u32(get_period_context.response));
 }
 
 TEST(TraceHandler, Errors) {
@@ -296,13 +312,13 @@ TEST(TraceHandler, Errors) {
   Trace trace;
   TraceHandler trace_handler = TraceHandler(&trace);
 
-  trace.SetTracedVarId(1, var_x.id());
-  trace.SetTracedVarId(3, var_y.id());
-  trace.Start();
+  trace.set_traced_variable(1, var_x.id());
+  trace.set_traced_variable(3, var_y.id());
+  trace.start();
 
   std::vector<std::tuple<std::vector<uint8_t>, ErrorCode>> requests = {
       {{}, ErrorCode::MissingData},   // Missing subcommand
-      {{8}, ErrorCode::InvalidData},  // Invalid subcommand
+      {{9}, ErrorCode::InvalidData},  // Invalid subcommand
       {{static_cast<uint8_t>(TraceHandler::Subcommand::Download)}, ErrorCode::NoMemory},
       {{static_cast<uint8_t>(TraceHandler::Subcommand::SetVarId), 1, 1}, ErrorCode::MissingData},
       //      {{static_cast<uint8_t>(TraceHandler::Subcommand::SetVarId), Trace::MaxVars, 1, 0},
@@ -316,7 +332,8 @@ TEST(TraceHandler, Errors) {
   };
   std::array<uint8_t, kResponseSize> response;
   bool processed{false};
-  for (auto &[request, error] : requests) {
+  for (size_t i = 0; i < requests.size(); ++i) {
+    auto &[request, error] = requests[i];
     Context context = {.request = request.data(),
                        .request_length = static_cast<uint32_t>(request.size()),
                        .response = response.data(),
@@ -324,7 +341,7 @@ TEST(TraceHandler, Errors) {
                                                   // checks have passed
                        .response_length = 0,
                        .processed = &processed};
-    EXPECT_EQ(error, trace_handler.Process(&context));
+    EXPECT_EQ(error, trace_handler.Process(&context)) << " failed on test #" << i;
     EXPECT_FALSE(processed);
     EXPECT_EQ(context.response_length, 0);
   }

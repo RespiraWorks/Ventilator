@@ -81,14 +81,15 @@ class PokeHandler : public MemoryHandler {
 //
 // Data passed to the command is a single byte which defines what the command
 // does:
-//  flush - Used to disable the trace and flush the trace buffer
+//  Flush - Used to disable the trace and flush the trace buffer
 //  Download - Used to read data from the buffer
-//  start - Used to start recording in the trace buffer
+//  Start - Used to start recording in the trace buffer
+//  Stop - Used to stop recording in the trace buffer
 //  GetVarId followed by var index (1 byte) - Used to get trace variables ID
 //  SetVarId followed by var index (1 byte) and variable ID (2 bytes) - Used to
 //    set traced variable id
-//  period - Used to get the trace period
-//  set_period followed by desired trace period (4 bytes) - Used to set the
+//  GetPeriod - Used to get the trace period
+//  SetPeriod followed by desired trace period (4 bytes) - Used to set the
 //    trace period
 //  CountSamples - Used to get the number of samples currently in the trace
 //    buffer

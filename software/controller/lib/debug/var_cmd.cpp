@@ -126,11 +126,10 @@ ErrorCode VarHandler::GetVar(Context *context) {
   uint32_t intermediate_buffer[size / sizeof(uint32_t)];
   var->get_value(intermediate_buffer);
 
-  uint32_t *ptr = intermediate_buffer;
+  // endian conversion
   for (size_t i = 0; i < size / sizeof(uint32_t); i++) {
-    u32_to_u8(*ptr, context->response);
+    u32_to_u8(intermediate_buffer[i], context->response);
     context->response += sizeof(uint32_t);
-    ptr++;
   }
   context->response_length = static_cast<uint32_t>(var->size());
 
@@ -154,13 +153,12 @@ ErrorCode VarHandler::SetVar(Context *context) {
 
   if (!var->write_allowed()) return ErrorCode::InternalError;
 
+  // endian conversion
   uint32_t intermediate_buffer[size / sizeof(uint32_t)];
-  uint32_t *ptr = intermediate_buffer;
-  auto request_ptr = context->request + 3;
+  const auto *request_ptr = context->request + 3;
   for (size_t i = 0; i < size / sizeof(uint32_t); i++) {
-    *ptr = u8_to_u32(request_ptr);
+    intermediate_buffer[i] = u8_to_u32(request_ptr);
     request_ptr += sizeof(uint32_t);
-    ptr++;
   }
 
   var->set_value(intermediate_buffer);

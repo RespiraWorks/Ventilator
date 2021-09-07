@@ -41,13 +41,13 @@ class Trace {
   // 40% of the RAM available on our STM32
   static constexpr size_t BufferSize{0x4000};
 
-  /// \returns false if manually stopped or stopped on its own when buffer was filled
+  /// \returns false if manually stopped or autostopped when buffer was filled
   bool running() const;
 
-  /// \brief starts acquisition, which will continue until buffer is full or explicitly stopped
+  /// \brief starts acquisition; or restarts if already started (flushes)
   void start();
 
-  /// \brief stops acquisition
+  /// \brief stops acquisition, does not flush
   void stop();
 
   /// \returns number of cycles that Trace will wait before sampling variables

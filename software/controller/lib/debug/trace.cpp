@@ -62,7 +62,7 @@ bool Trace::set_traced_variable(uint8_t index, uint16_t variable_registry_id) {
     traced_vars_[index] = nullptr;
     return true;
   }
-  auto var_ptr = Variable::Registry::singleton().find(variable_registry_id);
+  auto *var_ptr = Variable::Registry::singleton().find(variable_registry_id);
   if (!var_ptr || (var_ptr->size() != sizeof(uint32_t))) {
     // variable not found or type is not of correct size
     return false;
@@ -82,10 +82,9 @@ uint16_t Trace::traced_variable(uint8_t index) {
 }
 
 [[nodiscard]] bool Trace::get_next_record(std::array<uint32_t, MaxVars> *record, size_t *count) {
-  // Grab one sample with interrupts disabled.
-  // There's a chance the trace is still running, so we could get interrupted
-  // by the high priority thread that adds to the buffer.
-  // I want to make sure I read a full sample without being interrupted.
+  // Grab one sample with interrupts disabled. There's a chance the trace is still running, so we
+  // could get interrupted by the high priority thread that adds to the buffer.
+  // We want to make sure we read a full sample without being interrupted.
   *count = 0;
   BlockInterrupts block;
   for (auto *var : traced_vars_) {

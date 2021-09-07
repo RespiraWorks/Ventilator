@@ -171,9 +171,9 @@ class Channel {
   //    means we lose the ability to retry a request after an I²C (or DMA)
   //    error.
   uint8_t write_buffer_[WriteBufferSize];
-  uint32_t write_buffer_index_{0};
-  uint32_t write_buffer_start_{0};
-  uint32_t wrapping_index_{WriteBufferSize};
+  size_t write_buffer_index_{0};
+  size_t write_buffer_start_{0};
+  size_t wrapping_index_{WriteBufferSize};
   bool CopyDataToWriteBuffer(const void *data, uint16_t size);
 };
 

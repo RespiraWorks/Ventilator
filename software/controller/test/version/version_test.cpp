@@ -17,10 +17,12 @@ limitations under the License.
 
 #include "gtest/gtest.h"
 
-TEST(Version, GitVersion) { EXPECT_GT(sizeof(git_version), 14) << git_version; }
+TEST(Version, GitVersion) { EXPECT_GT(sizeof(Version::GitVersion), 14) << Version::GitVersion; }
 
-TEST(Version, GitBranch) { EXPECT_GT(sizeof(git_version), 5) << git_version; }
+TEST(Version, GitBranch) { EXPECT_GT(sizeof(Version::GitBranch), 5) << Version::GitBranch; }
 
-TEST(Version, GitDirty) { EXPECT_EQ(typeid(git_dirty), typeid(bool)); }
+TEST(Version, GitDirty) { EXPECT_EQ(typeid(Version::GitDirty), typeid(bool)); }
 
-TEST(Version, PioEnv) { EXPECT_STREQ(pio_env, "NATIVE") << pio_env; }
+TEST(Version, PioEnv) { EXPECT_STREQ(Version::PioEnv, "NATIVE") << Version::PioEnv; }
+
+TEST(Version, BuildTime) { EXPECT_GE(sizeof(Version::BuildTime), 23) << Version::BuildTime; }

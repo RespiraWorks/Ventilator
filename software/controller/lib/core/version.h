@@ -15,8 +15,12 @@ limitations under the License.
 
 #pragma once
 
+namespace Version {
+
 static const char GitVersion[] = GIT_VERSION;
 static const char GitBranch[] = GIT_BRANCH;
 static constexpr bool GitDirty{GIT_DIRTY};
 static const char PioEnv[] = PIO_ENV;
 static const char BuildTime[] = BUILD_TIME;
+
+}  // namespace Version

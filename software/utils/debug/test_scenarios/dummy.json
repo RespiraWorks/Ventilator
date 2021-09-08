@@ -21,5 +21,33 @@
             "net_flow"
         ],
         "test_criteria": {}
+    },
+    {
+        "name": "dummy2",
+        "description": "Short pressure control test with manual settings",
+        "manual_settings": {
+            "lung_compliance": 50.0,
+            "lung_resistance": 20
+        },
+        "ventilator_settings": {
+            "forced_breath_rate": 12,
+            "forced_ie_ratio": 0.25,
+            "forced_pip": 25,
+            "forced_peep": 10,
+            "forced_fio2": 90,
+            "forced_mode": "pressure_control"
+        },
+        "capture_duration_secs": 5,
+        "capture_ignore_secs": 5,
+        "trace_period": 1,
+        "trace_variable_names": [
+            "pc_setpoint",
+            "patient_pressure_dp",
+            "volume",
+            "net_flow"
+        ],
+        "test_criteria": {
+            "expected_tv": 500
+        }
     }
 ]

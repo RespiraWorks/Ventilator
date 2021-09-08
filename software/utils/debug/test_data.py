@@ -74,6 +74,7 @@ class TestData:
     git_dirty: bool = True
     scenario: TestScenario
     ventilator_settings: Dict
+    ventilator_readings: Dict
     traces: List
 
     def __init__(self, test_scenario):
@@ -111,7 +112,11 @@ class TestData:
         if self.ventilator_settings:
             ret += "\nVentilator settings:\n"
             for name, val in sorted(self.ventilator_settings.items()):
-                ret += f"  {name:25} = {val}\n"
+                ret += f"  {name:30} = {val}\n"
+        if self.ventilator_readings:
+            ret += "\nVentilator readings:\n"
+            for name, val in sorted(self.ventilator_readings.items()):
+                ret += f"  {name:30} = {val}\n"
         if len(self.traces):
             ret += f"Test data contains [{len(self.traces)}] traces"
             for t in self.traces:
@@ -144,6 +149,7 @@ class TestData:
             "git_dirty": self.git_dirty,
             "scenario": self.scenario.as_dict(),
             "ventilator_settings": self.ventilator_settings,
+            "ventilator_readings": self.ventilator_readings,
             "traces": [t.as_dict() for t in self.traces],
         }
 
@@ -212,6 +218,7 @@ class TestData:
         td.git_branch = data["git_branch"]
         td.git_dirty = data["git_dirty"]
         td.ventilator_settings = data["ventilator_settings"]
+        td.ventilator_readings = data["ventilator_readings"]
         for t in data["traces"]:
             td.traces.append(Trace.from_dict(t))
         return td

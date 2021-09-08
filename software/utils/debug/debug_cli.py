@@ -130,6 +130,8 @@ class CmdLine(cmd.Cmd):
             self.interface.resynchronize()
             self.interface.variables_update_info()
         self.update_prompt()
+        if not self.interface.sanity_checks():
+            return
 
         while True:
             try:

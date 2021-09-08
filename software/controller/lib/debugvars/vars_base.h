@@ -65,9 +65,14 @@ class Base {
   Base(Type type, const char *name, Access access, const char *units, const char *help,
        const char *fmt = "");
 
-  virtual void get_value(void *write_buff) = 0;
-  virtual void set_value(void *read_buf) = 0;
-  virtual size_t size() const = 0;
+  /// \brief should write its value to buffer of sufficient size
+  virtual void serialize_value(void *write_buffer) = 0;
+
+  /// \brief retrieves its own value from buffer
+  virtual void deserialize_value(const void *read_buffer) = 0;
+
+  /// \returns number of bytes occupied by value, so caller can ensure sufficient size of buffer
+  virtual size_t byte_size() const = 0;
 
   const char *name() const;
   void prepend_name(const char *prefix);

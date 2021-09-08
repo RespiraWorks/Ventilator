@@ -42,6 +42,7 @@ class CircularBuffer {
   // Return number of elements available in the buffer to read.
   size_t FullCount() const {
     BlockInterrupts block;
+    /// \TODO: ssize_t is likely compiler-dependent; this function could be improved
     ssize_t ct = head_ - tail_;
     if (ct < 0) ct += N + 1;
     return static_cast<size_t>(ct);

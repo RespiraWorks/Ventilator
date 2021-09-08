@@ -31,7 +31,7 @@ void Trace::stop() { running_ = false; }
 
 uint32_t Trace::period() const { return period_; }
 
-void Trace::set_period(uint32_t period) { period_ = period; }
+void Trace::set_period(const uint32_t period) { period_ = period; }
 
 // Sample all trace variables every "period" calls
 void Trace::maybe_sample() {
@@ -50,7 +50,10 @@ void Trace::maybe_sample() {
 
 void Trace::flush() { trace_buffer_.Flush(); }
 
-size_t Trace::sample_count() { return trace_buffer_.FullCount() / active_variable_count(); }
+size_t Trace::sample_count() {
+  if (!active_variable_count()) return 0;
+  return trace_buffer_.FullCount() / active_variable_count();
+}
 
 uint16_t Trace::active_variable_count() {
   return static_cast<uint16_t>(std::count_if(traced_vars_.begin(), traced_vars_.end(),
@@ -63,7 +66,7 @@ bool Trace::set_traced_variable(uint8_t index, uint16_t variable_registry_id) {
     return true;
   }
   auto *var_ptr = Variable::Registry::singleton().find(variable_registry_id);
-  if (!var_ptr || (var_ptr->size() != sizeof(uint32_t))) {
+  if (!var_ptr || (var_ptr->byte_size() != sizeof(uint32_t))) {
     // variable not found or type is not of correct size
     return false;
   }
@@ -106,7 +109,7 @@ bool Trace::sample_all_variables() {
   for (auto *var : traced_vars_) {
     if (!var) continue;
     // Can't fail as we've already checked for sufficient space above.
-    var->get_value(&temp_variable_value_);
+    var->serialize_value(&temp_variable_value_);
     (void)trace_buffer_.Put(temp_variable_value_);
   }
   return true;

@@ -555,8 +555,8 @@ ex: poke [type] <address> <data>
                     print(dark_orange(text))
             return
         else:
-            variable_md = self.interface.variable_metadata[cl[0]]
-            val = self.interface.variable_get(cl[0], raw=raw, fmt=fmt)
+            variable_md = self.interface.variable_metadata[var_name]
+            val = self.interface.variable_get(var_name, raw=raw, fmt=fmt)
             print(variable_md.print_value(val))
 
     def complete_get(self, text, line, begidx, endidx):

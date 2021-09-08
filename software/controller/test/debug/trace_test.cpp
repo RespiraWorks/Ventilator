@@ -30,14 +30,14 @@ TEST(Trace, MaybeSampleTwoVars) {
   Variable::FnVar32 var_x(
       Variable::Type::UInt32, "x", Variable::Access::ReadOnly, "units",
       [&](void* write_buff) { std::memcpy(write_buff, &i, 4); },
-      [&](void* read_buf) { (void)read_buf; }, "");
+      [&](const void* read_buf) { (void)read_buf; }, "");
   Variable::FnVar32 var_y(
       Variable::Type::UInt32, "y", Variable::Access::ReadOnly, "units",
       [&](void* write_buff) {
         auto ii = 10 * i;
         std::memcpy(write_buff, &ii, 4);
       },
-      [&](void* read_buf) { (void)read_buf; }, "");
+      [&](const void* read_buf) { (void)read_buf; }, "");
 
   Trace trace;
   trace.set_period(3);  // Trace every 3 cycles.

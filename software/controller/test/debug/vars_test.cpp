@@ -36,12 +36,12 @@ TEST(DebugVar, DebugVarInt32) {
   EXPECT_EQ(&var, Registry::singleton().find(var.id()));
 
   other_val = 0;
-  var.get_value(&other_val);
+  var.serialize_value(&other_val);
   EXPECT_EQ(int32_t{5}, other_val);
   other_val = 7;
-  var.set_value(&other_val);
+  var.deserialize_value(&other_val);
   other_val = 0;
-  var.get_value(&other_val);
+  var.serialize_value(&other_val);
   EXPECT_EQ(int32_t{7}, other_val);
   EXPECT_EQ(7, value);
 
@@ -57,7 +57,7 @@ TEST(DebugVar, DebugVarUint32Defaults) {
   // All default arguments
   Primitive32 var("var", Access::ReadWrite, &value, "unit");
   other_val = 0;
-  var.get_value(&other_val);
+  var.serialize_value(&other_val);
   EXPECT_EQ(uint32_t{5}, other_val);
   EXPECT_STREQ("", var.help());
   EXPECT_STREQ("%u", var.format());
@@ -75,17 +75,17 @@ TEST(DebugVar, DebugVarFloatDefaults) {
 
   // Rountrip through uint32 should not change value.
   uint32_t uint_val{0};
-  var.get_value(&uint_val);
-  var.set_value(&uint_val);
+  var.serialize_value(&uint_val);
+  var.deserialize_value(&uint_val);
   uint32_t other_val{0};
-  var.get_value(&other_val);
+  var.serialize_value(&other_val);
   EXPECT_EQ(uint_val, other_val);
   EXPECT_EQ(5.0f, value);
 }
 
 TEST(DebugVar, FloatArray) {
   FloatArray<3> fa3("fa3", Access::ReadWrite, "units");
-  EXPECT_EQ(fa3.size(), 4 * 3);
+  EXPECT_EQ(fa3.byte_size(), 4 * 3);
   fa3.data[0] = 24.0f;
   fa3.data[1] = 42.0f;
   fa3.data[2] = 69.0f;
@@ -94,9 +94,9 @@ TEST(DebugVar, FloatArray) {
   EXPECT_EQ(fa3.data, compare_to);
 
   uint32_t buffer[3 * 4];
-  fa3.get_value(buffer);
+  fa3.serialize_value(buffer);
   fa3.data = {0};
-  fa3.set_value(buffer);
+  fa3.deserialize_value(buffer);
   EXPECT_EQ(fa3.data, compare_to);
   EXPECT_NE(fa3.data.data(), compare_to.data());
   EXPECT_NE(reinterpret_cast<void*>(fa3.data.data()), reinterpret_cast<void*>(buffer));

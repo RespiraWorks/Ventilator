@@ -88,7 +88,7 @@ ErrorCode VarHandler::GetVarInfo(Context *context) {
   uint32_t count = 0;
   context->response[count++] = static_cast<uint8_t>(var->type());
   context->response[count++] = static_cast<uint8_t>(var->access());
-  context->response[count++] = static_cast<uint8_t>(var->size());
+  context->response[count++] = static_cast<uint8_t>(var->byte_size());
   context->response[count++] = 0;
   context->response[count++] = static_cast<uint8_t>(name_length);
   context->response[count++] = static_cast<uint8_t>(format_length);
@@ -120,18 +120,18 @@ ErrorCode VarHandler::GetVar(Context *context) {
   auto *var = Variable::Registry::singleton().find(var_id);
   if (!var) return ErrorCode::UnknownVariable;
 
-  auto size = var->size();
+  auto size = var->byte_size();
   if (context->max_response_length < size) return ErrorCode::NoMemory;
 
   uint32_t intermediate_buffer[size / sizeof(uint32_t)];
-  var->get_value(intermediate_buffer);
+  var->serialize_value(intermediate_buffer);
 
   // endian conversion
   for (size_t i = 0; i < size / sizeof(uint32_t); i++) {
     u32_to_u8(intermediate_buffer[i], context->response);
     context->response += sizeof(uint32_t);
   }
-  context->response_length = static_cast<uint32_t>(var->size());
+  context->response_length = static_cast<uint32_t>(var->byte_size());
 
   *(context->processed) = true;
   return ErrorCode::None;
@@ -147,7 +147,7 @@ ErrorCode VarHandler::SetVar(Context *context) {
   if (!var) return ErrorCode::UnknownVariable;
 
   uint32_t count = context->request_length - 3;
-  auto size = var->size();
+  auto size = var->byte_size();
 
   if (count < size) return ErrorCode::MissingData;
 
@@ -161,7 +161,7 @@ ErrorCode VarHandler::SetVar(Context *context) {
     request_ptr += sizeof(uint32_t);
   }
 
-  var->set_value(intermediate_buffer);
+  var->deserialize_value(intermediate_buffer);
   context->response_length = 0;
   *(context->processed) = true;
   return ErrorCode::None;

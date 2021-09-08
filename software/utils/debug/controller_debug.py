@@ -299,13 +299,12 @@ class ControllerDebugInterface:
         self.variables_force_off()
         self.trace_set_period(test.scenario.trace_period)
         self.trace_select(test.scenario.trace_variable_names)
-        self.trace_start()
         time.sleep(test.scenario.capture_ignore_secs)
 
         print(
             f"\nStarting data capture for {test.scenario.capture_duration_secs} seconds"
         )
-        self.trace_flush()
+        self.trace_start()
         time.sleep(test.scenario.capture_duration_secs)
         self.trace_stop()
 

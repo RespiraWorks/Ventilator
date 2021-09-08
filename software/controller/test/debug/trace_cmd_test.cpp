@@ -42,14 +42,14 @@ TEST(TraceHandler, Flush) {
   Debug::Variable::FnVar32 var_x(
       Debug::Variable::Type::UInt32, "x", Debug::Variable::Access::ReadOnly, "unit",
       [&](void *write_buff) { std::memcpy(write_buff, &i, 4); },
-      [&](void *read_buf) { (void)read_buf; }, "");
+      [&](const void *read_buf) { (void)read_buf; }, "");
   Debug::Variable::FnVar32 var_y(
       Debug::Variable::Type::UInt32, "x", Debug::Variable::Access::ReadOnly, "unit",
       [&](void *write_buff) {
         auto ii = 10 * i;
         std::memcpy(write_buff, &ii, 4);
       },
-      [&](void *read_buf) { (void)read_buf; }, "");
+      [&](const void *read_buf) { (void)read_buf; }, "");
 
   // define trace and trace handler
   Trace trace;
@@ -103,14 +103,14 @@ TEST(TraceHandler, Read) {
   Debug::Variable::FnVar32 var_x(
       Debug::Variable::Type::UInt32, "x", Debug::Variable::Access::ReadOnly, "unit",
       [&](void *write_buff) { std::memcpy(write_buff, &i, 4); },
-      [&](void *read_buf) { (void)read_buf; }, "");
+      [&](const void *read_buf) { (void)read_buf; }, "");
   Debug::Variable::FnVar32 var_y(
       Debug::Variable::Type::UInt32, "y", Debug::Variable::Access::ReadOnly, "unit",
       [&](void *write_buff) {
         auto ii = 10 * i;
         std::memcpy(write_buff, &ii, 4);
       },
-      [&](void *read_buf) { (void)read_buf; }, "");
+      [&](const void *read_buf) { (void)read_buf; }, "");
 
   // define trace and trace handler
   Trace trace;

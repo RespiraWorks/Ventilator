@@ -29,9 +29,9 @@ class FnVar32 : public Base {
           const char *help, const char *fmt = "")
       : Base(type, name, access, units, help, fmt), get_fn_(get_fn), set_fn_(set_fn) {}
 
-  void get_value(void *write_buff) override { get_fn_(write_buff); }
-  void set_value(void *read_buf) override { set_fn_(read_buf); }
-  size_t size() const override { return sizeof(uint32_t); }
+  void serialize_value(void *write_buff) override { get_fn_(write_buff); }
+  void deserialize_value(const void *read_buf) override { set_fn_(read_buf); }
+  size_t byte_size() const override { return sizeof(uint32_t); }
 
  private:
   GetFn get_fn_;
@@ -57,12 +57,16 @@ class Primitive32 : public Base {
       : Primitive32(Type::Float, name, access, data, units, help, fmt) {}
 
   // Gets the current value of the variable as an uint32_t.
-  void get_value(void *write_buff) override { std::memcpy(write_buff, address_, size()); }
+  void serialize_value(void *write_buff) override {
+    std::memcpy(write_buff, address_, byte_size());
+  }
 
   // Sets the current value of the variable as an uint32_t.
-  void set_value(void *read_buf) override { std::memcpy(address_, read_buf, size()); }
+  void deserialize_value(const void *read_buf) override {
+    std::memcpy(address_, read_buf, byte_size());
+  }
 
-  size_t size() const override { return 4; }
+  size_t byte_size() const override { return 4; }
 
  private:
   void *address_;
@@ -128,11 +132,15 @@ class FloatArray : public Base {
              const char *help = "", const char *fmt = "%.3f")
       : Base(Type::FloatArray, name, access, units, help, fmt), data(initial) {}
 
-  void get_value(void *write_buff) override { std::memcpy(write_buff, data.data(), size()); }
+  void serialize_value(void *write_buff) override {
+    std::memcpy(write_buff, data.data(), byte_size());
+  }
 
-  void set_value(void *read_buf) override { std::memcpy(data.data(), read_buf, size()); }
+  void deserialize_value(const void *read_buf) override {
+    std::memcpy(data.data(), read_buf, byte_size());
+  }
 
-  size_t size() const override { return 4 * N; }
+  size_t byte_size() const override { return 4 * N; }
 
   std::array<float, N> data;
 };

@@ -102,7 +102,7 @@ class VarInfo:
         ret = f"[{self.id:>02}] {self.size():>2}{type_str} "
         if show_access:
             ret += "w+ " if self.write_access else "w- "
-        ret += f"{self.name:25} {self.units:>13} "
+        ret += f"{self.name:30} {self.units:>13} "
         if show_format:
             format_string = "[" + self.format + "]"
             ret += f"{format_string:>8} "
@@ -129,7 +129,7 @@ class VarInfo:
         write = ""
         if show_access:
             write = "w+ " if self.write_access else "w- "
-        return f"{write}{self.name:25} = {value:>25} {self.units}"
+        return f"{write}{self.name:30} = {value:>25} {self.units}"
 
     # Convert an unsigned 32-bit value into the correct type for
     # this variable

@@ -69,7 +69,8 @@ class TestData:
     platform_uname = None
     tester_name: str = None
     tester_email: str = None
-    git_sha: str = None
+    git_version: str = None
+    git_branch: str = None
     git_dirty: bool = True
     scenario: TestScenario
     ventilator_settings: Dict
@@ -79,7 +80,8 @@ class TestData:
         self.start_time_utc = datetime.utcnow()
         self.platform_uname = platform.uname()
         repo = git.Repo(search_parent_directories=True)
-        self.git_sha = repo.git.describe("--tags")
+        self.git_version = repo.git.describe("--tags")
+        self.git_branch = repo.active_branch.name
         self.git_dirty = repo.is_dirty(untracked_files=True)
         self.tester_name = repo.config_reader().get_value("user", "name")
         self.tester_email = repo.config_reader().get_value("user", "email")
@@ -88,7 +90,7 @@ class TestData:
 
     def unique_name(self):
         return (
-            self.start_time_utc.strftime("%Y-%m-%d-%H-%M-%S")
+            self.start_time_utc.strftime("%Y-%m-%d_%H-%M-%S")
             + "_"
             + self.tester_name.split()[0].lower()
             + "_"
@@ -97,13 +99,13 @@ class TestData:
 
     def __str__(self):
         ret = "Start time (UTC): {}\n".format(
-            self.start_time_utc.strftime("%Y-%m-%d %H:%M:%S")
+            self.start_time_utc.strftime("UTC %Y-%m-%d %H:%M:%S")
         )
         ret += f"Machine info:     {self.platform_uname}\n"
         ret += f"Tester:           {self.tester_name} ({self.tester_email})\n"
-        ret += f"Git sha:          {self.git_sha}"
+        ret += f"Version:          {self.git_version} ({self.git_branch})"
         if self.git_dirty:
-            ret += red(" (DIRTY)")
+            ret += red(" DIRTY")
         ret += "\n"
         ret += "TEST SCENARIO:\n" + self.scenario.long_description()
         if self.ventilator_settings:
@@ -137,7 +139,8 @@ class TestData:
             "platform_uname": self.platform_uname,
             "tester_name": self.tester_name,
             "tester_email": self.tester_email,
-            "git_sha": self.git_sha,
+            "git_version": self.git_version,
+            "git_branch": self.git_branch,
             "git_dirty": self.git_dirty,
             "scenario": self.scenario.as_dict(),
             "ventilator_settings": self.ventilator_settings,
@@ -205,7 +208,8 @@ class TestData:
         td.platform_uname = data["platform_uname"]
         td.tester_name = data["tester_name"]
         td.tester_email = data["tester_email"]
-        td.git_sha = data["git_sha"]
+        td.git_version = data["git_version"]
+        td.git_branch = data["git_branch"]
         td.git_dirty = data["git_dirty"]
         td.ventilator_settings = data["ventilator_settings"]
         for t in data["traces"]:

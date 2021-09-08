@@ -29,25 +29,26 @@ Import("env")
 
 def get_firmware_specifier_build_flag():
     repo = git.Repo(search_parent_directories=True)
-    git_version = repo.git.describe("--tags")
-    git_branch = repo.active_branch.name
-    git_dirty = repo.is_dirty(untracked_files=True)
-    pio_env = env["PIOENV"].upper()
-    build_time_utc = datetime.utcnow().strftime("UTC %Y-%m-%d\\ %H:%M:%S")
-    print(f"git_version: {git_version}")
-    print(f"pio_branch: {git_branch}")
-    print(f"git_dirty: {git_dirty}")
-    print(f"pio_env: {pio_env}")
+    GitVersion = repo.git.describe("--tags")
+    GitBranch = repo.active_branch.name
+    GitDirty = int(repo.is_dirty(untracked_files=True))
+    PioEnv = env["PIOENV"].upper()
+    build_time_utc = datetime.utcnow().strftime("UTC\\ %Y-%m-%d\\ %H:%M:%S")
 
-    version_flag = f'-D GIT_VERSION=\\"{git_version}\\"'
-    branch_flag = f'-D GIT_BRANCH=\\"{git_branch}\\"'
-    dirty_flag = "-D GIT_DIRTY=" + f"{int(git_dirty)}"
-    env_flag = f'-D PIO_ENV=\\"{pio_env}\\"'
+    print(f"GitVersion: {GitVersion}")
+    print(f"pio_branch: {GitBranch}")
+    print(f"GitDirty: {GitDirty}")
+    print(f"PioEnv: {PioEnv}")
+
+    version_flag = f'-D GIT_VERSION=\\"{GitVersion}\\"'
+    branch_flag = f'-D GIT_BRANCH=\\"{GitBranch}\\"'
+    dirty_flag = "-D GIT_DIRTY=" + f"{GitDirty}"
+    env_flag = f'-D PIO_ENV=\\"{PioEnv}\\"'
     time_flag = f'-D BUILD_TIME=\\"{build_time_utc}\\"'
-    return " ".join([version_flag, branch_flag, dirty_flag, env_flag, time_flag])
+    return [version_flag, branch_flag, dirty_flag, env_flag, time_flag]
 
 
 ret = get_firmware_specifier_build_flag()
 print(f"BUILD FLAGS:   {ret}")
 
-env.Append(BUILD_FLAGS=[get_firmware_specifier_build_flag()])
+env.Append(BUILD_FLAGS=ret)

@@ -30,16 +30,16 @@ using DUint32 = Debug::Variable::UInt32;
 using DFloat = Debug::Variable::Float;
 using DAccess = Debug::Variable::Access;
 
-static DEBUG_STRING(dbg_version, "0_controller_version", DAccess::ReadOnly, git_version,
+static DEBUG_STRING(dbg_version, "0_controller_version", DAccess::ReadOnly, GitVersion,
                     "controller version at compile time: git describe --tags");
-static DEBUG_STRING(dbg_git_branch, "0_controller_branch", DAccess::ReadOnly, git_branch,
+static DEBUG_STRING(dbg_git_branch, "0_controller_branch", DAccess::ReadOnly, GitBranch,
                     "controller built from git branch");
 /// \TODO: implement Bool type and use that?
-static DUint32 dbg_git_dirty("0_controller_git_dirty", DAccess::ReadOnly, git_dirty, "bool",
+static DUint32 dbg_git_dirty("0_controller_git_dirty", DAccess::ReadOnly, GitDirty, "bool",
                              "Was code dirty (had uncommitted changes) at time of building?", "%s");
-static DEBUG_STRING(dbg_pio_env, "0_controller_pio_env", DAccess::ReadOnly, pio_env,
+static DEBUG_STRING(dbg_pio_env, "0_controller_pio_env", DAccess::ReadOnly, PioEnv,
                     "platformio environment used for building");
-static DEBUG_STRING(dbg_build_time, "0_controller_build_time", DAccess::ReadOnly, build_time,
+static DEBUG_STRING(dbg_build_time, "0_controller_build_time", DAccess::ReadOnly, BuildTime,
                     "UTC timestamp at time of controller build");
 
 // By default, the controller receives settings (on/off, pip, rr, etc.) from

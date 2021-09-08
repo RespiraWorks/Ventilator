@@ -15,8 +15,8 @@ limitations under the License.
 
 #pragma once
 
-static const char git_version[] = GIT_VERSION;
-static const char git_branch[] = GIT_BRANCH;
-static constexpr bool git_dirty{GIT_DIRTY};
-static const char pio_env[] = PIO_ENV;
-static const char build_time[] = BUILD_TIME;
+static const char GitVersion[] = GIT_VERSION;
+static const char GitBranch[] = GIT_BRANCH;
+static constexpr bool GitDirty{GIT_DIRTY};
+static const char PioEnv[] = PIO_ENV;
+static const char BuildTime[] = BUILD_TIME;

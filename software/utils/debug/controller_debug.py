@@ -29,7 +29,7 @@ from lib.error import Error
 import test_scenario
 from test_data import *
 from pathlib import Path
-from lib.colors import red
+from lib.colors import red, orange
 
 # TODO: Import constants from proto instead!
 
@@ -128,6 +128,59 @@ class ControllerDebugInterface:
                 raise Error(
                     "Could not resynchronize. Serial Exception encountered. Closing port."
                 )
+
+    def sanity_checks(self):
+        # we do this just for the git info
+        test = TestData(test_scenario.TestScenario())
+
+        ctrl_version = self.variable_get("0_controller_version")
+        ctrl_dirty = bool(self.variable_get("0_controller_git_dirty", raw=True))
+        ctrl_branch = self.variable_get("0_controller_branch")
+        version_mismatch = test.git_version != ctrl_version
+        branch_mismatch = test.git_branch != ctrl_branch
+        problem = version_mismatch or branch_mismatch or test.git_dirty or ctrl_dirty
+
+        if not problem:
+            return True
+
+        print(
+            red(
+                "---------------================= WARNING =================---------------"
+            )
+        )
+        print(
+            red(
+                " Potential controller version incompatibility or uncertain provenance "
+            )
+        )
+        if version_mismatch:
+            print(
+                red(
+                    f"    * version mismatch: ctrl=({ctrl_version}) != dbg=({test.git_version})"
+                )
+            )
+        if branch_mismatch:
+            print(
+                red(
+                    f"    * branch mismatch: ctrl=({ctrl_branch}) != dbg=({test.git_branch})"
+                )
+            )
+        if ctrl_dirty:
+            print(red(f"    * controller built from dirty (uncommitted) code"))
+        if test.git_dirty:
+            print(red(f"    * debugger running with dirty (uncommitted) code"))
+        print(
+            red(
+                "---------------================= WARNING =================---------------"
+            )
+        )
+        print(
+            "The above might be a sign of problems. Test results may not be meaningful or"
+            " reproducible."
+        )
+
+        value = input("Are you sure you want to continue (y/Y)?")
+        return value == "y" or value == "Y"
 
     # Read info about all the supported variables and load
     # them in a map
@@ -274,16 +327,8 @@ class ControllerDebugInterface:
 
         test = TestData(self.scenarios[name])
 
-        if test.git_dirty:
-            print(
-                red(
-                    "There are unstaged or uncommitted changes to the code. Saving this"
-                    " data with reference to most recent commit might be misleading."
-                )
-            )
-            value = input("Are you sure you want to continue with this test run? ")
-            if value != "y" and value != "Y":
-                return
+        if not self.sanity_checks():
+            return
 
         self.variables_force_open()
         self.variable_set("forced_mode", "off")
@@ -291,7 +336,11 @@ class ControllerDebugInterface:
 
         # Give the user a chance to adjust the test lung.
         if len(test.scenario.manual_settings):
-            input("\nAdjust manual settings per above, then press enter.\n")
+            input(
+                orange(
+                    "\nAdjust manual settings per above, then press enter to start test.\n"
+                )
+            )
 
         # Apply all vent settings
         print("\n")
@@ -314,6 +363,9 @@ class ControllerDebugInterface:
         test.ventilator_settings = self.variables_get_all(
             access_filter=var_info.VAR_ACCESS_WRITE, raw=True
         )
+        test.ventilator_readings = self.variables_get_all(
+            access_filter=var_info.VAR_ACCESS_READ_ONLY, raw=True
+        )
         self.variable_set("forced_mode", "off")
         return test
 
@@ -335,6 +387,9 @@ class ControllerDebugInterface:
         ]
         test.ventilator_settings = self.variables_get_all(
             access_filter=var_info.VAR_ACCESS_WRITE, raw=True
+        )
+        test.ventilator_readings = self.variables_get_all(
+            access_filter=var_info.VAR_ACCESS_READ_ONLY, raw=True
         )
         return test
 

@@ -24,29 +24,43 @@ limitations under the License.
 #include "nvparams.h"
 #include "sensors.h"
 #include "trace.h"
+#include "version.h"
+
+using DUint32 = Debug::Variable::UInt32;
+using DFloat = Debug::Variable::Float;
+using DAccess = Debug::Variable::Access;
+
+static DEBUG_STRING(dbg_version, "0_controller_version", DAccess::ReadOnly, Version::GitVersion,
+                    "controller version at compile time: git describe --tags");
+static DEBUG_STRING(dbg_git_branch, "0_controller_branch", DAccess::ReadOnly, Version::GitBranch,
+                    "controller built from git branch");
+/// \TODO: implement Bool type and use that?
+static DUint32 dbg_git_dirty("0_controller_git_dirty", DAccess::ReadOnly, Version::GitDirty, "bool",
+                             "Was code dirty (had uncommitted changes) at time of building?", "%s");
+static DEBUG_STRING(dbg_pio_env, "0_controller_pio_env", DAccess::ReadOnly, Version::PioEnv,
+                    "platformio environment used for building");
+static DEBUG_STRING(dbg_build_time, "0_controller_build_time", DAccess::ReadOnly,
+                    Version::BuildTime, "UTC timestamp at time of controller build");
 
 // By default, the controller receives settings (on/off, pip, rr, etc.) from
 // the GUI.  But you can also command the controller by setting the gui_foo
 // DebugVars below.
-static Debug::Variable::UInt32 forced_mode(
-    "forced_mode", Debug::Variable::Access::ReadWrite, _VentMode_MAX + 1, "",
+static DUint32 forced_mode(
+    "forced_mode", DAccess::ReadWrite, _VentMode_MAX + 1, "",
     "Overrides ventilation mode as commanded by GUI; see VentMode enum in network_protocol.proto."
     " If out of range, this and all of the other gui_foo variables are ignored.",
     "%s");
-static Debug::Variable::UInt32 forced_breath_rate(
-    "forced_breath_rate", Debug::Variable::Access::ReadWrite, 15, "breaths/min",
+static DUint32 forced_breath_rate(
+    "forced_breath_rate", DAccess::ReadWrite, 15, "breaths/min",
     "Target breath rate; overrides GUI setting when forced_mode is valid");
-static Debug::Variable::UInt32 forced_peep(
-    "forced_peep", Debug::Variable::Access::ReadWrite, 5, "cmH2O",
-    "Target PEEP; overrides GUI setting when forced_mode is valid");
-static Debug::Variable::UInt32 forced_pip(
-    "forced_pip", Debug::Variable::Access::ReadWrite, 15, "cmH2O",
-    "Target PIP; overrides GUI setting when forced_mode is valid");
-static Debug::Variable::Float forced_ie_ratio(
-    "forced_ie_ratio", Debug::Variable::Access::ReadWrite, 0.66f, "ratio",
-    "Target I:E ratio; overrides GUI setting when forced_mode is valid");
-static Debug::Variable::Float forced_fio2(
-    "forced_fio2", Debug::Variable::Access::ReadWrite, 21, "%",
+static DUint32 forced_peep("forced_peep", DAccess::ReadWrite, 5, "cmH2O",
+                           "Target PEEP; overrides GUI setting when forced_mode is valid");
+static DUint32 forced_pip("forced_pip", DAccess::ReadWrite, 15, "cmH2O",
+                          "Target PIP; overrides GUI setting when forced_mode is valid");
+static DFloat forced_ie_ratio("forced_ie_ratio", DAccess::ReadWrite, 0.66f, "ratio",
+                              "Target I:E ratio; overrides GUI setting when forced_mode is valid");
+static DFloat forced_fio2(
+    "forced_fio2", DAccess::ReadWrite, 21, "%",
     "Target percent oxygen [21, 100]; overrides GUI setting when forced_mode is valid");
 
 static Controller controller;

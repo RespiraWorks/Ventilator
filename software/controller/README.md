@@ -24,14 +24,17 @@ The part of the code specific to the controller resides here.
 * [src](src) - just the main loop for controller
 
 **Files:**
-* [platfomio.ini](platformio.ini) - the equivalent of a "make file" which governs how platformio builds targets
-* [coverage.sh](coverage.sh) - script for generating unit test code coverage reports
 * [controller.sh](controller.sh) - general utility script for:
   * building controller firmware
   * running unit tests
   * running static checks
+  * generating coverage reports locally
   * uploading/deploying firmware
-  * self documented if you run it without parameters...
+  * shortcut to [debug interface](../utils/debug)
+  * self documented if you run it without parameters or with `--help`
+* [platfomio.ini](platformio.ini) - the equivalent of a "make file" which governs how platformio builds targets
+* [.ycm_extra_conf.py](.ycm_extra_conf.py) - configuration for
+  [YouCompleteMe](https://github.com/ycm-core/YouCompleteMe) (for some IDEs)
 
 ## Development toolchain
 
@@ -66,7 +69,7 @@ but platformio will just say all checks have passed without giving an error if i
 After installing platformio, you should be able to build and test as follows:
 
 ```
-$ ./controller.sh --test
+$ ./controller.sh test
 # This will run a few commands, such as "platformio run" and
 # "platformio test -e native".
 ```
@@ -112,7 +115,7 @@ Now you can build and upload to the device.
 $ pio run -t upload
 ```
 
-A more convenient way to run is to use the `./controller.sh --run`. If you have multiple Nucleos that you
+A more convenient way to run is to use the `./controller.sh run`. If you have multiple Nucleos that you
 want to deploy to, you should consult the [platformio configuration guide](platformio).
 
 ### USB permission problems

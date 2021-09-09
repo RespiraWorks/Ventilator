@@ -8,16 +8,11 @@ into the ventilator unit.
 
 Scripts for doing so are available under [rpi_config](rpi_config).
 
-## controller_debug
+## controller debug client
 
-[controller_debug.sh](controller_debug.sh)
+[/debug](debug) subdirectory contains a set of Python scripts that talk to the controller via the virtual serial port that is created when you plug a USB cable into the controller's debug port. The command line interface allows you to examine and directly manipulate a number of low level variables, as well as run calibration routines and automated performance tests.
 
-This is a convenience link to the controller debug interface.
-
-This Python script can be used to interface with the controller via the virtual serial port that is created when you plug a USB cable into the controller's debug port. The command line interface allows you to examine and directly manipulate a number of low level variables, as well as run calibration routines and automated performance tests.
-
-There is a brief tutorial on how to use it right next to the python code in the
-[/debug](debug) subdirectory.
+There is a brief tutorial on how to use it right next to the python code in the [/debug](debug) subdirectory. Script can also be accessed via the common controller utilities script at [software/controller/controller.sh](../controller/controller.sh).
 
 ## decoder
 

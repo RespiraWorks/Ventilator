@@ -30,6 +30,9 @@ cd "$(dirname "$0")"
 EXIT_FAILURE=1
 EXIT_SUCCESS=0
 
+COVERAGE_ENVIRONMENT=native
+COVERAGE_OUTPUT_DIR=coverage_reports
+
 # Check if Linux
 PLATFORM="$(uname -s)"
 if [ $PLATFORM != "Linux" ]; then
@@ -50,7 +53,9 @@ The following options are provided:
   --clean       Clean build directories
   --check       Runs static checks only
   --test        Builds and runs all tests locally
-    [--no-checks]     - do not run static checks (yes, it's to annoy you!)
+    [--no-checks]   - do not run static checks (yes, it's to annoy you!)
+    [--no-integ]    - do not build integration tests (yes, it's to annoy you!)
+    [--cov]         - generate coverage reports locally
   --run         Builds and deploys firmware to controller
                 There can be only one connected. Otherwise, use the platformio/deploy.sh script manually.
 EOF
@@ -100,6 +105,25 @@ run_integration_tests() {
   INTEGRATION_TEST_H=eeprom_test.h pio run -e integration-test
 }
 
+generate_coverage_reports() {
+  SRC_DIR=".pio/build/$COVERAGE_ENVIRONMENT"
+
+  # delete the old report as "safely" as possible
+  find "$COVERAGE_OUTPUT_DIR" -name "*.html" -delete || true
+  mkdir -p "$COVERAGE_OUTPUT_DIR"
+  lcov --directory "$SRC_DIR" --capture --output-file "$COVERAGE_OUTPUT_DIR/$COVERAGE_ENVIRONMENT.info"
+
+  # the file "output_export.cpp" causes an lcov error, but it doesn't appear to be part of our source, so I'm excluding it
+  lcov -r "$COVERAGE_OUTPUT_DIR/$COVERAGE_ENVIRONMENT.info" --output-file "$COVERAGE_OUTPUT_DIR/${COVERAGE_ENVIRONMENT}_trimmed.info" \
+      "*output_export.c*" \
+      "*.pio/libdeps/*" \
+      "*_test_transport.c" \
+      "/usr/include*"
+  genhtml "$COVERAGE_OUTPUT_DIR/${COVERAGE_ENVIRONMENT}_trimmed.info" --output-directory "$COVERAGE_OUTPUT_DIR"
+
+  echo "Coverage report generated. Open '$COVERAGE_OUTPUT_DIR/index.html' in a browser to view it."
+}
+
 ########
 # HELP #
 ########
@@ -140,6 +164,7 @@ fi
 
 if [ "$1" == "--clean" ]; then
   clean_dir .pio
+  clean_dir $COVERAGE_OUTPUT_DIR
   exit $EXIT_SUCCESS
 fi
 
@@ -160,12 +185,20 @@ if [ "$1" == "--test" ]; then
   # Controller unit tests on native.
   pio test -e native
 
-  run_integration_tests
+  if [ "$2" == "--cov" ] || [ "$3" == "--cov" ] || [ "$4" == "--cov" ]; then
+    generate_coverage_reports
+  fi
+
+  if [ "$2" != "--no-integ" ] && [ "$3" != "--no-integ" ] && [ "$4" != "--no-integ" ]; then
+    run_integration_tests
+  else
+    echo "Skipping integration test build."
+  fi
 
   # Make sure controller builds for target platform.
   pio run -e stm32
 
-  if [ "$2" != "--no-checks" ]; then
+  if [ "$2" != "--no-checks" ] && [ "$3" != "--no-checks" ] && [ "$4" != "--no-checks" ]; then
     run_checks
   else
     echo "Skipping static checks."

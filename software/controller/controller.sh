@@ -67,19 +67,19 @@ Utility script for the RespiraWorks Ventilator controller.
 
 The following options are available:
   install   Installs platformio and configures udev rules for deployment
-                [-f] - force installation even with root privileges (for CI only)
+                [-f] - force installation, even with root privileges (for CI only)
   check     Runs static checks only
   clean     Clean build directories
   debug     Run debugger CLI (Python utility) to communicate with controller remotely
   run       Builds and deploys firmware to controller
-                There can be only one connected. Otherwise, use the platformio/deploy.sh script manually.
+            There can be only one connected. Otherwise, use the platformio/deploy.sh script manually.
+                [-f] - force run, even with root privileges
   test      Builds and runs all unit tests, integration tests, static checks, generates coverage
                 [--no-checks] - do not run static checks (for CI)
-                [--no-cov]    - do not generate coverage reports locally (for CI)
+                [--cov]       - generate coverage reports
   unit      Builds and runs unit tests only (and generates coverage reports)
                 <name>  - run specific unit test, may include wildcards, i.e. 'debug*'
-
-  --help/-h Display this help info
+  help/-h   Display this help info
 EOF
 }
 
@@ -179,7 +179,7 @@ launch_browser() {
 # HELP #
 ########
 
-if [ "$1" == "--help" ] || [ "$1" == "-h" ]; then
+if [ "$1" == "help" ] || [ "$1" == "-h" ]; then
   print_help
   exit $EXIT_SUCCESS
 
@@ -247,10 +247,8 @@ elif [ "$1" == "test" ]; then
     echo "Skipping static checks."
   fi
 
-  if [ "$2" != "--no-cov" ] && [ "$3" != "--no-cov" ]; then
+  if [ "$2" == "--cov" ] || [ "$3" == "--cov" ]; then
     generate_coverage_reports
-  else
-    echo "Skipping coverage reports."
   fi
 
   exit $EXIT_SUCCESS

@@ -4,8 +4,8 @@ This library adds a simple serial interface primarily intended to be used
 for system debugging.  This entire library can be compiled out of the
 production system. **#TODO** How?
 
-The interface can be accessed via a script located at
-[software/utils/controller_debug.sh](../../../utils/controller_debug.sh)
+The Python CLI interface can be accessed via the common controller utilities script at
+[software/controller/controller.sh](../../controller.sh)
 
 There is also a [brief tutorial](../../../utils/debug) on how to use it.
 

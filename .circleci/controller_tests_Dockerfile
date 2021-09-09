@@ -18,4 +18,4 @@ CMD /bin/bash \
     curl https://codecov.io/bash > codecov_uploader.sh && \
     chmod +x codecov_uploader.sh && \
     cat codecov_uploader.sh && \
-    ./codecov_uploader.sh -v -F controller
+    ./codecov_uploader.sh -F controller

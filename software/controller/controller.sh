@@ -171,6 +171,10 @@ generate_coverage_reports() {
   echo "Coverage report generated. Open '$COVERAGE_OUTPUT_DIR/index.html' in a browser to view it."
 }
 
+launch_browser() {
+  python -m webbrowser ${COVERAGE_OUTPUT_DIR}/index.html
+}
+
 ########
 # HELP #
 ########
@@ -204,9 +208,9 @@ elif [ "$1" == "check" ]; then
   run_checks
   exit $EXIT_SUCCESS
 
-########
-# TEST #
-########
+#############
+# UNIT TEST #
+#############
 elif [ "$1" == "unit" ]; then
   clean_all
 
@@ -237,16 +241,16 @@ elif [ "$1" == "test" ]; then
   clean_all
   pio test -e native
 
-  if [ "$2" != "--no-cov" ] && [ "$3" != "--no-cov" ]; then
-    generate_coverage_reports
-  else
-    echo "Skipping coverage reports."
-  fi
-
   if [ "$2" != "--no-checks" ] && [ "$3" != "--no-checks" ]; then
     run_checks
   else
     echo "Skipping static checks."
+  fi
+
+  if [ "$2" != "--no-cov" ] && [ "$3" != "--no-cov" ]; then
+    generate_coverage_reports
+  else
+    echo "Skipping coverage reports."
   fi
 
   exit $EXIT_SUCCESS

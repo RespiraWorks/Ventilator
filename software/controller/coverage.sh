@@ -31,6 +31,7 @@ lcov --directory "$SRC_DIR" --capture --output-file "$OUTPUT_DIR/$ENVIRONMENT.in
 lcov -r "$OUTPUT_DIR/$ENVIRONMENT.info" --output-file "$OUTPUT_DIR/${ENVIRONMENT}_trimmed.info" \
     "*output_export.c*" \
     "*.pio/libdeps/*" \
+    "*_test_transport.c" \
     "/usr/include*"
 genhtml "$OUTPUT_DIR/${ENVIRONMENT}_trimmed.info" --output-directory "$OUTPUT_DIR"
 

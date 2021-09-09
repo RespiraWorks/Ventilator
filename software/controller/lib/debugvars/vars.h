@@ -158,11 +158,15 @@ class String : public Base {
     set(initial, size);
   }
 
-  void get_value(void *write_buff) override { std::memcpy(write_buff, data.data(), size()); }
+  void serialize_value(void *write_buff) override {
+    std::memcpy(write_buff, data.data(), byte_size());
+  }
 
-  void set_value(void *read_buf) override { std::memcpy(data.data(), read_buf, size()); }
+  void deserialize_value(const void *read_buf) override {
+    std::memcpy(data.data(), read_buf, byte_size());
+  }
 
-  size_t size() const override { return N; }
+  size_t byte_size() const override { return N; }
 
   void set(const char *new_value, size_t size) {
     size = std::min(size, N);

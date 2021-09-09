@@ -111,7 +111,7 @@ TEST(DebugVar, FloatArray) {
 
 TEST(DebugVar, String) {
   String<3> s3("fa3", Access::ReadOnly);
-  EXPECT_EQ(s3.size(), 3);
+  EXPECT_EQ(s3.byte_size(), 3);
   s3.data[0] = 'a';
   s3.data[1] = 'b';
   s3.data[2] = 'c';
@@ -128,7 +128,7 @@ TEST(DebugVar, String) {
   EXPECT_STREQ(str2, s4.get());
 
   DEBUG_STRING(str_auto, "str_auto", Access::ReadOnly, "auto", "auto help");
-  EXPECT_EQ(8, str_auto.size());
+  EXPECT_EQ(8, str_auto.byte_size());
   EXPECT_STREQ("auto", str_auto.get());
   EXPECT_STREQ("str_auto", str_auto.name());
   EXPECT_STREQ("auto help", str_auto.help());

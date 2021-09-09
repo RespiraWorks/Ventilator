@@ -69,7 +69,7 @@ but platformio will just say all checks have passed without giving an error if i
 After installing platformio, you should be able to build and test as follows:
 
 ```
-$ ./controller.sh --test
+$ ./controller.sh test
 # This will run a few commands, such as "platformio run" and
 # "platformio test -e native".
 ```
@@ -115,7 +115,7 @@ Now you can build and upload to the device.
 $ pio run -t upload
 ```
 
-A more convenient way to run is to use the `./controller.sh --run`. If you have multiple Nucleos that you
+A more convenient way to run is to use the `./controller.sh run`. If you have multiple Nucleos that you
 want to deploy to, you should consult the [platformio configuration guide](platformio).
 
 ### USB permission problems

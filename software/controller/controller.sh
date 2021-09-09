@@ -1,12 +1,27 @@
 #!/bin/bash
 
+# Copyright 2020-2021, RespiraWorks
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+
 # This script is designed for local unix usage.
-# ./controller.sh --help
+# ./controller.sh help
 
 # Use this script during development to have a good approximation
 # of whether your PR will pass tests on CircleCI:
 #
-# $ ./controller.sh --test
+# $ ./controller.sh test
 #
 # CircleCI runs this script (via .circleci/config.yml), but might have some
 # environment differences, so the approximation is not perfect. For
@@ -15,20 +30,25 @@
 # Feel free to add more checks here, but keep in mind that:
 # - They have to pass on CircleCI
 # - They have to have a very good chance of passing for other
-#   developers if they run via ./controller.sh --test
+#   developers if they run via ./controller.sh test
 
 # Fail if any command fails
 set -e
 set -o pipefail
 
 # Print each command as it executes
-set -o xtrace
+if [ -n "$VERBOSE" ]; then
+  set -o xtrace
+fi
 
 # This script should work no matter where you call it from.
 cd "$(dirname "$0")"
 
 EXIT_FAILURE=1
 EXIT_SUCCESS=0
+
+COVERAGE_ENVIRONMENT=native
+COVERAGE_OUTPUT_DIR=coverage_reports
 
 # Check if Linux
 PLATFORM="$(uname -s)"
@@ -43,16 +63,23 @@ fi
 
 print_help() {
     cat <<EOF
-RespiraWorks controller build utilities. Will build and run most tests. Will also build embedded controller code.
-The following options are provided:
-  --help        Display this dialog
-  --install     Install platformio and configure udev rules for deployment
-  --clean       Clean build directories
-  --check       Runs static checks only
-  --test        Builds and runs all tests locally
-    [--no-checks]     - do not run static checks (yes, it's to annoy you!)
-  --run         Builds and deploys firmware to controller
-                There can be only one connected. Otherwise, use the platformio/deploy.sh script manually.
+Utility script for the RespiraWorks Ventilator controller.
+
+The following options are available:
+  install   Installs platformio and configures udev rules for deployment
+                [-f] - force installation, even with root privileges (for CI only)
+  check     Runs static checks only
+  clean     Clean build directories
+  debug     Run debugger CLI (Python utility) to communicate with controller remotely
+  run       Builds and deploys firmware to controller
+            There can be only one connected. Otherwise, use the platformio/deploy.sh script manually.
+                [-f] - force run, even with root privileges
+  test      Builds and runs all unit tests, integration tests, static checks, generates coverage
+                [--no-checks] - do not run static checks (for CI)
+                [--cov]       - generate coverage reports
+  unit      Builds and runs unit tests only (and generates coverage reports)
+                <name>  - run specific unit test, may include wildcards, i.e. 'debug*'
+  help/-h   Display this help info
 EOF
 }
 
@@ -66,6 +93,27 @@ clean_dir() {
     echo "File with this name already exists, not a directory."
     return 1
   fi
+}
+
+clean_all() {
+  clean_dir .pio
+  clean_dir $COVERAGE_OUTPUT_DIR
+}
+
+configure_platformio() {
+    pushd "$HOME"
+    python3 -c "$(curl -fsSL https://raw.githubusercontent.com/platformio/platformio/master/scripts/get-platformio.py)"
+    echo 'export PATH=$PATH:~/.platformio/penv/bin' >> ~/.profile
+    popd
+
+    curl -fsSL https://raw.githubusercontent.com/platformio/platformio-core/master/scripts/99-platformio-udev.rules | sudo tee /etc/udev/rules.d/99-platformio-udev.rules
+    sudo service udev restart
+    sudo usermod -a -G dialout "$USER"
+    sudo usermod -a -G plugdev "$USER"
+
+    echo "Updated udev rules. You might have to restart your machine for changes to become effective."
+
+    exit $EXIT_SUCCESS
 }
 
 run_checks() {
@@ -100,85 +148,115 @@ run_integration_tests() {
   INTEGRATION_TEST_H=eeprom_test.h pio run -e integration-test
 }
 
+generate_coverage_reports() {
+  SRC_DIR=".pio/build/$COVERAGE_ENVIRONMENT"
+
+  # delete the old report as "safely" as possible
+  find "$COVERAGE_OUTPUT_DIR" -name "*.html" -delete || true
+  mkdir -p "$COVERAGE_OUTPUT_DIR"
+  lcov --directory "$SRC_DIR" --capture \
+       --output-file "$COVERAGE_OUTPUT_DIR/$COVERAGE_ENVIRONMENT.info"
+
+  # the file "output_export.cpp" causes an lcov error,
+  # but it doesn't appear to be part of our source, so we're excluding it
+  lcov -r "$COVERAGE_OUTPUT_DIR/$COVERAGE_ENVIRONMENT.info" \
+      --output-file "$COVERAGE_OUTPUT_DIR/${COVERAGE_ENVIRONMENT}_trimmed.info" \
+      "*output_export.c*" \
+      "*.pio/libdeps/*" \
+      "*_test_transport.c" \
+      "/usr/include*"
+  genhtml "$COVERAGE_OUTPUT_DIR/${COVERAGE_ENVIRONMENT}_trimmed.info" \
+      --output-directory "$COVERAGE_OUTPUT_DIR"
+
+  echo "Coverage report generated. Open '$COVERAGE_OUTPUT_DIR/index.html' in a browser to view it."
+}
+
+launch_browser() {
+  python -m webbrowser ${COVERAGE_OUTPUT_DIR}/index.html
+}
+
 ########
 # HELP #
 ########
 
-if [ "$1" == "--help" ]; then
+if [ "$1" == "help" ] || [ "$1" == "-h" ]; then
   print_help
   exit $EXIT_SUCCESS
-fi
 
 ###########
 # INSTALL #
 ###########
-
-if [ "$1" == "--install" ]; then
+elif [ "$1" == "install" ]; then
   if [ "$EUID" -eq 0 ] && [ "$2" != "-f" ]; then
     echo "Please do not run install with root privileges!"
     exit $EXIT_SUCCESS
   fi
 
-  pushd "$HOME"
-  python3 -c "$(curl -fsSL https://raw.githubusercontent.com/platformio/platformio/master/scripts/get-platformio.py)"
-  echo 'export PATH=$PATH:~/.platformio/penv/bin' >> ~/.profile
-  popd
-
-  curl -fsSL https://raw.githubusercontent.com/platformio/platformio-core/master/scripts/99-platformio-udev.rules | sudo tee /etc/udev/rules.d/99-platformio-udev.rules
-  sudo service udev restart
-  sudo usermod -a -G dialout "$USER"
-  sudo usermod -a -G plugdev "$USER"
-
-  echo "Updated udev rules. You might have to restart your machine for changes to become effective."
-
-  exit $EXIT_SUCCESS
-fi
+  configure_platformio
 
 #########
 # CLEAN #
 #########
-
-if [ "$1" == "--clean" ]; then
-  clean_dir .pio
+elif [ "$1" == "clean" ]; then
+  clean_all
   exit $EXIT_SUCCESS
-fi
 
 #########
 # CHECK #
 #########
-
-if [ "$1" == "--check" ]; then
+elif [ "$1" == "check" ]; then
   run_checks
   exit $EXIT_SUCCESS
-fi
 
-########
-# TEST #
-########
+#############
+# UNIT TEST #
+#############
+elif [ "$1" == "unit" ]; then
+  clean_all
 
-if [ "$1" == "--test" ]; then
-  # Controller unit tests on native.
-  pio test -e native
+  if [ -n "$2" ]; then
+    pio test -e native -f "$2"
+  else
+    pio test -e native
+  fi
 
-  run_integration_tests
+  generate_coverage_reports
 
-  # Make sure controller builds for target platform.
+  exit $EXIT_SUCCESS
+
+############
+# TEST ALL #
+############
+elif [ "$1" == "test" ]; then
+  clean_all
+
+  # Make sure controller builds for target platform
   pio run -e stm32
 
-  if [ "$2" != "--no-checks" ]; then
+  # Make sure integration tests build
+  run_integration_tests
+
+  # Controller unit tests on native
+  # This must be the last thing built
+  clean_all
+  pio test -e native
+
+  if [ "$2" != "--no-checks" ] && [ "$3" != "--no-checks" ]; then
     run_checks
   else
     echo "Skipping static checks."
   fi
 
+  if [ "$2" == "--cov" ] || [ "$3" == "--cov" ]; then
+    generate_coverage_reports
+  fi
+
   exit $EXIT_SUCCESS
-fi
 
 #######
 # RUN #
 #######
-
-if [ "$1" == "--run" ]; then
+elif [ "$1" == "run" ]; then
 
   if [ "$EUID" -eq 0 ] && [ "$2" != "-f" ]; then
     echo "Please do not run the app with root privileges!"
@@ -188,6 +266,23 @@ if [ "$1" == "--run" ]; then
   platformio/deploy.sh stm32
 
   exit $EXIT_SUCCESS
-fi
 
-}
+#########
+# DEBUG #
+#########
+elif [ "$1" == "debug" ]; then
+
+  shift
+  ../utils/debug/debug_cli.py "$@"
+
+  exit $EXIT_SUCCESS
+
+################
+# ERROR & HELP #
+################
+else
+  echo "ERROR: Bad command or insufficient parameters!"
+  echo
+  print_help
+  exit $EXIT_FAILURE
+fi

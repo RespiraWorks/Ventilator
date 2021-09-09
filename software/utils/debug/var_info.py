@@ -32,8 +32,9 @@ VAR_INT32 = 1
 VAR_UINT32 = 2
 VAR_FLOAT = 3
 VAR_FLOAT_ARRAY = 4
+VAR_STRING = 5
 
-VAR_TYPE_REPRESENTATION = ["?", "i", "u", "f", "A"]
+VAR_TYPE_REPRESENTATION = ["?", "i", "u", "f", "A", "S"]
 
 VAR_ACCESS_READ_ONLY = 0
 VAR_ACCESS_WRITE = 1
@@ -60,7 +61,10 @@ class VarInfo:
     help: str
 
     def size(self):
-        return int(self.byte_size / 4)
+        if self.type == VAR_STRING:
+            return self.byte_size
+        else:
+            return int(self.byte_size / 4)
 
     # Initialize the variable info from the data returned
     # by the controller.  Set var.cpp in the controller for
@@ -98,7 +102,7 @@ class VarInfo:
         ret = f"[{self.id:>02}] {self.size():>2}{type_str} "
         if show_access:
             ret += "w+ " if self.write_access else "w- "
-        ret += f"{self.name:25} {self.units:>13} "
+        ret += f"{self.name:30} {self.units:>13} "
         if show_format:
             format_string = "[" + self.format + "]"
             ret += f"{format_string:>8} "
@@ -115,6 +119,9 @@ class VarInfo:
 
         if self.type == VAR_FLOAT_ARRAY:
             return "[" + " ".join(fmt % k for k in value) + "]"
+        elif self.type == VAR_STRING:
+            # TODO: may not need this once we have generated protocol and no trailing zeros
+            return value.rstrip("\00")
         else:
             return fmt % value
 
@@ -122,7 +129,7 @@ class VarInfo:
         write = ""
         if show_access:
             write = "w+ " if self.write_access else "w- "
-        return f"{write}{self.name:25} = {value:>25} {self.units}"
+        return f"{write}{self.name:30} = {value:>25} {self.units}"
 
     # Convert an unsigned 32-bit value into the correct type for
     # this variable
@@ -150,6 +157,8 @@ class VarInfo:
             return debug_types.bytes_to_float32s(data)[0]
         elif self.type == VAR_FLOAT_ARRAY:
             return debug_types.bytes_to_float32s(data)
+        elif self.type == VAR_STRING:
+            return bytes(data).decode("ascii")
         else:
             raise Error(f"Sorry, I don't know how to handle variable type {self.type}")
 

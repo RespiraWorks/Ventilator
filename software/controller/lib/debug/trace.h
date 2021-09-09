@@ -54,7 +54,7 @@ class Trace {
   uint32_t period() const;
 
   /// \param period number of cycles that Trace should wait before sampling variables
-  void set_period(const uint32_t period);
+  void set_period(uint32_t period);
 
   /// \brief Called fromm looping function. It may capture data if cycle count has been reached.
   /// \post If cycle count was reached, the cycle counter will be reset.

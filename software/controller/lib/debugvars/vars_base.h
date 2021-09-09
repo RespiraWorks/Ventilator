@@ -27,6 +27,7 @@ enum class Type {
   UInt32 = 2,
   Float = 3,
   FloatArray = 4,
+  String = 5,
 };
 
 // Defines the possible access to variable

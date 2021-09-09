@@ -36,8 +36,8 @@ fi
 
 git pull
 
-./controller/controller.sh --clean
-./controller/controller.sh --run
+./controller/controller.sh clean
+./controller/controller.sh run
 
 ./gui/gui.sh --build --release --no-checks
 

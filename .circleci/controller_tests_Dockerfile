@@ -5,15 +5,15 @@ FROM debian:buster
 RUN apt-get update && \
     apt-get install build-essential python3-pip lcov git curl libtinfo5 -y && \
     pip3 install -U pip && \
-    pip3 install platformio codecov && \
+    pip3 install platformio codecov gitpython && \
     platformio update && \
     platformio platform install native
 
 WORKDIR /root/Ventilator
 COPY . ./
+ENV VERBOSE=1
 CMD /bin/bash \
-    software/controller/controller.sh --test && \
-    software/controller/coverage.sh && \
+    software/controller/controller.sh test --no-checks && \
     cd software/controller && \
     curl https://codecov.io/bash > codecov_uploader.sh && \
     chmod +x codecov_uploader.sh && \

@@ -118,7 +118,7 @@ class CmdLine(cmd.Cmd):
         if mode == MODE_BOOT:
             self.prompt = orange(f"{self.interface.serial_port.port}:boot] ")
         else:
-            sn = self.interface.variable_get("serial_number", raw=True)
+            sn = self.interface.variable_get("0_ventilator_serial_number", raw=True)
             if sn > 0:
                 self.prompt = green(f"sn-{sn}] ")
             else:
@@ -130,6 +130,8 @@ class CmdLine(cmd.Cmd):
             self.interface.resynchronize()
             self.interface.variables_update_info()
         self.update_prompt()
+        if not self.interface.sanity_checks():
+            return
 
         while True:
             try:

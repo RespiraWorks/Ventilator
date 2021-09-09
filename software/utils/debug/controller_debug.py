@@ -145,7 +145,7 @@ class ControllerDebugInterface:
 
         print(
             red(
-                "--------------=============== WARNING =================---------------"
+                "---------------================= WARNING =================---------------"
             )
         )
         print(
@@ -171,11 +171,12 @@ class ControllerDebugInterface:
             print(red(f"    * debugger running with dirty (uncommitted) code"))
         print(
             red(
-                "--------------=============== WARNING =================---------------"
+                "---------------================= WARNING =================---------------"
             )
         )
         print(
-            "The above might be a sign of problems. Test results may not be meaningful."
+            "The above might be a sign of problems. Test results may not be meaningful or"
+            " reproducible."
         )
 
         value = input("Are you sure you want to continue (y/Y)?")

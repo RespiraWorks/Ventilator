@@ -66,18 +66,20 @@ print_help() {
 Utility script for the RespiraWorks Ventilator controller.
 
 The following options are available:
-  install     Install platformio and configure udev rules for deployment
-    [-f]            - force installation even with root privileges (for CI only)
-  clean       Clean build directories
-  check       Runs static checks only
-  test        Builds and runs all tests locally
-    [--no-checks]   - do not run static checks (yes, it's to annoy you!)
-    [--no-integ]    - do not build integration tests (yes, it's to annoy you!)
-    [--cov]         - generate coverage reports locally
-  run         Builds and deploys firmware to controller
+  install   Installs platformio and configures udev rules for deployment
+                [-f] - force installation even with root privileges (for CI only)
+  check     Runs static checks only
+  clean     Clean build directories
+  debug     Run debugger CLI (Python utility) to communicate with controller remotely
+  run       Builds and deploys firmware to controller
                 There can be only one connected. Otherwise, use the platformio/deploy.sh script manually.
-  debug       Run debugger CLI (Python utility) to communicate with controller remotely
-  --help/-h   Display this dialog
+  test      Builds and runs all unit tests, integration tests, static checks, generates coverage
+                [--no-checks] - do not run static checks (for CI)
+                [--no-cov]    - do not generate coverage reports locally (for CI)
+  unit      Builds and runs unit tests only (and generates coverage reports)
+                <name>  - run specific unit test, may include wildcards, i.e. 'debug*'
+
+  --help/-h Display this help info
 EOF
 }
 
@@ -91,6 +93,11 @@ clean_dir() {
     echo "File with this name already exists, not a directory."
     return 1
   fi
+}
+
+clean_all() {
+  clean_dir .pio
+  clean_dir $COVERAGE_OUTPUT_DIR
 }
 
 configure_platformio() {
@@ -187,8 +194,7 @@ elif [ "$1" == "install" ]; then
 # CLEAN #
 #########
 elif [ "$1" == "clean" ]; then
-  clean_dir .pio
-  clean_dir $COVERAGE_OUTPUT_DIR
+  clean_all
   exit $EXIT_SUCCESS
 
 #########
@@ -201,24 +207,43 @@ elif [ "$1" == "check" ]; then
 ########
 # TEST #
 ########
-elif [ "$1" == "test" ]; then
-  # Controller unit tests on native.
-  pio test -e native
+elif [ "$1" == "unit" ]; then
+  clean_all
 
-  if [ "$2" == "--cov" ] || [ "$3" == "--cov" ] || [ "$4" == "--cov" ]; then
-    generate_coverage_reports
-  fi
-
-  if [ "$2" != "--no-integ" ] && [ "$3" != "--no-integ" ] && [ "$4" != "--no-integ" ]; then
-    run_integration_tests
+  if [ -n "$2" ]; then
+    pio test -e native -f "$2"
   else
-    echo "Skipping integration test build."
+    pio test -e native
   fi
 
-  # Make sure controller builds for target platform.
+  generate_coverage_reports
+
+  exit $EXIT_SUCCESS
+
+############
+# TEST ALL #
+############
+elif [ "$1" == "test" ]; then
+  clean_all
+
+  # Make sure controller builds for target platform
   pio run -e stm32
 
-  if [ "$2" != "--no-checks" ] && [ "$3" != "--no-checks" ] && [ "$4" != "--no-checks" ]; then
+  # Make sure integration tests build
+  run_integration_tests
+
+  # Controller unit tests on native
+  # This must be the last thing built
+  clean_all
+  pio test -e native
+
+  if [ "$2" != "--no-cov" ] && [ "$3" != "--no-cov" ]; then
+    generate_coverage_reports
+  else
+    echo "Skipping coverage reports."
+  fi
+
+  if [ "$2" != "--no-checks" ] && [ "$3" != "--no-checks" ]; then
     run_checks
   else
     echo "Skipping static checks."

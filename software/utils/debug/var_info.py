@@ -25,12 +25,15 @@ from lib.error import Error
 
 # TODO: Import constants from proto instead!
 
+VAR_INVALID_ID = 100
+
 # Variable types (see vars.h)
 VAR_INT32 = 1
 VAR_UINT32 = 2
 VAR_FLOAT = 3
+VAR_FLOAT_ARRAY = 4
 
-VAR_TYPE_REPRESENTATION = ["?", "i", "u", "f"]
+VAR_TYPE_REPRESENTATION = ["?", "i", "u", "f", "A"]
 
 VAR_ACCESS_READ_ONLY = 0
 VAR_ACCESS_WRITE = 1
@@ -50,10 +53,14 @@ class VarInfo:
     id: int
     type: int
     write_access: bool
+    byte_size: int
     name: str
     units: str = ""
     format: str
     help: str
+
+    def size(self):
+        return int(self.byte_size / 4)
 
     # Initialize the variable info from the data returned
     # by the controller.  Set var.cpp in the controller for
@@ -66,6 +73,7 @@ class VarInfo:
 
         self.type = data[0]
         self.write_access = data[1] == VAR_ACCESS_WRITE
+        self.byte_size = data[2]
         name_length = data[4]
         fmt_length = data[5]
         help_length = data[6]
@@ -87,7 +95,7 @@ class VarInfo:
         type_str = "?"
         if self.type < len(VAR_TYPE_REPRESENTATION):
             type_str = VAR_TYPE_REPRESENTATION[self.type]
-        ret = f"[{self.id:>02}{type_str}] "
+        ret = f"[{self.id:>02}] {self.size():>2}{type_str} "
         if show_access:
             ret += "w+ " if self.write_access else "w- "
         ret += f"{self.name:25} {self.units:>13} "
@@ -96,6 +104,19 @@ class VarInfo:
             ret += f"{format_string:>8} "
         ret += f" {self.help}"
         return ret
+
+    def format_value(self, value, raw=False, fmt=None):
+        if raw:
+            return value
+
+        # If a format wasn't passed, use the default for this var
+        if fmt is None:
+            fmt = self.format
+
+        if self.type == VAR_FLOAT_ARRAY:
+            return "[" + " ".join(fmt % k for k in value) + "]"
+        else:
+            return fmt % value
 
     def print_value(self, value, show_access=True):
         write = ""
@@ -127,6 +148,8 @@ class VarInfo:
             return debug_types.bytes_to_int32s(data)[0]
         elif self.type == VAR_FLOAT:
             return debug_types.bytes_to_float32s(data)[0]
+        elif self.type == VAR_FLOAT_ARRAY:
+            return debug_types.bytes_to_float32s(data)
         else:
             raise Error(f"Sorry, I don't know how to handle variable type {self.type}")
 
@@ -146,5 +169,12 @@ class VarInfo:
             return debug_types.int32s_to_bytes(value)
         elif self.type == VAR_FLOAT:
             return debug_types.float32s_to_bytes(float(value))
+        elif self.type == VAR_FLOAT_ARRAY:
+            float_array = [float(k) for k in value]
+            if len(float_array) != self.size():
+                raise Error(
+                    f"FloatArray size mismatch. Should be {self.size()}, was {len(float_array)}"
+                )
+            return debug_types.float32s_to_bytes(float_array)
         else:
             raise Error(f"Sorry, I don't know how to handle variable type {self.type}")

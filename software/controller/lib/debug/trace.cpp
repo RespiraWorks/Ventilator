@@ -17,22 +17,30 @@ limitations under the License.
 
 namespace Debug {
 
-// (Re-)Start the trace
-void Trace::Start() {
+bool Trace::running() const { return running_; }
+
+// (Re-)start the trace
+void Trace::start() {
   if (!running_) {
     trace_buffer_.Flush();
   }
   running_ = true;
 }
 
+void Trace::stop() { running_ = false; }
+
+uint32_t Trace::period() const { return period_; }
+
+void Trace::set_period(const uint32_t period) { period_ = period; }
+
 // Sample all trace variables every "period" calls
-void Trace::MaybeSample() {
+void Trace::maybe_sample() {
   if (!running_) return;
 
   if (cycles_count_ == 0) {
-    if (!SampleAllVars()) {
+    if (!sample_all_variables()) {
       // Trace buffer is full, stop tracing.
-      Stop();
+      stop();
     }
   }
 
@@ -40,30 +48,46 @@ void Trace::MaybeSample() {
   if (cycles_count_ >= period_) cycles_count_ = 0;
 }
 
-bool Trace::SetTracedVarId(uint8_t index, uint16_t id) {
-  if (index >= MaxTraceVars) {
+void Trace::flush() { trace_buffer_.Flush(); }
+
+size_t Trace::sample_count() {
+  if (!active_variable_count()) return 0;
+  return trace_buffer_.FullCount() / active_variable_count();
+}
+
+uint16_t Trace::active_variable_count() {
+  return static_cast<uint16_t>(std::count_if(traced_vars_.begin(), traced_vars_.end(),
+                                             [](const Variable::Base *var) { return (var); }));
+}
+
+bool Trace::set_traced_variable(uint8_t index, uint16_t variable_registry_id) {
+  if (variable_registry_id == Variable::InvalidID) {
+    traced_vars_[index] = nullptr;
+    return true;
+  }
+  auto *var_ptr = Variable::Registry::singleton().find(variable_registry_id);
+  if (!var_ptr || (var_ptr->byte_size() != sizeof(uint32_t))) {
+    // variable not found or type is not of correct size
     return false;
   }
-  traced_vars_[index] = Variable::Registry::singleton().find(id);
+  traced_vars_[index] = var_ptr;
   // like in the SetTraceVarId<int index> template, we need to flush the buffer
   // when the set of traced variables change.
   trace_buffer_.Flush();
   return true;
 }
 
-int16_t Trace::GetTracedVarId(uint8_t index) {
-  if (index >= MaxTraceVars) {
-    return -1;
+uint16_t Trace::traced_variable(uint8_t index) {
+  if (index >= MaxVars) {
+    return Variable::InvalidID;
   }
-  return traced_vars_[index] ? traced_vars_[index]->id() : -1;
+  return traced_vars_[index] ? traced_vars_[index]->id() : Variable::InvalidID;
 }
 
-[[nodiscard]] bool Trace::GetNextTraceRecord(std::array<uint32_t, MaxTraceVars> *record,
-                                             size_t *count) {
-  // Grab one sample with interrupts disabled.
-  // There's a chance the trace is still running, so we could get interrupted
-  // by the high priority thread that adds to the buffer.
-  // I want to make sure I read a full sample without being interrupted.
+[[nodiscard]] bool Trace::get_next_record(std::array<uint32_t, MaxVars> *record, size_t *count) {
+  // Grab one sample with interrupts disabled. There's a chance the trace is still running, so we
+  // could get interrupted by the high priority thread that adds to the buffer.
+  // We want to make sure we read a full sample without being interrupted.
   *count = 0;
   BlockInterrupts block;
   for (auto *var : traced_vars_) {
@@ -75,17 +99,18 @@ int16_t Trace::GetTracedVarId(uint8_t index) {
   return true;
 }
 
-bool Trace::SampleAllVars() {
+bool Trace::sample_all_variables() {
   // If there are no enabled trace variables, or if there isn't enough space
   // in the buffer for a full sample, then signal to stop the trace.
-  if (trace_buffer_.FreeCount() < GetNumActiveVars()) {
+  if (trace_buffer_.FreeCount() < active_variable_count()) {
     return false;
   }
   // Sample each enabled variable and store the result to the buffer.
   for (auto *var : traced_vars_) {
     if (!var) continue;
     // Can't fail as we've already checked for sufficient space above.
-    (void)trace_buffer_.Put(var->get_value());
+    var->serialize_value(&temp_variable_value_);
+    (void)trace_buffer_.Put(temp_variable_value_);
   }
   return true;
 }

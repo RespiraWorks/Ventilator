@@ -8,6 +8,7 @@ source/config/*
 *.user
 *.log
 !.gitignore
+software/controller/.gitignore
 
 #IDE
 CMakeLists*

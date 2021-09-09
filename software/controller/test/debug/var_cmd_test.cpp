@@ -21,6 +21,8 @@ limitations under the License.
 #include "gtest/gtest.h"
 #include "vars.h"
 
+// \TODO: more tests for FloatArray type
+
 namespace Debug::Command {
 
 TEST(VarHandler, GetVarInfo) {
@@ -35,7 +37,7 @@ TEST(VarHandler, GetVarInfo) {
   // expected result is hand-built from format given in var_cmd.cpp
   std::vector<uint8_t> expected = {static_cast<uint8_t>(Debug::Variable::Type::UInt32),
                                    static_cast<uint8_t>(Debug::Variable::Access::ReadOnly),
-                                   0,
+                                   static_cast<uint8_t>(4),
                                    0,
                                    static_cast<uint8_t>(strlen(name)),
                                    static_cast<uint8_t>(strlen(format)),

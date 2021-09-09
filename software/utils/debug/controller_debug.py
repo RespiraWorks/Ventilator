@@ -43,22 +43,23 @@ OP_TRACE = 0x05
 OP_EEPROM = 0x06
 
 # Some commands take a sub-command as their first byte of data
-SUBCMD_VAR_INFO = 0
-SUBCMD_VAR_GET = 1
-SUBCMD_VAR_SET = 2
-SUBCMD_VAR_GET_COUNT = 3
+SUBCMD_VAR_INFO = 0x00
+SUBCMD_VAR_GET = 0x01
+SUBCMD_VAR_SET = 0x02
+SUBCMD_VAR_GET_COUNT = 0x03
 
-SUBCMD_TRACE_FLUSH = 0
-SUBCMD_TRACE_GETDATA = 1
-SUBCMD_TRACE_START = 2
-SUBCMD_TRACE_GET_VARID = 3
-SUBCMD_TRACE_SET_VARID = 4
-SUBCMD_TRACE_GET_PERIOD = 5
-SUBCMD_TRACE_SET_PERIOD = 6
-SUBCMD_TRACE_GET_NUM_SAMPLES = 7
+SUBCMD_TRACE_FLUSH = 0x00
+SUBCMD_TRACE_GETDATA = 0x01
+SUBCMD_TRACE_START = 0x02
+SUBCMD_TRACE_STOP = 0x03
+SUBCMD_TRACE_GET_VARID = 0x04
+SUBCMD_TRACE_SET_VARID = 0x05
+SUBCMD_TRACE_GET_PERIOD = 0x06
+SUBCMD_TRACE_SET_PERIOD = 0x07
+SUBCMD_TRACE_GET_NUM_SAMPLES = 0x08
 
-SUBCMD_EEPROM_READ = 0
-SUBCMD_EEPROM_WRITE = 1
+SUBCMD_EEPROM_READ = 0x00
+SUBCMD_EEPROM_WRITE = 0x01
 
 # Can trace this many variables at once.  Keep this in sync with
 # kMaxTraceVars in the controller.
@@ -76,7 +77,7 @@ ERROR_CODES = [
     "Insufficient memory",
     "Some type of internal error (aka bug)",
     "The requested variable ID is invalid",
-    "Data is out of range",
+    "Invalid data in request",
     "Response timeout",
 ]
 
@@ -209,27 +210,22 @@ class ControllerDebugInterface:
         data = self.send_command(
             OP_VAR, [SUBCMD_VAR_GET] + debug_types.int16s_to_bytes(variable.id)
         )
-        value = variable.from_bytes(data)
-
-        if raw:
-            return value
-
-        # If a format wasn't passed, use the default for this var
-        if fmt is None:
-            fmt = variable.format
-
-        return fmt % value
+        return variable.format_value(variable.from_bytes(data), raw, fmt)
 
     def variable_set(self, name, value, verbose=False):
         if not (name in self.variable_metadata):
             raise Error(f"Cannot set unknown variable {name}")
 
         variable = self.variable_metadata[name]
+        # \TODO this will not work for FloatArray
         if verbose:
             text = variable.print_value(value, show_access=False)
             print(f"  applying {text}")
 
         data = variable.to_bytes(value)
+        if self.print_raw:
+            print(f"  data converted as {data}")
+
         self.send_command(
             OP_VAR, [SUBCMD_VAR_SET] + debug_types.int16s_to_bytes(variable.id) + data
         )
@@ -301,16 +297,16 @@ class ControllerDebugInterface:
         print("\n")
         self.variables_set(test.scenario.ventilator_settings)
         self.variables_force_off()
+        self.trace_set_period(test.scenario.trace_period)
+        self.trace_select(test.scenario.trace_variable_names)
         time.sleep(test.scenario.capture_ignore_secs)
 
         print(
             f"\nStarting data capture for {test.scenario.capture_duration_secs} seconds"
         )
-        self.trace_flush()
-        self.trace_set_period(test.scenario.trace_period)
-        self.trace_select(test.scenario.trace_variable_names)
         self.trace_start()
         time.sleep(test.scenario.capture_duration_secs)
+        self.trace_stop()
 
         print("\nRetrieving data and halting ventilation")
         # get data and halt ventilation
@@ -319,7 +315,6 @@ class ControllerDebugInterface:
             access_filter=var_info.VAR_ACCESS_WRITE, raw=True
         )
         self.variable_set("forced_mode", "off")
-        self.trace_stop()
         return test
 
     def trace_save(self, scenario_name="manual_trace"):
@@ -448,7 +443,7 @@ class ControllerDebugInterface:
                 raise Error(f"Cannot select trace. Variable `{name}` does not exist.")
         var_names += [""] * (TRACE_VAR_CT - len(var_names))
         for (i, var_name) in enumerate(var_names):
-            var_id = -1
+            var_id = var_info.VAR_INVALID_ID
             if var_name in self.variable_metadata:
                 var_id = self.variable_metadata[var_name].id
             var = debug_types.int16s_to_bytes(var_id)
@@ -458,8 +453,7 @@ class ControllerDebugInterface:
         self.send_command(OP_TRACE, [SUBCMD_TRACE_START])
 
     def trace_stop(self):
-        self.trace_select([])
-        self.trace_flush()
+        self.send_command(OP_TRACE, [SUBCMD_TRACE_STOP])
 
     def trace_num_samples(self):
         dat = self.send_command(OP_TRACE, [SUBCMD_TRACE_GET_NUM_SAMPLES])

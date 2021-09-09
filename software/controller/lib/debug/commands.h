@@ -84,6 +84,7 @@ class PokeHandler : public MemoryHandler {
 //  Flush - Used to disable the trace and flush the trace buffer
 //  Download - Used to read data from the buffer
 //  Start - Used to start recording in the trace buffer
+//  Stop - Used to stop recording in the trace buffer
 //  GetVarId followed by var index (1 byte) - Used to get trace variables ID
 //  SetVarId followed by var index (1 byte) and variable ID (2 bytes) - Used to
 //    set traced variable id
@@ -102,11 +103,12 @@ class TraceHandler : public Handler {
     Flush = 0x00,     // disable and flush the trace buffer
     Download = 0x01,  // download data from the trace buffer
     Start = 0x02,     // start tracing data
-    GetVarId = 0x03,  // get traced variable id
-    SetVarId = 0x04,  // set traced variable id
-    GetPeriod = 0x05,
-    SetPeriod = 0x06,
-    CountSamples = 0x07,  // get number of samples in the trace buffer
+    Stop = 0x03,      // stop tracing data
+    GetVarId = 0x04,  // get traced variable id
+    SetVarId = 0x05,  // set traced variable id
+    GetPeriod = 0x06,
+    SetPeriod = 0x07,
+    CountSamples = 0x08,  // get number of samples in the trace buffer
   };
 
  private:

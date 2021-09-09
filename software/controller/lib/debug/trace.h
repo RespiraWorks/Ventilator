@@ -23,92 +23,91 @@ limitations under the License.
 
 namespace Debug {
 
-static constexpr uint32_t MaxTraceVars{4};
-
 /*
  * Implements a data trace facility.
  *
- * The data trace is a feature which allows data to be written to a largish
- * RAM buffer in real time and read out by the debug inteface later.  The
- * data can then be graphed or otherwise manipulated.
+ * The data trace is a feature which allows data to be written to a largish RAM buffer in real time
+ * and read out by the debug interface later. The data can then be graphed or otherwise manipulated.
  *
- * This is extremely useful for tuning control systems because it allows
- * data to be captured precisely at high update rates, much higher then
- * could be done using simple printouts over a serial port.
+ * This is extremely useful for tuning control systems because it allows data to be captured
+ * precisely at high update rates, much higher than could be done using simple printouts over a
+ * serial port.
  */
 class Trace {
  public:
-  // Gets/sets the trace flags. At the moment, flags can only be 0 (disabled) or
-  // 1 (enabled).
-  bool GetStatus() const { return running_; }
+  static constexpr uint16_t MaxVars{4};
 
-  void Start();
+  // This circular buffer is as big as we consider reasonable, to give a good tracing capability:
+  // 40% of the RAM available on our STM32
+  static constexpr size_t BufferSize{0x4000};
 
-  void Stop() { running_ = false; }
+  /// \returns false if manually stopped or autostopped when buffer was filled
+  bool running() const;
 
-  uint32_t GetPeriod() const { return period_; }
-  void SetPeriod(uint32_t period) { period_ = period; }
+  /// \brief starts acquisition; or restarts if already started (flushes)
+  void start();
 
-  void MaybeSample();
+  /// \brief stops acquisition, does not flush
+  void stop();
 
-  void Flush() {
-    Stop();
-    trace_buffer_.Flush();
-  }
+  /// \returns number of cycles that Trace will wait before sampling variables
+  uint32_t period() const;
 
-  size_t GetNumSamples() { return trace_buffer_.FullCount() / GetNumActiveVars(); }
+  /// \param period number of cycles that Trace should wait before sampling variables
+  void set_period(const uint32_t period);
 
-  uint32_t GetNumActiveVars() {
-    return static_cast<uint32_t>(std::count_if(traced_vars_.begin(), traced_vars_.end(),
-                                               [](const Variable::Base *var) { return (var); }));
-  }
+  /// \brief Called fromm looping function. It may capture data if cycle count has been reached.
+  /// \post If cycle count was reached, the cycle counter will be reset.
+  void maybe_sample();
 
-  template <int index>
-  void SetTracedVarId(int32_t id) {
-    static_assert(index >= 0 && index < MaxTraceVars);
-    traced_vars_[index] = Variable::Registry::singleton().find(static_cast<uint16_t>(id));
-    // The layout of the trace buffer is just a bunch of uint32_t's one per
-    // each variable of each sample cycle. In order to be able to interpret
-    // the buffer unambiguously, the set of traced variables must be the same
-    // throughout the buffer. So, if the set changes, we need to flush.
-    trace_buffer_.Flush();
-  }
+  /// \brief clears trace buffer
+  void flush();
 
-  template <int index>
-  int32_t GetTracedVarId() {
-    static_assert(index >= 0 && index < MaxTraceVars);
-    return traced_vars_[index] ? traced_vars_[index]->id() : -1;
-  }
+  /* \returns number of acquired samples in time series,
+   * i.e. not multiplied by traced variable count
+   * */
+  size_t sample_count();
 
-  bool SetTracedVarId(uint8_t index, uint16_t id);
-  int16_t GetTracedVarId(uint8_t index);
+  /// \returns number of valid variables selected for acquisition
+  uint16_t active_variable_count();
 
-  // Grabs the next sample of all traced variables from the trace buffer.
-  // Returns false if the buffer has less data than the number of traced
-  // variables - this should never happen.
-  // Sets *count to the number of elements actually set in *record.
-  // This will equal GetNumActiveVars() but is easier to use for testing.
-  [[nodiscard]] bool GetNextTraceRecord(std::array<uint32_t, MaxTraceVars> *record, size_t *count);
+  /* \brief selects position `index` to trace the variable spcified by `variable_registry_id`
+   * \param index assumed to be a number number < MaxVars
+   * \param variable_registry_id may be any variable ID, including Variable::InvalidID, which will
+   *        disable tracing at that position
+   * \returns false if variable could not be found in registry, or the type was of wrong size
+   *          true if successfully set or disabled
+   *          */
+  bool set_traced_variable(uint8_t index, uint16_t variable_registry_id);
+
+  /// \returns id of variable at index, Variable::InvalidID if variable is not valid
+  uint16_t traced_variable(uint8_t index);
+
+  /* Grabs the next sample of all traced variables from the trace buffer. Returns false if the
+   * buffer has less data than the number of traced variables - this should never happen. Sets
+   * *count to the number of elements actually set in *record. This will equal
+   * active_variable_count() but is easier to use for testing.
+   * */
+  [[nodiscard]] bool get_next_record(std::array<uint32_t, MaxVars> *record, size_t *count);
 
  private:
   // This function is called at the end of the high priority loop function.
   // It captures any enabled data variables to the trace buffer.
-  bool SampleAllVars();
+  bool sample_all_variables();
 
-  // Set this to start capturing data to the trace buffer.
   // It will auto-clear when the buffer is full, or when stopped.
   bool running_{false};
-  // The trace period gives the period of the trace data capture
-  // in units of loop cycles.
+
+  // The trace period gives the period of the trace data capture in units of loop cycles.
   uint32_t period_{1};
   // Number of loop cycles elapsed since last sample was captured.
   uint32_t cycles_count_{0};
 
-  std::array<Variable::Base *, MaxTraceVars> traced_vars_ = {nullptr};
+  std::array<Variable::Base *, MaxVars> traced_vars_ = {nullptr};
 
-  // This circular buffer is as big as we consider reasonable, to give a good
-  // tracing capability: 40% of the RAM available on our STM32
-  CircularBuffer<uint32_t, 0x4000> trace_buffer_;
+  // Pre-allocated because it will be reused for every capture
+  uint32_t temp_variable_value_{0};
+  CircularBuffer<uint32_t, BufferSize> trace_buffer_;
 };
 
 }  // namespace Debug

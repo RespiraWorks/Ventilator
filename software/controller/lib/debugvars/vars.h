@@ -15,6 +15,7 @@ limitations under the License.
 
 #pragma once
 
+#include <array>
 #include <cstring>
 
 #include "vars_base.h"
@@ -22,14 +23,15 @@ limitations under the License.
 namespace Debug::Variable {
 
 template <typename GetFn, typename SetFn>
-class FnVar : public Base {
+class FnVar32 : public Base {
  public:
-  FnVar(Type type, const char *name, Access access, const char *units, GetFn get_fn, SetFn set_fn,
-        const char *help, const char *fmt = "")
+  FnVar32(Type type, const char *name, Access access, const char *units, GetFn get_fn, SetFn set_fn,
+          const char *help, const char *fmt = "")
       : Base(type, name, access, units, help, fmt), get_fn_(get_fn), set_fn_(set_fn) {}
 
-  uint32_t get_value() override { return get_fn_(); }
-  void set_value(uint32_t value) override { set_fn_(value); }
+  void serialize_value(void *write_buff) override { get_fn_(write_buff); }
+  void deserialize_value(const void *read_buf) override { set_fn_(read_buf); }
+  size_t byte_size() const override { return sizeof(uint32_t); }
 
  private:
   GetFn get_fn_;
@@ -55,14 +57,16 @@ class Primitive32 : public Base {
       : Primitive32(Type::Float, name, access, data, units, help, fmt) {}
 
   // Gets the current value of the variable as an uint32_t.
-  uint32_t get_value() override {
-    uint32_t res;
-    std::memcpy(&res, address_, 4);
-    return res;
+  void serialize_value(void *write_buff) override {
+    std::memcpy(write_buff, address_, byte_size());
   }
 
   // Sets the current value of the variable as an uint32_t.
-  void set_value(uint32_t value) override { std::memcpy(address_, &value, 4); }
+  void deserialize_value(const void *read_buf) override {
+    std::memcpy(address_, read_buf, byte_size());
+  }
+
+  size_t byte_size() const override { return 4; }
 
  private:
   void *address_;
@@ -109,6 +113,36 @@ class Float : public Primitive32 {
 
  private:
   float value_;
+};
+
+template <size_t N>
+class FloatArray : public Base {
+ public:
+  FloatArray(const char *name, Access access, const char *units, const char *help = "",
+             const char *fmt = "%.3f")
+      : Base(Type::FloatArray, name, access, units, help, fmt) {}
+
+  FloatArray(const char *name, Access access, float initial_fill, const char *units,
+             const char *help = "", const char *fmt = "%.3f")
+      : Base(Type::FloatArray, name, access, units, help, fmt) {
+    data.fill(initial_fill);
+  }
+
+  FloatArray(const char *name, Access access, std::array<float, N> initial, const char *units,
+             const char *help = "", const char *fmt = "%.3f")
+      : Base(Type::FloatArray, name, access, units, help, fmt), data(initial) {}
+
+  void serialize_value(void *write_buff) override {
+    std::memcpy(write_buff, data.data(), byte_size());
+  }
+
+  void deserialize_value(const void *read_buf) override {
+    std::memcpy(data.data(), read_buf, byte_size());
+  }
+
+  size_t byte_size() const override { return 4 * N; }
+
+  std::array<float, N> data;
 };
 
 }  // namespace Debug::Variable

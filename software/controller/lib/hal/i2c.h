@@ -96,11 +96,11 @@ class Channel {
  protected:
   // We queue of a few requests. The number of requests is arbitrary but
   // should be enough for all intents and purposes.
-  static constexpr uint8_t QueueLength{80};
+  static constexpr size_t QueueLength{80};
 
   // We copy the write data into a buffer to make sure nothing can be lost
   // due to the scope of the caller's variable. This is the buffer size.
-  static constexpr uint32_t WriteBufferSize{4096};
+  static constexpr size_t WriteBufferSize{4096};
 
   // Max retry-after-error allowed for a single request.
   static constexpr int8_t MaxRetries{5};
@@ -171,9 +171,9 @@ class Channel {
   //    means we lose the ability to retry a request after an I²C (or DMA)
   //    error.
   uint8_t write_buffer_[WriteBufferSize];
-  uint32_t write_buffer_index_{0};
-  uint32_t write_buffer_start_{0};
-  uint32_t wrapping_index_{WriteBufferSize};
+  size_t write_buffer_index_{0};
+  size_t write_buffer_start_{0};
+  size_t wrapping_index_{WriteBufferSize};
   bool CopyDataToWriteBuffer(const void *data, uint16_t size);
 };
 

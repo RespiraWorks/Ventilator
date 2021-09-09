@@ -17,6 +17,7 @@ limitations under the License.
 
 #include "stepper.h"
 #include "units.h"
+#include "vars.h"
 
 enum class PinchValveHomeState {
   Disabled,
@@ -48,7 +49,7 @@ class PinchValve {
  public:
   // Create a new pinch valve using the specified
   // stepper motor.
-  explicit PinchValve(int motor_index);
+  explicit PinchValve(int motor_index, const char* name_prepend, const char* help_append);
 
   // Initialize the pinch value absolute position.
   // This should be called at startup from the
@@ -76,9 +77,17 @@ class PinchValve {
  private:
   Time move_start_time_;
 
-  int motor_index_;
+  // \todo test invalid initialization?
+  int motor_index_{-1};
 
   float last_command_{-1.0f};
 
   PinchValveHomeState home_state_{PinchValveHomeState::Disabled};
+
+  // This table is used to roughly linearize the pinch valve output.  It was built by adjusting the
+  // pinch valve and monitoring the flow through the venturi tube. The entries should give pinch
+  // valve settings for a list of equally spaced flow rates.  The first entry should be the setting
+  // for 0 flow rate (normally 0) and the last entry should be the setting for 100% flow rate. The
+  // minimum length of the table is 2 entries.
+  Debug::Variable::FloatArray<11> calibration_;
 };

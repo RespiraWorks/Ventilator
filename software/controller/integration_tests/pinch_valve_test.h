@@ -18,7 +18,7 @@ static constexpr Duration Delay{milliseconds(1000)};
 
 void RunTest() {
   hal.Init();
-  PinchValve pinch_valve(MotorIndex);
+  PinchValve pinch_valve(MotorIndex, "any", " for whatever");
   pinch_valve.Home();
 
   bool valve_open{false};

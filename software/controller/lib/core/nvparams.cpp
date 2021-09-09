@@ -37,7 +37,7 @@ static Debug::Variable::UInt32 dbg_reinit(
     "Set to 1 to request a reinit of NV params on next boot.");
 
 /// \TODO: use String type to allow alphanumeric?
-static Debug::Variable::UInt32 dbg_serial("0_controller_serial_number",
+static Debug::Variable::UInt32 dbg_serial("0_ventilator_serial_number",
                                           Debug::Variable::Access::ReadWrite, 0, "",
                                           "Serial number of the ventilator, in EEPROM");
 

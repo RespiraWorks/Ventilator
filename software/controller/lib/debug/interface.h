@@ -64,7 +64,7 @@ class Interface {
 
   static uint16_t ComputeCRC(const uint8_t *buffer, size_t length);
 
-  void SampleTraceVars() { trace_->MaybeSample(); }
+  void SampleTraceVars() { trace_->maybe_sample(); }
 
  private:
   State state_{State::AwaitingCommand};

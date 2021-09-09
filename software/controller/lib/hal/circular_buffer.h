@@ -15,8 +15,7 @@ limitations under the License.
 
 #pragma once
 
-#include <stdint.h>
-
+#include <cstdint>
 #include <optional>
 
 #include "hal.h"
@@ -27,7 +26,7 @@ limitations under the License.
 // and the interrupt handlers, so it needs to be thread safe.
 // I'm disabling interrupts during the critical sections to
 // ensure that's the case.
-template <class T, uint N>
+template <class T, size_t N>
 class CircularBuffer {
   // Uses an array of size N+1 to hold all N elements of the buffer, as
   // buffer_[head_] is by definition inaccessible.
@@ -37,20 +36,21 @@ class CircularBuffer {
 
  public:
   CircularBuffer() {
-    for (uint i = 0; i <= N; ++i) buffer_[i] = T();
+    for (size_t i = 0; i <= N; ++i) buffer_[i] = T();
   }
 
   // Return number of elements available in the buffer to read.
-  int FullCount() const {
+  size_t FullCount() const {
     BlockInterrupts block;
-    int ct = head_ - tail_;
+    /// \TODO: ssize_t is likely compiler-dependent; this function could be improved
+    ssize_t ct = head_ - tail_;
     if (ct < 0) ct += N + 1;
-    return ct;
+    return static_cast<size_t>(ct);
   }
 
   // Return number of free spaces in the buffer where more
   // elements can be written.
-  int FreeCount() const { return N - FullCount(); }
+  size_t FreeCount() const { return N - FullCount(); }
 
   // Get the oldest element from the buffer, popping it from the buffer.
   std::optional<T> Get() {

@@ -15,6 +15,7 @@ limitations under the License.
 
 #pragma once
 
+#include <cstddef>
 #include <cstdint>
 
 namespace Debug::Variable {
@@ -25,6 +26,7 @@ enum class Type {
   Int32 = 1,
   UInt32 = 2,
   Float = 3,
+  FloatArray = 4,
 };
 
 // Defines the possible access to variable
@@ -35,7 +37,7 @@ enum class Access {
 
 static constexpr uint16_t MaxVariableCount{100};
 
-static constexpr uint16_t InvalidID{MaxVariableCount + 1};
+static constexpr uint16_t InvalidID{MaxVariableCount};
 
 /*! \class Base vars_base.h "vars_base.h"
  *  \brief Abstract base class for debug variables
@@ -63,8 +65,14 @@ class Base {
   Base(Type type, const char *name, Access access, const char *units, const char *help,
        const char *fmt = "");
 
-  virtual uint32_t get_value() = 0;
-  virtual void set_value(uint32_t value) = 0;
+  /// \brief should write its value to buffer of sufficient size
+  virtual void serialize_value(void *write_buffer) = 0;
+
+  /// \brief retrieves its own value from buffer
+  virtual void deserialize_value(const void *read_buffer) = 0;
+
+  /// \returns number of bytes occupied by value, so caller can ensure sufficient size of buffer
+  virtual size_t byte_size() const = 0;
 
   const char *name() const;
   void prepend_name(const char *prefix);

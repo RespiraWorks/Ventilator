@@ -17,4 +17,4 @@ CMD /bin/bash \
     cd software/controller && \
     curl -Os https://uploader.codecov.io/latest/linux/codecov && \
     chmod +x codecov && \
-    ./codecov -F controller
+    ./codecov -t ${CODECOV_TOKEN} -F controller

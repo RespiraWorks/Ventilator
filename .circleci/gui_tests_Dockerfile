@@ -17,4 +17,4 @@ CMD /bin/bash \
     cd software/gui/build/tests && \
     curl -Os https://uploader.codecov.io/latest/linux/codecov && \
     chmod +x codecov && \
-    ./codecov -F gui
+    ./codecov -t ${CODECOV_TOKEN} -F gui

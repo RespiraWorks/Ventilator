@@ -61,6 +61,8 @@ jobs:
     # This is because LeakSanitizer, which runs during the build, requires ptrace.
     machine:
       image: ubuntu-1604:201903-01
+      environment:
+        CODECOV_TOKEN: $CODECOV_TOKEN
     steps:
       - checkout
       - run:
@@ -76,6 +78,8 @@ jobs:
   gui-tests:
     machine:
       image: ubuntu-1604:201903-01
+      environment:
+        CODECOV_TOKEN: $CODECOV_TOKEN
     steps:
       - checkout
       - run:

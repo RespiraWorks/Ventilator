@@ -49,4 +49,5 @@ parsers:
 ignore:
   - "**/tests"
   - "**/third_party"
+  - "**/third_party/nanopb"
   - "**/test"

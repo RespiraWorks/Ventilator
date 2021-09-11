@@ -574,9 +574,8 @@ ex: poke [type] <address> <data>
             "  get set [--raw]          -  retrieves all settings (writable variables)"
         )
         print("  get read [--raw]         -  retrieves all read-only variables")
-        print(
-            "  get <var> [fmt] [--raw]  -  retrieves a specific variable, optionally with format or raw"
-        )
+        print("  get <var> [fmt] [--raw]  -  retrieves a specific variable(s)")
+        print("       <var> - can contain wildcards * or ?")
         print("Available variables:")
         for k in sorted(self.interface.variable_metadata.keys()):
             print(f" {self.interface.variable_metadata[k].verbose()}")

@@ -25,6 +25,7 @@ import threading
 import time
 import debug_types
 import var_info
+import fnmatch
 from lib.error import Error
 import test_scenario
 from test_data import *
@@ -203,19 +204,14 @@ class ControllerDebugInterface:
                 )
             self.variable_metadata[variable.name] = variable
 
-    def variables_list(self):
-        ret = "Variables currently defined:\n"
-        for k in sorted(self.variable_metadata.keys()):
-            ret += f" {self.variable_metadata[k].verbose()}\n"
-        return ret
-
-    def variables_find(self, starting_with, access_filter=None):
+    def variables_find(self, pattern="", access_filter=None):
         out = []
         for name, metadata in self.variable_metadata.items():
             if access_filter is not None and metadata.write_access != access_filter:
                 continue
-            if name.startswith(starting_with):
-                out.append(name)
+            if len(pattern) and not fnmatch.fnmatchcase(name, pattern):
+                continue
+            out.append(name)
         return out
 
     def variable_by_id(self, vid):
@@ -247,11 +243,9 @@ class ControllerDebugInterface:
         for var, val in pairs.items():
             self.variable_set(var, val, verbose=True)
 
-    def variables_get_all(self, access_filter=None, raw=False):
+    def variables_get(self, names, raw=False):
         ret = {}
-        for name, metadata in self.variable_metadata.items():
-            if access_filter is not None and metadata.write_access != access_filter:
-                continue
+        for name in names:
             ret[name] = self.variable_get(name, raw=raw)
         return ret
 
@@ -360,11 +354,11 @@ class ControllerDebugInterface:
         print("\nRetrieving data and halting ventilation")
         # get data and halt ventilation
         test.traces = self.trace_download()
-        test.ventilator_settings = self.variables_get_all(
-            access_filter=var_info.VAR_ACCESS_WRITE, raw=True
+        test.ventilator_settings = self.variables_get(
+            self.variables_find(access_filter=var_info.VAR_ACCESS_WRITE), raw=True
         )
-        test.ventilator_readings = self.variables_get_all(
-            access_filter=var_info.VAR_ACCESS_READ_ONLY, raw=True
+        test.ventilator_readings = self.variables_get(
+            self.variables_find(access_filter=var_info.VAR_ACCESS_READ_ONLY), raw=True
         )
         self.variable_set("forced_mode", "off")
         return test
@@ -385,11 +379,11 @@ class ControllerDebugInterface:
         test.scenario.trace_variable_names = [
             x.name for x in self.trace_active_variables_list()
         ]
-        test.ventilator_settings = self.variables_get_all(
-            access_filter=var_info.VAR_ACCESS_WRITE, raw=True
+        test.ventilator_settings = self.variables_get(
+            self.variables_find(access_filter=var_info.VAR_ACCESS_WRITE), raw=True
         )
-        test.ventilator_readings = self.variables_get_all(
-            access_filter=var_info.VAR_ACCESS_READ_ONLY, raw=True
+        test.ventilator_readings = self.variables_get(
+            self.variables_find(access_filter=var_info.VAR_ACCESS_READ_ONLY), raw=True
         )
         return test
 

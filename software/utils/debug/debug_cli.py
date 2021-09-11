@@ -529,46 +529,41 @@ ex: poke [type] <address> <data>
                 fmt = cl[1]
 
         if var_name == "all":
-            all_vars = self.interface.variables_get_all(raw=raw)
-            for count, name in enumerate(sorted(all_vars.keys())):
-                variable_md = self.interface.variable_metadata[name]
-                text = variable_md.print_value(all_vars[name])
-                if (count % 2) == 0:
-                    print(white(text))
-                else:
-                    print(dark_orange(text))
+            found = self.interface.variables_find()
+            all_vars = self.interface.variables_get(found, raw=raw)
+            self.print_variable_values(all_vars, show_access=True)
             return
         elif var_name == "set":
-            all_vars = self.interface.variables_get_all(
-                access_filter=VAR_ACCESS_WRITE, raw=raw
-            )
-            for count, name in enumerate(sorted(all_vars.keys())):
-                variable_md = self.interface.variable_metadata[name]
-                text = variable_md.print_value(all_vars[name], show_access=False)
-                if (count % 2) == 0:
-                    print(white(text))
-                else:
-                    print(dark_orange(text))
+            found = self.interface.variables_find(access_filter=VAR_ACCESS_WRITE)
+            all_vars = self.interface.variables_get(found, raw=raw)
+            self.print_variable_values(all_vars, show_access=False)
             return
         elif var_name == "read":
-            all_vars = self.interface.variables_get_all(
-                access_filter=VAR_ACCESS_READ_ONLY, raw=raw
-            )
-            for count, name in enumerate(sorted(all_vars.keys())):
-                variable_md = self.interface.variable_metadata[name]
-                text = variable_md.print_value(all_vars[name], show_access=False)
-                if (count % 2) == 0:
-                    print(white(text))
-                else:
-                    print(dark_orange(text))
+            found = self.interface.variables_find(access_filter=VAR_ACCESS_READ_ONLY)
+            all_vars = self.interface.variables_get(found, raw=raw)
+            self.print_variable_values(all_vars, show_access=False)
+            return
+        elif "*" in var_name or "?" in var_name:
+            found = self.interface.variables_find(pattern=var_name)
+            all_vars = self.interface.variables_get(found, raw=raw)
+            self.print_variable_values(all_vars, show_access=False)
             return
         else:
             variable_md = self.interface.variable_metadata[var_name]
             val = self.interface.variable_get(var_name, raw=raw, fmt=fmt)
             print(variable_md.print_value(val))
 
+    def print_variable_values(self, names_values, show_access):
+        for count, name in enumerate(sorted(names_values.keys())):
+            variable_md = self.interface.variable_metadata[name]
+            text = variable_md.print_value(names_values[name], show_access=show_access)
+            if (count % 2) == 0:
+                print(white(text))
+            else:
+                print(dark_orange(text))
+
     def complete_get(self, text, line, begidx, endidx):
-        return self.interface.variables_find(text) + [
+        return self.interface.variables_find(pattern=(text + "*")) + [
             x for x in ["all", "set", "read"] if x.startswith(text)
         ]
 
@@ -611,20 +606,16 @@ ex: poke [type] <address> <data>
             self.interface.variable_set(varname, cl[1:])  # array
 
     def complete_set(self, text, line, begidx, endidx):
-        return self.interface.variables_find(text, access_filter=VAR_ACCESS_WRITE) + [
-            x for x in ["force_off", "force_open"] if x.startswith(text)
-        ]
+        return self.interface.variables_find(
+            pattern=(text + "*"), access_filter=VAR_ACCESS_WRITE
+        ) + [x for x in ["force_off", "force_open"] if x.startswith(text)]
 
     def help_set(self):
         print("Sets value for a ventilator debug variable (or convenience macro):")
         print("  force_off           - resets all forced actuator variables")
         print("  force_open          - forces all valves open and blower to maximum")
         print("Available variables:")
-        for k in sorted(
-            self.interface.variables_find(
-                starting_with="", access_filter=VAR_ACCESS_WRITE
-            )
-        ):
+        for k in sorted(self.interface.variables_find(access_filter=VAR_ACCESS_WRITE)):
             print(
                 f" {self.interface.variable_metadata[k].verbose(show_access=False, show_format=False)}"
             )
@@ -736,12 +727,12 @@ trace save [--verbose/-v] [--plot/-p] [--csv/-c]
         tokens = shlex.split(line)
         if len(tokens) > 2 and tokens[1] == "start":
             return self.interface.variables_find(
-                text, access_filter=VAR_ACCESS_READ_ONLY
+                pattern=(text + "*"), access_filter=VAR_ACCESS_READ_ONLY
             )
         elif len(tokens) == 2 and text == "start":
             return ["start "]
         elif len(tokens) == 2 and text == "" and tokens[1] == "start":
-            return self.interface.variables_find("", access_filter=VAR_ACCESS_READ_ONLY)
+            return self.interface.variables_find(access_filter=VAR_ACCESS_READ_ONLY)
         elif len(tokens) == 2 and any(s.startswith(text) for s in sub_commands):
             return [s for s in sub_commands if s.startswith(text)]
         elif len(tokens) == 1:

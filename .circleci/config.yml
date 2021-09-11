@@ -71,11 +71,13 @@ jobs:
           name: Run tests & publish coverage
           command: |
             ci_env=`/bin/bash <(curl -s https://codecov.io/env)`
-            docker run -e CODECOV_TOKEN='$CODECOV_TOKEN' --privileged -t controller-test-image
+            docker run $ci_env --privileged -t controller-test-image
 
   gui-tests:
     machine:
       image: ubuntu-1604:201903-01
+      environment:
+        CODECOV_TOKEN: $CODECOV_TOKEN
     steps:
       - checkout
       - run:
@@ -90,7 +92,7 @@ jobs:
           name: Run tests & publish coverage
           command: |
             ci_env=`/bin/bash <(curl -s https://codecov.io/env)`
-            docker run -e CODECOV_TOKEN='$CODECOV_TOKEN' --privileged -t gui-test-image
+            docker run $ci_env --privileged -t gui-test-image
 
 workflows:
   commit:

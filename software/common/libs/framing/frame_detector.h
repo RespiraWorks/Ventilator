@@ -32,9 +32,9 @@ limitations under the License.
  * RxBuffer is responsible for underlying reception and buffering of incoming data. Also RxBuffer
  * provides callbacks described by RxListener interface. In particular:
  *
- *   OnCharacterMatch is called when MARK character is received
- *   OnRxComplete is called when the requested number of bytes was received
- *   OnRxError is called when an error occurs in the underlying reception infrastructure
+ *   on_character_match is called when MARK character is received
+ *   on_rx_complete is called when the requested number of bytes was received
+ *   on_rx_error is called when an error occurs in the underlying reception infrastructure
  *
  * FrameDetector is modeled as a Finite State Machine having states:
  *
@@ -45,23 +45,23 @@ limitations under the License.
  *   ReceivingFrame - FrameDetector is synced and will interpret the next MARK byte as an end of the
  *          frame and will interpret the bytes in RxBuffer as a frame.
  *
- * OnRxError will cause FrameDetector to transition to the Lost state, frame being received will be
- * ignored.
- * ...MbbbbbbEbbbbMMbbbbbbbM
- *    ^-----------^ this frame will be ignored
- *                 ^-------^ this frame will be received
+ * on_rx_error will cause FrameDetector to transition to the Lost state, frame being received will
+ *      be ignored:
+ *          ...MbbbbbbEbbbbMMbbbbbbbM
+ *             ^-----------^ this frame will be ignored
+ *                          ^-------^ this frame will be received
  *
- * OnRxComplete should not happen in normal reception. When FrameEncoder orders a reception from
- * RxBuffer, it specifies maximum length of the frame expected, also FrameEncoder restarts reception
- * upon receiving OnCharMatch callback. Thus, receiving OnRxComplete callback means that we get no
- * MARK characters in the stream because sender is sending garbage or a frame that is longer than
- * the expected length.
+ * on_rx_complete should not happen in normal reception. When FrameEncoder orders a reception from
+ *      RxBuffer, it specifies maximum length of the frame expected, also FrameEncoder restarts
+ *      reception upon receiving OnCharMatch callback. Thus, receiving OnRxComplete callback means
+ *      that we get no MARK characters in the stream because sender is sending garbage or a frame
+ *      that is longer than the expected length.
  *
  * FrameDetector keeps a copy of the last successfully received frame and a flag denoting if the
  * last received frame was read by the caller.
  * */
 
-template <class RxBuffer, int FrameBufferLength>
+template <class RxBuffer, size_t FrameBufferLength>
 class FrameDetector : public RxListener {
  public:
   enum class State {
@@ -87,23 +87,21 @@ class FrameDetector : public RxListener {
         // We assume this is the frame end marker, so we wait for start.
         state_ = State::WaitForStartMarker;
         restart_rx();
-        break;
+        return;
       case State::WaitForStartMarker:
         // Received some junk while waiting for start marker but should have been just silence.
         state_ = State::Lost;
         restart_rx();
-        break;
+        return;
       case State::ReceivingFrame:
         // Yes, we got data, thus we got the frame we can pass further.
         process_received_data();
         state_ = State::WaitForStartMarker;
         restart_rx();
-        break;
-      default:
-        state_ = State::Lost;
-        restart_rx();
-        break;
+        return;
     }
+    // Switch above covers all cases.
+    __builtin_unreachable();
   }
 
   void on_char_match_with_markers_only() {
@@ -113,21 +111,19 @@ class FrameDetector : public RxListener {
         // We were lucky to get to Lost state in the inter-frame silence,
         // so we assume this marker is the start of frame.
         state_ = State::ReceivingFrame;
-        break;
+        return;
       case State::WaitForStartMarker:
         // Received the marker we are waiting for.
         state_ = State::ReceivingFrame;
-        break;
+        return;
       case State::ReceivingFrame:
         // Received repeated marker char.
         // We have received a 0-length frame. Ignore it and continue receiving frame bytes.
         restart_rx();
-        break;
-      default:
-        state_ = State::Lost;
-        restart_rx();
-        break;
+        return;
     }
+    // Switch above covers all cases.
+    __builtin_unreachable();
   }
 
   // Callback method called when RxBuffer receives a marker character;
@@ -172,19 +168,19 @@ class FrameDetector : public RxListener {
 
   // Returns the last successfully detected frame, resets the frame_available flag.
   // If frame_available was returning true before this call, it will return false afterwards
-  uint8_t *take_frame() {
+  const uint8_t *take_frame() {
     frame_available_ = false;
     return frame_buffer_;
   }
 
   // Returns the length of the last successfully detected frame.
-  uint32_t frame_length() { return frame_buf_length_; }
+  size_t frame_length() const { return frame_buf_length_; }
 
   // Returns true if a new frame was detected and this frame is available for read.
-  bool frame_available() { return frame_available_; }
+  bool frame_available() const { return frame_available_; }
 
 #ifdef TEST_MODE
-  State get_state() { return state_; }
+  State get_state() const { return state_; }
 #endif
 
  private:
@@ -192,8 +188,8 @@ class FrameDetector : public RxListener {
   State state_{State::Lost};
   bool frame_available_{false};
   uint8_t frame_buffer_[FrameBufferLength] = {0};
-  uint32_t frame_buf_length_{0};
-  uint32_t marker_count_{0};
+  size_t frame_buf_length_{0};
+  size_t marker_count_{0};
 
   void restart_rx() {
     marker_count_ = 0;

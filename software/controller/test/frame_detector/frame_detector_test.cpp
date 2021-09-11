@@ -26,26 +26,26 @@ limitations under the License.
 
 using namespace std;
 
-constexpr uint32_t LEN = 20;
+constexpr size_t BufferLength{20};
+constexpr uint8_t Mark{static_cast<uint8_t>('.')};
 
-using State = FrameDetector<SoftRxBuffer<LEN>, LEN>::State;
-using FrameDetectorTest = FrameDetector<SoftRxBuffer<LEN>, LEN>;
-constexpr uint8_t MARK = static_cast<uint8_t>('.');
+using State = FrameDetector<SoftRxBuffer<BufferLength>, BufferLength>::State;
+using FrameDetectorTest = FrameDetector<SoftRxBuffer<BufferLength>, BufferLength>;
 
 TEST(FrameDetector, MarkFirstInLost) {
-  SoftRxBuffer<LEN> rx_buf(MARK);
+  SoftRxBuffer<BufferLength> rx_buf(Mark);
   FrameDetectorTest frame_detector(rx_buf);
   EXPECT_TRUE(frame_detector.begin());
   ASSERT_EQ(State::Lost, frame_detector.get_state());
   EXPECT_FALSE(frame_detector.frame_available());
 
-  rx_buf.put_byte(MARK);
+  rx_buf.put_byte(Mark);
   ASSERT_EQ(State::ReceivingFrame, frame_detector.get_state());
   EXPECT_FALSE(frame_detector.frame_available());
 }
 
 TEST(FrameDetector, JunkWhileWaitForStart) {
-  SoftRxBuffer<LEN> rx_buf(MARK);
+  SoftRxBuffer<BufferLength> rx_buf(Mark);
   FrameDetectorTest frame_detector(rx_buf);
   EXPECT_TRUE(frame_detector.begin());
   ASSERT_EQ(State::Lost, frame_detector.get_state());
@@ -55,7 +55,7 @@ TEST(FrameDetector, JunkWhileWaitForStart) {
   ASSERT_EQ(State::Lost, frame_detector.get_state());
   EXPECT_FALSE(frame_detector.frame_available());
 
-  rx_buf.put_byte(MARK);
+  rx_buf.put_byte(Mark);
   ASSERT_EQ(State::WaitForStartMarker, frame_detector.get_state());
   EXPECT_FALSE(frame_detector.frame_available());
 
@@ -63,45 +63,45 @@ TEST(FrameDetector, JunkWhileWaitForStart) {
   ASSERT_EQ(State::WaitForStartMarker, frame_detector.get_state());
   EXPECT_FALSE(frame_detector.frame_available());
 
-  rx_buf.put_byte(MARK);
+  rx_buf.put_byte(Mark);
   ASSERT_EQ(State::Lost, frame_detector.get_state());
   EXPECT_FALSE(frame_detector.frame_available());
 }
 
 TEST(FrameDetector, RxFullSizeFrame) {
-  SoftRxBuffer<LEN> rx_buf(MARK);
+  SoftRxBuffer<BufferLength> rx_buf(Mark);
   FrameDetectorTest frame_detector(rx_buf);
   EXPECT_TRUE(frame_detector.begin());
   ASSERT_EQ(State::Lost, frame_detector.get_state());
   EXPECT_FALSE(frame_detector.frame_available());
 
-  rx_buf.put_byte(MARK);
+  rx_buf.put_byte(Mark);
   ASSERT_EQ(State::ReceivingFrame, frame_detector.get_state());
   EXPECT_FALSE(frame_detector.frame_available());
 
-  for (uint32_t i = 0; i < LEN - 2; i++) {
+  for (uint32_t i = 0; i < BufferLength - 2; i++) {
     rx_buf.put_byte(' ');
   }
-  rx_buf.put_byte(MARK);
+  rx_buf.put_byte(Mark);
 
   EXPECT_EQ(State::WaitForStartMarker, frame_detector.get_state());
   ASSERT_TRUE(frame_detector.frame_available());
   ASSERT_EQ(string("                  "),
-            string(reinterpret_cast<char *>(frame_detector.take_frame())));
+            string(reinterpret_cast<const char *>(frame_detector.take_frame())));
 }
 
 TEST(FrameDetector, RxComplete) {
-  SoftRxBuffer<LEN> rx_buf(MARK);
+  SoftRxBuffer<BufferLength> rx_buf(Mark);
   FrameDetectorTest frame_detector(rx_buf);
   EXPECT_TRUE(frame_detector.begin());
   ASSERT_EQ(State::Lost, frame_detector.get_state());
   EXPECT_FALSE(frame_detector.frame_available());
 
-  rx_buf.put_byte(MARK);
+  rx_buf.put_byte(Mark);
   ASSERT_EQ(State::ReceivingFrame, frame_detector.get_state());
   EXPECT_FALSE(frame_detector.frame_available());
 
-  for (uint32_t i = 0; i < LEN; i++) {
+  for (uint32_t i = 0; i < BufferLength; i++) {
     rx_buf.put_byte(' ');
   }
 
@@ -112,37 +112,37 @@ TEST(FrameDetector, RxComplete) {
 }
 
 TEST(FrameDetector, RxFrameIllegalyLong) {
-  SoftRxBuffer<LEN> rx_buf(MARK);
+  SoftRxBuffer<BufferLength> rx_buf(Mark);
   FrameDetectorTest frame_detector(rx_buf);
   EXPECT_TRUE(frame_detector.begin());
   ASSERT_EQ(State::Lost, frame_detector.get_state());
   EXPECT_FALSE(frame_detector.frame_available());
 
-  rx_buf.put_byte(MARK);
+  rx_buf.put_byte(Mark);
   ASSERT_EQ(State::ReceivingFrame, frame_detector.get_state());
   EXPECT_FALSE(frame_detector.frame_available());
 
-  for (uint32_t i = 0; i < LEN - 1; i++) {
+  for (uint32_t i = 0; i < BufferLength - 1; i++) {
     rx_buf.put_byte(' ');
   }
-  rx_buf.put_byte(MARK);
+  rx_buf.put_byte(Mark);
 
   EXPECT_EQ(State::ReceivingFrame, frame_detector.get_state());
   ASSERT_FALSE(frame_detector.frame_available());
 }
 
 TEST(FrameDetector, ErrorWhileRx) {
-  SoftRxBuffer<LEN> rx_buf(MARK);
+  SoftRxBuffer<BufferLength> rx_buf(Mark);
   FrameDetectorTest frame_detector(rx_buf);
   EXPECT_TRUE(frame_detector.begin());
   ASSERT_EQ(State::Lost, frame_detector.get_state());
   EXPECT_FALSE(frame_detector.frame_available());
 
-  rx_buf.put_byte(MARK);
+  rx_buf.put_byte(Mark);
   ASSERT_EQ(State::ReceivingFrame, frame_detector.get_state());
   EXPECT_FALSE(frame_detector.frame_available());
 
-  rx_buf.put_byte(MARK);
+  rx_buf.put_byte(Mark);
   ASSERT_EQ(State::ReceivingFrame, frame_detector.get_state());
   EXPECT_FALSE(frame_detector.frame_available());
 
@@ -150,7 +150,7 @@ TEST(FrameDetector, ErrorWhileRx) {
   ASSERT_EQ(State::Lost, frame_detector.get_state());
   EXPECT_FALSE(frame_detector.frame_available());
 
-  rx_buf.put_byte(MARK);
+  rx_buf.put_byte(Mark);
   ASSERT_EQ(State::ReceivingFrame, frame_detector.get_state());
   EXPECT_FALSE(frame_detector.frame_available());
 
@@ -158,7 +158,7 @@ TEST(FrameDetector, ErrorWhileRx) {
   ASSERT_EQ(State::Lost, frame_detector.get_state());
   EXPECT_FALSE(frame_detector.frame_available());
 
-  rx_buf.put_byte(MARK);
+  rx_buf.put_byte(Mark);
   ASSERT_EQ(State::ReceivingFrame, frame_detector.get_state());
   EXPECT_FALSE(frame_detector.frame_available());
 
@@ -166,7 +166,7 @@ TEST(FrameDetector, ErrorWhileRx) {
   ASSERT_EQ(State::Lost, frame_detector.get_state());
   EXPECT_FALSE(frame_detector.frame_available());
 
-  rx_buf.put_byte(MARK);
+  rx_buf.put_byte(Mark);
   ASSERT_EQ(State::ReceivingFrame, frame_detector.get_state());
   EXPECT_FALSE(frame_detector.frame_available());
 
@@ -175,11 +175,11 @@ TEST(FrameDetector, ErrorWhileRx) {
   EXPECT_FALSE(frame_detector.frame_available());
 }
 
-template <int BUF_LEN>
+template <int BUF_BufferLength>
 vector<string> fakeRx(string frame) {
   vector<string> ret;
-  SoftRxBuffer<BUF_LEN> rx_buf(MARK);
-  FrameDetector<SoftRxBuffer<BUF_LEN>, BUF_LEN> frame_detector(rx_buf);
+  SoftRxBuffer<BUF_BufferLength> rx_buf(Mark);
+  FrameDetector<SoftRxBuffer<BUF_BufferLength>, BUF_BufferLength> frame_detector(rx_buf);
   if (!frame_detector.begin()) {
     return ret;
   }
@@ -205,7 +205,7 @@ vector<string> fakeRx(string frame) {
     if (frame_detector.frame_available()) {
       string s;
       auto length = static_cast<size_t>(frame_detector.frame_length());
-      s.assign(reinterpret_cast<char *>(frame_detector.take_frame()), length);
+      s.assign(reinterpret_cast<const char *>(frame_detector.take_frame()), length);
       ret.push_back(s);
     }
   }
@@ -214,36 +214,36 @@ vector<string> fakeRx(string frame) {
 }
 
 TEST(FrameDetector, FuzzMoreMarkers) {
-  EXPECT_THAT(fakeRx<LEN>(".aaa..."), testing::ElementsAre("aaa"));
-  EXPECT_THAT(fakeRx<LEN>("..aaa...."), testing::ElementsAre("aaa"));
-  EXPECT_THAT(fakeRx<LEN>("...aaa.."), testing::ElementsAre("aaa"));
-  EXPECT_THAT(fakeRx<LEN>("....aaa."), testing::ElementsAre("aaa"));
+  EXPECT_THAT(fakeRx<BufferLength>(".aaa..."), testing::ElementsAre("aaa"));
+  EXPECT_THAT(fakeRx<BufferLength>("..aaa...."), testing::ElementsAre("aaa"));
+  EXPECT_THAT(fakeRx<BufferLength>("...aaa.."), testing::ElementsAre("aaa"));
+  EXPECT_THAT(fakeRx<BufferLength>("....aaa."), testing::ElementsAre("aaa"));
 }
 
 TEST(FrameDetector, FramesTooLong) {
-  EXPECT_THAT(fakeRx<LEN>(".aaaaaaaaaaaaaaaaaaaa..aaa."), testing::ElementsAre("aaa"));
-  EXPECT_THAT(fakeRx<LEN>(".aaaaaaaaaaaaaaaaaaa..aaa."), testing::ElementsAre("aaa"));
-  EXPECT_THAT(fakeRx<LEN>("....................aaa."), testing::ElementsAre("aaa"));
-  EXPECT_THAT(fakeRx<LEN>("...................aaa."), testing::ElementsAre("aaa"));
+  EXPECT_THAT(fakeRx<BufferLength>(".aaaaaaaaaaaaaaaaaaaa..aaa."), testing::ElementsAre("aaa"));
+  EXPECT_THAT(fakeRx<BufferLength>(".aaaaaaaaaaaaaaaaaaa..aaa."), testing::ElementsAre("aaa"));
+  EXPECT_THAT(fakeRx<BufferLength>("....................aaa."), testing::ElementsAre("aaa"));
+  EXPECT_THAT(fakeRx<BufferLength>("...................aaa."), testing::ElementsAre("aaa"));
 }
 
 TEST(FrameDetector, FuzzyInputs) {
-  EXPECT_THAT(fakeRx<LEN>(".aaa..bbb..a."), testing::ElementsAre("aaa", "bbb", "a"));
-  EXPECT_THAT(fakeRx<LEN>("..aaa..bbb..a."), testing::ElementsAre("aaa", "bbb", "a"));
-  EXPECT_THAT(fakeRx<LEN>("aaa.bbb.a."), testing::ElementsAre());
-  EXPECT_THAT(fakeRx<LEN>("aaa.....bbb.a."), testing::ElementsAre("bbb"));
-  EXPECT_THAT(fakeRx<LEN>(".aaa....bbb.a."), testing::ElementsAre("aaa", "bbb"));
-  EXPECT_THAT(fakeRx<LEN>("aa.bbb.b...bbbb..s.ss.s...ssss..ss.ssss..aaaaa.sa.aaaa."),
+  EXPECT_THAT(fakeRx<BufferLength>(".aaa..bbb..a."), testing::ElementsAre("aaa", "bbb", "a"));
+  EXPECT_THAT(fakeRx<BufferLength>("..aaa..bbb..a."), testing::ElementsAre("aaa", "bbb", "a"));
+  EXPECT_THAT(fakeRx<BufferLength>("aaa.bbb.a."), testing::ElementsAre());
+  EXPECT_THAT(fakeRx<BufferLength>("aaa.....bbb.a."), testing::ElementsAre("bbb"));
+  EXPECT_THAT(fakeRx<BufferLength>(".aaa....bbb.a."), testing::ElementsAre("aaa", "bbb"));
+  EXPECT_THAT(fakeRx<BufferLength>("aa.bbb.b...bbbb..s.ss.s...ssss..ss.ssss..aaaaa.sa.aaaa."),
               testing::ElementsAre("bbbb", "s", "ssss", "ss", "aaaaa"));
 }
 
 TEST(FrameDetector, FuzzyErrors) {
-  EXPECT_THAT(fakeRx<LEN>(".aaa..bUb..a."), testing::ElementsAre("aaa", "a"));
-  EXPECT_THAT(fakeRx<LEN>("..aaaF.bbb..a."), testing::ElementsAre("bbb", "a"));
-  EXPECT_THAT(fakeRx<LEN>("aaa.bbb.a."), testing::ElementsAre());
-  EXPECT_THAT(fakeRx<LEN>("aaa.....bbb.a."), testing::ElementsAre("bbb"));
-  EXPECT_THAT(fakeRx<LEN>(".aaa...Dbbb.a."), testing::ElementsAre("aaa"));
-  EXPECT_THAT(fakeRx<LEN>("aa.bbb.b...bbbb..s.ss.s...ssss..ss.ssss.Oaaaaa.sa.aaaa."),
+  EXPECT_THAT(fakeRx<BufferLength>(".aaa..bUb..a."), testing::ElementsAre("aaa", "a"));
+  EXPECT_THAT(fakeRx<BufferLength>("..aaaF.bbb..a."), testing::ElementsAre("bbb", "a"));
+  EXPECT_THAT(fakeRx<BufferLength>("aaa.bbb.a."), testing::ElementsAre());
+  EXPECT_THAT(fakeRx<BufferLength>("aaa.....bbb.a."), testing::ElementsAre("bbb"));
+  EXPECT_THAT(fakeRx<BufferLength>(".aaa...Dbbb.a."), testing::ElementsAre("aaa"));
+  EXPECT_THAT(fakeRx<BufferLength>("aa.bbb.b...bbbb..s.ss.s...ssss..ss.ssss.Oaaaaa.sa.aaaa."),
               testing::ElementsAre("bbbb", "s", "ssss", "ss"));
 }
 

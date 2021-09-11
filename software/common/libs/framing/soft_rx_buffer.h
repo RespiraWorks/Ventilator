@@ -19,7 +19,7 @@ limitations under the License.
 
 #include "serial_listeners.h"
 
-template <uint32_t RxBytesMax>
+template <size_t RxBytesMax>
 class SoftRxBuffer {
  public:
   explicit SoftRxBuffer(uint8_t match_char) : match_char_(match_char) {}
@@ -34,21 +34,21 @@ class SoftRxBuffer {
     return true;
   };
 
-  uint32_t received_length() { return rx_index_; }
+  size_t received_length() const { return rx_index_; }
 
-  uint8_t *get() { return rx_buffer_; }
+  const uint8_t *get() const { return rx_buffer_; }
 
-  void put_byte(uint8_t b) {
+  void put_byte(const uint8_t byte) {
     if (rx_index_ < RxBytesMax) {
-      rx_buffer_[rx_index_++] = b;
-      if (match_char_ == b) {
+      rx_buffer_[rx_index_++] = byte;
+      if (byte == match_char_) {
         if (rx_listener_) {
           rx_listener_->on_character_match();
         }
       }
     }
 
-    // \TODO: this never be >? or this could just be an else branch?
+    // cannot be `else` since rx_index_ may be incremented in above block
     if (rx_index_ >= RxBytesMax) {
       if (rx_listener_) {
         rx_listener_->on_rx_complete();
@@ -57,8 +57,8 @@ class SoftRxBuffer {
   }
 
  private:
-  uint8_t rx_buffer_[RxBytesMax];
-  uint32_t rx_index_{0};
+  uint8_t rx_buffer_[RxBytesMax] = {0};
+  size_t rx_index_{0};
   RxListener *rx_listener_{nullptr};
   uint8_t match_char_{0};
 };

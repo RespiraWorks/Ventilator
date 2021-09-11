@@ -38,14 +38,14 @@ class RxBufferUartDma {
   }
 
   // Returns how many bytes were written into rx_buf
-  uint32_t received_length() { return (RxBytesMax - uart_dma_.rx_bytes_left()); }
+  uint32_t received_length() const { return (RxBytesMax - uart_dma_.rx_bytes_left()); }
 
   // Returns the rx_buffer_
-  uint8_t *get() { return rx_buffer_; }
+  const uint8_t *get() const { return rx_buffer_; }
 
 #ifdef TEST_MODE
   // Puts a byte to rx_buffer_
-  void test_put_byte(uint8_t b);
+  void test_put_byte(const uint8_t b);
 #endif
 
  private:
@@ -59,7 +59,7 @@ class RxBufferUartDma {
 extern uint32_t rx_index;
 // Puts a byte to rx_buffer_
 template <uint32_t RxBytesMax>
-void RxBufferUartDma<RxBytesMax>::test_put_byte(uint8_t b) {
+void RxBufferUartDma<RxBytesMax>::test_put_byte(const uint8_t b) {
   rx_buffer_[rx_index++] = b;
 }
 #endif

@@ -38,9 +38,12 @@ Abbreviations [RM], [DS], etc are defined in hal/README.md.
 #include "system_timer.h"
 #include "timers.h"
 #include "uart.h"
-#include "uart_dma.h"
 #include "vars.h"
 #include "watchdog.h"
+
+#ifdef UART_VIA_DMA
+#include "uart_dma.h"
+#endif
 
 static constexpr uint32_t CPUFrequencyMhz{80};
 

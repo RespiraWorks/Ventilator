@@ -13,9 +13,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+#if defined(BARE_STM32)
 #include "hal.h"
-
-#ifdef TEST_MODE
+#else
 #include <cassert>
 #endif
 

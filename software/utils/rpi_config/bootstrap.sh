@@ -1,5 +1,20 @@
 #!/bin/bash
 
+# Copyright 2020-2021, RespiraWorks
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+
 # Fail if any command fails
 set -e
 set -o pipefail
@@ -12,7 +27,7 @@ echo "  -- clones the repository"
 echo "  -- configures Raspberry Pi:"
 echo "     * no screensaver or screen blanking"
 echo "     * no splash on bootup"
-echo "     * serial interface enabled for GUI<->controller comms"
+echo "     * serial interface enabled for GUI<->controller communications"
 echo "  -- udev rule added for nucleo, enabling flashing of firmware"
 echo "  -- guake console accessible at all times using [F12]"
 echo "  -- desktop shortcuts for ventilator GUI, updater, debug interface"

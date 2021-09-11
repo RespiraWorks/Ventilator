@@ -102,10 +102,10 @@ class CmdLine(cmd.Cmd):
 
     def update_prompt(self):
         if not self.interface.connected():
-            self.prompt = purple("OFFLINE] ")
+            self.prompt = purple("[OFFLINE] ")
             return
 
-        self.prompt = purple("ERROR] ")
+        self.prompt = purple("[ERROR] ")
         try:
             mode = self.interface.mode_get()
         except Error as e:
@@ -116,13 +116,13 @@ class CmdLine(cmd.Cmd):
             return
 
         if mode == MODE_BOOT:
-            self.prompt = orange(f"{self.interface.serial_port.port}:boot] ")
+            self.prompt = orange(f"[{self.interface.serial_port.port}:boot] ")
         else:
             sn = self.interface.variable_get("0_ventilator_serial_number", raw=True)
             if sn > 0:
-                self.prompt = green(f"sn-{sn}] ")
+                self.prompt = green(f"[sn:{sn}] ")
             else:
-                self.prompt = green(f"{self.interface.serial_port.port}] ")
+                self.prompt = green(f"[port:{self.interface.serial_port.port}] ")
 
     def cli_loop(self):
         self.autoload()
@@ -147,6 +147,22 @@ class CmdLine(cmd.Cmd):
     def emptyline(self):
         self.interface.resynchronize()
         self.update_prompt()
+
+    def do_EOF(self, line):
+        return True
+
+    def do_exit(self, line):
+        return True
+
+    def do_quit(self, line):
+        return True
+
+    def do_env(self, line):
+        """Prints this command interface's environmental variables
+        """
+        print(f"scripts_directory = {self.scripts_directory}")
+        print(f"test_scenarios_dir = {self.test_scenarios_dir}")
+        print(f"self.test_data_dir = {self.test_data_dir}")
 
     def do_debug(self, line):
         """Sets display of low level serial data on/off.
@@ -234,10 +250,8 @@ named {self.scripts_directory} will be searched for the python script.
         exec(run_command)
 
     def complete_run(self, text, line, begidx, endidx):
-        return [
-            x[len(self.scripts_directory) + 1 : len(x) - 3]
-            for x in glob.glob(self.scripts_directory + "/" + text + "*.py")
-        ]
+        wildcard_path = Path(self.scripts_directory) / (text + "*.py")
+        return [Path(x).stem for x in glob.glob(str(wildcard_path))]
 
     def do_test(self, line):
         """This command is for working with structured test scenarios and saved test data.
@@ -376,14 +390,12 @@ test read <file> [--verbose/-v] [--plot/-p] [--csv/-c]
             print("Invalid test args: {}", params)
 
     def get_dataset_names(self, text=""):
-        dir_length = len(str(self.test_data_dir)) + 1
         wildcard_path = self.test_data_dir / (text + "*.json")
-        return [x[dir_length : len(x) - 5] for x in glob.glob(str(wildcard_path))]
+        return [str(Path(x).stem) for x in glob.glob(str(wildcard_path))]
 
     def get_scenario_file_names(self, text=""):
-        dir_length = len(str(self.test_scenarios_dir)) + 1
         wildcard_path = self.test_scenarios_dir / (text + "*")
-        return [x[dir_length : len(x)] for x in glob.glob(str(wildcard_path))]
+        return [str(Path(x).name) for x in glob.glob(str(wildcard_path))]
 
     def complete_test(self, text, line, begidx, endidx):
         sub_commands = [
@@ -501,12 +513,6 @@ ex: poke [type] <address> <data>
             data = [int(x, 0) for x in param[1:]]
         self.interface.poke(address, data, poke_type)
 
-    def do_EOF(self, line):
-        return True
-
-    def do_exit(self, line):
-        return True
-
     def do_get(self, line):
         cl = line.split()
         if len(cl) < 1:
@@ -582,19 +588,38 @@ ex: poke [type] <address> <data>
 
     def do_set(self, line):
         cl = line.split()
+        if len(cl) < 1:
+            print(red("Not enough parameters"))
+            return
+        varname = cl[0]
+
+        if varname == "force_off":
+            self.interface.variables_force_off()
+            return
+
+        if varname == "force_open":
+            self.interface.variables_force_open()
+            return
+
         if len(cl) < 2:
             print("Please give the variable name and value")
             return
+
         if len(cl) == 2:
-            self.interface.variable_set(cl[0], cl[1])  # single variable
+            self.interface.variable_set(varname, cl[1])  # single variable
         else:
-            self.interface.variable_set(cl[0], cl[1:])  # array
+            self.interface.variable_set(varname, cl[1:])  # array
 
     def complete_set(self, text, line, begidx, endidx):
-        return self.interface.variables_find(text, access_filter=VAR_ACCESS_WRITE)
+        return self.interface.variables_find(text, access_filter=VAR_ACCESS_WRITE) + [
+            x for x in ["force_off", "force_open"] if x.startswith(text)
+        ]
 
     def help_set(self):
-        print("Sets one of the ventilator debug variables listed below:")
+        print("Sets value for a ventilator debug variable (or convenience macro):")
+        print("  force_off           - resets all forced actuator variables")
+        print("  force_open          - forces all valves open and blower to maximum")
+        print("Available variables:")
         for k in sorted(
             self.interface.variables_find(
                 starting_with="", access_filter=VAR_ACCESS_WRITE

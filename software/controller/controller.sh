@@ -273,7 +273,9 @@ elif [ "$1" == "run" ]; then
 elif [ "$1" == "debug" ]; then
 
   shift
-  ../utils/debug/debug_cli.py "$@"
+  pushd ../utils/debug
+  ./debug_cli.py "$@"
+  popd
 
   exit $EXIT_SUCCESS
 

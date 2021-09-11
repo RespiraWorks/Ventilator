@@ -179,7 +179,7 @@ class ControllerDebugInterface:
             " reproducible."
         )
 
-        value = input("Are you sure you want to continue (y/Y)?")
+        value = input("Are you sure you want to continue (y/Y)? ")
         return value == "y" or value == "Y"
 
     # Read info about all the supported variables and load

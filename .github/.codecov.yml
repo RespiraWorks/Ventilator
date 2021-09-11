@@ -52,3 +52,5 @@ ignore:
   - "**/third_party/nanopb"
   - "**/third_party/**/*"
   - "**/test"
+  - "software/common/third_party/**/*"
+  - "software/controller/test/**/*"

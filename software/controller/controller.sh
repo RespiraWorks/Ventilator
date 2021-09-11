@@ -79,6 +79,7 @@ The following options are available:
                 [--cov]       - generate coverage reports
   unit      Builds and runs unit tests only (and generates coverage reports)
                 <name>  - run specific unit test, may include wildcards, i.e. 'debug*'
+                [-o]    - open coverage report in browser when done
   help/-h   Display this help info
 EOF
 }
@@ -181,7 +182,7 @@ generate_coverage_reports() {
 }
 
 launch_browser() {
-  python -m webbrowser ${COVERAGE_OUTPUT_DIR}/index.html
+  python -m webbrowser "${COVERAGE_OUTPUT_DIR}/index.html"
 }
 
 ########
@@ -230,6 +231,10 @@ elif [ "$1" == "unit" ]; then
   fi
 
   generate_coverage_reports
+
+  if [ "$3" == "-o" ]; then
+    launch_browser
+  fi
 
   exit $EXIT_SUCCESS
 

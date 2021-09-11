@@ -14,7 +14,6 @@ CMD /bin/bash \
     software/gui/gui.sh --install && \
     software/gui/gui.sh --build -f -j --no-checks && \
     software/gui/gui.sh --test -f -x && \
-    cd software/gui/build/tests && \
     curl -Os https://uploader.codecov.io/latest/linux/codecov && \
     chmod +x codecov && \
-    ./codecov -t ${CODECOV_TOKEN} -F gui
+    ./codecov -t ${CODECOV_TOKEN} -s software/gui/build/tests -F gui

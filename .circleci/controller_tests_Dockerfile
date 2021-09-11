@@ -14,7 +14,6 @@ COPY . ./
 ENV VERBOSE=1
 CMD /bin/bash \
     software/controller/controller.sh test --no-checks && \
-    cd software/controller && \
     curl -Os https://uploader.codecov.io/latest/linux/codecov && \
     chmod +x codecov && \
-    ./codecov -t ${CODECOV_TOKEN} -F controller
+    ./codecov -t ${CODECOV_TOKEN} -s software/controller -F controller

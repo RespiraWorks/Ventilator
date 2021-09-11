@@ -353,39 +353,43 @@ class ControllerDebugInterface:
 
         print("\nRetrieving data and halting ventilation")
         # get data and halt ventilation
-        test.traces = self.trace_download()
-        test.ventilator_settings = self.variables_get(
-            self.variables_find(access_filter=var_info.VAR_ACCESS_WRITE), raw=True
-        )
-        test.ventilator_readings = self.variables_get(
-            self.variables_find(access_filter=var_info.VAR_ACCESS_READ_ONLY), raw=True
-        )
+        self.save_test_data(test)
         self.variable_set("forced_mode", "off")
         return test
 
     def trace_save(self, scenario_name="manual_trace"):
         test = TestData(test_scenario.TestScenario())
-        test.traces = self.trace_download()
-        time_series = test.traces[0].data
-        test.scenario.capture_duration_secs = (
-            time_series[len(time_series) - 1] - time_series[0]
-        )
+
+        # get data
+        self.save_test_data(test)
+
+        # Label null scenario
         test.scenario.name = scenario_name
         test.scenario.description = (
             "Manually triggered trace -- undefined test scenario"
+        )
+
+        # Infer scenario parameters
+        time_series = test.traces[0].data
+        test.scenario.capture_duration_secs = (
+            time_series[len(time_series) - 1] - time_series[0]
         )
         test.scenario.capture_ignore_secs = 0
         test.scenario.trace_period = self.trace_get_period()
         test.scenario.trace_variable_names = [
             x.name for x in self.trace_active_variables_list()
         ]
+
+        return test
+
+    def save_test_data(self, test):
+        test.traces = self.trace_download()
         test.ventilator_settings = self.variables_get(
             self.variables_find(access_filter=var_info.VAR_ACCESS_WRITE), raw=True
         )
         test.ventilator_readings = self.variables_get(
             self.variables_find(access_filter=var_info.VAR_ACCESS_READ_ONLY), raw=True
         )
-        return test
 
     def peek(self, address, ct=1, fmt="+XXXX", fname=None, raw=False):
         decoded_address = debug_types.decode_address(address)

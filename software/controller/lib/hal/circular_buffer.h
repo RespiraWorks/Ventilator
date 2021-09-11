@@ -35,9 +35,7 @@ class CircularBuffer {
   volatile int head_{0}, tail_{0};
 
  public:
-  CircularBuffer() {
-    for (size_t i = 0; i <= N; ++i) buffer_[i] = T();
-  }
+  CircularBuffer() = default;
 
   // Return number of elements available in the buffer to read.
   size_t FullCount() const {
@@ -51,6 +49,8 @@ class CircularBuffer {
   // Return number of free spaces in the buffer where more
   // elements can be written.
   size_t FreeCount() const { return N - FullCount(); }
+
+  bool IsFull() const { return FullCount() == N; }
 
   // Get the oldest element from the buffer, popping it from the buffer.
   std::optional<T> Get() {

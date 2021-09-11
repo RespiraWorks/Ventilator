@@ -47,7 +47,7 @@ VenturiFlowSensor::VenturiFlowSensor(const char* name, const char* help_suppleme
  * direction of flow, depending on how the differential sensor is attached to
  * the venturi.
  */
-VolumetricFlow VenturiFlowSensor::read(HalApi& hal_api, float air_density) const {
+VolumetricFlow VenturiFlowSensor::read(const HalApi& hal_api, float air_density) const {
   auto ret = pressure_delta_to_flow(pressure_sensor_->read(hal_api), air_density);
   dbg_flow_.set(ret.ml_per_sec());
   return ret;

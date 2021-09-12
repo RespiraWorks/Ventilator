@@ -61,18 +61,34 @@ else
   exit $EXIT_FAILURE
 fi
 
-### Set RW background - must be done in Desktop mode, thus not in boostrap.sh
-pcmanfm --set-wallpaper ${HOME}/ventilator/manufacturing/images/rendering_full.jpg
-
 # This script should run from repo/software dir
 cd "$(dirname "$0")"/../..
 
 ### Will not switch branch to master!
 git pull
 
-### Update controller and deploy
-./controller/controller.sh clean
-./controller/controller.sh run
+### Set RW background - must be done in Desktop mode, thus not in boostrap.sh
+pcmanfm --set-wallpaper ${HOME}/ventilator/manufacturing/images/rendering_full.jpg
+
+### Update Desktop shortcuts
+/bin/cp -rf software/utils/rpi_config/user/Desktop/* ${HOME}/Desktop
+
+if zenity --question --no-wrap --title="PIO Update" \
+          --text "<span size=\"large\">Update PlatformIO and libraries?</span>"
+then
+  ### Clean and update PIO
+  echo "Updating PlatformIO and libraries..."
+  ./controller/controller.sh update
+fi
+
+if zenity --question --no-wrap --title="Controller Build" \
+          --text "<span size=\"large\">Build and deploy controller?</span>"
+then
+  echo "Building and deploying cycle controller..."
+  ### Update controller and deploy
+  ./controller/controller.sh clean
+  ./controller/controller.sh run
+fi
 
 ans=$(zenity --list --radiolist --title "GUI Build" \
        --column "Select" --column "Build type" \
@@ -88,8 +104,6 @@ then
   echo "Building Debug"
   ./gui/gui.sh clean
   ./gui/gui.sh build --debug --no-checks
-else
-  exit $EXIT_FAILURE
 fi
 
 zenity --info --no-wrap --title="Success" --text "Ventilator update executed successfully!"

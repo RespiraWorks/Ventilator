@@ -135,6 +135,8 @@ class ControllerDebugInterface:
         # we do this just for the git info
         test = TestData(test_scenario.TestScenario())
 
+        # \TODO: check that serial number is valid?
+
         ctrl_version = self.variable_get("0_controller_version")
         ctrl_dirty = bool(self.variable_get("0_controller_git_dirty", raw=True))
         ctrl_branch = self.variable_get("0_controller_branch")

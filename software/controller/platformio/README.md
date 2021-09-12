@@ -25,6 +25,8 @@ For the above script to work, a file in your local platformio configuration foun
 `$HOME/.platformio/packages/tool-openocd/scripts/interface/stlink.cfg`
 must be replaced with the [`stlink.cfg`](stlink.cfg) provided here.
 
+> TODO: make a script to patch or replace this file
+
 This solution is based on a post on the platformio forums
 [here](https://community.platformio.org/t/choosing-stlink-v2-programmer/10716).
 

@@ -14,7 +14,7 @@ jobs:
       - run:
           name: Check for broken links
           command: |
-            git ls-files -z '**/*.md' | xargs -0 liche -d . -x "amazon.com|mouser.com|cypress.com|digikey.com|st.com|rsdelivers.com|platformio.org|smcpneumatics.com|all3dp.com" -t 30
+            git ls-files -z '**/*.md' | xargs -0 liche -d . -x "amazon.com|mouser.com|cypress.com|digikey.com|st.com|rsdelivers.com|platformio.org|smcpneumatics.com|all3dp.com|uflowvalve.com" -t 30
 
   common-precommit-checks:
     docker:

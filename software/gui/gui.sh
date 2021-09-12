@@ -40,7 +40,7 @@ EXIT_FAILURE=1
 EXIT_SUCCESS=0
 
 COVERAGE_INPUT_DIR=build/tests
-COVERAGE_OUTPUT_DIR=build/coverage_reports
+COVERAGE_OUTPUT_DIR=coverage_reports
 
 #########
 # UTILS #
@@ -117,6 +117,39 @@ generate_coverage_reports() {
   echo "   You may open it in browser with 'python -m webbrowser ${COVERAGE_OUTPUT_DIR}/index.html'"
 
   #launch_browser
+}
+
+upload_coverage_reports() {
+  echo "Generating test coverage reports for GUI..."
+
+  # If $COVERAGE_OUTPUT_DIR, assumes it is clean, i.e. with clean_dir
+  clean_dir ${COVERAGE_OUTPUT_DIR}/ugly
+  clean_dir ${COVERAGE_OUTPUT_DIR}/processed
+  mkdir -p "$COVERAGE_OUTPUT_DIR/ugly"
+  mkdir -p "$COVERAGE_OUTPUT_DIR/processed"
+
+  find $COVERAGE_INPUT_DIR -name '*.gcda' -exec cp -t ${COVERAGE_OUTPUT_DIR}/ugly {} +
+  find $COVERAGE_INPUT_DIR -name '*.gcno' -exec cp -t ${COVERAGE_OUTPUT_DIR}/ugly {} +
+  find . \( -name "*.c" -o -name "*.cpp" -o -name "*.h" -o -name "*.hpp" \) \
+      -not -path '*third_party*' \
+      -exec gcov -pb -f {} \;
+  mv *.gcov "$COVERAGE_OUTPUT_DIR/processed"
+
+# weird that all three of these had to be removed above for anything to come out
+#      -not -path '*moc*' \
+#      -not -path '*qrc*' \
+#      -not -path '*test*' \
+
+  rm $COVERAGE_OUTPUT_DIR/processed/#usr*
+  rm $COVERAGE_OUTPUT_DIR/processed/*third_party*
+  rm $COVERAGE_OUTPUT_DIR/processed/*common*
+  rm $COVERAGE_OUTPUT_DIR/processed/moc*
+  rm $COVERAGE_OUTPUT_DIR/processed/*tests*
+
+  curl -Os https://uploader.codecov.io/latest/linux/codecov
+  chmod +x codecov
+  ./codecov -F gui
+  rm codecov
 }
 
 launch_browser() {
@@ -266,14 +299,19 @@ if [ "$1" == "--test" ]; then
   generate_coverage_reports
 
   exit $EXIT_SUCCESS
-fi
 
+###################
+# UPLOAD COVERAGE #
+###################
+elif [ "$1" == "cov_upload" ]; then
+  upload_coverage_reports
+
+  exit $EXIT_SUCCESS
 
 #######
 # RUN #
 #######
-
-if [ "$1" == "--run" ]; then
+elif [ "$1" == "--run" ]; then
 
   if [ "$EUID" -eq 0 ] && [ "$2" != "-f" ]; then
     echo "Please do not run the app with root privileges!"
@@ -291,8 +329,12 @@ if [ "$1" == "--run" ]; then
     exit $EXIT_SUCCESS
   fi
   popd
-fi
 
-echo No valid options provided :\(
-print_help
-exit $EXIT_FAILURE
+################
+# ERROR & HELP #
+################
+else
+  echo No valid options provided :\(
+  print_help
+  exit $EXIT_FAILURE
+fi

@@ -149,6 +149,35 @@ run_integration_tests() {
   INTEGRATION_TEST_H=eeprom_test.h pio run -e integration-test
 }
 
+upload_coverage_reports() {
+  echo "Generating test coverage reports for controller and common code..."
+
+  SRC_DIR=".pio/build/$COVERAGE_ENVIRONMENT"
+
+  # If $COVERAGE_OUTPUT_DIR, assumes it is clean, i.e. with clean_dir
+  clean_dir ${COVERAGE_OUTPUT_DIR}/ugly
+  clean_dir ${COVERAGE_OUTPUT_DIR}/processed
+  mkdir -p "$COVERAGE_OUTPUT_DIR/ugly"
+  mkdir -p "$COVERAGE_OUTPUT_DIR/processed"
+
+  find $SRC_DIR -name '*.gcda' -exec cp -t ${COVERAGE_OUTPUT_DIR}/ugly {} +
+  find $SRC_DIR -name '*.gcno' -exec cp -t ${COVERAGE_OUTPUT_DIR}/ugly {} +
+  find . \( -name "*.c" -o -name "*.cpp" -o -name "*.h" -o -name "*.hpp" \) \
+      -not -path '*third_party*' \
+      -not -path '*generated_libs*' \
+      -not -path '*integration_tests*' \
+      -not -path '*cmake*' \
+      -not -path '*test*' \
+      -exec gcov -pb -o coverage_reports/ugly -f {} \;
+  mv *.gcov "$COVERAGE_OUTPUT_DIR/processed"
+  rm $COVERAGE_OUTPUT_DIR/processed/#usr*
+
+  curl -Os https://uploader.codecov.io/latest/linux/codecov
+  chmod +x codecov
+  ./codecov -F controller
+  rm codecov
+}
+
 generate_coverage_reports() {
   echo "Generating test coverage reports..."
 
@@ -264,6 +293,14 @@ elif [ "$1" == "test" ]; then
   if [ "$2" == "--cov" ] || [ "$3" == "--cov" ]; then
     generate_coverage_reports
   fi
+
+  exit $EXIT_SUCCESS
+
+###################
+# UPLOAD COVERAGE #
+###################
+elif [ "$1" == "cov_upload" ]; then
+  upload_coverage_reports
 
   exit $EXIT_SUCCESS
 

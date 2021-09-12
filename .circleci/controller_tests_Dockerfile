@@ -13,7 +13,6 @@ WORKDIR /root/Ventilator
 COPY . ./
 ENV VERBOSE=1
 CMD /bin/bash \
-    software/controller/controller.sh test --cov --no-checks && \
-    curl -Os https://uploader.codecov.io/latest/linux/codecov && \
-    chmod +x codecov && \
-    ./codecov -f software/controller/coverage_reports/native.info -F controller
+    cd software/controller && \
+    controller.sh test --cov --no-checks && \
+    controller.sh cov_upload

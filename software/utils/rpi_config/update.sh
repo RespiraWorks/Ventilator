@@ -1,5 +1,20 @@
 #!/bin/bash
 
+# Copyright 2020-2021, RespiraWorks
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+
 # Fail if any command fails
 set -e
 set -o pipefail
@@ -11,7 +26,7 @@ echo " "
 echo "  -- this will rebuild and flash controller firmware"
 echo "  -- this will rebuild the GUI"
 echo "  -- a 'git pull' will be performed, but branch will not be changed"
-echo "  -- if you have made any local changes, take care"
+echo "  -- if you have made any local changes, abort take care of those first"
 echo "  -- neither unit tests nor static checks will be performed"
 echo " "
 read -n1 -s -r -p $'Press any key to continue...\n' key
@@ -34,11 +49,18 @@ if [ "$EUID" -eq 0 ] && [ "$2" != "-f" ]; then
   exit 1
 fi
 
+### Will not switch branch to master!
 git pull
 
+### Update desktop shortcuts
+yes | cp -rf software/utils/rpi_config/Github /home/pi/Desktop
+yes | cp -rf software/utils/rpi_config/*.desktop /home/pi/Desktop
+
+### Update controller and deploy
 ./controller/controller.sh clean
 ./controller/controller.sh run
 
+### Rebuild GUI
 ./gui/gui.sh --build --release --no-checks
 
 echo "Installation complete. Please check that this terminated with no errors."

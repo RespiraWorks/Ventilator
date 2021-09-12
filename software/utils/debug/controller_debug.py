@@ -25,6 +25,7 @@ import threading
 import time
 import debug_types
 import var_info
+import fnmatch
 from lib.error import Error
 import test_scenario
 from test_data import *
@@ -179,7 +180,7 @@ class ControllerDebugInterface:
             " reproducible."
         )
 
-        value = input("Are you sure you want to continue (y/Y)?")
+        value = input("Are you sure you want to continue (y/Y)? ")
         return value == "y" or value == "Y"
 
     # Read info about all the supported variables and load
@@ -203,19 +204,14 @@ class ControllerDebugInterface:
                 )
             self.variable_metadata[variable.name] = variable
 
-    def variables_list(self):
-        ret = "Variables currently defined:\n"
-        for k in sorted(self.variable_metadata.keys()):
-            ret += f" {self.variable_metadata[k].verbose()}\n"
-        return ret
-
-    def variables_find(self, starting_with, access_filter=None):
+    def variables_find(self, pattern="", access_filter=None):
         out = []
         for name, metadata in self.variable_metadata.items():
             if access_filter is not None and metadata.write_access != access_filter:
                 continue
-            if name.startswith(starting_with):
-                out.append(name)
+            if len(pattern) and not fnmatch.fnmatchcase(name, pattern):
+                continue
+            out.append(name)
         return out
 
     def variable_by_id(self, vid):
@@ -247,11 +243,9 @@ class ControllerDebugInterface:
         for var, val in pairs.items():
             self.variable_set(var, val, verbose=True)
 
-    def variables_get_all(self, access_filter=None, raw=False):
+    def variables_get(self, names, raw=False):
         ret = {}
-        for name, metadata in self.variable_metadata.items():
-            if access_filter is not None and metadata.write_access != access_filter:
-                continue
+        for name in names:
             ret[name] = self.variable_get(name, raw=raw)
         return ret
 
@@ -359,39 +353,43 @@ class ControllerDebugInterface:
 
         print("\nRetrieving data and halting ventilation")
         # get data and halt ventilation
-        test.traces = self.trace_download()
-        test.ventilator_settings = self.variables_get_all(
-            access_filter=var_info.VAR_ACCESS_WRITE, raw=True
-        )
-        test.ventilator_readings = self.variables_get_all(
-            access_filter=var_info.VAR_ACCESS_READ_ONLY, raw=True
-        )
+        self.save_test_data(test)
         self.variable_set("forced_mode", "off")
         return test
 
     def trace_save(self, scenario_name="manual_trace"):
         test = TestData(test_scenario.TestScenario())
-        test.traces = self.trace_download()
-        time_series = test.traces[0].data
-        test.scenario.capture_duration_secs = (
-            time_series[len(time_series) - 1] - time_series[0]
-        )
+
+        # get data
+        self.save_test_data(test)
+
+        # Label null scenario
         test.scenario.name = scenario_name
         test.scenario.description = (
             "Manually triggered trace -- undefined test scenario"
+        )
+
+        # Infer scenario parameters
+        time_series = test.traces[0].data
+        test.scenario.capture_duration_secs = (
+            time_series[len(time_series) - 1] - time_series[0]
         )
         test.scenario.capture_ignore_secs = 0
         test.scenario.trace_period = self.trace_get_period()
         test.scenario.trace_variable_names = [
             x.name for x in self.trace_active_variables_list()
         ]
-        test.ventilator_settings = self.variables_get_all(
-            access_filter=var_info.VAR_ACCESS_WRITE, raw=True
-        )
-        test.ventilator_readings = self.variables_get_all(
-            access_filter=var_info.VAR_ACCESS_READ_ONLY, raw=True
-        )
+
         return test
+
+    def save_test_data(self, test):
+        test.traces = self.trace_download()
+        test.ventilator_settings = self.variables_get(
+            self.variables_find(access_filter=var_info.VAR_ACCESS_WRITE), raw=True
+        )
+        test.ventilator_readings = self.variables_get(
+            self.variables_find(access_filter=var_info.VAR_ACCESS_READ_ONLY), raw=True
+        )
 
     def peek(self, address, ct=1, fmt="+XXXX", fname=None, raw=False):
         decoded_address = debug_types.decode_address(address)

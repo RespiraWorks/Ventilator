@@ -102,10 +102,10 @@ class CmdLine(cmd.Cmd):
 
     def update_prompt(self):
         if not self.interface.connected():
-            self.prompt = purple("OFFLINE] ")
+            self.prompt = purple("[OFFLINE] ")
             return
 
-        self.prompt = purple("ERROR] ")
+        self.prompt = purple("[ERROR] ")
         try:
             mode = self.interface.mode_get()
         except Error as e:
@@ -116,13 +116,13 @@ class CmdLine(cmd.Cmd):
             return
 
         if mode == MODE_BOOT:
-            self.prompt = orange(f"{self.interface.serial_port.port}:boot] ")
+            self.prompt = orange(f"[{self.interface.serial_port.port}:boot] ")
         else:
             sn = self.interface.variable_get("0_ventilator_serial_number", raw=True)
             if sn > 0:
-                self.prompt = green(f"sn-{sn}] ")
+                self.prompt = green(f"[sn:{sn}] ")
             else:
-                self.prompt = green(f"{self.interface.serial_port.port}] ")
+                self.prompt = green(f"[port:{self.interface.serial_port.port}] ")
 
     def cli_loop(self):
         self.autoload()
@@ -147,6 +147,22 @@ class CmdLine(cmd.Cmd):
     def emptyline(self):
         self.interface.resynchronize()
         self.update_prompt()
+
+    def do_EOF(self, line):
+        return True
+
+    def do_exit(self, line):
+        return True
+
+    def do_quit(self, line):
+        return True
+
+    def do_env(self, line):
+        """Prints this command interface's environmental variables
+        """
+        print(f"scripts_directory = {self.scripts_directory}")
+        print(f"test_scenarios_dir = {self.test_scenarios_dir}")
+        print(f"self.test_data_dir = {self.test_data_dir}")
 
     def do_debug(self, line):
         """Sets display of low level serial data on/off.
@@ -234,10 +250,8 @@ named {self.scripts_directory} will be searched for the python script.
         exec(run_command)
 
     def complete_run(self, text, line, begidx, endidx):
-        return [
-            x[len(self.scripts_directory) + 1 : len(x) - 3]
-            for x in glob.glob(self.scripts_directory + "/" + text + "*.py")
-        ]
+        wildcard_path = Path(self.scripts_directory) / (text + "*.py")
+        return [Path(x).stem for x in glob.glob(str(wildcard_path))]
 
     def do_test(self, line):
         """This command is for working with structured test scenarios and saved test data.
@@ -376,14 +390,12 @@ test read <file> [--verbose/-v] [--plot/-p] [--csv/-c]
             print("Invalid test args: {}", params)
 
     def get_dataset_names(self, text=""):
-        dir_length = len(str(self.test_data_dir)) + 1
         wildcard_path = self.test_data_dir / (text + "*.json")
-        return [x[dir_length : len(x) - 5] for x in glob.glob(str(wildcard_path))]
+        return [str(Path(x).stem) for x in glob.glob(str(wildcard_path))]
 
     def get_scenario_file_names(self, text=""):
-        dir_length = len(str(self.test_scenarios_dir)) + 1
         wildcard_path = self.test_scenarios_dir / (text + "*")
-        return [x[dir_length : len(x)] for x in glob.glob(str(wildcard_path))]
+        return [str(Path(x).name) for x in glob.glob(str(wildcard_path))]
 
     def complete_test(self, text, line, begidx, endidx):
         sub_commands = [
@@ -501,12 +513,6 @@ ex: poke [type] <address> <data>
             data = [int(x, 0) for x in param[1:]]
         self.interface.poke(address, data, poke_type)
 
-    def do_EOF(self, line):
-        return True
-
-    def do_exit(self, line):
-        return True
-
     def do_get(self, line):
         cl = line.split()
         if len(cl) < 1:
@@ -523,46 +529,41 @@ ex: poke [type] <address> <data>
                 fmt = cl[1]
 
         if var_name == "all":
-            all_vars = self.interface.variables_get_all(raw=raw)
-            for count, name in enumerate(sorted(all_vars.keys())):
-                variable_md = self.interface.variable_metadata[name]
-                text = variable_md.print_value(all_vars[name])
-                if (count % 2) == 0:
-                    print(white(text))
-                else:
-                    print(dark_orange(text))
+            found = self.interface.variables_find()
+            all_vars = self.interface.variables_get(found, raw=raw)
+            self.print_variable_values(all_vars, show_access=True)
             return
         elif var_name == "set":
-            all_vars = self.interface.variables_get_all(
-                access_filter=VAR_ACCESS_WRITE, raw=raw
-            )
-            for count, name in enumerate(sorted(all_vars.keys())):
-                variable_md = self.interface.variable_metadata[name]
-                text = variable_md.print_value(all_vars[name], show_access=False)
-                if (count % 2) == 0:
-                    print(white(text))
-                else:
-                    print(dark_orange(text))
+            found = self.interface.variables_find(access_filter=VAR_ACCESS_WRITE)
+            all_vars = self.interface.variables_get(found, raw=raw)
+            self.print_variable_values(all_vars, show_access=False)
             return
         elif var_name == "read":
-            all_vars = self.interface.variables_get_all(
-                access_filter=VAR_ACCESS_READ_ONLY, raw=raw
-            )
-            for count, name in enumerate(sorted(all_vars.keys())):
-                variable_md = self.interface.variable_metadata[name]
-                text = variable_md.print_value(all_vars[name], show_access=False)
-                if (count % 2) == 0:
-                    print(white(text))
-                else:
-                    print(dark_orange(text))
+            found = self.interface.variables_find(access_filter=VAR_ACCESS_READ_ONLY)
+            all_vars = self.interface.variables_get(found, raw=raw)
+            self.print_variable_values(all_vars, show_access=False)
+            return
+        elif "*" in var_name or "?" in var_name:
+            found = self.interface.variables_find(pattern=var_name)
+            all_vars = self.interface.variables_get(found, raw=raw)
+            self.print_variable_values(all_vars, show_access=False)
             return
         else:
             variable_md = self.interface.variable_metadata[var_name]
             val = self.interface.variable_get(var_name, raw=raw, fmt=fmt)
             print(variable_md.print_value(val))
 
+    def print_variable_values(self, names_values, show_access):
+        for count, name in enumerate(sorted(names_values.keys())):
+            variable_md = self.interface.variable_metadata[name]
+            text = variable_md.print_value(names_values[name], show_access=show_access)
+            if (count % 2) == 0:
+                print(white(text))
+            else:
+                print(dark_orange(text))
+
     def complete_get(self, text, line, begidx, endidx):
-        return self.interface.variables_find(text) + [
+        return self.interface.variables_find(pattern=(text + "*")) + [
             x for x in ["all", "set", "read"] if x.startswith(text)
         ]
 
@@ -573,33 +574,47 @@ ex: poke [type] <address> <data>
             "  get set [--raw]          -  retrieves all settings (writable variables)"
         )
         print("  get read [--raw]         -  retrieves all read-only variables")
-        print(
-            "  get <var> [fmt] [--raw]  -  retrieves a specific variable, optionally with format or raw"
-        )
+        print("  get <var> [fmt] [--raw]  -  retrieves a specific variable(s)")
+        print("       <var> - can contain wildcards * or ?")
         print("Available variables:")
         for k in sorted(self.interface.variable_metadata.keys()):
             print(f" {self.interface.variable_metadata[k].verbose()}")
 
     def do_set(self, line):
         cl = line.split()
+        if len(cl) < 1:
+            print(red("Not enough parameters"))
+            return
+        varname = cl[0]
+
+        if varname == "force_off":
+            self.interface.variables_force_off()
+            return
+
+        if varname == "force_open":
+            self.interface.variables_force_open()
+            return
+
         if len(cl) < 2:
             print("Please give the variable name and value")
             return
+
         if len(cl) == 2:
-            self.interface.variable_set(cl[0], cl[1])  # single variable
+            self.interface.variable_set(varname, cl[1])  # single variable
         else:
-            self.interface.variable_set(cl[0], cl[1:])  # array
+            self.interface.variable_set(varname, cl[1:])  # array
 
     def complete_set(self, text, line, begidx, endidx):
-        return self.interface.variables_find(text, access_filter=VAR_ACCESS_WRITE)
+        return self.interface.variables_find(
+            pattern=(text + "*"), access_filter=VAR_ACCESS_WRITE
+        ) + [x for x in ["force_off", "force_open"] if x.startswith(text)]
 
     def help_set(self):
-        print("Sets one of the ventilator debug variables listed below:")
-        for k in sorted(
-            self.interface.variables_find(
-                starting_with="", access_filter=VAR_ACCESS_WRITE
-            )
-        ):
+        print("Sets value for a ventilator debug variable (or convenience macro):")
+        print("  force_off           - resets all forced actuator variables")
+        print("  force_open          - forces all valves open and blower to maximum")
+        print("Available variables:")
+        for k in sorted(self.interface.variables_find(access_filter=VAR_ACCESS_WRITE)):
             print(
                 f" {self.interface.variable_metadata[k].verbose(show_access=False, show_format=False)}"
             )
@@ -711,12 +726,12 @@ trace save [--verbose/-v] [--plot/-p] [--csv/-c]
         tokens = shlex.split(line)
         if len(tokens) > 2 and tokens[1] == "start":
             return self.interface.variables_find(
-                text, access_filter=VAR_ACCESS_READ_ONLY
+                pattern=(text + "*"), access_filter=VAR_ACCESS_READ_ONLY
             )
         elif len(tokens) == 2 and text == "start":
             return ["start "]
         elif len(tokens) == 2 and text == "" and tokens[1] == "start":
-            return self.interface.variables_find("", access_filter=VAR_ACCESS_READ_ONLY)
+            return self.interface.variables_find(access_filter=VAR_ACCESS_READ_ONLY)
         elif len(tokens) == 2 and any(s.startswith(text) for s in sub_commands):
             return [s for s in sub_commands if s.startswith(text)]
         elif len(tokens) == 1:

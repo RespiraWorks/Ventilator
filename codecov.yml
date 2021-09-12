@@ -29,6 +29,10 @@ comment:
   require_head: yes
   branches: null
 
+fixes:
+  - "/home/martin/dev/ventilator/::"
+  - "/root/Ventilator/::"
+
 flags:
   controller:
     paths:

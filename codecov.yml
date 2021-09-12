@@ -29,10 +29,6 @@ comment:
   require_head: yes
   branches: null
 
-fixes:
-  - "/home/martin/dev/ventilator/::"
-  - "/root/Ventilator/::"
-
 flags:
   controller:
     paths:
@@ -51,11 +47,3 @@ parsers:
       method: no
       macro: no
 
-ignore:
-  - "**/tests"
-  - "**/third_party"
-  - "**/third_party/nanopb"
-  - "**/third_party/**/*"
-  - "**/test"
-  - "software/common/third_party/**/*"
-  - "software/controller/test/**/*"

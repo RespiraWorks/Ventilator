@@ -132,7 +132,7 @@ upload_coverage_reports() {
   find $COVERAGE_INPUT_DIR -name '*.gcno' -exec cp -t ${COVERAGE_OUTPUT_DIR}/ugly {} +
   find . \( -name "*.c" -o -name "*.cpp" -o -name "*.h" -o -name "*.hpp" \) \
       -not -path '*third_party*' \
-      -exec gcov -pb -f {} \;
+      -exec gcov -pb -o coverage_reports/ugly -f {} \;
   mv *.gcov "$COVERAGE_OUTPUT_DIR/processed"
 
 # weird that all three of these had to be removed above for anything to come out
@@ -162,13 +162,12 @@ launch_browser() {
 
 if [ "$1" == "--help" ]; then
   print_help
-fi
+  exit $EXIT_SUCCESS
 
 ###########
 # INSTALL #
 ###########
-
-if [ "$1" == "--install" ]; then
+elif [ "$1" == "--install" ]; then
   if [ "$PLATFORM" == "Darwin" ]; then
     brew install qt5
   fi
@@ -207,24 +206,21 @@ if [ "$1" == "--install" ]; then
 	      clang-tidy
   fi
   exit $EXIT_SUCCESS
-fi
 
 #########
 # CLEAN #
 #########
-
-if [ "$1" == "--clean" ]; then
+elif [ "$1" == "--clean" ]; then
   clean_dir build
   clean_dir "$COVERAGE_OUTPUT_DIR"
   qmake -unset QMAKEFEATURES
   git submodule deinit .
   exit $EXIT_SUCCESS
-fi
 
 #########
 # BUILD #
 #########
-if [ "$1" == "--build" ]; then
+elif [ "$1" == "--build" ]; then
 
   if [ "$EUID" -eq 0 ] && [ "$2" != "-f" ]; then
     echo "Please do not run build with root privileges!"
@@ -268,14 +264,11 @@ if [ "$1" == "--build" ]; then
 
   popd
   exit $EXIT_SUCCESS
-fi
-
 
 ########
 # TEST #
 ########
-
-if [ "$1" == "--test" ]; then
+elif [ "$1" == "--test" ]; then
 
   if [ "$EUID" -eq 0 ] && [ "$2" != "-f" ]; then
     echo "Please do not run tests with root privileges!"

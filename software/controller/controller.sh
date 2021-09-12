@@ -97,7 +97,7 @@ clean_dir() {
 
 clean_all() {
   clean_dir .pio
-  clean_dir $COVERAGE_OUTPUT_DIR
+  clean_dir ${COVERAGE_OUTPUT_DIR}
 }
 
 configure_platformio() {
@@ -149,26 +149,35 @@ run_integration_tests() {
 }
 
 generate_coverage_reports() {
+  echo "Generating test coverage reports..."
+
   SRC_DIR=".pio/build/$COVERAGE_ENVIRONMENT"
 
-  # delete the old report as "safely" as possible
-  find "$COVERAGE_OUTPUT_DIR" -name "*.html" -delete || true
+  QUIET="--quiet"
+  if [ -n "$VERBOSE" ]; then
+    QUIET=""
+  fi
+
+  # If $COVERAGE_OUTPUT_DIR, assumes it is clean, i.e. with clean_dir
   mkdir -p "$COVERAGE_OUTPUT_DIR"
-  lcov --directory "$SRC_DIR" --capture \
-       --output-file "$COVERAGE_OUTPUT_DIR/$COVERAGE_ENVIRONMENT.info"
 
   # the file "output_export.cpp" causes an lcov error,
   # but it doesn't appear to be part of our source, so we're excluding it
-  lcov -r "$COVERAGE_OUTPUT_DIR/$COVERAGE_ENVIRONMENT.info" \
-      --output-file "$COVERAGE_OUTPUT_DIR/${COVERAGE_ENVIRONMENT}_trimmed.info" \
-      "*output_export.c*" \
-      "*.pio/libdeps/*" \
-      "*_test_transport.c" \
-      "/usr/include*"
-  genhtml "$COVERAGE_OUTPUT_DIR/${COVERAGE_ENVIRONMENT}_trimmed.info" \
+  lcov ${QUIET} --directory "$SRC_DIR" --capture \
+       --output-file "$COVERAGE_OUTPUT_DIR/$COVERAGE_ENVIRONMENT.info" \
+       --exclude "*_test_transport.c" \
+       --exclude "*output_export.c*" \
+       --exclude "*/third_party/*" \
+       --exclude "*.pio/libdeps/*" \
+       --exclude "/usr/include*"
+
+  genhtml ${QUIET} "$COVERAGE_OUTPUT_DIR/${COVERAGE_ENVIRONMENT}.info" \
       --output-directory "$COVERAGE_OUTPUT_DIR"
 
-  echo "Coverage report generated. Open '$COVERAGE_OUTPUT_DIR/index.html' in a browser to view it."
+  echo "Coverage reports generated at '$COVERAGE_OUTPUT_DIR/index.html'"
+  echo "   You may open it in browser with 'python -m webbrowser ${COVERAGE_OUTPUT_DIR}/index.html'"
+
+  #launch_browser
 }
 
 launch_browser() {
@@ -273,7 +282,9 @@ elif [ "$1" == "run" ]; then
 elif [ "$1" == "debug" ]; then
 
   shift
-  ../utils/debug/debug_cli.py "$@"
+  pushd ../utils/debug
+  ./debug_cli.py "$@"
+  popd
 
   exit $EXIT_SUCCESS
 

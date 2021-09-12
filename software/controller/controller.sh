@@ -167,10 +167,11 @@ upload_coverage_reports() {
       -not -path '*generated_libs*' \
       -not -path '*integration_tests*' \
       -not -path '*cmake*' \
-      -not -path '*test*' \
       -exec gcov -pb -o coverage_reports/ugly -f {} \;
-  mv *.gcov "$COVERAGE_OUTPUT_DIR/processed"
+  mv {*.gcov,.*.gcov} "$COVERAGE_OUTPUT_DIR/processed"
   rm $COVERAGE_OUTPUT_DIR/processed/#usr*
+  rm $COVERAGE_OUTPUT_DIR/processed/test*
+  rm $COVERAGE_OUTPUT_DIR/processed/.pio*
 
   curl -Os https://uploader.codecov.io/latest/linux/codecov
   chmod +x codecov

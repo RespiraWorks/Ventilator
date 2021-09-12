@@ -13,6 +13,5 @@ WORKDIR /root/Ventilator
 COPY . ./
 ENV VERBOSE=1
 CMD /bin/bash \
-    cd software/controller && \
-    controller.sh test --cov --no-checks && \
-    controller.sh cov_upload
+    software/controller/controller.sh test --no-checks && \
+    software/controller/controller.sh cov_upload

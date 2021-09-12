@@ -215,6 +215,7 @@ fi
 
 if [ "$1" == "--clean" ]; then
   clean_dir build
+  clean_dir "$COVERAGE_OUTPUT_DIR"
   qmake -unset QMAKEFEATURES
   git submodule deinit .
   exit $EXIT_SUCCESS
@@ -296,7 +297,7 @@ if [ "$1" == "--test" ]; then
   fi
   popd
 
-  generate_coverage_reports
+  #generate_coverage_reports
 
   exit $EXIT_SUCCESS
 

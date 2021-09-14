@@ -167,17 +167,14 @@ generate_coverage_reports() {
     QUIET=""
   fi
 
-  # If $COVERAGE_OUTPUT_DIR, assumes it is clean, i.e. with clean_dir
+  clean_dir "$COVERAGE_OUTPUT_DIR"
   mkdir -p "$COVERAGE_OUTPUT_DIR"
 
   # the file "output_export.cpp" causes an lcov error,
   # but it doesn't appear to be part of our source, so we're excluding it
   lcov ${QUIET} --directory "$SRC_DIR" --capture \
        --output-file "${COVERAGE_OUTPUT_DIR}/${COVERAGE_ENVIRONMENT}.info"
-#       --exclude "*_test_transport.c" \
-#       --exclude "*output_export.c*" \
-#       --exclude "*.pio/libdeps/*" \
-#       --exclude "/usr/include*"
+
 
   lcov ${QUIET} --remove "${COVERAGE_OUTPUT_DIR}/${COVERAGE_ENVIRONMENT}.info" \
        --output-file "${COVERAGE_OUTPUT_DIR}/${COVERAGE_ENVIRONMENT}_trimmed.info" \
@@ -187,8 +184,9 @@ generate_coverage_reports() {
        "*.pio/libdeps/*" \
        "/usr/include*"
 
-  rm "${COVERAGE_OUTPUT_DIR}/coverage.info"
-  mv "${COVERAGE_OUTPUT_DIR}/coverage_trimmed.info" "${COVERAGE_OUTPUT_DIR}/coverage.info"
+  rm "${COVERAGE_OUTPUT_DIR}/${COVERAGE_ENVIRONMENT}.info"
+  mv "${COVERAGE_OUTPUT_DIR}/${COVERAGE_ENVIRONMENT}_trimmed.info" \
+      "${COVERAGE_OUTPUT_DIR}/${COVERAGE_ENVIRONMENT}.info"
 
   genhtml ${QUIET} "${COVERAGE_OUTPUT_DIR}/${COVERAGE_ENVIRONMENT}.info" \
       --output-directory "${COVERAGE_OUTPUT_DIR}"

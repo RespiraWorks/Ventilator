@@ -104,9 +104,7 @@ generate_coverage_reports() {
   fi
 
   clean_dir "$COVERAGE_OUTPUT_DIR"
-  create_clean_directory "$COVERAGE_OUTPUT_DIR"
-
-  lcov --version
+  mkdir -p "$COVERAGE_OUTPUT_DIR"
 
   lcov ${QUIET} --directory "$COVERAGE_INPUT_DIR" --capture \
        --output-file "$COVERAGE_OUTPUT_DIR/coverage.info"

@@ -151,28 +151,28 @@ run_integration_tests() {
 }
 
 upload_coverage_reports() {
-  echo "Generating test coverage reports for controller and common code..."
-
-  SRC_DIR=".pio/build/$COVERAGE_ENVIRONMENT"
-
-  # If $COVERAGE_OUTPUT_DIR, assumes it is clean, i.e. with clean_dir
-  clean_dir ${COVERAGE_OUTPUT_DIR}/ugly
-  clean_dir ${COVERAGE_OUTPUT_DIR}/processed
-  mkdir -p "$COVERAGE_OUTPUT_DIR/ugly"
-  mkdir -p "$COVERAGE_OUTPUT_DIR/processed"
-
-  find $SRC_DIR -name '*.gcda' -exec cp -t ${COVERAGE_OUTPUT_DIR}/ugly {} +
-  find $SRC_DIR -name '*.gcno' -exec cp -t ${COVERAGE_OUTPUT_DIR}/ugly {} +
-  find . \( -name "*.c" -o -name "*.cpp" -o -name "*.h" -o -name "*.hpp" \) \
-      -not -path '*common*' \
-      -not -path '*integration_tests*' \
-      -not -path '*cmake*' \
-      -exec gcov -pb -o coverage_reports/ugly -f {} \;
-  mv {*.gcov,.*.gcov} "$COVERAGE_OUTPUT_DIR/processed"
-  rm $COVERAGE_OUTPUT_DIR/processed/#usr*
-  rm $COVERAGE_OUTPUT_DIR/processed/test*
-  rm $COVERAGE_OUTPUT_DIR/processed/.pio*
-  rm $COVERAGE_OUTPUT_DIR/processed/*common*
+#  echo "Generating test coverage reports for controller and common code..."
+#
+#  SRC_DIR=".pio/build/$COVERAGE_ENVIRONMENT"
+#
+#  # If $COVERAGE_OUTPUT_DIR, assumes it is clean, i.e. with clean_dir
+#  clean_dir ${COVERAGE_OUTPUT_DIR}/ugly
+#  clean_dir ${COVERAGE_OUTPUT_DIR}/processed
+#  mkdir -p "$COVERAGE_OUTPUT_DIR/ugly"
+#  mkdir -p "$COVERAGE_OUTPUT_DIR/processed"
+#
+#  find $SRC_DIR -name '*.gcda' -exec cp -t ${COVERAGE_OUTPUT_DIR}/ugly {} +
+#  find $SRC_DIR -name '*.gcno' -exec cp -t ${COVERAGE_OUTPUT_DIR}/ugly {} +
+#  find . \( -name "*.c" -o -name "*.cpp" -o -name "*.h" -o -name "*.hpp" \) \
+#      -not -path '*common*' \
+#      -not -path '*integration_tests*' \
+#      -not -path '*cmake*' \
+#      -exec gcov -pb -o coverage_reports/ugly -f {} \;
+#  mv {*.gcov,.*.gcov} "$COVERAGE_OUTPUT_DIR/processed"
+#  rm $COVERAGE_OUTPUT_DIR/processed/#usr*
+#  rm $COVERAGE_OUTPUT_DIR/processed/test*
+#  rm $COVERAGE_OUTPUT_DIR/processed/.pio*
+#  rm $COVERAGE_OUTPUT_DIR/processed/*common*
 
   curl -Os https://uploader.codecov.io/latest/linux/codecov
   chmod +x codecov
@@ -190,21 +190,40 @@ generate_coverage_reports() {
     QUIET=""
   fi
 
-  # If $COVERAGE_OUTPUT_DIR, assumes it is clean, i.e. with clean_dir
   mkdir -p "$COVERAGE_OUTPUT_DIR"
+  mkdir -p "$COVERAGE_OUTPUT_DIR"
+
 
   # the file "output_export.cpp" causes an lcov error,
   # but it doesn't appear to be part of our source, so we're excluding it
   lcov ${QUIET} --directory "$SRC_DIR" --capture \
-       --output-file "$COVERAGE_OUTPUT_DIR/$COVERAGE_ENVIRONMENT.info" \
-       --exclude "*_test_transport.c" \
-       --exclude "*output_export.c*" \
-       --exclude "*common*" \
-       --exclude "*.pio/libdeps/*" \
-       --exclude "/usr/include*"
+       --output-file "${COVERAGE_OUTPUT_DIR}/${COVERAGE_ENVIRONMENT}.info"
 
-  genhtml ${QUIET} "$COVERAGE_OUTPUT_DIR/${COVERAGE_ENVIRONMENT}.info" \
-      --output-directory "$COVERAGE_OUTPUT_DIR"
+
+  lcov ${QUIET} --remove "${COVERAGE_OUTPUT_DIR}/${COVERAGE_ENVIRONMENT}.info" \
+       --output-file "${COVERAGE_OUTPUT_DIR}/${COVERAGE_ENVIRONMENT}_trimmed.info" \
+       "*_test_transport.c" \
+       "*output_export.c*" \
+       "*common*" \
+       "*test*" \
+       "*.pio/libdeps/*" \
+       "/usr/include*"
+
+#  lcov ${QUIET} --directory "$SRC_DIR" --capture \
+#       --output-file "$COVERAGE_OUTPUT_DIR/$COVERAGE_ENVIRONMENT.info" \
+#       --exclude "*_test_transport.c" \
+#       --exclude "*output_export.c*" \
+#       --exclude "*common*" \
+#       --exclude "*.pio/libdeps/*" \
+#       --exclude "/usr/include*"
+
+  rm "${COVERAGE_OUTPUT_DIR}/${COVERAGE_ENVIRONMENT}.info"
+  mv "${COVERAGE_OUTPUT_DIR}/${COVERAGE_ENVIRONMENT}_trimmed.info" \
+      "${COVERAGE_OUTPUT_DIR}/${COVERAGE_ENVIRONMENT}.info"
+
+
+  genhtml ${QUIET} "${COVERAGE_OUTPUT_DIR}/${COVERAGE_ENVIRONMENT}.info" \
+      --output-directory "${COVERAGE_OUTPUT_DIR}"
 
   echo "Coverage reports generated at '$COVERAGE_OUTPUT_DIR/index.html'"
   echo "   You may open it in browser with 'python -m webbrowser ${COVERAGE_OUTPUT_DIR}/index.html'"

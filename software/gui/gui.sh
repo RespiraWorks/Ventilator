@@ -106,6 +106,8 @@ generate_coverage_reports() {
   clean_dir "$COVERAGE_OUTPUT_DIR"
   create_clean_directory "$COVERAGE_OUTPUT_DIR"
 
+  lcov --version
+
   # the file "output_export.cpp" causes an lcov error,
   # but it doesn't appear to be part of our source, so we're excluding it
   lcov ${QUIET} --directory "$COVERAGE_INPUT_DIR" --capture \

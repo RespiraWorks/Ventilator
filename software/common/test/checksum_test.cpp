@@ -15,10 +15,7 @@ limitations under the License.
 
 #include "checksum.h"
 
-#include <stdint.h>
-
 #include <algorithm>
-#include <cstdio>
 #include <cstdlib>
 #include <cstring>
 #include <map>

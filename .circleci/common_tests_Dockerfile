@@ -13,5 +13,5 @@ WORKDIR /root/Ventilator
 COPY . ./
 ENV VERBOSE=1
 CMD /bin/bash \
-    software/common/common.sh test && \
+    software/common/common.sh test --no-checks && \
     software/common/common.sh cov_upload

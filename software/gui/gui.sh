@@ -111,8 +111,8 @@ generate_coverage_reports() {
   lcov ${QUIET} --directory "$COVERAGE_INPUT_DIR" --capture \
        --output-file "$COVERAGE_OUTPUT_DIR/coverage.info"
 
-  lcov -r "$COVERAGE_OUTPUT_DIR/coverage.info" \
-      --output-file "$COVERAGE_OUTPUT_DIR/coverage_trimmed.info" \
+  lcov --remove "$COVERAGE_OUTPUT_DIR/coverage.info" \
+       --output-file "$COVERAGE_OUTPUT_DIR/coverage_trimmed.info" \
        "*/common/*" \
        "*/tests/*" \
        "*spdlog*" \
@@ -133,29 +133,29 @@ generate_coverage_reports() {
 upload_coverage_reports() {
   echo "Generating test coverage reports for GUI..."
 
-  # If $COVERAGE_OUTPUT_DIR, assumes it is clean, i.e. with clean_dir
-  clean_dir ${COVERAGE_OUTPUT_DIR}/ugly
-  clean_dir ${COVERAGE_OUTPUT_DIR}/processed
-  mkdir -p "$COVERAGE_OUTPUT_DIR/ugly"
-  mkdir -p "$COVERAGE_OUTPUT_DIR/processed"
-
-  find $COVERAGE_INPUT_DIR -name '*.gcda' -exec cp -t ${COVERAGE_OUTPUT_DIR}/ugly {} +
-  find $COVERAGE_INPUT_DIR -name '*.gcno' -exec cp -t ${COVERAGE_OUTPUT_DIR}/ugly {} +
-  find . \( -name "*.c" -o -name "*.cpp" -o -name "*.h" -o -name "*.hpp" \) \
-      -not -path '*third_party*' \
-      -exec gcov -pb -o coverage_reports/ugly -f {} \;
-  mv *.gcov "$COVERAGE_OUTPUT_DIR/processed"
-
-# weird that all three of these had to be removed above for anything to come out
-#      -not -path '*moc*' \
-#      -not -path '*qrc*' \
-#      -not -path '*test*' \
-
-  rm $COVERAGE_OUTPUT_DIR/processed/#usr*
-  rm $COVERAGE_OUTPUT_DIR/processed/*third_party*
-  rm $COVERAGE_OUTPUT_DIR/processed/*common*
-  rm $COVERAGE_OUTPUT_DIR/processed/moc*
-  rm $COVERAGE_OUTPUT_DIR/processed/*tests*
+#  # If $COVERAGE_OUTPUT_DIR, assumes it is clean, i.e. with clean_dir
+#  clean_dir ${COVERAGE_OUTPUT_DIR}/ugly
+#  clean_dir ${COVERAGE_OUTPUT_DIR}/processed
+#  mkdir -p "$COVERAGE_OUTPUT_DIR/ugly"
+#  mkdir -p "$COVERAGE_OUTPUT_DIR/processed"
+#
+#  find $COVERAGE_INPUT_DIR -name '*.gcda' -exec cp -t ${COVERAGE_OUTPUT_DIR}/ugly {} +
+#  find $COVERAGE_INPUT_DIR -name '*.gcno' -exec cp -t ${COVERAGE_OUTPUT_DIR}/ugly {} +
+#  find . \( -name "*.c" -o -name "*.cpp" -o -name "*.h" -o -name "*.hpp" \) \
+#      -not -path '*third_party*' \
+#      -exec gcov -pb -o coverage_reports/ugly -f {} \;
+#  mv *.gcov "$COVERAGE_OUTPUT_DIR/processed"
+#
+## weird that all three of these had to be removed above for anything to come out
+##      -not -path '*moc*' \
+##      -not -path '*qrc*' \
+##      -not -path '*test*' \
+#
+#  rm $COVERAGE_OUTPUT_DIR/processed/#usr*
+#  rm $COVERAGE_OUTPUT_DIR/processed/*third_party*
+#  rm $COVERAGE_OUTPUT_DIR/processed/*common*
+#  rm $COVERAGE_OUTPUT_DIR/processed/moc*
+#  rm $COVERAGE_OUTPUT_DIR/processed/*tests*
 
   curl -Os https://uploader.codecov.io/latest/linux/codecov
   chmod +x codecov

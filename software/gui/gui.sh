@@ -118,7 +118,10 @@ generate_coverage_reports() {
        "*spdlog*" \
        "/usr/include*"
 
-  genhtml ${QUIET} "$COVERAGE_OUTPUT_DIR/coverage_trimmed.info" \
+  rm "$COVERAGE_OUTPUT_DIR/coverage.info"
+  mv "$COVERAGE_OUTPUT_DIR/coverage_trimmed.info" "$COVERAGE_OUTPUT_DIR/coverage.info"
+
+  genhtml ${QUIET} "$COVERAGE_OUTPUT_DIR/coverage.info" \
       --output-directory "$COVERAGE_OUTPUT_DIR"
 
   echo "Coverage reports generated at '$COVERAGE_OUTPUT_DIR/index.html'"

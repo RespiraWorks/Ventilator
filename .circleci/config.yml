@@ -73,6 +73,24 @@ jobs:
             ci_env=`/bin/bash <(curl -s https://codecov.io/env)`
             docker run $ci_env --privileged -t controller-test-image
 
+  common-tests:
+    # See https://circleci.com/docs/2.0/executor-types/#docker-benefits-and-limitations
+    # We use a machine executor here because we must run the container in privileged mode.
+    # This is because LeakSanitizer, which runs during the build, requires ptrace.
+    machine:
+      image: ubuntu-1604:201903-01
+    steps:
+      - checkout
+      - run:
+          name: Build docker image
+          command: |
+            docker build -f .circleci/common_tests_Dockerfile -t common-test-image .
+      - run:
+          name: Run tests & publish coverage
+          command: |
+            ci_env=`/bin/bash <(curl -s https://codecov.io/env)`
+            docker run $ci_env --privileged -t common-test-image
+
   gui-tests:
     machine:
       image: ubuntu-1604:201903-01
@@ -98,4 +116,5 @@ workflows:
       - dead-link-test
       - common-precommit-checks
       - controller-tests
+      - common-tests
       - gui-tests

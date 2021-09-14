@@ -290,7 +290,7 @@ elif [ "$1" == "--test" ]; then
   fi
   popd
 
-  #generate_coverage_reports
+  generate_coverage_reports
 
   exit $EXIT_SUCCESS
 

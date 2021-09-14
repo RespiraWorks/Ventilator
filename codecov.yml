@@ -20,6 +20,13 @@ coverage:
         range: "70...100"
         flags:
           - gui
+      common:
+        target: auto
+        precision: 5
+        round: down
+        range: "70...100"
+        flags:
+          - common
 
 comment:
   layout: "reach, diff, flags, files"
@@ -38,6 +45,10 @@ flags:
     paths:
       - software/gui
     carryforward: false
+  common:
+    paths:
+      - software/common
+    carryforward: false
 
 parsers:
   gcov:
@@ -46,4 +57,3 @@ parsers:
       loop: yes
       method: no
       macro: no
-

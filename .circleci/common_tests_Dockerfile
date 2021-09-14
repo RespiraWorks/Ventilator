@@ -1,0 +1,17 @@
+# This Dockerfile creates an image that has the necessary tools to run unit tests and publish coverage reports
+
+FROM debian:buster
+
+RUN apt-get update && \
+    apt-get install build-essential python3-pip lcov git curl libtinfo5 -y && \
+    pip3 install -U pip && \
+    pip3 install platformio codecov gitpython && \
+    platformio update && \
+    platformio platform install native
+
+WORKDIR /root/Ventilator
+COPY . ./
+ENV VERBOSE=1
+CMD /bin/bash \
+    software/common/common.sh test --no-checks && \
+    software/common/common.sh cov_upload

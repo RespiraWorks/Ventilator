@@ -183,7 +183,7 @@ upload_coverage_reports() {
 generate_coverage_reports() {
   echo "Generating test coverage reports..."
 
-  SRC_DIR=".pio/build/$COVERAGE_ENVIRONMENT"
+  SRC_DIR=".pio/build/${COVERAGE_ENVIRONMENT}"
 
   QUIET="--quiet"
   if [ -n "$VERBOSE" ]; then
@@ -193,15 +193,14 @@ generate_coverage_reports() {
   mkdir -p "$COVERAGE_OUTPUT_DIR"
   mkdir -p "$COVERAGE_OUTPUT_DIR"
 
+  # cannot use --exclude as v1.13 on CI doesn't support that param
+  lcov ${QUIET} --directory "$SRC_DIR" --capture \
+       --output-file "${COVERAGE_OUTPUT_DIR}/coverage.info"
 
   # the file "output_export.cpp" causes an lcov error,
   # but it doesn't appear to be part of our source, so we're excluding it
-  lcov ${QUIET} --directory "$SRC_DIR" --capture \
-       --output-file "${COVERAGE_OUTPUT_DIR}/${COVERAGE_ENVIRONMENT}.info"
-
-
-  lcov ${QUIET} --remove "${COVERAGE_OUTPUT_DIR}/${COVERAGE_ENVIRONMENT}.info" \
-       --output-file "${COVERAGE_OUTPUT_DIR}/${COVERAGE_ENVIRONMENT}_trimmed.info" \
+  lcov ${QUIET} --remove "${COVERAGE_OUTPUT_DIR}/coverage.info" \
+       --output-file "${COVERAGE_OUTPUT_DIR}/coverage_trimmed.info" \
        "*_test_transport.c" \
        "*output_export.c*" \
        "*common*" \
@@ -209,20 +208,12 @@ generate_coverage_reports() {
        "*.pio/libdeps/*" \
        "/usr/include*"
 
-#  lcov ${QUIET} --directory "$SRC_DIR" --capture \
-#       --output-file "$COVERAGE_OUTPUT_DIR/$COVERAGE_ENVIRONMENT.info" \
-#       --exclude "*_test_transport.c" \
-#       --exclude "*output_export.c*" \
-#       --exclude "*common*" \
-#       --exclude "*.pio/libdeps/*" \
-#       --exclude "/usr/include*"
+  # Has to be called `coverage.info` for Codecov to pick it up
+  rm "${COVERAGE_OUTPUT_DIR}/coverage.info"
+  mv "${COVERAGE_OUTPUT_DIR}/coverage_trimmed.info" \
+      "${COVERAGE_OUTPUT_DIR}/coverage.info"
 
-  rm "${COVERAGE_OUTPUT_DIR}/${COVERAGE_ENVIRONMENT}.info"
-  mv "${COVERAGE_OUTPUT_DIR}/${COVERAGE_ENVIRONMENT}_trimmed.info" \
-      "${COVERAGE_OUTPUT_DIR}/${COVERAGE_ENVIRONMENT}.info"
-
-
-  genhtml ${QUIET} "${COVERAGE_OUTPUT_DIR}/${COVERAGE_ENVIRONMENT}.info" \
+  genhtml ${QUIET} "${COVERAGE_OUTPUT_DIR}/coverage.info" \
       --output-directory "${COVERAGE_OUTPUT_DIR}"
 
   echo "Coverage reports generated at '$COVERAGE_OUTPUT_DIR/index.html'"

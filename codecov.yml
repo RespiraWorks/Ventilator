@@ -8,17 +8,15 @@ coverage:
   round: down
   status:
     project:
-      default: off
-      controller:
+      default:
         target: auto
+      controller:
         flags:
           - controller
       gui:
-        target: auto
         flags:
           - gui
       common:
-        target: auto
         flags:
           - common
 

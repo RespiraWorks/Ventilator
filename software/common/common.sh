@@ -173,13 +173,13 @@ generate_coverage_reports() {
   # the file "output_export.cpp" causes an lcov error,
   # but it doesn't appear to be part of our source, so we're excluding it
   lcov ${QUIET} --directory "$SRC_DIR" --capture \
-       --output-file "${COVERAGE_OUTPUT_DIR}/${COVERAGE_ENVIRONMENT}.info" \
-       --exclude "*_test_transport.c" \
-       --exclude "*output_export.c*" \
-       --exclude "*.pio/libdeps/*" \
-       --exclude "/usr/include*"
+       --output-file "${COVERAGE_OUTPUT_DIR}/${COVERAGE_ENVIRONMENT}.info"
+#       --exclude "*_test_transport.c" \
+#       --exclude "*output_export.c*" \
+#       --exclude "*.pio/libdeps/*" \
+#       --exclude "/usr/include*"
 
-  lcov --remove "${COVERAGE_OUTPUT_DIR}/${COVERAGE_ENVIRONMENT}.info" \
+  lcov ${QUIET} --remove "${COVERAGE_OUTPUT_DIR}/${COVERAGE_ENVIRONMENT}.info" \
        --output-file "${COVERAGE_OUTPUT_DIR}/${COVERAGE_ENVIRONMENT}_trimmed.info" \
        "*_test_transport.c" \
        "*output_export.c*" \

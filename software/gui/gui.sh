@@ -111,7 +111,7 @@ generate_coverage_reports() {
   lcov ${QUIET} --directory "$COVERAGE_INPUT_DIR" --capture \
        --output-file "$COVERAGE_OUTPUT_DIR/coverage.info"
 
-  lcov --remove "$COVERAGE_OUTPUT_DIR/coverage.info" \
+  lcov ${QUIET} --remove "$COVERAGE_OUTPUT_DIR/coverage.info" \
        --output-file "$COVERAGE_OUTPUT_DIR/coverage_trimmed.info" \
        "*/common/*" \
        "*/tests/*" \

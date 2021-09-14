@@ -16,5 +16,5 @@ COPY . ./
 WORKDIR /root/Ventilator/software/controller
 
 CMD /bin/bash \
-    controller.sh test --no-checks && \
-    controller.sh cov_upload
+    ./controller.sh test --no-checks && \
+    ./controller.sh cov_upload

@@ -16,5 +16,5 @@ COPY . ./
 WORKDIR /root/Ventilator/software/common
 
 CMD /bin/bash \
-    common.sh test --no-checks && \
-    common.sh cov_upload
+    ./common.sh test --no-checks && \
+    ./common.sh cov_upload

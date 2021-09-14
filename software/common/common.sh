@@ -129,27 +129,29 @@ run_checks() {
 }
 
 upload_coverage_reports() {
-#  echo "Generating test coverage reports for controller and common code..."
-#
-#  SRC_DIR=".pio/build/$COVERAGE_ENVIRONMENT"
-#
-#  # If $COVERAGE_OUTPUT_DIR, assumes it is clean, i.e. with clean_dir
-#  clean_dir ${COVERAGE_OUTPUT_DIR}/ugly
-#  clean_dir ${COVERAGE_OUTPUT_DIR}/processed
-#  mkdir -p "$COVERAGE_OUTPUT_DIR/ugly"
-#  mkdir -p "$COVERAGE_OUTPUT_DIR/processed"
-#
-#  find $SRC_DIR -name '*.gcda' -exec cp -t ${COVERAGE_OUTPUT_DIR}/ugly {} +
-#  find $SRC_DIR -name '*.gcno' -exec cp -t ${COVERAGE_OUTPUT_DIR}/ugly {} +
-#  find . \( -name "*.c" -o -name "*.cpp" -o -name "*.h" -o -name "*.hpp" \) \
-#      -not -path '*third_party*' \
-#      -not -path '*generated_libs*' \
-#      -not -path '*cmake*' \
-#      -exec gcov -pb -o coverage_reports/ugly -f {} \;
-#  mv {*.gcov,.*.gcov} "$COVERAGE_OUTPUT_DIR/processed"
-#  rm $COVERAGE_OUTPUT_DIR/processed/#usr*
-#  rm $COVERAGE_OUTPUT_DIR/processed/test*
-#  rm $COVERAGE_OUTPUT_DIR/processed/.pio*
+  echo "Uploading coverage reports to Codecov"
+
+  echo "Generating test coverage reports for controller and common code..."
+
+  SRC_DIR=".pio/build/$COVERAGE_ENVIRONMENT"
+
+  # If $COVERAGE_OUTPUT_DIR, assumes it is clean, i.e. with clean_dir
+  clean_dir ${COVERAGE_OUTPUT_DIR}/ugly
+  clean_dir ${COVERAGE_OUTPUT_DIR}/processed
+  mkdir -p "$COVERAGE_OUTPUT_DIR/ugly"
+  mkdir -p "$COVERAGE_OUTPUT_DIR/processed"
+
+  find $SRC_DIR -name '*.gcda' -exec cp -t ${COVERAGE_OUTPUT_DIR}/ugly {} +
+  find $SRC_DIR -name '*.gcno' -exec cp -t ${COVERAGE_OUTPUT_DIR}/ugly {} +
+  find . \( -name "*.c" -o -name "*.cpp" -o -name "*.h" -o -name "*.hpp" \) \
+      -not -path '*third_party*' \
+      -not -path '*generated_libs*' \
+      -not -path '*cmake*' \
+      -exec gcov -pb -o coverage_reports/ugly -f {} \;
+  mv {*.gcov,.*.gcov} "$COVERAGE_OUTPUT_DIR/processed"
+  rm $COVERAGE_OUTPUT_DIR/processed/#usr*
+  rm $COVERAGE_OUTPUT_DIR/processed/test*
+  rm $COVERAGE_OUTPUT_DIR/processed/.pio*
 
   curl -Os https://uploader.codecov.io/latest/linux/codecov
   chmod +x codecov
@@ -186,10 +188,9 @@ generate_coverage_reports() {
 
   # Has to be called `coverage.info` for Codecov to pick it up
   rm "${COVERAGE_OUTPUT_DIR}/coverage.info"
-  mv "${COVERAGE_OUTPUT_DIR}/coverage_trimmed.info" \
-      "${COVERAGE_OUTPUT_DIR}/coverage.info"
+  mv "${COVERAGE_OUTPUT_DIR}/coverage_trimmed.info" "${COVERAGE_OUTPUT_DIR}/coverage.info"
 
-  genhtml ${QUIET} "${COVERAGE_OUTPUT_DIR}/coverage.info" \
+  genhtml ${QUIET} "${COVERAGE_OUTPUT_DIR}/coverage.info"
       --output-directory "${COVERAGE_OUTPUT_DIR}"
 
   echo "Coverage reports generated at '${COVERAGE_OUTPUT_DIR}/index.html'"

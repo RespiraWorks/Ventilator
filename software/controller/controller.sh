@@ -80,6 +80,7 @@ The following options are available:
   unit      Builds and runs unit tests only (and generates coverage reports)
                 <name>  - run specific unit test, may include wildcards, i.e. 'debug*'
                 [-o]    - open coverage report in browser when done
+  cov_upload   Upload coverage reports to Codecov server
   help/-h   Display this help info
 EOF
 }

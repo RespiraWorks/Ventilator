@@ -11,7 +11,7 @@ WORKDIR /root/Ventilator
 COPY . ./
 
 CMD /bin/bash \
-    software/gui/gui.sh --install && \
-    software/gui/gui.sh --build -f -j --no-checks && \
-    software/gui/gui.sh --test -f -x && \
+    software/gui/gui.sh install && \
+    software/gui/gui.sh build -f -j --no-checks && \
+    software/gui/gui.sh test -f -x --no-cov && \
     software/gui/gui.sh cov_upload

@@ -62,16 +62,17 @@ Utility script for the RespiraWorks Ventilator common code testing.
 
 The following options are available:
   install   Installs platformio and configures udev rules for deployment
-                [-f] - force installation, even with root privileges (for CI only)
+          [-f] - force installation, even with root privileges (for CI only)
   check     Runs static checks only
   clean     Clean build directories
   test      Builds and runs all unit tests, integration tests, static checks, generates coverage
-                [--no-checks] - do not run static checks (for CI)
-                [--cov]       - generate coverage reports
-  unit      Builds and runs unit tests only (and generates coverage reports)
-                <name>  - run specific unit test, may include wildcards, i.e. 'debug*'
-                [-o]    - open coverage report in browser when done
-  help/-h   Display this help info
+       [--no-checks] - do not run static checks (for CI)
+       [--cov]       - generate coverage reports
+  cov_upload   Upload coverage reports to Codecov server
+  unit         Builds and runs unit tests only (and generates coverage reports)
+       <name>  - run specific unit test, may include wildcards, i.e. 'debug*'
+       [-o]    - open coverage report in browser when done
+  help/-h      Display this help info
 EOF
 }
 

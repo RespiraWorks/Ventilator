@@ -108,16 +108,17 @@ generate_coverage_reports() {
 
   lcov --version
 
-  # the file "output_export.cpp" causes an lcov error,
-  # but it doesn't appear to be part of our source, so we're excluding it
   lcov ${QUIET} --directory "$COVERAGE_INPUT_DIR" --capture \
-       --output-file "$COVERAGE_OUTPUT_DIR/coverage.info" \
-       --exclude "*/common/*" \
-       --exclude "*/tests/*" \
-       --exclude "*spdlog*" \
-       --exclude "/usr/include*"
+       --output-file "$COVERAGE_OUTPUT_DIR/coverage.info"
 
-  genhtml ${QUIET} "$COVERAGE_OUTPUT_DIR/coverage.info" \
+  lcov -r "$COVERAGE_OUTPUT_DIR/coverage.info" \
+      --output-file "$COVERAGE_OUTPUT_DIR/coverage_trimmed.info" \
+       "*/common/*" \
+       "*/tests/*" \
+       "*spdlog*" \
+       "/usr/include*"
+
+  genhtml ${QUIET} "$COVERAGE_OUTPUT_DIR/coverage_trimmed.info" \
       --output-directory "$COVERAGE_OUTPUT_DIR"
 
   echo "Coverage reports generated at '$COVERAGE_OUTPUT_DIR/index.html'"

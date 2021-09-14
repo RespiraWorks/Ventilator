@@ -3,28 +3,22 @@ codecov:
   require_ci_to_pass: no
 
 coverage:
+  precision: 2
+  range: "70...100"
+  round: down
   status:
     project:
       default: off
       controller:
         target: auto
-        precision: 5
-        round: down
-        range: "70...100"
         flags:
           - controller
       gui:
         target: auto
-        precision: 5
-        round: down
-        range: "70...100"
         flags:
           - gui
       common:
         target: auto
-        precision: 5
-        round: down
-        range: "70...100"
         flags:
           - common
 

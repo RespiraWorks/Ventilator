@@ -10,8 +10,10 @@ RUN apt-get update && \
 WORKDIR /root/Ventilator
 COPY . ./
 
+
+WORKDIR /root/Ventilator/software/gui
+
 CMD /bin/bash \
-    cd software/gui && \
     gui.sh install && \
     gui.sh build -f -j --no-checks && \
     gui.sh test -f -x --no-cov && \

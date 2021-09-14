@@ -10,9 +10,11 @@ RUN apt-get update && \
     platformio platform install native
 
 WORKDIR /root/Ventilator
+
 COPY . ./
-ENV VERBOSE=1
+
+WORKDIR /root/Ventilator/software/common
+
 CMD /bin/bash \
-    cd software/common && \
     common.sh test --no-checks && \
     common.sh cov_upload

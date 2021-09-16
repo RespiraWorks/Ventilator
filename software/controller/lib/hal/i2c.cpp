@@ -85,7 +85,7 @@ bool Channel::SendRequest(const Request &request) {
 
   // Queue the request if possible: check that there is room in the index
   // buffer
-  if (buffer_.FreeCount() <= 0) {
+  if (buffer_.IsFull()) {
     return false;
   }
 

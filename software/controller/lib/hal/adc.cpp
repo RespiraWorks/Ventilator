@@ -95,39 +95,39 @@ static constexpr int MaxAdcReading =
 
 // Set sample time ([RM] 16.4.12).
 enum class ADCSampleTimeReg {
-  s2_5 = 0,    // 2.5 clock cycles
-  s6_5 = 1,    // 6.5 clock cycles
-  s12_5 = 2,   // 12.5 clock cycles
-  s24_5 = 3,   // 24.5 clock cycles
-  s47_5 = 4,   // 47.5 clock cycles
-  s92_5 = 5,   // 92.5 clock cycles
-  s247_5 = 6,  // 247.5 clock cycles
-  s640_5 = 7   // 640.5 clock cycles
+  S2p5 = 0,    // 2.5 clock cycles
+  S6p5 = 1,    // 6.5 clock cycles
+  S12p5 = 2,   // 12.5 clock cycles
+  S24p5 = 3,   // 24.5 clock cycles
+  S47p5 = 4,   // 47.5 clock cycles
+  S92p5 = 5,   // 92.5 clock cycles
+  S247p5 = 6,  // 247.5 clock cycles
+  S640p5 = 7   // 640.5 clock cycles
 };
 // I'm using 92.5 A/D clocks to sample.
 // A/D sample time in CPU clock cycles.  Fixed for now.
 // This is the time we give the analog input to charge the A/D sampling cap.
-static constexpr ADCSampleTimeReg AdcSampleTime{ADCSampleTimeReg::s92_5};
+static constexpr ADCSampleTimeReg AdcSampleTime{ADCSampleTimeReg::S92p5};
 
 // Time of an A/D conversion in CPU clock cycles (see [RM] 16.4.16):
 // sample time (in clock cycles, rounded up) + 12 (one per bit of resolution).
 static constexpr int AdcConversionTime = [] {
   switch (AdcSampleTime) {
-    case ADCSampleTimeReg::s2_5:
+    case ADCSampleTimeReg::S2p5:
       return 3 + AdcResolution;
-    case ADCSampleTimeReg::s6_5:
+    case ADCSampleTimeReg::S6p5:
       return 7 + AdcResolution;
-    case ADCSampleTimeReg::s12_5:
+    case ADCSampleTimeReg::S12p5:
       return 13 + AdcResolution;
-    case ADCSampleTimeReg::s24_5:
+    case ADCSampleTimeReg::S24p5:
       return 25 + AdcResolution;
-    case ADCSampleTimeReg::s47_5:
+    case ADCSampleTimeReg::S47p5:
       return 48 + AdcResolution;
-    case ADCSampleTimeReg::s92_5:
+    case ADCSampleTimeReg::S92p5:
       return 93 + AdcResolution;
-    case ADCSampleTimeReg::s247_5:
+    case ADCSampleTimeReg::S247p5:
       return 248 + AdcResolution;
-    case ADCSampleTimeReg::s640_5:
+    case ADCSampleTimeReg::S640p5:
       return 640 + AdcResolution;
   }
   // All cases covered above (and GCC checks this).
@@ -207,7 +207,6 @@ void HalApi::InitADC() {
       case 10:
         return 1;
       case 12:
-        return 0;
       default:
         return 0;
     }
@@ -263,7 +262,7 @@ void HalApi::InitADC() {
 }
 
 // Read the specified analog input.
-Voltage HalApi::AnalogRead(AnalogPin pin) {
+Voltage HalApi::AnalogRead(AnalogPin pin) const {
   int offset = [&] {
     switch (pin) {
       case AnalogPin::InterimBoardAnalogPressure:

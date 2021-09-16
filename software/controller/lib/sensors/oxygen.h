@@ -21,5 +21,5 @@ class TeledyneR24 : public OxygenSensor, public AnalogSensor {
  public:
   TeledyneR24(const char* name, const char* help_supplement, AnalogPin pin);
 
-  float read(HalApi& hal_api, Pressure p_ambient) const override;
+  float read(const HalApi& hal_api, Pressure p_ambient) const override;
 };

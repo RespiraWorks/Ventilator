@@ -192,8 +192,8 @@ class HalApi {
   // somewhat consistent with the Arduino API that people are familiar with.
   void AnalogWrite(PwmPin pin, float duty);
 
-  // Sets `pin` to high or low.
-  void DigitalWrite(BinaryPin pin, VoltageLevel value);
+  // Sets `binary_pin` to high or low.
+  void DigitalWrite(BinaryPin binary_pin, VoltageLevel value);
 
   // Receives bytes from the GUI controller along the serial bus.
   //

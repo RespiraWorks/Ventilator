@@ -52,6 +52,7 @@ limitations under the License.
 
 #if defined(BARE_STM32)
 
+#include "gpio.h"
 #include "hal.h"
 #include "hal_stm32.h"
 
@@ -157,12 +158,16 @@ void HalApi::InitADC() {
   // Enable the clock to the A/D converter
   EnableClock(AdcBase);
 
+  using namespace GPIO;
+
   // Configure the 5 pins used as analog inputs
-  GpioPinMode(GpioCBase, 0, GPIOPinMode::Analog);  // PC0 (ADC1_IN1)  interim board: analog pressure
-  GpioPinMode(GpioABase, 1, GPIOPinMode::Analog);  // PA1 (ADC1_IN6)  U3 patient pressure
-  GpioPinMode(GpioABase, 4, GPIOPinMode::Analog);  // PA4 (ADC1_IN9)  U4 inhale flow
-  GpioPinMode(GpioBBase, 0, GPIOPinMode::Analog);  // PB0 (ADC1_IN15) U5 exhale flow
-  GpioPinMode(GpioCBase, 1, GPIOPinMode::Analog);  // PC3 (ADC1_IN2)  interim board: oxygen sensor
+  SetPinMode(Port::PortC, 0,
+             GPIO::PinMode::Analog);  // PC0 (ADC1_IN1)  interim board: analog pressure
+  SetPinMode(Port::PortA, 1, GPIO::PinMode::Analog);  // PA1 (ADC1_IN6)  U3 patient pressure
+  SetPinMode(Port::PortA, 4, GPIO::PinMode::Analog);  // PA4 (ADC1_IN9)  U4 inhale flow
+  SetPinMode(Port::PortB, 0, GPIO::PinMode::Analog);  // PB0 (ADC1_IN15) U5 exhale flow
+  SetPinMode(Port::PortC, 1,
+             GPIO::PinMode::Analog);  // PC3 (ADC1_IN2)  interim board: oxygen sensor
 
   // Perform a power-up and calibration sequence on the A/D converter
   AdcReg *adc = AdcBase;

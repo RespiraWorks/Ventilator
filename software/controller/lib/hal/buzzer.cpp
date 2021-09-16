@@ -12,6 +12,12 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+
+#include <algorithm>
+
+#include "gpio.h"
+#include "hal.h"
+
 #if defined(BARE_STM32)
 
 // The buzzer we use for generating alarms on the controller board is
@@ -26,13 +32,10 @@ limitations under the License.
 // This pin is tied to timer 3 channel 1, so we can use that timer
 // to generate the square wave needed to power the buzzer.
 
-#include <algorithm>
-
-#include "hal.h"
 #include "hal_stm32.h"
 
 void HalApi::InitBuzzer() {
-  static constexpr int BuzzerFreqHz = 2400;
+  static constexpr int BuzzerFreqHz{2400};
 
   EnableClock(Timer3Base);
 
@@ -40,7 +43,7 @@ void HalApi::InitBuzzer() {
   // The STM32 datasheet has a table (table 17) which shows
   // which functions can be connected to each pin.  For
   // PB4 we select function 2 to connect it to timer 3.
-  GpioPinAltFunc(GpioBBase, 4, 2);
+  GPIO::PinAltFunc(GPIO::Port::PortB, 4, 2);
 
   TimerReg *tmr = Timer3Base;
 

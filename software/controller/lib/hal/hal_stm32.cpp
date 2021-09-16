@@ -26,13 +26,14 @@ Abbreviations [RM], [DS], etc are defined in hal/README.md.
 
 #include "hal_stm32.h"
 
-#include <stdarg.h>
-#include <stdio.h>
-
+#include <cstdarg>
+#include <cstdio>
 #include <optional>
 
 #include "checksum.h"
 #include "circular_buffer.h"
+#include "gpio.h"
+#include "gpio_regs.h"
 #include "hal.h"
 #include "stepper.h"
 #include "uart_dma.h"
@@ -212,39 +213,41 @@ void HalApi::Init() {
 void HalApi::InitGpio() {
   // See [RM] chapter 8 for details on GPIO
 
+  using namespace GPIO;
+
   // Enable all the GPIO clocks
-  EnableClock(GpioABase);
-  EnableClock(GpioBBase);
-  EnableClock(GpioCBase);
-  EnableClock(GpioDBase);
-  EnableClock(GpioEBase);
-  EnableClock(GpioHBase);
+  EnableClock(base_address(Port::PortA));
+  EnableClock(base_address(Port::PortB));
+  EnableClock(base_address(Port::PortC));
+  EnableClock(base_address(Port::PortD));
+  EnableClock(base_address(Port::PortE));
+  EnableClock(base_address(Port::PortH));
 
   // Configure PCB ID pins as inputs.
-  GpioPinMode(GpioBBase, 1, GPIOPinMode::Input);
-  GpioPinMode(GpioABase, 12, GPIOPinMode::Input);
+  SetPinMode(Port::PortB, 1, GPIO::PinMode::Input);
+  SetPinMode(Port::PortA, 12, GPIO::PinMode::Input);
 
   // Configure LED pins as outputs
-  GpioPinMode(GpioCBase, 13, GPIOPinMode::Output);
-  GpioPinMode(GpioCBase, 14, GPIOPinMode::Output);
-  GpioPinMode(GpioCBase, 15, GPIOPinMode::Output);
+  SetPinMode(Port::PortC, 13, GPIO::PinMode::Output);
+  SetPinMode(Port::PortC, 14, GPIO::PinMode::Output);
+  SetPinMode(Port::PortC, 15, GPIO::PinMode::Output);
 
   // Turn all three LEDs off initially
-  GpioClrPin(GpioCBase, 13);
-  GpioClrPin(GpioCBase, 14);
-  GpioClrPin(GpioCBase, 15);
+  ClrPin(Port::PortC, 13);
+  ClrPin(Port::PortC, 14);
+  ClrPin(Port::PortC, 15);
 }
 
 // Set or clear the specified digital output
-void HalApi::DigitalWrite(BinaryPin pin, VoltageLevel value) {
-  auto [base, bit] = [&]() -> std::pair<GpioReg *, int> {
-    switch (pin) {
+void HalApi::DigitalWrite(BinaryPin binary_pin, VoltageLevel value) {
+  auto [port, pin] = [&]() -> std::pair<GPIO::Port, int> {
+    switch (binary_pin) {
       case BinaryPin::RedLED:
-        return {GpioCBase, 13};
+        return {GPIO::Port::PortC, 13};
       case BinaryPin::YellowLED:
-        return {GpioCBase, 14};
+        return {GPIO::Port::PortC, 14};
       case BinaryPin::GreenLED:
-        return {GpioCBase, 15};
+        return {GPIO::Port::PortC, 15};
     }
     // All cases covered above (and GCC checks this).
     __builtin_unreachable();
@@ -252,11 +255,11 @@ void HalApi::DigitalWrite(BinaryPin pin, VoltageLevel value) {
 
   switch (value) {
     case VoltageLevel::High:
-      GpioSetPin(base, bit);
+      GPIO::SetPin(port, pin);
       break;
 
     case VoltageLevel::Low:
-      GpioClrPin(base, bit);
+      GPIO::ClrPin(port, pin);
       break;
   }
 }
@@ -435,7 +438,7 @@ void HalApi::InitPwmOut() {
   EnableClock(Timer2Base);
 
   // Connect PB3 to timer 2
-  GpioPinAltFunc(GpioBBase, 3, 1);
+  GPIO::PinAltFunc(GPIO::Port::PortB, 3, 1);
 
   TimerReg *tmr = Timer2Base;
 
@@ -611,13 +614,13 @@ void HalApi::InitUARTs() {
 #ifdef UART_VIA_DMA
   EnableClock(Dma1Base);
 #endif
-  GpioPinAltFunc(GpioABase, 2, 7);
-  GpioPinAltFunc(GpioABase, 3, 7);
+  GPIO::PinAltFunc(GPIO::Port::PortA, 2, 7);
+  GPIO::PinAltFunc(GPIO::Port::PortA, 3, 7);
 
-  GpioPinAltFunc(GpioBBase, 10, 7);
-  GpioPinAltFunc(GpioBBase, 11, 7);
-  GpioPinAltFunc(GpioBBase, 13, 7);
-  GpioPinAltFunc(GpioBBase, 14, 7);
+  GPIO::PinAltFunc(GPIO::Port::PortB, 10, 7);
+  GPIO::PinAltFunc(GPIO::Port::PortB, 11, 7);
+  GPIO::PinAltFunc(GPIO::Port::PortB, 13, 7);
+  GPIO::PinAltFunc(GPIO::Port::PortB, 14, 7);
 
 #ifdef UART_VIA_DMA
   dma_uart.Init(115200);
@@ -722,11 +725,25 @@ void HalApi::EnableClock(volatile void *ptr) {
     int index;
     int bit_set;
   } RccInfo[] = {
-      {Dma1Base, 0, 0},   {Dma2Base, 0, 1},     {FlashBase, 0, 8},  {GpioABase, 1, 0},
-      {GpioBBase, 1, 1},  {GpioCBase, 1, 2},    {GpioDBase, 1, 3},  {GpioEBase, 1, 4},
-      {GpioHBase, 1, 7},  {AdcBase, 1, 13},     {Timer2Base, 4, 0}, {Timer3Base, 4, 1},
-      {Timer6Base, 4, 4}, {Uart2Base, 4, 17},   {Uart3Base, 4, 18}, {Timer1Base, 6, 11},
-      {Spi1Base, 6, 12},  {Timer15Base, 6, 16}, {I2C1Base, 4, 21},
+      {Dma1Base, 0, 0},
+      {Dma2Base, 0, 1},
+      {FlashBase, 0, 8},
+      {AdcBase, 1, 13},
+      {Timer2Base, 4, 0},
+      {Timer3Base, 4, 1},
+      {Timer6Base, 4, 4},
+      {Uart2Base, 4, 17},
+      {Uart3Base, 4, 18},
+      {Timer1Base, 6, 11},
+      {Spi1Base, 6, 12},
+      {Timer15Base, 6, 16},
+      {I2C1Base, 4, 21},
+      {GPIO::base_address(GPIO::Port::PortA), 1, 0},
+      {GPIO::base_address(GPIO::Port::PortB), 1, 1},
+      {GPIO::base_address(GPIO::Port::PortC), 1, 2},
+      {GPIO::base_address(GPIO::Port::PortD), 1, 3},
+      {GPIO::base_address(GPIO::Port::PortE), 1, 4},
+      {GPIO::base_address(GPIO::Port::PortH), 1, 7},
       // The following entries are probably correct, but have
       // not been tested yet.  When adding support for one of
       // these peripherals just comment out the line.  And

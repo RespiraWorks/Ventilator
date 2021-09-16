@@ -15,6 +15,7 @@ limitations under the License.
 
 #include "stepper.h"
 
+#include "gpio.h"
 #include "hal.h"
 
 StepMotor StepMotor::motor_[StepMotor::MaxMotors];
@@ -86,8 +87,8 @@ static constexpr float VelIntSpeedReg = TickTime * (1 << 26);
 static constexpr int MicrostepPerStep = 128;
 
 // These functions raise and lower the chip select pin
-inline void CSHigh() { GpioSetPin(GpioBBase, 6); }
-inline void CSLow() { GpioClrPin(GpioBBase, 6); }
+inline void CSHigh() { GPIO::SetPin(GPIO::Port::PortB, 6); }
+inline void CSLow() { GPIO::ClrPin(GPIO::Port::PortB, 6); }
 
 StepMtrErr StepMotor::SetParam(StepMtrParam param, uint32_t value) {
   uint8_t p = static_cast<uint8_t>(param);
@@ -185,18 +186,18 @@ void HalApi::StepperMotorInit() {
   // I just want it to be high so I don't reset the
   // part inadvertently
   CSHigh();
-  GpioSetPin(GpioABase, 9);
-  GpioPinMode(GpioBBase, 6, GPIOPinMode::Output);
-  GpioPinMode(GpioABase, 9, GPIOPinMode::Output);
+  GPIO::SetPin(GPIO::Port::PortA, 9);
+  GPIO::SetPinMode(GPIO::Port::PortB, 6, GPIO::PinMode::Output);
+  GPIO::SetPinMode(GPIO::Port::PortA, 9, GPIO::PinMode::Output);
 
   // Assign the three SPI pins to the SPI peripheral
-  GpioPinAltFunc(GpioABase, 5, 5);
-  GpioPinAltFunc(GpioABase, 6, 5);
-  GpioPinAltFunc(GpioABase, 7, 5);
+  GPIO::PinAltFunc(GPIO::Port::PortA, 5, 5);
+  GPIO::PinAltFunc(GPIO::Port::PortA, 6, 5);
+  GPIO::PinAltFunc(GPIO::Port::PortA, 7, 5);
 
   // Set the output pins to use the highest speed setting
-  GpioOutSpeed(GpioABase, 5, GPIOOutSpeed::Smoking);
-  GpioOutSpeed(GpioABase, 7, GPIOOutSpeed::Smoking);
+  GPIO::SetOutSpeed(GPIO::Port::PortA, 5, GPIO::OutSpeed::Smoking);
+  GPIO::SetOutSpeed(GPIO::Port::PortA, 7, GPIO::OutSpeed::Smoking);
 
   // Configure my SPI port to talk to the stepper
   SpiReg *const spi = Spi1Base;

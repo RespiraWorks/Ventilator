@@ -240,7 +240,7 @@ void HalApi::InitGpio() {
 
 // Set or clear the specified digital output
 void HalApi::DigitalWrite(BinaryPin binary_pin, VoltageLevel value) {
-  auto [port, pin] = [&]() -> std::pair<GPIO::Port, int> {
+  auto [port, pin] = [&]() -> std::pair<GPIO::Port, uint8_t> {
     switch (binary_pin) {
       case BinaryPin::RedLED:
         return {GPIO::Port::PortC, 13};

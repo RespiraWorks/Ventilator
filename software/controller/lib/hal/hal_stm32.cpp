@@ -764,11 +764,11 @@ void HalApi::EnableClock(volatile void *ptr) {
     hal.DisableInterrupts();
     // TODO: could have a call to Fault() for debug purposes, but not in
     // production
+  } else {
+    // Enable the clock of the requested peripheral
+    RccReg *rcc = RccBase;
+    rcc->peripheral_clock_enable[ndx] |= (1 << bit);
   }
-
-  // Enable the clock of the requested peripheral
-  RccReg *rcc = RccBase;
-  rcc->peripheral_clock_enable[ndx] |= (1 << bit);
 }
 
 static void StepperISR() { StepMotor::DmaISR(); }

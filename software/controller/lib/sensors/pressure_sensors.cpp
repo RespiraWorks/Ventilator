@@ -21,7 +21,7 @@ AnalogPressureSensor::AnalogPressureSensor(const char *name, const char *help_su
       AnalogSensor(name, help_supplement, pin),
       voltage_to_kPa_(voltage_to_kPa) {}
 
-Pressure AnalogPressureSensor::read(HalApi &hal_api) const {
+Pressure AnalogPressureSensor::read(const HalApi &hal_api) const {
   auto ret = kPa(AnalogSensor::read_diff_volts(hal_api) * voltage_to_kPa_);
   dbg_pressure_.set(ret.cmH2O());
   return ret;

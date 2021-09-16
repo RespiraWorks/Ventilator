@@ -179,7 +179,7 @@ class HalApi {
   // Returns a voltage.  On STM32 this can range from 0 to 3.3V.
   //
   // In test mode, will return the last value set via TESTSetAnalogPin.
-  Voltage AnalogRead(AnalogPin pin);
+  Voltage AnalogRead(AnalogPin pin) const;
 
 #ifdef TEST_MODE
   void TESTSetAnalogPin(AnalogPin pin, Voltage value);
@@ -429,7 +429,7 @@ inline void HalApi::WatchdogHandler() {}
 
 inline Time HalApi::Now() { return time_; }
 inline void HalApi::Delay(Duration d) { time_ = time_ + d; }
-inline Voltage HalApi::AnalogRead(AnalogPin pin) { return analog_pin_values_.at(pin); }
+inline Voltage HalApi::AnalogRead(AnalogPin pin) const { return analog_pin_values_.at(pin); }
 inline void HalApi::TESTSetAnalogPin(AnalogPin pin, Voltage value) {
   analog_pin_values_[pin] = value;
 }

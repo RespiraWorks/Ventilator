@@ -22,7 +22,7 @@ class AnalogPressureSensor : public PressureSensor, public AnalogSensor {
   AnalogPressureSensor(const char *name, const char *help_supplement, AnalogPin pin,
                        float voltage_to_kPa);
 
-  Pressure read(HalApi &hal_api) const override;
+  Pressure read(const HalApi &hal_api) const override;
 
  private:
   // Assume linear relationship, pending further research

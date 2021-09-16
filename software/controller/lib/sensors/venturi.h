@@ -25,7 +25,7 @@ class VenturiFlowSensor : public FlowSensor {
                     float venturi_correction);
 
   /// \param air_density in units of kg/m^3, will depend on temperature and pressure
-  VolumetricFlow read(HalApi& hal_api, float air_density) const override;
+  VolumetricFlow read(const HalApi& hal_api, float air_density) const override;
 
   /// This is exposed as static so the math can be tested without HAL
   VolumetricFlow pressure_delta_to_flow(Pressure delta, float air_density) const;

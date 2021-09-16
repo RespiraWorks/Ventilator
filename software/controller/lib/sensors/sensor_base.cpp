@@ -28,12 +28,12 @@ AnalogSensor::AnalogSensor(const char *name, const char *help_supplement, Analog
   dbg_voltage_.append_help(help_supplement);
 }
 
-void AnalogSensor::set_zero(HalApi &hal_api) {
+void AnalogSensor::set_zero(const HalApi &hal_api) {
   zero_ = hal_api.AnalogRead(pin_);
   dbg_zero_.set(zero_.volts());
 }
 
-float AnalogSensor::read_diff_volts(HalApi &hal_api) const {
+float AnalogSensor::read_diff_volts(const HalApi &hal_api) const {
   auto ret = (hal_api.AnalogRead(pin_) - zero_).volts();
   dbg_voltage_.set(ret);
   return ret;

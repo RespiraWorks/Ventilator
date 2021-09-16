@@ -284,7 +284,7 @@ void HalApi::InitSysTimer() {
   // -1 until the clock wraps back to zero and generates an interrupt. This
   // setting will cause an interrupt every 10,000 clocks or 1 millisecond
   tmr->auto_reload = 9999;
-  tmr->prescaler = (CPU_FREQ_MHZ / 10 - 1);
+  tmr->prescaler = (CPUFrequencyMhz / 10 - 1);
   tmr->event = 1;
   // Enable UIFREMAP.  This causes the top bit of tmr->counter to be true if a
   // timer interrupt is pending.
@@ -344,7 +344,7 @@ void HalApi::StartLoopTimer(const Duration &period, void (*callback)(void *), vo
   WatchdogInit();
 
   // Find the loop period in clock cycles
-  int32_t reload = static_cast<int32_t>(CPU_FREQ * period.seconds());
+  int32_t reload = static_cast<int32_t>(CPUFrequency * period.seconds());
   int prescale = 1;
 
   // Adjust the prescaler so that my reload count will fit in the 16-bit
@@ -392,14 +392,14 @@ static void Timer15ISR() {
 
   // Keep track of loop latency in uSec
   // Also max latency since it was last zeroed
-  latency = static_cast<float>(start) * (1.0f / CPU_FREQ_MHZ);
+  latency = static_cast<float>(start) * (1.0f / CPUFrequencyMhz);
   if (latency > max_latency) max_latency = latency;
 
   // Call the function
   controller_callback(controller_arg);
 
   uint32_t end = Timer15Base->counter;
-  loop_time = static_cast<float>(end - start) * (1.0f / CPU_FREQ_MHZ);
+  loop_time = static_cast<float>(end - start) * (1.0f / CPUFrequencyMhz);
 
   // Start sending any queued commands to the stepper motor
   StepMotor::StartQueuedCommands();
@@ -443,7 +443,7 @@ void HalApi::InitPwmOut() {
   TimerReg *tmr = Timer2Base;
 
   // Set the frequency
-  tmr->auto_reload = (CPU_FREQ / PwmFreqHz) - 1;
+  tmr->auto_reload = (CPUFrequency / PwmFreqHz) - 1;
 
   // Configure channel 2 in PWM output mode 1
   // with preload enabled.  The preload means that
@@ -492,9 +492,9 @@ class UART {
  public:
   explicit UART(UartReg *const r) : uart_(r) {}
 
-  void Init(int baud) {
+  void Init(uint32_t baud) {
     // Set baud rate register
-    uart_->baudrate = CPU_FREQ / baud;
+    uart_->baudrate = CPUFrequency / baud;
 
     uart_->control_reg1.bitfield.rx_interrupt = 1;  // enable receive interrupt
     uart_->control_reg1.bitfield.tx_enable = 1;     // enable transmitter

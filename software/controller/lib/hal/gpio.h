@@ -26,7 +26,7 @@ Reference abbreviations [RM], [DS], etc are defined in hal/README.md.
 
 namespace GPIO {
 
-/// \TODO: MOve these mappings elsewhere
+/// \TODO: Move these mappings elsewhere
 enum class Port : uint32_t {
   PortA = 0x48000000,
   PortB = 0x48000400,
@@ -36,45 +36,44 @@ enum class Port : uint32_t {
   PortH = 0x48001C00,
 };
 
-// Each pin has a 2-bit mode value that can be set using this function.
-// Pin 0 mode is in bits 0-1, pin 1 in 2-3, etc.  ([RM] 8.4.1)
-enum class PinMode {
-  Input = 0,
-  Output = 1,
-  AlternateFunction = 2,
-  Analog = 3,
+// Value for GPIOx_MODER ([RM] 8.4.1)
+enum class PinMode : uint8_t {
+  Input = 0b00,
+  Output = 0b01,
+  AlternateFunction = 0b10,
+  Analog = 0b11,
 };
 
 // Value for GPIOx_OTYPER ([RM] 8.4.2)
-enum class OutType { PushPull = 0, OpenDrain = 1 };
+enum class OutType : uint8_t { PushPull = 0b0, OpenDrain = 0b1 };
 
-// Output pin speeds are set using two consecutive bits / pin.
-enum class OutSpeed { Slow = 0, Medium = 1, Fast = 2, Smoking = 3 };
+// Value for GPIOx_OSPEEDR ([RM] 8.4.3)
+enum class OutSpeed : uint8_t { Slow = 0b00, Medium = 0b01, Fast = 0b10, Smoking = 0b11 };
 
-void SetPinMode(Port port, int pin, PinMode mode);
+void SetPinMode(Port port, uint8_t pin, PinMode mode);
 
-void SetOutType(Port port, int pin, OutType output_type);
+void SetOutType(Port port, uint8_t pin, OutType output_type);
 
-void SetOutSpeed(Port port, int pin, OutSpeed speed);
+void SetOutSpeed(Port port, uint8_t pin, OutSpeed speed);
 
 // Many GPIO pins can be repurposed with an alternate function
 // See Table 17 and 18 [DS] for alternate functions
 // See [RM] 8.4.9 and 8.4.10 for GPIO alternate function selection
-void PinAltFunc(Port port, int pin, int func);
+void PinAltFunc(Port port, uint8_t pin, uint8_t func);
 
 // Set a specific output pin
-void SetPin(Port port, int pin);
+void SetPin(Port port, uint8_t pin);
 
 // Clear a specific output pin
-void ClrPin(Port port, int pin);
+void ClrPin(Port port, uint8_t pin);
 
-// Return the current value of an input pin
-int GetPin(Port port, int pin);
+// Return the current value of an input pin ([RM] 8.4.5)
+uint16_t GetPin(Port port, uint8_t pin);
 
 // This adds a pull-up resistor to an input pin
-void PullUp(Port port, int pin);
+void PullUp(Port port, uint8_t pin);
 
 // This adds a pull-down resistor to an input pin
-void PullDn(Port port, int pin);
+void PullDn(Port port, uint8_t pin);
 
 }  // namespace GPIO

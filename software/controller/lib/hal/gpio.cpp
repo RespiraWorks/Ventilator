@@ -26,14 +26,13 @@ Reference abbreviations [RM], [DS], etc are defined in hal/README.md.
 
 namespace GPIO {
 
-void SetPinMode(Port port, int pin, PinMode mode) {
+void SetPinMode(Port port, uint8_t pin, PinMode mode) {
   auto *gpio = base_address(port);
   gpio->mode &= ~(0b11 << (pin * 2));
-  gpio->mode |= (static_cast<int>(mode) << (pin * 2));
+  gpio->mode |= (static_cast<uint32_t>(mode) << (pin * 2));
 }
 
-// Value for GPIOx_OTYPER ([RM] 8.4.2)
-void SetOutType(Port port, int pin, OutType output_type) {
+void SetOutType(Port port, uint8_t pin, OutType output_type) {
   auto *gpio = base_address(port);
   if (output_type == OutType::OpenDrain)
     gpio->output_type |= 1 << pin;
@@ -42,9 +41,9 @@ void SetOutType(Port port, int pin, OutType output_type) {
 }
 
 // Output pin speeds are set using two consecutive bits / pin.
-void SetOutSpeed(Port port, int pin, OutSpeed speed) {
+void SetOutSpeed(Port port, uint8_t pin, OutSpeed speed) {
   auto *gpio = base_address(port);
-  int s = static_cast<int>(speed);
+  auto s = static_cast<uint32_t>(speed);
   gpio->output_speed &= ~(0b11 << (2 * pin));
   gpio->output_speed |= (s << (2 * pin));
 }
@@ -52,34 +51,34 @@ void SetOutSpeed(Port port, int pin, OutSpeed speed) {
 // Many GPIO pins can be repurposed with an alternate function
 // See Table 17 and 18 [DS] for alternate functions
 // See [RM] 8.4.9 and 8.4.10 for GPIO alternate function selection
-void PinAltFunc(Port port, int pin, int func) {
+void PinAltFunc(Port port, uint8_t pin, uint8_t func) {
   auto *gpio = base_address(port);
   SetPinMode(port, pin, PinMode::AlternateFunction);
 
-  int x = (pin < 8) ? 0 : 1;
-  gpio->alternate_function[x] |= (func << ((pin & 0b111) * 4));
+  uint8_t x = (pin < 8) ? 0 : 1;
+  gpio->alternate_function[x] |= (static_cast<uint32_t>(func) << ((pin & 0b111) * 4));
 }
 
 // Set a specific output pin
-void SetPin(Port port, int pin) {
+void SetPin(Port port, uint8_t pin) {
   auto *gpio = base_address(port);
   gpio->set = static_cast<uint16_t>(1 << pin);
 }
 
 // Clear a specific output pin
-void ClrPin(Port port, int pin) {
+void ClrPin(Port port, uint8_t pin) {
   auto *gpio = base_address(port);
   gpio->clear = static_cast<uint16_t>(1 << pin);
 }
 
 // Return the current value of an input pin
-int GetPin(Port port, int pin) {
+uint16_t GetPin(Port port, uint8_t pin) {
   auto *gpio = base_address(port);
   return (gpio->input_data & (1 << pin)) ? 1 : 0;
 }
 
 // This adds a pull-up resistor to an input pin
-void PullUp(Port port, int pin) {
+void PullUp(Port port, uint8_t pin) {
   auto *gpio = base_address(port);
   uint32_t x = gpio->pullup_pulldown & ~(3 << (2 * pin));
   x |= 1 << (2 * pin);
@@ -87,7 +86,7 @@ void PullUp(Port port, int pin) {
 }
 
 // This adds a pull-down resistor to an input pin
-void PullDn(Port port, int pin) {
+void PullDn(Port port, uint8_t pin) {
   auto *gpio = base_address(port);
   uint32_t x = gpio->pullup_pulldown & ~(3 << (2 * pin));
   x |= 2 << (2 * pin);

@@ -31,8 +31,10 @@ Reference abbreviations [RM], [DS], etc are defined in hal/README.md.
 
 #include "hal_stm32_regs.h"
 
-#define CPU_FREQ_MHZ 80
-#define CPU_FREQ (CPU_FREQ_MHZ * 1000000)
+static constexpr uint32_t CPUFrequencyMhz{80};
+
+/// \TODO: Why? And what units is this in?
+static constexpr uint32_t CPUFrequency{CPUFrequencyMhz * 1000000};
 
 // Interrupt vectors that we currently use.
 // The values here are the offsets into the interrupt table.

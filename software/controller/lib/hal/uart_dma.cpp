@@ -37,7 +37,7 @@ extern UartDma uart_dma;
 void UartDma::init(uint32_t baud) {
   baud_ = baud;
   // Set baud rate register
-  uart_->baudrate = CPU_FREQ / baud;
+  uart_->baudrate = CPUFrequency / baud;
 
   uart_->control3.bitfield.rx_dma = 1;  // set DMAR bit to enable DMA for receiver
   uart_->control3.bitfield.tx_dma = 1;  // set DMAT bit to enable DMA for transmitter

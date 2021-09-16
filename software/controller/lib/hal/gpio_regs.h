@@ -41,9 +41,8 @@ struct RegisterStructure {
   uint16_t set;                    // Bit set register [RM] 8.4.7
   uint16_t clear;                  // Bit reset register [RM] 8.4.7
   uint32_t flash_lock;             // Configuration lock register [RM] 8.4.8
-  uint32_t alternate_function[2];  // Alternate function low/high register
-  // [RM] 8.4.{9,10}
-  uint32_t reset;  // Reset register [RM] 8.4.11
+  uint32_t alternate_function[2];  // Alternate function low/high register [RM] 8.4.{9,10}
+  uint32_t reset;                  // Reset register [RM] 8.4.11
 };
 
 typedef volatile RegisterStructure Register;

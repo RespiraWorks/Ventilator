@@ -35,7 +35,7 @@ limitations under the License.
 #include "hal_stm32.h"
 
 void HalApi::InitBuzzer() {
-  static constexpr int BuzzerFreqHz{2400};
+  static constexpr uint32_t BuzzerFreqHz{2400};
 
   EnableClock(Timer3Base);
 
@@ -48,7 +48,7 @@ void HalApi::InitBuzzer() {
   TimerReg *tmr = Timer3Base;
 
   // Set the frequency
-  tmr->auto_reload = (CPU_FREQ / BuzzerFreqHz) - 1;
+  tmr->auto_reload = (CPUFrequency / BuzzerFreqHz) - 1;
 
   // Configure channel 1 in PWM output mode 1
   // with preload enabled.  The preload means that

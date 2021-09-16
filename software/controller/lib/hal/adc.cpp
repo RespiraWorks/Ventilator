@@ -137,7 +137,7 @@ static constexpr int AdcConversionTime = [] {
 
 // Calculate how long our history buffer needs to be based on the above.
 static constexpr int AdcSampleHistory = static_cast<int>(
-    SampleHistoryTimeSec * CPU_FREQ / AdcConversionTime / OversampleCount / AdcChannels);
+    SampleHistoryTimeSec * CPUFrequency / AdcConversionTime / OversampleCount / AdcChannels);
 
 // This scaler converts the sum of the A/D readings (a total of
 // AdcSampleHistory) into a voltage.  The A/D is scaled so a value of 0

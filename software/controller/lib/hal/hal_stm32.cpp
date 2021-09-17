@@ -32,6 +32,7 @@ Abbreviations [RM], [DS], etc are defined in hal/README.md.
 
 #include "checksum.h"
 #include "circular_buffer.h"
+#include "clocks.h"
 #include "gpio.h"
 #include "gpio_regs.h"
 #include "hal.h"
@@ -117,46 +118,7 @@ void HalApi::EarlyInit() {
   flash->access.instruction_cache_enable = 0;
   flash->access.data_cache_enable = 0;
 
-  // Enable the PLL.
-  // We use the MSI clock as the source for the PLL
-  // The MSI clock is running at its default frequency of
-  // 4MHz.
-  //
-  // The PLL can generate several clocks with somewhat
-  // less then descriptive names in the [RM].
-  // These clocks are:
-  //   P clock - Used for the SAI peripheral.  Not used here
-  //   Q clock - 48MHz output clock used for USB.  Not used here.
-  //   R clock - This is the main system clock.  We care about this one.
-  //
-  // When configuring the PLL there are several constants programmed
-  // into the PLL register to set the frequency of the internal VCO
-  // These constants are called N and M in the [RM]:
-  //
-  // Fin = 4MHz
-  // Fvco = Fin * (N/M)
-  //
-  // Legal range for Fvco is 96MHz to 344MHz according to [DS].
-  // I'll use 160MHz for Fvco and divide by 2 to get an 80MHz output clock
-  //
-  // See [RM] chapter 6
-  int n = 40;
-  int m = 1;
-  RccReg *rcc = RccBase;
-  rcc->pll_config = 0x01000001 | (n << 8) | ((m - 1) << 4);
-
-  // Turn on the PLL
-  rcc->clock_control |= 0x01000000;
-
-  // Wait for the PLL ready indication
-  while (!(rcc->clock_control & 0x02000000)) {
-  }
-
-  // Set PLL as system clock
-  rcc->clock_config = 0x00000003;
-
-  // Use system clock as the A/D clock
-  rcc->independent_clock_config = 0x30000000;
+  configure_pll();
 }
 
 /*
@@ -773,7 +735,7 @@ void HalApi::EnableClock(volatile void *ptr) {
     }
   }
 
-  // If the input address wasn't found then its definitely
+  // If the input address wasn't found then it's definitely
   // a bug.  I'll just loop forever here causing the code
   // to crash.  That should make it easier to find the
   // bug during development.
@@ -783,8 +745,7 @@ void HalApi::EnableClock(volatile void *ptr) {
     // production
   } else {
     // Enable the clock of the requested peripheral
-    RccReg *rcc = RccBase;
-    rcc->peripheral_clock_enable[ndx] |= (1 << bit);
+    enable_peripheral_clock(static_cast<uint8_t>(ndx), static_cast<uint8_t>(bit));
   }
 }
 

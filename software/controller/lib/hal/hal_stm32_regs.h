@@ -27,32 +27,6 @@ used to configure them can be found in [RM]
 Reference abbreviations ([RM], [PCB], etc) are defined in hal/README.md
 */
 
-// Reset and clock control (RCC) registers
-// [RM] 6.4 (pg 192) and registers map in Table 32 [RM] 6.4.32 (pg 243-)
-struct RccStruct {
-  uint32_t clock_control;      // 0x00 RCC_CR [RM] 6.4.1 (pg 192)
-  uint32_t clock_calibration;  // 0x04 RCC_ICSCR [RM] 6.4.2 (pg 196)
-  uint32_t clock_config;       // 0x08 RCC_CFGR [RM] 6.4.3 (pg 196)
-  uint32_t pll_config;         // 0x0C RCC_PLLCFGR [RM] 6.4.4 (pg 198)
-  uint32_t pll_sai1_config;    // 0x10 RCC_PLLSAI1CFGR [RM] 6.4.5 (pg 201)
-  uint32_t reserved0;
-  uint32_t clock_interrupt_enable;  // 0x18 RCC_CIER [RM] 6.4.6 (pg 204)
-  uint32_t clock_interrupt_flag;    // 0x1C RCC_CIFR [RM] 6.4.7 (pg 206)
-  uint32_t clock_interrupt_clear;   // 0x20 RCC_CICR [RM] 6.4.8 (pg 207)
-  uint32_t reserved1;
-  uint32_t peripheral_reset[8];         // 0x28 [RM] 6.4.9-14 (pg 208-216)
-  uint32_t peripheral_clock_enable[8];  // 0x48 [RM] 6.4.15-20 (pg 216-225)
-  uint32_t sleep_clock_enable[8];       // 0x68 [RM] 6.4.21-26 (pg 225-234)
-  uint32_t independent_clock_config;    // 0x88 [RM] 6.4.27 (pg 234)
-  uint32_t reserved2;
-  uint32_t backup;                     // 0x90 RCC_BDCR [RM] 6.4.28 (pg 237)
-  uint32_t status;                     // 0x94 RCC_CSR [RM] 6.4.29 (pg 239)
-  uint32_t recovery;                   // 0x98 RCC_CRRCR [RM] 6.4.30 (pg 241)
-  uint32_t independent_clock_config2;  // 0x9C RCC_CCIPR2 [RM] 6.4.31 (pg 242)
-};
-typedef volatile RccStruct RccReg;
-inline RccReg *const RccBase = reinterpret_cast<RccReg *>(0x40021000);
-
 // The System control block (SCB) provides system implementation information, and system control.
 // This includes configuration, control, and reporting of the system exceptions.
 // Most of this is defined in [PM] 4.4 (pg 221), except the ones marked otherwise

@@ -24,6 +24,8 @@ Reference abbreviations [RM], [DS], etc are defined in hal/README.md.
 
 #include <cstdint>
 
+// General Purpose I/O [RM] 8.4
+
 namespace GPIO {
 
 /// \TODO: Move these mappings elsewhere
@@ -68,7 +70,7 @@ void SetPin(Port port, uint8_t pin);
 void ClrPin(Port port, uint8_t pin);
 
 // Return the current value of an input pin ([RM] 8.4.5)
-uint16_t GetPin(Port port, uint8_t pin);
+bool GetPin(Port port, uint8_t pin);
 
 // This adds a pull-up resistor to an input pin
 void PullUp(Port port, uint8_t pin);

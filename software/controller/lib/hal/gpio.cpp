@@ -22,9 +22,27 @@ Reference abbreviations [RM], [DS], etc are defined in hal/README.md.
 
 #include "gpio.h"
 
-#include "gpio_regs.h"
-
 namespace GPIO {
+
+// General Purpose I/O
+// [RM] 8.4 GPIO Registers (pg 267)
+struct RegisterStructure {
+  uint32_t mode;                   // Mode register [RM] 8.4.1
+  uint32_t output_type;            // Output type register [RM] 8.4.2
+  uint32_t output_speed;           // Output speed register [RM] 8.4.3
+  uint32_t pullup_pulldown;        // Pull-up/pull-down register [RM] 8.4.4
+  uint32_t input_data;             // Input data register [RM] 8.4.5
+  uint32_t output_data;            // Output data register [RM] 8.4.6
+  uint16_t set;                    // Bit set register [RM] 8.4.7
+  uint16_t clear;                  // Bit reset register [RM] 8.4.7
+  uint32_t flash_lock;             // Configuration lock register [RM] 8.4.8
+  uint32_t alternate_function[2];  // Alternate function low/high register [RM] 8.4.{9,10}
+  uint32_t reset;                  // Reset register [RM] 8.4.11
+};
+
+typedef volatile RegisterStructure Register;
+
+inline Register *const base_address(const Port port) { return reinterpret_cast<Register *>(port); }
 
 void SetPinMode(Port port, uint8_t pin, PinMode mode) {
   auto *gpio = base_address(port);
@@ -72,7 +90,7 @@ void ClrPin(Port port, uint8_t pin) {
 }
 
 // Return the current value of an input pin
-uint16_t GetPin(Port port, uint8_t pin) {
+bool GetPin(Port port, uint8_t pin) {
   auto *gpio = base_address(port);
   return (gpio->input_data & (1 << pin)) ? 1 : 0;
 }

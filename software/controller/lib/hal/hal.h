@@ -340,7 +340,6 @@ class HalApi {
   void InitSysTimer();
   void InitPwmOut();
   void InitUARTs();
-  void EnableClock(volatile void *ptr);
   void EnableInterrupt(InterruptVector vec, IntPriority pri);
   void StepperMotorInit();
   void InitBuzzer();

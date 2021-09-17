@@ -15,6 +15,7 @@ limitations under the License.
 
 #include "stepper.h"
 
+#include "clocks.h"
 #include "gpio.h"
 #include "hal.h"
 
@@ -163,8 +164,8 @@ StepMtrErr StepMotor::GetParam(StepMtrParam param, uint32_t *value) {
  * we have 3 steppers.
  *****************************************************************/
 void HalApi::StepperMotorInit() {
-  EnableClock(Spi1Base);
-  EnableClock(Dma2Base);
+  enable_peripheral_clock(PeripheralID::SPI1);
+  enable_peripheral_clock(PeripheralID::DMA2);
 
   // The following pins are used to talk to the stepper
   // drivers:

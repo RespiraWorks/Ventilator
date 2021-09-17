@@ -24,6 +24,7 @@ limitations under the License.
 
 #include <cstring>
 
+#include "clocks.h"
 #include "gpio.h"
 #include "hal.h"
 
@@ -35,8 +36,8 @@ I2C::STM32Channel i2c1;
 // Reference abbreviations ([RM], [PCB], etc) are defined in hal/README.md
 void HalApi::InitI2C() {
   // Enable I2C1 and DMA2 peripheral clocks (we use DMA2 to send/receive data)
-  EnableClock(I2C1Base);
-  EnableClock(Dma2Base);
+  enable_peripheral_clock(PeripheralID::I2C1);
+  enable_peripheral_clock(PeripheralID::DMA2);
 
   // The following pins are used as i2c1 bus on the rev-1 PCB (see [PCB]):
   // - PB8 (I2C1 - DATA)

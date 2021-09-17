@@ -17,7 +17,68 @@ limitations under the License.
 
 #include <cstdint>
 
-// Enable the clock of the requested peripheral
+// Please read manual carefully, as not all peripherals ara available on all processors
+// [RM] 6.4.9-26 (pg 208-234)
+enum class PeripheralID {
+  ADC,
+  AES,   // AES accelerator
+  CAN1,  // CAN1
+  CRC,
+  CRS,
+  DAC1,
+  DFSDM1,  // Digital filters for sigma-delta modulators
+  DMA1,
+  DMA2,
+  Flash,  // Flash memory interface
+  Firewall,
+  GPIOA,
+  GPIOB,
+  GPIOC,
+  GPIOD,
+  GPIOE,
+  GPIOH,
+  I2C1,
+  I2C2,
+  I2C3,
+  I2C4,
+  LCD,
+  LowPowerTimer1,
+  LowPowerTimer2,
+  LowPowerUART1,
+  OPAMP,  // OPAMP interface
+  Power,
+  QSPI,    // Quad SPI
+  RNG,     // Random number generator
+  RTCAPB,  // RTC APB
+  SAI1,    // SAI1
+  SDMMC1,  // SDMMC
+  SPI1,    // SPI1
+  SPI2,    // SPI2
+  SPI3,    // SPI3
+  SingleWirePMI1,
+  SYSCFG,  // SYSCFG + COMP + VREFBUF
+  Timer1,
+  Timer2,
+  Timer3,
+  Timer6,
+  Timer7,
+  Timer15,
+  Timer16,
+  TSC,  // Touch sensing controller
+  UART1,
+  UART2,
+  UART3,
+  UART4,
+  USBFS,  // USB FS
+  WindowWatchdog,
+};
+
+// Enable clocks to a specific peripheral.
+// On the STM32 the clocks going to various peripherals on the chip are individually selectable and
+// for the most part disabled on startup. Clocks to the specific peripherals need to be enabled
+// through the RCC (Reset and Clock Controller) module before the peripheral can be used.
+void enable_peripheral_clock(const PeripheralID);
+
 void enable_peripheral_clock(uint8_t index, uint8_t bit);
 
 void configure_pll();

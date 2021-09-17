@@ -50,10 +50,12 @@ limitations under the License.
 //
 ////////////////////////////////////////////////////////////////////
 
-#if defined(BARE_STM32)
-
+#include "clocks.h"
 #include "gpio.h"
 #include "hal.h"
+
+#if defined(BARE_STM32)
+
 #include "hal_stm32.h"
 
 /*
@@ -156,7 +158,7 @@ static_assert(AdcSampleHistory < 100);
 
 void HalApi::InitADC() {
   // Enable the clock to the A/D converter
-  EnableClock(AdcBase);
+  enable_peripheral_clock(PeripheralID::ADC);
 
   using namespace GPIO;
 
@@ -241,7 +243,7 @@ void HalApi::InitADC() {
   adc->adc[0].sequence.sequence5 = 2;   // PC3 (ADC1_IN2)  interim board: oxygen sensor
 
   // I use DMA1 channel 1 to copy A/D readings into the buffer ([RM] 11.4.4)
-  EnableClock(Dma1Base);
+  enable_peripheral_clock(PeripheralID::DMA1);
   DmaReg *dma = Dma1Base;
   int c1 = static_cast<int>(DmaChannel::Chan1);
 

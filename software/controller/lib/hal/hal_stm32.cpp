@@ -102,7 +102,7 @@ void HalApi::EarlyInit() {
 
   // Reset caches and set latency for 80MHz operation
   // See chapter 3 of [RM] for details on the embedded flash module
-  EnableClock(FlashBase);
+  enable_peripheral_clock(PeripheralID::Flash);
   FlashReg *flash = FlashBase;
 
   // Set four wait states (required to run at 80MHz)
@@ -178,12 +178,12 @@ void HalApi::InitGpio() {
   using namespace GPIO;
 
   // Enable all the GPIO clocks
-  EnableClock(base_address(Port::PortA));
-  EnableClock(base_address(Port::PortB));
-  EnableClock(base_address(Port::PortC));
-  EnableClock(base_address(Port::PortD));
-  EnableClock(base_address(Port::PortE));
-  EnableClock(base_address(Port::PortH));
+  enable_peripheral_clock(PeripheralID::GPIOA);
+  enable_peripheral_clock(PeripheralID::GPIOB);
+  enable_peripheral_clock(PeripheralID::GPIOC);
+  enable_peripheral_clock(PeripheralID::GPIOD);
+  enable_peripheral_clock(PeripheralID::GPIOE);
+  enable_peripheral_clock(PeripheralID::GPIOH);
 
   // Configure PCB ID pins as inputs.
   SetPinMode(Port::PortB, 1, GPIO::PinMode::Input);
@@ -237,7 +237,7 @@ void HalApi::DigitalWrite(BinaryPin binary_pin, VoltageLevel value) {
  *****************************************************************/
 void HalApi::InitSysTimer() {
   // Enable the clock to the timer
-  EnableClock(Timer6Base);
+  enable_peripheral_clock(PeripheralID::Timer6);
 
   // Just set the timer up to count every microsecond.
   TimerReg *tmr = Timer6Base;
@@ -317,7 +317,7 @@ void HalApi::StartLoopTimer(const Duration &period, void (*callback)(void *), vo
   }
 
   // Enable the clock to the timer
-  EnableClock(Timer15Base);
+  enable_peripheral_clock(PeripheralID::Timer15);
 
   // Just set the timer up to count every microsecond.
   TimerReg *tmr = Timer15Base;
@@ -397,7 +397,7 @@ void HalApi::InitPwmOut() {
   // part in 4000 (80000000/20000) or about 12 bits.
   static constexpr int PwmFreqHz = 20000;
 
-  EnableClock(Timer2Base);
+  enable_peripheral_clock(PeripheralID::Timer2);
 
   // Connect PB3 to timer 2
   GPIO::PinAltFunc(GPIO::Port::PortB, 3, 1);
@@ -571,10 +571,10 @@ extern UartDma dma_uart;
 void HalApi::InitUARTs() {
   // NOTE - The UART functionality hasn't been tested due to lack of hardware!
   //        Need to do that as soon as the boards are available.
-  EnableClock(Uart2Base);
-  EnableClock(Uart3Base);
+  enable_peripheral_clock(PeripheralID::UART2);
+  enable_peripheral_clock(PeripheralID::UART3);
 #ifdef UART_VIA_DMA
-  EnableClock(Dma1Base);
+  enable_peripheral_clock(PeripheralID::DMA1);
 #endif
   GPIO::PinAltFunc(GPIO::Port::PortA, 2, 7);
   GPIO::PinAltFunc(GPIO::Port::PortA, 3, 7);
@@ -673,81 +673,6 @@ void HalApi::WatchdogHandler() {
   }
 }
 #pragma GCC diagnostic pop
-
-// Enable clocks to a specific peripheral.
-// On the STM32 the clocks going to various peripherals on the chip
-// are individually selectable and for the most part disabled on startup.
-// Clocks to the specific peripherals need to be enabled through the
-// RCC (Reset and Clock Controller) module before the peripheral can be
-// used.
-// Pass in the base address of the peripheral to enable its clock
-void HalApi::EnableClock(volatile void *ptr) {
-  static struct {
-    volatile void *base_reg;
-    int index;
-    int bit_set;
-  } RccInfo[] = {
-      {Dma1Base, 0, 0},
-      {Dma2Base, 0, 1},
-      {FlashBase, 0, 8},
-      {AdcBase, 1, 13},
-      {Timer2Base, 4, 0},
-      {Timer3Base, 4, 1},
-      {Timer6Base, 4, 4},
-      {Uart2Base, 4, 17},
-      {Uart3Base, 4, 18},
-      {Timer1Base, 6, 11},
-      {Spi1Base, 6, 12},
-      {Timer15Base, 6, 16},
-      {I2C1Base, 4, 21},
-      {GPIO::base_address(GPIO::Port::PortA), 1, 0},
-      {GPIO::base_address(GPIO::Port::PortB), 1, 1},
-      {GPIO::base_address(GPIO::Port::PortC), 1, 2},
-      {GPIO::base_address(GPIO::Port::PortD), 1, 3},
-      {GPIO::base_address(GPIO::Port::PortE), 1, 4},
-      {GPIO::base_address(GPIO::Port::PortH), 1, 7},
-      // The following entries are probably correct, but have
-      // not been tested yet.  When adding support for one of
-      // these peripherals just comment out the line.  And
-      // test of course.
-      //      {CrcBase, 0, 12},
-      //      {Timer3Base, 4, 1},
-      //      {Spi2Base, 4, 14},
-      //      {Spi3Base, 4, 15},
-      //      {Uart4Base, 4, 19},
-      //      {I2C2Base, 4, 22},
-      //      {I2C3Base, 4, 23},
-      //      {I2C4Base, 5, 1},
-      //      {Uart1Base, 6, 14},
-      //      {Timer16Base, 6, 17},
-  };
-
-  // I don't include all the peripherals here, just the ones that we currently
-  // use or seem likely to be used in the future.  To add more peripherals,
-  // just look up the appropriate bit in [RM] chapter 6.
-  int ndx = -1;
-  int bit = 0;
-  for (auto &info : RccInfo) {
-    if (ptr == info.base_reg) {
-      ndx = info.index;
-      bit = info.bit_set;
-      break;
-    }
-  }
-
-  // If the input address wasn't found then it's definitely
-  // a bug.  I'll just loop forever here causing the code
-  // to crash.  That should make it easier to find the
-  // bug during development.
-  if (ndx < 0) {
-    hal.DisableInterrupts();
-    // TODO: could have a call to Fault() for debug purposes, but not in
-    // production
-  } else {
-    // Enable the clock of the requested peripheral
-    enable_peripheral_clock(static_cast<uint8_t>(ndx), static_cast<uint8_t>(bit));
-  }
-}
 
 static void StepperISR() { StepMotor::DmaISR(); }
 

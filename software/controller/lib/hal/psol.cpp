@@ -15,6 +15,7 @@ limitations under the License.
 
 #include <algorithm>
 
+#include "clocks.h"
 #include "gpio.h"
 #include "hal.h"
 #include "vars.h"
@@ -59,7 +60,7 @@ void HalApi::InitPSOL() {
   // that there won't be any audible noise from the switching
   static constexpr int PwmFreq = 5000;
 
-  EnableClock(Timer1Base);
+  enable_peripheral_clock(PeripheralID::Timer1);
 
   // Connect PA11 to timer 1
   // [DS] table 17 shows which functions can be connected to each pin.

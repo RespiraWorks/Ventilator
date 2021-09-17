@@ -32,12 +32,13 @@ limitations under the License.
 // This pin is tied to timer 3 channel 1, so we can use that timer
 // to generate the square wave needed to power the buzzer.
 
+#include "clocks.h"
 #include "hal_stm32.h"
 
 void HalApi::InitBuzzer() {
   static constexpr uint32_t BuzzerFreqHz{2400};
 
-  EnableClock(Timer3Base);
+  enable_peripheral_clock(PeripheralID::Timer3);
 
   // Connect PB4 to timer 3
   // The STM32 datasheet has a table (table 17) which shows

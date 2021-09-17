@@ -27,62 +27,63 @@ used to configure them can be found in [RM]
 Reference abbreviations ([RM], [PCB], etc) are defined in hal/README.md
 */
 
-// [PM] 4.4 System control block (SCB) (pg 221)
+// Reset and clock control (RCC) registers
+// [RM] 6.4 (pg 192) and registers map in Table 32 [RM] 6.4.32 (pg 243-)
 struct RccStruct {
-  uint32_t clock_control;
-  uint32_t clock_calibration;
-  uint32_t clock_config;
-  uint32_t pll_config;
-  uint32_t pll_sai_config;
+  uint32_t clock_control;      // 0x00 RCC_CR [RM] 6.4.1 (pg 192)
+  uint32_t clock_calibration;  // 0x04 RCC_ICSCR [RM] 6.4.2 (pg 196)
+  uint32_t clock_config;       // 0x08 RCC_CFGR [RM] 6.4.3 (pg 196)
+  uint32_t pll_config;         // 0x0C RCC_PLLCFGR [RM] 6.4.4 (pg 198)
+  uint32_t pll_sai1_config;    // 0x10 RCC_PLLSAI1CFGR [RM] 6.4.5 (pg 201)
+  uint32_t reserved0;
+  uint32_t clock_interrupt_enable;  // 0x18 RCC_CIER [RM] 6.4.6 (pg 204)
+  uint32_t clock_interrupt_flag;    // 0x1C RCC_CIFR [RM] 6.4.7 (pg 206)
+  uint32_t clock_interrupt_clear;   // 0x20 RCC_CICR [RM] 6.4.8 (pg 207)
   uint32_t reserved1;
-  uint32_t clock_interrupt_enable;
-  uint32_t clock_interrupt_flag;
-  uint32_t clock_interrupt_clear;
+  uint32_t peripheral_reset[8];         // 0x28 [RM] 6.4.9-14 (pg 208-216)
+  uint32_t peripheral_clock_enable[8];  // 0x48 [RM] 6.4.15-20 (pg 216-225)
+  uint32_t sleep_clock_enable[8];       // 0x68 [RM] 6.4.21-26 (pg 225-234)
+  uint32_t independent_clock_config;    // 0x88 [RM] 6.4.27 (pg 234)
   uint32_t reserved2;
-  uint32_t peripheral_reset[8];
-  uint32_t peripheral_clock_enable[8];
-  uint32_t sleep_clock_enable[8];
-  uint32_t independent_clock_config;
-  uint32_t reserved3;
-  uint32_t backup;
-  uint32_t status;
-  uint32_t recovery;
-  uint32_t independent_clock_config2;
+  uint32_t backup;                     // 0x90 RCC_BDCR [RM] 6.4.28 (pg 237)
+  uint32_t status;                     // 0x94 RCC_CSR [RM] 6.4.29 (pg 239)
+  uint32_t recovery;                   // 0x98 RCC_CRRCR [RM] 6.4.30 (pg 241)
+  uint32_t independent_clock_config2;  // 0x9C RCC_CCIPR2 [RM] 6.4.31 (pg 242)
 };
 typedef volatile RccStruct RccReg;
 inline RccReg *const RccBase = reinterpret_cast<RccReg *>(0x40021000);
 
-// [PM] 4.4 System control block (SCB) (pg 221)
+// The System control block (SCB) provides system implementation information, and system control.
+// This includes configuration, control, and reporting of the system exceptions.
+// Most of this is defined in [PM] 4.4 (pg 221), except the ones marked otherwise
 struct SysControlStruct {
   uint32_t reserved0;
-  uint32_t int_type;
-  uint32_t aux_control;
+  uint32_t int_type;     // 0xE000E004 What is this ????? And WTF is this from ?????
+  uint32_t aux_control;  // 0xE000E008 ACTLR
   uint32_t reserved1;
-  uint32_t sys_tick[3];
+  uint32_t sys_tick[3];  // 0xE000E010 SysTick timer registers [PM] 4.5 (pg 246)
   uint32_t reserved2[57];
-  uint32_t nvic[768];  // 0xE000E100 - NVIC Register [RM] 4.3 (pg 208)
-  uint32_t cpu_id;
-  uint32_t int_control;
-  uint32_t vector_table;
-  uint32_t app_interrupt;  // 0xE000ED0C - Application Interrupt and Reset
-                           // Control Register
-  uint32_t system_control;
-  uint32_t config_control;  // 0xE000ED14 - Configuration and Control Register
-  uint32_t system_priority[3];
-  uint32_t system_handler_control;
-  uint32_t fault_status;
-  uint32_t hard_fault_status;
+  uint32_t nvic[768];               // 0xE000E100 NVIC [RM] 4.3 (pg 208)
+  uint32_t cpu_id;                  // 0xE000ED00 CPUID
+  uint32_t interrupt_control;       // 0xE000ED04 ICSR
+  uint32_t vector_table;            // 0xE000ED08 VTOR
+  uint32_t app_interrupt;           // 0xE000ED0C AIRCR
+  uint32_t system_control;          // 0xE000ED10 SCR
+  uint32_t config_control;          // 0xE000ED14 CCR
+  uint32_t system_priority[3];      // 0xE000ED18 SHPR1-3
+  uint32_t system_handler_control;  // 0xE000ED24 SHCSR
+  uint32_t fault_status;            // 0xE000ED28 CFSR/MMSR/BFSR/UFSR
+  uint32_t hard_fault_status;       // 0xE000ED2C HFSR
   uint32_t reserved3;
-  uint32_t mm_fault_address;
-  uint32_t bus_fault_addr;
+  uint32_t mm_fault_address;  // 0xE000ED34 MMAR
+  uint32_t bus_fault_addr;    // 0xE000ED38 BFAR
   uint32_t reserved4[19];
-  uint32_t coproc_access_control;  // 0xE000ED88 - Coprocessor access control
-                                   // register
+  uint32_t coproc_access_control;  // 0xE000ED88 CPACR [PM] 4.6 (pg 252)
 };
 typedef volatile SysControlStruct SysControlReg;
 inline SysControlReg *const SysControlBase = reinterpret_cast<SysControlReg *>(0xE000E000);
 
-// [PM] 4.3 Nested vectored interrupt controller (NVIC) (pg 208)
+// Nested vectored interrupt controller (NVIC) [PM] 4.3 (pg 208)
 struct InterruptControlStruct {
   uint32_t set_enable[32];
   uint32_t clear_enable[32];

@@ -42,16 +42,18 @@ struct RegisterStructure {
 
 typedef volatile RegisterStructure Register;
 
-inline Register *const base_address(const Port port) { return reinterpret_cast<Register *>(port); }
+RegisterStructure *base_address(const Port port) {
+  return reinterpret_cast<RegisterStructure *>(port);
+}
 
-void SetPinMode(Port port, uint8_t pin, PinMode mode) {
-  auto *gpio = base_address(port);
+void pin_mode(Port port, uint8_t pin, PinMode mode) {
+  Register *const gpio = base_address(port);
   gpio->mode &= ~(0b11 << (pin * 2));
   gpio->mode |= (static_cast<uint32_t>(mode) << (pin * 2));
 }
 
-void SetOutType(Port port, uint8_t pin, OutType output_type) {
-  auto *gpio = base_address(port);
+void output_type(Port port, uint8_t pin, OutType output_type) {
+  Register *const gpio = base_address(port);
   if (output_type == OutType::OpenDrain)
     gpio->output_type |= 1 << pin;
   else
@@ -59,8 +61,8 @@ void SetOutType(Port port, uint8_t pin, OutType output_type) {
 }
 
 // Output pin speeds are set using two consecutive bits / pin.
-void SetOutSpeed(Port port, uint8_t pin, OutSpeed speed) {
-  auto *gpio = base_address(port);
+void output_speed(Port port, uint8_t pin, OutSpeed speed) {
+  Register *const gpio = base_address(port);
   auto s = static_cast<uint32_t>(speed);
   gpio->output_speed &= ~(0b11 << (2 * pin));
   gpio->output_speed |= (s << (2 * pin));
@@ -69,43 +71,43 @@ void SetOutSpeed(Port port, uint8_t pin, OutSpeed speed) {
 // Many GPIO pins can be repurposed with an alternate function
 // See Table 17 and 18 [DS] for alternate functions
 // See [RM] 8.4.9 and 8.4.10 for GPIO alternate function selection
-void PinAltFunc(Port port, uint8_t pin, uint8_t func) {
-  auto *gpio = base_address(port);
-  SetPinMode(port, pin, PinMode::AlternateFunction);
+void alternate_function(Port port, uint8_t pin, AlternativeFuncion func) {
+  Register *const gpio = base_address(port);
+  pin_mode(port, pin, PinMode::AlternateFunction);
 
   uint8_t x = (pin < 8) ? 0 : 1;
   gpio->alternate_function[x] |= (static_cast<uint32_t>(func) << ((pin & 0b111) * 4));
 }
 
 // Set a specific output pin
-void SetPin(Port port, uint8_t pin) {
-  auto *gpio = base_address(port);
+void set_pin(Port port, uint8_t pin) {
+  Register *const gpio = base_address(port);
   gpio->set = static_cast<uint16_t>(1 << pin);
 }
 
 // Clear a specific output pin
-void ClrPin(Port port, uint8_t pin) {
-  auto *gpio = base_address(port);
+void clear_pin(Port port, uint8_t pin) {
+  Register *const gpio = base_address(port);
   gpio->clear = static_cast<uint16_t>(1 << pin);
 }
 
 // Return the current value of an input pin
-bool GetPin(Port port, uint8_t pin) {
-  auto *gpio = base_address(port);
-  return (gpio->input_data & (1 << pin)) ? 1 : 0;
+bool get_pin(Port port, uint8_t pin) {
+  Register *const gpio = base_address(port);
+  return gpio->input_data & (1 << pin);
 }
 
 // This adds a pull-up resistor to an input pin
-void PullUp(Port port, uint8_t pin) {
-  auto *gpio = base_address(port);
+void pull_up(Port port, uint8_t pin) {
+  Register *const gpio = base_address(port);
   uint32_t x = gpio->pullup_pulldown & ~(3 << (2 * pin));
   x |= 1 << (2 * pin);
   gpio->pullup_pulldown = x;
 }
 
 // This adds a pull-down resistor to an input pin
-void PullDn(Port port, uint8_t pin) {
-  auto *gpio = base_address(port);
+void pull_down(Port port, uint8_t pin) {
+  Register *const gpio = base_address(port);
   uint32_t x = gpio->pullup_pulldown & ~(3 << (2 * pin));
   x |= 2 << (2 * pin);
   gpio->pullup_pulldown = x;

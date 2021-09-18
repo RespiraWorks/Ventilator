@@ -160,16 +160,15 @@ void HalApi::InitADC() {
   // Enable the clock to the A/D converter
   enable_peripheral_clock(PeripheralID::ADC);
 
-  using namespace GPIO;
+  using IOPort = GPIO::Port;
+  using IOMode = GPIO::PinMode;
 
   // Configure the 5 pins used as analog inputs
-  SetPinMode(Port::PortC, 0,
-             GPIO::PinMode::Analog);  // PC0 (ADC1_IN1)  interim board: analog pressure
-  SetPinMode(Port::PortA, 1, GPIO::PinMode::Analog);  // PA1 (ADC1_IN6)  U3 patient pressure
-  SetPinMode(Port::PortA, 4, GPIO::PinMode::Analog);  // PA4 (ADC1_IN9)  U4 inhale flow
-  SetPinMode(Port::PortB, 0, GPIO::PinMode::Analog);  // PB0 (ADC1_IN15) U5 exhale flow
-  SetPinMode(Port::PortC, 1,
-             GPIO::PinMode::Analog);  // PC3 (ADC1_IN2)  interim board: oxygen sensor
+  GPIO::pin_mode(IOPort::PortC, 0, IOMode::Analog);  // PC0 (ADC1_IN1)  interim: analog pressure
+  GPIO::pin_mode(IOPort::PortA, 1, IOMode::Analog);  // PA1 (ADC1_IN6)  U3 patient pressure
+  GPIO::pin_mode(IOPort::PortA, 4, IOMode::Analog);  // PA4 (ADC1_IN9)  U4 inhale flow
+  GPIO::pin_mode(IOPort::PortB, 0, IOMode::Analog);  // PB0 (ADC1_IN15) U5 exhale flow
+  GPIO::pin_mode(IOPort::PortC, 1, IOMode::Analog);  // PC3 (ADC1_IN2)  interim: oxygen sensor
 
   // Perform a power-up and calibration sequence on the A/D converter
   AdcReg *adc = AdcBase;

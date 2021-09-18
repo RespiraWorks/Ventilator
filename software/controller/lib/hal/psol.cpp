@@ -62,10 +62,8 @@ void HalApi::InitPSOL() {
 
   enable_peripheral_clock(PeripheralID::Timer1);
 
-  // Connect PA11 to timer 1
-  // [DS] table 17 shows which functions can be connected to each pin.
-  // For PA11 we select function 1 to connect it to timer 1.
-  GPIO::PinAltFunc(GPIO::Port::PortA, 11, 1);
+  // Connect PA11 to TIM1_CH4, [DS] Table 17 (pg 76)
+  GPIO::alternate_function(GPIO::Port::PortA, /*pin =*/11, GPIO::AlternativeFuncion::AF1);
 
   TimerReg *tmr = Timer1Base;
 

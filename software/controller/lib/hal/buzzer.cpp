@@ -15,10 +15,9 @@ limitations under the License.
 
 #include <algorithm>
 
+#include "clocks.h"
 #include "gpio.h"
 #include "hal.h"
-
-#if defined(BARE_STM32)
 
 // The buzzer we use for generating alarms on the controller board is
 // part number CT-1205H-SMT-TR made by CUI.
@@ -32,7 +31,8 @@ limitations under the License.
 // This pin is tied to timer 3 channel 1, so we can use that timer
 // to generate the square wave needed to power the buzzer.
 
-#include "clocks.h"
+#if defined(BARE_STM32)
+
 #include "hal_stm32.h"
 
 void HalApi::InitBuzzer() {
@@ -40,11 +40,8 @@ void HalApi::InitBuzzer() {
 
   enable_peripheral_clock(PeripheralID::Timer3);
 
-  // Connect PB4 to timer 3
-  // The STM32 datasheet has a table (table 17) which shows
-  // which functions can be connected to each pin.  For
-  // PB4 we select function 2 to connect it to timer 3.
-  GPIO::PinAltFunc(GPIO::Port::PortB, 4, 2);
+  // Connect PB4 to TIM3_CH1, [DS] Table 17 (pg 77)
+  GPIO::alternate_function(GPIO::Port::PortB, /*pin =*/4, GPIO::AlternativeFuncion::AF2);
 
   TimerReg *tmr = Timer3Base;
 

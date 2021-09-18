@@ -77,8 +77,6 @@ enum class PeripheralID {
 // On the STM32 the clocks going to various peripherals on the chip are individually selectable and
 // for the most part disabled on startup. Clocks to the specific peripherals need to be enabled
 // through the RCC (Reset and Clock Controller) module before the peripheral can be used.
-void enable_peripheral_clock(const PeripheralID);
-
-void enable_peripheral_clock(uint8_t index, uint8_t bit);
+void enable_peripheral_clock(PeripheralID);
 
 void configure_pll();

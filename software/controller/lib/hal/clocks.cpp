@@ -198,13 +198,6 @@ void enable_peripheral_clock(const PeripheralID id) {
   RccBase->peripheral_clock_enable[static_cast<uint8_t>(mapping.offset)] |= (1 << mapping.bit);
 }
 
-// Enable the clock of the requested peripheral
-// 0x48 [RM] 6.4.15-20 (pg 216-225)
-void enable_peripheral_clock(uint8_t index, uint8_t bit) {
-  RccReg *rcc = RccBase;
-  rcc->peripheral_clock_enable[index] |= (1 << bit);
-}
-
 void configure_pll() {
   // We use the MSI clock as the source for the PLL.
   // MSI clock is running at its default frequency of 4MHz.

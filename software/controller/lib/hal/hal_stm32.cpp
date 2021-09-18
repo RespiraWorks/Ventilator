@@ -174,8 +174,6 @@ void HalApi::Init() {
 void HalApi::InitGpio() {
   // See [RM] chapter 8 for details on GPIO
 
-  using namespace GPIO;
-
   // Enable all the GPIO clocks
   enable_peripheral_clock(PeripheralID::GPIOA);
   enable_peripheral_clock(PeripheralID::GPIOB);
@@ -184,19 +182,22 @@ void HalApi::InitGpio() {
   enable_peripheral_clock(PeripheralID::GPIOE);
   enable_peripheral_clock(PeripheralID::GPIOH);
 
+  using IOPort = GPIO::Port;
+  using IOMode = GPIO::PinMode;
+
   // Configure PCB ID pins as inputs.
-  SetPinMode(Port::PortB, 1, GPIO::PinMode::Input);
-  SetPinMode(Port::PortA, 12, GPIO::PinMode::Input);
+  GPIO::pin_mode(IOPort::PortB, 1, IOMode::Input);
+  GPIO::pin_mode(IOPort::PortA, 12, IOMode::Input);
 
   // Configure LED pins as outputs
-  SetPinMode(Port::PortC, 13, GPIO::PinMode::Output);
-  SetPinMode(Port::PortC, 14, GPIO::PinMode::Output);
-  SetPinMode(Port::PortC, 15, GPIO::PinMode::Output);
+  GPIO::pin_mode(IOPort::PortC, 13, IOMode::Output);
+  GPIO::pin_mode(IOPort::PortC, 14, IOMode::Output);
+  GPIO::pin_mode(IOPort::PortC, 15, IOMode::Output);
 
   // Turn all three LEDs off initially
-  ClrPin(Port::PortC, 13);
-  ClrPin(Port::PortC, 14);
-  ClrPin(Port::PortC, 15);
+  GPIO::clear_pin(IOPort::PortC, 13);
+  GPIO::clear_pin(IOPort::PortC, 14);
+  GPIO::clear_pin(IOPort::PortC, 15);
 }
 
 // Set or clear the specified digital output
@@ -216,11 +217,11 @@ void HalApi::DigitalWrite(BinaryPin binary_pin, VoltageLevel value) {
 
   switch (value) {
     case VoltageLevel::High:
-      GPIO::SetPin(port, pin);
+      GPIO::set_pin(port, pin);
       break;
 
     case VoltageLevel::Low:
-      GPIO::ClrPin(port, pin);
+      GPIO::clear_pin(port, pin);
       break;
   }
 }
@@ -399,7 +400,9 @@ void HalApi::InitPwmOut() {
   enable_peripheral_clock(PeripheralID::Timer2);
 
   // Connect PB3 to timer 2
-  GPIO::PinAltFunc(GPIO::Port::PortB, 3, 1);
+  // [DS] Table 17 (pg 77)
+  GPIO::alternate_function(GPIO::Port::PortB, /*pin =*/3,
+                           GPIO::AlternativeFuncion::AF1);  // TIM2_CH2
 
   TimerReg *tmr = Timer2Base;
 
@@ -575,13 +578,21 @@ void HalApi::InitUARTs() {
 #ifdef UART_VIA_DMA
   enable_peripheral_clock(PeripheralID::DMA1);
 #endif
-  GPIO::PinAltFunc(GPIO::Port::PortA, 2, 7);
-  GPIO::PinAltFunc(GPIO::Port::PortA, 3, 7);
+  // [DS] Table 17 (pg 76)
+  GPIO::alternate_function(GPIO::Port::PortA, /*pin =*/2,
+                           GPIO::AlternativeFuncion::AF7);  // USART2_TX
+  GPIO::alternate_function(GPIO::Port::PortA, /*pin =*/3,
+                           GPIO::AlternativeFuncion::AF7);  // USART2_RX
 
-  GPIO::PinAltFunc(GPIO::Port::PortB, 10, 7);
-  GPIO::PinAltFunc(GPIO::Port::PortB, 11, 7);
-  GPIO::PinAltFunc(GPIO::Port::PortB, 13, 7);
-  GPIO::PinAltFunc(GPIO::Port::PortB, 14, 7);
+  // [DS] Table 17 (pg 77)
+  GPIO::alternate_function(GPIO::Port::PortB, /*pin =*/10,
+                           GPIO::AlternativeFuncion::AF7);  // USART3_TX
+  GPIO::alternate_function(GPIO::Port::PortB, /*pin =*/11,
+                           GPIO::AlternativeFuncion::AF7);  // USART3_RX
+  GPIO::alternate_function(GPIO::Port::PortB, /*pin =*/13,
+                           GPIO::AlternativeFuncion::AF7);  // USART3_CTS
+  GPIO::alternate_function(GPIO::Port::PortB, /*pin =*/14,
+                           GPIO::AlternativeFuncion::AF7);  // USART3_RTS_DE
 
 #ifdef UART_VIA_DMA
   dma_uart.Init(115200);

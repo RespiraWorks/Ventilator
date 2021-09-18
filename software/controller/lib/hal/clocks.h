@@ -65,10 +65,10 @@ enum class PeripheralID {
   Timer15,
   Timer16,
   TSC,  // Touch sensing controller
-  UART1,
-  UART2,
-  UART3,
   UART4,
+  USART1,
+  USART2,
+  USART3,
   USBFS,  // USB FS
   WindowWatchdog,
 };

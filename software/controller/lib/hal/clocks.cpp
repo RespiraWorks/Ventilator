@@ -129,9 +129,9 @@ PeripheralMapping get_peripheral_mapping(const PeripheralID id) {
       return {PeripheralBlock::APB1R1, 21};
     case PeripheralID::UART4:
       return {PeripheralBlock::APB1R1, 19};  // Note 4
-    case PeripheralID::UART3:
+    case PeripheralID::USART3:
       return {PeripheralBlock::APB1R1, 18};  // Note 3
-    case PeripheralID::UART2:
+    case PeripheralID::USART2:
       return {PeripheralBlock::APB1R1, 17};
     case PeripheralID::SPI3:
       return {PeripheralBlock::APB1R1, 15};  // Note 1
@@ -174,7 +174,7 @@ PeripheralMapping get_peripheral_mapping(const PeripheralID id) {
       return {PeripheralBlock::APB2, 17};
     case PeripheralID::Timer15:
       return {PeripheralBlock::APB2, 16};
-    case PeripheralID::UART1:
+    case PeripheralID::USART1:
       return {PeripheralBlock::APB2, 14};
     case PeripheralID::SPI1:
       return {PeripheralBlock::APB2, 12};

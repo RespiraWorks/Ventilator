@@ -138,8 +138,8 @@ static constexpr int AdcConversionTime = [] {
 }();
 
 // Calculate how long our history buffer needs to be based on the above.
-static constexpr int AdcSampleHistory = static_cast<int>(
-    SampleHistoryTimeSec * CPUFrequency / AdcConversionTime / OversampleCount / AdcChannels);
+static constexpr int AdcSampleHistory = static_cast<uint32_t>(
+    SampleHistoryTimeSec * CPUFrequencyHz / AdcConversionTime / OversampleCount / AdcChannels);
 
 // This scaler converts the sum of the A/D readings (a total of
 // AdcSampleHistory) into a voltage.  The A/D is scaled so a value of 0
@@ -244,7 +244,7 @@ void HalApi::InitADC() {
   // I use DMA1 channel 1 to copy A/D readings into the buffer ([RM] 11.4.4)
   enable_peripheral_clock(PeripheralID::DMA1);
   DmaReg *dma = Dma1Base;
-  int c1 = static_cast<int>(DmaChannel::Chan1);
+  auto c1 = static_cast<uint8_t>(DmaChannel::Chan1);
 
   dma->channel[c1].peripheral_address = &adc->adc[0].data;
   dma->channel[c1].memory_address = adc_buff;

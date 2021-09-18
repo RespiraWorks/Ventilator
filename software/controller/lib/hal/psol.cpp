@@ -68,7 +68,7 @@ void HalApi::InitPSOL() {
   TimerReg *tmr = Timer1Base;
 
   // Set the frequency
-  tmr->auto_reload = (CPUFrequency / PwmFreq) - 1;
+  tmr->auto_reload = (CPUFrequencyHz / PwmFreq) - 1;
 
   // Configure channel 4 in PWM output mode 1
   // with preload enabled.  The preload means that

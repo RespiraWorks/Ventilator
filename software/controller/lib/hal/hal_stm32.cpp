@@ -306,7 +306,7 @@ void HalApi::StartLoopTimer(const Duration &period, void (*callback)(void *), vo
   WatchdogInit();
 
   // Find the loop period in clock cycles
-  int32_t reload = static_cast<int32_t>(CPUFrequency * period.seconds());
+  int32_t reload = static_cast<int32_t>(CPUFrequencyHz * period.seconds());
   int prescale = 1;
 
   // Adjust the prescaler so that my reload count will fit in the 16-bit
@@ -407,7 +407,7 @@ void HalApi::InitPwmOut() {
   TimerReg *tmr = Timer2Base;
 
   // Set the frequency
-  tmr->auto_reload = (CPUFrequency / PwmFreqHz) - 1;
+  tmr->auto_reload = (CPUFrequencyHz / PwmFreqHz) - 1;
 
   // Configure channel 2 in PWM output mode 1
   // with preload enabled.  The preload means that
@@ -458,7 +458,7 @@ class UART {
 
   void Init(uint32_t baud) {
     // Set baud rate register
-    uart_->baudrate = CPUFrequency / baud;
+    uart_->baudrate = CPUFrequencyHz / baud;
 
     uart_->control_reg1.bitfield.rx_interrupt = 1;  // enable receive interrupt
     uart_->control_reg1.bitfield.tx_enable = 1;     // enable transmitter
@@ -560,7 +560,7 @@ extern UartDma dma_uart;
 //
 // The Nucleo board also includes a secondary serial port that's
 // indirectly connected to its USB connector.  This port is
-// connected to the STM32 UART2 at pins:
+// connected to the STM32 USART2 at pins:
 //    PA2 - TX
 //    PA3 - RX
 //
@@ -568,13 +568,13 @@ extern UartDma dma_uart;
 // pin is used for which function.  A less definitive, but perhaps
 // easier to read version is available at [PCBsp].
 //
-// These pins are connected to UART3
+// These pins are connected to USART3
 // The UART is described in [RM] chapter 38
 void HalApi::InitUARTs() {
   // NOTE - The UART functionality hasn't been tested due to lack of hardware!
   //        Need to do that as soon as the boards are available.
-  enable_peripheral_clock(PeripheralID::UART2);
-  enable_peripheral_clock(PeripheralID::UART3);
+  enable_peripheral_clock(PeripheralID::USART2);
+  enable_peripheral_clock(PeripheralID::USART3);
 #ifdef UART_VIA_DMA
   enable_peripheral_clock(PeripheralID::DMA1);
 #endif

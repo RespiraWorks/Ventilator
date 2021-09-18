@@ -475,7 +475,7 @@ typedef volatile FlashStruct FlashReg;
 inline FlashReg *const FlashBase = reinterpret_cast<FlashReg *>(0x40022000);
 
 // [RM] 11.4.4 DMA channels (pg 302)
-enum class DmaChannel {
+enum class DmaChannel : uint8_t {
   Chan1 = 0,
   Chan2 = 1,
   Chan3 = 2,

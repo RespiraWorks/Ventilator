@@ -33,8 +33,7 @@ Reference abbreviations [RM], [DS], etc are defined in hal/README.md.
 
 static constexpr uint32_t CPUFrequencyMhz{80};
 
-/// \TODO: Why? And what units is this in?
-static constexpr uint32_t CPUFrequency{CPUFrequencyMhz * 1000000};
+static constexpr uint32_t CPUFrequencyHz{CPUFrequencyMhz * 1000 * 1000};
 
 // Interrupt vectors that we currently use.
 // The values here are the offsets into the interrupt table.

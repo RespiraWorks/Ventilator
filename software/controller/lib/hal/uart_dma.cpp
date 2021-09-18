@@ -21,7 +21,7 @@ limitations under the License.
 #include "hal_stm32.h"
 #include "hal_stm32_regs.h"
 
-// STM32 UART3 driver based on DMA transfers.
+// STM32 USART3 driver based on DMA transfers.
 
 // Direct Memory Access mode in MCU allows to set up a memory buffer
 // transfer by means of hardware with no CPU intervention.
@@ -33,11 +33,11 @@ limitations under the License.
 
 extern UartDma uart_dma;
 
-// Performs UART3 initialization
+// Performs USART3 initialization
 void UartDma::init(uint32_t baud) {
   baud_ = baud;
   // Set baud rate register
-  uart_->baudrate = CPUFrequency / baud;
+  uart_->baudrate = CPUFrequencyHz / baud;
 
   uart_->control3.bitfield.rx_dma = 1;  // set DMAR bit to enable DMA for receiver
   uart_->control3.bitfield.tx_dma = 1;  // set DMAT bit to enable DMA for transmitter
@@ -86,7 +86,7 @@ void UartDma::init(uint32_t baud) {
   tx_dma_config.direction = static_cast<uint32_t>(DmaChannelDir::MemoryToPeripheral);
 }
 
-// Sets up an interrupt on matching char incoming form UART3
+// Sets up an interrupt on matching char incoming form USART3
 void UartDma::enable_character_match() {
   uart_->interrupt_clear.bitfield.char_match_clear = 1;   // Clear char match flag
   uart_->control_reg1.bitfield.char_match_interrupt = 1;  // Enable character match interrupt
@@ -136,7 +136,7 @@ void UartDma::stop_tx() {
   }
 }
 
-// Sets up reception of exactly [length] chars from UART3 into [buf]
+// Sets up reception of exactly [length] chars from USART3 into [buf]
 // [timeout] is the number of baud rate bits for which RX line is
 // allowed to be idle before issuing timeout error.
 // on_character_match callback will be called if a match_char is seen on the RX
@@ -158,7 +158,7 @@ void UartDma::stop_tx() {
 // Returns true if no reception is in progress and new reception was setup.
 
 bool UartDma::start_rx(uint8_t *buf, uint32_t length, RxListener *rxl) {
-  // UART3 reception happens on DMA1 channel 3
+  // USART3 reception happens on DMA1 channel 3
   if (rx_in_progress()) {
     return false;
   }

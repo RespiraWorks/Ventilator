@@ -55,13 +55,13 @@ enum class OutSpeed : uint8_t { Slow = 0b00, Medium = 0b01, Fast = 0b10, Smoking
 // [DS] Tables 17-18 (pg 76-86)
 enum class AlternativeFuncion : uint32_t {
   AF0 = 0,    //< SYS_AF
-  AF1 = 1,    //< TIM!/TIM2/LPTIM1
+  AF1 = 1,    //< TIM1/TIM2/LPTIM1
   AF2 = 2,    //< I2C4/TIM1/TIM2/TIM3
   AF3 = 3,    //< I2C4/USART2/CAN1/TIM1
   AF4 = 4,    //< I2C1/I2C2/I2C3/I2C4
   AF5 = 5,    //< SPI1/SPI2/I2C4
   AF6 = 6,    //< SPI3/DFSDM/COMP1
-  AF7 = 7,    //< USART1/USART2/USART3   -- TODO: fix other abbrevs to USART
+  AF7 = 7,    //< USART1/USART2/USART3
   AF8 = 8,    //< UART4/LPUART1/CAN1
   AF9 = 9,    //< CAN1/TSC
   AF10 = 10,  //< CAN1/USB/QUADSPI

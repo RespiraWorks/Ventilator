@@ -46,7 +46,7 @@ void HalApi::InitBuzzer() {
   TimerReg *tmr = Timer3Base;
 
   // Set the frequency
-  tmr->auto_reload = (CPUFrequency / BuzzerFreqHz) - 1;
+  tmr->auto_reload = (CPUFrequencyHz / BuzzerFreqHz) - 1;
 
   // Configure channel 1 in PWM output mode 1
   // with preload enabled.  The preload means that

@@ -17,6 +17,9 @@ limitations under the License.
 
 #include "clocks.h"
 #include "gpio.h"
+#include "timers.h"
+
+/// \TODO: declare signatures elsewhere
 #include "hal.h"
 
 // The buzzer we use for generating alarms on the controller board is
@@ -33,6 +36,7 @@ limitations under the License.
 
 #if defined(BARE_STM32)
 
+/// \TODO bring in frequencies as parameters to eliminate this dependency
 #include "hal_stm32.h"
 
 void HalApi::InitBuzzer() {

@@ -36,6 +36,7 @@ Abbreviations [RM], [DS], etc are defined in hal/README.md.
 #include "gpio.h"
 #include "hal.h"
 #include "stepper.h"
+#include "timers.h"
 #include "uart_dma.h"
 #include "vars.h"
 

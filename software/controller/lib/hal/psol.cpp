@@ -17,10 +17,16 @@ limitations under the License.
 
 #include "clocks.h"
 #include "gpio.h"
-#include "hal.h"
+#include "timers.h"
 #include "vars.h"
 
+/// \TODO: declare signatures elsewhere
+#include "hal.h"
+
 #if defined(BARE_STM32)
+
+/// \TODO bring in frequencies as parameters to eliminate this dependency
+#include "hal_stm32.h"
 
 // This file implements the interface to the Proportional Solenoid
 // valve (commonly abbreviated as PSOL) used to control the flow of
@@ -37,8 +43,6 @@ limitations under the License.
 // On our board the solenoid output is connected to pin PA11 which
 // can be driven by timer 1 channel 4.  We'll use that timer channel
 // to control the solenoid
-
-#include "hal_stm32.h"
 
 // Testing in Edwin's garage, we found that the psol was fully closed at
 // somewhere between 0.75 and 0.80 (i.e. definitely zero at 0.75 and probably

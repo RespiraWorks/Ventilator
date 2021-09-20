@@ -1,5 +1,19 @@
 #!/bin/bash
 
+# Copyright 2020-2021, RespiraWorks
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 # This script is designed for local unix usage.
 # ./gui.sh --help
 
@@ -8,7 +22,9 @@ set -e
 set -o pipefail
 
 # Print each command as it executes
-set -o xtrace
+if [ -n "$VERBOSE" ]; then
+  set -o xtrace
+fi
 
 # This script should work no matter where you call it from.
 cd "$(dirname "$0")"
@@ -20,6 +36,11 @@ if [ $PLATFORM != "Darwin" ] && [ $PLATFORM != "Linux" ]; then
   exit 1
 fi
 
+EXIT_FAILURE=1
+EXIT_SUCCESS=0
+
+COVERAGE_INPUT_DIR=build/tests
+COVERAGE_OUTPUT_DIR=coverage_reports
 
 #########
 # UTILS #
@@ -27,21 +48,26 @@ fi
 
 print_help() {
     cat <<EOF
-RespiraWorks VentilatorUI build utilities.
+RespiraWorks Ventilator UI build utilities.
 The following options are provided:
-  --help      Display this dialog
-  --install   Install dependencies for your platform [$PLATFORM]
-  --clean     Clean build directory and deinitialize git submodules
-  --build     Build the gui to /build, options:
-      [--relase/--debug] - what it says
-      [-j]               - parallel build
-      [--no-checks]      - do not run static checks (yes, it's to annoy you!)
-  --test      Run the unit QTest autotest suite, options:
-      [-x]               - forwards to Xvfb (for CLI-only testing)
-  --run       Run the application, forwards app options:
+  install       Install dependencies for your platform [$PLATFORM]
+  clean         Clean build directory and de-initialize git submodules
+  build         Build the gui to /build, options:
+        [--relase/--debug] - what it says
+        [-f]               - force run, even with root privileges
+        [-j]               - parallel build
+        [--no-checks]      - do not run static checks (yes, it's to annoy you!)
+  test         Run the unit QTest autotest suite, options:
+       [-f]               - force run, even with root privileges
+       [-x]               - forwards to Xvfb (for CLI-only testing)
+       [--no-cov]         - do not generate coverage reports
+  cov_upload   Upload coverage reports to Codecov server
+  run          Run the application, forwards app options:
+      [-f]               - force run, even with root privileges
       [--startup-only] - just start up momentarily and shutdown
       [--serial-port]  - port for communicating with controller
-  -f          Forces run, bypassing root privilege check. For CI only. Please don't do this!
+  cov_upload
+  help/-h    Display this dialog
 EOF
 }
 
@@ -50,10 +76,10 @@ clean_dir() {
   if [ -d "$dir_name" ]; then
     echo "Removing $dir_name"
     rm -rf "$dir_name"
-    return 0
+    return $EXIT_SUCCESS
   elif [ -f "$dir_name" ]; then
     echo "File with this name already exists, not a directory."
-    return 1
+    return $EXIT_FAILURE
   fi
 }
 
@@ -62,26 +88,71 @@ create_clean_directory() {
   clean_dir "$dir_name"
   if mkdir "$dir_name"; then
     echo "Clean directory created: $dir_name"
-    return 0
+    return $EXIT_SUCCESS
   else
     echo "Creating directory failed: $dir_name"
-    return 1
+    return $EXIT_FAILURE
   fi
+}
+
+generate_coverage_reports() {
+  echo "Generating test coverage reports..."
+
+  QUIET="--quiet"
+  if [ -n "$VERBOSE" ]; then
+    QUIET=""
+  fi
+
+  clean_dir "$COVERAGE_OUTPUT_DIR"
+  mkdir -p "$COVERAGE_OUTPUT_DIR"
+
+  lcov ${QUIET} --directory "$COVERAGE_INPUT_DIR" --capture \
+       --output-file "$COVERAGE_OUTPUT_DIR/coverage.info"
+
+  lcov ${QUIET} --remove "$COVERAGE_OUTPUT_DIR/coverage.info" \
+       --output-file "$COVERAGE_OUTPUT_DIR/coverage_trimmed.info" \
+       "*/common/*" \
+       "*/tests/*" \
+       "*spdlog*" \
+       "/usr/include*"
+
+  rm "$COVERAGE_OUTPUT_DIR/coverage.info"
+  mv "$COVERAGE_OUTPUT_DIR/coverage_trimmed.info" "$COVERAGE_OUTPUT_DIR/coverage.info"
+
+  genhtml ${QUIET} "$COVERAGE_OUTPUT_DIR/coverage.info" \
+      --output-directory "$COVERAGE_OUTPUT_DIR"
+
+  echo "Coverage reports generated at '$COVERAGE_OUTPUT_DIR/index.html'"
+  echo "   You may open it in browser with 'python -m webbrowser ${COVERAGE_OUTPUT_DIR}/index.html'"
+
+  #launch_browser
+}
+
+upload_coverage_reports() {
+  echo "Uploading coverage reports to Codecov"
+
+  curl -Os https://uploader.codecov.io/latest/linux/codecov
+  chmod +x codecov
+  ./codecov -F gui
+  rm codecov
+}
+
+launch_browser() {
+  python -m webbrowser "${COVERAGE_OUTPUT_DIR}/index.html"
 }
 
 ########
 # HELP #
 ########
 
-if [ "$1" == "--help" ]; then
+if [ "$1" == "help" ] || [ "$1" == "-h" ]; then
   print_help
-fi
+  exit $EXIT_SUCCESS
 
 ###########
 # INSTALL #
 ###########
-
-if [ "$1" == "--install" ]; then
+elif [ "$1" == "install" ]; then
   if [ "$PLATFORM" == "Darwin" ]; then
     brew install qt5
   fi
@@ -114,32 +185,31 @@ if [ "$1" == "--install" ]; then
         libqt5serialport5 \
         qtdeclarative5-dev-tools \
         xvfb \
-	bear \
-	cppcheck \
-	clang-tidy
+	      bear \
+	      cppcheck \
+	      lcov \
+	      clang-tidy
   fi
-  exit 0
-fi
+  exit $EXIT_SUCCESS
 
 #########
 # CLEAN #
 #########
-
-if [ "$1" == "--clean" ]; then
+elif [ "$1" == "clean" ]; then
   clean_dir build
+  clean_dir "$COVERAGE_OUTPUT_DIR"
   qmake -unset QMAKEFEATURES
   git submodule deinit .
-  exit 0
-fi
+  exit $EXIT_SUCCESS
 
 #########
 # BUILD #
 #########
-if [ "$1" == "--build" ]; then
+elif [ "$1" == "build" ]; then
 
   if [ "$EUID" -eq 0 ] && [ "$2" != "-f" ]; then
     echo "Please do not run build with root privileges!"
-    exit 1
+    exit $EXIT_FAILURE
   fi
 
   create_clean_directory build
@@ -178,19 +248,16 @@ if [ "$1" == "--build" ]; then
   fi
 
   popd
-  exit 0
-fi
-
+  exit $EXIT_SUCCESS
 
 ########
 # TEST #
 ########
-
-if [ "$1" == "--test" ]; then
+elif [ "$1" == "test" ]; then
 
   if [ "$EUID" -eq 0 ] && [ "$2" != "-f" ]; then
     echo "Please do not run tests with root privileges!"
-    exit 1
+    exit $EXIT_FAILURE
   fi
 
   pushd build
@@ -199,7 +266,7 @@ if [ "$1" == "--test" ]; then
     make check
   fi
   if [ "$PLATFORM" == "Linux" ]; then
-    if [ "$2" == "-x" ] || [ "$3" == "-x" ]; then
+    if [ "$2" == "-x" ] || [ "$3" == "-x" ] || [ "$4" == "-x" ]; then
       Xvfb :1 &
       DISPLAY=:1 make check
     else
@@ -207,34 +274,48 @@ if [ "$1" == "--test" ]; then
     fi
   fi
   popd
-  exit 0
-fi
 
+  if [ "$2" != "--no-cov" ] && [ "$3" != "--no-cov" ] && [ "$4" != "--no-cov" ]; then
+    generate_coverage_reports
+  fi
+
+  exit $EXIT_SUCCESS
+
+###################
+# UPLOAD COVERAGE #
+###################
+elif [ "$1" == "cov_upload" ]; then
+  upload_coverage_reports
+
+  exit $EXIT_SUCCESS
 
 #######
 # RUN #
 #######
-
-if [ "$1" == "--run" ]; then
+elif [ "$1" == "run" ]; then
 
   if [ "$EUID" -eq 0 ] && [ "$2" != "-f" ]; then
     echo "Please do not run the app with root privileges!"
-    exit 1
+    exit $EXIT_FAILURE
   fi
 
   pushd build/app
 
   if [ "$PLATFORM" == "Darwin" ]; then
     ./ProjectVentilatorGUI.app/Contents/MacOS/ProjectVentilatorGUI "${@:2}"
-    exit 0
+    exit $EXIT_SUCCESS
   fi
   if [ "$PLATFORM" == "Linux" ]; then
     ./ProjectVentilatorGUI "${@:2}"
-    exit 0
+    exit $EXIT_SUCCESS
   fi
   popd
-fi
 
-echo No valid options provided :\(
-print_help
-exit 1
+################
+# ERROR & HELP #
+################
+else
+  echo No valid options provided :\(
+  print_help
+  exit $EXIT_FAILURE
+fi

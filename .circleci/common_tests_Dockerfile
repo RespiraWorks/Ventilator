@@ -13,8 +13,8 @@ WORKDIR /root/Ventilator
 
 COPY . ./
 
-WORKDIR /root/Ventilator/software/controller
+WORKDIR /root/Ventilator/software/common
 
 CMD /bin/bash \
-    ./controller.sh test --cov --no-checks && \
-    ./controller.sh cov_upload
+    ./common.sh test --cov --no-checks && \
+    ./common.sh cov_upload

@@ -1,24 +1,24 @@
 codecov:
-  require_ci_to_pass: yes
+  token: a570973b-0fb7-4c26-867c-ce2fc9d7458e
+  require_ci_to_pass: no
 
 coverage:
+  precision: 2
+  range: "70...100"
+  round: down
   status:
     project:
-      default: off
-      controller:
+      default:
         target: auto
-        precision: 5
-        round: down
-        range: "70...100"
+      controller:
         flags:
           - controller
       gui:
-        target: auto
-        precision: 5
-        round: down
-        range: "70...100"
         flags:
           - gui
+      common:
+        flags:
+          - common
 
 comment:
   layout: "reach, diff, flags, files"
@@ -26,7 +26,7 @@ comment:
   require_changes: false
   require_base: yes
   require_head: yes
-  branches: null
+  after_n_builds: 3
 
 flags:
   controller:
@@ -37,6 +37,10 @@ flags:
     paths:
       - software/gui
     carryforward: false
+  common:
+    paths:
+      - software/common
+    carryforward: false
 
 parsers:
   gcov:
@@ -45,9 +49,3 @@ parsers:
       loop: yes
       method: no
       macro: no
-
-ignore:
-  - "**/tests"
-  - "**/third_party"
-  - "**/third_party/nanopb"
-  - "**/test"

@@ -56,7 +56,9 @@ static uint32_t CRC(Structure *param) {
 }
 
 // Checks whether a param is valid (through its checksum)
-static bool IsValid(Structure *param) { return param->crc == CRC(param); };
+static bool IsValid(Structure *param) {
+  return param->crc == CRC(param) && param->version == Structure().version;
+};
 
 // One time init of non-volatile parameter area.
 // This must not be done when a watchdog is enabled, as it blocks
@@ -125,7 +127,7 @@ void Handler::Init(I2Ceeprom *eeprom) {
   Set(offsetof(Structure, power_cycles), &counter, 4);
 }
 
-bool Handler::Set(uint16_t offset, void *value, uint8_t len) {
+bool Handler::Set(uint16_t offset, const void *value, uint8_t len) {
   // Make sure the passed pointer is pointing to somewhere
   // in the structure and isn't in the reserved first 6 bytes
   if ((offset < 6) || ((offset + len) > Size)) return false;

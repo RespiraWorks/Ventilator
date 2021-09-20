@@ -22,7 +22,7 @@ limitations under the License.
 #include "system_timer.h"
 
 // These constants define various properties of the pinch
-// value and how we control it.  As the mechanical design
+// valve and how we control it.  As the mechanical design
 // of the value continues to evolve these constants may
 // need to change.  Once things stabilize however, we should
 // be able to come up with a good set of values here that
@@ -64,12 +64,11 @@ static constexpr float MoveAmp = 0.25f;
 static constexpr float MoveVel = 2000.0f;
 static constexpr float MoveAccel = MoveVel / 0.05f;
 
-PinchValve::PinchValve(int motor_index, const char *name_prepend, const char *help_append)
+PinchValve::PinchValve(int motor_index, const char *name_prepend, const char *help_append,
+                       NVParams::Handler *nv_params, const uint16_t offset)
     : motor_index_(motor_index),
-      calibration_("_pinch_cal", Debug::Variable::Access::ReadWrite,
-                   {0.0000f, 0.0410f, 0.0689f, 0.0987f, 0.1275f, 0.1590f, 0.1932f, 0.2359f, 0.2940f,
-                    0.3988f, 1.0000f},
-                   "", "Pinch valve flow table") {
+      calibration_("_pinch_cal", Debug::Variable::Access::ReadWrite, nv_params, offset, "",
+                   "Pinch valve flow table") {
   calibration_.prepend_name(name_prepend);
   calibration_.append_help(help_append);
 }

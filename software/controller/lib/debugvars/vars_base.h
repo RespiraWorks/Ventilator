@@ -18,6 +18,8 @@ limitations under the License.
 #include <cstddef>
 #include <cstdint>
 
+#include "nvparams.h"
+
 namespace Debug::Variable {
 
 // \todo should we have an `Invalid` type?
@@ -97,6 +99,21 @@ class Base {
   char fmt_[10]{0};
 
   friend class Registry;
+};
+
+class NonVolatile {
+ public:
+  NonVolatile(NVParams::Handler *nv_params, const uint16_t offset)
+      : nv_params_{nv_params}, offset_{offset} {};
+
+  void write(const void *write_buff, uint8_t len) const {
+    nv_params_->Set(offset_, write_buff, len);
+  };
+  void read(void *read_buff, uint8_t len) const { nv_params_->Get(offset_, read_buff, len); };
+
+ private:
+  NVParams::Handler *nv_params_;
+  uint16_t offset_;
 };
 
 /*! \class Registry vars_base.h "vars_base.h"

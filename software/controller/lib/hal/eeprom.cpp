@@ -54,7 +54,7 @@ bool I2Ceeprom::ReadBytes(uint16_t offset, uint16_t length, void *data, bool *pr
   return ReceiveBytes(read_request);
 };
 
-bool I2Ceeprom::WriteBytes(uint16_t offset, uint16_t length, void *data, bool *processed) {
+bool I2Ceeprom::WriteBytes(uint16_t offset, uint16_t length, const void *data, bool *processed) {
   if (offset + length > size_) {
     // requesting outside of memory capacity
     return false;
@@ -63,7 +63,7 @@ bool I2Ceeprom::WriteBytes(uint16_t offset, uint16_t length, void *data, bool *p
   // Break write requests into page writes, no write across page boundaries
   bool success{true};
   uint16_t current_offset{offset};
-  uint8_t *current_data = reinterpret_cast<uint8_t *>(data);
+  const uint8_t *current_data = reinterpret_cast<const uint8_t *>(data);
 
   while (current_offset < offset + length) {
     // provision request length from current offset to the end of the page

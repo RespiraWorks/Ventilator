@@ -70,6 +70,7 @@ static ControllerStatus controller_status;
 static Sensors sensors;
 static NVParams::Handler nv_params;
 static I2Ceeprom eeprom = I2Ceeprom(0x50, 64, 32768, &i2c1);
+static Actuators actuators;
 
 // Global variables for the debug interface
 static Debug::Trace trace;
@@ -118,7 +119,7 @@ static void HighPriorityTask(void *arg) {
   // actuators_state, and remove pressure_setpoint_cm_h2o from ControllerStatus
 
   // Update the outputs from the PID
-  ActuatorsExecute(actuators_state);
+  actuators.execute(actuators_state);
 
   // Update controller_status.  This is periodically sent back to the GUI.
   controller_status.sensor_readings = AsSensorsProto(sensor_readings, controller_state);
@@ -144,8 +145,8 @@ static void HighPriorityTask(void *arg) {
   // Take this opportunity while we're sleeping to home the pinch valves.  This
   // way we're guaranteed that they're ready before we start ventilating.
   Time sleep_start = SystemTimer::singleton().now();
-  while (!AreActuatorsReady() || SystemTimer::singleton().now() - sleep_start < seconds(10)) {
-    ActuatorsExecute({
+  while (!actuators.ready() || SystemTimer::singleton().now() - sleep_start < seconds(10)) {
+    actuators.execute({
         .fio2_valve = 0,
         .blower_power = 0,
         .blower_valve = 1,
@@ -216,6 +217,9 @@ int main() {
 
   // Locate our non-volatile parameter block in flash
   nv_params.Init(&eeprom);
+
+  actuators.init(&nv_params, offsetof(NVParams::Structure, blower_pinch_cal),
+                 offsetof(NVParams::Structure, exhale_pinch_cal));
 
   CommsInit();
 

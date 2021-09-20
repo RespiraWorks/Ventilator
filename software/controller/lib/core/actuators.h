@@ -20,6 +20,8 @@ limitations under the License.
 
 #include <optional>
 
+#include "pinch_valve.h"
+
 struct ActuatorsState {
   // Valve setting for the FIO2 proportional solenoid
   // Range 0 to 1 where 0 is fully closed and 1 is fully open.
@@ -39,10 +41,21 @@ struct ActuatorsState {
   std::optional<float> exhale_valve;
 };
 
-// Causes passed state to be applied to the actuators
-void ActuatorsExecute(const ActuatorsState &desired_state);
+class Actuators {
+ public:
+  Actuators() = default;
+  void init(NVParams::Handler *nv_params, const uint16_t blower_pinch_cal_offset,
+            const uint16_t exhale_pinch_cal_offset);
 
-// Returns true if the actuators are ready for action or false
-// if they aren't (for example pinch valves are homing).
-// The system should be kept in a safe state until this returns true.
-bool AreActuatorsReady();
+  // Returns true if the actuators are ready for action or false
+  // if they aren't (for example pinch valves are homing).
+  // The system should be kept in a safe state until this returns true.
+  bool ready();
+
+  // Causes passed state to be applied to the actuators
+  void execute(const ActuatorsState &desired_state);
+
+ private:
+  std::optional<PinchValve> blower_pinch_;
+  std::optional<PinchValve> exhale_pinch_;
+};

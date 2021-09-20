@@ -83,7 +83,7 @@ mkdir -p /home/pi/.config/libfm && cp -f software/utils/rpi_config/libfm.conf /h
 ### RW theme :)
 pcmanfm --set-wallpaper /home/pi/Ventilator/manufacturing/images/rendering_full.jpg
 
-sudo ./software/gui/gui.sh --install
+sudo ./software/gui/gui.sh install
 ./software/controller/controller.sh install
 
 echo "Installation complete. Please check that this terminated with no errors."

@@ -61,7 +61,7 @@ yes | cp -rf software/utils/rpi_config/*.desktop /home/pi/Desktop
 ./controller/controller.sh run
 
 ### Rebuild GUI
-./gui/gui.sh --build --release --no-checks
+./gui/gui.sh build --release --no-checks
 
 echo "Installation complete. Please check that this terminated with no errors."
 echo " "

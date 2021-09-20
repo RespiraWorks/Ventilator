@@ -15,15 +15,13 @@ limitations under the License.
 
 #include "checksum.h"
 
-#include <stdint.h>
-
 #include <algorithm>
-#include <cstdio>
 #include <cstdlib>
 #include <cstring>
 #include <map>
 
 #include "gtest/gtest.h"
+#include "test_libs/gtest_print.h"
 
 TEST(Checksum32, KnownValues) {
   EXPECT_EQ((uint32_t)0, soft_crc32(NULL, 0));
@@ -60,7 +58,7 @@ TEST(Checksum32, BitFlips) {
     data[bitToFlip / 8] = static_cast<char>(data[bitToFlip / 8] ^ byteMask);
   }
 
-  printf("%d/%d collisions after flipping a single bit.\n", singleBitFlipCollisions, numTests);
+  PRINTF("%d/%d collisions after flipping a single bit.\n", singleBitFlipCollisions, numTests);
   EXPECT_EQ(0, singleBitFlipCollisions) << "Got at least one collision from one-bit flips; is the "
                                            "checksum broken?";
 
@@ -72,7 +70,7 @@ TEST(Checksum32, BitFlips) {
   int32_t maxCollisionHash = it->first;
   int32_t maxCollisions = it->second;
   double maxCollisionsFrac = 1.0 * maxCollisions / numTests;
-  printf("%d/%d collisions on worst checksum, 0x%4x\n", maxCollisions, numTests, maxCollisionHash);
+  PRINTF("%d/%d collisions on worst checksum, 0x%4x\n", maxCollisions, numTests, maxCollisionHash);
   EXPECT_LE(maxCollisionsFrac, 0.0002)
       << "Too many collisions on worst checksum; is the checksum broken?";
 }

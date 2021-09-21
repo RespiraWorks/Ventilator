@@ -15,19 +15,24 @@ limitations under the License.
 
 #include "stepper.h"
 
+#include <cmath>
+#include <cstring>
+
 #include "clocks.h"
 #include "gpio.h"
 #include "hal.h"
+#include "spi.h"
 
 StepMotor StepMotor::motor_[StepMotor::MaxMotors];
 int StepMotor::total_motors_;
 
 #if defined(BARE_STM32)
 
-#include <cmath>
-#include <cstring>
-
+/// \TODO uses sleep and interrupt handlers
 #include "hal_stm32.h"
+
+/// \TODO: for DMA registers
+#include "hal_stm32_regs.h"
 
 // Static data members
 uint8_t StepMotor::dma_buff_[StepMotor::MaxMotors];

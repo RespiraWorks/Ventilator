@@ -184,6 +184,9 @@ inline AdcReg *const AdcBase = reinterpret_cast<AdcReg *>(0X50040000);
 /// \TODO: mostly for Sleep and CPUFrequencyHz
 #include "hal_stm32.h"
 
+/// \TODO: for DMA registers
+#include "hal_stm32_regs.h"
+
 /*
 Please refer to [PCB] as the ultimate source of which pin is used for which function.
 

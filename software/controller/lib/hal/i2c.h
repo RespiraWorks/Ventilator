@@ -21,7 +21,7 @@ limitations under the License.
 
 #include "circular_buffer.h"
 #if defined(BARE_STM32)
-#include "hal_stm32.h"
+#include "hal_stm32_regs.h"
 #endif
 
 namespace I2C {

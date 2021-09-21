@@ -29,8 +29,6 @@ Reference abbreviations [RM], [DS], etc are defined in hal/README.md.
 
 #include <cstdint>
 
-#include "hal_stm32_regs.h"
-
 static constexpr uint32_t CPUFrequencyMhz{80};
 
 static constexpr uint32_t CPUFrequencyHz{CPUFrequencyMhz * 1000 * 1000};

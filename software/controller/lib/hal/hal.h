@@ -31,9 +31,8 @@ limitations under the License.
 // observe whether mocked methods are called.  So far that hasn't been
 // necessary.
 
-#include <stdint.h>
-
 #include <algorithm>
+#include <cstdint>
 
 #include "units.h"
 
@@ -112,23 +111,6 @@ enum class BinaryPin {
   YellowLED,
   GreenLED,
 };
-
-// Interrupts on the STM32 are prioritized.  This allows
-// more important interrupts to interrupt less important
-// ones.  When interrupts are enabled we give a priority
-// value to indicate how important the interrupt is.
-// The lower the priority number the more important the
-// interrupt.  The range is 0 to 15, but I only use a few
-// here.  Hard faults, NMI, resets, etc have a fixed
-// priority of -1, so they can always interrupt any other
-// priority level.
-enum class IntPriority {
-  Critical = 2,  // Very important interrupt
-  Standard = 5,  // Normal hardware interrupts
-  Low = 8,       // Less important.  Hardware interrupts can interrupt this
-};
-
-enum class InterruptVector;
 
 #ifdef TEST_MODE
 class TestSerialPort {
@@ -296,24 +278,6 @@ class HalApi {
   // system for configured amount of time
   void WatchdogHandler();
 
-  // Interrupt enable/disable functions.
-  //
-  // Where possible, prefer using the BlockInterrupts RAII class.
-  //
-  // NOTE: Interrupts should only be disabled for short periods of time and
-  // only for very good reasons.  Leaving interrupts disabled for long can
-  // cause loss of serial data and other bad effects.
-  void DisableInterrupts();
-  void EnableInterrupts();
-
-  // Returns true if interrupts are currently enabled.
-  //
-  // Where possible, prefer using the BlockInterrupts RAII class.
-  bool InterruptsEnabled() const;
-
-  // Return true if we are currently executing in an interrupt handler
-  bool InInterruptHandler();
-
  private:
   // Initializes watchdog, sets appropriate pins to Output, etc.  Called by
   // HalApi::Init
@@ -326,7 +290,6 @@ class HalApi {
   void InitSysTimer();
   void InitPwmOut();
   void InitUARTs();
-  void EnableInterrupt(InterruptVector vec, IntPriority pri);
   void StepperMotorInit();
   void InitBuzzer();
 
@@ -337,7 +300,6 @@ class HalApi {
 
 #ifdef TEST_MODE
   Time time_ = microsSinceStartup(0);
-  bool interrupts_enabled_ = true;
 
   // The default pin mode on Arduino is Input, which happens to be the first
   // enumerator in PinMode and so the default in these maps!
@@ -358,57 +320,8 @@ class HalApi {
 
 extern HalApi hal;
 
-// RAII class that disables interrupts.  For example:
-//
-// {
-//   BlockInterrupts block;
-//   // Interrupts are disabled until the close brace.
-// }
-//
-// This class is reentrant, i.e. it's safe to BlockInterrupts even when
-// interrupts are already disabled.
-class [[nodiscard]] BlockInterrupts {
- public:
-  BlockInterrupts() : active_(hal.InterruptsEnabled()) {
-    if (active_) {
-      hal.DisableInterrupts();
-    }
-  }
+#if !defined(BARE_STM32)
 
-  // Not copyable or movable.  (Technically we could make this class
-  // movable if necessary, but it probably isn't!)
-  BlockInterrupts(const BlockInterrupts &) = delete;
-  BlockInterrupts(BlockInterrupts &&) = delete;
-  BlockInterrupts &operator=(const BlockInterrupts &) = delete;
-  BlockInterrupts &operator=(BlockInterrupts &&) = delete;
-
-  ~BlockInterrupts() {
-    if (active_) {
-      hal.EnableInterrupts();
-    }
-  }
-
- private:
-  bool active_;
-};
-
-#if defined(BARE_STM32)
-
-inline void HalApi::DisableInterrupts() { asm volatile("cpsid i" ::: "memory"); }
-inline void HalApi::EnableInterrupts() { asm volatile("cpsie i" ::: "memory"); }
-inline bool HalApi::InterruptsEnabled() const {
-  int ret;
-  asm volatile("mrs %[output], primask" : [output] "=r"(ret));
-  return ret == 0;
-}
-
-inline bool HalApi::InInterruptHandler() {
-  int ret;
-  asm volatile("mrs %[output], ipsr" : [output] "=r"(ret));
-  return ret > 0;
-}
-
-#else
 inline void HalApi::Init() {}
 inline void HalApi::WatchdogHandler() {}
 
@@ -470,11 +383,6 @@ inline uint16_t HalApi::TESTDebugGetOutgoingData(char *data, uint16_t len) {
 inline void HalApi::TESTDebugPutIncomingData(const char *data, uint16_t len) {
   debug_serial_port_.PutIncomingData(data, len);
 }
-
-inline void HalApi::DisableInterrupts() { interrupts_enabled_ = false; }
-inline void HalApi::EnableInterrupts() { interrupts_enabled_ = true; }
-inline bool HalApi::InterruptsEnabled() const { return interrupts_enabled_; }
-inline bool HalApi::InInterruptHandler() { return false; }
 
 inline uint16_t TestSerialPort::Read(char *buf, uint16_t len) {
   if (incoming_data_.empty()) {

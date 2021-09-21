@@ -29,8 +29,6 @@ limitations under the License.
 #include "hal.h"
 
 #if defined(BARE_STM32)
-/// \TODO: interrupts
-#include "hal_stm32.h"
 
 I2C::STM32Channel i2c1;
 
@@ -56,10 +54,10 @@ void HalApi::InitI2C() {
   GPIO::pull_up(GPIO::Port::B, 8);
   GPIO::pull_up(GPIO::Port::B, 9);
 
-  EnableInterrupt(InterruptVector::I2c1Event, IntPriority::Low);
-  EnableInterrupt(InterruptVector::I2c1Error, IntPriority::Low);
-  EnableInterrupt(InterruptVector::Dma2Channel6, IntPriority::Low);
-  EnableInterrupt(InterruptVector::Dma2Channel7, IntPriority::Low);
+  Interrupts::singleton().EnableInterrupt(InterruptVector::I2c1Event, IntPriority::Low);
+  Interrupts::singleton().EnableInterrupt(InterruptVector::I2c1Error, IntPriority::Low);
+  Interrupts::singleton().EnableInterrupt(InterruptVector::Dma2Channel6, IntPriority::Low);
+  Interrupts::singleton().EnableInterrupt(InterruptVector::Dma2Channel7, IntPriority::Low);
 
   // init i2c1
   i2c1.Init(I2C1Base, DMA::Base::DMA2, I2C::Speed::Fast);
@@ -272,7 +270,6 @@ void Channel::I2CErrorHandler() {
   StartTransfer();
 }
 
-#if defined(BARE_STM32)
 void STM32Channel::Init(I2CReg *i2c, DMA::Base dma, Speed speed) {
   i2c_ = i2c;
   dma_ = dma;
@@ -465,6 +462,5 @@ void STM32Channel::DMAIntHandler(DMA::Channel chan) {
   DMA::ClearInt(dma_, chan, DMA::Interrupt::Global);
   StartTransfer();
 }
-#endif  // BARE_STM32
 
 }  // namespace I2C

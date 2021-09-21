@@ -280,7 +280,6 @@ class Channel {
   bool CopyDataToWriteBuffer(const void *data, uint16_t size);
 };
 
-#ifdef BARE_STM32
 class STM32Channel : public Channel {
  public:
   STM32Channel() = default;
@@ -319,7 +318,6 @@ class STM32Channel : public Channel {
   void ConfigureDMAChannel(volatile DmaReg::ChannelRegs *channel, ExchangeDirection direction);
   void SetupDMATransfer();
 };
-#endif
 
 class TestChannel : public Channel {
  public:

@@ -15,6 +15,8 @@ limitations under the License.
 
 #include "trace.h"
 
+#include <algorithm>
+
 namespace Debug {
 
 bool Trace::running() const { return running_; }

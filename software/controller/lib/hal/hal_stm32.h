@@ -32,21 +32,3 @@ Reference abbreviations [RM], [DS], etc are defined in hal/README.md.
 static constexpr uint32_t CPUFrequencyMhz{80};
 
 static constexpr uint32_t CPUFrequencyHz{CPUFrequencyMhz * 1000 * 1000};
-
-// Interrupt vectors that we currently use.
-// The values here are the offsets into the interrupt table.
-// These can be found in [RM] chapter 12 (NVIC)
-enum class InterruptVector {
-  Dma1Channel2 = 0x70,
-  Dma1Channel3 = 0x074,
-  Timer15 = 0xA0,
-  I2c1Event = 0xBC,
-  I2c1Error = 0xC0,
-  Spi1 = 0xCC,
-  Uart2 = 0x0D8,
-  Uart3 = 0x0DC,
-  Timer6 = 0x118,
-  Dma2Channel3 = 0x128,
-  Dma2Channel6 = 0x150,
-  Dma2Channel7 = 0x157,
-};

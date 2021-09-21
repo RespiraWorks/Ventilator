@@ -32,6 +32,7 @@ Abbreviations [RM], [DS], etc are defined in hal/README.md.
 #include "flash.h"
 #include "gpio.h"
 #include "hal.h"
+#include "interrupts.h"
 #include "stepper.h"
 #include "timers.h"
 #include "uart.h"
@@ -116,7 +117,7 @@ void HalApi::Init() {
   InitBuzzer();
   InitPSOL();
   InitI2C();
-  EnableInterrupts();
+  Interrupts::singleton().EnableInterrupts();
   StepperMotorInit();
 }
 
@@ -237,7 +238,7 @@ void HalApi::InitSysTimer() {
   tmr->control_reg1.bitfield.counter_enable = 1;
   tmr->interrupts_enable = 1;
 
-  EnableInterrupt(InterruptVector::Timer6, IntPriority::Standard);
+  Interrupts::singleton().EnableInterrupt(InterruptVector::Timer6, IntPriority::Standard);
 }
 
 static void Timer6ISR() {
@@ -316,7 +317,7 @@ void HalApi::StartLoopTimer(const Duration &period, void (*callback)(void *), vo
   // for normal hardware interrupts.  This means that other
   // interrupts can be serviced while controller functions
   // are running.
-  EnableInterrupt(InterruptVector::Timer15, IntPriority::Low);
+  Interrupts::singleton().EnableInterrupt(InterruptVector::Timer15, IntPriority::Low);
 }
 
 static float latency, max_latency, loop_time;
@@ -480,10 +481,10 @@ void HalApi::InitUARTs() {
 #endif
   debug_uart.Init(CPUFrequencyHz, 115200);
 
-  EnableInterrupt(InterruptVector::Dma1Channel2, IntPriority::Standard);
-  EnableInterrupt(InterruptVector::Dma1Channel3, IntPriority::Standard);
-  EnableInterrupt(InterruptVector::Uart2, IntPriority::Standard);
-  EnableInterrupt(InterruptVector::Uart3, IntPriority::Standard);
+  Interrupts::singleton().EnableInterrupt(InterruptVector::Dma1Channel2, IntPriority::Standard);
+  Interrupts::singleton().EnableInterrupt(InterruptVector::Dma1Channel3, IntPriority::Standard);
+  Interrupts::singleton().EnableInterrupt(InterruptVector::Uart2, IntPriority::Standard);
+  Interrupts::singleton().EnableInterrupt(InterruptVector::Uart3, IntPriority::Standard);
 }
 
 static void Uart2ISR() { debug_uart.ISR(); }
@@ -705,21 +706,5 @@ __attribute__((used)) __attribute__((section(".isr_vector"))) void (*const Vecto
     BadISR,           //  99 - 0x18C
     BadISR,           // 100 - 0x190
 };
-
-// Enable an interrupt with a specified priority (0 to 15)
-// See [RM] chapter 12 for more information on the NVIC.
-void HalApi::EnableInterrupt(InterruptVector vec, IntPriority pri) {
-  InterruptControlReg *nvic = NvicBase;
-
-  int addr = static_cast<int>(vec);
-
-  int id = addr / 4 - 16;
-
-  nvic->set_enable[id >> 5] = 1 << (id & 0x1F);
-
-  // The STM32 processor implements bits 4-7 of the NVIM priority register.
-  int p = static_cast<int>(pri);
-  nvic->priority[id] = static_cast<uint8_t>(p << 4);
-}
 
 #endif

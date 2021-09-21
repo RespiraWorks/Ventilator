@@ -57,18 +57,6 @@ struct SysControlStruct {
 typedef volatile SysControlStruct SysControlReg;
 inline SysControlReg *const SysControlBase = reinterpret_cast<SysControlReg *>(0xE000E000);
 
-// Nested vectored interrupt controller (NVIC) [PM] 4.3 (pg 208)
-struct InterruptControlStruct {
-  uint32_t set_enable[32];
-  uint32_t clear_enable[32];
-  uint32_t set_pending[32];
-  uint32_t clear_pending[32];
-  uint32_t active[64];
-  uint8_t priority[1024];
-};
-typedef volatile InterruptControlStruct InterruptControlReg;
-inline InterruptControlReg *const NvicBase = reinterpret_cast<InterruptControlReg *>(0xE000E100);
-
 // Watchdog timer
 // [RM] 32.4 Watchdog Registers (pg 1016)
 struct WatchdogStruct {

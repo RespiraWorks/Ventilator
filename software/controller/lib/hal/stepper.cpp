@@ -22,15 +22,13 @@ limitations under the License.
 #include "dma.h"
 #include "gpio.h"
 #include "hal.h"
+#include "interrupts.h"
 #include "spi.h"
 
 StepMotor StepMotor::motor_[StepMotor::MaxMotors];
 int StepMotor::total_motors_;
 
 #if defined(BARE_STM32)
-
-/// \TODO uses sleep and interrupt handlers
-#include "hal_stm32.h"
 
 // Static data members
 uint8_t StepMotor::dma_buff_[StepMotor::MaxMotors];
@@ -123,7 +121,7 @@ StepMtrErr StepMotor::GetParam(StepMtrParam param, uint32_t *value) {
 
   // It's not legal to call this from the control loop because it
   // has to block.  Return an error if we're in an interrupt handler
-  if (hal.InInterruptHandler()) return StepMtrErr::WouldBlock;
+  if (Interrupts::singleton().InInterruptHandler()) return StepMtrErr::WouldBlock;
 
   uint8_t cmd_buff[4];
 
@@ -266,7 +264,7 @@ void HalApi::StepperMotorInit() {
   dma->channel[c4].config.priority = 0;
   dma->channel[c4].config.mem2mem = 0;
 
-  hal.EnableInterrupt(InterruptVector::Dma2Channel3, IntPriority::Standard);
+  Interrupts::singleton().EnableInterrupt(InterruptVector::Dma2Channel3, IntPriority::Standard);
 
   StepMotor::OneTimeInit();
 }
@@ -532,7 +530,7 @@ StepMtrErr StepMotor::Reset() {
 StepMtrErr StepMotor::GetStatus(StepperStatus *stat) {
   // It's not legal to call this from the control loop because it
   // has to block.  Return an error if we're in an interrupt handler
-  if (hal.InInterruptHandler()) return StepMtrErr::WouldBlock;
+  if (Interrupts::singleton().InInterruptHandler()) return StepMtrErr::WouldBlock;
 
   uint8_t cmd[] = {static_cast<uint8_t>(StepMtrCmd::GetStatus), 0, 0};
 
@@ -624,7 +622,7 @@ StepMtrErr StepMotor::SendCmd(uint8_t *cmd, uint32_t len) {
   // See if we're running from an interrupt handler
   // (i.e. the controller thread).  If so we just
   // add this command to our queue and return
-  if (hal.InInterruptHandler()) return EnqueueCmd(cmd, len);
+  if (Interrupts::singleton().InInterruptHandler()) return EnqueueCmd(cmd, len);
 
   // Copy the command to my buffer with interrupts disabled.
   // I want to make sure the whole command gets sent as one continuous

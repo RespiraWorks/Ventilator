@@ -49,7 +49,7 @@ static constexpr uint32_t SystemStackSize{2500};
 __attribute__((aligned(8))) uint32_t system_stack[SystemStackSize];
 
 // local data
-static volatile int64_t ms_count;
+static volatile int64_t ms_count{0};
 
 // local static functions.  I don't want to add any private
 // functions to the Hal class to avoid complexity with other
@@ -114,9 +114,10 @@ void HalApi::EarlyInit() {
 void HalApi::Init() {
   // Init various components needed by the system.
   InitGpio();
+  LEDs_.initialize();
   InitSysTimer();
   adc_.initialize(CPUFrequencyHz);
-  InitPwmOut();
+  pwm_.initialize(CPUFrequencyHz);
   InitUARTs();
   buzzer_.initialize(CPUFrequencyHz);
   psol_.InitPSOL(CPUFrequencyHz);
@@ -153,11 +154,6 @@ void HalApi::Init() {
  * we're running on.
  *  PB1  - ID0
  *  PA12 - ID1
- *
- * LED outputs.
- *  PC13 - red
- *  PC14 - yellow
- *  PC15 - green
  *****************************************************************/
 void HalApi::InitGpio() {
   // See [RM] chapter 8 for details on GPIO
@@ -176,42 +172,6 @@ void HalApi::InitGpio() {
   // Configure PCB ID pins as inputs.
   GPIO::pin_mode(IOPort::B, 1, IOMode::Input);
   GPIO::pin_mode(IOPort::A, 12, IOMode::Input);
-
-  // Configure LED pins as outputs
-  GPIO::pin_mode(IOPort::C, 13, IOMode::Output);
-  GPIO::pin_mode(IOPort::C, 14, IOMode::Output);
-  GPIO::pin_mode(IOPort::C, 15, IOMode::Output);
-
-  // Turn all three LEDs off initially
-  GPIO::clear_pin(IOPort::C, 13);
-  GPIO::clear_pin(IOPort::C, 14);
-  GPIO::clear_pin(IOPort::C, 15);
-}
-
-// Set or clear the specified digital output
-void HalApi::DigitalWrite(BinaryPin binary_pin, VoltageLevel value) {
-  auto [port, pin] = [&]() -> std::pair<GPIO::Port, uint8_t> {
-    switch (binary_pin) {
-      case BinaryPin::RedLED:
-        return {GPIO::Port::C, 13};
-      case BinaryPin::YellowLED:
-        return {GPIO::Port::C, 14};
-      case BinaryPin::GreenLED:
-        return {GPIO::Port::C, 15};
-    }
-    // All cases covered above (and GCC checks this).
-    __builtin_unreachable();
-  }();
-
-  switch (value) {
-    case VoltageLevel::High:
-      GPIO::set_pin(port, pin);
-      break;
-
-    case VoltageLevel::Low:
-      GPIO::clear_pin(port, pin);
-      break;
-  }
 }
 
 /******************************************************************
@@ -353,82 +313,6 @@ static void Timer15ISR() {
 
   // Start sending any queued commands to the stepper motor
   StepMotor::StartQueuedCommands();
-}
-
-/******************************************************************
- * PWM outputs
- *
- * The following four outputs could be driven
- * as PWM outputs:
- *
- * PA8  - Timer 1 Channel 1 - heater control
- * PB3  - Timer 2 Channel 2 - blower control
- *
- * For now I'll just set up the blower since that's the only
- * one called out in the HAL
- *
- * These timers are documented in [RM] chapters 26 and 27.
- *****************************************************************/
-void HalApi::InitPwmOut() {
-  // The PWM frequency isn't mentioned anywhere that I can find, so
-  // I'm just picking a reasonable number.  This can be refined later
-  //
-  // The selection of PWM frequency is a trade off between latency and
-  // resolution.  Higher frequencies give lower latency and lower resolution.
-  //
-  // Latency is the time between setting the value and it taking effect,
-  // this is essentially the PWM period (1/frequency).  For example, a
-  // 20kHz frequency would give a latency of up to 50 usec.
-  //
-  // Resultion is based on the ratio of the clock frequency (80MHz) to the
-  // PWM frequency.  For example, a 20kHz PWM would have a resolution of one
-  // part in 4000 (80000000/20000) or about 12 bits.
-  static constexpr int PwmFreqHz = 20000;
-
-  enable_peripheral_clock(PeripheralID::Timer2);
-
-  // Connect PB3 to timer 2
-  // [DS] Table 17 (pg 77)
-  GPIO::alternate_function(GPIO::Port::B, /*pin =*/3,
-                           GPIO::AlternativeFuncion::AF1);  // TIM2_CH2
-
-  TimerReg *tmr = Timer2Base;
-
-  // Set the frequency
-  tmr->auto_reload = (CPUFrequencyHz / PwmFreqHz) - 1;
-
-  // Configure channel 2 in PWM output mode 1
-  // with preload enabled.  The preload means that
-  // the new PWM duty cycle gets written to a shadow
-  // register and copied to the active register
-  // at the start of the next cycle.
-  tmr->capture_compare_mode[0] = 0x6800;
-
-  tmr->capture_compare_enable = 0x10;
-
-  // Start with 0% duty cycle
-  tmr->capture_compare[1] = 0;
-
-  // Load the shadow registers
-  tmr->event = 1;
-
-  // Start the counter
-  tmr->control_reg1.bitfield.auto_reload_preload = 1;
-  tmr->control_reg1.bitfield.counter_enable = 1;
-}
-
-// Set the PWM period.
-void HalApi::AnalogWrite(PwmPin pin, float duty) {
-  auto [tmr, chan] = [&]() -> std::pair<TimerReg *, int> {
-    switch (pin) {
-      case PwmPin::Blower:
-        return {Timer2Base, 1};
-    }
-    // All cases covered above (and GCC checks this).
-    __builtin_unreachable();
-  }();
-
-  tmr->capture_compare[chan] = static_cast<uint32_t>(static_cast<float>(tmr->auto_reload) * duty);
 }
 
 static UART rpi_uart(Uart3Base);

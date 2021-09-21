@@ -36,7 +36,9 @@ limitations under the License.
 
 #include "adc.h"
 #include "buzzer.h"
+#include "led_indicators.h"
 #include "psol.h"
+#include "pwm.h"
 #include "units.h"
 
 #ifdef TEST_MODE
@@ -61,49 +63,6 @@ limitations under the License.
 #endif
 
 #endif  // TEST_MODE
-
-// ---------------------------------------------------------------
-// Strongly typed analogues of some Arduino types.
-// "Strongly typed" means that it will be a compile error, e.g.,
-// to pass a PWM pin id to a function expecting an analog pin id.
-// ---------------------------------------------------------------
-
-// Mode of a digital pin.
-// Usage: PinMode::Input etc.
-enum class PinMode {
-  // Test code relies on Input being the first enumeration (to get the
-  // behavior that Input pins are the default).
-  Input,
-  Output,
-  InputPullup
-};
-
-// Voltage level of a digital pin.
-// Usage: VoltageLevel::High, Low
-enum class VoltageLevel { High, Low };
-
-// Pulse-width modulated outputs from the controller.  These can be set to
-// values in [0-255].
-//
-// Pins default to Input, so if you add a new pin here, be sure to update
-// HalApi::Init() and set it to Output!
-enum class PwmPin {
-  // Controls the fan speed.
-  Blower,
-};
-
-// Binary pins set by the controller -- these are booleans, High or Low.
-//
-// PWM pins can of course be HIGH or LOW too, but we separate out purely on/off
-// pins from PWM pins for reasons of "strong typing".
-//
-// Pins default to Input, so if you add a new pin here, be sure to update
-// HalApi::Init() and set it to Output!
-enum class BinaryPin {
-  RedLED,
-  YellowLED,
-  GreenLED,
-};
 
 #ifdef TEST_MODE
 class TestSerialPort {
@@ -143,16 +102,6 @@ class HalApi {
   // Faked when testing.  Does not sleep, but does advance the time returned
   // by millis().
   void Delay(Duration d);
-
-  // Causes `pin` to output a square wave with the given duty cycle (range
-  // [0, 1]).
-  //
-  // Perhaps a better name would be "pwmWrite", but we also want to be
-  // somewhat consistent with the Arduino API that people are familiar with.
-  void AnalogWrite(PwmPin pin, float duty);
-
-  // Sets `binary_pin` to high or low.
-  void DigitalWrite(BinaryPin binary_pin, VoltageLevel value);
 
   // Receives bytes from the GUI controller along the serial bus.
   //
@@ -256,28 +205,13 @@ class HalApi {
   void InitGpio();
   void InitI2C();
   void InitSysTimer();
-  void InitPwmOut();
   void InitUARTs();
   void StepperMotorInit();
 
 #endif
 
-  void SetDigitalPinMode(PwmPin pin, PinMode mode);
-  void SetDigitalPinMode(BinaryPin pin, PinMode mode);
-
 #ifdef TEST_MODE
   Time time_ = microsSinceStartup(0);
-
-  // The default pin mode on Arduino is Input, which happens to be the first
-  // enumerator in PinMode and so the default in these maps!
-  //
-  // Source: https://www.arduino.cc/en/Tutorial/DigitalPins
-  // "Arduino (Atmega) pins default to input"
-  std::map<PwmPin, PinMode> pwm_pin_modes_;
-  std::map<BinaryPin, PinMode> binary_pin_modes_;
-
-  std::map<BinaryPin, VoltageLevel> binary_pin_values_;
-  std::map<PwmPin, float> pwm_pin_values_;
 
   TestSerialPort serial_port_;
   TestSerialPort debug_serial_port_;
@@ -287,6 +221,8 @@ class HalApi {
   ADC adc_;
   Buzzer buzzer_;
   PSOL psol_;
+  LEDIndicators LEDs_;
+  PWM pwm_;
 };
 
 extern HalApi hal;
@@ -298,22 +234,6 @@ inline void HalApi::WatchdogHandler() {}
 
 inline Time HalApi::Now() { return time_; }
 inline void HalApi::Delay(Duration d) { time_ = time_ + d; }
-inline void HalApi::SetDigitalPinMode(PwmPin pin, PinMode mode) { pwm_pin_modes_[pin] = mode; }
-inline void HalApi::SetDigitalPinMode(BinaryPin pin, PinMode mode) {
-  binary_pin_modes_[pin] = mode;
-}
-inline void HalApi::DigitalWrite(BinaryPin pin, VoltageLevel value) {
-  if (binary_pin_modes_[pin] != PinMode::Output) {
-    assert(false && "Can only write to an OUTPUT pin");
-  }
-  binary_pin_values_[pin] = value;
-}
-inline void HalApi::AnalogWrite(PwmPin pin, float duty) {
-  if (pwm_pin_modes_[pin] != PinMode::Output) {
-    assert(false && "Can only write to an OUTPUT pin");
-  }
-  pwm_pin_values_[pin] = duty;
-}
 
 inline uint16_t HalApi::SerialRead(char *buf, uint16_t len) { return serial_port_.Read(buf, len); }
 inline uint16_t HalApi::SerialBytesAvailableForRead() {

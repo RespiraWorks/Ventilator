@@ -18,7 +18,6 @@ limitations under the License.
 
 #include "uart_dma.h"
 
-#include "hal_stm32.h"
 #include "hal_stm32_regs.h"
 
 // STM32 UART3 driver based on DMA transfers.

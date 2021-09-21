@@ -568,8 +568,8 @@ extern UartDma dma_uart;
 // pin is used for which function.  A less definitive, but perhaps
 // easier to read version is available at [PCBsp].
 //
-// These pins are connected to USART3
-// The UART is described in [RM] chapter 38
+// These pins are connected to UART3
+// The UART/USART is described in [RM] chapter 38
 void HalApi::InitUARTs() {
   // NOTE - The UART functionality hasn't been tested due to lack of hardware!
   //        Need to do that as soon as the boards are available.

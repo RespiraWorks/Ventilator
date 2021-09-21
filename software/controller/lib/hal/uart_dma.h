@@ -23,9 +23,9 @@ class DmaCtrl {
  public:
   explicit DmaCtrl(DmaReg *const dma) : dma_(dma) {}
   void init() {
-    // USART3 reception happens on DMA1 channel 3
+    // UART3 reception happens on DMA1 channel 3
     dma_->channel_select.c3s = 0b0010;
-    // USART3 transmission happens on DMA1 channel 2
+    // UART3 transmission happens on DMA1 channel 2
     dma_->channel_select.c2s = 0b0010;
   }
 

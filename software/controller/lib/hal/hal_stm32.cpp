@@ -39,10 +39,14 @@ Abbreviations [RM], [DS], etc are defined in hal/README.md.
 #include "uart_dma.h"
 #include "vars.h"
 
-#define SYSTEM_STACK_SIZE 2500
+static constexpr uint32_t CPUFrequencyMhz{80};
+
+static constexpr uint32_t CPUFrequencyHz{CPUFrequencyMhz * 1000 * 1000};
+
+static constexpr uint32_t SystemStackSize{2500};
 
 // This is the main stack used in our system.
-__attribute__((aligned(8))) uint32_t system_stack[SYSTEM_STACK_SIZE];
+__attribute__((aligned(8))) uint32_t system_stack[SystemStackSize];
 
 // local data
 static volatile int64_t ms_count;
@@ -111,11 +115,11 @@ void HalApi::Init() {
   // Init various components needed by the system.
   InitGpio();
   InitSysTimer();
-  InitADC();
+  adc_.initialize(CPUFrequencyHz);
   InitPwmOut();
   InitUARTs();
-  InitBuzzer();
-  InitPSOL();
+  buzzer_.initialize(CPUFrequencyHz);
+  psol_.InitPSOL(CPUFrequencyHz);
   InitI2C();
   Interrupts::singleton().EnableInterrupts();
   StepperMotorInit();
@@ -587,7 +591,7 @@ __attribute__((used)) __attribute__((section(".isr_vector"))) void (*const Vecto
     // The first entry of the ISR holds the initial value of the
     // stack pointer.  The ARM processor initializes the stack
     // pointer based on this address.
-    reinterpret_cast<void (*)()>(&system_stack[SYSTEM_STACK_SIZE]),
+    reinterpret_cast<void (*)()>(&system_stack[SystemStackSize]),
 
     // The second ISR entry is the reset vector which is an
     // assembly language routine that does some basic memory

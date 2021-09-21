@@ -13,14 +13,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+#include "buzzer.h"
+
 #include <algorithm>
 
 #include "clocks.h"
 #include "gpio.h"
 #include "timers.h"
-
-/// \TODO: declare signatures elsewhere
-#include "hal.h"
 
 // The buzzer we use for generating alarms on the controller board is
 // part number CT-1205H-SMT-TR made by CUI.
@@ -36,12 +35,7 @@ limitations under the License.
 
 #if defined(BARE_STM32)
 
-/// \TODO bring in frequencies as parameters to eliminate this dependency
-#include "hal_stm32.h"
-
-void HalApi::InitBuzzer() {
-  static constexpr uint32_t BuzzerFreqHz{2400};
-
+void Buzzer::initialize(const uint32_t cpu_frequency_hz) {
   enable_peripheral_clock(PeripheralID::Timer3);
 
   // Connect PB4 to TIM3_CH1, [DS] Table 17 (pg 77)
@@ -50,7 +44,7 @@ void HalApi::InitBuzzer() {
   TimerReg *tmr = Timer3Base;
 
   // Set the frequency
-  tmr->auto_reload = (CPUFrequencyHz / BuzzerFreqHz) - 1;
+  tmr->auto_reload = (cpu_frequency_hz / freqency_hz_) - 1;
 
   // Configure channel 1 in PWM output mode 1
   // with preload enabled.  The preload means that
@@ -75,13 +69,13 @@ void HalApi::InitBuzzer() {
   tmr->control_reg1.bitfield.counter_enable = 1;
 }
 
-void HalApi::BuzzerOff() {
+void Buzzer::off() {
   TimerReg *tmr = Timer3Base;
   tmr->capture_compare[0] = 0;
 }
 
 // Set the buzzer on with the specified volume (0 to 1)
-void HalApi::BuzzerOn(float volume) {
+void Buzzer::on(float volume) {
   TimerReg *tmr = Timer3Base;
 
   volume = std::clamp(volume, 0.0f, 1.0f);
@@ -90,5 +84,11 @@ void HalApi::BuzzerOn(float volume) {
   float duty = volume * 0.8f * static_cast<float>(tmr->auto_reload);
   tmr->capture_compare[0] = static_cast<int>(duty);
 }
+
+#else
+
+void Buzzer::initialize(const uint32_t cpu_frequency_hz) {}
+void Buzzer::off() {}
+void Buzzer::on(float volume) {}
 
 #endif

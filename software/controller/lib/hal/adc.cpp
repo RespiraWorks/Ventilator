@@ -50,6 +50,8 @@ limitations under the License.
 //
 ////////////////////////////////////////////////////////////////////
 
+#include "adc.h"
+
 #include "clocks.h"
 #include "dma.h"
 #include "gpio.h"
@@ -182,9 +184,6 @@ inline AdcReg *const AdcBase = reinterpret_cast<AdcReg *>(0X50040000);
 
 #if defined(BARE_STM32)
 
-/// \TODO: mostly for Sleep and CPUFrequencyHz
-#include "hal_stm32.h"
-
 /*
 Please refer to [PCB] as the ultimate source of which pin is used for which function.
 
@@ -200,9 +199,6 @@ Reference abbreviations ([RM], [PCB], etc) are defined in hal/README.md
 
 // How long a period (in seconds) we want to average the A/D readings.
 static constexpr float SampleHistoryTimeSec = 0.001f;
-
-// Total number of A/D inputs we're sampling
-static constexpr int AdcChannels = 5;
 
 // Resolution of the ADC channels (in bits).
 // We are using the default value (which is also the highest possible one - see [RM] 16.4.22).
@@ -264,26 +260,24 @@ static constexpr int AdcConversionTime = [] {
   __builtin_unreachable();
 }();
 
-// Calculate how long our history buffer needs to be based on the above.
-static constexpr uint32_t AdcSampleHistory = static_cast<uint32_t>(
-    SampleHistoryTimeSec * CPUFrequencyHz / AdcConversionTime / OversampleCount / AdcChannels);
+bool ADC::initialize(const uint32_t cpu_frequency_hz) {
+  adc_sample_history_ =
+      static_cast<uint32_t>(SampleHistoryTimeSec * static_cast<float>(cpu_frequency_hz) /
+                            AdcConversionTime / OversampleCount / AdcChannels);
 
-// This scaler converts the sum of the A/D readings (a total of
-// AdcSampleHistory) into a voltage.  The A/D is scaled so a value of 0
-// corresponds to 0 volts, and MaxAdcReading corresponds to 3.3V
-static constexpr float AdcScaler = 3.3f / (MaxAdcReading * AdcSampleHistory);
+  // This scaler converts the sum of the A/D readings (a total of
+  // adc_sample_history_) into a voltage.  The A/D is scaled so a value of 0
+  // corresponds to 0 volts, and MaxAdcReading corresponds to 3.3V
+  adc_scaler_ = 3.3f / static_cast<float>(MaxAdcReading * adc_sample_history_);
 
-// This buffer will hold the readings from the A/D
-static volatile uint16_t adc_buff[AdcSampleHistory * AdcChannels];
+  // NOTE - we need the sample history to be small for two reasons:
+  // - We sum to a 32-bit floating point number and will lose precision if we add in too many
+  // samples
+  // - We want the A/D reading to be fast, so summing up a really large array might be too slow.
+  //
+  // If you get hit with this assertion you may need to rethink the way this function works.
+  if (adc_sample_history_ > 100) return false;
 
-// NOTE - we need the sample history to be small for two reasons:
-// - We sum to a 32-bit floating point number and will lose precision if we add in too many samples
-// - We want the A/D reading to be fast, so summing up a really large array might be too slow.
-//
-// If you get hit with this assertion you may need to rethink the way this function works.
-static_assert(AdcSampleHistory < 100);
-
-void HalApi::InitADC() {
   // Enable the clock to the A/D converter
   enable_peripheral_clock(PeripheralID::ADC);
 
@@ -375,7 +369,7 @@ void HalApi::InitADC() {
 
   dma->channel[c1].peripheral_address = &adc->adc[0].data;
   dma->channel[c1].memory_address = adc_buff;
-  dma->channel[c1].count = AdcSampleHistory * AdcChannels;
+  dma->channel[c1].count = adc_sample_history_ * AdcChannels;
 
   dma->channel[c1].config.enable = 0;
   dma->channel[c1].config.tx_complete_interrupt = 0;
@@ -392,10 +386,12 @@ void HalApi::InitADC() {
 
   // Start the A/D converter (by setting bit 2 of the control register - per [RM] p457)
   adc->adc[0].control |= 0x00000004;
+
+  return true;
 }
 
 // Read the specified analog input.
-Voltage HalApi::AnalogRead(AnalogPin pin) const {
+Voltage ADC::read(const AnalogPin pin) const {
   int offset = [&] {
     switch (pin) {
       case AnalogPin::InterimBoardAnalogPressure:
@@ -418,9 +414,17 @@ Voltage HalApi::AnalogRead(AnalogPin pin) const {
   // background, but that shouldn't cause any problems because memory
   // accesses for 16-bit values are atomic.
   float sum = 0;
-  for (int i = 0; i < AdcSampleHistory; i++) sum += adc_buff[i * AdcChannels + offset];
+  for (int i = 0; i < adc_sample_history_; i++) sum += adc_buff[i * AdcChannels + offset];
 
-  return volts(sum * AdcScaler);
+  return volts(sum * adc_scaler_);
 }
+
+#else
+
+bool ADC::initialize(const uint32_t cpu_frequency_hz) { return true; }
+
+Voltage ADC::read(AnalogPin pin) const { return analog_pin_values_.at(pin); }
+
+void ADC::TESTSetAnalogPin(AnalogPin pin, Voltage value) { analog_pin_values_[pin] = value; }
 
 #endif

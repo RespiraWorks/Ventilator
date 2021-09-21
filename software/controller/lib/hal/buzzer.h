@@ -13,18 +13,16 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-/*
-This file implements the HAL (Hardware Abstraction Layer) for the
-STM32L452 processor used on the controller.
-
-Reference abbreviations [RM], [DS], etc are defined in hal/README.md.
-*/
-
 #pragma once
 
-#if !defined(BARE_STM32)
-#error \
-    "the header stm32.h is part of the HAL for the BARE_STM32 build.  It should only be used as part of that build"
-#endif
-
 #include <cstdint>
+
+class Buzzer {
+ public:
+  void initialize(uint32_t cpu_frequency_hz);
+  void off();
+  void on(float volume);
+
+ private:
+  uint32_t freqency_hz_{2400};
+};

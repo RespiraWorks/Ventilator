@@ -1,0 +1,60 @@
+/* Copyright 2020-2021, RespiraWorks
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+#pragma once
+
+#include "units.h"
+
+#ifdef TEST_MODE
+#include <map>
+#endif  // !TEST_MODE
+
+// Location of analog sensors as labeled on the PCB(s). Note that this does not necessarily define
+// their function and further mapping should be done in the higher layers of the software.
+enum class AnalogPin {
+  InterimBoardAnalogPressure,
+  U3PatientPressure,
+  U4InhaleFlow,
+  U5ExhaleFlow,
+  InterimBoardOxygenSensor,
+};
+
+/// \TODO: should be singleton
+class ADC {
+ public:
+  bool initialize(uint32_t cpu_frequency_hz);
+
+  // Reads from analog sensor using an analog-to-digital converter.
+  // Returns a voltage.  On STM32 this can range from 0 to 3.3V.
+  // In test mode, will return the last value set via TESTSetAnalogPin.
+  Voltage read(AnalogPin pin) const;
+
+#ifdef TEST_MODE
+  void TESTSetAnalogPin(AnalogPin pin, Voltage value);
+#endif
+
+ private:
+  // Total number of A/D inputs we're sampling
+  static constexpr int AdcChannels{5};
+
+  uint32_t adc_sample_history_{1};
+  float adc_scaler_{1.0f};
+
+  volatile uint16_t adc_buff[100 * AdcChannels];
+
+#ifdef TEST_MODE
+  std::map<AnalogPin, Voltage> analog_pin_values_;
+#endif
+};

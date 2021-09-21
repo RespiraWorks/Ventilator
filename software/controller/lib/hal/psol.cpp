@@ -13,20 +13,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+#include "psol.h"
+
 #include <algorithm>
 
 #include "clocks.h"
 #include "gpio.h"
 #include "timers.h"
-#include "vars.h"
-
-/// \TODO: declare signatures elsewhere
-#include "hal.h"
 
 #if defined(BARE_STM32)
-
-/// \TODO bring in frequencies as parameters to eliminate this dependency
-#include "hal_stm32.h"
 
 // This file implements the interface to the Proportional Solenoid
 // valve (commonly abbreviated as PSOL) used to control the flow of
@@ -44,21 +39,7 @@ limitations under the License.
 // can be driven by timer 1 channel 4.  We'll use that timer channel
 // to control the solenoid
 
-// Testing in Edwin's garage, we found that the psol was fully closed at
-// somewhere between 0.75 and 0.80 (i.e. definitely zero at 0.75 and probably
-// zero a bit above that) and fully open at 0.90.
-
-// UFlow IBV19M value
-static Debug::Variable::Float dbg_psol_pwm_closed("psol_pwm_closed",
-                                                  Debug::Variable::Access::ReadWrite, 0.35f,
-                                                  "ratio", "PWM power that closes the psol [0,1]");
-
-// UFlow IBV19M value
-static Debug::Variable::Float dbg_psol_pwm_open("psol_pwm_open", Debug::Variable::Access::ReadWrite,
-                                                0.75f, "ratio",
-                                                "PWM power that opens the psol [0,1]");
-
-void HalApi::InitPSOL() {
+void PSOL::InitPSOL(const uint32_t cpu_frequency_hz) {
   // I'm using a 20kHz PWM frequency to drive the solenoid
   // This is somewhat arbitrary, but is high enough to ensure
   // that there won't be any audible noise from the switching
@@ -72,7 +53,7 @@ void HalApi::InitPSOL() {
   TimerReg *tmr = Timer1Base;
 
   // Set the frequency
-  tmr->auto_reload = (CPUFrequencyHz / PwmFreq) - 1;
+  tmr->auto_reload = (cpu_frequency_hz / PwmFreq) - 1;
 
   // Configure channel 4 in PWM output mode 1
   // with preload enabled.  The preload means that
@@ -103,7 +84,7 @@ void HalApi::InitPSOL() {
 
 // Set the PSOL output level to a value from 0 (fully closed)
 // to 1 (fully open)
-void HalApi::PSolValue(float val) {
+void PSOL::PSolValue(float val) {
   TimerReg *tmr = Timer1Base;
 
   val = std::clamp(val, 0.0f, 1.0f);
@@ -114,8 +95,8 @@ void HalApi::PSolValue(float val) {
   if (val == 0) {
     scaled = 0;
   } else {
-    float open_pwm = dbg_psol_pwm_open.get();
-    float closed_pwm = dbg_psol_pwm_closed.get();
+    float open_pwm = pwm_open_.get();
+    float closed_pwm = pwm_closed_.get();
     scaled = closed_pwm + val * (open_pwm - closed_pwm);
   }
   float duty = scaled * static_cast<float>(tmr->auto_reload);
@@ -123,5 +104,6 @@ void HalApi::PSolValue(float val) {
 }
 
 #else
-void HalApi::PSolValue(float val) {}
+void PSOL::InitPSOL(uint32_t cpu_frequency_hz) {}
+void PSOL::PSolValue(float val) {}
 #endif

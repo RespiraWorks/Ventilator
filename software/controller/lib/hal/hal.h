@@ -34,6 +34,9 @@ limitations under the License.
 #include <algorithm>
 #include <cstdint>
 
+#include "adc.h"
+#include "buzzer.h"
+#include "psol.h"
 #include "units.h"
 
 #ifdef TEST_MODE
@@ -78,16 +81,6 @@ enum class PinMode {
 // Voltage level of a digital pin.
 // Usage: VoltageLevel::High, Low
 enum class VoltageLevel { High, Low };
-
-// Location of analog sensors as labeled on the PCB(s). Note that this does not necessarily define
-// their function and further mapping should be done in the higher layers of the software.
-enum class AnalogPin {
-  InterimBoardAnalogPressure,
-  U3PatientPressure,
-  U4InhaleFlow,
-  U5ExhaleFlow,
-  InterimBoardOxygenSensor,
-};
 
 // Pulse-width modulated outputs from the controller.  These can be set to
 // values in [0-255].
@@ -151,22 +144,6 @@ class HalApi {
   // by millis().
   void Delay(Duration d);
 
-  // Caveat for people new to Arduino: AnalogRead and AnalogWrite are
-  // completely separate from each other and do not even refer to the same
-  // pins. AnalogRead() reads the value of an analog input pin. AnalogWrite()
-  // writes to a PWM pin - some of the digital pins are PWM pins.
-
-  // Reads from analog sensor using an analog-to-digital converter.
-  //
-  // Returns a voltage.  On STM32 this can range from 0 to 3.3V.
-  //
-  // In test mode, will return the last value set via TESTSetAnalogPin.
-  Voltage AnalogRead(AnalogPin pin) const;
-
-#ifdef TEST_MODE
-  void TESTSetAnalogPin(AnalogPin pin, Voltage value);
-#endif
-
   // Causes `pin` to output a square wave with the given duty cycle (range
   // [0, 1]).
   //
@@ -211,14 +188,6 @@ class HalApi {
   [[nodiscard]] uint16_t DebugRead(char *buf, uint16_t len);
   uint16_t DebugBytesAvailableForWrite();
   uint16_t DebugBytesAvailableForRead();
-
-  // Buzzer used for alarms.  These functions turn the buzzer on/off.
-  void BuzzerOn(float volume = 1.0f);
-  void BuzzerOff();
-
-  // PSOL (Proportional Solenoid) support
-  void InitPSOL();
-  void PSolValue(float val);
 
 #ifndef TEST_MODE
   // Translates to a numeric pin that can be passed to the Arduino API.
@@ -285,13 +254,11 @@ class HalApi {
 
 #ifdef BARE_STM32
   void InitGpio();
-  void InitADC();
   void InitI2C();
   void InitSysTimer();
   void InitPwmOut();
   void InitUARTs();
   void StepperMotorInit();
-  void InitBuzzer();
 
 #endif
 
@@ -309,13 +276,17 @@ class HalApi {
   std::map<PwmPin, PinMode> pwm_pin_modes_;
   std::map<BinaryPin, PinMode> binary_pin_modes_;
 
-  std::map<AnalogPin, Voltage> analog_pin_values_;
   std::map<BinaryPin, VoltageLevel> binary_pin_values_;
   std::map<PwmPin, float> pwm_pin_values_;
 
   TestSerialPort serial_port_;
   TestSerialPort debug_serial_port_;
 #endif
+
+ public:
+  ADC adc_;
+  Buzzer buzzer_;
+  PSOL psol_;
 };
 
 extern HalApi hal;
@@ -327,10 +298,6 @@ inline void HalApi::WatchdogHandler() {}
 
 inline Time HalApi::Now() { return time_; }
 inline void HalApi::Delay(Duration d) { time_ = time_ + d; }
-inline Voltage HalApi::AnalogRead(AnalogPin pin) const { return analog_pin_values_.at(pin); }
-inline void HalApi::TESTSetAnalogPin(AnalogPin pin, Voltage value) {
-  analog_pin_values_[pin] = value;
-}
 inline void HalApi::SetDigitalPinMode(PwmPin pin, PinMode mode) { pwm_pin_modes_[pin] = mode; }
 inline void HalApi::SetDigitalPinMode(BinaryPin pin, PinMode mode) {
   binary_pin_modes_[pin] = mode;
@@ -427,10 +394,5 @@ inline void TestSerialPort::PutIncomingData(const char *data, uint16_t len) {
 }
 
 inline void HalApi::StartLoopTimer(const Duration &period, void (*callback)(void *), void *arg) {}
-
-inline void BuzzerOn(float volume) {}
-inline void BuzzerOff() {}
-inline void InitPSOL() {}
-inline void PSolValue(float val) {}
 
 #endif

@@ -15,14 +15,16 @@ limitations under the License.
 
 #pragma once
 
+// Reference abbreviations ([RM], [PCB], etc) are defined in hal/README.md
+
 #include <cstdint>
 
 // Please read manual carefully, as not all peripherals ara available on all processors
 // [RM] 6.4.9-26 (pg 208-234)
 enum class PeripheralID {
   ADC,
-  AES,   // AES accelerator
-  CAN1,  // CAN1
+  AES,  // AES accelerator
+  CAN1,
   CRC,
   CRS,
   DAC1,
@@ -50,11 +52,11 @@ enum class PeripheralID {
   QSPI,    // Quad SPI
   RNG,     // Random number generator
   RTCAPB,  // RTC APB
-  SAI1,    // SAI1
-  SDMMC1,  // SDMMC
-  SPI1,    // SPI1
-  SPI2,    // SPI2
-  SPI3,    // SPI3
+  SAI1,
+  SDMMC1,
+  SPI1,
+  SPI2,
+  SPI3,
   SingleWirePMI1,
   SYSCFG,  // SYSCFG + COMP + VREFBUF
   Timer1,

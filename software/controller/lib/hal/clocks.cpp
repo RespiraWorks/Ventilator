@@ -82,15 +82,15 @@ PeripheralMapping get_peripheral_mapping(const PeripheralID id) {
     case PeripheralID::RNG:
       return {PeripheralBlock::AHB2, 18};
     case PeripheralID::AES:
-      return {PeripheralBlock::AHB2, 16};  // note [1] above
+      return {PeripheralBlock::AHB2, 16};  // See note 1 above
     case PeripheralID::ADC:
       return {PeripheralBlock::AHB2, 13};
     case PeripheralID::GPIOH:
       return {PeripheralBlock::AHB2, 7};
     case PeripheralID::GPIOE:
-      return {PeripheralBlock::AHB2, 4};  // note [2] above
+      return {PeripheralBlock::AHB2, 4};  // See note 2 above
     case PeripheralID::GPIOD:
-      return {PeripheralBlock::AHB2, 3};  // note [2] above
+      return {PeripheralBlock::AHB2, 3};  // See note 2 above
     case PeripheralID::GPIOC:
       return {PeripheralBlock::AHB2, 2};
     case PeripheralID::GPIOB:
@@ -124,17 +124,17 @@ PeripheralMapping get_peripheral_mapping(const PeripheralID id) {
     case PeripheralID::I2C3:
       return {PeripheralBlock::APB1R1, 23};
     case PeripheralID::I2C2:
-      return {PeripheralBlock::APB1R1, 22};  // Note 3
+      return {PeripheralBlock::APB1R1, 22};  // See note 3 above
     case PeripheralID::I2C1:
       return {PeripheralBlock::APB1R1, 21};
     case PeripheralID::UART4:
-      return {PeripheralBlock::APB1R1, 19};  // Note 4
+      return {PeripheralBlock::APB1R1, 19};  // See note 4 above
     case PeripheralID::USART3:
-      return {PeripheralBlock::APB1R1, 18};  // Note 3
+      return {PeripheralBlock::APB1R1, 18};  // See note 3 above
     case PeripheralID::USART2:
       return {PeripheralBlock::APB1R1, 17};
     case PeripheralID::SPI3:
-      return {PeripheralBlock::APB1R1, 15};  // Note 1
+      return {PeripheralBlock::APB1R1, 15};  // See note 1 above
     case PeripheralID::SPI2:
       return {PeripheralBlock::APB1R1, 14};
     case PeripheralID::WindowWatchdog:
@@ -142,13 +142,13 @@ PeripheralMapping get_peripheral_mapping(const PeripheralID id) {
     case PeripheralID::RTCAPB:
       return {PeripheralBlock::APB1R1, 10};  // Enable clock or sleep only, not reset
     case PeripheralID::LCD:
-      return {PeripheralBlock::APB1R1, 9};  // Note 5
+      return {PeripheralBlock::APB1R1, 9};  // See note 5 above
     case PeripheralID::Timer7:
-      return {PeripheralBlock::APB1R1, 5};  // Note 6
+      return {PeripheralBlock::APB1R1, 5};  // See note 6 above
     case PeripheralID::Timer6:
       return {PeripheralBlock::APB1R1, 4};
     case PeripheralID::Timer3:
-      return {PeripheralBlock::APB1R1, 1};  // Note 4
+      return {PeripheralBlock::APB1R1, 1};  // See note 4 above
     case PeripheralID::Timer2:
       return {PeripheralBlock::APB1R1, 0};
     // [RM] 6.4.13, 6.4.19, 6.4.25
@@ -157,9 +157,9 @@ PeripheralMapping get_peripheral_mapping(const PeripheralID id) {
     case PeripheralID::LowPowerTimer2:
       return {PeripheralBlock::APB1R2, 5};
     case PeripheralID::SingleWirePMI1:
-      return {PeripheralBlock::APB1R2, 2};  // Note 1
+      return {PeripheralBlock::APB1R2, 2};  // See note 1 above
     case PeripheralID::I2C4:
-      return {PeripheralBlock::APB1R2, 1};  // Note 2
+      return {PeripheralBlock::APB1R2, 1};  // See note 2 above2
     case PeripheralID::LowPowerUART1:
       return {PeripheralBlock::APB1R2, 0};
     // [RM] 6.4.14, 6.4.20, 6.4.26
@@ -167,9 +167,9 @@ PeripheralMapping get_peripheral_mapping(const PeripheralID id) {
     //   2. Not available on STM3L41xxx and STM32L42xxx devices.
     //   3. Not available on STM3L41xxx and STM32L42xxx, STM32L432 and STM32L442 devices.
     case PeripheralID::DFSDM1:
-      return {PeripheralBlock::APB2, 24};  // Note 1
+      return {PeripheralBlock::APB2, 24};  // See note 1 above
     case PeripheralID::SAI1:
-      return {PeripheralBlock::APB2, 21};  // Note 2
+      return {PeripheralBlock::APB2, 21};  // See note 2 above
     case PeripheralID::Timer16:
       return {PeripheralBlock::APB2, 17};
     case PeripheralID::Timer15:
@@ -181,7 +181,7 @@ PeripheralMapping get_peripheral_mapping(const PeripheralID id) {
     case PeripheralID::Timer1:
       return {PeripheralBlock::APB2, 11};
     case PeripheralID::SDMMC1:
-      return {PeripheralBlock::APB2, 10};  // Note 3
+      return {PeripheralBlock::APB2, 10};  // See note 3 above
     case PeripheralID::Firewall:
       return {PeripheralBlock::APB2, 7};  // Clock enable only, not reset or sleep
     case PeripheralID::SYSCFG:

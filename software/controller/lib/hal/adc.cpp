@@ -138,7 +138,7 @@ static constexpr int AdcConversionTime = [] {
 }();
 
 // Calculate how long our history buffer needs to be based on the above.
-static constexpr int AdcSampleHistory = static_cast<uint32_t>(
+static constexpr uint32_t AdcSampleHistory = static_cast<uint32_t>(
     SampleHistoryTimeSec * CPUFrequencyHz / AdcConversionTime / OversampleCount / AdcChannels);
 
 // This scaler converts the sum of the A/D readings (a total of
@@ -164,11 +164,11 @@ void HalApi::InitADC() {
   using IOMode = GPIO::PinMode;
 
   // Configure the 5 pins used as analog inputs
-  GPIO::pin_mode(IOPort::PortC, 0, IOMode::Analog);  // PC0 (ADC1_IN1)  interim: analog pressure
-  GPIO::pin_mode(IOPort::PortA, 1, IOMode::Analog);  // PA1 (ADC1_IN6)  U3 patient pressure
-  GPIO::pin_mode(IOPort::PortA, 4, IOMode::Analog);  // PA4 (ADC1_IN9)  U4 inhale flow
-  GPIO::pin_mode(IOPort::PortB, 0, IOMode::Analog);  // PB0 (ADC1_IN15) U5 exhale flow
-  GPIO::pin_mode(IOPort::PortC, 1, IOMode::Analog);  // PC3 (ADC1_IN2)  interim: oxygen sensor
+  GPIO::pin_mode(IOPort::C, 0, IOMode::Analog);  // PC0 (ADC1_IN1)  interim: analog pressure
+  GPIO::pin_mode(IOPort::A, 1, IOMode::Analog);  // PA1 (ADC1_IN6)  U3 patient pressure
+  GPIO::pin_mode(IOPort::A, 4, IOMode::Analog);  // PA4 (ADC1_IN9)  U4 inhale flow
+  GPIO::pin_mode(IOPort::B, 0, IOMode::Analog);  // PB0 (ADC1_IN15) U5 exhale flow
+  GPIO::pin_mode(IOPort::C, 1, IOMode::Analog);  // PC3 (ADC1_IN2)  interim: oxygen sensor
 
   // Perform a power-up and calibration sequence on the A/D converter
   AdcReg *adc = AdcBase;

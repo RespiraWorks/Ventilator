@@ -30,12 +30,12 @@ namespace GPIO {
 
 /// \TODO: Move these mappings elsewhere
 enum class Port : uint32_t {
-  PortA = 0x48000000,
-  PortB = 0x48000400,
-  PortC = 0x48000800,
-  PortD = 0x48000C00,
-  PortE = 0x48001000,
-  PortH = 0x48001C00,
+  A = 0x48000000,
+  B = 0x48000400,
+  C = 0x48000800,
+  D = 0x48000C00,
+  E = 0x48001000,
+  H = 0x48001C00,
 };
 
 // Value for GPIOx_MODER ([RM] 8.4.1)

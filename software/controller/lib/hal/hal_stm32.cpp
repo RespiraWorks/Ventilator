@@ -186,18 +186,18 @@ void HalApi::InitGpio() {
   using IOMode = GPIO::PinMode;
 
   // Configure PCB ID pins as inputs.
-  GPIO::pin_mode(IOPort::PortB, 1, IOMode::Input);
-  GPIO::pin_mode(IOPort::PortA, 12, IOMode::Input);
+  GPIO::pin_mode(IOPort::B, 1, IOMode::Input);
+  GPIO::pin_mode(IOPort::A, 12, IOMode::Input);
 
   // Configure LED pins as outputs
-  GPIO::pin_mode(IOPort::PortC, 13, IOMode::Output);
-  GPIO::pin_mode(IOPort::PortC, 14, IOMode::Output);
-  GPIO::pin_mode(IOPort::PortC, 15, IOMode::Output);
+  GPIO::pin_mode(IOPort::C, 13, IOMode::Output);
+  GPIO::pin_mode(IOPort::C, 14, IOMode::Output);
+  GPIO::pin_mode(IOPort::C, 15, IOMode::Output);
 
   // Turn all three LEDs off initially
-  GPIO::clear_pin(IOPort::PortC, 13);
-  GPIO::clear_pin(IOPort::PortC, 14);
-  GPIO::clear_pin(IOPort::PortC, 15);
+  GPIO::clear_pin(IOPort::C, 13);
+  GPIO::clear_pin(IOPort::C, 14);
+  GPIO::clear_pin(IOPort::C, 15);
 }
 
 // Set or clear the specified digital output
@@ -205,11 +205,11 @@ void HalApi::DigitalWrite(BinaryPin binary_pin, VoltageLevel value) {
   auto [port, pin] = [&]() -> std::pair<GPIO::Port, uint8_t> {
     switch (binary_pin) {
       case BinaryPin::RedLED:
-        return {GPIO::Port::PortC, 13};
+        return {GPIO::Port::C, 13};
       case BinaryPin::YellowLED:
-        return {GPIO::Port::PortC, 14};
+        return {GPIO::Port::C, 14};
       case BinaryPin::GreenLED:
-        return {GPIO::Port::PortC, 15};
+        return {GPIO::Port::C, 15};
     }
     // All cases covered above (and GCC checks this).
     __builtin_unreachable();
@@ -401,7 +401,7 @@ void HalApi::InitPwmOut() {
 
   // Connect PB3 to timer 2
   // [DS] Table 17 (pg 77)
-  GPIO::alternate_function(GPIO::Port::PortB, /*pin =*/3,
+  GPIO::alternate_function(GPIO::Port::B, /*pin =*/3,
                            GPIO::AlternativeFuncion::AF1);  // TIM2_CH2
 
   TimerReg *tmr = Timer2Base;
@@ -579,19 +579,19 @@ void HalApi::InitUARTs() {
   enable_peripheral_clock(PeripheralID::DMA1);
 #endif
   // [DS] Table 17 (pg 76)
-  GPIO::alternate_function(GPIO::Port::PortA, /*pin =*/2,
+  GPIO::alternate_function(GPIO::Port::A, /*pin =*/2,
                            GPIO::AlternativeFuncion::AF7);  // USART2_TX
-  GPIO::alternate_function(GPIO::Port::PortA, /*pin =*/3,
+  GPIO::alternate_function(GPIO::Port::A, /*pin =*/3,
                            GPIO::AlternativeFuncion::AF7);  // USART2_RX
 
   // [DS] Table 17 (pg 77)
-  GPIO::alternate_function(GPIO::Port::PortB, /*pin =*/10,
+  GPIO::alternate_function(GPIO::Port::B, /*pin =*/10,
                            GPIO::AlternativeFuncion::AF7);  // USART3_TX
-  GPIO::alternate_function(GPIO::Port::PortB, /*pin =*/11,
+  GPIO::alternate_function(GPIO::Port::B, /*pin =*/11,
                            GPIO::AlternativeFuncion::AF7);  // USART3_RX
-  GPIO::alternate_function(GPIO::Port::PortB, /*pin =*/13,
+  GPIO::alternate_function(GPIO::Port::B, /*pin =*/13,
                            GPIO::AlternativeFuncion::AF7);  // USART3_CTS
-  GPIO::alternate_function(GPIO::Port::PortB, /*pin =*/14,
+  GPIO::alternate_function(GPIO::Port::B, /*pin =*/14,
                            GPIO::AlternativeFuncion::AF7);  // USART3_RTS_DE
 
 #ifdef UART_VIA_DMA

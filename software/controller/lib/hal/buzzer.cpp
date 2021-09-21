@@ -41,7 +41,7 @@ void HalApi::InitBuzzer() {
   enable_peripheral_clock(PeripheralID::Timer3);
 
   // Connect PB4 to TIM3_CH1, [DS] Table 17 (pg 77)
-  GPIO::alternate_function(GPIO::Port::PortB, /*pin =*/4, GPIO::AlternativeFuncion::AF2);
+  GPIO::alternate_function(GPIO::Port::B, /*pin =*/4, GPIO::AlternativeFuncion::AF2);
 
   TimerReg *tmr = Timer3Base;
 

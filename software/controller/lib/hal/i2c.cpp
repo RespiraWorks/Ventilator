@@ -41,19 +41,19 @@ void HalApi::InitI2C() {
 
   // The following pins are used as i2c1 bus on the rev-1 PCB (see [PCB]):
   // Set Pin Function to I²C, [DS] Table 17 (pg 77)
-  GPIO::alternate_function(GPIO::Port::PortB, /*pin =*/8,
+  GPIO::alternate_function(GPIO::Port::B, /*pin =*/8,
                            GPIO::AlternativeFuncion::AF4);  // I2C1_SCL
-  GPIO::alternate_function(GPIO::Port::PortB, /*pin =*/9,
+  GPIO::alternate_function(GPIO::Port::B, /*pin =*/9,
                            GPIO::AlternativeFuncion::AF4);  // I2C1_SDA
   // Set output speed to Fast
-  GPIO::output_speed(GPIO::Port::PortB, 8, GPIO::OutSpeed::Fast);
-  GPIO::output_speed(GPIO::Port::PortB, 9, GPIO::OutSpeed::Fast);
+  GPIO::output_speed(GPIO::Port::B, 8, GPIO::OutSpeed::Fast);
+  GPIO::output_speed(GPIO::Port::B, 9, GPIO::OutSpeed::Fast);
   // Set open drain mode
-  GPIO::output_type(GPIO::Port::PortB, 8, GPIO::OutType::OpenDrain);
-  GPIO::output_type(GPIO::Port::PortB, 9, GPIO::OutType::OpenDrain);
+  GPIO::output_type(GPIO::Port::B, 8, GPIO::OutType::OpenDrain);
+  GPIO::output_type(GPIO::Port::B, 9, GPIO::OutType::OpenDrain);
   // Set Pull Up resistors
-  GPIO::pull_up(GPIO::Port::PortB, 8);
-  GPIO::pull_up(GPIO::Port::PortB, 9);
+  GPIO::pull_up(GPIO::Port::B, 8);
+  GPIO::pull_up(GPIO::Port::B, 9);
 
   EnableInterrupt(InterruptVector::I2c1Event, IntPriority::Low);
   EnableInterrupt(InterruptVector::I2c1Error, IntPriority::Low);

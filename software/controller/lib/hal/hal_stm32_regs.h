@@ -15,7 +15,7 @@ limitations under the License.
 
 #pragma once
 
-#include <stdint.h>
+#include <cstdint>
 
 /*
 The structures below represent the STM32 registers used
@@ -27,62 +27,37 @@ used to configure them can be found in [RM]
 Reference abbreviations ([RM], [PCB], etc) are defined in hal/README.md
 */
 
-// [PM] 4.4 System control block (SCB) (pg 221)
-struct RccStruct {
-  uint32_t clock_control;
-  uint32_t clock_calibration;
-  uint32_t clock_config;
-  uint32_t pll_config;
-  uint32_t pll_sai_config;
-  uint32_t reserved1;
-  uint32_t clock_interrupt_enable;
-  uint32_t clock_interrupt_flag;
-  uint32_t clock_interrupt_clear;
-  uint32_t reserved2;
-  uint32_t peripheral_reset[8];
-  uint32_t peripheral_clock_enable[8];
-  uint32_t sleep_clock_enable[8];
-  uint32_t independent_clock_config;
-  uint32_t reserved3;
-  uint32_t backup;
-  uint32_t status;
-  uint32_t recovery;
-  uint32_t independent_clock_config2;
-};
-typedef volatile RccStruct RccReg;
-inline RccReg *const RccBase = reinterpret_cast<RccReg *>(0x40021000);
-
-// [PM] 4.4 System control block (SCB) (pg 221)
+// The System control block (SCB) provides system implementation information, and system control.
+// This includes configuration, control, and reporting of the system exceptions.
+// Most of this is defined in [PM] 4.4 (pg 221), except the ones marked otherwise
 struct SysControlStruct {
   uint32_t reserved0;
-  uint32_t int_type;
-  uint32_t aux_control;
+  uint32_t int_type;     // 0xE000E004 What is this ????? And WTF is this from ?????
+  uint32_t aux_control;  // 0xE000E008 ACTLR
   uint32_t reserved1;
-  uint32_t sys_tick[3];
+  uint32_t sys_tick[3];  // 0xE000E010 SysTick timer registers [PM] 4.5 (pg 246)
   uint32_t reserved2[57];
-  uint32_t nvic[768];  // 0xE000E100 - NVIC Register [RM] 4.3 (pg 208)
-  uint32_t cpu_id;
-  uint32_t int_control;
-  uint32_t vector_table;
-  uint32_t app_interrupt;  // 0xE000ED0C - Application Interrupt and Reset
-                           // Control Register
-  uint32_t system_control;
-  uint32_t config_control;  // 0xE000ED14 - Configuration and Control Register
-  uint32_t system_priority[3];
-  uint32_t system_handler_control;
-  uint32_t fault_status;
-  uint32_t hard_fault_status;
+  uint32_t nvic[768];               // 0xE000E100 NVIC [RM] 4.3 (pg 208)
+  uint32_t cpu_id;                  // 0xE000ED00 CPUID
+  uint32_t interrupt_control;       // 0xE000ED04 ICSR
+  uint32_t vector_table;            // 0xE000ED08 VTOR
+  uint32_t app_interrupt;           // 0xE000ED0C AIRCR
+  uint32_t system_control;          // 0xE000ED10 SCR
+  uint32_t config_control;          // 0xE000ED14 CCR
+  uint32_t system_priority[3];      // 0xE000ED18 SHPR1-3
+  uint32_t system_handler_control;  // 0xE000ED24 SHCSR
+  uint32_t fault_status;            // 0xE000ED28 CFSR/MMSR/BFSR/UFSR
+  uint32_t hard_fault_status;       // 0xE000ED2C HFSR
   uint32_t reserved3;
-  uint32_t mm_fault_address;
-  uint32_t bus_fault_addr;
+  uint32_t mm_fault_address;  // 0xE000ED34 MMAR
+  uint32_t bus_fault_addr;    // 0xE000ED38 BFAR
   uint32_t reserved4[19];
-  uint32_t coproc_access_control;  // 0xE000ED88 - Coprocessor access control
-                                   // register
+  uint32_t coproc_access_control;  // 0xE000ED88 CPACR [PM] 4.6 (pg 252)
 };
 typedef volatile SysControlStruct SysControlReg;
 inline SysControlReg *const SysControlBase = reinterpret_cast<SysControlReg *>(0xE000E000);
 
-// [PM] 4.3 Nested vectored interrupt controller (NVIC) (pg 208)
+// Nested vectored interrupt controller (NVIC) [PM] 4.3 (pg 208)
 struct InterruptControlStruct {
   uint32_t set_enable[32];
   uint32_t clear_enable[32];
@@ -500,7 +475,7 @@ typedef volatile FlashStruct FlashReg;
 inline FlashReg *const FlashBase = reinterpret_cast<FlashReg *>(0x40022000);
 
 // [RM] 11.4.4 DMA channels (pg 302)
-enum class DmaChannel {
+enum class DmaChannel : uint8_t {
   Chan1 = 0,
   Chan2 = 1,
   Chan3 = 2,
@@ -830,27 +805,3 @@ struct CrcStruct {
 };
 typedef volatile CrcStruct CrcReg;
 inline CrcReg *const CrcBase = reinterpret_cast<CrcReg *>(0x40023000);
-
-// General Purpose I/O
-// [RM] 8.4 GPIO Registers (pg 267)
-struct GpioStruct {
-  uint32_t mode;                   // Mode register [RM] 8.4.1
-  uint32_t output_type;            // Output type register [RM] 8.4.2
-  uint32_t output_speed;           // Output speed register [RM] 8.4.3
-  uint32_t pullup_pulldown;        // Pull-up/pull-down register [RM] 8.4.4
-  uint32_t input_data;             // Input data register [RM] 8.4.5
-  uint32_t output_data;            // Output data register [RM] 8.4.6
-  uint16_t set;                    // Bit set register [RM] 8.4.7
-  uint16_t clear;                  // Bit reset register [RM] 8.4.7
-  uint32_t flash_lock;             // Configuration lock register [RM] 8.4.8
-  uint32_t alternate_function[2];  // Alternate function low/high register
-                                   // [RM] 8.4.{9,10}
-  uint32_t reset;                  // Reset register [RM] 8.4.11
-};
-typedef volatile GpioStruct GpioReg;
-inline GpioReg *const GpioABase = reinterpret_cast<GpioReg *>(0x48000000);
-inline GpioReg *const GpioBBase = reinterpret_cast<GpioReg *>(0x48000400);
-inline GpioReg *const GpioCBase = reinterpret_cast<GpioReg *>(0x48000800);
-inline GpioReg *const GpioDBase = reinterpret_cast<GpioReg *>(0x48000C00);
-inline GpioReg *const GpioEBase = reinterpret_cast<GpioReg *>(0x48001000);
-inline GpioReg *const GpioHBase = reinterpret_cast<GpioReg *>(0x48001C00);

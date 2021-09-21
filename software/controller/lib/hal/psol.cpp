@@ -12,7 +12,13 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+
+#include <algorithm>
+
+#include "clocks.h"
+#include "gpio.h"
 #include "hal.h"
+#include "vars.h"
 
 #if defined(BARE_STM32)
 
@@ -32,10 +38,7 @@ limitations under the License.
 // can be driven by timer 1 channel 4.  We'll use that timer channel
 // to control the solenoid
 
-#include <algorithm>
-
 #include "hal_stm32.h"
-#include "vars.h"
 
 // Testing in Edwin's garage, we found that the psol was fully closed at
 // somewhere between 0.75 and 0.80 (i.e. definitely zero at 0.75 and probably
@@ -57,17 +60,15 @@ void HalApi::InitPSOL() {
   // that there won't be any audible noise from the switching
   static constexpr int PwmFreq = 5000;
 
-  EnableClock(Timer1Base);
+  enable_peripheral_clock(PeripheralID::Timer1);
 
-  // Connect PA11 to timer 1
-  // [DS] table 17 shows which functions can be connected to each pin.
-  // For PA11 we select function 1 to connect it to timer 1.
-  GpioPinAltFunc(GpioABase, 11, 1);
+  // Connect PA11 to TIM1_CH4, [DS] Table 17 (pg 76)
+  GPIO::alternate_function(GPIO::Port::A, /*pin =*/11, GPIO::AlternativeFuncion::AF1);
 
   TimerReg *tmr = Timer1Base;
 
   // Set the frequency
-  tmr->auto_reload = (CPU_FREQ / PwmFreq) - 1;
+  tmr->auto_reload = (CPUFrequencyHz / PwmFreq) - 1;
 
   // Configure channel 4 in PWM output mode 1
   // with preload enabled.  The preload means that

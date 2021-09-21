@@ -50,9 +50,12 @@ limitations under the License.
 //
 ////////////////////////////////////////////////////////////////////
 
+#include "clocks.h"
+#include "gpio.h"
+#include "hal.h"
+
 #if defined(BARE_STM32)
 
-#include "hal.h"
 #include "hal_stm32.h"
 
 /*
@@ -135,8 +138,8 @@ static constexpr int AdcConversionTime = [] {
 }();
 
 // Calculate how long our history buffer needs to be based on the above.
-static constexpr int AdcSampleHistory = static_cast<int>(
-    SampleHistoryTimeSec * CPU_FREQ / AdcConversionTime / OversampleCount / AdcChannels);
+static constexpr uint32_t AdcSampleHistory = static_cast<uint32_t>(
+    SampleHistoryTimeSec * CPUFrequencyHz / AdcConversionTime / OversampleCount / AdcChannels);
 
 // This scaler converts the sum of the A/D readings (a total of
 // AdcSampleHistory) into a voltage.  The A/D is scaled so a value of 0
@@ -155,14 +158,17 @@ static_assert(AdcSampleHistory < 100);
 
 void HalApi::InitADC() {
   // Enable the clock to the A/D converter
-  EnableClock(AdcBase);
+  enable_peripheral_clock(PeripheralID::ADC);
+
+  using IOPort = GPIO::Port;
+  using IOMode = GPIO::PinMode;
 
   // Configure the 5 pins used as analog inputs
-  GpioPinMode(GpioCBase, 0, GPIOPinMode::Analog);  // PC0 (ADC1_IN1)  interim board: analog pressure
-  GpioPinMode(GpioABase, 1, GPIOPinMode::Analog);  // PA1 (ADC1_IN6)  U3 patient pressure
-  GpioPinMode(GpioABase, 4, GPIOPinMode::Analog);  // PA4 (ADC1_IN9)  U4 inhale flow
-  GpioPinMode(GpioBBase, 0, GPIOPinMode::Analog);  // PB0 (ADC1_IN15) U5 exhale flow
-  GpioPinMode(GpioCBase, 1, GPIOPinMode::Analog);  // PC3 (ADC1_IN2)  interim board: oxygen sensor
+  GPIO::pin_mode(IOPort::C, 0, IOMode::Analog);  // PC0 (ADC1_IN1)  interim: analog pressure
+  GPIO::pin_mode(IOPort::A, 1, IOMode::Analog);  // PA1 (ADC1_IN6)  U3 patient pressure
+  GPIO::pin_mode(IOPort::A, 4, IOMode::Analog);  // PA4 (ADC1_IN9)  U4 inhale flow
+  GPIO::pin_mode(IOPort::B, 0, IOMode::Analog);  // PB0 (ADC1_IN15) U5 exhale flow
+  GPIO::pin_mode(IOPort::C, 1, IOMode::Analog);  // PC3 (ADC1_IN2)  interim: oxygen sensor
 
   // Perform a power-up and calibration sequence on the A/D converter
   AdcReg *adc = AdcBase;
@@ -236,9 +242,9 @@ void HalApi::InitADC() {
   adc->adc[0].sequence.sequence5 = 2;   // PC3 (ADC1_IN2)  interim board: oxygen sensor
 
   // I use DMA1 channel 1 to copy A/D readings into the buffer ([RM] 11.4.4)
-  EnableClock(Dma1Base);
+  enable_peripheral_clock(PeripheralID::DMA1);
   DmaReg *dma = Dma1Base;
-  int c1 = static_cast<int>(DmaChannel::Chan1);
+  auto c1 = static_cast<uint8_t>(DmaChannel::Chan1);
 
   dma->channel[c1].peripheral_address = &adc->adc[0].data;
   dma->channel[c1].memory_address = adc_buff;

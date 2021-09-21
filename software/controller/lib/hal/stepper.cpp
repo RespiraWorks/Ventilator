@@ -15,6 +15,8 @@ limitations under the License.
 
 #include "stepper.h"
 
+#include "clocks.h"
+#include "gpio.h"
 #include "hal.h"
 
 StepMotor StepMotor::motor_[StepMotor::MaxMotors];
@@ -86,8 +88,8 @@ static constexpr float VelIntSpeedReg = TickTime * (1 << 26);
 static constexpr int MicrostepPerStep = 128;
 
 // These functions raise and lower the chip select pin
-inline void CSHigh() { GpioSetPin(GpioBBase, 6); }
-inline void CSLow() { GpioClrPin(GpioBBase, 6); }
+inline void CSHigh() { GPIO::set_pin(GPIO::Port::B, 6); }
+inline void CSLow() { GPIO::clear_pin(GPIO::Port::B, 6); }
 
 StepMtrErr StepMotor::SetParam(StepMtrParam param, uint32_t value) {
   uint8_t p = static_cast<uint8_t>(param);
@@ -162,8 +164,8 @@ StepMtrErr StepMotor::GetParam(StepMtrParam param, uint32_t *value) {
  * we have 3 steppers.
  *****************************************************************/
 void HalApi::StepperMotorInit() {
-  EnableClock(Spi1Base);
-  EnableClock(Dma2Base);
+  enable_peripheral_clock(PeripheralID::SPI1);
+  enable_peripheral_clock(PeripheralID::DMA2);
 
   // The following pins are used to talk to the stepper
   // drivers:
@@ -185,18 +187,21 @@ void HalApi::StepperMotorInit() {
   // I just want it to be high so I don't reset the
   // part inadvertently
   CSHigh();
-  GpioSetPin(GpioABase, 9);
-  GpioPinMode(GpioBBase, 6, GPIOPinMode::Output);
-  GpioPinMode(GpioABase, 9, GPIOPinMode::Output);
+  GPIO::set_pin(GPIO::Port::A, 9);
+  GPIO::pin_mode(GPIO::Port::B, 6, GPIO::PinMode::Output);
+  GPIO::pin_mode(GPIO::Port::A, 9, GPIO::PinMode::Output);
 
-  // Assign the three SPI pins to the SPI peripheral
-  GpioPinAltFunc(GpioABase, 5, 5);
-  GpioPinAltFunc(GpioABase, 6, 5);
-  GpioPinAltFunc(GpioABase, 7, 5);
+  // Assign the three SPI pins to the SPI peripheral, [DS] Table 17 (pg 76)
+  GPIO::alternate_function(GPIO::Port::A, /*pin =*/5,
+                           GPIO::AlternativeFuncion::AF5);  // SPI1_SCK
+  GPIO::alternate_function(GPIO::Port::A, /*pin =*/6,
+                           GPIO::AlternativeFuncion::AF5);  // SPI1_MISO
+  GPIO::alternate_function(GPIO::Port::A, /*pin =*/7,
+                           GPIO::AlternativeFuncion::AF5);  // SPI1_MOSI
 
   // Set the output pins to use the highest speed setting
-  GpioOutSpeed(GpioABase, 5, GPIOOutSpeed::Smoking);
-  GpioOutSpeed(GpioABase, 7, GPIOOutSpeed::Smoking);
+  GPIO::output_speed(GPIO::Port::A, 5, GPIO::OutSpeed::Smoking);
+  GPIO::output_speed(GPIO::Port::A, 7, GPIO::OutSpeed::Smoking);
 
   // Configure my SPI port to talk to the stepper
   SpiReg *const spi = Spi1Base;

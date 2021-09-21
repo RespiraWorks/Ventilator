@@ -12,7 +12,12 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-#if defined(BARE_STM32)
+
+#include <algorithm>
+
+#include "clocks.h"
+#include "gpio.h"
+#include "hal.h"
 
 // The buzzer we use for generating alarms on the controller board is
 // part number CT-1205H-SMT-TR made by CUI.
@@ -26,26 +31,22 @@ limitations under the License.
 // This pin is tied to timer 3 channel 1, so we can use that timer
 // to generate the square wave needed to power the buzzer.
 
-#include <algorithm>
+#if defined(BARE_STM32)
 
-#include "hal.h"
 #include "hal_stm32.h"
 
 void HalApi::InitBuzzer() {
-  static constexpr int BuzzerFreqHz = 2400;
+  static constexpr uint32_t BuzzerFreqHz{2400};
 
-  EnableClock(Timer3Base);
+  enable_peripheral_clock(PeripheralID::Timer3);
 
-  // Connect PB4 to timer 3
-  // The STM32 datasheet has a table (table 17) which shows
-  // which functions can be connected to each pin.  For
-  // PB4 we select function 2 to connect it to timer 3.
-  GpioPinAltFunc(GpioBBase, 4, 2);
+  // Connect PB4 to TIM3_CH1, [DS] Table 17 (pg 77)
+  GPIO::alternate_function(GPIO::Port::B, /*pin =*/4, GPIO::AlternativeFuncion::AF2);
 
   TimerReg *tmr = Timer3Base;
 
   // Set the frequency
-  tmr->auto_reload = (CPU_FREQ / BuzzerFreqHz) - 1;
+  tmr->auto_reload = (CPUFrequencyHz / BuzzerFreqHz) - 1;
 
   // Configure channel 1 in PWM output mode 1
   // with preload enabled.  The preload means that

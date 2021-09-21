@@ -26,13 +26,14 @@ Abbreviations [RM], [DS], etc are defined in hal/README.md.
 
 #include "hal_stm32.h"
 
-#include <stdarg.h>
-#include <stdio.h>
-
+#include <cstdarg>
+#include <cstdio>
 #include <optional>
 
 #include "checksum.h"
 #include "circular_buffer.h"
+#include "clocks.h"
+#include "gpio.h"
 #include "hal.h"
 #include "stepper.h"
 #include "uart_dma.h"
@@ -100,7 +101,7 @@ void HalApi::EarlyInit() {
 
   // Reset caches and set latency for 80MHz operation
   // See chapter 3 of [RM] for details on the embedded flash module
-  EnableClock(FlashBase);
+  enable_peripheral_clock(PeripheralID::Flash);
   FlashReg *flash = FlashBase;
 
   // Set four wait states (required to run at 80MHz)
@@ -116,46 +117,7 @@ void HalApi::EarlyInit() {
   flash->access.instruction_cache_enable = 0;
   flash->access.data_cache_enable = 0;
 
-  // Enable the PLL.
-  // We use the MSI clock as the source for the PLL
-  // The MSI clock is running at its default frequency of
-  // 4MHz.
-  //
-  // The PLL can generate several clocks with somewhat
-  // less then descriptive names in the [RM].
-  // These clocks are:
-  //   P clock - Used for the SAI peripheral.  Not used here
-  //   Q clock - 48MHz output clock used for USB.  Not used here.
-  //   R clock - This is the main system clock.  We care about this one.
-  //
-  // When configuring the PLL there are several constants programmed
-  // into the PLL register to set the frequency of the internal VCO
-  // These constants are called N and M in the [RM]:
-  //
-  // Fin = 4MHz
-  // Fvco = Fin * (N/M)
-  //
-  // Legal range for Fvco is 96MHz to 344MHz according to [DS].
-  // I'll use 160MHz for Fvco and divide by 2 to get an 80MHz output clock
-  //
-  // See [RM] chapter 6
-  int n = 40;
-  int m = 1;
-  RccReg *rcc = RccBase;
-  rcc->pll_config = 0x01000001 | (n << 8) | ((m - 1) << 4);
-
-  // Turn on the PLL
-  rcc->clock_control |= 0x01000000;
-
-  // Wait for the PLL ready indication
-  while (!(rcc->clock_control & 0x02000000)) {
-  }
-
-  // Set PLL as system clock
-  rcc->clock_config = 0x00000003;
-
-  // Use system clock as the A/D clock
-  rcc->independent_clock_config = 0x30000000;
+  configure_pll();
 }
 
 /*
@@ -213,38 +175,41 @@ void HalApi::InitGpio() {
   // See [RM] chapter 8 for details on GPIO
 
   // Enable all the GPIO clocks
-  EnableClock(GpioABase);
-  EnableClock(GpioBBase);
-  EnableClock(GpioCBase);
-  EnableClock(GpioDBase);
-  EnableClock(GpioEBase);
-  EnableClock(GpioHBase);
+  enable_peripheral_clock(PeripheralID::GPIOA);
+  enable_peripheral_clock(PeripheralID::GPIOB);
+  enable_peripheral_clock(PeripheralID::GPIOC);
+  enable_peripheral_clock(PeripheralID::GPIOD);
+  enable_peripheral_clock(PeripheralID::GPIOE);
+  enable_peripheral_clock(PeripheralID::GPIOH);
+
+  using IOPort = GPIO::Port;
+  using IOMode = GPIO::PinMode;
 
   // Configure PCB ID pins as inputs.
-  GpioPinMode(GpioBBase, 1, GPIOPinMode::Input);
-  GpioPinMode(GpioABase, 12, GPIOPinMode::Input);
+  GPIO::pin_mode(IOPort::B, 1, IOMode::Input);
+  GPIO::pin_mode(IOPort::A, 12, IOMode::Input);
 
   // Configure LED pins as outputs
-  GpioPinMode(GpioCBase, 13, GPIOPinMode::Output);
-  GpioPinMode(GpioCBase, 14, GPIOPinMode::Output);
-  GpioPinMode(GpioCBase, 15, GPIOPinMode::Output);
+  GPIO::pin_mode(IOPort::C, 13, IOMode::Output);
+  GPIO::pin_mode(IOPort::C, 14, IOMode::Output);
+  GPIO::pin_mode(IOPort::C, 15, IOMode::Output);
 
   // Turn all three LEDs off initially
-  GpioClrPin(GpioCBase, 13);
-  GpioClrPin(GpioCBase, 14);
-  GpioClrPin(GpioCBase, 15);
+  GPIO::clear_pin(IOPort::C, 13);
+  GPIO::clear_pin(IOPort::C, 14);
+  GPIO::clear_pin(IOPort::C, 15);
 }
 
 // Set or clear the specified digital output
-void HalApi::DigitalWrite(BinaryPin pin, VoltageLevel value) {
-  auto [base, bit] = [&]() -> std::pair<GpioReg *, int> {
-    switch (pin) {
+void HalApi::DigitalWrite(BinaryPin binary_pin, VoltageLevel value) {
+  auto [port, pin] = [&]() -> std::pair<GPIO::Port, uint8_t> {
+    switch (binary_pin) {
       case BinaryPin::RedLED:
-        return {GpioCBase, 13};
+        return {GPIO::Port::C, 13};
       case BinaryPin::YellowLED:
-        return {GpioCBase, 14};
+        return {GPIO::Port::C, 14};
       case BinaryPin::GreenLED:
-        return {GpioCBase, 15};
+        return {GPIO::Port::C, 15};
     }
     // All cases covered above (and GCC checks this).
     __builtin_unreachable();
@@ -252,11 +217,11 @@ void HalApi::DigitalWrite(BinaryPin pin, VoltageLevel value) {
 
   switch (value) {
     case VoltageLevel::High:
-      GpioSetPin(base, bit);
+      GPIO::set_pin(port, pin);
       break;
 
     case VoltageLevel::Low:
-      GpioClrPin(base, bit);
+      GPIO::clear_pin(port, pin);
       break;
   }
 }
@@ -272,7 +237,7 @@ void HalApi::DigitalWrite(BinaryPin pin, VoltageLevel value) {
  *****************************************************************/
 void HalApi::InitSysTimer() {
   // Enable the clock to the timer
-  EnableClock(Timer6Base);
+  enable_peripheral_clock(PeripheralID::Timer6);
 
   // Just set the timer up to count every microsecond.
   TimerReg *tmr = Timer6Base;
@@ -281,7 +246,7 @@ void HalApi::InitSysTimer() {
   // -1 until the clock wraps back to zero and generates an interrupt. This
   // setting will cause an interrupt every 10,000 clocks or 1 millisecond
   tmr->auto_reload = 9999;
-  tmr->prescaler = (CPU_FREQ_MHZ / 10 - 1);
+  tmr->prescaler = (CPUFrequencyMhz / 10 - 1);
   tmr->event = 1;
   // Enable UIFREMAP.  This causes the top bit of tmr->counter to be true if a
   // timer interrupt is pending.
@@ -341,7 +306,7 @@ void HalApi::StartLoopTimer(const Duration &period, void (*callback)(void *), vo
   WatchdogInit();
 
   // Find the loop period in clock cycles
-  int32_t reload = static_cast<int32_t>(CPU_FREQ * period.seconds());
+  int32_t reload = static_cast<int32_t>(CPUFrequencyHz * period.seconds());
   int prescale = 1;
 
   // Adjust the prescaler so that my reload count will fit in the 16-bit
@@ -352,7 +317,7 @@ void HalApi::StartLoopTimer(const Duration &period, void (*callback)(void *), vo
   }
 
   // Enable the clock to the timer
-  EnableClock(Timer15Base);
+  enable_peripheral_clock(PeripheralID::Timer15);
 
   // Just set the timer up to count every microsecond.
   TimerReg *tmr = Timer15Base;
@@ -389,14 +354,14 @@ static void Timer15ISR() {
 
   // Keep track of loop latency in uSec
   // Also max latency since it was last zeroed
-  latency = static_cast<float>(start) * (1.0f / CPU_FREQ_MHZ);
+  latency = static_cast<float>(start) * (1.0f / CPUFrequencyMhz);
   if (latency > max_latency) max_latency = latency;
 
   // Call the function
   controller_callback(controller_arg);
 
   uint32_t end = Timer15Base->counter;
-  loop_time = static_cast<float>(end - start) * (1.0f / CPU_FREQ_MHZ);
+  loop_time = static_cast<float>(end - start) * (1.0f / CPUFrequencyMhz);
 
   // Start sending any queued commands to the stepper motor
   StepMotor::StartQueuedCommands();
@@ -432,15 +397,17 @@ void HalApi::InitPwmOut() {
   // part in 4000 (80000000/20000) or about 12 bits.
   static constexpr int PwmFreqHz = 20000;
 
-  EnableClock(Timer2Base);
+  enable_peripheral_clock(PeripheralID::Timer2);
 
   // Connect PB3 to timer 2
-  GpioPinAltFunc(GpioBBase, 3, 1);
+  // [DS] Table 17 (pg 77)
+  GPIO::alternate_function(GPIO::Port::B, /*pin =*/3,
+                           GPIO::AlternativeFuncion::AF1);  // TIM2_CH2
 
   TimerReg *tmr = Timer2Base;
 
   // Set the frequency
-  tmr->auto_reload = (CPU_FREQ / PwmFreqHz) - 1;
+  tmr->auto_reload = (CPUFrequencyHz / PwmFreqHz) - 1;
 
   // Configure channel 2 in PWM output mode 1
   // with preload enabled.  The preload means that
@@ -489,9 +456,9 @@ class UART {
  public:
   explicit UART(UartReg *const r) : uart_(r) {}
 
-  void Init(int baud) {
+  void Init(uint32_t baud) {
     // Set baud rate register
-    uart_->baudrate = CPU_FREQ / baud;
+    uart_->baudrate = CPUFrequencyHz / baud;
 
     uart_->control_reg1.bitfield.rx_interrupt = 1;  // enable receive interrupt
     uart_->control_reg1.bitfield.tx_enable = 1;     // enable transmitter
@@ -593,7 +560,7 @@ extern UartDma dma_uart;
 //
 // The Nucleo board also includes a secondary serial port that's
 // indirectly connected to its USB connector.  This port is
-// connected to the STM32 UART2 at pins:
+// connected to the STM32 USART2 at pins:
 //    PA2 - TX
 //    PA3 - RX
 //
@@ -602,22 +569,30 @@ extern UartDma dma_uart;
 // easier to read version is available at [PCBsp].
 //
 // These pins are connected to UART3
-// The UART is described in [RM] chapter 38
+// The UART/USART is described in [RM] chapter 38
 void HalApi::InitUARTs() {
   // NOTE - The UART functionality hasn't been tested due to lack of hardware!
   //        Need to do that as soon as the boards are available.
-  EnableClock(Uart2Base);
-  EnableClock(Uart3Base);
+  enable_peripheral_clock(PeripheralID::USART2);
+  enable_peripheral_clock(PeripheralID::USART3);
 #ifdef UART_VIA_DMA
-  EnableClock(Dma1Base);
+  enable_peripheral_clock(PeripheralID::DMA1);
 #endif
-  GpioPinAltFunc(GpioABase, 2, 7);
-  GpioPinAltFunc(GpioABase, 3, 7);
+  // [DS] Table 17 (pg 76)
+  GPIO::alternate_function(GPIO::Port::A, /*pin =*/2,
+                           GPIO::AlternativeFuncion::AF7);  // USART2_TX
+  GPIO::alternate_function(GPIO::Port::A, /*pin =*/3,
+                           GPIO::AlternativeFuncion::AF7);  // USART2_RX
 
-  GpioPinAltFunc(GpioBBase, 10, 7);
-  GpioPinAltFunc(GpioBBase, 11, 7);
-  GpioPinAltFunc(GpioBBase, 13, 7);
-  GpioPinAltFunc(GpioBBase, 14, 7);
+  // [DS] Table 17 (pg 77)
+  GPIO::alternate_function(GPIO::Port::B, /*pin =*/10,
+                           GPIO::AlternativeFuncion::AF7);  // USART3_TX
+  GPIO::alternate_function(GPIO::Port::B, /*pin =*/11,
+                           GPIO::AlternativeFuncion::AF7);  // USART3_RX
+  GPIO::alternate_function(GPIO::Port::B, /*pin =*/13,
+                           GPIO::AlternativeFuncion::AF7);  // USART3_CTS
+  GPIO::alternate_function(GPIO::Port::B, /*pin =*/14,
+                           GPIO::AlternativeFuncion::AF7);  // USART3_RTS_DE
 
 #ifdef UART_VIA_DMA
   dma_uart.Init(115200);
@@ -708,68 +683,6 @@ void HalApi::WatchdogHandler() {
   }
 }
 #pragma GCC diagnostic pop
-
-// Enable clocks to a specific peripheral.
-// On the STM32 the clocks going to various peripherals on the chip
-// are individually selectable and for the most part disabled on startup.
-// Clocks to the specific peripherals need to be enabled through the
-// RCC (Reset and Clock Controller) module before the peripheral can be
-// used.
-// Pass in the base address of the peripheral to enable its clock
-void HalApi::EnableClock(volatile void *ptr) {
-  static struct {
-    volatile void *base_reg;
-    int index;
-    int bit_set;
-  } RccInfo[] = {
-      {Dma1Base, 0, 0},   {Dma2Base, 0, 1},     {FlashBase, 0, 8},  {GpioABase, 1, 0},
-      {GpioBBase, 1, 1},  {GpioCBase, 1, 2},    {GpioDBase, 1, 3},  {GpioEBase, 1, 4},
-      {GpioHBase, 1, 7},  {AdcBase, 1, 13},     {Timer2Base, 4, 0}, {Timer3Base, 4, 1},
-      {Timer6Base, 4, 4}, {Uart2Base, 4, 17},   {Uart3Base, 4, 18}, {Timer1Base, 6, 11},
-      {Spi1Base, 6, 12},  {Timer15Base, 6, 16}, {I2C1Base, 4, 21},
-      // The following entries are probably correct, but have
-      // not been tested yet.  When adding support for one of
-      // these peripherals just comment out the line.  And
-      // test of course.
-      //      {CrcBase, 0, 12},
-      //      {Timer3Base, 4, 1},
-      //      {Spi2Base, 4, 14},
-      //      {Spi3Base, 4, 15},
-      //      {Uart4Base, 4, 19},
-      //      {I2C2Base, 4, 22},
-      //      {I2C3Base, 4, 23},
-      //      {I2C4Base, 5, 1},
-      //      {Uart1Base, 6, 14},
-      //      {Timer16Base, 6, 17},
-  };
-
-  // I don't include all the peripherals here, just the ones that we currently
-  // use or seem likely to be used in the future.  To add more peripherals,
-  // just look up the appropriate bit in [RM] chapter 6.
-  int ndx = -1;
-  int bit = 0;
-  for (auto &info : RccInfo) {
-    if (ptr == info.base_reg) {
-      ndx = info.index;
-      bit = info.bit_set;
-      break;
-    }
-  }
-
-  // If the input address wasn't found then its definitely
-  // a bug.  I'll just loop forever here causing the code
-  // to crash.  That should make it easier to find the
-  // bug during development.
-  if (ndx < 0) {
-    hal.DisableInterrupts();
-    // TODO: could have a call to Fault() for debug purposes, but not in
-    // production
-  } else {
-    // Enable the clock of the requested peripheral
-    RccReg *rcc = RccBase;
-    rcc->peripheral_clock_enable[ndx] |= (1 << bit);
-  }
-}
 
 static void StepperISR() { StepMotor::DmaISR(); }
 

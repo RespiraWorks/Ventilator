@@ -24,33 +24,36 @@ limitations under the License.
 
 #include <cstring>
 
+#include "clocks.h"
+#include "gpio.h"
 #include "hal.h"
 
 #if defined(BARE_STM32)
 #include "hal_stm32.h"
+
 I2C::STM32Channel i2c1;
 
 // Reference abbreviations ([RM], [PCB], etc) are defined in hal/README.md
 void HalApi::InitI2C() {
   // Enable I2C1 and DMA2 peripheral clocks (we use DMA2 to send/receive data)
-  EnableClock(I2C1Base);
-  EnableClock(Dma2Base);
+  enable_peripheral_clock(PeripheralID::I2C1);
+  enable_peripheral_clock(PeripheralID::DMA2);
 
   // The following pins are used as i2c1 bus on the rev-1 PCB (see [PCB]):
-  // - PB8 (I2C1 - DATA)
-  // - PB9 (I2C1 - CLOCK)
-  // Set Pin Function to I²C (see [DS] Table 17)
-  GpioPinAltFunc(GpioBBase, 8, 4);
-  GpioPinAltFunc(GpioBBase, 9, 4);
+  // Set Pin Function to I²C, [DS] Table 17 (pg 77)
+  GPIO::alternate_function(GPIO::Port::B, /*pin =*/8,
+                           GPIO::AlternativeFuncion::AF4);  // I2C1_SCL
+  GPIO::alternate_function(GPIO::Port::B, /*pin =*/9,
+                           GPIO::AlternativeFuncion::AF4);  // I2C1_SDA
   // Set output speed to Fast
-  GpioOutSpeed(GpioBBase, 8, GPIOOutSpeed::Fast);
-  GpioOutSpeed(GpioBBase, 9, GPIOOutSpeed::Fast);
+  GPIO::output_speed(GPIO::Port::B, 8, GPIO::OutSpeed::Fast);
+  GPIO::output_speed(GPIO::Port::B, 9, GPIO::OutSpeed::Fast);
   // Set open drain mode
-  GpioOutType(GpioBBase, 8, GPIOOutType::OpenDrain);
-  GpioOutType(GpioBBase, 9, GPIOOutType::OpenDrain);
+  GPIO::output_type(GPIO::Port::B, 8, GPIO::OutType::OpenDrain);
+  GPIO::output_type(GPIO::Port::B, 9, GPIO::OutType::OpenDrain);
   // Set Pull Up resistors
-  GpioPullUp(GpioBBase, 8);
-  GpioPullUp(GpioBBase, 9);
+  GPIO::pull_up(GPIO::Port::B, 8);
+  GPIO::pull_up(GPIO::Port::B, 9);
 
   EnableInterrupt(InterruptVector::I2c1Event, IntPriority::Low);
   EnableInterrupt(InterruptVector::I2c1Error, IntPriority::Low);

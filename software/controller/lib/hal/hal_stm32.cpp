@@ -22,16 +22,15 @@ Details of the processor's peripherals can be found in [RM].
 Abbreviations [RM], [DS], etc are defined in hal/README.md.
 */
 
-#if defined(BARE_STM32)
+#include "hal.h"
 
-#include "hal_stm32.h"
+#if defined(BARE_STM32)
 
 #include <optional>
 
 #include "clocks.h"
 #include "flash.h"
 #include "gpio.h"
-#include "hal.h"
 #include "interrupts.h"
 #include "stepper.h"
 #include "timers.h"
@@ -166,12 +165,9 @@ void HalApi::InitGpio() {
   enable_peripheral_clock(PeripheralID::GPIOE);
   enable_peripheral_clock(PeripheralID::GPIOH);
 
-  using IOPort = GPIO::Port;
-  using IOMode = GPIO::PinMode;
-
   // Configure PCB ID pins as inputs.
-  GPIO::pin_mode(IOPort::B, 1, IOMode::Input);
-  GPIO::pin_mode(IOPort::A, 12, IOMode::Input);
+  GPIO::pin_mode(GPIO::Port::B, 1, GPIO::PinMode::Input);
+  GPIO::pin_mode(GPIO::Port::A, 12, GPIO::PinMode::Input);
 }
 
 /******************************************************************

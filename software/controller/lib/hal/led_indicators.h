@@ -17,7 +17,7 @@ limitations under the License.
 
 #include <cstdint>
 
-#ifdef TEST_MODE
+#if !defined(BARE_STM32)
 #include <map>
 
 #include "gpio.h"
@@ -47,7 +47,7 @@ class LEDIndicators {
   // Sets `binary_pin` to high or low.
   void set(BinaryPin binary_pin, VoltageLevel value);
 
-#ifdef TEST_MODE
+#if !defined(BARE_STM32)
  public:
   void set_pin_mode(BinaryPin pin, GPIO::PinMode mode);
 

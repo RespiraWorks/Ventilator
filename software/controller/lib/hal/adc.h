@@ -17,9 +17,9 @@ limitations under the License.
 
 #include "units.h"
 
-#ifdef TEST_MODE
+#if !defined(BARE_STM32)
 #include <map>
-#endif  // !TEST_MODE
+#endif
 
 // Location of analog sensors as labeled on the PCB(s). Note that this does not necessarily define
 // their function and further mapping should be done in the higher layers of the software.
@@ -41,7 +41,7 @@ class ADC {
   // In test mode, will return the last value set via TESTSetAnalogPin.
   Voltage read(AnalogPin pin) const;
 
-#ifdef TEST_MODE
+#if !defined(BARE_STM32)
   void TESTSetAnalogPin(AnalogPin pin, Voltage value);
 #endif
 
@@ -54,7 +54,7 @@ class ADC {
 
   volatile uint16_t adc_buff[100 * AdcChannels];
 
-#ifdef TEST_MODE
+#if !defined(BARE_STM32)
   std::map<AnalogPin, Voltage> analog_pin_values_;
 #endif
 };

@@ -36,7 +36,7 @@ class DmaCtrl {
 
 class UartDma {
  public:
-#ifdef TEST_MODE
+#if !defined(BARE_STM32)
   UartDma() = default;
 #endif
   UartDma(UartReg *const uart, DmaReg *const dma, uint8_t tx_channel, uint8_t rx_channel,

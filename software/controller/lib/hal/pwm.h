@@ -17,7 +17,7 @@ limitations under the License.
 
 #include <cstdint>
 
-#ifdef TEST_MODE
+#if !defined(BARE_STM32)
 #include <map>
 
 #include "gpio.h"
@@ -57,7 +57,7 @@ class PWM {
   // part in 4000 (80000000/20000) or about 12 bits.
   uint32_t pwm_freq_hz_{20000};
 
-#ifdef TEST_MODE
+#if !defined(BARE_STM32)
  public:
   void set_pin_mode(PwmPin pin, GPIO::PinMode mode);
 

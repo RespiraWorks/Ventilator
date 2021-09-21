@@ -363,7 +363,7 @@ class TestChannel : public Channel {
 
 }  // namespace I2C
 
-#ifdef BARE_STM32
+#if defined(BARE_STM32)
 extern I2C::STM32Channel i2c1;
 #else
 extern I2C::Channel i2c1;

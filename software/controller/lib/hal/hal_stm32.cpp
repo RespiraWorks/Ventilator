@@ -33,6 +33,7 @@ Abbreviations [RM], [DS], etc are defined in hal/README.md.
 #include "checksum.h"
 #include "circular_buffer.h"
 #include "clocks.h"
+#include "flash.h"
 #include "gpio.h"
 #include "hal.h"
 #include "stepper.h"
@@ -100,23 +101,7 @@ void HalApi::EarlyInit() {
   SysControlReg *sys_ctl = SysControlBase;
   sys_ctl->coproc_access_control = 0x00F00000;
 
-  // Reset caches and set latency for 80MHz operation
-  // See chapter 3 of [RM] for details on the embedded flash module
-  enable_peripheral_clock(PeripheralID::Flash);
-  FlashReg *flash = FlashBase;
-
-  // Set four wait states (required to run at 80MHz)
-  flash->access.latency = 4;
-
-  // Reset the instruction and data caches
-  flash->access.instruction_cache_reset = 1;
-  flash->access.data_cache_reset = 1;
-  flash->access.instruction_cache_reset = 0;
-  flash->access.data_cache_reset = 0;
-
-  // Enable the caches
-  flash->access.instruction_cache_enable = 0;
-  flash->access.data_cache_enable = 0;
+  Flash::FlashInit();
 
   configure_pll();
 }

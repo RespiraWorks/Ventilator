@@ -238,58 +238,6 @@ inline UartReg *const Uart2Base = reinterpret_cast<UartReg *>(0x40004400);
 inline UartReg *const Uart3Base = reinterpret_cast<UartReg *>(0x40004800);
 inline UartReg *const Uart4Base = reinterpret_cast<UartReg *>(0x40004C00);
 
-// [RM] 3.7 Flash Registers (pg 100)
-struct FlashStruct {
-  // Access control register
-  struct {
-    uint32_t latency : 3;  // Number of wait states
-    uint32_t reserved1 : 5;
-    uint32_t prefecth_enable : 1;
-    uint32_t instruction_cache_enable : 1;
-    uint32_t data_cache_enable : 1;
-    uint32_t instruction_cache_reset : 1;  // Instruction cache reset
-    uint32_t data_cache_reset : 1;         // Data cache reset
-    uint32_t run_powerdown : 1;            // Power-down during run or low power mode
-    uint32_t sleep_powerdown : 1;          // Power-down during sleep mode
-    uint32_t reserved2 : 17;
-  } access;
-
-  uint32_t powerdown_key;
-  uint32_t key;
-  uint32_t option_key;
-  uint32_t status;
-
-  // 0x14 - Control Register (FLASH_CR)
-  struct {
-    uint32_t program : 1;
-    uint32_t page_erase : 1;
-    uint32_t mass_erase : 1;
-    uint32_t page : 8;
-    uint32_t reserved1 : 5;
-    uint32_t start_operation : 1;
-    uint32_t opt_start : 1;
-    uint32_t fast_programming : 1;
-    uint32_t reserved2 : 5;
-    uint32_t end_op_interrupt : 1;
-    uint32_t error_interrupt : 1;
-    uint32_t read_error_interrupt : 1;
-    uint32_t force_byte_reloading : 1;
-    uint32_t reserved3 : 2;
-    uint32_t options_lock : 1;
-    uint32_t flash_lock : 1;
-  } control;
-
-  uint32_t ecc;
-  uint32_t reserved1;
-  uint32_t option;
-  uint32_t pcrop_start_address;
-  uint32_t pcrop_end_address;
-  uint32_t wrp_area_a;
-  uint32_t wrp_area_b;
-};
-typedef volatile FlashStruct FlashReg;
-inline FlashReg *const FlashBase = reinterpret_cast<FlashReg *>(0x40022000);
-
 // [RM] 11.4.4 DMA channels (pg 302)
 enum class DmaChannel : uint8_t {
   Chan1 = 0,

@@ -238,20 +238,6 @@ class HalApi {
   void InitPSOL();
   void PSolValue(float val);
 
-  // Erase a page of flash given the starting address of that page.
-  bool FlashErasePage(uint32_t address);
-
-  // Write data to flash memory at the specified address
-  // Note that the STM32 only allows writing in multiples of 8 bytes
-  // to addresses that are a multiple of 8.
-  //
-  // @param addr - Address in flash memory at which to write.
-  //               NOTE - must be a multiple of 8
-  // @param data - Pointer to data to write
-  // @param ct   - Number of bytes to write
-  //               NOTE - must be a multiple of 8
-  bool FlashWrite(uint32_t addr, void *data, size_t ct);
-
 #ifndef TEST_MODE
   // Translates to a numeric pin that can be passed to the Arduino API.
   uint8_t RawPin(PwmPin pin);
@@ -538,7 +524,5 @@ inline void BuzzerOn(float volume) {}
 inline void BuzzerOff() {}
 inline void InitPSOL() {}
 inline void PSolValue(float val) {}
-inline bool HalApi::FlashErasePage(uint32_t address) { return true; }
-inline bool HalApi::FlashWrite(uint32_t addr, void *data, size_t ct) { return true; }
 
 #endif

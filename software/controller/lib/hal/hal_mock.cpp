@@ -22,9 +22,6 @@ void HalApi::EarlyInit() {}
 void HalApi::Init() {}
 void HalApi::WatchdogHandler() {}
 
-Time HalApi::Now() { return time_; }
-void HalApi::Delay(Duration d) { time_ = time_ + d; }
-
 uint16_t HalApi::SerialRead(char *buf, uint16_t len) { return serial_port_.Read(buf, len); }
 uint16_t HalApi::SerialBytesAvailableForRead() { return serial_port_.BytesAvailableForRead(); }
 uint16_t HalApi::SerialWrite(const char *buf, uint16_t len) { return serial_port_.Write(buf, len); }

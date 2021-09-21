@@ -33,6 +33,7 @@ Abbreviations [RM], [DS], etc are defined in hal/README.md.
 #include "gpio.h"
 #include "interrupts.h"
 #include "stepper.h"
+#include "system_timer.h"
 #include "timers.h"
 #include "uart.h"
 #include "uart_dma.h"
@@ -46,9 +47,6 @@ static constexpr uint32_t SystemStackSize{2500};
 
 // This is the main stack used in our system.
 __attribute__((aligned(8))) uint32_t system_stack[SystemStackSize];
-
-// local data
-static volatile int64_t ms_count{0};
 
 // local static functions.  I don't want to add any private
 // functions to the Hal class to avoid complexity with other
@@ -107,6 +105,8 @@ void HalApi::EarlyInit() {
   configure_pll();
 }
 
+static void Timer6ISR() { SystemTimer::singleton().InterruptHandler(); }
+
 /*
  * One time init of HAL.
  */
@@ -114,7 +114,7 @@ void HalApi::Init() {
   // Init various components needed by the system.
   InitGpio();
   LEDs_.initialize();
-  InitSysTimer(CPUFrequencyMhz);
+  SystemTimer::singleton().initialize(CPUFrequencyMHz);
   adc_.initialize(CPUFrequencyHz);
   pwm_.initialize(CPUFrequencyHz);
   InitUARTs();
@@ -122,7 +122,7 @@ void HalApi::Init() {
   psol_.InitPSOL(CPUFrequencyHz);
   InitI2C();
   Interrupts::singleton().EnableInterrupts();
-  StepMotor::StepperMotorInit();
+  StepMotor::OneTimeInit();
 }
 
 // Reset the processor
@@ -168,66 +168,6 @@ void HalApi::InitGpio() {
   // Configure PCB ID pins as inputs.
   GPIO::pin_mode(GPIO::Port::B, 1, GPIO::PinMode::Input);
   GPIO::pin_mode(GPIO::Port::A, 12, GPIO::PinMode::Input);
-}
-
-/******************************************************************
- * System timer
- *
- * I use one of the basic timers (timer 6) for general system timing.
- * I configure it to count every 100ns and generate an interrupt
- * every millisecond
- *
- * The basic timers (like timer 6) are documented in [RM] chapter 29.
- *****************************************************************/
-void HalApi::InitSysTimer(const uint32_t cpu_frequency_Mhz) {
-  // Enable the clock to the timer
-  enable_peripheral_clock(PeripheralID::Timer6);
-
-  // Just set the timer up to count every microsecond.
-  TimerReg *tmr = Timer6Base;
-
-  // The reload register gives the number of clock ticks (100ns in our case)
-  // -1 until the clock wraps back to zero and generates an interrupt. This
-  // setting will cause an interrupt every 10,000 clocks or 1 millisecond
-  tmr->auto_reload = 9999;
-  tmr->prescaler = (cpu_frequency_Mhz / 10 - 1);
-  tmr->event = 1;
-  // Enable UIFREMAP.  This causes the top bit of tmr->counter to be true if a
-  // timer interrupt is pending.
-  tmr->control_reg1.bitfield.uif_remapping = 1;
-  tmr->control_reg1.bitfield.counter_enable = 1;
-  tmr->interrupts_enable = 1;
-
-  Interrupts::singleton().EnableInterrupt(InterruptVector::Timer6, IntPriority::Standard);
-}
-
-static void Timer6ISR() {
-  Timer6Base->status = 0;
-  ms_count++;
-}
-
-void HalApi::Delay(Duration d) {
-  Time start = Now();
-  while (Now() - start < d) {
-  }
-}
-
-Time HalApi::Now() {
-  // Disable interrupts so we can read ms_count and the timer state without
-  // racing with the timer's interrupt handler.
-  BlockInterrupts block_interrupts;
-
-  // Bottom 16 bits of the counter are a value in the range [0, 1ms) in units
-  // of 100ns.  Top bit of the counter is UIFCOPY, which indicates whether the
-  // counter has rolled over and an interrupt to increment ms_count is pending.
-  //
-  // Since the counter is actively running, we need to read both the counter
-  // value and UIFCOPY atomically.
-  uint32_t counter = Timer6Base->counter;
-  int64_t micros = (counter & 0xffff) / 10;
-  bool interrupt_pending = counter >> 31;
-
-  return microsSinceStartup(ms_count * 1000 + micros + (interrupt_pending ? 1 : 0));
 }
 
 /******************************************************************

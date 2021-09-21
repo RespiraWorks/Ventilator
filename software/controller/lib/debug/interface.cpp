@@ -17,6 +17,7 @@ limitations under the License.
 
 #include "binary_utils.h"
 #include "hal.h"
+#include "system_timer.h"
 
 namespace Debug {
 // Initialize interface handler with variable list of
@@ -62,7 +63,7 @@ bool Interface::Poll() {
     case State::AwaitingResponse:
       if (command_processed_) {
         SendResponse(ErrorCode::None, response_length_);
-      } else if (hal.Now() > command_start_time_ + milliseconds(100)) {
+      } else if (SystemTimer::singleton().Now() > command_start_time_ + milliseconds(100)) {
         SendError(ErrorCode::Timeout);
       }
       return false;
@@ -196,7 +197,7 @@ void Interface::ProcessCommand() {
   }
 
   state_ = State::AwaitingResponse;
-  command_start_time_ = hal.Now();
+  command_start_time_ = SystemTimer::singleton().Now();
   response_length_ = context.response_length;
 }
 

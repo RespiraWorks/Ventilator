@@ -55,7 +55,7 @@ limitations under the License.
 #include "clocks.h"
 #include "dma.h"
 #include "gpio.h"
-#include "hal.h"
+#include "system_timer.h"
 
 // [RM] 16.6 ADC Registers (for each ADC) (pg 450)
 struct AdcStruct {
@@ -300,7 +300,7 @@ bool ADC::initialize(const uint32_t cpu_frequency_hz) {
   // Wait for the startup time ([RM] 16.4.6) specified in the STM32 [DS] for the voltage regulator
   // to become ready.  The time in the [DS] is 20 microseconds ([DS] 6.3.18) but I'll wait for 30
   // just to be extra conservative
-  hal.Delay(microseconds(30));
+  SystemTimer::singleton().Delay(microseconds(30));
 
   // Calibrate the A/D for single ended channels ([RM] 16.4.8)
   adc->adc[0].control |= 0x80000000;

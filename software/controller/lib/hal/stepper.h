@@ -171,8 +171,6 @@ class StepMotor {
   StepMotor() = default;
 
   // Called from HAL at startup
-  static void StepperMotorInit();
-
   static void OneTimeInit();
 
   // Return a pointer to the Nth stepper motor in the system.

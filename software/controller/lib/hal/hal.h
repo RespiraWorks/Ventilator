@@ -84,18 +84,6 @@ class HalApi {
  public:
   void Init();
 
-  // Amount of time that has passed since the board started running the
-  // program.
-  //
-  // Faked when testing.  Time doesn't advance unless you call Delay().
-  Time Now();
-
-  // Sleeps for some number of milliseconds.
-  //
-  // Faked when testing.  Does not sleep, but does advance the time returned
-  // by millis().
-  void Delay(Duration d);
-
   // Receives bytes from the GUI controller along the serial bus.
   //
   // Arduino's SerialIO will block if len > SerialBytesAvailableForRead(), but
@@ -152,7 +140,6 @@ class HalApi {
 #if defined(BARE_STM32)
   void InitGpio();
   void InitI2C();
-  void InitSysTimer(uint32_t cpu_frequency_Mhz);
   void InitUARTs();
 #endif
 

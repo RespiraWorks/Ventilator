@@ -9,6 +9,7 @@
 //
 
 #include "hal.h"
+#include "system_timer.h"
 
 // test parameters
 static constexpr Duration Delay{milliseconds(10)};

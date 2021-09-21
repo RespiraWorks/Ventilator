@@ -20,7 +20,10 @@ limitations under the License.
 #pragma once
 
 #include "circular_buffer.h"
+#include "dma.h"
+
 #if defined(BARE_STM32)
+/// \TODO: for i2c regs
 #include "hal_stm32_regs.h"
 #endif
 
@@ -185,13 +188,13 @@ class STM32Channel : public Channel {
   // the channel using DMA if possible. If DMA_Reg is invalid (or that DMA
   // cannot be linked to this I²C), dma is disabled and all transfers are
   // handled in software.
-  void Init(I2CReg *i2c, DmaReg *dma, Speed speed);
+  void Init(I2CReg *i2c, DMA::Base dma, Speed speed);
   // Interrupt handlers for DMA, which only makes sense on the STM32
-  void DMAIntHandler(DmaChannel chan);
+  void DMAIntHandler(DMA::Channel chan);
 
  private:
   I2CReg *i2c_{nullptr};
-  DmaReg *dma_{nullptr};
+  DMA::Base dma_;
   volatile DmaReg::ChannelRegs *rx_channel_{nullptr};
   volatile DmaReg::ChannelRegs *tx_channel_{nullptr};
 
@@ -212,7 +215,7 @@ class STM32Channel : public Channel {
   void ClearNack() override { i2c_->interrupt_clear = 0x10; }
   void ClearErrors() override { i2c_->interrupt_clear = 0x720; }
 
-  void SetupDMAChannels(DmaReg *dma);
+  void SetupDMAChannels(DMA::Base dma);
   void ConfigureDMAChannel(volatile DmaReg::ChannelRegs *channel, ExchangeDirection direction);
   void SetupDMATransfer();
 };

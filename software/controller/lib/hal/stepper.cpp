@@ -19,6 +19,7 @@ limitations under the License.
 #include <cstring>
 
 #include "clocks.h"
+#include "dma.h"
 #include "gpio.h"
 #include "hal.h"
 #include "spi.h"
@@ -30,9 +31,6 @@ int StepMotor::total_motors_;
 
 /// \TODO uses sleep and interrupt handlers
 #include "hal_stm32.h"
-
-/// \TODO: for DMA registers
-#include "hal_stm32_regs.h"
 
 // Static data members
 uint8_t StepMotor::dma_buff_[StepMotor::MaxMotors];
@@ -231,13 +229,13 @@ void HalApi::StepperMotorInit() {
 
   // DMA2 channels 3 and 4 can be used to handle rx and tx interrupts from
   // SPI1 respectively.
-  DmaSelectChannel(Dma2Base, DmaChannel::Chan3, 4);
-  DmaSelectChannel(Dma2Base, DmaChannel::Chan4, 4);
+  DMA::SelectChannel(DMA::Base::DMA2, DMA::Channel::Chan3, 4);
+  DMA::SelectChannel(DMA::Base::DMA2, DMA::Channel::Chan4, 4);
 
   // The two DMA channels move data to/from the SPI data register.
-  DmaReg *dma = Dma2Base;
-  int c3 = static_cast<int>(DmaChannel::Chan3);
-  int c4 = static_cast<int>(DmaChannel::Chan4);
+  DmaReg *dma = DMA::get_register(DMA::Base::DMA2);
+  int c3 = static_cast<int>(DMA::Channel::Chan3);
+  int c4 = static_cast<int>(DMA::Channel::Chan4);
   dma->channel[c3].peripheral_address = &spi->data;
   dma->channel[c4].peripheral_address = &spi->data;
 
@@ -246,7 +244,7 @@ void HalApi::StepperMotorInit() {
   dma->channel[c3].config.tx_complete_interrupt = 1;
   dma->channel[c3].config.half_tx_interrupt = 0;
   dma->channel[c3].config.tx_error_interrupt = 0;
-  dma->channel[c3].config.direction = static_cast<uint32_t>(DmaChannelDir::PeripheralToMemory);
+  dma->channel[c3].config.direction = static_cast<uint32_t>(DMA::ChannelDir::PeripheralToMemory);
   dma->channel[c3].config.circular = 0;
   dma->channel[c3].config.peripheral_increment = 0;
   dma->channel[c3].config.memory_increment = 1;
@@ -259,7 +257,7 @@ void HalApi::StepperMotorInit() {
   dma->channel[c4].config.tx_complete_interrupt = 0;
   dma->channel[c4].config.half_tx_interrupt = 0;
   dma->channel[c4].config.tx_error_interrupt = 0;
-  dma->channel[c4].config.direction = static_cast<uint32_t>(DmaChannelDir::MemoryToPeripheral);
+  dma->channel[c4].config.direction = static_cast<uint32_t>(DMA::ChannelDir::MemoryToPeripheral);
   dma->channel[c4].config.circular = 0;
   dma->channel[c4].config.peripheral_increment = 0;
   dma->channel[c4].config.memory_increment = 1;
@@ -779,10 +777,10 @@ void StepMotor::UpdateComState() {
   // of motor driver chips.  Set up my DMA to
   // send it out.
   //////////////////////////////////////////////
-  int c3 = static_cast<int>(DmaChannel::Chan3);
-  int c4 = static_cast<int>(DmaChannel::Chan4);
+  int c3 = static_cast<int>(DMA::Channel::Chan3);
+  int c4 = static_cast<int>(DMA::Channel::Chan4);
 
-  DmaReg *dma = Dma2Base;
+  DmaReg *dma = DMA::get_register(DMA::Base::DMA2);
   dma->channel[c3].config.enable = 0;
   dma->channel[c4].config.enable = 0;
 
@@ -804,7 +802,7 @@ void StepMotor::DmaISR() {
   CSHigh();
 
   // Clear the DMA interrupt
-  DmaClearInt(Dma2Base, DmaChannel::Chan3, DmaInterrupt::Global);
+  DMA::ClearInt(DMA::Base::DMA2, DMA::Channel::Chan3, DMA::Interrupt::Global);
 
   UpdateComState();
 }
@@ -819,10 +817,10 @@ void StepMotor::StartQueuedCommands() {
 // This is used to send a command to the stepper chips during
 // startup.
 void StepMotor::SendInitCmd(uint8_t *buff, int len) {
-  int c3 = static_cast<int>(DmaChannel::Chan3);
-  int c4 = static_cast<int>(DmaChannel::Chan4);
+  int c3 = static_cast<int>(DMA::Channel::Chan3);
+  int c4 = static_cast<int>(DMA::Channel::Chan4);
 
-  DmaReg *dma = Dma2Base;
+  DmaReg *dma = DMA::get_register(DMA::Base::DMA2);
   dma->channel[c3].config.enable = 0;
   dma->channel[c4].config.enable = 0;
 
@@ -847,7 +845,7 @@ void StepMotor::SendInitCmd(uint8_t *buff, int len) {
 
   // Clear the interrupt flag so I won't get an interrupt
   // as soon as I re-enable them
-  DmaClearInt(Dma2Base, DmaChannel::Chan3, DmaInterrupt::Global);
+  DMA::ClearInt(DMA::Base::DMA2, DMA::Channel::Chan3, DMA::Interrupt::Global);
 
   // Raise the chip select line and wait 1 microsecond.
   // The minimum time the CS needs to be high is just under

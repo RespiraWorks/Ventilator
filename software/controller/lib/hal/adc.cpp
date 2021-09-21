@@ -51,6 +51,7 @@ limitations under the License.
 ////////////////////////////////////////////////////////////////////
 
 #include "clocks.h"
+#include "dma.h"
 #include "gpio.h"
 #include "hal.h"
 
@@ -183,9 +184,6 @@ inline AdcReg *const AdcBase = reinterpret_cast<AdcReg *>(0X50040000);
 
 /// \TODO: mostly for Sleep and CPUFrequencyHz
 #include "hal_stm32.h"
-
-/// \TODO: for DMA registers
-#include "hal_stm32_regs.h"
 
 /*
 Please refer to [PCB] as the ultimate source of which pin is used for which function.
@@ -372,8 +370,8 @@ void HalApi::InitADC() {
 
   // I use DMA1 channel 1 to copy A/D readings into the buffer ([RM] 11.4.4)
   enable_peripheral_clock(PeripheralID::DMA1);
-  DmaReg *dma = Dma1Base;
-  auto c1 = static_cast<uint8_t>(DmaChannel::Chan1);
+  DmaReg *dma = DMA::get_register(DMA::Base::DMA1);
+  auto c1 = static_cast<uint8_t>(DMA::Channel::Chan1);
 
   dma->channel[c1].peripheral_address = &adc->adc[0].data;
   dma->channel[c1].memory_address = adc_buff;
@@ -383,7 +381,7 @@ void HalApi::InitADC() {
   dma->channel[c1].config.tx_complete_interrupt = 0;
   dma->channel[c1].config.half_tx_interrupt = 0;
   dma->channel[c1].config.tx_error_interrupt = 0;
-  dma->channel[c1].config.direction = static_cast<uint32_t>(DmaChannelDir::PeripheralToMemory);
+  dma->channel[c1].config.direction = static_cast<uint32_t>(DMA::ChannelDir::PeripheralToMemory);
   dma->channel[c1].config.circular = 1;
   dma->channel[c1].config.peripheral_increment = 0;
   dma->channel[c1].config.memory_increment = 1;

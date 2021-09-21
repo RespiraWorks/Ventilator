@@ -16,6 +16,7 @@ limitations under the License.
 
 #pragma once
 
+#include "dma.h"
 #include "hal_stm32_regs.h"
 #include "serial_listeners.h"
 

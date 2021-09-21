@@ -29,6 +29,7 @@ limitations under the License.
 #include "hal.h"
 
 #if defined(BARE_STM32)
+/// \TODO: interrupts
 #include "hal_stm32.h"
 
 I2C::STM32Channel i2c1;

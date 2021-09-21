@@ -26,12 +26,8 @@ Abbreviations [RM], [DS], etc are defined in hal/README.md.
 
 #include "hal_stm32.h"
 
-#include <cstdarg>
-#include <cstdio>
 #include <optional>
 
-#include "checksum.h"
-#include "circular_buffer.h"
 #include "clocks.h"
 #include "flash.h"
 #include "gpio.h"

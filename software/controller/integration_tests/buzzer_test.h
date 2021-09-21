@@ -26,9 +26,9 @@ void RunTest() {
 
   while (true) {
     if (buzzer_on) {
-      hal.BuzzerOn(volume);
+      hal.buzzer_.on(volume);
     } else {
-      hal.BuzzerOff();
+      hal.buzzer_.off();
     }
 
     hal.Delay(Delay);

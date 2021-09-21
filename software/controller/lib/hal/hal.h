@@ -47,8 +47,7 @@ limitations under the License.
 #error "TEST_MODE intended to be run only on native, but BARE_STM32 is defined"
 #endif
 
-#include <assert.h>
-
+#include <cassert>
 #include <cstring>
 #include <deque>
 #include <map>
@@ -88,6 +87,14 @@ class TestSerialPort {
 // any ifdefs for different platforms, and all of the "global variables" can
 // move into the hal_foo.cpp files.
 class HalApi {
+ public:
+  /// \TODO: likely these should not even be members
+  ADC adc_;
+  Buzzer buzzer_;
+  PSOL psol_;
+  LEDIndicators LEDs_;
+  PWM pwm_;
+
  public:
   void Init();
 
@@ -139,15 +146,35 @@ class HalApi {
   uint16_t DebugBytesAvailableForRead();
 
 #ifndef TEST_MODE
-  // Translates to a numeric pin that can be passed to the Arduino API.
-  uint8_t RawPin(PwmPin pin);
-  uint8_t RawPin(AnalogPin pin);
-  uint8_t RawPin(BinaryPin pin);
-
   // Perform some early chip initialization before static constructors are run
   void EarlyInit();
+#endif
 
-#else
+  // Performs the device soft-reset
+  [[noreturn]] void ResetDevice();
+
+  // Start the loop timer
+  void StartLoopTimer(const Duration &period, void (*callback)(void *), void *arg);
+
+  // Pets the watchdog, this makes the watchdog not reset the
+  // system for configured amount of time
+  void WatchdogHandler();
+
+ private:
+  // Initializes watchdog, sets appropriate pins to Output, etc.  Called by
+  // HalApi::Init
+  void WatchdogInit();
+
+#ifdef BARE_STM32
+  void InitGpio();
+  void InitI2C();
+  void InitSysTimer();
+  void InitUARTs();
+  void StepperMotorInit();
+#endif
+
+#ifdef TEST_MODE
+ public:
   // Reads up to `len` bytes of data "sent" via SerialWrite.  Returns the
   // total number of bytes read.
   //
@@ -184,45 +211,13 @@ class HalApi {
   // Same as above, but for the debug serial port.
   uint16_t TESTDebugGetOutgoingData(char *data, uint16_t len);
   void TESTDebugPutIncomingData(const char *data, uint16_t len);
-#endif
-
-  // Performs the device soft-reset
-  [[noreturn]] void ResetDevice();
-
-  // Start the loop timer
-  void StartLoopTimer(const Duration &period, void (*callback)(void *), void *arg);
-
-  // Pets the watchdog, this makes the watchdog not reset the
-  // system for configured amount of time
-  void WatchdogHandler();
 
  private:
-  // Initializes watchdog, sets appropriate pins to Output, etc.  Called by
-  // HalApi::Init
-  void WatchdogInit();
-
-#ifdef BARE_STM32
-  void InitGpio();
-  void InitI2C();
-  void InitSysTimer();
-  void InitUARTs();
-  void StepperMotorInit();
-
-#endif
-
-#ifdef TEST_MODE
   Time time_ = microsSinceStartup(0);
 
   TestSerialPort serial_port_;
   TestSerialPort debug_serial_port_;
 #endif
-
- public:
-  ADC adc_;
-  Buzzer buzzer_;
-  PSOL psol_;
-  LEDIndicators LEDs_;
-  PWM pwm_;
 };
 
 extern HalApi hal;

@@ -96,7 +96,7 @@ void RunTest() {
     write_data[i] = Data;
   }
 
-  hal.BuzzerOn(0.1f);
+  hal.buzzer_.on(0.1f);
   eeprom.ReadBytes(Address, Length, &eeprom_before, nullptr);
 
   eeprom.WriteBytes(Address, Length, &write_data, nullptr);
@@ -134,7 +134,7 @@ void RunTest() {
   while (true) {
     // stop the buzzer after 1 second if the test is a success
     if (!failed && hal.Now() > microsSinceStartup(1000000)) {
-      hal.BuzzerOff();
+      hal.buzzer_.off();
     }
 
     debug.Poll();

@@ -23,7 +23,7 @@ void RunTest() {
   float step = InitialStep;
 
   while (true) {
-    hal.PSolValue(psol_position);
+    hal.psol_.PSolValue(psol_position);
     hal.Delay(Delay);
 
     hal.WatchdogHandler();

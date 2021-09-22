@@ -41,9 +41,9 @@ void UartDma::initialize(const uint32_t cpu_frequency_hz, const uint32_t baud) {
   uart_->control3.bitfield.dma_disable_on_rx_error = 1;  // DMA disabled following a reception error
   uart_->control2.bitfield.rx_timeout_enable = 0;        // Disable receive timeout feature
   uart_->control2.bitfield.addr = match_char_;           // set match char
+  uart_->control3.bitfield.error_interrupt = 1;          // enable interrupt on error
 
-  uart_->control3.bitfield.error_interrupt = 1;  // enable interrupt on error
-  uart_->request.bitfield.flush_rx = 1;          // Clear RXNE flag before clearing other flags
+  uart_->request.bitfield.flush_rx = 1;  // Clear RXNE flag before clearing other flags
 
   // Clear error flags.
   uart_->interrupt_clear.bitfield.framing_error_clear = 1;
@@ -232,7 +232,6 @@ void UartDma::UART_interrupt_handler() {
   if (character_match_interrupt()) {
     uart_->request.bitfield.flush_rx = 1;  // Clear RXNE flag before clearing other flags
     uart_->interrupt_clear.bitfield.char_match_clear = 1;  // Clear char match flag
-
     if (rx_listener_) {
       rx_listener_->on_character_match();
     }

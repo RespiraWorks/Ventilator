@@ -15,13 +15,8 @@ limitations under the License.
 
 #pragma once
 
+#include <cstddef>
 #include <cstdint>
-
-// The polynomial 0x741B8CD7 has Hamming distance 6 up to 16360 bits
-// and Hamming distance 4 up to 114663 bits.
-//[Philip Koopman, 32-Bit Cyclic Redundancy Codes for Internet Applications
-// 2002.] https://users.ece.cmu.edu/~koopman/crc/
-constexpr uint32_t Crc32Polynomial{0x741B8CD7};
 
 // Calculates CRC32 of a given byte array.
 // NOTE: each byte separately is passed to CRC calculation, i.e. bytes are not
@@ -31,7 +26,7 @@ constexpr uint32_t Crc32Polynomial{0x741B8CD7};
 // @param data - data on which to calculate CRC32
 // @param length - length of the data
 // @returns CRC32 if length > 0, 0 otherwise
-uint32_t soft_crc32(const uint8_t *data, uint32_t length);
+uint32_t soft_crc32(const uint8_t *data, size_t length);
 
 // Performs a single CRC32 calculation.
 // @param crc - CRC value pre-computed in earlier iteration, or initial CRC
@@ -40,7 +35,7 @@ uint32_t soft_crc32(const uint8_t *data, uint32_t length);
 // @returns CRC32
 uint32_t crc32_single(uint32_t crc, uint8_t data);
 
-// Assumes last 4 bytes in buf are CRC32, calculates CRC for buf[0:len-4] and
+// Assumes last 4 bytes in buffer are CRC32, calculates CRC for buffer[0:len-4] and
 // checks if they match.
 // @returns true if CRC match, false if not match or length < 5
-bool crc_ok(const uint8_t *buf, uint32_t len);
+bool crc_ok(const uint8_t *buffer, size_t length);

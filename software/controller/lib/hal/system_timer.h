@@ -30,15 +30,15 @@ class SystemTimer {
   /// \TODO: use explicit unit-aware frequency types
   void initialize(uint32_t cpu_frequency_MHz);
 
-  void InterruptHandler();
+  void interrupt_handler();
 
   // Amount of time that has passed since the board started running the program.
   // Faked when testing.  Time doesn't advance unless you call Delay().
-  Time Now();
+  Time now();
 
   // Sleeps for some number of milliseconds.
   // Faked when testing.  Does not sleep, but does advance the time returned by millis().
-  void Delay(Duration d);
+  void delay(Duration d);
 
  private:
   /// \TODO: do 64-bit types work on STM32?

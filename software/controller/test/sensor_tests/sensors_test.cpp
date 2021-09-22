@@ -99,7 +99,7 @@ static SensorReadings update_readings(Duration dt, Pressure oxygen_influx_dp,
   hal.adc.TESTSetAnalogPin(sensor_pin(Sensor::OutflowPressureDiff),
                            MPXV5004_PressureToVoltage(outflow_dp));
   hal.adc.TESTSetAnalogPin(sensor_pin(Sensor::FIO2), FIO2ToVoltage(fio2, p_amb));
-  SystemTimer::singleton().Delay(dt);
+  SystemTimer::singleton().delay(dt);
   return sensors->get_readings();
 }
 

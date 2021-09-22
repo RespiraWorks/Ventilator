@@ -53,18 +53,18 @@ void SystemTimer::initialize(uint32_t cpu_frequency_MHz) {
   Interrupts::singleton().EnableInterrupt(InterruptVector::Timer6, IntPriority::Standard);
 }
 
-void SystemTimer::InterruptHandler() {
+void SystemTimer::interrupt_handler() {
   Timer6Base->status = 0;
   ms_count_++;
 }
 
-void SystemTimer::Delay(Duration d) {
-  Time start = Now();
-  while (Now() - start < d) {
+void SystemTimer::delay(Duration d) {
+  Time start = now();
+  while (now() - start < d) {
   }
 }
 
-Time SystemTimer::Now() {
+Time SystemTimer::now() {
   // Disable interrupts so we can read ms_count_ and the timer state without
   // racing with the timer's interrupt handler.
   BlockInterrupts block_interrupts;
@@ -85,8 +85,8 @@ Time SystemTimer::Now() {
 #else
 
 void SystemTimer::initialize(uint32_t cpu_frequency_MHz) {}
-void SystemTimer::InterruptHandler() {}
-Time SystemTimer::Now() { return time_; }
-void SystemTimer::Delay(Duration d) { time_ = time_ + d; }
+void SystemTimer::interrupt_handler() {}
+Time SystemTimer::now() { return time_; }
+void SystemTimer::delay(Duration d) { time_ = time_ + d; }
 
 #endif

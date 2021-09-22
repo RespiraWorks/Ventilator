@@ -148,7 +148,7 @@ void actuatorsTestSequence(const std::vector<ActuatorsTest> &seq) {
   constexpr float ValveStateTolerance{.001f};
 
   // Reset time to test's start time.
-  SystemTimer::singleton().Delay(seq.front().time - SystemTimer::singleton().Now());
+  SystemTimer::singleton().delay(seq.front().time - SystemTimer::singleton().now());
 
   Controller controller;
   VentParams last_params = VentParams_init_zero;
@@ -163,15 +163,15 @@ void actuatorsTestSequence(const std::vector<ActuatorsTest> &seq) {
   for (const auto &actuators_test : seq) {
     SCOPED_TRACE("time = " + actuators_test.time.microsSinceStartup() / 1000);
     // Move time forward to t in steps of Controller::GetLoopPeriod().
-    while (SystemTimer::singleton().Now() < actuators_test.time) {
-      SystemTimer::singleton().Delay(Controller::GetLoopPeriod());
-      (void)controller.Run(SystemTimer::singleton().Now(), last_params, last_readings);
+    while (SystemTimer::singleton().now() < actuators_test.time) {
+      SystemTimer::singleton().delay(Controller::GetLoopPeriod());
+      (void)controller.Run(SystemTimer::singleton().now(), last_params, last_readings);
     }
     EXPECT_EQ(actuators_test.time.microsSinceStartup(),
-              SystemTimer::singleton().Now().microsSinceStartup());
+              SystemTimer::singleton().now().microsSinceStartup());
 
     auto [act_state, unused_status] = controller.Run(
-        SystemTimer::singleton().Now(), actuators_test.params, actuators_test.readings);
+        SystemTimer::singleton().now(), actuators_test.params, actuators_test.readings);
     (void)unused_status;
 
     EXPECT_FLOAT_EQ(act_state.blower_power, actuators_test.expected_state.blower_power);

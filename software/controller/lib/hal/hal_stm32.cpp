@@ -31,6 +31,7 @@ Abbreviations [RM], [DS], etc are defined in hal/README.md.
 #include "clocks.h"
 #include "flash.h"
 #include "gpio.h"
+#include "hal_stm32_regs.h"
 #include "i2c.h"
 #include "interrupts.h"
 #include "stepper.h"
@@ -108,7 +109,7 @@ void HalApi::EarlyInit() {
   configure_pll();
 }
 
-void Timer6ISR() { SystemTimer::singleton().InterruptHandler(); }
+void Timer6ISR() { SystemTimer::singleton().interrupt_handler(); }
 
 /*
  * One time init of HAL.
@@ -286,7 +287,7 @@ void HalApi::InitUARTs() {
                            GPIO::AlternativeFuncion::AF7);  // USART3_RTS_DE
 
 #ifdef UART_VIA_DMA
-  dma_uart.Init(CPUFrequencyHz, 115200);
+  dma_uart.initialize(CPUFrequencyHz, 115200);
 #else
   rpi_uart.Init(CPUFrequencyHz, 115200);
 #endif

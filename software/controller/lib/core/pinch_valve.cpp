@@ -113,14 +113,14 @@ void PinchValve::Home() {
 
     // Start a relative move into the hard stop
     case PinchValveHomeState::MoveToStop:
-      move_start_time_ = SystemTimer::singleton().Now();
+      move_start_time_ = SystemTimer::singleton().now();
       err = mtr->MoveRel(HomeDist);
       if (err == StepMtrErr::Ok) home_state_ = PinchValveHomeState::WaitMoveStop;
       break;
 
     // Wait for the move to hard stop to end
     case PinchValveHomeState::WaitMoveStop: {
-      Duration dt = SystemTimer::singleton().Now() - move_start_time_;
+      Duration dt = SystemTimer::singleton().now() - move_start_time_;
       if (dt.seconds() >= 3.0f) home_state_ = PinchValveHomeState::SetNormalAmp;
       break;
     }
@@ -135,13 +135,13 @@ void PinchValve::Home() {
     // This should cause us to end up with the bearings
     // just touching the tube, but not squeezing it.
     case PinchValveHomeState::MoveOffset:
-      move_start_time_ = SystemTimer::singleton().Now();
+      move_start_time_ = SystemTimer::singleton().now();
       err = mtr->MoveRel(-HomeOffset);
       if (err == StepMtrErr::Ok) home_state_ = PinchValveHomeState::WaitMoveOffset;
       break;
 
     case PinchValveHomeState::WaitMoveOffset: {
-      Duration dt = SystemTimer::singleton().Now() - move_start_time_;
+      Duration dt = SystemTimer::singleton().now() - move_start_time_;
       if (dt.seconds() >= 2.0f) home_state_ = PinchValveHomeState::ZeroPos;
       break;
     }

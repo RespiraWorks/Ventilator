@@ -33,10 +33,10 @@ limitations under the License.
 extern UartDma uart_dma;
 
 // Performs UART3 initialization
-void UartDma::init(uint32_t baud) {
+void UartDma::initialize(const uint32_t cpu_frequency_hz, const uint32_t baud) {
   baud_ = baud;
   // Set baud rate register
-  uart_->baudrate = CPUFrequencyHz / baud;
+  uart_->baudrate = cpu_frequency_hz / baud;
 
   uart_->control3.bitfield.rx_dma = 1;  // set DMAR bit to enable DMA for receiver
   uart_->control3.bitfield.tx_dma = 1;  // set DMAT bit to enable DMA for transmitter
@@ -64,12 +64,12 @@ void UartDma::init(uint32_t baud) {
   rx_dma_config.half_tx_interrupt = 0;      // no half-transfer interrupt
   rx_dma_config.tx_complete_interrupt = 1;  // interrupt on DMA complete
   rx_dma_config.mem2mem = 0;                // memory-to-memory mode disabled
-  rx_dma_config.memory_size = static_cast<uint32_t>(DmaTransferSize::Byte);
-  rx_dma_config.peripheral_size = static_cast<uint32_t>(DmaTransferSize::Byte);
+  rx_dma_config.memory_size = static_cast<uint32_t>(DMA::TransferSize::Byte);
+  rx_dma_config.peripheral_size = static_cast<uint32_t>(DMA::TransferSize::Byte);
   rx_dma_config.memory_increment = 1;      // increment destination (memory)
   rx_dma_config.peripheral_increment = 0;  // don't increment source (peripheral) address
   rx_dma_config.circular = 0;              // not circular
-  rx_dma_config.direction = static_cast<uint32_t>(DmaChannelDir::PeripheralToMemory);
+  rx_dma_config.direction = static_cast<uint32_t>(DMA::ChannelDir::PeripheralToMemory);
 
   auto &tx_dma_config = dma_->channel[tx_channel_].config;
   tx_dma_config.priority = 0b11;            // high priority
@@ -77,12 +77,12 @@ void UartDma::init(uint32_t baud) {
   tx_dma_config.half_tx_interrupt = 0;      // no half-transfer interrupt
   tx_dma_config.tx_complete_interrupt = 1;  // DMA complete interrupt enabled
   tx_dma_config.mem2mem = 0;                // memory-to-memory mode disabled
-  tx_dma_config.memory_size = static_cast<uint32_t>(DmaTransferSize::Byte);
-  tx_dma_config.peripheral_size = static_cast<uint32_t>(DmaTransferSize::Byte);
+  tx_dma_config.memory_size = static_cast<uint32_t>(DMA::TransferSize::Byte);
+  tx_dma_config.peripheral_size = static_cast<uint32_t>(DMA::TransferSize::Byte);
   tx_dma_config.memory_increment = 1;      // increment source (memory) address
   tx_dma_config.peripheral_increment = 0;  // don't increment dest (peripheral) address
   tx_dma_config.circular = 0;              // not circular
-  tx_dma_config.direction = static_cast<uint32_t>(DmaChannelDir::MemoryToPeripheral);
+  tx_dma_config.direction = static_cast<uint32_t>(DMA::ChannelDir::MemoryToPeripheral);
 }
 
 // Sets up an interrupt on matching char incoming form UART3
@@ -275,15 +275,13 @@ void UartDma::DMA_rx_interrupt_handler() {
 // TODO: These are declared in hal_stm32.cpp but implemented here, clean this up!
 
 void DMA1Channel2ISR() {
-  DmaReg *dma = Dma1Base;
   uart_dma.DMA_tx_interrupt_handler();
-  dma->interrupt_clear.gif2 = 1;  // clear all channel 3 flags
+  DMA::get_register(DMA::Base::DMA1)->interrupt_clear.gif2 = 1;  // clear all channel 3 flags
 }
 
 void DMA1Channel3ISR() {
-  DmaReg *dma = Dma1Base;
   uart_dma.DMA_rx_interrupt_handler();
-  dma->interrupt_clear.gif3 = 1;  // clear all channel 2 flags
+  DMA::get_register(DMA::Base::DMA1)->interrupt_clear.gif3 = 1;  // clear all channel 2 flags
 }
 
 // This is the interrupt handler for the UART.

@@ -84,7 +84,7 @@ std::vector<uint8_t> ProcessCmd(Interface *serial, std::vector<uint8_t> req,
                                static_cast<uint16_t>(full_req.size()));
   for (int i = 0; i < 100 && !serial->Poll(); ++i) {
     // Wait for command to complete, advance sim time to allow timeout
-    SystemTimer::singleton().Delay(milliseconds(10));
+    SystemTimer::singleton().delay(milliseconds(10));
   }
 
   std::vector<uint8_t> escaped_resp(500);

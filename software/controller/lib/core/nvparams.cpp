@@ -214,13 +214,13 @@ void Handler::Update(const Time now, VentParams *params) {
 bool Handler::ReadFullParams(Address address, Structure *param, I2Ceeprom *eeprom) {
   bool read_finished{false};
   eeprom->ReadBytes(static_cast<uint16_t>(address), Size, param, &read_finished);
-  Time start_time = SystemTimer::singleton().Now();
+  Time start_time = SystemTimer::singleton().now();
   // Wait until the read is performed, or at most 500 ms: reading 4kB should
   // take under 100 ms if the 400 kHz I²C bus is used at 100% capacity.
   // If this takes longer, it most likely means our EEPROM is irresponsive (or
   // absent...).
   while (!read_finished) {
-    if (SystemTimer::singleton().Now() > start_time + milliseconds(500)) {
+    if (SystemTimer::singleton().now() > start_time + milliseconds(500)) {
       // maybe we should have an alarm in case our EEPROM is irresponsive?
       return false;
     }

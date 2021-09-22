@@ -33,7 +33,7 @@ void RunTest() {
 
   while (true) {
     stepper_motor->MoveRel(StepDegrees);
-    SystemTimer::singleton().Delay(Delay);
+    SystemTimer::singleton().delay(Delay);
 
     Watchdog::pet();
   }

@@ -283,7 +283,7 @@ void StepMotor::OneTimeInit() {
     // a new command.  For the power-step chip this delay
     // time is specified as 500 microseconds in the data sheet.
     // For the L6470 its only 45 max
-    SystemTimer::singleton().Delay(microseconds(500));
+    SystemTimer::singleton().delay(microseconds(500));
 
     // Get the first gate config register of the powerSTEP01.
     // This is actually the config register on the L6470
@@ -847,7 +847,7 @@ void StepMotor::SendInitCmd(uint8_t *buff, int len) {
   // The minimum time the CS needs to be high is just under
   // 1 microsecond.
   chip_select_high();
-  SystemTimer::singleton().Delay(microseconds(1));
+  SystemTimer::singleton().delay(microseconds(1));
 }
 
 // This is run at startup before the DMA interrupts are enabled.

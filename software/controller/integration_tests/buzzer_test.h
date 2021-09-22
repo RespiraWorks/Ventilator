@@ -32,7 +32,7 @@ void RunTest() {
       hal.buzzer.off();
     }
 
-    SystemTimer::singleton().Delay(Delay);
+    SystemTimer::singleton().delay(Delay);
 
     buzzer_on = !buzzer_on;
     if (buzzer_on) {

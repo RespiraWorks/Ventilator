@@ -112,7 +112,7 @@ static void HighPriorityTask(void *arg) {
 
   // Run our PID loop
   auto [actuators_state, controller_state] = controller.Run(
-      SystemTimer::singleton().Now(), controller_status.active_params, sensor_readings);
+      SystemTimer::singleton().now(), controller_status.active_params, sensor_readings);
 
   // TODO update pb library to replace fan_power in ControllerStatus with
   // actuators_state, and remove pressure_setpoint_cm_h2o from ControllerStatus
@@ -143,15 +143,15 @@ static void HighPriorityTask(void *arg) {
   //
   // Take this opportunity while we're sleeping to home the pinch valves.  This
   // way we're guaranteed that they're ready before we start ventilating.
-  Time sleep_start = SystemTimer::singleton().Now();
-  while (!AreActuatorsReady() || SystemTimer::singleton().Now() - sleep_start < seconds(10)) {
+  Time sleep_start = SystemTimer::singleton().now();
+  while (!AreActuatorsReady() || SystemTimer::singleton().now() - sleep_start < seconds(10)) {
     ActuatorsExecute({
         .fio2_valve = 0,
         .blower_power = 0,
         .blower_valve = 1,
         .exhale_valve = 1,
     });
-    SystemTimer::singleton().Delay(milliseconds(10));
+    SystemTimer::singleton().delay(milliseconds(10));
     Watchdog::pet();
     debug.Poll();
   }
@@ -171,7 +171,7 @@ static void HighPriorityTask(void *arg) {
   hal.StartLoopTimer(Controller::GetLoopPeriod(), HighPriorityTask, nullptr);
 
   while (true) {
-    controller_status.uptime_ms = SystemTimer::singleton().Now().microsSinceStartup() / 1000;
+    controller_status.uptime_ms = SystemTimer::singleton().now().microsSinceStartup() / 1000;
 
     // Copy the current controller status with interrupts disabled to ensure that the data we
     // send to the GUI is self-consistent.
@@ -206,7 +206,7 @@ static void HighPriorityTask(void *arg) {
     debug.Poll();
 
     // Update nv_params
-    nv_params.Update(SystemTimer::singleton().Now(), &gui_status.desired_params);
+    nv_params.Update(SystemTimer::singleton().now(), &gui_status.desired_params);
   }
 }
 

@@ -72,7 +72,7 @@ TEST(CommTests, CommandRx) {
     CommsHandler(controller_status_ignored, &received);
     // We use a timeout for framing packets, so we have to advance the time,
     // otherwise we'll never think the packet is complete!
-    SystemTimer::singleton().Delay(milliseconds(1));
+    SystemTimer::singleton().delay(milliseconds(1));
   }
   EXPECT_EQ(s.uptime_ms, received.uptime_ms);
   EXPECT_EQ(s.desired_params.mode, received.desired_params.mode);

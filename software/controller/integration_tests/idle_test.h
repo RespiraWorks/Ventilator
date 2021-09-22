@@ -19,6 +19,6 @@ void RunTest() {
   hal.Init();
 
   while (true) {
-    SystemTimer::singleton().Delay(Delay);
+    SystemTimer::singleton().delay(Delay);
   }
 }

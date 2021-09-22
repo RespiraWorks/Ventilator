@@ -348,7 +348,7 @@ void STM32Channel::SetupDMAChannels(const DMA::Base dma) {
 
   for (auto &map : DmaMap) {
     if (dma == map.dma_base && i2c_ == map.i2c_base) {
-      auto dma_register = DMA::get_register(dma);
+      auto *dma_register = DMA::get_register(dma);
       dma_ = dma;
       tx_channel_ = &dma_register->channel[static_cast<uint8_t>(map.tx_channel_id)];
       rx_channel_ = &dma_register->channel[static_cast<uint8_t>(map.rx_channel_id)];
@@ -426,7 +426,7 @@ void STM32Channel::SetupDMATransfer() {
 
 void STM32Channel::DMAIntHandler(DMA::Channel chan) {
   if (!dma_enable_ || !transfer_in_progress_) return;
-  auto dma_register = DMA::get_register(dma_);
+  auto *dma_register = DMA::get_register(dma_);
   dma_register->channel[static_cast<uint8_t>(chan)].config.enable = 0;
   if (DMA::IntStatus(dma_, chan, DMA::Interrupt::TransferComplete)) {
     if (remaining_size_ > 255) {

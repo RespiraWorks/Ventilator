@@ -302,7 +302,7 @@ bool ADC::initialize(const uint32_t cpu_frequency_hz) {
   // Wait for the startup time ([RM] 16.4.6) specified in the STM32 [DS] for the voltage regulator
   // to become ready.  The time in the [DS] is 20 microseconds ([DS] 6.3.18) but I'll wait for 30
   // just to be extra conservative
-  SystemTimer::singleton().Delay(microseconds(30));
+  SystemTimer::singleton().delay(microseconds(30));
 
   // Calibrate the A/D for single ended channels ([RM] 16.4.8)
   adc->adc[0].control |= 0x80000000;
@@ -371,7 +371,7 @@ bool ADC::initialize(const uint32_t cpu_frequency_hz) {
 
   /// \TODO: improve DMA abstraction to factor this out?
   dma->channel[c1].peripheral_address = &adc->adc[0].data;
-  dma->channel[c1].memory_address = adc_buff;
+  dma->channel[c1].memory_address = oversample_buffer_;
   dma->channel[c1].count = adc_sample_history_ * AdcChannels;
 
   dma->channel[c1].config.enable = 0;
@@ -418,7 +418,7 @@ Voltage ADC::read(const AnalogPin pin) const {
   // background, but that shouldn't cause any problems because memory
   // accesses for 16-bit values are atomic.
   float sum = 0;
-  for (int i = 0; i < adc_sample_history_; i++) sum += adc_buff[i * AdcChannels + offset];
+  for (int i = 0; i < adc_sample_history_; i++) sum += oversample_buffer_[i * AdcChannels + offset];
 
   return volts(sum * adc_scaler_);
 }

@@ -26,7 +26,7 @@ void RunTest() {
 
   while (true) {
     hal.pwm.set(PwmPin::Blower, fan_power);
-    SystemTimer::singleton().Delay(Delay);
+    SystemTimer::singleton().delay(Delay);
 
     Watchdog::pet();
 

@@ -26,7 +26,7 @@ void RunTest() {
 
   while (true) {
     hal.psol.set(psol_position);
-    SystemTimer::singleton().Delay(Delay);
+    SystemTimer::singleton().delay(Delay);
 
     Watchdog::pet();
 

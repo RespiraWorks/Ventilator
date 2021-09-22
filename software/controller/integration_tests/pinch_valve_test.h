@@ -26,7 +26,7 @@ void RunTest() {
   bool valve_open{false};
   while (true) {
     pinch_valve.SetOutput(valve_open ? 1.0f : 0.0f);
-    SystemTimer::singleton().Delay(Delay);
+    SystemTimer::singleton().delay(Delay);
 
     Watchdog::pet();
 

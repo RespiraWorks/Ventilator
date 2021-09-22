@@ -63,7 +63,7 @@ bool Interface::Poll() {
     case State::AwaitingResponse:
       if (command_processed_) {
         SendResponse(ErrorCode::None, response_length_);
-      } else if (SystemTimer::singleton().Now() > command_start_time_ + milliseconds(100)) {
+      } else if (SystemTimer::singleton().now() > command_start_time_ + milliseconds(100)) {
         SendError(ErrorCode::Timeout);
       }
       return false;
@@ -197,7 +197,7 @@ void Interface::ProcessCommand() {
   }
 
   state_ = State::AwaitingResponse;
-  command_start_time_ = SystemTimer::singleton().Now();
+  command_start_time_ = SystemTimer::singleton().now();
   response_length_ = context.response_length;
 }
 

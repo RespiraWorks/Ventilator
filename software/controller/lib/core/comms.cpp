@@ -32,7 +32,7 @@ static std::optional<Time> last_tx;
 // always at the beginning of the buffer.
 static uint8_t rx_buffer[GuiStatus_size];
 static uint16_t rx_idx = 0;
-static Time last_rx = SystemTimer::singleton().Now();
+static Time last_rx = SystemTimer::singleton().now();
 static bool rx_in_progress = false;
 
 // We currently lack proper message framing, so we use a timeout to determine
@@ -48,7 +48,7 @@ static constexpr Duration TxInterval = milliseconds(30);
 
 void CommsInit() {}
 
-static bool IsTimeToProcessPacket() { return SystemTimer::singleton().Now() - last_rx > RxTimeout; }
+static bool IsTimeToProcessPacket() { return SystemTimer::singleton().now() - last_rx > RxTimeout; }
 
 // NOTE this is work in progress.
 // Proper framing incomming. Afproto will be used to encode data to form that
@@ -70,7 +70,7 @@ static void ProcessTx(const ControllerStatus &controller_status) {
   //  - we can transmit at least one byte now, and
   //  - it's been a while since we last transmitted.
   if (tx_bytes_remaining == 0 &&
-      (last_tx == std::nullopt || SystemTimer::singleton().Now() - *last_tx > TxInterval)) {
+      (last_tx == std::nullopt || SystemTimer::singleton().now() - *last_tx > TxInterval)) {
     // Serialize current status into output buffer.
     //
     // TODO: Frame the message bytes.
@@ -82,7 +82,7 @@ static void ProcessTx(const ControllerStatus &controller_status) {
     }
     tx_idx = 0;
     tx_bytes_remaining = static_cast<uint16_t>(stream.bytes_written);
-    last_tx = SystemTimer::singleton().Now();
+    last_tx = SystemTimer::singleton().now();
   }
 
   // TODO: Alarm if we haven't been able to send a status in a certain amount
@@ -112,7 +112,7 @@ static void ProcessRx(GuiStatus *gui_status) {
         rx_idx = 0;
         break;
       }
-      last_rx = SystemTimer::singleton().Now();
+      last_rx = SystemTimer::singleton().now();
     }
   }
 

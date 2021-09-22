@@ -197,7 +197,7 @@ inline UartReg *const Uart4Base = reinterpret_cast<UartReg *>(0x40004C00);
 
 class UART {
  public:
-  explicit UART(UartReg *const r);
+  explicit UART(UartReg *r);
 
   void Init(uint32_t cpu_frequency_hz, uint32_t baud);
 

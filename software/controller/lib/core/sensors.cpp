@@ -59,7 +59,7 @@ void Sensors::calibrate() {
   // It seems that we'll need to save calibration readings to non-volatile
   // memory and provide operators with a way to shut off the device's blowers,
   // open any necessary valves, and recalibrate.
-  SystemTimer::singleton().Delay(milliseconds(20));
+  SystemTimer::singleton().delay(milliseconds(20));
 
   patient_pressure_sensor_.set_zero(hal);
   air_influx_sensor_dp_.set_zero(hal);

@@ -54,7 +54,7 @@ class ADC {
 
   //\TODO: possibly have parent allocate memory depending on number of samples
   // Presized under some assumptions, see implementation for initialize()
-  volatile uint16_t adc_buff[100 * AdcChannels];
+  volatile uint16_t oversample_buffer_[100 * AdcChannels];
 
 #if !defined(BARE_STM32)
  public:

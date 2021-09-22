@@ -298,6 +298,7 @@ class STM32Channel : public Channel {
  private:
   I2CReg *i2c_{nullptr};
   DMA::Base dma_;
+  /// \TODO: anyway to avoid keeping regiters here directly? Improve DMA abstraction?
   volatile DmaReg::ChannelRegs *rx_channel_{nullptr};
   volatile DmaReg::ChannelRegs *tx_channel_{nullptr};
 

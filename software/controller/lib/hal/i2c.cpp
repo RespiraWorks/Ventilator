@@ -26,7 +26,6 @@ limitations under the License.
 
 #include "clocks.h"
 #include "gpio.h"
-#include "hal.h"
 
 #if defined(BARE_STM32)
 I2C::STM32Channel i2c1;

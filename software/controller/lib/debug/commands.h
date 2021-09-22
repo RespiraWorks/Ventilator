@@ -17,7 +17,6 @@ limitations under the License.
 
 #include "binary_utils.h"
 #include "eeprom.h"
-#include "hal.h"
 #include "interface.h"
 
 namespace Debug::Command {

@@ -41,14 +41,10 @@ limitations under the License.
 #include "pwm.h"
 #include "units.h"
 
+/// \TODO: Mock port interface should be with the tests, not main code
 #if !defined(BARE_STM32)
-#include <cassert>
-#include <cstring>
 #include <deque>
-#include <map>
 #include <vector>
-
-#include "checksum.h"
 
 class TestSerialPort {
  public:

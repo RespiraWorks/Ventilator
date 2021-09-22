@@ -17,7 +17,7 @@ limitations under the License.
 
 #include "clocks.h"
 
-// \TODO these consts should be maintained by main or whoever is calling these functions
+// \TODO these consts should be maintained by caller
 // Flash memory location & size info
 static constexpr uint32_t FlashStartAddr{0x08000000};
 static constexpr size_t FlashSize{32 * 1024};
@@ -72,6 +72,7 @@ struct FlashStruct {
   uint32_t wrp_area_a;
   uint32_t wrp_area_b;
 };
+
 typedef volatile FlashStruct FlashReg;
 inline FlashReg* const FlashBase = reinterpret_cast<FlashReg*>(0x40022000);
 
@@ -110,7 +111,7 @@ void LockFlash(FlashReg* reg) { reg->control.flash_lock = 1; }
 
 namespace Flash {
 
-void FlashInit() {
+void initialize() {
   // Reset caches and set latency for 80MHz operation
   // See chapter 3 of [RM] for details on the embedded flash module
   enable_peripheral_clock(PeripheralID::Flash);
@@ -136,7 +137,7 @@ void FlashInit() {
  *
  * Returns true on success or false on failure
  */
-bool FlashErasePage(uint32_t addr) {
+bool erase_page(uint32_t addr) {
   if (!ValidFlashParameters(addr, FlashPageSize)) return false;
 
   // Clear all the status bits
@@ -163,7 +164,7 @@ bool FlashErasePage(uint32_t addr) {
   return true;
 }
 
-bool FlashWrite(uint32_t addr, void* data, size_t ct) {
+bool write(uint32_t addr, void* data, size_t ct) {
   if (!ValidFlashParameters(addr, ct)) return false;
   FlashReg* reg = FlashBase;
 

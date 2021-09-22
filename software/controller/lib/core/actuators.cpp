@@ -41,7 +41,7 @@ void ActuatorsExecute(const ActuatorsState &desired_state) {
   else
     exhale_pinch.Disable();
 
-  hal.psol.PSolValue(desired_state.fio2_valve);
+  hal.psol.set(desired_state.fio2_valve);
 }
 
 // Return true if all actuators are enabled and ready for action

@@ -18,12 +18,13 @@ limitations under the License.
 #include <cstddef>
 #include <cstdint>
 
+/// \TODO: do we still have any use for this class?
 namespace Flash {
 
-void FlashInit();
+void initialize();
 
 // Erase a page of flash given the starting address of that page.
-bool FlashErasePage(uint32_t address);
+bool erase_page(uint32_t address);
 
 // Write data to flash memory at the specified address
 // Note that the STM32 only allows writing in multiples of 8 bytes
@@ -34,6 +35,6 @@ bool FlashErasePage(uint32_t address);
 // @param data - Pointer to data to write
 // @param ct   - Number of bytes to write
 //               NOTE - must be a multiple of 8
-bool FlashWrite(uint32_t addr, void *data, size_t ct);
+bool write(uint32_t addr, void *data, size_t ct);
 
 }  // namespace Flash

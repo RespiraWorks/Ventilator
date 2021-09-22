@@ -39,7 +39,8 @@ limitations under the License.
 // can be driven by timer 1 channel 4.  We'll use that timer channel
 // to control the solenoid
 
-void PSOL::InitPSOL(const uint32_t cpu_frequency_hz) {
+/// \TODO generalize to have pins and frequency be maintained by caller
+void PSOL::initialize(const uint32_t cpu_frequency_hz) {
   // I'm using a 20kHz PWM frequency to drive the solenoid
   // This is somewhat arbitrary, but is high enough to ensure
   // that there won't be any audible noise from the switching
@@ -82,11 +83,10 @@ void PSOL::InitPSOL(const uint32_t cpu_frequency_hz) {
   tmr->control_reg1.bitfield.counter_enable = 1;
 }
 
-// Set the PSOL output level to a value from 0 (fully closed)
-// to 1 (fully open)
-void PSOL::PSolValue(float val) {
+void PSOL::set(float val) {
   TimerReg *tmr = Timer1Base;
 
+  /// \TODO factor out scaling to test it and/or supplement with calibration curve
   val = std::clamp(val, 0.0f, 1.0f);
 
   // Scale linearly between our fully-open and fully-closed PWM values, except
@@ -104,6 +104,8 @@ void PSOL::PSolValue(float val) {
 }
 
 #else
-void PSOL::InitPSOL(uint32_t cpu_frequency_hz) {}
-void PSOL::PSolValue(float val) {}
+
+/// \TODO: improve mocking to make this useful in tests
+void PSOL::initialize(uint32_t cpu_frequency_hz) {}
+void PSOL::set(float val) {}
 #endif

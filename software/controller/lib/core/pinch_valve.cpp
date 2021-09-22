@@ -16,11 +16,9 @@ limitations under the License.
 #include "pinch_valve.h"
 
 #include <algorithm>
-#include <array>
 #include <cfloat>
 #include <cmath>
 
-#include "hal.h"
 #include "system_timer.h"
 
 // These constants define various properties of the pinch

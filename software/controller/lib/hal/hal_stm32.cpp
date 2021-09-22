@@ -102,7 +102,8 @@ void HalApi::EarlyInit() {
   SysControlReg *sys_ctl = SysControlBase;
   sys_ctl->coproc_access_control = 0x00F00000;
 
-  Flash::FlashInit();
+  /// \TODO: initialized but never used. Do we still need it?
+  Flash::initialize();
 
   configure_pll();
 }
@@ -122,7 +123,7 @@ void HalApi::Init() {
   pwm.initialize(CPUFrequencyHz);
   InitUARTs();
   buzzer.initialize(CPUFrequencyHz);
-  psol.InitPSOL(CPUFrequencyHz);
+  psol.initialize(CPUFrequencyHz);
   I2C::initialize();
   Interrupts::singleton().EnableInterrupts();
   StepMotor::OneTimeInit();

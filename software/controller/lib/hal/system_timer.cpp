@@ -15,11 +15,11 @@ limitations under the License.
 
 #include "system_timer.h"
 
+#if defined(BARE_STM32)
+
 #include "clocks.h"
 #include "interrupts.h"
 #include "timers.h"
-
-#if defined(BARE_STM32)
 
 /******************************************************************
  * System timer

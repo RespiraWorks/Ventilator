@@ -87,6 +87,7 @@ void Buzzer::on(float volume) {
 
 #else
 
+/// \TODO: mock this better, can be useful for alarm testing
 void Buzzer::initialize(const uint32_t cpu_frequency_hz) {}
 void Buzzer::off() {}
 void Buzzer::on(float volume) {}

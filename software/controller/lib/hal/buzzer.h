@@ -24,5 +24,6 @@ class Buzzer {
   void on(float volume);
 
  private:
+  /// \TODO parametrize buzzer frequency at initialization
   uint32_t freqency_hz_{2400};
 };

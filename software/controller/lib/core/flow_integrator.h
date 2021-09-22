@@ -17,7 +17,6 @@ limitations under the License.
 
 #include <optional>
 
-#include "hal.h"
 #include "units.h"
 
 // Integrates flow over time to calculate volume.

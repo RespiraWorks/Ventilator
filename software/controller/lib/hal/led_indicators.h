@@ -49,6 +49,7 @@ class LEDIndicators {
 
 #if !defined(BARE_STM32)
  public:
+  /// \TODO: is this the best thing to test? Isn't this implementation-specific?
   void set_pin_mode(BinaryPin pin, GPIO::PinMode mode);
 
  private:

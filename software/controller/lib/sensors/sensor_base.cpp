@@ -15,7 +15,7 @@ limitations under the License.
 
 #include "sensor_base.h"
 
-#include <cmath>
+/// \TODO: generalize these classes to not require reference to entire HAL
 
 AnalogSensor::AnalogSensor(const char *name, const char *help_supplement, AnalogPin pin)
     : pin_(pin),

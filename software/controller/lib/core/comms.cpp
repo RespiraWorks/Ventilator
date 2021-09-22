@@ -4,7 +4,6 @@
 #include <pb_decode.h>
 #include <pb_encode.h>
 
-#include <algorithm>
 #include <optional>
 
 #include "hal.h"

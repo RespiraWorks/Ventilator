@@ -29,7 +29,6 @@ limitations under the License.
 #include <string.h>
 
 #include "checksum.h"
-#include "hal.h"
 #include "system_timer.h"
 #include "vars.h"
 

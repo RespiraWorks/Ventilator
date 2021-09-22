@@ -20,6 +20,6 @@ limitations under the License.
 // Not really a test, just silencing code coverage warning for native build
 TEST(PSol, TestStubs) {
   PSOL psol;
-  psol.InitPSOL(666);
-  psol.PSolValue(42.0f);
+  psol.initialize(666);
+  psol.set(42.0f);
 }

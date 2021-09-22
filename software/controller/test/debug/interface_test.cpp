@@ -24,6 +24,7 @@ limitations under the License.
 #include "commands.h"
 #include "gmock/gmock-matchers.h"
 #include "gtest/gtest.h"
+#include "hal.h"
 #include "system_timer.h"
 #include "vars.h"
 

@@ -52,6 +52,8 @@ limitations under the License.
 
 #include "adc.h"
 
+#if defined(BARE_STM32)
+
 #include "clocks.h"
 #include "dma.h"
 #include "gpio.h"
@@ -179,10 +181,9 @@ struct AdcStruct {
   uint32_t common_control;
   uint32_t common_data;
 };
+
 typedef volatile AdcStruct AdcReg;
 inline AdcReg *const AdcBase = reinterpret_cast<AdcReg *>(0X50040000);
-
-#if defined(BARE_STM32)
 
 /*
 Please refer to [PCB] as the ultimate source of which pin is used for which function.
@@ -260,6 +261,7 @@ static constexpr int AdcConversionTime = [] {
   __builtin_unreachable();
 }();
 
+/// \TODO: have caller provide mappings in a different layer
 bool ADC::initialize(const uint32_t cpu_frequency_hz) {
   adc_sample_history_ =
       static_cast<uint32_t>(SampleHistoryTimeSec * static_cast<float>(cpu_frequency_hz) /
@@ -367,6 +369,7 @@ bool ADC::initialize(const uint32_t cpu_frequency_hz) {
   DmaReg *dma = DMA::get_register(DMA::Base::DMA1);
   auto c1 = static_cast<uint8_t>(DMA::Channel::Chan1);
 
+  /// \TODO: improve DMA abstraction to factor this out?
   dma->channel[c1].peripheral_address = &adc->adc[0].data;
   dma->channel[c1].memory_address = adc_buff;
   dma->channel[c1].count = adc_sample_history_ * AdcChannels;
@@ -392,6 +395,7 @@ bool ADC::initialize(const uint32_t cpu_frequency_hz) {
 
 // Read the specified analog input.
 Voltage ADC::read(const AnalogPin pin) const {
+  /// \TODO: factor out mapping function and have it tested
   int offset = [&] {
     switch (pin) {
       case AnalogPin::InterimBoardAnalogPressure:

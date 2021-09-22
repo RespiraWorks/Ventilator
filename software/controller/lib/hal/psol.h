@@ -20,8 +20,10 @@ limitations under the License.
 /// \TODO: generalize to be instantiable (dbg var prefixes, etc..)
 class PSOL {
  public:
-  void InitPSOL(uint32_t cpu_frequency_hz);
-  void PSolValue(float val);
+  void initialize(uint32_t cpu_frequency_hz);
+
+  // Set the PSOL output level to a value from 0 (fully closed) to 1 (fully open)
+  void set(float val);
 
  private:
   // Testing in Edwin's garage, we found that the psol was fully closed at

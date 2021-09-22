@@ -15,13 +15,7 @@ limitations under the License.
 
 #include "pwm.h"
 
-#include <algorithm>
-#include <cassert>
-
-#include "clocks.h"
-#include "gpio.h"
-#include "timers.h"
-
+/// \TODO: have mappings be maintained in / provided by a higher layer
 /******************************************************************
  * PWM outputs
  *
@@ -39,6 +33,13 @@ limitations under the License.
 
 #if defined(BARE_STM32)
 
+#include <algorithm>
+
+#include "clocks.h"
+#include "gpio.h"
+#include "timers.h"
+
+/// \TODO generalize to have pins and frequency be maintained by caller
 void PWM::initialize(const uint32_t cpu_frequency_hz) {
   enable_peripheral_clock(PeripheralID::Timer2);
 
@@ -87,6 +88,8 @@ void PWM::set(const PwmPin pin, const float duty) {
 }
 
 #else
+
+#include <cassert>
 
 void PWM::initialize(const uint32_t cpu_frequency_hz) {}
 

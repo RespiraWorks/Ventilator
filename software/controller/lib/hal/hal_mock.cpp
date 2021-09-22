@@ -13,9 +13,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include "hal.h"
-
 #if !defined(BARE_STM32)
+
+#include "hal.h"
 
 void HalApi::EarlyInit() {}
 void HalApi::Init() {}

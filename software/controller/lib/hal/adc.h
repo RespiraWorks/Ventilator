@@ -31,19 +31,19 @@ enum class AnalogPin {
   InterimBoardOxygenSensor,
 };
 
-/// \TODO: should be singleton
+/// \TODO: could be explicit singleton?
 class ADC {
  public:
+  ADC() = default;
+
+  /// \TODO: nodiscard flag, or have parent be responsible for buffer, see below
+  /// \returns true if buffer size was sufficient
   bool initialize(uint32_t cpu_frequency_hz);
 
   // Reads from analog sensor using an analog-to-digital converter.
   // Returns a voltage.  On STM32 this can range from 0 to 3.3V.
   // In test mode, will return the last value set via TESTSetAnalogPin.
   Voltage read(AnalogPin pin) const;
-
-#if !defined(BARE_STM32)
-  void TESTSetAnalogPin(AnalogPin pin, Voltage value);
-#endif
 
  private:
   // Total number of A/D inputs we're sampling
@@ -52,9 +52,15 @@ class ADC {
   uint32_t adc_sample_history_{1};
   float adc_scaler_{1.0f};
 
+  //\TODO: possibly have parent allocate memory depending on number of samples
+  // Presized under some assumptions, see implementation for initialize()
   volatile uint16_t adc_buff[100 * AdcChannels];
 
 #if !defined(BARE_STM32)
+ public:
+  void TESTSetAnalogPin(AnalogPin pin, Voltage value);
+
+ private:
   std::map<AnalogPin, Voltage> analog_pin_values_;
 #endif
 };

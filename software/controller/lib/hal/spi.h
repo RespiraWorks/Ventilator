@@ -15,6 +15,10 @@ limitations under the License.
 
 #pragma once
 
+/// \TODO: create more of an abstraction than just providing registers
+
+#include <cstdint>
+
 // [RM] 40.6 SPI Registers (pg 1330)
 struct SpiStruct {
   struct {

@@ -15,6 +15,11 @@ limitations under the License.
 
 #include "stepper.h"
 
+StepMotor StepMotor::motor_[StepMotor::MaxMotors];
+int StepMotor::total_motors_;
+
+#if defined(BARE_STM32)
+
 #include <cmath>
 #include <cstring>
 
@@ -24,11 +29,6 @@ limitations under the License.
 #include "interrupts.h"
 #include "spi.h"
 #include "system_timer.h"
-
-StepMotor StepMotor::motor_[StepMotor::MaxMotors];
-int StepMotor::total_motors_;
-
-#if defined(BARE_STM32)
 
 // Static data members
 uint8_t StepMotor::dma_buff_[StepMotor::MaxMotors];
@@ -232,12 +232,11 @@ void StepMotor::OneTimeInit() {
 
   // The two DMA channels move data to/from the SPI data register.
   DmaReg *dma = DMA::get_register(DMA::Base::DMA2);
-  int c3 = static_cast<int>(DMA::Channel::Chan3);
-  int c4 = static_cast<int>(DMA::Channel::Chan4);
-  dma->channel[c3].peripheral_address = &spi->data;
-  dma->channel[c4].peripheral_address = &spi->data;
 
   // Configure the DMA channels, but don't enable them yet
+  /// \TODO: (subtly) repetitive blocks for each channel - factor this out
+  int c3 = static_cast<int>(DMA::Channel::Chan3);
+  dma->channel[c3].peripheral_address = &spi->data;
   dma->channel[c3].config.enable = 0;
   dma->channel[c3].config.tx_complete_interrupt = 1;
   dma->channel[c3].config.half_tx_interrupt = 0;
@@ -251,6 +250,8 @@ void StepMotor::OneTimeInit() {
   dma->channel[c3].config.priority = 0;
   dma->channel[c3].config.mem2mem = 0;
 
+  int c4 = static_cast<int>(DMA::Channel::Chan4);
+  dma->channel[c4].peripheral_address = &spi->data;
   dma->channel[c4].config.enable = 0;
   dma->channel[c4].config.tx_complete_interrupt = 0;
   dma->channel[c4].config.half_tx_interrupt = 0;
@@ -888,19 +889,16 @@ void StepMotor::ProbeChips() {
 }
 
 #else
+
+/// \TODO: improve this mocking to be helpful in testing
+
 StepMtrErr StepMotor::HardDisable() { return StepMtrErr::Ok; }
-
 StepMtrErr StepMotor::SetAmpAll(float amp) { return StepMtrErr::Ok; }
-
 StepMtrErr StepMotor::SetMaxSpeed(float dps) { return StepMtrErr::Ok; }
-
 StepMtrErr StepMotor::SetAccel(float acc) { return StepMtrErr::Ok; }
-
 StepMtrErr StepMotor::MoveRel(float deg) { return StepMtrErr::Ok; }
-
 StepMtrErr StepMotor::ClearPosition() { return StepMtrErr::Ok; }
-
 StepMtrErr StepMotor::GotoPos(float deg) { return StepMtrErr::Ok; }
-
 StepMtrErr StepMotor::HardStop() { return StepMtrErr::Ok; }
+
 #endif

@@ -49,6 +49,7 @@ class I2Ceeprom {
   virtual bool ReceiveBytes(const I2C::Request &request) { return channel_->SendRequest(request); }
 };
 
+/// \TODO: move mock class out to tests rather than main code
 class TestEeprom : public I2Ceeprom {
  public:
   TestEeprom(uint8_t address, uint8_t page_size, uint16_t size)

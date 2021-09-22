@@ -25,7 +25,7 @@ void RunTest() {
   float step = InitialStep;
 
   while (true) {
-    hal.pwm_.set(PwmPin::Blower, fan_power);
+    hal.pwm.set(PwmPin::Blower, fan_power);
     SystemTimer::singleton().Delay(Delay);
 
     Watchdog::pet();

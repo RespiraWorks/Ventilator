@@ -22,6 +22,8 @@ Reference abbreviations [RM], [DS], etc are defined in hal/README.md.
 
 #include "gpio.h"
 
+#include "clocks.h"
+
 namespace GPIO {
 
 // General Purpose I/O
@@ -44,6 +46,16 @@ typedef volatile RegisterStructure Register;
 
 RegisterStructure *base_address(const Port port) {
   return reinterpret_cast<RegisterStructure *>(port);
+}
+
+void enable_all_clocks() {
+  // Enable all the GPIO clocks
+  enable_peripheral_clock(PeripheralID::GPIOA);
+  enable_peripheral_clock(PeripheralID::GPIOB);
+  enable_peripheral_clock(PeripheralID::GPIOC);
+  enable_peripheral_clock(PeripheralID::GPIOD);
+  enable_peripheral_clock(PeripheralID::GPIOE);
+  enable_peripheral_clock(PeripheralID::GPIOH);
 }
 
 void pin_mode(Port port, uint8_t pin, PinMode mode) {

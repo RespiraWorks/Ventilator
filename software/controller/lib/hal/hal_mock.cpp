@@ -18,8 +18,9 @@ limitations under the License.
 #if !defined(BARE_STM32)
 
 void HalApi::EarlyInit() {}
-
 void HalApi::Init() {}
+void HalApi::init_PCB_ID_pins() {}
+void HalApi::InitUARTs() {}
 
 uint16_t HalApi::SerialRead(char *buf, uint16_t len) { return serial_port_.Read(buf, len); }
 uint16_t HalApi::SerialBytesAvailableForRead() { return serial_port_.BytesAvailableForRead(); }

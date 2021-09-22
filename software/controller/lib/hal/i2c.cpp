@@ -29,11 +29,15 @@ limitations under the License.
 #include "hal.h"
 
 #if defined(BARE_STM32)
-
 I2C::STM32Channel i2c1;
+#else
+I2C::Channel i2c1;
+#endif  // BARE_STM32
+
+namespace I2C {
 
 // Reference abbreviations ([RM], [PCB], etc) are defined in hal/README.md
-void HalApi::InitI2C() {
+void initialize() {
   // Enable I2C1 and DMA2 peripheral clocks (we use DMA2 to send/receive data)
   enable_peripheral_clock(PeripheralID::I2C1);
   enable_peripheral_clock(PeripheralID::DMA2);
@@ -59,24 +63,11 @@ void HalApi::InitI2C() {
   Interrupts::singleton().EnableInterrupt(InterruptVector::Dma2Channel6, IntPriority::Low);
   Interrupts::singleton().EnableInterrupt(InterruptVector::Dma2Channel7, IntPriority::Low);
 
-  // init i2c1
+// init i2c1
+#if defined(BARE_STM32)
   i2c1.Init(I2C1Base, DMA::Base::DMA2, I2C::Speed::Fast);
+#endif
 }
-
-// Those interrupt service routines are specific to our configuration, unlike
-// the I2C::Channel::*ISR() which are generic ISR associated with an I²C channel
-void I2c1EventISR() { i2c1.I2CEventHandler(); };
-
-void I2c1ErrorISR() { i2c1.I2CErrorHandler(); };
-
-void DMA2Channel6ISR() { i2c1.DMAIntHandler(DMA::Channel::Chan6); };
-
-void DMA2Channel7ISR() { i2c1.DMAIntHandler(DMA::Channel::Chan7); };
-#else
-I2C::Channel i2c1;
-#endif  // BARE_STM32
-
-namespace I2C {
 
 bool Channel::SendRequest(const Request &request) {
   *(request.processed) = false;

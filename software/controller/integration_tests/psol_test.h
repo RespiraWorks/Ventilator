@@ -25,7 +25,7 @@ void RunTest() {
   float step = InitialStep;
 
   while (true) {
-    hal.psol_.PSolValue(psol_position);
+    hal.psol.PSolValue(psol_position);
     SystemTimer::singleton().Delay(Delay);
 
     Watchdog::pet();

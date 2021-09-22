@@ -27,9 +27,9 @@ void RunTest() {
 
   while (true) {
     if (buzzer_on) {
-      hal.buzzer_.on(volume);
+      hal.buzzer.on(volume);
     } else {
-      hal.buzzer_.off();
+      hal.buzzer.off();
     }
 
     SystemTimer::singleton().Delay(Delay);

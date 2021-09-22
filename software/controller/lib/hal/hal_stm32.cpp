@@ -31,6 +31,7 @@ Abbreviations [RM], [DS], etc are defined in hal/README.md.
 #include "clocks.h"
 #include "flash.h"
 #include "gpio.h"
+#include "i2c.h"
 #include "interrupts.h"
 #include "stepper.h"
 #include "system_timer.h"
@@ -54,8 +55,8 @@ __attribute__((aligned(8))) uint32_t system_stack[SystemStackSize];
 // builds.
 // Those are Interrupt Service Routines, i.e callback functions for the
 // interrupt handlers. They are referenced in the Interrupt Vector Table.
-static void Timer6ISR();
-static void Timer15ISR();
+void Timer6ISR();
+void Timer15ISR();
 void Uart3ISR();
 void DMA1Channel2ISR();
 void DMA1Channel3ISR();
@@ -106,22 +107,23 @@ void HalApi::EarlyInit() {
   configure_pll();
 }
 
-static void Timer6ISR() { SystemTimer::singleton().InterruptHandler(); }
+void Timer6ISR() { SystemTimer::singleton().InterruptHandler(); }
 
 /*
  * One time init of HAL.
  */
 void HalApi::Init() {
   // Init various components needed by the system.
-  InitGpio();
-  LEDs_.initialize();
+  GPIO::enable_all_clocks();
+  init_PCB_ID_pins();
+  LEDs.initialize();
   SystemTimer::singleton().initialize(CPUFrequencyMhz);
-  adc_.initialize(CPUFrequencyHz);
-  pwm_.initialize(CPUFrequencyHz);
+  adc.initialize(CPUFrequencyHz);
+  pwm.initialize(CPUFrequencyHz);
   InitUARTs();
-  buzzer_.initialize(CPUFrequencyHz);
-  psol_.InitPSOL(CPUFrequencyHz);
-  InitI2C();
+  buzzer.initialize(CPUFrequencyHz);
+  psol.InitPSOL(CPUFrequencyHz);
+  I2C::initialize();
   Interrupts::singleton().EnableInterrupts();
   StepMotor::OneTimeInit();
 }
@@ -142,30 +144,12 @@ void HalApi::Init() {
 }
 
 /******************************************************************
- * General Purpose I/O support.
- *
- * The following pins are used as GPIO on the rev-1 PCB
- *
- * Please refer to the PCB schematic as the ultimate source of which
- * pin is used for which function.  A less definitive, but perhaps
- * easier to read version is available in [PCBsp]
- *
  * ID inputs.  These can be used to identify the PCB revision
  * we're running on.
  *  PB1  - ID0
  *  PA12 - ID1
  *****************************************************************/
-void HalApi::InitGpio() {
-  // See [RM] chapter 8 for details on GPIO
-
-  // Enable all the GPIO clocks
-  enable_peripheral_clock(PeripheralID::GPIOA);
-  enable_peripheral_clock(PeripheralID::GPIOB);
-  enable_peripheral_clock(PeripheralID::GPIOC);
-  enable_peripheral_clock(PeripheralID::GPIOD);
-  enable_peripheral_clock(PeripheralID::GPIOE);
-  enable_peripheral_clock(PeripheralID::GPIOH);
-
+void HalApi::init_PCB_ID_pins() {
   // Configure PCB ID pins as inputs.
   GPIO::pin_mode(GPIO::Port::B, 1, GPIO::PinMode::Input);
   GPIO::pin_mode(GPIO::Port::A, 12, GPIO::PinMode::Input);
@@ -233,7 +217,7 @@ static Debug::Variable::Primitive32 dbg_loop_time("loop_time", Debug::Variable::
                                                   &loop_time, "\xB5s", "Duration of loop function",
                                                   "%.2f");
 
-static void Timer15ISR() {
+void Timer15ISR() {
   uint32_t start = Timer15Base->counter;
   Timer15Base->status = 0;
 
@@ -248,6 +232,7 @@ static void Timer15ISR() {
   uint32_t end = Timer15Base->counter;
   loop_time = static_cast<float>(end - start) * (1.0f / CPUFrequencyMhz);
 
+  /// \TODO: Too tightly coupled bc HAL must be aware of steppers. Use another callback?
   // Start sending any queued commands to the stepper motor
   StepMotor::StartQueuedCommands();
 }
@@ -312,7 +297,7 @@ void HalApi::InitUARTs() {
   Interrupts::singleton().EnableInterrupt(InterruptVector::Uart3, IntPriority::Standard);
 }
 
-static void Uart2ISR() { debug_uart.ISR(); }
+void Uart2ISR() { debug_uart.ISR(); }
 
 #ifndef UART_VIA_DMA
 void Uart3ISR() { rpi_uart.ISR(); }
@@ -338,13 +323,12 @@ uint16_t HalApi::DebugBytesAvailableForWrite() { return debug_uart.TxFree(); }
 [[noreturn]] static void Fault() {
   while (true) {
     ;  // noop
-    /* \todo this function is unused; could be made useful if implementation
-     * made sense? blink lights? scream? do something? */
+    /// \TODO function is unused. Make useful: blink lights? scream? do something?
   }
 }
 #pragma GCC diagnostic pop
 
-static void StepperISR() { StepMotor::DmaISR(); }
+void StepperISR() { StepMotor::DmaISR(); }
 
 /******************************************************************
  * Interrupt vector table.  The interrupt vector table is a list of
@@ -353,12 +337,19 @@ static void StepperISR() { StepMotor::DmaISR(); }
  *****************************************************************/
 
 // TODO: these could optionally call Fault() but not in production
-static void NMI() {}
-static void FaultISR() {}
-static void MPUFaultISR() {}
-static void BusFaultISR() {}
-static void UsageFaultISR() {}
-static void BadISR() {}
+void NMI() {}
+void FaultISR() {}
+void MPUFaultISR() {}
+void BusFaultISR() {}
+void UsageFaultISR() {}
+void BadISR() {}
+
+// Those interrupt service routines are specific to our configuration, unlike
+// the I2C::Channel::*ISR() which are generic ISR associated with an I²C channel
+void I2c1EventISR() { i2c1.I2CEventHandler(); };
+void I2c1ErrorISR() { i2c1.I2CErrorHandler(); };
+void DMA2Channel6ISR() { i2c1.DMAIntHandler(DMA::Channel::Chan6); };
+void DMA2Channel7ISR() { i2c1.DMAIntHandler(DMA::Channel::Chan7); };
 
 // We don't control this function's name, silence the style check
 // NOLINTNEXTLINE(readability-identifier-naming)

@@ -19,6 +19,8 @@ limitations under the License.
 
 #pragma once
 
+/// \TODO: refactor this -- too much stuff in one file, and get rid of static globals
+
 #include "circular_buffer.h"
 #include "dma.h"
 
@@ -128,6 +130,8 @@ inline I2CReg *const I2C3Base = reinterpret_cast<I2CReg *>(0x40005c00);
 inline I2CReg *const I2C4Base = reinterpret_cast<I2CReg *>(0x40008400);
 
 namespace I2C {
+
+void initialize();
 
 // Speed values correspond to the timing register value from [RM] table 182
 enum class Speed {

@@ -75,11 +75,11 @@ class TestSerialPort {
 class HalApi {
  public:
   /// \TODO: likely these should not even be members
-  ADC adc_;
-  Buzzer buzzer_;
-  PSOL psol_;
-  LEDIndicators LEDs_;
-  PWM pwm_;
+  ADC adc;
+  Buzzer buzzer;
+  PSOL psol;
+  LEDIndicators LEDs;
+  PWM pwm;
 
  public:
   void Init();
@@ -128,11 +128,9 @@ class HalApi {
   // Start the loop timer
   void StartLoopTimer(const Duration &period, void (*callback)(void *), void *arg);
 
-#if defined(BARE_STM32)
-  void InitGpio();
-  void InitI2C();
+  void init_PCB_ID_pins();
+
   void InitUARTs();
-#endif
 
 #if !defined(BARE_STM32)
  public:

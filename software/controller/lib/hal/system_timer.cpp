@@ -21,8 +21,6 @@ limitations under the License.
 
 #if defined(BARE_STM32)
 
-static volatile int64_t ms_count_{0};
-
 /******************************************************************
  * System timer
  *
@@ -32,7 +30,7 @@ static volatile int64_t ms_count_{0};
  *
  * The basic timers (like timer 6) are documented in [RM] chapter 29.
  *****************************************************************/
-void SystemTimer::initialize(uint32_t cpu_frequency_hz) {
+void SystemTimer::initialize(uint32_t cpu_frequency_MHz) {
   // Enable the clock to the timer
   enable_peripheral_clock(PeripheralID::Timer6);
 
@@ -44,7 +42,7 @@ void SystemTimer::initialize(uint32_t cpu_frequency_hz) {
   // -1 until the clock wraps back to zero and generates an interrupt. This
   // setting will cause an interrupt every 10,000 clocks or 1 millisecond
   tmr->auto_reload = 9999;
-  tmr->prescaler = (cpu_frequency_hz / 10 - 1);
+  tmr->prescaler = (cpu_frequency_MHz / 10 - 1);
   tmr->event = 1;
   // Enable UIFREMAP.  This causes the top bit of tmr->counter to be true if a
   // timer interrupt is pending.
@@ -86,6 +84,8 @@ Time SystemTimer::Now() {
 
 #else
 
+void SystemTimer::initialize(uint32_t cpu_frequency_MHz) {}
+void SystemTimer::InterruptHandler() {}
 Time SystemTimer::Now() { return time_; }
 void SystemTimer::Delay(Duration d) { time_ = time_ + d; }
 

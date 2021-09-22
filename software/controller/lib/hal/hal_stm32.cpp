@@ -114,7 +114,7 @@ void HalApi::Init() {
   // Init various components needed by the system.
   InitGpio();
   LEDs_.initialize();
-  SystemTimer::singleton().initialize(CPUFrequencyMHz);
+  SystemTimer::singleton().initialize(CPUFrequencyMhz);
   adc_.initialize(CPUFrequencyHz);
   pwm_.initialize(CPUFrequencyHz);
   InitUARTs();

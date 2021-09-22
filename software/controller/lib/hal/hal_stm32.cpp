@@ -114,7 +114,7 @@ void HalApi::Init() {
   // Init various components needed by the system.
   InitGpio();
   LEDs_.initialize();
-  InitSysTimer();
+  InitSysTimer(CPUFrequencyMhz);
   adc_.initialize(CPUFrequencyHz);
   pwm_.initialize(CPUFrequencyHz);
   InitUARTs();
@@ -122,7 +122,7 @@ void HalApi::Init() {
   psol_.InitPSOL(CPUFrequencyHz);
   InitI2C();
   Interrupts::singleton().EnableInterrupts();
-  StepperMotorInit();
+  StepMotor::StepperMotorInit();
 }
 
 // Reset the processor
@@ -179,7 +179,7 @@ void HalApi::InitGpio() {
  *
  * The basic timers (like timer 6) are documented in [RM] chapter 29.
  *****************************************************************/
-void HalApi::InitSysTimer() {
+void HalApi::InitSysTimer(const uint32_t cpu_frequency_Mhz) {
   // Enable the clock to the timer
   enable_peripheral_clock(PeripheralID::Timer6);
 
@@ -190,7 +190,7 @@ void HalApi::InitSysTimer() {
   // -1 until the clock wraps back to zero and generates an interrupt. This
   // setting will cause an interrupt every 10,000 clocks or 1 millisecond
   tmr->auto_reload = 9999;
-  tmr->prescaler = (CPUFrequencyMhz / 10 - 1);
+  tmr->prescaler = (cpu_frequency_Mhz / 10 - 1);
   tmr->event = 1;
   // Enable UIFREMAP.  This causes the top bit of tmr->counter to be true if a
   // timer interrupt is pending.

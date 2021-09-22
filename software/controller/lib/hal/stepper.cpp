@@ -89,8 +89,8 @@ static constexpr float VelIntSpeedReg = TickTime * (1 << 26);
 static constexpr int MicrostepPerStep = 128;
 
 // These functions raise and lower the chip select pin
-inline void CSHigh() { GPIO::set_pin(GPIO::Port::B, 6); }
-inline void CSLow() { GPIO::clear_pin(GPIO::Port::B, 6); }
+void chip_select_high() { GPIO::set_pin(GPIO::Port::B, 6); }
+void chip_select_low() { GPIO::clear_pin(GPIO::Port::B, 6); }
 
 StepMtrErr StepMotor::SetParam(StepMtrParam param, uint32_t value) {
   uint8_t p = static_cast<uint8_t>(param);
@@ -164,7 +164,7 @@ StepMtrErr StepMotor::GetParam(StepMtrParam param, uint32_t *value) {
  * on the rising edge of CS.  That's a little better for us since
  * we have 3 steppers.
  *****************************************************************/
-void HalApi::StepperMotorInit() {
+void StepMotor::StepperMotorInit() {
   enable_peripheral_clock(PeripheralID::SPI1);
   enable_peripheral_clock(PeripheralID::DMA2);
 
@@ -187,7 +187,7 @@ void HalApi::StepperMotorInit() {
   // pulled high.  I don't really use the reset pin,
   // I just want it to be high so I don't reset the
   // part inadvertently
-  CSHigh();
+  chip_select_high();
   GPIO::set_pin(GPIO::Port::A, 9);
   GPIO::pin_mode(GPIO::Port::B, 6, GPIO::PinMode::Output);
   GPIO::pin_mode(GPIO::Port::A, 9, GPIO::PinMode::Output);
@@ -790,14 +790,14 @@ void StepMotor::UpdateComState() {
   // NOTE - CS has to be high for at least 650ns between bytes.
   // I don't bother timing this because I've found that in
   // practice it takes longer than that to handle the interrupt
-  CSLow();
+  chip_select_low();
 
   dma->channel[c3].config.enable = 1;
   dma->channel[c4].config.enable = 1;
 }
 
 void StepMotor::DmaISR() {
-  CSHigh();
+  chip_select_high();
 
   // Clear the DMA interrupt
   DMA::ClearInt(DMA::Base::DMA2, DMA::Channel::Chan3, DMA::Interrupt::Global);
@@ -827,7 +827,7 @@ void StepMotor::SendInitCmd(uint8_t *buff, int len) {
   dma->channel[c3].memory_address = buff;
   dma->channel[c4].memory_address = buff;
 
-  CSLow();
+  chip_select_low();
 
   // I prevent interrupts during this because I don't
   // want the normal interrupt handler to run.
@@ -848,7 +848,7 @@ void StepMotor::SendInitCmd(uint8_t *buff, int len) {
   // Raise the chip select line and wait 1 microsecond.
   // The minimum time the CS needs to be high is just under
   // 1 microsecond.
-  CSHigh();
+  chip_select_high();
   hal.Delay(microseconds(1));
 }
 

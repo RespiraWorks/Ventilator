@@ -46,7 +46,7 @@ limitations under the License.
 
 #pragma once
 
-#include <stdint.h>
+#include <cstdint>
 
 // These are the simple opcodes for the stepper driver.
 // Not included here are set/get parameter which include
@@ -171,6 +171,8 @@ class StepMotor {
   StepMotor() = default;
 
   // Called from HAL at startup
+  static void StepperMotorInit();
+
   static void OneTimeInit();
 
   // Return a pointer to the Nth stepper motor in the system.

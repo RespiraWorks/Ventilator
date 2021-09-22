@@ -152,9 +152,8 @@ class HalApi {
 #if defined(BARE_STM32)
   void InitGpio();
   void InitI2C();
-  void InitSysTimer();
+  void InitSysTimer(uint32_t cpu_frequency_Mhz);
   void InitUARTs();
-  void StepperMotorInit();
 #endif
 
 #if !defined(BARE_STM32)

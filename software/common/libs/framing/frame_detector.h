@@ -179,7 +179,7 @@ class FrameDetector : public RxListener {
   // Returns true if a new frame was detected and this frame is available for read.
   bool frame_available() const { return frame_available_; }
 
-#ifdef TEST_MODE
+#if !defined(BARE_STM32)
   State get_state() const { return state_; }
 #endif
 

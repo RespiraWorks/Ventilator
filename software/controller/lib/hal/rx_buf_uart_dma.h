@@ -43,7 +43,7 @@ class RxBufferUartDma {
   // Returns the rx_buffer_
   const uint8_t *get() const { return rx_buffer_; }
 
-#ifdef TEST_MODE
+#if !defined(BARE_STM32)
   // Puts a byte to rx_buffer_
   void test_put_byte(const uint8_t b);
 #endif
@@ -55,7 +55,7 @@ class RxBufferUartDma {
   uint8_t rx_buffer_[RxBytesMax] = {0};
 };
 
-#ifdef TEST_MODE
+#if !defined(BARE_STM32)
 extern uint32_t rx_index;
 // Puts a byte to rx_buffer_
 template <uint32_t RxBytesMax>

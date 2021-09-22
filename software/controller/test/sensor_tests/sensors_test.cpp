@@ -33,6 +33,7 @@ limitations under the License.
 #include "flow_integrator.h"
 #include "gtest/gtest.h"
 #include "hal.h"
+#include "system_timer.h"
 
 // Maximum allowable delta between calculated sensor readings and the input.
 static const Pressure ComparisonTolerancePressure{kPa(0.005f)};
@@ -98,7 +99,7 @@ static SensorReadings update_readings(Duration dt, Pressure oxygen_influx_dp,
   hal.adc_.TESTSetAnalogPin(sensor_pin(Sensor::OutflowPressureDiff),
                             MPXV5004_PressureToVoltage(outflow_dp));
   hal.adc_.TESTSetAnalogPin(sensor_pin(Sensor::FIO2), FIO2ToVoltage(fio2, p_amb));
-  hal.Delay(dt);
+  SystemTimer::singleton().Delay(dt);
   return sensors->get_readings();
 }
 

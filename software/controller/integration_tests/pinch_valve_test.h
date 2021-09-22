@@ -11,6 +11,7 @@
 
 #include "hal.h"
 #include "pinch_valve.h"
+#include "system_timer.h"
 
 // test parameters
 static constexpr int MotorIndex{TEST_PARAM_1};
@@ -24,7 +25,7 @@ void RunTest() {
   bool valve_open{false};
   while (true) {
     pinch_valve.SetOutput(valve_open ? 1.0f : 0.0f);
-    hal.Delay(Delay);
+    SystemTimer::singleton().Delay(Delay);
 
     hal.WatchdogHandler();
 

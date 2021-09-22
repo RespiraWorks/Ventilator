@@ -9,9 +9,11 @@
 //      TBD - which python script to run?
 //
 
+#include <cmath>
+
 #include "hal.h"
 #include "stepper.h"
-#include <cmath>
+#include "system_timer.h"
 
 // test parameters
 static constexpr int MotorIndex{TEST_PARAM_1};
@@ -30,7 +32,7 @@ void RunTest() {
 
   while (true) {
     stepper_motor->MoveRel(StepDegrees);
-    hal.Delay(Delay);
+    SystemTimer::singleton().Delay(Delay);
 
     hal.WatchdogHandler();
   }

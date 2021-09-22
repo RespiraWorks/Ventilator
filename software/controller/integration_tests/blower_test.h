@@ -25,7 +25,7 @@ void RunTest() {
 
   while (true) {
     hal.pwm_.set(PwmPin::Blower, fan_power);
-    hal.Delay(Delay);
+    SystemTimer::singleton().Delay(Delay);
 
     hal.WatchdogHandler();
 

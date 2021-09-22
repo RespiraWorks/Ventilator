@@ -9,6 +9,7 @@
 //
 
 #include "hal.h"
+#include "system_timer.h"
 
 // test parameters
 static constexpr Duration Delay{milliseconds(10)};
@@ -24,7 +25,7 @@ void RunTest() {
 
   while (true) {
     hal.psol_.PSolValue(psol_position);
-    hal.Delay(Delay);
+    SystemTimer::singleton().Delay(Delay);
 
     hal.WatchdogHandler();
 

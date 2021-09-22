@@ -18,6 +18,7 @@ limitations under the License.
 #include <cmath>
 
 #include "gtest/gtest.h"
+#include "system_timer.h"
 
 // TODO: There ought to be many more tests in here.
 
@@ -147,7 +148,7 @@ void actuatorsTestSequence(const std::vector<ActuatorsTest> &seq) {
   constexpr float ValveStateTolerance{.001f};
 
   // Reset time to test's start time.
-  hal.Delay(seq.front().time - hal.Now());
+  SystemTimer::singleton().Delay(seq.front().time - SystemTimer::singleton().Now());
 
   Controller controller;
   VentParams last_params = VentParams_init_zero;
@@ -162,14 +163,15 @@ void actuatorsTestSequence(const std::vector<ActuatorsTest> &seq) {
   for (const auto &actuators_test : seq) {
     SCOPED_TRACE("time = " + actuators_test.time.microsSinceStartup() / 1000);
     // Move time forward to t in steps of Controller::GetLoopPeriod().
-    while (hal.Now() < actuators_test.time) {
-      hal.Delay(Controller::GetLoopPeriod());
-      (void)controller.Run(hal.Now(), last_params, last_readings);
+    while (SystemTimer::singleton().Now() < actuators_test.time) {
+      SystemTimer::singleton().Delay(Controller::GetLoopPeriod());
+      (void)controller.Run(SystemTimer::singleton().Now(), last_params, last_readings);
     }
-    EXPECT_EQ(actuators_test.time.microsSinceStartup(), hal.Now().microsSinceStartup());
+    EXPECT_EQ(actuators_test.time.microsSinceStartup(),
+              SystemTimer::singleton().Now().microsSinceStartup());
 
-    auto [act_state, unused_status] =
-        controller.Run(hal.Now(), actuators_test.params, actuators_test.readings);
+    auto [act_state, unused_status] = controller.Run(
+        SystemTimer::singleton().Now(), actuators_test.params, actuators_test.readings);
     (void)unused_status;
 
     EXPECT_FLOAT_EQ(act_state.blower_power, actuators_test.expected_state.blower_power);

@@ -14,11 +14,9 @@ limitations under the License.
 
 */
 
-#if defined(BARE_STM32) && defined(UART_VIA_DMA)
+#if defined(BARE_STM32)
 
 #include "uart_dma.h"
-
-#include "hal_stm32_regs.h"
 
 // STM32 UART3 driver based on DMA transfers.
 
@@ -205,9 +203,8 @@ static bool rx_error() {
 }
 
 // ISR handler for the UART peripheral.
-// Calls on_rx_error and on_character_match functions of the rx_listener_ as
-// those events are provided by UART peripheral. on_rx_complete is called by DMA
-// ISR
+// Calls on_rx_error and on_character_match functions of the rx_listener_ as those events are
+// provided by UART peripheral. on_rx_complete is called by the DMA ISR
 void UartDma::UART_interrupt_handler() {
   if (rx_error()) {
     RxError e = RxError::Unknown;
@@ -284,7 +281,9 @@ void DMA1Channel3ISR() {
   DMA::get_register(DMA::Base::DMA1)->interrupt_clear.gif3 = 1;  // clear all channel 2 flags
 }
 
+#if defined(UART_VIA_DMA)
 // This is the interrupt handler for the UART.
 void Uart3ISR() { uart_dma.UART_interrupt_handler(); }
+#endif
 
 #endif

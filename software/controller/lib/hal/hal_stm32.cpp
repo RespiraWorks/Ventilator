@@ -38,6 +38,7 @@ Abbreviations [RM], [DS], etc are defined in hal/README.md.
 #include "uart.h"
 #include "uart_dma.h"
 #include "vars.h"
+#include "watchdog.h"
 
 static constexpr uint32_t CPUFrequencyMhz{80};
 
@@ -187,7 +188,7 @@ void HalApi::StartLoopTimer(const Duration &period, void (*callback)(void *), vo
   // Init the watchdog timer now.  The watchdog timer is serviced by the
   // loop callback function.  I don't init it until the loop starts because
   // otherwise it may expire before the function that resets it starts running
-  WatchdogInit();
+  Watchdog::initialize();
 
   // Find the loop period in clock cycles
   int32_t reload = static_cast<int32_t>(CPUFrequencyHz * period.seconds());
@@ -330,51 +331,6 @@ uint16_t HalApi::DebugWrite(const char *buf, uint16_t len) { return debug_uart.W
 uint16_t HalApi::DebugRead(char *buf, uint16_t len) { return debug_uart.Read(buf, len); }
 
 uint16_t HalApi::DebugBytesAvailableForWrite() { return debug_uart.TxFree(); }
-
-/******************************************************************
- * Watchdog timer (see [RM] chapter 32).
- *
- * The watchdog timer will reset the system if it hasn't been
- * re-initialized within a specific amount of time.  It's used
- * to catch bugs that would otherwise hang the system.  When
- * the watchdog is enabled such a bug will reset the system
- * rather then let it hang indefinitely.
- *****************************************************************/
-void HalApi::WatchdogInit() {
-  WatchdogReg *wdog = WatchdogBase;
-
-  // Enable the watchdog timer by writing the appropriate value to its key
-  // register
-  wdog->key = 0xCCCC;
-
-  // Enable register access
-  wdog->key = 0x5555;
-
-  // Set the pre-scaler to 0.  That setting will cause the watchdog
-  // clock to be updated at approximately 8KHz.
-  wdog->prescaler = 0;
-
-  // The reload value gives the number of clock cycles before the
-  // watchdog timer times out.  I'll set it to 2000 which gives
-  // us about 250ms before a reset.
-  wdog->reload = 2000;
-
-  // Since the watchdog timer runs off its own clock which is pretty
-  // slow, it takes a little time for the registers to actually get
-  // updated.  I wait for the status register to go to zero which
-  // means its done.
-  while (wdog->status) {
-  }
-
-  // Reset the timer.  This also locks the registers again.
-  wdog->key = 0xAAAA;
-}
-
-// Pet the watchdog so it doesn't bite us.
-void HalApi::WatchdogHandler() {
-  WatchdogReg *wdog = WatchdogBase;
-  wdog->key = 0xAAAA;
-}
 
 // Fault handler
 #pragma GCC diagnostic push

@@ -10,6 +10,7 @@
 
 #include "hal.h"
 #include "system_timer.h"
+#include "watchdog.h"
 
 // test parameters
 static constexpr Duration Delay{milliseconds(10)};
@@ -27,7 +28,7 @@ void RunTest() {
     hal.pwm_.set(PwmPin::Blower, fan_power);
     SystemTimer::singleton().Delay(Delay);
 
-    hal.WatchdogHandler();
+    Watchdog::pet();
 
     fan_power += step;
     if (fan_power >= FanMax) {

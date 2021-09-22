@@ -26,6 +26,7 @@ limitations under the License.
 #include "system_timer.h"
 #include "trace.h"
 #include "version.h"
+#include "watchdog.h"
 
 using DUint32 = Debug::Variable::UInt32;
 using DFloat = Debug::Variable::Float;
@@ -127,8 +128,7 @@ static void HighPriorityTask(void *arg) {
   // Sample any trace variables that are enabled
   debug.SampleTraceVars();
 
-  // Pet the watchdog
-  hal.WatchdogHandler();
+  Watchdog::pet();
 }
 
 // This function is the lower priority background loop which runs continuously
@@ -152,7 +152,7 @@ static void HighPriorityTask(void *arg) {
         .exhale_valve = 1,
     });
     SystemTimer::singleton().Delay(milliseconds(10));
-    hal.WatchdogHandler();
+    Watchdog::pet();
     debug.Poll();
   }
 

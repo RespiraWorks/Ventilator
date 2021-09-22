@@ -20,7 +20,6 @@ limitations under the License.
 void HalApi::EarlyInit() {}
 
 void HalApi::Init() {}
-void HalApi::WatchdogHandler() {}
 
 uint16_t HalApi::SerialRead(char *buf, uint16_t len) { return serial_port_.Read(buf, len); }
 uint16_t HalApi::SerialBytesAvailableForRead() { return serial_port_.BytesAvailableForRead(); }

@@ -14,6 +14,7 @@
 #include "hal.h"
 #include "stepper.h"
 #include "system_timer.h"
+#include "watchdog.h"
 
 // test parameters
 static constexpr int MotorIndex{TEST_PARAM_1};
@@ -34,6 +35,6 @@ void RunTest() {
     stepper_motor->MoveRel(StepDegrees);
     SystemTimer::singleton().Delay(Delay);
 
-    hal.WatchdogHandler();
+    Watchdog::pet();
   }
 }

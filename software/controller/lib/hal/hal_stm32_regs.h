@@ -57,18 +57,7 @@ struct SysControlStruct {
 typedef volatile SysControlStruct SysControlReg;
 inline SysControlReg *const SysControlBase = reinterpret_cast<SysControlReg *>(0xE000E000);
 
-// Watchdog timer
-// [RM] 32.4 Watchdog Registers (pg 1016)
-struct WatchdogStruct {
-  uint32_t key;        // Key register [RM] 32.4.1
-  uint32_t prescaler;  // Prescale register [RM] 32.4.2
-  uint32_t reload;     // Reload register [RM] 32.4.3
-  uint32_t status;     // Status register [RM] 32.4.4
-  uint32_t window;     // Window register [RM] 32.4.5
-};
-typedef volatile WatchdogStruct WatchdogReg;
-inline WatchdogReg *const WatchdogBase = reinterpret_cast<WatchdogReg *>(0x40003000);
-
+/// \TODO: Do we never intend to use this again since you have soft_crc? delete this?
 // CRC calculation unit
 // [RM] 14.4 CRC Registers (pg 341)
 struct CrcStruct {

@@ -128,15 +128,6 @@ class HalApi {
   // Start the loop timer
   void StartLoopTimer(const Duration &period, void (*callback)(void *), void *arg);
 
-  // Pets the watchdog, this makes the watchdog not reset the
-  // system for configured amount of time
-  void WatchdogHandler();
-
- private:
-  // Initializes watchdog, sets appropriate pins to Output, etc.  Called by
-  // HalApi::Init
-  void WatchdogInit();
-
 #if defined(BARE_STM32)
   void InitGpio();
   void InitI2C();

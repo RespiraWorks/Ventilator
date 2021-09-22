@@ -10,6 +10,7 @@
 //
 
 #include "hal.h"
+#include "system_timer.h"
 
 // test parameters
 static constexpr Duration Delay{milliseconds(10)};
@@ -18,6 +19,6 @@ void RunTest() {
   hal.Init();
 
   while (true) {
-    hal.Delay(Delay);
+    SystemTimer::singleton().Delay(Delay);
   }
 }

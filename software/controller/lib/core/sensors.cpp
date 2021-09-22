@@ -15,6 +15,8 @@ limitations under the License.
 
 #include "sensors.h"
 
+#include "system_timer.h"
+
 //////////////////////////////////////////////////////////////////
 //                   SENSOR LOGICAL MAPPINGS                    //
 //   Change these if you route your sensor tubing differently   //
@@ -57,7 +59,7 @@ void Sensors::calibrate() {
   // It seems that we'll need to save calibration readings to non-volatile
   // memory and provide operators with a way to shut off the device's blowers,
   // open any necessary valves, and recalibrate.
-  hal.Delay(milliseconds(20));
+  SystemTimer::singleton().Delay(milliseconds(20));
 
   patient_pressure_sensor_.set_zero(hal);
   air_influx_sensor_dp_.set_zero(hal);

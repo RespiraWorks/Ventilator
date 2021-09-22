@@ -21,9 +21,9 @@ limitations under the License.
 #include "clocks.h"
 #include "dma.h"
 #include "gpio.h"
-#include "hal.h"
 #include "interrupts.h"
 #include "spi.h"
+#include "system_timer.h"
 
 StepMotor StepMotor::motor_[StepMotor::MaxMotors];
 int StepMotor::total_motors_;
@@ -164,7 +164,7 @@ StepMtrErr StepMotor::GetParam(StepMtrParam param, uint32_t *value) {
  * on the rising edge of CS.  That's a little better for us since
  * we have 3 steppers.
  *****************************************************************/
-void StepMotor::StepperMotorInit() {
+void StepMotor::OneTimeInit() {
   enable_peripheral_clock(PeripheralID::SPI1);
   enable_peripheral_clock(PeripheralID::DMA2);
 
@@ -266,12 +266,9 @@ void StepMotor::StepperMotorInit() {
 
   Interrupts::singleton().EnableInterrupt(InterruptVector::Dma2Channel3, IntPriority::Standard);
 
-  StepMotor::OneTimeInit();
-}
+  // Do some basic init of the stepper motor chips so we can
+  // make them spin the motors
 
-// Do some basic init of the stepper motor chips so we can
-// make them spin the motors
-void StepMotor::OneTimeInit() {
   uint32_t val;
 
   ProbeChips();
@@ -285,7 +282,7 @@ void StepMotor::OneTimeInit() {
     // a new command.  For the power-step chip this delay
     // time is specified as 500 microseconds in the data sheet.
     // For the L6470 its only 45 max
-    hal.Delay(microseconds(500));
+    SystemTimer::singleton().Delay(microseconds(500));
 
     // Get the first gate config register of the powerSTEP01.
     // This is actually the config register on the L6470
@@ -849,7 +846,7 @@ void StepMotor::SendInitCmd(uint8_t *buff, int len) {
   // The minimum time the CS needs to be high is just under
   // 1 microsecond.
   chip_select_high();
-  hal.Delay(microseconds(1));
+  SystemTimer::singleton().Delay(microseconds(1));
 }
 
 // This is run at startup before the DMA interrupts are enabled.

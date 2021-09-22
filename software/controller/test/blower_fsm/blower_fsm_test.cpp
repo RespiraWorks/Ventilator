@@ -23,6 +23,7 @@ limitations under the License.
 #include "gmock/gmock-matchers.h"
 #include "gtest/gtest.h"
 #include "hal.h"
+#include "system_timer.h"
 
 namespace {
 
@@ -40,7 +41,7 @@ static_assert(rise_time_us % 2 == 0, "blower fsm tests assume we can divide rise
 TEST(BlowerFsmTest, InitiallyOff) {
   BlowerFsm fsm;
   VentParams p = VentParams_init_zero;
-  BlowerSystemState s = fsm.DesiredState(hal.Now(), p, inputs_zero);
+  BlowerSystemState s = fsm.DesiredState(SystemTimer::singleton().Now(), p, inputs_zero);
   EXPECT_TRUE(s.pressure_setpoint == std::nullopt);
   EXPECT_EQ(s.flow_direction, FlowDirection::Expiratory);
 }
@@ -48,8 +49,8 @@ TEST(BlowerFsmTest, InitiallyOff) {
 TEST(BlowerFsmTest, StaysOff) {
   BlowerFsm fsm;
   VentParams p = VentParams_init_zero;
-  hal.Delay(milliseconds(1000));
-  BlowerSystemState s = fsm.DesiredState(hal.Now(), p, inputs_zero);
+  SystemTimer::singleton().Delay(milliseconds(1000));
+  BlowerSystemState s = fsm.DesiredState(SystemTimer::singleton().Now(), p, inputs_zero);
   EXPECT_TRUE(s.pressure_setpoint == std::nullopt);
   EXPECT_EQ(s.flow_direction, FlowDirection::Expiratory);
 }
@@ -63,7 +64,7 @@ TEST(BlowerFsmTest, OffFsmDesiredPipPeep) {
   p.peep_cm_h2o = 10;
   p.pip_cm_h2o = 20;
 
-  BlowerSystemState s = fsm.DesiredState(hal.Now(), p, inputs_zero);
+  BlowerSystemState s = fsm.DesiredState(SystemTimer::singleton().Now(), p, inputs_zero);
   EXPECT_EQ(s.pip.cmH2O(), 0.f);
   EXPECT_EQ(s.peep.cmH2O(), 0.f);
 }
@@ -78,29 +79,29 @@ TEST(BlowerFsmTest, DesiredPipPeep) {
     p.pip_cm_h2o = 20;
     p.peep_cm_h2o = 10;
 
-    BlowerSystemState s = fsm.DesiredState(hal.Now(), p, inputs_zero);
+    BlowerSystemState s = fsm.DesiredState(SystemTimer::singleton().Now(), p, inputs_zero);
     EXPECT_EQ(s.pip.cmH2O(), 20.f);
     EXPECT_EQ(s.peep.cmH2O(), 10.f);
 
-    hal.Delay(seconds(1));
+    SystemTimer::singleton().Delay(seconds(1));
     p.pip_cm_h2o = 25;
     p.peep_cm_h2o = 15;
 
     // pip/peep unchanged, because we haven't hit a breath boundary yet.
-    s = fsm.DesiredState(hal.Now(), p, inputs_zero);
+    s = fsm.DesiredState(SystemTimer::singleton().Now(), p, inputs_zero);
     EXPECT_EQ(s.pip.cmH2O(), 20.f);
     EXPECT_EQ(s.peep.cmH2O(), 10.f);
 
     // We are at the breath boundary; the FSM will return the last desired state
     // for the just-completed breath; is_end_of_breath flag should be true
-    hal.Delay(seconds(2));
-    s = fsm.DesiredState(hal.Now(), p, inputs_zero);
+    SystemTimer::singleton().Delay(seconds(2));
+    s = fsm.DesiredState(SystemTimer::singleton().Now(), p, inputs_zero);
     EXPECT_EQ(s.pip.cmH2O(), 20.f);
     EXPECT_EQ(s.peep.cmH2O(), 10.f);
     EXPECT_EQ(s.is_end_of_breath, true);
 
     // the next desired state should contain updated values
-    s = fsm.DesiredState(hal.Now(), p, inputs_zero);
+    s = fsm.DesiredState(SystemTimer::singleton().Now(), p, inputs_zero);
     EXPECT_EQ(s.pip.cmH2O(), 25.f);
     EXPECT_EQ(s.peep.cmH2O(), 15.f);
     EXPECT_EQ(s.is_end_of_breath, false);
@@ -124,21 +125,22 @@ void testSequence(const std::vector<BlowerFsmTest> &seq) {
 
   // Reset time to test's start time.
   // TODO: Add a hal.test_ResetClockToZero() command?
-  hal.Delay(seq.front().time - hal.Now());
+  SystemTimer::singleton().Delay(seq.front().time - SystemTimer::singleton().Now());
 
   VentParams last_params;
   BlowerFsmInputs last_inputs;
   for (const auto &blower_fsm_test : seq) {
     SCOPED_TRACE("time = " + blower_fsm_test.time.microsSinceStartup() / 1000);
     // Move time forward to t in steps of Controller::GetLoopPeriod().
-    while (hal.Now() < blower_fsm_test.time) {
-      hal.Delay(Controller::GetLoopPeriod());
-      (void)fsm.DesiredState(hal.Now(), last_params, last_inputs);
+    while (SystemTimer::singleton().Now() < blower_fsm_test.time) {
+      SystemTimer::singleton().Delay(Controller::GetLoopPeriod());
+      (void)fsm.DesiredState(SystemTimer::singleton().Now(), last_params, last_inputs);
     }
-    EXPECT_EQ(blower_fsm_test.time.microsSinceStartup(), hal.Now().microsSinceStartup());
+    EXPECT_EQ(blower_fsm_test.time.microsSinceStartup(),
+              SystemTimer::singleton().Now().microsSinceStartup());
 
-    BlowerSystemState state =
-        fsm.DesiredState(hal.Now(), blower_fsm_test.params, blower_fsm_test.inputs);
+    BlowerSystemState state = fsm.DesiredState(SystemTimer::singleton().Now(),
+                                               blower_fsm_test.params, blower_fsm_test.inputs);
     EXPECT_EQ(state.pressure_setpoint.has_value(),
               blower_fsm_test.expected_state.pressure_setpoint.has_value());
     EXPECT_FLOAT_EQ(state.pressure_setpoint.value_or(cmH2O(0)).cmH2O(),
@@ -252,24 +254,24 @@ FlowTraceResults RunFlowTrace(const VolumetricFlow *trace, size_t n, const VentP
                               std::vector<std::tuple</*time ms*/ uint64_t,
                                                      /*setpoint pressure, cmH2O*/ float>>
                                   setpoint_checks) {
-  FsmTy fsm(hal.Now(), params);
+  FsmTy fsm(SystemTimer::singleton().Now(), params);
 
-  Time start = hal.Now();
+  Time start = SystemTimer::singleton().Now();
   FlowTraceResults results;
   auto check_it = setpoint_checks.begin();
 
   for (size_t i = 0; i < n; i++) {
-    auto ms = (hal.Now() - start).microseconds() / 1000;
+    auto ms = (SystemTimer::singleton().Now() - start).microseconds() / 1000;
     SCOPED_TRACE("time = " + std::to_string(ms));
 
     VolumetricFlow f = trace[i];
 
     // Our traces don't contain volume measurements, but this is OK for now.
     BlowerSystemState desired_state =
-        fsm.DesiredState(hal.Now(), {.patient_volume = ml(0), .net_flow = f});
+        fsm.DesiredState(SystemTimer::singleton().Now(), {.patient_volume = ml(0), .net_flow = f});
     FlowDirection dir = desired_state.flow_direction;
     if (dir == FlowDirection::Expiratory && !results.expire_start_time) {
-      results.expire_start_time = hal.Now() - start;
+      results.expire_start_time = SystemTimer::singleton().Now() - start;
     }
 
     if (results.expire_start_time == std::nullopt) {
@@ -291,11 +293,11 @@ FlowTraceResults RunFlowTrace(const VolumetricFlow *trace, size_t n, const VentP
     }
 
     if (desired_state.is_end_of_breath) {
-      results.finish_time = hal.Now() - start;
+      results.finish_time = SystemTimer::singleton().Now() - start;
       break;
     }
 
-    hal.Delay(trace_interval);
+    SystemTimer::singleton().Delay(trace_interval);
   }
 
   EXPECT_TRUE(check_it == setpoint_checks.end()) << "didn't see every expected pressure checkpoint";

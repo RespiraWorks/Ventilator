@@ -15,28 +15,26 @@ limitations under the License.
 
 #pragma once
 
-#include <cstdint>
-
-#include "serial_listeners.h"
+#include "rx_buffer.h"
 
 template <size_t RxBytesMax>
-class SoftRxBuffer {
+class SoftRxBuffer : public RxBuffer {
  public:
   explicit SoftRxBuffer(uint8_t match_char) : match_char_(match_char) {}
 
-  void restart_rx(RxListener *listener) {
+  void restart_rx(RxListener *listener) override {
     rx_index_ = 0;
     rx_listener_ = listener;
   }
 
-  bool begin(RxListener *listener) {
+  bool begin(RxListener *listener) override {
     restart_rx(listener);
     return true;
   };
 
-  size_t received_length() const { return rx_index_; }
+  size_t received_length() const override { return rx_index_; }
 
-  const uint8_t *get() const { return rx_buffer_; }
+  const uint8_t *get() const override { return rx_buffer_; }
 
   void put_byte(const uint8_t byte) {
     if (rx_index_ < RxBytesMax) {

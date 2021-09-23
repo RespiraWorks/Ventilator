@@ -29,8 +29,8 @@ using namespace std;
 constexpr size_t BufferLength{20};
 constexpr uint8_t Mark{static_cast<uint8_t>('.')};
 
-using State = FrameDetector<SoftRxBuffer<BufferLength>, BufferLength>::State;
-using FrameDetectorTest = FrameDetector<SoftRxBuffer<BufferLength>, BufferLength>;
+using State = FrameDetector<BufferLength>::State;
+using FrameDetectorTest = FrameDetector<BufferLength>;
 
 TEST(FrameDetector, MarkFirstInLost) {
   SoftRxBuffer<BufferLength> rx_buf(Mark);
@@ -179,7 +179,7 @@ template <int BUF_BufferLength>
 vector<string> fakeRx(string frame) {
   vector<string> ret;
   SoftRxBuffer<BUF_BufferLength> rx_buf(Mark);
-  FrameDetector<SoftRxBuffer<BUF_BufferLength>, BUF_BufferLength> frame_detector(rx_buf);
+  FrameDetector<BUF_BufferLength> frame_detector(rx_buf);
   if (!frame_detector.begin()) {
     return ret;
   }

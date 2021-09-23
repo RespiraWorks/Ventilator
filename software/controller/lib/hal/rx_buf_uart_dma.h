@@ -16,32 +16,33 @@ limitations under the License.
 #pragma once
 
 #include "network_protocol.pb.h"
+#include "rx_buffer.h"
 #include "uart_dma.h"
 
 // RX buffer wrapper that controls restart of reception and provides count of received bytes.
 // We need this class to abstract hardware access from FrameDetector FSM, so it can be used in GUI
 template <uint32_t RxBytesMax>
-class RxBufferUartDma {
+class RxBufferUartDma : public RxBuffer {
  public:
   explicit RxBufferUartDma(UartDma &uart_dma) : uart_dma_(uart_dma) {}
 
   // Sets up underlying receive infrastructure and starts the first reception
-  [[nodiscard]] bool begin(RxListener *rxl) {
+  [[nodiscard]] bool begin(RxListener *rxl) override {
     uart_dma_.enable_character_match();
     return uart_dma_.start_rx(rx_buffer_, RxBytesMax, rxl);
   }
 
   // Restarts the ongoing reception, this means the rx_buffer_ will be written from the beginning
-  void restart_rx(RxListener *rxl) {
+  void restart_rx(RxListener *rxl) override {
     uart_dma_.stop_rx();
     [[maybe_unused]] bool started = uart_dma_.start_rx(rx_buffer_, RxBytesMax, rxl);
   }
 
   // Returns how many bytes were written into rx_buf
-  uint32_t received_length() const { return (RxBytesMax - uart_dma_.rx_bytes_left()); }
+  uint32_t received_length() const override { return (RxBytesMax - uart_dma_.rx_bytes_left()); }
 
   // Returns the rx_buffer_
-  const uint8_t *get() const { return rx_buffer_; }
+  const uint8_t *get() const override { return rx_buffer_; }
 
 #if !defined(BARE_STM32)
   // Puts a byte to rx_buffer_

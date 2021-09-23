@@ -13,24 +13,19 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#pragma once
+#include "soft_rx_buffer.h"
 
-#include <cstddef>
-#include <cstdint>
+#include "gmock/gmock.h"
+#include "gtest/gtest.h"
 
-#include "serial_listeners.h"
+constexpr size_t BufferLength{20};
+constexpr uint8_t FrameMarker{static_cast<uint8_t>('.')};
 
-class RxBuffer {
- public:
-  // Sets up underlying receive infrastructure and starts the first reception
-  virtual bool begin(RxListener *listener) = 0;
+using BufferType = SoftRxBuffer<BufferLength>;
 
-  // Restarts the ongoing reception, i.e. the buffer will be written from the beginning
-  virtual void restart_rx(RxListener *listener) = 0;
+/// \TODO: implement actual tests
 
-  // Returns how many bytes were written to the buffer
-  virtual size_t received_length() const = 0;
-
-  // Returns the buffer
-  virtual const uint8_t *get() const = 0;
-};
+TEST(SoftRxBuffer, Placeholder) {
+  BufferType buffer(FrameMarker);
+  EXPECT_EQ(buffer.received_length(), 0);
+}

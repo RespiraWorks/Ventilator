@@ -21,8 +21,15 @@ limitations under the License.
 
 class RxBuffer {
  public:
-  virtual void restart_rx(RxListener *listener) = 0;
+  // Sets up underlying receive infrastructure and starts the first reception
   virtual bool begin(RxListener *listener) = 0;
+
+  // Restarts the ongoing reception, i.e. the buffer will be written from the beginning
+  virtual void restart_rx(RxListener *listener) = 0;
+
+  // Returns how many bytes were written to the buffer
   virtual size_t received_length() const = 0;
+
+  // Returns the buffer
   virtual const uint8_t *get() const = 0;
 };

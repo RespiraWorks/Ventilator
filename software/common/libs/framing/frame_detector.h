@@ -101,12 +101,8 @@ class FrameDetector : public RxListener {
   // Returns true if a new frame was detected and this frame is available for read.
   bool frame_available() const;
 
-#if !defined(BARE_STM32)
-  State get_state() const;
-//  { return state_; }
-#endif
-
- private:
+  /// Using protected so that derived class with back-door can be used for testing
+ protected:
   RxBuffer *rx_buffer_;  /// \TODO: const ptr?
   State state_{State::Lost};
   bool frame_available_{false};

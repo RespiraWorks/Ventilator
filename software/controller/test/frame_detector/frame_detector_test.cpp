@@ -29,8 +29,13 @@ using namespace std;
 constexpr size_t BufferLength{20};
 constexpr uint8_t Mark{static_cast<uint8_t>('.')};
 
-using State = FrameDetector<BufferLength>::State;
-using FrameDetectorTest = FrameDetector<BufferLength>;
+class FrameDetectorTest : public FrameDetector<BufferLength> {
+ public:
+  FrameDetectorTest(RxBuffer &t) : FrameDetector<BufferLength>(t) {}
+  State get_state() const { return state_; }
+};
+
+using State = FrameDetectorTest::State;
 
 TEST(FrameDetector, MarkFirstInLost) {
   SoftRxBuffer<BufferLength> rx_buf(Mark);

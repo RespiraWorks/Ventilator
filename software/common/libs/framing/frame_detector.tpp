@@ -137,11 +137,6 @@ template<size_t S>
 bool FrameDetector<S>::frame_available() const
 { return frame_available_; }
 
-#if !defined(BARE_STM32)
-template<size_t S>
-typename FrameDetector<S>::State FrameDetector<S>::get_state() const { return state_; }
-#endif
-
 template<size_t S>
 void FrameDetector<S>::restart_rx()
 {

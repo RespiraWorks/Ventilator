@@ -64,14 +64,8 @@ static constexpr float MoveAmp = 0.25f;
 static constexpr float MoveVel = 2000.0f;
 static constexpr float MoveAccel = MoveVel / 0.05f;
 
-PinchValve::PinchValve(int motor_index, const char *name_prepend, const char *help_append,
-                       NVParams::Handler *nv_params, const uint16_t offset)
-    : motor_index_(motor_index),
-      calibration_("_pinch_cal", Debug::Variable::Access::ReadWrite, nv_params, offset, "",
-                   "Pinch valve flow table") {
-  calibration_.prepend_name(name_prepend);
-  calibration_.append_help(help_append);
-}
+PinchValve::PinchValve(int motor_index, Interpolant<pinch_valves_cal_size> *calibration)
+    : motor_index_(motor_index), calibration_(calibration) {}
 
 // Disable the pinch valve
 void PinchValve::Disable() {
@@ -172,26 +166,11 @@ void PinchValve::SetOutput(float value) {
   StepMotor *mtr = StepMotor::GetStepper(motor_index_);
   if (!mtr) return;
 
-  value = std::clamp(value, 0.0f, 1.0f);
-
-  // Number of intervals defined by the table.
-  float tbl_len = static_cast<float>(calibration_.data.size() - 1);
-
-  // Convert the input value based on a table
-  // used to linearize the pinch valve output
-  int n = static_cast<int>(value * tbl_len);
-  float f = value * tbl_len - static_cast<float>(n);
-
-  if (n == static_cast<int>(tbl_len))
-    value = calibration_.data[n];
-  else
-    value = calibration_.data[n] + f * (calibration_.data[n + 1] - calibration_.data[n]);
-
   // Convert the value to an absolute position in deg
   // The motor's zero position is at the home offset
   // which corresponds to fully open (i.e. 100% flow)
   // The valve is closed at a position of -MaxMove;
-  float pos = (value - 1.0f) * MaxMove;
+  float pos = (calibration_->get_value(value) - 1.0f) * MaxMove;
 
   // Once you put a move in motion you can't change the destination position
   // until the move ends. That means that if the servo loop commands a

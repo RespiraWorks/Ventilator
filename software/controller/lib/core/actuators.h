@@ -18,8 +18,6 @@ limitations under the License.
 
 #pragma once
 
-#include <optional>
-
 #include "pinch_valve.h"
 
 struct ActuatorsState {
@@ -43,9 +41,10 @@ struct ActuatorsState {
 
 class Actuators {
  public:
-  Actuators() = default;
-  void init(NVParams::Handler *nv_params, const uint16_t blower_pinch_cal_offset,
-            const uint16_t exhale_pinch_cal_offset);
+  Actuators(int blower_motor_index, Interpolant<pinch_valves_cal_size> *blower_pinch_cal,
+            int exhale_motor_index, Interpolant<pinch_valves_cal_size> *exhale_pinch_cal)
+      : blower_pinch_(blower_motor_index, blower_pinch_cal),
+        exhale_pinch_(exhale_motor_index, exhale_pinch_cal){};
 
   // Returns true if the actuators are ready for action or false
   // if they aren't (for example pinch valves are homing).
@@ -56,6 +55,6 @@ class Actuators {
   void execute(const ActuatorsState &desired_state);
 
  private:
-  std::optional<PinchValve> blower_pinch_;
-  std::optional<PinchValve> exhale_pinch_;
+  PinchValve blower_pinch_;
+  PinchValve exhale_pinch_;
 };

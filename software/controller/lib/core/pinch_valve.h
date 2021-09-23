@@ -17,9 +17,9 @@ limitations under the License.
 
 #include <stdint.h>
 
+#include "interpolant.h"
 #include "stepper.h"
 #include "units.h"
-#include "vars.h"
 
 enum class PinchValveHomeState {
   Disabled,
@@ -51,8 +51,7 @@ class PinchValve {
  public:
   // Create a new pinch valve using the specified
   // stepper motor.
-  explicit PinchValve(int motor_index, const char* name_prepend, const char* help_append,
-                      NVParams::Handler* nv_params, const uint16_t offset);
+  explicit PinchValve(int motor_index, Interpolant<pinch_valves_cal_size> *calibration);
 
   // Initialize the pinch value absolute position.
   // This should be called at startup from the
@@ -87,9 +86,6 @@ class PinchValve {
 
   PinchValveHomeState home_state_{PinchValveHomeState::Disabled};
 
-  // keep pinch_valve calibration size in sync with nvparams size
-  static constexpr size_t cal_size{sizeof(NVParams::Structure::blower_pinch_cal) / sizeof(float)};
-  // pinch valve calibration table, initialized from NV_Params (EEPROM contents) and modified
-  // through the debug interface
-  Debug::Variable::NVFloatArray<cal_size> calibration_;
+  // pinch valve calibration table
+  Interpolant<pinch_valves_cal_size> *calibration_{nullptr};
 };

@@ -22,6 +22,9 @@ limitations under the License.
 #include "network_protocol.pb.h"
 #include "units.h"
 
+// pinch_valve calibration size, defined here because the tables are stored in NVParams.
+static constexpr size_t pinch_valves_cal_size{11};
+
 namespace NVParams {
 
 // This structure defines the layout of the non-volatile
@@ -56,14 +59,13 @@ struct Structure {
   // should give pinch valve settings for a list of equally spaced flow rates.  The first entry
   // should be the setting for 0 flow rate (normally 0) and the last entry should be the setting
   // for 100% flow rate. The minimum length of the table is 2 entries.
-  std::array<float, 11> blower_pinch_cal{0.0000f, 0.0410f, 0.0689f, 0.0987f, 0.1275f, 0.1590f,
-                                         0.1932f, 0.2359f, 0.2940f, 0.3988f, 1.0000f};
-  std::array<float, 11> exhale_pinch_cal{0.0000f, 0.0410f, 0.0689f, 0.0987f, 0.1275f, 0.1590f,
-                                         0.1932f, 0.2359f, 0.2940f, 0.3988f, 1.0000f};
+  std::array<float, pinch_valves_cal_size> blower_pinch_cal{0.0000f, 0.0410f, 0.0689f, 0.0987f,
+                                                            0.1275f, 0.1590f, 0.1932f, 0.2359f,
+                                                            0.2940f, 0.3988f, 1.0000f};
+  std::array<float, pinch_valves_cal_size> exhale_pinch_cal{0.0000f, 0.0410f, 0.0689f, 0.0987f,
+                                                            0.1275f, 0.1590f, 0.1932f, 0.2359f,
+                                                            0.2940f, 0.3988f, 1.0000f};
 };
-// the pinch valves calibration tables must have the same length, because the pinch valves use the
-// same size for their calibration arrays.
-static_assert(sizeof(Structure::blower_pinch_cal) == sizeof(Structure::exhale_pinch_cal));
 
 // We are reserving the first 8 kB out of our 32kB eeprom for nv params.
 // Since we use a double buffer Structure should be at most 4kB.

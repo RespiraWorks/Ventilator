@@ -71,7 +71,7 @@ class FrameDetector : public RxListener {
     ReceivingFrame       // Frame detector is receiving a frame
   };
 
-  explicit FrameDetector(RxBuffer &t);
+  explicit FrameDetector(RxBuffer *);
 
   // Starts frame detector
   [[nodiscard]] bool begin();
@@ -86,7 +86,7 @@ class FrameDetector : public RxListener {
   void on_character_match() override;
 
   // Callback method called when underlying Rx system experiences an error
-  void on_rx_error([[maybe_unused]] RxError e) override;
+  void on_rx_error(RxError) override;
 
   // Callback method called when RxBuffer is full
   void on_rx_complete() override;

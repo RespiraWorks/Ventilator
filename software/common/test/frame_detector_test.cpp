@@ -16,42 +16,38 @@ limitations under the License.
 #include "frame_detector.h"
 
 #include <cmath>
-#include <string>
-#include <vector>
 
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
 #include "proto_traits.h"
 #include "soft_rx_buffer.h"
 
-using namespace std;
-
 constexpr size_t BufferLength{20};
-constexpr uint8_t Mark{static_cast<uint8_t>('.')};
+constexpr uint8_t FrameMarker{static_cast<uint8_t>('.')};
 
 class FrameDetectorTest : public FrameDetector<BufferLength> {
  public:
-  FrameDetectorTest(RxBuffer &t) : FrameDetector<BufferLength>(t) {}
+  FrameDetectorTest(RxBuffer *t) : FrameDetector<BufferLength>(t) {}
   State get_state() const { return state_; }
 };
 
 using State = FrameDetectorTest::State;
 
 TEST(FrameDetector, MarkFirstInLost) {
-  SoftRxBuffer<BufferLength> rx_buf(Mark);
-  FrameDetectorTest frame_detector(rx_buf);
+  SoftRxBuffer<BufferLength> rx_buf(FrameMarker);
+  FrameDetectorTest frame_detector(&rx_buf);
   EXPECT_TRUE(frame_detector.begin());
   ASSERT_EQ(State::Lost, frame_detector.get_state());
   EXPECT_FALSE(frame_detector.frame_available());
 
-  rx_buf.put_byte(Mark);
+  rx_buf.put_byte(FrameMarker);
   ASSERT_EQ(State::ReceivingFrame, frame_detector.get_state());
   EXPECT_FALSE(frame_detector.frame_available());
 }
 
 TEST(FrameDetector, JunkWhileWaitForStart) {
-  SoftRxBuffer<BufferLength> rx_buf(Mark);
-  FrameDetectorTest frame_detector(rx_buf);
+  SoftRxBuffer<BufferLength> rx_buf(FrameMarker);
+  FrameDetectorTest frame_detector(&rx_buf);
   EXPECT_TRUE(frame_detector.begin());
   ASSERT_EQ(State::Lost, frame_detector.get_state());
   EXPECT_FALSE(frame_detector.frame_available());
@@ -60,7 +56,8 @@ TEST(FrameDetector, JunkWhileWaitForStart) {
   ASSERT_EQ(State::Lost, frame_detector.get_state());
   EXPECT_FALSE(frame_detector.frame_available());
 
-  rx_buf.put_byte(Mark);
+  rx_buf.put_byte(FrameMarker);
+  // assumed to be an end of frame, since we were in the lost state
   ASSERT_EQ(State::WaitForStartMarker, frame_detector.get_state());
   EXPECT_FALSE(frame_detector.frame_available());
 
@@ -68,41 +65,42 @@ TEST(FrameDetector, JunkWhileWaitForStart) {
   ASSERT_EQ(State::WaitForStartMarker, frame_detector.get_state());
   EXPECT_FALSE(frame_detector.frame_available());
 
-  rx_buf.put_byte(Mark);
+  rx_buf.put_byte(FrameMarker);
   ASSERT_EQ(State::Lost, frame_detector.get_state());
   EXPECT_FALSE(frame_detector.frame_available());
 }
 
 TEST(FrameDetector, RxFullSizeFrame) {
-  SoftRxBuffer<BufferLength> rx_buf(Mark);
-  FrameDetectorTest frame_detector(rx_buf);
+  SoftRxBuffer<BufferLength> rx_buf(FrameMarker);
+  FrameDetectorTest frame_detector(&rx_buf);
   EXPECT_TRUE(frame_detector.begin());
   ASSERT_EQ(State::Lost, frame_detector.get_state());
   EXPECT_FALSE(frame_detector.frame_available());
 
-  rx_buf.put_byte(Mark);
+  rx_buf.put_byte(FrameMarker);
+  // because we shouldn't have received data between frames
   ASSERT_EQ(State::ReceivingFrame, frame_detector.get_state());
   EXPECT_FALSE(frame_detector.frame_available());
 
   for (uint32_t i = 0; i < BufferLength - 2; i++) {
     rx_buf.put_byte(' ');
   }
-  rx_buf.put_byte(Mark);
+  rx_buf.put_byte(FrameMarker);
 
   EXPECT_EQ(State::WaitForStartMarker, frame_detector.get_state());
   ASSERT_TRUE(frame_detector.frame_available());
-  ASSERT_EQ(string("                  "),
-            string(reinterpret_cast<const char *>(frame_detector.take_frame())));
+  ASSERT_EQ(std::string("                  "),
+            std::string(reinterpret_cast<const char *>(frame_detector.take_frame())));
 }
 
 TEST(FrameDetector, RxComplete) {
-  SoftRxBuffer<BufferLength> rx_buf(Mark);
-  FrameDetectorTest frame_detector(rx_buf);
+  SoftRxBuffer<BufferLength> rx_buf(FrameMarker);
+  FrameDetectorTest frame_detector(&rx_buf);
   EXPECT_TRUE(frame_detector.begin());
   ASSERT_EQ(State::Lost, frame_detector.get_state());
   EXPECT_FALSE(frame_detector.frame_available());
 
-  rx_buf.put_byte(Mark);
+  rx_buf.put_byte(FrameMarker);
   ASSERT_EQ(State::ReceivingFrame, frame_detector.get_state());
   EXPECT_FALSE(frame_detector.frame_available());
 
@@ -117,37 +115,37 @@ TEST(FrameDetector, RxComplete) {
 }
 
 TEST(FrameDetector, RxFrameIllegalyLong) {
-  SoftRxBuffer<BufferLength> rx_buf(Mark);
-  FrameDetectorTest frame_detector(rx_buf);
+  SoftRxBuffer<BufferLength> rx_buf(FrameMarker);
+  FrameDetectorTest frame_detector(&rx_buf);
   EXPECT_TRUE(frame_detector.begin());
   ASSERT_EQ(State::Lost, frame_detector.get_state());
   EXPECT_FALSE(frame_detector.frame_available());
 
-  rx_buf.put_byte(Mark);
+  rx_buf.put_byte(FrameMarker);
   ASSERT_EQ(State::ReceivingFrame, frame_detector.get_state());
   EXPECT_FALSE(frame_detector.frame_available());
 
   for (uint32_t i = 0; i < BufferLength - 1; i++) {
     rx_buf.put_byte(' ');
   }
-  rx_buf.put_byte(Mark);
+  rx_buf.put_byte(FrameMarker);
 
   EXPECT_EQ(State::ReceivingFrame, frame_detector.get_state());
   ASSERT_FALSE(frame_detector.frame_available());
 }
 
 TEST(FrameDetector, ErrorWhileRx) {
-  SoftRxBuffer<BufferLength> rx_buf(Mark);
-  FrameDetectorTest frame_detector(rx_buf);
+  SoftRxBuffer<BufferLength> rx_buf(FrameMarker);
+  FrameDetectorTest frame_detector(&rx_buf);
   EXPECT_TRUE(frame_detector.begin());
   ASSERT_EQ(State::Lost, frame_detector.get_state());
   EXPECT_FALSE(frame_detector.frame_available());
 
-  rx_buf.put_byte(Mark);
+  rx_buf.put_byte(FrameMarker);
   ASSERT_EQ(State::ReceivingFrame, frame_detector.get_state());
   EXPECT_FALSE(frame_detector.frame_available());
 
-  rx_buf.put_byte(Mark);
+  rx_buf.put_byte(FrameMarker);
   ASSERT_EQ(State::ReceivingFrame, frame_detector.get_state());
   EXPECT_FALSE(frame_detector.frame_available());
 
@@ -155,7 +153,7 @@ TEST(FrameDetector, ErrorWhileRx) {
   ASSERT_EQ(State::Lost, frame_detector.get_state());
   EXPECT_FALSE(frame_detector.frame_available());
 
-  rx_buf.put_byte(Mark);
+  rx_buf.put_byte(FrameMarker);
   ASSERT_EQ(State::ReceivingFrame, frame_detector.get_state());
   EXPECT_FALSE(frame_detector.frame_available());
 
@@ -163,7 +161,7 @@ TEST(FrameDetector, ErrorWhileRx) {
   ASSERT_EQ(State::Lost, frame_detector.get_state());
   EXPECT_FALSE(frame_detector.frame_available());
 
-  rx_buf.put_byte(Mark);
+  rx_buf.put_byte(FrameMarker);
   ASSERT_EQ(State::ReceivingFrame, frame_detector.get_state());
   EXPECT_FALSE(frame_detector.frame_available());
 
@@ -171,7 +169,7 @@ TEST(FrameDetector, ErrorWhileRx) {
   ASSERT_EQ(State::Lost, frame_detector.get_state());
   EXPECT_FALSE(frame_detector.frame_available());
 
-  rx_buf.put_byte(Mark);
+  rx_buf.put_byte(FrameMarker);
   ASSERT_EQ(State::ReceivingFrame, frame_detector.get_state());
   EXPECT_FALSE(frame_detector.frame_available());
 
@@ -181,10 +179,10 @@ TEST(FrameDetector, ErrorWhileRx) {
 }
 
 template <int BUF_BufferLength>
-vector<string> fakeRx(string frame) {
-  vector<string> ret;
-  SoftRxBuffer<BUF_BufferLength> rx_buf(Mark);
-  FrameDetector<BUF_BufferLength> frame_detector(rx_buf);
+std::vector<std::string> fakeRx(std::string frame) {
+  std::vector<std::string> ret;
+  SoftRxBuffer<BUF_BufferLength> rx_buf(FrameMarker);
+  FrameDetector<BUF_BufferLength> frame_detector(&rx_buf);
   if (!frame_detector.begin()) {
     return ret;
   }
@@ -208,7 +206,7 @@ vector<string> fakeRx(string frame) {
     }
 
     if (frame_detector.frame_available()) {
-      string s;
+      std::string s;
       auto length = static_cast<size_t>(frame_detector.frame_length());
       s.assign(reinterpret_cast<const char *>(frame_detector.take_frame()), length);
       ret.push_back(s);
@@ -253,7 +251,7 @@ TEST(FrameDetector, FuzzyErrors) {
 }
 
 TEST(FrameDetector, FuzzRandomEvents) {
-  string valid_frames = "..aa..bb..cc.";
+  std::string valid_frames = "..aa..bb..cc.";
 
   /* \todo make this exhaustive, rather than random, like:
 int remainder = j;
@@ -264,7 +262,7 @@ switch (r) { ... }
 } */
 
   for (int j = 0; j < pow(3, 10); j++) {
-    string noise = "";
+    std::string noise = "";
     for (int i = 0; i < 10; i++) {
       int r = rand() % static_cast<int>(3);
       switch (r) {

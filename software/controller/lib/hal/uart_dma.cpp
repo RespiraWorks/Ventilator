@@ -14,8 +14,6 @@ limitations under the License.
 
 */
 
-#if defined(BARE_STM32)
-
 #include "uart_dma.h"
 
 // STM32 UART3 driver based on DMA transfers.
@@ -28,7 +26,24 @@ limitations under the License.
 
 // This driver also provides Character Match callback on match_char reception.
 
-extern UartDma uart_dma;
+#if defined(BARE_STM32)
+
+DmaCtrl::DmaCtrl(DmaReg *const dma) : dma_(dma) {}
+
+void DmaCtrl::init() {
+  // UART3 reception happens on DMA1 channel 3
+  dma_->channel_select.c3s = 0b0010;
+  // UART3 transmission happens on DMA1 channel 2
+  dma_->channel_select.c2s = 0b0010;
+}
+
+UartDma::UartDma(UartReg *const uart, DmaReg *const dma, uint8_t tx_channel, uint8_t rx_channel,
+                 char match_char)
+    : uart_(uart),
+      dma_(dma),
+      tx_channel_(tx_channel),
+      rx_channel_(rx_channel),
+      match_char_(match_char) {}
 
 // Performs UART3 initialization
 void UartDma::initialize(const uint32_t cpu_frequency_hz, const uint32_t baud) {
@@ -269,6 +284,7 @@ void UartDma::DMA_rx_interrupt_handler() {
 }
 
 // TODO: These are declared in hal_stm32.cpp but implemented here, clean this up!
+extern UartDma uart_dma;
 
 void DMA1Channel2ISR() {
   uart_dma.DMA_tx_interrupt_handler();
@@ -284,5 +300,26 @@ void DMA1Channel3ISR() {
 // This is the interrupt handler for the UART.
 void Uart3ISR() { uart_dma.UART_interrupt_handler(); }
 #endif
+
+#else
+
+void UartDma::initialize(uint32_t cpu_frequency_hz, uint32_t baud) {}
+
+bool UartDma::start_tx(uint8_t *buf, uint32_t length, TxListener *txl) { return true; }
+bool UartDma::start_rx(uint8_t *buf, uint32_t length, RxListener *rxl) { return true; }
+
+bool UartDma::tx_in_progress() const { return true; }
+bool UartDma::rx_in_progress() const { return true; }
+
+void UartDma::stop_tx() {}
+void UartDma::stop_rx() {}
+
+uint32_t UartDma::rx_bytes_left() { return 0; }
+
+void UartDma::enable_character_match() {}
+
+void UartDma::UART_interrupt_handler() {}
+void UartDma::DMA_rx_interrupt_handler() {}
+void UartDma::DMA_tx_interrupt_handler() {}
 
 #endif

@@ -17,7 +17,7 @@ limitations under the License.
 /// It is included by the corresponding header.
 
 template<size_t S>
-FrameDetector<S>::FrameDetector(RxBuffer& t) : rx_buffer_(&t)
+FrameDetector<S>::FrameDetector(RxBuffer* buffer) : rx_buffer_(buffer)
 {}
 
 template<size_t S>

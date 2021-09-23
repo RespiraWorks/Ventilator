@@ -30,7 +30,7 @@ class SoftRxBuffer : public RxBuffer {
   size_t received_length() const override;
   const uint8_t* get() const override;
 
-  void put_byte(const uint8_t byte);
+  void put_byte(uint8_t byte);
 
  private:
   uint8_t rx_buffer_[RxBytesMax] = {0};

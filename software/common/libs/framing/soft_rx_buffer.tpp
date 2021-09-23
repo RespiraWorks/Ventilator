@@ -13,8 +13,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-/// This is a template implementation file.
-/// It is included by the corresponding header.
+////////////////////////////////////////////////////////////////////////////////
+/// WARNING: Do not include this file as header, nor compile it as a source! ///
+///                                                                          ///
+/// This is a template implementation file.                                  ///
+/// It is included by the corresponding header.                              ///
+////////////////////////////////////////////////////////////////////////////////
 
 template<size_t RxBytesMax>
 SoftRxBuffer<RxBytesMax>::SoftRxBuffer(uint8_t match_char)

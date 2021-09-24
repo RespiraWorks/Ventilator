@@ -125,41 +125,80 @@ class FloatArray : public Base {
   FloatArray(const char *name, Access access, float initial_fill, const char *units,
              const char *help = "", const char *fmt = "%.3f")
       : Base(Type::FloatArray, name, access, units, help, fmt) {
-    data.fill(initial_fill);
+    data_.fill(initial_fill);
   }
 
   FloatArray(const char *name, Access access, std::array<float, N> initial, const char *units,
              const char *help = "", const char *fmt = "%.3f")
-      : Base(Type::FloatArray, name, access, units, help, fmt), data(initial) {}
+      : Base(Type::FloatArray, name, access, units, help, fmt), data_(initial) {}
 
   void serialize_value(void *write_buff) override {
-    std::memcpy(write_buff, data.data(), byte_size());
+    std::memcpy(write_buff, data_.data(), byte_size());
   }
 
   void deserialize_value(const void *read_buf) override {
-    std::memcpy(data.data(), read_buf, byte_size());
+    std::memcpy(data_.data(), read_buf, byte_size());
   }
 
   size_t byte_size() const override { return 4 * N; }
 
-  std::array<float, N> data;
+  float get_data(const size_t index) const {
+    if (index < N)
+      return data_[index];
+    else
+      return 0.0f;
+  }
+
+  virtual void set_data(const size_t index, const float value) {
+    if (index < N) {
+      data_[index] = value;
+    }
+  }
+
+ protected:
+  std::array<float, N> data_;
 };
 
 template <size_t N>
 class NVFloatArray : public FloatArray<N>, public NonVolatile {
  public:
-  NVFloatArray(const char *name, Access access, NVParams::Handler *nv_params, uint16_t offset,
-               const char *units, const char *help = "", const char *fmt = "%.3f")
+  NVFloatArray(const char *name, Access access, NVParams::Handler *nv_params, const uint16_t offset,
+               const char *units = "", const char *help = "", const char *fmt = "%.3f")
       : FloatArray<N>(name, access, units, help, fmt), NonVolatile(nv_params, offset) {
-    float nv_data[N];
+    float nv_data[N] = {0.0f};
     read(&nv_data, 4 * N);
     FloatArray<N>::deserialize_value(&nv_data);
   }
 
+  NVFloatArray(const char *name, Access access, const char *units, const char *help = "",
+               const char *fmt = "%.3f")
+      : FloatArray<N>(name, access, units, help, fmt){};
+
+  NVFloatArray(const char *name, Access access, float initial_fill, const char *units = "",
+               const char *help = "", const char *fmt = "%.3f")
+      : FloatArray<N>(name, access, initial_fill, units, help, fmt){};
+
+  NVFloatArray(const char *name, Access access, std::array<float, N> initial,
+               const char *units = "", const char *help = "", const char *fmt = "%.3f")
+      : FloatArray<N>(name, access, initial, units, help, fmt){};
+
   void deserialize_value(const void *write_buff) override {
     FloatArray<N>::deserialize_value(write_buff);
+    // write checks that the var is linked, no need to check it here as well
     write(write_buff, 4 * N);
   }
+
+  void set_data(const size_t index, const float value) override {
+    FloatArray<N>::set_data(index, value);
+    nv_params_->Set(static_cast<uint16_t>(offset_ + index * 4), &value, 4);
+  }
+
+  void link(NVParams::Handler *nv_params, const uint16_t offset) {
+    NonVolatile::link(nv_params, offset);
+    float nv_data[N] = {0.0f};
+    read(&nv_data, 4 * N);
+    FloatArray<N>::deserialize_value(&nv_data);
+  };
 };
 
 template <size_t N>

@@ -25,32 +25,37 @@ limitations under the License.
 template <size_t N>
 class Interpolant {
  public:
-  Interpolant() = default;
+  Interpolant(const char *name, float initial_fill, const char *units = "", const char *help = "",
+              const char *fmt = "%.3f")
+      : cal_table_(name, Debug::Variable::Access::ReadWrite, initial_fill, units, help, fmt){};
 
-  // Because we store data in EEPROM, the table has to be initialized after the
-  // initialization of nvparams (which reads EEPROM).
-  // Be sure to initialize all interpolants after having read the EEPROM.
-  void init(const char *name, NVParams::Handler *nv_params, uint16_t offset, const char *units = "",
-            const char *help = "", const char *fmt = "%.3f") {
-    table_.emplace(name, Debug::Variable::Access::ReadWrite, nv_params, offset, units, help, fmt);
-  };
+  Interpolant(const char *name, std::array<float, N> initial, const char *units = "",
+              const char *help = "", const char *fmt = "%.3f")
+      : cal_table_(name, Debug::Variable::Access::ReadWrite, initial, units, help, fmt){};
+
+  Interpolant(const char *name, NVParams::Handler *nv_params, const uint16_t offset,
+              const char *units = "", const char *help = "", const char *fmt = "%.3f")
+      : cal_table_(name, Debug::Variable::Access::ReadWrite, nv_params, offset, units, help, fmt){};
 
   float get_value(const float input) {
-    if (!table_.has_value()) return 0.0f;
+    if (input <= 0.0f) return cal_table_.get_data(0);
 
-    if (input <= 0.0f) return table_->data[0];
+    if (input >= 1.0f) return cal_table_.get_data(N - 1);
 
-    if (input >= 1.0f) return table_->data[N - 1];
-
-    // Interpolant table is for regularly spaced inputs between 0 and 1, meaning table_[n]
+    // Interpolant cal_table_ is for regularly spaced inputs between 0 and 1, meaning cal_table_[n]
     // represents the expected output value when input = n/(N-1). Solving for n yields
     size_t index = static_cast<size_t>(input * static_cast<float>(N - 1));
-    // Part of input that is not taken into account because of the rounding of index:
+    // Part of input that is above index/(N-1):
     float remainder = input * static_cast<float>(N - 1) - static_cast<float>(index);
 
-    return table_->data[index] + remainder * (table_->data[index + 1] - table_->data[index]);
+    return cal_table_.get_data(index) +
+           remainder * (cal_table_.get_data(index + 1) - cal_table_.get_data(index));
+  };
+
+  void link(NVParams::Handler *nv_params, const uint16_t offset) {
+    cal_table_.link(nv_params, offset);
   };
 
  private:
-  std::optional<Debug::Variable::NVFloatArray<N>> table_;
+  Debug::Variable::NVFloatArray<N> cal_table_;
 };

@@ -70,8 +70,10 @@ static ControllerStatus controller_status;
 static Sensors sensors;
 static NVParams::Handler nv_params;
 static I2Ceeprom eeprom = I2Ceeprom(0x50, 64, 32768, &i2c1);
-static Interpolant<pinch_valves_cal_size> blower_pinch_cal;
-static Interpolant<pinch_valves_cal_size> exhale_pinch_cal;
+static Interpolant<pinch_valves_cal_size> blower_pinch_cal(
+    "blower_pinch_cal", 0.0f, "", "calibration table for blower pinch valve");
+static Interpolant<pinch_valves_cal_size> exhale_pinch_cal(
+    "exhale_pinch_cal", 0.0f, "", "calibration table for exhale pinch valve");
 static Actuators actuators(0, &blower_pinch_cal, 1, &exhale_pinch_cal);
 
 // Global variables for the debug interface
@@ -219,12 +221,8 @@ int main() {
 
   // Locate our non-volatile parameter block in flash
   nv_params.Init(&eeprom);
-  blower_pinch_cal.init("blower_pinch_cal", &nv_params,
-                        offsetof(NVParams::Structure, blower_pinch_cal), "",
-                        "calibration table for blower pinch valve");
-  exhale_pinch_cal.init("exhale_pinch_cal", &nv_params,
-                        offsetof(NVParams::Structure, exhale_pinch_cal), "",
-                        "calibration table for exhale pinch valve");
+  blower_pinch_cal.link(&nv_params, offsetof(NVParams::Structure, blower_pinch_cal));
+  exhale_pinch_cal.link(&nv_params, offsetof(NVParams::Structure, exhale_pinch_cal));
 
   CommsInit();
 

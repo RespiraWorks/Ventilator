@@ -192,7 +192,60 @@ TEST(DebugVar, NonVolatile) {
 
   var_value += rand();
 
-  nv_var.write(&var_value, sizeof(int));
-  nv_params.Get(nv_var_offset, &eeprom_value, sizeof(int));
+  nv_var.write(&var_value, sizeof(var_value));
+  nv_params.Get(nv_var_offset, &eeprom_value, sizeof(eeprom_value));
   EXPECT_EQ(var_value, eeprom_value);
+
+  constexpr uint16_t array_offset{offsetof(NVParams::Structure, exhale_pinch_cal)};
+
+  // I am using the already linked constructor to test NonVolatile(*nvparams, offset)
+  NVFloatArray<4> nv_array("nv_array", Access::ReadWrite, &nv_params, array_offset);
+  EXPECT_TRUE(nv_array.linked());
+
+  float eeprom_array[nv_array.size()];
+  nv_params.Get(array_offset, &eeprom_array, static_cast<uint16_t>(nv_array.byte_size()));
+  for (size_t i = 0; i < nv_array.size(); ++i) {
+    EXPECT_EQ(nv_array.get_data(i), eeprom_array[i]);
+  }
+  nv_array.set_data(0, eeprom_array[0] + 1);
+  EXPECT_EQ(nv_array.get_data(0), eeprom_array[0] + 1);
+
+  nv_params.Get(array_offset, &eeprom_array, static_cast<uint16_t>(nv_array.byte_size()));
+  for (size_t i = 0; i < nv_array.size(); ++i) {
+    EXPECT_EQ(nv_array.get_data(i), eeprom_array[i]);
+  }
+
+  // using link method with nullptr actually unlinks the array
+  nv_array.link(nullptr, 0);
+  EXPECT_FALSE(nv_array.linked());
+
+  nv_array.fill(-1.0f);
+  // Using -1 since I know that the cal array can't use negative values and count on this to
+  // check that the eeprom_array is unchanged
+  nv_params.Get(array_offset, &eeprom_array, static_cast<uint16_t>(nv_array.byte_size()));
+  for (size_t i = 0; i < nv_array.size(); ++i) {
+    EXPECT_NE(nv_array.get_data(i), eeprom_array[i]);
+    EXPECT_EQ(nv_array.get_data(i), -1.0f);
+  }
+
+  nv_array.link(&nv_params, array_offset);
+  // check that a call to link did overwrite the existing array
+  for (size_t i = 0; i < nv_array.size(); ++i) {
+    EXPECT_EQ(nv_array.get_data(i), eeprom_array[i]);
+  }
+
+  float write_buff[nv_array.size()] = {-0.5f, 0.0f, 0.5f, 1.0f};
+  nv_array.deserialize_value(write_buff);
+  nv_params.Get(array_offset, &eeprom_array, static_cast<uint16_t>(nv_array.byte_size()));
+  for (size_t i = 0; i < nv_array.size(); ++i) {
+    EXPECT_EQ(nv_array.get_data(i), write_buff[i]);
+    EXPECT_EQ(nv_array.get_data(i), eeprom_array[i]);
+  }
+
+  nv_array.fill(2.0f);
+  nv_params.Get(array_offset, &eeprom_array, static_cast<uint16_t>(nv_array.byte_size()));
+  for (size_t i = 0; i < nv_array.size(); ++i) {
+    EXPECT_EQ(nv_array.get_data(i), 2.0f);
+    EXPECT_EQ(nv_array.get_data(i), eeprom_array[i]);
+  }
 }

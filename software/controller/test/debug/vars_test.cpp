@@ -86,27 +86,32 @@ TEST(DebugVar, DebugVarFloatDefaults) {
 TEST(DebugVar, FloatArray) {
   FloatArray<3> fa3("fa3", Access::ReadWrite, "units");
   EXPECT_EQ(fa3.byte_size(), 4 * 3);
-  fa3.data[0] = 24.0f;
-  fa3.data[1] = 42.0f;
-  fa3.data[2] = 69.0f;
+  fa3.set_data(0, 24.0f);
+  fa3.set_data(1, 42.0f);
+  fa3.set_data(2, 69.0f);
   std::array<float, 3> compare_to{24.0f, 42.0f, 69.0f};
 
-  EXPECT_EQ(fa3.data, compare_to);
-
+  EXPECT_EQ(compare_to.size(), fa3.size());
+  for (size_t i = 0; i < fa3.size(); ++i) {
+    EXPECT_EQ(fa3.get_data(i), compare_to[i]);
+  }
   uint32_t buffer[3 * 4];
   fa3.serialize_value(buffer);
-  fa3.data = {0};
+  fa3.fill(0.0f);
+  for (size_t i = 0; i < fa3.size(); ++i) {
+    EXPECT_EQ(fa3.get_data(i), 0.0f);
+  }
   fa3.deserialize_value(buffer);
-  EXPECT_EQ(fa3.data, compare_to);
-  EXPECT_NE(fa3.data.data(), compare_to.data());
-  EXPECT_NE(reinterpret_cast<void*>(fa3.data.data()), reinterpret_cast<void*>(buffer));
+  for (size_t i = 0; i < fa3.size(); ++i) {
+    EXPECT_EQ(fa3.get_data(i), compare_to[i]);
+  }
 
   FloatArray<5> fa5("fa5", Access::ReadWrite, 4.0f, "units");
-  EXPECT_EQ(fa5.data[4], 4.0f);
+  EXPECT_EQ(fa5.get_data(4), 4.0f);
 
   FloatArray<2> fa2("fa2", Access::ReadWrite, {1.0f, 2.0f}, "units");
-  EXPECT_EQ(fa2.data[0], 1.0f);
-  EXPECT_EQ(fa2.data[1], 2.0f);
+  EXPECT_EQ(fa2.get_data(0), 1.0f);
+  EXPECT_EQ(fa2.get_data(1), 2.0f);
 }
 
 TEST(DebugVar, String) {
@@ -149,4 +154,45 @@ TEST(DebugVar, Registration) {
   EXPECT_EQ(&var1, Registry::singleton().find(var1.id()));
   EXPECT_EQ(&var2, Registry::singleton().find(var2.id()));
   EXPECT_EQ(nullptr, Registry::singleton().find(12345));
+}
+
+TEST(DebugVar, NonVolatile) {
+  TestEeprom test_eeprom(0x50, 64, 8192);
+  NVParams::Structure ref_params;
+  NVParams::Handler nv_params;
+
+  test_eeprom.WriteBytes(0, sizeof(NVParams::Structure), &ref_params, nullptr);
+
+  nv_params.Init(&test_eeprom);
+
+  NonVolatile nv_var;
+
+  EXPECT_FALSE(nv_var.linked());
+
+  int eeprom_value;
+  // I want to link the nv_var to a non-zero value within the structure. Here is one.
+  constexpr uint16_t nv_var_offset{offsetof(NVParams::Structure, blower_pinch_cal) + 4};
+  nv_params.Get(nv_var_offset, &eeprom_value, sizeof(eeprom_value));
+
+  auto var_value{eeprom_value - 1};
+
+  // read/write when not linked has no effect
+  nv_var.read(&var_value, sizeof(var_value));
+  EXPECT_EQ(var_value, eeprom_value - 1);
+  nv_var.read(&var_value, sizeof(var_value));
+  nv_var.write(&var_value, sizeof(var_value));
+  nv_params.Get(nv_var_offset, &eeprom_value, sizeof(eeprom_value));
+  EXPECT_NE(var_value, eeprom_value);
+
+  nv_var.link(&nv_params, nv_var_offset);
+
+  EXPECT_TRUE(nv_var.linked());
+  nv_var.read(&var_value, sizeof(var_value));
+  EXPECT_EQ(var_value, eeprom_value);
+
+  var_value += rand();
+
+  nv_var.write(&var_value, sizeof(int));
+  nv_params.Get(nv_var_offset, &eeprom_value, sizeof(int));
+  EXPECT_EQ(var_value, eeprom_value);
 }

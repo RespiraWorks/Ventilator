@@ -109,11 +109,11 @@ class NonVolatile {
 
   bool linked() const { return nv_params_ != nullptr; };
 
-  void write(const void *write_buff, uint8_t len) const {
+  void write(const void *write_buff, uint16_t len) const {
     if (linked()) nv_params_->Set(offset_, write_buff, len);
   };
 
-  void read(void *read_buff, uint8_t len) const {
+  void read(void *read_buff, uint16_t len) const {
     if (linked()) nv_params_->Get(offset_, read_buff, len);
   };
 

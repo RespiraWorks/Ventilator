@@ -140,7 +140,11 @@ class FloatArray : public Base {
     std::memcpy(data_.data(), read_buf, byte_size());
   }
 
+  size_t size() const { return data_.size(); }
+
   size_t byte_size() const override { return 4 * N; }
+
+  virtual void fill(float value) { data_.fill(value); }
 
   float get_data(const size_t index) const {
     if (index < N)
@@ -191,6 +195,13 @@ class NVFloatArray : public FloatArray<N>, public NonVolatile {
   void set_data(const size_t index, const float value) override {
     FloatArray<N>::set_data(index, value);
     nv_params_->Set(static_cast<uint16_t>(offset_ + index * 4), &value, 4);
+  }
+
+  void fill(float value) override {
+    FloatArray<N>::fill(value);
+    uint8_t write_buff[4 * N];
+    FloatArray<N>::serialize_value(&write_buff);
+    write(write_buff, 4 * N);
   }
 
   void link(NVParams::Handler *nv_params, const uint16_t offset) {

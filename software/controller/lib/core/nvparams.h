@@ -84,8 +84,8 @@ class Handler {
  public:
   Handler() = default;
   void Init(I2Ceeprom *eeprom);
-  bool Set(uint16_t offset, const void *value, uint8_t len);
-  bool Get(uint16_t offset, void *value, uint8_t len);
+  bool Set(uint16_t offset, const void *value, uint16_t len);
+  bool Get(uint16_t offset, void *value, uint16_t len);
   void Update(Time now, VentParams *params);
 
  private:

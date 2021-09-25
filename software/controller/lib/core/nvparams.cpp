@@ -127,7 +127,7 @@ void Handler::Init(I2Ceeprom *eeprom) {
   Set(offsetof(Structure, power_cycles), &counter, 4);
 }
 
-bool Handler::Set(uint16_t offset, const void *value, uint8_t len) {
+bool Handler::Set(uint16_t offset, const void *value, uint16_t len) {
   // Make sure the passed pointer is pointing to somewhere
   // in the structure and isn't in the reserved first 6 bytes
   if ((offset < 6) || ((offset + len) > Size)) return false;
@@ -162,7 +162,7 @@ bool Handler::Set(uint16_t offset, const void *value, uint8_t len) {
   return true;
 }
 
-bool Handler::Get(uint16_t offset, void *value, uint8_t len) {
+bool Handler::Get(uint16_t offset, void *value, uint16_t len) {
 /// \TODO: Better mocking. In test mode we need to be able to access any byte
 #if defined(BARE_STM32)
   // Make sure the passed pointer is pointing to somewhere

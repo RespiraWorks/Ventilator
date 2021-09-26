@@ -6,15 +6,12 @@ Please also see the [Software design pages](../design/controller_architecture.md
 
 ## Rationale and structure
 
-The ventilator actuators must be driven by control loops ensuring continuous
-breathing according to doctor-provided parameters, while also ensuring
-no harm is done to the patient.
+The ventilator actuators must be driven by control loops ensuring continuous breathing according to doctor-provided parameters, while also ensuring no harm is done to the patient.
 
 Controller code is separated from the user interface code. This makes the code base
 smaller, easier to maintain, and lessens the risk of unexpected behavior.
 
-The controller shares the [common communications code](../common) with the GUI.
-The part of the code specific to the controller resides here.
+The controller shares [common code](../common) with the GUI. The part of the code specific to the controller resides here.
 
 **Directories:**
 * [lib](lib) - most of the substantive controller code, must all be libraries to be unit-testable by platformio
@@ -33,45 +30,36 @@ The part of the code specific to the controller resides here.
   * shortcut to [debug interface](../utils/debug)
   * self documented if you run it without parameters or with `--help`
 * [platfomio.ini](platformio.ini) - the equivalent of a "make file" which governs how platformio builds targets
-* [.ycm_extra_conf.py](.ycm_extra_conf.py) - configuration for
-  [YouCompleteMe](https://github.com/ycm-core/YouCompleteMe) (for some IDEs)
+* [.ycm_extra_conf.py](.ycm_extra_conf.py) - configuration for [YouCompleteMe](https://github.com/ycm-core/YouCompleteMe) (for some IDEs)
 
 ## Development toolchain
 
 The target platform for this code is the STM32 processor (currently, the Nucleo L452RE to be precise).
 
-We use [platformio](https://platformio.org/) for building the controller code.
-Platformio has a CLI and an IDE. You'll need the platformio CLI in order to build
-from the command-line, even if you also install the IDE.
+We use [platformio](https://platformio.org/) for building the controller code. Platformio has a CLI and an IDE. You'll need the platformio CLI in order to build from the command-line, even if you also install the IDE.
 
 Instructions for installing:
  * [CLI](https://docs.platformio.org/en/latest/core/installation.html#super-quick-mac-linux)
  * [IDE](https://docs.platformio.org/en/latest/integration/ide/vscode.html#installation)
+ * platformio can be used inside CLion, but you may need to run `pio init --ide clion` from its integrated terminal. You should run this in the same directory as `platformio.ini`.
 
-Note that an issue prevents platformio CLI 5.0 and 5.0.1 to run our unit tests. If you are using one of these versions, you will need to upgrade to 5.0.2 or newer version using:
+Some issues may prevent specific version sof platformio from building or running unit tests. It is currently recommended that you use `v5.1.1`, which you may install with i.e.:
 ```
-$ platformio upgrade
+pip install platformio==5.1.1
 ```
 
 Here's a [video introduction](https://www.youtube.com/watch?v=EIkGTwLOD7o) to platformio.
 
-PlatformIO works on Windows as well.
-You'll need to install [Atom](https://atom.io/),
-[Clang+LLVM](https://releases.llvm.org/download.html),
-and [Python](https://www.python.org/downloads/windows/).
-(Note: you may be asked to install Python 2.7, but PlatformIO works with Python 3.5+ as well, ostensibly.)
+PlatformIO works on Windows as well. You'll need to install [Atom](https://atom.io/), [Clang+LLVM](https://releases.llvm.org/download.html), and [Python](https://www.python.org/downloads/windows/). (Note: you may be asked to install Python 2.7, but PlatformIO works with Python 3.5+ as well, ostensibly.)
 
-You also need to install the package `libtinfo5` on Linux. Clang-tidy needs this package to run its checks,
-but platformio will just say all checks have passed without giving an error if it's missing.
+You also need to install the package `libtinfo5` on Linux. Clang-tidy needs this package to run its checks, but platformio will just say all checks have passed without giving an error if it's missing.
 
 ## Building and testing
 
-After installing platformio, you should be able to build and test as follows:
+After installing platformio, you should be able to build and run tests as follows:
 
 ```
 $ ./controller.sh test
-# This will run a few commands, such as "platformio run" and
-# "platformio test -e native".
 ```
 
 This is the same script that runs on our continuous integration server (Travis CI).
@@ -82,7 +70,7 @@ e.g. if things don't build for you in `master`, try:
 
 
 ```
-$ rm -rf .pio/
+$ ./controller.sh clean
 ```
 
 If you encounter an error such as `Error: Unknown development platform 'native'`, try running
@@ -108,20 +96,22 @@ Hardware ID: USB VID:PID=1A86:7523 LOCATION=20-2.2
 Description: USB2.0-Serial
 ```
 
+**TODO:** add this search functionality to script
+
 Now you can build and upload to the device.
 **Note:** The following command should be run in this directory (same as where `platformnio.ini` lives).
 
 ```
-$ pio run -t upload
+$ ./controller.sh run
 ```
 
-A more convenient way to run is to use the `./controller.sh run`. If you have multiple Nucleos that you
-want to deploy to, you should consult the [platformio configuration guide](platformio).
+If you have multiple Nucleos that you want to deploy to, you should consult the [platformio configuration guide](platformio).
+
+**TODO:** make the script do this configuring for you
 
 ### USB permission problems
 
-If `pio device list` did not show the Nucleo as, for example, when attempting to deploy directly from the Raspberry Pi,
-you may have to give yourself rw permission on the USB device.
+If `pio device list` did not show the Nucleo as, for example, when attempting to deploy directly from the Raspberry Pi, you may have to give yourself rw permission on the USB device.
 
 Find the device ID with `lsusb`. Let us assume in this case, that it shows
 `Bus 001 Device 004: ID 0483:374b STMicroelectronics ST-LINK/V2.1`.
@@ -147,6 +137,8 @@ Hardware ID: fe201000.serial
 Description: ttyAMA0
 ```
 
+**TODO:** make the script do this configuring for you
+
 ### Other udev problems
 
 If you get the following error, it means platformio was unable to find a connected device.
@@ -166,6 +158,8 @@ sudo usermod -a -G plugdev $USER
 ```
 and then either re-login or restart machine.
 
+**TODO:** make the script do this configuring for you
+
 For more details on this, see the following articles:
 [platformio FAQ](https://docs.platformio.org/en/latest/faq.html#platformio-udev-rules)
 [community forums](https://community.platformio.org/t/stm32-vs-code-mbed-upload-issue-error-libusb-open-failed-with-libusb-error-access-error-open-failed/10650)
@@ -177,7 +171,3 @@ Alternatively, you can upload the firmware.elf and firmware.bin files to the con
 Some (semi-)automated integration tests are in the [integration_tests](integration_tests) directory.
 
 Debug interface and manual testing utilities are in the [../utils](../utils) directory.
-
-## IDEs
-
-* platformio can be used inside CLion, but you may need to run `pio init --ide clion` from its integrated terminal. You should do this in the same directory as `platformio.ini`.

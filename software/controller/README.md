@@ -177,3 +177,7 @@ Alternatively, you can upload the firmware.elf and firmware.bin files to the con
 Some (semi-)automated integration tests are in the [integration_tests](integration_tests) directory.
 
 Debug interface and manual testing utilities are in the [../utils](../utils) directory.
+
+## IDEs
+
+* platformio can be used inside CLion, but you may need to run `pio init --ide clion` from its integrated terminal. You should do this in the same directory as `platformio.ini`.

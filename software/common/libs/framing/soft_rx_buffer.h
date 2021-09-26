@@ -20,6 +20,10 @@ limitations under the License.
 /// \TODO: This class will be used for GUI only? Should it live with that code?
 /// \TODO: Class is not explicitly tested, only as part of FrameDetector
 /// \TODO: explain the why and how of this class
+
+/*! \class SoftRxBuffer soft_rx_buffer.h "soft_rx_buffer.h"
+ *  \brief Abstract class for serial receiver buffers.
+ */
 template <size_t RxBytesMax>
 class SoftRxBuffer : public RxBuffer {
  public:

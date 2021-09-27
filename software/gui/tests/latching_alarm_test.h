@@ -1,41 +1,53 @@
-#ifndef LATCHING_ALARM_TEST_H_
-#define LATCHING_ALARM_TEST_H_
+/* Copyright 2020-2021, RespiraWorks
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+#pragma once
+
+#include <QCoreApplication>
+#include <QString>
+#include <QtTest>
 
 #include "breath_signals.h"
 #include "chrono.h"
 #include "latching_alarm.h"
 #include "network_protocol.pb.h"
 
-#include <QCoreApplication>
-#include <QString>
-#include <QtTest>
-
 // A test alarm for the condition "pressure > 60".
 class MaxPressureAlarm : public LatchingAlarm {
-public:
+ public:
   MaxPressureAlarm() : LatchingAlarm(AlarmPriority::HIGH) {}
 
-private:
-  std::optional<QString>
-  IsActive(SteadyInstant now, const ControllerStatus &status,
-           const BreathSignals &breath_signals) override {
+ private:
+  std::optional<QString> IsActive(SteadyInstant now, const ControllerStatus &status,
+                                  const BreathSignals &breath_signals) override {
     (void)now;
     (void)breath_signals;
     return (status.sensor_readings.patient_pressure_cm_h2o > 60.0)
                ? std::make_optional<QString>(
-                     QString("active at %1")
-                         .arg(status.sensor_readings.patient_pressure_cm_h2o))
+                     QString("active at %1").arg(status.sensor_readings.patient_pressure_cm_h2o))
                : std::nullopt;
   }
 };
 
 class LatchingAlarmTest : public QObject {
   Q_OBJECT
-public:
+ public:
   LatchingAlarmTest() = default;
   ~LatchingAlarmTest() = default;
 
-private slots:
+ private slots:
   void initTestCase() {}
   void cleanupTestCase() {}
 
@@ -143,10 +155,8 @@ private slots:
     QCOMPARE("active at 95", alarm.GetBannerText());
   }
 
-private:
-  SteadyInstant t(int seconds) const {
-    return base_ + DurationMs(1000 * seconds);
-  }
+ private:
+  SteadyInstant t(int seconds) const { return base_ + DurationMs(1000 * seconds); }
   ControllerStatus pressure(float p) const {
     ControllerStatus res;
     res.sensor_readings.patient_pressure_cm_h2o = p;
@@ -155,5 +165,3 @@ private:
 
   SteadyInstant base_ = SteadyClock::now();
 };
-
-#endif // LATCHING_ALARM_TEST_H_

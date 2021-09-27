@@ -1,19 +1,33 @@
-#ifndef CONTROLLER_HISTORY_H
-#define CONTROLLER_HISTORY_H
+/* Copyright 2020-2021, RespiraWorks
 
-#include "chrono.h"
-#include "network_protocol.pb.h"
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+#pragma once
 
 #include <deque>
 #include <tuple>
 #include <vector>
+
+#include "chrono.h"
+#include "network_protocol.pb.h"
 
 // Maintains a history of recent ControllerStatus-es sufficient
 // for rendering the UI.
 //
 // Non-thread-safe, needs external synchronization.
 class ControllerHistory {
-public:
+ public:
   // Initializes the history to keep a window of given duration -
   // meaning, if the oldest point is more than this much older than
   // the point being added, it gets kicked out.
@@ -29,14 +43,12 @@ public:
   // For a similar reason we also must use specifically a steady clock
   // (clock that never goes backwards) - as opposed to, say, the system clock.
   bool Append(SteadyInstant gui_now, const ControllerStatus &status) {
-    if (!history_.empty() &&
-        gui_now - std::get<SteadyInstant>(history_.back()) < granularity_) {
+    if (!history_.empty() && gui_now - std::get<SteadyInstant>(history_.back()) < granularity_) {
       return false;
     }
     history_.push_back({gui_now, status});
     // Kick out points that are too old.
-    while (!history_.empty() &&
-           gui_now - std::get<SteadyInstant>(history_.front()) > window_) {
+    while (!history_.empty() && gui_now - std::get<SteadyInstant>(history_.front()) > window_) {
       history_.pop_front();
     }
     return true;
@@ -55,10 +67,8 @@ public:
     return std::get<1>(history_.back());
   }
 
-private:
+ private:
   DurationMs window_;
   DurationMs granularity_;
   std::deque<std::tuple<SteadyInstant, ControllerStatus>> history_;
 };
-
-#endif // CONTROLLER_HISTORY_H

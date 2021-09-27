@@ -1,5 +1,19 @@
-#ifndef CLOCK_H_
-#define CLOCK_H_
+/* Copyright 2020-2021, RespiraWorks
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+#pragma once
 
 #include <QObject>
 #include <QTime>
@@ -14,7 +28,7 @@ class SimpleClock : public QObject {
   Q_PROPERTY(int minute READ GetMinute NOTIFY time_changed)
   Q_PROPERTY(int second READ GetSecond NOTIFY time_changed)
 
-public:
+ public:
   explicit SimpleClock(QObject *parent = nullptr) : QObject(parent) {
     connect(&timer_, &QTimer::timeout, this, &SimpleClock::update_timer);
     timer_.start(1000);
@@ -31,15 +45,13 @@ public:
     emit time_changed();
   }
 
-signals:
+ signals:
 
   void updateIntervalChanged();
   void time_changed();
   void updated();
 
-private:
+ private:
   QTime current_time_ = QTime::currentTime();
   QTimer timer_;
 };
-
-#endif // CLOCK_H_

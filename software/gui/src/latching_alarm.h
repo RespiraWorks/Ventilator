@@ -1,19 +1,32 @@
-#ifndef LATCHING_ALARM_H_
-#define LATCHING_ALARM_H_
+/* Copyright 2020-2021, RespiraWorks
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+#pragma once
+
+#include <QObject>
+#include <QString>
+#include <optional>
 
 #include "breath_signals.h"
 #include "chrono.h"
 #include "network_protocol.pb.h"
 
-#include <QObject>
-#include <QString>
-
-#include <optional>
-
 class AlarmPriority {
   Q_GADGET
 
-public:
+ public:
   enum Enum {
     NONE,
     LOW,
@@ -37,25 +50,23 @@ public:
 class LatchingAlarm : public QObject {
   Q_OBJECT
 
-private:
+ private:
   // If the alarm condition is active, returns a human-readable string
   // describing it, otherwise nullopt.
-  virtual std::optional<QString>
-  IsActive(SteadyInstant now, const ControllerStatus &status,
-           const BreathSignals &breath_signals) = 0;
+  virtual std::optional<QString> IsActive(SteadyInstant now, const ControllerStatus &status,
+                                          const BreathSignals &breath_signals) = 0;
 
-protected:
+ protected:
   explicit LatchingAlarm(AlarmPriority::Enum priority) : priority_(priority) {}
 
-public:
+ public:
   virtual ~LatchingAlarm() = default;
 
+  Q_PROPERTY(AlarmPriority::Enum nominalPriority READ GetNominalPriority CONSTANT)
   Q_PROPERTY(
-      AlarmPriority::Enum nominalPriority READ GetNominalPriority CONSTANT)
-  Q_PROPERTY(AlarmPriority::Enum effectiveVisualPriority READ
-                 GetEffectiveVisualPriority NOTIFY updated)
-  Q_PROPERTY(AlarmPriority::Enum effectiveAudioPriority READ
-                 GetEffectiveAudioPriority NOTIFY updated)
+      AlarmPriority::Enum effectiveVisualPriority READ GetEffectiveVisualPriority NOTIFY updated)
+  Q_PROPERTY(
+      AlarmPriority::Enum effectiveAudioPriority READ GetEffectiveAudioPriority NOTIFY updated)
   Q_PROPERTY(QString bannerText READ GetBannerText NOTIFY updated)
   Q_PROPERTY(int remainingSilenceMs READ GetRemainingSilenceMs NOTIFY updated)
 
@@ -69,36 +80,34 @@ public:
       banner_text_ = banner_text;
     }
     switch (audio_state_) {
-    case AudioState::INACTIVE:
-      audio_state_ =
-          is_condition_active_ ? AudioState::BEEPING : AudioState::INACTIVE;
-      break;
-    case AudioState::BEEPING:
-      audio_state_ = AudioState::BEEPING;
-      break;
-    case AudioState::SILENCED:
-      if (now > silenced_until_) {
-        // Silencing period elapsed.
-        // If condition is active, we should go back to beeping, otherwise go
-        // back to normal.
-        silenced_until_ = std::nullopt;
-        audio_state_ =
-            is_condition_active_ ? AudioState::BEEPING : AudioState::INACTIVE;
-      } else {
-        // Silencing period is still in effect.
-        // If condition is active, silencing continues.
-        // If condition stops being active while silent, that clears the
-        // silencing because it applied only to the current occurrence of the
-        // condition.
-        if (is_condition_active_) {
-          audio_state_ = AudioState::SILENCED;
-        } else {
+      case AudioState::INACTIVE:
+        audio_state_ = is_condition_active_ ? AudioState::BEEPING : AudioState::INACTIVE;
+        break;
+      case AudioState::BEEPING:
+        audio_state_ = AudioState::BEEPING;
+        break;
+      case AudioState::SILENCED:
+        if (now > silenced_until_) {
+          // Silencing period elapsed.
+          // If condition is active, we should go back to beeping, otherwise go
+          // back to normal.
           silenced_until_ = std::nullopt;
-          banner_text_ = std::nullopt;
-          audio_state_ = AudioState::INACTIVE;
+          audio_state_ = is_condition_active_ ? AudioState::BEEPING : AudioState::INACTIVE;
+        } else {
+          // Silencing period is still in effect.
+          // If condition is active, silencing continues.
+          // If condition stops being active while silent, that clears the
+          // silencing because it applied only to the current occurrence of the
+          // condition.
+          if (is_condition_active_) {
+            audio_state_ = AudioState::SILENCED;
+          } else {
+            silenced_until_ = std::nullopt;
+            banner_text_ = std::nullopt;
+            audio_state_ = AudioState::INACTIVE;
+          }
         }
-      }
-      break;
+        break;
     }
     updated();
   }
@@ -124,27 +133,23 @@ public:
 
   // ACKNOWLEDGEs the alarm, suppressing audio for 2 minutes.
   void Acknowledge(SteadyInstant now) {
-    if (!IsAudioActive())
-      return;
+    if (!IsAudioActive()) return;
     audio_state_ = AudioState::SILENCED;
     silenced_until_ = now + DurationMs(120'000);
     updated();
   }
 
-  std::optional<SteadyInstant> GetSilencedUntil() const {
-    return silenced_until_;
-  }
+  std::optional<SteadyInstant> GetSilencedUntil() const { return silenced_until_; }
 
   int GetRemainingSilenceMs() {
-    return silenced_until_.has_value()
-               ? TimeAMinusB(*silenced_until_, SteadyClock::now()).count()
-               : 0;
+    return silenced_until_.has_value() ? TimeAMinusB(*silenced_until_, SteadyClock::now()).count()
+                                       : 0;
   }
 
-signals:
+ signals:
   void updated();
 
-private:
+ private:
   bool is_condition_active_ = false;
   // Present if IsAudioActive().
   // Corresponds to the text returned by Update() last time the condition was
@@ -158,5 +163,3 @@ private:
   // Present only in SILENCED.
   std::optional<SteadyInstant> silenced_until_ = std::nullopt;
 };
-
-#endif // LATCHING_ALARM_H_

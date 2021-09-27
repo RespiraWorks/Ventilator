@@ -199,18 +199,18 @@ Reference abbreviations ([RM], [PCB], etc) are defined in hal/README.md
 */
 
 // How long a period (in seconds) we want to average the A/D readings.
-static constexpr float SampleHistoryTimeSec = 0.001f;
+static constexpr float SampleHistoryTimeSec{0.001f};
 
 // Resolution of the ADC channels (in bits).
 // We are using the default value (which is also the highest possible one - see [RM] 16.4.22).
-static constexpr int AdcResolution = 12;
+static constexpr int AdcResolution{12};
 
 // This constant controls how many times we have the A/D sample each input
 // and sum them before moving on to the next input.  The constant is set
 // as a log base 2, so a value of 3 for example would mean sample 8 times
 // (2^3 == 8).  Legal values range from 0 to 8.
-static constexpr int OversampleLog2 = 4;
-static constexpr int OversampleCount = 1 << OversampleLog2;
+static constexpr int OversampleLog2{4};
+static constexpr int OversampleCount{1 << OversampleLog2};
 
 // [RM] 16.4.30: Oversampler (pg 425)
 // This calculated constant gives the maximum A/D reading based on the number of samples.
@@ -272,13 +272,7 @@ bool ADC::initialize(const uint32_t cpu_frequency_hz) {
   // corresponds to 0 volts, and MaxAdcReading corresponds to 3.3V
   adc_scaler_ = 3.3f / static_cast<float>(MaxAdcReading * adc_sample_history_);
 
-  // NOTE - we need the sample history to be small for two reasons:
-  // - We sum to a 32-bit floating point number and will lose precision if we add in too many
-  // samples
-  // - We want the A/D reading to be fast, so summing up a really large array might be too slow.
-  //
-  // If you get hit with this assertion you may need to rethink the way this function works.
-  if (adc_sample_history_ > 100) return false;
+  if (adc_sample_history_ > AdcSampleHistoryHardMax) return false;
 
   // Enable the clock to the A/D converter
   enable_peripheral_clock(PeripheralID::ADC);

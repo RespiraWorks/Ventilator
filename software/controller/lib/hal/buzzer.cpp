@@ -41,6 +41,7 @@ void Buzzer::initialize(const uint32_t cpu_frequency_hz) {
   // Connect PB4 to TIM3_CH1, [DS] Table 17 (pg 77)
   GPIO::alternate_function(GPIO::Port::B, /*pin =*/4, GPIO::AlternativeFuncion::AF2);
 
+  /// \TODO: either make this a member variable and/or further abstract Timers interface
   TimerReg *tmr = Timer3Base;
 
   // Set the frequency

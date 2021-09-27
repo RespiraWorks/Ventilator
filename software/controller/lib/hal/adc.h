@@ -36,9 +36,9 @@ class ADC {
  public:
   ADC() = default;
 
-  /// \TODO: nodiscard flag, or have parent be responsible for buffer, see below
-  /// \returns true if buffer size was sufficient
-  bool initialize(uint32_t cpu_frequency_hz);
+  /// \returns true if buffer size was sufficient. If false, consider changing
+  ///          AdcSampleHistoryHardMax below
+  [[nodiscard]] bool initialize(uint32_t cpu_frequency_hz);
 
   // Reads from analog sensor using an analog-to-digital converter.
   // Returns a voltage.  On STM32 this can range from 0 to 3.3V.
@@ -47,14 +47,22 @@ class ADC {
 
  private:
   // Total number of A/D inputs we're sampling
+  // \TODO: consider templating this or somehow linking it to mapping enum size
   static constexpr int AdcChannels{5};
+
+  // We need the sample history to be small for two reasons:
+  // - We sum to a 32-bit float and will lose precision if we add in too many samples
+  // - We want the A/D reading to be fast, so summing up a really large array might be too slow
+  // If you get hit with this assertion you may need to rethink the way this function works.
+  // \TODO: template this, or improve it somehow
+  static constexpr uint32_t AdcSampleHistoryHardMax{100};
 
   uint32_t adc_sample_history_{1};
   float adc_scaler_{1.0f};
 
   //\TODO: possibly have parent allocate memory depending on number of samples
   // Presized under some assumptions, see implementation for initialize()
-  volatile uint16_t oversample_buffer_[100 * AdcChannels];
+  volatile uint16_t oversample_buffer_[AdcSampleHistoryHardMax * AdcChannels];
 
 #if !defined(BARE_STM32)
  public:

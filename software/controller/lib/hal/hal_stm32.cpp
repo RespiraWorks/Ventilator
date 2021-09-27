@@ -120,7 +120,8 @@ void HalApi::Init() {
   init_PCB_ID_pins();
   LEDs.initialize();
   SystemTimer::singleton().initialize(CPUFrequencyMhz);
-  adc.initialize(CPUFrequencyHz);
+  /// \TODO: fault somehow if this returns false
+  [[maybe_unused]] bool buffer_size_sufficient = adc.initialize(CPUFrequencyHz);
   pwm.initialize(CPUFrequencyHz);
   InitUARTs();
   buzzer.initialize(CPUFrequencyHz);
@@ -326,6 +327,7 @@ uint16_t HalApi::DebugBytesAvailableForWrite() { return debug_uart.TxFree(); }
   while (true) {
     ;  // noop
     /// \TODO function is unused. Make useful: blink lights? scream? do something?
+    ///       flash and beep morse code?
   }
 }
 #pragma GCC diagnostic pop
@@ -338,7 +340,7 @@ void StepperISR() { StepMotor::DmaISR(); }
  * very start of the flash memory.
  *****************************************************************/
 
-// TODO: these could optionally call Fault() but not in production
+/// \TODO: these could optionally call Fault() but not in production, log error to EEPROM
 void NMI() {}
 void FaultISR() {}
 void MPUFaultISR() {}

@@ -165,25 +165,27 @@ elif [ "$1" == "install" ]; then
 
     apt-get update &&
       apt-get install -y \
-        build-essential \
         git \
-        qt5-default \
+        build-essential \
+        qt5-qmake \
+        qtchooser \
+        qtbase5-dev \
         qtbase5-dev-tools \
-        qtdeclarative5-dev \
         qtmultimedia5-dev \
-        libqt5multimediawidgets5 \
+        qtdeclarative5-dev \
+        qtdeclarative5-dev-tools \
+        qtquickcontrols2-5-dev \
+        libqt5serialport5 \
+        libqt5serialport5-dev \
         libqt5multimedia5 \
         libqt5multimedia5-plugins \
         libqt5multimediaquick5 \
-        pulseaudio \
+        libqt5multimediawidgets5 \
         qml-module-qtcharts \
-        qtquickcontrols2-5-dev \
         qml-module-qtquick-controls \
         qml-module-qtquick-controls2 \
         qml-module-qtmultimedia \
-        libqt5serialport5-dev \
-        libqt5serialport5 \
-        qtdeclarative5-dev-tools \
+        pulseaudio \
         xvfb \
 	      bear \
 	      cppcheck \
@@ -234,7 +236,7 @@ elif [ "$1" == "build" ]; then
   pushd build
 
   qmake $config_opt ..
-  bear make $j_opt
+  bear -- make $j_opt
 
   if [ "$2" != "--no-checks" ] && [ "$3" != "--no-checks" ] && [ "$4" != "--no-checks" ]; then
     cppcheck --project=compile_commands.json -i ../../src/third_party -i ../../../common/third_party .

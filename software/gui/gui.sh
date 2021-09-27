@@ -204,7 +204,6 @@ build_configure() {
   create_clean_directory build
   $QMAKE_ALIAS -unset QMAKEFEATURES
   git submodule update --init --recursive
-  git submodule update --remote
 
   if [ "$will_need_checks" == "yes" ]; then
     checks_pre
@@ -227,6 +226,7 @@ build_with_bear() {
 
   pushd build
   bear $bear_opt -- make $j_opt
+  checks_post
   popd
 }
 
@@ -306,7 +306,6 @@ elif [ "$1" == "build" ]; then
 
   if [ "$checks_opt" == "yes" ]; then
     build_with_bear $j_opt
-    checks_post
   else
     build_with_make $j_opt
   fi

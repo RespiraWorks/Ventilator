@@ -42,6 +42,8 @@ EXIT_SUCCESS=0
 COVERAGE_INPUT_DIR=build/tests
 COVERAGE_OUTPUT_DIR=coverage_reports
 
+QMAKE_ALIAS="qmake -qt=qt5"
+
 #########
 # UTILS #
 #########
@@ -200,7 +202,7 @@ elif [ "$1" == "install" ]; then
 elif [ "$1" == "clean" ]; then
   clean_dir build
   clean_dir "$COVERAGE_OUTPUT_DIR"
-  qmake -unset QMAKEFEATURES
+  $QMAKE_ALIAS -unset QMAKEFEATURES
   git submodule deinit .
   exit $EXIT_SUCCESS
 
@@ -215,7 +217,7 @@ elif [ "$1" == "build" ]; then
   fi
 
   create_clean_directory build
-  qmake -unset QMAKEFEATURES
+  $QMAKE_ALIAS -unset QMAKEFEATURES
   git submodule update --init --recursive
 
   config_opt="CONFIG+=release"
@@ -235,8 +237,8 @@ elif [ "$1" == "build" ]; then
 
   pushd build
 
-  qmake $config_opt ..
-  bear -- make $j_opt
+  $QMAKE_ALIAS $config_opt ..
+  bear $bear_opt -- make $j_opt
 
   if [ "$2" != "--no-checks" ] && [ "$3" != "--no-checks" ] && [ "$4" != "--no-checks" ]; then
     cppcheck --project=compile_commands.json -i ../../src/third_party -i ../../../common/third_party .

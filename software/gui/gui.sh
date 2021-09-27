@@ -204,6 +204,7 @@ build_configure() {
   create_clean_directory build
   $QMAKE_ALIAS -unset QMAKEFEATURES
   git submodule update --init --recursive
+  git submodule update --remote
 
   if [ "$will_need_checks" == "yes" ]; then
     checks_pre

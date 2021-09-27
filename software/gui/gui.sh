@@ -244,6 +244,7 @@ elif [ "$1" == "build" ]; then
 
   $QMAKE_ALIAS $config_opt ..
   bear --version
+  bear --help
   bear $bear_opt -- make $j_opt
 
   if [ "$2" != "--no-checks" ] && [ "$3" != "--no-checks" ] && [ "$4" != "--no-checks" ]; then

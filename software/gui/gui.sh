@@ -230,6 +230,11 @@ elif [ "$1" == "build" ]; then
     j_opt="-j"
   fi
 
+  bear_opt=""
+  if [ -n "$VERBOSE" ]; then
+    bear_opt="--verbose"
+  fi
+
   ## Does this have to happen up here or can it go with the other checks after build?
   if [ "$2" != "--no-checks" ] && [ "$3" != "--no-checks" ] && [ "$4" != "--no-checks" ]; then
     cppcheck -ithird_party -ibuild .

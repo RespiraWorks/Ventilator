@@ -9,6 +9,7 @@ source/config/*
 *.log
 !.gitignore
 software/controller/.gitignore
+software/common/.gitignore
 
 #IDE
 CMakeLists*

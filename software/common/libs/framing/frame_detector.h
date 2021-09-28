@@ -76,14 +76,16 @@ class FrameDetector : public RxListener {
   // Starts frame detector
   [[nodiscard]] bool begin();
 
-  void on_char_match_with_data();
-
-  void on_char_match_with_markers_only();
-
   // Callback method called when RxBuffer receives a marker character;
   // Note: MARK character is already written to RxBuffer so all conditions
   // evaluating rx_buffer_.received_length() take that into account
   void on_character_match() override;
+
+  /// \TODO: make private?
+  void on_char_match_with_data();
+
+  /// \TODO: make private?
+  void on_char_match_with_markers_only();
 
   // Callback method called when underlying Rx system experiences an error
   void on_rx_error(RxError) override;
@@ -91,15 +93,15 @@ class FrameDetector : public RxListener {
   // Callback method called when RxBuffer is full
   void on_rx_complete() override;
 
-  // Returns the last successfully detected frame, resets the frame_available flag.
-  // If frame_available was returning true before this call, it will return false afterwards
-  const uint8_t *take_frame();
+  // Returns true if a new frame was detected and this frame is available for read.
+  bool frame_available() const;
 
   // Returns the length of the last successfully detected frame.
   size_t frame_length() const;
 
-  // Returns true if a new frame was detected and this frame is available for read.
-  bool frame_available() const;
+  // Returns the last successfully detected frame, resets the frame_available flag.
+  // If frame_available was returning true before this call, it will return false afterwards
+  const uint8_t *take_frame();
 
   /// Using protected so that derived class with back-door can be used for testing
  protected:
@@ -116,4 +118,5 @@ class FrameDetector : public RxListener {
   void process_received_data();
 };
 
+/// Includes function implementations so they don't have to live in header
 #include "frame_detector.tpp"

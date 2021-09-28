@@ -15,11 +15,8 @@ limitations under the License.
 
 #include "frame_detector.h"
 
-#include <cmath>
-
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
-#include "proto_traits.h"
 #include "soft_rx_buffer.h"
 
 constexpr size_t BufferLength{20};

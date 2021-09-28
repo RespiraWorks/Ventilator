@@ -19,10 +19,10 @@ limitations under the License.
 
 /// \TODO: This class will be used for GUI only? Should it live with that code?
 /// \TODO: Class is not explicitly tested, only as part of FrameDetector
-/// \TODO: explain the why and how of this class
 
 /*! \class SoftRxBuffer soft_rx_buffer.h "soft_rx_buffer.h"
- *  \brief Abstract class for serial receiver buffers.
+ *  \brief This class is used for GUI but is also convenient for testing
+ *     the FrameDetector class since bytes can be manually added to buffer.
  */
 template <size_t RxBytesMax>
 class SoftRxBuffer : public RxBuffer {
@@ -43,4 +43,5 @@ class SoftRxBuffer : public RxBuffer {
   uint8_t match_char_{0};
 };
 
+/// Includes function implementations so they don't have to live in header
 #include "soft_rx_buffer.tpp"

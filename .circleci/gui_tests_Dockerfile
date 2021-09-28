@@ -15,6 +15,6 @@ WORKDIR /root/Ventilator/software/gui
 
 CMD /bin/bash \
     ./gui.sh install && \
-    VERBOSE=1 ./gui.sh build -f -j --no-checks && \
+    ./gui.sh build -f -j --no-checks && \
     ./gui.sh test -f -x && \
     ./gui.sh cov_upload

@@ -273,7 +273,7 @@ elif [ "$1" == "clean" ]; then
   clean_dir build
   clean_dir "$COVERAGE_OUTPUT_DIR"
   $QMAKE_ALIAS -unset QMAKEFEATURES
-  git submodule deinit .
+  git submodule deinit -f .
   exit $EXIT_SUCCESS
 
 #########

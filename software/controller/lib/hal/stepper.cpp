@@ -15,10 +15,6 @@ limitations under the License.
 
 #include "stepper.h"
 
-#include "clocks.h"
-#include "gpio.h"
-#include "hal.h"
-
 StepMotor StepMotor::motor_[StepMotor::MaxMotors];
 int StepMotor::total_motors_;
 
@@ -27,7 +23,12 @@ int StepMotor::total_motors_;
 #include <cmath>
 #include <cstring>
 
-#include "hal_stm32.h"
+#include "clocks.h"
+#include "dma.h"
+#include "gpio.h"
+#include "interrupts.h"
+#include "spi.h"
+#include "system_timer.h"
 
 // Static data members
 uint8_t StepMotor::dma_buff_[StepMotor::MaxMotors];
@@ -88,8 +89,8 @@ static constexpr float VelIntSpeedReg = TickTime * (1 << 26);
 static constexpr int MicrostepPerStep = 128;
 
 // These functions raise and lower the chip select pin
-inline void CSHigh() { GPIO::set_pin(GPIO::Port::B, 6); }
-inline void CSLow() { GPIO::clear_pin(GPIO::Port::B, 6); }
+void chip_select_high() { GPIO::set_pin(GPIO::Port::B, 6); }
+void chip_select_low() { GPIO::clear_pin(GPIO::Port::B, 6); }
 
 StepMtrErr StepMotor::SetParam(StepMtrParam param, uint32_t value) {
   uint8_t p = static_cast<uint8_t>(param);
@@ -120,7 +121,7 @@ StepMtrErr StepMotor::GetParam(StepMtrParam param, uint32_t *value) {
 
   // It's not legal to call this from the control loop because it
   // has to block.  Return an error if we're in an interrupt handler
-  if (hal.InInterruptHandler()) return StepMtrErr::WouldBlock;
+  if (Interrupts::singleton().InInterruptHandler()) return StepMtrErr::WouldBlock;
 
   uint8_t cmd_buff[4];
 
@@ -163,7 +164,7 @@ StepMtrErr StepMotor::GetParam(StepMtrParam param, uint32_t *value) {
  * on the rising edge of CS.  That's a little better for us since
  * we have 3 steppers.
  *****************************************************************/
-void HalApi::StepperMotorInit() {
+void StepMotor::OneTimeInit() {
   enable_peripheral_clock(PeripheralID::SPI1);
   enable_peripheral_clock(PeripheralID::DMA2);
 
@@ -186,7 +187,7 @@ void HalApi::StepperMotorInit() {
   // pulled high.  I don't really use the reset pin,
   // I just want it to be high so I don't reset the
   // part inadvertently
-  CSHigh();
+  chip_select_high();
   GPIO::set_pin(GPIO::Port::A, 9);
   GPIO::pin_mode(GPIO::Port::B, 6, GPIO::PinMode::Output);
   GPIO::pin_mode(GPIO::Port::A, 9, GPIO::PinMode::Output);
@@ -226,22 +227,21 @@ void HalApi::StepperMotorInit() {
 
   // DMA2 channels 3 and 4 can be used to handle rx and tx interrupts from
   // SPI1 respectively.
-  DmaSelectChannel(Dma2Base, DmaChannel::Chan3, 4);
-  DmaSelectChannel(Dma2Base, DmaChannel::Chan4, 4);
+  DMA::SelectChannel(DMA::Base::DMA2, DMA::Channel::Chan3, 4);
+  DMA::SelectChannel(DMA::Base::DMA2, DMA::Channel::Chan4, 4);
 
   // The two DMA channels move data to/from the SPI data register.
-  DmaReg *dma = Dma2Base;
-  int c3 = static_cast<int>(DmaChannel::Chan3);
-  int c4 = static_cast<int>(DmaChannel::Chan4);
-  dma->channel[c3].peripheral_address = &spi->data;
-  dma->channel[c4].peripheral_address = &spi->data;
+  DmaReg *dma = DMA::get_register(DMA::Base::DMA2);
 
   // Configure the DMA channels, but don't enable them yet
+  /// \TODO: (subtly) repetitive blocks for each channel - factor this out
+  int c3 = static_cast<int>(DMA::Channel::Chan3);
+  dma->channel[c3].peripheral_address = &spi->data;
   dma->channel[c3].config.enable = 0;
   dma->channel[c3].config.tx_complete_interrupt = 1;
   dma->channel[c3].config.half_tx_interrupt = 0;
   dma->channel[c3].config.tx_error_interrupt = 0;
-  dma->channel[c3].config.direction = static_cast<uint32_t>(DmaChannelDir::PeripheralToMemory);
+  dma->channel[c3].config.direction = static_cast<uint32_t>(DMA::ChannelDir::PeripheralToMemory);
   dma->channel[c3].config.circular = 0;
   dma->channel[c3].config.peripheral_increment = 0;
   dma->channel[c3].config.memory_increment = 1;
@@ -250,11 +250,13 @@ void HalApi::StepperMotorInit() {
   dma->channel[c3].config.priority = 0;
   dma->channel[c3].config.mem2mem = 0;
 
+  int c4 = static_cast<int>(DMA::Channel::Chan4);
+  dma->channel[c4].peripheral_address = &spi->data;
   dma->channel[c4].config.enable = 0;
   dma->channel[c4].config.tx_complete_interrupt = 0;
   dma->channel[c4].config.half_tx_interrupt = 0;
   dma->channel[c4].config.tx_error_interrupt = 0;
-  dma->channel[c4].config.direction = static_cast<uint32_t>(DmaChannelDir::MemoryToPeripheral);
+  dma->channel[c4].config.direction = static_cast<uint32_t>(DMA::ChannelDir::MemoryToPeripheral);
   dma->channel[c4].config.circular = 0;
   dma->channel[c4].config.peripheral_increment = 0;
   dma->channel[c4].config.memory_increment = 1;
@@ -263,14 +265,11 @@ void HalApi::StepperMotorInit() {
   dma->channel[c4].config.priority = 0;
   dma->channel[c4].config.mem2mem = 0;
 
-  hal.EnableInterrupt(InterruptVector::Dma2Channel3, IntPriority::Standard);
+  Interrupts::singleton().EnableInterrupt(InterruptVector::Dma2Channel3, IntPriority::Standard);
 
-  StepMotor::OneTimeInit();
-}
+  // Do some basic init of the stepper motor chips so we can
+  // make them spin the motors
 
-// Do some basic init of the stepper motor chips so we can
-// make them spin the motors
-void StepMotor::OneTimeInit() {
   uint32_t val;
 
   ProbeChips();
@@ -284,7 +283,7 @@ void StepMotor::OneTimeInit() {
     // a new command.  For the power-step chip this delay
     // time is specified as 500 microseconds in the data sheet.
     // For the L6470 its only 45 max
-    hal.Delay(microseconds(500));
+    SystemTimer::singleton().delay(microseconds(500));
 
     // Get the first gate config register of the powerSTEP01.
     // This is actually the config register on the L6470
@@ -529,7 +528,7 @@ StepMtrErr StepMotor::Reset() {
 StepMtrErr StepMotor::GetStatus(StepperStatus *stat) {
   // It's not legal to call this from the control loop because it
   // has to block.  Return an error if we're in an interrupt handler
-  if (hal.InInterruptHandler()) return StepMtrErr::WouldBlock;
+  if (Interrupts::singleton().InInterruptHandler()) return StepMtrErr::WouldBlock;
 
   uint8_t cmd[] = {static_cast<uint8_t>(StepMtrCmd::GetStatus), 0, 0};
 
@@ -621,7 +620,7 @@ StepMtrErr StepMotor::SendCmd(uint8_t *cmd, uint32_t len) {
   // See if we're running from an interrupt handler
   // (i.e. the controller thread).  If so we just
   // add this command to our queue and return
-  if (hal.InInterruptHandler()) return EnqueueCmd(cmd, len);
+  if (Interrupts::singleton().InInterruptHandler()) return EnqueueCmd(cmd, len);
 
   // Copy the command to my buffer with interrupts disabled.
   // I want to make sure the whole command gets sent as one continuous
@@ -774,10 +773,10 @@ void StepMotor::UpdateComState() {
   // of motor driver chips.  Set up my DMA to
   // send it out.
   //////////////////////////////////////////////
-  int c3 = static_cast<int>(DmaChannel::Chan3);
-  int c4 = static_cast<int>(DmaChannel::Chan4);
+  int c3 = static_cast<int>(DMA::Channel::Chan3);
+  int c4 = static_cast<int>(DMA::Channel::Chan4);
 
-  DmaReg *dma = Dma2Base;
+  DmaReg *dma = DMA::get_register(DMA::Base::DMA2);
   dma->channel[c3].config.enable = 0;
   dma->channel[c4].config.enable = 0;
 
@@ -789,17 +788,17 @@ void StepMotor::UpdateComState() {
   // NOTE - CS has to be high for at least 650ns between bytes.
   // I don't bother timing this because I've found that in
   // practice it takes longer than that to handle the interrupt
-  CSLow();
+  chip_select_low();
 
   dma->channel[c3].config.enable = 1;
   dma->channel[c4].config.enable = 1;
 }
 
 void StepMotor::DmaISR() {
-  CSHigh();
+  chip_select_high();
 
   // Clear the DMA interrupt
-  DmaClearInt(Dma2Base, DmaChannel::Chan3, DmaInterrupt::Global);
+  DMA::ClearInt(DMA::Base::DMA2, DMA::Channel::Chan3, DMA::Interrupt::Global);
 
   UpdateComState();
 }
@@ -814,10 +813,10 @@ void StepMotor::StartQueuedCommands() {
 // This is used to send a command to the stepper chips during
 // startup.
 void StepMotor::SendInitCmd(uint8_t *buff, int len) {
-  int c3 = static_cast<int>(DmaChannel::Chan3);
-  int c4 = static_cast<int>(DmaChannel::Chan4);
+  int c3 = static_cast<int>(DMA::Channel::Chan3);
+  int c4 = static_cast<int>(DMA::Channel::Chan4);
 
-  DmaReg *dma = Dma2Base;
+  DmaReg *dma = DMA::get_register(DMA::Base::DMA2);
   dma->channel[c3].config.enable = 0;
   dma->channel[c4].config.enable = 0;
 
@@ -826,7 +825,7 @@ void StepMotor::SendInitCmd(uint8_t *buff, int len) {
   dma->channel[c3].memory_address = buff;
   dma->channel[c4].memory_address = buff;
 
-  CSLow();
+  chip_select_low();
 
   // I prevent interrupts during this because I don't
   // want the normal interrupt handler to run.
@@ -842,13 +841,13 @@ void StepMotor::SendInitCmd(uint8_t *buff, int len) {
 
   // Clear the interrupt flag so I won't get an interrupt
   // as soon as I re-enable them
-  DmaClearInt(Dma2Base, DmaChannel::Chan3, DmaInterrupt::Global);
+  DMA::ClearInt(DMA::Base::DMA2, DMA::Channel::Chan3, DMA::Interrupt::Global);
 
   // Raise the chip select line and wait 1 microsecond.
   // The minimum time the CS needs to be high is just under
   // 1 microsecond.
-  CSHigh();
-  hal.Delay(microseconds(1));
+  chip_select_high();
+  SystemTimer::singleton().delay(microseconds(1));
 }
 
 // This is run at startup before the DMA interrupts are enabled.
@@ -890,19 +889,16 @@ void StepMotor::ProbeChips() {
 }
 
 #else
+
+/// \TODO: improve this mocking to be helpful in testing
+
 StepMtrErr StepMotor::HardDisable() { return StepMtrErr::Ok; }
-
 StepMtrErr StepMotor::SetAmpAll(float amp) { return StepMtrErr::Ok; }
-
 StepMtrErr StepMotor::SetMaxSpeed(float dps) { return StepMtrErr::Ok; }
-
 StepMtrErr StepMotor::SetAccel(float acc) { return StepMtrErr::Ok; }
-
 StepMtrErr StepMotor::MoveRel(float deg) { return StepMtrErr::Ok; }
-
 StepMtrErr StepMotor::ClearPosition() { return StepMtrErr::Ok; }
-
 StepMtrErr StepMotor::GotoPos(float deg) { return StepMtrErr::Ok; }
-
 StepMtrErr StepMotor::HardStop() { return StepMtrErr::Ok; }
+
 #endif

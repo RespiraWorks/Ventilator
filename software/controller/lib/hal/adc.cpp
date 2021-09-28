@@ -50,13 +50,140 @@ limitations under the License.
 //
 ////////////////////////////////////////////////////////////////////
 
-#include "clocks.h"
-#include "gpio.h"
-#include "hal.h"
+#include "adc.h"
 
 #if defined(BARE_STM32)
 
-#include "hal_stm32.h"
+#include "clocks.h"
+#include "dma.h"
+#include "gpio.h"
+#include "system_timer.h"
+
+// [RM] 16.6 ADC Registers (for each ADC) (pg 450)
+struct AdcStruct {
+  // A/D specific registers (0x100 total length)
+  struct {
+    uint32_t status;
+    uint32_t interrupts_enable;
+    uint32_t control;
+    struct {
+      uint32_t dma_enable : 1;
+      uint32_t dma_config : 1;
+      uint32_t df_sdm_config : 1;
+      uint32_t resolution : 2;
+      uint32_t alignment : 1;
+      uint32_t external_trigger_selection : 4;
+      uint32_t external_trigger_enable : 2;
+      uint32_t overrun_mode : 1;
+      uint32_t continuous_conversion : 1;
+      uint32_t delayed_conversion : 1;
+      uint32_t reserved1 : 1;
+      uint32_t discontinuous_mode : 1;
+      uint32_t discontinuous_channel_count : 3;
+      uint32_t discontinuous_injected_channels : 1;
+      uint32_t jsqr_mode : 1;
+      uint32_t single_channel_analog_watchdog1 : 1;
+      uint32_t analog_watchdog1_enable : 1;
+      uint32_t analog_watchdog1_on_injected : 1;
+      uint32_t automatic_injected_conversion : 1;
+      uint32_t analog_watchdog1_channel : 5;
+      uint32_t injected_queue_disable : 1;
+    } configuration1;  // 0x0C - [RM] 16.6.4 ADC Configuration Register
+    // (ADC_CFGR) (pg 458)
+
+    struct {
+      uint32_t regular_oversampling : 1;
+      uint32_t injected_oversampling : 1;
+      uint32_t oversampling_ratio : 3;
+      uint32_t oversampling_shift : 4;
+      uint32_t triggered_oversampling : 1;
+      uint32_t regular_oversampling_mode : 1;
+      uint32_t reserved : 21;
+    } configuration2;  // [RM] 16.6.5 ADC configuration register 2 (ADC_CFGR2)
+    // (pg 462)
+
+    struct {
+      uint32_t ch0 : 3;
+      uint32_t ch1 : 3;
+      uint32_t ch2 : 3;
+      uint32_t ch3 : 3;
+      uint32_t ch4 : 3;
+      uint32_t ch5 : 3;
+      uint32_t ch6 : 3;
+      uint32_t ch7 : 3;
+      uint32_t ch8 : 3;
+      uint32_t ch9 : 3;
+      uint32_t reserved1 : 2;
+      uint32_t ch10 : 3;
+      uint32_t ch11 : 3;
+      uint32_t ch12 : 3;
+      uint32_t ch13 : 3;
+      uint32_t ch14 : 3;
+      uint32_t ch15 : 3;
+      uint32_t ch16 : 3;
+      uint32_t ch17 : 3;
+      uint32_t ch18 : 3;
+      uint32_t reserved2 : 5;
+    } sample_times;  // [RM] 16.6.6 ADC Sample Time Register 1 (ADC_SMPR1) (pg
+    // 464)
+
+    uint32_t reserved1;
+    uint32_t watchdogs[3];  // 0x20 - [RM] 16.6.8 ADC Watchdog
+    uint32_t reserved2;
+
+    // 4x sequence registers.  These registers are used
+    // to define the number of A/D readings and the
+    // channel numbers being read.
+    struct {
+      uint32_t length : 6;
+      uint32_t sequence1 : 6;
+      uint32_t sequence2 : 6;
+      uint32_t sequence3 : 6;
+      uint32_t sequence4 : 6;
+      uint32_t reserved1 : 2;
+
+      uint32_t sequence5 : 6;
+      uint32_t sequence6 : 6;
+      uint32_t sequence7 : 6;
+      uint32_t sequence8 : 6;
+      uint32_t sequence9 : 6;
+      uint32_t reserved2 : 2;
+
+      uint32_t sequence10 : 6;
+      uint32_t sequence11 : 6;
+      uint32_t sequence12 : 6;
+      uint32_t sequence13 : 6;
+      uint32_t sequence14 : 6;
+      uint32_t reserved3 : 2;
+
+      uint32_t sequence15 : 6;
+      uint32_t sequence16 : 6;
+      uint32_t reserved4 : 20;
+    } sequence;  // ADC Regular Sequence Register (pg 468)
+
+    uint32_t data;
+    uint32_t reserved3[2];
+    uint32_t injected_sequence;
+    uint32_t reserved4[4];
+    uint32_t offset[4];
+    uint32_t reserved5[4];
+    uint32_t injected_data[4];
+    uint32_t reserved6[4];
+    uint32_t watchdoc_config[2];
+    uint32_t reserved7[2];
+    uint32_t differential_mode;
+    uint32_t calibration;  // 0xB4 - Calibration Factors [RM] 16.6.22 (pg 476)
+    uint32_t reserved8[18];
+  } adc[2];  // Master ADC1, Slave ADC2
+
+  uint32_t common_status;
+  uint32_t reserved9;
+  uint32_t common_control;
+  uint32_t common_data;
+};
+
+typedef volatile AdcStruct AdcReg;
+inline AdcReg *const AdcBase = reinterpret_cast<AdcReg *>(0X50040000);
 
 /*
 Please refer to [PCB] as the ultimate source of which pin is used for which function.
@@ -72,21 +199,18 @@ Reference abbreviations ([RM], [PCB], etc) are defined in hal/README.md
 */
 
 // How long a period (in seconds) we want to average the A/D readings.
-static constexpr float SampleHistoryTimeSec = 0.001f;
-
-// Total number of A/D inputs we're sampling
-static constexpr int AdcChannels = 5;
+static constexpr float SampleHistoryTimeSec{0.001f};
 
 // Resolution of the ADC channels (in bits).
 // We are using the default value (which is also the highest possible one - see [RM] 16.4.22).
-static constexpr int AdcResolution = 12;
+static constexpr int AdcResolution{12};
 
 // This constant controls how many times we have the A/D sample each input
 // and sum them before moving on to the next input.  The constant is set
 // as a log base 2, so a value of 3 for example would mean sample 8 times
 // (2^3 == 8).  Legal values range from 0 to 8.
-static constexpr int OversampleLog2 = 4;
-static constexpr int OversampleCount = 1 << OversampleLog2;
+static constexpr int OversampleLog2{4};
+static constexpr int OversampleCount{1 << OversampleLog2};
 
 // [RM] 16.4.30: Oversampler (pg 425)
 // This calculated constant gives the maximum A/D reading based on the number of samples.
@@ -137,26 +261,19 @@ static constexpr int AdcConversionTime = [] {
   __builtin_unreachable();
 }();
 
-// Calculate how long our history buffer needs to be based on the above.
-static constexpr uint32_t AdcSampleHistory = static_cast<uint32_t>(
-    SampleHistoryTimeSec * CPUFrequencyHz / AdcConversionTime / OversampleCount / AdcChannels);
+/// \TODO: have caller provide mappings in a different layer
+bool ADC::initialize(const uint32_t cpu_frequency_hz) {
+  adc_sample_history_ =
+      static_cast<uint32_t>(SampleHistoryTimeSec * static_cast<float>(cpu_frequency_hz) /
+                            AdcConversionTime / OversampleCount / AdcChannels);
 
-// This scaler converts the sum of the A/D readings (a total of
-// AdcSampleHistory) into a voltage.  The A/D is scaled so a value of 0
-// corresponds to 0 volts, and MaxAdcReading corresponds to 3.3V
-static constexpr float AdcScaler = 3.3f / (MaxAdcReading * AdcSampleHistory);
+  // This scaler converts the sum of the A/D readings (a total of
+  // adc_sample_history_) into a voltage.  The A/D is scaled so a value of 0
+  // corresponds to 0 volts, and MaxAdcReading corresponds to 3.3V
+  adc_scaler_ = 3.3f / static_cast<float>(MaxAdcReading * adc_sample_history_);
 
-// This buffer will hold the readings from the A/D
-static volatile uint16_t adc_buff[AdcSampleHistory * AdcChannels];
+  if (adc_sample_history_ > AdcSampleHistoryHardMax) return false;
 
-// NOTE - we need the sample history to be small for two reasons:
-// - We sum to a 32-bit floating point number and will lose precision if we add in too many samples
-// - We want the A/D reading to be fast, so summing up a really large array might be too slow.
-//
-// If you get hit with this assertion you may need to rethink the way this function works.
-static_assert(AdcSampleHistory < 100);
-
-void HalApi::InitADC() {
   // Enable the clock to the A/D converter
   enable_peripheral_clock(PeripheralID::ADC);
 
@@ -179,7 +296,7 @@ void HalApi::InitADC() {
   // Wait for the startup time ([RM] 16.4.6) specified in the STM32 [DS] for the voltage regulator
   // to become ready.  The time in the [DS] is 20 microseconds ([DS] 6.3.18) but I'll wait for 30
   // just to be extra conservative
-  hal.Delay(microseconds(30));
+  SystemTimer::singleton().delay(microseconds(30));
 
   // Calibrate the A/D for single ended channels ([RM] 16.4.8)
   adc->adc[0].control |= 0x80000000;
@@ -243,18 +360,19 @@ void HalApi::InitADC() {
 
   // I use DMA1 channel 1 to copy A/D readings into the buffer ([RM] 11.4.4)
   enable_peripheral_clock(PeripheralID::DMA1);
-  DmaReg *dma = Dma1Base;
-  auto c1 = static_cast<uint8_t>(DmaChannel::Chan1);
+  DmaReg *dma = DMA::get_register(DMA::Base::DMA1);
+  auto c1 = static_cast<uint8_t>(DMA::Channel::Chan1);
 
+  /// \TODO: improve DMA abstraction to factor this out?
   dma->channel[c1].peripheral_address = &adc->adc[0].data;
-  dma->channel[c1].memory_address = adc_buff;
-  dma->channel[c1].count = AdcSampleHistory * AdcChannels;
+  dma->channel[c1].memory_address = oversample_buffer_;
+  dma->channel[c1].count = adc_sample_history_ * AdcChannels;
 
   dma->channel[c1].config.enable = 0;
   dma->channel[c1].config.tx_complete_interrupt = 0;
   dma->channel[c1].config.half_tx_interrupt = 0;
   dma->channel[c1].config.tx_error_interrupt = 0;
-  dma->channel[c1].config.direction = static_cast<uint32_t>(DmaChannelDir::PeripheralToMemory);
+  dma->channel[c1].config.direction = static_cast<uint32_t>(DMA::ChannelDir::PeripheralToMemory);
   dma->channel[c1].config.circular = 1;
   dma->channel[c1].config.peripheral_increment = 0;
   dma->channel[c1].config.memory_increment = 1;
@@ -265,10 +383,13 @@ void HalApi::InitADC() {
 
   // Start the A/D converter (by setting bit 2 of the control register - per [RM] p457)
   adc->adc[0].control |= 0x00000004;
+
+  return true;
 }
 
 // Read the specified analog input.
-Voltage HalApi::AnalogRead(AnalogPin pin) const {
+Voltage ADC::read(const AnalogPin pin) const {
+  /// \TODO: factor out mapping function and have it tested
   int offset = [&] {
     switch (pin) {
       case AnalogPin::InterimBoardAnalogPressure:
@@ -291,9 +412,17 @@ Voltage HalApi::AnalogRead(AnalogPin pin) const {
   // background, but that shouldn't cause any problems because memory
   // accesses for 16-bit values are atomic.
   float sum = 0;
-  for (int i = 0; i < AdcSampleHistory; i++) sum += adc_buff[i * AdcChannels + offset];
+  for (int i = 0; i < adc_sample_history_; i++) sum += oversample_buffer_[i * AdcChannels + offset];
 
-  return volts(sum * AdcScaler);
+  return volts(sum * adc_scaler_);
 }
+
+#else
+
+bool ADC::initialize(const uint32_t cpu_frequency_hz) { return true; }
+
+Voltage ADC::read(AnalogPin pin) const { return analog_pin_values_.at(pin); }
+
+void ADC::TESTSetAnalogPin(AnalogPin pin, Voltage value) { analog_pin_values_[pin] = value; }
 
 #endif

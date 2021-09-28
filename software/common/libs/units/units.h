@@ -18,6 +18,8 @@ limitations under the License.
 #include <cstdint>
 #include <type_traits>
 
+/// \TODO: implement frequency types, so we avoid bugs of mixed up Hz vs. MHz for example
+
 // Wrappers for measurements of different physical quantities [1] (length,
 // time, etc.).
 //

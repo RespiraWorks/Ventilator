@@ -24,7 +24,13 @@ Reference abbreviations [RM], [DS], etc are defined in hal/README.md.
 
 #include <cstdint>
 
-// General Purpose I/O [RM] 8.4
+/******************************************************************
+ * General Purpose I/O support. [RM] Chapter 8
+ *
+ * Please refer to the PCB schematic as the ultimate source of which
+ * pin is used for which function.  A less definitive, but perhaps
+ * easier to read version is available in [PCBsp]
+ *****************************************************************/
 
 namespace GPIO {
 
@@ -71,6 +77,8 @@ enum class AlternativeFuncion : uint32_t {
   AF14 = 14,  //< TIM2/TIM15/TIM16/LPTIM2
   AF15 = 15   //< EVENTOUT
 };
+
+void enable_all_clocks();
 
 void pin_mode(Port port, uint8_t pin, PinMode mode);
 

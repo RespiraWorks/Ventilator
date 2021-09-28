@@ -29,6 +29,7 @@ Import("env")
 
 def get_firmware_specifier_build_flag():
     repo = git.Repo(search_parent_directories=True)
+    # TODO: contingency for detached heads, individual commits or some mid-rebase situations?
     GitVersion = repo.git.describe("--tags")
     GitBranch = repo.active_branch.name
     GitDirty = int(repo.is_dirty(untracked_files=True))

@@ -9,6 +9,8 @@
 //
 
 #include "hal.h"
+#include "system_timer.h"
+#include "watchdog.h"
 
 // test parameters
 static constexpr Duration Delay{milliseconds(10)};
@@ -23,10 +25,10 @@ void RunTest() {
   float step = InitialStep;
 
   while (true) {
-    hal.PSolValue(psol_position);
-    hal.Delay(Delay);
+    hal.psol.set(psol_position);
+    SystemTimer::singleton().delay(Delay);
 
-    hal.WatchdogHandler();
+    Watchdog::pet();
 
     psol_position += step;
     if (psol_position >= PSolMax) {

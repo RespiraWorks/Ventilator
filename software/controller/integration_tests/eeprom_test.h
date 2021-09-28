@@ -49,6 +49,7 @@
 #include "commands.h"
 #include "hal.h"
 #include "interface.h"
+#include "system_timer.h"
 #include "vars.h"
 
 static Debug::Variable::UInt32 dbg_addr_before("eeprom_before", Debug::Variable::Access::ReadOnly,
@@ -96,7 +97,7 @@ void RunTest() {
     write_data[i] = Data;
   }
 
-  hal.BuzzerOn(0.1f);
+  hal.buzzer.on(0.1f);
   eeprom.ReadBytes(Address, Length, &eeprom_before, nullptr);
 
   eeprom.WriteBytes(Address, Length, &write_data, nullptr);
@@ -111,7 +112,7 @@ void RunTest() {
   // (through DMA and/or hardware interrupts), with a 500 ms timeout: our I2C
   // bus is 400 kb/s, each of these operations should take less than 100 ms,
   // unless they are too big for our design anyway.
-  while (!second_read_finished && hal.Now() < microsSinceStartup(500000)) {
+  while (!second_read_finished && SystemTimer::singleton().now() < microsSinceStartup(500000)) {
   };
 
   bool failed = false;
@@ -133,8 +134,8 @@ void RunTest() {
   // stopped after some time, and to process debug interface commands.
   while (true) {
     // stop the buzzer after 1 second if the test is a success
-    if (!failed && hal.Now() > microsSinceStartup(1000000)) {
-      hal.BuzzerOff();
+    if (!failed && SystemTimer::singleton().now() > microsSinceStartup(1000000)) {
+      hal.buzzer.off();
     }
 
     debug.Poll();

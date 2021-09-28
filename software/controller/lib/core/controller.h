@@ -77,7 +77,7 @@ class Controller {
                         /*output_min=*/0.f,
                         /*output_max=*/1.0f};
 
-  PID psol_pid_{"psol_",
+  PID psol_pid_{"psol",
                 " for O2 psol PID",
                 /*kp=*/0.04f,
                 /*ki=*/20.0f,

@@ -13,8 +13,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+#include "psol.h"
+
 #include "gtest/gtest.h"
-#include "hal.h"
 
 // Not really a test, just silencing code coverage warning for native build
-TEST(PSol, TestStubs) { PSolValue(0.0); }
+TEST(PSol, TestStubs) {
+  PSOL psol;
+  psol.initialize(666);
+  psol.set(42.0f);
+}

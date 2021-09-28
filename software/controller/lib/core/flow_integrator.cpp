@@ -15,8 +15,6 @@ limitations under the License.
 
 #include "flow_integrator.h"
 
-#include "vars.h"
-
 // TODO: VolumeIntegrationInterval was not chosen carefully.
 static constexpr Duration VolumeIntegrationInterval = milliseconds(5);
 

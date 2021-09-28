@@ -26,15 +26,17 @@ limitations under the License.
 
 #include "clocks.h"
 #include "gpio.h"
-#include "hal.h"
 
 #if defined(BARE_STM32)
-#include "hal_stm32.h"
-
 I2C::STM32Channel i2c1;
+#else
+I2C::Channel i2c1;
+#endif  // BARE_STM32
+
+namespace I2C {
 
 // Reference abbreviations ([RM], [PCB], etc) are defined in hal/README.md
-void HalApi::InitI2C() {
+void initialize() {
   // Enable I2C1 and DMA2 peripheral clocks (we use DMA2 to send/receive data)
   enable_peripheral_clock(PeripheralID::I2C1);
   enable_peripheral_clock(PeripheralID::DMA2);
@@ -55,29 +57,16 @@ void HalApi::InitI2C() {
   GPIO::pull_up(GPIO::Port::B, 8);
   GPIO::pull_up(GPIO::Port::B, 9);
 
-  EnableInterrupt(InterruptVector::I2c1Event, IntPriority::Low);
-  EnableInterrupt(InterruptVector::I2c1Error, IntPriority::Low);
-  EnableInterrupt(InterruptVector::Dma2Channel6, IntPriority::Low);
-  EnableInterrupt(InterruptVector::Dma2Channel7, IntPriority::Low);
+  Interrupts::singleton().EnableInterrupt(InterruptVector::I2c1Event, IntPriority::Low);
+  Interrupts::singleton().EnableInterrupt(InterruptVector::I2c1Error, IntPriority::Low);
+  Interrupts::singleton().EnableInterrupt(InterruptVector::Dma2Channel6, IntPriority::Low);
+  Interrupts::singleton().EnableInterrupt(InterruptVector::Dma2Channel7, IntPriority::Low);
 
-  // init i2c1
-  i2c1.Init(I2C1Base, Dma2Base, I2C::Speed::Fast);
+// init i2c1
+#if defined(BARE_STM32)
+  i2c1.Init(I2C1Base, DMA::Base::DMA2, I2C::Speed::Fast);
+#endif
 }
-
-// Those interrupt service routines are specific to our configuration, unlike
-// the I2C::Channel::*ISR() which are generic ISR associated with an I²C channel
-void I2c1EventISR() { i2c1.I2CEventHandler(); };
-
-void I2c1ErrorISR() { i2c1.I2CErrorHandler(); };
-
-void DMA2Channel6ISR() { i2c1.DMAIntHandler(DmaChannel::Chan6); };
-
-void DMA2Channel7ISR() { i2c1.DMAIntHandler(DmaChannel::Chan7); };
-#else
-I2C::Channel i2c1;
-#endif  // BARE_STM32
-
-namespace I2C {
 
 bool Channel::SendRequest(const Request &request) {
   *(request.processed) = false;
@@ -271,9 +260,9 @@ void Channel::I2CErrorHandler() {
   StartTransfer();
 }
 
-#if defined(BARE_STM32)
-void STM32Channel::Init(I2CReg *i2c, DmaReg *dma, Speed speed) {
+void STM32Channel::Init(I2CReg *i2c, DMA::Base dma, Speed speed) {
   i2c_ = i2c;
+  dma_ = dma;
 
   // Disable I²C peripheral
   i2c_->control_reg1.enable = 0;
@@ -282,9 +271,9 @@ void STM32Channel::Init(I2CReg *i2c, DmaReg *dma, Speed speed) {
   i2c_->timing.full_reg = static_cast<uint32_t>(speed);
 
   // Setup DMA channels
-  if (dma != nullptr) {
-    SetupDMAChannels(dma);
-  }
+  //  if (dma != nullptr) {
+  SetupDMAChannels(dma);
+  //  }
 
   // enable I²C peripheral
   i2c_->control_reg1.enable = 1;
@@ -341,31 +330,32 @@ void STM32Channel::WriteTransferSize() {
 }
 
 // DMA functions are only meaningful in BARE_STM32
-void STM32Channel::SetupDMAChannels(DmaReg *dma) {
+void STM32Channel::SetupDMAChannels(const DMA::Base dma) {
   // DMA mapping for I²C (see [RM] p299)
   static struct {
-    volatile void *dma_base;
+    DMA::Base dma_base;
     volatile void *i2c_base;
-    DmaChannel tx_channel_id;
-    DmaChannel rx_channel_id;
+    DMA::Channel tx_channel_id;
+    DMA::Channel rx_channel_id;
     uint8_t request_number;
   } DmaMap[] = {
-      {Dma1Base, I2C1Base, DmaChannel::Chan6, DmaChannel::Chan7, 3},
-      {Dma1Base, I2C2Base, DmaChannel::Chan4, DmaChannel::Chan5, 3},
-      {Dma1Base, I2C3Base, DmaChannel::Chan2, DmaChannel::Chan3, 3},
-      {Dma2Base, I2C1Base, DmaChannel::Chan7, DmaChannel::Chan6, 5},
-      {Dma2Base, I2C4Base, DmaChannel::Chan2, DmaChannel::Chan1, 0},
+      {DMA::Base::DMA1, I2C1Base, DMA::Channel::Chan6, DMA::Channel::Chan7, 3},
+      {DMA::Base::DMA1, I2C2Base, DMA::Channel::Chan4, DMA::Channel::Chan5, 3},
+      {DMA::Base::DMA1, I2C3Base, DMA::Channel::Chan2, DMA::Channel::Chan3, 3},
+      {DMA::Base::DMA2, I2C1Base, DMA::Channel::Chan7, DMA::Channel::Chan6, 5},
+      {DMA::Base::DMA2, I2C4Base, DMA::Channel::Chan2, DMA::Channel::Chan1, 0},
   };
 
   for (auto &map : DmaMap) {
     if (dma == map.dma_base && i2c_ == map.i2c_base) {
+      auto *dma_register = DMA::get_register(dma);
       dma_ = dma;
-      tx_channel_ = &dma_->channel[static_cast<uint8_t>(map.tx_channel_id)];
-      rx_channel_ = &dma_->channel[static_cast<uint8_t>(map.rx_channel_id)];
+      tx_channel_ = &dma_register->channel[static_cast<uint8_t>(map.tx_channel_id)];
+      rx_channel_ = &dma_register->channel[static_cast<uint8_t>(map.rx_channel_id)];
 
       // Tell the STM32 that those two DMA channels are used for I2C
-      DmaSelectChannel(dma, map.rx_channel_id, map.request_number);
-      DmaSelectChannel(dma, map.tx_channel_id, map.request_number);
+      DMA::SelectChannel(dma, map.rx_channel_id, map.request_number);
+      DMA::SelectChannel(dma, map.tx_channel_id, map.request_number);
 
       // configure both DMA channels to handle I²C transfers
       ConfigureDMAChannel(rx_channel_, ExchangeDirection::Read);
@@ -386,16 +376,16 @@ void I2C::STM32Channel::ConfigureDMAChannel(volatile DmaReg::ChannelRegs *channe
   channel->config.half_tx_interrupt = 0;      // no half-transfer interrupt
   channel->config.tx_complete_interrupt = 1;  // interrupt on DMA complete
   channel->config.mem2mem = 0;                // memory-to-memory mode disabled
-  channel->config.memory_size = static_cast<uint8_t>(DmaTransferSize::Byte);
-  channel->config.peripheral_size = static_cast<uint8_t>(DmaTransferSize::Byte);
+  channel->config.memory_size = static_cast<uint8_t>(DMA::TransferSize::Byte);
+  channel->config.peripheral_size = static_cast<uint8_t>(DMA::TransferSize::Byte);
   channel->config.memory_increment = 1;      // increment dest address
   channel->config.peripheral_increment = 0;  // don't increment source address
   channel->config.circular = 0;
   if (direction == ExchangeDirection::Read) {
-    channel->config.direction = static_cast<uint8_t>(DmaChannelDir::PeripheralToMemory);
+    channel->config.direction = static_cast<uint8_t>(DMA::ChannelDir::PeripheralToMemory);
     channel->peripheral_address = &(i2c_->rx_data);
   } else {
-    channel->config.direction = static_cast<uint8_t>(DmaChannelDir::MemoryToPeripheral);
+    channel->config.direction = static_cast<uint8_t>(DMA::ChannelDir::MemoryToPeripheral);
     channel->peripheral_address = &(i2c_->tx_data);
   }
 }
@@ -434,10 +424,11 @@ void STM32Channel::SetupDMATransfer() {
   channel->config.enable = 1;
 }
 
-void STM32Channel::DMAIntHandler(DmaChannel chan) {
+void STM32Channel::DMAIntHandler(DMA::Channel chan) {
   if (!dma_enable_ || !transfer_in_progress_) return;
-  dma_->channel[static_cast<uint8_t>(chan)].config.enable = 0;
-  if (DmaIntStatus(dma_, chan, DmaInterrupt::TransferComplete)) {
+  auto *dma_register = DMA::get_register(dma_);
+  dma_register->channel[static_cast<uint8_t>(chan)].config.enable = 0;
+  if (DMA::IntStatus(dma_, chan, DMA::Interrupt::TransferComplete)) {
     if (remaining_size_ > 255) {
       // decrement remaining size by 255 (the size of the DMA transfer)
       remaining_size_ = static_cast<uint16_t>(remaining_size_ - 255);
@@ -446,7 +437,7 @@ void STM32Channel::DMAIntHandler(DmaChannel chan) {
       remaining_size_ = 0;
       EndTransfer();
     }
-  } else if (DmaIntStatus(dma_, chan, DmaInterrupt::TransferError)) {
+  } else if (DMA::IntStatus(dma_, chan, DMA::Interrupt::TransferError)) {
     // we are dealing with an error --> reset transfer (up to MaxRetries
     // times)
     if (--error_retry_ > 0) {
@@ -458,9 +449,8 @@ void STM32Channel::DMAIntHandler(DmaChannel chan) {
     }
   }
   // clear all interrupts and (re-)start the current or next transfer
-  DmaClearInt(dma_, chan, DmaInterrupt::Global);
+  DMA::ClearInt(dma_, chan, DMA::Interrupt::Global);
   StartTransfer();
 }
-#endif  // BARE_STM32
 
 }  // namespace I2C

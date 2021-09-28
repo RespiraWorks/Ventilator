@@ -16,8 +16,9 @@ limitations under the License.
 
 #pragma once
 
-#include "hal_stm32_regs.h"
+#include "dma.h"
 #include "serial_listeners.h"
+#include "uart.h"
 
 class DmaCtrl {
  public:
@@ -35,7 +36,7 @@ class DmaCtrl {
 
 class UartDma {
  public:
-#ifdef TEST_MODE
+#if !defined(BARE_STM32)
   UartDma() = default;
 #endif
   UartDma(UartReg *const uart, DmaReg *const dma, uint8_t tx_channel, uint8_t rx_channel,
@@ -46,7 +47,7 @@ class UartDma {
         rx_channel_(rx_channel),
         match_char_(match_char) {}
 
-  void init(uint32_t baud);
+  void initialize(uint32_t cpu_frequency_hz, uint32_t baud);
 
   [[nodiscard]] bool start_tx(uint8_t *buf, uint32_t length, TxListener *txl);
   [[nodiscard]] bool start_rx(uint8_t *buf, uint32_t length, RxListener *rxl);

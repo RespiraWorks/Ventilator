@@ -3,8 +3,8 @@
 exclude: '\.pb\.|pb2.py|common/third_party'
 
 repos:
-- repo: https://github.com/jlebar/pre-commit-hooks
-  rev: 349213c5414e360385e74f04964e6d5c43cdad36
+- repo: https://github.com/RespiraWorks/pre-commit-hooks
+  rev: 30478fe90ebf2429bd4b6b069ac118f22862c3ab
   hooks:
   - id: clang-format-whole-file
     name: clang-format C++

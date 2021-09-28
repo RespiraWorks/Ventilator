@@ -9,6 +9,7 @@
 //      TBD - which python script to run?
 //
 #include "hal.h"
+#include "system_timer.h"
 
 // test parameters
 static constexpr Duration Delay{milliseconds(1000)};
@@ -26,12 +27,12 @@ void RunTest() {
 
   while (true) {
     if (buzzer_on) {
-      hal.BuzzerOn(volume);
+      hal.buzzer.on(volume);
     } else {
-      hal.BuzzerOff();
+      hal.buzzer.off();
     }
 
-    hal.Delay(Delay);
+    SystemTimer::singleton().delay(Delay);
 
     buzzer_on = !buzzer_on;
     if (buzzer_on) {

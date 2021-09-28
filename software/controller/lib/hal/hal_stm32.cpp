@@ -22,38 +22,42 @@ Details of the processor's peripherals can be found in [RM].
 Abbreviations [RM], [DS], etc are defined in hal/README.md.
 */
 
+#include "hal.h"
+
 #if defined(BARE_STM32)
 
-#include "hal_stm32.h"
-
-#include <cstdarg>
-#include <cstdio>
 #include <optional>
 
-#include "checksum.h"
-#include "circular_buffer.h"
 #include "clocks.h"
+#include "flash.h"
 #include "gpio.h"
-#include "hal.h"
+#include "hal_stm32_regs.h"
+#include "i2c.h"
+#include "interrupts.h"
 #include "stepper.h"
+#include "system_timer.h"
+#include "timers.h"
+#include "uart.h"
 #include "uart_dma.h"
 #include "vars.h"
+#include "watchdog.h"
 
-#define SYSTEM_STACK_SIZE 2500
+static constexpr uint32_t CPUFrequencyMhz{80};
+
+static constexpr uint32_t CPUFrequencyHz{CPUFrequencyMhz * 1000 * 1000};
+
+static constexpr uint32_t SystemStackSize{2500};
 
 // This is the main stack used in our system.
-__attribute__((aligned(8))) uint32_t system_stack[SYSTEM_STACK_SIZE];
-
-// local data
-static volatile int64_t ms_count;
+__attribute__((aligned(8))) uint32_t system_stack[SystemStackSize];
 
 // local static functions.  I don't want to add any private
 // functions to the Hal class to avoid complexity with other
 // builds.
 // Those are Interrupt Service Routines, i.e callback functions for the
 // interrupt handlers. They are referenced in the Interrupt Vector Table.
-static void Timer6ISR();
-static void Timer15ISR();
+void Timer6ISR();
+void Timer15ISR();
 void Uart3ISR();
 void DMA1Channel2ISR();
 void DMA1Channel3ISR();
@@ -99,42 +103,32 @@ void HalApi::EarlyInit() {
   SysControlReg *sys_ctl = SysControlBase;
   sys_ctl->coproc_access_control = 0x00F00000;
 
-  // Reset caches and set latency for 80MHz operation
-  // See chapter 3 of [RM] for details on the embedded flash module
-  enable_peripheral_clock(PeripheralID::Flash);
-  FlashReg *flash = FlashBase;
-
-  // Set four wait states (required to run at 80MHz)
-  flash->access.latency = 4;
-
-  // Reset the instruction and data caches
-  flash->access.instruction_cache_reset = 1;
-  flash->access.data_cache_reset = 1;
-  flash->access.instruction_cache_reset = 0;
-  flash->access.data_cache_reset = 0;
-
-  // Enable the caches
-  flash->access.instruction_cache_enable = 0;
-  flash->access.data_cache_enable = 0;
+  /// \TODO: initialized but never used. Do we still need it?
+  Flash::initialize();
 
   configure_pll();
 }
+
+void Timer6ISR() { SystemTimer::singleton().interrupt_handler(); }
 
 /*
  * One time init of HAL.
  */
 void HalApi::Init() {
   // Init various components needed by the system.
-  InitGpio();
-  InitSysTimer();
-  InitADC();
-  InitPwmOut();
+  GPIO::enable_all_clocks();
+  init_PCB_ID_pins();
+  LEDs.initialize();
+  SystemTimer::singleton().initialize(CPUFrequencyMhz);
+  /// \TODO: fault somehow if this returns false
+  [[maybe_unused]] bool buffer_size_sufficient = adc.initialize(CPUFrequencyHz);
+  pwm.initialize(CPUFrequencyHz);
   InitUARTs();
-  InitBuzzer();
-  InitPSOL();
-  InitI2C();
-  EnableInterrupts();
-  StepperMotorInit();
+  buzzer.initialize(CPUFrequencyHz);
+  psol.initialize(CPUFrequencyHz);
+  I2C::initialize();
+  Interrupts::singleton().EnableInterrupts();
+  StepMotor::OneTimeInit();
 }
 
 // Reset the processor
@@ -153,137 +147,15 @@ void HalApi::Init() {
 }
 
 /******************************************************************
- * General Purpose I/O support.
- *
- * The following pins are used as GPIO on the rev-1 PCB
- *
- * Please refer to the PCB schematic as the ultimate source of which
- * pin is used for which function.  A less definitive, but perhaps
- * easier to read version is available in [PCBsp]
- *
  * ID inputs.  These can be used to identify the PCB revision
  * we're running on.
  *  PB1  - ID0
  *  PA12 - ID1
- *
- * LED outputs.
- *  PC13 - red
- *  PC14 - yellow
- *  PC15 - green
  *****************************************************************/
-void HalApi::InitGpio() {
-  // See [RM] chapter 8 for details on GPIO
-
-  // Enable all the GPIO clocks
-  enable_peripheral_clock(PeripheralID::GPIOA);
-  enable_peripheral_clock(PeripheralID::GPIOB);
-  enable_peripheral_clock(PeripheralID::GPIOC);
-  enable_peripheral_clock(PeripheralID::GPIOD);
-  enable_peripheral_clock(PeripheralID::GPIOE);
-  enable_peripheral_clock(PeripheralID::GPIOH);
-
-  using IOPort = GPIO::Port;
-  using IOMode = GPIO::PinMode;
-
+void HalApi::init_PCB_ID_pins() {
   // Configure PCB ID pins as inputs.
-  GPIO::pin_mode(IOPort::B, 1, IOMode::Input);
-  GPIO::pin_mode(IOPort::A, 12, IOMode::Input);
-
-  // Configure LED pins as outputs
-  GPIO::pin_mode(IOPort::C, 13, IOMode::Output);
-  GPIO::pin_mode(IOPort::C, 14, IOMode::Output);
-  GPIO::pin_mode(IOPort::C, 15, IOMode::Output);
-
-  // Turn all three LEDs off initially
-  GPIO::clear_pin(IOPort::C, 13);
-  GPIO::clear_pin(IOPort::C, 14);
-  GPIO::clear_pin(IOPort::C, 15);
-}
-
-// Set or clear the specified digital output
-void HalApi::DigitalWrite(BinaryPin binary_pin, VoltageLevel value) {
-  auto [port, pin] = [&]() -> std::pair<GPIO::Port, uint8_t> {
-    switch (binary_pin) {
-      case BinaryPin::RedLED:
-        return {GPIO::Port::C, 13};
-      case BinaryPin::YellowLED:
-        return {GPIO::Port::C, 14};
-      case BinaryPin::GreenLED:
-        return {GPIO::Port::C, 15};
-    }
-    // All cases covered above (and GCC checks this).
-    __builtin_unreachable();
-  }();
-
-  switch (value) {
-    case VoltageLevel::High:
-      GPIO::set_pin(port, pin);
-      break;
-
-    case VoltageLevel::Low:
-      GPIO::clear_pin(port, pin);
-      break;
-  }
-}
-
-/******************************************************************
- * System timer
- *
- * I use one of the basic timers (timer 6) for general system timing.
- * I configure it to count every 100ns and generate an interrupt
- * every millisecond
- *
- * The basic timers (like timer 6) are documented in [RM] chapter 29.
- *****************************************************************/
-void HalApi::InitSysTimer() {
-  // Enable the clock to the timer
-  enable_peripheral_clock(PeripheralID::Timer6);
-
-  // Just set the timer up to count every microsecond.
-  TimerReg *tmr = Timer6Base;
-
-  // The reload register gives the number of clock ticks (100ns in our case)
-  // -1 until the clock wraps back to zero and generates an interrupt. This
-  // setting will cause an interrupt every 10,000 clocks or 1 millisecond
-  tmr->auto_reload = 9999;
-  tmr->prescaler = (CPUFrequencyMhz / 10 - 1);
-  tmr->event = 1;
-  // Enable UIFREMAP.  This causes the top bit of tmr->counter to be true if a
-  // timer interrupt is pending.
-  tmr->control_reg1.bitfield.uif_remapping = 1;
-  tmr->control_reg1.bitfield.counter_enable = 1;
-  tmr->interrupts_enable = 1;
-
-  EnableInterrupt(InterruptVector::Timer6, IntPriority::Standard);
-}
-
-static void Timer6ISR() {
-  Timer6Base->status = 0;
-  ms_count++;
-}
-
-void HalApi::Delay(Duration d) {
-  Time start = Now();
-  while (Now() - start < d) {
-  }
-}
-
-Time HalApi::Now() {
-  // Disable interrupts so we can read ms_count and the timer state without
-  // racing with the timer's interrupt handler.
-  BlockInterrupts block_interrupts;
-
-  // Bottom 16 bits of the counter are a value in the range [0, 1ms) in units
-  // of 100ns.  Top bit of the counter is UIFCOPY, which indicates whether the
-  // counter has rolled over and an interrupt to increment ms_count is pending.
-  //
-  // Since the counter is actively running, we need to read both the counter
-  // value and UIFCOPY atomically.
-  uint32_t counter = Timer6Base->counter;
-  int64_t micros = (counter & 0xffff) / 10;
-  bool interrupt_pending = counter >> 31;
-
-  return microsSinceStartup(ms_count * 1000 + micros + (interrupt_pending ? 1 : 0));
+  GPIO::pin_mode(GPIO::Port::B, 1, GPIO::PinMode::Input);
+  GPIO::pin_mode(GPIO::Port::A, 12, GPIO::PinMode::Input);
 }
 
 /******************************************************************
@@ -303,7 +175,7 @@ void HalApi::StartLoopTimer(const Duration &period, void (*callback)(void *), vo
   // Init the watchdog timer now.  The watchdog timer is serviced by the
   // loop callback function.  I don't init it until the loop starts because
   // otherwise it may expire before the function that resets it starts running
-  WatchdogInit();
+  Watchdog::initialize();
 
   // Find the loop period in clock cycles
   int32_t reload = static_cast<int32_t>(CPUFrequencyHz * period.seconds());
@@ -333,7 +205,7 @@ void HalApi::StartLoopTimer(const Duration &period, void (*callback)(void *), vo
   // for normal hardware interrupts.  This means that other
   // interrupts can be serviced while controller functions
   // are running.
-  EnableInterrupt(InterruptVector::Timer15, IntPriority::Low);
+  Interrupts::singleton().EnableInterrupt(InterruptVector::Timer15, IntPriority::Low);
 }
 
 static float latency, max_latency, loop_time;
@@ -348,7 +220,7 @@ static Debug::Variable::Primitive32 dbg_loop_time("loop_time", Debug::Variable::
                                                   &loop_time, "\xB5s", "Duration of loop function",
                                                   "%.2f");
 
-static void Timer15ISR() {
+void Timer15ISR() {
   uint32_t start = Timer15Base->counter;
   Timer15Base->status = 0;
 
@@ -363,189 +235,10 @@ static void Timer15ISR() {
   uint32_t end = Timer15Base->counter;
   loop_time = static_cast<float>(end - start) * (1.0f / CPUFrequencyMhz);
 
+  /// \TODO: Too tightly coupled bc HAL must be aware of steppers. Use another callback?
   // Start sending any queued commands to the stepper motor
   StepMotor::StartQueuedCommands();
 }
-
-/******************************************************************
- * PWM outputs
- *
- * The following four outputs could be driven
- * as PWM outputs:
- *
- * PA8  - Timer 1 Channel 1 - heater control
- * PB3  - Timer 2 Channel 2 - blower control
- *
- * For now I'll just set up the blower since that's the only
- * one called out in the HAL
- *
- * These timers are documented in [RM] chapters 26 and 27.
- *****************************************************************/
-void HalApi::InitPwmOut() {
-  // The PWM frequency isn't mentioned anywhere that I can find, so
-  // I'm just picking a reasonable number.  This can be refined later
-  //
-  // The selection of PWM frequency is a trade off between latency and
-  // resolution.  Higher frequencies give lower latency and lower resolution.
-  //
-  // Latency is the time between setting the value and it taking effect,
-  // this is essentially the PWM period (1/frequency).  For example, a
-  // 20kHz frequency would give a latency of up to 50 usec.
-  //
-  // Resultion is based on the ratio of the clock frequency (80MHz) to the
-  // PWM frequency.  For example, a 20kHz PWM would have a resolution of one
-  // part in 4000 (80000000/20000) or about 12 bits.
-  static constexpr int PwmFreqHz = 20000;
-
-  enable_peripheral_clock(PeripheralID::Timer2);
-
-  // Connect PB3 to timer 2
-  // [DS] Table 17 (pg 77)
-  GPIO::alternate_function(GPIO::Port::B, /*pin =*/3,
-                           GPIO::AlternativeFuncion::AF1);  // TIM2_CH2
-
-  TimerReg *tmr = Timer2Base;
-
-  // Set the frequency
-  tmr->auto_reload = (CPUFrequencyHz / PwmFreqHz) - 1;
-
-  // Configure channel 2 in PWM output mode 1
-  // with preload enabled.  The preload means that
-  // the new PWM duty cycle gets written to a shadow
-  // register and copied to the active register
-  // at the start of the next cycle.
-  tmr->capture_compare_mode[0] = 0x6800;
-
-  tmr->capture_compare_enable = 0x10;
-
-  // Start with 0% duty cycle
-  tmr->capture_compare[1] = 0;
-
-  // Load the shadow registers
-  tmr->event = 1;
-
-  // Start the counter
-  tmr->control_reg1.bitfield.auto_reload_preload = 1;
-  tmr->control_reg1.bitfield.counter_enable = 1;
-}
-
-// Set the PWM period.
-void HalApi::AnalogWrite(PwmPin pin, float duty) {
-  auto [tmr, chan] = [&]() -> std::pair<TimerReg *, int> {
-    switch (pin) {
-      case PwmPin::Blower:
-        return {Timer2Base, 1};
-    }
-    // All cases covered above (and GCC checks this).
-    __builtin_unreachable();
-  }();
-
-  tmr->capture_compare[chan] = static_cast<uint32_t>(static_cast<float>(tmr->auto_reload) * duty);
-}
-
-/******************************************************************
- * Serial port to GUI
- * [RM] Chapter 38 defines the USART registers.
- *****************************************************************/
-
-class UART {
-  CircularBuffer<uint8_t, 128> rx_data_;
-  CircularBuffer<uint8_t, 128> tx_data_;
-  UartReg *const uart_;
-
- public:
-  explicit UART(UartReg *const r) : uart_(r) {}
-
-  void Init(uint32_t baud) {
-    // Set baud rate register
-    uart_->baudrate = CPUFrequencyHz / baud;
-
-    uart_->control_reg1.bitfield.rx_interrupt = 1;  // enable receive interrupt
-    uart_->control_reg1.bitfield.tx_enable = 1;     // enable transmitter
-    uart_->control_reg1.bitfield.rx_enable = 1;     // enable receiver
-    uart_->control_reg1.bitfield.enable = 1;        // enable uart
-  }
-
-  // This is the interrupt handler for the UART.
-  void ISR() {
-    // Check for overrun error and framing errors.  Clear those errors if
-    // they're set to avoid further interrupts from them.
-    if (uart_->status.bitfield.framing_error) {
-      uart_->interrupt_clear.bitfield.framing_error_clear = 1;
-    }
-    if (uart_->status.bitfield.overrun_error) {
-      uart_->interrupt_clear.bitfield.overrun_clear = 1;
-    }
-
-    // See if we received a new byte.
-    if (uart_->status.bitfield.rx_not_empty) {
-      // Add the byte to rx_data_.  If the buffer is full, we'll drop it --
-      // what else can we do?
-      //
-      // TODO: Perhaps log a warning here so we have an idea of whether
-      // this buffer is hitting capacity frequently.
-      (void)rx_data_.Put(static_cast<uint8_t>(uart_->rx_data));
-    }
-
-    // Check for transmit data register empty
-    if (uart_->status.bitfield.tx_empty && uart_->control_reg1.bitfield.tx_interrupt) {
-      std::optional<uint8_t> ch = tx_data_.Get();
-
-      // If there's nothing left in the transmit buffer,
-      // just disable further transmit interrupts.
-      if (ch == std::nullopt) {
-        uart_->control_reg1.bitfield.tx_interrupt = 0;
-      } else {
-        // Otherwise, Send the next byte.
-        uart_->tx_data = *ch;
-      }
-    }
-  }
-
-  // Read up to len bytes and store them in the passed buffer.
-  // This function does not block, so if less then len bytes
-  // are available it will only return the available bytes
-  // Returns the number of bytes actually read.
-  uint16_t Read(char *buf, uint16_t len) {
-    for (uint16_t i = 0; i < len; i++) {
-      std::optional<uint8_t> ch = rx_data_.Get();
-      if (ch == std::nullopt) {
-        return i;
-      }
-      *buf++ = *ch;
-    }
-
-    // Note that we don't need to enable the rx interrupt
-    // here.  That one is always enabled.
-    return len;
-  }
-
-  // Write up to len bytes to the buffer.
-  // This function does not block, so if there isn't enough
-  // space to write len bytes, then only a partial write
-  // will occur.
-  // The number of bytes actually written is returned.
-  uint16_t Write(const char *buf, uint16_t len) {
-    uint16_t i;
-    for (i = 0; i < len; i++) {
-      if (!tx_data_.Put(*buf++)) break;
-    }
-
-    // Enable the tx interrupt.  If there was already anything
-    // in the buffer this will already be enabled, but enabling
-    // it again doesn't hurt anything.
-    uart_->control_reg1.bitfield.tx_interrupt = 1;
-    return i;
-  }
-
-  // Return the number of bytes currently in the
-  // receive buffer and ready to be read.
-  uint16_t RxFull() { return static_cast<uint16_t>(rx_data_.FullCount()); }
-
-  // Returns the number of free locations in the
-  // transmit buffer.
-  uint16_t TxFree() { return static_cast<uint16_t>(tx_data_.FreeCount()); }
-};
 
 static UART rpi_uart(Uart3Base);
 static UART debug_uart(Uart2Base);
@@ -595,19 +288,19 @@ void HalApi::InitUARTs() {
                            GPIO::AlternativeFuncion::AF7);  // USART3_RTS_DE
 
 #ifdef UART_VIA_DMA
-  dma_uart.Init(115200);
+  dma_uart.initialize(CPUFrequencyHz, 115200);
 #else
-  rpi_uart.Init(115200);
+  rpi_uart.Init(CPUFrequencyHz, 115200);
 #endif
-  debug_uart.Init(115200);
+  debug_uart.Init(CPUFrequencyHz, 115200);
 
-  EnableInterrupt(InterruptVector::Dma1Channel2, IntPriority::Standard);
-  EnableInterrupt(InterruptVector::Dma1Channel3, IntPriority::Standard);
-  EnableInterrupt(InterruptVector::Uart2, IntPriority::Standard);
-  EnableInterrupt(InterruptVector::Uart3, IntPriority::Standard);
+  Interrupts::singleton().EnableInterrupt(InterruptVector::Dma1Channel2, IntPriority::Standard);
+  Interrupts::singleton().EnableInterrupt(InterruptVector::Dma1Channel3, IntPriority::Standard);
+  Interrupts::singleton().EnableInterrupt(InterruptVector::Uart2, IntPriority::Standard);
+  Interrupts::singleton().EnableInterrupt(InterruptVector::Uart3, IntPriority::Standard);
 }
 
-static void Uart2ISR() { debug_uart.ISR(); }
+void Uart2ISR() { debug_uart.ISR(); }
 
 #ifndef UART_VIA_DMA
 void Uart3ISR() { rpi_uart.ISR(); }
@@ -627,64 +320,19 @@ uint16_t HalApi::DebugRead(char *buf, uint16_t len) { return debug_uart.Read(buf
 
 uint16_t HalApi::DebugBytesAvailableForWrite() { return debug_uart.TxFree(); }
 
-/******************************************************************
- * Watchdog timer (see [RM] chapter 32).
- *
- * The watchdog timer will reset the system if it hasn't been
- * re-initialized within a specific amount of time.  It's used
- * to catch bugs that would otherwise hang the system.  When
- * the watchdog is enabled such a bug will reset the system
- * rather then let it hang indefinitely.
- *****************************************************************/
-void HalApi::WatchdogInit() {
-  WatchdogReg *wdog = WatchdogBase;
-
-  // Enable the watchdog timer by writing the appropriate value to its key
-  // register
-  wdog->key = 0xCCCC;
-
-  // Enable register access
-  wdog->key = 0x5555;
-
-  // Set the pre-scaler to 0.  That setting will cause the watchdog
-  // clock to be updated at approximately 8KHz.
-  wdog->prescaler = 0;
-
-  // The reload value gives the number of clock cycles before the
-  // watchdog timer times out.  I'll set it to 2000 which gives
-  // us about 250ms before a reset.
-  wdog->reload = 2000;
-
-  // Since the watchdog timer runs off its own clock which is pretty
-  // slow, it takes a little time for the registers to actually get
-  // updated.  I wait for the status register to go to zero which
-  // means its done.
-  while (wdog->status) {
-  }
-
-  // Reset the timer.  This also locks the registers again.
-  wdog->key = 0xAAAA;
-}
-
-// Pet the watchdog so it doesn't bite us.
-void HalApi::WatchdogHandler() {
-  WatchdogReg *wdog = WatchdogBase;
-  wdog->key = 0xAAAA;
-}
-
 // Fault handler
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-function"
 [[noreturn]] static void Fault() {
   while (true) {
     ;  // noop
-    /* \todo this function is unused; could be made useful if implementation
-     * made sense? blink lights? scream? do something? */
+    /// \TODO function is unused. Make useful: blink lights? scream? do something?
+    ///       flash and beep morse code?
   }
 }
 #pragma GCC diagnostic pop
 
-static void StepperISR() { StepMotor::DmaISR(); }
+void StepperISR() { StepMotor::DmaISR(); }
 
 /******************************************************************
  * Interrupt vector table.  The interrupt vector table is a list of
@@ -692,13 +340,20 @@ static void StepperISR() { StepMotor::DmaISR(); }
  * very start of the flash memory.
  *****************************************************************/
 
-// TODO: these could optionally call Fault() but not in production
-static void NMI() {}
-static void FaultISR() {}
-static void MPUFaultISR() {}
-static void BusFaultISR() {}
-static void UsageFaultISR() {}
-static void BadISR() {}
+/// \TODO: these could optionally call Fault() but not in production, log error to EEPROM
+void NMI() {}
+void FaultISR() {}
+void MPUFaultISR() {}
+void BusFaultISR() {}
+void UsageFaultISR() {}
+void BadISR() {}
+
+// Those interrupt service routines are specific to our configuration, unlike
+// the I2C::Channel::*ISR() which are generic ISR associated with an I²C channel
+void I2c1EventISR() { i2c1.I2CEventHandler(); };
+void I2c1ErrorISR() { i2c1.I2CErrorHandler(); };
+void DMA2Channel6ISR() { i2c1.DMAIntHandler(DMA::Channel::Chan6); };
+void DMA2Channel7ISR() { i2c1.DMAIntHandler(DMA::Channel::Chan7); };
 
 // We don't control this function's name, silence the style check
 // NOLINTNEXTLINE(readability-identifier-naming)
@@ -707,7 +362,7 @@ __attribute__((used)) __attribute__((section(".isr_vector"))) void (*const Vecto
     // The first entry of the ISR holds the initial value of the
     // stack pointer.  The ARM processor initializes the stack
     // pointer based on this address.
-    reinterpret_cast<void (*)()>(&system_stack[SYSTEM_STACK_SIZE]),
+    reinterpret_cast<void (*)()>(&system_stack[SystemStackSize]),
 
     // The second ISR entry is the reset vector which is an
     // assembly language routine that does some basic memory
@@ -826,21 +481,5 @@ __attribute__((used)) __attribute__((section(".isr_vector"))) void (*const Vecto
     BadISR,           //  99 - 0x18C
     BadISR,           // 100 - 0x190
 };
-
-// Enable an interrupt with a specified priority (0 to 15)
-// See [RM] chapter 12 for more information on the NVIC.
-void HalApi::EnableInterrupt(InterruptVector vec, IntPriority pri) {
-  InterruptControlReg *nvic = NvicBase;
-
-  int addr = static_cast<int>(vec);
-
-  int id = addr / 4 - 16;
-
-  nvic->set_enable[id >> 5] = 1 << (id & 0x1F);
-
-  // The STM32 processor implements bits 4-7 of the NVIM priority register.
-  int p = static_cast<int>(pri);
-  nvic->priority[id] = static_cast<uint8_t>(p << 4);
-}
 
 #endif

@@ -19,12 +19,119 @@ limitations under the License.
 
 #pragma once
 
+/// \TODO: refactor this -- too much stuff in one file, and get rid of static globals
+
 #include "circular_buffer.h"
-#if defined(BARE_STM32)
-#include "hal_stm32.h"
-#endif
+#include "dma.h"
+
+// [RM] 37.7 I2C Registers
+struct I2CStruct {
+  union {
+    struct {
+      uint32_t enable : 1;
+      uint32_t tx_interrupts : 1;
+      uint32_t rx_interrupts : 1;
+      uint32_t addr_interrupts : 1;
+      uint32_t nack_interrupts : 1;
+      uint32_t stop_interrupts : 1;
+      uint32_t tx_complete_interrupts : 1;
+      uint32_t error_interrupts : 1;
+      uint32_t digital_noise_filter_conntrol : 4;
+      uint32_t analog_noise_filternig_off : 1;
+      uint32_t reserved1 : 1;
+      uint32_t dma_tx : 1;
+      uint32_t dma_rx : 1;
+      uint32_t slave_byte : 1;
+      uint32_t no_clock_stretch : 1;
+      uint32_t wake_from_stop : 1;
+      uint32_t general_call : 1;
+      uint32_t smbus_default_host : 1;
+      uint32_t smbus_default_device : 1;
+      uint32_t smbus_alert : 1;
+      uint32_t smbus_packet_error_checking : 1;
+      uint32_t reserved2 : 8;
+    };
+    uint32_t full_reg;
+  } control_reg1;  // Control register 1 [RM] 37.7.1
+  union {
+    struct {
+      uint32_t slave_addr_lsb : 1;  // lsb of 10 bits slave address
+      // (master)
+      uint32_t slave_addr_7b : 7;  // middle 7b bits of slave address
+      // (master)
+      uint32_t slave_addr_msb : 2;  // msb of 10 bits slave address
+      // (master)
+      uint32_t transfer_direction : 1;  // 0 = write, 1 = read (master)
+      uint32_t address_10b : 1;         // Set to enable 10 bits address header
+      // (master)
+      uint32_t read_10b_header : 1;  // Clear to send complete read sequence
+      // (master)
+      uint32_t start : 1;  // Set to generate START condition
+      uint32_t stop : 1;   // Set to generate STOP after byte transfer
+      // (master)
+      uint32_t nack : 1;                     // Generate NACK after byte reception (slave)
+      uint32_t n_bytes : 8;                  // Set to the number of bytes to send
+      uint32_t reload : 1;                   // Set to allow several consecutive transfers
+      uint32_t autoend : 1;                  // Set to automatically send stop condition
+      uint32_t packet_error_check_byte : 1;  // Set to send SMBus packet error
+      // checking byte
+      uint32_t reserved : 5;
+    };
+    uint32_t full_reg;
+  } control2;        // Control register 2 [RM] 37.7.2
+  uint32_t addr[2];  // Own address (1-2) register [RM] 37.7.{3,4} (slave)
+  union {
+    struct {
+      uint32_t scl_low : 8;   // Duration of SCL Low state (cycles)
+      uint32_t scl_high : 8;  // Duration of SCL High state (cycles)
+      uint32_t sda_hold : 4;  // Delay between SCL falling edge and SDA
+      // edge (cycles)
+      uint32_t scl_delay : 4;  // Delay between SDA edge and SCL rising
+      // edge (cycles)
+      uint32_t reserved : 4;
+      uint32_t prescaler : 4;  // Prescaler
+    };
+    uint32_t full_reg;
+  } timing;          // Timing register [RM] 37.7.5
+  uint32_t timeout;  // Timout register [RM] 37.7.6
+  union {
+    struct {
+      uint32_t tx_empty : 1;
+      uint32_t tx_interrupt : 1;
+      uint32_t rx_not_empty : 1;
+      uint32_t address_match : 1;
+      uint32_t nack : 1;
+      uint32_t stop : 1;
+      uint32_t transfer_complete : 1;
+      uint32_t transfer_reload : 1;
+      uint32_t bus_error : 1;
+      uint32_t arbitration_loss : 1;
+      uint32_t overrun : 1;
+      uint32_t packet_check_error : 1;
+      uint32_t timeout : 1;
+      uint32_t alert : 1;
+      uint32_t reserved1 : 1;
+      uint32_t busy : 1;
+      uint32_t transfer_direction : 1;
+      uint32_t address_code : 7;
+      uint32_t reserved : 8;
+    };
+    uint32_t full_reg;
+  } status;                     // Interrupt & status register [RM] 37.7.7
+  uint32_t interrupt_clear;     // Interrupt clear register [RM] 37.7.8
+  uint32_t packet_error_check;  // PEC register [RM] 37.7.9
+  uint32_t rx_data;             // Receive data register [RM] 37.7.10
+  uint32_t tx_data;             // Transmit data register [RM] 37.7.11
+};
+typedef volatile I2CStruct I2CReg;
+inline I2CReg *const I2C1Base = reinterpret_cast<I2CReg *>(0x40005400);
+inline I2CReg *const I2C2Base = reinterpret_cast<I2CReg *>(0x40005800);
+inline I2CReg *const I2C3Base = reinterpret_cast<I2CReg *>(0x40005c00);
+inline I2CReg *const I2C4Base = reinterpret_cast<I2CReg *>(0x40008400);
 
 namespace I2C {
+
+void initialize();
 
 // Speed values correspond to the timing register value from [RM] table 182
 enum class Speed {
@@ -177,7 +284,6 @@ class Channel {
   bool CopyDataToWriteBuffer(const void *data, uint16_t size);
 };
 
-#ifdef BARE_STM32
 class STM32Channel : public Channel {
  public:
   STM32Channel() = default;
@@ -185,13 +291,14 @@ class STM32Channel : public Channel {
   // the channel using DMA if possible. If DMA_Reg is invalid (or that DMA
   // cannot be linked to this I²C), dma is disabled and all transfers are
   // handled in software.
-  void Init(I2CReg *i2c, DmaReg *dma, Speed speed);
+  void Init(I2CReg *i2c, DMA::Base dma, Speed speed);
   // Interrupt handlers for DMA, which only makes sense on the STM32
-  void DMAIntHandler(DmaChannel chan);
+  void DMAIntHandler(DMA::Channel chan);
 
  private:
   I2CReg *i2c_{nullptr};
-  DmaReg *dma_{nullptr};
+  DMA::Base dma_;
+  /// \TODO: anyway to avoid keeping regiters here directly? Improve DMA abstraction?
   volatile DmaReg::ChannelRegs *rx_channel_{nullptr};
   volatile DmaReg::ChannelRegs *tx_channel_{nullptr};
 
@@ -212,11 +319,10 @@ class STM32Channel : public Channel {
   void ClearNack() override { i2c_->interrupt_clear = 0x10; }
   void ClearErrors() override { i2c_->interrupt_clear = 0x720; }
 
-  void SetupDMAChannels(DmaReg *dma);
+  void SetupDMAChannels(DMA::Base dma);
   void ConfigureDMAChannel(volatile DmaReg::ChannelRegs *channel, ExchangeDirection direction);
   void SetupDMATransfer();
 };
-#endif
 
 class TestChannel : public Channel {
  public:
@@ -262,7 +368,7 @@ class TestChannel : public Channel {
 
 }  // namespace I2C
 
-#ifdef BARE_STM32
+#if defined(BARE_STM32)
 extern I2C::STM32Channel i2c1;
 #else
 extern I2C::Channel i2c1;

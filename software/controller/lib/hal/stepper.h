@@ -46,7 +46,7 @@ limitations under the License.
 
 #pragma once
 
-#include <stdint.h>
+#include <cstdint>
 
 // These are the simple opcodes for the stepper driver.
 // Not included here are set/get parameter which include

@@ -29,7 +29,7 @@ limitations under the License.
 #include <string.h>
 
 #include "checksum.h"
-#include "hal.h"
+#include "system_timer.h"
 #include "vars.h"
 
 static Debug::Variable::UInt32 dbg_reinit(
@@ -62,7 +62,8 @@ static bool IsValid(Structure *param) { return param->crc == CRC(param); };
 // This must not be done when a watchdog is enabled, as it blocks
 // execution while it reads through the I2C EEPROM.
 void Handler::Init(I2Ceeprom *eeprom) {
-#ifndef TEST_MODE  // this leads to conversion error when compiling on native
+/// \TODO: better mocking. This leads to conversion error when compiling on native
+#if defined(BARE_STM32)
   dbg_nvparams.set(reinterpret_cast<uint32_t>(&nv_param_));
 #endif
   if (eeprom != nullptr) {
@@ -160,7 +161,8 @@ bool Handler::Set(uint16_t offset, void *value, uint8_t len) {
 }
 
 bool Handler::Get(uint16_t offset, void *value, uint8_t len) {
-#ifndef TEST_MODE  // in test mode I need to be able to access any byte
+/// \TODO: Better mocking. In test mode we need to be able to access any byte
+#if defined(BARE_STM32)
   // Make sure the passed pointer is pointing to somewhere
   // in the structure and isn't in the reserved first 6 bytes
   if ((offset < 6) || ((offset + len) > Size)) return false;
@@ -212,13 +214,13 @@ void Handler::Update(const Time now, VentParams *params) {
 bool Handler::ReadFullParams(Address address, Structure *param, I2Ceeprom *eeprom) {
   bool read_finished{false};
   eeprom->ReadBytes(static_cast<uint16_t>(address), Size, param, &read_finished);
-  Time start_time = hal.Now();
+  Time start_time = SystemTimer::singleton().now();
   // Wait until the read is performed, or at most 500 ms: reading 4kB should
   // take under 100 ms if the 400 kHz I²C bus is used at 100% capacity.
   // If this takes longer, it most likely means our EEPROM is irresponsive (or
   // absent...).
   while (!read_finished) {
-    if (hal.Now() > start_time + milliseconds(500)) {
+    if (SystemTimer::singleton().now() > start_time + milliseconds(500)) {
       // maybe we should have an alarm in case our EEPROM is irresponsive?
       return false;
     }

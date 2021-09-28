@@ -21,6 +21,7 @@ limitations under the License.
 #include "circular_buffer.h"
 #include "debug_types.h"
 #include "trace.h"
+#include "units.h"
 
 namespace Debug {
 

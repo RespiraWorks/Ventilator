@@ -15,10 +15,12 @@ limitations under the License.
 
 #pragma once
 
+#include <sys/types.h>
+
 #include <cstdint>
 #include <optional>
 
-#include "hal.h"
+#include "interrupts.h"
 
 // This class is a generic circular buffer with fixed size.
 //

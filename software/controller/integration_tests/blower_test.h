@@ -9,6 +9,8 @@
 //
 
 #include "hal.h"
+#include "system_timer.h"
+#include "watchdog.h"
 
 // test parameters
 static constexpr Duration Delay{milliseconds(10)};
@@ -23,10 +25,10 @@ void RunTest() {
   float step = InitialStep;
 
   while (true) {
-    hal.AnalogWrite(PwmPin::Blower, fan_power);
-    hal.Delay(Delay);
+    hal.pwm.set(PwmPin::Blower, fan_power);
+    SystemTimer::singleton().delay(Delay);
 
-    hal.WatchdogHandler();
+    Watchdog::pet();
 
     fan_power += step;
     if (fan_power >= FanMax) {

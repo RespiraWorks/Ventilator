@@ -15,9 +15,7 @@ limitations under the License.
 
 #include "eeprom.h"
 
-#include <string.h>
-
-#include "hal.h"
+#include <cstring>
 
 bool I2Ceeprom::ReadBytes(uint16_t offset, uint16_t length, void *data, bool *processed) {
   if (offset + length > size_) {

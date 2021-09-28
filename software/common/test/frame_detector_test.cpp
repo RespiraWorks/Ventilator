@@ -19,36 +19,66 @@ limitations under the License.
 #include "gtest/gtest.h"
 #include "soft_rx_buffer.h"
 
-constexpr size_t BufferLength{20};
-constexpr uint8_t FrameMarker{static_cast<uint8_t>('.')};
+static constexpr size_t BufferLength{20};
+static constexpr uint8_t FrameMarker{static_cast<uint8_t>('.')};
 
-class FrameDetectorTest : public FrameDetector<BufferLength> {
+/// Derived class to expose internal state of FrameDetector
+class ExposedFrameDetector : public FrameDetector<BufferLength> {
  public:
-  FrameDetectorTest(RxBuffer *t) : FrameDetector<BufferLength>(t) {}
+  ExposedFrameDetector(RxBuffer *t) : FrameDetector<BufferLength>(t) {}
   State get_state() const { return state_; }
 };
 
-using State = FrameDetectorTest::State;
+using State = ExposedFrameDetector::State;
 
-TEST(FrameDetector, MarkFirstInLost) {
-  SoftRxBuffer<BufferLength> rx_buf(FrameMarker);
-  FrameDetectorTest frame_detector(&rx_buf);
-  EXPECT_TRUE(frame_detector.begin());
+// Common test fixture
+class FrameDetectorTest : public testing::Test {
+ protected:
+  void SetUp() override { EXPECT_TRUE(frame_detector.begin()); }
+  void TearDown() override {}
+  virtual ~FrameDetectorTest() {}
+
+  void fill(const std::string &data) {
+    for (auto &c : data) {
+      rx_buf.put_byte(c);
+    }
+  }
+
+  SoftRxBuffer<BufferLength> rx_buf{FrameMarker};
+  ExposedFrameDetector frame_detector{&rx_buf};
+};
+
+/* Important assumptions:
+ * SoftRxBuffer will only use FrameDetector callbacks when
+ *  - it encounters a FrameMaker, or
+ *  - when the buffer is full
+ * These assumptions are assured by SoftRxBuffer tests.
+ * Therefore, here we will only test for state machine transitions under those
+ * two conditions.
+ */
+
+TEST_F(FrameDetectorTest, InitialStateIsLost) {
   ASSERT_EQ(State::Lost, frame_detector.get_state());
   EXPECT_FALSE(frame_detector.frame_available());
+}
 
+TEST_F(FrameDetectorTest, StartsReceivingOnMarker) {
   rx_buf.put_byte(FrameMarker);
   ASSERT_EQ(State::ReceivingFrame, frame_detector.get_state());
   EXPECT_FALSE(frame_detector.frame_available());
 }
 
-TEST(FrameDetector, JunkWhileWaitForStart) {
-  SoftRxBuffer<BufferLength> rx_buf(FrameMarker);
-  FrameDetectorTest frame_detector(&rx_buf);
-  EXPECT_TRUE(frame_detector.begin());
+TEST_F(FrameDetectorTest, JunkBeforeMarkerImpliesMiddleOfFrame) {
+  fill("anything");
   ASSERT_EQ(State::Lost, frame_detector.get_state());
   EXPECT_FALSE(frame_detector.frame_available());
 
+  rx_buf.put_byte(FrameMarker);
+  ASSERT_EQ(State::WaitForStartMarker, frame_detector.get_state());
+  EXPECT_FALSE(frame_detector.frame_available());
+}
+
+TEST_F(FrameDetectorTest, JunkWhileWaitForStart) {
   rx_buf.put_byte(' ');
   ASSERT_EQ(State::Lost, frame_detector.get_state());
   EXPECT_FALSE(frame_detector.frame_available());
@@ -67,13 +97,7 @@ TEST(FrameDetector, JunkWhileWaitForStart) {
   EXPECT_FALSE(frame_detector.frame_available());
 }
 
-TEST(FrameDetector, RxFullSizeFrame) {
-  SoftRxBuffer<BufferLength> rx_buf(FrameMarker);
-  FrameDetectorTest frame_detector(&rx_buf);
-  EXPECT_TRUE(frame_detector.begin());
-  ASSERT_EQ(State::Lost, frame_detector.get_state());
-  EXPECT_FALSE(frame_detector.frame_available());
-
+TEST_F(FrameDetectorTest, RxFullSizeFrame) {
   rx_buf.put_byte(FrameMarker);
   // because we shouldn't have received data between frames
   ASSERT_EQ(State::ReceivingFrame, frame_detector.get_state());
@@ -90,13 +114,7 @@ TEST(FrameDetector, RxFullSizeFrame) {
             std::string(reinterpret_cast<const char *>(frame_detector.take_frame())));
 }
 
-TEST(FrameDetector, RxComplete) {
-  SoftRxBuffer<BufferLength> rx_buf(FrameMarker);
-  FrameDetectorTest frame_detector(&rx_buf);
-  EXPECT_TRUE(frame_detector.begin());
-  ASSERT_EQ(State::Lost, frame_detector.get_state());
-  EXPECT_FALSE(frame_detector.frame_available());
-
+TEST_F(FrameDetectorTest, RxComplete) {
   rx_buf.put_byte(FrameMarker);
   ASSERT_EQ(State::ReceivingFrame, frame_detector.get_state());
   EXPECT_FALSE(frame_detector.frame_available());
@@ -111,13 +129,7 @@ TEST(FrameDetector, RxComplete) {
   ASSERT_FALSE(frame_detector.frame_available());
 }
 
-TEST(FrameDetector, RxFrameIllegalyLong) {
-  SoftRxBuffer<BufferLength> rx_buf(FrameMarker);
-  FrameDetectorTest frame_detector(&rx_buf);
-  EXPECT_TRUE(frame_detector.begin());
-  ASSERT_EQ(State::Lost, frame_detector.get_state());
-  EXPECT_FALSE(frame_detector.frame_available());
-
+TEST_F(FrameDetectorTest, RxFrameIllegalyLong) {
   rx_buf.put_byte(FrameMarker);
   ASSERT_EQ(State::ReceivingFrame, frame_detector.get_state());
   EXPECT_FALSE(frame_detector.frame_available());
@@ -131,13 +143,7 @@ TEST(FrameDetector, RxFrameIllegalyLong) {
   ASSERT_FALSE(frame_detector.frame_available());
 }
 
-TEST(FrameDetector, ErrorWhileRx) {
-  SoftRxBuffer<BufferLength> rx_buf(FrameMarker);
-  FrameDetectorTest frame_detector(&rx_buf);
-  EXPECT_TRUE(frame_detector.begin());
-  ASSERT_EQ(State::Lost, frame_detector.get_state());
-  EXPECT_FALSE(frame_detector.frame_available());
-
+TEST_F(FrameDetectorTest, ErrorWhileRx) {
   rx_buf.put_byte(FrameMarker);
   ASSERT_EQ(State::ReceivingFrame, frame_detector.get_state());
   EXPECT_FALSE(frame_detector.frame_available());
@@ -213,21 +219,21 @@ std::vector<std::string> fakeRx(std::string frame) {
   return ret;
 }
 
-TEST(FrameDetector, FuzzMoreMarkers) {
+TEST_F(FrameDetectorTest, FuzzMoreMarkers) {
   EXPECT_THAT(fakeRx<BufferLength>(".aaa..."), testing::ElementsAre("aaa"));
   EXPECT_THAT(fakeRx<BufferLength>("..aaa...."), testing::ElementsAre("aaa"));
   EXPECT_THAT(fakeRx<BufferLength>("...aaa.."), testing::ElementsAre("aaa"));
   EXPECT_THAT(fakeRx<BufferLength>("....aaa."), testing::ElementsAre("aaa"));
 }
 
-TEST(FrameDetector, FramesTooLong) {
+TEST_F(FrameDetectorTest, FramesTooLong) {
   EXPECT_THAT(fakeRx<BufferLength>(".aaaaaaaaaaaaaaaaaaaa..aaa."), testing::ElementsAre("aaa"));
   EXPECT_THAT(fakeRx<BufferLength>(".aaaaaaaaaaaaaaaaaaa..aaa."), testing::ElementsAre("aaa"));
   EXPECT_THAT(fakeRx<BufferLength>("....................aaa."), testing::ElementsAre("aaa"));
   EXPECT_THAT(fakeRx<BufferLength>("...................aaa."), testing::ElementsAre("aaa"));
 }
 
-TEST(FrameDetector, FuzzyInputs) {
+TEST_F(FrameDetectorTest, FuzzyInputs) {
   EXPECT_THAT(fakeRx<BufferLength>(".aaa..bbb..a."), testing::ElementsAre("aaa", "bbb", "a"));
   EXPECT_THAT(fakeRx<BufferLength>("..aaa..bbb..a."), testing::ElementsAre("aaa", "bbb", "a"));
   EXPECT_THAT(fakeRx<BufferLength>("aaa.bbb.a."), testing::ElementsAre());
@@ -237,7 +243,7 @@ TEST(FrameDetector, FuzzyInputs) {
               testing::ElementsAre("bbbb", "s", "ssss", "ss", "aaaaa"));
 }
 
-TEST(FrameDetector, FuzzyErrors) {
+TEST_F(FrameDetectorTest, FuzzyErrors) {
   EXPECT_THAT(fakeRx<BufferLength>(".aaa..bUb..a."), testing::ElementsAre("aaa", "a"));
   EXPECT_THAT(fakeRx<BufferLength>("..aaaF.bbb..a."), testing::ElementsAre("bbb", "a"));
   EXPECT_THAT(fakeRx<BufferLength>("aaa.bbb.a."), testing::ElementsAre());
@@ -247,7 +253,7 @@ TEST(FrameDetector, FuzzyErrors) {
               testing::ElementsAre("bbbb", "s", "ssss", "ss"));
 }
 
-TEST(FrameDetector, FuzzRandomEvents) {
+TEST_F(FrameDetectorTest, FuzzRandomEvents) {
   std::string valid_frames = "..aa..bb..cc.";
 
   /* \todo make this exhaustive, rather than random, like:

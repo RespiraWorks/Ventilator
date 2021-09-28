@@ -51,8 +51,8 @@ const uint8_t *RxBufferUartDma<RxBytesMax>::get() const {
   return rx_buffer_;
 }
 
+/// \TODO find a better way to mock this without ifdefs once UartDma is mockable
 #if !defined(BARE_STM32)
-extern size_t rx_index;
 // Puts a byte to rx_buffer_
 template <size_t RxBytesMax>
 void RxBufferUartDma<RxBytesMax>::test_put_byte(const uint8_t b) {

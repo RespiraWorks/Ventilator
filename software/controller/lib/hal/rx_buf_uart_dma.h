@@ -33,17 +33,20 @@ class RxBufferUartDma : public RxBuffer {
   size_t received_length() const override;
   const uint8_t *get() const override;
 
-  /// \TODO find a better way to mock this without ifdefs
-#if !defined(BARE_STM32)
-  // Puts a byte to rx_buffer_
-  void test_put_byte(const uint8_t b);
-#endif
-
- private:
+  /// Using protected so that derived class with back-door can be used for testing
+ protected:
   // UartDma provides receiving to this buffer
   UartDma &uart_dma_;
   // Buffer into which the data is received
   uint8_t rx_buffer_[RxBytesMax] = {0};
+
+/// \TODO find a better way to mock this without ifdefs once UartDma is mockable
+#if !defined(BARE_STM32)
+ public:
+  // Puts a byte to rx_buffer_
+  void test_put_byte(const uint8_t b);
+  size_t rx_index{0};
+#endif
 };
 
 #include "rx_buf_uart_dma.tpp"

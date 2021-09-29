@@ -15,6 +15,8 @@ limitations under the License.
 
 #include "actuators.h"
 
+#include "hal.h"
+
 void Actuators::execute(const ActuatorsState &desired_state) {
   // set blower PWM
   hal.pwm.set(PwmPin::Blower, desired_state.blower_power);

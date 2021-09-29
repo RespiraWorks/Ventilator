@@ -18,6 +18,8 @@ limitations under the License.
 #include <stddef.h>
 #include <stdint.h>
 
+#include <array>
+
 #include "eeprom.h"
 #include "network_protocol.pb.h"
 #include "units.h"

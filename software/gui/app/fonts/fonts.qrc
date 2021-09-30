@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/fonts">
+        <file>NotoSans-Bold.ttf</file>
+        <file>NotoSans-BoldItalic.ttf</file>
+        <file>NotoSans-Italic.ttf</file>
+        <file>NotoSans-Regular.ttf</file>
+        <file>Oxygen-Bold.ttf</file>
+        <file>Oxygen-Light.ttf</file>
+        <file>Oxygen-Regular.ttf</file>
+    </qresource>
+</RCC>

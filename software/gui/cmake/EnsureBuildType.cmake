@@ -1,0 +1,6 @@
+if (NOT CMAKE_BUILD_TYPE)
+    message(STATUS "Build type was not set. Using Release mode.")
+    set(CMAKE_BUILD_TYPE "Release")
+else ()
+  message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
+endif()

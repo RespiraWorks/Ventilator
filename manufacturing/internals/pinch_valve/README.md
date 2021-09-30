@@ -111,7 +111,7 @@ BEFORE purchasing any parts.**
 
 [a1rw]:    #Custom-parts
 [a2rw]:    #Custom-parts
-[a3step]:  https://www.omc-stepperonline.com/nema-17-stepper-motor/nema-17-bipolar-59ncm-84oz-in-2a-42x48mm-4-wires-w-1m-cable-and-connector-full-d-cut-shaft.html
+[a3step]:  https://www.omc-stepperonline.com/full-d-cut-shaft-nema-17-bipolar-59ncm-84oz-in-2a-42x48mm-4-wires-w-1m-cable-connector-17hs19-2004s2
 [a3amzn]:  https://www.amazon.com/dp/B07Z1J8JWH
 [a4mcmc]:  https://www.mcmaster.com/91294A128
 [a5mcmc]:  https://www.mcmaster.com/92095A218

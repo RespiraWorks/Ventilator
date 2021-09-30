@@ -1,0 +1,21 @@
+<RCC>
+    <qresource prefix="/images">
+        <file>Logo.png</file>
+        <file>respiraWorksLogoHorizontalTransparent.png</file>
+        <file>RW_add_24.svg</file>
+        <file>RW_adjust_24.svg</file>
+        <file>RW_alarm-off_24.svg</file>
+        <file>RW_alarm_24.svg</file>
+        <file>RW_battery-25_24.svg</file>
+        <file>RW_battery-50_24.svg</file>
+        <file>RW_battery-75_24.svg</file>
+        <file>RW_battery-100_24.svg</file>
+        <file>RW_debug.svg</file>
+        <file>RW_info_24.svg</file>
+        <file>RW_inspsenssettings_24.svg</file>
+        <file>RW_log_24.svg</file>
+        <file>RW_menu_24.svg</file>
+        <file>RW_substract_24.svg</file>
+        <file>RW_warning_24.svg</file>
+    </qresource>
+</RCC>

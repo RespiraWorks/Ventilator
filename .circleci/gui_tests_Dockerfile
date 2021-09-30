@@ -2,19 +2,13 @@
 
 FROM debian:buster
 
-RUN apt-get update && \
-    apt-get install build-essential python-pip lcov git curl -y && \
-    pip install -U pip && \
-    pip install codecov
-
 WORKDIR /root/Ventilator
 COPY . ./
-
 
 WORKDIR /root/Ventilator/software/gui
 
 CMD /bin/bash \
     ./gui.sh install && \
-    ./gui.sh build -f -j --no-checks && \
-    ./gui.sh test -f -x && \
-    ./gui.sh cov_upload
+    FORCED_ROOT=1 ./gui.sh build -j --no-checks && \
+    FORCED_ROOT=1 ./gui.sh run -x --startup-only && \
+    FORCED_ROOT=1 ./gui.sh test -j -x --upload-cov

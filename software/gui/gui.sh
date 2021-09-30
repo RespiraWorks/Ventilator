@@ -42,8 +42,6 @@ EXIT_SUCCESS=0
 COVERAGE_INPUT_DIR=build/tests
 COVERAGE_OUTPUT_DIR=coverage_reports
 
-QMAKE_ALIAS="qmake -qt=qt5"
-
 #########
 # UTILS #
 #########
@@ -53,24 +51,23 @@ print_help() {
 RespiraWorks Ventilator UI build & test utilities.
 
 The following options are available:
-  install       Install dependencies for your platform [$PLATFORM]
-  clean         Clean build directory and de-initialize git submodules
-  build         Build the gui to /build, options:
-        [--relase/--debug] - what it says (default=release)
-        [-f]               - force run, even with root privileges
-        [-j]               - parallel build
-        [--no-checks]      - do not run static checks (yes, it's to annoy you!)
-  test         Run the unit QTest autotest suite, options:
-       [-f]               - force run, even with root privileges
-       [-x]               - forwards to Xvfb (for CLI-only testing)
-       [--no-cov]         - do not generate coverage reports
-  cov_upload   Upload coverage reports to Codecov server
+  install     Install dependencies for your platform [$PLATFORM]
+  clean       Clean build directory and de-initialize git submodules
+  build       Build the gui to /build, options:
+      [--relase/--debug] - what it says (default=release)
+      [-j]               - parallel build (auto select max-1 cores)
+      [--no-checks]      - do not run static checks (default=on, to annoy you!)
+  test        Run unit tests, options:
+      [-j]               - parallel build (auto select max-1 cores)
+      [-x]               - forwards to Xvfb (for CLI-only testing)
+      [--no-cov]         - do not generate coverage reports
+      [--upload-cov]     - upload coverage reports to codecov (for CI only)
   run          Run the application, forwards app options:
-      [-f]               - force run, even with root privileges
-      [--startup-only] - just start up momentarily and shutdown
-      [--serial-port]  - port for communicating with controller
-  cov_upload
-  help/-h    Display this dialog
+      [-j]               - parallel build (auto select max-1 cores)
+      [-x]               - forwards to Xvfb (for CLI-only testing)
+      [--startup-only]   - just start up momentarily and shutdown
+      [--serial-port]    - port for communicating with controller
+  help/-h     Display this dialog
 EOF
 }
 
@@ -98,6 +95,81 @@ create_clean_directory() {
   fi
 }
 
+install_linux() {
+  # Last tuned for Ubuntu 2021.04 Hirsute
+  apt-get update
+  apt-get install -y \
+          git \
+          build-essential \
+          curl \
+          cmake \
+          qtbase5-dev \
+          qtbase5-dev-tools \
+          qtmultimedia5-dev \
+          qtdeclarative5-dev \
+          qtdeclarative5-dev-tools \
+          qtquickcontrols2-5-dev \
+          libqt5serialport5 \
+          libqt5serialport5-dev \
+          libqt5multimedia5 \
+          libqt5multimedia5-plugins \
+          libqt5multimediaquick5 \
+          libqt5multimediawidgets5 \
+          qml-module-qtcharts \
+          qml-module-qtquick-controls \
+          qml-module-qtquick-controls2 \
+          qml-module-qtmultimedia \
+          pulseaudio \
+          python3-pip \
+          xvfb \
+          bear \
+          cppcheck \
+          gcovr \
+          lcov \
+          clang-tidy
+}
+
+configure_conan() {
+  pip3 install -U pip
+  pip3 install conan
+  conan profile new --detect default
+  conan profile update settings.compiler.libcxx=libstdc++11 default
+}
+
+run_cppcheck() {
+  create_clean_directory  build/cppcheck
+  cppcheck --enable=all --std=c++17 --inconclusive --force --inline-suppr --quiet \
+           -I ../common/generated_libs/network_protocol \
+           -I ../common/third_party/nanopb \
+           -I ../common/libs/units \
+           -ibuild -icmake-build-stm32 -isrc/third_party \
+           .
+
+#           --project=build/compile_commands.json \
+#           --xml --output-file=build/cppcheck/report.xml \
+#
+#  cppcheck-htmlreport --file=build/cppcheck/report.xml \
+#                      --title="Ventilator GUI" \
+#                      --report-dir=build/cppcheck --source-dir=.
+}
+
+run_clang_tidy() {
+  j_opt=$1
+
+  CLANG_TIDY_EXEC=""
+  CLANG_TIDY_VERSION=$(echo "$(clang-tidy --version | sed -n 2p)" | awk -F[" ".] '{print $5}')
+  if [ "$CLANG_TIDY_VERSION" = "6" ]; then
+    CLANG_TIDY_EXEC="run-clang-tidy-6.0.py"
+  else
+    CLANG_TIDY_EXEC="run-clang-tidy-${CLANG_TIDY_VERSION}.py"
+  fi
+  echo "running $CLANG_TIDY_EXEC"
+  find . -name '*.cpp' -not -path "*third_party*" -not -path "*build*" \
+         -exec $CLANG_TIDY_EXEC -quiet $j_opt \
+         -header-filter='^.*gui\/(src|app|tests)\/.*\.(hpp|cpp|h)$' \
+         -p build {} \;
+}
+
 generate_coverage_reports() {
   echo "Generating test coverage reports..."
 
@@ -117,6 +189,7 @@ generate_coverage_reports() {
        "*/common/*" \
        "*/tests/*" \
        "*spdlog*" \
+       "*fmt*" \
        "/usr/include*"
 
   rm "$COVERAGE_OUTPUT_DIR/coverage.info"
@@ -131,6 +204,10 @@ generate_coverage_reports() {
   #launch_browser
 }
 
+launch_browser() {
+  python -m webbrowser "${COVERAGE_OUTPUT_DIR}/index.html"
+}
+
 upload_coverage_reports() {
   echo "Uploading coverage reports to Codecov"
 
@@ -139,105 +216,6 @@ upload_coverage_reports() {
   ./codecov -F gui
   rm codecov
 }
-
-launch_browser() {
-  python -m webbrowser "${COVERAGE_OUTPUT_DIR}/index.html"
-}
-
-install_linux() {
-  # Last tuned for Ubuntu 2021.04 Hirsute
-  apt-get update
-  apt-get install -y \
-          git \
-          build-essential \
-          qt5-qmake \
-          qtchooser \
-          qtbase5-dev \
-          qtbase5-dev-tools \
-          qtmultimedia5-dev \
-          qtdeclarative5-dev \
-          qtdeclarative5-dev-tools \
-          qtquickcontrols2-5-dev \
-          libqt5serialport5 \
-          libqt5serialport5-dev \
-          libqt5multimedia5 \
-          libqt5multimedia5-plugins \
-          libqt5multimediaquick5 \
-          libqt5multimediawidgets5 \
-          qml-module-qtcharts \
-          qml-module-qtquick-controls \
-          qml-module-qtquick-controls2 \
-          qml-module-qtmultimedia \
-          pulseaudio \
-          xvfb \
-          bear \
-          cppcheck \
-          lcov \
-          clang-tidy
-}
-
-checks_pre() {
-  #Should happen in the build directory
-  cppcheck -ithird_party -ibuild .
-}
-
-checks_post() {
-  #Should happen in the build directory
-
-  cppcheck --project=compile_commands.json \
-           -i ../../src/third_party \
-           -i ../../../common/third_party \
-           .
-
-  CLANG_TIDY_VERSION=$(echo "$(clang-tidy --version | sed -n 2p)" | awk -F[" ".] '{print $5}')
-  if [ "$CLANG_TIDY_VERSION" = "6" ]; then
-    run-clang-tidy-6.0.py -p .
-  else
-    eval "run-clang-tidy-${CLANG_TIDY_VERSION}.py"
-  fi
-}
-
-build_configure() {
-  config_type=$1
-  will_need_checks=$2
-
-  create_clean_directory build
-  $QMAKE_ALIAS -unset QMAKEFEATURES
-  git submodule update --init --recursive
-
-  if [ "$will_need_checks" == "yes" ]; then
-    checks_pre
-  fi
-
-  pushd build
-  $QMAKE_ALIAS CONFIG+=${config_type} ..
-  popd
-}
-
-build_with_bear() {
-  j_opt=$1
-
-  bear_opt=""
-  if [ -n "$VERBOSE" ]; then
-    bear --version
-    bear --help
-    bear_opt="--verbose"
-  fi
-
-  pushd build
-  bear $bear_opt -- make $j_opt
-  checks_post
-  popd
-}
-
-build_with_make() {
-  j_opt=$1
-
-  pushd build
-  make $j_opt
-  popd
-}
-
 
 ########
 # HELP #
@@ -253,6 +231,7 @@ if [ "$1" == "help" ] || [ "$1" == "-h" ]; then
 elif [ "$1" == "install" ]; then
   if [ "$PLATFORM" == "Darwin" ]; then
     brew install qt5
+    configure_conan
     exit $EXIT_SUCCESS
   elif [ "$PLATFORM" == "Linux" ]; then
     if [ "$EUID" -ne 0 ]; then
@@ -260,6 +239,7 @@ elif [ "$1" == "install" ]; then
       exit $EXIT_FAILURE
     fi
     install_linux
+    configure_conan
     exit $EXIT_SUCCESS
   else
     echo "Unsupported platform: ${PLATFORM}"
@@ -272,7 +252,6 @@ elif [ "$1" == "install" ]; then
 elif [ "$1" == "clean" ]; then
   clean_dir build
   clean_dir "$COVERAGE_OUTPUT_DIR"
-  $QMAKE_ALIAS -unset QMAKEFEATURES
   git submodule deinit -f .
   exit $EXIT_SUCCESS
 
@@ -282,19 +261,26 @@ elif [ "$1" == "clean" ]; then
 elif [ "$1" == "build" ]; then
 
   #TODO: what if it's one of the later params?
-  if [ "$EUID" -eq 0 ] && [ "$2" != "-f" ]; then
+  if [ "$EUID" -eq 0 ] && [ -z "$FORCED_ROOT" ]; then
     echo "Please do not run build with root privileges!"
     exit $EXIT_FAILURE
   fi
 
-  config_type="release"
+  config_type="Release"
   if [ "$2" == "--debug" ] || [ "$3" == "--debug" ] || [ "$4" == "--debug" ]; then
-    config_type="debug"
+    config_type="Debug"
   fi
 
   j_opt=""
   if [ "$2" == "-j" ] || [ "$3" == "-j" ] || [ "$4" == "-j" ]; then
-    j_opt="-j"
+    # build with 1 less than total number of CPUS, minimum 1
+    NUM_CPUS=$(cat /proc/cpuinfo | grep -c processor)
+    let NUM_CPUS-=1
+    if [ "$NUM_CPUS" -lt "1" ]; then
+      NUM_CPUS=1
+    fi
+    echo "Will build with ${NUM_CPUS} parallel jobs"
+    j_opt="-j${NUM_CPUS}"
   fi
 
   checks_opt="yes"
@@ -302,15 +288,32 @@ elif [ "$1" == "build" ]; then
     checks_opt="no"
   fi
 
-  build_configure $config_type $checks_opt
+  git submodule update --init --recursive
+  create_clean_directory build
+
+  pushd build
+  if [ "$checks_opt" == "yes" ]; then
+    cmake -DCMAKE_BUILD_TYPE=${config_type} -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
+    make everything $j_opt
+  else
+    cmake -DCMAKE_BUILD_TYPE=${config_type} ..
+    make everything $j_opt
+  fi
+  popd
 
   if [ "$checks_opt" == "yes" ]; then
-    build_with_bear $j_opt
-  else
-    build_with_make $j_opt
+    run_clang_tidy $j_opt
+    run_cppcheck
   fi
 
   exit $EXIT_SUCCESS
+
+#########
+# CHECK #
+#########
+elif [ "$1" == "check" ]; then
+  run_clang_tidy
+  run_cppcheck
 
 ########
 # TEST #
@@ -318,36 +321,49 @@ elif [ "$1" == "build" ]; then
 elif [ "$1" == "test" ]; then
 
   #TODO: what if it's one of the later params?
-  if [ "$EUID" -eq 0 ] && [ "$2" != "-f" ]; then
+  if [ "$EUID" -eq 0 ] && [ -z "$FORCED_ROOT" ]; then
     echo "Please do not run tests with root privileges!"
     exit $EXIT_FAILURE
   fi
 
+  j_opt=""
+  if [ "$2" == "-j" ] || [ "$3" == "-j" ] || [ "$4" == "-j" ] || [ "$5" == "-j" ]; then
+    # build with 1 less than total number of CPUS, minimum 1
+    NUM_CPUS=$(cat /proc/cpuinfo | grep -c processor)
+    let NUM_CPUS-=1
+    if [ "$NUM_CPUS" -lt "1" ]; then
+      NUM_CPUS=1
+    fi
+    echo "Will build tests with ${NUM_CPUS} parallel jobs"
+    j_opt="-j${NUM_CPUS}"
+  fi
+
+  git submodule update --init --recursive
+  create_clean_directory build
+
   pushd build
+  cmake -DCMAKE_BUILD_TYPE=Debug -DCOV=1 ..
 
   if [ "$PLATFORM" == "Darwin" ]; then
-    make check
+    make run_tests
   elif [ "$PLATFORM" == "Linux" ]; then
-    if [ "$2" == "-x" ] || [ "$3" == "-x" ] || [ "$4" == "-x" ]; then
-      Xvfb :1 &
-      DISPLAY=:1 make check
+    if [ "$2" == "-x" ] || [ "$3" == "-x" ] || [ "$4" == "-x" ] || [ "$5" == "-x" ]; then
+      xvfb-run make run_tests $j_opt
     else
-      make check
+      make run_tests $j_opt
     fi
   fi
   popd
 
-  if [ "$2" != "--no-cov" ] && [ "$3" != "--no-cov" ] && [ "$4" != "--no-cov" ]; then
+  if [ "$2" != "--no-cov" ] && [ "$3" != "--no-cov" ] \
+   && [ "$4" != "--no-cov" ] && [ "$5" != "--no-cov" ]; then
     generate_coverage_reports
+    if [ "$2" == "--upload-cov" ] || [ "$3" == "--upload-cov" ] \
+     || [ "$4" == "--upload-cov" ] || [ "$5" == "--upload-cov" ]; then
+      upload_coverage_reports
+    fi
   fi
 
-  exit $EXIT_SUCCESS
-
-###################
-# UPLOAD COVERAGE #
-###################
-elif [ "$1" == "cov_upload" ]; then
-  upload_coverage_reports
   exit $EXIT_SUCCESS
 
 #######
@@ -355,22 +371,20 @@ elif [ "$1" == "cov_upload" ]; then
 #######
 elif [ "$1" == "run" ]; then
 
-  if [ "$EUID" -eq 0 ] && [ "$2" != "-f" ]; then
+  if [ "$EUID" -eq 0 ] && [ -z "$FORCED_ROOT" ]; then
     echo "Please do not run the app with root privileges!"
     exit $EXIT_FAILURE
   fi
 
-  pushd build/app
-
-  # If -f was used, it should be discarded before calling app
-  if [ "$PLATFORM" == "Darwin" ]; then
-    ./ProjectVentilatorGUI.app/Contents/MacOS/ProjectVentilatorGUI "${@:2}"
-    exit $EXIT_SUCCESS
-  elif [ "$PLATFORM" == "Linux" ]; then
-    ./ProjectVentilatorGUI "${@:2}"
-    exit $EXIT_SUCCESS
+  pushd build
+  if [ "$2" == "-x" ] || [ "$3" == "-x" ] || [ "$4" == "-x" ]; then
+    xvfb-run ./bin/ventilator_gui_app "${@:3}"
+  else
+    ./bin/ventilator_gui_app "${@:2}"
   fi
   popd
+
+  exit $EXIT_SUCCESS
 
 ################
 # ERROR & HELP #

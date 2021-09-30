@@ -8,11 +8,12 @@ source/config/*
 *.user
 *.log
 !.gitignore
-software/controller/.gitignore
-software/common/.gitignore
 
 #IDE
-CMakeLists*
+software/controller/CMakeLists*
+software/controller/.gitignore
+software/common/CMakeLists*
+software/common/.gitignore
 cmake-build-*/
 .idea/
 .idea

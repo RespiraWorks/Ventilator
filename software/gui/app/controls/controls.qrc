@@ -1,0 +1,34 @@
+<RCC>
+    <qresource prefix="/controls">
+        <file>graphs/FlowGraph.qml</file>
+        <file>graphs/PressureGraph.qml</file>
+        <file>graphs/TvGraph.qml</file>
+        <file>parameters/FiO2Parameter.qml</file>
+        <file>parameters/ITimeParameter.qml</file>
+        <file>parameters/PeepParameter.qml</file>
+        <file>parameters/PipParameter.qml</file>
+        <file>parameters/RrParameter.qml</file>
+        <file>readings/FiO2Display.qml</file>
+        <file>readings/FlowDisplay.qml</file>
+        <file>readings/IerDisplay.qml</file>
+        <file>readings/PeepDisplay.qml</file>
+        <file>readings/PipDisplay.qml</file>
+        <file>readings/RrDisplay.qml</file>
+        <file>readings/TvDisplay.qml</file>
+        <file>AlarmButton.qml</file>
+        <file>AlarmNotificationBanner.qml</file>
+        <file>BaseButton.qml</file>
+        <file>BasePopup.qml</file>
+        <file>DeviceStatusDisplay.qml</file>
+        <file>FpsItem.qml</file>
+        <file>HeaderButton.qml</file>
+        <file>MainHeader.qml</file>
+        <file>Mode.qml</file>
+        <file>ParameterAdjustPopup.qml</file>
+        <file>ParameterButton.qml</file>
+        <file>ParameterDisplay.qml</file>
+        <file>PopupButton.qml</file>
+        <file>ScopeView.qml</file>
+        <file>StepCounter.qml</file>
+    </qresource>
+</RCC>

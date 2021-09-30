@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/modes">
+        <file>HighFlowNasalCannulaMode.qml</file>
+        <file>PressureAssistMode.qml</file>
+        <file>PressureControlMode.qml</file>
+    </qresource>
+</RCC>

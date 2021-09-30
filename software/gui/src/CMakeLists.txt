@@ -1,13 +1,15 @@
-#include(InstallConfig)
-#include(BuildInfo)
+include(common.cmake)
 
 find_package(spdlog REQUIRED)
-#find_package(date REQUIRED)
-#find_package(Threads REQUIRED)
+find_package(fmt REQUIRED)
+find_package(Threads REQUIRED)
 
-set(this_target ${PROJECT_NAME}_src)
+set(this_target ${PROJECT_NAME}_backend)
 
-include(QtLibraryConfig)
+set(CMAKE_AUTOMOC ON)
+find_package(Qt5 COMPONENTS
+  SerialPort Quick Multimedia
+  REQUIRED)
 
 set(${this_target}_sources
   gui_state_container.cpp
@@ -36,6 +38,7 @@ set(${this_target}_headers
   )
 
 # Mostly for qnanopainter \TODO: make it an external lib
+set(QNANO_QUICK ON CACHE BOOL "Build QNanoPainter for QtQuick")
 add_subdirectory(third_party)
 
 add_library(
@@ -48,17 +51,15 @@ add_library(
 target_include_directories(
   ${this_target}
   PUBLIC ${PROJECT_SOURCE_DIR}/src
-  PUBLIC ${PROJECT_SOURCE_DIR}/../common/generated_libs/network_protocol
-  PUBLIC ${PROJECT_SOURCE_DIR}/../common/third_party/nanopb
-  PUBLIC ${PROJECT_SOURCE_DIR}/../common/libs/units
-  PUBLIC ${PROJECT_SOURCE_DIR}/src/third_party/qnanopainter/libqnanopainter
   INTERFACE $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 
 target_link_libraries(
   ${this_target}
   PUBLIC common
-  PUBLIC qnanopainter
+  PUBLIC fmt::fmt
+  PUBLIC Threads::Threads
+  PUBLIC QNanoPainter
   PUBLIC Qt5::SerialPort
   PUBLIC Qt5::Quick
   PUBLIC Qt5::Multimedia

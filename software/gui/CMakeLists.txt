@@ -43,8 +43,17 @@ endif()
 include(CompilerConfig)
 include(OutputDirConfig)
 include(CoverageReports)
+include(QtMacFix)
 
-include(common.cmake)
+#include(InstallConfig)
+
+#include(BuildInfo)
+execute_process(COMMAND "git" "rev-parse" "HEAD"
+  WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+  OUTPUT_VARIABLE GIT_SHA1
+  OUTPUT_STRIP_TRAILING_WHITESPACE)
+add_definitions(-DGIT_VERSION="${GIT_SHA1}")
+
 add_subdirectory(src)
 add_subdirectory(app)
 

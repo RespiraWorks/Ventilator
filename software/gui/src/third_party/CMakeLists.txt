@@ -1,7 +1,8 @@
-set(this_target qnanopainter)
+set(this_target QNanoPainter)
 
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
-set(CMAKE_AUTOMOC ON)
+option(QNANO_QUICK "Build QNanoPainter for QtQuick" OFF)
+
+option(QNANO_WIDGETS "Build QNanoPainter for QtWidgets" OFF)
 
 find_package(Qt5 COMPONENTS Core Gui REQUIRED)
 
@@ -26,35 +27,7 @@ add_definitions(-DQNANO_ENABLE_GLES3)
 set(QNANO_BUILD_GLES_BACKENDS OFF)
 set(QNANO_BUILD_GL_BACKENDS ON)
 
-# \TODO: autodetect backend
-
-if(QNANO_BUILD_GLES_BACKENDS)
-  message(STATUS "QNanoPainter: Including OpenGL ES backends")
-  add_definitions(-DQNANO_BUILD_GLES_BACKENDS)
-
-  set(${this_target}_backend_sources
-    qnanopainter/libqnanopainter/private/qnanobackendgles2.cpp
-    qnanopainter/libqnanopainter/private/qnanobackendgles3.cpp
-    )
-  set(${this_target}_backend_headers
-    qnanopainter/libqnanopainter/private/qnanobackendgles2.h
-    qnanopainter/libqnanopainter/private/qnanobackendgles3.h
-    )
-endif()
-
-if(QNANO_BUILD_GL_BACKENDS)
-  message(STATUS "QNanoPainter: Including OpenGL backends")
-  add_definitions(-DQNANO_BUILD_GL_BACKENDS)
-
-  set(${this_target}_backend_sources
-    qnanopainter/libqnanopainter/private/qnanobackendgl2.cpp
-    qnanopainter/libqnanopainter/private/qnanobackendgl3.cpp
-    )
-  set(${this_target}_backend_headers
-    qnanopainter/libqnanopainter/private/qnanobackendgl2.h
-    qnanopainter/libqnanopainter/private/qnanobackendgl3.h
-    )
-endif()
+# \TODO: autodetect backends
 
 set(${this_target}_sources
   qnanopainter/libqnanopainter
@@ -69,7 +42,6 @@ set(${this_target}_sources
   qnanopainter/libqnanopainter/qnanowindow.cpp
   qnanopainter/libqnanopainter/private/qnanodebug.cpp
   qnanopainter/libqnanopainter/nanovg/nanovg.c
-  ${${this_target}_backend_sources}
   )
 
 set(${this_target}_headers
@@ -88,14 +60,55 @@ set(${this_target}_headers
   qnanopainter/libqnanopainter/qnanowindow.h
   qnanopainter/libqnanopainter/private/qnanodebug.h
   qnanopainter/libqnanopainter/nanovg/nanovg.h
-  ${${this_target}_backend_headers}
   )
 
 qt5_add_resources(${this_target}_resources
   qnanopainter/libqnanopainter/libqnanopainterdata.qrc)
 
-if(Qt5Quick_FOUND)
+if(QNANO_BUILD_GLES_BACKENDS)
+  message(STATUS "QNanoPainter: Including OpenGL ES backends")
+  add_definitions(-DQNANO_BUILD_GLES_BACKENDS)
+
+  set(${this_target}_sources
+    ${${this_target}_sources}
+    qnanopainter/libqnanopainter/private/qnanobackendgles2.cpp
+    qnanopainter/libqnanopainter/private/qnanobackendgles3.cpp
+    )
+  set(${this_target}_headers
+    ${${this_target}_headers}
+    qnanopainter/libqnanopainter/private/qnanobackendgles2.h
+    qnanopainter/libqnanopainter/private/qnanobackendgles3.h
+    )
+endif()
+
+if(QNANO_BUILD_GL_BACKENDS)
+  message(STATUS "QNanoPainter: Including OpenGL backends")
+
+  find_package(OpenGL REQUIRED)
+
+  add_definitions(-DQNANO_BUILD_GL_BACKENDS)
+
+  set(${this_target}_sources
+    ${${this_target}_sources}
+    qnanopainter/libqnanopainter/private/qnanobackendgl2.cpp
+    qnanopainter/libqnanopainter/private/qnanobackendgl3.cpp
+    )
+  set(${this_target}_headers
+    ${${this_target}_headers}
+    qnanopainter/libqnanopainter/private/qnanobackendgl2.h
+    qnanopainter/libqnanopainter/private/qnanobackendgl3.h
+    )
+
+  set(${this_target}_libs
+    ${${this_target}_libs}
+    PUBLIC OpenGL::GL
+    )
+endif()
+
+if (QNANO_QUICK)
   message(STATUS "QNanoPainter: Including QtQuick components")
+  find_package(Qt5 COMPONENTS Quick REQUIRED)
+
   set(${this_target}_sources
     ${${this_target}_sources}
     qnanopainter/libqnanopainter/qnanoquickitem.cpp
@@ -112,8 +125,10 @@ if(Qt5Quick_FOUND)
     )
 endif()
 
-if(Qt5Widgets_FOUND)
-  message(STATUS "QNanoPainter: Including QtQuick components")
+if (QNANO_WIDGETS)
+  message(STATUS "QNanoPainter: Including QtWidget components")
+  find_package(Qt5 COMPONENTS Widgets REQUIRED)
+
   set(${this_target}_sources
     ${${this_target}_sources}
     qnanopainter/libqnanopainter/qnanowidget.cpp
@@ -137,7 +152,7 @@ add_library(
 
 target_include_directories(
   ${this_target}
-  PUBLIC qnanopainter/libqnanopainter/private
+  PRIVATE qnanopainter/libqnanopainter/private
   PUBLIC qnanopainter/libqnanopainter
   INTERFACE $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )

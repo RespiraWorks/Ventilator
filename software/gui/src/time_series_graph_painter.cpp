@@ -1,11 +1,28 @@
+/* Copyright 2020-2021, RespiraWorks
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
 #include "time_series_graph_painter.h"
-#include "qnanocolor.h"
-#include "time_series_graph.h"
+
 #include <QDebug>
 #include <QVarLengthArray>
 #include <QtMath>
 #include <algorithm>
-#include <math.h>
+#include <cmath>
+
+#include "time_series_graph.h"
+
 TimeSeriesGraphPainter::TimeSeriesGraphPainter() {}
 
 void TimeSeriesGraphPainter::paint(QNanoPainter *m_painter) {
@@ -14,16 +31,13 @@ void TimeSeriesGraphPainter::paint(QNanoPainter *m_painter) {
 
   int size = dataset_.size();
 
-  if (size < 2)
-    return;
+  if (size < 2) return;
 
   // Draw graph line
   m_painter->beginPath();
-  m_painter->moveTo(calculateRealX(dataset_[0].x()),
-                    calculateRealY(dataset_[0].y()));
+  m_painter->moveTo(calculateRealX(dataset_[0].x()), calculateRealY(dataset_[0].y()));
   for (int i = 1; i < size; i++)
-    m_painter->lineTo(calculateRealX(dataset_[i].x()),
-                      calculateRealY(dataset_[i].y()));
+    m_painter->lineTo(calculateRealX(dataset_[i].x()), calculateRealY(dataset_[i].y()));
 
   m_painter->setFillStyle(color_fill_);
   m_painter->setStrokeStyle(color_line_);
@@ -32,11 +46,9 @@ void TimeSeriesGraphPainter::paint(QNanoPainter *m_painter) {
 
   // Draw graph background area
   m_painter->beginPath();
-  m_painter->moveTo(calculateRealX(dataset_[0].x()),
-                    calculateRealY(dataset_[0].y()));
+  m_painter->moveTo(calculateRealX(dataset_[0].x()), calculateRealY(dataset_[0].y()));
   for (int i = 1; i < size; i++)
-    m_painter->lineTo(calculateRealX(dataset_[i].x()),
-                      calculateRealY(dataset_[i].y()));
+    m_painter->lineTo(calculateRealX(dataset_[i].x()), calculateRealY(dataset_[i].y()));
 
   m_painter->lineTo(w, h);
   m_painter->lineTo(calculateRealX(dataset_[0].x()), h);
@@ -46,10 +58,8 @@ void TimeSeriesGraphPainter::paint(QNanoPainter *m_painter) {
   // Draw baseline
   if (show_baseline_) {
     m_painter->beginPath();
-    m_painter->moveTo(calculateRealX(dataset_[0].x()),
-                      calculateRealY(baseline_value_));
-    m_painter->lineTo(calculateRealX(dataset_[size - 1].x()),
-                      calculateRealY(baseline_value_));
+    m_painter->moveTo(calculateRealX(dataset_[0].x()), calculateRealY(baseline_value_));
+    m_painter->lineTo(calculateRealX(dataset_[size - 1].x()), calculateRealY(baseline_value_));
     m_painter->setLineWidth(1.0f);
     m_painter->setStrokeStyle(baseline_color_);
     m_painter->stroke();
@@ -59,8 +69,7 @@ void TimeSeriesGraphPainter::paint(QNanoPainter *m_painter) {
 void TimeSeriesGraphPainter::synchronize(QNanoQuickItem *item) {
   TimeSeriesGraph *realItem = static_cast<TimeSeriesGraph *>(item);
 
-  if (!realItem)
-    return;
+  if (!realItem) return;
 
   dataset_ = realItem->GetDataset();
   baseline_value_ = realItem->GetBaselineValue();
@@ -68,10 +77,8 @@ void TimeSeriesGraphPainter::synchronize(QNanoQuickItem *item) {
   min_value_ = realItem->GetMinValue();
   max_value_ = realItem->GetMaxValue();
   range_in_sec = realItem->GetRangeInSeconds();
-  color_line_ = QNanoColor(
-      realItem->GetLineColor().red(), realItem->GetLineColor().green(),
-      realItem->GetLineColor().blue(), realItem->GetLineColor().alpha());
-  color_fill_ = QNanoColor(
-      realItem->GetAreaColor().red(), realItem->GetAreaColor().green(),
-      realItem->GetAreaColor().blue(), realItem->GetAreaColor().alpha());
+  color_line_ = QNanoColor(realItem->GetLineColor().red(), realItem->GetLineColor().green(),
+                           realItem->GetLineColor().blue(), realItem->GetLineColor().alpha());
+  color_fill_ = QNanoColor(realItem->GetAreaColor().red(), realItem->GetAreaColor().green(),
+                           realItem->GetAreaColor().blue(), realItem->GetAreaColor().alpha());
 }

@@ -1,22 +1,36 @@
-#ifndef PATIENT_DETACHED_TEST_H_
-#define PATIENT_DETACHED_TEST_H_
+/* Copyright 2020-2021, RespiraWorks
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+#pragma once
+
+#include <QCoreApplication>
+#include <QString>
+#include <QtTest>
 
 #include "breath_signals.h"
 #include "chrono.h"
 #include "network_protocol.pb.h"
 #include "patient_detached_alarm.h"
 
-#include <QCoreApplication>
-#include <QString>
-#include <QtTest>
-
 class PatientDetachedAlarmTest : public QObject {
   Q_OBJECT
-public:
+ public:
   PatientDetachedAlarmTest() = default;
   ~PatientDetachedAlarmTest() = default;
 
-private slots:
+ private slots:
   void initTestCase() {}
   void cleanupTestCase() {}
 
@@ -57,10 +71,8 @@ private slots:
     QVERIFY(alarm.IsAudioActive());
   }
 
-private:
-  SteadyInstant t(int seconds) const {
-    return base_ + DurationMs(1000 * seconds);
-  }
+ private:
+  SteadyInstant t(int seconds) const { return base_ + DurationMs(1000 * seconds); }
   ControllerStatus flow_correction(float ml_per_sec) const {
     ControllerStatus res;
     res.sensor_readings.flow_correction_ml_per_min = ml_per_sec * 60;
@@ -69,5 +81,3 @@ private:
 
   SteadyInstant base_ = SteadyClock::now();
 };
-
-#endif // PATIENT_DETACHED_TEST_H_

@@ -1,26 +1,40 @@
-#ifndef BREATH_SIGNALS_TEST_H_
-#define BREATH_SIGNALS_TEST_H_
+/* Copyright 2020-2021, RespiraWorks
 
-#include "breath_signals.h"
-#include "network_protocol.pb.h"
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+#pragma once
 
 #include <QCoreApplication>
 #include <QtTest>
 
+#include "breath_signals.h"
+#include "network_protocol.pb.h"
+
 class BreathSignalsTest : public QObject {
   Q_OBJECT
-public:
+ public:
   BreathSignalsTest() = default;
   ~BreathSignalsTest() = default;
 
-private slots:
+ private slots:
   void initTestCase() {}
   void cleanupTestCase() {}
 
   void testPipAndPeep() {
     SteadyInstant now = SteadyClock::now();
     auto pressure = [](uint64_t breath_id, float p) -> ControllerStatus {
-      ControllerStatus res;
+      ControllerStatus res = ControllerStatus_init_zero;
       res.sensor_readings.breath_id = breath_id;
       res.sensor_readings.patient_pressure_cm_h2o = p;
       return res;
@@ -51,7 +65,9 @@ private slots:
 
   void testRr() {
     auto breath = [](uint64_t breath_id) -> ControllerStatus {
-      return {.sensor_readings = {.breath_id = breath_id}};
+      ControllerStatus res = ControllerStatus_init_zero;
+      res.sensor_readings.breath_id = breath_id;
+      return res;
     };
     SteadyInstant now = SteadyClock::now();
     auto ms = [=](int millis) { return now + DurationMs(millis); };
@@ -93,5 +109,3 @@ private slots:
     QCOMPARE(30, b.rr().value_or(0.0));
   }
 };
-
-#endif // BREATH_SIGNALS_TEST_H_

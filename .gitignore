@@ -12,7 +12,8 @@ software/controller/.gitignore
 software/common/.gitignore
 
 #IDE
-CMakeLists*
+software/controller/CMakeLists*
+software/common/CMakeLists*
 cmake-build-*/
 .idea/
 .idea

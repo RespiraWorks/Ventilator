@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/sounds">
+        <file>alarm_high.wav</file>
+        <file>alarm_low.wav</file>
+        <file>alarm_medium.wav</file>
+    </qresource>
+</RCC>

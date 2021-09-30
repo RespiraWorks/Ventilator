@@ -42,18 +42,21 @@ EXIT_SUCCESS=0
 COVERAGE_INPUT_DIR=build/tests
 COVERAGE_OUTPUT_DIR=coverage_reports
 
+QMAKE_ALIAS="qmake -qt=qt5"
+
 #########
 # UTILS #
 #########
 
 print_help() {
     cat <<EOF
-RespiraWorks Ventilator UI build utilities.
-The following options are provided:
+RespiraWorks Ventilator UI build & test utilities.
+
+The following options are available:
   install       Install dependencies for your platform [$PLATFORM]
   clean         Clean build directory and de-initialize git submodules
   build         Build the gui to /build, options:
-        [--relase/--debug] - what it says
+        [--relase/--debug] - what it says (default=release)
         [-f]               - force run, even with root privileges
         [-j]               - parallel build
         [--no-checks]      - do not run static checks (yes, it's to annoy you!)
@@ -141,6 +144,101 @@ launch_browser() {
   python -m webbrowser "${COVERAGE_OUTPUT_DIR}/index.html"
 }
 
+install_linux() {
+  # Last tuned for Ubuntu 2021.04 Hirsute
+  apt-get update
+  apt-get install -y \
+          git \
+          build-essential \
+          qt5-qmake \
+          qtchooser \
+          qtbase5-dev \
+          qtbase5-dev-tools \
+          qtmultimedia5-dev \
+          qtdeclarative5-dev \
+          qtdeclarative5-dev-tools \
+          qtquickcontrols2-5-dev \
+          libqt5serialport5 \
+          libqt5serialport5-dev \
+          libqt5multimedia5 \
+          libqt5multimedia5-plugins \
+          libqt5multimediaquick5 \
+          libqt5multimediawidgets5 \
+          qml-module-qtcharts \
+          qml-module-qtquick-controls \
+          qml-module-qtquick-controls2 \
+          qml-module-qtmultimedia \
+          pulseaudio \
+          xvfb \
+          bear \
+          cppcheck \
+          lcov \
+          clang-tidy
+}
+
+checks_pre() {
+  #Should happen in the build directory
+  cppcheck -ithird_party -ibuild .
+}
+
+checks_post() {
+  #Should happen in the build directory
+
+  cppcheck --project=compile_commands.json \
+           -i ../../src/third_party \
+           -i ../../../common/third_party \
+           .
+
+  CLANG_TIDY_VERSION=$(echo "$(clang-tidy --version | sed -n 2p)" | awk -F[" ".] '{print $5}')
+  if [ "$CLANG_TIDY_VERSION" = "6" ]; then
+    run-clang-tidy-6.0.py -p .
+  else
+    eval "run-clang-tidy-${CLANG_TIDY_VERSION}.py"
+  fi
+}
+
+build_configure() {
+  config_type=$1
+  will_need_checks=$2
+
+  create_clean_directory build
+  $QMAKE_ALIAS -unset QMAKEFEATURES
+  git submodule update --init --recursive
+
+  if [ "$will_need_checks" == "yes" ]; then
+    checks_pre
+  fi
+
+  pushd build
+  $QMAKE_ALIAS CONFIG+=${config_type} ..
+  popd
+}
+
+build_with_bear() {
+  j_opt=$1
+
+  bear_opt=""
+  if [ -n "$VERBOSE" ]; then
+    bear --version
+    bear --help
+    bear_opt="--verbose"
+  fi
+
+  pushd build
+  bear $bear_opt -- make $j_opt
+  checks_post
+  popd
+}
+
+build_with_make() {
+  j_opt=$1
+
+  pushd build
+  make $j_opt
+  popd
+}
+
+
 ########
 # HELP #
 ########
@@ -155,42 +253,18 @@ if [ "$1" == "help" ] || [ "$1" == "-h" ]; then
 elif [ "$1" == "install" ]; then
   if [ "$PLATFORM" == "Darwin" ]; then
     brew install qt5
-  fi
-
-  if [ "$PLATFORM" == "Linux" ]; then
+    exit $EXIT_SUCCESS
+  elif [ "$PLATFORM" == "Linux" ]; then
     if [ "$EUID" -ne 0 ]; then
       echo "Please run install with root privileges!"
-      exit 1
+      exit $EXIT_FAILURE
     fi
-
-    apt-get update &&
-      apt-get install -y \
-        build-essential \
-        git \
-        qt5-default \
-        qtbase5-dev-tools \
-        qtdeclarative5-dev \
-        qtmultimedia5-dev \
-        libqt5multimediawidgets5 \
-        libqt5multimedia5 \
-        libqt5multimedia5-plugins \
-        libqt5multimediaquick5 \
-        pulseaudio \
-        qml-module-qtcharts \
-        qtquickcontrols2-5-dev \
-        qml-module-qtquick-controls \
-        qml-module-qtquick-controls2 \
-        qml-module-qtmultimedia \
-        libqt5serialport5-dev \
-        libqt5serialport5 \
-        qtdeclarative5-dev-tools \
-        xvfb \
-	      bear \
-	      cppcheck \
-	      lcov \
-	      clang-tidy
+    install_linux
+    exit $EXIT_SUCCESS
+  else
+    echo "Unsupported platform: ${PLATFORM}"
+    exit $EXIT_FAILURE
   fi
-  exit $EXIT_SUCCESS
 
 #########
 # CLEAN #
@@ -198,8 +272,8 @@ elif [ "$1" == "install" ]; then
 elif [ "$1" == "clean" ]; then
   clean_dir build
   clean_dir "$COVERAGE_OUTPUT_DIR"
-  qmake -unset QMAKEFEATURES
-  git submodule deinit .
+  $QMAKE_ALIAS -unset QMAKEFEATURES
+  git submodule deinit -f .
   exit $EXIT_SUCCESS
 
 #########
@@ -207,18 +281,15 @@ elif [ "$1" == "clean" ]; then
 #########
 elif [ "$1" == "build" ]; then
 
+  #TODO: what if it's one of the later params?
   if [ "$EUID" -eq 0 ] && [ "$2" != "-f" ]; then
     echo "Please do not run build with root privileges!"
     exit $EXIT_FAILURE
   fi
 
-  create_clean_directory build
-  qmake -unset QMAKEFEATURES
-  git submodule update --init --recursive
-
-  config_opt="CONFIG+=release"
+  config_type="release"
   if [ "$2" == "--debug" ] || [ "$3" == "--debug" ] || [ "$4" == "--debug" ]; then
-    config_opt="CONFIG+=debug"
+    config_type="debug"
   fi
 
   j_opt=""
@@ -226,28 +297,19 @@ elif [ "$1" == "build" ]; then
     j_opt="-j"
   fi
 
-  ## Does this have to happen up here or can it go with the other checks after build?
-  if [ "$2" != "--no-checks" ] && [ "$3" != "--no-checks" ] && [ "$4" != "--no-checks" ]; then
-    cppcheck -ithird_party -ibuild .
+  checks_opt="yes"
+  if [ "$2" == "--no-checks" ] || [ "$3" == "--no-checks" ] || [ "$4" == "--no-checks" ]; then
+    checks_opt="no"
   fi
 
-  pushd build
+  build_configure $config_type $checks_opt
 
-  qmake $config_opt ..
-  bear make $j_opt
-
-  if [ "$2" != "--no-checks" ] && [ "$3" != "--no-checks" ] && [ "$4" != "--no-checks" ]; then
-    cppcheck --project=compile_commands.json -i ../../src/third_party -i ../../../common/third_party .
-
-    CLANG_TIDY_VERSION=$(echo "$(clang-tidy --version | sed -n 2p)" | awk -F[" ".] '{print $5}')
-    if [ "$CLANG_TIDY_VERSION" = "6" ]; then
-      run-clang-tidy-6.0.py -p .
-    else
-      eval "run-clang-tidy-${CLANG_TIDY_VERSION}.py"
-    fi
+  if [ "$checks_opt" == "yes" ]; then
+    build_with_bear $j_opt
+  else
+    build_with_make $j_opt
   fi
 
-  popd
   exit $EXIT_SUCCESS
 
 ########
@@ -255,6 +317,7 @@ elif [ "$1" == "build" ]; then
 ########
 elif [ "$1" == "test" ]; then
 
+  #TODO: what if it's one of the later params?
   if [ "$EUID" -eq 0 ] && [ "$2" != "-f" ]; then
     echo "Please do not run tests with root privileges!"
     exit $EXIT_FAILURE
@@ -264,8 +327,7 @@ elif [ "$1" == "test" ]; then
 
   if [ "$PLATFORM" == "Darwin" ]; then
     make check
-  fi
-  if [ "$PLATFORM" == "Linux" ]; then
+  elif [ "$PLATFORM" == "Linux" ]; then
     if [ "$2" == "-x" ] || [ "$3" == "-x" ] || [ "$4" == "-x" ]; then
       Xvfb :1 &
       DISPLAY=:1 make check
@@ -286,7 +348,6 @@ elif [ "$1" == "test" ]; then
 ###################
 elif [ "$1" == "cov_upload" ]; then
   upload_coverage_reports
-
   exit $EXIT_SUCCESS
 
 #######
@@ -301,11 +362,11 @@ elif [ "$1" == "run" ]; then
 
   pushd build/app
 
+  # If -f was used, it should be discarded before calling app
   if [ "$PLATFORM" == "Darwin" ]; then
     ./ProjectVentilatorGUI.app/Contents/MacOS/ProjectVentilatorGUI "${@:2}"
     exit $EXIT_SUCCESS
-  fi
-  if [ "$PLATFORM" == "Linux" ]; then
+  elif [ "$PLATFORM" == "Linux" ]; then
     ./ProjectVentilatorGUI "${@:2}"
     exit $EXIT_SUCCESS
   fi

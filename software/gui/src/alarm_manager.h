@@ -1,5 +1,23 @@
-#ifndef ALARM_MANAGER_H_
-#define ALARM_MANAGER_H_
+/* Copyright 2020-2021, RespiraWorks
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+#pragma once
+
+#include <QDebug>
+#include <QObject>
+#include <QString>
 
 #include "chrono.h"
 #include "latching_alarm.h"
@@ -7,17 +25,12 @@
 #include "pip_exceeded_alarm.h"
 #include "pip_not_reached_alarm.h"
 
-#include <QDebug>
-#include <QObject>
-#include <QString>
-
 class AlarmManager : public QObject {
   Q_OBJECT
-public:
+ public:
   AlarmManager() {
     for (auto *alarm : alarms_) {
-      QObject::connect(alarm, &LatchingAlarm::updated, this,
-                       &AlarmManager::updated);
+      QObject::connect(alarm, &LatchingAlarm::updated, this, &AlarmManager::updated);
     }
   }
 
@@ -28,18 +41,17 @@ public:
     }
   }
 
-  Q_PROPERTY(LatchingAlarm *highestPriorityActiveAlarm READ
-                 GetHighestPriorityActiveAlarm NOTIFY updated)
-  Q_PROPERTY(LatchingAlarm *highestPrioritySilencedAlarm READ
-                 GetHighestPrioritySilencedAlarm NOTIFY updated)
+  Q_PROPERTY(
+      LatchingAlarm *highestPriorityActiveAlarm READ GetHighestPriorityActiveAlarm NOTIFY updated)
+  Q_PROPERTY(LatchingAlarm *highestPrioritySilencedAlarm READ GetHighestPrioritySilencedAlarm NOTIFY
+                 updated)
   Q_PROPERTY(int numActiveAlarms READ GetNumActiveAlarms NOTIFY updated)
   Q_PROPERTY(int numSilencedAlarms READ GetNumSilencedAlarms NOTIFY updated)
 
   LatchingAlarm *GetHighestPriorityActiveAlarm() {
     LatchingAlarm *res = nullptr;
     for (auto *alarm : alarms_) {
-      if (res == nullptr || alarm->GetEffectiveAudioPriority() >
-                                res->GetEffectiveAudioPriority()) {
+      if (res == nullptr || alarm->GetEffectiveAudioPriority() > res->GetEffectiveAudioPriority()) {
         res = alarm;
       }
     }
@@ -49,10 +61,8 @@ public:
   LatchingAlarm *GetHighestPrioritySilencedAlarm() {
     LatchingAlarm *res = nullptr;
     for (auto *alarm : alarms_) {
-      if (!alarm->GetSilencedUntil().has_value())
-        continue;
-      if (res == nullptr ||
-          alarm->GetNominalPriority() > res->GetNominalPriority()) {
+      if (!alarm->GetSilencedUntil().has_value()) continue;
+      if (res == nullptr || alarm->GetNominalPriority() > res->GetNominalPriority()) {
         res = alarm;
       }
     }
@@ -62,8 +72,7 @@ public:
   int GetNumActiveAlarms() const {
     int res = 0;
     for (auto *alarm : alarms_) {
-      if (alarm->IsAudioActive())
-        ++res;
+      if (alarm->IsAudioActive()) ++res;
     }
     return res;
   }
@@ -71,8 +80,7 @@ public:
   int GetNumSilencedAlarms() const {
     int res = 0;
     for (auto *alarm : alarms_) {
-      if (alarm->GetSilencedUntil().has_value())
-        ++res;
+      if (alarm->GetSilencedUntil().has_value()) ++res;
     }
     return res;
   }
@@ -81,30 +89,21 @@ public:
     GetHighestPriorityActiveAlarm()->Acknowledge(SteadyClock::now());
   }
 
-  Q_PROPERTY(
-      PipExceededAlarm *pipExceededAlarm READ get_pip_exceeded_alarm CONSTANT)
-  Q_PROPERTY(PipNotReachedAlarm *pipNotReachedAlarm READ
-                 get_pip_not_reached_alarm CONSTANT)
-  Q_PROPERTY(PatientDetachedAlarm *patientDetachedAlarm READ
-                 get_patient_detached_alarm CONSTANT)
+  Q_PROPERTY(PipExceededAlarm *pipExceededAlarm READ get_pip_exceeded_alarm CONSTANT)
+  Q_PROPERTY(PipNotReachedAlarm *pipNotReachedAlarm READ get_pip_not_reached_alarm CONSTANT)
+  Q_PROPERTY(PatientDetachedAlarm *patientDetachedAlarm READ get_patient_detached_alarm CONSTANT)
 
   PipExceededAlarm *get_pip_exceeded_alarm() { return &pip_exceeded_alarm_; }
-  PipNotReachedAlarm *get_pip_not_reached_alarm() {
-    return &pip_not_reached_alarm_;
-  }
-  PatientDetachedAlarm *get_patient_detached_alarm() {
-    return &patient_detached_alarm_;
-  }
+  PipNotReachedAlarm *get_pip_not_reached_alarm() { return &pip_not_reached_alarm_; }
+  PatientDetachedAlarm *get_patient_detached_alarm() { return &patient_detached_alarm_; }
 
-signals:
+ signals:
   void updated();
 
-private:
+ private:
   PipExceededAlarm pip_exceeded_alarm_;
   PipNotReachedAlarm pip_not_reached_alarm_;
   PatientDetachedAlarm patient_detached_alarm_;
-  std::vector<LatchingAlarm *> alarms_{
-      &pip_exceeded_alarm_, &pip_not_reached_alarm_, &patient_detached_alarm_};
+  std::vector<LatchingAlarm *> alarms_{&pip_exceeded_alarm_, &pip_not_reached_alarm_,
+                                       &patient_detached_alarm_};
 };
-
-#endif // ALARM_MANAGER_H_

@@ -1,11 +1,26 @@
-#ifndef TIME_SERIES_GRAPH_H_
-#define TIME_SERIES_GRAPH_H_
+/* Copyright 2020-2021, RespiraWorks
 
-#include "time_series_graph_painter.h"
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+#pragma once
+
 #include <QColor>
 #include <QPointF>
 #include <QQuickItem>
 #include <QVector>
+
+#include "time_series_graph_painter.h"
 
 /**
  * @brief The TimeSeriesGraph is an QuickItem used to display a time series.
@@ -13,29 +28,22 @@
 class TimeSeriesGraph : public QNanoQuickItem {
   Q_OBJECT
 
-  Q_PROPERTY(QVector<QPointF> dataset READ GetDataset WRITE SetDataset NOTIFY
-                 DatasetChanged)
+  Q_PROPERTY(QVector<QPointF> dataset READ GetDataset WRITE SetDataset NOTIFY DatasetChanged)
+  Q_PROPERTY(float minValue READ GetMinValue WRITE SetMinValue NOTIFY MinValueChanged)
+  Q_PROPERTY(float maxValue READ GetMaxValue WRITE SetMaxValue NOTIFY MaxValueChanged)
+  Q_PROPERTY(float rangeInSeconds READ GetRangeInSeconds WRITE SetRangeInSeconds NOTIFY
+                 RangeInSecondsChanged)
+  Q_PROPERTY(QColor lineColor READ GetLineColor WRITE SetLineColor NOTIFY LineColorChanged)
+  Q_PROPERTY(QColor areaColor READ GetAreaColor WRITE SetAreaColor NOTIFY AreaColorChanged)
   Q_PROPERTY(
-      float minValue READ GetMinValue WRITE SetMinValue NOTIFY MinValueChanged)
+      bool showBaseline READ GetShowBaseline WRITE SetShowBaseline NOTIFY ShowBaselineChanged)
   Q_PROPERTY(
-      float maxValue READ GetMaxValue WRITE SetMaxValue NOTIFY MaxValueChanged)
-  Q_PROPERTY(float rangeInSeconds READ GetRangeInSeconds WRITE SetRangeInSeconds
-                 NOTIFY RangeInSecondsChanged)
-  Q_PROPERTY(QColor lineColor READ GetLineColor WRITE SetLineColor NOTIFY
-                 LineColorChanged)
-  Q_PROPERTY(QColor areaColor READ GetAreaColor WRITE SetAreaColor NOTIFY
-                 AreaColorChanged)
-  Q_PROPERTY(bool showBaseline READ GetShowBaseline WRITE SetShowBaseline NOTIFY
-                 ShowBaselineChanged)
-  Q_PROPERTY(float baselineValue READ GetBaselineValue WRITE SetBaselineValue
-                 NOTIFY BaselineValueChanged)
+      float baselineValue READ GetBaselineValue WRITE SetBaselineValue NOTIFY BaselineValueChanged)
 
-public:
+ public:
   TimeSeriesGraph(){};
 
-  QNanoQuickItemPainter *createItemPainter() const {
-    return new TimeSeriesGraphPainter();
-  }
+  QNanoQuickItemPainter *createItemPainter() const { return new TimeSeriesGraphPainter(); }
 
   QVector<QPointF> GetDataset() const { return dataset_; };
 
@@ -56,7 +64,7 @@ public:
     }
   }
 
-public slots:
+ public slots:
 
   void SetBaselineValue(float baseline) {
     if (baseline_value_ != baseline) {
@@ -109,7 +117,7 @@ public slots:
     }
   }
 
-signals:
+ signals:
   void DatasetChanged();
   void MinValueChanged();
   void MaxValueChanged();
@@ -119,7 +127,7 @@ signals:
   void ShowBaselineChanged();
   void BaselineValueChanged();
 
-private:
+ private:
   QVector<QPointF> dataset_;
 
   QColor line_color_ = QColor(255, 255, 255, 255);
@@ -130,5 +138,3 @@ private:
   bool show_baseline_ = true;
   float baseline_value_ = 0;
 };
-
-#endif // TIME_SERIES_GRAPH_H_

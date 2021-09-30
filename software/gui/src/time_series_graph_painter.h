@@ -1,20 +1,35 @@
-#ifndef TIME_SERIES_GRAPH_PAINTER_H_
-#define TIME_SERIES_GRAPH_PAINTER_H_
+/* Copyright 2020-2021, RespiraWorks
 
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+#pragma once
+
+#include <QQuickItem>
+
+#include "qnanocolor.h"
 #include "qnanoquickitem.h"
 #include "qnanoquickitempainter.h"
-#include <QQuickItem>
-#include <qnanocolor.h>
 
 class TimeSeriesGraphPainter : public QNanoQuickItemPainter {
-public:
+ public:
   TimeSeriesGraphPainter();
 
   void paint(QNanoPainter *p);
 
   void synchronize(QNanoQuickItem *item);
 
-private:
+ private:
   QVector<QPointF> dataset_;
 
   float max_value_ = 100;
@@ -40,5 +55,3 @@ private:
     return result;
   }
 };
-
-#endif // TIME_SERIES_GRAPH_PAINTER_H_

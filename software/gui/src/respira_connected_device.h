@@ -1,3 +1,23 @@
+/* Copyright 2020-2021, RespiraWorks
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+#pragma once
+
+#include <QSerialPort>
+#include <memory>
+
 #include "chrono.h"
 #include "connected_device.h"
 #include "logger.h"
@@ -5,8 +25,6 @@
 #include "pb_common.h"
 #include "pb_decode.h"
 #include "pb_encode.h"
-#include <QSerialPort>
-#include <memory>
 
 // Connects to system serial port, does nanopb serialization/deserialization
 // of GuiStatus and ControllerStatus and provides methods to send/receive
@@ -31,8 +49,7 @@ constexpr DurationMs INTER_FRAME_TIMEOUT_MS = DurationMs(42);
 constexpr DurationMs WRITE_TIMEOUT_MS = DurationMs(15);
 
 class RespiraConnectedDevice : public ConnectedDevice {
-
-public:
+ public:
   RespiraConnectedDevice(QString portName) : serialPortName_(portName) {}
 
   ~RespiraConnectedDevice() {
@@ -44,8 +61,7 @@ public:
   // Creates the QSerialPort in the current thread context.
   // We can't provide it from outside context because of Qt mechanisms.
   bool createPortMaybe() {
-    if (serialPort_ != nullptr)
-      return true;
+    if (serialPort_ != nullptr) return true;
 
     serialPort_ = std::make_unique<QSerialPort>();
     serialPort_->setPortName(serialPortName_);
@@ -63,8 +79,7 @@ public:
 
   bool SendGuiStatus(const GuiStatus &gui_status) override {
     if (!createPortMaybe()) {
-      CRIT("Could not open serial port for sending {}",
-           serialPortName_.toStdString());
+      CRIT("Could not open serial port for sending {}", serialPortName_.toStdString());
       // TODO Raise an Alert?
       return false;
     }
@@ -90,8 +105,7 @@ public:
 
   bool ReceiveControllerStatus(ControllerStatus *controller_status) override {
     if (!createPortMaybe()) {
-      CRIT("Could not open serial port for reading {}",
-           serialPortName_.toStdString());
+      CRIT("Could not open serial port for reading {}", serialPortName_.toStdString());
       // TODO Raise an Alert?
       return false;
     }
@@ -111,8 +125,8 @@ public:
       responseData += serialPort_->readAll();
     }
 
-    pb_istream_t stream = pb_istream_from_buffer(
-        (const uint8_t *)responseData.data(), responseData.length());
+    pb_istream_t stream =
+        pb_istream_from_buffer((const uint8_t *)responseData.data(), responseData.length());
 
     if (!pb_decode(&stream, ControllerStatus_fields, controller_status)) {
       CRIT("Could not de-serialize received data as Controller Status");
@@ -123,7 +137,7 @@ public:
     return true;
   }
 
-private:
+ private:
   std::unique_ptr<QSerialPort> serialPort_ = nullptr;
   QString serialPortName_;
 };

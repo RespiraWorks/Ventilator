@@ -65,8 +65,8 @@ add_custom_target(everything DEPENDS
   )
 #create_coverage_targets(
 #  coverage
-#  run_unit_tests
+#  run_gui_backend_tests
 #  ${PROJECT_BINARY_DIR}
-#  ${CMAKE_SOURCE_DIR}/source/
-#  ${PROJECT_BINARY_DIR}/tests/coverage
+#  ${CMAKE_SOURCE_DIR}/src/
+#  ${CMAKE_SOURCE_DIR}/coverage_reports
 #)

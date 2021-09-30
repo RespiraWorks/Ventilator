@@ -64,3 +64,5 @@ target_link_libraries(
   PUBLIC Qt5::Quick
   PUBLIC Qt5::Multimedia
 )
+
+enable_coverage(${this_target})

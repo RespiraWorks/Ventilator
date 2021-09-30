@@ -37,6 +37,8 @@ target_link_libraries(
   PRIVATE Qt5::Test
 )
 
+enable_coverage(${this_target})
+
 # Creates command dependent on existence of target
 add_custom_target(run_gui_backend_tests
   COMMAND $<TARGET_FILE:${this_target}>

@@ -17,6 +17,7 @@ limitations under the License.
 
 #include <spdlog/spdlog.h>
 
+#include <cassert>  /// Somehow spdlog needs this but fails to bring it
 #include <string>
 
 #pragma GCC system_header

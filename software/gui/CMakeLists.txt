@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.7.0 FATAL_ERROR)
-project(ventiltor_gui
+project(ventilator_gui
     LANGUAGES CXX C
     VERSION 0.0.1
     )
@@ -57,19 +57,16 @@ add_definitions(-DGIT_VERSION="${GIT_SHA1}")
 add_subdirectory(src)
 add_subdirectory(app)
 
-#include(FindGTestFix)
-#if(GTest_FOUND)
-#  add_subdirectory(tests)
-#  add_custom_target(everything DEPENDS
-#    all_tests
-#    acquire
-#    daquiri
-#    )
-#  create_coverage_targets(
-#    coverage
-#    run_unit_tests
-#    ${PROJECT_BINARY_DIR}
-#    ${CMAKE_SOURCE_DIR}/source/
-#    ${PROJECT_BINARY_DIR}/tests/coverage
-#  )
-#endif()
+enable_testing()
+add_subdirectory(tests)
+add_custom_target(everything DEPENDS
+  all_tests
+  ventilator_gui_app
+  )
+#create_coverage_targets(
+#  coverage
+#  run_unit_tests
+#  ${PROJECT_BINARY_DIR}
+#  ${CMAKE_SOURCE_DIR}/source/
+#  ${PROJECT_BINARY_DIR}/tests/coverage
+#)

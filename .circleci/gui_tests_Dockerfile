@@ -19,5 +19,5 @@ CMD /bin/bash \
     FORCED_ROOT=1 ./gui.sh build -j --no-checks && \
     FORCED_ROOT=1 ./gui.sh run -x --startup-only && \
     ./gui.sh clean && \
-    FORCED_ROOT=1 ./gui.sh test && \
+    FORCED_ROOT=1 ./gui.sh test -x && \
     ./gui.sh cov_upload

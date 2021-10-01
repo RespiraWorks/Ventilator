@@ -241,7 +241,7 @@ build_with_make() {
   j_opt=$1
 
   pushd build
-  make $j_opt
+  make ventilator_gui_app $j_opt
   popd
 }
 
@@ -341,17 +341,14 @@ elif [ "$1" == "test" ]; then
     make run_tests
   elif [ "$PLATFORM" == "Linux" ]; then
     if [ "$2" == "-x" ] || [ "$3" == "-x" ] || [ "$4" == "-x" ]; then
-      Xvfb :1 &
-      DISPLAY=:1 make run_tests -j3
+      xvfb-run make run_tests -j3
     else
       make run_tests -j3
     fi
   fi
   popd
 
-  if [ "$2" != "--no-cov" ] && [ "$3" != "--no-cov" ] && [ "$4" != "--no-cov" ]; then
-    generate_coverage_reports
-  fi
+  generate_coverage_reports
 
   exit $EXIT_SUCCESS
 

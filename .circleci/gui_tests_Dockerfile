@@ -15,10 +15,9 @@ WORKDIR /root/Ventilator/software/gui
 
 ##### TODO: move test run app in headless mode
 CMD /bin/bash \
-    export FORCED_ROOT=1 \
     ./gui.sh install && \
-    ./gui.sh build -j --no-checks && \
-    ./gui.sh run -x --startup-only && \
+    FORCED_ROOT=1 ./gui.sh build -j --no-checks && \
+    FORCED_ROOT=1 ./gui.sh run -x --startup-only && \
     ./gui.sh clean && \
-    ./gui.sh test && \
+    FORCED_ROOT=1 ./gui.sh test && \
     ./gui.sh cov_upload

@@ -117,9 +117,10 @@ generate_coverage_reports() {
        "*/common/*" \
        "*/tests/*" \
        "*spdlog*" \
+       "*fmt*" \
        "/usr/include*"
 
-  rm "$COVERAGE_OUTPUT_DIR/coverage.info"
+  mv "$COVERAGE_OUTPUT_DIR/coverage.info" "$COVERAGE_OUTPUT_DIR/coverage_untrimmed.info"
   mv "$COVERAGE_OUTPUT_DIR/coverage_trimmed.info" "$COVERAGE_OUTPUT_DIR/coverage.info"
 
   genhtml ${QUIET} "$COVERAGE_OUTPUT_DIR/coverage.info" \
@@ -150,8 +151,7 @@ install_linux() {
   apt-get install -y \
           git \
           build-essential \
-          qt5-qmake \
-          qtchooser \
+          cmake \
           qtbase5-dev \
           qtbase5-dev-tools \
           qtmultimedia5-dev \
@@ -202,7 +202,6 @@ build_configure() {
   will_need_checks=$2
 
   create_clean_directory build
-  $QMAKE_ALIAS -unset QMAKEFEATURES
   git submodule update --init --recursive
 
   if [ "$will_need_checks" == "yes" ]; then
@@ -210,7 +209,7 @@ build_configure() {
   fi
 
   pushd build
-  $QMAKE_ALIAS CONFIG+=${config_type} ..
+  cmake -DCMAKE_BUILD_TYPE=${config_type} ..
   popd
 }
 
@@ -287,17 +286,17 @@ elif [ "$1" == "build" ]; then
     exit $EXIT_FAILURE
   fi
 
-  config_type="release"
+  config_type="Release"
   if [ "$2" == "--debug" ] || [ "$3" == "--debug" ] || [ "$4" == "--debug" ]; then
-    config_type="debug"
+    config_type="Debug"
   fi
 
   j_opt=""
   if [ "$2" == "-j" ] || [ "$3" == "-j" ] || [ "$4" == "-j" ]; then
-    j_opt="-j"
+    j_opt="-j3"
   fi
 
-  checks_opt="yes"
+  checks_opt="no"
   if [ "$2" == "--no-checks" ] || [ "$3" == "--no-checks" ] || [ "$4" == "--no-checks" ]; then
     checks_opt="no"
   fi
@@ -323,16 +322,20 @@ elif [ "$1" == "test" ]; then
     exit $EXIT_FAILURE
   fi
 
+  create_clean_directory build
+  git submodule update --init --recursive
+
   pushd build
+  cmake -DCMAKE_BUILD_TYPE=Debug -DCOV=1 ..
 
   if [ "$PLATFORM" == "Darwin" ]; then
-    make check
+    make run_tests
   elif [ "$PLATFORM" == "Linux" ]; then
     if [ "$2" == "-x" ] || [ "$3" == "-x" ] || [ "$4" == "-x" ]; then
       Xvfb :1 &
-      DISPLAY=:1 make check
+      DISPLAY=:1 make run_tests -j3
     else
-      make check
+      make run_tests -j3
     fi
   fi
   popd
@@ -364,10 +367,10 @@ elif [ "$1" == "run" ]; then
 
   # If -f was used, it should be discarded before calling app
   if [ "$PLATFORM" == "Darwin" ]; then
-    ./ProjectVentilatorGUI.app/Contents/MacOS/ProjectVentilatorGUI "${@:2}"
+    ./bin/ventilator_gui_app "${@:2}"
     exit $EXIT_SUCCESS
   elif [ "$PLATFORM" == "Linux" ]; then
-    ./ProjectVentilatorGUI "${@:2}"
+    ./bin/ventilator_gui_app "${@:2}"
     exit $EXIT_SUCCESS
   fi
   popd

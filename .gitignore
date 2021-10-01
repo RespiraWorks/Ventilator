@@ -8,7 +8,6 @@ source/config/*
 *.user
 *.log
 !.gitignore
-software/gui/conan.cmake
 
 #IDE
 software/controller/CMakeLists*

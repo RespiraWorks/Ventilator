@@ -176,6 +176,14 @@ install_linux() {
           clang-tidy
 }
 
+configure_conan() {
+  conan profile new --detect default
+  conan profile update settings.compiler.libcxx=libstdc++11 default
+  conan remote add conan-center https://conan.bintray.com False -f
+  conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan False -f
+}
+
+
 checks_pre() {
   #Should happen in the build directory
   cppcheck -ithird_party -ibuild .
@@ -252,6 +260,7 @@ if [ "$1" == "help" ] || [ "$1" == "-h" ]; then
 elif [ "$1" == "install" ]; then
   if [ "$PLATFORM" == "Darwin" ]; then
     brew install qt5
+    configure_conan
     exit $EXIT_SUCCESS
   elif [ "$PLATFORM" == "Linux" ]; then
     if [ "$EUID" -ne 0 ]; then
@@ -259,6 +268,7 @@ elif [ "$1" == "install" ]; then
       exit $EXIT_FAILURE
     fi
     install_linux
+    configure_conan
     exit $EXIT_SUCCESS
   else
     echo "Unsupported platform: ${PLATFORM}"

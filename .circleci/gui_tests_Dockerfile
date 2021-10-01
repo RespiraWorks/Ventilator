@@ -5,7 +5,7 @@ FROM debian:buster
 RUN apt-get update && \
     apt-get install build-essential python-pip lcov git curl -y && \
     pip install -U pip && \
-    pip install codecov
+    pip install codecov conan
 
 WORKDIR /root/Ventilator
 COPY . ./

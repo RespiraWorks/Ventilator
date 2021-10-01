@@ -149,6 +149,7 @@ install_linux() {
   apt-get install -y \
           git \
           build-essential \
+          curl \
           cmake \
           qtbase5-dev \
           qtbase5-dev-tools \
@@ -167,6 +168,7 @@ install_linux() {
           qml-module-qtquick-controls2 \
           qml-module-qtmultimedia \
           pulseaudio \
+          python-pip \
           xvfb \
           bear \
           cppcheck \
@@ -373,8 +375,7 @@ elif [ "$1" == "run" ]; then
   pushd build
 
   if [ "$2" == "-x" ]; then
-    Xvfb :1 &
-    DISPLAY=:1 ./bin/ventilator_gui_app "${@:3}"
+    xvfb-run ./bin/ventilator_gui_app "${@:3}"
     exit $EXIT_SUCCESS
   else
     ./bin/ventilator_gui_app "${@:2}"

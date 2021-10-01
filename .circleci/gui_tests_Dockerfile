@@ -4,7 +4,7 @@ FROM debian:buster
 
 ##### TODO: move some of this to gui.sh script
 RUN apt-get update && \
-    apt-get install build-essential python-pip lcov git curl -y && \
+    apt-get install python-pip -y && \
     pip install -U pip && \
     pip install codecov conan
 

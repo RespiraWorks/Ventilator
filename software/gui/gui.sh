@@ -288,7 +288,7 @@ elif [ "$1" == "clean" ]; then
 elif [ "$1" == "build" ]; then
 
   #TODO: what if it's one of the later params?
-  if [ "$EUID" -eq 0 ] && [ "$2" != "-f" ]; then
+  if [ "$EUID" -eq 0 ] && [ -z "$FORCED_ROOT" ]; then
     echo "Please do not run build with root privileges!"
     exit $EXIT_FAILURE
   fi
@@ -324,13 +324,13 @@ elif [ "$1" == "build" ]; then
 elif [ "$1" == "test" ]; then
 
   #TODO: what if it's one of the later params?
-  if [ "$EUID" -eq 0 ] && [ "$2" != "-f" ]; then
+  if [ "$EUID" -eq 0 ] && [ -z "$FORCED_ROOT" ]; then
     echo "Please do not run tests with root privileges!"
     exit $EXIT_FAILURE
   fi
 
-  create_clean_directory build
   git submodule update --init --recursive
+  create_clean_directory build
 
   pushd build
   cmake -DCMAKE_BUILD_TYPE=Debug -DCOV=1 ..
@@ -365,12 +365,12 @@ elif [ "$1" == "cov_upload" ]; then
 #######
 elif [ "$1" == "run" ]; then
 
-  if [ "$EUID" -eq 0 ] && [ "$2" != "-f" ]; then
+  if [ "$EUID" -eq 0 ] && [ -z "$FORCED_ROOT" ]; then
     echo "Please do not run the app with root privileges!"
     exit $EXIT_FAILURE
   fi
 
-  pushd build/app
+  pushd build
 
   # If -f was used, it should be discarded before calling app
   if [ "$PLATFORM" == "Darwin" ]; then

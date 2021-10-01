@@ -2,6 +2,7 @@
 
 FROM debian:buster
 
+##### TODO: move some of this to gui.sh script
 RUN apt-get update && \
     apt-get install build-essential python-pip lcov git curl -y && \
     pip install -U pip && \
@@ -10,11 +11,14 @@ RUN apt-get update && \
 WORKDIR /root/Ventilator
 COPY . ./
 
-
 WORKDIR /root/Ventilator/software/gui
 
+##### TODO: move test run app in headless mode
 CMD /bin/bash \
+    export FORCED_ROOT=1 \
     ./gui.sh install && \
-    ./gui.sh build -f -j --no-checks && \
-    ./gui.sh test -f -x && \
+    ./gui.sh build -j --no-checks && \
+    Xvfb :1 & DISPLAY=:1 ./build/bin/ventilator_gui_app --startup-only
+    ./gui.sh clean && \
+    ./gui.sh test && \
     ./gui.sh cov_upload

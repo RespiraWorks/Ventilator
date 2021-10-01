@@ -172,6 +172,7 @@ install_linux() {
           xvfb \
           bear \
           cppcheck \
+          gcovr \
           lcov \
           clang-tidy
 }

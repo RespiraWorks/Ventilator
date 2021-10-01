@@ -21,8 +21,8 @@
 option(COV "Enable code coverage reporting for unit tests (if possible)." OFF)
 
 function(configure_coverage_gcc)
-  set(COVERAGE_COMPILE_FLAGS "-coverage -fprofile-arcs -fprofile-generate -ftest-coverage" PARENT_SCOPE)
-  set(COVERAGE_LINK_FLAGS "-g -O0 -lgcov -coverage -fprofile-generate -ftest-coverage" PARENT_SCOPE)
+  set(COVERAGE_COMPILE_FLAGS "-coverage -ftest-coverage" PARENT_SCOPE)
+  set(COVERAGE_LINK_FLAGS "-g -O0 -coverage -ftest-coverage" PARENT_SCOPE)
   find_program(COVERAGE_GCOV_PATH gcov) # IS NEVER USED!!!!
   find_program(COVERAGE_GCOVR_PATH gcovr PATHS ${CMAKE_CURRENT_LIST_DIR})
   if (NOT COVERAGE_GCOV_PATH)

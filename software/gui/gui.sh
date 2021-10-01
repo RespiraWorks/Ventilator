@@ -118,7 +118,7 @@ generate_coverage_reports() {
        "*fmt*" \
        "/usr/include*"
 
-  mv "$COVERAGE_OUTPUT_DIR/coverage.info" "$COVERAGE_OUTPUT_DIR/coverage_untrimmed.info"
+  rem "$COVERAGE_OUTPUT_DIR/coverage.info"
   mv "$COVERAGE_OUTPUT_DIR/coverage_trimmed.info" "$COVERAGE_OUTPUT_DIR/coverage.info"
 
   genhtml ${QUIET} "$COVERAGE_OUTPUT_DIR/coverage.info" \

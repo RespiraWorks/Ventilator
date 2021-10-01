@@ -18,7 +18,7 @@ CMD /bin/bash \
     export FORCED_ROOT=1 \
     ./gui.sh install && \
     ./gui.sh build -j --no-checks && \
-    Xvfb :1 & DISPLAY=:1 ./build/bin/ventilator_gui_app --startup-only
+    Xvfb :1 & DISPLAY=:1 ./build/bin/ventilator_gui_app --startup-only \
     ./gui.sh clean && \
     ./gui.sh test && \
     ./gui.sh cov_upload

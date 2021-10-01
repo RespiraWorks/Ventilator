@@ -28,7 +28,6 @@ if(${CONAN} MATCHES "AUTO")
       BUILD_TYPE "None"
       BUILD outdated)
   message(STATUS "Deleting Conan-generated Findqplot.cmake to use package-provided modules")
-  file(REMOVE ${CMAKE_BINARY_DIR}/Findqplot.cmake)
 elseif(${CONAN} MATCHES "MANUAL")
   if(EXISTS "${CMAKE_BINARY_DIR}/conanbuildinfo.cmake")
     include("${CMAKE_BINARY_DIR}/conanbuildinfo.cmake")
@@ -59,14 +58,8 @@ add_subdirectory(app)
 
 enable_testing()
 add_subdirectory(tests)
+
 add_custom_target(everything DEPENDS
   all_tests
   ventilator_gui_app
   )
-#create_coverage_targets(
-#  coverage
-#  run_gui_backend_tests
-#  ${PROJECT_BINARY_DIR}
-#  ${CMAKE_SOURCE_DIR}/src/
-#  ${CMAKE_SOURCE_DIR}/coverage_reports
-#)

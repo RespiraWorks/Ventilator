@@ -42,8 +42,6 @@ EXIT_SUCCESS=0
 COVERAGE_INPUT_DIR=build/tests
 COVERAGE_OUTPUT_DIR=coverage_reports
 
-QMAKE_ALIAS="qmake -qt=qt5"
-
 #########
 # UTILS #
 #########
@@ -281,7 +279,6 @@ elif [ "$1" == "install" ]; then
 elif [ "$1" == "clean" ]; then
   clean_dir build
   clean_dir "$COVERAGE_OUTPUT_DIR"
-  $QMAKE_ALIAS -unset QMAKEFEATURES
   git submodule deinit -f .
   exit $EXIT_SUCCESS
 

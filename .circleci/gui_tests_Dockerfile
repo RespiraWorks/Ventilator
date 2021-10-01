@@ -6,7 +6,7 @@ FROM debian:buster
 RUN apt-get update && \
     apt-get install python-pip -y && \
     pip install -U pip && \
-    pip install codecov conan
+    pip install conan
 
 WORKDIR /root/Ventilator
 COPY . ./
@@ -18,6 +18,5 @@ CMD /bin/bash \
     ./gui.sh install && \
     FORCED_ROOT=1 ./gui.sh build -j --no-checks && \
     FORCED_ROOT=1 ./gui.sh run -x --startup-only && \
-    ./gui.sh clean && \
     FORCED_ROOT=1 ./gui.sh test -x && \
     ./gui.sh cov_upload

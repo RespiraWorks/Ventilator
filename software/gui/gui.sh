@@ -372,11 +372,11 @@ elif [ "$1" == "run" ]; then
 
   pushd build
 
-  # If -f was used, it should be discarded before calling app
-  if [ "$PLATFORM" == "Darwin" ]; then
-    ./bin/ventilator_gui_app "${@:2}"
+  if [ "$2" == "-x" ]; then
+    Xvfb :1 &
+    DISPLAY=:1 ./bin/ventilator_gui_app "${@:3}"
     exit $EXIT_SUCCESS
-  elif [ "$PLATFORM" == "Linux" ]; then
+  else
     ./bin/ventilator_gui_app "${@:2}"
     exit $EXIT_SUCCESS
   fi

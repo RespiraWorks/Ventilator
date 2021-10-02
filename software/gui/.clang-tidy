@@ -1,0 +1,91 @@
+---
+# TODO(jkff): Re-enable google-readability-casting: it can be annoying, but it
+# can catch some nasty bugs. E.g. C-style casts happily cast a pointer to the
+# wrong type.
+Checks: >
+  *,
+  -*-magic-numbers,
+  -hicpp-*,
+  -cppcoreguidelines-*,
+  -fuchsia-*,
+  -clion-*,
+  -cert-*,
+  -readability-named-parameter,
+  -llvm-header-guard,
+  -google-readability-todo,
+  -misc-unused-parameters,
+  -*-braces-around-statements,
+  -google-readability-casting,
+  -readability-else-after-return,
+  -modernize-use-auto,
+  -modernize-use-trailing-return-type,
+  -modernize-deprecated-headers,
+  -llvm-include-order,
+  -modernize-avoid-c-arrays,
+  -readability-uppercase-literal-suffix,
+  -bugprone-narrowing-conversions,
+  -readability-isolate-declaration,
+  -readability-convert-member-functions-to-static,
+  -modernize-use-default-member-init,
+  -misc-non-private-member-variables-in-classes,
+  -readability-implicit-bool-conversion,
+  -modernize-use-using,
+  -modernize-use-nodiscard,
+  -readability-non-const-parameter,
+  -llvmlibc-callee-namespace,
+  -llvmlibc-restrict-system-libc-headers,
+  -llvmlibc-implementation-in-namespace
+
+# TODO: apply necessary code fixes so we can re-enable
+#WarningsAsErrors: '*'
+# This is OK because clang-tidy still displays the warnings
+
+# Naming style checks (readability-identifier-naming).
+CheckOptions:
+  - key:             readability-identifier-naming.ClassCase
+    value:           CamelCase
+  - key:             readability-identifier-naming.TypeAliasCase
+    value:           CamelCase
+  - key:             readability-identifier-naming.TypedefCase
+    value:           CamelCase
+  - key:             readability-identifier-naming.EnumCase
+    value:           CamelCase
+  - key:             readability-identifier-naming.NamespaceCase
+    value:           CamelCase
+  - key:             readability-identifier-naming.EnumConstantCase
+    value:           CamelCase
+  - key:             readability-identifier-naming.GlobalConstantCase
+    value:           CamelCase
+  - key:             readability-identifier-naming.StaticConstantCase
+    value:           CamelCase
+  - key:             readability-identifier-naming.StaticVariableCase
+    value:           CamelCase
+  - key:             readability-identifier-naming.MemberCase
+    value:           lower_case
+# We only require the "_" suffix for private and protected members in order to
+# allow struct members (which are public) to not use the suffix
+  - key:             readability-identifier-naming.PrivateMemberCase
+    value:           lower_case
+  - key:             readability-identifier-naming.PrivateMemberSuffix
+    value:           _
+  - key:             readability-identifier-naming.ProtectedMemberCase
+    value:           lower_case
+  - key:             readability-identifier-naming.ProtectedMemberSuffix
+    value:           _
+# static class members also require the suffix
+  - key:             readability-identifier-naming.ClassMemberCase
+    value:           lower_case
+  - key:             readability-identifier-naming.ClassMemberSuffix
+    value:           _
+  - key:             readability-identifier-naming.ParameterCase
+    value:           lower_case
+  - key:             readability-identifier-naming.VariableCase
+    value:           lower_case
+  - key:             readability-identifier-naming.MacroDefinitionCase
+    value:           UPPER_CASE
+  - key:             readability-identifier-naming.IgnoreMainLikeFunctions
+    value:           1
+# TODO: add function naming rules (snake_case?).
+# Because we want to be able to use acronyms, we don't want to enforce this
+# We could add a //NOLINTNEXTLINE() to all of those, but this seems overkill.
+...

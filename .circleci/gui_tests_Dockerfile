@@ -2,7 +2,6 @@
 
 FROM debian:buster
 
-##### TODO: move some of this to gui.sh script
 RUN apt-get update && \
     apt-get install python-pip -y && \
     pip install -U pip && \
@@ -13,10 +12,8 @@ COPY . ./
 
 WORKDIR /root/Ventilator/software/gui
 
-##### TODO: move test run app in headless mode
 CMD /bin/bash \
     ./gui.sh install && \
     FORCED_ROOT=1 ./gui.sh build -j --no-checks && \
     FORCED_ROOT=1 ./gui.sh run -x --startup-only && \
-    FORCED_ROOT=1 ./gui.sh test -x && \
-    ./gui.sh cov_upload
+    FORCED_ROOT=1 ./gui.sh test -j -x --upload_cov && \

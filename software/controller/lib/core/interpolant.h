@@ -52,10 +52,7 @@ class Interpolant {
            remainder * (cal_table_.get_data(index + 1) - cal_table_.get_data(index));
   };
 
-  void link(NVParams::Handler *nv_params, const uint16_t offset) {
-    cal_table_.link(nv_params, offset);
-  };
-
  private:
   Debug::Variable::NVFloatArray<N> cal_table_;
+  friend class PinchValve;
 };

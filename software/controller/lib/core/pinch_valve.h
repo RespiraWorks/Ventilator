@@ -49,9 +49,8 @@ enum class PinchValveHomeState {
 
 class PinchValve {
  public:
-  // Create a new pinch valve using the specified
-  // stepper motor.
-  explicit PinchValve(int motor_index, Interpolant<pinch_valves_cal_size> *calibration);
+  // Create a new pinch valve using the specified stepper motor.
+  explicit PinchValve(const char *name, const char *help_supplement, int motor_index);
 
   // Initialize the pinch value absolute position.
   // This should be called at startup from the
@@ -76,6 +75,11 @@ class PinchValve {
   // Return true if the pinch valve is ready for action
   bool IsReady() { return home_state_ == PinchValveHomeState::Homed; }
 
+  // Link calibration table to nv params
+  void LinkCalibration(NVParams::Handler *nv_params, const uint16_t offset) {
+    calibration_.cal_table_.link(nv_params, offset);
+  };
+
  private:
   Time move_start_time_;
 
@@ -87,5 +91,5 @@ class PinchValve {
   PinchValveHomeState home_state_{PinchValveHomeState::Disabled};
 
   // pinch valve calibration table
-  Interpolant<pinch_valves_cal_size> *calibration_{nullptr};
+  Interpolant<pinch_valves_cal_size> calibration_{"pinch_cal", 0.0f, "", "calibration table"};
 };

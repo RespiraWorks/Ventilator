@@ -41,15 +41,21 @@ struct ActuatorsState {
 
 class Actuators {
  public:
-  Actuators(int blower_motor_index, Interpolant<pinch_valves_cal_size> *blower_pinch_cal,
-            int exhale_motor_index, Interpolant<pinch_valves_cal_size> *exhale_pinch_cal)
-      : blower_pinch_(blower_motor_index, blower_pinch_cal),
-        exhale_pinch_(exhale_motor_index, exhale_pinch_cal){};
+  Actuators(int blower_motor_index, int exhale_motor_index)
+      : blower_pinch_("blower_", " for blower pinch valve", blower_motor_index),
+        exhale_pinch_("exhale_", " for exhale pinch valve", exhale_motor_index){};
 
   // Returns true if the actuators are ready for action or false
   // if they aren't (for example pinch valves are homing).
   // The system should be kept in a safe state until this returns true.
   bool ready();
+
+  // links pinch valves calibration to nv_params.
+  void link(NVParams::Handler *nv_params, uint16_t blower_pinch_cal_offset,
+            uint16_t exhale_pinch_cal_offset) {
+    blower_pinch_.LinkCalibration(nv_params, blower_pinch_cal_offset);
+    exhale_pinch_.LinkCalibration(nv_params, exhale_pinch_cal_offset);
+  }
 
   // Causes passed state to be applied to the actuators
   void execute(const ActuatorsState &desired_state);

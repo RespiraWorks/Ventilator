@@ -25,8 +25,8 @@ limitations under the License.
 template <size_t N>
 class Interpolant {
  public:
-  Interpolant(const char *name, float initial_fill, const char *units = "", const char *help = "",
-              const char *fmt = "%.3f")
+  Interpolant(const char *name, float initial_fill = 0.0f, const char *units = "",
+              const char *help = "", const char *fmt = "%.3f")
       : cal_table_(name, Debug::Variable::Access::ReadWrite, initial_fill, units, help, fmt){};
 
   Interpolant(const char *name, std::array<float, N> initial, const char *units = "",

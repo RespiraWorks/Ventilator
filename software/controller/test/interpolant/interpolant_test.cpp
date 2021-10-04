@@ -1,0 +1,69 @@
+/* Copyright 2020, RespiraWorks
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+#include "interpolant.h"
+
+#include "gtest/gtest.h"
+
+TEST(Interpolant, Constructors) {
+  Interpolant<2> zero_filled{"zero_filled"};
+  // checking the associated debugvar's attributes, I know it is the last registered one
+  Debug::Variable::Base *zero_array = Debug::Variable::Registry::singleton().find(
+      static_cast<uint16_t>(Debug::Variable::Registry::singleton().count() - 1));
+  EXPECT_STREQ(zero_array->name(), "zero_filled");
+  EXPECT_STREQ(zero_array->units(), "");
+  EXPECT_STREQ(zero_array->help(), "");
+  EXPECT_STREQ(zero_array->format(), "%.3f");
+  // checking that whatever the input value, output is 0
+  for (uint i = 0; i < 11; ++i) {
+    EXPECT_EQ(zero_filled.get_value(static_cast<float>(i) * 0.1f), 0.0f);
+  }
+
+  Interpolant<6> value_filled{"value_filled", 5.0f, "unit", "help for five", "%1.0f"};
+  // checking the associated debugvar's attributes
+  Debug::Variable::Base *five_array = Debug::Variable::Registry::singleton().find(
+      static_cast<uint16_t>(Debug::Variable::Registry::singleton().count() - 1));
+  EXPECT_STREQ(five_array->name(), "value_filled");
+  EXPECT_STREQ(five_array->units(), "unit");
+  EXPECT_STREQ(five_array->help(), "help for five");
+  EXPECT_STREQ(five_array->format(), "%1.0f");
+  // checking that whatever the input value, output is 5
+  for (uint i = 0; i < 11; ++i) {
+    EXPECT_EQ(value_filled.get_value(static_cast<float>(i) * 0.1f), 5.0f);
+  }
+
+  std::array<float, 7> cosinus{1.0f, 0.866f, 0.5f, 0.0f, -0.5f, -0.866f, -1.0f};
+  // checking that the values at the interpolation points match the table's values
+  Interpolant<cosinus.size()> cos_interp{"cosinus", cosinus};
+  for (uint i = 0; i < cosinus.size(); ++i) {
+    EXPECT_EQ(cos_interp.get_value(static_cast<float>(i) / static_cast<float>(cosinus.size() - 1)),
+              cosinus[i]);
+  }
+}
+
+TEST(Interpolant, Interpolation) {
+  Interpolant<3> negative{"negative", {-4.0f, -2.0f, -1.0f}};
+  // checking out of bounds input
+  EXPECT_EQ(negative.get_value(-0.1f), -4.0f);
+  EXPECT_EQ(negative.get_value(1.1f), -1.0f);
+  // checking output on the grid
+  EXPECT_EQ(negative.get_value(0.0f), -4.0f);
+  EXPECT_EQ(negative.get_value(0.5f), -2.0f);
+  EXPECT_EQ(negative.get_value(1.0f), -1.0f);
+  // checking interpolation
+  EXPECT_EQ(negative.get_value(0.1f), -3.6f);
+  EXPECT_EQ(negative.get_value(0.25f), -3.0f);
+  EXPECT_EQ(negative.get_value(0.75f), -1.5f);
+}

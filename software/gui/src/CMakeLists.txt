@@ -14,6 +14,7 @@ find_package(Qt5 COMPONENTS
 set(${this_target}_sources
   alarm_manager.cpp
   breath_signals.cpp
+  controller_history.cpp
   gui_state_container.cpp
   logger.cpp
   periodic_closure.cpp

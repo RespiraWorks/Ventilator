@@ -17,6 +17,16 @@ limitations under the License.
 
 #include <iostream>
 
+// Initializes a PeriodicClosure to run the given lambda with a given
+// interval.
+//
+// Note that you have to explicitly call Start().
+PeriodicClosure::PeriodicClosure(DurationMs interval, std::function<void()> fn)
+    : interval_(interval), fn_(std::move(fn)) {}
+
+// Calls Stop().
+PeriodicClosure::~PeriodicClosure() { Stop(); }
+
 void PeriodicClosure::Start() { loop_thread_ = std::thread(&PeriodicClosure::Loop, this); }
 
 void PeriodicClosure::Stop() {

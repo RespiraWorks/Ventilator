@@ -41,81 +41,42 @@ class TimeSeriesGraph : public QNanoQuickItem {
       float baselineValue READ GetBaselineValue WRITE SetBaselineValue NOTIFY BaselineValueChanged)
 
  public:
-  TimeSeriesGraph(){};
+  TimeSeriesGraph() = default;
 
-  QNanoQuickItemPainter *createItemPainter() const { return new TimeSeriesGraphPainter(); }
+  QNanoQuickItemPainter *createItemPainter() const;
 
-  QVector<QPointF> GetDataset() const { return dataset_; };
+  QVector<QPointF> GetDataset() const;
 
-  float GetRangeInSeconds() const { return range_in_secs_; };
+  float GetRangeInSeconds() const;
 
-  QColor GetLineColor() const { return line_color_; };
+  QColor GetLineColor() const;
 
-  QColor GetAreaColor() const { return area_color_; };
+  QColor GetAreaColor() const;
 
-  bool GetShowBaseline() const { return show_baseline_; }
+  bool GetShowBaseline() const;
 
-  float GetBaselineValue() const { return baseline_value_; }
+  float GetBaselineValue() const;
 
-  void SetShowBaseline(bool value) {
-    if (show_baseline_ != value) {
-      show_baseline_ = value;
-      emit ShowBaselineChanged();
-    }
-  }
+  void SetShowBaseline(bool value);
 
  public slots:
 
-  void SetBaselineValue(float baseline) {
-    if (baseline_value_ != baseline) {
-      baseline_value_ = baseline;
-      emit BaselineValueChanged();
-    }
-  }
-  void SetRangeInSeconds(float rangeInSeconds) {
-    if (range_in_secs_ != rangeInSeconds) {
-      range_in_secs_ = rangeInSeconds;
-      emit RangeInSecondsChanged();
-    }
-  }
+  void SetBaselineValue(float baseline);
+  void SetRangeInSeconds(float rangeInSeconds);
 
-  void SetLineColor(QColor color) {
-    if (line_color_ != color) {
-      line_color_ = color;
-      emit LineColorChanged();
-    }
-  }
+  void SetLineColor(QColor color);
 
-  void SetAreaColor(QColor color) {
-    if (area_color_ != color) {
-      area_color_ = color;
-      emit AreaColorChanged();
-    }
-  }
+  void SetAreaColor(QColor color);
 
-  void SetDataset(QVector<QPointF> &dataset) {
-    dataset_ = dataset;
-    emit DatasetChanged();
-    this->update();
-  }
+  void SetDataset(QVector<QPointF> &dataset);
 
-  float GetMinValue() const { return min_value_; };
+  float GetMinValue() const;
 
-  void SetMinValue(float value) {
-    if (min_value_ != value) {
-      min_value_ = value;
-      emit MinValueChanged();
-    }
-  }
+  void SetMinValue(float value);
 
-  float GetMaxValue() const { return max_value_; };
+  float GetMaxValue() const;
 
-  void SetMaxValue(float value) {
-    if (max_value_ != value) {
-      max_value_ = value;
-      emit MinValueChanged();
-    }
-  }
+  void SetMaxValue(float value);
 
  signals:
   void DatasetChanged();

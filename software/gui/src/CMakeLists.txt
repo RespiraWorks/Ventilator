@@ -16,8 +16,11 @@ set(${this_target}_sources
   breath_signals.cpp
   controller_history.cpp
   gui_state_container.cpp
+  latching_alarm.cpp
   logger.cpp
   periodic_closure.cpp
+  respira_connected_device.cpp
+  time_series_graph.cpp
   time_series_graph_painter.cpp
   )
 

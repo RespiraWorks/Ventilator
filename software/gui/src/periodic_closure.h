@@ -36,11 +36,10 @@ class PeriodicClosure {
   // interval.
   //
   // Note that you have to explicitly call Start().
-  PeriodicClosure(DurationMs interval, std::function<void()> fn)
-      : interval_(interval), fn_(std::move(fn)) {}
+  PeriodicClosure(DurationMs interval, std::function<void()> fn);
 
   // Calls Stop().
-  ~PeriodicClosure() { Stop(); }
+  ~PeriodicClosure();
 
   // Begins periodically running the given lambda.
   void Start();

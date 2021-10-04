@@ -57,59 +57,19 @@ class GuiStateContainer : public QObject {
 
   // Initializes the state container to keep the history of controller
   // statuses in a given time window with given granularity.
-  GuiStateContainer(DurationMs history_window, DurationMs granularity)
-      : startup_time_(SteadyClock::now()), history_(history_window, granularity) {
-    QObject::connect(this, &GuiStateContainer::params_changed, [this]() {
-      // TODO: This could come from GUI alarm settings instead.
-      // Source for +/-5 is this thread:
-      // https://respiraworks.slack.com/archives/C011UMNUWGZ/p1592606104221700?thread_ts=1592603466.221100&cid=C011UMNUWGZ
-      alarm_manager_.get_pip_exceeded_alarm()->SetThresholdCmH2O(commanded_pip_ + 5);
-      alarm_manager_.get_pip_not_reached_alarm()->SetThresholdCmH2O(commanded_pip_ - 5);
-    });
-    // Set initial alarm parameters per above.
-    params_changed();
-  }
+  GuiStateContainer(DurationMs history_window, DurationMs granularity);
 
-  bool get_is_using_fake_data() const { return is_using_fake_data_; }
-  void set_is_using_fake_data(bool value) { is_using_fake_data_ = value; }
+  bool get_is_using_fake_data() const;
+  void set_is_using_fake_data(bool value);
 
   // Returns when the GUI started up.
-  SteadyInstant GetStartupTime() { return startup_time_; }
+  SteadyInstant GetStartupTime();
 
   // Returns the current GuiStatus to be sent to the controller.
-  GuiStatus GetGuiStatus() {
-    GuiStatus status = GuiStatus_init_zero;
-
-    status.uptime_ms = TimeAMinusB(SteadyClock::now(), startup_time_).count();
-    status.desired_params.mode = [&] {
-      switch (commanded_mode_) {
-        case VentilationMode::PRESSURE_CONTROL:
-          return VentMode::VentMode_PRESSURE_CONTROL;
-        case VentilationMode::PRESSURE_ASSIST:
-          return VentMode::VentMode_PRESSURE_ASSIST;
-        case VentilationMode::HIGH_FLOW_NASAL_CANNULA:
-          return VentMode::VentMode_HIGH_FLOW_NASAL_CANNULA;
-        default:
-          // Should never happen.
-          CRIT("Unexpected commanded_mode: {}", commanded_mode_);
-          return VentMode::VentMode_PRESSURE_CONTROL;
-      }
-    }();
-    status.desired_params.peep_cm_h2o = commanded_peep_;
-    status.desired_params.breaths_per_min = commanded_rr_;
-    status.desired_params.pip_cm_h2o = commanded_pip_;
-    float breath_duration_sec = 60.0 / commanded_rr_;
-    float commanded_e_time = breath_duration_sec - commanded_i_time_;
-    status.desired_params.inspiratory_expiratory_ratio = commanded_i_time_ / commanded_e_time;
-    status.desired_params.fio2 = commanded_fio2_percent_ * 0.01;
-
-    return status;
-  }
+  GuiStatus GetGuiStatus();
 
   // Returns the recent history of ControllerStatus.
-  std::vector<std::tuple<SteadyInstant, ControllerStatus>> GetControllerStatusHistory() {
-    return history_.GetHistory();
-  }
+  std::vector<std::tuple<SteadyInstant, ControllerStatus>> GetControllerStatusHistory();
 
   Q_PROPERTY(bool is_using_fake_data READ get_is_using_fake_data CONSTANT)
   // Measured parameters
@@ -141,35 +101,21 @@ class GuiStateContainer : public QObject {
   Q_PROPERTY(SimpleClock *clock READ get_clock NOTIFY clock_changed)
   Q_PROPERTY(bool isDebugBuild READ IsDebugBuild NOTIFY IsDebugBuildChanged)
 
-  QVector<QPointF> GetPressureSeries() const { return pressure_series_; }
+  QVector<QPointF> GetPressureSeries() const;
 
-  bool IsDebugBuild() const {
-#ifdef QT_DEBUG
-    return true;
-#else
-    return false;
-#endif
-  }
-  void SetPressureSeries(QVector<QPointF> &&series) {
-    pressure_series_ = series;
-    emit PressureSeriesChanged();
-  }
+  bool IsDebugBuild() const;
 
-  QVector<QPointF> GetFlowSeries() const { return flow_series_; }
+  void SetPressureSeries(QVector<QPointF> &&series);
 
-  void SetFlowSeries(QVector<QPointF> &&series) {
-    flow_series_ = series;
-    emit FlowSeriesChanged();
-  }
+  QVector<QPointF> GetFlowSeries() const;
 
-  QVector<QPointF> GetTidalSeries() const { return tidal_series_; }
+  void SetFlowSeries(QVector<QPointF> &&series);
 
-  void SetTidalSeries(QVector<QPointF> &&series) {
-    tidal_series_ = series;
-    emit TidalSeriesChanged();
-  }
+  QVector<QPointF> GetTidalSeries() const;
 
-  AlarmManager *GetAlarmManager() { return &alarm_manager_; }
+  void SetTidalSeries(QVector<QPointF> &&series);
+
+  AlarmManager *GetAlarmManager();
 
  signals:
   void measurements_changed();
@@ -184,48 +130,23 @@ class GuiStateContainer : public QObject {
 
  public slots:
   // Adds a data point of controller status to the history.
-  void controller_status_changed(SteadyInstant now, const ControllerStatus &status) {
-    breath_signals_.Update(now, status);
-    alarm_manager_.Update(now, status, breath_signals_);
-    if (history_.Append(now, status)) {
-      UpdateGraphs();
-      measurements_changed();
-    }
-  }
+  void controller_status_changed(SteadyInstant now, const ControllerStatus &status);
 
   void UpdateGraphs();
 
  private:
-  int get_battery_percentage() const {
-    return battery_percentage_;
-    // TODO: Figure our how battery will be implemented
-    // and how to get estimation.
-  }
-  SimpleClock *get_clock() const { return const_cast<SimpleClock *>(&clock_); }
+  int get_battery_percentage() const;
+  SimpleClock *get_clock() const;
 
   // ====================== Measured parameters ========================
-  qreal get_measured_pressure() const {
-    return history_.GetLastStatus().sensor_readings.patient_pressure_cm_h2o;
-  }
-  qreal get_measured_flow() const {
-    return 0.001 * history_.GetLastStatus().sensor_readings.flow_ml_per_min;
-  }
-  qreal get_measured_tv() const { return history_.GetLastStatus().sensor_readings.volume_ml; }
-  qreal get_measured_rr() const {
-    return (commanded_mode_ == VentilationMode::PRESSURE_CONTROL)
-               ? commanded_rr_
-               : breath_signals_.rr().value_or(commanded_rr_);
-  }
-  qreal get_measured_peep() const { return breath_signals_.peep().value_or(commanded_peep_); }
-  qreal get_measured_pip() const { return breath_signals_.pip().value_or(commanded_pip_); }
-  qreal get_measured_ier() const {
-    float breath_duration_sec = 60.0 / get_measured_rr();
-    float commanded_e_time = breath_duration_sec - commanded_i_time_;
-    return commanded_i_time_ / commanded_e_time;
-  }
-  qreal get_measured_fio2_percent() const {
-    return 100 * history_.GetLastStatus().sensor_readings.fio2;
-  }
+  qreal get_measured_pressure() const;
+  qreal get_measured_flow() const;
+  qreal get_measured_tv() const;
+  qreal get_measured_rr() const;
+  qreal get_measured_peep() const;
+  qreal get_measured_pip() const;
+  qreal get_measured_ier() const;
+  qreal get_measured_fio2_percent() const;
 
   const SteadyInstant startup_time_ = SteadyClock::now();
   bool is_using_fake_data_ = false;

@@ -72,6 +72,7 @@ Q_INVOKABLE void AlarmManager::acknowledgeHighestPriorityActiveAlarm() {
 PipExceededAlarm *AlarmManager::get_pip_exceeded_alarm() { return &pip_exceeded_alarm_; }
 
 PipNotReachedAlarm *AlarmManager::get_pip_not_reached_alarm() { return &pip_not_reached_alarm_; }
+
 PatientDetachedAlarm *AlarmManager::get_patient_detached_alarm() {
   return &patient_detached_alarm_;
 }

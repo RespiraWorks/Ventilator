@@ -36,6 +36,8 @@ add_executable(
   ${${this_target}_headers}
 )
 
+enable_coverage(${this_target})
+
 target_include_directories(
   ${this_target}
   PRIVATE ${PROJECT_SOURCE_DIR}/tests
@@ -46,8 +48,6 @@ target_link_libraries(
   PRIVATE ${PROJECT_NAME}_backend
   PRIVATE Qt5::Test
 )
-
-enable_coverage(${this_target})
 
 # Creates command dependent on existence of target
 add_custom_target(run_gui_backend_tests

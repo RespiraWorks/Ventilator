@@ -39,7 +39,7 @@ fi
 EXIT_FAILURE=1
 EXIT_SUCCESS=0
 
-COVERAGE_INPUT_DIR=build/tests
+COVERAGE_INPUT_DIR=build
 COVERAGE_OUTPUT_DIR=coverage_reports
 
 #########

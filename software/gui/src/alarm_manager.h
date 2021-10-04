@@ -28,18 +28,10 @@ limitations under the License.
 class AlarmManager : public QObject {
   Q_OBJECT
  public:
-  AlarmManager() {
-    for (auto *alarm : alarms_) {
-      QObject::connect(alarm, &LatchingAlarm::updated, this, &AlarmManager::updated);
-    }
-  }
+  AlarmManager();
 
   void Update(SteadyInstant now, const ControllerStatus &status,
-              const BreathSignals &breath_signals) {
-    for (auto *alarm : alarms_) {
-      alarm->Update(now, status, breath_signals);
-    }
-  }
+              const BreathSignals &breath_signals);
 
   Q_PROPERTY(
       LatchingAlarm *highestPriorityActiveAlarm READ GetHighestPriorityActiveAlarm NOTIFY updated)
@@ -48,54 +40,23 @@ class AlarmManager : public QObject {
   Q_PROPERTY(int numActiveAlarms READ GetNumActiveAlarms NOTIFY updated)
   Q_PROPERTY(int numSilencedAlarms READ GetNumSilencedAlarms NOTIFY updated)
 
-  LatchingAlarm *GetHighestPriorityActiveAlarm() {
-    LatchingAlarm *res = nullptr;
-    for (auto *alarm : alarms_) {
-      if (res == nullptr || alarm->GetEffectiveAudioPriority() > res->GetEffectiveAudioPriority()) {
-        res = alarm;
-      }
-    }
-    return res;
-  }
+  LatchingAlarm *GetHighestPriorityActiveAlarm();
 
-  LatchingAlarm *GetHighestPrioritySilencedAlarm() {
-    LatchingAlarm *res = nullptr;
-    for (auto *alarm : alarms_) {
-      if (!alarm->GetSilencedUntil().has_value()) continue;
-      if (res == nullptr || alarm->GetNominalPriority() > res->GetNominalPriority()) {
-        res = alarm;
-      }
-    }
-    return res;
-  }
+  LatchingAlarm *GetHighestPrioritySilencedAlarm();
 
-  int GetNumActiveAlarms() const {
-    int res = 0;
-    for (auto *alarm : alarms_) {
-      if (alarm->IsAudioActive()) ++res;
-    }
-    return res;
-  }
+  int GetNumActiveAlarms() const;
 
-  int GetNumSilencedAlarms() const {
-    int res = 0;
-    for (auto *alarm : alarms_) {
-      if (alarm->GetSilencedUntil().has_value()) ++res;
-    }
-    return res;
-  }
+  int GetNumSilencedAlarms() const;
 
-  Q_INVOKABLE void acknowledgeHighestPriorityActiveAlarm() {
-    GetHighestPriorityActiveAlarm()->Acknowledge(SteadyClock::now());
-  }
+  Q_INVOKABLE void acknowledgeHighestPriorityActiveAlarm();
 
   Q_PROPERTY(PipExceededAlarm *pipExceededAlarm READ get_pip_exceeded_alarm CONSTANT)
   Q_PROPERTY(PipNotReachedAlarm *pipNotReachedAlarm READ get_pip_not_reached_alarm CONSTANT)
   Q_PROPERTY(PatientDetachedAlarm *patientDetachedAlarm READ get_patient_detached_alarm CONSTANT)
 
-  PipExceededAlarm *get_pip_exceeded_alarm() { return &pip_exceeded_alarm_; }
-  PipNotReachedAlarm *get_pip_not_reached_alarm() { return &pip_not_reached_alarm_; }
-  PatientDetachedAlarm *get_patient_detached_alarm() { return &patient_detached_alarm_; }
+  PipExceededAlarm *get_pip_exceeded_alarm();
+  PipNotReachedAlarm *get_pip_not_reached_alarm();
+  PatientDetachedAlarm *get_patient_detached_alarm();
 
  signals:
   void updated();

@@ -38,7 +38,8 @@ struct Structure {
   uint8_t version{0};  // Version of the structure. If some fields in the structure change,
                        // there is a risk of misinterpreting data that is in EEPROM during
                        // initialization. This version is compared to the one in EEPROM and
-                       // the params in EEPROM are declared invalid if there is a mismatch.
+                       // the params in EEPROM are declared invalid and overwritten with default
+                       // valuesif there is a mismatch.
                        // Note that if the size of the structure changes, the chances that the crc
                        // matches are non-existent and incrementing the version is not useful: the
                        // EEPROM params will be invalid no matter what.

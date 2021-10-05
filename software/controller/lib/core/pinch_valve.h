@@ -91,5 +91,5 @@ class PinchValve {
   PinchValveHomeState home_state_{PinchValveHomeState::Disabled};
 
   // pinch valve calibration table
-  Interpolant<pinch_valves_cal_size> calibration_{"pinch_cal", 0.0f, "", "calibration table"};
+  Interpolant<pinch_valves_cal_size> calibration_{"pinch_cal", 0.0f, 1.0f, "", "calibration table"};
 };

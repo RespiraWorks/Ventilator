@@ -18,20 +18,21 @@ limitations under the License.
 #include "gtest/gtest.h"
 
 TEST(Interpolant, Constructors) {
-  Interpolant<2> zero_filled{"zero_filled"};
+  Interpolant<5> default_fill{"default_fill"};
   // checking the associated debugvar's attributes, I know it is the last registered one
-  Debug::Variable::Base *zero_array = Debug::Variable::Registry::singleton().find(
+  Debug::Variable::Base *default_array = Debug::Variable::Registry::singleton().find(
       static_cast<uint16_t>(Debug::Variable::Registry::singleton().count() - 1));
-  EXPECT_STREQ(zero_array->name(), "zero_filled");
-  EXPECT_STREQ(zero_array->units(), "");
-  EXPECT_STREQ(zero_array->help(), "");
-  EXPECT_STREQ(zero_array->format(), "%.3f");
-  // checking that whatever the input value, output is 0
+  EXPECT_STREQ(default_array->name(), "default_fill");
+  EXPECT_STREQ(default_array->units(), "");
+  EXPECT_STREQ(default_array->help(), "");
+  EXPECT_STREQ(default_array->format(), "%.3f");
+  // checking that output = input
   for (uint i = 0; i < 11; ++i) {
-    EXPECT_EQ(zero_filled.get_value(static_cast<float>(i) * 0.1f), 0.0f);
+    float input = static_cast<float>(i) * 0.1f;
+    EXPECT_EQ(default_fill.get_value(input), input);
   }
 
-  Interpolant<6> value_filled{"value_filled", 5.0f, "unit", "help for five", "%1.0f"};
+  Interpolant<6> value_filled{"value_filled", 5.0f, 5.0f, "unit", "help for five", "%1.0f"};
   // checking the associated debugvar's attributes
   Debug::Variable::Base *five_array = Debug::Variable::Registry::singleton().find(
       static_cast<uint16_t>(Debug::Variable::Registry::singleton().count() - 1));

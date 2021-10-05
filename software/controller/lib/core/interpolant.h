@@ -17,17 +17,24 @@ limitations under the License.
 
 #include <stdint.h>
 
-#include "nvparams.h"
-#include "vars.h"
+#include "nv_vars.h"
 
 // This class abstracts a lookup table that is stored in EEPROM, accessible through the debug
-// interface, and used for linear interpolation with input between 0 and 1.
+// interface, and used for linear interpolation with input between 0 and 1 (and clamped to those
+// values if not).
 template <size_t N>
 class Interpolant {
  public:
-  Interpolant(const char *name, float initial_fill = 0.0f, const char *units = "",
+  Interpolant(const char *name, float cal_0 = 0.0f, float cal_1 = 1.0f, const char *units = "",
               const char *help = "", const char *fmt = "%.3f")
-      : cal_table_(name, Debug::Variable::Access::ReadWrite, initial_fill, units, help, fmt){};
+      : cal_table_(name, Debug::Variable::Access::ReadWrite, cal_0, units, help, fmt) {
+    // starting the loop at index 1 in order to avoid division by 0: if N <= 1 (which
+    // doesn't make sense anyway), we don't actually enter the loop, and the first element
+    // is already set to cal_0 by the cal_table_ constructor with initial_fill = cal_0;
+    for (size_t i = 1; i < N; ++i) {
+      cal_table_.set_data(i, cal_0 + static_cast<float>(i) / (N - 1) * (cal_1 - cal_0));
+    }
+  };
 
   Interpolant(const char *name, std::array<float, N> initial, const char *units = "",
               const char *help = "", const char *fmt = "%.3f")

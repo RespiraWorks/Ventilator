@@ -56,7 +56,7 @@ class NVFloatArray : public FloatArray<N>, public NonVolatile {
     FloatArray<N>::deserialize_value(&nv_data);
   }
 
-  NVFloatArray(const char *name, Access access, const char *units, const char *help = "",
+  NVFloatArray(const char *name, Access access, const char *units = "", const char *help = "",
                const char *fmt = "%.3f")
       : FloatArray<N>(name, access, units, help, fmt){};
 

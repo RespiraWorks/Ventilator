@@ -48,7 +48,17 @@ if [ $PLATFORM != "Linux" ]; then
   exit 1
 fi
 
+### Update the system TODO: uncomment
+#sudo apt-get update
+#sudo apt-get --yes upgrade
+
+### Install guake terminal and git with lfs
 sudo apt-get --yes install guake git-lfs
+
+echo "deb http://archive.raspberrypi.org/debian/ buster main" | sudo tee -a /etc/apt/sources.list
+sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 7FA3303E
+sudo apt-get update
+sudo apt-get install raspi-config
 
 ### enable serial interface but not console
 sudo raspi-config nonint do_serial 2

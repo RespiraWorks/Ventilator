@@ -93,20 +93,26 @@ clean_all() {
   clean_dir ${COVERAGE_OUTPUT_DIR}
 }
 
-configure_platformio() {
-    pushd "$HOME"
-    python3 -c "$(curl -fsSL https://raw.githubusercontent.com/platformio/platformio/master/scripts/get-platformio.py)"
-    echo 'export PATH=$PATH:~/.platformio/penv/bin' >> ~/.profile
-    popd
+install_linux() {
+  apt-get update
+  apt-get install -y \
+          build-essential \
+          python3-pip \
+          git \
+          curl \
+          libtinfo5 \
+          cppcheck \
+          gcovr \
+          lcov \
+          clang-tidy
+}
 
-    curl -fsSL https://raw.githubusercontent.com/platformio/platformio-core/master/scripts/99-platformio-udev.rules | sudo tee /etc/udev/rules.d/99-platformio-udev.rules
-    sudo service udev restart
-    sudo usermod -a -G dialout "$USER"
-    sudo usermod -a -G plugdev "$USER"
-
-    echo "Updated udev rules. You might have to restart your machine for changes to become effective."
-
-    exit $EXIT_SUCCESS
+install_local() {
+  pip3 install -U pip
+  pip3 install platformio codecov
+  pip3 install platformio==5.1.1
+  platformio update
+  platformio platform install native
 }
 
 run_checks() {
@@ -215,12 +221,23 @@ if [ "$1" == "help" ] || [ "$1" == "-h" ]; then
 # INSTALL #
 ###########
 elif [ "$1" == "install" ]; then
-  if [ "$EUID" -eq 0 ] && [ "$2" != "-f" ]; then
-    echo "Please do not run install with root privileges!"
-    exit $EXIT_SUCCESS
+  if [ "$EUID" -ne 0 ]; then
+    echo "Please run install with root privileges!"
+    exit $EXIT_FAILURE
   fi
 
-  configure_platformio
+  install_linux
+
+#################
+# INSTALL LOCAL #
+#################
+elif [ "$1" == "install_local" ]; then
+  if [ "$EUID" -eq 0 ] && [ "$2" != "-f" ]; then
+    echo "Please do not run install_local with root privileges!"
+    exit $EXIT_FAILURE
+  fi
+
+  install_local
 
 #########
 # CLEAN #

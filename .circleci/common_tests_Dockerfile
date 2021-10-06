@@ -2,13 +2,6 @@
 
 FROM debian:buster
 
-RUN apt-get update && \
-    apt-get install build-essential python3-pip lcov git curl libtinfo5 -y && \
-    pip3 install -U pip && \
-    pip3 install platformio codecov gitpython && \
-    platformio update && \
-    platformio platform install native
-
 WORKDIR /root/Ventilator
 
 COPY . ./
@@ -16,5 +9,7 @@ COPY . ./
 WORKDIR /root/Ventilator/software/common
 
 CMD /bin/bash \
+    ./common.sh install && \
+    ./common.sh install_local -f && \
     ./common.sh test --cov --no-checks && \
     ./common.sh cov_upload

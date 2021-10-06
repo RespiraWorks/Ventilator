@@ -60,7 +60,7 @@ jobs:
     # We use a machine executor here because we must run the container in privileged mode.
     # This is because LeakSanitizer, which runs during the build, requires ptrace.
     machine:
-      image: ubuntu-1604:201903-01
+      image: ubuntu-2004:202010-01
     steps:
       - checkout
       - run:
@@ -78,7 +78,7 @@ jobs:
     # We use a machine executor here because we must run the container in privileged mode.
     # This is because LeakSanitizer, which runs during the build, requires ptrace.
     machine:
-      image: ubuntu-1604:201903-01
+      image: ubuntu-2004:202010-01
     steps:
       - checkout
       - run:

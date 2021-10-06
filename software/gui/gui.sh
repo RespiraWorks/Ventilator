@@ -122,7 +122,6 @@ install_linux() {
           pulseaudio \
           python3-pip \
           xvfb \
-          bear \
           cppcheck \
           gcovr \
           lcov \
@@ -134,6 +133,10 @@ configure_conan() {
   pip3 install conan
   conan profile new --detect default
   conan profile update settings.compiler.libcxx=libstdc++11 default
+}
+
+install_local() {
+  pip3 install gitpython
 }
 
 run_cppcheck() {
@@ -245,6 +248,17 @@ elif [ "$1" == "install" ]; then
     echo "Unsupported platform: ${PLATFORM}"
     exit $EXIT_FAILURE
   fi
+
+#################
+# INSTALL LOCAL #
+#################
+elif [ "$1" == "install_local" ]; then
+  if [ "$EUID" -eq 0 ] && [ -z "$FORCED_ROOT" ]; then
+    echo "Please do not run install_local with root privileges!"
+    exit $EXIT_FAILURE
+  fi
+
+  install_local
 
 #########
 # CLEAN #

@@ -15,6 +15,8 @@ limitations under the License.
 
 #include "interpolant.h"
 
+#include <vector>
+
 #include "gtest/gtest.h"
 
 TEST(Interpolant, Constructors) {
@@ -55,16 +57,20 @@ TEST(Interpolant, Constructors) {
 }
 
 TEST(Interpolant, Interpolation) {
-  Interpolant<3> negative{"negative", {-4.0f, -2.0f, -1.0f}};
+  std::array<float, 3> values{-4.0f, -2.0f, -1.0f};
+  Interpolant<3> negative{"negative", values};
   // checking out of bounds input
   EXPECT_EQ(negative.get_value(-0.1f), -4.0f);
   EXPECT_EQ(negative.get_value(1.1f), -1.0f);
   // checking output on the grid
-  EXPECT_EQ(negative.get_value(0.0f), -4.0f);
-  EXPECT_EQ(negative.get_value(0.5f), -2.0f);
-  EXPECT_EQ(negative.get_value(1.0f), -1.0f);
+  std::array<float, 3> grid{0.0f, 0.5f, 1.0f};
+  for (size_t i = 0; i < values.size(); ++i) {
+    EXPECT_EQ(negative.get_value(grid[i]), values[i]);
+  }
   // checking interpolation
-  EXPECT_EQ(negative.get_value(0.1f), -3.6f);
-  EXPECT_EQ(negative.get_value(0.25f), -3.0f);
-  EXPECT_EQ(negative.get_value(0.75f), -1.5f);
+  std::vector<float> input_values{0.10f, 0.25f, 0.75f};
+  std::vector<float> expected_out{-3.6f, -3.0f, -1.5f};
+  for (size_t i = 0; i < input_values.size(); ++i) {
+    EXPECT_EQ(negative.get_value(input_values[i]), expected_out[i]);
+  }
 }

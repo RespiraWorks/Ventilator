@@ -50,9 +50,6 @@ fi
 
 sudo apt-get --yes install guake git-lfs
 
-### this is for controller debug interface
-pip3 install matplotlib pillow pandas gitpython
-
 ### enable serial interface but not console
 sudo raspi-config nonint do_serial 2
 
@@ -66,25 +63,26 @@ sudo raspi-config nonint do_boot_splash 1
 echo 'ATTRS{idVendor}=="0483", ATTRS{idProduct}=="374b", MODE="666"' | sudo tee /etc/udev/rules.d/99-openocd.rules > /dev/null
 
 ### Clone repository and go in
-git clone https://github.com/RespiraWorks/Ventilator.git
-cd Ventilator
+git clone https://github.com/RespiraWorks/Ventilator.git ventilator
+cd ventilator
 
 ### no screensaver
 ### guake on startup
 sudo /bin/cp -f software/utils/rpi_config/autostart /etc/xdg/lxsession/LXDE-pi/autostart
 
 ### Desktop shortcuts
-cp software/utils/rpi_config/Github /home/pi/Desktop
-cp software/utils/rpi_config/*.desktop /home/pi/Desktop
+cp software/utils/rpi_config/Github /home/respira/Desktop
+cp software/utils/rpi_config/*.desktop /home/respira/Desktop
 
 ### Execute shortcuts without bitching
-mkdir -p /home/pi/.config/libfm && cp -f software/utils/rpi_config/libfm.conf /home/pi/.config/libfm
+mkdir -p /home/respira/.config/libfm && cp -f software/utils/rpi_config/libfm.conf /home/respira/.config/libfm
 
 ### RW theme :)
-pcmanfm --set-wallpaper /home/pi/Ventilator/manufacturing/images/rendering_full.jpg
+pcmanfm --set-wallpaper /home/respira/ventilator/manufacturing/images/rendering_full.jpg
 
 sudo ./software/gui/gui.sh install
-./software/controller/controller.sh install
+sudo ./software/controller/controller.sh install
+sudo ./software/controller/controller.sh configure
 
 echo "Installation complete. Please check that this terminated with no errors."
 echo "Upon restart, please run the 'Ventilator update' app from your desktop."

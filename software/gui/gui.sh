@@ -242,6 +242,7 @@ elif [ "$1" == "install" ]; then
       exit $EXIT_FAILURE
     fi
     install_linux
+    configure_conan
     exit $EXIT_SUCCESS
   else
     echo "Unsupported platform: ${PLATFORM}"

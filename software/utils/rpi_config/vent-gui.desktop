@@ -1,8 +1,8 @@
 [Desktop Entry]
 Name[en_US]=Ventilator GUI
-Path=/home/pi/Ventilator/software/gui
-Exec=lxterminal -t "Ventilator GUI" --working-directory=/home/pi/Ventilator/software/gui -e "./gui.sh run --serial-port /dev/ttyS0"
-Icon=/home/pi/Ventilator/software/utils/icons/logo_transparent.png
+Path=/home/respira/Ventilator/software/gui
+Exec=lxterminal -t "Ventilator GUI" --working-directory=/home/respira/Ventilator/software/gui -e "./gui.sh run --serial-port /dev/ttyS0"
+Icon=/home/respira/Ventilator/software/utils/icons/logo_transparent.png
 Terminal=true
 Type=Application
 Categories=Application

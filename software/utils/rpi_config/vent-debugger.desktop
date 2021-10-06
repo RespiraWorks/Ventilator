@@ -1,8 +1,8 @@
 [Desktop Entry]
 Name[en_US]=Vent debug
-Path=/home/pi/Ventilator/software/utils
-Exec=lxterminal -t "Vent debug" --working-directory=/home/pi/Ventilator/software/controller -e "source ~/.profile && ./controller_debug.sh debug"
-Icon=/home/pi/Ventilator/software/utils/icons/debug.png
+Path=/home/respira/Ventilator/software/utils
+Exec=lxterminal -t "Vent debug" --working-directory=/home/respira/Ventilator/software/controller -e "source ~/.profile && ./controller.sh debug"
+Icon=/home/respira/Ventilator/software/utils/icons/debug.png
 Encoding=UTF-8
 Terminal=false
 Type=Application

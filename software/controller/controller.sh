@@ -118,7 +118,7 @@ install_linux() {
 
 install_local() {
   pip3 install -U pip
-  pip3 install platformio codecov pyserial matplotlib pandas gitpython
+  pip3 install codecov pyserial matplotlib pandas gitpython
   pip3 install platformio==5.1.1
   platformio update
   platformio platform install native

@@ -53,14 +53,17 @@ fi
 git pull
 
 ### Update desktop shortcuts
-yes | cp -rf software/utils/rpi_config/Github /home/pi/Desktop
-yes | cp -rf software/utils/rpi_config/*.desktop /home/pi/Desktop
+yes | cp -rf software/utils/rpi_config/Github /home/respira/Desktop
+yes | cp -rf software/utils/rpi_config/*.desktop /home/respira/Desktop
 
 ### Update controller and deploy
+./controller/controller.sh install_local
 ./controller/controller.sh clean
 ./controller/controller.sh run
 
 ### Rebuild GUI
+./gui/gui.sh install_local
+./gui/gui.sh clean
 ./gui/gui.sh build --release --no-checks
 
 echo "Installation complete. Please check that this terminated with no errors."

@@ -1,8 +1,8 @@
 [Desktop Entry]
 Name[en_US]=Vent debug
-Path=/home/respira/Ventilator/software/utils
-Exec=lxterminal -t "Vent debug" --working-directory=/home/respira/Ventilator/software/controller -e "source ~/.profile && ./controller.sh debug"
-Icon=/home/respira/Ventilator/software/utils/icons/debug.png
+Path=/home/respira/ventilator/software/utils
+Exec=mate-terminal -t "Vent debug" --working-directory=/home/respira/ventilator/software/controller -e "source ~/.profile && ./controller.sh debug"
+Icon=/home/respira/ventilator/software/utils/icons/debug.png
 Encoding=UTF-8
 Terminal=false
 Type=Application

@@ -22,8 +22,10 @@ Now, open up a browser, and come back to this page.
 
 Just copy and paste this dangerous script into the console:
 
+# TODO: change command to point to master
+
 ```
-bash <(wget -qO- https://raw.githubusercontent.com/RespiraWorks/Ventilator/master/software/utils/rpi_config/bootstrap.sh)
+bash <(wget -qO- https://raw.githubusercontent.com/RespiraWorks/Ventilator/issue_1180_cmake_build_on_rpi/software/utils/rpi_config/bootstrap.sh)
 ```
 
 Follow the onscreen directions.

@@ -87,6 +87,7 @@ echo 'ATTRS{idVendor}=="0483", ATTRS{idProduct}=="374b", MODE="666"' | sudo tee 
 git clone https://github.com/RespiraWorks/Ventilator.git ventilator
 cd ventilator
 git checkout issue_1180_cmake_build_on_rpi  #TODO: remove this
+git pull #TODO remove this
 
 ### guake on startup and settings
 mkdir -p /home/respira/.config/autostart

@@ -55,12 +55,10 @@ git pull
 
 ### Rebuild GUI
 ./gui/gui.sh clean
-./gui/gui.sh install_local
 ./gui/gui.sh build --release --no-checks
 
 ### Update controller and deploy
 ./controller/controller.sh clean
-./controller/controller.sh install_local
 ./controller/controller.sh run
 
 ### Update desktop shortcuts

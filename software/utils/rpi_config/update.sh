@@ -32,6 +32,7 @@ echo " "
 read -n1 -s -r -p $'Press any key to continue...\n' key
 
 # Print each command as it executes
+# TODO only if verbose
 set -o xtrace
 
 # This script should run from repo/software dir
@@ -53,8 +54,7 @@ fi
 git pull
 
 ### Update desktop shortcuts
-yes | cp -rf software/utils/rpi_config/Github /home/respira/Desktop
-yes | cp -rf software/utils/rpi_config/*.desktop /home/respira/Desktop
+yes | cp -rf ./software/utils/rpi_config/Desktop/* /home/respira/Desktop
 
 ### Update controller and deploy
 ./controller/controller.sh install_local

@@ -39,6 +39,7 @@ echo " Will require a restart when complete."
 read -n1 -s -r -p $'Press any key to continue...\n' key
 
 # Print each command as it executes
+# TODO only if verbose
 set -o xtrace
 
 # Check if Linux

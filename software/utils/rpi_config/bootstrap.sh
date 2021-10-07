@@ -57,38 +57,35 @@ fi
 ### Install guake terminal and git with lfs
 sudo apt-get --yes install guake git-lfs
 
-#echo "deb http://archive.raspberrypi.org/debian/ buster main" | sudo tee -a /etc/apt/sources.list
-#sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 7FA3303E
-#sudo apt-get update
-#sudo apt-get install raspi-config
+echo "deb http://archive.raspberrypi.org/debian/ buster main" | sudo tee -a /etc/apt/sources.list
+sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 7FA3303E
+sudo apt-get update
+sudo apt-get install raspi-config
 
-### enable serial interface but not console TODO: make this work on Ubuntu MATE
+# Ubuntu MATE does not have serial console enabled by default,
+# so we do not need to disable it. TODO: test this
+# If you are using regular RasPI, you may need to do this:
 #sudo raspi-config nonint do_serial 2
 
 ### disable screen blanking
-#sudo raspi-config nonint do_blanking 1
+sudo raspi-config nonint do_blanking 1
 
 ### disable splash screen
-#sudo raspi-config nonint do_boot_splash 1
+sudo raspi-config nonint do_boot_splash 1
 
 ### configure USB permissions to deploy to Nucleo
-#echo 'ATTRS{idVendor}=="0483", ATTRS{idProduct}=="374b", MODE="666"' | sudo tee /etc/udev/rules.d/99-openocd.rules > /dev/null
+echo 'ATTRS{idVendor}=="0483", ATTRS{idProduct}=="374b", MODE="666"' | sudo tee /etc/udev/rules.d/99-openocd.rules > /dev/null
 
 ### Clone repository and go in
 git clone https://github.com/RespiraWorks/Ventilator.git ventilator
 cd ventilator
 
-### TODO: no screensaver
-
-# Serial no console, no screen blanking, no boot splash
-sudo mv /boot/firmware/cmdline.txt /boot/firmware/cmdline_backup.txt
-sudo cp software/utils/rpi_config/boot/cmdline.txt /boot/firmware
-
-sudo mv /boot/firmware/config.txt /boot/firmware/config_backup.txt
-sudo cp software/utils/rpi_config/boot/config.txt /boot/firmware
-
-#sudo mv /boot/firmware/syscfg.txt /boot/firmware/syscfg_backup.txt
-#sudo mv /boot/firmware/usercfg.txt /boot/firmware/usercfg_backup.txt
+### No screensaver or screen lock
+gsettings set org.gnome.desktop.lockdown disable-lock-screen 1
+gsettings set org.gnome.desktop.screensaver lock-enabled 0
+gsettings set org.gnome.desktop.screensaver lock-delay 3600
+gsettings set org.gnome.desktop.screensaver idle-activation-enabled 0
+gsettings set org.gnome.desktop.session idle-delay 0
 
 ### guake on startup and settings
 mkdir -p /home/respira/.config/autostart
@@ -102,8 +99,8 @@ chmod +x /home/respira/Desktop/*
 ### Execute shortcuts without bitching TODO
 #mkdir -p /home/respira/.config/libfm && cp -f software/utils/rpi_config/libfm.conf /home/respira/.config/libfm
 
-### RW theme :) TODO
-#pcmanfm --set-wallpaper /home/respira/ventilator/manufacturing/images/rendering_full.jpg
+### RW theme :)
+gsettings set org.mate.background picture-filename /home/respira/ventilator/manufacturing/images/rendering_full.jpg
 
 #sudo ./software/gui/gui.sh install
 #sudo ./software/controller/controller.sh install

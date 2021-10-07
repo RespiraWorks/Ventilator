@@ -52,51 +52,56 @@ fi
 #sudo apt-get update
 #sudo apt-get --yes upgrade
 
+# TODO: Ubuntu MATE desktop and color config
+
 ### Install guake terminal and git with lfs
 sudo apt-get --yes install guake git-lfs
 
-echo "deb http://archive.raspberrypi.org/debian/ buster main" | sudo tee -a /etc/apt/sources.list
-sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 7FA3303E
-sudo apt-get update
-sudo apt-get install raspi-config
+#echo "deb http://archive.raspberrypi.org/debian/ buster main" | sudo tee -a /etc/apt/sources.list
+#sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 7FA3303E
+#sudo apt-get update
+#sudo apt-get install raspi-config
 
-### enable serial interface but not console
-sudo raspi-config nonint do_serial 2
+### enable serial interface but not console TODO: make this work on Ubuntu MATE
+#sudo raspi-config nonint do_serial 2
 
 ### disable screen blanking
-sudo raspi-config nonint do_blanking 1
+#sudo raspi-config nonint do_blanking 1
 
 ### disable splash screen
-sudo raspi-config nonint do_boot_splash 1
+#sudo raspi-config nonint do_boot_splash 1
 
 ### configure USB permissions to deploy to Nucleo
-echo 'ATTRS{idVendor}=="0483", ATTRS{idProduct}=="374b", MODE="666"' | sudo tee /etc/udev/rules.d/99-openocd.rules > /dev/null
+#echo 'ATTRS{idVendor}=="0483", ATTRS{idProduct}=="374b", MODE="666"' | sudo tee /etc/udev/rules.d/99-openocd.rules > /dev/null
 
 ### Clone repository and go in
 git clone https://github.com/RespiraWorks/Ventilator.git ventilator
 cd ventilator
 
-### no screensaver
-### guake on startup
-sudo /bin/cp -f software/utils/rpi_config/autostart /etc/xdg/lxsession/LXDE-pi/autostart
+### TODO: no screensaver
+
+### guake on startup and settings
+mkdir -p /home/respira/.config/autostart
+cp software/utils/rpi_config/user_config/autostart/* /home/respira/.config/autostart
+dconf load /apps/guake/ < software/utils/rpi_config/user_config/dconf-guake-dump.txt
 
 ### Desktop shortcuts
 cp software/utils/rpi_config/Github /home/respira/Desktop
 cp software/utils/rpi_config/*.desktop /home/respira/Desktop
 
-### Execute shortcuts without bitching
-mkdir -p /home/respira/.config/libfm && cp -f software/utils/rpi_config/libfm.conf /home/respira/.config/libfm
+### Execute shortcuts without bitching TODO
+#mkdir -p /home/respira/.config/libfm && cp -f software/utils/rpi_config/libfm.conf /home/respira/.config/libfm
 
-### RW theme :)
-pcmanfm --set-wallpaper /home/respira/ventilator/manufacturing/images/rendering_full.jpg
+### RW theme :) TODO
+#pcmanfm --set-wallpaper /home/respira/ventilator/manufacturing/images/rendering_full.jpg
 
-sudo ./software/gui/gui.sh install
-sudo ./software/controller/controller.sh install
-sudo ./software/controller/controller.sh configure
+#sudo ./software/gui/gui.sh install
+#sudo ./software/controller/controller.sh install
+#sudo ./software/controller/controller.sh configure
 
 echo "Installation complete. Please check that this terminated with no errors."
 echo "Upon restart, please run the 'Ventilator update' app from your desktop."
 echo " "
 read -n1 -s -r -p $'Press any key to restart the machine\n' key
 
-sudo shutdown -r now
+#sudo shutdown -r now

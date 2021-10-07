@@ -1,6 +1,7 @@
 [Desktop Entry]
-Type=Link
+Encoding=UTF-8
 Name=Github repo
+Type=Link
 Comment=RespiraWorks ventilator repository on Github
-Icon=/home/respira/Ventilator/software/utils/icons/logo_reverse.png
 URL=https://github.com/RespiraWorks/Ventilator
+Icon=/home/respira/Ventilator/software/utils/icons/logo_reverse.png

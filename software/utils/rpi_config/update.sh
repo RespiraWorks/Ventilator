@@ -54,7 +54,7 @@ fi
 git pull
 
 ### Update desktop shortcuts
-yes | cp -rf ./software/utils/rpi_config/Desktop/* /home/respira/Desktop
+yes | cp -rf ./utils/rpi_config/Desktop/* /home/respira/Desktop
 
 ### Update controller and deploy
 ./controller/controller.sh install_local

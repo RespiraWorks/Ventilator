@@ -53,15 +53,15 @@ fi
 ### Will not switch branch to master!
 git pull
 
-### Update controller and deploy
-./controller/controller.sh clean
-./controller/controller.sh install_local
-./controller/controller.sh run
-
 ### Rebuild GUI
 ./gui/gui.sh clean
 ./gui/gui.sh install_local
 ./gui/gui.sh build --release --no-checks
+
+### Update controller and deploy
+./controller/controller.sh clean
+./controller/controller.sh install_local
+./controller/controller.sh run
 
 ### Update desktop shortcuts
 yes | cp -rf ./utils/rpi_config/Desktop/* /home/respira/Desktop

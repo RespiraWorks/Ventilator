@@ -49,10 +49,10 @@ if [ $PLATFORM != "Linux" ]; then
 fi
 
 ### No screensaver or screen lock
-gsettings set org.gnome.desktop.lockdown disable-lock-screen 1
-gsettings set org.gnome.desktop.screensaver lock-enabled 0
+gsettings set org.gnome.desktop.lockdown disable-lock-screen 'true'
+gsettings set org.gnome.desktop.screensaver lock-enabled 'false'
 gsettings set org.gnome.desktop.screensaver lock-delay 3600
-gsettings set org.gnome.desktop.screensaver idle-activation-enabled 0
+gsettings set org.gnome.desktop.screensaver idle-activation-enabled 'false'
 gsettings set org.gnome.desktop.session idle-delay 0
 
 ### Update the system TODO: uncomment
@@ -77,8 +77,8 @@ sudo apt-get --yes install raspi-config
 ### disable screen blanking
 sudo raspi-config nonint do_blanking 1
 
-### disable splash screen
-sudo raspi-config nonint do_boot_splash 1
+### disable splash screen TODO this don't work
+#sudo raspi-config nonint do_boot_splash 1
 
 ### configure USB permissions to deploy to Nucleo
 echo 'ATTRS{idVendor}=="0483", ATTRS{idProduct}=="374b", MODE="666"' | sudo tee /etc/udev/rules.d/99-openocd.rules > /dev/null
@@ -90,11 +90,11 @@ git checkout issue_1180_cmake_build_on_rpi  #TODO: remove this
 
 ### guake on startup and settings
 mkdir -p /home/respira/.config/autostart
-cp software/utils/rpi_config/user_config/autostart/* /home/respira/.config/autostart
-dconf load /apps/guake/ < software/utils/rpi_config/user_config/dconf-guake-dump.txt
+cp ./software/utils/rpi_config/user_config/autostart/* /home/respira/.config/autostart
+dconf load /apps/guake/ < ./software/utils/rpi_config/user_config/dconf-guake-dump.txt
 
 ### Desktop shortcuts
-cp software/utils/rpi_config/Desktop/* /home/respira/Desktop
+cp ./software/utils/rpi_config/Desktop/* /home/respira/Desktop
 chmod +x /home/respira/Desktop/*
 
 ### Execute shortcuts without bitching TODO

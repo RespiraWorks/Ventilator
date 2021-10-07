@@ -131,6 +131,7 @@ install_linux() {
 configure_conan() {
   pip3 install -U pip
   pip3 install conan
+  #source ${HOME}/.profile
   conan profile new --detect default
   conan profile update settings.compiler.libcxx=libstdc++11 default
 }

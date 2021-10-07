@@ -103,9 +103,11 @@ chmod +x /home/respira/Desktop/*
 ### RW theme :)
 gsettings set org.mate.background picture-filename /home/respira/ventilator/manufacturing/images/rendering_full.jpg
 
-#sudo ./software/gui/gui.sh install
-#sudo ./software/controller/controller.sh install
-#sudo ./software/controller/controller.sh configure
+sudo ./software/gui/gui.sh install
+./software/gui/gui.sh install_local
+sudo ./software/controller/controller.sh install
+./software/controller/controller.sh install_local
+sudo ./software/controller/controller.sh configure
 
 echo "Installation complete. Please check that this terminated with no errors."
 echo "Upon restart, please run the 'Ventilator update' app from your desktop."

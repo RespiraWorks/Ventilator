@@ -1,0 +1,54 @@
+# Please DO NOT modify this file; if you need to modify the boot config, the
+# "usercfg.txt" file is the place to include user changes. Please refer to
+# the README file for a description of the various configuration files on
+# the boot partition.
+
+# The unusual ordering below is deliberate; older firmwares (in particular the
+# version initially shipped with bionic) don't understand the conditional
+# [sections] below and simply ignore them. The Pi4 doesn't boot at all with
+# firmwares this old so it's safe to place at the top. Of the Pi2 and Pi3, the
+# Pi3 uboot happens to work happily on the Pi2, so it needs to go at the bottom
+# to support old firmwares.
+
+[pi4]
+kernel=uboot_rpi_4.bin
+max_framebuffers=2
+
+[pi2]
+kernel=uboot_rpi_2.bin
+
+[pi3]
+kernel=uboot_rpi_3.bin
+
+[all]
+arm_64bit=1
+device_tree_address=0x03000000
+
+# The following settings are "defaults" expected to be overridden by the
+# included configuration. The only reason they are included is, again, to
+# support old firmwares which don't understand the "include" command.
+
+enable_uart=0
+cmdline=cmdline.txt
+
+include syscfg.txt
+include usercfg.txt
+
+# Enable the FKMS ("Fake" KMS) graphics overlay, enable the camera firmware
+# and allocate 128Mb to the GPU memory
+dtoverlay=vc4-fkms-v3d
+gpu_mem=128
+start_x=1
+
+# Comment out the following line if the edges of the desktop appear outside
+# the edges of your display
+disable_overscan=1
+
+# If you have issues with audio, you may try uncommenting the following line
+# which forces the HDMI output into HDMI mode instead of DVI (which doesn't
+# support audio output)
+#hdmi_drive=2
+
+# If you have a CM4, uncomment the following line to enable the USB2 outputs
+# on the IO board (assuming your CM4 is plugged into such a board)
+#dtoverlay=dwc2,dr_mode=host

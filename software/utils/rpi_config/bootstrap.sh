@@ -80,14 +80,24 @@ cd ventilator
 
 ### TODO: no screensaver
 
+# Serial no console, no screen blanking, no boot splash
+sudo mv /boot/firmware/cmdline.txt /boot/firmware/cmdline_backup.txt
+sudo cp software/utils/rpi_config/boot/cmdline.txt /boot/firmware
+
+sudo mv /boot/firmware/config.txt /boot/firmware/config_backup.txt
+sudo cp software/utils/rpi_config/boot/config.txt /boot/firmware
+
+#sudo mv /boot/firmware/syscfg.txt /boot/firmware/syscfg_backup.txt
+#sudo mv /boot/firmware/usercfg.txt /boot/firmware/usercfg_backup.txt
+
 ### guake on startup and settings
 mkdir -p /home/respira/.config/autostart
 cp software/utils/rpi_config/user_config/autostart/* /home/respira/.config/autostart
 dconf load /apps/guake/ < software/utils/rpi_config/user_config/dconf-guake-dump.txt
 
 ### Desktop shortcuts
-cp software/utils/rpi_config/Github /home/respira/Desktop
-cp software/utils/rpi_config/*.desktop /home/respira/Desktop
+cp software/utils/rpi_config/Desktop/* /home/respira/Desktop
+chmod +x /home/respira/Desktop/*
 
 ### Execute shortcuts without bitching TODO
 #mkdir -p /home/respira/.config/libfm && cp -f software/utils/rpi_config/libfm.conf /home/respira/.config/libfm

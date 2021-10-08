@@ -88,11 +88,7 @@ sudo apt-get autoclean
 # If you are using regular RasPI, you may need to do this:
 #sudo raspi-config nonint do_serial 2
 
-### disable screen blanking TODO this don't work
-###sudo raspi-config nonint do_blanking 1
-
-### disable splash screen TODO this don't work
-#sudo raspi-config nonint do_boot_splash 1
+### TODO: Disable boot splash
 #https://ubuntu-mate.community/t/disable-splash-screen-on-bootup/3375
 
 ### Clone repository and go in
@@ -110,7 +106,7 @@ git pull
 ###############################################################################
 
 ### Dekstop shortcuts, guake on startup and guake settings
-cp -rf ./software/utils/rpi_config/user/* ${HOME}
+cp -rf ./software/utils/rpi_config/user/. ${HOME}
 dconf load /apps/guake/ < ./software/utils/rpi_config/dconf-guake-dump.txt
 
 ### RW theme :)

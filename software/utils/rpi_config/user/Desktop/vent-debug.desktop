@@ -3,8 +3,8 @@
 Version=1.0
 Type=Application
 Terminal=false
-Icon=/home/respira/ventilator/software/utils/icons/debug.png
-Icon[en_US]=/home/respira/ventilator/software/utils/icons/debug.png
+Icon=rw_debug
+Icon[en_US]=rw_debug
 Name[en_US]=debug
-Exec=xterm -title "Vent debug" -hold -e "source ~/.profile && /home/respira/ventilator/software/controller/controller.sh debug"
+Exec=xterm -title "Vent debug" -hold -e "source ~/.profile && ${HOME}/ventilator/software/controller/controller.sh debug"
 Name=debug

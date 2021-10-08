@@ -3,9 +3,8 @@
 Version=1.0
 Type=Application
 Terminal=false
-Path=/home/respira/ventilator/software/utils/rpi_config
-Icon=/home/respira/ventilator/software/utils/icons/inhale.png
-Icon[en_US]=/home/respira/ventilator/software/utils/icons/inhale.png
+Icon=rw_inhale
+Icon[en_US]=rw_inhale
 Name[en_US]=Ventilator update
-Exec=xterm -title "Vent update" -hold -e "source ~/.profile && /home/respira/ventilator/software/utils/rpi_config/update.sh"
+Exec=xterm -title "Vent update" -hold -e "source ~/.profile && ${HOME}/ventilator/software/utils/rpi_config/update.sh"
 Name=Ventilator update

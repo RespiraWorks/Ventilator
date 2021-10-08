@@ -106,6 +106,9 @@ git pull
 ###############################################################################
 
 ### Dekstop shortcuts, guake on startup and guake settings
+
+sudo cp ./software/utils/icons/* /usr/share/pixmaps
+
 cp -rf ./software/utils/rpi_config/user/. ${HOME}
 dconf load /apps/guake/ < ./software/utils/rpi_config/dconf-guake-dump.txt
 

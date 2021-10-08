@@ -3,8 +3,8 @@
 Version=1.0
 Type=Application
 Terminal=false
-Icon=/home/respira/ventilator/software/utils/icons/logo_transparent.png
-Icon[en_US]=/home/respira/ventilator/software/utils/icons/logo_transparent.png
+Icon=rw_logo_transparent
+Icon[en_US]=rw_logo_transparent
 Name[en_US]=Ventilator GUI
-Exec=xterm -title "Vent GUI" -hold -e "source ~/.profile && /home/respira/ventilator/software/gui/gui.sh run --serial-port /dev/ttyS0"
+Exec=xterm -title "Vent GUI" -hold -e "source ~/.profile && ${HOME}/ventilator/software/gui/gui.sh run --serial-port /dev/ttyS0"
 Name=Ventilator GUI

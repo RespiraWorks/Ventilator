@@ -3,8 +3,8 @@
 Version=1.0
 Type=Application
 Terminal=false
-Icon=/home/respira/ventilator/software/utils/icons/logo_reverse.png
-Icon[en_US]=/home/respira/ventilator/software/utils/icons/logo_reverse.png
+Icon=rw_logo_reverse
+Icon[en_US]=rw_logo_reverse
 Name[en_US]=Github repo
 Exec=firefox https://github.com/RespiraWorks/Ventilator
 Name=Github repo

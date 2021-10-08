@@ -120,6 +120,7 @@ install_local() {
   pip3 install -U pip
   pip3 install codecov pyserial matplotlib pandas gitpython
   pip3 install platformio==5.1.1
+  source ${HOME}/.profile
   platformio update
   platformio platform install native
 }

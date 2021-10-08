@@ -27,8 +27,6 @@ set -o pipefail
 EXIT_FAILURE=1
 EXIT_SUCCESS=0
 
-username="respira"
-
 # Check if Linux
 PLATFORM="$(uname -s)"
 if [ $PLATFORM != "Linux" ]; then

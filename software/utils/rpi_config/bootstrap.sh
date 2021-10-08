@@ -77,7 +77,7 @@ sudo apt-get --yes remove libreoffice*
 ### Update the system
 sudo apt-get update
 sudo apt-get --yes upgrade
-sudo apt-get autoremove
+sudo apt-get --yes autoremove
 sudo apt-get autoclean
 
 #echo "deb http://archive.raspberrypi.org/debian/ buster main" | sudo tee -a /etc/apt/sources.list

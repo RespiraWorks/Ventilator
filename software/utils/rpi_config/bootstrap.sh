@@ -68,6 +68,8 @@ gsettings set org.mate.screensaver cycle-delay 240
 #gsettings set org.mate.desktop.session idle-delay 0
 
 mate-panel --reset --layout netbook
+sudo add-apt-repository ppa:lah7/ubuntu-mate-colours
+sudo apt-get update
 sudo apt-get --yes install ubuntu-mate-colours-blue guake git-lfs
 #mate-appearance-properties --install=Ambiant-MATE-Dark-Blue
 sudo apt-get --yes remove libreoffice*

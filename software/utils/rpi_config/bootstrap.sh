@@ -18,13 +18,15 @@
 set -e
 set -o pipefail
 
-# Print each command as it executes
-if [ -n "$VERBOSE" ]; then
+# Print each command as it executes #TODO uncomment
+#if [ -n "$VERBOSE" ]; then
   set -o xtrace
-fi
+#fi
 
 EXIT_FAILURE=1
 EXIT_SUCCESS=0
+
+username="respira"
 
 # Check if Linux
 PLATFORM="$(uname -s)"
@@ -55,20 +57,24 @@ if [ -z "$VERBOSE" ]; then
 fi
 
 ### No screensaver or screen lock
-gsettings set org.gnome.desktop.lockdown disable-lock-screen 'true'
-gsettings set org.gnome.desktop.screensaver lock-enabled 'false'
-gsettings set org.gnome.desktop.screensaver lock-delay 3600
-gsettings set org.gnome.desktop.screensaver idle-activation-enabled 'false'
-gsettings set org.gnome.desktop.session idle-delay 0
+#mate-screensaver-command
+#xset s off
+gsettings set org.mate.power-manager sleep-display-ac 0
+gsettings set org.mate.screensaver lock-enabled 'false'
+gsettings set org.mate.screensaver idle-activation-enabled 'false'
+gsettings set org.mate.screensaver lock-delay 3600
+gsettings set org.mate.screensaver cycle-delay 240
+#gsettings set org.mate.desktop.lockdown disable-lock-screen 'true'
+#gsettings set org.mate.desktop.session idle-delay 0
 
-# TODO: Ubuntu MATE desktop and color config
+# Ubuntu MATE desktop and color config
 mate-panel --reset --layout netbook
 sudo apt install ubuntu-mate-colours-blue
 #mate-appearance-properties --install=Ambiant-MATE-Dark-Blue
 
-### Update the system TODO: uncomment
-#sudo apt-get update
-#sudo apt-get --yes upgrade
+### Update the system
+sudo apt-get update
+sudo apt-get --yes upgrade
 
 ### Install guake terminal and git with lfs
 sudo apt-get --yes install guake git-lfs
@@ -88,9 +94,7 @@ sudo apt-get --yes install guake git-lfs
 
 ### disable splash screen TODO this don't work
 #sudo raspi-config nonint do_boot_splash 1
-
-### configure USB permissions to deploy to Nucleo
-echo 'ATTRS{idVendor}=="0483", ATTRS{idProduct}=="374b", MODE="666"' | sudo tee /etc/udev/rules.d/99-openocd.rules > /dev/null
+#https://ubuntu-mate.community/t/disable-splash-screen-on-bootup/3375
 
 ### Clone repository and go in
 git clone https://github.com/RespiraWorks/Ventilator.git ventilator
@@ -102,19 +106,13 @@ cd ventilator
 git checkout issue_1180_cmake_build_on_rpi
 git pull
 ###############################################################################
+### TODO: Comment out above before making merge request                     ###
+###############################################################################
 
-### guake on startup and settings
+### Dekstop shortcuts, guake on startup and guake settings
 mkdir -p /home/respira/.config/autostart
-cp ./software/utils/rpi_config/user_config/autostart/* /home/respira/.config/autostart
-chmod +x /home/respira/.config/autostart/*
-dconf load /apps/guake/ < ./software/utils/rpi_config/user_config/dconf-guake-dump.txt
-
-### Desktop shortcuts
-cp ./software/utils/rpi_config/Desktop/* /home/respira/Desktop
-chmod +x /home/respira/Desktop/*
-
-### Execute shortcuts without bitching TODO: is this still needed?
-#mkdir -p /home/respira/.config/libfm && cp -f software/utils/rpi_config/libfm.conf /home/respira/.config/libfm
+cp -rf ./software/utils/rpi_config/user/* /home/${username}
+dconf load /apps/guake/ < ./software/utils/rpi_config/dconf-guake-dump.txt
 
 ### RW theme :)
 gsettings set org.mate.background picture-filename /home/respira/ventilator/manufacturing/images/rendering_full.jpg
@@ -125,6 +123,9 @@ sudo ./software/gui/gui.sh install
 sudo ./software/controller/controller.sh install
 ./software/controller/controller.sh install_local
 sudo ./software/controller/controller.sh configure
+
+### configure USB permissions to deploy to Nucleo
+echo 'ATTRS{idVendor}=="0483", ATTRS{idProduct}=="374b", MODE="666"' | sudo tee /etc/udev/rules.d/99-openocd.rules > /dev/null
 
 if [ -z "$VERBOSE" ]; then
   echo "Installation complete. Please check that this terminated with no errors."

@@ -26,8 +26,6 @@ set -o pipefail
 EXIT_FAILURE=1
 EXIT_SUCCESS=0
 
-username="respira"
-
 # Check if Linux
 PLATFORM="$(uname -s)"
 if [ $PLATFORM != "Linux" ]; then
@@ -98,6 +96,7 @@ sudo apt-get autoclean
 #https://ubuntu-mate.community/t/disable-splash-screen-on-bootup/3375
 
 ### Clone repository and go in
+cd ${HOME}
 git clone https://github.com/RespiraWorks/Ventilator.git ventilator
 cd ventilator
 
@@ -111,11 +110,11 @@ git pull
 ###############################################################################
 
 ### Dekstop shortcuts, guake on startup and guake settings
-cp -rf ./software/utils/rpi_config/user/* /home/${username}
+cp -rf ./software/utils/rpi_config/user/* ${HOME}
 dconf load /apps/guake/ < ./software/utils/rpi_config/dconf-guake-dump.txt
 
 ### RW theme :)
-gsettings set org.mate.background picture-filename /home/${username}/ventilator/manufacturing/images/rendering_full.jpg
+gsettings set org.mate.background picture-filename ${HOME}/ventilator/manufacturing/images/rendering_full.jpg
 
 # Install dependencies and do initial configuration for build toolchains
 sudo ./software/gui/gui.sh install

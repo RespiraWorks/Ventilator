@@ -1,0 +1,10 @@
+#!/usr/bin/env xdg-open
+[Desktop Entry]
+Version=1.0
+Type=Application
+Terminal=false
+Icon=/home/respira/ventilator/software/utils/icons/logo_transparent.png
+Icon[en_US]=/home/respira/ventilator/software/utils/icons/logo_transparent.png
+Name[en_US]=Ventilator GUI
+Exec=xterm -title "Vent GUI" -hold -e "source ~/.profile && /home/respira/ventilator/software/gui/gui.sh run --serial-port /dev/ttyS0"
+Name=Ventilator GUI

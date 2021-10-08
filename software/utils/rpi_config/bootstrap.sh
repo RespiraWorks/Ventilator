@@ -68,7 +68,7 @@ gsettings set org.mate.screensaver cycle-delay 240
 #gsettings set org.mate.desktop.session idle-delay 0
 
 mate-panel --reset --layout netbook
-sudo add-apt-repository ppa:lah7/ubuntu-mate-colours
+sudo add-apt-repository --yes ppa:lah7/ubuntu-mate-colours
 sudo apt-get update
 sudo apt-get --yes install ubuntu-mate-colours-blue guake git-lfs
 #mate-appearance-properties --install=Ambiant-MATE-Dark-Blue
@@ -77,6 +77,8 @@ sudo apt-get --yes remove libreoffice*
 ### Update the system
 sudo apt-get update
 sudo apt-get --yes upgrade
+sudo apt-get autoremove
+sudo apt-get autoclean
 
 #echo "deb http://archive.raspberrypi.org/debian/ buster main" | sudo tee -a /etc/apt/sources.list
 #sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 7FA3303E
@@ -109,12 +111,11 @@ git pull
 ###############################################################################
 
 ### Dekstop shortcuts, guake on startup and guake settings
-mkdir -p /home/respira/.config/autostart
 cp -rf ./software/utils/rpi_config/user/* /home/${username}
 dconf load /apps/guake/ < ./software/utils/rpi_config/dconf-guake-dump.txt
 
 ### RW theme :)
-gsettings set org.mate.background picture-filename /home/respira/ventilator/manufacturing/images/rendering_full.jpg
+gsettings set org.mate.background picture-filename /home/${username}/ventilator/manufacturing/images/rendering_full.jpg
 
 # Install dependencies and do initial configuration for build toolchains
 sudo ./software/gui/gui.sh install

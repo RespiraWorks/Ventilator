@@ -67,17 +67,14 @@ gsettings set org.mate.screensaver cycle-delay 240
 #gsettings set org.mate.desktop.lockdown disable-lock-screen 'true'
 #gsettings set org.mate.desktop.session idle-delay 0
 
-# Ubuntu MATE desktop and color config
 mate-panel --reset --layout netbook
-sudo apt install ubuntu-mate-colours-blue
+sudo apt-get --yes install ubuntu-mate-colours-blue guake git-lfs
 #mate-appearance-properties --install=Ambiant-MATE-Dark-Blue
+sudo apt-get --yes remove libreoffice*
 
 ### Update the system
 sudo apt-get update
 sudo apt-get --yes upgrade
-
-### Install guake terminal and git with lfs
-sudo apt-get --yes install guake git-lfs
 
 #echo "deb http://archive.raspberrypi.org/debian/ buster main" | sudo tee -a /etc/apt/sources.list
 #sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 7FA3303E

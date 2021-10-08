@@ -14,7 +14,7 @@ The following assumes that you have a working hardware prototype with all necess
 * Boot up and go through the standard Raspi configuration steps - locale, Wifi, etc..
 * Recommended:
   * set up your username and password to be`respira`
-  * allow it to boot without asking for password
+  * chose `Log in automatically` instead of requiring a password at bootup
 
 You may also want to configure the image with wifi and ssh credentials by directly editing it on the SD card, as described [here](https://raspberrypi.stackexchange.com/questions/66949/enable-ssh-and-connect-to-a-wifi-network-without-a-keyboard-or-a-screen) or
 [here](https://www.luisdelarosa.com/2017/09/19/how-to-enable-headless-networking-on-ubuntu-mate-on-raspberry-pi/).

@@ -99,10 +99,6 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Checkout submodules
-          command: |
-            git submodule update --init --recursive
-      - run:
           name: Install dependencies
           command: |
             export FORCED_ROOT=1
@@ -111,10 +107,10 @@ jobs:
           name: Run tests & publish coverage
           command: |
             export FORCED_ROOT=1
+            ./software/gui/gui.sh build -j --no-checks
+            ./software/gui/gui.sh run -x --startup-only
             ci_env=`/bin/bash <(curl -s https://codecov.io/env)`
-            ./software/gui/gui/gui.sh build -j --no-checks
-            ./software/gui/gui/gui.sh run -x --startup-only
-            ./software/gui/gui/gui.sh test -j -x --upload-cov
+            ./software/gui/gui.sh test -j -x --upload-cov
 
 workflows:
   commit:

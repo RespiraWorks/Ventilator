@@ -33,6 +33,12 @@ if [ $PLATFORM != "Linux" ]; then
   exit $EXIT_FAILURE
 fi
 
+# Make sure we are not in sudo
+if [ "$EUID" -eq 0 ] && [ "$2" != "-f" ]; then
+  echo "Please do not run this script with root privileges!"
+  exit $EXIT_FAILURE
+fi
+
 if [ -z "$VERBOSE" ]; then
   echo "==============================================================================="
   echo "=================== RespiraWorks Ventilator bootstrapper ======================"

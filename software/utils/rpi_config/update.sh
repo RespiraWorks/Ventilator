@@ -34,9 +34,9 @@ if [ $PLATFORM != "Linux" ]; then
   exit $EXIT_FAILURE
 fi
 
-# Make sure it's not sudo
+# Make sure we are not in sudo
 if [ "$EUID" -eq 0 ] && [ "$2" != "-f" ]; then
-  echo "Please do not run tests with root privileges!"
+  echo "Please do not run this script with root privileges!"
   exit $EXIT_FAILURE
 fi
 

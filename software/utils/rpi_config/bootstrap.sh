@@ -55,21 +55,17 @@ if [ -z "$VERBOSE" ]; then
 fi
 
 ### No screensaver or screen lock
-#mate-screensaver-command
-#xset s off
 gsettings set org.mate.power-manager sleep-display-ac 0
 gsettings set org.mate.screensaver lock-enabled 'false'
 gsettings set org.mate.screensaver idle-activation-enabled 'false'
 gsettings set org.mate.screensaver lock-delay 3600
 gsettings set org.mate.screensaver cycle-delay 240
-#gsettings set org.mate.desktop.lockdown disable-lock-screen 'true'
-#gsettings set org.mate.desktop.session idle-delay 0
 
 mate-panel --reset --layout netbook
 sudo add-apt-repository --yes ppa:lah7/ubuntu-mate-colours
 sudo apt-get update
 sudo apt-get --yes install ubuntu-mate-colours-blue guake git-lfs
-#mate-appearance-properties --install=Ambiant-MATE-Dark-Blue
+# \TODO: apply Ambiant-MATE-Dark-Blue theme?
 sudo apt-get --yes remove libreoffice*
 
 ### Update the system

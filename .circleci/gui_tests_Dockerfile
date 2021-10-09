@@ -3,6 +3,7 @@
 FROM debian:buster
 
 RUN apt-get update && apt-get -y install sudo
+RUN echo "lecture never" >> /etc/sudoers
 RUN useradd -m docker && echo "docker:docker" | chpasswd && adduser docker sudo
 USER docker
 

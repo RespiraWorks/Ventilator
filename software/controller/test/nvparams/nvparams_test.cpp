@@ -26,7 +26,7 @@ static constexpr uint32_t kMemSize{8192};
 static void CompareParams(int16_t address, const Structure &ref, NVParams::Handler &nv_params_,
                           TestEeprom &eeprom_) {
   // Reminder to update this function when Structure changes size.
-  static_assert(sizeof(Structure) == 52);
+  static_assert(sizeof(Structure) == 140);
   Structure read;
   if (address < 0) {
     nv_params_.Get(0, &read, sizeof(Structure));
@@ -57,6 +57,15 @@ static void CompareParams(int16_t address, const Structure &ref, NVParams::Handl
             ref.last_settings.inspiratory_trigger_cm_h2o);
   EXPECT_EQ(read.last_settings.expiratory_trigger_ml_per_min,
             ref.last_settings.expiratory_trigger_ml_per_min);
+
+  ASSERT_EQ(read.blower_pinch_cal.size(), ref.blower_pinch_cal.size());
+  for (size_t i = 0; i < ref.blower_pinch_cal.size(); ++i) {
+    EXPECT_EQ(read.blower_pinch_cal[i], ref.blower_pinch_cal[i]);
+  }
+  ASSERT_EQ(read.exhale_pinch_cal.size(), ref.exhale_pinch_cal.size());
+  for (size_t i = 0; i < ref.exhale_pinch_cal.size(); ++i) {
+    EXPECT_EQ(read.exhale_pinch_cal[i], ref.exhale_pinch_cal[i]);
+  }
 }
 
 uint32_t ParamsCRC(Structure *params) {

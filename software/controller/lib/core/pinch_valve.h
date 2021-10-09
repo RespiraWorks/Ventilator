@@ -15,9 +15,11 @@ limitations under the License.
 
 #pragma once
 
+#include <stdint.h>
+
+#include "interpolant.h"
 #include "stepper.h"
 #include "units.h"
-#include "vars.h"
 
 enum class PinchValveHomeState {
   Disabled,
@@ -47,9 +49,8 @@ enum class PinchValveHomeState {
 
 class PinchValve {
  public:
-  // Create a new pinch valve using the specified
-  // stepper motor.
-  explicit PinchValve(int motor_index, const char* name_prepend, const char* help_append);
+  // Create a new pinch valve using the specified stepper motor.
+  explicit PinchValve(const char *name, const char *help_supplement, int motor_index);
 
   // Initialize the pinch value absolute position.
   // This should be called at startup from the
@@ -74,6 +75,11 @@ class PinchValve {
   // Return true if the pinch valve is ready for action
   bool IsReady() { return home_state_ == PinchValveHomeState::Homed; }
 
+  // Link calibration table to nv params
+  void LinkCalibration(NVParams::Handler *nv_params, const uint16_t offset) {
+    calibration_.cal_table_.link(nv_params, offset);
+  };
+
  private:
   Time move_start_time_;
 
@@ -84,10 +90,6 @@ class PinchValve {
 
   PinchValveHomeState home_state_{PinchValveHomeState::Disabled};
 
-  // This table is used to roughly linearize the pinch valve output.  It was built by adjusting the
-  // pinch valve and monitoring the flow through the venturi tube. The entries should give pinch
-  // valve settings for a list of equally spaced flow rates.  The first entry should be the setting
-  // for 0 flow rate (normally 0) and the last entry should be the setting for 100% flow rate. The
-  // minimum length of the table is 2 entries.
-  Debug::Variable::FloatArray<11> calibration_;
+  // pinch valve calibration table
+  Interpolant<pinch_valves_cal_size> calibration_{"pinch_cal", 0.0f, 1.0f, "", "calibration table"};
 };

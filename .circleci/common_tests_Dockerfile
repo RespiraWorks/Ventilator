@@ -8,7 +8,9 @@ COPY . ./
 
 WORKDIR /root/Ventilator/software/common
 
+ENV FORCED_ROOT=1
+
 CMD /bin/bash \
-    FORCED_ROOT=1 ./common.sh install && \
+    ./common.sh install && \
     ./common.sh test --cov --no-checks && \
     ./common.sh cov_upload

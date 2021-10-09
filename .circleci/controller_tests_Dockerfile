@@ -8,7 +8,9 @@ COPY . ./
 
 WORKDIR /root/Ventilator/software/controller
 
+ENV FORCED_ROOT=1
+
 CMD /bin/bash \
-    FORCED_ROOT=1 ./controller.sh install && \
+    ./controller.sh install && \
     ./controller.sh test --cov --no-checks && \
     ./controller.sh cov_upload

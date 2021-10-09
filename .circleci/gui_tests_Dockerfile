@@ -8,8 +8,10 @@ COPY . ./
 
 WORKDIR /root/Ventilator/software/gui
 
+ENV FORCED_ROOT=1
+
 CMD /bin/bash \
-    FORCED_ROOT=1 ./gui.sh install && \
-    FORCED_ROOT=1 ./gui.sh build -j --no-checks && \
-    FORCED_ROOT=1 ./gui.sh run -x --startup-only && \
-    FORCED_ROOT=1 ./gui.sh test -j -x --upload-cov
+    ./gui.sh install && \
+    ./gui.sh build -j --no-checks && \
+    ./gui.sh run -x --startup-only && \
+    ./gui.sh test -j -x --upload-cov

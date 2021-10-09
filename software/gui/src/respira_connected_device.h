@@ -61,7 +61,9 @@ class RespiraConnectedDevice : public ConnectedDevice {
   // Creates the QSerialPort in the current thread context.
   // We can't provide it from outside context because of Qt mechanisms.
   bool createPortMaybe() {
-    if ((serialPort_ != nullptr) && serialPort_->open(QIODevice::ReadWrite)) return true;
+    if (serialPort_ != nullptr) {
+      return true;
+    }
 
     serialPort_ = std::make_unique<QSerialPort>();
     serialPort_->setPortName(serialPortName_);

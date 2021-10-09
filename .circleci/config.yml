@@ -83,14 +83,17 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Build docker image
+          name: Install dependencies
           command: |
-            docker build -f .circleci/common_tests_Dockerfile -t common-test-image .
+            export FORCED_ROOT=1
+            ./software/common/common.sh install
       - run:
           name: Run tests & publish coverage
           command: |
+            export FORCED_ROOT=1
+            ./software/common/common.sh test --cov --no-checks
             ci_env=`/bin/bash <(curl -s https://codecov.io/env)`
-            docker run $ci_env --privileged -t common-test-image
+            ./software/common/common.sh cov_upload
 
   gui-tests:
     machine:
@@ -108,9 +111,9 @@ jobs:
           command: |
             export FORCED_ROOT=1
             ./software/gui/gui.sh build -j --no-checks
-            ./software/gui/gui.sh run -x --startup-only
+            ./software/gui/gui.sh run --startup-only
             ci_env=`/bin/bash <(curl -s https://codecov.io/env)`
-            ./software/gui/gui.sh test -j -x --upload-cov
+            ./software/gui/gui.sh test -j --upload-cov
 
 workflows:
   commit:

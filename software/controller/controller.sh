@@ -66,22 +66,21 @@ print_help() {
 Utility script for the RespiraWorks Ventilator controller.
 
 The following options are available:
-  install   Installs platformio and configures udev rules for deployment
-                [-f] - force installation, even with root privileges (for CI only)
-  check     Runs static checks only
-  clean     Clean build directories
-  debug     Run debugger CLI (Python utility) to communicate with controller remotely
-  run       Builds and deploys firmware to controller
-            There can be only one connected. Otherwise, use the platformio/deploy.sh script manually.
-                [-f] - force run, even with root privileges
-  test      Builds and runs all unit tests, integration tests, static checks, generates coverage
+  install     One-time installation of build toolchain and dependencies
+  configure   Configures udev rules for deployment to controller
+  check       Runs static checks only
+  clean       Clean build directories
+  debug       Run debugger CLI (Python utility) to communicate with controller remotely
+  run         Builds and deploys firmware to controller
+              There can be only one connected. Otherwise, use the platformio/deploy.sh script manually.
+  test        Builds and runs all unit tests, integration tests, static checks, generates coverage
                 [--no-checks] - do not run static checks (for CI)
                 [--cov]       - generate coverage reports
-  unit      Builds and runs unit tests only (and generates coverage reports)
+  unit        Builds and runs unit tests only (and generates coverage reports)
                 <name>  - run specific unit test, may include wildcards, i.e. 'debug*'
                 [-o]    - open coverage report in browser when done
-  cov_upload   Upload coverage reports to Codecov server
-  help/-h   Display this help info
+  cov_upload  Upload coverage reports to Codecov server
+  help/-h     Display this help info
 EOF
 }
 
@@ -103,20 +102,17 @@ clean_all() {
 }
 
 install_linux() {
-  apt-get update
-  apt-get install -y \
-          build-essential \
-          python3-pip \
-          git \
-          curl \
-          libtinfo5 \
-          cppcheck \
-          gcovr \
-          lcov \
-          clang-tidy
-}
-
-install_local() {
+  sudo apt-get update
+  sudo apt-get install -y \
+               build-essential \
+               python3-pip \
+               git \
+               curl \
+               libtinfo5 \
+               cppcheck \
+               gcovr \
+               lcov \
+               clang-tidy
   pip3 install -U pip
   pip3 install codecov pyserial matplotlib pandas gitpython
   pip3 install platformio==5.1.1
@@ -255,35 +251,23 @@ if [ "$1" == "help" ] || [ "$1" == "-h" ]; then
 # INSTALL #
 ###########
 elif [ "$1" == "install" ]; then
-  if [ "$EUID" -ne 0 ]; then
-    echo "Please run install with root privileges!"
+  if [ "$EUID" -eq 0 ] && [ -z "$FORCED_ROOT" ]; then
+    echo "Please do not run install with root privileges!"
     exit $EXIT_FAILURE
   fi
-
   install_linux
-
-#################
-# INSTALL LOCAL #
-#################
-elif [ "$1" == "install_local" ]; then
-  if [ "$EUID" -eq 0 ] && [ "$2" != "-f" ]; then
-    echo "Please do not run install_local with root privileges!"
-    exit $EXIT_FAILURE
-  fi
-
-  install_local
+  exit $EXIT_SUCCESS
 
 #############
 # CONFIGURE #
 #############
 elif [ "$1" == "configure" ]; then
-  if [ "$EUID" -ne 0 ]; then
-    echo "Please run configure with root privileges!"
+  if [ "$EUID" -eq 0 ] && [ -z "$FORCED_ROOT" ]; then
+    echo "Please do not run configure with root privileges!"
     exit $EXIT_FAILURE
   fi
-
   configure_platformio
-
+  exit $EXIT_SUCCESS
 
 #########
 # CLEAN #
@@ -361,8 +345,8 @@ elif [ "$1" == "cov_upload" ]; then
 #######
 elif [ "$1" == "run" ]; then
 
-  if [ "$EUID" -eq 0 ] && [ "$2" != "-f" ]; then
-    echo "Please do not run the app with root privileges!"
+  if [ "$EUID" -eq 0 ] && [ -z "$FORCED_ROOT" ]; then
+    echo "Please do not deploy with root privileges!"
     exit $EXIT_FAILURE
   fi
 

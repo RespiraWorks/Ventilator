@@ -104,9 +104,7 @@ git pull
 ###############################################################################
 
 ### Dekstop shortcuts, guake on startup and guake settings
-
 sudo cp ./software/utils/icons/* /usr/share/pixmaps
-
 cp -rf ./software/utils/rpi_config/user/. ${HOME}
 dconf load /apps/guake/ < ./software/utils/rpi_config/dconf-guake-dump.txt
 
@@ -114,12 +112,11 @@ dconf load /apps/guake/ < ./software/utils/rpi_config/dconf-guake-dump.txt
 gsettings set org.mate.background picture-filename ${HOME}/ventilator/manufacturing/images/rendering_full.jpg
 
 # Install dependencies and do initial configuration for build toolchains
-sudo ./software/gui/gui.sh install
-./software/gui/gui.sh install_local
-sudo ./software/controller/controller.sh install
-./software/controller/controller.sh install_local
-sudo ./software/controller/controller.sh configure
+./software/gui/gui.sh install
+./software/controller/controller.sh install
+./software/controller/controller.sh configure
 
+### give user access to serial devices
 sudo gpasswd --add ${USER} dialout
 
 ### configure USB permissions to deploy to Nucleo

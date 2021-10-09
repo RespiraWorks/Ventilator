@@ -103,14 +103,18 @@ jobs:
           command: |
             git submodule update --init --recursive
       - run:
-          name: Build docker image
+          name: Install dependencies
           command: |
-            docker build -f .circleci/gui_tests_Dockerfile -t gui-test-image .
+            export FORCED_ROOT=1
+            software/gui/gui/install.sh
       - run:
           name: Run tests & publish coverage
           command: |
+            export FORCED_ROOT=1
             ci_env=`/bin/bash <(curl -s https://codecov.io/env)`
-            docker run $ci_env --privileged -t gui-test-image
+            software/gui/gui/gui.sh build -j --no-checks
+            software/gui/gui/gui.sh run -x --startup-only
+            software/gui/gui/gui.sh test -j -x --upload-cov
 
 workflows:
   commit:

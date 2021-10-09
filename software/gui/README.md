@@ -120,8 +120,6 @@ Upon a successful compilation, the executable file is accessible on Linux as:
 Where you may specify whatever serial port the ventilator controller is for the GUI to communicate
 with. The above has been the correct port for all prototypes tested to date.
 
-Depending on the OS you are running the above port could also be `/dev/ttyAMA0`.
-
 If you do not specify a serial-port, the app will run with pre-recorded data.
 
 If you are running the application remotely, via ssh for example, don't forget to set

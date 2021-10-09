@@ -18,10 +18,10 @@
 set -e
 set -o pipefail
 
-# Print each command as it executes #TODO uncomment
-#if [ -n "$VERBOSE" ]; then
+# Print each command as it executes
+if [ -n "$VERBOSE" ]; then
   set -o xtrace
-#fi
+fi
 
 EXIT_FAILURE=1
 EXIT_SUCCESS=0
@@ -41,7 +41,7 @@ if [ -z "$VERBOSE" ]; then
   echo "  -- clones the repository"
   echo "  -- configures Raspberry Pi:"
   echo "     * no screensaver or screen blanking"
-  echo "     * no splash on bootup"
+  echo "     * GUI<->controller serial connection enabled but no terminal"
   echo "     * serial interface enabled for GUI<->controller communications"
   echo "  -- udev rule added for nucleo, enabling flashing of firmware"
   echo "  -- guake console accessible at all times using [F12]"
@@ -50,7 +50,9 @@ if [ -z "$VERBOSE" ]; then
   echo "  -- installs toolchains and dependencies for building controller and GUI"
   echo "  -- will require a restart when done"
   echo " "
-  echo " Will require a restart when complete."
+  echo " PLEASE DO NOT RUN THIS ON YOUR DEVELOPMENT PC."
+  echo " THIS WILL MESS WITH YOUR BOOTLOADER."
+  echo " THIS IS FOR RASPBERRY-PI ONLY!"
   read -n1 -s -r -p $'Press any key to continue...\n' key
 fi
 
@@ -74,17 +76,11 @@ sudo apt-get --yes upgrade
 sudo apt-get --yes autoremove
 sudo apt-get autoclean
 
-#echo "deb http://archive.raspberrypi.org/debian/ buster main" | sudo tee -a /etc/apt/sources.list
-#sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 7FA3303E
-#sudo apt-get update
-#sudo apt-get --yes install raspi-config
+# Enable UART, but disable serial terminal
+echo "enable_uart=1" | sudo tee -a /boot/firmware/usercfg.txt
+sudo sed -i -e 's/console=tty1 //g' /boot/firmware/cmdline.txt
 
-# Ubuntu MATE does not have serial console enabled by default,
-# so we do not need to disable it. TODO: test this
-# If you are using regular RasPI, you may need to do this:
-#sudo raspi-config nonint do_serial 2
-
-### TODO: Disable boot splash
+### TODO: Disable boot splash or make custom splash with RW logo?
 #https://ubuntu-mate.community/t/disable-splash-screen-on-bootup/3375
 
 ### Clone repository and go in
@@ -98,7 +94,7 @@ cd ventilator
 git checkout issue_1180_cmake_build_on_rpi
 git pull
 ###############################################################################
-### TODO: Comment out above before making merge request                     ###
+### TODO: Comment out above before merging to master!!!                     ###
 ###############################################################################
 
 ### Dekstop shortcuts, guake on startup and guake settings
@@ -117,6 +113,8 @@ sudo ./software/gui/gui.sh install
 sudo ./software/controller/controller.sh install
 ./software/controller/controller.sh install_local
 sudo ./software/controller/controller.sh configure
+
+sudo gpasswd --add ${USER} dialout
 
 ### configure USB permissions to deploy to Nucleo
 echo 'ATTRS{idVendor}=="0483", ATTRS{idProduct}=="374b", MODE="666"' | sudo tee /etc/udev/rules.d/99-openocd.rules > /dev/null

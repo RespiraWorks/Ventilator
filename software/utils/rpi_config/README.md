@@ -24,7 +24,7 @@ Once the OS is up and running and has internet access, open up a browser, and co
 Just copy and paste this script into a terminal:
 
 ```
-# \TODO: change command to point to master
+# \TODO: change command to point to master before merging!!!
 
 bash <(wget -qO- https://raw.githubusercontent.com/RespiraWorks/Ventilator/issue_1180_cmake_build_on_rpi/software/utils/rpi_config/bootstrap.sh)
 ```

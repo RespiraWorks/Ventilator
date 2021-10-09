@@ -19,10 +19,10 @@
 set -e
 set -o pipefail
 
-# Print each command as it executes #TODO uncomment
-#if [ -n "$VERBOSE" ]; then
+# Print each command as it executes
+if [ -n "$VERBOSE" ]; then
   set -o xtrace
-#fi
+fi
 
 EXIT_FAILURE=1
 EXIT_SUCCESS=0
@@ -31,6 +31,12 @@ EXIT_SUCCESS=0
 PLATFORM="$(uname -s)"
 if [ $PLATFORM != "Linux" ]; then
   echo "Error: This script only supports 'Linux'. You have $PLATFORM."
+  exit $EXIT_FAILURE
+fi
+
+# Make sure it's not sudo
+if [ "$EUID" -eq 0 ] && [ "$2" != "-f" ]; then
+  echo "Please do not run tests with root privileges!"
   exit $EXIT_FAILURE
 fi
 
@@ -48,11 +54,6 @@ if [ -z "$VERBOSE" ]; then
   read -n1 -s -r -p $'Press any key to continue...\n' key
 fi
 
-if [ "$EUID" -eq 0 ] && [ "$2" != "-f" ]; then
-  echo "Please do not run tests with root privileges!"
-  exit $EXIT_FAILURE
-fi
-
 # This script should run from repo/software dir
 cd "$(dirname "$0")"/../..
 
@@ -65,7 +66,7 @@ select dr in "Debug" "Release" "Abort"; do
     case $dr in
         Debug ) ./gui/gui.sh clean && ./gui/gui.sh build --debug --no-checks; break;;
         Release ) ./gui/gui.sh clean && ./gui/gui.sh build --release --no-checks; break;;
-        Abort ) exit;;
+        Abort ) exit $EXIT_FAILURE;;
     esac
 done
 
@@ -76,5 +77,5 @@ done
 if [ -z "$VERBOSE" ]; then
   echo "Installation complete. Please check that this terminated with no errors."
   echo " "
-  read -n1 -s -r -p $'Press any key to close this window.\n' key
+  read -n1 -s -r -p $'Press any key to continue.\n' key
 fi

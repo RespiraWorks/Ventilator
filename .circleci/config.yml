@@ -56,28 +56,24 @@ jobs:
             pre-commit run --show-diff-on-failure --files $changed_files
 
   controller-tests:
-    # See https://circleci.com/docs/2.0/executor-types/#docker-benefits-and-limitations
-    # We use a machine executor here because we must run the container in privileged mode.
-    # This is because LeakSanitizer, which runs during the build, requires ptrace.
     machine:
       image: ubuntu-2004:202010-01
     resource_class: large
     steps:
       - checkout
       - run:
-          name: Build docker image
+          name: Install dependencies
           command: |
-            docker build -f .circleci/controller_tests_Dockerfile -t controller-test-image .
+            export FORCED_ROOT=1
+            ./software/controller/controller.sh install
       - run:
           name: Run tests & publish coverage
           command: |
+            ./software/controller/controller.sh test --cov --no-checks
             ci_env=`/bin/bash <(curl -s https://codecov.io/env)`
-            docker run $ci_env --privileged -t controller-test-image
+            ./software/controller/controller.sh cov_upload
 
   common-tests:
-    # See https://circleci.com/docs/2.0/executor-types/#docker-benefits-and-limitations
-    # We use a machine executor here because we must run the container in privileged mode.
-    # This is because LeakSanitizer, which runs during the build, requires ptrace.
     machine:
       image: ubuntu-2004:202010-01
     steps:
@@ -90,7 +86,6 @@ jobs:
       - run:
           name: Run tests & publish coverage
           command: |
-            export FORCED_ROOT=1
             ./software/common/common.sh test --cov --no-checks
             ci_env=`/bin/bash <(curl -s https://codecov.io/env)`
             ./software/common/common.sh cov_upload
@@ -107,11 +102,15 @@ jobs:
             export FORCED_ROOT=1
             ./software/gui/gui.sh install
       - run:
-          name: Run tests & publish coverage
+          name: Build and run app
           command: |
             export FORCED_ROOT=1
             ./software/gui/gui.sh build -j --no-checks
             ./software/gui/gui.sh run --startup-only
+      - run:
+          name: Run tests & publish coverage
+          command: |
+            export FORCED_ROOT=1
             ci_env=`/bin/bash <(curl -s https://codecov.io/env)`
             ./software/gui/gui.sh test -j --upload-cov
 

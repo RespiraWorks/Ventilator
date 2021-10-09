@@ -37,7 +37,7 @@ class I2Ceeprom {
   // As for the I2C::Requests, it is up to the caller to ensure length and
   // data are consistent.
   bool ReadBytes(uint16_t offset, uint16_t length, void *data, bool *processed);
-  bool WriteBytes(uint16_t offset, uint16_t length, void *data, bool *processed);
+  bool WriteBytes(uint16_t offset, uint16_t length, const void *data, bool *processed);
 
  protected:
   uint8_t address_;    // 7 bits I²C address

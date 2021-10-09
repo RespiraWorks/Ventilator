@@ -125,24 +125,42 @@ class FloatArray : public Base {
   FloatArray(const char *name, Access access, float initial_fill, const char *units,
              const char *help = "", const char *fmt = "%.3f")
       : Base(Type::FloatArray, name, access, units, help, fmt) {
-    data.fill(initial_fill);
+    data_.fill(initial_fill);
   }
 
   FloatArray(const char *name, Access access, std::array<float, N> initial, const char *units,
              const char *help = "", const char *fmt = "%.3f")
-      : Base(Type::FloatArray, name, access, units, help, fmt), data(initial) {}
+      : Base(Type::FloatArray, name, access, units, help, fmt), data_(initial) {}
 
   void serialize_value(void *write_buff) override {
-    std::memcpy(write_buff, data.data(), byte_size());
+    std::memcpy(write_buff, data_.data(), byte_size());
   }
 
   void deserialize_value(const void *read_buf) override {
-    std::memcpy(data.data(), read_buf, byte_size());
+    std::memcpy(data_.data(), read_buf, byte_size());
   }
+
+  size_t size() const { return data_.size(); }
 
   size_t byte_size() const override { return 4 * N; }
 
-  std::array<float, N> data;
+  virtual void fill(float value) { data_.fill(value); }
+
+  float get_data(const size_t index) const {
+    if (index < N)
+      return data_[index];
+    else
+      return 0.0f;
+  }
+
+  virtual void set_data(const size_t index, const float value) {
+    if (index < N) {
+      data_[index] = value;
+    }
+  }
+
+ protected:
+  std::array<float, N> data_;
 };
 
 template <size_t N>

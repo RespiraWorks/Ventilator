@@ -18,9 +18,14 @@ limitations under the License.
 #include <stddef.h>
 #include <stdint.h>
 
+#include <array>
+
 #include "eeprom.h"
 #include "network_protocol.pb.h"
 #include "units.h"
+
+// pinch_valve calibration size, defined here because the tables are stored in NVParams.
+static constexpr size_t pinch_valves_cal_size{11};
 
 namespace NVParams {
 
@@ -30,7 +35,14 @@ struct Structure {
   // Header info used to keep track of parameter info
   uint32_t crc{0};     // 32-bit CRC of remaining structure
   uint8_t count{0};    // Incremented on each write.
-  uint8_t version{0};  // Version of the structure.
+  uint8_t version{0};  // Version of the structure. If some fields in the structure change,
+                       // there is a risk of misinterpreting data that is in EEPROM during
+                       // initialization. This version is compared to the one in EEPROM and
+                       // the params in EEPROM are declared invalid and overwritten with default
+                       // valuesif there is a mismatch.
+                       // Note that if the size of the structure changes, the chances that the crc
+                       // matches are non-existent and incrementing the version is not useful: the
+                       // EEPROM params will be invalid no matter what.
 
   uint8_t reinit{0};  // Write to 1 (through dbg_reinit) to request for a reinit
                       // on next boot. This should prove useful if our system
@@ -44,6 +56,18 @@ struct Structure {
   uint32_t cumulated_service{0};  // Cumulated power-ON time, stored in seconds.
                                   // May rollover after 136 years
   VentParams last_settings = VentParams_init_default;  // Last settings seen by the vent
+
+  // The following 2 tables are used to roughly linearize the pinch valves output.  They were built
+  // by adjusting the pinch valve and monitoring the flow through the venturi tube. The entries
+  // should give pinch valve settings for a list of equally spaced flow rates.  The first entry
+  // should be the setting for 0 flow rate (normally 0) and the last entry should be the setting
+  // for 100% flow rate. The minimum length of the table is 2 entries.
+  std::array<float, pinch_valves_cal_size> blower_pinch_cal{0.0000f, 0.0410f, 0.0689f, 0.0987f,
+                                                            0.1275f, 0.1590f, 0.1932f, 0.2359f,
+                                                            0.2940f, 0.3988f, 1.0000f};
+  std::array<float, pinch_valves_cal_size> exhale_pinch_cal{0.0000f, 0.0410f, 0.0689f, 0.0987f,
+                                                            0.1275f, 0.1590f, 0.1932f, 0.2359f,
+                                                            0.2940f, 0.3988f, 1.0000f};
 };
 
 // We are reserving the first 8 kB out of our 32kB eeprom for nv params.
@@ -63,8 +87,8 @@ class Handler {
  public:
   Handler() = default;
   void Init(I2Ceeprom *eeprom);
-  bool Set(uint16_t offset, void *value, uint8_t len);
-  bool Get(uint16_t offset, void *value, uint8_t len);
+  bool Set(uint16_t offset, const void *value, uint16_t len);
+  bool Get(uint16_t offset, void *value, uint16_t len);
   void Update(Time now, VentParams *params);
 
  private:

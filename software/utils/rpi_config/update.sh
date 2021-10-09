@@ -48,21 +48,26 @@ if [ -z "$VERBOSE" ]; then
   read -n1 -s -r -p $'Press any key to continue...\n' key
 fi
 
-# This script should run from repo/software dir
-cd "$(dirname "$0")"/../..
-
-
 if [ "$EUID" -eq 0 ] && [ "$2" != "-f" ]; then
   echo "Please do not run tests with root privileges!"
   exit $EXIT_FAILURE
 fi
 
+# This script should run from repo/software dir
+cd "$(dirname "$0")"/../..
+
 ### Will not switch branch to master!
 git pull
 
 ### Rebuild GUI
-./gui/gui.sh clean
-./gui/gui.sh build --release --no-checks
+echo "Do you wish to build GUI as debug or release?"
+select dr in "Debug" "Release" "Abort"; do
+    case $dr in
+        Debug ) ./gui/gui.sh clean && ./gui/gui.sh build --debug --no-checks; break;;
+        Release ) ./gui/gui.sh clean && ./gui/gui.sh build --release --no-checks; break;;
+        Abort ) exit;;
+    esac
+done
 
 ### Update controller and deploy
 ./controller/controller.sh clean

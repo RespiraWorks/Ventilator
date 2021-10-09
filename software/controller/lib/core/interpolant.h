@@ -25,8 +25,8 @@ limitations under the License.
 template <size_t N>
 class Interpolant {
  public:
-  Interpolant(const char *name, float cal_0 = 0.0f, float cal_1 = 1.0f, const char *units = "",
-              const char *help = "", const char *fmt = "%.3f")
+  explicit Interpolant(const char *name, float cal_0 = 0.0f, float cal_1 = 1.0f,
+                       const char *units = "", const char *help = "", const char *fmt = "%.3f")
       : cal_table_(name, Debug::Variable::Access::ReadWrite, cal_0, units, help, fmt) {
     // starting the loop at index 1 in order to avoid division by 0: if N <= 1 (which
     // doesn't make sense anyway), we don't actually enter the loop, and the first element

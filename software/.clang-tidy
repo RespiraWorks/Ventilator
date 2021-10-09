@@ -31,7 +31,10 @@ Checks: >
   -readability-implicit-bool-conversion,
   -modernize-use-using,
   -modernize-use-nodiscard,
-  -readability-non-const-parameter
+  -readability-non-const-parameter,
+  -bugprone-reserved-identifier,
+  -altera-struct-pack-align,
+  -llvmlibc-*,
 
 # TODO: apply necessary code fixes so we can re-enable
 #WarningsAsErrors: '*'

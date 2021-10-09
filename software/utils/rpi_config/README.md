@@ -16,8 +16,7 @@ The following assumes that you have a working hardware prototype with all necess
   * set up your username and password to be`respira`
   * chose `Log in automatically` instead of requiring a password at bootup
 
-You may also want to configure the image with wifi and ssh credentials by directly editing it on the SD card, as described [here](https://raspberrypi.stackexchange.com/questions/66949/enable-ssh-and-connect-to-a-wifi-network-without-a-keyboard-or-a-screen) or
-[here](https://www.luisdelarosa.com/2017/09/19/how-to-enable-headless-networking-on-ubuntu-mate-on-raspberry-pi/).
+You may also want to configure the image with wifi and ssh credentials to then further configure and control remotely. Please see the [remote access](#remote-access-to-rpi) section below for more details.
 
 Once the OS is up and running and has internet access, open up a browser, and come back to this page.
 
@@ -42,3 +41,23 @@ On your desktop you should have:
 * Ventilator GUI -- graphical interface for controlling the ventilator
 * debug -- opens console with ventilator debug interface and connects to the controller
 * Github repo -- opens a browser to the RespiraWorks ventilator github page
+
+## Remote access to *RPi*
+
+Username: `respira` Password: `respira`
+
+To access the *RPi* remotely, it must be connected to your network. You may connect it physically
+with an Ethernet cable. If that is not an option, you must provide it with your WiFi credentials.
+
+You may add those credentials to the *RPi* configuration by directly editing it on the SD card, as
+described [here](https://raspberrypi.stackexchange.com/questions/66949/enable-ssh-and-connect-to-a-wifi-network-without-a-keyboard-or-a-screen) or
+[here](https://www.luisdelarosa.com/2017/09/19/how-to-enable-headless-networking-on-ubuntu-mate-on-raspberry-pi/).
+
+Alternatively, if you have a keyboard that you can hook up to the *RPi*, you may escape the full screen mode and switch to terminal with `Ctrl+Alt+F1`, and then run `sudo raspi-config`. You may have to reboot for this toi take effect.
+
+To find out the *RPi*'s IP address, run `ifconfig`.
+
+Now you may ssh into the *RPi* from another machine by running `ssh pi@IP_ADDRESS`
+
+If you have any trouble with serial communications, you may also double on check your
+*RPi* configuration with `sudo raspi-config`.

@@ -23,10 +23,9 @@ limitations under the License.
  * as PWM outputs:
  *
  * PA8  - Timer 1 Channel 1 - heater control
+ * PA11 - Timer 1 Channel 4 - psol control
  * PB3  - Timer 2 Channel 2 - blower control
- *
- * For now I'll just set up the blower since that's the only
- * one called out in the HAL
+ * PB4  - Timer 3 Channel 1 - buzzer control
  *
  * These timers are documented in [RM] chapters 26 and 27.
  *****************************************************************/
@@ -41,50 +40,73 @@ limitations under the License.
 
 /// \TODO generalize to have pins and frequency be maintained by caller
 void PWM::initialize(const uint32_t cpu_frequency_hz) {
-  enable_peripheral_clock(PeripheralID::Timer2);
-
-  // Connect PB3 to timer 2
-  // [DS] Table 17 (pg 77)
-  GPIO::alternate_function(GPIO::Port::B, /*pin =*/3,
-                           GPIO::AlternativeFuncion::AF1);  // TIM2_CH2
-
-  TimerReg *tmr = Timer2Base;
-
-  // Set the frequency
-  tmr->auto_reload = (cpu_frequency_hz / pwm_freq_hz_) - 1;
-
-  // Configure channel 2 in PWM output mode 1
-  // with preload enabled.  The preload means that
-  // the new PWM duty cycle gets written to a shadow
-  // register and copied to the active register
-  // at the start of the next cycle.
-  tmr->capture_compare_mode[0] = 0x6800;
-
-  tmr->capture_compare_enable = 0x10;
-
-  // Start with 0% duty cycle
-  tmr->capture_compare[1] = 0;
-
-  // Load the shadow registers
-  tmr->event = 1;
-
-  // Start the counter
-  tmr->control_reg1.bitfield.auto_reload_preload = 1;
-  tmr->control_reg1.bitfield.counter_enable = 1;
-}
-
-// Set the PWM period.
-void PWM::set(const PwmPin pin, const float duty) {
-  auto [tmr, chan] = [&]() -> std::pair<TimerReg *, int> {
-    switch (pin) {
+  auto [tmr, channel, peripheral, port, pin_number,
+        alternate_function] = [&]() -> std::tuple<TimerReg*, uint8_t, PeripheralID, GPIO::Port,
+                                                  uint8_t, GPIO::AlternativeFunction> {
+    switch (pin_) {
       case PwmPin::Blower:
-        return {Timer2Base, 1};
+        // Connect PB3 to timer 2 channel 2
+        // [DS] Table 17 (pg 77)
+        return {Timer2Base,    2, PeripheralID::Timer2,
+                GPIO::Port::B, 3, GPIO::AlternativeFunction::AF1};
+      case PwmPin::Buzzer:
+        // Connect PB4 to timer 3 channel 1
+        // [DS] Table 17 (pg 77)
+        return {Timer3Base,    1, PeripheralID::Timer3,
+                GPIO::Port::B, 4, GPIO::AlternativeFunction::AF2};
+      case PwmPin::Psol:
+        // Connect PA11 to timer 1 channel 4
+        // [DS] Table 17 (pg 77)
+        return {Timer1Base,    4,  PeripheralID::Timer1,
+                GPIO::Port::A, 11, GPIO::AlternativeFunction::AF1};
     }
     // All cases covered above (and GCC checks this).
     __builtin_unreachable();
   }();
 
-  tmr->capture_compare[chan] = static_cast<uint32_t>(static_cast<float>(tmr->auto_reload) * duty);
+  // remember tmr reg and channel for set() member function
+  tmr_ = tmr;
+  channel_ = channel;
+
+  enable_peripheral_clock(peripheral);
+
+  GPIO::alternate_function(port, pin_number, alternate_function);
+
+  // Set the frequency
+  tmr_->auto_reload = (cpu_frequency_hz / pwm_freq_hz_) - 1;
+
+  // Configure channel in PWM output mode 1 with preload enabled.  The preload means that
+  // the new PWM duty cycle gets written to a shadow register and copied to the active register
+  // at the start of the next cycle.
+  // TODO - abstract these in a Timer abstraction, which deals with settings per channel bits.
+  tmr_->capture_compare_mode[static_cast<size_t>((channel_ - 1) / 2)] = 0x68
+                                                                        << ((channel_ - 1) % 2) * 8;
+
+  tmr_->capture_compare_enable = 0x01 << (channel_ - 1) * 4;
+
+  // For timer 1 we need to disable the main output enable
+  // (MOE) feature by setting bit 15 of the deadtime register. [RM] 26.3.16
+  if (tmr_ == Timer1Base) {
+    tmr_->dead_time = 0x8000;
+  }
+
+  // Start with 0% duty cycle
+  tmr_->capture_compare[channel_ - 1] = 0;
+
+  // Load the shadow registers
+  tmr_->event = 1;
+
+  // Start the counter
+  tmr_->control_reg1.bitfield.auto_reload_preload = 1;
+  tmr_->control_reg1.bitfield.counter_enable = 1;
+}
+
+// Set the PWM period.
+void PWM::set(const float duty) {
+  if (tmr_ != nullptr && channel_ < 5) {
+    auto value = static_cast<float>(tmr_->auto_reload) * std::clamp(duty, 0.0f, 1.0f);
+    tmr_->capture_compare[channel_ - 1] = static_cast<uint32_t>(value);
+  }
 }
 
 #else
@@ -93,13 +115,13 @@ void PWM::set(const PwmPin pin, const float duty) {
 
 void PWM::initialize(const uint32_t cpu_frequency_hz) {}
 
-void PWM::set_pin_mode(PwmPin pin, GPIO::PinMode mode) { pwm_pin_modes_[pin] = mode; }
+void PWM::set_pin_mode(GPIO::PinMode mode) { pwm_pin_modes_[pin_] = mode; }
 
-void PWM::set(PwmPin pin, float duty) {
-  if (pwm_pin_modes_[pin] != GPIO::PinMode::Output) {
+void PWM::set(float duty) {
+  if (pwm_pin_modes_[pin_] != GPIO::PinMode::Output) {
     assert(false && "Can only write to an OUTPUT pin");
   }
-  pwm_pin_values_[pin] = duty;
+  pwm_pin_values_[pin_] = duty;
 }
 
 #endif

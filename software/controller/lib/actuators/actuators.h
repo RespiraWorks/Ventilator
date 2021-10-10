@@ -42,8 +42,8 @@ struct ActuatorsState {
 class Actuators {
  public:
   Actuators(int blower_motor_index, int exhale_motor_index)
-      : blower_pinch_("blower_", " for blower pinch valve", blower_motor_index),
-        exhale_pinch_("exhale_", " for exhale pinch valve", exhale_motor_index){};
+      : blower_pinch_("blower_pinch_", " of the blower pinch valve", blower_motor_index),
+        exhale_pinch_("exhale_pinch_", " of the exhale pinch valve", exhale_motor_index){};
 
   // Returns true if the actuators are ready for action or false
   // if they aren't (for example pinch valves are homing).
@@ -57,10 +57,23 @@ class Actuators {
     exhale_pinch_.LinkCalibration(nv_params, exhale_pinch_cal_offset);
   }
 
+  void Init(uint32_t cpu_frequency_hz) {
+    blower_.initialize_pwm(cpu_frequency_hz);
+    psol_.initialize_pwm(cpu_frequency_hz);
+  };
+
   // Causes passed state to be applied to the actuators
   void execute(const ActuatorsState &desired_state);
 
  private:
   PinchValve blower_pinch_;
   PinchValve exhale_pinch_;
+  // Blower is driven by a 20kHz PWM, as a compromise between resolution and response time
+  PwmActuator blower_{PwmPin::Blower, 20000, "blower_", " of the blower"};
+
+  // psol is driven by a 5kHz PWM
+  // Testing in Edwin's garage, we found that the psol was fully closed at
+  // somewhere between 0.75 and 0.80 (i.e. definitely zero at 0.75 and probably
+  // zero a bit above that) and fully open at 0.90.
+  PwmActuator psol_{PwmPin::Psol, 5000, "psol_", " of the proportional solenoid", 0.35f, 0.75f};
 };

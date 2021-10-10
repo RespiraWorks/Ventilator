@@ -87,6 +87,8 @@ extern "C" void abort() {
   };
 }
 
+uint32_t HalApi::GetCpuFreq() { return CPUFrequencyHz; }
+
 // This function is called _init() above.  It does some basic
 // chip initialization.
 //
@@ -122,10 +124,8 @@ void HalApi::Init() {
   SystemTimer::singleton().initialize(CPUFrequencyMhz);
   /// \TODO: fault somehow if this returns false
   [[maybe_unused]] bool buffer_size_sufficient = adc.initialize(CPUFrequencyHz);
-  pwm.initialize(CPUFrequencyHz);
-  InitUARTs();
   buzzer.initialize(CPUFrequencyHz);
-  psol.initialize(CPUFrequencyHz);
+  InitUARTs();
   I2C::initialize();
   Interrupts::singleton().EnableInterrupts();
   StepMotor::OneTimeInit();
@@ -273,19 +273,19 @@ void HalApi::InitUARTs() {
 #endif
   // [DS] Table 17 (pg 76)
   GPIO::alternate_function(GPIO::Port::A, /*pin =*/2,
-                           GPIO::AlternativeFuncion::AF7);  // USART2_TX
+                           GPIO::AlternativeFunction::AF7);  // USART2_TX
   GPIO::alternate_function(GPIO::Port::A, /*pin =*/3,
-                           GPIO::AlternativeFuncion::AF7);  // USART2_RX
+                           GPIO::AlternativeFunction::AF7);  // USART2_RX
 
   // [DS] Table 17 (pg 77)
   GPIO::alternate_function(GPIO::Port::B, /*pin =*/10,
-                           GPIO::AlternativeFuncion::AF7);  // USART3_TX
+                           GPIO::AlternativeFunction::AF7);  // USART3_TX
   GPIO::alternate_function(GPIO::Port::B, /*pin =*/11,
-                           GPIO::AlternativeFuncion::AF7);  // USART3_RX
+                           GPIO::AlternativeFunction::AF7);  // USART3_RX
   GPIO::alternate_function(GPIO::Port::B, /*pin =*/13,
-                           GPIO::AlternativeFuncion::AF7);  // USART3_CTS
+                           GPIO::AlternativeFunction::AF7);  // USART3_CTS
   GPIO::alternate_function(GPIO::Port::B, /*pin =*/14,
-                           GPIO::AlternativeFuncion::AF7);  // USART3_RTS_DE
+                           GPIO::AlternativeFunction::AF7);  // USART3_RTS_DE
 
 #ifdef UART_VIA_DMA
   dma_uart.initialize(CPUFrequencyHz, 115200);

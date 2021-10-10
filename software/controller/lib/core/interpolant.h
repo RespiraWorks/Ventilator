@@ -61,5 +61,5 @@ class Interpolant {
 
  private:
   Debug::Variable::NVFloatArray<N> cal_table_;
-  friend class PinchValve;
+  friend class Actuator;
 };

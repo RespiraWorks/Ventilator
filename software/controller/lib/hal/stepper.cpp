@@ -194,11 +194,11 @@ void StepMotor::OneTimeInit() {
 
   // Assign the three SPI pins to the SPI peripheral, [DS] Table 17 (pg 76)
   GPIO::alternate_function(GPIO::Port::A, /*pin =*/5,
-                           GPIO::AlternativeFuncion::AF5);  // SPI1_SCK
+                           GPIO::AlternativeFunction::AF5);  // SPI1_SCK
   GPIO::alternate_function(GPIO::Port::A, /*pin =*/6,
-                           GPIO::AlternativeFuncion::AF5);  // SPI1_MISO
+                           GPIO::AlternativeFunction::AF5);  // SPI1_MISO
   GPIO::alternate_function(GPIO::Port::A, /*pin =*/7,
-                           GPIO::AlternativeFuncion::AF5);  // SPI1_MOSI
+                           GPIO::AlternativeFunction::AF5);  // SPI1_MOSI
 
   // Set the output pins to use the highest speed setting
   GPIO::output_speed(GPIO::Port::A, 5, GPIO::OutSpeed::Smoking);

@@ -15,11 +15,9 @@ limitations under the License.
 
 #include "actuators.h"
 
-#include "hal.h"
-
 void Actuators::execute(const ActuatorsState &desired_state) {
   // set blower PWM
-  hal.pwm.set(PwmPin::Blower, desired_state.blower_power);
+  blower_.set(desired_state.blower_power);
 
   // Set the blower pinch valve position
   if (desired_state.blower_valve)
@@ -33,7 +31,7 @@ void Actuators::execute(const ActuatorsState &desired_state) {
   else
     exhale_pinch_.Disable();
 
-  hal.psol.set(desired_state.fio2_valve);
+  psol_.set(desired_state.fio2_valve);
 }
 
 // Return true if all actuators are enabled and ready for action

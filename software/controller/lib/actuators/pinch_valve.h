@@ -17,7 +17,7 @@ limitations under the License.
 
 #include <stdint.h>
 
-#include "interpolant.h"
+#include "actuator_base.h"
 #include "stepper.h"
 #include "units.h"
 
@@ -47,10 +47,11 @@ enum class PinchValveHomeState {
 // direction to this then you should swap the motor wires
 // around to get the correct direction of motion
 
-class PinchValve {
+class PinchValve : public Actuator {
  public:
   // Create a new pinch valve using the specified stepper motor.
-  explicit PinchValve(const char *name, const char *help_supplement, int motor_index);
+  PinchValve(const char *name, const char *help_supplement, int motor_index)
+      : Actuator(name, help_supplement), motor_index_(motor_index) {}
 
   // Initialize the pinch value absolute position.
   // This should be called at startup from the
@@ -75,11 +76,6 @@ class PinchValve {
   // Return true if the pinch valve is ready for action
   bool IsReady() { return home_state_ == PinchValveHomeState::Homed; }
 
-  // Link calibration table to nv params
-  void LinkCalibration(NVParams::Handler *nv_params, const uint16_t offset) {
-    calibration_.cal_table_.link(nv_params, offset);
-  };
-
  private:
   Time move_start_time_;
 
@@ -89,7 +85,4 @@ class PinchValve {
   float last_command_{-1.0f};
 
   PinchValveHomeState home_state_{PinchValveHomeState::Disabled};
-
-  // pinch valve calibration table
-  Interpolant<PinchValvesCalSize> calibration_{"pinch_cal", 0.0f, 1.0f, "", "calibration table"};
 };

@@ -64,12 +64,6 @@ static constexpr float MoveAmp = 0.25f;
 static constexpr float MoveVel = 2000.0f;
 static constexpr float MoveAccel = MoveVel / 0.05f;
 
-PinchValve::PinchValve(const char *name, const char *help_supplement, int motor_index)
-    : motor_index_(motor_index) {
-  calibration_.cal_table_.prepend_name(name);
-  calibration_.cal_table_.append_help(help_supplement);
-}
-
 // Disable the pinch valve
 void PinchValve::Disable() {
   StepMotor *mtr = StepMotor::GetStepper(motor_index_);
@@ -173,7 +167,7 @@ void PinchValve::SetOutput(float value) {
   // The motor's zero position is at the home offset
   // which corresponds to fully open (i.e. 100% flow)
   // The valve is closed at a position of -MaxMove;
-  float pos = (calibration_.get_value(value) - 1.0f) * MaxMove;
+  float pos = (get_value(value) - 1.0f) * MaxMove;
 
   // Once you put a move in motion you can't change the destination position
   // until the move ends. That means that if the servo loop commands a

@@ -15,8 +15,11 @@ limitations under the License.
 
 #if !defined(BARE_STM32)
 
+#include <cstring>
+
 #include "hal.h"
 
+uint32_t HalApi::GetCpuFreq() { return 0; }
 void HalApi::EarlyInit() {}
 void HalApi::Init() {}
 void HalApi::init_PCB_ID_pins() {}

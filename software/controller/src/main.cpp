@@ -215,6 +215,9 @@ int main() {
   // Initialize hal first because it initializes the watchdog. See comment on HalApi::Init().
   hal.Init();
 
+  // Init the pwm pin for actuators
+  actuators.Init(HalApi::GetCpuFreq());
+
   // Locate our non-volatile parameter block in flash
   nv_params.Init(&eeprom);
   actuators.link(&nv_params, offsetof(NVParams::Structure, blower_pinch_cal),

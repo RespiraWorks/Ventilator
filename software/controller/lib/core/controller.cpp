@@ -133,17 +133,5 @@ std::pair<ActuatorsState, ControllerState> Controller::Run(Time now, const VentP
   dbg_volume_uncorrected_.set(uncorrected_flow_integrator_->GetVolume().ml());
   dbg_flow_correction_.set(flow_integrator_->FlowCorrection().ml_per_sec());
 
-  // Handle DebugVars that force the actuators.
-  auto set_force = [](const Debug::Variable::Float &var, auto &state) {
-    float v = var.get();
-    if (v >= 0 && v <= 1) {
-      state = v;
-    }
-  };
-  set_force(forced_blower_power_, actuators_state.blower_power);
-  set_force(forced_blower_valve_pos_, actuators_state.blower_valve);
-  set_force(forced_exhale_valve_pos_, actuators_state.exhale_valve);
-  set_force(forced_psol_pos_, actuators_state.fio2_valve);
-
   return {actuators_state, controller_state};
 }

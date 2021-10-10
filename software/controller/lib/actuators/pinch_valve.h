@@ -51,7 +51,10 @@ class PinchValve : public Actuator {
  public:
   // Create a new pinch valve using the specified stepper motor.
   PinchValve(const char *name, const char *help_supplement, int motor_index)
-      : Actuator(name, help_supplement), motor_index_(motor_index) {}
+      : Actuator(name, help_supplement,
+                 {0.0000f, 0.0410f, 0.0689f, 0.0987f, 0.1275f, 0.1590f, 0.1932f, 0.2359f, 0.2940f,
+                  0.3988f, 1.0000f}),
+        motor_index_(motor_index) {}
 
   // Initialize the pinch value absolute position.
   // This should be called at startup from the

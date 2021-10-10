@@ -29,6 +29,6 @@ limitations under the License.
 // used from libraries that don't link with hal.
 #if defined(BARE_STM32)
 // We don't control this function's name, silence the style check
-// NOLINTNEXTLINE(readability-identifier-naming)
+// NOLINTNEXTLINE(readability-identifier-naming,bugprone-reserved-identifier)
 extern "C" void __cxa_pure_virtual() { hal.ResetDevice(); }
 #endif

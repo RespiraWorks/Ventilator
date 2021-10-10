@@ -22,7 +22,7 @@ static constexpr float InitialStep{TEST_PARAM_3};
 void RunTest() {
   hal.Init();
   PwmActuator psol{PwmPin::Psol, 5000, "psol_", " of the proportional solenoid"};
-  psol.initialize_pwm(80000000);
+  psol.initialize_pwm(HalApi::GetCpuFreq());
 
   float psol_position = PSolMin;
   float step = InitialStep;

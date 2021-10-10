@@ -78,7 +78,6 @@ class HalApi {
   // main in my view).
   PWM buzzer{PwmPin::Buzzer, 2400};
 
- public:
   static uint32_t GetCpuFreq();
 
   void Init();

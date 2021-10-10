@@ -22,7 +22,7 @@ static constexpr float InitialStep{0.002f};
 void RunTest() {
   hal.Init();
   PwmActuator blower{PwmPin::Blower, 20000, "blower_", " of the blower"};
-  blower.initialize_pwm(80000000);
+  blower.initialize_pwm(HalApi::GetCpuFreq());
 
   float fan_power = FanMin;
   float step = InitialStep;

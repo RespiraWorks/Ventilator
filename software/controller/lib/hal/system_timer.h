@@ -27,8 +27,7 @@ class SystemTimer {
     return SingletonInstance;
   }
 
-  /// \TODO: use explicit unit-aware frequency types
-  void initialize(uint32_t cpu_frequency_MHz);
+  void initialize(Frequency cpu_frequency);
 
   void interrupt_handler();
 

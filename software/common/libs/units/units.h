@@ -71,6 +71,9 @@ limitations under the License.
 //   Duration         microseconds(int64_t)
 //   Duration         minutes(float)
 //   Time             microsSinceStartup(int64_t)
+//   Frequency        hertz(float)
+//   Frequency        kilohertz(float)
+//   Frequency        megahertz(float)
 //
 // Values support addition and subtraction.  The laws for Duration and Time are
 // different than the other units:
@@ -157,7 +160,7 @@ class ArithScalar : public Scalar<Q, ValTy> {
   }
 
   // Ratio of two measurements.  Always defined, and always returns a float,
-  // irrespective of ValTy.
+  // whatever ValTy is.
   constexpr float operator/(const ArithScalar &a) const {
     return static_cast<float>(this->val_) / static_cast<float>(a.val_);
   }
@@ -309,6 +312,41 @@ class Voltage : public UnitsDetail::ArithScalar<Voltage, float> {
 
 constexpr Voltage volts(float v) { return Voltage(v); }
 
+// Represents the frequency of a periodic signal.
+//
+// Precision: float
+//
+// Units:
+//  - hertz
+//  - kilohertz
+//  - megahertz
+//
+// Native unit (implementation detail): hertz
+//
+// Multiplying a Frequency by a Duration (or vice-versa) gives a unitless float
+// Dividing a unitless float by a Frequency gives a Duration
+// Dividing a unitless float by a Duration gives a Frequency
+//
+// Though adding and subtracting frequencies make little sense, we still use ArithScalar because
+// multiplying and dividing them by a constant, or dividing two together is very useful.
+class Frequency : public UnitsDetail::ArithScalar<Frequency, float> {
+ public:
+  [[nodiscard]] constexpr float hertz() const { return val_; }
+  [[nodiscard]] constexpr float kilohertz() const { return val_ / 1000; }
+  [[nodiscard]] constexpr float megahertz() const { return val_ / 1000000; }
+
+ private:
+  constexpr friend Frequency hertz(float hertz);
+  constexpr friend Frequency kilohertz(float kilohertz);
+  constexpr friend Frequency megahertz(float megahertz);
+
+  using UnitsDetail::ArithScalar<Frequency, float>::ArithScalar;
+};
+
+constexpr Frequency hertz(float hertz) { return Frequency(hertz); }
+constexpr Frequency kilohertz(float kilohertz) { return Frequency(kilohertz * 1000); }
+constexpr Frequency megahertz(float megahertz) { return Frequency(megahertz * 1000000); }
+
 // Time and Duration classes.
 //
 // - Duration represents a length of time, e.g. "10 seconds" or
@@ -341,6 +379,10 @@ class Time;
 //
 // Multiplying a VolumetricFlow by a Duration gives you a Volume.
 // Dividing a Volume by a Duration gives you a VolumetricFlow.
+//
+// Multiplying a Frequency by a Duration (or vice-versa) gives a unitless float
+// Dividing a unitless float by a Frequency gives a Duration
+// Dividing a unitless float by a Duration gives a Frequency
 //
 // Note that because the factory `Duration milliseconds(int64_t)` takes an
 // int64, but `float Duration::milliseconds()` must return a float, you may
@@ -441,3 +483,13 @@ constexpr inline Volume operator*(Duration b, VolumetricFlow a) {
 constexpr inline VolumetricFlow operator/(Volume a, Duration b) {
   return ml_per_min(a.ml() / b.minutes());
 }
+
+constexpr inline float operator*(Frequency a, Duration b) { return a.hertz() * b.seconds(); }
+
+constexpr inline float operator*(Duration b, Frequency a) { return a.hertz() * b.seconds(); }
+
+// Be aware that dividing by zero leads to Inf and needs to be protected.
+constexpr inline Duration operator/(float a, Frequency b) { return seconds(a / b.hertz()); }
+
+// Be aware that dividing by zero leads to Inf and needs to be protected.
+constexpr inline Frequency operator/(float a, Duration b) { return hertz(a / b.seconds()); }

@@ -73,11 +73,11 @@ class Actuator {
 
 class PwmActuator : public Actuator {
  public:
-  PwmActuator(const PwmPin pin, const uint32_t pwm_freq_hz, const char *name, const char *help,
+  PwmActuator(const PwmPin pin, const Frequency pwm_freq, const char *name, const char *help,
               float cal_0 = 0.0f, float cal_1 = 1.0f)
-      : Actuator(name, help, cal_0, cal_1), pwm_(pin, pwm_freq_hz) {}
+      : Actuator(name, help, cal_0, cal_1), pwm_(pin, pwm_freq) {}
 
-  void initialize_pwm(uint32_t cpu_frequency_hz) { pwm_.initialize(cpu_frequency_hz); }
+  void initialize_pwm(Frequency cpu_frequency) { pwm_.initialize(cpu_frequency); }
 
   void set(const float value) { pwm_.set(get_value(value)); }
 

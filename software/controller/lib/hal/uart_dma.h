@@ -47,7 +47,7 @@ class UartDma {
         rx_channel_(rx_channel),
         match_char_(match_char) {}
 
-  void initialize(uint32_t cpu_frequency_hz, uint32_t baud);
+  void initialize(Frequency cpu_frequency, Frequency baud);
 
   [[nodiscard]] bool start_tx(uint8_t *buf, uint32_t length, TxListener *txl);
   [[nodiscard]] bool start_rx(uint8_t *buf, uint32_t length, RxListener *rxl);

@@ -57,23 +57,28 @@ class Actuators {
     exhale_pinch_.LinkCalibration(nv_params, exhale_pinch_cal_offset);
   }
 
-  void Init(uint32_t cpu_frequency_hz) {
-    blower_.initialize_pwm(cpu_frequency_hz);
-    psol_.initialize_pwm(cpu_frequency_hz);
+  void Init(Frequency cpu_frequency) {
+    blower_.initialize_pwm(cpu_frequency);
+    psol_.initialize_pwm(cpu_frequency);
   };
 
   // Causes passed state to be applied to the actuators
   void execute(const ActuatorsState &desired_state);
 
+  // Blower is driven by a 20kHz PWM, as a compromise between resolution and response time
+  static constexpr Frequency BlowerFreq = kilohertz(20);
+  // psol is driven by a 5kHz PWM
+  static constexpr Frequency PSolFreq = kilohertz(5);
+
  private:
   PinchValve blower_pinch_;
   PinchValve exhale_pinch_;
-  // Blower is driven by a 20kHz PWM, as a compromise between resolution and response time
-  PwmActuator blower_{PwmPin::Blower, 20000, "blower_", " of the blower"};
 
-  // psol is driven by a 5kHz PWM
+  // Blower has no calibration (yet?)
+  PwmActuator blower_{PwmPin::Blower, BlowerFreq, "blower_", " of the blower"};
+
   // Testing in Edwin's garage, we found that the psol was fully closed at
   // somewhere between 0.75 and 0.80 (i.e. definitely zero at 0.75 and probably
   // zero a bit above that) and fully open at 0.90.
-  PwmActuator psol_{PwmPin::Psol, 5000, "psol_", " of the proportional solenoid", 0.35f, 0.75f};
+  PwmActuator psol_{PwmPin::Psol, PSolFreq, "psol_", " of the proportional solenoid", 0.35f, 0.75f};
 };

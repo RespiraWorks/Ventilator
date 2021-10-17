@@ -76,9 +76,9 @@ class HalApi {
   // with calibration from 0 to 0.8, which works, but buzzer isn't really an actuator so making it
   // a member of Actuators feels wrong, and the initialization overhead is a bit much to live in
   // main in my view).
-  PWM buzzer{PwmPin::Buzzer, 2400};
+  PWM buzzer{PwmPin::Buzzer, kilohertz(2.4f)};
 
-  static uint32_t GetCpuFreq();
+  static Frequency GetCpuFreq();
 
   void Init();
 

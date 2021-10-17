@@ -18,6 +18,7 @@ limitations under the License.
 #include <cstdint>
 
 #include "timers.h"
+#include "units.h"
 
 #if !defined(BARE_STM32)
 #include <map>
@@ -28,19 +29,18 @@ limitations under the License.
 // Pulse-width modulated outputs from the controller.  These can be set to
 // values in [0-255].
 //
-// Pins default to Input, so if you add a new pin here, be sure to update
-// HalApi::Init() and set it to Output!
+// Pins default to input, and will be set to output as part of the initialize method
 enum class PwmPin {
-  Blower,  // Controls the fan speed.
-  Buzzer,  // Controls buzzer volume.
-  Psol,    // Controls proportionnal solenoid valve (for oxygen limb).
+  Blower,
+  Buzzer,
+  Psol,
 };
 
 class PWM {
  public:
-  PWM(const PwmPin pin, const uint32_t pwm_freq_hz) : pin_(pin), pwm_freq_hz_(pwm_freq_hz){};
+  PWM(const PwmPin pin, const Frequency pwm_freq) : pin_(pin), pwm_freq_(pwm_freq){};
 
-  void initialize(uint32_t cpu_frequency_hz);
+  void initialize(Frequency cpu_frequency);
 
   // Causes `pin` to output a square wave with the given duty cycle (range [0, 1], with preemptive
   // clamping before setting the registers).
@@ -59,9 +59,9 @@ class PWM {
   // Resolution is based on the ratio of the clock frequency (80MHz) to the
   // PWM frequency.  For example, a 20kHz PWM would have a resolution of one
   // part in 4000 (80000000/20000) or about 12 bits.
-  uint32_t pwm_freq_hz_;
+  Frequency pwm_freq_;
 
-  TimerReg* tmr_{nullptr};
+  TimerReg* timer_{nullptr};
   uint8_t channel_{0};
 
 #if !defined(BARE_STM32)

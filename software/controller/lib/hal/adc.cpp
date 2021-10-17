@@ -198,8 +198,8 @@ The following pins are used as analog inputs on the rev-1 PCB:
 Reference abbreviations ([RM], [PCB], etc) are defined in hal/README.md
 */
 
-// How long a period (in seconds) we want to average the A/D readings.
-static constexpr float SampleHistoryTimeSec{0.001f};
+// How long a period we want to average the A/D readings.
+static constexpr Duration SampleHistoryTime{milliseconds(1.f)};
 
 // Resolution of the ADC channels (in bits).
 // We are using the default value (which is also the highest possible one - see [RM] 16.4.22).
@@ -262,10 +262,9 @@ static constexpr int AdcConversionTime = [] {
 }();
 
 /// \TODO: have caller provide mappings in a different layer
-bool ADC::initialize(const uint32_t cpu_frequency_hz) {
-  adc_sample_history_ =
-      static_cast<uint32_t>(SampleHistoryTimeSec * static_cast<float>(cpu_frequency_hz) /
-                            AdcConversionTime / OversampleCount / AdcChannels);
+bool ADC::initialize(const Frequency cpu_frequency) {
+  adc_sample_history_ = static_cast<uint32_t>(SampleHistoryTime * cpu_frequency /
+                                              AdcConversionTime / OversampleCount / AdcChannels);
 
   // This scaler converts the sum of the A/D readings (a total of
   // adc_sample_history_) into a voltage.  The A/D is scaled so a value of 0
@@ -419,7 +418,7 @@ Voltage ADC::read(const AnalogPin pin) const {
 
 #else
 
-bool ADC::initialize(const uint32_t cpu_frequency_hz) { return true; }
+bool ADC::initialize(const Frequency cpu_frequency) { return true; }
 
 Voltage ADC::read(AnalogPin pin) const { return analog_pin_values_.at(pin); }
 

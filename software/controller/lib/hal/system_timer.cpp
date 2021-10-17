@@ -30,7 +30,7 @@ limitations under the License.
  *
  * The basic timers (like timer 6) are documented in [RM] chapter 29.
  *****************************************************************/
-void SystemTimer::initialize(uint32_t cpu_frequency_MHz) {
+void SystemTimer::initialize(Frequency cpu_frequency) {
   // Enable the clock to the timer
   enable_peripheral_clock(PeripheralID::Timer6);
 
@@ -42,7 +42,7 @@ void SystemTimer::initialize(uint32_t cpu_frequency_MHz) {
   // -1 until the clock wraps back to zero and generates an interrupt. This
   // setting will cause an interrupt every 10,000 clocks or 1 millisecond
   tmr->auto_reload = 9999;
-  tmr->prescaler = (cpu_frequency_MHz / 10 - 1);
+  tmr->prescaler = static_cast<uint32_t>(cpu_frequency.megahertz() / 10.0f - 1.0f);
   tmr->event = 1;
   // Enable UIFREMAP.  This causes the top bit of tmr->counter to be true if a
   // timer interrupt is pending.
@@ -84,7 +84,7 @@ Time SystemTimer::now() {
 
 #else
 
-void SystemTimer::initialize(uint32_t cpu_frequency_MHz) {}
+void SystemTimer::initialize(Frequency cpu_frequency) {}
 void SystemTimer::interrupt_handler() {}
 Time SystemTimer::now() { return time_; }
 void SystemTimer::delay(Duration d) { time_ = time_ + d; }

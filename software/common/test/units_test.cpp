@@ -190,6 +190,25 @@ TEST(Units, Volume) {
   EXPECT_FLOAT_EQ((seconds(4.56f) * liters_per_sec(3.1415f)).ml(), 14325.24f);
 }
 
+TEST(Units, Frequency) {
+  EXPECT_FLOAT_EQ(hertz(1).hertz(), 1);
+  EXPECT_FLOAT_EQ(hertz(1).kilohertz(), 1e-3f);
+  EXPECT_FLOAT_EQ(kilohertz(1).kilohertz(), 1);
+  EXPECT_FLOAT_EQ(megahertz(1).megahertz(), 1);
+  EXPECT_FLOAT_EQ(megahertz(1).hertz(), 1e6f);
+
+  checkRelationalOperators(hertz);
+  checkArithmeticOperators(hertz, &Frequency::hertz);
+
+  EXPECT_FLOAT_EQ((hertz(4.0f) * 500.0f).kilohertz(), 2.0f);
+  EXPECT_FLOAT_EQ((1234.0f * hertz(2.5f)).kilohertz(), 3.085f);
+  EXPECT_FLOAT_EQ((kilohertz(6.283f) / 2000.0f).hertz(), 3.1415f);
+
+  EXPECT_FLOAT_EQ(kilohertz(2) * seconds(1), 2000);
+  EXPECT_FLOAT_EQ((1.0f / milliseconds(1)).kilohertz(), 1.0f);
+  EXPECT_FLOAT_EQ((1.0f / megahertz(1)).microseconds(), 1.0f);
+}
+
 TEST(Units, Duration) {
   EXPECT_FLOAT_EQ(seconds(1).seconds(), 1);
   EXPECT_FLOAT_EQ(minutes(1).seconds(), 60);

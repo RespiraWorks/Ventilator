@@ -34,5 +34,19 @@ void Actuators::execute(const ActuatorsState &desired_state) {
   psol_.set(desired_state.fio2_valve);
 }
 
+void Actuators::Init(Frequency cpu_frequency) {
+  blower_.initialize_pwm(cpu_frequency);
+  psol_.initialize_pwm(cpu_frequency);
+};
+
+void Actuators::link(NVParams::Handler *nv_params, uint16_t blower_pinch_cal_offset,
+                     uint16_t exhale_pinch_cal_offset, uint16_t blower_cal_offset,
+                     uint16_t psol_cal_offset) {
+  blower_pinch_.LinkCalibration(nv_params, blower_pinch_cal_offset);
+  exhale_pinch_.LinkCalibration(nv_params, exhale_pinch_cal_offset);
+  blower_.LinkCalibration(nv_params, blower_cal_offset);
+  psol_.LinkCalibration(nv_params, psol_cal_offset);
+}
+
 // Return true if all actuators are enabled and ready for action
 bool Actuators::ready() { return blower_pinch_.IsReady() && exhale_pinch_.IsReady(); }

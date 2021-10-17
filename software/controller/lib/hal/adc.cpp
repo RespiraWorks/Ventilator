@@ -199,7 +199,7 @@ Reference abbreviations ([RM], [PCB], etc) are defined in hal/README.md
 */
 
 // How long a period we want to average the A/D readings.
-static constexpr Duration SampleHistoryTime{milliseconds(1.f)};
+static constexpr Duration SampleHistoryTime{milliseconds(1)};
 
 // Resolution of the ADC channels (in bits).
 // We are using the default value (which is also the highest possible one - see [RM] 16.4.22).

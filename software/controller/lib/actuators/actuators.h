@@ -50,17 +50,11 @@ class Actuators {
   // The system should be kept in a safe state until this returns true.
   bool ready();
 
-  // links pinch valves calibration to nv_params.
+  // links actuators calibration tables to nv_params.
   void link(NVParams::Handler *nv_params, uint16_t blower_pinch_cal_offset,
-            uint16_t exhale_pinch_cal_offset) {
-    blower_pinch_.LinkCalibration(nv_params, blower_pinch_cal_offset);
-    exhale_pinch_.LinkCalibration(nv_params, exhale_pinch_cal_offset);
-  }
+            uint16_t exhale_pinch_cal_offset, uint16_t blower_cal_offset, uint16_t psol_cal_offset);
 
-  void Init(Frequency cpu_frequency) {
-    blower_.initialize_pwm(cpu_frequency);
-    psol_.initialize_pwm(cpu_frequency);
-  };
+  void Init(Frequency cpu_frequency);
 
   // Causes passed state to be applied to the actuators
   void execute(const ActuatorsState &desired_state);
@@ -73,12 +67,11 @@ class Actuators {
  private:
   PinchValve blower_pinch_;
   PinchValve exhale_pinch_;
-
-  // Blower has no calibration (yet?)
   PwmActuator blower_{PwmPin::Blower, BlowerFreq, "blower_", " of the blower"};
 
   // Testing in Edwin's garage, we found that the psol was fully closed at
   // somewhere between 0.75 and 0.80 (i.e. definitely zero at 0.75 and probably
   // zero a bit above that) and fully open at 0.90.
+  // \TODO: the values in the comment are inconsistent with the code, have Edwin confirm those.
   PwmActuator psol_{PwmPin::Psol, PSolFreq, "psol_", " of the proportional solenoid", 0.35f, 0.75f};
 };

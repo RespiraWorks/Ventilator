@@ -24,7 +24,8 @@ limitations under the License.
 #include "network_protocol.pb.h"
 #include "units.h"
 
-// pinch_valve calibration size, defined here because the tables are stored in NVParams.
+// Actuators calibration size, defined here because the tables are stored in NVParams.
+// Size 11 means the settings are given with a 10% output increment between two points.
 static constexpr size_t ActuatorsCalSize{11};
 
 namespace NVParams {
@@ -57,17 +58,25 @@ struct Structure {
                                   // May rollover after 136 years
   VentParams last_settings = VentParams_init_default;  // Last settings seen by the vent
 
-  // The following 2 tables are used to roughly linearize the pinch valves output.  They were built
-  // by adjusting the pinch valve and monitoring the flow through the venturi tube. The entries
-  // should give pinch valve settings for a list of equally spaced flow rates.  The first entry
-  // should be the setting for 0 flow rate (normally 0) and the last entry should be the setting
-  // for 100% flow rate. The minimum length of the table is 2 entries.
+  // The following tables are used to roughly linearize the actuators output.  They were built
+  // by adjusting the setting and monitoring the flow through a venturi tube. The entries
+  // should give settings for a list of equally spaced flow rates (0 to 100%).  The first entry
+  // should be the setting for 0 flow and the last entry should be the setting for 100% flow.
+  // Note that those are only used after (if?) Actuators::LinkCalibration() has been called for the
+  // considered actuator.
+  // \TODO: though it makes sense to have functional values during prototyping, we should consider
+  // making those default values unusable (all zeros?) for a production unit, to ensure that a
+  // given ventilator has been fully calibrated before use
   std::array<float, ActuatorsCalSize> blower_pinch_cal{0.0000f, 0.0410f, 0.0689f, 0.0987f,
                                                        0.1275f, 0.1590f, 0.1932f, 0.2359f,
                                                        0.2940f, 0.3988f, 1.0000f};
   std::array<float, ActuatorsCalSize> exhale_pinch_cal{0.0000f, 0.0410f, 0.0689f, 0.0987f,
                                                        0.1275f, 0.1590f, 0.1932f, 0.2359f,
                                                        0.2940f, 0.3988f, 1.0000f};
+  std::array<float, ActuatorsCalSize> blower_cal{0,    0.1f, 0.2f, 0.3f, 0.4f, 0.5f,
+                                                 0.6f, 0.7f, 0.8f, 0.9f, 1.f};
+  std::array<float, ActuatorsCalSize> psol_cal{0.35f, 0.39f, 0.43f, 0.47f, 0.51f, 0.55f,
+                                               0.59f, 0.63f, 0.67f, 0.71f, 0.75f};
 };
 
 // We are reserving the first 8 kB out of our 32kB eeprom for nv params.

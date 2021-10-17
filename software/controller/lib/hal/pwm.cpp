@@ -36,7 +36,6 @@ limitations under the License.
 
 #include "clocks.h"
 #include "gpio.h"
-#include "timers.h"
 
 /// \TODO generalize to have pins and frequency be maintained by caller
 void PWM::initialize(const Frequency cpu_frequency) {

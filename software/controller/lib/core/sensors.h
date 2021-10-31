@@ -61,7 +61,7 @@ class Sensors {
   // Performs general init and sensor calibration.  This function should
   // be called on system startup before any other sensor functions
   // are called.
-  void init(ADC *adc, Frequency cpu_frequency);
+  void init(Frequency cpu_frequency);
 
   // Read the sensors.
   SensorReadings get_readings() const;
@@ -69,6 +69,8 @@ class Sensors {
  private:
   /// \TODO: get this either from ADC constants header or something like that
   static constexpr float ADCVoltageRange{3.3f};
+
+  ADC adc_;
 
   // \TODO: create a physical constants header for custom parts like venturi
   // Diameters and correction coefficient relating to 3/4in Venturi, see https://bit.ly/2ARuReg.

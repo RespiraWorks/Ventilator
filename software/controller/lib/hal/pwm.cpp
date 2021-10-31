@@ -30,46 +30,13 @@ limitations under the License.
  * These timers are documented in [RM] chapters 26 and 27.
  *****************************************************************/
 
+#include <algorithm>
 #if defined(BARE_STM32)
 
-#include <algorithm>
-
-#include "clocks.h"
-#include "gpio.h"
-
-/// \TODO generalize to have pins and frequency be maintained by caller
-void PWM::initialize(const Frequency cpu_frequency) {
-  auto [timer, channel, peripheral, port, pin_number,
-        alternate_function] = [&]() -> std::tuple<TimerReg*, uint8_t, PeripheralID, GPIO::Port,
-                                                  uint8_t, GPIO::AlternativeFunction> {
-    switch (pin_) {
-      case PwmPin::Blower:
-        // Connect PB3 to timer 2 channel 2
-        // [DS] Table 17 (pg 77)
-        return {Timer2Base,    2, PeripheralID::Timer2,
-                GPIO::Port::B, 3, GPIO::AlternativeFunction::AF1};
-      case PwmPin::Buzzer:
-        // Connect PB4 to timer 3 channel 1
-        // [DS] Table 17 (pg 77)
-        return {Timer3Base,    1, PeripheralID::Timer3,
-                GPIO::Port::B, 4, GPIO::AlternativeFunction::AF2};
-      case PwmPin::Psol:
-        // Connect PA11 to timer 1 channel 4
-        // [DS] Table 17 (pg 77)
-        return {Timer1Base,    4,  PeripheralID::Timer1,
-                GPIO::Port::A, 11, GPIO::AlternativeFunction::AF1};
-    }
-    // All cases covered above (and GCC checks this).
-    __builtin_unreachable();
-  }();
-
-  // remember timer reg and channel for set() member function
-  timer_ = timer;
-  channel_ = channel;
-
+PWM::PWM(const Frequency pwm_freq, TimerReg *timer, uint8_t channel, const PeripheralID peripheral,
+         const Frequency cpu_frequency)
+    : pwm_freq_(pwm_freq), timer_(timer), channel_(channel) {
   enable_peripheral_clock(peripheral);
-
-  GPIO::AlternatePin(port, pin_number, alternate_function);
 
   // Set the frequency
   timer_->auto_reload = static_cast<uint32_t>(cpu_frequency.hertz() / pwm_freq_.hertz()) - 1;
@@ -110,17 +77,12 @@ void PWM::set(const float duty) {
 
 #else
 
-#include <cassert>
+PWM::PWM(const Frequency pwm_freq, TimerReg *timer, uint8_t channel, const PeripheralID peripheral,
+         const Frequency cpu_frequency)
+    : pwm_freq_(pwm_freq), timer_(timer), channel_(channel){};
 
-void PWM::initialize(const Frequency cpu_frequency) {}
+void PWM::set(float duty) { value_ = std::clamp(duty, 0.0f, 1.0f); }
 
-void PWM::set_pin_mode(GPIO::PinMode mode) { pwm_pin_modes_[pin_] = mode; }
-
-void PWM::set(float duty) {
-  if (pwm_pin_modes_[pin_] != GPIO::PinMode::Output) {
-    assert(false && "Can only write to an OUTPUT pin");
-  }
-  pwm_pin_values_[pin_] = duty;
-}
+float PWM::get() const { return value_; }
 
 #endif

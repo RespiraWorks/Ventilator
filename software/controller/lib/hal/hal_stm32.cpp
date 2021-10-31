@@ -122,7 +122,13 @@ void HalApi::Init() {
   LEDs.initialize();
   /// \TODO: ensure CPUFrequency is a multiple of 10 MHz
   SystemTimer::singleton().initialize(CPUFrequency);
-  buzzer.initialize(CPUFrequency);
+  // \TODO: previous implementation of buzzer used a 0.8 scaling factor to produce max volume
+  // when we used set(1). We need to bring that back somehow (e.g make buzzer a pwm driven actuator
+  // with calibration from 0 to 0.8, which works, but buzzer isn't really an actuator so making it
+  // a member of Actuators feels wrong, and the initialization overhead is a bit much to live in
+  // main in my view).
+  buzzer.emplace(GPIO::Port::B, 4, GPIO::AlternativeFunction::AF2, kilohertz(2.4f), Timer3Base, 1,
+                 PeripheralID::Timer3, CPUFrequency);
   InitUARTs();
   I2C::initialize();
   Interrupts::singleton().EnableInterrupts();

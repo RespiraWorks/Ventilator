@@ -69,11 +69,11 @@ class Actuators {
  private:
   PinchValve blower_pinch_;
   PinchValve exhale_pinch_;
-  PwmActuator blower_{PwmPin::Blower, BlowerFreq, "blower_", " of the blower"};
+  std::optional<PwmActuator> blower_{std::nullopt};
 
   // Testing in Edwin's garage, we found that the psol was fully closed at
   // somewhere between 0.75 and 0.80 (i.e. definitely zero at 0.75 and probably
   // zero a bit above that) and fully open at 0.90.
   // \TODO: the values in the comment are inconsistent with the code, have Edwin confirm those.
-  PwmActuator psol_{PwmPin::Psol, PSolFreq, "psol_", " of the proportional solenoid", 0.35f, 0.75f};
+  std::optional<PwmActuator> psol_{std::nullopt};
 };

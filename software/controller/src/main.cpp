@@ -225,7 +225,7 @@ int main() {
 
   // Initialize and calibrate the sensors.
   // This needs to be done before the sensors are used.
-  sensors.init(&hal.adc, HalApi::GetCpuFreq());
+  sensors.init(HalApi::GetCpuFreq());
 
   BackgroundLoop();
 }

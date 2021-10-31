@@ -47,7 +47,6 @@ Pin::Pin(Port port, uint8_t pin, PinMode mode) : pin_(pin) {
 };
 
 #if defined(BARE_STM32)
-// Helper functions to set output type for either Output or Alt function pin
 void Pin::output_type(OutType output_type) {
   if (output_type == OutType::OpenDrain)
     gpio_->output_type |= 1 << pin_;
@@ -55,20 +54,23 @@ void Pin::output_type(OutType output_type) {
     gpio_->output_type &= ~(1 << pin_);
 }
 
-// Helper functions to set output speed for either Output or Alt function pin
 void Pin::output_speed(OutSpeed speed) {
   auto s = static_cast<uint32_t>(speed);
   gpio_->output_speed &= ~(0b11 << (2 * pin_));
   gpio_->output_speed |= (s << (2 * pin_));
 }
 
-// Helper function to set pullup/pulldown resistor for either Input or Alt function pin
 void Pin::pull_type(PullType pull) {
   // Get the current value within the register, masking the bits we want to alter
   uint32_t x = gpio_->pullup_pulldown & ~(3 << (2 * pin_));
   // Only alter the appropriate bits
   x |= static_cast<uint32_t>(pull) << (2 * pin_);
   gpio_->pullup_pulldown = x;
+}
+
+void Pin::alternate_function(AlternativeFunction func) {
+  uint8_t index = (pin_ < 8) ? 0 : 1;
+  gpio_->alternate_function[index] |= (static_cast<uint32_t>(func) << ((pin_ & 0b111) * 4));
 }
 
 void DigitalOutputPin::set() { gpio_->set = static_cast<uint16_t>(1 << pin_); }
@@ -78,14 +80,19 @@ void DigitalOutputPin::clear() { gpio_->clear = static_cast<uint16_t>(1 << pin_)
 bool DigitalInputPin::get() const { return gpio_->input_data & (1 << pin_); }
 
 #else
-// \TODO add a real mock?
+// \TODO add a real mock for those?
 void Pin::output_type(OutType output_type) {}
 void Pin::output_speed(OutSpeed speed) {}
 void Pin::pull_type(PullType pull) {}
+void Pin::alternate_function(AlternativeFunction func) {}
 
-void DigitalOutputPin::set() {}
-void DigitalOutputPin::clear() {}
-bool DigitalInputPin::get() const { return true; }
+void DigitalOutputPin::set() { value_ = 1; }
+void DigitalOutputPin::clear() { value_ = 0; }
+bool DigitalOutputPin::get() const { return value_; }
+
+void DigitalInputPin::set() { value_ = 1; }
+void DigitalInputPin::clear() { value_ = 0; }
+bool DigitalInputPin::get() const { return value_; }
 
 #endif
 
@@ -115,12 +122,7 @@ AlternatePin::AlternatePin(Port port, uint8_t pin, AlternativeFunction func, Pul
     : Pin(port, pin, PinMode::AlternateFunction) {
   output_type(type);
   output_speed(speed);
-  // set AlternateFunction number
-#if defined(BARE_STM32)
-  uint8_t index = (pin < 8) ? 0 : 1;
-  gpio_->alternate_function[index] |= (static_cast<uint32_t>(func) << ((pin & 0b111) * 4));
-#endif
-  // Set pull type register:
+  alternate_function(func);
   pull_type(pull);
 }
 
@@ -132,5 +134,15 @@ AnalogInputPin::AnalogInputPin(Port port, uint8_t pin, ADC *adc, AdcChannel chan
 }
 
 Voltage AnalogInputPin::read() const { return adc_->read(channel_); }
+
+AnalogOutputPin::AnalogOutputPin(Port port, uint8_t pin, const AlternativeFunction func,
+                                 const Frequency pwm_freq, TimerReg *timer, uint8_t channel,
+                                 const PeripheralID peripheral, const Frequency cpu_frequency)
+    : Pin(port, pin, PinMode::AlternateFunction),
+      pwm_(pwm_freq, timer, channel, peripheral, cpu_frequency) {
+  alternate_function(func);
+}
+
+void AnalogOutputPin::set(float value) { pwm_.set(value); }
 
 }  // namespace GPIO

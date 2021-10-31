@@ -25,6 +25,7 @@ Reference abbreviations [RM], [DS], etc are defined in hal/README.md.
 #include <cstdint>
 
 #include "adc.h"
+#include "pwm.h"
 
 /******************************************************************
  * General Purpose I/O support. [RM] Chapter 8
@@ -113,9 +114,11 @@ class Pin {
  protected:
   Register *gpio_{nullptr};
   uint8_t pin_;
-  void output_type(OutType output_type);
-  void output_speed(OutSpeed speed);
-  void pull_type(PullType pull);
+  // helper functions to set properties of the pin (writes them to registers).
+  void output_type(OutType output_type);              // for output or alternate pins
+  void output_speed(OutSpeed speed);                  // for output or alternate pins
+  void pull_type(PullType pull);                      // for input or alternate pins
+  void alternate_function(AlternativeFunction func);  // for analog output or alternate pins
 };
 
 // Output pin, which can be set to 1 or cleared to 0
@@ -125,6 +128,12 @@ class DigitalOutputPin : public Pin {
                    OutType type = OutType::PushPull);
   void set();
   void clear();
+#if !defined(BARE_STM32)
+  bool get() const;
+
+ private:
+  bool value_;
+#endif
 };
 
 // Input pins can be read as a boolean (0 or 1)
@@ -132,6 +141,13 @@ class DigitalInputPin : public Pin {
  public:
   DigitalInputPin(Port port, uint8_t pin, PullType pull = PullType::None);
   bool get() const;
+#if !defined(BARE_STM32)
+  void set();
+  void clear();
+
+ private:
+  bool value_;
+#endif
 };
 
 class AlternatePin : public Pin {
@@ -148,6 +164,17 @@ class AnalogInputPin : public Pin {
  private:
   ADC *adc_{nullptr};
   AdcChannel channel_;
+};
+
+class AnalogOutputPin : public Pin {
+ public:
+  AnalogOutputPin(Port port, uint8_t pin, const AlternativeFunction func, const Frequency pwm_freq,
+                  TimerReg *timer, uint8_t channel, const PeripheralID peripheral,
+                  const Frequency cpu_frequency);
+  void set(float value);
+
+ private:
+  PWM pwm_;
 };
 
 }  // namespace GPIO

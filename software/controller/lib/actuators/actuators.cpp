@@ -17,7 +17,7 @@ limitations under the License.
 
 void Actuators::execute(const ActuatorsState &desired_state) {
   // set blower PWM
-  blower_.set(desired_state.blower_power);
+  blower_->set(desired_state.blower_power);
 
   // Set the blower pinch valve position
   if (desired_state.blower_valve)
@@ -31,12 +31,15 @@ void Actuators::execute(const ActuatorsState &desired_state) {
   else
     exhale_pinch_.Disable();
 
-  psol_.set(desired_state.fio2_valve);
+  psol_->set(desired_state.fio2_valve);
 }
 
 void Actuators::Init(Frequency cpu_frequency) {
-  blower_.initialize_pwm(cpu_frequency);
-  psol_.initialize_pwm(cpu_frequency);
+  blower_.emplace(GPIO::Port::B, 3, GPIO::AlternativeFunction::AF1, BlowerFreq, Timer2Base, 2,
+                  PeripheralID::Timer2, cpu_frequency, "blower_", " of the blower");
+  psol_.emplace(GPIO::Port::A, 11, GPIO::AlternativeFunction::AF1, PSolFreq, Timer1Base, 4,
+                PeripheralID::Timer1, cpu_frequency, "psol_", " of the proportional solenoid",
+                0.35f, 0.75f);
 };
 
 void Actuators::link(NVParams::Handler *nv_params, uint16_t blower_pinch_cal_offset,
@@ -44,8 +47,8 @@ void Actuators::link(NVParams::Handler *nv_params, uint16_t blower_pinch_cal_off
                      uint16_t psol_cal_offset) {
   blower_pinch_.LinkCalibration(nv_params, blower_pinch_cal_offset);
   exhale_pinch_.LinkCalibration(nv_params, exhale_pinch_cal_offset);
-  blower_.LinkCalibration(nv_params, blower_cal_offset);
-  psol_.LinkCalibration(nv_params, psol_cal_offset);
+  blower_->LinkCalibration(nv_params, blower_cal_offset);
+  psol_->LinkCalibration(nv_params, psol_cal_offset);
 }
 
 // Return true if all actuators are enabled and ready for action

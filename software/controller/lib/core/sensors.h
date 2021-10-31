@@ -66,11 +66,12 @@ class Sensors {
   // Read the sensors.
   SensorReadings get_readings() const;
 
+  // for testing purposes, I made this a public member
+  ADC adc;
+
  private:
   /// \TODO: get this either from ADC constants header or something like that
   static constexpr float ADCVoltageRange{3.3f};
-
-  ADC adc_;
 
   // \TODO: create a physical constants header for custom parts like venturi
   // Diameters and correction coefficient relating to 3/4in Venturi, see https://bit.ly/2ARuReg.

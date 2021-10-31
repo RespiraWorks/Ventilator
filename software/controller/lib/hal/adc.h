@@ -15,20 +15,25 @@ limitations under the License.
 
 #pragma once
 
+#include <array>
+
 #include "units.h"
 
 #if !defined(BARE_STM32)
 #include <map>
 #endif
 
+// Reference abbreviations ([RM], [PCB], etc) are defined in hal/README.md
+
 // Location of analog sensors as labeled on the PCB(s). Note that this does not necessarily define
 // their function and further mapping should be done in the higher layers of the software.
-enum class AnalogPin {
-  InterimBoardAnalogPressure,
-  U3PatientPressure,
-  U4InhaleFlow,
-  U5ExhaleFlow,
-  InterimBoardOxygenSensor,
+// Please refer to [PCB] as the ultimate source of which pin is used for which function.
+enum class AdcChannel {
+  InterimBoardAnalogPressure = 1,  // PC0 (ADC1_IN1)  interim board: analog pressure
+  InterimBoardOxygenSensor = 2,    // PC3 (ADC1_IN2)  interim board: oxygen sensor
+  U3PatientPressure = 6,           // PA1 (ADC1_IN6)  U3 patient pressure
+  U4InhaleFlow = 9,                // PA4 (ADC1_IN9)  U4 inhale flow
+  U5ExhaleFlow = 15,               // PB0 (ADC1_IN15) U5 exhale flow
 };
 
 /// \TODO: could be explicit singleton?
@@ -43,12 +48,15 @@ class ADC {
   // Reads from analog sensor using an analog-to-digital converter.
   // Returns a voltage.  On STM32 this can range from 0 to 3.3V.
   // In test mode, will return the last value set via TESTSetAnalogPin.
-  Voltage read(AnalogPin pin) const;
+  Voltage read(AdcChannel pin) const;
+
+  // Add a new channel to the ADC
+  bool add_channel(AdcChannel channel);
 
  private:
   // Total number of A/D inputs we're sampling
   // \TODO: consider templating this or somehow linking it to mapping enum size
-  static constexpr int AdcChannels{5};
+  static constexpr int MaxAdcChannels{5};
 
   // We need the sample history to be small for two reasons:
   // - We sum to a 32-bit float and will lose precision if we add in too many samples
@@ -60,15 +68,19 @@ class ADC {
   uint32_t adc_sample_history_{1};
   float adc_scaler_{1.0f};
 
+  // Array of ADC channels we use.
+  std::array<AdcChannel, MaxAdcChannels> channels_;
+  uint8_t n_channels_{0};
+
   //\TODO: possibly have parent allocate memory depending on number of samples
   // Presized under some assumptions, see implementation for initialize()
-  volatile uint16_t oversample_buffer_[AdcSampleHistoryHardMax * AdcChannels];
+  volatile uint16_t oversample_buffer_[AdcSampleHistoryHardMax * MaxAdcChannels];
 
 #if !defined(BARE_STM32)
  public:
-  void TESTSetAnalogPin(AnalogPin pin, Voltage value);
+  void TESTSetAnalogPin(AdcChannel pin, Voltage value);
 
  private:
-  std::map<AnalogPin, Voltage> analog_pin_values_;
+  std::map<AdcChannel, Voltage> analog_pin_values_;
 #endif
 };

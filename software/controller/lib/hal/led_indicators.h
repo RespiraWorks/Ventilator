@@ -16,44 +16,15 @@ limitations under the License.
 #pragma once
 
 #include <cstdint>
-
-#if !defined(BARE_STM32)
-#include <map>
+#include <optional>
 
 #include "gpio.h"
-#endif
-
-// Binary pins set by the controller -- these are booleans, High or Low.
-//
-// PWM pins can of course be HIGH or LOW too, but we separate out purely on/off
-// pins from PWM pins for reasons of "strong typing".
-//
-// Pins default to Input, so if you add a new pin here, be sure to update
-// HalApi::Init() and set it to Output!
-enum class BinaryPin {
-  RedLED,
-  YellowLED,
-  GreenLED,
-};
-
-// Voltage level of a digital pin.
-// Usage: VoltageLevel::High, Low
-enum class VoltageLevel { High, Low };
 
 class LEDIndicators {
  public:
   void initialize();
 
-  // Sets `binary_pin` to high or low.
-  void set(BinaryPin binary_pin, VoltageLevel value);
-
-#if !defined(BARE_STM32)
- public:
-  /// \TODO: is this the best thing to test? Isn't this implementation-specific?
-  void set_pin_mode(BinaryPin pin, GPIO::PinMode mode);
-
- private:
-  std::map<BinaryPin, GPIO::PinMode> binary_pin_modes_;
-  std::map<BinaryPin, VoltageLevel> binary_pin_values_;
-#endif
+  std::optional<GPIO::DigitalOutputPin> red_led_;
+  std::optional<GPIO::DigitalOutputPin> yellow_led_;
+  std::optional<GPIO::DigitalOutputPin> green_led_;
 };

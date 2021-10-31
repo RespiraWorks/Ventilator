@@ -17,8 +17,9 @@ limitations under the License.
 
 /// \TODO: generalize these classes to not require reference to entire HAL
 
-AnalogSensor::AnalogSensor(const char *name, const char *help_supplement, AnalogPin pin)
-    : pin_(pin),
+AnalogSensor::AnalogSensor(const char *name, const char *help_supplement, GPIO::Port port,
+                           uint8_t pin, ADC *adc, AdcChannel adc_channel)
+    : pin_(port, pin, adc, adc_channel),
       dbg_zero_("zero", Debug::Variable::Access::ReadOnly, 0.f, "V", "Voltage offset "),
       dbg_voltage_("voltage", Debug::Variable::Access::ReadOnly, 0.f, "V", "Voltage reading ") {
   dbg_zero_.prepend_name(name);
@@ -28,13 +29,13 @@ AnalogSensor::AnalogSensor(const char *name, const char *help_supplement, Analog
   dbg_voltage_.append_help(help_supplement);
 }
 
-void AnalogSensor::set_zero(const HalApi &hal_api) {
-  zero_ = hal_api.adc.read(pin_);
+void AnalogSensor::set_zero() {
+  zero_ = pin_.read();
   dbg_zero_.set(zero_.volts());
 }
 
-float AnalogSensor::read_diff_volts(const HalApi &hal_api) const {
-  auto ret = (hal_api.adc.read(pin_) - zero_).volts();
+float AnalogSensor::read_diff_volts() const {
+  auto ret = (pin_.read() - zero_).volts();
   dbg_voltage_.set(ret);
   return ret;
 }

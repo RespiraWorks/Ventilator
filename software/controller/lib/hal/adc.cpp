@@ -50,9 +50,13 @@ limitations under the License.
 //
 ////////////////////////////////////////////////////////////////////
 
+// Reference abbreviations ([RM], [PCB], etc) are defined in hal/README.md
+
 #include "adc.h"
 
 #if defined(BARE_STM32)
+
+#include <algorithm>
 
 #include "clocks.h"
 #include "dma.h"
@@ -102,30 +106,32 @@ struct AdcStruct {
     } configuration2;  // [RM] 16.6.5 ADC configuration register 2 (ADC_CFGR2)
     // (pg 462)
 
-    struct {
-      uint32_t ch0 : 3;
-      uint32_t ch1 : 3;
-      uint32_t ch2 : 3;
-      uint32_t ch3 : 3;
-      uint32_t ch4 : 3;
-      uint32_t ch5 : 3;
-      uint32_t ch6 : 3;
-      uint32_t ch7 : 3;
-      uint32_t ch8 : 3;
-      uint32_t ch9 : 3;
-      uint32_t reserved1 : 2;
-      uint32_t ch10 : 3;
-      uint32_t ch11 : 3;
-      uint32_t ch12 : 3;
-      uint32_t ch13 : 3;
-      uint32_t ch14 : 3;
-      uint32_t ch15 : 3;
-      uint32_t ch16 : 3;
-      uint32_t ch17 : 3;
-      uint32_t ch18 : 3;
-      uint32_t reserved2 : 5;
-    } sample_times;  // [RM] 16.6.6 ADC Sample Time Register 1 (ADC_SMPR1) (pg
-    // 464)
+    union {
+      struct {
+        uint32_t ch0 : 3;
+        uint32_t ch1 : 3;
+        uint32_t ch2 : 3;
+        uint32_t ch3 : 3;
+        uint32_t ch4 : 3;
+        uint32_t ch5 : 3;
+        uint32_t ch6 : 3;
+        uint32_t ch7 : 3;
+        uint32_t ch8 : 3;
+        uint32_t ch9 : 3;
+        uint32_t reserved1 : 2;
+        uint32_t ch10 : 3;
+        uint32_t ch11 : 3;
+        uint32_t ch12 : 3;
+        uint32_t ch13 : 3;
+        uint32_t ch14 : 3;
+        uint32_t ch15 : 3;
+        uint32_t ch16 : 3;
+        uint32_t ch17 : 3;
+        uint32_t ch18 : 3;
+        uint32_t reserved2 : 5;
+      } bitfield;
+      uint32_t words[2];
+    } sample_times;  // [RM] 16.6.6 ADC Sample Time Register 1 (ADC_SMPR1) (pg 464)
 
     uint32_t reserved1;
     uint32_t watchdogs[3];  // 0x20 - [RM] 16.6.8 ADC Watchdog
@@ -134,31 +140,34 @@ struct AdcStruct {
     // 4x sequence registers.  These registers are used
     // to define the number of A/D readings and the
     // channel numbers being read.
-    struct {
-      uint32_t length : 6;
-      uint32_t sequence1 : 6;
-      uint32_t sequence2 : 6;
-      uint32_t sequence3 : 6;
-      uint32_t sequence4 : 6;
-      uint32_t reserved1 : 2;
+    union {
+      struct {
+        uint32_t length : 6;
+        uint32_t sequence1 : 6;
+        uint32_t sequence2 : 6;
+        uint32_t sequence3 : 6;
+        uint32_t sequence4 : 6;
+        uint32_t reserved1 : 2;
 
-      uint32_t sequence5 : 6;
-      uint32_t sequence6 : 6;
-      uint32_t sequence7 : 6;
-      uint32_t sequence8 : 6;
-      uint32_t sequence9 : 6;
-      uint32_t reserved2 : 2;
+        uint32_t sequence5 : 6;
+        uint32_t sequence6 : 6;
+        uint32_t sequence7 : 6;
+        uint32_t sequence8 : 6;
+        uint32_t sequence9 : 6;
+        uint32_t reserved2 : 2;
 
-      uint32_t sequence10 : 6;
-      uint32_t sequence11 : 6;
-      uint32_t sequence12 : 6;
-      uint32_t sequence13 : 6;
-      uint32_t sequence14 : 6;
-      uint32_t reserved3 : 2;
+        uint32_t sequence10 : 6;
+        uint32_t sequence11 : 6;
+        uint32_t sequence12 : 6;
+        uint32_t sequence13 : 6;
+        uint32_t sequence14 : 6;
+        uint32_t reserved3 : 2;
 
-      uint32_t sequence15 : 6;
-      uint32_t sequence16 : 6;
-      uint32_t reserved4 : 20;
+        uint32_t sequence15 : 6;
+        uint32_t sequence16 : 6;
+        uint32_t reserved4 : 20;
+      } bitfield;
+      uint32_t words[4];
     } sequence;  // ADC Regular Sequence Register (pg 468)
 
     uint32_t data;
@@ -184,19 +193,6 @@ struct AdcStruct {
 
 typedef volatile AdcStruct AdcReg;
 inline AdcReg *const AdcBase = reinterpret_cast<AdcReg *>(0X50040000);
-
-/*
-Please refer to [PCB] as the ultimate source of which pin is used for which function.
-
-The following pins are used as analog inputs on the rev-1 PCB:
-- PC0 (ADC1_IN1)  interim board: analog pressure
-- PA1 (ADC1_IN6)  U3 patient pressure
-- PA4 (ADC1_IN9)  U4 inhale flow
-- PB0 (ADC1_IN15) U5 exhale flow
-- PC3 (ADC1_IN2)  interim board: oxygen sensor
-
-Reference abbreviations ([RM], [PCB], etc) are defined in hal/README.md
-*/
 
 // How long a period we want to average the A/D readings.
 static constexpr Duration SampleHistoryTime{milliseconds(1)};
@@ -261,10 +257,33 @@ static constexpr int AdcConversionTime = [] {
   __builtin_unreachable();
 }();
 
-/// \TODO: have caller provide mappings in a different layer
+// local helper functions to manipulate ADC registers
+void SetAdcSampleTime(AdcReg *adc, const uint8_t channel, const ADCSampleTimeReg sample_time) {
+  if (channel > 18) return;
+  // We write the AdcSampleTimeReg value to the corresponding sample_times register:
+  // in first word the first 9 channels and in the second one for channels 10 to 18,
+  // and shifted by channel (modulo 10) * 3 bits
+  size_t index = static_cast<size_t>(channel / 10);
+  adc->adc[0].sample_times.words[index] |= static_cast<uint32_t>(sample_time) << (channel % 10) * 3;
+}
+
+void SetAdcSequence(AdcReg *adc, const uint8_t sequence_number, const uint8_t channel) {
+  if (sequence_number < 1 || sequence_number > 16 || channel > 18) return;
+  // Set sequence registers in order, in the matching word (0 for sequence 1 to 4, 1 for 5 to 9,
+  // and so on), and shifted by sequence_number (modulo 5) * 6 bits
+  size_t index = static_cast<size_t>(sequence_number / 5);
+  adc->adc[0].sequence.words[index] |= channel << (sequence_number % 5) * 6;
+};
+
+bool ADC::add_channel(AdcChannel channel) {
+  if (n_channels_ >= MaxAdcChannels) return false;
+  channels_[n_channels_++] = channel;
+  return true;
+};
+
 bool ADC::initialize(const Frequency cpu_frequency) {
   adc_sample_history_ = static_cast<uint32_t>(SampleHistoryTime * cpu_frequency /
-                                              AdcConversionTime / OversampleCount / AdcChannels);
+                                              AdcConversionTime / OversampleCount / MaxAdcChannels);
 
   // This scaler converts the sum of the A/D readings (a total of
   // adc_sample_history_) into a voltage.  The A/D is scaled so a value of 0
@@ -275,16 +294,6 @@ bool ADC::initialize(const Frequency cpu_frequency) {
 
   // Enable the clock to the A/D converter
   enable_peripheral_clock(PeripheralID::ADC);
-
-  using IOPort = GPIO::Port;
-  using IOMode = GPIO::PinMode;
-
-  // Configure the 5 pins used as analog inputs
-  GPIO::pin_mode(IOPort::C, 0, IOMode::Analog);  // PC0 (ADC1_IN1)  interim: analog pressure
-  GPIO::pin_mode(IOPort::A, 1, IOMode::Analog);  // PA1 (ADC1_IN6)  U3 patient pressure
-  GPIO::pin_mode(IOPort::A, 4, IOMode::Analog);  // PA4 (ADC1_IN9)  U4 inhale flow
-  GPIO::pin_mode(IOPort::B, 0, IOMode::Analog);  // PB0 (ADC1_IN15) U5 exhale flow
-  GPIO::pin_mode(IOPort::C, 1, IOMode::Analog);  // PC3 (ADC1_IN2)  interim: oxygen sensor
 
   // Perform a power-up and calibration sequence on the A/D converter
   AdcReg *adc = AdcBase;
@@ -341,21 +350,15 @@ bool ADC::initialize(const Frequency cpu_frequency) {
   // Set oversampling shift if necessary (see [RM] Table 66)
   adc->adc[0].configuration2.oversampling_shift = (OversampleLog2 < 4) ? 0 : (OversampleLog2 - 4);
 
-  // Set sample times ([RM] 16.4.12).
-  adc->adc[0].sample_times.ch1 = static_cast<uint32_t>(AdcSampleTime);
-  adc->adc[0].sample_times.ch6 = static_cast<uint32_t>(AdcSampleTime);
-  adc->adc[0].sample_times.ch9 = static_cast<uint32_t>(AdcSampleTime);
-  adc->adc[0].sample_times.ch15 = static_cast<uint32_t>(AdcSampleTime);
-  adc->adc[0].sample_times.ch2 = static_cast<uint32_t>(AdcSampleTime);
-
   // Set conversion sequence length (number of used channels - 1, per [RM] p468)
-  adc->adc[0].sequence.length = AdcChannels - 1;
+  adc->adc[0].sequence.bitfield.length = MaxAdcChannels - 1;
 
-  adc->adc[0].sequence.sequence1 = 1;   // PC0 (ADC1_IN1)  interim board: analog pressure
-  adc->adc[0].sequence.sequence2 = 6;   // PA1 (ADC1_IN6)  U3 patient pressure
-  adc->adc[0].sequence.sequence3 = 9;   // PA4 (ADC1_IN9)  U4 inhale flow
-  adc->adc[0].sequence.sequence4 = 15;  // PB0 (ADC1_IN15) U5 exhale flow
-  adc->adc[0].sequence.sequence5 = 2;   // PC3 (ADC1_IN2)  interim board: oxygen sensor
+  // Set sample times ([RM] 16.4.12) for the channels we use and sequence order.
+  for (size_t i = 0; i < n_channels_; ++i) {
+    uint8_t channel = static_cast<uint8_t>(channels_[i]);
+    SetAdcSampleTime(adc, channel, AdcSampleTime);
+    SetAdcSequence(adc, static_cast<uint8_t>(i + 1), channel);
+  }
 
   // I use DMA1 channel 1 to copy A/D readings into the buffer ([RM] 11.4.4)
   enable_peripheral_clock(PeripheralID::DMA1);
@@ -365,7 +368,7 @@ bool ADC::initialize(const Frequency cpu_frequency) {
   /// \TODO: improve DMA abstraction to factor this out?
   dma->channel[c1].peripheral_address = &adc->adc[0].data;
   dma->channel[c1].memory_address = oversample_buffer_;
-  dma->channel[c1].count = adc_sample_history_ * AdcChannels;
+  dma->channel[c1].count = adc_sample_history_ * MaxAdcChannels;
 
   dma->channel[c1].config.enable = 0;
   dma->channel[c1].config.tx_complete_interrupt = 0;
@@ -387,31 +390,19 @@ bool ADC::initialize(const Frequency cpu_frequency) {
 }
 
 // Read the specified analog input.
-Voltage ADC::read(const AnalogPin pin) const {
-  /// \TODO: factor out mapping function and have it tested
-  int offset = [&] {
-    switch (pin) {
-      case AnalogPin::InterimBoardAnalogPressure:
-        return 0;
-      case AnalogPin::U3PatientPressure:
-        return 1;
-      case AnalogPin::U4InhaleFlow:
-        return 2;
-      case AnalogPin::U5ExhaleFlow:
-        return 3;
-      case AnalogPin::InterimBoardOxygenSensor:
-        return 4;
-    }
-    // All cases covered above (and GCC checks this).
-    __builtin_unreachable();
-  }();
+Voltage ADC::read(const AdcChannel channel) const {
+  size_t offset =
+      std::distance(channels_.begin(), std::find(channels_.begin(), channels_.end(), channel));
+
+  if (offset >= MaxAdcChannels) return volts(0);
 
   // We just run through the buffer and add up all the readings for
   // this channel.  The DMA is still writing to this buffer in the
   // background, but that shouldn't cause any problems because memory
   // accesses for 16-bit values are atomic.
   float sum = 0;
-  for (int i = 0; i < adc_sample_history_; i++) sum += oversample_buffer_[i * AdcChannels + offset];
+  for (int i = 0; i < adc_sample_history_; i++)
+    sum += oversample_buffer_[i * MaxAdcChannels + offset];
 
   return volts(sum * adc_scaler_);
 }
@@ -420,8 +411,10 @@ Voltage ADC::read(const AnalogPin pin) const {
 
 bool ADC::initialize(const Frequency cpu_frequency) { return true; }
 
-Voltage ADC::read(AnalogPin pin) const { return analog_pin_values_.at(pin); }
+Voltage ADC::read(const AdcChannel channel) const { return analog_pin_values_.at(channel); }
 
-void ADC::TESTSetAnalogPin(AnalogPin pin, Voltage value) { analog_pin_values_[pin] = value; }
+void ADC::TESTSetAnalogPin(const AdcChannel channel, Voltage value) {
+  analog_pin_values_[channel] = value;
+}
 
 #endif

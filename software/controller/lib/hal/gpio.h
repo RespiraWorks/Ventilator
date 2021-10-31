@@ -24,6 +24,8 @@ Reference abbreviations [RM], [DS], etc are defined in hal/README.md.
 
 #include <cstdint>
 
+#include "adc.h"
+
 /******************************************************************
  * General Purpose I/O support. [RM] Chapter 8
  *
@@ -33,6 +35,24 @@ Reference abbreviations [RM], [DS], etc are defined in hal/README.md.
  *****************************************************************/
 
 namespace GPIO {
+
+// General Purpose I/O
+// [RM] 8.4 GPIO Registers (pg 267)
+struct RegisterStructure {
+  uint32_t mode;                   // Mode register [RM] 8.4.1
+  uint32_t output_type;            // Output type register [RM] 8.4.2
+  uint32_t output_speed;           // Output speed register [RM] 8.4.3
+  uint32_t pullup_pulldown;        // Pull-up/pull-down register [RM] 8.4.4
+  uint32_t input_data;             // Input data register [RM] 8.4.5
+  uint32_t output_data;            // Output data register [RM] 8.4.6
+  uint16_t set;                    // Bit set register [RM] 8.4.7
+  uint16_t clear;                  // Bit reset register [RM] 8.4.7
+  uint32_t flash_lock;             // Configuration lock register [RM] 8.4.8
+  uint32_t alternate_function[2];  // Alternate function low/high register [RM] 8.4.{9,10}
+  uint32_t reset;                  // Reset register [RM] 8.4.11
+};
+
+typedef volatile RegisterStructure Register;
 
 /// \TODO: Move these mappings elsewhere
 enum class Port : uint32_t {
@@ -58,6 +78,9 @@ enum class OutType : uint8_t { PushPull = 0b0, OpenDrain = 0b1 };
 // Value for GPIOx_OSPEEDR ([RM] 8.4.3)
 enum class OutSpeed : uint8_t { Slow = 0b00, Medium = 0b01, Fast = 0b10, Smoking = 0b11 };
 
+// Value for GPIOx_PUPDR ([RM] 8.4.4)
+enum class PullType : uint8_t { None = 0b00, Up = 0b01, Down = 0b10 };
+
 // [DS] Tables 17-18 (pg 76-86)
 enum class AlternativeFunction : uint32_t {
   AF0 = 0,    //< SYS_AF
@@ -80,30 +103,51 @@ enum class AlternativeFunction : uint32_t {
 
 void enable_all_clocks();
 
-void pin_mode(Port port, uint8_t pin, PinMode mode);
+// Abstract pin, note that for some types of pin (most notably AlternateFunction), we only need to
+// instantiate the pin so the registers are properly set, but we don't really need to keep a
+// reference to the pin itself
+class Pin {
+ public:
+  Pin(Port port, uint8_t pin, PinMode mode);
 
-void output_type(Port port, uint8_t pin, OutType output_type);
+ protected:
+  Register *gpio_{nullptr};
+  uint8_t pin_;
+  void output_type(OutType output_type);
+  void output_speed(OutSpeed speed);
+  void pull_type(PullType pull);
+};
 
-void output_speed(Port port, uint8_t pin, OutSpeed speed);
+// Output pin, which can be set to 1 or cleared to 0
+class DigitalOutputPin : public Pin {
+ public:
+  DigitalOutputPin(Port port, uint8_t pin, bool start_high = false, OutSpeed speed = OutSpeed::Slow,
+                   OutType type = OutType::PushPull);
+  void set();
+  void clear();
+};
 
-// Many GPIO pins can be repurposed with an alternate function
-// See Table 17 and 18 [DS] for alternate functions
-// See [RM] 8.4.9 and 8.4.10 for GPIO alternate function selection
-void alternate_function(Port port, uint8_t pin, AlternativeFunction func);
+// Input pins can be read as a boolean (0 or 1)
+class DigitalInputPin : public Pin {
+ public:
+  DigitalInputPin(Port port, uint8_t pin, PullType pull = PullType::None);
+  bool get() const;
+};
 
-// Set a specific output pin
-void set_pin(Port port, uint8_t pin);
+class AlternatePin : public Pin {
+ public:
+  AlternatePin(Port port, uint8_t pin, AlternativeFunction func, PullType pull = PullType::None,
+               OutSpeed speed = OutSpeed::Slow, OutType type = OutType::PushPull);
+};
 
-// Clear a specific output pin
-void clear_pin(Port port, uint8_t pin);
+class AnalogInputPin : public Pin {
+ public:
+  AnalogInputPin(Port port, uint8_t pin, ADC *adc, AdcChannel channel);
+  Voltage read() const;
 
-// Return the current value of an input pin ([RM] 8.4.5)
-bool get_pin(Port port, uint8_t pin);
-
-// This adds a pull-up resistor to an input pin
-void pull_up(Port port, uint8_t pin);
-
-// This adds a pull-down resistor to an input pin
-void pull_down(Port port, uint8_t pin);
+ private:
+  ADC *adc_{nullptr};
+  AdcChannel channel_;
+};
 
 }  // namespace GPIO

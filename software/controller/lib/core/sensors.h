@@ -15,6 +15,8 @@ limitations under the License.
 
 #pragma once
 
+#include <optional>
+
 #include "oxygen.h"
 #include "pressure_sensors.h"
 #include "venturi.h"
@@ -31,7 +33,7 @@ enum class Sensor {
 };
 
 // Logical mappings: conceptual sensor -> ADC channel
-AnalogPin sensor_pin(Sensor s);
+AdcChannel adc_channel(Sensor s);
 
 struct SensorReadings {
   Pressure patient_pressure;
@@ -56,10 +58,10 @@ class Sensors {
  public:
   Sensors();
 
-  // Perform some initial sensor calibration.  This function should
+  // Performs general init and sensor calibration.  This function should
   // be called on system startup before any other sensor functions
   // are called.
-  void calibrate();
+  void init(ADC *adc, Frequency cpu_frequency);
 
   // Read the sensors.
   SensorReadings get_readings() const;
@@ -81,25 +83,14 @@ class Sensors {
   static_assert(VenturiChokeDiameter > meters(0));
 
   // Fundamental sensors
-  MPXV5010DP patient_pressure_sensor_{"patient_pressure_", "for patient airway pressure",
-                                      sensor_pin(Sensor::PatientPressure), ADCVoltageRange};
-  TeledyneR24 fio2_sensor_{"fio2", "Fraction of oxygen in supplied air", sensor_pin(Sensor::FIO2)};
-  MPXV5004DP air_influx_sensor_dp_{"air_influx_", "for ambient air influx",
-                                   sensor_pin(Sensor::AirInflowPressureDiff), ADCVoltageRange};
-  MPXV5004DP oxygen_influx_sensor_dp_{"oxygen_influx_", "for concentrated oxygen influx",
-                                      sensor_pin(Sensor::OxygenInflowPressureDiff),
-                                      ADCVoltageRange};
-  MPXV5004DP outflow_sensor_dp_{"outflow_", "for outflow", sensor_pin(Sensor::OutflowPressureDiff),
-                                ADCVoltageRange};
+  std::optional<MPXV5010DP> patient_pressure_sensor_{std::nullopt};
+  std::optional<TeledyneR24> fio2_sensor_{std::nullopt};
+  std::optional<MPXV5004DP> air_influx_sensor_dp_{std::nullopt};
+  std::optional<MPXV5004DP> oxygen_influx_sensor_dp_{std::nullopt};
+  std::optional<MPXV5004DP> outflow_sensor_dp_{std::nullopt};
 
   // These require existing DP sensors to link to
-  VenturiFlowSensor air_influx_sensor_{"air_influx_",          "for ambient air influx",
-                                       &air_influx_sensor_dp_, VenturiPortDiameter,
-                                       VenturiChokeDiameter,   VenturiCorrection};
-  VenturiFlowSensor oxygen_influx_sensor_{
-      "oxygen_influx_",          "for concentrated oxygen influx",
-      &oxygen_influx_sensor_dp_, VenturiPortDiameter,
-      VenturiChokeDiameter,      VenturiCorrection};
-  VenturiFlowSensor outflow_sensor_{"outflow_",          "for outflow",        &outflow_sensor_dp_,
-                                    VenturiPortDiameter, VenturiChokeDiameter, VenturiCorrection};
+  std::optional<VenturiFlowSensor> air_influx_sensor_{std::nullopt};
+  std::optional<VenturiFlowSensor> oxygen_influx_sensor_{std::nullopt};
+  std::optional<VenturiFlowSensor> outflow_sensor_{std::nullopt};
 };

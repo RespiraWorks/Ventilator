@@ -17,6 +17,8 @@ limitations under the License.
 
 #include <math.h>
 
+#include <algorithm>
+
 static constexpr Duration LoopPeriod = milliseconds(10);
 
 /*static*/ Duration Controller::GetLoopPeriod() { return LoopPeriod; }

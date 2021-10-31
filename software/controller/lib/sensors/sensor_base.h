@@ -15,20 +15,21 @@ limitations under the License.
 
 #pragma once
 
-#include "hal.h"
+#include "gpio.h"
 #include "units.h"
 #include "vars.h"
 
 class AnalogSensor {
  public:
-  AnalogSensor(const char *name, const char *help_supplement, AnalogPin pin);
+  AnalogSensor(const char *name, const char *help_supplement, GPIO::Port port, uint8_t pin,
+               ADC *adc, AdcChannel adc_channel);
 
-  void set_zero(const HalApi &hal_api);
+  void set_zero();
 
-  float read_diff_volts(const HalApi &hal_api) const;
+  float read_diff_volts() const;
 
  private:
-  AnalogPin pin_;
+  GPIO::AnalogInputPin pin_;
   Voltage zero_;
 
   mutable Debug::Variable::Float dbg_zero_;
@@ -37,7 +38,7 @@ class AnalogSensor {
 
 class PressureSensor {
  public:
-  virtual Pressure read(const HalApi &hal_api) const = 0;
+  virtual Pressure read() const = 0;
 
  protected:
   PressureSensor(const char *name, const char *help_supplement);
@@ -46,7 +47,7 @@ class PressureSensor {
 
 class FlowSensor {
  public:
-  virtual VolumetricFlow read(const HalApi &hal_api, float air_density) const = 0;
+  virtual VolumetricFlow read(float air_density) const = 0;
 
  protected:
   FlowSensor(const char *name, const char *help_supplement);
@@ -55,7 +56,7 @@ class FlowSensor {
 
 class OxygenSensor {
  public:
-  virtual float read(const HalApi &hal_api, Pressure p_ambient) const = 0;
+  virtual float read(Pressure p_ambient) const = 0;
 
  protected:
   OxygenSensor(const char *name, const char *help_supplement);

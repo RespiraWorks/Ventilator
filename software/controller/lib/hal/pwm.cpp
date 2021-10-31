@@ -69,7 +69,7 @@ void PWM::initialize(const Frequency cpu_frequency) {
 
   enable_peripheral_clock(peripheral);
 
-  GPIO::alternate_function(port, pin_number, alternate_function);
+  GPIO::AlternatePin(port, pin_number, alternate_function);
 
   // Set the frequency
   timer_->auto_reload = static_cast<uint32_t>(cpu_frequency.hertz() / pwm_freq_.hertz()) - 1;

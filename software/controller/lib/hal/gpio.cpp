@@ -26,28 +26,6 @@ Reference abbreviations [RM], [DS], etc are defined in hal/README.md.
 
 namespace GPIO {
 
-// General Purpose I/O
-// [RM] 8.4 GPIO Registers (pg 267)
-struct RegisterStructure {
-  uint32_t mode;                   // Mode register [RM] 8.4.1
-  uint32_t output_type;            // Output type register [RM] 8.4.2
-  uint32_t output_speed;           // Output speed register [RM] 8.4.3
-  uint32_t pullup_pulldown;        // Pull-up/pull-down register [RM] 8.4.4
-  uint32_t input_data;             // Input data register [RM] 8.4.5
-  uint32_t output_data;            // Output data register [RM] 8.4.6
-  uint16_t set;                    // Bit set register [RM] 8.4.7
-  uint16_t clear;                  // Bit reset register [RM] 8.4.7
-  uint32_t flash_lock;             // Configuration lock register [RM] 8.4.8
-  uint32_t alternate_function[2];  // Alternate function low/high register [RM] 8.4.{9,10}
-  uint32_t reset;                  // Reset register [RM] 8.4.11
-};
-
-typedef volatile RegisterStructure Register;
-
-RegisterStructure *base_address(const Port port) {
-  return reinterpret_cast<RegisterStructure *>(port);
-}
-
 void enable_all_clocks() {
   // Enable all the GPIO clocks
   enable_peripheral_clock(PeripheralID::GPIOA);
@@ -58,71 +36,101 @@ void enable_all_clocks() {
   enable_peripheral_clock(PeripheralID::GPIOH);
 }
 
-void pin_mode(Port port, uint8_t pin, PinMode mode) {
-  Register *const gpio = base_address(port);
-  gpio->mode &= ~(0b11 << (pin * 2));
-  gpio->mode |= (static_cast<uint32_t>(mode) << (pin * 2));
-}
+Pin::Pin(Port port, uint8_t pin, PinMode mode) : pin_(pin) {
+#if defined(BARE_STM32)
+  gpio_ = reinterpret_cast<RegisterStructure *>(port);
+  // reset the mode bits to 0
+  gpio_->mode &= ~(0b11 << (pin_ * 2));
+  // set the mode bits to the desired value
+  gpio_->mode |= (static_cast<uint32_t>(mode) << (pin_ * 2));
+#endif
+};
 
-void output_type(Port port, uint8_t pin, OutType output_type) {
-  Register *const gpio = base_address(port);
+#if defined(BARE_STM32)
+// Helper functions to set output type for either Output or Alt function pin
+void Pin::output_type(OutType output_type) {
   if (output_type == OutType::OpenDrain)
-    gpio->output_type |= 1 << pin;
+    gpio_->output_type |= 1 << pin_;
   else
-    gpio->output_type &= ~(1 << pin);
+    gpio_->output_type &= ~(1 << pin_);
 }
 
-// Output pin speeds are set using two consecutive bits / pin.
-void output_speed(Port port, uint8_t pin, OutSpeed speed) {
-  Register *const gpio = base_address(port);
+// Helper functions to set output speed for either Output or Alt function pin
+void Pin::output_speed(OutSpeed speed) {
   auto s = static_cast<uint32_t>(speed);
-  gpio->output_speed &= ~(0b11 << (2 * pin));
-  gpio->output_speed |= (s << (2 * pin));
+  gpio_->output_speed &= ~(0b11 << (2 * pin_));
+  gpio_->output_speed |= (s << (2 * pin_));
 }
+
+// Helper function to set pullup/pulldown resistor for either Input or Alt function pin
+void Pin::pull_type(PullType pull) {
+  // Get the current value within the register, masking the bits we want to alter
+  uint32_t x = gpio_->pullup_pulldown & ~(3 << (2 * pin_));
+  // Only alter the appropriate bits
+  x |= static_cast<uint32_t>(pull) << (2 * pin_);
+  gpio_->pullup_pulldown = x;
+}
+
+void DigitalOutputPin::set() { gpio_->set = static_cast<uint16_t>(1 << pin_); }
+
+void DigitalOutputPin::clear() { gpio_->clear = static_cast<uint16_t>(1 << pin_); }
+
+bool DigitalInputPin::get() const { return gpio_->input_data & (1 << pin_); }
+
+#else
+// \TODO add a real mock?
+void Pin::output_type(OutType output_type) {}
+void Pin::output_speed(OutSpeed speed) {}
+void Pin::pull_type(PullType pull) {}
+
+void DigitalOutputPin::set() {}
+void DigitalOutputPin::clear() {}
+bool DigitalInputPin::get() const { return true; }
+
+#endif
+
+DigitalOutputPin::DigitalOutputPin(Port port, uint8_t pin, bool start_high, OutSpeed speed,
+                                   OutType type)
+    : Pin(port, pin, PinMode::Output) {
+  // set high ASAP
+  if (start_high) {
+    set();
+  } else {
+    clear();
+  }
+  output_type(type);
+  output_speed(speed);
+}
+
+DigitalInputPin::DigitalInputPin(Port port, uint8_t pin, PullType pull)
+    : Pin(port, pin, PinMode::Input) {
+  pull_type(pull);
+};
 
 // Many GPIO pins can be repurposed with an alternate function
 // See Table 17 and 18 [DS] for alternate functions
 // See [RM] 8.4.9 and 8.4.10 for GPIO alternate function selection
-void alternate_function(Port port, uint8_t pin, AlternativeFunction func) {
-  Register *const gpio = base_address(port);
-  pin_mode(port, pin, PinMode::AlternateFunction);
-
-  uint8_t x = (pin < 8) ? 0 : 1;
-  gpio->alternate_function[x] |= (static_cast<uint32_t>(func) << ((pin & 0b111) * 4));
+AlternatePin::AlternatePin(Port port, uint8_t pin, AlternativeFunction func, PullType pull,
+                           OutSpeed speed, OutType type)
+    : Pin(port, pin, PinMode::AlternateFunction) {
+  output_type(type);
+  output_speed(speed);
+  // set AlternateFunction number
+#if defined(BARE_STM32)
+  uint8_t index = (pin < 8) ? 0 : 1;
+  gpio_->alternate_function[index] |= (static_cast<uint32_t>(func) << ((pin & 0b111) * 4));
+#endif
+  // Set pull type register:
+  pull_type(pull);
 }
 
-// Set a specific output pin
-void set_pin(Port port, uint8_t pin) {
-  Register *const gpio = base_address(port);
-  gpio->set = static_cast<uint16_t>(1 << pin);
+AnalogInputPin::AnalogInputPin(Port port, uint8_t pin, ADC *adc, AdcChannel channel)
+    : Pin(port, pin, PinMode::Analog), adc_(adc), channel_(channel) {
+#if defined(BARE_STM32)
+  adc_->add_channel(channel_);
+#endif
 }
 
-// Clear a specific output pin
-void clear_pin(Port port, uint8_t pin) {
-  Register *const gpio = base_address(port);
-  gpio->clear = static_cast<uint16_t>(1 << pin);
-}
-
-// Return the current value of an input pin
-bool get_pin(Port port, uint8_t pin) {
-  Register *const gpio = base_address(port);
-  return gpio->input_data & (1 << pin);
-}
-
-// This adds a pull-up resistor to an input pin
-void pull_up(Port port, uint8_t pin) {
-  Register *const gpio = base_address(port);
-  uint32_t x = gpio->pullup_pulldown & ~(3 << (2 * pin));
-  x |= 1 << (2 * pin);
-  gpio->pullup_pulldown = x;
-}
-
-// This adds a pull-down resistor to an input pin
-void pull_down(Port port, uint8_t pin) {
-  Register *const gpio = base_address(port);
-  uint32_t x = gpio->pullup_pulldown & ~(3 << (2 * pin));
-  x |= 2 << (2 * pin);
-  gpio->pullup_pulldown = x;
-}
+Voltage AnalogInputPin::read() const { return adc_->read(channel_); }
 
 }  // namespace GPIO

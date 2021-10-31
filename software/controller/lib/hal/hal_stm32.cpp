@@ -122,8 +122,6 @@ void HalApi::Init() {
   LEDs.initialize();
   /// \TODO: ensure CPUFrequency is a multiple of 10 MHz
   SystemTimer::singleton().initialize(CPUFrequency);
-  /// \TODO: fault somehow if this returns false
-  [[maybe_unused]] bool buffer_size_sufficient = adc.initialize(CPUFrequency);
   buzzer.initialize(CPUFrequency);
   InitUARTs();
   I2C::initialize();
@@ -154,8 +152,8 @@ void HalApi::Init() {
  *****************************************************************/
 void HalApi::init_PCB_ID_pins() {
   // Configure PCB ID pins as inputs.
-  GPIO::pin_mode(GPIO::Port::B, 1, GPIO::PinMode::Input);
-  GPIO::pin_mode(GPIO::Port::A, 12, GPIO::PinMode::Input);
+  GPIO::DigitalInputPin(GPIO::Port::B, 1);
+  GPIO::DigitalInputPin(GPIO::Port::A, 12);
 }
 
 /******************************************************************
@@ -272,20 +270,14 @@ void HalApi::InitUARTs() {
   enable_peripheral_clock(PeripheralID::DMA1);
 #endif
   // [DS] Table 17 (pg 76)
-  GPIO::alternate_function(GPIO::Port::A, /*pin =*/2,
-                           GPIO::AlternativeFunction::AF7);  // USART2_TX
-  GPIO::alternate_function(GPIO::Port::A, /*pin =*/3,
-                           GPIO::AlternativeFunction::AF7);  // USART2_RX
+  GPIO::AlternatePin(GPIO::Port::A, 2, GPIO::AlternativeFunction::AF7);  // USART2_TX
+  GPIO::AlternatePin(GPIO::Port::A, 3, GPIO::AlternativeFunction::AF7);  // USART2_RX
 
   // [DS] Table 17 (pg 77)
-  GPIO::alternate_function(GPIO::Port::B, /*pin =*/10,
-                           GPIO::AlternativeFunction::AF7);  // USART3_TX
-  GPIO::alternate_function(GPIO::Port::B, /*pin =*/11,
-                           GPIO::AlternativeFunction::AF7);  // USART3_RX
-  GPIO::alternate_function(GPIO::Port::B, /*pin =*/13,
-                           GPIO::AlternativeFunction::AF7);  // USART3_CTS
-  GPIO::alternate_function(GPIO::Port::B, /*pin =*/14,
-                           GPIO::AlternativeFunction::AF7);  // USART3_RTS_DE
+  GPIO::AlternatePin(GPIO::Port::B, 10, GPIO::AlternativeFunction::AF7);  // USART3_TX
+  GPIO::AlternatePin(GPIO::Port::B, 11, GPIO::AlternativeFunction::AF7);  // USART3_RX
+  GPIO::AlternatePin(GPIO::Port::B, 13, GPIO::AlternativeFunction::AF7);  // USART3_CTS
+  GPIO::AlternatePin(GPIO::Port::B, 14, GPIO::AlternativeFunction::AF7);  // USART3_RTS_DE
 
 #ifdef UART_VIA_DMA
   dma_uart.initialize(CPUFrequency, UARTBaudRate);

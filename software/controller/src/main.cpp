@@ -157,10 +157,6 @@ static void HighPriorityTask(void *arg) {
     debug.Poll();
   }
 
-  // Calibrate the sensors.
-  // This needs to be done before the sensors are used.
-  sensors.calibrate();
-
   // Current controller status.
   // Updated when we receive data from the GUI, when sensors read data, etc.
   controller_status = ControllerStatus_init_zero;
@@ -226,6 +222,10 @@ int main() {
                  offsetof(NVParams::Structure, psol_cal));
 
   CommsInit();
+
+  // Initialize and calibrate the sensors.
+  // This needs to be done before the sensors are used.
+  sensors.init(&hal.adc, HalApi::GetCpuFreq());
 
   BackgroundLoop();
 }

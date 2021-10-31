@@ -47,6 +47,9 @@ limitations under the License.
 #pragma once
 
 #include <cstdint>
+#include <optional>
+
+#include "gpio.h"
 
 // These are the simple opcodes for the stepper driver.
 // Not included here are set/get parameter which include
@@ -295,6 +298,9 @@ class StepMotor {
   static uint8_t dma_buff_[MaxMotors];
   static uint8_t param_len_[32];
   static StepCommState coms_state_;
+
+  // pointer to the chip select pin that we need to manually manipulate to speak with the motors.
+  static std::optional<GPIO::DigitalOutputPin> chip_select_;
 
   // This queue is used for sending commands from the high
   // priority loop.  The command is copied to this queue and

@@ -135,14 +135,12 @@ AnalogInputPin::AnalogInputPin(Port port, uint8_t pin, ADC *adc, AdcChannel chan
 
 Voltage AnalogInputPin::read() const { return adc_->read(channel_); }
 
-AnalogOutputPin::AnalogOutputPin(Port port, uint8_t pin, const AlternativeFunction func,
-                                 const Frequency pwm_freq, TimerReg *timer, uint8_t channel,
-                                 const PeripheralID peripheral, const Frequency cpu_frequency)
-    : Pin(port, pin, PinMode::AlternateFunction),
-      pwm_(pwm_freq, timer, channel, peripheral, cpu_frequency) {
-  alternate_function(func);
+PwmPin::PwmPin(PwmChannel channel, const Frequency pwm_freq, const Frequency cpu_frequency)
+    : AlternatePin(channel.port, channel.pin, channel.function),
+      pwm_(pwm_freq, channel.peripheral, channel.timer_channel, cpu_frequency) {
+  alternate_function(channel.function);
 }
 
-void AnalogOutputPin::set(float value) { pwm_.set(value); }
+void PwmPin::set(float value) { pwm_.set(value); }
 
 }  // namespace GPIO

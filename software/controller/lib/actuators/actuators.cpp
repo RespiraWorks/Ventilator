@@ -15,6 +15,16 @@ limitations under the License.
 
 #include "actuators.h"
 
+// Blower is hooked up to PB3 (see [PCB]),
+// which can be linked to Timer2 chanel 2 using AF1 (see [DS], p77)
+GPIO::PwmChannel Actuators::BlowerChannel = {GPIO::Port::B, 3, GPIO::AlternativeFunction::AF1,
+                                             PeripheralID::Timer2, 2};
+
+// psol is hooked up to PA11 (see [PCB]),
+// which can be linked to Timer1 chanel 4 using AF1 (see [DS], p76)
+GPIO::PwmChannel Actuators::PSolChannel = {GPIO::Port::A, 11, GPIO::AlternativeFunction::AF1,
+                                           PeripheralID::Timer1, 4};
+
 void Actuators::execute(const ActuatorsState &desired_state) {
   // set blower PWM
   blower_->set(desired_state.blower_power);
@@ -35,10 +45,14 @@ void Actuators::execute(const ActuatorsState &desired_state) {
 }
 
 void Actuators::Init(Frequency cpu_frequency) {
-  blower_.emplace(GPIO::Port::B, 3, GPIO::AlternativeFunction::AF1, BlowerFreq, Timer2Base, 2,
-                  PeripheralID::Timer2, cpu_frequency, "blower_", " of the blower");
-  psol_.emplace(GPIO::Port::A, 11, GPIO::AlternativeFunction::AF1, PSolFreq, Timer1Base, 4,
-                PeripheralID::Timer1, cpu_frequency, "psol_", " of the proportional solenoid",
+  // For now, the blower uses default calibration values, linearly spaced between 0 and 1
+  blower_.emplace(BlowerChannel, BlowerFreq, cpu_frequency, "blower_", " of the blower");
+
+  // Testing in Edwin's garage, we found that the psol was fully closed at
+  // somewhere between 0.75 and 0.80 (i.e. definitely zero at 0.75 and probably
+  // zero a bit above that) and fully open at 0.90.
+  // \TODO: the values in the comment are inconsistent with the code, have Edwin confirm those.
+  psol_.emplace(PSolChannel, PSolFreq, cpu_frequency, "psol_", " of the proportional solenoid",
                 0.35f, 0.75f);
 };
 

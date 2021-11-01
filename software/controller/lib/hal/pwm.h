@@ -23,7 +23,7 @@ limitations under the License.
 
 class PWM {
  public:
-  PWM(const Frequency pwm_freq, TimerReg* timer, uint8_t channel, const PeripheralID peripheral,
+  PWM(const Frequency pwm_freq, const PeripheralID peripheral, uint8_t channel,
       const Frequency cpu_frequency);
 
   // Causes `pin` to output a square wave with the given duty cycle (range [0, 1], with preemptive
@@ -46,7 +46,7 @@ class PWM {
   TimerReg* timer_;
   uint8_t channel_;
 #if !defined(BARE_STM32)
-  float value_;
+  float value_{0};
 
  public:
   float get() const;

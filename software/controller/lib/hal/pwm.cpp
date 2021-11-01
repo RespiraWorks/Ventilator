@@ -33,9 +33,31 @@ limitations under the License.
 #include <algorithm>
 #if defined(BARE_STM32)
 
-PWM::PWM(const Frequency pwm_freq, TimerReg *timer, uint8_t channel, const PeripheralID peripheral,
+// helper function to get the proper timer register based on timer peripheral ID
+TimerReg *register_for(const PeripheralID peripheral) {
+  switch (peripheral) {
+    case PeripheralID::Timer1:
+      return Timer1Base;
+    case PeripheralID::Timer2:
+      return Timer2Base;
+    case PeripheralID::Timer3:
+      return Timer3Base;
+    case PeripheralID::Timer6:
+      return Timer6Base;
+    case PeripheralID::Timer7:
+      return Timer7Base;
+    case PeripheralID::Timer15:
+      return Timer15Base;
+    case PeripheralID::Timer16:
+      return Timer16Base;
+    default:
+      return nullptr;
+  }
+}
+
+PWM::PWM(const Frequency pwm_freq, const PeripheralID peripheral, uint8_t channel,
          const Frequency cpu_frequency)
-    : pwm_freq_(pwm_freq), timer_(timer), channel_(channel) {
+    : pwm_freq_(pwm_freq), timer_(register_for(peripheral)), channel_(channel) {
   enable_peripheral_clock(peripheral);
 
   // Set the frequency
@@ -77,9 +99,9 @@ void PWM::set(const float duty) {
 
 #else
 
-PWM::PWM(const Frequency pwm_freq, TimerReg *timer, uint8_t channel, const PeripheralID peripheral,
+PWM::PWM(const Frequency pwm_freq, const PeripheralID peripheral, uint8_t channel,
          const Frequency cpu_frequency)
-    : pwm_freq_(pwm_freq), timer_(timer), channel_(channel){};
+    : pwm_freq_(pwm_freq), timer_(nullptr), channel_(channel){};
 
 void PWM::set(float duty) { value_ = std::clamp(duty, 0.0f, 1.0f); }
 

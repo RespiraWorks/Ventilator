@@ -104,9 +104,11 @@ enum class AlternativeFunction : uint32_t {
 
 void enable_all_clocks();
 
-// Abstract pin, note that for some types of pin (most notably AlternateFunction), we only need to
+// Abstract pin. Note that for some types of pin (most notably AlternateFunction), we only need to
 // instantiate the pin so the registers are properly set, but we don't really need to keep a
 // reference to the pin itself
+// Also note that because the instantiation of a pin writes to registers, this needs to happen
+// after the Hal has been properly initialized.
 class Pin {
  public:
   Pin(Port port, uint8_t pin, PinMode mode);
@@ -132,7 +134,7 @@ class DigitalOutputPin : public Pin {
   bool get() const;
 
  private:
-  bool value_;
+  bool value_{0};
 #endif
 };
 
@@ -146,16 +148,21 @@ class DigitalInputPin : public Pin {
   void clear();
 
  private:
-  bool value_;
+  bool value_{0};
 #endif
 };
 
+// Alternate function Pin, varying in function from serial bus handling to pwm output
+// See Table 17 and 18 [DS] for alternate functions mapping
+// Note that this is subclassed as PwmPin to output pwm signals.
 class AlternatePin : public Pin {
  public:
   AlternatePin(Port port, uint8_t pin, AlternativeFunction func, PullType pull = PullType::None,
                OutSpeed speed = OutSpeed::Slow, OutType type = OutType::PushPull);
 };
 
+// Analog input pin, linked to an ADC channel.
+// See Table 16 [DS] for physical pin to ADC Channel mapping.
 class AnalogInputPin : public Pin {
  public:
   AnalogInputPin(Port port, uint8_t pin, ADC *adc, AdcChannel channel);
@@ -166,11 +173,22 @@ class AnalogInputPin : public Pin {
   AdcChannel channel_;
 };
 
-class AnalogOutputPin : public Pin {
+// Helper struct that allows us to manipulate a PWM pin as a collection of all functions that helps
+// define it: a physical pin (port and number), an alternate function and a timer channel (timer
+// peripheral and channel number).
+// See Table 17 and 18 [DS] for physical pin to timer channel mapping.
+struct PwmChannel {
+  Port port;
+  uint8_t pin;
+  AlternativeFunction function;
+  PeripheralID peripheral;
+  uint8_t timer_channel;
+};
+
+// PWM pin, handling to its own pwm signal.
+class PwmPin : public AlternatePin {
  public:
-  AnalogOutputPin(Port port, uint8_t pin, const AlternativeFunction func, const Frequency pwm_freq,
-                  TimerReg *timer, uint8_t channel, const PeripheralID peripheral,
-                  const Frequency cpu_frequency);
+  PwmPin(PwmChannel channel, const Frequency pwm_freq, const Frequency cpu_frequency);
   void set(float value);
 
  private:

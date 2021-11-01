@@ -59,21 +59,23 @@ class Actuators {
   // Causes passed state to be applied to the actuators
   void execute(const ActuatorsState &desired_state);
 
+  static GPIO::PwmChannel BlowerChannel;
   // Blower is driven by a 20kHz PWM, as a compromise between resolution and response time
   /// TODO: add/find a better rationale for this, maybe with the resulting response time/resolution
   static constexpr Frequency BlowerFreq = kilohertz(20);
-  // psol is driven by a 5kHz PWM
-  /// TODO: find the rationale behind this
+
+  // Blower is hooked up to PA11 (see [PCB]),
+  // which can be linked to Timer1 chanel 4 using AF1 (see [DS], p77)
+  static GPIO::PwmChannel PSolChannel;
+
+  // Psol is driven by a 5kHz PWM (\TODO: find rationale behind this?)
   static constexpr Frequency PSolFreq = kilohertz(5);
 
  private:
   PinchValve blower_pinch_;
   PinchValve exhale_pinch_;
+  // Blower and PSol use pwm pins and need to be instantiated after HAL, therefore we
+  // use std::optional to delay the instantiation within Init function.
   std::optional<PwmActuator> blower_{std::nullopt};
-
-  // Testing in Edwin's garage, we found that the psol was fully closed at
-  // somewhere between 0.75 and 0.80 (i.e. definitely zero at 0.75 and probably
-  // zero a bit above that) and fully open at 0.90.
-  // \TODO: the values in the comment are inconsistent with the code, have Edwin confirm those.
   std::optional<PwmActuator> psol_{std::nullopt};
 };

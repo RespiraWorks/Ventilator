@@ -157,6 +157,10 @@ static void HighPriorityTask(void *arg) {
     debug.Poll();
   }
 
+  // Initialize and calibrate the sensors after the pinch valves are properly homed to avoid the
+  // effects of the blower (and to a lesser degree the pinch valves) moving during startup.
+  sensors.init(HalApi::GetCpuFreq());
+
   // Current controller status.
   // Updated when we receive data from the GUI, when sensors read data, etc.
   controller_status = ControllerStatus_init_zero;
@@ -222,10 +226,6 @@ int main() {
                  offsetof(NVParams::Structure, psol_cal));
 
   CommsInit();
-
-  // Initialize and calibrate the sensors.
-  // This needs to be done before the sensors are used.
-  sensors.init(HalApi::GetCpuFreq());
 
   BackgroundLoop();
 }

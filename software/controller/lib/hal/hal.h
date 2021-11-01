@@ -72,7 +72,7 @@ class HalApi {
   /// \TODO: likely these should not even be members
   LEDIndicators LEDs;
 
-  std::optional<GPIO::AnalogOutputPin> buzzer{std::nullopt};
+  std::optional<GPIO::PwmPin> buzzer{std::nullopt};
 
   static Frequency GetCpuFreq();
 

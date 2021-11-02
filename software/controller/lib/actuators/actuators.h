@@ -50,23 +50,25 @@ class Actuators {
   // The system should be kept in a safe state until this returns true.
   bool ready();
 
-  // links actuators calibration tables to nv_params.
-  void link(NVParams::Handler *nv_params, uint16_t blower_pinch_cal_offset,
+  // Creates pwm actuators and links actuators calibration tables to nv_params.
+  void Init(Frequency cpu_frequency, NVParams::Handler *nv_params, uint16_t blower_pinch_cal_offset,
             uint16_t exhale_pinch_cal_offset, uint16_t blower_cal_offset, uint16_t psol_cal_offset);
-
-  void Init(Frequency cpu_frequency);
 
   // Causes passed state to be applied to the actuators
   void execute(const ActuatorsState &desired_state);
 
-  static GPIO::PwmChannel BlowerChannel;
+  // Blower is hooked up to PB3 (see [PCB]),
+  // which can be linked to Timer2 chanel 2 using AF1 (see [DS], p77)
+  static constexpr GPIO::PwmChannel BlowerChannel = {
+      GPIO::Port::B, 3, GPIO::AlternativeFunction::AF1, PeripheralID::Timer2, 2};
   // Blower is driven by a 20kHz PWM, as a compromise between resolution and response time
   /// TODO: add/find a better rationale for this, maybe with the resulting response time/resolution
   static constexpr Frequency BlowerFreq = kilohertz(20);
 
-  // Blower is hooked up to PA11 (see [PCB]),
-  // which can be linked to Timer1 chanel 4 using AF1 (see [DS], p77)
-  static GPIO::PwmChannel PSolChannel;
+  // psol is hooked up to PA11 (see [PCB]),
+  // which can be linked to Timer1 chanel 4 using AF1 (see [DS], p76)
+  static constexpr GPIO::PwmChannel PSolChannel = {
+      GPIO::Port::A, 11, GPIO::AlternativeFunction::AF1, PeripheralID::Timer1, 4};
 
   // Psol is driven by a 5kHz PWM (\TODO: find rationale behind this?)
   static constexpr Frequency PSolFreq = kilohertz(5);

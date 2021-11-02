@@ -15,16 +15,6 @@ limitations under the License.
 
 #include "actuators.h"
 
-// Blower is hooked up to PB3 (see [PCB]),
-// which can be linked to Timer2 chanel 2 using AF1 (see [DS], p77)
-GPIO::PwmChannel Actuators::BlowerChannel = {GPIO::Port::B, 3, GPIO::AlternativeFunction::AF1,
-                                             PeripheralID::Timer2, 2};
-
-// psol is hooked up to PA11 (see [PCB]),
-// which can be linked to Timer1 chanel 4 using AF1 (see [DS], p76)
-GPIO::PwmChannel Actuators::PSolChannel = {GPIO::Port::A, 11, GPIO::AlternativeFunction::AF1,
-                                           PeripheralID::Timer1, 4};
-
 void Actuators::execute(const ActuatorsState &desired_state) {
   // set blower PWM
   blower_->set(desired_state.blower_power);
@@ -44,7 +34,9 @@ void Actuators::execute(const ActuatorsState &desired_state) {
   psol_->set(desired_state.fio2_valve);
 }
 
-void Actuators::Init(Frequency cpu_frequency) {
+void Actuators::Init(Frequency cpu_frequency, NVParams::Handler *nv_params,
+                     uint16_t blower_pinch_cal_offset, uint16_t exhale_pinch_cal_offset,
+                     uint16_t blower_cal_offset, uint16_t psol_cal_offset) {
   // For now, the blower uses default calibration values, linearly spaced between 0 and 1
   blower_.emplace(BlowerChannel, BlowerFreq, cpu_frequency, "blower_", " of the blower");
 
@@ -54,11 +46,8 @@ void Actuators::Init(Frequency cpu_frequency) {
   // \TODO: the values in the comment are inconsistent with the code, have Edwin confirm those.
   psol_.emplace(PSolChannel, PSolFreq, cpu_frequency, "psol_", " of the proportional solenoid",
                 0.35f, 0.75f);
-};
 
-void Actuators::link(NVParams::Handler *nv_params, uint16_t blower_pinch_cal_offset,
-                     uint16_t exhale_pinch_cal_offset, uint16_t blower_cal_offset,
-                     uint16_t psol_cal_offset) {
+  // In case Init was called with nullptr, these fail silently
   blower_pinch_.LinkCalibration(nv_params, blower_pinch_cal_offset);
   exhale_pinch_.LinkCalibration(nv_params, exhale_pinch_cal_offset);
   blower_->LinkCalibration(nv_params, blower_cal_offset);

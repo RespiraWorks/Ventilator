@@ -51,7 +51,7 @@ class Actuators {
   bool ready();
 
   // Creates pwm actuators and links actuators calibration tables to nv_params.
-  void Init(Frequency cpu_frequency, NVParams::Handler *nv_params, uint16_t blower_pinch_cal_offset,
+  void init(Frequency cpu_frequency, NVParams::Handler *nv_params, uint16_t blower_pinch_cal_offset,
             uint16_t exhale_pinch_cal_offset, uint16_t blower_cal_offset, uint16_t psol_cal_offset);
 
   // Causes passed state to be applied to the actuators
@@ -77,7 +77,7 @@ class Actuators {
   PinchValve blower_pinch_;
   PinchValve exhale_pinch_;
   // Blower and PSol use pwm pins and need to be instantiated after HAL, therefore we
-  // use std::optional to delay the instantiation within Init function.
+  // use std::optional to delay the instantiation within init function.
   std::optional<PwmActuator> blower_{std::nullopt};
   std::optional<PwmActuator> psol_{std::nullopt};
 };

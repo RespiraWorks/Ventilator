@@ -16,6 +16,7 @@ limitations under the License.
 #include "actuators.h"
 
 void Actuators::execute(const ActuatorsState &desired_state) {
+  if (!ready()) return;
   // set blower PWM
   blower_->set(desired_state.blower_power);
 
@@ -34,7 +35,7 @@ void Actuators::execute(const ActuatorsState &desired_state) {
   psol_->set(desired_state.fio2_valve);
 }
 
-void Actuators::Init(Frequency cpu_frequency, NVParams::Handler *nv_params,
+void Actuators::init(Frequency cpu_frequency, NVParams::Handler *nv_params,
                      uint16_t blower_pinch_cal_offset, uint16_t exhale_pinch_cal_offset,
                      uint16_t blower_cal_offset, uint16_t psol_cal_offset) {
   // For now, the blower uses default calibration values, linearly spaced between 0 and 1
@@ -47,7 +48,7 @@ void Actuators::Init(Frequency cpu_frequency, NVParams::Handler *nv_params,
   psol_.emplace(PSolChannel, PSolFreq, cpu_frequency, "psol_", " of the proportional solenoid",
                 0.35f, 0.75f);
 
-  // In case Init was called with nullptr, these fail silently
+  // In case init was called with nullptr, these fail silently
   blower_pinch_.LinkCalibration(nv_params, blower_pinch_cal_offset);
   exhale_pinch_.LinkCalibration(nv_params, exhale_pinch_cal_offset);
   blower_->LinkCalibration(nv_params, blower_cal_offset);
@@ -55,4 +56,7 @@ void Actuators::Init(Frequency cpu_frequency, NVParams::Handler *nv_params,
 }
 
 // Return true if all actuators are enabled and ready for action
-bool Actuators::ready() { return blower_pinch_.IsReady() && exhale_pinch_.IsReady(); }
+bool Actuators::ready() {
+  return blower_pinch_.IsReady() && exhale_pinch_.IsReady() && blower_.has_value() &&
+         psol_.has_value();
+}

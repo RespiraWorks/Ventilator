@@ -218,7 +218,7 @@ int main() {
   // Locate our non-volatile parameter block in flash
   nv_params.Init(&eeprom);
   // Init the pwm pins for actuators and link calibration tables
-  actuators.Init(HalApi::GetCpuFreq(), &nv_params, offsetof(NVParams::Structure, blower_pinch_cal),
+  actuators.init(HalApi::GetCpuFreq(), &nv_params, offsetof(NVParams::Structure, blower_pinch_cal),
                  offsetof(NVParams::Structure, exhale_pinch_cal),
                  offsetof(NVParams::Structure, blower_cal),
                  offsetof(NVParams::Structure, psol_cal));

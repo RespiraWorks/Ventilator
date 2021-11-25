@@ -18,7 +18,6 @@ limitations under the License.
 #include "system_constants.h"
 
 void Actuators::execute(const ActuatorsState &desired_state) {
-  if (!ready()) return;
   // set blower PWM
   blower_->set(desired_state.blower_power);
 

@@ -44,7 +44,7 @@ void Actuators::init(Frequency cpu_frequency, NVParams::Handler *nv_params,
   blower_.emplace(BlowerChannel, BlowerFreq, cpu_frequency, "blower_", " of the blower");
 
   psol_.emplace(PSolChannel, PSolFreq, cpu_frequency, "psol_", " of the proportional solenoid",
-                psol_value_closed, psol_value_open);
+                PSolClosed, PSolOpen);
 
   // In case init was called with nullptr, these fail silently
   blower_pinch_.LinkCalibration(nv_params, blower_pinch_cal_offset);

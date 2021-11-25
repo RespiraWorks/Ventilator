@@ -10,6 +10,7 @@
 
 #include "actuators.h"
 #include "hal.h"
+#include "system_constants.h"
 #include "system_timer.h"
 #include "watchdog.h"
 
@@ -21,8 +22,7 @@ static constexpr float InitialStep{0.002f};
 
 void RunTest() {
   hal.Init();
-  PwmActuator blower{Actuators::BlowerChannel, Actuators::BlowerFreq, HalApi::GetCpuFreq(),
-                     "blower_", " of the blower"};
+  PwmActuator blower{BlowerChannel, BlowerFreq, HalApi::GetCpuFreq(), "blower_", " of the blower"};
 
   float fan_power = FanMin;
   float step = InitialStep;

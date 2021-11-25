@@ -42,6 +42,9 @@ class ADC {
   // Add a new channel to the ADC
   bool add_channel(uint8_t channel);
 
+  // Voltage range for the ADC
+  static constexpr Voltage VoltageRange{volts(3.3f)};
+
  private:
   // Total number of A/D inputs we're sampling
   // \TODO: consider templating this or somehow linking it to mapping enum size

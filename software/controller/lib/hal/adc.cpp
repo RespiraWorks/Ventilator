@@ -288,7 +288,7 @@ bool ADC::initialize(const Frequency cpu_frequency) {
   // This scaler converts the sum of the A/D readings (a total of
   // adc_sample_history_) into a voltage.  The A/D is scaled so a value of 0
   // corresponds to 0 volts, and MaxAdcReading corresponds to 3.3V
-  adc_scaler_ = 3.3f / static_cast<float>(MaxAdcReading * adc_sample_history_);
+  adc_scaler_ = VoltageRange.volts() / static_cast<float>(MaxAdcReading * adc_sample_history_);
 
   if (adc_sample_history_ > AdcSampleHistoryHardMax) return false;
 

@@ -23,6 +23,7 @@ limitations under the License.
 #include "gmock/gmock-matchers.h"
 #include "gtest/gtest.h"
 #include "hal.h"
+#include "system_constants.h"
 #include "system_timer.h"
 
 namespace {

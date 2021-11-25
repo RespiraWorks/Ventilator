@@ -63,7 +63,7 @@ static VenturiFlowSensor typical_venturi{
  * range (0-4kPa) is in the voltage range 0-3.3V.
  */
 static Voltage MPXV5004_PressureToVoltage(Pressure pressure) {
-  return volts(3.3f * (0.2f * pressure.kPa() + 0.2f));
+  return volts(ADC::VoltageRange.volts() * (0.2f * pressure.kPa() + 0.2f));
 }
 
 // @brief This method models the pressure to voltage transfer function of the
@@ -72,7 +72,7 @@ static Voltage MPXV5004_PressureToVoltage(Pressure pressure) {
 // pressure range (0-10kPa) is in the voltage range 0-3.3V.
 
 static Voltage MPXV5010_PressureToVoltage(Pressure pressure) {
-  return volts(3.3f * (0.09f * pressure.kPa() + 0.04f));
+  return volts(ADC::VoltageRange.volts() * (0.09f * pressure.kPa() + 0.04f));
 }
 // This method models the oxygen sensor. Voltage reads partial pressure of O2
 // and needs ambient pressure to modulate output voltage.

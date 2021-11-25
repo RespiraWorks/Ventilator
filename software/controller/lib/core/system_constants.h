@@ -18,6 +18,8 @@ limitations under the License.
 
 // Reference abbreviations ([RM], [PCB], etc) are defined in hal/README.md
 
+#pragma once
+
 #include "gpio.h"
 #include "units.h"
 
@@ -58,8 +60,8 @@ static constexpr Frequency PSolFreq = kilohertz(5);
 // somewhere between 0.75 and 0.80 (i.e. definitely zero at 0.75 and probably
 // zero a bit above that) and fully open at 0.90.
 // \TODO: the values in the comment are inconsistent with the code, have Edwin confirm those.
-static constexpr float psol_value_closed = 0.35f;
-static constexpr float psol_value_open = 0.75f;
+static constexpr float PSolClosed = 0.35f;
+static constexpr float PSolOpen = 0.75f;
 
 /**************************************************************************************
  *                                 PHYSICAL CONSTANTS                                 *
@@ -75,3 +77,17 @@ static constexpr float VenturiCorrection{0.97f};
 
 static_assert(VenturiPortDiameter > VenturiChokeDiameter);
 static_assert(VenturiChokeDiameter > meters(0));
+
+/**************************************************************************************
+ *                                FUNCTIONAL CONSTANTS                                *
+ **************************************************************************************/
+
+// Loop period of our main controller loop
+static constexpr Duration MainLoopPeriod = milliseconds(10);
+
+// Transition from PEEP to PIP pressure hapens over this length of time.  Citation:
+// https://respiraworks.slack.com/archives/C011CJQV4Q7/p1591763842312500?thread_ts=1591759016.310200&cid=C011CJQV4Q7
+inline constexpr Duration RiseTime = milliseconds(100);
+
+// TODO: VolumeIntegrationInterval (for volume integrator) was not chosen carefully.
+static constexpr Duration VolumeIntegrationInterval = milliseconds(5);

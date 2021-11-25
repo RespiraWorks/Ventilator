@@ -15,8 +15,7 @@ limitations under the License.
 
 #include "flow_integrator.h"
 
-// TODO: VolumeIntegrationInterval was not chosen carefully.
-static constexpr Duration VolumeIntegrationInterval = milliseconds(5);
+#include "system_constants.h"
 
 FlowIntegrator::FlowIntegrator() = default;
 

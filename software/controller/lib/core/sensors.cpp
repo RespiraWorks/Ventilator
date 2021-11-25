@@ -46,16 +46,17 @@ Sensors::Sensors() = default;
 void Sensors::init(Frequency cpu_frequency) {
   // Here we create all sensors and initialize the adc.
   patient_pressure_sensor_.emplace("patient_pressure_", "for patient airway pressure",
-                                   adc_channel(Sensor::PatientPressure), &adc, ADCVoltageRange);
+                                   adc_channel(Sensor::PatientPressure), &adc, ADC::VoltageRange);
   fio2_sensor_.emplace("fio2", "Fraction of oxygen in supplied air", adc_channel(Sensor::FIO2),
                        &adc);
   air_influx_sensor_dp_.emplace("air_influx_", "for ambient air influx",
-                                adc_channel(Sensor::AirInflowPressureDiff), &adc, ADCVoltageRange);
+                                adc_channel(Sensor::AirInflowPressureDiff), &adc,
+                                ADC::VoltageRange);
   oxygen_influx_sensor_dp_.emplace("oxygen_influx_", "for concentrated oxygen influx",
                                    adc_channel(Sensor::OxygenInflowPressureDiff), &adc,
-                                   ADCVoltageRange);
+                                   ADC::VoltageRange);
   outflow_sensor_dp_.emplace("outflow_", "for outflow", adc_channel(Sensor::OutflowPressureDiff),
-                             &adc, ADCVoltageRange);
+                             &adc, ADC::VoltageRange);
 
   // These require existing DP sensors to link to
   air_influx_sensor_.emplace("air_influx_", "for ambient air influx",

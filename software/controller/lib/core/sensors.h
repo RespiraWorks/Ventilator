@@ -76,9 +76,6 @@ class Sensors {
   ADC adc;
 
  private:
-  /// \TODO: get this either from ADC constants header or something like that
-  static constexpr float ADCVoltageRange{3.3f};
-
   // Fundamental sensors. Because those use GPIO Pins, we need to delay instantiation to after
   // the Hal has been properly initialized. We use std::optional to achieve that, and emplace them
   // within init function

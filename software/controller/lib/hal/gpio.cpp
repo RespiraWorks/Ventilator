@@ -126,14 +126,14 @@ AlternatePin::AlternatePin(Port port, uint8_t pin, AlternativeFunction func, Pul
   pull_type(pull);
 }
 
-AnalogInputPin::AnalogInputPin(Port port, uint8_t pin, ADC *adc, AdcChannel channel)
-    : Pin(port, pin, PinMode::Analog), adc_(adc), channel_(channel) {
+AnalogInputPin::AnalogInputPin(AdcChannel channel, ADC *adc)
+    : Pin(channel.port, channel.pin, PinMode::Analog), adc_(adc), channel_(channel) {
 #if defined(BARE_STM32)
-  adc_->add_channel(channel_);
+  adc_->add_channel(channel_.adc_channel);
 #endif
 }
 
-Voltage AnalogInputPin::read() const { return adc_->read(channel_); }
+Voltage AnalogInputPin::read() const { return adc_->read(channel_.adc_channel); }
 
 PwmPin::PwmPin(PwmChannel channel, const Frequency pwm_freq, const Frequency cpu_frequency)
     : AlternatePin(channel.port, channel.pin, channel.function),

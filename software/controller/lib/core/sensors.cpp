@@ -15,24 +15,25 @@ limitations under the License.
 
 #include "sensors.h"
 
+#include "system_constants.h"
 #include "system_timer.h"
 
 //////////////////////////////////////////////////////////////////
 //                   SENSOR LOGICAL MAPPINGS                    //
 //   Change these if you route your sensor tubing differently   //
 //////////////////////////////////////////////////////////////////
-AdcChannel adc_channel(Sensor s) {
+GPIO::AdcChannel adc_channel(Sensor s) {
   switch (s) {
     case Sensor::PatientPressure:
-      return AdcChannel::InterimBoardAnalogPressure;
+      return InterimBoardAnalogPressure;
     case Sensor::OxygenInflowPressureDiff:
-      return AdcChannel::U3PatientPressure;
+      return U3PatientPressure;
     case Sensor::AirInflowPressureDiff:
-      return AdcChannel::U4InhaleFlow;
+      return U4InhaleFlow;
     case Sensor::OutflowPressureDiff:
-      return AdcChannel::U5ExhaleFlow;
+      return U5ExhaleFlow;
     case Sensor::FIO2:
-      return AdcChannel::InterimBoardOxygenSensor;
+      return InterimBoardOxygenSensor;
   }
   // Switch above covers all cases.
   __builtin_unreachable();
@@ -45,17 +46,17 @@ Sensors::Sensors() = default;
 void Sensors::init(Frequency cpu_frequency) {
   // Here we create all sensors and initialize the adc.
   patient_pressure_sensor_.emplace("patient_pressure_", "for patient airway pressure",
-                                   GPIO::Port::C, 0, &adc, adc_channel(Sensor::PatientPressure),
-                                   ADCVoltageRange);
-  fio2_sensor_.emplace("fio2", "Fraction of oxygen in supplied air", GPIO::Port::C, 3, &adc,
-                       adc_channel(Sensor::FIO2));
-  air_influx_sensor_dp_.emplace("air_influx_", "for ambient air influx", GPIO::Port::A, 4, &adc,
-                                adc_channel(Sensor::AirInflowPressureDiff), ADCVoltageRange);
+                                   adc_channel(Sensor::PatientPressure), &adc, ADCVoltageRange);
+  fio2_sensor_.emplace("fio2", "Fraction of oxygen in supplied air", adc_channel(Sensor::FIO2),
+                       &adc);
+  air_influx_sensor_dp_.emplace("air_influx_", "for ambient air influx",
+                                adc_channel(Sensor::AirInflowPressureDiff), &adc, ADCVoltageRange);
   oxygen_influx_sensor_dp_.emplace("oxygen_influx_", "for concentrated oxygen influx",
-                                   GPIO::Port::A, 1, &adc,
-                                   adc_channel(Sensor::OxygenInflowPressureDiff), ADCVoltageRange);
-  outflow_sensor_dp_.emplace("outflow_", "for outflow", GPIO::Port::B, 0, &adc,
-                             adc_channel(Sensor::OutflowPressureDiff), ADCVoltageRange);
+                                   adc_channel(Sensor::OxygenInflowPressureDiff), &adc,
+                                   ADCVoltageRange);
+  outflow_sensor_dp_.emplace("outflow_", "for outflow", adc_channel(Sensor::OutflowPressureDiff),
+                             &adc, ADCVoltageRange);
+
   // These require existing DP sensors to link to
   air_influx_sensor_.emplace("air_influx_", "for ambient air influx",
                              &air_influx_sensor_dp_.value(), VenturiPortDiameter,
@@ -68,7 +69,9 @@ void Sensors::init(Frequency cpu_frequency) {
 
   /// \TODO: fault somehow if this returns false
   [[maybe_unused]] bool buffer_size_sufficient = adc.initialize(cpu_frequency);
+}
 
+void Sensors::calibrate() {
   // We wait 20ms from power-on-reset for pressure sensors to warm up.
   //
   // TODO: Is 20ms the right amount of time?  We're basing it on the data sheet

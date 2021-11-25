@@ -161,11 +161,19 @@ class AlternatePin : public Pin {
                OutSpeed speed = OutSpeed::Slow, OutType type = OutType::PushPull);
 };
 
+// Helper struct that allows us to manipulate an analog input pin as a collection of everything
+// that helps define it: a physical pin (port and number) and an ADC channel number.
+// See Table 16 [DS] for physical pin to ADC channel mapping.
+struct AdcChannel {
+  Port port;
+  uint8_t pin;
+  uint8_t adc_channel;
+};
+
 // Analog input pin, linked to an ADC channel.
-// See Table 16 [DS] for physical pin to ADC Channel mapping.
 class AnalogInputPin : public Pin {
  public:
-  AnalogInputPin(Port port, uint8_t pin, ADC *adc, AdcChannel channel);
+  AnalogInputPin(AdcChannel channel, ADC *adc);
   Voltage read() const;
 
  private:
@@ -173,7 +181,7 @@ class AnalogInputPin : public Pin {
   AdcChannel channel_;
 };
 
-// Helper struct that allows us to manipulate a PWM pin as a collection of all functions that helps
+// Helper struct that allows us to manipulate a PWM pin as a collection of everything that helps
 // define it: a physical pin (port and number), an alternate function and a timer channel (timer
 // peripheral and channel number).
 // See Table 17 and 18 [DS] for physical pin to timer channel mapping.

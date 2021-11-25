@@ -15,6 +15,8 @@ limitations under the License.
 
 #include "actuators.h"
 
+#include "system_constants.h"
+
 void Actuators::execute(const ActuatorsState &desired_state) {
   if (!ready()) return;
   // set blower PWM
@@ -41,12 +43,8 @@ void Actuators::init(Frequency cpu_frequency, NVParams::Handler *nv_params,
   // For now, the blower uses default calibration values, linearly spaced between 0 and 1
   blower_.emplace(BlowerChannel, BlowerFreq, cpu_frequency, "blower_", " of the blower");
 
-  // Testing in Edwin's garage, we found that the psol was fully closed at
-  // somewhere between 0.75 and 0.80 (i.e. definitely zero at 0.75 and probably
-  // zero a bit above that) and fully open at 0.90.
-  // \TODO: the values in the comment are inconsistent with the code, have Edwin confirm those.
   psol_.emplace(PSolChannel, PSolFreq, cpu_frequency, "psol_", " of the proportional solenoid",
-                0.35f, 0.75f);
+                psol_value_closed, psol_value_open);
 
   // In case init was called with nullptr, these fail silently
   blower_pinch_.LinkCalibration(nv_params, blower_pinch_cal_offset);

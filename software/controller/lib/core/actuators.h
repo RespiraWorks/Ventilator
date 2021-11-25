@@ -57,22 +57,6 @@ class Actuators {
   // Causes passed state to be applied to the actuators
   void execute(const ActuatorsState &desired_state);
 
-  // Blower is hooked up to PB3 (see [PCB]),
-  // which can be linked to Timer2 chanel 2 using AF1 (see [DS], p77)
-  static constexpr GPIO::PwmChannel BlowerChannel = {
-      GPIO::Port::B, 3, GPIO::AlternativeFunction::AF1, PeripheralID::Timer2, 2};
-  // Blower is driven by a 20kHz PWM, as a compromise between resolution and response time
-  /// TODO: add/find a better rationale for this, maybe with the resulting response time/resolution
-  static constexpr Frequency BlowerFreq = kilohertz(20);
-
-  // psol is hooked up to PA11 (see [PCB]),
-  // which can be linked to Timer1 chanel 4 using AF1 (see [DS], p76)
-  static constexpr GPIO::PwmChannel PSolChannel = {
-      GPIO::Port::A, 11, GPIO::AlternativeFunction::AF1, PeripheralID::Timer1, 4};
-
-  // Psol is driven by a 5kHz PWM (\TODO: find rationale behind this?)
-  static constexpr Frequency PSolFreq = kilohertz(5);
-
  private:
   PinchValve blower_pinch_;
   PinchValve exhale_pinch_;

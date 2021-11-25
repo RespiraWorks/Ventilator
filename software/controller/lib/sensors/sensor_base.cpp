@@ -17,9 +17,9 @@ limitations under the License.
 
 /// \TODO: generalize these classes to not require reference to entire HAL
 
-AnalogSensor::AnalogSensor(const char *name, const char *help_supplement, GPIO::Port port,
-                           uint8_t pin, ADC *adc, AdcChannel adc_channel)
-    : pin_(port, pin, adc, adc_channel),
+AnalogSensor::AnalogSensor(const char *name, const char *help_supplement,
+                           const GPIO::AdcChannel &channel, ADC *adc)
+    : pin_(channel, adc),
       dbg_zero_("zero", Debug::Variable::Access::ReadOnly, 0.f, "V", "Voltage offset "),
       dbg_voltage_("voltage", Debug::Variable::Access::ReadOnly, 0.f, "V", "Voltage reading ") {
   dbg_zero_.prepend_name(name);

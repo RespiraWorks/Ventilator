@@ -21,7 +21,7 @@ limitations under the License.
 
 static constexpr Duration LoopPeriod = milliseconds(10);
 
-/*static*/ Duration Controller::GetLoopPeriod() { return LoopPeriod; }
+Duration Controller::GetLoopPeriod() { return LoopPeriod; }
 
 std::pair<ActuatorsState, ControllerState> Controller::Run(Time now, const VentParams &params,
                                                            const SensorReadings &sensor_readings) {

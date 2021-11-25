@@ -275,7 +275,7 @@ void SetAdcSequence(AdcReg *adc, const uint8_t sequence_number, const uint8_t ch
   adc->adc[0].sequence.words[index] |= channel << (sequence_number % 5) * 6;
 };
 
-bool ADC::add_channel(AdcChannel channel) {
+bool ADC::add_channel(const uint8_t channel) {
   if (n_channels_ >= MaxAdcChannels) return false;
   channels_[n_channels_++] = channel;
   return true;
@@ -390,7 +390,7 @@ bool ADC::initialize(const Frequency cpu_frequency) {
 }
 
 // Read the specified analog input.
-Voltage ADC::read(const AdcChannel channel) const {
+Voltage ADC::read(const uint8_t channel) const {
   size_t offset =
       std::distance(channels_.begin(), std::find(channels_.begin(), channels_.end(), channel));
 
@@ -411,9 +411,9 @@ Voltage ADC::read(const AdcChannel channel) const {
 
 bool ADC::initialize(const Frequency cpu_frequency) { return true; }
 
-Voltage ADC::read(const AdcChannel channel) const { return analog_pin_values_.at(channel); }
+Voltage ADC::read(const uint8_t channel) const { return analog_pin_values_.at(channel); }
 
-void ADC::TESTSetAnalogPin(const AdcChannel channel, Voltage value) {
+void ADC::TESTSetAnalogPin(const uint8_t channel, Voltage value) {
   analog_pin_values_[channel] = value;
 }
 

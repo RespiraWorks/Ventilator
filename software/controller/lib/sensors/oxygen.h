@@ -19,8 +19,8 @@ limitations under the License.
 
 class TeledyneR24 : public OxygenSensor, public AnalogSensor {
  public:
-  TeledyneR24(const char* name, const char* help_supplement, GPIO::Port port, uint8_t pin, ADC* adc,
-              AdcChannel adc_channel);
+  TeledyneR24(const char* name, const char* help_supplement, const GPIO::AdcChannel& channel,
+              ADC* adc);
 
   float read(Pressure p_ambient) const override;
 };

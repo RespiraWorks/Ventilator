@@ -15,10 +15,9 @@ limitations under the License.
 
 #include "oxygen.h"
 
-TeledyneR24::TeledyneR24(const char *name, const char *help_supplement, GPIO::Port port,
-                         uint8_t pin, ADC *adc, AdcChannel adc_channel)
-    : OxygenSensor(name, help_supplement),
-      AnalogSensor(name, help_supplement, port, pin, adc, adc_channel) {}
+TeledyneR24::TeledyneR24(const char *name, const char *help_supplement,
+                         const GPIO::AdcChannel &channel, ADC *adc)
+    : OxygenSensor(name, help_supplement), AnalogSensor(name, help_supplement, channel, adc) {}
 
 // Reads an oxygen sensor, returning the concentration of oxygen [0 ; 1.0]
 //

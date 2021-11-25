@@ -33,7 +33,7 @@ enum class Sensor {
 };
 
 // Logical mappings: conceptual sensor -> ADC channel
-AdcChannel adc_channel(Sensor s);
+GPIO::AdcChannel adc_channel(Sensor s);
 
 struct SensorReadings {
   Pressure patient_pressure;
@@ -58,10 +58,16 @@ class Sensors {
  public:
   Sensors();
 
-  // Performs general init and sensor calibration.  This function should
+  // Performs general init.  This function should
   // be called on system startup before any other sensor functions
   // are called.
   void init(Frequency cpu_frequency);
+
+  // Performs calibration of the sensors. For now, since sensor calibration are not
+  // stored in EEPROM, this function should be called immediately after init, but
+  // it shouldn't stay that way (to accomodate for ventilator restart while linked
+  // to a patient)
+  void calibrate();
 
   // Read the sensors.
   SensorReadings get_readings() const;
@@ -72,18 +78,6 @@ class Sensors {
  private:
   /// \TODO: get this either from ADC constants header or something like that
   static constexpr float ADCVoltageRange{3.3f};
-
-  // \TODO: create a physical constants header for custom parts like venturi
-  // Diameters and correction coefficient relating to 3/4in Venturi, see https://bit.ly/2ARuReg.
-  // Correction factor of 0.97 is based on ISO recommendations for Reynolds of roughly 10^4 and
-  // machined (rather than cast) surfaces. Data fit is in good agreement based on comparison to
-  // Fleisch pneumotachograph; see https://github.com/RespiraWorks/Ventilator/pull/476
-  constexpr static Length VenturiPortDiameter{millimeters(15.05f)};
-  constexpr static Length VenturiChokeDiameter{millimeters(5.5f)};
-  constexpr static float VenturiCorrection{0.97f};
-
-  static_assert(VenturiPortDiameter > VenturiChokeDiameter);
-  static_assert(VenturiChokeDiameter > meters(0));
 
   // Fundamental sensors. Because those use GPIO Pins, we need to delay instantiation to after
   // the Hal has been properly initialized. We use std::optional to achieve that, and emplace them

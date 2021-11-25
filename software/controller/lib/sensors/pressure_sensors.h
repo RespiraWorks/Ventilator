@@ -19,8 +19,8 @@ limitations under the License.
 
 class AnalogPressureSensor : public PressureSensor, public AnalogSensor {
  public:
-  AnalogPressureSensor(const char *name, const char *help_supplement, GPIO::Port port, uint8_t pin,
-                       ADC *adc, AdcChannel adc_channel, float voltage_to_kPa);
+  AnalogPressureSensor(const char *name, const char *help_supplement,
+                       const GPIO::AdcChannel &channel, ADC *adc, float voltage_to_kPa);
 
   Pressure read() const override;
 
@@ -31,8 +31,8 @@ class AnalogPressureSensor : public PressureSensor, public AnalogSensor {
 
 class MPXV5004DP : public AnalogPressureSensor {
  public:
-  MPXV5004DP(const char *name, const char *help_supplement, GPIO::Port port, uint8_t pin, ADC *adc,
-             AdcChannel adc_channel, float voltage_range);
+  MPXV5004DP(const char *name, const char *help_supplement, const GPIO::AdcChannel &channel,
+             ADC *adc, float voltage_range);
 
   // min/max possible reading from MPXV5004DP pressure sensors
   // \TODO: are we supposed to use these somehow?
@@ -42,8 +42,8 @@ class MPXV5004DP : public AnalogPressureSensor {
 
 class MPXV5010DP : public AnalogPressureSensor {
  public:
-  MPXV5010DP(const char *name, const char *help_supplement, GPIO::Port port, uint8_t pin, ADC *adc,
-             AdcChannel adc_channel, float voltage_range);
+  MPXV5010DP(const char *name, const char *help_supplement, const GPIO::AdcChannel &channel,
+             ADC *adc, float voltage_range);
   // min/max possible reading from MPXV5010DP pressure sensors
   constexpr static Pressure MinPressure{kPa(0.0f)};
   constexpr static Pressure MaxPressure{kPa(10.0f)};

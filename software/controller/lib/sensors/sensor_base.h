@@ -21,8 +21,8 @@ limitations under the License.
 
 class AnalogSensor {
  public:
-  AnalogSensor(const char *name, const char *help_supplement, GPIO::Port port, uint8_t pin,
-               ADC *adc, AdcChannel adc_channel);
+  AnalogSensor(const char *name, const char *help_supplement, const GPIO::AdcChannel &channel,
+               ADC *adc);
 
   void set_zero();
 

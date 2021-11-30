@@ -66,12 +66,10 @@ ErrorCode EepromHandler::Write(const uint16_t address, Context *context) {
   uint8_t request[MaxWriteLength] = {0};
   memcpy(&request[0], &(context->request[3]), length);
   context->response_length = 0;
-  if (eeprom_->WriteBytes(address, length, &request, context->processed)) {
-    return ErrorCode::None;
-  } else {
-    // could not send write request for some reason
-    return ErrorCode::InternalError;
-  }
+  if (eeprom_->WriteBytes(address, length, &request, context->processed)) return ErrorCode::None;
+
+  // could not send write request for some reason
+  return ErrorCode::InternalError;
 }
 
 }  // namespace Debug::Command

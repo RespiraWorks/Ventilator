@@ -25,7 +25,7 @@ limitations under the License.
 #include "units.h"
 
 // pinch_valve calibration size, defined here because the tables are stored in NVParams.
-static constexpr size_t pinch_valves_cal_size{11};
+static constexpr size_t PinchValvesCalSize{11};
 
 namespace NVParams {
 
@@ -62,12 +62,12 @@ struct Structure {
   // should give pinch valve settings for a list of equally spaced flow rates.  The first entry
   // should be the setting for 0 flow rate (normally 0) and the last entry should be the setting
   // for 100% flow rate. The minimum length of the table is 2 entries.
-  std::array<float, pinch_valves_cal_size> blower_pinch_cal{0.0000f, 0.0410f, 0.0689f, 0.0987f,
-                                                            0.1275f, 0.1590f, 0.1932f, 0.2359f,
-                                                            0.2940f, 0.3988f, 1.0000f};
-  std::array<float, pinch_valves_cal_size> exhale_pinch_cal{0.0000f, 0.0410f, 0.0689f, 0.0987f,
-                                                            0.1275f, 0.1590f, 0.1932f, 0.2359f,
-                                                            0.2940f, 0.3988f, 1.0000f};
+  std::array<float, PinchValvesCalSize> blower_pinch_cal{0.0000f, 0.0410f, 0.0689f, 0.0987f,
+                                                         0.1275f, 0.1590f, 0.1932f, 0.2359f,
+                                                         0.2940f, 0.3988f, 1.0000f};
+  std::array<float, PinchValvesCalSize> exhale_pinch_cal{0.0000f, 0.0410f, 0.0689f, 0.0987f,
+                                                         0.1275f, 0.1590f, 0.1932f, 0.2359f,
+                                                         0.2940f, 0.3988f, 1.0000f};
 };
 
 // We are reserving the first 8 kB out of our 32kB eeprom for nv params.

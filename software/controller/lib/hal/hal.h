@@ -77,7 +77,6 @@ class HalApi {
   LEDIndicators LEDs;
   PWM pwm;
 
- public:
   void Init();
 
   // Receives bytes from the GUI controller along the serial bus.

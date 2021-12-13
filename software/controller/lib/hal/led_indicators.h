@@ -24,7 +24,7 @@ class LEDIndicators {
  public:
   void initialize();
 
-  std::optional<GPIO::DigitalOutputPin> red_led_;
-  std::optional<GPIO::DigitalOutputPin> yellow_led_;
-  std::optional<GPIO::DigitalOutputPin> green_led_;
+  std::optional<GPIO::DigitalOutputPin> red_led;
+  std::optional<GPIO::DigitalOutputPin> yellow_led;
+  std::optional<GPIO::DigitalOutputPin> green_led;
 };

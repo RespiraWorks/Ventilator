@@ -17,6 +17,7 @@ limitations under the License.
 
 #include <array>
 
+#include "gpio.h"
 #include "units.h"
 
 #if !defined(BARE_STM32)
@@ -68,11 +69,28 @@ class ADC {
   // Presized under some assumptions, see implementation for initialize()
   volatile uint16_t oversample_buffer_[AdcSampleHistoryHardMax * MaxAdcChannels];
 
+  // helper functions to manipulate ADC registers
+  void SetAdcSampleTime(uint8_t channel, uint32_t sample_time);
+  void SetAdcSequence(uint8_t sequence_number, uint8_t channel);
+
 #if !defined(BARE_STM32)
  public:
-  void TESTSetAnalogPin(uint8_t pin, Voltage value);
+  void TESTSetAnalogPin(uint8_t channel, Voltage value);
 
  private:
   std::map<uint8_t, Voltage> analog_pin_values_;
 #endif
 };
+
+namespace GPIO {
+// Analog input pin, linked to an ADC channel.
+class AnalogInputPin : public Pin {
+ public:
+  AnalogInputPin(AdcChannel channel, ADC *adc);
+  Voltage read() const;
+
+ private:
+  ADC *adc_{nullptr};
+  AdcChannel channel_;
+};
+}  // namespace GPIO

@@ -35,8 +35,6 @@ limitations under the License.
 #include <cstdint>
 #include <optional>
 
-#include "adc.h"
-#include "gpio.h"
 #include "led_indicators.h"
 #include "units.h"
 
@@ -71,8 +69,6 @@ class HalApi {
  public:
   /// \TODO: likely these should not even be members
   LEDIndicators LEDs;
-
-  std::optional<GPIO::PwmPin> buzzer{std::nullopt};
 
   static Frequency GetCpuFreq();
 

@@ -15,29 +15,7 @@ limitations under the License.
 
 #include "sensors.h"
 
-#include "system_constants.h"
 #include "system_timer.h"
-
-//////////////////////////////////////////////////////////////////
-//                   SENSOR LOGICAL MAPPINGS                    //
-//   Change these if you route your sensor tubing differently   //
-//////////////////////////////////////////////////////////////////
-GPIO::AdcChannel adc_channel(Sensor s) {
-  switch (s) {
-    case Sensor::PatientPressure:
-      return InterimBoardAnalogPressure;
-    case Sensor::OxygenInflowPressureDiff:
-      return U3PatientPressure;
-    case Sensor::AirInflowPressureDiff:
-      return U4InhaleFlow;
-    case Sensor::OutflowPressureDiff:
-      return U5ExhaleFlow;
-    case Sensor::FIO2:
-      return InterimBoardOxygenSensor;
-  }
-  // Switch above covers all cases.
-  __builtin_unreachable();
-}
 
 Sensors::Sensors() = default;
 

@@ -26,7 +26,7 @@ limitations under the License.
  *****************************************************************/
 void LEDIndicators::initialize() {
   // Configure LED pins as outputs
-  red_led_.emplace(GPIO::Port::C, 13);
-  yellow_led_.emplace(GPIO::Port::C, 14);
-  green_led_.emplace(GPIO::Port::C, 15);
+  red_led.emplace(GPIO::Port::C, 13);
+  yellow_led.emplace(GPIO::Port::C, 14);
+  green_led.emplace(GPIO::Port::C, 15);
 }

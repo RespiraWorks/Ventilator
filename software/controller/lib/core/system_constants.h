@@ -48,20 +48,31 @@ static constexpr GPIO::PwmChannel BlowerChannel = {GPIO::Port::B, 3, GPIO::Alter
                                                    PeripheralID::Timer2, 2};
 // Blower is driven by a 20kHz PWM, as a compromise between resolution and response time
 /// TODO: add/find a better rationale for this, maybe with the resulting response time/resolution
-static constexpr Frequency BlowerFreq = kilohertz(20);
+static constexpr Frequency BlowerFreq{kilohertz(20)};
 
 // psol is hooked up to PA11 (see [PCB]),
 // which can be linked to Timer1 chanel 4 using AF1 (see [DS], p76)
 static constexpr GPIO::PwmChannel PSolChannel = {GPIO::Port::A, 11, GPIO::AlternativeFunction::AF1,
                                                  PeripheralID::Timer1, 4};
 // Psol is driven by a 5kHz PWM (\TODO: find rationale behind this?)
-static constexpr Frequency PSolFreq = kilohertz(5);
+static constexpr Frequency PSolFreq{kilohertz(5)};
 // Testing in Edwin's garage, we found that the psol was fully closed at
 // somewhere between 0.75 and 0.80 (i.e. definitely zero at 0.75 and probably
 // zero a bit above that) and fully open at 0.90.
 // \TODO: the values in the comment are inconsistent with the code, have Edwin confirm those.
-static constexpr float PSolClosed = 0.35f;
-static constexpr float PSolOpen = 0.75f;
+static constexpr float PSolClosed{0.35f};
+static constexpr float PSolOpen{0.75f};
+
+// Buzzer is hooked up to PB4 (see [PCB]),
+// which can be linked to Timer3 chanel 1 using AF2 (see [DS], p77)
+static constexpr GPIO::PwmChannel BuzzerChannel = {GPIO::Port::B, 4, GPIO::AlternativeFunction::AF2,
+                                                   PeripheralID::Timer3, 1};
+// Buzzer is driven by a 2.4kHz PWM, which produces a medium to high pitch noise, which seems
+// adequate for an alarm of some sort.
+static constexpr Frequency BuzzerFreq{kilohertz(2.4f)};
+// Maximum volume is around a duty cycle of 0.8, and no sound at 0.
+static constexpr float MaxBuzzerVolume{0.8f};
+static constexpr float BuzzerOff{0};
 
 /**************************************************************************************
  *                                 PHYSICAL CONSTANTS                                 *
@@ -83,11 +94,27 @@ static_assert(VenturiChokeDiameter > meters(0));
  **************************************************************************************/
 
 // Loop period of our main controller loop
-static constexpr Duration MainLoopPeriod = milliseconds(10);
+static constexpr Duration MainLoopPeriod{milliseconds(10)};
 
 // Transition from PEEP to PIP pressure hapens over this length of time.  Citation:
 // https://respiraworks.slack.com/archives/C011CJQV4Q7/p1591763842312500?thread_ts=1591759016.310200&cid=C011CJQV4Q7
-inline constexpr Duration RiseTime = milliseconds(100);
+inline constexpr Duration RiseTime{milliseconds(100)};
 
 // TODO: VolumeIntegrationInterval (for volume integrator) was not chosen carefully.
-static constexpr Duration VolumeIntegrationInterval = milliseconds(5);
+static constexpr Duration VolumeIntegrationInterval{milliseconds(5)};
+
+// Keep this in sync with the Sensor enum below
+constexpr static uint16_t NumSensors{5};
+
+enum class Sensor {
+  PatientPressure,
+  AirInflowPressureDiff,
+  OxygenInflowPressureDiff,
+  OutflowPressureDiff,
+  FIO2,
+};
+
+/**************************************************************************************
+ *                                  PNEUMATIC ROUTING                                 *
+ **************************************************************************************/
+GPIO::AdcChannel adc_channel(Sensor s);

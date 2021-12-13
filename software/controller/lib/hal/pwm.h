@@ -17,14 +17,13 @@ limitations under the License.
 
 #include <cstdint>
 
-#include "clocks.h"
+#include "gpio.h"
 #include "timers.h"
 #include "units.h"
 
 class PWM {
  public:
-  PWM(const Frequency pwm_freq, const PeripheralID peripheral, uint8_t channel,
-      const Frequency cpu_frequency);
+  PWM(Frequency pwm_freq, PeripheralID peripheral, uint8_t channel, Frequency cpu_frequency);
 
   // Causes `pin` to output a square wave with the given duty cycle (range [0, 1], with preemptive
   // clamping before setting the registers).
@@ -52,3 +51,15 @@ class PWM {
   float get() const;
 #endif
 };
+
+namespace GPIO {
+// PWM pin, handling to its own pwm signal.
+class PwmPin : public AlternatePin {
+ public:
+  PwmPin(PwmChannel channel, Frequency pwm_freq, Frequency cpu_frequency);
+  void set(float value);
+
+ private:
+  PWM pwm_;
+};
+}  // namespace GPIO

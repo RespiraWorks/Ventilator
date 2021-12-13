@@ -60,8 +60,12 @@ class Actuators {
  private:
   PinchValve blower_pinch_;
   PinchValve exhale_pinch_;
-  // Blower and PSol use pwm pins and need to be instantiated after HAL, therefore we
+  // Blower, PSol and buzzer use pwm pins and need to be instantiated after HAL, therefore we
   // use std::optional to delay the instantiation within init function.
   std::optional<PwmActuator> blower_{std::nullopt};
   std::optional<PwmActuator> psol_{std::nullopt};
+
+ public:
+  // buzzer is made public to allow easier manipulation (not through actuators.execute()).
+  std::optional<PwmActuator> buzzer{std::nullopt};
 };

@@ -24,8 +24,7 @@ Reference abbreviations [RM], [DS], etc are defined in hal/README.md.
 
 #include <cstdint>
 
-#include "adc.h"
-#include "pwm.h"
+#include "clocks.h"
 
 /******************************************************************
  * General Purpose I/O support. [RM] Chapter 8
@@ -37,32 +36,14 @@ Reference abbreviations [RM], [DS], etc are defined in hal/README.md.
 
 namespace GPIO {
 
-// General Purpose I/O
-// [RM] 8.4 GPIO Registers (pg 267)
-struct RegisterStructure {
-  uint32_t mode;                   // Mode register [RM] 8.4.1
-  uint32_t output_type;            // Output type register [RM] 8.4.2
-  uint32_t output_speed;           // Output speed register [RM] 8.4.3
-  uint32_t pullup_pulldown;        // Pull-up/pull-down register [RM] 8.4.4
-  uint32_t input_data;             // Input data register [RM] 8.4.5
-  uint32_t output_data;            // Output data register [RM] 8.4.6
-  uint16_t set;                    // Bit set register [RM] 8.4.7
-  uint16_t clear;                  // Bit reset register [RM] 8.4.7
-  uint32_t flash_lock;             // Configuration lock register [RM] 8.4.8
-  uint32_t alternate_function[2];  // Alternate function low/high register [RM] 8.4.{9,10}
-  uint32_t reset;                  // Reset register [RM] 8.4.11
-};
-
-typedef volatile RegisterStructure Register;
-
 /// \TODO: Move these mappings elsewhere
 enum class Port : uint32_t {
-  A = 0x48000000,
-  B = 0x48000400,
-  C = 0x48000800,
-  D = 0x48000C00,
-  E = 0x48001000,
-  H = 0x48001C00,
+  A,
+  B,
+  C,
+  D,
+  E,
+  H,
 };
 
 // Value for GPIOx_MODER ([RM] 8.4.1)
@@ -114,7 +95,7 @@ class Pin {
   Pin(Port port, uint8_t pin, PinMode mode);
 
  protected:
-  Register *gpio_{nullptr};
+  Port port_;
   uint8_t pin_;
   // helper functions to set properties of the pin (writes them to registers).
   void output_type(OutType output_type);              // for output or alternate pins
@@ -134,7 +115,7 @@ class DigitalOutputPin : public Pin {
   bool get() const;
 
  private:
-  bool value_{0};
+  bool value_{false};
 #endif
 };
 
@@ -148,7 +129,7 @@ class DigitalInputPin : public Pin {
   void clear();
 
  private:
-  bool value_{0};
+  bool value_{false};
 #endif
 };
 
@@ -164,21 +145,11 @@ class AlternatePin : public Pin {
 // Helper struct that allows us to manipulate an analog input pin as a collection of everything
 // that helps define it: a physical pin (port and number) and an ADC channel number.
 // See Table 16 [DS] for physical pin to ADC channel mapping.
+// Functionality behind this is defined in adc.h
 struct AdcChannel {
   Port port;
   uint8_t pin;
   uint8_t adc_channel;
-};
-
-// Analog input pin, linked to an ADC channel.
-class AnalogInputPin : public Pin {
- public:
-  AnalogInputPin(AdcChannel channel, ADC *adc);
-  Voltage read() const;
-
- private:
-  ADC *adc_{nullptr};
-  AdcChannel channel_;
 };
 
 // Helper struct that allows us to manipulate a PWM pin as a collection of everything that helps
@@ -191,16 +162,6 @@ struct PwmChannel {
   AlternativeFunction function;
   PeripheralID peripheral;
   uint8_t timer_channel;
-};
-
-// PWM pin, handling to its own pwm signal.
-class PwmPin : public AlternatePin {
- public:
-  PwmPin(PwmChannel channel, const Frequency pwm_freq, const Frequency cpu_frequency);
-  void set(float value);
-
- private:
-  PWM pwm_;
 };
 
 }  // namespace GPIO

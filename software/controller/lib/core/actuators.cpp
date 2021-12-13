@@ -45,6 +45,9 @@ void Actuators::init(Frequency cpu_frequency, NVParams::Handler *nv_params,
   psol_.emplace(PSolChannel, PSolFreq, cpu_frequency, "psol_", " of the proportional solenoid",
                 PSolClosed, PSolOpen);
 
+  buzzer.emplace(BuzzerChannel, BuzzerFreq, cpu_frequency, "buzzer_", "of the buzzer", BuzzerOff,
+                 MaxBuzzerVolume);
+
   // In case init was called with nullptr, these fail silently
   blower_pinch_.LinkCalibration(nv_params, blower_pinch_cal_offset);
   exhale_pinch_.LinkCalibration(nv_params, exhale_pinch_cal_offset);

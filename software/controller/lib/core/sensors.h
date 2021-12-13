@@ -19,21 +19,8 @@ limitations under the License.
 
 #include "oxygen.h"
 #include "pressure_sensors.h"
+#include "system_constants.h"
 #include "venturi.h"
-
-// Keep this in sync with the Sensor enum below
-constexpr static uint16_t NumSensors{5};
-
-enum class Sensor {
-  PatientPressure,
-  AirInflowPressureDiff,
-  OxygenInflowPressureDiff,
-  OutflowPressureDiff,
-  FIO2,
-};
-
-// Logical mappings: conceptual sensor -> ADC channel
-GPIO::AdcChannel adc_channel(Sensor s);
 
 struct SensorReadings {
   Pressure patient_pressure;

@@ -15,7 +15,7 @@ limitations under the License.
 
 #pragma once
 
-#include "gpio.h"
+#include "adc.h"
 #include "units.h"
 #include "vars.h"
 

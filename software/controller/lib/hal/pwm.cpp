@@ -108,3 +108,13 @@ void PWM::set(float duty) { value_ = std::clamp(duty, 0.0f, 1.0f); }
 float PWM::get() const { return value_; }
 
 #endif
+
+namespace GPIO {
+PwmPin::PwmPin(PwmChannel channel, const Frequency pwm_freq, const Frequency cpu_frequency)
+    : AlternatePin(channel.port, channel.pin, channel.function),
+      pwm_(pwm_freq, channel.peripheral, channel.timer_channel, cpu_frequency) {
+  alternate_function(channel.function);
+}
+
+void PwmPin::set(float value) { pwm_.set(value); }
+}  // namespace GPIO

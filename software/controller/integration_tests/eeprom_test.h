@@ -46,9 +46,11 @@
 //      TBD - which python script to run?
 //
 
+#include "actuator_base.h"
 #include "commands.h"
 #include "hal.h"
 #include "interface.h"
+#include "system_constants.h"
 #include "system_timer.h"
 #include "vars.h"
 
@@ -97,7 +99,10 @@ void RunTest() {
     write_data[i] = Data;
   }
 
-  hal.buzzer->set(0.1f);
+  PwmActuator buzzer{BuzzerChannel,    BuzzerFreq, HalApi::GetCpuFreq(), "buzzer_",
+                     " of the buzzer", BuzzerOff,  MaxBuzzerVolume};
+
+  buzzer.set(0.1f);
   eeprom.ReadBytes(Address, Length, &eeprom_before, nullptr);
 
   eeprom.WriteBytes(Address, Length, &write_data, nullptr);
@@ -135,7 +140,7 @@ void RunTest() {
   while (true) {
     // stop the buzzer after 1 second if the test is a success
     if (!failed && SystemTimer::singleton().now() > microsSinceStartup(1000000)) {
-      hal.buzzer->set(0.0f);
+      buzzer.set(0.0f);
     }
 
     debug.Poll();

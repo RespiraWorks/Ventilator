@@ -17,8 +17,8 @@ limitations under the License.
 
 #include <stdint.h>
 
-#include "gpio.h"
 #include "interpolant.h"
+#include "pwm.h"
 
 class Actuator {
  public:

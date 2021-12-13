@@ -58,9 +58,7 @@ limitations under the License.
 
 #include <algorithm>
 
-#include "clocks.h"
 #include "dma.h"
-#include "gpio.h"
 #include "system_timer.h"
 
 // [RM] 16.6 ADC Registers (for each ADC) (pg 450)
@@ -257,18 +255,21 @@ static constexpr int AdcConversionTime = [] {
   __builtin_unreachable();
 }();
 
-// local helper functions to manipulate ADC registers
-void SetAdcSampleTime(AdcReg *adc, const uint8_t channel, const ADCSampleTimeReg sample_time) {
+void ADC::SetAdcSampleTime(const uint8_t channel, const uint32_t sample_time) {
   if (channel > 18) return;
+
+  AdcReg *adc = AdcBase;
   // We write the AdcSampleTimeReg value to the corresponding sample_times register:
   // in first word the first 9 channels and in the second one for channels 10 to 18,
   // and shifted by channel (modulo 10) * 3 bits
   size_t index = static_cast<size_t>(channel / 10);
-  adc->adc[0].sample_times.words[index] |= static_cast<uint32_t>(sample_time) << (channel % 10) * 3;
+  adc->adc[0].sample_times.words[index] |= sample_time << (channel % 10) * 3;
 }
 
-void SetAdcSequence(AdcReg *adc, const uint8_t sequence_number, const uint8_t channel) {
+void ADC::SetAdcSequence(const uint8_t sequence_number, const uint8_t channel) {
   if (sequence_number < 1 || sequence_number > 16 || channel > 18) return;
+
+  AdcReg *adc = AdcBase;
   // Set sequence registers in order, in the matching word (0 for sequence 1 to 4, 1 for 5 to 9,
   // and so on), and shifted by sequence_number (modulo 5) * 6 bits
   size_t index = static_cast<size_t>(sequence_number / 5);
@@ -356,8 +357,8 @@ bool ADC::initialize(const Frequency cpu_frequency) {
   // Set sample times ([RM] 16.4.12) for the channels we use and sequence order.
   for (size_t i = 0; i < n_channels_; ++i) {
     uint8_t channel = static_cast<uint8_t>(channels_[i]);
-    SetAdcSampleTime(adc, channel, AdcSampleTime);
-    SetAdcSequence(adc, static_cast<uint8_t>(i + 1), channel);
+    SetAdcSampleTime(channel, static_cast<uint32_t>(AdcSampleTime));
+    SetAdcSequence(static_cast<uint8_t>(i + 1), channel);
   }
 
   // I use DMA1 channel 1 to copy A/D readings into the buffer ([RM] 11.4.4)
@@ -418,3 +419,14 @@ void ADC::TESTSetAnalogPin(const uint8_t channel, Voltage value) {
 }
 
 #endif
+
+namespace GPIO {
+AnalogInputPin::AnalogInputPin(AdcChannel channel, ADC *adc)
+    : Pin(channel.port, channel.pin, PinMode::Analog), adc_(adc), channel_(channel) {
+#if defined(BARE_STM32)
+  adc_->add_channel(channel_.adc_channel);
+#endif
+}
+
+Voltage AnalogInputPin::read() const { return adc_->read(channel_.adc_channel); }
+}  // namespace GPIO

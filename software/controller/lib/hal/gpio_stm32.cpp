@@ -19,12 +19,22 @@ STM32L452 processor used on the controller.
 
 Reference abbreviations [RM], [DS], etc are defined in hal/README.md.
 */
-
-#include "gpio.h"
+#if defined(BARE_STM32)
 
 #include "clocks.h"
+#include "gpio.h"
 
 namespace GPIO {
+
+void enable_all_clocks() {
+  // Enable all the GPIO clocks
+  enable_peripheral_clock(PeripheralID::GPIOA);
+  enable_peripheral_clock(PeripheralID::GPIOB);
+  enable_peripheral_clock(PeripheralID::GPIOC);
+  enable_peripheral_clock(PeripheralID::GPIOD);
+  enable_peripheral_clock(PeripheralID::GPIOE);
+  enable_peripheral_clock(PeripheralID::GPIOH);
+}
 
 // General Purpose I/O
 // [RM] 8.4 GPIO Registers (pg 267)
@@ -65,27 +75,14 @@ RegisterStructure *base_address(const Port port) {
   return reinterpret_cast<RegisterStructure *>(address);
 }
 
-void enable_all_clocks() {
-  // Enable all the GPIO clocks
-  enable_peripheral_clock(PeripheralID::GPIOA);
-  enable_peripheral_clock(PeripheralID::GPIOB);
-  enable_peripheral_clock(PeripheralID::GPIOC);
-  enable_peripheral_clock(PeripheralID::GPIOD);
-  enable_peripheral_clock(PeripheralID::GPIOE);
-  enable_peripheral_clock(PeripheralID::GPIOH);
-}
-
 Pin::Pin(Port port, uint8_t pin, PinMode mode) : port_(port), pin_(pin) {
-#if defined(BARE_STM32)
   auto *gpio = base_address(port_);
   // reset the mode bits to 0
   gpio->mode &= ~(0b11 << (pin_ * 2));
   // set the mode bits to the desired value
   gpio->mode |= (static_cast<uint32_t>(mode) << (pin_ * 2));
-#endif
 };
 
-#if defined(BARE_STM32)
 void Pin::output_type(OutType output_type) {
   auto *gpio = base_address(port_);
   if (output_type == OutType::OpenDrain)
@@ -116,38 +113,6 @@ void Pin::alternate_function(AlternativeFunction func) {
   gpio->alternate_function[index] |= (static_cast<uint32_t>(func) << ((pin_ & 0b111) * 4));
 }
 
-void DigitalOutputPin::set() {
-  auto *gpio = base_address(port_);
-  gpio->set = static_cast<uint16_t>(1 << pin_);
-}
-
-void DigitalOutputPin::clear() {
-  auto *gpio = base_address(port_);
-  gpio->clear = static_cast<uint16_t>(1 << pin_);
-}
-
-bool DigitalInputPin::get() const {
-  auto *gpio = base_address(port_);
-  return gpio->input_data & (1 << pin_);
-}
-
-#else
-// \TODO add a real mock for those?
-void Pin::output_type(OutType output_type) {}
-void Pin::output_speed(OutSpeed speed) {}
-void Pin::pull_type(PullType pull) {}
-void Pin::alternate_function(AlternativeFunction func) {}
-
-void DigitalOutputPin::set() { value_ = true; }
-void DigitalOutputPin::clear() { value_ = false; }
-bool DigitalOutputPin::get() const { return value_; }
-
-void DigitalInputPin::set() { value_ = true; }
-void DigitalInputPin::clear() { value_ = false; }
-bool DigitalInputPin::get() const { return value_; }
-
-#endif
-
 DigitalOutputPin::DigitalOutputPin(Port port, uint8_t pin, bool start_high, OutSpeed speed,
                                    OutType type)
     : Pin(port, pin, PinMode::Output) {
@@ -160,11 +125,25 @@ DigitalOutputPin::DigitalOutputPin(Port port, uint8_t pin, bool start_high, OutS
   output_type(type);
   output_speed(speed);
 }
+void DigitalOutputPin::set() {
+  auto *gpio = base_address(port_);
+  gpio->set = static_cast<uint16_t>(1 << pin_);
+}
+
+void DigitalOutputPin::clear() {
+  auto *gpio = base_address(port_);
+  gpio->clear = static_cast<uint16_t>(1 << pin_);
+}
 
 DigitalInputPin::DigitalInputPin(Port port, uint8_t pin, PullType pull)
     : Pin(port, pin, PinMode::Input) {
   pull_type(pull);
 };
+
+bool DigitalInputPin::get() const {
+  auto *gpio = base_address(port_);
+  return gpio->input_data & (1 << pin_);
+}
 
 // Many GPIO pins can be repurposed with an alternate function
 // See Table 17 and 18 [DS] for alternate functions
@@ -177,5 +156,5 @@ AlternatePin::AlternatePin(Port port, uint8_t pin, AlternativeFunction func, Pul
   alternate_function(func);
   pull_type(pull);
 }
-
 }  // namespace GPIO
+#endif

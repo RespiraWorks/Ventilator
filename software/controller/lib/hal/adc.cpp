@@ -276,12 +276,6 @@ void ADC::SetAdcSequence(const uint8_t sequence_number, const uint8_t channel) {
   adc->adc[0].sequence.words[index] |= channel << (sequence_number % 5) * 6;
 };
 
-bool ADC::add_channel(const uint8_t channel) {
-  if (n_channels_ >= MaxAdcChannels) return false;
-  channels_[n_channels_++] = channel;
-  return true;
-};
-
 bool ADC::initialize(const Frequency cpu_frequency) {
   adc_sample_history_ = static_cast<uint32_t>(SampleHistoryTime * cpu_frequency /
                                               AdcConversionTime / OversampleCount / MaxAdcChannels);
@@ -420,12 +414,16 @@ void ADC::TESTSetAnalogPin(const uint8_t channel, Voltage value) {
 
 #endif
 
+bool ADC::add_channel(const uint8_t channel) {
+  if (n_channels_ >= MaxAdcChannels) return false;
+  channels_[n_channels_++] = channel;
+  return true;
+};
+
 namespace GPIO {
 AnalogInputPin::AnalogInputPin(AdcChannel channel, ADC *adc)
     : Pin(channel.port, channel.pin, PinMode::Analog), adc_(adc), channel_(channel) {
-#if defined(BARE_STM32)
   adc_->add_channel(channel_.adc_channel);
-#endif
 }
 
 Voltage AnalogInputPin::read() const { return adc_->read(channel_.adc_channel); }

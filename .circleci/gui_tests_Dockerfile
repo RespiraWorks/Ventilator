@@ -2,11 +2,6 @@
 
 FROM debian:buster
 
-RUN apt-get update && \
-    apt-get install python-pip -y && \
-    pip install -U pip && \
-    pip install conan
-
 WORKDIR /root/Ventilator
 COPY . ./
 

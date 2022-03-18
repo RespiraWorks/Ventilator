@@ -120,7 +120,7 @@ install_linux() {
           qml-module-qtquick-controls2 \
           qml-module-qtmultimedia \
           pulseaudio \
-          python-pip \
+          python3-pip \
           xvfb \
           bear \
           cppcheck \
@@ -130,10 +130,12 @@ install_linux() {
 }
 
 configure_conan() {
+  pip3 install -U pip
+  pip3 install conan
   conan profile new --detect default
   conan profile update settings.compiler.libcxx=libstdc++11 default
-  conan remote add conan-center https://conan.bintray.com False -f
-  conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan False -f
+  conan remote add conancenter https://center.conan.io
+  conan remote add https://bincrafters.jfrog.io/artifactory/api/conan/public-conan
 }
 
 run_cppcheck() {

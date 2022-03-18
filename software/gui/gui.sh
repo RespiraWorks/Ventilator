@@ -97,7 +97,6 @@ create_clean_directory() {
 
 install_linux() {
   # Last tuned for Ubuntu 2021.04 Hirsute
-<<<<<<< HEAD
   apt-get update
   apt-get install -y \
           git \

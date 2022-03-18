@@ -134,7 +134,6 @@ configure_conan() {
   pip3 install conan
   conan profile new --detect default
   conan profile update settings.compiler.libcxx=libstdc++11 default
-  conan remote add conancenter https://center.conan.io
   conan remote add https://bincrafters.jfrog.io/artifactory/api/conan/public-conan
 }
 

@@ -134,8 +134,6 @@ configure_conan() {
   pip3 install conan
   conan profile new --detect default
   conan profile update settings.compiler.libcxx=libstdc++11 default
-  conan config set general.revisions_enabled=1
-  conan remote add bincrafters https://bincrafters.jfrog.io/artifactory/api/conan/public-conan
 }
 
 run_cppcheck() {

@@ -58,6 +58,7 @@ target_link_libraries(
   ${this_target}
   PUBLIC common
   PUBLIC fmt::fmt
+  PUBLIC spdlog::spdlog
   PUBLIC Threads::Threads
   PUBLIC QNanoPainter
   PUBLIC Qt5::SerialPort

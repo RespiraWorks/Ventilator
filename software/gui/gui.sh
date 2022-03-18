@@ -97,8 +97,8 @@ create_clean_directory() {
 
 install_linux() {
   # Last tuned for Ubuntu 2021.04 Hirsute
-  apt-get update
-  apt-get install -y \
+  sudo apt-get update
+  sudo apt-get install -y \
           git \
           build-essential \
           curl \
@@ -129,15 +129,11 @@ install_linux() {
 }
 
 configure_conan() {
-  pip3 install -U pip
-  pip3 install conan
+  sudo pip3 install -U pip
+  sudo pip3 install conan gitpython
   #source ${HOME}/.profile
   conan profile new --detect default
   conan profile update settings.compiler.libcxx=libstdc++11 default
-}
-
-install_local() {
-  pip3 install gitpython
 }
 
 run_cppcheck() {

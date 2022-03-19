@@ -1,0 +1,67 @@
+Local:
+ssh-keygen -R raspberrypi.local
+ssh pi@raspberrypi.local
+  password: raspberry
+
+PI:
+sudo raspi-config
+  set hostname=rw-ventilator
+sudo adduser admin
+  password: respira
+sudo usermod -aG sudo admin
+
+Local:
+ssh-keygen -R rw-ventilator.local
+ssh admin@rw-ventilator.local
+  password: respira
+
+PI:
+cd ~
+mkdir .ssh
+chmod 700 .ssh
+exit
+
+Local:
+scp ~/.ssh/id_rsa.pub admin@rw-ventilator.local:.ssh/authorized_keys
+  password: respira
+ssh admin@rw-ventilator.local
+
+PI:
+sudo nano /etc/ssh/sshd_config
+  add line: PasswordAuthentication no
+sudo systemctl restart sshd.service
+sudo apt update
+sudo apt upgrade
+sudo raspi-config
+  boot into CLI w/o autologin
+sudo reboot now
+
+Local:
+ssh admin@rw-ventilator.local
+
+PI:
+sudo deluser pi
+sudo raspi-config
+  boot into GUI w/ autologin
+  splash - off
+  screen blanking - off
+  SPI - on
+  Serial - shell off, interface on
+  Locale - ???
+  Time zone - ???
+
+sudo apt install git-lfs
+clone repo
+
+### configure USB permissions to deploy to Nucleo
+echo 'ATTRS{idVendor}=="0483", ATTRS{idProduct}=="374b", MODE="666"' | sudo tee /etc/udev/rules.d/99-openocd.rules > /dev/null
+
+### Desktop shortcuts
+cp software/utils/rpi_config/user/Desktop/* /home/admin/Desktop
+
+### Execute shortcuts without bitching
+mkdir -p /home/admin/.config/libfm && cp -f software/utils/rpi_config/libfm.conf /home/admin/.config/libfm
+
+### RW theme :)
+ln -s /home/admin/ventilator/manufacturing/images/rendering_full.jpg /etc/alternatives/desktop-background
+pcmanfm --set-wallpaper /home/admin/ventilator/manufacturing/images/rendering_full.jpg

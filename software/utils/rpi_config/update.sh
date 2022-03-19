@@ -40,7 +40,7 @@ if [ "$EUID" -eq 0 ] && [ "$2" != "-f" ]; then
   exit $EXIT_FAILURE
 fi
 
-pcmanfm --set-wallpaper /home/admin/ventilator/manufacturing/images/rendering_full.jpg
+pcmanfm --set-wallpaper ${HOME}/ventilator/manufacturing/images/rendering_full.jpg
 
 if [ -z "$VERBOSE" ]; then
   echo "==============================================================================="
@@ -77,7 +77,7 @@ done
 ./controller/controller.sh run
 
 if [ -z "$VERBOSE" ]; then
-  echo "Installation complete. Please check that this terminated with no errors."
+  echo "Installation complete. Please check that this script terminated without errors."
   echo " "
   read -n1 -s -r -p $'Press any key to continue.\n' key
 fi

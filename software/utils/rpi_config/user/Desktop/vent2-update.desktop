@@ -1,8 +1,0 @@
-[Desktop Entry]
-Name[en_US]=Ventilator update
-Path=/home/admin/ventilator/software/utils/rpi_config
-Exec=lxterminal -t "Ventilator update" --working-directory=/home/admin/ventilator/software/utils/rpi_config -e "source ~/.profile && ./update.sh"
-Icon=/home/admin/ventilator/software/utils/icons/rw_inhale.png
-Terminal=true
-Type=Application
-Categories=Application

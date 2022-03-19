@@ -40,6 +40,8 @@ if [ "$EUID" -eq 0 ] && [ "$2" != "-f" ]; then
   exit $EXIT_FAILURE
 fi
 
+pcmanfm --set-wallpaper /home/admin/ventilator/manufacturing/images/rendering_full.jpg
+
 if [ -z "$VERBOSE" ]; then
   echo "==============================================================================="
   echo "================== RespiraWorks Ventilator update utility ====================="

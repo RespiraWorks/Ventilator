@@ -40,6 +40,7 @@ if [ "$EUID" -eq 0 ] && [ "$2" != "-f" ]; then
   exit $EXIT_FAILURE
 fi
 
+### Set RW background - must be done in Desktop mode, thus not in boostrap.sh
 pcmanfm --set-wallpaper ${HOME}/ventilator/manufacturing/images/rendering_full.jpg
 
 if [ -z "$VERBOSE" ]; then

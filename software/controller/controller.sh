@@ -122,6 +122,7 @@ install_linux() {
 }
 
 configure_platformio() {
+  echo 'ATTRS{idVendor}=="0483", ATTRS{idProduct}=="374b", MODE="666"' | sudo tee /etc/udev/rules.d/99-openocd.rules > /dev/null
   curl -fsSL https://raw.githubusercontent.com/platformio/platformio-core/master/scripts/99-platformio-udev.rules | sudo tee /etc/udev/rules.d/99-platformio-udev.rules
   sudo service udev restart
   sudo usermod -a -G dialout "$USER"

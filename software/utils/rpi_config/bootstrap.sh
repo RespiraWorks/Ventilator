@@ -44,49 +44,26 @@ if [ -z "$VERBOSE" ]; then
   echo "=================== RespiraWorks Ventilator bootstrapper ======================"
   echo "==============================================================================="
   echo " "
+  echo " MAKE SURE YOU HAVE FOLLOWED ONLINE INSTRUCTIONS TO SET UP YOUR RASPBERRY PI"
+  echo " "
   echo "  -- clones the repository"
-  echo "  -- configures Raspberry Pi to function as Ventilator GUI:"
-  echo "     * no screensaver or screen blanking"
-  echo "     * GUI<->controller serial interface enabled but no terminal"
-  echo "  -- udev rule added for nucleo, enabling flashing of firmware"
-  echo "  -- guake console accessible at all times using [F12]"
   echo "  -- desktop shortcuts for ventilator GUI, updater, debug interface"
-  echo "  -- RW-theme desktop background"
   echo "  -- installs toolchains and dependencies for building controller and GUI"
+  echo "  -- configures device rules for stm32, enabling flashing of firmware"
   echo "  -- will require a restart when done"
   echo " "
   echo " PLEASE DO NOT RUN THIS ON YOUR DEVELOPMENT PC."
-  echo " THIS WILL MESS WITH YOUR BOOTLOADER."
+  echo " THIS WILL MESS WITH YOUR SYSTEM CONFIGURATION."
   echo " THIS IS FOR RASPBERRY-PI ONLY!"
   read -n1 -s -r -p $'Press any key to continue...\n' key
 fi
 
-### No screensaver or screen lock
-gsettings set org.mate.power-manager sleep-display-ac 0
-gsettings set org.mate.screensaver lock-enabled 'false'
-gsettings set org.mate.screensaver idle-activation-enabled 'false'
-gsettings set org.mate.screensaver lock-delay 3600
-gsettings set org.mate.screensaver cycle-delay 240
-
-mate-panel --reset --layout netbook
-sudo add-apt-repository --yes ppa:lah7/ubuntu-mate-colours
+### Install git-lfs and update the system
 sudo apt-get update
-sudo apt-get --yes install ubuntu-mate-colours-blue guake git-lfs
-# \TODO: apply Ambiant-MATE-Dark-Blue theme?
-sudo apt-get --yes remove libreoffice*
-
-### Update the system
-sudo apt-get update
+sudo apt-get --yes install git-lfs
 sudo apt-get --yes upgrade
 sudo apt-get --yes autoremove
 sudo apt-get autoclean
-
-# Enable UART, but disable serial terminal
-echo "enable_uart=1" | sudo tee -a /boot/firmware/usercfg.txt
-sudo sed -i -e 's/console=tty1 //g' /boot/firmware/cmdline.txt
-
-### TODO: Disable boot splash or make custom splash with RW logo?
-#https://ubuntu-mate.community/t/disable-splash-screen-on-bootup/3375
 
 ### Clone repository and go in
 cd ${HOME}
@@ -102,24 +79,16 @@ git pull
 ### TODO: Comment out above before merging to master!!!                     ###
 ###############################################################################
 
-### Dekstop shortcuts, guake on startup and guake settings
-sudo cp ./software/utils/icons/* /usr/share/pixmaps
-cp -rf ./software/utils/rpi_config/user/. ${HOME}
-dconf load /apps/guake/ < ./software/utils/rpi_config/dconf-guake-dump.txt
+### Desktop shortcuts
+cp -f software/utils/rpi_config/user/Desktop/* ${HOME}/Desktop
 
-### RW theme :)
-gsettings set org.mate.background picture-filename ${HOME}/ventilator/manufacturing/images/rendering_full.jpg
+### Execute shortcuts without bitching
+mkdir -p ${HOME}/.config/libfm && cp -f software/utils/rpi_config/user/.config/libfm.conf ${HOME}/.config/libfm
 
 # Install dependencies and do initial configuration for build toolchains
 ./software/gui/gui.sh install
 ./software/controller/controller.sh install
 ./software/controller/controller.sh configure
-
-### give user access to serial devices
-sudo gpasswd --add ${USER} dialout
-
-### configure USB permissions to deploy to Nucleo
-echo 'ATTRS{idVendor}=="0483", ATTRS{idProduct}=="374b", MODE="666"' | sudo tee /etc/udev/rules.d/99-openocd.rules > /dev/null
 
 if [ -z "$VERBOSE" ]; then
   echo "Installation complete. Please check that this terminated with no errors."

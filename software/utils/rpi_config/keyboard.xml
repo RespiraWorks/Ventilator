@@ -30,7 +30,7 @@
             <space width="500" extended="true"/>
 
             <key fill="true">
-                <default display="Esc" action="escape" />
+                <default display="Esc" action="escape"/>
             </key>
             <!--
                 <key>
@@ -38,57 +38,57 @@
                 </key>
             -->
             <key>
-                <default display="`" />
+                <default display="`"/>
             </key>
             <key>
-                <default display="1" />
-                <shifted display="!" />
+                <default display="1"/>
+                <shifted display="!"/>
             </key>
             <key>
-                <default display="2" />
-                <shifted display='"' />
-                <mod1    display="½" />
+                <default display="2"/>
+                <shifted display='"'/>
+                <mod1 display="½"/>
             </key>
             <key>
-                <default display="3" />
-                <shifted display="£" />
-                <mod1    display="¾" />
+                <default display="3"/>
+                <shifted display="£"/>
+                <mod1 display="¾"/>
             </key>
             <key>
-                <default display="4" />
-                <shifted display="$" />
+                <default display="4"/>
+                <shifted display="$"/>
             </key>
             <key>
-                <default display="5" />
-                <shifted display="%" />
+                <default display="5"/>
+                <shifted display="%"/>
             </key>
             <key>
-                <default display="6" />
-                <shifted display="^" />
+                <default display="6"/>
+                <shifted display="^"/>
             </key>
             <key>
-                <default display="7" />
-                <shifted display="&amp;" />
+                <default display="7"/>
+                <shifted display="&amp;"/>
             </key>
             <key>
-                <default display="8" />
-                <shifted display="*" />
+                <default display="8"/>
+                <shifted display="*"/>
             </key>
             <key>
-                <default display="9" />
-                <shifted display="(" />
+                <default display="9"/>
+                <shifted display="("/>
             </key>
             <key>
-                <default display="0" />
-                <shifted display=")" />
+                <default display="0"/>
+                <shifted display=")"/>
             </key>
             <key>
-                <default display="-" />
-                <shifted display="_" />
+                <default display="-"/>
+                <shifted display="_"/>
             </key>
             <key>
-                <default display="=" />
-                <shifted display="+" />
+                <default display="="/>
+                <shifted display="+"/>
             </key>
 
             <key fill="true">
@@ -98,10 +98,10 @@
 
             <space width="500" extended="true"/>
 
-            <key width="4000"  extended="true">
+            <key width="4000" extended="true">
                 <default display="Home" action="home"/>
             </key>
-            <key width="4000"  extended="true">
+            <key width="4000" extended="true">
                 <default display="PgUp" action="pageup"/>
             </key>
 
@@ -119,65 +119,65 @@
                 <default display="Tab" action="tab"/>
             </key>
             <key obey-caps='true'>
-                <default display="q" />
-                <shifted display="Q" />
+                <default display="q"/>
+                <shifted display="Q"/>
             </key>
             <key obey-caps='true'>
-                <default display="w" />
-                <shifted display="W" />
+                <default display="w"/>
+                <shifted display="W"/>
             </key>
             <key obey-caps='true'>
-                <mod1 display="ë" />
-                <default    display="e" />
-                <shifted display="E" />
+                <mod1 display="ë"/>
+                <default display="e"/>
+                <shifted display="E"/>
             </key>
             <key obey-caps='true'>
-                <default display="r" />
-                <shifted display="R" />
+                <default display="r"/>
+                <shifted display="R"/>
             </key>
             <key obey-caps='true'>
-                <default display="t" />
-                <shifted display="T" />
+                <default display="t"/>
+                <shifted display="T"/>
             </key>
             <key obey-caps='true'>
-                <default display="y" />
-                <shifted display="Y" />
+                <default display="y"/>
+                <shifted display="Y"/>
             </key>
             <key obey-caps='true'>
-                <default display="u" />
-                <shifted display="U" />
+                <default display="u"/>
+                <shifted display="U"/>
             </key>
             <key obey-caps='true'>
-                <default display="i" />
-                <shifted display="I" />
+                <default display="i"/>
+                <shifted display="I"/>
             </key>
             <key obey-caps='true'>
-                <default display="o" />
-                <shifted display="O" />
+                <default display="o"/>
+                <shifted display="O"/>
             </key>
             <key obey-caps='true'>
-                <default display="p" />
-                <shifted display="P" />
+                <default display="p"/>
+                <shifted display="P"/>
             </key>
             <key>
-                <default display="{" />
-                <shifted display="[" />
+                <default display="{"/>
+                <shifted display="["/>
             </key>
             <key>
-                <default display="}" />
-                <shifted display="]" />
+                <default display="}"/>
+                <shifted display="]"/>
             </key>
             <key fill="true">
-                <default display="\" />
-                <shifted display="|" />
+                <default display="\"/>
+                <shifted display="|"/>
             </key>
 
             <space width="500" extended="true"/>
 
-            <key width="4000"  extended="true">
+            <key width="4000" extended="true">
                 <default display="End" action="end"/>
             </key>
-            <key width="4000"  extended="true">
+            <key width="4000" extended="true">
                 <default display="PgDn" action="pagedown"/>
             </key>
 
@@ -192,48 +192,48 @@
                 <default display="Caps" action="modifier:caps"/>
             </key>
             <key obey-caps='true'>
-                <default display="a" />
-                <shifted display="A" />
+                <default display="a"/>
+                <shifted display="A"/>
             </key>
             <key obey-caps='true'>
-                <default display="s" />
-                <shifted display="S" />
+                <default display="s"/>
+                <shifted display="S"/>
             </key>
             <key obey-caps='true'>
-                <default display="d" />
-                <shifted display="D" />
+                <default display="d"/>
+                <shifted display="D"/>
             </key>
             <key obey-caps='true'>
-                <default display="f" />
-                <shifted display="F" />
+                <default display="f"/>
+                <shifted display="F"/>
             </key>
             <key obey-caps='true'>
-                <default display="g" />
-                <shifted display="G" />
+                <default display="g"/>
+                <shifted display="G"/>
             </key>
             <key obey-caps='true'>
-                <default display="h" />
-                <shifted display="H" />
+                <default display="h"/>
+                <shifted display="H"/>
             </key>
             <key obey-caps='true'>
-                <default display="j" />
-                <shifted display="J" />
+                <default display="j"/>
+                <shifted display="J"/>
             </key>
             <key obey-caps='true'>
-                <default display="k" />
-                <shifted display="K" />
+                <default display="k"/>
+                <shifted display="K"/>
             </key>
             <key obey-caps='true'>
-                <default display="l" />
-                <shifted display="L" />
+                <default display="l"/>
+                <shifted display="L"/>
             </key>
             <key>
-                <default display=";" />
-                <shifted display=":" />
+                <default display=";"/>
+                <shifted display=":"/>
             </key>
             <key>
-                <default display="#" />
-                <shifted display="~" />
+                <default display="#"/>
+                <shifted display="~"/>
             </key>
             <key fill="true">
                 <!-- <default display="◀┛" action="return"/> -->
@@ -242,9 +242,9 @@
 
             <space width="500" extended="true"/>
 
-            <space width="4000"  extended="true" />
+            <space width="4000" extended="true"/>
 
-            <space width="4000"  extended="true" />
+            <space width="4000" extended="true"/>
 
             <space width="500" extended="true"/>
 
@@ -259,51 +259,51 @@
             </key>
 
             <key obey-caps='true'>
-                <default display="z" />
-                <shifted display="Z" />
+                <default display="z"/>
+                <shifted display="Z"/>
             </key>
 
             <key obey-caps='true'>
-                <default display="x" />
-                <shifted display="X" />
+                <default display="x"/>
+                <shifted display="X"/>
             </key>
 
             <key obey-caps='true'>
-                <default display="c" />
-                <shifted display="C" />
+                <default display="c"/>
+                <shifted display="C"/>
             </key>
 
             <key obey-caps='true'>
-                <default display="v" />
-                <shifted display="V" />
+                <default display="v"/>
+                <shifted display="V"/>
             </key>
 
             <key obey-caps='true'>
-                <default display="b" />
-                <shifted display="B" />
+                <default display="b"/>
+                <shifted display="B"/>
             </key>
 
             <key obey-caps='true'>
-                <default display="n" />
-                <shifted display="N" />
+                <default display="n"/>
+                <shifted display="N"/>
             </key>
 
             <key obey-caps='true'>
-                <default display="m" />
-                <shifted display="M" />
+                <default display="m"/>
+                <shifted display="M"/>
             </key>
 
             <key>
-                <default display="," />
-                <shifted display="&lt;" />
+                <default display=","/>
+                <shifted display="&lt;"/>
             </key>
             <key>
-                <default display="." />
-                <shifted display="&gt;" />
+                <default display="."/>
+                <shifted display="&gt;"/>
             </key>
             <key>
-                <default display="/" />
-                <shifted display="?" />
+                <default display="/"/>
+                <shifted display="?"/>
             </key>
 
 
@@ -313,12 +313,11 @@
 
             <space width="500" extended="true"/>
 
-            <space width="4000"  extended="true" />
+            <space width="4000" extended="true"/>
 
-            <space width="4000"  extended="true" />
+            <space width="4000" extended="true"/>
 
             <space width="500" extended="true"/>
-
 
 
         </row>
@@ -340,32 +339,32 @@
 
 
             <key width="9000">
-                <default display=" " action="space" />
+                <default display=" " action="space"/>
             </key>
 
             <key>
-                <default display="@" />
-                <shifted display="'" />
+                <default display="@"/>
+                <shifted display="'"/>
             </key>
 
             <key>
-                <default display="↑" action="up" />
+                <default display="↑" action="up"/>
             </key>
             <key>
-                <default display="↓" action="down" />
+                <default display="↓" action="down"/>
             </key>
             <key>
-                <default display="←" action="left" />
+                <default display="←" action="left"/>
             </key>
             <key>
-                <default display="→" action="right" />
+                <default display="→" action="right"/>
             </key>
 
             <space width="500" extended="true"/>
 
-            <space width="4000"  extended="true" />
+            <space width="4000" extended="true"/>
 
-            <space width="4000"  extended="true" />
+            <space width="4000" extended="true"/>
 
             <space width="500" extended="true"/>
 

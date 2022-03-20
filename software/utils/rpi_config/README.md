@@ -11,8 +11,8 @@ The following assumes that you have a working hardware prototype with all necess
 The first few configuration steps must be done manually. These steps can be done on any Raspberry Pi (not necessarily integrated with the entire hardware setup), and later transfer the correctly configured SD card.
 
 * Start with a clean SD card of at least 32GB. Building the software can be a resource-greedy process.
-* Flash the SD card with [Raspberry Pi OS](https://www.raspberrypi.com/software/operating-systems/). This setup has most recently been tested with `Raspberry Pi OS (64-bit) / January 28, 2022` release.
-* If you do have a keyboard and mouse attached, boot on the Raspberry Pi directly and configure it as follows:
+* Flash the SD card with [Raspberry Pi OS](https://www.raspberrypi.com/software/operating-systems/). This setup has most recently been tested with `Raspberry Pi OS with Desktop (64-bit) / January 28, 2022 release`.
+* If you have a keyboard and mouse attached, boot into the RasPi directly and configure it as follows:
   * username (mandatory): `admin` - system should boot to this user by default, otherwise shortcuts may not work
   * password (recommended): `respira` - will need this for `sudo` tasks, so don't forget it
   * hostname (recommended): `rw-ventilator` - could make it something else unique if you have multiple prototypes on your network
@@ -29,9 +29,9 @@ The first few configuration steps must be done manually. These steps can be done
 
 ## Automatic setup
 
-With the above configured, the next step should be pretty automatic. You can still use a stand-alone Raspberry Pi without all the hardware.
+With the above configured, the next step should be pretty automatic. You can still use a stand-alone RasPi without all the hardware.
 
-Use `ssh` or open up a terminal on the Raspberry Pi and just copy and paste this script into a terminal:
+Use `ssh` or open up a terminal on the RasPi and just copy and paste this script into a terminal:
 
 ```shell
 # \TODO: change command to point to master before merging!!!

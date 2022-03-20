@@ -15,14 +15,16 @@ ssh-keygen -R raspberrypi.local
 ssh pi@raspberrypi.local
 ```
 where the password will be `raspberry`. The first command may throw an error, but that is ok. It is just to clear any old credentials.
+
 7. Now that you are on the `PI`, run `sudo raspi-config` and set the machine's hostname to be `rw-ventilator` or something more unique if you expect to have multiple of them on your network simultaneously. When exiting the configuration utility, don't reboot it just yet.
-8. Also on the `PI`:
+8Also on the `PI`:
 ```shell
 sudo adduser admin
 sudo usermod -aG sudo admin
 ```
 where you should provide it with an appropriate password, possibly `respira`.
-9. Now reboot the device.
+
+9. Reboot the device.
 10. Now log in to the new user and password:
 ```shell
 ssh-keygen -R rw-ventilator.local
@@ -41,16 +43,19 @@ scp ~/.ssh/id_rsa.pub admin@rw-ventilator.local:.ssh/authorized_keys
 ssh admin@rw-ventilator.local
 ```
 You should no longer be asked for a password when logging in.
+
 13. Now on the `PI`, disable plain text password access:
 ```shell
 sudo nano /etc/ssh/sshd_config
 ```
 and add or modify the appropriate line to read `PasswordAuthentication no`
+
 14. also on the `PI`, run `sudo raspi-config` and set it to boot into command prompt without automatic login. Reboot when exiting.
 15. Login with again using `ssh admin@rw-ventilator.local` and on the `PI`:
 ```shell
 sudo deluser pi
 ```
 to get rid of the old username.
+
 16. Now run `sudo raspi-config` again and configure it to boot into Desktop **with** automatic login.
 

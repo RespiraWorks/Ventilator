@@ -58,4 +58,3 @@ sudo deluser pi
 to get rid of the old username.
 
 16. Now run `sudo raspi-config` again and configure it to boot into Desktop **with** automatic login.
-

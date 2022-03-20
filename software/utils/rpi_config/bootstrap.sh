@@ -60,10 +60,11 @@ fi
 
 ### Install git-lfs and update the system
 sudo apt-get update
-sudo apt-get --yes install git-lfs
+sudo apt-get --yes install git-lfs matchbox-keyboard
 sudo apt-get --yes upgrade
 sudo apt-get --yes autoremove
 sudo apt-get autoclean
+git config --global pull.ff only
 
 ### Clone repository and go in
 cd ${HOME}
@@ -81,6 +82,9 @@ git pull
 
 ### Desktop shortcuts
 cp -f software/utils/rpi_config/user/Desktop/* ${HOME}/Desktop
+
+### Matchbox keyboard setup
+sudo cp -f software/utils/rpi_config/keyboard.xml /usr/share/matchbox-keyboard/
 
 ### Execute shortcuts without bitching
 mkdir -p ${HOME}/.config/libfm && cp -f software/utils/rpi_config/user/.config/libfm.conf ${HOME}/.config/libfm

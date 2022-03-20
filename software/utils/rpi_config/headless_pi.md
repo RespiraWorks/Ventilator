@@ -17,14 +17,14 @@ ssh pi@raspberrypi.local
 where the password will be `raspberry`. The first command may throw an error, but that is ok. It is just to clear any old credentials.
 
 7. Now that you are on the `PI`, run `sudo raspi-config` and set the machine's hostname to be `rw-ventilator` or something more unique if you expect to have multiple of them on your network simultaneously. When exiting the configuration utility, don't reboot it just yet.
-8Also on the `PI`:
+8. Also on the `PI`:
 ```shell
 sudo adduser admin
 sudo usermod -aG sudo admin
 ```
 where you should provide it with an appropriate password, possibly `respira`.
 
-9. Reboot the device.
+9. Reboot the device, either manually or with `sudo shutdown -r now`
 10. Now log in to the new user and password:
 ```shell
 ssh-keygen -R rw-ventilator.local

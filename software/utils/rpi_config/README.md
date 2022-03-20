@@ -17,9 +17,10 @@ The first few configuration steps must be done manually. These steps can be done
   * password (recommended): `respira` - will need this for `sudo` tasks, so don't forget it
   * hostname (recommended): `rw-ventilator` - could make it something else unique if you have multiple prototypes on your network
   * enable *ssh* and set up credentials to access the machine remotely
-* If you cannot attach keyboard and mouse to your Raspberry Pi, you can configure the machine remotely via *ssh* as described our guide [here](headless_pi.md).
-* To find out the *RPi*'s IP address, run `ifconfig`. If configured as above, you should be able to ssh into the *RPi* from another machine by running `ssh admin@IP_ADDRESS`.
-* Regardless of the approach taken above, you should now run `sudo raspi-config` and apply the following settings:
+* If you cannot or don't want to attach keyboard and mouse to your Raspberry Pi, you can configure the machine remotely via *ssh* as described our guide [here](headless_pi.md).
+* If configured as above, you should be able to *ssh* into the RasPi from another machine by running `ssh admin@rw-ventilator` (or whatever host name you gave it).
+* Otherwise, you can find out*RPi*'s IP address with `ifconfig` and then you can reach it as `ssh admin@IP_ADDRESS`.
+* Regardless of the approach taken above, you should now be able to run `sudo raspi-config` and apply the following settings:
   * splash screen: `off`
   * screen blanking: `off`
   * Serial: `shell off`, `interface on`

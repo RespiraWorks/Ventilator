@@ -2,14 +2,14 @@
 
 You may want to configure a Raspberry Pi without a dedicated keyboard and mouse.
 
-Herein we will refer to your local development machine (linux or Mac) as `Local` and the remotely accessed Raspberry Pi as `PI`.
+Herein we will refer to your local development machine as `Local` and the remotely accessed Raspberry Pi as `PI`.
 
 1. Flash the operating system to your SD card.
 2. Mount the SD card on your local machine.
 3. Copy the 2 files in the [boot](boot) directory to the `boot` volume on the SD card.
 4. Modify the [wpa_supplicant.conf](boot/wpa_supplicant.conf) file with the correct [country code](https://en.wikipedia.org/wiki/List_of_ISO_3166_country_codes) and the WiFi `network name` and `wifi password`.
 5. Insert the SD card into a Raspberry Pi (a standalone will do, does not have to be a fully integrated ventilator).
-6. On your `local` machine:
+6. On your `local` machine, use bash:
 ```shell
 ssh-keygen -R raspberrypi.local
 ssh pi@raspberrypi.local

@@ -23,6 +23,7 @@ The first few configuration steps must be done manually. These steps can be done
 * Regardless of the approach taken above, you should now be able to run `sudo raspi-config` and apply the following settings:
   * splash screen: `off`
   * screen blanking: `off`
+  * audio output: `HDMI`
   * Serial: `shell off`, `interface on`
   * Locale: `[your locale]`
   * Time zone: `[your time zone]`
@@ -51,6 +52,8 @@ This is now a good time to:
 
 When the machine boots, you should see an icon that says `Ventilator update` on the desktop. Either double-click or use the touch screen to run this shortcut.
 This will build the graphical interface and controller software, and deploy the latter to the STM32.
+
+You may need to answer some questions using a keyboard. For your convenience, a virtual `matchbox-keyboard` utility has been installed, which can be found on the main application menu under `Accessories`.
 
 ## What you have available
 

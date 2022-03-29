@@ -80,8 +80,8 @@ cd ventilator
 ###############################################################################
 ### TODO: Uncomment this section only when tweaking this script in a branch ###
 ###############################################################################
-git checkout issue_1180_cmake_build_on_rpi
-git pull
+#git checkout issue_1180_cmake_build_on_rpi
+#git pull
 ###############################################################################
 ### TODO: Comment out above before merging to master!!!                     ###
 ###############################################################################

@@ -40,22 +40,34 @@ if [ "$EUID" -eq 0 ] && [ "$2" != "-f" ]; then
   exit $EXIT_FAILURE
 fi
 
+message="RespiraWorks Ventilator update utility
+
+  -- a 'git pull' will be performed, but branch will not be changed
+  -- will rebuild the GUI
+  -- will rebuild and flash controller
+  -- if you have made any local changes, abort and take care of those first
+  -- neither unit tests nor static checks will be performed
+
+PLEASE NOTE THAT AT THE END OF THIS PROCESS YOU SHOULD GET A CONFIRMATION DIALOG INDICATING SUCCESS
+
+  Do you want to continue?"
+
+if zenity --question --no-wrap --title="Ventilator update" \
+          --text "<span size=\"large\">$message.</span>"
+then
+  echo "Continuing with update..."
+else
+  exit $EXIT_FAILURE
+fi
+
 ### Set RW background - must be done in Desktop mode, thus not in boostrap.sh
 pcmanfm --set-wallpaper ${HOME}/ventilator/manufacturing/images/rendering_full.jpg
 
-if [ -z "$VERBOSE" ]; then
-  echo "==============================================================================="
-  echo "================== RespiraWorks Ventilator update utility ====================="
-  echo "==============================================================================="
-  echo " "
-  echo "  -- this will rebuild and flash controller firmware"
-  echo "  -- this will rebuild the GUI"
-  echo "  -- a 'git pull' will be performed, but branch will not be changed"
-  echo "  -- if you have made any local changes, abort take care of those first"
-  echo "  -- neither unit tests nor static checks will be performed"
-  echo " "
-  read -n1 -s -r -p $'Press any key to continue...\n' key
-fi
+### disable screensaver
+#echo "@xset -dpms" >> /home/admin/.config/lxsession/LXDE-pi/autostart
+#echo "@xset s off" >> /home/admin/.config/lxsession/LXDE-pi/autostart
+
+#sudo raspi-config nonint do_audio       2  # force audio via HDMI
 
 # This script should run from repo/software dir
 cd "$(dirname "$0")"/../..
@@ -63,22 +75,27 @@ cd "$(dirname "$0")"/../..
 ### Will not switch branch to master!
 git pull
 
-### Rebuild GUI
-echo "Do you wish to build GUI as debug or release?"
-select dr in "Debug" "Release" "Abort"; do
-    case $dr in
-        Debug ) ./gui/gui.sh clean && ./gui/gui.sh build --debug --no-checks; break;;
-        Release ) ./gui/gui.sh clean && ./gui/gui.sh build --release --no-checks; break;;
-        Abort ) exit $EXIT_FAILURE;;
-    esac
-done
-
 ### Update controller and deploy
 ./controller/controller.sh clean
 ./controller/controller.sh run
 
-if [ -z "$VERBOSE" ]; then
-  echo "Installation complete. Please check that this script terminated without errors."
-  echo " "
-  read -n1 -s -r -p $'Press any key to continue.\n' key
+ans=$(zenity --list --radiolist --title "GUI Build" \
+       --column "Select" --column "Build type" \
+          TRUE "Release" FALSE "Debug")
+
+if [[ $ans = "Release" ]]
+then
+  echo "Building Release"
+  ./gui/gui.sh clean
+  ./gui/gui.sh build --release --no-checks;
+elif [[ $ans = "Debug" ]]
+then
+  echo "Building Debug"
+  ./gui/gui.sh clean
+  ./gui/gui.sh build --debug --no-checks
+else
+  exit $EXIT_FAILURE
 fi
+
+zenity --info --no-wrap --title="Success" --text "Ventilator update executed successfully!"
+exit $EXIT_SUCCESS

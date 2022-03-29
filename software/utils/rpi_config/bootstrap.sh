@@ -55,6 +55,7 @@ if [ -z "$VERBOSE" ]; then
   echo " PLEASE DO NOT RUN THIS ON YOUR DEVELOPMENT PC."
   echo " THIS WILL MESS WITH YOUR SYSTEM CONFIGURATION."
   echo " THIS IS FOR RASPBERRY-PI ONLY!"
+  echo " "
   read -n1 -s -r -p $'Press any key to continue...\n' key
 fi
 
@@ -65,6 +66,11 @@ sudo apt-get --yes upgrade
 sudo apt-get --yes autoremove
 sudo apt-get autoclean
 git config --global pull.ff only
+
+### RasPi configuration
+sudo raspi-config nonint do_serial      2  # enable serial interface but not console
+sudo raspi-config nonint do_blanking    1  # disable screen blanking
+sudo raspi-config nonint do_boot_splash 1  # disable splash screen
 
 ### Clone repository and go in
 cd ${HOME}

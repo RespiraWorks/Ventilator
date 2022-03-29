@@ -8,25 +8,21 @@ The following assumes that you have a working hardware prototype with all necess
 
 ## Initial setup
 
-The first few configuration steps must be done manually. These steps can be done on any Raspberry Pi (not necessarily integrated with the entire hardware setup), and later transfer the correctly configured SD card.
+The first few configuration steps must be done manually. These steps can be done on any Raspberry Pi (not necessarily integrated with the entire hardware setup), and later transfer the correctly configured SD card to a full prototype.
 
 * Start with a clean SD card of at least 32GB. Building the software can be a resource-greedy process.
-* Flash the SD card with [Raspberry Pi OS](https://www.raspberrypi.com/software/operating-systems/). This setup has most recently been tested with `Raspberry Pi OS with Desktop (64-bit) / January 28, 2022 release`.
-* If you have a keyboard and mouse attached, boot into the RasPi directly and configure it as follows:
-  * username (mandatory): `admin` - system should boot to this user by default, otherwise shortcuts may not work
-  * password (recommended): `respira` - will need this for `sudo` tasks, so don't forget it
+* Flash the SD card using the [Raspberry Pi Imager](https://www.raspberrypi.com/software/) making sure to configure it as follows:
+  * **IMPORTANT:** use the `64-bit Desktop / January 28, 2022` release of the Raspberry Pi OS. Other versions have not been tested to work.
   * hostname (recommended): `rw-ventilator` - could make it something else unique if you have multiple prototypes on your network
-  * enable *ssh* and set up credentials to access the machine remotely
-* If you cannot or don't want to attach keyboard and mouse to your Raspberry Pi, you can configure the machine remotely via *ssh* as described our guide [here](headless_pi.md).
+  * username (mandatory): `admin` - system should boot to this user by default, otherwise desktop shortcuts may not work
+  * password (recommended): `respira` - will need this for `sudo` tasks, so don't forget it
+  * enable *ssh* and set up credentials to access the machine remotely, especially if you cannot attach a keyboard to your prototype
+  * configure `WiFi` settings if needed
+  * set time zone and disable `first run wizard`
 * If configured as above, you should be able to *ssh* into the RasPi from another machine by running `ssh admin@rw-ventilator` (or whatever host name you gave it).
 * Otherwise, you can find out*RPi*'s IP address with `ifconfig` and then you can reach it as `ssh admin@IP_ADDRESS`.
+* If you had logged into another instance with the same hostname, you may need to clear the old credentials with `ssh-keygen -R rw-ventilator.local`.
 * Regardless of the approach taken above, you should now be able to run `sudo raspi-config` and apply the following settings:
-  * splash screen: `off`
-  * screen blanking: `off`
-  * audio output: `HDMI`
-  * Serial: `shell off`, `interface on`
-  * Locale: `[your locale]`
-  * Time zone: `[your time zone]`
   * Boot into Desktop with automatic login
 
 ## Automatic setup
@@ -35,9 +31,8 @@ With the above configured, the next step should be pretty automatic. You can sti
 
 Use `ssh` or open up a terminal on the RasPi and just copy and paste this script into a terminal:
 
+<!-- \TODO: change command to point to master before merging!!! -->
 ```shell
-# \TODO: change command to point to master before merging!!!
-
 bash <(wget -qO- https://raw.githubusercontent.com/RespiraWorks/Ventilator/issue_1180_cmake_build_on_rpi/software/utils/rpi_config/bootstrap.sh)
 ```
 

@@ -130,7 +130,7 @@ class CmdLine(cmd.Cmd):
             self.interface.resynchronize()
             self.interface.variables_update_info()
         self.update_prompt()
-        if not self.interface.sanity_checks():
+        if self.interface.connected() and not self.interface.sanity_checks():
             return
 
         while True:
@@ -158,8 +158,7 @@ class CmdLine(cmd.Cmd):
         return True
 
     def do_env(self, line):
-        """Prints this command interface's environmental variables
-        """
+        """Prints this command interface's environmental variables"""
         print(f"scripts_directory = {self.scripts_directory}")
         print(f"test_scenarios_dir = {self.test_scenarios_dir}")
         print(f"self.test_data_dir = {self.test_data_dir}")
@@ -183,18 +182,18 @@ class CmdLine(cmd.Cmd):
     def do_connect(self, line):
         """This command manages the connection of the debug interface to the ventilator controller
 
-If ventilator USB cable is unplugged, the CLI prompt should update to reflect this on the next loop
-(blank line or failed command). You may also start the debugger without a plugged in device.
-Use one of the following commands to reconnect.
+        If ventilator USB cable is unplugged, the CLI prompt should update to reflect this on the next loop
+        (blank line or failed command). You may also start the debugger without a plugged in device.
+        Use one of the following commands to reconnect.
 
-connect list
-  searches and lists available STM32 devices on the serial bus
+        connect list
+          searches and lists available STM32 devices on the serial bus
 
-connect auto
-  attempt to connect to a plugged in controller automatically
+        connect auto
+          attempt to connect to a plugged in controller automatically
 
-connect <port>
-  connect to controller on a specific port
+        connect <port>
+          connect to controller on a specific port
 
         """
 
@@ -256,46 +255,46 @@ named {self.scripts_directory} will be searched for the python script.
     def do_test(self, line):
         """This command is for working with structured test scenarios and saved test data.
 
-A test scenario defines independent variables in question, whether they be ventilator settings
-or manual settings applicable to external test equipment. It may also specify test criteria
-which can be confirmed by human examination or other scripts. A scenario also defines which
-variables to capture, how often to sample them and length of test run.
+        A test scenario defines independent variables in question, whether they be ventilator settings
+        or manual settings applicable to external test equipment. It may also specify test criteria
+        which can be confirmed by human examination or other scripts. A scenario also defines which
+        variables to capture, how often to sample them and length of test run.
 
-Running a test scenario will capture traced variables as well as a snapshot of all ventilator
-variables and other available metadata concerning the testing environment.
+        Running a test scenario will capture traced variables as well as a snapshot of all ventilator
+        variables and other available metadata concerning the testing environment.
 
-The unique test identifier (as well as the file name) is defined as
-    <UTC date-time>_<tester>_<scenario_name>
+        The unique test identifier (as well as the file name) is defined as
+            <UTC date-time>_<tester>_<scenario_name>
 
-test load <file>
-  loads test scenarios from specified .csv or .json <file>
+        test load <file>
+          loads test scenarios from specified .csv or .json <file>
 
-test autoload
-  loads all test scenarios found in `test_scenarios` subdirectory
+        test autoload
+          loads all test scenarios found in `test_scenarios` subdirectory
 
-test clear
-  clears all test scenarios loaded in this session
+        test clear
+          clears all test scenarios loaded in this session
 
-test list [--verbose/-v]
-  lists all test scenarios loaded in this session
+        test list [--verbose/-v]
+          lists all test scenarios loaded in this session
 
-test show <scenario>
-  prints out the full definition of named <scenario>
+        test show <scenario>
+          prints out the full definition of named <scenario>
 
-test apply <scenario>
-  applies all ventilator settings for named <scenario>
+        test apply <scenario>
+          applies all ventilator settings for named <scenario>
 
-test run <scenario> [--verbose/-v] [--plot/-p] [--csv/-c]
-  runs named <scenario> and saves data to .json
-    --verbose/-v  - also print out full trace data in columns
-    --plot/-p     - also plot traces and save plots as .png
-    --csv/-c      - also save traces as .csv
+        test run <scenario> [--verbose/-v] [--plot/-p] [--csv/-c]
+          runs named <scenario> and saves data to .json
+            --verbose/-v  - also print out full trace data in columns
+            --plot/-p     - also plot traces and save plots as .png
+            --csv/-c      - also save traces as .csv
 
-test read <file> [--verbose/-v] [--plot/-p] [--csv/-c]
-  reads test data from <file> and prints it out,
-    --verbose/-v  - also print out full trace data in columns
-    --plot/-p     - also plot traces and save plots as .png
-    --csv/-c      - also save traces as .csv
+        test read <file> [--verbose/-v] [--plot/-p] [--csv/-c]
+          reads test data from <file> and prints it out,
+            --verbose/-v  - also print out full trace data in columns
+            --plot/-p     - also plot traces and save plots as .png
+            --csv/-c      - also save traces as .csv
         """
         params = shlex.split(line)
         if len(params) < 1:
@@ -439,34 +438,33 @@ test read <file> [--verbose/-v] [--plot/-p] [--csv/-c]
     def do_peek(self, line):
         """Peek at a memory location.
 
-ex: peek <address> <ct> <fmt> <file>
+        ex: peek <address> <ct> <fmt> <file>
 
-   address - the starting address passed as an integer value
-   ct      - Number of bytes to read (default 1)
-   fmt     - An optional formatting string.
-   file    - An optional file to save the data to
+           address - the starting address passed as an integer value
+           ct      - Number of bytes to read (default 1)
+           fmt     - An optional formatting string.
+           file    - An optional file to save the data to
 
-   The formatting string determines how the data is interpreted and displayed.
-   Its a string made up of the following characters:
-     +  current address
-     x  16-bit integer displayed in hex
-     i  16-bit signed integer displayed in decimal
-     u  16-bit unsigned integer displayed in decimal
-     X  32-bit integer displayed in hex
-     I  32-bit signed integer displayed in decimal
-     U  32-bit unsigned integer displayed in decimal
-     f  32-bit float
-     e  32-bit float in exponential format
-     c  Single byte displayed as an ASCII character
-     b  Single byte displayed in hex
+           The formatting string determines how the data is interpreted and displayed.
+           Its a string made up of the following characters:
+             +  current address
+             x  16-bit integer displayed in hex
+             i  16-bit signed integer displayed in decimal
+             u  16-bit unsigned integer displayed in decimal
+             X  32-bit integer displayed in hex
+             I  32-bit signed integer displayed in decimal
+             U  32-bit unsigned integer displayed in decimal
+             f  32-bit float
+             e  32-bit float in exponential format
+             c  Single byte displayed as an ASCII character
+             b  Single byte displayed in hex
 
-   The data is extracted from what's returned and formatted as described in the string.
-   If there's more data left over at the end of the string, a new line starts and the
-   string starts over.
+           The data is extracted from what's returned and formatted as described in the string.
+           If there's more data left over at the end of the string, a new line starts and the
+           string starts over.
 
-   The default formatting string if none is supplied is +XXXX
-   i.e. Data is displayed as a series of 4 32-bit hex values / line
-"""
+           The default formatting string if none is supplied is +XXXX
+           i.e. Data is displayed as a series of 4 32-bit hex values / line"""
         param = shlex.split(line)
         if len(param) < 1:
             print("Please specify the address at which to peek at a minimum")
@@ -486,15 +484,14 @@ ex: peek <address> <ct> <fmt> <file>
     def do_poke(self, line):
         """Write data to a memory address
 
-ex: poke [type] <address> <data>
+        ex: poke [type] <address> <data>
 
-   type    - Optional type, can be byte, short, long or float
-             determines how the data will be interpreted.
+           type    - Optional type, can be byte, short, long or float
+                     determines how the data will be interpreted.
 
-   address - Address at which to write data
+           address - Address at which to write data
 
-   data    - One or more data items to write.
-"""
+           data    - One or more data items to write."""
         param = shlex.split(line)
         if len(param) < 2:
             print("Please pass the address and at least one value to write")
@@ -622,45 +619,44 @@ ex: poke [type] <address> <data>
     def do_trace(self, line):
         """The `trace` command controls/reads the controller's trace buffer.
 
-Tracing lets you sample debug variables in real time.  Their values are saved
-to a large internal memory buffer in the device, which you can then download
-and/or display as a graph.
+        Tracing lets you sample debug variables in real time.  Their values are saved
+        to a large internal memory buffer in the device, which you can then download
+        and/or display as a graph.
 
-For meaningful performance testing, it is recommended that you use the higher
-level `test` self.interface for a more structured experiment control experience. See
-`help test`.
+        For meaningful performance testing, it is recommended that you use the higher
+        level `test` self.interface for a more structured experiment control experience. See
+        `help test`.
 
-A sub-command must be passed as an option:
+        A sub-command must be passed as an option:
 
-trace start [--period p] [var1 ... ]
-  Starts collecting trace data.
+        trace start [--period p] [var1 ... ]
+          Starts collecting trace data.
 
-  You can specify the names of up to TRACE_VAR_CT debug variables to trace.  If
-  you don't specify any, we use the last known values.
+          You can specify the names of up to TRACE_VAR_CT debug variables to trace.  If
+          you don't specify any, we use the last known values.
 
-  --period controls the sample period in units of one trip through the
-  controller's high-priority loop.  If you don't specify a period, we use 1.
+          --period controls the sample period in units of one trip through the
+          controller's high-priority loop.  If you don't specify a period, we use 1.
 
-trace flush
-  Flushes the trace buffer. If trace is ongoing, buffer will be filled with new data.
+        trace flush
+          Flushes the trace buffer. If trace is ongoing, buffer will be filled with new data.
 
-trace stop
-  Stops trace
+        trace stop
+          Stops trace
 
-trace status
-  Returns the current state of the trace:
-    - traced variables
-    - trace period
-    - number of samples in the trace buffer
+        trace status
+          Returns the current state of the trace:
+            - traced variables
+            - trace period
+            - number of samples in the trace buffer
 
-trace save [--verbose/-v] [--plot/-p] [--csv/-c]
-  Downloads trace data and saves it as an "unplanned test". File will be named as
-  <date-time>_<user>_manual_trace.json with a blank test scenario definition.
-  See more about tests and test scenarios with `help test`.
-    --verbose/-v  - also print out full trace data
-    --plot/-p     - also plot traces and save as .png
-    --csv/-c      - also save traces as .csv
-"""
+        trace save [--verbose/-v] [--plot/-p] [--csv/-c]
+          Downloads trace data and saves it as an "unplanned test". File will be named as
+          <date-time>_<user>_manual_trace.json with a blank test scenario definition.
+          See more about tests and test scenarios with `help test`.
+            --verbose/-v  - also print out full trace data
+            --plot/-p     - also plot traces and save as .png
+            --csv/-c      - also save traces as .csv"""
         cl = shlex.split(line)
         if len(cl) < 1:
             print("Error, please specify the trace command to run.")
@@ -739,16 +735,15 @@ trace save [--verbose/-v] [--plot/-p] [--csv/-c]
 
     def do_eeprom(self, line):
         """The `eeprom` command allows you to read/write to the controller's
-non-volatile memory.
+        non-volatile memory.
 
-A sub-command must be passed as an option:
+        A sub-command must be passed as an option:
 
-eeprom read <address> <length>
-  Reads length bytes in the EEPROM starting at given address.
+        eeprom read <address> <length>
+          Reads length bytes in the EEPROM starting at given address.
 
-eeprom write <address> <data>
-  Writes data (provided as a series of bytes) to the EEPROM.
-"""
+        eeprom write <address> <data>
+          Writes data (provided as a series of bytes) to the EEPROM."""
         cl = shlex.split(line)
         if len(cl) < 1:
             print("Error, please specify the operation to perform.")

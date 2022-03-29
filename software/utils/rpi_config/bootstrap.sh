@@ -14,81 +14,97 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 # Fail if any command fails
 set -e
 set -o pipefail
 
-echo "==============================================================================="
-echo "=================== RespiraWorks Ventilator bootstrapper ======================"
-echo "==============================================================================="
-echo " "
-echo "  -- clones the repository"
-echo "  -- configures Raspberry Pi:"
-echo "     * no screensaver or screen blanking"
-echo "     * no splash on bootup"
-echo "     * serial interface enabled for GUI<->controller communications"
-echo "  -- udev rule added for nucleo, enabling flashing of firmware"
-echo "  -- guake console accessible at all times using [F12]"
-echo "  -- desktop shortcuts for ventilator GUI, updater, debug interface"
-echo "  -- RW-theme background"
-echo "  -- installs toolchains and dependencies for building controller and GUI"
-echo "  -- will require a restart when done"
-echo " "
-echo " Will require a restart when complete."
-read -n1 -s -r -p $'Press any key to continue...\n' key
-
 # Print each command as it executes
-set -o xtrace
+if [ -n "$VERBOSE" ]; then
+  set -o xtrace
+fi
+
+EXIT_FAILURE=1
+EXIT_SUCCESS=0
 
 # Check if Linux
 PLATFORM="$(uname -s)"
 if [ $PLATFORM != "Linux" ]; then
   echo "Error: This script only supports 'Linux'. You have $PLATFORM."
-  exit 1
+  exit $EXIT_FAILURE
 fi
 
-sudo apt-get --yes install guake git-lfs
+# Make sure we are not in sudo
+if [ "$EUID" -eq 0 ] && [ "$2" != "-f" ]; then
+  echo "Please do not run this script with root privileges!"
+  exit $EXIT_FAILURE
+fi
 
-### this is for controller debug interface
-pip3 install matplotlib pillow pandas gitpython
+if [ -z "$VERBOSE" ]; then
+  echo "==============================================================================="
+  echo "=================== RespiraWorks Ventilator bootstrapper ======================"
+  echo "==============================================================================="
+  echo " "
+  echo " MAKE SURE YOU HAVE FOLLOWED ONLINE INSTRUCTIONS TO SET UP YOUR RASPBERRY PI"
+  echo " "
+  echo "  -- clones the repository"
+  echo "  -- desktop shortcuts for ventilator GUI, updater, debug interface"
+  echo "  -- installs toolchains and dependencies for building controller and GUI"
+  echo "  -- configures device rules for stm32, enabling flashing of firmware"
+  echo "  -- will require a restart when done"
+  echo " "
+  echo " PLEASE DO NOT RUN THIS ON YOUR DEVELOPMENT PC."
+  echo " THIS WILL MESS WITH YOUR SYSTEM CONFIGURATION."
+  echo " THIS IS FOR RASPBERRY-PI ONLY!"
+  echo " "
+  read -n1 -s -r -p $'Press any key to continue...\n' key
+fi
 
-### enable serial interface but not console
-sudo raspi-config nonint do_serial 2
+### Install git-lfs and update the system
+sudo apt-get update
+sudo apt-get --yes install git-lfs matchbox-keyboard
+sudo apt-get --yes upgrade
+sudo apt-get --yes autoremove
+sudo apt-get autoclean
+git config --global pull.ff only
 
-### disable screen blanking
-sudo raspi-config nonint do_blanking 1
-
-### disable splash screen
-sudo raspi-config nonint do_boot_splash 1
-
-### configure USB permissions to deploy to Nucleo
-echo 'ATTRS{idVendor}=="0483", ATTRS{idProduct}=="374b", MODE="666"' | sudo tee /etc/udev/rules.d/99-openocd.rules > /dev/null
+### RasPi configuration
+sudo raspi-config nonint do_serial      2  # enable serial interface but not console
+sudo raspi-config nonint do_blanking    1  # disable screen blanking
+sudo raspi-config nonint do_boot_splash 1  # disable splash screen
 
 ### Clone repository and go in
-git clone https://github.com/RespiraWorks/Ventilator.git
-cd Ventilator
+cd ${HOME}
+git clone https://github.com/RespiraWorks/Ventilator.git ventilator
+cd ventilator
 
-### no screensaver
-### guake on startup
-sudo /bin/cp -f software/utils/rpi_config/autostart /etc/xdg/lxsession/LXDE-pi/autostart
+###############################################################################
+### TODO: Uncomment this section only when tweaking this script in a branch ###
+###############################################################################
+#git checkout issue_1180_cmake_build_on_rpi
+#git pull
+###############################################################################
+### TODO: Comment out above before merging to master!!!                     ###
+###############################################################################
 
 ### Desktop shortcuts
-cp software/utils/rpi_config/Github /home/pi/Desktop
-cp software/utils/rpi_config/*.desktop /home/pi/Desktop
+cp -f software/utils/rpi_config/user/Desktop/* ${HOME}/Desktop
+
+### Matchbox keyboard setup
+sudo cp -f software/utils/rpi_config/keyboard.xml /usr/share/matchbox-keyboard/
 
 ### Execute shortcuts without bitching
-mkdir -p /home/pi/.config/libfm && cp -f software/utils/rpi_config/libfm.conf /home/pi/.config/libfm
+mkdir -p ${HOME}/.config/libfm && cp -f software/utils/rpi_config/user/.config/libfm.conf ${HOME}/.config/libfm
 
-### RW theme :)
-pcmanfm --set-wallpaper /home/pi/Ventilator/manufacturing/images/rendering_full.jpg
-
-sudo ./software/gui/gui.sh install
+# Install dependencies and do initial configuration for build toolchains
+./software/gui/gui.sh install
 ./software/controller/controller.sh install
+./software/controller/controller.sh configure
 
-echo "Installation complete. Please check that this terminated with no errors."
-echo "Upon restart, please run the 'Ventilator update' app from your desktop."
-echo " "
-read -n1 -s -r -p $'Press any key to restart the machine\n' key
+if [ -z "$VERBOSE" ]; then
+  echo "Installation complete. Please check that this terminated with no errors."
+  echo "Upon restart, please run the 'Ventilator update' app from your desktop."
+  echo " "
+  read -n1 -s -r -p $'Press any key to restart the machine\n' key
 
-sudo shutdown -r now
+  sudo shutdown -r now
+fi

@@ -84,8 +84,14 @@ class TestData:
         self.git_version = repo.git.describe("--tags")
         self.git_branch = repo.active_branch.name
         self.git_dirty = repo.is_dirty(untracked_files=True)
-        self.tester_name = repo.config_reader().get_value("user", "name")
-        self.tester_email = repo.config_reader().get_value("user", "email")
+        try:
+            self.tester_name = repo.config_reader().get_value("user", "name")
+        except:
+            self.tester_name = "anonymous"
+        try:
+            self.tester_email = repo.config_reader().get_value("user", "email")
+        except:
+            self.tester_email = "no@mail.provided"
         self.scenario = test_scenario
         self.traces = []
 

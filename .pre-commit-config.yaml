@@ -4,7 +4,7 @@ exclude: '\.pb\.|pb2.py|common/third_party'
 
 repos:
 - repo: https://github.com/RespiraWorks/pre-commit-hooks
-  rev: 30478fe90ebf2429bd4b6b069ac118f22862c3ab
+  rev: bd1f610afaa0e76cc58467029a053a093a0dadf3
   hooks:
   - id: clang-format-whole-file
     name: clang-format C++
@@ -19,7 +19,7 @@ repos:
     types: [proto]
 
 - repo: https://github.com/psf/black
-  rev: 19.10b0
+  rev: 22.3.0
   hooks:
   - id: black
     # We can specify a Python version below, but this requires everyone to have

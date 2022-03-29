@@ -51,7 +51,7 @@ print_help() {
 RespiraWorks Ventilator UI build & test utilities.
 
 The following options are available:
-  install     Install dependencies for your platform [$PLATFORM]
+  install     One-time installation of build toolchain and dependencies
   clean       Clean build directory and de-initialize git submodules
   build       Build the gui to /build, options:
       [--relase/--debug] - what it says (default=release)
@@ -97,8 +97,8 @@ create_clean_directory() {
 
 install_linux() {
   # Last tuned for Ubuntu 2021.04 Hirsute
-  apt-get update
-  apt-get install -y \
+  sudo apt-get update
+  sudo apt-get install -y \
           git \
           build-essential \
           curl \
@@ -122,7 +122,6 @@ install_linux() {
           pulseaudio \
           python3-pip \
           xvfb \
-          bear \
           cppcheck \
           gcovr \
           lcov \
@@ -130,8 +129,9 @@ install_linux() {
 }
 
 configure_conan() {
-  pip3 install -U pip
-  pip3 install conan
+  sudo pip3 install -U pip
+  sudo pip3 install conan gitpython
+  #source ${HOME}/.profile
   conan profile new --detect default
   conan profile update settings.compiler.libcxx=libstdc++11 default
 }
@@ -234,8 +234,8 @@ elif [ "$1" == "install" ]; then
     configure_conan
     exit $EXIT_SUCCESS
   elif [ "$PLATFORM" == "Linux" ]; then
-    if [ "$EUID" -ne 0 ]; then
-      echo "Please run install with root privileges!"
+    if [ "$EUID" -eq 0 ] && [ -z "$FORCED_ROOT" ]; then
+      echo "Please do not run install with root privileges!"
       exit $EXIT_FAILURE
     fi
     install_linux

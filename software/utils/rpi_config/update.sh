@@ -48,7 +48,8 @@ message="RespiraWorks Ventilator update utility
   -- if you have made any local changes, abort and take care of those first
   -- neither unit tests nor static checks will be performed
 
-PLEASE NOTE THAT AT THE END OF THIS PROCESS YOU SHOULD GET A CONFIRMATION DIALOG INDICATING SUCCESS
+PLEASE NOTE THAT AT THE END OF THIS PROCESS YOU SHOULD
+GET A CONFIRMATION DIALOG INDICATING SUCCESS
 
   Do you want to continue?"
 
@@ -66,8 +67,6 @@ pcmanfm --set-wallpaper ${HOME}/ventilator/manufacturing/images/rendering_full.j
 ### disable screensaver
 #echo "@xset -dpms" >> /home/admin/.config/lxsession/LXDE-pi/autostart
 #echo "@xset s off" >> /home/admin/.config/lxsession/LXDE-pi/autostart
-
-#sudo raspi-config nonint do_audio       2  # force audio via HDMI
 
 # This script should run from repo/software dir
 cd "$(dirname "$0")"/../..

@@ -64,10 +64,6 @@ fi
 ### Set RW background - must be done in Desktop mode, thus not in boostrap.sh
 pcmanfm --set-wallpaper ${HOME}/ventilator/manufacturing/images/rendering_full.jpg
 
-### disable screensaver
-#echo "@xset -dpms" >> /home/admin/.config/lxsession/LXDE-pi/autostart
-#echo "@xset s off" >> /home/admin/.config/lxsession/LXDE-pi/autostart
-
 # This script should run from repo/software dir
 cd "$(dirname "$0")"/../..
 

@@ -3,7 +3,7 @@ version: 2.1
 jobs:
   dead-link-test:
     machine:
-      image: ubuntu-2004:202010-01
+      image: ubuntu-2004:current
     steps:
       - checkout
       - run:
@@ -31,7 +31,7 @@ jobs:
             echo 'export PATH=$GOPATH/bin:$PATH' >> $BASH_ENV
             echo 'export GO111MODULE="on"' >> $BASH_ENV
             source $BASH_ENV
-            go get -u github.com/raviqqe/liche
+            go get -u github.com/raviqqe/liche@v0.2.0
       - run:
           name: Check for broken links with Liche
           command: |
@@ -39,7 +39,7 @@ jobs:
 
   common-precommit-checks:
     docker:
-      - image: circleci/python:3.8
+      - image: cimg/python:3.10.4
     steps:
       - checkout
       - run:
@@ -57,7 +57,7 @@ jobs:
 
   controller-tests:
     machine:
-      image: ubuntu-2004:202010-01
+      image: ubuntu-2004:current
     resource_class: large
     steps:
       - checkout
@@ -74,7 +74,7 @@ jobs:
 
   common-tests:
     machine:
-      image: ubuntu-2004:202010-01
+      image: ubuntu-2004:current
     steps:
       - checkout
       - run:
@@ -90,7 +90,7 @@ jobs:
 
   gui-tests:
     machine:
-      image: ubuntu-2004:202010-01
+      image: ubuntu-2004:current
     resource_class: large
     steps:
       - checkout

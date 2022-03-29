@@ -131,6 +131,7 @@ class ControllerDebugInterface:
                 )
 
     def sanity_checks(self):
+        # TODO: make sure git is configured and we have identity for tester
         # we do this just for the git info
         test = TestData(test_scenario.TestScenario())
 

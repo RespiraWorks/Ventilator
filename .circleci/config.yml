@@ -2,36 +2,13 @@ version: 2.1
 
 jobs:
   dead-link-test:
-    machine:
-      image: ubuntu-1604:201903-01
+    docker:
+      - image: cimg/go:1.17
     steps:
       - checkout
       - run:
-          name: Install & Set up go
-          command: |
-            sudo apt-get update -qq
-            sudo apt-get install git
-            sudo apt-get install -y python-dev python3-dev -qq
-            if  [ -f goinstall.sh ]; then
-                rm goinstall.sh
-            fi
-            if [ -d ~/.go ]; then
-              rm -rf ~/.go
-            fi
-            wget https://raw.githubusercontent.com/canha/golang-tools-install-script/master/goinstall.sh
-            sudo chown circleci goinstall.sh
-            sudo chmod +x goinstall.sh
-            ./goinstall.sh
-      - run:
           name: Install Liche
-          command: |
-            echo 'export GOROOT=~/.go' >> $BASH_ENV
-            echo 'export PATH=$GOROOT/bin:$PATH' >> $BASH_ENV
-            echo 'export GOPATH=~/go' >> $BASH_ENV
-            echo 'export PATH=$GOPATH/bin:$PATH' >> $BASH_ENV
-            echo 'export GO111MODULE="on"' >> $BASH_ENV
-            source $BASH_ENV
-            go get -u github.com/raviqqe/liche
+          command: go get -u github.com/raviqqe/liche
       - run:
           name: Check for broken links with Liche
           command: |
@@ -39,7 +16,7 @@ jobs:
 
   common-precommit-checks:
     docker:
-      - image: circleci/python:3.8
+      - image: cimg/python:3.10.4
     steps:
       - checkout
       - run:
@@ -56,60 +33,60 @@ jobs:
             pre-commit run --show-diff-on-failure --files $changed_files
 
   controller-tests:
-    # See https://circleci.com/docs/2.0/executor-types/#docker-benefits-and-limitations
-    # We use a machine executor here because we must run the container in privileged mode.
-    # This is because LeakSanitizer, which runs during the build, requires ptrace.
     machine:
-      image: ubuntu-1604:201903-01
-    steps:
-      - checkout
-      - run:
-          name: Build docker image
-          command: |
-            docker build -f .circleci/controller_tests_Dockerfile -t controller-test-image .
-      - run:
-          name: Run tests & publish coverage
-          command: |
-            ci_env=`/bin/bash <(curl -s https://codecov.io/env)`
-            docker run $ci_env --privileged -t controller-test-image
-
-  common-tests:
-    # See https://circleci.com/docs/2.0/executor-types/#docker-benefits-and-limitations
-    # We use a machine executor here because we must run the container in privileged mode.
-    # This is because LeakSanitizer, which runs during the build, requires ptrace.
-    machine:
-      image: ubuntu-1604:201903-01
-    steps:
-      - checkout
-      - run:
-          name: Build docker image
-          command: |
-            docker build -f .circleci/common_tests_Dockerfile -t common-test-image .
-      - run:
-          name: Run tests & publish coverage
-          command: |
-            ci_env=`/bin/bash <(curl -s https://codecov.io/env)`
-            docker run $ci_env --privileged -t common-test-image
-
-  gui-tests:
-    machine:
-      image: ubuntu-2004:202010-01
+      image: ubuntu-2004:current
     resource_class: large
     steps:
       - checkout
       - run:
-          name: Checkout submodules
+          name: Install dependencies
           command: |
-            git submodule update --init --recursive
-      - run:
-          name: Build docker image
-          command: |
-            docker build -f .circleci/gui_tests_Dockerfile -t gui-test-image .
+            export FORCED_ROOT=1
+            ./software/controller/controller.sh install
       - run:
           name: Run tests & publish coverage
           command: |
-            ci_env=`/bin/bash <(curl -s https://codecov.io/env)`
-            docker run $ci_env --privileged -t gui-test-image
+            ./software/controller/controller.sh test --cov --no-checks
+            ./software/controller/controller.sh cov_upload
+
+  common-tests:
+    machine:
+      image: ubuntu-2004:current
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: |
+            export FORCED_ROOT=1
+            ./software/common/common.sh install
+      - run:
+          name: Run tests & publish coverage
+          command: |
+            ./software/common/common.sh test --cov --no-checks
+            ./software/common/common.sh cov_upload
+
+  gui-tests:
+    machine:
+      image: ubuntu-2004:current
+    resource_class: large
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: |
+            export FORCED_ROOT=1
+            ./software/gui/gui.sh install
+      - run:
+          name: Build and run app
+          command: |
+            export FORCED_ROOT=1
+            ./software/gui/gui.sh build -j --no-checks
+            ./software/gui/gui.sh run --startup-only
+      - run:
+          name: Run tests & publish coverage
+          command: |
+            export FORCED_ROOT=1
+            ./software/gui/gui.sh test -j --upload-cov
 
 workflows:
   commit:

@@ -19,50 +19,78 @@
 set -e
 set -o pipefail
 
-echo "==============================================================================="
-echo "================== RespiraWorks Ventilator update utility ====================="
-echo "==============================================================================="
-echo " "
-echo "  -- this will rebuild and flash controller firmware"
-echo "  -- this will rebuild the GUI"
-echo "  -- a 'git pull' will be performed, but branch will not be changed"
-echo "  -- if you have made any local changes, abort take care of those first"
-echo "  -- neither unit tests nor static checks will be performed"
-echo " "
-read -n1 -s -r -p $'Press any key to continue...\n' key
-
 # Print each command as it executes
-set -o xtrace
+if [ -n "$VERBOSE" ]; then
+  set -o xtrace
+fi
 
-# This script should run from repo/software dir
-cd "$(dirname "$0")"/../..
+EXIT_FAILURE=1
+EXIT_SUCCESS=0
 
 # Check if Linux
 PLATFORM="$(uname -s)"
 if [ $PLATFORM != "Linux" ]; then
   echo "Error: This script only supports 'Linux'. You have $PLATFORM."
-  exit 1
+  exit $EXIT_FAILURE
 fi
 
+# Make sure we are not in sudo
 if [ "$EUID" -eq 0 ] && [ "$2" != "-f" ]; then
-  echo "Please do not run tests with root privileges!"
-  exit 1
+  echo "Please do not run this script with root privileges!"
+  exit $EXIT_FAILURE
 fi
+
+message="RespiraWorks Ventilator update utility
+
+  -- a 'git pull' will be performed, but branch will not be changed
+  -- will rebuild the GUI
+  -- will rebuild and flash controller
+  -- if you have made any local changes, abort and take care of those first
+  -- neither unit tests nor static checks will be performed
+
+PLEASE NOTE THAT AT THE END OF THIS PROCESS YOU SHOULD
+GET A CONFIRMATION DIALOG INDICATING SUCCESS
+
+  Do you want to continue?"
+
+if zenity --question --no-wrap --title="Ventilator update" \
+          --text "<span size=\"large\">$message.</span>"
+then
+  echo "Continuing with update..."
+else
+  exit $EXIT_FAILURE
+fi
+
+### Set RW background - must be done in Desktop mode, thus not in boostrap.sh
+pcmanfm --set-wallpaper ${HOME}/ventilator/manufacturing/images/rendering_full.jpg
+
+# This script should run from repo/software dir
+cd "$(dirname "$0")"/../..
 
 ### Will not switch branch to master!
 git pull
-
-### Update desktop shortcuts
-yes | cp -rf software/utils/rpi_config/Github /home/pi/Desktop
-yes | cp -rf software/utils/rpi_config/*.desktop /home/pi/Desktop
 
 ### Update controller and deploy
 ./controller/controller.sh clean
 ./controller/controller.sh run
 
-### Rebuild GUI
-./gui/gui.sh build --release --no-checks
+ans=$(zenity --list --radiolist --title "GUI Build" \
+       --column "Select" --column "Build type" \
+          TRUE "Release" FALSE "Debug")
 
-echo "Installation complete. Please check that this terminated with no errors."
-echo " "
-read -n1 -s -r -p $'Press any key to close this window.\n' key
+if [[ $ans = "Release" ]]
+then
+  echo "Building Release"
+  ./gui/gui.sh clean
+  ./gui/gui.sh build --release --no-checks;
+elif [[ $ans = "Debug" ]]
+then
+  echo "Building Debug"
+  ./gui/gui.sh clean
+  ./gui/gui.sh build --debug --no-checks
+else
+  exit $EXIT_FAILURE
+fi
+
+zenity --info --no-wrap --title="Success" --text "Ventilator update executed successfully!"
+exit $EXIT_SUCCESS

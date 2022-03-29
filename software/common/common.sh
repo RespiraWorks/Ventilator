@@ -61,18 +61,17 @@ print_help() {
 Utility script for the RespiraWorks Ventilator common code testing.
 
 The following options are available:
-  install   Installs platformio and configures udev rules for deployment
-          [-f] - force installation, even with root privileges (for CI only)
-  check     Runs static checks only
-  clean     Clean build directories
-  test      Builds and runs all unit tests, integration tests, static checks, generates coverage
-       [--no-checks] - do not run static checks (for CI)
-       [--cov]       - generate coverage reports
-  cov_upload   Upload coverage reports to Codecov server
-  unit         Builds and runs unit tests only (and generates coverage reports)
-       <name>  - run specific unit test, may include wildcards, i.e. 'debug*'
-       [-o]    - open coverage report in browser when done
-  help/-h      Display this help info
+  install     One-time installation of build toolchain and dependencies
+  check       Runs static checks only
+  clean       Clean build directories
+  test        Builds and runs all unit tests, integration tests, static checks, generates coverage
+                [--no-checks] - do not run static checks (for CI)
+                [--cov]       - generate coverage reports
+  cov_upload  Upload coverage reports to Codecov server
+  unit        Builds and runs unit tests only (and generates coverage reports)
+                  <name>  - run specific unit test, may include wildcards, i.e. 'debug*'
+                  [-o]    - open coverage report in browser when done
+  help/-h     Display this help info
 EOF
 }
 
@@ -93,20 +92,24 @@ clean_all() {
   clean_dir ${COVERAGE_OUTPUT_DIR}
 }
 
-configure_platformio() {
-    pushd "$HOME"
-    python3 -c "$(curl -fsSL https://raw.githubusercontent.com/platformio/platformio/master/scripts/get-platformio.py)"
-    echo 'export PATH=$PATH:~/.platformio/penv/bin' >> ~/.profile
-    popd
-
-    curl -fsSL https://raw.githubusercontent.com/platformio/platformio-core/master/scripts/99-platformio-udev.rules | sudo tee /etc/udev/rules.d/99-platformio-udev.rules
-    sudo service udev restart
-    sudo usermod -a -G dialout "$USER"
-    sudo usermod -a -G plugdev "$USER"
-
-    echo "Updated udev rules. You might have to restart your machine for changes to become effective."
-
-    exit $EXIT_SUCCESS
+install_linux() {
+  sudo apt-get update
+  sudo apt-get install -y \
+               build-essential \
+               python3-pip \
+               git \
+               curl \
+               libtinfo5 \
+               cppcheck \
+               gcovr \
+               lcov \
+               clang-tidy
+  pip3 install -U pip
+  pip3 install codecov
+  pip3 install platformio==5.1.1
+  source ${HOME}/.profile
+  platformio update
+  platformio platform install native
 }
 
 run_checks() {
@@ -215,12 +218,12 @@ if [ "$1" == "help" ] || [ "$1" == "-h" ]; then
 # INSTALL #
 ###########
 elif [ "$1" == "install" ]; then
-  if [ "$EUID" -eq 0 ] && [ "$2" != "-f" ]; then
+  if [ "$EUID" -eq 0 ] && [ -z "$FORCED_ROOT" ]; then
     echo "Please do not run install with root privileges!"
-    exit $EXIT_SUCCESS
+    exit $EXIT_FAILURE
   fi
-
-  configure_platformio
+  install_linux
+  exit $EXIT_SUCCESS
 
 #########
 # CLEAN #

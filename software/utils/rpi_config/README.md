@@ -1,42 +1,56 @@
-# Automatic deployment on integrated prototypes
+# Deployment on integrated prototypes
 
-The following scripts and configurations are here to help alleviate the frustration of having to perform the many
-arcane incantations to get a prototype running with software.
+The following scripts and configurations are here to help alleviate the frustration of having to perform the many arcane incantations to get a prototype running with software.
 
-**DISCLAIMER: You should not use this on any living beings - as a ventilator, or in any other way.
-These are utilities for bench with mechanical lung simulators only.
-It is also assumed that you are familiar with the software architecture and generally know what you are doing.**
+**DISCLAIMER: You should not use this on any living beings - as a ventilator, or in any other way. These are utilities for bench testing with mechanical lung simulators only. It is also assumed that you are familiar with the software architecture and generally know what you are doing.**
 
-The following assumes that you have a working hardware prototype with all necessary electronics, correctly wired for
-power and communication. See the [manufacturing](../../../manufacturing) section for details.
+The following assumes that you have a working hardware prototype with all necessary electronics, correctly wired for power and communication. See the [manufacturing](../../../manufacturing) section for details.
 
-## How to set up
+## Initial OS setup
 
-* Start with a clean SD card of about 32GB. Building the software can be a resource-greedy process.
-* Prepare an SD card with a vanilla Raspberry Pi OS, the full desktop variety.
-* Make sure you have a USB connection from Raspi to Nucleo if you intend to flash firmware locally
-* Boot up and go through the standard Raspi configuration steps - locale, Wifi, update
-* Reboot
+The first few configuration steps must be done manually when writing the operating system to the SD card.
 
-Now, open up a browser, and come back to this page.
+* Use an SD card of at least 32GB. Building the software can be a resource-greedy process.
+* Flash the SD card using the [Raspberry Pi Imager](https://www.raspberrypi.com/software/) making sure to configure it as follows:
+  * **IMPORTANT:** use the `64-bit Desktop / January 28, 2022` release of the Raspberry Pi OS. Other versions have not been tested to work.
+  * hostname (recommended): `rw-ventilator` - could make it something else unique if you have multiple prototypes on your network
+  * username (mandatory): `admin` - system should boot to this user by default, otherwise desktop shortcuts may not work
+  * password (recommended): `respira` - will need this for `sudo` tasks, so don't forget it
+  * enable *ssh* and set up credentials to access the machine remotely, especially if you cannot attach a keyboard to your prototype
+  * configure wifi settings if needed
+  * set time zone and disable `first run wizard`
+* You should be able to *ssh* into the RasPi from another machine by running `ssh admin@rw-ventilator` (or whatever host name you gave it). Otherwise, you can find out*RPi*'s IP address with `ifconfig` and then you can reach it as `ssh admin@IP_ADDRESS`. If you had logged into another instance with the same hostname, you may need to clear the old credentials with `ssh-keygen -R rw-ventilator.local`.
 
-Just copy and paste this dangerous script into the console:
+## Automatic setup
 
-```
+With the above configured, the next step should be pretty automatic. You can still use a stand-alone RasPi without all the hardware.
+
+Whether by `ssh` or attached keyboard, copy and paste this command into a terminal:
+
+<!-- \TODO: change command to point to master before merging!!! -->
+```shell
 bash <(wget -qO- https://raw.githubusercontent.com/RespiraWorks/Ventilator/master/software/utils/rpi_config/bootstrap.sh)
 ```
 
-Follow the onscreen directions.
+Follow the onscreen directions. When the initial installation is complete, the system will reboot.
 
-When the initial install is complete, the system will reboot again.
+This is a good time to:
+* transfer the SD card to the target machine
+* make sure you have a USB connection from the PI to the Nucleo so that it can update controller firmware
+* if you have `ssh` access, the rest should work without the need for keyboard and mouse attached to the PI
 
-You will need to run the "Ventilator update" app that you should find on your desktop for the first time to make the
-ventilator functional.
+### Final configuration and initial software deployment
+
+When the machine boots, you should see an icon that says `Ventilator update` on the desktop. Either double-click or use the touch screen to run this shortcut.
+This will build the graphical interface and controller software, and deploy the latter to the STM32.
+
+**NOTE:** You may also want to check that audio is set to be piped to `HDMI` rather than the `AV Jack` by right clicking on the volume icon in the task bar.
 
 ## What you have available
 
 On your desktop you should have:
+* Ventilator GUI -- starts the graphical interface for controlling the ventilator
+* Github repo -- opens a browser to the RespiraWorks ventilator github page, in case you need to consult documentation
 * Ventilator update -- run this any time to update all firmware and software to the latest version
-* Ventilator GUI -- graphical interface for controlling the ventilator
-* Vent debug -- opens console with ventilator debug interface and connects to the controller
-* Ventilator repo -- opens a browser to the RespiraWorks ventilator github page
+* debug -- opens console with ventilator debug interface and connects to the controller. You should be able to use this utility via `ssh` as well, by running `~/ventilator/software/controller/controller.sh debug`.
+* For your convenience, a virtual `matchbox-keyboard` utility has been installed, which can be found on the main application menu under `Accessories`.

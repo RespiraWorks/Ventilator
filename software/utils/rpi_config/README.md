@@ -54,4 +54,3 @@ On your desktop you should have:
 * Ventilator update -- run this any time to update all firmware and software to the latest version
 * debug -- opens console with ventilator debug interface and connects to the controller. You should be able to use this utility via `ssh` as well, by running `~/ventilator/software/controller/controller.sh debug`.
 * For your convenience, a virtual `matchbox-keyboard` utility has been installed, which can be found on the main application menu under `Accessories`.
-

@@ -12,14 +12,19 @@ The first few configuration steps must be done manually when writing the operati
 
 * Use an SD card of at least 32GB. Building the software can be a resource-greedy process.
 * Flash the SD card using the [Raspberry Pi Imager](https://www.raspberrypi.com/software/) making sure to configure it as follows:
-  * **IMPORTANT:** use the `64-bit Desktop / January 28, 2022` release of the Raspberry Pi OS. Other versions have not been tested to work.
-  * hostname (recommended): `rw-ventilator` - could make it something else unique if you have multiple prototypes on your network
-  * username (mandatory): `admin` - system should boot to this user by default, otherwise desktop shortcuts may not work
-  * password (recommended): `respira` - will need this for `sudo` tasks, so don't forget it
-  * enable *ssh* and set up credentials to access the machine remotely, especially if you cannot attach a keyboard to your prototype
-  * configure wifi settings if needed
-  * set time zone and disable `first run wizard`
-* You should be able to *ssh* into the RasPi from another machine by running `ssh admin@rw-ventilator` (or whatever host name you gave it). Otherwise, you can find out*RPi*'s IP address with `ifconfig` and then you can reach it as `ssh admin@IP_ADDRESS`. If you had logged into another instance with the same hostname, you may need to clear the old credentials with `ssh-keygen -R rw-ventilator.local`.
+  * **IMPORTANT:** Click 'CHOOSE OS' > 'Raspberry Pi OS (Other)' and select the `64-bit Desktop / January 28, 2022` release of the Raspberry Pi OS. Other versions have not been tested to work.
+  * Click 'STORAGE' and select your SD card
+  * Click the gear icon in the lower right corner, and set up the following parameters:
+   * hostname (recommended): `rw-ventilator` - could make it something else unique if you have multiple prototypes on your network
+   * username (mandatory): `admin` - system should boot to this user by default, otherwise desktop shortcuts may not work
+   * password (recommended): `respira` - will need this for `sudo` tasks, so don't forget it
+   * enable *ssh* and set up credentials to access the machine remotely, especially if you cannot attach a keyboard to your prototype
+   * configure wifi SSID and password settings if needed
+   * set time zone and disable `first run wizard`
+   * Click 'SAVE'
+   * Click 'WRITE'
+* Once the card is writted, remove it and plug it into the RPi, then power it on.
+* Once it is booted, you should be able to *ssh* into the RasPi from another machine by running `ssh admin@rw-ventilator` (or whatever host name you gave it). Otherwise, you can find out*RPi*'s IP address with `ifconfig` and then you can reach it as `ssh admin@IP_ADDRESS`. If you had logged into another instance with the same hostname, you may need to clear the old credentials with `ssh-keygen -R rw-ventilator.local`.
 
 ## Automatic setup
 

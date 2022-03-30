@@ -23,7 +23,7 @@ If you are not actively working on the code for this application but simply need
 
 ## Building the GUI
 
-You may want to build and run the GUI application natively, either on your primary machine or on the *RPi*. Most recently, we have been building and testing on the [Ubuntu MATE](https://ubuntu-mate.org/download/arm64/focal/) distribution, more specifically `20.04.3 Focal Fossa` release.
+You may want to build and run the GUI application natively, either on your primary machine or on the *RPi*. Most recently, we have been building and testing on the [Raspberry Pi OS](https://www.raspberrypi.com/software/operating-systems/#raspberry-pi-os-64-bit) distribution, more specifically `v11 Bullseye 64 bits (January 28th 2022)` release ([download link](https://downloads.raspberrypi.org/raspios_arm64/images/raspios_arm64-2022-01-28/2022-01-28-raspios-bullseye-arm64.zip)).
 
 The [gui.sh](gui.sh) script does almost everything you need:
 * installs dependencies

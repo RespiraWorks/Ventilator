@@ -23,7 +23,9 @@ The first few configuration steps must be done manually when writing the operati
    * set time zone and disable `first run wizard`
    * Click 'SAVE'
    * Click 'WRITE'
-* Once the card is writted, remove it and plug it into the RPi, then power it on.
+   * Important: you must wait until you get the message from the RPi Imager that you can remove the SD card before doing so. (There is an extra process that runs after it gets to 100% - if you eject or remove the card too early, the configuration information won't be written successfully).
+* Once the card is written, remove it and plug it into the RPi, then power it on.
+* If you have a screen attached, the RPi configurator will run on the first boot, and ask you to re-set a lot of the configuration you already entered in the Imager.  You can click 'CANCEL' and close this window without going through any of the settings.
 * Once it is booted, you should be able to *ssh* into the RasPi from another machine by running `ssh admin@rw-ventilator` (or whatever host name you gave it). Otherwise, you can find out*RPi*'s IP address with `ifconfig` and then you can reach it as `ssh admin@IP_ADDRESS`. If you had logged into another instance with the same hostname, you may need to clear the old credentials with `ssh-keygen -R rw-ventilator.local`.
 
 ## Automatic setup

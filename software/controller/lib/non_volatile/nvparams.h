@@ -1,4 +1,4 @@
-/* Copyright 2020, RespiraWorks
+/* Copyright 2020-2022, RespiraWorks
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -64,7 +64,7 @@ struct Structure {
   // should be the setting for 0 flow and the last entry should be the setting for 100% flow.
   // Note that those are only used after (if?) Actuators::LinkCalibration() has been called for the
   // considered actuator.
-  // \TODO: though it makes sense to have functional values during prototyping, we should consider
+  /// \TODO: though it makes sense to have functional values during prototyping, we should consider
   // making those default values unusable (all zeros?) for a production unit, to ensure that a
   // given ventilator has been fully calibrated before use
   std::array<float, ActuatorsCalSize> blower_pinch_cal{0.0000f, 0.0410f, 0.0689f, 0.0987f,

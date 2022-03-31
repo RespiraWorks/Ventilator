@@ -1,4 +1,4 @@
-/* Copyright 2020-2021, RespiraWorks
+/* Copyright 2020-2022, RespiraWorks
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -120,6 +120,7 @@ void HalApi::Init() {
   GPIO::enable_all_clocks();
   init_PCB_ID_pins();
   LEDs.initialize();
+  /// \TODO: ensure CPUFrequency is a multiple of 10 MHz
   SystemTimer::singleton().initialize(CPUFrequency);
   /// \TODO: fault somehow if this returns false
   [[maybe_unused]] bool buffer_size_sufficient = adc.initialize(CPUFrequency);

@@ -30,6 +30,8 @@ limitations under the License.
 // values in [0-255].
 //
 // Pins default to input, and will be set to output as part of the initialize method
+
+/// \TODO: abstract PwmPin definition out of here, and in a higher layer.
 enum class PwmPin {
   Blower,
   Buzzer,

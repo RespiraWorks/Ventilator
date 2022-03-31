@@ -1,4 +1,4 @@
-/* Copyright 2021, RespiraWorks
+/* Copyright 2021-2022, RespiraWorks
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -48,7 +48,3 @@ float Actuator::get_value(float input) {
 
   return calibration_.get_value(input);
 }
-
-PwmActuator::PwmActuator(const PwmPin pin, const Frequency pwm_freq, const char *name,
-                         const char *help, float cal_0, float cal_1)
-    : Actuator(name, help, cal_0, cal_1), pwm_(pin, pwm_freq) {}

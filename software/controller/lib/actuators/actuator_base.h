@@ -1,4 +1,4 @@
-/* Copyright 2021, RespiraWorks
+/* Copyright 2021-2022, RespiraWorks
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -43,17 +43,4 @@ class Actuator {
   // Debug var that can be used from debug interface to force the actuator's setting
   Debug::Variable::Float forced_value_{"setting", Debug::Variable::Access::ReadWrite, -1.f,
                                        "ratio"};
-};
-
-class PwmActuator : public Actuator {
- public:
-  PwmActuator(const PwmPin pin, const Frequency pwm_freq, const char *name, const char *help,
-              float cal_0 = 0.0f, float cal_1 = 1.0f);
-
-  void initialize_pwm(Frequency cpu_frequency) { pwm_.initialize(cpu_frequency); }
-
-  void set(const float value) { pwm_.set(get_value(value)); }
-
- private:
-  PWM pwm_;
 };

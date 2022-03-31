@@ -1,4 +1,4 @@
-/* Copyright 2021, RespiraWorks
+/* Copyright 2021-2022, RespiraWorks
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -13,11 +13,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include "actuators.h"
-
+#include "actuator_base.h"
 #include "gtest/gtest.h"
 
-// \TODO improve pwm and pinchvalve/stepper mocks to create tests for pwmActuator, pinch valves
+/// \TODO: improve pwm and pinchvalve/stepper mocks to create tests for pwmActuator, pinch valves
 // and actuators as a whole
 
 TEST(Actuator, init) {

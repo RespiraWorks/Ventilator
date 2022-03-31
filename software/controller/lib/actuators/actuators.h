@@ -1,4 +1,4 @@
-/* Copyright 2020, RespiraWorks
+/* Copyright 2020-2022, RespiraWorks
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -60,8 +60,10 @@ class Actuators {
   void execute(const ActuatorsState &desired_state);
 
   // Blower is driven by a 20kHz PWM, as a compromise between resolution and response time
+  /// TODO: add/find a better rationale for this, maybe with the resulting response time/resolution
   static constexpr Frequency BlowerFreq = kilohertz(20);
   // psol is driven by a 5kHz PWM
+  /// TODO: find the rationale behind this
   static constexpr Frequency PSolFreq = kilohertz(5);
 
  private:

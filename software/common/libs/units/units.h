@@ -1,4 +1,4 @@
-/* Copyright 2020, RespiraWorks
+/* Copyright 2020-2022, RespiraWorks
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,8 +17,6 @@ limitations under the License.
 
 #include <cstdint>
 #include <type_traits>
-
-/// \TODO: implement frequency types, so we avoid bugs of mixed up Hz vs. MHz for example
 
 // Wrappers for measurements of different physical quantities [1] (length,
 // time, etc.).

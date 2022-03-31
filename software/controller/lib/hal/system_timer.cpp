@@ -1,4 +1,4 @@
-/* Copyright 2020-2021, RespiraWorks
+/* Copyright 2020-2022, RespiraWorks
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ limitations under the License.
  * I use one of the basic timers (timer 6) for general system timing.
  * I configure it to count every 100ns and generate an interrupt
  * every millisecond
+ * Note that this assumes the cpu frequency is a multiple of 10MHz.
  *
  * The basic timers (like timer 6) are documented in [RM] chapter 29.
  *****************************************************************/
@@ -37,12 +38,17 @@ void SystemTimer::initialize(Frequency cpu_frequency) {
   // Just set the timer up to count every microsecond.
   TimerReg *tmr = Timer6Base;
 
-  /// \TODO: assumptions may not hold since cpu freq parametrized
   // The reload register gives the number of clock ticks (100ns in our case)
   // -1 until the clock wraps back to zero and generates an interrupt. This
   // setting will cause an interrupt every 10,000 clocks or 1 millisecond
   tmr->auto_reload = 9999;
-  tmr->prescaler = static_cast<uint32_t>(cpu_frequency.megahertz() / 10.0f - 1.0f);
+
+  // We set the prescaler to create a 100ns (1E-7 s) clock. This is only precise
+  // if cpu_frequency is a multiple of 10MHz. This way, 100ns is an exact number
+  // of cpu clock cycles (the prescaler register is that number - 1).
+  // Note that we can't use Duration type to represent 100 ns.
+  tmr->prescaler = static_cast<uint32_t>(cpu_frequency.hertz() * 1.0E-7f - 1.0f);
+
   tmr->event = 1;
   // Enable UIFREMAP.  This causes the top bit of tmr->counter to be true if a
   // timer interrupt is pending.

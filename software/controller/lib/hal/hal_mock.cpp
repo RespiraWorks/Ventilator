@@ -15,8 +15,12 @@ limitations under the License.
 
 #if !defined(BARE_STM32)
 
+#include <cstring>  //memcpy
+
 #include "hal.h"
 
+/// \TODO: is this a good assumption for a mock HAL?
+Frequency HalApi::GetCpuFreq() { return hertz(0); }
 void HalApi::EarlyInit() {}
 void HalApi::Init() {}
 void HalApi::init_PCB_ID_pins() {}

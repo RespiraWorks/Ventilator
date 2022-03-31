@@ -8,6 +8,7 @@
 //      TBD - which python script to run?
 //
 
+#include "actuators.h"
 #include "hal.h"
 #include "system_timer.h"
 #include "watchdog.h"
@@ -20,12 +21,14 @@ static constexpr float InitialStep{0.002f};
 
 void RunTest() {
   hal.Init();
+  PwmActuator blower{PwmPin::Blower, Actuators::BlowerFreq, "blower_", " of the blower"};
+  blower.initialize_pwm(HalApi::GetCpuFreq());
 
   float fan_power = FanMin;
   float step = InitialStep;
 
   while (true) {
-    hal.pwm.set(PwmPin::Blower, fan_power);
+    blower.set(fan_power);
     SystemTimer::singleton().delay(Delay);
 
     Watchdog::pet();

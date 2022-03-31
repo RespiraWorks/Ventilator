@@ -117,24 +117,6 @@ class Controller {
   using DbgUint32 = Debug::Variable::UInt32;
   using DbgAccess = Debug::Variable::Access;
 
-  DbgFloat forced_blower_power_{
-      "forced_blower_power", DbgAccess::ReadWrite, -1.f, "ratio",
-      "Force the blower fan to a particular power [0,1].  Specify a value "
-      "outside this range to let the controller control it."};
-  DbgFloat forced_exhale_valve_pos_{
-      "forced_exhale_valve_pos", DbgAccess::ReadWrite, -1.f, "ratio",
-      "Force the exhale valve to a particular position [0,1].  Specify a value "
-      "outside this range to let the controller control it."};
-  DbgFloat forced_blower_valve_pos_{
-      "forced_blower_valve_pos", DbgAccess::ReadWrite, -1.f, "ratio",
-      "Force the blower valve to a particular position [0,1].  Specify a value "
-      "outside this range to let the controller control it."};
-  DbgFloat forced_psol_pos_{
-      "forced_psol_pos", DbgAccess::ReadWrite, -1.f, "ratio",
-      "Force the O2 psol to a particular position [0,1].  (Note that psol.cpp "
-      "scales this further; see psol_pwm_closed and psol_pwm_open.)  Specify a "
-      "value outside this range to let the controller control the psol."};
-
   // Unchanging outputs - read from external debug program, never modified here.
   DbgUint32 dbg_loop_period_{"loop_period", DbgAccess::ReadOnly,
                              static_cast<uint32_t>(GetLoopPeriod().microseconds()), "\xB5s",

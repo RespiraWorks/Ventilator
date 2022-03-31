@@ -17,6 +17,9 @@ limitations under the License.
 
 #include <cstdint>
 
+#include "timers.h"
+#include "units.h"
+
 #if !defined(BARE_STM32)
 #include <map>
 
@@ -26,25 +29,28 @@ limitations under the License.
 // Pulse-width modulated outputs from the controller.  These can be set to
 // values in [0-255].
 //
-// Pins default to Input, so if you add a new pin here, be sure to update
-// HalApi::Init() and set it to Output!
+// Pins default to input, and will be set to output as part of the initialize method
+
+/// \TODO: abstract PwmPin definition out of here, and in a higher layer.
 enum class PwmPin {
-  // Controls the fan speed.
   Blower,
+  Buzzer,
+  Psol,
 };
 
-/// \TODO: make this an explicit singleton?
 class PWM {
  public:
-  void initialize(uint32_t cpu_frequency_hz);
+  PWM(const PwmPin pin, const Frequency pwm_freq) : pin_(pin), pwm_freq_(pwm_freq){};
 
-  // Causes `pin` to output a square wave with the given duty cycle (range [0, 1]).
-  void set(PwmPin pin, float duty);
+  void initialize(Frequency cpu_frequency);
+
+  // Causes `pin` to output a square wave with the given duty cycle (range [0, 1], with preemptive
+  // clamping before setting the registers).
+  void set(float duty);
 
  private:
-  // The PWM frequency isn't mentioned anywhere that I can find, so
-  // I'm just picking a reasonable number.  This can be refined later
-  //
+  PwmPin pin_;
+
   // The selection of PWM frequency is a trade-off between latency and
   // resolution.  Higher frequencies give lower latency and lower resolution.
   //
@@ -55,12 +61,15 @@ class PWM {
   // Resolution is based on the ratio of the clock frequency (80MHz) to the
   // PWM frequency.  For example, a 20kHz PWM would have a resolution of one
   // part in 4000 (80000000/20000) or about 12 bits.
-  uint32_t pwm_freq_hz_{20000};
+  Frequency pwm_freq_;
+
+  TimerReg* timer_{nullptr};
+  uint8_t channel_{0};
 
 #if !defined(BARE_STM32)
  public:
   /// \TODO: is this the best thing to test? Isn't this implementation-specific?
-  void set_pin_mode(PwmPin pin, GPIO::PinMode mode);
+  void set_pin_mode(GPIO::PinMode mode);
 
  private:
   std::map<PwmPin, GPIO::PinMode> pwm_pin_modes_;

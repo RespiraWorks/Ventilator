@@ -28,6 +28,7 @@ TEST(Interpolant, Constructors) {
   EXPECT_STREQ(default_array->units(), "");
   EXPECT_STREQ(default_array->help(), "");
   EXPECT_STREQ(default_array->format(), "%.3f");
+  EXPECT_TRUE(default_array->write_allowed());
   // checking that output = input
   for (uint i = 0; i < 11; ++i) {
     float input = static_cast<float>(i) * 0.1f;

@@ -1,4 +1,4 @@
-/* Copyright 2020-2021, RespiraWorks
+/* Copyright 2020-2022, RespiraWorks
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -27,8 +27,9 @@ class SystemTimer {
     return SingletonInstance;
   }
 
-  /// \TODO: use explicit unit-aware frequency types
-  void initialize(uint32_t cpu_frequency_MHz);
+  // Note that in order to get a precise timer, the cpu_frequency passed to the
+  // initialize method needs to be a multiple of 10 MHz.
+  void initialize(Frequency cpu_frequency);
 
   void interrupt_handler();
 

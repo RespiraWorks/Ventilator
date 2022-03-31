@@ -17,9 +17,9 @@ limitations under the License.
 
 UART::UART(UartReg* const r) : uart_(r) {}
 
-void UART::Init(uint32_t cpu_frequency_hz, uint32_t baud) {
+void UART::Init(Frequency cpu_frequency, Frequency baud) {
   // Set baud rate register
-  uart_->baudrate = cpu_frequency_hz / baud;
+  uart_->baudrate = static_cast<uint32_t>(cpu_frequency / baud);
 
   uart_->control_reg1.bitfield.rx_interrupt = 1;  // enable receive interrupt
   uart_->control_reg1.bitfield.tx_enable = 1;     // enable transmitter

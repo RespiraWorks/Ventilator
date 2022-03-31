@@ -25,6 +25,7 @@ limitations under the License.
 #include <cstdint>
 
 #include "circular_buffer.h"
+#include "units.h"
 
 // [RM] 38.8 USART Registers (pg 1238)
 struct UartStruct {
@@ -199,7 +200,7 @@ class UART {
  public:
   explicit UART(UartReg *r);
 
-  void Init(uint32_t cpu_frequency_hz, uint32_t baud);
+  void Init(Frequency cpu_frequency, Frequency baud);
 
   // This is the interrupt handler for the UART.
   void ISR();

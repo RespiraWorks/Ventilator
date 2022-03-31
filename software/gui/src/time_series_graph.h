@@ -91,11 +91,11 @@ class TimeSeriesGraph : public QNanoQuickItem {
  private:
   QVector<QPointF> dataset_;
 
-  QColor line_color_ = QColor(255, 255, 255, 255);
-  QColor area_color_ = QColor(255, 255, 255, 255);
-  float max_value_ = 0;
-  float min_value_ = 0;
-  float range_in_secs_ = 30.0;
-  bool show_baseline_ = true;
-  float baseline_value_ = 0;
+  QColor line_color_{QColor(255, 255, 255, 255)};
+  QColor area_color_{QColor(255, 255, 255, 255)};
+  float max_value_{0};
+  float min_value_{0};
+  float range_in_secs_{30.0};
+  bool show_baseline_{true};
+  float baseline_value_{0};
 };

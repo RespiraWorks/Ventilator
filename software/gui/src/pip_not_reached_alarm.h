@@ -53,5 +53,5 @@ class PipNotReachedAlarm : public LatchingAlarm {
   }
 
  private:
-  float threshold_cmh2o_ = 10;
+  float threshold_cmh2o_{10};
 };

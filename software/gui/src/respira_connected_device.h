@@ -55,6 +55,6 @@ class RespiraConnectedDevice : public ConnectedDevice {
   bool ReceiveControllerStatus(ControllerStatus *controller_status) override;
 
  private:
-  std::unique_ptr<QSerialPort> serialPort_ = nullptr;
+  std::unique_ptr<QSerialPort> serialPort_{nullptr};
   QString serialPortName_;
 };

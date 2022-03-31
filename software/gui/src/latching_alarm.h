@@ -101,7 +101,7 @@ class LatchingAlarm : public QObject {
   void updated();
 
  private:
-  bool is_condition_active_ = false;
+  bool is_condition_active_{false};
   // Present if IsAudioActive().
   // Corresponds to the text returned by Update() last time the condition was
   // active.
@@ -110,7 +110,7 @@ class LatchingAlarm : public QObject {
   enum class AudioState { INACTIVE, BEEPING, SILENCED };
 
   const AlarmPriority::Enum priority_;
-  AudioState audio_state_ = AudioState::INACTIVE;
+  AudioState audio_state_{AudioState::INACTIVE};
   // Present only in SILENCED.
-  std::optional<SteadyInstant> silenced_until_ = std::nullopt;
+  std::optional<SteadyInstant> silenced_until_{std::nullopt};
 };

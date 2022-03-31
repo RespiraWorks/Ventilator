@@ -27,9 +27,9 @@ void RunTest() {
 
   while (true) {
     if (buzzer_on) {
-      hal.buzzer.on(volume);
+      hal.buzzer.set(volume);
     } else {
-      hal.buzzer.off();
+      hal.buzzer.set(0);
     }
 
     SystemTimer::singleton().delay(Delay);

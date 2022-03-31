@@ -17,14 +17,10 @@
 // test parameters
 static constexpr int MotorIndex{TEST_PARAM_1};
 static constexpr Duration Delay{milliseconds(1000)};
-static NVParams::Handler nv_params;
-static I2Ceeprom eeprom = I2Ceeprom(0x50, 64, 32768, &i2c1);
 static PinchValve pinch_valve("pinch_valve_", " for pinch valve", MotorIndex);
 
 void RunTest() {
   hal.Init();
-  nv_params.Init(&eeprom);
-  pinch_valve.LinkCalibration(&nv_params, offsetof(NVParams::Structure, blower_pinch_cal));
   pinch_valve.Home();
 
   bool valve_open{false};

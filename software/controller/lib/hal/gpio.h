@@ -59,7 +59,7 @@ enum class OutType : uint8_t { PushPull = 0b0, OpenDrain = 0b1 };
 enum class OutSpeed : uint8_t { Slow = 0b00, Medium = 0b01, Fast = 0b10, Smoking = 0b11 };
 
 // [DS] Tables 17-18 (pg 76-86)
-enum class AlternativeFuncion : uint32_t {
+enum class AlternativeFunction : uint32_t {
   AF0 = 0,    //< SYS_AF
   AF1 = 1,    //< TIM1/TIM2/LPTIM1
   AF2 = 2,    //< I2C4/TIM1/TIM2/TIM3
@@ -89,7 +89,7 @@ void output_speed(Port port, uint8_t pin, OutSpeed speed);
 // Many GPIO pins can be repurposed with an alternate function
 // See Table 17 and 18 [DS] for alternate functions
 // See [RM] 8.4.9 and 8.4.10 for GPIO alternate function selection
-void alternate_function(Port port, uint8_t pin, AlternativeFuncion func);
+void alternate_function(Port port, uint8_t pin, AlternativeFunction func);
 
 // Set a specific output pin
 void set_pin(Port port, uint8_t pin);

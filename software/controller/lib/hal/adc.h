@@ -38,7 +38,7 @@ class ADC {
 
   /// \returns true if buffer size was sufficient. If false, consider changing
   ///          AdcSampleHistoryHardMax below
-  [[nodiscard]] bool initialize(uint32_t cpu_frequency_hz);
+  [[nodiscard]] bool initialize(Frequency cpu_frequency);
 
   // Reads from analog sensor using an analog-to-digital converter.
   // Returns a voltage.  On STM32 this can range from 0 to 3.3V.

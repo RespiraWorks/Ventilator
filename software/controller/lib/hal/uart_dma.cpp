@@ -33,10 +33,10 @@ limitations under the License.
 extern UartDma uart_dma;
 
 // Performs UART3 initialization
-void UartDma::initialize(const uint32_t cpu_frequency_hz, const uint32_t baud) {
+void UartDma::initialize(const Frequency cpu_frequency, const Frequency baud) {
   baud_ = baud;
   // Set baud rate register
-  uart_->baudrate = cpu_frequency_hz / baud;
+  uart_->baudrate = static_cast<uint32_t>(cpu_frequency / baud);
 
   uart_->control3.bitfield.rx_dma = 1;  // set DMAR bit to enable DMA for receiver
   uart_->control3.bitfield.tx_dma = 1;  // set DMAT bit to enable DMA for transmitter

@@ -1,4 +1,4 @@
-/* Copyright 2020-2021, RespiraWorks
+/* Copyright 2020-2022, RespiraWorks
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -42,9 +42,8 @@ Abbreviations [RM], [DS], etc are defined in hal/README.md.
 #include "vars.h"
 #include "watchdog.h"
 
-static constexpr uint32_t CPUFrequencyMhz{80};
-
-static constexpr uint32_t CPUFrequencyHz{CPUFrequencyMhz * 1000 * 1000};
+static constexpr Frequency CPUFrequency{megahertz(80)};
+static constexpr Frequency UARTBaudRate{hertz(115200)};
 
 static constexpr uint32_t SystemStackSize{2500};
 
@@ -87,6 +86,8 @@ extern "C" void abort() {
   };
 }
 
+Frequency HalApi::GetCpuFreq() { return CPUFrequency; }
+
 // This function is called _init() above.  It does some basic
 // chip initialization.
 //
@@ -119,13 +120,12 @@ void HalApi::Init() {
   GPIO::enable_all_clocks();
   init_PCB_ID_pins();
   LEDs.initialize();
-  SystemTimer::singleton().initialize(CPUFrequencyMhz);
+  /// \TODO: ensure CPUFrequency is a multiple of 10 MHz
+  SystemTimer::singleton().initialize(CPUFrequency);
   /// \TODO: fault somehow if this returns false
-  [[maybe_unused]] bool buffer_size_sufficient = adc.initialize(CPUFrequencyHz);
-  pwm.initialize(CPUFrequencyHz);
+  [[maybe_unused]] bool buffer_size_sufficient = adc.initialize(CPUFrequency);
+  buzzer.initialize(CPUFrequency);
   InitUARTs();
-  buzzer.initialize(CPUFrequencyHz);
-  psol.initialize(CPUFrequencyHz);
   I2C::initialize();
   Interrupts::singleton().EnableInterrupts();
   StepMotor::OneTimeInit();
@@ -178,7 +178,7 @@ void HalApi::StartLoopTimer(const Duration &period, void (*callback)(void *), vo
   Watchdog::initialize();
 
   // Find the loop period in clock cycles
-  int32_t reload = static_cast<int32_t>(CPUFrequencyHz * period.seconds());
+  int32_t reload = static_cast<int32_t>(CPUFrequency.hertz() * period.seconds());
   int prescale = 1;
 
   // Adjust the prescaler so that my reload count will fit in the 16-bit
@@ -226,14 +226,14 @@ void Timer15ISR() {
 
   // Keep track of loop latency in uSec
   // Also max latency since it was last zeroed
-  latency = static_cast<float>(start) * (1.0f / CPUFrequencyMhz);
+  latency = static_cast<float>(start) * (1.0f / CPUFrequency.megahertz());
   if (latency > max_latency) max_latency = latency;
 
   // Call the function
   controller_callback(controller_arg);
 
   uint32_t end = Timer15Base->counter;
-  loop_time = static_cast<float>(end - start) * (1.0f / CPUFrequencyMhz);
+  loop_time = static_cast<float>(end - start) * (1.0f / CPUFrequency.megahertz());
 
   /// \TODO: Too tightly coupled bc HAL must be aware of steppers. Use another callback?
   // Start sending any queued commands to the stepper motor
@@ -273,26 +273,26 @@ void HalApi::InitUARTs() {
 #endif
   // [DS] Table 17 (pg 76)
   GPIO::alternate_function(GPIO::Port::A, /*pin =*/2,
-                           GPIO::AlternativeFuncion::AF7);  // USART2_TX
+                           GPIO::AlternativeFunction::AF7);  // USART2_TX
   GPIO::alternate_function(GPIO::Port::A, /*pin =*/3,
-                           GPIO::AlternativeFuncion::AF7);  // USART2_RX
+                           GPIO::AlternativeFunction::AF7);  // USART2_RX
 
   // [DS] Table 17 (pg 77)
   GPIO::alternate_function(GPIO::Port::B, /*pin =*/10,
-                           GPIO::AlternativeFuncion::AF7);  // USART3_TX
+                           GPIO::AlternativeFunction::AF7);  // USART3_TX
   GPIO::alternate_function(GPIO::Port::B, /*pin =*/11,
-                           GPIO::AlternativeFuncion::AF7);  // USART3_RX
+                           GPIO::AlternativeFunction::AF7);  // USART3_RX
   GPIO::alternate_function(GPIO::Port::B, /*pin =*/13,
-                           GPIO::AlternativeFuncion::AF7);  // USART3_CTS
+                           GPIO::AlternativeFunction::AF7);  // USART3_CTS
   GPIO::alternate_function(GPIO::Port::B, /*pin =*/14,
-                           GPIO::AlternativeFuncion::AF7);  // USART3_RTS_DE
+                           GPIO::AlternativeFunction::AF7);  // USART3_RTS_DE
 
 #ifdef UART_VIA_DMA
-  dma_uart.initialize(CPUFrequencyHz, 115200);
+  dma_uart.initialize(CPUFrequency, UARTBaudRate);
 #else
-  rpi_uart.Init(CPUFrequencyHz, 115200);
+  rpi_uart.Init(CPUFrequency, UARTBaudRate);
 #endif
-  debug_uart.Init(CPUFrequencyHz, 115200);
+  debug_uart.Init(CPUFrequency, UARTBaudRate);
 
   Interrupts::singleton().EnableInterrupt(InterruptVector::Dma1Channel2, IntPriority::Standard);
   Interrupts::singleton().EnableInterrupt(InterruptVector::Dma1Channel3, IntPriority::Standard);

@@ -83,7 +83,7 @@ void output_speed(Port port, uint8_t pin, OutSpeed speed) {
 // Many GPIO pins can be repurposed with an alternate function
 // See Table 17 and 18 [DS] for alternate functions
 // See [RM] 8.4.9 and 8.4.10 for GPIO alternate function selection
-void alternate_function(Port port, uint8_t pin, AlternativeFuncion func) {
+void alternate_function(Port port, uint8_t pin, AlternativeFunction func) {
   Register *const gpio = base_address(port);
   pin_mode(port, pin, PinMode::AlternateFunction);
 

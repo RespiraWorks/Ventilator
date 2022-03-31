@@ -44,9 +44,9 @@ void initialize() {
   // The following pins are used as i2c1 bus on the rev-1 PCB (see [PCB]):
   // Set Pin Function to I²C, [DS] Table 17 (pg 77)
   GPIO::alternate_function(GPIO::Port::B, /*pin =*/8,
-                           GPIO::AlternativeFuncion::AF4);  // I2C1_SCL
+                           GPIO::AlternativeFunction::AF4);  // I2C1_SCL
   GPIO::alternate_function(GPIO::Port::B, /*pin =*/9,
-                           GPIO::AlternativeFuncion::AF4);  // I2C1_SDA
+                           GPIO::AlternativeFunction::AF4);  // I2C1_SDA
   // Set output speed to Fast
   GPIO::output_speed(GPIO::Port::B, 8, GPIO::OutSpeed::Fast);
   GPIO::output_speed(GPIO::Port::B, 9, GPIO::OutSpeed::Fast);

@@ -19,13 +19,13 @@ QNanoQuickItemPainter *TimeSeriesGraph::createItemPainter() const {
   return new TimeSeriesGraphPainter();
 }
 
-QVector<QPointF> TimeSeriesGraph::GetDataset() const { return dataset_; };
+QVector<QPointF> TimeSeriesGraph::GetDataset() const { return dataset_; }
 
-float TimeSeriesGraph::GetRangeInSeconds() const { return range_in_secs_; };
+float TimeSeriesGraph::GetRangeInSeconds() const { return range_in_secs_; }
 
-QColor TimeSeriesGraph::GetLineColor() const { return line_color_; };
+QColor TimeSeriesGraph::GetLineColor() const { return line_color_; }
 
-QColor TimeSeriesGraph::GetAreaColor() const { return area_color_; };
+QColor TimeSeriesGraph::GetAreaColor() const { return area_color_; }
 
 bool TimeSeriesGraph::GetShowBaseline() const { return show_baseline_; }
 
@@ -72,7 +72,7 @@ void TimeSeriesGraph::SetDataset(QVector<QPointF> &dataset) {
   this->update();
 }
 
-float TimeSeriesGraph::GetMinValue() const { return min_value_; };
+float TimeSeriesGraph::GetMinValue() const { return min_value_; }
 
 void TimeSeriesGraph::SetMinValue(float value) {
   if (min_value_ != value) {
@@ -81,7 +81,7 @@ void TimeSeriesGraph::SetMinValue(float value) {
   }
 }
 
-float TimeSeriesGraph::GetMaxValue() const { return max_value_; };
+float TimeSeriesGraph::GetMaxValue() const { return max_value_; }
 
 void TimeSeriesGraph::SetMaxValue(float value) {
   if (max_value_ != value) {

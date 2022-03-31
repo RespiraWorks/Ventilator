@@ -33,7 +33,7 @@ class BreathSignals {
   std::optional<float> rr() const;
 
  private:
-  uint32_t num_breaths_ = 0;
+  uint32_t num_breaths_{0};
 
   std::optional<float> latest_pip_;
   std::optional<float> current_pip_;
@@ -41,9 +41,9 @@ class BreathSignals {
   std::optional<float> latest_peep_;
   std::optional<float> current_peep_;
 
-  uint64_t latest_breath_id_ = 0;
+  uint64_t latest_breath_id_{0};
 
-  static constexpr int MinRecentBreathStarts = 3;
-  static constexpr int MaxRecentBreathStarts = 5;
+  static constexpr int MinRecentBreathStarts{3};
+  static constexpr int MaxRecentBreathStarts{5};
   std::deque<SteadyInstant> recent_breath_starts_;
 };

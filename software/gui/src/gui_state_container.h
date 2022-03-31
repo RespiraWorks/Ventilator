@@ -149,10 +149,10 @@ class GuiStateContainer : public QObject {
   qreal get_measured_fio2_percent() const;
 
   const SteadyInstant startup_time_ = SteadyClock::now();
-  bool is_using_fake_data_ = false;
+  bool is_using_fake_data_{false};
   ControllerHistory history_;
   BreathSignals breath_signals_;
-  int battery_percentage_ = 70;
+  int battery_percentage_{70};
   SimpleClock clock_;
 
   QVector<QPointF> pressure_series_;
@@ -162,13 +162,13 @@ class GuiStateContainer : public QObject {
   // Commanded parameters
   // Initialize to default parameters like in
   // https://github.com/RespiraWorks/Ventilator/blob/89b817af/controller/src/main.cpp#L84
-  VentilationMode commanded_mode_ = VentilationMode::PRESSURE_CONTROL;
-  quint32 commanded_rr_ = 12;
-  quint32 commanded_pip_ = 15;
-  quint32 commanded_peep_ = 5;
-  qreal commanded_i_time_ = 1.0;
+  VentilationMode commanded_mode_{VentilationMode::PRESSURE_CONTROL};
+  quint32 commanded_rr_{12};
+  quint32 commanded_pip_{15};
+  quint32 commanded_peep_{5};
+  qreal commanded_i_time_{1.0};
   // https://respiraworks.slack.com/archives/C011UMNUWGZ/p1592608246223200?thread_ts=1592603466.221100&cid=C011UMNUWGZ
-  qreal commanded_fio2_percent_ = 21.0;
+  qreal commanded_fio2_percent_{21.0};
 
   AlarmManager alarm_manager_;
 };

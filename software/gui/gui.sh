@@ -63,7 +63,6 @@ The following options are available:
       [--no-cov]         - do not generate coverage reports
       [--upload-cov]     - upload coverage reports to codecov (for CI only)
   run          Run the application, forwards app options:
-      [-j]               - parallel build (auto select max-1 cores)
       [-x]               - forwards to Xvfb (for CLI-only testing)
       [--startup-only]   - just start up momentarily and shutdown
       [--serial-port]    - port for communicating with controller
@@ -199,7 +198,7 @@ generate_coverage_reports() {
       --output-directory "$COVERAGE_OUTPUT_DIR"
 
   echo "Coverage reports generated at '$COVERAGE_OUTPUT_DIR/index.html'"
-  echo "   You may open it in browser with 'python -m webbrowser ${COVERAGE_OUTPUT_DIR}/index.html'"
+  echo "   You may open it in browser with 'python3 -m webbrowser ${COVERAGE_OUTPUT_DIR}/index.html'"
 
   #launch_browser
 }

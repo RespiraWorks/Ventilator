@@ -23,8 +23,8 @@ limitations under the License.
 class PwmActuator : public Actuator {
  public:
   PwmActuator(GPIO::PwmChannel channel, Frequency pwm_freq, Frequency cpu_frequency,
-              const char *name, const char *help, float cal_0 = 0.0f, float cal_1 = 1.0f);
-    : Actuator(name, help, cal_0, cal_1), pwm_pin_(channel, pwm_freq, cpu_frequency) {};
+              const char *name, const char *help, float cal_0 = 0.0f, float cal_1 = 1.0f)
+      : Actuator(name, help, cal_0, cal_1), pwm_pin_(channel, pwm_freq, cpu_frequency){};
 
   void set(const float value) { pwm_pin_.set(get_value(value)); }
 

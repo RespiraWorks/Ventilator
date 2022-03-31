@@ -46,10 +46,10 @@
 //      TBD - which python script to run?
 //
 
-#include "actuator_base.h"
 #include "commands.h"
 #include "hal.h"
 #include "interface.h"
+#include "pwm_actuator.h"
 #include "system_constants.h"
 #include "system_timer.h"
 #include "vars.h"

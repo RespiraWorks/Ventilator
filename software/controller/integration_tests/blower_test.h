@@ -8,8 +8,8 @@
 //      TBD - which python script to run?
 //
 
-#include "actuators.h"
 #include "hal.h"
+#include "pwm_actuator.h"
 #include "system_constants.h"
 #include "system_timer.h"
 #include "watchdog.h"

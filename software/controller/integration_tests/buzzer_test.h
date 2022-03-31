@@ -8,8 +8,8 @@
 // Automation:
 //      TBD - which python script to run?
 //
-#include "actuator_base.h"
 #include "hal.h"
+#include "pwm_actuator.h"
 #include "system_constants.h"
 #include "system_timer.h"
 

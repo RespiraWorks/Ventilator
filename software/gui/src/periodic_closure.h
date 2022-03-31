@@ -59,6 +59,6 @@ class PeriodicClosure {
   std::thread loop_thread_;
 
   std::mutex mu_;
-  bool stop_requested_ = false;
+  bool stop_requested_{false};
   std::condition_variable stop_requested_cv_;
 };

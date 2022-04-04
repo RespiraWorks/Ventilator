@@ -17,31 +17,39 @@ limitations under the License.
 
 #include "system_timer.h"
 
-//////////////////////////////////////////////////////////////////
-//                   SENSOR LOGICAL MAPPINGS                    //
-//   Change these if you route your sensor tubing differently   //
-//////////////////////////////////////////////////////////////////
-AnalogPin sensor_pin(Sensor s) {
-  switch (s) {
-    case Sensor::PatientPressure:
-      return AnalogPin::InterimBoardAnalogPressure;
-    case Sensor::OxygenInflowPressureDiff:
-      return AnalogPin::U3PatientPressure;
-    case Sensor::AirInflowPressureDiff:
-      return AnalogPin::U4InhaleFlow;
-    case Sensor::OutflowPressureDiff:
-      return AnalogPin::U5ExhaleFlow;
-    case Sensor::FIO2:
-      return AnalogPin::InterimBoardOxygenSensor;
-  }
-  // Switch above covers all cases.
-  __builtin_unreachable();
-}
-
 Sensors::Sensors() = default;
 
-// NOTE - I can't do this in the constructor now because it gets called before
-// the HAL is set up, so the busy wait never finishes.
+// NOTE - I can't do this in the constructor because the Hal needs to be initialized
+// and we need to be able to write to the registers
+void Sensors::init(Frequency cpu_frequency) {
+  // Here we create all sensors and initialize the adc.
+  patient_pressure_sensor_.emplace("patient_pressure_", "for patient airway pressure",
+                                   adc_channel(Sensor::PatientPressure), &adc, ADC::VoltageRange);
+  fio2_sensor_.emplace("fio2", "Fraction of oxygen in supplied air", adc_channel(Sensor::FIO2),
+                       &adc);
+  air_influx_sensor_dp_.emplace("air_influx_", "for ambient air influx",
+                                adc_channel(Sensor::AirInflowPressureDiff), &adc,
+                                ADC::VoltageRange);
+  oxygen_influx_sensor_dp_.emplace("oxygen_influx_", "for concentrated oxygen influx",
+                                   adc_channel(Sensor::OxygenInflowPressureDiff), &adc,
+                                   ADC::VoltageRange);
+  outflow_sensor_dp_.emplace("outflow_", "for outflow", adc_channel(Sensor::OutflowPressureDiff),
+                             &adc, ADC::VoltageRange);
+
+  // These require existing DP sensors to link to
+  air_influx_sensor_.emplace("air_influx_", "for ambient air influx",
+                             &air_influx_sensor_dp_.value(), VenturiPortDiameter,
+                             VenturiChokeDiameter, VenturiCorrection);
+  oxygen_influx_sensor_.emplace("oxygen_influx_", "for concentrated oxygen influx",
+                                &oxygen_influx_sensor_dp_.value(), VenturiPortDiameter,
+                                VenturiChokeDiameter, VenturiCorrection);
+  outflow_sensor_.emplace("outflow_", "for outflow", &outflow_sensor_dp_.value(),
+                          VenturiPortDiameter, VenturiChokeDiameter, VenturiCorrection);
+
+  /// \TODO: fault somehow if this returns false
+  [[maybe_unused]] bool buffer_size_sufficient = adc.initialize(cpu_frequency);
+}
+
 void Sensors::calibrate() {
   // We wait 20ms from power-on-reset for pressure sensors to warm up.
   //
@@ -61,11 +69,11 @@ void Sensors::calibrate() {
   // open any necessary valves, and recalibrate.
   SystemTimer::singleton().delay(milliseconds(20));
 
-  patient_pressure_sensor_.set_zero(hal);
-  air_influx_sensor_dp_.set_zero(hal);
-  oxygen_influx_sensor_dp_.set_zero(hal);
-  outflow_sensor_dp_.set_zero(hal);
-  fio2_sensor_.set_zero(hal);
+  patient_pressure_sensor_->set_zero();
+  air_influx_sensor_dp_->set_zero();
+  oxygen_influx_sensor_dp_->set_zero();
+  outflow_sensor_dp_->set_zero();
+  fio2_sensor_->set_zero();
 }
 
 /// \TODO: Add alarms if sensor value is out of expected range?
@@ -83,10 +91,10 @@ SensorReadings Sensors::get_readings() const {
   static constexpr Pressure AmbientPressure = kPa(101.3f);
 
   return {
-      .patient_pressure = patient_pressure_sensor_.read(hal),
-      .fio2 = fio2_sensor_.read(hal, AmbientPressure),
-      .air_inflow = air_influx_sensor_.read(hal, AirDensity),
-      .oxygen_inflow = oxygen_influx_sensor_.read(hal, AirDensity),
-      .outflow = outflow_sensor_.read(hal, AirDensity),
+      .patient_pressure = patient_pressure_sensor_->read(),
+      .fio2 = fio2_sensor_->read(AmbientPressure),
+      .air_inflow = air_influx_sensor_->read(AirDensity),
+      .oxygen_inflow = oxygen_influx_sensor_->read(AirDensity),
+      .outflow = outflow_sensor_->read(AirDensity),
   };
 }

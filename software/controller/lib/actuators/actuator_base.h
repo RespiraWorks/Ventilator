@@ -18,7 +18,6 @@ limitations under the License.
 #include <stdint.h>
 
 #include "interpolant.h"
-#include "pwm.h"
 
 class Actuator {
  public:

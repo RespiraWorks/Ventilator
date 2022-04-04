@@ -8,8 +8,9 @@
 //      TBD - which python script to run?
 //
 
-#include "actuators.h"
 #include "hal.h"
+#include "pwm_actuator.h"
+#include "system_constants.h"
 #include "system_timer.h"
 #include "watchdog.h"
 
@@ -21,8 +22,7 @@ static constexpr float InitialStep{0.002f};
 
 void RunTest() {
   hal.Init();
-  PwmActuator blower{PwmPin::Blower, Actuators::BlowerFreq, "blower_", " of the blower"};
-  blower.initialize_pwm(HalApi::GetCpuFreq());
+  PwmActuator blower{BlowerChannel, BlowerFreq, HalApi::GetCpuFreq(), "blower_", " of the blower"};
 
   float fan_power = FanMin;
   float step = InitialStep;

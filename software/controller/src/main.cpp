@@ -157,8 +157,8 @@ static void HighPriorityTask(void *arg) {
     debug.Poll();
   }
 
-  // Calibrate the sensors.
-  // This needs to be done before the sensors are used.
+  // Calibrate the sensors after the pinch valves are properly homed to avoid the
+  // effects of the blower (and to a lesser degree the pinch valves) moving during startup.
   sensors.calibrate();
 
   // Current controller status.
@@ -215,15 +215,15 @@ int main() {
   // Initialize hal first because it initializes the watchdog. See comment on HalApi::Init().
   hal.Init();
 
-  // Init the pwm pins for actuators
-  actuators.Init(HalApi::GetCpuFreq());
-
   // Locate our non-volatile parameter block in flash
   nv_params.Init(&eeprom);
-  actuators.link(&nv_params, offsetof(NVParams::Structure, blower_pinch_cal),
+  // Init the pwm pins for actuators and link calibration tables
+  actuators.init(HalApi::GetCpuFreq(), &nv_params, offsetof(NVParams::Structure, blower_pinch_cal),
                  offsetof(NVParams::Structure, exhale_pinch_cal),
                  offsetof(NVParams::Structure, blower_cal),
                  offsetof(NVParams::Structure, psol_cal));
+
+  sensors.init(HalApi::GetCpuFreq());
 
   CommsInit();
 

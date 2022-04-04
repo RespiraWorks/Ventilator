@@ -15,9 +15,11 @@ limitations under the License.
 
 #include "actuators.h"
 
+#include "system_constants.h"
+
 void Actuators::execute(const ActuatorsState &desired_state) {
   // set blower PWM
-  blower_.set(desired_state.blower_power);
+  blower_->set(desired_state.blower_power);
 
   // Set the blower pinch valve position
   if (desired_state.blower_valve)
@@ -31,22 +33,30 @@ void Actuators::execute(const ActuatorsState &desired_state) {
   else
     exhale_pinch_.Disable();
 
-  psol_.set(desired_state.fio2_valve);
+  psol_->set(desired_state.fio2_valve);
 }
 
-void Actuators::Init(Frequency cpu_frequency) {
-  blower_.initialize_pwm(cpu_frequency);
-  psol_.initialize_pwm(cpu_frequency);
-};
+void Actuators::init(Frequency cpu_frequency, NVParams::Handler *nv_params,
+                     uint16_t blower_pinch_cal_offset, uint16_t exhale_pinch_cal_offset,
+                     uint16_t blower_cal_offset, uint16_t psol_cal_offset) {
+  // For now, the blower uses default calibration values, linearly spaced between 0 and 1
+  blower_.emplace(BlowerChannel, BlowerFreq, cpu_frequency, "blower_", " of the blower");
 
-void Actuators::link(NVParams::Handler *nv_params, uint16_t blower_pinch_cal_offset,
-                     uint16_t exhale_pinch_cal_offset, uint16_t blower_cal_offset,
-                     uint16_t psol_cal_offset) {
+  psol_.emplace(PSolChannel, PSolFreq, cpu_frequency, "psol_", " of the proportional solenoid",
+                PSolClosed, PSolOpen);
+
+  buzzer.emplace(BuzzerChannel, BuzzerFreq, cpu_frequency, "buzzer_", "of the buzzer", BuzzerOff,
+                 MaxBuzzerVolume);
+
+  // In case init was called with nullptr, these fail silently
   blower_pinch_.LinkCalibration(nv_params, blower_pinch_cal_offset);
   exhale_pinch_.LinkCalibration(nv_params, exhale_pinch_cal_offset);
-  blower_.LinkCalibration(nv_params, blower_cal_offset);
-  psol_.LinkCalibration(nv_params, psol_cal_offset);
+  blower_->LinkCalibration(nv_params, blower_cal_offset);
+  psol_->LinkCalibration(nv_params, psol_cal_offset);
 }
 
 // Return true if all actuators are enabled and ready for action
-bool Actuators::ready() { return blower_pinch_.IsReady() && exhale_pinch_.IsReady(); }
+bool Actuators::ready() {
+  return blower_pinch_.IsReady() && exhale_pinch_.IsReady() && blower_.has_value() &&
+         psol_.has_value();
+}

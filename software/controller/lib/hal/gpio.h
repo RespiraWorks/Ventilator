@@ -24,6 +24,8 @@ Reference abbreviations [RM], [DS], etc are defined in hal/README.md.
 
 #include <cstdint>
 
+#include "clocks.h"
+
 /******************************************************************
  * General Purpose I/O support. [RM] Chapter 8
  *
@@ -36,12 +38,12 @@ namespace GPIO {
 
 /// \TODO: Move these mappings elsewhere
 enum class Port : uint32_t {
-  A = 0x48000000,
-  B = 0x48000400,
-  C = 0x48000800,
-  D = 0x48000C00,
-  E = 0x48001000,
-  H = 0x48001C00,
+  A,
+  B,
+  C,
+  D,
+  E,
+  H,
 };
 
 // Value for GPIOx_MODER ([RM] 8.4.1)
@@ -57,6 +59,9 @@ enum class OutType : uint8_t { PushPull = 0b0, OpenDrain = 0b1 };
 
 // Value for GPIOx_OSPEEDR ([RM] 8.4.3)
 enum class OutSpeed : uint8_t { Slow = 0b00, Medium = 0b01, Fast = 0b10, Smoking = 0b11 };
+
+// Value for GPIOx_PUPDR ([RM] 8.4.4)
+enum class PullType : uint8_t { None = 0b00, Up = 0b01, Down = 0b10 };
 
 // [DS] Tables 17-18 (pg 76-86)
 enum class AlternativeFunction : uint32_t {
@@ -80,30 +85,85 @@ enum class AlternativeFunction : uint32_t {
 
 void enable_all_clocks();
 
-void pin_mode(Port port, uint8_t pin, PinMode mode);
+// Abstract pin. Note that for some types of pin (most notably AlternateFunction), we only need to
+// instantiate the pin so the registers are properly set, but we don't really need to keep a
+// reference to the pin itself
+// Also note that because the instantiation of a pin writes to registers, this needs to happen
+// after the Hal has been properly initialized.
+class Pin {
+ public:
+  Pin(Port port, uint8_t pin, PinMode mode);
 
-void output_type(Port port, uint8_t pin, OutType output_type);
+ protected:
+  Port port_;
+  uint8_t pin_;
+  // helper functions to set properties of the pin (writes them to registers).
+  void output_type(OutType output_type);              // for output or alternate pins
+  void output_speed(OutSpeed speed);                  // for output or alternate pins
+  void pull_type(PullType pull);                      // for input or alternate pins
+  void alternate_function(AlternativeFunction func);  // for analog output or alternate pins
+};
 
-void output_speed(Port port, uint8_t pin, OutSpeed speed);
+// Output pin, which can be set to 1 or cleared to 0
+class DigitalOutputPin : public Pin {
+ public:
+  DigitalOutputPin(Port port, uint8_t pin, bool start_high = false, OutSpeed speed = OutSpeed::Slow,
+                   OutType type = OutType::PushPull);
+  void set();
+  void clear();
+/// \TODO: make this part of a mock subclass rather than the main one
+#if !defined(BARE_STM32)
+  bool get() const;
 
-// Many GPIO pins can be repurposed with an alternate function
-// See Table 17 and 18 [DS] for alternate functions
-// See [RM] 8.4.9 and 8.4.10 for GPIO alternate function selection
-void alternate_function(Port port, uint8_t pin, AlternativeFunction func);
+ private:
+  bool value_{false};
+#endif
+};
 
-// Set a specific output pin
-void set_pin(Port port, uint8_t pin);
+// Input pins can be read as a boolean (0 or 1)
+class DigitalInputPin : public Pin {
+ public:
+  DigitalInputPin(Port port, uint8_t pin, PullType pull = PullType::None);
+  bool get() const;
+/// \TODO: make this part of a mock subclass rather than the main one
+#if !defined(BARE_STM32)
+  void set();
+  void clear();
 
-// Clear a specific output pin
-void clear_pin(Port port, uint8_t pin);
+ private:
+  bool value_{false};
+#endif
+};
 
-// Return the current value of an input pin ([RM] 8.4.5)
-bool get_pin(Port port, uint8_t pin);
+// Alternate function Pin, varying in function from serial bus handling to pwm output
+// See Table 17 and 18 [DS] for alternate functions mapping
+class AlternatePin : public Pin {
+ public:
+  AlternatePin(Port port, uint8_t pin, AlternativeFunction func, PullType pull = PullType::None,
+               OutSpeed speed = OutSpeed::Slow, OutType type = OutType::PushPull);
+};
 
-// This adds a pull-up resistor to an input pin
-void pull_up(Port port, uint8_t pin);
+// Helper struct that allows us to manipulate an analog input pin as a collection of everything
+// that helps define it: a physical pin (port and number) and an ADC channel number.
+// See Table 16 [DS] for physical pin to ADC channel mapping.
+// Functionality behind this is defined in adc.h
+struct AdcChannel {
+  Port port;
+  uint8_t pin;
+  uint8_t adc_channel;
+};
 
-// This adds a pull-down resistor to an input pin
-void pull_down(Port port, uint8_t pin);
+// Helper struct that allows us to manipulate a PWM pin as a collection of everything that helps
+// define it: a physical pin (port and number), an alternate function and a timer channel (timer
+// peripheral and channel number).
+// See Table 17 and 18 [DS] for physical pin to timer channel mapping.
+// Functionality behind this is defined in pwm.h
+struct PwmChannel {
+  Port port;
+  uint8_t pin;
+  AlternativeFunction function;
+  PeripheralID peripheral;
+  uint8_t timer_channel;
+};
 
 }  // namespace GPIO

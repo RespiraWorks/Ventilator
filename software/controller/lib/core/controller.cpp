@@ -17,9 +17,11 @@ limitations under the License.
 
 #include <math.h>
 
-static constexpr Duration LoopPeriod = milliseconds(10);
+#include <algorithm>
 
-/*static*/ Duration Controller::GetLoopPeriod() { return LoopPeriod; }
+#include "system_constants.h"
+
+Duration Controller::GetLoopPeriod() { return MainLoopPeriod; }
 
 std::pair<ActuatorsState, ControllerState> Controller::Run(Time now, const VentParams &params,
                                                            const SensorReadings &sensor_readings) {

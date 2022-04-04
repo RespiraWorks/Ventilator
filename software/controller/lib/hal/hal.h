@@ -33,7 +33,6 @@ limitations under the License.
 
 #include <algorithm>
 #include <cstdint>
-#include <optional>
 
 #include "led_indicators.h"
 #include "units.h"

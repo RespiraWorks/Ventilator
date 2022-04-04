@@ -111,6 +111,7 @@ class DigitalOutputPin : public Pin {
                    OutType type = OutType::PushPull);
   void set();
   void clear();
+/// \TODO: make this part of a mock subclass rather than the main one
 #if !defined(BARE_STM32)
   bool get() const;
 
@@ -124,6 +125,7 @@ class DigitalInputPin : public Pin {
  public:
   DigitalInputPin(Port port, uint8_t pin, PullType pull = PullType::None);
   bool get() const;
+/// \TODO: make this part of a mock subclass rather than the main one
 #if !defined(BARE_STM32)
   void set();
   void clear();
@@ -135,7 +137,6 @@ class DigitalInputPin : public Pin {
 
 // Alternate function Pin, varying in function from serial bus handling to pwm output
 // See Table 17 and 18 [DS] for alternate functions mapping
-// Note that this is subclassed as PwmPin to output pwm signals.
 class AlternatePin : public Pin {
  public:
   AlternatePin(Port port, uint8_t pin, AlternativeFunction func, PullType pull = PullType::None,
@@ -156,6 +157,7 @@ struct AdcChannel {
 // define it: a physical pin (port and number), an alternate function and a timer channel (timer
 // peripheral and channel number).
 // See Table 17 and 18 [DS] for physical pin to timer channel mapping.
+// Functionality behind this is defined in pwm.h
 struct PwmChannel {
   Port port;
   uint8_t pin;

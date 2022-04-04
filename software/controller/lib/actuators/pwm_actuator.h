@@ -26,7 +26,7 @@ class PwmActuator : public Actuator {
               const char *name, const char *help, float cal_0 = 0.0f, float cal_1 = 1.0f)
       : Actuator(name, help, cal_0, cal_1), pwm_pin_(channel, pwm_freq, cpu_frequency){};
 
-  void set(const float value) { pwm_pin_.set(get_value(value)); }
+  void set(const float value) { pwm_pin_.set(Actuator::get_value(value)); }
 
  private:
   GPIO::PwmPin pwm_pin_;

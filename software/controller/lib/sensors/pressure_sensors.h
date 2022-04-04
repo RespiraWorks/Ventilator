@@ -15,6 +15,7 @@ limitations under the License.
 
 #pragma once
 
+#include "analog_sensor.h"
 #include "sensor_base.h"
 
 class AnalogPressureSensor : public PressureSensor, public AnalogSensor {

@@ -1,4 +1,4 @@
-/* Copyright 2020, RespiraWorks
+/* Copyright 2020-2022, RespiraWorks
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,26 +15,8 @@ limitations under the License.
 
 #pragma once
 
-#include "adc.h"
 #include "units.h"
 #include "vars.h"
-
-class AnalogSensor {
- public:
-  AnalogSensor(const char *name, const char *help_supplement, const GPIO::AdcChannel &channel,
-               ADC *adc);
-
-  void set_zero();
-
-  float read_diff_volts() const;
-
- private:
-  GPIO::AnalogInputPin pin_;
-  Voltage zero_;
-
-  mutable Debug::Variable::Float dbg_zero_;
-  mutable Debug::Variable::Float dbg_voltage_;
-};
 
 class PressureSensor {
  public:

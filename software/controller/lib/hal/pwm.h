@@ -44,6 +44,7 @@ class PWM {
 
   TimerReg* timer_;
   uint8_t channel_;
+/// \TODO: move to a separate mock class
 #if !defined(BARE_STM32)
   float value_{0};
 
@@ -53,7 +54,7 @@ class PWM {
 };
 
 namespace GPIO {
-// PWM pin, handling to its own pwm signal.
+// PWM pin, handling its own pwm signal.
 class PwmPin : public AlternatePin {
  public:
   PwmPin(PwmChannel channel, Frequency pwm_freq, Frequency cpu_frequency);

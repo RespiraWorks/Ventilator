@@ -54,6 +54,8 @@ class Sensors {
   // stored in EEPROM, this function should be called immediately after init, but
   // it shouldn't stay that way (to accomodate for ventilator restart while linked
   // to a patient)
+  /// TODO: store calibration in EEPROM and have this called only upon user request
+  /// to make certain the vent is not linked to a patient
   void calibrate();
 
   // Read the sensors.

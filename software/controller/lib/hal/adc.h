@@ -65,10 +65,12 @@ class ADC {
   std::array<uint8_t, MaxAdcChannels> channels_;
   uint8_t n_channels_{0};
 
-  //\TODO: possibly have parent allocate memory depending on number of samples
+  /// \TODO: possibly have parent allocate memory depending on number of samples
   // Presized under some assumptions, see implementation for initialize()
   volatile uint16_t oversample_buffer_[AdcSampleHistoryHardMax * MaxAdcChannels];
 
+// \TODO: subclass as STM32 and mock classes to make this easier to read, and have the
+// mock class be part of the tests rather than the main code.
 #if defined(BARE_STM32)
   // helper functions to manipulate ADC registers
   void SetAdcSampleTime(uint8_t channel, uint32_t sample_time);

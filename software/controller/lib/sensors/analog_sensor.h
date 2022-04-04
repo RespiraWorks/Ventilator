@@ -1,4 +1,4 @@
-/* Copyright 2020, RespiraWorks
+/* Copyright 2020-2022, RespiraWorks
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,13 +15,23 @@ limitations under the License.
 
 #pragma once
 
-#include "analog_sensor.h"
-#include "sensor_base.h"
+#include "adc.h"
+#include "units.h"
+#include "vars.h"
 
-class TeledyneR24 : public OxygenSensor, public AnalogSensor {
+class AnalogSensor {
  public:
-  TeledyneR24(const char* name, const char* help_supplement, const GPIO::AdcChannel& channel,
-              ADC* adc);
+  AnalogSensor(const char *name, const char *help_supplement, const GPIO::AdcChannel &channel,
+               ADC *adc);
 
-  float read(Pressure p_ambient) const override;
+  void set_zero();
+
+  float read_diff_volts() const;
+
+ private:
+  GPIO::AnalogInputPin pin_;
+  Voltage zero_;
+
+  mutable Debug::Variable::Float dbg_zero_;
+  mutable Debug::Variable::Float dbg_voltage_;
 };

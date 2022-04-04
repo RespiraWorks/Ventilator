@@ -34,9 +34,7 @@ limitations under the License.
 #include <algorithm>
 #include <cstdint>
 
-#include "adc.h"
 #include "led_indicators.h"
-#include "pwm.h"
 #include "units.h"
 
 /// \TODO: Mock port interface should be with the tests, not main code
@@ -69,14 +67,7 @@ class TestSerialPort {
 class HalApi {
  public:
   /// \TODO: likely these should not even be members
-  ADC adc;
   LEDIndicators LEDs;
-  // \TODO: previous implementation of buzzer used a 0.8 scaling factor to produce max volume
-  // when we used set(1). We need to bring that back somehow (e.g make buzzer a pwm driven actuator
-  // with calibration from 0 to 0.8, which works, but buzzer isn't really an actuator so making it
-  // a member of Actuators feels wrong, and the initialization overhead is a bit much to live in
-  // main in my view).
-  PWM buzzer{PwmPin::Buzzer, kilohertz(2.4f)};
 
   static Frequency GetCpuFreq();
 

@@ -1,4 +1,4 @@
-/* Copyright 2020, RespiraWorks
+/* Copyright 2020-2022, RespiraWorks
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -14,30 +14,6 @@ limitations under the License.
 */
 
 #include "sensor_base.h"
-
-/// \TODO: generalize these classes to not require reference to entire HAL
-
-AnalogSensor::AnalogSensor(const char *name, const char *help_supplement, AnalogPin pin)
-    : pin_(pin),
-      dbg_zero_("zero", Debug::Variable::Access::ReadOnly, 0.f, "V", "Voltage offset "),
-      dbg_voltage_("voltage", Debug::Variable::Access::ReadOnly, 0.f, "V", "Voltage reading ") {
-  dbg_zero_.prepend_name(name);
-  dbg_zero_.append_help(help_supplement);
-
-  dbg_voltage_.prepend_name(name);
-  dbg_voltage_.append_help(help_supplement);
-}
-
-void AnalogSensor::set_zero(const HalApi &hal_api) {
-  zero_ = hal_api.adc.read(pin_);
-  dbg_zero_.set(zero_.volts());
-}
-
-float AnalogSensor::read_diff_volts(const HalApi &hal_api) const {
-  auto ret = (hal_api.adc.read(pin_) - zero_).volts();
-  dbg_voltage_.set(ret);
-  return ret;
-}
 
 PressureSensor::PressureSensor(const char *name, const char *help_supplement)
     : dbg_pressure_("dp", Debug::Variable::Access::ReadOnly, 0.f, "cmH2O",

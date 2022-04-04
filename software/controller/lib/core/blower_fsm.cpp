@@ -18,6 +18,7 @@ limitations under the License.
 #include <algorithm>
 
 #include "controller.h"
+#include "system_constants.h"
 #include "vars.h"
 
 // dbg_pa_* are pressure assist configuration vars.

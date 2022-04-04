@@ -9,6 +9,8 @@
 //      TBD - which python script to run?
 //
 #include "hal.h"
+#include "pwm_actuator.h"
+#include "system_constants.h"
 #include "system_timer.h"
 
 // test parameters
@@ -25,11 +27,14 @@ void RunTest() {
 
   bool buzzer_on{false};
 
+  PwmActuator buzzer{BuzzerChannel,    BuzzerFreq, HalApi::GetCpuFreq(), "buzzer_",
+                     " of the buzzer", BuzzerOff,  MaxBuzzerVolume};
+
   while (true) {
     if (buzzer_on) {
-      hal.buzzer.set(volume);
+      buzzer.set(volume);
     } else {
-      hal.buzzer.set(0);
+      buzzer.set(0);
     }
 
     SystemTimer::singleton().delay(Delay);

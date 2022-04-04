@@ -16,13 +16,14 @@ limitations under the License.
 #include "pressure_sensors.h"
 
 AnalogPressureSensor::AnalogPressureSensor(const char *name, const char *help_supplement,
-                                           AnalogPin pin, float voltage_to_kPa)
+                                           const GPIO::AdcChannel &channel, ADC *adc,
+                                           float voltage_to_kPa)
     : PressureSensor(name, help_supplement),
-      AnalogSensor(name, help_supplement, pin),
+      AnalogSensor(name, help_supplement, channel, adc),
       voltage_to_kPa_(voltage_to_kPa) {}
 
-Pressure AnalogPressureSensor::read(const HalApi &hal_api) const {
-  auto ret = kPa(AnalogSensor::read_diff_volts(hal_api) * voltage_to_kPa_);
+Pressure AnalogPressureSensor::read() const {
+  auto ret = kPa(AnalogSensor::read_diff_volts() * voltage_to_kPa_);
   dbg_pressure_.set(ret.cmH2O());
   return ret;
 }
@@ -33,9 +34,9 @@ Pressure AnalogPressureSensor::read(const HalApi &hal_api) const {
 //
 // voltage_range is whatever the voltage is scaled to as captured by your ADC.
 // Therefore, if we multiply the received voltage by 5/voltage_range, we get a pressure in kPa.
-MPXV5004DP::MPXV5004DP(const char *name, const char *help_supplement, AnalogPin pin,
-                       float voltage_range)
-    : AnalogPressureSensor(name, help_supplement, pin, 5.f / voltage_range) {}
+MPXV5004DP::MPXV5004DP(const char *name, const char *help_supplement,
+                       const GPIO::AdcChannel &channel, ADC *adc, Voltage voltage_range)
+    : AnalogPressureSensor(name, help_supplement, channel, adc, 5.f / voltage_range.volts()) {}
 
 // Vout = Vss * (0.09 * P + 0.04) between 0 and 5 V :
 // https://www.nxp.com/docs/en/data-sheet/MPX5010.pdf
@@ -44,6 +45,7 @@ MPXV5004DP::MPXV5004DP(const char *name, const char *help_supplement, AnalogPin 
 // voltage_range is whatever the voltage is scaled to as captured by your ADC.
 // Therefore, if we multiply the received voltage by 5/voltage_range and divide it by 0.45, we get a
 // pressure in kPa.
-MPXV5010DP::MPXV5010DP(const char *name, const char *help_supplement, AnalogPin pin,
-                       float voltage_range)
-    : AnalogPressureSensor(name, help_supplement, pin, 5.f / voltage_range / 0.45f) {}
+MPXV5010DP::MPXV5010DP(const char *name, const char *help_supplement,
+                       const GPIO::AdcChannel &channel, ADC *adc, Voltage voltage_range)
+    : AnalogPressureSensor(name, help_supplement, channel, adc,
+                           5.f / voltage_range.volts() / 0.45f) {}

@@ -8,8 +8,9 @@
 //      TBD - which python script to run?
 //
 
-#include "actuators.h"
 #include "hal.h"
+#include "pwm_actuator.h"
+#include "system_constants.h"
 #include "system_timer.h"
 #include "watchdog.h"
 
@@ -21,8 +22,9 @@ static constexpr float InitialStep{TEST_PARAM_3};
 
 void RunTest() {
   hal.Init();
-  PwmActuator psol{PwmPin::Psol, Actuators::PSolFreq, "psol_", " of the proportional solenoid"};
-  psol.initialize_pwm(HalApi::GetCpuFreq());
+  PwmActuator psol{
+      PSolChannel, PSolFreq, HalApi::GetCpuFreq(), "psol_", " of the proportional solenoid",
+      PSolClosed,  PSolOpen};
 
   float psol_position = PSolMin;
   float step = InitialStep;

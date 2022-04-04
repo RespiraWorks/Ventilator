@@ -17,40 +17,19 @@ limitations under the License.
 
 #include <cstdint>
 
+#include "gpio.h"
 #include "timers.h"
 #include "units.h"
 
-#if !defined(BARE_STM32)
-#include <map>
-
-#include "gpio.h"
-#endif
-
-// Pulse-width modulated outputs from the controller.  These can be set to
-// values in [0-255].
-//
-// Pins default to input, and will be set to output as part of the initialize method
-
-/// \TODO: abstract PwmPin definition out of here, and in a higher layer.
-enum class PwmPin {
-  Blower,
-  Buzzer,
-  Psol,
-};
-
 class PWM {
  public:
-  PWM(const PwmPin pin, const Frequency pwm_freq) : pin_(pin), pwm_freq_(pwm_freq){};
-
-  void initialize(Frequency cpu_frequency);
+  PWM(Frequency pwm_freq, PeripheralID peripheral, uint8_t channel, Frequency cpu_frequency);
 
   // Causes `pin` to output a square wave with the given duty cycle (range [0, 1], with preemptive
   // clamping before setting the registers).
   void set(float duty);
 
  private:
-  PwmPin pin_;
-
   // The selection of PWM frequency is a trade-off between latency and
   // resolution.  Higher frequencies give lower latency and lower resolution.
   //
@@ -63,16 +42,25 @@ class PWM {
   // part in 4000 (80000000/20000) or about 12 bits.
   Frequency pwm_freq_;
 
-  TimerReg* timer_{nullptr};
-  uint8_t channel_{0};
-
+  TimerReg* timer_;
+  uint8_t channel_;
+/// \TODO: move to a separate mock class
 #if !defined(BARE_STM32)
- public:
-  /// \TODO: is this the best thing to test? Isn't this implementation-specific?
-  void set_pin_mode(GPIO::PinMode mode);
+  float value_{0};
 
- private:
-  std::map<PwmPin, GPIO::PinMode> pwm_pin_modes_;
-  std::map<PwmPin, float> pwm_pin_values_;
+ public:
+  float get() const;
 #endif
 };
+
+namespace GPIO {
+// PWM pin, handling its own pwm signal.
+class PwmPin : public AlternatePin {
+ public:
+  PwmPin(PwmChannel channel, Frequency pwm_freq, Frequency cpu_frequency);
+  void set(float value);
+
+ private:
+  PWM pwm_;
+};
+}  // namespace GPIO

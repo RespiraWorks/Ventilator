@@ -1,4 +1,4 @@
-/* Copyright 2020, RespiraWorks
+/* Copyright 2020-2022, RespiraWorks
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,29 +15,12 @@ limitations under the License.
 
 #pragma once
 
-#include "hal.h"
 #include "units.h"
 #include "vars.h"
 
-class AnalogSensor {
- public:
-  AnalogSensor(const char *name, const char *help_supplement, AnalogPin pin);
-
-  void set_zero(const HalApi &hal_api);
-
-  float read_diff_volts(const HalApi &hal_api) const;
-
- private:
-  AnalogPin pin_;
-  Voltage zero_;
-
-  mutable Debug::Variable::Float dbg_zero_;
-  mutable Debug::Variable::Float dbg_voltage_;
-};
-
 class PressureSensor {
  public:
-  virtual Pressure read(const HalApi &hal_api) const = 0;
+  virtual Pressure read() const = 0;
 
  protected:
   PressureSensor(const char *name, const char *help_supplement);
@@ -46,7 +29,7 @@ class PressureSensor {
 
 class FlowSensor {
  public:
-  virtual VolumetricFlow read(const HalApi &hal_api, float air_density) const = 0;
+  virtual VolumetricFlow read(float air_density) const = 0;
 
  protected:
   FlowSensor(const char *name, const char *help_supplement);
@@ -55,7 +38,7 @@ class FlowSensor {
 
 class OxygenSensor {
  public:
-  virtual float read(const HalApi &hal_api, Pressure p_ambient) const = 0;
+  virtual float read(Pressure p_ambient) const = 0;
 
  protected:
   OxygenSensor(const char *name, const char *help_supplement);

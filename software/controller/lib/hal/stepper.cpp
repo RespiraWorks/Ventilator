@@ -17,6 +17,7 @@ limitations under the License.
 
 StepMotor StepMotor::motor_[StepMotor::MaxMotors];
 int StepMotor::total_motors_;
+std::optional<GPIO::DigitalOutputPin> StepMotor::chip_select_{std::nullopt};
 
 #if defined(BARE_STM32)
 
@@ -25,7 +26,6 @@ int StepMotor::total_motors_;
 
 #include "clocks.h"
 #include "dma.h"
-#include "gpio.h"
 #include "interrupts.h"
 #include "spi.h"
 #include "system_timer.h"
@@ -87,10 +87,6 @@ static constexpr float VelIntSpeedReg = TickTime * (1 << 26);
 // For now this is a constant, we're just using the
 // default value of the chip.
 static constexpr int MicrostepPerStep = 128;
-
-// These functions raise and lower the chip select pin
-void chip_select_high() { GPIO::set_pin(GPIO::Port::B, 6); }
-void chip_select_low() { GPIO::clear_pin(GPIO::Port::B, 6); }
 
 StepMtrErr StepMotor::SetParam(StepMtrParam param, uint32_t value) {
   uint8_t p = static_cast<uint8_t>(param);
@@ -183,26 +179,21 @@ void StepMotor::OneTimeInit() {
   //   PB4  - busy open drain output
   //   PC10 - STCK input
 
-  // Configure the CS and reset pins as outputs.
-  // pulled high.  I don't really use the reset pin,
-  // I just want it to be high so I don't reset the
-  // part inadvertently
-  chip_select_high();
-  GPIO::set_pin(GPIO::Port::A, 9);
-  GPIO::pin_mode(GPIO::Port::B, 6, GPIO::PinMode::Output);
-  GPIO::pin_mode(GPIO::Port::A, 9, GPIO::PinMode::Output);
+  // Configure the CS and reset pins as outputs, pulled high.
+  // I don't really use the reset pin, I just want it to be high so I don't reset the part
+  // inadvertently.
+  GPIO::DigitalOutputPin(GPIO::Port::A, 9, true);  // reset pin
+  chip_select_.emplace(GPIO::Port::B, 6, true);    // chip select pin
 
-  // Assign the three SPI pins to the SPI peripheral, [DS] Table 17 (pg 76)
-  GPIO::alternate_function(GPIO::Port::A, /*pin =*/5,
-                           GPIO::AlternativeFunction::AF5);  // SPI1_SCK
-  GPIO::alternate_function(GPIO::Port::A, /*pin =*/6,
-                           GPIO::AlternativeFunction::AF5);  // SPI1_MISO
-  GPIO::alternate_function(GPIO::Port::A, /*pin =*/7,
-                           GPIO::AlternativeFunction::AF5);  // SPI1_MOSI
-
-  // Set the output pins to use the highest speed setting
-  GPIO::output_speed(GPIO::Port::A, 5, GPIO::OutSpeed::Smoking);
-  GPIO::output_speed(GPIO::Port::A, 7, GPIO::OutSpeed::Smoking);
+  // Assign the three SPI pins to the SPI peripheral, [DS] Table 17 (pg 76) with output pins to
+  // highest speed setting SPI1_SCK
+  GPIO::AlternatePin(GPIO::Port::A, 5, GPIO::AlternativeFunction::AF5, GPIO::PullType::None,
+                     GPIO::OutSpeed::Smoking);
+  // SPI1_MISO
+  GPIO::AlternatePin(GPIO::Port::A, 6, GPIO::AlternativeFunction::AF5);
+  // SPI1_MOSI
+  GPIO::AlternatePin(GPIO::Port::A, 7, GPIO::AlternativeFunction::AF5, GPIO::PullType::None,
+                     GPIO::OutSpeed::Smoking);
 
   // Configure my SPI port to talk to the stepper
   SpiReg *const spi = Spi1Base;
@@ -788,14 +779,14 @@ void StepMotor::UpdateComState() {
   // NOTE - CS has to be high for at least 650ns between bytes.
   // I don't bother timing this because I've found that in
   // practice it takes longer than that to handle the interrupt
-  chip_select_low();
+  chip_select_->clear();
 
   dma->channel[c3].config.enable = 1;
   dma->channel[c4].config.enable = 1;
 }
 
 void StepMotor::DmaISR() {
-  chip_select_high();
+  chip_select_->set();
 
   // Clear the DMA interrupt
   DMA::ClearInt(DMA::Base::DMA2, DMA::Channel::Chan3, DMA::Interrupt::Global);
@@ -810,8 +801,7 @@ void StepMotor::StartQueuedCommands() {
   if (coms_state_ == StepCommState::Idle) UpdateComState();
 }
 
-// This is used to send a command to the stepper chips during
-// startup.
+// This is used to send a command to the stepper chips during startup.
 void StepMotor::SendInitCmd(uint8_t *buff, int len) {
   int c3 = static_cast<int>(DMA::Channel::Chan3);
   int c4 = static_cast<int>(DMA::Channel::Chan4);
@@ -825,7 +815,7 @@ void StepMotor::SendInitCmd(uint8_t *buff, int len) {
   dma->channel[c3].memory_address = buff;
   dma->channel[c4].memory_address = buff;
 
-  chip_select_low();
+  chip_select_->clear();
 
   // I prevent interrupts during this because I don't
   // want the normal interrupt handler to run.
@@ -846,7 +836,7 @@ void StepMotor::SendInitCmd(uint8_t *buff, int len) {
   // Raise the chip select line and wait 1 microsecond.
   // The minimum time the CS needs to be high is just under
   // 1 microsecond.
-  chip_select_high();
+  chip_select_->set();
   SystemTimer::singleton().delay(microseconds(1));
 }
 

@@ -15,11 +15,13 @@ limitations under the License.
 
 #pragma once
 
+#include "analog_sensor.h"
 #include "sensor_base.h"
 
 class TeledyneR24 : public OxygenSensor, public AnalogSensor {
  public:
-  TeledyneR24(const char* name, const char* help_supplement, AnalogPin pin);
+  TeledyneR24(const char* name, const char* help_supplement, const GPIO::AdcChannel& channel,
+              ADC* adc);
 
-  float read(const HalApi& hal_api, Pressure p_ambient) const override;
+  float read(Pressure p_ambient) const override;
 };

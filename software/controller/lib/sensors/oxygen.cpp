@@ -15,14 +15,15 @@ limitations under the License.
 
 #include "oxygen.h"
 
-TeledyneR24::TeledyneR24(const char *name, const char *help_supplement, AnalogPin pin)
-    : OxygenSensor(name, help_supplement), AnalogSensor(name, help_supplement, pin) {}
+TeledyneR24::TeledyneR24(const char *name, const char *help_supplement,
+                         const GPIO::AdcChannel &channel, ADC *adc)
+    : OxygenSensor(name, help_supplement), AnalogSensor(name, help_supplement, channel, adc) {}
 
 // Reads an oxygen sensor, returning the concentration of oxygen [0 ; 1.0]
 //
 // Output scales with partial pressure of O2, so ambient pressure must be
 // compensated to get an accurate FIO2.
-float TeledyneR24::read(const HalApi &hal_api, Pressure p_ambient) const {
+float TeledyneR24::read(Pressure p_ambient) const {
   // Teledyne R24-compatible Electrochemical Cell Oxygen Sensor
   // http://www.medicalsolutiontechnology.com/wp-content/uploads/2012/09/GO-04-DATA-SHEET.pdf
   // Sensitivity of 0.060V/fio2, where fio2 is 0.0 to 1.0, at pressure = 1atm
@@ -38,9 +39,9 @@ float TeledyneR24::read(const HalApi &hal_api, Pressure p_ambient) const {
   static const float OxygenSensorGain{0.060f};
 
   // TODO: raise alarm if fio2 is out of expected (0,1) range
-  auto ret = AnalogSensor::read_diff_volts(hal_api) / (AmplifierGain * OxygenSensorGain) /
-                 p_ambient.atm() +
-             O2ConcentrationInAir;
+  auto ret =
+      AnalogSensor::read_diff_volts() / (AmplifierGain * OxygenSensorGain) / p_ambient.atm() +
+      O2ConcentrationInAir;
 
   dbg_fio2_.set(ret);
 

@@ -63,7 +63,7 @@ static VenturiFlowSensor typical_venturi{
  * range (0-4kPa) is in the voltage range 0-3.3V.
  */
 static Voltage MPXV5004_PressureToVoltage(Pressure pressure) {
-  return volts(3.3f * (0.2f * pressure.kPa() + 0.2f));
+  return volts(ADC::VoltageRange.volts() * (0.2f * pressure.kPa() + 0.2f));
 }
 
 // @brief This method models the pressure to voltage transfer function of the
@@ -72,7 +72,7 @@ static Voltage MPXV5004_PressureToVoltage(Pressure pressure) {
 // pressure range (0-10kPa) is in the voltage range 0-3.3V.
 
 static Voltage MPXV5010_PressureToVoltage(Pressure pressure) {
-  return volts(3.3f * (0.09f * pressure.kPa() + 0.04f));
+  return volts(ADC::VoltageRange.volts() * (0.09f * pressure.kPa() + 0.04f));
 }
 // This method models the oxygen sensor. Voltage reads partial pressure of O2
 // and needs ambient pressure to modulate output voltage.
@@ -89,21 +89,22 @@ static SensorReadings update_readings(Duration dt, Pressure oxygen_influx_dp,
                                       Pressure patient_pressure, Pressure air_influx_dp,
                                       Pressure outflow_dp, Pressure p_amb, float fio2,
                                       Sensors *sensors) {
-  hal.adc.TESTSetAnalogPin(sensor_pin(Sensor::PatientPressure),
-                           MPXV5010_PressureToVoltage(patient_pressure));
-
-  hal.adc.TESTSetAnalogPin(sensor_pin(Sensor::OxygenInflowPressureDiff),
-                           MPXV5004_PressureToVoltage(oxygen_influx_dp));
-  hal.adc.TESTSetAnalogPin(sensor_pin(Sensor::AirInflowPressureDiff),
-                           MPXV5004_PressureToVoltage(air_influx_dp));
-  hal.adc.TESTSetAnalogPin(sensor_pin(Sensor::OutflowPressureDiff),
-                           MPXV5004_PressureToVoltage(outflow_dp));
-  hal.adc.TESTSetAnalogPin(sensor_pin(Sensor::FIO2), FIO2ToVoltage(fio2, p_amb));
+  sensors->adc.TESTSetAnalogPin(adc_channel(Sensor::PatientPressure).adc_channel,
+                                MPXV5010_PressureToVoltage(patient_pressure));
+  sensors->adc.TESTSetAnalogPin(adc_channel(Sensor::OxygenInflowPressureDiff).adc_channel,
+                                MPXV5004_PressureToVoltage(oxygen_influx_dp));
+  sensors->adc.TESTSetAnalogPin(adc_channel(Sensor::AirInflowPressureDiff).adc_channel,
+                                MPXV5004_PressureToVoltage(air_influx_dp));
+  sensors->adc.TESTSetAnalogPin(adc_channel(Sensor::OutflowPressureDiff).adc_channel,
+                                MPXV5004_PressureToVoltage(outflow_dp));
+  sensors->adc.TESTSetAnalogPin(adc_channel(Sensor::FIO2).adc_channel, FIO2ToVoltage(fio2, p_amb));
   SystemTimer::singleton().delay(dt);
   return sensors->get_readings();
 }
 
 TEST(SensorTests, FullScalePressureReading) {
+  Sensors sensors;
+  sensors.init(HalApi::GetCpuFreq());
   // These pressure waveforms start at 0 kPa to simulate the system being in the
   // proper calibration state then they go over the sensor full ranges.
   std::vector<Pressure> pressures = {kPa(0.0f), kPa(0.5f), kPa(1.0f), kPa(1.5f), kPa(2.0f),
@@ -111,40 +112,50 @@ TEST(SensorTests, FullScalePressureReading) {
 
   // Will pad the rest of the simulated analog signals with ambient pressure
   // readings (0 kPa) voltage equivalents
-  hal.adc.TESTSetAnalogPin(sensor_pin(Sensor::PatientPressure), MPXV5010_PressureToVoltage(kPa(0)));
+  sensors.adc.TESTSetAnalogPin(adc_channel(Sensor::PatientPressure).adc_channel,
+                               MPXV5010_PressureToVoltage(kPa(0)));
   // First set the simulated analog signals to an ambient 0 kPa corresponding
   // voltage during calibration
   Voltage voltage_at_0kPa = MPXV5004_PressureToVoltage(kPa(0));  //[V]
-  hal.adc.TESTSetAnalogPin(sensor_pin(Sensor::OxygenInflowPressureDiff), voltage_at_0kPa);
-  hal.adc.TESTSetAnalogPin(sensor_pin(Sensor::AirInflowPressureDiff), voltage_at_0kPa);
-  hal.adc.TESTSetAnalogPin(sensor_pin(Sensor::OutflowPressureDiff), voltage_at_0kPa);
+  sensors.adc.TESTSetAnalogPin(adc_channel(Sensor::OxygenInflowPressureDiff).adc_channel,
+                               voltage_at_0kPa);
+  sensors.adc.TESTSetAnalogPin(adc_channel(Sensor::AirInflowPressureDiff).adc_channel,
+                               voltage_at_0kPa);
+  sensors.adc.TESTSetAnalogPin(adc_channel(Sensor::OutflowPressureDiff).adc_channel,
+                               voltage_at_0kPa);
   // Set fio2 signal to allow calibration
-  hal.adc.TESTSetAnalogPin(sensor_pin(Sensor::FIO2), FIO2ToVoltage(0.21f, atm(1.0f)));
-
-  Sensors sensors;
+  sensors.adc.TESTSetAnalogPin(adc_channel(Sensor::FIO2).adc_channel,
+                               FIO2ToVoltage(0.21f, atm(1.0f)));
   sensors.calibrate();
 
   // Now to compare the pressure readings the sensor module is calculating
   // versus what the original pressure waveform was
   for (auto p : pressures) {
     SCOPED_TRACE("Pressure " + std::to_string(p.kPa()));
-    hal.adc.TESTSetAnalogPin(sensor_pin(Sensor::PatientPressure), MPXV5010_PressureToVoltage(p));
+    sensors.adc.TESTSetAnalogPin(adc_channel(Sensor::PatientPressure).adc_channel,
+                                 MPXV5010_PressureToVoltage(p));
     EXPECT_PRESSURE_NEAR(sensors.get_readings().patient_pressure, p);
   }
 }
 
 TEST(SensorTests, FiO2Reading) {
+  Sensors sensors;
+  sensors.init(HalApi::GetCpuFreq());
+
   // calibrate O2 sensor at 21% fio2, 1atm
-  hal.adc.TESTSetAnalogPin(sensor_pin(Sensor::OxygenInflowPressureDiff),
-                           FIO2ToVoltage(0.21f, atm(1.0f)));
-  hal.adc.TESTSetAnalogPin(sensor_pin(Sensor::PatientPressure), MPXV5010_PressureToVoltage(kPa(0)));
+  sensors.adc.TESTSetAnalogPin(adc_channel(Sensor::FIO2).adc_channel,
+                               FIO2ToVoltage(0.21f, atm(1.0f)));
+  sensors.adc.TESTSetAnalogPin(adc_channel(Sensor::PatientPressure).adc_channel,
+                               MPXV5010_PressureToVoltage(kPa(0)));
   // Set the other sensors to reasonable values to allow calibration
   Voltage voltage_at_0kPa = MPXV5004_PressureToVoltage(kPa(0));
-  hal.adc.TESTSetAnalogPin(sensor_pin(Sensor::OxygenInflowPressureDiff), voltage_at_0kPa);
-  hal.adc.TESTSetAnalogPin(sensor_pin(Sensor::AirInflowPressureDiff), voltage_at_0kPa);
-  hal.adc.TESTSetAnalogPin(sensor_pin(Sensor::OutflowPressureDiff), voltage_at_0kPa);
+  sensors.adc.TESTSetAnalogPin(adc_channel(Sensor::OxygenInflowPressureDiff).adc_channel,
+                               voltage_at_0kPa);
+  sensors.adc.TESTSetAnalogPin(adc_channel(Sensor::AirInflowPressureDiff).adc_channel,
+                               voltage_at_0kPa);
+  sensors.adc.TESTSetAnalogPin(adc_channel(Sensor::OutflowPressureDiff).adc_channel,
+                               voltage_at_0kPa);
 
-  Sensors sensors;
   sensors.calibrate();
 
   // fio2 profile
@@ -153,7 +164,8 @@ TEST(SensorTests, FiO2Reading) {
   // sweep all fio2 settings and 1 atm pressure
   for (auto fio2 : fio2_settings) {
     SCOPED_TRACE("fio2 " + std::to_string(fio2));
-    hal.adc.TESTSetAnalogPin(sensor_pin(Sensor::FIO2), FIO2ToVoltage(fio2, atm(1.0f)));
+    sensors.adc.TESTSetAnalogPin(adc_channel(Sensor::FIO2).adc_channel,
+                                 FIO2ToVoltage(fio2, atm(1.0f)));
     EXPECT_NEAR(sensors.get_readings().fio2, fio2, ComparisonToleranceFIO2);
   }
   // TODO: check the effect of ambient pressure once the system has a way to
@@ -181,6 +193,9 @@ TEST(SensorTests, TestVolumetricFlowCalculation) {
 }
 
 TEST(SensorTests, TotalFlowCalculation) {
+  Sensors sensors;
+  sensors.init(HalApi::GetCpuFreq());
+
   // These pressure waveforms start at 0 kPa to simulate the system being in the
   // proper calibration state then they go over the sensor full ranges with
   // less samples than for FullScaleReadings.
@@ -188,15 +203,19 @@ TEST(SensorTests, TotalFlowCalculation) {
 
   // First set the simulated analog signals to an ambient 0 kPa corresponding
   // voltage during calibration
-  hal.adc.TESTSetAnalogPin(sensor_pin(Sensor::PatientPressure), MPXV5010_PressureToVoltage(kPa(0)));
+  sensors.adc.TESTSetAnalogPin(adc_channel(Sensor::PatientPressure).adc_channel,
+                               MPXV5010_PressureToVoltage(kPa(0)));
   Voltage voltage_at_0kPa = MPXV5004_PressureToVoltage(kPa(0));  //[V]
-  hal.adc.TESTSetAnalogPin(sensor_pin(Sensor::OxygenInflowPressureDiff), voltage_at_0kPa);
-  hal.adc.TESTSetAnalogPin(sensor_pin(Sensor::AirInflowPressureDiff), voltage_at_0kPa);
-  hal.adc.TESTSetAnalogPin(sensor_pin(Sensor::OutflowPressureDiff), voltage_at_0kPa);
+  sensors.adc.TESTSetAnalogPin(adc_channel(Sensor::OxygenInflowPressureDiff).adc_channel,
+                               voltage_at_0kPa);
+  sensors.adc.TESTSetAnalogPin(adc_channel(Sensor::AirInflowPressureDiff).adc_channel,
+                               voltage_at_0kPa);
+  sensors.adc.TESTSetAnalogPin(adc_channel(Sensor::OutflowPressureDiff).adc_channel,
+                               voltage_at_0kPa);
   // Set fio2 signal to allow calibration
-  hal.adc.TESTSetAnalogPin(sensor_pin(Sensor::FIO2), FIO2ToVoltage(0.21f, atm(1.0f)));
+  sensors.adc.TESTSetAnalogPin(adc_channel(Sensor::FIO2).adc_channel,
+                               FIO2ToVoltage(0.21f, atm(1.0f)));
 
-  Sensors sensors;
   sensors.calibrate();
 
   for (auto p_air_in : pressures) {
@@ -217,24 +236,27 @@ TEST(SensorTests, TotalFlowCalculation) {
 }
 
 TEST(SensorTests, Calibration) {
+  Sensors sensors;
+  sensors.init(HalApi::GetCpuFreq());
+
   // First set the simulated analog signals to randomly chosen signals
   // corresponding to conditions during calibration
   Pressure init_oxy_inflow_delta = kPa(0.09f);
-  hal.adc.TESTSetAnalogPin(sensor_pin(Sensor::OxygenInflowPressureDiff),
-                           MPXV5004_PressureToVoltage(init_oxy_inflow_delta));
+  sensors.adc.TESTSetAnalogPin(adc_channel(Sensor::OxygenInflowPressureDiff).adc_channel,
+                               MPXV5004_PressureToVoltage(init_oxy_inflow_delta));
   Pressure init_pressure = kPa(0.23f);
-  hal.adc.TESTSetAnalogPin(sensor_pin(Sensor::PatientPressure),
-                           MPXV5010_PressureToVoltage(init_pressure));
+  sensors.adc.TESTSetAnalogPin(adc_channel(Sensor::PatientPressure).adc_channel,
+                               MPXV5010_PressureToVoltage(init_pressure));
   Pressure init_air_inflow_delta = kPa(0.15f);
-  hal.adc.TESTSetAnalogPin(sensor_pin(Sensor::AirInflowPressureDiff),
-                           MPXV5004_PressureToVoltage(init_air_inflow_delta));
+  sensors.adc.TESTSetAnalogPin(adc_channel(Sensor::AirInflowPressureDiff).adc_channel,
+                               MPXV5004_PressureToVoltage(init_air_inflow_delta));
   Pressure init_outflow_delta = kPa(-0.13f);
-  hal.adc.TESTSetAnalogPin(sensor_pin(Sensor::OutflowPressureDiff),
-                           MPXV5004_PressureToVoltage(init_outflow_delta));
+  sensors.adc.TESTSetAnalogPin(adc_channel(Sensor::OutflowPressureDiff).adc_channel,
+                               MPXV5004_PressureToVoltage(init_outflow_delta));
   float init_fio2 = 0.15f;
-  hal.adc.TESTSetAnalogPin(sensor_pin(Sensor::FIO2), FIO2ToVoltage(init_fio2, atm(1.0f)));
+  sensors.adc.TESTSetAnalogPin(adc_channel(Sensor::FIO2).adc_channel,
+                               FIO2ToVoltage(init_fio2, atm(1.0f)));
 
-  Sensors sensors;
   sensors.calibrate();
 
   // get the sensor readings for the init signals, expect 0 (except for fio2,

@@ -50,30 +50,22 @@ class Actuators {
   // The system should be kept in a safe state until this returns true.
   bool ready();
 
-  // links actuators calibration tables to nv_params.
-  void link(NVParams::Handler *nv_params, uint16_t blower_pinch_cal_offset,
+  // Creates pwm actuators and links actuators calibration tables to nv_params.
+  void init(Frequency cpu_frequency, NVParams::Handler *nv_params, uint16_t blower_pinch_cal_offset,
             uint16_t exhale_pinch_cal_offset, uint16_t blower_cal_offset, uint16_t psol_cal_offset);
-
-  void Init(Frequency cpu_frequency);
 
   // Causes passed state to be applied to the actuators
   void execute(const ActuatorsState &desired_state);
 
-  // Blower is driven by a 20kHz PWM, as a compromise between resolution and response time
-  /// TODO: add/find a better rationale for this, maybe with the resulting response time/resolution
-  static constexpr Frequency BlowerFreq = kilohertz(20);
-  // psol is driven by a 5kHz PWM
-  /// TODO: find the rationale behind this
-  static constexpr Frequency PSolFreq = kilohertz(5);
-
  private:
   PinchValve blower_pinch_;
   PinchValve exhale_pinch_;
-  PwmActuator blower_{PwmPin::Blower, BlowerFreq, "blower_", " of the blower"};
+  // Blower, PSol and buzzer use pwm pins and need to be instantiated after HAL, therefore we
+  // use std::optional to delay the instantiation within init function.
+  std::optional<PwmActuator> blower_{std::nullopt};
+  std::optional<PwmActuator> psol_{std::nullopt};
 
-  // Testing in Edwin's garage, we found that the psol was fully closed at
-  // somewhere between 0.75 and 0.80 (i.e. definitely zero at 0.75 and probably
-  // zero a bit above that) and fully open at 0.90.
-  // \TODO: the values in the comment are inconsistent with the code, have Edwin confirm those.
-  PwmActuator psol_{PwmPin::Psol, PSolFreq, "psol_", " of the proportional solenoid", 0.35f, 0.75f};
+ public:
+  // buzzer is made public to allow easier manipulation (not through actuators.execute()).
+  std::optional<PwmActuator> buzzer{std::nullopt};
 };

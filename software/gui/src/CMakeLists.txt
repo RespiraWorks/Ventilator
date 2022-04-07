@@ -12,9 +12,15 @@ find_package(Qt5 COMPONENTS
   REQUIRED)
 
 set(${this_target}_sources
+  alarm_manager.cpp
+  breath_signals.cpp
+  controller_history.cpp
   gui_state_container.cpp
+  latching_alarm.cpp
   logger.cpp
   periodic_closure.cpp
+  respira_connected_device.cpp
+  time_series_graph.cpp
   time_series_graph_painter.cpp
   )
 
@@ -54,6 +60,8 @@ target_include_directories(
   INTERFACE $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 
+enable_coverage(${this_target})
+
 target_link_libraries(
   ${this_target}
   PUBLIC common
@@ -65,5 +73,3 @@ target_link_libraries(
   PUBLIC Qt5::Quick
   PUBLIC Qt5::Multimedia
 )
-
-enable_coverage(${this_target})

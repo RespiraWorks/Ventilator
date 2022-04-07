@@ -49,5 +49,5 @@ class PatientDetachedAlarm : public LatchingAlarm {
   // about -1600ml/s even with PIP/PEEP set to 5cmH2O.  -500ml/s is
   // conservative, but still well below what we'd expect to see in normal
   // operation.
-  static inline constexpr VolumetricFlow threshold_ = ml_per_sec(-500);
+  static inline constexpr VolumetricFlow threshold_{ml_per_sec(-500)};
 };

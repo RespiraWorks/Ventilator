@@ -52,6 +52,6 @@ class SimpleClock : public QObject {
   void updated();
 
  private:
-  QTime current_time_ = QTime::currentTime();
+  QTime current_time_{QTime::currentTime()};
   QTimer timer_;
 };

@@ -14,10 +14,20 @@ set(${this_target}_sources
   )
 
 set(${this_target}_headers
+  alarm_manager_test.h
   breath_signals_test.h
+  controller_history_test.h
+  gui_state_container_test.h
   latching_alarm_test.h
   logger_test.h
   patient_detached_alarm_test.h
+  periodic_closure_test.h
+  pip_exceeded_alarm_test.h
+  pip_not_reached_alarm_test.h
+  respira_connected_device_test.h
+  simple_clock_test.h
+  time_series_graph_painter_test.h
+  time_series_graph_test.h
   )
 
 add_executable(
@@ -25,6 +35,8 @@ add_executable(
   ${${this_target}_sources}
   ${${this_target}_headers}
 )
+
+enable_coverage(${this_target})
 
 target_include_directories(
   ${this_target}
@@ -36,8 +48,6 @@ target_link_libraries(
   PRIVATE ${PROJECT_NAME}_backend
   PRIVATE Qt5::Test
 )
-
-enable_coverage(${this_target})
 
 # Creates command dependent on existence of target
 add_custom_target(run_gui_backend_tests

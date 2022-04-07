@@ -82,3 +82,14 @@ void TimeSeriesGraphPainter::synchronize(QNanoQuickItem *item) {
   color_fill_ = QNanoColor(realItem->GetAreaColor().red(), realItem->GetAreaColor().green(),
                            realItem->GetAreaColor().blue(), realItem->GetAreaColor().alpha());
 }
+
+float TimeSeriesGraphPainter::calculateRealX(float timeX) {
+  float result = width() * (1.0 + timeX / range_in_sec);
+  return result;
+}
+
+float TimeSeriesGraphPainter::calculateRealY(float value) {
+  float ratio = (value - min_value_) / (max_value_ - min_value_);
+  float result = height() - (ratio * height());
+  return result;
+}

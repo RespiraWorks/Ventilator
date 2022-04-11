@@ -1,8 +1,8 @@
 # Air filter assembly
 
-| Patient connector |     | Air inlet/outlet  |     |
-|:-----------------:|:---:|:-----------------:|:---:|
-|![](images/rendered_patient_solid.jpg) |![](images/rendered_patient_cut.jpg) |![](images/rendered_outlet_solid.jpg) |![](images/rendered_outlet_cut.jpg) |
+|         Patient connector          |                                       |        Air inlet/outlet         |                                     |
+|:----------------------------------:|:-------------------------------------:|:-------------------------------:|:-----------------------------------:|
+| ![](images/rendered_patient.jpg)   | ![](images/rendered_patient_cut.jpg)  | ![](images/rendered_outlet.jpg) | ![](images/rendered_outlet_cut.jpg) |
 
 ## Design basis
 
@@ -65,9 +65,9 @@ Most recent changes also include thickening of the walls to make the 3d prints l
 
 ### Source files
 
-> TODO: drawings - printed parts and gasket only
-
 The custom design and assembly have been carried out in Autodesk Inventor, and the following "source" files are provided:
+
+All Inventor assembly models and drawings are within this repo directory.
 
 * [Filter assembly.iam](filter_assembly.iam) - Inventor assembly file for a single filter holder
 * [Filter housing.ipt](filter_housing.ipt) - Inventor part file for filter housing/panel mount (pictured in purple above).
@@ -75,21 +75,23 @@ The custom design and assembly have been carried out in Autodesk Inventor, and t
 * [Filter gasket.ipt](filter_gasket.ipt) - Inventor part file for filter gasket design
 * [Filter stand-in.ipt](filter_stand-in.ipt) - Stand-in for the actual HEPA filter.
 
+> TODO: drawings - printed parts, gasket, assembly
+
 > TODO: Move filter stand-in to third party dir
+
+> TODO: Make CAD for gasket jig
 
 Previous versions of these parts were designed in OnShape, and the history of those previous iterations can be found
 [here](https://cad.onshape.com/documents/3fe0c1f79c482144c267173d/w/2ad1c08071a25185f9c78c68/e/c3b817c7fd516ff612068657).
 
-> TODO: Make CAD for gasket jig
+Recently exported files for manufacturing can be found on our Google Drive at
+[Manufacturing/Output files v0.4](https://tinyurl.com/y4t5tz9f).
 
 ### 3d printing
 
-The following STL files have been exported for 3d printing:
-* [Filter housing.stl](exports/filter_housing.stl) - should need 4 of these
-* [Filter cover - patient connector.stl](exports/filter_cover_patient_connector.stl) - should need 2 of these
-* [Filter cover - air vent.stl](exports/filter_cover_air_vent.stl) - should need 2 of these
+Recently exported files for 3d printing can be found on our Google Drive at
+[Manufacturing/Output files v0.4/3d printing](https://tinyurl.com/2kuwps9h).
 
-Quantities identified above assume a full set of 4 filter assemblies for a single ventilator.
 
 ![](images/printed_set.jpg)
 
@@ -102,31 +104,38 @@ BEFORE purchasing any parts.**
 
 **Note:** The below quantities are for building a complete set of 4 filter housings needed for one ventilator assembly.
 
-| Item  | Quantity  | Manufacturer  | Part #                                 | Price (USD) | Sources[*][ppg]| Notes |
-| ----- |----------:| ------------- | -------------------------------------- | -----------:|:-----------:|:------|
-|**A1** | 4         | RespiraWorks  | [Filter housing][a1rw]                 | 1.00        | Rw          | 3D printed from STL in link |
-|**A2** | 2         | RespiraWorks  | [Filter cover w/ tubing adapter][a2rw] | 1.00        | Rw          | 3D printed from STL in link |
-|**A3** | 2         | RespiraWorks  | [Filter cover w/ outlet vent][a3rw]    | 1.00        | Rw          | 3D printed from STL in link |
-|**A4** | 4         | Amyehouse     | 20160819-1a                            | 1.33        | [Z][a4amzn] | Roomba 700-compatible HEPA filters |
-|**A5** | (~100 cm²)| McMaster-Carr | 8785K82                                | 240 / m²    | [C][a5mcmc] | Gasket material, cut with jigs(**A9+A10**) to make **A6** |
-|**A6** | 8         | RespiraWorks  | [Filter gaskets][a6rw]                 | 0.10        | Rw          | Filter gaskets, made from **A5**, using jigs **A9+A10** |
-|**A7** | 8         | McMaster-Carr | 96016A556                              | 0.55        | [C][a7mcmc] | M3 thumbscrews |
-|**A8** | 8         | McMaster-Carr | 94180A333                              | 0.17        | [C][a8mcmc] | Heat-set inserts for m3 screws |
-|**A9** | (1)       | RespiraWorks  | [Filter inside cut jig][a9rw]          | *tool*      | Rw          | 3D printed from STL in link |
-|**A10**| (1)       | RespiraWorks  | [Filter outside cut jig][a10rw]        | *tool*      | Rw          | 3D printed from STL in link |
+| Item    |   Quantity | Manufacturer   | Part #                                 | Price (USD) | Sources[*][ppg] | Notes                                                  |
+|---------|-----------:|----------------|----------------------------------------|------------:|:---------------:|:-------------------------------------------------------|
+| **A1**  |          4 | RespiraWorks   | [Filter housing][a1rw]                 |        1.00 |       Rw        | 3D printed from STL in link                            |
+| **A2**  |          2 | RespiraWorks   | [Filter cover w/ tubing adapter][a2rw] |        1.00 |       Rw        | 3D printed from STL in link                            |
+| **A3**  |          2 | RespiraWorks   | [Filter cover w/ outlet vent][a3rw]    |        1.00 |       Rw        | 3D printed from STL in link                            |
+| **A4**  |          4 | Amyehouse      | 20160819-1a                            |        1.33 |   [Z][a4amzn]   | Roomba 700-compatible HEPA filters                     |
+| **A5**  | (~100 cm²) | McMaster-Carr  | 8785K82                                |    240 / m² |   [C][a5mcmc]   | Gasket material, cut with jigs`[A9-10]` to make `[A6]` |
+| **A6**  |          8 | RespiraWorks   | [Filter gaskets][a6rw]                 |        0.10 |       Rw        | Filter gaskets, made from `[A5]`, using jigs `[A9-10]` |
+| **A7**  |          8 | McMaster-Carr  | 99607A279                              |        9.96 |   [C][a7mcmc]   | M4 thumbscrews                                         |
+| **A8**  |          8 | McMaster-Carr  | 94180A353                              |        0.24 |   [C][a8mcmc]   | Heat-set inserts for m4 screws                         |
+| **A9**  |        (1) | RespiraWorks   | [Filter inside cut jig][a9rw]          |      *tool* |       Rw        | 3D printed from STL in link                            |
+| **A10** |        (1) | RespiraWorks   | [Filter outside cut jig][a10rw]        |      *tool* |       Rw        | 3D printed from STL in link                            |
+| **A11** |          4 | McMaster-Carr  | 93625A150                              |        0.06 |  [C][a11mcmc]   | M4 lock nut                                            |
+| **A12** |          4 | McMaster-Carr  | 93475A230                              |        0.02 |  [C][a12mcmc]   | M4 washer, 9mm OD                                      |
+| **A13** |          4 | McMaster-Carr  | 92095A193                              |        0.09 |  [C][a13mcmc]   | M4 screw, 14mm                                         |
 
-**Single filter holder assembly price:** USD 4.97
 
-[a1rw]:   exports/filter_housing.stl
-[a2rw]:   exports/filter_cover_patient_connector.stl
-[a3rw]:   exports/filter_cover_air_vent.stl
+**Single filter holder assembly price:** USD ~25.00
+
+[a1rw]:   #3d-printing
+[a2rw]:   #3d-printing
+[a3rw]:   #3d-printing
 [a4amzn]: https://www.amazon.com/gp/product/B01KNZCW8E
 [a5mcmc]: https://www.mcmaster.com/8785K82/
 [a6rw]:   #filter-gaskets
-[a7mcmc]: https://www.mcmaster.com/96016A556/
-[a8mcmc]: https://www.mcmaster.com/94180A333/
-[a9rw]:   exports/filter-gasket-jig-inside.stl
-[a10rw]:  exports/filter-gasket-jig-outside.stl
+[a7mcmc]: https://www.mcmaster.com/99607A279/
+[a8mcmc]: https://www.mcmaster.com/94180A353/
+[a9rw]:   #filter-gaskets
+[a10rw]:  #filter-gaskets
+[a11mcmc]: https://www.mcmaster.com/93625A150/
+[a12mcmc]: https://www.mcmaster.com/93475A230/
+[a13mcmc]: https://www.mcmaster.com/92095A193/
 
 ## Assembly
 
@@ -138,17 +147,19 @@ BEFORE purchasing any parts.**
 
 - Install heat set inserts into the filter housings.
 
-> **TODO: add picture of installed**
+> TODO: add picture of installed
 
 - Remove the filters `[A4]` from the housings that they arrive in from the manufacturer.
 
-|                            |                             |
-|:--------------------------:|:---------------------------:|
-|![](images/roomba1.jpg) | ![](images/roomba2.jpg) |
+|                           |                           |
+|:-------------------------:|:-------------------------:|
+| ![](images/roomba1.jpg)   | ![](images/roomba2.jpg)   |
 
 
 ### Filter gaskets
 
+Recently exported files for making gaskets can be found on our Google Drive at
+[Manufacturing/Output files v0.4/Gaskets](https://tinyurl.com/yc8cx38z).
 
 | Cut the inner edge of the gasket in the gasket material using the inside cut jig `[A9]` | Place the outer cut jig `[A10]` into the hole you just made |
 |:--------------------------:|:---------------------------:|
@@ -157,15 +168,17 @@ BEFORE purchasing any parts.**
 
 Cut the outer edge of the gasket.
 
-|                            |                             |
-|:--------------------------:|:---------------------------:|
-|![](images/MakeGasket5.jpg) | ![](images/MakeGasket6.jpg) |
+|                              |                             |
+|:----------------------------:|:---------------------------:|
+| ![](images/MakeGasket5.jpg)  | ![](images/MakeGasket6.jpg) |
 
 - Repeat steps above to produce a total of 8 gaskets for 4 filter assemblies
 
 - Test the fit of all filter assemblies with gaskets and filters. You may need to sand or file the printed
 housing components to ensure that all edges and corners are clean to maintain a tight seal.
 
-|                            |                             |
-|:--------------------------:|:---------------------------:|
-|![](images/parts.jpg) | ![](images/assembled.jpg) |
+|                        |                            |
+|:----------------------:|:--------------------------:|
+| ![](images/parts.jpg)  | ![](images/assembled.jpg)  |
+
+- Use M4 hardware `[A11-13]` to attach filter holder to the [filter panel assembly](..).

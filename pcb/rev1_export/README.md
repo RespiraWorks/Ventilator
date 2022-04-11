@@ -65,7 +65,7 @@ If you are a RespiraWorks contributor, request dev hardware by making an entry
   connected loads like the PSOL.  Remove C33 and C34.
 
 ## Rev 1.0 PCB Quick Start Guide for Electrical Developers
-* If you are building a complete enclosed ventilator, follow the instructions on [display_panel](../../manufacturing/internals/display_panel/README.md).
+* If you are building a complete enclosed ventilator, follow the instructions on [electronics](../../manufacturing/internals/electronics/README.md).
 * If you have SN 01, 02, 03, or 05, make sure you check the errata above before you proceed or you may damage the Rpi.
 * If you intend to use the stepper motor-based pinch valves, you will need to solder some wires to power the stepper
   driver as it takes a power input for the motor that is separate  from the logic power it gets from the Nucleo below.
@@ -88,7 +88,7 @@ If you are a RespiraWorks contributor, request dev hardware by making an entry
   long gold pins of this module can get bent so make sure they are straight and they all go into their respective
   sockets successfully.  The stepper driver green connectors go in the direction of the white connectors on the
   mainboard PCB.  For setting up multiple stepper boards and/or connecting actual steppers, see
-  [this guide](../../manufacturing/internals/display_panel/electronics/stepper_drivers).
+  [this guide](../../manufacturing/internals/electronics/stepper_setup.md).
 
 ![plug in the stepper driver](readme_photos/IMG_9307.jpg)
 * If you are using an Rpi 3B+ or 4 with this PCB, plug this into the RPI socket.  Note that if you have the standoffs
@@ -142,10 +142,10 @@ When the PCB was originally designed, the ability to add a stepper driver was es
 case* we wanted to try something that required a stepper motor.
 
 To use stepper motors, you must add stepper driver boards as described in
-[this guide](../../manufacturing/internals/display_panel/electronics/stepper_drivers).
+[this guide](../../manufacturing/internals/electronics/stepper_setup.md).
 
 ## System integration
 
 The PCB and its daughter-boards are part of the
-[electronics sub-assembly](../../manufacturing/internals/display_panel/electronics).
+[electronics sub-assembly](../../manufacturing/internals/electronics).
 

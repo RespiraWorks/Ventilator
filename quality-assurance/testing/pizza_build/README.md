@@ -1,5 +1,7 @@
 # Pizza Build
 
+> TODO: this page is obsolete for v0.4. Please follow latest under [manufacturing/internals](../../../manufacturing/internals).
+
 ## DISCLAIMER
 
 **This is an incomplete, as yet untested design that is not yet intended to be used on patients.**
@@ -19,7 +21,7 @@ It can also come in various configurations, depending on your testing needs:
 
 ## Essentials
 
-Firstly, you will need a full [Electronics assembly](../../../manufacturing/internals/display_panel/electronics),
+Firstly, you will need a full [Electronics assembly](../../../manufacturing/internals/electronics),
 which contains the computing components.
 
 We are using 3/4" ID tube as the default standard (and adapters where needed, like to the blower and the pinch valves).
@@ -85,9 +87,9 @@ The following are essential sub-assemblies that you'll need no matter what addit
 
 ## Assembly Instructions
 
-| Pneumatics schematic  |  Shitty diagram     |
-|:---------------------:|:--------------------:|
-![](images/pizza-pneumatics.png) |![](images/pizza-diagram.jpg)  |
+|       Pneumatics schematic       |  Shitty diagram     |
+|:--------------------------------:|:--------------------:|
+| ![](images/pizza-pneumatics.png) |![](images/pizza-diagram.jpg)  |
 
 [Pneumatics diagram source](images/pizza-pneumatics.eps)
 
@@ -168,7 +170,7 @@ circuit board:
 ![](images/stepper_connection3.jpg)
 
 Additional details for how to attach stepper drivers to PCB can be found in the
-[pcb section](../../../manufacturing/internals/display_panel/electronics/stepper_drivers) of the repository.
+[electronics section](../../../manufacturing/internals/electronics) of the repository.
 
 ### Raspberry Pi
 

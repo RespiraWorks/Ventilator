@@ -4,6 +4,8 @@ jobs:
   dead-link-test:
     docker:
       - image: cimg/go:1.17
+    environment:
+      GIT_LFS_SKIP_SMUDGE: 1
     steps:
       - checkout
       - run:
@@ -17,6 +19,8 @@ jobs:
   common-precommit-checks:
     docker:
       - image: cimg/python:3.10.4
+    environment:
+      GIT_LFS_SKIP_SMUDGE: 1
     steps:
       - checkout
       - run:
@@ -35,6 +39,8 @@ jobs:
   controller-tests:
     machine:
       image: ubuntu-2004:current
+    environment:
+      GIT_LFS_SKIP_SMUDGE: 1
     resource_class: large
     steps:
       - checkout
@@ -52,6 +58,8 @@ jobs:
   common-tests:
     machine:
       image: ubuntu-2004:current
+    environment:
+      GIT_LFS_SKIP_SMUDGE: 1
     steps:
       - checkout
       - run:
@@ -69,6 +77,8 @@ jobs:
     machine:
       image: ubuntu-2004:current
     resource_class: large
+    environment:
+      GIT_LFS_SKIP_SMUDGE: 1
     steps:
       - checkout
       - run:

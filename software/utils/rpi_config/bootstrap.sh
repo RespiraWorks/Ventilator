@@ -61,7 +61,8 @@ fi
 
 ### Install git-lfs and update the system
 sudo apt-get update
-sudo apt-get --yes install git-lfs matchbox-keyboard
+sudo apt-get --yes install git matchbox-keyboard
+#sudo apt-get --yes install git-lfs matchbox-keyboard  TODO: bring this back when LFS problems are solved?
 sudo apt-get --yes upgrade
 sudo apt-get --yes autoremove
 sudo apt-get autoclean

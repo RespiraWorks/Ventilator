@@ -1,4 +1,5 @@
-# This is based on https://github.com/RespiraWorks/Ventilator/blob/f426ea02efdd4b04b6fe720802c9cd23de6b0672/sample-data/2020-06-21-RunForRecord2-AIR-and-OXY/20200621-RunForRecord2-OXY/covent_pc_1.dat
+# This is based on 2020-06-21-RunForRecord2-AIR-and-OXY/20200621-RunForRecord2-OXY/covent_pc_1.dat
+# Original data archive can be found at at https://drive.google.com/drive/folders/1aD7zU0mxUqlSf_IJAmof-au3Mf1F3ped?usp=sharing
 # rearranged into the form GUI expects with a breath_id added using a shell script
 # on the condition "pressure setpoint transitioned from non-5.000 to 5.000".
 #

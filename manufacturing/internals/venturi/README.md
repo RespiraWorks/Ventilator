@@ -1,8 +1,8 @@
 # Venturi Flow Sensor
 
-| Cross-section                   | Solid                    |
-|:--------------------------------:|:------------------------:|
-| ![](images/v1_cross_section.jpg) | ![](images/v1_solid.jpg) |
+| Cross-section                     | Solid                    |
+|:---------------------------------:|:------------------------:|
+| ![](images/v1_cross_section.jpg)  | ![](images/v1_solid.jpg) |
 
 ## Design basis
 
@@ -66,56 +66,49 @@ compact.
 The CAD includes optional features that can be enabled/disabled, such as integrated U-turn manifolds required for
 the latest enclosed build. A number of different configurations have been exported below.
 
-## Files
+## Parametric model
 
-The original CAD with constraints is an AutoDesk Inventor part file. Parameters may be changed to
-include transitions and barbs for different diameter tubing, as can be seen in the drawing below:
+Recently exported files for 3d printing can be found [here](https://tinyurl.com/2kuwps9h).
 
-![](images/venturi_drawing.jpg)
+The original model with constraints is an AutoDesk Inventor part file. Parameters may be changed to
+include transitions and barbs for different diameter tubing, as described in the table below. Assembly model and drawings
+are all within this repository directory as well.
 
-The venturi outline drawing and Inventor CAD can be found here:
+**Note: the venturi configurations are saved as iPart Configurations, which can be accessed by expanding the "Tables" tab in the Feature Tree of the venturi .ipt part.**
 
-|File Type| Download Link |
-|:-----:|:-------:|
-|Outline Drawing PDF |[**venturi.pdf**](exports/venturi.pdf)|
-|Venturi Inventor CAD |[**venturi.ipt**](venturi.ipt)|
-
-**Note: the venturi configurations are saved as iPart Configurations, which can be acessed by expanding the "Tables" tab in the Feature Tree of the venturi .ipt part.**
-
-Below are a number of STL files exported for manufacture using 3d printing. Some versions are adapted for particular
-positions in the enclosed assembly, incorporating tubing diameter transitions up- and down-stream of pinch valves.
-Some have also been elongated (within the limits of what the enclosure space allows). The elongation and elimination of
-discrete reducers should help mitigate turbulence and thus improve sensor precision. Empirical testing is pending.
+Below are a number of variants of the flow meter as configured for integration into the pneumatic system. They
+incorporate tubing diameter transitions up- and down-stream of pinch valves as well as for narrower oxygen influx
+tubing. Some have also been elongated (within the limits of what the enclosure space allows). The elongation and
+elimination of discrete reducers should help mitigate turbulence and thus improve sensor precision.
+Empirical testing is pending.
 
 Listed variables are the parameters that need to be configured in the CAD in order to produce this particular variation
 of the part. The variables `diams_before_venturi` and `diams_after_venturi` define additional length of tubing
 before and after the tapering to venturi constriction in multiples of inner tube diameter. Greater numbers should
 result in less turbulence and better sensor performance.
 
-Note that explicit clamp space may does not need to be provided when tubing diameter matched the 3/4" outer diameter
+Note that explicit clamp space may not need to be provided when tubing diameter matches the 3/4" outer diameter
 of the main venturi flow sensor body. In such cases, additional clamping also adds to straight tubing length dictated
 by the two variables described above.
 
-|           | Generic | Air influx | Oxygen influx | Exhale sensor |
-|:---------:|:-------:|:----------:|:-------------:|:-------------:|
-| **Use**   | General testing / "Pizza build" | Enclosed build | Enclosed build | Enclosed build |
-| **Image** |![](images/venturi_generic.jpg) | ![](images/venturi_air_influx.jpg) | ![](images/venturi_oxygen_influx.jpg) | ![](images/venturi_exhale.jpg) |
-| diams_before_venturi          | 2.0      | 2.5      | 2.5      | 2.0      |
-| diams_after_venturi           | 0.5      | 1.0      | 1.0      | 1.0      |
-| input_outer_diameter          | 3/4"     | 3/8"     | 3/4"     | 3/4"     |
-| input_thk                     | 2mm      | 1.5mm    | 2mm      | 2mm      |
-| input_clamp_nominal_len       | 0mm      | 12mm     | 12mm     | 12mm     |
-| Straight output barb features | enabled  | disabled | disabled | enabled  |
-| output_outer_diameter         | 3/4"     | -        | -        | 3/8"     |
-| output_thk                    | 2mm      | -        | -        | 1.5mm    |
-| output_clamp_nominal_len      | 0mm      | -        | -        | 12mm     |
-| Left U-turn features          | disabled | enabled  | disabled | disabled |
-| Right U-turn features         | disabled | disabled | enabled  | disabled |
-| u_turn_parallel_distance      | -        | 10mm     | 10mm     | -        |
-| u_turn_output_tube_len        | -        | 30mm     | 30mm     | -        |
-| **STL file**  | [venturi_generic.stl](exports/venturi_generic.stl) | [venturi_air_influx.stl](exports/venturi_air_influx.stl) | [venturi_oxygen_influx.stl](exports/venturi_oxygen_influx.stl) | [venturi_exhale.jpg](exports/venturi_exhale.stl) |
-| **Total length** | 106.1mm | 143mm | 138mm | 142.5mm |
-| **Notes** | | | Requires discrete [1/4"-3/4" adapter](../reducer_3-4_1-4) upstream | |
+|                               |               Generic               |             Air influx              |             Oxygen influx              |          Exhale sensor          |
+|:-----------------------------:|:-----------------------------------:|:-----------------------------------:|:--------------------------------------:|:-------------------------------:|
+|            **Use**            |   General testing / "Pizza build"   |           Enclosed build            |             Enclosed build             |         Enclosed build          |
+|           **Image**           | ![](images/venturi_generic.jpg)     | ![](images/venturi_air_influx.jpg)  | ![](images/venturi_oxygen_influx.jpg)  | ![](images/venturi_exhale.jpg)  |
+|     diams_before_venturi      |                 2.0                 |                 2.5                 |                  2.5                   |               2.0               |
+|      diams_after_venturi      |                 0.5                 |                 1.0                 |                  1.0                   |               1.0               |
+|     input_outer_diameter      |                3/4"                 |                3/8"                 |                  1/4"                  |              3/4"               |
+|           input_thk           |                 2mm                 |                1.5mm                |                 1.5mm                  |               2mm               |
+|    input_clamp_nominal_len    |                 0mm                 |                12mm                 |                  12mm                  |              12mm               |
+| Straight output barb features |               enabled               |              disabled               |                disabled                |             enabled             |
+|     output_outer_diameter     |                3/4"                 |                  -                  |                   -                    |              3/8"               |
+|          output_thk           |                 2mm                 |                  -                  |                   -                    |              1.5mm              |
+|   output_clamp_nominal_len    |                 0mm                 |                  -                  |                   -                    |              12mm               |
+|     Left U-turn features      |              disabled               |               enabled               |                disabled                |            disabled             |
+|     Right U-turn features     |              disabled               |              disabled               |                enabled                 |            disabled             |
+|   u_turn_parallel_distance    |                  -                  |                10mm                 |                  10mm                  |                -                |
+|    u_turn_output_tube_len     |                  -                  |                30mm                 |                  30mm                  |                -                |
+|       **Total length**        |               106.1mm               |                143mm                |                144.6mm                 |             142.5mm             |
 
 ## Parts
 
@@ -124,24 +117,24 @@ BEFORE purchasing any parts.**
 
 [ppg]: ../../purchasing_guidelines.md
 
-| Item | Quantity | Manufacturer  | Part #               | Price (USD) | Sources[*][ppg] | Notes |
-| ---- |---------:| ------------- | -------------------- | -----------:|:---------------:| ----- |
-|**A1**| 1        | RespiraWorks  | [Venturi body][a1rw] | ~1.00       | Rw              | 3D-printed venturi body |
+| Item | Quantity | Manufacturer  | Part #               | Price (USD) | Sources[*][ppg] | Notes                                              |
+| ---- |---------:| ------------- | -------------------- | -----------:|:---------------:|----------------------------------------------------|
+|**A1**| 1        | RespiraWorks  | [Venturi body][a1rw] | ~1.00       | Rw              | 3D-printed venturi body                            |
 |**A2**| 2        | McMaster-Carr | 5463K3               | 0.39        | [C][a2mcmc]     | Barbed fitting 3/32" UNF, nipple for sensor tubing |
 
 **Total assembly price:** USD 1.78
 
-[a1rw]:   #files
+[a1rw]:   #parametric-model
 [a2mcmc]: https://www.mcmaster.com/5463K33
 
 ## Tools
 
 These may or may not be useful.
 
-| Item | Manufacturer  | Part #          | Price (USD) | Sources[*][ppg] | Notes |
-| ---- | ------------- | --------------- | -----------:|:---------------:| ----- |
-|**B1**| McMaster-Carr | 2636A251        | 6.76        | [C][b1mcmc]     | 10-32 UNF bottoming tap for threading nipple ports |
-|**B2**| McMaster-Carr | 2636A251        | 6.76        | [C][b2mcmc]     | 10-32 UNF tapered tap for threading nipple ports |
+| Item | Manufacturer  | Part #          | Price (USD) | Sources[*][ppg] | Notes                                                  |
+| ---- | ------------- | --------------- | -----------:|:---------------:|--------------------------------------------------------|
+|**B1**| McMaster-Carr | 2636A251        | 6.76        | [C][b1mcmc]     | 10-32 UNF bottoming tap for threading nipple ports     |
+|**B2**| McMaster-Carr | 2636A251        | 6.76        | [C][b2mcmc]     | 10-32 UNF tapered tap for threading nipple ports       |
 |**B3**| uxcell        | a19032000ux0738 | 6.89        | [Z][b3amzn]     | 5.5 reamer for ensuring venturi diameter, **optional** |
 |**B4**| DeWalt        | DWA1205         | 2.58        | [Z][b4amzn]     | 5/64" drill bit, should optimally be 2mm, **optional** |
 

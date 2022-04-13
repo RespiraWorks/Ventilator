@@ -1,8 +1,8 @@
 # Stepper Proportional Pinch Valve
 
-| CAD Rendering               | Assembled                         | In action                 |
-|:---------------------------:|:---------------------------------:|:-------------------------:|
-|[![](images/rendered_assembly_smaller.jpg)](images/rendered_assembly.jpg) | ![](images/assembled_smaller.jpg) | ![](images/animation.gif) |
+|                                CAD Rendering                                |             Assembled              | In action                 |
+|:---------------------------------------------------------------------------:|:----------------------------------:|:-------------------------:|
+| [![](images/rendered_assembly_smaller.jpg)](images/rendered_assembly.jpg)   | ![](images/assembled_smaller.jpg)  | ![](images/animation.gif) |
 
 ## Overview
 
@@ -72,17 +72,18 @@ Bearings are now better aligned with the tube.
 
 ## Custom parts
 
-These files should not be printed with FDM. Instead, a leak-tight method like SLA or MJF should be used.
+Recently exported files for 3d printing can be found [here](https://tinyurl.com/2kuwps9h).
+
+These parts should not be printed with FDM. Instead, a leak-tight method like SLA or MJF should be used.
 
 **Note: Please also see general advice in the [manufacturing methods guide](../../methods).**
 
 > **TODO: Drawings**
 
-|     | Stepper base (Item 9)      | Stepper rotor (Item 10)     |
-|----:|:--------------------------:|:---------------------------:|
-| Rendering | ![](images/rendered_base.jpg) | ![](images/rendered_rotor.jpg) |
-| Inventor IPT |[Pinch valve base.ipt](pinch_valve_base.ipt)|[Pinch valve rotor.ipt](pinch_valve_rotor.ipt)|
-| STL for printing |[Pinch valve base.stl](exports/pinch_valve_base.stl)|[Pinch valve rotor.stl](exports/pinch_valve_rotor.stl)|
+|                  |                Stepper base (Item 9)                 |                Stepper rotor (Item 10)                 |
+|-----------------:|:----------------------------------------------------:|:------------------------------------------------------:|
+|       Rendering  |            ![](images/rendered_base.jpg)             |            ![](images/rendered_rotor.jpg)              |
+|     Inventor IPT |     [Pinch valve base.ipt](pinch_valve_base.ipt)     |     [Pinch valve rotor.ipt](pinch_valve_rotor.ipt)     |
 
 There is also an Inventor assembly with all the hardware [Pinch valve assembly.iam](pinch_valve_assembly.iam).
 
@@ -93,19 +94,19 @@ BEFORE purchasing any parts.**
 
 [ppg]: ../../purchasing_guidelines.md
 
-| Item  | Quantity | Manufacturer  | Part #                | Price (USD)  | Sources[*][ppg]         | Notes |
-| ----- |---------:| ------------- | --------------------- | ------------:|:-----------------------:| ----- |
-|**A1** | 1        | RespiraWorks  | [Stepper base][a1rw]  | 1.0          | Rw                      | BASE - 3D printed |
-|**A2** | 1        | RespiraWorks  | [Stepper rotor][a2rw] | 1.0          | Rw                      | ROTOR - 3D printed |
+| Item  | Quantity | Manufacturer  | Part #                | Price (USD)  | Sources[*][ppg]         | Notes                                                              |
+| ----- |---------:| ------------- | --------------------- | ------------:|:-----------------------:|--------------------------------------------------------------------|
+|**A1** | 1        | RespiraWorks  | [Stepper base][a1rw]  | 1.0          | Rw                      | BASE - 3D printed                                                  |
+|**A2** | 1        | RespiraWorks  | [Stepper rotor][a2rw] | 1.0          | Rw                      | ROTOR - 3D printed                                                 |
 |**A3** | 1        | STEPPERONLINE | 17HS19-2004S2         | 11.59        | [T][a3step] [Z][a3amzn] | Stepper motor. Make sure to get version with the full-cut D-shaft. |
-|**A4** | 3        | McMaster-Carr | 91294A128             | 0.05         | [C][a4mcmc]             | M3 screws, 8mm, flat head: mounting stepper to base |
-|**A5** | 1        | McMaster-Carr | 92095A218             | 0.31         | [C][a5mcmc]             | M5 screws, 30mm: axle for bearing |
-|**A6** | 3        | FastEddy      | TFE4262               | 1.25         | [F][a6fast] [C][a6mcmc] | 5x16x5 Metal shielded bearings |
-|**A7** | 4        | McMaster-Carr | 92095A478             | 0.11         | [C][a7mcmc]             | M4 screws, 18mm: base mounting to main assembly |
-|**A8** | 4        | McMaster-Carr | 93625A150             | 0.06         | [C][a8mcmc]             | M4 lock nuts |
-|**A9** | 8        | McMaster-Carr | 93475A230             | 0.02         | [C][a9mcmc]             | M4 washers, 9mm OD |
-|**A10**| 15cm     | McMaster-Carr | 5894K38               | 20.18 / m    | [C][a10mcmc]            | PVC Tubing, 3/8" ID, 5/8" OD, continuous-flex soft Tygon |
-|**A11**| 2        | McMaster-Carr | 9579K67               | 0.63         | [C][a11mcmc]            | Herbie clip E (12-13.8mm) for clamping 5/8"OD tubing |
+|**A4** | 3        | McMaster-Carr | 91294A128             | 0.05         | [C][a4mcmc]             | M3 screws, 8mm, flat head: mounting stepper to base                |
+|**A5** | 1        | McMaster-Carr | 92095A218             | 0.31         | [C][a5mcmc]             | M5 screws, 30mm: axle for bearing                                  |
+|**A6** | 3        | FastEddy      | TFE4262               | 1.25         | [F][a6fast] [C][a6mcmc] | 5x16x5 Metal shielded bearings                                     |
+|**A7** | 4        | McMaster-Carr | 92095A478             | 0.11         | [C][a7mcmc]             | M4 screws, 18mm: base mounting to main assembly                    |
+|**A8** | 4        | McMaster-Carr | 93625A150             | 0.06         | [C][a8mcmc]             | M4 lock nuts                                                       |
+|**A9** | 8        | McMaster-Carr | 93475A230             | 0.02         | [C][a9mcmc]             | M4 washers, 9mm OD                                                 |
+|**A10**| 15cm     | McMaster-Carr | 5894K38               | 20.18 / m    | [C][a10mcmc]            | PVC Tubing, 3/8" ID, 5/8" OD, continuous-flex soft Tygon           |
+|**A11**| 2        | McMaster-Carr | 9579K67               | 0.63         | [C][a11mcmc]            | Herbie clip E (12-13.8mm) for clamping 5/8"OD tubing               |
 
 **Total assembly price:** USD 22.93
 
@@ -145,10 +146,10 @@ machines they way print too tight and you may crack the rotor trying to just mus
 threads first.  Prop tip: only chase a portion of the threads for the bolt that holds on the bearings, leaving a bit
 to act as a lock nut.
 
-| Rotor Assembly                | Base Assembly                      |
-|:-----------------------------:|:----------------------------------:|
-|![Assembled](images/rotor.jpg) | ![Assembled](images/assembled.jpg) |
-3mm hex and 2.5mm hex driver are required for assembling rotor.|  2mm hex driver is required for attaching base.
+|                         Rotor Assembly                          |                 Base Assembly                  |
+|:---------------------------------------------------------------:|:----------------------------------------------:|
+|                 ![Assembled](images/rotor.jpg)                  |      ![Assembled](images/assembled.jpg)        |
+ | 3mm hex and 2.5mm hex driver are required for assembling rotor. | 2mm hex driver is required for attaching base. |
 
 With the Tygon tube and clamps, a single pinch valve sub assembly appears like so:
 
@@ -157,4 +158,4 @@ With the Tygon tube and clamps, a single pinch valve sub assembly appears like s
 ## System integration
 
 Integration into the electrical/controls system is covered in
-[electronics assembly page](../display_panel/electronics).
+[electronics assembly page](../electronics).

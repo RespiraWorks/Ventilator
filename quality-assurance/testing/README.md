@@ -15,9 +15,10 @@ It is not enclosed like the final product and is meant to be operated in an open
 This page may be somewhat `OBSOLETE`, so please also read the [manufacturing](../../manufacturing) section for
 information about the latest pneumatic/mechanical design decisions.
 
-## Testing data
+## Test data
 
-Some testing data is [here](testing-data)
+Full archive of legacy (v.0.2-0.3) test data has been moved to
+[Google Drive](https://drive.google.com/drive/folders/1uaE0JVirbfPbpzJjl3X7DUDbAeUo5Ja3?usp=sharing)
 
 ## Durability and Life-Leader Testing
 
@@ -34,7 +35,7 @@ performance testing to see how it compares to fresh valves.  The blower operates
 
 As of 2020.09.01, 1108 hours, had elapsed on the Preliminary Life Leader Test.  This represents 3.99 million cycles on the pinch valve, representing at minimum 92 days of continuous ventilator operation at the highest setting of 30 bpm, equivalent to 2160 hours of continuous use.  On the blower, this represents 46 days of continuous operation.
 
-**[Link to 600hr Intermediate Life Leader Test](https://github.com/RespiraWorks/Ventilator/tree/master/software/sample-data/2020-07-03-LifeLeader-594hrs-Performance-AIR)**
+**[Link to 600hr Intermediate Life Leader Test](https://drive.google.com/drive/folders/1VYlnqkLQeSA_KZ99PjS6-LAI7GFn2coH?usp=sharing)**
 
 In the future, we will do Life Leader Testing on a full ventilator unit in order to provide a life leader for all the components.
 

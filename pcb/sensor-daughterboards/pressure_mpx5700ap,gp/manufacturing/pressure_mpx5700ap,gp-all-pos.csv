@@ -1,8 +1,0 @@
-Ref,Val,Package,PosX,PosY,Rot,Side
-"C1","1uF","C_0603_1608Metric",18.750000,-15.750000,0.000000,top
-"C3","470pF","C_0603_1608Metric",19.500000,-18.500000,90.000000,top
-"C4","1uF","C_0603_1608Metric",27.500000,-18.500000,90.000000,top
-"J1","Main board connections (bottom entry)","PinSocket_1x04_P2.54mm_Vertical_SMD_TE_1241152-4",37.750000,-12.500000,0.000000,top
-"J2","Main board connections (bottom entry)","PinSocket_1x04_P2.54mm_Vertical_SMD_TE_1241152-4",6.000000,-12.500000,90.000000,top
-"R1","2.4K","R_0603_1608Metric",22.500000,-17.500000,180.000000,top
-"R2","4.7K","R_0603_1608Metric",25.500000,-18.500000,90.000000,top

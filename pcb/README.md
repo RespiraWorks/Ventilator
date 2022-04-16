@@ -22,11 +22,10 @@ The latest revision of the PCB is Rev A, designed to be used in the top-level de
 
 The main design is in this folder and the project file is here: [Ventilator Mainboard Rev A](Ventilator.pro)
 
-The complete turnkey manufacturing package is here: [Ventilator Mainboard Rev A Turnkey FAB/ASSY Package](manufacturing/20210401-Ventilator-RevA-PKG-TURNKEY.zip)
+Recently exported files for PCB manufacture can be found on our Google Drive at
+[Manufacturing/Output files v0.4/PCB](https://tinyurl.com/2p8af3fm).
 
-And the individual manufacturing files are here: [Ventilator Mainboard Rev A Manufacturing Files](manufacturing/)
-
-This revision integrates many of the modules and daughtercards in PCB Rev 1.0 into a single PCB, while breaking out the sensors to daughtercards to make it better adaptable to sensors available in other markets.  It adds some important new features:
+This revision integrates many of the modules and daughter-cards in PCB Rev 1.0 into a single PCB, while breaking out the sensors to daughter-cards to make it better adaptable to sensors available in other markets.  It adds some important new features:
  - Moved CycleController from STM32L452 to STM32L496 microcontroller for more I/O pins, memory, and storage.
  - Added an independent FPGA-based supervisor.
  - Higher power capability now up to 120W.
@@ -39,12 +38,16 @@ This revision integrates many of the modules and daughtercards in PCB Rev 1.0 in
  - Temperature sensors to monitor component health.
  - Integrated Li-Ion battery backup, charging, and monitoring.
  - Additional power connections for display, fans, and indicator lights.
- 
+
+## Sensor daughter-boards
+
+> TODO: add documentation about these
+
 ## Rev 1.0
 
-The exported complete Rev 1 files for manufacture can be found in the folder [rev1_export](rev1_export).
-
-The old Altium-based design project, including a snapshot of this readme, can be found in the folder [rev1_export/archived-Altium-Version-RevA-work-in-progress](rev1_export/archived-Altium-Version-RevA-work-in-progress)
+An archive of the previous version of the PCB, including the Altium-based design project and a snapshot of the old
+readme is available on our Google Drive at
+[Manufacturing/Output files v0.2-0.3/PCB](https://drive.google.com/drive/folders/1xHPLvo59tGI5uU38FrWMkVGmK_UR2sjQ?usp=sharing)
 
 ## Current issues
 

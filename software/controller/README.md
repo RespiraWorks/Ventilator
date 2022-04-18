@@ -45,23 +45,15 @@ Platformio has a CLI and an IDE. You'll need the platformio CLI in order to buil
 from the command-line, even if you also install the IDE.
 
 Instructions for installing:
- * [CLI](https://docs.platformio.org/en/latest/core/installation.html#super-quick-mac-linux)
- * [IDE](https://docs.platformio.org/en/latest/integration/ide/vscode.html#installation)
+ * [CLI](https://docs.platformio.org/en/latest/core/index.html)
+ * [IDE](https://docs.platformio.org/en/latest/integration/ide/pioide.html)
 
 Note that an issue prevents platformio CLI 5.0 and 5.0.1 to run our unit tests. If you are using one of these versions, you will need to upgrade to 5.0.2 or newer version using:
 ```
 $ platformio upgrade
 ```
 
-Here's a [video introduction](https://www.youtube.com/watch?v=EIkGTwLOD7o) to platformio.
-
-PlatformIO works on Windows as well.
-You'll need to install [Atom](https://atom.io/),
-[Clang+LLVM](https://releases.llvm.org/download.html),
-and [Python](https://www.python.org/downloads/windows/).
-(Note: you may be asked to install Python 2.7, but PlatformIO works with Python 3.5+ as well, ostensibly.)
-
-You also need to install the package `libtinfo5` on Linux. Clang-tidy needs this package to run its checks,
+You may also need to install the package `libtinfo5` on Linux. Clang-tidy needs this package to run its checks,
 but platformio will just say all checks have passed without giving an error if it's missing.
 
 ## Building and testing

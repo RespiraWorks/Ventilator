@@ -1,7 +1,5 @@
 # Quality Assurance
 
-This directory is for regulatory and testing-related assets.
-
 As life support equipment, ventilators must have a high-quality design,
 with design controls, thorough review, and a well documented
 verification plan. Our design is developed under an ISO 14971 process,

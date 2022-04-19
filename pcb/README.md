@@ -2,7 +2,7 @@
 
 This directory contains files for the Ventilator mainboard design.
 
-![](VentilatorPCB-RevA-Angled-Render.png)
+![](VentilatorPCB-RevA-Angled-Render.jpg)
 
 The RespiraWorks Ventilator Mainboard PCB is a custom component that integrates the Cycle Controller, UI Computer,
 sensors, actuator drives, power supplies, filtering, and protection components.

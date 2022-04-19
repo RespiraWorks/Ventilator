@@ -23,7 +23,10 @@ without scaffolding works well and the part has been successfully printed with S
 
 **Note: Please also see general advice in the [manufacturing methods guide](../../../manufacturing/methods).**
 
-[STL file for 3d printing](assets/patient_tubing_adapter.stl)
+Inventor part models is within this repo directory.
+
+Recently exported STL files for 3d printing can be found on our Google Drive at
+[Manufacturing/Output - testing equipment](https://tinyurl.com/bdfnnznf).
 
 ![](assets/patient_tubing_adapter.jpg)
 
@@ -34,16 +37,16 @@ BEFORE purchasing any parts.**
 
 [ppg]: ../../../manufacturing/purchasing_guidelines.md
 
-| Item | Quantity | Manufacturer    | Part #                 | Price (USD)  | Sources[*][ppg] | Notes |
-| ---- |---------:| --------------- | ---------------------- | ------------:|-----------------| ----- |
-|**A1**| 1        | South Pacific   | SPB-6110-5PK           | 129.00 / 5   | [Z][a1amzn]      | Test lung |
-|**A2**| 2        | Mars Wellness   | 4332593260             | 16.99 / 2    | [Z][a2amzn]      | CPAP tubing |
-|**A3**| 1        | RespiraWorks    | patient_tubing_adapter | ~$1.0        | [R][a3rw]        | Y-adapter for 22mm tubing |
-|**A4**| ~1       | BXI or whatever | CA-BX-AP-PF            | 24.95 / 6    | [Z][a4amzn]      | Just some sturdy material. Aluminum, wood, whatevery you have around. 1x 16x12 sheet needed, or 2x 8x12 sheets |
-|**A5**| ~2       | Grifiti         | 41010                  | 10.98 / 5    | [Z][a5amzn]      | just a big rubber band. Several jumbo rubber bands or resistance tubing from an exercise device will work. |
-|**A6**| ~3       | Alliance Rubber | 08997                  | 6.48  / 18   | [Z][a6aamzn]     | just some more big rubber bands. Good for tuning the response. |
-|**A7**| 3        | NewMainOne      | 4336300183             | 13.98 / 500  | [Z][a7amzn]      | hopefully you have some zip ties at home already but if not, here's a link |
-|**A8**| -        | GRIFITI         | 41192                  | 17.98        | [Z][a8amzn]      | more rubber bands, optional or alternative to 3 and 3a |
+| Item   | Quantity | Manufacturer    | Part #                 | Price (USD) | Sources[*][ppg] | Notes                                                                                                          |
+|--------|---------:|-----------------|------------------------|------------:|-----------------|----------------------------------------------------------------------------------------------------------------|
+| **A1** |        1 | South Pacific   | SPB-6110-5PK           |  129.00 / 5 | [Z][a1amzn]     | Test lung                                                                                                      |
+| **A2** |        2 | Mars Wellness   | 4332593260             |   16.99 / 2 | [Z][a2amzn]     | CPAP tubing                                                                                                    |
+| **A3** |        1 | RespiraWorks    | patient_tubing_adapter |       ~$1.0 | [R][a3rw]       | Y-adapter for 22mm tubing                                                                                      |
+| **A4** |       ~1 | BXI or whatever | CA-BX-AP-PF            |   24.95 / 6 | [Z][a4amzn]     | Just some sturdy material. Aluminum, wood, whatevery you have around. 1x 16x12 sheet needed, or 2x 8x12 sheets |
+| **A5** |       ~2 | Grifiti         | 41010                  |   10.98 / 5 | [Z][a5amzn]     | just a big rubber band. Several jumbo rubber bands or resistance tubing from an exercise device will work.     |
+| **A6** |       ~3 | Alliance Rubber | 08997                  |  6.48  / 18 | [Z][a6aamzn]    | just some more big rubber bands. Good for tuning the response.                                                 |
+| **A7** |        3 | NewMainOne      | 4336300183             | 13.98 / 500 | [Z][a7amzn]     | hopefully you have some zip ties at home already but if not, here's a link                                     |
+| **A8** |        - | GRIFITI         | 41192                  |       17.98 | [Z][a8amzn]     | more rubber bands, optional or alternative to 3 and 3a                                                         |
 
 [a1amzn]: https://www.amazon.com/FlexLung-Biomedical-Ventilator-Testing-Demonstration/dp/B07B876P9C
 [a2amzn]: https://www.amazon.com/gp/product/B01N14F1MV

@@ -1,8 +1,8 @@
 # Internal assembly
 
-|                                                                |                                               |
-|:--------------------------------------------------------------:|:---------------------------------------------:|
-| [![](images/rendering_smaller.jpg)](images/rendering_full.jpg) | [![](images/top_smaller.jpg)](images/top.jpg) |
+|                                   |                             |
+|:---------------------------------:|:---------------------------:|
+| ![](images/rendering_smaller.jpg) | ![](images/top_smaller.jpg) |
 
 ## Design rationale
 

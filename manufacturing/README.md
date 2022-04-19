@@ -1,8 +1,8 @@
 # Manufacturing design
 
-|                     Full assembly rendering                     |                                     Internals                                      |
-|:---------------------------------------------------------------:|:----------------------------------------------------------------------------------:|
-| [![](images/rendering_smaller.jpg)](images/rendering_full.jpg)  | [![](internals/images/rendering_smaller.jpg)](internals/images/rendering_full.jpg) |
+|      Full assembly rendering      |                  Internals                   |
+|:---------------------------------:|:--------------------------------------------:|
+| ![](images/rendering_smaller.jpg) | ![](internals/images/rendering_smaller.jpg)  |
 
 
 This section of the repository describes the physical design of the ventilator and the process of manufacturing the
@@ -163,11 +163,11 @@ Some aspects of the production packaged design are detailed in the first section
 
 There are currently at least 3 prototypes being worked on in various locations around the world:
 
-|                      |                                                                         |                                                                           |
-|:--------------------:|:-----------------------------------------------------------------------:|:-------------------------------------------------------------------------:|
-| Germantown Maryland  |     [![](images/assembled_smaller.jpg)](images/assembled_full.jpg)      | [![](internals/images/top_smaller.jpg)](internals/images/top_smaller.jpg) |
-| Sunnyvale California | [![](images/California_front_smaller.jpg)](images/California_front.jpg) |   [![](images/California_back_smaller.jpg)](images/California_back.jpg)   |
-| Visakhapatnam India  |       [![](images/India_full_smaller.jpg)](images/India_full.jpg)       |        [![](images/India_back_smaller.jpg)](images/India_back.jpg)        |
+|                      |                                          |                                         |
+|:--------------------:|:----------------------------------------:|:---------------------------------------:|
+| Germantown Maryland  |    ![](images/assembled_smaller.jpg)     |  ![](internals/images/top_smaller.jpg)  |
+| Sunnyvale California | ![](images/California_front_smaller.jpg) | ![](images/California_back_smaller.jpg) |
+| Visakhapatnam India  |    ![](images/India_full_smaller.jpg)    |   ![](images/India_back_smaller.jpg)    |
 
 ### Test equipment
 

@@ -1,4 +1,5 @@
 ## Ansible Files (ansible 2.5.1)
+
 ### rpi-primer.yml
 This is the Ansible script that installs Docker on the target system and also configures the system to automatically boot into OpenBox. Either a QEMU instance or a Raspberry Pi accessible via SSH must be running for it to work.
 
@@ -17,11 +18,8 @@ This is Ansible's inventory file that keeps track of the targets of playbooks. P
 
 ## QEMU Files (QEMU emulator version 2.11.1)
 
-Both of these files are from [this](https://github.com/dhruvvyas90/qemu-rpi-kernel) repo with RPi kernels
-### kernel-qemu-4.19.50-buster
-Kernel used to spin up Raspbian via QEMU.
-
-### versatile-pb-buster.dtb
-Compiled device tree used to spin up Raspbian via QEMU
+You will need both of these files from [this](https://github.com/dhruvvyas90/qemu-rpi-kernel) repo with RPi kernels:
+* `kernel-qemu-4.19.50-buster` - kernel used to spin up Raspbian via QEMU.
+* `versatile-pb-buster.dtb` - compiled device tree used to spin up Raspbian via QEMU
 
 Ensure both of these files are in the same directory as the raspbian image.

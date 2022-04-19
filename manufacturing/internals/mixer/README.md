@@ -16,11 +16,15 @@ Further refinements to this solution are tracked in [#915](https://github.com/Re
 
 The following simple Y-connector with barbs for 3/4"ID tubing has been designed.
 
-|  CAD rendering    |  3d Printed   |
-|:---------------------:|:--------------------:|
-|![](oxygen_mixer_rendering.jpg) | ![](oxygen_mixer_printed.jpg) |
-|[Source: Inventor IPT](oxygen_mixer.ipt)|[STL File for 3d printing](oxygen_mixer.ipt)|
+|          CAD rendering          |          3d Printed           |
+|:-------------------------------:|:-----------------------------:|
+| ![](oxygen_mixer_rendering.jpg) | ![](oxygen_mixer_printed.jpg) |
+
+Inventor part model is within this repo directory.
 
 ## Manufacturing
+
+Recently exported files for 3d printing can be found on our Google Drive at
+[Manufacturing/Output files v0.4/3d printing](https://tinyurl.com/2kuwps9h).
 
 **Note: Please see general advice in the [manufacturing methods guide](../../methods).**

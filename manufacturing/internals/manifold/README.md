@@ -25,9 +25,10 @@ out of the ventilator enclosure.
 
 ## Design implementation
 
-Recently exported files for 3d printing can be found [here](https://tinyurl.com/2kuwps9h).
+All Inventor part models, assembly models and drawings are within this repo directory.
 
-Parametric Inventor models and drawings are all found within this repo directory.
+Recently exported files for 3d printing can be found on our Google Drive at
+[Manufacturing/Output files v0.4/3d printing](https://tinyurl.com/2kuwps9h).
 
 The part was designed in Autodesk Inventor, along with assembly to geometrically test interface fit
 before manufacture. The design has been tested by 3d printing the manifold in resin.
@@ -36,9 +37,9 @@ There are some nuances to modeling threads correctly for 3d printing so that no 
 Notes on modeling threads have been published in our
 [mechanical engineering wiki page](https://github.com/RespiraWorks/Ventilator/wiki/Mechanical-engineering-notes).
 
-|                   CAD rendering                    |                Drawings                |                       3d Printed                       |
-|:--------------------------------------------------:|:--------------------------------------:|:------------------------------------------------------:|
-| ![](images/oxygen_relief_manifold_rendering.jpg)   | ![](images/oxygen_relief_manifold.jpg) |    ![](images/oxygen_relief_manifold_printed.jpg)      |
+|                  CAD rendering                   |                Drawings                |                   3d Printed                   |
+|:------------------------------------------------:|:--------------------------------------:|:----------------------------------------------:|
+| ![](images/oxygen_relief_manifold_rendering.jpg) | ![](images/oxygen_relief_manifold.jpg) | ![](images/oxygen_relief_manifold_printed.jpg) |
 
 ### Parts
 
@@ -47,11 +48,11 @@ BEFORE purchasing any parts.**
 
 [ppg]: ../../purchasing_guidelines.md
 
-| Item  | Quantity | Manufacturer   | Part #                  | Price (USD)  | Sources[*][ppg]| Notes                     |
-| ----- |---------:| -------------- | ----------------------- | ------------:|:--------------:|---------------------------|
-|**A1** | 1        | RespiraWorks   | [Custom manifold][a1rw] | 1.00         | Rw             | Custom manifold           |
-|**A2** | 1        | Cables&Sensors | G0-040                  | 76.00        | [Cs][a2cns]    | Oxygen sensor             |
-|**A3** | 1        | Generant       | VRVI-250B-V-0.8         | 54.00        | [Gn][a3gene]   | Overpressure relief valve |
+| Item   | Quantity | Manufacturer   | Part #                  | Price (USD) | Sources[*][ppg] | Notes                     |
+|--------|---------:|----------------|-------------------------|------------:|:---------------:|---------------------------|
+| **A1** |        1 | RespiraWorks   | [Custom manifold][a1rw] |        1.00 |       Rw        | Custom manifold           |
+| **A2** |        1 | Cables&Sensors | G0-040                  |       76.00 |   [Cs][a2cns]   | Oxygen sensor             |
+| **A3** |        1 | Generant       | VRVI-250B-V-0.8         |       54.00 |  [Gn][a3gene]   | Overpressure relief valve |
 
 **Total assembly price:** USD 131.00
 
@@ -63,10 +64,9 @@ BEFORE purchasing any parts.**
 
 **Note: Please also see general advice in the [manufacturing methods guide](../../methods).**
 
-|                  Sub-assembly CAD                  |                    Assembled                     |
-|:--------------------------------------------------:|:------------------------------------------------:|
-| ![](images/oxygen_relief_assembly_rendering.jpg)   | ![](images/oxygen_relief_assembly_printed.jpg)   |
-| [Source: Inventor IAM](oxygen_relief_assembly.iam) |                                                  |
+|                 Sub-assembly CAD                 |                   Assembled                    |
+|:------------------------------------------------:|:----------------------------------------------:|
+| ![](images/oxygen_relief_assembly_rendering.jpg) | ![](images/oxygen_relief_assembly_printed.jpg) |
 
 3d printing has been successful using Siraya Fast.
 

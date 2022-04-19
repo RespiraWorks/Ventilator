@@ -1,8 +1,8 @@
 # Internal assembly
 
-|                                                                |                                               |
-|:--------------------------------------------------------------:|:---------------------------------------------:|
-| [![](images/rendering_smaller.jpg)](images/rendering_full.jpg) | [![](images/top_smaller.jpg)](images/top.jpg) |
+|                                   |                             |
+|:---------------------------------:|:---------------------------:|
+| ![](images/rendering_smaller.jpg) | ![](images/top_smaller.jpg) |
 
 ## Design rationale
 
@@ -174,6 +174,6 @@ You can now connect all the wiring (except main power):
 * Secure sensor tubing with zip ties `[A24]`, but do so lightly. Don't tighten them to the point where the
   air flow is restricted in the tubes or where the wires can't move at all.
 
-|                   Top view                    |                     Bottom view                     |
-|:---------------------------------------------:|:---------------------------------------------------:|
-| [![](images/top_smaller.jpg)](images/top.jpg) | [![](images/bottom_smaller.jpg)](images/bottom.jpg) |
+|          Top view           |          Bottom view           |
+|:---------------------------:|:------------------------------:|
+| ![](images/top_smaller.jpg) | ![](images/bottom_smaller.jpg) |

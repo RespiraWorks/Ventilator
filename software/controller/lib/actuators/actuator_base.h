@@ -40,6 +40,9 @@ class Actuator {
 
  private:
   // Debug var that can be used from debug interface to force the actuator's setting
+  // TODO: make the "setting" debugvar name less generic, for example "position" for pinch valves,
+  // "power" for pwm, ...)
+  // Reminder: also update debug scripts (hardcoded debugvar names) when implementing this TODO.
   Debug::Variable::Float forced_value_{"setting", Debug::Variable::Access::ReadWrite, -1.f,
                                        "ratio"};
 };

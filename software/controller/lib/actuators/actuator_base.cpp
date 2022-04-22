@@ -15,27 +15,26 @@ limitations under the License.
 
 #include "actuator_base.h"
 
-Actuator::Actuator(const char *name, const char *help, float cal_0, float cal_1)
+Actuator::Actuator(const char *name, const char *help, const char *setting_name, float cal_0,
+                   float cal_1)
     : calibration_("cal", cal_0, cal_1, "", "Calibration table") {
-  calibration_.cal_table_.prepend_name(name);
-  calibration_.cal_table_.append_help(help);
-  forced_value_.prepend_name(name);
-  forced_value_.prepend_name("forced_");
-  forced_value_.append_help("Force the setting");
-  forced_value_.append_help(help);
-  forced_value_.append_help(
-      " to a certain value in [0,1].  Specify a value outside"
-      " this range to let the controller control it.");
+  InitDebugVars(name, help, setting_name);
 };
 
 Actuator::Actuator(const char *name, const char *help,
-                   std::array<float, ActuatorsCalSize> calibration)
+                   std::array<float, ActuatorsCalSize> calibration, const char *setting_name)
     : calibration_("cal", calibration, "", "Calibration table") {
+  InitDebugVars(name, help, setting_name);
+};
+
+void Actuator::InitDebugVars(const char *name, const char *help, const char *setting_name) {
   calibration_.cal_table_.prepend_name(name);
   calibration_.cal_table_.append_help(help);
+  forced_value_.prepend_name(setting_name);
   forced_value_.prepend_name(name);
   forced_value_.prepend_name("forced_");
-  forced_value_.append_help("Force the setting");
+  forced_value_.append_help("Force the ");
+  forced_value_.append_help(setting_name);
   forced_value_.append_help(help);
   forced_value_.append_help(
       " to a certain value in [0,1].  Specify a value outside"

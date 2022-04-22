@@ -99,8 +99,8 @@ void RunTest() {
     write_data[i] = Data;
   }
 
-  PwmActuator buzzer{BuzzerChannel,    BuzzerFreq, HalApi::GetCpuFreq(), "buzzer_",
-                     " of the buzzer", BuzzerOff,  MaxBuzzerVolume};
+  PwmActuator buzzer{BuzzerChannel, BuzzerFreq, HalApi::GetCpuFreq(), "buzzer_", " of the buzzer",
+                     "volume",      BuzzerOff,  MaxBuzzerVolume};
 
   buzzer.set(0.1f);
   eeprom.ReadBytes(Address, Length, &eeprom_before, nullptr);

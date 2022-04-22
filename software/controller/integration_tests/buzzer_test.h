@@ -27,8 +27,8 @@ void RunTest() {
 
   bool buzzer_on{false};
 
-  PwmActuator buzzer{BuzzerChannel,    BuzzerFreq, HalApi::GetCpuFreq(), "buzzer_",
-                     " of the buzzer", BuzzerOff,  MaxBuzzerVolume};
+  PwmActuator buzzer{BuzzerChannel, BuzzerFreq, HalApi::GetCpuFreq(), "buzzer_", " of the buzzer",
+                     "volume",      BuzzerOff,  MaxBuzzerVolume};
 
   while (true) {
     if (buzzer_on) {

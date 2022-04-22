@@ -225,9 +225,9 @@ class ControllerDebugInterface:
         # Ensure the ventilator fan is on, and disconnect the fan from the system
         # so it's not inflating the test lung.  Edwin's request is that the fan
         # doesn't have to spin up during these tests.
-        self.variable_set("forced_exhale_pinch_setting", 1)
-        self.variable_set("forced_blower_pinch_setting", 1)
-        self.variable_set("forced_blower_setting", 1)
+        self.variable_set("forced_exhale_valve_position", 1)
+        self.variable_set("forced_blower_valve_position", 1)
+        self.variable_set("forced_blower_power", 1)
         # todo force o2 psol open or closed?
 
     def variables_force_off(self):
@@ -235,9 +235,9 @@ class ControllerDebugInterface:
         # controller.  Note that you should unforce the blower power *after* setting the
         # forced_mode because if we unforced it while we were still in mode 0
         # (i.e. "ventilator off"), the fan would momentarily spin down.
-        self.variable_set("forced_exhale_pinch_setting", -1)
-        self.variable_set("forced_blower_pinch_setting", -1)
-        self.variable_set("forced_blower_setting", -1)
+        self.variable_set("forced_exhale_valve_position", -1)
+        self.variable_set("forced_blower_valve_position", -1)
+        self.variable_set("forced_blower_power", -1)
         # todo unforce o2 psol?
 
     def variables_set(self, pairs):

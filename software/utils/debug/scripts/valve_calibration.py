@@ -26,9 +26,9 @@ def valve_calibration(interface: ControllerDebugInterface, cmdline: str = ""):
         print("Syntax:")
         print("  run valve_calibration <forced_valve_variable> <flow_variable>")
         print("    forced_valve_variable - one of these:")
-        print("         forced_exhale_pinch_setting")
-        print("         forced_blower_pinch_setting")
-        print("         forced_psol_setting")
+        print("         forced_exhale_valve_position")
+        print("         forced_blower_valve_position")
+        print("         forced_psol_position")
         print("    flow_variable - one of these:")
         print("         air_influx_flow")
         print("         oxygen_influx_flow")
@@ -37,8 +37,8 @@ def valve_calibration(interface: ControllerDebugInterface, cmdline: str = ""):
 
     # todo - for forced_psol_setting, we need blower off, and possibly other assumptions are not valid
 
-    valve_variable = cl[0]  # "forced_blower_pinch_setting"
-    flow_variable = cl[1]  # "flow_inhale"
+    valve_variable = cl[0]
+    flow_variable = cl[1]
 
     if valve_variable not in interface.variable_metadata.keys():
         print(f"Error: `{valve_variable}` is not a valid variable")
@@ -60,7 +60,7 @@ def valve_calibration(interface: ControllerDebugInterface, cmdline: str = ""):
     print("Shutting off fan and homing pinch valve")
     interface.variables_force_open()
     # todo why 0.75? not 1? what about the PSOL case?
-    interface.variable_set("forced_blower_setting", 0.75)
+    interface.variable_set("forced_blower_power", 0.75)
 
     input("Hit enter when ready to continue")
     print()
@@ -121,7 +121,7 @@ def valve_calibration(interface: ControllerDebugInterface, cmdline: str = ""):
                 break
             previous_flow = mean_flow
     results.insert(0, 0)
-    interface.variable_set("forced_blower_setting", 0)
+    interface.variable_set("forced_blower_power", 0)
 
     formatted_list = [f"{elem:.2f}" for elem in results]
     print(f"Results: {formatted_list}")

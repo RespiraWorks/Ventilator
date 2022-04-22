@@ -21,8 +21,10 @@ limitations under the License.
 
 class Actuator {
  public:
-  Actuator(const char *name, const char *help, float cal_0 = 0.0f, float cal_1 = 1.0f);
-  Actuator(const char *name, const char *help, std::array<float, ActuatorsCalSize> calibration);
+  Actuator(const char *name, const char *help, const char *setting_name = "setting",
+           float cal_0 = 0.0f, float cal_1 = 1.0f);
+  Actuator(const char *name, const char *help, std::array<float, ActuatorsCalSize> calibration,
+           const char *setting_name = "setting");
 
   // Link calibration table to nv params (if deemed necessary).
   // This function overwrites the existing (init?) calibration values with contents of nv_params
@@ -40,9 +42,8 @@ class Actuator {
 
  private:
   // Debug var that can be used from debug interface to force the actuator's setting
-  // TODO: make the "setting" debugvar name less generic, for example "position" for pinch valves,
-  // "power" for pwm, ...)
-  // Reminder: also update debug scripts (hardcoded debugvar names) when implementing this TODO.
-  Debug::Variable::Float forced_value_{"setting", Debug::Variable::Access::ReadWrite, -1.f,
-                                       "ratio"};
+  Debug::Variable::Float forced_value_{"", Debug::Variable::Access::ReadWrite, -1.f, "ratio"};
+
+  // Helper function to handle calibration and forced value debugvars during init
+  void InitDebugVars(const char *name, const char *help, const char *setting_name);
 };

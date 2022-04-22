@@ -42,8 +42,8 @@ struct ActuatorsState {
 class Actuators {
  public:
   Actuators(int blower_motor_index, int exhale_motor_index)
-      : blower_pinch_("blower_pinch_", " of the blower pinch valve", blower_motor_index),
-        exhale_pinch_("exhale_pinch_", " of the exhale pinch valve", exhale_motor_index){};
+      : blower_pinch_("blower_valve_", " of the blower pinch valve", blower_motor_index),
+        exhale_pinch_("exhale_valve_", " of the exhale pinch valve", exhale_motor_index){};
 
   // Returns true if the actuators are ready for action or false
   // if they aren't (for example pinch valves are homing).

@@ -22,9 +22,14 @@ static constexpr float InitialStep{TEST_PARAM_3};
 
 void RunTest() {
   hal.Init();
-  PwmActuator psol{
-      PSolChannel, PSolFreq, HalApi::GetCpuFreq(), "psol_", " of the proportional solenoid",
-      PSolClosed,  PSolOpen};
+  PwmActuator psol{PSolChannel,
+                   PSolFreq,
+                   HalApi::GetCpuFreq(),
+                   "psol_",
+                   " of the proportional solenoid",
+                   "position",
+                   PSolClosed,
+                   PSolOpen};
 
   float psol_position = PSolMin;
   float step = InitialStep;

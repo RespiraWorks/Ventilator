@@ -1,1 +1,1 @@
-Scripts for use with `controller_debug.py`'s `run` command.
+Scripts for use with the debug interface's `run` command.

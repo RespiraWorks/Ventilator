@@ -6,15 +6,11 @@ Please also see the [Software design pages](../design/controller_architecture.md
 
 ## Rationale and structure
 
-The ventilator actuators must be driven by control loops ensuring continuous
-breathing according to doctor-provided parameters, while also ensuring
-no harm is done to the patient.
+The ventilator actuators must be driven by control loops ensuring continuous breathing according to doctor-provided parameters, while also ensuring no harm is done to the patient.
 
-Controller code is separated from the user interface code. This makes the code base
-smaller, easier to maintain, and lessens the risk of unexpected behavior.
+Controller code is separated from the user interface code. This makes the code base smaller, easier to maintain, and lessens the risk of unexpected behavior.
 
-The controller shares the [common communications code](../common) with the GUI.
-The part of the code specific to the controller resides here.
+The controller shares the [common communications code](../common) with the GUI. The part of the code specific to the controller resides here.
 
 **Directories:**
 * [lib](lib) - most of the substantive controller code, must all be libraries to be unit-testable by platformio
@@ -33,32 +29,29 @@ The part of the code specific to the controller resides here.
   * shortcut to [debug interface](../utils/debug)
   * self documented if you run it without parameters or with `--help`
 * [platfomio.ini](platformio.ini) - the equivalent of a "make file" which governs how platformio builds targets
-* [.ycm_extra_conf.py](.ycm_extra_conf.py) - configuration for
-  [YouCompleteMe](https://github.com/ycm-core/YouCompleteMe) (for some IDEs)
+* [.ycm_extra_conf.py](.ycm_extra_conf.py) - configuration for [YouCompleteMe](https://github.com/ycm-core/YouCompleteMe) (for some IDEs)
 
 ## Development toolchain
 
 The target platform for this code is the STM32 processor (currently, the Nucleo L452RE to be precise).
 
-We use [platformio](https://platformio.org/) for building the controller code.
-Platformio has a CLI and an IDE. You'll need the platformio CLI in order to build
-from the command-line, even if you also install the IDE.
+We use [platformio](https://platformio.org/) for building the controller code. Platformio has a CLI and an IDE. You'll need the platformio CLI in order to build from the command-line, even if you also install the IDE.
 
 Instructions for installing:
  * [CLI](https://docs.platformio.org/en/latest/core/index.html)
  * [IDE](https://docs.platformio.org/en/latest/integration/ide/pioide.html)
 
-Note that an issue prevents platformio CLI 5.0 and 5.0.1 to run our unit tests. If you are using one of these versions, you will need to upgrade to 5.0.2 or newer version using:
+Some issues may prevent specific version sof platformio from building or running unit tests. It is currently recommended that you use `v5.2.5` (latest version at the time of this writing), which you may install with i.e.:
+
 ```
-$ platformio upgrade
+$ pip install platformio==5.2.5
 ```
 
-You may also need to install the package `libtinfo5` on Linux. Clang-tidy needs this package to run its checks,
-but platformio will just say all checks have passed without giving an error if it's missing.
+You may also need to install the package `libtinfo5` on Linux. Clang-tidy needs this package to run its checks, but platformio will just say all checks have passed without giving an error if it's missing.
 
 ## Building and testing
 
-After installing platformio, you should be able to build and test as follows:
+After installing platformio, you should be able to build and run test as follows:
 
 ```
 $ ./controller.sh test
@@ -69,9 +62,7 @@ $ ./controller.sh test
 This is the same script that runs on our continuous integration server (Travis CI).
 Run it frequently during development to catch errors/style violations early.
 
-Sometimes PlatformIO can get into a bad state -
-e.g. if things don't build for you in `master`, try:
-
+Sometimes PlatformIO can get into a bad state - e.g. if things don't build for you in `master`, try:
 
 ```
 $ rm -rf .pio/
@@ -86,8 +77,7 @@ $ platformio platform install native
 ## Running on the controller
 
 To run this you will need at a Nucleo dev board and/or some version of the PCB.
-For various builds of the physical system, please refer to the [manufacturing](../../manufacturing)
-section in this repository.
+For various builds of the physical system, please refer to the [manufacturing](../../manufacturing) section in this repository.
 
 Plug in the STM32 to your machine, then ask platformio to list all devices connected.
 You should see a USB serial port corresponding to your device.
@@ -100,26 +90,26 @@ Hardware ID: USB VID:PID=1A86:7523 LOCATION=20-2.2
 Description: USB2.0-Serial
 ```
 
+**TODO:** add this search functionality to script
+
 Now you can build and upload to the device.
-**Note:** The following command should be run in this directory (same as where `platformnio.ini` lives).
+**Note:** The following command should be run in this directory (same as where `platformio.ini` lives).
 
 ```
 $ pio run -t upload
 ```
 
-A more convenient way to run is to use the `./controller.sh run`. If you have multiple Nucleos that you
-want to deploy to, you should consult the [platformio configuration guide](platformio).
+A more convenient way to run is to use the `./controller.sh run`.
+If you have multiple Nucleos that you want to deploy to, you should consult the [platformio configuration guide](platformio).
+**TODO:** make the script do this configuring for you
 
 ### USB permission problems
 
-If `pio device list` did not show the Nucleo as, for example, when attempting to deploy directly from the Raspberry Pi,
-you may have to give yourself rw permission on the USB device.
+If `pio device list` did not show the Nucleo as, for example, when attempting to deploy directly from the Raspberry Pi, you may have to give yourself rw permission on the USB device.
 
-Find the device ID with `lsusb`. Let us assume in this case, that it shows
-`Bus 001 Device 004: ID 0483:374b STMicroelectronics ST-LINK/V2.1`.
+Find the device ID with `lsusb`. Let us assume in this case, that it shows `Bus 001 Device 004: ID 0483:374b STMicroelectronics ST-LINK/V2.1`.
 
-Add a udev rule for that device that mounts it with 666 permission. For example, create a file
-`/etc/udev/rules.d/99-openocd.rules` with the following line:
+Add a udev rule for that device that mounts it with 666 permission. For example, create a file `/etc/udev/rules.d/99-openocd.rules` with the following line:
 
 ```
 ATTRS{idVendor}=="0483", ATTRS{idProduct}=="374b", MODE="666"

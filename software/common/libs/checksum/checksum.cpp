@@ -19,6 +19,8 @@ limitations under the License.
 // and Hamming distance 4 up to 114663 bits.
 //[Philip Koopman, 32-Bit Cyclic Redundancy Codes for Internet Applications
 // 2002.] https://users.ece.cmu.edu/~koopman/crc/
+constexpr uint32_t Crc32Polynomial{0x741B8CD7};
+
 // Table generated using
 // http://www.sunshine2k.de/coding/javascript/crc/crc_js.html
 uint32_t crc32_single(uint32_t crc, uint8_t data) {
@@ -44,7 +46,7 @@ uint32_t crc32_single(uint32_t crc, uint8_t data) {
   return crc;
 }
 
-uint32_t soft_crc32(const uint8_t *data, uint32_t length) {
+uint32_t soft_crc32(const uint8_t *data, size_t length) {
   if (0 == length) {
     return 0;
   }
@@ -56,23 +58,23 @@ uint32_t soft_crc32(const uint8_t *data, uint32_t length) {
   return crc;
 }
 
-static uint32_t extract_crc(const uint8_t *buf, uint32_t data_length) {
-  if (data_length < 4) {
+static uint32_t extract_crc(const uint8_t *buffer, size_t length) {
+  if (length < 4) {
     return 0;
   }
 
-  uint32_t crc = static_cast<uint32_t>(buf[data_length - 4]) << 24 |
-                 static_cast<uint32_t>(buf[data_length - 3]) << 16 |
-                 static_cast<uint32_t>(buf[data_length - 2]) << 8 |
-                 static_cast<uint32_t>(buf[data_length - 1]);
+  uint32_t crc = static_cast<uint32_t>(buffer[length - 4]) << 24 |
+                 static_cast<uint32_t>(buffer[length - 3]) << 16 |
+                 static_cast<uint32_t>(buffer[length - 2]) << 8 |
+                 static_cast<uint32_t>(buffer[length - 1]);
   return crc;
 }
 
-bool crc_ok(const uint8_t *buf, uint32_t len) {
+bool crc_ok(const uint8_t *buffer, size_t length) {
   // It makes no sense to check CRC on a buffer smaller than 5 bytes.
   // We need 4 bytes for CRC and at leas 1 byte on which to check CRC
-  if (len < 5) {
+  if (length < 5) {
     return false;
   }
-  return soft_crc32(buf, len - 4) == extract_crc(buf, len);
+  return soft_crc32(buffer, length - 4) == extract_crc(buffer, length);
 }

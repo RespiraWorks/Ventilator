@@ -45,9 +45,13 @@ class Interpolant {
       : cal_table_(name, Debug::Variable::Access::ReadWrite, nv_params, offset, units, help, fmt){};
 
   float get_value(const float input) {
-    if (input <= 0.0f) return cal_table_.get_data(0);
+    if (input <= 0.0f) {
+      return cal_table_.get_data(0);
+    }
 
-    if (input >= 1.0f) return cal_table_.get_data(N - 1);
+    if (input >= 1.0f) {
+      return cal_table_.get_data(N - 1);
+    }
 
     // Interpolant cal_table_ is for regularly spaced inputs between 0 and 1, meaning cal_table_[n]
     // represents the expected output value when input = n/(N-1). Solving for n yields

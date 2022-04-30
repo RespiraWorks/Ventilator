@@ -229,7 +229,7 @@ void ChannelControl::Disable() {
   channel_reg->config.enable = 0;
 }
 
-size_t ChannelControl::Remaining() {
+size_t ChannelControl::Remaining() const {
   auto *channel_reg = get_channel_reg(base_, channel_);
   return channel_reg->count;
 }

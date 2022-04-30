@@ -130,7 +130,9 @@ void Handler::Init(I2Ceeprom *eeprom) {
 bool Handler::Set(uint16_t offset, const void *value, uint16_t len) {
   // Make sure the passed pointer is pointing to somewhere
   // in the structure and isn't in the reserved first 6 bytes
-  if ((offset < 6) || ((offset + len) > Size)) return false;
+  if ((offset < 6) || ((offset + len) > Size)) {
+    return false;
+  }
 
   // Update the contents in nv_params
   memcpy(reinterpret_cast<uint8_t *>(&nv_param_) + offset, value, len);
@@ -167,7 +169,9 @@ bool Handler::Get(uint16_t offset, void *value, uint16_t len) {
 #if defined(BARE_STM32)
   // Make sure the passed pointer is pointing to somewhere
   // in the structure and isn't in the reserved first 6 bytes
-  if ((offset < 6) || ((offset + len) > Size)) return false;
+  if ((offset < 6) || ((offset + len) > Size)) {
+    return false;
+  }
 #endif
   memcpy(value, reinterpret_cast<uint8_t *>(&nv_param_) + offset, len);
   return true;

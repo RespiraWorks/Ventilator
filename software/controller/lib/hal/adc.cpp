@@ -256,7 +256,9 @@ static constexpr int AdcConversionTime = [] {
 }();
 
 void ADC::SetAdcSampleTime(const uint8_t channel, const uint32_t sample_time) {
-  if (channel > 18) return;
+  if (channel > 18) {
+    return;
+  }
 
   AdcReg *adc = AdcBase;
   // We write the AdcSampleTimeReg value to the corresponding sample_times register:
@@ -267,7 +269,9 @@ void ADC::SetAdcSampleTime(const uint8_t channel, const uint32_t sample_time) {
 }
 
 void ADC::SetAdcSequence(const uint8_t sequence_number, const uint8_t channel) {
-  if (sequence_number < 1 || sequence_number > 16 || channel > 18) return;
+  if (sequence_number < 1 || sequence_number > 16 || channel > 18) {
+    return;
+  }
 
   AdcReg *adc = AdcBase;
   // Set sequence registers in order, in the matching word (0 for sequence 1 to 4, 1 for 5 to 9,
@@ -285,7 +289,9 @@ bool ADC::initialize(const Frequency cpu_frequency) {
   // corresponds to 0 volts, and MaxAdcReading corresponds to 3.3V
   adc_scaler_ = VoltageRange.volts() / static_cast<float>(MaxAdcReading * adc_sample_history_);
 
-  if (adc_sample_history_ > AdcSampleHistoryHardMax) return false;
+  if (adc_sample_history_ > AdcSampleHistoryHardMax) {
+    return false;
+  }
 
   // Enable the clock to the A/D converter
   enable_peripheral_clock(PeripheralID::ADC);
@@ -375,7 +381,9 @@ Voltage ADC::read(const uint8_t channel) const {
   size_t offset =
       std::distance(channels_.begin(), std::find(channels_.begin(), channels_.end(), channel));
 
-  if (offset >= MaxAdcChannels) return volts(0);
+  if (offset >= MaxAdcChannels) {
+    return volts(0);
+  }
 
   // We just run through the buffer and add up all the readings for
   // this channel.  The DMA is still writing to this buffer in the
@@ -401,7 +409,9 @@ void ADC::TESTSetAnalogPin(const uint8_t channel, Voltage value) {
 #endif
 
 bool ADC::add_channel(const uint8_t channel) {
-  if (n_channels_ >= MaxAdcChannels) return false;
+  if (n_channels_ >= MaxAdcChannels) {
+    return false;
+  }
   channels_[n_channels_++] = channel;
   return true;
 };

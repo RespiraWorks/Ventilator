@@ -91,10 +91,14 @@ static constexpr int MicrostepPerStep = 128;
 
 StepMtrErr StepMotor::SetParam(StepMtrParam param, uint32_t value) {
   uint8_t p = static_cast<uint8_t>(param);
-  if (p > sizeof(param_len_)) return StepMtrErr::BadParam;
+  if (p > sizeof(param_len_)) {
+    return StepMtrErr::BadParam;
+  }
 
   int len = param_len_[p];
-  if (!len || (len > 3)) return StepMtrErr::BadParam;
+  if (!len || (len > 3)) {
+    return StepMtrErr::BadParam;
+  }
 
   uint8_t cmd_buff[4];
   cmd_buff[0] = p;  // The op-code for a set is just the parameter number
@@ -111,14 +115,20 @@ StepMtrErr StepMotor::SetParam(StepMtrParam param, uint32_t value) {
 
 StepMtrErr StepMotor::GetParam(StepMtrParam param, uint32_t *value) {
   uint8_t p = static_cast<uint8_t>(param);
-  if (p > sizeof(param_len_)) return StepMtrErr::BadParam;
+  if (p > sizeof(param_len_)) {
+    return StepMtrErr::BadParam;
+  }
 
   int len = param_len_[p];
-  if (!len || (len > 3)) return StepMtrErr::BadParam;
+  if (!len || (len > 3)) {
+    return StepMtrErr::BadParam;
+  }
 
   // It's not legal to call this from the control loop because it
   // has to block.  Return an error if we're in an interrupt handler
-  if (Interrupts::singleton().InInterruptHandler()) return StepMtrErr::WouldBlock;
+  if (Interrupts::singleton().InInterruptHandler()) {
+    return StepMtrErr::WouldBlock;
+  }
 
   uint8_t cmd_buff[4];
 
@@ -129,7 +139,9 @@ StepMtrErr StepMotor::GetParam(StepMtrParam param, uint32_t *value) {
   cmd_buff[3] = 0;
 
   StepMtrErr err = SendCmd(cmd_buff, len + 1);
-  if (err != StepMtrErr::Ok) return err;
+  if (err != StepMtrErr::Ok) {
+    return err;
+  }
 
   // At this point, the response from the stepper driver
   // chip is in my buffer.  The first byte is zero, and
@@ -253,7 +265,9 @@ void StepMotor::OneTimeInit() {
 
     // If this is at the default config register value for
     // the L6470 then I don't need to do any more configuration
-    if (val == 0x2E88) continue;
+    if (val == 0x2E88) {
+      continue;
+    }
 
     mtr->power_step_ = true;
 
@@ -303,10 +317,14 @@ StepMtrErr StepMotor::GetCurrentSpeed(float *ret) {
 //
 // NOTE - The motor must be disabled to set this
 StepMtrErr StepMotor::SetMaxSpeed(float dps) {
-  if (dps < 0) return StepMtrErr::BadValue;
+  if (dps < 0) {
+    return StepMtrErr::BadValue;
+  }
 
   uint32_t speed = static_cast<uint32_t>(DpsToVelReg(dps, VelMaxSpeedReg));
-  if (speed > 0x3ff) speed = 0x3ff;
+  if (speed > 0x3ff) {
+    speed = 0x3ff;
+  }
 
   return SetParam(StepMtrParam::MaxSpeed, speed);
 }
@@ -330,10 +348,14 @@ StepMtrErr StepMotor::GetMaxSpeed(float *ret) {
 //
 // NOTE - The motor must be disabled to set this
 StepMtrErr StepMotor::SetMinSpeed(float dps) {
-  if (dps < 0) return StepMtrErr::BadValue;
+  if (dps < 0) {
+    return StepMtrErr::BadValue;
+  }
 
   uint32_t speed = static_cast<uint32_t>(DpsToVelReg(dps, VelMinSpeedReg));
-  if (speed > 0xfff) speed = 0xfff;
+  if (speed > 0xfff) {
+    speed = 0xfff;
+  }
 
   return SetParam(StepMtrParam::MinSpeed, speed);
 }
@@ -351,17 +373,23 @@ StepMtrErr StepMotor::GetMinSpeed(float *ret) {
 // NOTE - The motor must be disabled to set this
 StepMtrErr StepMotor::SetAccel(float acc) {
   static constexpr float Scaler = (TickTime * TickTime * 1099511627776.f);
-  if (acc < 0) return StepMtrErr::BadValue;
+  if (acc < 0) {
+    return StepMtrErr::BadValue;
+  }
 
   // Convert from deg/sec/sec to steps/sec/sec
   acc *= static_cast<float>(steps_per_rev_) / 360.0f;
 
   // Convert to the proper units for the driver chip
   uint32_t val = static_cast<uint32_t>(acc * Scaler);
-  if (val > 0x0fff) val = 0xfff;
+  if (val > 0x0fff) {
+    val = 0xfff;
+  }
 
   StepMtrErr err = SetParam(StepMtrParam::Acceleration, val);
-  if (err != StepMtrErr::Ok) return err;
+  if (err != StepMtrErr::Ok) {
+    return err;
+  }
 
   return SetParam(StepMtrParam::Deceleration, val);
 }
@@ -390,9 +418,13 @@ StepMtrErr StepMotor::SetKval(StepMtrParam param, float amp) {
   // by an extra 15% if working with the powerSTEP chip.
   // I don't think we're using that part in the real design, so
   // this can get retired at some point
-  if (power_step_ && amp < 0.9) amp += 0.15f;
+  if (power_step_ && amp < 0.9) {
+    amp += 0.15f;
+  }
 
-  if ((amp < 0) || (amp > 1)) return StepMtrErr::BadValue;
+  if ((amp < 0) || (amp > 1)) {
+    return StepMtrErr::BadValue;
+  }
 
   // The stepper chip uses a value of 0 to 255
   return SetParam(param, static_cast<uint32_t>(amp * 255));
@@ -409,13 +441,19 @@ StepMtrErr StepMotor::SetAmpDecel(float amp) {
 
 StepMtrErr StepMotor::SetAmpAll(float amp) {
   StepMtrErr err = SetAmpHold(amp);
-  if (err != StepMtrErr::Ok) return err;
+  if (err != StepMtrErr::Ok) {
+    return err;
+  }
 
   err = SetAmpRun(amp);
-  if (err != StepMtrErr::Ok) return err;
+  if (err != StepMtrErr::Ok) {
+    return err;
+  }
 
   err = SetAmpAccel(amp);
-  if (err != StepMtrErr::Ok) return err;
+  if (err != StepMtrErr::Ok) {
+    return err;
+  }
 
   return SetAmpDecel(amp);
 }
@@ -433,7 +471,9 @@ StepMtrErr StepMotor::RunAtVelocity(float vel) {
   // The speed value is a 20 bit unsigned integer passed
   // as part of the command.
   int32_t s = static_cast<int32_t>(speed);
-  if (s > 0x000fffff) s = 0x000fffff;
+  if (s > 0x000fffff) {
+    s = 0x000fffff;
+  }
 
   uint8_t cmd[4];
   if (neg)
@@ -490,12 +530,16 @@ StepMtrErr StepMotor::Reset() {
 StepMtrErr StepMotor::GetStatus(StepperStatus *stat) {
   // It's not legal to call this from the control loop because it
   // has to block.  Return an error if we're in an interrupt handler
-  if (Interrupts::singleton().InInterruptHandler()) return StepMtrErr::WouldBlock;
+  if (Interrupts::singleton().InInterruptHandler()) {
+    return StepMtrErr::WouldBlock;
+  }
 
   uint8_t cmd[] = {static_cast<uint8_t>(StepMtrCmd::GetStatus), 0, 0};
 
   StepMtrErr err = SendCmd(cmd, 3);
-  if (err != StepMtrErr::Ok) return err;
+  if (err != StepMtrErr::Ok) {
+    return err;
+  }
 
   stat->enabled = (cmd[2] & 0x01) == 0;
   stat->command_error = (cmd[2] & 0x80) || (cmd[1] & 0x01);
@@ -556,7 +600,9 @@ StepMtrErr StepMotor::MoveRel(float deg) {
   } else
     cmd[0] = static_cast<uint8_t>(StepMtrCmd::MovePositive);
 
-  if (dist > 0x003FFFFF) return StepMtrErr::BadValue;
+  if (dist > 0x003FFFFF) {
+    return StepMtrErr::BadValue;
+  }
 
   cmd[1] = static_cast<uint8_t>(dist >> 16);
   cmd[2] = static_cast<uint8_t>(dist >> 8);
@@ -582,7 +628,9 @@ StepMtrErr StepMotor::SendCmd(uint8_t *cmd, uint32_t len) {
   // See if we're running from an interrupt handler
   // (i.e. the controller thread).  If so we just
   // add this command to our queue and return
-  if (Interrupts::singleton().InInterruptHandler()) return EnqueueCmd(cmd, len);
+  if (Interrupts::singleton().InInterruptHandler()) {
+    return EnqueueCmd(cmd, len);
+  }
 
   // Copy the command to my buffer with interrupts disabled.
   // I want to make sure the whole command gets sent as one continuous
@@ -598,7 +646,9 @@ StepMtrErr StepMotor::SendCmd(uint8_t *cmd, uint32_t len) {
   }
 
   // If the communications interface is idle, start it.
-  if (state == StepCommState::Idle) UpdateComState();
+  if (state == StepCommState::Idle) {
+    UpdateComState();
+  }
 
   // Wait for the ISR to finish sending the command.
   // When it does, it will set the pointer to NULL
@@ -623,9 +673,13 @@ StepMtrErr StepMotor::EnqueueCmd(uint8_t *cmd, uint32_t len) {
 
   // It's illegal to call this if we're currently pulling data
   // from the queues.
-  if (coms_state_ == StepCommState::SendQueued) return StepMtrErr::InvalidState;
+  if (coms_state_ == StepCommState::SendQueued) {
+    return StepMtrErr::InvalidState;
+  }
 
-  if (queue_count_ + len > sizeof(queue_)) return StepMtrErr::QueueFull;
+  if (queue_count_ + len > sizeof(queue_)) {
+    return StepMtrErr::QueueFull;
+  }
 
   memcpy(&queue_[queue_count_], cmd, len);
   queue_count_ += len;
@@ -689,7 +743,9 @@ void StepMotor::UpdateComState() {
 
       // If any data was found in the queues, then I'm done.
       // Otherwise, move on to the next state.
-      if (data_to_send) break;
+      if (data_to_send) {
+        break;
+      }
 
       coms_state_ = StepCommState::SendSync;
       // fall through
@@ -707,7 +763,9 @@ void StepMotor::UpdateComState() {
         // buffer that the command came from.
         if (motor_[i].save_response_) {
           *motor_[i].cmd_ptr_++ = dma_buff_[i];
-          if (--motor_[i].cmd_remain_ <= 0) motor_[i].cmd_ptr_ = nullptr;
+          if (--motor_[i].cmd_remain_ <= 0) {
+            motor_[i].cmd_ptr_ = nullptr;
+          }
         }
 
         // If this motor has an active command to send,
@@ -763,7 +821,9 @@ void StepMotor::DmaISR() {
 // priority loop timer ISR.  If the comm state machine
 // is idle it starts a new transmission
 void StepMotor::StartQueuedCommands() {
-  if (coms_state_ == StepCommState::Idle) UpdateComState();
+  if (coms_state_ == StepCommState::Idle) {
+    UpdateComState();
+  }
 }
 
 // This is used to send a command to the stepper chips during startup.
@@ -835,7 +895,9 @@ void StepMotor::ProbeChips() {
 
   // If all the bytes in the buffer were zero, then most likely there is
   // nothing connected at all.
-  if (total_motors_ == sizeof(probe_buff)) total_motors_ = 0;
+  if (total_motors_ == sizeof(probe_buff)) {
+    total_motors_ = 0;
+  }
 }
 
 #else

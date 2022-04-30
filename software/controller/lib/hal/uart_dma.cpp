@@ -1,4 +1,4 @@
-/* Copyright 2022, RespiraWorks
+/* Copyright 2020-2022, RespiraWorks
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
@@ -15,13 +15,13 @@ limitations under the License.
 #include <string.h>  // used for memcpy
 
 #include "dma.h"
+#include "framing_spec_chars.h"
 
-// Declaration of UART channels, as global since hal requires it to exist for interrupt handlers
-// TODO: find a way to get rid of these global variable (probably requires a more flexible
+// Declaration of UART channel with Rpi, as global since hal requires it to exist for interrupt
+// handlers.
+// TODO: find a way to get rid of global variable (probably requires a more flexible
 // handling of InterruptVector in Reset_Handler() function from hal_stm32.cpp)
-#if defined(UART_VIA_DMA)
-UART::DMAChannel rpi_uart(UART::Base::UART3, DMA::Base::DMA1);
-#endif
+UART::DMAChannel rpi_uart(UART::Base::UART3, DMA::Base::DMA1, FramingMark);
 
 namespace UART {
 
@@ -71,7 +71,9 @@ void DMAChannel::Initialize(GPIO::Port port, uint8_t tx_pin, uint8_t rx_pin,
 // Returns number of bytes copied to buffer and awaiting transfer by DMA
 size_t DMAChannel::Write(uint8_t *buffer, size_t length, TxListener *txl) {
   // DMA transfers cannot interrupt each other
-  if (tx_in_progress_) return 0;
+  if (tx_in_progress_) {
+    return 0;
+  }
 
   if (length > BufferLength) {
     // TODO: log an error, this is not supposed to happen, though the caller can
@@ -85,7 +87,6 @@ size_t DMAChannel::Write(uint8_t *buffer, size_t length, TxListener *txl) {
   // clear UART Transfer Complete flag, per [RM] p1230
   ClearTxCompleteInterrupt();
   tx_dma_->Enable();
-  tx_in_progress_ = true;
   Channel::Write(buffer, length, txl);
   return length;
 }
@@ -110,13 +111,18 @@ void DMAChannel::StopTx() {
 // Returns desired length if no reception is in progress and new reception was setup.
 size_t DMAChannel::Read(uint8_t *buffer, size_t length, RxListener *rxl) {
   // DMA transfers cannot interrupt each other
-  if (rx_in_progress_) return 0;
+  if (rx_in_progress_) {
+    return 0;
+  }
 
-  rx_listener_ = rxl;
+  if (rxl) {
+    SetRxListener(rxl);
+  }
   // setup DMA transfer
   rx_dma_->SetupTransfer(buffer, length);
   rx_dma_->Enable();
   rx_in_progress_ = true;
+  rx_length_ = length;
   // though the transfer may take some time, inform the caller that he will
   // eventually get all of his data (when RxFull() > 0)
   return length;
@@ -127,9 +133,8 @@ void DMAChannel::StopRx() {
   rx_in_progress_ = false;
 }
 
-// RxFull doesn't really make sense when using DMA, which directly transfers data to client's buffer
-// return 0 if a transfer is in progress (we cannot receive new bytes), and a big value otherwise
-size_t DMAChannel::RxFull() const { return rx_in_progress_ ? 0 : BufferLength; }
+// RxFull tells the caller how many bytes have been written to his buffer
+size_t DMAChannel::RxFull() const { return rx_length_ - rx_dma_->Remaining(); }
 
 // Can only process one transfer at a time, so this returns 0 if a transfer is in progress,
 // and full buffer length otherwise (whichcorresponds to the available space)
@@ -140,11 +145,15 @@ void DMAChannel::TxDMAInterruptHandler() {
   StopTx();
   if (tx_dma_->InterruptStatus(DMA::Interrupt::TransferError)) {
     tx_dma_->ClearInterrupt(DMA::Interrupt::TransferError);
-    if (tx_listener_) tx_listener_->on_tx_error();
+    if (tx_listener_) {
+      tx_listener_->on_tx_error();
+    }
   }
   if (tx_dma_->InterruptStatus(DMA::Interrupt::TransferComplete)) {
     tx_dma_->ClearInterrupt(DMA::Interrupt::TransferComplete);
-    if (tx_listener_) tx_listener_->on_tx_complete();
+    if (tx_listener_) {
+      tx_listener_->on_tx_complete();
+    }
   }
 }
 
@@ -152,12 +161,16 @@ void DMAChannel::RxDMAInterruptHandler() {
   StopRx();
   if (rx_dma_->InterruptStatus(DMA::Interrupt::TransferError)) {
     rx_dma_->ClearInterrupt(DMA::Interrupt::TransferError);
-    if (rx_listener_) rx_listener_->on_rx_error(RxError::DMA);
+    if (rx_listener_) {
+      rx_listener_->on_rx_error(RxError::DMA);
+    }
   };
 
   if (rx_dma_->InterruptStatus(DMA::Interrupt::TransferComplete)) {
     rx_dma_->ClearInterrupt(DMA::Interrupt::TransferComplete);
-    if (rx_listener_) rx_listener_->on_rx_complete();
+    if (rx_listener_) {
+      rx_listener_->on_rx_complete();
+    }
   }
 }
 

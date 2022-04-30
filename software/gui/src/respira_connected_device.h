@@ -20,11 +20,12 @@ limitations under the License.
 
 #include "chrono.h"
 #include "connected_device.h"
+#include "frame_detector.h"
+#include "framing_spec_chars.h"
 #include "logger.h"
 #include "network_protocol.pb.h"
-#include "pb_common.h"
-#include "pb_decode.h"
-#include "pb_encode.h"
+#include "proto_traits.h"
+#include "soft_rx_buffer.h"
 
 // Connects to system serial port, does nanopb serialization/deserialization
 // of GuiStatus and ControllerStatus and provides methods to send/receive
@@ -57,4 +58,10 @@ class RespiraConnectedDevice : public ConnectedDevice {
  private:
   std::unique_ptr<QSerialPort> serialPort_{nullptr};
   QString serialPortName_;
+
+  // Size of the rx buffer is set asuming a corner case where EVERY ControllerStatus
+  // byte and CRC32 will be escaped + two marker chars; this is too big, but safe.
+  static constexpr size_t RxFrameLengthMax{ProtoTraits<ControllerStatus>::MaxFrameSize};
+  SoftRxBuffer<RxFrameLengthMax> rx_buffer_{FramingMark};
+  FrameDetector<RxFrameLengthMax> frame_detector_{&rx_buffer_};
 };

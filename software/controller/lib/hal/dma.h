@@ -56,7 +56,7 @@ class ChannelControl {
   void SetupTransfer(volatile void *data, size_t length);
   void Enable();
   void Disable();
-  size_t Remaining();
+  size_t Remaining() const;
 
  private:
   void SelectChannel(uint8_t selection);

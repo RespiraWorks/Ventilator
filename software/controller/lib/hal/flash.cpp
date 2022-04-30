@@ -138,7 +138,9 @@ void initialize() {
  * Returns true on success or false on failure
  */
 bool erase_page(uint32_t addr) {
-  if (!ValidFlashParameters(addr, FlashPageSize)) return false;
+  if (!ValidFlashParameters(addr, FlashPageSize)) {
+    return false;
+  }
 
   // Clear all the status bits
   FlashReg* reg = FlashBase;
@@ -165,7 +167,9 @@ bool erase_page(uint32_t addr) {
 }
 
 bool write(uint32_t addr, void* data, size_t ct) {
-  if (!ValidFlashParameters(addr, ct)) return false;
+  if (!ValidFlashParameters(addr, ct)) {
+    return false;
+  }
   FlashReg* reg = FlashBase;
 
   // Clear all the status bits
@@ -188,7 +192,9 @@ bool write(uint32_t addr, void* data, size_t ct) {
     }
 
     // Check for errors
-    if (reg->status & 0x0000C3FA) break;
+    if (reg->status & 0x0000C3FA) {
+      break;
+    }
 
     // Clear EOP
     reg->status = 0x00000001;

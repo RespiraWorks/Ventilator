@@ -47,7 +47,7 @@ static Debug::Variable::UInt32 dbg_nvparams("nvparams_address", Debug::Variable:
 namespace NVParams {
 
 // Size of the parameter block including the header
-static constexpr uint32_t Size{sizeof(Structure)};
+static constexpr size_t Size{sizeof(Structure)};
 
 // Calculate the CRC of the params at this address
 static uint32_t CRC(Structure *param) {

@@ -38,9 +38,11 @@ Abbreviations [RM], [DS], etc are defined in hal/README.md.
 #include "system_timer.h"
 #include "timers.h"
 #include "uart.h"
-#include "uart_dma.h"
 #include "vars.h"
 #include "watchdog.h"
+#if defined(UART_VIA_DMA)
+#include "uart_dma.h"
+#endif
 
 static constexpr Frequency CPUFrequency{megahertz(80)};
 static constexpr Frequency UARTBaudRate{hertz(115200)};
@@ -239,7 +241,7 @@ void Timer15ISR() {
 
 static UART rpi_uart(Uart3Base);
 static UART debug_uart(Uart2Base);
-#ifdef UART_VIA_DMA
+#if defined(UART_VIA_DMA)
 extern UartDma dma_uart;
 #endif
 // The UART that talks to the rPi uses the following pins:
@@ -265,7 +267,7 @@ void HalApi::InitUARTs() {
   //        Need to do that as soon as the boards are available.
   enable_peripheral_clock(PeripheralID::USART2);
   enable_peripheral_clock(PeripheralID::USART3);
-#ifdef UART_VIA_DMA
+#if defined(UART_VIA_DMA)
   enable_peripheral_clock(PeripheralID::DMA1);
 #endif
   // [DS] Table 17 (pg 76)
@@ -278,7 +280,7 @@ void HalApi::InitUARTs() {
   GPIO::AlternatePin(GPIO::Port::B, 13, GPIO::AlternativeFunction::AF7);  // USART3_CTS
   GPIO::AlternatePin(GPIO::Port::B, 14, GPIO::AlternativeFunction::AF7);  // USART3_RTS_DE
 
-#ifdef UART_VIA_DMA
+#if defined(UART_VIA_DMA)
   dma_uart.initialize(CPUFrequency, UARTBaudRate);
 #else
   rpi_uart.Init(CPUFrequency, UARTBaudRate);
@@ -293,7 +295,7 @@ void HalApi::InitUARTs() {
 
 void Uart2ISR() { debug_uart.ISR(); }
 
-#ifndef UART_VIA_DMA
+#if !defined(UART_VIA_DMA)
 void Uart3ISR() { rpi_uart.ISR(); }
 #endif
 
@@ -393,7 +395,7 @@ __attribute__((used)) __attribute__((section(".isr_vector"))) void (*const Vecto
     BadISR,         //  25 - 0x064
     BadISR,         //  26 - 0x068
     BadISR,         //  27 - 0x06C
-#ifdef UART_VIA_DMA
+#if defined(UART_VIA_DMA)
     DMA1Channel2ISR,  //  28 - 0x070 DMA1 CH2
     DMA1Channel3ISR,  //  29 - 0x074 DMA1 CH3
 #else

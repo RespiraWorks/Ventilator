@@ -10,7 +10,7 @@ The ventilator actuators must be driven by control loops ensuring continuous bre
 
 Controller code is separated from the user interface code. This makes the code base smaller, easier to maintain, and lessens the risk of unexpected behavior.
 
-The controller shares the [common communications code](../common) with the GUI. The part of the code specific to the controller resides here.
+The controller shares the [common code](../common) with the GUI. The part of the code specific to the controller resides here.
 
 **Directories:**
 * [lib](lib) - most of the substantive controller code, must all be libraries to be unit-testable by platformio

@@ -1,4 +1,4 @@
-/* Copyright 2020, RespiraWorks
+/* Copyright 2020-2022, RespiraWorks
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -12,8 +12,11 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
+#if defined(BARE_STM32)
 #include "hal.h"
+#else
+#include <cassert>
+#endif
 
 // Provide an implementation of __cxa_pure_virtual, which is called when you
 // try to invoke a pure-virtual function.  Without this, the default
@@ -27,8 +30,13 @@ limitations under the License.
 // header in the putative library from each file with a pure virtual function.
 // We'd probably also need to remove the dependency on hal, so this could be
 // used from libraries that don't link with hal.
-#if defined(BARE_STM32)
+
 // We don't control this function's name, silence the style check
 // NOLINTNEXTLINE(readability-identifier-naming,bugprone-reserved-identifier)
-extern "C" void __cxa_pure_virtual() { hal.ResetDevice(); }
+extern "C" void __cxa_pure_virtual() {
+#if defined(BARE_STM32)
+  hal.ResetDevice();
+#else
+  assert(false);
 #endif
+}

@@ -357,26 +357,13 @@ bool ADC::initialize(const Frequency cpu_frequency) {
 
   // I use DMA1 channel 1 to copy A/D readings into the buffer ([RM] 11.4.4)
   enable_peripheral_clock(PeripheralID::DMA1);
-  DmaReg *dma = DMA::get_register(DMA::Base::DMA1);
-  auto c1 = static_cast<uint8_t>(DMA::Channel::Chan1);
+  DMA::ChannelControl dma{DMA::Base::DMA1, DMA::Channel::Chan1};
 
-  /// \TODO: improve DMA abstraction to factor this out?
-  dma->channel[c1].peripheral_address = &adc->adc[0].data;
-  dma->channel[c1].memory_address = oversample_buffer_;
-  dma->channel[c1].count = adc_sample_history_ * MaxAdcChannels;
-
-  dma->channel[c1].config.enable = 0;
-  dma->channel[c1].config.tx_complete_interrupt = 0;
-  dma->channel[c1].config.half_tx_interrupt = 0;
-  dma->channel[c1].config.tx_error_interrupt = 0;
-  dma->channel[c1].config.direction = static_cast<uint32_t>(DMA::ChannelDir::PeripheralToMemory);
-  dma->channel[c1].config.circular = 1;
-  dma->channel[c1].config.peripheral_increment = 0;
-  dma->channel[c1].config.memory_increment = 1;
-  dma->channel[c1].config.peripheral_size = 1;
-  dma->channel[c1].config.memory_size = 1;
-  dma->channel[c1].config.priority = 0;
-  dma->channel[c1].config.enable = 1;
+  dma.Init(/*selection=*/0, &adc->adc[0].data, DMA::ChannelDir::PeripheralToMemory,
+           /*tx_interrupt=*/false, DMA::ChannelPriority::Low, /*circular=*/true,
+           DMA::TransferSize::HalfWord);
+  dma.SetupTx(oversample_buffer_, adc_sample_history_ * MaxAdcChannels);
+  dma.Enable();
 
   // Start the A/D converter (by setting bit 2 of the control register - per [RM] p457)
   adc->adc[0].control |= 0x00000004;

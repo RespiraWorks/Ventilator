@@ -242,7 +242,7 @@ void Timer15ISR() {
 static UART rpi_uart(Uart3Base);
 static UART debug_uart(Uart2Base);
 #if defined(UART_VIA_DMA)
-extern UartDma dma_uart;
+static UartDma dma_uart(Uart3Base, 0xE2);
 #endif
 // The UART that talks to the rPi uses the following pins:
 //    PB10 - TX
@@ -281,7 +281,8 @@ void HalApi::InitUARTs() {
   GPIO::AlternatePin(GPIO::Port::B, 14, GPIO::AlternativeFunction::AF7);  // USART3_RTS_DE
 
 #if defined(UART_VIA_DMA)
-  dma_uart.initialize(CPUFrequency, UARTBaudRate);
+  dma_uart.initialize(CPUFrequency, UARTBaudRate, DMA::Base::DMA1, DMA::Channel::Chan2,
+                      DMA::Channel::Chan3);
 #else
   rpi_uart.Init(CPUFrequency, UARTBaudRate);
 #endif
@@ -345,8 +346,13 @@ void BadISR() {}
 // the I2C::Channel::*ISR() which are generic ISR associated with an I²C channel
 void I2c1EventISR() { i2c1.I2CEventHandler(); };
 void I2c1ErrorISR() { i2c1.I2CErrorHandler(); };
-void DMA2Channel6ISR() { i2c1.DMAIntHandler(DMA::Channel::Chan6); };
-void DMA2Channel7ISR() { i2c1.DMAIntHandler(DMA::Channel::Chan7); };
+void DMA2Channel6ISR() { i2c1.DMAIntHandler(I2C::ExchangeDirection::Read); };
+void DMA2Channel7ISR() { i2c1.DMAIntHandler(I2C::ExchangeDirection::Write); };
+#if defined(UART_VIA_DMA)
+void DMA1Channel2ISR() { dma_uart.DMA_tx_interrupt_handler(); }
+void DMA1Channel3ISR() { dma_uart.DMA_rx_interrupt_handler(); }
+void Uart3ISR() { dma_uart.UART_interrupt_handler(); }
+#endif
 
 // We don't control this function's name, silence the style check
 // NOLINTNEXTLINE(readability-identifier-naming)

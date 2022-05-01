@@ -49,6 +49,7 @@ limitations under the License.
 #include <cstdint>
 #include <optional>
 
+#include "dma.h"
 #include "gpio.h"
 
 // These are the simple opcodes for the stepper driver.
@@ -296,6 +297,8 @@ class StepMotor {
  private:
   static StepMotor motor_[MaxMotors];
   static uint8_t dma_buff_[MaxMotors];
+  static std::optional<DMA::ChannelControl> rx_dma_;
+  static std::optional<DMA::ChannelControl> tx_dma_;
   static uint8_t param_len_[32];
   static StepCommState coms_state_;
 

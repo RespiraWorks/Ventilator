@@ -58,10 +58,10 @@ void UartDma::initialize(const Frequency cpu_frequency, const Frequency baud, DM
 
   rx_dma_.emplace(dma, rx_channel);
   tx_dma_.emplace(dma, tx_channel);
-  rx_dma_->Init(2, &(uart_->rx_data), DMA::ChannelDir::PeripheralToMemory, 1,
-                DMA::ChannelPriority::Highest);
-  tx_dma_->Init(2, &(uart_->tx_data), DMA::ChannelDir::MemoryToPeripheral, 1,
-                DMA::ChannelPriority::Highest);
+  rx_dma_->Initialize(2, &(uart_->rx_data), DMA::ChannelDir::PeripheralToMemory, 1,
+                      DMA::ChannelPriority::Highest);
+  tx_dma_->Initialize(2, &(uart_->tx_data), DMA::ChannelDir::MemoryToPeripheral, 1,
+                      DMA::ChannelPriority::Highest);
 }
 
 // Sets up an interrupt on matching char incoming form UART3
@@ -94,7 +94,7 @@ bool UartDma::start_tx(uint8_t *buffer, uint32_t length, TxListener *txl) {
   tx_listener_ = txl;
 
   tx_dma_->Disable();  // Disable channel before config
-  tx_dma_->SetupTx(buffer, length & 0x0000FFFF);
+  tx_dma_->SetupTransfer(buffer, length & 0x0000FFFF);
   tx_in_progress_ = true;
   tx_dma_->Enable();
 
@@ -140,7 +140,7 @@ bool UartDma::start_rx(uint8_t *buffer, uint32_t length, RxListener *rxl) {
   rx_listener_ = rxl;
 
   rx_dma_->Disable();  // Disable channel before config
-  rx_dma_->SetupTx(buffer, length & 0x0000FFFF);
+  rx_dma_->SetupTransfer(buffer, length & 0x0000FFFF);
 
   uart_->interrupt_clear.bitfield.rx_timeout_clear = 1;  // Clear rx timeout flag
   uart_->request.bitfield.flush_rx = 1;                  // Clear RXNE flag
@@ -216,7 +216,7 @@ void UartDma::UART_interrupt_handler() {
 // Calls on_tx_error and on_tx_complete functions of the tx_listener_
 void UartDma::DMA_tx_interrupt_handler() {
   stop_tx();
-  if (tx_dma_->IntStatus(DMA::Interrupt::TransferError)) {
+  if (tx_dma_->InterruptStatus(DMA::Interrupt::TransferError)) {
     if (tx_listener_) {
       tx_listener_->on_tx_error();
     }
@@ -225,14 +225,14 @@ void UartDma::DMA_tx_interrupt_handler() {
       tx_listener_->on_tx_complete();
     }
   }
-  tx_dma_->ClearInt(DMA::Interrupt::Global);
+  tx_dma_->ClearInterrupt(DMA::Interrupt::Global);
 }
 
 // ISR handler for the DMA peripheral responsible for reception.
 // Calls on_rx_error and on_rx_complete functions of the rx_listener_
 void UartDma::DMA_rx_interrupt_handler() {
   stop_rx();
-  if (rx_dma_->IntStatus(DMA::Interrupt::TransferError)) {
+  if (rx_dma_->InterruptStatus(DMA::Interrupt::TransferError)) {
     if (rx_listener_) {
       rx_listener_->on_rx_error(RxError::DMA);
     }
@@ -241,7 +241,7 @@ void UartDma::DMA_rx_interrupt_handler() {
       rx_listener_->on_rx_complete();
     }
   }
-  rx_dma_->ClearInt(DMA::Interrupt::Global);
+  rx_dma_->ClearInterrupt(DMA::Interrupt::Global);
 }
 
 #endif

@@ -16,7 +16,7 @@ limitations under the License.
 #include "dma.h"
 
 namespace DMA {
-struct DmaStruct {
+struct DmaRegisters {
   union {
     struct {
       uint32_t gif1 : 1;   // global interrupt flag
@@ -123,8 +123,9 @@ struct DmaStruct {
     uint32_t full_reg;
   } channel_select;  // Channel Selection Register [RM] 11.6.7 (pg 317)
 };
-typedef volatile DmaStruct DmaReg;
+typedef volatile DmaRegisters DmaReg;
 
+// DMA base registers, per [RM] table 2 (p68)
 DmaReg *get_register(const Base id) {
   switch (id) {
     case Base::DMA1:
@@ -143,9 +144,9 @@ volatile DmaReg::ChannelRegs *get_channel_reg(const Base id, const Channel chann
 
 ChannelControl::ChannelControl(Base base, Channel channel) : base_(base), channel_(channel){};
 
-void ChannelControl::Init(uint8_t selection, volatile uint32_t *peripheral, ChannelDir dir,
-                          bool tx_interrupt, ChannelPriority prio, bool circular,
-                          TransferSize size) {
+void ChannelControl::Initialize(uint8_t selection, volatile uint32_t *peripheral, ChannelDir dir,
+                                bool tx_interrupt, ChannelPriority prio, bool circular,
+                                TransferSize size) {
   Disable();
   SelectChannel(selection);
   SetupChannel(prio, size, dir, tx_interrupt, circular);
@@ -154,21 +155,21 @@ void ChannelControl::Init(uint8_t selection, volatile uint32_t *peripheral, Chan
   channel_reg->peripheral_address = peripheral;
 }
 
-bool ChannelControl::IntStatus(Interrupt interrupt) {
+bool ChannelControl::InterruptStatus(Interrupt interrupt) {
   uint32_t x = static_cast<uint32_t>(interrupt);
   x <<= 4 * static_cast<uint8_t>(channel_);  // 4 events per channel ([RM] 11.6.2)
   auto *dma_reg = get_register(base_);
   return (x & dma_reg->interrupt_status.full_reg) > 0;
 };
 
-void ChannelControl::ClearInt(Interrupt interrupt) {
+void ChannelControl::ClearInterrupt(Interrupt interrupt) {
   uint32_t x = static_cast<uint32_t>(interrupt);
   x <<= 4 * static_cast<uint8_t>(channel_);  // 4 events per channel ([RM] 11.6.2)
   auto *dma_reg = get_register(base_);
   dma_reg->interrupt_clear.full_reg = x;
 };
 
-void ChannelControl::SetupTx(volatile void *data, uint32_t length) {
+void ChannelControl::SetupTransfer(volatile void *data, uint32_t length) {
   auto *channel_reg = get_channel_reg(base_, channel_);
   channel_reg->memory_address = data;
   channel_reg->count = length;

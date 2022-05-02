@@ -222,10 +222,10 @@ void StepMotor::OneTimeInit() {
   rx_dma_.emplace(DMA::Base::DMA2, DMA::Channel::Chan3);
   tx_dma_.emplace(DMA::Base::DMA2, DMA::Channel::Chan4);
 
-  rx_dma_->Init(4, &spi->data, DMA::ChannelDir::PeripheralToMemory, /*tx_interrupt=*/true,
-                DMA::ChannelPriority::Low);
-  tx_dma_->Init(4, &spi->data, DMA::ChannelDir::MemoryToPeripheral, /*tx_interrupt=*/false,
-                DMA::ChannelPriority::Low);
+  rx_dma_->Initialize(4, &spi->data, DMA::ChannelDir::PeripheralToMemory, /*tx_interrupt=*/true,
+                      DMA::ChannelPriority::Low);
+  tx_dma_->Initialize(4, &spi->data, DMA::ChannelDir::MemoryToPeripheral, /*tx_interrupt=*/false,
+                      DMA::ChannelPriority::Low);
 
   Interrupts::singleton().EnableInterrupt(InterruptVector::Dma2Channel3, IntPriority::Standard);
 
@@ -738,8 +738,8 @@ void StepMotor::UpdateComState() {
   rx_dma_->Disable();
   tx_dma_->Disable();
 
-  rx_dma_->SetupTx(dma_buff_, total_motors_);
-  tx_dma_->SetupTx(dma_buff_, total_motors_);
+  rx_dma_->SetupTransfer(dma_buff_, total_motors_);
+  tx_dma_->SetupTransfer(dma_buff_, total_motors_);
 
   // NOTE - CS has to be high for at least 650ns between bytes.
   // I don't bother timing this because I've found that in
@@ -754,7 +754,7 @@ void StepMotor::DmaISR() {
   chip_select_->set();
 
   // Clear the DMA interrupt
-  rx_dma_->ClearInt(DMA::Interrupt::Global);
+  rx_dma_->ClearInterrupt(DMA::Interrupt::Global);
 
   UpdateComState();
 }
@@ -771,8 +771,8 @@ void StepMotor::SendInitCmd(uint8_t *buff, int len) {
   rx_dma_->Disable();
   tx_dma_->Disable();
 
-  rx_dma_->SetupTx(buff, len);
-  tx_dma_->SetupTx(buff, len);
+  rx_dma_->SetupTransfer(buff, len);
+  tx_dma_->SetupTransfer(buff, len);
 
   chip_select_->clear();
 
@@ -786,12 +786,12 @@ void StepMotor::SendInitCmd(uint8_t *buff, int len) {
   rx_dma_->Enable();
   tx_dma_->Enable();
 
-  while (!rx_dma_->IntStatus(DMA::Interrupt::TransferComplete)) {
+  while (!rx_dma_->InterruptStatus(DMA::Interrupt::TransferComplete)) {
   }
 
   // Clear the interrupt flag so I won't get an interrupt
   // as soon as I re-enable them
-  rx_dma_->ClearInt(DMA::Interrupt::Global);
+  rx_dma_->ClearInterrupt(DMA::Interrupt::Global);
 
   // Raise the chip select line and wait 1 microsecond.
   // The minimum time the CS needs to be high is just under

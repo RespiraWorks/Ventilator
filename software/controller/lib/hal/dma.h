@@ -43,12 +43,12 @@ enum class ChannelPriority { Low = 0, Medium = 1, High = 2, Highest = 3 };
 class ChannelControl {
  public:
   ChannelControl(Base base, Channel channel);
-  void Init(uint8_t selection, volatile uint32_t *peripheral, ChannelDir dir,
-            bool tx_interrupt = false, ChannelPriority prio = ChannelPriority::Medium,
-            bool circular = false, TransferSize size = TransferSize::Byte);
-  bool IntStatus(Interrupt interrupt);
-  void ClearInt(Interrupt interrupt);
-  void SetupTx(volatile void *data, uint32_t length);
+  void Initialize(uint8_t selection, volatile uint32_t *peripheral, ChannelDir dir,
+                  bool tx_interrupt = false, ChannelPriority prio = ChannelPriority::Medium,
+                  bool circular = false, TransferSize size = TransferSize::Byte);
+  bool InterruptStatus(Interrupt interrupt);
+  void ClearInterrupt(Interrupt interrupt);
+  void SetupTransfer(volatile void *data, uint32_t length);
   void Enable();
   void Disable();
   uint32_t Remaining();

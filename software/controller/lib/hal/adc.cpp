@@ -359,10 +359,10 @@ bool ADC::initialize(const Frequency cpu_frequency) {
   enable_peripheral_clock(PeripheralID::DMA1);
   DMA::ChannelControl dma{DMA::Base::DMA1, DMA::Channel::Chan1};
 
-  dma.Init(/*selection=*/0, &adc->adc[0].data, DMA::ChannelDir::PeripheralToMemory,
-           /*tx_interrupt=*/false, DMA::ChannelPriority::Low, /*circular=*/true,
-           DMA::TransferSize::HalfWord);
-  dma.SetupTx(oversample_buffer_, adc_sample_history_ * MaxAdcChannels);
+  dma.Initialize(/*selection=*/0, &adc->adc[0].data, DMA::ChannelDir::PeripheralToMemory,
+                 /*tx_interrupt=*/false, DMA::ChannelPriority::Low, /*circular=*/true,
+                 DMA::TransferSize::HalfWord);
+  dma.SetupTransfer(oversample_buffer_, adc_sample_history_ * MaxAdcChannels);
   dma.Enable();
 
   // Start the A/D converter (by setting bit 2 of the control register - per [RM] p457)

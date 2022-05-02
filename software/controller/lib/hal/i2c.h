@@ -298,8 +298,8 @@ class STM32Channel : public Channel {
  private:
   I2CReg *i2c_{nullptr};
 
-  std::optional<DMA::ChannelControl> rx_channel_control_{std::nullopt};
-  std::optional<DMA::ChannelControl> tx_channel_control_{std::nullopt};
+  std::optional<DMA::ChannelControl> rx_dma_{std::nullopt};
+  std::optional<DMA::ChannelControl> tx_dma_{std::nullopt};
 
   void SetupI2CTransfer() override;  // configure a transfer
   void ReceiveByte() override { *next_data_ = static_cast<uint8_t>(i2c_->rx_data); };

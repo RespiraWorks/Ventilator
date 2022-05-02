@@ -211,8 +211,8 @@ void ChannelControl::SetupChannel(ChannelPriority prio, TransferSize size, Chann
   channel_reg->config.tx_complete_interrupt = tx_interrupt;
   channel_reg->config.memory_size = static_cast<uint32_t>(size) & 0b11;
   channel_reg->config.peripheral_size = static_cast<uint32_t>(size) & 0b11;
-  channel_reg->config.direction = static_cast<bool>(dir);
-  channel_reg->config.circular = static_cast<bool>(circular);
+  channel_reg->config.direction = static_cast<uint32_t>(dir) & 0b1;
+  channel_reg->config.circular = circular;
 
   // those settings are the same for all DMA channels we use.
   channel_reg->config.half_tx_interrupt = 0;

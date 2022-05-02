@@ -15,6 +15,7 @@ limitations under the License.
 
 #pragma once
 
+#include <cstddef>  // used for size_t definition
 #include <cstdint>
 
 namespace DMA {
@@ -51,7 +52,7 @@ class ChannelControl {
   void SetupTransfer(volatile void *data, uint32_t length);
   void Enable();
   void Disable();
-  uint32_t Remaining();
+  size_t Remaining();
 
  private:
   void SelectChannel(uint8_t selection);

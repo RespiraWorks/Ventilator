@@ -125,7 +125,7 @@ void HalApi::Init() {
   /// \TODO: ensure CPUFrequency is a multiple of 10 MHz
   SystemTimer::singleton().initialize(CPUFrequency);
   InitUARTs();
-  I2C::initialize();
+  i2c1.Initialize(I2C::Speed::Fast, GPIO::Port::B, 8, 9, GPIO::AlternativeFunction::AF4);
   Interrupts::singleton().EnableInterrupts();
   StepMotor::OneTimeInit();
 }
@@ -269,9 +269,6 @@ void HalApi::InitUARTs() {
   //        Need to do that as soon as the boards are available.
   enable_peripheral_clock(PeripheralID::USART2);
   enable_peripheral_clock(PeripheralID::USART3);
-#if defined(UART_VIA_DMA)
-  enable_peripheral_clock(PeripheralID::DMA1);
-#endif
   // [DS] Table 17 (pg 76)
   GPIO::AlternatePin(GPIO::Port::A, 2, GPIO::AlternativeFunction::AF7);  // USART2_TX
   GPIO::AlternatePin(GPIO::Port::A, 3, GPIO::AlternativeFunction::AF7);  // USART2_RX

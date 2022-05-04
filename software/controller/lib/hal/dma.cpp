@@ -15,6 +15,9 @@ limitations under the License.
 
 #include "dma.h"
 
+#include "clocks.h"
+#include "interrupts.h"
+
 namespace DMA {
 struct DmaRegisters {
   union {
@@ -147,6 +150,41 @@ ChannelControl::ChannelControl(Base base, Channel channel) : base_(base), channe
 void ChannelControl::Initialize(uint8_t selection, volatile uint32_t *peripheral, ChannelDir dir,
                                 bool tx_interrupt, ChannelPriority prio, bool circular,
                                 TransferSize size) {
+  switch (base_) {
+    case Base::DMA1:
+      enable_peripheral_clock(PeripheralID::DMA1);
+      // TODO: add all channel interrupts to interrupt vectors and here
+      switch (channel_) {
+        case DMA::Channel::Chan2:
+          Interrupts::singleton().EnableInterrupt(InterruptVector::Dma1Channel2, IntPriority::Low);
+          break;
+        case DMA::Channel::Chan3:
+          Interrupts::singleton().EnableInterrupt(InterruptVector::Dma1Channel3, IntPriority::Low);
+          break;
+        default:
+          break;
+      }
+      break;
+    case Base::DMA2:
+      enable_peripheral_clock(PeripheralID::DMA2);
+      switch (channel_) {
+        case DMA::Channel::Chan2:
+          Interrupts::singleton().EnableInterrupt(InterruptVector::Dma2Channel3, IntPriority::Low);
+          break;
+        case DMA::Channel::Chan6:
+          Interrupts::singleton().EnableInterrupt(InterruptVector::Dma2Channel6, IntPriority::Low);
+        case DMA::Channel::Chan7:
+          Interrupts::singleton().EnableInterrupt(InterruptVector::Dma2Channel7, IntPriority::Low);
+          break;
+        default:
+          break;
+      }
+      break;
+    default:
+      // All cases covered above (and GCC checks this).
+      __builtin_unreachable();
+  };
+
   Disable();
   SelectChannel(selection);
   SetupChannel(prio, size, dir, tx_interrupt, circular);

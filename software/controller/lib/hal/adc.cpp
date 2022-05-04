@@ -356,7 +356,6 @@ bool ADC::initialize(const Frequency cpu_frequency) {
   }
 
   // I use DMA1 channel 1 to copy A/D readings into the buffer ([RM] 11.4.4)
-  enable_peripheral_clock(PeripheralID::DMA1);
   DMA::ChannelControl dma{DMA::Base::DMA1, DMA::Channel::Chan1};
 
   dma.Initialize(/*selection=*/0, &adc->adc[0].data, DMA::ChannelDir::PeripheralToMemory,

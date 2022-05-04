@@ -27,6 +27,8 @@ enum class InterruptVector : uint32_t {
   Timer15 = 0xA0,
   I2c1Event = 0xBC,
   I2c1Error = 0xC0,
+  I2c2Event = 0xC4,
+  I2c2Error = 0xC8,
   Spi1 = 0xCC,
   Uart2 = 0x0D8,
   Uart3 = 0x0DC,
@@ -34,6 +36,10 @@ enum class InterruptVector : uint32_t {
   Dma2Channel3 = 0x128,
   Dma2Channel6 = 0x150,
   Dma2Channel7 = 0x157,
+  I2c3Event = 0x160,
+  I2c3Error = 0x164,
+  I2c4Event = 0x18C,
+  I2c4Error = 0x190,
 };
 
 // Interrupts on the STM32 are prioritized.  This allows

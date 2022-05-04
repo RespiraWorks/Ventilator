@@ -25,38 +25,231 @@ limitations under the License.
 #include <cstring>
 
 #include "clocks.h"
-#include "gpio.h"
 
-#if defined(BARE_STM32)
-I2C::STM32Channel i2c1;
-#else
-I2C::Channel i2c1;
-#endif  // BARE_STM32
+// Declaration of I2C channel, as global since hal requires it to exist for interrupt handlers
+I2C::Channel i2c1(I2C::Base::I2C1, DMA::Base::DMA2);
 
 namespace I2C {
+// [RM] 37.7 I2C Registers
+struct Register {
+  union {
+    struct {
+      uint32_t enable : 1;
+      uint32_t tx_interrupts : 1;
+      uint32_t rx_interrupts : 1;
+      uint32_t addr_interrupts : 1;
+      uint32_t nack_interrupts : 1;
+      uint32_t stop_interrupts : 1;
+      uint32_t tx_complete_interrupts : 1;
+      uint32_t error_interrupts : 1;
+      uint32_t digital_noise_filter_conntrol : 4;
+      uint32_t analog_noise_filternig_off : 1;
+      uint32_t reserved1 : 1;
+      uint32_t dma_tx : 1;
+      uint32_t dma_rx : 1;
+      uint32_t slave_byte : 1;
+      uint32_t no_clock_stretch : 1;
+      uint32_t wake_from_stop : 1;
+      uint32_t general_call : 1;
+      uint32_t smbus_default_host : 1;
+      uint32_t smbus_default_device : 1;
+      uint32_t smbus_alert : 1;
+      uint32_t smbus_packet_error_checking : 1;
+      uint32_t reserved2 : 8;
+    };
+    uint32_t full_reg;
+  } control_reg1;  // Control register 1 [RM] 37.7.1
+  union {
+    struct {
+      uint32_t slave_addr_lsb : 1;  // lsb of 10 bits slave address
+      // (master)
+      uint32_t slave_addr_7b : 7;  // middle 7b bits of slave address
+      // (master)
+      uint32_t slave_addr_msb : 2;  // msb of 10 bits slave address
+      // (master)
+      uint32_t transfer_direction : 1;  // 0 = write, 1 = read (master)
+      uint32_t address_10b : 1;         // Set to enable 10 bits address header
+      // (master)
+      uint32_t read_10b_header : 1;  // Clear to send complete read sequence
+      // (master)
+      uint32_t start : 1;  // Set to generate START condition
+      uint32_t stop : 1;   // Set to generate STOP after byte transfer
+      // (master)
+      uint32_t nack : 1;                     // Generate NACK after byte reception (slave)
+      uint32_t n_bytes : 8;                  // Set to the number of bytes to send
+      uint32_t reload : 1;                   // Set to allow several consecutive transfers
+      uint32_t autoend : 1;                  // Set to automatically send stop condition
+      uint32_t packet_error_check_byte : 1;  // Set to send SMBus packet error
+      // checking byte
+      uint32_t reserved : 5;
+    };
+    uint32_t full_reg;
+  } control2;        // Control register 2 [RM] 37.7.2
+  uint32_t addr[2];  // Own address (1-2) register [RM] 37.7.{3,4} (slave)
+  union {
+    struct {
+      uint32_t scl_low : 8;   // Duration of SCL Low state (cycles)
+      uint32_t scl_high : 8;  // Duration of SCL High state (cycles)
+      uint32_t sda_hold : 4;  // Delay between SCL falling edge and SDA
+      // edge (cycles)
+      uint32_t scl_delay : 4;  // Delay between SDA edge and SCL rising
+      // edge (cycles)
+      uint32_t reserved : 4;
+      uint32_t prescaler : 4;  // Prescaler
+    };
+    uint32_t full_reg;
+  } timing;          // Timing register [RM] 37.7.5
+  uint32_t timeout;  // Timout register [RM] 37.7.6
+  union {
+    struct {
+      uint32_t tx_empty : 1;
+      uint32_t tx_interrupt : 1;
+      uint32_t rx_not_empty : 1;
+      uint32_t address_match : 1;
+      uint32_t nack : 1;
+      uint32_t stop : 1;
+      uint32_t transfer_complete : 1;
+      uint32_t transfer_reload : 1;
+      uint32_t bus_error : 1;
+      uint32_t arbitration_loss : 1;
+      uint32_t overrun : 1;
+      uint32_t packet_check_error : 1;
+      uint32_t timeout : 1;
+      uint32_t alert : 1;
+      uint32_t reserved1 : 1;
+      uint32_t busy : 1;
+      uint32_t transfer_direction : 1;
+      uint32_t address_code : 7;
+      uint32_t reserved : 8;
+    };
+    uint32_t full_reg;
+  } status;                     // Interrupt & status register [RM] 37.7.7
+  uint32_t interrupt_clear;     // Interrupt clear register [RM] 37.7.8
+  uint32_t packet_error_check;  // PEC register [RM] 37.7.9
+  uint32_t rx_data;             // Receive data register [RM] 37.7.10
+  uint32_t tx_data;             // Transmit data register [RM] 37.7.11
+};
+typedef volatile Register I2CReg;
 
-// Reference abbreviations ([RM], [PCB], etc) are defined in hal/README.md
-void initialize() {
-  // Enable I2C1 and DMA2 peripheral clocks (we use DMA2 to send/receive data)
-  enable_peripheral_clock(PeripheralID::I2C1);
-  enable_peripheral_clock(PeripheralID::DMA2);
+// I2C base registers, per [RM] table 2 (p68)
+I2CReg *get_register(const Base id) {
+  switch (id) {
+    case Base::I2C1:
+      return reinterpret_cast<I2CReg *>(0x40005400);
+    case Base::I2C2:
+      return reinterpret_cast<I2CReg *>(0x40005800);
+    case Base::I2C3:
+      return reinterpret_cast<I2CReg *>(0x40005c00);
+    case Base::I2C4:
+      return reinterpret_cast<I2CReg *>(0x40008400);
+  }
+  // All cases covered above (and GCC checks this).
+  __builtin_unreachable();
+}
 
-  // The following pins are used as i2c1 bus on the rev-1 PCB (see [PCB]):
-  // Set Pin Function to I²C, [DS] Table 17 (pg 77)
-  GPIO::AlternatePin(GPIO::Port::B, 8, GPIO::AlternativeFunction::AF4, GPIO::PullType::Up,
-                     GPIO::OutSpeed::Fast, GPIO::OutType::OpenDrain);  // I2C1_SCL
-  GPIO::AlternatePin(GPIO::Port::B, 9, GPIO::AlternativeFunction::AF4, GPIO::PullType::Up,
-                     GPIO::OutSpeed::Fast, GPIO::OutType::OpenDrain);  // I2C1_SDA
+Channel::Channel(Base i2c, DMA::Base dma) : i2c_(i2c) {
+  // DMA mapping for I²C (see [RM] p299)
+  static struct {
+    DMA::Base dma_base;
+    Base i2c_base;
+    DMA::Channel tx_channel_id;
+    DMA::Channel rx_channel_id;
+    uint8_t request_number;
+  } DmaMap[] = {
+      {DMA::Base::DMA1, Base::I2C1, DMA::Channel::Chan6, DMA::Channel::Chan7, 3},
+      {DMA::Base::DMA1, Base::I2C2, DMA::Channel::Chan4, DMA::Channel::Chan5, 3},
+      {DMA::Base::DMA1, Base::I2C3, DMA::Channel::Chan2, DMA::Channel::Chan3, 3},
+      {DMA::Base::DMA2, Base::I2C1, DMA::Channel::Chan7, DMA::Channel::Chan6, 5},
+      {DMA::Base::DMA2, Base::I2C4, DMA::Channel::Chan2, DMA::Channel::Chan1, 0},
+  };
 
-  Interrupts::singleton().EnableInterrupt(InterruptVector::I2c1Event, IntPriority::Low);
-  Interrupts::singleton().EnableInterrupt(InterruptVector::I2c1Error, IntPriority::Low);
-  Interrupts::singleton().EnableInterrupt(InterruptVector::Dma2Channel6, IntPriority::Low);
-  Interrupts::singleton().EnableInterrupt(InterruptVector::Dma2Channel7, IntPriority::Low);
+  for (auto &map : DmaMap) {
+    if (dma == map.dma_base && i2c_ == map.i2c_base) {
+      tx_dma_.emplace(dma, map.tx_channel_id);
+      rx_dma_.emplace(dma, map.rx_channel_id);
+      request_ = map.request_number;
+      dma_enable_ = true;
+      break;
+    }
+  }
+}
 
-// init i2c1
-#if defined(BARE_STM32)
-  i2c1.Init(I2C1Base, DMA::Base::DMA2, I2C::Speed::Fast);
-#endif
+void Channel::Initialize(Speed speed, GPIO::Port port, uint8_t scl_pin, uint8_t sda_pin,
+                         GPIO::AlternativeFunction alt_function) {
+  GPIO::AlternatePin(port, scl_pin, alt_function, GPIO::PullType::Up, GPIO::OutSpeed::Fast,
+                     GPIO::OutType::OpenDrain);
+  GPIO::AlternatePin(port, sda_pin, alt_function, GPIO::PullType::Up, GPIO::OutSpeed::Fast,
+                     GPIO::OutType::OpenDrain);
+
+  switch (i2c_) {
+    case Base::I2C1:
+      enable_peripheral_clock(PeripheralID::I2C1);
+      Interrupts::singleton().EnableInterrupt(InterruptVector::I2c1Event, IntPriority::Low);
+      Interrupts::singleton().EnableInterrupt(InterruptVector::I2c1Error, IntPriority::Low);
+      break;
+    case Base::I2C2:
+      enable_peripheral_clock(PeripheralID::I2C2);
+      Interrupts::singleton().EnableInterrupt(InterruptVector::I2c2Event, IntPriority::Low);
+      Interrupts::singleton().EnableInterrupt(InterruptVector::I2c2Error, IntPriority::Low);
+    case Base::I2C3:
+      enable_peripheral_clock(PeripheralID::I2C3);
+      Interrupts::singleton().EnableInterrupt(InterruptVector::I2c3Event, IntPriority::Low);
+      Interrupts::singleton().EnableInterrupt(InterruptVector::I2c3Error, IntPriority::Low);
+    case Base::I2C4:
+      enable_peripheral_clock(PeripheralID::I2C4);
+      Interrupts::singleton().EnableInterrupt(InterruptVector::I2c4Event, IntPriority::Low);
+      Interrupts::singleton().EnableInterrupt(InterruptVector::I2c4Error, IntPriority::Low);
+      break;
+    default:
+      // All cases covered above (and GCC checks this).
+      __builtin_unreachable();
+  }
+
+  I2CReg *i2c_reg{get_register(i2c_)};
+
+  // Disable I²C peripheral
+  i2c_reg->control_reg1.enable = 0;
+
+  // Set I²C speed using timing values from [RM] table 182
+  i2c_reg->timing.full_reg = [speed] {
+    switch (speed) {
+      case Speed::Slow:
+        return 0x3042C3C7;
+      case Speed::Standard:
+        return 0x30420F13;
+      case Speed::Fast:
+        return 0x10320309;
+      case Speed::FastPlus:
+        return 0x00200204;
+    }
+    // All cases covered above (and GCC checks this).
+    __builtin_unreachable();
+  }();
+
+  // Setup DMA channels
+  if (dma_enable_) {
+    tx_dma_->Initialize(request_, &(i2c_reg->tx_data), DMA::ChannelDir::MemoryToPeripheral, 1);
+    rx_dma_->Initialize(request_, &(i2c_reg->rx_data), DMA::ChannelDir::PeripheralToMemory, 1);
+    i2c_reg->control_reg1.dma_rx = 1;
+    i2c_reg->control_reg1.dma_tx = 1;
+  }
+
+  // enable I²C peripheral
+  i2c_reg->control_reg1.enable = 1;
+
+  // configure I²C interrupts
+  i2c_reg->control_reg1.nack_interrupts = 1;
+  i2c_reg->control_reg1.error_interrupts = 1;
+  // in DMA mode, we do not treat the transfer-specific ones
+  if (!dma_enable_) {
+    i2c_reg->control_reg1.rx_interrupts = 1;
+    i2c_reg->control_reg1.tx_interrupts = 1;
+    i2c_reg->control_reg1.tx_complete_interrupts = 1;
+  } else {
+    i2c_reg->control_reg1.rx_interrupts = 0;
+    i2c_reg->control_reg1.tx_interrupts = 0;
+    i2c_reg->control_reg1.tx_complete_interrupts = 0;
+  }
 }
 
 bool Channel::SendRequest(const Request &request) {
@@ -159,6 +352,21 @@ void Channel::StartTransfer() {
   SetupI2CTransfer();
 }
 
+void Channel::SetupI2CTransfer() {
+  I2CReg *i2c_reg{get_register(i2c_)};
+  // set transfer-specific registers per [RM] p1149 to 1158
+  i2c_reg->control2.slave_addr_7b = last_request_.slave_address & 0x7f;
+  i2c_reg->control2.transfer_direction = static_cast<bool>(last_request_.direction);
+
+  if (dma_enable_) {
+    SetupDMATransfer();
+  }
+
+  WriteTransferSize();
+
+  i2c_reg->control2.start = 1;
+}
+
 // Method called by interrupt handler when dma is disabled. This method
 // transfers data to/from the tx/rx registers from/to *request.data
 void Channel::TransferByte() {
@@ -178,6 +386,33 @@ void Channel::TransferByte() {
   };
 }
 
+void Channel::ReceiveByte() { *next_data_ = static_cast<uint8_t>(get_register(i2c_)->rx_data); }
+
+void Channel::SendByte() { get_register(i2c_)->tx_data = *next_data_; }
+
+// Write the remaining size to the appropriate register with reload logic
+void Channel::WriteTransferSize() {
+  I2CReg *i2c_reg{get_register(i2c_)};
+  if (remaining_size_ <= 255) {
+    i2c_reg->control2.n_bytes = static_cast<uint8_t>(remaining_size_);
+    i2c_reg->control2.reload = 0;
+  } else {
+    i2c_reg->control2.n_bytes = 255;
+    // Transfer reload is not currently supported by our HAL in DMA mode,
+    // we will treat a reload as a new transfer. In effect this means we
+    // will have to reissue the I²C header and start condition.
+    // It also means that any request that has a (functional) header inside
+    // its data and is longer than 255 bytes may not be processed correctly
+    // by the I²C slave, as it will be split (this is referred to as a
+    // Restart condition rather than Reload)
+    if (!dma_enable_) {
+      i2c_reg->control2.reload = 1;
+    } else {
+      i2c_reg->control2.reload = 0;
+    }
+  }
+}
+
 void Channel::EndTransfer() {
   // Ensure thread safety
   BlockInterrupts block;
@@ -194,6 +429,19 @@ void Channel::EndTransfer() {
   }
   transfer_in_progress_ = false;
 }
+
+void Channel::StopTransfer() { get_register(i2c_)->control2.stop = 1; };
+
+bool Channel::NextByteNeeded() const {
+  return get_register(i2c_)->status.rx_not_empty || get_register(i2c_)->status.tx_interrupt;
+};
+// Interrupt getters
+bool Channel::TransferReload() const { return get_register(i2c_)->status.transfer_reload; }
+bool Channel::TransferComplete() const { return get_register(i2c_)->status.transfer_complete; }
+bool Channel::NackDetected() const { return get_register(i2c_)->status.nack; }
+// Interrupt clear
+void Channel::ClearNack() { get_register(i2c_)->interrupt_clear = 0x10; }
+void Channel::ClearErrors() { get_register(i2c_)->interrupt_clear = 0x720; }
 
 void Channel::I2CEventHandler() {
   if (!transfer_in_progress_) {
@@ -237,123 +485,7 @@ void Channel::I2CEventHandler() {
   }
 }
 
-void Channel::I2CErrorHandler() {
-  // I²C error --> clear all error flags (except those that are SMBus only)
-  ClearErrors();
-  // and restart the request up to error_retry_ times
-  if (--error_retry_ > 0) {
-    next_data_ = reinterpret_cast<uint8_t *>(last_request_.data);
-    remaining_size_ = last_request_.size;
-  } else {
-    // skip this request and go to next one;
-    remaining_size_ = 0;
-  }
-  StartTransfer();
-}
-
-void STM32Channel::Init(I2CReg *i2c, DMA::Base dma, Speed speed) {
-  i2c_ = i2c;
-
-  // Disable I²C peripheral
-  i2c_->control_reg1.enable = 0;
-
-  // Set I²C speed using timing values from [RM] table 182
-  i2c_->timing.full_reg = static_cast<uint32_t>(speed);
-
-  // Setup DMA channels
-  //  if (dma != nullptr) {
-  SetupDMAChannels(dma);
-  //  }
-
-  // enable I²C peripheral
-  i2c_->control_reg1.enable = 1;
-
-  // configure I²C interrupts
-  i2c_->control_reg1.nack_interrupts = 1;
-  i2c_->control_reg1.error_interrupts = 1;
-  // in DMA mode, we do not treat the transfer-specific ones
-  if (!dma_enable_) {
-    i2c_->control_reg1.rx_interrupts = 1;
-    i2c_->control_reg1.tx_interrupts = 1;
-    i2c_->control_reg1.tx_complete_interrupts = 1;
-  } else {
-    i2c_->control_reg1.rx_interrupts = 0;
-    i2c_->control_reg1.tx_interrupts = 0;
-    i2c_->control_reg1.tx_complete_interrupts = 0;
-  }
-}
-
-void STM32Channel::SetupI2CTransfer() {
-  // set transfer-specific registers per [RM] p1149 to 1158
-  i2c_->control2.slave_addr_7b = last_request_.slave_address & 0x7f;
-  i2c_->control2.transfer_direction = static_cast<bool>(last_request_.direction);
-
-  if (dma_enable_) {
-    SetupDMATransfer();
-  }
-
-  WriteTransferSize();
-
-  i2c_->control2.start = 1;
-}
-
-// Write the remaining size to the appropriate register with reload logic
-void STM32Channel::WriteTransferSize() {
-  if (remaining_size_ <= 255) {
-    i2c_->control2.n_bytes = static_cast<uint8_t>(remaining_size_);
-    i2c_->control2.reload = 0;
-  } else {
-    i2c_->control2.n_bytes = 255;
-    // Transfer reload is not currently supported by our HAL in DMA mode,
-    // we will treat a reload as a new transfer. In effect this means we
-    // will have to reissue the I²C header and start condition.
-    // It also means that any request that has a (functional) header inside
-    // its data and is longer than 255 bytes may not be processed correctly
-    // by the I²C slave, as it will be split (this is referred to as a
-    // Restart condition rather than Reload)
-    if (!dma_enable_) {
-      i2c_->control2.reload = 1;
-    } else {
-      i2c_->control2.reload = 0;
-    }
-  }
-}
-
-// DMA functions are only meaningful in BARE_STM32
-void STM32Channel::SetupDMAChannels(const DMA::Base dma) {
-  // DMA mapping for I²C (see [RM] p299)
-  static struct {
-    DMA::Base dma_base;
-    volatile void *i2c_base;
-    DMA::Channel tx_channel_id;
-    DMA::Channel rx_channel_id;
-    uint8_t request_number;
-  } DmaMap[] = {
-      {DMA::Base::DMA1, I2C1Base, DMA::Channel::Chan6, DMA::Channel::Chan7, 3},
-      {DMA::Base::DMA1, I2C2Base, DMA::Channel::Chan4, DMA::Channel::Chan5, 3},
-      {DMA::Base::DMA1, I2C3Base, DMA::Channel::Chan2, DMA::Channel::Chan3, 3},
-      {DMA::Base::DMA2, I2C1Base, DMA::Channel::Chan7, DMA::Channel::Chan6, 5},
-      {DMA::Base::DMA2, I2C4Base, DMA::Channel::Chan2, DMA::Channel::Chan1, 0},
-  };
-
-  for (auto &map : DmaMap) {
-    if (dma == map.dma_base && i2c_ == map.i2c_base) {
-      tx_dma_.emplace(dma, map.tx_channel_id);
-      rx_dma_.emplace(dma, map.rx_channel_id);
-
-      tx_dma_->Initialize(map.request_number, &(i2c_->tx_data), DMA::ChannelDir::MemoryToPeripheral,
-                          1);
-      rx_dma_->Initialize(map.request_number, &(i2c_->rx_data), DMA::ChannelDir::PeripheralToMemory,
-                          1);
-      dma_enable_ = true;
-      i2c_->control_reg1.dma_rx = 1;
-      i2c_->control_reg1.dma_tx = 1;
-      break;
-    }
-  }
-}
-
-void STM32Channel::SetupDMATransfer() {
+void Channel::SetupDMATransfer() {
   if (!dma_enable_) {
     return;
   }
@@ -383,12 +515,27 @@ void STM32Channel::SetupDMATransfer() {
   // has been written to the register) may arrive before the last byte is
   // actually written on the line. Tests with both DMA and I2C interrupts
   // enabled to send Stop at the end of the I2C transfer were inconclusive.
-  i2c_->control2.autoend = 1;
+  get_register(i2c_)->control2.autoend = 1;
 
   channel->Enable();
 }
 
-void STM32Channel::DMAIntHandler(ExchangeDirection direction) {
+// Interrupt handlers
+void Channel::I2CErrorHandler() {
+  // I²C error --> clear all error flags (except those that are SMBus only)
+  ClearErrors();
+  // and restart the request up to error_retry_ times
+  if (--error_retry_ > 0) {
+    next_data_ = reinterpret_cast<uint8_t *>(last_request_.data);
+    remaining_size_ = last_request_.size;
+  } else {
+    // skip this request and go to next one;
+    remaining_size_ = 0;
+  }
+  StartTransfer();
+}
+
+void Channel::DMAIntHandler(ExchangeDirection direction) {
   if (!dma_enable_ || !transfer_in_progress_) return;
 
   DMA::ChannelControl *channel{nullptr};

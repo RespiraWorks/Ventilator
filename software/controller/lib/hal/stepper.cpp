@@ -163,7 +163,6 @@ StepMtrErr StepMotor::GetParam(StepMtrParam param, uint32_t *value) {
  *****************************************************************/
 void StepMotor::OneTimeInit() {
   enable_peripheral_clock(PeripheralID::SPI1);
-  enable_peripheral_clock(PeripheralID::DMA2);
 
   // The following pins are used to talk to the stepper
   // drivers:

@@ -33,7 +33,7 @@ void Actuator::InitDebugVars(const char *name, const char *help, const char *set
   forced_value_.prepend_name(setting_name, /*strict=*/true);
   forced_value_.prepend_name(name);
   forced_value_.prepend_name("forced_");
-  forced_value_.append_help("Force the ");
+  forced_value_.append_help("Force the", /*strict=*/true);
   forced_value_.append_help(setting_name);
   forced_value_.append_help(help);
   forced_value_.append_help(

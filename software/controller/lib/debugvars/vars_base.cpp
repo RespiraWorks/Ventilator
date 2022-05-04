@@ -32,15 +32,22 @@ Base::Base(Type type, const char *name, Access access, const char *units, const 
 
 const char *Base::name() const { return name_; }
 
-void Base::prepend_name(const char *prefix) {
+void Base::prepend_name(const char *prefix, bool strict) {
   // Assumes name_ has enough space allocated for the combined string.
-  size_t len = strlen(prefix);
-  memmove(name_ + len, name_, strlen(name_) + 1);
-  memcpy(name_, prefix, len);
+  size_t length = strlen(prefix);
+  constexpr char Delimitor{'_'};
+  if (!strict && prefix[length - 1] != Delimitor) {
+    memmove(name_ + 1, name_, strlen(name_) + 1);
+    memcpy(name_, &Delimitor, 1);
+  }
+  memmove(name_ + length, name_, strlen(name_) + 1);
+  memcpy(name_, prefix, length);
 }
 
-void Base::append_help(const char *text) {
+void Base::append_help(const char *text, bool strict) {
+  constexpr char Delimitor{' '};
   // \todo use stricat instead?
+  if (!strict && text[0] != Delimitor) strcat(help_, &Delimitor);
   strcat(help_, text);
 }
 

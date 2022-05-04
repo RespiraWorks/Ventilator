@@ -76,8 +76,8 @@ class Base {
   virtual size_t byte_size() const = 0;
 
   const char *name() const;
-  void prepend_name(const char *prefix);
-  void append_help(const char *text);
+  void prepend_name(const char *prefix, bool strict = false);
+  void append_help(const char *text, bool strict = false);
 
   const char *format() const;
   const char *help() const;

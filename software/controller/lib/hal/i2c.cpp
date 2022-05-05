@@ -27,6 +27,8 @@ limitations under the License.
 #include "clocks.h"
 
 // Declaration of I2C channel, as global since hal requires it to exist for interrupt handlers
+// TODO: find a way to get rid of this as global variable (probably requires a more flexible
+// handling of InterruptVector in Reset_Handler() function from hal_stm32.cpp)
 I2C::Channel i2c1(I2C::Base::I2C1, DMA::Base::DMA2);
 
 namespace I2C {
@@ -228,8 +230,10 @@ void Channel::Initialize(Speed speed, GPIO::Port port, uint8_t scl_pin, uint8_t 
 
   // Setup DMA channels
   if (dma_enable_) {
-    tx_dma_->Initialize(request_, &(i2c_reg->tx_data), DMA::ChannelDir::MemoryToPeripheral, 1);
-    rx_dma_->Initialize(request_, &(i2c_reg->rx_data), DMA::ChannelDir::PeripheralToMemory, 1);
+    tx_dma_->Initialize(request_, &(i2c_reg->tx_data), DMA::ChannelDir::MemoryToPeripheral, true,
+                        DMA::ChannelPriority::Low, IntPriority::Low);
+    rx_dma_->Initialize(request_, &(i2c_reg->rx_data), DMA::ChannelDir::PeripheralToMemory, true,
+                        DMA::ChannelPriority::Low, IntPriority::Low);
     i2c_reg->control_reg1.dma_rx = 1;
     i2c_reg->control_reg1.dma_tx = 1;
   }

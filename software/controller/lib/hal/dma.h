@@ -18,6 +18,8 @@ limitations under the License.
 #include <cstddef>  // used for size_t definition
 #include <cstdint>
 
+#include "interrupts.h"
+
 namespace DMA {
 
 enum class Base {
@@ -45,8 +47,10 @@ class ChannelControl {
  public:
   ChannelControl(Base base, Channel channel);
   void Initialize(uint8_t selection, volatile uint32_t *peripheral, ChannelDir dir,
-                  bool tx_interrupt = false, ChannelPriority prio = ChannelPriority::Medium,
-                  bool circular = false, TransferSize size = TransferSize::Byte);
+                  bool tx_interrupt = false,
+                  ChannelPriority channel_priority = ChannelPriority::Medium,
+                  IntPriority interrupt_priority = IntPriority::Standard, bool circular = false,
+                  TransferSize size = TransferSize::Byte);
   bool InterruptStatus(Interrupt interrupt);
   void ClearInterrupt(Interrupt interrupt);
   void SetupTransfer(volatile void *data, uint32_t length);

@@ -16,7 +16,6 @@ limitations under the License.
 #include "dma.h"
 
 #include "clocks.h"
-#include "interrupts.h"
 
 namespace DMA {
 struct DmaRegisters {
@@ -148,18 +147,20 @@ volatile DmaReg::ChannelRegs *get_channel_reg(const Base id, const Channel chann
 ChannelControl::ChannelControl(Base base, Channel channel) : base_(base), channel_(channel){};
 
 void ChannelControl::Initialize(uint8_t selection, volatile uint32_t *peripheral, ChannelDir dir,
-                                bool tx_interrupt, ChannelPriority prio, bool circular,
-                                TransferSize size) {
+                                bool tx_interrupt, ChannelPriority channel_priority,
+                                IntPriority interrupt_priority, bool circular, TransferSize size) {
   switch (base_) {
     case Base::DMA1:
       enable_peripheral_clock(PeripheralID::DMA1);
       // TODO: add all channel interrupts to interrupt vectors and here
       switch (channel_) {
         case DMA::Channel::Chan2:
-          Interrupts::singleton().EnableInterrupt(InterruptVector::Dma1Channel2, IntPriority::Low);
+          Interrupts::singleton().EnableInterrupt(InterruptVector::Dma1Channel2,
+                                                  interrupt_priority);
           break;
         case DMA::Channel::Chan3:
-          Interrupts::singleton().EnableInterrupt(InterruptVector::Dma1Channel3, IntPriority::Low);
+          Interrupts::singleton().EnableInterrupt(InterruptVector::Dma1Channel3,
+                                                  interrupt_priority);
           break;
         default:
           break;
@@ -168,13 +169,16 @@ void ChannelControl::Initialize(uint8_t selection, volatile uint32_t *peripheral
     case Base::DMA2:
       enable_peripheral_clock(PeripheralID::DMA2);
       switch (channel_) {
-        case DMA::Channel::Chan2:
-          Interrupts::singleton().EnableInterrupt(InterruptVector::Dma2Channel3, IntPriority::Low);
+        case DMA::Channel::Chan3:
+          Interrupts::singleton().EnableInterrupt(InterruptVector::Dma2Channel3,
+                                                  interrupt_priority);
           break;
         case DMA::Channel::Chan6:
-          Interrupts::singleton().EnableInterrupt(InterruptVector::Dma2Channel6, IntPriority::Low);
+          Interrupts::singleton().EnableInterrupt(InterruptVector::Dma2Channel6,
+                                                  interrupt_priority);
         case DMA::Channel::Chan7:
-          Interrupts::singleton().EnableInterrupt(InterruptVector::Dma2Channel7, IntPriority::Low);
+          Interrupts::singleton().EnableInterrupt(InterruptVector::Dma2Channel7,
+                                                  interrupt_priority);
           break;
         default:
           break;
@@ -187,7 +191,7 @@ void ChannelControl::Initialize(uint8_t selection, volatile uint32_t *peripheral
 
   Disable();
   SelectChannel(selection);
-  SetupChannel(prio, size, dir, tx_interrupt, circular);
+  SetupChannel(channel_priority, size, dir, tx_interrupt, circular);
 
   auto *channel_reg = get_channel_reg(base_, channel_);
   channel_reg->peripheral_address = peripheral;

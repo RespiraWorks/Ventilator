@@ -222,11 +222,9 @@ void StepMotor::OneTimeInit() {
   tx_dma_.emplace(DMA::Base::DMA2, DMA::Channel::Chan4);
 
   rx_dma_->Initialize(4, &spi->data, DMA::ChannelDir::PeripheralToMemory, /*tx_interrupt=*/true,
-                      DMA::ChannelPriority::Low);
+                      DMA::ChannelPriority::Low, IntPriority::Standard);
   tx_dma_->Initialize(4, &spi->data, DMA::ChannelDir::MemoryToPeripheral, /*tx_interrupt=*/false,
-                      DMA::ChannelPriority::Low);
-
-  Interrupts::singleton().EnableInterrupt(InterruptVector::Dma2Channel3, IntPriority::Standard);
+                      DMA::ChannelPriority::Low, IntPriority::Standard);
 
   // Do some basic init of the stepper motor chips so we can
   // make them spin the motors

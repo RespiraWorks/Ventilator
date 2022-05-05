@@ -287,8 +287,6 @@ void HalApi::InitUARTs() {
 #endif
   debug_uart.Init(CPUFrequency, UARTBaudRate);
 
-  Interrupts::singleton().EnableInterrupt(InterruptVector::Dma1Channel2, IntPriority::Standard);
-  Interrupts::singleton().EnableInterrupt(InterruptVector::Dma1Channel3, IntPriority::Standard);
   Interrupts::singleton().EnableInterrupt(InterruptVector::Uart2, IntPriority::Standard);
   Interrupts::singleton().EnableInterrupt(InterruptVector::Uart3, IntPriority::Standard);
 }

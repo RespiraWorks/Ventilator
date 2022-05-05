@@ -1,11 +1,8 @@
-/* Copyright 2020, RespiraWorks
-
+/* Copyright 2020-2022, RespiraWorks
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
-
     http://www.apache.org/licenses/LICENSE-2.0
-
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -97,21 +94,3 @@ bool I2Ceeprom::WriteBytes(uint16_t offset, uint16_t length, const void *data, b
   }
   return success;
 };
-
-bool TestEeprom::SendBytes(const I2C::Request &request) {
-  address_pointer_ = reinterpret_cast<uint8_t *>(request.data)[0] << 8 |
-                     reinterpret_cast<uint8_t *>(request.data)[1];
-  for (uint32_t i = 2; i < request.size; ++i) {
-    memory_[address_pointer_++] = reinterpret_cast<uint8_t *>(request.data)[i];
-  }
-  if (request.processed != nullptr) *(request.processed) = true;
-  return true;
-}
-
-bool TestEeprom::ReceiveBytes(const I2C::Request &request) {
-  for (uint32_t i = 0; i < request.size; ++i) {
-    reinterpret_cast<uint8_t *>(request.data)[i] = memory_[address_pointer_++];
-  }
-  if (request.processed != nullptr) *(request.processed) = true;
-  return true;
-}

@@ -16,7 +16,6 @@ limitations under the License.
 #include "checksum.h"
 #include "gtest/gtest.h"
 
-
 using namespace NVParams;
 
 static constexpr uint32_t kMemSize{8192};

@@ -49,8 +49,8 @@ class ChannelControl {
   void Initialize(uint8_t selection, volatile uint32_t *peripheral, ChannelDir dir,
                   bool tx_interrupt = false,
                   ChannelPriority channel_priority = ChannelPriority::Medium,
-                  IntPriority interrupt_priority = IntPriority::Standard, bool circular = false,
-                  TransferSize size = TransferSize::Byte);
+                  InterruptPriority interrupt_priority = InterruptPriority::Standard,
+                  bool circular = false, TransferSize size = TransferSize::Byte);
   bool InterruptStatus(Interrupt interrupt);
   void ClearInterrupt(Interrupt interrupt);
   void SetupTransfer(volatile void *data, uint32_t length);

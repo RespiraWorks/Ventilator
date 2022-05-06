@@ -359,7 +359,7 @@ bool ADC::initialize(const Frequency cpu_frequency) {
   DMA::ChannelControl dma{DMA::Base::DMA1, DMA::Channel::Chan1};
 
   dma.Initialize(/*selection=*/0, &adc->adc[0].data, DMA::ChannelDir::PeripheralToMemory,
-                 /*tx_interrupt=*/false, DMA::ChannelPriority::Low, IntPriority::Standard,
+                 /*tx_interrupt=*/false, DMA::ChannelPriority::Low, InterruptPriority::Standard,
                  /*circular=*/true, DMA::TransferSize::HalfWord);
   dma.SetupTransfer(oversample_buffer_, adc_sample_history_ * MaxAdcChannels);
   dma.Enable();

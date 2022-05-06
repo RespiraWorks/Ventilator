@@ -56,7 +56,7 @@ void SystemTimer::initialize(Frequency cpu_frequency) {
   tmr->control_reg1.bitfield.counter_enable = 1;
   tmr->interrupts_enable = 1;
 
-  Interrupts::singleton().EnableInterrupt(InterruptVector::Timer6, IntPriority::Standard);
+  Interrupts::singleton().EnableInterrupt(InterruptVector::Timer6, InterruptPriority::Standard);
 }
 
 void SystemTimer::interrupt_handler() {

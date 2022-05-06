@@ -103,7 +103,7 @@ class Channel {
   void I2CEventHandler();
   void I2CErrorHandler();
   // Interrupt handler for DMA, which only makes sense on the STM32
-  void DMAIntHandler(ExchangeDirection direction);
+  void DMAInterruptHandler(ExchangeDirection direction);
 
   // Queue of a few requests. The number of requests is arbitrary but
   // should be enough for all intents and purposes.

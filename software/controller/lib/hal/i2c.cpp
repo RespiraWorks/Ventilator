@@ -186,21 +186,21 @@ void Channel::Initialize(Speed speed, GPIO::Port port, uint8_t scl_pin, uint8_t 
   switch (i2c_) {
     case Base::I2C1:
       enable_peripheral_clock(PeripheralID::I2C1);
-      Interrupts::singleton().EnableInterrupt(InterruptVector::I2c1Event, IntPriority::Low);
-      Interrupts::singleton().EnableInterrupt(InterruptVector::I2c1Error, IntPriority::Low);
+      Interrupts::singleton().EnableInterrupt(InterruptVector::I2c1Event, InterruptPriority::Low);
+      Interrupts::singleton().EnableInterrupt(InterruptVector::I2c1Error, InterruptPriority::Low);
       break;
     case Base::I2C2:
       enable_peripheral_clock(PeripheralID::I2C2);
-      Interrupts::singleton().EnableInterrupt(InterruptVector::I2c2Event, IntPriority::Low);
-      Interrupts::singleton().EnableInterrupt(InterruptVector::I2c2Error, IntPriority::Low);
+      Interrupts::singleton().EnableInterrupt(InterruptVector::I2c2Event, InterruptPriority::Low);
+      Interrupts::singleton().EnableInterrupt(InterruptVector::I2c2Error, InterruptPriority::Low);
     case Base::I2C3:
       enable_peripheral_clock(PeripheralID::I2C3);
-      Interrupts::singleton().EnableInterrupt(InterruptVector::I2c3Event, IntPriority::Low);
-      Interrupts::singleton().EnableInterrupt(InterruptVector::I2c3Error, IntPriority::Low);
+      Interrupts::singleton().EnableInterrupt(InterruptVector::I2c3Event, InterruptPriority::Low);
+      Interrupts::singleton().EnableInterrupt(InterruptVector::I2c3Error, InterruptPriority::Low);
     case Base::I2C4:
       enable_peripheral_clock(PeripheralID::I2C4);
-      Interrupts::singleton().EnableInterrupt(InterruptVector::I2c4Event, IntPriority::Low);
-      Interrupts::singleton().EnableInterrupt(InterruptVector::I2c4Error, IntPriority::Low);
+      Interrupts::singleton().EnableInterrupt(InterruptVector::I2c4Event, InterruptPriority::Low);
+      Interrupts::singleton().EnableInterrupt(InterruptVector::I2c4Error, InterruptPriority::Low);
       break;
     default:
       // All cases covered above (and GCC checks this).
@@ -230,10 +230,10 @@ void Channel::Initialize(Speed speed, GPIO::Port port, uint8_t scl_pin, uint8_t 
 
   // Setup DMA channels
   if (dma_enable_) {
-    tx_dma_->Initialize(request_, &(i2c_reg->tx_data), DMA::ChannelDir::MemoryToPeripheral, true,
-                        DMA::ChannelPriority::Low, IntPriority::Low);
-    rx_dma_->Initialize(request_, &(i2c_reg->rx_data), DMA::ChannelDir::PeripheralToMemory, true,
-                        DMA::ChannelPriority::Low, IntPriority::Low);
+    tx_dma_->Initialize(request_, &(i2c_reg->tx_data), DMA::ChannelDir::MemoryToPeripheral,
+                        /*tx_interrupt=*/true, DMA::ChannelPriority::Low, InterruptPriority::Low);
+    rx_dma_->Initialize(request_, &(i2c_reg->rx_data), DMA::ChannelDir::PeripheralToMemory,
+                        /*tx_interrupt=*/true, DMA::ChannelPriority::Low, InterruptPriority::Low);
     i2c_reg->control_reg1.dma_rx = 1;
     i2c_reg->control_reg1.dma_tx = 1;
   }
@@ -539,7 +539,7 @@ void Channel::I2CErrorHandler() {
   StartTransfer();
 }
 
-void Channel::DMAIntHandler(ExchangeDirection direction) {
+void Channel::DMAInterruptHandler(ExchangeDirection direction) {
   if (!dma_enable_ || !transfer_in_progress_) return;
 
   DMA::ChannelControl *channel{nullptr};

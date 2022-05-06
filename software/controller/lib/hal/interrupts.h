@@ -51,7 +51,7 @@ enum class InterruptVector : uint32_t {
 // here.  Hard faults, NMI, resets, etc have a fixed
 // priority of -1, so they can always interrupt any other
 // priority level.
-enum class IntPriority {
+enum class InterruptPriority {
   Critical = 2,  // Very important interrupt
   Standard = 5,  // Normal hardware interrupts
   Low = 8,       // Less important.  Hardware interrupts can interrupt this
@@ -75,7 +75,7 @@ class Interrupts {
     return SingletonInstance;
   }
 
-  void EnableInterrupt(InterruptVector vec, IntPriority pri);
+  void EnableInterrupt(InterruptVector vec, InterruptPriority pri);
 
   // Interrupt enable/disable functions.
   void DisableInterrupts();

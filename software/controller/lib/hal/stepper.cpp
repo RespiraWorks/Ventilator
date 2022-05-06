@@ -221,10 +221,13 @@ void StepMotor::OneTimeInit() {
   rx_dma_.emplace(DMA::Base::DMA2, DMA::Channel::Chan3);
   tx_dma_.emplace(DMA::Base::DMA2, DMA::Channel::Chan4);
 
-  rx_dma_->Initialize(4, &spi->data, DMA::ChannelDir::PeripheralToMemory, /*tx_interrupt=*/true,
-                      DMA::ChannelPriority::Low, IntPriority::Standard);
-  tx_dma_->Initialize(4, &spi->data, DMA::ChannelDir::MemoryToPeripheral, /*tx_interrupt=*/false,
-                      DMA::ChannelPriority::Low, IntPriority::Standard);
+  // SPI1 can be linked to DMA2 using selection number 4 [RM p299]
+  rx_dma_->Initialize(/*selection=*/4, &spi->data, DMA::ChannelDir::PeripheralToMemory,
+                      /*tx_interrupt=*/true, DMA::ChannelPriority::Low,
+                      InterruptPriority::Standard);
+  tx_dma_->Initialize(/*selection=*/4, &spi->data, DMA::ChannelDir::MemoryToPeripheral,
+                      /*tx_interrupt=*/false, DMA::ChannelPriority::Low,
+                      InterruptPriority::Standard);
 
   // Do some basic init of the stepper motor chips so we can
   // make them spin the motors

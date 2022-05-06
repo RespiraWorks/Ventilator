@@ -125,7 +125,9 @@ void HalApi::Init() {
   /// \TODO: ensure CPUFrequency is a multiple of 10 MHz
   SystemTimer::singleton().initialize(CPUFrequency);
   InitUARTs();
-  i2c1.Initialize(I2C::Speed::Fast, GPIO::Port::B, 8, 9, GPIO::AlternativeFunction::AF4);
+  // [PCBsp] lists I2C1 pins : SCL=PB8 and SDA=PB9
+  i2c1.Initialize(I2C::Speed::Fast, GPIO::Port::B, /*scl_pin=*/8, /*sda_pin=*/9,
+                  GPIO::AlternativeFunction::AF4);
   Interrupts::singleton().EnableInterrupts();
   StepMotor::OneTimeInit();
 }
@@ -204,7 +206,7 @@ void HalApi::StartLoopTimer(const Duration &period, void (*callback)(void *), vo
   // for normal hardware interrupts.  This means that other
   // interrupts can be serviced while controller functions
   // are running.
-  Interrupts::singleton().EnableInterrupt(InterruptVector::Timer15, IntPriority::Low);
+  Interrupts::singleton().EnableInterrupt(InterruptVector::Timer15, InterruptPriority::Low);
 }
 
 static float latency, max_latency, loop_time;
@@ -287,8 +289,8 @@ void HalApi::InitUARTs() {
 #endif
   debug_uart.Init(CPUFrequency, UARTBaudRate);
 
-  Interrupts::singleton().EnableInterrupt(InterruptVector::Uart2, IntPriority::Standard);
-  Interrupts::singleton().EnableInterrupt(InterruptVector::Uart3, IntPriority::Standard);
+  Interrupts::singleton().EnableInterrupt(InterruptVector::Uart2, InterruptPriority::Standard);
+  Interrupts::singleton().EnableInterrupt(InterruptVector::Uart3, InterruptPriority::Standard);
 }
 
 void Uart2ISR() { debug_uart.ISR(); }
@@ -343,8 +345,8 @@ void BadISR() {}
 // the I2C::Channel::*ISR() which are generic ISR associated with an I²C channel
 void I2c1EventISR() { i2c1.I2CEventHandler(); };
 void I2c1ErrorISR() { i2c1.I2CErrorHandler(); };
-void DMA2Channel6ISR() { i2c1.DMAIntHandler(I2C::ExchangeDirection::Read); };
-void DMA2Channel7ISR() { i2c1.DMAIntHandler(I2C::ExchangeDirection::Write); };
+void DMA2Channel6ISR() { i2c1.DMAInterruptHandler(I2C::ExchangeDirection::Read); };
+void DMA2Channel7ISR() { i2c1.DMAInterruptHandler(I2C::ExchangeDirection::Write); };
 #if defined(UART_VIA_DMA)
 void DMA1Channel2ISR() { dma_uart.DMA_tx_interrupt_handler(); }
 void DMA1Channel3ISR() { dma_uart.DMA_rx_interrupt_handler(); }

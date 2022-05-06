@@ -148,7 +148,8 @@ ChannelControl::ChannelControl(Base base, Channel channel) : base_(base), channe
 
 void ChannelControl::Initialize(uint8_t selection, volatile uint32_t *peripheral, ChannelDir dir,
                                 bool tx_interrupt, ChannelPriority channel_priority,
-                                IntPriority interrupt_priority, bool circular, TransferSize size) {
+                                InterruptPriority interrupt_priority, bool circular,
+                                TransferSize size) {
   switch (base_) {
     case Base::DMA1:
       enable_peripheral_clock(PeripheralID::DMA1);

@@ -163,7 +163,6 @@ StepMtrErr StepMotor::GetParam(StepMtrParam param, uint32_t *value) {
  *****************************************************************/
 void StepMotor::OneTimeInit() {
   enable_peripheral_clock(PeripheralID::SPI1);
-  enable_peripheral_clock(PeripheralID::DMA2);
 
   // The following pins are used to talk to the stepper
   // drivers:
@@ -222,12 +221,13 @@ void StepMotor::OneTimeInit() {
   rx_dma_.emplace(DMA::Base::DMA2, DMA::Channel::Chan3);
   tx_dma_.emplace(DMA::Base::DMA2, DMA::Channel::Chan4);
 
-  rx_dma_->Initialize(4, &spi->data, DMA::ChannelDir::PeripheralToMemory, /*tx_interrupt=*/true,
-                      DMA::ChannelPriority::Low);
-  tx_dma_->Initialize(4, &spi->data, DMA::ChannelDir::MemoryToPeripheral, /*tx_interrupt=*/false,
-                      DMA::ChannelPriority::Low);
-
-  Interrupts::singleton().EnableInterrupt(InterruptVector::Dma2Channel3, IntPriority::Standard);
+  // SPI1 can be linked to DMA2 using selection number 4 [RM p299]
+  rx_dma_->Initialize(/*selection=*/4, &spi->data, DMA::ChannelDir::PeripheralToMemory,
+                      /*tx_interrupt=*/true, DMA::ChannelPriority::Low,
+                      InterruptPriority::Standard);
+  tx_dma_->Initialize(/*selection=*/4, &spi->data, DMA::ChannelDir::MemoryToPeripheral,
+                      /*tx_interrupt=*/false, DMA::ChannelPriority::Low,
+                      InterruptPriority::Standard);
 
   // Do some basic init of the stepper motor chips so we can
   // make them spin the motors

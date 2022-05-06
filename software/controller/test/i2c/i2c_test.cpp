@@ -19,12 +19,58 @@ limitations under the License.
 
 using namespace I2C;
 
+class TestChannel : public Channel {
+ public:
+  TestChannel() : Channel(Base::I2C1){};
+  // in test mode, setters and getters for faked sent/received data
+  std::optional<uint8_t> TESTGetSentData() { return sent_buffer_.Get(); };
+  bool TESTQueueReceiveData(uint8_t data) { return rx_buffer_.Put(data); };
+  // setter to simulate Nack received
+  void TESTSimulateNack() { nack_ = true; };
+
+ private:
+  // fake sending and receiving data through circular buffers.
+  CircularBuffer<uint8_t, WriteBufferSize> sent_buffer_;
+  // note it is up to the tester to put data in the rx_buffer before
+  // calling I2CEventHandler during a read request
+  CircularBuffer<uint8_t, WriteBufferSize> rx_buffer_;
+  // fake a NACK condition on next handler call
+  bool nack_{false};
+
+  // mock the sending and receiving of bytes from internal buffers
+  void SendByte() override {
+    bool ok = sent_buffer_.Put(*next_data_);
+    if (ok) return;
+  };
+  void ReceiveByte() override {
+    std::optional<uint8_t> data = rx_buffer_.Get();
+    if (data != std::nullopt) {
+      *next_data_ = *data;
+    }
+  };
+
+  // Override functions that write to registers
+  void SetupI2CTransfer() override{};
+  void StopTransfer() override{};
+  void ClearNack() override { nack_ = false; };
+  void WriteTransferSize() override{};
+  void ClearErrors() override{};
+
+  // Override I²C interrupt getters for Mock
+  bool NextByteNeeded() const override { return remaining_size_ > 0; };
+  bool TransferReload() const override {
+    return remaining_size_ % 255 == 0 && remaining_size_ > 0;
+  };
+  bool TransferComplete() const override { return remaining_size_ == 0; };
+  bool NackDetected() const override { return nack_; };
+};
+
 TEST(I2C, RequestQueue) {
-  constexpr uint QueueLength{80};
+  constexpr uint32_t QueueLength{I2C::Channel::QueueLength};
 
   TestChannel i2c;
 
-  // Queue kQueueLength+5 read requests
+  // Queue QueueLength+5 read requests
   uint8_t read_data[QueueLength + 5];
   bool processed[QueueLength + 5];
   for (int req = 0; req < QueueLength + 5; ++req) {

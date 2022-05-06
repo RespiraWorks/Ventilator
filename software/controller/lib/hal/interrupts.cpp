@@ -31,7 +31,7 @@ inline InterruptControlReg *const NvicBase = reinterpret_cast<InterruptControlRe
 
 // Enable an interrupt with a specified priority (0 to 15)
 // See [RM] chapter 12 for more information on the NVIC.
-void Interrupts::EnableInterrupt(InterruptVector vec, IntPriority pri) {
+void Interrupts::EnableInterrupt(InterruptVector vec, InterruptPriority pri) {
   InterruptControlReg *nvic = NvicBase;
 
   int addr = static_cast<int>(vec);
@@ -61,7 +61,7 @@ bool Interrupts::InInterruptHandler() {
 
 #else
 
-void Interrupts::EnableInterrupt(InterruptVector vec, IntPriority pri) {}
+void Interrupts::EnableInterrupt(InterruptVector vec, InterruptPriority pri) {}
 void Interrupts::DisableInterrupts() { interrupts_enabled_ = false; }
 void Interrupts::EnableInterrupts() { interrupts_enabled_ = true; }
 bool Interrupts::InterruptsEnabled() const { return interrupts_enabled_; }

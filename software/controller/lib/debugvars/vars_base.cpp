@@ -35,19 +35,19 @@ const char *Base::name() const { return name_; }
 void Base::prepend_name(const char *prefix, bool strict) {
   // Assumes name_ has enough space allocated for the combined string.
   size_t length = strlen(prefix);
-  constexpr char delimitor{'_'};
-  if (!strict && prefix[length - 1] != delimitor) {
+  constexpr char delimiter{'_'};
+  if (!strict && prefix[length - 1] != delimiter) {
     memmove(name_ + 1, name_, strlen(name_) + 1);
-    memcpy(name_, &delimitor, 1);
+    memcpy(name_, &delimiter, 1);
   }
   memmove(name_ + length, name_, strlen(name_) + 1);
   memcpy(name_, prefix, length);
 }
 
 void Base::append_help(const char *text, bool strict) {
-  constexpr char delimitor{' '};
+  constexpr char delimiter{' '};
   // \todo use stricat instead?
-  if (!strict && text[0] != delimitor) strncat(help_, &delimitor, 1);
+  if (!strict && text[0] != delimiter) strncat(help_, &delimiter, 1);
   strcat(help_, text);
 }
 

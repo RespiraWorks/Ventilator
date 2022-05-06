@@ -253,7 +253,6 @@ void Channel::I2CErrorHandler() {
 
 void STM32Channel::Init(I2CReg *i2c, DMA::Base dma, Speed speed) {
   i2c_ = i2c;
-  dma_ = dma;
 
   // Disable I²C peripheral
   i2c_->control_reg1.enable = 0;
@@ -339,45 +338,18 @@ void STM32Channel::SetupDMAChannels(const DMA::Base dma) {
 
   for (auto &map : DmaMap) {
     if (dma == map.dma_base && i2c_ == map.i2c_base) {
-      auto *dma_register = DMA::get_register(dma);
-      dma_ = dma;
-      tx_channel_ = &dma_register->channel[static_cast<uint8_t>(map.tx_channel_id)];
-      rx_channel_ = &dma_register->channel[static_cast<uint8_t>(map.rx_channel_id)];
+      tx_dma_.emplace(dma, map.tx_channel_id);
+      rx_dma_.emplace(dma, map.rx_channel_id);
 
-      // Tell the STM32 that those two DMA channels are used for I2C
-      DMA::SelectChannel(dma, map.rx_channel_id, map.request_number);
-      DMA::SelectChannel(dma, map.tx_channel_id, map.request_number);
-
-      // configure both DMA channels to handle I²C transfers
-      ConfigureDMAChannel(rx_channel_, ExchangeDirection::Read);
-      ConfigureDMAChannel(tx_channel_, ExchangeDirection::Write);
-
+      tx_dma_->Initialize(map.request_number, &(i2c_->tx_data), DMA::ChannelDir::MemoryToPeripheral,
+                          1);
+      rx_dma_->Initialize(map.request_number, &(i2c_->rx_data), DMA::ChannelDir::PeripheralToMemory,
+                          1);
       dma_enable_ = true;
       i2c_->control_reg1.dma_rx = 1;
       i2c_->control_reg1.dma_tx = 1;
       break;
     }
-  }
-}
-
-void I2C::STM32Channel::ConfigureDMAChannel(volatile DmaReg::ChannelRegs *channel,
-                                            ExchangeDirection direction) {
-  channel->config.priority = 0b01;            // medium priority
-  channel->config.tx_error_interrupt = 1;     // interrupt on error
-  channel->config.half_tx_interrupt = 0;      // no half-transfer interrupt
-  channel->config.tx_complete_interrupt = 1;  // interrupt on DMA complete
-  channel->config.mem2mem = 0;                // memory-to-memory mode disabled
-  channel->config.memory_size = static_cast<uint8_t>(DMA::TransferSize::Byte);
-  channel->config.peripheral_size = static_cast<uint8_t>(DMA::TransferSize::Byte);
-  channel->config.memory_increment = 1;      // increment dest address
-  channel->config.peripheral_increment = 0;  // don't increment source address
-  channel->config.circular = 0;
-  if (direction == ExchangeDirection::Read) {
-    channel->config.direction = static_cast<uint8_t>(DMA::ChannelDir::PeripheralToMemory);
-    channel->peripheral_address = &(i2c_->rx_data);
-  } else {
-    channel->config.direction = static_cast<uint8_t>(DMA::ChannelDir::MemoryToPeripheral);
-    channel->peripheral_address = &(i2c_->tx_data);
   }
 }
 
@@ -387,23 +359,24 @@ void STM32Channel::SetupDMATransfer() {
   }
   // to be on the safe size, disable both channels in case they weren't
   // (likely when this is called as a "retry after error")
-  rx_channel_->config.enable = 0;
-  tx_channel_->config.enable = 0;
+  rx_dma_->Disable();
+  tx_dma_->Disable();
 
-  volatile DmaReg::ChannelRegs *channel{nullptr};
+  DMA::ChannelControl *channel{nullptr};
   if (last_request_.direction == ExchangeDirection::Read) {
-    channel = rx_channel_;
+    channel = &(rx_dma_.value());
   } else {
-    channel = tx_channel_;
+    channel = &(tx_dma_.value());
   }
 
-  channel->memory_address = next_data_;
-
+  uint16_t transfer_size{0};
   if (remaining_size_ <= 255) {
-    channel->count = remaining_size_;
+    transfer_size = remaining_size_;
   } else {
-    channel->count = 255;
+    transfer_size = 255;
   }
+
+  channel->SetupTransfer(next_data_, transfer_size);
 
   // when using DMA, we need to use autoend, otherwise the STOP condition
   // which we issue at the end of the DMA transfer (which means the last byte
@@ -412,14 +385,21 @@ void STM32Channel::SetupDMATransfer() {
   // enabled to send Stop at the end of the I2C transfer were inconclusive.
   i2c_->control2.autoend = 1;
 
-  channel->config.enable = 1;
+  channel->Enable();
 }
 
-void STM32Channel::DMAIntHandler(DMA::Channel chan) {
+void STM32Channel::DMAIntHandler(ExchangeDirection direction) {
   if (!dma_enable_ || !transfer_in_progress_) return;
-  auto *dma_register = DMA::get_register(dma_);
-  dma_register->channel[static_cast<uint8_t>(chan)].config.enable = 0;
-  if (DMA::IntStatus(dma_, chan, DMA::Interrupt::TransferComplete)) {
+
+  DMA::ChannelControl *channel{nullptr};
+  if (last_request_.direction == ExchangeDirection::Read) {
+    channel = &(rx_dma_.value());
+  } else {
+    channel = &(tx_dma_.value());
+  }
+
+  channel->Disable();
+  if (channel->InterruptStatus(DMA::Interrupt::TransferComplete)) {
     if (remaining_size_ > 255) {
       // decrement remaining size by 255 (the size of the DMA transfer)
       remaining_size_ = static_cast<uint16_t>(remaining_size_ - 255);
@@ -428,7 +408,7 @@ void STM32Channel::DMAIntHandler(DMA::Channel chan) {
       remaining_size_ = 0;
       EndTransfer();
     }
-  } else if (DMA::IntStatus(dma_, chan, DMA::Interrupt::TransferError)) {
+  } else if (channel->InterruptStatus(DMA::Interrupt::TransferError)) {
     // we are dealing with an error --> reset transfer (up to MaxRetries
     // times)
     if (--error_retry_ > 0) {
@@ -440,7 +420,7 @@ void STM32Channel::DMAIntHandler(DMA::Channel chan) {
     }
   }
   // clear all interrupts and (re-)start the current or next transfer
-  DMA::ClearInt(dma_, chan, DMA::Interrupt::Global);
+  channel->ClearInterrupt(DMA::Interrupt::Global);
   StartTransfer();
 }
 

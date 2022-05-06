@@ -25,7 +25,6 @@ std::optional<GPIO::DigitalOutputPin> StepMotor::chip_select_{std::nullopt};
 #include <cstring>
 
 #include "clocks.h"
-#include "dma.h"
 #include "interrupts.h"
 #include "spi.h"
 #include "system_timer.h"
@@ -33,6 +32,8 @@ std::optional<GPIO::DigitalOutputPin> StepMotor::chip_select_{std::nullopt};
 // Static data members
 uint8_t StepMotor::dma_buff_[StepMotor::MaxMotors];
 StepCommState StepMotor::coms_state_ = StepCommState::Idle;
+std::optional<DMA::ChannelControl> StepMotor::rx_dma_{std::nullopt};
+std::optional<DMA::ChannelControl> StepMotor::tx_dma_{std::nullopt};
 
 // This array holds the length of each parameter in units of
 // bytes, rounded up to the nearest byte.  This info is based
@@ -218,43 +219,13 @@ void StepMotor::OneTimeInit() {
 
   // DMA2 channels 3 and 4 can be used to handle rx and tx interrupts from
   // SPI1 respectively.
-  DMA::SelectChannel(DMA::Base::DMA2, DMA::Channel::Chan3, 4);
-  DMA::SelectChannel(DMA::Base::DMA2, DMA::Channel::Chan4, 4);
+  rx_dma_.emplace(DMA::Base::DMA2, DMA::Channel::Chan3);
+  tx_dma_.emplace(DMA::Base::DMA2, DMA::Channel::Chan4);
 
-  // The two DMA channels move data to/from the SPI data register.
-  DmaReg *dma = DMA::get_register(DMA::Base::DMA2);
-
-  // Configure the DMA channels, but don't enable them yet
-  /// \TODO: (subtly) repetitive blocks for each channel - factor this out
-  int c3 = static_cast<int>(DMA::Channel::Chan3);
-  dma->channel[c3].peripheral_address = &spi->data;
-  dma->channel[c3].config.enable = 0;
-  dma->channel[c3].config.tx_complete_interrupt = 1;
-  dma->channel[c3].config.half_tx_interrupt = 0;
-  dma->channel[c3].config.tx_error_interrupt = 0;
-  dma->channel[c3].config.direction = static_cast<uint32_t>(DMA::ChannelDir::PeripheralToMemory);
-  dma->channel[c3].config.circular = 0;
-  dma->channel[c3].config.peripheral_increment = 0;
-  dma->channel[c3].config.memory_increment = 1;
-  dma->channel[c3].config.peripheral_size = 0;
-  dma->channel[c3].config.memory_size = 0;
-  dma->channel[c3].config.priority = 0;
-  dma->channel[c3].config.mem2mem = 0;
-
-  int c4 = static_cast<int>(DMA::Channel::Chan4);
-  dma->channel[c4].peripheral_address = &spi->data;
-  dma->channel[c4].config.enable = 0;
-  dma->channel[c4].config.tx_complete_interrupt = 0;
-  dma->channel[c4].config.half_tx_interrupt = 0;
-  dma->channel[c4].config.tx_error_interrupt = 0;
-  dma->channel[c4].config.direction = static_cast<uint32_t>(DMA::ChannelDir::MemoryToPeripheral);
-  dma->channel[c4].config.circular = 0;
-  dma->channel[c4].config.peripheral_increment = 0;
-  dma->channel[c4].config.memory_increment = 1;
-  dma->channel[c4].config.peripheral_size = 0;
-  dma->channel[c4].config.memory_size = 0;
-  dma->channel[c4].config.priority = 0;
-  dma->channel[c4].config.mem2mem = 0;
+  rx_dma_->Initialize(4, &spi->data, DMA::ChannelDir::PeripheralToMemory, /*tx_interrupt=*/true,
+                      DMA::ChannelPriority::Low);
+  tx_dma_->Initialize(4, &spi->data, DMA::ChannelDir::MemoryToPeripheral, /*tx_interrupt=*/false,
+                      DMA::ChannelPriority::Low);
 
   Interrupts::singleton().EnableInterrupt(InterruptVector::Dma2Channel3, IntPriority::Standard);
 
@@ -764,32 +735,26 @@ void StepMotor::UpdateComState() {
   // of motor driver chips.  Set up my DMA to
   // send it out.
   //////////////////////////////////////////////
-  int c3 = static_cast<int>(DMA::Channel::Chan3);
-  int c4 = static_cast<int>(DMA::Channel::Chan4);
+  rx_dma_->Disable();
+  tx_dma_->Disable();
 
-  DmaReg *dma = DMA::get_register(DMA::Base::DMA2);
-  dma->channel[c3].config.enable = 0;
-  dma->channel[c4].config.enable = 0;
-
-  dma->channel[c3].count = total_motors_;
-  dma->channel[c4].count = total_motors_;
-  dma->channel[c3].memory_address = dma_buff_;
-  dma->channel[c4].memory_address = dma_buff_;
+  rx_dma_->SetupTransfer(dma_buff_, total_motors_);
+  tx_dma_->SetupTransfer(dma_buff_, total_motors_);
 
   // NOTE - CS has to be high for at least 650ns between bytes.
   // I don't bother timing this because I've found that in
   // practice it takes longer than that to handle the interrupt
   chip_select_->clear();
 
-  dma->channel[c3].config.enable = 1;
-  dma->channel[c4].config.enable = 1;
+  rx_dma_->Enable();
+  tx_dma_->Enable();
 }
 
 void StepMotor::DmaISR() {
   chip_select_->set();
 
   // Clear the DMA interrupt
-  DMA::ClearInt(DMA::Base::DMA2, DMA::Channel::Chan3, DMA::Interrupt::Global);
+  rx_dma_->ClearInterrupt(DMA::Interrupt::Global);
 
   UpdateComState();
 }
@@ -803,17 +768,11 @@ void StepMotor::StartQueuedCommands() {
 
 // This is used to send a command to the stepper chips during startup.
 void StepMotor::SendInitCmd(uint8_t *buff, int len) {
-  int c3 = static_cast<int>(DMA::Channel::Chan3);
-  int c4 = static_cast<int>(DMA::Channel::Chan4);
+  rx_dma_->Disable();
+  tx_dma_->Disable();
 
-  DmaReg *dma = DMA::get_register(DMA::Base::DMA2);
-  dma->channel[c3].config.enable = 0;
-  dma->channel[c4].config.enable = 0;
-
-  dma->channel[c3].count = len;
-  dma->channel[c4].count = len;
-  dma->channel[c3].memory_address = buff;
-  dma->channel[c4].memory_address = buff;
+  rx_dma_->SetupTransfer(buff, len);
+  tx_dma_->SetupTransfer(buff, len);
 
   chip_select_->clear();
 
@@ -824,14 +783,15 @@ void StepMotor::SendInitCmd(uint8_t *buff, int len) {
   // to add the additional logic to it to handle these
   // unusual startup commands.
   BlockInterrupts block;
-  dma->channel[c3].config.enable = 1;
-  dma->channel[c4].config.enable = 1;
-  while (!dma->interrupt_status.tcif3) {
+  rx_dma_->Enable();
+  tx_dma_->Enable();
+
+  while (!rx_dma_->InterruptStatus(DMA::Interrupt::TransferComplete)) {
   }
 
   // Clear the interrupt flag so I won't get an interrupt
   // as soon as I re-enable them
-  DMA::ClearInt(DMA::Base::DMA2, DMA::Channel::Chan3, DMA::Interrupt::Global);
+  rx_dma_->ClearInterrupt(DMA::Interrupt::Global);
 
   // Raise the chip select line and wait 1 microsecond.
   // The minimum time the CS needs to be high is just under

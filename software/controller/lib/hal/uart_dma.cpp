@@ -1,4 +1,4 @@
-/* Copyright 2020-2021, RespiraWorks
+/* Copyright 2020-2022, RespiraWorks
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -30,11 +30,9 @@ limitations under the License.
 
 // This driver also provides Character Match callback on match_char reception.
 
-extern UartDma uart_dma;
-
-// Performs UART3 initialization
-void UartDma::initialize(const Frequency cpu_frequency, const Frequency baud) {
-  baud_ = baud;
+// Performs UART initialization
+void UartDma::initialize(const Frequency cpu_frequency, const Frequency baud, DMA::Base dma,
+                         DMA::Channel tx_channel, DMA::Channel rx_channel) {
   // Set baud rate register
   uart_->baudrate = static_cast<uint32_t>(cpu_frequency / baud);
 
@@ -58,31 +56,12 @@ void UartDma::initialize(const Frequency cpu_frequency, const Frequency baud) {
 
   // TODO enable parity checking?
 
-  auto &rx_dma_config = dma_->channel[rx_channel_].config;
-  rx_dma_config.priority = 0b11;            // high priority
-  rx_dma_config.tx_error_interrupt = 1;     // interrupt on error
-  rx_dma_config.half_tx_interrupt = 0;      // no half-transfer interrupt
-  rx_dma_config.tx_complete_interrupt = 1;  // interrupt on DMA complete
-  rx_dma_config.mem2mem = 0;                // memory-to-memory mode disabled
-  rx_dma_config.memory_size = static_cast<uint32_t>(DMA::TransferSize::Byte);
-  rx_dma_config.peripheral_size = static_cast<uint32_t>(DMA::TransferSize::Byte);
-  rx_dma_config.memory_increment = 1;      // increment destination (memory)
-  rx_dma_config.peripheral_increment = 0;  // don't increment source (peripheral) address
-  rx_dma_config.circular = 0;              // not circular
-  rx_dma_config.direction = static_cast<uint32_t>(DMA::ChannelDir::PeripheralToMemory);
-
-  auto &tx_dma_config = dma_->channel[tx_channel_].config;
-  tx_dma_config.priority = 0b11;            // high priority
-  tx_dma_config.tx_error_interrupt = 1;     // interrupt on error
-  tx_dma_config.half_tx_interrupt = 0;      // no half-transfer interrupt
-  tx_dma_config.tx_complete_interrupt = 1;  // DMA complete interrupt enabled
-  tx_dma_config.mem2mem = 0;                // memory-to-memory mode disabled
-  tx_dma_config.memory_size = static_cast<uint32_t>(DMA::TransferSize::Byte);
-  tx_dma_config.peripheral_size = static_cast<uint32_t>(DMA::TransferSize::Byte);
-  tx_dma_config.memory_increment = 1;      // increment source (memory) address
-  tx_dma_config.peripheral_increment = 0;  // don't increment dest (peripheral) address
-  tx_dma_config.circular = 0;              // not circular
-  tx_dma_config.direction = static_cast<uint32_t>(DMA::ChannelDir::MemoryToPeripheral);
+  rx_dma_.emplace(dma, rx_channel);
+  tx_dma_.emplace(dma, tx_channel);
+  rx_dma_->Initialize(2, &(uart_->rx_data), DMA::ChannelDir::PeripheralToMemory, 1,
+                      DMA::ChannelPriority::Highest);
+  tx_dma_->Initialize(2, &(uart_->tx_data), DMA::ChannelDir::MemoryToPeripheral, 1,
+                      DMA::ChannelPriority::Highest);
 }
 
 // Sets up an interrupt on matching char incoming form UART3
@@ -107,21 +86,17 @@ bool UartDma::rx_in_progress() const {
 // Returns false if DMA transmission is in progress, does not
 // interrupt previous transmission.
 // Returns true if no transmission is in progress
-bool UartDma::start_tx(uint8_t *buf, uint32_t length, TxListener *txl) {
+bool UartDma::start_tx(uint8_t *buffer, uint32_t length, TxListener *txl) {
   if (tx_in_progress()) {
     return false;
   }
 
   tx_listener_ = txl;
 
-  auto &tx_dma = dma_->channel[tx_channel_];
-  tx_dma.config.enable = 0;                       // Disable channel before config
-  tx_dma.peripheral_address = &(uart_->tx_data);  // data sink
-  tx_dma.memory_address = const_cast<void *>(reinterpret_cast<const void *>(buf));  // data source
-  tx_dma.count = length & 0x0000FFFF;                                               // data length
-  tx_dma.config.enable = 1;                                                         // go!
-
+  tx_dma_->Disable();  // Disable channel before config
+  tx_dma_->SetupTransfer(buffer, length & 0x0000FFFF);
   tx_in_progress_ = true;
+  tx_dma_->Enable();
 
   return true;
 }
@@ -129,7 +104,7 @@ bool UartDma::start_tx(uint8_t *buf, uint32_t length, TxListener *txl) {
 void UartDma::stop_tx() {
   if (tx_in_progress()) {
     // Disable DMA channel
-    dma_->channel[tx_channel_].config.enable = 0;
+    tx_dma_->Disable();
     // TODO thread safety
     tx_in_progress_ = false;
   }
@@ -156,7 +131,7 @@ void UartDma::stop_tx() {
 // Returns false if reception is in progress, new reception is not setup.
 // Returns true if no reception is in progress and new reception was setup.
 
-bool UartDma::start_rx(uint8_t *buf, uint32_t length, RxListener *rxl) {
+bool UartDma::start_rx(uint8_t *buffer, uint32_t length, RxListener *rxl) {
   // UART3 reception happens on DMA1 channel 3
   if (rx_in_progress()) {
     return false;
@@ -164,30 +139,25 @@ bool UartDma::start_rx(uint8_t *buf, uint32_t length, RxListener *rxl) {
 
   rx_listener_ = rxl;
 
-  auto &rx_dma = dma_->channel[rx_channel_];
-
-  rx_dma.config.enable = 0;  // don't enable yet
-
-  rx_dma.peripheral_address = &(uart_->rx_data);                                    // data source
-  rx_dma.memory_address = const_cast<void *>(reinterpret_cast<const void *>(buf));  // data sink
-  rx_dma.count = length;                                                            // data length
+  rx_dma_->Disable();  // Disable channel before config
+  rx_dma_->SetupTransfer(buffer, length & 0x0000FFFF);
 
   uart_->interrupt_clear.bitfield.rx_timeout_clear = 1;  // Clear rx timeout flag
   uart_->request.bitfield.flush_rx = 1;                  // Clear RXNE flag
 
-  rx_dma.config.enable = 1;  // go!
-
   rx_in_progress_ = true;
+
+  rx_dma_->Enable();
 
   return true;
 }
 
-uint32_t UartDma::rx_bytes_left() { return dma_->channel[2].count; }
+uint32_t UartDma::rx_bytes_left() { return tx_dma_->Remaining(); }
 
 void UartDma::stop_rx() {
   if (rx_in_progress()) {
     uart_->control_reg1.bitfield.rx_timeout_interrupt = 0;  // Disable receive timeout interrupt
-    dma_->channel[rx_channel_].config.enable = 0;           // Disable DMA channel
+    rx_dma_->Disable();
     // TODO thread safety
     rx_in_progress_ = false;
   }
@@ -246,7 +216,7 @@ void UartDma::UART_interrupt_handler() {
 // Calls on_tx_error and on_tx_complete functions of the tx_listener_
 void UartDma::DMA_tx_interrupt_handler() {
   stop_tx();
-  if (dma_->interrupt_status.teif2) {
+  if (tx_dma_->InterruptStatus(DMA::Interrupt::TransferError)) {
     if (tx_listener_) {
       tx_listener_->on_tx_error();
     }
@@ -255,13 +225,14 @@ void UartDma::DMA_tx_interrupt_handler() {
       tx_listener_->on_tx_complete();
     }
   }
+  tx_dma_->ClearInterrupt(DMA::Interrupt::Global);
 }
 
 // ISR handler for the DMA peripheral responsible for reception.
 // Calls on_rx_error and on_rx_complete functions of the rx_listener_
 void UartDma::DMA_rx_interrupt_handler() {
   stop_rx();
-  if (dma_->interrupt_status.teif3) {
+  if (rx_dma_->InterruptStatus(DMA::Interrupt::TransferError)) {
     if (rx_listener_) {
       rx_listener_->on_rx_error(RxError::DMA);
     }
@@ -270,21 +241,7 @@ void UartDma::DMA_rx_interrupt_handler() {
       rx_listener_->on_rx_complete();
     }
   }
+  rx_dma_->ClearInterrupt(DMA::Interrupt::Global);
 }
-
-// TODO: These are declared in hal_stm32.cpp but implemented here, clean this up!
-
-void DMA1Channel2ISR() {
-  uart_dma.DMA_tx_interrupt_handler();
-  DMA::get_register(DMA::Base::DMA1)->interrupt_clear.gif2 = 1;  // clear all channel 3 flags
-}
-
-void DMA1Channel3ISR() {
-  uart_dma.DMA_rx_interrupt_handler();
-  DMA::get_register(DMA::Base::DMA1)->interrupt_clear.gif3 = 1;  // clear all channel 2 flags
-}
-
-// This is the interrupt handler for the UART.
-void Uart3ISR() { uart_dma.UART_interrupt_handler(); }
 
 #endif

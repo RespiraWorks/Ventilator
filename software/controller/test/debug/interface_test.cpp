@@ -17,7 +17,7 @@ limitations under the License.
 #include <array>
 #include <vector>
 
-#include "../eeprom/test_eeprom.h"
+#include "../eeprom/mock_eeprom.h"
 #include "binary_utils.h"
 #include "commands.h"
 #include "gmock/gmock-matchers.h"

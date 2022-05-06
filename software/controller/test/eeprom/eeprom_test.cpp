@@ -11,7 +11,7 @@ limitations under the License.
 */
 
 #include "gtest/gtest.h"
-#include "test_eeprom.h"
+#include "mock_eeprom.h"
 
 static constexpr uint32_t kMemSize{512};
 uint8_t memory[kMemSize];

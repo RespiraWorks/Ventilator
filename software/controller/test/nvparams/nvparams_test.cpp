@@ -12,7 +12,7 @@ limitations under the License.
 
 #include "nvparams.h"
 
-#include "../eeprom/test_eeprom.h"
+#include "../eeprom/mock_eeprom.h"
 #include "checksum.h"
 #include "gtest/gtest.h"
 

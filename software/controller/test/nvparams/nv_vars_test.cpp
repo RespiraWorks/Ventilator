@@ -12,7 +12,7 @@ limitations under the License.
 
 #include "nv_vars.h"
 
-#include "../eeprom/test_eeprom.h"
+#include "../eeprom/mock_eeprom.h"
 #include "gtest/gtest.h"
 
 using namespace Debug::Variable;

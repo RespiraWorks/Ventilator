@@ -12,7 +12,7 @@ limitations under the License.
 
 #include <array>
 
-#include "../eeprom/test_eeprom.h"
+#include "../eeprom/mock_eeprom.h"
 #include "commands.h"
 #include "gtest/gtest.h"
 

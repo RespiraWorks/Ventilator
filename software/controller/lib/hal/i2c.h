@@ -293,14 +293,13 @@ class STM32Channel : public Channel {
   // handled in software.
   void Init(I2CReg *i2c, DMA::Base dma, Speed speed);
   // Interrupt handlers for DMA, which only makes sense on the STM32
-  void DMAIntHandler(DMA::Channel chan);
+  void DMAIntHandler(ExchangeDirection direction);
 
  private:
   I2CReg *i2c_{nullptr};
-  DMA::Base dma_;
-  /// \TODO: anyway to avoid keeping regiters here directly? Improve DMA abstraction?
-  volatile DmaReg::ChannelRegs *rx_channel_{nullptr};
-  volatile DmaReg::ChannelRegs *tx_channel_{nullptr};
+
+  std::optional<DMA::ChannelControl> rx_dma_{std::nullopt};
+  std::optional<DMA::ChannelControl> tx_dma_{std::nullopt};
 
   void SetupI2CTransfer() override;  // configure a transfer
   void ReceiveByte() override { *next_data_ = static_cast<uint8_t>(i2c_->rx_data); };
@@ -320,7 +319,6 @@ class STM32Channel : public Channel {
   void ClearErrors() override { i2c_->interrupt_clear = 0x720; }
 
   void SetupDMAChannels(DMA::Base dma);
-  void ConfigureDMAChannel(volatile DmaReg::ChannelRegs *channel, ExchangeDirection direction);
   void SetupDMATransfer();
 };
 

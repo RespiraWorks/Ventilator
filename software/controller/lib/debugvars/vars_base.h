@@ -81,7 +81,7 @@ class Base {
   //         is automatically added unless strict is set to true.
   /// \param strict can be set to true to prevent adding an '_' between prefix and var name
   void prepend_name(const char *prefix, bool strict = false);
-  /// \brief appends the help string with given text. If text does not start with a soace, one
+  /// \brief appends the help string with given text. If text does not start with a space, one
   //         is automatically added unless strict is set to true.
   /// \param strict can be set to true to prevent adding a space between help string and text
   void append_help(const char *text, bool strict = false);

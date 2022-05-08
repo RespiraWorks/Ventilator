@@ -24,11 +24,26 @@ TEST(DebugVar, DebugVarInt32) {
   int32_t other_val{0};
   Primitive32 var("var", Access::ReadOnly, &value, "unit", "help", "fmt");
   EXPECT_STREQ("var", var.name());
-  var.prepend_name("pre_");
+  var.prepend_name("pre");
+  // check that an underscore was autmatically added to prefix
   EXPECT_STREQ("pre_var", var.name());
+  var.prepend_name("strict", true);
+  // check that no underscore was added
+  EXPECT_STREQ("strictpre_var", var.name());
+  var.prepend_name("pre_");
+  // check that underscore, already present, was not duplicated
+  EXPECT_STREQ("pre_strictpre_var", var.name());
   EXPECT_STREQ("help", var.help());
-  var.append_help(" so much help");
+  var.append_help("so much help");
+  // check that a space was automatically added
   EXPECT_STREQ("help so much help", var.help());
+  var.append_help("ing", true);
+  // check that no space was automatically added
+  EXPECT_STREQ("help so much helping", var.help());
+  var.append_help(" involved", true);
+  // check that no space was automatically added since it is already there
+  EXPECT_STREQ("help so much helping involved", var.help());
+
   EXPECT_EQ(Type::Int32, var.type());
   EXPECT_STREQ("fmt", var.format());
   EXPECT_STREQ("unit", var.units());

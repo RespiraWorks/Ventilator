@@ -76,8 +76,15 @@ class Base {
   virtual size_t byte_size() const = 0;
 
   const char *name() const;
-  void prepend_name(const char *prefix);
-  void append_help(const char *text);
+
+  /// \brief prefixes the variable name with given prefix. If prefix does not end with an '_', one
+  //         is automatically added unless strict is set to true.
+  /// \param strict can be set to true to prevent adding an '_' between prefix and var name
+  void prepend_name(const char *prefix, bool strict = false);
+  /// \brief appends the help string with given text. If text does not start with a space, one
+  //         is automatically added unless strict is set to true.
+  /// \param strict can be set to true to prevent adding a space between help string and text
+  void append_help(const char *text, bool strict = false);
 
   const char *format() const;
   const char *help() const;

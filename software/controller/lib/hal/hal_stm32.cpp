@@ -241,8 +241,8 @@ void Timer15ISR() {
   StepMotor::StartQueuedCommands();
 }
 
-static UART rpi_uart(Uart3Base);
-static UART debug_uart(Uart2Base);
+static UART::Channel rpi_uart(UART::Base::UART3);
+static UART::Channel debug_uart(UART::Base::UART2);
 #if defined(UART_VIA_DMA)
 // The character used for char_match is entirely arbitrary and will need to be a constant from
 // common, to allow using it in GUI as well for framing (once we get framing)
@@ -269,34 +269,21 @@ static UartDma dma_uart(Uart3Base, 0xE2);
 void HalApi::InitUARTs() {
   // NOTE - The UART functionality hasn't been tested due to lack of hardware!
   //        Need to do that as soon as the boards are available.
-  enable_peripheral_clock(PeripheralID::USART2);
-  enable_peripheral_clock(PeripheralID::USART3);
-  // [DS] Table 17 (pg 76)
-  GPIO::AlternatePin(GPIO::Port::A, 2, GPIO::AlternativeFunction::AF7);  // USART2_TX
-  GPIO::AlternatePin(GPIO::Port::A, 3, GPIO::AlternativeFunction::AF7);  // USART2_RX
-
-  // [DS] Table 17 (pg 77)
-  GPIO::AlternatePin(GPIO::Port::B, 10, GPIO::AlternativeFunction::AF7);  // USART3_TX
-  GPIO::AlternatePin(GPIO::Port::B, 11, GPIO::AlternativeFunction::AF7);  // USART3_RX
-  GPIO::AlternatePin(GPIO::Port::B, 13, GPIO::AlternativeFunction::AF7);  // USART3_CTS
-  GPIO::AlternatePin(GPIO::Port::B, 14, GPIO::AlternativeFunction::AF7);  // USART3_RTS_DE
-
 #if defined(UART_VIA_DMA)
   dma_uart.initialize(CPUFrequency, UARTBaudRate, DMA::Base::DMA1, DMA::Channel::Chan2,
                       DMA::Channel::Chan3);
 #else
-  rpi_uart.Init(CPUFrequency, UARTBaudRate);
+  rpi_uart.Initialize(GPIO::Port::B, 10, 11, 13, 14, GPIO::AlternativeFunction::AF7, CPUFrequency,
+                      UARTBaudRate);
 #endif
-  debug_uart.Init(CPUFrequency, UARTBaudRate);
-
-  Interrupts::singleton().EnableInterrupt(InterruptVector::Uart2, InterruptPriority::Standard);
-  Interrupts::singleton().EnableInterrupt(InterruptVector::Uart3, InterruptPriority::Standard);
+  debug_uart.Initialize(GPIO::Port::A, 2, 3, std::nullopt, std::nullopt,
+                        GPIO::AlternativeFunction::AF7, CPUFrequency, UARTBaudRate);
 }
 
-void Uart2ISR() { debug_uart.ISR(); }
+void Uart2ISR() { debug_uart.UARTInterruptHandler(); }
 
 #if !defined(UART_VIA_DMA)
-void Uart3ISR() { rpi_uart.ISR(); }
+void Uart3ISR() { rpi_uart.UARTInterruptHandler(); }
 #endif
 
 uint16_t HalApi::SerialRead(char *buf, uint16_t len) { return rpi_uart.Read(buf, len); }

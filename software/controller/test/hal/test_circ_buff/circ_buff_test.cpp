@@ -1,11 +1,8 @@
-/* Copyright 2020, RespiraWorks
-
+/* Copyright 2020-2022, RespiraWorks
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
-
     http://www.apache.org/licenses/LICENSE-2.0
-
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,11 +18,12 @@ limitations under the License.
 
 // Test the buffer counts and rollover
 TEST(CircularBuffer, Counts) {
-  constexpr uint BufferSize = 128;
+  constexpr size_t BufferSize = 128;
   CircularBuffer<uint8_t, BufferSize> buff;
 
   ASSERT_EQ(buff.FreeCount(), BufferSize);
   ASSERT_EQ(buff.FullCount(), 0);
+  ASSERT_EQ(buff.ContiguousCount(), 0);
 
   // Add/remove bytes from the buffer and check counts along the way.
   // The full/free calculations change when the buffer wraps, so I
@@ -35,7 +33,7 @@ TEST(CircularBuffer, Counts) {
     int full = 0;
     int free = BufferSize;
     for (int j = 0; j < 20; j++) {
-      // By putting j in the buffer, I can then check that it is stays a FIFO
+      // By putting j in the buffer, I can then check that it stays a FIFO
       // even when it wraps around
       bool ok = buff.Put(static_cast<uint8_t>(j));
       ASSERT_EQ(ok, true);
@@ -61,7 +59,7 @@ TEST(CircularBuffer, Counts) {
 // Make sure the data we add to the buffer is the same
 // as the data we get out of it
 TEST(CircularBuffer, DataIO) {
-  constexpr uint BufferSize = 256;
+  constexpr size_t BufferSize = 256;
   CircularBuffer<uint8_t, BufferSize> buff;
 
   uint8_t TestSet[BufferSize + 20];
@@ -76,10 +74,12 @@ TEST(CircularBuffer, DataIO) {
       ASSERT_EQ(ok, true);
       ASSERT_EQ(buff.FullCount(), i + 1);
       ASSERT_EQ(buff.FreeCount(), BufferSize - 1 - i);
+      ASSERT_EQ(buff.FullCount(), buff.ContiguousCount());
     } else {
       ASSERT_EQ(ok, false);
       ASSERT_EQ(buff.FullCount(), BufferSize);
       ASSERT_EQ(buff.FreeCount(), 0);
+      ASSERT_EQ(buff.FullCount(), buff.ContiguousCount());
       break;
     }
   }
@@ -104,15 +104,17 @@ TEST(CircularBuffer, DataIO) {
 // Test that the buffer of minimal size (uint N = 0) is always empty
 // This has no practical use but this way we make sure the template is safe.
 TEST(CircularBuffer, Size0) {
-  CircularBuffer<uint8_t, 0> buff;
+  CircularBuffer<size_t, 0> buff;
   ASSERT_EQ(buff.FullCount(), 0);
   ASSERT_EQ(buff.FreeCount(), 0);
   ASSERT_EQ(buff.Put(0), false);
   ASSERT_EQ(buff.Get(), std::nullopt);
+  ASSERT_EQ(buff.GetTailAddress(), nullptr);
+  ASSERT_EQ(buff.ContiguousCount(), 0);
 }
 
 TEST(CircularBuffer, SmallBufferFullTest) {
-  constexpr uint BufferSize = 5;
+  constexpr size_t BufferSize = 6;
   CircularBuffer<uint8_t, BufferSize> buff;
   ASSERT_EQ(buff.FullCount(), 0);
   ASSERT_EQ(buff.FreeCount(), BufferSize);
@@ -125,6 +127,8 @@ TEST(CircularBuffer, SmallBufferFullTest) {
   ASSERT_EQ(buff.FullCount(), 1);
   ASSERT_EQ(buff.FreeCount(), BufferSize - 1);
 
+  size_t max_contiguous_count{BufferSize + 1};
+
   // This loop tests that for all configurations of a non-empty buffer,
   // we can put and get stuff as we want, and that stuff is properly handled.
   for (int i = 0; i < BufferSize + 1; i++) {
@@ -134,17 +138,24 @@ TEST(CircularBuffer, SmallBufferFullTest) {
       ASSERT_EQ(buff.Put(elem++), true);
       ASSERT_EQ(buff.FullCount(), j + 1);
       ASSERT_EQ(buff.FreeCount(), BufferSize - j - 1);
+      ASSERT_EQ(buff.ContiguousCount(), j < max_contiguous_count ? j + 1 : max_contiguous_count);
     }
     // Buffer must now be full, we can't put any more data in.
     ASSERT_EQ(buff.Put(0), false);
     // Pop all but one element and check the counts.
     // Because we leave 1 element, the next loop will iterate
-    // with a different tail location: mod(tail - 1, BufferSize).
+    // with a different tail location: mod(tail - 2, BufferSize + 1).
     for (int j = 1; j < BufferSize; j++) {
-      std::optional<uint8_t> ch = buff.Get();
-      ASSERT_EQ(*ch, static_cast<uint8_t>(elem - static_cast<uint8_t>(BufferSize + 1 - j)));
+      uint8_t by_address = *buff.GetTailAddress();
+      std::optional<uint8_t> poped = buff.Get();
+      // maintain max_contiguous_count when pop'ing elements
+      if (--max_contiguous_count == 0) max_contiguous_count = BufferSize + 1;
+      ASSERT_EQ(by_address, *poped);
+      ASSERT_EQ(*poped, static_cast<uint8_t>(elem - static_cast<uint8_t>(BufferSize + 1 - j)));
       ASSERT_EQ(buff.FullCount(), BufferSize - j);
       ASSERT_EQ(buff.FreeCount(), j);
+      ASSERT_EQ(buff.ContiguousCount(),
+                BufferSize - j < max_contiguous_count ? BufferSize - j : max_contiguous_count);
     }
   }
 
@@ -153,20 +164,29 @@ TEST(CircularBuffer, SmallBufferFullTest) {
   ASSERT_EQ(buff.FullCount(), 0);
   ASSERT_EQ(buff.FreeCount(), BufferSize);
   ASSERT_EQ(buff.Get(), std::nullopt);
+  ASSERT_EQ(buff.GetTailAddress(), nullptr);
+  ASSERT_EQ(buff.ContiguousCount(), 0);
 
   // Fill in the gap left by the original loop to include empty buffers.
   for (int i = 0; i < 5; i++) {
     ASSERT_EQ(buff.Put(elem), true);
     ASSERT_EQ(buff.FullCount(), 1);
     ASSERT_EQ(buff.FreeCount(), BufferSize - 1);
+    // Buffer with one element is always contiguous
+    ASSERT_EQ(buff.ContiguousCount(), 1);
+
     std::optional<uint8_t> ch = buff.Get();
     ASSERT_EQ(*ch, elem++);
     ASSERT_EQ(buff.FullCount(), 0);
     ASSERT_EQ(buff.FreeCount(), BufferSize);
+    ASSERT_EQ(buff.GetTailAddress(), nullptr);
+    ASSERT_EQ(buff.ContiguousCount(), 0);
     // Trying to get an element from an empty buffer doesn't change anything,
     // whatever the head/tail
     ASSERT_EQ(buff.Get(), std::nullopt);
     ASSERT_EQ(buff.FullCount(), 0);
     ASSERT_EQ(buff.FreeCount(), BufferSize);
+    ASSERT_EQ(buff.GetTailAddress(), nullptr);
+    ASSERT_EQ(buff.ContiguousCount(), 0);
   }
 }

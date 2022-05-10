@@ -275,11 +275,13 @@ void Channel::Initialize(GPIO::Port port, uint8_t tx_pin, uint8_t rx_pin,
   uart->control3.bitfield.tx_dma = dma_enable_;  // set DMAT bit to enable DMA for transmitter
   uart->control3.bitfield.dma_disable_on_rx_error = dma_enable_;
 
-  uart->control2.bitfield.addr = match_char_;   // set match char
-  uart->control3.bitfield.error_interrupt = 1;  // enable interrupt on error
+  uart->control2.bitfield.addr = match_char_;  // set match char
+
+  // Enable some interrupts for DMA mode only
+  uart->control3.bitfield.error_interrupt = dma_enable_;            // interrupt on error
+  uart->control_reg1.bitfield.tx_complete_interrupt = dma_enable_;  // tx complete interrupt
 
   uart->control_reg1.bitfield.rx_interrupt = !dma_enable_;  // enable rx interrupt in SW mode only
-  uart->control_reg1.bitfield.tx_complete_interrupt = 1;    // enable tx complete interrupt
   uart->control_reg1.bitfield.tx_enable = 1;                // enable transmitter
   uart->control_reg1.bitfield.rx_enable = 1;                // enable receiver
   uart->control_reg1.bitfield.enable = 1;                   // enable uart
@@ -327,7 +329,7 @@ uint16_t Channel::Read(char *buffer, uint16_t length, RxListener *rxl) {
 
 // Write up to length bytes to the buffer.
 // This function does not block, so if there isn't enough
-// space to write length bytes, then only a partial write
+// space to write len bytes, then only a partial write
 // will occur.
 // The number of bytes actually written is returned.
 uint16_t Channel::Write(const char *buffer, uint16_t length, TxListener *txl) {
@@ -400,7 +402,7 @@ void Channel::UARTInterruptHandler() {
   }
 
   // check for character match interrupt and trigger character match callback
-  if (uart->status.bitfield.char_match != 0) {
+  if (uart->status.bitfield.char_match && uart->control_reg1.bitfield.char_match_interrupt) {
     uart->interrupt_clear.bitfield.char_match_clear = 1;
     rx_listener_->on_character_match();
   }
@@ -416,11 +418,11 @@ void Channel::UARTInterruptHandler() {
   }
 
   // Check for transmit data register empty
-  if (!dma_enable_ && uart->status.bitfield.tx_empty) {
+  if (!dma_enable_ && uart->status.bitfield.tx_empty && uart->control_reg1.bitfield.tx_interrupt) {
     std::optional<uint8_t> ch = tx_data_.Get();
 
     // If there's nothing left in the transmit buffer,
-    // disable further transmit interrupts, and run tx listener.
+    // just disable further transmit interrupts.
     if (ch == std::nullopt) {
       uart->control_reg1.bitfield.tx_interrupt = 0;
     } else {
@@ -430,7 +432,7 @@ void Channel::UARTInterruptHandler() {
   }
 
   // Check for tx_complete interrupt to trigger callback
-  if (uart->status.bitfield.tx_complete) {
+  if (uart->status.bitfield.tx_complete && uart->control_reg1.bitfield.tx_complete_interrupt) {
     uart->interrupt_clear.bitfield.tx_complete_clear = 1;
     tx_listener_->on_tx_complete();
   }

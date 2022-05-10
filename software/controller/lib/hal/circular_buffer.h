@@ -88,31 +88,6 @@ class CircularBuffer {
     return N + 1 - tail_;
   }
 
-  // Get a pointer to the next element we can put in the buffer.
-  // Used to transfer data from a peripheral to a buffer using DMA.
-  // After getting head address, make sure there is enough room in the buffer,
-  // and pre-put elements in the buffer (though DMA will modify them afterwards)
-  volatile T* GetHeadAddress() {
-    if (FreeCount() == 0) {
-      return nullptr;
-    }
-    return &(buffer_[head_]);
-  }
-
-  // Get the number of free space in the buffer with no wrapping around the buffer.
-  // Used to transfer data from a peripheral to a buffer using DMA, which
-  // needs consecutive data to be sent.  Note that with this, we may need two DMA
-  // transfers to receive the data required.
-  size_t ContiguousFreeCount() const {
-    BlockInterrupts block;
-    // If tail is bigger than head, all free space is available
-    if (tail_ > head_) return FreeCount();
-    // Otherwise, only count the space to the right of head_, but omit the very
-    // last place (inaccessible) if tail_ is 0.
-    if (tail_ == 0) return N - head_;
-    return N + 1 - head_;
-  }
-
   // Add an element to the buffer.
   //
   // Returns false if the buffer is full.

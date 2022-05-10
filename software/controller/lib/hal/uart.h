@@ -41,18 +41,23 @@ class Channel {
                   std::optional<uint8_t> rts_pin, GPIO::AlternativeFunction alt_function,
                   Frequency cpu_frequency, Frequency baud);
 
+  // Setup registers to enable character match
+  void EnableCharacterMatch();
+
   // Read up to length bytes and store them in the passed buffer.
   // This function does not block, so if less then length bytes are available it
   // will only return the available bytes
-  // Returns the number of bytes actually read.
-  // In DMA mode, uses rx listener methods on interrupt.
+  // In normal (SW) mode, returns the number of bytes actually read.
+  // In DMA mode, this returns 0 on error, or length, but it only sets up the transfer and
+  // uses rx listener methods on interrupts (transfer complete, transfer error, character match).
+  // This means that you cannot use or reset buffer immediately after calling Read in DMA mode.
   uint16_t Read(char *buffer, uint16_t length, RxListener *rxl = nullptr);
 
   // Write length bytes to the tx buffer, and, ultimately, to the serial link.
   // This function does not block, so if there isn't enough space to write
   // length bytes, then only a partial write will occur.
   // The number of bytes actually written is returned.
-  // In DMA mode, uses rx listener methods on interrupts.
+  // In DMA mode, uses tx listener methods on interrupts.
   uint16_t Write(const char *buffer, uint16_t length, TxListener *txl = nullptr);
 
   // Return the number of bytes currently in the receive buffer and ready to be read.
@@ -74,8 +79,10 @@ class Channel {
   Base uart_;
   // Circular buffers, make sure they stay big enough to store data to/from the GUI.
   static constexpr size_t BufferLength{128};
-  CircularBuffer<uint8_t, BufferLength> rx_data_;
   CircularBuffer<uint8_t, BufferLength> tx_data_;
+  // note that rx_data_ is not used in DMA mode, as DMA directly transfers data to the buffer
+  // provided by the client.
+  CircularBuffer<uint8_t, BufferLength> rx_data_;
 
   // Channel may or may not use DMA
   bool dma_enable_{false};
@@ -92,6 +99,8 @@ class Channel {
   TxListener *tx_listener_{nullptr};
 
   uint8_t match_char_{0};
+
+  void SetupTxDMA(uint16_t length);
 };
 
 }  // namespace UART

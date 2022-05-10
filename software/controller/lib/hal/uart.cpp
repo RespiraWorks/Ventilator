@@ -257,15 +257,39 @@ void Channel::Initialize(GPIO::Port port, uint8_t tx_pin, uint8_t rx_pin,
   if (cts_pin.has_value()) GPIO::AlternatePin(port, *cts_pin, alt_function);
   if (rts_pin.has_value()) GPIO::AlternatePin(port, *rts_pin, alt_function);
 
+  auto *uart = get_register(uart_);
+
+  // Initialize DMA channels
+  if (dma_enable_) {
+    rx_dma_->Initialize(request_, &(uart->rx_data), DMA::ChannelDir::PeripheralToMemory,
+                        /*tx_interrupt=*/true, DMA::ChannelPriority::Highest);
+    tx_dma_->Initialize(request_, &(uart->tx_data), DMA::ChannelDir::MemoryToPeripheral,
+                        /*tx_interrupt=*/true, DMA::ChannelPriority::Highest);
+  }
+
   // Set baud rate register
-  UartReg *uart = get_register(uart_);
   uart->baudrate = static_cast<uint32_t>(cpu_frequency / baud);
 
-  // Set control register
-  uart->control_reg1.bitfield.rx_interrupt = 1;  // enable receive interrupt
-  uart->control_reg1.bitfield.tx_enable = 1;     // enable transmitter
-  uart->control_reg1.bitfield.rx_enable = 1;     // enable receiver
-  uart->control_reg1.bitfield.enable = 1;        // enable uart
+  // Set DMA-specific control registers
+  uart->control3.bitfield.rx_dma = dma_enable_;  // set DMAR bit to enable DMA for receiver
+  uart->control3.bitfield.tx_dma = dma_enable_;  // set DMAT bit to enable DMA for transmitter
+  uart->control3.bitfield.dma_disable_on_rx_error = dma_enable_;
+
+  uart->control2.bitfield.addr = match_char_;   // set match char
+  uart->control3.bitfield.error_interrupt = 1;  // enable interrupt on error
+
+  uart->control_reg1.bitfield.rx_interrupt = !dma_enable_;  // enable rx interrupt in SW mode only
+  uart->control_reg1.bitfield.tx_complete_interrupt = 1;    // enable tx complete interrupt
+  uart->control_reg1.bitfield.tx_enable = 1;                // enable transmitter
+  uart->control_reg1.bitfield.rx_enable = 1;                // enable receiver
+  uart->control_reg1.bitfield.enable = 1;                   // enable uart
+}
+
+// Sets up an interrupt on reception of matching char
+void Channel::EnableCharacterMatch() {
+  auto *uart = get_register(uart_);
+  uart->interrupt_clear.bitfield.char_match_clear = 1;   // Clear char match flag
+  uart->control_reg1.bitfield.char_match_interrupt = 1;  // Enable character match interrupt
 }
 
 // Read up to length bytes and store them in the passed buffer.
@@ -273,7 +297,21 @@ void Channel::Initialize(GPIO::Port port, uint8_t tx_pin, uint8_t rx_pin,
 // are available it will only return the available bytes
 // Returns the number of bytes actually read.
 uint16_t Channel::Read(char *buffer, uint16_t length, RxListener *rxl) {
+  // DMA transfers cannot interrupt each other
+  if (dma_enable_ && rx_dma_->Remaining() > 0) return 0;
+
   rx_listener_ = rxl;
+
+  if (dma_enable_) {
+    rx_dma_->SetupTransfer(buffer, length);
+
+    auto uart = get_register(uart_);
+    // flush receive buffer
+    uart->request.bitfield.flush_rx = 1;
+    rx_dma_->Enable();
+    return length;
+  }
+
   for (uint16_t i = 0; i < length; i++) {
     std::optional<uint8_t> ch = rx_data_.Get();
     if (ch == std::nullopt) {
@@ -287,50 +325,88 @@ uint16_t Channel::Read(char *buffer, uint16_t length, RxListener *rxl) {
   return length;
 }
 
-// Write up to len bytes to the buffer.
+// Write up to length bytes to the buffer.
 // This function does not block, so if there isn't enough
-// space to write len bytes, then only a partial write
+// space to write length bytes, then only a partial write
 // will occur.
 // The number of bytes actually written is returned.
 uint16_t Channel::Write(const char *buffer, uint16_t length, TxListener *txl) {
+  // DMA transfers cannot interrupt each other
+  if (dma_enable_ && tx_dma_->Remaining() > 0) return 0;
+
   uint16_t i;
   for (i = 0; i < length; i++) {
     if (!tx_data_.Put(*buffer++)) break;
   }
 
   tx_listener_ = txl;
-  // Enable the tx interrupt.  If there was already anything
-  // in the buffer this will already be enabled, but enabling
-  // it again doesn't hurt anything.
-  get_register(uart_)->control_reg1.bitfield.tx_interrupt = 1;
+
+  if (dma_enable_)
+    SetupTxDMA(i);
+  else
+    // Enable the tx interrupt.  If there was already anything
+    // in the buffer this will already be enabled, but enabling
+    // it again doesn't hurt anything.
+    get_register(uart_)->control_reg1.bitfield.tx_interrupt = 1;
 
   return i;
 }
 
+void Channel::SetupTxDMA(uint16_t length) {
+  if (!dma_enable_ || length == 0) return;
+  // DMA can only tranfer from contiguous data. To make it work with a circular buffer,
+  // we will use dma tx complete interrupt to setup a second transfer for the rest of the data
+  // in case the buffer wraps around.
+  uint16_t transfer_length{length};
+  if (length > tx_data_.ContiguousDataCount())
+    transfer_length = static_cast<uint16_t>(tx_data_.ContiguousDataCount());
+  // setup DMA transfer
+  tx_dma_->SetupTransfer(tx_data_.GetTailAddress(), transfer_length);
+  tx_dma_count_ = transfer_length;
+  // clear UART Transfer Complete flag, per [RM] p1230
+  get_register(uart_)->interrupt_clear.bitfield.tx_complete_clear = 1;
+  tx_dma_->Enable();
+};
+
 // Return the number of bytes currently in the receive buffer and ready to be read.
+// Only useful in SW mode.
 uint16_t Channel::RxFull() const { return static_cast<uint16_t>(rx_data_.FullCount()); }
 
 // Returns the number of free locations in the transmit buffer.
 uint16_t Channel::TxFree() const { return static_cast<uint16_t>(tx_data_.FreeCount()); }
 
 // Provide a way to stop a transfer and flush the corresponding buffer
-void Channel::StopTx(){};
-void Channel::StopRx(){};
+void Channel::StopTx() {
+  if (dma_enable_) tx_dma_->Disable();
+  tx_data_.Flush();
+};
+void Channel::StopRx() {
+  if (dma_enable_) rx_dma_->Disable();
+  rx_data_.Flush();
+};
 
 // This is the interrupt handler for the UART.
 void Channel::UARTInterruptHandler() {
   UartReg *uart = get_register(uart_);
   // Check for overrun error and framing errors.  Clear those errors if
   // they're set to avoid further interrupts from them.
-  if (uart->status.bitfield.framing_error) {
-    uart->interrupt_clear.bitfield.framing_error_clear = 1;
-  }
   if (uart->status.bitfield.overrun_error) {
     uart->interrupt_clear.bitfield.overrun_clear = 1;
+    rx_listener_->on_rx_error(RxError::Overrun);
+  }
+  if (uart->status.bitfield.framing_error) {
+    uart->interrupt_clear.bitfield.framing_error_clear = 1;
+    rx_listener_->on_rx_error(RxError::SerialFraming);
+  }
+
+  // check for character match interrupt and trigger character match callback
+  if (uart->status.bitfield.char_match != 0) {
+    uart->interrupt_clear.bitfield.char_match_clear = 1;
+    rx_listener_->on_character_match();
   }
 
   // See if we received a new byte.
-  if (uart->status.bitfield.rx_not_empty) {
+  if (!dma_enable_ && uart->status.bitfield.rx_not_empty) {
     // Add the byte to rx_data_.  If the buffer is full, we'll drop it --
     // what else can we do?
     //
@@ -340,18 +416,56 @@ void Channel::UARTInterruptHandler() {
   }
 
   // Check for transmit data register empty
-  if (uart->status.bitfield.tx_empty && uart->control_reg1.bitfield.tx_interrupt) {
+  if (!dma_enable_ && uart->status.bitfield.tx_empty) {
     std::optional<uint8_t> ch = tx_data_.Get();
 
     // If there's nothing left in the transmit buffer,
-    // just disable further transmit interrupts.
+    // disable further transmit interrupts, and run tx listener.
     if (ch == std::nullopt) {
       uart->control_reg1.bitfield.tx_interrupt = 0;
     } else {
-      // Otherwise, Send the next byte.
+      // Otherwise, send the next byte.
       uart->tx_data = *ch;
     }
   }
+
+  // Check for tx_complete interrupt to trigger callback
+  if (uart->status.bitfield.tx_complete) {
+    uart->interrupt_clear.bitfield.tx_complete_clear = 1;
+    tx_listener_->on_tx_complete();
+  }
 }
+
+void Channel::TxDMAInterruptHandler() {
+  if (!dma_enable_) return;
+  tx_dma_->Disable();
+  if (tx_dma_->InterruptStatus(DMA::Interrupt::TransferError)) {
+    tx_dma_->ClearInterrupt(DMA::Interrupt::TransferError);
+    // retry transfer
+    SetupTxDMA(static_cast<uint16_t>(tx_data_.FullCount()));
+    tx_listener_->on_tx_error();
+  }
+
+  if (tx_dma_->InterruptStatus(DMA::Interrupt::TransferComplete)) {
+    tx_dma_->ClearInterrupt(DMA::Interrupt::TransferComplete);
+    // pop the tx_dma_count_ elements that were transmitted by DMA from the buffer
+    for (uint i = 0; i < tx_dma_count_; ++i) tx_data_.Get();
+    // setup the next transfer (this does nothing if the buffer is now empty)
+    SetupTxDMA(static_cast<uint16_t>(tx_data_.FullCount()));
+  }
+};
+void Channel::RxDMAInterruptHandler() {
+  if (!dma_enable_) return;
+  rx_dma_->Disable();
+  if (rx_dma_->InterruptStatus(DMA::Interrupt::TransferError)) {
+    rx_dma_->ClearInterrupt(DMA::Interrupt::TransferError);
+    rx_listener_->on_rx_error(RxError::DMA);
+  };
+
+  if (rx_dma_->InterruptStatus(DMA::Interrupt::TransferComplete)) {
+    rx_dma_->ClearInterrupt(DMA::Interrupt::TransferComplete);
+    rx_listener_->on_rx_complete();
+  }
+};
 
 }  // namespace UART

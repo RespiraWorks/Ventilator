@@ -272,19 +272,19 @@ void Channel::Initialize(GPIO::Port port, uint8_t tx_pin, uint8_t rx_pin,
 // This function does not block, so if less then len bytes
 // are available it will only return the available bytes
 // Returns the number of bytes actually read.
-uint16_t Channel::Read(char *buf, uint16_t len, RxListener *rxl) {
-  for (uint16_t i = 0; i < len; i++) {
+uint16_t Channel::Read(char *buffer, uint16_t length, RxListener *rxl) {
+  rx_listener_ = rxl;
+  for (uint16_t i = 0; i < length; i++) {
     std::optional<uint8_t> ch = rx_data_.Get();
     if (ch == std::nullopt) {
       return i;
     }
-    *buf++ = *ch;
+    *buffer++ = *ch;
   }
 
-  rx_listener_ = rxl;
   // Note that we don't need to enable the rx interrupt
   // here.  That one is always enabled.
-  return len;
+  return length;
 }
 
 // Write up to len bytes to the buffer.
@@ -292,10 +292,10 @@ uint16_t Channel::Read(char *buf, uint16_t len, RxListener *rxl) {
 // space to write len bytes, then only a partial write
 // will occur.
 // The number of bytes actually written is returned.
-uint16_t Channel::Write(const char *buf, uint16_t len, TxListener *txl) {
+uint16_t Channel::Write(const char *buffer, uint16_t length, TxListener *txl) {
   uint16_t i;
-  for (i = 0; i < len; i++) {
-    if (!tx_data_.Put(*buf++)) break;
+  for (i = 0; i < length; i++) {
+    if (!tx_data_.Put(*buffer++)) break;
   }
 
   tx_listener_ = txl;

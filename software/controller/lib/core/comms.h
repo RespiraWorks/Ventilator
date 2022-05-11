@@ -17,6 +17,8 @@ limitations under the License.
 
 #include <stdint.h>
 
+#include <algorithm>  // for std::min
+
 #include "network_protocol.pb.h"
 
 // This module periodically sends messages to the GUI device and receives

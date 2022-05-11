@@ -6,8 +6,8 @@
 
 #include <optional>
 
-#include "hal.h"
 #include "system_timer.h"
+#include "uart.h"
 
 // Our outgoing (serialized) ControllerStatus proto is stored in tx_buffer.  We
 // then transmit it a few bytes at a time, as the serial port becomes
@@ -60,7 +60,7 @@ static bool IsTimeToProcessPacket() { return SystemTimer::singleton().now() - la
 
 // TODO run this via DMA to free up resources for control loops
 static void ProcessTx(const ControllerStatus &controller_status) {
-  auto bytes_avail = hal.SerialBytesAvailableForWrite();
+  auto bytes_avail = rpi_uart.TxFree();
   if (bytes_avail == 0) {
     return;
   }
@@ -92,8 +92,8 @@ static void ProcessTx(const ControllerStatus &controller_status) {
   if (tx_bytes_remaining > 0) {
     // TODO(jlebar): Change SerialWrite to take a uint8* instead of a char*, so
     // it matches nanopb.
-    uint16_t bytes_written = hal.SerialWrite(reinterpret_cast<char *>(tx_buffer) + tx_idx,
-                                             std::min(bytes_avail, tx_bytes_remaining));
+    uint16_t bytes_written = rpi_uart.Write(reinterpret_cast<char *>(tx_buffer) + tx_idx,
+                                            std::min(bytes_avail, tx_bytes_remaining));
     // TODO: How paranoid should we be about this underflowing?  Perhaps we
     // should reset the device if this or other invariants are violated?
     tx_bytes_remaining = static_cast<uint16_t>(tx_bytes_remaining - bytes_written);
@@ -102,10 +102,10 @@ static void ProcessTx(const ControllerStatus &controller_status) {
 }
 
 static void ProcessRx(GuiStatus *gui_status) {
-  while (hal.SerialBytesAvailableForRead() > 0) {
+  while (rpi_uart.RxFull() > 0) {
     rx_in_progress = true;
     char b;
-    uint16_t bytes_read = hal.SerialRead(&b, 1);
+    uint16_t bytes_read = rpi_uart.Read(&b, 1);
     if (bytes_read == 1) {
       rx_buffer[rx_idx++] = (uint8_t)b;
       if (rx_idx >= sizeof(rx_buffer)) {

@@ -37,8 +37,8 @@ class Channel {
   Channel(Base base, DMA::Base dma, uint8_t match_char = 0);
 
   // Setup all registers to manage the uart channel, with hardware flow control pins as an option
-  void Initialize(GPIO::Port port, uint8_t tx_pin, uint8_t rx_pin, std::optional<uint8_t> cts_pin,
-                  std::optional<uint8_t> rts_pin, GPIO::AlternativeFunction alt_function,
+  void Initialize(GPIO::Port port, uint8_t tx_pin, uint8_t rx_pin, std::optional<uint8_t> rts_pin,
+                  std::optional<uint8_t> cts_pin, GPIO::AlternativeFunction alt_function,
                   Frequency cpu_frequency, Frequency baud);
 
   // Setup registers to enable character match
@@ -58,7 +58,7 @@ class Channel {
   // length bytes, then only a partial write will occur.
   // The number of bytes actually written is returned.
   // In DMA mode, uses tx listener methods on interrupts.
-  uint16_t Write(const char *buffer, uint16_t length, TxListener *txl = nullptr);
+  uint16_t Write(char *buffer, uint16_t length, TxListener *txl = nullptr);
 
   // Return the number of bytes currently in the receive buffer and ready to be read.
   uint16_t RxFull() const;
@@ -104,3 +104,6 @@ class Channel {
 };
 
 }  // namespace UART
+
+extern UART::Channel rpi_uart;
+extern UART::Channel debug_uart;

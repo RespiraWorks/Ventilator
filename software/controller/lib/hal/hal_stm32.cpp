@@ -40,9 +40,6 @@ Abbreviations [RM], [DS], etc are defined in hal/README.md.
 #include "uart.h"
 #include "vars.h"
 #include "watchdog.h"
-#if defined(UART_VIA_DMA)
-#include "uart_dma.h"
-#endif
 
 static constexpr Frequency CPUFrequency{megahertz(80)};
 static constexpr Frequency UARTBaudRate{hertz(115200)};
@@ -124,7 +121,16 @@ void HalApi::Init() {
   LEDs.initialize();
   /// \TODO: ensure CPUFrequency is a multiple of 10 MHz
   SystemTimer::singleton().initialize(CPUFrequency);
-  InitUARTs();
+  // [PCBsp] Lists UART pins for comms with the rPi: PB10 (TX), PB11 (RX), PB13 (RTS) and PB14 (CTS)
+  rpi_uart.Initialize(GPIO::Port::B, /*tx_pin=*/10, /*rx_pin=*/11, /*rts_pin=*/13, /*cts_pin=*/14,
+                      GPIO::AlternativeFunction::AF7, CPUFrequency, UARTBaudRate);
+  // The Nucleo board also includes a secondary serial port that's indirectly connected to its USB
+  // connector.  This port is connected to the STM32 USART2 at pins PA2 (TX) and PA3 (RX) and has
+  // no HW flow control (rts/cts)
+  debug_uart.Initialize(GPIO::Port::A, /*tx_pin=*/2, /*rx_pin=*/3,
+                        /*rts_pin=*/std::nullopt, /*cts_pin=*/std::nullopt,
+                        GPIO::AlternativeFunction::AF7, CPUFrequency, UARTBaudRate);
+
   // [PCBsp] lists I2C1 pins : SCL=PB8 and SDA=PB9
   i2c1.Initialize(I2C::Speed::Fast, GPIO::Port::B, /*scl_pin=*/8, /*sda_pin=*/9,
                   GPIO::AlternativeFunction::AF4);
@@ -241,65 +247,6 @@ void Timer15ISR() {
   StepMotor::StartQueuedCommands();
 }
 
-static UART::Channel rpi_uart(UART::Base::UART3);
-static UART::Channel debug_uart(UART::Base::UART2);
-#if defined(UART_VIA_DMA)
-// The character used for char_match is entirely arbitrary and will need to be a constant from
-// common, to allow using it in GUI as well for framing (once we get framing)
-static UartDma dma_uart(Uart3Base, 0xE2);
-#endif
-// The UART that talks to the rPi uses the following pins:
-//    PB10 - TX
-//    PB11 - RX
-//    PB13 - RTS
-//    PB14 - CTS
-//
-// The Nucleo board also includes a secondary serial port that's
-// indirectly connected to its USB connector.  This port is
-// connected to the STM32 USART2 at pins:
-//    PA2 - TX
-//    PA3 - RX
-//
-// Please refer to the PCB schematic as the ultimate source of which
-// pin is used for which function.  A less definitive, but perhaps
-// easier to read version is available at [PCBsp].
-//
-// These pins are connected to UART3
-// The UART/USART is described in [RM] chapter 38
-void HalApi::InitUARTs() {
-  // NOTE - The UART functionality hasn't been tested due to lack of hardware!
-  //        Need to do that as soon as the boards are available.
-#if defined(UART_VIA_DMA)
-  dma_uart.initialize(CPUFrequency, UARTBaudRate, DMA::Base::DMA1, DMA::Channel::Chan2,
-                      DMA::Channel::Chan3);
-#else
-  rpi_uart.Initialize(GPIO::Port::B, 10, 11, 13, 14, GPIO::AlternativeFunction::AF7, CPUFrequency,
-                      UARTBaudRate);
-#endif
-  debug_uart.Initialize(GPIO::Port::A, 2, 3, std::nullopt, std::nullopt,
-                        GPIO::AlternativeFunction::AF7, CPUFrequency, UARTBaudRate);
-}
-
-void Uart2ISR() { debug_uart.UARTInterruptHandler(); }
-
-#if !defined(UART_VIA_DMA)
-void Uart3ISR() { rpi_uart.UARTInterruptHandler(); }
-#endif
-
-uint16_t HalApi::SerialRead(char *buf, uint16_t len) { return rpi_uart.Read(buf, len); }
-
-uint16_t HalApi::SerialBytesAvailableForRead() { return rpi_uart.RxFull(); }
-
-uint16_t HalApi::SerialWrite(const char *buf, uint16_t len) { return rpi_uart.Write(buf, len); }
-
-uint16_t HalApi::SerialBytesAvailableForWrite() { return rpi_uart.TxFree(); }
-
-uint16_t HalApi::DebugWrite(const char *buf, uint16_t len) { return debug_uart.Write(buf, len); }
-
-uint16_t HalApi::DebugRead(char *buf, uint16_t len) { return debug_uart.Read(buf, len); }
-
-uint16_t HalApi::DebugBytesAvailableForWrite() { return debug_uart.TxFree(); }
-
 // Fault handler
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-function"
@@ -334,11 +281,14 @@ void I2c1EventISR() { i2c1.I2CEventHandler(); };
 void I2c1ErrorISR() { i2c1.I2CErrorHandler(); };
 void DMA2Channel6ISR() { i2c1.DMAInterruptHandler(I2C::ExchangeDirection::Read); };
 void DMA2Channel7ISR() { i2c1.DMAInterruptHandler(I2C::ExchangeDirection::Write); };
+
 #if defined(UART_VIA_DMA)
-void DMA1Channel2ISR() { dma_uart.DMA_tx_interrupt_handler(); }
-void DMA1Channel3ISR() { dma_uart.DMA_rx_interrupt_handler(); }
-void Uart3ISR() { dma_uart.UART_interrupt_handler(); }
+void DMA1Channel2ISR() { rpi_uart.TxDMAInterruptHandler(); }
+void DMA1Channel3ISR() { rpi_uart.RxDMAInterruptHandler(); }
 #endif
+
+void Uart3ISR() { rpi_uart.UARTInterruptHandler(); }
+void Uart2ISR() { debug_uart.UARTInterruptHandler(); }
 
 // We don't control this function's name, silence the style check
 // NOLINTNEXTLINE(readability-identifier-naming)

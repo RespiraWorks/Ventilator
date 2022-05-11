@@ -16,8 +16,8 @@ limitations under the License.
 #include "interface.h"
 
 #include "binary_utils.h"
-#include "hal.h"
 #include "system_timer.h"
+#include "uart.h"
 
 namespace Debug {
 // Initialize interface handler with variable list of
@@ -83,7 +83,7 @@ bool Interface::Poll() {
 bool Interface::ReadNextByte() {
   // Get the next byte from the debug serial port if there is one.
   char next_char;
-  if (hal.DebugRead(&next_char, 1) < 1) return false;
+  if (debug_uart.Read(&next_char, 1) < 1) return false;
 
   uint8_t byte = static_cast<uint8_t>(next_char);
 
@@ -120,7 +120,7 @@ bool Interface::ReadNextByte() {
 bool Interface::SendNextByte() {
   // To simplify things below, I require at least 3 bytes
   // in the output buffer to continue
-  if (hal.DebugBytesAvailableForWrite() < 3) return false;
+  if (debug_uart.TxFree() < 3) return false;
 
   // See what the next character to send is.
   char next_char = response_[response_bytes_sent_++];
@@ -131,9 +131,9 @@ bool Interface::SendNextByte() {
     char escaped_char[2];
     escaped_char[0] = static_cast<char>(SpecialChar::Escape);
     escaped_char[1] = next_char;
-    (void)hal.DebugWrite(escaped_char, 2);
+    (void)debug_uart.Write(escaped_char, 2);
   } else {
-    (void)hal.DebugWrite(&next_char, 1);
+    (void)debug_uart.Write(&next_char, 1);
   }
 
   // If there's more response to send, return true
@@ -143,7 +143,7 @@ bool Interface::SendNextByte() {
   // termination character and start waiting on the next
   // command.
   char end_transfer = static_cast<char>(SpecialChar::EndTransfer);
-  (void)hal.DebugWrite(&end_transfer, 1);
+  (void)debug_uart.Write(&end_transfer, 1);
 
   state_ = State::AwaitingCommand;
   response_bytes_sent_ = 0;

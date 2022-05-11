@@ -12,6 +12,18 @@ limitations under the License.
 
 #include "uart.h"
 
+// Declaration of UART channels, as global since hal requires it to exist for interrupt handlers
+// TODO: find a way to get rid of these global variable (probably requires a more flexible
+// handling of InterruptVector in Reset_Handler() function from hal_stm32.cpp)
+#if defined(UART_VIA_DMA)
+// The character used for char_match is entirely arbitrary and will need to be a constant from
+// common, to allow using it in GUI as well for framing (once we get framing)
+UART::Channel rpi_uart(UART::Base::UART3, DMA::Base::DMA1, 0x02);
+#else
+UART::Channel rpi_uart(UART::Base::UART3);
+#endif
+UART::Channel debug_uart(UART::Base::UART2);
+
 namespace UART {
 
 // [RM] 38.8 USART Registers (pg 1238)
@@ -225,7 +237,7 @@ Channel::Channel(Base base, DMA::Base dma, uint8_t match_char)
 };
 
 void Channel::Initialize(GPIO::Port port, uint8_t tx_pin, uint8_t rx_pin,
-                         std::optional<uint8_t> cts_pin, std::optional<uint8_t> rts_pin,
+                         std::optional<uint8_t> rts_pin, std::optional<uint8_t> cts_pin,
                          GPIO::AlternativeFunction alt_function, Frequency cpu_frequency,
                          Frequency baud) {
   // Enable clock and interrupts
@@ -329,7 +341,7 @@ uint16_t Channel::Read(char *buffer, uint16_t length, RxListener *rxl) {
 // space to write len bytes, then only a partial write
 // will occur.
 // The number of bytes actually written is returned.
-uint16_t Channel::Write(const char *buffer, uint16_t length, TxListener *txl) {
+uint16_t Channel::Write(char *buffer, uint16_t length, TxListener *txl) {
   // DMA transfers cannot interrupt each other
   if (dma_enable_ && tx_dma_->Remaining() > 0) return 0;
 
@@ -341,7 +353,9 @@ uint16_t Channel::Write(const char *buffer, uint16_t length, TxListener *txl) {
   tx_listener_ = txl;
 
   if (dma_enable_) {
-    SetupTxDMA(i);
+    tx_dma_->SetupTransfer(buffer, length);
+    get_register(uart_)->interrupt_clear.bitfield.tx_complete_clear = 1;
+    tx_dma_->Enable();
   } else {
     // Enable the tx interrupt.  If there was already anything
     // in the buffer this will already be enabled, but enabling
@@ -457,6 +471,7 @@ void Channel::TxDMAInterruptHandler() {
     SetupTxDMA(static_cast<uint16_t>(tx_data_.FullCount()));
   }
 };
+
 void Channel::RxDMAInterruptHandler() {
   if (!dma_enable_) return;
   rx_dma_->Disable();

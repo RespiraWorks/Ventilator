@@ -21,6 +21,7 @@ limitations under the License.
 #include "circular_buffer.h"
 #include "debug_types.h"
 #include "trace.h"
+#include "uart.h"
 #include "units.h"
 
 namespace Debug {
@@ -56,7 +57,7 @@ namespace Debug {
 // has a special value.
 class Interface {
  public:
-  explicit Interface(Trace *trace, int count, ...);
+  Interface(UART::Channel *uart, Trace *trace, int count, ...);
 
   // This function is called from the main loop to handle debug commands.
   // Returns true if this call has finished sending the response for a command,
@@ -92,6 +93,8 @@ class Interface {
   // List of registered command handlers
   Command::Handler *registry_[32] = {nullptr};
 
+  // Uart channel on which data is sent
+  UART::Channel *uart_;
   // Trace buffer (populated when SampleTraceVars is called and Trace is
   // enabled through the trace command)
   Trace *trace_;

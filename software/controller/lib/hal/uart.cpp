@@ -307,7 +307,7 @@ void Channel::EnableCharacterMatch() {
 // This function does not block, so if less then len bytes
 // are available it will only return the available bytes
 // Returns the number of bytes actually read.
-uint16_t Channel::Read(char *buffer, uint16_t length, RxListener *rxl) {
+uint16_t Channel::Read(uint8_t *buffer, uint16_t length, RxListener *rxl) {
   // DMA transfers cannot interrupt each other
   if (dma_enable_ && rx_dma_->Remaining() > 0) return 0;
 
@@ -341,7 +341,7 @@ uint16_t Channel::Read(char *buffer, uint16_t length, RxListener *rxl) {
 // space to write len bytes, then only a partial write
 // will occur.
 // The number of bytes actually written is returned.
-uint16_t Channel::Write(char *buffer, uint16_t length, TxListener *txl) {
+uint16_t Channel::Write(uint8_t *buffer, uint16_t length, TxListener *txl) {
   // DMA transfers cannot interrupt each other
   if (dma_enable_ && tx_dma_->Remaining() > 0) return 0;
 

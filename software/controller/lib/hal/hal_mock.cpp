@@ -22,7 +22,6 @@ Frequency HalApi::GetCpuFreq() { return hertz(0); }
 void HalApi::EarlyInit() {}
 void HalApi::Init() {}
 void HalApi::init_PCB_ID_pins() {}
-void HalApi::InitUARTs() {}
 void HalApi::StartLoopTimer(const Duration &period, void (*callback)(void *), void *arg) {}
 
 #endif

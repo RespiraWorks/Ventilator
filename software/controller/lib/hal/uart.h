@@ -51,14 +51,14 @@ class Channel {
   // In DMA mode, this returns 0 on error, or length, but it only sets up the transfer and
   // uses rx listener methods on interrupts (transfer complete, transfer error, character match).
   // This means that you cannot use or reset buffer immediately after calling Read in DMA mode.
-  uint16_t Read(char *buffer, uint16_t length, RxListener *rxl = nullptr);
+  uint16_t Read(uint8_t *buffer, uint16_t length, RxListener *rxl = nullptr);
 
   // Write length bytes to the tx buffer, and, ultimately, to the serial link.
   // This function does not block, so if there isn't enough space to write
   // length bytes, then only a partial write will occur.
   // The number of bytes actually written is returned.
   // In DMA mode, uses tx listener methods on interrupts.
-  uint16_t Write(char *buffer, uint16_t length, TxListener *txl = nullptr);
+  uint16_t Write(uint8_t *buffer, uint16_t length, TxListener *txl = nullptr);
 
   // Return the number of bytes currently in the receive buffer and ready to be read.
   uint16_t RxFull() const;

@@ -353,20 +353,23 @@ uint16_t Channel::Write(uint8_t *buffer, uint16_t length, TxListener *txl) {
   tx_listener_ = txl;
 
   if (dma_enable_) {
-    tx_dma_->SetupTransfer(buffer, length);
-    get_register(uart_)->interrupt_clear.bitfield.tx_complete_clear = 1;
-    tx_dma_->Enable();
+    SetupTxDMA(length);
   } else {
     // Enable the tx interrupt.  If there was already anything
     // in the buffer this will already be enabled, but enabling
     // it again doesn't hurt anything.
-    get_register(uart_)->control_reg1.bitfield.tx_interrupt = 1;
+    EnableTxInterrupt();
   }
 
-  get_register(uart_)->control_reg1.bitfield.tx_complete_interrupt = 1;
+  EnableTxCompleteInterrupt();
 
   return i;
 }
+
+void Channel::EnableTxInterrupt() { get_register(uart_)->control_reg1.bitfield.tx_interrupt = 1; };
+void Channel::EnableTxCompleteInterrupt() {
+  get_register(uart_)->control_reg1.bitfield.tx_complete_interrupt = 1;
+};
 
 void Channel::SetupTxDMA(uint16_t length) {
   if (!dma_enable_ || length == 0) return;

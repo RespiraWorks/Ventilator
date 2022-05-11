@@ -42,7 +42,7 @@ class Channel {
                   Frequency cpu_frequency, Frequency baud);
 
   // Setup registers to enable character match
-  void EnableCharacterMatch();
+  virtual void EnableCharacterMatch();
 
   // Read up to length bytes and store them in the passed buffer.
   // This function does not block, so if less then length bytes are available it
@@ -75,14 +75,16 @@ class Channel {
   void TxDMAInterruptHandler();
   void RxDMAInterruptHandler();
 
- private:
-  Base uart_;
+ protected:
   // Circular buffers, make sure they stay big enough to store data to/from the GUI.
   static constexpr size_t BufferLength{128};
   CircularBuffer<uint8_t, BufferLength> tx_data_;
   // note that rx_data_ is not used in DMA mode, as DMA directly transfers data to the buffer
   // provided by the client.
   CircularBuffer<uint8_t, BufferLength> rx_data_;
+
+ private:
+  Base uart_;
 
   // Channel may or may not use DMA
   bool dma_enable_{false};
@@ -99,6 +101,9 @@ class Channel {
   TxListener *tx_listener_{nullptr};
 
   uint8_t match_char_{0};
+
+  virtual void EnableTxInterrupt();
+  virtual void EnableTxCompleteInterrupt();
 
   void SetupTxDMA(uint16_t length);
 };

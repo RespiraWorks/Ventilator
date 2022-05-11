@@ -5,11 +5,14 @@
 #include <pb_encode.h>
 
 #include "gtest_main.h"
-#include "hal.h"
+#include "uart_mock.h"
 #include "network_protocol.pb.h"
 #include "system_timer.h"
 
 TEST(CommTests, SendControllerStatus) {
+  UART::MockChannel uart;
+  Comms comms{&uart};
+
   // Initialize a large ControllerStatus so as to force multiple calls to
   // CommsHandler to send it.
   ControllerStatus s = ControllerStatus_init_zero;
@@ -24,14 +27,14 @@ TEST(CommTests, SendControllerStatus) {
   s.sensor_readings.volume_ml = 800;
   s.sensor_readings.flow_ml_per_min = 1000;
 
-  // Run CommsHandler until it stops sending data.  10 iterations should be
+  // Run comms::Handler until it stops sending data.  10 iterations should be
   // more than enough.
   for (int i = 0; i < 10; i++) {
     GuiStatus gui_status_ignored = GuiStatus_init_zero;
-    CommsHandler(s, &gui_status_ignored);
+    comms.Handler(s, &gui_status_ignored);
   }
-  char tx_buffer[ControllerStatus_size];
-  uint16_t len = hal.TESTSerialGetOutgoingData(tx_buffer, sizeof(tx_buffer));
+  uint8_t tx_buffer[ControllerStatus_size];
+  uint16_t len = uart.GetTxData(tx_buffer, sizeof(tx_buffer));
   ASSERT_GT(len, 0);
   pb_istream_t stream = pb_istream_from_buffer(reinterpret_cast<unsigned char *>(tx_buffer), len);
 
@@ -45,6 +48,9 @@ TEST(CommTests, SendControllerStatus) {
 }
 
 TEST(CommTests, CommandRx) {
+  UART::MockChannel uart;
+  Comms comms{&uart};
+
   GuiStatus s = GuiStatus_init_zero;
   s.uptime_ms = std::numeric_limits<uint32_t>::max() / 2;
   s.desired_params.mode = VentMode_PRESSURE_CONTROL;
@@ -55,13 +61,12 @@ TEST(CommTests, CommandRx) {
   s.desired_params.inspiratory_trigger_cm_h2o = 5;
   s.desired_params.expiratory_trigger_ml_per_min = 9;
 
-  char rx_buffer[GuiStatus_size];
-  pb_ostream_t stream =
-      pb_ostream_from_buffer(reinterpret_cast<unsigned char *>(rx_buffer), sizeof(rx_buffer));
+  uint8_t rx_buffer[GuiStatus_size];
+  pb_ostream_t stream = pb_ostream_from_buffer(rx_buffer, sizeof(rx_buffer));
   pb_encode(&stream, GuiStatus_fields, &s);
   EXPECT_GT(stream.bytes_written, 0u);
-  hal.TESTSerialPutIncomingData(rx_buffer, static_cast<uint16_t>(stream.bytes_written));
-  EXPECT_GT(hal.SerialBytesAvailableForRead(), 0);
+  uart.PutRxData(rx_buffer, static_cast<uint16_t>(stream.bytes_written));
+  EXPECT_GT(uart.RxFull(), 0);
 
   ControllerStatus controller_status_ignored = ControllerStatus_init_zero;
   GuiStatus received = GuiStatus_init_zero;
@@ -69,7 +74,7 @@ TEST(CommTests, CommandRx) {
   // Run CommsHandler until it updates GuiStatus.  10 iterations should be
   // more than enough to read the whole thing.
   for (int i = 0; i < 10; i++) {
-    CommsHandler(controller_status_ignored, &received);
+    comms.Handler(controller_status_ignored, &received);
     // We use a timeout for framing packets, so we have to advance the time,
     // otherwise we'll never think the packet is complete!
     SystemTimer::singleton().delay(milliseconds(1));

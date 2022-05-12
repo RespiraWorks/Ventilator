@@ -12,8 +12,8 @@ limitations under the License.
 
 #include "nv_vars.h"
 
-#include "../eeprom/mock_eeprom.h"
 #include "gtest/gtest.h"
+#include "mock_eeprom.h"
 
 using namespace Debug::Variable;
 using namespace NVParams;

@@ -31,7 +31,7 @@ limitations under the License.
 #include <string>
 
 #include "flow_integrator.h"
-#include "gtest/gtest.h"
+#include "gtest_main.h"
 #include "hal.h"
 #include "system_timer.h"
 

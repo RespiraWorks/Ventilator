@@ -12,9 +12,9 @@ limitations under the License.
 
 #include <array>
 
-#include "../eeprom/mock_eeprom.h"
 #include "commands.h"
 #include "gtest/gtest.h"
+#include "mock_eeprom.h"
 
 namespace Debug::Command {
 

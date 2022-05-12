@@ -17,12 +17,12 @@ limitations under the License.
 #include <array>
 #include <vector>
 
-#include "../eeprom/mock_eeprom.h"
 #include "binary_utils.h"
 #include "commands.h"
 #include "gmock/gmock-matchers.h"
 #include "gtest/gtest.h"
 #include "hal.h"
+#include "mock_eeprom.h"
 #include "system_timer.h"
 #include "vars.h"
 

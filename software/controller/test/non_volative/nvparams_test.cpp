@@ -12,9 +12,9 @@ limitations under the License.
 
 #include "nvparams.h"
 
-#include "../eeprom/mock_eeprom.h"
 #include "checksum.h"
 #include "gtest/gtest.h"
+#include "mock_eeprom.h"
 
 using namespace NVParams;
 

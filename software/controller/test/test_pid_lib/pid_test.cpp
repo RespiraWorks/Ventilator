@@ -23,7 +23,7 @@ limitations under the License.
 
 #include "pid.h"
 
-#include "gtest/gtest.h"
+#include "gtest_main.h"
 
 // The PWM is a 0-255 integer, which means we can accept error of 1 in output
 inline constexpr float OUTPUT_TOLERANCE = 1;

@@ -23,7 +23,6 @@ TEST(CircularBuffer, Counts) {
 
   ASSERT_EQ(buff.FreeCount(), BufferSize);
   ASSERT_EQ(buff.FullCount(), 0);
-  ASSERT_EQ(buff.ContiguousDataCount(), 0);
 
   // Add/remove bytes from the buffer and check counts along the way.
   // The full/free calculations change when the buffer wraps, so I
@@ -74,12 +73,10 @@ TEST(CircularBuffer, DataIO) {
       ASSERT_EQ(ok, true);
       ASSERT_EQ(buff.FullCount(), i + 1);
       ASSERT_EQ(buff.FreeCount(), BufferSize - 1 - i);
-      ASSERT_EQ(buff.FullCount(), buff.ContiguousDataCount());
     } else {
       ASSERT_EQ(ok, false);
       ASSERT_EQ(buff.FullCount(), BufferSize);
       ASSERT_EQ(buff.FreeCount(), 0);
-      ASSERT_EQ(buff.FullCount(), buff.ContiguousDataCount());
       break;
     }
   }
@@ -109,8 +106,6 @@ TEST(CircularBuffer, Size0) {
   ASSERT_EQ(buff.FreeCount(), 0);
   ASSERT_EQ(buff.Put(0), false);
   ASSERT_EQ(buff.Get(), std::nullopt);
-  ASSERT_EQ(buff.GetTailAddress(), nullptr);
-  ASSERT_EQ(buff.ContiguousDataCount(), 0);
 }
 
 TEST(CircularBuffer, SmallBufferFullTest) {
@@ -120,18 +115,11 @@ TEST(CircularBuffer, SmallBufferFullTest) {
   ASSERT_EQ(buff.FullCount(), 0);
   ASSERT_EQ(buff.FreeCount(), BufferSize);
   ASSERT_EQ(buff.Get(), std::nullopt);
-  ASSERT_EQ(buff.ContiguousDataCount(), 0);
 
   uint8_t elem = 0;
   ASSERT_TRUE(buff.Put(elem++));
   ASSERT_EQ(buff.FullCount(), 1);
   ASSERT_EQ(buff.FreeCount(), BufferSize - 1);
-  ASSERT_EQ(buff.ContiguousDataCount(), 1);
-
-  // note that we set max_contiguous_data to BufferSize + 1, which is not entirely
-  // accurate but allows taking into account the existence of buffer[head_] (though it
-  // is effectively inaccessible).
-  size_t max_contiguous_data{BufferSize + 1};
 
   // This loop tests that for all configurations of a non-empty buffer,
   // we can put and get stuff as we want, and that stuff is properly handled.
@@ -142,7 +130,6 @@ TEST(CircularBuffer, SmallBufferFullTest) {
       ASSERT_EQ(buff.Put(elem++), true);
       ASSERT_EQ(buff.FullCount(), j + 1);
       ASSERT_EQ(buff.FreeCount(), BufferSize - j - 1);
-      ASSERT_EQ(buff.ContiguousDataCount(), j < max_contiguous_data ? j + 1 : max_contiguous_data);
     }
     // Buffer must now be full, we can't put any more data in.
     ASSERT_EQ(buff.Put(0), false);
@@ -150,21 +137,10 @@ TEST(CircularBuffer, SmallBufferFullTest) {
     // Because we leave 1 element, the next loop will iterate
     // with a different tail location: mod(tail - 2, BufferSize + 1).
     for (int j = 1; j < BufferSize; j++) {
-      uint8_t by_address = *buff.GetTailAddress();
       std::optional<uint8_t> poped = buff.Get();
-
-      // maintain max_contiguous_data when pop'ing elements
-      if (--max_contiguous_data == 0) {
-        // we just pop'ed the element at the end of the buffer, tail is back at 0
-        max_contiguous_data = BufferSize + 1;
-      }
-
-      ASSERT_EQ(by_address, *poped);
       ASSERT_EQ(*poped, static_cast<uint8_t>(elem - static_cast<uint8_t>(BufferSize + 1 - j)));
       ASSERT_EQ(buff.FullCount(), BufferSize - j);
       ASSERT_EQ(buff.FreeCount(), j);
-      ASSERT_EQ(buff.ContiguousDataCount(),
-                BufferSize - j < max_contiguous_data ? BufferSize - j : max_contiguous_data);
     }
   }
 
@@ -173,30 +149,22 @@ TEST(CircularBuffer, SmallBufferFullTest) {
   ASSERT_EQ(buff.FullCount(), 0);
   ASSERT_EQ(buff.FreeCount(), BufferSize);
   ASSERT_EQ(buff.Get(), std::nullopt);
-  ASSERT_EQ(buff.GetTailAddress(), nullptr);
-  ASSERT_EQ(buff.ContiguousDataCount(), 0);
 
   // Fill in the gap left by the original loop to include empty buffers.
   for (int i = 0; i < BufferSize + 1; i++) {
     ASSERT_EQ(buff.Put(elem), true);
     ASSERT_EQ(buff.FullCount(), 1);
     ASSERT_EQ(buff.FreeCount(), BufferSize - 1);
-    // Buffer with one element is always contiguous
-    ASSERT_EQ(buff.ContiguousDataCount(), 1);
 
     std::optional<uint8_t> ch = buff.Get();
     ASSERT_EQ(*ch, elem++);
     ASSERT_EQ(buff.FullCount(), 0);
     ASSERT_EQ(buff.FreeCount(), BufferSize);
-    ASSERT_EQ(buff.GetTailAddress(), nullptr);
-    ASSERT_EQ(buff.ContiguousDataCount(), 0);
 
     // Trying to get an element from an empty buffer doesn't change anything,
     // whatever the head/tail
     ASSERT_EQ(buff.Get(), std::nullopt);
     ASSERT_EQ(buff.FullCount(), 0);
     ASSERT_EQ(buff.FreeCount(), BufferSize);
-    ASSERT_EQ(buff.GetTailAddress(), nullptr);
-    ASSERT_EQ(buff.ContiguousDataCount(), 0);
   }
 }

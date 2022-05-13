@@ -55,7 +55,7 @@ void Comms::ProcessTx(const ControllerStatus &controller_status) {
       return;
     }
     tx_idx_ = 0;
-    tx_bytes_remaining_ = static_cast<uint16_t>(stream.bytes_written);
+    tx_bytes_remaining_ = stream.bytes_written;
     last_tx_ = SystemTimer::singleton().now();
   }
 
@@ -64,12 +64,12 @@ void Comms::ProcessTx(const ControllerStatus &controller_status) {
 
   // Send bytes over the wire if any are in our buffer.
   if (tx_bytes_remaining_ > 0) {
-    uint16_t bytes_written =
+    size_t bytes_written =
         uart_->Write(tx_buffer_ + tx_idx_, std::min(bytes_avail, tx_bytes_remaining_));
     // TODO: How paranoid should we be about this underflowing?  Perhaps we
     // should reset the device if this or other invariants are violated?
-    tx_bytes_remaining_ = static_cast<uint16_t>(tx_bytes_remaining_ - bytes_written);
-    tx_idx_ = static_cast<uint16_t>(tx_idx_ + bytes_written);
+    tx_bytes_remaining_ = tx_bytes_remaining_ - bytes_written;
+    tx_idx_ = tx_idx_ + bytes_written;
   }
 }
 
@@ -77,7 +77,7 @@ void Comms::ProcessRx(GuiStatus *gui_status) {
   while (uart_->RxFull() > 0) {
     rx_in_progress_ = true;
     uint8_t b;
-    uint16_t bytes_read = uart_->Read(&b, 1);
+    size_t bytes_read = uart_->Read(&b, 1);
     if (bytes_read == 1) {
       rx_buffer_[rx_idx_++] = b;
       if (rx_idx_ >= sizeof(rx_buffer_)) {

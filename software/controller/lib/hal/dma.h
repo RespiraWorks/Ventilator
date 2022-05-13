@@ -53,7 +53,7 @@ class ChannelControl {
                   bool circular = false, TransferSize size = TransferSize::Byte);
   bool InterruptStatus(Interrupt interrupt);
   void ClearInterrupt(Interrupt interrupt);
-  void SetupTransfer(volatile void *data, uint32_t length);
+  void SetupTransfer(volatile void *data, size_t length);
   void Enable();
   void Disable();
   size_t Remaining();

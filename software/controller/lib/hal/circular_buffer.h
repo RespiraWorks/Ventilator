@@ -67,27 +67,6 @@ class CircularBuffer {
     return val;
   }
 
-  // Get a pointer to the oldest element from the buffer.
-  // Used to transfer data from a buffer to a peripheral using DMA.
-  // Don't forget to pop all elements correctly transfered after the
-  // DMA transfer is finished (e.g in the DMA interrupt handler).
-  volatile T* GetTailAddress() {
-    if (head_ == tail_) {
-      return nullptr;
-    }
-    return &(buffer_[tail_]);
-  }
-
-  // Get the number of elements in the buffer with no wrapping around the buffer.
-  // Used to transfer data from a buffer to a peripheral using DMA, which
-  // needs consecutive data to be sent.  Note that with this, sending the
-  // whole buffer often requires two DMA transfers
-  size_t ContiguousDataCount() const {
-    BlockInterrupts block;
-    if (head_ >= tail_) return head_ - tail_;
-    return N + 1 - tail_;
-  }
-
   // Add an element to the buffer.
   //
   // Returns false if the buffer is full.

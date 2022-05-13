@@ -21,7 +21,6 @@ limitations under the License.
 #include "commands.h"
 #include "gmock/gmock-matchers.h"
 #include "gtest/gtest.h"
-#include "hal.h"
 #include "mock_eeprom.h"
 #include "system_timer.h"
 #include "uart_mock.h"
@@ -80,16 +79,15 @@ std::vector<uint8_t> ProcessCmd(UART::MockChannel *uart, Interface *serial,
   full_req.push_back(crc_bytes[1]);
   full_req.push_back(static_cast<uint8_t>(SpecialChar::EndTransfer));
 
-  uart->PutRxData(full_req.data(), static_cast<uint16_t>(full_req.size()));
+  uart->PutRxData(full_req.data(), full_req.size());
   for (int i = 0; i < 100 && !serial->Poll(); ++i) {
     // Wait for command to complete, advance sim time to allow timeout
     SystemTimer::singleton().delay(milliseconds(10));
   }
 
   std::vector<uint8_t> escaped_resp(500);
-  uint16_t resp_len =
-      uart->GetTxData(escaped_resp.data(), static_cast<uint16_t>(escaped_resp.size()));
-  escaped_resp.erase(escaped_resp.begin() + resp_len, escaped_resp.end());
+  size_t response_length = uart->GetTxData(escaped_resp.data(), escaped_resp.size());
+  escaped_resp.erase(escaped_resp.begin() + response_length, escaped_resp.end());
   EXPECT_GE(escaped_resp.size(), size_t{3} /* err code + crc */);
 
   // Unescape response
@@ -231,7 +229,7 @@ TEST(Interface, Errors) {
     // Wait for command to complete
   }
   // In that case, we actually expect no response
-  uint16_t resp_len = uart.GetTxData(resp.data(), 10);
-  EXPECT_EQ(resp_len, 0);
+  size_t response_length = uart.GetTxData(resp.data(), 10);
+  EXPECT_EQ(response_length, 0);
 }
 }  // namespace Debug

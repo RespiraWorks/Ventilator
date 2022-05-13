@@ -34,9 +34,10 @@ TEST(CommTests, SendControllerStatus) {
     comms.Handler(s, &gui_status_ignored);
   }
   uint8_t tx_buffer[ControllerStatus_size];
-  uint16_t len = uart.GetTxData(tx_buffer, sizeof(tx_buffer));
-  ASSERT_GT(len, 0);
-  pb_istream_t stream = pb_istream_from_buffer(reinterpret_cast<unsigned char *>(tx_buffer), len);
+  size_t length = uart.GetTxData(tx_buffer, sizeof(tx_buffer));
+  ASSERT_GT(length, 0);
+  pb_istream_t stream =
+      pb_istream_from_buffer(reinterpret_cast<unsigned char *>(tx_buffer), length);
 
   ControllerStatus sent = ControllerStatus_init_zero;
   ASSERT_TRUE(pb_decode(&stream, ControllerStatus_fields, &sent));

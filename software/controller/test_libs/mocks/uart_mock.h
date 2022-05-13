@@ -15,25 +15,25 @@ limitations under the License.
 
 namespace UART {
 
-class MockChannel : public Channel {
+class MockChannel : public SoftChannel {
  public:
-  MockChannel() : Channel(Base::UART1){};
-  explicit MockChannel(char match_char) : Channel(Base::UART1, match_char){};
+  MockChannel() : SoftChannel(Base::UART1){};
+  explicit MockChannel(char match_char) : SoftChannel(Base::UART1, match_char){};
 
   bool PutRxByte(uint8_t byte) { return rx_data_.Put(byte); }
 
   std::optional<uint8_t> GetTxByte() { return tx_data_.Get(); }
 
-  uint16_t PutRxData(uint8_t *buffer, uint16_t length) {
-    uint16_t i;
+  size_t PutRxData(uint8_t *buffer, size_t length) {
+    size_t i;
     for (i = 0; i < length; i++) {
       if (!rx_data_.Put(*buffer++)) break;
     }
     return i;
   };
 
-  uint16_t GetTxData(uint8_t *buffer, uint16_t length) {
-    uint16_t i;
+  size_t GetTxData(uint8_t *buffer, size_t length) {
+    size_t i;
     for (i = 0; i < length; i++) {
       std::optional<uint8_t> ch = tx_data_.Get();
       if (ch == std::nullopt) return i;

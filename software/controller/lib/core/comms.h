@@ -39,10 +39,10 @@ class Comms {
   // beginning of the buffer.
   uint8_t tx_buffer_[ControllerStatus_size] = {0};
   // Index of the next byte to transmit.
-  uint16_t tx_idx_{0};
+  size_t tx_idx_{0};
   // Number of bytes remaining to transmit. tx_idx + tx_bytes_remaining equals
   // the size of the serialized ControllerStatus proto.
-  uint16_t tx_bytes_remaining_{0};
+  size_t tx_bytes_remaining_{0};
 
   // Time when we started sending the last ControllerStatus.
   std::optional<Time> last_tx_{std::nullopt};
@@ -53,7 +53,7 @@ class Comms {
   // Like tx_buffer, this isn't a circular buffer; the beginning of the proto is
   // always at the beginning of the buffer.
   uint8_t rx_buffer_[GuiStatus_size] = {0};
-  uint16_t rx_idx_{0};
+  size_t rx_idx_{0};
   Time last_rx_{microsSinceStartup(0)};
   bool rx_in_progress_{false};
 

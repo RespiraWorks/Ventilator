@@ -23,20 +23,21 @@ TEST(UartTest, Rx) {
 
   uint8_t read_buffer[channel.GetBufferLength()];
 
-  uint8_t bytes_added{50};  // keep this as a multiple of 2
+  // keep this as a multiple of 2
+  size_t bytes_added{50};
   // put bytes in buffer
-  for (uint8_t i = bytes_added; i > 0; --i) channel.PutRxByte(i);
+  for (uint8_t i = static_cast<uint8_t>(bytes_added); i > 0; --i) channel.PutRxByte(i);
   ASSERT_EQ(channel.RxFull(), bytes_added);
   // retrieve half of those
   ASSERT_EQ(channel.Read(read_buffer, bytes_added / 2), bytes_added / 2);
   // the other half remains
   ASSERT_EQ(channel.RxFull(), bytes_added / 2);
-  for (uint8_t i = 0; i < 25; i++) ASSERT_EQ(read_buffer[i], bytes_added - i);
+  for (uint8_t i = 0; i < 25; ++i) ASSERT_EQ(read_buffer[i], bytes_added - i);
   // retrieve the other half through longer Read
   ASSERT_EQ(channel.Read(read_buffer, bytes_added), bytes_added / 2);
   // buffer is now empty
   ASSERT_EQ(channel.RxFull(), 0);
-  for (uint8_t i = 0; i < 25; i++) ASSERT_EQ(read_buffer[i], bytes_added / 2 - i);
+  for (uint8_t i = 0; i < 25; ++i) ASSERT_EQ(read_buffer[i], bytes_added / 2 - i);
   ASSERT_EQ(channel.Read(read_buffer, bytes_added), 0);
 }
 
@@ -44,12 +45,12 @@ TEST(UartTest, Tx) {
   UART::MockChannel channel;
 
   // create a buffer slightly bigger than the tx buffer
-  uint16_t buffer_size{static_cast<uint16_t>(channel.GetBufferLength() + 1)};
+  size_t buffer_size{channel.GetBufferLength() + 1};
   uint8_t send_buffer[buffer_size];
   for (uint8_t i = 0; i < buffer_size; ++i) send_buffer[i] = i;
 
   // reasonably sized write
-  uint8_t bytes_added{50};
+  size_t bytes_added{50};
   ASSERT_EQ(channel.Write(send_buffer, bytes_added), bytes_added);
   ASSERT_EQ(channel.TxFree(), channel.GetBufferLength() - bytes_added);
   for (uint8_t i = 0; i < bytes_added; ++i) ASSERT_EQ(*channel.GetTxByte(), i);

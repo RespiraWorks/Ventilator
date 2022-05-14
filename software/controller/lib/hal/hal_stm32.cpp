@@ -37,7 +37,10 @@ Abbreviations [RM], [DS], etc are defined in hal/README.md.
 #include "stepper.h"
 #include "system_timer.h"
 #include "timers.h"
-#include "uart.h"
+#if defined(UART_VIA_DMA)
+#include "uart_dma.h"
+#endif
+#include "uart_soft.h"
 #include "vars.h"
 #include "watchdog.h"
 

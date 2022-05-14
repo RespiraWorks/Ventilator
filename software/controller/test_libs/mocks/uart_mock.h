@@ -11,7 +11,7 @@ limitations under the License.
 */
 #pragma once
 
-#include "uart.h"
+#include "uart_soft.h"
 
 namespace UART {
 

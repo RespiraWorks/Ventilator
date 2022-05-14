@@ -15,7 +15,11 @@ limitations under the License.
 #include <stdint.h>
 
 #include "network_protocol.pb.h"
-#include "uart.h"
+#if defined(UART_VIA_DMA)
+#include "uart_dma.h"
+#else
+#include "uart_soft.h"
+#endif
 
 // This module periodically sends messages to the GUI device and receives
 // messages from the GUI.  The only way it communicates with other modules is

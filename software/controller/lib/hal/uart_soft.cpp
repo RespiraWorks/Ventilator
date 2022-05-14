@@ -62,7 +62,7 @@ void SoftChannel::UARTInterruptHandler() {
     //
     // TODO: Perhaps log a warning here so we have an idea of whether
     // this buffer is hitting capacity frequently.
-    (void)rx_data_.Put(GetRxReg());
+    (void)rx_data_.Put(static_cast<uint8_t>(*GetRxAddress()));
   }
 
   // Check for transmit data register empty
@@ -75,7 +75,7 @@ void SoftChannel::UARTInterruptHandler() {
       DisableTxInterrupt();
     } else {
       // Otherwise, send the next byte.
-      PutTxReg(*ch);
+      *GetTxAddress() = *ch;
     }
   }
 }

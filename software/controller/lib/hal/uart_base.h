@@ -59,7 +59,7 @@ class Channel {
   // In DMA mode, uses tx listener methods on interrupts.
   virtual size_t Write(uint8_t *buffer, size_t length, TxListener *txl = nullptr) = 0;
 
-  // Return the number of bytes currently in the receive buffer and ready to be read.
+  // Return the number of bytes ready to be read.
   virtual size_t RxFull() const = 0;
   // Returns the number of free locations in the transmit buffer.
   virtual size_t TxFree() const = 0;

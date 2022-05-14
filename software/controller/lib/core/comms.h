@@ -54,8 +54,8 @@ class Comms {
   // Our incoming (serialized) GuiStatus proto is incrementally buffered in
   // rx_buffer until it's complete and we can deserialize it to a proto.
   //
-  // Like tx_buffer, this isn't a circular buffer; the beginning of the proto is
-  // always at the beginning of the buffer.
+  // Like tx_buffer, this isn't a circular buffer; the beginning of the proto should
+  // always be at the beginning of the buffer.
   uint8_t rx_buffer_[GuiStatus_size] = {0};
   size_t rx_idx_{0};
   Time last_rx_{microsSinceStartup(0)};

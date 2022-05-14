@@ -286,16 +286,13 @@ void Channel::ClearTxCompleteInterrupt() {
 
 void Channel::DisableTxInterrupt() { get_register(uart_)->control_reg1.bitfield.tx_interrupt = 0; };
 
-uint8_t Channel::GetRxReg() { return static_cast<uint8_t>(get_register(uart_)->rx_data); }
-void Channel::PutTxReg(uint8_t byte) { get_register(uart_)->tx_data = byte; }
-
 volatile uint32_t *Channel::GetRxAddress() { return &(get_register(uart_)->rx_data); };
 volatile uint32_t *Channel::GetTxAddress() { return &(get_register(uart_)->tx_data); };
 
 bool Channel::RxRegNotEmpty() { return get_register(uart_)->status.bitfield.rx_not_empty; }
 bool Channel::TxRegEmpty() { return get_register(uart_)->status.bitfield.tx_empty; }
 
-// This is the interrupt handler for the UART.
+// This is the interrupt handler for the UART, which calls given callbacks on events
 void Channel::UARTInterruptHandler() {
   UartReg *uart = get_register(uart_);
   // Check for overrun error and framing errors.  Clear those errors if

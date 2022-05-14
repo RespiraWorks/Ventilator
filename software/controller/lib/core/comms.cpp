@@ -69,25 +69,35 @@ void Comms::ProcessTx(const ControllerStatus &controller_status) {
     // TODO: How paranoid should we be about this underflowing?  Perhaps we
     // should reset the device if this or other invariants are violated?
     tx_bytes_remaining_ = tx_bytes_remaining_ - bytes_written;
-    tx_idx_ = tx_idx_ + bytes_written;
+    tx_idx_ += bytes_written;
   }
 }
 
 void Comms::ProcessRx(GuiStatus *gui_status) {
-  while (uart_->RxFull() > 0) {
-    rx_in_progress_ = true;
-    uint8_t b;
-    size_t bytes_read = uart_->Read(&b, 1);
-    if (bytes_read == 1) {
-      rx_buffer_[rx_idx_++] = b;
-      if (rx_idx_ >= sizeof(rx_buffer_)) {
-        rx_idx_ = 0;
-        break;
+  if (uart_->RxFull() > 0) {
+#if defined(UART_VIA_DMA)
+    // in DMA mode, this means we recieved GuiStatus_size bytes, so we can deserialize them
+    if (rx_in_progress_) {
+      pb_istream_t stream = pb_istream_from_buffer(rx_buffer_, rx_idx_);
+      GuiStatus new_gui_status = GuiStatus_init_zero;
+      if (pb_decode(&stream, GuiStatus_fields, &new_gui_status)) {
+        *gui_status = new_gui_status;
+      } else {
+        // TODO: Log an error.
       }
+      rx_idx_ = 0;
+      rx_in_progress_ = false;
+    }
+#endif
+    rx_in_progress_ = true;
+    size_t bytes_read = uart_->Read(&(rx_buffer_[rx_idx_]), GuiStatus_size);
+    if (bytes_read > 0) {
+      rx_idx_ += bytes_read;
       last_rx_ = SystemTimer::singleton().now();
     }
   }
 
+#if !defined(UART_VIA_DMA)
   // TODO do away with timeout-based reception once we have framing in place,
   // but it will work for Alpha build for now
   if (rx_in_progress_ && IsTimeToProcessPacket()) {
@@ -101,6 +111,7 @@ void Comms::ProcessRx(GuiStatus *gui_status) {
     rx_idx_ = 0;
     rx_in_progress_ = false;
   }
+#endif
 }
 
 void Comms::Handler(const ControllerStatus &controller_status, GuiStatus *gui_status) {

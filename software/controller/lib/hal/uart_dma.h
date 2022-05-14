@@ -34,13 +34,11 @@ class DMAChannel : public Channel {
   size_t Read(uint8_t *buffer, size_t length, RxListener *rxl = nullptr) override;
   size_t Write(uint8_t *buffer, size_t length, TxListener *txl = nullptr) override;
 
-  // DMA doesn't have an rx buffer, RxFull doesn't make much sense.
-  size_t RxFull() const override { return 0; };
-  // Returns 0 if transfer is in progress (sending is then impossible) and BufferLength otherwise
-  size_t TxFree() const override { return tx_in_progress_ ? 0 : BufferLength; };
+  size_t RxFull() const override;
+  size_t TxFree() const override;
 
-  void StopTx() override { tx_dma_->Disable(); };
-  void StopRx() override { rx_dma_->Disable(); };
+  void StopTx() override;
+  void StopRx() override;
 
   void TxDMAInterruptHandler();
   void RxDMAInterruptHandler();

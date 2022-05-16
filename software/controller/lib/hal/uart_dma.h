@@ -29,9 +29,13 @@ class DMAChannel : public Channel {
 
   void Initialize(GPIO::Port port, uint8_t tx_pin, uint8_t rx_pin, std::optional<uint8_t> rts_pin,
                   std::optional<uint8_t> cts_pin, GPIO::AlternativeFunction alt_function,
-                  Frequency cpu_frequency, Frequency baud);
+                  Frequency cpu_frequency, Frequency baud) override;
 
+  // Note the use of default argument value in override functions, which is only OK because
+  // overriden virtual functions use the same default value.
+  // NOLINTNEXTLINE(google-default-arguments)
   size_t Read(uint8_t *buffer, size_t length, RxListener *rxl = nullptr) override;
+  // NOLINTNEXTLINE(google-default-arguments)
   size_t Write(uint8_t *buffer, size_t length, TxListener *txl = nullptr) override;
 
   size_t RxFull() const override;

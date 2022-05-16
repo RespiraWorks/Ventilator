@@ -48,7 +48,8 @@ size_t SoftChannel::Write(uint8_t *buffer, size_t length, TxListener *txl) {
     if (!tx_data_.Put(*buffer++)) break;
   }
   EnableTxInterrupt();
-  return Channel::Write(buffer, length, txl) + i;
+  Channel::Write(buffer, length, txl);
+  return i;
 }
 
 void SoftChannel::UARTInterruptHandler() {

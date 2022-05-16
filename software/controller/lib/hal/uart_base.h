@@ -50,13 +50,19 @@ class Channel {
   // In DMA mode, this returns 0 on error, or length, but it only sets up the transfer and
   // uses rx listener methods on interrupts (transfer complete, transfer error, character match).
   // This means that you cannot use or reset buffer immediately after calling Read in DMA mode.
+  // Note the use of default argument value in virtual function, which is only OK in case
+  // overriding functions use the same default value.
+  // NOLINTNEXTLINE(google-default-arguments)
   virtual size_t Read(uint8_t *buffer, size_t length, RxListener *rxl = nullptr) = 0;
 
   // Write length bytes to the tx buffer, and, ultimately, to the serial link.
   // This function does not block, so if there isn't enough space to write
   // length bytes, then only a partial write will occur.
   // The number of bytes actually written is returned.
-  // In DMA mode, uses tx listener methods on interrupts.
+  // Uses tx listener methods on interrupts (transfer complete, DMA error).
+  // Note the use of default argument value in virtual function, which is only OK in case
+  // overriding functions use the same default value.
+  // NOLINTNEXTLINE(google-default-arguments)
   virtual size_t Write(uint8_t *buffer, size_t length, TxListener *txl = nullptr) = 0;
 
   // Return the number of bytes ready to be read.

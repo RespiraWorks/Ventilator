@@ -17,8 +17,7 @@ namespace UART {
 
 class MockChannel : public SoftChannel {
  public:
-  MockChannel() : SoftChannel(Base::UART1){};
-  explicit MockChannel(char match_char) : SoftChannel(Base::UART1, match_char){};
+  explicit MockChannel(char match_char = 0) : SoftChannel(Base::UART1, match_char){};
 
   bool PutRxByte(uint8_t byte) { return rx_data_.Put(byte); }
 

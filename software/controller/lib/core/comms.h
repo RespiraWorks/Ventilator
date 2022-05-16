@@ -61,17 +61,6 @@ class Comms {
   Time last_rx_{microsSinceStartup(0)};
   bool rx_in_progress_{false};
 
-  // We currently lack proper message framing, so we use a timeout to determine
-  // when the GUI is done sending us its message.
-  Duration RxTimeout{milliseconds(1)};
-
-  // We send a ControllerStatus every TX_INTERVAL_MS.
-
-  // In Alpha build we use synchronized communication initiated by GUI cycle
-  // controller. Since both ControllerStatus and GuiStatus take roughly 300+
-  // bytes, we need at least 1/115200.*10*300=26ms to transmit.
-  Duration TxInterval{milliseconds(30)};
-
   bool IsTimeToProcessPacket();
   void ProcessTx(const ControllerStatus &controller_status);
   void ProcessRx(GuiStatus *gui_status);

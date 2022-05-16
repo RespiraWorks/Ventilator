@@ -21,8 +21,13 @@ class SoftChannel : public Channel {
  public:
   explicit SoftChannel(Base base, uint8_t match_char = 0) : Channel(base, match_char){};
 
+  // Note the use of default argument value in override functions, which is only OK because
+  // overriden virtual functions use the same default value.
+  // NOLINTNEXTLINE(google-default-arguments)
   size_t Read(uint8_t *buffer, size_t length, RxListener *rxl = nullptr) override;
+  // NOLINTNEXTLINE(google-default-arguments)
   size_t Write(uint8_t *buffer, size_t length, TxListener *txl = nullptr) override;
+
   // Return the number of bytes currently in the receive buffer and ready to be read.
   size_t RxFull() const override { return rx_data_.FullCount(); };
   // Returns the number of free locations in the transmit buffer.
@@ -31,7 +36,7 @@ class SoftChannel : public Channel {
   void StopTx() override { tx_data_.Flush(); };
   void StopRx() override { rx_data_.Flush(); };
 
-  void UARTInterruptHandler();
+  void UARTInterruptHandler() override;
 
  protected:
   // circular buffers for transmitting and receiving data

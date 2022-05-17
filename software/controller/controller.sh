@@ -115,7 +115,7 @@ install_linux() {
                clang-tidy
   pip3 install -U pip
   pip3 install codecov pyserial matplotlib pandas gitpython
-  pip3 install platformio==5.2.5
+  pip3 install platformio==6.0.0
   source ${HOME}/.profile
   platformio update
   platformio platform install native

@@ -89,21 +89,21 @@ void Comms::ProcessRx(GuiStatus *gui_status) {
 #if defined(UART_VIA_DMA)
     // in DMA mode, this means we recieved GuiStatus_size bytes, so we can deserialize them
     if (rx_in_progress_) {
-      pb_istream_t stream = pb_istream_from_buffer(rx_buffer_, rx_idx_);
+      pb_istream_t stream = pb_istream_from_buffer(rx_buffer_, rx_index_);
       GuiStatus new_gui_status = GuiStatus_init_zero;
       if (pb_decode(&stream, GuiStatus_fields, &new_gui_status)) {
         *gui_status = new_gui_status;
       } else {
         // TODO: Log an error.
       }
-      rx_idx_ = 0;
+      rx_index_ = 0;
       rx_in_progress_ = false;
     }
 #endif
     rx_in_progress_ = true;
-    size_t bytes_read = uart_->Read(&(rx_buffer_[rx_idx_]), GuiStatus_size);
+    size_t bytes_read = uart_->Read(&(rx_buffer_[rx_index_]), GuiStatus_size - rx_index_);
     if (bytes_read > 0) {
-      rx_idx_ += bytes_read;
+      rx_index_ += bytes_read;
       last_rx_ = SystemTimer::singleton().now();
     }
   }
@@ -112,14 +112,14 @@ void Comms::ProcessRx(GuiStatus *gui_status) {
   // TODO do away with timeout-based reception once we have framing in place,
   // but it will work for Alpha build for now
   if (rx_in_progress_ && IsTimeToProcessPacket()) {
-    pb_istream_t stream = pb_istream_from_buffer(rx_buffer_, rx_idx_);
+    pb_istream_t stream = pb_istream_from_buffer(rx_buffer_, rx_index_);
     GuiStatus new_gui_status = GuiStatus_init_zero;
     if (pb_decode(&stream, GuiStatus_fields, &new_gui_status)) {
       *gui_status = new_gui_status;
     } else {
       // TODO: Log an error.
     }
-    rx_idx_ = 0;
+    rx_index_ = 0;
     rx_in_progress_ = false;
   }
 #endif

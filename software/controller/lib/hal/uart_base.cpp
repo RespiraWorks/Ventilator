@@ -276,6 +276,7 @@ size_t Channel::Write(uint8_t *buffer, size_t length, TxListener *txl) {
 }
 
 void Channel::EnableTxInterrupt() { get_register(uart_)->control_reg1.bitfield.tx_interrupt = 1; };
+
 void Channel::EnableTxCompleteInterrupt() {
   get_register(uart_)->control_reg1.bitfield.tx_complete_interrupt = 1;
 };

@@ -21,7 +21,6 @@ limitations under the License.
 #include <map>
 
 #include "gtest/gtest.h"
-#include "gtest_print.h"
 
 TEST(Checksum32, KnownValues) {
   EXPECT_EQ((uint32_t)0, soft_crc32(NULL, 0));
@@ -58,20 +57,15 @@ TEST(Checksum32, BitFlips) {
     data[bitToFlip / 8] = static_cast<char>(data[bitToFlip / 8] ^ byteMask);
   }
 
-  // PRINTF("%d/%d collisions after flipping a single bit.\n", singleBitFlipCollisions, numTests);
   EXPECT_EQ(0, singleBitFlipCollisions) << "Got at least one collision from one-bit flips; is the "
                                            "checksum broken?";
 
-  // Find the checksum with the most collisions.  There shouldn't be "too
-  // many".
+  // Find the checksum with the most collisions.  There shouldn't be "too many".
   using MapElem = decltype(*collisions.begin());
   auto it = std::max_element(collisions.begin(), collisions.end(),
                              [](MapElem a, MapElem b) { return a.second < b.second; });
-  // int32_t maxCollisionHash = it->first;
   int32_t maxCollisions = it->second;
   double maxCollisionsFrac = 1.0 * maxCollisions / numTests;
-  // PRINTF("%d/%d collisions on worst checksum, 0x%4x\n", maxCollisions, numTests,
-  // maxCollisionHash);
   EXPECT_LE(maxCollisionsFrac, 0.0002)
       << "Too many collisions on worst checksum; is the checksum broken?";
 }

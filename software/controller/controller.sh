@@ -77,7 +77,7 @@ The following options are available:
                 [--no-checks] - do not run static checks (for CI)
                 [--cov]       - generate coverage reports
   unit        Builds and runs unit tests only (and generates coverage reports)
-                <name>  - run specific unit test, may include wildcards, i.e. '*debug'
+                <name>  - run specific unit test, may include wildcards, i.e. '*debug*'
                 [-o]    - open coverage report in browser when done
   cov_upload  Upload coverage reports to Codecov server
   help/-h     Display this help info
@@ -115,11 +115,10 @@ install_linux() {
                clang-tidy
   pip3 install -U pip
   pip3 install codecov pyserial matplotlib pandas gitpython
-  pip3 install platformio==6.0.0
+  pip3 install platformio==6.0.1
   source ${HOME}/.profile
   platformio update
   platformio platform install native
-  platformio upgrade --dev
 }
 
 configure_platformio() {

@@ -69,7 +69,7 @@ The following options are available:
                 [--cov]       - generate coverage reports
   cov_upload  Upload coverage reports to Codecov server
   unit        Builds and runs unit tests only (and generates coverage reports)
-                  <name>  - run specific unit test, may include wildcards, i.e. 'debug*'
+                  <name>  - run specific unit test, may include wildcards, i.e. '*common*'
                   [-o]    - open coverage report in browser when done
   help/-h     Display this help info
 EOF
@@ -106,11 +106,10 @@ install_linux() {
                clang-tidy
   pip3 install -U pip
   pip3 install codecov
-  pip3 install platformio==6.0.0
+  pip3 install platformio==6.0.1
   source ${HOME}/.profile
   platformio update
   platformio platform install native
-  platformio upgrade --dev
 }
 
 run_checks() {

@@ -15,7 +15,7 @@ limitations under the License.
 
 #include "i2c.h"
 
-#include "gtest/gtest.h"
+#include "gtest_main.h"
 
 using namespace I2C;
 

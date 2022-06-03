@@ -4,7 +4,7 @@
 #include <pb_decode.h>
 #include <pb_encode.h>
 
-#include "gtest/gtest.h"
+#include "gtest_main.h"
 #include "hal.h"
 #include "network_protocol.pb.h"
 #include "system_timer.h"

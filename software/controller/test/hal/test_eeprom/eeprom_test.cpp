@@ -10,7 +10,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include "gtest/gtest.h"
+#include "gtest_main.h"
 #include "mock_eeprom.h"
 
 static constexpr uint32_t kMemSize{512};

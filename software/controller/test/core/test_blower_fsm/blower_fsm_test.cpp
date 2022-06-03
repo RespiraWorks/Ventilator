@@ -21,7 +21,7 @@ limitations under the License.
 #include "blower_fsm_test_data.h"
 #include "controller.h"
 #include "gmock/gmock-matchers.h"
-#include "gtest/gtest.h"
+#include "gtest_main.h"
 #include "hal.h"
 #include "system_constants.h"
 #include "system_timer.h"

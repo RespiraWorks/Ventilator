@@ -17,7 +17,7 @@ limitations under the License.
 
 #include <cmath>
 
-#include "gtest/gtest.h"
+#include "gtest_main.h"
 #include "system_timer.h"
 
 // TODO: There ought to be many more tests in here.

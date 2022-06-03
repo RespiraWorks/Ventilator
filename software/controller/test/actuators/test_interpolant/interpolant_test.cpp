@@ -17,7 +17,7 @@ limitations under the License.
 
 #include <vector>
 
-#include "gtest/gtest.h"
+#include "gtest_main.h"
 
 TEST(Interpolant, Constructors) {
   Interpolant<5> default_fill{"default_fill"};

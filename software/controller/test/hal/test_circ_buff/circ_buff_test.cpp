@@ -17,7 +17,7 @@ limitations under the License.
 #include <optional>
 
 #include "circular_buffer.h"
-#include "gtest/gtest.h"
+#include "gtest_main.h"
 
 // Test the buffer counts and rollover
 TEST(CircularBuffer, Counts) {

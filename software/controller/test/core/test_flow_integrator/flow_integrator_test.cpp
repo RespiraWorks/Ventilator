@@ -15,7 +15,7 @@ limitations under the License.
 
 #include "flow_integrator.h"
 
-#include "gtest/gtest.h"
+#include "gtest_main.h"
 
 static const Volume COMPARISON_TOLERANCE_VOLUME = ml(1);
 

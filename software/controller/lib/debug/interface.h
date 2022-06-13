@@ -71,6 +71,10 @@ class Interface {
  private:
   State state_{State::AwaitingCommand};
 
+  // Minimum debug message size is 3 bytes: 1 byte gives the command (respectively
+  // the error code for responses), and 2 bytes are used for checksum.
+  static constexpr size_t MinFrameSize{3};
+
   // Buffer into which request data is written in AwaitingCommand state
   uint8_t request_[500] = {0};
   uint32_t request_size_{0};

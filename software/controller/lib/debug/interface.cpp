@@ -117,7 +117,7 @@ bool Interface::ReadNextByte() {
 bool Interface::SendNextByte() {
   // To simplify things below, I require at least 3 bytes
   // in the output buffer to continue
-  if (uart_->TxFree() < 3) return false;
+  if (uart_->TxFree() < MinFrameSize) return false;
 
   // See what the next character to send is.
   uint8_t next_byte = response_[response_bytes_sent_++];
@@ -155,7 +155,7 @@ void Interface::ProcessCommand() {
   // waiting for the next one.
   // This means we can send EndTransfer characters to synchronize
   // communication if necessary
-  if (request_size_ < 3) {
+  if (request_size_ < MinFrameSize) {
     request_size_ = 0;
     state_ = State::AwaitingCommand;
     return;
@@ -180,9 +180,9 @@ void Interface::ProcessCommand() {
   // by 3 to make sure we can add the error code and CRC.
   Command::Context context = {
       .request = &request_[1],
-      .request_length = request_size_ - 3,
+      .request_length = request_size_ - MinFrameSize,
       .response = &response_[1],
-      .max_response_length = sizeof(response_) - 3,
+      .max_response_length = sizeof(response_) - MinFrameSize,
       .response_length = 0,
       .processed = &command_processed_,
   };
@@ -209,7 +209,7 @@ void Interface::SendResponse(ErrorCode error, uint32_t response_length) {
   response_bytes_sent_ = 0;
   // The size of the response that will be sent includes the error code (1 byte)
   // and checksum (2 bytes).
-  response_size_ = response_length + 3;
+  response_size_ = response_length + MinFrameSize;
 }
 
 // 16-bit CRC calculation for debug commands and responses

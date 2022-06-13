@@ -45,17 +45,14 @@ bool Comms::IsTimeToProcessPacket() {
 }
 
 void Comms::ProcessTx(const ControllerStatus &controller_status) {
-  auto bytes_avail = uart_->TxFree();
-  if (bytes_avail == 0) {
-    return;
-  }
+  if (uart_->CannotTransmit()) return;
 
   // Serialize our current state into the buffer if
-  //  - we're not currently transmitting,
-  //  - we can transmit at least one byte now, and
-  //  - it's been a while since we last transmitted.
+  //  - we can transmit at least one byte now (per previous return condition),
+  //  - we're not currently transmitting (in order not to overwrite our tx buffer), and
+  //  - it's been a while since we last transmitted (or we never did).
   if (tx_bytes_remaining_ == 0 &&
-      (last_tx_ == std::nullopt || SystemTimer::singleton().now() - *last_tx_ > TxInterval)) {
+      (SystemTimer::singleton().now() - *last_tx_ > TxInterval || last_tx_ == std::nullopt)) {
     // Serialize current status into output buffer.
     //
     // TODO: Frame the message bytes.
@@ -75,8 +72,11 @@ void Comms::ProcessTx(const ControllerStatus &controller_status) {
 
   // Send bytes over the wire if any are in our buffer.
   if (tx_bytes_remaining_ > 0) {
+    // We are very conservative with this Write request, which uses
+    // length = std::min(uart_->TxFree(), length) while uart::Write has its own mechanics to prevent
+    // buffer overflow.
     size_t bytes_written =
-        uart_->Write(tx_buffer_ + tx_idx_, std::min(bytes_avail, tx_bytes_remaining_));
+        uart_->Write(tx_buffer_ + tx_idx_, std::min(uart_->TxFree(), tx_bytes_remaining_));
     // TODO: How paranoid should we be about this underflowing?  Perhaps we
     // should reset the device if this or other invariants are violated?
     tx_bytes_remaining_ = tx_bytes_remaining_ - bytes_written;
@@ -85,7 +85,7 @@ void Comms::ProcessTx(const ControllerStatus &controller_status) {
 }
 
 void Comms::ProcessRx(GuiStatus *gui_status) {
-  if (uart_->RxFull() > 0) {
+  if (uart_->HasReceivedBytes()) {
 #if defined(UART_VIA_DMA)
     // in DMA mode, this means we recieved GuiStatus_size bytes, so we can deserialize them
     if (rx_in_progress_) {

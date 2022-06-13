@@ -67,8 +67,13 @@ class Channel {
 
   // Return the number of bytes ready to be read.
   virtual size_t RxFull() const = 0;
+  // Returns whether at least one byte has been received
+  bool HasReceivedBytes() const { return RxFull() > 0; };
+
   // Returns the number of free locations in the transmit buffer.
   virtual size_t TxFree() const = 0;
+  // Returns true if Tx buffer is full;
+  bool CannotTransmit() const { return TxFree() == 0; };
 
   // Provide a way to stop a transfer and flush the corresponding buffer
   virtual void StopTx() = 0;

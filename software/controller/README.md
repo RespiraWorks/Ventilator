@@ -15,6 +15,7 @@ The controller shares the [common code](../common) with the GUI. The part of the
 **Directories:**
 * [lib](lib) - most of the substantive controller code, must all be libraries to be unit-testable by platformio
 * [test](test) - unit tests
+* [test_libs](test_libs) - libraries intended to be used only for unit tests (include mock libraries)
 * [integration_tests](integration_tests) - code for (semi-)automated hardware-in-the-loop testbeds
 * [platformio](platformio) - build configurations and deployment scripts
 * [src](src) - just the main loop for controller

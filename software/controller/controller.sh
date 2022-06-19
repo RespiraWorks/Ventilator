@@ -117,8 +117,6 @@ install_linux() {
   pip3 install codecov pyserial matplotlib pandas gitpython
   pip3 install platformio==6.0.2
   source ${HOME}/.profile
-  platformio update
-  platformio platform install native
 }
 
 configure_platformio() {
@@ -182,7 +180,7 @@ upload_coverage_reports() {
       -not -path '*common*' \
       -not -path '*integration_tests*' \
       -not -path '*cmake*' \
-      -exec gcov -pb -o coverage_reports/ugly -f {} \;
+      -exec gcov -pb -o ${COVERAGE_OUTPUT_DIR}/ugly -f {} \;
   mv {*.gcov,.*.gcov} "$COVERAGE_OUTPUT_DIR/processed"
   rm $COVERAGE_OUTPUT_DIR/processed/#usr*
   rm $COVERAGE_OUTPUT_DIR/processed/test*
@@ -227,13 +225,19 @@ generate_coverage_reports() {
   rm "${COVERAGE_OUTPUT_DIR}/coverage.info"
   mv "${COVERAGE_OUTPUT_DIR}/coverage_trimmed.info" "${COVERAGE_OUTPUT_DIR}/coverage.info"
 
-  genhtml ${QUIET} "${COVERAGE_OUTPUT_DIR}/coverage.info" \
-      --output-directory "${COVERAGE_OUTPUT_DIR}"
+  # Capture the case where coverage report is empty in order not to block in case of empty coverage report
+  # This is a temporary solution to an issue with platformio 6.0 (https://community.platformio.org/t/code-coverage-issue-on-native/28126)
+  # \\\TODO: remove this when platformio gets fixed
+  if [ -s "${COVERAGE_OUTPUT_DIR}/coverage.info" ]; then
+    genhtml ${QUIET} "${COVERAGE_OUTPUT_DIR}/coverage.info" \
+        --output-directory "${COVERAGE_OUTPUT_DIR}"
 
-  echo "Coverage reports generated at '$COVERAGE_OUTPUT_DIR/index.html'"
-  echo "   You may open it in browser with 'python -m webbrowser ${COVERAGE_OUTPUT_DIR}/index.html'"
+    echo "Coverage reports generated at '$COVERAGE_OUTPUT_DIR/index.html'"
+    echo "   You may open it in browser with 'python -m webbrowser ${COVERAGE_OUTPUT_DIR}/index.html'"
+  else
+    echo "Error while generating coverage reports: reporting zero coverage. Non-blocking for now."
+  fi
 
-  #launch_browser
 }
 
 launch_browser() {
@@ -319,6 +323,14 @@ elif [ "$1" == "test" ]; then
   # Controller unit tests on native
   # This must be the last thing built
   clean_all
+
+  # if we need to generate coverage reports, perform a first build of a single unit test
+  # because platformio clears the build dir after the first unit test it builds.
+  # We arbitrarily chose pid_lib.
+  if [ "$2" == "--cov" ] || [ "$3" == "--cov" ]; then
+    pio test -e native -f test_pid_lib
+  fi
+
   pio test -e native
 
   if [ "$2" == "--cov" ] || [ "$3" == "--cov" ]; then

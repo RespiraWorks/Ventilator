@@ -20,7 +20,7 @@ limitations under the License.
 #include <cstring>
 #include <map>
 
-#include "gtest/gtest.h"
+#include "gtest_main.h"
 
 TEST(Checksum32, KnownValues) {
   EXPECT_EQ((uint32_t)0, soft_crc32(NULL, 0));

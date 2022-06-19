@@ -17,7 +17,7 @@ limitations under the License.
 
 #include <type_traits>
 
-#include "gtest/gtest.h"
+#include "gtest_main.h"
 
 template <typename T, typename NumTy>
 void checkRelationalOperators(T (*unit)(NumTy)) {

@@ -15,7 +15,7 @@ limitations under the License.
 
 #include "binary_utils.h"
 
-#include "gtest/gtest.h"
+#include "gtest_main.h"
 
 TEST(Binutils, Conversion_32bits) {
   uint32_t test_values[10] = {0,          0x12345678, 0xABCDEF01, 0x98765432,

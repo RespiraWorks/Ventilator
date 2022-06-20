@@ -69,7 +69,7 @@ The following options are available:
                 [--cov]       - generate coverage reports
   cov_upload  Upload coverage reports to Codecov server
   unit        Builds and runs unit tests only (and generates coverage reports)
-                  <name>  - run specific unit test, may include wildcards, i.e. '*common*'
+                  <name>  - run specific unit test, may include wildcards, i.e. '*checksum*'
                   [-o]    - open coverage report in browser when done
   help/-h     Display this help info
 EOF

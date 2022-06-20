@@ -15,6 +15,7 @@ The controller shares the [common code](../common) with the GUI. The part of the
 **Directories:**
 * [lib](lib) - most of the substantive controller code, must all be libraries to be unit-testable by platformio
 * [test](test) - unit tests
+* [test_libs](test_libs) - libraries intended to be used only for unit tests (include mock libraries)
 * [integration_tests](integration_tests) - code for (semi-)automated hardware-in-the-loop testbeds
 * [platformio](platformio) - build configurations and deployment scripts
 * [src](src) - just the main loop for controller
@@ -41,10 +42,10 @@ Instructions for installing:
  * [CLI](https://docs.platformio.org/en/latest/core/index.html)
  * [IDE](https://docs.platformio.org/en/latest/integration/ide/pioide.html)
 
-Some issues may prevent specific versions of platformio from building or running unit tests. It is currently recommended that you use `v5.2.5` (latest version at the time of this writing), which you may install with i.e.:
+Some issues may prevent specific versions of platformio from building or running unit tests. It is currently recommended that you use `v6.0.1` (latest version at the time of this writing), which you may install with i.e.:
 
 ```
-$ pip install platformio==5.2.5
+$ pip install platformio==6.0.1
 ```
 
 You may also need to install the package `libtinfo5` on Linux. Clang-tidy needs this package to run its checks, but platformio will just say all checks have passed without giving an error if it's missing.

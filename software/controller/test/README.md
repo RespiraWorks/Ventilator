@@ -1,8 +1,6 @@
-platformio requires that each test get its own directory.
+platformio requires that each test get its own `test_[feature]` directory.
 
-> Place a test in the `test` directory. If you have more than one test, split
-> them into sub-folders. For example, `test/test_1/*.[c,cpp,h]`,
-> `test_N/*.[c,cpp,h]`, etc. If there is no such directory in the `test` folder,
-> then PIO Unit Testing Engine will treat the source code of `test` folder as
-> SINGLE test.
-https://docs.platformio.org/en/latest/plus/unit-testing.html
+> PIO Unit Testing Engine will treat the source code of `test_[feature]` folder as a
+> SINGLE test, which compiles all `cpp` files that are in the same folder as `test_[feature]`
+> One (and only one) of those `cpp` file needs to include `gtest_main.h` in order to define `main()`).
+https://docs.platformio.org/en/latest/advanced/unit-testing/structure.html#test-hierarchy

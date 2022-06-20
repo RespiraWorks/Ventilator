@@ -147,10 +147,10 @@ class FloatArray : public Base {
   virtual void fill(float value) { data_.fill(value); }
 
   float get_data(const size_t index) const {
-    if (index < N)
+    if (index < N) {
       return data_[index];
-    else
-      return 0.0f;
+    }
+    return 0.0f;
   }
 
   virtual void set_data(const size_t index, const float value) {

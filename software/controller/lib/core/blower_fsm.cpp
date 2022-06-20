@@ -104,15 +104,15 @@ BlowerSystemState PressureControlFsm::DesiredState(Time now, const BlowerFsmInpu
         .peep = expire_pressure_,
         .is_end_of_breath = false,
     };
-  } else {  // expiratory part of the cycle
-    return {
-        .pressure_setpoint = expire_pressure_,
-        .flow_direction = FlowDirection::Expiratory,
-        .pip = inspire_pressure_,
-        .peep = expire_pressure_,
-        .is_end_of_breath = (now >= expire_end_),
-    };
   }
+  // expiratory part of the cycle
+  return {
+      .pressure_setpoint = expire_pressure_,
+      .flow_direction = FlowDirection::Expiratory,
+      .pip = inspire_pressure_,
+      .peep = expire_pressure_,
+      .is_end_of_breath = (now >= expire_end_),
+  };
 }
 
 PressureAssistFsm::PressureAssistFsm(Time now, const VentParams &params)
@@ -139,15 +139,15 @@ BlowerSystemState PressureAssistFsm::DesiredState(Time now, const BlowerFsmInput
         .peep = expire_pressure_,
         .is_end_of_breath = false,
     };
-  } else {  // expiratory part of the cycle
-    return {
-        .pressure_setpoint = expire_pressure_,
-        .flow_direction = FlowDirection::Expiratory,
-        .pip = inspire_pressure_,
-        .peep = expire_pressure_,
-        .is_end_of_breath = (now >= expire_deadline_ || PatientInspiring(now, inputs)),
-    };
   }
+  // expiratory part of the cycle
+  return {
+      .pressure_setpoint = expire_pressure_,
+      .flow_direction = FlowDirection::Expiratory,
+      .pip = inspire_pressure_,
+      .peep = expire_pressure_,
+      .is_end_of_breath = (now >= expire_deadline_ || PatientInspiring(now, inputs)),
+  };
 }
 
 // TODO don't rely on fsm inner states to make this usable in any fsm

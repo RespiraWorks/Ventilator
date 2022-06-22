@@ -22,7 +22,7 @@ ErrorCode PokeHandler::Process(Context *context) {
   if (context->request_length < 5) return ErrorCode::MissingData;
 
   size_t address = address_msw_ + u8_to_u32(&context->request[0]);
-  uint32_t count = context->request_length - 4;
+  size_t count = context->request_length - 4;
 
   // Some registers can't handle byte accesses, so rather then just
   // use a simple memcpy here I will do 32-bit or 16-bit accesses

@@ -198,7 +198,7 @@ void Interface::ProcessCommand() {
   response_length_ = context.response_length;
 }
 
-void Interface::SendResponse(ErrorCode error, uint32_t response_length) {
+void Interface::SendResponse(ErrorCode error, size_t response_length) {
   response_[0] = static_cast<uint8_t>(error);
 
   // Calculate the CRC on the data and error code returned

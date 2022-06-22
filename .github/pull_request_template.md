@@ -1,6 +1,10 @@
 # Description
 
-Please include a summary of the change and which issue is fixed. Please also include relevant motivation and context. List any dependencies that are required for this change.
+Summary of changes
+
+Relevant motivation and context
+
+Dependencies that are required for this change
 
 Updates #(issue)
 
@@ -9,25 +13,29 @@ Updates #(issue)
 Closes #(issue)
 
 
-# General checklist:
+## Self-review checklist:
 
-- [ ] I have performed a self-review, including - looked through the `Files changed` tab, browsed repository in my branch
-- [ ] I have made corresponding changes to the documentation - to reflect changes in code, electrical or mechanical design
-- [ ] All new documentation or graphics follow the [documentation style guide](https://github.com/RespiraWorks/Ventilator/wiki/Documentation-style-guide)
-- [ ] All new content is linked, easily discoverable, does not require too many clicks
-- [ ] I have reviewed any other relevant parts of our [contributor wiki](https://github.com/RespiraWorks/Ventilator/wiki) to ensure that this PR conforms to the standards
-- [ ] I have given the PR a descriptive name (prefixed with **WIP** if it is not yet ready for review)
-- [ ] I have tagged relevant reviewers
+- [ ] Self-review: looked through the `Files changed` tab, browsed repository in branch
+- [ ] Documentation updated - reflects changes in code, electrical or mechanical design
+- [ ] Documentation and graphics follow the [documentation style guide](https://github.com/RespiraWorks/Ventilator/wiki/Documentation-style-guide)
+- [ ] New content is linked, easily discoverable, does not require too many clicks
+- [ ] Follows other relevant parts of [contributor wiki](https://github.com/RespiraWorks/Ventilator/wiki)
+- [ ] PR has a descriptive name
+- [ ] Tagged relevant reviewers
 
-## Code checklist:
+### Software only:
 
-- [ ] All new code follows our [code style](https://github.com/RespiraWorks/Ventilator/wiki/Code-style)
-- [ ] I have commented my code, particularly in hard-to-understand areas
-- [ ] My changes generate no new warnings
-- [ ] I have added tests that prove my fix is effective or that my feature works
-- [ ] I have described tests I used to verify my changes, instructions for reproducing them and any relevant configuration details.
-- [ ] I ran the unit test suite and verified that all tests pass - new and old, locally and on CI
-- [ ] I performed a clean build and verified that there were no warnings
-- [ ] I ran our static analysis tools and verified there were no warnings
-- [ ] Any dependent changes have been merged and published in downstream modules
-- [ ] All source files have license headers
+- [ ] Follows our [code style](https://github.com/RespiraWorks/Ventilator/wiki/Code-style)
+- [ ] Commented code, particularly in hard-to-understand areas
+- [ ] All tests pass - new and old, locally and on CI
+- [ ] No new warnings or static check failures
+- [ ] Tests that prove fix is effective or new feature works
+- [ ] Manual tests are explained, with instructions for reproducing them
+
+### CAD / mechanical only:
+
+- [ ] Follows our [mechanical engineering standards](https://github.com/RespiraWorks/Ventilator/wiki/Mechanical-engineering-standards)
+- [ ] Everything is metric and ISO where possible
+- [ ] All features and constraints are named
+- [ ] Imported parts are well-named, with source URL and iProperties
+- [ ] Screenshots and/or assembly photos updated

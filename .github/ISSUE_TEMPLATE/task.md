@@ -7,7 +7,7 @@ assignees: ''
 
 ---
 
-Please take the time to describe the issue in detail, so that other contributors can pick it up and implement or declare it done/obsolete in case if was completed out of band.
+Please take the time to describe the issue in detail, so that other contributors can pick it up and implement or declare it done/obsolete in case it was completed out of band.
 
 **A TASK** is something that may not add functionality to the product but entails research, analysis, investigation, testing or manufacture of components or prototypes.
 
@@ -26,8 +26,8 @@ Link to requirements or risk analysis if applicable.
 **Starting points**
 Where might one start with solving this problem? Point to any relevant files or websites. Even if you have but a vague idea, please share. Perhaps something has prevented you or blocked you from solving the problem already?
 
-**Don't forget**
-- [ ] Put the issue in a milestone
-- [ ] Assign it to one of the projects
-- [ ] Add appropriate labels
-- [ ] Mention dependent/blocked issues if any
+**Don't forget (can delete these when done)**
+* Put the issue in a milestone
+* Assign it to one of the projects
+* Add appropriate labels
+* Mention dependent/blocked issues if any

@@ -5,9 +5,9 @@
 #include <pb_encode.h>
 
 #include "gtest_main.h"
-#include "uart_mock.h"
 #include "network_protocol.pb.h"
 #include "system_timer.h"
+#include "uart_mock.h"
 
 TEST(CommTests, SendControllerStatus) {
   UART::MockChannel uart;

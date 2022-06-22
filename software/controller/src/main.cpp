@@ -71,6 +71,7 @@ static Sensors sensors;
 static NVParams::Handler nv_params;
 static I2Ceeprom eeprom = I2Ceeprom(0x50, 64, 32768, &i2c1);
 static Actuators actuators(0, 1);
+static Comms comms(&rpi_uart);
 
 // Global variables for the debug interface
 static Debug::Trace trace;
@@ -83,7 +84,7 @@ static Debug::Command::VarHandler var_command;
 static Debug::Command::TraceHandler trace_command(&trace);
 static Debug::Command::EepromHandler eeprom_command(&eeprom);
 
-static Debug::Interface debug(&trace, 12, Debug::Command::Code::Mode, &mode_command,
+static Debug::Interface debug(&debug_uart, &trace, 12, Debug::Command::Code::Mode, &mode_command,
                               Debug::Command::Code::Peek, &peek_command, Debug::Command::Code::Poke,
                               &poke_command, Debug::Command::Code::Variable, &var_command,
                               Debug::Command::Code::Trace, &trace_command,
@@ -182,7 +183,7 @@ static void HighPriorityTask(void *arg) {
       local_controller_status = controller_status;
     }
 
-    CommsHandler(local_controller_status, &gui_status);
+    comms.Handler(local_controller_status, &gui_status);
 
     // Override received gui_status from the RPi with values from DebugVars iff
     // the forced_mode DebugVar has a legal value.
@@ -224,8 +225,6 @@ int main() {
                  offsetof(NVParams::Structure, psol_cal));
 
   sensors.init(HalApi::GetCpuFreq());
-
-  CommsInit();
 
   BackgroundLoop();
 }

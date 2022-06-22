@@ -1,59 +1,67 @@
 /* Copyright 2020-2022, RespiraWorks
-
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
-
     http://www.apache.org/licenses/LICENSE-2.0
-
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-
 */
 
 #pragma once
 
+/******************************************************************
+ * Serial ports to GUI and debug interface (virtual port over USB)
+ * use uart.
+ * [RM] Chapter 38 defines the USART function.
+ *****************************************************************/
+
 #include "dma.h"
-#include "serial_listeners.h"
-#include "uart.h"
+#include "uart_base.h"
 
-class UartDma {
+namespace UART {
+class DMAChannel : public Channel {
  public:
-#if !defined(BARE_STM32)
-  UartDma() = default;
-#endif
-  UartDma(UartReg *const uart, char match_char) : uart_(uart), match_char_(match_char){};
+  // Create a channel with DMA enabled
+  DMAChannel(Base base, DMA::Base dma, uint8_t match_char = 0);
 
-  void initialize(Frequency cpu_frequency, Frequency baud, DMA::Base dma, DMA::Channel tx_channel,
-                  DMA::Channel rx_channel);
+  void Initialize(GPIO::Port port, uint8_t tx_pin, uint8_t rx_pin, std::optional<uint8_t> rts_pin,
+                  std::optional<uint8_t> cts_pin, GPIO::AlternativeFunction alt_function,
+                  Frequency cpu_frequency, Frequency baud) override;
 
-  [[nodiscard]] bool start_tx(uint8_t *buffer, uint32_t length, TxListener *txl);
-  [[nodiscard]] bool start_rx(uint8_t *buffer, uint32_t length, RxListener *rxl);
+  // Note the use of default argument value in override functions, which is only OK because
+  // overriden virtual functions use the same default value.
+  // NOLINTNEXTLINE(google-default-arguments)
+  size_t Read(uint8_t *buffer, size_t length, RxListener *rxl = nullptr) override;
+  // NOLINTNEXTLINE(google-default-arguments)
+  size_t Write(uint8_t *buffer, size_t length, TxListener *txl = nullptr) override;
 
-  bool tx_in_progress() const;
-  bool rx_in_progress() const;
+  size_t RxFull() const override;
+  size_t TxFree() const override;
 
-  void stop_tx();
-  void stop_rx();
+  void StopTx() override;
+  void StopRx() override;
 
-  uint32_t rx_bytes_left();
-
-  void enable_character_match();
-
-  void UART_interrupt_handler();
-  void DMA_rx_interrupt_handler();
-  void DMA_tx_interrupt_handler();
+  void TxDMAInterruptHandler();
+  void RxDMAInterruptHandler();
 
  private:
-  UartReg *const uart_{nullptr};
   std::optional<DMA::ChannelControl> tx_dma_{std::nullopt};
   std::optional<DMA::ChannelControl> rx_dma_{std::nullopt};
-  RxListener *rx_listener_{nullptr};
-  TxListener *tx_listener_{nullptr};
-  uint8_t match_char_;
+  uint8_t request_{0};  // request number for dma setup
+
+  // Store Tx data in our own buffer, in case caller overwrites its data before DMA has finished
+  // transmitting it all
+  uint8_t tx_data_[BufferLength] = {0};
+
   bool tx_in_progress_{false};
   bool rx_in_progress_{false};
 };
+
+}  // namespace UART
+
+#if defined(UART_VIA_DMA)
+extern UART::DMAChannel rpi_uart;
+#endif

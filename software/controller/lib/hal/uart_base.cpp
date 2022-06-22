@@ -1,11 +1,8 @@
 /* Copyright 2020-2021, RespiraWorks
-
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
-
     http://www.apache.org/licenses/LICENSE-2.0
-
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -13,22 +10,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-// \TODO: abstract this better so we don't have to expose registers
+#include "uart_base.h"
 
-#pragma once
-
-/******************************************************************
- * Serial port to GUI
- * [RM] Chapter 38 defines the USART registers.
- *****************************************************************/
-
-#include <cstdint>
-
-#include "circular_buffer.h"
-#include "units.h"
+namespace UART {
 
 // [RM] 38.8 USART Registers (pg 1238)
-struct UartStruct {
+struct Registers {
   union {
     struct {
       uint32_t enable : 1;
@@ -190,44 +177,148 @@ struct UartStruct {
   uint32_t rx_data;
   uint32_t tx_data;
 };
-typedef volatile UartStruct UartReg;
-inline UartReg *const Uart1Base = reinterpret_cast<UartReg *>(0x40013800);
-inline UartReg *const Uart2Base = reinterpret_cast<UartReg *>(0x40004400);
-inline UartReg *const Uart3Base = reinterpret_cast<UartReg *>(0x40004800);
-inline UartReg *const Uart4Base = reinterpret_cast<UartReg *>(0x40004C00);
+typedef volatile Registers UartReg;
 
-class UART {
- public:
-  explicit UART(UartReg *r);
+// UART base registers, per [RM] table 2 (p68)
+UartReg *get_register(const Base id) {
+  switch (id) {
+    case Base::UART1:
+      return reinterpret_cast<UartReg *>(0x40013800);
+    case Base::UART2:
+      return reinterpret_cast<UartReg *>(0x40004400);
+    case Base::UART3:
+      return reinterpret_cast<UartReg *>(0x40004800);
+    case Base::UART4:
+      return reinterpret_cast<UartReg *>(0x40004C00);
+  }
+  // All cases covered above (and GCC checks this).
+  __builtin_unreachable();
+}
 
-  void Init(Frequency cpu_frequency, Frequency baud);
+void Channel::Initialize(GPIO::Port port, uint8_t tx_pin, uint8_t rx_pin,
+                         std::optional<uint8_t> rts_pin, std::optional<uint8_t> cts_pin,
+                         GPIO::AlternativeFunction alt_function, Frequency cpu_frequency,
+                         Frequency baud) {
+  EnableClock();
+  SetupPins(port, tx_pin, rx_pin, rts_pin, cts_pin, alt_function);
+  SetupUARTRegisters(cpu_frequency, baud);
+}
 
-  // This is the interrupt handler for the UART.
-  void ISR();
+// Enable clock and interrupts
+void Channel::EnableClock() {
+  switch (uart_) {
+    case Base::UART1:
+      enable_peripheral_clock(PeripheralID::USART1);
+      Interrupts::singleton().EnableInterrupt(InterruptVector::Uart1, InterruptPriority::Standard);
+      break;
+    case Base::UART2:
+      enable_peripheral_clock(PeripheralID::USART2);
+      Interrupts::singleton().EnableInterrupt(InterruptVector::Uart2, InterruptPriority::Standard);
+      break;
+    case Base::UART3:
+      enable_peripheral_clock(PeripheralID::USART3);
+      Interrupts::singleton().EnableInterrupt(InterruptVector::Uart3, InterruptPriority::Standard);
+      break;
+    case Base::UART4:
+      enable_peripheral_clock(PeripheralID::UART4);
+      Interrupts::singleton().EnableInterrupt(InterruptVector::Uart4, InterruptPriority::Standard);
+      break;
+      // All cases covered above (and GCC checks this).
+      __builtin_unreachable();
+  }
+}
 
-  // Read up to len bytes and store them in the passed buffer.
-  // This function does not block, so if less then len bytes
-  // are available it will only return the available bytes
-  // Returns the number of bytes actually read.
-  uint16_t Read(char *buf, uint16_t len);
+void Channel::SetupPins(GPIO::Port port, uint8_t tx_pin, uint8_t rx_pin,
+                        std::optional<uint8_t> rts_pin, std::optional<uint8_t> cts_pin,
+                        GPIO::AlternativeFunction alt_function) {
+  // Set Tx/Rx pins
+  GPIO::AlternatePin(port, tx_pin, alt_function);
+  GPIO::AlternatePin(port, rx_pin, alt_function);
 
-  // Write up to len bytes to the buffer.
-  // This function does not block, so if there isn't enough
-  // space to write len bytes, then only a partial write
-  // will occur.
-  // The number of bytes actually written is returned.
-  uint16_t Write(const char *buf, uint16_t len);
+  // Set hardware flow control pins (when provided)
+  if (cts_pin.has_value()) GPIO::AlternatePin(port, *cts_pin, alt_function);
+  if (rts_pin.has_value()) GPIO::AlternatePin(port, *rts_pin, alt_function);
+}
 
-  // Return the number of bytes currently in the
-  // receive buffer and ready to be read.
-  uint16_t RxFull();
+void Channel::SetupUARTRegisters(Frequency cpu_frequency, Frequency baud, bool dma_enable) {
+  auto *uart = get_register(uart_);
 
-  // Returns the number of free locations in the
-  // transmit buffer.
-  uint16_t TxFree();
+  // Set baud rate register
+  uart->baudrate = static_cast<uint32_t>(cpu_frequency / baud);
 
- private:
-  CircularBuffer<uint8_t, 128> rx_data_;
-  CircularBuffer<uint8_t, 128> tx_data_;
-  UartReg *const uart_;
+  // Set DMA-specific control registers
+  uart->control3.bitfield.rx_dma = dma_enable;  // set DMAR bit to enable DMA for receiver
+  uart->control3.bitfield.tx_dma = dma_enable;  // set DMAT bit to enable DMA for transmitter
+  uart->control3.bitfield.dma_disable_on_rx_error = dma_enable;
+
+  uart->control2.bitfield.addr = match_char_;  // set match char
+
+  uart->control3.bitfield.error_interrupt = dma_enable;    // interrupt on error (DMA mode only)
+  uart->control_reg1.bitfield.rx_interrupt = !dma_enable;  // rx interrupt (SW mode only)
+  uart->control_reg1.bitfield.tx_enable = 1;               // enable transmitter
+  uart->control_reg1.bitfield.rx_enable = 1;               // enable receiver
+  uart->control_reg1.bitfield.enable = 1;                  // enable uart
+}
+
+// Sets up an interrupt on reception of matching char
+void Channel::EnableCharacterMatch() {
+  auto *uart = get_register(uart_);
+  uart->interrupt_clear.bitfield.char_match_clear = 1;   // Clear char match flag
+  uart->control_reg1.bitfield.char_match_interrupt = 1;  // Enable character match interrupt
+}
+
+size_t Channel::Write(uint8_t *buffer, size_t length, TxListener *txl) {
+  // Set callback function
+  tx_listener_ = txl;
+  // Enable tx complete interrupt.
+  EnableTxCompleteInterrupt();
+  return 0;
+}
+
+void Channel::EnableTxInterrupt() { get_register(uart_)->control_reg1.bitfield.tx_interrupt = 1; };
+
+void Channel::EnableTxCompleteInterrupt() {
+  get_register(uart_)->control_reg1.bitfield.tx_complete_interrupt = 1;
 };
+
+void Channel::ClearTxCompleteInterrupt() {
+  get_register(uart_)->interrupt_clear.bitfield.tx_complete_clear = 1;
+};
+
+void Channel::DisableTxInterrupt() { get_register(uart_)->control_reg1.bitfield.tx_interrupt = 0; };
+
+volatile uint32_t *Channel::GetRxAddress() { return &(get_register(uart_)->rx_data); };
+volatile uint32_t *Channel::GetTxAddress() { return &(get_register(uart_)->tx_data); };
+
+bool Channel::RxRegNotEmpty() { return get_register(uart_)->status.bitfield.rx_not_empty; }
+bool Channel::TxRegEmpty() { return get_register(uart_)->status.bitfield.tx_empty; }
+
+// This is the interrupt handler for the UART, which calls given callbacks on events
+void Channel::UARTInterruptHandler() {
+  UartReg *uart = get_register(uart_);
+  // Check for overrun error and framing errors.  Clear those errors if
+  // they're set to avoid further interrupts from them.
+  if (uart->status.bitfield.overrun_error) {
+    uart->interrupt_clear.bitfield.overrun_clear = 1;
+    if (rx_listener_) rx_listener_->on_rx_error(RxError::Overrun);
+  }
+  if (uart->status.bitfield.framing_error) {
+    uart->interrupt_clear.bitfield.framing_error_clear = 1;
+    if (rx_listener_) rx_listener_->on_rx_error(RxError::SerialFraming);
+  }
+
+  // Check for character match interrupt and trigger character match callback
+  if (uart->status.bitfield.char_match) {
+    uart->interrupt_clear.bitfield.char_match_clear = 1;
+    if (rx_listener_) rx_listener_->on_character_match();
+  }
+
+  // Check for tx_complete interrupt to trigger callback
+  if (uart->status.bitfield.tx_complete) {
+    uart->interrupt_clear.bitfield.tx_complete_clear = 1;
+    uart->control_reg1.bitfield.tx_complete_interrupt = 0;
+    if (tx_listener_) tx_listener_->on_tx_complete();
+  }
+}
+
+}  // namespace UART

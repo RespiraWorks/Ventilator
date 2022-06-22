@@ -212,10 +212,11 @@ void ChannelControl::ClearInterrupt(Interrupt interrupt) {
   dma_reg->interrupt_clear.full_reg = x;
 };
 
-void ChannelControl::SetupTransfer(volatile void *data, uint32_t length) {
+void ChannelControl::SetupTransfer(volatile void *data, size_t length) {
   auto *channel_reg = get_channel_reg(base_, channel_);
   channel_reg->memory_address = data;
-  channel_reg->count = length;
+  // count register only uses the 16 least significant bits ([RM] 11.6.4)
+  channel_reg->count = static_cast<uint16_t>(length);
 }
 
 void ChannelControl::Enable() {

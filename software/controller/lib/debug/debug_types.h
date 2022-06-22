@@ -53,17 +53,17 @@ enum class Code : uint8_t {
 
 // Structure that represents a command's parameters
 struct Context {
-  const uint8_t *request;              // pointer to the request (command's data)
-  const uint32_t request_length;       // length of the request
-  uint8_t *response;                   // pointer to the response (that will be
-                                       // written by the command handler)
-  const uint32_t max_response_length;  // maximum length the command handler
-                                       // can use (enforces response limits)
-  uint32_t response_length;            // (actual) length of the response once the
-                                       // command is processed
-  bool *processed;                     // pointer to a boolean that informs the interface handler
-                                       // that a command's response is available (some commands
-                                       // take time)
+  const uint8_t *request;            // pointer to the request (command's data)
+  const size_t request_length;       // length of the request
+  uint8_t *response;                 // pointer to the response (that will be
+                                     // written by the command handler)
+  const size_t max_response_length;  // maximum length the command handler
+                                     // can use (enforces response limits)
+  size_t response_length;            // (actual) length of the response once the
+                                     // command is processed
+  bool *processed;                   // pointer to a boolean that informs the interface handler
+                                     // that a command's response is available (some commands
+                                     // take time)
 };
 
 // Each debug command is represented by an instance of this virtual class

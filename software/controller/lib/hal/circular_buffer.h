@@ -34,7 +34,7 @@ class CircularBuffer {
   // buffer_[head_] is by definition inaccessible.
   // This also makes the template safe against N = 0.
   volatile T buffer_[N + 1];
-  volatile int head_{0}, tail_{0};
+  volatile size_t head_{0}, tail_{0};
 
  public:
   CircularBuffer() = default;
@@ -42,10 +42,8 @@ class CircularBuffer {
   // Return number of elements available in the buffer to read.
   size_t FullCount() const {
     BlockInterrupts block;
-    /// \TODO: ssize_t is likely compiler-dependent; this function could be improved
-    ssize_t ct = head_ - tail_;
-    if (ct < 0) ct += N + 1;
-    return static_cast<size_t>(ct);
+    if (head_ >= tail_) return head_ - tail_;
+    return N + 1 + head_ - tail_;
   }
 
   // Return number of free spaces in the buffer where more

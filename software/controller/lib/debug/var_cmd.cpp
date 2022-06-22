@@ -146,8 +146,8 @@ ErrorCode VarHandler::SetVar(Context *context) {
   auto *var = Variable::Registry::singleton().find(var_id);
   if (!var) return ErrorCode::UnknownVariable;
 
-  uint32_t count = context->request_length - 3;
-  auto size = var->byte_size();
+  size_t count = context->request_length - 3;
+  size_t size = var->byte_size();
 
   if (count < size) return ErrorCode::MissingData;
 

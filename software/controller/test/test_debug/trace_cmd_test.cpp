@@ -23,7 +23,7 @@ namespace Debug::Command {
 
 static constexpr size_t kResponseSize{100};
 // helper function that checks the buffer output
-void CheckBufferOutput(std::array<uint8_t, kResponseSize> response, uint32_t response_length,
+void CheckBufferOutput(std::array<uint8_t, kResponseSize> response, size_t response_length,
                        size_t sample_size, uint32_t initial_value) {
   for (int i = 0; i < response_length / sample_size; ++i) {
     uint8_t expected_value[sample_size];

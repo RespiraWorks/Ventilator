@@ -16,15 +16,14 @@ limitations under the License.
 #include "interface.h"
 
 #include "binary_utils.h"
-#include "hal.h"
 #include "system_timer.h"
 
 namespace Debug {
 // Initialize interface handler with variable list of
 // Command::Code, Command::Handler pairs and a trace
-Interface::Interface(Trace *trace, int count, ...) {
+Interface::Interface(UART::Channel *uart, Trace *trace, int count, ...) {
+  uart_ = uart;
   trace_ = trace;
-
   // Add the provided handlers to the registry, unless an odd number of
   // arguments have been provided
   va_list valist;
@@ -82,10 +81,8 @@ bool Interface::Poll() {
 // Also returns false if a full command has been received.
 bool Interface::ReadNextByte() {
   // Get the next byte from the debug serial port if there is one.
-  char next_char;
-  if (hal.DebugRead(&next_char, 1) < 1) return false;
-
-  uint8_t byte = static_cast<uint8_t>(next_char);
+  uint8_t byte;
+  if (uart_->Read(&byte, 1) < 1) return false;
 
   // If the previous character received was an escape character
   // then just save this byte (assuming there's space)
@@ -120,20 +117,20 @@ bool Interface::ReadNextByte() {
 bool Interface::SendNextByte() {
   // To simplify things below, I require at least 3 bytes
   // in the output buffer to continue
-  if (hal.DebugBytesAvailableForWrite() < 3) return false;
+  if (uart_->TxFree() < MinFrameSize) return false;
 
   // See what the next character to send is.
-  char next_char = response_[response_bytes_sent_++];
+  uint8_t next_byte = response_[response_bytes_sent_++];
 
   // If its a special character, I need to escape it.
-  if ((next_char == static_cast<char>(SpecialChar::EndTransfer)) ||
-      (next_char == static_cast<char>(SpecialChar::Escape))) {
-    char escaped_char[2];
-    escaped_char[0] = static_cast<char>(SpecialChar::Escape);
-    escaped_char[1] = next_char;
-    (void)hal.DebugWrite(escaped_char, 2);
+  if ((next_byte == static_cast<uint8_t>(SpecialChar::EndTransfer)) ||
+      (next_byte == static_cast<uint8_t>(SpecialChar::Escape))) {
+    uint8_t escaped_char[2];
+    escaped_char[0] = static_cast<uint8_t>(SpecialChar::Escape);
+    escaped_char[1] = next_byte;
+    (void)uart_->Write(escaped_char, 2);
   } else {
-    (void)hal.DebugWrite(&next_char, 1);
+    (void)uart_->Write(&next_byte, 1);
   }
 
   // If there's more response to send, return true
@@ -142,8 +139,8 @@ bool Interface::SendNextByte() {
   // If that was the last byte in my response, send the
   // termination character and start waiting on the next
   // command.
-  char end_transfer = static_cast<char>(SpecialChar::EndTransfer);
-  (void)hal.DebugWrite(&end_transfer, 1);
+  uint8_t end_transfer = static_cast<uint8_t>(SpecialChar::EndTransfer);
+  (void)uart_->Write(&end_transfer, 1);
 
   state_ = State::AwaitingCommand;
   response_bytes_sent_ = 0;
@@ -158,7 +155,7 @@ void Interface::ProcessCommand() {
   // waiting for the next one.
   // This means we can send EndTransfer characters to synchronize
   // communication if necessary
-  if (request_size_ < 3) {
+  if (request_size_ < MinFrameSize) {
     request_size_ = 0;
     state_ = State::AwaitingCommand;
     return;
@@ -183,9 +180,9 @@ void Interface::ProcessCommand() {
   // by 3 to make sure we can add the error code and CRC.
   Command::Context context = {
       .request = &request_[1],
-      .request_length = request_size_ - 3,
+      .request_length = request_size_ - MinFrameSize,
       .response = &response_[1],
-      .max_response_length = sizeof(response_) - 3,
+      .max_response_length = sizeof(response_) - MinFrameSize,
       .response_length = 0,
       .processed = &command_processed_,
   };
@@ -201,7 +198,7 @@ void Interface::ProcessCommand() {
   response_length_ = context.response_length;
 }
 
-void Interface::SendResponse(ErrorCode error, uint32_t response_length) {
+void Interface::SendResponse(ErrorCode error, size_t response_length) {
   response_[0] = static_cast<uint8_t>(error);
 
   // Calculate the CRC on the data and error code returned
@@ -212,7 +209,7 @@ void Interface::SendResponse(ErrorCode error, uint32_t response_length) {
   response_bytes_sent_ = 0;
   // The size of the response that will be sent includes the error code (1 byte)
   // and checksum (2 bytes).
-  response_size_ = response_length + 3;
+  response_size_ = response_length + MinFrameSize;
 }
 
 // 16-bit CRC calculation for debug commands and responses

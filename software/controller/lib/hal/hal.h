@@ -37,26 +37,6 @@ limitations under the License.
 #include "led_indicators.h"
 #include "units.h"
 
-/// \TODO: Mock port interface should be with the tests, not main code
-#if !defined(BARE_STM32)
-#include <deque>
-#include <vector>
-
-class TestSerialPort {
- public:
-  [[nodiscard]] uint16_t Write(const char *buf, uint16_t len);
-  [[nodiscard]] uint16_t Read(char *buf, uint16_t len);
-  uint16_t BytesAvailableForWrite();
-  uint16_t BytesAvailableForRead();
-  void PutIncomingData(const char *data, uint16_t len);
-  uint16_t GetOutgoingData(char *data, uint16_t len);
-
- private:
-  std::deque<std::vector<char>> incoming_data_;
-  std::vector<char> outgoing_data_;
-};
-#endif
-
 // Singleton class which implements a hardware abstraction layer.
 //
 // Access this via the `hal` global variable, e.g. `hal.millis()`.
@@ -73,41 +53,6 @@ class HalApi {
 
   void Init();
 
-  // Receives bytes from the GUI controller along the serial bus.
-  //
-  // Arduino's SerialIO will block if len > SerialBytesAvailableForRead(), but
-  // this function will never block. Instead it returns the number of bytes
-  // read.  It's up to you to check how many bytes were actually read and
-  // handle "short reads" where we read fewer bytes than were requested.
-  //
-  // TODO(jlebar): Change the serial* functions to use uint32_t once we've
-  // dropped support for Arduino.
-  [[nodiscard]] uint16_t SerialRead(char *buf, uint16_t len);
-
-  // Number of bytes we can read without blocking.
-  uint16_t SerialBytesAvailableForRead();
-
-  // Sends bytes to the GUI controller along the serial bus.
-  //
-  // Arduino's SerialIO will block if len > SerialBytesAvailableForWrite(),
-  // but this function will never block.  Instead, it returns the number of
-  // bytes written.  number of bytes written.  It's up to you to check how
-  // many bytes were actually written and handle "short writes" where we wrote
-  // less than the whole buffer.
-  [[nodiscard]] uint16_t SerialWrite(const char *buf, uint16_t len);
-  [[nodiscard]] uint16_t SerialWrite(uint8_t data) {
-    return SerialWrite(reinterpret_cast<const char *>(&data), 1);
-  }
-
-  // Number of bytes we can write without blocking.
-  uint16_t SerialBytesAvailableForWrite();
-
-  // Serial port used for debugging
-  [[nodiscard]] uint16_t DebugWrite(const char *buf, uint16_t len);
-  [[nodiscard]] uint16_t DebugRead(char *buf, uint16_t len);
-  uint16_t DebugBytesAvailableForWrite();
-  uint16_t DebugBytesAvailableForRead();
-
   // Perform some early chip initialization before static constructors are run
   void EarlyInit();
 
@@ -119,52 +64,9 @@ class HalApi {
 
   void init_PCB_ID_pins();
 
-  void InitUARTs();
-
 #if !defined(BARE_STM32)
- public:
-  // Reads up to `len` bytes of data "sent" via SerialWrite.  Returns the
-  // total number of bytes read.
-  //
-  // TODO: Once we have explicit message framing, this should simply read one
-  // message.
-  uint16_t TESTSerialGetOutgoingData(char *data, uint16_t len);
-
-  // Simulates receiving serial data from the GUI controller.  Makes these
-  // bytes available to be read by serialReadByte().
-  //
-  // Large buffers sent this way will be split into smaller buffers, to
-  // simulate the fact that the Arduino has a small rx buffer.
-  //
-  // Furthermore, SerialRead() will not read across a
-  // TESTSerialPutIncomingData() boundary.  This allows you to test short
-  // reads.  For example, if you did
-  //
-  //   char buf1[8];
-  //   char buf2[4];
-  //   hal.TESTSerialPutIncomingData(buf1, 8);
-  //   hal.TESTSerialPutIncomingData(buf2, 4);
-  //
-  // then the you'd have the following execution
-  //
-  //   char buf[16];
-  //   hal.SerialBytesAvailableForRead() == 8
-  //   hal.SerialRead(buf, 16) == 8
-  //   hal.SerialBytesAvailableForRead() == 4
-  //   hal.SerialRead(buf, 16) == 4
-  //   hal.SerialBytesAvailableForRead() == 0
-  //
-  void TESTSerialPutIncomingData(const char *data, uint16_t len);
-
-  // Same as above, but for the debug serial port.
-  uint16_t TESTDebugGetOutgoingData(char *data, uint16_t len);
-  void TESTDebugPutIncomingData(const char *data, uint16_t len);
-
  private:
   Time time_ = microsSinceStartup(0);
-
-  TestSerialPort serial_port_;
-  TestSerialPort debug_serial_port_;
 #endif
 };
 

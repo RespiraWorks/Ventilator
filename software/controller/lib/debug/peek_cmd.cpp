@@ -24,7 +24,7 @@ ErrorCode PeekHandler::Process(Context *context) {
   if (context->request_length < 6) return ErrorCode::MissingData;
 
   size_t address = address_msw_ + u8_to_u32(&context->request[0]);
-  uint32_t count = u8_to_u16(&context->request[4]);
+  size_t count = u8_to_u16(&context->request[4]);
 
   // Limit the number of output bytes based on buffer size
   if (count > context->max_response_length) count = context->max_response_length;

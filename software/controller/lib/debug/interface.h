@@ -21,6 +21,7 @@ limitations under the License.
 #include "circular_buffer.h"
 #include "debug_types.h"
 #include "trace.h"
+#include "uart_soft.h"
 #include "units.h"
 
 namespace Debug {
@@ -56,7 +57,7 @@ namespace Debug {
 // has a special value.
 class Interface {
  public:
-  explicit Interface(Trace *trace, int count, ...);
+  Interface(UART::Channel *uart, Trace *trace, int count, ...);
 
   // This function is called from the main loop to handle debug commands.
   // Returns true if this call has finished sending the response for a command,
@@ -70,9 +71,13 @@ class Interface {
  private:
   State state_{State::AwaitingCommand};
 
+  // Minimum debug message size is 3 bytes: 1 byte gives the command (respectively
+  // the error code for responses), and 2 bytes are used for checksum.
+  static constexpr size_t MinFrameSize{3};
+
   // Buffer into which request data is written in AwaitingCommand state
   uint8_t request_[500] = {0};
-  uint32_t request_size_{0};
+  size_t request_size_{0};
   // Remember when we receive an escape char (in case the call happens in
   // between the escape char and the special char)
   bool escape_next_byte_{false};
@@ -80,18 +85,20 @@ class Interface {
   // Buffer into which the command handler writes its response and which is then
   // sent in Responding state.
   uint8_t response_[500] = {0};
-  uint32_t response_size_{0};
-  uint32_t response_bytes_sent_{0};
+  size_t response_size_{0};
+  size_t response_bytes_sent_{0};
 
   // Some commands take time to be fully processed, we record their start time
   // and status
   Time command_start_time_{microsSinceStartup(0)};
   bool command_processed_{true};
-  uint32_t response_length_{0};
+  size_t response_length_{0};
 
   // List of registered command handlers
   Command::Handler *registry_[32] = {nullptr};
 
+  // Uart channel on which data is sent
+  UART::Channel *uart_;
   // Trace buffer (populated when SampleTraceVars is called and Trace is
   // enabled through the trace command)
   Trace *trace_;
@@ -100,7 +107,7 @@ class Interface {
   void ProcessCommand();
   bool SendNextByte();
 
-  void SendResponse(ErrorCode error, uint32_t response_length);
+  void SendResponse(ErrorCode error, size_t response_length);
   void SendError(ErrorCode error) { SendResponse(error, 0); }
 };
 

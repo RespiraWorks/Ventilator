@@ -46,7 +46,7 @@ BEFORE purchasing any parts.**
 | **A11** |        1 | RespiraWorks  | [Venturi: exhale][a11rw]             |        2.00 |       Rw        | Venturi flow sensor, exhale variant                                      |
 | **A12** |        1 | RespiraWorks  | [Oxygen mixer][a12rw]                |        1.00 |       Rw        | Oxygen mixing chamber                                                    |
 | **A13** |        1 | RespiraWorks  | [Back panel][a13rw]                  |       25.84 |       Rw        | Back panel, with oxygen and main power input                             |
-| **A14** |        5 | McMaster-Carr | 53415K153                            |        1.32 |  [C][a14mcmc]   | 3/4"ID barbed elbow                                                      |
+| **A14** |        1 | McMaster-Carr | 53415K153                            |        1.32 |  [C][a14mcmc]   | 3/4"ID barbed elbow                                                      |
 | **A15** |        1 | McMaster-Carr | 5463K648                             |        0.84 |  [C][a15mcmc]   | 3/4"ID x 3/8"ID barbed reducer                                           |
 | **A16** |      ~1m | OCSParts      | 117062-5                             |   15.09 / m |  [Z][a16amzn]   | Soft 3/4"ID 1"OD tubing, for main line tubing                            |
 | **A17** |       24 | McMaster-Carr | 9579K73                              |        0.61 |  [C][a17mcmc]   | Herbie clip K (22.2-24.9mm) for clamping 1"OD, main tubing               |
@@ -58,6 +58,8 @@ BEFORE purchasing any parts.**
 | **A23** |        1 | RespiraWorks  | [Wiring harnesses][a23rw]            |        9.39 |       Rw        | Various wiring assemblies                                                |
 | **A24** |        3 | GTSE          | GTSE-10025BLU-USSL                   |        0.04 |  [Z][a24amzn]   | Zip ties, for securing sensor tubing and wiring harnesses                |
 | **A25** |        1 | RespiraWorks  | [Electronics panel][a25rw]           |      540.00 |       Rw        | Electronics panel                                                        |
+| **A26** |        1 | RespiraWorks  | [U-bend adapter 60°][a26rw]          |        1.00 |       Rw        | Custom U-bend adapter for 3/4" tubing with 60° turn                      |
+| **A27** |        1 | RespiraWorks  | [U-bend adapter 90°][a27rw]          |        1.00 |       Rw        | Custom U-bend adapter for 3/4" tubing with 90° turn                      |
 
 **Total assembly price:** USD ~1650.00
 
@@ -86,6 +88,8 @@ BEFORE purchasing any parts.**
 [a23rw]:   ../wiring
 [a24amzn]: https://www.amazon.com/GTSE-Small-Strength-Nylon-Cable/dp/B086H4TR5Y
 [a25rw]:   electronics
+[a26rw]:   custom_tubing_adapters
+[a27rw]:   custom_tubing_adapters
 
 ## Assembly
 
@@ -112,7 +116,7 @@ The rough order/hierarchy of internals assembly is as follows:
     * [Manifold](manifold) - for oxygen sensor and overpressure relief valve
     * [Oxygen mixer](mixer) - for mixing air and oxygen before delivery to patient
     * [Venturi flow sensors](venturi) - in-house design of affordable flow sensors
-    * Various tubing adapters `[13-15]`
+    * Various tubing adapters `[13-15]`, `[26-27]`
     * 3/4 tubing `[16]` and clamps `[17]`
 9. Install the [display panel](display_panel)
 10. Install oxygen line tubing `[A19]` and clamps `[20]`

@@ -11,6 +11,8 @@ For a single ventilator unit, the following custom wiring assemblies are needed:
 * [Proportional solenoid](#proportional-solenoid-valve)
 * [Oxygen sensor](#oxygen-sensor-cable)
 
+The source files are controlled here in git, while the output files (drawings, BOMs, etc) are in google drive, here: https://drive.google.com/drive/folders/1HJD6YM-jMm3TKKr1ulAXmxR8wc9A-NZK?usp=sharing
+
 It is probably a good idea to manufacture and test these before proceeding with the rest of the mechanical assembly.
 
 Total price estimate: USD 24.00

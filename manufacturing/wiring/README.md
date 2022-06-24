@@ -11,6 +11,8 @@ For a single ventilator unit, the following custom wiring assemblies are needed:
 * [Proportional solenoid](#proportional-solenoid-valve)
 * [Oxygen sensor](#oxygen-sensor-cable)
 
+The source files are controlled here in git, while the output files (drawings, BOMs, etc) are in google drive, here: https://drive.google.com/drive/folders/1HJD6YM-jMm3TKKr1ulAXmxR8wc9A-NZK?usp=sharing
+
 It is probably a good idea to manufacture and test these before proceeding with the rest of the mechanical assembly.
 
 Total price estimate: USD 24.00
@@ -32,7 +34,7 @@ BEFORE purchasing any parts.**
 | **A4**  |        1 | JST             | XHP-6                 |         0.12 |      [K][a4key]      | XH 6-pin housings, for blower control                          |
 | **A5**  |        7 | JST             | SVH-21T-P1.1          |         0.11 | [K][a5key] [R][a5rs] | VH crimp contacts, for main power, for blower power            |
 | **A6**  |        2 | TE              | 1-1123722-2           |         0.18 | [K][a6key] [R][a6rs] | VH housing 2 pin, for blower power                             |
-| **A7**  |        1 | JST             | VHR-3N                |         0.14 |      [K][a7key]      | VH housing 3 pin, for main power                               |
+| **A7**  |        1 | Molex           | 1716920104            |         0.74 |      [K][a7key]      | Molex 2x2 Mega-Fit connector housing, for main power           |
 | **A9**  |        1 | Kycon           | KPJX-PM-4S            |         2.89 |      [K][a9key]      | 4 pin DIN female, main power connector                         |
 | **A10** |        8 | TE Connectivity | 102107-3              |         0.47 |     [K][a10key]      | 2.54mm male pin, for stepper interface                         |
 | **A11** |        2 | TE Connectivity | 87499-7               |         0.73 |     [K][a11key]      | 2.54mm 4-pin housing, for stepper interface                    |
@@ -47,7 +49,9 @@ BEFORE purchasing any parts.**
 | **A20** |     ~1 m | uxcell          | a11110900ux0059       |     1.32 / m |     [Z][a20amzn]     | Shrink tubing, black, 3mm diameter                             |
 | **A21** |     ~2 m | uxcell          | A17032300ux0991       |     1.50 / m |     [Z][a21amzn]     | Shrink tubing, black, 4mm diameter                             |
 | **A22** |   ~0.5 m | XHF             | B07WC9BGRT            |     0.95 / m |     [Z][a22amzn]     | Shrink tubing, red, assorted diameters                         |
-| **A23** |        1 | Phoenix Contact | 3240078               |         0.15 |     [K][a23key]      | M4 ring terminal, 14-18AWG                                     |
+| **A23** |        1 | Molex           | 0193230008            |         0.45 |     [K][a23key]      | M4 ring terminal, 14-16AWG                                     |
+| **A24** |        6 | Molex           | 0797582038            |   1.33/300mm |     [K][a24key]      | Pre-crimped Mega-Fit leads, 300mm                              |
+| **A25** |        2 | TE Connectivity | 3-520276-2            |         0.14 |     [K][a25key]      | 4.7mm QC Terminal Female, 14-16awg                             |
 
 [a1key]:   https://www.digikey.com/short/z44f8d
 [a2key]:   https://www.digikey.com/short/z44f8f
@@ -57,7 +61,7 @@ BEFORE purchasing any parts.**
 [a5rs]:    https://export.rsdelivers.com/product/jst/svh-41t-p11/jst-nv-vh-female-crimp-terminal-contact-16awg-svh/7620692
 [a6key]:   https://www.digikey.com/short/z44fwj
 [a6rs]:    https://export.rsdelivers.com/product/jst/vhr-2n/jst-vhr-female-connector-housing-396mm-pitch-2/8201172
-[a7key]:   https://www.digikey.com/short/z44fwp
+[a7key]:   https://www.digikey.com/en/products/detail/molex/1716920104/4515272
 [a9key]:   https://www.digikey.com/en/products/detail/kycon-inc/KPJX-PM-4S/9990081
 [a10key]:  https://www.digikey.com/en/products/detail/te-connectivity-amp-connectors/102107-3/298993
 [a11key]:  https://www.digikey.com/en/products/detail/te-connectivity-amp-connectors/87499-7/29911
@@ -72,7 +76,9 @@ BEFORE purchasing any parts.**
 [a20amzn]: https://www.amazon.com/uxcell-Polyolefin-Insulation-Shrink-Tubing/dp/B008DFW8JA
 [a21amzn]: https://www.amazon.com/uxcell-4mm-Shrink-Sleeve-Tubing/dp/B071VGQH97
 [a22amzn]: https://www.amazon.com/XHF-140-PCS-Red-Wear-Resistant/dp/B07WC9BGRT
-[a23key]:  https://www.digikey.com/en/products/detail/phoenix-contact/3240078/4458695
+[a23key]:  https://www.digikey.com/en/products/detail/molex/0193230008/3884489
+[a24key]: https://www.digikey.com/en/products/detail/molex/0797582038/6607214
+[a25key]: https://www.digikey.com/en/products/detail/te-connectivity-amp-connectors/3-520276-2/2060928
 
 ## Tools
 
@@ -113,38 +119,31 @@ You will need all the tools listed.
 
 * Using:
   * DIN female receptacle `[A9]`
-  * 16AWG wire 65mm each in black and red `[A12]`
-  * 2x VH crimp contacts `[A5]`
-  * VH 3-pin housing `[A7]`
+  * Pre-crimped Molex Mega-Fit cables `[A24]`
+  * Mega-Fit 4-pin housing `[A7]`
   * Shrink tubing `[A20-22]`
-  * 16AWG wire green, 30 cm `[A12]`
+  * 16AWG wire green, 100 cm `[A12]`
   * M4 ring terminal `[A23]`
+  * 4.7mm QC Terminal Female, 14-16awg `[A25]`
 
 - Instructions:
-  - Cut two 5cm lengths from each of the wire colors.
-  - Solder the 5cm lengths to the 4-pin Power DIN connector per the drawing below. It will be easier if you use a hot iron (>370C) and you pre-tin both the wires ends and the connector solder cups.
-  - Apply heat shrink to the 4 exposed connections.
-  - Solder the two black wires to the remaining length of the black wire, and do the same with the red.  Apply heat shrink to the junction.
+  - Insert the 4 pre-crimped cables into the 2x2 Mega-Fit housing.
+  - Clip the crimped ends off the remaining free end of the cables.
+  - Slide 15mm of heat shrink onto each of the 2 cables that will go to the DIN receptacle.
   - Slide on a few extra lengths of heat shrink tubing for cable management before you proceed.
-  - Crimp the VH contacts onto the ends of the red and black wire, then push them into the housings according to the drawing until they click.
-  - Do a gentle pull test to confirm proper seating of the contact.
+  - Solder the cables to the DIN receptacle per the cable drawing.  Apply the heat shrink to the junction.
+  - Crimp the QC terminals per the drawing.
+  - Crimp the ring terminal per the drawing.
+  - Do a gentle pull test to confirm proper seating of all the contacts.
   - Shrink the remaining pieces of heat shrink to make the cable more manageable.
 
-- Enclosure grounding terminal (process image 4):
-  - solder two 10cm lengths of green wire to the sides of the DIN connector (which can remain exposed)
-  - solder the two pieces of green wire together and to the remaining 10 cm length
-  - apply some shrink tubing to where the three wires meet
-  - crimp the ring terminal to the end of the wire
-
-- Total price: USD 8.61
+- Total price: USD 8.94
 
 |                      Cable Image                       |                                 Cable Drawing                                 |
 |:------------------------------------------------------:|:-----------------------------------------------------------------------------:|
-| ![Main Power Input Cable](images/main_power_cable.jpg) | ![Main Power Input Cable Drawing](images/main_power_cable_drawing_image.jpg)  |
+| To be added after first assembly | ![Main Power Input Cable Drawing](images/wiring-v0.4-power-entry.png)  |
 
-|                     Process Image 1                      |                     Process Image 2                      |                     Process Image 3                      |                     Process Image 4                      |
-|:--------------------------------------------------------:|:--------------------------------------------------------:|:--------------------------------------------------------:|:--------------------------------------------------------:|
-| ![Process Image 1](images/main_power_cable_process1.jpg) | ![Process Image 2](images/main_power_cable_process2.jpg) | ![Process Image 1](images/main_power_cable_process3.jpg) | ![Process Image 1](images/main_power_cable_process4.jpg) |
+
 
 ### Blower power
 

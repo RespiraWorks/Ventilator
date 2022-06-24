@@ -15,13 +15,6 @@ connectors:
     subtype: female
     mpn: 1716920104
     manufacturer: Molex
-    additional_components:
-    -
-       type: Crimp
-       subtype: Mega-Fit 14-16AWG Female
-       mpn: 1720630311
-       manufacturer: Molex
-       qty_multiplier: populated
        
   F1:
     style: simple
@@ -42,15 +35,21 @@ connectors:
 cables:
   W1:
     wirecount: 2
+    type: Molex pre-crimped Mega-Fit
+    mpn: 0797582038
+    manufacturer: Molex
     # more cable parameters:
-    length: 0.25
+    length: 0.3
     gauge: 16 AWG
     show_equiv: true # auto-calculate AWG equivalent
-    colors: [BK, RD]
+    colors: [BK, BK]
   W2:
     wirecount: 2
+    type: Molex pre-crimped Mega-Fit
+    mpn: 0797582038
+    manufacturer: Molex
     # more cable parameters:
-    length: 0.25
+    length: 0.3
     gauge: 16 AWG
     show_equiv: true # auto-calculate AWG equivalent
     colors: [BK, BK]

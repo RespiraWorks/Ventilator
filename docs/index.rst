@@ -27,6 +27,8 @@ Table of Contents
 
    system/index
    hardware/index
+   wiring/index
+   purchasing/index
    software/index
    process/index
    contributing/contributing

@@ -2,11 +2,16 @@ connectors:
   X1:
     pincount: 5
     # More connector parameters:
-    pinlabels: [+24V, GND, GND, +24V, SHIELD]
+    pinlabels: [GND, +24V, GND, +24V, SHIELD]
     type: 4-PIN POWER DIN
     subtype: female
     mpn: KPJX-PM-4S
     manufacturer: Kycon
+    image: 
+      src: images\KyconPinout-KPJX-PM-4S.png        # path to the image file
+      caption: Reference Pinout, view from mating face     # text to display below the image
+      bgcolor: WH   # Background color of entry in diagram component box
+      width: 200       # range: 1~65535; unit: points
     
   X2:
     pincount: 4
@@ -64,7 +69,7 @@ cables:
 
 connections:
   -
-    - X1: [2,1]
+    - X1: [1-2]
     - W1: [1-2]
     - X2: [1-2]
   -

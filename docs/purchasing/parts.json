@@ -1,0 +1,138 @@
+[
+  {
+    "pn": "ew-awg16",
+    "notes": "16 AWG wire",
+    "manufacturer": "Any",
+    "mpn": "N/A",
+    "avg_price": 4.10,
+    "price_unit": "m",
+    "sources": [
+      {
+        "supplier": "Amazon",
+        "spn": "B00N51OJJ4",
+        "price": 31.26,
+        "price_units": 7.62,
+        "url": "https://www.amazon.com/gp/product/B00N51OJJ4"
+      }
+    ]
+  },
+  {
+    "pn": "ew-pre2",
+    "notes": "Molex Pre-crimped Mega-Fit",
+    "manufacturer": "Molex",
+    "mpn": "0797582038",
+    "avg_price": 1.33,
+    "price_unit": "",
+    "sources": [
+      {
+        "supplier": "DigiKey",
+        "spn": "WM16040-ND",
+        "price": 1.33,
+        "price_units": 1,
+        "url": "https://www.digikey.com/en/products/detail/molex/0797582038/6607214"
+      }
+    ]
+  },
+  {
+    "pn": "ec-dinf4",
+    "notes": "4-PIN DIN Power input port",
+    "manufacturer": "Kycon",
+    "mpn": "KPJX-PM-4S",
+    "avg_price": 3.13,
+    "price_unit": "",
+    "sources": [
+      {
+        "supplier": "DigiKey",
+        "spn": "2092-KPJX-PM-4S-ND",
+        "price": 3.13,
+        "price_units": 1,
+        "url": "https://www.digikey.com/en/products/detail/kycon-inc/KPJX-PM-4S/9990081"
+      }
+    ]
+  },
+  {
+    "pn": "ec-qctf",
+    "notes": "4.7mm QC Female Terminal for 14-16awg",
+    "manufacturer": "TE Connectivity",
+    "mpn": "3-520276-2",
+    "avg_price": 0.26,
+    "price_unit": "",
+    "sources": [
+      {
+        "supplier": "DigiKey",
+        "spn": "A99878CT-ND",
+        "price": 0.26,
+        "price_units": 1,
+        "url": "https://www.digikey.com/en/products/detail/te-connectivity-amp-connectors/3-520276-2/2060928"
+      }
+    ]
+  },
+  {
+    "pn": "ec-ring",
+    "notes": "M4 Ring Terminal for 14-16awg",
+    "manufacturer": "Molex",
+    "mpn": "0193230008",
+    "avg_price": 0.45,
+    "price_unit": "",
+    "sources": [
+      {
+        "supplier": "DigiKey",
+        "spn": "WM9628-ND",
+        "price": 0.45,
+        "price_units": 1,
+        "url": "https://www.digikey.com/en/products/detail/molex/0193230008/3884489"
+      }
+    ]
+  },
+  {
+    "pn": "ec-mega4",
+    "notes": "Mega-Fit 2x2",
+    "manufacturer": "Molex",
+    "mpn": "1716920104",
+    "avg_price": 0.74,
+    "price_unit": "",
+    "sources": [
+      {
+        "supplier": "DigiKey",
+        "spn": "WM10386-ND",
+        "price": 0.74,
+        "price_units": 1,
+        "url": "https://www.digikey.com/en/products/detail/molex/1716920104/4515272"
+      }
+    ]
+  },
+  {
+    "pn": "ew-shrink3",
+    "notes": "Shrink tubing, black, 3mm diameter",
+    "manufacturer": "",
+    "mpn": "",
+    "avg_price": 2.46,
+    "price_unit": "m",
+    "sources": [
+      {
+        "supplier": "Amazon",
+        "spn": "B0919GN3SX",
+        "price": 10.00,
+        "price_units": 6.1,
+        "url": "https://www.amazon.com/Inch-XHF-Waterproof-Insulation-Wear-Resistant/dp/B0919GN3SX"
+      }
+    ]
+  },
+  {
+    "pn": "ew-shrink5",
+    "notes": "Shrink tubing, black, 5mm diameter",
+    "manufacturer": "",
+    "mpn": "",
+    "avg_price": 2.46,
+    "price_unit": "m",
+    "sources": [
+      {
+        "supplier": "Amazon",
+        "spn": "B0919F4YFZ",
+        "price": 10.00,
+        "price_units": 6.1,
+        "url": "https://www.amazon.com/Inch-XHF-Waterproof-Insulation-Wear-Resistant/dp/B0919F4YFZ"
+      }
+    ]
+  }
+]

@@ -1,0 +1,89 @@
+connectors:
+  X1:
+    pn: ec-dinf4
+    pincount: 5
+    # More connector parameters:
+    pinlabels: [GND, +24V, GND, +24V, SHIELD]
+    type: 4-PIN POWER DIN
+    subtype: female
+    mpn: KPJX-PM-4S
+    manufacturer: Kycon
+    image:
+      src: ./images/KyconPinout-KPJX-PM-4S.png        # path to the image file
+      caption: Reference Pinout, view from mating face     # text to display below the image
+      bgcolor: WH   # Background color of entry in diagram component box
+      width: 200       # range: 1~65535; unit: points
+
+  X2:
+    pn: ec-mega4
+    pincount: 4
+    pinlabels: [GND, +24V, SW-N, SW-P]
+    type: Mega-Fit 2x2
+    subtype: female
+    mpn: 1716920104
+    manufacturer: Molex
+
+  F1:
+    pn: ec-qctf
+    style: simple
+    autogenerate: true
+    type: 4.7mm QC Term Female
+    subtype: 14-16awg
+    mpn: 3-520276-2
+    manufacturer: TE Connectivity
+
+  F2:
+    pn: ec-ring
+    style: simple
+    autogenerate: true
+    type: M4 Ring Term
+    subtype: 14-16awg
+    mpn: 0193230008
+    manufacturer: Molex
+
+cables:
+  W1:
+    pn: ew-pre2
+    wirecount: 2
+    type: Molex pre-crimped Mega-Fit
+    mpn: 0797582038
+    manufacturer: Molex
+    # more cable parameters:
+    length: 0.3
+    gauge: 16 AWG
+    show_equiv: true # auto-calculate AWG equivalent
+    colors: [BK, BK]
+  W2:
+    pn: ew-pre2
+    wirecount: 2
+    type: Molex pre-crimped Mega-Fit
+    mpn: 0797582038
+    manufacturer: Molex
+    # more cable parameters:
+    length: 0.3
+    gauge: 16 AWG
+    show_equiv: true # auto-calculate AWG equivalent
+    colors: [BK, BK]
+  W3:
+    pn: ew-awg16
+    wirecount: 1
+    # more cable parameters:
+    length: 0.1
+    gauge: 16 AWG
+    show_equiv: true # auto-calculate AWG equivalent
+    colors: [GN]
+
+
+connections:
+  -
+    - X1: [1-2]
+    - W1: [1-2]
+    - X2: [1-2]
+  -
+    - F1
+    - W2: [1-2]
+    - X2: [3-4]
+  -
+    - X1: 5
+    - W3: 1
+    - F2

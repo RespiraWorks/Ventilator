@@ -1,10 +1,13 @@
 # Wiring assemblies
 
+**DEPRECATED - this page is deprecated, as it is being migrated to Sphinx-generated documentation located at [respiraworks.github.io/Ventilator](file:///home/martin/dev/ventilator/docs/_build/html/wiring/index.html)**
+
+> TODO: Migrate contents to Sphinx
+
 The following page describes the custom wiring components required in the electrical assembly. Manufacturing
 these components will require soldering and crimping.
 
 For a single ventilator unit, the following custom wiring assemblies are needed:
-* [Main power](#main-power-input)
 * [Blower power](#blower-power)
 * [Blower signal/control](#blower-control-cable)
 * [Stepper motor pigtails (x2)](#stepper-wiring)
@@ -32,8 +35,6 @@ BEFORE purchasing any parts.**
 | **A4**  |        1 | JST             | XHP-6                 |         0.12 |      [K][a4key]      | XH 6-pin housings, for blower control                          |
 | **A5**  |        7 | JST             | SVH-21T-P1.1          |         0.11 | [K][a5key] [R][a5rs] | VH crimp contacts, for main power, for blower power            |
 | **A6**  |        2 | TE              | 1-1123722-2           |         0.18 | [K][a6key] [R][a6rs] | VH housing 2 pin, for blower power                             |
-| **A7**  |        1 | JST             | VHR-3N                |         0.14 |      [K][a7key]      | VH housing 3 pin, for main power                               |
-| **A9**  |        1 | Kycon           | KPJX-PM-4S            |         2.89 |      [K][a9key]      | 4 pin DIN female, main power connector                         |
 | **A10** |        8 | TE Connectivity | 102107-3              |         0.47 |     [K][a10key]      | 2.54mm male pin, for stepper interface                         |
 | **A11** |        2 | TE Connectivity | 87499-7               |         0.73 |     [K][a11key]      | 2.54mm 4-pin housing, for stepper interface                    |
 | **A12** |   ~2.5 m | Remington       | 16UL1007STRKIT        |     0.66 / m |     [Z][a12amzn]     | 16 AWG wire, for power cables                                  |
@@ -47,7 +48,6 @@ BEFORE purchasing any parts.**
 | **A20** |     ~1 m | uxcell          | a11110900ux0059       |     1.32 / m |     [Z][a20amzn]     | Shrink tubing, black, 3mm diameter                             |
 | **A21** |     ~2 m | uxcell          | A17032300ux0991       |     1.50 / m |     [Z][a21amzn]     | Shrink tubing, black, 4mm diameter                             |
 | **A22** |   ~0.5 m | XHF             | B07WC9BGRT            |     0.95 / m |     [Z][a22amzn]     | Shrink tubing, red, assorted diameters                         |
-| **A23** |        1 | Phoenix Contact | 3240078               |         0.15 |     [K][a23key]      | M4 ring terminal, 14-18AWG                                     |
 
 [a1key]:   https://www.digikey.com/short/z44f8d
 [a2key]:   https://www.digikey.com/short/z44f8f
@@ -57,8 +57,6 @@ BEFORE purchasing any parts.**
 [a5rs]:    https://export.rsdelivers.com/product/jst/svh-41t-p11/jst-nv-vh-female-crimp-terminal-contact-16awg-svh/7620692
 [a6key]:   https://www.digikey.com/short/z44fwj
 [a6rs]:    https://export.rsdelivers.com/product/jst/vhr-2n/jst-vhr-female-connector-housing-396mm-pitch-2/8201172
-[a7key]:   https://www.digikey.com/short/z44fwp
-[a9key]:   https://www.digikey.com/en/products/detail/kycon-inc/KPJX-PM-4S/9990081
 [a10key]:  https://www.digikey.com/en/products/detail/te-connectivity-amp-connectors/102107-3/298993
 [a11key]:  https://www.digikey.com/en/products/detail/te-connectivity-amp-connectors/87499-7/29911
 [a12amzn]: https://www.amazon.com/gp/product/B00N51OJJ4
@@ -72,7 +70,6 @@ BEFORE purchasing any parts.**
 [a20amzn]: https://www.amazon.com/uxcell-Polyolefin-Insulation-Shrink-Tubing/dp/B008DFW8JA
 [a21amzn]: https://www.amazon.com/uxcell-4mm-Shrink-Sleeve-Tubing/dp/B071VGQH97
 [a22amzn]: https://www.amazon.com/XHF-140-PCS-Red-Wear-Resistant/dp/B07WC9BGRT
-[a23key]:  https://www.digikey.com/en/products/detail/phoenix-contact/3240078/4458695
 
 ## Tools
 
@@ -106,45 +103,6 @@ Recently exported drawings for wiring harnesses can be found on our Google Drive
 As much as possible we should try to keep the cables one-to-one
 (for example the wiring of the PCB to blower driver cables are all pin 1 to pin 1,
 pin 2 to pin 2, etc. with the same connector style on both ends.
-
-### Main power input
-
-You will need all the tools listed.
-
-* Using:
-  * DIN female receptacle `[A9]`
-  * 16AWG wire 65mm each in black and red `[A12]`
-  * 2x VH crimp contacts `[A5]`
-  * VH 3-pin housing `[A7]`
-  * Shrink tubing `[A20-22]`
-  * 16AWG wire green, 30 cm `[A12]`
-  * M4 ring terminal `[A23]`
-
-- Instructions:
-  - Cut two 5cm lengths from each of the wire colors.
-  - Solder the 5cm lengths to the 4-pin Power DIN connector per the drawing below. It will be easier if you use a hot iron (>370C) and you pre-tin both the wires ends and the connector solder cups.
-  - Apply heat shrink to the 4 exposed connections.
-  - Solder the two black wires to the remaining length of the black wire, and do the same with the red.  Apply heat shrink to the junction.
-  - Slide on a few extra lengths of heat shrink tubing for cable management before you proceed.
-  - Crimp the VH contacts onto the ends of the red and black wire, then push them into the housings according to the drawing until they click.
-  - Do a gentle pull test to confirm proper seating of the contact.
-  - Shrink the remaining pieces of heat shrink to make the cable more manageable.
-
-- Enclosure grounding terminal (process image 4):
-  - solder two 10cm lengths of green wire to the sides of the DIN connector (which can remain exposed)
-  - solder the two pieces of green wire together and to the remaining 10 cm length
-  - apply some shrink tubing to where the three wires meet
-  - crimp the ring terminal to the end of the wire
-
-- Total price: USD 8.61
-
-|                      Cable Image                       |                                 Cable Drawing                                 |
-|:------------------------------------------------------:|:-----------------------------------------------------------------------------:|
-| ![Main Power Input Cable](images/main_power_cable.jpg) | ![Main Power Input Cable Drawing](images/main_power_cable_drawing_image.jpg)  |
-
-|                     Process Image 1                      |                     Process Image 2                      |                     Process Image 3                      |                     Process Image 4                      |
-|:--------------------------------------------------------:|:--------------------------------------------------------:|:--------------------------------------------------------:|:--------------------------------------------------------:|
-| ![Process Image 1](images/main_power_cable_process1.jpg) | ![Process Image 2](images/main_power_cable_process2.jpg) | ![Process Image 1](images/main_power_cable_process3.jpg) | ![Process Image 1](images/main_power_cable_process4.jpg) |
 
 ### Blower power
 

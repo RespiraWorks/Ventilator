@@ -1,7 +1,7 @@
 .. _process:
 
 Process Documentation
-====================
+=====================
 
 .. toctree::
    :maxdepth: 1

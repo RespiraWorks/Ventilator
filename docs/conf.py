@@ -24,9 +24,9 @@ subprocess.call("doxygen", shell=True)
 # -- Project information -----------------------------------------------------
 
 project = "RespiraWorks Ventilator"
-copyright = "2021, RespiraWorks"
+copyright = "2022, RespiraWorks"
 author = "RespiraWorks"
-version = "0.3"
+version = "pre-0.4"
 
 # -- General configuration ---------------------------------------------------
 
@@ -88,6 +88,11 @@ github_url = "https://github.com/RespiraWorks/Ventilator"
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = [os.path.join(os.path.dirname(mlx.traceability.__file__), "assets")]
+
+
+def setup(app):
+    app.add_css_file("my_theme.css")
+
 
 # -- Breathe configuration -------------------------------------------------
 

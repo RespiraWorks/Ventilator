@@ -1,0 +1,78 @@
+connectors:
+  X1:
+    pincount: 5
+    # More connector parameters:
+    pinlabels: [+24V, GND, GND, +24V, SHIELD]
+    type: 4-PIN POWER DIN
+    subtype: female
+    mpn: KPJX-PM-4S
+    manufacturer: Kycon
+    
+  X2:
+    pincount: 4
+    pinlabels: [GND, +24V, SW-N, SW-P]
+    type: Mega-Fit 2x2
+    subtype: female
+    mpn: 1716920104
+    manufacturer: Molex
+    additional_components:
+    -
+       type: Crimp
+       subtype: Mega-Fit 14-16AWG Female
+       mpn: 1720630311
+       manufacturer: Molex
+       qty_multiplier: populated
+       
+  F1:
+    style: simple
+    autogenerate: true
+    type: 4.7mm QC Term Female
+    subtype: 14-16awg
+    mpn: 3-520276-2
+    manufacturer: TE Connectivity
+    
+  F2:
+    style: simple
+    autogenerate: true
+    type: M4 Ring Term
+    subtype: 14-16awg
+    mpn: 0193230008
+    manufacturer: Molex
+
+cables:
+  W1:
+    wirecount: 2
+    # more cable parameters:
+    length: 0.25
+    gauge: 16 AWG
+    show_equiv: true # auto-calculate AWG equivalent
+    colors: [BK, RD]
+  W2:
+    wirecount: 2
+    # more cable parameters:
+    length: 0.25
+    gauge: 16 AWG
+    show_equiv: true # auto-calculate AWG equivalent
+    colors: [BK, BK]
+  W3:
+    wirecount: 1
+    # more cable parameters:
+    length: 0.1
+    gauge: 16 AWG
+    show_equiv: true # auto-calculate AWG equivalent
+    colors: [GN]
+    
+
+connections:
+  -
+    - X1: [2,1]
+    - W1: [1-2]
+    - X2: [1-2]
+  -
+    - F1
+    - W2: [1-2]
+    - X2: [3-4]
+  -
+    - X1: 5
+    - W3: 1
+    - F2

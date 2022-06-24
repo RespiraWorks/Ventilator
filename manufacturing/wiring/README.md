@@ -49,6 +49,7 @@ BEFORE purchasing any parts.**
 | **A22** |   ~0.5 m | XHF             | B07WC9BGRT            |     0.95 / m |     [Z][a22amzn]     | Shrink tubing, red, assorted diameters                         |
 | **A23** |        1 | Molex           | 0193230008            |         0.45 |     [K][a23key]      | M4 ring terminal, 14-16AWG                                     |
 | **A24** |        6 | Molex           | 0797582038            |   1.33/300mm |     [K][a24key]      | Pre-crimped Mega-Fit leads, 300mm                              |
+| **A25** |        2 | TE Connectivity | 3-520276-2            |         0.14 |     [K][a25key]      | 4.7mm QC Terminal Female, 14-16awg                             |
 
 [a1key]:   https://www.digikey.com/short/z44f8d
 [a2key]:   https://www.digikey.com/short/z44f8f
@@ -75,6 +76,7 @@ BEFORE purchasing any parts.**
 [a22amzn]: https://www.amazon.com/XHF-140-PCS-Red-Wear-Resistant/dp/B07WC9BGRT
 [a23key]:  https://www.digikey.com/en/products/detail/molex/0193230008/3884489
 [a24key]: https://www.digikey.com/en/products/detail/molex/0797582038/6607214
+[a25key]: https://www.digikey.com/en/products/detail/te-connectivity-amp-connectors/3-520276-2/2060928
 
 ## Tools
 
@@ -120,6 +122,7 @@ You will need all the tools listed.
   * Shrink tubing `[A20-22]`
   * 16AWG wire green, 100 cm `[A12]`
   * M4 ring terminal `[A23]`
+  * 4.7mm QC Terminal Female, 14-16awg `[A25]`
 
 - Instructions:
   - Insert the 4 pre-crimped cables into the 2x2 Mega-Fit housing.
@@ -132,7 +135,7 @@ You will need all the tools listed.
   - Do a gentle pull test to confirm proper seating of all the contacts.
   - Shrink the remaining pieces of heat shrink to make the cable more manageable.
 
-- Total price: USD 8.61
+- Total price: USD 8.94
 
 |                      Cable Image                       |                                 Cable Drawing                                 |
 |:------------------------------------------------------:|:-----------------------------------------------------------------------------:|

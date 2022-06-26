@@ -8,13 +8,13 @@ on:
 jobs:
   build:
 
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
 
     steps:
       - name: Setup Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
-          python-version: '3.8'
+          python-version: '3.x'
       - name: Requirements
         run: sudo apt-get install graphviz
           && sudo apt-get install doxygen
@@ -22,12 +22,18 @@ jobs:
           && pip3 install breathe
           && pip3 install sphinx-sitemap
           && pip3 install mlx.traceability
+          && pip3 install wireviz
+          && pip3 install pandas
       - name: Checkout repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 1
+      - name: Pull in relevant images only
+        run: git lfs pull -I "docs/wiring/images/*.png"
       - name: Build docs
         run: cd docs
+          && wiring/make_wiring.sh
+          && purchasing/make_parts.sh
           && make html
           && cd _build/html
           && touch .nojekyll

@@ -26,7 +26,7 @@ A permissive license doesn't have this problem, because you can take the code an
 it.  You don't have to share your changes under the same license.
 
 The perceived risk of this is that an organization might take the open-source code, make many changes to it, and not
-share those changes with the community - thus harming the overall project.
+share those changes with the community — thus harming the overall project.
 
 In our experience, the risk of this is low.  The value of an open-source project is not just in its source code, but
 also in the community: the people who understand the code and can help.  If you make a closed-source fork of the code,

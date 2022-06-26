@@ -2,8 +2,7 @@
 
 ![In-Action](in-action.png)
 
-Here resides the code for the ventilator graphical user interface. It is based on QT and runs
-on Raspberry Pi (henceforth "*RPi*").
+Here resides the code for the ventilator graphical user interface. It is based on QT and runs on Raspberry Pi (henceforth "*RPi*").
 
 Please also see the [Software design pages](../design/GUI_architecture.md) for more information on GUI architecture.
 
@@ -17,13 +16,13 @@ To deploy it as intended for the ventilator you will need:
 * Card reader USB
 
 A more complete list of hardware components is on the
-[Electrical system assembly page](../../manufacturing/internals/electronics).
+[Electronics sub-assembly page](../../manufacturing/internals/electronics).
 
 If you are not actively working on the code for this application but simply need it for prototype testing, you will probably want to use the [automated deployment scripts](../utils/rpi_config).
 
 ## Building the GUI
 
-You may want to build and run the GUI application natively, either on your primary machine or on the *RPi*. Most recently, we have been building and testing on the 64 bits desktop edition of [Raspberry Pi OS](https://www.raspberrypi.com/software/operating-systems/#raspberry-pi-os-64-bit) distribution, more specifically its `v11 Bullseye 64 bits (January 28th 2022)` release ([download link](https://downloads.raspberrypi.org/raspios_arm64/images/raspios_arm64-2022-01-28/)).
+You may want to build and run the GUI application natively, either on your primary machine or on the *RPi*. Most recently, we have been building and testing on the 64 bits desktop edition of [Raspberry Pi OS](https://www.raspberrypi.com/software/operating-systems/#raspberry-pi-os-64-bit) distribution, more specifically it's the `v11 Bullseye 64 bits (January 28th 2022)` release ([download link](https://downloads.raspberrypi.org/raspios_arm64/images/raspios_arm64-2022-01-28/)).
 
 The [gui.sh](gui.sh) script does almost everything you need:
 * installs dependencies
@@ -56,12 +55,9 @@ You can also compile with `--debug` option. You will see additional information 
 
 ### Mac OS X
 
-You may also build and run on MacOS, but you may have to install some dependencies manually.
-This section may be out of date.
+You may also build and run on MacOS, but you may have to install some dependencies manually. This section may be out of date.
 
-Go to https://www.qt.io/download-open-source and download the Qt Online Installer.
-When asked to select a version, check "Archive", click "Filter", and select 5.15.2.
-Unselect all modules except core QT and Charts.
+Go to https://www.qt.io/download-open-source and download the Qt Online Installer. When asked to select a version, check "Archive", click "Filter", and select 5.15.2. Unselect all modules except core QT and Charts.
 
 After installation completes, add `qmake` to your PATH, e.g.:
 
@@ -121,9 +117,7 @@ If you want to add additional debug messages, refer to [logger.h](src/logger.h).
 
 ### Screen resolution issues
 
-The qml layout has been designed for a resolution of 1024x600, in case of the display
-defaulting to some other setting, this messes up the GUI layout. If this randomly
-happens to you (it did to me), add the following to the /boot/config.txt file on your *RPi*.
+The qml layout has been designed for a resolution of 1024x600, in case of the display defaulting to some other setting, this messes up the GUI layout. If this randomly happens to you (it did to me), add the following to the /boot/config.txt file on your *RPi*.
 ```
 hdmi_cvt=1024 600 60 3 0 0 0
 

@@ -12,7 +12,7 @@ The first few configuration steps must be done manually when writing the operati
 
 * Use an SD card of at least 32GB. Building the software can be a resource-greedy process.
 * Flash the SD card using the [Raspberry Pi Imager](https://www.raspberrypi.com/software/) making sure to configure it as follows:
-  * **IMPORTANT:** Click 'CHOOSE OS' > 'Raspberry Pi OS (Other)' and select the `Raspberry Pi OS (64-bit)` release of the Raspberry Pi OS. Other versions have not been tested to work.
+  * **IMPORTANT:** Click 'CHOOSE OS' > 'Raspberry Pi OS (Other)' and select the `Raspberry Pi OS (64-bit)` release of the Raspberry Pi OS. Other versions have not been tested to work. More specifically should be the `v11 Bullseye 64 bits (January 28th 2022)` release ([download link](https://downloads.raspberrypi.org/raspios_arm64/images/raspios_arm64-2022-01-28/)).
   * Click 'STORAGE' and select your SD card
   * Click the gear icon in the lower right corner, and set up the following parameters:
    * hostname (recommended): `rw-ventilator` - could make it something else unique if you have multiple prototypes on your network

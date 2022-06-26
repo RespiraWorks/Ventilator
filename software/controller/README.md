@@ -4,6 +4,8 @@ Here resides the code for the ventilator controller.
 
 Please also see the [Software design pages](../design/controller_architecture.md) for more information on controller architecture.
 
+If you are not actively working on the controller code but simply need it for prototype testing, you will probably want to use the [automated deployment scripts](../utils/rpi_config).
+
 ## Rationale and structure
 
 The ventilator actuators must be driven by control loops ensuring continuous breathing according to doctor-provided parameters, while also ensuring no harm is done to the patient.
@@ -34,7 +36,9 @@ The controller shares the [common code](../common) with the GUI. The part of the
 
 ## Development toolchain
 
-The target platform for this code is the STM32 processor (currently, the Nucleo L452RE to be precise).
+The target platform for this code is the STM32 processor:
+* currently, the code supports Nucleo L452RE
+* next [PCB](../../pcb) version integrates STM32L496, to which we will soon transition
 
 We use [platformio](https://platformio.org/) for building the controller code. Platformio has a CLI and an IDE. You'll need the platformio CLI in order to build from the command-line, even if you also install the IDE.
 

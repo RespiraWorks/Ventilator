@@ -15,13 +15,16 @@ limitations under the License.
 
 #include "respira_connected_device.h"
 
+#include "framing.h"
+#include "qserial_output_stream.h"
+
 // In Alpha Cycle controller transmits every 30ms, but sometimes it takes
 // longer, 42 being a safe bet
-static constexpr DurationMs INTER_FRAME_TIMEOUT_MS = DurationMs(42);
+static constexpr DurationMs InterframeTimeout = DurationMs(42);
 
 // GuiStatus is about 150 bytes, resulting in 13ms tx time. Output buffer
 // will usually swallow it immeadetely, but just in case we set a timeout.
-static constexpr DurationMs WRITE_TIMEOUT_MS = DurationMs(15);
+static constexpr DurationMs WriteTimeout = DurationMs(15);
 
 RespiraConnectedDevice::RespiraConnectedDevice(QString portName) : serialPortName_(portName) {}
 
@@ -44,9 +47,10 @@ bool RespiraConnectedDevice::createPortMaybe() {
   serialPort_->setStopBits(QSerialPort::OneStop);
   serialPort_->setFlowControl(QSerialPort::NoFlowControl);
 
-  if (!serialPort_->open(QIODevice::ReadWrite)) {
-    return false;
-  }
+  if (!serialPort_->open(QIODevice::ReadWrite)) return false;
+
+  if (!frame_detector_.begin()) return false;
+
   return true;
 }
 
@@ -57,18 +61,15 @@ bool RespiraConnectedDevice::SendGuiStatus(const GuiStatus &gui_status) {
     return false;
   }
 
-  uint8_t tx_buffer[GuiStatus_size];
-
-  pb_ostream_t stream = pb_ostream_from_buffer(tx_buffer, sizeof(tx_buffer));
-  if (!pb_encode(&stream, GuiStatus_fields, &gui_status)) {
+  QSerialOutputStream output_stream{serialPort_};
+  uint32_t encoded_length = EncodeFrame<GuiStatus>(gui_status, output_stream);
+  if (0 == encoded_length) {
     // TODO Raise an Alert?
-    CRIT("Could not serialize GuiStatus");
+    CRIT("Could not frame serialized GuiStatus");
     return false;
   }
 
-  serialPort_->write((const char *)tx_buffer, stream.bytes_written);
-
-  if (!serialPort_->waitForBytesWritten(WRITE_TIMEOUT_MS.count())) {
+  if (!serialPort_->waitForBytesWritten(WriteTimeout.count())) {
     // TODO Raise an Alert?
     CRIT("Timeout while sending GuiStatus");
     return false;
@@ -84,27 +85,30 @@ bool RespiraConnectedDevice::ReceiveControllerStatus(ControllerStatus *controlle
   }
 
   // wait for incomming data
-  if (!serialPort_->waitForReadyRead(INTER_FRAME_TIMEOUT_MS.count())) {
+  if (!serialPort_->waitForReadyRead(InterframeTimeout.count())) {
     // TODO Raise an Alert?
     CRIT("Timeout while waiting for a serial frame from Cycle Controller");
     return false;
   }
 
-  QByteArray responseData = serialPort_->readAll();
-
-  // continue reading characters until we don't see
-  // any data for long enough to estimate end of packet silence
-  while (serialPort_->waitForReadyRead(INTER_FRAME_TIMEOUT_MS.count() / 5)) {
-    responseData += serialPort_->readAll();
+  if (serialPort_->bytesAvailable() > 0) {
+    QByteArray raw_data = serialPort_->readAll();
+    for (int i = 0; i < raw_data.size(); i++) {
+      rx_buffer_.put_byte(raw_data.at(i));
+    }
   }
 
-  pb_istream_t stream =
-      pb_istream_from_buffer((const uint8_t *)responseData.data(), responseData.length());
+  if (frame_detector_.frame_available()) {
+    uint8_t *buffer = frame_detector_.take_frame();
+    uint32_t length = frame_detector_.frame_length();
+    DecodeResult result = DecodeFrame<ControllerStatus>(buffer, length, controller_status);
 
-  if (!pb_decode(&stream, ControllerStatus_fields, controller_status)) {
-    CRIT("Could not de-serialize received data as Controller Status");
-    // TODO: Raise an Alert?
-    return false;
+    if (DecodeResult::Success != result) {
+      CRIT("Could not decode received data as a frame, error code: {}",
+           static_cast<uint32_t>(result));
+      // TODO: Raise an Alert?
+      return false;
+    }
   }
 
   return true;

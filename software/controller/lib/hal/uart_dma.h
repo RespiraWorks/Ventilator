@@ -44,6 +44,8 @@ class DMAChannel : public Channel {
   void StopTx() override;
   void StopRx() override;
 
+  bool IsDMAChannel() override { return true; };
+
   void TxDMAInterruptHandler();
   void RxDMAInterruptHandler();
 
@@ -56,12 +58,12 @@ class DMAChannel : public Channel {
   // transmitting it all
   uint8_t tx_data_[BufferLength] = {0};
 
-  bool tx_in_progress_{false};
+  // Store last Rx length to inform caller about how many bytes we put in the buffer
+  size_t rx_length_{0};
+
   bool rx_in_progress_{false};
 };
 
 }  // namespace UART
 
-#if defined(UART_VIA_DMA)
 extern UART::DMAChannel rpi_uart;
-#endif

@@ -24,7 +24,9 @@ namespace Debug::Command {
 ErrorCode VarHandler::Process(Context *context) {
   // The first byte of data is always required, this
   // gives the sub-command.
-  if (context->request_length < 1) return ErrorCode::MissingData;
+  if (context->request_length < 1) {
+    return ErrorCode::MissingData;
+  }
 
   Subcommand subcommand{context->request[0]};
 
@@ -55,12 +57,16 @@ ErrorCode VarHandler::Process(Context *context) {
 // passed ID is invalid.
 ErrorCode VarHandler::GetVarInfo(Context *context) {
   // We expect a 16-bit ID to be passed
-  if (context->request_length < 3) return ErrorCode::MissingData;
+  if (context->request_length < 3) {
+    return ErrorCode::MissingData;
+  }
 
   uint16_t var_id = u8_to_u16(&context->request[1]);
 
   const auto *var = Variable::Registry::singleton().find(var_id);
-  if (!var) return ErrorCode::UnknownVariable;
+  if (!var) {
+    return ErrorCode::UnknownVariable;
+  }
 
   // The info I return consists of the following:
   // <type>     - 1 byte variable type code
@@ -113,15 +119,21 @@ ErrorCode VarHandler::GetVarInfo(Context *context) {
 
 ErrorCode VarHandler::GetVar(Context *context) {
   // We expect a 16-bit ID to be passed
-  if (context->request_length < 3) return ErrorCode::MissingData;
+  if (context->request_length < 3) {
+    return ErrorCode::MissingData;
+  }
 
   uint16_t var_id = u8_to_u16(&context->request[1]);
 
   auto *var = Variable::Registry::singleton().find(var_id);
-  if (!var) return ErrorCode::UnknownVariable;
+  if (!var) {
+    return ErrorCode::UnknownVariable;
+  }
 
   auto size = var->byte_size();
-  if (context->max_response_length < size) return ErrorCode::NoMemory;
+  if (context->max_response_length < size) {
+    return ErrorCode::NoMemory;
+  }
 
   uint32_t intermediate_buffer[size / sizeof(uint32_t)];
   var->serialize_value(intermediate_buffer);
@@ -139,19 +151,27 @@ ErrorCode VarHandler::GetVar(Context *context) {
 
 ErrorCode VarHandler::SetVar(Context *context) {
   // We expect a 16-bit ID to be passed
-  if (context->request_length < 3) return ErrorCode::MissingData;
+  if (context->request_length < 3) {
+    return ErrorCode::MissingData;
+  }
 
   uint16_t var_id = u8_to_u16(&context->request[1]);
 
   auto *var = Variable::Registry::singleton().find(var_id);
-  if (!var) return ErrorCode::UnknownVariable;
+  if (!var) {
+    return ErrorCode::UnknownVariable;
+  }
 
   size_t count = context->request_length - 3;
   size_t size = var->byte_size();
 
-  if (count < size) return ErrorCode::MissingData;
+  if (count < size) {
+    return ErrorCode::MissingData;
+  }
 
-  if (!var->write_allowed()) return ErrorCode::InternalError;
+  if (!var->write_allowed()) {
+    return ErrorCode::InternalError;
+  }
 
   // endian conversion
   uint32_t intermediate_buffer[size / sizeof(uint32_t)];
@@ -168,7 +188,9 @@ ErrorCode VarHandler::SetVar(Context *context) {
 }
 
 ErrorCode VarHandler::GetVarCount(Context *context) {
-  if (context->max_response_length < 4) return ErrorCode::NoMemory;
+  if (context->max_response_length < 4) {
+    return ErrorCode::NoMemory;
+  }
 
   u32_to_u8(Variable::Registry::singleton().count(), context->response);
   context->response_length = 4;

@@ -236,8 +236,12 @@ void Channel::SetupPins(GPIO::Port port, uint8_t tx_pin, uint8_t rx_pin,
   GPIO::AlternatePin(port, rx_pin, alt_function);
 
   // Set hardware flow control pins (when provided)
-  if (cts_pin.has_value()) GPIO::AlternatePin(port, *cts_pin, alt_function);
-  if (rts_pin.has_value()) GPIO::AlternatePin(port, *rts_pin, alt_function);
+  if (cts_pin.has_value()) {
+    GPIO::AlternatePin(port, *cts_pin, alt_function);
+  }
+  if (rts_pin.has_value()) {
+    GPIO::AlternatePin(port, *rts_pin, alt_function);
+  }
 }
 
 void Channel::SetupUARTRegisters(Frequency cpu_frequency, Frequency baud, bool dma_enable) {
@@ -267,9 +271,13 @@ void Channel::EnableCharacterMatch() {
   uart->control_reg1.bitfield.char_match_interrupt = 1;  // Enable character match interrupt
 }
 
+void Channel::SetRxListener(RxListener *rxl) { rx_listener_ = rxl; };
+
 size_t Channel::Write(uint8_t *buffer, size_t length, TxListener *txl) {
   // Set callback function
   tx_listener_ = txl;
+  // set tx_in_progress
+  tx_in_progress_ = true;
   // Enable tx complete interrupt.
   EnableTxCompleteInterrupt();
   return 0;
@@ -300,25 +308,42 @@ void Channel::UARTInterruptHandler() {
   // they're set to avoid further interrupts from them.
   if (uart->status.bitfield.overrun_error) {
     uart->interrupt_clear.bitfield.overrun_clear = 1;
-    if (rx_listener_) rx_listener_->on_rx_error(RxError::Overrun);
+    if (rx_listener_) {
+      rx_listener_->on_rx_error(RxError::Overrun);
+    }
   }
   if (uart->status.bitfield.framing_error) {
     uart->interrupt_clear.bitfield.framing_error_clear = 1;
-    if (rx_listener_) rx_listener_->on_rx_error(RxError::SerialFraming);
+    if (rx_listener_) {
+      rx_listener_->on_rx_error(RxError::SerialFraming);
+    }
   }
 
   // Check for character match interrupt and trigger character match callback
   if (uart->status.bitfield.char_match) {
     uart->interrupt_clear.bitfield.char_match_clear = 1;
-    if (rx_listener_) rx_listener_->on_character_match();
+    OnCharacterMatch();
   }
 
   // Check for tx_complete interrupt to trigger callback
   if (uart->status.bitfield.tx_complete) {
     uart->interrupt_clear.bitfield.tx_complete_clear = 1;
     uart->control_reg1.bitfield.tx_complete_interrupt = 0;
-    if (tx_listener_) tx_listener_->on_tx_complete();
+    OnTxComplete();
   }
 }
+
+void Channel::OnTxComplete() {
+  tx_in_progress_ = false;
+  if (tx_listener_) {
+    tx_listener_->on_tx_complete();
+  }
+};
+
+void Channel::OnCharacterMatch() {
+  if (rx_listener_) {
+    rx_listener_->on_character_match();
+  }
+};
 
 }  // namespace UART

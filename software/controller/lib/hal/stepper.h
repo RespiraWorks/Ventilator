@@ -181,7 +181,9 @@ class StepMotor {
   //
   // Returns NULL for an invalid input
   static StepMotor *GetStepper(int n) {
-    if ((n < 0) || (n >= total_motors_)) return nullptr;
+    if ((n < 0) || (n >= total_motors_)) {
+      return nullptr;
+    }
     return &motor_[n];
   }
 

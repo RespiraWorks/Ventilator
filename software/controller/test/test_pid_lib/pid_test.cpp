@@ -138,7 +138,9 @@ TEST(PidTest, IntegralSaturationMax) {
   float output = 0;
   for (int i = 0; i < 1000; ++i) {
     output = pid.compute(ticks(t++), input, setpoint);
-    if (output >= MAX_OUTPUT) break;
+    if (output >= MAX_OUTPUT) {
+      break;
+    }
   }
   EXPECT_EQ(output, MAX_OUTPUT);
 
@@ -166,7 +168,9 @@ TEST(PidTest, IntegralSaturationMin) {
   float output = 0;
   for (int i = 0; i < 1000; ++i) {
     output = pid.compute(ticks(t++), input, setpoint);
-    if (output <= MIN_OUTPUT) break;
+    if (output <= MIN_OUTPUT) {
+      break;
+    }
   }
   EXPECT_EQ(output, MIN_OUTPUT);
 
@@ -342,7 +346,9 @@ TEST(PidTest, reset) {
   // Build up an integral sum
   pid.kd(0);
   pid.ki(1);
-  for (int i = 0; i < 10; i++) output = pid.compute(ticks(t++), setpoint - error, setpoint);
+  for (int i = 0; i < 10; i++) {
+    output = pid.compute(ticks(t++), setpoint - error, setpoint);
+  }
 
   // With all gains set to zero, running again will not change the output
   // it will still be the output_sum_ value

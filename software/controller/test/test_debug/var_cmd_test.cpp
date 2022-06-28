@@ -43,10 +43,18 @@ TEST(VarHandler, GetVarInfo) {
                                    static_cast<uint8_t>(strlen(format)),
                                    static_cast<uint8_t>(strlen(help)),
                                    static_cast<uint8_t>(strlen(unit))};
-  for (size_t i = 0; i < strlen(name); ++i) expected.push_back(name[i]);
-  for (size_t i = 0; i < strlen(format); ++i) expected.push_back(format[i]);
-  for (size_t i = 0; i < strlen(help); ++i) expected.push_back(help[i]);
-  for (size_t i = 0; i < strlen(unit); ++i) expected.push_back(unit[i]);
+  for (size_t i = 0; i < strlen(name); ++i) {
+    expected.push_back(name[i]);
+  }
+  for (size_t i = 0; i < strlen(format); ++i) {
+    expected.push_back(format[i]);
+  }
+  for (size_t i = 0; i < strlen(help); ++i) {
+    expected.push_back(help[i]);
+  }
+  for (size_t i = 0; i < strlen(unit); ++i) {
+    expected.push_back(unit[i]);
+  }
 
   uint8_t id[2];
   u16_to_u8(var.id(), id);

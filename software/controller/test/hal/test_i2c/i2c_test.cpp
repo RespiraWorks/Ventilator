@@ -40,7 +40,9 @@ class TestChannel : public Channel {
   // mock the sending and receiving of bytes from internal buffers
   void SendByte() override {
     bool ok = sent_buffer_.Put(*next_data_);
-    if (ok) return;
+    if (ok) {
+      return;
+    }
   };
   void ReceiveByte() override {
     std::optional<uint8_t> data = rx_buffer_.Get();

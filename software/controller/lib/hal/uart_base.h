@@ -18,11 +18,13 @@ limitations under the License.
  * [RM] Chapter 38 defines the USART function.
  *****************************************************************/
 
+#include <algorithm>
 #include <cstdint>
 #include <optional>
 
 #include "gpio.h"
 #include "interrupts.h"
+#include "proto_traits.h"
 #include "serial_listeners.h"
 #include "units.h"
 
@@ -63,7 +65,7 @@ class Channel {
   // Note the use of default argument value in virtual function, which is only OK in case
   // overriding functions use the same default value.
   // NOLINTNEXTLINE(google-default-arguments)
-  virtual size_t Write(uint8_t *buffer, size_t length, TxListener *txl = nullptr) = 0;
+  virtual size_t Write(uint8_t *buffer, size_t length, TxListener *txl = nullptr);
 
   // Return the number of bytes ready to be read.
   virtual size_t RxFull() const = 0;
@@ -82,6 +84,12 @@ class Channel {
   // Interrupt handlers for the UART channel.
   virtual void UARTInterruptHandler();
 
+  // setter for Rx Listener
+  void SetRxListener(RxListener *rxl);
+
+  // tester of whether channel uses DMA
+  virtual bool IsDMAChannel() { return false; };
+
  protected:
   Base uart_;
 
@@ -92,8 +100,10 @@ class Channel {
 
   uint8_t match_char_{0};
 
+  bool tx_in_progress_{false};
+
   // Length of Buffers, make sure they stay big enough to store data to/from the GUI.
-  static constexpr size_t BufferLength{128};
+  static constexpr size_t BufferLength{256};
 
   virtual void EnableTxInterrupt();
   virtual void EnableTxCompleteInterrupt();
@@ -113,6 +123,9 @@ class Channel {
   void SetupPins(GPIO::Port port, uint8_t tx_pin, uint8_t rx_pin, std::optional<uint8_t> rts_pin,
                  std::optional<uint8_t> cts_pin, GPIO::AlternativeFunction alt_function);
   void SetupUARTRegisters(Frequency cpu_frequency, Frequency baud, bool dma_enable = false);
+
+  void OnTxComplete();
+  void OnCharacterMatch();
 };
 
 }  // namespace UART

@@ -42,7 +42,9 @@ class CircularBuffer {
   // Return number of elements available in the buffer to read.
   size_t FullCount() const {
     BlockInterrupts block;
-    if (head_ >= tail_) return head_ - tail_;
+    if (head_ >= tail_) {
+      return head_ - tail_;
+    }
     return N + 1 + head_ - tail_;
   }
 

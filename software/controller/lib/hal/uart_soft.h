@@ -46,7 +46,4 @@ class SoftChannel : public Channel {
 
 }  // namespace UART
 
-#if !defined(UART_VIA_DMA)
-extern UART::SoftChannel rpi_uart;
-#endif
 extern UART::SoftChannel debug_uart;

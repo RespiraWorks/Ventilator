@@ -169,6 +169,8 @@ static void HighPriorityTask(void *arg) {
   // Last-received status from the GUI.
   GuiStatus gui_status = GuiStatus_init_zero;
 
+  comms.Initialize();
+
   // After all initialization is done, ask the HAL to start our high priority thread.
   hal.StartLoopTimer(Controller::GetLoopPeriod(), HighPriorityTask, nullptr);
 

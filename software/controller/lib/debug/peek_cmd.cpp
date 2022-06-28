@@ -21,13 +21,17 @@ ErrorCode PeekHandler::Process(Context *context) {
   // and a two byte count of how many bytes to return
   // Length should be exactly 6, but if more data is passed
   // I'll just ignore it.
-  if (context->request_length < 6) return ErrorCode::MissingData;
+  if (context->request_length < 6) {
+    return ErrorCode::MissingData;
+  }
 
   size_t address = address_msw_ + u8_to_u32(&context->request[0]);
   size_t count = u8_to_u16(&context->request[4]);
 
   // Limit the number of output bytes based on buffer size
-  if (count > context->max_response_length) count = context->max_response_length;
+  if (count > context->max_response_length) {
+    count = context->max_response_length;
+  }
 
   // Some registers can't handle byte accesses, so rather then just
   // use a simple memcpy here I will do 32-bit or 16-bit accesses

@@ -32,7 +32,9 @@ class TestEeprom : public I2Ceeprom {
     for (uint32_t i = 2; i < request.size; ++i) {
       memory_[address_pointer_++] = reinterpret_cast<uint8_t *>(request.data)[i];
     }
-    if (request.processed != nullptr) *(request.processed) = true;
+    if (request.processed != nullptr) {
+      *(request.processed) = true;
+    }
     return true;
   }
 
@@ -40,7 +42,9 @@ class TestEeprom : public I2Ceeprom {
     for (uint32_t i = 0; i < request.size; ++i) {
       reinterpret_cast<uint8_t *>(request.data)[i] = memory_[address_pointer_++];
     }
-    if (request.processed != nullptr) *(request.processed) = true;
+    if (request.processed != nullptr) {
+      *(request.processed) = true;
+    }
     return true;
   }
 };

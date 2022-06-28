@@ -67,7 +67,9 @@ static constexpr float MoveAccel = MoveVel / 0.05f;
 // Disable the pinch valve
 void PinchValve::Disable() {
   StepMotor *mtr = StepMotor::GetStepper(motor_index_);
-  if (!mtr) return;
+  if (!mtr) {
+    return;
+  }
 
   home_state_ = PinchValveHomeState::Disabled;
   mtr->HardDisable();
@@ -79,7 +81,9 @@ void PinchValve::Disable() {
 //
 void PinchValve::Home() {
   StepMotor *mtr = StepMotor::GetStepper(motor_index_);
-  if (!mtr) return;
+  if (!mtr) {
+    return;
+  }
 
   StepMtrErr err;
 
@@ -91,34 +95,46 @@ void PinchValve::Home() {
     // Limit motor power during homing.
     case PinchValveHomeState::LowerAmp:
       err = mtr->SetAmpAll(HomeAmp);
-      if (err == StepMtrErr::Ok) home_state_ = PinchValveHomeState::SetHomeSpeed;
+      if (err == StepMtrErr::Ok) {
+        home_state_ = PinchValveHomeState::SetHomeSpeed;
+      }
       break;
 
     // Set the move speed/accel to be used during homing
     case PinchValveHomeState::SetHomeSpeed:
       err = mtr->SetMaxSpeed(HomeVel);
-      if (err == StepMtrErr::Ok) err = mtr->SetAccel(HomeAccel);
-      if (err == StepMtrErr::Ok) home_state_ = PinchValveHomeState::MoveToStop;
+      if (err == StepMtrErr::Ok) {
+        err = mtr->SetAccel(HomeAccel);
+      }
+      if (err == StepMtrErr::Ok) {
+        home_state_ = PinchValveHomeState::MoveToStop;
+      }
       break;
 
     // Start a relative move into the hard stop
     case PinchValveHomeState::MoveToStop:
       move_start_time_ = SystemTimer::singleton().now();
       err = mtr->MoveRel(HomeDist);
-      if (err == StepMtrErr::Ok) home_state_ = PinchValveHomeState::WaitMoveStop;
+      if (err == StepMtrErr::Ok) {
+        home_state_ = PinchValveHomeState::WaitMoveStop;
+      }
       break;
 
     // Wait for the move to hard stop to end
     case PinchValveHomeState::WaitMoveStop: {
       Duration dt = SystemTimer::singleton().now() - move_start_time_;
-      if (dt.seconds() >= 3.0f) home_state_ = PinchValveHomeState::SetNormalAmp;
+      if (dt.seconds() >= 3.0f) {
+        home_state_ = PinchValveHomeState::SetNormalAmp;
+      }
       break;
     }
 
     // Switch to normal power setting
     case PinchValveHomeState::SetNormalAmp:
       err = mtr->SetAmpAll(MoveAmp);
-      if (err == StepMtrErr::Ok) home_state_ = PinchValveHomeState::MoveOffset;
+      if (err == StepMtrErr::Ok) {
+        home_state_ = PinchValveHomeState::MoveOffset;
+      }
       break;
 
     // Make a relative move away from the hard stop.
@@ -127,27 +143,37 @@ void PinchValve::Home() {
     case PinchValveHomeState::MoveOffset:
       move_start_time_ = SystemTimer::singleton().now();
       err = mtr->MoveRel(-HomeOffset);
-      if (err == StepMtrErr::Ok) home_state_ = PinchValveHomeState::WaitMoveOffset;
+      if (err == StepMtrErr::Ok) {
+        home_state_ = PinchValveHomeState::WaitMoveOffset;
+      }
       break;
 
     case PinchValveHomeState::WaitMoveOffset: {
       Duration dt = SystemTimer::singleton().now() - move_start_time_;
-      if (dt.seconds() >= 2.0f) home_state_ = PinchValveHomeState::ZeroPos;
+      if (dt.seconds() >= 2.0f) {
+        home_state_ = PinchValveHomeState::ZeroPos;
+      }
       break;
     }
 
     // Set the current position to zero
     case PinchValveHomeState::ZeroPos:
       err = mtr->ClearPosition();
-      if (err == StepMtrErr::Ok) home_state_ = PinchValveHomeState::SetNormalSpeed;
+      if (err == StepMtrErr::Ok) {
+        home_state_ = PinchValveHomeState::SetNormalSpeed;
+      }
       break;
 
     // Switch to normal move speed/accel
     case PinchValveHomeState::SetNormalSpeed:
 
       err = mtr->SetMaxSpeed(MoveVel);
-      if (err == StepMtrErr::Ok) err = mtr->SetAccel(MoveAccel);
-      if (err == StepMtrErr::Ok) home_state_ = PinchValveHomeState::Homed;
+      if (err == StepMtrErr::Ok) {
+        err = mtr->SetAccel(MoveAccel);
+      }
+      if (err == StepMtrErr::Ok) {
+        home_state_ = PinchValveHomeState::Homed;
+      }
 
     case PinchValveHomeState::Homed:
       break;
@@ -161,7 +187,9 @@ void PinchValve::SetOutput(float value) {
   }
 
   StepMotor *mtr = StepMotor::GetStepper(motor_index_);
-  if (!mtr) return;
+  if (!mtr) {
+    return;
+  }
 
   // Convert the value to an absolute position in deg
   // The motor's zero position is at the home offset
@@ -182,7 +210,9 @@ void PinchValve::SetOutput(float value) {
   //
   // This seems to really smooth out the pinch valve motion and allow for
   // higher gains.
-  if (fabsf(pos - last_command_) > FLT_EPSILON) mtr->HardStop();
+  if (fabsf(pos - last_command_) > FLT_EPSILON) {
+    mtr->HardStop();
+  }
 
   last_command_ = pos;
   mtr->GotoPos(pos);

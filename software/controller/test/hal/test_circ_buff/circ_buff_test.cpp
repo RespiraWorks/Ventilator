@@ -62,7 +62,9 @@ TEST(CircularBuffer, DataIO) {
   CircularBuffer<uint8_t, BufferSize> buff;
 
   uint8_t TestSet[BufferSize + 20];
-  for (uint32_t i = 0; i < sizeof(TestSet); i++) TestSet[i] = static_cast<uint8_t>(rand());
+  for (uint32_t i = 0; i < sizeof(TestSet); i++) {
+    TestSet[i] = static_cast<uint8_t>(rand());
+  }
 
   // Add data to the buffer until failure - multiple failures should not affect
   // our test results: the buffer's content stays unchanged during failure to

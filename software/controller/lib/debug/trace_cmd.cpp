@@ -21,7 +21,9 @@ namespace Debug::Command {
 ErrorCode TraceHandler::Process(Context *context) {
   // The first byte of data is always required, this
   // gives the sub-command.
-  if (context->request_length < 1) return ErrorCode::MissingData;
+  if (context->request_length < 1) {
+    return ErrorCode::MissingData;
+  }
 
   Subcommand subcommand{context->request[0]};
 
@@ -59,7 +61,9 @@ ErrorCode TraceHandler::Process(Context *context) {
 
     case Subcommand::GetPeriod:
       // response (trace period) is 32 bits (4 bytes) long
-      if (context->max_response_length < 4) return ErrorCode::NoMemory;
+      if (context->max_response_length < 4) {
+        return ErrorCode::NoMemory;
+      }
       u32_to_u8(trace_->period(), context->response);
       context->response_length = 4;
       *(context->processed) = true;
@@ -68,7 +72,9 @@ ErrorCode TraceHandler::Process(Context *context) {
     case Subcommand::SetPeriod:
       // trace period is a 32 bits int, meaning the request (including subcommand)
       // is 5 bytes long
-      if (context->request_length < 5) return ErrorCode::MissingData;
+      if (context->request_length < 5) {
+        return ErrorCode::MissingData;
+      }
       trace_->set_period(u8_to_u32(&(context->request[1])));
       context->response_length = 0;
       *(context->processed) = true;
@@ -76,7 +82,9 @@ ErrorCode TraceHandler::Process(Context *context) {
 
     case Subcommand::CountSamples:
       // response (num samples) is 4 bytes long, make sure I have enough room
-      if (context->max_response_length < 4) return ErrorCode::NoMemory;
+      if (context->max_response_length < 4) {
+        return ErrorCode::NoMemory;
+      }
       u32_to_u8(static_cast<uint32_t>(trace_->sample_count()), context->response);
       context->response_length = 4;
       *(context->processed) = true;
@@ -137,7 +145,9 @@ ErrorCode TraceHandler::ReadTraceBuffer(Context *context) {
 
 ErrorCode TraceHandler::SetTraceVar(Context *context) {
   // 3 extra bytes are required to provide variable index and variable ID
-  if (context->request_length < 4) return ErrorCode::MissingData;
+  if (context->request_length < 4) {
+    return ErrorCode::MissingData;
+  }
   // extract index and var_id from request
   uint8_t index = context->request[1];
   uint16_t var_id = u8_to_u16(&context->request[2]);
@@ -152,12 +162,16 @@ ErrorCode TraceHandler::SetTraceVar(Context *context) {
 
 ErrorCode TraceHandler::GetTraceVar(Context *context) {
   // 1 extra byte is required to provide variable index
-  if (context->request_length < 2) return ErrorCode::MissingData;
+  if (context->request_length < 2) {
+    return ErrorCode::MissingData;
+  }
 
   uint8_t index = context->request[1];
 
   // response (var ID) is 16 bits (2 bytes) long
-  if (context->max_response_length < 2) return ErrorCode::NoMemory;
+  if (context->max_response_length < 2) {
+    return ErrorCode::NoMemory;
+  }
   context->response_length = 2;
 
   u16_to_u8(static_cast<uint16_t>(trace_->traced_variable(index)), context->response);

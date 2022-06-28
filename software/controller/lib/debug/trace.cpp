@@ -37,7 +37,9 @@ void Trace::set_period(const uint32_t period) { period_ = period; }
 
 // Sample all trace variables every "period" calls
 void Trace::maybe_sample() {
-  if (!running_) return;
+  if (!running_) {
+    return;
+  }
 
   if (cycles_count_ == 0) {
     if (!sample_all_variables()) {
@@ -47,13 +49,17 @@ void Trace::maybe_sample() {
   }
 
   ++cycles_count_;
-  if (cycles_count_ >= period_) cycles_count_ = 0;
+  if (cycles_count_ >= period_) {
+    cycles_count_ = 0;
+  }
 }
 
 void Trace::flush() { trace_buffer_.Flush(); }
 
 size_t Trace::sample_count() {
-  if (!active_variable_count()) return 0;
+  if (!active_variable_count()) {
+    return 0;
+  }
   return trace_buffer_.FullCount() / active_variable_count();
 }
 
@@ -93,9 +99,13 @@ uint16_t Trace::traced_variable(uint8_t index) {
   *count = 0;
   BlockInterrupts block;
   for (auto *var : traced_vars_) {
-    if (!var) continue;
+    if (!var) {
+      continue;
+    }
     std::optional<uint32_t> dat = trace_buffer_.Get();
-    if (!dat) return false;
+    if (!dat) {
+      return false;
+    }
     (*record)[(*count)++] = *dat;
   }
   return true;
@@ -109,7 +119,9 @@ bool Trace::sample_all_variables() {
   }
   // Sample each enabled variable and store the result to the buffer.
   for (auto *var : traced_vars_) {
-    if (!var) continue;
+    if (!var) {
+      continue;
+    }
     // Can't fail as we've already checked for sufficient space above.
     var->serialize_value(&temp_variable_value_);
     (void)trace_buffer_.Put(temp_variable_value_);

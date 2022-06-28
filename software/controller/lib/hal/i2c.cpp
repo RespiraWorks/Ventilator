@@ -540,7 +540,9 @@ void Channel::I2CErrorHandler() {
 }
 
 void Channel::DMAInterruptHandler(ExchangeDirection direction) {
-  if (!dma_enable_ || !transfer_in_progress_) return;
+  if (!dma_enable_ || !transfer_in_progress_) {
+    return;
+  }
 
   DMA::ChannelControl *channel{nullptr};
   if (last_request_.direction == ExchangeDirection::Read) {

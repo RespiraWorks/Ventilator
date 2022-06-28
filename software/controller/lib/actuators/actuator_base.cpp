@@ -43,7 +43,9 @@ void Actuator::InitDebugVars(const char *name, const char *help, const char *set
 
 float Actuator::get_value(float input) {
   auto forced = forced_value_.get();
-  if (forced >= 0 && forced <= 1) return calibration_.get_value(forced);
+  if (forced >= 0 && forced <= 1) {
+    return calibration_.get_value(forced);
+  }
 
   return calibration_.get_value(input);
 }

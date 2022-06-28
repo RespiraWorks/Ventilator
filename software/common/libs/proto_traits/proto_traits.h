@@ -42,14 +42,20 @@ struct ProtoTraits {
   // static inline const pb_msgdesc_t *MsgDesc = &Proto_msg;
 };
 
-#define MAKE_TRAITS(T)                                        \
-  template <>                                                 \
-  struct ProtoTraits<T> {                                     \
-    using Type = T;                                           \
-    static inline constexpr uint32_t MaxSize = T##_size;      \
-    static inline constexpr T InitZero = T##_init_zero;       \
-    static inline constexpr T InitDefault = T##_init_default; \
-    static inline const pb_msgdesc_t *MsgDesc = &T##_msg;     \
+#define CRC_SIZE 4
+#define FRAMING_SIZE 2
+#define ESCAPED_BYTE_SIZE 2
+
+#define MAKE_TRAITS(T)                                            \
+  template <>                                                     \
+  struct ProtoTraits<T> {                                         \
+    using Type = T;                                               \
+    static inline constexpr uint32_t MaxSize = T##_size;          \
+    static inline constexpr uint32_t MaxFrameSize =               \
+        (T##_size + CRC_SIZE) * ESCAPED_BYTE_SIZE + FRAMING_SIZE; \
+    static inline constexpr T InitZero = T##_init_zero;           \
+    static inline constexpr T InitDefault = T##_init_default;     \
+    static inline const pb_msgdesc_t *MsgDesc = &T##_msg;         \
   }
 
 MAKE_TRAITS(ControllerStatus);

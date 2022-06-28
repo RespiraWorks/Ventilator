@@ -12,12 +12,10 @@ limitations under the License.
 
 #include "uart_soft.h"
 
-// Declaration of UART channels, as global since hal requires it to exist for interrupt handlers
-// TODO: find a way to get rid of these global variable (probably requires a more flexible
+// Declaration of UART channel for debug interface, as global since hal requires it to exist
+// for interrupt handlers
+// TODO: find a way to get rid of global variable (probably requires a more flexible
 // handling of InterruptVector in Reset_Handler() function from hal_stm32.cpp)
-#if !defined(UART_VIA_DMA)
-UART::SoftChannel rpi_uart(UART::Base::UART3);
-#endif
 UART::SoftChannel debug_uart(UART::Base::UART2);
 
 namespace UART {
@@ -27,7 +25,9 @@ namespace UART {
 // are available it will only return the available bytes
 // Returns the number of bytes actually read.
 size_t SoftChannel::Read(uint8_t *buffer, size_t length, RxListener *rxl) {
-  rx_listener_ = rxl;
+  if (rxl) {
+    SetRxListener(rxl);
+  }
 
   for (size_t i = 0; i < length; i++) {
     std::optional<uint8_t> ch = rx_data_.Get();
@@ -45,7 +45,9 @@ size_t SoftChannel::Read(uint8_t *buffer, size_t length, RxListener *rxl) {
 size_t SoftChannel::Write(uint8_t *buffer, size_t length, TxListener *txl) {
   size_t i;
   for (i = 0; i < length; i++) {
-    if (!tx_data_.Put(*buffer++)) break;
+    if (!tx_data_.Put(*buffer++)) {
+      break;
+    }
   }
   EnableTxInterrupt();
   Channel::Write(buffer, length, txl);

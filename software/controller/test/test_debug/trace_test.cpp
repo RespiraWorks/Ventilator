@@ -54,7 +54,9 @@ TEST(Trace, MaybeSampleTwoVars) {
   int expected_num_samples = 0;
   for (; i < 9; ++i) {
     trace.maybe_sample();  // Should sample at i = 0, 3, 6
-    if (i % 3 == 0) ++expected_num_samples;
+    if (i % 3 == 0) {
+      ++expected_num_samples;
+    }
     EXPECT_EQ(expected_num_samples, trace.sample_count());
   }
 
@@ -73,7 +75,9 @@ TEST(Trace, MaybeSampleTwoVars) {
   // being collected.
   for (; i < 15; ++i) {
     trace.maybe_sample();  // Should sample at i = 9, 12
-    if (i % 3 == 0) ++expected_num_samples;
+    if (i % 3 == 0) {
+      ++expected_num_samples;
+    }
     EXPECT_EQ(expected_num_samples, trace.sample_count());
   }
 

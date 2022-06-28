@@ -82,14 +82,18 @@ bool Interface::Poll() {
 bool Interface::ReadNextByte() {
   // Get the next byte from the debug serial port if there is one.
   uint8_t byte;
-  if (uart_->Read(&byte, 1) < 1) return false;
+  if (uart_->Read(&byte, 1) < 1) {
+    return false;
+  }
 
   // If the previous character received was an escape character
   // then just save this byte (assuming there's space)
   if (escape_next_byte_) {
     escape_next_byte_ = false;
 
-    if (request_size_ < std::size(request_)) request_[request_size_++] = byte;
+    if (request_size_ < std::size(request_)) {
+      request_[request_size_++] = byte;
+    }
     return true;
   }
 
@@ -107,7 +111,9 @@ bool Interface::ReadNextByte() {
   }
 
   // For other characters, just save them if there's space in the buffer
-  if (request_size_ < std::size(request_)) request_[request_size_++] = byte;
+  if (request_size_ < std::size(request_)) {
+    request_[request_size_++] = byte;
+  }
   return true;
 }
 
@@ -117,7 +123,9 @@ bool Interface::ReadNextByte() {
 bool Interface::SendNextByte() {
   // To simplify things below, I require at least 3 bytes
   // in the output buffer to continue
-  if (uart_->TxFree() < MinFrameSize) return false;
+  if (uart_->TxFree() < MinFrameSize) {
+    return false;
+  }
 
   // See what the next character to send is.
   uint8_t next_byte = response_[response_bytes_sent_++];
@@ -134,7 +142,9 @@ bool Interface::SendNextByte() {
   }
 
   // If there's more response to send, return true
-  if (response_bytes_sent_ < response_size_) return true;
+  if (response_bytes_sent_ < response_size_) {
+    return true;
+  }
 
   // If that was the last byte in my response, send the
   // termination character and start waiting on the next
@@ -228,7 +238,9 @@ uint16_t Interface::ComputeCRC(const uint8_t *buffer, size_t length) {
       for (uint8_t bit_number = 0; bit_number < 8; bit_number++) {
         bool lsb = (crc & 1) == 1;
         crc = static_cast<uint16_t>(crc >> 1);
-        if (lsb) crc ^= CRC16POLY;
+        if (lsb) {
+          crc ^= CRC16POLY;
+        }
       }
 
       CrcTable[byte] = crc;

@@ -47,7 +47,9 @@ void Base::prepend_name(const char *prefix, bool strict) {
 void Base::append_help(const char *text, bool strict) {
   constexpr char delimiter{' '};
   // \todo use stricat instead?
-  if (!strict && text[0] != delimiter) strncat(help_, &delimiter, 1);
+  if (!strict && text[0] != delimiter) {
+    strncat(help_, &delimiter, 1);
+  }
   strcat(help_, text);
 }
 

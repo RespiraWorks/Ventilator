@@ -14,12 +14,14 @@ limitations under the License.
 
 #include <stdint.h>
 
+#include <optional>
+
+#include "frame_detector.h"
 #include "network_protocol.pb.h"
-#if defined(UART_VIA_DMA)
+#include "proto_traits.h"
 #include "uart_dma.h"
-#else
-#include "uart_soft.h"
-#endif
+#include "uart_rx_buffer.h"
+#include "uart_stream.h"
 
 // This module periodically sends messages to the GUI device and receives
 // messages from the GUI.  The only way it communicates with other modules is
@@ -28,6 +30,8 @@ class Comms {
  public:
   explicit Comms(UART::Channel *uart) : uart_(uart){};
 
+  void Initialize();
+
   // `controller_status` should be the controller's current status.  It's sent
   // periodically to the GUI.  When we receive a message from the GUI, we update
   // gui_status accordingly.
@@ -35,33 +39,19 @@ class Comms {
 
  private:
   UART::Channel *uart_;
-  // Our outgoing (serialized) ControllerStatus proto is stored in tx_buffer.  We
-  // then transmit it a few bytes at a time, as the serial port becomes
-  // available.
-  //
-  // This isn't a circular buffer; the beginning of the proto is always at the
-  // beginning of the buffer.
-  uint8_t tx_buffer_[ControllerStatus_size] = {0};
-  // Index of the next byte to transmit.
-  size_t tx_idx_{0};
-  // Number of bytes remaining to transmit. tx_idx + tx_bytes_remaining equals
-  // the size of the serialized ControllerStatus proto.
-  size_t tx_bytes_remaining_{0};
 
-  // Time when we started sending the last ControllerStatus.
+  // Our outgoing (framed) ControllerStatus proto is stored in tx_buffer.
+  UartStream<(ControllerStatus_size + 4) * 2 + 2> tx_buffer_{uart_};
   std::optional<Time> last_tx_{std::nullopt};
 
-  // Our incoming (serialized) GuiStatus proto is incrementally buffered in
-  // rx_buffer until it's complete and we can deserialize it to a proto.
-  //
-  // Like tx_buffer, this isn't a circular buffer; the beginning of the proto should
-  // always be at the beginning of the buffer.
-  uint8_t rx_buffer_[GuiStatus_size] = {0};
-  size_t rx_index_{0};
+  // Our incoming (framed) GuiStatus proto is buffered in rx_buffer.
+  static constexpr size_t RxBufferSize{ProtoTraits<GuiStatus>::MaxFrameSize};
+  UartRxBuffer<RxBufferSize> rx_buffer_{uart_};
   Time last_rx_{microsSinceStartup(0)};
-  bool rx_in_progress_{false};
+  FrameDetector<RxBufferSize> frame_detector_{&rx_buffer_};
 
-  bool IsTimeToProcessPacket();
   void ProcessTx(const ControllerStatus &controller_status);
   void ProcessRx(GuiStatus *gui_status);
+
+  static constexpr Duration TxInterval{milliseconds(30)};
 };

@@ -25,6 +25,11 @@
 #
 # CircleCI runs this script (via .circleci/config.yml), but might have some
 # environment differences, so the approximation is not perfect. For
+
+PIO_VERSION=6.0.2
+COVERAGE_ENVIRONMENT=native
+COVERAGE_OUTPUT_DIR=coverage_reports
+
 # a more exact test run, please build the tests_Dockerfile.
 
 # Fail if any command fails
@@ -41,9 +46,6 @@ cd "$(dirname "$0")"
 
 EXIT_FAILURE=1
 EXIT_SUCCESS=0
-
-COVERAGE_ENVIRONMENT=native
-COVERAGE_OUTPUT_DIR=coverage_reports
 
 # Check if Linux
 PLATFORM="$(uname -s)"
@@ -62,6 +64,7 @@ Utility script for the RespiraWorks Ventilator common code testing.
 
 The following options are available:
   install     One-time installation of build toolchain and dependencies
+  update      Updates platformio and required libraries
   check       Runs static checks only
   clean       Clean build directories
   test        Builds and runs all unit tests, integration tests, static checks, generates coverage
@@ -106,8 +109,15 @@ install_linux() {
                clang-tidy
   pip3 install -U pip
   pip3 install codecov
-  pip3 install platformio==6.0.2
+  pip3 install platformio==${PIO_VERSION}
   source ${HOME}/.profile
+}
+
+update_platformio() {
+  pip3 install platformio==${PIO_VERSION}
+  pio pkg uninstall -d .
+  pio pkg install -d .
+  exit $EXIT_SUCCESS
 }
 
 run_checks() {
@@ -228,6 +238,17 @@ elif [ "$1" == "install" ]; then
     exit $EXIT_FAILURE
   fi
   install_linux
+  exit $EXIT_SUCCESS
+
+##########
+# UPDATE #
+##########
+elif [ "$1" == "update" ]; then
+  if [ "$EUID" -eq 0 ] && [ -z "$FORCED_ROOT" ]; then
+    echo "Please do not run update with root privileges!"
+    exit $EXIT_SUCCESS
+  fi
+  update_platformio
   exit $EXIT_SUCCESS
 
 #########

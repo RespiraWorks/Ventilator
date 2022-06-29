@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2020-2021, RespiraWorks
+# Copyright 2020-2022, RespiraWorks
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -32,6 +32,10 @@
 # - They have to have a very good chance of passing for other
 #   developers if they run via ./controller.sh test
 
+PIO_VERSION=6.0.2
+COVERAGE_ENVIRONMENT=native
+COVERAGE_OUTPUT_DIR=coverage_reports
+
 # Fail if any command fails
 set -e
 set -o pipefail
@@ -46,9 +50,6 @@ cd "$(dirname "$0")"
 
 EXIT_FAILURE=1
 EXIT_SUCCESS=0
-
-COVERAGE_ENVIRONMENT=native
-COVERAGE_OUTPUT_DIR=coverage_reports
 
 # Check if Linux
 PLATFORM="$(uname -s)"
@@ -67,7 +68,8 @@ Utility script for the RespiraWorks Ventilator controller.
 
 The following options are available:
   install     One-time installation of build toolchain and dependencies
-  configure   Configures udev rules for deployment to controller
+  configure   One-time configuring of udev rules for deployment to controller
+  update      Updates platformio and required libraries
   check       Runs static checks only
   clean       Clean build directories
   debug       Run debugger CLI (Python utility) to communicate with controller remotely
@@ -115,7 +117,7 @@ install_linux() {
                clang-tidy
   pip3 install -U pip
   pip3 install codecov pyserial matplotlib pandas gitpython
-  pip3 install platformio==6.0.2
+  pip3 install platformio==${PIO_VERSION}
   source ${HOME}/.profile
 }
 
@@ -127,6 +129,13 @@ configure_platformio() {
   sudo usermod -a -G plugdev "$USER"
 
   echo "Updated udev rules. You might have to restart your machine for changes to become effective."
+}
+
+update_platformio() {
+  pip3 install platformio==${PIO_VERSION}
+  pio pkg uninstall -d .
+  pio pkg install -d .
+  exit $EXIT_SUCCESS
 }
 
 run_checks() {
@@ -272,6 +281,17 @@ elif [ "$1" == "configure" ]; then
     exit $EXIT_FAILURE
   fi
   configure_platformio
+  exit $EXIT_SUCCESS
+
+##########
+# UPDATE #
+##########
+elif [ "$1" == "update" ]; then
+  if [ "$EUID" -eq 0 ] && [ -z "$FORCED_ROOT" ]; then
+    echo "Please do not run update with root privileges!"
+    exit $EXIT_SUCCESS
+  fi
+  update_platformio
   exit $EXIT_SUCCESS
 
 #########

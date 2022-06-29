@@ -88,7 +88,7 @@ cd ventilator
 ###############################################################################
 
 ### Desktop shortcuts
-cp -f software/utils/rpi_config/user/Desktop/* ${HOME}/Desktop
+/bin/cp -rf software/utils/rpi_config/user/Desktop/* ${HOME}/Desktop
 
 ### Matchbox keyboard setup
 sudo cp -f software/utils/rpi_config/keyboard.xml /usr/share/matchbox-keyboard/

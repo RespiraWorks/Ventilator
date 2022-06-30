@@ -1,11 +1,8 @@
-/* Copyright 2020, RespiraWorks
-
+/* Copyright 2020-2022, RespiraWorks
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
-
     http://www.apache.org/licenses/LICENSE-2.0
-
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -18,6 +15,7 @@ limitations under the License.
 #include <optional>
 #include <variant>
 
+#include "breath_detection.h"
 #include "network_protocol.pb.h"
 #include "units.h"
 
@@ -52,14 +50,6 @@ limitations under the License.
 enum class FlowDirection {
   Inspiratory,
   Expiratory,
-};
-
-// Sensor readings etc that are used by BlowerFsm to do e.g. breath detection.
-struct BlowerFsmInputs {
-  // Current patient volume, corrected for sensor zero-point drift.
-  Volume patient_volume;
-  // inflow - outflow, corrected for sensor zero-point drift.
-  VolumetricFlow net_flow;
 };
 
 // Represents a state that the blower FSM wants us to achieve at a given point
@@ -104,7 +94,7 @@ class OffFsm {
  public:
   OffFsm() = default;
   explicit OffFsm(Time now, const VentParams &) {}
-  BlowerSystemState DesiredState(Time now, const BlowerFsmInputs &inputs) {
+  BlowerSystemState DesiredState(Time now, const BreathDetectionInputs &inputs) {
     return {
         .pressure_setpoint = std::nullopt,
         // TODO: It doesn't make much sense to specify a flow direction when the
@@ -127,7 +117,7 @@ class OffFsm {
 class PressureControlFsm {
  public:
   explicit PressureControlFsm(Time now, const VentParams &params);
-  BlowerSystemState DesiredState(Time now, const BlowerFsmInputs &inputs);
+  BlowerSystemState DesiredState(Time now, const BreathDetectionInputs &inputs);
 
  private:
   const Pressure inspire_pressure_;
@@ -149,35 +139,22 @@ class PressureControlFsm {
 class PressureAssistFsm {
  public:
   explicit PressureAssistFsm(Time now, const VentParams &params);
-  BlowerSystemState DesiredState(Time now, const BlowerFsmInputs &inputs);
+  BlowerSystemState DesiredState(Time now, const BreathDetectionInputs &inputs);
 
  private:
-  bool PatientInspiring(Time now, const BlowerFsmInputs &inputs);
-
   const Pressure inspire_pressure_;
   const Pressure expire_pressure_;
   Time start_time_;
   Time inspire_end_;
   Time expire_deadline_;
-
-  // During exhale we maintain two exponentially-weighted averages of flow, one
-  // which updates quickly (fast_flow_avg_), and one which updates slowly
-  // (slow_flow_avg_).
-  //
-  // When fast_flow_avg_ exceeds slow_flow_avg_ by a threshold, we trigger a
-  // breath.
-  //
-  // More discussion of this algorithm:
-  // https://respiraworks.slack.com/archives/C011CJQV4Q7/p1592417313120400
-  std::optional<VolumetricFlow> fast_flow_avg_;
-  std::optional<VolumetricFlow> slow_flow_avg_;
+  BreathDetection inspire_detection_;
 };
 
 class BlowerFsm {
  public:
-  // Gets the state that the the blower system should (ideally) deliver right
-  // now.
-  BlowerSystemState DesiredState(Time now, const VentParams &params, const BlowerFsmInputs &inputs);
+  // Gets the state that the the blower system should (ideally) deliver right now.
+  BlowerSystemState DesiredState(Time now, const VentParams &params,
+                                 const BreathDetectionInputs &inputs);
 
  private:
   std::variant<OffFsm, PressureControlFsm, PressureAssistFsm> fsm_;

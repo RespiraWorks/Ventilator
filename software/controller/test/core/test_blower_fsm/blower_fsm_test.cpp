@@ -28,7 +28,7 @@ limitations under the License.
 
 namespace {
 
-constexpr BlowerFsmInputs inputs_zero = {
+constexpr BreathDetectionInputs inputs_zero = {
     .patient_volume = ml(0),
     .net_flow = ml_per_sec(0),
 };
@@ -112,7 +112,7 @@ TEST(BlowerFsmTest, DesiredPipPeep) {
 struct BlowerFsmTest {
   Time time{microsSinceStartup(0)};
   VentParams params;
-  BlowerFsmInputs inputs;
+  BreathDetectionInputs inputs;
   BlowerSystemState expected_state;
 };
 
@@ -129,7 +129,7 @@ void testSequence(const std::vector<BlowerFsmTest> &seq) {
   SystemTimer::singleton().delay(seq.front().time - SystemTimer::singleton().now());
 
   VentParams last_params;
-  BlowerFsmInputs last_inputs;
+  BreathDetectionInputs last_inputs;
   for (const auto &blower_fsm_test : seq) {
     SCOPED_TRACE("time = " + blower_fsm_test.time.microsSinceStartup() / 1000);
     // Move time forward to t in steps of Controller::GetLoopPeriod().

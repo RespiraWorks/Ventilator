@@ -14,7 +14,6 @@ limitations under the License.
 
 #include <algorithm>
 
-#include "controller.h"
 #include "system_constants.h"
 #include "vars.h"
 
@@ -90,8 +89,7 @@ PressureAssistFsm::PressureAssistFsm(Time now, const VentParams &params)
       expire_pressure_(cmH2O(static_cast<float>(params.peep_cm_h2o))),
       start_time_(now),
       inspire_end_(start_time_ + InspireDuration(params)),
-      expire_deadline_(inspire_end_ + ExpireDuration(params)),
-      inspire_detection_(Controller::GetLoopPeriod(), "pressure_assist") {}
+      expire_deadline_(inspire_end_ + ExpireDuration(params)) {}
 
 BlowerSystemState PressureAssistFsm::DesiredState(Time now, const BreathDetectionInputs &inputs) {
   if (now < inspire_end_) {

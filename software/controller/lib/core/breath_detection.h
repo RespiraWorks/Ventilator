@@ -27,7 +27,7 @@ struct BreathDetectionInputs {
 // Provides a class that is used to detecting inspiratory effort.
 class BreathDetection {
  public:
-  BreathDetection(const Duration loop_period, const char *mode);
+  BreathDetection();
   // This method tells the system if a patient is inspiring and must be called
   // only during exhale phase. Parameters:
   // - net_flow, to allow inspire detection
@@ -36,20 +36,13 @@ class BreathDetection {
   bool PatientInspiring(const BreathDetectionInputs &inputs, bool at_dwell);
 
  private:
-  Debug::Variable::Float fast_alpha_;
-  Debug::Variable::Float slow_alpha_;
-
   // During breath we maintain two exponentially-weighted averages of flow, one
-  // which updates quickly (fast_avg_flow_), and one which updates slowly
-  // (slow_avg_flow_).
+  // which updates quickly (fast_flow_avg_), and one which updates slowly (slow_flow_avg_).
   //
-  // When fast_avg_flow_ exceeds slow_avg_flow_ by a threshold, we trigger a
-  // breath.
+  // When fast_flow_avg_ exceeds slow_flow_avg_ by a threshold, we trigger a breath.
   //
   // More discussion of this algorithm:
   // https://respiraworks.slack.com/archives/C011CJQV4Q7/p1592417313120400
-  Debug::Variable::Float fast_flow_avg_{"fast_flow_avg", Debug::Variable::Access::ReadOnly, 0.0f,
-                                        "mL/s", "fast-updating flow average"};
-  Debug::Variable::Float slow_flow_avg_{"slow_flow_avg", Debug::Variable::Access::ReadOnly, 0.0f,
-                                        "mL/s", "fast-updating flow average"};
+  VolumetricFlow fast_flow_avg_{ml_per_sec(0)};
+  VolumetricFlow slow_flow_avg_{ml_per_sec(0)};
 };

@@ -147,7 +147,7 @@ class PressureAssistFsm {
   Time start_time_;
   Time inspire_end_;
   Time expire_deadline_;
-  BreathDetection inspire_detection_;
+  BreathDetection inspire_detection_{};
 };
 
 class BlowerFsm {

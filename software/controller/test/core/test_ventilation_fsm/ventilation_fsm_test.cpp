@@ -13,18 +13,18 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include "blower_fsm.h"
+#include "ventilation_fsm.h"
 
 #include <optional>
 #include <string>
 
-#include "blower_fsm_test_data.h"
 #include "controller.h"
 #include "gmock/gmock-matchers.h"
 #include "gtest_main.h"
 #include "hal.h"
 #include "system_constants.h"
 #include "system_timer.h"
+#include "ventilation_fsm_test_data.h"
 
 namespace {
 
@@ -35,29 +35,31 @@ constexpr BreathDetectionInputs inputs_zero = {
 
 constexpr int64_t rise_time_us = RiseTime.microseconds();
 static_assert(rise_time_us % 1000 == 0,
-              "blower fsm tests assume rise time is a whole number of ms.");
-static_assert(rise_time_us % 5 == 0, "blower fsm tests assume we can divide rise time ms by 5.");
-static_assert(rise_time_us % 2 == 0, "blower fsm tests assume we can divide rise time ms by 2.");
+              "ventilation fsm tests assume rise time is a whole number of ms.");
+static_assert(rise_time_us % 5 == 0,
+              "ventilation fsm tests assume we can divide rise time ms by 5.");
+static_assert(rise_time_us % 2 == 0,
+              "ventilation fsm tests assume we can divide rise time ms by 2.");
 
-TEST(BlowerFsmTest, InitiallyOff) {
-  BlowerFsm fsm;
+TEST(VentilationFsmTest, InitiallyOff) {
+  VentilationFsm fsm;
   VentParams p = VentParams_init_zero;
-  BlowerSystemState s = fsm.DesiredState(SystemTimer::singleton().now(), p, inputs_zero);
+  VentilationSystemState s = fsm.DesiredState(SystemTimer::singleton().now(), p, inputs_zero);
   EXPECT_TRUE(s.pressure_setpoint == std::nullopt);
   EXPECT_EQ(s.flow_direction, FlowDirection::Expiratory);
 }
 
-TEST(BlowerFsmTest, StaysOff) {
-  BlowerFsm fsm;
+TEST(VentilationFsmTest, StaysOff) {
+  VentilationFsm fsm;
   VentParams p = VentParams_init_zero;
   SystemTimer::singleton().delay(milliseconds(1000));
-  BlowerSystemState s = fsm.DesiredState(SystemTimer::singleton().now(), p, inputs_zero);
+  VentilationSystemState s = fsm.DesiredState(SystemTimer::singleton().now(), p, inputs_zero);
   EXPECT_TRUE(s.pressure_setpoint == std::nullopt);
   EXPECT_EQ(s.flow_direction, FlowDirection::Expiratory);
 }
 
-TEST(BlowerFsmTest, OffFsmDesiredPipPeep) {
-  BlowerFsm fsm;
+TEST(VentilationFsmTest, OffFsmDesiredPipPeep) {
+  VentilationFsm fsm;
   VentParams p = VentParams_init_zero;
   p.mode = VentMode_OFF;
   p.breaths_per_min = 20;
@@ -65,14 +67,14 @@ TEST(BlowerFsmTest, OffFsmDesiredPipPeep) {
   p.peep_cm_h2o = 10;
   p.pip_cm_h2o = 20;
 
-  BlowerSystemState s = fsm.DesiredState(SystemTimer::singleton().now(), p, inputs_zero);
+  VentilationSystemState s = fsm.DesiredState(SystemTimer::singleton().now(), p, inputs_zero);
   EXPECT_EQ(s.pip.cmH2O(), 0.f);
   EXPECT_EQ(s.peep.cmH2O(), 0.f);
 }
 
-TEST(BlowerFsmTest, DesiredPipPeep) {
+TEST(VentilationFsmTest, DesiredPipPeep) {
   for (VentMode mode : {VentMode_PRESSURE_CONTROL, VentMode_PRESSURE_ASSIST}) {
-    BlowerFsm fsm;
+    VentilationFsm fsm;
     VentParams p = VentParams_init_zero;
     p.mode = mode;
     p.breaths_per_min = 20;  // 3s/breath
@@ -80,7 +82,7 @@ TEST(BlowerFsmTest, DesiredPipPeep) {
     p.pip_cm_h2o = 20;
     p.peep_cm_h2o = 10;
 
-    BlowerSystemState s = fsm.DesiredState(SystemTimer::singleton().now(), p, inputs_zero);
+    VentilationSystemState s = fsm.DesiredState(SystemTimer::singleton().now(), p, inputs_zero);
     EXPECT_EQ(s.pip.cmH2O(), 20.f);
     EXPECT_EQ(s.peep.cmH2O(), 10.f);
 
@@ -109,17 +111,17 @@ TEST(BlowerFsmTest, DesiredPipPeep) {
   }
 }
 
-struct BlowerFsmTest {
+struct VentilationFsmTest {
   Time time{microsSinceStartup(0)};
   VentParams params;
   BreathDetectionInputs inputs;
-  BlowerSystemState expected_state;
+  VentilationSystemState expected_state;
 };
 
-// Checks that a sequence of calls to blower_fsm_desired_state() yield the
+// Checks that a sequence of calls to ventilation_fsm_desired_state() yield the
 // expected results.
-void testSequence(const std::vector<BlowerFsmTest> &seq) {
-  BlowerFsm fsm;
+void testSequence(const std::vector<VentilationFsmTest> &seq) {
+  VentilationFsm fsm;
   if (seq.empty()) {
     return;
   }
@@ -130,30 +132,31 @@ void testSequence(const std::vector<BlowerFsmTest> &seq) {
 
   VentParams last_params;
   BreathDetectionInputs last_inputs;
-  for (const auto &blower_fsm_test : seq) {
-    SCOPED_TRACE("time = " + blower_fsm_test.time.microsSinceStartup() / 1000);
+  for (const auto &ventilation_fsm_test : seq) {
+    SCOPED_TRACE("time = " + ventilation_fsm_test.time.microsSinceStartup() / 1000);
     // Move time forward to t in steps of Controller::GetLoopPeriod().
-    while (SystemTimer::singleton().now() < blower_fsm_test.time) {
+    while (SystemTimer::singleton().now() < ventilation_fsm_test.time) {
       SystemTimer::singleton().delay(Controller::GetLoopPeriod());
       (void)fsm.DesiredState(SystemTimer::singleton().now(), last_params, last_inputs);
     }
-    EXPECT_EQ(blower_fsm_test.time.microsSinceStartup(),
+    EXPECT_EQ(ventilation_fsm_test.time.microsSinceStartup(),
               SystemTimer::singleton().now().microsSinceStartup());
 
-    BlowerSystemState state = fsm.DesiredState(SystemTimer::singleton().now(),
-                                               blower_fsm_test.params, blower_fsm_test.inputs);
+    VentilationSystemState state = fsm.DesiredState(
+        SystemTimer::singleton().now(), ventilation_fsm_test.params, ventilation_fsm_test.inputs);
     EXPECT_EQ(state.pressure_setpoint.has_value(),
-              blower_fsm_test.expected_state.pressure_setpoint.has_value());
-    EXPECT_FLOAT_EQ(state.pressure_setpoint.value_or(cmH2O(0)).cmH2O(),
-                    blower_fsm_test.expected_state.pressure_setpoint.value_or(cmH2O(0)).cmH2O());
-    EXPECT_EQ(state.flow_direction, blower_fsm_test.expected_state.flow_direction);
+              ventilation_fsm_test.expected_state.pressure_setpoint.has_value());
+    EXPECT_FLOAT_EQ(
+        state.pressure_setpoint.value_or(cmH2O(0)).cmH2O(),
+        ventilation_fsm_test.expected_state.pressure_setpoint.value_or(cmH2O(0)).cmH2O());
+    EXPECT_EQ(state.flow_direction, ventilation_fsm_test.expected_state.flow_direction);
 
-    last_params = blower_fsm_test.params;
-    last_inputs = blower_fsm_test.inputs;
+    last_params = ventilation_fsm_test.params;
+    last_inputs = ventilation_fsm_test.inputs;
   }
 }
 
-TEST(BlowerFsmTest, PressureControl) {
+TEST(VentilationFsmTest, PressureControl) {
   VentParams params = VentParams_init_zero;
   params.mode = VentMode_PRESSURE_CONTROL;
   // 20 breaths/min = 3s/breath.  I:E = 2 means 2s for inspire, 1s for expire.
@@ -268,7 +271,7 @@ FlowTraceResults RunFlowTrace(const VolumetricFlow *trace, size_t n, const VentP
     VolumetricFlow f = trace[i];
 
     // Our traces don't contain volume measurements, but this is OK for now.
-    BlowerSystemState desired_state =
+    VentilationSystemState desired_state =
         fsm.DesiredState(SystemTimer::singleton().now(), {.patient_volume = ml(0), .net_flow = f});
     FlowDirection dir = desired_state.flow_direction;
     if (dir == FlowDirection::Expiratory && !results.expire_start_time) {
@@ -307,7 +310,7 @@ FlowTraceResults RunFlowTrace(const VolumetricFlow *trace, size_t n, const VentP
 }
 
 // Test a pressure-assist trace which has inspiratory effort.
-TEST(BlowerFsmTest, PressureAssistFlowTrace1) {
+TEST(VentilationFsmTest, PressureAssistFlowTrace1) {
   VentParams p = VentParams_init_zero;
   p.mode = VentMode_PRESSURE_ASSIST;
   p.breaths_per_min = 12;
@@ -337,7 +340,7 @@ TEST(BlowerFsmTest, PressureAssistFlowTrace1) {
 }
 
 // Test a pressure-assist trace which doesn't have inspiratory effort.
-TEST(BlowerFsmTest, PressureAssistFlowTrace2) {
+TEST(VentilationFsmTest, PressureAssistFlowTrace2) {
   VentParams p = VentParams_init_zero;
   p.mode = VentMode_PRESSURE_ASSIST;
   p.breaths_per_min = 12;

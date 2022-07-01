@@ -10,7 +10,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include "blower_fsm.h"
+#include "ventilation_fsm.h"
 
 #include <algorithm>
 
@@ -59,7 +59,8 @@ PressureControlFsm::PressureControlFsm(Time now, const VentParams &params)
       inspire_end_(start_time_ + InspireDuration(params)),
       expire_end_(inspire_end_ + ExpireDuration(params)) {}
 
-BlowerSystemState PressureControlFsm::DesiredState(Time now, const BreathDetectionInputs &inputs) {
+VentilationSystemState PressureControlFsm::DesiredState(Time now,
+                                                        const BreathDetectionInputs &inputs) {
   if (now < inspire_end_) {
     // Go from expire_pressure_ to inspire_pressure_ over a duration of
     // RiseTime.  Then for the rest of the inspire time, hold at
@@ -91,7 +92,8 @@ PressureAssistFsm::PressureAssistFsm(Time now, const VentParams &params)
       inspire_end_(start_time_ + InspireDuration(params)),
       expire_deadline_(inspire_end_ + ExpireDuration(params)) {}
 
-BlowerSystemState PressureAssistFsm::DesiredState(Time now, const BreathDetectionInputs &inputs) {
+VentilationSystemState PressureAssistFsm::DesiredState(Time now,
+                                                       const BreathDetectionInputs &inputs) {
   if (now < inspire_end_) {
     // Go from expire_pressure_ to inspire_pressure_ over a duration of
     // RiseTime.  Then for the rest of the inspire time, hold at
@@ -115,13 +117,15 @@ BlowerSystemState PressureAssistFsm::DesiredState(Time now, const BreathDetectio
       .is_end_of_breath =
           (now >= expire_deadline_ ||
            inspire_detection_.PatientInspiring(
-               inputs, now > inspire_end_ + milliseconds(dbg_pa_min_expire_ms.get()))),
+               inputs,
+               /*at_dwell=*/now > inspire_end_ + milliseconds(dbg_pa_min_expire_ms.get()))),
   };
 }
 
-BlowerSystemState BlowerFsm::DesiredState(Time now, const VentParams &params,
-                                          const BreathDetectionInputs &inputs) {
-  BlowerSystemState s = std::visit([&](auto &fsm) { return fsm.DesiredState(now, inputs); }, fsm_);
+VentilationSystemState VentilationFsm::DesiredState(Time now, const VentParams &params,
+                                                    const BreathDetectionInputs &inputs) {
+  VentilationSystemState s =
+      std::visit([&](auto &fsm) { return fsm.DesiredState(now, inputs); }, fsm_);
 
   // Before returning the state just obtained, we check if a mode change is
   // needed. If the ventilator is being switched on, recompute the desired

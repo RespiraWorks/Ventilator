@@ -35,7 +35,7 @@ std::pair<ActuatorsState, ControllerState> Controller::Run(Time now, const VentP
   Volume patient_volume = flow_integrator_->GetVolume();
   VolumetricFlow net_flow = uncorrected_net_flow + flow_integrator_->FlowCorrection();
 
-  BlowerSystemState desired_state =
+  VentilationSystemState desired_state =
       fsm_.DesiredState(now, params, {.patient_volume = patient_volume, .net_flow = net_flow});
 
   if (desired_state.is_end_of_breath) {

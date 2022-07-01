@@ -70,5 +70,5 @@ bool BreathDetection::PatientInspiring(const BreathDetectionInputs &inputs, bool
   dbg_slow_flow_avg.set(slow_flow_avg_.ml_per_sec());
   dbg_fast_flow_avg.set(fast_flow_avg_.ml_per_sec());
 
-  return at_dwell && fast_flow_avg_ - slow_flow_avg_ > ml_per_sec(dbg_bd_flow_trigger.get());
+  return at_dwell && fast_flow_avg_ - slow_flow_avg_ > ml_per_sec(dbg_flow_trigger.get());
 }

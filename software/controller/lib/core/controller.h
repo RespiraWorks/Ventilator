@@ -19,13 +19,13 @@ limitations under the License.
 #include <utility>
 
 #include "actuators.h"
-#include "blower_fsm.h"
 #include "flow_integrator.h"
 #include "network_protocol.pb.h"
 #include "pid.h"
 #include "sensors.h"
 #include "units.h"
 #include "vars.h"
+#include "ventilation_fsm.h"
 
 // TODO: This name is too close to the ControllerStatus proto.
 struct ControllerState {
@@ -64,7 +64,7 @@ class Controller {
 
  private:
   uint32_t breath_id_{0};
-  BlowerFsm fsm_;
+  VentilationFsm fsm_;
 
   // TODO: These params need to be tuned.
   PID blower_valve_pid_{"blower_valve_",

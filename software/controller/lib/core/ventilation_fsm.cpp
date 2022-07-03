@@ -1,11 +1,8 @@
-/* Copyright 2020, RespiraWorks
-
+/* Copyright 2020-2022, RespiraWorks
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
-
     http://www.apache.org/licenses/LICENSE-2.0
-
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -13,11 +10,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include "blower_fsm.h"
+#include "ventilation_fsm.h"
 
 #include <algorithm>
 
-#include "controller.h"
 #include "system_constants.h"
 #include "vars.h"
 
@@ -25,40 +21,13 @@ limitations under the License.
 //
 // These are read but never modified here.
 
-// TODO: This should be configurable from the GUI.
-static Debug::Variable::Float dbg_pa_flow_trigger("pa_flow_trigger",
-                                                  Debug::Variable::Access::ReadWrite, 200, "mL/s",
-                                                  "pressure assist flow trigger");
-
+// This is a pressure assist tuning parameter, read but never modified here
 // TODO: Is 250ms right?  Or can it be a fixed value at all; should it depend
 // on the RR or something?
 static Debug::Variable::Float dbg_pa_min_expire_ms(
     "pa_min_expire_ms", Debug::Variable::Access::ReadWrite, 250, "ms",
     "minimum amount of time after ventilator exits PIP "
     "before we're eligible to trigger a breath");
-
-// fast_flow_avg_alpha and slow_flow_avg_alpha were tuned for a control loop
-// that runs at a particular frequency.
-//
-// In theory if the control loop gets slower, the alpha terms should get
-// bigger, placing more weight on newer readings, and similarly if the control
-// loop gets faster, the alpha terms should get smaller.  We've tried to encode
-// this here, although it remains to be seen if it actually works.
-static Debug::Variable::Float dbg_fast_flow_avg_alpha(
-    "fast_flow_avg_alpha", Debug::Variable::Access::ReadWrite,
-    0.2f * (Controller::GetLoopPeriod() / milliseconds(10)), "",
-    "alpha term in pressure assist mode's fast-updating "
-    "exponentially-weighted average of flow");
-static Debug::Variable::Float dbg_slow_flow_avg_alpha(
-    "slow_flow_avg_alpha", Debug::Variable::Access::ReadWrite,
-    0.01f * (Controller::GetLoopPeriod() / milliseconds(10)), "",
-    "alpha term in pressure assist mode's slow-updating "
-    "exponentially-weighted average of flow");
-
-static Debug::Variable::Float dbg_fast_flow_avg("fast_flow_avg", Debug::Variable::Access::ReadOnly,
-                                                0.0f, "mL/s", "fast-updating flow average");
-static Debug::Variable::Float dbg_slow_flow_avg("slow_flow_avg", Debug::Variable::Access::ReadOnly,
-                                                0.0f, "mL/s", "slow-updating flow average");
 
 // Given t = secs_per_breath and r = I:E ratio, calculate inspiration and
 // expiration durations (I and E).
@@ -90,7 +59,8 @@ PressureControlFsm::PressureControlFsm(Time now, const VentParams &params)
       inspire_end_(start_time_ + InspireDuration(params)),
       expire_end_(inspire_end_ + ExpireDuration(params)) {}
 
-BlowerSystemState PressureControlFsm::DesiredState(Time now, const BlowerFsmInputs &inputs) {
+VentilationSystemState PressureControlFsm::DesiredState(Time now,
+                                                        const BreathDetectionInputs &inputs) {
   if (now < inspire_end_) {
     // Go from expire_pressure_ to inspire_pressure_ over a duration of
     // RiseTime.  Then for the rest of the inspire time, hold at
@@ -120,12 +90,10 @@ PressureAssistFsm::PressureAssistFsm(Time now, const VentParams &params)
       expire_pressure_(cmH2O(static_cast<float>(params.peep_cm_h2o))),
       start_time_(now),
       inspire_end_(start_time_ + InspireDuration(params)),
-      expire_deadline_(inspire_end_ + ExpireDuration(params)) {
-  dbg_slow_flow_avg.set(0.f);
-  dbg_fast_flow_avg.set(0.f);
-}
+      expire_deadline_(inspire_end_ + ExpireDuration(params)) {}
 
-BlowerSystemState PressureAssistFsm::DesiredState(Time now, const BlowerFsmInputs &inputs) {
+VentilationSystemState PressureAssistFsm::DesiredState(Time now,
+                                                       const BreathDetectionInputs &inputs) {
   if (now < inspire_end_) {
     // Go from expire_pressure_ to inspire_pressure_ over a duration of
     // RiseTime.  Then for the rest of the inspire time, hold at
@@ -146,45 +114,18 @@ BlowerSystemState PressureAssistFsm::DesiredState(Time now, const BlowerFsmInput
       .flow_direction = FlowDirection::Expiratory,
       .pip = inspire_pressure_,
       .peep = expire_pressure_,
-      .is_end_of_breath = (now >= expire_deadline_ || PatientInspiring(now, inputs)),
+      .is_end_of_breath =
+          (now >= expire_deadline_ ||
+           inspire_detection_.PatientInspiring(
+               inputs,
+               /*at_dwell=*/now > inspire_end_ + milliseconds(dbg_pa_min_expire_ms.get()))),
   };
 }
 
-// TODO don't rely on fsm inner states to make this usable in any fsm
-bool PressureAssistFsm::PatientInspiring(Time now, const BlowerFsmInputs &inputs) {
-  if (now < inspire_end_ || inputs.net_flow < ml_per_sec(0)) {
-    return false;
-  }
-
-  // Once we're done inspiring and flow is non-negative, start calculating two
-  // exponentially-weighted averages of net flow: slow_flow_avg_ and
-  // fast_flow_avg_.
-  //
-  // The slow one has a smaller alpha term, so updates slower than the fast
-  // one.  You can think of the slow average as estimating "flow at dwell" and
-  // the fast average as estimating "current flow".
-  //
-  // If the fast average exceeds the slow average by a threshold, we trigger a
-  // breath.
-  float slow_alpha = dbg_slow_flow_avg_alpha.get();
-  float fast_alpha = dbg_fast_flow_avg_alpha.get();
-
-  // TODO: This could be encapsulated in an exponentially-weighted-average
-  // class.
-  slow_flow_avg_ =
-      slow_alpha * inputs.net_flow + (1 - slow_alpha) * slow_flow_avg_.value_or(inputs.net_flow);
-  dbg_slow_flow_avg.set(slow_flow_avg_->ml_per_sec());
-  fast_flow_avg_ =
-      fast_alpha * inputs.net_flow + (1 - fast_alpha) * fast_flow_avg_.value_or(inputs.net_flow);
-  dbg_fast_flow_avg.set(fast_flow_avg_->ml_per_sec());
-
-  return now >= inspire_end_ + milliseconds(dbg_pa_min_expire_ms.get()) &&
-         *fast_flow_avg_ > *slow_flow_avg_ + ml_per_sec(dbg_pa_flow_trigger.get());
-}
-
-BlowerSystemState BlowerFsm::DesiredState(Time now, const VentParams &params,
-                                          const BlowerFsmInputs &inputs) {
-  BlowerSystemState s = std::visit([&](auto &fsm) { return fsm.DesiredState(now, inputs); }, fsm_);
+VentilationSystemState VentilationFsm::DesiredState(Time now, const VentParams &params,
+                                                    const BreathDetectionInputs &inputs) {
+  VentilationSystemState s =
+      std::visit([&](auto &fsm) { return fsm.DesiredState(now, inputs); }, fsm_);
 
   // Before returning the state just obtained, we check if a mode change is
   // needed. If the ventilator is being switched on, recompute the desired

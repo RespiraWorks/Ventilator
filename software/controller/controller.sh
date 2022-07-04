@@ -118,6 +118,11 @@ install_linux() {
   pip3 install -U pip
   pip3 install codecov pyserial matplotlib pandas gitpython
   pip3 install platformio==${PIO_VERSION}
+
+  # upgrading platformio to development version to get proper code coverage reports
+  # remove this when platformio 6.1.0 goes live.
+  pio upgrade --dev
+
   source ${HOME}/.profile
 }
 
@@ -133,6 +138,11 @@ configure_platformio() {
 
 update_platformio() {
   pip3 install platformio==${PIO_VERSION}
+
+  # upgrading platformio to development version to get proper code coverage reports
+  # remove this when platformio 6.1.0 goes live.
+  pio upgrade --dev
+
   pio pkg uninstall -d .
   pio pkg install -d .
   exit $EXIT_SUCCESS
@@ -234,18 +244,11 @@ generate_coverage_reports() {
   rm "${COVERAGE_OUTPUT_DIR}/coverage.info"
   mv "${COVERAGE_OUTPUT_DIR}/coverage_trimmed.info" "${COVERAGE_OUTPUT_DIR}/coverage.info"
 
-  # Capture the case where coverage report is empty in order not to block in case of empty coverage report
-  # This is a temporary solution to an issue with platformio 6.0 (https://community.platformio.org/t/code-coverage-issue-on-native/28126)
-  # \\\TODO: remove this when platformio gets fixed
-  if [ -s "${COVERAGE_OUTPUT_DIR}/coverage.info" ]; then
-    genhtml ${QUIET} "${COVERAGE_OUTPUT_DIR}/coverage.info" \
-        --output-directory "${COVERAGE_OUTPUT_DIR}"
+  genhtml ${QUIET} "${COVERAGE_OUTPUT_DIR}/coverage.info" \
+      --output-directory "${COVERAGE_OUTPUT_DIR}"
 
-    echo "Coverage reports generated at '$COVERAGE_OUTPUT_DIR/index.html'"
-    echo "   You may open it in browser with 'python -m webbrowser ${COVERAGE_OUTPUT_DIR}/index.html'"
-  else
-    echo "Error while generating coverage reports: reporting zero coverage. Non-blocking for now."
-  fi
+  echo "Coverage reports generated at '$COVERAGE_OUTPUT_DIR/index.html'"
+  echo "   You may open it in browser with 'python -m webbrowser ${COVERAGE_OUTPUT_DIR}/index.html'"
 
 }
 

@@ -159,17 +159,17 @@ class PressureAssistFsm {
   Time start_time_;
   Time inspire_end_;
   Time expire_deadline_;
-  BreathDetection inspire_detection_{};
-  Duration inspire_duration;
+  BreathDetection breath_detection_{};
+  Duration inhale_duration_;
 };
 
 // "Breath finite state machine" for High Flow Nasal Cannula mode
 class HFNCFsm {
-public:
+ public:
   explicit HFNCFsm(Time now, const VentParams &params);
   VentilationSystemState DesiredState(Time now, const BreathDetectionInputs &inputs);
 
-private:
+ private:
   const VolumetricFlow needed_flow_;
   Time start_time_;
   Time inspire_end_;
@@ -178,11 +178,11 @@ private:
 
 // "Breath finite state machine" for volume control mode.
 class VolumeControlFsm {
-public:
+ public:
   explicit VolumeControlFsm(Time now, const VentParams &params);
   VentilationSystemState DesiredState(Time now, const BreathDetectionInputs &inputs);
 
-private:
+ private:
   const Volume inspire_volume_;
   const Pressure expire_pressure_;
   Time start_time_;
@@ -192,11 +192,11 @@ private:
 
 // "Breath finite state machine" for CPAP mode
 class CPAPFsm {
-public:
+ public:
   explicit CPAPFsm(Time now, const VentParams &params);
   VentilationSystemState DesiredState(Time now, const BreathDetectionInputs &inputs);
 
-private:
+ private:
   const VolumetricFlow needed_flow_;
   const Pressure expire_pressure_;
   Time start_time_;
@@ -207,104 +207,104 @@ private:
 // "Breath finite state machine" for volume assist mode.
 //
 class VolumeAssistFsm {
-public:
+ public:
   explicit VolumeAssistFsm(Time now, const VentParams &params);
   VentilationSystemState DesiredState(Time now, const BreathDetectionInputs &inputs);
 
-private:
+ private:
   const Volume inspire_volume_;
   const Pressure expire_pressure_;
   Time start_time_;
   Time inspire_end_;
   Time expire_end_;
-  Duration inspire_duration;
-  BreathDetection inspire_detection_{};
+  Duration inhale_duration_;
+  BreathDetection breath_detection_{};
 };
 
 // "Breath finite state machine" for pressure support mode.
 //
 class PressureSupportFsm {
-public:
+ public:
   explicit PressureSupportFsm(Time now, const VentParams &params);
   VentilationSystemState DesiredState(Time now, const BreathDetectionInputs &inputs);
 
-private:
+ private:
   const Pressure psupp_;
   const Pressure expire_pressure_;
   Time start_time_;
   Time inspire_end_;
   Time expire_end_;
-  Duration inspire_duration;
-  Duration expire_duration;
-  BreathDetection inspire_detection_{};
+  Duration inhale_duration_;
+  Duration exhale_duration_;
+  BreathDetection breath_detection_{};
 };
 
 // "Breath finite state machine" for PC_SIMV mode.
 //
 class SIMVPCFsm {
-public:
+ public:
   explicit SIMVPCFsm(Time now, const VentParams &params);
   VentilationSystemState DesiredState(Time now, const BreathDetectionInputs &inputs);
 
-private:
+ private:
   Pressure inspire_pressure_;
   const Pressure expire_pressure_;
   const Pressure psupp_;
   Time start_time_;
   Time inspire_end_;
   Time expire_end_;
-  Duration inspire_duration;
-  Duration expire_duration;
-  BreathDetection inspire_detection_{};
+  Duration inhale_duration_;
+  Duration exhale_duration_;
+  BreathDetection breath_detection_{};
 };
 
 // "Breath finite state machine" for VC_SIMV mode.
 //
 class SIMVVCFsm {
-public:
+ public:
   explicit SIMVVCFsm(Time now, const VentParams &params);
   VentilationSystemState DesiredState(Time now, const BreathDetectionInputs &inputs);
 
-private:
+ private:
   const Volume inspire_volume_;
   const Pressure expire_pressure_;
   const Pressure psupp_;
   Time start_time_;
   Time inspire_end_;
   Time expire_end_;
-  Duration inspire_duration;
-  Duration expire_duration;
+  Duration inhale_duration_;
+  Duration exhale_duration_;
   bool pressure_support;
-  BreathDetection inspire_detection_{};
+  BreathDetection breath_detection_{};
 };
 
 // "Breath finite state machine" for BIPAP mode.
 //
 class BIPAPFsm {
-public:
+ public:
   explicit BIPAPFsm(Time now, const VentParams &params);
   VentilationSystemState DesiredState(Time now, const BreathDetectionInputs &inputs);
 
-private:
+ private:
   const Pressure inspire_pressure_;
   const Pressure expire_pressure_;
   const Pressure psupp_;
   Time start_time_;
   Time inspire_end_;
   Time expire_end_;
-  Duration inspire_duration;
-  Duration expire_duration;
-  BreathDetection inspire_detection_{};
+  Duration inhale_duration_;
+  Duration exhale_duration_;
+  BreathDetection breath_detection_{};
 };
 
 // "Breath finite state machine" for PRVC mode.
 //
 class PRVCFsm {
-public:
+ public:
   explicit PRVCFsm(Time now, const VentParams &params);
   VentilationSystemState DesiredState(Time now, const BreathDetectionInputs &inputs);
 
-private:
+ private:
   const Pressure inspire_pressure_;
   const Pressure expire_pressure_;
   const Pressure pstep_;
@@ -312,26 +312,26 @@ private:
   Time start_time_;
   Time inspire_end_;
   Time expire_end_;
-  Duration inspire_duration;
-  Duration expire_duration;
+  Duration inhale_duration_;
+  Duration exhale_duration_;
 };
 
 // "Breath finite state machine" for SPV mode.
 //
 class SPVFsm {
-public:
+ public:
   explicit SPVFsm(Time now, const VentParams &params);
   VentilationSystemState DesiredState(Time now, const BreathDetectionInputs &inputs);
 
-private:
+ private:
   const Pressure psupp_;
   const Pressure expire_pressure_;
   Time start_time_;
   Time inspire_end_;
   Time expire_end_;
-  Duration inspire_duration;
-  Duration expire_duration;
-  BreathDetection inspire_detection_{};
+  Duration inhale_duration_;
+  Duration exhale_duration_;
+  BreathDetection breath_detection_{};
 };
 
 class VentilationFsm {
@@ -341,19 +341,7 @@ class VentilationFsm {
                                       const BreathDetectionInputs &inputs);
 
  private:
-  std::variant<
-    OffFsm,
-    PressureControlFsm,
-    PressureAssistFsm,
-    HFNCFsm,
-    VolumeControlFsm,
-    CPAPFsm,
-    VolumeAssistFsm,
-    PressureSupportFsm,
-    SIMVPCFsm,
-    SIMVVCFsm,
-    BIPAPFsm,
-    PRVCFsm,
-    SPVFsm
-    > fsm_;
+  std::variant<OffFsm, PressureControlFsm, PressureAssistFsm, HFNCFsm, VolumeControlFsm, CPAPFsm,
+               VolumeAssistFsm, PressureSupportFsm, SIMVPCFsm, SIMVVCFsm, BIPAPFsm, PRVCFsm, SPVFsm>
+      fsm_;
 };

@@ -13,9 +13,9 @@ limitations under the License.
 #include "breath_detection.h"
 
 /// \TODO: this is only here for loop period for default trigger values. Get rid of this
-#include "controller.h"
-
 #include <algorithm>
+
+#include "controller.h"
 
 using DebugFloat = Debug::Variable::Float;
 
@@ -25,10 +25,10 @@ using DebugFloat = Debug::Variable::Float;
 
 /// \TODO This should be configurable from the GUI.
 static DebugFloat inhale_trigger{"bd_inhale_trigger", Debug::Variable::Access::ReadWrite, 200,
-                                   "mL/s", "Breath detection inhale trigger"};
+                                 "mL/s", "Breath detection inhale trigger"};
 
 static DebugFloat exhale_trigger("bd_exhale_trigger", Debug::Variable::Access::ReadWrite, 300,
-                                     "mL/s", "Breath detection exhale trigger");
+                                 "mL/s", "Breath detection exhale trigger");
 
 // fast_alpha_ and slow_alpha_ were tuned for a control loop that runs at a particular frequency.
 // In theory if the control loop gets slower, the alpha terms should get bigger, placing more weight
@@ -70,8 +70,7 @@ void BreathDetection::update_averages(const BreathDetectionInputs &inputs) {
   dbg_fast_flow_avg.set(fast_flow_avg_.ml_per_sec());
 }
 
-
-bool BreathDetection::PatientInspiring(const BreathDetectionInputs &inputs, bool at_dwell) {
+bool BreathDetection::PatientInhaling(const BreathDetectionInputs &inputs, bool at_dwell) {
   // Calculate averages only once flow is non-negative
   if (inputs.net_flow < ml_per_sec(0)) {
     return false;
@@ -92,4 +91,3 @@ bool BreathDetection::PatientExhaling(const BreathDetectionInputs &inputs, bool 
 
   return slow_flow_avg_ > fast_flow_avg_ + ml_per_sec(exhale_trigger.get());
 }
-

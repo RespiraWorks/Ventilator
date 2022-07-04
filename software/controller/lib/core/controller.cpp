@@ -54,585 +54,564 @@ std::pair<ActuatorsState, ControllerState> Controller::Run(Time now, const VentP
   ActuatorsState actuators_state;
 
   switch (params.mode) {
-  case VentMode_OFF:
-    break;
-  case VentMode_PRESSURE_CONTROL:
-  case VentMode_PRESSURE_ASSIST:
-  case VentMode_PRESSURE_REG_VC:
-  case VentMode_PRESSURE_SUPPORT:
-  case VentMode_SPONTANEOUS_BREATHS:
-  case VentMode_PC_SIMV:
-  case VentMode_BIPAP:
-    if (desired_state.pressure_setpoint == std::nullopt) {
-      // System disabled.  Disable blower, close inspiratory pinch valve, and
-      // open expiratory pinch valve.  This way if someone is hooked up, they can
-      // breathe through the expiratory branch, and they can't contaminate the
-      // inspiratory branch.
-      //
-      // If the pinch valves are not yet homed, this will home them and then move
-      // them to the desired positions.
-      air_pressure_pid_.reset();
-      psol_pid_.reset();
-      fio2_pid_.reset();
-      air_flow_pid_.reset();
-
-      actuators_state = {
-        .fio2_valve = 0,
-        .blower_power = 0,
-        .blower_valve = 0,
-        .exhale_valve = 1,
-      };
-      ventilator_was_on_ = false;
-    } else {
-      if (!ventilator_was_on_) {
-        // reset volume integrators
-        flow_integrator_.emplace();
-        uncorrected_flow_integrator_.emplace();
-      }
-
-      // Delivering air + oxygen mixes from 21 to 59%.
-      if (params.fio2 < 0.6) {
-        psol_pid_.reset();
-
-        // Successive Loop Closure: pressure on outer loop, flow on inner loop
-        // Pressure command >> Flow command >> Actuator command
-        float flow_cmd =
-          air_pressure_pid_.compute(now, sensor_readings.patient_pressure.kPa(),
-              desired_state.pressure_setpoint->kPa());
-
-        float blower_valve = air_flow_pid_.compute(
-            now, sensor_readings.air_inflow.liters_per_sec(), flow_cmd);
-
-        // Fio2 controller with feed-forward
-        float fio2_coupling_value =
-          std::clamp(params.fio2 + fio2_pid_.compute(now, sensor_readings.fio2,
-                params.fio2),
-              0.0f, 1.0f); // just a little bit of feed-forward
-
-        actuators_state = {
-          .fio2_valve = std::clamp(sensor_readings.oxygen_inflow.liters_per_sec() *
-              fio2_coupling_value,
-              0.0f, 1.0f),
-          // In normal mode, blower is always full power; pid controls pressure
-          // by actuating the blower pinch valve.
-          .blower_power = 1.f,
-          .blower_valve = std::clamp(
-              blower_valve + 0.05f, 0.0f,
-              1.0f), // always keep the valve a little open for better response
-          // coupled control: exhale valve tracks flow command
-          .exhale_valve = std::clamp(1.0f - 0.55f * flow_cmd - 0.4f, 0.f, 1.f),
-        };
-      } else {
-        // Delivering air + oxygen mixes from 60 to 100%
+    case VentMode_OFF:
+      break;
+    case VentMode_PRESSURE_CONTROL:
+    case VentMode_PRESSURE_ASSIST:
+    case VentMode_PRESSURE_REG_VC:
+    case VentMode_PRESSURE_SUPPORT:
+    case VentMode_SPONTANEOUS_BREATHS:
+    case VentMode_PC_SIMV:
+    case VentMode_BIPAP:
+      if (desired_state.pressure_setpoint == std::nullopt) {
+        // System disabled.  Disable blower, close inspiratory pinch valve, and
+        // open expiratory pinch valve.  This way if someone is hooked up, they can
+        // breathe through the expiratory branch, and they can't contaminate the
+        // inspiratory branch.
+        //
+        // If the pinch valves are not yet homed, this will home them and then move
+        // them to the desired positions.
         air_pressure_pid_.reset();
-
-        // Single loop on PSOL for now, because PSOL flow sensor not implemented
-        // yet
-        float psol_valve =
-          psol_pid_.compute(now, sensor_readings.patient_pressure.kPa(),
-              desired_state.pressure_setpoint->kPa());
-
-        float fio2_coupling_value =
-          std::clamp(params.fio2 + fio2_pid_.compute(now, sensor_readings.fio2,
-                params.fio2),
-              0.0f, 1.0f); // just a little bit of feed-forward
-
-        float blower_valve =
-          air_flow_pid_.compute(now, sensor_readings.air_inflow.liters_per_sec(),
-              psol_valve * (1 - fio2_coupling_value));
-
-        actuators_state = {
-          // Force psol to stay very slightly open to avoid the discontinuity
-          // caused by valve hysteresis at very low command.  The exhale valve
-          // compensates for this intentional leakage by staying open when the
-          // psol valve is closed.
-          .fio2_valve = std::clamp(psol_valve + 0.05f, 0.0f, 1.0f),
-          .blower_power = 1.0f,
-          .blower_valve = std::clamp(blower_valve, 0.0f, 1.0f),
-          .exhale_valve = 1.0f - 0.6f * psol_valve - 0.4f,
-        };
-      }
-      // Start controlling pressure.
-      ventilator_was_on_ = true;
-    }
-    break;
-  case VentMode_HIGH_FLOW_NASAL_CANNULA:
-    if (desired_state.flow_setpoint == std::nullopt) {
-      // System disabled.  Disable blower, close inspiratory pinch valve, and
-      // open expiratory pinch valve.  This way if someone is hooked up, they can
-      // breathe through the expiratory branch, and they can't contaminate the
-      // inspiratory branch.
-      //
-      // If the pinch valves are not yet homed, this will home them and then move
-      // them to the desired positions.
-      air_pressure_pid_.reset();
-      psol_pid_.reset();
-      fio2_pid_.reset();
-      air_flow_pid_.reset();
-
-      actuators_state = {
-        .fio2_valve = 0,
-        .blower_power = 0,
-        .blower_valve = 0,
-        .exhale_valve = 1,
-      };
-      ventilator_was_on_ = false;
-    } else {
-      if (!ventilator_was_on_) {
-        // reset volume integrators
-        flow_integrator_.emplace();
-        uncorrected_flow_integrator_.emplace();
-      }
-
-      // Delivering air + oxygen mixes from 21 to 59%.
-      if (params.fio2 < 0.6) {
         psol_pid_.reset();
-
-        float blower_valve = air_flow_pid_.compute(
-            now, sensor_readings.air_inflow.liters_per_sec(),
-            desired_state.flow_setpoint->liters_per_sec());
-
-        // Fio2 controller with feed-forward
-        float fio2_coupling_value =
-          std::clamp(params.fio2 + fio2_pid_.compute(now, sensor_readings.fio2,
-                params.fio2),
-              0.0f, 1.0f); // just a little bit of feed-forward
-
-        actuators_state = {
-          .fio2_valve = std::clamp(sensor_readings.oxygen_inflow.liters_per_sec() *
-              fio2_coupling_value,
-              0.0f, 1.0f),
-          // In normal mode, blower is always full power; pid controls pressure
-          // by actuating the blower pinch valve.
-          .blower_power = 1.f,
-          .blower_valve = std::clamp(
-              blower_valve + 0.05f, 0.0f,
-              1.0f), // always keep the valve a little open for better response
-          // coupled control: exhale valve tracks flow command
-          .exhale_valve = std::clamp(blower_valve + 0.05f, 0.f, 1.f),
-        };
-      } else {
-        // Delivering air + oxygen mixes from 60 to 100%
+        fio2_pid_.reset();
         air_flow_pid_.reset();
 
-        // Single loop on PSOL for now, because PSOL flow sensor not implemented
-        // yet
-        float psol_valve = psol_pid_.compute(
-            now, net_flow.liters_per_sec(),
-            desired_state.flow_setpoint->liters_per_sec());
-
-        float fio2_coupling_value =
-          std::clamp(params.fio2 + fio2_pid_.compute(now, sensor_readings.fio2,
-                params.fio2),
-              0.0f, 1.0f); // just a little bit of feed-forward
-
-        float blower_valve =
-          air_flow_pid_.compute(now, sensor_readings.air_inflow.liters_per_sec(),
-              psol_valve * (1 - fio2_coupling_value));
-
         actuators_state = {
-          // Force psol to stay very slightly open to avoid the discontinuity
-          // caused by valve hysteresis at very low command.  The exhale valve
-          // compensates for this intentional leakage by staying open when the
-          // psol valve is closed.
-          .fio2_valve = std::clamp(psol_valve + 0.05f, 0.0f, 1.0f),
-          .blower_power = 1.0f,
-          .blower_valve = std::clamp(blower_valve, 0.0f, 1.0f),
-          .exhale_valve = 1.0f - 0.6f * psol_valve - 0.4f,
+            .fio2_valve = 0,
+            .blower_power = 0,
+            .blower_valve = 0,
+            .exhale_valve = 1,
         };
-      }
-      // Start controlling pressure.
-      ventilator_was_on_ = true;
-    }
-    break;
-  case VentMode_VOLUME_CONTROL:
-  case VentMode_VOLUME_ASSIST:
-    if (desired_state.volume_setpoint == std::nullopt) {
-      // System disabled.  Disable blower, close inspiratory pinch valve, and
-      // open expiratory pinch valve.  This way if someone is hooked up, they can
-      // breathe through the expiratory branch, and they can't contaminate the
-      // inspiratory branch.
-      //
-      // If the pinch valves are not yet homed, this will home them and then move
-      // them to the desired positions.
-      air_volume_pid_.reset();
-      air_pressure_pid_.reset();
-      psol_pid_.reset();
-      fio2_pid_.reset();
-      air_flow_pid_.reset();
+        ventilator_was_on_ = false;
+      } else {
+        if (!ventilator_was_on_) {
+          // reset volume integrators
+          flow_integrator_.emplace();
+          uncorrected_flow_integrator_.emplace();
+        }
 
-      actuators_state = {
-        .fio2_valve = 0,
-        .blower_power = 0,
-        .blower_valve = 0,
-        .exhale_valve = 1,
-      };
-      ventilator_was_on_ = false;
-    } else {
-      if (!ventilator_was_on_) {
-        // reset volume integrators
-        flow_integrator_.emplace();
-        uncorrected_flow_integrator_.emplace();
-      }
+        // Delivering air + oxygen mixes from 21 to 59%.
+        if (params.fio2 < 0.6) {
+          psol_pid_.reset();
 
-      // Delivering air + oxygen mixes from 21 to 59%.
-      if (params.fio2 < 0.6) {
-        float flow_cmd;
-
-        psol_pid_.reset();
-
-        if (!desired_state.is_in_exhale) {
-          air_pressure_pid_.reset();
-          // Successive Loop Closure: volume on outer loop, flow on inner loop
-          // Volume command >> Flow command >> Actuator command
-          flow_cmd = air_volume_pid_.compute(now, patient_volume.ml(),
-              desired_state.volume_setpoint->ml());
-        } else {
-          air_volume_pid_.reset();
           // Successive Loop Closure: pressure on outer loop, flow on inner loop
           // Pressure command >> Flow command >> Actuator command
-          flow_cmd =
-            air_pressure_pid_.compute(now, sensor_readings.patient_pressure.kPa(),
-                desired_state.pressure_setpoint->kPa());
-        }
+          float flow_cmd = air_pressure_pid_.compute(now, sensor_readings.patient_pressure.kPa(),
+                                                     desired_state.pressure_setpoint->kPa());
 
-        float blower_valve = air_flow_pid_.compute(
-            now, sensor_readings.air_inflow.liters_per_sec(), flow_cmd);
+          float blower_valve =
+              air_flow_pid_.compute(now, sensor_readings.air_inflow.liters_per_sec(), flow_cmd);
 
-        // Fio2 controller with feed-forward
-        float fio2_coupling_value =
-          std::clamp(params.fio2 + fio2_pid_.compute(now, sensor_readings.fio2,
-                params.fio2),
-              0.0f, 1.0f); // just a little bit of feed-forward
+          // Fio2 controller with feed-forward
+          float fio2_coupling_value =
+              std::clamp(params.fio2 + fio2_pid_.compute(now, sensor_readings.fio2, params.fio2),
+                         0.0f, 1.0f);  // just a little bit of feed-forward
 
-        if (!desired_state.is_in_exhale) {
           actuators_state = {
-            .fio2_valve = std::clamp(sensor_readings.oxygen_inflow.liters_per_sec() *
-                fio2_coupling_value,
-                0.0f, 1.0f),
-            // In normal mode, blower is always full power; pid controls pressure
-            // by actuating the blower pinch valve.
-            .blower_power = 1.f,
-            .blower_valve = std::clamp(blower_valve, 0.0f,
-                1.0f), // always keep the valve a little open for better response
-            // coupled control: exhale valve tracks flow command
-            .exhale_valve = std::clamp(1.0f - 0.60f * blower_valve, 0.f, 1.f),
+              .fio2_valve = std::clamp(
+                  sensor_readings.oxygen_inflow.liters_per_sec() * fio2_coupling_value, 0.0f, 1.0f),
+              // In normal mode, blower is always full power; pid controls pressure
+              // by actuating the blower pinch valve.
+              .blower_power = 1.f,
+              .blower_valve =
+                  std::clamp(blower_valve + 0.05f, 0.0f,
+                             1.0f),  // always keep the valve a little open for better response
+              // coupled control: exhale valve tracks flow command
+              .exhale_valve = std::clamp(1.0f - 0.55f * flow_cmd - 0.4f, 0.f, 1.f),
           };
         } else {
+          // Delivering air + oxygen mixes from 60 to 100%
+          air_pressure_pid_.reset();
+
+          // Single loop on PSOL for now, because PSOL flow sensor not implemented
+          // yet
+          float psol_valve = psol_pid_.compute(now, sensor_readings.patient_pressure.kPa(),
+                                               desired_state.pressure_setpoint->kPa());
+
+          float fio2_coupling_value =
+              std::clamp(params.fio2 + fio2_pid_.compute(now, sensor_readings.fio2, params.fio2),
+                         0.0f, 1.0f);  // just a little bit of feed-forward
+
+          float blower_valve =
+              air_flow_pid_.compute(now, sensor_readings.air_inflow.liters_per_sec(),
+                                    psol_valve * (1 - fio2_coupling_value));
+
           actuators_state = {
-            .fio2_valve = std::clamp(sensor_readings.oxygen_inflow.liters_per_sec() *
-                fio2_coupling_value,
-                0.0f, 1.0f),
-            // In normal mode, blower is always full power; pid controls pressure
-            // by actuating the blower pinch valve.
-            .blower_power = 1.f,
-            .blower_valve = std::clamp(
-                blower_valve + 0.05f, 0.0f,
-                1.0f), // always keep the valve a little open for better response
-            // coupled control: exhale valve tracks flow command
-            .exhale_valve = std::clamp(1.0f - 0.55f * flow_cmd - 0.4f, 0.f, 1.f),
+              // Force psol to stay very slightly open to avoid the discontinuity
+              // caused by valve hysteresis at very low command.  The exhale valve
+              // compensates for this intentional leakage by staying open when the
+              // psol valve is closed.
+              .fio2_valve = std::clamp(psol_valve + 0.05f, 0.0f, 1.0f),
+              .blower_power = 1.0f,
+              .blower_valve = std::clamp(blower_valve, 0.0f, 1.0f),
+              .exhale_valve = 1.0f - 0.6f * psol_valve - 0.4f,
           };
         }
-      } else {
-        float psol_valve;
-
-        // Delivering air + oxygen mixes from 60 to 100%
+        // Start controlling pressure.
+        ventilator_was_on_ = true;
+      }
+      break;
+    case VentMode_HIGH_FLOW_NASAL_CANNULA:
+      if (desired_state.flow_setpoint == std::nullopt) {
+        // System disabled.  Disable blower, close inspiratory pinch valve, and
+        // open expiratory pinch valve.  This way if someone is hooked up, they can
+        // breathe through the expiratory branch, and they can't contaminate the
+        // inspiratory branch.
+        //
+        // If the pinch valves are not yet homed, this will home them and then move
+        // them to the desired positions.
         air_pressure_pid_.reset();
-        air_volume_pid_.reset();
-
-        // Single loop on PSOL for now, because PSOL flow sensor not implemented
-        // yet
-        if (!desired_state.is_in_exhale) {
-          psol_valve = psol_pid_.compute(now, patient_volume.ml(),
-              desired_state.volume_setpoint->ml());
-        } else {
-          psol_valve =
-            psol_pid_.compute(now, sensor_readings.patient_pressure.kPa(),
-                desired_state.pressure_setpoint->kPa());
-        }
-
-        float fio2_coupling_value =
-          std::clamp(params.fio2 + fio2_pid_.compute(now, sensor_readings.fio2,
-                params.fio2),
-              0.0f, 1.0f); // just a little bit of feed-forward
-
-        float blower_valve =
-          air_flow_pid_.compute(now, sensor_readings.air_inflow.liters_per_sec(),
-              psol_valve * (1 - fio2_coupling_value));
-
-        actuators_state = {
-          // Force psol to stay very slightly open to avoid the discontinuity
-          // caused by valve hysteresis at very low command.  The exhale valve
-          // compensates for this intentional leakage by staying open when the
-          // psol valve is closed.
-          .fio2_valve = std::clamp(psol_valve + 0.05f, 0.0f, 1.0f),
-          .blower_power = 1.0f,
-          .blower_valve = std::clamp(blower_valve, 0.0f, 1.0f),
-          .exhale_valve = 1.0f - 0.6f * psol_valve - 0.4f,
-        };
-      }
-      // Start controlling pressure.
-      ventilator_was_on_ = true;
-    }
-    break;
-  case VentMode_CPAP:
-    if (desired_state.flow_setpoint == std::nullopt) {
-      // System disabled.  Disable blower, close inspiratory pinch valve, and
-      // open expiratory pinch valve.  This way if someone is hooked up, they can
-      // breathe through the expiratory branch, and they can't contaminate the
-      // inspiratory branch.
-      //
-      // If the pinch valves are not yet homed, this will home them and then move
-      // them to the desired positions.
-      air_pressure_pid_.reset();
-      psol_pid_.reset();
-      fio2_pid_.reset();
-      air_flow_pid_.reset();
-
-      actuators_state = {
-        .fio2_valve = 0,
-        .blower_power = 0,
-        .blower_valve = 0,
-        .exhale_valve = 1,
-      };
-      ventilator_was_on_ = false;
-    } else {
-      if (!ventilator_was_on_) {
-        // reset volume integrators
-        flow_integrator_.emplace();
-        uncorrected_flow_integrator_.emplace();
-      }
-
-      // Delivering air + oxygen mixes from 21 to 59%.
-      if (params.fio2 < 0.6) {
-        float blower_valve;
-        float flow_cmd;
-
         psol_pid_.reset();
-
-        if (!desired_state.is_in_exhale) {
-          air_pressure_pid_.reset();
-          // Successive Loop Closure: volume on outer loop, flow on inner loop
-          // Volume command >> Flow command >> Actuator command
-          blower_valve = air_flow_pid_.compute(
-                  now, sensor_readings.air_inflow.liters_per_sec(),
-                  desired_state.flow_setpoint->liters_per_sec());
-        } else {
-          // Successive Loop Closure: pressure on outer loop, flow on inner loop
-          // Pressure command >> Flow command >> Actuator command
-          flow_cmd =
-            air_pressure_pid_.compute(now, sensor_readings.patient_pressure.kPa(),
-                desired_state.pressure_setpoint->kPa());
-          blower_valve = air_flow_pid_.compute(
-              now, sensor_readings.air_inflow.liters_per_sec(), flow_cmd);
-        }
-        // Fio2 controller with feed-forward
-        float fio2_coupling_value =
-          std::clamp(params.fio2 + fio2_pid_.compute(now, sensor_readings.fio2,
-                params.fio2),
-              0.0f, 1.0f); // just a little bit of feed-forward
-
-        if (!desired_state.is_in_exhale) {
-          actuators_state = {
-            .fio2_valve = std::clamp(sensor_readings.oxygen_inflow.liters_per_sec() *
-                fio2_coupling_value,
-                0.0f, 1.0f),
-            // In normal mode, blower is always full power; pid controls pressure
-            // by actuating the blower pinch valve.
-            .blower_power = 1.f,
-            .blower_valve = std::clamp(
-                blower_valve + 0.05f, 0.0f,
-                1.0f), // always keep the valve a little open for better response
-            // coupled control: exhale valve tracks flow command
-            .exhale_valve = std::clamp(blower_valve + 0.05f, 0.f, 1.f),
-          };
-        } else {
-          actuators_state = {
-            .fio2_valve = std::clamp(sensor_readings.oxygen_inflow.liters_per_sec() *
-                fio2_coupling_value,
-                0.0f, 1.0f),
-            // In normal mode, blower is always full power; pid controls pressure
-            // by actuating the blower pinch valve.
-            .blower_power = 1.f,
-            .blower_valve = std::clamp(
-                blower_valve + 0.05f, 0.0f,
-                1.0f), // always keep the valve a little open for better response
-            // coupled control: exhale valve tracks flow command
-            .exhale_valve = std::clamp(1.0f - 0.55f * flow_cmd - 0.4f, 0.f, 1.f),
-          };
-        }
-      } else {
-        float psol_valve;
-
-        // Delivering air + oxygen mixes from 60 to 100%
+        fio2_pid_.reset();
         air_flow_pid_.reset();
-        air_pressure_pid_.reset();
-
-        // Single loop on PSOL for now, because PSOL flow sensor not implemented
-        // yet
-        if (!desired_state.is_in_exhale) {
-          psol_valve = psol_pid_.compute(
-                  now, sensor_readings.oxygen_inflow.liters_per_sec(),
-                  desired_state.flow_setpoint->liters_per_sec());
-        } else {
-          psol_valve =
-            psol_pid_.compute(now, sensor_readings.patient_pressure.kPa(),
-                desired_state.pressure_setpoint->kPa());
-        }
-
-        float fio2_coupling_value =
-          std::clamp(params.fio2 + fio2_pid_.compute(now, sensor_readings.fio2,
-                params.fio2),
-              0.0f, 1.0f); // just a little bit of feed-forward
-
-        float blower_valve =
-          air_flow_pid_.compute(now, sensor_readings.air_inflow.liters_per_sec(),
-              psol_valve * (1 - fio2_coupling_value));
 
         actuators_state = {
-          // Force psol to stay very slightly open to avoid the discontinuity
-          // caused by valve hysteresis at very low command.  The exhale valve
-          // compensates for this intentional leakage by staying open when the
-          // psol valve is closed.
-          .fio2_valve = std::clamp(psol_valve + 0.05f, 0.0f, 1.0f),
-          .blower_power = 1.0f,
-          .blower_valve = std::clamp(blower_valve, 0.0f, 1.0f),
-          .exhale_valve = 1.0f - 0.6f * psol_valve - 0.4f,
+            .fio2_valve = 0,
+            .blower_power = 0,
+            .blower_valve = 0,
+            .exhale_valve = 1,
         };
-      }
-      // Start controlling pressure.
-      ventilator_was_on_ = true;
-    }
-    break;
-  case VentMode_VC_SIMV:
-    if (desired_state.volume_setpoint == std::nullopt) {
-      // System disabled.  Disable blower, close inspiratory pinch valve, and
-      // open expiratory pinch valve.  This way if someone is hooked up, they can
-      // breathe through the expiratory branch, and they can't contaminate the
-      // inspiratory branch.
-      //
-      // If the pinch valves are not yet homed, this will home them and then move
-      // them to the desired positions.
-      air_volume_pid_.reset();
-      air_pressure_pid_.reset();
-      psol_pid_.reset();
-      fio2_pid_.reset();
-      air_flow_pid_.reset();
-
-      actuators_state = {
-        .fio2_valve = 0,
-        .blower_power = 0,
-        .blower_valve = 0,
-        .exhale_valve = 1,
-      };
-      ventilator_was_on_ = false;
-    } else {
-      if (!ventilator_was_on_) {
-        // reset volume integrators
-        flow_integrator_.emplace();
-        uncorrected_flow_integrator_.emplace();
-      }
-
-      // Delivering air + oxygen mixes from 21 to 59%.
-      if (params.fio2 < 0.6) {
-        float flow_cmd;
-
-        psol_pid_.reset();
-
-        if (!desired_state.is_in_exhale) {
-          air_pressure_pid_.reset();
-          // Successive Loop Closure: volume on outer loop, flow on inner loop
-          // Volume command >> Flow command >> Actuator command
-          flow_cmd = air_volume_pid_.compute(now, patient_volume.ml(),
-              desired_state.volume_setpoint->ml());
-        } else {
-          air_volume_pid_.reset();
-          // Successive Loop Closure: pressure on outer loop, flow on inner loop
-          // Pressure command >> Flow command >> Actuator command
-          flow_cmd =
-            air_pressure_pid_.compute(now, sensor_readings.patient_pressure.kPa(),
-                desired_state.pressure_setpoint->kPa());
-        }
-
-        float blower_valve = air_flow_pid_.compute(
-            now, sensor_readings.air_inflow.liters_per_sec(), flow_cmd);
-
-        // Fio2 controller with feed-forward
-        float fio2_coupling_value =
-          std::clamp(params.fio2 + fio2_pid_.compute(now, sensor_readings.fio2,
-                params.fio2),
-              0.0f, 1.0f); // just a little bit of feed-forward
-
-        if (!desired_state.is_in_exhale) {
-          actuators_state = {
-            .fio2_valve = std::clamp(sensor_readings.oxygen_inflow.liters_per_sec() *
-                fio2_coupling_value,
-                0.0f, 1.0f),
-            // In normal mode, blower is always full power; pid controls pressure
-            // by actuating the blower pinch valve.
-            .blower_power = 1.f,
-            .blower_valve = std::clamp(blower_valve, 0.0f,
-                1.0f), // always keep the valve a little open for better response
-            // coupled control: exhale valve tracks flow command
-            .exhale_valve = std::clamp(1.0f - 0.60f * blower_valve, 0.f, 1.f),
-          };
-        } else {
-          actuators_state = {
-            .fio2_valve = std::clamp(sensor_readings.oxygen_inflow.liters_per_sec() *
-                fio2_coupling_value,
-                0.0f, 1.0f),
-            // In normal mode, blower is always full power; pid controls pressure
-            // by actuating the blower pinch valve.
-            .blower_power = 1.f,
-            .blower_valve = std::clamp(
-                blower_valve + 0.05f, 0.0f,
-                1.0f), // always keep the valve a little open for better response
-            // coupled control: exhale valve tracks flow command
-            .exhale_valve = std::clamp(1.0f - 0.55f * flow_cmd - 0.4f, 0.f, 1.f),
-          };
-        }
+        ventilator_was_on_ = false;
       } else {
-        float psol_valve;
-
-        // Delivering air + oxygen mixes from 60 to 100%
-        air_pressure_pid_.reset();
-        air_volume_pid_.reset();
-
-        // Single loop on PSOL for now, because PSOL flow sensor not implemented
-        // yet
-        if (!desired_state.is_in_exhale) {
-          psol_valve = psol_pid_.compute(now, patient_volume.ml(),
-              desired_state.volume_setpoint->ml());
-        } else {
-          psol_valve =
-            psol_pid_.compute(now, sensor_readings.patient_pressure.kPa(),
-                desired_state.pressure_setpoint->kPa());
+        if (!ventilator_was_on_) {
+          // reset volume integrators
+          flow_integrator_.emplace();
+          uncorrected_flow_integrator_.emplace();
         }
 
-        float fio2_coupling_value =
-          std::clamp(params.fio2 + fio2_pid_.compute(now, sensor_readings.fio2,
-                params.fio2),
-              0.0f, 1.0f); // just a little bit of feed-forward
+        // Delivering air + oxygen mixes from 21 to 59%.
+        if (params.fio2 < 0.6) {
+          psol_pid_.reset();
 
-        float blower_valve =
-          air_flow_pid_.compute(now, sensor_readings.air_inflow.liters_per_sec(),
-              psol_valve * (1 - fio2_coupling_value));
+          float blower_valve =
+              air_flow_pid_.compute(now, sensor_readings.air_inflow.liters_per_sec(),
+                                    desired_state.flow_setpoint->liters_per_sec());
+
+          // Fio2 controller with feed-forward
+          float fio2_coupling_value =
+              std::clamp(params.fio2 + fio2_pid_.compute(now, sensor_readings.fio2, params.fio2),
+                         0.0f, 1.0f);  // just a little bit of feed-forward
+
+          actuators_state = {
+              .fio2_valve = std::clamp(
+                  sensor_readings.oxygen_inflow.liters_per_sec() * fio2_coupling_value, 0.0f, 1.0f),
+              // In normal mode, blower is always full power; pid controls pressure
+              // by actuating the blower pinch valve.
+              .blower_power = 1.f,
+              .blower_valve =
+                  std::clamp(blower_valve + 0.05f, 0.0f,
+                             1.0f),  // always keep the valve a little open for better response
+              // coupled control: exhale valve tracks flow command
+              .exhale_valve = std::clamp(blower_valve + 0.05f, 0.f, 1.f),
+          };
+        } else {
+          // Delivering air + oxygen mixes from 60 to 100%
+          air_flow_pid_.reset();
+
+          // Single loop on PSOL for now, because PSOL flow sensor not implemented
+          // yet
+          float psol_valve = psol_pid_.compute(now, net_flow.liters_per_sec(),
+                                               desired_state.flow_setpoint->liters_per_sec());
+
+          float fio2_coupling_value =
+              std::clamp(params.fio2 + fio2_pid_.compute(now, sensor_readings.fio2, params.fio2),
+                         0.0f, 1.0f);  // just a little bit of feed-forward
+
+          float blower_valve =
+              air_flow_pid_.compute(now, sensor_readings.air_inflow.liters_per_sec(),
+                                    psol_valve * (1 - fio2_coupling_value));
+
+          actuators_state = {
+              // Force psol to stay very slightly open to avoid the discontinuity
+              // caused by valve hysteresis at very low command.  The exhale valve
+              // compensates for this intentional leakage by staying open when the
+              // psol valve is closed.
+              .fio2_valve = std::clamp(psol_valve + 0.05f, 0.0f, 1.0f),
+              .blower_power = 1.0f,
+              .blower_valve = std::clamp(blower_valve, 0.0f, 1.0f),
+              .exhale_valve = 1.0f - 0.6f * psol_valve - 0.4f,
+          };
+        }
+        // Start controlling pressure.
+        ventilator_was_on_ = true;
+      }
+      break;
+    case VentMode_VOLUME_CONTROL:
+    case VentMode_VOLUME_ASSIST:
+      if (desired_state.volume_setpoint == std::nullopt) {
+        // System disabled.  Disable blower, close inspiratory pinch valve, and
+        // open expiratory pinch valve.  This way if someone is hooked up, they can
+        // breathe through the expiratory branch, and they can't contaminate the
+        // inspiratory branch.
+        //
+        // If the pinch valves are not yet homed, this will home them and then move
+        // them to the desired positions.
+        air_volume_pid_.reset();
+        air_pressure_pid_.reset();
+        psol_pid_.reset();
+        fio2_pid_.reset();
+        air_flow_pid_.reset();
 
         actuators_state = {
-          // Force psol to stay very slightly open to avoid the discontinuity
-          // caused by valve hysteresis at very low command.  The exhale valve
-          // compensates for this intentional leakage by staying open when the
-          // psol valve is closed.
-          .fio2_valve = std::clamp(psol_valve + 0.05f, 0.0f, 1.0f),
-          .blower_power = 1.0f,
-          .blower_valve = std::clamp(blower_valve, 0.0f, 1.0f),
-          .exhale_valve = 1.0f - 0.6f * psol_valve - 0.4f,
+            .fio2_valve = 0,
+            .blower_power = 0,
+            .blower_valve = 0,
+            .exhale_valve = 1,
         };
+        ventilator_was_on_ = false;
+      } else {
+        if (!ventilator_was_on_) {
+          // reset volume integrators
+          flow_integrator_.emplace();
+          uncorrected_flow_integrator_.emplace();
+        }
+
+        // Delivering air + oxygen mixes from 21 to 59%.
+        if (params.fio2 < 0.6) {
+          float flow_cmd;
+
+          psol_pid_.reset();
+
+          if (!desired_state.is_in_exhale) {
+            air_pressure_pid_.reset();
+            // Successive Loop Closure: volume on outer loop, flow on inner loop
+            // Volume command >> Flow command >> Actuator command
+            flow_cmd = air_volume_pid_.compute(now, patient_volume.ml(),
+                                               desired_state.volume_setpoint->ml());
+          } else {
+            air_volume_pid_.reset();
+            // Successive Loop Closure: pressure on outer loop, flow on inner loop
+            // Pressure command >> Flow command >> Actuator command
+            flow_cmd = air_pressure_pid_.compute(now, sensor_readings.patient_pressure.kPa(),
+                                                 desired_state.pressure_setpoint->kPa());
+          }
+
+          float blower_valve =
+              air_flow_pid_.compute(now, sensor_readings.air_inflow.liters_per_sec(), flow_cmd);
+
+          // Fio2 controller with feed-forward
+          float fio2_coupling_value =
+              std::clamp(params.fio2 + fio2_pid_.compute(now, sensor_readings.fio2, params.fio2),
+                         0.0f, 1.0f);  // just a little bit of feed-forward
+
+          if (!desired_state.is_in_exhale) {
+            actuators_state = {
+                .fio2_valve =
+                    std::clamp(sensor_readings.oxygen_inflow.liters_per_sec() * fio2_coupling_value,
+                               0.0f, 1.0f),
+                // In normal mode, blower is always full power; pid controls pressure
+                // by actuating the blower pinch valve.
+                .blower_power = 1.f,
+                .blower_valve =
+                    std::clamp(blower_valve, 0.0f,
+                               1.0f),  // always keep the valve a little open for better response
+                // coupled control: exhale valve tracks flow command
+                .exhale_valve = std::clamp(1.0f - 0.60f * blower_valve, 0.f, 1.f),
+            };
+          } else {
+            actuators_state = {
+                .fio2_valve =
+                    std::clamp(sensor_readings.oxygen_inflow.liters_per_sec() * fio2_coupling_value,
+                               0.0f, 1.0f),
+                // In normal mode, blower is always full power; pid controls pressure
+                // by actuating the blower pinch valve.
+                .blower_power = 1.f,
+                .blower_valve =
+                    std::clamp(blower_valve + 0.05f, 0.0f,
+                               1.0f),  // always keep the valve a little open for better response
+                // coupled control: exhale valve tracks flow command
+                .exhale_valve = std::clamp(1.0f - 0.55f * flow_cmd - 0.4f, 0.f, 1.f),
+            };
+          }
+        } else {
+          float psol_valve;
+
+          // Delivering air + oxygen mixes from 60 to 100%
+          air_pressure_pid_.reset();
+          air_volume_pid_.reset();
+
+          // Single loop on PSOL for now, because PSOL flow sensor not implemented
+          // yet
+          if (!desired_state.is_in_exhale) {
+            psol_valve =
+                psol_pid_.compute(now, patient_volume.ml(), desired_state.volume_setpoint->ml());
+          } else {
+            psol_valve = psol_pid_.compute(now, sensor_readings.patient_pressure.kPa(),
+                                           desired_state.pressure_setpoint->kPa());
+          }
+
+          float fio2_coupling_value =
+              std::clamp(params.fio2 + fio2_pid_.compute(now, sensor_readings.fio2, params.fio2),
+                         0.0f, 1.0f);  // just a little bit of feed-forward
+
+          float blower_valve =
+              air_flow_pid_.compute(now, sensor_readings.air_inflow.liters_per_sec(),
+                                    psol_valve * (1 - fio2_coupling_value));
+
+          actuators_state = {
+              // Force psol to stay very slightly open to avoid the discontinuity
+              // caused by valve hysteresis at very low command.  The exhale valve
+              // compensates for this intentional leakage by staying open when the
+              // psol valve is closed.
+              .fio2_valve = std::clamp(psol_valve + 0.05f, 0.0f, 1.0f),
+              .blower_power = 1.0f,
+              .blower_valve = std::clamp(blower_valve, 0.0f, 1.0f),
+              .exhale_valve = 1.0f - 0.6f * psol_valve - 0.4f,
+          };
+        }
+        // Start controlling pressure.
+        ventilator_was_on_ = true;
       }
-      // Start controlling pressure.
-      ventilator_was_on_ = true;
-    }
-    break;
+      break;
+    case VentMode_CPAP:
+      if (desired_state.flow_setpoint == std::nullopt) {
+        // System disabled.  Disable blower, close inspiratory pinch valve, and
+        // open expiratory pinch valve.  This way if someone is hooked up, they can
+        // breathe through the expiratory branch, and they can't contaminate the
+        // inspiratory branch.
+        //
+        // If the pinch valves are not yet homed, this will home them and then move
+        // them to the desired positions.
+        air_pressure_pid_.reset();
+        psol_pid_.reset();
+        fio2_pid_.reset();
+        air_flow_pid_.reset();
+
+        actuators_state = {
+            .fio2_valve = 0,
+            .blower_power = 0,
+            .blower_valve = 0,
+            .exhale_valve = 1,
+        };
+        ventilator_was_on_ = false;
+      } else {
+        if (!ventilator_was_on_) {
+          // reset volume integrators
+          flow_integrator_.emplace();
+          uncorrected_flow_integrator_.emplace();
+        }
+
+        // Delivering air + oxygen mixes from 21 to 59%.
+        if (params.fio2 < 0.6) {
+          float blower_valve;
+          float flow_cmd;
+
+          psol_pid_.reset();
+
+          if (!desired_state.is_in_exhale) {
+            air_pressure_pid_.reset();
+            // Successive Loop Closure: volume on outer loop, flow on inner loop
+            // Volume command >> Flow command >> Actuator command
+            blower_valve = air_flow_pid_.compute(now, sensor_readings.air_inflow.liters_per_sec(),
+                                                 desired_state.flow_setpoint->liters_per_sec());
+          } else {
+            // Successive Loop Closure: pressure on outer loop, flow on inner loop
+            // Pressure command >> Flow command >> Actuator command
+            flow_cmd = air_pressure_pid_.compute(now, sensor_readings.patient_pressure.kPa(),
+                                                 desired_state.pressure_setpoint->kPa());
+            blower_valve =
+                air_flow_pid_.compute(now, sensor_readings.air_inflow.liters_per_sec(), flow_cmd);
+          }
+          // Fio2 controller with feed-forward
+          float fio2_coupling_value =
+              std::clamp(params.fio2 + fio2_pid_.compute(now, sensor_readings.fio2, params.fio2),
+                         0.0f, 1.0f);  // just a little bit of feed-forward
+
+          if (!desired_state.is_in_exhale) {
+            actuators_state = {
+                .fio2_valve =
+                    std::clamp(sensor_readings.oxygen_inflow.liters_per_sec() * fio2_coupling_value,
+                               0.0f, 1.0f),
+                // In normal mode, blower is always full power; pid controls pressure
+                // by actuating the blower pinch valve.
+                .blower_power = 1.f,
+                .blower_valve =
+                    std::clamp(blower_valve + 0.05f, 0.0f,
+                               1.0f),  // always keep the valve a little open for better response
+                // coupled control: exhale valve tracks flow command
+                .exhale_valve = std::clamp(blower_valve + 0.05f, 0.f, 1.f),
+            };
+          } else {
+            actuators_state = {
+                .fio2_valve =
+                    std::clamp(sensor_readings.oxygen_inflow.liters_per_sec() * fio2_coupling_value,
+                               0.0f, 1.0f),
+                // In normal mode, blower is always full power; pid controls pressure
+                // by actuating the blower pinch valve.
+                .blower_power = 1.f,
+                .blower_valve =
+                    std::clamp(blower_valve + 0.05f, 0.0f,
+                               1.0f),  // always keep the valve a little open for better response
+                // coupled control: exhale valve tracks flow command
+                .exhale_valve = std::clamp(1.0f - 0.55f * flow_cmd - 0.4f, 0.f, 1.f),
+            };
+          }
+        } else {
+          float psol_valve;
+
+          // Delivering air + oxygen mixes from 60 to 100%
+          air_flow_pid_.reset();
+          air_pressure_pid_.reset();
+
+          // Single loop on PSOL for now, because PSOL flow sensor not implemented
+          // yet
+          if (!desired_state.is_in_exhale) {
+            psol_valve = psol_pid_.compute(now, sensor_readings.oxygen_inflow.liters_per_sec(),
+                                           desired_state.flow_setpoint->liters_per_sec());
+          } else {
+            psol_valve = psol_pid_.compute(now, sensor_readings.patient_pressure.kPa(),
+                                           desired_state.pressure_setpoint->kPa());
+          }
+
+          float fio2_coupling_value =
+              std::clamp(params.fio2 + fio2_pid_.compute(now, sensor_readings.fio2, params.fio2),
+                         0.0f, 1.0f);  // just a little bit of feed-forward
+
+          float blower_valve =
+              air_flow_pid_.compute(now, sensor_readings.air_inflow.liters_per_sec(),
+                                    psol_valve * (1 - fio2_coupling_value));
+
+          actuators_state = {
+              // Force psol to stay very slightly open to avoid the discontinuity
+              // caused by valve hysteresis at very low command.  The exhale valve
+              // compensates for this intentional leakage by staying open when the
+              // psol valve is closed.
+              .fio2_valve = std::clamp(psol_valve + 0.05f, 0.0f, 1.0f),
+              .blower_power = 1.0f,
+              .blower_valve = std::clamp(blower_valve, 0.0f, 1.0f),
+              .exhale_valve = 1.0f - 0.6f * psol_valve - 0.4f,
+          };
+        }
+        // Start controlling pressure.
+        ventilator_was_on_ = true;
+      }
+      break;
+    case VentMode_VC_SIMV:
+      if (desired_state.volume_setpoint == std::nullopt) {
+        // System disabled.  Disable blower, close inspiratory pinch valve, and
+        // open expiratory pinch valve.  This way if someone is hooked up, they can
+        // breathe through the expiratory branch, and they can't contaminate the
+        // inspiratory branch.
+        //
+        // If the pinch valves are not yet homed, this will home them and then move
+        // them to the desired positions.
+        air_volume_pid_.reset();
+        air_pressure_pid_.reset();
+        psol_pid_.reset();
+        fio2_pid_.reset();
+        air_flow_pid_.reset();
+
+        actuators_state = {
+            .fio2_valve = 0,
+            .blower_power = 0,
+            .blower_valve = 0,
+            .exhale_valve = 1,
+        };
+        ventilator_was_on_ = false;
+      } else {
+        if (!ventilator_was_on_) {
+          // reset volume integrators
+          flow_integrator_.emplace();
+          uncorrected_flow_integrator_.emplace();
+        }
+
+        // Delivering air + oxygen mixes from 21 to 59%.
+        if (params.fio2 < 0.6) {
+          float flow_cmd;
+
+          psol_pid_.reset();
+
+          if (!desired_state.is_in_exhale) {
+            air_pressure_pid_.reset();
+            // Successive Loop Closure: volume on outer loop, flow on inner loop
+            // Volume command >> Flow command >> Actuator command
+            flow_cmd = air_volume_pid_.compute(now, patient_volume.ml(),
+                                               desired_state.volume_setpoint->ml());
+          } else {
+            air_volume_pid_.reset();
+            // Successive Loop Closure: pressure on outer loop, flow on inner loop
+            // Pressure command >> Flow command >> Actuator command
+            flow_cmd = air_pressure_pid_.compute(now, sensor_readings.patient_pressure.kPa(),
+                                                 desired_state.pressure_setpoint->kPa());
+          }
+
+          float blower_valve =
+              air_flow_pid_.compute(now, sensor_readings.air_inflow.liters_per_sec(), flow_cmd);
+
+          // Fio2 controller with feed-forward
+          float fio2_coupling_value =
+              std::clamp(params.fio2 + fio2_pid_.compute(now, sensor_readings.fio2, params.fio2),
+                         0.0f, 1.0f);  // just a little bit of feed-forward
+
+          if (!desired_state.is_in_exhale) {
+            actuators_state = {
+                .fio2_valve =
+                    std::clamp(sensor_readings.oxygen_inflow.liters_per_sec() * fio2_coupling_value,
+                               0.0f, 1.0f),
+                // In normal mode, blower is always full power; pid controls pressure
+                // by actuating the blower pinch valve.
+                .blower_power = 1.f,
+                .blower_valve =
+                    std::clamp(blower_valve, 0.0f,
+                               1.0f),  // always keep the valve a little open for better response
+                // coupled control: exhale valve tracks flow command
+                .exhale_valve = std::clamp(1.0f - 0.60f * blower_valve, 0.f, 1.f),
+            };
+          } else {
+            actuators_state = {
+                .fio2_valve =
+                    std::clamp(sensor_readings.oxygen_inflow.liters_per_sec() * fio2_coupling_value,
+                               0.0f, 1.0f),
+                // In normal mode, blower is always full power; pid controls pressure
+                // by actuating the blower pinch valve.
+                .blower_power = 1.f,
+                .blower_valve =
+                    std::clamp(blower_valve + 0.05f, 0.0f,
+                               1.0f),  // always keep the valve a little open for better response
+                // coupled control: exhale valve tracks flow command
+                .exhale_valve = std::clamp(1.0f - 0.55f * flow_cmd - 0.4f, 0.f, 1.f),
+            };
+          }
+        } else {
+          float psol_valve;
+
+          // Delivering air + oxygen mixes from 60 to 100%
+          air_pressure_pid_.reset();
+          air_volume_pid_.reset();
+
+          // Single loop on PSOL for now, because PSOL flow sensor not implemented
+          // yet
+          if (!desired_state.is_in_exhale) {
+            psol_valve =
+                psol_pid_.compute(now, patient_volume.ml(), desired_state.volume_setpoint->ml());
+          } else {
+            psol_valve = psol_pid_.compute(now, sensor_readings.patient_pressure.kPa(),
+                                           desired_state.pressure_setpoint->kPa());
+          }
+
+          float fio2_coupling_value =
+              std::clamp(params.fio2 + fio2_pid_.compute(now, sensor_readings.fio2, params.fio2),
+                         0.0f, 1.0f);  // just a little bit of feed-forward
+
+          float blower_valve =
+              air_flow_pid_.compute(now, sensor_readings.air_inflow.liters_per_sec(),
+                                    psol_valve * (1 - fio2_coupling_value));
+
+          actuators_state = {
+              // Force psol to stay very slightly open to avoid the discontinuity
+              // caused by valve hysteresis at very low command.  The exhale valve
+              // compensates for this intentional leakage by staying open when the
+              // psol valve is closed.
+              .fio2_valve = std::clamp(psol_valve + 0.05f, 0.0f, 1.0f),
+              .blower_power = 1.0f,
+              .blower_valve = std::clamp(blower_valve, 0.0f, 1.0f),
+              .exhale_valve = 1.0f - 0.6f * psol_valve - 0.4f,
+          };
+        }
+        // Start controlling pressure.
+        ventilator_was_on_ = true;
+      }
+      break;
   }
 
   ControllerState controller_state = {

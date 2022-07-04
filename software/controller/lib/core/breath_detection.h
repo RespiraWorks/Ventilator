@@ -33,7 +33,7 @@ class BreathDetection {
   // - net_flow, to allow inspire detection
   // - at_dwell, telling BreathDetection that the dwell plateau has been reached
   // TODO: automatically detect dwell plateau from flow
-  bool PatientInspiring(const BreathDetectionInputs &inputs, bool at_dwell);
+  bool PatientInhaling(const BreathDetectionInputs &inputs, bool at_dwell);
   bool PatientExhaling(const BreathDetectionInputs &inputs, bool at_dwell);
 
  protected:

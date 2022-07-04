@@ -1,4 +1,4 @@
-/* Copyright 2020-2021, RespiraWorks
+/* Copyright 2020-2022, RespiraWorks
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -317,8 +317,8 @@ TEST(TraceHandler, Errors) {
   trace.start();
 
   std::vector<std::tuple<std::vector<uint8_t>, ErrorCode>> requests = {
-      {{}, ErrorCode::MissingData},   // Missing subcommand
-      {{9}, ErrorCode::InvalidData},  // Invalid subcommand
+      {std::vector<uint8_t>{}, ErrorCode::MissingData},  // Missing subcommand
+      {{9}, ErrorCode::InvalidData},                     // Invalid subcommand
       {{static_cast<uint8_t>(TraceHandler::Subcommand::Download)}, ErrorCode::NoMemory},
       {{static_cast<uint8_t>(TraceHandler::Subcommand::SetVarId), 1, 1}, ErrorCode::MissingData},
       //      {{static_cast<uint8_t>(TraceHandler::Subcommand::SetVarId), Trace::MaxVars, 1, 0},

@@ -1,9 +1,11 @@
-
 /* Copyright 2020-2022, RespiraWorks
+
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
+
     http://www.apache.org/licenses/LICENSE-2.0
+
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -37,21 +39,21 @@ class UartStream : public OutputStream, public TxListener {
   StreamResponse put(int32_t b) override {
     if (tx_error_) {
       tx_error_ = false;
-      return {.count_written = 0, .flags = ResponseFlags::ErrorStreamBroken};
+      return {/*count_written=*/0, ResponseFlags::ErrorStreamBroken};
     }
     // TODO thread safety
     if (EndOfStream == b) {
-      return {.count_written = 0, .flags = transmit()};
+      return {/*count_written=*/0, transmit()};
     }
 
     if (buffer_full()) {
-      return {.count_written = 0, .flags = ResponseFlags::ErrorBufferFull};
+      return {/*count_written=*/0, ResponseFlags::ErrorBufferFull};
     } else {
       buffer_[index_++] = static_cast<uint8_t>(b);
       if (buffer_full()) {
-        return {.count_written = 1, .flags = transmit()};
+        return {/*count_written=*/1, transmit()};
       }
-      return {.count_written = 1, .flags = ResponseFlags::StreamSuccess};
+      return {/*count_written=*/1, ResponseFlags::StreamSuccess};
     }
   }
 

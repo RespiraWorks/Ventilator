@@ -1,8 +1,11 @@
 /* Copyright 2020-2022, RespiraWorks
+
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
+
     http://www.apache.org/licenses/LICENSE-2.0
+
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -112,13 +115,13 @@ TEST(EepromHandler, Errors) {
   long_write[0] = 1;
 
   std::vector<std::tuple<std::vector<uint8_t>, ErrorCode>> requests = {
-      {{}, ErrorCode::MissingData},                    // Missing subcommand
-      {{0, 0, 0, 4, 0}, ErrorCode::NoMemory},          // length > max response length
-      {{0, 0, 0, 0}, ErrorCode::MissingData},          // Read missing length
-      {{1, 0, 0}, ErrorCode::MissingData},             // Write missing data
-      {{1, 0xFF, 0xFF, 0}, ErrorCode::InternalError},  // Write outside eeprom
-      {long_write, ErrorCode::NoMemory},               // Write more than 1024 bytes
-      {{2, 0, 0}, ErrorCode::InvalidData},             // Invalid subcommand
+      {std::vector<uint8_t>{}, ErrorCode::MissingData},  // Missing subcommand
+      {{0, 0, 0, 4, 0}, ErrorCode::NoMemory},            // length > max response length
+      {{0, 0, 0, 0}, ErrorCode::MissingData},            // Read missing length
+      {{1, 0, 0}, ErrorCode::MissingData},               // Write missing data
+      {{1, 0xFF, 0xFF, 0}, ErrorCode::InternalError},    // Write outside eeprom
+      {long_write, ErrorCode::NoMemory},                 // Write more than 1024 bytes
+      {{2, 0, 0}, ErrorCode::InvalidData},               // Invalid subcommand
   };
 
   for (auto &[request, error] : requests) {

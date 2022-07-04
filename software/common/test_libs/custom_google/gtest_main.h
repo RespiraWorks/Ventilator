@@ -17,5 +17,10 @@ limitations under the License.
 int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
 
-  return RUN_ALL_TESTS();
+  if (RUN_ALL_TESTS())
+    ;
+
+  // Always returning 0, per platformio documentation:
+  // https://docs.platformio.org/en/latest/advanced/unit-testing/frameworks/googletest.html
+  return 0;
 }

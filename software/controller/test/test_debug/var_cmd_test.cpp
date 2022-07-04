@@ -1,4 +1,4 @@
-/* Copyright 2020-2021, RespiraWorks
+/* Copyright 2020-2022, RespiraWorks
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -181,8 +181,8 @@ TEST(VarHandler, Errors) {
   u16_to_u8(var_readonly.id(), id_readonly);
 
   std::vector<std::tuple<std::vector<uint8_t>, ErrorCode>> requests = {
-      {{}, ErrorCode::MissingData},   // Missing subcommand
-      {{4}, ErrorCode::InvalidData},  // Invalid subcommand
+      {std::vector<uint8_t>{}, ErrorCode::MissingData},  // Missing subcommand
+      {{4}, ErrorCode::InvalidData},                     // Invalid subcommand
       {{0, 0xFF, 0xFF}, ErrorCode::UnknownVariable},
       {{1, 0xFF, 0xFF}, ErrorCode::UnknownVariable},
       {{2, 0xFF, 0xFF}, ErrorCode::UnknownVariable},

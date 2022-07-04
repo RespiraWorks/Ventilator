@@ -1,4 +1,4 @@
-/* Copyright 2020-2021, RespiraWorks
+/* Copyright 2020-2022, RespiraWorks
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -98,7 +98,7 @@ uint16_t Trace::traced_variable(uint8_t index) {
   // We want to make sure we read a full sample without being interrupted.
   *count = 0;
   BlockInterrupts block;
-  for (auto *var : traced_vars_) {
+  for (const auto *var : traced_vars_) {
     if (!var) {
       continue;
     }

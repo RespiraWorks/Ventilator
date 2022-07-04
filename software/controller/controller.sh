@@ -161,10 +161,10 @@ run_checks() {
     set +e
     set +o pipefail
 
-    # STM32 - clangtidy [TODO(a-vinod) cppcheck]
-    # Native - cppcheck & clangtidy
-
+    # STM32 - cppcheck & clangtidy
     pio check -e stm32 --fail-on-defect=high --skip-packages
+
+    # Native - cppcheck & clangtidy
     pio check -e native --fail-on-defect=high
 }
 

@@ -120,7 +120,7 @@ install_linux() {
   pip3 install platformio==${PIO_VERSION}
 
   # upgrading platformio to development version to get proper code coverage reports
-  # remove this when platformio 6.1.0 goes live.
+  # TODO: remove this when platformio 6.1.0 goes live.
   pio upgrade --dev
 
   source ${HOME}/.profile
@@ -140,7 +140,7 @@ update_platformio() {
   pip3 install platformio==${PIO_VERSION}
 
   # upgrading platformio to development version to get proper code coverage reports
-  # remove this when platformio 6.1.0 goes live.
+  # TODO: remove this when platformio 6.1.0 goes live.
   pio upgrade --dev
 
   pio pkg uninstall -d .

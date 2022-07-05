@@ -62,7 +62,7 @@ GuiStatus GuiStateContainer::GetGuiStatus() {
       case VentilationMode::SIMVVC:
         return VentMode::VentMode_VC_SIMV;
       case VentilationMode::BIPAP:
-        return VentMode:: VentMode_BIPAP;
+        return VentMode::VentMode_BIPAP;
       case VentilationMode::PRVC:
         return VentMode::VentMode_PRESSURE_REG_VC;
       case VentilationMode::SPV:
@@ -177,9 +177,8 @@ qreal GuiStateContainer::get_measured_tv() const {
 }
 
 qreal GuiStateContainer::get_measured_rr() const {
-  return (commanded_mode_ == VentilationMode::VC)
-         ? commanded_rr_
-         : breath_signals_.rr().value_or(commanded_rr_);
+  return (commanded_mode_ == VentilationMode::VC) ? commanded_rr_
+                                                  : breath_signals_.rr().value_or(commanded_rr_);
 }
 
 qreal GuiStateContainer::get_measured_peep() const {
@@ -187,7 +186,7 @@ qreal GuiStateContainer::get_measured_peep() const {
 }
 
 qreal GuiStateContainer::get_measured_psupp() const {
-  return 0;//breath_signals_.peep().value_or(commanded_psupp_);
+  return 0;  // breath_signals_.peep().value_or(commanded_psupp_);
 }
 
 qreal GuiStateContainer::get_measured_viv() const {

@@ -69,25 +69,25 @@ class Controller {
   // TODO: These params need to be tuned.
 
   PID air_volume_pid_{"air_volume_",
-                        " for AIR outer loop volume PID",
-                        /*initial_kp=*/0.75f,
+                      " for AIR outer loop volume PID",
+                      /*initial_kp=*/0.75f,
+                      /*initial_ki=*/20.0f,
+                      /*initial_kd=*/0.075f,
+                      /*p_term=*/PID::TermApplication::OnError,
+                      /*d_term=*/PID::TermApplication::OnMeasurement,
+                      /*output_min=*/0.f,
+                      /*output_max=*/1.0f};
+
+  // Ziegler-Nichols Outer Loop Pressure values: ku = 0.9, Tu = 0.04
+  PID air_pressure_pid_{"air_pressure_",
+                        " for AIR outer loop pressure PID",
+                        /*initial_kp=*/0.4f,
                         /*initial_ki=*/20.0f,
-                        /*initial_kd=*/0.075f,
+                        /*initial_kd=*/0.0f,
                         /*p_term=*/PID::TermApplication::OnError,
                         /*d_term=*/PID::TermApplication::OnMeasurement,
                         /*output_min=*/0.f,
                         /*output_max=*/1.0f};
-
-  // Ziegler-Nichols Outer Loop Pressure values: ku = 0.9, Tu = 0.04
-  PID air_pressure_pid_{"air_pressure_",
-                      " for AIR outer loop pressure PID",
-      /*initial_kp=*/0.4f,
-      /*initial_ki=*/20.0f,
-      /*initial_kd=*/0.0f,
-      /*p_term=*/PID::TermApplication::OnError,
-      /*d_term=*/PID::TermApplication::OnMeasurement,
-      /*output_min=*/0.f,
-      /*output_max=*/1.0f};
 
   PID psol_pid_{"psol",
                 " for O2 psol PID",
@@ -101,23 +101,23 @@ class Controller {
 
   PID fio2_pid_{"fio2_",
                 " for FIO2 PID",
-      /*kp=*/0.001f,
-      /*ki=*/0.1f,
-      /*kd=*/0.0f,
-      /*p_term=*/PID::TermApplication::OnError,
-      /*d_term=*/PID::TermApplication::OnMeasurement,
-      /*output_min=*/-1.0f,
-      /*output_max=*/1.0f};
+                /*kp=*/0.001f,
+                /*ki=*/0.1f,
+                /*kd=*/0.0f,
+                /*p_term=*/PID::TermApplication::OnError,
+                /*d_term=*/PID::TermApplication::OnMeasurement,
+                /*output_min=*/-1.0f,
+                /*output_max=*/1.0f};
 
   PID air_flow_pid_{"air_flow_",
                     " for air flow PID",
-      /*kp=*/0.1f,
-      /*ki=*/20.0f,
-      /*kd=*/0.0f,
-      /*p_term=*/PID::TermApplication::OnError,
-      /*d_term=*/PID::TermApplication::OnMeasurement,
-      /*output_min=*/0.f,
-      /*output_max=*/1.0f};
+                    /*kp=*/0.1f,
+                    /*ki=*/20.0f,
+                    /*kd=*/0.0f,
+                    /*p_term=*/PID::TermApplication::OnError,
+                    /*d_term=*/PID::TermApplication::OnMeasurement,
+                    /*output_min=*/0.f,
+                    /*output_max=*/1.0f};
 
   // These objects accumulate flow to calculate volume.
   //

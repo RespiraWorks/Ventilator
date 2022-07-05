@@ -43,7 +43,7 @@ void BreathSignals::Update(SteadyInstant now, const ControllerStatus &status) {
 
   current_pip_ = std::max(current_pip_.value_or(std::numeric_limits<float>::min()), pressure);
   current_peep_ = std::min(current_peep_.value_or(std::numeric_limits<float>::max()), pressure);
-  current_viv_ = std::max(current_viv_.value_or(std::numeric_limits<float>::min()),volumeml);
+  current_viv_ = std::max(current_viv_.value_or(std::numeric_limits<float>::min()), volumeml);
 }
 
 uint32_t BreathSignals::num_breaths() const { return num_breaths_; }
@@ -54,7 +54,7 @@ std::optional<float> BreathSignals::peep() const { return latest_peep_; }
 
 std::optional<float> BreathSignals::viv() const { return latest_viv_; }
 
-uint32_t BreathSignals::currentmode() const { return currentmode_;}
+uint32_t BreathSignals::currentmode() const { return currentmode_; }
 
 std::optional<float> BreathSignals::rr() const {
   if (recent_breath_starts_.size() < MinRecentBreathStarts) {

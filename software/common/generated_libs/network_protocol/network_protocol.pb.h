@@ -80,11 +80,11 @@ typedef struct _GuiStatus {
 /* Initializer values for message structs */
 #define GuiStatus_init_default                   {0, VentParams_init_default}
 #define ControllerStatus_init_default            {0, VentParams_init_default, SensorsProto_init_default, 0, 0}
-#define VentParams_init_default                  {_VentMode_MIN, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+#define VentParams_init_default                  {_VentMode_MIN, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
 #define SensorsProto_init_default                {0, 0, 0, 0, 0, 0, 0, 0}
 #define GuiStatus_init_zero                      {0, VentParams_init_zero}
 #define ControllerStatus_init_zero               {0, VentParams_init_zero, SensorsProto_init_zero, 0, 0}
-#define VentParams_init_zero                     {_VentMode_MIN, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+#define VentParams_init_zero                     {_VentMode_MIN, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
 #define SensorsProto_init_zero                   {0, 0, 0, 0, 0, 0, 0, 0}
 
 /* Field tags (for use in manual encoding/decoding) */

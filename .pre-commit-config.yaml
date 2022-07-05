@@ -33,6 +33,7 @@ repos:
   rev: v2.5.0
   hooks:
   - id: check-yaml
+    exclude: ^software/.clang-format
   - id: end-of-file-fixer
     exclude: ^gui/app/third_party|^pcb/
   - id: trailing-whitespace

@@ -27,7 +27,6 @@ limitations under the License.
 #include "viv_exceeded_alarm.h"
 #include "viv_not_reached_alarm.h"
 
-
 class AlarmManager : public QObject {
   Q_OBJECT
  public:
@@ -74,7 +73,7 @@ class AlarmManager : public QObject {
   PatientDetachedAlarm patient_detached_alarm_;
   VivExceededAlarm viv_exceeded_alarm_;
   VivNotReachedAlarm viv_not_reached_alarm_;
-  std::vector<LatchingAlarm *> alarms_{
-      &pip_exceeded_alarm_, &pip_not_reached_alarm_, &patient_detached_alarm_,
-      &viv_exceeded_alarm_, &viv_not_reached_alarm_};
+  std::vector<LatchingAlarm *> alarms_{&pip_exceeded_alarm_, &pip_not_reached_alarm_,
+                                       &patient_detached_alarm_, &viv_exceeded_alarm_,
+                                       &viv_not_reached_alarm_};
 };

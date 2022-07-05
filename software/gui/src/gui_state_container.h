@@ -49,19 +49,19 @@ class GuiStateContainer : public QObject {
 
  public:
   enum VentilationMode {
-      OFF,
-      PRESSURE_CONTROL ,
-      PRESSURE_ASSIST ,
-      HIGH_FLOW_NASAL_CANNULA,
-      VC ,
-      CPAP,
-      VC_AC ,
-      PSV ,
-      SIMVPC ,
-      SIMVVC ,
-      BIPAP ,
-      PRVC ,
-      SPV
+    OFF,
+    PRESSURE_CONTROL,
+    PRESSURE_ASSIST,
+    HIGH_FLOW_NASAL_CANNULA,
+    VC,
+    CPAP,
+    VC_AC,
+    PSV,
+    SIMVPC,
+    SIMVVC,
+    BIPAP,
+    PRVC,
+    SPV
   };
   Q_ENUM(VentilationMode)
 

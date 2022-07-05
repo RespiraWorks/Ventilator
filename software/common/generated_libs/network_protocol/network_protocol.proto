@@ -109,7 +109,7 @@ message ControllerStatus {
   // Value in range [0, 1] indicating how fast we're spinning the fan.
   required float fan_power = 6;
 
-  // TODO: Include some sort of code version, e.g. git sha that the controller was built from?
+  // TODO: Include some sort of code version, e.g. git sha that the controller built from?
 }
 
 // Values set by the ventilator operator.
@@ -119,15 +119,14 @@ message VentParams {
   // For more info on these terms, see
   // https://github.com/RespiraWorks/Ventilator/wiki/Ventilator-Glossary
 
-  required uint32 peep_cm_h2o = 3; // PEEP - positive end-expiratory pressure
-  required uint32 breaths_per_min = 4; // RR - respiratory rate
-  required uint32 pip_cm_h2o = 5;      // PIP - peak inspiratory pressure
-  required float inspiratory_expiratory_ratio = 6; // I:E
-
-  required uint32 inspiratory_trigger_cm_h2o = 8; // P-trigger
+  required uint32 peep_cm_h2o = 3;                  // PEEP - positive end-expiratory pressure
+  required uint32 breaths_per_min = 4;              // RR - respiratory rate
+  required uint32 pip_cm_h2o = 5;                   // PIP - peak inspiratory pressure
+  required float inspiratory_expiratory_ratio = 6;  // I:E
+  required uint32 inspiratory_trigger_cm_h2o = 8;   // P-trigger
 
   // TODO(jlebar): Is ml/min the correct unit for this?
-  required uint32 expiratory_trigger_ml_per_min = 9; // V-trigger
+  required uint32 expiratory_trigger_ml_per_min = 9;  // V-trigger
 
   // A value between 0..1. Technically only values in [0.21, 1] are allowed.
   required float fio2 = 10;

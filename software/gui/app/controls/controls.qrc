@@ -4,7 +4,7 @@
         <file>graphs/PressureGraph.qml</file>
         <file>graphs/TvGraph.qml</file>
         <file>parameters/FiO2Parameter.qml</file>
-        <file>parameters/FlowImp.qml</file>
+        <file>parameters/Flowlmp.qml</file>
         <file>parameters/ITimeParameter.qml</file>
         <file>parameters/PeepParameter.qml</file>
         <file>parameters/PipParameter.qml</file>

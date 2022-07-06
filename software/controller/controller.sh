@@ -32,7 +32,7 @@
 # - They have to have a very good chance of passing for other
 #   developers if they run via ./controller.sh test
 
-PIO_VERSION=6.0.2
+PIO_VERSION=6.1.0
 COVERAGE_ENVIRONMENT=native
 COVERAGE_OUTPUT_DIR=coverage_reports
 
@@ -118,11 +118,6 @@ install_linux() {
   pip3 install -U pip
   pip3 install codecov pyserial matplotlib pandas gitpython
   pip3 install platformio==${PIO_VERSION}
-
-  # upgrading platformio to development version to get proper code coverage reports
-  # TODO: remove this when platformio 6.1.0 goes live.
-  pio upgrade --dev
-
   source ${HOME}/.profile
 }
 
@@ -138,11 +133,6 @@ configure_platformio() {
 
 update_platformio() {
   pip3 install platformio==${PIO_VERSION}
-
-  # upgrading platformio to development version to get proper code coverage reports
-  # TODO: remove this when platformio 6.1.0 goes live.
-  pio upgrade --dev
-
   pio pkg uninstall -d .
   pio pkg install -d .
   exit $EXIT_SUCCESS

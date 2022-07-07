@@ -81,7 +81,8 @@ class TestData:
         self.start_time_utc = datetime.utcnow()
         self.platform_uname = platform.uname()
         repo = git.Repo(search_parent_directories=True)
-        self.git_version = repo.git.describe("--tags")
+        self.git_version = repo.head.object.hexsha
+        # TODO: reintroduce semantic version info using repo.git.describe("--tags")
         self.git_branch = repo.active_branch.name
         self.git_dirty = repo.is_dirty(untracked_files=True)
         try:

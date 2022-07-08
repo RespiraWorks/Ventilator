@@ -68,10 +68,10 @@ cd "$(dirname "$0")"/../..
 git pull
 
 ### Set RW background - must be done in Desktop mode, thus not in boostrap.sh
-pcmanfm --set-wallpaper ${HOME}/ventilator/manufacturing/images/rendering_full.jpg
+pcmanfm --set-wallpaper ${HOME}/ventilator/software/utils/rpi_config/desktop_background.jpg
 
 ### Update Desktop shortcuts
-/bin/cp -rf software/utils/rpi_config/user/Desktop/* ${HOME}/Desktop
+/bin/cp -rf ${HOME}/ventilator/software/utils/rpi_config/user/Desktop/* ${HOME}/Desktop
 
 if zenity --question --no-wrap --title="PIO Update" \
           --text "<span size=\"large\">Update PlatformIO and libraries?</span>"

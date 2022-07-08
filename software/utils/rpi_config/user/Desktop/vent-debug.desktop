@@ -1,5 +1,5 @@
 [Desktop Entry]
-Name=debug
+Name=Debug
 Path=/home/admin/ventilator/software/utils
 Exec=lxterminal -t "Vent debug" --working-directory=/home/admin/ventilator/software/controller -e "source ~/.profile && ./controller.sh debug"
 Icon=/home/admin/ventilator/software/utils/icons/rw_debug.png

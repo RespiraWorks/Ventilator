@@ -16,7 +16,7 @@ limitations under the License.
 #include "actuator_base.h"
 #include "gtest_main.h"
 
-/// \TODO: improve pwm and pinchvalve/stepper mocks to create tests for pwmActuator, pinch valves
+/// \TODO improve pwm and pinchvalve/stepper mocks to create tests for pwmActuator, pinch valves
 // and actuators as a whole
 
 TEST(Actuator, init) {

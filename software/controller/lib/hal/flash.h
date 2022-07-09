@@ -18,7 +18,7 @@ limitations under the License.
 #include <cstddef>
 #include <cstdint>
 
-/// \TODO: do we still have any use for this class?
+/// \TODO do we still have any use for this class?
 namespace Flash {
 
 void initialize();

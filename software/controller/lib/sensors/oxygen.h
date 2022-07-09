@@ -18,10 +18,12 @@ limitations under the License.
 #include "analog_sensor.h"
 #include "sensor_base.h"
 
-class TeledyneR24 : public OxygenSensor, public AnalogSensor {
+template <class SourceType>
+class TeledyneR24 : public OxygenSensor, public AnalogSensor<SourceType> {
  public:
-  TeledyneR24(const char* name, const char* help_supplement, const GPIO::AdcChannel& channel,
-              ADC* adc);
+  TeledyneR24(const char* name, const char* help_supplement, SourceType&& source);
 
   float read(Pressure p_ambient) const override;
 };
+
+#include "oxygen.tpp"

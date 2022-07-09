@@ -45,5 +45,3 @@ class SoftChannel : public Channel {
 };
 
 }  // namespace UART
-
-extern UART::SoftChannel debug_uart;

@@ -15,7 +15,7 @@ limitations under the License.
 
 #include "pwm.h"
 
-/// \TODO: have mappings be maintained in / provided by a higher layer
+/// \TODO have mappings be maintained in / provided by a higher layer
 /******************************************************************
  * PWM outputs
  *
@@ -32,6 +32,8 @@ limitations under the License.
 
 #include <algorithm>
 #if defined(BARE_STM32)
+
+#include "clocks_stm32.h"
 
 // helper function to get the proper timer register based on timer peripheral ID
 TimerReg *register_for(const PeripheralID peripheral) {

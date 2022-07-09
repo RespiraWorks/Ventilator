@@ -15,8 +15,7 @@ limitations under the License.
 
 #include "trace.h"
 
-#include <stdint.h>
-
+#include <cstdint>
 #include <iostream>
 #include <limits>
 

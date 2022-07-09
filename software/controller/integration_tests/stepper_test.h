@@ -12,7 +12,9 @@
 #include <cmath>
 
 #include "hal.h"
+#include "pwm_actuator.h"
 #include "stepper.h"
+#include "system_constants.h"
 #include "system_timer.h"
 #include "watchdog.h"
 
@@ -23,6 +25,12 @@ static constexpr Duration Delay{milliseconds(1000)};
 
 void RunTest() {
   hal.Init();
+
+  // Just to shut it up, may not need this beyond v0.3
+  PwmActuator blower{BlowerChannel, BlowerFreq, HalApi::CPUFrequency(), "", ""};
+  blower.set(0.0f);
+
+  StepMotor::OneTimeInit();
 
   // Configure stepper
   StepMotor *stepper_motor = StepMotor::GetStepper(MotorIndex);

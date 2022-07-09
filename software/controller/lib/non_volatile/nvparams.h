@@ -15,10 +15,9 @@ limitations under the License.
 
 #pragma once
 
-#include <stddef.h>
-#include <stdint.h>
-
 #include <array>
+#include <cstddef>
+#include <cstdint>
 
 #include "eeprom.h"
 #include "network_protocol.pb.h"
@@ -64,9 +63,9 @@ struct Structure {
   // should be the setting for 0 flow and the last entry should be the setting for 100% flow.
   // Note that those are only used after (if?) Actuators::LinkCalibration() has been called for the
   // considered actuator.
-  /// \TODO: though it makes sense to have functional values during prototyping, we should consider
-  // making those default values unusable (all zeros?) for a production unit, to ensure that a
-  // given ventilator has been fully calibrated before use
+  /// \TODO though it makes sense to have functional values during prototyping, we should consider
+  ///   making those default values unusable (all zeros?) for a production unit, to ensure that a
+  ///   given ventilator has been fully calibrated before use
   std::array<float, ActuatorsCalSize> blower_pinch_cal{0.0000f, 0.0410f, 0.0689f, 0.0987f,
                                                        0.1275f, 0.1590f, 0.1932f, 0.2359f,
                                                        0.2940f, 0.3988f, 1.0000f};

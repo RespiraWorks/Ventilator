@@ -13,11 +13,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#pragma once
-
 // Reference abbreviations ([RM], [PCB], etc) are defined in hal/README.md
 
-#include <cstdint>
+#pragma once
+
+/// \TODO should this file be named peripheral_id.h?
 
 // Please read manual carefully, as not all peripherals ara available on all processors
 // [RM] 6.4.9-26 (pg 208-234)
@@ -74,11 +74,3 @@ enum class PeripheralID {
   USBFS,  // USB FS
   WindowWatchdog,
 };
-
-// Enable clocks to a specific peripheral.
-// On the STM32 the clocks going to various peripherals on the chip are individually selectable and
-// for the most part disabled on startup. Clocks to the specific peripherals need to be enabled
-// through the RCC (Reset and Clock Controller) module before the peripheral can be used.
-void enable_peripheral_clock(PeripheralID);
-
-void configure_pll();

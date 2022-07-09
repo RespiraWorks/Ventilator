@@ -1,4 +1,4 @@
-/* Copyright 2020, RespiraWorks
+/* Copyright 2020-2022, RespiraWorks
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -24,12 +24,8 @@ limitations under the License.
 
 #include <cstring>
 
-#include "clocks.h"
-
-// Declaration of I2C channel, as global since hal requires it to exist for interrupt handlers
-// TODO: find a way to get rid of this as global variable (probably requires a more flexible
-// handling of InterruptVector in Reset_Handler() function from hal_stm32.cpp)
-I2C::Channel i2c1(I2C::Base::I2C1, DMA::Base::DMA2);
+#include "clocks_stm32.h"
+#include "gpio_stm32.h"
 
 namespace I2C {
 // [RM] 37.7 I2C Registers

@@ -19,6 +19,7 @@ limitations under the License.
 
 #include "gtest_main.h"
 #include "system_timer.h"
+#include "venturi.h"
 
 // TODO: There ought to be many more tests in here.
 

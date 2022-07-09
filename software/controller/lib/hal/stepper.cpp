@@ -1,4 +1,4 @@
-/* Copyright 2020-2021, RespiraWorks
+/* Copyright 2020-2022, RespiraWorks
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ std::optional<GPIO::DigitalOutputPin> StepMotor::chip_select_{std::nullopt};
 #include <cmath>
 #include <cstring>
 
-#include "clocks.h"
+#include "clocks_stm32.h"
 #include "interrupts.h"
 #include "spi.h"
 #include "system_timer.h"
@@ -902,7 +902,7 @@ void StepMotor::ProbeChips() {
 
 #else
 
-/// \TODO: improve this mocking to be helpful in testing
+/// \TODO improve this mocking to be helpful in testing
 
 StepMtrErr StepMotor::HardDisable() { return StepMtrErr::Ok; }
 StepMtrErr StepMotor::SetAmpAll(float amp) { return StepMtrErr::Ok; }

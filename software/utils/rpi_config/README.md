@@ -34,7 +34,7 @@ With the above configured, the next step should be pretty automatic. You can sti
 
 Whether by `ssh` or attached keyboard, copy and paste this command into a terminal:
 
-<!-- \TODO: change command to point to master before merging!!! -->
+<!-- \TODO change command to point to master before merging!!! -->
 ```shell
 bash <(wget -qO- https://github.com/RespiraWorks/Ventilator/raw/master/software/utils/rpi_config/bootstrap.sh)
 ```

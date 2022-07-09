@@ -65,5 +65,3 @@ class DMAChannel : public Channel {
 };
 
 }  // namespace UART
-
-extern UART::DMAChannel rpi_uart;

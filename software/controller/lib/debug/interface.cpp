@@ -1,4 +1,4 @@
-/* Copyright 2020-2021, RespiraWorks
+/* Copyright 2020-2022, RespiraWorks
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -19,25 +19,15 @@ limitations under the License.
 #include "system_timer.h"
 
 namespace Debug {
-// Initialize interface handler with variable list of
-// Command::Code, Command::Handler pairs and a trace
-Interface::Interface(UART::Channel *uart, Trace *trace, int count, ...) {
-  uart_ = uart;
-  trace_ = trace;
-  // Add the provided handlers to the registry, unless an odd number of
-  // arguments have been provided
-  va_list valist;
-  va_start(valist, count);
-  for (int i = 0; i < count / 2; ++i) {
-    Command::Code code = va_arg(valist, Command::Code);
-    Command::Handler *handler = va_arg(valist, Command::Handler *);
-    registry_[static_cast<uint8_t>(code)] = handler;
-  }
-  va_end(valist);  // clean memory reserved for valist
+
+Interface::Interface(UART::Channel *uart) : uart_(uart) {}
+
+void Interface::add_handler(Command::Code code, Command::Handler *handler) {
+  registry_[static_cast<uint8_t>(code)] = handler;
 }
 
 // This function is called from the main low priority background loop.
-// Its a simple state machine that waits for a new command to be received
+// It's a simple state machine that waits for a new command to be received
 // over the debug serial port.  Process the command when one is received
 // and sends the response back.
 bool Interface::Poll() {
@@ -45,7 +35,7 @@ bool Interface::Poll() {
     // Waiting for a new command to be received.
     // I continue to process bytes until there are no more available,
     // or a full command has been received.  Either way, the
-    // ReadNextByte function will return false when its time
+    // ReadNextByte function will return false when it's time
     // to move on.
     case State::AwaitingCommand:
       while (ReadNextByte()) {
@@ -62,6 +52,7 @@ bool Interface::Poll() {
     case State::AwaitingResponse:
       if (command_processed_) {
         SendResponse(ErrorCode::None, response_length_);
+        /// \TODO parametrize time-out threshold
       } else if (SystemTimer::singleton().now() > command_start_time_ + milliseconds(100)) {
         SendError(ErrorCode::Timeout);
       }
@@ -130,15 +121,15 @@ bool Interface::SendNextByte() {
   // See what the next character to send is.
   uint8_t next_byte = response_[response_bytes_sent_++];
 
-  // If its a special character, I need to escape it.
+  // If it's a special character, I need to escape it.
   if ((next_byte == static_cast<uint8_t>(SpecialChar::EndTransfer)) ||
       (next_byte == static_cast<uint8_t>(SpecialChar::Escape))) {
     uint8_t escaped_char[2];
     escaped_char[0] = static_cast<uint8_t>(SpecialChar::Escape);
     escaped_char[1] = next_byte;
-    (void)uart_->Write(escaped_char, 2);
+    [[maybe_unused]] size_t written = uart_->Write(escaped_char, 2);
   } else {
-    (void)uart_->Write(&next_byte, 1);
+    [[maybe_unused]] size_t written = uart_->Write(&next_byte, 1);
   }
 
   // If there's more response to send, return true
@@ -150,7 +141,7 @@ bool Interface::SendNextByte() {
   // termination character and start waiting on the next
   // command.
   uint8_t end_transfer = static_cast<uint8_t>(SpecialChar::EndTransfer);
-  (void)uart_->Write(&end_transfer, 1);
+  [[maybe_unused]] size_t written = uart_->Write(&end_transfer, 1);
 
   state_ = State::AwaitingCommand;
   response_bytes_sent_ = 0;
@@ -161,7 +152,7 @@ bool Interface::SendNextByte() {
 void Interface::ProcessCommand() {
   // The total number of bytes received (not including the termination byte)
   // is the value of request_size_, which should be at least 3 (8 bits command
-  // code + 16 bits checksum). If its not, I just ignore the command and jump to
+  // code + 16 bits checksum). If it's not, I just ignore the command and jump to
   // waiting for the next one.
   // This means we can send EndTransfer characters to synchronize
   // communication if necessary

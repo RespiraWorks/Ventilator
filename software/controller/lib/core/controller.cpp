@@ -15,9 +15,8 @@ limitations under the License.
 
 #include "controller.h"
 
-#include <math.h>
-
 #include <algorithm>
+#include <cmath>
 
 #include "system_constants.h"
 

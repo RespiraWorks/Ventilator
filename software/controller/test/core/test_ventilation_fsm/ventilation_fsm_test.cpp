@@ -21,7 +21,6 @@ limitations under the License.
 #include "controller.h"
 #include "gmock/gmock-matchers.h"
 #include "gtest_main.h"
-#include "hal.h"
 #include "system_constants.h"
 #include "system_timer.h"
 #include "ventilation_fsm_test_data.h"

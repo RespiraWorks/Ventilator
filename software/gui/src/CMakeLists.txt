@@ -43,7 +43,7 @@ set(${this_target}_headers
   time_series_graph_painter.h
   )
 
-# Mostly for qnanopainter \TODO: make it an external lib
+# Mostly for qnanopainter \TODO make it an external lib
 set(QNANO_QUICK ON CACHE BOOL "Build QNanoPainter for QtQuick")
 add_subdirectory(third_party)
 

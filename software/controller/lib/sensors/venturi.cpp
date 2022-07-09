@@ -19,7 +19,7 @@ limitations under the License.
 
 float pow2(float f) { return f * f; }
 
-// \TODO: put this in math header and have it tested
+/// \TODO put this in math header and have it tested
 // Returns an area in meters squared.
 float diameter_to_area_m2(Length diameter) {
   return static_cast<float>(M_PI) / 4.0f * pow2(diameter.meters());

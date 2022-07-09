@@ -1,4 +1,4 @@
-/* Copyright 2020-2021, RespiraWorks
+/* Copyright 2020-2022, RespiraWorks
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -37,6 +37,12 @@ limitations under the License.
 #include "led_indicators.h"
 #include "units.h"
 
+#if defined(BARE_STM32)
+/// \TODO use truly abstract UART and I2C classes instead
+#include "i2c.h"
+#include "uart_dma.h"
+#endif
+
 // Singleton class which implements a hardware abstraction layer.
 //
 // Access this via the `hal` global variable, e.g. `hal.millis()`.
@@ -46,15 +52,17 @@ limitations under the License.
 // move into the hal_foo.cpp files.
 class HalApi {
  public:
-  /// \TODO: likely these should not even be members
+  /// \TODO likely these should not even be members
   LEDIndicators LEDs;
 
-  static Frequency GetCpuFreq();
+  static Frequency CPUFrequency();
 
-  void Init();
+  static Frequency UARTBaudRate();
 
   // Perform some early chip initialization before static constructors are run
   void EarlyInit();
+
+  void Init();
 
   // Performs the device soft-reset
   [[noreturn]] void ResetDevice();
@@ -64,7 +72,12 @@ class HalApi {
 
   void init_PCB_ID_pins();
 
-#if !defined(BARE_STM32)
+#if defined(BARE_STM32)
+  void bind_channels(I2C::Channel *i2c, UART::DMAChannel *rpi, UART::Channel *debug);
+  I2C::Channel *i2c_{nullptr};
+  UART::DMAChannel *rpi_uart_{nullptr};
+  UART::Channel *debug_uart_{nullptr};
+#else
  private:
   Time time_ = microsSinceStartup(0);
 #endif

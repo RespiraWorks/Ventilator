@@ -22,13 +22,17 @@ static constexpr float InitialStep{0.1f};
 void RunTest() {
   hal.Init();
 
+  // Just to shut it up, may not need this beyond v0.3
+  PwmActuator blower{BlowerChannel, BlowerFreq, HalApi::CPUFrequency(), "", ""};
+  blower.set(0.0f);
+
   float volume = MinVolume;
   float step = InitialStep;
 
   bool buzzer_on{false};
 
-  PwmActuator buzzer{BuzzerChannel, BuzzerFreq, HalApi::GetCpuFreq(), "buzzer_", " of the buzzer",
-                     "volume",      BuzzerOff,  MaxBuzzerVolume};
+  PwmActuator buzzer{BuzzerChannel, BuzzerFreq,     HalApi::CPUFrequency(), "", "", "",
+                     BuzzerOff,     MaxBuzzerVolume};
 
   while (true) {
     if (buzzer_on) {

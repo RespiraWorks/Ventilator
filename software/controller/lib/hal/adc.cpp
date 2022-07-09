@@ -54,10 +54,9 @@ limitations under the License.
 
 #include "adc.h"
 
-#if defined(BARE_STM32)
-
 #include <algorithm>
 
+#include "clocks_stm32.h"
 #include "dma.h"
 #include "system_timer.h"
 
@@ -395,18 +394,6 @@ Voltage ADC::read(const uint8_t channel) const {
 
   return volts(sum * adc_scaler_);
 }
-
-#else
-
-bool ADC::initialize(const Frequency cpu_frequency) { return true; }
-
-Voltage ADC::read(const uint8_t channel) const { return analog_pin_values_.at(channel); }
-
-void ADC::TESTSetAnalogPin(const uint8_t channel, Voltage value) {
-  analog_pin_values_[channel] = value;
-}
-
-#endif
 
 bool ADC::add_channel(const uint8_t channel) {
   if (n_channels_ >= MaxAdcChannels) {

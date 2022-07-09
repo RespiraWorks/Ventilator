@@ -52,6 +52,7 @@
 #include "pwm_actuator.h"
 #include "system_constants.h"
 #include "system_timer.h"
+#include "uart_soft.h"  // for debug_uart
 #include "vars.h"
 
 static Debug::Variable::UInt32 dbg_addr_before("eeprom_before", Debug::Variable::Access::ReadOnly,
@@ -68,6 +69,10 @@ static constexpr uint16_t Address{TEST_PARAM_1};
 static constexpr uint8_t Data{TEST_PARAM_2};
 static constexpr uint16_t Length{TEST_PARAM_3};
 
+/// \TODO initialize based on system constants, and instantiate inside function
+I2C::Channel i2c1(I2C::Base::I2C1, DMA::Base::DMA2);
+UART::SoftChannel debug_uart(UART::Base::UART2);
+
 // declaration of EEPROM
 static I2Ceeprom eeprom = I2Ceeprom(0x50, 64, 32768, &i2c1);
 
@@ -82,14 +87,40 @@ static Debug::Command::VarHandler var_command;
 static Debug::Command::TraceHandler trace_command(&trace);
 static Debug::Command::EepromHandler eeprom_command(&eeprom);
 
-static Debug::Interface debug(&debug_uart, &trace, 12, Debug::Command::Code::Mode, &mode_command,
-                              Debug::Command::Code::Peek, &peek_command, Debug::Command::Code::Poke,
-                              &poke_command, Debug::Command::Code::Variable, &var_command,
-                              Debug::Command::Code::Trace, &trace_command,
-                              Debug::Command::Code::EepromAccess, &eeprom_command);
+static Debug::Interface debug(&debug_uart);
 
 void RunTest() {
   hal.Init();
+
+  // Just to shut it up, may not need this beyond v0.3
+  PwmActuator blower{BlowerChannel, BlowerFreq, HalApi::CPUFrequency(), "blower_",
+                     " of the blower"};
+  blower.set(0.0f);
+
+  // The Nucleo board also includes a secondary serial port that's indirectly connected to its USB
+  // connector.  This port is connected to the STM32 USART2 at pins PA2 (TX) and PA3 (RX) and has
+  // no HW flow control (rts/cts)
+  debug_uart.Initialize(GPIO::Port::A, /*tx_pin=*/2, /*rx_pin=*/3,
+                        /*rts_pin=*/std::nullopt, /*cts_pin=*/std::nullopt,
+                        GPIO::AlternativeFunction::AF7, HalApi::CPUFrequency(),
+                        HalApi::UARTBaudRate());
+
+  // [PCBsp] lists I2C1 pins : SCL=PB8 and SDA=PB9
+  i2c1.Initialize(I2C::Speed::Fast, GPIO::Port::B, /*scl_pin=*/8, /*sda_pin=*/9,
+                  GPIO::AlternativeFunction::AF4);
+
+  hal.bind_channels(&i2c1, nullptr, &debug_uart);
+  Interrupts::singleton().EnableInterrupts();
+
+  /// \TODO are all the handlers really necessary for this integration test?
+  /// \TODO perhaps have a more minimal version of this test without debug interface at all?
+  debug.add_handler(Debug::Command::Code::Mode, &mode_command);
+  debug.add_handler(Debug::Command::Code::Peek, &peek_command);
+  debug.add_handler(Debug::Command::Code::Poke, &poke_command);
+  debug.add_handler(Debug::Command::Code::Variable, &var_command);
+  debug.add_handler(Debug::Command::Code::Trace, &trace_command);
+  debug.add_handler(Debug::Command::Code::EepromAccess, &eeprom_command);
+
   uint8_t eeprom_before[Length];
   uint8_t write_data[Length];
   uint8_t eeprom_after[Length];
@@ -99,10 +130,10 @@ void RunTest() {
     write_data[i] = Data;
   }
 
-  PwmActuator buzzer{BuzzerChannel, BuzzerFreq, HalApi::GetCpuFreq(), "buzzer_", " of the buzzer",
+  PwmActuator buzzer{BuzzerChannel, BuzzerFreq, HalApi::CPUFrequency(), "", " of the buzzer",
                      "volume",      BuzzerOff,  MaxBuzzerVolume};
 
-  buzzer.set(0.1f);
+  buzzer.set(0.3f);
   eeprom.ReadBytes(Address, Length, &eeprom_before, nullptr);
 
   eeprom.WriteBytes(Address, Length, &write_data, nullptr);

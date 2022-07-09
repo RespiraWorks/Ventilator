@@ -10,6 +10,8 @@
 //
 
 #include "hal.h"
+#include "pwm_actuator.h"
+#include "system_constants.h"
 #include "system_timer.h"
 
 // test parameters
@@ -17,6 +19,10 @@ static constexpr Duration Delay{milliseconds(10)};
 
 void RunTest() {
   hal.Init();
+
+  // Just to shut it up, may not need this beyond v0.3
+  PwmActuator blower{BlowerChannel, BlowerFreq, HalApi::CPUFrequency(), "", ""};
+  blower.set(0.0f);
 
   while (true) {
     SystemTimer::singleton().delay(Delay);

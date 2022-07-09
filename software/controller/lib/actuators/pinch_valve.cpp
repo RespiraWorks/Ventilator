@@ -19,6 +19,7 @@ limitations under the License.
 #include <cfloat>
 #include <cmath>
 
+#include "stepper.h"
 #include "system_timer.h"
 
 // These constants define various properties of the pinch

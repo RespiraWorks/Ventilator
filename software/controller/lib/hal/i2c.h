@@ -197,5 +197,3 @@ class Channel {
 };
 
 }  // namespace I2C
-
-extern I2C::Channel i2c1;

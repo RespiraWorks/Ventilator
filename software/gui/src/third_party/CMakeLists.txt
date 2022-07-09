@@ -27,7 +27,7 @@ add_definitions(-DQNANO_ENABLE_GLES3)
 set(QNANO_BUILD_GLES_BACKENDS OFF)
 set(QNANO_BUILD_GL_BACKENDS ON)
 
-# \TODO: autodetect backends
+# \TODO autodetect backends
 
 set(${this_target}_sources
   qnanopainter/libqnanopainter

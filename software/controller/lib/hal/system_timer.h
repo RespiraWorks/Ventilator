@@ -42,7 +42,7 @@ class SystemTimer {
   void delay(Duration d);
 
  private:
-  /// \TODO: do 64-bit types work on STM32?
+  /// \TODO do 64-bit types work on STM32?
   volatile uint64_t ms_count_{0};
 
   // singleton assurance, because these are private

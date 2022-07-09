@@ -1,4 +1,4 @@
-/* Copyright 2020-2021, RespiraWorks
+/* Copyright 2020-2022, RespiraWorks
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,14 +15,14 @@ limitations under the License.
 
 #pragma once
 
-#include <cstdarg>
 #include <optional>
 
-#include "circular_buffer.h"
 #include "debug_types.h"
-#include "trace.h"
-#include "uart_soft.h"
+#include "uart_base.h"
 #include "units.h"
+
+/// \TODO Either template the Interface class and/or have it take a truly abstract Channel. This
+///   class expects it to have Read, TxFree and Write HAL expects it to have UARTInterruptHandler
 
 namespace Debug {
 
@@ -57,7 +57,9 @@ namespace Debug {
 // has a special value.
 class Interface {
  public:
-  Interface(UART::Channel *uart, Trace *trace, int count, ...);
+  explicit Interface(UART::Channel *uart);
+
+  void add_handler(Command::Code code, Command::Handler *handler);
 
   // This function is called from the main loop to handle debug commands.
   // Returns true if this call has finished sending the response for a command,
@@ -65,8 +67,6 @@ class Interface {
   bool Poll();
 
   static uint16_t ComputeCRC(const uint8_t *buffer, size_t length);
-
-  void SampleTraceVars() { trace_->maybe_sample(); }
 
  private:
   State state_{State::AwaitingCommand};
@@ -95,13 +95,11 @@ class Interface {
   size_t response_length_{0};
 
   // List of registered command handlers
+  /// \TODO size of registry should be determined by range of Code enum
   Command::Handler *registry_[32] = {nullptr};
 
   // Uart channel on which data is sent
   UART::Channel *uart_;
-  // Trace buffer (populated when SampleTraceVars is called and Trace is
-  // enabled through the trace command)
-  Trace *trace_;
 
   bool ReadNextByte();
   void ProcessCommand();

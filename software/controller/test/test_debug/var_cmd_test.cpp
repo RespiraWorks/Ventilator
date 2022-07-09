@@ -13,15 +13,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include <stdint.h>
-
 #include <array>
+#include <cstdint>
 
 #include "commands.h"
 #include "gtest/gtest.h"
 #include "vars.h"
 
-// \TODO: more tests for FloatArray type
+/// \TODO more tests for FloatArray type
 
 namespace Debug::Command {
 

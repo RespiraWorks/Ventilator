@@ -15,7 +15,7 @@ limitations under the License.
 
 #include "dma.h"
 
-#include "clocks.h"
+#include "clocks_stm32.h"
 
 namespace DMA {
 struct DmaRegisters {

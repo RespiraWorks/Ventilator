@@ -140,7 +140,7 @@ The following two scripts are available for (semi-)automated integration testing
 [deploy_test.sh](deploy_test.sh) - will build and deploy a specified integration test to a specific prototype
 referenced by serial designation alias. Script is self-documented.
 
-[bash script](run_all.sh) - will deploy a sequence of integration tests each for about 15 seconds, ending
+[run_all.sh](run_all.sh) - will deploy a sequence of integration tests each for about 15 seconds, ending
 by putting the controller into an idle loop. Must specify serial alias.
 
 ### How to create a new test

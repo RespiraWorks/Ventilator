@@ -15,7 +15,7 @@ limitations under the License.
 
 #include "flash.h"
 
-#include "clocks.h"
+#include "clocks_stm32.h"
 
 // \TODO these consts should be maintained by caller
 // Flash memory location & size info

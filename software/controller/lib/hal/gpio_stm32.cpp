@@ -19,22 +19,13 @@ STM32L452 processor used on the controller.
 
 Reference abbreviations [RM], [DS], etc are defined in hal/README.md.
 */
+
+/// \TODO: make this class implement an abstract API and get rid of idfefs, see also gpio_mock
 #if defined(BARE_STM32)
 
-#include "clocks.h"
-#include "gpio.h"
+#include "gpio_stm32.h"
 
 namespace GPIO {
-
-void enable_all_clocks() {
-  // Enable all the GPIO clocks
-  enable_peripheral_clock(PeripheralID::GPIOA);
-  enable_peripheral_clock(PeripheralID::GPIOB);
-  enable_peripheral_clock(PeripheralID::GPIOC);
-  enable_peripheral_clock(PeripheralID::GPIOD);
-  enable_peripheral_clock(PeripheralID::GPIOE);
-  enable_peripheral_clock(PeripheralID::GPIOH);
-}
 
 // General Purpose I/O
 // [RM] 8.4 GPIO Registers (pg 267)

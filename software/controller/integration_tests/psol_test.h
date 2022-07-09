@@ -24,7 +24,7 @@ void RunTest() {
   hal.Init();
   PwmActuator psol{PSolChannel,
                    PSolFreq,
-                   HalApi::GetCpuFreq(),
+                   HalApi::CPUFrequency(),
                    "psol_",
                    " of the proportional solenoid",
                    "position",

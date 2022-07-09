@@ -1,4 +1,4 @@
-/* Copyright 2021, RespiraWorks
+/* Copyright 2021-2022, RespiraWorks
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -27,10 +27,10 @@ limitations under the License.
  *                                ELECTRICAL CONSTANTS                                *
  **************************************************************************************/
 
-// The analog sensor on the daughterboard is hooked up to PC0 (see [PCB]) aka ADC1_IN1 (see [DS])
+// The analog sensor on the daughter-board is hooked up to PC0 (see [PCB]) aka ADC1_IN1 (see [DS])
 static constexpr GPIO::AdcChannel InterimBoardAnalogPressure{GPIO::Port::C, 0, 1};
 
-// The O2 sensor on the daughterboardis hooked up to PC3 (see [PCB]), aka ADC1_IN2 (see [DS])
+// The O2 sensor on the daughter-board is hooked up to PC3 (see [PCB]), aka ADC1_IN2 (see [DS])
 static constexpr GPIO::AdcChannel InterimBoardOxygenSensor{GPIO::Port::C, 3, 2};
 
 // "U4 Inhale Flow" sensor on the PCB is pin PA4 (see [PCB]), aka ADC1_IN9 (see [DS])
@@ -47,19 +47,20 @@ static constexpr GPIO::AdcChannel U5ExhaleFlow{GPIO::Port::B, 0, 15};
 static constexpr GPIO::PwmChannel BlowerChannel{GPIO::Port::B, 3, GPIO::AlternativeFunction::AF1,
                                                 PeripheralID::Timer2, 2};
 // Blower is driven by a 20kHz PWM, as a compromise between resolution and response time
-/// TODO: add/find a better rationale for this, maybe with the resulting response time/resolution
+//// TODO: add/find a better rationale for this, maybe with the resulting response time/resolution
 static constexpr Frequency BlowerFreq{kilohertz(20)};
 
 // psol is hooked up to PA11 (see [PCB]),
 // which can be linked to Timer1 chanel 4 using AF1 (see [DS], p76)
 static constexpr GPIO::PwmChannel PSolChannel{GPIO::Port::A, 11, GPIO::AlternativeFunction::AF1,
                                               PeripheralID::Timer1, 4};
-// Psol is driven by a 5kHz PWM (\TODO: find rationale behind this?)
+// Psol is driven by a 5kHz PWM
+/// \TODO find rationale behind this?
 static constexpr Frequency PSolFreq{kilohertz(5)};
 // Testing in Edwin's garage, we found that the psol was fully closed at
 // somewhere between 0.75 and 0.80 (i.e. definitely zero at 0.75 and probably
 // zero a bit above that) and fully open at 0.90.
-// \TODO: the values in the comment are inconsistent with the code, have Edwin confirm those.
+/// \TODO the values in the comment are inconsistent with the code, have Edwin confirm those.
 static constexpr float PSolClosed{0.35f};
 static constexpr float PSolOpen{0.75f};
 
@@ -73,6 +74,9 @@ static constexpr Frequency BuzzerFreq{kilohertz(2.4f)};
 // Maximum volume is around a duty cycle of 0.8, and no sound at 0.
 static constexpr float MaxBuzzerVolume{0.8f};
 static constexpr float BuzzerOff{0};
+
+static constexpr int BlowerValveMotorIndex{0};
+static constexpr int ExhaleValveMotorIndex{1};
 
 /**************************************************************************************
  *                                 PHYSICAL CONSTANTS                                 *
@@ -100,7 +104,7 @@ static constexpr Duration MainLoopPeriod{milliseconds(10)};
 // https://respiraworks.slack.com/archives/C011CJQV4Q7/p1591763842312500?thread_ts=1591759016.310200&cid=C011CJQV4Q7
 inline constexpr Duration RiseTime{milliseconds(100)};
 
-// TODO: VolumeIntegrationInterval (for volume integrator) was not chosen carefully.
+/// \TODO VolumeIntegrationInterval (for volume integrator) was not chosen carefully.
 static constexpr Duration VolumeIntegrationInterval{milliseconds(5)};
 
 // Keep this in sync with the Sensor enum below

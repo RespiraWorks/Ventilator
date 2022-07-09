@@ -29,7 +29,7 @@ struct WatchdogStruct {
 typedef volatile WatchdogStruct WatchdogReg;
 inline WatchdogReg *const WatchdogBase = reinterpret_cast<WatchdogReg *>(0x40003000);
 
-/// \TODO: parametrize timeout based on clock frequency
+/// \TODO parametrize timeout based on clock frequency
 void Watchdog::initialize() {
   WatchdogReg *wdog = WatchdogBase;
 

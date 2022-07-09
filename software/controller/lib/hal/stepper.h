@@ -50,7 +50,7 @@ limitations under the License.
 #include <optional>
 
 #include "dma.h"
-#include "gpio.h"
+#include "gpio_stm32.h"
 
 // These are the simple opcodes for the stepper driver.
 // Not included here are set/get parameter which include

@@ -131,18 +131,43 @@ class ControllerDebugInterface:
                 )
 
     def sanity_checks(self):
-        # TODO: make sure git is configured and we have identity for tester
+        # \TODO: make sure git is configured and we have identity for tester
         # we do this just for the git info
         test = TestData(test_scenario.TestScenario())
 
-        # \TODO: check that serial number is valid?
+        # \TODO check that serial number is valid?
 
-        ctrl_version = self.variable_get("0_controller_version")
-        ctrl_dirty = bool(self.variable_get("0_controller_git_dirty", raw=True))
-        ctrl_branch = self.variable_get("0_controller_branch")
+        try:
+            ctrl_version = self.variable_get("0_controller_version")
+        except Exception as e:
+            ctrl_version = "invalid"
+
+        try:
+            ctrl_dirty = bool(self.variable_get("0_controller_git_dirty", raw=True))
+        except Exception as e:
+            ctrl_dirty = "invalid"
+
+        try:
+            ctrl_branch = self.variable_get("0_controller_branch")
+        except Exception as e:
+            ctrl_branch = "invalid"
+
+        bad_version = (
+            (ctrl_version == "invalid")
+            or (ctrl_dirty == "invalid")
+            or (ctrl_branch == "invalid")
+        )
         version_mismatch = test.git_version != ctrl_version
         branch_mismatch = test.git_branch != ctrl_branch
-        problem = version_mismatch or branch_mismatch or test.git_dirty or ctrl_dirty
+        problem = (
+            bad_version
+            or version_mismatch
+            or branch_mismatch
+            or test.git_dirty
+            or ctrl_dirty
+        )
+
+        # \TODO: block running scripted tests in case of critical errors
 
         if not problem:
             return True
@@ -157,6 +182,12 @@ class ControllerDebugInterface:
                 " Potential controller version incompatibility or uncertain provenance "
             )
         )
+        if ctrl_version == "invalid":
+            print(red("    * controller version invalid"))
+        if ctrl_dirty == "invalid":
+            print(red("    * controller dirty flag invalid"))
+        if ctrl_branch == "invalid":
+            print(red("    * controller branch invalid"))
         if version_mismatch:
             print(
                 red(

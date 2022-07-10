@@ -61,8 +61,7 @@ fi
 
 ### Install git-lfs and update the system
 sudo apt-get update
-sudo apt-get --yes install git matchbox-keyboard
-#sudo apt-get --yes install git-lfs matchbox-keyboard  TODO: bring this back when LFS problems are solved?
+sudo apt-get --yes install git-lfs matchbox-keyboard
 sudo apt-get --yes upgrade
 sudo apt-get --yes autoremove
 sudo apt-get autoclean
@@ -73,27 +72,29 @@ sudo raspi-config nonint do_serial      2  # enable serial interface but not con
 sudo raspi-config nonint do_blanking    1  # disable screen blanking
 sudo raspi-config nonint do_boot_splash 1  # disable splash screen
 
-### Clone repository and go in
+### Clone repository without LFS and go in
 cd ${HOME}
-git clone https://github.com/RespiraWorks/Ventilator.git ventilator
+GIT_LFS_SKIP_SMUDGE=1 git clone https://github.com/RespiraWorks/Ventilator.git ventilator
 cd ventilator
 
 ###############################################################################
 ### TODO: Uncomment this section only when tweaking this script in a branch ###
 ###############################################################################
-#git checkout issue_1180_cmake_build_on_rpi
-#git pull
+#git checkout issue_1277_deploy_with_graphics
 ###############################################################################
 ### TODO: Comment out above before merging to master!!!                     ###
 ###############################################################################
 
+### Bring in software-related graphics only from LFS
+git lfs pull -I "software/**"
+
 ### Desktop shortcuts
 /bin/cp -rf software/utils/rpi_config/user/Desktop/* ${HOME}/Desktop
 
-### Matchbox keyboard setup
+### On-screen keyboard, in case its needed
 sudo cp -f software/utils/rpi_config/keyboard.xml /usr/share/matchbox-keyboard/
 
-### Execute shortcuts without bitching
+### Execute desktop shortcuts without bitching
 mkdir -p ${HOME}/.config/libfm && cp -f software/utils/rpi_config/user/.config/libfm.conf ${HOME}/.config/libfm
 
 # Install dependencies and do initial configuration for build toolchains
@@ -103,7 +104,7 @@ mkdir -p ${HOME}/.config/libfm && cp -f software/utils/rpi_config/user/.config/l
 
 if [ -z "$VERBOSE" ]; then
   echo "Installation complete. Please check that this terminated with no errors."
-  echo "Upon restart, please run the 'Ventilator update' app from your desktop."
+  echo "Upon restart, please run the 'Update' app from your desktop to complete deployment."
   echo " "
   read -n1 -s -r -p $'Press any key to restart the machine\n' key
 

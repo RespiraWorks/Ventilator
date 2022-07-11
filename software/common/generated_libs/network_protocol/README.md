@@ -16,13 +16,12 @@
 [RespiraWorks](https://respira.works/) is a 501(c)(3) non-profit organization with over 200 contributors worldwide working to design a low-cost and [open-source](open_source.md) ventilator for communities underserved by the global supply chain. Our objective is to provide the know-how and technology to enable local enterprises to manufacture and service these systems.
 
 
- MacOS:
-
-    $ brew install nanopb-generator
-    $ pip3 install protobuf
-    $ NANOPB_PATH=$(brew --cellar nanopb-generator)/$(brew list --versions \
+MacOS:
+     brew install nanopb-generator
+     pip3 install protobuf
+     NANOPB_PATH=$(brew --cellar nanopb-generator)/$(brew list --versions \
           nanopb-generator | awk '{print $2}')
-    $ protoc \
+     protoc \
         --plugin=$NANOPB_PATH/bin/protoc-gen-nanopb \
         -I $NANOPB_PATH/libexec/proto \
         -Icommon/generated_libs/network_protocol \
@@ -30,43 +29,25 @@
         --python_out=utils \
         common/generated_libs/network_protocol/network_protocol.proto
 
-
-
-<<<<<<< HEAD
- $ protoc \
-     --plugin=nanopb/generator       
-     -I nanopb/generator/proto \
-     -Icommon/generated_libs/network_protocol \
-     --nanopb_out=common/generated_libs/network_protocol \
-     --python_out=utils \
-     common/generated_libs/network_protocol/network_protocol.proto
-*/
-
-// Linux:
-/*
- $ sudo apt install nanopb
- $ pip3 install protobuf
-
- $ protoc \
+Linux:
+  sudo apt install nanopb
+  pip3 install protobuf
+  protoc \
      --plugin=usr/bin/protoc-gen-nanopb     
      -I usr/lib/python3/dist-packages/proto \
      -Icommon/generated_libs/network_protocol \
      --nanopb_out=common/generated_libs/network_protocol \
      --python_out=utils \
      common/generated_libs/network_protocol/network_protocol.proto
-*/
-=======
- Via Git:
 
-    $ git clone https://github.com/nanopb/nanopb.git
-    $ pip3 install protobuf
+Git:
 
-    $ protoc \
-        --plugin=nanopb/generator       
-        -I nanopb/generator/proto \
-        -Icommon/generated_libs/network_protocol \
-        --nanopb_out=common/generated_libs/network_protocol \
-        --python_out=utils \
-        common/generated_libs/network_protocol/network_protocol.proto
-
->>>>>>> 8064adf7189b7c8e801e4c2a539b1c836a26084d
+  git clone https://github.com/nanopb/nanopb.git
+  pip3 install protobuf
+  protoc \
+     --plugin=nanopb/generator       
+     -I nanopb/generator/proto \
+     -Icommon/generated_libs/network_protocol \
+     --nanopb_out=common/generated_libs/network_protocol \
+     --python_out=utils \
+     common/generated_libs/network_protocol/network_protocol.proto

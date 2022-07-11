@@ -16,8 +16,8 @@
 [RespiraWorks](https://respira.works/) is a 501(c)(3) non-profit organization with over 200 contributors worldwide working to design a low-cost and [open-source](open_source.md) ventilator for communities underserved by the global supply chain. Our objective is to provide the know-how and technology to enable local enterprises to manufacture and service these systems.
 
 
-// MacOS:
-/*
+ MacOS:
+
     $ brew install nanopb-generator
     $ pip3 install protobuf
     $ NANOPB_PATH=$(brew --cellar nanopb-generator)/$(brew list --versions \
@@ -29,11 +29,11 @@
         --nanopb_out=common/generated_libs/network_protocol \
         --python_out=utils \
         common/generated_libs/network_protocol/network_protocol.proto
-*/
 
 
-// Via Git:
-/*
+
+ Via Git:
+
  $ git clone https://github.com/nanopb/nanopb.git
  $ pip3 install protobuf
 
@@ -44,4 +44,4 @@
      --nanopb_out=common/generated_libs/network_protocol \
      --python_out=utils \
      common/generated_libs/network_protocol/network_protocol.proto
-*/
+

@@ -11,8 +11,6 @@
 [![GitHub commit activity](https://img.shields.io/github/commit-activity/m/RespiraWorks/Ventilator)](https://github.com/RespiraWorks/Ventilator/pulse)
 [![Donate](https://img.shields.io/badge/donate-gofundme-blueviolet)](https://www.gofundme.com/f/RespiraWorks)
 
-This is a common repository for all hardware and software components of the RespiraWorks open source ventilator.
-
 **If you intend to contribute, please read our [wiki](https://github.com/RespiraWorks/Ventilator/wiki).**
 
 [RespiraWorks](https://respira.works/) is a 501(c)(3) non-profit organization with over 200 contributors worldwide working to design a low-cost and [open-source](open_source.md) ventilator for communities underserved by the global supply chain. Our objective is to provide the know-how and technology to enable local enterprises to manufacture and service these systems.

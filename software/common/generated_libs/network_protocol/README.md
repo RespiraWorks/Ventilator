@@ -1,3 +1,10 @@
+The following scripts will generate network protocol files based on the .proto file contained in /generated_libs/network_protocol/network_protocol.proto
+
+Running this script will return a python output (designated by --python_out) as well as a nanopb output (designated by --nanopb_out). 
+
+The nanopb plugin is specified by --plugin, and the directory (can be multiple, in this case is) searched for imports is designated by -I
+ 
+
    MacOS:
     
     brew install nanopb-generator

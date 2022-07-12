@@ -30,4 +30,3 @@ The nanopb plugin is specified by --plugin, and the directory (can be multiple, 
       --nanopb_out=common/generated_libs/network_protocol \
       --python_out=utils \
       common/generated_libs/network_protocol/network_protocol.proto
-

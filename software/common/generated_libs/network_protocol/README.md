@@ -1,12 +1,12 @@
 The following scripts will generate network protocol files based on the .proto file contained in /generated_libs/network_protocol/network_protocol.proto
 
-Running this script will return a python output (designated by --python_out) as well as a nanopb output (designated by --nanopb_out). 
+Running this script will return a python output (designated by --python_out) as well as a nanopb output (designated by --nanopb_out).
 
-The nanopb plugin is specified by --plugin, and the directory (can be multiple, in this case is) searched for imports is designated by -I
- 
+The nanopb plugin is specified by --plugin, and the directory (or directories) searched for imports is designated by -I
+
 
    MacOS:
-    
+
     brew install nanopb-generator
     $ pip3 install protobuf
      NANOPB_PATH=$(brew --cellar nanopb-generator)/$(brew list --versions \
@@ -20,11 +20,11 @@ The nanopb plugin is specified by --plugin, and the directory (can be multiple, 
         common/generated_libs/network_protocol/network_protocol.proto
 
    Linux:
-    
+
     sudo apt install nanopb
     pip3 install protobuf
     protoc \
-      --plugin=usr/bin/protoc-gen-nanopb     
+      --plugin=usr/bin/protoc-gen-nanopb
       -I usr/lib/python3/dist-packages/proto \
       -Icommon/generated_libs/network_protocol \
       --nanopb_out=common/generated_libs/network_protocol \

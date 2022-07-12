@@ -129,6 +129,7 @@ RawStringFormats:
       - PB
       - proto
       - PROTO
+      - Proto
     EnclosingFunctions:
       - EqualsProto
       - EquivToProto

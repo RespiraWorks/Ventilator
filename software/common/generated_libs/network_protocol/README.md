@@ -24,14 +24,3 @@
       --python_out=utils \
       common/generated_libs/network_protocol/network_protocol.proto
 
-   Git:
-
-    git clone https://github.com/nanopb/nanopb.git
-    pip3 install protobuf
-    protoc \
-       --plugin=nanopb/generator       
-       -I nanopb/generator/proto \
-       -Icommon/generated_libs/network_protocol \
-       --nanopb_out=common/generated_libs/network_protocol \
-       --python_out=utils \
-       common/generated_libs/network_protocol/network_protocol.proto

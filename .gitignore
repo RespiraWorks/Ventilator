@@ -53,3 +53,6 @@ fp-info-cache
 
 #performance test data
 test_data/
+
+#network protocol outfiles
+software/common/protocol_buffer_outputs/

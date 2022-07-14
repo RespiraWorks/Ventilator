@@ -202,6 +202,22 @@
         "url": "https://www.mouser.com/ProductDetail/Molex/08-55-0102"
       }
     ]
-  }
-  
+  },
+  {
+    "pn": "ew-26awg-kit",
+    "notes": "10-color 24awg Wire Kit",
+    "manufacturer": "Remington",
+    "mpn": "26UL1007STRKIT10COLOR",
+    "avg_price": 42.35,
+    "price_unit": "250ft",
+    "sources": [
+      {
+        "supplier": "Digikey",
+        "spn": "2328-26UL1007STRKIT10COLOR-ND",
+        "price": 42.35,
+        "price_units": 250ft,
+        "url": "https://www.digikey.com/en/products/detail/remington-industries/26UL1007STRKIT10COLOR/11613823"
+      }
+    ]
+  }  
 ]

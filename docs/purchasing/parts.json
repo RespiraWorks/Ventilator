@@ -134,5 +134,90 @@
         "url": "https://www.amazon.com/Inch-XHF-Waterproof-Insulation-Wear-Resistant/dp/B0919F4YFZ"
       }
     ]
-  }
+  },
+  {
+    "pn": "ec-microfit-f-wire-1x3",
+    "notes": "Micro-Fit 3.0 Female Wire Housing 1x3",
+    "manufacturer": "Molex",
+    "mpn": "0436450300",
+    "avg_price": 0.49,
+    "price_unit": "",
+    "sources": [
+      {
+        "supplier": "Digikey",
+        "spn": "WM1846-ND",
+        "price": 0.49,
+        "price_units": ,
+        "url": "https://www.digikey.com/en/products/detail/molex/0436450300/268975"
+      }
+    ]
+  },
+  {
+    "pn": "ec-microfit-f-crimp-20-24awg",
+    "notes": "Molex Micro-Fit 3.0 Female Crimp Contact 20-24awg",
+    "manufacturer": "Molex",
+    "mpn": "43030-0002",
+    "avg_price": 0.09,
+    "price_unit": "",
+    "sources": [
+      {
+        "supplier": "DigiKey",
+        "spn": "WM1125CT-ND",
+        "price": 0.09,
+        "price_units": 1,
+        "url": "https://www.digikey.com/en/products/detail/molex/0430300002/467797"
+      }
+    ]
+  },
+  {
+    "pn": "ec-kk-f-wire-3",
+    "notes": "Molex KK 2.54 Female Wire Housing 3 pos",
+    "manufacturer": "Molex",
+    "mpn": "22-01-3037",
+    "avg_price": 0.12,
+    "price_unit": "",
+    "sources": [
+      {
+        "supplier": "Mouser",
+        "spn": "538-22-01-3037",
+        "price": 0.12,
+        "price_units": 1,
+        "url": "https://www.mouser.com/ProductDetail/Molex/22-01-3037"
+      }
+    ]
+  },
+  {
+    "pn": "ec-kk-f-crimp",
+    "notes": "Molex KK 2.54 Female Crimp Contact 22-30awg",
+    "manufacturer": "Molex",
+    "mpn": "08-55-0102",
+    "avg_price": 0.10,
+    "price_unit": "",
+    "sources": [
+      {
+        "supplier": "Mouser",
+        "spn": "538-08-55-0102",
+        "price": 0.10,
+        "price_units": 1,
+        "url": "https://www.mouser.com/ProductDetail/Molex/08-55-0102"
+      }
+    ]
+  },
+  {
+    "pn": "ew-26awg-kit",
+    "notes": "10-color 24awg Wire Kit",
+    "manufacturer": "Remington",
+    "mpn": "26UL1007STRKIT10COLOR",
+    "avg_price": 42.35,
+    "price_unit": "250ft",
+    "sources": [
+      {
+        "supplier": "Digikey",
+        "spn": "2328-26UL1007STRKIT10COLOR-ND",
+        "price": 42.35,
+        "price_units": 250ft,
+        "url": "https://www.digikey.com/en/products/detail/remington-industries/26UL1007STRKIT10COLOR/11613823"
+      }
+    ]
+  }  
 ]

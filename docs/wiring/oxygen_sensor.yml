@@ -1,0 +1,55 @@
+connectors:
+  X1:
+    pn: ec-microfit-f-wire-1x3                       # RW part number from purchasing JSON file
+    pincount: 3                                      # number of pins in the connector
+    pinlabels: [OXY+, NC, OXY-]                # names for the signal on the connector
+    type: Micro-Fit 3.0 Wire Housing 1x3                # connector type
+    subtype: female                                  # connector sub-type
+    mpn: 43645-0300                                  # manufacturer part number
+    manufacturer: Molex                              # manufacturer
+    additional_components:                           # defines additional components such as contacts
+      -
+        type: crimp                                    # additional component type
+        subtype: Molex Micro-Fit 3.0 Female Crimp Contact 20-24awg   # additional component name 
+        qty_multiplier: populated                      # this multiples by the number of connector instances for the BOM
+        manufacturer: Molex                            # additional component manufacturer
+        mpn: 43030-0002                                # additional component part number
+        pn: ec-microfit-f-crimp-20-24awg                  # RW part number
+        
+  X2:
+    pn: ec-kk-f-wire-3
+    pincount: 3
+    pinlabels: [OXY+, NC, OXY-]
+    type: Molex KK 2.54 1x3
+    subtype: female
+    mpn: 22-01-3037
+    manufacturer: Molex
+    additional_components:                           # defines additional components such as contacts
+      -
+        type: crimp                                    # additional component type
+        subtype:  KK 2.54 Female Crimp Contact 22-30awg   # additional component name 
+        qty: 1
+        qty_multiplier: populated                      # this multiples by the number of connector instances for the BOM
+        manufacturer: Molex                            # additional component manufacturer
+        mpn: 08-55-0102                                # additional component part number
+        pn: ec-kk-f-crimp                  # RW part number 
+  
+ 
+cables:
+  W1:
+    pn: ew-26awg-kit
+    wirecount: 2
+    type: 10-color 24awg Wire Kit
+    mpn: 26UL1007STRKIT10COLOR
+    manufacturer: Remington
+    # more cable parameters:
+    length: 300 mm
+    gauge: 24 AWG
+    show_equiv: true # auto-calculate AWG equivalent
+    colors: [WH, BU]
+
+connections:
+  - 
+    - X1: [1,3]
+    - W1: [1,2]
+    - X2: [1,3]

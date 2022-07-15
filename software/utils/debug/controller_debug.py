@@ -31,6 +31,7 @@ import test_scenario
 from test_data import *
 from pathlib import Path
 from lib.colors import red, orange
+import numpy as np
 
 # TODO: Import constants from proto instead!
 
@@ -298,12 +299,23 @@ class ControllerDebugInterface:
             raise Error(f"Cannot set unknown variable {name}")
 
         variable = self.variable_metadata[name]
-        # \TODO this will not work for FloatArray
-        if verbose:
-            text = variable.print_value(value, show_access=False)
-            print(f"  applying {text}")
+        if "lin" in value:
+            # TODO need to handle whitespace in function e.g. lin(a, b)
+            # TODO need to handle incorrect usage of funciton e.g. typos, syntax errors
+            value_ = "".join(value.split())  # remove whitespace
+            start = float(value[value_.index("(") + 1 : value_.index(",")])
+            end = float(value[value_.index(",") + 1 : value_.index(")")])
+            data = variable.to_bytes(
+                np.linspace(start, end, variable.size()).astype(str).tolist()
+            )
+        else:
+            # \TODO this will not work for FloatArray
+            if verbose:
+                text = variable.print_value(value, show_access=False)
+                print(f"  applying {text}")
 
-        data = variable.to_bytes(value)
+            data = variable.to_bytes(value)
+
         if self.print_raw:
             print(f"  data converted as {data}")
 

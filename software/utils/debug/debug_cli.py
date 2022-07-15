@@ -597,7 +597,7 @@ named {self.scripts_directory} will be searched for the python script.
             return
 
         if len(cl) == 2:
-            self.interface.variable_set(varname, cl[1])  # single variable
+            self.interface.variable_set(varname, cl[1])  # single variable or function
         else:
             self.interface.variable_set(varname, cl[1:])  # array
 
@@ -607,14 +607,24 @@ named {self.scripts_directory} will be searched for the python script.
         ) + [x for x in ["force_off", "force_open"] if x.startswith(text)]
 
     def help_set(self):
+        print("usage: set [var] [value(s)]")
         print("Sets value for a ventilator debug variable (or convenience macro):")
         print("  force_off           - resets all forced actuator variables")
         print("  force_open          - forces all valves open and blower to maximum")
+        print()
         print("Available variables:")
         for k in sorted(self.interface.variables_find(access_filter=VAR_ACCESS_WRITE)):
             print(
                 f" {self.interface.variable_metadata[k].verbose(show_access=False, show_format=False)}"
             )
+        print()
+        print("If a variable points to an array, then there are two ways to set it.")
+        print(
+            "  manually               - list the values in the order they should be set in the array"
+        )
+        print("  automatically          - populate the array values using a function")
+        print("Supported functions:")
+        print("  lin(start, stop)       -  evenly spaced numbers over start and stop")
 
     def do_trace(self, line):
         """The `trace` command controls/reads the controller's trace buffer.
@@ -814,3 +824,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+s

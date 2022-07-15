@@ -26,7 +26,7 @@ limitations under the License.
 
 #include "nvparams.h"
 
-#include <string.h>
+#include <cstring>
 
 #include "checksum.h"
 #include "system_timer.h"
@@ -36,7 +36,7 @@ static Debug::Variable::UInt32 dbg_reinit(
     "nvparams_reinit", Debug::Variable::Access::ReadWrite, 0, "",
     "Set to 1 to request a reinit of NV params on next boot.");
 
-/// \TODO: use String type to allow alphanumeric?
+/// \TODO use String type to allow alphanumeric?
 static Debug::Variable::UInt32 dbg_serial("0_ventilator_serial_number",
                                           Debug::Variable::Access::ReadWrite, 0, "",
                                           "Serial number of the ventilator, in EEPROM");
@@ -64,7 +64,7 @@ static bool IsValid(Structure *param) {
 // This must not be done when a watchdog is enabled, as it blocks
 // execution while it reads through the I2C EEPROM.
 void Handler::Init(I2Ceeprom *eeprom) {
-/// \TODO: better mocking. This leads to conversion error when compiling on native
+/// \TODO better mocking. This leads to conversion error when compiling on native
 #if defined(BARE_STM32)
   dbg_nvparams.set(reinterpret_cast<uint32_t>(&nv_param_));
 #endif
@@ -165,7 +165,7 @@ bool Handler::Set(uint16_t offset, const void *value, uint16_t len) {
 }
 
 bool Handler::Get(uint16_t offset, void *value, uint16_t len) {
-/// \TODO: Better mocking. In test mode we need to be able to access any byte
+/// \TODO Better mocking. In test mode we need to be able to access any byte
 #if defined(BARE_STM32)
   // Make sure the passed pointer is pointing to somewhere
   // in the structure and isn't in the reserved first 6 bytes

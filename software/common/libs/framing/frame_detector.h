@@ -98,7 +98,7 @@ class FrameDetector : public RxListener {
 
   /// Using protected so that derived class with back-door can be used for testing
  protected:
-  RxBuffer *rx_buffer_;  /// \TODO: const ptr?
+  RxBuffer *rx_buffer_;  /// \TODO const ptr?
   State state_{State::Lost};
   bool frame_available_{false};
   uint8_t frame_buffer_[FrameBufferLength] = {0};

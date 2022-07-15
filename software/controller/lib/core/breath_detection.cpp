@@ -22,7 +22,7 @@ using DebugFloat = Debug::Variable::Float;
 // apply to any and all breath detection instances, to make them permanent and therefore traceable.
 // This is fine because there can only ever be a single breath detection instance at any given time.
 
-/// \TODO: This should be configurable from the GUI.
+/// \TODO This should be configurable from the GUI.
 static DebugFloat dbg_flow_trigger{"bd_flow_trigger", Debug::Variable::Access::ReadWrite, 200,
                                    "mL/s", "Breath detection flow trigger"};
 

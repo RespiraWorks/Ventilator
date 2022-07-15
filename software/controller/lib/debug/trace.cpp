@@ -98,7 +98,7 @@ uint16_t Trace::traced_variable(uint8_t index) {
   // We want to make sure we read a full sample without being interrupted.
   *count = 0;
   BlockInterrupts block;
-  for (const auto *var : traced_vars_) {
+  for (const auto *const var : traced_vars_) {
     if (!var) {
       continue;
     }

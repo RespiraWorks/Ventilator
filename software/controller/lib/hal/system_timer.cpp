@@ -17,7 +17,7 @@ limitations under the License.
 
 #if defined(BARE_STM32)
 
-#include "clocks.h"
+#include "clocks_stm32.h"
 #include "interrupts.h"
 #include "timers.h"
 

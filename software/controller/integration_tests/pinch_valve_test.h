@@ -11,6 +11,8 @@
 
 #include "hal.h"
 #include "pinch_valve.h"
+#include "pwm_actuator.h"
+#include "system_constants.h"
 #include "system_timer.h"
 #include "watchdog.h"
 
@@ -21,6 +23,12 @@ static PinchValve pinch_valve("pinch_valve_", " for pinch valve", MotorIndex);
 
 void RunTest() {
   hal.Init();
+
+  // Just to shut it up, may not need this beyond v0.3
+  PwmActuator blower{BlowerChannel, BlowerFreq, HalApi::CPUFrequency(), "", ""};
+  blower.set(0.0f);
+
+  StepMotor::OneTimeInit();
   pinch_valve.Home();
 
   bool valve_open{false};

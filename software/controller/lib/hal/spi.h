@@ -15,7 +15,7 @@ limitations under the License.
 
 #pragma once
 
-/// \TODO: create more of an abstraction than just providing registers
+/// \TODO create more of an abstraction than just providing registers
 
 #include <cstdint>
 

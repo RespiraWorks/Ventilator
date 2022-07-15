@@ -57,7 +57,7 @@ struct SysControlStruct {
 typedef volatile SysControlStruct SysControlReg;
 inline SysControlReg *const SysControlBase = reinterpret_cast<SysControlReg *>(0xE000E000);
 
-/// \TODO: Do we never intend to use this again since you have soft_crc? delete this?
+/// \TODO Do we never intend to use this again since you have soft_crc? delete this?
 // CRC calculation unit
 // [RM] 14.4 CRC Registers (pg 341)
 struct CrcStruct {

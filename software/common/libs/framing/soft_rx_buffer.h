@@ -14,8 +14,8 @@ limitations under the License.
 
 #include "rx_buffer.h"
 
-/// \TODO: This class will be used for GUI only? Should it live with that code?
-/// \TODO: Class is not explicitly tested, only as part of FrameDetector
+/// \TODO This class will be used for GUI only? Should it live with that code?
+/// \TODO Class is not explicitly tested, only as part of FrameDetector
 
 /*! \class SoftRxBuffer soft_rx_buffer.h "soft_rx_buffer.h"
  *  \brief This class is used for GUI but is also convenient for testing

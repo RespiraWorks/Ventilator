@@ -22,28 +22,25 @@ Details of the processor's peripherals can be found in [RM].
 Abbreviations [RM], [DS], etc are defined in hal/README.md.
 */
 
-#include "hal.h"
-
 #if defined(BARE_STM32)
 
 #include <optional>
 
-#include "clocks.h"
+#include "clocks_stm32.h"
 #include "flash.h"
-#include "gpio.h"
+#include "gpio_stm32.h"
+#include "hal.h"
 #include "hal_stm32_regs.h"
-#include "i2c.h"
 #include "interrupts.h"
 #include "stepper.h"
 #include "system_timer.h"
 #include "timers.h"
-#include "uart_dma.h"
-#include "uart_soft.h"
 #include "vars.h"
 #include "watchdog.h"
 
-static constexpr Frequency CPUFrequency{megahertz(80)};
-static constexpr Frequency UARTBaudRate{hertz(115200)};
+Frequency HalApi::CPUFrequency() { return megahertz(80); }
+
+Frequency HalApi::UARTBaudRate() { return hertz(115200); }
 
 static constexpr uint32_t SystemStackSize{2500};
 
@@ -86,8 +83,6 @@ extern "C" void abort() {
   };
 }
 
-Frequency HalApi::GetCpuFreq() { return CPUFrequency; }
-
 // This function is called _init() above.  It does some basic
 // chip initialization.
 //
@@ -104,7 +99,7 @@ void HalApi::EarlyInit() {
   SysControlReg *sys_ctl = SysControlBase;
   sys_ctl->coproc_access_control = 0x00F00000;
 
-  /// \TODO: initialized but never used. Do we still need it?
+  /// \TODO initialized but never used. Do we still need it?
   Flash::initialize();
 
   configure_pll();
@@ -117,26 +112,17 @@ void Timer6ISR() { SystemTimer::singleton().interrupt_handler(); }
  */
 void HalApi::Init() {
   // Init various components needed by the system.
-  GPIO::enable_all_clocks();
+  enable_gpio_clocks();
   init_PCB_ID_pins();
   LEDs.initialize();
-  /// \TODO: ensure CPUFrequency is a multiple of 10 MHz
-  SystemTimer::singleton().initialize(CPUFrequency);
-  // [PCBsp] Lists UART pins for comms with the rPi: PB10 (TX), PB11 (RX), PB13 (RTS) and PB14 (CTS)
-  rpi_uart.Initialize(GPIO::Port::B, /*tx_pin=*/10, /*rx_pin=*/11, /*rts_pin=*/13, /*cts_pin=*/14,
-                      GPIO::AlternativeFunction::AF7, CPUFrequency, UARTBaudRate);
-  // The Nucleo board also includes a secondary serial port that's indirectly connected to its USB
-  // connector.  This port is connected to the STM32 USART2 at pins PA2 (TX) and PA3 (RX) and has
-  // no HW flow control (rts/cts)
-  debug_uart.Initialize(GPIO::Port::A, /*tx_pin=*/2, /*rx_pin=*/3,
-                        /*rts_pin=*/std::nullopt, /*cts_pin=*/std::nullopt,
-                        GPIO::AlternativeFunction::AF7, CPUFrequency, UARTBaudRate);
+  /// \TODO ensure CPUFrequency is a multiple of 10 MHz
+  SystemTimer::singleton().initialize(CPUFrequency());
+}
 
-  // [PCBsp] lists I2C1 pins : SCL=PB8 and SDA=PB9
-  i2c1.Initialize(I2C::Speed::Fast, GPIO::Port::B, /*scl_pin=*/8, /*sda_pin=*/9,
-                  GPIO::AlternativeFunction::AF4);
-  Interrupts::singleton().EnableInterrupts();
-  StepMotor::OneTimeInit();
+void HalApi::bind_channels(I2C::Channel *i2c, UART::DMAChannel *rpi, UART::Channel *debug) {
+  i2c_ = i2c;
+  rpi_uart_ = rpi;
+  debug_uart_ = debug;
 }
 
 // Reset the processor
@@ -186,7 +172,7 @@ void HalApi::StartLoopTimer(const Duration &period, void (*callback)(void *), vo
   Watchdog::initialize();
 
   // Find the loop period in clock cycles
-  int32_t reload = static_cast<int32_t>(CPUFrequency.hertz() * period.seconds());
+  int32_t reload = static_cast<int32_t>(CPUFrequency().hertz() * period.seconds());
   int prescale = 1;
 
   // Adjust the prescaler so that my reload count will fit in the 16-bit
@@ -234,7 +220,7 @@ void Timer15ISR() {
 
   // Keep track of loop latency in uSec
   // Also max latency since it was last zeroed
-  latency = static_cast<float>(start) * (1.0f / CPUFrequency.megahertz());
+  latency = static_cast<float>(start) * (1.0f / HalApi::CPUFrequency().megahertz());
   if (latency > max_latency) {
     max_latency = latency;
   }
@@ -243,9 +229,9 @@ void Timer15ISR() {
   controller_callback(controller_arg);
 
   uint32_t end = Timer15Base->counter;
-  loop_time = static_cast<float>(end - start) * (1.0f / CPUFrequency.megahertz());
+  loop_time = static_cast<float>(end - start) * (1.0f / HalApi::CPUFrequency().megahertz());
 
-  /// \TODO: Too tightly coupled bc HAL must be aware of steppers. Use another callback?
+  /// \TODO Too tightly coupled bc HAL must be aware of steppers. Use another callback?
   // Start sending any queued commands to the stepper motor
   StepMotor::StartQueuedCommands();
 }
@@ -270,7 +256,7 @@ void StepperISR() { StepMotor::DmaISR(); }
  * very start of the flash memory.
  *****************************************************************/
 
-/// \TODO: these could optionally call Fault() but not in production, log error to EEPROM
+/// \TODO these could optionally call Fault() but not in production, log error to EEPROM
 void NMI() {}
 void FaultISR() {}
 void MPUFaultISR() {}
@@ -280,16 +266,51 @@ void BadISR() {}
 
 // Those interrupt service routines are specific to our configuration, unlike
 // the I2C::Channel::*ISR() which are generic ISR associated with an I²C channel
-void I2c1EventISR() { i2c1.I2CEventHandler(); };
-void I2c1ErrorISR() { i2c1.I2CErrorHandler(); };
-void DMA2Channel6ISR() { i2c1.DMAInterruptHandler(I2C::ExchangeDirection::Read); };
-void DMA2Channel7ISR() { i2c1.DMAInterruptHandler(I2C::ExchangeDirection::Write); };
+void I2c1EventISR() {
+  if (hal.i2c_) {
+    hal.i2c_->I2CEventHandler();
+  }
+};
 
-void DMA1Channel2ISR() { rpi_uart.TxDMAInterruptHandler(); }
-void DMA1Channel3ISR() { rpi_uart.RxDMAInterruptHandler(); }
+void I2c1ErrorISR() {
+  if (hal.i2c_) {
+    hal.i2c_->I2CErrorHandler();
+  }
+};
 
-void Uart3ISR() { rpi_uart.UARTInterruptHandler(); }
-void Uart2ISR() { debug_uart.UARTInterruptHandler(); }
+void DMA2Channel6ISR() {
+  if (hal.i2c_) {
+    hal.i2c_->DMAInterruptHandler(I2C::ExchangeDirection::Read);
+  }
+};
+
+void DMA2Channel7ISR() {
+  if (hal.i2c_) {
+    hal.i2c_->DMAInterruptHandler(I2C::ExchangeDirection::Write);
+  }
+};
+
+void DMA1Channel2ISR() {
+  if (hal.rpi_uart_) {
+    hal.rpi_uart_->TxDMAInterruptHandler();
+  }
+}
+void DMA1Channel3ISR() {
+  if (hal.rpi_uart_) {
+    hal.rpi_uart_->RxDMAInterruptHandler();
+  }
+}
+
+void Uart3ISR() {
+  if (hal.rpi_uart_) {
+    hal.rpi_uart_->UARTInterruptHandler();
+  }
+}
+void Uart2ISR() {
+  if (hal.debug_uart_) {
+    hal.debug_uart_->UARTInterruptHandler();
+  }
+}
 
 // We don't control this function's name, silence the style check
 // NOLINTNEXTLINE(readability-identifier-naming)

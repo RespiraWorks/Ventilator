@@ -12,16 +12,10 @@ limitations under the License.
 
 #include "uart_dma.h"
 
-#include <string.h>  // used for memcpy
+#include <cstring>  // used for memcpy
 
 #include "dma.h"
 #include "framing_spec_chars.h"
-
-// Declaration of UART channel with Rpi, as global since hal requires it to exist for interrupt
-// handlers.
-// TODO: find a way to get rid of global variable (probably requires a more flexible
-// handling of InterruptVector in Reset_Handler() function from hal_stm32.cpp)
-UART::DMAChannel rpi_uart(UART::Base::UART3, DMA::Base::DMA1, FramingMark);
 
 namespace UART {
 

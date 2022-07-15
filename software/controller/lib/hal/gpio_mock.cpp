@@ -21,12 +21,10 @@ Reference abbreviations [RM], [DS], etc are defined in hal/README.md.
 */
 #if !defined(BARE_STM32)
 
-#include "clocks.h"
-#include "gpio.h"
+/// \TODO should include mock header, not this
+#include "gpio_stm32.h"
 
 namespace GPIO {
-
-void enable_all_clocks() {}
 
 Pin::Pin(Port port, uint8_t pin, PinMode mode) : port_(port), pin_(pin){};
 

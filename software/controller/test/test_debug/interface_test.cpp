@@ -12,8 +12,6 @@ limitations under the License.
 
 #include "interface.h"
 
-#include <stdint.h>
-
 #include <array>
 #include <vector>
 
@@ -116,9 +114,9 @@ std::vector<uint8_t> ProcessCmd(UART::MockChannel *uart, Interface *serial,
 
 TEST(Interface, Mode) {
   UART::MockChannel uart;
-  Trace trace;
   Command::ModeHandler mode_command;
-  Interface serial(&uart, &trace, 2, Command::Code::Mode, &mode_command);
+  Interface serial(&uart);
+  serial.add_handler(Command::Code::Mode, &mode_command);
 
   std::vector<uint8_t> req = {static_cast<uint8_t>(Command::Code::Mode)};
   std::vector<uint8_t> resp = ProcessCmd(&uart, &serial, req);
@@ -146,9 +144,9 @@ TEST(Interface, GetVar) {
   Debug::Variable::Primitive32 var_bar("bar", Debug::Variable::Access::ReadOnly, &bar, "unit");
 
   UART::MockChannel uart;
-  Trace trace;
   Command::VarHandler var_command;
-  Interface serial(&uart, &trace, 2, Command::Code::Variable, &var_command);
+  Interface serial(&uart);
+  serial.add_handler(Command::Code::Variable, &var_command);
   // Run a bunch of times with different expected results
   // to exercise buffer management.
   for (int i = 0; i < 100; ++i, ++foo, ++bar) {
@@ -159,10 +157,10 @@ TEST(Interface, GetVar) {
 
 TEST(Interface, AwaitingResponseState) {
   UART::MockChannel uart;
-  Trace trace;
   TestEeprom eeprom_test(0x50, 64, 4096);
   Command::EepromHandler eeprom_command(&eeprom_test);
-  Interface serial(&uart, &trace, 2, Command::Code::EepromAccess, &eeprom_command);
+  Interface serial(&uart);
+  serial.add_handler(Command::Code::EepromAccess, &eeprom_command);
   // EEPROM read command needs time to be processed
   std::vector<uint8_t> req = {
       static_cast<uint8_t>(Command::Code::EepromAccess),
@@ -197,11 +195,13 @@ TEST(Interface, Errors) {
   Command::TraceHandler trace_command(&trace);
   Command::EepromHandler eeprom_command(&eeprom_test);
 
-  Debug::Interface serial(&uart, &trace, 12, Debug::Command::Code::Mode, &mode_command,
-                          Debug::Command::Code::Peek, &peek_command, Debug::Command::Code::Poke,
-                          &poke_command, Debug::Command::Code::Variable, &var_command,
-                          Debug::Command::Code::Trace, &trace_command,
-                          Debug::Command::Code::EepromAccess, &eeprom_command);
+  Debug::Interface serial(&uart);
+  serial.add_handler(Debug::Command::Code::Mode, &mode_command);
+  serial.add_handler(Debug::Command::Code::Peek, &peek_command);
+  serial.add_handler(Debug::Command::Code::Poke, &poke_command);
+  serial.add_handler(Debug::Command::Code::Variable, &var_command);
+  serial.add_handler(Debug::Command::Code::Trace, &trace_command);
+  serial.add_handler(Debug::Command::Code::EepromAccess, &eeprom_command);
   // Unknown command - If we ever develop new commands, make sure the command
   // code is too big.
   std::vector<uint8_t> req = {25};

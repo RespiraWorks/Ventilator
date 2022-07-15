@@ -18,10 +18,11 @@ limitations under the License.
 #include "analog_sensor.h"
 #include "sensor_base.h"
 
-class AnalogPressureSensor : public PressureSensor, public AnalogSensor {
+template <class SourceType>
+class AnalogPressureSensor : public PressureSensor, public AnalogSensor<SourceType> {
  public:
-  AnalogPressureSensor(const char *name, const char *help_supplement,
-                       const GPIO::AdcChannel &channel, ADC *adc, float voltage_to_kPa);
+  AnalogPressureSensor(const char *name, const char *help_supplement, SourceType &&source,
+                       float voltage_to_kPa);
 
   Pressure read() const override;
 
@@ -30,22 +31,26 @@ class AnalogPressureSensor : public PressureSensor, public AnalogSensor {
   float voltage_to_kPa_;
 };
 
-class MPXV5004DP : public AnalogPressureSensor {
+template <class SourceType>
+class MPXV5004DP : public AnalogPressureSensor<SourceType> {
  public:
-  MPXV5004DP(const char *name, const char *help_supplement, const GPIO::AdcChannel &channel,
-             ADC *adc, Voltage voltage_range);
+  MPXV5004DP(const char *name, const char *help_supplement, SourceType &&source,
+             Voltage voltage_range);
 
   // min/max possible reading from MPXV5004DP pressure sensors
-  // \TODO: are we supposed to use these somehow?
+  /// \TODO are we supposed to use these somehow?
   constexpr static Pressure MinPressure{kPa(0.0f)};
   constexpr static Pressure MaxPressure{kPa(3.92f)};
 };
 
-class MPXV5010DP : public AnalogPressureSensor {
+template <class SourceType>
+class MPXV5010DP : public AnalogPressureSensor<SourceType> {
  public:
-  MPXV5010DP(const char *name, const char *help_supplement, const GPIO::AdcChannel &channel,
-             ADC *adc, Voltage voltage_range);
+  MPXV5010DP(const char *name, const char *help_supplement, SourceType &&source,
+             Voltage voltage_range);
   // min/max possible reading from MPXV5010DP pressure sensors
   constexpr static Pressure MinPressure{kPa(0.0f)};
   constexpr static Pressure MaxPressure{kPa(10.0f)};
 };
+
+#include "pressure_sensors.tpp"

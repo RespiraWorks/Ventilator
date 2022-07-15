@@ -18,7 +18,7 @@ limitations under the License.
 
 #pragma once
 
-#include "pinch_valve.h"
+#include <optional>
 
 struct ActuatorsState {
   // Valve setting for the FIO2 proportional solenoid
@@ -39,33 +39,15 @@ struct ActuatorsState {
   std::optional<float> exhale_valve;
 };
 
-class Actuators {
+class AbstractActuators {
  public:
-  Actuators(int blower_motor_index, int exhale_motor_index)
-      : blower_pinch_("blower_valve_", " of the blower pinch valve", blower_motor_index),
-        exhale_pinch_("exhale_valve_", " of the exhale pinch valve", exhale_motor_index){};
-
   // Returns true if the actuators are ready for action or false
   // if they aren't (for example pinch valves are homing).
   // The system should be kept in a safe state until this returns true.
-  bool ready();
-
-  // Creates pwm actuators and links actuators calibration tables to nv_params.
-  void init(Frequency cpu_frequency, NVParams::Handler *nv_params, uint16_t blower_pinch_cal_offset,
-            uint16_t exhale_pinch_cal_offset, uint16_t blower_cal_offset, uint16_t psol_cal_offset);
+  virtual bool ready() = 0;
 
   // Causes passed state to be applied to the actuators
-  void execute(const ActuatorsState &desired_state);
+  virtual void execute(const ActuatorsState &desired_state) = 0;
 
- private:
-  PinchValve blower_pinch_;
-  PinchValve exhale_pinch_;
-  // Blower, PSol and buzzer use pwm pins and need to be instantiated after HAL, therefore we
-  // use std::optional to delay the instantiation within init function.
-  std::optional<PwmActuator> blower_{std::nullopt};
-  std::optional<PwmActuator> psol_{std::nullopt};
-
- public:
-  // buzzer is made public to allow easier manipulation (not through actuators.execute()).
-  std::optional<PwmActuator> buzzer{std::nullopt};
+  virtual void beep(float volume) = 0;
 };

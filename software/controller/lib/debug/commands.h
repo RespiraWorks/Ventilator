@@ -1,4 +1,4 @@
-/* Copyright 2020-2021, RespiraWorks
+/* Copyright 2020-2022, RespiraWorks
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,8 +16,9 @@ limitations under the License.
 #pragma once
 
 #include "binary_utils.h"
+#include "debug_types.h"
 #include "eeprom.h"
-#include "interface.h"
+#include "trace.h"
 
 namespace Debug::Command {
 
@@ -26,9 +27,9 @@ namespace Debug::Command {
 //  0 - Running in normal mode
 //  1 - Running in boot mode.
 //
-// We don't actually have a boot mode yet, but its only a matter of time.
+// We don't actually have a boot mode yet, but it's only a matter of time.
 // Once we start doing things like updating firmware (not through a debugger),
-// we will need a separate boot loader image to ensure graceful recovery.
+// we will need a separate bootloader image to ensure graceful recovery.
 class ModeHandler : public Handler {
  public:
   ModeHandler() = default;

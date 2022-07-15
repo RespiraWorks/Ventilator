@@ -40,7 +40,7 @@ TEST(CommTests, SendControllerStatus) {
   comms.Handler(s, &gui_status_ignored);
 
   // Retrieve data that was copied to UART
-  uint8_t tx_buffer[(ControllerStatus_size + 4) * 2 + 2];
+  uint8_t tx_buffer[ProtoTraits<ControllerStatus>::MaxFrameSize];
   size_t length = uart.GetTxData(tx_buffer, sizeof(tx_buffer));
   ASSERT_GT(length, 0);
 

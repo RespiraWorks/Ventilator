@@ -17,8 +17,9 @@ limitations under the License.
 
 #include "hal.h"
 
-/// \TODO: is this a good assumption for a mock HAL?
-Frequency HalApi::GetCpuFreq() { return hertz(0); }
+/// \TODO is this a good assumption for a mock HAL?
+Frequency HalApi::CPUFrequency() { return hertz(0); }
+Frequency HalApi::UARTBaudRate() { return hertz(0); }
 void HalApi::EarlyInit() {}
 void HalApi::Init() {}
 void HalApi::init_PCB_ID_pins() {}

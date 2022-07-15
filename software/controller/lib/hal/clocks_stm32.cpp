@@ -1,4 +1,4 @@
-/* Copyright 2020-2021, RespiraWorks
+/* Copyright 2020-2022, RespiraWorks
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,7 +15,9 @@ limitations under the License.
 
 // Reference abbreviations ([RM], [PCB], etc) are defined in hal/README.md
 
-#include "clocks.h"
+#include "clocks_stm32.h"
+
+#include <cstdint>
 
 // Same memory layout pattern for reset, enable and sleep [RM] 6.4.9-26
 // This is for blocks of 32 bits, thus advancing by 0x04 bytes
@@ -198,7 +200,17 @@ void enable_peripheral_clock(const PeripheralID id) {
   RccBase->peripheral_clock_enable[static_cast<uint8_t>(mapping.offset)] |= (1 << mapping.bit);
 }
 
-/// \TODO: improve or refactor to make fewer assumptions about frequencies below
+void enable_gpio_clocks() {
+  // Enable all the GPIO clocks
+  enable_peripheral_clock(PeripheralID::GPIOA);
+  enable_peripheral_clock(PeripheralID::GPIOB);
+  enable_peripheral_clock(PeripheralID::GPIOC);
+  enable_peripheral_clock(PeripheralID::GPIOD);
+  enable_peripheral_clock(PeripheralID::GPIOE);
+  enable_peripheral_clock(PeripheralID::GPIOH);
+}
+
+/// \TODO improve or refactor to make fewer assumptions about frequencies below
 void configure_pll() {
   // We use the MSI clock as the source for the PLL.
   // MSI clock is running at its default frequency of 4MHz.

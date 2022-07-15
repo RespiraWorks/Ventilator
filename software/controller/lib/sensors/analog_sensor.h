@@ -15,23 +15,27 @@ limitations under the License.
 
 #pragma once
 
-#include "adc.h"
 #include "units.h"
 #include "vars.h"
 
+/// SourceType is any type that has a function with the following signature:
+///     Voltage read() const;
+
+template <class SourceType>
 class AnalogSensor {
  public:
-  AnalogSensor(const char *name, const char *help_supplement, const GPIO::AdcChannel &channel,
-               ADC *adc);
+  AnalogSensor(const char *name, const char *help_supplement, SourceType &&source);
 
   void set_zero();
 
   float read_diff_volts() const;
 
  private:
-  GPIO::AnalogInputPin pin_;
+  SourceType source_;
   Voltage zero_;
 
   mutable Debug::Variable::Float dbg_zero_;
   mutable Debug::Variable::Float dbg_voltage_;
 };
+
+#include "analog_sensor.tpp"

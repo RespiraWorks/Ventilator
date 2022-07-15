@@ -36,6 +36,6 @@ class VenturiFlowSensor : public FlowSensor {
   float port_area_;
   float choke_area_;
 
-  /// \TODO: define and explain this
+  /// \TODO define and explain this
   float venturi_correction_;
 };

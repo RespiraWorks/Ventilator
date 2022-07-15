@@ -15,9 +15,9 @@ limitations under the License.
 
 #pragma once
 
-#include <stdint.h>
+#include <cstdint>
 
-#include "pwm_actuator.h"
+#include "actuator_base.h"
 #include "stepper.h"
 #include "units.h"
 

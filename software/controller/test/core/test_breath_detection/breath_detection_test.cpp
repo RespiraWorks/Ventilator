@@ -18,7 +18,7 @@ limitations under the License.
 TEST(BreathDetection, TestStubs) {
   BreathDetection breath_detector;
   BreathDetectionInputs input{ml(0), ml_per_sec(-1.0f)};
-  EXPECT_FALSE(breath_detector.PatientInspiring(input, true));
+  EXPECT_FALSE(breath_detector.PatientInhaling(input, true));
   input.net_flow = ml_per_sec(1.0f);
-  EXPECT_FALSE(breath_detector.PatientInspiring(input, false));
+  EXPECT_FALSE(breath_detector.PatientInhaling(input, false));
 }

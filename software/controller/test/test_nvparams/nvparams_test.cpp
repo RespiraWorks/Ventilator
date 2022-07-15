@@ -24,7 +24,7 @@ static constexpr uint32_t kMemSize{8192};
 static void CompareParams(int16_t address, const Structure &ref, NVParams::Handler &nv_params_,
                           TestEeprom &eeprom_) {
   // Reminder to update this function when Structure changes size.
-  static_assert(sizeof(Structure) == 228);
+  static_assert(sizeof(Structure) == 244);
   Structure read;
   if (address < 0) {
     nv_params_.Get(0, &read, sizeof(Structure));
@@ -43,12 +43,16 @@ static void CompareParams(int16_t address, const Structure &ref, NVParams::Handl
   EXPECT_EQ(read.cumulated_service, ref.cumulated_service);
 
   // Reminder to update this function when VentParams changes size.
-  static_assert(sizeof(VentParams) == 32);
+  static_assert(sizeof(VentParams) == 48);
   EXPECT_EQ(read.last_settings.mode, ref.last_settings.mode);
   EXPECT_EQ(read.last_settings.peep_cm_h2o, ref.last_settings.peep_cm_h2o);
   EXPECT_EQ(read.last_settings.pip_cm_h2o, ref.last_settings.pip_cm_h2o);
   EXPECT_EQ(read.last_settings.breaths_per_min, ref.last_settings.breaths_per_min);
   EXPECT_EQ(read.last_settings.fio2, ref.last_settings.fio2);
+  EXPECT_EQ(read.last_settings.viv_ml, ref.last_settings.viv_ml);
+  EXPECT_EQ(read.last_settings.flow_l_per_min, ref.last_settings.flow_l_per_min);
+  EXPECT_EQ(read.last_settings.psupp_cm_h2o, ref.last_settings.psupp_cm_h2o);
+  EXPECT_EQ(read.last_settings.pstep_cm_h2o, ref.last_settings.pstep_cm_h2o);
   EXPECT_EQ(read.last_settings.inspiratory_expiratory_ratio,
             ref.last_settings.inspiratory_expiratory_ratio);
   EXPECT_EQ(read.last_settings.inspiratory_trigger_cm_h2o,

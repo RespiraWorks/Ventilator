@@ -116,7 +116,15 @@ ColumnLayout
                 spacing: 50
 
 
-
+                DelayButton
+                {
+                    id: onoffButton
+                    height: 40
+                    text: "On/OFF"
+                    autoExclusive: true
+                    spacing: 50
+                    onActivated: changeStateText("ON")
+                }
                 DelayButton
                 {
                     id: acmodeButton

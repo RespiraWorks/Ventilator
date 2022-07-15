@@ -67,10 +67,22 @@ class Controller {
   VentilationFsm fsm_;
 
   // TODO: These params need to be tuned.
-  PID blower_valve_pid_{"blower_valve_",
-                        " for blower valve PID",
-                        /*initial_kp=*/0.04f,
-                        /*initial_ki=*/10.0f,
+
+  PID air_volume_pid_{"air_volume_",
+                      " for AIR outer loop volume PID",
+                      /*initial_kp=*/0.75f,
+                      /*initial_ki=*/20.0f,
+                      /*initial_kd=*/0.075f,
+                      /*p_term=*/PID::TermApplication::OnError,
+                      /*d_term=*/PID::TermApplication::OnMeasurement,
+                      /*output_min=*/0.f,
+                      /*output_max=*/1.0f};
+
+  // Ziegler-Nichols Outer Loop Pressure values: ku = 0.9, Tu = 0.04
+  PID air_pressure_pid_{"air_pressure_",
+                        " for AIR outer loop pressure PID",
+                        /*initial_kp=*/0.4f,
+                        /*initial_ki=*/20.0f,
                         /*initial_kd=*/0.0f,
                         /*p_term=*/PID::TermApplication::OnError,
                         /*d_term=*/PID::TermApplication::OnMeasurement,
@@ -94,8 +106,18 @@ class Controller {
                 /*initial_kd=*/0.0f,
                 /*p_term=*/PID::TermApplication::OnError,
                 /*d_term=*/PID::TermApplication::OnMeasurement,
-                /*output_min=*/0.f,
+                /*output_min=*/-1.0f,
                 /*output_max=*/1.0f};
+
+  PID air_flow_pid_{"air_flow_",
+                    " for air flow PID",
+                    /*initial_kp=*/0.1f,
+                    /*initial_ki=*/20.0f,
+                    /*initial_kd=*/0.0f,
+                    /*p_term=*/PID::TermApplication::OnError,
+                    /*d_term=*/PID::TermApplication::OnMeasurement,
+                    /*output_min=*/0.f,
+                    /*output_max=*/1.0f};
 
   // These objects accumulate flow to calculate volume.
   //
@@ -125,9 +147,21 @@ class Controller {
   // Outputs - read from external debug program, modified by the controller.
   DbgFloat dbg_pc_setpoint_{"pc_setpoint", DbgAccess::ReadOnly, 0.0f, "cmH2O",
                             "Pressure control set-point"};
+
+  DbgFloat dbg_volume_setpoint_{"vol_setpoint", DbgAccess::ReadOnly, 0.0f, "m³",
+                                "Volume control setpoint"};
+
+  DbgFloat dbg_flow_setpoint_{"flow_setpoint", DbgAccess::ReadOnly, 0.0f, "L/s",
+                              "Flow control setpoint"};
+
   // \todo: need a forced_fio2 variable
   DbgFloat dbg_fio2_setpoint_{"fio2_setpoint", DbgAccess::ReadOnly, 0.21f, "ratio",
                               "FiO2 setpoint [0.0, 1.0] as commanded by GUI"};
+
+  DbgFloat dbg_air_flow_setpoint_{"air_flow_setpoint", DbgAccess::ReadOnly, 0.0f, "L/s",
+                                  "Setpoint for air flow PID"};
+  DbgFloat dbg_air_flow_lps_{"air_flow_measured", DbgAccess::ReadOnly, 0.0f, "L/s",
+                             "Measured Air Flow"};
 
   DbgFloat dbg_net_flow_{"net_flow", DbgAccess::ReadOnly, 0.0f, "mL/s", "Net flow rate"};
   DbgFloat dbg_net_flow_uncorrected_{"net_flow_uncorrected", DbgAccess::ReadOnly, 0.0f, "mL/s",

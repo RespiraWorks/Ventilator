@@ -100,7 +100,7 @@ static_assert(VenturiChokeDiameter > meters(0));
 // Loop period of our main controller loop
 static constexpr Duration MainLoopPeriod{milliseconds(10)};
 
-// Transition from PEEP to PIP pressure hapens over this length of time.  Citation:
+// Transition from PEEP to PIP pressure happens over this length of time.  Citation:
 // https://respiraworks.slack.com/archives/C011CJQV4Q7/p1591763842312500?thread_ts=1591759016.310200&cid=C011CJQV4Q7
 inline constexpr Duration RiseTime{milliseconds(100)};
 

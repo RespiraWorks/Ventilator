@@ -3,8 +3,12 @@ import QtQuick.Controls 2.4
 import QtQuick.Layouts 1.3
 import ".."
 import "../controls"
+import "../controls/parameters"
+import "../controls/readings"
+import "../controls/graphs"
+import ".."
 
-// TODO: Implement mode
+
 Mode {
     Text {
         anchors.centerIn: parent
@@ -23,72 +27,37 @@ Mode {
             right: parent.right; rightMargin: 8
         }
 
+
         GridLayout {
             anchors {
                 top: parent.top
                 horizontalCenter: parent.horizontalCenter
             }
             columns: 2
-            columnSpacing: 0
-            rowSpacing: 0
+            columnSpacing: 8
+            rowSpacing: 8
 
-            ParameterDisplay {
-                parameterName: qsTr("PIP")
-                parameterUnit: qsTr("cmH<sub>2</sub>O")
-                parameterValue: "23"
-            }
 
-            ParameterDisplay {
-                parameterName: qsTr("PEEP")
-                parameterUnit: qsTr("cmH<sub>2</sub>O")
-                parameterValue: "4"
-            }
+            FiO2Display {}
+            FlowDisplay{}
 
-            ParameterDisplay {
-                parameterName: qsTr("Flow")
-                parameterUnit: qsTr("L/min")
-                parameterValue: "58"
-            }
 
-            ParameterDisplay {
-                parameterName: qsTr("RR")
-                parameterUnit: qsTr("b/min")
-                parameterValue: "15"
-            }
-
-            ParameterDisplay {
-                parameterName: qsTr("VT")
-                parameterUnit: qsTr("mL")
-                parameterValue: "385"
-            }
-
-            ParameterDisplay {
-                parameterName: qsTr("FiO<sub>2</sub>")
-                parameterUnit: qsTr("%")
-                parameterValue: "15"
-            }
         }
     }
 
+
     Row {
+        id: parameterButtonsPanel
+        spacing: 8
 
         anchors {
             horizontalCenter: parent.horizontalCenter
             bottom: parent.bottom; bottomMargin: 8
         }
 
-        spacing: 8
+        Layout.alignment: Qt.AlignHCenter
 
-        ParameterButton {
-            parameterName: qsTr("Flow")
-            parameterUnit: qsTr("L/min")
-            parameterValue: 60
-        }
-
-        ParameterButton {
-            parameterName: qsTr("FiO<sub>2</sub>")
-            parameterUnit: "%"
-            parameterValue: 40
-        }
+        FiO2Parameter {}
+        Flowlmp {}
     }
 }

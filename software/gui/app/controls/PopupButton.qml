@@ -14,6 +14,7 @@ Button {
     background: Rectangle {
         radius: 8
         width: root.width; height: parent.height
+        enabled: true
         color: root.checked || root.down ?
                    Style.theme.color.modalButtonHighlighted :
                    Style.theme.color.modalButton

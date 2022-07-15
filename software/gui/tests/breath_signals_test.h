@@ -33,34 +33,36 @@ class BreathSignalsTest : public QObject {
 
   void testPipAndPeep() {
     SteadyInstant now = SteadyClock::now();
-    auto pressure = [](uint64_t breath_id, float p) -> ControllerStatus {
+    auto pressure = [](uint64_t breath_id, float p, float v) -> ControllerStatus {
       ControllerStatus res = ControllerStatus_init_zero;
       res.sensor_readings.breath_id = breath_id;
       res.sensor_readings.patient_pressure_cm_h2o = p;
+      res.sensor_readings.volume_ml = v;
       return res;
     };
 
     BreathSignals b;
     QVERIFY(!b.pip().has_value());
     QVERIFY(!b.peep().has_value());
-
-    b.Update(now, pressure(1, 5.0f));
-    b.Update(now, pressure(1, 7.0f));
-    b.Update(now, pressure(1, 6.0f));
+    QVERIFY(!b.viv().has_value());
+    b.Update(now, pressure(1, 5.0f, 50.f));
+    b.Update(now, pressure(1, 7.0f, 60.f));
+    b.Update(now, pressure(1, 6.0f, 70.f));
     QCOMPARE(b.pip().value_or(0), 0);
     QCOMPARE(b.peep().value_or(0), 0);
-
+    QCOMPARE(b.viv().value_or(0), 0);
     // New breath started - previous breath's values become available.
-    b.Update(now, pressure(2, 4.0f));
+    b.Update(now, pressure(2, 4.0f, 40.f));
     QCOMPARE(b.pip().value_or(0), 7.0);
     QCOMPARE(b.peep().value_or(0), 5.0);
-    b.Update(now, pressure(2, 6.0f));
-    b.Update(now, pressure(2, 5.0f));
-
+    QCOMPARE(b.viv().value_or(0), 70.0);
+    b.Update(now, pressure(2, 6.0f, 50.f));
+    b.Update(now, pressure(2, 5.0f, 55.f));
     // Another breath started - previous breath's values become available.
-    b.Update(now, pressure(3, 4.0f));
+    b.Update(now, pressure(3, 4.0f, 45.f));
     QCOMPARE(b.pip().value_or(0), 6.0);
     QCOMPARE(b.peep().value_or(0), 4.0);
+    QCOMPARE(b.viv().value_or(0), 55.0);
   }
 
   void testRr() {

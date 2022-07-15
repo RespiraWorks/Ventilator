@@ -1,21 +1,10 @@
-#include "chrono.h"
-#include "connected_device.h"
-#include "controller_history.h"
-#include "gui_state_container.h"
-#include "latching_alarm.h"
-#include "periodic_closure.h"
-#include "respira_connected_device.h"
-
-#include "logger.h"
-#include <QStandardPaths>
-
-#include "time_series_graph.h"
 #include <QCommandLineParser>
 #include <QDebug>
 #include <QFontDatabase>
 #include <QFontInfo>
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+#include <QStandardPaths>
 #include <QtCore/QDir>
 #include <QtQml/QQmlContext>
 #include <QtQml/QQmlEngine>
@@ -23,6 +12,16 @@
 #include <cmath>
 #include <iostream>
 #include <memory>
+
+#include "chrono.h"
+#include "connected_device.h"
+#include "controller_history.h"
+#include "gui_state_container.h"
+#include "latching_alarm.h"
+#include "logger.h"
+#include "periodic_closure.h"
+#include "respira_connected_device.h"
+#include "time_series_graph.h"
 
 QObject *gui_state_instance(QQmlEngine *engine, QJSEngine *scriptEngine) {
   static GuiStateContainer state_container(
@@ -50,17 +49,14 @@ void install_fonts() {
 }
 
 void init_logger(bool debug_mode) {
-  auto log_path =
-      QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
+  auto log_path = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
   QDir().mkpath(log_path);
   auto log_file = log_path + "/gui.log";
   printf("Saving logs in %s\n", log_file.toLatin1().data());
   if (debug_mode) {
-    CustomLogger::initLogger(spdlog::level::trace, true,
-                             log_file.toStdString());
+    CustomLogger::initLogger(spdlog::level::trace, true, log_file.toStdString());
   } else {
-    CustomLogger::initLogger(spdlog::level::info, false,
-                             log_file.toStdString());
+    CustomLogger::initLogger(spdlog::level::info, false, log_file.toStdString());
   }
 }
 
@@ -90,10 +86,10 @@ int main(int argc, char *argv[]) {
       QStringList() << "startup-only",
       QObject::tr("main", "Start up and exit successfully (for testing)"));
 
-  QCommandLineOption serialPortOption(
-      QStringList() << "serial-port",
-      QObject::tr("main", "Serial port filename. "
-                          "Uses pre-recorded test data if not set."));
+  QCommandLineOption serialPortOption(QStringList() << "serial-port",
+                                      QObject::tr("main",
+                                                  "Serial port filename. "
+                                                  "Uses pre-recorded test data if not set."));
   serialPortOption.setValueName("port");
 
   parser.addOption(startupOnlyOption);
@@ -109,8 +105,7 @@ int main(int argc, char *argv[]) {
   std::unique_ptr<ConnectedDevice> device;
   if (parser.isSet(serialPortOption)) {
     state_container->set_is_using_fake_data(false);
-    device = std::make_unique<RespiraConnectedDevice>(
-        parser.value(serialPortOption));
+    device = std::make_unique<RespiraConnectedDevice>(parser.value(serialPortOption));
   } else {
     state_container->set_is_using_fake_data(true);
     // NOTE: The code below is specialized to this particular file.
@@ -123,8 +118,7 @@ int main(int argc, char *argv[]) {
     while (!file.atEnd()) {
       QString line{file.readLine()};
       line = line.trimmed();
-      if (line.isEmpty() || line.startsWith("#") || line.startsWith("time"))
-        continue;
+      if (line.isEmpty() || line.startsWith("#") || line.startsWith("time")) continue;
       auto tokens = line.split(" ").toVector();
 
       ControllerStatus status = ControllerStatus_init_zero;
@@ -175,16 +169,13 @@ int main(int argc, char *argv[]) {
   communicate.Start();
 
   qmlRegisterType<TimeSeriesGraph>("Respira", 1, 0, "TimeSeriesGraph");
-  qmlRegisterUncreatableType<AlarmPriority>("Respira", 1, 0, "AlarmPriority",
-                                            "is an enum");
-  qmlRegisterUncreatableType<AlarmManager>(
-      "Respira", 1, 0, "AlarmManager",
-      "AlarmManager cannot be instantiated from QML");
-  qmlRegisterUncreatableType<LatchingAlarm>(
-      "Respira", 1, 0, "LatchingAlarm",
-      "LatchingAlarm cannot be instantiated from QML");
-  qmlRegisterSingletonType<GuiStateContainer>(
-      "Respira", 1, 0, "GuiStateContainer", &gui_state_instance);
+  qmlRegisterUncreatableType<AlarmPriority>("Respira", 1, 0, "AlarmPriority", "is an enum");
+  qmlRegisterUncreatableType<AlarmManager>("Respira", 1, 0, "AlarmManager",
+                                           "AlarmManager cannot be instantiated from QML");
+  qmlRegisterUncreatableType<LatchingAlarm>("Respira", 1, 0, "LatchingAlarm",
+                                            "LatchingAlarm cannot be instantiated from QML");
+  qmlRegisterSingletonType<GuiStateContainer>("Respira", 1, 0, "GuiStateContainer",
+                                              &gui_state_instance);
 
   install_fonts();
 

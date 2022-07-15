@@ -23,7 +23,7 @@ Button {
     contentItem: Text {
         text: root.text
         font.bold: true
-        font.pixelSize: 32
+        font.pixelSize: 30
         color: "white"
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter

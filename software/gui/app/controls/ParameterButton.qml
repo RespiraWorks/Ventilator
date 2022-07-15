@@ -14,7 +14,7 @@ import ".."
 Button {
     id: control
 
-    implicitWidth:192; implicitHeight: 80
+    implicitWidth:195; implicitHeight: 80
 
     // define parameter name, e.g. PIP
     property alias parameterName: parameterNameText.text
@@ -75,15 +75,17 @@ Button {
         Text {
             id: parameterValueText
             width: 104; height: 70
+
             anchors {
                 top: parent.top; topMargin: 1
                 right: parent.right; rightMargin: 8
             }
+
             text: control.parameterDisplayFormatter(control.parameterValue)
             textFormat: Text.AutoText
             color: Style.theme.color.textPrimary
-            font: Style.theme.font.parameterButtonValue
-            horizontalAlignment: Text.AlignHCenter
+            font: Style.theme.font.inputparameterDisplay
+            horizontalAlignment: Text.AlignRight// AlignHCenter
             verticalAlignment: Text.AlignVCenter
         }
     }

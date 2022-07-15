@@ -23,6 +23,8 @@ GuiStateContainer::GuiStateContainer(DurationMs history_window, DurationMs granu
     // https://respiraworks.slack.com/archives/C011UMNUWGZ/p1592606104221700?thread_ts=1592603466.221100&cid=C011UMNUWGZ
     alarm_manager_.get_pip_exceeded_alarm()->SetThresholdCmH2O(commanded_pip_ + 5);
     alarm_manager_.get_pip_not_reached_alarm()->SetThresholdCmH2O(commanded_pip_ - 5);
+    alarm_manager_.get_viv_exceeded_alarm()->SetThresholdml(commanded_viv_ + 5);
+    alarm_manager_.get_viv_not_reached_alarm()->SetThresholdml(commanded_viv_ - 5);
   });
   // Set initial alarm parameters per above.
   params_changed();
@@ -39,12 +41,32 @@ GuiStatus GuiStateContainer::GetGuiStatus() {
   status.uptime_ms = TimeAMinusB(SteadyClock::now(), startup_time_).count();
   status.desired_params.mode = [&] {
     switch (commanded_mode_) {
+      case VentilationMode::OFF:
+        return VentMode::VentMode_OFF;
       case VentilationMode::PRESSURE_CONTROL:
         return VentMode::VentMode_PRESSURE_CONTROL;
       case VentilationMode::PRESSURE_ASSIST:
         return VentMode::VentMode_PRESSURE_ASSIST;
       case VentilationMode::HIGH_FLOW_NASAL_CANNULA:
         return VentMode::VentMode_HIGH_FLOW_NASAL_CANNULA;
+      case VentilationMode::VC:
+        return VentMode::VentMode_VOLUME_CONTROL;
+      case VentilationMode::CPAP:
+        return VentMode::VentMode_CPAP;
+      case VentilationMode::VC_AC:
+        return VentMode::VentMode_VOLUME_ASSIST;
+      case VentilationMode::PSV:
+        return VentMode::VentMode_PRESSURE_SUPPORT;
+      case VentilationMode::SIMVPC:
+        return VentMode::VentMode_PC_SIMV;
+      case VentilationMode::SIMVVC:
+        return VentMode::VentMode_VC_SIMV;
+      case VentilationMode::BIPAP:
+        return VentMode::VentMode_BIPAP;
+      case VentilationMode::PRVC:
+        return VentMode::VentMode_PRESSURE_REG_VC;
+      case VentilationMode::SPV:
+        return VentMode::VentMode_SPONTANEOUS_BREATHS;
       default:
         // Should never happen.
         CRIT("Unexpected commanded_mode: {}", commanded_mode_);
@@ -54,6 +76,10 @@ GuiStatus GuiStateContainer::GetGuiStatus() {
   status.desired_params.peep_cm_h2o = commanded_peep_;
   status.desired_params.breaths_per_min = commanded_rr_;
   status.desired_params.pip_cm_h2o = commanded_pip_;
+  status.desired_params.viv_ml = commanded_viv_;
+  status.desired_params.flow_l_per_min = commanded_flow_;
+  status.desired_params.psupp_cm_h2o = commanded_psupp_;
+  status.desired_params.pstep_cm_h2o = commanded_pstep_;
   float breath_duration_sec = 60.0 / commanded_rr_;
   float commanded_e_time = breath_duration_sec - commanded_i_time_;
   status.desired_params.inspiratory_expiratory_ratio = commanded_i_time_ / commanded_e_time;
@@ -151,13 +177,20 @@ qreal GuiStateContainer::get_measured_tv() const {
 }
 
 qreal GuiStateContainer::get_measured_rr() const {
-  return (commanded_mode_ == VentilationMode::PRESSURE_CONTROL)
-             ? commanded_rr_
-             : breath_signals_.rr().value_or(commanded_rr_);
+  return (commanded_mode_ == VentilationMode::VC) ? commanded_rr_
+                                                  : breath_signals_.rr().value_or(commanded_rr_);
 }
 
 qreal GuiStateContainer::get_measured_peep() const {
   return breath_signals_.peep().value_or(commanded_peep_);
+}
+
+qreal GuiStateContainer::get_measured_psupp() const {
+  return 0;  // breath_signals_.peep().value_or(commanded_psupp_);
+}
+
+qreal GuiStateContainer::get_measured_viv() const {
+  return breath_signals_.viv().value_or(commanded_viv_);
 }
 
 qreal GuiStateContainer::get_measured_pip() const {

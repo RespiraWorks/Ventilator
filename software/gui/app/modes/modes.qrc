@@ -1,7 +1,16 @@
 <RCC>
     <qresource prefix="/modes">
+        <file>BIPAP.qml</file>
+        <file>CPAPMode.qml</file>
         <file>HighFlowNasalCannulaMode.qml</file>
         <file>PressureAssistMode.qml</file>
         <file>PressureControlMode.qml</file>
+        <file>PressureRegulatedVolumeControlMode.qml</file>
+        <file>PressureSupportVentilation.qml</file>
+        <file>SpontaneousVentilationModel.qml</file>
+        <file>SyncIMVPC.qml</file>
+        <file>SyncIMVVC.qml</file>
+        <file>VolumeAssistVentilationMode.qml</file>
+        <file>VolumeControlVentilationMode.qml</file>
     </qresource>
 </RCC>

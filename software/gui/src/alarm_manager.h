@@ -24,6 +24,8 @@ limitations under the License.
 #include "patient_detached_alarm.h"
 #include "pip_exceeded_alarm.h"
 #include "pip_not_reached_alarm.h"
+#include "viv_exceeded_alarm.h"
+#include "viv_not_reached_alarm.h"
 
 class AlarmManager : public QObject {
   Q_OBJECT
@@ -53,10 +55,14 @@ class AlarmManager : public QObject {
   Q_PROPERTY(PipExceededAlarm *pipExceededAlarm READ get_pip_exceeded_alarm CONSTANT)
   Q_PROPERTY(PipNotReachedAlarm *pipNotReachedAlarm READ get_pip_not_reached_alarm CONSTANT)
   Q_PROPERTY(PatientDetachedAlarm *patientDetachedAlarm READ get_patient_detached_alarm CONSTANT)
+  Q_PROPERTY(VivExceededAlarm *vivExceededAlarm READ get_viv_exceeded_alarm CONSTANT)
+  Q_PROPERTY(VivNotReachedAlarm *vivNotReachedAlarm READ get_viv_not_reached_alarm CONSTANT)
 
   PipExceededAlarm *get_pip_exceeded_alarm();
   PipNotReachedAlarm *get_pip_not_reached_alarm();
   PatientDetachedAlarm *get_patient_detached_alarm();
+  VivExceededAlarm *get_viv_exceeded_alarm();
+  VivNotReachedAlarm *get_viv_not_reached_alarm();
 
  signals:
   void updated();
@@ -65,6 +71,9 @@ class AlarmManager : public QObject {
   PipExceededAlarm pip_exceeded_alarm_;
   PipNotReachedAlarm pip_not_reached_alarm_;
   PatientDetachedAlarm patient_detached_alarm_;
+  VivExceededAlarm viv_exceeded_alarm_;
+  VivNotReachedAlarm viv_not_reached_alarm_;
   std::vector<LatchingAlarm *> alarms_{&pip_exceeded_alarm_, &pip_not_reached_alarm_,
-                                       &patient_detached_alarm_};
+                                       &patient_detached_alarm_, &viv_exceeded_alarm_,
+                                       &viv_not_reached_alarm_};
 };

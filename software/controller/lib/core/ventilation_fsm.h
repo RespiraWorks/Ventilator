@@ -61,6 +61,10 @@ struct VentilationSystemState {
   // immediately", whereas pressure_setpoint == 0 instructs the system to try
   // to achieve 0 pressure by e.g. closing valves.
   std::optional<Pressure> pressure_setpoint;
+  // volume setpoint used in volume control/assist modes
+  std::optional<Volume> volume_setpoint;
+  // volumetric flow setpoint used in HFNC, CPAP & BIPAP
+  std::optional<VolumetricFlow> flow_setpoint;
 
   // Should air be primarily flowing into the patient, or out of the patient?
   FlowDirection flow_direction;
@@ -72,7 +76,12 @@ struct VentilationSystemState {
   // breath boundaries.
   Pressure pip;
   Pressure peep;
+  Pressure psup;
+  Pressure pstep;
 
+  // inspire volume used in volume control/assist modes
+  Volume viv;
+  bool is_in_exhale = false;
   // Is this the last VentilationSystemState returned at the end of the breath cycle?
   bool is_end_of_breath = false;
 };
@@ -97,6 +106,7 @@ class OffFsm {
   VentilationSystemState DesiredState(Time now, const BreathDetectionInputs &inputs) {
     return {
         .pressure_setpoint = std::nullopt,
+        .volume_setpoint = std::nullopt,
         // TODO: It doesn't make much sense to specify a flow direction when the
         // device is off and therefore there's no flow!  It might be better to
         // have a different VentilationSystemState struct for different categories of
@@ -108,6 +118,8 @@ class OffFsm {
         .flow_direction = FlowDirection::Expiratory,
         .pip = cmH2O(0.0f),
         .peep = cmH2O(0.0f),
+        .viv = ml(0.0f),
+        .is_in_exhale = false,
         .is_end_of_breath = false,
     };
   }
@@ -147,15 +159,189 @@ class PressureAssistFsm {
   Time start_time_;
   Time inspire_end_;
   Time expire_deadline_;
-  BreathDetection inspire_detection_{};
+  BreathDetection breath_detection_{};
+  Duration inhale_duration_;
+};
+
+// "Breath finite state machine" for High Flow Nasal Cannula mode
+class HFNCFsm {
+ public:
+  explicit HFNCFsm(Time now, const VentParams &params);
+  VentilationSystemState DesiredState(Time now, const BreathDetectionInputs &inputs);
+
+ private:
+  const VolumetricFlow needed_flow_;
+  Time start_time_;
+  Time inspire_end_;
+  Time expire_end_;
+};
+
+// "Breath finite state machine" for volume control mode.
+class VolumeControlFsm {
+ public:
+  explicit VolumeControlFsm(Time now, const VentParams &params);
+  VentilationSystemState DesiredState(Time now, const BreathDetectionInputs &inputs);
+
+ private:
+  const Volume inspire_volume_;
+  const Pressure expire_pressure_;
+  Time start_time_;
+  Time inspire_end_;
+  Time expire_end_;
+};
+
+// "Breath finite state machine" for CPAP mode
+class CPAPFsm {
+ public:
+  explicit CPAPFsm(Time now, const VentParams &params);
+  VentilationSystemState DesiredState(Time now, const BreathDetectionInputs &inputs);
+
+ private:
+  const VolumetricFlow needed_flow_;
+  const Pressure expire_pressure_;
+  Time start_time_;
+  Time inspire_end_;
+  Time expire_end_;
+};
+
+// "Breath finite state machine" for volume assist mode.
+//
+class VolumeAssistFsm {
+ public:
+  explicit VolumeAssistFsm(Time now, const VentParams &params);
+  VentilationSystemState DesiredState(Time now, const BreathDetectionInputs &inputs);
+
+ private:
+  const Volume inspire_volume_;
+  const Pressure expire_pressure_;
+  Time start_time_;
+  Time inspire_end_;
+  Time expire_end_;
+  Duration inhale_duration_;
+  BreathDetection breath_detection_{};
+};
+
+// "Breath finite state machine" for pressure support mode.
+//
+class PressureSupportFsm {
+ public:
+  explicit PressureSupportFsm(Time now, const VentParams &params);
+  VentilationSystemState DesiredState(Time now, const BreathDetectionInputs &inputs);
+
+ private:
+  const Pressure psupp_;
+  const Pressure expire_pressure_;
+  Time start_time_;
+  Time inspire_end_;
+  Time expire_end_;
+  Duration inhale_duration_;
+  Duration exhale_duration_;
+  BreathDetection breath_detection_{};
+};
+
+// "Breath finite state machine" for PC_SIMV mode.
+//
+class SIMVPCFsm {
+ public:
+  explicit SIMVPCFsm(Time now, const VentParams &params);
+  VentilationSystemState DesiredState(Time now, const BreathDetectionInputs &inputs);
+
+ private:
+  Pressure inspire_pressure_;
+  const Pressure expire_pressure_;
+  const Pressure psupp_;
+  Time start_time_;
+  Time inspire_end_;
+  Time expire_end_;
+  Duration inhale_duration_;
+  Duration exhale_duration_;
+  BreathDetection breath_detection_{};
+};
+
+// "Breath finite state machine" for VC_SIMV mode.
+//
+class SIMVVCFsm {
+ public:
+  explicit SIMVVCFsm(Time now, const VentParams &params);
+  VentilationSystemState DesiredState(Time now, const BreathDetectionInputs &inputs);
+
+ private:
+  const Volume inspire_volume_;
+  const Pressure expire_pressure_;
+  const Pressure psupp_;
+  Time start_time_;
+  Time inspire_end_;
+  Time expire_end_;
+  Duration inhale_duration_;
+  Duration exhale_duration_;
+  bool pressure_support;
+  BreathDetection breath_detection_{};
+};
+
+// "Breath finite state machine" for BIPAP mode.
+//
+class BIPAPFsm {
+ public:
+  explicit BIPAPFsm(Time now, const VentParams &params);
+  VentilationSystemState DesiredState(Time now, const BreathDetectionInputs &inputs);
+
+ private:
+  const Pressure inspire_pressure_;
+  const Pressure expire_pressure_;
+  const Pressure psupp_;
+  Time start_time_;
+  Time inspire_end_;
+  Time expire_end_;
+  Duration inhale_duration_;
+  Duration exhale_duration_;
+  BreathDetection breath_detection_{};
+};
+
+// "Breath finite state machine" for PRVC mode.
+//
+class PRVCFsm {
+ public:
+  explicit PRVCFsm(Time now, const VentParams &params);
+  VentilationSystemState DesiredState(Time now, const BreathDetectionInputs &inputs);
+
+ private:
+  const Pressure inspire_pressure_;
+  const Pressure expire_pressure_;
+  const Pressure pstep_;
+  const Volume inspire_volume_;
+  Time start_time_;
+  Time inspire_end_;
+  Time expire_end_;
+  Duration inhale_duration_;
+  Duration exhale_duration_;
+};
+
+// "Breath finite state machine" for SPV mode.
+//
+class SPVFsm {
+ public:
+  explicit SPVFsm(Time now, const VentParams &params);
+  VentilationSystemState DesiredState(Time now, const BreathDetectionInputs &inputs);
+
+ private:
+  const Pressure psupp_;
+  const Pressure expire_pressure_;
+  Time start_time_;
+  Time inspire_end_;
+  Time expire_end_;
+  Duration inhale_duration_;
+  Duration exhale_duration_;
+  BreathDetection breath_detection_{};
 };
 
 class VentilationFsm {
  public:
-  // Gets the state that the the system should (ideally) deliver right now.
+  // Gets the state that the system should (ideally) deliver right now.
   VentilationSystemState DesiredState(Time now, const VentParams &params,
                                       const BreathDetectionInputs &inputs);
 
  private:
-  std::variant<OffFsm, PressureControlFsm, PressureAssistFsm> fsm_;
+  std::variant<OffFsm, PressureControlFsm, PressureAssistFsm, HFNCFsm, VolumeControlFsm, CPAPFsm,
+               VolumeAssistFsm, PressureSupportFsm, SIMVPCFsm, SIMVVCFsm, BIPAPFsm, PRVCFsm, SPVFsm>
+      fsm_;
 };

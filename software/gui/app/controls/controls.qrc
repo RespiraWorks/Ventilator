@@ -4,17 +4,23 @@
         <file>graphs/PressureGraph.qml</file>
         <file>graphs/TvGraph.qml</file>
         <file>parameters/FiO2Parameter.qml</file>
+        <file>parameters/Flowlmp.qml</file>
         <file>parameters/ITimeParameter.qml</file>
         <file>parameters/PeepParameter.qml</file>
         <file>parameters/PipParameter.qml</file>
+        <file>parameters/PSTEPParameter.qml</file>
+        <file>parameters/PSUPPParameter.qml</file>
         <file>parameters/RrParameter.qml</file>
+        <file>parameters/VIVParameter.qml</file>
         <file>readings/FiO2Display.qml</file>
         <file>readings/FlowDisplay.qml</file>
         <file>readings/IerDisplay.qml</file>
         <file>readings/PeepDisplay.qml</file>
         <file>readings/PipDisplay.qml</file>
+        <file>readings/PSUPPDisplay.qml</file>
         <file>readings/RrDisplay.qml</file>
         <file>readings/TvDisplay.qml</file>
+        <file>readings/VivDisplay.qml</file>
         <file>AlarmButton.qml</file>
         <file>AlarmNotificationBanner.qml</file>
         <file>BaseButton.qml</file>

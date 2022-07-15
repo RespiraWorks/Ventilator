@@ -8,7 +8,6 @@ import "../controls/readings"
 import "../controls/graphs"
 import ".."
 
-// TODO: Common this with PressureAssistMode.qml.
 Mode {
     id: mode
 
@@ -36,7 +35,6 @@ Mode {
             FlowDisplay {}
             RrDisplay {}
             IerDisplay {}
-            ParameterDisplay { /* empty */ }
             TvDisplay {}
             FiO2Display {}
         }

@@ -17,6 +17,8 @@ limitations under the License.
 
 void BreathSignals::Update(SteadyInstant now, const ControllerStatus &status) {
   float pressure = status.sensor_readings.patient_pressure_cm_h2o;
+  float volumeml = status.sensor_readings.volume_ml;
+  currentmode_ = status.active_params.mode;
   uint64_t breath_id = status.sensor_readings.breath_id;
 
   if (breath_id != latest_breath_id_) {
@@ -29,6 +31,9 @@ void BreathSignals::Update(SteadyInstant now, const ControllerStatus &status) {
     latest_peep_ = current_peep_;
     current_peep_ = pressure;
 
+    latest_viv_ = current_viv_;
+    current_viv_ = volumeml;
+
     recent_breath_starts_.push_back(now);
     if (recent_breath_starts_.size() > MaxRecentBreathStarts) {
       recent_breath_starts_.pop_front();
@@ -38,6 +43,7 @@ void BreathSignals::Update(SteadyInstant now, const ControllerStatus &status) {
 
   current_pip_ = std::max(current_pip_.value_or(std::numeric_limits<float>::min()), pressure);
   current_peep_ = std::min(current_peep_.value_or(std::numeric_limits<float>::max()), pressure);
+  current_viv_ = std::max(current_viv_.value_or(std::numeric_limits<float>::min()), volumeml);
 }
 
 uint32_t BreathSignals::num_breaths() const { return num_breaths_; }
@@ -45,6 +51,10 @@ uint32_t BreathSignals::num_breaths() const { return num_breaths_; }
 std::optional<float> BreathSignals::pip() const { return latest_pip_; }
 
 std::optional<float> BreathSignals::peep() const { return latest_peep_; }
+
+std::optional<float> BreathSignals::viv() const { return latest_viv_; }
+
+uint32_t BreathSignals::currentmode() const { return currentmode_; }
 
 std::optional<float> BreathSignals::rr() const {
   if (recent_breath_starts_.size() < MinRecentBreathStarts) {

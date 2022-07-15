@@ -168,4 +168,8 @@ StatementMacros:
 TabWidth:        8
 UseCRLF:         false
 UseTab:          Never
+---
+Language: Proto
+BasedOnStyle:  Google
+ColumnLimit:     100
 ...

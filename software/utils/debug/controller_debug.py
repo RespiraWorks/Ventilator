@@ -303,8 +303,8 @@ class ControllerDebugInterface:
             # TODO need to handle whitespace in function e.g. lin(a, b)
             # TODO need to handle incorrect usage of funciton e.g. typos, syntax errors
             value_ = "".join(value.split())  # remove whitespace
-            start = float(value[value_.index("(") + 1 : value_.index(",")])
-            end = float(value[value_.index(",") + 1 : value_.index(")")])
+            start = float(value_[value_.index("(") + 1 : value_.index(",")])
+            end = float(value_[value_.index(",") + 1 : value_.index(")")])
             data = variable.to_bytes(
                 np.linspace(start, end, variable.size()).astype(str).tolist()
             )

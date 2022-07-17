@@ -113,11 +113,8 @@ install_linux() {
   pip3 install protobuf
   pip3 install platformio==${PIO_VERSION}
   source ${HOME}/.profile
-}
 
-generate_network_protocols() {
-  sudo apt install nanopb
-  pip3 install protobuf
+  # Generate network protocols
   protoc \
   --plugin=usr/bin/protoc-gen-nanopb
   -I usr/lib/python3/dist-packages/proto \
@@ -126,6 +123,7 @@ generate_network_protocols() {
   --python_out=protocol_buffer_outputs \
   generated_libs/network_protocol/network_protocol.proto
 }
+
 
 update_platformio() {
   pip3 install platformio==${PIO_VERSION}
@@ -333,11 +331,3 @@ else
   print_help
   exit $EXIT_FAILURE
 fi
-
-##############################
-# GENERATE NETWORK PROTOCOLS #
-##############################
-elif [ "$1" == "generate_network_protocols" ]; then
-  generate_network_protocols
-
-  exit $EXIT_SUCCESS

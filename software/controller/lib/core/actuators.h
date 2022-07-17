@@ -37,6 +37,10 @@ struct ActuatorsState {
   // If the valve is disabled, then this is nullopt.
   // If enabled the range is 0 (fully closed) to 1 (fully open)
   std::optional<float> exhale_valve;
+
+  bool led_red{false};
+  bool led_yellow{false};
+  bool led_green{false};
 };
 
 class AbstractActuators {

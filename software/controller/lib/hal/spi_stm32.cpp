@@ -108,13 +108,13 @@ void STM32Channel::Initialize(GPIO::Port clock_port, uint8_t clock_pin, GPIO::Po
   // Enable the clock for the selected peripheral
   switch (spi_) {
     case Base::SPI1:
-      enable_peripheral_clock(PeripheralID::SPI1);
+      Clocks::enable_peripheral_clock(PeripheralID::SPI1);
       break;
     case Base::SPI2:
-      enable_peripheral_clock(PeripheralID::SPI2);
+      Clocks::enable_peripheral_clock(PeripheralID::SPI2);
       break;
     case Base::SPI3:
-      enable_peripheral_clock(PeripheralID::SPI3);
+      Clocks::enable_peripheral_clock(PeripheralID::SPI3);
       break;
     default:
       // All cases covered above (and GCC checks this).

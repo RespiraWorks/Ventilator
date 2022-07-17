@@ -24,7 +24,7 @@ Reference abbreviations [RM], [DS], etc are defined in hal/README.md.
 
 #include <cstdint>
 
-#include "clocks.h"
+#include "peripheral_id.h"
 
 /******************************************************************
  * General Purpose I/O support. [RM] Chapter 8

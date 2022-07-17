@@ -18,7 +18,7 @@ limitations under the License.
 #include <cstdint>
 
 #include "gpio_stm32.h"
-#include "timers.h"
+#include "timers_stm32.h"
 #include "units.h"
 
 class PWM {
@@ -42,7 +42,7 @@ class PWM {
   // part in 4000 (80000000/20000) or about 12 bits.
   Frequency pwm_freq_;
 
-  TimerReg* timer_;
+  Timer::TimerReg* timer_;
   uint8_t channel_;
 /// \TODO move to a separate mock class
 #if !defined(BARE_STM32)

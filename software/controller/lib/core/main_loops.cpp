@@ -34,7 +34,7 @@ SensorsProto MainContainer::AsSensorsProto(const SensorReadings &r, const Contro
 
 void MainContainer::init() {
   // Initialize hal first because it initializes the watchdog. See comment on HalApi::Init().
-  hal.Init();
+  hardware_layer.init_hal();
 
   comms.emplace(hardware_layer.comms_channel());
   debug.emplace(hardware_layer.debug_channel());
@@ -49,7 +49,7 @@ void MainContainer::init() {
   eeprom_command.emplace(hardware_layer.eeprom());
   debug->add_handler(Debug::Command::Code::EepromAccess, &eeprom_command.value());
 
-  hardware_layer.init();
+  hardware_layer.init_subsystems();
 
   comms->Initialize();
 

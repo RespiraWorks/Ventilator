@@ -1,4 +1,4 @@
-/* Copyright 2020-2021, RespiraWorks
+/* Copyright 2020-2022, RespiraWorks
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -13,13 +13,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-// Reference abbreviations ([RM], [PCB], etc) are defined in hal/README.md
-
 #pragma once
 
-#include "clocks.h"
+#include "peripheral_id.h"
 
 /// \TODO scope these functions, maybe also have abstract interface?
+
+namespace Clocks {
 
 // Enable clocks to a specific peripheral.
 // On the STM32 the clocks going to various peripherals on the chip are individually selectable and
@@ -30,3 +30,5 @@ void enable_peripheral_clock(PeripheralID);
 void enable_gpio_clocks();
 
 void configure_pll();
+
+}  // namespace Clocks

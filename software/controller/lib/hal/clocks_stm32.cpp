@@ -13,11 +13,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-// Reference abbreviations ([RM], [PCB], etc) are defined in hal/README.md
-
 #include "clocks_stm32.h"
 
 #include <cstdint>
+
+namespace Clocks {
 
 // Same memory layout pattern for reset, enable and sleep [RM] 6.4.9-26
 // This is for blocks of 32 bits, thus advancing by 0x04 bytes
@@ -249,3 +249,5 @@ void configure_pll() {
   // Use system clock as the A/D clock
   rcc->independent_clock_config = 0x30000000;
 };
+
+}  // namespace Clocks

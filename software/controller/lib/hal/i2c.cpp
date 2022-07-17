@@ -181,20 +181,20 @@ void Channel::Initialize(Speed speed, GPIO::Port port, uint8_t scl_pin, uint8_t 
 
   switch (i2c_) {
     case Base::I2C1:
-      enable_peripheral_clock(PeripheralID::I2C1);
+      Clocks::enable_peripheral_clock(PeripheralID::I2C1);
       Interrupts::singleton().EnableInterrupt(InterruptVector::I2c1Event, InterruptPriority::Low);
       Interrupts::singleton().EnableInterrupt(InterruptVector::I2c1Error, InterruptPriority::Low);
       break;
     case Base::I2C2:
-      enable_peripheral_clock(PeripheralID::I2C2);
+      Clocks::enable_peripheral_clock(PeripheralID::I2C2);
       Interrupts::singleton().EnableInterrupt(InterruptVector::I2c2Event, InterruptPriority::Low);
       Interrupts::singleton().EnableInterrupt(InterruptVector::I2c2Error, InterruptPriority::Low);
     case Base::I2C3:
-      enable_peripheral_clock(PeripheralID::I2C3);
+      Clocks::enable_peripheral_clock(PeripheralID::I2C3);
       Interrupts::singleton().EnableInterrupt(InterruptVector::I2c3Event, InterruptPriority::Low);
       Interrupts::singleton().EnableInterrupt(InterruptVector::I2c3Error, InterruptPriority::Low);
     case Base::I2C4:
-      enable_peripheral_clock(PeripheralID::I2C4);
+      Clocks::enable_peripheral_clock(PeripheralID::I2C4);
       Interrupts::singleton().EnableInterrupt(InterruptVector::I2c4Event, InterruptPriority::Low);
       Interrupts::singleton().EnableInterrupt(InterruptVector::I2c4Error, InterruptPriority::Low);
       break;

@@ -1,4 +1,4 @@
-/* Copyright 2020-2021, RespiraWorks
+/* Copyright 2020-2022, RespiraWorks
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -13,30 +13,20 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#pragma once
+#include "sys_control.h"
 
 #include <cstdint>
-
-/*
-The structures below represent the STM32 registers used
-to configure various modules (like timers, serial ports, etc).
-
-Detailed information on these modules and the registers
-used to configure them can be found in [RM]
-
-Reference abbreviations ([RM], [PCB], etc) are defined in hal/README.md
-*/
 
 // The System control block (SCB) provides system implementation information, and system control.
 // This includes configuration, control, and reporting of the system exceptions.
 // Most of this is defined in [PM] 4.4 (pg 221), except the ones marked otherwise
 struct SysControlStruct {
-  uint32_t reserved0;
-  uint32_t int_type;     // 0xE000E004 What is this ????? And WTF is this from ?????
-  uint32_t aux_control;  // 0xE000E008 ACTLR
-  uint32_t reserved1;
-  uint32_t sys_tick[3];  // 0xE000E010 SysTick timer registers [PM] 4.5 (pg 246)
-  uint32_t reserved2[57];
+  uint32_t reserved0;               // 0xE000E000
+  uint32_t int_type;                // 0xE000E004 What is this ????? And WTF is this from ?????
+  uint32_t aux_control;             // 0xE000E008 ACTLR
+  uint32_t reserved1;               // 0xE000E00C
+  uint32_t sys_tick[3];             // 0xE000E010 SysTick timer registers [PM] 4.5 (pg 246)
+  uint32_t reserved2[57];           // 0xE000E014
   uint32_t nvic[768];               // 0xE000E100 NVIC [RM] 4.3 (pg 208)
   uint32_t cpu_id;                  // 0xE000ED00 CPUID
   uint32_t interrupt_control;       // 0xE000ED04 ICSR
@@ -48,25 +38,28 @@ struct SysControlStruct {
   uint32_t system_handler_control;  // 0xE000ED24 SHCSR
   uint32_t fault_status;            // 0xE000ED28 CFSR/MMSR/BFSR/UFSR
   uint32_t hard_fault_status;       // 0xE000ED2C HFSR
-  uint32_t reserved3;
-  uint32_t mm_fault_address;  // 0xE000ED34 MMAR
-  uint32_t bus_fault_addr;    // 0xE000ED38 BFAR
-  uint32_t reserved4[19];
-  uint32_t coproc_access_control;  // 0xE000ED88 CPACR [PM] 4.6 (pg 252)
+  uint32_t reserved3;               // 0xE000ED30
+  uint32_t mm_fault_address;        // 0xE000ED34 MMAR
+  uint32_t bus_fault_addr;          // 0xE000ED38 BFAR
+  uint32_t reserved4[19];           // 0xE000ED3C
+  uint32_t coproc_access_control;   // 0xE000ED88 CPACR [PM] 4.6 (pg 252)
 };
 typedef volatile SysControlStruct SysControlReg;
 inline SysControlReg *const SysControlBase = reinterpret_cast<SysControlReg *>(0xE000E000);
 
-/// \TODO Do we never intend to use this again since you have soft_crc? delete this?
-// CRC calculation unit
-// [RM] 14.4 CRC Registers (pg 341)
-struct CrcStruct {
-  uint32_t data;     // Data register [RM] 14.4.1
-  uint32_t scratch;  // Independent data register [RM] 14.4.2
-  uint32_t control;  // Control register [RM] 14.4.3
-  uint32_t reserved;
-  uint32_t init;        // Initial CRC value [RM] 14.4.4
-  uint32_t polynomial;  // CRC polynomial [RM] 14.4.5
-};
-typedef volatile CrcStruct CrcReg;
-inline CrcReg *const CrcBase = reinterpret_cast<CrcReg *>(0x40023000);
+void SysControl::enable_fpu() {
+  // The system control registers are documented in [PM] chapter 4.
+  // Details on enabling the FPU are in section 4.6.6.
+
+  /// \todo define magic value
+  SysControlBase->coproc_access_control = 0x00F00000;
+}
+
+void SysControl::reset_processor() {
+  // Note that the system control registers are a standard ARM peripheral they are documented in the
+  // [PM] rather than the [RM]. The register we use to reset the system is called the
+  // "Application interrupt and reset control register (AIRCR)"
+
+  /// \todo define magic value
+  SysControlBase->app_interrupt = 0x05FA0004;
+}

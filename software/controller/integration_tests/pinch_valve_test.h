@@ -22,10 +22,10 @@ static constexpr Duration Delay{milliseconds(1000)};
 static PinchValve pinch_valve("pinch_valve_", " for pinch valve", MotorIndex);
 
 void RunTest() {
-  hal.Init();
+  hal.Init(CPUFrequency);
 
   // Just to shut it up, may not need this beyond v0.3
-  PwmActuator blower{BlowerChannel, BlowerFreq, HalApi::CPUFrequency(), "", ""};
+  PwmActuator blower{BlowerChannel, BlowerFreq, CPUFrequency, "", ""};
   blower.set(0.0f);
 
   StepMotor::OneTimeInit();

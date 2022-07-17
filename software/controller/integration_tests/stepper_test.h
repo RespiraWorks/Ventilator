@@ -24,10 +24,10 @@ static constexpr float StepDegrees{TEST_PARAM_2};
 static constexpr Duration Delay{milliseconds(1000)};
 
 void RunTest() {
-  hal.Init();
+  hal.Init(CPUFrequency);
 
   // Just to shut it up, may not need this beyond v0.3
-  PwmActuator blower{BlowerChannel, BlowerFreq, HalApi::CPUFrequency(), "", ""};
+  PwmActuator blower{BlowerChannel, BlowerFreq, CPUFrequency, "", ""};
   blower.set(0.0f);
 
   StepMotor::OneTimeInit();

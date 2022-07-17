@@ -1,4 +1,4 @@
-/* Copyright 2020-2021, RespiraWorks
+/* Copyright 2020-2022, RespiraWorks
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -13,14 +13,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-// Reference abbreviations ([RM], [PCB], etc) are defined in hal/README.md
-
 #pragma once
 
-/// \TODO should this file be named peripheral_id.h?
+/// \todo this may not be generic enough; what processors is this true for?
 
 // Please read manual carefully, as not all peripherals ara available on all processors
 // [RM] 6.4.9-26 (pg 208-234)
+// \todo likely needs an "Invalid" value for default initializations
 enum class PeripheralID {
   ADC,
   AES,  // AES accelerator

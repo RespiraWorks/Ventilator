@@ -18,35 +18,26 @@ limitations under the License.
 #if defined(BARE_STM32)
 
 #include "clocks_stm32.h"
-#include "interrupts.h"
-#include "timers.h"
+#include "timers_stm32.h"
 
-/******************************************************************
- * System timer
- *
- * I use one of the basic timers (timer 6) for general system timing.
- * I configure it to count every 100ns and generate an interrupt
- * every millisecond
- * Note that this assumes the cpu frequency is a multiple of 10MHz.
- *
- * The basic timers (like timer 6) are documented in [RM] chapter 29.
- *****************************************************************/
-void SystemTimer::initialize(Frequency cpu_frequency) {
+void SystemTimer::initialize(PeripheralID id, InterruptVector interrupt_vector,
+                             Frequency cpu_frequency) {
+  id_ = id;
+
   // Enable the clock to the timer
-  enable_peripheral_clock(PeripheralID::Timer6);
+  Clocks::enable_peripheral_clock(id_);
 
   // Just set the timer up to count every microsecond.
-  TimerReg *tmr = Timer6Base;
+  auto *tmr = Timer::get_register(id_);
 
   // The reload register gives the number of clock ticks (100ns in our case)
   // -1 until the clock wraps back to zero and generates an interrupt. This
   // setting will cause an interrupt every 10,000 clocks or 1 millisecond
   tmr->auto_reload = 9999;
 
-  // We set the prescaler to create a 100ns (1E-7 s) clock. This is only precise
-  // if cpu_frequency is a multiple of 10MHz. This way, 100ns is an exact number
-  // of cpu clock cycles (the prescaler register is that number - 1).
-  // Note that we can't use Duration type to represent 100 ns.
+  // We set the prescaler to create a 100ns (1E-7 s) clock. This is only precise if cpu_frequency is
+  // a multiple of 10MHz. This way, 100ns is an exact number of cpu clock cycles (the prescaler
+  // register is that number - 1). Note that we can't use Duration type to represent 100 ns.
   tmr->prescaler = static_cast<uint32_t>(cpu_frequency.hertz() * 1.0E-7f - 1.0f);
 
   tmr->event = 1;
@@ -56,11 +47,11 @@ void SystemTimer::initialize(Frequency cpu_frequency) {
   tmr->control_reg1.bitfield.counter_enable = 1;
   tmr->interrupts_enable = 1;
 
-  Interrupts::singleton().EnableInterrupt(InterruptVector::Timer6, InterruptPriority::Standard);
+  Interrupts::singleton().EnableInterrupt(interrupt_vector, InterruptPriority::Standard);
 }
 
 void SystemTimer::interrupt_handler() {
-  Timer6Base->status = 0;
+  Timer::get_register(id_)->status = 0;
   ms_count_++;
 }
 
@@ -81,7 +72,7 @@ Time SystemTimer::now() {
   //
   // Since the counter is actively running, we need to read both the counter
   // value and UIFCOPY atomically.
-  uint32_t counter = Timer6Base->counter;
+  uint32_t counter = Timer::get_register(id_)->counter;
   int64_t micros = (counter & 0xffff) / 10;
   bool interrupt_pending = counter >> 31;
 
@@ -90,7 +81,8 @@ Time SystemTimer::now() {
 
 #else
 
-void SystemTimer::initialize(Frequency cpu_frequency) {}
+void SystemTimer::initialize(PeripheralID id, InterruptVector interrupt_vector,
+                             Frequency cpu_frequency) {}
 void SystemTimer::interrupt_handler() {}
 Time SystemTimer::now() { return time_; }
 void SystemTimer::delay(Duration d) { time_ = time_ + d; }

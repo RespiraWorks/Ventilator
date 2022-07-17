@@ -114,7 +114,7 @@ namespace Flash {
 void initialize() {
   // Reset caches and set latency for 80MHz operation
   // See chapter 3 of [RM] for details on the embedded flash module
-  enable_peripheral_clock(PeripheralID::Flash);
+  Clocks::enable_peripheral_clock(PeripheralID::Flash);
   FlashReg* flash = FlashBase;
 
   // Set four wait states (required to run at 80MHz)

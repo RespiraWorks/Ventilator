@@ -299,6 +299,8 @@ class ControllerDebugInterface:
             raise Error(f"Cannot set unknown variable {name}")
 
         variable = self.variable_metadata[name]
+
+        # TODO: function call should be abstracted
         if "lin" in value:
             # TODO need to handle whitespace in function e.g. lin(a, b)
             # TODO need to handle incorrect usage of funciton e.g. typos, syntax errors

@@ -37,6 +37,7 @@ from var_info import VAR_ACCESS_READ_ONLY, VAR_ACCESS_WRITE
 import matplotlib.pyplot as plt
 import test_data
 from pathlib import Path
+import re
 
 
 class ArgparseShowHelpError(Exception):
@@ -578,7 +579,25 @@ named {self.scripts_directory} will be searched for the python script.
             print(f" {self.interface.variable_metadata[k].verbose()}")
 
     def do_set(self, line):
+        # If the user calls a function with whitespace in the arguments, e.g. f(x, y, z)
+        # then we need to remove the whitespace within the call so we can easily parse
+        # the rest of the command by separating words split()
+        function = ""
+        if re.search("\w+\([\s\S]+\)", line):  # find the function call
+            start = re.search("\w+\([\s\S]+\)", line).start()
+            if re.search("\w+\([\s\S]+\)", line).end() == len(line):
+                function = line[start:]
+                line = line[:start]
+            else:
+                end = re.search("\w+\([\s\S]+\)", line).end()
+                function = line[start:end]
+                line = line[:start] + line[end:]
+            function = "".join(function)  # remove whitespace
+
         cl = line.split()
+        if function != "":
+            cl.append(function)
+
         if len(cl) < 1:
             print(red("Not enough parameters"))
             return

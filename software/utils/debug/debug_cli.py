@@ -32,7 +32,7 @@ import traceback
 from lib.colors import *
 from lib.error import Error
 from lib.serial_detect import detect_stm32_ports, print_detected_ports
-from controller_debug import ControllerDebugInterface, MODE_BOOT
+from controller_debug import ControllerDebugInterface, MODE_BOOT, SUPPORTED_FUNCTIONS
 from var_info import VAR_ACCESS_READ_ONLY, VAR_ACCESS_WRITE
 import matplotlib.pyplot as plt
 import test_data
@@ -583,13 +583,13 @@ named {self.scripts_directory} will be searched for the python script.
         # then we need to remove the whitespace within the call so we can easily parse
         # the rest of the command by separating words split()
         function = ""
-        if re.search("\w+\([\s\S]+\)", line):  # find the function call
-            start = re.search("\w+\([\s\S]+\)", line).start()
-            if re.search("\w+\([\s\S]+\)", line).end() == len(line):
+        if re.search("\w+\([\s\S]*\)", line):  # find the function call
+            start = re.search("\w+\([\s\S]*\)", line).start()
+            if re.search("\w+\([\s\S]*\)", line).end() == len(line):
                 function = line[start:]
                 line = line[:start]
             else:
-                end = re.search("\w+\([\s\S]+\)", line).end()
+                end = re.search("\w+\([\s\S]*\)", line).end()
                 function = line[start:end]
                 line = line[:start] + line[end:]
             function = "".join(function)  # remove whitespace
@@ -616,9 +616,11 @@ named {self.scripts_directory} will be searched for the python script.
             return
 
         if len(cl) == 2:
-            self.interface.variable_set(varname, cl[1])  # single variable or function
+            self.interface.variable_set(
+                varname, cl[1], function != ""
+            )  # single variable or function
         else:
-            self.interface.variable_set(varname, cl[1:])  # array
+            self.interface.variable_set(varname, cl[1:], False)  # array
 
     def complete_set(self, text, line, begidx, endidx):
         return self.interface.variables_find(
@@ -642,8 +644,9 @@ named {self.scripts_directory} will be searched for the python script.
             "  manually               - list the values in the order they should be set in the array"
         )
         print("  automatically          - populate the array values using a function")
-        print("Supported functions:")
-        print("  lin(start, stop)       -  evenly spaced numbers over start and stop")
+        print("Available functions:")
+        for key, value in SUPPORTED_FUNCTIONS.items():
+            print("  {0:20} - {1}".format(key, value))
 
     def do_trace(self, line):
         """The `trace` command controls/reads the controller's trace buffer.

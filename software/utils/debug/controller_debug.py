@@ -31,7 +31,7 @@ import test_scenario
 from test_data import *
 from pathlib import Path
 from lib.colors import red, orange
-import numpy as np
+from debug_funcs import *
 
 # TODO: Import constants from proto instead!
 
@@ -294,22 +294,15 @@ class ControllerDebugInterface:
         )
         return variable.format_value(variable.from_bytes(data), raw, fmt)
 
-    def variable_set(self, name, value, verbose=False):
+    def variable_set(self, name, value, func_used, verbose=False):
         if not (name in self.variable_metadata):
             raise Error(f"Cannot set unknown variable {name}")
 
         variable = self.variable_metadata[name]
 
         # TODO: function call should be abstracted
-        if "lin" in value:
-            # TODO need to handle whitespace in function e.g. lin(a, b)
-            # TODO need to handle incorrect usage of funciton e.g. typos, syntax errors
-            value_ = "".join(value.split())  # remove whitespace
-            start = float(value_[value_.index("(") + 1 : value_.index(",")])
-            end = float(value_[value_.index(",") + 1 : value_.index(")")])
-            data = variable.to_bytes(
-                np.linspace(start, end, variable.size()).astype(str).tolist()
-            )
+        if func_used:
+            data = variable.to_bytes(self.high_level_func(value, variable.size()))
         else:
             # \TODO this will not work for FloatArray
             if verbose:
@@ -324,6 +317,28 @@ class ControllerDebugInterface:
         self.send_command(
             OP_VAR, [SUBCMD_VAR_SET] + debug_types.int16s_to_bytes(variable.id) + data
         )
+
+    def high_level_func(self, func, num_data_points):
+        # separate function name from args (if there are args)
+        # e.g. lin(a,b) -> lin, (a,b)
+        f = ""
+        args = ""
+        if func.index("(") != -1:
+            start = func.index("(")
+            end = func.index(")")
+            f = func[:start]
+            args = func[start + 1 : end]
+        else:
+            f = func
+
+        # Map function and arguments to appropriate wrapper function
+        if f == "lin":
+            comma = args.index(",")
+            a = float(args[:comma])
+            b = float(args[comma + 1 :])
+            return lin(a, b, num_data_points)
+        elif f == "eigen":
+            return eigen(num_data_points)
 
     def tests_import(self, file_name):
         in_file = Path(file_name)

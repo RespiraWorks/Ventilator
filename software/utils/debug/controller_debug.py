@@ -294,51 +294,40 @@ class ControllerDebugInterface:
         )
         return variable.format_value(variable.from_bytes(data), raw, fmt)
 
-    def variable_set(self, name, value, func_used, verbose=False):
+    def variable_set(self, name, value, verbose=False):
         if not (name in self.variable_metadata):
             raise Error(f"Cannot set unknown variable {name}")
 
         variable = self.variable_metadata[name]
 
-        # TODO: function call should be abstracted
-        if func_used:
-            data = variable.to_bytes(self.high_level_func(value, variable.size()))
-        else:
-            # \TODO this will not work for FloatArray
-            if verbose:
-                text = variable.print_value(value, show_access=False)
-                print(f"  applying {text}")
+        # TODO: verbose behavior
+        # TODO: ensure number of input data points = dimension of variable
 
-            data = variable.to_bytes(value)
+        if isinstance(value, list):
+            if len(value) != variable.size():  # dimension mismatch
+                raise Error(
+                    f"Cannot set {name} because input is {len(value)}-dim and {name} is {variable.size()}-dim"
+                )
+            if len(value) > 1:  # floatarray
+                data = variable.to_bytes(value)
+            else:  # float
+                data = variable.to_bytes(value[0])
+        else:  # function to generate floatarray values
+            if variable.size() < 2:  # dimension mismatch
+                raise Error(
+                    f"Cannot set {name} with a function because it's a 1-dim float"
+                )
+
+            if "lin" in value:  # lin(a, b)
+                data = variable.to_bytes(DebugFunctions.lin(variable, value))
+            elif "eigen" in value:  # identity
+                data = variable.to_bytes(DebugFunctions.eigen(variable))
 
         if self.print_raw:
             print(f"  data converted as {data}")
-
         self.send_command(
             OP_VAR, [SUBCMD_VAR_SET] + debug_types.int16s_to_bytes(variable.id) + data
         )
-
-    def high_level_func(self, func, num_data_points):
-        # separate function name from args (if there are args)
-        # e.g. lin(a,b) -> lin, (a,b)
-        f = ""
-        args = ""
-        if func.index("(") != -1:
-            start = func.index("(")
-            end = func.index(")")
-            f = func[:start]
-            args = func[start + 1 : end]
-        else:
-            f = func
-
-        # Map function and arguments to appropriate wrapper function
-        if f == "lin":
-            comma = args.index(",")
-            a = float(args[:comma])
-            b = float(args[comma + 1 :])
-            return lin(a, b, num_data_points)
-        elif f == "eigen":
-            return eigen(num_data_points)
 
     def tests_import(self, file_name):
         in_file = Path(file_name)

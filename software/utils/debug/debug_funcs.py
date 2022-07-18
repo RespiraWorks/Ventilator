@@ -29,13 +29,8 @@ SUPPORTED_FUNCTIONS = {
 
 
 class DebugFunctions:
-    def lin(var, val):
-        value_ = "".join(val.split())  # remove whitespace
-        a = float(value_[value_.index("(") + 1 : value_.index(",")])
-        b = float(value_[value_.index(",") + 1 : value_.index(")")])
-        n = var.size()
-        return np.linspace(a, b, n).astype(str).tolist()
+    def lin(a, b):
+        return np.linspace(a, b, 11).astype(str).tolist()
 
-    def eigen(var):
-        val = "lin(0,1)"
-        return DebugFunctions.lin(var, val)
+    def eigen():
+        return DebugFunctions.lin(0, 1, 11)

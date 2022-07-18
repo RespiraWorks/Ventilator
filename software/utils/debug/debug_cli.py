@@ -581,13 +581,7 @@ named {self.scripts_directory} will be searched for the python script.
     def do_set(self, line):
         set_parser = CmdArgumentParser(description="set value(s) to debug variables")
         set_parser.add_argument("var", help="variable to set")
-        input_data = set_parser.add_mutually_exclusive_group(required=True)
-        input_data.add_argument(
-            "-v", "--val", nargs="+", help="value(s) to set variable to", type=float
-        )  # TODO: constant N
-        input_data.add_argument(
-            "-f", "--function", help="function to generate value(s) to set variable to"
-        )
+        set_parser.add_argument("data", nargs="+", help="data to assign to variable")
 
         cl = line.split()
         args = set_parser.parse_args(cl)
@@ -599,10 +593,12 @@ named {self.scripts_directory} will be searched for the python script.
             self.interface.variables_force_open()
             return
 
-        if args.val:
-            self.interface.variable_set(args.var, args.val)
-        else:
-            self.interface.variable_set(args.var, args.function)
+        if len(args.data) == 1:  # function or single float
+            data = args.data[0]
+        else:  # float array
+            data = args.data
+
+        self.interface.variable_set(args.var, data)
 
     def complete_set(self, text, line, begidx, endidx):
         return self.interface.variables_find(

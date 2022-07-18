@@ -301,27 +301,13 @@ class ControllerDebugInterface:
         variable = self.variable_metadata[name]
 
         # TODO: verbose behavior
+        # TODO: error handling
         # TODO: ensure number of input data points = dimension of variable
 
-        if isinstance(value, list):
-            if len(value) != variable.size():  # dimension mismatch
-                raise Error(
-                    f"Cannot set {name} because input is {len(value)}-dim and {name} is {variable.size()}-dim"
-                )
-            if len(value) > 1:  # floatarray
-                data = variable.to_bytes(value)
-            else:  # float
-                data = variable.to_bytes(value[0])
-        else:  # function to generate floatarray values
-            if variable.size() < 2:  # dimension mismatch
-                raise Error(
-                    f"Cannot set {name} with a function because it's a 1-dim float"
-                )
-
-            if "lin" in value:  # lin(a, b)
-                data = variable.to_bytes(DebugFunctions.lin(variable, value))
-            elif "eigen" in value:  # identity
-                data = variable.to_bytes(DebugFunctions.eigen(variable))
+        if isinstance(value, str) and not value.isdecimal():  # function
+            data = variable.to_bytes(eval(f"DebugFunctions.{value}"))
+        else:  # float or float array
+            data = variable.to_bytes(value)
 
         if self.print_raw:
             print(f"  data converted as {data}")

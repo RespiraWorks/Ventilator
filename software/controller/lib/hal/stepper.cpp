@@ -16,8 +16,7 @@ limitations under the License.
 #include "stepper.h"
 
 StepMotor StepMotor::motor_[StepMotor::MaxMotors];
-int StepMotor::total_motors_;
-std::optional<GPIO::DigitalOutputPin> StepMotor::chip_select_{std::nullopt};
+uint8_t StepMotor::total_motors_;
 
 #if defined(BARE_STM32)
 
@@ -26,14 +25,13 @@ std::optional<GPIO::DigitalOutputPin> StepMotor::chip_select_{std::nullopt};
 
 #include "clocks_stm32.h"
 #include "interrupts.h"
-#include "spi.h"
 #include "system_timer.h"
 
 // Static data members
 uint8_t StepMotor::dma_buff_[StepMotor::MaxMotors];
 StepCommState StepMotor::coms_state_ = StepCommState::Idle;
-std::optional<DMA::ChannelControl> StepMotor::rx_dma_{std::nullopt};
-std::optional<DMA::ChannelControl> StepMotor::tx_dma_{std::nullopt};
+SPI::Channel StepMotor::spi_{SPI::Base::SPI1, DMA::Base::DMA2};
+StepperRxListener StepMotor::rxl_;
 
 // This array holds the length of each parameter in units of
 // bytes, rounded up to the nearest byte.  This info is based
@@ -174,8 +172,6 @@ StepMtrErr StepMotor::GetParam(StepMtrParam param, uint32_t *value) {
  * we have 3 steppers.
  *****************************************************************/
 void StepMotor::OneTimeInit() {
-  enable_peripheral_clock(PeripheralID::SPI1);
-
   // The following pins are used to talk to the stepper
   // drivers:
   //   PA5 - SCLK
@@ -191,55 +187,10 @@ void StepMotor::OneTimeInit() {
   //   PB4  - busy open drain output
   //   PC10 - STCK input
 
-  // Configure the CS and reset pins as outputs, pulled high.
-  // I don't really use the reset pin, I just want it to be high so I don't reset the part
-  // inadvertently.
-  GPIO::DigitalOutputPin(GPIO::Port::A, 9, true);  // reset pin
-  chip_select_.emplace(GPIO::Port::B, 6, true);    // chip select pin
-
-  // Assign the three SPI pins to the SPI peripheral, [DS] Table 17 (pg 76) with output pins to
-  // highest speed setting SPI1_SCK
-  GPIO::AlternatePin(GPIO::Port::A, 5, GPIO::AlternativeFunction::AF5, GPIO::PullType::None,
-                     GPIO::OutSpeed::Smoking);
-  // SPI1_MISO
-  GPIO::AlternatePin(GPIO::Port::A, 6, GPIO::AlternativeFunction::AF5);
-  // SPI1_MOSI
-  GPIO::AlternatePin(GPIO::Port::A, 7, GPIO::AlternativeFunction::AF5, GPIO::PullType::None,
-                     GPIO::OutSpeed::Smoking);
-
-  // Configure my SPI port to talk to the stepper
-  SpiReg *const spi = Spi1Base;
-
-  // Configure the SPI to work in 8-bit data mode
-  // Enable RXNE interrupts
-  spi->control2.rx_dma = 1;             // Enable DMA on receive
-  spi->control2.tx_dma = 1;             // Enable DMA on transmit
-  spi->control2.data_size = 7;          // 8-bit data size
-  spi->control2.fifo_rx_threshold = 1;  // Receive interrupt on every byte
-
-  // Configure for master mode, CPOL and CPHA both 0.
-  // The stepper driver chip has a max SPI clock
-  // rate of 5MHz which is the rate I'll use.
-  spi->control_reg1.clock_phase = 1;            // Data is sampled on the rising edge of the clock
-  spi->control_reg1.clock_polarity = 1;         // Clock line is high when not active
-  spi->control_reg1.master = 1;                 // We're acting as the master on the SPI bus
-  spi->control_reg1.bitrate = 3;                // Set bit rate for 80MHz/16 or 5MHz
-  spi->control_reg1.internal_slave_select = 1;  // Enable software slave select
-  spi->control_reg1.sw_slave_management = 1;    // Software slave select management
-  spi->control_reg1.enable = 1;                 // Enable the SPI module
-
-  // DMA2 channels 3 and 4 can be used to handle rx and tx interrupts from
-  // SPI1 respectively.
-  rx_dma_.emplace(DMA::Base::DMA2, DMA::Channel::Chan3);
-  tx_dma_.emplace(DMA::Base::DMA2, DMA::Channel::Chan4);
-
-  // SPI1 can be linked to DMA2 using selection number 4 [RM p299]
-  rx_dma_->Initialize(/*selection=*/4, &spi->data, DMA::ChannelDir::PeripheralToMemory,
-                      /*tx_interrupt=*/true, DMA::ChannelPriority::Low,
-                      InterruptPriority::Standard);
-  tx_dma_->Initialize(/*selection=*/4, &spi->data, DMA::ChannelDir::MemoryToPeripheral,
-                      /*tx_interrupt=*/false, DMA::ChannelPriority::Low,
-                      InterruptPriority::Standard);
+  spi_.Initialize(/*clock_port=*/GPIO::Port::A, 5, /*miso_port=*/GPIO::Port::A, 6,
+                  /*mosi_port=*/GPIO::Port::A, 7, /*chip_select_port=*/GPIO::Port::B, 6,
+                  /*reset_port=*/GPIO::Port::A, 9, /*word_size=*/8, /*clock_scaler=*/3,
+                  /*rx_interrupts=*/true, /*tx_interrputs=*/false, /*rxl=*/&rxl_);
 
   // Do some basic init of the stepper motor chips so we can
   // make them spin the motors
@@ -658,7 +609,7 @@ StepMtrErr StepMotor::SendCmd(uint8_t *cmd, uint32_t len) {
   // The ISR replaces the command with the response, I need to copy the
   // response so the caller can use it.
   memcpy(cmd, &last_cmd_[0], len);
-  // TODO: have a dedicated place to place the stepper response so the ISR
+  /// \TODO have a dedicated place to place the stepper response so the ISR
   // doesn't reuse the location of the command to put the response.
 
   return StepMtrErr::Ok;
@@ -793,28 +744,11 @@ void StepMotor::UpdateComState() {
   // of motor driver chips.  Set up my DMA to
   // send it out.
   //////////////////////////////////////////////
-  rx_dma_->Disable();
-  tx_dma_->Disable();
-
-  rx_dma_->SetupTransfer(dma_buff_, total_motors_);
-  tx_dma_->SetupTransfer(dma_buff_, total_motors_);
-
-  // NOTE - CS has to be high for at least 650ns between bytes.
-  // I don't bother timing this because I've found that in
-  // practice it takes longer than that to handle the interrupt
-  chip_select_->clear();
-
-  rx_dma_->Enable();
-  tx_dma_->Enable();
+  SendCmdOverSPI(dma_buff_, total_motors_);
 }
 
 void StepMotor::DmaISR() {
-  chip_select_->set();
-
-  // Clear the DMA interrupt
-  rx_dma_->ClearInterrupt(DMA::Interrupt::Global);
-
-  UpdateComState();
+  spi_.RxDMAInterruptHandler();
 }
 
 // This is called from the HAL at the end of the high
@@ -826,38 +760,17 @@ void StepMotor::StartQueuedCommands() {
   }
 }
 
-// This is used to send a command to the stepper chips during startup.
-void StepMotor::SendInitCmd(uint8_t *buff, int len) {
-  rx_dma_->Disable();
-  tx_dma_->Disable();
-
-  rx_dma_->SetupTransfer(buff, len);
-  tx_dma_->SetupTransfer(buff, len);
-
-  chip_select_->clear();
-
-  // I prevent interrupts during this because I don't
-  // want the normal interrupt handler to run.
-  // The normal interrupt handler is designed to be used
-  // with normal commands after startup and I don't want
-  // to add the additional logic to it to handle these
-  // unusual startup commands.
-  BlockInterrupts block;
-  rx_dma_->Enable();
-  tx_dma_->Enable();
-
-  while (!rx_dma_->InterruptStatus(DMA::Interrupt::TransferComplete)) {
+void StepperRxListener::on_rx_complete(){
+  StepMotor::spi_.SetChipSelect();
+  if(StepMotor::coms_state_ != StepCommState::Idle){
+    StepMotor::UpdateComState();
   }
+}
 
-  // Clear the interrupt flag so I won't get an interrupt
-  // as soon as I re-enable them
-  rx_dma_->ClearInterrupt(DMA::Interrupt::Global);
-
-  // Raise the chip select line and wait 1 microsecond.
-  // The minimum time the CS needs to be high is just under
-  // 1 microsecond.
-  chip_select_->set();
-  SystemTimer::singleton().delay(microseconds(1));
+// This is used to send a command to the stepper chips during startup.
+void StepMotor::SendCmdOverSPI(uint8_t *buff, uint8_t len) {
+  spi_.SetupReception(buff, len);
+  spi_.SendCommand(buff, len, true);
 }
 
 // This is run at startup before the DMA interrupts are enabled.
@@ -876,12 +789,14 @@ void StepMotor::ProbeChips() {
   // the middle of a command when the controller was restarted.
   for (int i = 0; i < 5; i++) {
     memset(probe_buff, static_cast<uint8_t>(StepMtrCmd::Nop), sizeof(probe_buff));
-    SendInitCmd(probe_buff, sizeof(probe_buff));
+    SendCmdOverSPI(probe_buff, sizeof(probe_buff));
+    SystemTimer::singleton().delay(microseconds(1000));
   }
 
   // Now send a reset to all the chips on the bus.
   memset(probe_buff, static_cast<uint8_t>(StepMtrCmd::ResetDevice), sizeof(probe_buff));
-  SendInitCmd(probe_buff, sizeof(probe_buff));
+  SendCmdOverSPI(probe_buff, sizeof(probe_buff));
+  SystemTimer::singleton().delay(microseconds(1000));
 
   // The first N bytes of the returned array should be 0 and the rest should
   // be the reset command.

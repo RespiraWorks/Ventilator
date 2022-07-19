@@ -1,4 +1,4 @@
-/* Copyright 2020, RespiraWorks
+/* Copyright 2020-2022, RespiraWorks
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -18,6 +18,9 @@ limitations under the License.
 //
 // This module implements a communication interface used to talk to a fixed
 // number of stepper driver chips via an SPI synchronous serial port.
+// 
+// The stepper driver chips are setup in a daisy chain configuration (see
+// https://en.wikipedia.org/wiki/Serial_Peripheral_Interface#Daisy_chain_configuration)
 //
 // The driver chips supported are made by ST.  The following chips are
 // supported:
@@ -51,6 +54,7 @@ limitations under the License.
 
 #include "dma.h"
 #include "gpio_stm32.h"
+#include "spi.h"
 
 // These are the simple opcodes for the stepper driver.
 // Not included here are set/get parameter which include
@@ -131,45 +135,36 @@ enum class StepMoveStatus {
 };
 
 // Detailed status about the stepper driver chip.
-// Note, fields marked with * below are latched meaning that they
-// will return true if the event has occurred since the last time
-// the status was read.  The act of reading the status clears them
-// so they won't be true on the next read unless they happen again.
+// Note, latching fields will return true if the event has occurred since the last time
+// the status was read.  The act of reading the status clears them so they won't be true
+// on the next read unless they happen again.
 struct StepperStatus {
-  // If true, power is being applied to the motor.
   bool enabled{false};
-
-  // * True if the stepper chip has detected an under voltage
-  bool under_voltage{false};
-
-  // * True if the stepper chip is getting hot
-  bool thermal_warning{false};
-
-  // * True if the stepper chip got so hot is shut itself down.
-  bool thermal_shutdown{false};
-
-  // * True if over current has been detected
-  bool over_current{false};
-
-  // * True if the chip detects a loss of steps (motor stall)
-  bool step_loss{false};
-
-  // * True if a command error (bad command) was detected by the chip
-  bool command_error{false};
-
-  // Specifics of the move status
+  bool under_voltage{false};    // latching
+  bool thermal_warning{false};  // latching
+  bool thermal_shutdown{false}; // latching
+  bool over_current{false};     // latching
+  bool step_loss{false};        // latching
+  bool command_error{false};    // latching
   StepMoveStatus move_status{StepMoveStatus::Stopped};
+};
+
+class StepperRxListener : public RxListener {
+  void on_rx_complete() override;
+  void on_rx_error(RxError) override {};
+  void on_character_match() override {};
 };
 
 // Represents one of the stepper motors in the system
 class StepMotor {
+  friend class StepperRxListener;
   // This constant gives the maximum number of motors we
   // can support with this driver.
   static constexpr int MaxMotors{4};
 
   // Number of motor driver chips present in the system.
   // This is automatically detected at startup.
-  static int total_motors_;
+  static uint8_t total_motors_;
 
  public:
   StepMotor() = default;
@@ -299,17 +294,11 @@ class StepMotor {
  private:
   static StepMotor motor_[MaxMotors];
   static uint8_t dma_buff_[MaxMotors];
-  static std::optional<DMA::ChannelControl> rx_dma_;
-  static std::optional<DMA::ChannelControl> tx_dma_;
   static uint8_t param_len_[32];
   static StepCommState coms_state_;
 
-  // pointer to the chip select pin that we need to manually manipulate to speak with the motors.
-  static std::optional<GPIO::DigitalOutputPin> chip_select_;
-
-  // This queue is used for sending commands from the high
-  // priority loop.  The command is copied to this queue and
-  // sent later.
+  // This queue is used for sending commands from the high priority loop.
+  // The command is copied to this queue and sent later.
   uint8_t queue_[40];
   int queue_count_{0};
   int queue_ndx_{0};
@@ -339,11 +328,15 @@ class StepMotor {
   StepMtrErr EnqueueCmd(uint8_t *cmd, uint32_t len);
 
   static void UpdateComState();
-  static void SendInitCmd(uint8_t *buff, int len);
+  static void SendCmdOverSPI(uint8_t *buff, uint8_t len);
   static void ProbeChips();
 
   // True if this is a powerSTEP chip.
   bool power_step_{false};
+
+  // SPI bus used to speak with the steppers
+  static SPI::Channel spi_;
+  static StepperRxListener rxl_;
 
  public:
   // Interrupt service routine.

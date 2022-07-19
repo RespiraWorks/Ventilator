@@ -302,12 +302,9 @@ class ControllerDebugInterface:
 
         # TODO: verbose behavior
         # TODO: error handling
-        # TODO: ensure number of input data points = dimension of variable
+        # TODO: handling strings
 
-        if isinstance(value, str) and not value.isdecimal():  # function
-            data = variable.to_bytes(eval(f"DebugFunctions.{value}"))
-        else:  # float or float array
-            data = variable.to_bytes(value)
+        data = variable.to_bytes(eval(f"{value}"))
 
         if self.print_raw:
             print(f"  data converted as {data}")

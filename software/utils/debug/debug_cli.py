@@ -593,10 +593,13 @@ named {self.scripts_directory} will be searched for the python script.
             self.interface.variables_force_open()
             return
 
-        if len(args.data) == 1:  # function or single float
-            data = args.data[0]
-        else:  # float array
-            data = args.data
+        try:  # get native python datatype
+            data = eval("".join(args.data))
+            if isinstance(data, list):  # array of dtype -> array of strings
+                data = list(map(str, data))
+        except NameError:  # append function scope
+            # TODO: handling unsupported functions
+            data = f"DebugFunctions.{''.join(args.data)}"
 
         self.interface.variable_set(args.var, data)
 

@@ -33,4 +33,4 @@ class DebugFunctions:
         return np.linspace(a, b, 11).astype(str).tolist()
 
     def eigen():
-        return DebugFunctions.lin(0, 1, 11)
+        return DebugFunctions.lin(0, 1)

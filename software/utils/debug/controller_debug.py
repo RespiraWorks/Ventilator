@@ -302,7 +302,6 @@ class ControllerDebugInterface:
 
         # TODO: verbose behavior
         # TODO: error handling
-        # TODO: handling strings
 
         data = variable.to_bytes(eval(f"{value}"))
 

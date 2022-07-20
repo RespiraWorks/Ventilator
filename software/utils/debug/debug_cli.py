@@ -593,13 +593,21 @@ named {self.scripts_directory} will be searched for the python script.
             self.interface.variables_force_open()
             return
 
-        try:  # get native python datatype
+        try:
+            "".join(args.data).index(
+                "("
+            )  # throws ValueError if function syntax is not followed
+            data = f"DebugFunctions.{''.join(args.data)}"
+        except ValueError:
             data = eval("".join(args.data))
+
             if isinstance(data, list):  # array of dtype -> array of strings
                 data = list(map(str, data))
-        except NameError:  # append function scope
-            # TODO: handling unsupported functions
-            data = f"DebugFunctions.{''.join(args.data)}"
+
+            if isinstance(
+                data, str
+            ):  # when we eval() data later, we need it to return a string
+                data = f"str('{data}')"
 
         self.interface.variable_set(args.var, data)
 

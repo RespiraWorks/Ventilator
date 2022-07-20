@@ -37,7 +37,6 @@ from var_info import VAR_ACCESS_READ_ONLY, VAR_ACCESS_WRITE
 import matplotlib.pyplot as plt
 import test_data
 from pathlib import Path
-import re
 
 
 class ArgparseShowHelpError(Exception):

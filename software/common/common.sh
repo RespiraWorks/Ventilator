@@ -75,6 +75,7 @@ The following options are available:
                   <name>  - run specific unit test, may include wildcards, i.e. '*checksum*'
                   [-o]    - open coverage report in browser when done
   help/-h     Display this help info
+  generate_network_protocols      Generates network protocols via Nanopb and protobuf
 EOF
 }
 
@@ -113,8 +114,17 @@ install_linux() {
   pip3 install protobuf
   pip3 install platformio==${PIO_VERSION}
   source ${HOME}/.profile
+}
 
-  # Generate network protocols
+
+update_platformio() {
+  pip3 install platformio==${PIO_VERSION}
+  pio pkg uninstall -d .
+  pio pkg install -d .
+  exit $EXIT_SUCCESS
+}
+
+generate_network_protocols() {
   protoc \
   --plugin=usr/bin/protoc-gen-nanopb
   -I usr/lib/python3/dist-packages/proto \
@@ -125,12 +135,6 @@ install_linux() {
 }
 
 
-update_platformio() {
-  pip3 install platformio==${PIO_VERSION}
-  pio pkg uninstall -d .
-  pio pkg install -d .
-  exit $EXIT_SUCCESS
-}
 
 run_checks() {
     # Code style / bug-prone pattern checks (eg. clang-tidy)
@@ -331,3 +335,11 @@ else
   print_help
   exit $EXIT_FAILURE
 fi
+
+##############################
+# GENERATE NETWORK PROTOCOLS #
+##############################
+elif [ "$1" == "generate_network_protocols" ]; then
+  generate_network_protocols
+
+  exit $EXIT_SUCCESS

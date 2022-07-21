@@ -56,3 +56,5 @@ test_data/
 
 #network protocol outfiles
 software/common/protocol_buffer_outputs/
+software/common/generated_libs/network_protocol/network_protocol.pb.c
+software/common/generated_libs/network_protocol/network_protocol.pb.h

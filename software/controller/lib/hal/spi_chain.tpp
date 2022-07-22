@@ -83,11 +83,14 @@ void DaisyChain<MaxSlaves>::ProbeSlaves(uint8_t null_command, uint8_t reset_comm
   }
 
   // Send a reset command to all the slaves.
-  memset(probe_buffer, reset_command, sizeof(probe_buffer));
+  for(size_t byte=0 ; byte < sizeof(probe_buffer) ; byte++){
+    probe_buffer[byte] = reset_command;
+  }
   SendDataWithBusyWait(probe_buffer, response_buffer, sizeof(probe_buffer));
 
   // At this point, the response buffer should be filled with as many null commands as there are
   // slaves.
+  num_slaves_ = 0;
   for (size_t i : response_buffer) {
     if (i == null_command)
       num_slaves_++;
@@ -144,21 +147,15 @@ void DaisyChain<MaxSlaves>::on_rx_complete(){
 template<size_t MaxSlaves>
 void DaisyChain<MaxSlaves>::ProcessReceivedData() {
   for(size_t slave = 0 ; slave < num_slaves_ ; slave++) {
-    if(current_request_[slave]<queue_count_[slave]) {
+    if(current_request_[slave] < queue_count_[slave]) {
       // We are processing a request for that slave.  Get that request handy.
       Request *request = &request_queue_[slave][current_request_[slave]];
 
       // We only record the response if the caller cares about it, and provided proper pointers
       // where we can put the response and inform him it is valid
-      if(request->response && request->processed) {
-        // We are discarding the first byte of every response since the receive line is always
-        // one byte behind the command. That byte is actually the last byte of the previous command.
-        if(save_response_[slave]){
-          // Update the response with received data from that slave
-          request->response[response_count_[slave]++] = receive_buffer_[slave];
-        } else {
-          save_response_[slave] = true;
-        }
+      if(request->response && request->processed && save_response_[slave]) {
+        // Update the response with received data from that slave
+        request->response[response_count_[slave]++] = receive_buffer_[slave];
       }
       if(end_of_request_[slave]){
         // inform the caller that the request is processed
@@ -197,9 +194,15 @@ void DaisyChain<MaxSlaves>::TransmitNextCommand() {
       Request *request = &request_queue_[slave][current_request_[slave]];
       send_buffer_[slave] = request->command[command_index_[slave]++];
 
+      // Trigger saving the response when we just sent the second byte.
+      // This allows us to discard the first byte of the response.
+      if(command_index_[slave] == 2){
+        save_response_[slave] = true;
+      }
+      
       // Check whether we are at the end of the current request, and pass the info to
       // ProcessReceivedData which will update the states after having saves the last byte of the
-      // response
+      // response, which is actually a remnant of a previous state.
       if(command_index_[slave] >= request->length) {
         end_of_request_[slave] = true;
       }

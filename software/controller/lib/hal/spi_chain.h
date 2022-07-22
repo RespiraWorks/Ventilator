@@ -32,10 +32,13 @@ namespace SPI {
 // consider the last data they received as theirs, and set their output accordingly.
 //
 // With this setup, we talk to all the slaves at once, but in as many clock cycles as there are
-// slaves, by keeping the chip select low as we send one word per slave, in reverse order.
+// slaves, by keeping the chip select low as we send one word per slave. 
+// For convenience in this implementation, we have numbered the salves in reverse order, so that
+// byte 0 of the send buffer is destined for slave 0, but that slave is technically the last in
+// the chain.
 // Also, we need to distribute their responses to the managing entities accordingly, as the
-// answers are tangled, for example with three slaves s1, s2, s3, we will receive:
-// [s3 resp_1, s2 resp_1, s1 resp_1, s3 resp_2, s2 resp_2, s1 resp_2, ...]
+// answers are tangled, for example after sending commands to three slaves s0, s1, s2, we will
+// receive [s0 resp[0], s1 resp[0], s2 resp[0], s0 resp[1], s1 resp[1], s2 resp[1], ...]
 
 // Structure that represents a request that can be queued up of sending to one of the slaves in
 // the SPI daisy chain.  Note that we only support 8 bits transmission for now.
@@ -82,9 +85,12 @@ class DaisyChain : public Channel, public RxListener {
   // Transmission status
   bool transmitting_data_{false};
 
+  void TransmitNextCommand();
+
   // We need to handle as many requests queues as we have slaves. We are using normal arrays to do
   // this as the requests should not stack up, and we are able to empty the queues every so often.
   static constexpr size_t MaxQueueLength{10};
+ private:
   Request request_queue_[MaxSlaves][MaxQueueLength];
   size_t queue_count_[MaxSlaves] = {0};
   size_t current_request_[MaxSlaves] = {0};
@@ -98,12 +104,12 @@ class DaisyChain : public Channel, public RxListener {
   // Length of 20 bytes per slave is arbitrary but should suffice for stepper motors, which take
   // short commands (length <= 4).
   // Note that this buffer is shared between slaves 
+ protected:
   static constexpr size_t CommandBufferSize{20 * MaxSlaves};
-  uint8_t command_buffer_[CommandBufferSize] = {0};
   size_t command_buffer_count_{0};
-
-  void TransmitNextCommand();
  private:
+  uint8_t command_buffer_[CommandBufferSize] = {0};
+
   // Buffers used to transmit/receive data from the SPI peripheral
   uint8_t send_buffer_[MaxSlaves] = {0};
   uint8_t receive_buffer_[MaxSlaves] = {0};

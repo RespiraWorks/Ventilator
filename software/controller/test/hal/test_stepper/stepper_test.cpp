@@ -19,7 +19,7 @@ limitations under the License.
 
 // Not really tests, just silencing code coverage warning for native build
 TEST(Stepper, TestStubs) {
-  StepMotor step_motor;
+  StepMotor step_motor(0);
   EXPECT_EQ(StepMtrErr::Ok, step_motor.HardDisable());
   EXPECT_EQ(StepMtrErr::Ok, step_motor.SetAmpAll(0.0));
   EXPECT_EQ(StepMtrErr::Ok, step_motor.SetMaxSpeed(0.0));

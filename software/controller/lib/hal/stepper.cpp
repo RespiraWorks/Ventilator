@@ -25,7 +25,8 @@ limitations under the License.
 #include "system_timer.h"
 
 // Static data members
-StepMotor StepMotor::motor_[StepMotor::MaxMotors] = {StepMotor(0), StepMotor(1), StepMotor(2), StepMotor(3)};
+StepMotor StepMotor::motor_[StepMotor::MaxMotors] = {StepMotor(0), StepMotor(1), StepMotor(2),
+                                                     StepMotor(3)};
 // The steppers are chained on the SPI1 bus, which we link with DMA2
 SPI::DaisyChain<StepMotor::MaxMotors> StepMotor::daisy_chain_{SPI::Base::SPI1, DMA::Base::DMA2};
 
@@ -125,7 +126,7 @@ StepMtrErr StepMotor::GetParam(StepMtrParam param, uint32_t *value) {
   }
 
   uint8_t cmd_buff[4];
-  uint8_t response[sizeof(cmd_buff)-1] = {0};
+  uint8_t response[sizeof(cmd_buff) - 1] = {0};
 
   // For a get, the op-code is the parameter | 0x20
   cmd_buff[0] = static_cast<uint8_t>(p | 0x20);
@@ -133,7 +134,7 @@ StepMtrErr StepMotor::GetParam(StepMtrParam param, uint32_t *value) {
   cmd_buff[2] = 0;
   cmd_buff[3] = 0;
 
-  StepMtrErr err = SendCmd(cmd_buff, len + 1, response) ;
+  StepMtrErr err = SendCmd(cmd_buff, len + 1, response);
   if (err != StepMtrErr::Ok) {
     return err;
   }
@@ -168,9 +169,8 @@ void StepMotor::OneTimeInit() {
                           /*mosi_port=*/GPIO::Port::A, 7, /*chip_select_port=*/GPIO::Port::B, 6,
                           /*reset_port=*/GPIO::Port::A, 9, /*word_size=*/8, /*clock_scaler=*/3);
 
-
   // Do some basic init of the stepper motor chips so we can make them spin the motors
-  for (size_t i = 0; i < daisy_chain_.num_slaves() ; i++) {
+  for (size_t i = 0; i < daisy_chain_.num_slaves(); i++) {
     StepMotor *mtr = StepMotor::GetStepper(i);
 
     mtr->Reset();
@@ -179,14 +179,14 @@ void StepMotor::OneTimeInit() {
     // For the power-step chip this delay time is specified as 500 microseconds in the data sheet.
     // For the L6470 it's only 45 max
     SystemTimer::singleton().delay(microseconds(500));
-    
+
     // Get the first gate config register of the powerSTEP01.
     // This is actually the config register on the L6470
     uint32_t val{0};
     mtr->GetParam(StepMtrParam::GateConfig1, &val);
 
-    // If this is at the default config register value for the L6470 then I don't need to do any more
-    // configuration
+    // If this is at the default config register value for the L6470 then I don't need to do any
+    // more configuration
     if (val == 0x2E88) {
       continue;
     }
@@ -458,7 +458,7 @@ StepMtrErr StepMotor::GetStatus(StepperStatus *stat) {
 
   // We expect a 2 bytes response so we add two zeros after the op code.
   uint8_t cmd[] = {static_cast<uint8_t>(StepMtrCmd::GetStatus), 0, 0};
-  uint8_t response[sizeof(cmd)-1] = {0};
+  uint8_t response[sizeof(cmd) - 1] = {0};
 
   StepMtrErr err = SendCmd(cmd, sizeof(cmd), response);
   if (err != StepMtrErr::Ok) {
@@ -546,24 +546,22 @@ StepMtrErr StepMotor::MoveRel(float deg) {
 StepMtrErr StepMotor::SendCmd(uint8_t *cmd, uint32_t len, uint8_t *response) {
   bool request_finished = false;
   SPI::Request request = {
-    .command = cmd,
-    .length = len,
-    .response = response,
-    .processed = &request_finished,
+      .command = cmd,
+      .length = len,
+      .response = response,
+      .processed = &request_finished,
   };
-  if(!daisy_chain_.SendRequest(request, slave_index_)){
+  if (!daisy_chain_.SendRequest(request, slave_index_)) {
     return StepMtrErr::QueueFull;
   }
-  
-  while(!Interrupts::singleton().InInterruptHandler() && !request_finished){
+
+  while (!Interrupts::singleton().InInterruptHandler() && !request_finished) {
   }
 
   return StepMtrErr::Ok;
 }
 
-void StepMotor::DmaISR() {
-  daisy_chain_.RxDMAInterruptHandler();
-}
+void StepMotor::DmaISR() { daisy_chain_.RxDMAInterruptHandler(); }
 
 #else
 

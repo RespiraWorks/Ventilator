@@ -15,9 +15,8 @@ limitations under the License.
 
 #pragma once
 
-#include "spi.h"
-
 #include "circular_buffer.h"
+#include "spi.h"
 #include "system_timer.h"
 #include "vars.h"
 
@@ -33,7 +32,7 @@ namespace SPI {
 // consider the last data they received as theirs, and set their output accordingly.
 //
 // With this setup, we talk to all the slaves at once, but in as many clock cycles as there are
-// slaves, by keeping the chip select low as we send one word per slave. 
+// slaves, by keeping the chip select low as we send one word per slave.
 // For convenience in this implementation, we have numbered the salves in reverse order, so that
 // byte 0 of the send buffer is destined for slave 0, but that slave is technically the last in
 // the chain.
@@ -43,40 +42,37 @@ namespace SPI {
 
 // Structure that represents a request that can be queued up of sending to one of the slaves in
 // the SPI daisy chain.  Note that we only support 8 bits transmission for now.
-struct Request{
+struct Request {
   uint8_t *command = {nullptr};
-  size_t length{0};              // (in bytes)
-  uint8_t *response = {nullptr}; // Place the caller wants us to put the response
-                                 // Note that because of the way a daisy chain works, the response
-                                 // must be one byte shorter than the command and the caller must
-                                 // reserve at least that much space for the response.
-                                 // In practice, this means the caller needs to fill the command
-                                 // to sizeof(expected_response) + 1 with nullcommand bytes.
-  bool *processed{nullptr};      // boolean we set to inform the caller that the request is
-                                 // processed
+  size_t length{0};               // (in bytes)
+  uint8_t *response = {nullptr};  // Place the caller wants us to put the response
+                                  // Note that because of the way a daisy chain works, the response
+                                  // must be one byte shorter than the command and the caller must
+                                  // reserve at least that much space for the response.
+                                  // In practice, this means the caller needs to fill the command
+                                  // to sizeof(expected_response) + 1 with nullcommand bytes.
+  bool *processed{nullptr};       // boolean we set to inform the caller that the request is
+                                  // processed
 };
 
 template <size_t MaxSlaves>
 class DaisyChain : public Channel, public RxListener {
  public:
-  DaisyChain(Base spi, DMA::Base dma) : Channel(spi, dma) {};
+  DaisyChain(Base spi, DMA::Base dma) : Channel(spi, dma){};
 
-  void Initialize(uint8_t null_command, uint8_t reset_command,
-                  GPIO::Port clock_port, uint8_t clock_pin, GPIO::Port miso_port,
-                  uint8_t miso_pin, GPIO::Port mosi_port, uint8_t mosi_pin,
-                  GPIO::Port chip_select_port, uint8_t chip_select_pin,
-                  GPIO::Port reset_port, uint8_t reset_pin,
-                  uint8_t word_size, uint8_t bitrate_scaler);
+  void Initialize(uint8_t null_command, uint8_t reset_command, GPIO::Port clock_port,
+                  uint8_t clock_pin, GPIO::Port miso_port, uint8_t miso_pin, GPIO::Port mosi_port,
+                  uint8_t mosi_pin, GPIO::Port chip_select_port, uint8_t chip_select_pin,
+                  GPIO::Port reset_port, uint8_t reset_pin, uint8_t word_size,
+                  uint8_t bitrate_scaler);
 
   bool SendRequest(const Request &request, size_t slave);
 
-  size_t num_slaves(){
-    return num_slaves_;
-  }
+  size_t num_slaves() { return num_slaves_; }
 
   void on_rx_complete() override;
-  void on_rx_error(RxError) override {};
-  void on_character_match() override {};
+  void on_rx_error(RxError) override{};
+  void on_character_match() override{};
 
  protected:
   // Number of slaves that are actually present in the chain, determined during initilization
@@ -94,6 +90,7 @@ class DaisyChain : public Channel, public RxListener {
   // We need to handle as many requests queues as we have slaves. We are using normal arrays to do
   // this as the requests should not stack up, and we are able to empty the queues every so often.
   static constexpr size_t MaxQueueLength{10};
+
  private:
   Request request_queue_[MaxSlaves][MaxQueueLength];
   size_t queue_count_[MaxSlaves] = {0};
@@ -107,10 +104,11 @@ class DaisyChain : public Channel, public RxListener {
   // being pointed to is not certain.
   // Length of 20 bytes per slave is arbitrary but should suffice for stepper motors, which take
   // short commands (length <= 4).
-  // Note that this buffer is shared between slaves 
+  // Note that this buffer is shared between slaves
  protected:
   static constexpr size_t CommandBufferSize{20 * MaxSlaves};
   size_t command_buffer_count_{0};
+
  private:
   uint8_t command_buffer_[CommandBufferSize] = {0};
 
@@ -119,10 +117,10 @@ class DaisyChain : public Channel, public RxListener {
   uint8_t receive_buffer_[MaxSlaves] = {0};
 
   void ProcessReceivedData();
-  void SendDataWithBusyWait(uint8_t* command_buffer, uint8_t* response_buffer, size_t length);
+  void SendDataWithBusyWait(uint8_t *command_buffer, uint8_t *response_buffer, size_t length);
   virtual void WaitResponse();
 };
 
 #include "spi_chain.tpp"
 
-} // namespace SPI
+}  // namespace SPI

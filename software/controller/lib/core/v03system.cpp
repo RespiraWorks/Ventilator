@@ -131,7 +131,7 @@ void V03Actuators::execute(const ActuatorsState &desired_state) {
   } else {
     exhale_pinch_->Disable();
   }
-  
+
   psol_->set(desired_state.fio2_valve);
 }
 

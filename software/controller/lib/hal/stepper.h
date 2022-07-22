@@ -18,7 +18,7 @@ limitations under the License.
 //
 // This module implements a communication interface used to talk to a fixed
 // number of stepper driver chips via an SPI synchronous serial port.
-// 
+//
 // The stepper driver chips are setup in a daisy chain configuration (see
 // https://en.wikipedia.org/wiki/Serial_Peripheral_Interface#Daisy_chain_configuration)
 //
@@ -140,12 +140,12 @@ enum class StepMoveStatus {
 // on the next read unless they happen again.
 struct StepperStatus {
   bool enabled{false};
-  bool under_voltage{false};    // latching
-  bool thermal_warning{false};  // latching
-  bool thermal_shutdown{false}; // latching
-  bool over_current{false};     // latching
-  bool step_loss{false};        // latching
-  bool command_error{false};    // latching
+  bool under_voltage{false};     // latching
+  bool thermal_warning{false};   // latching
+  bool thermal_shutdown{false};  // latching
+  bool over_current{false};      // latching
+  bool step_loss{false};         // latching
+  bool command_error{false};     // latching
   StepMoveStatus move_status{StepMoveStatus::Stopped};
 };
 
@@ -155,7 +155,7 @@ class StepMotor {
   // This constant gives the maximum number of motors we can support with this driver.
   static constexpr size_t MaxMotors{4};
 
-  explicit StepMotor(size_t index) : slave_index_(index) {};
+  explicit StepMotor(size_t index) : slave_index_(index){};
 
   // Called from HAL at startup
   static void OneTimeInit();
@@ -294,7 +294,7 @@ class StepMotor {
   StepMtrErr SetKval(StepMtrParam param, float amp);
 
   // Send a command and wait for the response (if any)
-  StepMtrErr SendCmd(uint8_t *cmd, uint32_t len, uint8_t *response=nullptr);
+  StepMtrErr SendCmd(uint8_t *cmd, uint32_t len, uint8_t *response = nullptr);
 
   // True if this is a powerSTEP chip.
   bool power_step_{false};

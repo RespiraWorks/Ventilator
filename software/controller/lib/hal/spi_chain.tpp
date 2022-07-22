@@ -46,7 +46,7 @@ bool DaisyChain<MaxSlaves>::SendRequest(const Request &request, size_t slave) {
     /// \TODO log an error (along with its nature?)
     return false;
   }
-  
+
   // copy request to the request queue for that slave
   Request *new_request = &(request_queue_[slave][queue_count_[slave]++]);
   new_request->command = &command_buffer_[command_buffer_count_];
@@ -115,9 +115,9 @@ void DaisyChain<MaxSlaves>::SendDataWithBusyWait(uint8_t* command_buffer, uint8_
 
   SetupReception(response_buffer, length);
   SendCommand(command_buffer, length, true);
-  
+
   WaitResponse();
-  
+
   // NOTE - CS has to be high for at least 650ns between bytes.
   SetChipSelect();
   SystemTimer::singleton().delay(microseconds(1));
@@ -163,7 +163,7 @@ void DaisyChain<MaxSlaves>::ProcessReceivedData() {
         if(request->processed) {
           *(request->processed) = true;
         }
-        // reset all request-related states 
+        // reset all request-related states
         response_count_[slave] = 0;
         command_index_[slave] = 0;
         save_response_[slave] = false;
@@ -200,7 +200,7 @@ void DaisyChain<MaxSlaves>::TransmitNextCommand() {
       if(command_index_[slave] == 2){
         save_response_[slave] = true;
       }
-      
+
       // Check whether we are at the end of the current request, and pass the info to
       // ProcessReceivedData which will update the states after having saves the last byte of the
       // response, which is actually a remnant of a previous state.

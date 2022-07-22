@@ -17,35 +17,35 @@ limitations under the License.
 
 // The STM32 chip comes with 3 SPI channels, which can be used to exchange
 // data with peripherals such as our stepper motors.
-// 
+//
 // Current implementation does not provide any bufferization, which is done
 // by the user.
 // Also, this only works with DMA, if DMA::Base provided in constructor cannot
 // be mapped to the desired SPI::Base, the transfers will not work.
 
 #include <optional>
+
 #include "dma.h"
 #include "gpio_stm32.h"
 #include "serial_listeners.h"
 
-namespace SPI{
+namespace SPI {
 
 enum class Base { SPI1, SPI2, SPI3 };
 
 class Channel {
  public:
   Channel(Base spi, DMA::Base dma);
-  
-  void Initialize(GPIO::Port clock_port, uint8_t clock_pin, GPIO::Port miso_port,
-                  uint8_t miso_pin, GPIO::Port mosi_port, uint8_t mosi_pin,
-                  GPIO::Port chip_select_port, uint8_t chip_select_pin,
-                  GPIO::Port reset_port, uint8_t reset_pin,
-                  uint8_t word_size, uint8_t bitrate_scaler,
-                  bool rx_interrupts_enabled, bool tx_interrupts_enabled,
-                  RxListener *rx_listener=nullptr, TxListener *tx_listener=nullptr);
-  
-  virtual void SetChipSelect() {chip_select_->set();}
-  virtual void ClearChipSelect() {chip_select_->clear();}
+
+  void Initialize(GPIO::Port clock_port, uint8_t clock_pin, GPIO::Port miso_port, uint8_t miso_pin,
+                  GPIO::Port mosi_port, uint8_t mosi_pin, GPIO::Port chip_select_port,
+                  uint8_t chip_select_pin, GPIO::Port reset_port, uint8_t reset_pin,
+                  uint8_t word_size, uint8_t bitrate_scaler, bool rx_interrupts_enabled,
+                  bool tx_interrupts_enabled, RxListener *rx_listener = nullptr,
+                  TxListener *tx_listener = nullptr);
+
+  virtual void SetChipSelect() { chip_select_->set(); }
+  virtual void ClearChipSelect() { chip_select_->clear(); }
 
   virtual void SetupReception(uint8_t *receive_buffer, size_t length);
   virtual void SendCommand(uint8_t *send_buffer, size_t length, bool clear_chip_select);
@@ -73,7 +73,6 @@ class Channel {
   // We need to keep reference of the chip_select pin (NSS) so the application
   // can manage communications properly
   std::optional<GPIO::DigitalOutputPin> chip_select_{std::nullopt};
-
 };
 
-} // namespace SPI
+}  // namespace SPI

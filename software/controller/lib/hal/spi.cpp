@@ -98,18 +98,17 @@ Channel::Channel(Base spi, DMA::Base dma) : spi_(spi) {
       break;
     }
   }
-
 };
 
 void Channel::Initialize(GPIO::Port clock_port, uint8_t clock_pin, GPIO::Port miso_port,
                          uint8_t miso_pin, GPIO::Port mosi_port, uint8_t mosi_pin,
                          GPIO::Port chip_select_port, uint8_t chip_select_pin,
-                         GPIO::Port reset_port, uint8_t reset_pin,
-                         uint8_t word_size, uint8_t bitrate_scaler,
-                         bool rx_interrupts_enabled, bool tx_interrupts_enabled,
-                         RxListener *rx_listener, TxListener *tx_listener){
+                         GPIO::Port reset_port, uint8_t reset_pin, uint8_t word_size,
+                         uint8_t bitrate_scaler, bool rx_interrupts_enabled,
+                         bool tx_interrupts_enabled, RxListener *rx_listener,
+                         TxListener *tx_listener) {
   // Enable the clock for the selected peripheral
-  switch(spi_){
+  switch (spi_) {
     case Base::SPI1:
       enable_peripheral_clock(PeripheralID::SPI1);
       break;
@@ -142,23 +141,23 @@ void Channel::Initialize(GPIO::Port clock_port, uint8_t clock_pin, GPIO::Port mi
   SpiReg *spi = get_register(spi_);
 
   // Enable RXNE interrupts
-  spi->control2.rx_dma = 1;             // Enable DMA on receive
-  spi->control2.tx_dma = 1;             // Enable DMA on transmit
-  
+  spi->control2.rx_dma = 1;  // Enable DMA on receive
+  spi->control2.tx_dma = 1;  // Enable DMA on transmit
+
   spi->control2.fifo_rx_threshold = 1;  // Receive interrupt on every byte
 
   spi->control2.data_size = static_cast<uint8_t>(word_size - 1) & 0b1111;
-  //register value to achieve that is 3) [RM p1331]
+  // register value to achieve that is 3) [RM p1331]
   spi->control_reg1.bitrate = bitrate_scaler & 0b111;
 
   // Configure for master mode, CPOL and CPHA both 0.
-  spi->control_reg1.clock_phase = 1;           // Data is sampled on the rising edge of the clock
-  spi->control_reg1.clock_polarity = 1;        // Clock line is high when not active
-  spi->control_reg1.master = 1;                // We're acting as the master on the SPI bus
-  spi->control_reg1.internal_slave_select = 1; // Enable software slave select
-  spi->control_reg1.sw_slave_management = 1;   // Software slave select management
+  spi->control_reg1.clock_phase = 1;            // Data is sampled on the rising edge of the clock
+  spi->control_reg1.clock_polarity = 1;         // Clock line is high when not active
+  spi->control_reg1.master = 1;                 // We're acting as the master on the SPI bus
+  spi->control_reg1.internal_slave_select = 1;  // Enable software slave select
+  spi->control_reg1.sw_slave_management = 1;    // Software slave select management
 
-  spi->control_reg1.enable = 1;                // Enable the SPI module
+  spi->control_reg1.enable = 1;  // Enable the SPI module
 
   rx_dma_->Initialize(dma_request_, &spi->data, DMA::ChannelDir::PeripheralToMemory,
                       rx_interrupts_enabled, DMA::ChannelPriority::Low,
@@ -167,8 +166,8 @@ void Channel::Initialize(GPIO::Port clock_port, uint8_t clock_pin, GPIO::Port mi
                       tx_interrupts_enabled, DMA::ChannelPriority::Low,
                       InterruptPriority::Standard);
 
-  rx_listener_=rx_listener;
-  tx_listener_=tx_listener;
+  rx_listener_ = rx_listener;
+  tx_listener_ = tx_listener;
 }
 
 void Channel::SetupReception(uint8_t *receive_buffer, size_t length) {
@@ -182,7 +181,7 @@ void Channel::SendCommand(uint8_t *send_buffer, size_t length, bool clear_chip_s
 
   tx_dma_->SetupTransfer(send_buffer, length);
 
-  if(clear_chip_select){
+  if (clear_chip_select) {
     ClearChipSelect();
   }
 
@@ -221,4 +220,4 @@ void Channel::RxDMAInterruptHandler() {
   }
 }
 
-} // namespace SPI
+}  // namespace SPI

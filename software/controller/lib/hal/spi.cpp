@@ -94,7 +94,7 @@ Channel::Channel(Base spi, DMA::Base dma) : spi_(spi) {
     if (dma == map.dma_base && spi_ == map.spi_base) {
       tx_dma_.emplace(dma, map.tx_channel_id);
       rx_dma_.emplace(dma, map.rx_channel_id);
-      request_ = map.request_number;
+      dma_request_ = map.request_number;
       break;
     }
   }
@@ -160,10 +160,10 @@ void Channel::Initialize(GPIO::Port clock_port, uint8_t clock_pin, GPIO::Port mi
 
   spi->control_reg1.enable = 1;                // Enable the SPI module
 
-  rx_dma_->Initialize(request_, &spi->data, DMA::ChannelDir::PeripheralToMemory,
+  rx_dma_->Initialize(dma_request_, &spi->data, DMA::ChannelDir::PeripheralToMemory,
                       rx_interrupts_enabled, DMA::ChannelPriority::Low,
                       InterruptPriority::Standard);
-  tx_dma_->Initialize(request_, &spi->data, DMA::ChannelDir::MemoryToPeripheral,
+  tx_dma_->Initialize(dma_request_, &spi->data, DMA::ChannelDir::MemoryToPeripheral,
                       tx_interrupts_enabled, DMA::ChannelPriority::Low,
                       InterruptPriority::Standard);
 
@@ -171,16 +171,16 @@ void Channel::Initialize(GPIO::Port clock_port, uint8_t clock_pin, GPIO::Port mi
   tx_listener_=tx_listener;
 }
 
-void Channel::SetupReception(uint8_t *buffer, uint8_t length) {
+void Channel::SetupReception(uint8_t *receive_buffer, size_t length) {
   rx_dma_->Disable();
-  rx_dma_->SetupTransfer(buffer, length);
+  rx_dma_->SetupTransfer(receive_buffer, length);
   rx_dma_->Enable();
 }
 
-void Channel::SendCommand(uint8_t *buffer, uint8_t length, bool clear_chip_select) {
+void Channel::SendCommand(uint8_t *send_buffer, size_t length, bool clear_chip_select) {
   tx_dma_->Disable();
 
-  tx_dma_->SetupTransfer(buffer, length);
+  tx_dma_->SetupTransfer(send_buffer, length);
 
   if(clear_chip_select){
     ClearChipSelect();

@@ -44,31 +44,36 @@ class Channel {
                   bool rx_interrupts_enabled, bool tx_interrupts_enabled,
                   RxListener *rx_listener=nullptr, TxListener *tx_listener=nullptr);
   
-  void SetChipSelect() {chip_select_->set();}
-  void ClearChipSelect() {chip_select_->clear();}
+  virtual void SetChipSelect() {chip_select_->set();}
+  virtual void ClearChipSelect() {chip_select_->clear();}
 
-  void SetupReception(uint8_t *buffer, uint8_t length);
-  void SendCommand(uint8_t *buffer, uint8_t length, bool clear_chip_select);
+  virtual void SetupReception(uint8_t *receive_buffer, size_t length);
+  virtual void SendCommand(uint8_t *send_buffer, size_t length, bool clear_chip_select);
 
   // Interrupt handlers for DMA transfer complete
   void TxDMAInterruptHandler();
-  void RxDMAInterruptHandler();
+  virtual void RxDMAInterruptHandler();
 
- private:
-  Base spi_;
-  // We need to keep reference of the chip_select pin (NSS) so the application
-  // can manage communications properly
-  std::optional<GPIO::DigitalOutputPin> chip_select_{std::nullopt};
-
+ protected:
   // The way we setup SPI uses DMA to control the data flow
   std::optional<DMA::ChannelControl> rx_dma_{std::nullopt};
   std::optional<DMA::ChannelControl> tx_dma_{std::nullopt};
-  // request number to setup the DMA channels
-  uint8_t request_{0};
 
   // listeners for DMA transfer complete
   RxListener *rx_listener_;
   TxListener *tx_listener_;
+
+ private:
+  // SPI base of this channel
+  Base spi_;
+
+  // request number to setup the DMA channels
+  uint8_t dma_request_{0};
+
+  // We need to keep reference of the chip_select pin (NSS) so the application
+  // can manage communications properly
+  std::optional<GPIO::DigitalOutputPin> chip_select_{std::nullopt};
+
 };
 
 } // namespace SPI

@@ -24,11 +24,11 @@ void DaisyChain<MaxSlaves>::Initialize(uint8_t null_command, uint8_t reset_comma
                                        GPIO::Port mosi_port, uint8_t mosi_pin,
                                        GPIO::Port chip_select_port, uint8_t chip_select_pin,
                                        GPIO::Port reset_port, uint8_t reset_pin,
-                                       uint8_t word_size, uint8_t bitrate_scaler,
-                                       bool rx_interrupts_enabled, bool tx_interrupts_enabled) {
+                                       uint8_t word_size, uint8_t bitrate_scaler) {
   Channel::Initialize(clock_port, clock_pin, miso_port, miso_pin, mosi_port, mosi_pin,
                       chip_select_port, chip_select_pin, reset_port, reset_pin, word_size,
-                      bitrate_scaler, rx_interrupts_enabled, tx_interrupts_enabled, this);
+                      bitrate_scaler, /*rx_interrupts_enabled=*/true,
+                      /*tx_interrupts_enabled=*/false, /*rx_listener=*/this);
   null_command_=null_command;
   ProbeSlaves(null_command, reset_command);
 }
@@ -91,13 +91,14 @@ void DaisyChain<MaxSlaves>::ProbeSlaves(uint8_t null_command, uint8_t reset_comm
   // At this point, the response buffer should be filled with as many null commands as there are
   // slaves.
   num_slaves_ = 0;
-  for (size_t i : response_buffer) {
-    if (i == null_command)
+  for (uint8_t i : response_buffer) {
+    if (i == null_command){
       num_slaves_++;
-    else
+    } else {
       break;
+    }
   }
-  
+
   // If the response buffer is full of null commands, this most likely means the
   // daisy chain is broken (more slaves than we expect)
   if(num_slaves_==sizeof(response_buffer)) {

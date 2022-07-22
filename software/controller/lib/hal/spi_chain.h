@@ -19,6 +19,7 @@ limitations under the License.
 
 #include "circular_buffer.h"
 #include "system_timer.h"
+#include "vars.h"
 
 namespace SPI {
 
@@ -65,17 +66,20 @@ class DaisyChain : public Channel, public RxListener {
                   uint8_t miso_pin, GPIO::Port mosi_port, uint8_t mosi_pin,
                   GPIO::Port chip_select_port, uint8_t chip_select_pin,
                   GPIO::Port reset_port, uint8_t reset_pin,
-                  uint8_t word_size, uint8_t bitrate_scaler,
-                  bool rx_interrupts_enabled, bool tx_interrupts_enabled);
+                  uint8_t word_size, uint8_t bitrate_scaler);
 
   bool SendRequest(const Request &request, size_t slave);
+
+  size_t num_slaves(){
+    return num_slaves_;
+  }
 
   void on_rx_complete() override;
   void on_rx_error(RxError) override {};
   void on_character_match() override {};
 
  protected:
-  // number of slaves that are actually present in the chain, determined during initilization
+  // Number of slaves that are actually present in the chain, determined during initilization
   size_t num_slaves_{0};
   void ProbeSlaves(uint8_t null_command, uint8_t reset_command);
 

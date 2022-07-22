@@ -230,10 +230,6 @@ void Timer15ISR() {
 
   uint32_t end = Timer15Base->counter;
   loop_time = static_cast<float>(end - start) * (1.0f / HalApi::CPUFrequency().megahertz());
-
-  /// \TODO Too tightly coupled bc HAL must be aware of steppers. Use another callback?
-  // Start sending any queued commands to the stepper motor
-  StepMotor::StartQueuedCommands();
 }
 
 // Fault handler

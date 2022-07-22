@@ -15,9 +15,6 @@ limitations under the License.
 
 #include "stepper.h"
 
-StepMotor StepMotor::motor_[StepMotor::MaxMotors];
-uint8_t StepMotor::total_motors_;
-
 #if defined(BARE_STM32)
 
 #include <cmath>
@@ -28,10 +25,9 @@ uint8_t StepMotor::total_motors_;
 #include "system_timer.h"
 
 // Static data members
-uint8_t StepMotor::dma_buff_[StepMotor::MaxMotors];
-StepCommState StepMotor::coms_state_ = StepCommState::Idle;
-SPI::Channel StepMotor::spi_{SPI::Base::SPI1, DMA::Base::DMA2};
-StepperRxListener StepMotor::rxl_;
+StepMotor StepMotor::motor_[StepMotor::MaxMotors] = {StepMotor(0), StepMotor(1), StepMotor(2), StepMotor(3)};
+// The steppers are chained on the SPI1 bus, which we link with DMA2
+SPI::DaisyChain<StepMotor::MaxMotors> StepMotor::daisy_chain_{SPI::Base::SPI1, DMA::Base::DMA2};
 
 // This array holds the length of each parameter in units of
 // bytes, rounded up to the nearest byte.  This info is based
@@ -129,6 +125,7 @@ StepMtrErr StepMotor::GetParam(StepMtrParam param, uint32_t *value) {
   }
 
   uint8_t cmd_buff[4];
+  uint8_t response[sizeof(cmd_buff)-1] = {0};
 
   // For a get, the op-code is the parameter | 0x20
   cmd_buff[0] = static_cast<uint8_t>(p | 0x20);
@@ -136,86 +133,60 @@ StepMtrErr StepMotor::GetParam(StepMtrParam param, uint32_t *value) {
   cmd_buff[2] = 0;
   cmd_buff[3] = 0;
 
-  StepMtrErr err = SendCmd(cmd_buff, len + 1);
+  StepMtrErr err = SendCmd(cmd_buff, len + 1, response) ;
   if (err != StepMtrErr::Ok) {
     return err;
   }
 
-  // At this point, the response from the stepper driver
-  // chip is in my buffer.  The first byte is zero, and
-  // the returned data is in bytes 1-N stored MSB first.
+  // Returned data is in stored MSB first.
   *value = 0;
-  for (int i = 0; i < len; i++) {
+  for (size_t i = 0; i < len; i++) {
     *value <<= 8;
-    *value |= cmd_buff[i + 1];
+    *value |= response[i];
   }
 
   return err;
 }
 
-/******************************************************************
- * SPI port used to talk to stepper motor drivers.
- *
- * Note that the stepper motor drivers have a somewhat inefficient
- * SPI implementation.  We need to pull the chip select (CS) line
- * high between each byte we send and hold it high for 625ns.
- * That means that we can't stream the data using DMA, we have to
- * handle every byte with an interrupt and busy wait in the interrupt
- * handler.
- *
- * One positive is that you can daisy chain multiple stepper drivers
- * and communicate with them all at once.  If you have N drivers then
- * you would send N bytes all at once and bring the CS line high
- * between sets of N bytes.  The bits flow through the chain of
- * stepper drivers all connected together and the data is latched
- * on the rising edge of CS.  That's a little better for us since
- * we have 3 steppers.
- *****************************************************************/
 void StepMotor::OneTimeInit() {
-  // The following pins are used to talk to the stepper
-  // drivers:
+  // The following pins are used to talk to the stepper drivers on the SPI daisy chain:
   //   PA5 - SCLK
   //   PA6 - MISO
   //   PA7 - MOSI
   //   PB6 - CS
   //
-  // Some additional pins I don't really care about, but
-  // are connected to the stepper developer's board
-  // For the most part I can just ignore these
+  // Some additional pins I don't really care about, but are connected to the stepper
+  // developer's board For the most part I can just ignore these:
   //   PA9  - Reset input.
   //   PA10 - flag open drain output
   //   PB4  - busy open drain output
   //   PC10 - STCK input
 
-  spi_.Initialize(/*clock_port=*/GPIO::Port::A, 5, /*miso_port=*/GPIO::Port::A, 6,
-                  /*mosi_port=*/GPIO::Port::A, 7, /*chip_select_port=*/GPIO::Port::B, 6,
-                  /*reset_port=*/GPIO::Port::A, 9, /*word_size=*/8, /*clock_scaler=*/3,
-                  /*rx_interrupts=*/true, /*tx_interrputs=*/false, /*rxl=*/&rxl_);
+  daisy_chain_.Initialize(/*null_command=*/static_cast<uint8_t>(StepMtrCmd::Nop),
+                          /*reset_command=*/static_cast<uint8_t>(StepMtrCmd::ResetDevice),
+                          /*clock_port=*/GPIO::Port::A, 5, /*miso_port=*/GPIO::Port::A, 6,
+                          /*mosi_port=*/GPIO::Port::A, 7, /*chip_select_port=*/GPIO::Port::B, 6,
+                          /*reset_port=*/GPIO::Port::A, 9, /*word_size=*/8, /*clock_scaler=*/3);
 
-  // Do some basic init of the stepper motor chips so we can
-  // make them spin the motors
 
-  uint32_t val;
-
-  ProbeChips();
-
-  for (int i = 0; i < total_motors_; i++) {
+  // Do some basic init of the stepper motor chips so we can make them spin the motors
+  for (size_t i = 0; i < daisy_chain_.num_slaves() ; i++) {
     StepMotor *mtr = StepMotor::GetStepper(i);
 
     mtr->Reset();
 
-    // We need to delay briefly after reset before sending
-    // a new command.  For the power-step chip this delay
-    // time is specified as 500 microseconds in the data sheet.
-    // For the L6470 its only 45 max
+    // We need to delay briefly after reset before sending a new command.
+    // For the power-step chip this delay time is specified as 500 microseconds in the data sheet.
+    // For the L6470 it's only 45 max
     SystemTimer::singleton().delay(microseconds(500));
-
+    
     // Get the first gate config register of the powerSTEP01.
     // This is actually the config register on the L6470
+    uint32_t val{0};
     mtr->GetParam(StepMtrParam::GateConfig1, &val);
 
-    // If this is at the default config register value for
-    // the L6470 then I don't need to do any more configuration
+    // If this is at the default config register value for the L6470 then I don't need to do any more
+    // configuration
     if (val == 0x2E88) {
       continue;
     }
@@ -485,22 +456,24 @@ StepMtrErr StepMotor::GetStatus(StepperStatus *stat) {
     return StepMtrErr::WouldBlock;
   }
 
+  // We expect a 2 bytes response so we add two zeros after the op code.
   uint8_t cmd[] = {static_cast<uint8_t>(StepMtrCmd::GetStatus), 0, 0};
+  uint8_t response[sizeof(cmd)-1] = {0};
 
-  StepMtrErr err = SendCmd(cmd, 3);
+  StepMtrErr err = SendCmd(cmd, sizeof(cmd), response);
   if (err != StepMtrErr::Ok) {
     return err;
   }
 
-  stat->enabled = (cmd[2] & 0x01) == 0;
-  stat->command_error = (cmd[2] & 0x80) || (cmd[1] & 0x01);
-  stat->under_voltage = (cmd[1] & 0x02) == 0;
-  stat->thermal_warning = (cmd[1] & 0x04) == 0;
-  stat->thermal_shutdown = (cmd[1] & 0x08) == 0;
-  stat->over_current = (cmd[1] & 0x10) == 0;
-  stat->step_loss = (cmd[1] & 0x60) != 0x60;
+  stat->enabled = (response[1] & 0x01) == 0;
+  stat->command_error = (response[1] & 0x80) || (response[0] & 0x01);
+  stat->under_voltage = (response[0] & 0x02) == 0;
+  stat->thermal_warning = (response[0] & 0x04) == 0;
+  stat->thermal_shutdown = (response[0] & 0x08) == 0;
+  stat->over_current = (response[0] & 0x10) == 0;
+  stat->step_loss = (response[0] & 0x60) != 0x60;
 
-  switch (cmd[2] & 0x60) {
+  switch (response[1] & 0x60) {
     case 0x00:
       stat->move_status = StepMoveStatus::Stopped;
       break;
@@ -561,258 +534,35 @@ StepMtrErr StepMotor::MoveRel(float deg) {
   return SendCmd(cmd, 4);
 }
 
-// Send a command to the motor and wait for the response.
-// The passed buffer should be at least len bytes long.
-// On entry it holds the commands (or commands) that will be
-// sent to the stepper.  On return it will hold the response
-// we received from the stepper.
+// Send a command to the motor and, unless called from an interrupt handler, wait for it to be
+// processed.
+// The passed buffer should be at least len bytes long and response (if any) should be at most
+// one byte shorter.
 //
-// Each command to the stepper consists of a one byte command
-// code and 0 to 3 data bytes.  Multiple commands can be placed
-// one after another and all sent as a unit with this function.
+// Each command to the stepper consists of a one byte command code and 0 to 3 data bytes.
+// Multiple commands can be placed one after another and all sent as a unit with this function.
 //
-// NOTE - this is a blocking call and should not be called from
-// the high priority controller thread.  If it is, it will return
-// an error.
-//
-StepMtrErr StepMotor::SendCmd(uint8_t *cmd, uint32_t len) {
-  // See if we're running from an interrupt handler
-  // (i.e. the controller thread).  If so we just
-  // add this command to our queue and return
-  if (Interrupts::singleton().InInterruptHandler()) {
-    return EnqueueCmd(cmd, len);
-  }
-
-  // Copy the command to my buffer with interrupts disabled.
-  // I want to make sure the whole command gets sent as one continuous
-  // stream and it's possible that commands are currently being sent
-  // to other motors.
-  StepCommState state;
-  {
-    BlockInterrupts block;
-    memcpy(&last_cmd_[0], cmd, len);
-    cmd_ptr_ = &last_cmd_[0];
-    cmd_remain_ = len;
-    state = coms_state_;
-  }
-
-  // If the communications interface is idle, start it.
-  if (state == StepCommState::Idle) {
-    UpdateComState();
-  }
-
-  // Wait for the ISR to finish sending the command.
-  // When it does, it will set the pointer to NULL
-  while (cmd_ptr_) {
-  }
-
-  // The ISR replaces the command with the response, I need to copy the
-  // response so the caller can use it.
-  memcpy(cmd, &last_cmd_[0], len);
-  /// \TODO have a dedicated place to place the stepper response so the ISR
-  // doesn't reuse the location of the command to put the response.
-
-  return StepMtrErr::Ok;
-}
-
-// Enqueue the command and return immediately.  This is called
-// from the controller loop to send commands to the drivers.
-StepMtrErr StepMotor::EnqueueCmd(uint8_t *cmd, uint32_t len) {
-  // Block interrupts during this call to prevent race conditions
-  // with the ISR that handles the communication.
-  BlockInterrupts block;
-
-  // It's illegal to call this if we're currently pulling data
-  // from the queues.
-  if (coms_state_ == StepCommState::SendQueued) {
-    return StepMtrErr::InvalidState;
-  }
-
-  if (queue_count_ + len > sizeof(queue_)) {
+// Note that when called outside an interrupt handler, a busy wait is included.
+StepMtrErr StepMotor::SendCmd(uint8_t *cmd, uint32_t len, uint8_t *response) {
+  bool request_finished = false;
+  SPI::Request request = {
+    .command = cmd,
+    .length = len,
+    .response = response,
+    .processed = &request_finished,
+  };
+  if(!daisy_chain_.SendRequest(request, slave_index_)){
     return StepMtrErr::QueueFull;
   }
-
-  memcpy(&queue_[queue_count_], cmd, len);
-  queue_count_ += len;
-
-  return StepMtrErr::Ok;
-}
-
-// Update the communications state machine.
-//
-// This is called from the ISR when the next byte of the
-// command needs to be sent.
-//
-// It's also called when a new command needs to be sent,
-// but only if the state machine is idle.  This shouldn't
-// be called outside the DMA ISR when the state machine
-// isn't idle or some nasty race conditions may result.
-//
-// Since this is a private method that's not really an
-// issue.  This is mostly just a warning to future
-// developers who may be tinkering with this code.
-void StepMotor::UpdateComState() {
-  // This will get set to true if I find any data to send
-  bool data_to_send = false;
-  switch (coms_state_) {
-    //////////////////////////////////////////////
-    // If we're idle it means we're starting
-    // a new command.  Bump the state and fall
-    // through to the next case.  I always look
-    // for queued data first.
-    //////////////////////////////////////////////
-    case StepCommState::Idle:
-      coms_state_ = StepCommState::SendQueued;
-      // fall through
-
-    //////////////////////////////////////////////
-    // We're sending data from the local queues.
-    // See if the queues still have more data to send.
-    // Note that I just ignore any response from
-    // the motor drivers when sending data from the queues
-    //////////////////////////////////////////////
-    case StepCommState::SendQueued:
-
-      // For each motor, grab the next byte from the queue
-      // and add it to my DMA buffer.  For any empty queue
-      // I just add a Nop command
-      for (int i = 0; i < total_motors_; i++) {
-        // This really should already be false
-        motor_[i].save_response_ = false;
-
-        if (motor_[i].queue_ndx_ < motor_[i].queue_count_) {
-          data_to_send = true;
-          dma_buff_[i] = motor_[i].queue_[motor_[i].queue_ndx_++];
-        }
-
-        else {
-          motor_[i].queue_ndx_ = 0;
-          motor_[i].queue_count_ = 0;
-          dma_buff_[i] = static_cast<uint8_t>(StepMtrCmd::Nop);
-        }
-      }
-
-      // If any data was found in the queues, then I'm done.
-      // Otherwise, move on to the next state.
-      if (data_to_send) {
-        break;
-      }
-
-      coms_state_ = StepCommState::SendSync;
-      // fall through
-
-    //////////////////////////////////////////////
-    // Sending data sent by the background task.
-    // In this state I also save the response from the
-    // motor driver chips.
-    //////////////////////////////////////////////
-    case StepCommState::SendSync:
-
-      for (int i = 0; i < total_motors_; i++) {
-        // If we sent this motor driver chip a command from
-        // this state last time, save the response in the same
-        // buffer that the command came from.
-        if (motor_[i].save_response_) {
-          *motor_[i].cmd_ptr_++ = dma_buff_[i];
-          if (--motor_[i].cmd_remain_ <= 0) {
-            motor_[i].cmd_ptr_ = nullptr;
-          }
-        }
-
-        // If this motor has an active command to send,
-        // grab the next byte, otherwise send a Nop
-        if (motor_[i].cmd_ptr_) {
-          data_to_send = true;
-          motor_[i].save_response_ = true;
-          dma_buff_[i] = *motor_[i].cmd_ptr_;
-        } else {
-          motor_[i].save_response_ = false;
-          dma_buff_[i] = static_cast<uint8_t>(StepMtrCmd::Nop);
-        }
-      }
-
-      // If I didn't find anything to send, then set our
-      // state to idle and return, I'm done.
-      if (!data_to_send) {
-        coms_state_ = StepCommState::Idle;
-        return;
-      }
+  
+  while(!Interrupts::singleton().InInterruptHandler() && !request_finished){
   }
 
-  //////////////////////////////////////////////
-  // I've got a message to send out to the chain
-  // of motor driver chips.  Set up my DMA to
-  // send it out.
-  //////////////////////////////////////////////
-  SendCmdOverSPI(dma_buff_, total_motors_);
+  return StepMtrErr::Ok;
 }
 
 void StepMotor::DmaISR() {
-  spi_.RxDMAInterruptHandler();
-}
-
-// This is called from the HAL at the end of the high
-// priority loop timer ISR.  If the comm state machine
-// is idle it starts a new transmission
-void StepMotor::StartQueuedCommands() {
-  if (coms_state_ == StepCommState::Idle) {
-    UpdateComState();
-  }
-}
-
-void StepperRxListener::on_rx_complete(){
-  StepMotor::spi_.SetChipSelect();
-  if(StepMotor::coms_state_ != StepCommState::Idle){
-    StepMotor::UpdateComState();
-  }
-}
-
-// This is used to send a command to the stepper chips during startup.
-void StepMotor::SendCmdOverSPI(uint8_t *buff, uint8_t len) {
-  spi_.SetupReception(buff, len);
-  spi_.SendCommand(buff, len, true);
-}
-
-// This is run at startup before the DMA interrupts are enabled.
-// It checks to determine how many stepper driver chips are
-// present in the system.  Once the hardware stabilizes enough
-// for everyone to have the same number of chips we can remove
-// this, but it's convenient for right now.
-void StepMotor::ProbeChips() {
-  // I use a buffer a bit larger than the max number of motors
-  // to try to continue to work even if there are a few more
-  // driver chips than I support on the bus.
-  uint8_t probe_buff[MaxMotors + 4];
-
-  // First, send NO OP commands to all the chips a few times.
-  // This will flush any data being sent by chips that were in
-  // the middle of a command when the controller was restarted.
-  for (int i = 0; i < 5; i++) {
-    memset(probe_buff, static_cast<uint8_t>(StepMtrCmd::Nop), sizeof(probe_buff));
-    SendCmdOverSPI(probe_buff, sizeof(probe_buff));
-    SystemTimer::singleton().delay(microseconds(1000));
-  }
-
-  // Now send a reset to all the chips on the bus.
-  memset(probe_buff, static_cast<uint8_t>(StepMtrCmd::ResetDevice), sizeof(probe_buff));
-  SendCmdOverSPI(probe_buff, sizeof(probe_buff));
-  SystemTimer::singleton().delay(microseconds(1000));
-
-  // The first N bytes of the returned array should be 0 and the rest should
-  // be the reset command.
-  total_motors_ = 0;
-  for (unsigned char i : probe_buff) {
-    if (i == 0x00)
-      total_motors_++;
-    else
-      break;
-  }
-
-  // If all the bytes in the buffer were zero, then most likely there is
-  // nothing connected at all.
-  if (total_motors_ == sizeof(probe_buff)) {
-    total_motors_ = 0;
-  }
+  daisy_chain_.RxDMAInterruptHandler();
 }
 
 #else

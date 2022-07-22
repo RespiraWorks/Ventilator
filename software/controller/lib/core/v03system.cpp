@@ -112,7 +112,8 @@ bool V03Actuators::ready() {
   // but not buzzer
 }
 
-// Assumes ready() == true
+// Assumes all actuators have been emplaced.
+// If the pinch valves are not homed yet, this will eventually home them.
 void V03Actuators::execute(const ActuatorsState &desired_state) {
   // set blower PWM
   blower_->set(desired_state.blower_power);
@@ -130,7 +131,7 @@ void V03Actuators::execute(const ActuatorsState &desired_state) {
   } else {
     exhale_pinch_->Disable();
   }
-
+  
   psol_->set(desired_state.fio2_valve);
 }
 

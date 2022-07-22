@@ -54,7 +54,7 @@ limitations under the License.
 
 #include "dma.h"
 #include "gpio_stm32.h"
-#include "spi.h"
+#include "spi_chain.h"
 
 // These are the simple opcodes for the stepper driver.
 // Not included here are set/get parameter which include
@@ -149,25 +149,13 @@ struct StepperStatus {
   StepMoveStatus move_status{StepMoveStatus::Stopped};
 };
 
-class StepperRxListener : public RxListener {
-  void on_rx_complete() override;
-  void on_rx_error(RxError) override {};
-  void on_character_match() override {};
-};
-
 // Represents one of the stepper motors in the system
 class StepMotor {
-  friend class StepperRxListener;
-  // This constant gives the maximum number of motors we
-  // can support with this driver.
-  static constexpr int MaxMotors{4};
-
-  // Number of motor driver chips present in the system.
-  // This is automatically detected at startup.
-  static uint8_t total_motors_;
-
  public:
-  StepMotor() = default;
+  // This constant gives the maximum number of motors we can support with this driver.
+  static constexpr size_t MaxMotors{4};
+
+  explicit StepMotor(size_t index) : slave_index_(index) {};
 
   // Called from HAL at startup
   static void OneTimeInit();
@@ -176,7 +164,7 @@ class StepMotor {
   //
   // Returns NULL for an invalid input
   static StepMotor *GetStepper(int n) {
-    if ((n < 0) || (n >= total_motors_)) {
+    if ((n < 0) || (n >= daisy_chain_.num_slaves())) {
       return nullptr;
     }
     return &motor_[n];
@@ -292,25 +280,9 @@ class StepMotor {
   StepMtrErr GetParam(StepMtrParam param, uint32_t *value);
 
  private:
+  size_t slave_index_;
   static StepMotor motor_[MaxMotors];
-  static uint8_t dma_buff_[MaxMotors];
   static uint8_t param_len_[32];
-  static StepCommState coms_state_;
-
-  // This queue is used for sending commands from the high priority loop.
-  // The command is copied to this queue and sent later.
-  uint8_t queue_[40];
-  int queue_count_{0};
-  int queue_ndx_{0};
-
-  // This pointer and count are used to hold the command being
-  // sent to the motor and its response.
-  // They're volatile because the interrupt handler updates them
-  volatile uint8_t *volatile cmd_ptr_{nullptr};
-  volatile int cmd_remain_{0};
-  bool save_response_{false};
-  // member for the command currently being sent that we can safely point to
-  uint8_t last_cmd_[4] = {0};
 
   // Number of full steps/rev
   // Defaults to the standard value for most steppers
@@ -321,29 +293,17 @@ class StepMotor {
   int32_t DegToUstep(float deg) const;
   StepMtrErr SetKval(StepMtrParam param, float amp);
 
-  // Send a command and wait for the response
-  StepMtrErr SendCmd(uint8_t *cmd, uint32_t len);
-
-  // Queue up the command and return immediately
-  StepMtrErr EnqueueCmd(uint8_t *cmd, uint32_t len);
-
-  static void UpdateComState();
-  static void SendCmdOverSPI(uint8_t *buff, uint8_t len);
-  static void ProbeChips();
+  // Send a command and wait for the response (if any)
+  StepMtrErr SendCmd(uint8_t *cmd, uint32_t len, uint8_t *response=nullptr);
 
   // True if this is a powerSTEP chip.
   bool power_step_{false};
 
   // SPI bus used to speak with the steppers
-  static SPI::Channel spi_;
-  static StepperRxListener rxl_;
+  static SPI::DaisyChain<MaxMotors> daisy_chain_;
 
  public:
   // Interrupt service routine.
   // This has to be public, but don't call it.
   static void DmaISR();
-
-  // This function should only be called by the HAL
-  // at the end of the high priority loop timer ISR
-  static void StartQueuedCommands();
 };

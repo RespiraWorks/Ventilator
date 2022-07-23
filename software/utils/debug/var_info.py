@@ -22,6 +22,7 @@ __license__ = """
 
 import debug_types
 from lib.error import Error
+from debug_funcs import DebugFunctions
 
 # TODO: Import constants from proto instead!
 
@@ -163,6 +164,7 @@ class VarInfo:
             raise Error(f"Sorry, I don't know how to handle variable type {self.type}")
 
     def to_bytes(self, value):
+        val_type = type(value).__name__
         if self.name == "forced_mode":
             if value not in VAR_VENT_MODE:
                 raise Error(f"Do not know how to encode forced_mode={value}")
@@ -170,15 +172,21 @@ class VarInfo:
             return debug_types.int32s_to_bytes(idx)
         elif self.type == VAR_INT32:
             if not isinstance(value, int):
-                value = int(value, 0)
+                raise TypeError(f"Expected type INT32, got {val_type}")
             return debug_types.int32s_to_bytes(value)
         elif self.type == VAR_UINT32:
             if not isinstance(value, int):
-                value = int(value, 0)
+                raise TypeError(f"Expected type UINT32, got {val_type}")
+            if value < 0:
+                raise ValueError(f"Expected type UINT32, got negative integer")
             return debug_types.int32s_to_bytes(value)
         elif self.type == VAR_FLOAT:
+            if not isinstance(value, float) and not isinstance(value, int):
+                raise TypeError(f"Expected type FLOAT, got {val_type}")
             return debug_types.float32s_to_bytes(float(value))
         elif self.type == VAR_FLOAT_ARRAY:
+            if not isinstance(value, list):
+                raise TypeError(f"Expected type FLOAT_ARRAY, got {val_type}")
             float_array = [float(k) for k in value]
             if len(float_array) != self.size():
                 raise Error(

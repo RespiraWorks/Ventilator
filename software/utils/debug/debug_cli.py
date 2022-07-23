@@ -35,7 +35,7 @@ from lib.error import Error
 from lib.serial_detect import detect_stm32_ports, print_detected_ports
 from controller_debug import ControllerDebugInterface, MODE_BOOT
 from debug_funcs import SUPPORTED_FUNCTIONS, DebugFunctions
-from var_info import VAR_ACCESS_READ_ONLY, VAR_ACCESS_WRITE
+from var_info import VAR_ACCESS_READ_ONLY, VAR_ACCESS_WRITE, VAR_FLOAT_ARRAY
 import numpy as np
 import matplotlib.pyplot as plt
 import test_data
@@ -514,6 +514,7 @@ named {self.scripts_directory} will be searched for the python script.
         self.interface.poke(address, data, poke_type)
 
     def do_get(self, line):
+        # TODO: plotting (-p/--plot)?
         cl = line.split()
         if len(cl) < 1:
             print("Please give the variable name to read")
@@ -552,6 +553,30 @@ named {self.scripts_directory} will be searched for the python script.
             variable_md = self.interface.variable_metadata[var_name]
             val = self.interface.variable_get(var_name, raw=raw, fmt=fmt)
             print(variable_md.print_value(val))
+            # TODO: should analyze only be done when an addition flag is passed?
+            self.analyze_var(variable_md, val)
+
+    def analyze_var(self, variable_md, val):
+        data_analysis_checks = dict()
+        # TODO: usefeul checks for non-float array types
+        if variable_md.type == VAR_FLOAT_ARRAY:
+            float_array = np.array(val[1:-1].split()).astype(float)
+
+            # TODO: other data analysis checks
+            data_analysis_checks.update(
+                {
+                    "linear": False,
+                }
+            )
+
+            # Check for linearity
+            lin_tolerance = 0.0001  # floats are rounded to three decimal places
+            diff = np.diff(float_array)
+            data_analysis_checks["linear"] = np.all(diff - diff[0] < lin_tolerance)
+
+            print("properties:")
+            for k, v in data_analysis_checks.items():
+                print(f"    {k} : {v}")
 
     def print_variable_values(self, names_values, show_access):
         for count, name in enumerate(sorted(names_values.keys())):

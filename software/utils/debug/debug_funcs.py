@@ -30,6 +30,7 @@ SUPPORTED_FUNCTIONS = {
 
 class DebugFunctions:
     def lin(low: float, high: float):
+        # TODO: should these values be rounded or set to a specific precision?
         return np.linspace(low, high, 11)
 
     def eigen():

@@ -607,8 +607,10 @@ named {self.scripts_directory} will be searched for the python script.
             print("Run 'help set' to see available functions.")
             raise
 
-        print(data)
-        self.interface.variable_set(args.var, data, verbose=True)
+        if isinstance(data, np.ndarray):
+            data = data.tolist()
+
+        self.interface.variable_set(args.var, data)
 
     def complete_set(self, text, line, begidx, endidx):
         return self.interface.variables_find(

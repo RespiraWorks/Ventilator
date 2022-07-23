@@ -61,7 +61,7 @@ void SystemTimer::delay(Duration d) {
   }
 }
 
-Time SystemTimer::now() {
+Time SystemTimer::now() const {
   // Disable interrupts so we can read ms_count_ and the timer state without
   // racing with the timer's interrupt handler.
   BlockInterrupts block_interrupts;
@@ -84,7 +84,7 @@ Time SystemTimer::now() {
 void SystemTimer::initialize(PeripheralID id, InterruptVector interrupt_vector,
                              Frequency cpu_frequency) {}
 void SystemTimer::interrupt_handler() {}
-Time SystemTimer::now() { return time_; }
+Time SystemTimer::now() const { return time_; }
 void SystemTimer::delay(Duration d) { time_ = time_ + d; }
 
 #endif

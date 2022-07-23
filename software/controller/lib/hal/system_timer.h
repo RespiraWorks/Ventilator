@@ -37,7 +37,7 @@ class SystemTimer {
 
   // Amount of time that has passed since the board started running the program.
   // Faked when testing.  Time doesn't advance unless you call Delay().
-  Time now();
+  Time now() const;
 
   // Sleeps for some number of milliseconds.
   // Faked when testing.  Does not sleep, but does advance the time returned by millis().

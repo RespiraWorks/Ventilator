@@ -598,13 +598,11 @@ named {self.scripts_directory} will be searched for the python script.
         debug_func_dict = {k: getattr(DebugFunctions, k) for k in dir(DebugFunctions)}
         try:
             data = eval("".join(args.data), globals(), debug_func_dict)
-        except TypeError:
-            print("You may incorrectly used a supported function.")
-            print("Run 'help set' to see available functions.")
-            raise
-        except NameError:
-            print("You may have called an unsupported function.")
-            print("Run 'help set' to see available functions.")
+        except:
+            print(
+                "You may incorrectly used a supported function or called an unsupported function."
+            )
+            print("Run 'help set' to see available functions and usage.")
             raise
 
         if isinstance(data, np.ndarray):

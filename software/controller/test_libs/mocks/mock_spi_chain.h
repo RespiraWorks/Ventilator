@@ -23,7 +23,7 @@ template <size_t MaxSlaves>
 class MockChain : public DaisyChain<MaxSlaves> {
  public:
   MockChain(size_t num_slaves, uint8_t null_command)
-      : DaisyChain<MaxSlaves>(Base::SPI1, DMA::Base::DMA1) {
+      : DaisyChain<MaxSlaves>(Base::SPI1, DMA::Base::DMA1, "mock_spi_chain", "for mock") {
     // Set stuff that is usually done in Initialize function
     // Note we are using "this->" for inherited members because we are subclassing from a template
     // (see https://tinyurl.com/4ejssh23)

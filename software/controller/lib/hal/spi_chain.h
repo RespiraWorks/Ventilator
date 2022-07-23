@@ -58,7 +58,7 @@ struct Request {
 template <size_t MaxSlaves>
 class DaisyChain : public Channel, public RxListener {
  public:
-  DaisyChain(Base spi, DMA::Base dma) : Channel(spi, dma){};
+  DaisyChain(Base spi, DMA::Base dma, const char *name, const char *help_supplement);
 
   void Initialize(uint8_t null_command, uint8_t reset_command, GPIO::Port clock_port,
                   uint8_t clock_pin, GPIO::Port miso_port, uint8_t miso_pin, GPIO::Port mosi_port,
@@ -119,6 +119,9 @@ class DaisyChain : public Channel, public RxListener {
   void ProcessReceivedData();
   void SendDataWithBusyWait(uint8_t *command_buffer, uint8_t *response_buffer, size_t length);
   virtual void WaitResponse();
+
+  Debug::Variable::UInt32 queueing_errors_{"queuing_errors", Debug::Variable::Access::ReadOnly, 0,
+                                           "", "Queueing error counter"};
 };
 
 #include "spi_chain.tpp"

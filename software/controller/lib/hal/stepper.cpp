@@ -28,7 +28,8 @@ limitations under the License.
 StepMotor StepMotor::motor_[StepMotor::MaxMotors] = {StepMotor(0), StepMotor(1), StepMotor(2),
                                                      StepMotor(3)};
 // The steppers are chained on the SPI1 bus, which we link with DMA2
-SPI::DaisyChain<StepMotor::MaxMotors> StepMotor::daisy_chain_{SPI::Base::SPI1, DMA::Base::DMA2};
+SPI::DaisyChain<StepMotor::MaxMotors> StepMotor::daisy_chain_{SPI::Base::SPI1, DMA::Base::DMA2,
+                                                              "stepper", "for stepper daisy chain"};
 
 // This array holds the length of each parameter in units of
 // bytes, rounded up to the nearest byte.  This info is based

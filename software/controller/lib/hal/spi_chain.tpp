@@ -18,6 +18,14 @@ limitations under the License.
 ////////////////////////////////////////////////////////////////////////////////
 
 template<size_t MaxSlaves>
+DaisyChain<MaxSlaves>::DaisyChain(Base spi, DMA::Base dma, const char* name, const char* help_supplement)
+   : Channel(spi, dma)
+  {
+    queueing_errors_.prepend_name(name);
+    queueing_errors_.append_help(help_supplement);
+   }
+
+template<size_t MaxSlaves>
 void DaisyChain<MaxSlaves>::Initialize(uint8_t null_command, uint8_t reset_command,
                                        GPIO::Port clock_port, uint8_t clock_pin,
                                        GPIO::Port miso_port, uint8_t miso_pin,
@@ -44,6 +52,7 @@ bool DaisyChain<MaxSlaves>::SendRequest(const Request &request, size_t slave) {
        request.length > CommandBufferSize - command_buffer_count_ ||
        request.command == nullptr || request.length == 0){
     /// \TODO log an error (along with its nature?)
+    queueing_errors_.set(queueing_errors_.get() + 1);
     return false;
   }
 

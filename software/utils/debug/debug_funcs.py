@@ -23,14 +23,14 @@ __license__ = """
 import numpy as np
 
 SUPPORTED_FUNCTIONS = {
-    "lin(start, stop)": "evenly spaced numbers over start and stop",
+    "lin(low, high)": "evenly spaced numbers over low and high",
     "eigen()": "evenly spaced out numbers from 0 to 1",
 }
 
 
 class DebugFunctions:
-    def lin(a, b):
-        return np.linspace(a, b, 11).astype(str).tolist()
+    def lin(low: float, high: float):
+        return np.linspace(low, high, 11)
 
     def eigen():
         return DebugFunctions.lin(0, 1)

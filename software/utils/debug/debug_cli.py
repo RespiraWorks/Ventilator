@@ -26,14 +26,17 @@ __license__ = """
 import argparse
 import cmd
 import glob
+from logging.handlers import DatagramHandler
 import os
 import shlex
 import traceback
 from lib.colors import *
 from lib.error import Error
 from lib.serial_detect import detect_stm32_ports, print_detected_ports
-from controller_debug import ControllerDebugInterface, MODE_BOOT, SUPPORTED_FUNCTIONS
+from controller_debug import ControllerDebugInterface, MODE_BOOT
+from debug_funcs import SUPPORTED_FUNCTIONS, DebugFunctions
 from var_info import VAR_ACCESS_READ_ONLY, VAR_ACCESS_WRITE
+import numpy as np
 import matplotlib.pyplot as plt
 import test_data
 from pathlib import Path
@@ -592,23 +595,20 @@ named {self.scripts_directory} will be searched for the python script.
             self.interface.variables_force_open()
             return
 
+        debug_func_dict = {k: getattr(DebugFunctions, k) for k in dir(DebugFunctions)}
         try:
-            "".join(args.data).index(
-                "("
-            )  # throws ValueError if function syntax is not followed
-            data = f"DebugFunctions.{''.join(args.data)}"
-        except ValueError:
-            data = eval("".join(args.data))
+            data = eval("".join(args.data), globals(), debug_func_dict)
+        except TypeError:
+            print("You may incorrectly used a supported function.")
+            print("Run 'help set' to see available functions.")
+            raise
+        except NameError:
+            print("You may have called an unsupported function.")
+            print("Run 'help set' to see available functions.")
+            raise
 
-            if isinstance(data, list):  # array of dtype -> array of strings
-                data = list(map(str, data))
-
-            if isinstance(
-                data, str
-            ):  # when we eval() data later, we need it to return a string
-                data = f"str('{data}')"
-
-        self.interface.variable_set(args.var, data)
+        print(data)
+        self.interface.variable_set(args.var, data, verbose=True)
 
     def complete_set(self, text, line, begidx, endidx):
         return self.interface.variables_find(
@@ -632,9 +632,13 @@ named {self.scripts_directory} will be searched for the python script.
             "  manually               - list the values in the order they should be set in the array"
         )
         print("  automatically          - populate the array values using a function")
-        print("Available functions:")
+        print("Available shortcut functions:")
         for key, value in SUPPORTED_FUNCTIONS.items():
             print("  {0:20} - {1}".format(key, value))
+        print(
+            "All native Python functionality and numpy can be used for function composition as well"
+        )
+        print("e.g.: set var np.flip(lin(1,5) + 5)")
 
     def do_trace(self, line):
         """The `trace` command controls/reads the controller's trace buffer.

@@ -77,7 +77,8 @@ class V03Actuators : public AbstractActuators {
   V03Actuators() = default;
 
   // Creates pwm actuators and links actuators calibration tables to nv_params.
-  void init(NVParams::Handler* nv_params);
+  void init(NVParams::Handler* nv_params,
+            SPI::DaisyChain<StepMotor::MaxMotors, StepMotor::QueueLength>* stepper_chain);
 
   // Returns true if the actuators are ready for action or false if they aren't (for example pinch
   // valves are homing). The system should be kept in a safe state until this returns true.
@@ -96,8 +97,6 @@ class V03Actuators : public AbstractActuators {
   // std::optional to delay the instantiation within init function.
   std::optional<PwmActuator> blower_{std::nullopt};
   std::optional<PwmActuator> psol_{std::nullopt};
-
-  // buzzer is made public to allow easier manipulation (not through actuators.execute()).
   std::optional<PwmActuator> buzzer_{std::nullopt};
 
   std::optional<GPIO::DigitalOutputPin> led_red_{std::nullopt};
@@ -133,6 +132,8 @@ class V03System : public AbstractSystem {
   I2C::Channel i2c1_;
   I2Ceeprom eeprom_;
   NVParams::Handler nv_params_;
+  SPI::STM32Channel spi1_;
+  SPI::DaisyChain<StepMotor::MaxMotors, StepMotor::QueueLength> stepper_daisy_chain_;
   ADC adc_;
   Sensors sensors_;
   Actuators actuators_;

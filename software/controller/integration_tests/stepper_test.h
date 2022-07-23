@@ -19,28 +19,45 @@
 #include "watchdog.h"
 
 // test parameters
-static constexpr int MotorIndex{TEST_PARAM_1};
+static constexpr size_t MotorIndex{TEST_PARAM_1};
 static constexpr float StepDegrees{TEST_PARAM_2};
 static constexpr Duration Delay{milliseconds(1000)};
 
+static SPI::Channel spi(SPI::Base::SPI1, DMA::Base::DMA2);
+static SPI::DaisyChain<StepMotor::MaxMotors, StepMotor::QueueLength> daisy_chain(
+    "stepper", "for stepper daisy chain", &spi, /*min_cs_high_time=*/microseconds(1));
+static StepMotor stepper(MotorIndex, &daisy_chain);
+
 void RunTest() {
   hal.Init(CPUFrequency);
+
+  // Set SPI listeners before its proper initialization to allow Initialize to enable the proper
+  // interrupts
+  spi.SetListeners(/*rxl=*/&daisy_chain, /*txl=*/nullptr);
+
+  spi.Initialize(/*clock_port=*/GPIO::Port::A, 5, /*miso_port=*/GPIO::Port::A, 6,
+                 /*mosi_port=*/GPIO::Port::A, 7, /*chip_select_port=*/GPIO::Port::B, 6,
+                 /*reset_port=*/GPIO::Port::A, 9, /*word_size=*/8, SPI::Bitrate::CpuFreqBySixteen);
+
+  daisy_chain.ProbeSlaves(/*null_command=*/static_cast<uint8_t>(StepMtrCmd::Nop),
+                          /*reset_command=*/static_cast<uint8_t>(StepMtrCmd::ResetDevice));
+
+  hal.bind_channels(nullptr, nullptr, nullptr, &spi);
 
   // Just to shut it up, may not need this beyond v0.3
   PwmActuator blower{BlowerChannel, BlowerFreq, CPUFrequency, "", ""};
   blower.set(0.0f);
 
-  StepMotor::OneTimeInit();
+  stepper.Initialize();
 
   // Configure stepper
-  StepMotor *stepper_motor = StepMotor::GetStepper(MotorIndex);
-  stepper_motor->SetAmpAll(0.1f);
-  stepper_motor->SetMaxSpeed(100.0f);
-  stepper_motor->SetAccel(100.0f / 0.1f);
-  stepper_motor->ClearPosition();
+  stepper.SetAmpAll(0.1f);
+  stepper.SetMaxSpeed(100.0f);
+  stepper.SetAccel(100.0f / 0.1f);
+  stepper.ClearPosition();
 
   while (true) {
-    stepper_motor->MoveRel(StepDegrees);
+    stepper.MoveRel(StepDegrees);
     SystemTimer::singleton().delay(Delay);
 
     Watchdog::pet();

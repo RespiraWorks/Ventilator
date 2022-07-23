@@ -33,6 +33,7 @@ limitations under the License.
 
 #include <cstdint>
 
+#include "spi.h"
 #include "units.h"
 #include "vars.h"
 
@@ -56,7 +57,8 @@ class HalApi {
   void StartLoopTimer(const Duration &period, void (*callback)(void *), void *arg);
 
 #if defined(BARE_STM32)
-  void bind_channels(I2C::Channel *i2c, UART::DMAChannel *rpi, UART::Channel *debug);
+  void bind_channels(I2C::Channel *i2c, UART::DMAChannel *rpi, UART::Channel *debug,
+                     SPI::Channel *spi);
 
   // local static functions.  We don't want to add any private functions to the Hal class to avoid
   // complexity with other builds. Those are Interrupt Service Routines, i.e callback functions for
@@ -71,12 +73,13 @@ class HalApi {
   static void I2c1ErrorISR();
   static void DMA2Channel6ISR();
   static void DMA2Channel7ISR();
+  static void DMA2Channel4ISR();
 
  private:
   I2C::Channel *i2c_{nullptr};
   UART::DMAChannel *rpi_uart_{nullptr};
   UART::Channel *debug_uart_{nullptr};
-
+  SPI::Channel *stepper_spi_{nullptr};
 #endif
 
  private:

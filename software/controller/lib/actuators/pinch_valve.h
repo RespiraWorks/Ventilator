@@ -50,8 +50,12 @@ enum class PinchValveHomeState {
 class PinchValve : public Actuator {
  public:
   // Create a new pinch valve using the specified stepper motor.
-  PinchValve(const char *name, const char *help_supplement, int motor_index)
-      : Actuator(name, help_supplement, "position"), motor_index_(motor_index) {}
+  PinchValve(const char *name, const char *help_supplement, int motor_index,
+             SPI::DaisyChain<StepMotor::MaxMotors, StepMotor::QueueLength> *spi)
+      : Actuator(name, help_supplement, "position"), motor_(motor_index, spi) {}
+
+  // Initialize the stepper motor
+  void Initialize() { motor_.Initialize(); };
 
   // Initialize the pinch value absolute position.
   // This should be called at startup from the
@@ -79,8 +83,7 @@ class PinchValve : public Actuator {
  private:
   Time move_start_time_;
 
-  // \todo test invalid initialization?
-  int motor_index_{-1};
+  StepMotor motor_;
 
   float last_command_{-1.0f};
 

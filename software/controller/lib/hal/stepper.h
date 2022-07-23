@@ -53,7 +53,6 @@ limitations under the License.
 #include <optional>
 
 #include "spi_chain.h"
-#include "spi_stm32.h"
 
 // These are the simple opcodes for the stepper driver.
 // Not included here are set/get parameter which include
@@ -146,21 +145,13 @@ class StepMotor {
  public:
   // This constant gives the maximum number of motors we can support with this driver.
   static constexpr size_t MaxMotors{4};
+  // Gives the length of command queues we want for a stepper motor
+  static constexpr size_t QueueLength{5};
 
-  explicit StepMotor(size_t index) : slave_index_(index){};
+  StepMotor(size_t index, SPI::DaisyChain<MaxMotors, QueueLength> *daisy_chain)
+      : slave_index_(index), daisy_chain_(daisy_chain){};
 
-  // Called from HAL at startup
-  static void OneTimeInit();
-
-  // Return a pointer to the Nth stepper motor in the system.
-  //
-  // Returns NULL for an invalid input
-  static StepMotor *GetStepper(int n) {
-    if ((n < 0) || (n >= daisy_chain_.num_slaves())) {
-      return nullptr;
-    }
-    return &motor_[n];
-  }
+  void Initialize();
 
   // Sets the number of full steps / rev for the motor.
   // For most stepper motors this is 200.  That's the
@@ -169,9 +160,9 @@ class StepMotor {
   // 200 steps / rev (360 deg / 200 steps = 1.8 deg).
   // This value is used internally to convert between
   // degrees and steps.
-  void SetStepsPerRev(int spr) { steps_per_rev_ = spr; }
+  void SetStepsPerRev(uint32_t spr) { steps_per_rev_ = spr; }
 
-  int GetStepsPerRev() const { return steps_per_rev_; }
+  uint32_t GetStepsPerRev() const { return steps_per_rev_; }
 
   // Read the current absolute motor velocity and return it
   // in deg/sec units
@@ -278,7 +269,7 @@ class StepMotor {
 
   // Number of full steps/rev
   // Defaults to the standard value for most steppers
-  int steps_per_rev_{200};
+  uint32_t steps_per_rev_{200};
 
   float DpsToVelReg(float vel, float cnv) const;
   float RegVelToDps(int32_t val, float cnv) const;
@@ -286,18 +277,11 @@ class StepMotor {
   StepMtrErr SetKval(StepMtrParam param, float amp);
 
   // Send a command and wait for the response (if any)
-  StepMtrErr SendCmd(uint8_t *cmd, uint32_t len, uint8_t *response = nullptr);
+  StepMtrErr SendCmd(uint8_t *command, uint32_t length, uint8_t *response = nullptr);
 
   // True if this is a powerSTEP chip.
   bool power_step_{false};
 
-  // SPI bus used to speak with the steppers
-  static SPI::STM32Channel spi_;
-  static SPI::DaisyChain</*MaxSlaves=*/StepMotor::MaxMotors, /*MaxRequestsPerSlave=*/10>
-      daisy_chain_;
-
- public:
-  // Interrupt service routine.
-  // This has to be public, but don't call it.
-  static void DmaISR();
+  // SPI daisy chain used to speak with the steppers
+  SPI::DaisyChain<MaxMotors, QueueLength> *daisy_chain_;
 };

@@ -107,7 +107,7 @@ void RunTest() {
   i2c1.Initialize(I2C::Speed::Fast, GPIO::Port::B, /*scl_pin=*/8, /*sda_pin=*/9,
                   GPIO::AlternativeFunction::AF4);
 
-  hal.bind_channels(&i2c1, nullptr, &debug_uart);
+  hal.bind_channels(&i2c1, nullptr, &debug_uart, nullptr);
   Interrupts::singleton().EnableInterrupts();
 
   /// \TODO are all the handlers really necessary for this integration test?

@@ -24,17 +24,6 @@ limitations under the License.
 #include "interrupts.h"
 #include "system_timer.h"
 
-// Static data members
-StepMotor StepMotor::motor_[StepMotor::MaxMotors] = {StepMotor(0), StepMotor(1), StepMotor(2),
-                                                     StepMotor(3)};
-// The steppers are chained on the SPI1 bus, which we link with DMA2
-SPI::STM32Channel StepMotor::spi_{SPI::Base::SPI1, DMA::Base::DMA2};
-// The steppers require us to keep CS high for at least 650 ns between bytes.
-// For us, the minimum delay we can control is 1µs
-SPI::DaisyChain</*MaxSlaves=*/StepMotor::MaxMotors, /*MaxRequestsPerSlave=*/10>
-    StepMotor::daisy_chain_{"stepper", "for stepper daisy chain", &spi_,
-                            /*min_cs_high_time=*/microseconds(1)};
-
 // This array holds the length of each parameter in units of
 // bytes, rounded up to the nearest byte.  This info is based
 // on table 12 in the powerSTEP chip data sheet
@@ -87,7 +76,7 @@ static constexpr float VelIntSpeedReg = TickTime * (1 << 26);
 // The number of microsteps / full step.
 // For now this is a constant, we're just using the
 // default value of the chip.
-static constexpr int MicrostepPerStep = 128;
+static constexpr uint32_t MicrostepPerStep = 128;
 
 StepMtrErr StepMotor::SetParam(StepMtrParam param, uint32_t value) {
   uint8_t p = static_cast<uint8_t>(param);
@@ -95,22 +84,22 @@ StepMtrErr StepMotor::SetParam(StepMtrParam param, uint32_t value) {
     return StepMtrErr::BadParam;
   }
 
-  int len = param_len_[p];
-  if (!len || (len > 3)) {
+  size_t length = param_len_[p];
+  if (!length || (length > 3)) {
     return StepMtrErr::BadParam;
   }
 
-  uint8_t cmd_buff[4];
-  cmd_buff[0] = p;  // The op-code for a set is just the parameter number
+  uint8_t command_buff[4];
+  command_buff[0] = p;  // The op-code for a set is just the parameter number
 
   // Split the parameter value into bytes, MSB first
-  value <<= 8 * (3 - len);
-  cmd_buff[1] = static_cast<uint8_t>(value >> 16);
-  cmd_buff[2] = static_cast<uint8_t>(value >> 8);
-  cmd_buff[3] = static_cast<uint8_t>(value);
+  value <<= 8 * (3 - length);
+  command_buff[1] = static_cast<uint8_t>(value >> 16);
+  command_buff[2] = static_cast<uint8_t>(value >> 8);
+  command_buff[3] = static_cast<uint8_t>(value);
 
   // The op-code for a set is equal to the parameter number
-  return SendCmd(cmd_buff, len + 1);
+  return SendCmd(command_buff, length + 1);
 }
 
 StepMtrErr StepMotor::GetParam(StepMtrParam param, uint32_t *value) {
@@ -119,8 +108,8 @@ StepMtrErr StepMotor::GetParam(StepMtrParam param, uint32_t *value) {
     return StepMtrErr::BadParam;
   }
 
-  int len = param_len_[p];
-  if (!len || (len > 3)) {
+  size_t length = param_len_[p];
+  if (!length || (length > 3)) {
     return StepMtrErr::BadParam;
   }
 
@@ -130,23 +119,23 @@ StepMtrErr StepMotor::GetParam(StepMtrParam param, uint32_t *value) {
     return StepMtrErr::WouldBlock;
   }
 
-  uint8_t cmd_buff[4];
-  uint8_t response[sizeof(cmd_buff) - 1] = {0};
+  uint8_t command_buff[4];
+  uint8_t response[sizeof(command_buff) - 1] = {0};
 
   // For a get, the op-code is the parameter | 0x20
-  cmd_buff[0] = static_cast<uint8_t>(p | 0x20);
-  cmd_buff[1] = 0;
-  cmd_buff[2] = 0;
-  cmd_buff[3] = 0;
+  command_buff[0] = static_cast<uint8_t>(p | 0x20);
+  command_buff[1] = 0;
+  command_buff[2] = 0;
+  command_buff[3] = 0;
 
-  StepMtrErr err = SendCmd(cmd_buff, len + 1, response);
+  StepMtrErr err = SendCmd(command_buff, length + 1, response);
   if (err != StepMtrErr::Ok) {
     return err;
   }
 
   // Returned data is stored MSB first.
   *value = 0;
-  for (size_t i = 0; i < len; i++) {
+  for (size_t i = 0; i < length; i++) {
     *value <<= 8;
     *value |= response[i];
   }
@@ -154,73 +143,42 @@ StepMtrErr StepMotor::GetParam(StepMtrParam param, uint32_t *value) {
   return err;
 }
 
-void StepMotor::OneTimeInit() {
-  // The following pins are used to talk to the stepper drivers on the SPI daisy chain:
-  //   PA5 - SCLK
-  //   PA6 - MISO
-  //   PA7 - MOSI
-  //   PB6 - CS
-  //
-  // Some additional pins I don't really care about, but are connected to the stepper
-  // developer's board For the most part I can just ignore these:
-  //   PA9  - Reset input.
-  //   PA10 - flag open drain output
-  //   PB4  - busy open drain output
-  //   PC10 - STCK input
-  //
-  // The stepper motors support 5Mbits/s communication, which means a clock of 80MHz / 16
-  // This assumes CPUFrequency is kept at 80MHz.
-
-  // Set SPI listeners before its proper initialization to allow Initialize to enable the proper
-  // interrupts
-  spi_.SetListeners(/*rxl=*/&daisy_chain_, /*txl=*/nullptr);
-
-  spi_.Initialize(/*clock_port=*/GPIO::Port::A, 5, /*miso_port=*/GPIO::Port::A, 6,
-                  /*mosi_port=*/GPIO::Port::A, 7, /*chip_select_port=*/GPIO::Port::B, 6,
-                  /*reset_port=*/GPIO::Port::A, 9, /*word_size=*/8, SPI::Bitrate::CpuFreqBySixteen);
-
-  daisy_chain_.ProbeSlaves(/*null_command=*/static_cast<uint8_t>(StepMtrCmd::Nop),
-                           /*reset_command=*/static_cast<uint8_t>(StepMtrCmd::ResetDevice));
-
+void StepMotor::Initialize() {
   // Do some basic init of the stepper motor chips so we can make them spin the motors
-  for (size_t i = 0; i < daisy_chain_.num_slaves(); i++) {
-    StepMotor *mtr = StepMotor::GetStepper(i);
+  Reset();
 
-    mtr->Reset();
+  // We need to delay briefly after reset before sending a new command.
+  // For the power-step chip this delay time is specified as 500 microseconds in the data sheet.
+  // For the L6470 it's only 45 max
+  SystemTimer::singleton().delay(microseconds(500));
 
-    // We need to delay briefly after reset before sending a new command.
-    // For the power-step chip this delay time is specified as 500 microseconds in the data sheet.
-    // For the L6470 it's only 45 max
-    SystemTimer::singleton().delay(microseconds(500));
+  // Get the first gate config register of the powerSTEP01.
+  // This is actually the config register on the L6470
+  uint32_t val{0};
+  GetParam(StepMtrParam::GateConfig1, &val);
 
-    // Get the first gate config register of the powerSTEP01.
-    // This is actually the config register on the L6470
-    uint32_t val{0};
-    mtr->GetParam(StepMtrParam::GateConfig1, &val);
-
-    // If this is at the default config register value for the L6470 then I don't need to do any
-    // more configuration
-    if (val == 0x2E88) {
-      continue;
-    }
-
-    mtr->power_step_ = true;
-
-    // Configure the two gate config registers to reasonable values
-    //
-    // GateConfig1 xxxxxxxxxxxxxxxx
-    //           ...........\\\\\ - time at constant current 3750ns (0x1D)
-    //           ........\\\------- Gate current 96mA (7)
-    //           .....\\\---------- Turn off boost time 1uS (7)
-    //           ....\------------- Watch dog enable (1)
-    //           \\\\-------------- reserved
-    mtr->SetParam(StepMtrParam::GateConfig1, 0x0FFD);
-
-    // GateConfig2 xxxxxxxx
-    //           ...\\\\\---------- Dead time 1000ns (7)
-    //           \\\--------------- Blanking time 1000ns (7)
-    mtr->SetParam(StepMtrParam::GateConfig2, 0xF7);
+  // If this is at the default config register value for the L6470 then I don't need to do any
+  // more configuration
+  if (val == 0x2E88) {
+    return;
   }
+
+  power_step_ = true;
+
+  // Configure the two gate config registers to reasonable values
+  //
+  // GateConfig1 xxxxxxxxxxxxxxxx
+  //           ...........\\\\\ - time at constant current 3750ns (0x1D)
+  //           ........\\\------- Gate current 96mA (7)
+  //           .....\\\---------- Turn off boost time 1uS (7)
+  //           ....\------------- Watch dog enable (1)
+  //           \\\\-------------- reserved
+  SetParam(StepMtrParam::GateConfig1, 0x0FFD);
+
+  // GateConfig2 xxxxxxxx
+  //           ...\\\\\---------- Dead time 1000ns (7)
+  //           \\\--------------- Blanking time 1000ns (7)
+  SetParam(StepMtrParam::GateConfig2, 0xF7);
 }
 
 // Convert a velocity from Deg/sec units to the value to program
@@ -396,66 +354,63 @@ StepMtrErr StepMotor::SetAmpAll(float amp) {
 // Start running at a constant velocity.
 // The velocity is specified in deg/sec units
 StepMtrErr StepMotor::RunAtVelocity(float vel) {
-  int neg = vel < 0;
-  vel = fabsf(vel);
-
   // Convert the speed from deg/sec to the weird units used by the stepper chip
-  float speed = DpsToVelReg(vel, VelCurrentSpeedReg);
+  float speed = DpsToVelReg(fabsf(vel), VelCurrentSpeedReg);
 
   // The speed value is a 20 bit unsigned integer passed as part of the command.
-  int32_t s = static_cast<int32_t>(speed);
+  uint32_t s = static_cast<uint32_t>(speed);
   if (s > 0x000fffff) {
     s = 0x000fffff;
   }
 
-  uint8_t cmd[4];
-  if (neg)
-    cmd[0] = static_cast<uint8_t>(StepMtrCmd::RunNegative);
+  uint8_t command[4];
+  if (vel < 0)
+    command[0] = static_cast<uint8_t>(StepMtrCmd::RunNegative);
   else
-    cmd[0] = static_cast<uint8_t>(StepMtrCmd::RunPositive);
+    command[0] = static_cast<uint8_t>(StepMtrCmd::RunPositive);
 
-  cmd[1] = static_cast<uint8_t>(s >> 16);
-  cmd[2] = static_cast<uint8_t>(s >> 8);
-  cmd[3] = static_cast<uint8_t>(s);
-  return SendCmd(cmd, 4);
+  command[1] = static_cast<uint8_t>(s >> 16);
+  command[2] = static_cast<uint8_t>(s >> 8);
+  command[3] = static_cast<uint8_t>(s);
+  return SendCmd(command, 4);
 }
 
 // Decelerate to zero velocity and hold position
 // This can also be used to enable the motor without causing any motion
 StepMtrErr StepMotor::SoftStop() {
-  uint8_t cmd = static_cast<uint8_t>(StepMtrCmd::SoftStop);
-  return SendCmd(&cmd, 1);
+  uint8_t command = static_cast<uint8_t>(StepMtrCmd::SoftStop);
+  return SendCmd(&command, 1);
 }
 
 // Stop abruptly and hold position
 // This can also be used to enable the motor without causing any motion
 StepMtrErr StepMotor::HardStop() {
-  uint8_t cmd = static_cast<uint8_t>(StepMtrCmd::HardStop);
-  return SendCmd(&cmd, 1);
+  uint8_t command = static_cast<uint8_t>(StepMtrCmd::HardStop);
+  return SendCmd(&command, 1);
 }
 
 // Decelerate to zero velocity and disable
 StepMtrErr StepMotor::SoftDisable() {
-  uint8_t cmd = static_cast<uint8_t>(StepMtrCmd::SoftDisable);
-  return SendCmd(&cmd, 1);
+  uint8_t command = static_cast<uint8_t>(StepMtrCmd::SoftDisable);
+  return SendCmd(&command, 1);
 }
 
 // Immediately disable the motor
 StepMtrErr StepMotor::HardDisable() {
-  uint8_t cmd = static_cast<uint8_t>(StepMtrCmd::HardDisable);
-  return SendCmd(&cmd, 1);
+  uint8_t command = static_cast<uint8_t>(StepMtrCmd::HardDisable);
+  return SendCmd(&command, 1);
 }
 
 // Reset the motor position to zero
 StepMtrErr StepMotor::ClearPosition() {
-  uint8_t cmd = static_cast<uint8_t>(StepMtrCmd::ResetPosition);
-  return SendCmd(&cmd, 1);
+  uint8_t command = static_cast<uint8_t>(StepMtrCmd::ResetPosition);
+  return SendCmd(&command, 1);
 }
 
 // Reset the stepper chip
 StepMtrErr StepMotor::Reset() {
-  uint8_t cmd = static_cast<uint8_t>(StepMtrCmd::ResetDevice);
-  return SendCmd(&cmd, 1);
+  uint8_t command = static_cast<uint8_t>(StepMtrCmd::ResetDevice);
+  return SendCmd(&command, 1);
 }
 
 StepMtrErr StepMotor::GetStatus(StepperStatus *stat) {
@@ -466,11 +421,11 @@ StepMtrErr StepMotor::GetStatus(StepperStatus *stat) {
   }
 
   // We expect a 2 bytes response so we add two Nops after the op code.
-  uint8_t cmd[] = {static_cast<uint8_t>(StepMtrCmd::GetStatus),
+  uint8_t command[] = {static_cast<uint8_t>(StepMtrCmd::GetStatus),
                    static_cast<uint8_t>(StepMtrCmd::Nop), static_cast<uint8_t>(StepMtrCmd::Nop)};
-  uint8_t response[sizeof(cmd) - 1] = {0};
+  uint8_t response[sizeof(command) - 1] = {0};
 
-  StepMtrErr err = SendCmd(cmd, sizeof(cmd), response);
+  StepMtrErr err = SendCmd(command, sizeof(command), response);
   if (err != StepMtrErr::Ok) {
     return err;
   }
@@ -513,34 +468,34 @@ int32_t StepMotor::DegToUstep(float deg) const {
 StepMtrErr StepMotor::GotoPos(float deg) {
   int32_t ustep = DegToUstep(deg);
 
-  uint8_t cmd[4];
-  cmd[0] = static_cast<uint8_t>(StepMtrCmd::GoTo);
-  cmd[1] = static_cast<uint8_t>(ustep >> 16);
-  cmd[2] = static_cast<uint8_t>(ustep >> 8);
-  cmd[3] = static_cast<uint8_t>(ustep);
-  return SendCmd(cmd, 4);
+  uint8_t command[4];
+  command[0] = static_cast<uint8_t>(StepMtrCmd::GoTo);
+  command[1] = static_cast<uint8_t>(ustep >> 16);
+  command[2] = static_cast<uint8_t>(ustep >> 8);
+  command[3] = static_cast<uint8_t>(ustep);
+  return SendCmd(command, 4);
 }
 
 // Start a relative move of the passed number of deg.
 StepMtrErr StepMotor::MoveRel(float deg) {
   int32_t dist = DegToUstep(deg);
 
-  uint8_t cmd[4];
+  uint8_t command[4];
 
   if (dist < 0) {
-    cmd[0] = static_cast<uint8_t>(StepMtrCmd::MoveNegative);
+    command[0] = static_cast<uint8_t>(StepMtrCmd::MoveNegative);
     dist *= -1;
   } else
-    cmd[0] = static_cast<uint8_t>(StepMtrCmd::MovePositive);
+    command[0] = static_cast<uint8_t>(StepMtrCmd::MovePositive);
 
   if (dist > 0x003FFFFF) {
     return StepMtrErr::BadValue;
   }
 
-  cmd[1] = static_cast<uint8_t>(dist >> 16);
-  cmd[2] = static_cast<uint8_t>(dist >> 8);
-  cmd[3] = static_cast<uint8_t>(dist);
-  return SendCmd(cmd, 4);
+  command[1] = static_cast<uint8_t>(dist >> 16);
+  command[2] = static_cast<uint8_t>(dist >> 8);
+  command[3] = static_cast<uint8_t>(dist);
+  return SendCmd(command, 4);
 }
 
 // Send a command to the motor and, unless called from an interrupt handler, wait for it to be
@@ -553,15 +508,15 @@ StepMtrErr StepMotor::MoveRel(float deg) {
 //
 // Note that when called outside an interrupt handler, this waits until the command is processed
 // before returning.
-StepMtrErr StepMotor::SendCmd(uint8_t *cmd, uint32_t len, uint8_t *response) {
+StepMtrErr StepMotor::SendCmd(uint8_t *command, uint32_t length, uint8_t *response) {
   bool request_finished = false;
   SPI::Request request = {
-      .command = cmd,
-      .length = len,
+      .command = command,
+      .length = length,
       .response = response,
       .processed = &request_finished,
   };
-  if (!daisy_chain_.SendRequest(request, slave_index_)) {
+  if (!daisy_chain_->SendRequest(request, slave_index_)) {
     return StepMtrErr::QueueFull;
   }
 
@@ -570,8 +525,6 @@ StepMtrErr StepMotor::SendCmd(uint8_t *cmd, uint32_t len, uint8_t *response) {
 
   return StepMtrErr::Ok;
 }
-
-void StepMotor::DmaISR() { spi_.RxDMAInterruptHandler(); }
 
 #else
 

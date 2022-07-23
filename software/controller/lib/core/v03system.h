@@ -29,6 +29,7 @@ limitations under the License.
 
 // System includes
 #include "nvparams.h"
+#include "spi_stm32.h"
 #include "system.h"
 #include "uart_dma.h"
 #include "uart_soft.h"
@@ -77,8 +78,7 @@ class V03Actuators : public AbstractActuators {
   V03Actuators() = default;
 
   // Creates pwm actuators and links actuators calibration tables to nv_params.
-  void init(NVParams::Handler* nv_params,
-            SPI::DaisyChain<StepMotor::MaxMotors, StepMotor::QueueLength>* stepper_chain);
+  void init(NVParams::Handler* nv_params, StepMotor::Chain* stepper_chain);
 
   // Returns true if the actuators are ready for action or false if they aren't (for example pinch
   // valves are homing). The system should be kept in a safe state until this returns true.
@@ -133,7 +133,7 @@ class V03System : public AbstractSystem {
   I2Ceeprom eeprom_;
   NVParams::Handler nv_params_;
   SPI::STM32Channel spi1_;
-  SPI::DaisyChain<StepMotor::MaxMotors, StepMotor::QueueLength> stepper_daisy_chain_;
+  StepMotor::Chain stepper_daisy_chain_;
   ADC adc_;
   Sensors sensors_;
   Actuators actuators_;

@@ -50,8 +50,7 @@ enum class PinchValveHomeState {
 class PinchValve : public Actuator {
  public:
   // Create a new pinch valve using the specified stepper motor.
-  PinchValve(const char *name, const char *help_supplement, int motor_index,
-             SPI::DaisyChain<StepMotor::MaxMotors, StepMotor::QueueLength> *spi)
+  PinchValve(const char *name, const char *help_supplement, int motor_index, StepMotor::Chain *spi)
       : Actuator(name, help_supplement, "position"), motor_(motor_index, spi) {}
 
   // Initialize the stepper motor
@@ -83,7 +82,7 @@ class PinchValve : public Actuator {
  private:
   Time move_start_time_;
 
-  StepMotor motor_;
+  StepMotor::Handler motor_;
 
   float last_command_{-1.0f};
 

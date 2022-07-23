@@ -13,6 +13,7 @@
 
 #include "hal.h"
 #include "pwm_actuator.h"
+#include "spi_stm32.h"
 #include "stepper.h"
 #include "system_constants.h"
 #include "system_timer.h"
@@ -23,24 +24,24 @@ static constexpr size_t MotorIndex{TEST_PARAM_1};
 static constexpr float StepDegrees{TEST_PARAM_2};
 static constexpr Duration Delay{milliseconds(1000)};
 
-static SPI::Channel spi(SPI::Base::SPI1, DMA::Base::DMA2);
-static SPI::DaisyChain<StepMotor::MaxMotors, StepMotor::QueueLength> daisy_chain(
-    "stepper", "for stepper daisy chain", &spi, /*min_cs_high_time=*/microseconds(1));
-static StepMotor stepper(MotorIndex, &daisy_chain);
+static SPI::STM32Channel spi(SPI::Base::SPI1, DMA::Base::DMA2);
+static StepMotor::Chain stepper_chain("stepper", "for stepper daisy chain", &spi,
+                                      /*min_cs_high_time=*/microseconds(1));
+static StepMotor::Handler stepper(MotorIndex, &stepper_chain);
 
 void RunTest() {
   hal.Init(CPUFrequency);
 
   // Set SPI listeners before its proper initialization to allow Initialize to enable the proper
   // interrupts
-  spi.SetListeners(/*rxl=*/&daisy_chain, /*txl=*/nullptr);
+  spi.SetListeners(/*rxl=*/&stepper_chain, /*txl=*/nullptr);
 
   spi.Initialize(/*clock_port=*/GPIO::Port::A, 5, /*miso_port=*/GPIO::Port::A, 6,
                  /*mosi_port=*/GPIO::Port::A, 7, /*chip_select_port=*/GPIO::Port::B, 6,
                  /*reset_port=*/GPIO::Port::A, 9, /*word_size=*/8, SPI::Bitrate::CpuFreqBySixteen);
 
-  daisy_chain.ProbeSlaves(/*null_command=*/static_cast<uint8_t>(StepMtrCmd::Nop),
-                          /*reset_command=*/static_cast<uint8_t>(StepMtrCmd::ResetDevice));
+  stepper_chain.ProbeSlaves(/*null_command=*/static_cast<uint8_t>(StepMotor::OpCode::Nop),
+                            /*reset_command=*/static_cast<uint8_t>(StepMotor::OpCode::ResetDevice));
 
   hal.bind_channels(nullptr, nullptr, nullptr, &spi);
 

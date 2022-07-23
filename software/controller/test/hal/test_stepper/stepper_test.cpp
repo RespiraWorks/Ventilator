@@ -19,13 +19,13 @@ limitations under the License.
 
 // Not really tests, just silencing code coverage warning for native build
 TEST(Stepper, TestStubs) {
-  StepMotor step_motor(0, nullptr);
-  EXPECT_EQ(StepMtrErr::Ok, step_motor.HardDisable());
-  EXPECT_EQ(StepMtrErr::Ok, step_motor.SetAmpAll(0.0));
-  EXPECT_EQ(StepMtrErr::Ok, step_motor.SetMaxSpeed(0.0));
-  EXPECT_EQ(StepMtrErr::Ok, step_motor.SetAccel(0.0));
-  EXPECT_EQ(StepMtrErr::Ok, step_motor.MoveRel(0.0));
-  EXPECT_EQ(StepMtrErr::Ok, step_motor.ClearPosition());
-  EXPECT_EQ(StepMtrErr::Ok, step_motor.GotoPos(0.0));
-  EXPECT_EQ(StepMtrErr::Ok, step_motor.HardStop());
+  StepMotor::Handler step_motor(0, nullptr);
+  EXPECT_EQ(StepMotor::ErrorCode::Ok, step_motor.HardDisable());
+  EXPECT_EQ(StepMotor::ErrorCode::Ok, step_motor.SetAmpAll(0.0));
+  EXPECT_EQ(StepMotor::ErrorCode::Ok, step_motor.SetMaxSpeed(0.0));
+  EXPECT_EQ(StepMotor::ErrorCode::Ok, step_motor.SetAccel(0.0));
+  EXPECT_EQ(StepMotor::ErrorCode::Ok, step_motor.MoveRel(0.0));
+  EXPECT_EQ(StepMotor::ErrorCode::Ok, step_motor.ClearPosition());
+  EXPECT_EQ(StepMotor::ErrorCode::Ok, step_motor.GotoPos(0.0));
+  EXPECT_EQ(StepMotor::ErrorCode::Ok, step_motor.HardStop());
 }

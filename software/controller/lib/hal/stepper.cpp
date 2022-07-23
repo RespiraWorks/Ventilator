@@ -24,10 +24,12 @@ limitations under the License.
 #include "interrupts.h"
 #include "system_timer.h"
 
+namespace StepMotor {
+
 // This array holds the length of each parameter in units of
 // bytes, rounded up to the nearest byte.  This info is based
 // on table 12 in the powerSTEP chip data sheet
-uint8_t StepMotor::param_len_[32] = {
+static uint8_t param_len[32] = {
     0,  // 0x00 - No valid parameter with ID 0
     3,  // 0x01 - Absolute position (22 bits)
     2,  // 0x02 - Electrical position (9 bits)
@@ -74,19 +76,18 @@ static constexpr float VelFSSpeedReg = TickTime * (1 << 18);
 static constexpr float VelIntSpeedReg = TickTime * (1 << 26);
 
 // The number of microsteps / full step.
-// For now this is a constant, we're just using the
-// default value of the chip.
+// For now this is a constant, we're just using the default value of the chip.
 static constexpr uint32_t MicrostepPerStep = 128;
 
-StepMtrErr StepMotor::SetParam(StepMtrParam param, uint32_t value) {
+ErrorCode Handler::SetParam(Param param, uint32_t value) {
   uint8_t p = static_cast<uint8_t>(param);
-  if (p > sizeof(param_len_)) {
-    return StepMtrErr::BadParam;
+  if (p > sizeof(param_len)) {
+    return ErrorCode::BadParam;
   }
 
-  size_t length = param_len_[p];
+  size_t length = param_len[p];
   if (!length || (length > 3)) {
-    return StepMtrErr::BadParam;
+    return ErrorCode::BadParam;
   }
 
   uint8_t command_buff[4];
@@ -102,21 +103,21 @@ StepMtrErr StepMotor::SetParam(StepMtrParam param, uint32_t value) {
   return SendCmd(command_buff, length + 1);
 }
 
-StepMtrErr StepMotor::GetParam(StepMtrParam param, uint32_t *value) {
+ErrorCode Handler::GetParam(Param param, uint32_t *value) {
   uint8_t p = static_cast<uint8_t>(param);
-  if (p > sizeof(param_len_)) {
-    return StepMtrErr::BadParam;
+  if (p > sizeof(param_len)) {
+    return ErrorCode::BadParam;
   }
 
-  size_t length = param_len_[p];
+  size_t length = param_len[p];
   if (!length || (length > 3)) {
-    return StepMtrErr::BadParam;
+    return ErrorCode::BadParam;
   }
 
-  // It's not legal to call this from the control loop because it
-  // has to block.  Return an error if we're in an interrupt handler
+  // It's not legal to call this from the control loop because it has to block.
+  // Return an error if we're in an interrupt handler
   if (Interrupts::singleton().InInterruptHandler()) {
-    return StepMtrErr::WouldBlock;
+    return ErrorCode::WouldBlock;
   }
 
   uint8_t command_buff[4];
@@ -128,8 +129,8 @@ StepMtrErr StepMotor::GetParam(StepMtrParam param, uint32_t *value) {
   command_buff[2] = 0;
   command_buff[3] = 0;
 
-  StepMtrErr err = SendCmd(command_buff, length + 1, response);
-  if (err != StepMtrErr::Ok) {
+  ErrorCode err = SendCmd(command_buff, length + 1, response);
+  if (err != ErrorCode::Ok) {
     return err;
   }
 
@@ -143,7 +144,7 @@ StepMtrErr StepMotor::GetParam(StepMtrParam param, uint32_t *value) {
   return err;
 }
 
-void StepMotor::Initialize() {
+void Handler::Initialize() {
   // Do some basic init of the stepper motor chips so we can make them spin the motors
   Reset();
 
@@ -155,7 +156,7 @@ void StepMotor::Initialize() {
   // Get the first gate config register of the powerSTEP01.
   // This is actually the config register on the L6470
   uint32_t val{0};
-  GetParam(StepMtrParam::GateConfig1, &val);
+  GetParam(Param::GateConfig1, &val);
 
   // If this is at the default config register value for the L6470 then I don't need to do any
   // more configuration
@@ -173,17 +174,17 @@ void StepMotor::Initialize() {
   //           .....\\\---------- Turn off boost time 1uS (7)
   //           ....\------------- Watch dog enable (1)
   //           \\\\-------------- reserved
-  SetParam(StepMtrParam::GateConfig1, 0x0FFD);
+  SetParam(Param::GateConfig1, 0x0FFD);
 
   // GateConfig2 xxxxxxxx
   //           ...\\\\\---------- Dead time 1000ns (7)
   //           \\\--------------- Blanking time 1000ns (7)
-  SetParam(StepMtrParam::GateConfig2, 0xF7);
+  SetParam(Param::GateConfig2, 0xF7);
 }
 
 // Convert a velocity from Deg/sec units to the value to program
 // into one of the stepper controller registers
-float StepMotor::DpsToVelReg(float vel, float cnv) const {
+float Handler::DpsToVelReg(float vel, float cnv) const {
   // Convert to steps / sec
   float step_per_sec = vel * static_cast<float>(steps_per_rev_) / 360.0f;
 
@@ -192,16 +193,15 @@ float StepMotor::DpsToVelReg(float vel, float cnv) const {
 }
 
 // Convert a velocity from a register value to deg/sec
-float StepMotor::RegVelToDps(int32_t val, float cnv) const {
+float Handler::RegVelToDps(int32_t val, float cnv) const {
   return static_cast<float>(val) * 360.0f / (cnv * static_cast<float>(steps_per_rev_));
 }
 
-// Read the current absolute motor velocity and return it
-// in deg/sec units
+// Read the current absolute motor velocity and return it in deg/sec units
 // Note that this value is always positive
-StepMtrErr StepMotor::GetCurrentSpeed(float *ret) {
+ErrorCode Handler::GetCurrentSpeed(float *ret) {
   uint32_t val;
-  StepMtrErr err = GetParam(StepMtrParam::Speed, &val);
+  ErrorCode err = GetParam(Param::Speed, &val);
   *ret = RegVelToDps(val, VelCurrentSpeedReg);
   return err;
 }
@@ -209,9 +209,9 @@ StepMtrErr StepMotor::GetCurrentSpeed(float *ret) {
 // Set the motor's max speed setting in deg/sec
 //
 // NOTE - The motor must be disabled to set this
-StepMtrErr StepMotor::SetMaxSpeed(float dps) {
+ErrorCode Handler::SetMaxSpeed(float dps) {
   if (dps < 0) {
-    return StepMtrErr::BadValue;
+    return ErrorCode::BadValue;
   }
 
   uint32_t speed = static_cast<uint32_t>(DpsToVelReg(dps, VelMaxSpeedReg));
@@ -219,13 +219,13 @@ StepMtrErr StepMotor::SetMaxSpeed(float dps) {
     speed = 0x3ff;
   }
 
-  return SetParam(StepMtrParam::MaxSpeed, speed);
+  return SetParam(Param::MaxSpeed, speed);
 }
 
 // Get the motor's max speed setting in deg/sec
-StepMtrErr StepMotor::GetMaxSpeed(float *ret) {
+ErrorCode Handler::GetMaxSpeed(float *ret) {
   uint32_t val;
-  StepMtrErr err = GetParam(StepMtrParam::MaxSpeed, &val);
+  ErrorCode err = GetParam(Param::MaxSpeed, &val);
   *ret = RegVelToDps(val, VelMaxSpeedReg);
   return err;
 }
@@ -240,9 +240,9 @@ StepMtrErr StepMotor::GetMaxSpeed(float *ret) {
 // This can help with vibration.
 //
 // NOTE - The motor must be disabled to set this
-StepMtrErr StepMotor::SetMinSpeed(float dps) {
+ErrorCode Handler::SetMinSpeed(float dps) {
   if (dps < 0) {
-    return StepMtrErr::BadValue;
+    return ErrorCode::BadValue;
   }
 
   uint32_t speed = static_cast<uint32_t>(DpsToVelReg(dps, VelMinSpeedReg));
@@ -250,13 +250,13 @@ StepMtrErr StepMotor::SetMinSpeed(float dps) {
     speed = 0xfff;
   }
 
-  return SetParam(StepMtrParam::MinSpeed, speed);
+  return SetParam(Param::MinSpeed, speed);
 }
 
 // Get the motor's min speed setting in deg/sec
-StepMtrErr StepMotor::GetMinSpeed(float *ret) {
+ErrorCode Handler::GetMinSpeed(float *ret) {
   uint32_t val;
-  StepMtrErr err = GetParam(StepMtrParam::MinSpeed, &val);
+  ErrorCode err = GetParam(Param::MinSpeed, &val);
   *ret = RegVelToDps(val, VelMinSpeedReg);
   return err;
 }
@@ -264,10 +264,10 @@ StepMtrErr StepMotor::GetMinSpeed(float *ret) {
 // Set the motors accel and decel rate in deg/sec/sec units
 //
 // NOTE - The motor must be disabled to set this
-StepMtrErr StepMotor::SetAccel(float acc) {
+ErrorCode Handler::SetAccel(float acc) {
   static constexpr float Scaler = (TickTime * TickTime * 1099511627776.f);
   if (acc < 0) {
-    return StepMtrErr::BadValue;
+    return ErrorCode::BadValue;
   }
 
   // Convert from deg/sec/sec to steps/sec/sec
@@ -279,12 +279,12 @@ StepMtrErr StepMotor::SetAccel(float acc) {
     val = 0xfff;
   }
 
-  StepMtrErr err = SetParam(StepMtrParam::Acceleration, val);
-  if (err != StepMtrErr::Ok) {
+  ErrorCode err = SetParam(Param::Acceleration, val);
+  if (err != ErrorCode::Ok) {
     return err;
   }
 
-  return SetParam(StepMtrParam::Deceleration, val);
+  return SetParam(Param::Deceleration, val);
 }
 
 // Set the amplitude of the voltage output used to drive the motor.
@@ -304,7 +304,7 @@ StepMtrErr StepMotor::SetAccel(float acc) {
 //
 // In all cases the values are set in a range of 0 to 1
 // for 0 to 100%
-StepMtrErr StepMotor::SetKval(StepMtrParam param, float amp) {
+ErrorCode Handler::SetKval(Param param, float amp) {
   // The powerSTEP chip seems a bit flaky with this setting.
   // It doesn't seem to enable at all with a 10% setting, and is
   // really wimpy with 20%.  For the moment I'm just boosting this
@@ -316,35 +316,31 @@ StepMtrErr StepMotor::SetKval(StepMtrParam param, float amp) {
   }
 
   if ((amp < 0) || (amp > 1)) {
-    return StepMtrErr::BadValue;
+    return ErrorCode::BadValue;
   }
 
   // The stepper chip uses a value of 0 to 255
   return SetParam(param, static_cast<uint32_t>(amp * 255));
 }
 
-StepMtrErr StepMotor::SetAmpHold(float amp) { return SetKval(StepMtrParam::KValueHold, amp); }
-StepMtrErr StepMotor::SetAmpRun(float amp) { return SetKval(StepMtrParam::KValueRun, amp); }
-StepMtrErr StepMotor::SetAmpAccel(float amp) {
-  return SetKval(StepMtrParam::KValueAccelerate, amp);
-}
-StepMtrErr StepMotor::SetAmpDecel(float amp) {
-  return SetKval(StepMtrParam::KValueDecelerate, amp);
-}
+ErrorCode Handler::SetAmpHold(float amp) { return SetKval(Param::KValueHold, amp); }
+ErrorCode Handler::SetAmpRun(float amp) { return SetKval(Param::KValueRun, amp); }
+ErrorCode Handler::SetAmpAccel(float amp) { return SetKval(Param::KValueAccelerate, amp); }
+ErrorCode Handler::SetAmpDecel(float amp) { return SetKval(Param::KValueDecelerate, amp); }
 
-StepMtrErr StepMotor::SetAmpAll(float amp) {
-  StepMtrErr err = SetAmpHold(amp);
-  if (err != StepMtrErr::Ok) {
+ErrorCode Handler::SetAmpAll(float amp) {
+  ErrorCode err = SetAmpHold(amp);
+  if (err != ErrorCode::Ok) {
     return err;
   }
 
   err = SetAmpRun(amp);
-  if (err != StepMtrErr::Ok) {
+  if (err != ErrorCode::Ok) {
     return err;
   }
 
   err = SetAmpAccel(amp);
-  if (err != StepMtrErr::Ok) {
+  if (err != ErrorCode::Ok) {
     return err;
   }
 
@@ -353,7 +349,7 @@ StepMtrErr StepMotor::SetAmpAll(float amp) {
 
 // Start running at a constant velocity.
 // The velocity is specified in deg/sec units
-StepMtrErr StepMotor::RunAtVelocity(float vel) {
+ErrorCode Handler::RunAtVelocity(float vel) {
   // Convert the speed from deg/sec to the weird units used by the stepper chip
   float speed = DpsToVelReg(fabsf(vel), VelCurrentSpeedReg);
 
@@ -365,9 +361,9 @@ StepMtrErr StepMotor::RunAtVelocity(float vel) {
 
   uint8_t command[4];
   if (vel < 0)
-    command[0] = static_cast<uint8_t>(StepMtrCmd::RunNegative);
+    command[0] = static_cast<uint8_t>(OpCode::RunNegative);
   else
-    command[0] = static_cast<uint8_t>(StepMtrCmd::RunPositive);
+    command[0] = static_cast<uint8_t>(OpCode::RunPositive);
 
   command[1] = static_cast<uint8_t>(s >> 16);
   command[2] = static_cast<uint8_t>(s >> 8);
@@ -377,56 +373,56 @@ StepMtrErr StepMotor::RunAtVelocity(float vel) {
 
 // Decelerate to zero velocity and hold position
 // This can also be used to enable the motor without causing any motion
-StepMtrErr StepMotor::SoftStop() {
-  uint8_t command = static_cast<uint8_t>(StepMtrCmd::SoftStop);
+ErrorCode Handler::SoftStop() {
+  uint8_t command = static_cast<uint8_t>(OpCode::SoftStop);
   return SendCmd(&command, 1);
 }
 
 // Stop abruptly and hold position
 // This can also be used to enable the motor without causing any motion
-StepMtrErr StepMotor::HardStop() {
-  uint8_t command = static_cast<uint8_t>(StepMtrCmd::HardStop);
+ErrorCode Handler::HardStop() {
+  uint8_t command = static_cast<uint8_t>(OpCode::HardStop);
   return SendCmd(&command, 1);
 }
 
 // Decelerate to zero velocity and disable
-StepMtrErr StepMotor::SoftDisable() {
-  uint8_t command = static_cast<uint8_t>(StepMtrCmd::SoftDisable);
+ErrorCode Handler::SoftDisable() {
+  uint8_t command = static_cast<uint8_t>(OpCode::SoftDisable);
   return SendCmd(&command, 1);
 }
 
 // Immediately disable the motor
-StepMtrErr StepMotor::HardDisable() {
-  uint8_t command = static_cast<uint8_t>(StepMtrCmd::HardDisable);
+ErrorCode Handler::HardDisable() {
+  uint8_t command = static_cast<uint8_t>(OpCode::HardDisable);
   return SendCmd(&command, 1);
 }
 
 // Reset the motor position to zero
-StepMtrErr StepMotor::ClearPosition() {
-  uint8_t command = static_cast<uint8_t>(StepMtrCmd::ResetPosition);
+ErrorCode Handler::ClearPosition() {
+  uint8_t command = static_cast<uint8_t>(OpCode::ResetPosition);
   return SendCmd(&command, 1);
 }
 
 // Reset the stepper chip
-StepMtrErr StepMotor::Reset() {
-  uint8_t command = static_cast<uint8_t>(StepMtrCmd::ResetDevice);
+ErrorCode Handler::Reset() {
+  uint8_t command = static_cast<uint8_t>(OpCode::ResetDevice);
   return SendCmd(&command, 1);
 }
 
-StepMtrErr StepMotor::GetStatus(StepperStatus *stat) {
-  // It's not legal to call this from the control loop because it
-  // has to block.  Return an error if we're in an interrupt handler
+ErrorCode Handler::GetStatus(Status *stat) {
+  // It's not legal to call this from the control loop because it has to block.
+  // Return an error if we're in an interrupt handler
   if (Interrupts::singleton().InInterruptHandler()) {
-    return StepMtrErr::WouldBlock;
+    return ErrorCode::WouldBlock;
   }
 
   // We expect a 2 bytes response so we add two Nops after the op code.
-  uint8_t command[] = {static_cast<uint8_t>(StepMtrCmd::GetStatus),
-                   static_cast<uint8_t>(StepMtrCmd::Nop), static_cast<uint8_t>(StepMtrCmd::Nop)};
+  uint8_t command[] = {static_cast<uint8_t>(OpCode::GetStatus), static_cast<uint8_t>(OpCode::Nop),
+                       static_cast<uint8_t>(OpCode::Nop)};
   uint8_t response[sizeof(command) - 1] = {0};
 
-  StepMtrErr err = SendCmd(command, sizeof(command), response);
-  if (err != StepMtrErr::Ok) {
+  ErrorCode err = SendCmd(command, sizeof(command), response);
+  if (err != ErrorCode::Ok) {
     return err;
   }
 
@@ -440,23 +436,23 @@ StepMtrErr StepMotor::GetStatus(StepperStatus *stat) {
 
   switch (response[1] & 0x60) {
     case 0x00:
-      stat->move_status = StepMoveStatus::Stopped;
+      stat->move_status = MoveStatus::Stopped;
       break;
     case 0x20:
-      stat->move_status = StepMoveStatus::Accelerating;
+      stat->move_status = MoveStatus::Accelerating;
       break;
     case 0x40:
-      stat->move_status = StepMoveStatus::Decelerating;
+      stat->move_status = MoveStatus::Decelerating;
       break;
     case 0x60:
-      stat->move_status = StepMoveStatus::ConstantSpeed;
+      stat->move_status = MoveStatus::ConstantSpeed;
       break;
   }
 
   return err;
 }
 
-int32_t StepMotor::DegToUstep(float deg) const {
+int32_t Handler::DegToUstep(float deg) const {
   uint32_t ustep_per_rev = MicrostepPerStep * steps_per_rev_;
 
   float steps = static_cast<float>(ustep_per_rev) * deg / 360.0f;
@@ -465,11 +461,11 @@ int32_t StepMotor::DegToUstep(float deg) const {
 
 // Goto to the position (in deg) via the shortest path
 // This returns once the move has started, it doesn't wait for the move to finish
-StepMtrErr StepMotor::GotoPos(float deg) {
+ErrorCode Handler::GotoPos(float deg) {
   int32_t ustep = DegToUstep(deg);
 
   uint8_t command[4];
-  command[0] = static_cast<uint8_t>(StepMtrCmd::GoTo);
+  command[0] = static_cast<uint8_t>(OpCode::GoTo);
   command[1] = static_cast<uint8_t>(ustep >> 16);
   command[2] = static_cast<uint8_t>(ustep >> 8);
   command[3] = static_cast<uint8_t>(ustep);
@@ -477,19 +473,19 @@ StepMtrErr StepMotor::GotoPos(float deg) {
 }
 
 // Start a relative move of the passed number of deg.
-StepMtrErr StepMotor::MoveRel(float deg) {
+ErrorCode Handler::MoveRel(float deg) {
   int32_t dist = DegToUstep(deg);
 
   uint8_t command[4];
 
   if (dist < 0) {
-    command[0] = static_cast<uint8_t>(StepMtrCmd::MoveNegative);
+    command[0] = static_cast<uint8_t>(OpCode::MoveNegative);
     dist *= -1;
   } else
-    command[0] = static_cast<uint8_t>(StepMtrCmd::MovePositive);
+    command[0] = static_cast<uint8_t>(OpCode::MovePositive);
 
   if (dist > 0x003FFFFF) {
-    return StepMtrErr::BadValue;
+    return ErrorCode::BadValue;
   }
 
   command[1] = static_cast<uint8_t>(dist >> 16);
@@ -506,9 +502,8 @@ StepMtrErr StepMotor::MoveRel(float deg) {
 // Each command to the stepper consists of a one byte command code and 0 to 3 data bytes.
 // Multiple commands can be placed one after another and all sent as a unit with this function.
 //
-// Note that when called outside an interrupt handler, this waits until the command is processed
-// before returning.
-StepMtrErr StepMotor::SendCmd(uint8_t *command, uint32_t length, uint8_t *response) {
+// Note that when called outside an interrupt handler, a busy wait is included.
+ErrorCode Handler::SendCmd(uint8_t *command, uint32_t length, uint8_t *response) {
   bool request_finished = false;
   SPI::Request request = {
       .command = command,
@@ -516,27 +511,29 @@ StepMtrErr StepMotor::SendCmd(uint8_t *command, uint32_t length, uint8_t *respon
       .response = response,
       .processed = &request_finished,
   };
-  if (!daisy_chain_->SendRequest(request, slave_index_)) {
-    return StepMtrErr::QueueFull;
+  if (!stepper_chain_->SendRequest(request, slave_index_)) {
+    return ErrorCode::QueueFull;
   }
 
   while (!Interrupts::singleton().InInterruptHandler() && !request_finished) {
   }
 
-  return StepMtrErr::Ok;
+  return ErrorCode::Ok;
 }
 
 #else
 
+namespace StepMotor {
 /// \TODO improve this mocking to be helpful in testing
-
-StepMtrErr StepMotor::HardDisable() { return StepMtrErr::Ok; }
-StepMtrErr StepMotor::SetAmpAll(float amp) { return StepMtrErr::Ok; }
-StepMtrErr StepMotor::SetMaxSpeed(float dps) { return StepMtrErr::Ok; }
-StepMtrErr StepMotor::SetAccel(float acc) { return StepMtrErr::Ok; }
-StepMtrErr StepMotor::MoveRel(float deg) { return StepMtrErr::Ok; }
-StepMtrErr StepMotor::ClearPosition() { return StepMtrErr::Ok; }
-StepMtrErr StepMotor::GotoPos(float deg) { return StepMtrErr::Ok; }
-StepMtrErr StepMotor::HardStop() { return StepMtrErr::Ok; }
+ErrorCode Handler::HardDisable() { return ErrorCode::Ok; }
+ErrorCode Handler::SetAmpAll(float amp) { return ErrorCode::Ok; }
+ErrorCode Handler::SetMaxSpeed(float dps) { return ErrorCode::Ok; }
+ErrorCode Handler::SetAccel(float acc) { return ErrorCode::Ok; }
+ErrorCode Handler::MoveRel(float deg) { return ErrorCode::Ok; }
+ErrorCode Handler::ClearPosition() { return ErrorCode::Ok; }
+ErrorCode Handler::GotoPos(float deg) { return ErrorCode::Ok; }
+ErrorCode Handler::HardStop() { return ErrorCode::Ok; }
 
 #endif
+
+}  // namespace StepMotor

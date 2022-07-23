@@ -54,10 +54,12 @@ limitations under the License.
 
 #include "spi_chain.h"
 
+namespace StepMotor {
+
 // These are the simple opcodes for the stepper driver.
 // Not included here are set/get parameter which include
 // the parameter ID value as part of the code.
-enum class StepMtrCmd : uint8_t {
+enum class OpCode : uint8_t {
   Nop = 0,                   // Used when there's no other command to send
   RunNegative = 0x50,        // Run negative at constant speed.
   RunPositive = 0x51,        // Run positive at constant speed.
@@ -78,7 +80,7 @@ enum class StepMtrCmd : uint8_t {
   GetStatus = 0xD0,          // Read the 16-bit status word
 };
 
-enum class StepMtrParam : uint8_t {
+enum class Param : uint8_t {
   AbsolutePosition = 0x01,          // Absolute position
   ElectricalPosition = 0x02,        // Electrical position
   MarkPosition = 0x03,              // Mark position
@@ -109,7 +111,7 @@ enum class StepMtrParam : uint8_t {
 };
 
 // Error codes returned by my functions
-enum class StepMtrErr {
+enum class ErrorCode {
   Ok,
   BadParam,      // The parameter ID is invalid
   BadValue,      // Illegal value passed
@@ -118,7 +120,7 @@ enum class StepMtrErr {
   InvalidState,  // Invalid state for command.
 };
 
-enum class StepMoveStatus {
+enum class MoveStatus {
   Stopped,
   Accelerating,
   Decelerating,
@@ -129,7 +131,7 @@ enum class StepMoveStatus {
 // Note, latching fields will return true if the event has occurred since the last time
 // the status was read.  The act of reading the status clears them so they won't be true
 // on the next read unless they happen again.
-struct StepperStatus {
+struct Status {
   bool enabled{false};
   bool under_voltage{false};     // latching
   bool thermal_warning{false};   // latching
@@ -137,19 +139,16 @@ struct StepperStatus {
   bool over_current{false};      // latching
   bool step_loss{false};         // latching
   bool command_error{false};     // latching
-  StepMoveStatus move_status{StepMoveStatus::Stopped};
+  MoveStatus move_status{MoveStatus::Stopped};
 };
 
-// Represents one of the stepper motors in the system
-class StepMotor {
- public:
-  // This constant gives the maximum number of motors we can support with this driver.
-  static constexpr size_t MaxMotors{4};
-  // Gives the length of command queues we want for a stepper motor
-  static constexpr size_t QueueLength{5};
+using Chain = SPI::DaisyChain</*MaxSlaves=*/4, /*QueuesLength*/ 10>;
 
-  StepMotor(size_t index, SPI::DaisyChain<MaxMotors, QueueLength> *daisy_chain)
-      : slave_index_(index), daisy_chain_(daisy_chain){};
+// Represents one of the stepper motors in the system
+class Handler {
+ public:
+  Handler(size_t index, Chain *stepper_chain)
+      : slave_index_(index), stepper_chain_(stepper_chain){};
 
   void Initialize();
 
@@ -167,11 +166,11 @@ class StepMotor {
   // Read the current absolute motor velocity and return it
   // in deg/sec units
   // Note that this value is always positive
-  StepMtrErr GetCurrentSpeed(float *ret);
+  ErrorCode GetCurrentSpeed(float *ret);
 
   // Get and set the motors max speed in deg/sec
-  StepMtrErr SetMaxSpeed(float dps);
-  StepMtrErr GetMaxSpeed(float *ret);
+  ErrorCode SetMaxSpeed(float dps);
+  ErrorCode GetMaxSpeed(float *ret);
 
   // Get and set the motor's minimum speed setting in deg/sec
   //
@@ -183,13 +182,13 @@ class StepMotor {
   // This can help with vibration.
   //
   // NOTE - The motor must be disabled to set this
-  StepMtrErr SetMinSpeed(float dps);
-  StepMtrErr GetMinSpeed(float *ret);
+  ErrorCode SetMinSpeed(float dps);
+  ErrorCode GetMinSpeed(float *ret);
 
   // Set the motors accel and decel rate in deg/sec/sec units
   //
   // NOTE - The motor must be disabled to set this
-  StepMtrErr SetAccel(float acc);
+  ErrorCode SetAccel(float acc);
 
   // Set the amplitude of the voltage output used to drive the motor.
   // The values set here allow the amplitude of output that pushes power
@@ -208,64 +207,62 @@ class StepMotor {
   //
   // In all cases the values are set in a range of 0 to 1
   // for 0 to 100%
-  StepMtrErr SetAmpHold(float amp);
-  StepMtrErr SetAmpRun(float amp);
-  StepMtrErr SetAmpAccel(float amp);
-  StepMtrErr SetAmpDecel(float amp);
+  ErrorCode SetAmpHold(float amp);
+  ErrorCode SetAmpRun(float amp);
+  ErrorCode SetAmpAccel(float amp);
+  ErrorCode SetAmpDecel(float amp);
 
   // Sets all four amplitude values to the same value
-  StepMtrErr SetAmpAll(float amp);
+  ErrorCode SetAmpAll(float amp);
 
   // Goto to the position (in deg) via the shortest path
   // This returns once the move has started, it doesn't
   // wait for the move to finish
-  StepMtrErr GotoPos(float deg);
+  ErrorCode GotoPos(float deg);
 
   // Start a relative move of the passed number of deg.
-  StepMtrErr MoveRel(float deg);
+  ErrorCode MoveRel(float deg);
 
   // Start running at a constant velocity.
   // The velocity is specified in deg/sec units
-  StepMtrErr RunAtVelocity(float vel);
+  ErrorCode RunAtVelocity(float vel);
 
   // Decelerate to zero velocity and hold position
   // This can also be used to enable the motor without
   // causing any motion
-  StepMtrErr SoftStop();
+  ErrorCode SoftStop();
 
   // Stop abruptly and hold position
   // This can also be used to enable the motor without
   // causing any motion
-  StepMtrErr HardStop();
+  ErrorCode HardStop();
 
   // Decelerate to zero velocity and disable
-  StepMtrErr SoftDisable();
+  ErrorCode SoftDisable();
 
   // Immediately disable the motor
-  StepMtrErr HardDisable();
+  ErrorCode HardDisable();
 
   // Reset the motor position to zero
-  StepMtrErr ClearPosition();
+  ErrorCode ClearPosition();
 
   // Reset the stepper chip
-  StepMtrErr Reset();
+  ErrorCode Reset();
 
   // Read the status of the stepper chip.
   // Like all reads, this can only be done in the
   // background loop
-  StepMtrErr GetStatus(StepperStatus *stat);
+  ErrorCode GetStatus(Status *stat);
 
   // Set and get parameters.
   // These are mostly for internal use.
   // The higher level methods should generally
   // be used instead.
-  StepMtrErr SetParam(StepMtrParam param, uint32_t value);
-  StepMtrErr GetParam(StepMtrParam param, uint32_t *value);
+  ErrorCode SetParam(Param param, uint32_t value);
+  ErrorCode GetParam(Param param, uint32_t *value);
 
  private:
   size_t slave_index_;
-  static StepMotor motor_[MaxMotors];
-  static uint8_t param_len_[32];
 
   // Number of full steps/rev
   // Defaults to the standard value for most steppers
@@ -274,14 +271,16 @@ class StepMotor {
   float DpsToVelReg(float vel, float cnv) const;
   float RegVelToDps(int32_t val, float cnv) const;
   int32_t DegToUstep(float deg) const;
-  StepMtrErr SetKval(StepMtrParam param, float amp);
+  ErrorCode SetKval(Param param, float amp);
 
   // Send a command and wait for the response (if any)
-  StepMtrErr SendCmd(uint8_t *command, uint32_t length, uint8_t *response = nullptr);
+  ErrorCode SendCmd(uint8_t *command, uint32_t length, uint8_t *response = nullptr);
 
   // True if this is a powerSTEP chip.
   bool power_step_{false};
 
-  // SPI daisy chain used to speak with the steppers
-  SPI::DaisyChain<MaxMotors, QueueLength> *daisy_chain_;
+  // Stepper's daisy chain used to speak with the steppers on the SPI bus
+  Chain *stepper_chain_;
 };
+
+}  // namespace StepMotor

@@ -86,9 +86,7 @@ SensorReadings V03Sensors::get_readings() const {
   };
 }
 
-void V03Actuators::init(
-    NVParams::Handler *nv_params,
-    SPI::DaisyChain<StepMotor::MaxMotors, StepMotor::QueueLength> *stepper_chain) {
+void V03Actuators::init(NVParams::Handler *nv_params, StepMotor::Chain *stepper_chain) {
   blower_pinch_.emplace("blower_valve_", " of the blower pinch valve", BlowerValveMotorIndex,
                         stepper_chain);
   exhale_pinch_.emplace("exhale_valve_", " of the exhale pinch valve", ExhaleValveMotorIndex,
@@ -225,14 +223,13 @@ void V03System::init_subsystems() {
   //
   // The stepper motors support 5Mbits/s communication, which means a clock of 80MHz / 16
   // This assumes CPUFrequency is kept at 80MHz.
-
   spi1_.Initialize(/*clock_port=*/GPIO::Port::A, 5, /*miso_port=*/GPIO::Port::A, 6,
                    /*mosi_port=*/GPIO::Port::A, 7, /*chip_select_port=*/GPIO::Port::B, 6,
                    /*reset_port=*/GPIO::Port::A, 9, /*word_size=*/8,
                    SPI::Bitrate::CpuFreqBySixteen);
 
-  stepper_daisy_chain_.ProbeSlaves(/*null_command=*/static_cast<uint8_t>(StepMtrCmd::Nop),
-                                   /*reset_command=*/static_cast<uint8_t>(StepMtrCmd::ResetDevice));
+  stepper_daisy_chain_.ProbeSlaves(static_cast<uint8_t>(StepMotor::OpCode::Nop),
+                                   static_cast<uint8_t>(StepMotor::OpCode::ResetDevice));
 
 #if defined(BARE_STM32)
   hal.bind_channels(&i2c1_, &rpi_uart_, &debug_uart_, &spi1_);

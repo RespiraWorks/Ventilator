@@ -76,7 +76,7 @@ void PinchValve::Disable() {
 // any time the valve is first enabled
 //
 void PinchValve::Home() {
-  StepMtrErr err;
+  StepMotor::ErrorCode err;
 
   switch (home_state_) {
     case PinchValveHomeState::Disabled:
@@ -86,7 +86,7 @@ void PinchValve::Home() {
     // Limit motor power during homing.
     case PinchValveHomeState::LowerAmp:
       err = motor_.SetAmpAll(HomeAmp);
-      if (err == StepMtrErr::Ok) {
+      if (err == StepMotor::ErrorCode::Ok) {
         home_state_ = PinchValveHomeState::SetHomeSpeed;
       }
       break;
@@ -94,10 +94,10 @@ void PinchValve::Home() {
     // Set the move speed/accel to be used during homing
     case PinchValveHomeState::SetHomeSpeed:
       err = motor_.SetMaxSpeed(HomeVel);
-      if (err == StepMtrErr::Ok) {
+      if (err == StepMotor::ErrorCode::Ok) {
         err = motor_.SetAccel(HomeAccel);
       }
-      if (err == StepMtrErr::Ok) {
+      if (err == StepMotor::ErrorCode::Ok) {
         home_state_ = PinchValveHomeState::MoveToStop;
       }
       break;
@@ -106,7 +106,7 @@ void PinchValve::Home() {
     case PinchValveHomeState::MoveToStop:
       move_start_time_ = SystemTimer::singleton().now();
       err = motor_.MoveRel(HomeDist);
-      if (err == StepMtrErr::Ok) {
+      if (err == StepMotor::ErrorCode::Ok) {
         home_state_ = PinchValveHomeState::WaitMoveStop;
       }
       break;
@@ -123,7 +123,7 @@ void PinchValve::Home() {
     // Switch to normal power setting
     case PinchValveHomeState::SetNormalAmp:
       err = motor_.SetAmpAll(MoveAmp);
-      if (err == StepMtrErr::Ok) {
+      if (err == StepMotor::ErrorCode::Ok) {
         home_state_ = PinchValveHomeState::MoveOffset;
       }
       break;
@@ -134,7 +134,7 @@ void PinchValve::Home() {
     case PinchValveHomeState::MoveOffset:
       move_start_time_ = SystemTimer::singleton().now();
       err = motor_.MoveRel(-HomeOffset);
-      if (err == StepMtrErr::Ok) {
+      if (err == StepMotor::ErrorCode::Ok) {
         home_state_ = PinchValveHomeState::WaitMoveOffset;
       }
       break;
@@ -150,7 +150,7 @@ void PinchValve::Home() {
     // Set the current position to zero
     case PinchValveHomeState::ZeroPos:
       err = motor_.ClearPosition();
-      if (err == StepMtrErr::Ok) {
+      if (err == StepMotor::ErrorCode::Ok) {
         home_state_ = PinchValveHomeState::SetNormalSpeed;
       }
       break;
@@ -159,10 +159,10 @@ void PinchValve::Home() {
     case PinchValveHomeState::SetNormalSpeed:
 
       err = motor_.SetMaxSpeed(MoveVel);
-      if (err == StepMtrErr::Ok) {
+      if (err == StepMotor::ErrorCode::Ok) {
         err = motor_.SetAccel(MoveAccel);
       }
-      if (err == StepMtrErr::Ok) {
+      if (err == StepMotor::ErrorCode::Ok) {
         home_state_ = PinchValveHomeState::Homed;
       }
 

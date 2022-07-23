@@ -116,7 +116,7 @@ install_linux() {
                lcov \
                clang-tidy
   pip3 install -U pip
-  pip3 install codecov pyserial matplotlib pandas gitpython
+  pip3 install codecov pyserial matplotlib pandas gitpython numpy
   pip3 install platformio==${PIO_VERSION}
   source ${HOME}/.profile
 }

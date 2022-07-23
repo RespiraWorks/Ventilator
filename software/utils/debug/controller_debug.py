@@ -303,16 +303,6 @@ class ControllerDebugInterface:
         # TODO: verbose behavior
         # TODO: error handling
 
-        # Type checking
-        if variable.type == var_info.VAR_STRING and not isinstance(value, str):
-            raise TypeError()
-        elif variable.type == var_info.VAR_FLOAT_ARRAY and not (
-            isinstance(value, np.ndarray) or type(value, list)
-        ):
-            raise TypeError()
-        elif not isinstance(value, int) or isinstance(value, float):
-            raise TypeError()
-
         if verbose:
             text = variable.print_value(value, show_access=False)
             print(f"  applying {text}")

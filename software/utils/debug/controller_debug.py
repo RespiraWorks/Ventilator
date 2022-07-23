@@ -31,7 +31,6 @@ import test_scenario
 from test_data import *
 from pathlib import Path
 from lib.colors import red, orange
-from debug_funcs import *
 
 # TODO: Import constants from proto instead!
 

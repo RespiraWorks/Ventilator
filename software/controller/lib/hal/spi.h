@@ -33,6 +33,18 @@ namespace SPI {
 
 enum class Base { SPI1, SPI2, SPI3 };
 
+// possible bitrates on SPI bus (see [RM] p1131).
+enum class Bitrate : uint8_t {
+  CpuFreqByTwo = 0,
+  CpuFreqByFour = 1,
+  CpuFreqByEight = 2,
+  CpuFreqBySixteen = 3,
+  CpuFreqByThirtyTwo = 4,
+  CpuFreqBySixtyFour = 5,
+  CpuFreqByOneTwentyEight = 6,
+  CpuFreqByTwoFiftySix = 7,
+};
+
 class Channel {
  public:
   Channel(Base spi, DMA::Base dma);
@@ -40,7 +52,7 @@ class Channel {
   void Initialize(GPIO::Port clock_port, uint8_t clock_pin, GPIO::Port miso_port, uint8_t miso_pin,
                   GPIO::Port mosi_port, uint8_t mosi_pin, GPIO::Port chip_select_port,
                   uint8_t chip_select_pin, GPIO::Port reset_port, uint8_t reset_pin,
-                  uint8_t word_size, uint8_t bitrate_scaler, bool rx_interrupts_enabled,
+                  uint8_t word_size, Bitrate bitrate, bool rx_interrupts_enabled,
                   bool tx_interrupts_enabled, RxListener *rx_listener = nullptr,
                   TxListener *tx_listener = nullptr);
 
@@ -60,8 +72,8 @@ class Channel {
   std::optional<DMA::ChannelControl> tx_dma_{std::nullopt};
 
   // listeners for DMA transfer complete
-  RxListener *rx_listener_;
-  TxListener *tx_listener_;
+  RxListener *rx_listener_{nullptr};
+  TxListener *tx_listener_{nullptr};
 
  private:
   // SPI base of this channel

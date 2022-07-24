@@ -104,9 +104,8 @@ void Channel::Initialize(GPIO::Port clock_port, uint8_t clock_pin, GPIO::Port mi
                          uint8_t miso_pin, GPIO::Port mosi_port, uint8_t mosi_pin,
                          GPIO::Port chip_select_port, uint8_t chip_select_pin,
                          GPIO::Port reset_port, uint8_t reset_pin, uint8_t word_size,
-                         uint8_t bitrate_scaler, bool rx_interrupts_enabled,
-                         bool tx_interrupts_enabled, RxListener *rx_listener,
-                         TxListener *tx_listener) {
+                         Bitrate bitrate, bool rx_interrupts_enabled, bool tx_interrupts_enabled,
+                         RxListener *rx_listener, TxListener *tx_listener) {
   // Enable the clock for the selected peripheral
   switch (spi_) {
     case Base::SPI1:
@@ -147,8 +146,7 @@ void Channel::Initialize(GPIO::Port clock_port, uint8_t clock_pin, GPIO::Port mi
   spi->control2.fifo_rx_threshold = 1;  // Receive interrupt on every byte
 
   spi->control2.data_size = static_cast<uint8_t>(word_size - 1) & 0b1111;
-  // register value to achieve that is 3) [RM p1331]
-  spi->control_reg1.bitrate = bitrate_scaler & 0b111;
+  spi->control_reg1.bitrate = static_cast<uint8_t>(bitrate) & 0b111;
 
   // Configure for master mode, CPOL and CPHA both 0.
   spi->control_reg1.clock_phase = 1;            // Data is sampled on the rising edge of the clock

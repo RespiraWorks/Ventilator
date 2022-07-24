@@ -140,7 +140,7 @@ StepMtrErr StepMotor::GetParam(StepMtrParam param, uint32_t *value) {
     return err;
   }
 
-  // Returned data is in stored MSB first.
+  // Returned data is stored MSB first.
   *value = 0;
   for (size_t i = 0; i < len; i++) {
     *value <<= 8;
@@ -163,12 +163,15 @@ void StepMotor::OneTimeInit() {
   //   PA10 - flag open drain output
   //   PB4  - busy open drain output
   //   PC10 - STCK input
-
+  //
+  // The stepper motors support 5Mbits/s communication, which means a clock of 80MHz / 16
+  // This assumes CPUFrequency is kept at 80MHz.
   daisy_chain_.Initialize(/*null_command=*/static_cast<uint8_t>(StepMtrCmd::Nop),
                           /*reset_command=*/static_cast<uint8_t>(StepMtrCmd::ResetDevice),
                           /*clock_port=*/GPIO::Port::A, 5, /*miso_port=*/GPIO::Port::A, 6,
                           /*mosi_port=*/GPIO::Port::A, 7, /*chip_select_port=*/GPIO::Port::B, 6,
-                          /*reset_port=*/GPIO::Port::A, 9, /*word_size=*/8, /*clock_scaler=*/3);
+                          /*reset_port=*/GPIO::Port::A, 9, /*word_size=*/8,
+                          SPI::Bitrate::CpuFreqBySixteen);
 
   // Do some basic init of the stepper motor chips so we can make them spin the motors
   for (size_t i = 0; i < daisy_chain_.num_slaves(); i++) {
@@ -387,12 +390,10 @@ StepMtrErr StepMotor::RunAtVelocity(float vel) {
   int neg = vel < 0;
   vel = fabsf(vel);
 
-  // Convert the speed from deg/sec to the weird units
-  // used by the stepper chip
+  // Convert the speed from deg/sec to the weird units used by the stepper chip
   float speed = DpsToVelReg(vel, VelCurrentSpeedReg);
 
-  // The speed value is a 20 bit unsigned integer passed
-  // as part of the command.
+  // The speed value is a 20 bit unsigned integer passed as part of the command.
   int32_t s = static_cast<int32_t>(speed);
   if (s > 0x000fffff) {
     s = 0x000fffff;
@@ -411,16 +412,14 @@ StepMtrErr StepMotor::RunAtVelocity(float vel) {
 }
 
 // Decelerate to zero velocity and hold position
-// This can also be used to enable the motor without
-// causing any motion
+// This can also be used to enable the motor without causing any motion
 StepMtrErr StepMotor::SoftStop() {
   uint8_t cmd = static_cast<uint8_t>(StepMtrCmd::SoftStop);
   return SendCmd(&cmd, 1);
 }
 
 // Stop abruptly and hold position
-// This can also be used to enable the motor without
-// causing any motion
+// This can also be used to enable the motor without causing any motion
 StepMtrErr StepMotor::HardStop() {
   uint8_t cmd = static_cast<uint8_t>(StepMtrCmd::HardStop);
   return SendCmd(&cmd, 1);
@@ -457,8 +456,9 @@ StepMtrErr StepMotor::GetStatus(StepperStatus *stat) {
     return StepMtrErr::WouldBlock;
   }
 
-  // We expect a 2 bytes response so we add two zeros after the op code.
-  uint8_t cmd[] = {static_cast<uint8_t>(StepMtrCmd::GetStatus), 0, 0};
+  // We expect a 2 bytes response so we add two Nops after the op code.
+  uint8_t cmd[] = {static_cast<uint8_t>(StepMtrCmd::GetStatus),
+                   static_cast<uint8_t>(StepMtrCmd::Nop), static_cast<uint8_t>(StepMtrCmd::Nop)};
   uint8_t response[sizeof(cmd) - 1] = {0};
 
   StepMtrErr err = SendCmd(cmd, sizeof(cmd), response);
@@ -500,8 +500,7 @@ int32_t StepMotor::DegToUstep(float deg) const {
 }
 
 // Goto to the position (in deg) via the shortest path
-// This returns once the move has started, it doesn't
-// wait for the move to finish
+// This returns once the move has started, it doesn't wait for the move to finish
 StepMtrErr StepMotor::GotoPos(float deg) {
   int32_t ustep = DegToUstep(deg);
 
@@ -537,13 +536,14 @@ StepMtrErr StepMotor::MoveRel(float deg) {
 
 // Send a command to the motor and, unless called from an interrupt handler, wait for it to be
 // processed.
-// The passed buffer should be at least len bytes long and response (if any) should be at most
-// one byte shorter.
+// The command should be at least length bytes long and response (if any) should be at least
+// (length-1) bytes long.
 //
 // Each command to the stepper consists of a one byte command code and 0 to 3 data bytes.
 // Multiple commands can be placed one after another and all sent as a unit with this function.
 //
-// Note that when called outside an interrupt handler, a busy wait is included.
+// Note that when called outside an interrupt handler, this waits until the command is processed
+// before returning.
 StepMtrErr StepMotor::SendCmd(uint8_t *cmd, uint32_t len, uint8_t *response) {
   bool request_finished = false;
   SPI::Request request = {

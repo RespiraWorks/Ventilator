@@ -33,7 +33,7 @@ namespace SPI {
 //
 // With this setup, we talk to all the slaves at once, but in as many clock cycles as there are
 // slaves, by keeping the chip select low as we send one word per slave.
-// For convenience in this implementation, we have numbered the salves in reverse order, so that
+// For convenience in this implementation, we have numbered the slaves in reverse order, so that
 // byte 0 of the send buffer is destined for slave 0, but that slave is technically the last in
 // the chain.
 // Also, we need to distribute their responses to the managing entities accordingly, as the
@@ -43,16 +43,15 @@ namespace SPI {
 // Structure that represents a request that can be queued up of sending to one of the slaves in
 // the SPI daisy chain.  Note that we only support 8 bits transmission for now.
 struct Request {
-  uint8_t *command = {nullptr};
-  size_t length{0};               // (in bytes)
-  uint8_t *response = {nullptr};  // Place the caller wants us to put the response
-                                  // Note that because of the way a daisy chain works, the response
-                                  // must be one byte shorter than the command and the caller must
-                                  // reserve at least that much space for the response.
-                                  // In practice, this means the caller needs to fill the command
-                                  // to sizeof(expected_response) + 1 with nullcommand bytes.
-  bool *processed{nullptr};       // boolean we set to inform the caller that the request is
-                                  // processed
+  uint8_t *command{nullptr};
+  size_t length{0};            // (in bytes)
+  uint8_t *response{nullptr};  // Place the caller wants us to put the response
+                               // Note that because of the way a daisy chain works, the response
+                               // must be one byte shorter than the command and the caller must
+                               // reserve at least that much space for the response.
+                               // In practice, this means the caller needs to fill the command
+                               // to sizeof(expected_response) + 1 with nullcommand bytes.
+  bool *processed{nullptr};    // boolean we set to inform the caller that the request is processed
 };
 
 template <size_t MaxSlaves>
@@ -63,8 +62,7 @@ class DaisyChain : public Channel, public RxListener {
   void Initialize(uint8_t null_command, uint8_t reset_command, GPIO::Port clock_port,
                   uint8_t clock_pin, GPIO::Port miso_port, uint8_t miso_pin, GPIO::Port mosi_port,
                   uint8_t mosi_pin, GPIO::Port chip_select_port, uint8_t chip_select_pin,
-                  GPIO::Port reset_port, uint8_t reset_pin, uint8_t word_size,
-                  uint8_t bitrate_scaler);
+                  GPIO::Port reset_port, uint8_t reset_pin, uint8_t word_size, Bitrate bitrate);
 
   bool SendRequest(const Request &request, size_t slave);
 

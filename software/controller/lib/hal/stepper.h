@@ -120,13 +120,6 @@ enum class StepMtrErr {
   InvalidState,  // Invalid state for command.
 };
 
-// States for the stepper motor communication interface
-enum class StepCommState {
-  Idle,        // Not currently communicating
-  SendQueued,  // Sending data that was queued up by control loop
-  SendSync,    // Sending data that the background thread is waiting on.
-};
-
 enum class StepMoveStatus {
   Stopped,
   Accelerating,

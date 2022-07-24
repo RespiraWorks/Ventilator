@@ -32,10 +32,10 @@ void DaisyChain<MaxSlaves>::Initialize(uint8_t null_command, uint8_t reset_comma
                                        GPIO::Port mosi_port, uint8_t mosi_pin,
                                        GPIO::Port chip_select_port, uint8_t chip_select_pin,
                                        GPIO::Port reset_port, uint8_t reset_pin,
-                                       uint8_t word_size, uint8_t bitrate_scaler) {
+                                       uint8_t word_size, Bitrate bitrate) {
   Channel::Initialize(clock_port, clock_pin, miso_port, miso_pin, mosi_port, mosi_pin,
                       chip_select_port, chip_select_pin, reset_port, reset_pin, word_size,
-                      bitrate_scaler, /*rx_interrupts_enabled=*/true,
+                      bitrate, /*rx_interrupts_enabled=*/true,
                       /*tx_interrupts_enabled=*/false, /*rx_listener=*/this);
   null_command_=null_command;
   ProbeSlaves(null_command, reset_command);

@@ -225,6 +225,8 @@ void DaisyChain<MaxSlaves>::TransmitNextCommand() {
     SetupReception(receive_buffer_, num_slaves_);
     // Send command with CS low
     SendCommand(send_buffer_, num_slaves_, true);
+    // Force CS to stay low for 350ns, in our case, the minimum wait is 1µs.
+    SystemTimer::singleton().delay(microseconds(1));
   } else {
     command_buffer_count_ = 0;
     // wait for the next command, which will trigger a new transmission

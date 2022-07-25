@@ -147,7 +147,7 @@
         "supplier": "Digikey",
         "spn": "WM1846-ND",
         "price": 0.49,
-        "price_units": ,
+        "price_units": 1,
         "url": "https://www.digikey.com/en/products/detail/molex/0436450300/268975"
       }
     ]
@@ -209,15 +209,15 @@
     "manufacturer": "Remington",
     "mpn": "26UL1007STRKIT10COLOR",
     "avg_price": 42.35,
-    "price_unit": "250ft",
+    "price_unit": "ft",
     "sources": [
       {
         "supplier": "Digikey",
         "spn": "2328-26UL1007STRKIT10COLOR-ND",
         "price": 42.35,
-        "price_units": 250ft,
+        "price_units": 250,
         "url": "https://www.digikey.com/en/products/detail/remington-industries/26UL1007STRKIT10COLOR/11613823"
       }
     ]
-  }  
+  }
 ]

@@ -13,7 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include "spi.h"
+#include "spi_stm32.h"
 
 #include "clocks_stm32.h"
 
@@ -75,7 +75,7 @@ SpiReg *get_register(const Base id) {
   __builtin_unreachable();
 }
 
-Channel::Channel(Base spi, DMA::Base dma) : spi_(spi) {
+STM32Channel::STM32Channel(Base spi, DMA::Base dma) : spi_(spi) {
   // DMA mapping for SPI (see [RM] p299)
   static struct {
     DMA::Base dma_base;
@@ -100,12 +100,11 @@ Channel::Channel(Base spi, DMA::Base dma) : spi_(spi) {
   }
 };
 
-void Channel::Initialize(GPIO::Port clock_port, uint8_t clock_pin, GPIO::Port miso_port,
-                         uint8_t miso_pin, GPIO::Port mosi_port, uint8_t mosi_pin,
-                         GPIO::Port chip_select_port, uint8_t chip_select_pin,
-                         GPIO::Port reset_port, uint8_t reset_pin, uint8_t word_size,
-                         Bitrate bitrate, bool rx_interrupts_enabled, bool tx_interrupts_enabled,
-                         RxListener *rx_listener, TxListener *tx_listener) {
+void STM32Channel::Initialize(GPIO::Port clock_port, uint8_t clock_pin, GPIO::Port miso_port,
+                              uint8_t miso_pin, GPIO::Port mosi_port, uint8_t mosi_pin,
+                              GPIO::Port chip_select_port, uint8_t chip_select_pin,
+                              GPIO::Port reset_port, uint8_t reset_pin, uint8_t word_size,
+                              Bitrate bitrate) {
   // Enable the clock for the selected peripheral
   switch (spi_) {
     case Base::SPI1:
@@ -158,23 +157,20 @@ void Channel::Initialize(GPIO::Port clock_port, uint8_t clock_pin, GPIO::Port mi
   spi->control_reg1.enable = 1;  // Enable the SPI module
 
   rx_dma_->Initialize(dma_request_, &spi->data, DMA::ChannelDir::PeripheralToMemory,
-                      rx_interrupts_enabled, DMA::ChannelPriority::Low,
+                      rx_listener_ != nullptr, DMA::ChannelPriority::Low,
                       InterruptPriority::Standard);
   tx_dma_->Initialize(dma_request_, &spi->data, DMA::ChannelDir::MemoryToPeripheral,
-                      tx_interrupts_enabled, DMA::ChannelPriority::Low,
+                      tx_listener_ != nullptr, DMA::ChannelPriority::Low,
                       InterruptPriority::Standard);
-
-  rx_listener_ = rx_listener;
-  tx_listener_ = tx_listener;
 }
 
-void Channel::SetupReception(uint8_t *receive_buffer, size_t length) {
+void STM32Channel::SetupReception(uint8_t *receive_buffer, size_t length) {
   rx_dma_->Disable();
   rx_dma_->SetupTransfer(receive_buffer, length);
   rx_dma_->Enable();
 }
 
-void Channel::SendCommand(uint8_t *send_buffer, size_t length, bool clear_chip_select) {
+void STM32Channel::SendCommand(uint8_t *send_buffer, size_t length, bool clear_chip_select) {
   tx_dma_->Disable();
 
   tx_dma_->SetupTransfer(send_buffer, length);
@@ -186,8 +182,18 @@ void Channel::SendCommand(uint8_t *send_buffer, size_t length, bool clear_chip_s
   tx_dma_->Enable();
 }
 
+// This must only called with interrupts disabled.
+void STM32Channel::WaitResponse() {
+  // Wait until transmission is finished and clear corresponding interrupt flag
+  while (!rx_dma_->InterruptStatus(DMA::Interrupt::TransferComplete)) {
+  }
+
+  // Clear the interrupt flag so I won't get an interrupt as soon as I re-enable them
+  rx_dma_->ClearInterrupt(DMA::Interrupt::Global);
+}
+
 // DMA channel Interrupt Handlers, which clear interrupts and run adequate callbacks
-void Channel::TxDMAInterruptHandler() {
+void STM32Channel::TxDMAInterruptHandler() {
   if (tx_dma_->InterruptStatus(DMA::Interrupt::TransferError)) {
     tx_dma_->ClearInterrupt(DMA::Interrupt::TransferError);
     if (tx_listener_) {
@@ -202,7 +208,7 @@ void Channel::TxDMAInterruptHandler() {
   }
 }
 
-void Channel::RxDMAInterruptHandler() {
+void STM32Channel::RxDMAInterruptHandler() {
   if (rx_dma_->InterruptStatus(DMA::Interrupt::TransferError)) {
     rx_dma_->ClearInterrupt(DMA::Interrupt::TransferError);
     if (rx_listener_) {

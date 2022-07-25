@@ -28,8 +28,12 @@ limitations under the License.
 StepMotor StepMotor::motor_[StepMotor::MaxMotors] = {StepMotor(0), StepMotor(1), StepMotor(2),
                                                      StepMotor(3)};
 // The steppers are chained on the SPI1 bus, which we link with DMA2
-SPI::DaisyChain<StepMotor::MaxMotors> StepMotor::daisy_chain_{SPI::Base::SPI1, DMA::Base::DMA2,
-                                                              "stepper", "for stepper daisy chain"};
+SPI::STM32Channel StepMotor::spi_{SPI::Base::SPI1, DMA::Base::DMA2};
+// The steppers require us to keep CS high for at least 650 ns between bytes.
+// For us, the minimum delay we can control is 1µs
+SPI::DaisyChain</*MaxSlaves=*/StepMotor::MaxMotors, /*MaxRequestsPerSlave=*/10>
+    StepMotor::daisy_chain_{"stepper", "for stepper daisy chain", &spi_,
+                            /*min_cs_high_time=*/microseconds(1)};
 
 // This array holds the length of each parameter in units of
 // bytes, rounded up to the nearest byte.  This info is based
@@ -166,12 +170,17 @@ void StepMotor::OneTimeInit() {
   //
   // The stepper motors support 5Mbits/s communication, which means a clock of 80MHz / 16
   // This assumes CPUFrequency is kept at 80MHz.
-  daisy_chain_.Initialize(/*null_command=*/static_cast<uint8_t>(StepMtrCmd::Nop),
-                          /*reset_command=*/static_cast<uint8_t>(StepMtrCmd::ResetDevice),
-                          /*clock_port=*/GPIO::Port::A, 5, /*miso_port=*/GPIO::Port::A, 6,
-                          /*mosi_port=*/GPIO::Port::A, 7, /*chip_select_port=*/GPIO::Port::B, 6,
-                          /*reset_port=*/GPIO::Port::A, 9, /*word_size=*/8,
-                          SPI::Bitrate::CpuFreqBySixteen);
+
+  // Set SPI listeners before its proper initialization to allow Initialize to enable the proper
+  // interrupts
+  spi_.SetListeners(/*rxl=*/&daisy_chain_, /*txl=*/nullptr);
+
+  spi_.Initialize(/*clock_port=*/GPIO::Port::A, 5, /*miso_port=*/GPIO::Port::A, 6,
+                  /*mosi_port=*/GPIO::Port::A, 7, /*chip_select_port=*/GPIO::Port::B, 6,
+                  /*reset_port=*/GPIO::Port::A, 9, /*word_size=*/8, SPI::Bitrate::CpuFreqBySixteen);
+
+  daisy_chain_.ProbeSlaves(/*null_command=*/static_cast<uint8_t>(StepMtrCmd::Nop),
+                           /*reset_command=*/static_cast<uint8_t>(StepMtrCmd::ResetDevice));
 
   // Do some basic init of the stepper motor chips so we can make them spin the motors
   for (size_t i = 0; i < daisy_chain_.num_slaves(); i++) {
@@ -562,7 +571,7 @@ StepMtrErr StepMotor::SendCmd(uint8_t *cmd, uint32_t len, uint8_t *response) {
   return StepMtrErr::Ok;
 }
 
-void StepMotor::DmaISR() { daisy_chain_.RxDMAInterruptHandler(); }
+void StepMotor::DmaISR() { spi_.RxDMAInterruptHandler(); }
 
 #else
 

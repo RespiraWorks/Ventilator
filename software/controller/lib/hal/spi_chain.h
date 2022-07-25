@@ -16,6 +16,7 @@ limitations under the License.
 #pragma once
 
 #include "circular_buffer.h"
+#include "serial_listeners.h"
 #include "spi.h"
 #include "system_timer.h"
 #include "vars.h"
@@ -54,15 +55,13 @@ struct Request {
   bool *processed{nullptr};    // boolean we set to inform the caller that the request is processed
 };
 
-template <size_t MaxSlaves>
-class DaisyChain : public Channel, public RxListener {
+template <size_t MaxSlaves, size_t MaxRequestsPerSlave>
+class DaisyChain : public RxListener {
  public:
-  DaisyChain(Base spi, DMA::Base dma, const char *name, const char *help_supplement);
+  DaisyChain(const char *name, const char *help_supplement, Channel *spi,
+             Duration min_cs_high_time);
 
-  void Initialize(uint8_t null_command, uint8_t reset_command, GPIO::Port clock_port,
-                  uint8_t clock_pin, GPIO::Port miso_port, uint8_t miso_pin, GPIO::Port mosi_port,
-                  uint8_t mosi_pin, GPIO::Port chip_select_port, uint8_t chip_select_pin,
-                  GPIO::Port reset_port, uint8_t reset_pin, uint8_t word_size, Bitrate bitrate);
+  void ProbeSlaves(uint8_t null_command, uint8_t reset_command);
 
   bool SendRequest(const Request &request, size_t slave);
 
@@ -72,10 +71,21 @@ class DaisyChain : public Channel, public RxListener {
   void on_rx_error(RxError) override{};
   void on_character_match() override{};
 
- protected:
+  // Functions used for probing, made public for testing purposes: if we do not have the hardware
+  // in the loop, SendDataWithBusyWait will send the transmission but never get a response.
+  // To alleviate this, the ProbeSlaves method is split at each step where a response is
+  // needed, so the test can call these functions individually and insert the response on the
+  // spi bus in between.
+  void SetNullCommand(uint8_t null_command);
+  void FlushSlavesData();
+  void ResetSlaves(uint8_t reset_command, uint8_t *response_buffer, size_t length);
+  void ParseProbeResponse(uint8_t *response_buffer, size_t length);
+
+ private:
+  Channel *spi_;
+
   // Number of slaves that are actually present in the chain, determined during initilization
   size_t num_slaves_{0};
-  void ProbeSlaves(uint8_t null_command, uint8_t reset_command);
 
   // null command we fill the send buffer with when there is nothing to send to a slave
   uint8_t null_command_{0};
@@ -85,12 +95,20 @@ class DaisyChain : public Channel, public RxListener {
 
   void TransmitNextCommand();
 
-  // We need to handle as many requests queues as we have slaves. We are using normal arrays to do
-  // this as the requests should not stack up, and we are able to empty the queues every so often.
-  static constexpr size_t MaxQueueLength{10};
+  // When a command is queued, its data is stored in a local buffer since the scope of the data
+  // being pointed to is not certain.
+  // Length of 20 bytes per slave is arbitrary but should suffice for stepper motors, which take
+  // short commands (length <= 4).
+  // Note that this buffer is shared between slaves
+  static constexpr size_t CommandBufferSize{20 * MaxSlaves};
+  size_t command_buffer_count_{0};
 
- private:
-  Request request_queue_[MaxSlaves][MaxQueueLength];
+  uint8_t command_buffer_[CommandBufferSize] = {0};
+
+  // We need to handle as many requests queues as we have slaves. We are using normal arrays to do
+  // this as the requests should not stack up, and we should be able to empty the queues beween
+  // cycles of the high priority loop.
+  Request request_queue_[MaxSlaves][MaxRequestsPerSlave];
   size_t queue_count_[MaxSlaves] = {0};
   size_t current_request_[MaxSlaves] = {0};
   size_t command_index_[MaxSlaves] = {0};
@@ -98,30 +116,25 @@ class DaisyChain : public Channel, public RxListener {
   size_t response_count_[MaxSlaves] = {0};
   bool save_response_[MaxSlaves] = {false};
 
-  // When a command is queued, its data is stored in a local buffer since the scope of the data
-  // being pointed to is not certain.
-  // Length of 20 bytes per slave is arbitrary but should suffice for stepper motors, which take
-  // short commands (length <= 4).
-  // Note that this buffer is shared between slaves
- protected:
-  static constexpr size_t CommandBufferSize{20 * MaxSlaves};
-  size_t command_buffer_count_{0};
-
- private:
-  uint8_t command_buffer_[CommandBufferSize] = {0};
-
   // Buffers used to transmit/receive data from the SPI peripheral
   uint8_t send_buffer_[MaxSlaves] = {0};
   uint8_t receive_buffer_[MaxSlaves] = {0};
 
+  // Minimum time between bytes when transmitting (this depends on the nature of the slaves)
+  Duration min_cs_high_time_;
+  // Time when CS was last set to high
+  Time last_cs_rise_{microsSinceStartup(0)};
+
   void ProcessReceivedData();
   void SendDataWithBusyWait(uint8_t *command_buffer, uint8_t *response_buffer, size_t length);
-  virtual void WaitResponse();
+
+  Request *GetCurrentRequest(size_t slave);
+  void AdvanceToNextRequest(size_t slave);
 
   Debug::Variable::UInt32 queueing_errors_{"queuing_errors", Debug::Variable::Access::ReadOnly, 0,
                                            "", "Queueing error counter"};
 };
 
-#include "spi_chain.tpp"
-
 }  // namespace SPI
+
+#include "spi_chain.tpp"

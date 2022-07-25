@@ -17,38 +17,83 @@ limitations under the License.
 /// It is included by the corresponding header.                              ///
 ////////////////////////////////////////////////////////////////////////////////
 
-template<size_t MaxSlaves>
-DaisyChain<MaxSlaves>::DaisyChain(Base spi, DMA::Base dma, const char* name, const char* help_supplement)
-   : Channel(spi, dma)
+namespace SPI {
+
+template<size_t MaxSlaves, size_t MaxRequestsPerSlave>
+DaisyChain<MaxSlaves, MaxRequestsPerSlave>::DaisyChain(const char* name, const char* help_supplement, Channel *spi, Duration min_cs_high_time)
+   : spi_(spi), min_cs_high_time_(min_cs_high_time)
   {
     queueing_errors_.prepend_name(name);
     queueing_errors_.append_help(help_supplement);
    }
 
-template<size_t MaxSlaves>
-void DaisyChain<MaxSlaves>::Initialize(uint8_t null_command, uint8_t reset_command,
-                                       GPIO::Port clock_port, uint8_t clock_pin,
-                                       GPIO::Port miso_port, uint8_t miso_pin,
-                                       GPIO::Port mosi_port, uint8_t mosi_pin,
-                                       GPIO::Port chip_select_port, uint8_t chip_select_pin,
-                                       GPIO::Port reset_port, uint8_t reset_pin,
-                                       uint8_t word_size, Bitrate bitrate) {
-  Channel::Initialize(clock_port, clock_pin, miso_port, miso_pin, mosi_port, mosi_pin,
-                      chip_select_port, chip_select_pin, reset_port, reset_pin, word_size,
-                      bitrate, /*rx_interrupts_enabled=*/true,
-                      /*tx_interrupts_enabled=*/false, /*rx_listener=*/this);
-  null_command_=null_command;
-  ProbeSlaves(null_command, reset_command);
+template<size_t MaxSlaves, size_t MaxRequestsPerSlave>
+void DaisyChain<MaxSlaves, MaxRequestsPerSlave>::ProbeSlaves(uint8_t null_command, uint8_t reset_command) {
+  // Remember the null_command for later
+  SetNullCommand(null_command);
+  FlushSlavesData();
+
+  // Send a reset command to all the slaves + 1, in order to capture the case where we have no
+  // slaves at all (and the response buffer will stay full of zeros).
+  uint8_t response_buffer[MaxSlaves+1] = {0};
+  ResetSlaves(reset_command, response_buffer, sizeof(response_buffer));
+
+  ParseProbeResponse(response_buffer, sizeof(response_buffer));
 }
 
-template<size_t MaxSlaves>
-bool DaisyChain<MaxSlaves>::SendRequest(const Request &request, size_t slave) {
+template<size_t MaxSlaves, size_t MaxRequestsPerSlave>
+void DaisyChain<MaxSlaves, MaxRequestsPerSlave>::SetNullCommand(uint8_t null_command){
+  null_command_ = null_command;
+};
+
+template<size_t MaxSlaves, size_t MaxRequestsPerSlave>
+void DaisyChain<MaxSlaves, MaxRequestsPerSlave>::FlushSlavesData(){
+  // Send a bunch of null commands in order to flush all of the data in the daisy chain and any data
+  // currently being returned by the slaves (in case the controller was halted in a weird state).
+  uint8_t flush_buffer[MaxSlaves*5] = {0};
+  for(size_t i = 0 ; i < sizeof(flush_buffer) ; i++){
+    flush_buffer[i] = null_command_;
+  }
+  uint8_t response_buffer[sizeof(flush_buffer)] = {0};
+  SendDataWithBusyWait(flush_buffer, response_buffer, sizeof(flush_buffer));
+};
+
+//
+template<size_t MaxSlaves, size_t MaxRequestsPerSlave>
+void DaisyChain<MaxSlaves, MaxRequestsPerSlave>::ResetSlaves(uint8_t reset_command, uint8_t *response_buffer, size_t length){
+  uint8_t reset_buffer[length] = {0};
+  for(size_t i = 0 ; i < sizeof(reset_buffer) ; i++){
+    reset_buffer[i] = reset_command;
+  }
+  SendDataWithBusyWait(reset_buffer, response_buffer, length);
+};
+
+template<size_t MaxSlaves, size_t MaxRequestsPerSlave>
+void DaisyChain<MaxSlaves, MaxRequestsPerSlave>::ParseProbeResponse(uint8_t *response_buffer, size_t length) {
+  // At this point, the response buffer should be filled with as many null commands as there are
+  // slaves. Parse it to determine how many slaves there are.
+  num_slaves_ = 0;
+  for(size_t i = 0 ; i < length ; i++){
+    if (response_buffer[i] == null_command_){
+      num_slaves_++;
+    }
+  }
+
+  // If the response buffer is full of null commands, this most likely means the
+  // daisy chain is broken (more slaves than we expect)
+  if(num_slaves_==sizeof(response_buffer)) {
+    num_slaves_ = 0;
+  }
+}
+
+template<size_t MaxSlaves, size_t MaxRequestsPerSlave>
+bool DaisyChain<MaxSlaves, MaxRequestsPerSlave>::SendRequest(const Request &request, size_t slave) {
   // Ensure thread safety as this function might be called from a timer interrupt
   // as well as the main loop.
   BlockInterrupts block;
   // Check that everything is in order to proceed: the slave is valid, there is room in the
   // request queue for that slave and in the command buffer, and the provided data looks OK
-  if(slave >= num_slaves_ || queue_count_[slave] >= MaxQueueLength ||
+  if(slave >= num_slaves_ || queue_count_[slave] >= MaxRequestsPerSlave ||
        request.length > CommandBufferSize - command_buffer_count_ ||
        request.command == nullptr || request.length == 0){
     /// \TODO log an error (along with its nature?)
@@ -56,7 +101,7 @@ bool DaisyChain<MaxSlaves>::SendRequest(const Request &request, size_t slave) {
     return false;
   }
 
-  // copy request to the request queue for that slave
+  // Copy request to the request queue for that slave
   Request *new_request = &(request_queue_[slave][queue_count_[slave]++]);
   new_request->command = &command_buffer_[command_buffer_count_];
   new_request->length = request.length;
@@ -78,89 +123,40 @@ bool DaisyChain<MaxSlaves>::SendRequest(const Request &request, size_t slave) {
   return true;
 }
 
-template<size_t MaxSlaves>
-void DaisyChain<MaxSlaves>::ProbeSlaves(uint8_t null_command, uint8_t reset_command) {
-  // We are using a buffer slightly larger than normal here in order to detect the case where the
-  // daisy chain is broken (with probe response being full of zeroes).
-  // We are first sending a bunch of null commands in order to flush all of the data in the daisy
-  // chain and any data currently being returned by the slaves (in case the controller was halted
-  // in a weird state).
-  uint8_t probe_buffer[MaxSlaves + 1] = {null_command};
-  uint8_t response_buffer[sizeof(probe_buffer)] = {0};
-  for (uint8_t i = 0; i < 5; i++) {
-    SendDataWithBusyWait(probe_buffer, response_buffer, sizeof(probe_buffer));
+template<size_t MaxSlaves, size_t MaxRequestsPerSlave>
+void DaisyChain<MaxSlaves, MaxRequestsPerSlave>::SendDataWithBusyWait(uint8_t* command_buffer, uint8_t* response_buffer, size_t length){
+  if(!command_buffer || !response_buffer){
+    return;
   }
 
-  // Send a reset command to all the slaves.
-  for(size_t byte=0 ; byte < sizeof(probe_buffer) ; byte++){
-    probe_buffer[byte] = reset_command;
-  }
-  SendDataWithBusyWait(probe_buffer, response_buffer, sizeof(probe_buffer));
-
-  // At this point, the response buffer should be filled with as many null commands as there are
-  // slaves.
-  num_slaves_ = 0;
-  for (uint8_t i : response_buffer) {
-    if (i == null_command){
-      num_slaves_++;
-    } else {
-      break;
-    }
-  }
-
-  // If the response buffer is full of null commands, this most likely means the
-  // daisy chain is broken (more slaves than we expect)
-  if(num_slaves_==sizeof(response_buffer)) {
-    num_slaves_ = 0;
-  }
-
-}
-
-template<size_t MaxSlaves>
-void DaisyChain<MaxSlaves>::SendDataWithBusyWait(uint8_t* command_buffer, uint8_t* response_buffer,
-                                                 size_t length){
   // Blocking interrupts in order to force a busy wait until the end of the command
   BlockInterrupts block;
 
-  SetupReception(response_buffer, length);
-  SendCommand(command_buffer, length, true);
+  spi_->SetupReception(response_buffer, length);
+  spi_->SendCommand(command_buffer, length, true);
 
-  WaitResponse();
+  spi_->WaitResponse();
 
-  // NOTE - CS has to be high for at least 650ns between bytes.
-  SetChipSelect();
+  // NOTE - CS has to be high between bytes (how long depends on the nature of the slaves).
+  spi_->SetChipSelect();
+  SystemTimer::singleton().delay(min_cs_high_time_);
+}
+
+template<size_t MaxSlaves, size_t MaxRequestsPerSlave>
+void DaisyChain<MaxSlaves, MaxRequestsPerSlave>::on_rx_complete(){
+  spi_->SetChipSelect();
+  last_cs_rise_=SystemTimer::singleton().now();
+  ProcessReceivedData();
+  TransmitNextCommand();
+  // Slight delay here allows us to not halt the controller when driving steppers.
+  /// \TODO investigate the reason we need this.
   SystemTimer::singleton().delay(microseconds(1));
 }
 
-
-// This must only called with interrupts disabled.
-template<size_t MaxSlaves>
-void DaisyChain<MaxSlaves>::WaitResponse(){
-  // Wait until transmission is finished and clear corresponding interrupt flag
-  while (!rx_dma_->InterruptStatus(DMA::Interrupt::TransferComplete)) {
-  }
-
-  // Clear the interrupt flag so I won't get an interrupt as soon as I re-enable them
-  rx_dma_->ClearInterrupt(DMA::Interrupt::Global);
-}
-
-template<size_t MaxSlaves>
-void DaisyChain<MaxSlaves>::on_rx_complete(){
-  // NOTE - CS has to be high for at least 650ns between bytes.
-  // We don't include a busy wait here because in practice, the seting up of the next transmission
-  // takes longer than that.
-  SetChipSelect();
-  ProcessReceivedData();
-  TransmitNextCommand();
-}
-
-template<size_t MaxSlaves>
-void DaisyChain<MaxSlaves>::ProcessReceivedData() {
+template<size_t MaxSlaves, size_t MaxRequestsPerSlave>
+void DaisyChain<MaxSlaves, MaxRequestsPerSlave>::ProcessReceivedData() {
   for(size_t slave = 0 ; slave < num_slaves_ ; slave++) {
-    if(current_request_[slave] < queue_count_[slave]) {
-      // We are processing a request for that slave.  Get that request handy.
-      Request *request = &request_queue_[slave][current_request_[slave]];
-
+    if(Request *request = GetCurrentRequest(slave)) {
       // We only record the response if the caller cares about it, and provided proper pointers
       // where we can put the response and inform him it is valid
       if(request->response && request->processed && save_response_[slave]) {
@@ -172,24 +168,14 @@ void DaisyChain<MaxSlaves>::ProcessReceivedData() {
         if(request->processed) {
           *(request->processed) = true;
         }
-        // reset all request-related states
-        response_count_[slave] = 0;
-        command_index_[slave] = 0;
-        save_response_[slave] = false;
-        end_of_request_[slave] = false;
-        // and carry on to the next request (if any)
-        if(++current_request_[slave] >= queue_count_[slave]){
-          // We reached the end of the request queue for that slave
-          queue_count_[slave] = 0;
-          current_request_[slave] = 0;
-        }
+        AdvanceToNextRequest(slave);
       }
     }
   }
 }
 
-template<size_t MaxSlaves>
-void DaisyChain<MaxSlaves>::TransmitNextCommand() {
+template<size_t MaxSlaves, size_t MaxRequestsPerSlave>
+void DaisyChain<MaxSlaves, MaxRequestsPerSlave>::TransmitNextCommand() {
   // This method does not need to block interrupts: it is called from either SendRequest, which
   // blocks interrupts or from RxDMAInterruptHandler (through on_rx_complete), which is only
   // possible after SetupReception and SendCommand (our last instructions) have been called.
@@ -199,9 +185,8 @@ void DaisyChain<MaxSlaves>::TransmitNextCommand() {
 
   for(size_t slave = 0 ; slave < num_slaves_ ; slave++) {
     // prepare data to be sent for each slave
-    if(current_request_[slave] < queue_count_[slave]){
+    if(Request *request = GetCurrentRequest(slave)){
       data_to_send = true;
-      Request *request = &request_queue_[slave][current_request_[slave]];
       send_buffer_[slave] = request->command[command_index_[slave]++];
 
       // Trigger saving the response when we just sent the second byte.
@@ -222,14 +207,42 @@ void DaisyChain<MaxSlaves>::TransmitNextCommand() {
   }
 
   if(data_to_send){
-    SetupReception(receive_buffer_, num_slaves_);
+    spi_->SetupReception(receive_buffer_, num_slaves_);
+    // In case cs has not been high for long enough, delay sending the command
+    Time now = SystemTimer::singleton().now();
+    if(now - last_cs_rise_ < min_cs_high_time_) {
+      SystemTimer::singleton().delay(now - last_cs_rise_);
+    }
     // Send command with CS low
-    SendCommand(send_buffer_, num_slaves_, true);
-    // Force CS to stay low for 350ns, in our case, the minimum wait is 1µs.
-    SystemTimer::singleton().delay(microseconds(1));
+    spi_->SendCommand(send_buffer_, num_slaves_, true);
   } else {
     command_buffer_count_ = 0;
     // wait for the next command, which will trigger a new transmission
     transmitting_data_ = false;
   }
 }
+template<size_t MaxSlaves, size_t MaxRequestsPerSlave>
+Request *DaisyChain<MaxSlaves, MaxRequestsPerSlave>::GetCurrentRequest(size_t slave) {
+  if(current_request_[slave] < queue_count_[slave]){
+    return &request_queue_[slave][current_request_[slave]];
+  }
+  return nullptr;
+}
+
+template<size_t MaxSlaves, size_t MaxRequestsPerSlave>
+void DaisyChain<MaxSlaves, MaxRequestsPerSlave>::AdvanceToNextRequest(size_t slave) {
+  // Carry on to the next request (if any)
+  if(++current_request_[slave] >= queue_count_[slave]){
+    // We reached the end of the request queue for that slave
+    queue_count_[slave] = 0;
+    current_request_[slave] = 0;
+  }
+  // reset command and response indexes
+  response_count_[slave] = 0;
+  command_index_[slave] = 0;
+  // reset other request-related states
+  save_response_[slave] = false;
+  end_of_request_[slave] = false;
+}
+
+} //namespace SPI

@@ -52,9 +52,8 @@ limitations under the License.
 #include <cstdint>
 #include <optional>
 
-#include "dma.h"
-#include "gpio_stm32.h"
 #include "spi_chain.h"
+#include "spi_stm32.h"
 
 // These are the simple opcodes for the stepper driver.
 // Not included here are set/get parameter which include
@@ -293,7 +292,9 @@ class StepMotor {
   bool power_step_{false};
 
   // SPI bus used to speak with the steppers
-  static SPI::DaisyChain<MaxMotors> daisy_chain_;
+  static SPI::STM32Channel spi_;
+  static SPI::DaisyChain</*MaxSlaves=*/StepMotor::MaxMotors, /*MaxRequestsPerSlave=*/10>
+      daisy_chain_;
 
  public:
   // Interrupt service routine.

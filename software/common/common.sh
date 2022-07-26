@@ -134,8 +134,6 @@ generate_network_protocols() {
   generated_libs/network_protocol/network_protocol.proto
 }
 
-
-
 run_checks() {
     # Code style / bug-prone pattern checks (eg. clang-tidy)
     # WARNING: This might sometimes give different results for different people,

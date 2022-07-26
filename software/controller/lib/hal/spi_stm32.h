@@ -64,10 +64,10 @@ class STM32Channel : public Channel {
   void SendCommand(uint8_t *send_buffer, size_t length, bool clear_chip_select) override;
 
   // Interrupt handlers for DMA transfer complete
-  void TxDMAInterruptHandler();
-  void RxDMAInterruptHandler();
+  void TxDMAInterruptHandler() override;
+  void RxDMAInterruptHandler() override;
 
-  void WaitResponse();
+  void WaitResponse() override;
 
  private:
   // The way we setup SPI uses DMA to control the data flow

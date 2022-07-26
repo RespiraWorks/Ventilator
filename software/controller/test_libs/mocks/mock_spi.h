@@ -73,7 +73,7 @@ class MockChannel : public Channel {
     tx_flow_count_ = 0;
   }
 
-  // Queue data that wil be copied to the receive buffer when SetupReception is called
+  // Queue data that will be copied to the receive buffer when SetupReception is called
   void QueueReceiveData(uint8_t *rx_data, size_t length) {
     rx_queue_ = rx_data;
     rx_count_ = length;

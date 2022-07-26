@@ -14,6 +14,9 @@ limitations under the License.
 */
 
 #pragma once
+
+#include <cstdint>
+
 #include "serial_listeners.h"
 
 namespace SPI {

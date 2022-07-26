@@ -55,31 +55,71 @@ struct Request {
   bool *processed{nullptr};    // boolean we set to inform the caller that the request is processed
 };
 
+template <size_t QueueLength>
+class RequestQueue {
+ public:
+  RequestQueue() = default;
+
+  bool AddRequest(const Request &request, uint8_t *command_buffer);
+
+  bool WriteNextResponseByte(uint8_t byte);
+
+  std::optional<uint8_t> GetNextCommandByte();
+
+  Request *GetCurrentRequest();
+
+ protected:
+  // We are using normal arrays to handle the request queues since the requests should not stack up,
+  // and we should be able to empty the queues beween cycles of the high priority loop.
+  Request queue_[QueueLength];
+  size_t queue_count_{0};
+  size_t current_request_{0};
+  size_t command_index_{0};
+  bool end_of_request_{false};
+  size_t response_count_{0};
+  bool save_response_{false};
+
+  void AdvanceToNextRequest();
+};
+
 template <size_t MaxSlaves, size_t MaxRequestsPerSlave>
 class DaisyChain : public RxListener {
  public:
   DaisyChain(const char *name, const char *help_supplement, Channel *spi,
              Duration min_cs_high_time);
 
-  void ProbeSlaves(uint8_t null_command, uint8_t reset_command);
+  // for testing purposes, this returns the number of slaves
+  size_t ProbeSlaves(uint8_t null_command, uint8_t reset_command);
 
   bool SendRequest(const Request &request, size_t slave);
 
   size_t num_slaves() { return num_slaves_; }
 
   void on_rx_complete() override;
+  // SPI only provides callback for DMA error, which is highly unlikely: Quoting from [RM] p307:
+  // "A DMA transfer error is generated when reading from or writing to a reserved address space"
+  // Gracefully recovering from that error would be quite hard to do, and the way we setup the
+  // transfers is very well contained (memory-wise), so the risk is virtually non-existant.
+  // For that reason, we don't really bother managing this error.
   void on_rx_error(RxError) override{};
+  // There is no character match interrupt on the SPI peripheral
   void on_character_match() override{};
 
-  // Functions used for probing, made public for testing purposes: if we do not have the hardware
-  // in the loop, SendDataWithBusyWait will send the transmission but never get a response.
-  // To alleviate this, the ProbeSlaves method is split at each step where a response is
-  // needed, so the test can call these functions individually and insert the response on the
-  // spi bus in between.
   void SetNullCommand(uint8_t null_command);
+  // Functions used for probing, made public for testing purposes.
   void FlushSlavesData();
   void ResetSlaves(uint8_t reset_command, uint8_t *response_buffer, size_t length);
-  void ParseProbeResponse(uint8_t *response_buffer, size_t length);
+  size_t ParseProbeResponse(uint8_t *response_buffer, size_t length);
+
+  // If needed, adds a busy wait before we send data to the SPI bus(with reset of CS to low state).
+  // Public for testing purposes.
+  void EnsureMinCSHighTime();
+
+ protected:
+  // Minimum time between bytes when transmitting (this depends on the nature of the slaves)
+  Duration min_cs_high_time_;
+  // Time when CS was last set to high
+  Time last_cs_rise_{microsSinceStartup(0)};
 
  private:
   Channel *spi_;
@@ -101,38 +141,24 @@ class DaisyChain : public RxListener {
   // short commands (length <= 4).
   // Note that this buffer is shared between slaves
   static constexpr size_t CommandBufferSize{20 * MaxSlaves};
+  uint8_t command_buffer_[CommandBufferSize] = {0};
   size_t command_buffer_count_{0};
 
-  uint8_t command_buffer_[CommandBufferSize] = {0};
-
-  // We need to handle as many requests queues as we have slaves. We are using normal arrays to do
-  // this as the requests should not stack up, and we should be able to empty the queues beween
-  // cycles of the high priority loop.
-  Request request_queue_[MaxSlaves][MaxRequestsPerSlave];
-  size_t queue_count_[MaxSlaves] = {0};
-  size_t current_request_[MaxSlaves] = {0};
-  size_t command_index_[MaxSlaves] = {0};
-  bool end_of_request_[MaxSlaves] = {false};
-  size_t response_count_[MaxSlaves] = {0};
-  bool save_response_[MaxSlaves] = {false};
+  // We need to handle as many requests queues as we have slaves.
+  RequestQueue<MaxRequestsPerSlave> request_queue_[MaxSlaves];
 
   // Buffers used to transmit/receive data from the SPI peripheral
   uint8_t send_buffer_[MaxSlaves] = {0};
   uint8_t receive_buffer_[MaxSlaves] = {0};
 
-  // Minimum time between bytes when transmitting (this depends on the nature of the slaves)
-  Duration min_cs_high_time_;
-  // Time when CS was last set to high
-  Time last_cs_rise_{microsSinceStartup(0)};
-
   void ProcessReceivedData();
   void SendDataWithBusyWait(uint8_t *command_buffer, uint8_t *response_buffer, size_t length);
 
-  Request *GetCurrentRequest(size_t slave);
-  void AdvanceToNextRequest(size_t slave);
+  uint32_t queueing_errors_{0};
 
-  Debug::Variable::UInt32 queueing_errors_{"queuing_errors", Debug::Variable::Access::ReadOnly, 0,
-                                           "", "Queueing error counter"};
+  Debug::Variable::Primitive32 dbg_queueing_errors_{
+      "queuing_errors", Debug::Variable::Access::ReadOnly, &queueing_errors_, "",
+      "Queueing error counter"};
 };
 
 }  // namespace SPI

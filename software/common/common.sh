@@ -324,6 +324,14 @@ elif [ "$1" == "cov_upload" ]; then
 
   exit $EXIT_SUCCESS
 
+##############################
+# GENERATE NETWORK PROTOCOLS #
+##############################
+elif [ "$1" == "generate_network_protocols" ]; then
+  generate_network_protocols
+
+  exit $EXIT_SUCCESS
+
 ################
 # ERROR & HELP #
 ################
@@ -333,11 +341,3 @@ else
   print_help
   exit $EXIT_FAILURE
 fi
-
-##############################
-# GENERATE NETWORK PROTOCOLS #
-##############################
-elif [ "$1" == "generate_network_protocols" ]; then
-  generate_network_protocols
-
-  exit $EXIT_SUCCESS

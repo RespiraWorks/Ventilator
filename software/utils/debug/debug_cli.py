@@ -26,7 +26,6 @@ __license__ = """
 import argparse
 import cmd
 import glob
-from logging.handlers import DatagramHandler
 import os
 import shlex
 import traceback

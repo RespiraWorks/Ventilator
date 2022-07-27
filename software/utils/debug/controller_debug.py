@@ -299,9 +299,6 @@ class ControllerDebugInterface:
 
         variable = self.variable_metadata[name]
 
-        # TODO: verbose behavior
-        # TODO: error handling
-
         if verbose:
             text = variable.print_value(value, show_access=False)
             print(f"  applying {text}")

@@ -1,4 +1,4 @@
-/* Copyright 2020-2021, RespiraWorks
+/* Copyright 2020-2022, RespiraWorks
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,51 +15,37 @@ limitations under the License.
 
 #pragma once
 
-/// \TODO create more of an abstraction than just providing registers
-
 #include <cstdint>
 
-// [RM] 40.6 SPI Registers (pg 1330)
-struct SpiStruct {
-  struct {
-    uint32_t clock_phase : 1;
-    uint32_t clock_polarity : 1;
-    uint32_t master : 1;
-    uint32_t bitrate : 3;
-    uint32_t enable : 1;
-    uint32_t lsb_first : 1;
-    uint32_t internal_slave_select : 1;
-    uint32_t sw_slave_management : 1;
-    uint32_t rx_only : 1;
-    uint32_t crc_length : 1;
-    uint32_t crc_next : 1;
-    uint32_t crc_enable : 1;
-    uint32_t bidir_output : 1;
-    uint32_t bidir_mode : 1;
-    uint32_t reserved : 16;
-  } control_reg1;  // Control register 1 (SPIx_CR1) [RM] 40.6.1 (pg 1330)
-  struct {
-    uint32_t rx_dma : 1;
-    uint32_t tx_dma : 1;
-    uint32_t ss_output : 1;
-    uint32_t nss_pulse : 1;
-    uint32_t frame_format : 1;
-    uint32_t error_interrupt : 1;
-    uint32_t rx_not_empty_interrupt : 1;
-    uint32_t tx_empty_interrupt : 1;
-    uint32_t data_size : 4;
-    uint32_t fifo_rx_threshold : 1;
-    uint32_t last_dma_rx : 1;
-    uint32_t last_dma_tx : 1;
-    uint32_t reserved : 17;
-  } control2;  // Control register 2 (SPIx_CR2) [RM] 40.6.2
-  uint32_t status;
-  uint32_t data;
-  uint32_t crc_polynomial;
-  uint32_t rx_crc;
-  uint32_t tx_crc;
+#include "serial_listeners.h"
+
+namespace SPI {
+
+class Channel {
+ public:
+  Channel() = default;
+
+  virtual void SetChipSelect() = 0;
+  virtual void ClearChipSelect() = 0;
+
+  virtual void SetupReception(uint8_t *receive_buffer, size_t length) = 0;
+  virtual void SendCommand(uint8_t *send_buffer, size_t length, bool clear_chip_select) = 0;
+
+  // Interrupt handlers for DMA transfer complete
+  virtual void TxDMAInterruptHandler() = 0;
+  virtual void RxDMAInterruptHandler() = 0;
+
+  virtual void WaitResponse() = 0;
+
+  void SetListeners(RxListener *rxl, TxListener *txl) {
+    rx_listener_ = rxl;
+    tx_listener_ = txl;
+  };
+
+ protected:
+  // Listeners for transfer complete
+  RxListener *rx_listener_{nullptr};
+  TxListener *tx_listener_{nullptr};
 };
-typedef volatile SpiStruct SpiReg;
-inline SpiReg *const Spi1Base = reinterpret_cast<SpiReg *>(0x40013000);
-inline SpiReg *const Spi2Base = reinterpret_cast<SpiReg *>(0x40003800);
-inline SpiReg *const Spi3Base = reinterpret_cast<SpiReg *>(0x40003C00);
+
+}  // namespace SPI

@@ -18,7 +18,7 @@ It was necessary to secure front acrylic panels (display panel and filter panel)
 while also allowing it to lay flush with the front face of the enclosure. Heat-set inserts allow the panels to be
 mounted securely without obstruction.
 
-The sizing for the mounting holes was based on [this](https://www.pemnet.com/fastening_products/pdf/sidata.pdf) catalog
+The sizing for the mounting holes was based on [this](https://www.pemnet.com/wp-content/uploads/sites/2/2022/06/sidata.pdf) catalog
 for heat set inserts. For M4 nuts (page 5, metric table, row 6), length code 1 (5.72 mm) is small enough to fit in the
 6.35mm-thick acrylic. The corresponding outer diameter for insertion i.e. acrylic mounting diameter is 5.94 mm.
 

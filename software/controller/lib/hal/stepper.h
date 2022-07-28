@@ -1,4 +1,4 @@
-/* Copyright 2020, RespiraWorks
+/* Copyright 2020-2022, RespiraWorks
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -18,6 +18,9 @@ limitations under the License.
 //
 // This module implements a communication interface used to talk to a fixed
 // number of stepper driver chips via an SPI synchronous serial port.
+//
+// The stepper driver chips are setup in a daisy chain configuration (see
+// https://en.wikipedia.org/wiki/Serial_Peripheral_Interface#Daisy_chain_configuration)
 //
 // The driver chips supported are made by ST.  The following chips are
 // supported:
@@ -49,8 +52,8 @@ limitations under the License.
 #include <cstdint>
 #include <optional>
 
-#include "dma.h"
-#include "gpio_stm32.h"
+#include "spi_chain.h"
+#include "spi_stm32.h"
 
 // These are the simple opcodes for the stepper driver.
 // Not included here are set/get parameter which include
@@ -116,13 +119,6 @@ enum class StepMtrErr {
   InvalidState,  // Invalid state for command.
 };
 
-// States for the stepper motor communication interface
-enum class StepCommState {
-  Idle,        // Not currently communicating
-  SendQueued,  // Sending data that was queued up by control loop
-  SendSync,    // Sending data that the background thread is waiting on.
-};
-
 enum class StepMoveStatus {
   Stopped,
   Accelerating,
@@ -131,48 +127,27 @@ enum class StepMoveStatus {
 };
 
 // Detailed status about the stepper driver chip.
-// Note, fields marked with * below are latched meaning that they
-// will return true if the event has occurred since the last time
-// the status was read.  The act of reading the status clears them
-// so they won't be true on the next read unless they happen again.
+// Note, latching fields will return true if the event has occurred since the last time
+// the status was read.  The act of reading the status clears them so they won't be true
+// on the next read unless they happen again.
 struct StepperStatus {
-  // If true, power is being applied to the motor.
   bool enabled{false};
-
-  // * True if the stepper chip has detected an under voltage
-  bool under_voltage{false};
-
-  // * True if the stepper chip is getting hot
-  bool thermal_warning{false};
-
-  // * True if the stepper chip got so hot is shut itself down.
-  bool thermal_shutdown{false};
-
-  // * True if over current has been detected
-  bool over_current{false};
-
-  // * True if the chip detects a loss of steps (motor stall)
-  bool step_loss{false};
-
-  // * True if a command error (bad command) was detected by the chip
-  bool command_error{false};
-
-  // Specifics of the move status
+  bool under_voltage{false};     // latching
+  bool thermal_warning{false};   // latching
+  bool thermal_shutdown{false};  // latching
+  bool over_current{false};      // latching
+  bool step_loss{false};         // latching
+  bool command_error{false};     // latching
   StepMoveStatus move_status{StepMoveStatus::Stopped};
 };
 
 // Represents one of the stepper motors in the system
 class StepMotor {
-  // This constant gives the maximum number of motors we
-  // can support with this driver.
-  static constexpr int MaxMotors{4};
-
-  // Number of motor driver chips present in the system.
-  // This is automatically detected at startup.
-  static int total_motors_;
-
  public:
-  StepMotor() = default;
+  // This constant gives the maximum number of motors we can support with this driver.
+  static constexpr size_t MaxMotors{4};
+
+  explicit StepMotor(size_t index) : slave_index_(index){};
 
   // Called from HAL at startup
   static void OneTimeInit();
@@ -181,7 +156,7 @@ class StepMotor {
   //
   // Returns NULL for an invalid input
   static StepMotor *GetStepper(int n) {
-    if ((n < 0) || (n >= total_motors_)) {
+    if ((n < 0) || (n >= daisy_chain_.num_slaves())) {
       return nullptr;
     }
     return &motor_[n];
@@ -297,31 +272,9 @@ class StepMotor {
   StepMtrErr GetParam(StepMtrParam param, uint32_t *value);
 
  private:
+  size_t slave_index_;
   static StepMotor motor_[MaxMotors];
-  static uint8_t dma_buff_[MaxMotors];
-  static std::optional<DMA::ChannelControl> rx_dma_;
-  static std::optional<DMA::ChannelControl> tx_dma_;
   static uint8_t param_len_[32];
-  static StepCommState coms_state_;
-
-  // pointer to the chip select pin that we need to manually manipulate to speak with the motors.
-  static std::optional<GPIO::DigitalOutputPin> chip_select_;
-
-  // This queue is used for sending commands from the high
-  // priority loop.  The command is copied to this queue and
-  // sent later.
-  uint8_t queue_[40];
-  int queue_count_{0};
-  int queue_ndx_{0};
-
-  // This pointer and count are used to hold the command being
-  // sent to the motor and its response.
-  // They're volatile because the interrupt handler updates them
-  volatile uint8_t *volatile cmd_ptr_{nullptr};
-  volatile int cmd_remain_{0};
-  bool save_response_{false};
-  // member for the command currently being sent that we can safely point to
-  uint8_t last_cmd_[4] = {0};
 
   // Number of full steps/rev
   // Defaults to the standard value for most steppers
@@ -332,25 +285,19 @@ class StepMotor {
   int32_t DegToUstep(float deg) const;
   StepMtrErr SetKval(StepMtrParam param, float amp);
 
-  // Send a command and wait for the response
-  StepMtrErr SendCmd(uint8_t *cmd, uint32_t len);
-
-  // Queue up the command and return immediately
-  StepMtrErr EnqueueCmd(uint8_t *cmd, uint32_t len);
-
-  static void UpdateComState();
-  static void SendInitCmd(uint8_t *buff, int len);
-  static void ProbeChips();
+  // Send a command and wait for the response (if any)
+  StepMtrErr SendCmd(uint8_t *cmd, uint32_t len, uint8_t *response = nullptr);
 
   // True if this is a powerSTEP chip.
   bool power_step_{false};
+
+  // SPI bus used to speak with the steppers
+  static SPI::STM32Channel spi_;
+  static SPI::DaisyChain</*MaxSlaves=*/StepMotor::MaxMotors, /*MaxRequestsPerSlave=*/10>
+      daisy_chain_;
 
  public:
   // Interrupt service routine.
   // This has to be public, but don't call it.
   static void DmaISR();
-
-  // This function should only be called by the HAL
-  // at the end of the high priority loop timer ISR
-  static void StartQueuedCommands();
 };

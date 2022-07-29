@@ -22,6 +22,8 @@ limitations under the License.
 #include <cassert>
 #include <type_traits>
 
+static constexpr size_t MaxCallbackSize{200};
+
 template <class A>
 class naive_function;
 template <typename ReturnValue, typename... Args>
@@ -30,12 +32,14 @@ class naive_function<ReturnValue(Args...)> {
   naive_function() {}
   template <typename T>
   naive_function(T t) : set_(true) {
-    static_assert(sizeof(CallableT<T>) <= sizeof(callable_));
+    static_assert(sizeof(CallableT<T>) <= MaxCallbackSize);
+    //    static_assert(sizeof(CallableT<T>) <= sizeof(callable_));
     new (_get()) CallableT<T>(t);
   }
   template <typename T>
   naive_function(T *ptr, ReturnValue (T::*t)(Args...)) : set_(true) {
-    static_assert(sizeof(CallableT<T>) <= sizeof(callable_));
+    static_assert(sizeof(CallableT<T>) <= MaxCallbackSize);
+    //    static_assert(sizeof(CallableT<T>) <= sizeof(callable_));
     new (_get()) CallableT<T>(ptr, t);
   }
   naive_function(const naive_function &c) : set_(c.set_) {
@@ -44,7 +48,6 @@ class naive_function<ReturnValue(Args...)> {
 
   naive_function &operator=(const naive_function &c) {
     if (this != &c) {
-      if (set_) _get()->~ICallable();
       if (c.set_) {
         set_ = true;
         c._get()->Copy(&callable_);
@@ -94,7 +97,9 @@ class naive_function<ReturnValue(Args...)> {
                     std::max(sizeof(CallableT<decltype(f)>),
                              sizeof(CallableT<void (CallableT<void (*)()>::*)()>)));
   };
-  typedef unsigned char callable_array[size()];
+
+  typedef unsigned char callable_array[MaxCallbackSize];
+  //  typedef unsigned char callable_array[size()];
   typename std::aligned_union<0, callable_array, CallableT<void (*)()>,
                               CallableT<void (CallableT<void (*)()>::*)()>>::type callable_;
 

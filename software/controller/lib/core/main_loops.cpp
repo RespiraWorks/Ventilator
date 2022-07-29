@@ -63,11 +63,11 @@ void MainContainer::init() {
   //    return this->high_priority_task();
   //  });
 
-  hal.set_timer15_callback([this]() -> void { high_priority_trigger.interrupt_handler(); });
+  hal.set_timer15_callback([this]() { this->high_priority_trigger.interrupt_handler(); });
 
   high_priority_trigger.start(PeripheralID::Timer15, InterruptVector::Timer15, CPUFrequency,
                               Controller::GetLoopPeriod(),
-                              [this]() -> void { this->high_priority_task(); });
+                              [this]() { this->high_priority_task(); });
 }
 
 // This function handles all the high priority tasks which need to be called periodically.

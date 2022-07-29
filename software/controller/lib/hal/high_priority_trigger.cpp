@@ -26,7 +26,7 @@ limitations under the License.
 //                                void (*callback)(void *), void *arg) {
 void HighPriorityTrigger::start(PeripheralID id, InterruptVector interrupt_vector,
                                 Frequency cpu_frequency, const Duration &period,
-                                GenericCallback *callback) {
+                                naive_function<void(void)> callback) {
   id_ = id;
   cpu_frequency_ = cpu_frequency;
   callback_ = callback;
@@ -75,7 +75,7 @@ void HighPriorityTrigger::interrupt_handler() {
   record_latency(static_cast<float>(start));
 
   // Call the function
-  if (callback_->valid_callback()) callback_->execute_callback();
+  callback_();
   //  controller_callback_(controller_arg_);
 
   uint32_t end = timer_register->counter;

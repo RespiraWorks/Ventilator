@@ -15,10 +15,10 @@ limitations under the License.
 
 #pragma once
 
-#include "callback.h"
 #include "commands.h"
 #include "comms.h"
 #include "controller.h"
+#include "high_priority_trigger.h"
 #include "interface.h"
 #include "network_protocol.pb.h"
 #include "trace.h"
@@ -26,15 +26,12 @@ limitations under the License.
 #include "vars.h"
 
 /// \TODO make this a template class that expects some implementation of AbstractSystem
-class MainContainer : public GenericCallback {
+class MainContainer {
  public:
   void init();
   void high_priority_task();
   void background_task();
   static SensorsProto AsSensorsProto(const SensorReadings &r, const ControllerState &c);
-
-  void execute_callback() override;
-  bool valid_callback() const override;
 
   System hardware_layer;
   Controller controller;
@@ -45,6 +42,7 @@ class MainContainer : public GenericCallback {
   std::optional<Comms> comms;
   std::optional<Debug::Interface> debug;
   Debug::Trace trace;
+  HighPriorityTrigger high_priority_trigger;
 
   Debug::Command::ModeHandler mode_command;
   Debug::Command::PeekHandler peek_command;

@@ -16,15 +16,9 @@ limitations under the License.
 #include "main_loops.h"
 
 #include "hal.h"
+#include "system_constants.h"  // for cpu frequency
 #include "system_timer.h"
 #include "watchdog.h"
-
-void MainContainer::execute_callback() { high_priority_task(); }
-
-bool MainContainer::valid_callback() const {
-  /// \todo make sure it has initialized?
-  return true;
-}
 
 SensorsProto MainContainer::AsSensorsProto(const SensorReadings &r, const ControllerState &c) {
   SensorsProto proto = SensorsProto_init_zero;
@@ -65,7 +59,15 @@ void MainContainer::init() {
   hardware_layer.sensors()->calibrate();
 
   // After all initialization is done, ask the HAL to start our high priority thread.
-  hal.StartLoopTimer(Controller::GetLoopPeriod(), this);
+  //  hal.StartLoopTimer(Controller::GetLoopPeriod(), [this]() -> void {
+  //    return this->high_priority_task();
+  //  });
+
+  hal.set_timer15_callback([this]() -> void { high_priority_trigger.interrupt_handler(); });
+
+  high_priority_trigger.start(PeripheralID::Timer15, InterruptVector::Timer15, CPUFrequency,
+                              Controller::GetLoopPeriod(),
+                              [this]() -> void { this->high_priority_task(); });
 }
 
 // This function handles all the high priority tasks which need to be called periodically.

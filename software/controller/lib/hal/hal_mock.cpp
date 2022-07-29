@@ -20,6 +20,7 @@ limitations under the License.
 void HalApi::EarlyInit() {}
 void HalApi::Init(Frequency cpu_frequency) {}
 // void HalApi::StartLoopTimer(const Duration &period, void (*callback)(void *), void *arg) {}
-void HalApi::StartLoopTimer(const Duration& period, GenericCallback* callback) {}
+// void HalApi::StartLoopTimer(const Duration& period, naive_function<void(void)> callback) {}
+void HalApi::set_timer15_callback(naive_function<void(void)> callback) {}
 
 #endif

@@ -33,7 +33,7 @@ limitations under the License.
 
 #include <cstdint>
 
-#include "callback.h"
+#include "function.h"
 #include "units.h"
 #include "vars.h"
 
@@ -55,7 +55,9 @@ class HalApi {
 
   // Start the loop timer
   //  void StartLoopTimer(const Duration &period, void (*callback)(void *), void *arg);
-  void StartLoopTimer(const Duration &period, GenericCallback *callback);
+  //  void StartLoopTimer(const Duration &period, naive_function<void(void)> callback);
+
+  void set_timer15_callback(naive_function<void(void)> callback);
 
 #if defined(BARE_STM32)
   void bind_channels(I2C::Channel *i2c, UART::DMAChannel *rpi, UART::Channel *debug);
@@ -78,6 +80,7 @@ class HalApi {
   I2C::Channel *i2c_{nullptr};
   UART::DMAChannel *rpi_uart_{nullptr};
   UART::Channel *debug_uart_{nullptr};
+  naive_function<void(void)> timer15_callback_;
 
 #endif
 

@@ -22,25 +22,27 @@ limitations under the License.
 #include <cassert>
 #include <type_traits>
 
-static constexpr size_t MaxCallbackSize{200};
+static constexpr size_t MaxCallbackSize{500};
 
-template <class A>
-class naive_function;
-template <typename ReturnValue, typename... Args>
-class naive_function<ReturnValue(Args...)> {
+// template <class A>
+// class naive_function;
+
+class naive_function {
  public:
   naive_function() {}
+
   template <typename T>
   naive_function(T t) : set_(true) {
     static_assert(sizeof(CallableT<T>) <= MaxCallbackSize);
     //    static_assert(sizeof(CallableT<T>) <= sizeof(callable_));
     new (_get()) CallableT<T>(t);
   }
+
   template <typename T>
-  naive_function(T *ptr, ReturnValue (T::*t)(Args...)) : set_(true) {
+  naive_function(T *ptr) : set_(true) {
     static_assert(sizeof(CallableT<T>) <= MaxCallbackSize);
     //    static_assert(sizeof(CallableT<T>) <= sizeof(callable_));
-    new (_get()) CallableT<T>(ptr, t);
+    new (_get()) CallableT<T>(ptr);
   }
   naive_function(const naive_function &c) : set_(c.set_) {
     if (c.set_) c._get()->Copy(&callable_);
@@ -56,46 +58,30 @@ class naive_function<ReturnValue(Args...)> {
     }
     return *this;
   }
-  ReturnValue operator()(Args... args) const { return _get()->Invoke(args...); }
-  ReturnValue operator()(Args... args) { return _get()->Invoke(args...); }
+  void operator()() const { _get()->Invoke(); }
+  void operator()() { _get()->Invoke(); }
 
  private:
   class ICallable {
    public:
-    virtual ReturnValue Invoke(Args...) = 0;
+    virtual void Invoke() = 0;
+    virtual void Invoke() const = 0;
     virtual void Copy(void *dst) const = 0;
   };
   ICallable *_get() { return ((ICallable *)&callable_); }
   const ICallable *_get() const { return ((const ICallable *)&callable_); }
+
   template <typename T>
   class CallableT : public ICallable {
    public:
     CallableT(const T &t) : t_(t) {}
 
-    ReturnValue Invoke(Args... args) override { return t_(std::forward<Args>(args)...); }
+    void Invoke() override { t_(); }
+    void Invoke() const override { t_(); }
     void Copy(void *dst) const override { new (dst) CallableT(*this); }
 
    private:
     T t_;
-  };
-  template <typename T>
-  class CallableT<ReturnValue (T::*)(Args...)> : public ICallable {
-   public:
-    CallableT(T *ptr, ReturnValue (T::*t)(Args...)) : ptr_(ptr), t_(t) {}
-
-    ReturnValue Invoke(Args... args) override { return (ptr_->*t_)(std::forward<Args>(args)...); }
-    void Copy(void *dst) const override { new (dst) CallableT(*this); }
-
-   private:
-    T *ptr_ = nullptr;
-    ReturnValue (T::*t_)(Args...) = nullptr;
-  };
-
-  static constexpr size_t size() {
-    auto f = []() -> void {};
-    return std::max(sizeof(CallableT<void (*)()>),
-                    std::max(sizeof(CallableT<decltype(f)>),
-                             sizeof(CallableT<void (CallableT<void (*)()>::*)()>)));
   };
 
   typedef unsigned char callable_array[MaxCallbackSize];

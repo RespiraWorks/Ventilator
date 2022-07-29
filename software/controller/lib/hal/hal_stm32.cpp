@@ -112,9 +112,7 @@ void HalApi::bind_channels(I2C::Channel *i2c, UART::DMAChannel *rpi, UART::Chann
 //                                         hal.cpu_frequency_, period, callback, arg);
 //}
 
-void HalApi::set_timer15_callback(naive_function<void(void)> callback) {
-  timer15_callback_ = callback;
-}
+void HalApi::set_timer15_callback(naive_function callback) { timer15_callback_ = callback; }
 
 void HalApi::Timer6ISR() {
   /// \todo make this a callback

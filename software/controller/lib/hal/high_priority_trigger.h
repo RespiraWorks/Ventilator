@@ -36,14 +36,14 @@ class HighPriorityTrigger {
   //             const Duration &period, void (*callback)(void *), void *arg);
 
   void start(PeripheralID id, InterruptVector interrupt_vector, Frequency cpu_frequency,
-             const Duration &period, naive_function<void(void)> callback);
+             const Duration &period, naive_function callback);
 
   void interrupt_handler();
 
  private:
   Frequency cpu_frequency_{hertz(0)};
   PeripheralID id_;
-  naive_function<void(void)> callback_;
+  naive_function callback_;
   //  void (*controller_callback_)(void *){nullptr};
   //  void *controller_arg_{nullptr};
 

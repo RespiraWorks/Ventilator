@@ -26,7 +26,7 @@ limitations under the License.
 //                                void (*callback)(void *), void *arg) {
 void HighPriorityTrigger::start(PeripheralID id, InterruptVector interrupt_vector,
                                 Frequency cpu_frequency, const Duration &period,
-                                naive_function<void(void)> callback) {
+                                naive_function callback) {
   id_ = id;
   cpu_frequency_ = cpu_frequency;
   callback_ = callback;

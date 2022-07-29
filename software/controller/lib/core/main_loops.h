@@ -15,6 +15,7 @@ limitations under the License.
 
 #pragma once
 
+#include "callback.h"
 #include "commands.h"
 #include "comms.h"
 #include "controller.h"
@@ -25,13 +26,15 @@ limitations under the License.
 #include "vars.h"
 
 /// \TODO make this a template class that expects some implementation of AbstractSystem
-class MainContainer {
+class MainContainer : public GenericCallback {
  public:
   void init();
   void high_priority_task();
-  void background_loop();
   void background_task();
   static SensorsProto AsSensorsProto(const SensorReadings &r, const ControllerState &c);
+
+  void execute_callback() override;
+  bool valid_callback() const override;
 
   System hardware_layer;
   Controller controller;

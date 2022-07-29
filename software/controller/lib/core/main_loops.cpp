@@ -19,6 +19,13 @@ limitations under the License.
 #include "system_timer.h"
 #include "watchdog.h"
 
+void MainContainer::execute_callback() { high_priority_task(); }
+
+bool MainContainer::valid_callback() const {
+  /// \todo make sure it has initialized?
+  return true;
+}
+
 SensorsProto MainContainer::AsSensorsProto(const SensorReadings &r, const ControllerState &c) {
   SensorsProto proto = SensorsProto_init_zero;
   proto.patient_pressure_cm_h2o = r.patient_pressure.cmH2O();
@@ -56,6 +63,9 @@ void MainContainer::init() {
   // Calibrate the sensors after the pinch valves are properly homed to avoid the effects of the
   // blower (and to a lesser degree the pinch valves) moving during startup.
   hardware_layer.sensors()->calibrate();
+
+  // After all initialization is done, ask the HAL to start our high priority thread.
+  hal.StartLoopTimer(Controller::GetLoopPeriod(), this);
 }
 
 // This function handles all the high priority tasks which need to be called periodically.

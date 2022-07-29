@@ -102,10 +102,15 @@ void HalApi::bind_channels(I2C::Channel *i2c, UART::DMAChannel *rpi, UART::Chann
 // We use one of the timers (timer 15) to generate the interrupt from which the control loop
 // callback function is called. This function runs at a higher priority then normal code, but not as
 // high as the hardware interrupts.
-void HalApi::StartLoopTimer(const Duration &period, void (*callback)(void *), void *arg) {
+void HalApi::StartLoopTimer(const Duration &period, GenericCallback *callback) {
   HighPriorityTrigger::singleton().start(PeripheralID::Timer15, InterruptVector::Timer15,
-                                         hal.cpu_frequency_, period, callback, arg);
+                                         hal.cpu_frequency_, period, callback);
 }
+
+// void HalApi::StartLoopTimer(const Duration &period, void (*callback)(void *), void *arg) {
+//  HighPriorityTrigger::singleton().start(PeripheralID::Timer15, InterruptVector::Timer15,
+//                                         hal.cpu_frequency_, period, callback, arg);
+//}
 
 void HalApi::Timer6ISR() {
   /// \todo make this a callback

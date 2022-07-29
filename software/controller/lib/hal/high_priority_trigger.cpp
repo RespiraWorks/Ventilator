@@ -21,13 +21,17 @@ limitations under the License.
 #include "timers_stm32.h"
 #include "watchdog.h"
 
+// void HighPriorityTrigger::start(PeripheralID id, InterruptVector interrupt_vector,
+//                                Frequency cpu_frequency, const Duration &period,
+//                                void (*callback)(void *), void *arg) {
 void HighPriorityTrigger::start(PeripheralID id, InterruptVector interrupt_vector,
                                 Frequency cpu_frequency, const Duration &period,
-                                void (*callback)(void *), void *arg) {
+                                GenericCallback *callback) {
   id_ = id;
   cpu_frequency_ = cpu_frequency;
-  controller_callback_ = callback;
-  controller_arg_ = arg;
+  callback_ = callback;
+  //  controller_callback_ = callback;
+  //  controller_arg_ = arg;
 
   // Init the watchdog timer now.  The watchdog timer is serviced by the loop callback function.
   // I don't init it until the loop starts because otherwise it may expire before the function that
@@ -71,7 +75,8 @@ void HighPriorityTrigger::interrupt_handler() {
   record_latency(static_cast<float>(start));
 
   // Call the function
-  controller_callback_(controller_arg_);
+  if (callback_->valid_callback()) callback_->execute_callback();
+  //  controller_callback_(controller_arg_);
 
   uint32_t end = timer_register->counter;
   record_loop_time(static_cast<float>(end - start));
@@ -81,7 +86,12 @@ void HighPriorityTrigger::interrupt_handler() {
 
 void HighPriorityTrigger::start(PeripheralID id, InterruptVector interrupt_vector,
                                 Frequency cpu_frequency, const Duration &period,
-                                void (*callback)(void *), void *arg) {}
+                                std::function<void(void)> callback) {}
+
+// void HighPriorityTrigger::start(PeripheralID id, InterruptVector interrupt_vector,
+//                                Frequency cpu_frequency, const Duration &period,
+//                                void (*callback)(void *), void *arg) {}
+
 void HighPriorityTrigger::interrupt_handler() {}
 
 #endif

@@ -15,6 +15,7 @@ limitations under the License.
 
 #pragma once
 
+#include "callback.h"
 #include "interrupts.h"  // for InterruptVector
 #include "peripheral_id.h"
 #include "units.h"
@@ -31,16 +32,20 @@ class HighPriorityTrigger {
   }
 
   // Start the loop timer
+  //  void start(PeripheralID id, InterruptVector interrupt_vector, Frequency cpu_frequency,
+  //             const Duration &period, void (*callback)(void *), void *arg);
+
   void start(PeripheralID id, InterruptVector interrupt_vector, Frequency cpu_frequency,
-             const Duration &period, void (*callback)(void *), void *arg);
+             const Duration &period, GenericCallback *callback);
 
   void interrupt_handler();
 
  private:
   Frequency cpu_frequency_{hertz(0)};
   PeripheralID id_;
-  void (*controller_callback_)(void *){nullptr};
-  void *controller_arg_{nullptr};
+  GenericCallback *callback_;
+  //  void (*controller_callback_)(void *){nullptr};
+  //  void *controller_arg_{nullptr};
 
   using DbgFloat = Debug::Variable::Float;
   using DbgAccess = Debug::Variable::Access;

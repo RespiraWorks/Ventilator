@@ -15,52 +15,17 @@ limitations under the License.
 
 #include "pwm.h"
 
-/// \TODO have mappings be maintained in / provided by a higher layer
-/******************************************************************
- * PWM outputs
- *
- * The following four outputs could be driven
- * as PWM outputs:
- *
- * PA8  - Timer 1 Channel 1 - heater control
- * PA11 - Timer 1 Channel 4 - psol control
- * PB3  - Timer 2 Channel 2 - blower control
- * PB4  - Timer 3 Channel 1 - buzzer control
- *
- * These timers are documented in [RM] chapters 26 and 27.
- *****************************************************************/
-
 #include <algorithm>
 #if defined(BARE_STM32)
 
 #include "clocks_stm32.h"
 
-// helper function to get the proper timer register based on timer peripheral ID
-TimerReg *register_for(const PeripheralID peripheral) {
-  switch (peripheral) {
-    case PeripheralID::Timer1:
-      return Timer1Base;
-    case PeripheralID::Timer2:
-      return Timer2Base;
-    case PeripheralID::Timer3:
-      return Timer3Base;
-    case PeripheralID::Timer6:
-      return Timer6Base;
-    case PeripheralID::Timer7:
-      return Timer7Base;
-    case PeripheralID::Timer15:
-      return Timer15Base;
-    case PeripheralID::Timer16:
-      return Timer16Base;
-    default:
-      return nullptr;
-  }
-}
-
 PWM::PWM(const Frequency pwm_freq, const PeripheralID peripheral, uint8_t channel,
          const Frequency cpu_frequency)
-    : pwm_freq_(pwm_freq), timer_(register_for(peripheral)), channel_(channel) {
-  enable_peripheral_clock(peripheral);
+    : pwm_freq_(pwm_freq), timer_(Timer::get_register(peripheral)), channel_(channel) {
+  Clocks::enable_peripheral_clock(peripheral);
+
+  // These timers are documented in [RM] chapters 26 and 27.
 
   // Set the frequency
   timer_->auto_reload = static_cast<uint32_t>(cpu_frequency.hertz() / pwm_freq_.hertz()) - 1;
@@ -76,7 +41,7 @@ PWM::PWM(const Frequency pwm_freq, const PeripheralID peripheral, uint8_t channe
 
   // For timer 1 we need to disable the main output enable
   // (MOE) feature by setting bit 15 of the deadtime register. [RM] 26.3.16
-  if (timer_ == Timer1Base) {
+  if (timer_ == Timer::get_register(PeripheralID::Timer1)) {
     timer_->dead_time = 0x8000;
   }
 

@@ -32,6 +32,7 @@ limitations under the License.
 #include "system.h"
 #include "uart_dma.h"
 #include "uart_soft.h"
+#include "vars.h"
 
 // Provides calibrated sensor readings
 class V03Sensors : public AbstractSensors {
@@ -89,8 +90,8 @@ class V03Actuators : public AbstractActuators {
   void beep(float volume) override;
 
  private:
-  std::optional<PinchValve> blower_pinch_;
-  std::optional<PinchValve> exhale_pinch_;
+  std::optional<PinchValve> blower_pinch_{std::nullopt};
+  std::optional<PinchValve> exhale_pinch_{std::nullopt};
   // Blower, PSol and buzzer use pwm pins and need to be instantiated after HAL, therefore we use
   // std::optional to delay the instantiation within init function.
   std::optional<PwmActuator> blower_{std::nullopt};
@@ -98,6 +99,10 @@ class V03Actuators : public AbstractActuators {
 
   // buzzer is made public to allow easier manipulation (not through actuators.execute()).
   std::optional<PwmActuator> buzzer_{std::nullopt};
+
+  std::optional<GPIO::DigitalOutputPin> led_red_{std::nullopt};
+  std::optional<GPIO::DigitalOutputPin> led_yellow_{std::nullopt};
+  std::optional<GPIO::DigitalOutputPin> led_green_{std::nullopt};
 };
 
 using Actuators = V03Actuators;
@@ -106,7 +111,9 @@ class V03System : public AbstractSystem {
  public:
   V03System();
 
-  void init() override;
+  void init_hal() override;
+
+  void init_subsystems() override;
 
   UART::Channel* comms_channel() override { return &rpi_uart_; }
 
@@ -129,6 +136,11 @@ class V03System : public AbstractSystem {
   ADC adc_;
   Sensors sensors_;
   Actuators actuators_;
+
+  using DUint32 = Debug::Variable::UInt32;
+  using DAccess = Debug::Variable::Access;
+  DUint32 pcb_id0_{"pcb_id_0", DAccess::ReadOnly, 0, "", "PCB version id pin 0"};
+  DUint32 pcb_id1_{"pcb_id_1", DAccess::ReadOnly, 0, "", "PCB version id pin 1"};
 };
 
 using System = V03System;

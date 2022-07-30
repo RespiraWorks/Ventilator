@@ -214,19 +214,19 @@ void Channel::Initialize(GPIO::Port port, uint8_t tx_pin, uint8_t rx_pin,
 void Channel::EnableClock() {
   switch (uart_) {
     case Base::UART1:
-      enable_peripheral_clock(PeripheralID::USART1);
+      Clocks::enable_peripheral_clock(PeripheralID::USART1);
       Interrupts::singleton().EnableInterrupt(InterruptVector::Uart1, InterruptPriority::Standard);
       break;
     case Base::UART2:
-      enable_peripheral_clock(PeripheralID::USART2);
+      Clocks::enable_peripheral_clock(PeripheralID::USART2);
       Interrupts::singleton().EnableInterrupt(InterruptVector::Uart2, InterruptPriority::Standard);
       break;
     case Base::UART3:
-      enable_peripheral_clock(PeripheralID::USART3);
+      Clocks::enable_peripheral_clock(PeripheralID::USART3);
       Interrupts::singleton().EnableInterrupt(InterruptVector::Uart3, InterruptPriority::Standard);
       break;
     case Base::UART4:
-      enable_peripheral_clock(PeripheralID::UART4);
+      Clocks::enable_peripheral_clock(PeripheralID::UART4);
       Interrupts::singleton().EnableInterrupt(InterruptVector::Uart4, InterruptPriority::Standard);
       break;
       // All cases covered above (and GCC checks this).

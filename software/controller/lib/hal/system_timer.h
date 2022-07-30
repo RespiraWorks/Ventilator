@@ -15,6 +15,8 @@ limitations under the License.
 
 #pragma once
 
+#include "interrupts.h"  // for InterruptVector
+#include "peripheral_id.h"
 #include "units.h"
 
 class SystemTimer {
@@ -29,7 +31,7 @@ class SystemTimer {
 
   // Note that in order to get a precise timer, the cpu_frequency passed to the
   // initialize method needs to be a multiple of 10 MHz.
-  void initialize(Frequency cpu_frequency);
+  void initialize(PeripheralID id, InterruptVector interrupt_vector, Frequency cpu_frequency);
 
   void interrupt_handler();
 
@@ -44,6 +46,7 @@ class SystemTimer {
  private:
   /// \TODO do 64-bit types work on STM32?
   volatile uint64_t ms_count_{0};
+  PeripheralID id_;
 
   // singleton assurance, because these are private
   SystemTimer() = default;              // cannot default initialize

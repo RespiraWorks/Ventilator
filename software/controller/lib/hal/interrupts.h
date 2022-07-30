@@ -1,4 +1,4 @@
-/* Copyright 2020, RespiraWorks
+/* Copyright 2020-2022, RespiraWorks
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -20,16 +20,17 @@ limitations under the License.
 // Interrupt vectors that we currently use.
 // [RM] 12.3 Table 46 (pg 321)
 // The values here are the offsets into the interrupt table.
-// \TODO implement mapping elsewhere, keep enum abstract
+// \todo implement mapping elsewhere, keep enum abstract
+// \todo must match interrupt table, maybe it should be filled out using offset()?
 enum class InterruptVector : uint32_t {
-  Dma1Channel2 = 0x70,
+  Dma1Channel2 = 0x070,
   Dma1Channel3 = 0x074,
-  Timer15 = 0xA0,
-  I2c1Event = 0xBC,
-  I2c1Error = 0xC0,
-  I2c2Event = 0xC4,
-  I2c2Error = 0xC8,
-  Spi1 = 0xCC,
+  Timer15 = 0x0A0,
+  I2c1Event = 0x0BC,
+  I2c1Error = 0x0C0,
+  I2c2Event = 0x0C4,
+  I2c2Error = 0x0C8,
+  Spi1 = 0x0CC,
   Uart1 = 0x0D4,
   Uart2 = 0x0D8,
   Uart3 = 0x0DC,

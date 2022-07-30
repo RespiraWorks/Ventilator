@@ -20,10 +20,10 @@ static constexpr float MaxVolume{TEST_PARAM_2};
 static constexpr float InitialStep{0.1f};
 
 void RunTest() {
-  hal.Init();
+  hal.Init(CPUFrequency);
 
   // Just to shut it up, may not need this beyond v0.3
-  PwmActuator blower{BlowerChannel, BlowerFreq, HalApi::CPUFrequency(), "", ""};
+  PwmActuator blower{BlowerChannel, BlowerFreq, CPUFrequency, "", ""};
   blower.set(0.0f);
 
   float volume = MinVolume;
@@ -31,7 +31,7 @@ void RunTest() {
 
   bool buzzer_on{false};
 
-  PwmActuator buzzer{BuzzerChannel, BuzzerFreq,     HalApi::CPUFrequency(), "", "", "",
+  PwmActuator buzzer{BuzzerChannel, BuzzerFreq,     CPUFrequency, "", "", "",
                      BuzzerOff,     MaxBuzzerVolume};
 
   while (true) {

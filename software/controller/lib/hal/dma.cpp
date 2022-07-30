@@ -152,7 +152,7 @@ void ChannelControl::Initialize(uint8_t selection, volatile uint32_t *peripheral
                                 TransferSize size) {
   switch (base_) {
     case Base::DMA1:
-      enable_peripheral_clock(PeripheralID::DMA1);
+      Clocks::enable_peripheral_clock(PeripheralID::DMA1);
       // TODO: add all channel interrupts to interrupt vectors and here
       switch (channel_) {
         case DMA::Channel::Chan2:
@@ -168,7 +168,7 @@ void ChannelControl::Initialize(uint8_t selection, volatile uint32_t *peripheral
       }
       break;
     case Base::DMA2:
-      enable_peripheral_clock(PeripheralID::DMA2);
+      Clocks::enable_peripheral_clock(PeripheralID::DMA2);
       switch (channel_) {
         case DMA::Channel::Chan3:
           Interrupts::singleton().EnableInterrupt(InterruptVector::Dma2Channel3,

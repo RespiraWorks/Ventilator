@@ -19,6 +19,10 @@ limitations under the License.
 
 #include <cstdint>
 
+#include "peripheral_id.h"
+
+namespace Timer {
+
 // Timer Register
 // NOTE: Offset values and applicable registers depend on timer used
 struct TimerStruct {
@@ -45,10 +49,9 @@ struct TimerStruct {
   uint32_t event;
   uint32_t capture_compare_mode[2];
   uint32_t capture_compare_enable;
-  // The topmost bit of counter will contain contain UIFCOPY if UIFREMAP is
-  // enabled, but *this register should not be decomposed into a bitfield
-  // struct*.  The idea behind UIFREMAP is to read the counter plus the UIFCOPY
-  // value atomically, in one go.
+  // The topmost bit of counter will contain UIFCOPY if UIFREMAP is enabled, but *this register
+  // should not be decomposed into a bitfield struct*.  The idea behind UIFREMAP is to read the
+  // counter plus the UIFCOPY value atomically, in one go.
   uint32_t counter;
   uint32_t prescaler;
   uint32_t auto_reload;
@@ -64,16 +67,32 @@ struct TimerStruct {
   uint32_t option2;
   uint32_t option3;
 };
-typedef volatile TimerStruct TimerReg;
 
-// [RM] 26 Advanced-control Timers (TIM1) (pg 718)
-inline TimerReg *const Timer1Base = reinterpret_cast<TimerReg *>(0x40012C00);
-// [RM] 27 General-purpose Timers (TIM2/TIM3) (pg 817)
-inline TimerReg *const Timer2Base = reinterpret_cast<TimerReg *>(0x40000000);
-inline TimerReg *const Timer3Base = reinterpret_cast<TimerReg *>(0x40000400);
-// [RM] 29 Basic Timers (TIM6/TIM7) (pg 968)
-inline TimerReg *const Timer6Base = reinterpret_cast<TimerReg *>(0x40001000);
-inline TimerReg *const Timer7Base = reinterpret_cast<TimerReg *>(0x40001400);
-// [RM] 28 General-purpose Timers (TIM15/TIM16) (pg 887)
-inline TimerReg *const Timer15Base = reinterpret_cast<TimerReg *>(0x40014000);
-inline TimerReg *const Timer16Base = reinterpret_cast<TimerReg *>(0x40014400);
+using TimerReg = volatile TimerStruct;
+
+inline TimerReg *const get_register(PeripheralID id) {
+  switch (id) {
+    // [RM] 26 Advanced-control Timers (TIM1) (pg 718)
+    case PeripheralID::Timer1:
+      return reinterpret_cast<TimerReg *>(0x40012C00);
+    // [RM] 27 General-purpose Timers (TIM2/TIM3) (pg 817)
+    case PeripheralID::Timer2:
+      return reinterpret_cast<TimerReg *>(0x40000000);
+    case PeripheralID::Timer3:
+      return reinterpret_cast<TimerReg *>(0x40000400);
+    // [RM] 29 Basic Timers (TIM6/TIM7) (pg 968)
+    case PeripheralID::Timer6:
+      return reinterpret_cast<TimerReg *>(0x40001000);
+    case PeripheralID::Timer7:
+      return reinterpret_cast<TimerReg *>(0x40001400);
+    // [RM] 28 General-purpose Timers (TIM15/TIM16) (pg 887)
+    case PeripheralID::Timer15:
+      return reinterpret_cast<TimerReg *>(0x40014000);
+    case PeripheralID::Timer16:
+      return reinterpret_cast<TimerReg *>(0x40014400);
+    default:
+      return nullptr;
+  }
+}
+
+}  // namespace Timer

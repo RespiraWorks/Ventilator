@@ -31,11 +31,10 @@ limitations under the License.
 // observe whether mocked methods are called.  So far that hasn't been
 // necessary.
 
-#include <algorithm>
 #include <cstdint>
 
-#include "led_indicators.h"
 #include "units.h"
+#include "vars.h"
 
 #if defined(BARE_STM32)
 /// \TODO use truly abstract UART and I2C classes instead
@@ -43,26 +42,12 @@ limitations under the License.
 #include "uart_dma.h"
 #endif
 
-// Singleton class which implements a hardware abstraction layer.
-//
-// Access this via the `hal` global variable, e.g. `hal.millis()`.
-//
-// TODO: Make Hal a namespace rather than a class.  Then this header won't need
-// any ifdefs for different platforms, and all of the "global variables" can
-// move into the hal_foo.cpp files.
 class HalApi {
  public:
-  /// \TODO likely these should not even be members
-  LEDIndicators LEDs;
-
-  static Frequency CPUFrequency();
-
-  static Frequency UARTBaudRate();
-
   // Perform some early chip initialization before static constructors are run
   void EarlyInit();
 
-  void Init();
+  void Init(Frequency cpu_frequency);
 
   // Performs the device soft-reset
   [[noreturn]] void ResetDevice();
@@ -70,17 +55,32 @@ class HalApi {
   // Start the loop timer
   void StartLoopTimer(const Duration &period, void (*callback)(void *), void *arg);
 
-  void init_PCB_ID_pins();
-
 #if defined(BARE_STM32)
   void bind_channels(I2C::Channel *i2c, UART::DMAChannel *rpi, UART::Channel *debug);
+
+  // local static functions.  We don't want to add any private functions to the Hal class to avoid
+  // complexity with other builds. Those are Interrupt Service Routines, i.e callback functions for
+  // the interrupt handlers. They are referenced in the Interrupt Vector Table.
+  static void Timer6ISR();
+  static void Timer15ISR();
+  static void Uart2ISR();
+  static void Uart3ISR();
+  static void DMA1Channel2ISR();
+  static void DMA1Channel3ISR();
+  static void I2c1EventISR();
+  static void I2c1ErrorISR();
+  static void DMA2Channel6ISR();
+  static void DMA2Channel7ISR();
+
+ private:
   I2C::Channel *i2c_{nullptr};
   UART::DMAChannel *rpi_uart_{nullptr};
   UART::Channel *debug_uart_{nullptr};
-#else
- private:
-  Time time_ = microsSinceStartup(0);
+
 #endif
+
+ private:
+  Frequency cpu_frequency_{hertz(0)};
 };
 
 extern HalApi hal;

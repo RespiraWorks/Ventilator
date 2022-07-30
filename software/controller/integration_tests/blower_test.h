@@ -21,8 +21,8 @@ static constexpr float FanMax{TEST_PARAM_2};
 static constexpr float InitialStep{0.002f};
 
 void RunTest() {
-  hal.Init();
-  PwmActuator blower{BlowerChannel, BlowerFreq, HalApi::CPUFrequency(), "", ""};
+  hal.Init(CPUFrequency);
+  PwmActuator blower{BlowerChannel, BlowerFreq, CPUFrequency, "", ""};
 
   float fan_power = FanMin;
   float step = InitialStep;

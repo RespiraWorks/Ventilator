@@ -30,6 +30,7 @@ static MainContainer god_object;
 // No busy waiting here.
 void HighPriorityTask(void *arg) { god_object.high_priority_task(); }
 
+/// \todo is this function needed at all, can go in main?
 // This function is the lower priority background loop which runs continuously after some basic
 // system init.  Pretty much everything not time critical should go here.
 [[noreturn]] void BackgroundLoop() {
@@ -46,8 +47,7 @@ int main() {
 
   [[maybe_unused]] DEBUG_STRING(version, "0_controller_version", DAccess::ReadOnly,
                                 Version::GitVersion,
-                                "controller version at compile time: long git"
-                                " sha");
+                                "controller version at compile time: long git sha");
   [[maybe_unused]] DEBUG_STRING(branch, "0_controller_branch", DAccess::ReadOnly,
                                 Version::GitBranch, "controller built from git branch");
   /// \TODO implement Bool type and use that?

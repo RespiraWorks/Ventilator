@@ -22,7 +22,8 @@ limitations under the License.
 
 class AbstractSystem {
  public:
-  virtual void init() = 0;
+  virtual void init_hal() = 0;
+  virtual void init_subsystems() = 0;
   virtual UART::Channel* comms_channel() = 0;
   virtual UART::Channel* debug_channel() = 0;
   virtual I2Ceeprom* eeprom() = 0;

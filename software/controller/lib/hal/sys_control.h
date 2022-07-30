@@ -15,15 +15,8 @@ limitations under the License.
 
 #pragma once
 
-#include <optional>
-
-#include "gpio_stm32.h"
-
-class LEDIndicators {
+class SysControl {
  public:
-  void initialize();
-
-  std::optional<GPIO::DigitalOutputPin> red_led;
-  std::optional<GPIO::DigitalOutputPin> yellow_led;
-  std::optional<GPIO::DigitalOutputPin> green_led;
+  static void enable_fpu();
+  static void reset_processor();
 };

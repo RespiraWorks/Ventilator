@@ -21,15 +21,9 @@ static constexpr float PSolMax{TEST_PARAM_2};
 static constexpr float InitialStep{TEST_PARAM_3};
 
 void RunTest() {
-  hal.Init();
-  PwmActuator psol{PSolChannel,
-                   PSolFreq,
-                   HalApi::CPUFrequency(),
-                   "psol_",
-                   " of the proportional solenoid",
-                   "position",
-                   PSolClosed,
-                   PSolOpen};
+  hal.Init(CPUFrequency);
+  PwmActuator psol{PSolChannel, PSolFreq,   CPUFrequency, "psol_", " of the proportional solenoid",
+                   "position",  PSolClosed, PSolOpen};
 
   float psol_position = PSolMin;
   float step = InitialStep;

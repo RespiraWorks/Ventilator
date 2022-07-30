@@ -90,11 +90,10 @@ static Debug::Command::EepromHandler eeprom_command(&eeprom);
 static Debug::Interface debug(&debug_uart);
 
 void RunTest() {
-  hal.Init();
+  hal.Init(CPUFrequency);
 
   // Just to shut it up, may not need this beyond v0.3
-  PwmActuator blower{BlowerChannel, BlowerFreq, HalApi::CPUFrequency(), "blower_",
-                     " of the blower"};
+  PwmActuator blower{BlowerChannel, BlowerFreq, CPUFrequency, "blower_", " of the blower"};
   blower.set(0.0f);
 
   // The Nucleo board also includes a secondary serial port that's indirectly connected to its USB
@@ -102,8 +101,7 @@ void RunTest() {
   // no HW flow control (rts/cts)
   debug_uart.Initialize(GPIO::Port::A, /*tx_pin=*/2, /*rx_pin=*/3,
                         /*rts_pin=*/std::nullopt, /*cts_pin=*/std::nullopt,
-                        GPIO::AlternativeFunction::AF7, HalApi::CPUFrequency(),
-                        HalApi::UARTBaudRate());
+                        GPIO::AlternativeFunction::AF7, CPUFrequency, UARTBaudRate);
 
   // [PCBsp] lists I2C1 pins : SCL=PB8 and SDA=PB9
   i2c1.Initialize(I2C::Speed::Fast, GPIO::Port::B, /*scl_pin=*/8, /*sda_pin=*/9,
@@ -130,8 +128,8 @@ void RunTest() {
     write_data[i] = Data;
   }
 
-  PwmActuator buzzer{BuzzerChannel, BuzzerFreq, HalApi::CPUFrequency(), "", " of the buzzer",
-                     "volume",      BuzzerOff,  MaxBuzzerVolume};
+  PwmActuator buzzer{BuzzerChannel,    BuzzerFreq, CPUFrequency, "",
+                     " of the buzzer", "volume",   BuzzerOff,    MaxBuzzerVolume};
 
   buzzer.set(0.3f);
   eeprom.ReadBytes(Address, Length, &eeprom_before, nullptr);

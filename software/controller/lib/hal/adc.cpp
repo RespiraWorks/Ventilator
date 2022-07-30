@@ -293,7 +293,7 @@ bool ADC::initialize(const Frequency cpu_frequency) {
   }
 
   // Enable the clock to the A/D converter
-  enable_peripheral_clock(PeripheralID::ADC);
+  Clocks::enable_peripheral_clock(PeripheralID::ADC);
 
   // Perform a power-up and calibration sequence on the A/D converter
   AdcReg *adc = AdcBase;

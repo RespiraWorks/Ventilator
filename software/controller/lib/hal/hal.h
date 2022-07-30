@@ -33,7 +33,7 @@ limitations under the License.
 
 #include <cstdint>
 
-#include "function.h"
+#include "callback.h"
 #include "units.h"
 #include "vars.h"
 
@@ -53,11 +53,7 @@ class HalApi {
   // Performs the device soft-reset
   [[noreturn]] void ResetDevice();
 
-  // Start the loop timer
-  //  void StartLoopTimer(const Duration &period, void (*callback)(void *), void *arg);
-  //  void StartLoopTimer(const Duration &period, naive_function<void(void)> callback);
-
-  void set_timer15_callback(naive_function callback);
+  void set_timer15_callback(Callback callback);
 
 #if defined(BARE_STM32)
   void bind_channels(I2C::Channel *i2c, UART::DMAChannel *rpi, UART::Channel *debug);
@@ -80,7 +76,7 @@ class HalApi {
   I2C::Channel *i2c_{nullptr};
   UART::DMAChannel *rpi_uart_{nullptr};
   UART::Channel *debug_uart_{nullptr};
-  naive_function timer15_callback_;
+  Callback timer15_callback_;
 
 #endif
 

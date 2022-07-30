@@ -28,6 +28,8 @@ limitations under the License.
 /// \TODO make this a template class that expects some implementation of AbstractSystem
 class MainContainer {
  public:
+  static void high_priority_callback(void *instance);
+
   void init();
   void high_priority_task();
   void background_task();

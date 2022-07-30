@@ -27,7 +27,6 @@ Abbreviations [RM], [DS], etc are defined in hal/README.md.
 #include "clocks_stm32.h"
 #include "flash.h"
 #include "hal.h"
-//#include "high_priority_trigger.h"
 #include "interrupts.h"
 #include "stepper.h"
 #include "sys_control.h"
@@ -98,32 +97,19 @@ void HalApi::bind_channels(I2C::Channel *i2c, UART::DMAChannel *rpi, UART::Chann
   }
 }
 
+/// \todo: this comment goes elsewhere
 // Loop timer
 // We use one of the timers (timer 15) to generate the interrupt from which the control loop
 // callback function is called. This function runs at a higher priority then normal code, but not as
 // high as the hardware interrupts.
-// void HalApi::StartLoopTimer(const Duration &period, naive_function<void(void)> callback) {
-//  HighPriorityTrigger::singleton().start(PeripheralID::Timer15, InterruptVector::Timer15,
-//                                         hal.cpu_frequency_, period, callback);
-//}
-
-// void HalApi::StartLoopTimer(const Duration &period, void (*callback)(void *), void *arg) {
-//  HighPriorityTrigger::singleton().start(PeripheralID::Timer15, InterruptVector::Timer15,
-//                                         hal.cpu_frequency_, period, callback, arg);
-//}
-
-void HalApi::set_timer15_callback(naive_function callback) { timer15_callback_ = callback; }
+void HalApi::set_timer15_callback(Callback callback) { timer15_callback_ = callback; }
 
 void HalApi::Timer6ISR() {
   /// \todo make this a callback
   SystemTimer::singleton().interrupt_handler();
 }
 
-void HalApi::Timer15ISR() {
-  /// \todo make this a callback
-  //  HighPriorityTrigger::singleton().interrupt_handler();
-  hal.timer15_callback_();
-}
+void HalApi::Timer15ISR() { hal.timer15_callback_(); }
 
 /// \todo make this a callback from main_loop or system
 // Fault handler

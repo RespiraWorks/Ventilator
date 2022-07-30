@@ -15,7 +15,7 @@ limitations under the License.
 
 #pragma once
 
-#include "function.h"
+#include "callback.h"
 #include "interrupts.h"  // for InterruptVector
 #include "peripheral_id.h"
 #include "units.h"
@@ -23,29 +23,19 @@ limitations under the License.
 
 class HighPriorityTrigger {
  public:
-  //  // this is the only way to access it
-  //  static HighPriorityTrigger &singleton() {
-  //    // will privately initialize on first call
-  //    static HighPriorityTrigger SingletonInstance;
-  //    // will always return
-  //    return SingletonInstance;
-  //  }
+  HighPriorityTrigger() = default;
 
-  // Start the loop timer
-  //  void start(PeripheralID id, InterruptVector interrupt_vector, Frequency cpu_frequency,
-  //             const Duration &period, void (*callback)(void *), void *arg);
+  static void interrupt_callback(void *instance);
 
   void start(PeripheralID id, InterruptVector interrupt_vector, Frequency cpu_frequency,
-             const Duration &period, naive_function callback);
+             const Duration &period, Callback run_me);
 
   void interrupt_handler();
 
  private:
   Frequency cpu_frequency_{hertz(0)};
   PeripheralID id_;
-  naive_function callback_;
-  //  void (*controller_callback_)(void *){nullptr};
-  //  void *controller_arg_{nullptr};
+  Callback run_me_;
 
   using DbgFloat = Debug::Variable::Float;
   using DbgAccess = Debug::Variable::Access;
@@ -57,11 +47,6 @@ class HighPriorityTrigger {
       "%.2f"};
   DbgFloat loop_time_{"loop_time", DbgAccess::ReadOnly,         0.0f,
                       "\xB5s",     "Duration of loop function", "%.2f"};
-
-  //  // singleton assurance, because these are private
-  //  HighPriorityTrigger() = default;                   // cannot default initialize
-  //  HighPriorityTrigger(HighPriorityTrigger const &);  // cannot copy initialize
-  //  void operator=(HighPriorityTrigger const &);       // cannot copy assign
 
   void record_latency(float loop_start_time);
   void record_loop_time(float loop_time);

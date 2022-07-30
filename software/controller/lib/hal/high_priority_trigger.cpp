@@ -21,19 +21,18 @@ limitations under the License.
 #include "timers_stm32.h"
 #include "watchdog.h"
 
-// void HighPriorityTrigger::start(PeripheralID id, InterruptVector interrupt_vector,
-//                                Frequency cpu_frequency, const Duration &period,
-//                                void (*callback)(void *), void *arg) {
+void HighPriorityTrigger::interrupt_callback(void *instance) {
+  auto *obj = static_cast<HighPriorityTrigger *>(instance);
+  obj->interrupt_handler();
+}
+
 void HighPriorityTrigger::start(PeripheralID id, InterruptVector interrupt_vector,
-                                Frequency cpu_frequency, const Duration &period,
-                                naive_function callback) {
+                                Frequency cpu_frequency, const Duration &period, Callback run_me) {
   id_ = id;
   cpu_frequency_ = cpu_frequency;
-  callback_ = callback;
-  //  controller_callback_ = callback;
-  //  controller_arg_ = arg;
+  run_me_ = run_me;
 
-  // Init the watchdog timer now.  The watchdog timer is serviced by the loop callback function.
+  // Init the watchdog timer now.  The watchdog timer is serviced by the loop run_me function.
   // I don't init it until the loop starts because otherwise it may expire before the function that
   // resets it starts running
   Watchdog::initialize();
@@ -59,7 +58,7 @@ void HighPriorityTrigger::start(PeripheralID id, InterruptVector interrupt_vecto
   tmr->control_reg1.bitfield.counter_enable = 1;
   tmr->interrupts_enable = 1;
 
-  // Enable the interrupt that will call the controller function callback periodically.
+  // Enable the interrupt that will call the controller function run_me periodically.
   // We are using a lower priority then that which I use for normal hardware interrupts.
   // This means that other interrupts can be serviced while controller functions are running.
   Interrupts::singleton().EnableInterrupt(interrupt_vector, InterruptPriority::Low);
@@ -75,7 +74,7 @@ void HighPriorityTrigger::interrupt_handler() {
   record_latency(static_cast<float>(start));
 
   // Call the function
-  callback_();
+  run_me_();
   //  controller_callback_(controller_arg_);
 
   uint32_t end = timer_register->counter;
@@ -85,12 +84,7 @@ void HighPriorityTrigger::interrupt_handler() {
 #else
 
 void HighPriorityTrigger::start(PeripheralID id, InterruptVector interrupt_vector,
-                                Frequency cpu_frequency, const Duration &period,
-                                std::function<void(void)> callback) {}
-
-// void HighPriorityTrigger::start(PeripheralID id, InterruptVector interrupt_vector,
-//                                Frequency cpu_frequency, const Duration &period,
-//                                void (*callback)(void *), void *arg) {}
+                                Frequency cpu_frequency, const Duration &period, Callback run_me) {}
 
 void HighPriorityTrigger::interrupt_handler() {}
 

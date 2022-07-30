@@ -1,4 +1,4 @@
-/* Copyright 2020-2021, RespiraWorks
+/* Copyright 2020-2022, RespiraWorks
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -13,12 +13,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#if !defined(BARE_STM32)
+#pragma once
 
-#include "hal.h"
+struct Callback {
+  inline void operator()() const { function(instance); }
 
-void HalApi::EarlyInit() {}
-void HalApi::Init(Frequency cpu_frequency) {}
-void HalApi::set_timer15_callback(Callback callback) {}
-
-#endif
+  void (*function)(void *){nullptr};
+  void *instance{nullptr};
+};

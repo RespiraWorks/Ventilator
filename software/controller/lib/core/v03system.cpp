@@ -205,9 +205,6 @@ void V03System::init_subsystems() {
   i2c1_.Initialize(I2C::Speed::Fast, GPIO::Port::B, /*scl_pin=*/8, /*sda_pin=*/9,
                    GPIO::AlternativeFunction::AF4);
 
-  // Set SPI listeners before its proper initialization to allow Initialize to enable the proper
-  // interrupts
-  spi1_.SetListeners(/*rxl=*/&stepper_daisy_chain_, /*txl=*/nullptr);
   // The following pins are used to talk to the stepper drivers on the SPI daisy chain:
   //   PA5 - SCLK
   //   PA6 - MISO

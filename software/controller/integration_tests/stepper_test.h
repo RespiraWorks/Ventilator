@@ -32,10 +32,6 @@ static StepMotor::Handler stepper(MotorIndex, &stepper_chain);
 void RunTest() {
   hal.Init(CPUFrequency);
 
-  // Set SPI listeners before its proper initialization to allow Initialize to enable the proper
-  // interrupts
-  spi.SetListeners(/*rxl=*/&stepper_chain, /*txl=*/nullptr);
-
   spi.Initialize(/*clock_port=*/GPIO::Port::A, 5, /*miso_port=*/GPIO::Port::A, 6,
                  /*mosi_port=*/GPIO::Port::A, 7, /*chip_select_port=*/GPIO::Port::B, 6,
                  /*reset_port=*/GPIO::Port::A, 9, /*word_size=*/8, SPI::Bitrate::CpuFreqBySixteen);

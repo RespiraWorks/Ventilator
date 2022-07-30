@@ -39,11 +39,6 @@ limitations under the License.
 //
 // The high priority control loop can only call a subset of the methods here,
 // those which send commands to the stepper chips but don't return a value.
-// When methods are called from the high priority loop the command is queued
-// up to be sent later, but no communication is immediately started.
-// The HAL kicks off any queued up commands automatically at the end of the
-// high priority loop.  If an illegal command (i.e. one that returns a value)
-// is called from the high priority control loop it will result in an error.
 //
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -121,25 +116,34 @@ enum class ErrorCode {
 };
 
 enum class MoveStatus {
-  Stopped,
-  Accelerating,
-  Decelerating,
-  ConstantSpeed,
+  Stopped = 0,
+  Accelerating = 1,
+  Decelerating = 2,
+  ConstantSpeed = 3,
 };
 
 // Detailed status about the stepper driver chip.
 // Note, latching fields will return true if the event has occurred since the last time
 // the status was read.  The act of reading the status clears them so they won't be true
 // on the next read unless they happen again.
-struct Status {
-  bool enabled{false};
-  bool under_voltage{false};     // latching
-  bool thermal_warning{false};   // latching
-  bool thermal_shutdown{false};  // latching
-  bool over_current{false};      // latching
-  bool step_loss{false};         // latching
-  bool command_error{false};     // latching
-  MoveStatus move_status{MoveStatus::Stopped};
+union Status {
+  struct {
+    uint16_t disabled : 1;
+    uint16_t stopped : 1;  // active low
+    uint16_t switch_input : 1;
+    uint16_t switch_event : 1;  // latching
+    uint16_t motion_direction : 1;
+    uint16_t motion_status : 2;
+    uint16_t rejected_command : 1;  // latching
+    uint16_t invalid_command : 1;   // latching
+    uint16_t undervoltage : 1;      // latching, active low
+    uint16_t thermal_warning : 1;   // latching, active low
+    uint16_t thermal_shutdown : 1;  // latching, active low
+    uint16_t overcurrent : 1;       // latching, active low
+    uint16_t step_loss : 2;         // latching, active low
+    uint16_t step_clock_mode : 1;
+  } bitfield;
+  uint16_t word;
 };
 
 using Chain = SPI::DaisyChain</*MaxSlaves=*/4, /*QueuesLength*/ 10>;
@@ -261,6 +265,9 @@ class Handler {
   ErrorCode SetParam(Param param, uint32_t value);
   ErrorCode GetParam(Param param, uint32_t *value);
 
+  // for testing purposes
+  bool power_step() { return power_step_; }
+
  private:
   size_t slave_index_;
 
@@ -274,7 +281,7 @@ class Handler {
   ErrorCode SetKval(Param param, float amp);
 
   // Send a command and wait for the response (if any)
-  ErrorCode SendCmd(uint8_t *command, uint32_t length, uint8_t *response = nullptr);
+  ErrorCode SendCmd(uint8_t *command, size_t length, uint8_t *response = nullptr);
 
   // True if this is a powerSTEP chip.
   bool power_step_{false};

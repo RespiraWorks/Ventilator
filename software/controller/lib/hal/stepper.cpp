@@ -15,8 +15,6 @@ limitations under the License.
 
 #include "stepper.h"
 
-#if defined(BARE_STM32)
-
 #include <cmath>
 #include <cstring>
 
@@ -29,7 +27,7 @@ namespace StepMotor {
 // This array holds the length of each parameter in units of
 // bytes, rounded up to the nearest byte.  This info is based
 // on table 12 in the powerSTEP chip data sheet
-static uint8_t param_len[32] = {
+static constexpr size_t param_len[32] = {
     0,  // 0x00 - No valid parameter with ID 0
     3,  // 0x01 - Absolute position (22 bits)
     2,  // 0x02 - Electrical position (9 bits)
@@ -66,8 +64,8 @@ static uint8_t param_len[32] = {
 
 // These constants are used to convert speeds in steps/sec
 // to the weird values used by the stepper driver chip.
-// Note that different registers use different conversion
-// factors.  See the chip data sheet for details.
+// Note that different registers use different conversion factors.
+// See the chip data sheet for details.
 static constexpr float TickTime = 250e-9f;
 static constexpr float VelCurrentSpeedReg = TickTime * (1 << 28);
 static constexpr float VelMaxSpeedReg = TickTime * (1 << 18);
@@ -426,28 +424,8 @@ ErrorCode Handler::GetStatus(Status *stat) {
     return err;
   }
 
-  stat->enabled = (response[1] & 0x01) == 0;
-  stat->command_error = (response[1] & 0x80) || (response[0] & 0x01);
-  stat->under_voltage = (response[0] & 0x02) == 0;
-  stat->thermal_warning = (response[0] & 0x04) == 0;
-  stat->thermal_shutdown = (response[0] & 0x08) == 0;
-  stat->over_current = (response[0] & 0x10) == 0;
-  stat->step_loss = (response[0] & 0x60) != 0x60;
-
-  switch (response[1] & 0x60) {
-    case 0x00:
-      stat->move_status = MoveStatus::Stopped;
-      break;
-    case 0x20:
-      stat->move_status = MoveStatus::Accelerating;
-      break;
-    case 0x40:
-      stat->move_status = MoveStatus::Decelerating;
-      break;
-    case 0x60:
-      stat->move_status = MoveStatus::ConstantSpeed;
-      break;
-  }
+  // received MSB first
+  stat->word = static_cast<uint16_t>((response[0] << 8) + response[1]);
 
   return err;
 }
@@ -503,7 +481,11 @@ ErrorCode Handler::MoveRel(float deg) {
 // Multiple commands can be placed one after another and all sent as a unit with this function.
 //
 // Note that when called outside an interrupt handler, a busy wait is included.
-ErrorCode Handler::SendCmd(uint8_t *command, uint32_t length, uint8_t *response) {
+ErrorCode Handler::SendCmd(uint8_t *command, size_t length, uint8_t *response) {
+  if (!stepper_chain_) {
+    // This is coming from an error in setting up the motor. TODO: fault somehow?
+    return ErrorCode::InvalidState;
+  }
   bool request_finished = false;
   SPI::Request request = {
       .command = command,
@@ -520,20 +502,5 @@ ErrorCode Handler::SendCmd(uint8_t *command, uint32_t length, uint8_t *response)
 
   return ErrorCode::Ok;
 }
-
-#else
-
-namespace StepMotor {
-/// \TODO improve this mocking to be helpful in testing
-ErrorCode Handler::HardDisable() { return ErrorCode::Ok; }
-ErrorCode Handler::SetAmpAll(float amp) { return ErrorCode::Ok; }
-ErrorCode Handler::SetMaxSpeed(float dps) { return ErrorCode::Ok; }
-ErrorCode Handler::SetAccel(float acc) { return ErrorCode::Ok; }
-ErrorCode Handler::MoveRel(float deg) { return ErrorCode::Ok; }
-ErrorCode Handler::ClearPosition() { return ErrorCode::Ok; }
-ErrorCode Handler::GotoPos(float deg) { return ErrorCode::Ok; }
-ErrorCode Handler::HardStop() { return ErrorCode::Ok; }
-
-#endif
 
 }  // namespace StepMotor

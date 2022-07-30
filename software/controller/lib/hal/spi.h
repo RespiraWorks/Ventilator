@@ -15,7 +15,8 @@ limitations under the License.
 
 #pragma once
 
-#include <cstdint>
+#include <cstddef>  // size_t
+#include <cstdint>  // uint8_t
 
 #include "serial_listeners.h"
 
@@ -37,10 +38,9 @@ class Channel {
 
   virtual void WaitResponse() = 0;
 
-  void SetListeners(RxListener *rxl, TxListener *txl) {
-    rx_listener_ = rxl;
-    tx_listener_ = txl;
-  };
+  void SetRxListener(RxListener *rxl) { rx_listener_ = rxl; };
+
+  void SetTxListener(TxListener *txl) { tx_listener_ = txl; };
 
  protected:
   // Listeners for transfer complete

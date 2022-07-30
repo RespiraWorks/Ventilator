@@ -37,32 +37,31 @@ class TestEnvironment {
       }
     }
     // Have the daisy chain parse that probe response
-    chain_.ParseProbeResponse(probe_response, sizeof(probe_response));
-
-    // Setup the mock spi to copy its tx buffer to slaves_states when spi_.SendNextcommand() is
-    // called for the first time.  At this point I don't bother queueing the initial slaves_state
-    // to the rx data because it will get discarded anyway.
-    spi_.TestSetSpiFlowTarget(slaves_state_, chain_.num_slaves());
+    EXPECT_EQ(chain_.ParseProbeResponse(probe_response, sizeof(probe_response)), num_slaves);
+    PrepareTransmission();
   };
 
   MockChannel spi_;
-  // setting min cs high time to 5 microseconds
+  // Setting min cs high time to 5 microseconds to allow testing of EnsureMisCSHighTime
   static constexpr Duration MinCSHighTime{microseconds(5)};
   DaisyChain<MaxSlaves, QueuesLength> chain_{"test", "for tests", &spi_, MinCSHighTime};
 
   bool SendRequest(Request &request, size_t slave) { return chain_.SendRequest(request, slave); }
 
   void SendNextBytes() {
-    // Queue the current slaves_state to the spi rx data so when chain_.on_rx_complete() calls
-    // spi_.SetupReception(), it will copy the slaves state to the receive buffer
-    spi_.QueueReceiveData(slaves_state_, chain_.num_slaves());
-    // Set the spi flow target to slaves state so that when chain_.on_rx_complete() calls
-    // spi_.SendNextcommand(), the set of bytes is copied to slaves_state.
+    PrepareTransmission();
+    chain_.on_rx_complete();
+  }
+
+  void PrepareTransmission() {
+    // Set the spi flow target to slaves state so that when spi_.Sendcommand() is called, the set
+    // of bytes is copied to slaves_state.
     // This is safe because it happens after spi_.SetupReception(), so SetupReception will have
     // copied the proper slaves_state to the receive buffer
     spi_.TestSetSpiFlowTarget(slaves_state_, chain_.num_slaves());
-    // Finally, call chain_.on_rx_complete() to trigger all of the things we have just setup.
-    chain_.on_rx_complete();
+    // Queue the current slaves_state to the spi rx data so when spi_.SetupReception is called,
+    // it will copy the slaves state to the receive buffer
+    spi_.TestQueueReceiveData(slaves_state_, chain_.num_slaves());
   }
 
   uint8_t slaves_state_[MaxSlaves] = {0};
@@ -149,7 +148,7 @@ TEST(DaisyChain, ResetSlavesSendsDesiredByte) {
   for (size_t i = 0; i < BufferLength; i++) {
     rx_data[i] = static_cast<uint8_t>(i + 7);
   }
-  test_chain.spi_.QueueReceiveData(rx_data, BufferLength);
+  test_chain.spi_.TestQueueReceiveData(rx_data, BufferLength);
 
   // setup the mock spi to send its flow to our buffer, then send a reset command that is 1 byte
   // shorter
@@ -162,6 +161,15 @@ TEST(DaisyChain, ResetSlavesSendsDesiredByte) {
   }
   EXPECT_EQ(spi_flow[ResetLength], 0);
   EXPECT_EQ(response[ResetLength], 0);
+}
+
+TEST(DaisyChain, ParseProbeResponse) {
+  constexpr size_t MaxSlaves{4};
+  constexpr uint8_t NullCommand{0xBF};
+  for (size_t num_slaves = 0; num_slaves <= MaxSlaves; num_slaves++) {
+    TestEnvironment<MaxSlaves, 1> test_chain{num_slaves, NullCommand};
+    EXPECT_EQ(test_chain.chain_.num_slaves(), num_slaves);
+  }
 }
 
 TEST(DaisyChain, ProbeSlavesIntegrationTest) {
@@ -188,7 +196,7 @@ TEST(DaisyChain, ProbeSlavesIntegrationTest) {
   while (byte < sizeof(rx_flow)) {
     rx_flow[byte++] = ResetCommand;
   }
-  test_chain.spi_.QueueReceiveData(rx_flow, sizeof(rx_flow));
+  test_chain.spi_.TestQueueReceiveData(rx_flow, sizeof(rx_flow));
   EXPECT_EQ(test_chain.chain_.ProbeSlaves(NullCommand, ResetCommand), NumSlaves);
 
   // check data sent on the spi bus:

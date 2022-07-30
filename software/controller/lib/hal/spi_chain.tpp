@@ -111,6 +111,9 @@ template<size_t MaxSlaves, size_t QueuesLength>
 DaisyChain<MaxSlaves, QueuesLength>::DaisyChain(const char* name, const char* help_supplement, Channel *spi, Duration min_cs_high_time)
    : min_cs_high_time_(min_cs_high_time), spi_(spi)
   {
+    if(spi_){
+      spi_->SetRxListener(this);
+    }
     dbg_queueing_errors_.prepend_name(name);
     dbg_queueing_errors_.append_help(help_supplement);
    }
@@ -124,10 +127,10 @@ size_t DaisyChain<MaxSlaves, QueuesLength>::ProbeSlaves(uint8_t null_command, ui
   // Send a reset command to all the slaves + 1, in order to capture the case where we have no
   // slaves at all (and the response buffer will stay full of zeros).
   uint8_t response_buffer[MaxSlaves+1] = {0};
-  ResetSlaves(reset_command, response_buffer, sizeof(response_buffer));
+  ResetSlaves(reset_command, response_buffer, MaxSlaves+1);
 
   // for testing purposes, this returns the number of slaves
-  return ParseProbeResponse(response_buffer, sizeof(response_buffer));;
+  return ParseProbeResponse(response_buffer, MaxSlaves+1);;
 }
 
 template<size_t MaxSlaves, size_t QueuesLength>
@@ -171,8 +174,8 @@ size_t DaisyChain<MaxSlaves, QueuesLength>::ParseProbeResponse(uint8_t *response
   }
 
   // If the response buffer is full of null commands, this most likely means the
-  // daisy chain is broken (more slaves than we expect)
-  if(num_slaves_==sizeof(response_buffer)) {
+  // daisy chain is broken (more slaves than we expect), stop sending any data.
+  if(num_slaves_==length) {
     num_slaves_ = 0;
   }
   return num_slaves_;
@@ -180,6 +183,10 @@ size_t DaisyChain<MaxSlaves, QueuesLength>::ParseProbeResponse(uint8_t *response
 
 template<size_t MaxSlaves, size_t QueuesLength>
 bool DaisyChain<MaxSlaves, QueuesLength>::SendRequest(const Request &request, size_t slave) {
+  if(!spi_){
+    // Don't queue the request if the chain is not fully setup.
+    return false;
+  }
   // Ensure thread safety as this function might be called from a timer interrupt
   // as well as the main loop.
   BlockInterrupts block;
@@ -213,7 +220,13 @@ bool DaisyChain<MaxSlaves, QueuesLength>::SendRequest(const Request &request, si
 
 template<size_t MaxSlaves, size_t QueuesLength>
 void DaisyChain<MaxSlaves, QueuesLength>::SendDataWithBusyWait(uint8_t* command_buffer, uint8_t* response_buffer, size_t length){
+  if(!spi_){
+    // The daisy chain was not initialized properly, it can't send any data.
+    return;
+  }
+
   if(!command_buffer || !response_buffer){
+    // Error in the request
     return;
   }
 
@@ -232,6 +245,9 @@ void DaisyChain<MaxSlaves, QueuesLength>::SendDataWithBusyWait(uint8_t* command_
 
 template<size_t MaxSlaves, size_t QueuesLength>
 void DaisyChain<MaxSlaves, QueuesLength>::on_rx_complete(){
+  if(!spi_){
+    return;
+  }
   spi_->SetChipSelect();
   last_cs_rise_=SystemTimer::singleton().now();
   ProcessReceivedData();

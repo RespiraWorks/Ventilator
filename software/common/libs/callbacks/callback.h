@@ -17,6 +17,7 @@ limitations under the License.
 
 struct Callback {
   inline void operator()() const { function(instance); }
+  inline explicit operator bool() const { return (function != nullptr); }
 
   void (*function)(void *){nullptr};
   void *instance{nullptr};

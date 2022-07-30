@@ -74,7 +74,9 @@ void HighPriorityTrigger::interrupt_handler() {
   record_latency(static_cast<float>(start));
 
   // Call the function
-  run_me_();
+  if (run_me_) {
+    run_me_();
+  }
   //  controller_callback_(controller_arg_);
 
   uint32_t end = timer_register->counter;

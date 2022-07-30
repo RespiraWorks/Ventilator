@@ -109,7 +109,11 @@ void HalApi::Timer6ISR() {
   SystemTimer::singleton().interrupt_handler();
 }
 
-void HalApi::Timer15ISR() { hal.timer15_callback_(); }
+void HalApi::Timer15ISR() {
+  if (hal.timer15_callback_) {
+    hal.timer15_callback_();
+  }
+}
 
 /// \todo make this a callback from main_loop or system
 // Fault handler

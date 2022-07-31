@@ -91,7 +91,7 @@ class V03Actuators : public AbstractActuators {
 
  private:
   std::optional<PinchValve> blower_pinch_{std::nullopt};
-  std::optional<PinchValve> exhale_pinch_{std::nullopt};
+  //  std::optional<PinchValve> exhale_pinch_{std::nullopt};
   // Blower, PSol and buzzer use pwm pins and need to be instantiated after HAL, therefore we use
   // std::optional to delay the instantiation within init function.
   std::optional<PwmActuator> blower_{std::nullopt};

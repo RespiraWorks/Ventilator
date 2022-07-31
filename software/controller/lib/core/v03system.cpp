@@ -88,7 +88,7 @@ SensorReadings V03Sensors::get_readings() const {
 
 void V03Actuators::init(NVParams::Handler *nv_params) {
   blower_pinch_.emplace("blower_valve_", " of the blower pinch valve", BlowerValveMotorIndex);
-  exhale_pinch_.emplace("exhale_valve_", " of the exhale pinch valve", ExhaleValveMotorIndex);
+  //  exhale_pinch_.emplace("exhale_valve_", " of the exhale pinch valve", ExhaleValveMotorIndex);
 
   // For now, the blower uses default calibration values, linearly spaced between 0 and 1
   blower_.emplace(BlowerChannel, BlowerFreq, CPUFrequency, "blower_", " of the blower");
@@ -101,7 +101,7 @@ void V03Actuators::init(NVParams::Handler *nv_params) {
 
   // In case init was called with nullptr, these fail silently
   blower_pinch_->LinkCalibration(nv_params, offsetof(NVParams::Structure, blower_pinch_cal));
-  exhale_pinch_->LinkCalibration(nv_params, offsetof(NVParams::Structure, exhale_pinch_cal));
+  //  exhale_pinch_->LinkCalibration(nv_params, offsetof(NVParams::Structure, exhale_pinch_cal));
   blower_->LinkCalibration(nv_params, offsetof(NVParams::Structure, blower_cal));
   psol_->LinkCalibration(nv_params, offsetof(NVParams::Structure, psol_cal));
 
@@ -117,9 +117,10 @@ void V03Actuators::init(NVParams::Handler *nv_params) {
 
 // Return true if all actuators are enabled and ready for action
 bool V03Actuators::ready() {
-  return blower_pinch_.has_value() && blower_pinch_->IsReady() && exhale_pinch_.has_value() &&
-         exhale_pinch_->IsReady() && blower_.has_value() && psol_.has_value() &&
-         led_red_.has_value() && led_yellow_.has_value() && led_green_.has_value();
+  return blower_pinch_.has_value() && blower_pinch_->IsReady() &&
+         //         exhale_pinch_.has_value() && exhale_pinch_->IsReady() &&
+         blower_.has_value() && psol_.has_value() && led_red_.has_value() &&
+         led_yellow_.has_value() && led_green_.has_value();
   // but not buzzer
 }
 
@@ -137,11 +138,11 @@ void V03Actuators::execute(const ActuatorsState &desired_state) {
   }
 
   // Set the exhale pinch valve position
-  if (desired_state.exhale_valve.has_value()) {
-    exhale_pinch_->SetOutput(*desired_state.exhale_valve);
-  } else {
-    exhale_pinch_->Disable();
-  }
+  //  if (desired_state.exhale_valve.has_value()) {
+  //    exhale_pinch_->SetOutput(*desired_state.exhale_valve);
+  //  } else {
+  //    exhale_pinch_->Disable();
+  //  }
 
   psol_->set(desired_state.fio2_valve);
 

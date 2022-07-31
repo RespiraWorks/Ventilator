@@ -199,7 +199,8 @@ void V03System::init_subsystems() {
                    GPIO::AlternativeFunction::AF4);
 
 #if defined(BARE_STM32)
-  hal.bind_channels(&i2c1_, &rpi_uart_, &debug_uart_);
+  hal.set_uart2_callback(debug_uart_.get_callback());
+  hal.bind_channels(&i2c1_, &rpi_uart_);
 #endif
 
   Interrupts::singleton().EnableInterrupts();

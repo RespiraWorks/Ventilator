@@ -81,10 +81,11 @@ void HalApi::Init(Frequency cpu_frequency) {
   cpu_frequency_ = cpu_frequency;
 }
 
-void HalApi::bind_channels(I2C::Channel *i2c, UART::DMAChannel *rpi, UART::Channel *debug) {
+void HalApi::set_uart2_callback(Callback callback) { uart2_callback_ = callback; }
+
+void HalApi::bind_channels(I2C::Channel *i2c, UART::DMAChannel *rpi) {
   i2c_ = i2c;
   rpi_uart_ = rpi;
-  debug_uart_ = debug;
 }
 
 // Reset the processor
@@ -184,8 +185,8 @@ void HalApi::Uart3ISR() {
   }
 }
 void HalApi::Uart2ISR() {
-  if (hal.debug_uart_) {
-    hal.debug_uart_->UARTInterruptHandler();
+  if (hal.uart2_callback_) {
+    hal.uart2_callback_();
   }
 }
 

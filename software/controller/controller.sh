@@ -116,9 +116,20 @@ install_linux() {
                lcov \
                clang-tidy
   pip3 install -U pip
+  pip3 install nanopb
   pip3 install codecov pyserial matplotlib pandas gitpython
   pip3 install platformio==${PIO_VERSION}
   source ${HOME}/.profile
+}
+
+generate_network_protocols() {
+  protoc \
+  --plugin=/home/$USER/.local/lib/python3.10/site-packages/nanopb/generator/protoc-gen-nanopb \
+  -I /home/$USER/.local/lib/python3.10/site-packages/nanopb/generator/proto \
+  -I $PWD/../common/generated_libs/network_protocol \
+  --nanopb_out=../common/generated_libs \
+  --python_out=../common/generated_libs \
+  $PWD/../common/generated_libs/network_protocol/network_protocol.proto
 }
 
 configure_platformio() {
@@ -389,6 +400,14 @@ elif [ "$1" == "debug" ]; then
   pushd ../utils/debug
   ./debug_cli.py "$@"
   popd
+
+  exit $EXIT_SUCCESS
+
+##############################
+# GENERATE NETWORK PROTOCOLS #
+##############################
+elif [ "$1" == "generate_network_protocols" ]; then
+  generate_network_protocols
 
   exit $EXIT_SUCCESS
 

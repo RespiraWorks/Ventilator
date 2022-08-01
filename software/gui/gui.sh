@@ -125,6 +125,17 @@ install_linux() {
           gcovr \
           lcov \
           clang-tidy
+  pip3 install nanopb
+}
+
+generate_network_protocols() {
+  protoc \
+  --plugin=/home/$USER/.local/lib/python3.10/site-packages/nanopb/generator/protoc-gen-nanopb \
+  -I /home/$USER/.local/lib/python3.10/site-packages/nanopb/generator/proto \
+  -I $PWD/../common/generated_libs/network_protocol \
+  --nanopb_out=../common/generated_libs \
+  --python_out=../common/generated_libs \
+  $PWD/../common/generated_libs/network_protocol/network_protocol.proto
 }
 
 configure_conan() {
@@ -382,6 +393,14 @@ elif [ "$1" == "run" ]; then
     ./bin/ventilator_gui_app "${@:2}"
   fi
   popd
+
+  exit $EXIT_SUCCESS
+
+##############################
+# GENERATE NETWORK PROTOCOLS #
+##############################
+elif [ "$1" == "generate_network_protocols" ]; then
+  generate_network_protocols
 
   exit $EXIT_SUCCESS
 

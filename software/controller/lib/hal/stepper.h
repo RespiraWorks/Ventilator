@@ -266,7 +266,7 @@ class Handler {
   ErrorCode GetParam(Param param, uint32_t *value);
 
   // for testing purposes
-  bool power_step() { return power_step_; }
+  bool power_step() const { return power_step_; }
 
  private:
   size_t slave_index_;

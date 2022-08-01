@@ -22,6 +22,9 @@ static constexpr float InitialStep{0.002f};
 
 void RunTest() {
   hal.Init(CPUFrequency);
+  SystemTimer::singleton().initialize(PeripheralID::Timer6, InterruptVector::Timer6, CPUFrequency);
+  Interrupts::singleton().EnableInterrupts();
+
   PwmActuator blower{BlowerChannel, BlowerFreq, CPUFrequency, "", ""};
 
   float fan_power = FanMin;

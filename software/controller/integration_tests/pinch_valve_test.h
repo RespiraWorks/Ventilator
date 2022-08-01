@@ -27,6 +27,7 @@ static PinchValve pinch_valve("pinch_valve_", " for pinch valve", MotorIndex, &s
 
 void RunTest() {
   hal.Init(CPUFrequency);
+  SystemTimer::singleton().initialize(PeripheralID::Timer6, InterruptVector::Timer6, CPUFrequency);
 
   spi.Initialize(/*clock_port=*/GPIO::Port::A, 5, /*miso_port=*/GPIO::Port::A, 6,
                  /*mosi_port=*/GPIO::Port::A, 7, /*chip_select_port=*/GPIO::Port::B, 6,
@@ -36,6 +37,8 @@ void RunTest() {
                             /*reset_command=*/static_cast<uint8_t>(StepMotor::OpCode::ResetDevice));
 
   hal.bind_channels(nullptr, nullptr, nullptr, &spi);
+
+  Interrupts::singleton().EnableInterrupts();
 
   // Just to shut it up, may not need this beyond v0.3
   PwmActuator blower{BlowerChannel, BlowerFreq, CPUFrequency, "", ""};

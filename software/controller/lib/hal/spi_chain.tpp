@@ -296,7 +296,7 @@ void DaisyChain<MaxSlaves, QueuesLength>::TransmitNextCommand() {
 }
 
 template<size_t MaxSlaves, size_t QueuesLength>
-void DaisyChain<MaxSlaves, QueuesLength>::EnsureMinCSHighTime(){
+void DaisyChain<MaxSlaves, QueuesLength>::EnsureMinCSHighTime() const {
   // In case cs has not been high for long enough, delay sending the command
     Time now = SystemTimer::singleton().now();
     if(now - last_cs_rise_ < min_cs_high_time_) {

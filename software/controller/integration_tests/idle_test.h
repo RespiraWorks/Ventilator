@@ -20,6 +20,9 @@ static constexpr Duration Delay{milliseconds(10)};
 void RunTest() {
   hal.Init(CPUFrequency);
 
+  SystemTimer::singleton().initialize(PeripheralID::Timer6, InterruptVector::Timer6, CPUFrequency);
+  Interrupts::singleton().EnableInterrupts();
+
   // Just to shut it up, may not need this beyond v0.3
   PwmActuator blower{BlowerChannel, BlowerFreq, CPUFrequency, "", ""};
   blower.set(0.0f);

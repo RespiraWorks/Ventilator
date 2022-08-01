@@ -93,7 +93,7 @@ class DaisyChain : public RxListener {
 
   bool SendRequest(const Request &request, size_t slave);
 
-  size_t num_slaves() { return num_slaves_; }
+  size_t num_slaves() const { return num_slaves_; }
 
   void on_rx_complete() override;
   // SPI only provides callback for DMA error, which is highly unlikely: Quoting from [RM] p307:
@@ -113,7 +113,7 @@ class DaisyChain : public RxListener {
 
   // If needed, adds a busy wait before we send data to the SPI bus(with reset of CS to low state).
   // Public for testing purposes.
-  void EnsureMinCSHighTime();
+  void EnsureMinCSHighTime() const;
 
  protected:
   // Minimum time between bytes when transmitting (this depends on the nature of the slaves)

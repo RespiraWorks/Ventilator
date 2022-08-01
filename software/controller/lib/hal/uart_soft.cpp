@@ -54,7 +54,7 @@ void SoftChannel::static_callback_handler(void *instance) {
 }
 
 Callback SoftChannel::get_callback() {
-  return {.instance = static_cast<void *>(this), .function = &static_callback_handler};
+  return {static_cast<void *>(this), &static_callback_handler};
 }
 
 void SoftChannel::UARTInterruptHandler() {

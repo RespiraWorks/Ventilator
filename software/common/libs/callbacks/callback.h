@@ -15,10 +15,15 @@ limitations under the License.
 
 #pragma once
 
-struct Callback {
-  inline void operator()() const { function(instance); }
-  inline explicit operator bool() const { return (function != nullptr); }
+class Callback {
+ public:
+  inline Callback() = default;
+  inline Callback(void *instance, void (*function)(void *))
+      : instance_(instance), function_(function) {}
+  inline explicit operator bool() const { return (function_ != nullptr); }
+  inline void operator()() const { function_(instance_); }
 
-  void *instance{nullptr};
-  void (*function)(void *){nullptr};
+ private:
+  void *instance_{nullptr};
+  void (*function_)(void *){nullptr};
 };

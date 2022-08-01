@@ -19,6 +19,7 @@ limitations under the License.
 
 #pragma once
 
+#include "callback.h"
 #include "circular_buffer.h"
 #include "dma.h"
 #include "gpio.h"
@@ -100,9 +101,19 @@ class Channel {
   bool SendRequest(const Request &request);
 
   // Interrupt handlers
+  Callback get_event_callback();
+  static void static_event_handler(void *instance);
   void I2CEventHandler();
+
+  Callback get_error_callback();
+  static void static_error_handler(void *instance);
   void I2CErrorHandler();
+
   // Interrupt handler for DMA, which only makes sense on the STM32
+  Callback get_read_callback();
+  Callback get_write_callback();
+  static void static_read_handler(void *instance);
+  static void static_write_handler(void *instance);
   void DMAInterruptHandler(ExchangeDirection direction);
 
   // Queue of a few requests. The number of requests is arbitrary but
@@ -131,6 +142,7 @@ class Channel {
   uint16_t remaining_size_{0};
 
  private:
+  bool initialized_{false};
   Base i2c_;
   std::optional<DMA::ChannelControl> rx_dma_{std::nullopt};
   std::optional<DMA::ChannelControl> tx_dma_{std::nullopt};

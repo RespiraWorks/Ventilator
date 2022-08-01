@@ -82,11 +82,17 @@ void HalApi::Init(Frequency cpu_frequency) {
 }
 
 void HalApi::set_uart2_callback(Callback callback) { uart2_callback_ = callback; }
+void HalApi::set_i2c1_event_callback(Callback callback) { i2c1_event_callback_ = callback; }
+void HalApi::set_i2c1_error_callback(Callback callback) { i2c1_error_callback_ = callback; }
+void HalApi::set_dma2ch6_callback(Callback callback) { dma2ch6_callback_ = callback; }
+void HalApi::set_dma2ch7_callback(Callback callback) { dma2ch7_callback_ = callback; }
 
-void HalApi::bind_channels(I2C::Channel *i2c, UART::DMAChannel *rpi) {
-  i2c_ = i2c;
-  rpi_uart_ = rpi;
-}
+// void HalApi::bind_channels(I2C::Channel *i2c, UART::DMAChannel *rpi) {
+//  i2c_ = i2c;
+//  rpi_uart_ = rpi;
+//}
+
+void HalApi::bind_channels(UART::DMAChannel *rpi) { rpi_uart_ = rpi; }
 
 // Reset the processor
 // this gets called from pure_virtual
@@ -145,27 +151,39 @@ void BadISR() {}
 // Those interrupt service routines are specific to our configuration, unlike
 // the I2C::Channel::*ISR() which are generic ISR associated with an I²C channel
 void HalApi::I2c1EventISR() {
-  if (hal.i2c_) {
-    hal.i2c_->I2CEventHandler();
+  if (hal.i2c1_event_callback_) {
+    hal.i2c1_event_callback_();
   }
+  //  if (hal.i2c_) {
+  //    hal.i2c_->I2CEventHandler();
+  //  }
 };
 
 void HalApi::I2c1ErrorISR() {
-  if (hal.i2c_) {
-    hal.i2c_->I2CErrorHandler();
+  if (hal.i2c1_error_callback_) {
+    hal.i2c1_error_callback_();
   }
+  //  if (hal.i2c_) {
+  //    hal.i2c_->I2CErrorHandler();
+  //  }
 };
 
 void HalApi::DMA2Channel6ISR() {
-  if (hal.i2c_) {
-    hal.i2c_->DMAInterruptHandler(I2C::ExchangeDirection::Read);
+  if (hal.dma2ch6_callback_) {
+    hal.dma2ch6_callback_();
   }
+  //  if (hal.i2c_) {
+  //    hal.i2c_->DMAInterruptHandler(I2C::ExchangeDirection::Read);
+  //  }
 };
 
 void HalApi::DMA2Channel7ISR() {
-  if (hal.i2c_) {
-    hal.i2c_->DMAInterruptHandler(I2C::ExchangeDirection::Write);
+  if (hal.dma2ch7_callback_) {
+    hal.dma2ch7_callback_();
   }
+  //  if (hal.i2c_) {
+  //    hal.i2c_->DMAInterruptHandler(I2C::ExchangeDirection::Write);
+  //  }
 };
 
 void HalApi::DMA1Channel2ISR() {

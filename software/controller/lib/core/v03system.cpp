@@ -171,6 +171,13 @@ void V03System::init_hal() {
   // every 100ns and generate an interrupt every millisecond. Note that this assumes the cpu
   // frequency is a multiple of 10MHz. Basic timers are documented in [RM] chapter 29.
   SystemTimer::singleton().initialize(PeripheralID::Timer6, InterruptVector::Timer6, CPUFrequency);
+
+#if defined(BARE_STM32)
+  hal.set_i2c1_event_callback(i2c1_.get_event_callback());
+  hal.set_i2c1_error_callback(i2c1_.get_error_callback());
+  hal.set_dma2ch6_callback(i2c1_.get_read_callback());
+  hal.set_dma2ch7_callback(i2c1_.get_write_callback());
+#endif
 }
 
 void V03System::init_subsystems() {
@@ -200,7 +207,8 @@ void V03System::init_subsystems() {
 
 #if defined(BARE_STM32)
   hal.set_uart2_callback(debug_uart_.get_callback());
-  hal.bind_channels(&i2c1_, &rpi_uart_);
+  //  hal.bind_channels(&i2c1_, &rpi_uart_);
+  hal.bind_channels(&rpi_uart_);
 #endif
 
   Interrupts::singleton().EnableInterrupts();

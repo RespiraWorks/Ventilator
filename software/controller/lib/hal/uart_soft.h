@@ -37,9 +37,9 @@ class SoftChannel : public Channel {
   void StopTx() override { tx_data_.Flush(); };
   void StopRx() override { rx_data_.Flush(); };
 
-  void UARTInterruptHandler() override;
   Callback get_callback();
   static void static_callback_handler(void *instance);
+  void UARTInterruptHandler() override;
 
  protected:
   // circular buffers for transmitting and receiving data

@@ -250,6 +250,8 @@ void Channel::Initialize(Speed speed, GPIO::Port port, uint8_t scl_pin, uint8_t 
     i2c_reg->control_reg1.tx_interrupts = 0;
     i2c_reg->control_reg1.tx_complete_interrupts = 0;
   }
+
+  initialized_ = true;
 }
 
 bool Channel::SendRequest(const Request &request) {
@@ -443,8 +445,53 @@ bool Channel::NackDetected() const { return get_register(i2c_)->status.nack; }
 void Channel::ClearNack() { get_register(i2c_)->interrupt_clear = 0x10; }
 void Channel::ClearErrors() { get_register(i2c_)->interrupt_clear = 0x720; }
 
+void Channel::SetupDMATransfer() {
+  if (!dma_enable_) {
+    return;
+  }
+  // to be on the safe size, disable both channels in case they weren't
+  // (likely when this is called as a "retry after error")
+  rx_dma_->Disable();
+  tx_dma_->Disable();
+
+  DMA::ChannelControl *channel{nullptr};
+  if (last_request_.direction == ExchangeDirection::Read) {
+    channel = &(rx_dma_.value());
+  } else {
+    channel = &(tx_dma_.value());
+  }
+
+  uint16_t transfer_size{0};
+  if (remaining_size_ <= 255) {
+    transfer_size = remaining_size_;
+  } else {
+    transfer_size = 255;
+  }
+
+  channel->SetupTransfer(next_data_, transfer_size);
+
+  // when using DMA, we need to use autoend, otherwise the STOP condition
+  // which we issue at the end of the DMA transfer (which means the last byte
+  // has been written to the register) may arrive before the last byte is
+  // actually written on the line. Tests with both DMA and I2C interrupts
+  // enabled to send Stop at the end of the I2C transfer were inconclusive.
+  get_register(i2c_)->control2.autoend = 1;
+
+  channel->Enable();
+}
+
+// Interrupt handlers
+
+Callback Channel::get_event_callback() {
+  return {static_cast<void *>(this), &static_event_handler};
+}
+
+void Channel::static_event_handler(void *instance) {
+  static_cast<Channel *>(instance)->I2CEventHandler();
+}
+
 void Channel::I2CEventHandler() {
-  if (!transfer_in_progress_) {
+  if (!initialized_ || !transfer_in_progress_) {
     return;
   }
 
@@ -485,43 +532,19 @@ void Channel::I2CEventHandler() {
   }
 }
 
-void Channel::SetupDMATransfer() {
-  if (!dma_enable_) {
-    return;
-  }
-  // to be on the safe size, disable both channels in case they weren't
-  // (likely when this is called as a "retry after error")
-  rx_dma_->Disable();
-  tx_dma_->Disable();
-
-  DMA::ChannelControl *channel{nullptr};
-  if (last_request_.direction == ExchangeDirection::Read) {
-    channel = &(rx_dma_.value());
-  } else {
-    channel = &(tx_dma_.value());
-  }
-
-  uint16_t transfer_size{0};
-  if (remaining_size_ <= 255) {
-    transfer_size = remaining_size_;
-  } else {
-    transfer_size = 255;
-  }
-
-  channel->SetupTransfer(next_data_, transfer_size);
-
-  // when using DMA, we need to use autoend, otherwise the STOP condition
-  // which we issue at the end of the DMA transfer (which means the last byte
-  // has been written to the register) may arrive before the last byte is
-  // actually written on the line. Tests with both DMA and I2C interrupts
-  // enabled to send Stop at the end of the I2C transfer were inconclusive.
-  get_register(i2c_)->control2.autoend = 1;
-
-  channel->Enable();
+Callback Channel::get_error_callback() {
+  return {static_cast<void *>(this), &static_error_handler};
 }
 
-// Interrupt handlers
+void Channel::static_error_handler(void *instance) {
+  static_cast<Channel *>(instance)->I2CErrorHandler();
+}
+
 void Channel::I2CErrorHandler() {
+  if (!initialized_) {
+    return;
+  }
+
   // I²C error --> clear all error flags (except those that are SMBus only)
   ClearErrors();
   // and restart the request up to error_retry_ times
@@ -535,8 +558,22 @@ void Channel::I2CErrorHandler() {
   StartTransfer();
 }
 
+Callback Channel::get_read_callback() { return {static_cast<void *>(this), &static_read_handler}; }
+
+Callback Channel::get_write_callback() {
+  return {static_cast<void *>(this), &static_write_handler};
+}
+
+void Channel::static_read_handler(void *instance) {
+  static_cast<Channel *>(instance)->DMAInterruptHandler(I2C::ExchangeDirection::Read);
+}
+
+void Channel::static_write_handler(void *instance) {
+  static_cast<Channel *>(instance)->DMAInterruptHandler(I2C::ExchangeDirection::Write);
+}
+
 void Channel::DMAInterruptHandler(ExchangeDirection direction) {
-  if (!dma_enable_ || !transfer_in_progress_) {
+  if (!initialized_ || !dma_enable_ || !transfer_in_progress_) {
     return;
   }
 

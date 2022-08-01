@@ -107,11 +107,11 @@ install_linux() {
                cppcheck \
                gcovr \
                lcov \
-               nanopb \
                clang-tidy
   pip3 install -U pip
   pip3 install codecov
   pip3 install protobuf
+  pip3 install nanopb
   pip3 install platformio==${PIO_VERSION}
   source ${HOME}/.profile
 }

@@ -21,9 +21,9 @@ limitations under the License.
 GPIO::AdcChannel adc_channel(Sensor s) {
   switch (s) {
     case Sensor::PatientPressure:
-      return InterimBoardAnalogPressure;
-    case Sensor::OxygenInflowPressureDiff:
       return U3PatientPressure;
+    case Sensor::OxygenInflowPressureDiff:
+      return InterimBoardAnalogPressure;
     case Sensor::AirInflowPressureDiff:
       return U4InhaleFlow;
     case Sensor::OutflowPressureDiff:

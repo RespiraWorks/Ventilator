@@ -58,7 +58,7 @@ class V03Sensors : public AbstractSensors {
   // Fundamental sensors. Because those use GPIO Pins, we need to delay instantiation to after
   // the Hal has been properly initialized. We use std::optional to achieve that, and emplace them
   // within init function
-  std::optional<MPXV5010DP<GPIO::AnalogInputPin>> patient_pressure_sensor_{std::nullopt};
+  std::optional<MPXV5004DP<GPIO::AnalogInputPin>> patient_pressure_sensor_{std::nullopt};
   std::optional<TeledyneR24<GPIO::AnalogInputPin>> fio2_sensor_{std::nullopt};
   std::optional<MPXV5004DP<GPIO::AnalogInputPin>> air_influx_sensor_dp_{std::nullopt};
   std::optional<MPXV5004DP<GPIO::AnalogInputPin>> oxygen_influx_sensor_dp_{std::nullopt};

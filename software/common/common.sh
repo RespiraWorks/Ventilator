@@ -126,12 +126,12 @@ update_platformio() {
 
 generate_network_protocols() {
   protoc \
-  --plugin=usr/bin/protoc-gen-nanopb
-  -I usr/lib/python3/dist-packages/proto \
-  -Igenerated_libs/network_protocol \
-  --nanopb_out=generated_libs/network_protocol \
-  --python_out=protocol_buffer_outputs \
-  generated_libs/network_protocol/network_protocol.proto
+  --plugin=/home/$USER/.local/lib/python3.10/site-packages/nanopb/generator/protoc-gen-nanopb \
+  -I /home/$USER/.local/lib/python3.10/site-packages/nanopb/generator/proto \
+  -I $PWD/generated_libs/network_protocol \
+  --nanopb_out=./generated_libs \
+  --python_out=./generated_libs \
+  $PWD/generated_libs/network_protocol/network_protocol.proto
 }
 
 run_checks() {

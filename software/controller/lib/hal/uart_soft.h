@@ -12,6 +12,7 @@ limitations under the License.
 
 #pragma once
 
+#include "callback.h"
 #include "circular_buffer.h"
 #include "uart_base.h"
 
@@ -36,6 +37,8 @@ class SoftChannel : public Channel {
   void StopTx() override { tx_data_.Flush(); };
   void StopRx() override { rx_data_.Flush(); };
 
+  Callback get_callback();
+  static void static_callback_handler(void *instance);
   void UARTInterruptHandler() override;
 
  protected:

@@ -48,6 +48,14 @@ size_t SoftChannel::Write(uint8_t *buffer, size_t length, TxListener *txl) {
   return i;
 }
 
+Callback SoftChannel::get_callback() {
+  return {static_cast<void *>(this), &static_callback_handler};
+}
+
+void SoftChannel::static_callback_handler(void *instance) {
+  static_cast<SoftChannel *>(instance)->UARTInterruptHandler();
+}
+
 void SoftChannel::UARTInterruptHandler() {
   // Process common interrupts
   Channel::UARTInterruptHandler();

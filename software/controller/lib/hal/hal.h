@@ -33,6 +33,7 @@ limitations under the License.
 
 #include <cstdint>
 
+#include "callback.h"
 #include "units.h"
 #include "vars.h"
 
@@ -56,7 +57,14 @@ class HalApi {
   void StartLoopTimer(const Duration &period, void (*callback)(void *), void *arg);
 
 #if defined(BARE_STM32)
-  void bind_channels(I2C::Channel *i2c, UART::DMAChannel *rpi, UART::Channel *debug);
+  void set_uart2_callback(Callback callback);
+  void set_i2c1_event_callback(Callback callback);
+  void set_i2c1_error_callback(Callback callback);
+  void set_dma2ch6_callback(Callback callback);
+  void set_dma2ch7_callback(Callback callback);
+
+  void bind_channels(UART::DMAChannel *rpi);
+  //  void bind_channels(I2C::Channel *i2c, UART::DMAChannel *rpi);
 
   // local static functions.  We don't want to add any private functions to the Hal class to avoid
   // complexity with other builds. Those are Interrupt Service Routines, i.e callback functions for
@@ -73,9 +81,13 @@ class HalApi {
   static void DMA2Channel7ISR();
 
  private:
-  I2C::Channel *i2c_{nullptr};
+  //  I2C::Channel *i2c_{nullptr};
   UART::DMAChannel *rpi_uart_{nullptr};
-  UART::Channel *debug_uart_{nullptr};
+  Callback uart2_callback_;
+  Callback i2c1_event_callback_;
+  Callback i2c1_error_callback_;
+  Callback dma2ch6_callback_;
+  Callback dma2ch7_callback_;
 
 #endif
 

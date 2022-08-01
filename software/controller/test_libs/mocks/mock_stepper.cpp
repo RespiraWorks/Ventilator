@@ -15,7 +15,8 @@ limitations under the License.
 
 #include "mock_stepper.h"
 
-#include <cmath>  // for fmod
+#include <cfloat>  // for FLT_EPSILON
+#include <cmath>   // for fmod and fabsf
 
 namespace StepMotor {
 
@@ -190,7 +191,7 @@ void TestStepper::ExecuteCommand() {
       op_code == static_cast<uint8_t>(Param::MarkPosition)  // OPCode to set the Mark position
   ) {
     // those commands use two's complement, check the sign bit
-    if (received_command_[1] & 0x10) {
+    if (received_command_[1] & 0x80) {
       // make sure the bits that were not provided are completed with FF to keep the argument
       // negative
       argument = 0xFFFFFFFF;
@@ -331,8 +332,10 @@ void TestStepper::MoveToPosition(int32_t microsteps, MoveDir dir) {
     return;
   }
   // We don't simulate actual movement between positions, but we still assume the motor is not
-  // stopped when it has just received a move command.
-  status_.bitfield.stopped = 0;
+  // stopped when it has just received a move command (with a different position than current one).
+  if (fabsf(new_position - position_) > FLT_EPSILON) {
+    status_.bitfield.stopped = 0;
+  }
   switch (dir) {
     case MoveDir::Positive:
       status_.bitfield.motion_direction = 0;

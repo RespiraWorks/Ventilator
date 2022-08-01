@@ -88,17 +88,17 @@ ErrorCode Handler::SetParam(Param param, uint32_t value) {
     return ErrorCode::BadParam;
   }
 
-  uint8_t command_buff[4];
-  command_buff[0] = p;  // The op-code for a set is just the parameter number
+  uint8_t command_buffer[4];
+  command_buffer[0] = p;  // The op-code for a set is just the parameter number
 
   // Split the parameter value into bytes, MSB first
   value <<= 8 * (3 - length);
-  command_buff[1] = static_cast<uint8_t>(value >> 16);
-  command_buff[2] = static_cast<uint8_t>(value >> 8);
-  command_buff[3] = static_cast<uint8_t>(value);
+  command_buffer[1] = static_cast<uint8_t>(value >> 16);
+  command_buffer[2] = static_cast<uint8_t>(value >> 8);
+  command_buffer[3] = static_cast<uint8_t>(value);
 
   // The op-code for a set is equal to the parameter number
-  return SendCmd(command_buff, length + 1);
+  return SendCmd(command_buffer, length + 1);
 }
 
 ErrorCode Handler::GetParam(Param param, uint32_t *value) {
@@ -118,16 +118,16 @@ ErrorCode Handler::GetParam(Param param, uint32_t *value) {
     return ErrorCode::WouldBlock;
   }
 
-  uint8_t command_buff[4];
-  uint8_t response[sizeof(command_buff) - 1] = {0};
+  uint8_t command_buffer[4];
+  uint8_t response[sizeof(command_buffer) - 1] = {0};
 
   // For a get, the op-code is the parameter | 0x20
-  command_buff[0] = static_cast<uint8_t>(p | 0x20);
-  command_buff[1] = 0;
-  command_buff[2] = 0;
-  command_buff[3] = 0;
+  command_buffer[0] = static_cast<uint8_t>(p | 0x20);
+  command_buffer[1] = 0;
+  command_buffer[2] = 0;
+  command_buffer[3] = 0;
 
-  ErrorCode err = SendCmd(command_buff, length + 1, response);
+  ErrorCode err = SendCmd(command_buffer, length + 1, response);
   if (err != ErrorCode::Ok) {
     return err;
   }

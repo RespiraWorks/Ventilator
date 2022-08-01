@@ -57,8 +57,9 @@ class TestStepper {
   size_t response_index_{0};
   size_t response_count_{0};
 
-  // current and stop positions (in degrees)
+  // Current position (in degrees).
   float position_{0};
+  // Stop positions should allow us to use this class to test the pinch valves as well.
   float low_stop_;
   float high_stop_;
 

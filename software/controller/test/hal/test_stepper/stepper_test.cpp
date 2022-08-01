@@ -217,6 +217,8 @@ TEST(StepMotor, MotorMovements) {
   EXPECT_EQ(handler.HardStop(), ErrorCode::Ok);
   EXPECT_EQ(handler.GotoPos(-30.0f), ErrorCode::Ok);
   EXPECT_NEAR(motor->Position(), -30.0f, PositionTolerance);
+  // we are out of 0 position test that sending ClearPosition
+  // resets current position to 0
   EXPECT_EQ(handler.ClearPosition(), ErrorCode::Ok);
   EXPECT_EQ(motor->Position(), 0.0f);
 }
